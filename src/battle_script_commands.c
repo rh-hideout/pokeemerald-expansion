@@ -12760,9 +12760,8 @@ static void Cmd_settaunt(void)
         u8 turns;
         if (GetConfig(B_TAUNT_TURNS) >= GEN_5)
         {
-            turns = 4;
-            if (!HasBattlerActedThisTurn(gBattlerTarget))
-                turns--; // If the target hasn't yet moved this turn, Taunt lasts for only three turns (source: Bulbapedia)
+            // If the target hasn't yet moved this turn, Taunt lasts for only three turns (source: Bulbapedia)
+            turns = HasBattlerActedThisTurn(gBattlerTarget) ? 4 : 3;
         }
         else if (GetConfig(B_TAUNT_TURNS) >= GEN_4)
         {
