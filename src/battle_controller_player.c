@@ -4,23 +4,27 @@
 #include "battle_arena.h"
 #include "battle_controllers.h"
 #include "battle_dome.h"
+#include "battle_gimmick.h"
 #include "battle_interface.h"
 #include "battle_message.h"
 #include "battle_setup.h"
 #include "battle_tv.h"
 #include "battle_z_move.h"
-#include "battle_gimmick.h"
 #include "bg.h"
+#include "caps.h"
 #include "data.h"
 #include "item.h"
 #include "item_menu.h"
 #include "link.h"
-#include "main.h"
 #include "m4a.h"
+#include "main.h"
+#include "menu.h"
 #include "palette.h"
 #include "party_menu.h"
 #include "pokeball.h"
+#include "pokedex.h"
 #include "pokemon.h"
+#include "pokemon_summary_screen.h"
 #include "random.h"
 #include "recorded_battle.h"
 #include "reshow_battle_screen.h"
@@ -29,6 +33,7 @@
 #include "task.h"
 #include "test_runner.h"
 #include "text.h"
+#include "type_icons.h"
 #include "util.h"
 #include "window.h"
 #include "line_break.h"
@@ -41,11 +46,6 @@
 #include "constants/songs.h"
 #include "constants/trainers.h"
 #include "constants/rgb.h"
-#include "caps.h"
-#include "menu.h"
-#include "pokemon_summary_screen.h"
-#include "type_icons.h"
-#include "pokedex.h"
 #include "test/battle.h"
 #include "test/test_runner_battle.h"
 
@@ -700,6 +700,8 @@ void HandleInputChooseMove(enum BattlerId battler)
     if (JOY_NEW(A_BUTTON) && !gBattleStruct->descriptionSubmenu)
     {
         TryToHideMoveInfoWindow();
+        if (B_MOVE_TYPE_SPRITES)
+            TryToHideMoveTypeIconSpriteWithDelay(MOVE_TYPE_ICON_DO_MOVE_DELAY);
         PlaySE(SE_SELECT);
 
         enum MoveTarget moveTarget = GetBattlerMoveTargetType(battler, moveInfo->moves[gMoveSelectionCursor[battler]]);
@@ -793,7 +795,7 @@ void HandleInputChooseMove(enum BattlerId battler)
             break;
         }
     }
-    else if ((JOY_NEW(B_BUTTON) || gPlayerDpadHoldFrames > 59)  && !gBattleStruct->descriptionSubmenu)
+    else if ((JOY_NEW(B_BUTTON) || gPlayerDpadHoldFrames > 59) && !gBattleStruct->descriptionSubmenu)
     {
         PlaySE(SE_SELECT);
         gBattleStruct->gimmick.playerSelect = FALSE;
@@ -808,6 +810,8 @@ void HandleInputChooseMove(enum BattlerId battler)
             HideGimmickTriggerSprite();
             BtlController_Complete(battler);
             TryToHideMoveInfoWindow();
+            if (B_MOVE_TYPE_SPRITES)
+                TryToHideMoveTypeIconSpriteWithDelay(MOVE_TYPE_ICON_BACK_MENU_DELAY);
         }
     }
     else if (JOY_NEW(DPAD_LEFT) && !gBattleStruct->zmove.viewing)
@@ -1743,9 +1747,17 @@ static void MoveSelectionDisplayMoveType(enum BattlerId battler)
         struct Pokemon *mon = GetBattlerMon(battler);
         type = CheckDynamicMoveType(mon, move, battler, MON_IN_BATTLE);
     }
-    end = StringCopy(txtPtr, gTypesInfo[type].name);
 
-    PrependFontIdToFit(txtPtr, end, FONT_NORMAL, WindowWidthPx(B_WIN_MOVE_TYPE) - 25);
+    if (B_MOVE_TYPE_SPRITES)
+    {
+        LoadTypeIconForMoveInfo(type);
+    }
+    else
+    {
+        end = StringCopy(txtPtr, gTypesInfo[type].name);
+        PrependFontIdToFit(txtPtr, end, FONT_NORMAL, WindowWidthPx(B_WIN_MOVE_TYPE) - 25);
+    }
+
     BattlePutTextOnWindow(gDisplayedStringBattle, B_WIN_MOVE_TYPE);
 }
 
@@ -2148,6 +2160,8 @@ void PlayerHandleChooseMove(enum BattlerId battler)
 void InitMoveSelectionsVarsAndStrings(enum BattlerId battler)
 {
     LoadTypeIcons(battler);
+    if (B_MOVE_TYPE_SPRITES)
+        LoadMoveTypeIconSpritesAndPalettes();
     MoveSelectionDisplayMoveNames(battler);
     gMultiUsePlayerCursor = 0xFF;
     MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
