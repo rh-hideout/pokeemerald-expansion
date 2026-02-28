@@ -8740,7 +8740,7 @@ static void Cmd_trysetencore(void)
             turns = RandomUniform(RNG_ENCORE_TURNS, 2, 6);
         }
 
-        gDisableStructs[gBattlerTarget].encoreTimer = turns;
+        gBattleMons[gBattlerTarget].volatiles.encoreTimer = turns;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
