@@ -145,12 +145,10 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 101-200")
         case EFFECT_REFLECT:
         case EFFECT_BIDE:
         case EFFECT_NIGHTMARE:
-        case EFFECT_SNORE:
         case EFFECT_SKETCH:
         case EFFECT_BELLY_DRUM:
         case EFFECT_DESTINY_BOND:
         case EFFECT_MIRROR_MOVE:
-        case EFFECT_REST:
         case EFFECT_SUBSTITUTE:
 
         //TODO: AI TESTS
@@ -165,6 +163,8 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 101-200")
 
         // tests exist elsewhere
         case EFFECT_HAZE:
+        case EFFECT_REST:
+        case EFFECT_SNORE:
 
         // Skipped on purpose.
         case EFFECT_PROTECT:
@@ -217,8 +217,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 201-300")
         switch (effect)
         {
         //TODO: AI HANDLING
-        case EFFECT_SLEEP_TALK: // logic exists but does not account for Rest correctly
-        case EFFECT_SAFEGUARD: // logic exists but does not account for Rest correctly
+        case EFFECT_SAFEGUARD:
         case EFFECT_FOLLOW_ME:
         case EFFECT_SNATCH:
         case EFFECT_GRUDGE:
@@ -244,6 +243,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 201-300")
 
         // tests exist elsewhere
         case EFFECT_HEAL_BELL:
+        case EFFECT_SLEEP_TALK:
         case EFFECT_WEATHER:
         case EFFECT_ROLE_PLAY:
         case EFFECT_REFRESH:
