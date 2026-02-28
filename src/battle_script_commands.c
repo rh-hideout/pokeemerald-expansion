@@ -12758,15 +12758,14 @@ static void Cmd_settaunt(void)
     else if (gDisableStructs[gBattlerTarget].tauntTimer == 0)
     {
         u8 turns;
-        if (B_TAUNT_TURNS >= GEN_5)
+        if (GetConfig(B_TAUNT_TURNS) >= GEN_5)
         {
-            turns = 4;
-            if (!HasBattlerActedThisTurn(gBattlerTarget))
-                turns--; // If the target hasn't yet moved this turn, Taunt lasts for only three turns (source: Bulbapedia)
+            // If the target hasn't yet moved this turn, Taunt lasts for only three turns (source: Bulbapedia)
+            turns = HasBattlerActedThisTurn(gBattlerTarget) ? 4 : 3;
         }
-        else if (B_TAUNT_TURNS >= GEN_4)
+        else if (GetConfig(B_TAUNT_TURNS) >= GEN_4)
         {
-            turns = (Random() & 2) + 3;
+            turns = RandomUniform(RNG_TAUNT_TURNS, 3, 5);
         }
         else
         {
