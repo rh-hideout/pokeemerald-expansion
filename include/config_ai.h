@@ -1,0 +1,79 @@
+// DO NOT MODIFY THIS FILE
+// This file was auto-generate by tools/config_splitter/split_config.py
+// Modify the files in the include/config/ directory instead
+
+#ifndef GUARD_CONFIG_AI_H
+#define GUARD_CONFIG_AI_H
+#define SHOULD_SWITCH_WONDER_GUARD_PERCENTAGE 100 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SHOULD_SWITCH_TRUANT_PERCENTAGE 100 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SHOULD_SWITCH_ALL_MOVES_BAD_PERCENTAGE 100 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define STAY_IN_STATS_RAISED 2 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SHOULD_SWITCH_ABSORBS_MOVE_PERCENTAGE 100 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SHOULD_SWITCH_ABSORBS_HIDDEN_POWER_PERCENTAGE 50 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SHOULD_SWITCH_TRAPPER_PERCENTAGE 100 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SHOULD_SWITCH_FREE_TURN_PERCENTAGE 50 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define STAY_IN_ABSORBING_PERCENTAGE 66 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SHOULD_SWITCH_HASBADODDS_PERCENTAGE 50 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SHOULD_SWITCH_ENCORE_STATUS_PERCENTAGE 100 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SHOULD_SWITCH_ENCORE_DAMAGE_PERCENTAGE 50 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SHOULD_SWITCH_CHOICE_LOCKED_PERCENTAGE 100 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SHOULD_SWITCH_ATTACKING_STAT_MINUS_TWO_PERCENTAGE 50 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SHOULD_SWITCH_ATTACKING_STAT_MINUS_THREE_PLUS_PERCENTAGE 100 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SHOULD_SWITCH_ALL_SCORES_BAD_PERCENTAGE 100 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SHOULD_SWITCH_PERISH_SONG_PERCENTAGE 100 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SHOULD_SWITCH_YAWN_PERCENTAGE 100 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SHOULD_SWITCH_BADLY_POISONED_PERCENTAGE 50 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SHOULD_SWITCH_BADLY_POISONED_STATS_RAISED_PERCENTAGE 20 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SHOULD_SWITCH_CURSED_PERCENTAGE 50 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SHOULD_SWITCH_CURSED_STATS_RAISED_PERCENTAGE 20 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SHOULD_SWITCH_NIGHTMARE_PERCENTAGE 33 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SHOULD_SWITCH_NIGHTMARE_STATS_RAISED_PERCENTAGE 15 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SHOULD_SWITCH_SEEDED_PERCENTAGE 25 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SHOULD_SWITCH_SEEDED_STATS_RAISED_PERCENTAGE 10 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SHOULD_SWITCH_INFATUATION_PERCENTAGE 100 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SHOULD_SWITCH_NATURAL_CURE_STRONG_PERCENTAGE 66 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SHOULD_SWITCH_NATURAL_CURE_STRONG_STATS_RAISED_PERCENTAGE 10 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SHOULD_SWITCH_NATURAL_CURE_WEAK_PERCENTAGE 25 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SHOULD_SWITCH_NATURAL_CURE_WEAK_STATS_RAISED_PERCENTAGE 10 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SHOULD_SWITCH_REGENERATOR_PERCENTAGE 50 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SHOULD_SWITCH_REGENERATOR_STATS_RAISED_PERCENTAGE 20 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define ALL_MOVES_BAD_STATUS_MOVES_BAD FALSE // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define AI_BAD_SCORE_THRESHOLD 90 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define AI_GOOD_SCORE_THRESHOLD 100 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define LOW_ACCURACY_THRESHOLD 75 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define STATUS_MOVE_FOCUS_PUNCH_CHANCE 50 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define BOOST_INTO_HAZE_CHANCE 0 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SHOULD_RECOVER_CHANCE 50 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define ENABLE_RECOVERY_THRESHOLD 60 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SUCKER_PUNCH_CHANCE 50 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SUCKER_PUNCH_PREDICTION_CHANCE 50 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define PRIORITIZE_LAST_CHANCE_CHANCE 50 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define RISKY_AI_CRIT_STAGE_THRESHOLD 2 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define RISKY_AI_CRIT_THRESHOLD_GEN_1 128 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define PREDICT_SWITCH_CHANCE 50 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define PREDICT_MOVE_CHANCE 100 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define AI_CONSERVE_TERA_CHANCE_PER_MON 10 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define AI_TERA_PREDICT_CHANCE 40 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define PP_STALL_DISREGARD_MOVE_PERCENTAGE 50 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define PP_STALL_SCORE_REDUCTION 20 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define ASSUME_STAB_SEES_ABILITY FALSE // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define ASSUME_STATUS_MOVES_HAS_TUNING TRUE // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define ASSUME_STATUS_HIGH_ODDS 90 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define ASSUME_STATUS_MEDIUM_ODDS 70 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define ASSUME_STATUS_LOW_ODDS 40 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define ASSUME_ALL_STATUS_ODDS 25 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define SMART_SWITCHING_OMNISCIENT FALSE // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define FRIENDLY_FIRE_RISKY_THRESHOLD 2 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define FRIENDLY_FIRE_NORMAL_THRESHOLD 3 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define FRIENDLY_FIRE_CONSERVATIVE_THRESHOLD 4 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define DOUBLE_TRICK_ROOM_ON_LAST_TURN_CHANCE 35 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define TAILWIND_IN_TRICK_ROOM_CHANCE 35 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define AI_FLAG_ATTACKS_PARTNER_FOCUSES_PARTNER FALSE // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define GUARD_SPLIT_ALLY_PERCENTAGE 200 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define GUARD_SPLIT_ENEMY_PERCENTAGE 50 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define POWER_SPLIT_ALLY_PERCENTAGE 150 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define POWER_SPLIT_ENEMY_PERCENTAGE 50 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define Z_EFFECT_FOLLOW_ME_THRESHOLD 30 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define Z_EFFECT_RESTORE_HP_LOWER_THRESHOLD ENABLE_RECOVERY_THRESHOLD // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#define Z_EFFECT_RESTORE_HP_HIGHER_THRESHOLD 90 // DO NOT MODIFY THIS LINE, change include/config/ai.h instead
+#endif
