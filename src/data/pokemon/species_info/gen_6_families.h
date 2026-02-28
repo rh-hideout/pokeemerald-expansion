@@ -3996,18 +3996,18 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .frontPicSize = MON_COORDS_SIZE(64, 64),
         .frontPicYOffset = 0,
         .frontAnimFrames = sAnims_TwoFramePlaceHolder,
-        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
         .backPic = gMonBackPic_BarbaracleMega,
         .backPicSize = MON_COORDS_SIZE(64, 64),
         .backPicYOffset = 0,
-        .backAnimId = BACK_ANIM_NONE,
+        //.backAnimId = BACK_ANIM_NONE,
         .palette = gMonPalette_BarbaracleMega,
         .shinyPalette = gMonShinyPalette_BarbaracleMega,
         .iconSprite = gMonIcon_BarbaracleMega,
         .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(Barbaracle)
-        SHADOW(13, 9, SHADOW_SIZE_L)
+        SHADOW(9, 13, SHADOW_SIZE_L)
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sBarbaracleLevelUpLearnset,
         .teachableLearnset = sBarbaracleTeachableLearnset,

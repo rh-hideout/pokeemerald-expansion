@@ -5208,7 +5208,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(Clefable)
-        SHADOW(-1, 0, SHADOW_SIZE_M)
+        SHADOW(-1, 12, SHADOW_SIZE_M)
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sClefableLevelUpLearnset,
         .teachableLearnset = sClefableTeachableLearnset,

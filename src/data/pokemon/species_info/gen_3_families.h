@@ -10586,14 +10586,14 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .backPic = gMonBackPic_AbsolMegaZ,
         .backPicSize = MON_COORDS_SIZE(64, 64),
         .backPicYOffset = 0,
-        .backAnimId = BACK_ANIM_SHRINK_GROW_VIBRATE,
+        //.backAnimId = BACK_ANIM_SHRINK_GROW_VIBRATE,
         .palette = gMonPalette_AbsolMegaZ,
         .shinyPalette = gMonShinyPalette_AbsolMegaZ,
         //.iconSprite = gMonIcon_QuestionMark,
         //.iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(Absol)
-        SHADOW(11, 1, SHADOW_SIZE_L)
+        SHADOW(1, 11, SHADOW_SIZE_L)
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sAbsolLevelUpLearnset,
         .teachableLearnset = sAbsolTeachableLearnset,

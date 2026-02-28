@@ -6621,18 +6621,18 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .frontPicSize = MON_COORDS_SIZE(64, 64),
         .frontPicYOffset = 0,
         .frontAnimFrames = sAnims_TwoFramePlaceHolder,
-        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
         .backPic = gMonBackPic_BaxcaliburMega,
         .backPicSize = MON_COORDS_SIZE(64, 64),
         .backPicYOffset = 0,
-        .backAnimId = BACK_ANIM_NONE,
+        //.backAnimId = BACK_ANIM_NONE,
         .palette = gMonPalette_BaxcaliburMega,
         .shinyPalette = gMonShinyPalette_BaxcaliburMega,
         .iconSprite = gMonIcon_BaxcaliburMega,
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(Baxcalibur)
-        SHADOW(2, 13, SHADOW_SIZE_XL)
+        SHADOW(2, 13, SHADOW_SIZE_XL_BATTLE_ONLY)
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sBaxcaliburLevelUpLearnset,
         .teachableLearnset = sBaxcaliburTeachableLearnset,
