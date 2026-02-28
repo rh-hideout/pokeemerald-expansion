@@ -17,8 +17,8 @@ struct RSBattleTowerRecord
 };
 
 struct FacilityClass {
-    u8 class;
-    u8 gfxId;
+    u16 class;
+    u16 gfxId;
 };
 
 #define FACILITY_CLASSES_MALE   30
