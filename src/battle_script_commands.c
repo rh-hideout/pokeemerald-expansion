@@ -8725,11 +8725,22 @@ static void Cmd_trysetencore(void)
         if (gBattleMons[gBattlerTarget].volatiles.encoredMove != GetBattlerChosenMove(gBattlerTarget))
             gBattleStruct->moveTarget[gBattlerTarget] = SetRandomTarget(gBattlerTarget);
 
-        // Encore always lasts 3 turns, but we need to account for a scenario where Encore changes the move during the same turn.
-        if (HasBattlerActedThisTurn(gBattlerTarget))
-            gBattleMons[gBattlerTarget].volatiles.encoreTimer = B_ENCORE_TIMER;
+        u8 turns;
+        if (GetConfig(B_ENCORE_TURNS) >= GEN_5)
+        {
+            // If the target already moved this turn, Encore lasts for four turns
+            turns = HasBattlerActedThisTurn(gBattlerTarget) ? B_ENCORE_TIMER : (B_ENCORE_TIMER - 1);
+        }
+        else if (GetConfig(B_ENCORE_TURNS) >= GEN_4)
+        {
+            turns = RandomUniform(RNG_ENCORE_TURNS, 3, 7);
+        }
         else
-            gBattleMons[gBattlerTarget].volatiles.encoreTimer = B_ENCORE_TIMER - 1;
+        {
+            turns = RandomUniform(RNG_ENCORE_TURNS, 2, 6);
+        }
+
+        gBattleMons[gBattlerTarget].volatiles.encoreTimer = turns;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }

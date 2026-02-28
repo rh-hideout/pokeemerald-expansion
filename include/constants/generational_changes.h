@@ -55,6 +55,7 @@
     F(B_TAILWIND_TURNS,            tailwindTurns,           (u32, GEN_COUNT - 1)) \
     F(B_SLEEP_TURNS,               sleepTurns,              (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_TAUNT_TURNS,               tauntTurns,              (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
+    F(B_ENCORE_TURNS,              encoreTurns,             (u32, GEN_COUNT - 1)) \
     F(B_SPORT_TURNS,               sportTurns,              (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_MEGA_EVO_TURN_ORDER,       megaEvoTurnOrder,        (u32, GEN_COUNT - 1)) \
     F(B_RECALC_TURN_AFTER_ACTIONS, recalcTurnAfterActions,  (u32, GEN_COUNT - 1)) \
