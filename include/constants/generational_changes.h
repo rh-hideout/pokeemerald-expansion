@@ -97,7 +97,6 @@
     F(B_SKILL_SWAP,                skillSwap,               (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_BRICK_BREAK,               brickBreak,              (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_WISH_HP_SOURCE,            wishHpSource,            (u32, GEN_COUNT - 1)) \
-    F(B_RAMPAGE_CANCELLING,        rampageCancelling,       (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_HEAL_BLOCKING,             healBlocking,            (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_ROOTED_GROUNDING,          rootedGrounding,         (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_METRONOME_MOVES,           metronomeMoves,          (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \

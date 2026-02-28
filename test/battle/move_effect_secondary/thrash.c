@@ -74,7 +74,7 @@ SINGLE_BATTLE_TEST("Thrash does not confuse the user if it is canceled on turn 2
 SINGLE_BATTLE_TEST("Thrash confuses the user if it is canceled on turn 3 of 3, Protect")
 {
     GIVEN {
-        ASSUME(B_RAMPAGE_CANCELLING >= GEN_5);
+        ASSUME(B_RAMPAGE_CONFUSION>= GEN_5);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -89,7 +89,7 @@ SINGLE_BATTLE_TEST("Thrash confuses the user if it is canceled on turn 3 of 3, P
 SINGLE_BATTLE_TEST("Thrash confuses the user if it is canceled on turn 3 of 3, Immunity")
 {
     GIVEN {
-        ASSUME(B_RAMPAGE_CANCELLING >= GEN_5);
+        ASSUME(B_RAMPAGE_CONFUSION>= GEN_5);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GENGAR);
@@ -115,5 +115,26 @@ SINGLE_BATTLE_TEST("Petal Dance does not lock mons that copy the move with Dance
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PETAL_DANCE, opponent);
         // How do you actually test locking?
         EXPECT(!(opponent->volatiles.multipleTurns));
+    }
+}
+
+SINGLE_BATTLE_TEST("Thrash confuses the user after it finishes even if move failed")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { MovesWithPP({MOVE_THRASH, 10}); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_GASTLY);
+    } WHEN {
+        TURN { MOVE(player, MOVE_THRASH); }
+        TURN { SKIP_TURN(player); }
+        TURN { SWITCH(opponent, 1); SKIP_TURN(player); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_THRASH, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_THRASH, player);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_THRASH, player);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
+    } THEN {
+        // Check that PP has been consumed correctly
+        EXPECT_EQ(player->pp[0], 9);
     }
 }

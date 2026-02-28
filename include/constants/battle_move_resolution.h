@@ -98,7 +98,6 @@ enum MoveEndState
     MOVEEND_SYMBIOSIS,
     MOVEEND_SUBSTITUTE,
     MOVEEND_FAINT_BLOCK,
-    MOVEEND_SKY_DROP_CONFUSE,
     MOVEEND_UPDATE_LAST_MOVES,
     MOVEEND_MIRROR_MOVE,
     MOVEEND_NEXT_TARGET, // Everything up until here is handled for each strike of a spread move
@@ -124,6 +123,8 @@ enum MoveEndState
     MOVEEND_MIRROR_HERB,
     MOVEEND_THIRD_MOVE_BLOCK,
     MOVEEND_EJECT_PACK,
+    MOVEEND_RAMPAGE,
+    MOVEEND_CONFUSION_AFTER_SKY_DROP, // If target was previously rampaging, it should be confused when dropped
     MOVEEND_CLEAR_BITS,
     MOVEEND_DANCER,
     MOVEEND_PURSUIT_NEXT_ACTION,
