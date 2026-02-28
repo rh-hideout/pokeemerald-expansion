@@ -8726,12 +8726,12 @@ static void Cmd_trysetencore(void)
             gBattleStruct->moveTarget[gBattlerTarget] = SetRandomTarget(gBattlerTarget);
 
         u8 turns;
-        if (GetConfig(CONFIG_ENCORE_TURNS) >= GEN_5)
+        if (GetConfig(B_ENCORE_TURNS) >= GEN_5)
         {
             // If the target already moved this turn, Encore lasts for four turns
             turns = HasBattlerActedThisTurn(gBattlerTarget) ? B_ENCORE_TIMER : (B_ENCORE_TIMER - 1);
         }
-        else if (GetConfig(CONFIG_ENCORE_TURNS) >= GEN_4)
+        else if (GetConfig(B_ENCORE_TURNS) >= GEN_4)
         {
             turns = RandomUniform(RNG_ENCORE_TURNS, 3, 7);
         }

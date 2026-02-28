@@ -14,8 +14,8 @@ SINGLE_BATTLE_TEST("Encore forces consecutive move uses for 3 turns: Encore used
     PARAMETRIZE { encoreUser = opponent; encoreTarget = player; speedPlayer = 10; speedOpponent = 20; }
     PARAMETRIZE { encoreUser = player; encoreTarget = opponent; speedPlayer = 20; speedOpponent = 10; }
     GIVEN {
-        WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_4);
-        WITH_CONFIG(CONFIG_ENCORE_TURNS, GEN_5);
+        WITH_CONFIG(B_ENCORE_TARGET, GEN_4);
+        WITH_CONFIG(B_ENCORE_TURNS, GEN_5);
         PLAYER(SPECIES_WOBBUFFET) { Speed(speedPlayer); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(speedOpponent); }
     } WHEN {
@@ -43,8 +43,8 @@ SINGLE_BATTLE_TEST("Encore forces consecutive move uses for 4 turns: Encore used
     PARAMETRIZE { encoreUser = opponent; encoreTarget = player; speedPlayer = 20; speedOpponent = 10; }
     PARAMETRIZE { encoreUser = player; encoreTarget = opponent; speedPlayer = 10; speedOpponent = 20; }
     GIVEN {
-        WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_4);
-        WITH_CONFIG(CONFIG_ENCORE_TURNS, GEN_5);
+        WITH_CONFIG(B_ENCORE_TARGET, GEN_4);
+        WITH_CONFIG(B_ENCORE_TURNS, GEN_5);
         PLAYER(SPECIES_WOBBUFFET) { Speed(speedPlayer); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(speedOpponent); }
     } WHEN {
@@ -129,7 +129,7 @@ SINGLE_BATTLE_TEST("(DYNAMAX) Dynamaxed Pokemon can be encored immediately after
 SINGLE_BATTLE_TEST("Encore's effect ends if the encored move runs out of PP")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_ENCORE_TURNS, GEN_5);
+        WITH_CONFIG(B_ENCORE_TURNS, GEN_5);
         PLAYER(SPECIES_WOBBUFFET) { Speed(1); MovesWithPP({MOVE_SCRATCH, 2}, {MOVE_CELEBRATE, 10}); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_ENCORE, MOVE_CELEBRATE); }
     } WHEN {
@@ -151,7 +151,7 @@ AI_SINGLE_BATTLE_TEST("Encore lasts for 2-6 turns (Gen 2-3)")
     PARAMETRIZE { turns = 6; }
     PASSES_RANDOMLY(1, 5, RNG_ENCORE_TURNS);
     GIVEN {
-        WITH_CONFIG(CONFIG_ENCORE_TURNS, GEN_3);
+        WITH_CONFIG(B_ENCORE_TURNS, GEN_3);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET) { Speed(1); Moves(MOVE_ENCORE, MOVE_CELEBRATE); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_CELEBRATE); }
@@ -180,7 +180,7 @@ AI_SINGLE_BATTLE_TEST("Encore lasts for 3-7 turns (Gen 4)")
     PARAMETRIZE { turns = 7; }
     PASSES_RANDOMLY(1, 5, RNG_ENCORE_TURNS);
     GIVEN {
-        WITH_CONFIG(CONFIG_ENCORE_TURNS, GEN_4);
+        WITH_CONFIG(B_ENCORE_TURNS, GEN_4);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET) { Speed(1); Moves(MOVE_ENCORE, MOVE_CELEBRATE); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_CELEBRATE); }
@@ -201,7 +201,7 @@ AI_SINGLE_BATTLE_TEST("Encore lasts for 3-7 turns (Gen 4)")
 DOUBLE_BATTLE_TEST("Encore randomly chooses an opponent target (Gen 2-4)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_4);
+        WITH_CONFIG(B_ENCORE_TARGET, GEN_4);
         PLAYER(SPECIES_WOBBUFFET) { Speed(3); Moves(MOVE_TACKLE, MOVE_CELEBRATE); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(1); Moves(MOVE_CELEBRATE); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(4); Moves(MOVE_ENCORE, MOVE_CELEBRATE); }
@@ -225,7 +225,7 @@ DOUBLE_BATTLE_TEST("Encore randomly chooses an opponent target (Gen 2-4)")
 DOUBLE_BATTLE_TEST("Encore allows choosing an opponent target (Gen 5+)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_5);
+        WITH_CONFIG(B_ENCORE_TARGET, GEN_5);
         PLAYER(SPECIES_WOBBUFFET) { Speed(3); Moves(MOVE_TACKLE, MOVE_CELEBRATE); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(1); Moves(MOVE_CELEBRATE); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(4); Moves(MOVE_ENCORE, MOVE_CELEBRATE); }
