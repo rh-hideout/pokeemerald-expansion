@@ -1927,6 +1927,7 @@ u32 AI_GetSwitchinWeather(enum BattlerId battler)
     case ABILITY_DRIZZLE:
         return B_WEATHER_RAIN_NORMAL;
     case ABILITY_DROUGHT:
+    case ABILITY_ORICHALCUM_PULSE:
         return B_WEATHER_SUN_NORMAL;
     case ABILITY_SAND_STREAM:
         return B_WEATHER_SANDSTORM;
@@ -4525,28 +4526,6 @@ void FreeRestoreAiLogicData(struct AiLogicData *savedAiLogicData)
 {
     memcpy(gAiLogicData, savedAiLogicData, SIZE_G_AI_LOGIC_DATA);
     Free(savedAiLogicData);
-}
-
-// Set potential field effect from ability for switch in
-void SetBattlerFieldStatusForSwitchin(enum BattlerId battler)
-{
-    switch (gAiLogicData->abilities[battler])
-    {
-    case ABILITY_VESSEL_OF_RUIN:
-        gBattleMons[battler].volatiles.vesselOfRuin = TRUE;
-        break;
-    case ABILITY_SWORD_OF_RUIN:
-        gBattleMons[battler].volatiles.swordOfRuin = TRUE;
-        break;
-    case ABILITY_TABLETS_OF_RUIN:
-        gBattleMons[battler].volatiles.tabletsOfRuin = TRUE;
-        break;
-    case ABILITY_BEADS_OF_RUIN:
-        gBattleMons[battler].volatiles.beadsOfRuin = TRUE;
-        break;
-    default:
-        break;
-    }
 }
 
 // party logic
