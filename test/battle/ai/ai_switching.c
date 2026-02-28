@@ -1764,3 +1764,16 @@ AI_DOUBLE_BATTLE_TEST("AI will not choose to switch out Dondozo with Commander T
         TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); EXPECT_MOVE(opponentLeft, MOVE_WATER_GUN); SKIP_TURN(opponentRight); }
     }
 }
+
+AI_SINGLE_BATTLE_TEST("Rage Fist stacks are seen properly for switch logic")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_VICTINI) { Level(70); Speed(2); Ability(ABILITY_VICTORY_STAR); Moves(MOVE_V_CREATE, MOVE_PSYCHIC); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Level(1); Speed(1); HP(1); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_GROUDON) { Level(85); Speed(3); Moves(MOVE_PRECIPICE_BLADES); }
+        OPPONENT(SPECIES_ANNIHILAPE) { Level(85); Speed(3); Moves(MOVE_RAGE_FIST); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_PSYCHIC); EXPECT_SEND_OUT(opponent, 1); }
+    }
+}

@@ -2144,6 +2144,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
     bool32 isFreeSwitch = IsFreeSwitch(switchType, battlerIn1, opposingBattler), isSwitchinFirst, isSwitchinFirstPriority, canSwitchinWin1v1;
     u32 invalidMons = 0;
     uq4_12_t effectiveness = UQ_4_12(1.0);
+    u32 storeCurrBattlerPartyIndex = gBattlerPartyIndexes[battler]; // Rage Fist fix
 
     // Iterate through mons
     for (i = firstId; i < lastId; i++)
@@ -2169,6 +2170,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
         else
             aliveCount++;
 
+        gBattlerPartyIndexes[battler] = i; // Rage Fist fix
         InitializeSwitchinCandidate(&party[i]);
 
         // While not really invalid per se, not really wise to switch into this mon
@@ -2295,7 +2297,8 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
         if (monMaxDamage == 0)
             invalidMons |= 1u << i;
     }
-
+    gBattlerPartyIndexes[battler] = storeCurrBattlerPartyIndex; // Rage Fist fix
+    
     batonPassId = GetRandomSwitchinWithBatonPass(aliveCount, bits, firstId, lastId, i);
 
     // Different switching priorities depending on switching mid battle vs switching after a KO or slow switch
