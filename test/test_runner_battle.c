@@ -14,6 +14,7 @@
 #include "party_menu.h"
 #include "random.h"
 #include "test/battle.h"
+#include "trainer_pools.h"
 #include "window.h"
 #include "constants/characters.h"
 #include "constants/trainers.h"
@@ -47,6 +48,20 @@ static inline bool32 RngSeedNotDefault(const rng_value_t *seed)
 }
 #undef Q_4_12
 #define Q_4_12(n) (s32)((n) * 4096)
+
+#define TRAINER_RED_TEST    0
+#define TRAINER_LEAF_TEST   1
+#define PARTNER_STEVEN_TEST 0
+
+const struct Trainer gTrainers[DIFFICULTY_COUNT][TRAINERS_COUNT] =
+{
+    #include "battle/trainer_control.h"
+};
+
+const struct Trainer gBattlePartners[DIFFICULTY_COUNT][PARTNER_COUNT] =
+{
+    #include "battle/partner_control.h"
+};
 
 // Alias sBackupMapData to avoid using heap.
 struct BattleTestRunnerState *const gBattleTestRunnerState = (void *)sBackupMapData;
@@ -364,14 +379,14 @@ static void BattleTest_Run(void *data)
         break;
     case BATTLE_TEST_AI_SINGLES:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER;
-        DATA.recordedBattle.opponentA = TRAINER_LEAF;
+        DATA.recordedBattle.opponentA = TRAINER_LEAF_TEST;
         DATA.hasAI = TRUE;
         for (i = 0; i < STATE->battlersCount; i++)
             DATA.currentMonIndexes[i] = i / 2;
         break;
     case BATTLE_TEST_AI_DOUBLES:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE;
-        DATA.recordedBattle.opponentA = TRAINER_LEAF;
+        DATA.recordedBattle.opponentA = TRAINER_LEAF_TEST;
         DATA.recordedBattle.opponentB = TRAINER_NONE;
         DATA.hasAI = TRUE;
         for (i = 0; i < STATE->battlersCount; i++)
@@ -379,9 +394,9 @@ static void BattleTest_Run(void *data)
         break;
     case BATTLE_TEST_AI_MULTI:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS;
-        DATA.recordedBattle.partnerId = TRAINER_PARTNER(PARTNER_STEVEN);
-        DATA.recordedBattle.opponentA = TRAINER_LEAF;
-        DATA.recordedBattle.opponentB = TRAINER_RED;
+        DATA.recordedBattle.partnerId = TRAINER_PARTNER(PARTNER_STEVEN_TEST);
+        DATA.recordedBattle.opponentA = TRAINER_LEAF_TEST;
+        DATA.recordedBattle.opponentB = TRAINER_RED_TEST;
         DATA.hasAI = TRUE;
         DATA.currentMonIndexes[0] = 0; // Player first mon
         DATA.currentMonIndexes[1] = 0; // Opponent A first mon
@@ -390,8 +405,8 @@ static void BattleTest_Run(void *data)
         break;
     case BATTLE_TEST_AI_TWO_VS_ONE:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_MULTI;
-        DATA.recordedBattle.partnerId = TRAINER_PARTNER(PARTNER_STEVEN);
-        DATA.recordedBattle.opponentA = TRAINER_LEAF;
+        DATA.recordedBattle.partnerId = TRAINER_PARTNER(PARTNER_STEVEN_TEST);
+        DATA.recordedBattle.opponentA = TRAINER_LEAF_TEST;
         DATA.recordedBattle.opponentB = 0xFFFF;
         DATA.currentMonIndexes[0] = 0; // Player first mon
         DATA.currentMonIndexes[1] = 0; // Opponent first mon
@@ -401,8 +416,8 @@ static void BattleTest_Run(void *data)
         break;
     case BATTLE_TEST_AI_ONE_VS_TWO:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_TWO_OPPONENTS;
-        DATA.recordedBattle.opponentA = TRAINER_LEAF;
-        DATA.recordedBattle.opponentB = TRAINER_RED;
+        DATA.recordedBattle.opponentA = TRAINER_LEAF_TEST;
+        DATA.recordedBattle.opponentB = TRAINER_RED_TEST;
         DATA.currentMonIndexes[0] = 0; // Player first mon
         DATA.currentMonIndexes[1] = 0; // Opponent A first mon
         DATA.currentMonIndexes[2] = 1; // Player second mon
@@ -424,7 +439,7 @@ static void BattleTest_Run(void *data)
         break;
     case BATTLE_TEST_MULTI:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_RECORDED_IS_MASTER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TRAINER | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS;
-        DATA.recordedBattle.partnerId = TRAINER_PARTNER(PARTNER_STEVEN);
+        DATA.recordedBattle.partnerId = TRAINER_PARTNER(PARTNER_STEVEN_TEST);
         DATA.recordedBattle.opponentA = TRAINER_LINK_OPPONENT;
         DATA.recordedBattle.opponentB = TRAINER_LINK_OPPONENT;
         DATA.currentMonIndexes[0] = 0; // Player first mon
@@ -434,7 +449,7 @@ static void BattleTest_Run(void *data)
         break;
     case BATTLE_TEST_TWO_VS_ONE:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_RECORDED_IS_MASTER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TRAINER | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_MULTI;
-        DATA.recordedBattle.partnerId = TRAINER_PARTNER(PARTNER_STEVEN);
+        DATA.recordedBattle.partnerId = TRAINER_PARTNER(PARTNER_STEVEN_TEST);
         DATA.recordedBattle.opponentA = TRAINER_LINK_OPPONENT;
         DATA.recordedBattle.opponentB = 0xFFFF;
         DATA.currentMonIndexes[0] = 0; // Player first mon

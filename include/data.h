@@ -217,12 +217,17 @@ static inline const struct Trainer *GetTrainerStructFromId(u16 trainerId)
     u32 sanitizedTrainerId = 0;
     if (gIsDebugBattle) return GetDebugAiTrainer();
     sanitizedTrainerId = SanitizeTrainerId(trainerId);
-    enum DifficultyLevel difficulty = GetTrainerDifficultyLevel(sanitizedTrainerId);
 
     if (IsPartnerTrainerId(trainerId))
+    {
+        enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(sanitizedTrainerId);
         return &gBattlePartners[difficulty][sanitizedTrainerId - TRAINER_PARTNER(PARTNER_NONE)];
+    }
     else
+    {
+        enum DifficultyLevel difficulty = GetTrainerDifficultyLevel(sanitizedTrainerId);
         return &gTrainers[difficulty][sanitizedTrainerId];
+    }
 }
 
 static inline const enum TrainerClassID GetTrainerClassFromId(u16 trainerId)
@@ -236,14 +241,14 @@ static inline const u8 *GetTrainerClassNameFromId(u16 trainerId)
 {
     enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(trainerId);
 
-    if (trainerId > TRAINER_PARTNER(PARTNER_NONE))
+    if (trainerId >= TRAINER_PARTNER(PARTNER_NONE))
         return gTrainerClasses[gBattlePartners[difficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerClass].name;
     return gTrainerClasses[GetTrainerClassFromId(trainerId)].name;
 }
 
 static inline const u8 *GetTrainerNameFromId(u16 trainerId)
 {
-    if (trainerId > TRAINER_PARTNER(PARTNER_NONE))
+    if (trainerId >= TRAINER_PARTNER(PARTNER_NONE))
     {
         enum DifficultyLevel partnerDifficulty = GetBattlePartnerDifficultyLevel(trainerId);
         return gBattlePartners[partnerDifficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerName;
@@ -255,7 +260,7 @@ static inline const u8 GetTrainerPicFromId(u16 trainerId)
 {
     enum DifficultyLevel partnerDifficulty = GetBattlePartnerDifficultyLevel(trainerId);
 
-    if (trainerId > TRAINER_PARTNER(PARTNER_NONE))
+    if (trainerId >= TRAINER_PARTNER(PARTNER_NONE))
         return gBattlePartners[partnerDifficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerPic;
 
     return GetTrainerStructFromId(trainerId)->trainerPic;
