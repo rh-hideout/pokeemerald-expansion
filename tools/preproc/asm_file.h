@@ -64,6 +64,7 @@ private:
     bool ConsumeComma();
     int ReadPadLength();
     void RemoveComments();
+    void ConsumeLineSkip();
     bool CheckForDirective(std::string name);
     void SkipWhitespace();
     void ExpectEmptyRestOfLine();
