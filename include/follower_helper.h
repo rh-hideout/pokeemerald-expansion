@@ -119,8 +119,8 @@ enum ConditionalMessage
     COND_MSG_BURN,
     COND_MSG_DAY,
     COND_MSG_NIGHT,
-    COND_MSG_ABNORMAL_WEATHER,
-    COND_MSG_COUNT,
+    COND_MSG_ABNORMAL_WEATHER
+    #define COND_MSG_COUNT (COND_MSG_ABNORMAL_WEATHER + 1)
 };
 
 extern const struct FollowerMsgInfoExtended gFollowerConditionalMessages[COND_MSG_COUNT];

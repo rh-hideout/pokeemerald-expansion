@@ -30,8 +30,8 @@ enum BattlerPosition
     B_POSITION_PLAYER_LEFT,
     B_POSITION_OPPONENT_LEFT,
     B_POSITION_PLAYER_RIGHT,
-    B_POSITION_OPPONENT_RIGHT,
-    MAX_POSITION_COUNT,
+    B_POSITION_OPPONENT_RIGHT
+    #define MAX_POSITION_COUNT (B_POSITION_OPPONENT_RIGHT + 1)
 };
 
 enum BattlerId
@@ -39,8 +39,8 @@ enum BattlerId
     B_BATTLER_0,
     B_BATTLER_1,
     B_BATTLER_2,
-    B_BATTLER_3,
-    MAX_BATTLERS_COUNT,
+    B_BATTLER_3
+    #define MAX_BATTLERS_COUNT (B_BATTLER_3 + 1)
 };
 
 // These macros can be used with either battler ID or positions to get the partner or the opposite mon
@@ -55,8 +55,8 @@ enum BattlerId
 enum BattleSide
 {
     B_SIDE_PLAYER = 0,
-    B_SIDE_OPPONENT = 1,
-    NUM_BATTLE_SIDES = 2,
+    B_SIDE_OPPONENT = 1
+    #define NUM_BATTLE_SIDES (B_SIDE_OPPONENT + 1)
 };
 
 #define B_FLANK_LEFT  0
@@ -247,8 +247,8 @@ enum SemiInvulnerableState
     STATE_ON_AIR,
     STATE_PHANTOM_FORCE,
     STATE_SKY_DROP,
-    STATE_COMMANDER,
-    SEMI_INVULNERABLE_COUNT,
+    STATE_COMMANDER
+    #define SEMI_INVULNERABLE_COUNT (STATE_COMMANDER + 1)
 };
 
 enum SemiInvulnerableExclusion
@@ -306,8 +306,8 @@ enum Hazards
     HAZARDS_STICKY_WEB,
     HAZARDS_TOXIC_SPIKES,
     HAZARDS_STEALTH_ROCK,
-    HAZARDS_STEELSURGE,
-    HAZARDS_MAX_COUNT,
+    HAZARDS_STEELSURGE
+    #define HAZARDS_MAX_COUNT (HAZARDS_STEELSURGE + 1)
 };
 
 // Used for damaging entry hazards based on type
@@ -358,8 +358,8 @@ enum BattleWeather
     BATTLE_WEATHER_HAIL,
     BATTLE_WEATHER_SNOW,
     BATTLE_WEATHER_FOG,
-    BATTLE_WEATHER_STRONG_WINDS,
-    BATTLE_WEATHER_COUNT,
+    BATTLE_WEATHER_STRONG_WINDS
+    #define BATTLE_WEATHER_COUNT (BATTLE_WEATHER_STRONG_WINDS + 1)
 };
 
 // Battle Weather flags
@@ -516,10 +516,9 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_TORMENT_SIDE,
     MOVE_EFFECT_LOWER_SPEED_2_SIDE,
     MOVE_EFFECT_FIRE_SPIN_SIDE,
-    MOVE_EFFECT_FIXED_POWER,
+    MOVE_EFFECT_FIXED_POWER
     // Max move effects end. They can be used for (custom) normal moves.
-
-    NUM_MOVE_EFFECTS
+    #define NUM_MOVE_EFFECTS (MOVE_EFFECT_FIXED_POWER + 1)
 };
 
 #if B_USE_FROSTBITE == TRUE
@@ -568,8 +567,8 @@ enum BattleEnvironments
     BATTLE_ENVIRONMENT_VOLCANO,
     BATTLE_ENVIRONMENT_DISTORTION_WORLD,
     BATTLE_ENVIRONMENT_SPACE,
-    BATTLE_ENVIRONMENT_ULTRA_SPACE,
-    BATTLE_ENVIRONMENT_COUNT,
+    BATTLE_ENVIRONMENT_ULTRA_SPACE
+    #define BATTLE_ENVIRONMENT_COUNT (BATTLE_ENVIRONMENT_ULTRA_SPACE + 1)
 };
 
 #define B_WAIT_TIME_LONG        (B_WAIT_TIME_MULTIPLIER * 4)

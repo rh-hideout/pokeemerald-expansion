@@ -15,8 +15,8 @@ enum {
     WALLPAPER_POKECENTER,
     WALLPAPER_MACHINE,
     WALLPAPER_PLAIN,
-    WALLPAPER_FRIENDS, // The one received as a gift from Walda's parents.
-    WALLPAPER_COUNT
+    WALLPAPER_FRIENDS // The one received as a gift from Walda's parents.
+    #define WALLPAPER_COUNT (WALLPAPER_FRIENDS + 1)
 };
 #define MAX_DEFAULT_WALLPAPER WALLPAPER_SAVANNA
 

@@ -105,7 +105,7 @@ enum {
     BERRY_MISSED,
     BERRY_PRIZE,
     BERRY_IN_ROW,
-    NUM_BERRY_IDS
+    #define NUM_BERRY_IDS (BERRY_IN_ROW + 1)
 };
 
 #define NUM_BERRY_TYPES  4 // Blue, Green, Gold, and 'missed'

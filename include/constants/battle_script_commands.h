@@ -443,7 +443,7 @@ enum MoveEndEffects
     MOVEEND_CLEAR_BITS,
     MOVEEND_DANCER,
     MOVEEND_PURSUIT_NEXT_ACTION,
-    MOVEEND_COUNT,
+    #define MOVEEND_COUNT (MOVEEND_PURSUIT_NEXT_ACTION + 1)
 
     // This guarantees a correct jump if new moveends are added directly after MOVEEND_HIT_ESCAPE
     MOVEEND_JUMP_TO_HIT_ESCAPE_PLUS_ONE = (MOVEEND_HIT_ESCAPE + 1),

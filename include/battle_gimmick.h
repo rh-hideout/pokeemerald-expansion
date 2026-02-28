@@ -8,8 +8,8 @@ enum Gimmick
     GIMMICK_ULTRA_BURST,
     GIMMICK_Z_MOVE,
     GIMMICK_DYNAMAX,
-    GIMMICK_TERA,
-    GIMMICKS_COUNT,
+    GIMMICK_TERA
+    #define GIMMICKS_COUNT (GIMMICK_TERA + 1)
 };
 
 struct GimmickInfo

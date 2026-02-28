@@ -8061,8 +8061,6 @@ void TryHazardsOnSwitchIn(u32 battler, u32 side, enum Hazards hazardType)
                 SetDmgHazardsBattlescript(battler, B_MSG_SHARPSTEELDMG);
         }
         break;
-    case HAZARDS_MAX_COUNT:
-        break;
     }
 }
 
