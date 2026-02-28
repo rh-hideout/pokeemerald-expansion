@@ -1521,7 +1521,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         //.iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(Crabominable)
-        SHADOW(-1, 0, SHADOW_SIZE_M)
+        SHADOW(2, 14, SHADOW_SIZE_XL_BATTLE_ONLY)
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sCrabominableLevelUpLearnset,
         .teachableLearnset = sCrabominableTeachableLearnset,
