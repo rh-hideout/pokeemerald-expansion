@@ -2194,7 +2194,6 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
             aiMove = gAiLogicData->switchinCandidate.battleMon.moves[j];
             damageDealt = AI_CalcPartyMonDamage(aiMove, battler, opposingBattler, gAiLogicData->switchinCandidate.battleMon, &effectiveness, AI_ATTACKING);
             hitsToKOPlayer = GetNoOfHitsToKOBattlerDmg(damageDealt, opposingBattler);
-            gBattlerPartyIndexes[battler] = storeCurrBattlerPartyIndex; // Rage Fist fix
 
             // Offensive switchin decisions are based on which whether switchin moves first and whether it can win a 1v1
             isSwitchinFirst = AI_IsPartyMonFaster(battler, opposingBattler, gAiLogicData->switchinCandidate.battleMon, aiMove, bestPlayerMove, CONSIDER_PRIORITY);
@@ -2298,7 +2297,8 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
         if (monMaxDamage == 0)
             invalidMons |= 1u << i;
     }
-
+    gBattlerPartyIndexes[battler] = storeCurrBattlerPartyIndex; // Rage Fist fix
+    
     batonPassId = GetRandomSwitchinWithBatonPass(aliveCount, bits, firstId, lastId, i);
 
     // Different switching priorities depending on switching mid battle vs switching after a KO or slow switch
