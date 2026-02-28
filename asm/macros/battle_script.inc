@@ -1305,7 +1305,7 @@
 	@ Used by effects that may proc Symbiosis but do not call removeitem.
 	.macro trysymbiosis battler:req
 	callnative BS_TrySymbiosis
-    .byte \battler
+	.byte \battler
 	.endm
 
 	@ returns B_SIDE_x to gBattleCommunication[0]
@@ -1460,10 +1460,6 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro trytwoturnmovespowerherbformchange
-	callnative BS_TryTwoTurnMovesPowerHerbFormChange
-	.endm
-
 	.macro tryquash failInstr:req
 	callnative BS_TryQuash
 	.4byte \failInstr
@@ -1520,9 +1516,9 @@
 	.byte \battler
 	.endm
 
-    .macro resetterrainabilityflags
-    callnative BS_ResetTerrainAbilityFlags
-    .endm
+	.macro resetterrainabilityflags
+	callnative BS_ResetTerrainAbilityFlags
+	.endm
 
 	@ Stores Healing Wish effect.
 	.macro storehealingwish battler:req
@@ -2090,20 +2086,6 @@
 	.macro tryhealquarterhealth battler:req, failInstr:req
 	callnative BS_TryHealQuarterHealth
 	.byte \battler
-	.4byte \failInstr
-	.endm
-
-	.macro jumpifunder200 jumpInstr:req
-	callnative BS_JumpIfUnder200
-	.4byte \jumpInstr
-	.endm
-
-	.macro setskydrop
-	callnative BS_SetSkyDrop
-	.endm
-
-	.macro clearskydrop failInstr:req
-	callnative BS_ClearSkyDrop
 	.4byte \failInstr
 	.endm
 

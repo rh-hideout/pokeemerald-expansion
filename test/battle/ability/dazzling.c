@@ -122,8 +122,7 @@ SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail prevent Protean act
     }
 }
 
-// Listed on Bulbapedia as "Moves that target all Pokémon (except Perish Song, Flower Shield, and Rototiller),"
-// Despite the fact that there's only 2 remaining moves from that list, being Haze and Teatime
+// Moves that target the field don't get blocked
 SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail do not block Haze")
 {
     u32 species;
@@ -135,6 +134,7 @@ SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail do not block Haze")
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_HAZE) == EFFECT_HAZE);
+        ASSUME(GetMoveTarget(MOVE_HAZE) == TARGET_FIELD);
         PLAYER(SPECIES_MURKROW) { Ability(ABILITY_PRANKSTER); }
         OPPONENT(species) { Ability(ability); }
     } WHEN {
@@ -143,14 +143,15 @@ SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail do not block Haze")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_HAZE, player);
         NOT ABILITY_POPUP(opponent, ability);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HAZE, player);
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
     }
 }
 
-SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail do not block Teatime")
+// Moves that target all battlers are blocked
+SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail on opponents block Teatime")
 {
     u32 species;
     enum Ability ability;
@@ -161,17 +162,18 @@ SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail do not block Teatim
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TEATIME) == EFFECT_TEATIME);
+        ASSUME(GetMoveTarget(MOVE_TEATIME) == TARGET_ALL_BATTLERS);
         ASSUME(GetItemHoldEffect(ITEM_ORAN_BERRY) == HOLD_EFFECT_RESTORE_HP);
         PLAYER(SPECIES_MURKROW) { Ability(ABILITY_PRANKSTER); Item(ITEM_ORAN_BERRY); HP(75); MaxHP(100); }
         OPPONENT(species) { Ability(ability); Item(ITEM_ORAN_BERRY); HP(75); MaxHP(100); }
     } WHEN {
         TURN { MOVE(player, MOVE_TEATIME); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TEATIME, player);
-        NOT ABILITY_POPUP(opponent, ability);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_TEATIME, player);
+        ABILITY_POPUP(opponent, ability);
     } THEN {
-        EXPECT_EQ(player->item, ITEM_NONE);
-        EXPECT_EQ(opponent->item, ITEM_NONE);
+        EXPECT_NE(player->item, ITEM_NONE);
+        EXPECT_NE(opponent->item, ITEM_NONE);
     }
 }
 

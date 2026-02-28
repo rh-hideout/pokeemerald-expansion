@@ -124,7 +124,7 @@ u32 ChangeStatBuffs(enum BattlerId battler, s8 statValue, enum Stat statId, unio
         }
         else if (!flags.certain
                 && (((battlerAbility == ABILITY_KEEN_EYE || battlerAbility == ABILITY_MINDS_EYE) && statId == STAT_ACC)
-                || (GetConfig(CONFIG_ILLUMINATE_EFFECT) >= GEN_9 && battlerAbility == ABILITY_ILLUMINATE && statId == STAT_ACC)
+                || (GetConfig(B_ILLUMINATE_EFFECT) >= GEN_9 && battlerAbility == ABILITY_ILLUMINATE && statId == STAT_ACC)
                 || (battlerAbility == ABILITY_HYPER_CUTTER && statId == STAT_ATK)
                 || (battlerAbility == ABILITY_BIG_PECKS && statId == STAT_DEF)))
         {
@@ -287,43 +287,43 @@ u32 ChangeStatBuffs(enum BattlerId battler, s8 statValue, enum Stat statId, unio
 #define STATS_TO_CHANGE 0
 bool32 CanAnyStatChange(enum BattlerId battler, enum Ability ability, enum Move move)
 {
-    u32 numAdditionalEffects = GetMoveAdditionalEffectCount(move);
+    // u32 numAdditionalEffects = GetMoveAdditionalEffectCount(move);
 
-    while (gBattleStruct->additionalEffectsCounter < numAdditionalEffects)
-    {
-        while (gBattleStruct->currStatToChange < NUM_STATS)
-        {
-            const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(move, additionalEffectsCounter);
-            u32 stat = gBattleStruct->currStatToChange++;
+    // while (gBattleStruct->additionalEffectsCounter < numAdditionalEffects)
+    // {
+    //     while (gBattleStruct->currStatToChange < NUM_STATS)
+    //     {
+    //         const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(move, gBattleStruct->additionalEffectsCounter);
+    //         u32 stat = gBattleStruct->currStatToChange++;
 
-            if (!IsStatSet(stat, additionalEffect))
-                continue;
+    //         if (!IsStatSet(stat, additionalEffect))
+    //             continue;
 
-            if (IsStatDecreaseEffect(additionalEffect->moveEffect))
-            {
-                if (CompareStat(battler, stat, MIN_STAT_STAGE, CMP_EQUAL, ability))
-                    continue;
+    //         if (IsStatDecreaseEffect(additionalEffect->moveEffect))
+    //         {
+    //             if (CompareStat(battler, stat, MIN_STAT_STAGE, CMP_EQUAL, ability))
+    //                 continue;
 
-                if (!CanStatDecrease())
-                    return FALSE;
+    //             if (!CanStatDecrease())
+    //                 return FALSE;
 
-                gBattleStruct->statsToChange[STATS_TO_CHANGE] |= stat;
-                gBattleStruct->statsToChange[stat] = -1 * stat;
-            }
-            else if (IsStatIncreaseEffect(additionalEffect->moveEffect))
-            {
-                if (CompareStat(battler, stat, MAX_STAT_STAGE, CMP_EQUAL, ability))
-                    continue;
+    //             gBattleStruct->statsToChange[STATS_TO_CHANGE] |= stat;
+    //             gBattleStruct->statsToChange[stat] = -1 * stat;
+    //         }
+    //         else if (IsStatIncreaseEffect(additionalEffect->moveEffect))
+    //         {
+    //             if (CompareStat(battler, stat, MAX_STAT_STAGE, CMP_EQUAL, ability))
+    //                 continue;
 
-                gBattleStruct->statsToChange[STATS_TO_CHANGE] |= stat;
-                gBattleStruct->statsToChange[stat] = stat;
-            }
-        }
+    //             gBattleStruct->statsToChange[STATS_TO_CHANGE] |= stat;
+    //             gBattleStruct->statsToChange[stat] = stat;
+    //         }
+    //     }
 
-        gBattleStruct->additionalEffectsCounter++;
-    }
+    //     gBattleStruct->additionalEffectsCounter++;
+    // }
 
-    return gBattleStruct->positiveStats || gBattleStruct->negativeStas;
+    return gBattleStruct->positiveStats || gBattleStruct->negativeStats;
 }
 
 void ApplyStatChanges(struct BattleContext *ctx, struct StatChange *st)
@@ -847,7 +847,7 @@ static void TryPlayStatChangeAnimation(enum BattlerId battler, enum Ability abil
                     }
                 }
                 else if (!((ability == ABILITY_KEEN_EYE || ability == ABILITY_MINDS_EYE) && currStat == STAT_ACC)
-                        && !(GetConfig(CONFIG_ILLUMINATE_EFFECT) >= GEN_9 && ability == ABILITY_ILLUMINATE && currStat == STAT_ACC)
+                        && !(GetConfig(B_ILLUMINATE_EFFECT) >= GEN_9 && ability == ABILITY_ILLUMINATE && currStat == STAT_ACC)
                         && !(ability == ABILITY_HYPER_CUTTER && currStat == STAT_ATK)
                         && !(ability == ABILITY_BIG_PECKS && currStat == STAT_DEF))
                 {

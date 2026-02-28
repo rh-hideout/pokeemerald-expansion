@@ -95,7 +95,7 @@ static bool32 CheckPartyMonHasHeldItem(enum Item item)
 {
     int i;
 
-    for(i = 0; i < PARTY_SIZE; i++)
+    for (i = 0; i < PARTY_SIZE; i++)
     {
         u16 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
         if (species != SPECIES_NONE && species != SPECIES_EGG && GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM) == item)
@@ -402,22 +402,38 @@ static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, e
     CalculateMonStats(&mon);
 
     // moves
+    bool32 all_default_flag = TRUE;
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        if (moves[i] == MOVE_NONE)
+        if (moves[i] != MOVE_DEFAULT)
+        {
+            all_default_flag = FALSE;
             break;
-        if (moves[i] < MOVES_COUNT)
-        {
-            SetMonMoveSlot(&mon, moves[i], i);
         }
-        else if (moves[i] == MOVE_DEFAULT)
+    }
+    if (all_default_flag)
+    {
+        GiveMonInitialMoveset(&mon);
+    }
+    else
+    {
+        for (i = 0; i < MAX_MON_MOVES; i++)
         {
-            GiveMonDefaultMove(&mon, i);
-            continue;
-        }
-        else
-        {
-            assertf(FALSE, "invalid move: %d", moves[i]) {}
+            if (moves[i] == MOVE_NONE)
+                break;
+            if (moves[i] < MOVES_COUNT)
+            {
+                SetMonMoveSlot(&mon, moves[i], i);
+            }
+            else if (moves[i] == MOVE_DEFAULT)
+            {
+                GiveMonDefaultMove(&mon, i);
+                continue;
+            }
+            else
+            {
+                assertf(FALSE, "invalid move: %d", moves[i]) {}
+            }
         }
     }
 
@@ -495,17 +511,17 @@ u32 ScriptGiveMon(u16 species, u8 level, enum Item item)
 
 void ScrCmd_createmon(struct ScriptContext *ctx)
 {
-    u8 side           = ScriptReadByte(ctx);
-    u8 slot           = ScriptReadByte(ctx);
-    u16 species       = VarGet(ScriptReadHalfword(ctx));
-    u8 level          = VarGet(ScriptReadHalfword(ctx));
+    u8 side            = ScriptReadByte(ctx);
+    u8 slot            = ScriptReadByte(ctx);
+    u16 species        = VarGet(ScriptReadHalfword(ctx));
+    u8 level           = VarGet(ScriptReadHalfword(ctx));
 
-    u32 flags         = ScriptReadWord(ctx);
-    enum Item item    = PARSE_FLAG(0, ITEM_NONE);
-    u8 ball           = PARSE_FLAG(1, ITEM_POKE_BALL);
-    u8 nature         = PARSE_FLAG(2, NATURE_RANDOM);
-    u8 abilityNum     = PARSE_FLAG(3, NUM_ABILITY_PERSONALITY);
-    u8 gender         = PARSE_FLAG(4, MON_GENDER_RANDOM);
+    u32 flags          = ScriptReadWord(ctx);
+    enum Item item     = PARSE_FLAG(0, ITEM_NONE);
+    enum PokeBall ball = PARSE_FLAG(1, BALL_POKE);
+    u8 nature          = PARSE_FLAG(2, NATURE_RANDOM);
+    u8 abilityNum      = PARSE_FLAG(3, NUM_ABILITY_PERSONALITY);
+    u8 gender          = PARSE_FLAG(4, MON_GENDER_RANDOM);
 
     u32 i;
     u16 evs[NUM_STATS];
