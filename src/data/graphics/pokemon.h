@@ -17540,10 +17540,10 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //OW_POKEMON_OBJECT_EVENTS
 
 #if P_GEN_9_MEGA_EVOLUTIONS
-//    const u32 gMonFrontPic_ScraftyMega[] = INCBIN_U32("graphics/pokemon/scrafty/mega/front.4bpp.smol");
-//    const u16 gMonPalette_ScraftyMega[] = INCBIN_U16("graphics/pokemon/scrafty/mega/normal.gbapal");
-//    const u32 gMonBackPic_ScraftyMega[] = INCBIN_U32("graphics/pokemon/scrafty/mega/back.4bpp.smol");
-//    const u16 gMonShinyPalette_ScraftyMega[] = INCBIN_U16("graphics/pokemon/scrafty/mega/shiny.gbapal");
+    const u32 gMonFrontPic_ScraftyMega[] = INCBIN_U32("graphics/pokemon/scrafty/mega/front.4bpp.smol");
+    const u16 gMonPalette_ScraftyMega[] = INCBIN_U16("graphics/pokemon/scrafty/mega/normal.gbapal");
+    const u32 gMonBackPic_ScraftyMega[] = INCBIN_U32("graphics/pokemon/scrafty/mega/back.4bpp.smol");
+    const u16 gMonShinyPalette_ScraftyMega[] = INCBIN_U16("graphics/pokemon/scrafty/mega/shiny.gbapal");
     const u8 gMonIcon_ScraftyMega[] = INCBIN_U8("graphics/pokemon/scrafty/mega/icon.4bpp");
 #if OW_POKEMON_OBJECT_EVENTS && OW_BATTLE_ONLY_FORMS
 //    const u32 gObjectEventPic_ScraftyMega[] = INCBIN_COMP("graphics/pokemon/scrafty/mega/overworld.4bpp");
