@@ -21717,10 +21717,10 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //OW_POKEMON_OBJECT_EVENTS
 
 #if P_GEN_9_MEGA_EVOLUTIONS
-//    const u32 gMonFrontPic_CrabominableMega[] = INCBIN_U32("graphics/pokemon/crabominable/mega/front.4bpp.smol");
-//    const u16 gMonPalette_CrabominableMega[] = INCBIN_U16("graphics/pokemon/crabominable/mega/normal.gbapal");
-//    const u32 gMonBackPic_CrabominableMega[] = INCBIN_U32("graphics/pokemon/crabominable/mega/back.4bpp.smol");
-//    const u16 gMonShinyPalette_CrabominableMega[] = INCBIN_U16("graphics/pokemon/crabominable/mega/shiny.gbapal");
+    const u32 gMonFrontPic_CrabominableMega[] = INCBIN_U32("graphics/pokemon/crabominable/mega/front.4bpp.smol");
+    const u16 gMonPalette_CrabominableMega[] = INCBIN_U16("graphics/pokemon/crabominable/mega/normal.gbapal");
+    const u32 gMonBackPic_CrabominableMega[] = INCBIN_U32("graphics/pokemon/crabominable/mega/back.4bpp.smol");
+    const u16 gMonShinyPalette_CrabominableMega[] = INCBIN_U16("graphics/pokemon/crabominable/mega/shiny.gbapal");
 //    const u8 gMonIcon_CrabominableMega[] = INCBIN_U8("graphics/pokemon/crabominable/mega/icon.4bpp");
 #if OW_POKEMON_OBJECT_EVENTS && OW_BATTLE_ONLY_FORMS
 //    const u32 gObjectEventPic_CrabominableMega[] = INCBIN_COMP("graphics/pokemon/crabominable/mega/overworld.4bpp");
