@@ -16864,10 +16864,10 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //OW_POKEMON_OBJECT_EVENTS
 
 #if P_GEN_9_MEGA_EVOLUTIONS
-//    const u32 gMonFrontPic_ExcadrillMega[] = INCBIN_U32("graphics/pokemon/excadrill/mega/front.4bpp.smol");
-//    const u16 gMonPalette_ExcadrillMega[] = INCBIN_U16("graphics/pokemon/excadrill/mega/normal.gbapal");
-//    const u32 gMonBackPic_ExcadrillMega[] = INCBIN_U32("graphics/pokemon/excadrill/mega/back.4bpp.smol");
-//    const u16 gMonShinyPalette_ExcadrillMega[] = INCBIN_U16("graphics/pokemon/excadrill/mega/shiny.gbapal");
+    const u32 gMonFrontPic_ExcadrillMega[] = INCBIN_U32("graphics/pokemon/excadrill/mega/front.4bpp.smol");
+    const u16 gMonPalette_ExcadrillMega[] = INCBIN_U16("graphics/pokemon/excadrill/mega/normal.gbapal");
+    const u32 gMonBackPic_ExcadrillMega[] = INCBIN_U32("graphics/pokemon/excadrill/mega/back.4bpp.smol");
+    const u16 gMonShinyPalette_ExcadrillMega[] = INCBIN_U16("graphics/pokemon/excadrill/mega/shiny.gbapal");
     const u8 gMonIcon_ExcadrillMega[] = INCBIN_U8("graphics/pokemon/excadrill/mega/icon.4bpp");
 #if OW_POKEMON_OBJECT_EVENTS && OW_BATTLE_ONLY_FORMS
 //    const u32 gObjectEventPic_ExcadrillMega[] = INCBIN_COMP("graphics/pokemon/excadrill/mega/overworld.4bpp");
