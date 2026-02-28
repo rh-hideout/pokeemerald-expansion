@@ -5,6 +5,7 @@
 #include "field_weather.h"
 #include "overworld.h"
 #include "random.h"
+#include "rtc.h"
 #include "script.h"
 #include "constants/weather.h"
 #include "constants/songs.h"
@@ -2451,6 +2452,33 @@ static void UpdateBubbleSprite(struct Sprite *sprite)
         DestroySprite(sprite);
 }
 
+//------------------------------------------------------------------------------
+// WEATHER_DARKNESS
+//------------------------------------------------------------------------------
+
+void Darkness_InitVars(void)
+{
+    gWeatherPtr->initStep = 0;
+    gWeatherPtr->targetColorMapIndex = 3;
+    gWeatherPtr->colorMapStepDelay = 20;
+    Weather_SetBlendCoeffs(8, BASE_SHADOW_INTENSITY); // preserve shadow darkness
+    gWeatherPtr->noShadows = FALSE;
+}
+
+void Darkness_InitAll(void)
+{
+    Darkness_InitVars();
+}
+
+void Darkness_Main(void)
+{
+}
+
+bool8 Darkness_Finish(void)
+{
+    return FALSE;
+}
+
 #undef tScrollXCounter
 #undef tScrollXDir
 #undef tCounter
@@ -2632,6 +2660,7 @@ static u8 TranslateWeatherNum(u8 weather)
     case WEATHER_ABNORMAL:           return WEATHER_ABNORMAL;
     case WEATHER_ROUTE119_CYCLE:     return sWeatherCycleRoute119[gSaveBlock1Ptr->weatherCycleStage];
     case WEATHER_ROUTE123_CYCLE:     return sWeatherCycleRoute123[gSaveBlock1Ptr->weatherCycleStage];
+    case WEATHER_DARKNESS:           return WEATHER_DARKNESS;
     default:                         return WEATHER_NONE;
     }
 }

@@ -19,6 +19,7 @@
 #include "util.h"
 #include "battle_scripts.h"
 #include "random.h"
+#include "rtc.h"
 #include "text.h"
 #include "safari_zone.h"
 #include "sound.h"
@@ -4021,6 +4022,25 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                     effect = TRUE;
                 }
                 break;
+            case WEATHER_DARKNESS:
+                if (!(gBattleWeather & B_WEATHER_DARKNESS))
+                {
+                    gBattleWeather = B_WEATHER_DARKNESS;
+                    gBattleScripting.animArg1 = B_ANIM_DARKNESS;
+                    effect = TRUE;
+                }
+                break;
+            case WEATHER_SUNNY:
+            case WEATHER_SUNNY_CLOUDS:
+            case WEATHER_SHADE:
+                u32 time = GetTimeOfDay();
+                if (time == TIME_NIGHT && !(gBattleWeather & B_WEATHER_DARKNESS))
+                {
+                    gBattleWeather = B_WEATHER_DARKNESS;
+                    gBattleScripting.animArg1 = B_ANIM_DARKNESS;
+                    effect = TRUE;
+                }
+
             }
         }
         if (effect)

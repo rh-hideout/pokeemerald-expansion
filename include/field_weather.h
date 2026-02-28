@@ -224,6 +224,10 @@ void Bubbles_InitVars(void);
 void Bubbles_Main(void);
 void Bubbles_InitAll(void);
 bool8 Bubbles_Finish(void);
+void Darkness_InitVars(void);
+void Darkness_Main(void);
+void Darkness_InitAll(void);
+bool8 Darkness_Finish(void);
 
 u8 GetSavedWeather(void);
 void SetSavedWeather(u32 weather);

@@ -141,6 +141,7 @@ static const struct WeatherCallbacks sWeatherFuncs[] =
     [WEATHER_DROUGHT]            = {Drought_InitVars,       Drought_Main,       Drought_InitAll,       Drought_Finish},
     [WEATHER_DOWNPOUR]           = {Downpour_InitVars,      Thunderstorm_Main,  Downpour_InitAll,      Thunderstorm_Finish},
     [WEATHER_UNDERWATER_BUBBLES] = {Bubbles_InitVars,       Bubbles_Main,       Bubbles_InitAll,       Bubbles_Finish},
+    [WEATHER_DARKNESS]           = {Darkness_InitVars,      Darkness_Main,      Darkness_InitAll,      Darkness_Finish},
 };
 
 void (*const gWeatherPalStateFuncs[])(void) =
@@ -365,6 +366,7 @@ static void FadeInScreenWithWeather(void)
     case WEATHER_RAIN_THUNDERSTORM:
     case WEATHER_DOWNPOUR:
     case WEATHER_SHADE:
+    case WEATHER_DARKNESS:
         if (FadeInScreen_RainShowShade() == FALSE)
         {
             gWeatherPtr->colorMapIndex = 3;
@@ -763,6 +765,7 @@ void FadeScreen(u8 mode, s8 delay)
     case WEATHER_DOWNPOUR:
     case WEATHER_FOG_HORIZONTAL:
     case WEATHER_SHADE:
+    case WEATHER_DARKNESS:
     case WEATHER_DROUGHT:
         useWeatherPal = TRUE;
         break;
@@ -1207,6 +1210,7 @@ static const u8 sWeatherNames[WEATHER_COUNT][24] = {
     [WEATHER_ROUTE119_CYCLE]     = _("ROUTE119 CYCLE"),
     [WEATHER_ROUTE123_CYCLE]     = _("ROUTE123 CYCLE"),
     [WEATHER_FOG]                = _("FOG"),
+    [WEATHER_DARKNESS]           = _("DARKNESS"),
 };
 
 static const u8 sDebugText_WeatherNotDefined[] = _("NOT DEFINED!!!");
