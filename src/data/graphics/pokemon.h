@@ -4976,10 +4976,10 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //OW_POKEMON_OBJECT_EVENTS
 
 #if P_GEN_9_MEGA_EVOLUTIONS
-//    const u32 gMonFrontPic_StarmieMega[] = INCBIN_U32("graphics/pokemon/starmie/mega/front.4bpp.smol");
-//    const u16 gMonPalette_StarmieMega[] = INCBIN_U16("graphics/pokemon/starmie/mega/normal.gbapal");
-//    const u32 gMonBackPic_StarmieMega[] = INCBIN_U32("graphics/pokemon/starmie/mega/back.4bpp.smol");
-//    const u16 gMonShinyPalette_StarmieMega[] = INCBIN_U16("graphics/pokemon/starmie/mega/shiny.gbapal");
+    const u32 gMonFrontPic_StarmieMega[] = INCBIN_U32("graphics/pokemon/starmie/mega/front.4bpp.smol");
+    const u16 gMonPalette_StarmieMega[] = INCBIN_U16("graphics/pokemon/starmie/mega/normal.gbapal");
+    const u32 gMonBackPic_StarmieMega[] = INCBIN_U32("graphics/pokemon/starmie/mega/back.4bpp.smol");
+    const u16 gMonShinyPalette_StarmieMega[] = INCBIN_U16("graphics/pokemon/starmie/mega/shiny.gbapal");
     const u8 gMonIcon_StarmieMega[] = INCBIN_U8("graphics/pokemon/starmie/mega/icon.4bpp");
 #if OW_POKEMON_OBJECT_EVENTS && OW_BATTLE_ONLY_FORMS
 //    const u32 gObjectEventPic_StarmieMega[] = INCBIN_COMP("graphics/pokemon/starmie/mega/overworld.4bpp");
