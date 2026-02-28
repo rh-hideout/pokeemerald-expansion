@@ -550,3 +550,30 @@ AI_SINGLE_BATTLE_TEST("AI uses Sparkling Aria to cure an enemy with Guts")
             TURN { EXPECT_MOVE(opponent, MOVE_SCALD); }
     }
 }
+
+AI_DOUBLE_BATTLE_TEST("AI scores Order Up's stat boost only with Commander")
+{
+    u32 species = SPECIES_NONE;
+    enum Ability ability = ABILITY_NONE;
+    bool32 expectBoost = FALSE;
+
+    PARAMETRIZE { species = SPECIES_TATSUGIRI_CURLY;    ability = ABILITY_COMMANDER;   expectBoost = TRUE; }
+    PARAMETRIZE { species = SPECIES_TATSUGIRI_DROOPY;   ability = ABILITY_COMMANDER;   expectBoost = TRUE; }
+    PARAMETRIZE { species = SPECIES_TATSUGIRI_STRETCHY; ability = ABILITY_COMMANDER;   expectBoost = TRUE; }
+    PARAMETRIZE { species = SPECIES_TATSUGIRI_STRETCHY; ability = ABILITY_STORM_DRAIN; expectBoost = FALSE; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
+        OPPONENT(species) { Ability(ability); }
+        OPPONENT(SPECIES_DONDOZO) { Moves(MOVE_ORDER_UP, MOVE_DRAGON_CLAW); }
+    } WHEN {
+        TURN {
+            if (expectBoost)
+                SCORE_GT(opponentRight, MOVE_ORDER_UP, MOVE_DRAGON_CLAW, target: playerLeft);
+            else
+                SCORE_EQ(opponentRight, MOVE_ORDER_UP, MOVE_DRAGON_CLAW, target: playerLeft);
+        }
+    }
+}
