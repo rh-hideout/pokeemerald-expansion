@@ -7772,22 +7772,22 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
             "of electricity. When it stops limiting\n"
             "itself, it's in the strongest class of\n"
             "electric Pokémon."),
-        //.frontPic = gMonBackPic_CircledQuestionMark,
-        //.frontPicSize = MON_COORDS_SIZE(40, 40),
-        //.frontPicYOffset = 12,
-        //.frontAnimFrames = sAnims_TwoFramePlaceHolder,
+        .frontPic = gMonFrontPic_ZeraoraMega,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
         //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        //.backPic = gMonBackPic_CircledQuestionMark,
-        //.backPicSize = MON_COORDS_SIZE(40, 40),
-        //.backPicYOffset = 12,
+        .backPic = gMonBackPic_ZeraoraMega,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 0,
         //.backAnimId = BACK_ANIM_NONE,
-        //.palette = gMonPalette_CircledQuestionMark,
-        //.shinyPalette = gMonShinyPalette_CircledQuestionMark,
+        .palette = gMonPalette_ZeraoraMega,
+        .shinyPalette = gMonShinyPalette_ZeraoraMega,
         .iconSprite = gMonIcon_ZeraoraMega,
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(Zeraora)
-        //SHADOW(-1, 0, SHADOW_SIZE_M)
+        SHADOW(-3, 12, SHADOW_SIZE_XL_BATTLE_ONLY)
         .isMegaEvolution = TRUE,
         .isMythical = TRUE,
         .isFrontierBanned = TRUE,

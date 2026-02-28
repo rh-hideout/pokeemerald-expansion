@@ -23181,10 +23181,10 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //OW_POKEMON_OBJECT_EVENTS
 
 #if P_GEN_9_MEGA_EVOLUTIONS
-//    const u32 gMonFrontPic_ZeraoraMega[] = INCBIN_U32("graphics/pokemon/zeraora/mega/front.4bpp.smol");
-//    const u16 gMonPalette_ZeraoraMega[] = INCBIN_U16("graphics/pokemon/zeraora/mega/normal.gbapal");
-//    const u32 gMonBackPic_ZeraoraMega[] = INCBIN_U32("graphics/pokemon/zeraora/mega/back.4bpp.smol");
-//    const u16 gMonShinyPalette_ZeraoraMega[] = INCBIN_U16("graphics/pokemon/zeraora/mega/shiny.gbapal");
+    const u32 gMonFrontPic_ZeraoraMega[] = INCBIN_U32("graphics/pokemon/zeraora/mega/front.4bpp.smol");
+    const u16 gMonPalette_ZeraoraMega[] = INCBIN_U16("graphics/pokemon/zeraora/mega/normal.gbapal");
+    const u32 gMonBackPic_ZeraoraMega[] = INCBIN_U32("graphics/pokemon/zeraora/mega/back.4bpp.smol");
+    const u16 gMonShinyPalette_ZeraoraMega[] = INCBIN_U16("graphics/pokemon/zeraora/mega/shiny.gbapal");
     const u8 gMonIcon_ZeraoraMega[] = INCBIN_U8("graphics/pokemon/zeraora/mega/icon.4bpp");
 #if OW_POKEMON_OBJECT_EVENTS && OW_BATTLE_ONLY_FORMS
 //    const u32 gObjectEventPic_ZeraoraMega[] = INCBIN_COMP("graphics/pokemon/zeraora/mega/overworld.4bpp");
