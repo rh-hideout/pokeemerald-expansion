@@ -844,6 +844,15 @@ extern const u8 BattleScript_MetronomeAttackstring[];
 extern const u8 BattleScript_SleepTalkAttackstring[];
 extern const u8 BattleScript_NaturePowerAttackstring[];
 extern const u8 BattleScript_PokemonCantUseTheMove[];
+
+// custom effects
 extern const u8 BattleScript_EffectDarkness[];
+extern const u8 BattleScript_MimeBarrierActivates[];
+extern const u8 BattleScript_NoxiousGasActivates[];
+extern const u8 BattleScript_EclipseActivates[];
+extern const u8 BattleScript_GuidingLightActivates[];
+extern const u8 BattleScript_CursedChantActivates[];
+extern const u8 BattleScript_ShellBurstActivates[];
+extern const u8 BattleScript_PoisonBarbsActivates[];
 
 #endif // GUARD_BATTLE_SCRIPTS_H

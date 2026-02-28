@@ -595,8 +595,9 @@
 #define B_ANIM_SWAP_TO_SUBSTITUTE       54
 #define B_ANIM_SWAP_FROM_SUBSTITUTE     55
 #define B_ANIM_DARKNESS	                56
+#define B_ANIM_MIME_BARRIER             57
 
-#define NUM_B_ANIMS_GENERAL             57
+#define NUM_B_ANIMS_GENERAL             58
 
 // special animations table (sBattleAnims_Special)
 #define B_ANIM_LVL_UP                   0

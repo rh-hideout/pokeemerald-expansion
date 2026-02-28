@@ -5989,6 +5989,7 @@ BattleScript_TargetFormChangeNoPopup:
 	waitanimation
 	handleformchange BS_SCRIPTING, 2
 	jumpifability BS_TARGET, ABILITY_DISGUISE, BattleScript_ApplyDisguiseFormChangeHPLoss
+	jumpifability BS_TARGET, ABILITY_MURKROW_SHIELD, BattleScript_ApplyDisguiseFormChangeHPLoss
 	return
 
 BattleScript_TargetFormChange::
@@ -8953,4 +8954,146 @@ BattleScript_SwapToSubstituteContinue:
 	playanimation BS_SCRIPTING, B_ANIM_SWAP_TO_SUBSTITUTE
 	waitanimation
 BattleScript_SwapToSubstituteReturn:
+	return
+
+BattleScript_MimeBarrierActivates::
+	pause B_WAIT_TIME_SHORT
+	call BattleScript_AbilityPopUp
+	waitstate
+	playanimation BS_ATTACKER, B_ANIM_MIME_BARRIER
+	printstring STRINGID_PKMNRAISEDSPDEF
+	waitmessage B_WAIT_TIME_LONG
+	printstring STRINGID_PKMNRAISEDDEF
+	waitmessage B_WAIT_TIME_LONG
+	end3
+
+BattleScript_CursedChantActivates::
+	savetarget
+	call BattleScript_AbilityPopUp
+	setbyte gBattlerTarget, 0
+BattleScript_CursedChantLoop:
+	jumpiftargetally BattleScript_CursedChantLoopIncrement
+	jumpifabsent BS_TARGET, BattleScript_CursedChantLoopIncrement
+	jumpifvolatile BS_TARGET, VOLATILE_SUBSTITUTE, BattleScript_CursedChantLoopIncrement
+	jumpiftype BS_TARGET, TYPE_GHOST, BattleScript_CursedChantPrevented
+	jumpiftype BS_TARGET, TYPE_DARK, BattleScript_CursedChantPrevented
+BattleScript_CursedChantEffect:
+	copybyte sBATTLER, gBattlerAttacker
+	setstatchanger STAT_SPATK, 1, TRUE
+	statbuffchange BS_TARGET, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_ALLOW_PTR, BattleScript_CursedChantLoopIncrement
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_CHANGE, BattleScript_CursedChantWontDecrease
+	printstring STRINGID_PKMNCUTSSPATKWITH
+BattleScript_CursedChantEffect_WaitString:
+	waitmessage B_WAIT_TIME_LONG
+	saveattacker
+	savetarget
+	copybyte sBATTLER, gBattlerTarget
+	restoreattacker
+	restoretarget
+BattleScript_CursedChantLoopIncrement:
+	addbyte gBattlerTarget, 1
+	jumpifbytenotequal gBattlerTarget, gBattlersCount, BattleScript_CursedChantLoop
+	copybyte sBATTLER, gBattlerAttacker
+	destroyabilitypopup
+	restoretarget
+	restoreattacker
+	pause B_WAIT_TIME_MED
+	end3
+
+BattleScript_CursedChantPrevented::
+	copybyte sBATTLER, gBattlerTarget
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_PKMNPREVENTSSTATLOSSWITH
+	goto BattleScript_CursedChantEffect_WaitString
+
+BattleScript_CursedChantWontDecrease:
+	printstring STRINGID_STATSWONTDECREASE
+	goto BattleScript_CursedChantEffect_WaitString
+
+BattleScript_CursedChantInReverse::
+	copybyte sBATTLER, gBattlerTarget
+	call BattleScript_AbilityPopUpTarget
+	pause B_WAIT_TIME_SHORT
+	modifybattlerstatstage BS_TARGET, STAT_ATK, INCREASE, 1, BattleScript_CursedChantLoopIncrement, ANIM_ON
+	goto BattleScript_CursedChantLoopIncrement
+
+BattleScript_NoxiousGasActivates::
+	savetarget
+	call BattleScript_AbilityPopUp
+	setbyte gBattlerTarget, 0
+BattleScript_NoxiousGasLoop:
+	jumpiftargetally BattleScript_NoxiousGasLoopIncrement
+	jumpifabsent BS_TARGET, BattleScript_NoxiousGasLoopIncrement
+	jumpifvolatile BS_TARGET, VOLATILE_SUBSTITUTE, BattleScript_NoxiousGasLoopIncrement
+	jumpiftype BS_TARGET, TYPE_POISON, BattleScript_NoxiousGasPrevented
+BattleScript_NoxiousGasEffect:
+	copybyte sBATTLER, gBattlerAttacker
+	setstatchanger STAT_DEF, 1, TRUE
+	statbuffchange BS_TARGET, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_ALLOW_PTR, BattleScript_NoxiousGasLoopIncrement
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_CHANGE, BattleScript_NoxiousGasWontDecrease
+	printstring STRINGID_PKMNCUTSDEFENSEWITH
+BattleScript_NoxiousGasEffect_WaitString:
+	waitmessage B_WAIT_TIME_LONG
+	saveattacker
+	savetarget
+	copybyte sBATTLER, gBattlerTarget
+	restoreattacker
+	restoretarget
+BattleScript_NoxiousGasLoopIncrement:
+	addbyte gBattlerTarget, 1
+	jumpifbytenotequal gBattlerTarget, gBattlersCount, BattleScript_NoxiousGasLoop
+	copybyte sBATTLER, gBattlerAttacker
+	destroyabilitypopup
+	restoretarget
+	restoreattacker
+	pause B_WAIT_TIME_MED
+	end3
+
+BattleScript_NoxiousGasPrevented::
+	copybyte sBATTLER, gBattlerTarget
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_PKMNPREVENTSSTATLOSSWITH
+	goto BattleScript_NoxiousGasEffect_WaitString
+
+BattleScript_NoxiousGasWontDecrease:
+	printstring STRINGID_STATSWONTDECREASE
+	goto BattleScript_NoxiousGasEffect_WaitString
+
+BattleScript_NoxiousGasInReverse::
+	copybyte sBATTLER, gBattlerTarget
+	call BattleScript_AbilityPopUpTarget
+	pause B_WAIT_TIME_SHORT
+	modifybattlerstatstage BS_TARGET, STAT_ATK, INCREASE, 1, BattleScript_NoxiousGasLoopIncrement, ANIM_ON
+	goto BattleScript_NoxiousGasLoopIncrement
+
+BattleScript_EclipseActivates::
+	pause B_WAIT_TIME_SHORT
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_PKMNSXDARKNESSENGULFS
+	waitstate
+	playanimation BS_BATTLER_0, B_ANIM_DARKNESS
+	call BattleScript_ActivateWeatherAbilities
+	end3
+
+BattleScript_GuidingLightActivates::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_LIGHTRAISESACCURACY
+	waitmessage B_WAIT_TIME_LONG
+	end3
+
+BattleScript_ShellBurstActivates::
+	call BattleScript_AbilityPopUp
+	pause B_WAIT_TIME_SHORT
+	setsteelsurge BattleScript_ShellBurstRet
+	printstring STRINGID_SHARPSTEELFLOATS
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_ShellBurstRet:
+	copybyte sBATTLER, gBattlerTarget
+	copybyte gBattlerTarget, gBattlerAttacker
+	copybyte gBattlerAttacker, sBATTLER
+	return
+
+BattleScript_PoisonBarbsActivates::
+	call BattleScript_AbilityStatusEffect
+	call BattleScript_HurtAttacker
 	return

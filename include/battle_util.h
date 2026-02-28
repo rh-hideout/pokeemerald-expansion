@@ -38,6 +38,7 @@ enum MoveAbsorbed
     MOVE_ABSORBED_BY_DRAIN_HP_ABILITY,
     MOVE_ABSORBED_BY_STAT_INCREASE_ABILITY,
     MOVE_ABSORBED_BY_BOOST_FLASH_FIRE,
+    MOVE_ABSORBED_BY_HELLFIRE,
 };
 
 enum FieldEffectCases
@@ -290,7 +291,7 @@ u8 GetAttackerObedienceForAction();
 enum HoldEffect GetBattlerHoldEffect(u32 battler);
 enum HoldEffect GetBattlerHoldEffectIgnoreAbility(u32 battler);
 enum HoldEffect GetBattlerHoldEffectIgnoreNegation(u32 battler);
-enum HoldEffect GetBattlerHoldEffectInternal(u32 battler, u32 ability);
+enum HoldEffect GetBattlerHoldEffectInternal(u32 battler, u32 ability, bool32 isJumpScareOnOpposingSide);
 u32 GetBattlerHoldEffectParam(u32 battler);
 bool32 CanBattlerAvoidContactEffects(u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum HoldEffect holdEffectAtk, u32 move);
 bool32 IsMoveMakingContact(u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum HoldEffect holdEffectAtk, u32 move);
@@ -440,5 +441,6 @@ bool32 IsDazzlingAbility(enum Ability ability);
 bool32 IsAllowedToUseBag(void);
 bool32 IsAnyTargetTurnDamaged(u32 battlerAtk);
 bool32 IsMimikyuDisguised(u32 battler);
+bool32 IsHonchkrowShielded(u32 battler);
 
 #endif // GUARD_BATTLE_UTIL_H

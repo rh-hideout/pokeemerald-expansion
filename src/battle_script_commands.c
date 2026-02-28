@@ -1652,19 +1652,25 @@ s32 CalcCritChanceStage(u32 battlerAtk, u32 battlerDef, u32 move, bool32 recordA
     }
     else if (gBattleMons[battlerAtk].volatiles.laserFocus
           || MoveAlwaysCrits(move)
-          || (abilityAtk == ABILITY_MERCILESS && gBattleMons[battlerDef].status1 & STATUS1_PSN_ANY))
+          || (abilityAtk == ABILITY_MERCILESS && gBattleMons[battlerDef].status1 & STATUS1_PSN_ANY)
+          || (abilityAtk == ABILITY_SILENT_HUNTER && gBattleWeather & B_WEATHER_DARKNESS && HasWeatherEffect()))
     {
         critChance = CRITICAL_HIT_ALWAYS;
     }
     else
     {
-        critChance  = (gBattleMons[battlerAtk].volatiles.focusEnergy != 0 ? 2 : 0)
-                    + (gBattleMons[battlerAtk].volatiles.dragonCheer != 0 ? 1 : 0)
-                    + GetMoveCriticalHitStage(move)
-                    + GetHoldEffectCritChanceIncrease(battlerAtk, holdEffectAtk)
-                    + ((B_AFFECTION_MECHANICS == TRUE && GetBattlerAffectionHearts(battlerAtk) == AFFECTION_FIVE_HEARTS) ? 2 : 0)
-                    + (abilityAtk == ABILITY_SUPER_LUCK ? 1 : 0)
-                    + gBattleMons[battlerAtk].volatiles.bonusCritStages;
+        u32 defAlly = BATTLE_PARTNER(battlerDef);
+
+        critChance = (gBattleMons[battlerAtk].volatiles.focusEnergy != 0 ? 2 : 0)
+            + (gBattleMons[battlerAtk].volatiles.dragonCheer != 0 ? 1 : 0)
+            + GetMoveCriticalHitStage(move)
+            + GetHoldEffectCritChanceIncrease(battlerAtk, holdEffectAtk)
+            + ((B_AFFECTION_MECHANICS == TRUE && GetBattlerAffectionHearts(battlerAtk) == AFFECTION_FIVE_HEARTS) ? 2 : 0)
+            + (abilityAtk == ABILITY_SUPER_LUCK ? 1 : 0)
+            + gBattleMons[battlerAtk].volatiles.bonusCritStages;
+
+        if (critChance > 0 && (abilityDef == ABILITY_BAD_LUCK_OMEN || GetBattlerAbility(defAlly) == ABILITY_BAD_LUCK_OMEN))
+            critChance -= 1;
 
         if (critChance >= ARRAY_COUNT(sCriticalHitOdds))
             critChance = ARRAY_COUNT(sCriticalHitOdds) - 1;
@@ -2048,6 +2054,8 @@ static inline bool32 DoesBattlerNegateDamage(u32 battler)
         return FALSE;
     if (ability == ABILITY_DISGUISE && species == SPECIES_MIMIKYU)
         return TRUE;
+    if (ability == ABILITY_MURKROW_SHIELD && species == SPECIES_HONCHKROW)
+        return TRUE;
     if (ability == ABILITY_ICE_FACE && species == SPECIES_EISCUE && GetBattleMoveCategory(gCurrentMove) == DAMAGE_CATEGORY_PHYSICAL)
         return TRUE;
 
@@ -2429,6 +2437,8 @@ static void MoveDamageDataHpUpdate(u32 battler, u32 scriptBattler, const u8 *nex
             GetBattlerPartyState(battler)->changedSpecies = gBattleMons[battler].species;
         if (gBattleMons[battler].species == SPECIES_MIMIKYU_TOTEM_DISGUISED)
             gBattleMons[battler].species = SPECIES_MIMIKYU_BUSTED_TOTEM;
+        else if (gBattleMons[battler].species == SPECIES_HONCHKROW)
+            gBattleMons[battler].species = SPECIES_HONCHKROW_BUSTED;
         else
             gBattleMons[battler].species = SPECIES_MIMIKYU_BUSTED;
         if (GetConfig(B_DISGUISE_HP_LOSS) >= GEN_8)
@@ -5478,8 +5488,10 @@ static void Cmd_isdmgblockedbydisguise(void)
     CMD_ARGS();
 
     if (!IsMimikyuDisguised(gBattlerAttacker)
+     || !IsHonchkrowShielded(gBattlerAttacker)
      || gBattleMons[gBattlerAttacker].volatiles.transformed
-     || !IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_DISGUISE))
+     || !IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_DISGUISE)
+     || !IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_MURKROW_SHIELD))
     {
         gBattlescriptCurrInstr = cmd->nextInstr;
         return;
@@ -5488,7 +5500,9 @@ static void Cmd_isdmgblockedbydisguise(void)
     gBattleScripting.battler = gBattlerAttacker;
     if (GetBattlerPartyState(gBattlerAttacker)->changedSpecies == SPECIES_NONE)
         GetBattlerPartyState(gBattlerAttacker)->changedSpecies = gBattleMons[gBattlerAttacker].species;
-    if (gBattleMons[gBattlerAttacker].species == SPECIES_MIMIKYU_TOTEM_DISGUISED)
+    if (gBattleMons[gBattlerAttacker].species == SPECIES_HONCHKROW)
+        gBattleMons[gBattlerAttacker].species = SPECIES_HONCHKROW_BUSTED;
+    else if (gBattleMons[gBattlerAttacker].species == SPECIES_MIMIKYU_TOTEM_DISGUISED)
         gBattleMons[gBattlerAttacker].species = SPECIES_MIMIKYU_BUSTED_TOTEM;
     else
         gBattleMons[gBattlerAttacker].species = SPECIES_MIMIKYU_BUSTED;
@@ -10308,7 +10322,7 @@ static void TryPlayStatChangeAnimation(u32 battler, enum Ability ability, u32 st
                         break;
                     }
                 }
-                else if (!((ability == ABILITY_KEEN_EYE || ability == ABILITY_MINDS_EYE) && currStat == STAT_ACC)
+                else if (!((ability == ABILITY_KEEN_EYE || ability == ABILITY_MINDS_EYE || ABILITY_GEM_OF_THE_SEA || ABILITY_NOCTURNAL) && currStat == STAT_ACC)
                         && !(GetConfig(B_ILLUMINATE_EFFECT) >= GEN_9 && ability == ABILITY_ILLUMINATE && currStat == STAT_ACC)
                         && !(ability == ABILITY_HYPER_CUTTER && currStat == STAT_ATK)
                         && !(ability == ABILITY_BIG_PECKS && currStat == STAT_DEF))
@@ -10477,7 +10491,7 @@ static u32 ChangeStatBuffs(u32 battler, s8 statValue, enum Stat statId, union St
             return STAT_CHANGE_DIDNT_WORK;
         }
         else if (!flags.certain
-                && (((battlerAbility == ABILITY_KEEN_EYE || battlerAbility == ABILITY_MINDS_EYE) && statId == STAT_ACC)
+                && (((battlerAbility == ABILITY_KEEN_EYE || battlerAbility == ABILITY_MINDS_EYE || ABILITY_GEM_OF_THE_SEA || ABILITY_NOCTURNAL) && statId == STAT_ACC)
                 || (GetConfig(B_ILLUMINATE_EFFECT) >= GEN_9 && battlerAbility == ABILITY_ILLUMINATE && statId == STAT_ACC)
                 || (battlerAbility == ABILITY_HYPER_CUTTER && statId == STAT_ATK)
                 || (battlerAbility == ABILITY_BIG_PECKS && statId == STAT_DEF)))
@@ -13500,10 +13514,14 @@ bool32 DoesSubstituteBlockMove(u32 battlerAtk, u32 battlerDef, u32 move)
 
 bool32 DoesDisguiseBlockMove(u32 battler, u32 move)
 {
-    if (!IsMimikyuDisguised(battler)
+    if ((!IsMimikyuDisguised(battler)
      || gBattleMons[battler].volatiles.transformed
      || (!gProtectStructs[battler].confusionSelfDmg && IsBattleMoveStatus(move))
      || !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_DISGUISE))
+     && (!IsHonchkrowShielded(battler)
+     || gBattleMons[battler].volatiles.transformed
+     || (!gProtectStructs[battler].confusionSelfDmg && IsBattleMoveStatus(move))
+     || !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MURKROW_SHIELD)))
         return FALSE;
     else
         return TRUE;

@@ -1014,6 +1014,7 @@ extern const u8 gBattleAnimGeneral_PowerConstruct[];
 extern const u8 gBattleAnimGeneral_SwapToSubstitute[];
 extern const u8 gBattleAnimGeneral_SwapFromSubstitute[];
 extern const u8 gBattleAnimGeneral_Darkness[];
+extern const u8 gBattleAnimGeneral_MimeBarrier[];
 
 // special animations
 extern const u8 gBattleAnimSpecial_LevelUp[];

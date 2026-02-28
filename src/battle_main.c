@@ -4774,6 +4774,42 @@ u32 GetBattlerTotalSpeedStat(u32 battler, enum Ability ability, enum HoldEffect 
     speed *= gStatStageRatios[gBattleMons[battler].statStages[STAT_SPEED]][0];
     speed /= gStatStageRatios[gBattleMons[battler].statStages[STAT_SPEED]][1];
 
+    u32 side1 = 0;
+    u32 side2 = 0;
+    u32 target1;
+    u32 target2;
+    u32 target3;
+    u32 target4;
+
+    side1 = GetBattlerSide(battler);
+    side2 = (BATTLE_OPPOSITE(GetBattlerPosition(battler))) & BIT_SIDE;
+    target1 = GetBattlerAtPosition(side1);
+    target2 = GetBattlerAtPosition(side1 + BIT_FLANK);
+    target3 = GetBattlerAtPosition(side2);
+    target4 = GetBattlerAtPosition(side2 + BIT_FLANK);
+    u16 abilities[MAX_BATTLERS_COUNT] = { 0 };
+
+    abilities[0] = GetBattlerAbility(target1);
+    abilities[1] = GetBattlerAbility(target2);
+    abilities[2] = GetBattlerAbility(target3);
+    abilities[3] = GetBattlerAbility(target4);
+
+    int i;
+    bool32 chronovisionActive = FALSE;
+
+    for (i = 0; i < gBattlersCount; i++)
+    {
+        if (abilities[i] == ABILITY_CHRONOVISION)
+        {
+            chronovisionActive = TRUE;
+        }
+    }
+
+    if (chronovisionActive && ability != ABILITY_CHRONOVISION)
+    {
+        speed = (speed * 75) / 100;
+    }
+
     // weather abilities
     if (HasWeatherEffect())
     {
@@ -4781,9 +4817,13 @@ u32 GetBattlerTotalSpeedStat(u32 battler, enum Ability ability, enum HoldEffect 
             speed *= 2;
         else if (ability == ABILITY_CHLOROPHYLL && holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA && gBattleWeather & B_WEATHER_SUN)
             speed *= 2;
+        else if (ability == ABILITY_SOLAR_FORCE && holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA && gBattleWeather & B_WEATHER_SUN)
+            speed *= 3;
         else if (ability == ABILITY_SAND_RUSH   && gBattleWeather & B_WEATHER_SANDSTORM)
             speed *= 2;
         else if (ability == ABILITY_SLUSH_RUSH  && (gBattleWeather & (B_WEATHER_HAIL | B_WEATHER_SNOW)))
+            speed *= 2;
+        else if (ability == ABILITY_SHADOW_STEP && (gBattleWeather & (B_WEATHER_DARKNESS)))
             speed *= 2;
     }
 
@@ -4879,6 +4919,10 @@ s32 GetBattleMovePriority(u32 battler, enum Ability ability, u32 move)
         priority++;
     }
     else if (ability == ABILITY_TRIAGE && IsHealingMove(move))
+    {
+        priority += 3;
+    }
+    else if (ability == ABILITY_RAPID_FIST && IsPunchingMove(move))
     {
         priority += 3;
     }
@@ -5855,6 +5899,9 @@ enum Type TrySetAteType(u32 move, u32 battlerAtk, enum Ability attackerAbility)
         break;
     case ABILITY_GALVANIZE:
         ateType = TYPE_ELECTRIC;
+        break;
+    case ABILITY_COMBUSTION:
+        ateType = TYPE_FIRE;
         break;
     default:
         ateType = TYPE_NONE;

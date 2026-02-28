@@ -882,7 +882,7 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_PKMNSXDARKNESSENGULFS]                = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s {B_SCR_ABILITY} plunged the field into darkness!"), //not in gen 5+, ability popup
     [STRINGID_LIGHTRAISESACCURACY]                  = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s {B_SCR_ABILITY} raises their teams' accuracy!"), //not in gen 5+, ability popup
     [STRINGID_DAMPENTERS]                           = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s {B_SCR_ABILITY} humidifies the field!"), //not in gen 5+, ability popup
-    [STRINGID_JUMPSCAREENTERS]                      = COMPOUND_STRING("{B_DEF_TEAM1} team is too scared to use items!"), //not in gen 5+, ability popup
+    [STRINGID_JUMPSCAREENTERS]                      = COMPOUND_STRING("{B_EFF_TEAM1} team is too scared to use items!"), //not in gen 5+, ability popup
     [STRINGID_PKMNCUTSSPATKWITH]                    = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s {B_SCR_ABILITY} cuts {B_DEF_NAME_WITH_PREFIX2}'s Special Attack!"), //not in gen 5+, ability popup
 };
 
