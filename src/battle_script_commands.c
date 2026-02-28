@@ -2898,9 +2898,12 @@ void StealTargetItem(u8 battlerStealer, u8 itemBattler)
     if (GetConfig(B_STEAL_WILD_ITEMS) >= GEN_9
      && !(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_PALACE))
      && GetMoveEffect(gCurrentMove) == EFFECT_STEAL_ITEM
-     && battlerStealer == gBattlerAttacker) // ensure that Pickpocket isn't activating this
+     && battlerStealer == gBattlerAttacker
+     && GetBattlerSide(itemBattler) == B_SIDE_OPPONENT) // ensure that Pickpocket isn't activating this
     {
-        AddBagItem(gLastUsedItem, 1);
+        u8 partyIndex = gBattlerPartyIndexes[itemBattler];
+        gBattleStruct->wildItemStolen[partyIndex] = gLastUsedItem;
+        gBattleStruct->itemLost[B_SIDE_OPPONENT][partyIndex].originalItem = gLastUsedItem;
     }
     else
     {
@@ -13896,6 +13899,7 @@ static void Cmd_handleballthrow(void)
             MarkBattlerForControllerExec(gBattlerAttacker);
             TryBattleFormChange(gBattlerTarget, FORM_CHANGE_END_BATTLE);
             gBattlescriptCurrInstr = BattleScript_SuccessBallThrow;
+            gBattleStruct->caughtMonPartyIndex = gBattlerPartyIndexes[gBattlerTarget];
             struct Pokemon *caughtMon = GetBattlerMon(gBattlerTarget);
             SetMonData(caughtMon, MON_DATA_POKEBALL, &ballId);
 
@@ -13964,6 +13968,7 @@ static void Cmd_handleballthrow(void)
                 }
                 TryBattleFormChange(gBattlerTarget, FORM_CHANGE_END_BATTLE);
                 gBattlescriptCurrInstr = BattleScript_SuccessBallThrow;
+                gBattleStruct->caughtMonPartyIndex = gBattlerPartyIndexes[gBattlerTarget];
                 struct Pokemon *caughtMon = GetBattlerMon(gBattlerTarget);
                 SetMonData(caughtMon, MON_DATA_POKEBALL, &ballId);
 
