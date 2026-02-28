@@ -162,7 +162,7 @@ Directive AsmFile::GetDirective()
 
 // Checks if we're at label that ends with '::'.
 // Returns the name if so and an empty string if not.
-std::string AsmFile::GetGlobalLabel()
+Label AsmFile::GetLabel()
 {
     long start = m_pos;
     long pos = m_pos;
@@ -175,14 +175,57 @@ std::string AsmFile::GetGlobalLabel()
             pos++;
     }
 
-    if (m_buffer[pos] == ':' && m_buffer[pos + 1] == ':')
+    if (m_buffer[pos] == ':')
     {
-        m_pos = pos + 2;
-        ExpectEmptyRestOfLine();
-        return std::string(&m_buffer[start], pos - start);
+        std::string symbol(&m_buffer[start], pos - start);
+        if (m_buffer[pos + 1] == ':')
+        {
+            m_pos = pos + 2;
+            ExpectEmptyRestOfLine();
+            return Label(symbol, Label::global);
+        }
+        else
+        {
+            m_pos = pos + 1;
+            return Label(symbol, Label::local);
+        }
     }
 
-    return std::string();
+    return Label("", Label::none);
+}
+
+std::string AsmFile::PeekSection()
+{
+    long oldPos = m_pos;
+    std::string section;
+
+    SkipWhitespace();
+
+    // TODO: Support 'pushsection', 'popsection', '.previous'.
+    if (CheckForDirective(".bss"))
+    {
+        section = ".bss";
+    }
+    else if (CheckForDirective(".data"))
+    {
+        section = ".data";
+    }
+    else if (CheckForDirective(".rodata"))
+    {
+        section = ".rodata";
+    }
+    else if (CheckForDirective(".text"))
+    {
+        section = ".text";
+    }
+    else if (CheckForDirective(".section"))
+    {
+        SkipWhitespace();
+        section = ReadIdentifier();
+    }
+
+    m_pos = oldPos;
+    return section;
 }
 
 // Skips tabs and spaces.
