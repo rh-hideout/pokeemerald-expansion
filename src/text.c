@@ -545,7 +545,7 @@ void RunTextPrinters(void)
         {
             if (currentPrinter->active)
             {
-                for (u32 repeat = 0; repeat < textRepeats; repeat++)
+                for (u32 repeat = 0; repeat < textRepeats || isInstantText; repeat++)
                 {
                     u32 renderState = RenderFont(currentPrinter);
                     switch (renderState)
@@ -2168,30 +2168,30 @@ u8 GetFontAttribute(u8 fontId, u8 attributeId)
     int result = 0;
     switch (attributeId)
     {
-        case FONTATTR_MAX_LETTER_WIDTH:
-            result = sFontInfos[fontId].maxLetterWidth;
-            break;
-        case FONTATTR_MAX_LETTER_HEIGHT:
-            result = sFontInfos[fontId].maxLetterHeight;
-            break;
-        case FONTATTR_LETTER_SPACING:
-            result = sFontInfos[fontId].letterSpacing;
-            break;
-        case FONTATTR_LINE_SPACING:
-            result = sFontInfos[fontId].lineSpacing;
-            break;
-        case FONTATTR_COLOR_ACCENT:
-            result = sFontInfos[fontId].color.accent;
-            break;
-        case FONTATTR_COLOR_FOREGROUND:
-            result = sFontInfos[fontId].color.foreground;
-            break;
-        case FONTATTR_COLOR_BACKGROUND:
-            result = sFontInfos[fontId].color.background;
-            break;
-        case FONTATTR_COLOR_SHADOW:
-            result = sFontInfos[fontId].color.shadow;
-            break;
+    case FONTATTR_MAX_LETTER_WIDTH:
+        result = sFontInfos[fontId].maxLetterWidth;
+        break;
+    case FONTATTR_MAX_LETTER_HEIGHT:
+        result = sFontInfos[fontId].maxLetterHeight;
+        break;
+    case FONTATTR_LETTER_SPACING:
+        result = sFontInfos[fontId].letterSpacing;
+        break;
+    case FONTATTR_LINE_SPACING:
+        result = sFontInfos[fontId].lineSpacing;
+        break;
+    case FONTATTR_COLOR_ACCENT:
+        result = sFontInfos[fontId].color.accent;
+        break;
+    case FONTATTR_COLOR_FOREGROUND:
+        result = sFontInfos[fontId].color.foreground;
+        break;
+    case FONTATTR_COLOR_BACKGROUND:
+        result = sFontInfos[fontId].color.background;
+        break;
+    case FONTATTR_COLOR_SHADOW:
+        result = sFontInfos[fontId].color.shadow;
+        break;
     }
     return result;
 }
@@ -2789,7 +2789,7 @@ static void SpriteCB_TextCursor(struct Sprite *sprite)
     else
     {
         sprite->sDelay = 8;
-        switch(sprite->sState)
+        switch (sprite->sState)
         {
         case 0:
             sprite->y2 = 0;

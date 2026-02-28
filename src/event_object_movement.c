@@ -266,6 +266,7 @@ static void (*const sMovementTypeCallbacks[])(struct Sprite *) =
     [MOVEMENT_TYPE_NONE] = MovementType_None,
     [MOVEMENT_TYPE_LOOK_AROUND] = MovementType_LookAround,
     [MOVEMENT_TYPE_WANDER_AROUND] = MovementType_WanderAround,
+    [MOVEMENT_TYPE_WANDER_AROUND_SLOWER] = MovementType_WanderAroundSlower,
     [MOVEMENT_TYPE_WANDER_UP_AND_DOWN] = MovementType_WanderUpAndDown,
     [MOVEMENT_TYPE_WANDER_DOWN_AND_UP] = MovementType_WanderUpAndDown,
     [MOVEMENT_TYPE_WANDER_LEFT_AND_RIGHT] = MovementType_WanderLeftAndRight,
@@ -3324,13 +3325,13 @@ u8 LoadPlayerObjectEventPalette(enum Gender gender)
     u16 paletteTag;
     switch (gender)
     {
-        default:
-        case MALE:
-            paletteTag = OBJ_EVENT_PAL_TAG_BRENDAN;
-            break;
-        case FEMALE:
-            paletteTag = OBJ_EVENT_PAL_TAG_MAY;
-            break;
+    default:
+    case MALE:
+        paletteTag = OBJ_EVENT_PAL_TAG_BRENDAN;
+        break;
+    case FEMALE:
+        paletteTag = OBJ_EVENT_PAL_TAG_MAY;
+        break;
     }
     return LoadObjectEventPalette(paletteTag);
 }
@@ -3874,6 +3875,7 @@ u16 GetObjectPaletteTag(u8 palSlot)
 
 movement_type_empty_callback(MovementType_None)
 movement_type_def(MovementType_WanderAround, gMovementTypeFuncs_WanderAround)
+movement_type_def(MovementType_WanderAroundSlower, gMovementTypeFuncs_WanderAroundSlower)
 
 bool8 MovementType_WanderAround_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
@@ -3935,6 +3937,14 @@ bool8 MovementType_WanderAround_Step5(struct ObjectEvent *objectEvent, struct Sp
     ObjectEventSetSingleMovement(objectEvent, sprite, GetWalkNormalMovementAction(objectEvent->movementDirection));
     objectEvent->singleMovementActive = TRUE;
     sprite->sTypeFuncId = 6;
+    return TRUE;
+}
+
+bool8 MovementType_WanderAround_Step5Slower(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    ObjectEventSetSingleMovement(objectEvent, sprite, GetWalkSlowMovementAction(objectEvent->movementDirection));
+    objectEvent->singleMovementActive = TRUE;
+    sprite->data[1] = 6;
     return TRUE;
 }
 
@@ -6748,16 +6758,16 @@ static u8 TryUpdateMovementActionOnStairs(struct ObjectEvent *objectEvent, u8 mo
 
     switch (movementActionId)
     {
-        case MOVEMENT_ACTION_WALK_NORMAL_DOWN:
-            return MOVEMENT_ACTION_WALK_SLOW_STAIRS_DOWN;
-        case MOVEMENT_ACTION_WALK_NORMAL_UP:
-            return MOVEMENT_ACTION_WALK_SLOW_STAIRS_UP;
-        case MOVEMENT_ACTION_WALK_NORMAL_LEFT:
-            return MOVEMENT_ACTION_WALK_SLOW_STAIRS_LEFT;
-        case MOVEMENT_ACTION_WALK_NORMAL_RIGHT:
-            return MOVEMENT_ACTION_WALK_SLOW_STAIRS_RIGHT;
-        default:
-            return movementActionId;
+    case MOVEMENT_ACTION_WALK_NORMAL_DOWN:
+        return MOVEMENT_ACTION_WALK_SLOW_STAIRS_DOWN;
+    case MOVEMENT_ACTION_WALK_NORMAL_UP:
+        return MOVEMENT_ACTION_WALK_SLOW_STAIRS_UP;
+    case MOVEMENT_ACTION_WALK_NORMAL_LEFT:
+        return MOVEMENT_ACTION_WALK_SLOW_STAIRS_LEFT;
+    case MOVEMENT_ACTION_WALK_NORMAL_RIGHT:
+        return MOVEMENT_ACTION_WALK_SLOW_STAIRS_RIGHT;
+    default:
+        return movementActionId;
     }
 }
 
@@ -7474,13 +7484,13 @@ static bool8 DoJumpInPlaceAnim(struct ObjectEvent *objectEvent, struct Sprite *s
 {
     switch (DoJumpAnimStep(objectEvent, sprite))
     {
-        case JUMP_FINISHED:
-            return TRUE;
-        case JUMP_HALFWAY:
-            SetObjectEventDirection(objectEvent, GetOppositeDirection(objectEvent->movementDirection));
-            SetStepAnim(objectEvent, sprite, GetMoveDirectionAnimNum(objectEvent->facingDirection));
-        default:
-            return FALSE;
+    case JUMP_FINISHED:
+        return TRUE;
+    case JUMP_HALFWAY:
+        SetObjectEventDirection(objectEvent, GetOppositeDirection(objectEvent->movementDirection));
+        SetStepAnim(objectEvent, sprite, GetMoveDirectionAnimNum(objectEvent->facingDirection));
+    default:
+        return FALSE;
     }
 }
 
@@ -9590,8 +9600,8 @@ static void UpdateObjectEventVisibility(struct ObjectEvent *objectEvent, struct 
 
 static void UpdateObjectEventOffscreen(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    u16 x, y;
-    u16 x2, y2;
+    s32 x, y;
+    s32 x2, y2;
     const struct ObjectEventGraphicsInfo *graphicsInfo;
 
     objectEvent->offScreen = FALSE;
@@ -9607,15 +9617,17 @@ static void UpdateObjectEventOffscreen(struct ObjectEvent *objectEvent, struct S
         x = sprite->x + sprite->x2 + sprite->centerToCornerVecX;
         y = sprite->y + sprite->y2 + sprite->centerToCornerVecY;
     }
-    x2 = graphicsInfo->width;
-    x2 += x;
-    y2 = y;
-    y2 += graphicsInfo->height;
+    x2 = x + graphicsInfo->width;
+    y2 = y + graphicsInfo->height;
 
-    if ((s16)x >= DISPLAY_WIDTH + 16 || (s16)x2 < -16)
+    s32 minX = -16;
+    if (objectEvent->graphicsId == OBJ_EVENT_GFX_SS_ANNE)
+        minX = -32;
+
+    if (x >= DISPLAY_WIDTH + 16 || x2 < minX)
         objectEvent->offScreen = TRUE;
 
-    if ((s16)y >= DISPLAY_HEIGHT + 16 || (s16)y2 < -16)
+    if (y >= DISPLAY_HEIGHT + 16 || y2 < -16)
         objectEvent->offScreen = TRUE;
 }
 
@@ -10743,7 +10755,7 @@ static bool8 AnimateSpriteInFigure8(struct Sprite *sprite)
 {
     bool8 finished = FALSE;
 
-    switch(sprite->data[7])
+    switch (sprite->data[7])
     {
     case 0:
         sprite->x2 += GetFigure8XOffset(sprite->data[6]);
@@ -10977,7 +10989,7 @@ static void UNUSED DestroyVirtualObjects(void)
     for (i = 0; i < MAX_SPRITES; i++)
     {
         struct Sprite *sprite = &gSprites[i];
-        if(sprite->inUse && sprite->callback == SpriteCB_VirtualObject)
+        if (sprite->inUse && sprite->callback == SpriteCB_VirtualObject)
             DestroySprite(sprite);
     }
 }
@@ -11071,7 +11083,7 @@ void SetVirtualObjectSpriteAnim(u8 virtualObjId, u8 animNum)
 
 static void MoveUnionRoomObjectUp(struct Sprite *sprite)
 {
-    switch(sprite->sAnimState)
+    switch (sprite->sAnimState)
     {
     case 0:
         sprite->y2 = 0;
@@ -11090,14 +11102,14 @@ static void MoveUnionRoomObjectUp(struct Sprite *sprite)
 
 static void MoveUnionRoomObjectDown(struct Sprite *sprite)
 {
-    switch(sprite->sAnimState)
+    switch (sprite->sAnimState)
     {
     case 0:
         sprite->y2 = -DISPLAY_HEIGHT;
         sprite->sAnimState++;
     case 1:
         sprite->y2 += 8;
-        if(sprite->y2 == 0)
+        if (sprite->y2 == 0)
         {
             sprite->sAnimNum = 0;
             sprite->sAnimState = 0;
@@ -11107,7 +11119,7 @@ static void MoveUnionRoomObjectDown(struct Sprite *sprite)
 
 static void VirtualObject_UpdateAnim(struct Sprite *sprite)
 {
-    switch(sprite->sAnimNum)
+    switch (sprite->sAnimNum)
     {
     case UNION_ROOM_SPAWN_IN:
         MoveUnionRoomObjectDown(sprite);
@@ -11288,10 +11300,10 @@ static void ApplyLevitateMovement(u8 taskId)
     LoadWordFromTwoHalfwords((u16*) &task->data[0], (u32 *)&objectEvent); // load the map object pointer.
     sprite = &gSprites[objectEvent->spriteId];
 
-    if(!(task->data[2] & 3))
+    if (!(task->data[2] & 3))
         sprite->y2 += task->data[3];
 
-    if(!(task->data[2] & 15))
+    if (!(task->data[2] & 15))
         task->data[3] = -task->data[3];
 
     task->data[2]++;
@@ -11311,9 +11323,9 @@ void FreezeObjectEventsExceptTwo(u8 objectEventId1, u8 objectEventId2)
 {
     u8 i;
 
-    for(i = 0; i < OBJECT_EVENTS_COUNT; i++)
+    for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
-        if(i != objectEventId1 && i != objectEventId2 &&
+        if (i != objectEventId1 && i != objectEventId2 &&
             gObjectEvents[i].active && i != gPlayerAvatar.objectEventId)
                 FreezeObjectEvent(&gObjectEvents[i]);
     }
@@ -11330,7 +11342,7 @@ u8 MovementAction_FlyUp_Step1(struct ObjectEvent *objectEvent, struct Sprite *sp
 {
     sprite->y2 -= 8;
 
-    if(sprite->y2 == -DISPLAY_HEIGHT)
+    if (sprite->y2 == -DISPLAY_HEIGHT)
         sprite->sActionFuncId++;
     return FALSE;
 }
@@ -11346,7 +11358,7 @@ u8 MovementAction_FlyDown_Step1(struct ObjectEvent *objectEvent, struct Sprite *
 {
     sprite->y2 += 8;
 
-    if(!sprite->y2)
+    if (!sprite->y2)
         sprite->sActionFuncId++;
     return FALSE;
 }

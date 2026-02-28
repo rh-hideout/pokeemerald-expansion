@@ -47,7 +47,7 @@ SINGLE_BATTLE_TEST("Arena Trap doesn't prevent switch outs via moves that switch
     GIVEN {
         ASSUME(GetMoveEffect(move) == effect);
         ASSUME(GetMoveEffect(MOVE_SOAK) == EFFECT_SOAK);
-        WITH_CONFIG(CONFIG_TELEPORT_BEHAVIOR, GEN_8);
+        WITH_CONFIG(B_TELEPORT_BEHAVIOR, GEN_8);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_DIGLETT) { Ability(ABILITY_ARENA_TRAP); }
@@ -113,7 +113,7 @@ SINGLE_BATTLE_TEST("Arena Trap prevents switch outs from Ghost-type Pokémon (Ge
 {
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_SHUPPET, 0) == TYPE_GHOST);
-        WITH_CONFIG(CONFIG_GHOSTS_ESCAPE, GEN_5);
+        WITH_CONFIG(B_GHOSTS_ESCAPE, GEN_5);
         PLAYER(SPECIES_SHUPPET);
         OPPONENT(SPECIES_DIGLETT) { Ability(ABILITY_ARENA_TRAP); }
     } WHEN {
@@ -129,7 +129,7 @@ SINGLE_BATTLE_TEST("Arena Trap doesn't prevent switch outs from Ghost-type Poké
 {
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_SHUPPET, 0) == TYPE_GHOST);
-        WITH_CONFIG(CONFIG_GHOSTS_ESCAPE, GEN_6);
+        WITH_CONFIG(B_GHOSTS_ESCAPE, GEN_6);
         PLAYER(SPECIES_SHUPPET);
         OPPONENT(SPECIES_DIGLETT) { Ability(ABILITY_ARENA_TRAP); }
     } WHEN {

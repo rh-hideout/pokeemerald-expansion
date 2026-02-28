@@ -168,27 +168,27 @@ static void Task_DrawEscalator(u8 taskId)
     // Set tile for each section of the escalator in sequence for current transition stage
     switch (tState)
     {
-        case 0:
-            SetEscalatorMetatile(taskId, gMapHeader.mapLayout->isFrlg ? sEscalatorMetatilesFrlg_BottomNextRail : sEscalatorMetatiles_1F_0, 0);
-            break;
-        case 1:
-            SetEscalatorMetatile(taskId, gMapHeader.mapLayout->isFrlg ? sEscalatorMetatilesFrlg_BottomRail : sEscalatorMetatiles_1F_1, 0);
-            break;
-        case 2:
-            SetEscalatorMetatile(taskId, gMapHeader.mapLayout->isFrlg ? sEscalatorMetatilesFrlg_BottomNext : sEscalatorMetatiles_1F_2, MAPGRID_IMPASSABLE);
-            break;
-        case 3:
-            SetEscalatorMetatile(taskId, gMapHeader.mapLayout->isFrlg ? sEscalatorMetatilesFrlg_Bottom : sEscalatorMetatiles_1F_3, 0);
-            break;
-        case 4:
-            SetEscalatorMetatile(taskId, gMapHeader.mapLayout->isFrlg ? sEscalatorMetatilesFrlg_TopNext : sEscalatorMetatiles_2F_0, MAPGRID_IMPASSABLE);
-            break;
-        case 5:
-            SetEscalatorMetatile(taskId, gMapHeader.mapLayout->isFrlg ? sEscalatorMetatilesFrlg_Top : sEscalatorMetatiles_2F_1, 0);
-            break;
-        case 6:
-            SetEscalatorMetatile(taskId, gMapHeader.mapLayout->isFrlg ? sEscalatorMetatilesFrlg_TopNextRail : sEscalatorMetatiles_2F_2, 0);
-            break;
+    case 0:
+        SetEscalatorMetatile(taskId, gMapHeader.mapLayout->isFrlg ? sEscalatorMetatilesFrlg_BottomNextRail : sEscalatorMetatiles_1F_0, 0);
+        break;
+    case 1:
+        SetEscalatorMetatile(taskId, gMapHeader.mapLayout->isFrlg ? sEscalatorMetatilesFrlg_BottomRail : sEscalatorMetatiles_1F_1, 0);
+        break;
+    case 2:
+        SetEscalatorMetatile(taskId, gMapHeader.mapLayout->isFrlg ? sEscalatorMetatilesFrlg_BottomNext : sEscalatorMetatiles_1F_2, MAPGRID_IMPASSABLE);
+        break;
+    case 3:
+        SetEscalatorMetatile(taskId, gMapHeader.mapLayout->isFrlg ? sEscalatorMetatilesFrlg_Bottom : sEscalatorMetatiles_1F_3, 0);
+        break;
+    case 4:
+        SetEscalatorMetatile(taskId, gMapHeader.mapLayout->isFrlg ? sEscalatorMetatilesFrlg_TopNext : sEscalatorMetatiles_2F_0, MAPGRID_IMPASSABLE);
+        break;
+    case 5:
+        SetEscalatorMetatile(taskId, gMapHeader.mapLayout->isFrlg ? sEscalatorMetatilesFrlg_Top : sEscalatorMetatiles_2F_1, 0);
+        break;
+    case 6:
+        SetEscalatorMetatile(taskId, gMapHeader.mapLayout->isFrlg ? sEscalatorMetatilesFrlg_TopNextRail : sEscalatorMetatiles_2F_2, 0);
+        break;
     }
 
     tState = (tState + 1) & 7;

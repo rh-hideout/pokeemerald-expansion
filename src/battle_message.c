@@ -229,9 +229,8 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_PKMNWASFROZEN]                        = COMPOUND_STRING("{B_EFF_NAME_WITH_PREFIX} was frozen solid!"),
     [STRINGID_PKMNFROZENBY]                         = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s {B_BUFF1} froze {B_EFF_NAME_WITH_PREFIX2} solid!"), //not in gen 5+, ability popup
     [STRINGID_PKMNISFROZEN]                         = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} is frozen solid!"),
-    [STRINGID_PKMNWASDEFROSTED]                     = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} thawed out!"),
-    [STRINGID_PKMNWASDEFROSTED2]                    = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} thawed out!"),
-    [STRINGID_PKMNWASDEFROSTEDBY]                   = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX}'s {B_CURRENT_MOVE} melted the ice!"),
+    [STRINGID_PKMNWASDEFROSTED]                     = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} thawed out!"),
+    [STRINGID_PKMNWASDEFROSTEDBY]                   = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s {B_CURRENT_MOVE} melted the ice!"),
     [STRINGID_PKMNWASPARALYZED]                     = COMPOUND_STRING("{B_EFF_NAME_WITH_PREFIX} is paralyzed, so it may be unable to move!"),
     [STRINGID_PKMNWASPARALYZEDBY]                   = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s {B_BUFF1} paralyzed {B_EFF_NAME_WITH_PREFIX2}, so it may be unable to move!"), //not in gen 5+, ability popup
     [STRINGID_PKMNISPARALYZED]                      = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} couldn't move because it's paralyzed!"),
@@ -282,12 +281,10 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_PKMNSAPPEDBYLEECHSEED]                = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX}'s health is sapped by Leech Seed!"),
     [STRINGID_PKMNFASTASLEEP]                       = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} is fast asleep."),
     [STRINGID_PKMNWOKEUP]                           = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} woke up!"),
-    [STRINGID_PKMNUPROARKEPTAWAKE]                  = COMPOUND_STRING("But the uproar kept {B_SCR_NAME_WITH_PREFIX2} awake!"),
     [STRINGID_PKMNWOKEUPINUPROAR]                   = COMPOUND_STRING("The uproar woke {B_EFF_NAME_WITH_PREFIX2}!"),
     [STRINGID_PKMNCAUSEDUPROAR]                     = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} caused an uproar!"),
     [STRINGID_PKMNMAKINGUPROAR]                     = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} is making an uproar!"),
     [STRINGID_PKMNCALMEDDOWN]                       = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} calmed down."),
-    [STRINGID_PKMNCANTSLEEPINUPROAR]                = COMPOUND_STRING("But {B_DEF_NAME_WITH_PREFIX2} can't sleep in an uproar!"),
     [STRINGID_PKMNSTOCKPILED]                       = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} stockpiled {B_BUFF1}!"),
     [STRINGID_PKMNCANTSLEEPINUPROAR2]               = COMPOUND_STRING("But {B_DEF_NAME_WITH_PREFIX2} can't sleep in an uproar!"),
     [STRINGID_UPROARKEPTPKMNAWAKE]                  = COMPOUND_STRING("But the uproar kept {B_DEF_NAME_WITH_PREFIX2} awake!"),
@@ -379,9 +376,7 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_PKMNHURTSWITH]                        = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} was hurt by {B_DEF_NAME_WITH_PREFIX2}'s {B_BUFF1}!"),
     [STRINGID_PKMNTRACED]                           = COMPOUND_STRING("It traced {B_BUFF1}'s {B_BUFF2}!"),
     [STRINGID_STATSHARPLY]                          = gText_StatSharply,
-    [STRINGID_STATROSE]                             = gText_StatRose,
     [STRINGID_STATHARSHLY]                          = COMPOUND_STRING("harshly "),
-    [STRINGID_STATFELL]                             = gText_StatFell,
     [STRINGID_ATTACKERSSTATROSE]                    = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX}'s {B_BUFF1} {B_BUFF2}rose!"),
     [STRINGID_DEFENDERSSTATROSE]                    = gText_DefendersStatRose,
     [STRINGID_SCRIPTINGSTATROSE]                    = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s {B_BUFF1} {B_BUFF2}rose!"),
@@ -428,7 +423,6 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_TRAINERBLOCKEDBALL]                   = COMPOUND_STRING("The Trainer blocked your Poké Ball!"),
     [STRINGID_DONTBEATHIEF]                         = COMPOUND_STRING("Don't be a thief!"),
     [STRINGID_ITDODGEDBALL]                         = COMPOUND_STRING("It dodged your thrown Poké Ball! This Pokémon can't be caught!"),
-    [STRINGID_YOUMISSEDPKMN]                        = COMPOUND_STRING("You missed the Pokémon!"),
     [STRINGID_PKMNBROKEFREE]                        = COMPOUND_STRING("Oh no! The Pokémon broke free!"),
     [STRINGID_ITAPPEAREDCAUGHT]                     = COMPOUND_STRING("Aww! It appeared to be caught!"),
     [STRINGID_AARGHALMOSTHADIT]                     = COMPOUND_STRING("Aargh! Almost had it!"),
@@ -436,7 +430,6 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_GOTCHAPKMNCAUGHTPLAYER]               = COMPOUND_STRING("Gotcha! {B_DEF_NAME} was caught!{WAIT_SE}{PLAY_BGM MUS_CAUGHT}\p"),
     [STRINGID_GOTCHAPKMNCAUGHTWALLY]                = COMPOUND_STRING("Gotcha! {B_DEF_NAME} was caught!{WAIT_SE}{PLAY_BGM MUS_CAUGHT}{PAUSE 127}"),
     [STRINGID_GIVENICKNAMECAPTURED]                 = COMPOUND_STRING("Would you like to give {B_DEF_NAME} a nickname?"),
-    [STRINGID_PKMNSENTTOPC]                         = COMPOUND_STRING("{B_DEF_NAME} has been sent to {B_PC_CREATOR_NAME} PC!"), //Still used lanette's pc since terminology is different
     [STRINGID_PKMNDATAADDEDTODEX]                   = COMPOUND_STRING("{B_DEF_NAME}'s data has been added to the Pokédex!\p"),
     [STRINGID_ITISRAINING]                          = COMPOUND_STRING("It's raining!"),
     [STRINGID_SANDSTORMISRAGING]                    = COMPOUND_STRING("The sandstorm is raging!"),
@@ -542,13 +535,8 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_ENDUREDSTURDY]                        = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} endured the hit using {B_DEF_ABILITY}!"),
     [STRINGID_POWERHERB]                            = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} became fully charged due to its {B_LAST_ITEM}!"),
     [STRINGID_HURTBYITEM]                           = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} was hurt by the {B_LAST_ITEM}!"),
-    [STRINGID_PSNBYITEM]                            = COMPOUND_STRING("{B_EFF_NAME_WITH_PREFIX} was badly poisoned by the {B_LAST_ITEM}!"),
-    [STRINGID_BRNBYITEM]                            = COMPOUND_STRING("{B_EFF_NAME_WITH_PREFIX} was burned by the {B_LAST_ITEM}!"),
-    [STRINGID_DEFABILITYIN]                         = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX}'s {B_DEF_ABILITY} activates!"),
     [STRINGID_GRAVITYINTENSIFIED]                   = COMPOUND_STRING("Gravity intensified!"),
-    [STRINGID_TARGETIDENTIFIED]                     = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} was identified!"),
     [STRINGID_TARGETWOKEUP]                         = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} woke up!"),
-    [STRINGID_PKMNSTOLEANDATEITEM]                  = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} stole and ate its target's {B_LAST_ITEM}!"),
     [STRINGID_TAILWINDBLEW]                         = COMPOUND_STRING("The Tailwind blew from behind {B_ATK_TEAM2} team!"),
     [STRINGID_PKMNWENTBACK]                         = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} went back to {B_ATK_TRAINER_NAME}!"),
     [STRINGID_PKMNCANTUSEITEMSANYMORE]              = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} can't use items anymore!"),
@@ -557,8 +545,6 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_PKMNSWITCHEDATKANDDEF]                = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} switched its Attack and Defense!"),
     [STRINGID_PKMNSABILITYSUPPRESSED]               = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX}'s Ability was suppressed!"),
     [STRINGID_SHIELDEDFROMCRITICALHITS]             = COMPOUND_STRING("Lucky Chant shielded {B_ATK_TEAM2} team from critical hits!"),
-    [STRINGID_SWITCHEDATKANDSPATK]                  = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} switched all changes to its Attack and Sp. Atk\pwith its target!"),
-    [STRINGID_SWITCHEDDEFANDSPDEF]                  = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} switched all changes to its Defense and Sp. Def\pwith its target!"),
     [STRINGID_PKMNACQUIREDABILITY]                  = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} acquired {B_DEF_ABILITY}!"),
     [STRINGID_POISONSPIKESSCATTERED]                = COMPOUND_STRING("Poison spikes were scattered on the ground all around {B_DEF_TEAM2} team!"),
     [STRINGID_PKMNSWITCHEDSTATCHANGES]              = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} switched stat changes with its target!"),
@@ -566,7 +552,6 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_PKMNLEVITATEDONELECTROMAGNETISM]      = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} levitated with electromagnetism!"),
     [STRINGID_PKMNTWISTEDDIMENSIONS]                = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} twisted the dimensions!"),
     [STRINGID_POINTEDSTONESFLOAT]                   = COMPOUND_STRING("Pointed stones float in the air around {B_DEF_TEAM2} team!"),
-    [STRINGID_CLOAKEDINMYSTICALMOONLIGHT]           = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} became cloaked in mystical moonlight!"),
     [STRINGID_TRAPPEDBYSWIRLINGMAGMA]               = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} became trapped by swirling magma!"),
     [STRINGID_VANISHEDINSTANTLY]                    = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} vanished instantly!"),
     [STRINGID_PROTECTEDTEAM]                        = COMPOUND_STRING("{B_CURRENT_MOVE} protected {B_ATK_TEAM2} team!"),
@@ -578,16 +563,10 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_HELDITEMSLOSEEFFECTS]                 = COMPOUND_STRING("It created a bizarre area in which Pokémon's held items lose their effects!"),
     [STRINGID_FELLSTRAIGHTDOWN]                     = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} fell straight down!"),
     [STRINGID_TARGETCHANGEDTYPE]                    = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} transformed into the {B_BUFF1} type!"),
-    [STRINGID_PKMNACQUIREDSIMPLE]                   = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} acquired Simple!"), //shouldn't directly use the name
     [STRINGID_KINDOFFER]                            = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} took the kind offer!"),
     [STRINGID_RESETSTARGETSSTATLEVELS]              = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX}'s stat changes were removed!"),
     [STRINGID_ALLYSWITCHPOSITION]                   = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} and {B_SCR_NAME_WITH_PREFIX2} switched places!"),
-    [STRINGID_RESTORETARGETSHEALTH]                 = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX}'s HP was restored!"),
-    [STRINGID_TOOKPJMNINTOTHESKY]                   = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} took {B_DEF_NAME_WITH_PREFIX2} into the sky!"),
-    [STRINGID_FREEDFROMSKYDROP]                     = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} was freed from the Sky Drop!"),
-    [STRINGID_POSTPONETARGETMOVE]                   = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX}'s move was postponed!"),
     [STRINGID_REFLECTTARGETSTYPE]                   = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} became the same type as {B_DEF_NAME_WITH_PREFIX2}!"),
-    [STRINGID_TRANSFERHELDITEM]                     = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} received {B_LAST_ITEM} from {B_ATK_NAME_WITH_PREFIX2}"),
     [STRINGID_EMBARGOENDS]                          = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} can use items again!"),
     [STRINGID_ELECTROMAGNETISM]                     = COMPOUND_STRING("electromagnetism"),
     [STRINGID_BUFFERENDS]                           = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s {B_BUFF1} wore off!"),
@@ -624,7 +603,6 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_FRISKACTIVATES]                       = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} frisked {B_DEF_NAME_WITH_PREFIX2} and found its {B_LAST_ITEM}!"),
     [STRINGID_UNNERVEENTERS]                        = COMPOUND_STRING("{B_EFF_TEAM1} team is too nervous to eat Berries!"),
     [STRINGID_HARVESTBERRY]                         = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} harvested its {B_LAST_ITEM}!"),
-    [STRINGID_MAGICBOUNCEACTIVATES]                 = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} bounced the {B_ATK_NAME_WITH_PREFIX2} back!"),
     [STRINGID_PROTEANTYPECHANGE]                    = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX}'s {B_ATK_ABILITY} transformed it into the {B_BUFF1} type!"),
     [STRINGID_SYMBIOSISITEMPASS]                    = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} passed its {B_LAST_ITEM} to {B_EFF_NAME_WITH_PREFIX2} through {B_LAST_ABILITY}!"),
     [STRINGID_STEALTHROCKDMG]                       = COMPOUND_STRING("Pointed stones dug into {B_SCR_NAME_WITH_PREFIX2}!"),
@@ -679,7 +657,6 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_PSYCHICTERRAINPREVENTS]               = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} is protected by the Psychic Terrain!"),
     [STRINGID_SAFETYGOGGLESPROTECTED]               = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} is not affected thanks to its {B_LAST_ITEM}!"),
     [STRINGID_FLOWERVEILPROTECTED]                  = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} surrounded itself with a veil of petals!"),
-    [STRINGID_SWEETVEILPROTECTED]                   = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} can't fall asleep due to a veil of sweetness!"),
     [STRINGID_AROMAVEILPROTECTED]                   = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} is protected by an aromatic veil!"),
     [STRINGID_CELEBRATEMESSAGE]                     = COMPOUND_STRING("Congratulations, {B_PLAYER_NAME}!"),
     [STRINGID_USEDINSTRUCTEDMOVE]                   = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} followed {B_ATK_NAME_WITH_PREFIX2}'s instructions!"),
@@ -805,9 +782,8 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_PKMNGOTFROSTBITE]                     = COMPOUND_STRING("{B_EFF_NAME_WITH_PREFIX} got frostbite!"),
     [STRINGID_PKMNSITEMHEALEDFROSTBITE]             = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s {B_LAST_ITEM} cured its frostbite!"),
     [STRINGID_ATTACKERHEALEDITSFROSTBITE]           = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} cured its frostbite through sheer determination so you wouldn't worry!"),
-    [STRINGID_PKMNFROSTBITEHEALED]                  = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX}'s frostbite was cured!"),
-    [STRINGID_PKMNFROSTBITEHEALED2]                 = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX}'s frostbite was cured!"),
-    [STRINGID_PKMNFROSTBITEHEALEDBY]                = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX}'s {B_CURRENT_MOVE} cured its frostbite!"),
+    [STRINGID_PKMNFROSTBITEHEALED]                  = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s frostbite was cured!"),
+    [STRINGID_PKMNFROSTBITEHEALEDBY]                = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s {B_CURRENT_MOVE} cured its frostbite!"),
     [STRINGID_MIRRORHERBCOPIED]                     = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} used its Mirror Herb to mirror its opponent's stat changes!"),
     [STRINGID_STARTEDSNOW]                          = COMPOUND_STRING("It started to snow!"),
     [STRINGID_SNOWCONTINUES]                        = COMPOUND_STRING("Snow continues to fall."), //not in gen 5+ (lol)
@@ -899,6 +875,8 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_PKMNANGRY]                            = COMPOUND_STRING("{B_OPPONENT_MON1_NAME} is angry!"),
     [STRINGID_PKMNEATING]                           = COMPOUND_STRING("{B_OPPONENT_MON1_NAME} is eating!"),
     [STRINGID_PKMNDISGUISEWASBUSTED]                = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s disguise was busted!"),
+    [STRINGID_ZENMODETRIGGERED]                     = COMPOUND_STRING("{B_SCR_ABILITY} triggered!"),
+    [STRINGID_ZENMODEENDED]                         = COMPOUND_STRING("{B_SCR_ABILITY} ended!"),
 };
 
 const u16 gTrainerUsedItemStringIds[] =
@@ -1212,7 +1190,7 @@ const u16 gGotFrostbiteStringIds[] =
 
 const u16 gFrostbiteHealedStringIds[] =
 {
-    [B_MSG_FROSTBITE_HEALED]         = STRINGID_PKMNFROSTBITEHEALED2,
+    [B_MSG_FROSTBITE_HEALED]         = STRINGID_PKMNFROSTBITEHEALED,
     [B_MSG_FROSTBITE_HEALED_BY_MOVE] = STRINGID_PKMNFROSTBITEHEALEDBY
 };
 
@@ -1224,7 +1202,7 @@ const u16 gGotFrozenStringIds[] =
 
 const u16 gGotDefrostedStringIds[] =
 {
-    [B_MSG_DEFROSTED]         = STRINGID_PKMNWASDEFROSTED2,
+    [B_MSG_DEFROSTED]         = STRINGID_PKMNWASDEFROSTED,
     [B_MSG_DEFROSTED_BY_MOVE] = STRINGID_PKMNWASDEFROSTEDBY
 };
 
@@ -1420,6 +1398,12 @@ const u16 gSpinHazardsStringIds[] =
     [HAZARDS_STEELSURGE] = STRINGID_PKMNBLEWAWAYSHARPSTEEL,
 };
 
+const u16 gZenModeStringIds[] =
+{
+    [B_MSG_ZEN_MODE_TRIGGERED] = STRINGID_ZENMODETRIGGERED,
+    [B_MSG_ZEN_MODE_ENDED] = STRINGID_ZENMODEENDED
+};
+
 const u8 gText_PkmnIsEvolving[] = _("What?\n{STR_VAR_1} is evolving!");
 const u8 gText_CongratsPkmnEvolved[] = _("Congratulations! Your {STR_VAR_1}\nevolved into {STR_VAR_2}!{WAIT_SE}\p");
 const u8 gText_PkmnStoppedEvolving[] = _("Huh? {STR_VAR_1}\nstopped evolving!\p");
@@ -1532,6 +1516,279 @@ static const u8 sText_Opposing2[] = _("the opposing");
 static const u8 sText_EmptyStatus[] = _("$$$$$$$");
 
 static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
+{
+    [B_WIN_MSG] = {
+        .fillValue = PIXEL_FILL(0xF),
+        .fontId = FONT_NORMAL,
+        .x = 0,
+        .y = 1,
+        .speed = 1,
+        .color.foreground = 1,
+        .color.background = 15,
+        .color.accent = 15,
+        .color.shadow = 6,
+    },
+    [B_WIN_ACTION_PROMPT] = {
+        .fillValue = PIXEL_FILL(0xF),
+        .fontId = FONT_NORMAL,
+        .x = 1,
+        .y = 1,
+        .speed = 0,
+        .color.foreground = 1,
+        .color.background = 15,
+        .color.accent = 15,
+        .color.shadow = 6,
+    },
+    [B_WIN_ACTION_MENU] = {
+        .fillValue = PIXEL_FILL(0xE),
+        .fontId = FONT_NORMAL,
+        .x = 0,
+        .y = 1,
+        .speed = 0,
+        .color.foreground = 13,
+        .color.background = 14,
+        .color.accent = 14,
+        .color.shadow = 15,
+    },
+    [B_WIN_MOVE_NAME_1] = {
+        .fillValue = PIXEL_FILL(0xE),
+        .fontId = FONT_NARROW,
+        .x = 0,
+        .y = 1,
+        .speed = 0,
+        .color.foreground = 13,
+        .color.background = 14,
+        .color.accent = 14,
+        .color.shadow = 15,
+    },
+    [B_WIN_MOVE_NAME_2] = {
+        .fillValue = PIXEL_FILL(0xE),
+        .fontId = FONT_NARROW,
+        .x = 0,
+        .y = 1,
+        .speed = 0,
+        .color.foreground = 13,
+        .color.background = 14,
+        .color.accent = 14,
+        .color.shadow = 15,
+    },
+    [B_WIN_MOVE_NAME_3] = {
+        .fillValue = PIXEL_FILL(0xE),
+        .fontId = FONT_NARROW,
+        .x = 0,
+        .y = 1,
+        .speed = 0,
+        .color.foreground = 13,
+        .color.background = 14,
+        .color.accent = 14,
+        .color.shadow = 15,
+    },
+    [B_WIN_MOVE_NAME_4] = {
+        .fillValue = PIXEL_FILL(0xE),
+        .fontId = FONT_NARROW,
+        .x = 0,
+        .y = 1,
+        .speed = 0,
+        .color.foreground = 13,
+        .color.background = 14,
+        .color.accent = 14,
+        .color.shadow = 15,
+    },
+    [B_WIN_PP] = {
+        .fillValue = PIXEL_FILL(0xE),
+        .fontId = FONT_NARROW,
+        .x = 0,
+        .y = 1,
+        .speed = 0,
+        .color.foreground = B_SHOW_EFFECTIVENESS != SHOW_EFFECTIVENESS_NEVER ? 13 : 12,
+        .color.background = 14,
+        .color.accent = 14,
+        .color.shadow = B_SHOW_EFFECTIVENESS != SHOW_EFFECTIVENESS_NEVER ? 15 : 11,
+    },
+    [B_WIN_DUMMY] = {
+        .fillValue = PIXEL_FILL(0xE),
+        .fontId = FONT_NORMAL,
+        .x = 0,
+        .y = 1,
+        .speed = 0,
+        .color.foreground = 13,
+        .color.background = 14,
+        .color.accent = 14,
+        .color.shadow = 15,
+    },
+    [B_WIN_PP_REMAINING] = {
+        .fillValue = PIXEL_FILL(0xE),
+        .fontId = FONT_NORMAL,
+        .x = 2,
+        .y = 1,
+        .speed = 0,
+        .color.foreground = 12,
+        .color.background = 14,
+        .color.accent = 14,
+        .color.shadow = 11,
+    },
+    [B_WIN_MOVE_TYPE] = {
+        .fillValue = PIXEL_FILL(0xE),
+        .fontId = FONT_NARROW,
+        .x = 0,
+        .y = 1,
+        .speed = 0,
+        .color.foreground = 13,
+        .color.background = 14,
+        .color.accent = 14,
+        .color.shadow = 15,
+    },
+    [B_WIN_SWITCH_PROMPT] = {
+        .fillValue = PIXEL_FILL(0xE),
+        .fontId = FONT_NARROW,
+        .x = 0,
+        .y = 1,
+        .speed = 0,
+        .color.foreground = 13,
+        .color.background = 14,
+        .color.accent = 14,
+        .color.shadow = 15,
+    },
+    [B_WIN_YESNO] = {
+        .fillValue = PIXEL_FILL(0xE),
+        .fontId = FONT_NORMAL,
+        .x = 0,
+        .y = 1,
+        .speed = 0,
+        .color.foreground = 13,
+        .color.background = 14,
+        .color.accent = 14,
+        .color.shadow = 15,
+    },
+    [B_WIN_LEVEL_UP_BOX] = {
+        .fillValue = PIXEL_FILL(0xE),
+        .fontId = FONT_NORMAL,
+        .x = 0,
+        .y = 1,
+        .speed = 0,
+        .color.foreground = 13,
+        .color.background = 14,
+        .color.accent = 14,
+        .color.shadow = 15,
+    },
+    [B_WIN_LEVEL_UP_BANNER] = {
+        .fillValue = PIXEL_FILL(0),
+        .fontId = FONT_NORMAL,
+        .x = 32,
+        .y = 1,
+        .speed = 0,
+        .color.foreground = 1,
+        .color.shadow = 2,
+    },
+    [B_WIN_VS_PLAYER] = {
+        .fillValue = PIXEL_FILL(0xE),
+        .fontId = FONT_NORMAL,
+        .x = -1,
+        .y = 1,
+        .speed = 0,
+        .color.foreground = 13,
+        .color.background = 14,
+        .color.accent = 14,
+        .color.shadow = 15,
+    },
+    [B_WIN_VS_OPPONENT] = {
+        .fillValue = PIXEL_FILL(0xE),
+        .fontId = FONT_NORMAL,
+        .x = -1,
+        .y = 1,
+        .speed = 0,
+        .color.foreground = 13,
+        .color.background = 14,
+        .color.accent = 14,
+        .color.shadow = 15,
+    },
+    [B_WIN_VS_MULTI_PLAYER_1] = {
+        .fillValue = PIXEL_FILL(0xE),
+        .fontId = FONT_NORMAL,
+        .x = -1,
+        .y = 1,
+        .speed = 0,
+        .color.foreground = 13,
+        .color.background = 14,
+        .color.accent = 14,
+        .color.shadow = 15,
+    },
+    [B_WIN_VS_MULTI_PLAYER_2] = {
+        .fillValue = PIXEL_FILL(0xE),
+        .fontId = FONT_NORMAL,
+        .x = -1,
+        .y = 1,
+        .speed = 0,
+        .color.foreground = 13,
+        .color.background = 14,
+        .color.accent = 14,
+        .color.shadow = 15,
+    },
+    [B_WIN_VS_MULTI_PLAYER_3] = {
+        .fillValue = PIXEL_FILL(0xE),
+        .fontId = FONT_NORMAL,
+        .x = -1,
+        .y = 1,
+        .speed = 0,
+        .color.foreground = 13,
+        .color.background = 14,
+        .color.accent = 14,
+        .color.shadow = 15,
+    },
+    [B_WIN_VS_MULTI_PLAYER_4] = {
+        .fillValue = PIXEL_FILL(0xE),
+        .fontId = FONT_NORMAL,
+        .x = -1,
+        .y = 1,
+        .speed = 0,
+        .color.foreground = 13,
+        .color.background = 14,
+        .color.accent = 14,
+        .color.shadow = 15,
+    },
+    [B_WIN_VS_OUTCOME_DRAW] = {
+        .fillValue = PIXEL_FILL(0),
+        .fontId = FONT_NORMAL,
+        .x = -1,
+        .y = 1,
+        .speed = 0,
+        .color.foreground = 1,
+        .color.shadow = 6,
+    },
+    [B_WIN_VS_OUTCOME_LEFT] = {
+        .fillValue = PIXEL_FILL(0),
+        .fontId = FONT_NORMAL,
+        .x = -1,
+        .y = 1,
+        .speed = 0,
+        .color.foreground = 1,
+        .color.shadow = 6,
+    },
+    [B_WIN_VS_OUTCOME_RIGHT] = {
+        .fillValue = PIXEL_FILL(0x0),
+        .fontId = FONT_NORMAL,
+        .x = -1,
+        .y = 1,
+        .speed = 0,
+        .color.foreground = 1,
+        .color.shadow = 6,
+    },
+    [B_WIN_MOVE_DESCRIPTION] = {
+        .fillValue = PIXEL_FILL(0xE),
+        .fontId = FONT_NARROW,
+        .x = 0,
+        .y = 1,
+        .letterSpacing = 0,
+        .lineSpacing = 0,
+        .speed = 0,
+        .color.foreground = TEXT_DYNAMIC_COLOR_4,
+        .color.background = TEXT_DYNAMIC_COLOR_5,
+        .color.accent = TEXT_DYNAMIC_COLOR_5,
+        .color.shadow = TEXT_DYNAMIC_COLOR_6,
+    },
+};
+
+static const struct BattleWindowText sTextOnWindowsInfo_KantoTutorial[] =
 {
     [B_WIN_MSG] = {
         .fillValue = PIXEL_FILL(0xF),
@@ -2087,7 +2344,8 @@ static const struct BattleWindowText sTextOnWindowsInfo_Arena[] =
 static const struct BattleWindowText *const sBattleTextOnWindowsInfo[] =
 {
     [B_WIN_TYPE_NORMAL] = sTextOnWindowsInfo_Normal,
-    [B_WIN_TYPE_ARENA]  = sTextOnWindowsInfo_Arena
+    [B_WIN_TYPE_ARENA]  = sTextOnWindowsInfo_Arena,
+    [B_WIN_TYPE_KANTO_TUTORIAL] = sTextOnWindowsInfo_KantoTutorial,
 };
 
 static const u8 sRecordedBattleTextSpeeds[] = {8, 4, 1, 0};
@@ -2733,6 +2991,11 @@ static const u8 *BattleStringGetOpponentNameByTrainerId(u16 trainerId, u8 *text,
             toCpy = GetExpandedPlaceholder(PLACEHOLDER_ID_RIVAL);
         else
             toCpy = GetTrainerNameFromId(trainerId);
+    }
+
+    assertf(DoesStringProperlyTerminate(toCpy, TRAINER_NAME_LENGTH + 1),"Opponent needs a valid name")
+    {
+        return gText_Blank;
     }
 
     return toCpy;

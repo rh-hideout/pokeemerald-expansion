@@ -841,14 +841,22 @@ void FieldEffectScript_LoadTiles(u8 **script)
     (*script) += 4;
 }
 
+static bool32 ShouldFieldEffectBeFogBlended(u8 *script)
+{
+    u32 ptr = FieldEffectScript_ReadWord(&script);
+    if (ptr == (u32)FldEff_TallGrass)
+        return FALSE;
+    return TRUE;
+}
+
 void FieldEffectScript_LoadFadedPalette(u8 **script)
 {
     struct SpritePalette *palette = (struct SpritePalette *)FieldEffectScript_ReadWord(script);
     u32 paletteSlot = LoadSpritePalette(palette);
     (*script) += 4;
     SetPaletteColorMapType(paletteSlot + 16, T1_READ_8(*script));
-    UpdateSpritePaletteWithWeather(paletteSlot, TRUE);
     (*script)++;
+    UpdateSpritePaletteWithWeather(paletteSlot, ShouldFieldEffectBeFogBlended(*script));
 }
 
 void FieldEffectScript_LoadPalette(u8 **script)
@@ -2346,7 +2354,7 @@ void StartLavaridgeGym1FWarp(u8 priority)
 
 static void Task_LavaridgeGym1FWarp(u8 taskId)
 {
-    while(sLavaridgeGym1FWarpEffectFuncs[gTasks[taskId].data[0]](&gTasks[taskId], &gObjectEvents[gPlayerAvatar.objectEventId], &gSprites[gPlayerAvatar.spriteId]));
+    while (sLavaridgeGym1FWarpEffectFuncs[gTasks[taskId].data[0]](&gTasks[taskId], &gObjectEvents[gPlayerAvatar.objectEventId], &gSprites[gPlayerAvatar.spriteId]));
 }
 
 static bool8 LavaridgeGym1FWarpEffect_Init(struct Task *task, struct ObjectEvent *objectEvent, struct Sprite *sprite)
@@ -4192,33 +4200,33 @@ static void Task_MoveDeoxysRock(u8 taskId)
     struct Sprite *sprite = &gSprites[tSpriteId];
     switch (tState)
     {
-        case 0:
-            tCurX = sprite->x << 4;
-            tCurY = sprite->y << 4;
-            tVelocityX = SAFE_DIV(tTargetX * 16 - tCurX, tMoveSteps);
-            tVelocityY = SAFE_DIV(tTargetY * 16 - tCurY, tMoveSteps);
-            tState++;
-            // fallthrough
-        case 1:
-            if (tMoveSteps != 0)
-            {
-                tMoveSteps--;
-                tCurX += tVelocityX;
-                tCurY += tVelocityY;
-                sprite->x = tCurX >> 4;
-                sprite->y = tCurY >> 4;
-            }
-            else
-            {
-                struct ObjectEvent *object = &gObjectEvents[tObjEventId];
-                sprite->x = tTargetX;
-                sprite->y = tTargetY;
-                ShiftStillObjectEventCoords(object);
-                object->triggerGroundEffectsOnStop = TRUE;
-                FieldEffectActiveListRemove(FLDEFF_MOVE_DEOXYS_ROCK);
-                DestroyTask(taskId);
-            }
-            break;
+    case 0:
+        tCurX = sprite->x << 4;
+        tCurY = sprite->y << 4;
+        tVelocityX = SAFE_DIV(tTargetX * 16 - tCurX, tMoveSteps);
+        tVelocityY = SAFE_DIV(tTargetY * 16 - tCurY, tMoveSteps);
+        tState++;
+        // fallthrough
+    case 1:
+        if (tMoveSteps != 0)
+        {
+            tMoveSteps--;
+            tCurX += tVelocityX;
+            tCurY += tVelocityY;
+            sprite->x = tCurX >> 4;
+            sprite->y = tCurY >> 4;
+        }
+        else
+        {
+            struct ObjectEvent *object = &gObjectEvents[tObjEventId];
+            sprite->x = tTargetX;
+            sprite->y = tTargetY;
+            ShiftStillObjectEventCoords(object);
+            object->triggerGroundEffectsOnStop = TRUE;
+            FieldEffectActiveListRemove(FLDEFF_MOVE_DEOXYS_ROCK);
+            DestroyTask(taskId);
+        }
+        break;
     }
 }
 

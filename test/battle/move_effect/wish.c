@@ -12,7 +12,7 @@ SINGLE_BATTLE_TEST("Wish restores 50% of the user's HP when not switching")
     PARAMETRIZE { config = GEN_4; }
     PARAMETRIZE { config = GEN_5; }
     GIVEN {
-        WITH_CONFIG(CONFIG_WISH_HP_SOURCE, config);
+        WITH_CONFIG(B_WISH_HP_SOURCE, config);
         PLAYER(SPECIES_WYNAUT) { HP(50); MaxHP(100); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -30,7 +30,7 @@ SINGLE_BATTLE_TEST("Wish restores 50% of the user's HP when not switching")
 SINGLE_BATTLE_TEST("Wish restores 50% of the user's HP when switching (Gen5+)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_WISH_HP_SOURCE, GEN_5);
+        WITH_CONFIG(B_WISH_HP_SOURCE, GEN_5);
         PLAYER(SPECIES_WYNAUT) { HP(50); MaxHP(100); }
         PLAYER(SPECIES_WOBBUFFET) { HP(100); MaxHP(200); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -50,7 +50,7 @@ SINGLE_BATTLE_TEST("Wish restores 50% of the user's HP when switching (Gen5+)")
 SINGLE_BATTLE_TEST("Wish restores 50% of the recipient's HP when switching (Gen3-4)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_WISH_HP_SOURCE, GEN_4);
+        WITH_CONFIG(B_WISH_HP_SOURCE, GEN_4);
         PLAYER(SPECIES_WYNAUT) { HP(50); MaxHP(100); }
         PLAYER(SPECIES_WOBBUFFET) { HP(100); MaxHP(200); }
         OPPONENT(SPECIES_WOBBUFFET);

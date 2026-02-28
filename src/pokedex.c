@@ -4245,17 +4245,17 @@ static u32 GetMeasurementTextPositions(u32 textElement)
     if (!POKEDEX_PLUS_HGSS)
         return textElement;
 
-    switch(textElement)
+    switch (textElement)
     {
-        case DEX_HEADER_X:
-            return (DEX_HEADER_X + DEX_HGSS_HEADER_X_PADDING);
-        case DEX_Y_TOP:
-            return (DEX_Y_TOP + DEX_HGSS_Y_TOP_PADDING);
-        case DEX_Y_BOTTOM:
-            return (DEX_Y_BOTTOM + DEX_HGSS_Y_BOTTOM_PADDING);
-        default:
-        case DEX_MEASUREMENT_X:
-            return (DEX_MEASUREMENT_X + DEX_HGSS_MEASUREMENT_X_PADDING);
+    case DEX_HEADER_X:
+        return (DEX_HEADER_X + DEX_HGSS_HEADER_X_PADDING);
+    case DEX_Y_TOP:
+        return (DEX_Y_TOP + DEX_HGSS_Y_TOP_PADDING);
+    case DEX_Y_BOTTOM:
+        return (DEX_Y_BOTTOM + DEX_HGSS_Y_BOTTOM_PADDING);
+    default:
+    case DEX_MEASUREMENT_X:
+        return (DEX_MEASUREMENT_X + DEX_HGSS_MEASUREMENT_X_PADDING);
     }
 }
 

@@ -95,7 +95,6 @@ static EWRAM_DATA u32 sBikeCyclingTimer = 0;
 static EWRAM_DATA u8 sSlidingDoorNextFrameCounter = 0;
 static EWRAM_DATA u8 sSlidingDoorFrame = 0;
 static EWRAM_DATA u8 sTutorMoveAndElevatorWindowId = 0;
-static EWRAM_DATA u16 sLilycoveDeptStore_NeverRead = 0;
 static EWRAM_DATA u16 sLilycoveDeptStore_DefaultFloorChoice = 0;
 static EWRAM_DATA struct ListMenuItem *sScrollableMultichoice_ListMenuItem = NULL;
 
@@ -1881,7 +1880,6 @@ void SetDeptStoreFloor(void)
 
 u16 GetDeptStoreDefaultFloorChoice(void)
 {
-    sLilycoveDeptStore_NeverRead = 0;
     sLilycoveDeptStore_DefaultFloorChoice = 0;
 
     if (gSaveBlock1Ptr->dynamicWarp.mapGroup == MAP_GROUP(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_1F))
@@ -1889,23 +1887,18 @@ u16 GetDeptStoreDefaultFloorChoice(void)
         switch (gSaveBlock1Ptr->dynamicWarp.mapNum)
         {
         case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_5F):
-            sLilycoveDeptStore_NeverRead = 0;
             sLilycoveDeptStore_DefaultFloorChoice = 0;
             break;
         case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_4F):
-            sLilycoveDeptStore_NeverRead = 0;
             sLilycoveDeptStore_DefaultFloorChoice = 1;
             break;
         case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_3F):
-            sLilycoveDeptStore_NeverRead = 0;
             sLilycoveDeptStore_DefaultFloorChoice = 2;
             break;
         case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_2F):
-            sLilycoveDeptStore_NeverRead = 0;
             sLilycoveDeptStore_DefaultFloorChoice = 3;
             break;
         case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_1F):
-            sLilycoveDeptStore_NeverRead = 0;
             sLilycoveDeptStore_DefaultFloorChoice = 4;
             break;
         }
@@ -2498,13 +2491,13 @@ void ShowScrollableMultichoice(void)
         task->tTaskId = taskId;
         break;
     case SCROLL_MULTI_SILPHCO_FLOORS:
-        task->tMaxItemsOnScreen = 7;
+        task->tMaxItemsOnScreen = MAX_SCROLL_MULTI_ON_SCREEN;
         task->tNumItems = 12;
         task->tLeft = 1;
         task->tTop = 1;
         task->tWidth = 8;
         task->tHeight = 12;
-        task->tKeepOpenAfterSelect = 0;
+        task->tKeepOpenAfterSelect = FALSE;
         task->tTaskId = taskId;
         task->tScrollOffset = sElevatorScroll;
         task->tSelectedRow = sElevatorCursorPos;
@@ -2672,14 +2665,14 @@ static const u8 *const sScrollableMultichoiceOptions[][MAX_SCROLL_MULTI_LENGTH] 
     },
     [SCROLL_MULTI_BADGES] =
     {
-		gText_Boulderbadge,
-		gText_Cascadebadge,
-		gText_Thunderbadge,
-		gText_Rainbowbadge,
-		gText_Soulbadge,
-		gText_Marshbadge,
-		gText_Volcanobadge,
-		gText_Earthbadge,
+        gText_Boulderbadge,
+        gText_Cascadebadge,
+        gText_Thunderbadge,
+        gText_Rainbowbadge,
+        gText_Soulbadge,
+        gText_Marshbadge,
+        gText_Volcanobadge,
+        gText_Earthbadge,
         gText_Exit,
     },
     [SCROLL_MULTI_SILPHCO_FLOORS] =
@@ -4328,27 +4321,27 @@ static void BufferFanClubTrainerName_(u8 whichLinkTrainer, u8 whichNPCTrainer)
 {
     switch (whichNPCTrainer)
     {
-        case 0:
-            StringCopy(gStringVar1, sText_Wallace);
-            break;
-        case 1:
-            StringCopy(gStringVar1, sText_Steven);
-            break;
-        case 2:
-            StringCopy(gStringVar1, sText_Brawly);
-            break;
-        case 3:
-            StringCopy(gStringVar1, sText_Winona);
-            break;
-        case 4:
-            StringCopy(gStringVar1, sText_Phoebe);
-            break;
-        case 5:
-            StringCopy(gStringVar1, sText_Glacia);
-            break;
-        default:
-            StringCopy(gStringVar1, sText_Wallace);
-            break;
+    case 0:
+        StringCopy(gStringVar1, sText_Wallace);
+        break;
+    case 1:
+        StringCopy(gStringVar1, sText_Steven);
+        break;
+    case 2:
+        StringCopy(gStringVar1, sText_Brawly);
+        break;
+    case 3:
+        StringCopy(gStringVar1, sText_Winona);
+        break;
+    case 4:
+        StringCopy(gStringVar1, sText_Phoebe);
+        break;
+    case 5:
+        StringCopy(gStringVar1, sText_Glacia);
+        break;
+    default:
+        StringCopy(gStringVar1, sText_Wallace);
+        break;
     }
 }
 #endif //FREE_LINK_BATTLE_RECORDS
@@ -4512,8 +4505,8 @@ static void UIEndTask(u8 taskId)
 
 static void UIShowMoveList(u8 taskId)
 {
-    gSpecialVar_0x8008 = gTasks[taskId].tPartyIndex;
-    gSpecialVar_0x8009 = gTasks[taskId].tMove;
+    gSpecialVar_0x8000 = gTasks[taskId].tPartyIndex;
+    gSpecialVar_0x8001 = gTasks[taskId].tMove;
     DestroyTask(taskId);
     ShowSelectMovePokemonSummaryScreen(gPlayerParty, gTasks[taskId].tPartyIndex, CB2_ReturnToFieldWhileLearningMove, gTasks[taskId].tMove);
 }
@@ -4568,8 +4561,8 @@ static void Task_ReturnToFieldWhileLearningMove(u8 taskId)
     {
         gTasks[taskId].func = Task_LearnMove;
         gTasks[taskId].tState = GetLearnMoveResumeAfterSummaryScreenState();
-        gTasks[taskId].tPartyIndex = gSpecialVar_0x8008;
-        gTasks[taskId].tMove = gSpecialVar_0x8009;
+        gTasks[taskId].tPartyIndex = gSpecialVar_0x8000;
+        gTasks[taskId].tMove = gSpecialVar_0x8001;
     }
 }
 
@@ -4630,18 +4623,18 @@ u8 GetLeadMonFriendship(void)
         return 0;
 }
 
-u16 GetFirstPartnerMove(u16 species)
+enum Move GetFirstPartnerMove(u16 species)
 {
-    switch(species)
+    switch (species)
     {
-        case SPECIES_VENUSAUR:
-            return MOVE_FRENZY_PLANT;
-        case SPECIES_CHARIZARD:
-            return MOVE_BLAST_BURN;
-        case SPECIES_BLASTOISE:
-            return MOVE_HYDRO_CANNON;
-        default:
-            return MOVE_NONE;
+    case SPECIES_VENUSAUR:
+        return MOVE_FRENZY_PLANT;
+    case SPECIES_CHARIZARD:
+        return MOVE_BLAST_BURN;
+    case SPECIES_BLASTOISE:
+        return MOVE_HYDRO_CANNON;
+    default:
+        return MOVE_NONE;
     }
 }
 
@@ -4663,19 +4656,19 @@ bool8 CapeBrinkGetMoveToTeachLeadPokemon(void)
         return FALSE;
 
     moveId = GetFirstPartnerMove(GetMonData(leadMon, MON_DATA_SPECIES_OR_EGG));
-    switch(moveId)
+    switch (moveId)
     {
-        case MOVE_FRENZY_PLANT:
-            tutorFlag = FLAG_TUTOR_FRENZY_PLANT;
-            break;
-        case MOVE_BLAST_BURN:
-            tutorFlag = FLAG_TUTOR_BLAST_BURN;
-            break;
-        case MOVE_HYDRO_CANNON:
-            tutorFlag = FLAG_TUTOR_HYDRO_CANNON;
-            break;
-        default:
-            return FALSE;
+    case MOVE_FRENZY_PLANT:
+        tutorFlag = FLAG_TUTOR_FRENZY_PLANT;
+        break;
+    case MOVE_BLAST_BURN:
+        tutorFlag = FLAG_TUTOR_BLAST_BURN;
+        break;
+    case MOVE_HYDRO_CANNON:
+        tutorFlag = FLAG_TUTOR_HYDRO_CANNON;
+        break;
+    default:
+        return FALSE;
     }
 
     StringCopy(gStringVar2, gMovesInfo[moveId].name);
@@ -4697,15 +4690,15 @@ bool8 HasLearnedAllMovesFromCapeBrinkTutor(void)
     // 8005 is set by CapeBrinkGetMoveToTeachLeadPokemon
     switch (gSpecialVar_0x8005)
     {
-        case MOVE_FRENZY_PLANT:
-            FlagSet(FLAG_TUTOR_FRENZY_PLANT);
-            break;
-        case MOVE_BLAST_BURN:
-            FlagSet(FLAG_TUTOR_BLAST_BURN);
-            break;
-        case MOVE_HYDRO_CANNON:
-            FlagSet(FLAG_TUTOR_HYDRO_CANNON);
-            break;
+    case MOVE_FRENZY_PLANT:
+        FlagSet(FLAG_TUTOR_FRENZY_PLANT);
+        break;
+    case MOVE_BLAST_BURN:
+        FlagSet(FLAG_TUTOR_BLAST_BURN);
+        break;
+    case MOVE_HYDRO_CANNON:
+        FlagSet(FLAG_TUTOR_HYDRO_CANNON);
+        break;
     }
 
     return (FlagGet(FLAG_TUTOR_FRENZY_PLANT) == TRUE)

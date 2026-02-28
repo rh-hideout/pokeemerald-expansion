@@ -113,16 +113,21 @@
 #define B_TELEPORT_BEHAVIOR         GEN_LATEST // In LGPE onwards (Gen8+ here), Teleport allows the user to swap out with another party member.
 #define B_BEAT_UP                   GEN_LATEST // In Gen5+, Beat Up uses a different formula to calculate its damage, and deals Dark-type damage. Prior to Gen 5, each hit also announces the party member's name.
 #define B_DARK_VOID_FAIL            GEN_LATEST // In Gen7+, only Darkrai can use Dark Void.
-#define B_BURN_HIT_THAW             GEN_LATEST // In Gen6+, damaging moves with a chance of burn will thaw the target, regardless if they're fire-type moves or not.
+#define B_HIT_THAW                  GEN_LATEST // In Gen6+, damaging moves that thaw the user will thaw the target. In Gen 3+, Fire-type moves thaw the target. In Gen 1-2, damaging moves that can burn will thaw the target, regardless if they can be burned or not.
 #define B_HEALING_WISH_SWITCH       GEN_LATEST // In Gen5+, the mon receiving Healing Wish is sent out at the end of the turn.
                                                // Additionally, in gen8+ the Healing Wish's effect will be stored until the user switches into a statused or hurt mon.
 #define B_DEFOG_EFFECT_CLEARING     GEN_LATEST // In Gen5+, Defog does not lower Evasion of target behind Subsitute. In Gen6+, Defog clears Spikes, Toxic Spikes, Stealth Rock and Sticky Web from both sides. In Gen8+, Defog also clears active Terrain.
 #define B_STOCKPILE_RAISES_DEFS     GEN_LATEST // In Gen4+, Stockpile also raises Defense and Sp. Defense stats. Once Spit Up / Swallow is used, these stat changes are lost.
+#define B_TRANSFORM_SEMI_INV_FAIL   GEN_LATEST // In Gen2+, Transform fails if the target is semi-invulnerable.
+#define B_TRANSFORM_TARGET_FAIL     GEN_LATEST // In Gen2+, Transform fails if the target is already transformed.
+#define B_TRANSFORM_USER_FAIL       GEN_LATEST // In Gen5+, Transform fails if the user is already transformed.
+#define B_TRANSFORM_SUBSTITUTE_FAIL GEN_LATEST // In Gen5+, Transform fails if the target is behind a Substitute.
 #define B_TRANSFORM_SHINY           GEN_LATEST // In Gen4+, Transform will copy the shiny state of the opponent instead of maintaining its own shiny state.
 #define B_TRANSFORM_FORM_CHANGES    GEN_LATEST // In Gen5+, Transformed Pokemon cannot change forms.
 #define B_WIDE_GUARD                GEN_LATEST // In Gen5 only, Wide Guard has a chance to fail if used consecutively.
 #define B_QUICK_GUARD               GEN_LATEST // In Gen5 only, Quick Guard has a chance to fail if used consecutively.
 #define B_IMPRISON                  GEN_LATEST // In Gen5+, Imprison doesn't fail if opposing pokemon don't have any moves the user knows.
+#define B_TAUNT_ME_FIRST            GEN_LATEST // In Gen5+, Taunt does not block Me First.
 #define B_ALLY_SWITCH_FAIL_CHANCE   GEN_LATEST // In Gen9+, using Ally Switch consecutively decreases the chance of success for each consecutive use.
 #define B_SKETCH_BANS               GEN_LATEST // In Gen9+, Sketch is unable to copy more moves than in previous generations.
 #define B_KNOCK_OFF_REMOVAL         GEN_LATEST // In Gen5+, Knock Off removes the foe's item instead of rendering it unusable.
@@ -149,7 +154,8 @@
 #define B_COUNTER_MIRROR_COAT_ALLY  GEN_LATEST // In Gen5+, an ally's attack does not count for uses of Counter/Mirror Coat/Metal Burst. In Gen4-, if the last attack taken was from an ally, Counter/Mirror Coat/Metal Burst would fail.
 #define B_COUNTER_TRY_HIT_PARTNER   GEN_LATEST // In Gen5+, if the user of the last attack is not on the field, it will be redirected to the partner. In Gen4-, Counter/Mirror Coat/Metal Burst would fail.
 #define B_RAGE_BUILDS               GEN_LATEST // In Gen4+, Rage's effect only sets in when it successfully hits. In Gen3, Rage's effect sets in regardless of whether it hits, misses or fails.
-#define B_CHECK_USER_FAILURE        GEN_LATEST // In Gen5+, The user no longer checks it's own failure, e.g. Soundproof will not block it's own Perish Song             
+#define B_CHECK_USER_FAILURE        GEN_LATEST // In Gen5+, The user no longer checks it's own failure, e.g. Soundproof will not block it's own Perish Song
+#define B_ABSORB_MESSAGE            GEN_LATEST // In Gen5+, No absorb message is played if user is already at full hp.
 
 // Ability settings
 #define B_GALE_WINGS                GEN_LATEST // In Gen7+ requires full HP to trigger.
@@ -183,6 +189,7 @@
 #define B_ATE_MULTIPLIER            GEN_LATEST // In Gen7+, -ate abilities (Aerilate, Galvanize, Normalize, Pixilate, Refrigerate) multiply damage by 1.2. Otherwise, it's 1.3, except Normalize which has no multiplier.
 #define B_DEFIANT_STICKY_WEB        GEN_LATEST // In Gen9+, Defiant activates on Sticky Web regardless of who set it up. In Gen8, Defiant does not activate on Sticky Web set up by an ally after Court Change swaps its side.
 #define B_POWDER_OVERCOAT           GEN_LATEST // In Gen6+, Overcoat blocks powder and spore moves from affecting the user.
+#define B_INFILTRATOR_SUBSTITUTE    GEN_LATEST // In Gen6+, Infiltrator bypasses Substitute when using a move, excluding Transform and Sky Drop.
 
 // Various volatile timers
 #define B_CONFUSION_TURNS    5

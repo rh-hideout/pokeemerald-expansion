@@ -21,8 +21,8 @@ WILD_BATTLE_TEST("Capture: Incapacitated catch bonus apply correcly with all gen
     PARAMETRIZE(expectedOdds = 125, status = STATUS1_FREEZE, gen = GEN_5);
 
     GIVEN {
-        WITH_CONFIG(CONFIG_INCAPACITATED_CATCH_BONUS, gen);
-        WITH_CONFIG(CONFIG_MISSING_BADGE_CATCH_MALUS, GEN_7);
+        WITH_CONFIG(B_INCAPACITATED_CATCH_BONUS, gen);
+        WITH_CONFIG(B_MISSING_BADGE_CATCH_MALUS, GEN_7);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_CLEFFA) {Status1(status);}
     } WHEN {
@@ -52,8 +52,8 @@ WILD_BATTLE_TEST("Capture: Low level catch bonus apply correcly with all gen con
     PARAMETRIZE(expectedOdds = 50, level = 30, gen = GEN_9);
 
     GIVEN {
-        WITH_CONFIG(CONFIG_LOW_LEVEL_CATCH_BONUS, gen);
-        WITH_CONFIG(CONFIG_MISSING_BADGE_CATCH_MALUS, GEN_7);
+        WITH_CONFIG(B_LOW_LEVEL_CATCH_BONUS, gen);
+        WITH_CONFIG(B_MISSING_BADGE_CATCH_MALUS, GEN_7);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_CLEFFA) {Level(level);}
     } WHEN {
@@ -89,7 +89,7 @@ WILD_BATTLE_TEST("Capture: Missing badge malus apply correcly in gen 8")
             else
                 FlagClear(FLAG_BADGE01_GET + j);
         }
-        WITH_CONFIG(CONFIG_MISSING_BADGE_CATCH_MALUS, GEN_8);
+        WITH_CONFIG(B_MISSING_BADGE_CATCH_MALUS, GEN_8);
         PLAYER(SPECIES_WOBBUFFET) {Level(playerLevel);}
         OPPONENT(SPECIES_CLEFFA);
     } WHEN {
@@ -126,7 +126,7 @@ WILD_BATTLE_TEST("Capture: Missing badge malus apply correcly in gen 9")
             else
                 FlagClear(FLAG_BADGE01_GET + j);
         }
-        WITH_CONFIG(CONFIG_MISSING_BADGE_CATCH_MALUS, GEN_9);
+        WITH_CONFIG(B_MISSING_BADGE_CATCH_MALUS, GEN_9);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_CLEFFA)  {Level(level);};
     } WHEN {
@@ -155,8 +155,8 @@ WILD_BATTLE_TEST("Capture: when CRITICAL_CAPTURE_IF_OWNED is enabled, capture of
         ASSUME(gSpeciesInfo[SPECIES_CATERPIE].catchRate > 155);
         if (alreadyOwned)
             GetSetPokedexFlag(SPECIES_CATERPIE, FLAG_SET_CAUGHT);
-        WITH_CONFIG(CONFIG_MISSING_BADGE_CATCH_MALUS, GEN_7);
-        WITH_CONFIG(CONFIG_CRITICAL_CAPTURE_IF_OWNED, GEN_9);
+        WITH_CONFIG(B_MISSING_BADGE_CATCH_MALUS, GEN_7);
+        WITH_CONFIG(B_CRITICAL_CAPTURE_IF_OWNED, GEN_9);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_CATERPIE);
     } WHEN {
@@ -189,8 +189,8 @@ WILD_BATTLE_TEST("Capture: when CRITICAL_CAPTURE_IF_OWNED is enabled, failed cap
 
     GIVEN {
         GetSetPokedexFlag(SPECIES_CATERPIE, FLAG_SET_CAUGHT);
-        WITH_CONFIG(CONFIG_MISSING_BADGE_CATCH_MALUS, GEN_7);
-        WITH_CONFIG(CONFIG_CRITICAL_CAPTURE_IF_OWNED, GEN_9);
+        WITH_CONFIG(B_MISSING_BADGE_CATCH_MALUS, GEN_7);
+        WITH_CONFIG(B_CRITICAL_CAPTURE_IF_OWNED, GEN_9);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_CATERPIE);
     } WHEN {

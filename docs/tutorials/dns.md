@@ -67,3 +67,46 @@ A: Shadows can be disabled for certain locations by modifying the `CurrentMapHas
 
 ### Q: How do I change the default light-blend color?
 A: The default color is handled by the `#define DEFAULT_LIGHT_COLOR` in `src/palette.c`.
+
+### Q. How do I use alternate nighttime palettes?
+
+In addition to palette tinting, the DNS allows tilesets to define alternate nighttime palettes.
+These palettes are automatically blended with their corresponding daytime palettes with the passage of time.
+
+Each tileset has `16` total palette slots. `3` of the BG palettes (`13 - 15`) are reserved for the UI leaving `13` (`0-12`) usable for tilesets. Because primary tilesets load `6` (`NUM_PALS_IN_PRIMARY`) palettes (`0-5`) and secondary Tilesets load `7` palettes (6-12), some slots are unused for each. DNS repurposes these unused slots to store alternate nighttime palettes.
+
+To avoid overlap with active palettes, each nighttime palette is stored in a different slot determined by the formula: `night_pal = (day_pal + 9) % 16`
+
+**Day palette index vs. Night palette index**
+
+| Day | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 |
+|-----|---|---|---|---|---|---|---|---|---|----|----|----|----|----|----|----|
+| Night | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
+
+
+For instance, in a secondary Tileset (slots `6-12`), the nighttime palettes for index `8` would be stored at index `1` (which is unused in a secondary tileset). Slots `0` and `13-15` are not used for blending so the corresponding slots `9` and `6-8` are never used for nighttime palettes.
+
+_Note that palette `0` is not used for blending._
+
+Once the appropriate nighttime `.pal` file has been added, add a `swapPalettes` field to the tileset struct definition in `src/data/tilesets/headers.h`. The macro `SWAP_PAL(x)` is provided for this purpose.
+
+`swapPalettes` is a bitmask so to use nighttime palettes for indices 7 and 9 in the Petalburg Tileset we add a `swapPalettes` with `SWAP_PAL(7) | SWAP_PAL(9)`. 
+
+Note that the palette index to specify here is the palette index that you want to swap at night (**NOT** the corresponding nighttime palette).
+
+```diff
+const struct Tileset gTileset_Petalburg =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_Petalburg,
++   .swapPalettes = SWAP_PAL(7) | SWAP_PAL(9), // Enable nighttime variants for slots 7 and 9
+    .palettes = gTilesetPalettes_Petalburg,
+    .metatiles = gMetatiles_Petalburg,
+    .metatileAttributes = gMetatileAttributes_Petalburg,
+    .callback = InitTilesetAnim_Petalburg,
+};
+```
+
+
+

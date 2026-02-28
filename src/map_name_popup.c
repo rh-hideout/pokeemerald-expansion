@@ -637,16 +637,16 @@ static void LoadMapNamePopUpWindowBg(void)
         popUpThemeId = sRegionMapSectionId_To_PopUpThemeIdMapping_BW[regionMapSectionId];
         switch (popUpThemeId)
         {
-            // add additional gen 5-style pop-up themes as cases here
-            default: // MAPPOPUP_THEME_BW_DEFAULT
-                if (OW_POPUP_BW_COLOR == OW_POPUP_BW_COLOR_WHITE)
-                    LoadPalette(sMapPopUpTilesPalette_BW_White, BG_PLTT_ID(14), sizeof(sMapPopUpTilesPalette_BW_White));
-                else
-                    LoadPalette(sMapPopUpTilesPalette_BW_Black, BG_PLTT_ID(14), sizeof(sMapPopUpTilesPalette_BW_Black));
+        // add additional gen 5-style pop-up themes as cases here
+        default: // MAPPOPUP_THEME_BW_DEFAULT
+            if (OW_POPUP_BW_COLOR == OW_POPUP_BW_COLOR_WHITE)
+                LoadPalette(sMapPopUpTilesPalette_BW_White, BG_PLTT_ID(14), sizeof(sMapPopUpTilesPalette_BW_White));
+            else
+                LoadPalette(sMapPopUpTilesPalette_BW_Black, BG_PLTT_ID(14), sizeof(sMapPopUpTilesPalette_BW_Black));
 
-                CopyToWindowPixelBuffer(popupWindowId, sMapPopUpTilesPrimary_BW, sizeof(sMapPopUpTilesPrimary_BW), 0);
-                CopyToWindowPixelBuffer(secondaryPopUpWindowId, sMapPopUpTilesSecondary_BW, sizeof(sMapPopUpTilesSecondary_BW), 0);
-                break;
+            CopyToWindowPixelBuffer(popupWindowId, sMapPopUpTilesPrimary_BW, sizeof(sMapPopUpTilesPrimary_BW), 0);
+            CopyToWindowPixelBuffer(secondaryPopUpWindowId, sMapPopUpTilesSecondary_BW, sizeof(sMapPopUpTilesSecondary_BW), 0);
+            break;
         }
 
         PutWindowTilemap(popupWindowId);

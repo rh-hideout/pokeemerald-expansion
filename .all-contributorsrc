@@ -633,6 +633,24 @@
       "contributions": [
         "design"
       ]
+    },
+    {
+      "login": "ChrispyChris27",
+      "name": "ChrispyChris27",
+      "avatar_url": "https://avatars.githubusercontent.com/u/173648816?v=4",
+      "profile": "https://github.com/ChrispyChris27",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "LogicalLlama",
+      "name": "LogicalLlama",
+      "avatar_url": "https://avatars.githubusercontent.com/u/248230900?v=4",
+      "profile": "https://github.com/LogicalLlama",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,

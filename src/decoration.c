@@ -1370,30 +1370,30 @@ static void Task_PlaceDecoration(u8 taskId)
 {
     switch (gTasks[taskId].tState)
     {
-        case 0:
-            if (!gPaletteFade.active)
-            {
-                SetInitialPositions(taskId);
-                gTasks[taskId].tState = 1;
-            }
-            break;
-        case 1:
-            RemoveFollowingPokemon();
-            gPaletteFade.bufferTransferDisabled = TRUE;
-            ConfigureCameraObjectForPlacingDecoration(&sPlaceDecorationGraphicsDataBuffer, gCurDecorationItems[gCurDecorationIndex]);
-            SetUpDecorationShape(taskId);
-            SetUpPlacingDecorationPlayerAvatar(taskId, &sPlaceDecorationGraphicsDataBuffer);
-            FadeInFromBlack();
-            gPaletteFade.bufferTransferDisabled = FALSE;
-            gTasks[taskId].tState = 2;
-            break;
-        case 2:
-            if (IsWeatherNotFadingIn() == TRUE)
-            {
-                gTasks[taskId].tDecorationItemsMenuCommand = DECOR_ITEMS_MENU_PLACE;
-                ContinueDecorating(taskId);
-            }
-            break;
+    case 0:
+        if (!gPaletteFade.active)
+        {
+            SetInitialPositions(taskId);
+            gTasks[taskId].tState = 1;
+        }
+        break;
+    case 1:
+        RemoveFollowingPokemon();
+        gPaletteFade.bufferTransferDisabled = TRUE;
+        ConfigureCameraObjectForPlacingDecoration(&sPlaceDecorationGraphicsDataBuffer, gCurDecorationItems[gCurDecorationIndex]);
+        SetUpDecorationShape(taskId);
+        SetUpPlacingDecorationPlayerAvatar(taskId, &sPlaceDecorationGraphicsDataBuffer);
+        FadeInFromBlack();
+        gPaletteFade.bufferTransferDisabled = FALSE;
+        gTasks[taskId].tState = 2;
+        break;
+    case 2:
+        if (IsWeatherNotFadingIn() == TRUE)
+        {
+            gTasks[taskId].tDecorationItemsMenuCommand = DECOR_ITEMS_MENU_PLACE;
+            ContinueDecorating(taskId);
+        }
+        break;
     }
 }
 
@@ -1429,47 +1429,47 @@ static void SetUpDecorationShape(u8 taskId)
 {
     switch (gDecorations[gCurDecorationItems[gCurDecorationIndex]].shape)
     {
-        case DECORSHAPE_1x1:
-            gTasks[taskId].tDecorWidth = 1;
-            gTasks[taskId].tDecorHeight = 1;
-            break;
-        case DECORSHAPE_2x1:
-            gTasks[taskId].tDecorWidth = 2;
-            gTasks[taskId].tDecorHeight = 1;
-            break;
-        case DECORSHAPE_3x1:
-            gTasks[taskId].tDecorWidth = 3;
-            gTasks[taskId].tDecorHeight = 1;
-            break;
-        case DECORSHAPE_4x2:
-            gTasks[taskId].tDecorWidth = 4;
-            gTasks[taskId].tDecorHeight = 2;
-            break;
-        case DECORSHAPE_2x2:
-            gTasks[taskId].tDecorWidth = 2;
-            gTasks[taskId].tDecorHeight = 2;
-            break;
-        case DECORSHAPE_1x2:
-            gTasks[taskId].tDecorWidth = 1;
-            gTasks[taskId].tDecorHeight = 2;
-            break;
-        case DECORSHAPE_1x3:
-            gTasks[taskId].tDecorWidth = 1;
-            gTasks[taskId].tDecorHeight = 3;
-            gTasks[taskId].tCursorY++;
-            break;
-        case DECORSHAPE_2x4:
-            gTasks[taskId].tDecorWidth = 2;
-            gTasks[taskId].tDecorHeight = 4;
-            break;
-        case DECORSHAPE_3x3:
-            gTasks[taskId].tDecorWidth = 3;
-            gTasks[taskId].tDecorHeight = 3;
-            break;
-        case DECORSHAPE_3x2:
-            gTasks[taskId].tDecorWidth = 3;
-            gTasks[taskId].tDecorHeight = 2;
-            break;
+    case DECORSHAPE_1x1:
+        gTasks[taskId].tDecorWidth = 1;
+        gTasks[taskId].tDecorHeight = 1;
+        break;
+    case DECORSHAPE_2x1:
+        gTasks[taskId].tDecorWidth = 2;
+        gTasks[taskId].tDecorHeight = 1;
+        break;
+    case DECORSHAPE_3x1:
+        gTasks[taskId].tDecorWidth = 3;
+        gTasks[taskId].tDecorHeight = 1;
+        break;
+    case DECORSHAPE_4x2:
+        gTasks[taskId].tDecorWidth = 4;
+        gTasks[taskId].tDecorHeight = 2;
+        break;
+    case DECORSHAPE_2x2:
+        gTasks[taskId].tDecorWidth = 2;
+        gTasks[taskId].tDecorHeight = 2;
+        break;
+    case DECORSHAPE_1x2:
+        gTasks[taskId].tDecorWidth = 1;
+        gTasks[taskId].tDecorHeight = 2;
+        break;
+    case DECORSHAPE_1x3:
+        gTasks[taskId].tDecorWidth = 1;
+        gTasks[taskId].tDecorHeight = 3;
+        gTasks[taskId].tCursorY++;
+        break;
+    case DECORSHAPE_2x4:
+        gTasks[taskId].tDecorWidth = 2;
+        gTasks[taskId].tDecorHeight = 4;
+        break;
+    case DECORSHAPE_3x3:
+        gTasks[taskId].tDecorWidth = 3;
+        gTasks[taskId].tDecorHeight = 3;
+        break;
+    case DECORSHAPE_3x2:
+        gTasks[taskId].tDecorWidth = 3;
+        gTasks[taskId].tDecorHeight = 2;
+        break;
     }
 }
 

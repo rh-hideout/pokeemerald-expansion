@@ -117,6 +117,7 @@ SINGLE_BATTLE_TEST("Illusion breaks if user loses Illusion due to Worry Seed")
 SINGLE_BATTLE_TEST("Illusion breaks when attacked behind a substitute")
 {
     GIVEN {
+        WITH_CONFIG(B_INFILTRATOR_SUBSTITUTE, GEN_6);
         PLAYER(SPECIES_DRAGAPULT) { Ability(ABILITY_INFILTRATOR); Speed(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
         OPPONENT(SPECIES_ZOROARK) { Speed(2); }

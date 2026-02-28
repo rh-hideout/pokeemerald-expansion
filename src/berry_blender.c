@@ -1812,7 +1812,7 @@ static void ResetLinkCmds(void)
 
 static void Task_OpponentMiss(u8 taskId)
 {
-   if(++gTasks[taskId].tTimer > gTasks[taskId].tDelay)
+   if (++gTasks[taskId].tTimer > gTasks[taskId].tDelay)
    {
         gRecvCmds[gTasks[taskId].tPlayerId][BLENDER_COMM_SCORE] = LINKCMD_BLENDER_SCORE_MISS;
         DestroyTask(taskId);

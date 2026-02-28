@@ -88,7 +88,7 @@ static void DoFacilityTrainerBattleInternal(u8 facility)
             FillFrontierTrainerParty(FRONTIER_DOUBLES_PARTY_SIZE);
             gBattleTypeFlags |= BATTLE_TYPE_DOUBLE;
             break;
-            case FRONTIER_MODE_MULTIS:
+        case FRONTIER_MODE_MULTIS:
             FillFrontierTrainersParties(FRONTIER_MULTI_PARTY_SIZE);
             gPartnerTrainerId = gSaveBlock2Ptr->frontier.trainerIds[17];
             FillPartnerParty(gPartnerTrainerId);

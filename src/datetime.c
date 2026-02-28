@@ -60,7 +60,7 @@ void DateTime_AddMinutes(struct DateTime *dateTime, u32 minutes)
     u32 hours = 0;
 
     dateTime->minute += minutes;
-    while(dateTime->minute >= MINUTES_PER_HOUR)
+    while (dateTime->minute >= MINUTES_PER_HOUR)
     {
         hours++;
         dateTime->minute -= MINUTES_PER_HOUR;
@@ -74,7 +74,7 @@ void DateTime_AddSeconds(struct DateTime *dateTime, u32 seconds)
     u32 minutes = 0;
 
     dateTime->second += seconds;
-    while(dateTime->second >= SECONDS_PER_MINUTE)
+    while (dateTime->second >= SECONDS_PER_MINUTE)
     {
         minutes++;
         dateTime->second -= SECONDS_PER_MINUTE;

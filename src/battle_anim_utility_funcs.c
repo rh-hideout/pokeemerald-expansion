@@ -473,7 +473,7 @@ static void StatsChangeAnimation_Step2(u8 taskId)
         LoadPalette(gStatAnim_SpDefense_Pal, BG_PLTT_ID(animBgData.paletteId), PLTT_SIZE_4BPP);
         break;
     default:
- // case STAT_ANIM_PAL_MULTIPLE:
+    // case STAT_ANIM_PAL_MULTIPLE:
         LoadPalette(gStatAnim_Multiple_Pal, BG_PLTT_ID(animBgData.paletteId), PLTT_SIZE_4BPP);
         break;
     }

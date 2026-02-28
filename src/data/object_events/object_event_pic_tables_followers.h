@@ -796,13 +796,13 @@ static const struct SpriteFrameImage sPicTable_Steelix[] = {
 };
 #if P_GENDER_DIFFERENCES
 static const struct SpriteFrameImage sPicTable_SteelixF[] = {
-    overworld_ascending_frames(gObjectEventPic_SteelixF, 4, 4),
+    overworld_ascending_frames(gObjectEventPic_SteelixF, 8, 8),
 };
 #endif //P_GENDER_DIFFERENCES
 #if OW_BATTLE_ONLY_FORMS
 #if P_MEGA_EVOLUTIONS
 static const struct SpriteFrameImage sPicTable_SteelixMega[] = {
-    overworld_ascending_frames(gObjectEventPic_SteelixMega, 4, 4),
+    overworld_ascending_frames(gObjectEventPic_SteelixMega, 8, 8),
 };
 #endif // P_MEGA_EVOLUTIONS
 #endif // OW_BATTLE_ONLY_FORMS
@@ -2994,7 +2994,7 @@ static const struct SpriteFrameImage sPicTable_Latias[] = {
 #if OW_BATTLE_ONLY_FORMS
 #if P_MEGA_EVOLUTIONS
 static const struct SpriteFrameImage sPicTable_LatiasMega[] = {
-    overworld_ascending_frames(gObjectEventPic_LatiasMega, 4, 4),
+    overworld_ascending_frames(gObjectEventPic_LatiasMega, 8, 8),
 };
 #endif // P_MEGA_EVOLUTIONS
 #endif // OW_BATTLE_ONLY_FORMS
@@ -3007,7 +3007,7 @@ static const struct SpriteFrameImage sPicTable_Latios[] = {
 #if OW_BATTLE_ONLY_FORMS
 #if P_MEGA_EVOLUTIONS
 static const struct SpriteFrameImage sPicTable_LatiosMega[] = {
-    overworld_ascending_frames(gObjectEventPic_LatiosMega, 4, 4),
+    overworld_ascending_frames(gObjectEventPic_LatiosMega, 8, 8),
 };
 #endif // P_MEGA_EVOLUTIONS
 #endif // OW_BATTLE_ONLY_FORMS
@@ -3020,7 +3020,7 @@ static const struct SpriteFrameImage sPicTable_Kyogre[] = {
 #if OW_BATTLE_ONLY_FORMS
 #if P_PRIMAL_REVERSIONS
 static const struct SpriteFrameImage sPicTable_KyogrePrimal[] = {
-    overworld_ascending_frames(gObjectEventPic_KyogrePrimal, 4, 4),
+    overworld_ascending_frames(gObjectEventPic_KyogrePrimal, 8, 8),
 };
 #endif // P_PRIMAL_REVERSIONS
 #endif // OW_BATTLE_ONLY_FORMS
@@ -3033,7 +3033,7 @@ static const struct SpriteFrameImage sPicTable_Groudon[] = {
 #if OW_BATTLE_ONLY_FORMS
 #if P_PRIMAL_REVERSIONS
 static const struct SpriteFrameImage sPicTable_GroudonPrimal[] = {
-    overworld_ascending_frames(gObjectEventPic_GroudonPrimal, 4, 4),
+    overworld_ascending_frames(gObjectEventPic_GroudonPrimal, 8, 8),
 };
 #endif // P_PRIMAL_REVERSIONS
 #endif // OW_BATTLE_ONLY_FORMS
@@ -3046,7 +3046,7 @@ static const struct SpriteFrameImage sPicTable_Rayquaza[] = {
 #if OW_BATTLE_ONLY_FORMS
 #if P_MEGA_EVOLUTIONS
 static const struct SpriteFrameImage sPicTable_RayquazaMega[] = {
-    overworld_ascending_frames(gObjectEventPic_RayquazaMega, 4, 4),
+    overworld_ascending_frames(gObjectEventPic_RayquazaMega, 8, 8),
 };
 #endif // P_MEGA_EVOLUTIONS
 #endif // OW_BATTLE_ONLY_FORMS
