@@ -116,6 +116,37 @@ AI_SINGLE_BATTLE_TEST("AI sees increased base power of Flail")
     }
 }
 
+AI_SINGLE_BATTLE_TEST("AI sees increased base power of Body Press after Defense is boosted")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BODY_PRESS) == EFFECT_BODY_PRESS);
+        ASSUME(GetMoveEffect(MOVE_IRON_DEFENSE) == EFFECT_DEFENSE_UP_2);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_ZAMAZENTA) { Moves(MOVE_BODY_PRESS, MOVE_IRON_HEAD, MOVE_IRON_DEFENSE); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponent, MOVE_IRON_DEFENSE); }
+        TURN { EXPECT_MOVE(opponent, MOVE_IRON_DEFENSE); }
+        TURN { EXPECT_MOVE(opponent, MOVE_BODY_PRESS); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI sees increased base power of Body Press after Special Defense is boosted (Wonder Room)")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BODY_PRESS) == EFFECT_BODY_PRESS);
+        ASSUME(GetMoveEffect(MOVE_AMNESIA) == EFFECT_SPECIAL_DEFENSE_UP_2);
+        ASSUME(GetMoveEffect(MOVE_WONDER_ROOM) == EFFECT_WONDER_ROOM);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_WONDER_ROOM, MOVE_CELEBRATE); Speed(20); }
+        OPPONENT(SPECIES_ZAMAZENTA) { Moves(MOVE_BODY_PRESS, MOVE_IRON_HEAD, MOVE_AMNESIA); Speed(10); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_WONDER_ROOM); EXPECT_MOVE(opponent, MOVE_AMNESIA); }
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_AMNESIA); }
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_BODY_PRESS); }
+    }
+}
+
 AI_SINGLE_BATTLE_TEST("AI will only use Dream Eater if target is asleep")
 {
     u16 status1, expectedMove;
