@@ -468,6 +468,57 @@ AI_DOUBLE_BATTLE_TEST("AI will choose Beat Up on an ally with Justified if it wi
     }
 }
 
+AI_DOUBLE_BATTLE_TEST("AI will choose Beat Up on an ally with Rage Fist if it will benefit the ally")
+{
+    u32 currentHP, movePP;
+    enum Move move;
+    bool32 shouldBeatUp;
+
+    PARAMETRIZE { move = MOVE_DRAIN_PUNCH; currentHP = 400; movePP = 10; shouldBeatUp = FALSE; }
+    PARAMETRIZE { move = MOVE_RAGE_FIST;   currentHP = 400; movePP = 10; shouldBeatUp = TRUE; }
+    PARAMETRIZE { move = MOVE_RAGE_FIST;   currentHP = 400; movePP = 0;  shouldBeatUp = FALSE; }
+    PARAMETRIZE { move = MOVE_RAGE_FIST;   currentHP = 1;   movePP = 10; shouldBeatUp = FALSE; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BEAT_UP) == EFFECT_BEAT_UP);
+        ASSUME(GetMoveEffect(MOVE_RAGE_FIST) == EFFECT_RAGE_FIST);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WHIMSICOTT) { Moves(MOVE_BEAT_UP); }
+        OPPONENT(SPECIES_ANNIHILAPE) { MovesWithPP({move, movePP}, {MOVE_CELEBRATE, 10}); HP(currentHP); }
+    } WHEN {
+        if (shouldBeatUp)
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_BEAT_UP, target: opponentRight); }
+        else
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_BEAT_UP, target: playerLeft); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI will only Beat Up for Rage Fist if it can hit at least one opponent")
+{
+    u32 species;
+    bool32 shouldBeatUp;
+
+    PARAMETRIZE { species = SPECIES_MEOWTH;    shouldBeatUp = FALSE; }
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; shouldBeatUp = TRUE; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BEAT_UP) == EFFECT_BEAT_UP);
+        ASSUME(GetMoveEffect(MOVE_RAGE_FIST) == EFFECT_RAGE_FIST);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_MEOWTH);
+        PLAYER(species);
+        OPPONENT(SPECIES_WHIMSICOTT) { Moves(MOVE_BEAT_UP); }
+        OPPONENT(SPECIES_ANNIHILAPE) { MovesWithPP({MOVE_RAGE_FIST, 10}, {MOVE_CELEBRATE, 10}); HP(400); }
+    } WHEN {
+        if (shouldBeatUp)
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_BEAT_UP, target: opponentRight); }
+        else
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_BEAT_UP, target: playerLeft); }
+    }
+}
+
 AI_DOUBLE_BATTLE_TEST("AI will choose Earthquake if partner is not alive")
 {
     ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);

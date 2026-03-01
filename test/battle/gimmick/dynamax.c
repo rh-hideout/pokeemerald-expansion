@@ -997,6 +997,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Volt Crash paralyzes both opponents")
         TURN { MOVE(playerLeft, MOVE_THUNDERBOLT, target: opponentLeft, gimmick: GIMMICK_DYNAMAX); }
     } SCENE {
         MESSAGE("Pikachu used G-Max Volt Crash!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_G_MAX_VOLT_CRASH, playerLeft);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, opponentLeft);
         MESSAGE("The opposing Wobbuffet is paralyzed, so it may be unable to move!");
         STATUS_ICON(opponentLeft, paralysis: TRUE);
@@ -1309,6 +1310,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Replenish recycles allies' berries 50\% of th
     PASSES_RANDOMLY(1, 2, RNG_G_MAX_REPLENISH);
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_REPLENISH, MOVE_EFFECT_RECYCLE_BERRIES));
+        ASSUME(GetItemHoldEffect(ITEM_APICOT_BERRY) == HOLD_EFFECT_SP_DEFENSE_UP);
         PLAYER(SPECIES_SNORLAX) { Item(ITEM_APICOT_BERRY); GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_MUNCHLAX) { Item(ITEM_APICOT_BERRY); Ability(ABILITY_THICK_FAT); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_APICOT_BERRY); }
@@ -1321,12 +1323,14 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Replenish recycles allies' berries 50\% of th
         TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft, gimmick: GIMMICK_DYNAMAX); }
     } SCENE {
         // turn 1
+
         MESSAGE("Using Apicot Berry, the Sp. Def of Snorlax rose!");
         MESSAGE("Using Apicot Berry, the Sp. Def of Munchlax rose!");
         MESSAGE("Using Apicot Berry, the Sp. Def of the opposing Wobbuffet rose!");
         MESSAGE("Using Apicot Berry, the Sp. Def of the opposing Wobbuffet rose!");
         // turn 2
         MESSAGE("Snorlax used G-Max Replenish!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_G_MAX_REPLENISH, playerLeft);
         MESSAGE("Snorlax found one Apicot Berry!");
         MESSAGE("Munchlax found one Apicot Berry!");
     }
@@ -1369,6 +1373,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Finale heals allies by 1/6 of their health")
         TURN { MOVE(playerLeft, MOVE_MOONBLAST, target: opponentLeft, gimmick: GIMMICK_DYNAMAX); }
     } SCENE {
         MESSAGE("Alcremie used G-Max Finale!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_G_MAX_FINALE, playerLeft);
         HP_BAR(playerLeft, captureDamage: &damage1);
         HP_BAR(playerRight, captureDamage: &damage2);
     } THEN {
@@ -1710,6 +1715,82 @@ DOUBLE_BATTLE_TEST("Dynamax stat raising moves don't make stat-changing abilitie
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
     } THEN {
         EXPECT_EQ(playerRight->statStages[stat], DEFAULT_STAT_STAGE + 1);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Dynamax: G-Max Finale heals allies by 1/6 of their health, even if it faints the foe")
+{
+    s16 damage1, damage2;
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_FINALE, MOVE_EFFECT_HEAL_TEAM));
+        PLAYER(SPECIES_ALCREMIE) { HP(1); GigantamaxFactor(TRUE); }
+        PLAYER(SPECIES_MILCERY) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET)  { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET)  { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_MOONBLAST, target: opponentLeft, gimmick: GIMMICK_DYNAMAX); SEND_OUT(opponentLeft, 2); }
+    } SCENE {
+        MESSAGE("Alcremie used G-Max Finale!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_G_MAX_FINALE, playerLeft);
+        HP_BAR(playerLeft, captureDamage: &damage1);
+        HP_BAR(playerRight, captureDamage: &damage2);
+    } THEN {
+        EXPECT_MUL_EQ(-damage1, Q_4_12(6), playerLeft->maxHP); // heals based on Dynamax HP. Appears to have a problem with milcery in this case!?
+    }
+}
+
+DOUBLE_BATTLE_TEST("Dynamax: G-Max Replenish recycles allies' berries 50\% of the time, even if it faints the foe")
+{
+    PASSES_RANDOMLY(1, 2, RNG_G_MAX_REPLENISH);
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_REPLENISH, MOVE_EFFECT_RECYCLE_BERRIES));
+        ASSUME(GetItemHoldEffect(ITEM_APICOT_BERRY) == HOLD_EFFECT_SP_DEFENSE_UP);
+        PLAYER(SPECIES_SNORLAX) { Item(ITEM_APICOT_BERRY); GigantamaxFactor(TRUE); }
+        PLAYER(SPECIES_MUNCHLAX) { Item(ITEM_APICOT_BERRY); Ability(ABILITY_THICK_FAT); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_STUFF_CHEEKS); \
+               MOVE(playerRight, MOVE_STUFF_CHEEKS); \
+               MOVE(opponentLeft, MOVE_CELEBRATE); \
+               MOVE(opponentRight, MOVE_CELEBRATE); }
+        TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft, gimmick: GIMMICK_DYNAMAX); SEND_OUT(opponentLeft, 2);}
+    } SCENE {
+        // turn 1
+        MESSAGE("Using Apicot Berry, the Sp. Def of Snorlax rose!");
+        MESSAGE("Using Apicot Berry, the Sp. Def of Munchlax rose!");
+        // turn 2
+        MESSAGE("Snorlax used G-Max Replenish!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_G_MAX_REPLENISH, playerLeft);
+        MESSAGE("Snorlax found one Apicot Berry!");
+        MESSAGE("Munchlax found one Apicot Berry!");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Dynamax: G-Max Volt Crash paralyzes other opponent even if its target faints")
+{
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_VOLT_CRASH, MOVE_EFFECT_PARALYZE_SIDE));
+        PLAYER(SPECIES_PIKACHU) { GigantamaxFactor(TRUE); }
+        PLAYER(SPECIES_PICHU);
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); } 
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_THUNDERBOLT, target: opponentLeft, gimmick: GIMMICK_DYNAMAX); SEND_OUT(opponentLeft, 2); }
+    } SCENE {
+        MESSAGE("Pikachu used G-Max Volt Crash!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_G_MAX_VOLT_CRASH, playerLeft);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, opponentLeft);
+            STATUS_ICON(opponentLeft, paralysis: TRUE);
+        }
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, opponentRight);
+        MESSAGE("The opposing Wynaut is paralyzed, so it may be unable to move!");
+        STATUS_ICON(opponentRight, paralysis: TRUE);
     }
 }
 

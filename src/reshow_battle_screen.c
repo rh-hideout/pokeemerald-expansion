@@ -84,6 +84,7 @@ static void CB2_ReshowBattleScreenAfterMenu(void)
     case 6:
         if (BattleLoadAllHealthBoxesGfx(gBattleScripting.reshowHelperState))
         {
+            LoadIndicatorSpritesGfx();
             gBattleScripting.reshowHelperState = 0;
         }
         else

@@ -89,5 +89,5 @@ RocketHideout_Elevator_EventScript_NeedKey::
 	end
 
 RocketHideout_Elevator_Text_AppearsToNeedAKey::
-    .string "It appears to need a key.$"
+	.string "It appears to need a key.$"
 

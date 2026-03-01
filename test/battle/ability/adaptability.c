@@ -61,4 +61,39 @@ SINGLE_BATTLE_TEST("(TERA) Terastallizing into the same type with Adaptability g
     }
 }
 
-TO_DO_BATTLE_TEST("Adaptability does not affect Stellar-type moves");
+SINGLE_BATTLE_TEST("(TERA) Adaptability does not increase non-Tera base STAB beyond 1.5x", s16 damage)
+{
+    u32 move;
+    PARAMETRIZE { move = MOVE_GUST; }
+    PARAMETRIZE { move = MOVE_WATER_GUN; }
+    GIVEN {
+        PLAYER(SPECIES_CRAWDAUNT) { Ability(ABILITY_ADAPTABILITY); TeraType(TYPE_NORMAL); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, move, gimmick: GIMMICK_TERA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        // With Adaptability, non-Tera base type should still be 1.5x STAB (not 2.0x).
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.5), results[1].damage);
+    }
+}
+
+SINGLE_BATTLE_TEST("(TERA) Adaptability does not affect Stellar-type moves", s16 damage)
+{
+    u32 ability;
+    PARAMETRIZE { ability = ABILITY_HYPER_CUTTER; }
+    PARAMETRIZE { ability = ABILITY_ADAPTABILITY; }
+    GIVEN {
+        PLAYER(SPECIES_CRAWDAUNT) { Ability(ability); TeraType(TYPE_STELLAR); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_TERA_BLAST, gimmick: GIMMICK_TERA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_BLAST, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
+    }
+}
