@@ -1523,7 +1523,16 @@ static enum CancelerResult HandleSkyDropResult(struct BattleContext *ctx)
     }
 
     // First turn
+
+    u32 rampageTurns = 0;
+    if (gBattleMons[ctx->battlerDef].volatiles.rampageTurns > 0)
+    {
+        rampageTurns = 1;
+        gBattleMons[ctx->battlerDef].volatiles.rampageTurns = 0;
+    }
+
     CancelMultiTurnMoves(ctx->battlerDef);
+    gBattleMons[ctx->battlerDef].volatiles.rampageTurns = rampageTurns; // restore possible rampage to confuse later
     gLockedMoves[ctx->battlerAtk] = ctx->move;
     gProtectStructs[ctx->battlerAtk].chargingTurn = TRUE;
     gBattleMons[ctx->battlerAtk].volatiles.multipleTurns = TRUE;
@@ -3634,12 +3643,15 @@ static enum MoveEndResult MoveEndRampage(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
-    if (gBattleMons[gBattlerAttacker].volatiles.rampageTurns == 0 || B_RAMPAGE_CONFUSION< GEN_5)
+    if (gBattleMons[gBattlerAttacker].volatiles.rampageTurns == 0
+     || gBattleMons[gBattlerAttacker].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET // Don't try to confuse if held by Sky Drop
+     || B_RAMPAGE_CONFUSION < GEN_5)
     {
         result = MOVEEND_RESULT_CONTINUE;
     }
     else if (--gBattleMons[gBattlerAttacker].volatiles.rampageTurns == 0)
     {
+        CancelMultiTurnMoves(gBattlerAttacker);
         if (CanBeConfused(gBattlerAttacker, gBattlerAttacker))
         {
             gBattleScripting.battler = gBattlerAttacker;
@@ -3665,7 +3677,7 @@ static enum MoveEndResult MoveEndConfusionAfterSkyDrop(void)
     if (gBattleMons[gBattlerTarget].volatiles.rampageTurns > 0
      && gBattleMons[gBattlerTarget].volatiles.semiInvulnerable != STATE_SKY_DROP_TARGET)
     {
-        gBattleMons[gBattlerTarget].volatiles.rampageTurns  = 0;
+        gBattleMons[gBattlerTarget].volatiles.rampageTurns = 0;
 
         if (CanBeConfused(gBattlerTarget, gBattlerTarget))
         {

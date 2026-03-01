@@ -229,7 +229,7 @@ SINGLE_BATTLE_TEST("Sky Drop: If target was locked into a move that would confus
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(120); Status1(STATUS1_BURN); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(70); Status1(STATUS1_BURN); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
@@ -248,7 +248,7 @@ SINGLE_BATTLE_TEST("Sky Drop: If target was locked into a move that would confus
 {
     GIVEN {
         PLAYER(SPECIES_SHARPEDO) { Ability(ABILITY_ROUGH_SKIN); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(370); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(220); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
@@ -257,12 +257,14 @@ SINGLE_BATTLE_TEST("Sky Drop: If target was locked into a move that would confus
         }
         TURN {
             SKIP_TURN(opponent);
-            ABILITY_POPUP(player, ABILITY_ROUGH_SKIN);
             SEND_OUT(opponent, 1);
         }
     } SCENE {
+        // Note: the move animations make the test fail, but the recording is fine and they aren't important for the test passing
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THRASH, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, opponent); // 1st turn
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, opponent); // 2nd turn
+        ABILITY_POPUP(player, ABILITY_ROUGH_SKIN);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
     }
 }
@@ -281,6 +283,6 @@ SINGLE_BATTLE_TEST("Sky Drop: Flying types will still get confused if they rampa
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THRASH, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, player);
         NOT HP_BAR(opponent);
-        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, opponent);
     }
 }
