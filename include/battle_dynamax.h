@@ -1,7 +1,7 @@
 #ifndef GUARD_BATTLE_DYNAMAX_H
 #define GUARD_BATTLE_DYNAMAX_H
 
-#define DYNAMAX_TURNS_COUNT	3
+#define DYNAMAX_TURNS_COUNT 3
 
 bool32 CanDynamax(enum BattlerId battler);
 bool32 IsGigantamaxed(enum BattlerId battler);

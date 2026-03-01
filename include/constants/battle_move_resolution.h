@@ -101,14 +101,14 @@ enum MoveEndState
     MOVEEND_SKY_DROP_CONFUSE,
     MOVEEND_UPDATE_LAST_MOVES,
     MOVEEND_MIRROR_MOVE,
-    MOVEEND_DEFROST,
     MOVEEND_NEXT_TARGET, // Everything up until here is handled for each strike of a spread move
     MOVEEND_HP_THRESHOLD_ITEMS_TARGET, // Activation only during a multi hit move / ability (Parental Bond)
     MOVEEND_MULTIHIT_MOVE,
+    MOVEEND_DEFROST,
+    MOVEEND_SHEER_FORCE, // If move is Sheer Force affected, skip to Hit Escape + One
     MOVEEND_MOVE_BLOCK,
     MOVEEND_ITEM_EFFECTS_ATTACKER_2,
     MOVEEND_ABILITY_EFFECT_FOES_FAINTED, // Moxie-like abilities / Battle Bond / Magician
-    MOVEEND_SHEER_FORCE, // If move is Sheer Force affected, skip to Hit Escape + One
     MOVEEND_SHELL_TRAP,
     MOVEEND_COLOR_CHANGE, // Color Change / Berserk / Anger Shell
     MOVEEND_KEE_MARANGA_HP_THRESHOLD_ITEM_TARGET,
@@ -116,14 +116,14 @@ enum MoveEndState
     MOVEEND_LIFE_ORB_SHELL_BELL,
     MOVEEND_FORM_CHANGE,
     MOVEEND_EMERGENCY_EXIT,
-    MOVEEND_EJECT_PACK,
     MOVEEND_HIT_ESCAPE,
+    MOVEEND_PICKPOCKET,
     MOVEEND_ITEMS_EFFECTS_ALL,
     MOVEEND_WHITE_HERB,
     MOVEEND_OPPORTUNIST,
     MOVEEND_MIRROR_HERB,
     MOVEEND_THIRD_MOVE_BLOCK,
-    MOVEEND_PICKPOCKET,
+    MOVEEND_EJECT_PACK,
     MOVEEND_CLEAR_BITS,
     MOVEEND_DANCER,
     MOVEEND_PURSUIT_NEXT_ACTION,
