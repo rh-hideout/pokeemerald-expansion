@@ -13,11 +13,13 @@
 #include "region_map.h"
 #include "rtc.h"
 #include "start_menu.h"
+#include "strings.h"
 #include "string_util.h"
 #include "task.h"
 #include "text.h"
 #include "constants/battle_frontier.h"
 #include "constants/layouts.h"
+#include "constants/map_types.h"
 #include "constants/region_map_sections.h"
 #include "constants/weather.h"
 #include "config/general.h"
@@ -518,6 +520,29 @@ static void UpdateSecondaryPopUpWindow(u8 secondaryPopUpWindowId)
     CopyWindowToVram(secondaryPopUpWindowId, COPYWIN_FULL);
 }
 
+static void MapNamePopupAppendFloorNum(u8 *map_name, s8 floorNum)
+{
+    if (floorNum == 0)
+        return;
+    u8 *dest = map_name;
+    while (*dest != EOS)
+        dest++;
+    *dest++ = CHAR_SPACE;
+    if (floorNum == FLOOR_ROOFTOP)
+    {
+        StringCopy(dest, gText_Rooftop);
+        return;
+    }
+    if (floorNum < 0)
+    {
+        *dest++ = CHAR_B;
+        floorNum *= -1;
+    }
+    dest = ConvertIntToDecimalStringN(dest, floorNum, STR_CONV_MODE_LEFT_ALIGN, 2);
+    *dest++ = CHAR_F;
+    *dest = EOS;
+}
+
 static void ShowMapNamePopUpWindow(void)
 {
     u8 mapDisplayHeader[27];
@@ -544,6 +569,10 @@ static void ShowMapNamePopUpWindow(void)
     {
         withoutPrefixPtr = &(mapDisplayHeader[6]);
         GetMapName(withoutPrefixPtr, gMapHeader.regionMapSectionId, 0);
+        if (gMapHeader.floorNumber != 0)
+        {
+            MapNamePopupAppendFloorNum(withoutPrefixPtr, gMapHeader.floorNumber);
+        }
     }
 
     if (OW_POPUP_GENERATION == GEN_5)
