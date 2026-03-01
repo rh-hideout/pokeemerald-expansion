@@ -3611,8 +3611,7 @@ static enum MoveEndResult MoveEndEjectPack(void)
     // Because sorting the battlers by speed takes lots of cycles, it's better to just check if any of the battlers has the Eject items.
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
-        if (
-          (gBattlerAttacker, i, GetMoveEffect(gCurrentMove)))
+        if (CanEjectPackTrigger(gBattlerAttacker, i, GetMoveEffect(gCurrentMove)))
         {
             ejectPackBattlers |= 1u << i;
             numEjectPackBattlers++;
