@@ -44,7 +44,7 @@ LilycoveCity_DepartmentStore_4F_EventScript_ClerkRight::
 	.align 2
 LilycoveCity_DepartmentStore_4F_Pokemart_DefenseTMs:
 	.2byte ITEM_TM_PROTECT
-	.2byte ITEM_TM_SAFEGUARD
+	.2byte ITEM_TM_SCARY_FACE
 	.2byte ITEM_TM_REFLECT
 	.2byte ITEM_TM_LIGHT_SCREEN
 	pokemartlistend
