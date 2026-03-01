@@ -1312,7 +1312,7 @@
 	@ Used by effects that may proc Symbiosis but do not call removeitem.
 	.macro trysymbiosis battler:req
 	callnative BS_TrySymbiosis
-    .byte \battler
+	.byte \battler
 	.endm
 
 	@ returns B_SIDE_x to gBattleCommunication[0]
@@ -1523,9 +1523,9 @@
 	.byte \battler
 	.endm
 
-    .macro resetterrainabilityflags
-    callnative BS_ResetTerrainAbilityFlags
-    .endm
+	.macro resetterrainabilityflags
+	callnative BS_ResetTerrainAbilityFlags
+	.endm
 
 	@ Stores Healing Wish effect.
 	.macro storehealingwish battler:req

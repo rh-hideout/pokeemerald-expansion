@@ -350,10 +350,10 @@ bool32 IsWordSplittingChar(const u8 *src, u32 index)
 {
     switch (src[index])
     {
-        case CHAR_SPACE:
-            return TRUE;
-        default:
-            return FALSE;
+    case CHAR_SPACE:
+        return TRUE;
+    default:
+        return FALSE;
     }
 }
 

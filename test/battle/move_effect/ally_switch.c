@@ -92,24 +92,24 @@ DOUBLE_BATTLE_TEST("Ally Switch does not redirect the target of Snipe Shot")
 
 DOUBLE_BATTLE_TEST("Ally Switch does not redirect moves done by Pokémon with Stalwart and Propeller Tail")
 {
+    u16 species;
     enum Ability ability;
-    PARAMETRIZE { ability = ABILITY_STALWART; }
-    PARAMETRIZE { ability = ABILITY_PROPELLER_TAIL; }
-    PARAMETRIZE { ability = ABILITY_TELEPATHY; }
+    PARAMETRIZE { species = SPECIES_DURALUDON; ability = ABILITY_STALWART; }
+    PARAMETRIZE { species = SPECIES_ARROKUDA;  ability = ABILITY_PROPELLER_TAIL; }
+    PARAMETRIZE { species = SPECIES_RALTS;     ability = ABILITY_TELEPATHY; }
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET); // Wobb is playerLeft, but it'll be Wynaut after Ally Switch
         PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_KADABRA) { Ability(ability); }
+        OPPONENT(species) { Ability(ability); }
         OPPONENT(SPECIES_ABRA);
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_ALLY_SWITCH); MOVE(opponentLeft, MOVE_SCRATCH, target:playerRight); } // Kadabra targets playerRight Wynaut.
+        TURN { MOVE(playerLeft, MOVE_ALLY_SWITCH); MOVE(opponentLeft, MOVE_SCRATCH, target:playerRight); } // Opponent targets playerRight Wynaut.
     } SCENE {
         MESSAGE("Wobbuffet used Ally Switch!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, playerLeft);
         MESSAGE("Wobbuffet and Wynaut switched places!");
 
-        MESSAGE("The opposing Kadabra used Scratch!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
         HP_BAR((ability == ABILITY_STALWART || ability == ABILITY_PROPELLER_TAIL) ? playerLeft : playerRight);
     }
@@ -218,6 +218,7 @@ DOUBLE_BATTLE_TEST("Ally Switch increases the Protect-like moves counter (Gen9+)
 DOUBLE_BATTLE_TEST("Ally Switch works if ally used two-turn move like Dig")
 {
     GIVEN {
+        ASSUME(gBattleMoveEffects[GetMoveEffect(MOVE_DIG)].twoTurnEffect);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -313,9 +314,8 @@ DOUBLE_BATTLE_TEST("Ally switch swaps opposing sky drop targets if partner is be
 DOUBLE_BATTLE_TEST("Ally Switch swaps Illusion data")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_ALLY_SWITCH) == EFFECT_ALLY_SWITCH);
         PLAYER(SPECIES_HOOPA);
-        PLAYER(SPECIES_ZOROARK);
+        PLAYER(SPECIES_ZOROARK) {Ability(ABILITY_ILLUSION); }
         PLAYER(SPECIES_MAMOSWINE); // the third member here is required for zoroark
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -329,6 +329,7 @@ DOUBLE_BATTLE_TEST("Ally Switch swaps Illusion data")
 DOUBLE_BATTLE_TEST("Ally switch updates last used moves for Mimic")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_MIMIC) == EFFECT_MIMIC);
         PLAYER(SPECIES_XATU)     { Speed(100); }
         PLAYER(SPECIES_RIOLU)    { Speed(150); }
         OPPONENT(SPECIES_FEAROW) { Speed(20); }
@@ -348,9 +349,10 @@ DOUBLE_BATTLE_TEST("Ally switch updates last used moves for Mimic")
     }
 }
 
-DOUBLE_BATTLE_TEST("Ally Switch does not update leech seed battler")
+DOUBLE_BATTLE_TEST("Ally Switch does not update leech seed position")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_LEECH_SEED) == EFFECT_LEECH_SEED);
         PLAYER(SPECIES_WYNAUT);
         PLAYER(SPECIES_SOLOSIS);
         OPPONENT(SPECIES_BULBASAUR) { HP(50); MaxHP(100); }
@@ -376,6 +378,114 @@ DOUBLE_BATTLE_TEST("Ally Switch does not update leech seed battler")
     } THEN {
         EXPECT_GT(opponentLeft->hp, 50);
         EXPECT_GT(opponentRight->hp, 50);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Ally Switch does not update Future Sight target position")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_ABRA);
+        OPPONENT(SPECIES_RALTS);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_FUTURE_SIGHT, target: playerLeft); }
+        TURN { MOVE(playerLeft, MOVE_ALLY_SWITCH); }
+        TURN { }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, playerLeft);
+        MESSAGE("Wynaut took the Future Sight attack!");
+        HP_BAR(playerLeft);
+        NOT HP_BAR(playerRight);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Ally Switch does not update Future Sight target position when attacker side switches")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_ABRA);
+        OPPONENT(SPECIES_RALTS);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_FUTURE_SIGHT, target: playerLeft); }
+        TURN { SWITCH(opponentLeft, 2); MOVE(opponentRight, MOVE_ALLY_SWITCH); }
+        TURN { }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, opponentRight);
+        MESSAGE("Wobbuffet took the Future Sight attack!");
+        HP_BAR(playerLeft);
+        NOT HP_BAR(playerRight);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Ally Switch does not update Wish recovery position")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_WISH) == EFFECT_WISH);
+        PLAYER(SPECIES_WOBBUFFET) { HP(50); MaxHP(100); }
+        PLAYER(SPECIES_WYNAUT) { HP(20); MaxHP(100); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_WISH); }
+        TURN { MOVE(playerLeft, MOVE_ALLY_SWITCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WISH, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, playerLeft);
+        HP_BAR(playerLeft);
+        NOT HP_BAR(playerRight);
+    } THEN {
+        EXPECT_EQ(playerLeft->hp, 70);
+        EXPECT_EQ(playerRight->hp, 50);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Ally Switch does not update Healing Wish/Lunar Dance recovery position")
+{
+    u16 move = MOVE_NONE;
+    struct BattlePokemon *switchTarget = NULL;
+
+    PARAMETRIZE { move = MOVE_HEALING_WISH; switchTarget = playerLeft; }
+    PARAMETRIZE { move = MOVE_HEALING_WISH; switchTarget = playerRight; }
+    PARAMETRIZE { move = MOVE_LUNAR_DANCE;  switchTarget = playerLeft; }
+    PARAMETRIZE { move = MOVE_LUNAR_DANCE;  switchTarget = playerRight; }
+
+    GIVEN {
+        WITH_CONFIG(B_HEALING_WISH_SWITCH, GEN_8);
+        ASSUME(GetMoveEffect(MOVE_HEALING_WISH) == EFFECT_HEALING_WISH);
+        ASSUME(GetMoveEffect(MOVE_LUNAR_DANCE) == EFFECT_LUNAR_DANCE);
+        PLAYER(SPECIES_GARDEVOIR);
+        PLAYER(SPECIES_ABRA);
+        PLAYER(SPECIES_WOBBUFFET) { HP(100); MaxHP(100); }
+        PLAYER(SPECIES_WYNAUT) { HP(50); MaxHP(80); Status1(STATUS1_PARALYSIS); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, move); SEND_OUT(playerLeft, 2); }
+        TURN { MOVE(playerRight, MOVE_ALLY_SWITCH); }
+        TURN { SWITCH(switchTarget, 3); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
+        if (switchTarget == playerLeft) {
+            HP_BAR(playerLeft, hp: 80);
+            STATUS_ICON(playerLeft, none: TRUE);
+        } else {
+            NOT HP_BAR(playerRight);
+        }
+    } THEN {
+        if (switchTarget == playerLeft) {
+            EXPECT_EQ(playerLeft->hp, 80);
+            EXPECT_EQ(playerLeft->status1, STATUS1_NONE);
+        } else {
+            EXPECT_EQ(playerRight->hp, 50);
+            EXPECT_EQ(playerRight->status1, STATUS1_PARALYSIS);
+        }
     }
 }
 

@@ -4,7 +4,7 @@
 #include "battle_setup.h"
 #include "battle_util.h"
 #include "battle_controllers.h"
-#include "battle_ai_util.h"
+#include "battle_ai_record.h"
 #include "battle_gimmick.h"
 #include "battle_scripts.h"
 #include "constants/battle.h"
@@ -1344,7 +1344,7 @@ static bool32 HandleEndTurnFormChange(enum BattlerId battler)
             break;
         default:
             BattleScriptExecute(BattleScript_BattlerFormChangeEnd2); // Generic animation
-			break;
+            break;
         }
         effect = TRUE;
     }

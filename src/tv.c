@@ -4038,7 +4038,7 @@ static void TranslateJapaneseEmeraldShows(TVShow *shows)
 
     for (curShow = shows; curShow < shows + LAST_TVSHOW_IDX; curShow++)
     {
-        switch(curShow->common.kind)
+        switch (curShow->common.kind)
         {
         case TVSHOW_FAN_CLUB_LETTER:
             curShow->fanclubLetter.language = GetStringLanguage(curShow->fanclubLetter.playerName);
@@ -4351,7 +4351,7 @@ static void DoTVShowBravoTrainerBattleTower(void)
     show = &gSaveBlock1Ptr->tvShows[gSpecialVar_0x8004];
     gSpecialVar_Result = FALSE;
     state = sTVShowState;
-    switch(state)
+    switch (state)
     {
     case BRAVOTOWER_STATE_INTRO:
         TVShowConvertInternationalString(gStringVar1, show->bravoTrainerTower.playerName, show->bravoTrainerTower.playerLanguage);
@@ -4446,7 +4446,7 @@ static void DoTVShowTodaysSmartShopper(void)
     show = &gSaveBlock1Ptr->tvShows[gSpecialVar_0x8004];
     gSpecialVar_Result = FALSE;
     state = sTVShowState;
-    switch(state)
+    switch (state)
     {
     case SMARTSHOPPER_STATE_INTRO:
         TVShowConvertInternationalString(gStringVar1, show->smartshopperShow.playerName, show->smartshopperShow.language);

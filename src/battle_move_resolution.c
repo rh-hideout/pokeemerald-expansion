@@ -2,7 +2,7 @@
 #include "battle.h"
 #include "battle_environment.h"
 #include "battle_hold_effects.h"
-#include "battle_ai_util.h"
+#include "battle_ai_record.h"
 #include "battle_util.h"
 #include "battle_move_resolution.h"
 #include "battle_scripts.h"
@@ -1304,8 +1304,10 @@ static enum CancelerResult CancelerMoveEffectFailureTarget(struct BattleContext 
             }
             break;
         case EFFECT_SUCKER_PUNCH:
+        {
+            u32 defMove = GetBattlerChosenMove(battlerDef);
             if (HasBattlerActedThisTurn(battlerDef)
-             || (IsBattleMoveStatus(GetBattlerChosenMove(battlerDef)) && !gProtectStructs[battlerDef].noValidMoves))
+             || (IsBattleMoveStatus(defMove) && !gProtectStructs[battlerDef].noValidMoves && GetMoveEffect(defMove) != EFFECT_ME_FIRST))
             {
                 battleScript = BattleScript_ButItFailed;
             }
@@ -1314,6 +1316,8 @@ static enum CancelerResult CancelerMoveEffectFailureTarget(struct BattleContext 
                 numAffectedTargets++;
                 continue;
             }
+
+        }
             break;
         case EFFECT_UPPER_HAND:
         {
@@ -1559,8 +1563,8 @@ static enum CancelerResult CancelerCharging(struct BattleContext *ctx)
     }
     else if (gBattleMons[ctx->battlerAtk].volatiles.multipleTurns) // Second turn
     {
-    	gBattleScripting.animTurn = 1;
-    	gBattleScripting.animTargetsHit = 0;
+        gBattleScripting.animTurn = 1;
+        gBattleScripting.animTargetsHit = 0;
         gBattleMons[ctx->battlerAtk].volatiles.multipleTurns = FALSE;
         if (gBattleMoveEffects[GetMoveEffect(ctx->move)].semiInvulnerableEffect)
             gBattleMons[ctx->battlerAtk].volatiles.semiInvulnerable = STATE_NONE;
@@ -1728,7 +1732,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleContext *ctx)
             gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_FAILED;
             continue;
         }
-        else if (!BreaksThroughSemiInvulnerablity(ctx->battlerAtk, ctx->battlerDef, ctx->abilityAtk, ctx->abilityDef, ctx->move))
+        else if (!CanBreakThroughSemiInvulnerablity(ctx->battlerAtk, ctx->battlerDef, ctx->abilityAtk, ctx->abilityDef, ctx->move))
         {
             gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_FAILED;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_AVOIDED_ATK;
@@ -3560,7 +3564,7 @@ static inline bool32 CanEjectPackTrigger(enum BattlerId battlerAtk, enum Battler
     if (gBattleMons[battlerDef].volatiles.tryEjectPack
      && GetBattlerHoldEffect(battlerDef) == HOLD_EFFECT_EJECT_PACK
      && IsBattlerAlive(battlerDef)
-     && CountUsablePartyMons(battlerDef) > 0
+     && CanBattlerSwitch(battlerDef)
      && !gProtectStructs[battlerDef].disableEjectPack
      && !(moveEffect == EFFECT_HIT_SWITCH_TARGET && CanBattlerSwitch(battlerAtk))
      && !(moveEffect == EFFECT_PARTING_SHOT && CanBattlerSwitch(battlerAtk)))
@@ -4076,9 +4080,21 @@ static enum Move GetAssistMove(void)
     enum Move move = MOVE_NONE;
     u32 chooseableMovesNo = 0;
     struct Pokemon *party;
+    u8 battlerByPartyId[PARTY_SIZE];
     enum Move validMoves[PARTY_SIZE * MAX_MON_MOVES] = {MOVE_NONE};
 
     party = GetBattlerParty(gBattlerAttacker);
+
+    for (u32 i = 0; i < PARTY_SIZE; i++)
+        battlerByPartyId[i] = MAX_BATTLERS_COUNT;
+    for (u32 battler = 0; battler < gBattlersCount; battler++)
+    {
+        if (!IsBattlerAlly(battler, gBattlerAttacker))
+            continue;
+
+        if (gBattlerPartyIndexes[battler] < PARTY_SIZE)
+            battlerByPartyId[gBattlerPartyIndexes[battler]] = battler;
+    }
 
     for (u32 monId = 0; monId < PARTY_SIZE; monId++)
     {
@@ -4091,7 +4107,12 @@ static enum Move GetAssistMove(void)
 
         for (u32 moveId = 0; moveId < MAX_MON_MOVES; moveId++)
         {
-            enum Move move = GetMonData(&party[monId], MON_DATA_MOVE1 + moveId);
+            enum Move move;
+
+            if (battlerByPartyId[monId] != MAX_BATTLERS_COUNT)
+                move = gBattleMons[battlerByPartyId[monId]].moves[moveId];
+            else
+                move = GetMonData(&party[monId], MON_DATA_MOVE1 + moveId);
 
             if (IsMoveAssistBanned(move))
                 continue;
