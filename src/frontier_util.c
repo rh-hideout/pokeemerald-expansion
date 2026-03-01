@@ -142,7 +142,7 @@ const struct FrontierBrain gFrontierBrainInfo[NUM_FRONTIER_FACILITIES] =
             COMPOUND_STRING("My DOME ACE title isn't just for show!") //Gold
         },
         .battledBit = {1 << 2, 1 << 3},
-        .streakAppearances = {1, 2, 5, 0},
+        .streakAppearances = {4, 9, 5, 0},
     },
     [FRONTIER_FACILITY_PALACE] =
     {
@@ -3231,7 +3231,7 @@ u16 GetRandomFrontierMonFromSet(u16 trainerId)
         // "High tier" Pokémon are only allowed on open level mode
         // 20 is not a possible value for level here
         monId = monSet[Random() % numMons];
-    } while((level == FRONTIER_MAX_LEVEL_50 || level == 20) && monId > FRONTIER_MONS_HIGH_TIER);
+    } while ((level == FRONTIER_MAX_LEVEL_50 || level == 20) && monId > FRONTIER_MONS_HIGH_TIER);
 
     return monId;
 }

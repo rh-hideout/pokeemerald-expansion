@@ -181,7 +181,6 @@ bool32 EndOrContinueWeather(void);
 enum DamageCategory GetReflectDamageMoveDamageCategory(enum BattlerId battler, enum Move move);
 bool32 IsUnnerveBlocked(enum BattlerId battler, enum Item itemId);
 bool32 IsAffectedByFollowMe(enum BattlerId battlerAtk, enum BattleSide defSide, enum Move move);
-void DetermineTarget(enum MoveTarget moveTarget, bool32 overwriteTarget);
 void HandleAction_UseMove(void);
 void HandleAction_Switch(void);
 void HandleAction_UseItem(void);
@@ -353,6 +352,7 @@ bool32 CanBeFrozen(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ab
 bool32 CanGetFrostbite(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityDef);
 bool32 CanSetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum MoveEffect secondaryMoveEffect, enum ResultOption option);
 bool32 CanBeConfused(enum BattlerId battler);
+bool32 IsSafeguardProtected(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk);
 u32 GetBattlerAffectionHearts(enum BattlerId battler);
 void TryToRevertMimicryAndFlags(void);
 bool32 BattleArenaTurnEnd(void);
@@ -405,7 +405,8 @@ u32 GetTotalAccuracy(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
 bool32 DoesOHKOMoveMissTarget(struct BattleCalcValues *cv);
 bool32 DoesMoveMissTarget(struct BattleCalcValues *cv);
 bool32 IsSemiInvulnerable(enum BattlerId battler, enum SemiInvulnerableExclusion excludeCommander);
-bool32 BreaksThroughSemiInvulnerablity(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum Move move);
+bool32 CanBreakThroughSemiInvulnerablity(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum Move move);
+bool32 BreaksThroughSemiInvulnerableState(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum Move move, enum SemiInvulnerableState state);
 bool32 HasPartnerTrainer(enum BattlerId battler);
 bool32 IsAffectedByPowderMove(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect);
 enum Move GetNaturePowerMove(void);

@@ -85,17 +85,17 @@ enum BattleSide
 #define BATTLE_TYPE_MULTI              (1 << 6)
 #define BATTLE_TYPE_SAFARI             (1 << 7)
 #define BATTLE_TYPE_BATTLE_TOWER       (1 << 8)
-#define BATTLE_TYPE_CATCH_TUTORIAL     (1 << 9) 
+#define BATTLE_TYPE_CATCH_TUTORIAL     (1 << 9)
 #define BATTLE_TYPE_ROAMER             (1 << 10)
 #define BATTLE_TYPE_EREADER_TRAINER    (1 << 11)
 #define BATTLE_TYPE_RAID               (1 << 12)
 #define BATTLE_TYPE_LEGENDARY          (1 << 13)
 #define BATTLE_TYPE_14                 (1 << 14)
-#define BATTLE_TYPE_TWO_OPPONENTS      (1 << 15) 
-#define BATTLE_TYPE_DOME               (1 << 16) 
-#define BATTLE_TYPE_PALACE             (1 << 17) 
-#define BATTLE_TYPE_ARENA              (1 << 18) 
-#define BATTLE_TYPE_FACTORY            (1 << 19) 
+#define BATTLE_TYPE_TWO_OPPONENTS      (1 << 15)
+#define BATTLE_TYPE_DOME               (1 << 16)
+#define BATTLE_TYPE_PALACE             (1 << 17)
+#define BATTLE_TYPE_ARENA              (1 << 18)
+#define BATTLE_TYPE_FACTORY            (1 << 19)
 #define BATTLE_TYPE_PIKE               (1 << 20)
 #define BATTLE_TYPE_PYRAMID            (1 << 21)
 #define BATTLE_TYPE_INGAME_PARTNER     (1 << 22)
@@ -236,6 +236,7 @@ enum VolatileFlags
     F(VOLATILE_BEADS_OF_RUIN,               beadsOfRuin,                   (u32, 1)) \
     F(VOLATILE_IS_TRANSFORMED_MON_SHINY,    isTransformedMonShiny,         (u32, 1)) \
     F(VOLATILE_TRANSFORMED_MON_PID,         transformedMonPID,             (u32, UINT32_MAX)) \
+    F(VOLATILE_TRANSFORMED_MON_SPECIES,     transformedMonSpecies,         (u32, NUM_SPECIES)) \
     F(VOLATILE_DISABLED_MOVE,               disabledMove,                  (u32, MOVES_COUNT_ALL)) \
     F(VOLATILE_ENCORED_MOVE,                encoredMove,                   (u32, MOVES_COUNT_ALL)) \
     F(VOLATILE_PROTECT_USES,                consecutiveMoveUses,           (u32, UINT8_MAX)) \
@@ -289,7 +290,8 @@ enum VolatileFlags
     F(VOLATILE_TRY_EJECT_PACK,              tryEjectPack,                  (u32, 1)) \
     F(VOLATILE_OCTOLOCKED_BY,               octolockedBy,                  (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
     F(VOLATILE_PARADOX_BOOSTED_STAT,        paradoxBoostedStat,            (enum Stat, NUM_STATS - 1)) \
-    F(VOLATILE_UNABLE_TO_USE_MOVE,          unableToUseMove,               (u32, 1))
+    F(VOLATILE_UNABLE_TO_USE_MOVE,          unableToUseMove,               (u32, 1)) \
+    F(VOLATILE_ACTIVATE_DANCER,             activateDancer,                (u32, 1))
 
 
 /* Use within a macro to get the maximum allowed value for a volatile. Requires _typeMaxValue as input. */
@@ -661,8 +663,9 @@ enum BattleEnvironments
 #define BATTLE_RUN_FORBIDDEN      1
 #define BATTLE_RUN_FAILURE        2
 
-#define B_WIN_TYPE_NORMAL 0
-#define B_WIN_TYPE_ARENA  1
+#define B_WIN_TYPE_NORMAL         0
+#define B_WIN_TYPE_ARENA          1
+#define B_WIN_TYPE_KANTO_TUTORIAL 2
 
 // Window Ids for sStandardBattleWindowTemplates / sBattleArenaWindowTemplates
 #define B_WIN_MSG                 0

@@ -2190,7 +2190,7 @@ static u32 Cmd_WaitPaletteFade(struct BerryCrushGame *game, u8 *args)
     case 0:
         if (UpdatePaletteFade())
             return 0;
-        if(args[0] != 0)
+        if (args[0] != 0)
             game->cmdState++;
         else
             game->cmdState = 3;

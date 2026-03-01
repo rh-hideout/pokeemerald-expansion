@@ -37,7 +37,7 @@ SINGLE_BATTLE_TEST("Heatproof halves the damage done by burn from 1/8th to 1/16t
     PARAMETRIZE { config = GEN_6; burnRate = 16; }
 
     GIVEN {
-        WITH_CONFIG(CONFIG_BURN_DAMAGE, config);
+        WITH_CONFIG(B_BURN_DAMAGE, config);
         PLAYER (SPECIES_BRONZONG) { Ability(ABILITY_HEATPROOF); Status1(STATUS1_BURN); }
         OPPONENT (SPECIES_WOBBUFFET);
     }
@@ -49,4 +49,3 @@ SINGLE_BATTLE_TEST("Heatproof halves the damage done by burn from 1/8th to 1/16t
         HP_BAR(player, damage: maxHP / burnRate);
     }
 }
-

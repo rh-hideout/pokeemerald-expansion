@@ -37,7 +37,7 @@ SINGLE_BATTLE_TEST("Flame Body triggers 1/3 times (Gen3) or 30% (Gen 4+) of the 
     PARAMETRIZE { config = GEN_4; passes = 3; trials = 10; } // 30%
     PASSES_RANDOMLY(passes, trials, RNG_FLAME_BODY);
     GIVEN {
-        WITH_CONFIG(CONFIG_ABILITY_TRIGGER_CHANCE, config);
+        WITH_CONFIG(B_ABILITY_TRIGGER_CHANCE, config);
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_MAGMAR) { Ability(ABILITY_FLAME_BODY); }

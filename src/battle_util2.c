@@ -189,7 +189,8 @@ u32 BattlePalace_TryEscapeStatus(enum BattlerId battler)
                 {
                     // Unfreeze
                     gBattleMons[battler].status1 &= ~(STATUS1_FREEZE);
-                    BattleScriptCall(BattleScript_MoveUsedUnfroze);
+                    gBattleScripting.battler = battler;
+                    BattleScriptCall(BattleScript_BattlerDefrosted);
                     gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_DEFROSTED;
                 }
                 effect = 2;

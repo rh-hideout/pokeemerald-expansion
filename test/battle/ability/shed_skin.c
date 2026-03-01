@@ -10,7 +10,7 @@ SINGLE_BATTLE_TEST("Shed Skin triggers 33% (Gen3, Gen5+) or 30% (Gen 4) of the t
 
     PASSES_RANDOMLY(passes, 100, RNG_SHED_SKIN);
     GIVEN {
-        WITH_CONFIG(CONFIG_ABILITY_TRIGGER_CHANCE, config);
+        WITH_CONFIG(B_ABILITY_TRIGGER_CHANCE, config);
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ARBOK) { Status1(STATUS1_POISON); Ability(ABILITY_SHED_SKIN); }
