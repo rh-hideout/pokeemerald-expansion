@@ -37975,46 +37975,13 @@ gBattleAnimMove_Darkness::
 	waitforvisualfinish
 	createsprite gMoonSpriteTemplate, ANIM_ATTACKER, 2, 120, 56
 	createvisualtask AnimTask_AlphaFadeIn, 3, 0, 16, 16, 0, 1
-	delay 40
 	playsewithpan SE_M_BARRIER, 0
-	call MoonLightRay
-	delay 10
-	call MoonLightRay
-	delay 10
-	call MoonLightRay
-	delay 10
-	call MoonLightRay
-	delay 20
+	delay 40
+	delay 40
+	delay 40
 	createvisualtask AnimTask_MoonlightEndFade, 2
 	waitforvisualfinish
 	end
-
-MoonLightRay:
-	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 40, -72
-	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 50, -40
-	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 30, -24
-	delay 4
-	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 40, 60
-	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 40, 50
-	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 30, 20
-	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 40, 10
-	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 40, 0
-	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 30, 24
-	delay 4
-	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 40, 30
-	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 40, 94
-	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 40, 130
-	delay 4
-	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 40, 150
-	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 40, 50
-	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 30, 48
-	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 40, 72
-	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 50, 40
-	delay 4
-	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 30, 24
-	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 40, 60
-	createsprite gMoonlightSparkleSpriteTemplate, ANIM_ATTACKER, 40, 50
-	return
 
 gBattleAnimMove_PyroBone::
 	loadspritegfx ANIM_TAG_BONE
