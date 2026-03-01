@@ -497,10 +497,10 @@ bool32 IsBattlerTrapped(enum BattlerId battlerAtk, enum BattlerId battlerDef)
         && (B_SHADOW_TAG_ESCAPE >= GEN_4 && gAiLogicData->abilities[battlerDef] != ABILITY_SHADOW_TAG))
         return TRUE;
     if (AI_IsAbilityOnSide(battlerAtk, ABILITY_ARENA_TRAP)
-        && AI_IsBattlerGrounded(battlerAtk))
+        && AI_IsBattlerGrounded(battlerDef))
         return TRUE;
     if (AI_IsAbilityOnSide(battlerAtk, ABILITY_MAGNET_PULL)
-        && IS_BATTLER_OF_TYPE(battlerAtk, TYPE_STEEL))
+        && IS_BATTLER_OF_TYPE(battlerDef, TYPE_STEEL))
         return TRUE;
 
     if (gBattleTypeFlags & BATTLE_TYPE_TRAINER && CountUsablePartyMons(battlerDef) == 0)
