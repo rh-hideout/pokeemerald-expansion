@@ -428,6 +428,7 @@ void TryUpdateEvolutionTracker(enum EvolutionConditions evolutionCondition, u32 
 bool32 CanUseMoveConsecutively(enum BattlerId battler);
 void TryResetConsecutiveUseCounter(enum BattlerId battler);
 void SetOrClearRageVolatile(void);
+bool32 IsNaturalEnemy(u32 speciesAttacker, u32 speciesTarget);
 enum Stat GetDownloadStat(enum BattlerId battler);
 
 #endif // GUARD_BATTLE_UTIL_H
