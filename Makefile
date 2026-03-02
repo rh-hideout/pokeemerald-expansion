@@ -380,6 +380,7 @@ TEST_SKIP_IS_FAIL := \x00
 endif
 
 check: $(TESTELF)
+	@echo "$(MAP_VERSION)" > map_version.s
 	@cp $< $(HEADLESSELF)
 	$(PATCHELF) $(HEADLESSELF) gTestRunnerHeadless '\x01' gTestRunnerSkipIsFail "$(TEST_SKIP_IS_FAIL)"
 	$(ROMTESTHYDRA) $(ROMTEST) $(OBJCOPY) $(HEADLESSELF)
