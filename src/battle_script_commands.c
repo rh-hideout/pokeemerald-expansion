@@ -3167,7 +3167,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         }
         break;
     case MOVE_EFFECT_FLING:
-        if (CanFling(gBattlerAttacker, abilities[gBattlerAttacker]))
+        if (CanFling(gBattlerAttacker, abilities[gBattlerAttacker]) || gBattleStruct->flungItem == FLUNG_ITEM_REMOVED)
         {
             u32 item = ITEM_NONE;
 
