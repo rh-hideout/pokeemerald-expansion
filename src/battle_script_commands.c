@@ -2124,7 +2124,12 @@ static void Cmd_printstring(void)
 {
     CMD_ARGS(u16 id);
 
-    if (gBattleControllerExecFlags == 0)
+    if (gBattleStruct->flungItem != FLUNG_ITEM_NONE)
+    {
+        // Prevent second fling message for a possible fling spread move
+        gBattlescriptCurrInstr = cmd->nextInstr;
+    }
+    else if (gBattleControllerExecFlags == 0)
     {
         u16 id = (cmd->id == 0 ? gBattleScripting.savedStringId : cmd->id);
 
@@ -2364,7 +2369,7 @@ static void SetNonVolatileStatus(enum BattlerId effectBattler, enum MoveEffect e
 
 static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect) // Currently only used to determine move effects which happen even if the move's defined effectbattler is fainted
 {
-    switch (moveEffect) 
+    switch (moveEffect)
     {
     case MOVE_EFFECT_PAYDAY:
     case MOVE_EFFECT_BUG_BITE:
@@ -2376,7 +2381,7 @@ static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect) //
     case MOVE_EFFECT_SANDSTORM:
     case MOVE_EFFECT_HAIL:
     case MOVE_EFFECT_MISTY_TERRAIN:
-    case MOVE_EFFECT_GRASSY_TERRAIN: 
+    case MOVE_EFFECT_GRASSY_TERRAIN:
     case MOVE_EFFECT_ELECTRIC_TERRAIN:
     case MOVE_EFFECT_PSYCHIC_TERRAIN:
     case MOVE_EFFECT_DEFOG:
@@ -2443,7 +2448,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         gBattlescriptCurrInstr = battleScript;
         return;
     }
-    
+
     gBattleScripting.battler = battlerAtk;
     gEffectBattler = effectBattler;
 
@@ -3169,10 +3174,23 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
     case MOVE_EFFECT_FLING:
         if (CanFling(gBattlerAttacker, abilities[gBattlerAttacker]))
         {
-            u32 item = gBattleStruct->flingItem;
-            if (item == ITEM_NONE) // flingItem could be none if not used with EFFECT_FLING
-                item = gBattleStruct->flingItem = gBattleMons[gBattlerAttacker].item;
-            gLastUsedItem = item;
+            u32 item = ITEM_NONE;
+
+            switch (gBattleStruct->flungItem)
+            {
+            case FLUNG_ITEM_NONE:
+                gBattleStruct->flungItem = FLUNG_ITEM_REMOVE;
+                if (GetMoveEffect(gCurrentMove) != EFFECT_FLING)
+                    item = gBattleStruct->flingItem = gLastUsedItem = gBattleMons[gBattlerAttacker].item;
+                else
+                    item = gBattleStruct->flingItem = gLastUsedItem;
+                break;
+            case FLUNG_ITEM_REMOVE:
+            case FLUNG_ITEM_REMOVED:
+                gBattleStruct->flungItem = FLUNG_ITEM_REMOVED;
+                item = gLastUsedItem = gBattleStruct->flingItem;
+                break;
+            }
 
             enum HoldEffect holdEffect = GetItemHoldEffect(item);
 
@@ -6582,17 +6600,15 @@ static void Cmd_removeitem(void)
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
     enum Item itemId = gBattleMons[battler].item;
 
-    if (gBattleStruct->flingItem != ITEM_NONE)
+    if (gBattleStruct->flungItem == FLUNG_ITEM_REMOVE)
     {
-        if (gBattleMons[gBattlerAttacker].item == ITEM_NONE) // Avoid the else branch
-        {
-            gBattlescriptCurrInstr = cmd->nextInstr;
-            return;
-        }
+        gBattleStruct->flungItem = FLUNG_ITEM_REMOVED;
         battler = gBattlerAttacker;
-        itemId = gBattleStruct->flingItem;
+        itemId = gLastUsedItem;
     }
-    else if (gBattleScripting.overrideBerryRequirements || itemId == ITEM_NONE)
+    else if (gBattleScripting.overrideBerryRequirements
+          || gBattleStruct->flungItem == FLUNG_ITEM_REMOVED
+          || itemId == ITEM_NONE)
     {
         // bug bite / pluck / no item - don't remove current item
         gBattlescriptCurrInstr = cmd->nextInstr;

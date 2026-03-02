@@ -1099,7 +1099,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
         if (!CanFling(ctx->battlerAtk, ctx->abilityAtk))
             battleScript = BattleScript_ButItFailed;
         else // set fling item
-            gBattleStruct->flingItem = gLastUsedItem = gBattleMons[ctx->battlerAtk].item;
+            gLastUsedItem = gBattleMons[ctx->battlerAtk].item;
         break;
     case EFFECT_FAIL_IF_NOT_ARG_TYPE:
         if (!IS_BATTLER_OF_TYPE(ctx->battlerAtk, GetMoveArgType(ctx->move)))
@@ -3712,7 +3712,7 @@ static enum MoveEndResult MoveEndClearBits(void)
     gBattleStruct->fickleBeamBoosted = FALSE;
     gBattleStruct->battlerState[gBattlerAttacker].usedMicleBerry = FALSE;
     gBattleStruct->toxicChainPriority = FALSE;
-    gBattleStruct->flingItem = ITEM_NONE;
+    gBattleStruct->flungItem = FLUNG_ITEM_NONE;
 
     if (gBattleStruct->unableToUseMove)
         gBattleStruct->pledgeMove = FALSE;

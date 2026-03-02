@@ -574,3 +574,4 @@ SINGLE_BATTLE_TEST("Fling doesn't fail when holding a Booster Energy and the tar
         EXPECT(player->item == ITEM_NONE);
     }
 }
+
