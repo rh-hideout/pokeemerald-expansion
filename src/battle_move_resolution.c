@@ -2380,10 +2380,13 @@ static enum MoveEndResult MoveEndTargetVisible(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
-    if (!gSpecialStatuses[gBattlerTarget].restoredBattlerSprite && !IsSemiInvulnerable(gBattlerTarget, CHECK_ALL))
+    if (!gSpecialStatuses[gBattlerTarget].restoredBattlerSprite
+     && gBattlerTarget < gBattlersCount
+     && !IsSemiInvulnerable(gBattlerTarget, CHECK_ALL))
     {
         BtlController_EmitSpriteInvisibility(gBattlerTarget, B_COMM_TO_CONTROLLER, FALSE);
         MarkBattlerForControllerExec(gBattlerTarget);
+        gSpecialStatuses[gBattlerTarget].restoredBattlerSprite = TRUE;
         gBattleMons[gBattlerTarget].volatiles.semiInvulnerable = STATE_NONE;
         result = MOVEEND_RESULT_BREAK;
     }
@@ -2480,6 +2483,7 @@ static enum MoveEndResult MoveEndFaintBlock(void)
             break;
         case FAINT_BLOCK_CHECK_TARGET_FAINTED: // Stop if target already ran the block / is alive or absent
             if (IsBattlerAlive(gBattlerTarget)
+             || gBattlerTarget >= gBattlersCount
              || (gAbsentBattlerFlags & 1u << gBattlerTarget)
              || gBattleStruct->battlerState[gBattlerTarget].fainted)
             {
