@@ -659,19 +659,18 @@ void BattleTv_SetDataBasedOnAnimation(u8 animationId)
     }
 }
 
-// Helper to get the correct party mon given a combined score index (0-5).
-// In multi battles: 0-2 maps to the front trainer, 3-5 maps to the flank trainer.
-static struct Pokemon *GetTvPartyMon(u32 scoreIdx, u32 side)
+// Helper following 4-party split in link multis
+static struct Pokemon *GetTvPartyMon(u32 scoreIndex, u32 side)
 {
-    if ((gBattleTypeFlags & BATTLE_TYPE_MULTI) && scoreIdx >= MULTI_PARTY_SIZE)
+    if ((gBattleTypeFlags & BATTLE_TYPE_MULTI) && scoreIndex >= MULTI_PARTY_SIZE)
     {
-        u32 trainer = (side == B_SIDE_PLAYER) ? B_TRAINER_2 : B_TRAINER_3;
-        return &gParties[trainer][scoreIdx - MULTI_PARTY_SIZE];
+        enum BattleTrainer trainer = (side == B_SIDE_PLAYER) ? B_TRAINER_2 : B_TRAINER_3;
+        return &gParties[trainer][scoreIndex - MULTI_PARTY_SIZE];
     }
     else
     {
-        u32 trainer = (side == B_SIDE_PLAYER) ? B_TRAINER_0 : B_TRAINER_1;
-        return &gParties[trainer][scoreIdx];
+        enum BattleTrainer trainer = (side == B_SIDE_PLAYER) ? B_TRAINER_0 : B_TRAINER_1;
+        return &gParties[trainer][scoreIndex];
     }
 }
 
