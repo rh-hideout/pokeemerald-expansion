@@ -65,6 +65,19 @@ include config.mk
 # Default make rule
 all: rom
 
+# Force make clean if the currently built version in map_version.s does not match MAP_VERSION and map_version.s exists.
+ifneq (,$(wildcard map_version.s))
+  MAP_VERSION_PATH := map_version.s
+  MAP_VERSION_CURRENT := $(shell cat $(MAP_VERSION_PATH))
+  ifneq ($(MAP_VERSION_CURRENT),$(MAP_VERSION))
+    # Only run if not already running make clean.
+    ifeq (,$(filter clean tidy tidymodern tidycheck tidydebug tidyrelease clean-assets clean-generated clean-teachables clean-teachables_intermediates,$(MAKECMDGOALS)))
+      $(info version mismatch ($(MAP_VERSION_CURRENT) -> $(MAP_VERSION)); running 'make clean')
+      $(shell $(MAKE) clean >/dev/null)
+    endif
+  endif
+endif
+
 # Toolchain selection
 TOOLCHAIN := $(DEVKITARM)
 # don't use dkP's base_tools anymore
@@ -373,6 +386,7 @@ check: $(TESTELF)
 
 # Other rules
 rom: $(ROM)
+	@echo "$(MAP_VERSION)" > map_version.s
 ifeq ($(COMPARE),1)
 	@$(SHA1) rom.sha1
 endif
@@ -394,6 +408,7 @@ tidy: tidymodern tidycheck tidydebug tidyrelease
 
 tidymodern:
 	rm -f poke*.gba poke*.elf poke*.map
+	rm -f map_version.s
 	rm -rf $(OBJ_DIR_NAME)
 
 tidycheck:
