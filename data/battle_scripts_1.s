@@ -509,6 +509,7 @@ BattleScript_EffectFling::
 	attackcanceler
 	accuracycheck BattleScript_FlingMissed
 	pause B_WAIT_TIME_SHORT
+    jumpifbyte CMP_EQUAL, sB_ANIM_TURN, 1, BattleScript_HitFromDamageCalc
 	printstring STRINGID_PKMNFLUNG
 	waitmessage B_WAIT_TIME_SHORT
 	goto BattleScript_HitFromDamageCalc

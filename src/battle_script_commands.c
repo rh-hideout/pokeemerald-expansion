@@ -2124,12 +2124,7 @@ static void Cmd_printstring(void)
 {
     CMD_ARGS(u16 id);
 
-    if (gBattleStruct->flungItem != FLUNG_ITEM_NONE && cmd->id == STRINGID_PKMNFLUNG)
-    {
-        // Prevent second fling message for a possible fling spread move
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-    else if (gBattleControllerExecFlags == 0)
+    if (gBattleControllerExecFlags == 0)
     {
         u16 id = (cmd->id == 0 ? gBattleScripting.savedStringId : cmd->id);
 
