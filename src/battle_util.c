@@ -5028,7 +5028,7 @@ u32 IsAbilityPreventingEscape(enum BattlerId battler)
     {
         if (battler == battlerDef || IsBattlerAlly(battler, battlerDef))
             continue;
-        
+
         if (!IsBattlerAlive(battlerDef))
             continue;
 
