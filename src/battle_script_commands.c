@@ -2124,7 +2124,7 @@ static void Cmd_printstring(void)
 {
     CMD_ARGS(u16 id);
 
-    if (gBattleStruct->flungItem != FLUNG_ITEM_NONE)
+    if (gBattleStruct->flungItem != FLUNG_ITEM_NONE && cmd->id == STRINGID_PKMNFLUNG)
     {
         // Prevent second fling message for a possible fling spread move
         gBattlescriptCurrInstr = cmd->nextInstr;
