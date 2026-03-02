@@ -4830,7 +4830,11 @@ u32 GetBattlerTotalSpeedStat(u32 battler, enum Ability ability, enum HoldEffect 
     // other abilities
     if (ability == ABILITY_QUICK_FEET && gBattleMons[battler].status1 & STATUS1_ANY)
         speed = (speed * 150) / 100;
+    else if (ability == ABILITY_TOXIC_BOOST && gBattleMons[battler].status1 & STATUS1_POISON)
+        speed *= 1.5;
     else if (ability == ABILITY_SURGE_SURFER && gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)
+        speed *= 2;
+    else if (ability == ABILITY_MISTY_STEP && gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN)
         speed *= 2;
     else if (ability == ABILITY_SLOW_START && gDisableStructs[battler].slowStartTimer != 0)
         speed /= 2;

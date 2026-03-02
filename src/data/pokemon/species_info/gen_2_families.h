@@ -388,7 +388,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
-        .abilities = { ABILITY_BLAZE, ABILITY_COMBUSTION, ABILITY_STEAM_ENGINE },
+        .abilities = { ABILITY_INTENSE_BLAZE, ABILITY_COMBUSTION, ABILITY_STEAM_ENGINE },
         .bodyColor = BODY_COLOR_YELLOW,
         .speciesName = _("Typhlosion"),
         .cryId = CRY_TYPHLOSION,
@@ -6080,7 +6080,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_AMORPHOUS),
-        .abilities = { ABILITY_MAGMA_ARMOR, ABILITY_COMBUSTION, ABILITY_WEAK_ARMOR },
+        .abilities = { ABILITY_MAGMA_ARMOR, ABILITY_FLAME_ABSORB, ABILITY_MAGMA_AURA },
         .bodyColor = BODY_COLOR_RED,
         .speciesName = _("Slugma"),
         .cryId = CRY_SLUGMA,
@@ -6156,7 +6156,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_AMORPHOUS),
-        .abilities = { ABILITY_STORM_DRAIN, ABILITY_COMBUSTION, ABILITY_WELL_BAKED_BODY },
+        .abilities = { ABILITY_MAGMA_ARMOR, ABILITY_FLAME_ABSORB, ABILITY_MAGMA_AURA },
         .bodyColor = BODY_COLOR_RED,
         .noFlip = TRUE,
         .speciesName = _("Magcargo"),
@@ -6302,7 +6302,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .growthRate = GROWTH_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
     #if P_UPDATED_ABILITIES >= GEN_4
-        .abilities = { ABILITY_OBLIVIOUS, ABILITY_SNOW_CLOAK, ABILITY_THICK_FAT },
+        .abilities = { ABILITY_OBLIVIOUS, ABILITY_ICE_TUSKS, ABILITY_THICK_FAT },
     #else
         .abilities = { ABILITY_OBLIVIOUS, ABILITY_NONE, ABILITY_THICK_FAT },
     #endif
@@ -6393,7 +6393,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
-        .abilities = { ABILITY_OBLIVIOUS, ABILITY_SNOW_CLOAK, ABILITY_THICK_FAT },
+        .abilities = { ABILITY_OBLIVIOUS, ABILITY_ICE_TUSKS, ABILITY_THICK_FAT },
         .bodyColor = BODY_COLOR_BROWN,
         .speciesName = _("Mamoswine"),
         .cryId = CRY_MAMOSWINE,
@@ -6846,7 +6846,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_WATER_1, EGG_GROUP_FIELD),
-        .abilities = { ABILITY_VITAL_SPIRIT, ABILITY_STAMINA, ABILITY_QUARK_DRIVE },
+        .abilities = { ABILITY_THICK_FAT, ABILITY_STAMINA, ABILITY_HOSPITALITY },
         .bodyColor = BODY_COLOR_RED,
         .speciesName = _("Delibird"),
         .cryId = CRY_DELIBIRD,
@@ -7047,12 +7047,12 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
 #if P_FAMILY_SKARMORY
     [SPECIES_SKARMORY] =
     {
-        .baseHP = 85,
-        .baseAttack = 95,
-        .baseDefense = 140,
-        .baseSpeed = 80,
+        .baseHP = 75,
+        .baseAttack = 90,
+        .baseDefense = 130,
+        .baseSpeed = 85,
         .baseSpAttack = 40,
-        .baseSpDefense = 70,
+        .baseSpDefense = 80,
         .types = MON_TYPES(TYPE_STEEL, TYPE_FLYING),
         .catchRate = 25,
         .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 163 : 168,
@@ -7062,7 +7062,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FLYING),
-        .abilities = { ABILITY_MULTISCALE, ABILITY_STEELWORKER, ABILITY_WEAK_ARMOR },
+        .abilities = { ABILITY_MULTISCALE, ABILITY_BATTLE_READY, ABILITY_WEAK_ARMOR },
         .bodyColor = BODY_COLOR_GRAY,
         .speciesName = _("Skarmory"),
         .cryId = CRY_SKARMORY,
@@ -7130,7 +7130,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .friendship = 35,
         .growthRate = GROWTH_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
-        .abilities = { ABILITY_POISON_HEAL, ABILITY_FLASH_FIRE, ABILITY_UNNERVE },
+        .abilities = { ABILITY_HELLFIRE, ABILITY_DARK_AURA, ABILITY_UNNERVE },
         .bodyColor = BODY_COLOR_BLACK,
         .speciesName = _("Houndour"),
         .cryId = CRY_HOUNDOUR,
@@ -7197,7 +7197,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .friendship = 35,
         .growthRate = GROWTH_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
-        .abilities = { ABILITY_POISON_HEAL, ABILITY_FLASH_FIRE, ABILITY_UNNERVE },
+        .abilities = { ABILITY_HELLFIRE, ABILITY_DARK_AURA, ABILITY_UNNERVE },
         .bodyColor = BODY_COLOR_BLACK,
         .speciesName = _("Houndoom"),
         .cryId = CRY_HOUNDOOM,
@@ -7332,12 +7332,12 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
 #if P_FAMILY_PHANPY
     [SPECIES_PHANPY] =
     {
-        .baseHP = 90,
+        .baseHP = 70,
         .baseAttack = 70,
         .baseDefense = 70,
-        .baseSpeed = 60,
+        .baseSpeed = 40,
         .baseSpAttack = 40,
-        .baseSpDefense = 40,
+        .baseSpDefense = 50,
         .types = MON_TYPES(TYPE_GROUND),
         .catchRate = 120,
         .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 66 : 124,
@@ -7347,7 +7347,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
-        .abilities = { ABILITY_BATTLE_ARMOR, ABILITY_NONE, ABILITY_SAND_VEIL },
+        .abilities = { ABILITY_BATTLE_ARMOR, ABILITY_BATTLE_ARMOR, ABILITY_SAND_VEIL },
         .bodyColor = BODY_COLOR_BLUE,
         .speciesName = _("Phanpy"),
         .cryId = CRY_PHANPY,
@@ -7399,7 +7399,8 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .levelUpLearnset = sPhanpyLevelUpLearnset,
         .teachableLearnset = sPhanpyTeachableLearnset,
         .eggMoveLearnset = sPhanpyEggMoveLearnset,
-        .evolutions = EVOLUTION({EVO_LEVEL, 35, SPECIES_DONPHAN}),
+        .evolutions = EVOLUTION({EVO_LEVEL, 35, SPECIES_DONPHAN}, 
+                                {EVO_ITEM, ITEM_SUN_STONE, SPECIES_GREAT_TUSK}),
     },
 
     [SPECIES_DONPHAN] =
@@ -7420,7 +7421,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
-        .abilities = { ABILITY_BATTLE_ARMOR, ABILITY_NONE, ABILITY_SAND_FORCE },
+        .abilities = { ABILITY_BATTLE_ARMOR, ABILITY_ROCK_HEAD, ABILITY_SAND_FORCE },
         .bodyColor = BODY_COLOR_GRAY,
         .speciesName = _("Donphan"),
         .cryId = CRY_DONPHAN,
@@ -7480,6 +7481,71 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         )
         .levelUpLearnset = sDonphanLevelUpLearnset,
         .teachableLearnset = sDonphanTeachableLearnset,
+    },
+
+    [SPECIES_GREAT_TUSK] =
+    {
+        .baseHP = 95,
+        .baseAttack = 110,
+        .baseDefense = 100,
+        .baseSpeed = 85,
+        .baseSpAttack = 45,
+        .baseSpDefense = 55,
+        .types = MON_TYPES(TYPE_GROUND, TYPE_FIGHTING),
+        .catchRate = 30,
+        .expYield = 285,
+        .evYield_Attack = 3,
+        .itemRare = ITEM_BOOSTER_ENERGY,
+        .genderRatio = MON_GENDERLESS,
+        .eggCycles = 50,
+        .friendship = 0,
+        .growthRate = GROWTH_SLOW,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED),
+        .abilities = { ABILITY_BATTLE_ARMOR, ABILITY_ROUGH_SKIN, ABILITY_PROTOSYNTHESIS },
+        .bodyColor = BODY_COLOR_PURPLE,
+        .speciesName = _("Tuskphan"),
+        .cryId = CRY_GREAT_TUSK,
+        .natDexNum = NATIONAL_DEX_GREAT_TUSK,
+        .categoryName = _("Paradox"),
+        .height = 22,
+        .weight = 3200,
+        .description = COMPOUND_STRING(
+            "Sightings of this Pokémon have\n"
+            "occurred in recent years. The name\n"
+            "Great Tusk was taken from a creature\n"
+            "listed in a certain book."),
+        .pokemonScale = 356,
+        .pokemonOffset = 17,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_GreatTusk,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .backPic = gMonBackPic_GreatTusk,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 9,
+        //.backAnimId = BACK_ANIM_NONE,
+        .palette = gMonPalette_GreatTusk,
+        .shinyPalette = gMonShinyPalette_GreatTusk,
+        .iconSprite = gMonIcon_GreatTusk,
+        .iconPalIndex = 0,
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+        SHADOW(2, 13, SHADOW_SIZE_XL_BATTLE_ONLY)
+        FOOTPRINT(GreatTusk)
+        OVERWORLD(
+            sPicTable_GreatTusk,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following,
+            gOverworldPalette_GreatTusk,
+            gShinyOverworldPalette_GreatTusk
+        )
+        .isParadox = TRUE,
+        .levelUpLearnset = sGreatTuskLevelUpLearnset,
+        .teachableLearnset = sGreatTuskTeachableLearnset,
     },
 #endif //P_FAMILY_PHANPY
 
@@ -7716,7 +7782,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .growthRate = GROWTH_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
     #if P_UPDATED_ABILITIES >= GEN_4
-        .abilities = { ABILITY_THICK_FAT, ABILITY_SCRAPPY, ABILITY_SAP_SIPPER },
+        .abilities = { ABILITY_THICK_FAT, ABILITY_SCRAPPY, ABILITY_HOSPITALITY },
     #else
         .abilities = { ABILITY_THICK_FAT, ABILITY_NONE, ABILITY_SAP_SIPPER },
     #endif
@@ -8097,7 +8163,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .friendship = 35,
         .growthRate = GROWTH_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER),
-        .abilities = { ABILITY_SHED_SKIN, ABILITY_NONE, ABILITY_NONE },
+        .abilities = { ABILITY_SHED_SKIN, ABILITY_NONE, ABILITY_SHED_SKIN },
         .bodyColor = BODY_COLOR_GRAY,
         .speciesName = _("Pupitar"),
         .cryId = CRY_PUPITAR,

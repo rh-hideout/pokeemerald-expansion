@@ -2304,8 +2304,14 @@ static enum MoveCanceler CancelerConfused(struct BattleContext *ctx)
             gBattleMons[ctx->battlerAtk].volatiles.confusionTurns--;
         if (gBattleMons[ctx->battlerAtk].volatiles.confusionTurns)
         {
+            if (GetBattlerAbility(ctx->battlerAtk) == ABILITY_TANGLED_FEET)
+            {
+                gBattleCommunication[MULTISTRING_CHOOSER] = FALSE;
+                BattleScriptCall(BattleScript_MoveUsedIsConfused);
+                return MOVE_STEP_BREAK;
+            }
              // confusion dmg
-            if (RandomPercentage(RNG_CONFUSION, (IsAbilityOnOpposingSide(ctx->battlerAtk, ABILITY_BAD_LUCK_OMEN) ? 50 : (GetConfig(B_CONFUSION_SELF_DMG_CHANCE) >= GEN_7 ? 33 : 50))))
+            else if (RandomPercentage(RNG_CONFUSION, (IsAbilityOnOpposingSide(ctx->battlerAtk, ABILITY_BAD_LUCK_OMEN) ? 50 : (GetConfig(B_CONFUSION_SELF_DMG_CHANCE) >= GEN_7 ? 33 : 50))))
             {
                 gBattleCommunication[MULTISTRING_CHOOSER] = TRUE;
                 struct DamageContext dmgCtx = {0};
@@ -3677,7 +3683,15 @@ bool32 CanAbilityAbsorbMove(u32 battlerAtk, u32 battlerDef, enum Ability ability
         break;
     case ABILITY_HELLFIRE:
         if (moveType == TYPE_FIRE)
-            effect = MOVE_ABSORBED_BY_HELLFIRE;
+            effect = MOVE_ABSORBED_BY_ABILITY;
+        break;
+    case ABILITY_FLAME_ABSORB:
+        if (moveType == TYPE_FIRE)
+            effect = MOVE_ABSORBED_BY_DRAIN_HP_ABILITY;
+        break;
+    case ABILITY_MAGMA_ARMOR:
+        if (moveType == TYPE_WATER || moveType == TYPE_ICE)
+            effect = MOVE_ABSORBED_BY_MAGMA_ARMOR_STAT_CHANGE;
         break;
     }
 
@@ -3728,9 +3742,24 @@ bool32 CanAbilityAbsorbMove(u32 battlerAtk, u32 battlerDef, enum Ability ability
             battleScript = BattleScript_FlashFireBoost;
         }
         break;
-    case MOVE_ABSORBED_BY_HELLFIRE:
+    case MOVE_ABSORBED_BY_ABILITY:
         gBattleStruct->pledgeMove = FALSE;
         battleScript = BattleScript_MonMadeMoveUseless;
+        break;
+    case MOVE_ABSORBED_BY_MAGMA_ARMOR_STAT_CHANGE:
+        gBattleStruct->pledgeMove = FALSE;
+        if (!CompareStat(battlerDef, STAT_DEF, MAX_STAT_STAGE, CMP_LESS_THAN, abilityDef) && !CompareStat(battlerDef, STAT_SPEED, MIN_STAT_STAGE, CMP_GREATER_THAN, abilityDef))
+        {
+            battleScript = BattleScript_MonMadeMoveUseless;
+        }
+        else
+        {
+            battleScript = BattleScript_MagmaArmorStatChange;
+            SET_STATCHANGER(STAT_DEF, 1, FALSE);
+            SET_STATCHANGER(STAT_SPEED, 1, TRUE);
+            if (B_ABSORBING_ABILITY_STRING < GEN_5)
+                PREPARE_STAT_BUFFER(gBattleTextBuff1, statId);
+        }
         break;
     }
 
@@ -5805,6 +5834,20 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                 effect++;
             }
             break;
+        case ABILITY_SUCTION_CUPS:
+            if (IsBattlerAlive(gBattlerTarget)
+                && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
+                && IsBattlerTurnDamaged(gBattlerTarget)
+                && !gBattleMons[gBattlerTarget].volatiles.escapePrevention
+                && IsMoveMakingContact(gBattlerAttacker, gBattlerTarget, ability, GetBattlerHoldEffect(gBattlerAttacker), move))
+            {
+                gEffectBattler = gBattlerTarget;
+                gBattleScripting.battler = gBattlerAttacker;
+                gBattleScripting.moveEffect = MOVE_EFFECT_PREVENT_ESCAPE;
+                BattleScriptCall(BattleScript_EffectPreventEscape);
+                effect++;
+            }
+            break;
         default:
             break;
         }
@@ -7822,7 +7865,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
         break;
     case ABILITY_TOXIC_BOOST:
         if (gBattleMons[battlerAtk].status1 & STATUS1_PSN_ANY && IsBattleMovePhysical(move))
-           modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
+           modifier = uq4_12_multiply(modifier, UQ_4_12(1.33));
         break;
     case ABILITY_RECKLESS:
         if (moveEffect == EFFECT_RECOIL || moveEffect == EFFECT_RECOIL_IF_MISS)
@@ -7830,7 +7873,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
         break;
     case ABILITY_IRON_FIST:
         if (IsPunchingMove(move))
-           modifier = uq4_12_multiply(modifier, UQ_4_12(1.2));
+           modifier = uq4_12_multiply(modifier, UQ_4_12(1.25));
         break;
     case ABILITY_SHEER_FORCE:
         if (MoveIsAffectedBySheerForce(move))
@@ -7949,6 +7992,10 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
         break;
     case ABILITY_VENOM_GLANDS:
         if (moveType == TYPE_POISON)
+            modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
+        break;
+    case ABILITY_ICE_TUSKS:
+        if ((ctx->weather & B_WEATHER_SNOW) && HasWeatherEffect() && IsMoveMakingContact(battlerAtk, battlerDef, ctx->abilityAtk, ctx->holdEffectAtk, move))
             modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
         break;
     default:
@@ -8231,6 +8278,13 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
         if (moveType == TYPE_FIRE && gBattleMons[battlerAtk].hp <= (gBattleMons[battlerAtk].maxHP / 3))
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
         break;
+    case ABILITY_INTENSE_BLAZE:
+        if (moveType == TYPE_FIRE)
+        {
+            u32 hpRatio = (gBattleMons[battlerAtk].maxHP - gBattleMons[battlerAtk].hp) / gBattleMons[battlerAtk].maxHP;
+            modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1 * (1 + (hpRatio * 0.75))));
+        }
+        break;
     case ABILITY_OVERGROW:
         if (moveType == TYPE_GRASS && gBattleMons[battlerAtk].hp <= (gBattleMons[battlerAtk].maxHP / 3))
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
@@ -8254,7 +8308,7 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
         }
         break;
     case ABILITY_FLOWER_GIFT:
-        if (gBattleMons[battlerAtk].species == SPECIES_CHERRIM_SUNSHINE && IsBattlerWeatherAffected(battlerAtk, B_WEATHER_SUN) && IsBattleMovePhysical(move))
+        if (IsBattlerWeatherAffected(battlerAtk, B_WEATHER_SUN) && IsBattleMovePhysical(move))
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
         break;
     case ABILITY_HUSTLE:
@@ -8363,7 +8417,7 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
         switch (GetBattlerAbility(BATTLE_PARTNER(battlerAtk)))
         {
         case ABILITY_FLOWER_GIFT:
-            if (gBattleMons[BATTLE_PARTNER(battlerAtk)].species == SPECIES_CHERRIM_SUNSHINE && IsBattlerWeatherAffected(BATTLE_PARTNER(battlerAtk), B_WEATHER_SUN) && IsBattleMovePhysical(move))
+            if (IsBattlerWeatherAffected(BATTLE_PARTNER(battlerAtk), B_WEATHER_SUN) && IsBattleMovePhysical(move))
                 modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
             break;
         default:
@@ -8520,8 +8574,16 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
                 RecordAbilityBattle(battlerDef, ABILITY_GRASS_PELT);
         }
         break;
+    case ABILITY_PASTEL_VEIL:
+        if (gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN && !usesDefStat)
+        {
+            modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
+            if (ctx->updateFlags)
+                RecordAbilityBattle(battlerDef, ABILITY_PASTEL_VEIL);
+        }
+        break;
     case ABILITY_FLOWER_GIFT:
-        if (gBattleMons[battlerDef].species == SPECIES_CHERRIM_SUNSHINE && IsBattlerWeatherAffected(battlerDef, B_WEATHER_SUN) && !usesDefStat)
+        if (IsBattlerWeatherAffected(battlerDef, B_WEATHER_SUN) && !usesDefStat)
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
         break;
     case ABILITY_SOLAR_FORCE:
@@ -8556,7 +8618,7 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
         switch (GetBattlerAbility(BATTLE_PARTNER(battlerDef)))
         {
         case ABILITY_FLOWER_GIFT:
-            if (gBattleMons[BATTLE_PARTNER(battlerDef)].species == SPECIES_CHERRIM_SUNSHINE && IsBattlerWeatherAffected(BATTLE_PARTNER(battlerDef), B_WEATHER_SUN) && !usesDefStat)
+            if (IsBattlerWeatherAffected(BATTLE_PARTNER(battlerDef), B_WEATHER_SUN) && !usesDefStat)
                 modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
             break;
         default:

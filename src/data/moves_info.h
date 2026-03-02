@@ -14044,7 +14044,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "It hurts the user a little."),
         .effect = EFFECT_RECOIL,
         .power = 120,
-        .type = TYPE_NORMAL,
+        .type = TYPE_GROUND,
         .accuracy = 100,
         .pp = 15,
         .target = MOVE_TARGET_SELECTED,

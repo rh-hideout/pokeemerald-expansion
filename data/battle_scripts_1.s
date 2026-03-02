@@ -3076,8 +3076,15 @@ BattleScript_EffectTwoTurnsAttack::
 	tryfiretwoturnmovewithoutcharging BS_ATTACKER, BattleScript_EffectHit @ e.g. Solar Beam
 	call BattleScript_FirstChargingTurn
 	tryfiretwoturnmoveaftercharging BS_ATTACKER, BattleScript_TwoTurnMovesSecondTurn @ e.g. Electro Shot
+	jumpifability BS_ATTACKER, ABILITY_BATTLE_READY, BattleScript_TwoTurnMovesBattleReady
 	jumpifholdeffect BS_ATTACKER, HOLD_EFFECT_POWER_HERB, BattleScript_TwoTurnMovesSecondPowerHerbActivates, TRUE
 	goto BattleScript_MoveEnd
+
+BattleScript_TwoTurnMovesBattleReady:
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_BATTLEREADYACTIVATES
+	waitmessage B_WAIT_TIME_LONG
+	call BattleScript_FromTwoTurnMovesSecondTurnRet
 
 BattleScript_EffectGeomancy::
 	jumpifvolatile BS_ATTACKER, VOLATILE_MULTIPLETURNS, BattleScript_GeomancySecondTurn
@@ -9096,4 +9103,29 @@ BattleScript_ShellBurstRet:
 BattleScript_PoisonBarbsActivates::
 	call BattleScript_AbilityStatusEffect
 	call BattleScript_HurtAttacker
+	return
+
+BattleScript_MagmaArmorStatChange::
+	pause B_WAIT_TIME_SHORT
+	call BattleScript_AbilityPopUpTarget
+	setmoveresultflags MOVE_RESULT_NO_EFFECT
+	modifybattlerstatstage BS_TARGET, STAT_DEF, INCREASE, 1, BattleScript_MagmaArmorStatChangeSpeedDrop, ANIM_ON
+BattleScript_MagmaArmorStatChangeSpeedDrop:
+	modifybattlerstatstage BS_TARGET, STAT_SPEED, DECREASE, 1, BattleScript_MagmaArmorStatChangeEnd, ANIM_ON
+BattleScript_MagmaArmorStatChangeEnd:
+	goto BattleScript_MoveEnd
+
+BattleScript_EffectPreventEscape::
+	savetarget
+	copybyte sBATTLER, gBattlerTarget
+BattleScript_EffectPreventEscapeLoop:
+	jumpifabsent BS_TARGET, BattleScript_EffectPreventEscapeIncrement
+	trysetescapeprevention BattleScript_EffectPreventEscapeIncrement
+BattleScript_EffectPreventEscapePrintMessage:
+	printstring STRINGID_TARGETCANTESCAPENOW
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_EffectPreventEscapeIncrement:
+	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_EffectPreventEscapeEnd
+BattleScript_EffectPreventEscapeEnd:
+	restoretarget
 	return

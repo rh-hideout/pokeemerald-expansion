@@ -165,8 +165,8 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_SUCTION_CUPS] =
     {
         .name = _("Suction Cups"),
-        .description = COMPOUND_STRING("Firmly anchors the body."),
-        .aiRating = 2,
+        .description = COMPOUND_STRING("Contact moves trap foes. Can't be moved."),
+        .aiRating = 4,
         .breakable = TRUE,
     },
 
@@ -309,7 +309,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_MAGMA_ARMOR] =
     {
         .name = _("Magma Armor"),
-        .description = COMPOUND_STRING("Prevents freezing."),
+        .description = COMPOUND_STRING("Water/Ice moves ups Def, drops Speed."),
         .aiRating = 1,
         .breakable = TRUE,
     },
@@ -2675,6 +2675,38 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Poison Barbs"),
         .description = COMPOUND_STRING("Hurts to touch. May poison on contact."),
+        .aiRating = 6,
+    },
+    [ABILITY_INTENSE_BLAZE] =
+    {
+        .name = _("Intense Blaze"),
+        .description = COMPOUND_STRING("Fire moves are boosted with less health."),
+        .aiRating = 6,
+    },
+    [ABILITY_FLAME_ABSORB] =
+    {
+        .name = _("Flame Absorb"),
+        .description = COMPOUND_STRING("Change fire into HP."),
+        .aiRating = 7,
+        .breakable = TRUE,
+    },
+    [ABILITY_ICE_TUSKS] =
+    {
+        .name = _("Ice Tusks"),
+        .description = COMPOUND_STRING("Boosts contact moves in snow."),
+        .aiRating = 7,
+        .breakable = TRUE,
+    },
+    [ABILITY_BATTLE_READY] =
+    {
+        .name = _("Battle Ready"),
+        .description = COMPOUND_STRING("Two-turn moves take only one turn."),
+        .aiRating = 7,
+    },
+    [ABILITY_MISTY_STEP] =
+    {
+        .name = _("Misty Step"),
+        .description = COMPOUND_STRING("Raises Speed in Misty Terrain."),
         .aiRating = 6,
     },
 };
