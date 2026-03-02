@@ -88,7 +88,7 @@ AI_DOUBLE_BATTLE_TEST("AI will Fake Out a target if its ally has slow KO on the 
             if (speed == 2)
             {
                 SCORE_EQ_VAL(opponentRight, MOVE_FAKE_OUT, AI_SCORE_DEFAULT + GOOD_EFFECT, target:playerLeft); 
-                SCORE_EQ_VAL(opponentRight, MOVE_FAKE_OUT, AI_SCORE_DEFAULT + SLOW_KILL + 2, target:playerRight);
+                SCORE_EQ_VAL(opponentRight, MOVE_FAKE_OUT, AI_SCORE_DEFAULT + FAST_KILL + 2, target:playerRight);
             }
             else
             {
