@@ -1,20 +1,20 @@
 #ifndef GUARD_BATTLE_DYNAMAX_H
 #define GUARD_BATTLE_DYNAMAX_H
 
-#define DYNAMAX_TURNS_COUNT	3
+#define DYNAMAX_TURNS_COUNT 3
 
-bool32 CanDynamax(u32 battler);
-bool32 IsGigantamaxed(u32 battler);
+bool32 CanDynamax(enum BattlerId battler);
+bool32 IsGigantamaxed(enum BattlerId battler);
 void ApplyDynamaxHPMultiplier(struct Pokemon *mon);
-void ActivateDynamax(u32 battler);
-u16 GetNonDynamaxHP(u32 battler);
-u16 GetNonDynamaxMaxHP(u32 battler);
-void UndoDynamax(u32 battler);
-bool32 IsMoveBlockedByMaxGuard(u32 move);
+void ActivateDynamax(enum BattlerId battler);
+u32 GetNonDynamaxHP(enum BattlerId battler);
+u32 GetNonDynamaxMaxHP(enum BattlerId battler);
+void UndoDynamax(enum BattlerId battler);
+bool32 IsMoveBlockedByMaxGuard(enum Move move);
 
-u16 GetMaxMove(u32 battler, u32 baseMove);
-u32 GetMaxMovePower(u32 move);
-bool32 IsMaxMove(u32 move);
+enum Move GetMaxMove(enum BattlerId battler, enum Move baseMove);
+u32 GetMaxMovePower(enum Move move);
+bool32 IsMaxMove(enum Move move);
 void ChooseDamageNonTypesString(enum Type type);
 
 void BS_UpdateDynamax(void);

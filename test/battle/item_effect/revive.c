@@ -130,8 +130,8 @@ DOUBLE_BATTLE_TEST("Revive does reset abilities")
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
-        TURN {  MOVE(opponentRight, MOVE_WORRY_SEED, target: playerLeft); MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); }
-        TURN { USE_ITEM(playerRight, ITEM_REVIVE, partyIndex: 0); SKIP_TURN(playerLeft); MOVE(opponentRight, MOVE_SPORE, target: playerLeft);}
+        TURN { MOVE(opponentRight, MOVE_WORRY_SEED, target: playerLeft); MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); }
+        TURN { USE_ITEM(playerRight, ITEM_REVIVE, partyIndex: 0); SKIP_TURN(playerLeft); MOVE(opponentRight, MOVE_SPORE, target: playerLeft); }
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
@@ -184,7 +184,7 @@ DOUBLE_BATTLE_TEST("Revive does not grant a mon its pre-death types")
         OPPONENT(SPECIES_POOCHYENA);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_REFLECT_TYPE, target: opponentRight); MOVE(opponentLeft, MOVE_PSYSHOCK, target: playerRight); MOVE(opponentRight, MOVE_SCRATCH, target: playerRight); }
-        TURN { USE_ITEM(playerLeft, ITEM_MAX_REVIVE, partyIndex: 1); SKIP_TURN(playerRight); MOVE(opponentLeft, MOVE_PSYCHIC, target: playerRight);}
+        TURN { USE_ITEM(playerLeft, ITEM_MAX_REVIVE, partyIndex: 1); SKIP_TURN(playerRight); MOVE(opponentLeft, MOVE_PSYCHIC, target: playerRight); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_REFLECT_TYPE, playerRight);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_PSYSHOCK, opponentLeft);
@@ -203,12 +203,12 @@ DOUBLE_BATTLE_TEST("Revive force revived pokemon to replace absent battler immed
 
     GIVEN {
         PLAYER(SPECIES_WYNAUT) { HP(1); }
-        PLAYER(SPECIES_WOBBUFFET) { };
-        PLAYER(SPECIES_ARBOK) { Ability(ability); HP(0) ;} ;
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_ARBOK) { Ability(ability); HP(0); }
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
-        TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft);}
+        TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); }
         TURN { USE_ITEM(playerRight, ITEM_REVIVE, partyIndex: 2); SKIP_TURN(playerLeft); MOVE(opponentRight, MOVE_SCRATCH, target: playerRight); }
     } SCENE {
         if (ability == ABILITY_INTIMIDATE)

@@ -1,4 +1,4 @@
-PewterCity_PokemonCenter_1F_MapScripts::
+PewterCity_PokemonCenter_1F_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, PewterCity_PokemonCenter_1F_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, CableClub_OnResume
 	.byte 0
@@ -10,7 +10,7 @@ PewterCity_PokemonCenter_1F_OnTransition::
 PewterCity_PokemonCenter_1F_EventScript_Nurse::
 	lock
 	faceplayer
-	call Common_EventScript_PkmnCenterNurse
+	call EventScript_PkmnCenterNurse_Frlg
 	release
 	end
 
@@ -45,29 +45,29 @@ PewterCity_PokemonCenter_1F_EventScript_GBAKid2::
 	end
 
 PewterCity_PokemonCenter_1F_Text_TeamRocketMtMoonImOnPhone::
-    .string "What!?\p"
-    .string "TEAM ROCKET is at MT. MOON?\n"
-    .string "Huh?\p"
-    .string "I'm on the phone!\n"
-    .string "Scram!$"
+	.string "What!?\p"
+	.string "TEAM ROCKET is at MT. MOON?\n"
+	.string "Huh?\p"
+	.string "I'm on the phone!\n"
+	.string "Scram!$"
 
 PewterCity_PokemonCenter_1F_Text_Jigglypuff::
-    .string "JIGGLYPUFF: Puu pupuu!$"
+	.string "JIGGLYPUFF: Puu pupuu!$"
 
 PewterCity_PokemonCenter_1F_Text_WhenJiggylypuffSingsMonsGetDrowsy::
-    .string "Yawn!\p"
-    .string "When JIGGLYPUFF sings, POKéMON get\n"
-    .string "drowsy…\p"
-    .string "…Me, too…\n"
-    .string "Snore…$"
+	.string "Yawn!\p"
+	.string "When JIGGLYPUFF sings, POKéMON get\n"
+	.string "drowsy…\p"
+	.string "…Me, too…\n"
+	.string "Snore…$"
 
 PewterCity_PokemonCenter_1F_Text_TradingMyClefairyForPikachu::
-    .string "I really want a PIKACHU, so I'm\n"
-    .string "trading my CLEFAIRY for one.$"
+	.string "I really want a PIKACHU, so I'm\n"
+	.string "trading my CLEFAIRY for one.$"
 
 PewterCity_PokemonCenter_1F_Text_TradingPikachuWithKid::
-    .string "I'm trading POKéMON with that kid\n"
-    .string "there.\p"
-    .string "I had two PIKACHU, so I figured\n"
-    .string "I might as well trade one.$"
+	.string "I'm trading POKéMON with that kid\n"
+	.string "there.\p"
+	.string "I had two PIKACHU, so I figured\n"
+	.string "I might as well trade one.$"
 

@@ -25,7 +25,7 @@ SINGLE_BATTLE_TEST("Protosynthesis boosts the highest stat")
 SINGLE_BATTLE_TEST("Protosynthesis boosts either Attack or Special Attack, not both")
 {
     u16 species;
-    u32 move;
+    enum Move move;
     s16 damage[2];
 
     PARAMETRIZE { species = SPECIES_ROARING_MOON; move = MOVE_SCRATCH; }
@@ -59,9 +59,9 @@ SINGLE_BATTLE_TEST("Protosynthesis ability pop up activates only once during the
     u16 turns;
 
     GIVEN {
-        WITH_CONFIG(CONFIG_ABILITY_WEATHER, GEN_6);
+        WITH_CONFIG(B_ABILITY_WEATHER, GEN_6);
         PLAYER(SPECIES_WALKING_WAKE) { Ability(ABILITY_PROTOSYNTHESIS); }
-        OPPONENT(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); };
+        OPPONENT(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); }
     } WHEN {
         for (turns = 0; turns < 5; turns++)
             TURN {}
@@ -90,7 +90,7 @@ SINGLE_BATTLE_TEST("Protosynthesis activates on switch-in")
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_ROARING_MOON) { Ability(ABILITY_PROTOSYNTHESIS); }
-        OPPONENT(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); };
+        OPPONENT(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); }
     } WHEN {
         TURN { SWITCH(player, 1); }
     } SCENE {
@@ -113,7 +113,7 @@ SINGLE_BATTLE_TEST("Protosynthesis prioritizes stats in the case of a tie in the
         PLAYER(SPECIES_GREAT_TUSK) { Ability(ABILITY_PROTOSYNTHESIS); Attack(stats[0]); Defense(stats[1]); SpAttack(stats[2]); SpDefense(stats[3]); Speed(stats[4]); }
         OPPONENT(SPECIES_GROUDON) { Ability(ABILITY_DROUGHT); Speed(5); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_DROUGHT);
         ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
@@ -131,6 +131,23 @@ SINGLE_BATTLE_TEST("Protosynthesis prioritizes stats in the case of a tie in the
                 MESSAGE("Great Tusk's Sp. Def was heightened!");
                 break;
         }
+    }
+}
+
+SINGLE_BATTLE_TEST("Protosynthesis uses Wonder Room swapped defenses when choosing boosted stat")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_WONDER_ROOM) == EFFECT_WONDER_ROOM);
+        PLAYER(SPECIES_ROARING_MOON) { Ability(ABILITY_PROTOSYNTHESIS); Attack(50); Defense(200); SpAttack(40); SpDefense(60); Speed(70); Moves(MOVE_WONDER_ROOM); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SUNNY_DAY); Speed(60); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_WONDER_ROOM); MOVE(opponent, MOVE_SUNNY_DAY); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WONDER_ROOM, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, opponent);
+        ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
+        MESSAGE("The harsh sunlight activated Roaring Moon's Protosynthesis!");
+        MESSAGE("Roaring Moon's Sp. Def was heightened!");
     }
 }
 
@@ -173,10 +190,11 @@ SINGLE_BATTLE_TEST("Protosynthesis doesn't activate for a transformed battler")
 SINGLE_BATTLE_TEST("Protosynthesis activates even if the Pokémon is holding an Utility Umbrella")
 {
     GIVEN {
+        ASSUME(gItemsInfo[ITEM_UTILITY_UMBRELLA].holdEffect == HOLD_EFFECT_UTILITY_UMBRELLA);
         PLAYER(SPECIES_GREAT_TUSK) { Ability(ABILITY_PROTOSYNTHESIS); Item(ITEM_UTILITY_UMBRELLA); }
         OPPONENT(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_DROUGHT);
         ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
@@ -309,5 +327,40 @@ SINGLE_BATTLE_TEST("Protosynthesis retains its boosted stat after Neutralizing G
         HP_BAR(opponent, captureDamage: &damage[1]);
     } THEN {
         EXPECT_EQ(damage[0], damage[1]);
+    }
+}
+
+SINGLE_BATTLE_TEST("Protosynthesis damage calculation is correct")
+{
+    s16 dmg;
+    s16 expectedDamage;
+
+    PARAMETRIZE { expectedDamage = 127; }
+    PARAMETRIZE { expectedDamage = 126; }
+    PARAMETRIZE { expectedDamage = 124; }
+    PARAMETRIZE { expectedDamage = 123; }
+    PARAMETRIZE { expectedDamage = 121; }
+    PARAMETRIZE { expectedDamage = 120; }
+    PARAMETRIZE { expectedDamage = 118; }
+    PARAMETRIZE { expectedDamage = 118; }
+    PARAMETRIZE { expectedDamage = 117; }
+    PARAMETRIZE { expectedDamage = 115; }
+    PARAMETRIZE { expectedDamage = 114; }
+    PARAMETRIZE { expectedDamage = 112; }
+    PARAMETRIZE { expectedDamage = 111; }
+    PARAMETRIZE { expectedDamage = 109; }
+    PARAMETRIZE { expectedDamage = 109; }
+    PARAMETRIZE { expectedDamage = 108; }
+
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_CLOSE_COMBAT) == DAMAGE_CATEGORY_PHYSICAL);
+        PLAYER(SPECIES_GOUGING_FIRE) { Ability(ABILITY_PROTOSYNTHESIS); Item(ITEM_BOOSTER_ENERGY); }
+        OPPONENT(SPECIES_URSHIFU_RAPID_STRIKE);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CLOSE_COMBAT, WITH_RNG(RNG_DAMAGE_MODIFIER, i)); }
+    } SCENE {
+        HP_BAR(player, captureDamage: &dmg);
+    } THEN {
+        EXPECT_EQ(expectedDamage, dmg);
     }
 }

@@ -135,9 +135,10 @@ void SoundTask_PlayCryHighPitch(u8 taskId)
 {
     u16 species = 0;
     s8 pan = BattleAnimAdjustPanning(SOUND_PAN_ATTACKER);
+    enum AnimBattler animBattler = gBattleAnimArgs[0];
     if (IsContest())
     {
-        if (gBattleAnimArgs[0] == ANIM_ATTACKER)
+        if (animBattler == ANIM_ATTACKER)
             species = gContestResources->moveAnim->species;
     // Destroying the task twice (here and at end of function)
     // results in an incorrect value for gAnimVisualTaskCount
@@ -148,20 +149,27 @@ void SoundTask_PlayCryHighPitch(u8 taskId)
     }
     else
     {
-        u8 battler;
+        enum BattlerId battler;
 
         // Get wanted battler.
-        if (gBattleAnimArgs[0] == ANIM_ATTACKER)
+        switch (animBattler)
+        {
+        case ANIM_ATTACKER:
             battler = gBattleAnimAttacker;
-        else if (gBattleAnimArgs[0] == ANIM_TARGET)
+            break;
+        case ANIM_TARGET:
             battler = gBattleAnimTarget;
-        else if (gBattleAnimArgs[0] == ANIM_ATK_PARTNER)
+            break;
+        case ANIM_ATK_PARTNER:
             battler = BATTLE_PARTNER(gBattleAnimAttacker);
-        else
+            break;
+        default:
             battler = BATTLE_PARTNER(gBattleAnimTarget);
+            break;
+        }
 
         // Check if battler is visible.
-        if ((gBattleAnimArgs[0] == ANIM_TARGET || gBattleAnimArgs[0] == ANIM_DEF_PARTNER) && !IsBattlerSpriteVisible(battler))
+        if ((animBattler == ANIM_TARGET || animBattler == ANIM_DEF_PARTNER) && !IsBattlerSpriteVisible(battler))
         {
             DestroyAnimVisualTask(taskId);
             return;
@@ -180,9 +188,10 @@ void SoundTask_PlayDoubleCry(u8 taskId)
 {
     u16 species = 0;
     s8 pan = BattleAnimAdjustPanning(SOUND_PAN_ATTACKER);
+    enum AnimBattler animBattler = gBattleAnimArgs[0];
     if (IsContest())
     {
-        if (gBattleAnimArgs[0] == ANIM_ATTACKER)
+        if (animBattler == ANIM_ATTACKER)
             species = gContestResources->moveAnim->species;
     // Destroying the task twice (here and at end of function)
     // results in an incorrect value for gAnimVisualTaskCount
@@ -193,20 +202,27 @@ void SoundTask_PlayDoubleCry(u8 taskId)
     }
     else
     {
-        u8 battler;
+        enum BattlerId battler;
 
         // Get wanted battler.
-        if (gBattleAnimArgs[0] == ANIM_ATTACKER)
+        switch (animBattler)
+        {
+        case ANIM_ATTACKER:
             battler = gBattleAnimAttacker;
-        else if (gBattleAnimArgs[0] == ANIM_TARGET)
+            break;
+        case ANIM_TARGET:
             battler = gBattleAnimTarget;
-        else if (gBattleAnimArgs[0] == ANIM_ATK_PARTNER)
+            break;
+        case ANIM_ATK_PARTNER:
             battler = BATTLE_PARTNER(gBattleAnimAttacker);
-        else
+            break;
+        default:
             battler = BATTLE_PARTNER(gBattleAnimTarget);
+            break;
+        }
 
         // Check if battler is visible.
-        if ((gBattleAnimArgs[0] == ANIM_TARGET || gBattleAnimArgs[0] == ANIM_DEF_PARTNER) && !IsBattlerSpriteVisible(battler))
+        if ((animBattler == ANIM_TARGET || animBattler == ANIM_DEF_PARTNER) && !IsBattlerSpriteVisible(battler))
         {
             DestroyAnimVisualTask(taskId);
             return;

@@ -1,6 +1,6 @@
 .equ NUM_SWITCHES_PRESSED, VAR_TEMP_8
 
-SevenIsland_SevaultCanyon_TanobyKey_MapScripts::
+SevenIsland_SevaultCanyon_TanobyKey_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, SevenIsland_SevaultCanyon_TanobyKey_OnTransition
 	.byte 0
 
@@ -130,6 +130,6 @@ SevenIsland_SevaultCanyon_TanobyKey_EventScript_PuzzleSolved::
 	end
 
 SevenIsland_SevaultCanyon_TanobyKey_Text_MysteriousRumbleFarAway::
-    .string "A mysterious rumble echoed\n"
-    .string "somewhere far away.$"
+	.string "A mysterious rumble echoed\n"
+	.string "somewhere far away.$"
 

@@ -14,14 +14,12 @@ static void DecompressGlyph_Braille(u16);
 u16 FontFunc_Braille(struct TextPrinter *textPrinter)
 {
     u16 char_;
-    struct TextPrinterSubStruct *subStruct;
-    subStruct = (struct TextPrinterSubStruct *)(&textPrinter->subStructFields);
     u32 scrollSpeed = GetPlayerTextScrollSpeed();
 
     switch (textPrinter->state)
     {
     case RENDER_STATE_HANDLE_CHAR:
-        if (JOY_HELD(A_BUTTON | B_BUTTON) && subStruct->hasPrintBeenSpedUp)
+        if (JOY_HELD(A_BUTTON | B_BUTTON) && textPrinter->hasPrintBeenSpedUp)
         {
             textPrinter->delayCounter = 0;
         }
@@ -30,7 +28,7 @@ u16 FontFunc_Braille(struct TextPrinter *textPrinter)
             textPrinter->delayCounter --;
             if (gTextFlags.canABSpeedUpPrint && JOY_NEW(A_BUTTON | B_BUTTON))
             {
-                subStruct->hasPrintBeenSpedUp = TRUE;
+                textPrinter->hasPrintBeenSpedUp = TRUE;
                 textPrinter->delayCounter = 0;
             }
             return RENDER_UPDATE;
@@ -105,7 +103,7 @@ u16 FontFunc_Braille(struct TextPrinter *textPrinter)
                 textPrinter->printerTemplate.currentChar++;
                 return RENDER_REPEAT;
             case EXT_CTRL_CODE_FONT:
-                subStruct->fontId = *textPrinter->printerTemplate.currentChar;
+                textPrinter->fontId = *textPrinter->printerTemplate.currentChar;
                 textPrinter->printerTemplate.currentChar++;
                 return RENDER_REPEAT;
             case EXT_CTRL_CODE_RESET_FONT:
@@ -117,7 +115,7 @@ u16 FontFunc_Braille(struct TextPrinter *textPrinter)
             case EXT_CTRL_CODE_PAUSE_UNTIL_PRESS:
                 textPrinter->state = RENDER_STATE_WAIT;
                 if (gTextFlags.autoScroll)
-                    subStruct->autoScrollDelay = 0;
+                    textPrinter->autoScrollDelay = 0;
                 return RENDER_UPDATE;
             case EXT_CTRL_CODE_WAIT_SE:
                 textPrinter->state = RENDER_STATE_WAIT_SE;
@@ -156,7 +154,7 @@ u16 FontFunc_Braille(struct TextPrinter *textPrinter)
             return RENDER_PRINT;
         }
         DecompressGlyph_Braille(char_);
-        CopyGlyphToWindow(textPrinter);
+        CopyGlyphToVRAM(textPrinter);
         textPrinter->printerTemplate.currentX += gCurGlyph.width + textPrinter->printerTemplate.letterSpacing;
         return RENDER_PRINT;
     case RENDER_STATE_WAIT:

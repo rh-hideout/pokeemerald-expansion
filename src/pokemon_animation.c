@@ -501,7 +501,7 @@ static void Task_HandleMonAnimation(u8 taskId)
 
     if (gTasks[taskId].tState == 0)
     {
-        gTasks[taskId].tBattlerId = sprite->data[0];
+        gTasks[taskId].tBattlerId = sprite->oam.paletteNum;
         gTasks[taskId].tSpeciesId = sprite->data[2];
         sprite->sDontFlip = TRUE;
         sprite->data[0] = 0;
@@ -1945,7 +1945,7 @@ static void FrontFlip_2(struct Sprite *sprite)
 {
     TryFlipX(sprite);
     sprite->x2++;
-    sprite->y2--;;
+    sprite->y2--;
 
     if (sprite->x2 >= 0)
     {

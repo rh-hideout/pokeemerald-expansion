@@ -73,7 +73,7 @@ DOUBLE_BATTLE_TEST("Beak Blast burns all who make contact with the Pokémon")
 
 SINGLE_BATTLE_TEST("Beak Blast burns only when contact moves are used")
 {
-    u32 move;
+    enum Move move;
     bool32 burn;
     PARAMETRIZE { move = MOVE_SCRATCH; burn = TRUE; }
     PARAMETRIZE { move = MOVE_WATER_GUN; burn = FALSE; }
@@ -87,7 +87,6 @@ SINGLE_BATTLE_TEST("Beak Blast burns only when contact moves are used")
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, move); MOVE(player, MOVE_BEAK_BLAST); }
-        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, player);
         MESSAGE("Wobbuffet started heating up its beak!");
@@ -112,10 +111,40 @@ SINGLE_BATTLE_TEST("Beak Blast burns only when contact moves are used")
     }
 }
 
+SINGLE_BATTLE_TEST("Beak Blast doesn't burn when charging a two turn move")
+{
+    u32 move;
+    PARAMETRIZE { move = MOVE_BOUNCE; }
+    PARAMETRIZE { move = MOVE_DIG; }
+
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_BOUNCE));
+        ASSUME(MoveMakesContact(MOVE_DIG));
+        ASSUME(gBattleMoveEffects[GetMoveEffect(MOVE_BOUNCE)].twoTurnEffect);
+        ASSUME(gBattleMoveEffects[GetMoveEffect(MOVE_DIG)].twoTurnEffect);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, move); MOVE(player, MOVE_BEAK_BLAST); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, player);
+        MESSAGE("Wobbuffet started heating up its beak!");
+        ANIMATION(ANIM_TYPE_MOVE, move, opponent);
+
+        NONE_OF {
+            HP_BAR(player);
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponent);
+            MESSAGE("The opposing Wobbuffet was burned!");
+            STATUS_ICON(opponent, burn: TRUE);
+        }
+    }
+}
+
 SINGLE_BATTLE_TEST("Beak Blast doesn't burn fire types")
 {
     GIVEN {
         ASSUME(gSpeciesInfo[SPECIES_ARCANINE].types[0] == TYPE_FIRE || gSpeciesInfo[SPECIES_ARCANINE].types[1] == TYPE_FIRE);
+        ASSUME(MoveMakesContact(MOVE_SCRATCH));
         PLAYER(SPECIES_ARCANINE);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -131,6 +160,7 @@ SINGLE_BATTLE_TEST("Beak Blast doesn't burn after being used")
 {
     GIVEN {
         ASSUME(GetMovePriority(MOVE_COUNTER) < GetMovePriority(MOVE_BEAK_BLAST));
+        ASSUME(MoveMakesContact(MOVE_COUNTER));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -138,6 +168,57 @@ SINGLE_BATTLE_TEST("Beak Blast doesn't burn after being used")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BEAK_BLAST, opponent);
         NOT STATUS_ICON(player, burn: TRUE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Beak Blast doesn't burn if the target is protected by Mat Block")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_MAT_BLOCK) == EFFECT_MAT_BLOCK);
+        ASSUME(GetMoveProtectMethod(MOVE_MAT_BLOCK) == PROTECT_MAT_BLOCK);
+        ASSUME(MoveMakesContact(MOVE_POUND));
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
+        PLAYER(SPECIES_WYNAUT) { Speed(2); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(10); }
+    } WHEN {
+        TURN {
+            MOVE(opponentRight, MOVE_MAT_BLOCK);
+            MOVE(opponentLeft, MOVE_BEAK_BLAST, target: playerLeft);
+            MOVE(playerLeft, MOVE_POUND, target: opponentLeft);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MAT_BLOCK, opponentRight);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, playerLeft);
+            STATUS_ICON(playerLeft, STATUS1_BURN);
+        }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Beak Blast doesn't burn if the target is protected by Quick Guard")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_QUICK_GUARD) == EFFECT_PROTECT);
+        ASSUME(GetMoveProtectMethod(MOVE_QUICK_GUARD) == PROTECT_QUICK_GUARD);
+        ASSUME(GetMovePriority(MOVE_QUICK_ATTACK) > 0);
+        ASSUME(MoveMakesContact(MOVE_QUICK_ATTACK));
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
+        PLAYER(SPECIES_WYNAUT) { Speed(2); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(10); }
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_BEAK_BLAST, target: playerLeft);
+               MOVE(opponentRight, MOVE_QUICK_GUARD);
+               MOVE(playerLeft, MOVE_QUICK_ATTACK, target: opponentLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_GUARD, opponentRight);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_ATTACK, playerLeft);
+            STATUS_ICON(playerLeft, STATUS1_BURN);
+        }
     }
 }
 

@@ -1,4 +1,4 @@
-SilphCo_Elevator_MapScripts::
+SilphCo_Elevator_Frlg_MapScripts::
 	.byte 0
 
 SilphCo_Elevator_EventScript_FloorSelect::
