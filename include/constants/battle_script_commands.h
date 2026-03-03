@@ -423,4 +423,11 @@ enum HealthUpdate
     MOVE_DAMAGE_HP_UPDATE,
 };
 
+enum FlungItem
+{
+    FLUNG_ITEM_NONE,
+    FLUNG_ITEM_REMOVE,
+    FLUNG_ITEM_REMOVED,
+};
+
 #endif // GUARD_CONSTANTS_BATTLE_SCRIPT_COMMANDS_H

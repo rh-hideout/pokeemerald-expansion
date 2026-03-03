@@ -1096,10 +1096,10 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
     switch (GetMoveEffect(ctx->move))
     {
     case EFFECT_FLING:
-        if (!CanFling(ctx->battlerAtk))
+        if (!CanFling(ctx->battlerAtk, ctx->abilityAtk))
             battleScript = BattleScript_ButItFailed;
         else // set fling item
-            gBattleStruct->flingItem = gLastUsedItem = gBattleMons[ctx->battlerAtk].item;
+            gLastUsedItem = gBattleMons[ctx->battlerAtk].item;
         break;
     case EFFECT_FAIL_IF_NOT_ARG_TYPE:
         if (!IS_BATTLER_OF_TYPE(ctx->battlerAtk, GetMoveArgType(ctx->move)))
@@ -2769,10 +2769,7 @@ static enum MoveEndResult MoveEndMultihitMove(void)
         gBattleScripting.multihitString[4]++;
         if (gMultiHitCounter == 0)
         {
-            if (MoveHasAdditionalEffect(gCurrentMove, MOVE_EFFECT_SCALE_SHOT) && !NoAliveMonsForEitherParty())
-                BattleScriptCall(BattleScript_ScaleShot);
-            else
-                BattleScriptCall(BattleScript_MultiHitPrintStrings);
+            BattleScriptCall(BattleScript_MultiHitPrintStrings);
             result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         else
@@ -2895,7 +2892,7 @@ static enum MoveEndResult MoveEndMoveBlock(void)
         if (gBattleMons[gBattlerTarget].item != ITEM_NONE
          && IsBattlerAlive(gBattlerAttacker)
          && !(B_KNOCK_OFF_REMOVAL >= GEN_5 && side == B_SIDE_PLAYER && !(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
-         && IsBattlerTurnDamaged(gBattlerTarget)
+         && IsAnyTargetTurnDamaged(gBattlerAttacker)
          && !DoesSubstituteBlockMove(gBattlerAttacker, gBattlerTarget, gCurrentMove)
          && CanBattlerGetOrLoseItem(gBattlerTarget, gBattlerAttacker, gBattleMons[gBattlerTarget].item)
          && !NoAliveMonsForEitherParty())
@@ -2934,7 +2931,7 @@ static enum MoveEndResult MoveEndMoveBlock(void)
         }
         break;
     case EFFECT_STEAL_ITEM:
-        if (!IsBattlerTurnDamaged(gBattlerTarget)
+        if (!IsAnyTargetTurnDamaged(gBattlerAttacker)
          || gBattleMons[gBattlerAttacker].item != ITEM_NONE
          || gBattleMons[gBattlerTarget].item == ITEM_NONE
          || !IsBattlerAlive(gBattlerAttacker)
@@ -2964,7 +2961,7 @@ static enum MoveEndResult MoveEndMoveBlock(void)
         }
         break;
     case EFFECT_HIT_SWITCH_TARGET:
-        if (IsBattlerTurnDamaged(gBattlerTarget)
+        if (IsAnyTargetTurnDamaged(gBattlerAttacker)
          && IsBattlerAlive(gBattlerTarget)
          && IsBattlerAlive(gBattlerAttacker)
          && gBattleMons[BATTLE_PARTNER(gBattlerTarget)].volatiles.semiInvulnerable != STATE_COMMANDER)
@@ -2995,7 +2992,7 @@ static enum MoveEndResult MoveEndMoveBlock(void)
         break;
     case EFFECT_SMACK_DOWN:
         if (!IsBattlerGrounded(gBattlerTarget, GetBattlerAbility(gBattlerTarget), GetBattlerHoldEffect(gBattlerTarget))
-         && IsBattlerTurnDamaged(gBattlerTarget)
+         && IsAnyTargetTurnDamaged(gBattlerAttacker)
          && IsBattlerAlive(gBattlerTarget)
          && !DoesSubstituteBlockMove(gBattlerAttacker, gBattlerTarget, gCurrentMove))
         {
@@ -3042,7 +3039,7 @@ static enum MoveEndResult MoveEndMoveBlock(void)
         }
         break;
     case EFFECT_RECOIL:
-        if (IsBattlerTurnDamaged(gBattlerTarget) && IsBattlerAlive(gBattlerAttacker) && gBattleStruct->moveDamage[gBattlerTarget] > 0)
+        if (IsAnyTargetTurnDamaged(gBattlerAttacker) && IsBattlerAlive(gBattlerAttacker) && gBattleStruct->moveDamage[gBattlerTarget] > 0)
         {
             enum Ability ability = GetBattlerAbility(gBattlerAttacker);
             if (IsAbilityAndRecord(gBattlerAttacker, ability, ABILITY_ROCK_HEAD)
@@ -3056,7 +3053,7 @@ static enum MoveEndResult MoveEndMoveBlock(void)
         }
         break;
     case EFFECT_CHLOROBLAST:
-        if (IsBattlerTurnDamaged(gBattlerTarget) && IsBattlerAlive(gBattlerAttacker))
+        if (IsAnyTargetTurnDamaged(gBattlerAttacker) && IsBattlerAlive(gBattlerAttacker))
         {
             enum Ability ability = GetBattlerAbility(gBattlerAttacker);
             if (IsAbilityAndRecord(gBattlerAttacker, ability, ABILITY_ROCK_HEAD)
@@ -3071,7 +3068,7 @@ static enum MoveEndResult MoveEndMoveBlock(void)
         }
         break;
     case EFFECT_RAPID_SPIN:
-        if (IsBattlerTurnDamaged(gBattlerTarget) && IsBattlerAlive(gBattlerAttacker))
+        if (IsAnyTargetTurnDamaged(gBattlerAttacker) && IsBattlerAlive(gBattlerAttacker))
         {
             BattleScriptCall(BattleScript_RapidSpinAway);
             result = MOVEEND_RESULT_RUN_SCRIPT;
@@ -3080,7 +3077,7 @@ static enum MoveEndResult MoveEndMoveBlock(void)
     case EFFECT_FELL_STINGER:
         if (IsBattlerAlive(gBattlerAttacker)
          && !IsBattlerAlive(gBattlerTarget)
-         && IsBattlerTurnDamaged(gBattlerTarget)
+         && IsAnyTargetTurnDamaged(gBattlerAttacker)
          && !NoAliveMonsForEitherParty()
          && CompareStat(gBattlerAttacker, STAT_ATK, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(gBattlerAttacker)))
         {
@@ -3093,7 +3090,7 @@ static enum MoveEndResult MoveEndMoveBlock(void)
         break;
     case EFFECT_STONE_AXE:
         if (!IsHazardOnSide(side, HAZARDS_STEALTH_ROCK)
-         && IsBattlerTurnDamaged(gBattlerTarget)
+         && IsAnyTargetTurnDamaged(gBattlerAttacker)
          && IsBattlerAlive(gBattlerAttacker))
         {
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_POINTEDSTONESFLOAT;
@@ -3104,7 +3101,7 @@ static enum MoveEndResult MoveEndMoveBlock(void)
         break;
     case EFFECT_CEASELESS_EDGE:
         if (gSideTimers[side].spikesAmount < 3
-         && IsBattlerTurnDamaged(gBattlerTarget)
+         && IsAnyTargetTurnDamaged(gBattlerAttacker)
          && IsBattlerAlive(gBattlerAttacker))
         {
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SPIKESSCATTERED;
@@ -3119,6 +3116,14 @@ static enum MoveEndResult MoveEndMoveBlock(void)
                 gBattlescriptCurrInstr = BattleScript_SpikesActivates;
                 result = MOVEEND_RESULT_RUN_SCRIPT;
             }
+        }
+        break;
+    case EFFECT_SCALE_SHOT:
+        if (IsBattlerAlive(gBattlerAttacker)
+         && IsAnyTargetTurnDamaged(gBattlerAttacker))
+        {
+            BattleScriptCall(BattleScript_DefDownSpeedUp);
+            result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
     default:
@@ -3382,7 +3387,7 @@ static enum MoveEndResult MoveEndHitEscape(void)
 
     if (GetMoveEffect(gCurrentMove) == EFFECT_HIT_ESCAPE
      && !gBattleStruct->unableToUseMove
-     && IsBattlerTurnDamaged(gBattlerTarget)
+     && IsAnyTargetTurnDamaged(gBattlerAttacker)
      && IsBattlerAlive(gBattlerAttacker)
      && !NoAliveMonsForBattlerSide(gBattlerTarget))
     {
@@ -3508,7 +3513,7 @@ static enum MoveEndResult MoveEndThirdMoveBlock(void)
     switch (moveEffect)
     {
     case EFFECT_STEEL_ROLLER:
-        if (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY && IsBattlerTurnDamaged(gBattlerTarget))
+        if (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY && IsAnyTargetTurnDamaged(gBattlerAttacker))
         {
             BattleScriptCall(BattleScript_RemoveTerrain);
             result = MOVEEND_RESULT_RUN_SCRIPT;
@@ -3518,7 +3523,7 @@ static enum MoveEndResult MoveEndThirdMoveBlock(void)
         if (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY
          && gLastPrintedMoves[gBattlerAttacker] == gCurrentMove
          && IsBattlerAlive(gBattlerAttacker)
-         && IsBattlerTurnDamaged(gBattlerTarget))
+         && IsAnyTargetTurnDamaged(gBattlerAttacker))
         {
             BattleScriptCall(BattleScript_RemoveTerrain);
             result = MOVEEND_RESULT_RUN_SCRIPT;
@@ -3723,7 +3728,7 @@ static enum MoveEndResult MoveEndClearBits(void)
     gBattleStruct->fickleBeamBoosted = FALSE;
     gBattleStruct->battlerState[gBattlerAttacker].usedMicleBerry = FALSE;
     gBattleStruct->toxicChainPriority = FALSE;
-    gBattleStruct->flingItem = ITEM_NONE;
+    gBattleStruct->flungItem = FLUNG_ITEM_NONE;
 
     if (gBattleStruct->unableToUseMove)
         gBattleStruct->pledgeMove = FALSE;
@@ -3754,7 +3759,7 @@ static enum MoveEndResult MoveEndClearBits(void)
         }
     }
 
-    // Need to check a specific battle during the end turn
+    // Need to check a specific battler during the end turn
     gBattleMons[gBattlerAttacker].volatiles.unableToUseMove = gBattleStruct->unableToUseMove;
     ClearDamageCalcResults();
 
