@@ -45,6 +45,8 @@ Porymap:
 To migrate tilesets that have been previously created for pokefirered you can use [this script](/migration_scripts/frlg_metatile_behavior_converter.py).<br>
 Instructions are in the script.
 
+## Disclaimer: The changes below aren't the permanent solution for the problems, A better build system is being worked on so these solutions might cause merge conflicts down the line
+
 ## Build FRLG by default
 If you want that running `make -j<output of nproc>` to directly compile one of firered or leafgreen instead of emerald make the following changes to the `makefile`
 
@@ -86,6 +88,29 @@ endif
 endif
 ```
 
+## Make empty region attibutes defaults to REGION_KANTO
+Another issue is that you need to add `REGION_KANTO` attribute to every new map you create
+
+Make the following changes to your `tools/mapjson/mapjson.cpp` so the new maps you add without the `REGION_KANTO` also work fine
+
+Note: This will break Vanilla Emerald maps as they have empty `region` attibutes by default
+
+```diff
+string region = json_to_string(map_data, "region", true);
+
+        if (region.empty()) {
+-            region = "REGION_HOENN";
++            region = "REGION_KANTO";
+        }
+        string map_name = json_to_string(map_data, "name");
+
+        if ((version == "emerald" && region != "REGION_HOENN")
+         || (version == "firered" && region != "REGION_KANTO")) {
+            invalid_maps.push_back(map_name);
+        }
+```
+
+## Fix CI if you are building FRLG by default
 If you make these I would also reccomend fixing your CI too to match these changes
 
 Make the following changes to your `.github/workflows/build.yml`
