@@ -93,8 +93,6 @@ Another issue is that you need to add `REGION_KANTO` attribute to every new map 
 
 Make the following changes to your `tools/mapjson/mapjson.cpp` so the new maps you add without the `REGION_KANTO` also work fine
 
-Note: This will break Vanilla Emerald maps as they have empty `region` attibutes by default
-
 ```diff
 string region = json_to_string(map_data, "region", true);
 
@@ -109,6 +107,16 @@ string region = json_to_string(map_data, "region", true);
             invalid_maps.push_back(map_name);
         }
 ```
+
+Then run this script to set `REGION_KANTO` as the region attribute for all the Hoenn Maps
+
+**Make sure you run this from the [root folder](../../) of your project!**
+
+```
+python3 migration_scripts/add_region_hoenn_attribute_to_hoenn_maps.py
+```
+
+Make sure to run `make clean` after running this script
 
 ## Fix CI if you are building FRLG by default
 If you make these I would also reccomend fixing your CI too to match these changes
@@ -158,4 +166,3 @@ Make the following changes to your `.github/workflows/build.yml`
 -          make leafgreen -j${nproc} -O
 +          make emerald -j${nproc} -O
 ```
-
