@@ -154,8 +154,6 @@ enum SleepClauseBlock
     BLOCKED_BY_SLEEP_CLAUSE,
 };
 
-#define SKY_DROP_NO_TARGET 0xFF
-
 enum EjectPackTiming
 {
     START_OF_TURN,
