@@ -2358,7 +2358,7 @@ static void SetNonVolatileStatus(enum BattlerId effectBattler, enum MoveEffect e
 
 static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect) // Currently only used to determine move effects which happen even if the move's defined effectbattler is fainted
 {
-    switch (moveEffect) 
+    switch (moveEffect)
     {
     case MOVE_EFFECT_PAYDAY:
     case MOVE_EFFECT_BUG_BITE:
@@ -2370,7 +2370,7 @@ static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect) //
     case MOVE_EFFECT_SANDSTORM:
     case MOVE_EFFECT_HAIL:
     case MOVE_EFFECT_MISTY_TERRAIN:
-    case MOVE_EFFECT_GRASSY_TERRAIN: 
+    case MOVE_EFFECT_GRASSY_TERRAIN:
     case MOVE_EFFECT_ELECTRIC_TERRAIN:
     case MOVE_EFFECT_PSYCHIC_TERRAIN:
     case MOVE_EFFECT_DEFOG:
@@ -2437,7 +2437,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         gBattlescriptCurrInstr = battleScript;
         return;
     }
-    
+
     gBattleScripting.battler = battlerAtk;
     gEffectBattler = effectBattler;
 
@@ -11514,9 +11514,9 @@ static void Cmd_tryconfusionafterskydrop(void)
         gBattleMons[skyDropTarget].volatiles.semiInvulnerable = STATE_NONE;
         gSpecialStatuses[skyDropTarget].restoredBattlerSprite = TRUE;
 
-        if (gBattleMons[skyDropTarget].volatiles.rampageTurns > 0)
+        if (gBattleMons[skyDropTarget].volatiles.confuseAfterDrop)
         {
-            gBattleMons[skyDropTarget].volatiles.rampageTurns = 0;
+            gBattleMons[skyDropTarget].volatiles.confuseAfterDrop = FALSE;
 
             if (CanBeConfused(skyDropTarget, skyDropTarget))
             {
