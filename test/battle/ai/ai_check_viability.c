@@ -77,7 +77,7 @@ AI_SINGLE_BATTLE_TEST("AI sees increased base power of Wake Up Slap")
 
 AI_SINGLE_BATTLE_TEST("AI sees increased base power of Grav Apple")
 {
-    u32 movePlayer;
+    enum Move movePlayer;
     u16 expectedMove;
 
     PARAMETRIZE { movePlayer = MOVE_CELEBRATE; expectedMove = MOVE_DRUM_BEATING; }
@@ -113,6 +113,37 @@ AI_SINGLE_BATTLE_TEST("AI sees increased base power of Flail")
         OPPONENT(SPECIES_WOBBUFFET) { HP(hp); MaxHP(490); Speed(20); Moves(MOVE_BODY_SLAM, MOVE_FLAIL); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, expectedMove); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI sees increased base power of Body Press after Defense is boosted")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BODY_PRESS) == EFFECT_BODY_PRESS);
+        ASSUME(GetMoveEffect(MOVE_IRON_DEFENSE) == EFFECT_DEFENSE_UP_2);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_ZAMAZENTA) { Moves(MOVE_BODY_PRESS, MOVE_IRON_HEAD, MOVE_IRON_DEFENSE); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponent, MOVE_IRON_DEFENSE); }
+        TURN { EXPECT_MOVE(opponent, MOVE_IRON_DEFENSE); }
+        TURN { EXPECT_MOVE(opponent, MOVE_BODY_PRESS); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI sees increased base power of Body Press after Special Defense is boosted (Wonder Room)")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BODY_PRESS) == EFFECT_BODY_PRESS);
+        ASSUME(GetMoveEffect(MOVE_AMNESIA) == EFFECT_SPECIAL_DEFENSE_UP_2);
+        ASSUME(GetMoveEffect(MOVE_WONDER_ROOM) == EFFECT_WONDER_ROOM);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_WONDER_ROOM, MOVE_CELEBRATE); Speed(20); }
+        OPPONENT(SPECIES_ZAMAZENTA) { Moves(MOVE_BODY_PRESS, MOVE_IRON_HEAD, MOVE_AMNESIA); Speed(10); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_WONDER_ROOM); EXPECT_MOVE(opponent, MOVE_AMNESIA); }
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_AMNESIA); }
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_BODY_PRESS); }
     }
 }
 
@@ -154,6 +185,23 @@ AI_SINGLE_BATTLE_TEST("AI chooses Sleep Talk only when it will not wake up with 
     }
 }
 
+AI_SINGLE_BATTLE_TEST("AI uses Snore or Sleep Talk after using Rest")
+{
+    enum Move sleepMove;
+
+    PARAMETRIZE { sleepMove = MOVE_SNORE; }
+    PARAMETRIZE { sleepMove = MOVE_SLEEP_TALK; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); HP(1); MaxHP(100); Moves(MOVE_REST, sleepMove, MOVE_TACKLE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_REST); }
+        TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, sleepMove); }
+    }
+}
+
 AI_SINGLE_BATTLE_TEST("AI sees increased base power of Spit Up")
 {
     GIVEN {
@@ -172,14 +220,16 @@ AI_SINGLE_BATTLE_TEST("AI sees increased base power of Spit Up")
 
 AI_SINGLE_BATTLE_TEST("AI can choose Counter or Mirror Coat if the predicted move split is correct and user doesn't faint")
 {
-    u16 playerMove = MOVE_NONE, opponentMove = MOVE_NONE;
+    enum Move playerMove = MOVE_NONE, opponentMove = MOVE_NONE;
 
     PARAMETRIZE { playerMove = MOVE_STRENGTH; opponentMove = MOVE_COUNTER; }
     PARAMETRIZE { playerMove = MOVE_POWER_GEM; opponentMove = MOVE_MIRROR_COAT; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_COUNTER) == EFFECT_COUNTER);
-        ASSUME(GetMoveEffect(MOVE_MIRROR_COAT) == EFFECT_MIRROR_COAT);
+        ASSUME(GetMoveEffect(MOVE_COUNTER) == EFFECT_REFLECT_DAMAGE);
+        ASSUME(GetMoveReflectDamage_DamageCategories(MOVE_COUNTER) == (1u << DAMAGE_CATEGORY_PHYSICAL));
+        ASSUME(GetMoveEffect(MOVE_MIRROR_COAT) == EFFECT_REFLECT_DAMAGE);
+        ASSUME(GetMoveReflectDamage_DamageCategories(MOVE_MIRROR_COAT) == (1u << DAMAGE_CATEGORY_SPECIAL));
         ASSUME(GetMoveCategory(MOVE_STRENGTH) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_POWER_GEM) == DAMAGE_CATEGORY_SPECIAL);
         ASSUME(GetMovePower(MOVE_POWER_GEM) == 80); // Gen 5's 70 power causes the test to fail
@@ -336,7 +386,7 @@ AI_SINGLE_BATTLE_TEST("AI uses Wide Guard against Earthquake when opponent would
 
 AI_SINGLE_BATTLE_TEST("AI uses Worry Seed against Rest")
 {
-    u32 move;
+    enum Move move;
     u64 aiFlags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT;
 
     PARAMETRIZE { move = MOVE_REST; }
@@ -357,7 +407,8 @@ AI_SINGLE_BATTLE_TEST("AI uses Worry Seed against Rest")
 
 AI_SINGLE_BATTLE_TEST("AI uses Simple Beam against Contrary Leaf Storm")
 {
-    enum Ability ability, move;
+    enum Ability ability;
+    enum Move move;
     PARAMETRIZE { ability = ABILITY_CONTRARY; move = MOVE_LEAF_STORM; }
     PARAMETRIZE { ability = ABILITY_CONTRARY; move = MOVE_CHARGE_BEAM; }
     PARAMETRIZE { ability = ABILITY_OVERGROW; move = MOVE_CHARGE_BEAM; }
@@ -410,6 +461,51 @@ AI_SINGLE_BATTLE_TEST("AI uses Trick Room (singles)")
             TURN { EXPECT_MOVE(opponent, MOVE_TRICK_ROOM); }
         else
             TURN { NOT_EXPECT_MOVE(opponent, MOVE_TRICK_ROOM); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI uses Tailwind to trigger Wind Rider (Single)")
+{
+    bool32 expectTailwind;
+    u16 tailwindSpecies;
+    enum Ability tailwindAbility;
+
+    PARAMETRIZE { tailwindSpecies = SPECIES_BRAMBLEGHAST; tailwindAbility = ABILITY_WIND_RIDER;  expectTailwind = TRUE; }
+    PARAMETRIZE { tailwindSpecies = SPECIES_BRAMBLEGHAST; tailwindAbility = ABILITY_INFILTRATOR; expectTailwind = FALSE; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TAILWIND) == EFFECT_TAILWIND);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
+        OPPONENT(tailwindSpecies) { Ability(tailwindAbility); Speed(9); Moves(MOVE_TAILWIND, MOVE_HEADBUTT); }
+    } WHEN {
+        if (expectTailwind)
+            TURN { EXPECT_MOVE(opponent, MOVE_TAILWIND); }
+        else
+            TURN { NOT_EXPECT_MOVE(opponent, MOVE_TAILWIND); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI uses Tailwind to trigger Wind Power (Single)")
+{
+    bool32 expectTailwind;
+    u16 tailwindSpecies;
+    enum Ability tailwindAbility;
+
+    PARAMETRIZE { tailwindSpecies = SPECIES_KILOWATTREL; tailwindAbility = ABILITY_WIND_POWER;  expectTailwind = TRUE; }
+    PARAMETRIZE { tailwindSpecies = SPECIES_KILOWATTREL; tailwindAbility = ABILITY_COMPETITIVE; expectTailwind = FALSE; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TAILWIND) == EFFECT_TAILWIND);
+        ASSUME(GetMoveType(MOVE_THUNDERSHOCK) == TYPE_ELECTRIC);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
+        OPPONENT(tailwindSpecies) { Ability(tailwindAbility); Speed(9); Moves(MOVE_TAILWIND, MOVE_THUNDERSHOCK); }
+    } WHEN {
+        if (expectTailwind)
+            TURN { EXPECT_MOVE(opponent, MOVE_TAILWIND); }
+        else
+            TURN { NOT_EXPECT_MOVE(opponent, MOVE_TAILWIND); }
     }
 }
 

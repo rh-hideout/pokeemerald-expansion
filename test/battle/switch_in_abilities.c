@@ -247,3 +247,23 @@ ONE_VS_TWO_BATTLE_TEST("Switch-in abilities trigger in Speed Order after post-KO
         }
     }
 }
+
+DOUBLE_BATTLE_TEST("Status setting abilities don't re-activate when a new mon switches in")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { ABILITY_POPUP(opponentRight, ABILITY_ELECTRIC_SURGE); }
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN { SWITCH(opponentLeft, 2); NOT ABILITY_POPUP(opponentRight, ABILITY_ELECTRIC_SURGE); }
+    } THEN {
+        EXPECT(!(gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN));
+    }
+}

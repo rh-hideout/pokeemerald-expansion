@@ -46,7 +46,7 @@ SINGLE_BATTLE_TEST("Frostbite deals 1/8th damage (Gen1-6) or 1/16th (Gen7+) per 
 
 SINGLE_BATTLE_TEST("Frostbite is healed if hit with a thawing move")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_FLAME_WHEEL; }
     PARAMETRIZE { move = MOVE_SACRED_FIRE; }
@@ -73,7 +73,7 @@ SINGLE_BATTLE_TEST("Frostbite is healed if hit with a thawing move")
 
 SINGLE_BATTLE_TEST("Frostbite is healed when the user uses a thawing move")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_FLAME_WHEEL; }
     PARAMETRIZE { move = MOVE_SACRED_FIRE; }

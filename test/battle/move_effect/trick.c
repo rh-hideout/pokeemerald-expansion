@@ -195,3 +195,38 @@ SINGLE_BATTLE_TEST("Trick can be used against targets with an active form change
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, opponent);
     }
 }
+
+SINGLE_BATTLE_TEST("Trick does not remove the user's choice lock if both the target and use are holding choice items before Gen 5")
+{
+    GIVEN {
+        WITH_CONFIG(B_MODERN_TRICK_CHOICE_LOCK, GEN_4);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_CHOICE_SCARF); MovesWithPP({MOVE_TRICK, 1}, {MOVE_CELEBRATE, 10}); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_CHOICE_SCARF); }
+    }
+    WHEN {
+        TURN { MOVE(player, MOVE_TRICK); }
+        TURN { FORCED_MOVE(player); }
+    }
+    SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STRUGGLE, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Trick removes the user's choice lock if both the target and use are holding choice items from Gen 5 onwards")
+{
+    GIVEN {
+        WITH_CONFIG(B_MODERN_TRICK_CHOICE_LOCK, GEN_5);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_CHOICE_SCARF); MovesWithPP({MOVE_TRICK, 1}, {MOVE_CELEBRATE, 10}); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_CHOICE_SCARF); }
+    }
+    WHEN {
+        TURN { MOVE(player, MOVE_TRICK); }
+        TURN { MOVE(player, MOVE_CELEBRATE); }
+    }
+    SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+    }
+}
+

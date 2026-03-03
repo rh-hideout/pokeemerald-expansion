@@ -74,7 +74,6 @@ void TrySpawnNamebox(u32 tileNum)
     FillNamebox();
 
     u8 colors[3] = {TEXT_COLOR_TRANSPARENT, OW_NAME_BOX_FOREGROUND_COLOR, OW_NAME_BOX_SHADOW_COLOR};
-    u8 bakColors[3];
     int strX = GetStringCenterAlignXOffset(fontId, strbuf, (winWidth * 8));
     if (matchCall)
     {
@@ -82,9 +81,9 @@ void TrySpawnNamebox(u32 tileNum)
         colors[2] = 0;
     }
 
-    SaveTextColors(&bakColors[0], &bakColors[1], &bakColors[2]);
+    union TextColor savedTextColors = SaveTextColors();
     AddTextPrinterParameterized3(sNameboxWindowId, fontId, strX, 0, colors, 0, strbuf);
-    RestoreTextColors(&bakColors[0], &bakColors[1], &bakColors[2]);
+    RestoreTextColors(savedTextColors);
     PutWindowTilemap(sNameboxWindowId);
     Free(strbuf);
 }

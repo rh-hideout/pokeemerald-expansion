@@ -7,8 +7,8 @@
 struct Berry
 {
     const u8 name[BERRY_NAME_LENGTH + 1];
-    u8 firmness:4;
-    u8 color:4;
+    enum BerryFirmness firmness:4;
+    enum BerryColor color:4;
     u16 size:10;
     u16 weedsBonus:3;
     u16 pestsBonus:3;
@@ -32,8 +32,8 @@ struct Berry
 struct Berry2
 {
     u8 name[BERRY_NAME_LENGTH + 1];
-    u8 firmness:4;
-    u8 color:4;
+    enum BerryFirmness firmness:4;
+    enum BerryColor color:4;
     u16 size:10;
     u16 weedsBonus:3;
     u16 pestsBonus:3;

@@ -73,7 +73,7 @@ DOUBLE_BATTLE_TEST("Beak Blast burns all who make contact with the Pokémon")
 
 SINGLE_BATTLE_TEST("Beak Blast burns only when contact moves are used")
 {
-    u32 move;
+    enum Move move;
     bool32 burn;
     PARAMETRIZE { move = MOVE_SCRATCH; burn = TRUE; }
     PARAMETRIZE { move = MOVE_WATER_GUN; burn = FALSE; }

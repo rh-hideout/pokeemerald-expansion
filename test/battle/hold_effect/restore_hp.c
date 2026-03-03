@@ -3,7 +3,7 @@
 
 DOUBLE_BATTLE_TEST("Restore HP Item effects do not miss timing")
 {
-    u16 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_BERRY_JUICE; }
     PARAMETRIZE { item = ITEM_ORAN_BERRY; }
@@ -30,7 +30,7 @@ DOUBLE_BATTLE_TEST("Restore HP Item effects do not miss timing")
 
 DOUBLE_BATTLE_TEST("Restore HP Item effects do not miss timing after a recoil move")
 {
-    u16 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_BERRY_JUICE; }
     PARAMETRIZE { item = ITEM_ORAN_BERRY; }
@@ -93,5 +93,29 @@ SINGLE_BATTLE_TEST("Healing berry animates on the correct battler at battle star
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Sitrus Berry restores HP before Shields Down form change")
+{
+    GIVEN {
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_MINIOR_CORE) {
+            Ability(ABILITY_SHIELDS_DOWN); HP(53); MaxHP(101); Item(ITEM_SITRUS_BERRY);
+        }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_SHIELDS_DOWN);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        HP_BAR(opponent); // Scratch
+        NONE_OF {
+            ABILITY_POPUP(opponent, ABILITY_SHIELDS_DOWN);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, opponent);
+        }
+        HP_BAR(opponent); // Heal
+    } THEN {
+        EXPECT_EQ(opponent->species, SPECIES_MINIOR_METEOR);
     }
 }

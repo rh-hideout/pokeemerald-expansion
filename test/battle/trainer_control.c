@@ -13,6 +13,26 @@
 #include "constants/battle.h"
 #include "constants/battle_ai.h"
 
+#define NUM_TEST_TRAINERS 12
+
+static const struct Trainer sTestTrainers[DIFFICULTY_COUNT][NUM_TEST_TRAINERS] =
+{
+#include "trainer_control.h"
+};
+
+enum DifficultyLevel GetTrainerDifficultyLevelTest(u16 trainerId)
+{
+    enum DifficultyLevel difficulty = GetCurrentDifficultyLevel();
+
+    if (difficulty == DIFFICULTY_NORMAL)
+        return DIFFICULTY_NORMAL;
+
+    if (sTestTrainers[difficulty][trainerId].party == NULL)
+        return DIFFICULTY_NORMAL;
+
+    return difficulty;
+}
+
 TEST("CreateNPCTrainerPartyForTrainer generates customized Pokémon")
 {
     struct Pokemon *testParty = Alloc(6 * sizeof(struct Pokemon));
@@ -141,22 +161,15 @@ static const struct TrainerMon sTestParty2[] =
     },
 };
 
-static const struct Trainer sTestTrainer2 =
-{
-    .trainerName = _("Test2"),
-    .trainerClass = TRAINER_CLASS_BLACK_BELT,
-    .party = TRAINER_PARTY(sTestParty2),
-};
-
 TEST("Trainer Class Balls apply to the entire party")
 {
     ASSUME(B_TRAINER_CLASS_POKE_BALLS >= GEN_8);
-    u32 j;
     struct Pokemon *testParty = Alloc(6 * sizeof(struct Pokemon));
-    CreateNPCTrainerPartyFromTrainer(testParty, &sTestTrainer2, TRUE, BATTLE_TYPE_TRAINER);
+    u32 j;
+    CreateNPCTrainerPartyFromTrainer(testParty, &sTestTrainers[DIFFICULTY_NORMAL][11], TRUE, BATTLE_TYPE_TRAINER);
     for(j = 0; j < 6; j++)
     {
-        EXPECT(GetMonData(&testParty[j], MON_DATA_POKEBALL, 0) == gTrainerClasses[sTestTrainer2.trainerClass].ball);
+        EXPECT(GetMonData(&testParty[j], MON_DATA_POKEBALL, 0) == gTrainerClasses[sTestTrainers[DIFFICULTY_NORMAL][11].trainerClass].ball);
     }
     Free(testParty);
 }
@@ -321,4 +334,13 @@ TEST("trainerproc supports both Double Battle: Yes and Battle Type: Doubles")
     PARAMETRIZE { currTrainer = 12; }
     const struct Trainer *trainer = GetTrainerStructFromId(currTrainer);
     EXPECT(trainer->battleType == TRAINER_BATTLE_TYPE_DOUBLES);
+}
+
+TEST("CreateNPCTrainerPartyForTrainer generates default moves if no moves are specified")
+{
+    ASSUME(sTestTrainers[GetTrainerDifficultyLevelTest(1)][1].party[0].moves[0] == MOVE_NONE);
+    struct Pokemon *testParty = Alloc(6 * sizeof(struct Pokemon));
+    CreateNPCTrainerPartyFromTrainer(testParty, &sTestTrainers[GetTrainerDifficultyLevelTest(1)][1], TRUE, BATTLE_TYPE_TRAINER);
+    EXPECT(GetMonData(&testParty[0], MON_DATA_MOVE1) != MOVE_NONE);
+    Free(testParty);
 }

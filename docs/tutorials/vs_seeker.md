@@ -111,5 +111,5 @@ If you want Trainers to spin once they are eligible for a rematch, their overwor
 * **Recharge Steps**: `VSSEEKER_RECHARGE_STEPS` is initally set to 100, but this value can be changed to any number under 256.
 * **Badge Requirement**: `HasAtLeastFiveBadges` is used to check if the Vs. Seeker will successfully work. You can customize the number of badges by changing `REMATCH_BADGE_COUNT` or otherwise alterting the function.
 
-## What are the limitations of the Vs. Seeker?
-The Vs. Seeker does not currently work with Gym Leaders. There is a bug filed to hopefully fix this in the future.
+## How do gym leaders rematch work with Vs. Seeker?
+They follow vanilla Emerald rules. You need to have set the flag `FLAG_SYS_GAME_CLEAR` by defeating Steven in Ever Grande City for the first rematch to be available. And then you need to have beaten every Gym Leader in a rematch once the second rematch is available. Then you need to beat every Gym Leader in a second rematch for the third rematch to be available, etc, etc ...

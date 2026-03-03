@@ -231,7 +231,11 @@ const union AnimCmd *const gAnims_Trainer[] ={
 #if !TESTING
 const struct Trainer gTrainers[DIFFICULTY_COUNT][TRAINERS_COUNT] =
 {
-    #include "data/trainers.h"
+#if IS_FRLG
+#include "data/trainers_frlg.h"
+#else
+#include "data/trainers.h"
+#endif
 };
 #endif
 

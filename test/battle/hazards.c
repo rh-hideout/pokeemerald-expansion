@@ -132,13 +132,13 @@ DOUBLE_BATTLE_TEST("Hazards can trigger Emergency Exit and hazards still activat
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FINAL_GAMBIT) == EFFECT_FINAL_GAMBIT);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        PLAYER(SPECIES_GOLISOPOD) { HP(105); MaxHP(200); Ability(ABILITY_EMERGENCY_EXIT); }
-        PLAYER(SPECIES_WYNAUT);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); HP(1); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(2); HP(1); }
+        PLAYER(SPECIES_GOLISOPOD) { Speed(10); HP(105); MaxHP(200); Ability(ABILITY_EMERGENCY_EXIT); }
+        PLAYER(SPECIES_WYNAUT) { Speed(5); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
+        OPPONENT(SPECIES_WOBBUFFET)  { Speed(10); }
+        OPPONENT(SPECIES_WYNAUT)  { Speed(5); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_STEALTH_ROCK); MOVE(opponentRight, MOVE_TOXIC_SPIKES); }
         TURN { MOVE(opponentLeft, MOVE_STICKY_WEB); MOVE(opponentRight, MOVE_SPIKES); }

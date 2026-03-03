@@ -26,8 +26,9 @@
 #include "text_window.h"
 #include "trig.h"
 #include "window.h"
-#include "constants/songs.h"
 #include "constants/battle_move_effects.h"
+#include "constants/characters.h"
+#include "constants/songs.h"
 #include "gba/io_reg.h"
 
 EWRAM_DATA static u8 sMailboxWindowIds[MAILBOXWIN_COUNT] = {0};
@@ -868,7 +869,7 @@ void MoveRelearnerPrintMessage(u8 *str)
 bool16 MoveRelearnerRunTextPrinters(void)
 {
     RunTextPrinters();
-    return IsTextPrinterActive(RELEARNERWIN_MSG);
+    return IsTextPrinterActiveOnWindow(RELEARNERWIN_MSG);
 }
 
 void MoveRelearnerCreateYesNoMenu(void)
@@ -912,10 +913,13 @@ static u8 *GetConditionMenuMonString(u8 *dst, u16 boxId, u16 monId)
     box = boxId;
     mon = monId;
     *(dst++) = EXT_CTRL_CODE_BEGIN;
-    *(dst++) = EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW;
-    *(dst++) = TEXT_COLOR_BLUE;
+    *(dst++) = EXT_CTRL_CODE_BACKGROUND;
     *(dst++) = TEXT_COLOR_TRANSPARENT;
+    *(dst++) = EXT_CTRL_CODE_BEGIN;
+    *(dst++) = EXT_CTRL_CODE_TEXT_COLORS;
+    *(dst++) = TEXT_COLOR_BLUE;
     *(dst++) = TEXT_COLOR_LIGHT_BLUE;
+    *(dst++) = TEXT_COLOR_TRANSPARENT;
     if (GetBoxOrPartyMonData(box, mon, MON_DATA_IS_EGG, NULL))
         return StringCopyPadded(dst, gText_EggNickname, 0, POKEMON_NAME_LENGTH + 2);
     GetBoxOrPartyMonData(box, mon, MON_DATA_NICKNAME, dst);
@@ -950,29 +954,27 @@ static u8 *GetConditionMenuMonString(u8 *dst, u16 boxId, u16 monId)
         break;
     case MON_MALE:
         *(str++) = EXT_CTRL_CODE_BEGIN;
-        *(str++) = EXT_CTRL_CODE_COLOR;
+        *(str++) = EXT_CTRL_CODE_TEXT_COLORS;
         *(str++) = TEXT_COLOR_RED;
-        *(str++) = EXT_CTRL_CODE_BEGIN;
-        *(str++) = EXT_CTRL_CODE_SHADOW;
         *(str++) = TEXT_COLOR_LIGHT_RED;
+        *(str++) = TEXT_COLOR_TRANSPARENT;
         *(str++) = CHAR_MALE;
         break;
     case MON_FEMALE:
         *(str++) = EXT_CTRL_CODE_BEGIN;
-        *(str++) = EXT_CTRL_CODE_COLOR;
+        *(str++) = EXT_CTRL_CODE_TEXT_COLORS;
         *(str++) = TEXT_COLOR_GREEN;
-        *(str++) = EXT_CTRL_CODE_BEGIN;
-        *(str++) = EXT_CTRL_CODE_SHADOW;
         *(str++) = TEXT_COLOR_LIGHT_GREEN;
+        *(str++) = TEXT_COLOR_TRANSPARENT;
         *(str++) = CHAR_FEMALE;
         break;
     }
 
     *(str++) = EXT_CTRL_CODE_BEGIN;
-    *(str++) = EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW;
+    *(str++) = EXT_CTRL_CODE_TEXT_COLORS;
     *(str++) = TEXT_COLOR_BLUE;
-    *(str++) = TEXT_COLOR_TRANSPARENT;
     *(str++) = TEXT_COLOR_LIGHT_BLUE;
+    *(str++) = TEXT_COLOR_TRANSPARENT;
     *(str++) = CHAR_SLASH;
     *(str++) = CHAR_EXTRA_SYMBOL;
     *(str++) = CHAR_LV_2;
@@ -1000,7 +1002,6 @@ static u8 *BufferConditionMenuSpacedStringN(u8 *dst, const u8 *src, s16 n)
 
 void GetConditionMenuMonNameAndLocString(u8 *locationDst, u8 *nameDst, u16 boxId, u16 monId, u16 partyId, u16 numMons, bool8 excludesCancel)
 {
-    u16 i;
     u16 box = boxId;
     u16 mon = monId;
 
@@ -1012,25 +1013,29 @@ void GetConditionMenuMonNameAndLocString(u8 *locationDst, u8 *nameDst, u16 boxId
 
     if (partyId != numMons)
     {
+        u16 i = 0;
         GetConditionMenuMonString(nameDst, box, mon);
-        locationDst[0] = EXT_CTRL_CODE_BEGIN;
-        locationDst[1] = EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW;
-        locationDst[2] = TEXT_COLOR_BLUE;
-        locationDst[3] = TEXT_COLOR_TRANSPARENT;
-        locationDst[4] = TEXT_COLOR_LIGHT_BLUE;
+        locationDst[i++] = EXT_CTRL_CODE_BEGIN;
+        locationDst[i++] = EXT_CTRL_CODE_BACKGROUND;
+        locationDst[i++] = TEXT_COLOR_TRANSPARENT;
+        locationDst[i++] = EXT_CTRL_CODE_BEGIN;
+        locationDst[i++] = EXT_CTRL_CODE_TEXT_COLORS;
+        locationDst[i++] = TEXT_COLOR_BLUE;
+        locationDst[i++] = TEXT_COLOR_LIGHT_BLUE;
+        locationDst[i++] = TEXT_COLOR_TRANSPARENT;
         if (box == TOTAL_BOXES_COUNT) // Party mon.
-            BufferConditionMenuSpacedStringN(&locationDst[5], gText_InParty, BOX_NAME_LENGTH);
+            BufferConditionMenuSpacedStringN(&locationDst[i], gText_InParty, BOX_NAME_LENGTH);
         else
-            BufferConditionMenuSpacedStringN(&locationDst[5], GetBoxNamePtr(box), BOX_NAME_LENGTH);
+            BufferConditionMenuSpacedStringN(&locationDst[i], GetBoxNamePtr(box), BOX_NAME_LENGTH);
     }
     else
     {
-        for (i = 0; i < POKEMON_NAME_LENGTH + 2; i++)
+        for (u16 i = 0; i < POKEMON_NAME_LENGTH + 2; i++)
             nameDst[i] = CHAR_SPACE;
-        nameDst[i] = EOS;
-        for (i = 0; i < BOX_NAME_LENGTH; i++)
+        nameDst[POKEMON_NAME_LENGTH + 2] = EOS;
+        for (u16 i = 0; i < BOX_NAME_LENGTH; i++)
             locationDst[i] = CHAR_SPACE;
-        locationDst[i] = EOS;
+        locationDst[BOX_NAME_LENGTH] = EOS;
     }
 }
 
@@ -1071,12 +1076,13 @@ void GetConditionMenuMonGfx(void *tilesDst, void *palDst, u16 boxId, u16 monId, 
 
     if (partyId != numMons)
     {
-        u16 species = GetBoxOrPartyMonData(boxId, monId, MON_DATA_SPECIES_OR_EGG, NULL);
+        u16 species = GetBoxOrPartyMonData(boxId, monId, MON_DATA_SPECIES, NULL);
         bool8 isShiny = GetBoxOrPartyMonData(boxId, monId, MON_DATA_IS_SHINY, NULL);
         u32 personality = GetBoxOrPartyMonData(boxId, monId, MON_DATA_PERSONALITY, NULL);
+        bool32 isEgg = GetBoxOrPartyMonData(boxId, monId, MON_DATA_IS_EGG, NULL);
 
-        LoadSpecialPokePic(tilesDst, species, personality, TRUE);
-        memcpy(palDst, GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality), 32);
+        LoadSpecialPokePicIsEgg(tilesDst, species, personality, TRUE, isEgg);
+        memcpy(palDst, GetMonSpritePalFromSpeciesAndPersonalityIsEgg(species, isShiny, personality, isEgg), 32);
     }
 }
 
@@ -1181,10 +1187,6 @@ void LoadConditionMonPicTemplate(struct SpriteSheet *sheet, struct SpriteTemplat
         .tileTag = TAG_CONDITION_MON,
         .paletteTag = TAG_CONDITION_MON,
         .oam = &sOam_ConditionMonPic,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
-        .callback = SpriteCallbackDummy,
     };
 
     struct SpritePalette dataPal = {NULL, TAG_CONDITION_MON};
@@ -1220,9 +1222,6 @@ void LoadConditionSelectionIcons(struct SpriteSheet *sheets, struct SpriteTempla
         .paletteTag = TAG_CONDITION_BALL,
         .oam = &sOam_ConditionSelectionIcon,
         .anims = sAnims_ConditionSelectionIcon,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
-        .callback = SpriteCallbackDummy,
     };
 
     for (i = 0; i < ARRAY_COUNT(dataSheets); i++)
@@ -1309,8 +1308,6 @@ static const struct SpriteTemplate sSpriteTemplate_ConditionSparkle =
     .paletteTag = TAG_CONDITION_SPARKLE,
     .oam = &sOam_ConditionSparkle,
     .anims = sAnims_ConditionSparkle,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_ConditionSparkle,
 };
 

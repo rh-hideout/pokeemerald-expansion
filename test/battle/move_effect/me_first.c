@@ -8,7 +8,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Me First copies the move from the target and increases it's power by 1.5", s16 damage)
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_TACKLE; }
     PARAMETRIZE { move = MOVE_ME_FIRST; }

@@ -84,7 +84,7 @@ SINGLE_BATTLE_TEST("Booster Energy's Protosynthesis boost is preserved when weat
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, opponent);
         MESSAGE("The sunlight faded.");
     } THEN {
-        EXPECT(gDisableStructs[B_POSITION_PLAYER_LEFT].paradoxBoostedStat == STAT_ATK);
+        EXPECT(gBattleMons[B_POSITION_PLAYER_LEFT].volatiles.paradoxBoostedStat == STAT_ATK);
     }
 }
 
@@ -173,7 +173,7 @@ SINGLE_BATTLE_TEST("Booster Energy's Quark Drive boost is preserved when terrain
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASSY_TERRAIN, opponent);
         MESSAGE("The grass disappeared from the battlefield.");
     } THEN {
-        EXPECT(gDisableStructs[B_POSITION_PLAYER_LEFT].paradoxBoostedStat == STAT_ATK);
+        EXPECT(gBattleMons[B_POSITION_PLAYER_LEFT].volatiles.paradoxBoostedStat == STAT_ATK);
     }
 }
 
@@ -181,7 +181,7 @@ SINGLE_BATTLE_TEST("Booster Energy increases special attack by 30% if it is the 
 {
     u32 species;
     enum Ability ability;
-    u32 item;
+    enum Item item;
 
     PARAMETRIZE { species = SPECIES_RAGING_BOLT; ability = ABILITY_PROTOSYNTHESIS; item = ITEM_NONE; }
     PARAMETRIZE { species = SPECIES_RAGING_BOLT; ability = ABILITY_PROTOSYNTHESIS; item = ITEM_BOOSTER_ENERGY; }
@@ -207,7 +207,7 @@ SINGLE_BATTLE_TEST("Booster Energy increases special defense by 30% if it is the
 {
     u32 species;
     enum Ability ability;
-    u32 item;
+    enum Item item;
 
     PARAMETRIZE { species = SPECIES_RAGING_BOLT; ability = ABILITY_PROTOSYNTHESIS; item = ITEM_NONE; }
     PARAMETRIZE { species = SPECIES_RAGING_BOLT; ability = ABILITY_PROTOSYNTHESIS; item = ITEM_BOOSTER_ENERGY; }
@@ -227,20 +227,6 @@ SINGLE_BATTLE_TEST("Booster Energy increases special defense by 30% if it is the
     } FINALLY {
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(0.77), results[1].damage);
         EXPECT_MUL_EQ(results[2].damage, Q_4_12(0.77), results[3].damage);
-    }
-}
-
-SINGLE_BATTLE_TEST("Booster Energy can't be flung if a Paradox species is involved")
-{
-    GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_IRON_MOTH].isParadox == TRUE);
-        PLAYER(SPECIES_IRON_MOTH);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_BOOSTER_ENERGY); }
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_FLING); }
-    } SCENE {
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, opponent);
-        MESSAGE("But it failed!");
     }
 }
 

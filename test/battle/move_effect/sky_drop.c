@@ -135,3 +135,76 @@ SINGLE_BATTLE_TEST("Sky Drop fails if the targe is in a semi-invulnerable state"
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, player);
     }
 }
+
+DOUBLE_BATTLE_TEST("Sky Drop will be canceled if it is electrified and holding a target with Volt Absorb")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_LANTURN) { Ability(ABILITY_VOLT_ABSORB); }
+        OPPONENT(SPECIES_MACHAMP) { Ability(ABILITY_NO_GUARD); }
+    } WHEN {
+        TURN { MOVE(opponentRight, MOVE_CELEBRATE, target: playerLeft); MOVE(playerLeft, MOVE_SKY_DROP, target: opponentLeft); }
+        TURN { MOVE(opponentRight, MOVE_ELECTRIFY, target: playerLeft); SKIP_TURN(playerLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIFY, opponentRight);
+        ABILITY_POPUP(opponentLeft, ABILITY_VOLT_ABSORB);
+        NOT HP_BAR(opponentLeft);
+    }
+}
+
+SINGLE_BATTLE_TEST("Sky Drop fails if the target fainted while it was held on air")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); Status1(STATUS1_BURN); }
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SKY_DROP); SEND_OUT(opponent, 1); }
+        TURN { SKIP_TURN(player); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, player);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, player);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Sky Drop will be canceled if it is electrified and holding a target with Volt Absorb before checking if it is a flying Type")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_ELECTRIFY) == EFFECT_ELECTRIFY);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WATTREL) { Ability(ABILITY_VOLT_ABSORB); }
+        OPPONENT(SPECIES_MACHAMP) { Ability(ABILITY_NO_GUARD); }
+    } WHEN {
+        TURN { MOVE(opponentRight, MOVE_CELEBRATE, target: playerLeft); MOVE(playerLeft, MOVE_SKY_DROP, target: opponentLeft); }
+        TURN { MOVE(opponentRight, MOVE_ELECTRIFY, target: playerLeft); SKIP_TURN(playerLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIFY, opponentRight);
+        NOT MESSAGE("It doesn't affect the opposing Wattrel…");
+        ABILITY_POPUP(opponentLeft, ABILITY_VOLT_ABSORB);
+        NOT HP_BAR(opponentLeft);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Sky Drop does not trigger Volt Absorb on it's charge turn")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_ELECTRIFY) == EFFECT_ELECTRIFY);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_LANTURN) { Ability(ABILITY_VOLT_ABSORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentRight, MOVE_ELECTRIFY, target: playerLeft); MOVE(playerLeft, MOVE_SKY_DROP, target: opponentLeft); }
+        TURN { SKIP_TURN(playerLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIFY, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, playerLeft);
+        NOT ABILITY_POPUP(opponentLeft, ABILITY_VOLT_ABSORB);
+        HP_BAR(opponentLeft); // Drop turn. Not affected by electrify anymore
+    }
+}
+

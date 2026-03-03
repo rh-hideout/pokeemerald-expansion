@@ -3,15 +3,14 @@
 
 ASSUMPTIONS
 {
-    ASSUME(!IsBattleMoveStatus(MOVE_SCRATCH));
-    ASSUME(!IsBattleMoveStatus(MOVE_GUST));
     ASSUME(GetMoveCategory(MOVE_GUST) == DAMAGE_CATEGORY_SPECIAL);
     ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
 }
 
 SINGLE_BATTLE_TEST("Weak Armor lowers Defense by 1 and boosts Speed by 1 (Gen5-6) or 2 (Gen7+) when hit by a physical attack")
 {
-    u16 move, gen;
+    enum Move move;
+    u32 gen;
 
     PARAMETRIZE { move = MOVE_SCRATCH; gen = GEN_6; }
     PARAMETRIZE { move = MOVE_SCRATCH; gen = GEN_7; }

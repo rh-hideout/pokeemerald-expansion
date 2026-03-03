@@ -34,7 +34,7 @@ SINGLE_BATTLE_TEST("Synthesis recovers 2/3 of the user's max HP in Sunlight (Gen
 
 SINGLE_BATTLE_TEST("Synthesis recovers 1/4 of the user's max HP in Rain, Sandstorm, Hail, and Snow (Gen3+)")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_RAIN_DANCE; }
     PARAMETRIZE { move = MOVE_SANDSTORM; }
     PARAMETRIZE { move = MOVE_HAIL; }
@@ -52,7 +52,7 @@ SINGLE_BATTLE_TEST("Synthesis recovers 1/4 of the user's max HP in Rain, Sandsto
 
 SINGLE_BATTLE_TEST("Synthesis recovers regular amount in sandstorm if holding utility umbrella")
 {
-    u32 item;
+    enum Item item;
     PARAMETRIZE { item = ITEM_LIFE_ORB; }
     PARAMETRIZE { item = ITEM_UTILITY_UMBRELLA; }
     GIVEN {

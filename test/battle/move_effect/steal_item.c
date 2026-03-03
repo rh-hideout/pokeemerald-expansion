@@ -3,13 +3,13 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_THIEF == EFFECT_STEAL_ITEM));
-    ASSUME(GetMoveEffect(MOVE_COVET == EFFECT_STEAL_ITEM));
+    ASSUME(GetMoveEffect(MOVE_THIEF) == EFFECT_STEAL_ITEM);
+    ASSUME(GetMoveEffect(MOVE_COVET) == EFFECT_STEAL_ITEM);
 }
 
 SINGLE_BATTLE_TEST("Thief and Covet steal target's held item")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_THIEF; }
     PARAMETRIZE { move = MOVE_COVET; }
     GIVEN {
@@ -29,7 +29,7 @@ SINGLE_BATTLE_TEST("Thief and Covet steal target's held item")
 
 SINGLE_BATTLE_TEST("Thief and Covet steal player's held item if opponent is a trainer")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_THIEF; }
     PARAMETRIZE { move = MOVE_COVET; }
     GIVEN {
@@ -50,7 +50,7 @@ SINGLE_BATTLE_TEST("Thief and Covet steal player's held item if opponent is a tr
 
 WILD_BATTLE_TEST("Thief and Covet don't steal player's held item if opponent is a wild mon")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_THIEF; }
     PARAMETRIZE { move = MOVE_COVET; }
     GIVEN {
@@ -71,7 +71,7 @@ WILD_BATTLE_TEST("Thief and Covet don't steal player's held item if opponent is 
 
 SINGLE_BATTLE_TEST("Thief and Covet don't steal target's held item if user is holding an item")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_THIEF; }
     PARAMETRIZE { move = MOVE_COVET; }
     GIVEN {
@@ -91,7 +91,7 @@ SINGLE_BATTLE_TEST("Thief and Covet don't steal target's held item if user is ho
 
 SINGLE_BATTLE_TEST("Thief and Covet don't steal target's held item if target has no item")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_THIEF; }
     PARAMETRIZE { move = MOVE_COVET; }
     GIVEN {
@@ -109,7 +109,7 @@ SINGLE_BATTLE_TEST("Thief and Covet don't steal target's held item if target has
 // Test can't currently verify if the item is sent to Bag
 WILD_BATTLE_TEST("Thief and Covet steal target's held item and it's added to Bag in wild battles (Gen 9+)")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_THIEF; }
     PARAMETRIZE { move = MOVE_COVET; }
     GIVEN {
@@ -130,7 +130,7 @@ WILD_BATTLE_TEST("Thief and Covet steal target's held item and it's added to Bag
 
 SINGLE_BATTLE_TEST("Thief and Covet can't steal target's held item if user faints before")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_THIEF; }
     PARAMETRIZE { move = MOVE_COVET; }
     GIVEN {
@@ -150,7 +150,7 @@ SINGLE_BATTLE_TEST("Thief and Covet can't steal target's held item if user faint
 
 SINGLE_BATTLE_TEST("Thief and Covet: Berries that activate on HP thresholds are stolen before they can activate")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_THIEF; }
     PARAMETRIZE { move = MOVE_COVET; }
 
@@ -169,7 +169,7 @@ SINGLE_BATTLE_TEST("Thief and Covet: Berries that activate on HP thresholds are 
 
 SINGLE_BATTLE_TEST("Thief and Covet: Berries that activate on a Status activate before the item can be stolen")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_THIEF; }
     PARAMETRIZE { move = MOVE_COVET; }
 

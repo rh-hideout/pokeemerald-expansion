@@ -45,7 +45,7 @@ SINGLE_BATTLE_TEST("Miracle Eye always hits unless the target is semi-invulnerab
             TURN { MOVE(player, MOVE_SPLASH); SKIP_TURN(opponent); }
     } SCENE {
         if (semiInvulnerable) {
-            MESSAGE("Wobbuffet's attack missed!");
+            NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_MIRACLE_EYE, player);
         } else {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_DOUBLE_TEAM, opponent);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);

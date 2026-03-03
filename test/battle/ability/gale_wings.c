@@ -29,7 +29,7 @@ SINGLE_BATTLE_TEST("Gale Wings only grants priority at full HP (Gen 7+)")
 
 SINGLE_BATTLE_TEST("Gale Wings only grants priority to Flying-type moves")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_AERIAL_ACE; }
     PARAMETRIZE { move = MOVE_FLARE_BLITZ; }
     GIVEN {
@@ -53,7 +53,7 @@ SINGLE_BATTLE_TEST("Gale Wings only grants priority to Flying-type moves")
 
 SINGLE_BATTLE_TEST("Gale Wings doesn't increase priority of Flying-type Natural Gift, Judgment, Hidden Power, or Tera Blast")
 {
-    u32 move;
+    enum Move move;
     u16 heldItem;
     PARAMETRIZE { move = MOVE_NATURAL_GIFT; heldItem = ITEM_LUM_BERRY; }
     PARAMETRIZE { move = MOVE_JUDGMENT; heldItem = ITEM_SKY_PLATE; }

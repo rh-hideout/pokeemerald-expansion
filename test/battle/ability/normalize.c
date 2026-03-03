@@ -184,7 +184,7 @@ SINGLE_BATTLE_TEST("Normalize-affected moves become Electric-type under Ion Delu
 
 SINGLE_BATTLE_TEST("Normalize doesn't affect Weather Ball's type", s16 damage)
 {
-    u16 move;
+    enum Move move;
     enum Ability ability;
     PARAMETRIZE { move = MOVE_CELEBRATE; ability = ABILITY_CUTE_CHARM; }
     PARAMETRIZE { move = MOVE_SUNNY_DAY; ability = ABILITY_CUTE_CHARM; }
@@ -232,7 +232,8 @@ SINGLE_BATTLE_TEST("Normalize doesn't affect Natural Gift's type")
 
 SINGLE_BATTLE_TEST("Normalize doesn't affect Judgment / Techno Blast / Multi-Attack's type")
 {
-    u16 move, item;
+    enum Move move;
+    enum Item item;
     PARAMETRIZE { move = MOVE_JUDGMENT; item = ITEM_ZAP_PLATE; }
     PARAMETRIZE { move = MOVE_TECHNO_BLAST; item = ITEM_SHOCK_DRIVE; }
     PARAMETRIZE { move = MOVE_MULTI_ATTACK; item = ITEM_ELECTRIC_MEMORY; }

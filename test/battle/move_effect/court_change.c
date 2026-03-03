@@ -173,9 +173,7 @@ DOUBLE_BATTLE_TEST("Court Change used by the player swaps G-Max Steelsurge")
         MESSAGE("Copperajah used G-Max Steelsurge!");
         SEND_IN_MESSAGE("Wobbuffet");
         MESSAGE("The sharp steel bit into Wobbuffet!");
-        NONE_OF {
-            MESSAGE("The sharp steel bit into the opposing Wynaut!");
-        }
+        NOT MESSAGE("The sharp steel bit into the opposing Wynaut!");
     }
 }
 
@@ -222,7 +220,7 @@ DOUBLE_BATTLE_TEST("Court Change used by the player swaps G-Max Vine Lash, G-Max
 
 AI_SINGLE_BATTLE_TEST("AI uses Court Change")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_HEADBUTT; }
     PARAMETRIZE { move = MOVE_REFLECT; }

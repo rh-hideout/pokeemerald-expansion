@@ -168,10 +168,20 @@ int MyFunction(int bar)
 }
 ```
 
-A chain of `if-else` statements in which any block is more than one line of
-code should use braces. If all blocks are single-line, then no braces are necessary.
+A chain of `if-else` statements in which any condition or block is more
+than one line of code should use braces. If all blocks *and* conditions
+are single-line, then no braces are necessary.
 
 ```c
+if (foo) // correct
+    return 1;
+
+if (foo
+ && bar) // correct
+{
+    return 1;
+}
+
 if (foo) // correct
 {
     return 1;
@@ -182,6 +192,25 @@ else
     return 0;
 }
 
+if (foo) // correct
+{
+    return 1;
+}
+else if (foo
+      && bar)
+{
+    return 0;
+}
+
+if (foo) // incorrect
+{
+    return 1;
+}
+
+if (foo
+ && bar) // incorrect
+    return 1;
+
 if (foo) // incorrect
     return 1;
 else
@@ -189,6 +218,26 @@ else
     MyFunction();
     return 0;
 }
+
+if (foo) // incorrect
+    return 1;
+else if (foo
+      && bar)
+    return 0;
+```
+
+The exception is `assertf` which should always use braces if it has a recovery path, even for one line of conditions and one line of code.
+
+```c
+assertf(true); // correct
+
+assertf(true) // correct
+{
+    return NULL;
+}
+
+assertf(true) // incorrect
+    return NULL;
 ```
 
 ### Control Structures

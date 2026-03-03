@@ -617,7 +617,7 @@ static void SetupRoomObjectEvents(void)
 
 static void GetBattlePikeData(void)
 {
-    u32 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
+    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
 
     switch (gSpecialVar_0x8005)
     {
@@ -644,7 +644,7 @@ static void GetBattlePikeData(void)
 
 static void SetBattlePikeData(void)
 {
-    u32 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
+    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
 
     switch (gSpecialVar_0x8005)
     {
@@ -797,7 +797,7 @@ static void HealMon(struct Pokemon *mon)
     ppBonuses = GetMonData(mon, MON_DATA_PP_BONUSES);
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        u16 move = GetMonData(mon, MON_DATA_MOVE1 + i);
+        enum Move move = GetMonData(mon, MON_DATA_MOVE1 + i);
         data[0] = CalculatePPWithBonus(move, ppBonuses, i);
         SetMonData(mon, MON_DATA_PP1 + i, data);
     }
@@ -1109,10 +1109,10 @@ bool32 TryGenerateBattlePikeWildMon(bool8 checkKeenEyeIntimidate)
     s32 i;
     s32 monLevel;
     u8 headerId = GetBattlePikeWildMonHeaderId();
-    u32 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
+    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
     const struct PikeWildMon *const *const wildMons = sWildMons[lvlMode];
     u32 abilityNum;
-    s32 pikeMonId = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES, NULL);
+    s32 pikeMonId = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES);
     pikeMonId = SpeciesToPikeMonId(pikeMonId);
 
     if (gSaveBlock2Ptr->frontier.lvlMode != FRONTIER_LVL_50)
@@ -1156,7 +1156,7 @@ bool32 TryGenerateBattlePikeWildMon(bool8 checkKeenEyeIntimidate)
 u8 GetBattlePikeWildMonHeaderId(void)
 {
     u8 headerId;
-    u8 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
+    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
     u16 winStreak = gSaveBlock2Ptr->frontier.pikeWinStreaks[lvlMode];
 
     if (winStreak <= 20 * NUM_PIKE_ROOMS)
@@ -1292,7 +1292,7 @@ static void TryHealMons(u8 healCount)
             u8 ppBonuses = GetMonData(mon, MON_DATA_PP_BONUSES);
             for (j = 0; j < MAX_MON_MOVES; j++)
             {
-                u16 move = GetMonData(mon, MON_DATA_MOVE1 + j);
+                enum Move move = GetMonData(mon, MON_DATA_MOVE1 + j);
                 max = CalculatePPWithBonus(move, ppBonuses, j);
                 curr = GetMonData(mon, MON_DATA_PP1 + j);
                 if (curr < max)
@@ -1381,7 +1381,7 @@ static void GetRoomTypeHint(void)
 static void PrepareOneTrainer(bool8 difficult)
 {
     int i;
-    u8 lvlMode;
+    enum FrontierLevelMode lvlMode;
     u8 battleNum;
     u16 challengeNum;
     u16 trainerId;
@@ -1414,7 +1414,7 @@ static void PrepareTwoTrainers(void)
 {
     int i;
     u16 trainerId;
-    u8 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
+    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
     u16 challengeNum = gSaveBlock2Ptr->frontier.pikeWinStreaks[lvlMode] / NUM_PIKE_ROOMS;
 
     gFacilityTrainers = gBattleFrontierTrainers;
@@ -1498,7 +1498,7 @@ static u8 GetPikeQueenFightType(u8 nextRoom)
 
     u8 facility = FRONTIER_FACILITY_PIKE;
     u8 ret = FRONTIER_BRAIN_NOT_READY;
-    u8 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
+    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
     u16 winStreak = gSaveBlock2Ptr->frontier.pikeWinStreaks[lvlMode];
     winStreak += nextRoom;
     numPikeSymbols = GetPlayerSymbolCountForFacility(FRONTIER_FACILITY_PIKE);
@@ -1558,7 +1558,7 @@ static void IsPartyFullHealed(void)
             u8 ppBonuses = GetMonData(mon, MON_DATA_PP_BONUSES);
             for (j = 0; j < MAX_MON_MOVES; j++)
             {
-                u16 move = GetMonData(mon, MON_DATA_MOVE1 + j);
+                enum Move move = GetMonData(mon, MON_DATA_MOVE1 + j);
                 max = CalculatePPWithBonus(move, ppBonuses, j);
                 curr = GetMonData(mon, MON_DATA_PP1 + j);
                 if (curr < max)
@@ -1607,7 +1607,7 @@ static void RestoreMonHeldItems(void)
 
 static void InitPikeChallenge(void)
 {
-    u8 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
+    enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
 
     gSaveBlock2Ptr->frontier.challengeStatus = 0;
     gSaveBlock2Ptr->frontier.curChallengeBattleNum = 0;

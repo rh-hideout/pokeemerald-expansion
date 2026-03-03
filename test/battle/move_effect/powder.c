@@ -83,7 +83,7 @@ SINGLE_BATTLE_TEST("Powder doesn't damage target if it has Magic Guard")
 SINGLE_BATTLE_TEST("Powder damages the target under heavy rain (Gen 6)")
 {
     GIVEN {
-        WITH_CONFIG(B_POWDER_RAIN, GEN_6);
+        WITH_CONFIG(B_POWDER_STATUS_HEAVY_RAIN, GEN_6);
         PLAYER(SPECIES_KYOGRE_PRIMAL) { Ability(ABILITY_PRIMORDIAL_SEA); }
         OPPONENT(SPECIES_VIVILLON);
     } WHEN {
@@ -100,7 +100,7 @@ SINGLE_BATTLE_TEST("Powder damages the target under heavy rain (Gen 6)")
 SINGLE_BATTLE_TEST("Powder doesn't damage target under heavy rain (Gen 7+)")
 {
     GIVEN {
-        WITH_CONFIG(B_POWDER_RAIN, GEN_7);
+        WITH_CONFIG(B_POWDER_STATUS_HEAVY_RAIN, GEN_7);
         PLAYER(SPECIES_KYOGRE_PRIMAL) { Ability(ABILITY_PRIMORDIAL_SEA); }
         OPPONENT(SPECIES_VIVILLON);
     } WHEN {
@@ -284,7 +284,7 @@ SINGLE_BATTLE_TEST("Powder doesn't consume Berry from Fire type Natural Gift but
 
 DOUBLE_BATTLE_TEST("Powder damages a target using Shell Trap even if it wasn't hit by a Physical move")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_SCRATCH; }
     PARAMETRIZE { move = MOVE_EMBER; }
     PARAMETRIZE { move = MOVE_TICKLE; }

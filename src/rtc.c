@@ -19,6 +19,8 @@ static u16 sSavedIme;
 COMMON_DATA struct Time gLocalTime = {0};
 
 // const rom
+static const u8 sText_AM[] = _("AM");
+static const u8 sText_PM[] = _("PM");
 
 static const struct SiiRtcInfo sRtcDummy = {0, MONTH_JAN, 1}; // 2000 Jan 1
 
@@ -413,9 +415,9 @@ void FormatDecimalTimeWithoutSeconds(u8 *txtPtr, s8 hour, s8 minute, bool32 is24
         txtPtr = ConvertIntToDecimalStringN(txtPtr, minute, STR_CONV_MODE_LEADING_ZEROS, 2);
         txtPtr = StringAppend(txtPtr, gText_Space);
         if (hour < 12)
-            txtPtr = StringAppend(txtPtr, gText_AM);
+            txtPtr = StringAppend(txtPtr, sText_AM);
         else
-            txtPtr = StringAppend(txtPtr, gText_PM);
+            txtPtr = StringAppend(txtPtr, sText_PM);
     }
 
     *txtPtr++ = EOS;
@@ -460,10 +462,21 @@ enum Weekday GetDayOfWeek(void)
 
 enum TimeOfDay GenConfigTimeOfDay(enum TimeOfDay timeOfDay)
 {
-    if ((((timeOfDay == TIME_MORNING || timeOfDay == TIME_EVENING) && OW_TIMES_OF_DAY == GEN_3)
-        || (timeOfDay == TIME_EVENING && OW_TIMES_OF_DAY == GEN_4))
-        && timeOfDay < TIME_LAST)
-        timeOfDay++;
+    if (timeOfDay >= TIME_LAST)
+        return timeOfDay;
+
+    switch (OW_TIMES_OF_DAY)
+    {
+    case GEN_3:
+        if (timeOfDay == TIME_MORNING || timeOfDay == TIME_EVENING)
+            timeOfDay++;
+        break;
+    case GEN_2:
+    case GEN_4:
+        if (timeOfDay == TIME_EVENING)
+            timeOfDay++;
+        break;
+    }
 
     return timeOfDay;
 }
