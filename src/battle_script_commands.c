@@ -14190,7 +14190,7 @@ void BS_TryInstruct(void)
     }
     else
     {
-        gSpecialStatuses[gBattlerTarget].instructedChosenTarget = gBattleStruct->moveTarget[gBattlerTarget] | 0x4;
+        gSpecialStatuses[gBattlerTarget].backUpTarget = gBattleStruct->moveTarget[gBattlerTarget] + 1;
         gCalledMove = move;
         u32 moveIndex;
         bool32 foundMove = FALSE;

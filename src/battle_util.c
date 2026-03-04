@@ -3053,8 +3053,6 @@ static bool32 TryDancer(void)
 {
     bool32 anyDancerQueued = FALSE;
     enum BattlerId dancerBattler = MAX_BATTLERS_COUNT;
-    enum BattlerId initialTarget = gBattlerTarget;
-    enum BattlerId backUpTarget = gBattlerAttacker;
 
     if (!IsDanceMove(gCurrentMove))
         return FALSE;
@@ -3076,8 +3074,8 @@ static bool32 TryDancer(void)
     // Set target for other Dancer mons; set bit so that mon cannot activate Dancer off of its own move
     if (!gSpecialStatuses[gBattlerAttacker].dancerUsedMove)
     {
-        initialTarget = gBattlerTarget;
-        backUpTarget = gBattlerAttacker;
+        gBattleScripting.savedBattler = gBattlerTarget | 0x4;
+        gBattleScripting.savedBattler |= (gBattlerAttacker << 4);
         gSpecialStatuses[gBattlerAttacker].dancerUsedMove = TRUE;
     }
 
@@ -3086,7 +3084,7 @@ static bool32 TryDancer(void)
      && gBattlerAttacker != dancerBattler)
     {
         gSpecialStatuses[dancerBattler].dancerUsedMove = TRUE;
-        gSpecialStatuses[dancerBattler].dancerOriginalTarget = gBattleStruct->moveTarget[dancerBattler] + 1;
+        gSpecialStatuses[dancerBattler].backUpTarget = gBattleStruct->moveTarget[dancerBattler] + 1;
         gBattleMons[dancerBattler].volatiles.activateDancer = FALSE;
         gBattlerAttacker = gBattlerAbility = dancerBattler;
         gCalledMove = gCurrentMove;
@@ -3094,11 +3092,11 @@ static bool32 TryDancer(void)
         RecordAbilityBattle(gBattlerAttacker, ABILITY_DANCER);
 
         // Set the target to the original target of the mon that first used a Dance move
-        gBattlerTarget = initialTarget;
+        gBattlerTarget = gBattleScripting.savedBattler & 0x3;
 
         // Make sure that the target isn't an ally - if it is, target the original user
         if (IsBattlerAlly(gBattlerTarget, gBattlerAttacker))
-            gBattlerTarget = backUpTarget;
+            gBattlerTarget = (gBattleScripting.savedBattler & 0xF0) >> 4;
 
         BattleScriptExecute(BattleScript_DancerActivates);
         return TRUE;

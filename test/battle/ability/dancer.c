@@ -593,7 +593,7 @@ DOUBLE_BATTLE_TEST("Dancer correctly restores move targets")
         HP_BAR(opponentLeft);
         ABILITY_POPUP(opponentRight, ABILITY_DANCER);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_REVELATION_DANCE, opponentRight);
-        HP_BAR(playerRight);
+        HP_BAR(playerLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentRight);
         HP_BAR(playerRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);

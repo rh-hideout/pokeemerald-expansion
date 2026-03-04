@@ -1142,11 +1142,11 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_FIRST_TURN_ONLY:
-        if (!gBattleStruct->battlerState[ctx->battlerAtk].isFirstTurn || gSpecialStatuses[ctx->battlerAtk].instructedChosenTarget)
+        if (!gBattleStruct->battlerState[ctx->battlerAtk].isFirstTurn || gSpecialStatuses[ctx->battlerAtk].backUpTarget)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_MAT_BLOCK:
-        if (!gBattleStruct->battlerState[ctx->battlerAtk].isFirstTurn || gSpecialStatuses[ctx->battlerAtk].instructedChosenTarget)
+        if (!gBattleStruct->battlerState[ctx->battlerAtk].isFirstTurn || gSpecialStatuses[ctx->battlerAtk].backUpTarget)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_FOLLOW_ME:
@@ -3689,10 +3689,8 @@ static enum MoveEndResult MoveEndClearBits(void)
     if (ShouldSetStompingTantrumTimer())
         gBattleStruct->battlerState[gBattlerAttacker].stompingTantrumTimer = 2;
 
-    if (gSpecialStatuses[gBattlerAttacker].instructedChosenTarget)
-        gBattleStruct->moveTarget[gBattlerAttacker] = gSpecialStatuses[gBattlerAttacker].instructedChosenTarget & 0x3;
-    if (gSpecialStatuses[gBattlerAttacker].dancerOriginalTarget)
-        gBattleStruct->moveTarget[gBattlerAttacker] = gSpecialStatuses[gBattlerAttacker].dancerOriginalTarget - 1;
+    if (gSpecialStatuses[gBattlerAttacker].backUpTarget)
+        gBattleStruct->moveTarget[gBattlerAttacker] = gSpecialStatuses[gBattlerAttacker].backUpTarget - 1;
 
     // If the Pokémon needs to keep track of move usage for its evolutions, do it
     if (originallyUsedMove != MOVE_NONE)
