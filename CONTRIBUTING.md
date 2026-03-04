@@ -6,7 +6,7 @@ All contributions are encouraged and valued. Please make sure to read the releva
 
 ## Bug Reports
 
-We use [GitHub](https://github.com/rh-hideout/pokeemerald-expansion/issues?q=sort%3Aupdated-desc+is%3Aissue+is%3Aopen+label%3Abug) issues to track bugs. 
+We use [GitHub](https://github.com/rh-hideout/pokeemerald-expansion/issues?q=sort%3Aupdated-desc+is%3Aissue+is%3Aopen+label%3Abug) issues to track bugs.
 
 ### What should I do before making a bug report?
 
@@ -15,7 +15,7 @@ We use [GitHub](https://github.com/rh-hideout/pokeemerald-expansion/issues?q=sor
 
 ### How do I submit a bug report?
 
-If you run into an issue with the project, open an [issue](https://github.com/rh-hideout/pokeemerald-expansion/issues/new). 
+If you run into an issue with the project, open an [issue](https://github.com/rh-hideout/pokeemerald-expansion/issues/new).
 
 The best bug reports have enough information that we won't have to contact you for more information. We welcome all efforts to improve pokeemerald-expansion, but would be very grateful if you completed as much of the checklist as possible in your bug report. This will help other contributiors fix your issue.
 
@@ -31,7 +31,7 @@ The best bug reports have enough information that we won't have to contact you f
 
 This section guides you through submitting a feature request for pokeemerald-expansion, **including completely new features and minor improvements to existing functionality**. Following these guidelines will help maintainers and the community to understand your suggestion and find related suggestions.
 
-- We use [GitHub](https://github.com/rh-hideout/pokeemerald-expansion/issues?q=sort%3Aupdated-desc+is%3Aissue+is%3Aopen+label%3Afeature-request) issues to track feature requests. 
+- We use [GitHub](https://github.com/rh-hideout/pokeemerald-expansion/issues?q=sort%3Aupdated-desc+is%3Aissue+is%3Aopen+label%3Afeature-request) issues to track feature requests.
 
 ### What should I do before making a feature request?
 
@@ -44,7 +44,7 @@ This section guides you through submitting a feature request for pokeemerald-exp
 
 ### How do I submit a feature request?
 
-To request a feature to be added to the project, open a [feature request](https://github.com/rh-hideout/pokeemerald-expansion/issues/new). 
+To request a feature to be added to the project, open a [feature request](https://github.com/rh-hideout/pokeemerald-expansion/issues/new).
 
 ### What happens after I submit a feature request?
 
@@ -108,11 +108,11 @@ git push --set-upstream origin newFeature
 ```
 
 #### 7. Open Pull Request
-Once your work is complete and pushed to the branch on Github, you can open a [pull request from your branch](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork), targeting the branch you've chosen from `pokeemerald-expansion`. Please fill out the pull request description as completely as possible. 
+Once your work is complete and pushed to the branch on Github, you can open a [pull request from your branch](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork), targeting the branch you've chosen from `pokeemerald-expansion`. Please fill out the pull request description as completely as possible.
 
 ### What happens after I submit a pull request?
 
-A maintainer will then assign themselves as a reviewer of your pull request, and may provide feedback in the form of a PR review. 
+A maintainer will then assign themselves as a reviewer of your pull request, and may provide feedback in the form of a PR review.
 
 Contributors are responsible for responding to and updating their branch by addressing the feedback in the review. Contributors are also responsible for making sure the branch passes the checklist at all times.
 

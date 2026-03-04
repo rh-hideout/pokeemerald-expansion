@@ -455,3 +455,54 @@ DOUBLE_BATTLE_TEST("Commander prevent Dondozo from switch out by Dragon Tail")
         NOT MESSAGE("Wobbuffet was dragged out!");
     }
 }
+
+DOUBLE_BATTLE_TEST("Commander will not activate if partner Dondozo is about to switch out")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_DONDOZO);
+        PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            SWITCH(playerLeft, 2);
+            SWITCH(playerRight, 3);
+        }
+    } SCENE {
+        NOT ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Commander clears when Dondozo is replaced and Tatsugiri can be hit")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_VOLT_SWITCH) == EFFECT_HIT_ESCAPE);
+        PLAYER(SPECIES_DONDOZO) { HP(1); Speed(1); }
+        PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); MaxHP(400); HP(400); Speed(2); }
+        PLAYER(SPECIES_SEADRA) { Speed(3); }
+        OPPONENT(SPECIES_VENUSAUR) { Speed(5); }
+        OPPONENT(SPECIES_LUXRAY) { Speed(6); }
+        OPPONENT(SPECIES_BUTTERFREE) { Speed(4); }
+    } WHEN {
+        TURN {
+            MOVE(opponentLeft, MOVE_SEED_BOMB, target: playerRight);
+            MOVE(opponentRight, MOVE_VOLT_SWITCH, target: playerLeft);
+            SEND_OUT(opponentRight, 2);
+            SEND_OUT(playerLeft, 2);
+        }
+        TURN {
+            MOVE(opponentRight, MOVE_BUG_BUZZ, target: playerRight);
+        }
+    } SCENE {
+        ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
+        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_VOLT_SWITCH, opponentRight);
+        MESSAGE("Dondozo fainted!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SEED_BOMB, opponentLeft);
+        HP_BAR(playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BUG_BUZZ, opponentRight);
+        HP_BAR(playerRight);
+    }
+}

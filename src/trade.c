@@ -1578,7 +1578,7 @@ static u8 CheckValidityOfTradeMons(u8 *aliveMons, u8 playerPartyCount, u8 player
     // Partner cant trade Egg or non-Hoenn mon if player doesn't have National Dex
     if (!IsNationalPokedexEnabled())
     {
-        if (sTradeMenu->isEgg[TRADE_PARTNER][partnerMonIdx] || !IsSpeciesInHoennDex(partnerSpecies))
+        if (sTradeMenu->isEgg[TRADE_PARTNER][partnerMonIdx] || !IsSpeciesInRegionalDex(partnerSpecies))
             return PARTNER_MON_INVALID;
     }
 
@@ -2399,7 +2399,7 @@ static u32 CanTradeSelectedMon(struct Pokemon *playerParty, int partyCount, int 
         if (species2[monIdx] == SPECIES_EGG)
             return CANT_TRADE_EGG_YET;
 
-        if (!IsSpeciesInHoennDex(species2[monIdx]))
+        if (!IsSpeciesInRegionalDex(species2[monIdx]))
             return CANT_TRADE_NATIONAL;
     }
 
@@ -2413,7 +2413,7 @@ static u32 CanTradeSelectedMon(struct Pokemon *playerParty, int partyCount, int 
             if (species2[monIdx] == SPECIES_EGG)
                 return CANT_TRADE_PARTNER_EGG_YET;
 
-            if (!IsSpeciesInHoennDex(species2[monIdx]))
+            if (!IsSpeciesInRegionalDex(species2[monIdx]))
                 return CANT_TRADE_INVALID_MON;
         }
     }
@@ -2530,15 +2530,15 @@ int GetUnionRoomTradeMessageId(struct RfuGameCompatibilityData player, struct Rf
         if (playerSpecies2 == SPECIES_EGG)
             return UR_TRADE_MSG_EGG_CANT_BE_TRADED;
 
-        if (!IsSpeciesInHoennDex(playerSpecies2))
+        if (!IsSpeciesInRegionalDex(playerSpecies2))
             return UR_TRADE_MSG_MON_CANT_BE_TRADED_NOW;
 
-        if (!IsSpeciesInHoennDex(partnerSpecies))
+        if (!IsSpeciesInRegionalDex(partnerSpecies))
             return UR_TRADE_MSG_PARTNERS_MON_CANT_BE_TRADED;
     }
 
     // If the partner doesn't have the National Dex then the player's offer has to be a Hoenn Pokémon
-    if (!partnerHasNationalDex && !IsSpeciesInHoennDex(playerSpecies2))
+    if (!partnerHasNationalDex && !IsSpeciesInRegionalDex(playerSpecies2))
         return UR_TRADE_MSG_PARTNER_CANT_ACCEPT_MON;
 
     // Trade is allowed
@@ -2560,7 +2560,7 @@ int CanRegisterMonForTradingBoard(struct RfuGameCompatibilityData player, u16 sp
     if (species2 == SPECIES_EGG)
         return CANT_REGISTER_EGG;
 
-    if (IsSpeciesInHoennDex(species2))
+    if (IsSpeciesInRegionalDex(species2))
         return CAN_REGISTER_MON;
 
     return CANT_REGISTER_MON_NOW;
@@ -2610,7 +2610,7 @@ int CanSpinTradeMon(struct Pokemon *mon, u16 monIdx)
 
     if (canTradeAnyMon == FALSE)
     {
-        if (!IsSpeciesInHoennDex(speciesArray[monIdx]))
+        if (!IsSpeciesInRegionalDex(speciesArray[monIdx]))
             return CANT_TRADE_NATIONAL;
 
         if (speciesArray[monIdx] == SPECIES_NONE)
@@ -2967,7 +2967,7 @@ static void CB2_InitInGameTrade(void)
     {
     case 0:
         //If ChooseBoxMon points to a pc mon, we store it into gEnemyParty
-        if(gSpecialVar_0x8004 == PC_MON_CHOSEN)
+        if (gSpecialVar_0x8004 == PC_MON_CHOSEN)
         {
             gSelectedTradeMonPositions[TRADE_PLAYER] = TRADEMON_FROM_PC;
             RemoveSelectedPcMon(&gEnemyParty[TRADEMON_FROM_PC]);
@@ -3341,7 +3341,7 @@ static void BufferTradeSceneStrings(void)
         ingameTrade = &sIngameTrades[gSpecialVar_0x8005];
         StringCopy(gStringVar1, ingameTrade->otName);
         StringCopy_Nickname(gStringVar3, ingameTrade->nickname);
-        if(gSpecialVar_0x8004 == PC_MON_CHOSEN)
+        if (gSpecialVar_0x8004 == PC_MON_CHOSEN)
             GetMonData(&gEnemyParty[TRADEMON_FROM_PC], MON_DATA_NICKNAME, name);
         else
             GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_NICKNAME, name);

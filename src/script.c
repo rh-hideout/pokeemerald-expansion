@@ -677,3 +677,15 @@ bool32 Script_MatchesSpecial(const u8 *script, void *funcPtr)
         return TRUE;
     return FALSE;
 }
+
+// FRLG
+void DisableMsgBoxWalkaway(void)
+{
+    // sMsgBoxWalkawayDisabled = TRUE;
+}
+
+void SetWalkingIntoSignVars(void)
+{
+    // gWalkAwayFromSignInhibitTimer = 6;
+    // sMsgBoxIsCancelable = TRUE;
+}

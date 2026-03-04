@@ -612,16 +612,16 @@ static u8 GetRandomFaceDirectionMovementType()
 
     switch (randomFacingDirection)
     {
-        case 0:
-            return MOVEMENT_TYPE_FACE_UP;
-        case 1:
-            return MOVEMENT_TYPE_FACE_DOWN;
-        case 2:
-            return MOVEMENT_TYPE_FACE_LEFT;
-        case 3:
-            return MOVEMENT_TYPE_FACE_RIGHT;
-        default:
-            return MOVEMENT_TYPE_FACE_DOWN;
+    case 0:
+        return MOVEMENT_TYPE_FACE_UP;
+    case 1:
+        return MOVEMENT_TYPE_FACE_DOWN;
+    case 2:
+        return MOVEMENT_TYPE_FACE_LEFT;
+    case 3:
+        return MOVEMENT_TYPE_FACE_RIGHT;
+    default:
+        return MOVEMENT_TYPE_FACE_DOWN;
     }
 }
 
@@ -678,7 +678,21 @@ static bool32 IsRegularLandTrainer(u8 graphicsId)
         OBJ_EVENT_GFX_WOMAN_2,
         OBJ_EVENT_GFX_WOMAN_4,
         OBJ_EVENT_GFX_WOMAN_5,
-        OBJ_EVENT_GFX_YOUNGSTER
+        OBJ_EVENT_GFX_YOUNGSTER,
+        OBJ_EVENT_GFX_TUBER_F_FRLG,
+        OBJ_EVENT_GFX_SAILOR_FRLG,
+        OBJ_EVENT_GFX_HIKER_FRLG,
+        OBJ_EVENT_GFX_PICNICKER_FRLG,
+        OBJ_EVENT_GFX_CAMPER_FRLG,
+        OBJ_EVENT_GFX_BEAUTY_FRLG,
+        OBJ_EVENT_GFX_WOMAN_2_FRLG,
+        OBJ_EVENT_GFX_FAT_MAN_FRLG,
+        OBJ_EVENT_GFX_BUG_CATCHER_FRLG,
+        OBJ_EVENT_GFX_WOMAN_1_FRLG,
+        OBJ_EVENT_GFX_YOUNGSTER_FRLG,
+        OBJ_EVENT_GFX_LASS_FRLG,
+        OBJ_EVENT_GFX_LITTLE_GIRL_FRLG,
+        OBJ_EVENT_GFX_LITTLE_BOY_FRLG,
     };
 
     for (i = 0; i < ARRAY_COUNT(regularTrainersOnLand); i++)

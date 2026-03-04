@@ -273,6 +273,95 @@ DOUBLE_BATTLE_TEST("Dancer doesn't trigger when an ally snatches the move")
     }
 }
 
+DOUBLE_BATTLE_TEST("Dancer doesn't activate if the original move missed")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_DOUBLE_TEAM) == EFFECT_EVASION_UP);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_DOUBLE_TEAM); MOVE(playerLeft, MOVE_FIERY_DANCE, target: opponentLeft, hit: FALSE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DOUBLE_TEAM, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerLeft);
+        MESSAGE("Wobbuffet's attack missed!");
+        NONE_OF {
+            ABILITY_POPUP(opponentLeft, ABILITY_DANCER);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, opponentLeft);
+        }
+    } THEN {
+        EXPECT_EQ(opponentLeft->statStages[STAT_EVASION], DEFAULT_STAT_STAGE + 1);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Dancer doesn't activate after Neutralizing Gas leaves the field")
+{
+    u32 hp;
+
+    PARAMETRIZE { hp = 1; }
+    PARAMETRIZE { hp = 200; }
+
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_EJECT_BUTTON) == HOLD_EFFECT_EJECT_BUTTON);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_GYARADOS) { Ability(ABILITY_INTIMIDATE); }
+        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); }
+        OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); HP(hp); Item(ITEM_EJECT_BUTTON); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_FIERY_DANCE, target: opponentRight); SEND_OUT(opponentRight, 2); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerLeft);
+        if (hp == 1) { // target faints
+            HP_BAR(opponentRight, hp: 0);
+            ABILITY_POPUP(playerRight, ABILITY_INTIMIDATE);
+        } else { // target activates eject button
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
+            ABILITY_POPUP(playerRight, ABILITY_INTIMIDATE);
+        }
+        NONE_OF {
+            ABILITY_POPUP(opponentLeft, ABILITY_DANCER);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, opponentLeft);
+        }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Dancer can activate after Neutralizing Gas enters the field on move execution")
+{
+    u32 speedPlayerRight;
+    PARAMETRIZE { speedPlayerRight = 3; }
+    PARAMETRIZE { speedPlayerRight = 7; }
+
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_EJECT_BUTTON) == HOLD_EFFECT_EJECT_BUTTON);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
+        PLAYER(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); Speed(speedPlayerRight); }
+        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); Speed(5); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_BUTTON); Speed(3); }
+        OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); Speed(3); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_FIERY_DANCE, target: opponentRight); SEND_OUT(opponentRight, 2); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerLeft);
+        HP_BAR(opponentRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
+        ABILITY_POPUP(opponentRight, ABILITY_NEUTRALIZING_GAS);
+        if (speedPlayerRight < 5) {
+            ABILITY_POPUP(playerRight, ABILITY_DANCER);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerRight);
+        }
+        ABILITY_POPUP(opponentLeft, ABILITY_DANCER);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, opponentLeft);
+        if (speedPlayerRight > 5) {
+            ABILITY_POPUP(playerRight, ABILITY_DANCER);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerRight);
+        }
+    }
+}
+
 SINGLE_BATTLE_TEST("Dancer-called moves can be reflected by Magic Bounce")
 {
     GIVEN {
@@ -579,7 +668,7 @@ SINGLE_BATTLE_TEST("Dancer user may hit itself in confusion instead of copying a
     PARAMETRIZE { genConfig = GEN_7; pctChance = 33; }
     PASSES_RANDOMLY(pctChance, 100, RNG_CONFUSION);
     GIVEN {
-        WITH_CONFIG(CONFIG_CONFUSION_SELF_DMG_CHANCE, genConfig);
+        WITH_CONFIG(B_CONFUSION_SELF_DMG_CHANCE, genConfig);
         ASSUME(IsDanceMove(MOVE_DRAGON_DANCE));
         ASSUME(GetMoveEffect(MOVE_CONFUSE_RAY) == EFFECT_CONFUSE);
         PLAYER(SPECIES_WOBBUFFET) { Speed(30); }
@@ -746,7 +835,7 @@ SINGLE_BATTLE_TEST("Dancer can still copy status moves if the user is holding an
 DOUBLE_BATTLE_TEST("Dancer copies Lunar Dance after the original user faints, but before the replacement is sent out")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_HEALING_WISH_SWITCH, GEN_7);
+        WITH_CONFIG(B_HEALING_WISH_SWITCH, GEN_7);
         ASSUME(GetMoveEffect(MOVE_LUNAR_DANCE) == EFFECT_LUNAR_DANCE);
         PLAYER(SPECIES_WOBBUFFET) { Speed(50); }
         PLAYER(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); Speed(20); }

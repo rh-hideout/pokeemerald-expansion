@@ -512,8 +512,8 @@ static void AnimDefensiveWall(struct Sprite *sprite)
 
     if (!isContest)
     {
-        u8 battlerCopy;
-        u8 battler = battlerCopy = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+        enum BattlerId battlerCopy;
+        enum BattlerId battler = battlerCopy = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
         u8 rank = GetBattlerSpriteBGPriorityRank(battler);
         int var0 = 1;
         u8 toBG_2 = (rank ^ var0) != 0;
@@ -564,7 +564,7 @@ static void AnimDefensiveWall(struct Sprite *sprite)
 
 static void AnimDefensiveWall_Step1(struct Sprite *sprite)
 {
-    u8 battler = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+    enum BattlerId battler = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
     if (!sprite->data[7])
     {
         sprite->data[7] = 1;
@@ -621,8 +621,8 @@ static void AnimDefensiveWall_Step4(struct Sprite *sprite)
     {
         if (!IsContest())
         {
-            u8 battlerCopy;
-            u8 battler = battlerCopy = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+            enum BattlerId battlerCopy;
+            enum BattlerId battler = battlerCopy = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
 
             if (IsBattlerSpriteVisible(battler))
                 gSprites[gBattlerSpriteIds[battler]].invisible = FALSE;
@@ -641,8 +641,8 @@ static void AnimDefensiveWall_Step5(struct Sprite *sprite)
 {
     if (!IsContest())
     {
-        u8 battlerCopy;
-        u8 battler = battlerCopy = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+        enum BattlerId battlerCopy;
+        enum BattlerId battler = battlerCopy = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
         u8 rank = GetBattlerSpriteBGPriorityRank(battler);
         int var0 = 1;
         bool8 toBG2 = (rank ^ var0) != 0;
@@ -1219,6 +1219,7 @@ void AnimTask_TransparentCloneGrowAndShrink(u8 taskId)
     s16 spriteId;
     s16 matrixNum;
     struct Task *task = &gTasks[taskId];
+    enum AnimBattler animBattler = gBattleAnimArgs[0];
 
     matrixNum = AllocOamMatrix();
     if (matrixNum == 0xFF)
@@ -1227,7 +1228,7 @@ void AnimTask_TransparentCloneGrowAndShrink(u8 taskId)
         return;
     }
 
-    spriteId = CloneBattlerSpriteWithBlend(gBattleAnimArgs[0]);
+    spriteId = CloneBattlerSpriteWithBlend(animBattler);
     if (spriteId < 0)
     {
         FreeOamMatrix(matrixNum);
@@ -1242,7 +1243,7 @@ void AnimTask_TransparentCloneGrowAndShrink(u8 taskId)
     gSprites[spriteId].subpriority++;
     SetSpriteRotScale(spriteId, 256, 256, 0);
     CalcCenterToCornerVec(&gSprites[spriteId], gSprites[spriteId].oam.shape, gSprites[spriteId].oam.size, gSprites[spriteId].oam.affineMode);
-    task->data[13] = GetAnimBattlerSpriteId(gBattleAnimArgs[0]);
+    task->data[13] = GetAnimBattlerSpriteId(animBattler);
     task->data[14] = matrixNum;
     task->data[15] = spriteId;
     task->func = AnimTask_TransparentCloneGrowAndShrink_Step;

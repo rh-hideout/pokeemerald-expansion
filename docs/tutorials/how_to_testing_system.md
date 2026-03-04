@@ -292,7 +292,7 @@ Adds the species to the player's, player partner's, opponent A's, or opponent B'
 Pokemon can be customised as per the guidance for `PLAYER(species)` and `OPPONENT(species)`.
 The functions assign the Pokémon to the party of the trainer at `B_POSITION_PLAYER_LEFT`, `B_POSITION_PLAYER_RIGHT`, `B_POSITION_OPPONENT_LEFT`, and `B_POSITION_OPPONENT_RIGHT`, respectively.
 `MULTI_PLAYER(species)` and `MULTI_OPPONENT_A(species)` set Pokémon starting at party index 0, while `MULTI_PARTNER(species)` and `MULTI_OPPONENT_B(species)` set Pokémon starting at party index 3.
-For `ONE_VS_TWO` tests, `MULTI_PLAYER(species)` must be used for all player-side Pokémon, and for `TWO_VS_ONE` tests, `MULTI_OPPONENT_A(species)` must be used for all opponent-side Pokémon. 
+For `ONE_VS_TWO` tests, `MULTI_PLAYER(species)` must be used for all player-side Pokémon, and for `TWO_VS_ONE` tests, `MULTI_OPPONENT_A(species)` must be used for all opponent-side Pokémon.
 All `MULTI_PLAYER(species)` Pokémon must be set before any `MULTI_PARTNER(species)` Pokémon, and all `MULTI_OPPONENT_A(species)` must be set before any `MULTI_OPPONENT_B(species)` Pokémon, else Pokémon will be set in the incorrect parties in the test.
 **Note where a side in a test has two trainers, the test setup manages the assigning of correct multi-party orders, therefore when using functions such as SEND_OUT, Player and Opponent A Pokémon may be referenced using indexes 0, 1, and 2, and Player's Partner and Opponent B Pokémon may be referenced using indexes 3, 4, and 5.**
 
