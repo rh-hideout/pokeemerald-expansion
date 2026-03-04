@@ -336,11 +336,13 @@ static u32 UpdateNormalPaletteFade(void)
     while (selectedPalettes)
     {
         if (selectedPalettes & 1)
+        {
             BlendPalette(
                 paletteOffset,
                 16,
                 gPaletteFade.y,
                 gPaletteFade.blendColor);
+        }
         selectedPalettes >>= 1;
         paletteOffset += 16;
     }
