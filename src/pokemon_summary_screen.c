@@ -1256,7 +1256,7 @@ void ShowPokemonSummaryScreen(u8 mode, void *mons, u8 monIndex, u8 maxMonIndex, 
     if (gMonSpritesGfxPtr == NULL)
         CreateMonSpritesGfxManager(MON_SPR_GFX_MANAGER_A, MON_SPR_GFX_MODE_NORMAL);
 
-    if (mode != SUMMARY_MODE_SELECT_MOVE)
+    if (mode != SUMMARY_MODE_SELECT_MOVE && mode != SUMMARY_MODE_RELEARNER_BATTLE && mode != SUMMARY_MODE_RELEARNER_CONTEST)
         gMoveRelearnerState = MOVE_RELEARNER_LEVEL_UP_MOVES;
 
     SetMainCallback2(CB2_InitSummaryScreen);
@@ -1359,13 +1359,13 @@ static bool8 LoadGraphics(void)
         gMain.state++;
         break;
     case 15:
+        UpdateMoveRelearnerState(FALSE);
         PutPageWindowTilemaps(sMonSummaryScreen->currPageIndex);
         gMain.state++;
         break;
     case 16:
         ResetSpriteIds();
         CreateMoveTypeIcons();
-        UpdateMoveRelearnerState(FALSE);
         sMonSummaryScreen->switchCounter = 0;
         gMain.state++;
         break;
