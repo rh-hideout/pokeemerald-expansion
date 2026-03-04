@@ -3049,6 +3049,64 @@ static bool32 IsRestrictedAbility(enum BattlerId battler, enum Ability ability)
         || GetSpeciesAbility(gBattleMons[battler].species, 2) == ability;
 }
 
+static bool32 TryDancer(void)
+{
+    bool32 anyDancerQueued = FALSE;
+    enum BattlerId dancerBattler = MAX_BATTLERS_COUNT;
+    enum BattlerId initialTarget = gBattlerTarget;
+    enum BattlerId backUpTarget = gBattlerAttacker;
+
+    if (!IsDanceMove(gCurrentMove))
+        return FALSE;
+
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+    {
+        if (gBattleMons[battler].volatiles.activateDancer && !gSpecialStatuses[battler].dancerUsedMove)
+        {
+            if (!anyDancerQueued || (gBattleMons[battler].speed < gBattleMons[dancerBattler].speed))
+                dancerBattler  = battler;
+            anyDancerQueued = TRUE;
+        }
+    }
+
+    if (!anyDancerQueued)
+        return FALSE;
+
+    // Dance move succeeds
+    // Set target for other Dancer mons; set bit so that mon cannot activate Dancer off of its own move
+    if (!gSpecialStatuses[gBattlerAttacker].dancerUsedMove)
+    {
+        initialTarget = gBattlerTarget;
+        backUpTarget = gBattlerAttacker;
+        gSpecialStatuses[gBattlerAttacker].dancerUsedMove = TRUE;
+    }
+
+    if (IsBattlerAlive(dancerBattler)
+     && !gSpecialStatuses[dancerBattler].dancerUsedMove
+     && gBattlerAttacker != dancerBattler)
+    {
+        gSpecialStatuses[dancerBattler].dancerUsedMove = TRUE;
+        gSpecialStatuses[dancerBattler].dancerOriginalTarget = gBattleStruct->moveTarget[dancerBattler] + 1;
+        gBattleMons[dancerBattler].volatiles.activateDancer = FALSE;
+        gBattlerAttacker = gBattlerAbility = dancerBattler;
+        gCalledMove = gCurrentMove;
+        gLastUsedAbility = ABILITY_DANCER;
+        RecordAbilityBattle(gBattlerAttacker, ABILITY_DANCER);
+
+        // Set the target to the original target of the mon that first used a Dance move
+        gBattlerTarget = initialTarget;
+
+        // Make sure that the target isn't an ally - if it is, target the original user
+        if (IsBattlerAlly(gBattlerTarget, gBattlerAttacker))
+            gBattlerTarget = backUpTarget;
+
+        BattleScriptExecute(BattleScript_DancerActivates);
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
 u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum Ability ability, enum Move move, bool32 shouldAbilityTrigger)
 {
     u32 effect = 0;
@@ -4424,36 +4482,8 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             break;
         }
         break;
-    case ABILITYEFFECT_MOVE_END_OTHER: // Abilities that activate on *another* battler's moveend: Dancer, Soul-Heart, Receiver, Symbiosis
-        switch (ability)
-        {
-        case ABILITY_DANCER:
-            if (IsBattlerAlive(battler)
-             && IsDanceMove(move)
-             && !gSpecialStatuses[battler].dancerUsedMove
-             && gBattlerAttacker != battler)
-            {
-                // Set bit and save Dancer mon's original target
-                gSpecialStatuses[battler].dancerUsedMove = TRUE;
-                gSpecialStatuses[battler].dancerOriginalTarget = gBattleStruct->moveTarget[battler] | 0x4;
-                gBattleMons[battler].volatiles.activateDancer = FALSE;
-                gBattlerAttacker = gBattlerAbility = battler;
-                gCalledMove = move;
-
-                // Set the target to the original target of the mon that first used a Dance move
-                gBattlerTarget = gBattleScripting.savedBattler & 0x3;
-
-                // Make sure that the target isn't an ally - if it is, target the original user
-                if (IsBattlerAlly(gBattlerTarget, gBattlerAttacker))
-                    gBattlerTarget = (gBattleScripting.savedBattler & 0xF0) >> 4;
-                BattleScriptExecute(BattleScript_DancerActivates);
-                effect++;
-            }
-            break;
-        default:
-            break;
-        }
-        break;
+    case ABILITYEFFECT_DANCER:
+        return TryDancer();
     case ABILITYEFFECT_MOVE_END_FOES_FAINTED:
         switch (ability)
         {
@@ -5027,7 +5057,7 @@ u32 IsAbilityPreventingEscape(enum BattlerId battler)
     {
         if (battler == battlerDef || IsBattlerAlly(battler, battlerDef))
             continue;
-        
+
         if (!IsBattlerAlive(battlerDef))
             continue;
 
