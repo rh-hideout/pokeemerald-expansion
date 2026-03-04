@@ -3062,7 +3062,7 @@ static bool32 TryDancer(void)
         if (gBattleMons[battler].volatiles.activateDancer && !gSpecialStatuses[battler].dancerUsedMove)
         {
             if (!anyDancerQueued || (gBattleMons[battler].speed < gBattleMons[dancerBattler].speed))
-                dancerBattler  = battler;
+                dancerBattler = battler;
             anyDancerQueued = TRUE;
         }
     }
