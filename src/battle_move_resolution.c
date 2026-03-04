@@ -1638,7 +1638,7 @@ static bool32 NoTargetPresent(enum BattlerId battler, enum Move move, enum MoveT
     case TARGET_USER_AND_ALLY:
         return FALSE; // At least user is present
     case TARGET_ALLY:
-        if (!IsBattlerAlive(BATTLE_PARTNER(gBattlerAttacker))) // Seems like TARGET_ALLY is retargeting if no ally
+        if (!IsBattlerAlive(gBattlerTarget))
             return TRUE;
         break;
     case TARGET_SELECTED:
@@ -2063,6 +2063,7 @@ static enum MoveEndResult MoveEndProtectLikeEffect(void)
     u32 temp = 0;
 
     if (gProtectStructs[gBattlerAttacker].chargingTurn
+     || !IsBattlerAlive(gBattlerAttacker)
      || CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), gCurrentMove))
     {
         gBattleScripting.moveendState++;
@@ -2663,10 +2664,12 @@ static enum MoveEndResult MoveEndUpdateLastMoves(void)
             gLastUsedMoveType[gBattlerAttacker] = 0;
         }
 
-        if (!(gHitMarker & HITMARKER_FAINTED(gBattlerTarget)))
-            gLastHitBy[gBattlerTarget] = gBattlerAttacker;
+        if (IsBattlerAlive(gBattlerTarget))
+            gLastHitBy[gBattlerTarget] = gBattlerAttacker; // Used by switch AI only
 
-        if (!gBattleStruct->unableToUseMove && !IsBattlerUnaffectedByMove(gBattlerTarget))
+        if (!gBattleStruct->unableToUseMove
+         && !IsBattlerUnaffectedByMove(gBattlerTarget)
+         && IsBattlerAlive(gBattlerTarget))
         {
             if (gChosenMove == MOVE_UNAVAILABLE)
             {
@@ -2686,6 +2689,7 @@ static enum MoveEndResult MoveEndUpdateLastMoves(void)
         }
         else
         {
+            gLastHitByType[gBattlerTarget] = TYPE_MYSTERY;
             gLastLandedMoves[gBattlerTarget] = MOVE_UNAVAILABLE;
         }
     }
