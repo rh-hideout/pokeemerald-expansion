@@ -49,9 +49,9 @@ static inline bool32 RngSeedNotDefault(const rng_value_t *seed)
 #undef Q_4_12
 #define Q_4_12(n) (s32)((n) * 4096)
 
-#define TRAINER_RED_TEST    0
-#define TRAINER_LEAF_TEST   1
-#define PARTNER_STEVEN_TEST 0
+#define TRAINER_RED_TEST    1
+#define TRAINER_LEAF_TEST   2
+#define PARTNER_STEVEN_TEST 1
 
 const struct Trainer gTrainers[DIFFICULTY_COUNT][TRAINERS_COUNT] =
 {

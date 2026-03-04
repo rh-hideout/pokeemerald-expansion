@@ -1,4 +1,12 @@
-=== TRAINER_RED_TEST ===
+=== TRAINER_NONE ===
+Name:
+Class: Pkmn Trainer 1
+Pic: Hiker
+Gender: Male
+Music: Male
+Double Battle: No
+
+=== 1 ===
 Name: RED
 Class: Rival
 Pic: Red
@@ -10,7 +18,7 @@ Charmander
 Level: 5
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-=== TRAINER_LEAF_TEST ===
+=== 2 ===
 Name: LEAF
 Class: Rival
 Pic: Leaf
@@ -23,7 +31,7 @@ Level: 5
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 
-=== 2 ===
+=== 3 ===
 Name: Test1
 Class: Pkmn Trainer 1
 Pic: Red
@@ -55,7 +63,7 @@ Wynaut
 Level: 5
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-=== 3 ===
+=== 4 ===
 Name: Test2
 Class: Pkmn Trainer 1
 Pic: Red
@@ -67,7 +75,7 @@ Difficulty: Normal
 Mewtwo
 Level: 5
 
-=== 4 ===
+=== 5 ===
 Name: Test2
 Class: Pkmn Trainer 1
 Pic: Red
@@ -79,7 +87,7 @@ Difficulty: Normal
 Mewtwo
 Level: 50
 
-=== 4 ===
+=== 5 ===
 Name: Test2
 Class: Pkmn Trainer 1
 Pic: Red
@@ -91,7 +99,7 @@ Difficulty: Easy
 Metapod
 Level: 1
 
-=== 4 ===
+=== 5 ===
 Name: Test2
 Class: Pkmn Trainer 1
 Pic: Red
@@ -103,7 +111,7 @@ Difficulty: Hard
 Arceus
 Level: 99
 
-=== 5 ===
+=== 6 ===
 Name: Test3
 Class: Pkmn Trainer 1
 Pic: Red
@@ -120,7 +128,7 @@ Eevee
 
 Mew
 
-=== 6 ===
+=== 7 ===
 Name: Test4
 Class: Pkmn Trainer 1
 Pic: Red
@@ -145,7 +153,7 @@ Tags: Ace
 Aron
 Tags: Lead
 
-=== 7 ===
+=== 8 ===
 Name: Test5
 Class: Pkmn Trainer 1
 Pic: Red
@@ -183,7 +191,7 @@ Oddish
 
 Eevee
 
-=== 8 ===
+=== 9 ===
 Name: Test6
 Class: Pkmn Trainer 1
 Pic: Red
@@ -202,7 +210,7 @@ Tags: Lead
 Eevee
 Tags: Lead
 
-=== 9 ===
+=== 10 ===
 Name: Test1
 Class: Pkmn Trainer 1
 Pic: Red
@@ -220,7 +228,7 @@ Tags: Lead
 
 Eevee
 
-=== 10 ===
+=== 11 ===
 Name: Test1
 Class: Pkmn Trainer 1
 Pic: Red
@@ -239,7 +247,7 @@ Wobbuffet
 Eevee
 Tags: Lead
 
-=== 11 ===
+=== 12 ===
 Name: Test9
 Class: Pkmn Trainer 1
 Pic: Red
@@ -252,7 +260,7 @@ Wynaut
 
 Wobbuffet
 
-=== 12 ===
+=== 13 ===
 Name: Test10
 Class: Pkmn Trainer 1
 Pic: Red
@@ -265,7 +273,7 @@ Wynaut
 
 Wobbuffet
 
-=== 11 ===
+=== 14 ===
 Name: Test11
 Class: Black Belt
 Pic: Red
