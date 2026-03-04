@@ -33,7 +33,8 @@ notes on fixes: guide on counting NPC's (Route 101 Nr.2: R101-2)
 - flag1: after exiting hyvls room, entering DHBW again initializes whole flag1 process again, Team rocket appears etc. after speaking to jessie, pre-fight dialogue appears but no fight. After speaking again it says "they already fled" but haven't moved. the exit of flag 1 is open 
 - flag2: after exiting lecture room of Houvert, the player is directed to the next flag. However, instead of walking to the next door, the character walks past walls into nothingness.
 - flag2: dialogue is done by "You" instead of [Name]
-- flag3: We might want to be consistent with the lecture rooms
+- flag2: We might want to be consistent with the lecture rooms
+- flag3: There is no clue for leaving the lecture room to search for the blackhansa building
 
 ## executing the gba-file || starting the VM guide whatever
 
@@ -369,6 +370,8 @@ Defeat Prof. Hyvl.
 > APPLES: Now write a script that
 > collects something measurable.
 > Come back when you have real results.
+
+travelling 
 
 ----door 4----
 > [NAME]: <Fuck, I'm late today, Class is almost over.>
