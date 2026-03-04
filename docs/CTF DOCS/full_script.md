@@ -11,12 +11,12 @@ notes on fixes: guide on counting NPC's (Route 101 Nr.2: R101-2)
 - BIRCH home characters monologues are not introduced by the speakers names
 - dialogue with BUM can't be repeated, other than any other NPC's statements
 - choosing Duskull leads to not receiving any damage 
-- BUM replaced BIRCH but dialogues and narrative insist on meeting BIRCH, which is not going to happen when expected. Maybe dialogue must be changed to something to lead towards the BUM. Also add more logic to why returning to the lab is reasonable.
+fixed: BUM replaced BIRCH but dialogues and narrative insist on meeting BIRCH, which is not going to happen when expected. Maybe dialogue must be changed to something to lead towards the BUM. Also add more logic to why returning to the lab is reasonable.
 - BUM left the scene sliding
-- R101-2: "If POKéMON get tired, take them to a POKéMON CENTER. There's a POKéMON CENTER in OLDALE TOWN right close by."
+fixed: R101-2: "If POKéMON get tired, take them to a POKéMON CENTER. There's a POKéMON CENTER in OLDALE TOWN right close by."
 - Route 103 first sign reads "(arrow pointed downwards) OLDALE TOWN"
-- Rival on Route 103 repeats the past about the player receiving its pokemon from the prof which is incorrect
-- Bella after receiving pokedex seams worried like a mother, not like a new shared flat fella
+fixed: Rival on Route 103 repeats the past about the player receiving its pokemon from the prof which is incorrect
+fixed: Bella after receiving pokedex seams worried like a mother, not like a new shared flat fella
 - map east of Neuostheim is named "Quadrate", empty, no music, a shield on the left side of the southern building is passable.
 - map DHBW has one west building which cant be entered, which is why door is passable because no trigger for entering is omitted
 - when xxx is received from Professor Farmer, no item acquired sound is omitted
@@ -28,13 +28,16 @@ notes on fixes: guide on counting NPC's (Route 101 Nr.2: R101-2)
 - flag1: after defeating team rocket, they disappear by walking into the east ee void of the map, some sparcles appear and a brunnete as well as a pokeball teleport.
 - flag1: after defeating, farmer could point out that mathelyzer was saved, afterward he heals pokemon
 - flag1: glassbox with readable M is only accessible from south which is counter-intuitive as the player circles around accessing objects from the center of the room
-- flag1: hint on shifting number: change number or letters
+fixed: flag1: hint on shifting number: change number or letters
 - flag1: no change in dialogue after freeing everyone
 - flag1: after exiting hyvls room, entering DHBW again initializes whole flag1 process again, Team rocket appears etc. after speaking to jessie, pre-fight dialogue appears but no fight. After speaking again it says "they already fled" but haven't moved. the exit of flag 1 is open 
 - flag2: after exiting lecture room of Houvert, the player is directed to the next flag. However, instead of walking to the next door, the character walks past walls into nothingness.
-- flag2: dialogue is done by "You" instead of [Name]
+fixed: flag2: dialogue is done by "You" instead of [Name]
 - flag2: We might want to be consistent with the lecture rooms
 - flag3: There is no clue for leaving the lecture room to search for the blackhansa building
+- flag3: entrance on phone corp is possible after truck event. however, the door cant be unlocked.
+- 
+
 
 ## executing the gba-file || starting the VM guide whatever
 
@@ -371,7 +374,30 @@ Defeat Prof. Hyvl.
 > collects something measurable.
 > Come back when you have real results.
 
-travelling 
+travelling full west
+a stranger approaches
+> Excuse me ???
+> Let me guess, from the way you're dressed, are you a POKéMON TRAINER?
+> ... ... ... ... ... ... 
+> Well, maybe not. Your clothes aren't all that dirty.
+> You're either a rookie TRAINER, or maybe you're just an ordinary kid.
+> I'm roaming the land in search of talented TRAINERS.
+> I'm sorry to have taken your time.
+
+> [NAME]: Huh, what's that Truck doing here?
+> [NAME]: FUCK, he is dead! The driver is fucking dead! Better
+> call the Police!
+> blablaba
+> afasfsafasf
+receives PHONE CORP ID
+going back to the company
+> GUARD: Ahh, you're from the Phone Company. Please come in.
+> [NAME]: <I was able to fool the security guard here, but it won't be
+> so easy with the others.>
+go passt the guards
+> This door is locked, but it has a lock. Maybe I can open it with the
+> right tools.
+> 
 
 ----door 4----
 > [NAME]: <Fuck, I'm late today, Class is almost over.>

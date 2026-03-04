@@ -57,6 +57,12 @@ example: if the player ID is 3750 and the chosen name is "lilh4cs", then the fla
 **Flag solution:** *an integer, derived from the function: trainer_code("your ID", "your player name")*
 
 ## Flag 3: Mr. Wörner's coding cellar
+
+## Flag 4: 
+
+## Flag 5
+
+## Flag 6: Kali's windswept caves
 **Description:** The player enters some kind of cave with no way to go any further.
 The cave is filled with rocks and boulders, a CD and a weird field on the ground.
 Upon going further, the next cave's section consists of craters and pillars. However, a rock blocks the exit and high-pitched sounds are played.
@@ -71,12 +77,6 @@ The 2nd stage plays high-pitched sounds, which replays after a while. The NPC to
 Don't forget to recognise the pauses between groups of sounds as well to receive the correct letters.
 The morse code sounds the following pattern: "... .-.. . . .--."
 **Flag solution:** "Sleep"
-
-## Flag 4: 
-
-## Flag 5
-
-## Flag 6
 
 ## Flag 7
 
