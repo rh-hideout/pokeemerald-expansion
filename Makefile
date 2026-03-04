@@ -65,15 +65,19 @@ include config.mk
 # Default make rule
 all: rom
 
-# Force make clean if the currently built version in map_version.s does not match MAP_VERSION and map_version.s exists.
+# Touch data/maps/map_groups.json and data/layouts/layouts.json if the currently built version in map_version.s does not match MAP_VERSION and map_version.s exists.
 ifneq (,$(wildcard map_version.s))
   MAP_VERSION_PATH := map_version.s
   MAP_VERSION_CURRENT := $(shell cat $(MAP_VERSION_PATH))
   ifneq ($(MAP_VERSION_CURRENT),$(MAP_VERSION))
     # Only run if not already running make clean.
     ifeq (,$(filter clean tidy tidymodern tidycheck tidydebug tidyrelease clean-assets clean-generated clean-teachables clean-teachables_intermediates,$(MAKECMDGOALS)))
-      $(info version mismatch ($(MAP_VERSION_CURRENT) -> $(MAP_VERSION)); running 'make clean')
-      $(shell $(MAKE) clean >/dev/null)
+      $(info version mismatch ($(MAP_VERSION_CURRENT) -> $(MAP_VERSION)); running 'touch' on data/maps/map_groups.json and data/layouts/layouts.json)
+      $(shell echo "$(MAP_VERSION)" > map_version.s) # Writing to map_version.s first appears to prevent compiler from looping
+      MAP_GROUP_JSON_PATH := data/maps/map_groups.json
+      LAYOUTS_JSON_PATH := data/layouts/layouts.json
+      $(shell touch $(MAP_GROUP_JSON_PATH))
+      $(shell touch $(LAYOUTS_JSON_PATH))
     endif
   endif
 endif
