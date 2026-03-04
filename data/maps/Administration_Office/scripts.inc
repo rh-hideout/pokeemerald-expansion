@@ -54,7 +54,7 @@ Administration_Office_Terminal_Already:
 	end
 
 Administration_Office_Text_EmptyOffice:
-	.string "You: Hmm… no one's here.\p"
+	.string "{PLAYER} Hmm… no one's here.\p"
 	.string "But I was told I have to enroll by today.$"
 
 Administration_Office_Text_TerminalIntro:

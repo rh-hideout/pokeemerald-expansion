@@ -143,7 +143,7 @@ HALLWAY_TO_SECRETARIAT_2_Text_HintStudent:
 	.string "It's a very secrete feeling?$"
 
 HALLWAY_TO_SECRETARIAT_2_Text_PlayerRemembersHallway:
-	.string "You: ...Right.\p"
+	.string "{PLAYER} ...Right.\p"
 	.string "This is where I enrolled.\p"
 	.string "This is where I received my\n"
 	.string "Registration Number.\p"
