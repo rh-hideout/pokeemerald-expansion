@@ -275,8 +275,8 @@ Route101_Text_YouSavedMe:
 	.string "BUM: First one is always free.\p"
 	.string "This is not the place to chat,\n"
 	.string "see you later!$"
-	.string "{PLAYER}: I should visit PROF. BIRCH\n"
-	.string "in his LAB.$"
+	.string "{PLAYER}: I should finally introduce myself to\n"
+	.string "PROFESSOR BIRCH at his lab.$"
 
 Route101_Text_TakeTiredPokemonToPokeCenter:
 	.string "If POKéMON get tired, take them to\n"

@@ -1,3 +1,5 @@
+## fixed. See unfixed for still to be fixed:
+
 ### tutorial
 #### original:
 ...going to Bella to understand what has to be done next
@@ -51,8 +53,8 @@ Defeat [CHILD] with your Pokèmon.
 Navigate through the tall grass by first walking east and then slightly northwest to find and interact with PROFESSOR BIRCH's child.
 > [CHILD]: Okay, so it's this one and that one that live on ROUTE 103...
 > Hey, it's [NAME]!
-> What? You've received a POKèMON? From some BUM? ... for free!?
-> ...fiddlesticks, this really ruffles my feathers. I've just been looking for one to gift you.
+> What? You've got a POKèMON? From some BUM? ... for free!?
+> ...fiddlesticks, this really ruffles my feathers. I've just been looking for one to give you.
 > But, since we're here, how about a little battle?
 > I'll teach you what being a TRAINER's about!
 
@@ -109,3 +111,6 @@ After solving flag 0, entering the DHBW is possible.
 ---end of logical flag 0---
 ...teleported to the museum
 > PROF. FARMER: What's all this mess?
+
+## unfixed:
+Nothing here yet.

@@ -329,8 +329,9 @@ PlayersHouse_1F_Text_SeeYouHoney:
 	.string "BELLA: See you, loser!$"
 
 PlayersHouse_1F_Text_DidYouMeetProfBirch:
-	.string "BELLA: Did you introduce yourself to\n"
-	.string "PROF. BIRCH?$"
+	.string "BELLA: I heard a frightened little girl outside.\n"
+	.string "I am quite busy right now preparing food, so\n"
+	.string "can you please see what is happening out there?$"
 
 PlayersHouse_1F_Text_YouShouldRestABit:
 	.string "BELLA: How are you doing, {PLAYER}?\n"

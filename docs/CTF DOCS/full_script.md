@@ -31,6 +31,9 @@ notes on fixes: guide on counting NPC's (Route 101 Nr.2: R101-2)
 - flag1: hint on shifting number: change number or letters
 - flag1: no change in dialogue after freeing everyone
 - flag1: after exiting hyvls room, entering DHBW again initializes whole flag1 process again, Team rocket appears etc. after speaking to jessie, pre-fight dialogue appears but no fight. After speaking again it says "they already fled" but haven't moved. the exit of flag 1 is open 
+- flag2: after exiting lecture room of Houvert, the player is directed to the next flag. However, instead of walking to the next door, the character walks past walls into nothingness.
+- flag2: dialogue is done by "You" instead of [Name]
+- flag3: We might want to be consistent with the lecture rooms
 
 ## executing the gba-file || starting the VM guide whatever
 
@@ -395,5 +398,45 @@ Talk to KALI.
 bumped into some guys "BOTH"
 >...
 
-flag ?
+official flag 2 after solving:
+> You: Right...
+> You: I remember
+> You: Now I can actually write the exam.
+> DR. PROF. HOUVERT: Time is up.
+> DR. PROF. HOUVERT: Pens down. \*walks to player
+> DR. PROF. HOUVERT: Pass your papers forward.
+> DR. PROF. HOUVERT: Hmm...
+> You have failed.
+> You: What? How can you tell already?
+> DR. PROF. HOUVERT: It is trivial.
+> DR. PROF. HOUVERT: Your reasoning lacks structure.
+> Your execution lacks precision.
+> Your result lacks merit.
+> DR. PROF. HOUVERT: However.
+> This is the DHBW.
+> To pass this semester... You will defeat me in battle.
+> DR. PROF. HOUVERT: Let us proceed.
+> DR. PROF. HOUVERT: Let us see if you perform better under pressure. \*proceeds to battle
+> DR. PROF. HOUVERT: Very well. You have passed this examination.
+> DR. PROF. HOUVERT: You may claim the second badge.
+> It proves you survived this exam.
+> Keep it safe.
 
+
+
+some flag?
+> [NAME]: Better go to my desk. 
+> PROF. BAMBERGER: Today in Forensics, we... 
+> What was that?!
+> JESSIE: Prepare for trouble... 
+> JAMES: and make it double!
+> [NAME]: Oh no, not again!
+> JESSIE: Time to collect our Bounty from BLACKHANSA. 
+> ADRIA: What is this? 
+
+\**upon interaction*
+> ADRIA: Did you find a clue about their whereabouts? 
+
+\**upon using the GameBoy Cart:*
+> The GameBoy Cart has NOTE written on it. But you 
+> can't find anything else

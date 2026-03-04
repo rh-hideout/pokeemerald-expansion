@@ -292,8 +292,13 @@ Route103_Text_MayRoute103Pokemon:
 
 Route103_Text_MayLetsBattle:
 	.string "Oh, hi, {PLAYER}{KUN}!\p"
-	.string "…Oh, I see, you got your first\n"
-	.string "POKéMON.\p"
+	.string "What? You've got a POKèMON?\n"
+	.string "From some BUM? ...\p"
+	.string "This sounds dangerous!\p"
+	.string "...fiddlesticks,\n"
+	.string "this really ruffles my feathers.\p"
+	.string "I've just been looking for one\n"
+	.string "to give you.\p"
 	.string "Since we're here, let's have a quick\n"
 	.string "battle!\p"
 	.string "I'll give you a taste of what being\n"
@@ -304,8 +309,8 @@ Route103_Text_MayDefeated:
 	.string "{PLAYER}{KUN}, you're pretty good!$"
 
 Route103_Text_MayTimeToHeadBack:
-	.string "MAY: I think I know why my dad has\n"
-	.string "an eye out for you now.\p"
+	.string "MAY: How have you become\n"
+	.string "so strong!\p"
 	.string "I mean, you just got that POKéMON,\n"
 	.string "but it already likes you.\p"
 	.string "You might be able to befriend any\n"
@@ -319,7 +324,13 @@ Route103_Text_BrendanRoute103Pokemon:
 
 Route103_Text_BrendanLetsBattle:
 	.string "Hey, it's {PLAYER}!\p"
-	.string "…Oh, yeah, Dad gave you a POKéMON.\p"
+	.string "What? You've got a POKèMON?\n"
+	.string "From some BUM? ...\p"
+	.string "...for free?!\p"
+	.string "...oh maaan,\n"
+	.string "I wish I'd seen him too!.\p"
+	.string "I've just been looking for a\n"
+	.string "Pokémon to give you.\p"
 	.string "Since we're here, how about a little\n"
 	.string "battle?\p"
 	.string "I'll teach you what being a TRAINER's\n"
@@ -329,9 +340,8 @@ Route103_Text_BrendanDefeated:
 	.string "Huh, {PLAYER}, you're not too shabby.$"
 
 Route103_Text_BrendanTimeToHeadBack:
-	.string "BRENDAN: I think I get it.\n"
-	.string "I think I know why my dad has his eye\l"
-	.string "out for you now.\p"
+	.string "BRENDAN: Wow.. How have you become\n"
+	.string "so strong!\p"
 	.string "Look, your POKéMON already likes you,\n"
 	.string "even though you just got it.\p"
 	.string "{PLAYER}, I get the feeling that you\n"

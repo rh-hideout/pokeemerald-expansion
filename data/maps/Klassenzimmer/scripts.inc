@@ -77,13 +77,19 @@ Klassenzimmer_Text_Welcome:
 Klassenzimmer_Text_Museum:
 	.string "PROF. FARMER: Today we will\n"
 	.string "visit the museum...\p"
-	.string "(Platzhaltertext)$"
+	.string "Yesterday, our temporary collection\n"
+	.string "was replaced by items of ancient history.\p"
+    .string "Don't ask me why the DHBW\n"
+    .string "needs this right now.\p"
+    .string "But why not make this our\n"
+    .string "opportunity to learn something new.\p"
+>   .string "So folks, let's get going.$"
 
 Museum_Text_StudentReceivesMon:
     .string "PROF. FARMER: At the beginning of your\n"
-    .string "studies, each student receives an\p"
-	.string "X, which is intended to support\n"
+    .string "studies, each student receives a\p"
+	.string "Taillow, which is intended to support\n"
     .string "you in your learning.\p"
-	.string "XXX has been added to your Team.$"
+	.string "Taillow has been added to your Team.$"
 
 

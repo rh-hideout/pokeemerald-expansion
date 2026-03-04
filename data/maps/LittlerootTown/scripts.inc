@@ -935,7 +935,7 @@ LittlerootTown_Text_SwitchShoesWithRunningShoes:
 LittlerootTown_Text_ExplainRunningShoes:
 	.string "BELLA: {PLAYER}, those shoes came with\n"
 	.string "instructions.\p"
-	.string "“Press the B Button while wearing these\n"
+	.string "“Press Y while wearing these\n"
 	.string "RUNNING SHOES to run extra-fast!\p"
 	.string "“Slip on these RUNNING SHOES and race\n"
 	.string "in the great outdoors!”$"
@@ -945,11 +945,15 @@ LittlerootTown_Text_ComeHomeIfAnythingHappens:
 	.string "… … … … … … … …\p"
 	.string "BELLA: You're always on the go…\n"
 	.string "…\l"
-	.string "Sometimes I miss you…\p"
-	.string "…nevermind.\n"
+	.string "The apartment feels\n"
+	.string "a bit empty without you.\p"
+	.string "See you around,\n"
+	.string "when you've got the time!\p"
 
 LittlerootTown_Text_CanUsePCToStoreItems:
-	.string "If you use a PC, you can store items\n"
+	.string "Oh and one last thing!\n"
+	.string "Don't forget about the PC's.\p"
+	.string "Use them to store items\n"
 	.string "and POKéMON.\p"
 	.string "The power of science is staggering!$"
 
