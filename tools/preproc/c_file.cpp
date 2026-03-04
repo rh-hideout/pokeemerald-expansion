@@ -132,7 +132,7 @@ void CFile::Preproc()
         }
     }
 
-    // TODO: Share the tails compound strings where possible (like the
+    // TODO: Share the tails of compound strings where possible (like the
     // 'ld' optimization for 'SHF_MERGE | SHF_STRINGS').
     for (auto it : m_compoundStrings)
     {
