@@ -588,3 +588,9 @@ graphics/object_events/pics/people/jessie.4bpp: graphics/object_events/pics/peop
 
 graphics/object_events/pics/people/james.4bpp: graphics/object_events/pics/people/james.png
 	tools/gbagfx/gbagfx $< $@ -mwidth 2 -mheight 4
+
+graphics/object_events/pics/people/officer_m.4bpp: graphics/object_events/pics/people/officer_m.png
+	tools/gbagfx/gbagfx $< $@ -mwidth 2 -mheight 4
+
+graphics/object_events/pics/people/officer_f.4bpp: graphics/object_events/pics/people/officer_f.png
+	tools/gbagfx/gbagfx $< $@ -mwidth 2 -mheight 4

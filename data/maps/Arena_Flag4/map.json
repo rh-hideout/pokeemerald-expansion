@@ -34,14 +34,14 @@
       "x": 5,
       "y": 9,
       "elevation": 0,
-      "dest_map": "MAP_SLATEPORT_CITY_BATTLE_TENT_LOBBY",
+      "dest_map": "MAP_GLITCH_HAUS",
       "dest_warp_id": "2"
     },
     {
       "x": 4,
       "y": 9,
       "elevation": 0,
-      "dest_map": "MAP_SLATEPORT_CITY_BATTLE_TENT_LOBBY",
+      "dest_map": "MAP_GLITCH_HAUS",
       "dest_warp_id": "2"
     }
   ],

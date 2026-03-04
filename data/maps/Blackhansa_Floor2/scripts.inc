@@ -96,6 +96,8 @@ Blackhansa_Floor2_ServerTap_Success:
     removeitem ITEM_RASPBERRY_PI, 1
     msgbox Blackhansa_Floor2_Text_Servers_Success, MSGBOX_DEFAULT
     setflag FLAG_BLACKHANSA_SERVER_TAP_DONE
+    playse SE_POKENAV_CALL
+    msgbox Blackhansa_Floor2_Text_Mail, MSGBOX_DEFAULT
     release
     end
 
@@ -137,6 +139,22 @@ Blackhansa_Floor2_Movement_ITManager_Return::
 	walk_up
 	step_end
 
+
+
+
+@ --------------------
+@ Schilder
+@ --------------------
+
+Blackhansa_Floor2_EventScript_Plaque::
+    msgbox Blackhansa_Floor2_Text_Plaque, MSGBOX_DEFAULT
+    release
+    end
+
+Blackhansa_Floor2_EventScript_Letter::
+    msgbox Blackhansa_Floor2_Text_Letter, MSGBOX_DEFAULT
+    release
+    end
 
 @ --------------------
 @ Texte
@@ -186,6 +204,20 @@ Blackhansa_Floor2_Text_Servers_Success:
 	.string "the cables. Traffic is now being\n"
 	.string "recorded and sent.$"
 
+Blackhansa_Floor2_Text_Letter::
+	.string "A letter: We are sending you the\n"
+	.string "requested plaque for your display\p"
+	.string "case. \n"
+	.string "<The plaque is no longer there>$"
 
+Blackhansa_Floor2_Text_Plaque::
+	.string "The plaque reads: \n"
+	.string "Maspalomas Lighthouse$"
 
+Blackhansa_Floor2_Text_Mail::
+	.string "You intercepted a message already.\p"
+	.string "It's addressed to the Blackhansa\n"
+	.string "Boss. \p"
+    .string "''...today at the old warehouse.\n"
+	.string " The password is CASSEROLE...''$"
 

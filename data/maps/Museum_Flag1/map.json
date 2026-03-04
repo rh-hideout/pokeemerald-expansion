@@ -112,7 +112,7 @@
       "x": 10,
       "y": 8,
       "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Museum_Flag1_EventScript_Sign_M1"
     },
     {
@@ -120,7 +120,7 @@
       "x": 15,
       "y": 6,
       "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Museum_Flag1_EventScript_Sign_X"
     },
     {

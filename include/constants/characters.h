@@ -83,6 +83,11 @@
 #define CHAR_SUPER_E           0x84
 #define CHAR_LESS_THAN         0x85
 #define CHAR_GREATER_THAN      0x86
+#define CHAR_L_BRACE           0x30
+#define CHAR_R_BRACE           0x31
+#define CHAR_CARET             0x32
+#define CHAR_DBL_QUOTE         0x33
+#define CHAR_UNDERSCORE        0x34
 //
 #define CHAR_SUPER_RE          0xA0
 #define CHAR_0                 0xA1
@@ -206,7 +211,7 @@
 #define CHAR_PP            0x06
 #define CHAR_ID            0x07
 #define CHAR_NO            0x08
-#define CHAR_UNDERSCORE    0x09
+#define CHAR_EXTRA_UNDERSCORE 0x09
 
 #define EXT_CTRL_CODE_COLOR                  0x01
 #define EXT_CTRL_CODE_HIGHLIGHT              0x02

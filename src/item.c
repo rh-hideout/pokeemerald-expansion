@@ -21,6 +21,9 @@
 #include "constants/item_effects.h"
 #include "constants/hold_effects.h"
 
+#include "secret_photo_viewer.h"
+
+
 #define DUMMY_PC_BAG_POCKET                 \
 {                                           \
     .id = POCKET_DUMMY,                     \

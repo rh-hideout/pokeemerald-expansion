@@ -1,0 +1,122 @@
+{
+  "id": "MAP_HALLWAY_TO_SECRETARIAT_2",
+  "name": "HALLWAY_TO_SECRETARIAT_2",
+  "layout": "LAYOUT_HALLWAY_TO_SECRETARIAT_2",
+  "music": "MUS_DUMMY",
+  "region_map_section": "MAPSEC_ABANDONED_SHIP",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_NONE",
+  "allow_cycling": false,
+  "allow_escaping": false,
+  "allow_running": false,
+  "show_map_name": true,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": null,
+  "object_events": [
+    {
+      "graphics_id": "OBJ_EVENT_GFX_SCHOOL_KID_M",
+      "x": 11,
+      "y": 2,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "HALLWAY_TO_SECRETARIAT_2_EventScript_HintStudent",
+      "flag": "FLAG_HIDE_SECRETARIAT_HINT_NPC"
+    }
+  ],
+  "warp_events": [
+    {
+      "x": 19,
+      "y": 2,
+      "elevation": 0,
+      "dest_map": "MAP_HALLWAYCURVEDLEFT",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 19,
+      "y": 3,
+      "elevation": 0,
+      "dest_map": "MAP_HALLWAYCURVEDLEFT",
+      "dest_warp_id": "1"
+    },
+    {
+      "x": 19,
+      "y": 4,
+      "elevation": 0,
+      "dest_map": "MAP_HALLWAYCURVEDLEFT",
+      "dest_warp_id": "2"
+    },
+    {
+      "x": 19,
+      "y": 5,
+      "elevation": 0,
+      "dest_map": "MAP_HALLWAYCURVEDLEFT",
+      "dest_warp_id": "3"
+    },
+    {
+      "x": 0,
+      "y": 2,
+      "elevation": 0,
+      "dest_map": "MAP_HALLWAYCURVEDRIGHT",
+      "dest_warp_id": "4"
+    },
+    {
+      "x": 0,
+      "y": 3,
+      "elevation": 0,
+      "dest_map": "MAP_HALLWAYCURVEDRIGHT",
+      "dest_warp_id": "5"
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "elevation": 0,
+      "dest_map": "MAP_HALLWAYCURVEDRIGHT",
+      "dest_warp_id": "6"
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "elevation": 0,
+      "dest_map": "MAP_HALLWAYCURVEDRIGHT",
+      "dest_warp_id": "7"
+    },
+    {
+      "x": 6,
+      "y": 1,
+      "elevation": 0,
+      "dest_map": "MAP_HOUVERT_CLASS",
+      "dest_warp_id": "2"
+    },
+    {
+      "x": 13,
+      "y": 1,
+      "elevation": 0,
+      "dest_map": "MAP_SECRETE_ROOMWITH_CODE",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 13,
+      "y": 5,
+      "elevation": 0,
+      "dest_map": "MAP_ADMINISTRATION_OFFICE",
+      "dest_warp_id": "0"
+    }
+  ],
+  "coord_events": [
+    {
+      "type": "trigger",
+      "x": 6,
+      "y": 1,
+      "elevation": 0,
+      "var": "VAR_TEMP_F",
+      "var_value": "0",
+      "script": "HALLWAY_TO_SECRETARIAT_2_EventScript_TeleporterHouvert"
+    }
+  ],
+  "bg_events": []
+}

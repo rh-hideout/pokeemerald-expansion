@@ -112,9 +112,10 @@
 //CTF
 #define TRAINER_PIC_ROCKET                93
 #define TRAINER_PIC_ORAGGLE               94
+#define TRAINER_PIC_HOUVERT               95
 
 //Count immer Erhöhen!
-#define TRAINER_PIC_COUNT                 95
+#define TRAINER_PIC_COUNT                 96
 
 // The player back pics are assumed to alternate according to the gender values (MALE/FEMALE)
 #define TRAINER_BACK_PIC_BRENDAN                0
@@ -361,6 +362,7 @@ enum TrainerClassID
     TRAINER_CLASS_RS_PROTAG,
     TRAINER_CLASS_TEAM_ROCKET, // CTF
     TRAINER_CLASS_PROFESSOR, // CTF
+    TRAINER_CLASS_BLACKHANSA, // CTF
     TRAINER_CLASS_COUNT
 
 };

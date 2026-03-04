@@ -643,30 +643,56 @@
     "MainHub"
   ],
   "gMapGroup_Flag2": [
-    "HowerClass",
-    "HALLWAY_TO_SECRETARIAT"
+    "HouvertClass",
+    "HALLWAY_TO_SECRETARIAT",
+    "Hallwaycurvedright",
+    "HALLWAY_TO_SECRETARIAT_2",
+    "Hallwaycurvedleft",
+    "Administration_Office",
+    "ClassroomOpeningLeft",
+    "ClassroomOpeningLeft_2",
+    "secreteRoomwithCode",
+    "ClassroomOpeningRight",
+    "ClassroomOpeningRight_2",
+    "ClassroomOpeninTop",
+    "ClassroomOpeninTop_2"
   ],
   "gMapGroup_Flag3": [
     "entryMapFlag3",
     "Blackhansa_Floor1",
     "Blackhansa_Floor2",
     "Klassenzimmer_SoEn",
-    "Flag3_CD"
+    "Flag3_CD",
+    "Lagerhalle"
   ],
   "gMapGroup_Flag4": [
     "entryMapFlag4",
     "Ludwigshafen",
     "Klassenzimmer_4",
     "Arena_Flag4",
-    "GlitchHaus"
+    "GlitchHaus",
+    "LuTransfer"
   ],
   "gMapGroup_Flag5": [
     "entryMapFlag5"
   ],
   "gMapGroup_Flag7": [
-    "entryMapFlag7"
+    "entryMapFlag7",
+    "Quadrate",
+    "SeckenheimerLandstrasse"
   ],
   "gMapGroup_Flag8": [
-    "entryMapFlag8"
+    "entryMapFlag8",
+    "Bridgeroom",
+    "BlackhansaFinale",
+    "FinaleFarmer",
+    "Waldhof",
+    "Wasserturm",
+    "WasserturmLobby",
+    "Klassenzimmer_Finale",
+    "Neckar",
+    "Stadium1",
+    "Stadium2",
+    "Stadium3"
   ]
 }

@@ -19,6 +19,7 @@
 #include "metatile_behavior.h"
 #include "string_util.h"
 #include "constants/field_effects.h"
+#include "constants/maps.h"
 #include "constants/metatile_behaviors.h"
 #include "constants/metatile_labels.h"
 #include "constants/songs.h"
@@ -40,6 +41,7 @@ static void Task_WateringBerryTreeAnim_Continue(u8);
 static void Task_WateringBerryTreeAnim_End(u8);
 
 static void FieldCallback_SecretBaseCave(void);
+static void FieldCallback_HallwaySecretDoor(void);
 static void SpriteCB_CaveEntranceInit(struct Sprite *);
 static void SpriteCB_CaveEntranceOpen(struct Sprite *);
 static void SpriteCB_CaveEntranceEnd(struct Sprite *);
@@ -56,6 +58,7 @@ static void SpriteCB_ShrubEntranceInit(struct Sprite *);
 static void SpriteCB_ShrubEntranceOpen(struct Sprite *);
 static void SpriteCB_ShrubEntranceEnd(struct Sprite *);
 static void StartSecretBaseShrubFieldEffect(void);
+static bool32 TrySetupHallwaySecretDoor(void);
 
 static void SpriteCB_SandPillar_BreakTop(struct Sprite *);
 static void SpriteCB_SandPillar_BreakBase(struct Sprite *);
@@ -550,7 +553,13 @@ bool32 SetUpFieldMove_SecretPower(void)
 
     CheckPlayerHasSecretBase();
 
-    if (gSpecialVar_Result == 1 || GetPlayerFacingDirection() != DIR_NORTH)
+    if (TrySetupHallwaySecretDoor())
+        return TRUE;
+
+    if (gSpecialVar_Result == 1)
+        return FALSE;
+
+    if (GetPlayerFacingDirection() != DIR_NORTH)
         return FALSE;
 
     GetXYCoordsOneStepInFrontOfPlayer(&gPlayerFacingPosition.x, &gPlayerFacingPosition.y);
@@ -583,10 +592,29 @@ bool32 SetUpFieldMove_SecretPower(void)
     return FALSE;
 }
 
+static bool32 TrySetupHallwaySecretDoor(void)
+{
+    if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_HALLWAY_TO_SECRETARIAT_2)
+        && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_HALLWAY_TO_SECRETARIAT_2))
+    {
+        gFieldCallback2 = FieldCallback_PrepareFadeInFromMenu;
+        gPostMenuFieldCallback = FieldCallback_HallwaySecretDoor;
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
 static void FieldCallback_SecretBaseCave(void)
 {
     gFieldEffectArguments[0] = GetCursorSelectionMonId();
     ScriptContext_SetupScript(SecretBase_EventScript_CaveUseSecretPower);
+}
+
+static void FieldCallback_HallwaySecretDoor(void)
+{
+    gFieldEffectArguments[0] = GetCursorSelectionMonId();
+    ScriptContext_SetupScript(HALLWAY_TO_SECRETARIAT_2_EventScript_SecretDoor);
 }
 
 bool8 FldEff_UseSecretPowerCave(void)

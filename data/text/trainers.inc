@@ -4794,3 +4794,58 @@ VSSeeker_Text_TrainersNotReady::
 	.string "The other Trainers don't appear\n"
 	.string "to be ready for battle.\p"
 	.string "Let's wait till later.{PAUSE_UNTIL_PRESS}$"
+
+
+
+
+
+
+
+
+
+Lagerhalle_Text_T1_Intro:
+    .string "You shouldn't be here!$"
+
+Lagerhalle_Text_T1_Defeated:
+	.string "I don't know much!$"
+	
+Lagerhalle_Text_T1_PostBattle:
+	.string "The boss only mentioned FAVORITE\n"
+	.string "PLACES to me.$"
+
+Lagerhalle_Text_T2_Intro:
+	.string "The professor will help us with\n"
+	.string "our WEAPON.$"
+
+Lagerhalle_Text_T2_Defeated:
+    .string "But don't tell anyone!.$"
+
+Lagerhalle_Text_T2_PostBattle:
+	.string "Something about OPENINGS. But you\n"
+	.string "didn't hear that from me!$"
+
+Lagerhalle_Text_T3_Intro:
+    .string "You cannot defeat BLACKHANSA.$"
+
+Lagerhalle_Text_T3_Defeated:
+    .string "Tough kid, eh?$"
+
+Lagerhalle_Text_T3_PostBattle:
+	.string "He wanted to calculate something,\n"
+	.string "but I was never good at addition.$"
+
+
+Lagerhalle_Text_Blackhansa_Intro:
+	.string "I'll wipe the floor with you and\n"
+    .string "feed you to my POKéMON.$"
+
+Lagerhalle_Text_Blackhansa_Defeated:
+    .string "Well, then we'll postpone it until\n"
+    .string "another time. But you won't be\p"
+    .string "able to free the professor. He'll\n"
+    .string "starve to death miserably in his\p"
+    .string "cell!$"
+
+Lagerhalle_Text_Blackhansa_PostBattle:
+	.string "Until next time, sucker!$"
+

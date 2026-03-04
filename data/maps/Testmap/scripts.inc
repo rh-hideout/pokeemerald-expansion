@@ -108,7 +108,12 @@ Testmap_EventScript_BlockRoute102::
     waitmovement 0
 
     releaseall
+	
 Testmap_BlockRoute102_End:
+	@ Flaggen verstecken NPC für Event auf Route 104, nicht entfernen
+	setflag FLAG_HIDE_ROUTE104_OFFICER_M
+	setflag FLAG_HIDE_ROUTE104_OFFICER_F
+	setflag FLAG_HIDE_ROUTE104_PHONE_CORP_ID
     end
 
 Testmap_Movement_TurnAndStepRight:

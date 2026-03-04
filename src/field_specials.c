@@ -4381,3 +4381,18 @@ void SetAbility(void)
     u32 ability = gSpecialVar_Result;
     SetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_ABILITY_NUM, &ability);
 }
+
+
+void Special_TakeChosenPartyMon(void)
+{
+    u16 slot = gSpecialVar_0x8004;
+    if (slot >= PARTY_SIZE)
+        return;
+
+    // Optional: nie das letzte Pokémon entfernen
+    // if (CalculatePlayerPartyCount() <= 1)
+    //     return;
+
+    ZeroMonData(&gPlayerParty[slot]);
+    CompactPartySlots();
+}

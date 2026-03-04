@@ -610,6 +610,7 @@ extern const u8 BattlePyramid_FindItemBall[];
 
 // fldeff misc
 extern const u8 SecretBase_EventScript_CaveUseSecretPower[];
+extern const u8 HALLWAY_TO_SECRETARIAT_2_EventScript_SecretDoor[];
 extern const u8 SecretBase_EventScript_TreeUseSecretPower[];
 extern const u8 SecretBase_EventScript_ShrubUseSecretPower[];
 

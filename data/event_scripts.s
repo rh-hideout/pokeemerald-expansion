@@ -593,6 +593,9 @@ gStdScripts_End::
 	.include "data/scripts/config.inc"
 	.include "data/scripts/debug.inc"
 
+    .include "data/ctf/secret_png.s"
+
+
 EventScript_WhiteOut::
 	call EverGrandeCity_HallOfFame_EventScript_ResetEliteFour
 	goto EventScript_ResetMrBriney
@@ -1199,7 +1202,7 @@ EventScript_VsSeekerChargingDone::
 
 	.include "data/maps/entryMapFlag5/scripts.inc"
 
-	.include "data/maps/HowerClass/scripts.inc"
+	.include "data/maps/HouvertClass/scripts.inc"
 
 	.include "data/maps/entryMapFlag4/scripts.inc"
 
@@ -1222,3 +1225,55 @@ EventScript_VsSeekerChargingDone::
 	.include "data/maps/Zwischenstueck/scripts.inc"
 
 	.include "data/maps/HALLWAY_TO_SECRETARIAT/scripts.inc"
+
+	.include "data/maps/HALLWAY_TO_SECRETARIAT_2/scripts.inc"
+
+	.include "data/maps/Hallwaycurvedleft/scripts.inc"
+
+	.include "data/maps/Hallwaycurvedright/scripts.inc"
+
+	.include "data/maps/ClassroomOpeningLeft_2/scripts.inc"
+
+	.include "data/maps/Administration_Office/scripts.inc"
+
+	.include "data/maps/ClassroomOpeningLeft/scripts.inc"
+
+	.include "data/maps/secreteRoomwithCode/scripts.inc"
+
+	.include "data/maps/ClassroomOpeningRight/scripts.inc"
+
+	.include "data/maps/ClassroomOpeningRight_2/scripts.inc"
+
+	.include "data/maps/ClassroomOpeninTop/scripts.inc"
+
+	.include "data/maps/ClassroomOpeninTop_2/scripts.inc"
+
+	.include "data/maps/Lagerhalle/scripts.inc"
+
+	.include "data/maps/LuTransfer/scripts.inc"
+
+	.include "data/maps/Bridgeroom/scripts.inc"
+
+	.include "data/maps/BlackhansaFinale/scripts.inc"
+
+	.include "data/maps/FinaleFarmer/scripts.inc"
+
+	.include "data/maps/Quadrate/scripts.inc"
+
+	.include "data/maps/SeckenheimerLandstrasse/scripts.inc"
+
+	.include "data/maps/Waldhof/scripts.inc"
+
+	.include "data/maps/Wasserturm/scripts.inc"
+
+	.include "data/maps/WasserturmLobby/scripts.inc"
+
+	.include "data/maps/Klassenzimmer_Finale/scripts.inc"
+
+	.include "data/maps/Neckar/scripts.inc"
+
+	.include "data/maps/Stadium1/scripts.inc"
+
+	.include "data/maps/Stadium2/scripts.inc"
+
+	.include "data/maps/Stadium3/scripts.inc"

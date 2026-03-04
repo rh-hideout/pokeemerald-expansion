@@ -249,15 +249,18 @@ extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Giddy;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_UnusedMauvilleOldMan1;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_UnusedMauvilleOldMan2;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_ApricornTree;
+//CTF
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_CtfTerminal;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Jessie;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_James;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_OfficerM;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_OfficerF;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Unsichtbar;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Dollarsign;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Cd;
-
-
-
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_TrainLeft;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_TrainRight;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Houvert;
 const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM_OBJ_EVENT_GFX] = {
     [OBJ_EVENT_GFX_BRENDAN_NORMAL] =           &gObjectEventGraphicsInfo_BrendanNormal,
     [OBJ_EVENT_GFX_BRENDAN_MACH_BIKE] =        &gObjectEventGraphicsInfo_BrendanMachBike,
@@ -510,7 +513,12 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_UNSICHTBAR] =               &gObjectEventGraphicsInfo_Unsichtbar,
     [OBJ_EVENT_GFX_DOLLARSIGN] =               &gObjectEventGraphicsInfo_Dollarsign,
     [OBJ_EVENT_GFX_CD] =                       &gObjectEventGraphicsInfo_Cd,
-    
+    [OBJ_EVENT_GFX_OFFICER_M] =                &gObjectEventGraphicsInfo_OfficerM,
+    [OBJ_EVENT_GFX_OFFICER_F] =                &gObjectEventGraphicsInfo_OfficerF,
+    [OBJ_EVENT_GFX_TRAIN_LEFT] =               &gObjectEventGraphicsInfo_TrainLeft,
+    [OBJ_EVENT_GFX_TRAIN_RIGHT] =              &gObjectEventGraphicsInfo_TrainRight,
+    [OBJ_EVENT_GFX_HOUVERT] =                  &gObjectEventGraphicsInfo_Houvert,
+
 
 
 };

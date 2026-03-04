@@ -83,6 +83,12 @@ SECTIONS {
         sound/songs/*.o(.rodata);
     } > ROM =0
 
+    .ctf :
+    ALIGN(4)
+    {
+        KEEP(*(.rodata.ctf))
+    } > ROM =0
+
     .data.iwram :
     ALIGN(4)
     {
