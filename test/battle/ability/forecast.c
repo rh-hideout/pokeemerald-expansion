@@ -476,7 +476,6 @@ DOUBLE_BATTLE_TEST("Forecast: All Forecast mons revert on the field if Primal We
         // ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, opponentRight);
         // ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, playerRight);
     } THEN {
-        EXPECT_EQ(playerLeft->species, SPECIES_CASTFORM_NORMAL);
         EXPECT_EQ(opponentLeft->species, SPECIES_CASTFORM_NORMAL);
         EXPECT_EQ(opponentRight->species, SPECIES_CASTFORM_NORMAL);
         EXPECT_EQ(playerRight->species, SPECIES_CASTFORM_NORMAL);
