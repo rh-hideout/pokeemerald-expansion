@@ -230,11 +230,11 @@ bool32 IsSwitchinTSpikesAffected(enum BattlerId battler)
     enum Ability ability = gAiLogicData->abilities[battler];
     u32 status = gBattleMons[battler].status1;
     enum HoldEffect heldItemEffect = gAiLogicData->holdEffects[battler];
+    bool32 ignoreItem = ((gFieldStatuses & STATUS_FIELD_MAGIC_ROOM) || ability == ABILITY_KLUTZ);
     if ((!IS_BATTLER_ANY_TYPE(battler, TYPE_POISON, TYPE_STEEL)
         && ability != ABILITY_IMMUNITY && ability != ABILITY_POISON_HEAL && !IsAbilityOnSide(battler, ABILITY_PASTEL_VEIL)
         && status == 0
-        && !(heldItemEffect == HOLD_EFFECT_HEAVY_DUTY_BOOTS
-            && (((gFieldStatuses & STATUS_FIELD_MAGIC_ROOM) || ability == ABILITY_KLUTZ)))
+        && !(heldItemEffect == HOLD_EFFECT_HEAVY_DUTY_BOOTS && ignoreItem)
         && heldItemEffect != HOLD_EFFECT_CURE_PSN && heldItemEffect != HOLD_EFFECT_CURE_STATUS
         && AI_IsBattlerGrounded(battler)))
     {
@@ -1520,38 +1520,39 @@ static u32 GetSwitchinSingleUseItemHealing(enum BattlerId battler, enum BattlerI
     s32 itemHeal = 0;
     
     // Check if we're at a single use healing item threshold
-    if (currentHP > 0 && gAiLogicData->abilities[battler] != ABILITY_KLUTZ
-        && !(gAiLogicData->abilities[opposingBattler] == ABILITY_UNNERVE && GetItemPocket(aiItem) == POCKET_BERRIES))
+    if (currentHP <= 0 
+     || gAiLogicData->abilities[battler] == ABILITY_KLUTZ
+     || (gAiLogicData->abilities[opposingBattler] == ABILITY_UNNERVE && GetItemPocket(aiItem) == POCKET_BERRIES))
+        return itemHeal;
+
+    switch (GetItemHoldEffect(aiItem))
     {
-        switch (GetItemHoldEffect(aiItem))
+    case HOLD_EFFECT_RESTORE_HP:
+        if (currentHP < maxHP / 2)
+            itemHeal = GetItemHoldEffectParam(aiItem);
+        break;
+    case HOLD_EFFECT_RESTORE_PCT_HP:
+        if (currentHP < maxHP / 2)
         {
-        case HOLD_EFFECT_RESTORE_HP:
-            if (currentHP < maxHP / 2)
-                itemHeal = GetItemHoldEffectParam(aiItem);
-            break;
-        case HOLD_EFFECT_RESTORE_PCT_HP:
-            if (currentHP < maxHP / 2)
-            {
-                itemHeal = maxHP / GetItemHoldEffectParam(aiItem);
-                if (itemHeal == 0)
-                    itemHeal = 1;
-            }
-            break;
-        case HOLD_EFFECT_CONFUSE_SPICY:
-        case HOLD_EFFECT_CONFUSE_DRY:
-        case HOLD_EFFECT_CONFUSE_SWEET:
-        case HOLD_EFFECT_CONFUSE_BITTER:
-        case HOLD_EFFECT_CONFUSE_SOUR:
-            if (currentHP < maxHP / CONFUSE_BERRY_HP_FRACTION)
-            {
-                itemHeal = maxHP / GetItemHoldEffectParam(aiItem);
-                if (itemHeal == 0)
-                    itemHeal = 1;
-            }
-            break;
-        default:
-            break;
+            itemHeal = maxHP / GetItemHoldEffectParam(aiItem);
+            if (itemHeal == 0)
+                itemHeal = 1;
         }
+        break;
+    case HOLD_EFFECT_CONFUSE_SPICY:
+    case HOLD_EFFECT_CONFUSE_DRY:
+    case HOLD_EFFECT_CONFUSE_SWEET:
+    case HOLD_EFFECT_CONFUSE_BITTER:
+    case HOLD_EFFECT_CONFUSE_SOUR:
+        if (currentHP < maxHP / CONFUSE_BERRY_HP_FRACTION)
+        {
+            itemHeal = maxHP / GetItemHoldEffectParam(aiItem);
+            if (itemHeal == 0)
+                itemHeal = 1;
+        }
+        break;
+    default:
+        break;
     }
 
     return itemHeal;
@@ -2666,9 +2667,6 @@ static void SetBattlerStatStagesForSwitchin(enum BattlerId battler, enum Battler
         gBattleMons[battler].statStages[STAT_DEF] += 1;
         break;
     case ABILITY_SUPREME_OVERLORD:
-        ///////////////////////////////////
-        // Needs gBattleStruct->supremeOverlordCounter[battler] moved out of gBattleStruct so it can be safely overwritten
-        //////////////////////////////////
         break;
     case ABILITY_DOWNLOAD:
         gBattleMons[battler].statStages[GetDownloadStat(battler)] += 1;
@@ -2734,9 +2732,9 @@ static void SetBattlerStatStagesForSwitchin(enum BattlerId battler, enum Battler
     case HOLD_EFFECT_TERRAIN_SEED:
         u32 seedParam = GetItemHoldEffectParam(aiItem);
         if ((seedParam == HOLD_EFFECT_PARAM_ELECTRIC_TERRAIN && (fieldStatus & STATUS_FIELD_ELECTRIC_TERRAIN))
-            || (seedParam == HOLD_EFFECT_PARAM_GRASSY_TERRAIN && (fieldStatus & STATUS_FIELD_GRASSY_TERRAIN))
-            || (seedParam == HOLD_EFFECT_PARAM_MISTY_TERRAIN && (fieldStatus & STATUS_FIELD_MISTY_TERRAIN))
-            || (seedParam == HOLD_EFFECT_PARAM_PSYCHIC_TERRAIN && (fieldStatus & STATUS_FIELD_PSYCHIC_TERRAIN)))
+         || (seedParam == HOLD_EFFECT_PARAM_GRASSY_TERRAIN && (fieldStatus & STATUS_FIELD_GRASSY_TERRAIN))
+         || (seedParam == HOLD_EFFECT_PARAM_MISTY_TERRAIN && (fieldStatus & STATUS_FIELD_MISTY_TERRAIN))
+         || (seedParam == HOLD_EFFECT_PARAM_PSYCHIC_TERRAIN && (fieldStatus & STATUS_FIELD_PSYCHIC_TERRAIN)))
             gBattleMons[battler].statStages[STAT_DEF] += 1;
         break;
     case HOLD_EFFECT_ATTACK_UP:
