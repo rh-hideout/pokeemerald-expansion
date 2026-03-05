@@ -471,10 +471,9 @@ DOUBLE_BATTLE_TEST("Forecast: All Forecast mons revert on the field if Primal We
         ABILITY_POPUP(opponentRight, ABILITY_FORECAST);
         ABILITY_POPUP(playerRight, ABILITY_FORECAST);
 
-        // Reverts them in slot order, not sure why. Result sill proves test is correct
-        // ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, opponentLeft);
-        // ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, opponentRight);
-        // ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, playerRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, opponentRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, playerRight);
     } THEN {
         EXPECT_EQ(opponentLeft->species, SPECIES_CASTFORM_NORMAL);
         EXPECT_EQ(opponentRight->species, SPECIES_CASTFORM_NORMAL);

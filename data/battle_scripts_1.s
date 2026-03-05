@@ -23,14 +23,12 @@
 	.section script_data, "aw", %progbits
 
 BattleScript_TryRevertWeatherform:
-    savetarget
-    setbyte gBattlerTarget, 0
+    setbyte gEffectBattler, 0
     sortbattlers
 BattleScript_TryRevertWeatherformLoop:
     tryrevertweatherform
-    addbyte gBattlerTarget, 1
-    jumpifbytenotequal gBattlerTarget, gBattlersCount, BattleScript_TryRevertWeatherformLoop
-    restoretarget
+    addbyte gEffectBattler, 1
+    jumpifbytenotequal gEffectBattler, gBattlersCount, BattleScript_TryRevertWeatherformLoop
     return
 
 BattleScript_FickleBeamMessage::
@@ -5439,7 +5437,7 @@ BattleScript_BattlerFormChangeNoPopup::
 BattleScript_BattlerFormChangeFromAfterAnimation::
 	handleformchange BS_SCRIPTING, 1
 	switchinabilities BS_SCRIPTING
-	jumpifability BS_TARGET, ABILITY_DISGUISE, BattleScript_ApplyDisguiseFormChangeHPLoss
+	jumpifability BS_SCRIPTING, ABILITY_DISGUISE, BattleScript_ApplyDisguiseFormChangeHPLoss
 	return
 
 BattleScript_ZenMode::
@@ -5461,7 +5459,8 @@ BattleScript_BattlerFormChangeDisguise::
 	waitanimation
 	printstring STRINGID_PKMNDISGUISEWASBUSTED
 	waitmessage B_WAIT_TIME_SHORT
-	goto BattleScript_BattlerFormChangeFromAfterAnimation
+	call BattleScript_BattlerFormChangeFromAfterAnimation
+    return
 
 BattleScript_BattlerFormChangeEnd3NoPopup::
 	call BattleScript_BattlerFormChangeNoPopup
@@ -5519,9 +5518,10 @@ BattleScript_ApplyDisguiseFormChangeHPLossReturn:
 BattleScript_TargetFormChangeNoPopup:
 	flushtextbox
 	handleformchange BS_SCRIPTING, 0
-	playanimation BS_TARGET, B_ANIM_FORM_CHANGE
+	playanimation BS_SCRIPTING, B_ANIM_FORM_CHANGE
 	waitanimation
-	goto BattleScript_BattlerFormChangeFromAfterAnimation
+	call BattleScript_BattlerFormChangeFromAfterAnimation
+    return
 
 BattleScript_TargetFormChange::
 	pause 5
