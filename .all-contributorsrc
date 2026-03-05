@@ -660,6 +660,15 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "luuma",
+      "name": "luuma",
+      "avatar_url": "https://avatars.githubusercontent.com/u/31407427?v=4",
+      "profile": "https://github.com/luuma",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
