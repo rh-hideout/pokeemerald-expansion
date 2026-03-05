@@ -130,3 +130,18 @@ DOUBLE_BATTLE_TEST("Lightning Rod absorbs moves that targets all battlers but do
         HP_BAR(playerRight);
     }
 }
+
+DOUBLE_BATTLE_TEST("Lighning Rod doesn't print a message failure if user is not alive")
+{
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_DISCHARGE) == TYPE_ELECTRIC);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_RAICHU) { HP(1); Ability(ABILITY_LIGHTNING_ROD); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_POUND, target: opponentRight); MOVE(playerRight, MOVE_DISCHARGE); }
+    } SCENE {
+        NOT ABILITY_POPUP(opponentRight, ABILITY_LIGHTNING_ROD);
+    }
+}
