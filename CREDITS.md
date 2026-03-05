@@ -94,6 +94,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/ChrispyChris27"><img src="https://avatars.githubusercontent.com/u/173648816?v=4?s=100" width="100px;" alt="ChrispyChris27"/><br /><sub><b>ChrispyChris27</b></sub></a><br /><a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=ChrispyChris27" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/LogicalLlama"><img src="https://avatars.githubusercontent.com/u/248230900?v=4?s=100" width="100px;" alt="LogicalLlama"/><br /><sub><b>LogicalLlama</b></sub></a><br /><a href="https://github.com/rh-hideout/pokeemerald-expansion/issues?q=author%3ALogicalLlama" title="Bug reports">🐛</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/KnightGallade"><img src="https://avatars.githubusercontent.com/u/189022270?v=4?s=100" width="100px;" alt="KnightGallade"/><br /><sub><b>KnightGallade</b></sub></a><br /><a href="https://github.com/rh-hideout/pokeemerald-expansion/issues?q=author%3AKnightGallade" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/luuma"><img src="https://avatars.githubusercontent.com/u/31407427?v=4?s=100" width="100px;" alt="luuma"/><br /><sub><b>luuma</b></sub></a><br /><a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=luuma" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
