@@ -131,7 +131,7 @@ DOUBLE_BATTLE_TEST("Lightning Rod absorbs moves that targets all battlers but do
     }
 }
 
-DOUBLE_BATTLE_TEST("Lighning Rod doesn't print a message failure if user is not alive")
+DOUBLE_BATTLE_TEST("Lighning Rod doesn't active if user has fainted")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_DISCHARGE) == TYPE_ELECTRIC);
