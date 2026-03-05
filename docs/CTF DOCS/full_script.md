@@ -467,5 +467,5 @@ some flag?
 > ADRIA: Did you find a clue about their whereabouts? 
 
 \**upon using the GameBoy Cart:*
-> The GameBoy Cart has NOTE written on it. But you 
+> A GameBoy Cartridge and a note with INSPECT written on it. But you 
 > can't find anything else

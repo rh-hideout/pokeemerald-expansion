@@ -57,10 +57,16 @@ example: if the player ID is 3750 and the chosen name is "lilh4cs", then the fla
 **Flag solution:** *an integer, derived from the function: trainer_code("your ID", "your player name")*
 
 ## Flag 3: Mr. Wörner's coding cellar
+Apples Raspberri py
+am ende nochmal zurück in dhbw
+
 
 ## Flag 4: 
+Udo erdmann surf und glitchhouse
+flag aus savegame auslesen
 
 ## Flag 5
+in progress
 
 ## Flag 6: Kali's windswept caves
 **Description:** The player enters some kind of cave with no way to go any further.
@@ -79,7 +85,18 @@ The morse code sounds the following pattern: "... .-.. . . .--."
 **Flag solution:** "Sleep"
 
 ## Flag 7
+in progress
 
 ## Flag 8
+**Description:** The player is ... Team Rocket ... Adria ...
+**Solution:** Use hex editor + gba ... use header 89 50 4E 47 0D 0A 1A 0A footer 49 45 4E 44 AE 42 60 bytes ...
+save the full hex blob including header and footer as png
+Tell Adria you will head to the STADION.
+Head east to Route 101 and north to enter the Neckar with surf. Follow north past the waterfall.
+
+**Flag solution:**
 
 ## Flag final
+**Description:**
+**Solution:**
+**Flag solution:**

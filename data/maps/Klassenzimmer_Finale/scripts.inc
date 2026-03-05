@@ -352,7 +352,14 @@ Klassenzimmer_Finale_Text_WhatIsThis::
 
 Klassenzimmer_Finale_Text_CluePrompt::
     .string "ADRIA: Did you find a clue\n"
-    .string "about their whereabouts?$"
+    .string "about their whereabouts?\p"
+    .string "Why would TEAM ROCKET\n"
+    .string "have a POKéMON GAME\p"
+    .string "with them? Especially when\n"
+    .string "kidnapping PROF BAMBERGER?!\p"
+    .string "How strange...\n"
+    .string "its even from the 3rd gen!\p"
+    .string "That's sooo ooold!!$"
 
 Klassenzimmer_Finale_Text_ClueWrong::
     .string "ADRIA: No... that can't be it.$"
