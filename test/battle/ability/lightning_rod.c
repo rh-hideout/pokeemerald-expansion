@@ -131,17 +131,20 @@ DOUBLE_BATTLE_TEST("Lightning Rod absorbs moves that targets all battlers but do
     }
 }
 
-DOUBLE_BATTLE_TEST("Lighning Rod doesn't active if user has fainted")
+DOUBLE_BATTLE_TEST("Lightning Rod doesn't active if user has fainted")
 {
     GIVEN {
-        ASSUME(GetMoveType(MOVE_DISCHARGE) == TYPE_ELECTRIC);
+        ASSUME(GetMoveType(MOVE_SPARK) == TYPE_ELECTRIC);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_RAICHU) { HP(1); Ability(ABILITY_LIGHTNING_ROD); }
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_POUND, target: opponentRight); MOVE(playerRight, MOVE_DISCHARGE); }
+        TURN { MOVE(playerLeft, MOVE_POUND, target: opponentRight); MOVE(playerRight, MOVE_SPARK, target: opponentLeft); }
     } SCENE {
-        NOT ABILITY_POPUP(opponentRight, ABILITY_LIGHTNING_ROD);
+        NONE_OF {
+            MESSAGE("The opposing Raichu's Lightning Rod took the attack");
+            ABILITY_POPUP(opponentRight, ABILITY_LIGHTNING_ROD);
+        }
     }
 }
