@@ -877,7 +877,7 @@ static u32 ChooseMoveOrAction_Doubles(enum BattlerId battler)
 
     for (enum BattlerId battlerIndex = 0; battlerIndex < MAX_BATTLERS_COUNT; battlerIndex++)
     {
-        if (battlerIndex == battler || gBattleMons[battlerIndex].hp == 0)
+        if (gBattleMons[battlerIndex].hp == 0)
         {
             actionOrMoveIndex[battlerIndex] = 0xFF;
             bestMovePointsForTarget[battlerIndex] = -1;
@@ -987,12 +987,14 @@ static u32 ChooseMoveOrAction_Doubles(enum BattlerId battler)
 
 static inline bool32 ShouldConsiderMoveForBattler(enum BattlerId battlerAi, enum BattlerId battlerDef, enum Move move)
 {
+    enum MoveTarget target = AI_GetBattlerMoveTargetType(battlerAi, move);
     if (battlerAi == BATTLE_PARTNER(battlerDef))
     {
-        enum MoveTarget target = AI_GetBattlerMoveTargetType(battlerAi, move);
         if (target == TARGET_BOTH || target == TARGET_OPPONENTS_FIELD)
             return FALSE;
     }
+    if (GetBattlerSide(battlerAi) != GetBattlerSide(battlerDef) && target == TARGET_USER_OR_ALLY)
+        return FALSE;
     return TRUE;
 }
 
@@ -3891,6 +3893,12 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                     ADJUST_AND_RETURN_SCORE(GOOD_EFFECT);
 
                 ADJUST_SCORE(WORST_EFFECT);
+                break;
+            }
+            case EFFECT_ACUPRESSURE:
+            {
+                ADJUST_SCORE(IncreaseStatUpScore(battlerAtkPartner, BATTLE_OPPOSITE(battlerAtkPartner), STAT_CHANGE_ATK_2));
+                ADJUST_SCORE(IncreaseStatUpScore(battlerAtkPartner, BATTLE_OPPOSITE(battlerAtkPartner), STAT_CHANGE_SPATK_2));
                 break;
             }
             default:
