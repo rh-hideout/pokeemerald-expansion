@@ -2288,7 +2288,7 @@ static inline bool32 TrySetLightScreen(enum BattlerId battler)
 
 static void TrySynchronizeActivation(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect effect)
 {
-    if (battlerAtk == effectBattler || gBattleStruct->synchronizeState == SYNCH_STATE_ONGOING)
+    if (battlerAtk == effectBattler || gBattleStruct->synchronizeState == SYNCH_STATE_SET_STATUS)
         return;
 
     enum Ability effectAbility = GetBattlerAbility(effectBattler);
@@ -2308,7 +2308,7 @@ static void TrySynchronizeActivation(enum BattlerId battlerAtk, enum BattlerId e
                 effect,
                 CHECK_TRIGGER))
         {
-            gBattleStruct->synchronizeState = SYNCH_STATE_ATTEMPT;
+            gBattleStruct->synchronizeState = SYNCH_STATE_START;
             gBattlerAbility = effectBattler;
             gBattleScripting.savedBattler = battlerAtk;
         }
@@ -2318,7 +2318,6 @@ static void TrySynchronizeActivation(enum BattlerId battlerAtk, enum BattlerId e
             gBattlerAbility = effectBattler;
         }
     }
-
 }
 
 static void SetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect effect, const u8 *battleScript, enum StatusTrigger trigger)
@@ -11632,7 +11631,7 @@ static void Cmd_trysynchronize(void)
     case SYNCH_STATE_NONE:
         gBattlescriptCurrInstr = cmd->nextInstr;
         break;
-    case SYNCH_STATE_ATTEMPT:
+    case SYNCH_STATE_START:
         synchStatus = GetMoveEffectFromStatus(gBattlerAbility);
         RecordAbilityBattle(gBattlerAbility, ABILITY_SYNCHRONIZE);
 
@@ -11641,7 +11640,7 @@ static void Cmd_trysynchronize(void)
 
         gEffectBattler = gBattleScripting.savedBattler;
         gBattleScripting.moveEffect = synchStatus;
-        gBattleStruct->synchronizeState = SYNCH_STATE_ONGOING;
+        gBattleStruct->synchronizeState = SYNCH_STATE_SET_STATUS;
         PREPARE_ABILITY_BUFFER(gBattleTextBuff1, ABILITY_SYNCHRONIZE);
         BattleScriptCall(BattleScript_SynchronizeActivates);
         break;
@@ -11649,7 +11648,7 @@ static void Cmd_trysynchronize(void)
         gBattleStruct->synchronizeState = SYNCH_STATE_END;
         BattleScriptCall(BattleScript_AbilityPopUp);
         break;
-    case SYNCH_STATE_ONGOING:
+    case SYNCH_STATE_SET_STATUS:
         gBattleStruct->synchronizeState = SYNCH_STATE_END;
         gBattlescriptCurrInstr = cmd->nextInstr;
         break;
