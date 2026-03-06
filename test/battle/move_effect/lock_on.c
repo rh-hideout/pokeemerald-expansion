@@ -1,7 +1,10 @@
 #include "global.h"
 #include "test/battle.h"
 
-TO_DO_BATTLE_TEST("TODO: Write Lock-On/Mind Reader (Move Effect) test titles")
+ASSUMPTIONS
+{
+    ASSUME(GetMoveEffect(MOVE_LOCK_ON) == EFFECT_LOCK_ON);
+}
 
 SINGLE_BATTLE_TEST("Lock-On volatile allows to hit through semi-invulnerability")
 {
@@ -122,3 +125,4 @@ SINGLE_BATTLE_TEST("Lock-On: When locked in target faints, the volatile will be 
     }
 }
 
+TO_DO_BATTLE_TEST("TODO: Write Lock-On/Mind Reader (Move Effect) test titles")
