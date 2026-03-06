@@ -2066,10 +2066,7 @@ static enum MoveEndResult MoveEndProtectLikeEffect(void)
     enum ProtectMethod method = gProtectStructs[gBattlerTarget].protected;
 
     if (gProtectStructs[gBattlerAttacker].chargingTurn
-<<<<<<< patch-151
      || !IsBattlerAlive(gBattlerAttacker)
-     || CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), gCurrentMove))
-=======
      || CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, abilityAtk, holdEffectAtk, gCurrentMove))
     {
         gBattleScripting.moveendState++;
@@ -2079,7 +2076,6 @@ static enum MoveEndResult MoveEndProtectLikeEffect(void)
     if (method != PROTECT_MAX_GUARD
      && abilityAtk == ABILITY_UNSEEN_FIST
      && IsMoveMakingContact(gBattlerAttacker, gBattlerTarget, abilityAtk, holdEffectAtk, gCurrentMove))
->>>>>>> master
     {
         gBattleScripting.moveendState++;
         return result;
