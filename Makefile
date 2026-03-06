@@ -65,23 +65,6 @@ include config.mk
 # Default make rule
 all: rom
 
-# Touch data/maps/map_groups.json and data/layouts/layouts.json if the currently built version in map_version.s does not match MAP_VERSION and map_version.s exists.
-ifneq (,$(wildcard map_version.s))
-  MAP_VERSION_PATH := map_version.s
-  MAP_VERSION_CURRENT := $(shell cat $(MAP_VERSION_PATH))
-  ifneq ($(MAP_VERSION_CURRENT),$(MAP_VERSION))
-    # Only run if not already running make clean.
-    ifeq (,$(filter clean tidy tidymodern tidycheck tidydebug tidyrelease clean-assets clean-generated clean-teachables clean-teachables_intermediates,$(MAKECMDGOALS)))
-      $(info version mismatch ($(MAP_VERSION_CURRENT) -> $(MAP_VERSION)); running 'touch' on data/maps/map_groups.json and data/layouts/layouts.json)
-      $(shell echo "$(MAP_VERSION)" > map_version.s) # Writing to map_version.s first appears to prevent compiler from looping
-      MAP_GROUP_JSON_PATH := data/maps/map_groups.json
-      LAYOUTS_JSON_PATH := data/layouts/layouts.json
-      $(shell touch $(MAP_GROUP_JSON_PATH))
-      $(shell touch $(LAYOUTS_JSON_PATH))
-    endif
-  endif
-endif
-
 # Toolchain selection
 TOOLCHAIN := $(DEVKITARM)
 # don't use dkP's base_tools anymore
@@ -384,14 +367,12 @@ TEST_SKIP_IS_FAIL := \x00
 endif
 
 check: $(TESTELF)
-	@echo "$(MAP_VERSION)" > map_version.s
 	@cp $< $(HEADLESSELF)
 	$(PATCHELF) $(HEADLESSELF) gTestRunnerHeadless '\x01' gTestRunnerSkipIsFail "$(TEST_SKIP_IS_FAIL)"
 	$(ROMTESTHYDRA) $(ROMTEST) $(OBJCOPY) $(HEADLESSELF)
 
 # Other rules
 rom: $(ROM)
-	@echo "$(MAP_VERSION)" > map_version.s
 ifeq ($(COMPARE),1)
 	@$(SHA1) rom.sha1
 endif
@@ -405,6 +386,7 @@ clean-assets:
 	rm -f $(MID_SUBDIR)/*.s
 	rm -f $(DATA_ASM_SUBDIR)/layouts/layouts.inc $(DATA_ASM_SUBDIR)/layouts/layouts_table.inc
 	rm -f $(DATA_ASM_SUBDIR)/maps/connections.inc $(DATA_ASM_SUBDIR)/maps/events.inc $(DATA_ASM_SUBDIR)/maps/groups.inc $(DATA_ASM_SUBDIR)/maps/headers.inc $(DATA_SRC_SUBDIR)/map_group_count.h
+	rm -f .map_version
 	find sound -iname '*.bin' -exec rm {} +
 	find . \( -iname '*.1bpp' -o -iname '*.4bpp' -o -iname '*.8bpp' -o -iname '*.gbapal' -o -iname '*.lz' -o -iname '*.smol' -o -iname '*.fastSmol' -o -iname '*.smolTM' -o -iname '*.rl' -o -iname '*.latfont' -o -iname '*.hwjpnfont' -o -iname '*.fwjpnfont' \) -exec rm {} +
 	find $(DATA_ASM_SUBDIR)/maps \( -iname 'connections.inc' -o -iname 'events.inc' -o -iname 'header.inc' \) -exec rm {} +
@@ -413,7 +395,6 @@ tidy: tidymodern tidycheck tidydebug tidyrelease
 
 tidymodern:
 	rm -f poke*.gba poke*.elf poke*.map
-	rm -f map_version.s
 	rm -rf $(OBJ_DIR_NAME)
 
 tidycheck:
