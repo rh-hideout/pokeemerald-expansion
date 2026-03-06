@@ -2309,7 +2309,7 @@ static void TrySynchronizeActivation(enum BattlerId battlerAtk, enum BattlerId e
                 CHECK_TRIGGER))
         {
             gBattleStruct->synchronizeState = SYNCH_STATE_START;
-            gBattlerAbility = effectBattler;
+            gBattleScripting.battler = gBattlerAbility = effectBattler;
             gBattleScripting.savedBattler = battlerAtk;
         }
         else
@@ -11653,8 +11653,8 @@ static void Cmd_trysynchronize(void)
         gBattlescriptCurrInstr = cmd->nextInstr;
         break;
     case SYNCH_STATE_END:
-        gBattleStruct->synchronizeState = SYNCH_STATE_NONE;
-        gEffectBattler = gBattlerAbility; // Restore effect battler that was previously set to the synchronize battler
+        gBattleStruct->synchronizeState = SYNCH_STATE_NONE; // Restore effect battler that was previously set to the synchronize battler
+        gEffectBattler = gBattlerAbility;
         gBattlescriptCurrInstr = cmd->nextInstr;
         break;
     }
