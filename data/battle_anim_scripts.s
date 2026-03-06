@@ -5874,50 +5874,7 @@ gBattleAnimMove_DrillRun::
 	fadetobg BG_FISSURE
 	waitbgfadeout
 	createvisualtask AnimTask_PositionFissureBgOnBattler, 5, ANIM_TARGET, 5, -1
-	createsprite gBowMonSpriteTemplate, ANIM_ATTACKER, 2, 0x0
-	playsewithpan SE_M_HEADBUTT, SOUND_PAN_ATTACKER
-	waitforvisualfinish
-	delay 2
-	createsprite gBowMonSpriteTemplate, ANIM_ATTACKER, 2, 0x1
-	createsprite gHornHitSpriteTemplate, ANIM_TARGET, 4, 0x0, 0x0, 0xc
-	waitforvisualfinish
-	playse 0x14
-	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_ATTACKER, 2, 0, 40, 1
-	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 10, 0, 40, 1
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=0, y=0, relative_to=ANIM_TARGET, animation=3
-	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
-	delay 4
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=0, y=2, relative_to=ANIM_TARGET, animation=3
-	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
-	delay 4
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=-4, y=3, relative_to=ANIM_TARGET, animation=3
-	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
-	delay 4
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=-8, y=-5, relative_to=ANIM_TARGET, animation=3
-	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
-	delay 4
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=4, y=-12, relative_to=ANIM_TARGET, animation=3
-	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
-	delay 4
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=16, y=0, relative_to=ANIM_TARGET, animation=3
-	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
-	delay 4
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=5, y=18, relative_to=ANIM_TARGET, animation=3
-	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
-	delay 4
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=-17, y=12, relative_to=ANIM_TARGET, animation=2
-	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
-	delay 4
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=-21, y=-15, relative_to=ANIM_TARGET, animation=2
-	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
-	delay 4
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=8, y=-27, relative_to=ANIM_TARGET, animation=2
-	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
-	delay 4
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=32, y=0, relative_to=ANIM_TARGET, animation=2
-	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
-	delay 4
-	createsprite gBowMonSpriteTemplate, ANIM_ATTACKER, 2, 0x2
+	call CreateSharpDrill
 	waitforvisualfinish
 	call UnsetPsychicBg
 	end
@@ -18038,50 +17995,7 @@ gBattleAnimMove_HyperDrill::
 	loadspritegfx ANIM_TAG_HORN_HIT
 	fadetobgfromset BG_GUILLOTINE_OPPONENT, BG_GUILLOTINE_PLAYER, BG_GUILLOTINE_CONTESTS
 	waitbgfadein
-	createsprite gBowMonSpriteTemplate, ANIM_ATTACKER, 2, 0
-	playsewithpan SE_M_HEADBUTT, SOUND_PAN_ATTACKER
-	waitforvisualfinish
-	delay 2
-	createsprite gBowMonSpriteTemplate, ANIM_ATTACKER, 2, 1
-	createsprite gHornHitSpriteTemplate, ANIM_TARGET, 4, 0, 0, 12
-	waitforvisualfinish
-	playse 20
-	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_ATTACKER, 2, 0, 40, 1
-	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 10, 0, 40, 1
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=0, y=0, relative_to=1, animation=3
-	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
-	delay 4
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=0, y=2, relative_to=1, animation=3
-	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
-	delay 4
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=-4, y=3, relative_to=1, animation=3
-	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
-	delay 4
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=-8, y=-5, relative_to=1, animation=3
-	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
-	delay 4
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=4, y=-12, relative_to=1, animation=3
-	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
-	delay 4
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=16, y=0, relative_to=1, animation=3
-	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
-	delay 4
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=5, y=18, relative_to=1, animation=3
-	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
-	delay 4
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=-17, y=12, relative_to=1, animation=2
-	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
-	delay 4
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=-21, y=-15, relative_to=1, animation=2
-	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
-	delay 4
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=8, y=-27, relative_to=1, animation=2
-	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
-	delay 4
-	create_flashing_hitsplat_sprite ANIM_TARGET, 3, x=32, y=0, relative_to=1, animation=2
-	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
-	delay 4
-	createsprite gBowMonSpriteTemplate, ANIM_ATTACKER, 2, 2
+	call CreateSharpDrill
 	complex_palette_blend selector=F_PAL_BG | F_PAL_BATTLERS, delay=3, num_blends=1, color1=RGB_BLACK, blend_y1=8, color2=RGB_BLACK, blend_y2=0
 	playsewithpan SE_M_RAZOR_WIND, SOUND_PAN_TARGET
 	waitforvisualfinish
@@ -23051,6 +22965,21 @@ gBattleAnimMove_HornDrill::
 HornDrillContinue:
 	waitbgfadein
 	setalpha 12, 8
+	call CreateSharpDrill
+	waitforvisualfinish
+	restorebg
+	waitbgfadeout
+	setarg 7, 0xFFFF
+	waitbgfadein
+	end
+
+HornDrillInContest:
+	fadetobg BG_DRILL_CONTESTS
+	waitbgfadeout
+	createvisualtask AnimTask_StartSlidingBg, 5, 2304, 768, 0, -1
+	goto HornDrillContinue
+
+CreateSharpDrill:
 	createsprite gBowMonSpriteTemplate, ANIM_ATTACKER, 2, 0
 	playsewithpan SE_M_HEADBUTT, SOUND_PAN_ATTACKER
 	waitforvisualfinish
@@ -23095,18 +23024,7 @@ HornDrillContinue:
 	playsewithpan SE_M_HORN_ATTACK, SOUND_PAN_TARGET
 	delay 4
 	createsprite gBowMonSpriteTemplate, ANIM_ATTACKER, 2, 2
-	waitforvisualfinish
-	restorebg
-	waitbgfadeout
-	setarg 7, 0xFFFF
-	waitbgfadein
-	end
-
-HornDrillInContest:
-	fadetobg BG_DRILL_CONTESTS
-	waitbgfadeout
-	createvisualtask AnimTask_StartSlidingBg, 5, 2304, 768, 0, -1
-	goto HornDrillContinue
+	return
 
 gBattleAnimMove_Thrash::
 	loadspritegfx ANIM_TAG_IMPACT
