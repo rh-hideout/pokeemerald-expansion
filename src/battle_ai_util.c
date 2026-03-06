@@ -2300,7 +2300,6 @@ static bool32 ShouldAvoidProtectingAgainstPartnerMove(enum BattlerId battler, en
     case TARGET_RANDOM:
     case TARGET_ALLY:
     case TARGET_USER_OR_ALLY:
-        // If the ally already committed to a direct coordination move into this slot, don't block it.
         return gAiBattleData->chosenTarget[partner] == battler;
     case TARGET_FOES_AND_ALLY:
     case TARGET_ALL_BATTLERS:
