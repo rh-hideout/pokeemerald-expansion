@@ -468,6 +468,27 @@ AI_DOUBLE_BATTLE_TEST("AI will choose Beat Up on an ally with Justified if it wi
     }
 }
 
+AI_DOUBLE_BATTLE_TEST("AI will not use Protect if its ally is about to trigger Justified with Beat Up")
+{
+    ASSUME(GetMoveEffect(MOVE_BEAT_UP) == EFFECT_BEAT_UP);
+    ASSUME(GetMoveType(MOVE_BEAT_UP) == TYPE_DARK);
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH); }
+        PLAYER(SPECIES_CLEFABLE) { Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_PANGORO)   { Ability(ABILITY_SCRAPPY); Moves(MOVE_BEAT_UP); }
+        OPPONENT(SPECIES_GROWLITHE) { Ability(ABILITY_JUSTIFIED); Moves(MOVE_PROTECT, MOVE_TACKLE); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft);
+            MOVE(playerRight, MOVE_SCRATCH, target: opponentRight);
+            EXPECT_MOVE(opponentLeft, MOVE_BEAT_UP, target: opponentRight);
+            NOT_EXPECT_MOVE(opponentRight, MOVE_PROTECT);
+        }
+    }
+}
+
 AI_DOUBLE_BATTLE_TEST("AI will choose Earthquake if partner is not alive")
 {
     ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
