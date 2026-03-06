@@ -38,7 +38,7 @@ SINGLE_BATTLE_TEST("Poison Point triggers 1/3 times (Gen3) or 30% (Gen 4+) of th
     PARAMETRIZE { config = GEN_4; passes = 3; trials = 10; } // 30%
     PASSES_RANDOMLY(passes, trials, RNG_POISON_POINT);
     GIVEN {
-        WITH_CONFIG(CONFIG_ABILITY_TRIGGER_CHANCE, config);
+        WITH_CONFIG(B_ABILITY_TRIGGER_CHANCE, config);
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_NIDORAN_M) { Ability(ABILITY_POISON_POINT); }

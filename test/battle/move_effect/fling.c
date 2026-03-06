@@ -66,7 +66,7 @@ SINGLE_BATTLE_TEST("Fling fails for Pokémon with Klutz ability (Gen5+)")
     PARAMETRIZE { ability = ABILITY_KLUTZ;    config = GEN_5; }
 
     GIVEN {
-        WITH_CONFIG(CONFIG_KLUTZ_FLING_INTERACTION, config);
+        WITH_CONFIG(B_KLUTZ_FLING_INTERACTION, config);
         PLAYER(SPECIES_BUNEARY) { Item(ITEM_RAZOR_CLAW); Ability(ability); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -489,6 +489,7 @@ SINGLE_BATTLE_TEST("Fling - thrown berry's effect activates for the target even 
         else if (statId != 0) {
             EXPECT_EQ(opponent->statStages[statId], DEFAULT_STAT_STAGE + 1);
         }
+        EXPECT(player->item == ITEM_NONE);
     }
 }
 

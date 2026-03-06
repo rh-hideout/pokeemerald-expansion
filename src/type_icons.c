@@ -529,17 +529,17 @@ static s32 GetTypeIconSlideMovement(bool32 useDoubleBattleCoords, u32 position, 
     {
         switch (position)
         {
-            case B_POSITION_PLAYER_LEFT:
-            case B_POSITION_PLAYER_RIGHT:
-                if (xPos > sTypeIconPositions[position][useDoubleBattleCoords].x - 10)
-                    return -1;
-                break;
-            default:
-            case B_POSITION_OPPONENT_LEFT:
-            case B_POSITION_OPPONENT_RIGHT:
-                if (xPos < sTypeIconPositions[position][useDoubleBattleCoords].x + 10)
-                    return 1;
-                break;
+        case B_POSITION_PLAYER_LEFT:
+        case B_POSITION_PLAYER_RIGHT:
+            if (xPos > sTypeIconPositions[position][useDoubleBattleCoords].x - 10)
+                return -1;
+            break;
+        default:
+        case B_POSITION_OPPONENT_LEFT:
+        case B_POSITION_OPPONENT_RIGHT:
+            if (xPos < sTypeIconPositions[position][useDoubleBattleCoords].x + 10)
+                return 1;
+            break;
         }
         return 0;
     }

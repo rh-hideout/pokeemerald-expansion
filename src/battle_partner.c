@@ -12,7 +12,6 @@
 #include "constants/abilities.h"
 #include "constants/battle_ai.h"
 
-#include "data/partner_parties.h"
 const struct Trainer gBattlePartners[DIFFICULTY_COUNT][PARTNER_COUNT] =
 {
 #include "data/battle_partners.h"
@@ -28,7 +27,6 @@ void FillPartnerParty(u16 trainerId)
     u16 monId;
     u32 otID;
     u8 trainerName[(PLAYER_NAME_LENGTH * 3) + 1];
-    s32 ball = -1;
     enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(trainerId);
     SetFacilityPtrsGetLevel();
 
@@ -100,10 +98,9 @@ void FillPartnerParty(u16 trainerId)
                     SetMonData(&gPlayerParty[i + 3], MON_DATA_ABILITY_NUM, &j);
             }
             SetMonData(&gPlayerParty[i + 3], MON_DATA_FRIENDSHIP, &(partyData[i].friendship));
-            if (partyData[i].ball != ITEM_NONE)
+            if (partyData[i].ball < POKEBALL_COUNT)
             {
-                ball = partyData[i].ball;
-                SetMonData(&gPlayerParty[i + 3], MON_DATA_POKEBALL, &ball);
+                SetMonData(&gPlayerParty[i + 3], MON_DATA_POKEBALL, &partyData[i].ball);
             }
             if (partyData[i].nickname != NULL)
             {

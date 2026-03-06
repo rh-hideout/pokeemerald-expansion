@@ -261,10 +261,10 @@ static const u8* const sBattleAnims_General[NUM_B_ANIMS_GENERAL] =
     [B_ANIM_SWAP_TO_SUBSTITUTE]     = gBattleAnimGeneral_SwapToSubstitute,
     [B_ANIM_SWAP_FROM_SUBSTITUTE]   = gBattleAnimGeneral_SwapFromSubstitute,
     [B_ANIM_MON_SCARED]             = gBattleAnimGeneral_MonScared,
-	[B_ANIM_GHOST_GET_OUT]          = gBattleAnimGeneral_GhostGetOut,
-	[B_ANIM_SILPH_SCOPED]           = gBattleAnimGeneral_SilphScoped,
-	[B_ANIM_ROCK_THROW]             = gBattleAnimGeneral_SafariRockThrow,
-	[B_ANIM_SAFARI_REACTION]        = gBattleAnimGeneral_SafariReaction,
+    [B_ANIM_GHOST_GET_OUT]          = gBattleAnimGeneral_GhostGetOut,
+    [B_ANIM_SILPH_SCOPED]           = gBattleAnimGeneral_SilphScoped,
+    [B_ANIM_ROCK_THROW]             = gBattleAnimGeneral_SafariRockThrow,
+    [B_ANIM_SAFARI_REACTION]        = gBattleAnimGeneral_SafariReaction,
 };
 
 static const u8* const sBattleAnims_Special[NUM_B_ANIMS_SPECIAL] =
