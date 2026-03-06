@@ -16,6 +16,7 @@
 #include "string_util.h"
 #include "task.h"
 #include "text.h"
+#include "trainer_util.h"
 #include "constants/abilities.h"
 #include "constants/battle_frontier.h"
 #include "constants/battle_frontier_mons.h"
@@ -314,11 +315,11 @@ void CreateFacilityMon(const struct TrainerMon *fmon, u16 level, u8 fixedIV, u32
 
     if (fmon->gender == TRAINER_MON_MALE)
     {
-        personality = GeneratePersonalityForGender(MON_MALE, fmon->species);
+        personality = GeneratePersonalityForGender(MON_MALE, fmon->species, 0);
     }
     else if (fmon->gender == TRAINER_MON_FEMALE)
     {
-        personality = GeneratePersonalityForGender(MON_FEMALE, fmon->species);
+        personality = GeneratePersonalityForGender(MON_FEMALE, fmon->species, 0);
     }
 
     ModifyPersonalityForNature(&personality, fmon->nature);
