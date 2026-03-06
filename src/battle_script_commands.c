@@ -578,6 +578,7 @@ static void Cmd_averagestats(void);
 static void Cmd_jumpifcaptivateaffected(void);
 static void Cmd_setnonvolatilestatus(void);
 static void Cmd_tryoverwriteability(void);
+static void Cmd_trysynchronize(void);
 static void Cmd_dummy(void);
 static void Cmd_callnative(void);
 
@@ -808,6 +809,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_JUMPIFCAPTIVATEAFFECTED]               = Cmd_jumpifcaptivateaffected,
     [B_SCR_OP_SETNONVOLATILESTATUS]                  = Cmd_setnonvolatilestatus,
     [B_SCR_OP_TRYOVERWRITEABILITY]                   = Cmd_tryoverwriteability,
+    [B_SCR_OP_TRY_SYNCHRONIZE]                       = Cmd_trysynchronize,
     [B_SCR_OP_UNUSED_1]                              = Cmd_dummy,
     [B_SCR_OP_UNUSED_2]                              = Cmd_dummy,
     [B_SCR_OP_UNUSED_3]                              = Cmd_dummy,
@@ -837,7 +839,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_27]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_28]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_29]                             = Cmd_dummy,
-    [B_SCR_OP_UNUSED_30]                             = Cmd_dummy,
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
 
@@ -2285,7 +2286,42 @@ static inline bool32 TrySetLightScreen(enum BattlerId battler)
     return FALSE;
 }
 
-static void SetNonVolatileStatus(enum BattlerId effectBattler, enum MoveEffect effect, const u8 *battleScript, enum StatusTrigger trigger)
+static void TrySynchronizeActivation(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect effect)
+{
+    if (battlerAtk == effectBattler || gBattleStruct->synchronizeState == SYNCH_STATE_ONGOING)
+        return;
+
+    enum Ability effectAbility = GetBattlerAbility(effectBattler);
+    if (effectAbility != ABILITY_SYNCHRONIZE)
+        return;
+
+    if (effect == MOVE_EFFECT_POISON
+     || effect == MOVE_EFFECT_TOXIC
+     || effect == MOVE_EFFECT_PARALYSIS
+     || effect == MOVE_EFFECT_BURN)
+    {
+        if (CanSetNonVolatileStatus(
+                effectBattler,
+                battlerAtk,
+                effectAbility,
+                GetBattlerAbility(battlerAtk),
+                effect,
+                CHECK_TRIGGER))
+        {
+            gBattleStruct->synchronizeState = SYNCH_STATE_ATTEMPT;
+            gBattlerAbility = effectBattler;
+            gBattleScripting.savedBattler = battlerAtk;
+        }
+        else
+        {
+            gBattleStruct->synchronizeState = SYNCH_STATE_SHOW_ABILITY_POPUP;
+            gBattlerAbility = effectBattler;
+        }
+    }
+
+}
+
+static void SetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect effect, const u8 *battleScript, enum StatusTrigger trigger)
 {
     gEffectBattler = effectBattler;
 
@@ -2350,12 +2386,7 @@ static void SetNonVolatileStatus(enum BattlerId effectBattler, enum MoveEffect e
 
     gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
 
-    // for synchronize
-    if (effect == MOVE_EFFECT_POISON
-     || effect == MOVE_EFFECT_TOXIC
-     || effect == MOVE_EFFECT_PARALYSIS
-     || effect == MOVE_EFFECT_BURN)
-        gBattleStruct->synchronizeMoveEffect = effect;
+    TrySynchronizeActivation(battlerAtk, effectBattler, effect);
 
     if (effect == MOVE_EFFECT_POISON || effect == MOVE_EFFECT_TOXIC)
         gBattleStruct->poisonPuppeteerConfusion = TRUE;
@@ -2483,7 +2514,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
                     moveEffect,
                     CHECK_TRIGGER))
         {
-            SetNonVolatileStatus(gEffectBattler, moveEffect, battleScript, TRIGGER_ON_MOVE);
+            SetNonVolatileStatus(gBattlerAttacker, gEffectBattler, moveEffect, battleScript, TRIGGER_ON_MOVE);
         }
         else
         {
@@ -9380,21 +9411,17 @@ static void Cmd_tryactivateitem(void)
     {
     case ACTIVATION_ON_USABLE_AGAIN:
     case ACTIVATION_ON_PICK_UP:
-        if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsForceTriggerItemActivation))
-            return;
+        ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsForceTriggerItemActivation);
         break;
     case ACTIVATION_ON_HARVEST:
         gLastUsedItem = gBattleMons[battler].item;
-        if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsOnBerryActivation))
-            return;
+        ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsOnBerryActivation);
         break;
     case ACTIVATION_ON_HP_THRESHOLD:
-        if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsOnHpThresholdActivation))
-            return;
+        ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsOnHpThresholdActivation);
         break;
     case ACTIVATION_ON_STATUS_CHANGE:
-        if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsOnStatusChangeActivation))
-            return;
+        ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsOnStatusChangeActivation);
         break;
     }
 }
@@ -11540,13 +11567,13 @@ static void Cmd_setnonvolatilestatus(void)
         if (gBattleScripting.moveEffect >= MOVE_EFFECT_CONFUSION)
             SetMoveEffect(gBattleScripting.battler, gEffectBattler, gBattleScripting.moveEffect, cmd->nextInstr, EFFECT_PRIMARY);
         else
-            SetNonVolatileStatus(gEffectBattler, gBattleScripting.moveEffect, cmd->nextInstr, TRIGGER_ON_ABILITY);
+            SetNonVolatileStatus(gBattleScripting.battler, gEffectBattler, gBattleScripting.moveEffect, cmd->nextInstr, TRIGGER_ON_ABILITY);
         break;
     case TRIGGER_ON_MOVE:
-        SetNonVolatileStatus(gBattlerTarget, GetMoveNonVolatileStatus(gCurrentMove), cmd->nextInstr, TRIGGER_ON_MOVE);
+        SetNonVolatileStatus(gBattlerAttacker, gBattlerTarget, GetMoveNonVolatileStatus(gCurrentMove), cmd->nextInstr, TRIGGER_ON_MOVE);
         break;
     case TRIGGER_ON_PROTECT:
-        SetNonVolatileStatus(gBattlerAttacker, gBattleScripting.moveEffect, cmd->nextInstr, TRIGGER_ON_PROTECT);
+        SetNonVolatileStatus(gBattlerTarget, gBattlerAttacker, gBattleScripting.moveEffect, cmd->nextInstr, TRIGGER_ON_PROTECT);
         break;
     }
 }
@@ -11575,6 +11602,62 @@ static void Cmd_tryoverwriteability(void)
         gBattleScripting.abilityPopupOverwrite = gBattleMons[gBattlerTarget].ability;
         gBattleMons[gBattlerTarget].ability = gBattleMons[gBattlerTarget].volatiles.overwrittenAbility = GetMoveOverwriteAbility(gCurrentMove);
         gBattlescriptCurrInstr = cmd->nextInstr;
+    }
+}
+
+static u32 GetMoveEffectFromStatus(enum BattlerId battler)
+{
+    switch (gBattleMons[battler].status1)
+    {
+    case STATUS1_POISON:
+        return MOVE_EFFECT_POISON;
+    case STATUS1_TOXIC_POISON:
+        return MOVE_EFFECT_TOXIC; ;
+    case STATUS1_PARALYSIS:
+        return MOVE_EFFECT_PARALYSIS;
+    case STATUS1_BURN:
+        return MOVE_EFFECT_BURN;
+    default:
+        return MOVE_EFFECT_NONE;
+    }
+}
+
+static void Cmd_trysynchronize(void)
+{
+    CMD_ARGS();
+    enum MoveEffect synchStatus = MOVE_EFFECT_NONE;
+
+    switch (gBattleStruct->synchronizeState)
+    {
+    case SYNCH_STATE_NONE:
+        gBattlescriptCurrInstr = cmd->nextInstr;
+        break;
+    case SYNCH_STATE_ATTEMPT:
+        synchStatus = GetMoveEffectFromStatus(gBattlerAbility);
+        RecordAbilityBattle(gBattlerAbility, ABILITY_SYNCHRONIZE);
+
+        if (GetConfig(B_SYNCHRONIZE_TOXIC) < GEN_5 && synchStatus == MOVE_EFFECT_TOXIC)
+            synchStatus = MOVE_EFFECT_POISON;
+
+        gEffectBattler = gBattleScripting.savedBattler;
+        gBattleScripting.moveEffect = synchStatus;
+        gBattleStruct->synchronizeState = SYNCH_STATE_ONGOING;
+        PREPARE_ABILITY_BUFFER(gBattleTextBuff1, ABILITY_SYNCHRONIZE);
+        BattleScriptCall(BattleScript_SynchronizeActivates);
+        break;
+    case SYNCH_STATE_SHOW_ABILITY_POPUP: // Synchronize ability pop up still shows up even if status fails
+        gBattleStruct->synchronizeState = SYNCH_STATE_END;
+        BattleScriptCall(BattleScript_AbilityPopUp);
+        break;
+    case SYNCH_STATE_ONGOING:
+        gBattleStruct->synchronizeState = SYNCH_STATE_END;
+        gBattlescriptCurrInstr = cmd->nextInstr;
+        break;
+    case SYNCH_STATE_END:
+        gBattleStruct->synchronizeState = SYNCH_STATE_NONE;
+        gEffectBattler = gBattlerAbility; // Restore effect battler that was previously set to the synchronize battler
+        gBattlescriptCurrInstr = cmd->nextInstr;
+        break;
     }
 }
 
@@ -13053,7 +13136,7 @@ void BS_SwapStats(void)
 static void TrySetParalysis(const u8 *nextInstr, const u8 *failInstr)
 {
     if (CanBeParalyzed(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerTarget)))
-        SetNonVolatileStatus(gBattlerTarget, MOVE_EFFECT_PARALYSIS, nextInstr, TRIGGER_ON_MOVE);
+        SetNonVolatileStatus(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_PARALYSIS, nextInstr, TRIGGER_ON_MOVE);
     else
         gBattlescriptCurrInstr = failInstr;
 }
@@ -13061,7 +13144,7 @@ static void TrySetParalysis(const u8 *nextInstr, const u8 *failInstr)
 static void TrySetPoison(const u8 *nextInstr, const u8 *failInstr)
 {
     if (CanBePoisoned(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerAbility(gBattlerTarget)))
-        SetNonVolatileStatus(gBattlerTarget, MOVE_EFFECT_POISON, nextInstr, TRIGGER_ON_MOVE);
+        SetNonVolatileStatus(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_POISON, nextInstr, TRIGGER_ON_MOVE);
     else
         gBattlescriptCurrInstr = failInstr;
 }
@@ -13069,7 +13152,7 @@ static void TrySetPoison(const u8 *nextInstr, const u8 *failInstr)
 static void TrySetSleep(const u8 *nextInstr, const u8 *failInstr)
 {
     if (CanBeSlept(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerTarget), BLOCKED_BY_SLEEP_CLAUSE))
-        SetNonVolatileStatus(gBattlerTarget, MOVE_EFFECT_SLEEP, nextInstr, TRIGGER_ON_MOVE);
+        SetNonVolatileStatus(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_SLEEP, nextInstr, TRIGGER_ON_MOVE);
     else
         gBattlescriptCurrInstr = failInstr;
 }

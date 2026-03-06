@@ -1214,6 +1214,10 @@
 	.4byte \failInstr
 	.endm
 
+	.macro trysynchronize
+	.byte B_SCR_OP_TRY_SYNCHRONIZE
+	.endm
+
 	.macro callnative func:req
 	.byte B_SCR_OP_CALLNATIVE
 	.4byte \func

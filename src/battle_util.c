@@ -897,7 +897,6 @@ void HandleAction_NothingIsFainted(void)
 {
     gCurrentTurnActionNumber++;
     gCurrentActionFuncId = gActionsByTurnOrder[gCurrentTurnActionNumber];
-    gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_NONE;
 }
 
 void HandleAction_ActionFinished(void)
@@ -920,7 +919,6 @@ void HandleAction_ActionFinished(void)
     gBattleCommunication[3] = 0;
     gBattleCommunication[4] = 0;
     gBattleResources->battleScriptsStack->size = 0;
-    gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_NONE;
 
     if (GetConfig(B_RECALC_TURN_AFTER_ACTIONS) >= GEN_8 && !afterYouActive && !gBattleStruct->pledgeMove && !IsPursuitTargetSet())
     {
@@ -4622,69 +4620,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         if (effect)
             return effect;
         break;
-    case ABILITYEFFECT_SYNCHRONIZE:
-        if (gLastUsedAbility == ABILITY_SYNCHRONIZE && gBattleStruct->synchronizeMoveEffect != MOVE_EFFECT_NONE)
-        {
-            gBattleScripting.battler = gBattlerAbility = gBattlerTarget;
-            RecordAbilityBattle(gBattlerTarget, ABILITY_SYNCHRONIZE);
-
-            if (GetConfig(B_SYNCHRONIZE_TOXIC) < GEN_5 && gBattleStruct->synchronizeMoveEffect == MOVE_EFFECT_TOXIC)
-                gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_POISON;
-
-            if (CanSetNonVolatileStatus(
-                    gBattlerTarget,
-                    gBattlerAttacker,
-                    gLastUsedAbility,
-                    GetBattlerAbility(gBattlerAttacker),
-                    gBattleStruct->synchronizeMoveEffect,
-                    CHECK_TRIGGER))
-            {
-                gEffectBattler = gBattlerAttacker;
-                gBattleScripting.moveEffect = gBattleStruct->synchronizeMoveEffect;
-                PREPARE_ABILITY_BUFFER(gBattleTextBuff1, ABILITY_SYNCHRONIZE);
-                BattleScriptCall(BattleScript_SynchronizeActivates);
-                effect++;
-            }
-            else // Synchronize ability pop up still shows up even if status fails
-            {
-                BattleScriptCall(BattleScript_AbilityPopUp);
-            }
-            gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_NONE;
-        }
-        break;
-    case ABILITYEFFECT_ATK_SYNCHRONIZE:
-        if (gLastUsedAbility == ABILITY_SYNCHRONIZE && gBattleStruct->synchronizeMoveEffect != MOVE_EFFECT_NONE)
-        {
-            gBattleScripting.battler = gBattlerAbility = gBattlerAttacker;
-            RecordAbilityBattle(gBattlerAttacker, ABILITY_SYNCHRONIZE);
-
-            if (GetConfig(B_SYNCHRONIZE_TOXIC) < GEN_5 && gBattleStruct->synchronizeMoveEffect == MOVE_EFFECT_TOXIC)
-                gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_POISON;
-
-            if (CanSetNonVolatileStatus(
-                    gBattlerAttacker,
-                    gBattlerTarget,
-                    gLastUsedAbility,
-                    GetBattlerAbility(gBattlerAttacker),
-                    gBattleStruct->synchronizeMoveEffect,
-                    CHECK_TRIGGER))
-            {
-                if (gBattleStruct->synchronizeMoveEffect == MOVE_EFFECT_TOXIC)
-                    gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_POISON;
-
-                gEffectBattler = gBattlerTarget;
-                gBattleScripting.moveEffect = gBattleStruct->synchronizeMoveEffect;
-                PREPARE_ABILITY_BUFFER(gBattleTextBuff1, ABILITY_SYNCHRONIZE);
-                BattleScriptCall(BattleScript_SynchronizeActivates);
-                effect++;
-            }
-            else // Synchronize ability pop up still shows up even if status fails
-            {
-                BattleScriptCall(BattleScript_AbilityPopUp);
-            }
-            gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_NONE;
-        }
-        break;
     case ABILITYEFFECT_TERA_SHIFT:
         if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_SWITCH_IN, ability))
         {
@@ -5027,7 +4962,7 @@ u32 IsAbilityPreventingEscape(enum BattlerId battler)
     {
         if (battler == battlerDef || IsBattlerAlly(battler, battlerDef))
             continue;
-        
+
         if (!IsBattlerAlive(battlerDef))
             continue;
 
