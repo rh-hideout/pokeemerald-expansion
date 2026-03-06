@@ -8954,8 +8954,14 @@ static void Cmd_settypetorandomresistance(void)
 static void Cmd_setalwayshitflag(void)
 {
     CMD_ARGS();
-    gBattleMons[gBattlerTarget].volatiles.lockOn = 2;
-    gBattleMons[gBattlerTarget].volatiles.battlerWithSureHit = gBattlerAttacker;
+
+    if (GetConfig(B_LOCK_ON) < GEN_5)
+    {
+        for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+            gBattleStruct->battlerState[battler].lockOn[gBattlerTarget] = 0;
+    }
+    gBattleStruct->battlerState[gBattlerAttacker].lockOn[gBattlerTarget] = 3; // Current turn is counted
+
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 

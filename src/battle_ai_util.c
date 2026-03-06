@@ -2111,8 +2111,7 @@ bool32 ShouldTryOHKO(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
     if (!DoesBattlerIgnoreAbilityChecks(battlerAtk, atkAbility, move) && defAbility == ABILITY_STURDY)
         return FALSE;
 
-    if (((gBattleMons[battlerDef].volatiles.lockOn
-        && gBattleMons[battlerDef].volatiles.battlerWithSureHit == battlerAtk)
+    if ((gBattleStruct->battlerState[gBattlerAttacker].lockOn[gBattlerTarget]
         || atkAbility == ABILITY_NO_GUARD || defAbility == ABILITY_NO_GUARD)
         && gBattleMons[battlerAtk].level >= gBattleMons[battlerDef].level)
     {

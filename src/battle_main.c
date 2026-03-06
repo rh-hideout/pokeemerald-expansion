@@ -3185,11 +3185,8 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
         {
             if (gBattleMons[i].volatiles.escapePrevention && gBattleMons[i].volatiles.battlerPreventingEscape == battler)
                 gBattleMons[i].volatiles.escapePrevention = FALSE;
-            if (gBattleMons[i].volatiles.lockOn && gBattleMons[i].volatiles.battlerWithSureHit == battler)
-            {
-                gBattleMons[i].volatiles.lockOn = 0;
-                gBattleMons[i].volatiles.battlerWithSureHit = 0;
-            }
+            gBattleStruct->battlerState[battler].lockOn[i] = 0;
+            gBattleStruct->battlerState[i].lockOn[battler] = 0;
         }
     }
     if (effect != EFFECT_BATON_PASS || GetConfig(B_BATON_PASS_TRAPPING) >= GEN_5)
@@ -3214,18 +3211,11 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
          * ...etc
          */
 
-        enum BattlerId i;
-        for (i = 0; i < gBattlersCount; i++)
-        {
-            if (!IsBattlerAlly(battler, i)
-             && gBattleMons[i].volatiles.lockOn != 0
-             && (gBattleMons[i].volatiles.battlerWithSureHit == battler))
-            {
-                gBattleMons[i].volatiles.lockOn = 0;
-            }
-        }
         if (gBattleMons[battler].volatiles.powerTrick)
-            SWAP(gBattleMons[battler].attack, gBattleMons[battler].defense, i);
+        {
+            u32 temp = 0;
+            SWAP(gBattleMons[battler].attack, gBattleMons[battler].defense, temp);
+        }
     }
 
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
@@ -3249,7 +3239,6 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
     if (effect == EFFECT_BATON_PASS)
     {
         gBattleMons[battler].volatiles.substituteHP = volatilesCopy->substituteHP;
-        gBattleMons[battler].volatiles.battlerWithSureHit = volatilesCopy->battlerWithSureHit;
         gBattleMons[battler].volatiles.perishSongTimer = volatilesCopy->perishSongTimer;
         gBattleMons[battler].volatiles.battlerPreventingEscape = volatilesCopy->battlerPreventingEscape;
         gBattleMons[battler].volatiles.embargoTimer = volatilesCopy->embargoTimer;
@@ -3419,6 +3408,8 @@ const u8* FaintClearSetData(enum BattlerId battler)
             gBattleStruct->lastTakenMove[i] = MOVE_NONE;
 
         gBattleStruct->lastTakenMoveFrom[i][battler] = 0;
+        gBattleStruct->battlerState[battler].lockOn[i] = 0;
+        gBattleStruct->battlerState[i].lockOn[battler] = 0;
     }
 
     gBattleMons[battler].types[0] = GetSpeciesType(gBattleMons[battler].species, 0);

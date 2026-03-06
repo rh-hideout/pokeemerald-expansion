@@ -3719,6 +3719,9 @@ static enum MoveEndResult MoveEndClearBits(void)
     gBattleStruct->toxicChainPriority = FALSE;
     gBattleStruct->flungItem = FLUNG_ITEM_NONE;
 
+    if (gBattleStruct->battlerState[gBattlerAttacker].lockOn[gBattlerTarget] > 0)
+        gBattleStruct->battlerState[gBattlerAttacker].lockOn[gBattlerTarget]--;
+
     if (gBattleStruct->unableToUseMove)
         gBattleStruct->pledgeMove = FALSE;
     if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_Z_MOVE)

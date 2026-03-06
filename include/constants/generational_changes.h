@@ -220,6 +220,7 @@
     F(B_SANDSTORM_SOLAR_BEAM,      standstormSolarBeam,     (u32, GEN_COUNT - 1)) \
     F(B_COUNTER_MIRROR_COAT_ALLY,  counterMirrorCoatAlly,   (u32, GEN_COUNT - 1)) \
     F(B_COUNTER_TRY_HIT_PARTNER,   counterTryHitPartner,    (u32, GEN_COUNT - 1)) \
+    F(B_LOCK_ON,                   lockOn,                  (u32, GEN_COUNT - 1)) \
 
 
 #define POKEMON_CONFIG_DEFINITIONS(F) \

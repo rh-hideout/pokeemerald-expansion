@@ -5027,7 +5027,7 @@ u32 IsAbilityPreventingEscape(enum BattlerId battler)
     {
         if (battler == battlerDef || IsBattlerAlly(battler, battlerDef))
             continue;
-        
+
         if (!IsBattlerAlive(battlerDef))
             continue;
 
@@ -10302,7 +10302,7 @@ bool32 CanMoveSkipAccuracyCalc(enum BattlerId battlerAtk, enum BattlerId battler
     enum Ability ability = ABILITY_NONE;
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
 
-    if ((gBattleMons[battlerDef].volatiles.lockOn && gBattleMons[battlerDef].volatiles.battlerWithSureHit == battlerAtk)
+    if (gBattleStruct->battlerState[gBattlerAttacker].lockOn[gBattlerTarget]
      || CanMoveSkipAccuracyCheck(battlerAtk, move)
      || gBattleMons[battlerDef].volatiles.glaiveRush)
     {
@@ -10528,7 +10528,7 @@ bool32 DoesOHKOMoveMissTarget(struct BattleCalcValues *cv)
     {
         lands = NO_HIT;
     }
-    else if ((gBattleMons[cv->battlerDef].volatiles.lockOn && gBattleMons[cv->battlerDef].volatiles.battlerWithSureHit == cv->battlerAtk)
+    else if (gBattleStruct->battlerState[cv->battlerAtk].lockOn[cv->battlerDef]
           || IsAbilityAndRecord(cv->battlerAtk, cv->abilities[cv->battlerAtk], ABILITY_NO_GUARD)
           || IsAbilityAndRecord(cv->battlerDef, cv->abilities[cv->battlerDef], ABILITY_NO_GUARD))
     {
@@ -10595,7 +10595,7 @@ static bool32 CanBreakThroughSemiInvulnerablityInternal(enum BattlerId battlerAt
             return TRUE;
         if (abilityAtk == ABILITY_NO_GUARD || abilityDef == ABILITY_NO_GUARD)
             return TRUE;
-        if (gBattleMons[battlerDef].volatiles.lockOn && gBattleMons[battlerDef].volatiles.battlerWithSureHit == battlerAtk)
+        if (gBattleStruct->battlerState[battlerAtk].lockOn[battlerDef])
             return TRUE;
     }
 
