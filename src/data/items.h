@@ -206,8 +206,6 @@ const struct ItemInfo gItemsInfo[] =
         .secondaryId = BALL_POKE,
         .iconPic = gItemIcon_PokeBall,
         .iconPalette = gItemIconPalette_PokeBall,
-        .shopCriteriaGoal = FLAG_ADVENTURE_STARTED,
-        .shopCriteriaFunc = ShopCriteriaByFlag
     },
 
     [ITEM_GREAT_BALL] =
@@ -224,8 +222,6 @@ const struct ItemInfo gItemsInfo[] =
         .secondaryId = BALL_GREAT,
         .iconPic = gItemIcon_GreatBall,
         .iconPalette = gItemIconPalette_GreatBall,
-        .shopCriteriaGoal = 1,
-        .shopCriteriaFunc = ShopCriteriaByBadgeCount
     },
 
     [ITEM_ULTRA_BALL] =
@@ -242,8 +238,6 @@ const struct ItemInfo gItemsInfo[] =
         .secondaryId = BALL_ULTRA,
         .iconPic = gItemIcon_UltraBall,
         .iconPalette = gItemIconPalette_UltraBall,
-        .shopCriteriaGoal = 3,
-        .shopCriteriaFunc = ShopCriteriaByBadgeCount
     },
 
     [ITEM_MASTER_BALL] =
@@ -653,8 +647,6 @@ const struct ItemInfo gItemsInfo[] =
         .flingPower = 30,
         .iconPic = gItemIcon_Potion,
         .iconPalette = gItemIconPalette_Potion,
-        .shopCriteriaGoal = 0,
-        .shopCriteriaFunc = ShopCriteriaByTheStart,
     },
 
     [ITEM_SUPER_POTION] =
@@ -679,8 +671,6 @@ const struct ItemInfo gItemsInfo[] =
         .flingPower = 30,
         .iconPic = gItemIcon_Potion,
         .iconPalette = gItemIconPalette_SuperPotion,
-        .shopCriteriaGoal = 1,
-        .shopCriteriaFunc = ShopCriteriaByBadgeCount
     },
 
     [ITEM_HYPER_POTION] =
@@ -705,8 +695,6 @@ const struct ItemInfo gItemsInfo[] =
         .flingPower = 30,
         .iconPic = gItemIcon_Potion,
         .iconPalette = gItemIconPalette_HyperPotion,
-        .shopCriteriaGoal = 2,
-        .shopCriteriaFunc = ShopCriteriaByBadgeCount
     },
 
     [ITEM_MAX_POTION] =
@@ -726,8 +714,6 @@ const struct ItemInfo gItemsInfo[] =
         .flingPower = 30,
         .iconPic = gItemIcon_LargePotion,
         .iconPalette = gItemIconPalette_MaxPotion,
-        .shopCriteriaGoal = 4,
-        .shopCriteriaFunc = ShopCriteriaByBadgeCount
     },
 
     [ITEM_FULL_RESTORE] =
@@ -748,8 +734,6 @@ const struct ItemInfo gItemsInfo[] =
         .flingPower = 30,
         .iconPic = gItemIcon_LargePotion,
         .iconPalette = gItemIconPalette_FullRestore,
-        .shopCriteriaGoal = 5,
-        .shopCriteriaFunc = ShopCriteriaByBadgeCount
     },
 
     [ITEM_REVIVE] =
@@ -769,8 +753,6 @@ const struct ItemInfo gItemsInfo[] =
         .flingPower = 30,
         .iconPic = gItemIcon_Revive,
         .iconPalette = gItemIconPalette_Revive,
-        .shopCriteriaGoal = 2,
-        .shopCriteriaFunc = ShopCriteriaByBadgeCount
     },
 
     [ITEM_MAX_REVIVE] =
@@ -981,8 +963,6 @@ const struct ItemInfo gItemsInfo[] =
         .flingPower = 30,
         .iconPic = gItemIcon_StatusHeal,
         .iconPalette = gItemIconPalette_Antidote,
-        .shopCriteriaGoal = FLAG_ADVENTURE_STARTED,
-        .shopCriteriaFunc = ShopCriteriaByFlag
     },
 
     [ITEM_PARALYZE_HEAL] =
@@ -1001,8 +981,6 @@ const struct ItemInfo gItemsInfo[] =
         .flingPower = 30,
         .iconPic = gItemIcon_StatusHeal,
         .iconPalette = gItemIconPalette_ParalyzeHeal,
-        .shopCriteriaGoal = 1,
-        .shopCriteriaFunc = ShopCriteriaByBadgeCount
     },
 
     [ITEM_BURN_HEAL] =
@@ -1027,8 +1005,6 @@ const struct ItemInfo gItemsInfo[] =
         .flingPower = 30,
         .iconPic = gItemIcon_StatusHeal,
         .iconPalette = gItemIconPalette_BurnHeal,
-        .shopCriteriaGoal = 1,
-        .shopCriteriaFunc = ShopCriteriaByBadgeCount
     },
 
     [ITEM_ICE_HEAL] =
@@ -1053,8 +1029,6 @@ const struct ItemInfo gItemsInfo[] =
         .flingPower = 30,
         .iconPic = gItemIcon_StatusHeal,
         .iconPalette = gItemIconPalette_IceHeal,
-        .shopCriteriaGoal = 1,
-        .shopCriteriaFunc = ShopCriteriaByBadgeCount
     },
 
     [ITEM_AWAKENING] =
@@ -1079,8 +1053,6 @@ const struct ItemInfo gItemsInfo[] =
         .flingPower = 30,
         .iconPic = gItemIcon_StatusHeal,
         .iconPalette = gItemIconPalette_Awakening,
-        .shopCriteriaGoal = 1,
-        .shopCriteriaFunc = ShopCriteriaByBadgeCount
     },
 
     [ITEM_FULL_HEAL] =
@@ -2315,8 +2287,6 @@ const struct ItemInfo gItemsInfo[] =
         .flingPower = 30,
         .iconPic = gItemIcon_Repel,
         .iconPalette = gItemIconPalette_Repel,
-        .shopCriteriaGoal = 1,
-        .shopCriteriaFunc = ShopCriteriaByBadgeCount
     },
 
     [ITEM_SUPER_REPEL] =
@@ -2335,8 +2305,6 @@ const struct ItemInfo gItemsInfo[] =
         .flingPower = 30,
         .iconPic = gItemIcon_Repel,
         .iconPalette = gItemIconPalette_SuperRepel,
-        .shopCriteriaGoal = 2,
-        .shopCriteriaFunc = ShopCriteriaByBadgeCount
     },
 
     [ITEM_MAX_REPEL] =
@@ -2355,8 +2323,6 @@ const struct ItemInfo gItemsInfo[] =
         .flingPower = 30,
         .iconPic = gItemIcon_Repel,
         .iconPalette = gItemIconPalette_MaxRepel,
-        .shopCriteriaGoal = 3,
-        .shopCriteriaFunc = ShopCriteriaByBadgeCount
     },
 
     [ITEM_LURE] =
@@ -2437,8 +2403,6 @@ const struct ItemInfo gItemsInfo[] =
         .flingPower = 30,
         .iconPic = gItemIcon_EscapeRope,
         .iconPalette = gItemIconPalette_EscapeRope,
-        .shopCriteriaGoal = 1,
-        .shopCriteriaFunc = ShopCriteriaByBadgeCount
     },
 
 // X Items
