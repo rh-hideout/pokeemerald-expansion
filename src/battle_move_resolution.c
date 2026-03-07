@@ -824,6 +824,9 @@ static bool32 HandleMoveTargetRedirection(enum MoveTarget moveTarget)
         enum BattlerId battler;
         for (battler = 0; battler < gBattlersCount; battler++)
         {
+            if (!IsBattlerAlive(battler) || gBattlerAttacker == battler)
+                continue;
+
             ability = GetBattlerAbility(battler);
             if ((B_REDIRECT_ABILITY_ALLIES >= GEN_4 || !IsBattlerAlly(gBattlerAttacker, battler))
                 && battler != gBattlerAttacker

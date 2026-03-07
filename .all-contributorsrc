@@ -679,6 +679,24 @@
         "bug"
       ]
     }
+    {
+      "login": "gammel2013",
+      "name": "gammel2013",
+      "avatar_url": "https://avatars.githubusercontent.com/u/160730477?v=4",
+      "profile": "https://github.com/Gammel2013",
+      "contributions": [
+        "bug"
+      ]
+    }
+    {
+      "login": "blusunrize",
+      "name": "blusunrize",
+      "avatar_url": "https://avatars.githubusercontent.com/u/4106382?v=4",
+      "profile": "https://github.com/BluSunrize",
+      "contributions": [
+        "bug"
+      ]
+    }
   ],
   "contributorsPerLine": 7,
   "linkToUsage": true,
