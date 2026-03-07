@@ -13,6 +13,7 @@ struct ConfigChanges
 {
     BATTLE_CONFIG_DEFINITIONS(UNPACK_CONFIG_STRUCT)
     POKEMON_CONFIG_DEFINITIONS(UNPACK_CONFIG_STRUCT)
+    AI_CONFIG_DEFINITIONS(UNPACK_CONFIG_STRUCT)
     // Expands to:
     // u32 critChance:4;
     // u32 critMultiplier:4;
