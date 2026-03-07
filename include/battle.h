@@ -1143,9 +1143,9 @@ static inline struct PartyState *GetBattlerPartyState(enum BattlerId battler)
     return &gBattleStruct->partyState[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]];
 }
 
-static inline bool32 IsDoubleBattle(void)
+static inline bool IsDoubleBattle(void)
 {
-    return !!(gBattleTypeFlags & BATTLE_TYPE_MORE_THAN_TWO_BATTLERS);
+    return (gBattleTypeFlags & BATTLE_TYPE_MORE_THAN_TWO_BATTLERS);
 }
 
 static inline bool32 IsSpreadMove(enum MoveTarget moveTarget)

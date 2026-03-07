@@ -1,6 +1,7 @@
 #ifndef GUARD_GBA_TYPES_H
 #define GUARD_GBA_TYPES_H
 
+#include <stdbool.h>
 #include <stdint.h>
 #include "gba/defines.h"
 
