@@ -3185,8 +3185,6 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
         {
             if (gBattleMons[i].volatiles.escapePrevention && gBattleMons[i].volatiles.battlerPreventingEscape == battler)
                 gBattleMons[i].volatiles.escapePrevention = FALSE;
-            gBattleStruct->battlerState[battler].lockOn[i] = 0;
-            gBattleStruct->battlerState[i].lockOn[battler] = 0;
         }
     }
     if (effect != EFFECT_BATON_PASS || GetConfig(B_BATON_PASS_TRAPPING) >= GEN_5)
@@ -3288,6 +3286,8 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
             gBattleStruct->lastTakenMove[i] = MOVE_NONE;
 
         gBattleStruct->lastTakenMoveFrom[i][battler] = 0;
+        gBattleStruct->battlerState[battler].lockOn[i] = 0;
+        gBattleStruct->battlerState[i].lockOn[battler] = 0;
     }
 
     gBattleStruct->choicedMove[battler] = MOVE_NONE;

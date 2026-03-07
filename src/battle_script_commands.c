@@ -8950,18 +8950,36 @@ static void Cmd_settypetorandomresistance(void)
     }
 }
 
+static bool32 IsAlreadyLockedIn(void)
+{
+    if (GetConfig(B_LOCK_ON) < GEN_5)
+        return FALSE;
+
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+    {
+        if (gBattleStruct->battlerState[gBattlerAttacker].lockOn[battler] > 0)
+            return TRUE;
+    }
+    return FALSE;
+}
 
 static void Cmd_setalwayshitflag(void)
 {
     CMD_ARGS();
+
+    if (IsAlreadyLockedIn())
+    {
+        gBattlescriptCurrInstr = BattleScript_ButItFailed;
+        return;
+    }
 
     if (GetConfig(B_LOCK_ON) < GEN_5)
     {
         for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
             gBattleStruct->battlerState[battler].lockOn[gBattlerTarget] = 0;
     }
-    gBattleStruct->battlerState[gBattlerAttacker].lockOn[gBattlerTarget] = 3; // Current turn is counted
 
+    gBattleStruct->battlerState[gBattlerAttacker].lockOn[gBattlerTarget] = 3; // Current turn is counted
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 

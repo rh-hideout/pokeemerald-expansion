@@ -73,9 +73,9 @@ DOUBLE_BATTLE_TEST("Lock-On: Multiple Pokemon can lock-in into a single target (
     }
 }
 
-SINGLE_BATTLE_TEST("Lock-On: Batton Pass transfers Lock-On volatile")
+SINGLE_BATTLE_TEST("Lock-On: Batton Pass does not transfer Lock-On volatile")
 {
-    PASSES_RANDOMLY(10, 10, RNG_ACCURACY);
+    PASSES_RANDOMLY(9, 10, RNG_ACCURACY);
     GIVEN {
         ASSUME(GetMoveAccuracy(MOVE_SKY_UPPERCUT) == 90);
         ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
@@ -122,6 +122,23 @@ SINGLE_BATTLE_TEST("Lock-On: When locked in target faints, the volatile will be 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, player);
     } THEN {
         EXPECT_EQ(gBattleStruct->battlerState[B_BATTLER_0].lockOn[B_BATTLER_1], 0);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Lock-On fails if a target has been locked in (Gen5+)")
+{
+    GIVEN {
+        WITH_CONFIG(B_LOCK_ON, GEN_5);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_LOCK_ON, target: opponentLeft); }
+        TURN { MOVE(playerLeft, MOVE_LOCK_ON, target: opponentRight); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LOCK_ON, playerLeft);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_LOCK_ON, playerLeft);
     }
 }
 
