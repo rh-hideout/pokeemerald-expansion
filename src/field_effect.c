@@ -1015,7 +1015,7 @@ u8 AddNewGameBirchObject(s16 x, s16 y, u8 subpriority)
     return CreateSprite(&sSpriteTemplate_NewGameBirch, x, y, subpriority);
 }
 
-u8 CreateMonSprite_PicBox(u16 species, s16 x, s16 y, u8 subpriority)
+u8 CreateMonSprite_PicBox(enum Species species, s16 x, s16 y, u8 subpriority)
 {
     s32 spriteId = CreateMonPicSprite(species, FALSE, 0x8000, TRUE, x, y, 0, species);
     PreservePaletteInWeather(IndexOfSpritePaletteTag(species) + 0x10);
@@ -1025,7 +1025,7 @@ u8 CreateMonSprite_PicBox(u16 species, s16 x, s16 y, u8 subpriority)
         return spriteId;
 }
 
-u8 CreateMonSprite_FieldMove(u16 species, bool8 isShiny, u32 personality, s16 x, s16 y, u8 subpriority)
+u8 CreateMonSprite_FieldMove(enum Species species, bool8 isShiny, u32 personality, s16 x, s16 y, u8 subpriority)
 {
     u16 spriteId = CreateMonPicSprite(species, isShiny, personality, TRUE, x, y, 0, species);
     PreservePaletteInWeather(gSprites[spriteId].oam.paletteNum + 0x10);
@@ -3272,13 +3272,15 @@ static u8 InitFieldMoveMonSprite(u32 species, bool8 isShiny, u32 personality)
     bool16 noDucking;
     u8 monSprite;
     struct Sprite *sprite;
+    enum Species monSpecies;
     noDucking = (species & SHOW_MON_CRY_NO_DUCKING) >> 16;
     species &= ~SHOW_MON_CRY_NO_DUCKING;
-    monSprite = CreateMonSprite_FieldMove(species, isShiny, personality, 320, 80, 0);
+    monSpecies = species;
+    monSprite = CreateMonSprite_FieldMove(monSpecies, isShiny, personality, 320, 80, 0);
     sprite = &gSprites[monSprite];
     sprite->callback = SpriteCallbackDummy;
     sprite->oam.priority = 0;
-    sprite->sSpecies = species;
+    sprite->sSpecies = monSpecies;
     sprite->data[6] = noDucking;
     return monSprite;
 }

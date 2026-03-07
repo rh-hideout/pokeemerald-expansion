@@ -4623,7 +4623,7 @@ u8 GetLeadMonFriendship(void)
         return 0;
 }
 
-enum Move GetFirstPartnerMove(u16 species)
+enum Move GetFirstPartnerMove(enum Species species)
 {
     switch (species)
     {

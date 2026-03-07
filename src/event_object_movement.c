@@ -2298,7 +2298,7 @@ static void RefreshFollowerGraphics(struct ObjectEvent *objEvent)
     }
 }
 
-u16 GetOverworldWeatherSpecies(u16 species)
+enum Species GetOverworldWeatherSpecies(enum Species species)
 {
     u32 i;
     u32 weather = GetCurrentWeather();
