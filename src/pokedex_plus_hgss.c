@@ -569,8 +569,8 @@ static void Task_LoadEvolutionScreen(u8 taskId);
 static void Task_HandleEvolutionScreenInput(u8 taskId);
 static void Task_SwitchScreensFromEvolutionScreen(u8 taskId);
 static void Task_ExitEvolutionScreen(u8 taskId);
-static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 depth, u32 *depth_i, u32 alreadyPrintedIcons[], u32 *icon_depth_i, u32 numLines);
-static u8 PrintPreEvolutions(u8 taskId, u16 species);
+static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, enum Species species, u8 depth, u32 *depth_i, u32 alreadyPrintedIcons[], u32 *icon_depth_i, u32 numLines);
+static u8 PrintPreEvolutions(u8 taskId, enum Species species);
 //Stat bars on scrolling screens
 static void TryDestroyStatBars(void);
 static void TryDestroyStatBarsBg(void);
@@ -582,7 +582,7 @@ static void SpriteCB_StatBarsBg(struct Sprite *sprite);
 //Forms screen
 static void Task_LoadFormsScreen(u8 taskId);
 static void Task_HandleFormsScreenInput(u8 taskId);
-static void PrintForms(u8 taskId, u16 species);
+static void PrintForms(u8 taskId, enum Species species);
 static void Task_SwitchScreensFromFormsScreen(u8 taskId);
 static void Task_ExitFormsScreen(u8 taskId);
 
@@ -3027,12 +3027,12 @@ static u8 ClearMonSprites(void)
     return FALSE;
 }
 
-static u16 GetPokemonSpriteToDisplay(u16 species)
+static u16 GetPokemonSpriteToDisplay(u16 index)
 {
-    if (species >= NATIONAL_DEX_COUNT || sPokedexView->pokedexList[species].dexNum == 0xFFFF)
+    if (index >= NATIONAL_DEX_COUNT || sPokedexView->pokedexList[index].dexNum == 0xFFFF)
         return 0xFFFF;
-    else if (sPokedexView->pokedexList[species].seen)
-        return sPokedexView->pokedexList[species].dexNum;
+    else if (sPokedexView->pokedexList[index].seen)
+        return sPokedexView->pokedexList[index].dexNum;
     else
         return 0;
 }
@@ -3588,7 +3588,7 @@ static void CreateStatBars(struct PokedexListItem *dexMon)
         u8 *gfx = Alloc(64 * 64);
         static const u8 sBarsYOffset[] = {3, 13, 23, 33, 43, 53};
         struct SpriteSheet sheet = {gfx, 64 * 64, TAG_STAT_BAR};
-        u32 species = NationalPokedexNumToSpecies(dexMon->dexNum);
+        enum Species species = NationalPokedexNumToSpecies(dexMon->dexNum);
 
         memcpy(gfx, sStatBarsGfx, sizeof(sStatBarsGfx));
         for (i = 0; i < NUM_STATS; i++)
@@ -4327,7 +4327,7 @@ static void SetTypeIconPosAndPal(u8 typeId, u8 x, u8 y, u8 spriteArrayId)
     sprite->y = y + 8;
     SetSpriteInvisibility(spriteArrayId, FALSE);
 }
-static void PrintCurrentSpeciesTypeInfo(u8 newEntry, u16 species)
+static void PrintCurrentSpeciesTypeInfo(u8 newEntry, enum Species species)
 {
     enum Type type1, type2;
 
@@ -4494,7 +4494,7 @@ static u8 PrintCryScreenSpeciesName(u8 windowId, u16 num, u8 left, u8 top)
 
 // Unown and Spinda use the personality of the first seen individual of that species
 // All others use personality 0
-static u32 GetPokedexMonPersonality(u16 species)
+static u32 GetPokedexMonPersonality(enum Species species)
 {
     if (species == SPECIES_UNOWN || species == SPECIES_SPINDA)
     {
@@ -4511,7 +4511,7 @@ static u32 GetPokedexMonPersonality(u16 species)
 
 static u16 CreateMonSpriteFromNationalDexNumberHGSS(u16 nationalNum, s16 x, s16 y, u16 paletteSlot)
 {
-    u32 species = NationalPokedexNumToSpeciesHGSS(nationalNum);
+    enum Species species = NationalPokedexNumToSpeciesHGSS(nationalNum);
     return CreateMonPicSprite(species, FALSE, GetPokedexMonPersonality(species), TRUE, x, y, paletteSlot, TAG_NONE);
 }
 
@@ -4742,7 +4742,7 @@ static void ResetStatsWindows(void)
 
 static void SaveMonDataInStruct(void)
 {
-    u16 species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
+    enum Species species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
     u8 evs[NUM_STATS] =
     {
         [STAT_HP]    = gSpeciesInfo[species].evYield_HP,
@@ -4851,7 +4851,7 @@ static void Task_LoadStatsScreen(u8 taskId)
         if (gTasks[taskId].data[1] == 0)
         {
             //Icon
-            u32 species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
+            enum Species species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
             u32 personality = GetPokedexMonPersonality(species);
             FreeMonIconPalettes(); //Free space for new pallete
             LoadMonIconPalettePersonality(species, personality); //Loads pallete for current mon
@@ -5033,7 +5033,7 @@ static void PrintStatsScreen_DestroyMoveItemIcon(u8 taskId)
 
 static bool8 CalculateMoves(void)
 {
-    u16 species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
+    enum Species species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
 
     u16 statsMovesEgg[EGG_MOVES_ARRAY_COUNT] = {0};
 
@@ -5079,7 +5079,7 @@ static bool8 CalculateMoves(void)
     return TRUE;
 }
 
-static enum Move GetSelectedMove(u32 species, u32 selected)
+static enum Move GetSelectedMove(enum Species species, u32 selected)
 {
     if (selected < sPokedexView->numEggMoves)
     {
@@ -5105,7 +5105,7 @@ static void PrintStatsScreen_Moves_Top(u8 taskId)
     u8 moves_y = 3;
 
     enum Item item = ITEM_MASTER_BALL;
-    u32 species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
+    enum Species species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
     u32 selected = sPokedexView->moveSelected;
     enum Move move = GetSelectedMove(species, selected);
     //Moves selected from move max
@@ -5183,7 +5183,7 @@ static void PrintStatsScreen_Moves_Description(u8 taskId)
     u8 moves_x = 5;
     u8 moves_y = 5;
 
-    u32 species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
+    enum Species species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
     enum Move move = GetSelectedMove(species, sPokedexView->moveSelected);
 
     //Move description
@@ -5226,7 +5226,7 @@ static void PrintStatsScreen_Moves_Bottom(u8 taskId)
     u8 contest_appeal = 0;
     u8 contest_jam = 0;
 
-    u32 species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
+    enum Species species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
     enum Move move = GetSelectedMove(species, sPokedexView->moveSelected);
 
     //Power + Accuracy
@@ -5276,7 +5276,7 @@ static void PrintStatsScreen_Moves_Bottom(u8 taskId)
 static void PrintStatsScreen_NameGender(u8 taskId, u32 num, u32 value)
 {
     u8 str[16];
-    u16 species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
+    enum Species species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
 
     u8 base_x = 38;
     u8 base_y = 0;
@@ -5976,7 +5976,7 @@ static void Task_LoadEvolutionScreen(u8 taskId)
     case 3:
         if (gTasks[taskId].data[1] == 0)
         {
-            u32 species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
+            enum Species species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
             u32 personality = GetPokedexMonPersonality(species);
             sPokedexView->selectedScreen = EVO_SCREEN;
             ResetEvoScreenDataStruct();
@@ -6190,7 +6190,7 @@ static void CreateCaughtBallEvolutionScreen(u16 targetSpecies, u8 x, u8 y, u16 u
     }
 }
 
-static void HandlePreEvolutionSpeciesPrint(u8 taskId, u16 preSpecies, u16 species, u8 base_x, u8 base_y, u8 base_y_offset, u8 base_i)
+static void HandlePreEvolutionSpeciesPrint(u8 taskId, u16 preSpecies, enum Species species, u8 base_x, u8 base_y, u8 base_y_offset, u8 base_i)
 {
     bool8 seen = GetSetPokedexFlag(SpeciesToNationalPokedexNum(preSpecies), FLAG_GET_SEEN);
 
@@ -6221,7 +6221,7 @@ static void HandlePreEvolutionSpeciesPrint(u8 taskId, u16 preSpecies, u16 specie
     }
 }
 
-static bool32 HasTwoPreEvolutions(u32 species)
+static bool32 HasTwoPreEvolutions(enum Species species)
 {
     switch (species)
     {
@@ -6232,7 +6232,7 @@ static bool32 HasTwoPreEvolutions(u32 species)
     }
 }
 
-static u8 PrintPreEvolutions(u8 taskId, u16 species)
+static u8 PrintPreEvolutions(u8 taskId, enum Species species)
 {
     u16 i;
     u16 j;
@@ -6404,7 +6404,7 @@ bool32 IsItemSweet(enum Item item)
     return item >= ITEM_STRAWBERRY_SWEET && item <= ITEM_RIBBON_SWEET;
 }
 
-static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 depth, u32 *depth_i, u32 alreadyPrintedIcons[], u32 *icon_depth_i, u32 numLines)
+static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, enum Species species, u8 depth, u32 *depth_i, u32 alreadyPrintedIcons[], u32 *icon_depth_i, u32 numLines)
 {
     int i;
     u32 depth_x = 4;
@@ -6460,10 +6460,10 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
 
         bool32 isAlcremie = IsSpeciesAlcremie(targetSpecies);
 
-        u32 speciesNameWidthInChars = GetSpeciesNameWidthInChars(GetSpeciesName(targetSpecies));
-        u32 speciesNameCharWidth = GetFontAttribute(GetSpeciesNameFontId(speciesNameWidthInChars), FONTATTR_MAX_LETTER_WIDTH);
+        enum Species speciesNameWidthInChars = GetSpeciesNameWidthInChars(GetSpeciesName(targetSpecies));
+        enum Species speciesNameCharWidth = GetFontAttribute(GetSpeciesNameFontId(speciesNameWidthInChars), FONTATTR_MAX_LETTER_WIDTH);
 
-        u32 speciesNameWidth = (speciesNameWidthInChars * speciesNameCharWidth);
+        enum Species speciesNameWidth = (speciesNameWidthInChars * speciesNameCharWidth);
         u32 base_x_offset = speciesNameWidth + base_x + depth_offset; // for evo method info
         u32 maxScreenWidth = 230 - base_x_offset;
 
@@ -6899,7 +6899,7 @@ static void Task_LoadFormsScreen(u8 taskId)
         if (gTasks[taskId].data[1] == 0)
         {
             //Icon
-            u32 species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
+            enum Species species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
             u32 personality = GetPokedexMonPersonality(species);
             FreeMonIconPalettes(); //Free space for new pallete
             LoadMonIconPalettePersonality(species, personality); //Loads pallete for current mon
@@ -7056,7 +7056,7 @@ static void Task_HandleFormsScreenInput(u8 taskId)
 
 #define FORM_SPECIES_END (0xffff)
 
-static void PrintForms(u8 taskId, u16 species)
+static void PrintForms(u8 taskId, enum Species species)
 {
     u8 i;
     u8 j = 1;

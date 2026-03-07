@@ -1177,8 +1177,8 @@ static void GetApprenticeMultiPartnerParty(u16 trainerId)
 {
     s32 i, count;
     u32 validSpecies[MULTI_PARTY_SIZE];
-    u16 species1 = GetMonData(&gPlayerParty[0], MON_DATA_SPECIES);
-    u16 species2 = GetMonData(&gPlayerParty[1], MON_DATA_SPECIES);
+    enum Species species1 = GetMonData(&gPlayerParty[0], MON_DATA_SPECIES);
+    enum Species species2 = GetMonData(&gPlayerParty[1], MON_DATA_SPECIES);
 
     count = 0;
     for (i = 0; i < MULTI_PARTY_SIZE; i++)
@@ -1203,8 +1203,8 @@ static void GetRecordMixFriendMultiPartnerParty(u16 trainerId)
     s32 i, count;
     u32 validSpecies[3];
     enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
-    u16 species1 = GetMonData(&gPlayerParty[0], MON_DATA_SPECIES);
-    u16 species2 = GetMonData(&gPlayerParty[1], MON_DATA_SPECIES);
+    enum Species species1 = GetMonData(&gPlayerParty[0], MON_DATA_SPECIES);
+    enum Species species2 = GetMonData(&gPlayerParty[1], MON_DATA_SPECIES);
 
     count = 0;
     for (i = 0; i < MAX_FRONTIER_PARTY_SIZE; i++)
@@ -1376,7 +1376,7 @@ static void LoadMultiPartnerCandidatesData(void)
 static void GetPotentialPartnerMoveAndSpecies(u16 trainerId, u16 monId)
 {
     enum Move move = MOVE_NONE;
-    u16 species = SPECIES_NONE;
+    enum Species species = SPECIES_NONE;
     SetFacilityPtrsGetLevel();
 
     if (trainerId != TRAINER_EREADER)
@@ -2129,7 +2129,7 @@ void TrySetLinkBattleTowerEnemyPartyLevel(void)
 
             for (u32 i = 0; i < PARTY_SIZE; i++)
             {
-                u32 species = GetMonData(&gEnemyParty[i], MON_DATA_SPECIES);
+                enum Species species = GetMonData(&gEnemyParty[i], MON_DATA_SPECIES);
                 if (species)
                 {
                     SetMonData(&gEnemyParty[i], MON_DATA_EXP, &gExperienceTables[gSpeciesInfo[species].growthRate][enemyLevel]);

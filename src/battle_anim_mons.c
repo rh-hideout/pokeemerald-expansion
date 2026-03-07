@@ -130,7 +130,7 @@ u8 GetBattlerSpriteCoord(enum BattlerId battler, u8 coordType)
     return retVal;
 }
 
-u8 GetBattlerYDelta(enum BattlerId battler, u16 species)
+u8 GetBattlerYDelta(enum BattlerId battler, enum Species species)
 {
     u32 personality;
     struct BattleSpriteInfo *spriteInfo;
@@ -168,7 +168,7 @@ u8 GetBattlerYDelta(enum BattlerId battler, u16 species)
     return ret;
 }
 
-u8 GetBattlerElevation(enum BattlerId battler, u16 species)
+u8 GetBattlerElevation(enum BattlerId battler, enum Species species)
 {
     u8 ret = 0;
     if (!IsOnPlayerSide(battler))
@@ -182,7 +182,7 @@ u8 GetBattlerElevation(enum BattlerId battler, u16 species)
     return ret;
 }
 
-u8 GetBattlerSpriteFinal_Y(enum BattlerId battler, u16 species, bool8 a3)
+u8 GetBattlerSpriteFinal_Y(enum BattlerId battler, enum Species species, bool8 a3)
 {
     u16 offset;
     u8 y;
@@ -2033,7 +2033,7 @@ u8 GetBattlerSpriteBGPriorityRank(enum BattlerId battler)
 }
 
 // Create Pokémon sprite to be used for a move animation effect (e.g. Role Play / Snatch)
-u8 CreateAdditionalMonSpriteForMoveAnim(u16 species, bool8 isBackpic, u8 id, s16 x, s16 y, u8 subpriority, u32 personality, bool8 isShiny, enum BattlerId battler)
+u8 CreateAdditionalMonSpriteForMoveAnim(enum Species species, bool8 isBackpic, u8 id, s16 x, s16 y, u8 subpriority, u32 personality, bool8 isShiny, enum BattlerId battler)
 {
     u8 spriteId;
     u16 sheet = LoadSpriteSheet(&sSpriteSheets_MoveEffectMons[id]);
@@ -2237,7 +2237,7 @@ void SetToPartnerPositions(enum BattlerId battler, bool8 respectMonPicOffsets, s
     *y = returnY;
 }
 
-u8 CreateInvisibleSpriteCopy(int battler, u8 spriteId, int species)
+u8 CreateInvisibleSpriteCopy(int battler, u8 spriteId, enum Species species)
 {
     u8 newSpriteId = CreateInvisibleSpriteWithCallback(SpriteCallbackDummy);
     gSprites[newSpriteId] = gSprites[spriteId];

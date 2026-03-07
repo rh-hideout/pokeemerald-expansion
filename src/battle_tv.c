@@ -666,7 +666,7 @@ void TryPutLinkBattleTvShowOnAir(void)
     struct BattleTvMovePoints *movePoints = NULL;
     u8 countPlayer = 0, countOpponent = 0;
     s16 sum = 0;
-    u16 species = SPECIES_NONE;
+    enum Species species = SPECIES_NONE;
     enum Move move = MOVE_NONE;
     s32 i, j;
     int zero = 0, one = 1; //needed for matching

@@ -4017,7 +4017,7 @@ static bool32 IsDomeStatusMoveEffect(enum Move move)
 static bool32 IsDomeRareMove(enum Move move)
 {
     u16 i, j;
-    u16 species = 0;
+    enum Species species = 0;
     for (i = 0; i < NUM_SPECIES; i++)
     {
         if (!IsSpeciesEnabled(i))

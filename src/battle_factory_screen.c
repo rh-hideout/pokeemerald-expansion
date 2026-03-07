@@ -1968,7 +1968,7 @@ static void Select_CreateMonSprite(void)
 {
     u8 monId = sFactorySelectScreen->cursorPos;
     struct Pokemon *mon = &sFactorySelectScreen->mons[monId].monData;
-    u16 species = GetMonData(mon, MON_DATA_SPECIES);
+    enum Species species = GetMonData(mon, MON_DATA_SPECIES);
     u32 personality = GetMonData(mon, MON_DATA_PERSONALITY);
     bool8 isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
 
@@ -2017,7 +2017,7 @@ static void Select_CreateChosenMonsSprites(void)
             if (sFactorySelectScreen->mons[j].selectedId == i + 1)
             {
                 struct Pokemon *mon = &sFactorySelectScreen->mons[j].monData;
-                u16 species = GetMonData(mon, MON_DATA_SPECIES);
+                enum Species species = GetMonData(mon, MON_DATA_SPECIES);
                 u32 personality = GetMonData(mon, MON_DATA_PERSONALITY);
                 bool8 isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
 
@@ -2209,7 +2209,7 @@ static void Select_SetWinRegs(s16 mWin0H, s16 nWin0H, s16 mWin0V, s16 nWin0V)
 static bool32 Select_AreSpeciesValid(u16 monId)
 {
     u8 i, j;
-    u32 species = gFacilityTrainerMons[monId].species;
+    enum Species species = gFacilityTrainerMons[monId].species;
     u8 selectState = sFactorySelectScreen->selectingMonsState;
 
     for (i = 1; i < selectState; i++)
@@ -4113,7 +4113,7 @@ static void Swap_TaskCantHaveSameMons(u8 taskId)
 static bool8 Swap_AlreadyHasSameSpecies(u8 monId)
 {
     u8 i;
-    u16 species = GetMonData(&gEnemyParty[monId], MON_DATA_SPECIES);
+    enum Species species = GetMonData(&gEnemyParty[monId], MON_DATA_SPECIES);
 
     for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
     {

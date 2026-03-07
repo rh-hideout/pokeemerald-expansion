@@ -2783,7 +2783,7 @@ static void ResetMonDataStruct(struct DebugMonData *sDebugMonData)
 #define tIterator   data[7]
 #define tIsEgg      data[8]
 
-static void Debug_Display_SpeciesInfo(u32 species, u32 number, u32 digit, u8 windowId)
+static void Debug_Display_SpeciesInfo(enum Species species, u32 number, u32 digit, u8 windowId)
 {
     u8 *end;
     StringCopy(gStringVar2, gText_DigitIndicator[digit]);
@@ -2944,7 +2944,7 @@ static void DebugAction_Give_Pokemon_SelectId(u8 taskId)
     {
         PlaySE(SE_SELECT);
         Debug_HandleInput_Numeric(taskId, 1, NUM_SPECIES - 1, DEBUG_NUMBER_DIGITS_ITEMS);
-        u32 species = gTasks[taskId].tInput;
+        enum Species species = gTasks[taskId].tInput;
         if (!IsSpeciesEnabled(species))
             species = SPECIES_NONE;
         Debug_Display_SpeciesInfo(species, gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
@@ -3502,7 +3502,7 @@ static void DebugAction_Give_Pokemon_ComplexCreateMon(u8 taskId) //https://githu
     u8 iv_val;
     u8 EVs[NUM_STATS];
     u8 ev_val;
-    u16 species     = sDebugMonData->species;
+    enum Species species = sDebugMonData->species;
     u8 level        = sDebugMonData->level;
     bool8 isShiny   = sDebugMonData->isShiny;
     u8 nature       = sDebugMonData->nature;
@@ -3745,7 +3745,7 @@ static void DebugAction_PCBag_Fill_PCBoxes_Fast(u8 taskId) //Credit: Sierraffini
 {
     int boxId, boxPosition;
     struct BoxPokemon boxMon;
-    u16 species = SPECIES_BULBASAUR;
+    enum Species species = SPECIES_BULBASAUR;
     u8 speciesName[POKEMON_NAME_LENGTH + 1];
 
     CreateBoxMon(&boxMon, species, 100, Random32(), OTID_STRUCT_PLAYER_ID);
@@ -3776,7 +3776,7 @@ static void DebugAction_PCBag_Fill_PCBoxes_Slow(u8 taskId)
 {
     int boxId, boxPosition;
     struct BoxPokemon boxMon;
-    u32 species = SPECIES_BULBASAUR;
+    enum Species species = SPECIES_BULBASAUR;
     bool8 spaceAvailable = FALSE;
 
     for (boxId = 0; boxId < TOTAL_BOXES_COUNT; boxId++)
@@ -4685,7 +4685,7 @@ static void DebugAction_Party_HealParty(u8 taskId)
 
 void DebugNative_GetAbilityNames(void)
 {
-    u32 species = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPECIES);
+    enum Species species = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPECIES);
     StringCopy(gStringVar1, gAbilitiesInfo[GetAbilityBySpecies(species, 0)].name);
     StringCopy(gStringVar2, gAbilitiesInfo[GetAbilityBySpecies(species, 1)].name);
     StringCopy(gStringVar3, gAbilitiesInfo[GetAbilityBySpecies(species, 2)].name);
