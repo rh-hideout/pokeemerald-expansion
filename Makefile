@@ -4,14 +4,14 @@ GAME_CODE    ?= BPEE
 BUILD_NAME   ?= emerald
 MAP_VERSION  ?= emerald
 
-ifeq (firered,$(MAKECMDGOALS))
+ifeq (firered, $(or $(BUILD), $(MAKECMDGOALS)))
   	GAME_VERSION 	:= FIRERED
 	TITLE       	:= POKEMON FIRE
 	GAME_CODE   	:= BPRE
 	BUILD_NAME  	:= firered
 	MAP_VERSION 	:= firered
 else
-ifeq (leafgreen,$(MAKECMDGOALS))
+ifeq (leafgreen, $(or $(BUILD), $(MAKECMDGOALS)))
 	GAME_VERSION 	:= LEAFGREEN
 	TITLE       	:= POKEMON LEAF
 	GAME_CODE   	:= BPGE
