@@ -1450,6 +1450,7 @@ void ModifySwitchAfterMoveScoring(enum BattlerId battler)
             continue;
         availableToSwitch++;
     }
+
     if (availableToSwitch == 0)
         return;
 
@@ -2124,6 +2125,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
         {
             continue;
         }
+        // Check if mon is already in play or being sent in
         if (IsPartyMonOnFieldOrChosenToSwitch(monIndex, battlerIn1, battlerIn2))
         {
             continue;
@@ -2390,6 +2392,7 @@ static u32 GetBestMonVanilla(struct Pokemon *party, int firstId, int lastId, enu
         {
             continue;
         }
+        // Check if mon is already in play or being sent in
         if (IsPartyMonOnFieldOrChosenToSwitch(monIndex, battlerIn1, battlerIn2))
         {
             continue;
@@ -2482,7 +2485,12 @@ static u32 GetNextMonInParty(struct Pokemon *party, int firstId, int lastId, enu
     for (u32 monIndex = firstId; monIndex < lastId; monIndex++)
     {
         // Check mon validity
-        if (!IsValidForBattle(&party[monIndex]) || IsPartyMonOnFieldOrChosenToSwitch(monIndex, battlerIn1, battlerIn2))
+        if (!IsValidForBattle(&party[monIndex]))
+        {
+            continue;
+        }
+        // Check if mon is already in play or being sent in
+        if (IsPartyMonOnFieldOrChosenToSwitch(monIndex, battlerIn1, battlerIn2))
         {
             continue;
         }
