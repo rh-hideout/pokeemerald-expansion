@@ -142,7 +142,7 @@ void CFile::Preproc()
         // would have put after the section name.
         // This will not work with Clang, see
         // https://discourse.llvm.org/t/creating-shf-merge-shf-strings-section/86399
-        std::printf("static const unsigned char __attribute__((section(\".rodata.compound_string.%016lx,\\\"aM\\\",%%progbits,%ld @\"))) sCompoundString_%016lx[] = {", it.second, it.first.size(), it.second);
+        std::printf("static const unsigned char __attribute__((section(\".rodata.compound_string.%016" PRIu64 "x,\\\"aM\\\",%%progbits,%ld @\"))) sCompoundString_%016" PRIu64 "x[] = {", it.second, it.first.size(), it.second);
         if (it.first.size() > 0)
         {
             std::printf(" 0x%02X", it.first[0]);
