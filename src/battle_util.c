@@ -3466,7 +3466,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             }
             break;
         case ABILITY_TERAFORM_ZERO:
-            if (gBattleMons[battler].species == SPECIES_TERAPAGOS_STELLAR)
+            if (shouldAbilityTrigger && gBattleMons[battler].species == SPECIES_TERAPAGOS_STELLAR)
             {
                 BattleScriptCall(BattleScript_ActivateTeraformZero);
                 effect++;
@@ -3623,7 +3623,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         }
         break;
     case ABILITYEFFECT_SWITCH_IN_FORM_CHANGE:
-        if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT_SEND_OUT, ability))
+        if (shouldAbilityTrigger && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT_SEND_OUT, ability))
         {
             gBattleScripting.battler = battler;
             // To prevent the new form's ability from pop up

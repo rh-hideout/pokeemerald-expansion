@@ -679,6 +679,15 @@
         "bug"
       ]
     }
+    {
+      "login": "blusunrize",
+      "name": "blusunrize",
+      "avatar_url": "https://avatars.githubusercontent.com/u/4106382?v=4",
+      "profile": "https://github.com/BluSunrize",
+      "contributions": [
+        "bug"
+      ]
+    }
   ],
   "contributorsPerLine": 7,
   "linkToUsage": true,
