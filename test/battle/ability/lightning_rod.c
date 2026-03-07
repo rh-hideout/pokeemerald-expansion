@@ -131,7 +131,7 @@ DOUBLE_BATTLE_TEST("Lightning Rod absorbs moves that targets all battlers but do
     }
 }
 
-DOUBLE_BATTLE_TEST("Lightning Rod doesn't active if user has fainted")
+DOUBLE_BATTLE_TEST("Lightning Rod doesn't activate if user has fainted")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_SPARK) == TYPE_ELECTRIC);
