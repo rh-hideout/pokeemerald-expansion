@@ -313,7 +313,7 @@ void CFile::TryConvertCompoundString()
     m_compoundStrings[converted] = hash;
     // WARNING: Assumes no collisions.
     // TODO: Incorporate filename to prevent cross-TU collisions.
-    printf("sCompoundString_%016lx", hash);
+    printf("sCompoundString_%016" PRIx64, hash);
 }
 
 bool CFile::CheckIdentifier(const std::string& ident)
