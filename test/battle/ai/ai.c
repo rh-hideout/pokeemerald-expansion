@@ -1285,3 +1285,25 @@ AI_DOUBLE_BATTLE_TEST("AI can use Acupressure on its ally")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ACUPRESSURE, opponentLeft);
     }
 }
+
+AI_SINGLE_BATTLE_TEST("AI's comparison of damaging moves correctly reads moveset indexes for effects")
+{
+    u32 move = MOVE_NONE;
+    PARAMETRIZE { move = MOVE_TACKLE; }
+    PARAMETRIZE { move = MOVE_DUAL_CHOP; }
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_RAPIDASH_GALAR){ Level(64); HP(1); Nature(NATURE_TIMID); Moves(MOVE_TACKLE);}
+        OPPONENT(SPECIES_HAXORUS){ Level(64); Nature(NATURE_JOLLY); Ability(ABILITY_MOLD_BREAKER); Moves(move, MOVE_EARTHQUAKE, MOVE_POISON_JAB); }
+    } WHEN {
+        TURN { 
+            MOVE(player, MOVE_TACKLE);
+            if (move == MOVE_TACKLE)
+                SCORE_EQ_VAL(opponent, MOVE_TACKLE, 104);
+            else if (move == MOVE_DUAL_CHOP)
+                SCORE_EQ_VAL(opponent, MOVE_DUAL_CHOP, 60);
+            SCORE_EQ_VAL(opponent, MOVE_EARTHQUAKE, 104);
+            SCORE_EQ_VAL(opponent, MOVE_POISON_JAB, 105);
+        }
+    }
+}
