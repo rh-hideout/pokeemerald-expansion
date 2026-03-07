@@ -4167,7 +4167,7 @@ static void HandleTurnActionSelectionState(void)
     bool32 reverseBattlerLogicOrder = RandomPercentage(RNG_AI_REVERSE_BATTLER_LOGIC_ORDER, AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE) && IsDoubleBattle();
 
     gBattleCommunication[ACTIONS_CONFIRMED_COUNT] = 0;
-    for (u32 battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
+    for (enum BattlerId battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
     {
         enum BattlerId battler = reverseBattlerLogicOrder ? BATTLE_PARTNER(battlerIndex) : battlerIndex;
         enum BattlerPosition position = GetBattlerPosition(battler);
