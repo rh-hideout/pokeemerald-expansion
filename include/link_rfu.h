@@ -294,7 +294,7 @@ void UpdateGameData_SetActivity(u8 activity, u32 partnerInfo, bool32 startedActi
 void CreateTask_RfuReconnectWithParent(const u8 *name, u16 trainerId);
 void SetHostRfuWonderFlags(bool32 hasNews, bool32 hasCard);
 void ResetHostRfuGameData(void);
-void SetTradeBoardRegisteredMonInfo(u32 type, u32 species, u32 level);
+void SetTradeBoardRegisteredMonInfo(u32 type, enum Species species, u32 level);
 void InitializeRfuLinkManager_EnterUnionRoom(void);
 void TryConnectToUnionRoomParent(const u8 *name, struct RfuGameData *parent, u8 activity);
 bool32 IsUnionRoomListenTaskActive(void);
