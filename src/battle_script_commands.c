@@ -389,9 +389,6 @@ static void Cmd_jumpifstatignorecontrary(void);
 static void Cmd_jumpbasedontype(void);
 static void Cmd_getexp(void);
 static void Cmd_checkteamslost(void);
-static void Cmd_movevaluescleanup(void);
-static void Cmd_setmultihit(void);
-static void Cmd_decrementmultihit(void);
 static void Cmd_goto(void);
 static void Cmd_jumpifbyte(void);
 static void Cmd_jumpifhalfword(void);
@@ -620,9 +617,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_JUMPBASEDONTYPE]                       = Cmd_jumpbasedontype,
     [B_SCR_OP_GETEXP]                                = Cmd_getexp,
     [B_SCR_OP_CHECKTEAMSLOST]                        = Cmd_checkteamslost,
-    [B_SCR_OP_MOVEVALUESCLEANUP]                     = Cmd_movevaluescleanup,
-    [B_SCR_OP_SETMULTIHIT]                           = Cmd_setmultihit,
-    [B_SCR_OP_DECREMENTMULTIHIT]                     = Cmd_decrementmultihit,
     [B_SCR_OP_GOTO]                                  = Cmd_goto,
     [B_SCR_OP_JUMPIFBYTE]                            = Cmd_jumpifbyte,
     [B_SCR_OP_JUMPIFHALFWORD]                        = Cmd_jumpifhalfword,
@@ -839,6 +833,9 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_27]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_28]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_29]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_30]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_31]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_32]                             = Cmd_dummy,
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
 
@@ -4649,32 +4646,6 @@ static void Cmd_checkteamslost(void)
     {
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
-}
-
-static void Cmd_movevaluescleanup(void)
-{
-    CMD_ARGS();
-
-    MoveValuesCleanUp();
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-static void Cmd_setmultihit(void)
-{
-    CMD_ARGS(u8 value);
-
-    gMultiHitCounter = cmd->value;
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-static void Cmd_decrementmultihit(void)
-{
-    CMD_ARGS(const u8 *loopInstr);
-
-    if (--gMultiHitCounter == 0)
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    else
-        gBattlescriptCurrInstr = cmd->loopInstr;
 }
 
 static void Cmd_goto(void)

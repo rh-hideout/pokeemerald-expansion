@@ -218,20 +218,6 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro movevaluescleanup
-	.byte B_SCR_OP_MOVEVALUESCLEANUP
-	.endm
-
-	.macro setmultihit value:req
-	.byte B_SCR_OP_SETMULTIHIT
-	.byte \value
-	.endm
-
-	.macro decrementmultihit loopInstr:req
-	.byte B_SCR_OP_DECREMENTMULTIHIT
-	.4byte \loopInstr
-	.endm
-
 	.macro goto instr:req
 	.byte B_SCR_OP_GOTO
 	.4byte \instr

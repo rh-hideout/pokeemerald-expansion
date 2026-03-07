@@ -2706,7 +2706,6 @@ static enum MoveEndResult MoveEndNextTarget(void)
             BattleScriptPush(GetMoveBattleScript(gCurrentMove));
             gBattlescriptCurrInstr = BattleScript_FlushMessageBox;
             gBattleScripting.moveendState = 0;
-            MoveValuesCleanUp();
             return MOVEEND_RESULT_BREAK;
         }
     }
@@ -2718,7 +2717,6 @@ static enum MoveEndResult MoveEndNextTarget(void)
         {
             gBattleStruct->moveTarget[gBattlerAttacker] = gBattlerTarget = nextTarget; // Fix for moxie spread moves
             gBattleScripting.moveendState = 0;
-            MoveValuesCleanUp();
             BattleScriptPush(GetMoveBattleScript(gCurrentMove));
             gBattlescriptCurrInstr = BattleScript_FlushMessageBox;
             return MOVEEND_RESULT_BREAK;
@@ -2740,7 +2738,6 @@ static enum MoveEndResult MoveEndNextTarget(void)
                 gBattleScripting.moveendState = 0;
                 gBattleScripting.animTurn = 0;
                 gBattleScripting.animTargetsHit = 0;
-                MoveValuesCleanUp();
                 BattleScriptPush(GetMoveBattleScript(gCurrentMove));
                 gBattlescriptCurrInstr = BattleScript_FlushMessageBox;
                 return MOVEEND_RESULT_BREAK;
@@ -2809,7 +2806,6 @@ static enum MoveEndResult MoveEndMultihitMove(void)
                 gBattleScripting.animTargetsHit = 0;
                 gBattleScripting.moveendState = 0;
                 gSpecialStatuses[gBattlerAttacker].multiHitOn = TRUE;
-                MoveValuesCleanUp();
                 BattleScriptPush(GetMoveBattleScript(gCurrentMove));
                 gBattlescriptCurrInstr = BattleScript_FlushMessageBox;
                 return MOVEEND_RESULT_BREAK;
@@ -3954,13 +3950,6 @@ static inline bool32 IsBattlerUsingBeakBlast(enum BattlerId battler)
     if (GetMoveEffect(gChosenMoveByBattler[battler]) != EFFECT_BEAK_BLAST)
         return FALSE;
     return !HasBattlerActedThisTurn(battler);
-}
-
-// Is there any point in still doing this?
-void MoveValuesCleanUp(void)
-{
-    gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
-    gBattleCommunication[MISS_TYPE] = 0;
 }
 
 static void RequestNonVolatileChange(enum BattlerId battlerAtk)
