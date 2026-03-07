@@ -2122,31 +2122,22 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
     {
         // Check mon validity
         if (!IsValidForBattle(&party[monIndex]))
-        {
             continue;
-        }
         // Check if mon is already in play or being sent in
         if (IsPartyMonOnFieldOrChosenToSwitch(monIndex, battlerIn1, battlerIn2))
-        {
             continue;
-        }
         // Check if partner wants to use this mon already
         if (IsPartyMonPlannedToBeSwitchedInByPartner(monIndex, battler))
-        {
             continue;
-        }
         // Save Ace Pokemon for last
-        else if (IsAceMon(battler, monIndex))
+        if (IsAceMon(battler, monIndex))
         {
             aceMonId = monIndex;
             aceMonCount++;
             continue;
         }
-        else
-        {
-            validMonIds |= (1u << monIndex);
-        }
 
+        validMonIds |= (1u << monIndex);
         InitializeSwitchinCandidate(battler, &party[monIndex]);
 
         u32 originalHp = gBattleMons[battler].hp;
@@ -2389,30 +2380,21 @@ static u32 GetBestMonVanilla(struct Pokemon *party, int firstId, int lastId, enu
     {
         // Check mon validity
         if (!IsValidForBattle(&party[monIndex]))
-        {
             continue;
-        }
         // Check if mon is already in play or being sent in
         if (IsPartyMonOnFieldOrChosenToSwitch(monIndex, battlerIn1, battlerIn2))
-        {
             continue;
-        }
         // Check if partner wants to use this mon already
         if (IsPartyMonPlannedToBeSwitchedInByPartner(monIndex, battler))
-        {
             continue;
-        }
         // Save Ace Pokemon for last
-        else if (IsAceMon(battler, monIndex))
+        if (IsAceMon(battler, monIndex))
         {
             aceMonId = monIndex;
             aceMonCount++;
             continue;
         }
-        else
-        {
-            validMonIds |= (1u << monIndex);
-        }
+        validMonIds |= (1u << monIndex);
         InitializeSwitchinCandidate(battler, &party[monIndex]);
 
         // While not really invalid per se, not really wise to switch into this mon
