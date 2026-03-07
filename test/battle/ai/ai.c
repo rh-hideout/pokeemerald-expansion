@@ -269,7 +269,7 @@ AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking 
     enum Move move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
     enum Move expectedMove, expectedMove2 = MOVE_NONE;
     enum Ability abilityAtk = ABILITY_NONE;
-    u32 holdItemAtk = ITEM_NONE;
+    enum Item holdItemAtk = ITEM_NONE;
 
     // Psychic is not very effective, but always hits. Solarbeam requires a charging turn, Double Edge has recoil and Focus Blast can miss;
     PARAMETRIZE { abilityAtk = ABILITY_STURDY; move1 = MOVE_FOCUS_BLAST; move2 = MOVE_SOLAR_BEAM; move3 = MOVE_PSYCHIC; move4 = MOVE_DOUBLE_EDGE; expectedMove = MOVE_PSYCHIC; }
@@ -304,7 +304,7 @@ AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking 
 
 AI_SINGLE_BATTLE_TEST("AI scores KOs with two turn moves correctly, considering Power Herb")
 {
-    u32 aiItem;
+    enum Item aiItem;
 
     PARAMETRIZE { aiItem = ITEM_POWER_HERB; }
     PARAMETRIZE { aiItem= ITEM_NONE; }
@@ -322,7 +322,7 @@ AI_SINGLE_BATTLE_TEST("AI scores KOs with two turn moves correctly, considering 
 AI_SINGLE_BATTLE_TEST("AI won't use Solar Beam if there is no Sun up or the user is not holding Power Herb")
 {
     enum Ability abilityAtk = ABILITY_NONE;
-    u16 holdItemAtk = ITEM_NONE;
+    enum Item holdItemAtk = ITEM_NONE;
 
     PARAMETRIZE { abilityAtk = ABILITY_DROUGHT; }
     PARAMETRIZE { holdItemAtk = ITEM_POWER_HERB; }
@@ -797,7 +797,7 @@ AI_SINGLE_BATTLE_TEST("AI won't boost stats against opponent with Unaware")
 
 AI_SINGLE_BATTLE_TEST("AI won't use status moves against opponents that would benefit")
 {
-    u32 aiMove;
+    enum Move aiMove;
     PARAMETRIZE { aiMove = MOVE_WILL_O_WISP; }
     PARAMETRIZE { aiMove = MOVE_TOXIC; }
     PARAMETRIZE { aiMove = MOVE_THUNDER_WAVE; }
@@ -1065,7 +1065,7 @@ AI_SINGLE_BATTLE_TEST("AI will not prioritize a regular OHKO over a berry-reduce
 
 AI_SINGLE_BATTLE_TEST("AI won't increase its stats if it's about to fall asleep due to Yawn")
 {
-    u32 aiMove;
+    enum Move aiMove;
     PARAMETRIZE { aiMove = MOVE_CELEBRATE; }
     PARAMETRIZE { aiMove = MOVE_SWORDS_DANCE; }
     GIVEN {
@@ -1102,7 +1102,7 @@ AI_SINGLE_BATTLE_TEST("AI will consider using Explosion inversely proportional t
 
 AI_SINGLE_BATTLE_TEST("AI will prioritize non-self-sacrificing moves if they have the same hits to KO")
 {
-    u32 selfSacrificeMove;
+    enum Move selfSacrificeMove;
     PARAMETRIZE { selfSacrificeMove = MOVE_EXPLOSION; }
     PARAMETRIZE { selfSacrificeMove = MOVE_FINAL_GAMBIT; }
     PASSES_RANDOMLY(100, 100, RNG_AI_CONSIDER_EXPLOSION);
