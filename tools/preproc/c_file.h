@@ -25,6 +25,7 @@
 #include <cstdint>
 #include <string>
 #include <memory>
+#include <map>
 #include "preproc.h"
 
 class CFile
@@ -43,17 +44,23 @@ private:
     long m_lineNum;
     std::string m_filename;
     bool m_isStdin;
+    std::map<std::vector<unsigned char>, std::uint64_t> m_compoundStrings;
+    std::string m_output;
 
     bool ConsumeHorizontalWhitespace();
     bool ConsumeNewline();
     void SkipWhitespace();
+    std::vector<unsigned char> ConvertString();
     void TryConvertString();
+    void TryConvertCompoundString();
     std::unique_ptr<unsigned char[]> ReadWholeFile(const std::string& path, int& size);
     bool CheckIdentifier(const std::string& ident);
     void TryConvertIncbin();
     void ReportDiagnostic(const char* type, const char* format, std::va_list args);
     void RaiseError(const char* format, ...);
     void RaiseWarning(const char* format, ...);
+    void printf(const char *format, ...);
+    void putchar(char c);
 };
 
 #endif // C_FILE_H

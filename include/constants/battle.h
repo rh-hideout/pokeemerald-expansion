@@ -511,7 +511,6 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_SP_DEF_MINUS_2,
     MOVE_EFFECT_ACC_MINUS_2,
     MOVE_EFFECT_EVS_MINUS_2,
-    MOVE_EFFECT_SCALE_SHOT,
     MOVE_EFFECT_THRASH,
     MOVE_EFFECT_DEF_SPDEF_DOWN,
     MOVE_EFFECT_CLEAR_SMOG,
@@ -540,6 +539,7 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_LIGHT_SCREEN,
     MOVE_EFFECT_SALT_CURE,
     MOVE_EFFECT_EERIE_SPELL,
+    MOVE_EFFECT_FLING, // If used without EFFECT_FLING, the move will be a regular damage move with fling as an additional effect without the failure and dmg modifier parts
 
     // Max move effects happen earlier in the execution chain.
     // For example stealth rock from G-Max Stonesurge is set up before abilities but from Stone Axe after.

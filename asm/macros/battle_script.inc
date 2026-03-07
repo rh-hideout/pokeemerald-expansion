@@ -218,20 +218,6 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro movevaluescleanup
-	.byte B_SCR_OP_MOVEVALUESCLEANUP
-	.endm
-
-	.macro setmultihit value:req
-	.byte B_SCR_OP_SETMULTIHIT
-	.byte \value
-	.endm
-
-	.macro decrementmultihit loopInstr:req
-	.byte B_SCR_OP_DECREMENTMULTIHIT
-	.4byte \loopInstr
-	.endm
-
 	.macro goto instr:req
 	.byte B_SCR_OP_GOTO
 	.4byte \instr
@@ -1214,6 +1200,10 @@
 	.4byte \failInstr
 	.endm
 
+	.macro trysynchronize
+	.byte B_SCR_OP_TRY_SYNCHRONIZE
+	.endm
+
 	.macro callnative func:req
 	.byte B_SCR_OP_CALLNATIVE
 	.4byte \func
@@ -1598,10 +1588,6 @@
 	callnative BS_JumpIfCanGigantamax
 	.byte \battler
 	.4byte \jumpInstr
-	.endm
-
-	.macro tryflingholdeffect
-	callnative BS_TryFlingHoldEffect
 	.endm
 
 	.macro swapsidestatuses

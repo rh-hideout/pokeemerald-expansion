@@ -101,7 +101,12 @@ struct ProtectStruct
 // Cleared at the start of HandleAction_ActionFinished
 struct SpecialStatus
 {
-    u8 changedStatsBattlerId; // Battler that was responsible for the latest stat change. Can be self.
+    u8 changedStatsBattlerId:3; // Battler that was responsible for the latest stat change. Can be self.
+    u8 neutralizingGasRemoved:1;
+    u8 berryReduced:1;
+    u8 mindBlownRecoil:1;
+    u8 padding:2;
+    // End of byte
     u8 statLowered:1;
     u8 abilityRedirected:1;
     u8 restoredBattlerSprite: 1;
@@ -111,12 +116,6 @@ struct SpecialStatus
     u8 dancerUsedMove:1;
     u8 criticalHit:1;
     // End of byte
-    u8 instructedChosenTarget:3;
-    u8 neutralizingGasRemoved:1;
-    u8 berryReduced:1;
-    u8 mindBlownRecoil:1;
-    u8 padding2:2;
-    // End of byte
     u8 gemParam:7;
     u8 gemBoost:1;
     // End of byte
@@ -124,7 +123,7 @@ struct SpecialStatus
     u8 multiHitOn:1;
     u8 distortedTypeMatchups:1;
     u8 teraShellAbilityDone:1;
-    u8 dancerOriginalTarget:3;
+    u8 backUpTarget:3;
     // End of byte
 };
 
@@ -596,13 +595,12 @@ struct BattleStruct
     u32 savedBattleTypeFlags;
     u16 abilityPreventingSwitchout;
     u8 hpScale;
-    u16 synchronizeMoveEffect;
     u8 anyMonHasTransformed:1; // Only used in battle_tv.c
     u8 sleepClauseNotBlocked:1;
     u8 isSkyBattle:1;
     u8 unableToUseMove:1; // for the current action only, to check if the battler failed to act at end turn use the DisableStruct member
     u8 triAttackBurn:1;
-    u8 unused:3;
+    enum SynchronizeState synchronizeState:3;
     void (*savedCallback)(void);
     u16 chosenItem[MAX_BATTLERS_COUNT];
     u16 choicedMove[MAX_BATTLERS_COUNT];
@@ -662,7 +660,9 @@ struct BattleStruct
     u8 beatUpSlot:3;
     u8 pledgeMove:1;
     u8 effectsBeforeUsingMoveDone:1; // Mega Evo and Focus Punch/Shell Trap effects.
-    u8 padding3:1;
+    u8 unused3:1;
+    u16 flingItem:14;
+    enum FlungItem flungItem:2;
     u8 itemPartyIndex[MAX_BATTLERS_COUNT];
     u8 itemMoveIndex[MAX_BATTLERS_COUNT];
     s32 aiDelayTimer; // Counts number of frames AI takes to choose an action.
@@ -698,7 +698,6 @@ struct BattleStruct
     enum SubmoveState submoveAnnouncement:2;
     u8 tryDestinyBond:1;
     u8 tryGrudge:1;
-    u16 flingItem;
     u8 incrementEchoedVoice:1;
     u8 echoedVoiceCounter:3;
     u8 attackAnimPlayed:1;
