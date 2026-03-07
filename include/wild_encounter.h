@@ -60,7 +60,7 @@ bool8 UpdateRepelCounter(void);
 bool8 TryDoDoubleWildBattle(void);
 bool8 StandardWildEncounter_Debug(void);
 u32 CalculateChainFishingShinyRolls(void);
-void CreateWildMon(u16 species, u8 level);
+void CreateWildMon(enum Species species, u8 level);
 u16 GetCurrentMapWildMonHeaderId(void);
 u32 ChooseWildMonIndex_Land(void);
 u32 ChooseWildMonIndex_Water(void);

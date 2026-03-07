@@ -1157,7 +1157,7 @@ static bool8 BufferTradeParties(void)
         for (i = 0, mon = gEnemyParty; i < PARTY_SIZE; mon++, i++)
         {
             u8 name[POKEMON_NAME_LENGTH + 1];
-            u16 species = GetMonData(mon, MON_DATA_SPECIES);
+            enum Species species = GetMonData(mon, MON_DATA_SPECIES);
 
             if (species != SPECIES_NONE)
             {
@@ -2384,8 +2384,8 @@ static u32 CanTradeSelectedMon(struct Pokemon *playerParty, int partyCount, int 
 {
     int i, numMonsLeft;
     struct LinkPlayer *partner;
-    u32 species[PARTY_SIZE];
-    u32 species2[PARTY_SIZE];
+    enum Species species[PARTY_SIZE];
+    enum Species species2[PARTY_SIZE];
 
     for (i = 0; i < partyCount; i++)
     {
@@ -2483,7 +2483,7 @@ s32 GetGameProgressForLinkTrade(void)
     return TRADE_BOTH_PLAYERS_READY;
 }
 
-int GetUnionRoomTradeMessageId(struct RfuGameCompatibilityData player, struct RfuGameCompatibilityData partner, u16 playerSpecies2, u16 partnerSpecies, enum Type requestedType, u16 playerSpecies, bool8 isModernFatefulEncounter)
+int GetUnionRoomTradeMessageId(struct RfuGameCompatibilityData player, struct RfuGameCompatibilityData partner, enum Species playerSpecies2, enum Species partnerSpecies, enum Type requestedType, enum Species playerSpecies, bool8 isModernFatefulEncounter)
 {
     bool8 playerHasNationalDex = player.hasNationalDex;
     bool8 playerCanLinkNationally = player.canLinkNationally;
@@ -2545,7 +2545,7 @@ int GetUnionRoomTradeMessageId(struct RfuGameCompatibilityData player, struct Rf
     return UR_TRADE_MSG_NONE;
 }
 
-int CanRegisterMonForTradingBoard(struct RfuGameCompatibilityData player, u16 species2, u16 species, bool8 isModernFatefulEncounter)
+int CanRegisterMonForTradingBoard(struct RfuGameCompatibilityData player, enum Species species2, enum Species species, bool8 isModernFatefulEncounter)
 {
     bool8 hasNationalDex = player.hasNationalDex;
 
@@ -2571,7 +2571,7 @@ int CanRegisterMonForTradingBoard(struct RfuGameCompatibilityData player, u16 sp
 int CanSpinTradeMon(struct Pokemon *mon, u16 monIdx)
 {
     int i, version, versions, canTradeAnyMon, numMonsLeft;
-    int speciesArray[PARTY_SIZE];
+    enum Species speciesArray[PARTY_SIZE];
 
     // Make Eggs not count for numMonsLeft
     for (i = 0; i < gPlayerPartyCount; i++)
@@ -2766,7 +2766,8 @@ static u32 TradeGetMultiplayerId(void)
 
 static void LoadTradeMonPic(struct Pokemon *mon, u8 state)
 {
-    u32 species, personality;
+    enum Species species;
+    u32 personality;
     u32 whichParty = state / 2;
     species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
     switch (state % 2)
@@ -3061,7 +3062,7 @@ static void UpdatePokedexForReceivedMon(u8 partyIdx)
 
     if (!GetMonData(mon, MON_DATA_IS_EGG))
     {
-        u16 species = GetMonData(mon, MON_DATA_SPECIES);
+        enum Species species = GetMonData(mon, MON_DATA_SPECIES);
         u32 personality = GetMonData(mon, MON_DATA_PERSONALITY);
         enum NationalDexOrder dexNum = SpeciesToNationalPokedexNum(species);
         GetSetPokedexFlag(dexNum, FLAG_SET_SEEN);
@@ -4630,7 +4631,7 @@ u16 GetTradeSpecies(void)
     struct BoxPokemon *boxmon = GetSelectedBoxMonFromPcOrParty();
     if (GetBoxMonData(boxmon, MON_DATA_IS_EGG))
         return SPECIES_NONE;
-    u32 species = GetBoxMonData(boxmon, MON_DATA_SPECIES);
+    enum Species species = GetBoxMonData(boxmon, MON_DATA_SPECIES);
     return species;
 }
 
