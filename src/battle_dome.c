@@ -1911,7 +1911,7 @@ static void InitDomeTrainers(void)
 {
     int i, j, k;
     int monLevel;
-    int species[FRONTIER_PARTY_SIZE];
+    enum Species species[FRONTIER_PARTY_SIZE];
     int monTypesBits, monTypesCount;
     int trainerId;
     int monId;
@@ -1919,9 +1919,9 @@ static void InitDomeTrainers(void)
     int *statValues;
     u8 ivs = 0;
 
-    species[0] = 0;
-    species[1] = 0;
-    species[2] = 0;
+    species[0] = SPECIES_NONE;
+    species[1] = SPECIES_NONE;
+    species[2] = SPECIES_NONE;
     rankingScores = AllocZeroed(sizeof(u16) * DOME_TOURNAMENT_TRAINERS_COUNT);
     statValues = AllocZeroed(sizeof(int) * NUM_STATS);
 
@@ -5724,7 +5724,7 @@ static void InitRandomTourneyTreeResults(void)
 {
     int i, j, k;
     int monLevel;
-    int species[FRONTIER_PARTY_SIZE];
+    enum Species species[FRONTIER_PARTY_SIZE];
     int monTypesBits;
     int trainerId;
     int monId;
@@ -5735,9 +5735,9 @@ static void InitRandomTourneyTreeResults(void)
     int *statValues;
     u8 ivs = 0;
 
-    species[0] = 0;
-    species[1] = 0;
-    species[2] = 0;
+    species[0] = SPECIES_NONE;
+    species[1] = SPECIES_NONE;
+    species[2] = SPECIES_NONE;
     if ((gSaveBlock2Ptr->frontier.domeLvlMode != -gSaveBlock2Ptr->frontier.domeBattleMode) && gSaveBlock2Ptr->frontier.challengeStatus != CHALLENGE_STATUS_SAVING)
         return;
 
@@ -5894,7 +5894,7 @@ static void DecideRoundWinners(u8 roundId)
     int i;
     int moveSlot, monId1, monId2;
     int tournamentId1, tournamentId2;
-    int species;
+    enum Species species;
     int points1 = 0, points2 = 0;
 
     for (i = 0; i < DOME_TOURNAMENT_TRAINERS_COUNT; i++)
