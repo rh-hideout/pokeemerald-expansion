@@ -11594,7 +11594,7 @@ static void Cmd_tryconfusionafterskydrop(void)
 
             if (CanBeConfused(skyDropTarget, skyDropTarget))
             {
-                shouldConfuse  = TRUE;
+                shouldConfuse = TRUE;
                 gBattleScripting.battler = skyDropTarget;
                 BattleScriptPush(cmd->nextInstr);
                 gBattlescriptCurrInstr = BattleScript_ConfusionAfterRampage;

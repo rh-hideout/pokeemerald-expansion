@@ -217,10 +217,10 @@ SINGLE_BATTLE_TEST("Sky Drop: If target was locked into a move that would confus
     } WHEN {
         TURN { MOVE(player, MOVE_THRASH); MOVE(opponent, MOVE_SKY_DROP);}
         TURN { SKIP_TURN(opponent); }
-        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THRASH, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, opponent);
+        HP_BAR(player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
     }
 }
@@ -229,7 +229,7 @@ SINGLE_BATTLE_TEST("Sky Drop: If target was locked into a move that would confus
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(70); Status1(STATUS1_BURN); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(70); MaxHP(490); Status1(STATUS1_BURN); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
@@ -248,7 +248,7 @@ SINGLE_BATTLE_TEST("Sky Drop: If target was locked into a move that would confus
 {
     GIVEN {
         PLAYER(SPECIES_SHARPEDO) { Ability(ABILITY_ROUGH_SKIN); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(220); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(220); MaxHP(490); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
@@ -260,7 +260,6 @@ SINGLE_BATTLE_TEST("Sky Drop: If target was locked into a move that would confus
             SEND_OUT(opponent, 1);
         }
     } SCENE {
-        // Note: the move animations make the test fail, but the recording is fine and they aren't important for the test passing
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THRASH, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, opponent); // 1st turn
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, opponent); // 2nd turn
