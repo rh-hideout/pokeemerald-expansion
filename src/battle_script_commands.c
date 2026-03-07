@@ -2306,7 +2306,7 @@ static void TrySynchronizeActivation(enum BattlerId battlerAtk, enum BattlerId e
                 CHECK_TRIGGER))
         {
             gBattleStruct->synchronizeState = SYNCH_STATE_START;
-            gBattleScripting.battler = gBattlerAbility = effectBattler;
+            gBattlerAbility = effectBattler;
             gBattleScripting.savedBattler = battlerAtk;
         }
         else
@@ -11582,7 +11582,7 @@ static u32 GetMoveEffectFromStatus(enum BattlerId battler)
     case STATUS1_POISON:
         return MOVE_EFFECT_POISON;
     case STATUS1_TOXIC_POISON:
-        return MOVE_EFFECT_TOXIC; ;
+        return MOVE_EFFECT_TOXIC;
     case STATUS1_PARALYSIS:
         return MOVE_EFFECT_PARALYSIS;
     case STATUS1_BURN:
@@ -11609,6 +11609,7 @@ static void Cmd_trysynchronize(void)
         if (GetConfig(B_SYNCHRONIZE_TOXIC) < GEN_5 && synchStatus == MOVE_EFFECT_TOXIC)
             synchStatus = MOVE_EFFECT_POISON;
 
+        gBattleScripting.battler = gBattlerAbility;
         gEffectBattler = gBattleScripting.savedBattler;
         gBattleScripting.moveEffect = synchStatus;
         gBattleStruct->synchronizeState = SYNCH_STATE_SET_STATUS;
@@ -11619,13 +11620,13 @@ static void Cmd_trysynchronize(void)
         gBattleStruct->synchronizeState = SYNCH_STATE_END;
         BattleScriptCall(BattleScript_AbilityPopUp);
         break;
-    case SYNCH_STATE_SET_STATUS:
+    case SYNCH_STATE_SET_STATUS: // Extra step to skip trysynchronize for battler the status is inflicted on, so gEffectBattler isn't assigned to early
         gBattleStruct->synchronizeState = SYNCH_STATE_END;
         gBattlescriptCurrInstr = cmd->nextInstr;
         break;
     case SYNCH_STATE_END:
-        gBattleStruct->synchronizeState = SYNCH_STATE_NONE; // Restore effect battler that was previously set to the synchronize battler
-        gEffectBattler = gBattlerAbility;
+        gBattleStruct->synchronizeState = SYNCH_STATE_NONE;
+        gEffectBattler = gBattlerAbility; // Restore effect battler that was previously set to the synchronize battler
         gBattlescriptCurrInstr = cmd->nextInstr;
         break;
     }
