@@ -564,7 +564,7 @@ TEST("Type names fit on Pokedex Search Screen")
 TEST("Map names fit in popup")
 {
     u32 i, j;
-    const u32 fontId = FONT_NARROW;
+    const u32 fontId = FONT_NARROWER;
     u32 widthPx = 80;
     s8 mapGroup = 0;
     s8 mapNum = 0;
