@@ -543,9 +543,19 @@ static void MapNamePopupAppendFloorNum(u8 *map_name, s8 floorNum)
     *dest = EOS;
 }
 
+u8 *GetPopUpMapName(u8 *dest, const struct MapHeader *mapHeader)
+{
+    GetMapName(dest, mapHeader->regionMapSectionId, 0);
+    if (mapHeader->floorNumber != 0)
+    {
+        MapNamePopupAppendFloorNum(dest, mapHeader->floorNumber);
+    }
+    return dest;
+}
+
 static void ShowMapNamePopUpWindow(void)
 {
-    u8 mapDisplayHeader[27];
+    u8 mapDisplayHeader[MAP_POPUP_STRING_BUFFER_LENGTH];
     u8 *withoutPrefixPtr;
     u8 x;
     const u8 *mapDisplayHeaderSource;
@@ -555,24 +565,20 @@ static void ShowMapNamePopUpWindow(void)
     {
         if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_TOP)
         {
-            withoutPrefixPtr = &(mapDisplayHeader[6]);
+            withoutPrefixPtr = &(mapDisplayHeader[MAP_POPUP_PREFIX_BUFFER_LENGTH]);
             mapDisplayHeaderSource = sBattlePyramid_MapHeaderStrings[FRONTIER_STAGES_PER_CHALLENGE];
         }
         else
         {
-            withoutPrefixPtr = &(mapDisplayHeader[6]);
+            withoutPrefixPtr = &(mapDisplayHeader[MAP_POPUP_PREFIX_BUFFER_LENGTH]);
             mapDisplayHeaderSource = sBattlePyramid_MapHeaderStrings[gSaveBlock2Ptr->frontier.curChallengeBattleNum];
         }
         StringCopy(withoutPrefixPtr, mapDisplayHeaderSource);
     }
     else
     {
-        withoutPrefixPtr = &(mapDisplayHeader[6]);
-        GetMapName(withoutPrefixPtr, gMapHeader.regionMapSectionId, 0);
-        if (gMapHeader.floorNumber != 0)
-        {
-            MapNamePopupAppendFloorNum(withoutPrefixPtr, gMapHeader.floorNumber);
-        }
+        withoutPrefixPtr = &(mapDisplayHeader[MAP_POPUP_PREFIX_BUFFER_LENGTH]);
+        GetPopUpMapName(withoutPrefixPtr, &gMapHeader);
     }
 
     if (OW_POPUP_GENERATION == GEN_5)
