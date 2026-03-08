@@ -168,6 +168,7 @@ enum RandomTag
     RNG_QUICK_DRAW,
     RNG_QUICK_CLAW,
     RNG_TRACE,
+    RNG_FOREWARN,
     RNG_FICKLE_BEAM,
     RNG_AI_ABILITY,
     RNG_AI_SCORE_TIE_DOUBLES_MOVE,
@@ -239,7 +240,9 @@ enum RandomTag
     RNG_MAGNITUDE,
     RNG_FISHING_BITE,
     RNG_FISHING_GEN3_STICKY,
+    RNG_WILD_MON_TARGET,
     RNG_TAUNT,
+    RNG_AI_FAKE_OUT_SAVE_ALLY,
 };
 
 #define RandomWeighted(tag, ...) \

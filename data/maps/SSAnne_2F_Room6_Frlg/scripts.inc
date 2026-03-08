@@ -1,4 +1,4 @@
-SSAnne_2F_Room6_MapScripts::
+SSAnne_2F_Room6_Frlg_MapScripts::
 	.byte 0
 
 SSAnne_2F_Room6_EventScript_Woman1::
@@ -10,9 +10,9 @@ SSAnne_2F_Room6_EventScript_Woman2::
 	end
 
 SSAnne_2F_Room6_Text_CaptainIsAwfullySick::
-    .string "The CAPTAIN said he's awfully sick.\n"
-    .string "He was all pale.$"
+	.string "The CAPTAIN said he's awfully sick.\n"
+	.string "He was all pale.$"
 
 SSAnne_2F_Room6_Text_ManyPeopleGetSeasick::
-    .string "I hear many people get seasick.$"
+	.string "I hear many people get seasick.$"
 

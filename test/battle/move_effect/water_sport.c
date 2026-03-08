@@ -11,7 +11,7 @@ SINGLE_BATTLE_TEST("Water Sport reduces the damage of Fire Type moves by 50% (Ge
     PARAMETRIZE { config = GEN_4; }
     PARAMETRIZE { config = GEN_5; }
     GIVEN {
-        WITH_CONFIG(CONFIG_SPORT_DMG_REDUCTION, config);
+        WITH_CONFIG(B_SPORT_DMG_REDUCTION, config);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

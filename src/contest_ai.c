@@ -343,40 +343,40 @@ static void ContestAI_DoAIProcessing(void)
 {
     while (eContestAI.aiState != CONTESTAI_FINISHED)
     {
-        switch(eContestAI.aiState)
+        switch (eContestAI.aiState)
         {
-            case CONTESTAI_DO_NOT_PROCESS:
-                break;
-            case CONTESTAI_SETTING_UP:
-                gAIScriptPtr = gContestAI_ScriptsTable[eContestAI.currentAIFlag];
+        case CONTESTAI_DO_NOT_PROCESS:
+            break;
+        case CONTESTAI_SETTING_UP:
+            gAIScriptPtr = gContestAI_ScriptsTable[eContestAI.currentAIFlag];
 
-                if (gContestMons[eContestAI.contestantId].moves[eContestAI.nextMoveIndex] == MOVE_NONE)
-                    eContestAI.nextMove = MOVE_NONE; // don't process a move that doesn't exist.
+            if (gContestMons[eContestAI.contestantId].moves[eContestAI.nextMoveIndex] == MOVE_NONE)
+                eContestAI.nextMove = MOVE_NONE; // don't process a move that doesn't exist.
+            else
+                eContestAI.nextMove = gContestMons[eContestAI.contestantId].moves[eContestAI.nextMoveIndex];
+            eContestAI.aiState++;
+            break;
+        case CONTESTAI_PROCESSING:
+            if (eContestAI.nextMove != MOVE_NONE)
+            {
+                sContestAICmdTable[*gAIScriptPtr](); // run the command.
+            }
+            else
+            {
+                eContestAI.moveScores[eContestAI.nextMoveIndex] = 0; // don't consider a move that doesn't exist.
+                eContestAI.aiAction |= AI_ACTION_DONE;
+            }
+            if (eContestAI.aiAction & AI_ACTION_DONE)
+            {
+                eContestAI.nextMoveIndex++;
+                if (eContestAI.nextMoveIndex < MAX_MON_MOVES)
+                    eContestAI.aiState = 0;
                 else
-                    eContestAI.nextMove = gContestMons[eContestAI.contestantId].moves[eContestAI.nextMoveIndex];
-                eContestAI.aiState++;
-                break;
-            case CONTESTAI_PROCESSING:
-                if (eContestAI.nextMove != MOVE_NONE)
-                {
-                    sContestAICmdTable[*gAIScriptPtr](); // run the command.
-                }
-                else
-                {
-                    eContestAI.moveScores[eContestAI.nextMoveIndex] = 0; // don't consider a move that doesn't exist.
-                    eContestAI.aiAction |= AI_ACTION_DONE;
-                }
-                if (eContestAI.aiAction & AI_ACTION_DONE)
-                {
-                    eContestAI.nextMoveIndex++;
-                    if (eContestAI.nextMoveIndex < MAX_MON_MOVES)
-                        eContestAI.aiState = 0;
-                    else
-                        // aiState = CONTESTAI_FINISHED
-                        eContestAI.aiState++;
-                    eContestAI.aiAction &= ~AI_ACTION_DONE;
-                }
-                break;
+                    // aiState = CONTESTAI_FINISHED
+                    eContestAI.aiState++;
+                eContestAI.aiAction &= ~AI_ACTION_DONE;
+            }
+            break;
         }
     }
 }

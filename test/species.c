@@ -71,13 +71,38 @@ TEST("Forms have the appropriate species form changes")
 
         if (IsSpeciesMegaEvolution(i)
             || IsSpeciesGigantamax(i)
-            || IsSpeciesUltraBurst(i))
+            || IsSpeciesUltraBurst(i)
+            || IsSpeciesPrimalReversion(i))
         {
             PARAMETRIZE_LABEL("%S", GetSpeciesName(i)) { species = i; }
         }
     }
-        EXPECT(DoesSpeciesHaveFormChangeMethod(species, FORM_CHANGE_END_BATTLE));
+    bool32 hasBattleEnd = FALSE, hasFaint = FALSE;
+
+    const struct FormChange *formChanges = GetSpeciesFormChanges(species);
+    EXPECT(formChanges != NULL);
+
+    for (u32 j = 0; formChanges[j].method != FORM_CHANGE_TERMINATOR; j++)
+    {
+        if (species != formChanges[j].targetSpecies)
+        {
+            if (formChanges[j].method == FORM_CHANGE_END_BATTLE)
+                hasBattleEnd = TRUE;
+            else if (formChanges[j].method == FORM_CHANGE_FAINT)
+                hasFaint = TRUE;
+        }
     }
+
+    EXPECT(hasBattleEnd);
+
+    // Primal Reversion don't change forms upon fainting
+    if (IsSpeciesMegaEvolution(i)
+        || IsSpeciesGigantamax(i)
+        || IsSpeciesUltraBurst(i))
+    {
+        EXPECT(hasFaint);
+    }
+}
 
 TEST("Form change targets have the appropriate species flags")
 {

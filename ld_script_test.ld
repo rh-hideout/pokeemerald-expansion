@@ -96,6 +96,12 @@ SECTIONS {
         *libnosys.a:*.o(.text*);
     } > ROM =0
 
+    .rodata.compound_string :
+    SUBALIGN(0)
+    {
+        *.o(.rodata.compound_string.*);
+    } > ROM =0
+
     .rodata :
     ALIGN(4)
     {

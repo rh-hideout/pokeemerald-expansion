@@ -26,26 +26,26 @@ static bool32 DoesAbilityBenefitFromWeather(enum Ability ability, u32 weather);
 static bool32 DoesAbilityBenefitFromFieldStatus(enum Ability ability, u32 fieldStatus);
 // A move is light sensitive if it is boosted by Sunny Day and weakened by low light weathers.
 static bool32 IsLightSensitiveMove(enum Move move);
-static bool32 HasLightSensitiveMove(u32 battler);
+static bool32 HasLightSensitiveMove(enum BattlerId battler);
 // The following functions all feed into WeatherChecker, which is then called by ShouldSetWeather and ShouldClearWeather.
 // BenefitsFrom functions all return FIELD_EFFECT_POSITIVE if the weather or field effect is good to have in place from the perspective of the battler, FIELD_EFFECT_NEUTRAL if it is neither good nor bad, and FIELD_EFFECT_NEGATIVE if it is bad.
 // The purpose of WeatherChecker and FieldStatusChecker is to cleanly homogenize the logic that's the same with all of them, and to more easily apply single battle logic to double battles.
 // ShouldSetWeather and ShouldClearWeather are looking for a positive or negative result respectively, and check the entire side.
 // If one pokemon has a positive result and the other has a negative result, it defaults to the opinion of the battler that may change the weather or field status.
-static enum FieldEffectOutcome BenefitsFromSun(u32 battler);
-static enum FieldEffectOutcome BenefitsFromSandstorm(u32 battler);
-static enum FieldEffectOutcome BenefitsFromHailOrSnow(u32 battler, u32 weather);
-static enum FieldEffectOutcome BenefitsFromRain(u32 battler);
+static enum FieldEffectOutcome BenefitsFromSun(enum BattlerId battler);
+static enum FieldEffectOutcome BenefitsFromSandstorm(enum BattlerId battler);
+static enum FieldEffectOutcome BenefitsFromHailOrSnow(enum BattlerId battler, u32 weather);
+static enum FieldEffectOutcome BenefitsFromRain(enum BattlerId battler);
 // The following functions all feed into FieldStatusChecker, which is then called by ShouldSetFieldStatus and ShouldClearFieldStatus.
 // They work approximately the same as the weather functions.
-static enum FieldEffectOutcome BenefitsFromElectricTerrain(u32 battler);
-static enum FieldEffectOutcome BenefitsFromGrassyTerrain(u32 battler);
-static enum FieldEffectOutcome BenefitsFromMistyTerrain(u32 battler);
-static enum FieldEffectOutcome BenefitsFromPsychicTerrain(u32 battler);
-static enum FieldEffectOutcome BenefitsFromGravity(u32 battler);
-static enum FieldEffectOutcome BenefitsFromTrickRoom(u32 battler);
+static enum FieldEffectOutcome BenefitsFromElectricTerrain(enum BattlerId battler);
+static enum FieldEffectOutcome BenefitsFromGrassyTerrain(enum BattlerId battler);
+static enum FieldEffectOutcome BenefitsFromMistyTerrain(enum BattlerId battler);
+static enum FieldEffectOutcome BenefitsFromPsychicTerrain(enum BattlerId battler);
+static enum FieldEffectOutcome BenefitsFromGravity(enum BattlerId battler);
+static enum FieldEffectOutcome BenefitsFromTrickRoom(enum BattlerId battler);
 
-static bool32 HasBattlerTerrainBoostMove(u32 battler, u32 terrain)
+static bool32 HasBattlerTerrainBoostMove(enum BattlerId battler, u32 terrain)
 {
     if (!IsBattlerAlive(battler))
         return FALSE;
@@ -62,7 +62,7 @@ static bool32 HasBattlerTerrainBoostMove(u32 battler, u32 terrain)
     return FALSE;
 }
 
-bool32 WeatherChecker(u32 battler, u32 weather, enum FieldEffectOutcome desiredResult)
+bool32 WeatherChecker(enum BattlerId battler, u32 weather, enum FieldEffectOutcome desiredResult)
 {
     if (IsWeatherActive(B_WEATHER_PRIMAL_ANY) != WEATHER_INACTIVE)
         return (FIELD_EFFECT_BLOCKED == desiredResult);
@@ -99,7 +99,7 @@ bool32 WeatherChecker(u32 battler, u32 weather, enum FieldEffectOutcome desiredR
     return (result == desiredResult);
 }
 
-bool32 FieldStatusChecker(u32 battler, u32 fieldStatus, enum FieldEffectOutcome desiredResult)
+bool32 FieldStatusChecker(enum BattlerId battler, u32 fieldStatus, enum FieldEffectOutcome desiredResult)
 {
     enum FieldEffectOutcome result = FIELD_EFFECT_NEUTRAL;
     enum FieldEffectOutcome firstResult = FIELD_EFFECT_NEUTRAL;
@@ -215,13 +215,13 @@ static bool32 IsLightSensitiveMove(enum Move move)
     }
 }
 
-static bool32 HasLightSensitiveMove(u32 battler)
+static bool32 HasLightSensitiveMove(enum BattlerId battler)
 {
     enum Move *moves = GetMovesArray(battler);
 
-    for (u32 battlerIndex = 0; battlerIndex < MAX_MON_MOVES; battlerIndex++)
+    for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        if (moves[battlerIndex] != MOVE_NONE && moves[battlerIndex] != MOVE_UNAVAILABLE && IsLightSensitiveMove(moves[battlerIndex]))
+        if (moves[moveIndex] != MOVE_NONE && moves[moveIndex] != MOVE_UNAVAILABLE && IsLightSensitiveMove(moves[moveIndex]))
             return TRUE;
     }
 
@@ -230,7 +230,7 @@ static bool32 HasLightSensitiveMove(u32 battler)
 
 // Sun
 // Utility Umbrella does NOT block Ancient Pokemon from their stat boosts.
-static enum FieldEffectOutcome BenefitsFromSun(u32 battler)
+static enum FieldEffectOutcome BenefitsFromSun(enum BattlerId battler)
 {
     enum Ability ability = gAiLogicData->abilities[battler];
 
@@ -255,7 +255,7 @@ static enum FieldEffectOutcome BenefitsFromSun(u32 battler)
 }
 
 // Sandstorm
-static enum FieldEffectOutcome BenefitsFromSandstorm(u32 battler)
+static enum FieldEffectOutcome BenefitsFromSandstorm(enum BattlerId battler)
 {
     if (DoesAbilityBenefitFromWeather(gAiLogicData->abilities[battler], B_WEATHER_SANDSTORM)
      || IS_BATTLER_OF_TYPE(battler, TYPE_ROCK))
@@ -275,7 +275,7 @@ static enum FieldEffectOutcome BenefitsFromSandstorm(u32 battler)
 }
 
 // Hail or Snow
-static enum FieldEffectOutcome BenefitsFromHailOrSnow(u32 battler, u32 weather)
+static enum FieldEffectOutcome BenefitsFromHailOrSnow(enum BattlerId battler, u32 weather)
 {
     if (DoesAbilityBenefitFromWeather(gAiLogicData->abilities[battler], weather)
      || IS_BATTLER_OF_TYPE(battler, TYPE_ICE)
@@ -296,7 +296,7 @@ static enum FieldEffectOutcome BenefitsFromHailOrSnow(u32 battler, u32 weather)
 }
 
 // Rain
-static enum FieldEffectOutcome BenefitsFromRain(u32 battler)
+static enum FieldEffectOutcome BenefitsFromRain(enum BattlerId battler)
 {
     if (gAiLogicData->holdEffects[battler] == HOLD_EFFECT_UTILITY_UMBRELLA)
         return FIELD_EFFECT_NEUTRAL;
@@ -316,7 +316,7 @@ static enum FieldEffectOutcome BenefitsFromRain(u32 battler)
 }
 
 //TODO: when is electric terrain bad?
-static enum FieldEffectOutcome BenefitsFromElectricTerrain(u32 battler)
+static enum FieldEffectOutcome BenefitsFromElectricTerrain(enum BattlerId battler)
 {
     if (DoesAbilityBenefitFromFieldStatus(gAiLogicData->abilities[battler], STATUS_FIELD_ELECTRIC_TERRAIN))
         return FIELD_EFFECT_POSITIVE;
@@ -345,7 +345,7 @@ static enum FieldEffectOutcome BenefitsFromElectricTerrain(u32 battler)
 }
 
 //TODO: when is grassy terrain bad?
-static enum FieldEffectOutcome BenefitsFromGrassyTerrain(u32 battler)
+static enum FieldEffectOutcome BenefitsFromGrassyTerrain(enum BattlerId battler)
 {
     if (DoesAbilityBenefitFromFieldStatus(gAiLogicData->abilities[battler], STATUS_FIELD_GRASSY_TERRAIN))
         return FIELD_EFFECT_POSITIVE;
@@ -373,7 +373,7 @@ static enum FieldEffectOutcome BenefitsFromGrassyTerrain(u32 battler)
 }
 
 //TODO: when is misty terrain bad?
-static enum FieldEffectOutcome BenefitsFromMistyTerrain(u32 battler)
+static enum FieldEffectOutcome BenefitsFromMistyTerrain(enum BattlerId battler)
 {
     if (DoesAbilityBenefitFromFieldStatus(gAiLogicData->abilities[battler], STATUS_FIELD_MISTY_TERRAIN))
         return FIELD_EFFECT_POSITIVE;
@@ -407,7 +407,7 @@ static enum FieldEffectOutcome BenefitsFromMistyTerrain(u32 battler)
 }
 
 //TODO: when is Psychic Terrain negative?
-static enum FieldEffectOutcome BenefitsFromPsychicTerrain(u32 battler)
+static enum FieldEffectOutcome BenefitsFromPsychicTerrain(enum BattlerId battler)
 {
     if (DoesAbilityBenefitFromFieldStatus(gAiLogicData->abilities[battler], STATUS_FIELD_PSYCHIC_TERRAIN))
         return FIELD_EFFECT_POSITIVE;
@@ -446,7 +446,7 @@ static enum FieldEffectOutcome BenefitsFromPsychicTerrain(u32 battler)
     return FIELD_EFFECT_NEUTRAL;
 }
 
-static enum FieldEffectOutcome BenefitsFromGravity(u32 battler)
+static enum FieldEffectOutcome BenefitsFromGravity(enum BattlerId battler)
 {
     if (!AI_IsBattlerGrounded(battler))
         return FIELD_EFFECT_NEGATIVE;
@@ -474,7 +474,7 @@ static enum FieldEffectOutcome BenefitsFromGravity(u32 battler)
     return FIELD_EFFECT_NEUTRAL;
 }
 
-static enum FieldEffectOutcome BenefitsFromTrickRoom(u32 battler)
+static enum FieldEffectOutcome BenefitsFromTrickRoom(enum BattlerId battler)
 {
     // If we're in singles, we literally only care about speed.
     if (IsBattle1v1())
@@ -509,7 +509,7 @@ static enum FieldEffectOutcome BenefitsFromTrickRoom(u32 battler)
     return FIELD_EFFECT_POSITIVE;
 }
 
-s32 CalcWeatherScore(u32 battlerAtk, u32 battlerDef, enum Move move, struct AiLogicData *aiData)
+s32 CalcWeatherScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, struct AiLogicData *aiData)
 {
     s32 score = 0;
 

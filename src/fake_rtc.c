@@ -50,6 +50,9 @@ void FakeRtc_TickTimeForward(void)
 
 void FakeRtc_AdvanceTimeBy(u32 days, u32 hours, u32 minutes, u32 seconds)
 {
+    if (!OW_USE_FAKE_RTC)
+        return;
+
     struct DateTime dateTime;
     struct SiiRtcInfo *rtc = FakeRtc_GetCurrentTime();
 
@@ -63,6 +66,9 @@ void FakeRtc_AdvanceTimeBy(u32 days, u32 hours, u32 minutes, u32 seconds)
 
 void FakeRtc_ForwardTimeTo(u32 hour, u32 minute, u32 second)
 {
+    if (!OW_USE_FAKE_RTC)
+        return;
+
     Script_PauseFakeRtc();
     struct Time diff, target;
     struct SiiRtcInfo *fakeRtc = FakeRtc_GetCurrentTime();

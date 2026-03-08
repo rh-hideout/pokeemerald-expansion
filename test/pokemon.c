@@ -354,10 +354,10 @@ TEST("givemon [moves (default)]")
     }
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_PYUKUMUKU);
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_LEVEL), 100);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE1), learnset[learnsetLength - 1].move);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE2), learnset[learnsetLength - 2].move);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE3), learnset[learnsetLength - 3].move);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE4), learnset[learnsetLength - 4].move);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE1), learnset[learnsetLength - 4].move);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE2), learnset[learnsetLength - 3].move);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE3), learnset[learnsetLength - 2].move);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE4), learnset[learnsetLength - 1].move);
 }
 
 TEST("givemon [all]")
@@ -365,7 +365,7 @@ TEST("givemon [all]")
     ZeroPlayerPartyMons();
 
     RUN_OVERWORLD_SCRIPT(
-        givemon SPECIES_WOBBUFFET, 100, item=ITEM_LEFTOVERS, ball=ITEM_MASTER_BALL, nature=NATURE_BOLD, abilityNum=2, gender=MON_MALE, hpEv=1, atkEv=2, defEv=3, speedEv=4, spAtkEv=5, spDefEv=6, hpIv=7, atkIv=8, defIv=9, speedIv=10, spAtkIv=11, spDefIv=12, move1=MOVE_SCRATCH, move2=MOVE_SPLASH, move3=MOVE_CELEBRATE, move4=MOVE_EXPLOSION, shinyMode=SHINY_MODE_ALWAYS, gmaxFactor=TRUE, teraType=TYPE_FIRE, dmaxLevel=7;
+        givemon SPECIES_WOBBUFFET, 100, item=ITEM_LEFTOVERS, ball=BALL_MASTER, nature=NATURE_BOLD, abilityNum=2, gender=MON_MALE, hpEv=1, atkEv=2, defEv=3, speedEv=4, spAtkEv=5, spDefEv=6, hpIv=7, atkIv=8, defIv=9, speedIv=10, spAtkIv=11, spDefIv=12, move1=MOVE_SCRATCH, move2=MOVE_SPLASH, move3=MOVE_CELEBRATE, move4=MOVE_EXPLOSION, shinyMode=SHINY_MODE_ALWAYS, gmaxFactor=TRUE, teraType=TYPE_FIRE, dmaxLevel=7;
     );
 
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_WOBBUFFET);
@@ -404,7 +404,7 @@ TEST("givemon [vars]")
     VarSet(VAR_TEMP_C, SPECIES_WOBBUFFET);
     VarSet(VAR_TEMP_D, 100);
     VarSet(VAR_0x8000, ITEM_LEFTOVERS);
-    VarSet(VAR_0x8001, ITEM_MASTER_BALL);
+    VarSet(VAR_0x8001, BALL_MASTER);
     VarSet(VAR_0x8002, NATURE_BOLD);
     VarSet(VAR_0x8003, 2);
     VarSet(VAR_0x8004, MON_MALE);
@@ -544,7 +544,7 @@ TEST("CalculateMonStats")
     ZeroPlayerPartyMons();
 
     RUN_OVERWORLD_SCRIPT(
-        givemon SPECIES_WOBBUFFET, 100, item=ITEM_LEFTOVERS, ball=ITEM_MASTER_BALL, nature=NATURE_BOLD, abilityNum=2, gender=MON_MALE, hpEv=1, atkEv=2, defEv=3, speedEv=4, spAtkEv=5, spDefEv=6, hpIv=7, atkIv=8, defIv=9, speedIv=10, spAtkIv=11, spDefIv=12, move1=MOVE_SCRATCH, move2=MOVE_SPLASH, move3=MOVE_CELEBRATE, move4=MOVE_EXPLOSION, shinyMode=SHINY_MODE_ALWAYS, gmaxFactor=TRUE, teraType=TYPE_FIRE, dmaxLevel=7;
+        givemon SPECIES_WOBBUFFET, 100, item=ITEM_LEFTOVERS, ball=BALL_MASTER, nature=NATURE_BOLD, abilityNum=2, gender=MON_MALE, hpEv=1, atkEv=2, defEv=3, speedEv=4, spAtkEv=5, spDefEv=6, hpIv=7, atkIv=8, defIv=9, speedIv=10, spAtkIv=11, spDefIv=12, move1=MOVE_SCRATCH, move2=MOVE_SPLASH, move3=MOVE_CELEBRATE, move4=MOVE_EXPLOSION, shinyMode=SHINY_MODE_ALWAYS, gmaxFactor=TRUE, teraType=TYPE_FIRE, dmaxLevel=7;
     );
 
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MAX_HP), 497);

@@ -11,7 +11,7 @@ WILD_BATTLE_TEST("Pokemon gain experience after catching a Pokemon (Gen6+)")
     PARAMETRIZE { level = 50;        config = GEN_6; }
 
     GIVEN {
-        WITH_CONFIG(CONFIG_EXP_CATCH, config);
+        WITH_CONFIG(B_EXP_CATCH, config);
         PLAYER(SPECIES_WOBBUFFET) { Level(level); }
         OPPONENT(SPECIES_CATERPIE) { HP(1); }
     } WHEN {

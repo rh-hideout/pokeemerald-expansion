@@ -1,4 +1,4 @@
-CeladonCity_Condominiums_2F_MapScripts::
+CeladonCity_Condominiums_2F_Frlg_MapScripts::
 	.byte 0
 
 CeladonCity_Condominiums_2F_EventScript_MeetingRoomSign::
@@ -6,5 +6,5 @@ CeladonCity_Condominiums_2F_EventScript_MeetingRoomSign::
 	end
 
 CeladonCity_Condominiums_2F_Text_GameFreakMeetingRoom::
-    .string "GAME FREAK Meeting Room$"
+	.string "GAME FREAK Meeting Room$"
 

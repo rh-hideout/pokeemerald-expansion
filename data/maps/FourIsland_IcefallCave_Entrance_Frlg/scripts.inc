@@ -1,4 +1,4 @@
-FourIsland_IcefallCave_Entrance_MapScripts::
+FourIsland_IcefallCave_Entrance_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, FourIsland_IcefallCave_Entrance_OnTransition
 	.byte 0
 

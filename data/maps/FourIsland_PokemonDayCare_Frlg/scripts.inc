@@ -1,4 +1,4 @@
-FourIsland_PokemonDayCare_MapScripts::
+FourIsland_PokemonDayCare_Frlg_MapScripts::
 	.byte 0
 
 FourIsland_PokemonDayCare_EventScript_DaycareWoman::

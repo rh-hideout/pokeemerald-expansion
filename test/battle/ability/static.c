@@ -37,7 +37,7 @@ SINGLE_BATTLE_TEST("Static triggers 1/3 times (Gen3) or 30% (Gen4+) of the time"
     PARAMETRIZE { config = GEN_4; passes = 3; trials = 10; } // 30%
     PASSES_RANDOMLY(passes, trials, RNG_STATIC);
     GIVEN {
-        WITH_CONFIG(CONFIG_ABILITY_TRIGGER_CHANCE, config);
+        WITH_CONFIG(B_ABILITY_TRIGGER_CHANCE, config);
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PIKACHU) { Ability(ABILITY_STATIC); }
