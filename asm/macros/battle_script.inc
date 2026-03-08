@@ -1203,18 +1203,22 @@
 	.4byte \failInstr
 	.endm
 
-	.macro tryanystatchange
+	.macro tryanystatchange jumpInstr:req
 	.byte B_SCR_OP_TRYANYSTATCHANGE
+	.4byte \jumpInstr
+	.endm
+
+	.macro trystatchange
+	.byte B_SCR_OP_TRYSTATCHANGE
+	.endm
+
+	.macro trynonmovestatchange
+	.byte B_SCR_OP_TRYNONMOVESTATCHANGE
 	.endm
 
 	.macro callnative func:req
 	.byte B_SCR_OP_CALLNATIVE
 	.4byte \func
-	.endm
-
-	.macro trystatchange failInstr:req
-	callnative BS_TryStatChange
-	.4byte \failInstr
 	.endm
 
 	.macro savetarget

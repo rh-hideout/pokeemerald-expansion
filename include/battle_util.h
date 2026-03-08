@@ -4,6 +4,7 @@
 #include "move.h"
 #include "constants/battle_string_ids.h"
 #include "constants/hold_effects.h"
+#include "constants/battle_stat_change.h"
 
 #define MOVE_LIMITATION_ZEROMOVE                (1 << 0)
 #define MOVE_LIMITATION_PP                      (1 << 1)
@@ -142,8 +143,9 @@ struct BattleCalcValues
 {
     enum BattlerId battlerAtk:3;
     enum BattlerId battlerDef:3;
+    enum BattlerId effectBattler:3;
     enum Move move:16;
-    u32 padding:10;
+    u32 padding:7;
     enum Ability abilities[MAX_BATTLERS_COUNT];
     enum HoldEffect holdEffects[MAX_BATTLERS_COUNT];
 };

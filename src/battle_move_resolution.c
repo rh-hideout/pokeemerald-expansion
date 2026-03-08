@@ -743,6 +743,9 @@ static bool32 ShouldCheckTargetMoveFailure(enum BattlerId battlerAtk, enum Battl
     if (IsBattlerUnaffectedByMove(battlerDef))
         return skipFailure;
 
+    if (!IsBattlerAlive(battlerDef))
+        return skipFailure;
+
     return sShouldCheckTargetMoveFailure[moveTarget](battlerAtk, battlerDef);
 }
 #undef checkFailure
@@ -1832,9 +1835,12 @@ static enum CancelerResult CancelerTargetFailure(struct BattleContext *ctx)
             gLastHitByType[gBattlerTarget] = 0;
             gBattleScripting.battler = ctx->battlerDef;
             gBattleStruct->pledgeMove = FALSE;
+            gBattleStruct->battlerState[ctx->battlerAtk].targetsDone[ctx->battlerDef] = TRUE;
             CancelMultiTurnMoves(ctx->battlerAtk, SKY_DROP_ATTACKCANCELER_CHECK);
             return CANCELER_RESULT_PAUSE;
         }
+
+        gBattleStruct->numPossibleTargets++;
     }
 
     if (IsDoubleBattle())
@@ -1846,6 +1852,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleContext *ctx)
     }
 
     ctx->battlerDef = gBattlerTarget;
+    gBattleStruct->battlerState[ctx->battlerAtk].targetsDone[ctx->battlerAtk] = gBattlerAttacker != gBattlerTarget; // Restore for possible self target moves
     gBattleStruct->eventState.atkCancelerBattler = 0;
     return CANCELER_RESULT_SUCCESS;
 }
@@ -2000,6 +2007,7 @@ static enum CancelerResult CancelerMultihitMoves(struct BattleContext *ctx)
     return CANCELER_RESULT_SUCCESS;
 }
 
+// ShouldSkipFailureCheckOnBattler
 static enum CancelerResult (*const sMoveSuccessOrderCancelers[])(struct BattleContext *ctx) =
 {
     [CANCELER_CLEAR_FLAGS] = CancelerClearFlags,

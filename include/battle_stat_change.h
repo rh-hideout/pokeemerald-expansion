@@ -9,8 +9,7 @@ struct StatChange
 
     enum Stat stat;
     s8 stage;
-    u16 stats;
-    u16 additionalEffect;
+    u8 stats;
 
     // Flags
     u32 silentFailure:1;
@@ -21,14 +20,21 @@ struct StatChange
     u32 notProtectAffected:1;
     u32 updateAdditionalEffectStats:1;
     u32 certain:1;
+    u32 setFailureFlags:1;
+    u32 numFailedTargets:2;
+    u32 nonMoveStatChange:1;
+    u32 nextBattler:1;
     // Some padding
 };
 
 u32 ChangeStatBuffs(enum BattlerId battler, s8 statValue, enum Stat statId, union StatChangeFlags flags, u32 stats, const u8 *BS_ptr);
-bool32 CanAnyStatChange(enum BattlerId battler, enum Ability ability, enum Move move);
+bool32 CompareStat(enum BattlerId battler, enum Stat statId, u32 cmpTo, u32 cmpKind, enum Ability ability);
+bool32 CanAnyStatChange(struct BattleCalcValues *cv, struct StatChange *st);
+void TryStatChange(struct BattleCalcValues *cv, struct StatChange *st);
+enum StatChangeResult TryNonMoveStatChange(struct BattleCalcValues *cv, struct StatChange *st);
+
+bool32 IsStatSet(u32 stat, const struct AdditionalEffect *additionalEffect);
 bool32 IsStatDecreaseEffect(u32 effect);
 bool32 IsStatIncreaseEffect(u32 effect);
-bool32 IsStatSet(u32 stat, const struct AdditionalEffect *additionalEffect);
-bool32 CompareStat(enum BattlerId battler, enum Stat statId, u32 cmpTo, u32 cmpKind, enum Ability ability);
 
 #endif // GUARD_BATTLE_MOVE_STAT_CHANGE_H

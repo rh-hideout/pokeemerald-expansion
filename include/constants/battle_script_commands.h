@@ -227,6 +227,8 @@ enum BattleScriptOpcode
     B_SCR_OP_SETNONVOLATILESTATUS,
     B_SCR_OP_TRYOVERWRITEABILITY,
     B_SCR_OP_TRYANYSTATCHANGE,
+    B_SCR_OP_TRYSTATCHANGE,
+    B_SCR_OP_TRYNONMOVESTATCHANGE,
 
     // Expansion users, please don't use any of the unused commands.
     // They are reserved for expansion usage.
@@ -260,8 +262,6 @@ enum BattleScriptOpcode
     B_SCR_OP_UNUSED_27,
     B_SCR_OP_UNUSED_28,
     B_SCR_OP_UNUSED_29,
-    B_SCR_OP_UNUSED_30,
-    B_SCR_OP_UNUSED_31,
     B_SCR_OP_CALLNATIVE,
 };
 

@@ -113,3 +113,15 @@ SINGLE_BATTLE_TEST("Anger Shell does not activate if move is boosted by Sheer Fo
         EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
     }
 }
+
+SINGLE_BATTLE_TEST("Anger Shell ...")
+{
+    u16 maxHp = 500, hp = 251;
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_KLAWF) { Ability(ABILITY_ANGER_SHELL); MaxHP(maxHp); HP(hp); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+    }
+}

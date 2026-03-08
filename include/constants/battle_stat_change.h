@@ -29,4 +29,12 @@ enum StatChangeResult
 #define BIT_ACC                     (1 << 6)
 #define BIT_EVASION                 (1 << 7)
 
+enum StatChangeProcess
+{
+    PROCESS_ADJUST_STATS, // Default state
+    PROCESS_NEGATIVE_STATS,
+    PROCESS_POSITIVE_STATS,
+    PROCESS_STATS_DONE,
+};
+
 #endif // GUARD_BATTLE_MOVE_STAT_CHANGE_H

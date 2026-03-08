@@ -4,6 +4,7 @@
 // should they be included here or included individually by every file?
 #include "constants/battle_end_turn.h"
 #include "constants/battle_switch_in.h"
+#include "constants/battle_stat_change.h"
 #include "constants/abilities.h"
 #include "constants/battle.h"
 #include "constants/battle_move_resolution.h"
@@ -125,6 +126,9 @@ struct SpecialStatus
     u8 distortedTypeMatchups:1;
     u8 teraShellAbilityDone:1;
     u8 dancerOriginalTarget:3;
+    // End of byte
+    u8 statsToChange[NUM_STATS];
+    s8 statStages[NUM_STATS];
     // End of byte
 };
 
@@ -547,9 +551,6 @@ struct EventStates
 // Cleared at the beginning of the battle. Fields need to be cleared when needed manually otherwise.
 struct BattleStruct
 {
-    u8 positiveStats;
-    u8 negativeStats;
-
     struct BattlerState battlerState[MAX_BATTLERS_COUNT];
     struct PartyState partyState[NUM_BATTLE_SIDES][PARTY_SIZE];
     struct EventStates eventState;
@@ -558,10 +559,9 @@ struct BattleStruct
     u16 moveTarget[MAX_BATTLERS_COUNT];
     u32 expShareExpValue;
     u32 expValue;
-    u8 currStatToChange:6;
+    u8 currStatToChange:4;
+    enum StatChangeProcess statChangeProcess:2;
     u8 statChangeMoveAnimPlayed:2;
-    u8 statChanges[NUM_STAT_SIGNS][NUM_BATTLE_STATS];
-    s8 statsToChange[NUM_BATTLE_STATS];
     u8 weatherDuration;
     u8 expGettersOrder[PARTY_SIZE]; // First battlers which were sent out, then via exp-share
     u8 expGetterMonId;
@@ -691,13 +691,14 @@ struct BattleStruct
     s16 passiveHpUpdate[MAX_BATTLERS_COUNT]; // non-move damage and healing
     s16 moveDamage[MAX_BATTLERS_COUNT];
     u16 moveResultFlags[MAX_BATTLERS_COUNT];
-    enum CalcDamageState noResultString[MAX_BATTLERS_COUNT];
     u8 doneDoublesSpreadHit:1;
     u8 calculatedDamageDone:1;
     u8 calculatedSpreadMoveAccuracy:1;
     u8 printedStrongWindsWeakenedAttack:1;
     u8 numSpreadTargets:3;
     u8 moldBreakerActive:1;
+    u8 numPossibleTargets:3;
+    u8 unused2:5;
     struct MessageStatus slideMessageStatus;
     u8 trainerSlideSpriteIds[MAX_BATTLERS_COUNT];
     u8 hazardsQueue[NUM_BATTLE_SIDES][HAZARDS_MAX_COUNT];

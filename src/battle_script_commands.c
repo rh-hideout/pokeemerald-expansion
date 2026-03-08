@@ -573,8 +573,10 @@ static void Cmd_swapstatstages(void);
 static void Cmd_averagestats(void);
 static void Cmd_setnonvolatilestatus(void);
 static void Cmd_tryoverwriteability(void);
-static void Cmd_dummy(void);
 static void Cmd_tryanystatchange(void);
+static void Cmd_trystatchange(void);
+static void Cmd_trynonmovestatchange(void);
+static void Cmd_dummy(void);
 static void Cmd_callnative(void);
 
 void (*const gBattleScriptingCommandsTable[])(void) =
@@ -803,6 +805,8 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_SETNONVOLATILESTATUS]                  = Cmd_setnonvolatilestatus,
     [B_SCR_OP_TRYOVERWRITEABILITY]                   = Cmd_tryoverwriteability,
     [B_SCR_OP_TRYANYSTATCHANGE]                      = Cmd_tryanystatchange,
+    [B_SCR_OP_TRYSTATCHANGE]                         = Cmd_trystatchange,
+    [B_SCR_OP_TRYNONMOVESTATCHANGE]                  = Cmd_trynonmovestatchange,
     [B_SCR_OP_UNUSED_1]                              = Cmd_dummy,
     [B_SCR_OP_UNUSED_2]                              = Cmd_dummy,
     [B_SCR_OP_UNUSED_3]                              = Cmd_dummy,
@@ -832,8 +836,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_27]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_28]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_29]                             = Cmd_dummy,
-    [B_SCR_OP_UNUSED_30]                             = Cmd_dummy,
-    [B_SCR_OP_UNUSED_31]                             = Cmd_dummy,
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
 
@@ -8913,8 +8915,8 @@ static void Cmd_halvehp(void)
 {
     CMD_ARGS();
 
-    if (!CanAnyStatChange(gBattlerTarget, ABILITY_NONE, gCurrentMove))
-        gBattlescriptCurrInstr = BattleScript_ButItFailed;
+    // if (!CanAnyStatChange(gBattlerTarget, ABILITY_NONE, gCurrentMove))
+    //     gBattlescriptCurrInstr = BattleScript_ButItFailed;
 
     u32 halfHp = GetNonDynamaxMaxHP(gBattlerTarget) / 2;
 
@@ -11085,88 +11087,181 @@ static void Cmd_tryoverwriteability(void)
     }
 }
 
-// Add wont change message
 static void Cmd_tryanystatchange(void)
+{
+    CMD_ARGS(const u8 *jumpInstr);
+
+    struct BattleCalcValues cv = {
+        .battlerAtk = gBattlerAttacker,
+        .battlerDef = gBattlerTarget,
+        .move = gCurrentMove,
+    };
+
+    struct StatChange st = {
+        .onlyChecking = TRUE,
+        .certain = gBattlerAttacker == gBattlerTarget,
+    };
+
+    u32 numFailure = 0;
+    bool32 changeStat = FALSE;
+
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+    {
+
+        if (gBattleStruct->battlerState[cv.battlerAtk].targetsDone[battler])
+            continue;
+
+        cv.effectBattler = battler;
+        cv.abilities[battler] = GetBattlerAbility(battler);
+        cv.holdEffects[battler] = GetBattlerHoldEffect(battler);
+
+        if (CanAnyStatChange(&cv, &st))
+        {
+            changeStat = TRUE;
+        }
+        else
+        {
+            gBattleStruct->moveResultFlags[cv.effectBattler] |= MOVE_RESULT_FAILED;
+            numFailure++;
+        }
+    }
+
+    if (changeStat)
+    {
+        gBattlescriptCurrInstr = cmd->nextInstr;
+    }
+    if (gBattleStruct->numPossibleTargets > 1 && numFailure == gBattleStruct->numPossibleTargets)
+    {
+        gBattlescriptCurrInstr = BattleScript_ButItFailed;
+    }
+    else
+    {
+        gBattlescriptCurrInstr = cmd->jumpInstr;
+    }
+
+    gBattleStruct->currStatToChange = STAT_ATK;
+    gBattleStruct->additionalEffectsCounter = 0;
+    gBattleStruct->eventState.atkCancelerBattler = 0;
+}
+
+static enum BattlerId GetTargetBySlot(enum BattlerId battlerAtk, enum BattlerId battlerDef)
+{
+    switch (battlerDef)
+    {
+    case B_BATTLER_0:
+        return battlerAtk;
+    case B_BATTLER_1:
+        return BATTLE_PARTNER(battlerAtk);
+    case B_BATTLER_2:
+        return LEFT_FOE(battlerAtk);
+    case B_BATTLER_3:
+        return RIGHT_FOE(battlerAtk);
+    default:
+        errorf("Illegal battler");
+        return B_BATTLER_0;
+    }
+}
+
+static void Cmd_trystatchange(void)
 {
     CMD_ARGS();
 
-    // struct BattleContext *ctx = {
-    //     .battlerAtk = gBattlerAttacker,
-    //     .battlerDef = gBattlerTarget,
-    //     .move = gCurrentMove,
-    //     .abilityAtk = GetBattlerAbility(gBattlerAttacker);
-    //     .holdEffectAtk = GetBattlerHoldEffect(gBattlerAttacker);
-    //     .abilityDef = GetBattlerAbility(gBattlerTarget);
-    //     .holdEffectDef = GetBattlerHoldEffect(gBattlerTarget);
-    // }
+    if (gBattleControllerExecFlags)
+        return;
 
-    // struct StatChange *st = {
-    //     .printStatCantChangeMsg = TRUE,
-    //     .battleScript = cmd->currInstr,
-    // }
+    // Avoids addtional redundant function calls
+    // Doesn't avoid all calls because it's NUM_STATS it's still possible counter hasn't been incremented
+    if (gBattleStruct->additionalEffectsCounter == GetMoveAdditionalEffectCount(gCurrentMove)
+     && gBattleStruct->currStatToChange == NUM_STATS)
+    {
+        gBattleStruct->eventState.atkCancelerBattler++;
+        gBattleStruct->currStatToChange = STAT_ATK;
+        gBattleStruct->additionalEffectsCounter = 0;
+    }
 
-    // enum StatChangeResult result = CanAnyStatChange(&ctx, &st);
+    if (gBattleStruct->eventState.atkCancelerBattler >= gBattlersCount)
+        goto next_instr;
 
-    // if (result == STAT_CHANGE_BLOCKED_BY_TARGET)
-    //     return;
+    struct BattleCalcValues cv = {
+        .battlerAtk = gBattlerAttacker,
+        .battlerDef = gBattlerTarget,
+        .move = gCurrentMove,
+    };
 
-    // // The idea is to fully intergrate it into canceler
-    // if (result == STAT_CHANGE_NOT_POSSIBLE)
-    // if (gBattleStruct->statCheckFailureDone)
-    // {
-    //     gBattlescriptCurrInstr = BattleScript_ButItFailed;
-    // }
+    struct StatChange st = {
+        .certain = gBattlerAttacker == gBattlerTarget,
+    };
 
-    // gBattleStruct->currStatToChange = STAT_ATK;
+    while (gBattleStruct->eventState.atkCancelerBattler < gBattlersCount)
+    {
+        cv.effectBattler = GetTargetBySlot(gBattlerAttacker, gBattleStruct->eventState.atkCancelerBattler);
+
+        if (gBattleStruct->battlerState[cv.battlerAtk].targetsDone[cv.effectBattler])
+        {
+            gBattleStruct->eventState.atkCancelerBattler++;
+            continue;
+        }
+
+        cv.abilities[cv.effectBattler] = GetBattlerAbility(cv.effectBattler);
+        cv.holdEffects[cv.effectBattler] = GetBattlerHoldEffect(cv.effectBattler);
+
+        TryStatChange(&cv, &st);
+
+        if (st.nextBattler || gBattleStruct->additionalEffectsCounter == GetMoveAdditionalEffectCount(gCurrentMove))
+        {
+            st.nextBattler = FALSE;
+            gBattleStruct->eventState.atkCancelerBattler++;
+        }
+
+        if (st.battleScript != NULL)
+        {
+            BattleScriptCall(st.battleScript);
+            return;
+        }
+    }
+
+    next_instr:
+    gBattleStruct->currStatToChange = STAT_ATK;
+    gBattleStruct->additionalEffectsCounter = 0;
+    gBattleStruct->eventState.atkCancelerBattler = 0;
+    gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-void BS_TryStatChange(void)
+static void Cmd_trynonmovestatchange(void)
 {
-    NATIVE_ARGS(const u8 *jumpInstr);
-    // u32 stat = 0;
-    // u32 numAdditionalEffects = GetMoveAdditionalEffectCount(gCurrentMove);
+    CMD_ARGS();
 
-    // while (gBattleStruct->additionalEffectsCounter < numAdditionalEffects)
-    // {
-    //     while (gBattleStruct->currStatToChange < NUM_STATS)
-    //     {
-    //         const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
-    //         stat = gBattleStruct->currStatToChange++;
+    if (gBattleControllerExecFlags)
+        return;
 
-    //         if (!IsStatSet(stat, additionalEffect))
-    //             continue;
+    if (gBattleStruct->statChangeProcess  == PROCESS_STATS_DONE)
+        goto next_instr;
 
-    //         enum Ability ability = GetBattlerAbility(gBattlerTarget);
+    struct BattleCalcValues cv = {
+        .battlerAtk = gBattlerAttacker,
+        .battlerDef = gBattlerTarget,
+        .effectBattler = gEffectBattler,
+        .move = MOVE_NONE,
+    };
 
-    //         if (IsStatDecreaseEffect(additionalEffect->moveEffect)
-    //          && !CompareStat(gBattlerTarget, stat, MIN_STAT_STAGE, CMP_EQUAL, ability))
-    //         {
-    //             u32 stage = additionalEffect->moveEffect - STAT_CHANGE_EFFECT_MINUS_1 + 1;
-    //             SET_STATCHANGER(stat, stage, TRUE);
-    //             gBattlescriptCurrInstr = cmd->nextInstr;
-    //             return;
-    //         }
+    cv.abilities[cv.effectBattler] = GetBattlerAbility(cv.effectBattler);
+    cv.holdEffects[cv.effectBattler] = GetBattlerHoldEffect(cv.effectBattler);
 
-    //         if (IsStatIncreaseEffect(additionalEffect->moveEffect)
-    //          && !CompareStat(gBattlerTarget, stat, MAX_STAT_STAGE, CMP_EQUAL, ability))
-    //         {
-    //             u32 stage = additionalEffect->moveEffect - STAT_CHANGE_EFFECT_PLUS_1 + 1;
-    //             SET_STATCHANGER(stat, stage, gCurrentMove, stage), FALSE);
-    //             gBattlescriptCurrInstr = cmd->nextInstr;
-    //             return;
-    //         }
+    struct StatChange st = {
+        .certain = TRUE,
+        .nonMoveStatChange = TRUE,
+    };
 
-    //     }
+    if (TryNonMoveStatChange(&cv, &st) == STAT_CHANGE_WORKED)
+    {
+        BattleScriptCall(st.battleScript);
+        return;
+    }
 
-    //     gBattleStruct->additionalEffectsCounter++;
-    //     gBattleStruct->currStatToChange = STAT_ATK;
-    //     gBattleScripting.statAnimPlayed = FALSE;
-    // }
-
-    // gBattleStruct->additionalEffectsCounter = 0;
-    // gBattleStruct->currStatToChange = STAT_ATK;
-    // gBattleScripting.statAnimPlayed = FALSE;
-    gBattlescriptCurrInstr = cmd->jumpInstr;
+    next_instr:
+    gBattleStruct->currStatToChange = STAT_ATK;
+    gBattleStruct->statChangeProcess = PROCESS_ADJUST_STATS;
+    gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 static void Cmd_dummy(void)
