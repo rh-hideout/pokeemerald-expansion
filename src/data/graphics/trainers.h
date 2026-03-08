@@ -578,28 +578,10 @@ const union AnimCmd *const sBackAnims_OldManPokedude[] = {
     (const struct TrainerBackPicInfo[])                                                      \
     {{                                                                                       \
         .coordinates = {.size = 8, .y_offset = yOffset},                                     \
-        .backPic = {.data = sprite, .size = TRAINER_PIC_SIZE, .relativeFrames = TRUE},       \
+        .image = {.data = sprite, .size = TRAINER_PIC_SIZE, .relativeFrames = TRUE},         \
         .paletteData = pal,                                                                  \
         .animation = anim,                                                                   \
     }}
-
-//     struct TrainerFrontPicInfo
-// {
-//     u8 y_offset;
-//     const u32 *imageData;
-//     const u32 *paletteData;
-//     const union AnimCmd *const *const animation;
-//     const struct Coords16 mugshotCoords;
-//     s16 mugshotRotation;
-// };
-
-// struct TrainerBackPicInfo
-// {
-//     const struct MonCoords coordinates;
-//     const struct SpriteFrameImage backPic;
-//     const u32 *palette;
-//     const union AnimCmd *const *const animation;
-// };
 
 const struct TrainerPicInfo gTrainerPicInfo[TRAINER_PIC_COUNT] =
 {
@@ -1417,28 +1399,4 @@ const struct TrainerSprite gTrainerSprites[] =
     TRAINER_SPRITE(TRAINER_PIC_RUIN_MANIAC_FRLG, gTrainerFrontPic_RuinManiacFrlg, gTrainerPalette_RuinManiacFrlg),
     TRAINER_SPRITE(TRAINER_PIC_LADY_FRLG, gTrainerFrontPic_LadyFrlg, gTrainerPalette_LadyFrlg),
     TRAINER_SPRITE(TRAINER_PIC_PAINTER_FRLG, gTrainerFrontPic_PainterFrlg, gTrainerPalette_PainterFrlg),
-};
-
-#define TRAINER_BACK_SPRITE(trainerPic, yOffset, sprite, pal, anim)                          \
-    [trainerPic] =                                                                           \
-    {                                                                                        \
-        .coordinates = {.size = 8, .y_offset = yOffset},                                     \
-        .backPic = {.data = sprite, .size = TRAINER_PIC_SIZE, .relativeFrames = TRUE},       \
-        .palette = {.data = pal, .tag = trainerPic},                                         \
-        .animation = anim,                                                                   \
-    }
-
-const struct TrainerBacksprite gTrainerBacksprites[] =
-{
-    TRAINER_BACK_SPRITE(TRAINER_PIC_BRENDAN, 4, gTrainerBackPic_Brendan, gTrainerPalette_Brendan, sBackAnims_Hoenn),
-    TRAINER_BACK_SPRITE(TRAINER_PIC_MAY, 4, gTrainerBackPic_May, gTrainerPalette_May, sBackAnims_Hoenn),
-    TRAINER_BACK_SPRITE(TRAINER_PIC_RED, 5, gTrainerBackPic_Red, gTrainerBackPicPalette_Red, sBackAnims_Kanto),
-    TRAINER_BACK_SPRITE(TRAINER_PIC_LEAF, 5, gTrainerBackPic_Leaf, gTrainerBackPicPalette_Leaf, sBackAnims_Kanto),
-    TRAINER_BACK_SPRITE(TRAINER_PIC_RS_BRENDAN, 4, gTrainerBackPic_RubySapphireBrendan, gTrainerPalette_RubySapphireBrendan, sBackAnims_Hoenn),
-    TRAINER_BACK_SPRITE(TRAINER_PIC_RS_MAY, 4, gTrainerBackPic_RubySapphireMay, gTrainerPalette_RubySapphireMay, sBackAnims_Hoenn),
-    TRAINER_BACK_SPRITE(TRAINER_PIC_WALLY, 4, gTrainerBackPic_Wally, gTrainerPalette_Wally, sBackAnims_Hoenn),
-    TRAINER_BACK_SPRITE(TRAINER_PIC_STEVEN, 4, gTrainerBackPic_Steven, gTrainerPalette_Steven, sBackAnims_Hoenn),
-    TRAINER_BACK_SPRITE(TRAINER_PIC_POKEDUDE, 4, gTrainerBackPic_Pokedude, gTrainerBackPicPalette_Pokedude, sBackAnims_OldManPokedude),
-    TRAINER_BACK_SPRITE(TRAINER_PIC_OLD_MAN, 4, gTrainerBackPic_OldMan, gTrainerBackPicPalette_OldMan, sBackAnims_OldManPokedude),
-
 };

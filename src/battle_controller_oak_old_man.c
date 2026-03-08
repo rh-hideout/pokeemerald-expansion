@@ -678,7 +678,7 @@ void OakOldManBufferExecCompleted(enum BattlerId battler)
 static void OakOldManHandleDrawTrainerPic(enum BattlerId battler)
 {
     u32 trainerPicId = (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE) ? gSaveBlock2Ptr->playerGender + TRAINER_PIC_RED : TRAINER_PIC_OLD_MAN;
-    BtlController_HandleDrawTrainerPic(battler, trainerPicId, FALSE, 80, (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80, 30);
+    BtlController_HandleDrawTrainerPic(battler, trainerPicId, FALSE, 80, (8 - GetTrainerBackPicCoords(trainerPicId)->size) * 4 + 80, 30);
 }
 
 static void OakOldManHandleTrainerSlide(enum BattlerId battler)
@@ -856,7 +856,7 @@ static void OakOldManHandleIntroTrainerBallThrow(enum BattlerId battler)
 {
     if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
     {
-        const u16 *trainerPal = gTrainerBacksprites[gSaveBlock2Ptr->playerGender].palette.data;
+        const u16 *trainerPal = GetTrainerBackPicPalette(gSaveBlock2Ptr->playerGender);
         BtlController_HandleIntroTrainerBallThrow(battler, 0xD6F8, trainerPal, 31, Intro_TryShinyAnimShowHealthbox);
     }
     else

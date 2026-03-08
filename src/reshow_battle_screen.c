@@ -24,7 +24,7 @@ static void CreateHealthboxSprite(enum BattlerId battler);
 static void ClearBattleBgCntBaseBlocks(void);
 static void CreateCaughtMonSprite(void);
 
-#define CATCH_TUTORIAL_TRAINER_PIC_BACK (IS_FRLG ? TRAINER_PIC_OLD_MAN : TRAINER_PIC_WALLY)
+#define CATCH_TUTORIAL_TRAINER_PIC (IS_FRLG ? TRAINER_PIC_OLD_MAN : TRAINER_PIC_WALLY)
 
 void ReshowBattleScreenDummy(void)
 {
@@ -284,7 +284,7 @@ static bool8 LoadBattlerSpriteGfx(enum BattlerId battler)
         else if (gBattleTypeFlags & BATTLE_TYPE_SAFARI && position == B_POSITION_PLAYER_LEFT)
             DecompressTrainerBackPic((gSaveBlock2Ptr->playerGender == FEMALE) ? TRAINER_PIC_PLAYER_FEMALE : TRAINER_PIC_PLAYER_MALE, battler);
         else if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL && position == B_POSITION_PLAYER_LEFT)
-            DecompressTrainerBackPic(CATCH_TUTORIAL_TRAINER_PIC_BACK, battler);
+            DecompressTrainerBackPic(CATCH_TUTORIAL_TRAINER_PIC, battler);
         else if (!gBattleSpritesDataPtr->battlerData[battler].behindSubstitute)
             BattleLoadMonSpriteGfx(GetBattlerMon(battler), battler);
         else
@@ -332,19 +332,19 @@ void CreateBattlerSprite(enum BattlerId battler)
             enum TrainerPicID trainerPicId = (gSaveBlock2Ptr->playerGender == FEMALE) ? TRAINER_PIC_PLAYER_FEMALE : TRAINER_PIC_PLAYER_MALE;
             SetMultiuseSpriteTemplateToTrainerBack(trainerPicId, position);
             gBattlerSpriteIds[battler] = CreateSprite(&gMultiuseSpriteTemplate, 0x50,
-                                                (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80,
+                                                (8 - GetTrainerBackPicCoords(trainerPicId)->size) * 4 + 80,
                                                  GetBattlerSpriteSubpriority(0));
-            gSprites[gBattlerSpriteIds[battler]].oam.paletteNum = IndexOfSpritePaletteTag(gTrainerBacksprites[trainerPicId].palette.tag);
+            gSprites[gBattlerSpriteIds[battler]].oam.paletteNum = IndexOfSpritePaletteTag(trainerPicId);
             gSprites[gBattlerSpriteIds[battler]].callback = SpriteCallbackDummy;
             gSprites[gBattlerSpriteIds[battler]].data[0] = battler;
         }
         else if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL && position == B_POSITION_PLAYER_LEFT)
         {
-            SetMultiuseSpriteTemplateToTrainerBack(CATCH_TUTORIAL_TRAINER_PIC_BACK, position);
+            SetMultiuseSpriteTemplateToTrainerBack(CATCH_TUTORIAL_TRAINER_PIC, position);
             gBattlerSpriteIds[battler] = CreateSprite(&gMultiuseSpriteTemplate, 0x50,
-                                                (8 - gTrainerBacksprites[CATCH_TUTORIAL_TRAINER_PIC_BACK].coordinates.size) * 4 + 80,
+                                                (8 - GetTrainerBackPicCoords(CATCH_TUTORIAL_TRAINER_PIC)->size) * 4 + 80,
                                                  GetBattlerSpriteSubpriority(0));
-            gSprites[gBattlerSpriteIds[battler]].oam.paletteNum = IndexOfSpritePaletteTag(gTrainerBacksprites[CATCH_TUTORIAL_TRAINER_PIC_BACK].palette.tag);
+            gSprites[gBattlerSpriteIds[battler]].oam.paletteNum = IndexOfSpritePaletteTag(CATCH_TUTORIAL_TRAINER_PIC);
             gSprites[gBattlerSpriteIds[battler]].callback = SpriteCallbackDummy;
             gSprites[gBattlerSpriteIds[battler]].data[0] = battler;
         }
