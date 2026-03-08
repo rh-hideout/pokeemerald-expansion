@@ -2399,7 +2399,7 @@ static const struct TrainerTowerFloor sTrainerTowerFloor_Single_5 = {
                 {
                     .species = SPECIES_TAUROS,
                     .heldItem = ITEM_SILK_SCARF,
-                    .moves = {MOVE_EARTHQUAKE, MOVE_BODY_SLAM, MOVE_ROCK_TOMB, MOVE_PURSUIT},
+                    .moves = {MOVE_EARTHQUAKE, MOVE_BODY_SLAM, MOVE_ROCK_TOMB},
                     .hpEV = 84,
                     .attackEV = 84,
                     .defenseEV = 84,

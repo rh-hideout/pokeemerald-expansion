@@ -944,11 +944,6 @@
 	.byte B_SCR_OP_SETSAFEGUARD
 	.endm
 
-	.macro jumpifnopursuitswitchdmg jumpInstr:req
-	.byte B_SCR_OP_JUMPIFNOPURSUITSWITCHDMG
-	.4byte \jumpInstr
-	.endm
-
 	.macro tryactivateitem battler:req, flag:req
 	.byte B_SCR_OP_TRYACTIVATEITEM
 	.byte \battler
@@ -1129,11 +1124,6 @@
 
 	.macro settypetoenvironment failInstr:req
 	.byte B_SCR_OP_SETTYPETOENVIRONMENT
-	.4byte \failInstr
-	.endm
-
-	.macro pursuitdoubles failInstr:req
-	.byte B_SCR_OP_PURSUITDOUBLES
 	.4byte \failInstr
 	.endm
 

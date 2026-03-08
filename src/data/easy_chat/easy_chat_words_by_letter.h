@@ -1273,7 +1273,6 @@ const u16 gEasyChatWordsByLetter_P[] = {
     EC_MOVE(PSYWAVE),
     EC_POKEMON_NATIONAL(PUPITAR),
     EC_WORD_PURE_POWER,
-    EC_MOVE(PURSUIT),
     EC_WORD_PUSHOVER,
 };
 

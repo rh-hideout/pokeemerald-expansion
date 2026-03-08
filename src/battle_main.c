@@ -3158,7 +3158,6 @@ static void BattleStartClearSetData(void)
     gBattleStruct->swapDamageCategory = FALSE; // Photon Geyser, Shell Side Arm, Light That Burns the Sky
     gBattleStruct->categoryOverride = FALSE; // used for Z-Moves and Max Moves
 
-    ClearPursuitValues();
     gSelectedMonPartyId = PARTY_SIZE; // Revival Blessing
     gCategoryIconSpriteId = 0xFF;
 
@@ -3284,8 +3283,6 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
     gBattleStruct->battlerState[battler].wasAboveHalfHp = gBattleMons[battler].hp > gBattleMons[battler].maxHP / 2;
     gBattleStruct->hazardsCounter = 0;
 
-    ClearPursuitValuesIfSet(battler);
-
     for (u32 i = 0; i < ARRAY_COUNT(gSideTimers); i++)
     {
         // Switched into sticky web user slot, so reset stored battler ID
@@ -3390,8 +3387,6 @@ const u8* FaintClearSetData(enum BattlerId battler)
     gBattleStruct->palaceFlags &= ~(1u << battler);
     if (battler == gBattlerAttacker)
         gBattleStruct->moldBreakerActive = FALSE;
-
-    ClearPursuitValuesIfSet(battler);
 
     if (gBattleStruct->battlerState[battler].commanderSpecies != SPECIES_NONE)
     {
@@ -5154,7 +5149,6 @@ static void TurnValuesCleanUp(bool8 var0)
     gBattleStruct->pledgeMove = FALSE; // combined pledge move may not have been used due to a canceler
     gBattleStruct->tryDestinyBond = FALSE;
     gBattleStruct->tryGrudge = FALSE;
-    ClearPursuitValues();
     ClearDamageCalcResults();
 }
 
@@ -5379,19 +5373,11 @@ static void RunTurnActionsFunctions(void)
     // Mega Evolve / Focus Punch-like moves after switching, items, running, but before using a move.
     if (gCurrentActionFuncId == B_ACTION_USE_MOVE && !gBattleStruct->effectsBeforeUsingMoveDone)
     {
-        if (!IsPursuitTargetSet())
-        {
-            if (TryDoGimmicksBeforeMoves())
-                return;
-            else if (TryDoMoveEffectsBeforeMoves())
-                return;
-            gBattleStruct->effectsBeforeUsingMoveDone = TRUE;
-        }
-        else
-        {
-            if (TryActivateGimmick(gBattlerByTurnOrder[gCurrentTurnActionNumber]))
-                return;
-        }
+        if (TryDoGimmicksBeforeMoves())
+            return;
+        else if (TryDoMoveEffectsBeforeMoves())
+            return;
+        gBattleStruct->effectsBeforeUsingMoveDone = TRUE;
     }
 
     gBattleStruct->savedTurnActionNumber = gCurrentTurnActionNumber;

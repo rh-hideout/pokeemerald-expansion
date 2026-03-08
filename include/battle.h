@@ -493,7 +493,6 @@ struct BattlerState
     u32 usedEjectItem:1;
     u32 sleepClauseEffectExempt:1; // Stores whether effect should be exempt from triggering Sleep Clause (Effect Spore)
     u32 usedMicleBerry:1;
-    u32 pursuitTarget:1;
     u32 stompingTantrumTimer:2;
     u32 canPickupItem:1;
     u32 ateBoost:1;
@@ -677,7 +676,6 @@ struct BattleStruct
     u16 opponentMonCanTera:6;
     u16 opponentMonCanDynamax:6;
     u16 additionalEffectsCounter:4; // A counter for the additionalEffects applied by the current move in Cmd_setadditionaleffects
-    u8 pursuitStoredSwitch; // Stored id for the Pursuit target's switch
     s32 battlerExpReward;
     u16 prevTurnSpecies[MAX_BATTLERS_COUNT]; // Stores species the AI has in play at start of turn
     s16 passiveHpUpdate[MAX_BATTLERS_COUNT]; // non-move damage and healing

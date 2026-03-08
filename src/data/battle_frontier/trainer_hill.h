@@ -4197,7 +4197,7 @@ static const struct TrainerHillFloor sFloors_Expert[] = {
                                         {
                                             .species = SPECIES_DUSCLOPS,
                                             .heldItem = ITEM_LEFTOVERS,
-                                            .moves = {MOVE_PURSUIT, MOVE_PROTECT, MOVE_ATTRACT, MOVE_WILL_O_WISP},
+                                            .moves = {MOVE_NIGHT_SHADE, MOVE_PROTECT, MOVE_ATTRACT, MOVE_WILL_O_WISP},
                                             .hpEV = 252,
                                             .defenseEV = 252,
                                             .spDefenseEV = 6,

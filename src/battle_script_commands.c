@@ -524,7 +524,6 @@ static void Cmd_jumpifconfusedandstatmaxed(void);
 static void Cmd_setembargo(void);
 static void Cmd_presentdamagecalculation(void);
 static void Cmd_setsafeguard(void);
-static void Cmd_jumpifnopursuitswitchdmg(void);
 static void Cmd_tryactivateitem(void);
 static void Cmd_halvehp(void);
 static void Cmd_copyfoestats(void);
@@ -561,7 +560,6 @@ static void Cmd_settypebasedhalvers(void);
 static void Cmd_jumpifsubstituteblocks(void);
 static void Cmd_tryrecycleitem(void);
 static void Cmd_settypetoenvironment(void);
-static void Cmd_pursuitdoubles(void);
 static void Cmd_snatchsetbattlers(void);
 static void Cmd_handleballthrow(void);
 static void Cmd_givecaughtmon(void);
@@ -754,7 +752,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_SETEMBARGO]                            = Cmd_setembargo,
     [B_SCR_OP_PRESENTDAMAGECALCULATION]              = Cmd_presentdamagecalculation,
     [B_SCR_OP_SETSAFEGUARD]                          = Cmd_setsafeguard,
-    [B_SCR_OP_JUMPIFNOPURSUITSWITCHDMG]              = Cmd_jumpifnopursuitswitchdmg,
     [B_SCR_OP_TRYACTIVATEITEM]                       = Cmd_tryactivateitem,
     [B_SCR_OP_HALVEHP]                               = Cmd_halvehp,
     [B_SCR_OP_COPYFOESTATS]                          = Cmd_copyfoestats,
@@ -791,7 +788,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_JUMPIFSUBSTITUTEBLOCKS]                = Cmd_jumpifsubstituteblocks,
     [B_SCR_OP_TRYRECYCLEITEM]                        = Cmd_tryrecycleitem,
     [B_SCR_OP_SETTYPETOENVIRONMENT]                  = Cmd_settypetoenvironment,
-    [B_SCR_OP_PURSUITDOUBLES]                        = Cmd_pursuitdoubles,
     [B_SCR_OP_SNATCHSETBATTLERS]                     = Cmd_snatchsetbattlers,
     [B_SCR_OP_HANDLEBALLTHROW]                       = Cmd_handleballthrow,
     [B_SCR_OP_GIVECAUGHTMON]                         = Cmd_givecaughtmon,
@@ -9275,27 +9271,6 @@ static void Cmd_setsafeguard(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static void Cmd_jumpifnopursuitswitchdmg(void)
-{
-    CMD_ARGS(const u8 *jumpInstr);
-
-    u32 savedTarget = gBattlerTarget;
-
-    if (SetTargetToNextPursuiter(gBattlerAttacker))
-    {
-        ChangeOrderTargetAfterAttacker();
-        gBattleStruct->battlerState[gBattlerAttacker].pursuitTarget = TRUE;
-        gBattleStruct->pursuitStoredSwitch = gBattleStruct->monToSwitchIntoId[gBattlerAttacker];
-        gBattleStruct->moveTarget[gBattlerTarget] = gBattlerAttacker;
-        gBattlerTarget = savedTarget;
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-    else
-    {
-        gBattlescriptCurrInstr = cmd->jumpInstr;
-    }
-}
-
 static void Cmd_tryactivateitem(void)
 {
     CMD_ARGS(u8 battler, u8 flag);
@@ -10441,31 +10416,6 @@ static void Cmd_settypetoenvironment(void)
         PREPARE_TYPE_BUFFER(gBattleTextBuff1, environmentType);
 
         gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-    else
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-}
-
-// Unused
-static void Cmd_pursuitdoubles(void)
-{
-    CMD_ARGS(const u8 *failInstr);
-
-    enum BattlerId battler = GetBattlerAtPosition(BATTLE_PARTNER(GetBattlerPosition(gBattlerAttacker)));
-
-    if (IsDoubleBattle()
-        && !(gAbsentBattlerFlags & (1u << battler))
-        && gChosenActionByBattler[battler] == B_ACTION_USE_MOVE
-        && GetMoveEffect(gChosenMoveByBattler[battler]) == EFFECT_PURSUIT)
-    {
-        gActionsByTurnOrder[battler] = B_ACTION_TRY_FINISH;
-        gCurrentMove = gChosenMoveByBattler[battler];
-        gBattlescriptCurrInstr = cmd->nextInstr;
-        gBattleScripting.animTurn = 1;
-        gBattleScripting.savedBattler = gBattlerAttacker;
-        gBattlerAttacker = battler;
     }
     else
     {

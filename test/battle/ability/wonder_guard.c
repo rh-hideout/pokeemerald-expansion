@@ -35,7 +35,6 @@ SINGLE_BATTLE_TEST("Wonder Guard does not activate when targeted by moves super 
     PARAMETRIZE { move = MOVE_PECK; }
     PARAMETRIZE { move = MOVE_ROCK_THROW; }
     PARAMETRIZE { move = MOVE_ASTONISH; }
-    PARAMETRIZE { move = MOVE_PURSUIT; }
     GIVEN {
         PLAYER(SPECIES_SHEDINJA) { Ability(ABILITY_WONDER_GUARD); }
         OPPONENT(SPECIES_WOBBUFFET);

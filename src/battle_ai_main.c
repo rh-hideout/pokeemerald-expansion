@@ -6868,17 +6868,6 @@ static s32 AI_PredictSwitch(enum BattlerId battlerAtk, enum BattlerId battlerDef
     // Switch benefit
     switch (moveEffect)
     {
-    case EFFECT_PURSUIT:
-    {
-        u32 hitsToKO = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, gAiThinkingStruct->movesetIndex, AI_ATTACKING, CONSIDER_ENDURE);
-        if (hitsToKO == 2)
-            ADJUST_SCORE(GOOD_EFFECT);
-        else if (hitsToKO == 1)
-            ADJUST_SCORE(BEST_EFFECT);
-        else if (IsSwitchOutEffect(GetMoveEffect(predictedMove)) && AI_WhoStrikesFirst(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY) == AI_IS_SLOWER) // Pursuit against fast U-Turn
-            ADJUST_SCORE(DECENT_EFFECT);
-        break;
-    }
 
     case EFFECT_FOCUS_PUNCH:
         ADJUST_SCORE(DECENT_EFFECT);

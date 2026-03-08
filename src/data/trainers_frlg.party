@@ -6144,7 +6144,7 @@ Raticate
 Level: 42
 IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
 - Super Fang
-- Pursuit
+- Endeavor
 - Scary Face
 - Quick Attack
 
@@ -6203,7 +6203,7 @@ Level: 42
 IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
 - Drill Peck
 - Mirror Move
-- Pursuit
+- Endeavor
 - Leer
 
 Persian
@@ -6260,7 +6260,7 @@ Raticate
 Level: 42
 IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
 - Super Fang
-- Pursuit
+- Endeavor
 - Scary Face
 - Quick Attack
 
@@ -6596,7 +6596,7 @@ IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
 - Pin Missile
 - Twineedle
 - Agility
-- Pursuit
+- Endeavor
 
 Butterfree
 Level: 42
@@ -10758,7 +10758,7 @@ Level: 52
 IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
 - Thrash
 - Horn Attack
-- Pursuit
+- Endeavor
 - Swagger
 
 === TRAINER_RUIN_MANIAC_BRANDON ===
@@ -13273,7 +13273,7 @@ Level: 57
 IVs: 26 HP / 26 Atk / 26 Def / 26 SpA / 26 SpD / 26 Spe
 - Take Down
 - Scary Face
-- Pursuit
+- Endeavor
 - Swagger
 
 === TRAINER_BUG_CATCHER_COLTON_2 ===

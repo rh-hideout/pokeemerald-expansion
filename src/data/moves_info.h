@@ -6163,30 +6163,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .validApprenticeMove = TRUE,
     },
 
-    [MOVE_PURSUIT] =
-    {
-        .name = COMPOUND_STRING("Pursuit"),
-        .description = COMPOUND_STRING(
-            "Inflicts bad damage if used\n"
-            "on a foe switching out."),
-        .effect = EFFECT_PURSUIT,
-        .power = 40,
-        .type = TYPE_DARK,
-        .accuracy = 100,
-        .pp = 20,
-        .target = TARGET_SELECTED,
-        .priority = 0,
-        .category = DAMAGE_CATEGORY_PHYSICAL,
-        .makesContact = TRUE,
-        .ignoresKingsRock = (B_UPDATED_MOVE_FLAGS == GEN_3 || B_UPDATED_MOVE_FLAGS == GEN_4),
-        .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_STARTLE_MONS_SAME_TYPE_APPEAL : CONTEST_EFFECT_BADLY_STARTLE_MONS_WITH_GOOD_APPEALS,
-        .contestCategory = CONTEST_CATEGORY_SMART,
-        .contestComboStarterId = 0,
-        .contestComboMoves = {0},
-        .battleAnimScript = gBattleAnimMove_Pursuit,
-        .validApprenticeMove = TRUE,
-    },
-
     [MOVE_RAPID_SPIN] =
     {
         .name = COMPOUND_STRING("Rapid Spin"),

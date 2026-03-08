@@ -88,7 +88,6 @@ const u16 gEasyChatGroup_Move1[] = {
     MOVE_PSYCHIC,
     MOVE_PSYCHO_BOOST,
     MOVE_PSYWAVE,
-    MOVE_PURSUIT,
     MOVE_RAGE,
     MOVE_RAIN_DANCE,
     MOVE_RAPID_SPIN,

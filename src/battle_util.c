@@ -923,7 +923,7 @@ void HandleAction_ActionFinished(void)
     gBattleResources->battleScriptsStack->size = 0;
     gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_NONE;
 
-    if (GetConfig(B_RECALC_TURN_AFTER_ACTIONS) >= GEN_8 && !afterYouActive && !gBattleStruct->pledgeMove && !IsPursuitTargetSet())
+    if (GetConfig(B_RECALC_TURN_AFTER_ACTIONS) >= GEN_8 && !afterYouActive && !gBattleStruct->pledgeMove)
     {
         // i starts at `gCurrentTurnActionNumber` because we don't want to recalculate turn order for mon that have already
         // taken action. It's been previously increased, which we want in order to not recalculate the turn of the mon that just finished its action
@@ -6336,10 +6336,6 @@ static inline u32 CalcMoveBasePower(struct BattleContext *ctx)
         if (ctx->weather & B_WEATHER_ANY)
             basePower *= 2;
         break;
-    case EFFECT_PURSUIT:
-        if (gBattleStruct->battlerState[battlerDef].pursuitTarget)
-            basePower *= 2;
-        break;
     case EFFECT_NATURAL_GIFT:
         basePower = gNaturalGiftTable[ITEM_TO_BERRY(gBattleMons[battlerAtk].item)].power;
         break;
@@ -9934,52 +9930,6 @@ bool32 IsMoveEffectBlockedByTarget(enum Ability ability)
     return FALSE;
 }
 
-bool32 SetTargetToNextPursuiter(enum BattlerId battlerDef)
-{
-    u32 i;
-    for (i = gCurrentTurnActionNumber + 1; i < gBattlersCount; i++)
-    {
-        enum BattlerId battler = gBattlerByTurnOrder[i];
-        if (gChosenActionByBattler[battler] == B_ACTION_USE_MOVE
-        && GetMoveEffect(gChosenMoveByBattler[battler]) == EFFECT_PURSUIT
-        && IsBattlerAlive(battlerDef)
-        && IsBattlerAlive(battler)
-        && !IsBattlerAlly(battler, battlerDef)
-        && (B_PURSUIT_TARGET >= GEN_4 || gBattleStruct->moveTarget[battler] == battlerDef)
-        && !IsGimmickSelected(battler, GIMMICK_Z_MOVE)
-        && !IsGimmickSelected(battler, GIMMICK_DYNAMAX)
-        && GetActiveGimmick(battler) != GIMMICK_DYNAMAX)
-        {
-            gBattlerTarget = battler;
-            return TRUE;
-        }
-    }
-    return FALSE;
-}
-
-bool32 IsPursuitTargetSet(void)
-{
-    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
-    {
-        if (gBattleStruct->battlerState[battler].pursuitTarget)
-            return TRUE;
-    }
-    return FALSE;
-}
-
-void ClearPursuitValues(void)
-{
-    for (enum BattlerId i = 0; i < gBattlersCount; i++)
-        gBattleStruct->battlerState[i].pursuitTarget = FALSE;
-    gBattleStruct->pursuitStoredSwitch = PARTY_SIZE;
-}
-
-void ClearPursuitValuesIfSet(enum BattlerId battler)
-{
-    if (gBattleStruct->battlerState[battler].pursuitTarget)
-        ClearPursuitValues();
-}
-
 bool32 HasWeatherEffect(void)
 {
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
@@ -10329,10 +10279,6 @@ bool32 CanMoveSkipAccuracyCalc(enum BattlerId battlerAtk, enum BattlerId battler
     else if (gBattleMons[battlerDef].volatiles.telekinesis
           && !IsSemiInvulnerable(battlerDef, CHECK_ALL)
           && moveEffect != EFFECT_OHKO)
-    {
-        effect = TRUE;
-    }
-    else if (gBattleStruct->battlerState[battlerDef].pursuitTarget)
     {
         effect = TRUE;
     }

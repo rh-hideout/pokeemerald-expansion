@@ -1054,10 +1054,6 @@ static bool32 AI_IsMoveEffectInPlus(enum BattlerId battlerAtk, enum BattlerId ba
         if (BattlerStatCanRise(battlerAtk, abilityAtk, STAT_ATK) && noOfHitsToKo == 1)
             return TRUE;
         break;
-    case EFFECT_PURSUIT:
-        if (noOfHitsToKo == 1)
-            return TRUE;
-        break;
     default:
         break;
     }
@@ -3163,8 +3159,6 @@ bool32 IsChaseEffect(enum BattleMoveEffects effect)
     // Effects that hit switching out mons like Pursuit
     switch (effect)
     {
-    case EFFECT_PURSUIT:
-        return TRUE;
     default:
         return FALSE;
     }

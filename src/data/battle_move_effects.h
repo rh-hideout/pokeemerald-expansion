@@ -725,13 +725,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 7,
         .battleFactoryStyle = FACTORY_STYLE_ENDURANCE,
     },
-
-    [EFFECT_PURSUIT] =
-    {
-        .battleScript = BattleScript_EffectHit,
-        .battleTvScore = 2,
-    },
-
+    
     [EFFECT_CAPTIVATE] =
     {
         .battleScript = BattleScript_EffectCaptivate,

@@ -771,9 +771,6 @@ bool32 IsAffectedByFollowMe(enum BattlerId battlerAtk, enum BattleSide defSide, 
         || IsAbilityAndRecord(battlerAtk, ability, ABILITY_STALWART))
         return FALSE;
 
-    if (effect == EFFECT_PURSUIT && IsPursuitTargetSet())
-        return FALSE;
-
     if (gSideTimers[defSide].followmePowder && !IsAffectedByPowderMove(battlerAtk, ability, GetBattlerHoldEffect(battlerAtk)))
         return FALSE;
 
@@ -3800,36 +3797,6 @@ static enum MoveEndResult MoveEndDancer(void)
     return result;
 }
 
-static enum MoveEndResult MoveEndPursuitNextAction(void)
-{
-    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
-
-    if (gBattleStruct->battlerState[gBattlerTarget].pursuitTarget)
-    {
-        u32 storedTarget = gBattlerTarget;
-        if (SetTargetToNextPursuiter(gBattlerTarget))
-        {
-            ChangeOrderTargetAfterAttacker();
-            gBattleStruct->moveTarget[gBattlerTarget] = storedTarget;
-            gBattlerTarget = storedTarget;
-        }
-        else if (IsBattlerAlive(gBattlerTarget))
-        {
-            gBattlerAttacker = gBattlerTarget;
-            if (gBattleStruct->pursuitStoredSwitch == PARTY_SIZE)
-                gBattlescriptCurrInstr = BattleScript_MoveSwitchOpenPartyScreen;
-            else
-                gBattlescriptCurrInstr = BattleScript_DoSwitchOut;
-            gBattleStruct->monToSwitchIntoId[gBattlerTarget] = gBattleStruct->pursuitStoredSwitch;
-            ClearPursuitValues();
-            result = MOVEEND_RESULT_RUN_SCRIPT;
-        }
-    }
-
-    gBattleScripting.moveendState++;
-    return result;
-}
-
 static enum MoveEndResult (*const sMoveEndHandlers[])(void) =
 {
     [MOVEEND_SET_VALUES] = MoveEndSetValues,
@@ -3879,7 +3846,6 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(void) =
     [MOVEEND_PICKPOCKET] = MoveEndPickpocket,
     [MOVEEND_CLEAR_BITS] = MoveEndClearBits,
     [MOVEEND_DANCER] = MoveEndDancer,
-    [MOVEEND_PURSUIT_NEXT_ACTION] = MoveEndPursuitNextAction,
 };
 
 enum MoveEndResult DoMoveEnd(enum MoveEndState endMode, enum MoveEndState endState)

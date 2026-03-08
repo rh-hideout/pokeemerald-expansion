@@ -126,7 +126,6 @@ enum MoveEndState
     MOVEEND_EJECT_PACK,
     MOVEEND_CLEAR_BITS,
     MOVEEND_DANCER,
-    MOVEEND_PURSUIT_NEXT_ACTION,
     MOVEEND_COUNT,
 
     // This guarantees a correct jump if new moveends are added directly after MOVEEND_HIT_ESCAPE

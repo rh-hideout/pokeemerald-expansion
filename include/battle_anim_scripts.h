@@ -230,7 +230,6 @@ extern const u8 gBattleAnimMove_Megahorn[];
 extern const u8 gBattleAnimMove_DragonBreath[];
 extern const u8 gBattleAnimMove_BatonPass[];
 extern const u8 gBattleAnimMove_Encore[];
-extern const u8 gBattleAnimMove_Pursuit[];
 extern const u8 gBattleAnimMove_RapidSpin[];
 extern const u8 gBattleAnimMove_SweetScent[];
 extern const u8 gBattleAnimMove_IronTail[];

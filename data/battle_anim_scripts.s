@@ -22007,33 +22007,6 @@ gBattleAnimMove_Reversal::
 	createvisualtask AnimTask_ShakeTargetBasedOnMovePowerOrDmg, 5, FALSE, 1, 8, 1, 0
 	end
 
-gBattleAnimMove_Pursuit::
-	loadspritegfx ANIM_TAG_IMPACT
-	monbg ANIM_TARGET
-	fadetobg BG_DARK
-	waitbgfadein
-	delay 0
-	setalpha 12, 8
-	choosetwoturnanim PursuitNormal, PursuitOnSwitchout
-PursuitContinue:
-	waitforvisualfinish
-	clearmonbg ANIM_TARGET
-	blendoff
-	delay 0
-	restorebg
-	waitbgfadein
-	end
-PursuitNormal:
-	playsewithpan SE_M_COMET_PUNCH, SOUND_PAN_TARGET
-	create_basic_hitsplat_sprite ANIM_ATTACKER, 3, x=0, y=0, relative_to=ANIM_TARGET, animation=2
-	createvisualtask AnimTask_ShakeTargetBasedOnMovePowerOrDmg, 5, FALSE, 1, 6, 1, 0
-	goto PursuitContinue
-PursuitOnSwitchout:
-	playsewithpan SE_M_COMET_PUNCH, SOUND_PAN_TARGET
-	create_basic_hitsplat_sprite ANIM_ATTACKER, 3, x=0, y=0, relative_to=ANIM_TARGET, animation=1
-	createvisualtask AnimTask_ShakeTargetBasedOnMovePowerOrDmg, 5, FALSE, 1, 6, 1, 0
-	goto PursuitContinue
-
 gBattleAnimMove_SpikeCannon::
 	loadspritegfx ANIM_TAG_NEEDLE
 	loadspritegfx ANIM_TAG_IMPACT

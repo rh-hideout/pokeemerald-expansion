@@ -230,16 +230,15 @@ BattleScript_SyrupBombEndTurn::
 BattleScript_SyrupBombTurnDmgEnd:
 	end2
 
-BattleScript_MoveSwitchPursuitEnd:
-	call BattleScript_MoveSwitchPursuitRet
+BattleScript_MoveSwitchChaseEnd:
+	call BattleScript_MoveSwitchChaseRet
 	end
 
-BattleScript_MoveSwitchPursuitRet:
+BattleScript_MoveSwitchChaseRet:
 	jumpifbattletype BATTLE_TYPE_ARENA, BattleScript_MoveSwitchEnd
 	jumpifcantswitch SWITCH_IGNORE_ESCAPE_PREVENTION | BS_ATTACKER, BattleScript_MoveSwitchEnd
 	printstring STRINGID_PKMNWENTBACK
 	waitmessage B_WAIT_TIME_SHORT
-	jumpifnopursuitswitchdmg BattleScript_MoveSwitchOpenPartyScreenRet
 	return
 
 BattleScript_MoveSwitch::
@@ -977,7 +976,7 @@ BattleScript_EffectPartingShotMaybeSwitch:
 
 BattleScript_EffectPartingShotSwitch:
 	moveendall
-	goto BattleScript_MoveSwitchPursuitEnd
+	goto BattleScript_MoveSwitchChaseEnd
 
 BattleScript_EffectPartingShotCantLowerMultipleStats:
 	pause B_WAIT_TIME_SHORT
@@ -2190,7 +2189,7 @@ BattleScript_EffectHitEscape::
 	setbyte sGIVEEXP_STATE, 0
 	getexp BS_TARGET
 BattleScript_HitEscapeSwitch:
-	call BattleScript_MoveSwitchPursuitRet
+	call BattleScript_MoveSwitchChaseRet
 	return
 
 BattleScript_EffectPlaceholder::
@@ -4342,7 +4341,6 @@ BattleScript_PrintFullBox::
 BattleScript_ActionSwitch::
 	hpthresholds2 BS_ATTACKER
 	printstring STRINGID_RETURNMON
-	jumpifnopursuitswitchdmg BattleScript_DoSwitchOut
 	end2
 
 BattleScript_DoSwitchOut::

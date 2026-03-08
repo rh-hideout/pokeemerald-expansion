@@ -301,19 +301,6 @@ AI_SINGLE_BATTLE_TEST("AI chooses moves that cure inactive party members")
     }
 }
 
-AI_SINGLE_BATTLE_TEST("AI prioritizes Pursuit if it would KO opponent")
-{
-    GIVEN {
-        ASSUME(GetMoveEffect(MOVE_PURSUIT) == EFFECT_PURSUIT);
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
-        PLAYER(SPECIES_ESPEON) { Level(5); }
-        PLAYER(SPECIES_TYRANITAR);
-        OPPONENT(SPECIES_TYRANITAR) { Moves(MOVE_CRUNCH, MOVE_PURSUIT); }
-    } WHEN {
-        TURN { SWITCH(player, 1); EXPECT_MOVE(opponent, MOVE_PURSUIT); SEND_OUT(player, 1); }
-    }
-}
-
 AI_SINGLE_BATTLE_TEST("AI uses Quick Guard against Quick Attack when opponent would die of poison")
 {
     GIVEN {

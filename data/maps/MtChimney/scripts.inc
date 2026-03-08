@@ -691,7 +691,7 @@ MtChimney_Text_ArchieThankYou:
 	.string "Whose side are you on?\p"
 	.string "Ah, it doesn't matter.\p"
 	.string "We will remain vigilant and keep up\n"
-	.string "our pursuit of TEAM MAGMA.\p"
+	.string "our chase of TEAM MAGMA.\p"
 	.string "{PLAYER}, we shall meet again!$"
 
 MtChimney_Text_MagmaOutnumbersUs:

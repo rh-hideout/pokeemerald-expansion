@@ -1830,14 +1830,6 @@ static const struct BardSoundTemplate sBardSoundTemplates_Moves[MOVES_COUNT][MAX
         NULL_BARD_SOUND,
         NULL_BARD_SOUND,
     },
-    [MOVE_PURSUIT] = {
-        { .songId = PHONEME_ID(PH_NURSE_BLEND) },
-        { .songId = PHONEME_ID(PH_GOOSE_BLEND) },
-        PREV_BARD_SOUND,
-        NULL_BARD_SOUND,
-        NULL_BARD_SOUND,
-        NULL_BARD_SOUND,
-    },
     [MOVE_RAPID_SPIN] = {
         { .songId = PHONEME_ID(PH_TRAP_BLEND) },
         { .songId = PHONEME_ID(PH_KIT_BLEND) },

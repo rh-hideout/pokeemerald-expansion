@@ -130,7 +130,6 @@
     F(B_DESTINY_BOND_FAIL,         destinyBondFail,         (u32, GEN_COUNT - 1)) \
     F(B_FORESIGHT_FAIL,            foresightFail,           (u32, GEN_COUNT - 1)) \
     F(B_MIRACLE_EYE_FAIL,          miracleEyeFail,          (u32, GEN_COUNT - 1)) \
-    F(B_PURSUIT_TARGET,            pursuitTarget,           (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_SKIP_RECHARGE,             skipRecharge,            (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_ENCORE_TARGET,             encoreTarget,            (u32, GEN_COUNT - 1)) \
     F(B_TIME_OF_DAY_HEALING_MOVES, timeOfDayHealingMoves,   (u32, GEN_COUNT - 1)) \

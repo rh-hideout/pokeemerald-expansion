@@ -1399,7 +1399,7 @@
       },
       {
         "Level": 22,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 25,
@@ -1570,7 +1570,7 @@
       "MOVE_DEFOG",
       "MOVE_FAINT_ATTACK",
       "MOVE_FORESIGHT",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_STEEL_WING",
       "MOVE_UPROAR"
     ],
@@ -1680,7 +1680,7 @@
       "MOVE_DEFOG",
       "MOVE_FAINT_ATTACK",
       "MOVE_FORESIGHT",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_STEEL_WING",
       "MOVE_UPROAR"
     ],
@@ -1796,7 +1796,7 @@
       "MOVE_DEFOG",
       "MOVE_FAINT_ATTACK",
       "MOVE_FORESIGHT",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_STEEL_WING",
       "MOVE_UPROAR"
     ],
@@ -1834,7 +1834,7 @@
       },
       {
         "Level": 13,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 16,
@@ -1962,7 +1962,7 @@
       },
       {
         "Level": 13,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 16,
@@ -2083,7 +2083,7 @@
       },
       {
         "Level": 13,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 17,
@@ -2191,7 +2191,7 @@
       },
       {
         "Level": 13,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 17,
@@ -2376,7 +2376,7 @@
       "MOVE_IRON_TAIL",
       "MOVE_POISON_FANG",
       "MOVE_POISON_TAIL",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SCARY_FACE",
       "MOVE_SLAM",
       "MOVE_SNATCH",
@@ -2529,7 +2529,7 @@
       "MOVE_IRON_TAIL",
       "MOVE_POISON_FANG",
       "MOVE_POISON_TAIL",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SCARY_FACE",
       "MOVE_SLAM",
       "MOVE_SNATCH",
@@ -3147,7 +3147,7 @@
       "MOVE_FOCUS_ENERGY",
       "MOVE_IRON_TAIL",
       "MOVE_POISON_TAIL",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SKULL_BASH",
       "MOVE_SUPERSONIC",
       "MOVE_TAKE_DOWN"
@@ -3258,7 +3258,7 @@
       "MOVE_FOCUS_ENERGY",
       "MOVE_IRON_TAIL",
       "MOVE_POISON_TAIL",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SKULL_BASH",
       "MOVE_SUPERSONIC",
       "MOVE_TAKE_DOWN"
@@ -3382,7 +3382,7 @@
       "MOVE_FOCUS_ENERGY",
       "MOVE_IRON_TAIL",
       "MOVE_POISON_TAIL",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SKULL_BASH",
       "MOVE_SUPERSONIC",
       "MOVE_TAKE_DOWN"
@@ -4682,7 +4682,7 @@
       "MOVE_GUST",
       "MOVE_HYPNOSIS",
       "MOVE_NASTY_PLOT",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_QUICK_ATTACK",
       "MOVE_STEEL_WING",
       "MOVE_WHIRLWIND",
@@ -4808,7 +4808,7 @@
       "MOVE_GUST",
       "MOVE_HYPNOSIS",
       "MOVE_NASTY_PLOT",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_QUICK_ATTACK",
       "MOVE_STEEL_WING",
       "MOVE_WHIRLWIND",
@@ -5216,7 +5216,7 @@
       "MOVE_METAL_CLAW",
       "MOVE_NATURAL_GIFT",
       "MOVE_PSYBEAM",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SCREECH",
       "MOVE_SWEET_SCENT"
     ],
@@ -5346,7 +5346,7 @@
       "MOVE_METAL_CLAW",
       "MOVE_NATURAL_GIFT",
       "MOVE_PSYBEAM",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SCREECH",
       "MOVE_SWEET_SCENT"
     ],
@@ -5699,7 +5699,7 @@
       "MOVE_HEADBUTT",
       "MOVE_MEMENTO",
       "MOVE_MUD_BOMB",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_REVERSAL",
       "MOVE_SCREECH",
       "MOVE_UPROAR"
@@ -5831,7 +5831,7 @@
       "MOVE_HEADBUTT",
       "MOVE_MEMENTO",
       "MOVE_MUD_BOMB",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_REVERSAL",
       "MOVE_SCREECH",
       "MOVE_UPROAR"
@@ -9979,7 +9979,7 @@
       },
       {
         "Level": 19,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 23,
@@ -10089,7 +10089,7 @@
       },
       {
         "Level": 19,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 23,
@@ -12890,7 +12890,7 @@
       "MOVE_HI_JUMP_KICK",
       "MOVE_MACH_PUNCH",
       "MOVE_MIND_READER",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_RAPID_SPIN",
       "MOVE_VACUUM_WAVE"
     ],
@@ -12922,7 +12922,7 @@
       },
       {
         "Level": 11,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 16,
@@ -13028,7 +13028,7 @@
       "MOVE_HI_JUMP_KICK",
       "MOVE_MACH_PUNCH",
       "MOVE_MIND_READER",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_RAPID_SPIN",
       "MOVE_VACUUM_WAVE"
     ],
@@ -14991,7 +14991,7 @@
       },
       {
         "Level": 9,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 13,
@@ -15653,7 +15653,7 @@
       },
       {
         "Level": 15,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 19,
@@ -17236,7 +17236,7 @@
       "MOVE_CURSE",
       "MOVE_DRAGON_BREATH",
       "MOVE_FORESIGHT",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_ROOST",
       "MOVE_STEEL_WING",
       "MOVE_TAILWIND",
@@ -17390,7 +17390,7 @@
       "MOVE_FISSURE",
       "MOVE_LICK",
       "MOVE_NATURAL_GIFT",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_WHIRLWIND",
       "MOVE_SELF_DESTRUCT",
       "MOVE_ZEN_HEADBUTT"
@@ -19810,7 +19810,7 @@
       "MOVE_IRON_TAIL",
       "MOVE_LAST_RESORT",
       "MOVE_NATURAL_GIFT",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_REVERSAL",
       "MOVE_SLASH",
       "MOVE_TRICK"
@@ -19952,7 +19952,7 @@
       "MOVE_IRON_TAIL",
       "MOVE_LAST_RESORT",
       "MOVE_NATURAL_GIFT",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_REVERSAL",
       "MOVE_SLASH",
       "MOVE_TRICK"
@@ -20566,7 +20566,7 @@
       "MOVE_ELECTROWEB",
       "MOVE_NIGHT_SLASH",
       "MOVE_PSYBEAM",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_RAGE_POWDER",
       "MOVE_SIGNAL_BEAM",
       "MOVE_SONIC_BOOM",
@@ -20693,7 +20693,7 @@
       "MOVE_ELECTROWEB",
       "MOVE_NIGHT_SLASH",
       "MOVE_PSYBEAM",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_RAGE_POWDER",
       "MOVE_SIGNAL_BEAM",
       "MOVE_SONIC_BOOM",
@@ -20822,7 +20822,7 @@
       "MOVE_GUST",
       "MOVE_HYPNOSIS",
       "MOVE_NASTY_PLOT",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_QUICK_ATTACK",
       "MOVE_STEEL_WING",
       "MOVE_WHIRLWIND",
@@ -23433,7 +23433,7 @@
       "MOVE_COVET",
       "MOVE_DOUBLE_SLAP",
       "MOVE_FAKE_OUT",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_REVENGE",
       "MOVE_SCREECH",
       "MOVE_SLAM",
@@ -23747,7 +23747,7 @@
       },
       {
         "Level": 30,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 33,
@@ -23807,7 +23807,7 @@
       "MOVE_FEINT",
       "MOVE_FAINT_ATTACK",
       "MOVE_LEECH_LIFE",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_REVERSAL",
       "MOVE_SECRET_POWER",
       "MOVE_SIGNAL_BEAM",
@@ -24223,7 +24223,7 @@
       },
       {
         "Level": 9,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 13,
@@ -24347,7 +24347,7 @@
       },
       {
         "Level": 5,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 11,
@@ -25227,7 +25227,7 @@
       },
       {
         "Level": 10,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 13,
@@ -26101,7 +26101,7 @@
       },
       {
         "Level": 9,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 13,
@@ -26467,7 +26467,7 @@
       "MOVE_FOCUS_PUNCH",
       "MOVE_HARDEN",
       "MOVE_MEGAHORN",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_REVENGE",
       "MOVE_SEISMIC_TOSS"
     ],
@@ -26608,7 +26608,7 @@
       "MOVE_ICE_PUNCH",
       "MOVE_ICE_SHARD",
       "MOVE_PUNISHMENT",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SPITE"
     ],
     "TutorMoves": [
@@ -28088,7 +28088,7 @@
       "MOVE_DRILL_PECK",
       "MOVE_ENDURE",
       "MOVE_GUARD_SWAP",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SKY_ATTACK",
       "MOVE_STEALTH_ROCK",
       "MOVE_WHIRLWIND"
@@ -28216,7 +28216,7 @@
       "MOVE_FIRE_SPIN",
       "MOVE_NASTY_PLOT",
       "MOVE_PUNISHMENT",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_RAGE",
       "MOVE_REVERSAL",
       "MOVE_SPITE",
@@ -28363,7 +28363,7 @@
       "MOVE_FIRE_SPIN",
       "MOVE_NASTY_PLOT",
       "MOVE_PUNISHMENT",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_RAGE",
       "MOVE_REVERSAL",
       "MOVE_SPITE",
@@ -29113,7 +29113,7 @@
       "MOVE_HI_JUMP_KICK",
       "MOVE_MACH_PUNCH",
       "MOVE_MIND_READER",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_RAPID_SPIN",
       "MOVE_VACUUM_WAVE"
     ],
@@ -29143,7 +29143,7 @@
       },
       {
         "Level": 10,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 15,
@@ -29242,7 +29242,7 @@
       "MOVE_HI_JUMP_KICK",
       "MOVE_MACH_PUNCH",
       "MOVE_MIND_READER",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_RAPID_SPIN",
       "MOVE_VACUUM_WAVE"
     ],
@@ -30335,7 +30335,7 @@
       "MOVE_IRON_HEAD",
       "MOVE_IRON_TAIL",
       "MOVE_OUTRAGE",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_STEALTH_ROCK",
       "MOVE_STOMP"
     ],
@@ -30465,7 +30465,7 @@
       "MOVE_IRON_HEAD",
       "MOVE_IRON_TAIL",
       "MOVE_OUTRAGE",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_STEALTH_ROCK",
       "MOVE_STOMP"
     ],
@@ -30631,7 +30631,7 @@
       "MOVE_IRON_HEAD",
       "MOVE_IRON_TAIL",
       "MOVE_OUTRAGE",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_STEALTH_ROCK",
       "MOVE_STOMP"
     ],
@@ -31071,7 +31071,7 @@
       },
       {
         "Level": 16,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 21,
@@ -31198,7 +31198,7 @@
       },
       {
         "Level": 17,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 23,
@@ -31336,7 +31336,7 @@
       },
       {
         "Level": 17,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 23,
@@ -32592,7 +32592,7 @@
       "MOVE_CHARM",
       "MOVE_HELPING_HAND",
       "MOVE_MUD_SLAP",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_ROCK_CLIMB",
       "MOVE_SIMPLE_BEAM",
       "MOVE_SLEEP_TALK",
@@ -32732,7 +32732,7 @@
       "MOVE_CHARM",
       "MOVE_HELPING_HAND",
       "MOVE_MUD_SLAP",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_ROCK_CLIMB",
       "MOVE_SIMPLE_BEAM",
       "MOVE_SLEEP_TALK",
@@ -33741,7 +33741,7 @@
       "MOVE_BRAVE_BIRD",
       "MOVE_DEFOG",
       "MOVE_MIRROR_MOVE",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_RAGE",
       "MOVE_REFRESH",
       "MOVE_ROOST",
@@ -33844,7 +33844,7 @@
       "MOVE_BRAVE_BIRD",
       "MOVE_DEFOG",
       "MOVE_MIRROR_MOVE",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_RAGE",
       "MOVE_REFRESH",
       "MOVE_ROOST",
@@ -33899,7 +33899,7 @@
       },
       {
         "Level": 30,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 33,
@@ -34057,7 +34057,7 @@
       "MOVE_AGILITY",
       "MOVE_AIR_CUTTER",
       "MOVE_AIR_SLASH",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_QUICK_ATTACK"
     ],
     "TMMoves": [
@@ -35099,7 +35099,7 @@
       "MOVE_CURSE",
       "MOVE_HAMMER_ARM",
       "MOVE_NIGHT_SLASH",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SLASH",
       "MOVE_SLEEP_TALK",
       "MOVE_SNORE",
@@ -35232,7 +35232,7 @@
       "MOVE_CURSE",
       "MOVE_HAMMER_ARM",
       "MOVE_NIGHT_SLASH",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SLASH",
       "MOVE_SLEEP_TALK",
       "MOVE_SNORE",
@@ -35383,7 +35383,7 @@
       "MOVE_CURSE",
       "MOVE_HAMMER_ARM",
       "MOVE_NIGHT_SLASH",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SLASH",
       "MOVE_SLEEP_TALK",
       "MOVE_SNORE",
@@ -41040,7 +41040,7 @@
       "MOVE_HAZE",
       "MOVE_HYPER_VOICE",
       "MOVE_POWER_SWAP",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_RAGE",
       "MOVE_ROOST",
       "MOVE_STEEL_WING"
@@ -41188,7 +41188,7 @@
       "MOVE_HAZE",
       "MOVE_HYPER_VOICE",
       "MOVE_POWER_SWAP",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_RAGE",
       "MOVE_ROOST",
       "MOVE_STEEL_WING"
@@ -41230,7 +41230,7 @@
       },
       {
         "Level": 12,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 15,
@@ -43523,7 +43523,7 @@
       "MOVE_GUNK_SHOT",
       "MOVE_IMPRISON",
       "MOVE_OMINOUS_WIND",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SHADOW_SNEAK"
     ],
     "TutorMoves": [
@@ -43665,7 +43665,7 @@
       "MOVE_GUNK_SHOT",
       "MOVE_IMPRISON",
       "MOVE_OMINOUS_WIND",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SHADOW_SNEAK"
     ],
     "TutorMoves": [
@@ -43716,7 +43716,7 @@
       },
       {
         "Level": 25,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 30,
@@ -43859,7 +43859,7 @@
       },
       {
         "Level": 25,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 30,
@@ -44242,7 +44242,7 @@
       },
       {
         "Level": 12,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 17,
@@ -45909,7 +45909,7 @@
       },
       {
         "Level": 23,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 26,
@@ -46035,7 +46035,7 @@
       },
       {
         "Level": 23,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 26,
@@ -47278,7 +47278,7 @@
       },
       {
         "Level": 33,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 41,
@@ -48663,7 +48663,7 @@
       "MOVE_FEATHER_DANCE",
       "MOVE_FORESIGHT",
       "MOVE_FURY_ATTACK",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_REVENGE",
       "MOVE_ROOST",
       "MOVE_SAND_ATTACK",
@@ -48766,7 +48766,7 @@
       "MOVE_FEATHER_DANCE",
       "MOVE_FORESIGHT",
       "MOVE_FURY_ATTACK",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_REVENGE",
       "MOVE_ROOST",
       "MOVE_SAND_ATTACK",
@@ -48879,7 +48879,7 @@
       "MOVE_FEATHER_DANCE",
       "MOVE_FORESIGHT",
       "MOVE_FURY_ATTACK",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_REVENGE",
       "MOVE_ROOST",
       "MOVE_SAND_ATTACK",
@@ -49776,7 +49776,7 @@
       },
       {
         "Level": 10,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 15,
@@ -49897,7 +49897,7 @@
       },
       {
         "Level": 10,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 15,
@@ -50550,7 +50550,7 @@
       },
       {
         "Level": 9,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 13,
@@ -50784,7 +50784,7 @@
       },
       {
         "Level": 18,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 21,
@@ -50917,7 +50917,7 @@
       },
       {
         "Level": 18,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 21,
@@ -51538,7 +51538,7 @@
       "MOVE_COVET",
       "MOVE_DOUBLE_SLAP",
       "MOVE_FAKE_OUT",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_REVENGE",
       "MOVE_SCREECH",
       "MOVE_SLAM",
@@ -52233,7 +52233,7 @@
       },
       {
         "Level": 1,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 1,
@@ -52793,7 +52793,7 @@
       "MOVE_IRON_TAIL",
       "MOVE_LEER",
       "MOVE_PUNISHMENT",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SCARY_FACE",
       "MOVE_SMOG"
     ],
@@ -52918,7 +52918,7 @@
       "MOVE_IRON_TAIL",
       "MOVE_LEER",
       "MOVE_PUNISHMENT",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SCARY_FACE",
       "MOVE_SMOG"
     ],
@@ -53666,7 +53666,7 @@
       },
       {
         "Level": 1,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 1,
@@ -54249,7 +54249,7 @@
       "MOVE_DOUBLE_EDGE",
       "MOVE_LICK",
       "MOVE_NATURAL_GIFT",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SELF_DESTRUCT",
       "MOVE_WHIRLWIND",
       "MOVE_ZEN_HEADBUTT"
@@ -54793,7 +54793,7 @@
       },
       {
         "Level": 16,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 20,
@@ -54878,7 +54878,7 @@
       "MOVE_IRON_TAIL",
       "MOVE_NIGHT_SLASH",
       "MOVE_POISON_TAIL",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SAND_ATTACK",
       "MOVE_SCREECH",
       "MOVE_SLASH",
@@ -54939,7 +54939,7 @@
       },
       {
         "Level": 16,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 20,
@@ -55032,7 +55032,7 @@
       "MOVE_IRON_TAIL",
       "MOVE_NIGHT_SLASH",
       "MOVE_POISON_TAIL",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SAND_ATTACK",
       "MOVE_SCREECH",
       "MOVE_SLASH",
@@ -55069,7 +55069,7 @@
       },
       {
         "Level": 15,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 17,
@@ -55219,7 +55219,7 @@
       },
       {
         "Level": 15,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 17,
@@ -56188,7 +56188,7 @@
       "MOVE_ICE_PUNCH",
       "MOVE_ICE_SHARD",
       "MOVE_PUNISHMENT",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SPITE"
     ],
     "TutorMoves": [
@@ -57258,7 +57258,7 @@
       },
       {
         "Level": 30,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 33,
@@ -57325,7 +57325,7 @@
       "MOVE_FEINT",
       "MOVE_FAINT_ATTACK",
       "MOVE_LEECH_LIFE",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_REVERSAL",
       "MOVE_SECRET_POWER",
       "MOVE_SIGNAL_BEAM",
@@ -58448,7 +58448,7 @@
       },
       {
         "Level": 25,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 30,
@@ -60637,7 +60637,7 @@
       "MOVE_MEAN_LOOK",
       "MOVE_MIRROR_COAT",
       "MOVE_NATURAL_GIFT",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SWEET_SCENT",
       "MOVE_TWISTER"
     ],
@@ -60769,7 +60769,7 @@
       "MOVE_MEAN_LOOK",
       "MOVE_MIRROR_COAT",
       "MOVE_NATURAL_GIFT",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SWEET_SCENT",
       "MOVE_TWISTER"
     ],
@@ -60906,7 +60906,7 @@
       "MOVE_MEAN_LOOK",
       "MOVE_MIRROR_COAT",
       "MOVE_NATURAL_GIFT",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SWEET_SCENT",
       "MOVE_TWISTER"
     ],
@@ -61843,7 +61843,7 @@
       "MOVE_FLAIL",
       "MOVE_FORESIGHT",
       "MOVE_IRON_TAIL",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_REVENGE",
       "MOVE_SCREECH"
     ],
@@ -61988,7 +61988,7 @@
       "MOVE_FLAIL",
       "MOVE_FORESIGHT",
       "MOVE_IRON_TAIL",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_REVENGE",
       "MOVE_SCREECH"
     ],
@@ -62107,7 +62107,7 @@
       "MOVE_ICE_FANG",
       "MOVE_LICK",
       "MOVE_MUD_SLAP",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SAND_ATTACK",
       "MOVE_THUNDER_FANG",
       "MOVE_YAWN"
@@ -62226,7 +62226,7 @@
       "MOVE_ICE_FANG",
       "MOVE_LICK",
       "MOVE_MUD_SLAP",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SAND_ATTACK",
       "MOVE_THUNDER_FANG",
       "MOVE_YAWN"
@@ -62359,7 +62359,7 @@
       "MOVE_ICE_FANG",
       "MOVE_LICK",
       "MOVE_MUD_SLAP",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SAND_ATTACK",
       "MOVE_THUNDER_FANG",
       "MOVE_YAWN"
@@ -62400,7 +62400,7 @@
       },
       {
         "Level": 15,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 19,
@@ -62540,7 +62540,7 @@
       },
       {
         "Level": 15,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 19,
@@ -63954,7 +63954,7 @@
       },
       {
         "Level": 22,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 25,
@@ -64065,7 +64065,7 @@
       },
       {
         "Level": 22,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 25,
@@ -66475,7 +66475,7 @@
       },
       {
         "Level": 12,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 15,
@@ -66582,7 +66582,7 @@
       },
       {
         "Level": 12,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 15,
@@ -66697,7 +66697,7 @@
       },
       {
         "Level": 12,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 15,
@@ -67447,7 +67447,7 @@
       "MOVE_FIRE_FANG",
       "MOVE_FOCUS_ENERGY",
       "MOVE_MEAN_LOOK",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_ROCK_CLIMB",
       "MOVE_THUNDER_FANG",
       "MOVE_UPROAR"
@@ -67593,7 +67593,7 @@
       "MOVE_FIRE_FANG",
       "MOVE_FOCUS_ENERGY",
       "MOVE_MEAN_LOOK",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_ROCK_CLIMB",
       "MOVE_THUNDER_FANG",
       "MOVE_UPROAR"
@@ -67751,7 +67751,7 @@
       "MOVE_FIRE_FANG",
       "MOVE_FOCUS_ENERGY",
       "MOVE_MEAN_LOOK",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_ROCK_CLIMB",
       "MOVE_THUNDER_FANG",
       "MOVE_UPROAR"
@@ -69941,7 +69941,7 @@
       },
       {
         "Level": 5,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 9,
@@ -70074,7 +70074,7 @@
       },
       {
         "Level": 1,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 1,
@@ -70082,7 +70082,7 @@
       },
       {
         "Level": 5,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 9,
@@ -72164,7 +72164,7 @@
       },
       {
         "Level": 16,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 19,
@@ -72351,7 +72351,7 @@
       "MOVE_HORN_ATTACK",
       "MOVE_KNOCK_OFF",
       "MOVE_MEGAHORN",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SCREECH"
     ],
     "TutorMoves": [
@@ -72480,7 +72480,7 @@
       "MOVE_HORN_ATTACK",
       "MOVE_KNOCK_OFF",
       "MOVE_MEGAHORN",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SCREECH"
     ],
     "TutorMoves": [
@@ -73186,7 +73186,7 @@
       "MOVE_FAINT_ATTACK",
       "MOVE_PIN_MISSILE",
       "MOVE_POISON_STING",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_ROCK_CLIMB"
     ],
     "TutorMoves": [
@@ -73310,7 +73310,7 @@
       "MOVE_FAINT_ATTACK",
       "MOVE_PIN_MISSILE",
       "MOVE_POISON_STING",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_ROCK_CLIMB"
     ],
     "TutorMoves": [
@@ -75689,7 +75689,7 @@
       "MOVE_GUARD_SPLIT",
       "MOVE_MIND_READER",
       "MOVE_MUD_SLAP",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SPIKES"
     ],
     "TutorMoves": [
@@ -75819,7 +75819,7 @@
       "MOVE_GUARD_SPLIT",
       "MOVE_MIND_READER",
       "MOVE_MUD_SLAP",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SPIKES"
     ],
     "TutorMoves": [
@@ -76352,7 +76352,7 @@
       "MOVE_IRON_TAIL",
       "MOVE_METAL_CLAW",
       "MOVE_POISON_TAIL",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SNATCH",
       "MOVE_SUCKER_PUNCH",
       "MOVE_THUNDER_FANG"
@@ -76741,7 +76741,7 @@
       "MOVE_HEADBUTT",
       "MOVE_MEAN_LOOK",
       "MOVE_PSYCHO_CUT",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_REVENGE",
       "MOVE_STEALTH_ROCK",
       "MOVE_SUCKER_PUNCH"
@@ -76895,7 +76895,7 @@
       "MOVE_HEADBUTT",
       "MOVE_MEAN_LOOK",
       "MOVE_PSYCHO_CUT",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_REVENGE",
       "MOVE_STEALTH_ROCK",
       "MOVE_SUCKER_PUNCH"
@@ -76921,7 +76921,7 @@
     "LevelMoves": [
       {
         "Level": 1,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 1,
@@ -77633,7 +77633,7 @@
       "MOVE_FAINT_ATTACK",
       "MOVE_HEAT_WAVE",
       "MOVE_NIGHT_SLASH",
-      "MOVE_PURSUIT",
+      "MOVE_ENDEAVOR",
       "MOVE_SLEEP_TALK",
       "MOVE_SUCKER_PUNCH",
       "MOVE_TICKLE",
@@ -79937,7 +79937,7 @@
       },
       {
         "Level": 33,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 41,
@@ -80212,7 +80212,7 @@
       },
       {
         "Level": 33,
-        "Move": "MOVE_PURSUIT"
+        "Move": "MOVE_ENDEAVOR"
       },
       {
         "Level": 41,
