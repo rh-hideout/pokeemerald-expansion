@@ -493,3 +493,17 @@ SINGLE_BATTLE_TEST("Knock Off doesn't knock off a Paradox mon's Booster Energy")
         EXPECT(opponent->item == ITEM_BOOSTER_ENERGY);
     }
 }
+
+SINGLE_BATTLE_TEST("Knock Off used by a Paradox mon doesn't knock off a Paradox mon's Booster Energy")
+{
+    GIVEN {
+        PLAYER(SPECIES_GREAT_TUSK);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_BOOSTER_ENERGY); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
+    } SCENE {
+        NOT MESSAGE("Great Tust knocked off the opposing Wobbuffet's Booster Energy!");
+    } THEN {
+        EXPECT(opponent->item == ITEM_BOOSTER_ENERGY);
+    }
+}
