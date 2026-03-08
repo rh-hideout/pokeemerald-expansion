@@ -8843,19 +8843,23 @@ bool32 DoBattlersShareType(enum BattlerId battler1, enum BattlerId battler2)
 
 bool32 CanBattlerGetOrLoseItem(enum BattlerId fromBattler, enum BattlerId battler, enum Item itemId)
 {
-    u16 species = gBattleMons[fromBattler].species;
+    u32 fromSpecies = gBattleMons[fromBattler].species;
+    u32 otherSpecies = gBattleMons[battler].species;
+
     enum HoldEffect holdEffect = GetItemHoldEffect(itemId); // Raw hold effect
 
     if (ItemIsMail(itemId))
         return FALSE;
     else if (itemId == ITEM_ENIGMA_BERRY_E_READER)
         return FALSE;
-    else if (DoesSpeciesUseHoldItemToChangeForm(species, itemId))
+    else if (DoesSpeciesUseHoldItemToChangeForm(fromSpecies, itemId))
         return FALSE;
     else if (holdEffect == HOLD_EFFECT_Z_CRYSTAL)
         return FALSE;
     else if (holdEffect == HOLD_EFFECT_BOOSTER_ENERGY
-         && (gSpeciesInfo[gBattleMons[fromBattler].species].isParadox || gSpeciesInfo[gBattleMons[battler].species].isParadox))
+         && (gSpeciesInfo[fromSpecies].isParadox || gSpeciesInfo[otherSpecies].isParadox))
+        return FALSE;
+    else if (holdEffect == HOLD_EFFECT_OGERPON_MASK && GET_BASE_SPECIES_ID(fromSpecies) == SPECIES_OGERPON)
         return FALSE;
     else
         return TRUE;
