@@ -244,11 +244,6 @@ u32 LoadCompressedSpriteSheetByTemplate(const struct SpriteTemplate *template, s
 
 }
 
-void DecompressPicFromTable(const struct CompressedSpriteSheet *src, void *buffer)
-{
-    DecompressDataWithHeaderWram(src->data, buffer);
-}
-
 void HandleLoadSpecialPokePic(bool32 isFrontPic, void *dest, s32 species, u32 personality)
 {
     LoadSpecialPokePicIsEgg(dest, species, personality, isFrontPic, FALSE);

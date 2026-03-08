@@ -287,9 +287,9 @@ static void RecordedPartnerHandleIntroTrainerBallThrow(enum BattlerId battler)
     if (gPartnerTrainerId > TRAINER_PARTNER(PARTNER_NONE))
         trainerPal = GetTrainerBackPicPalette(gBattlePartners[difficulty][gPartnerTrainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerBackPic);
     else if (IsAiVsAiBattle())
-        trainerPal = gTrainerSprites[GetTrainerBackPicFromId(gPartnerTrainerId)].palette.data;
+        trainerPal = GetTrainerFrontPicPalette(GetTrainerBackPicFromId(gPartnerTrainerId));
     else
-        trainerPal = gTrainerSprites[GetFrontierTrainerFrontSpriteId(gPartnerTrainerId)].palette.data; // 2 vs 2 multi battle in Battle Frontier, load front sprite and pal.
+        trainerPal = GetTrainerFrontPicPalette(GetFrontierTrainerFrontSpriteId(gPartnerTrainerId)); // 2 vs 2 multi battle in Battle Frontier, load front sprite and pal.
 
     BtlController_HandleIntroTrainerBallThrow(battler, 0xD6F9, trainerPal, 24, Controller_RecordedPartnerShowIntroHealthbox);
 }

@@ -2433,7 +2433,7 @@ void BtlController_HandleDrawTrainerPic(enum BattlerId battler, enum TrainerPicI
                                                    yPos,
                                                    subpriority);
 
-        gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.paletteNum = IndexOfSpritePaletteTag(gTrainerSprites[trainerPicId].palette.tag);
+        gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.paletteNum = IndexOfSpritePaletteTag(trainerPicId);
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].x2 = -DISPLAY_WIDTH;
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].sSpeedX = 2;
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.affineParam = trainerPicId;
@@ -2451,7 +2451,7 @@ void BtlController_HandleDrawTrainerPic(enum BattlerId battler, enum TrainerPicI
                                                              yPos,
                                                              subpriority);
 
-            gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.paletteNum = IndexOfSpritePaletteTag(gTrainerSprites[trainerPicId].palette.tag);
+            gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.paletteNum = IndexOfSpritePaletteTag(trainerPicId);
             gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.affineMode = ST_OAM_AFFINE_OFF;
             gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].hFlip = 1;
             gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].y2 = 48;
@@ -2508,7 +2508,7 @@ void BtlController_HandleTrainerSlide(enum BattlerId battler, enum TrainerPicID 
         SetMultiuseSpriteTemplateToTrainerFront(trainerPicId, GetBattlerPosition(battler));
         gBattleStruct->trainerSlideSpriteIds[battler] = CreateSprite(&gMultiuseSpriteTemplate, 176, 40, 0);
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.affineParam = trainerPicId;
-        gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.paletteNum = IndexOfSpritePaletteTag(gTrainerSprites[trainerPicId].palette.tag);
+        gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.paletteNum = IndexOfSpritePaletteTag(trainerPicId);
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].x2 = 96;
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].x += 32;
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].sSpeedX = -2;
