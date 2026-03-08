@@ -3497,9 +3497,7 @@ gBattleAnimMove_DefendOrder::
 	clearmonbg ANIM_DEF_PARTNER
 	blendoff
 	delay 1
-	call BideSetUp
-	waitforvisualfinish
-	end
+	goto BideSetUp
 
 gBattleAnimMove_HealOrder::
 	loadspritegfx ANIM_TAG_ATTACK_ORDER
@@ -18585,8 +18583,7 @@ gBattleAnimMove_SaltCure::
 	call SaltCureEffect
 	playsewithpan SE_M_ICY_WIND, SOUND_PAN_TARGET
 	waitforvisualfinish
-	call gBattleAnimGeneral_SaltCureDamage
-	end
+	goto gBattleAnimGeneral_SaltCureDamage
 
 SaltCureEffect:
 	createsprite gSaltCureSwirlSpriteTemplate, ANIM_TARGET, 2, 0, 28, 384, 50, 8, 50, ANIM_TARGET
