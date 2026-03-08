@@ -2,7 +2,7 @@
 #include "data.h"
 
 const u32 gTrainerFrontPic_None[] = INCBIN_U32("graphics/trainers/front_pics/none.4bpp.smol");
-const u16 gTrainerPalette_None[] = INCBIN_U16("graphics/trainers/palettes/none.gbapal.smol");
+const u16 gTrainerPalette_None[] = INCBIN_U16("graphics/trainers/palettes/none.gbapal");
 
 const u32 gTrainerFrontPic_Hiker[] = INCBIN_U32("graphics/trainers/front_pics/hiker.4bpp.smol");
 const u16 gTrainerPalette_Hiker[] = INCBIN_U16("graphics/trainers/front_pics/hiker.gbapal");
