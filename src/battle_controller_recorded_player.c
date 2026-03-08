@@ -22,6 +22,7 @@
 #include "task.h"
 #include "test_runner.h"
 #include "text.h"
+#include "trainer.h"
 #include "util.h"
 #include "window.h"
 #include "constants/battle_anim.h"
@@ -286,16 +287,18 @@ static void RecordedPlayerHandleDrawTrainerPic(enum BattlerId battler)
     }
     else
     {
+        enum Gender gender;
         if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
         {
             if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
-                trainerPicId = GetBattlerLinkPlayerGender(battler) + TRAINER_PIC_BRENDAN;
+                gender = GetBattlerLinkPlayerGender(battler);
             else
-                trainerPicId = gLinkPlayers[gRecordedBattleMultiplayerId].gender + TRAINER_PIC_BRENDAN;
+                gender = gLinkPlayers[gRecordedBattleMultiplayerId].gender;
         }
         else
-            trainerPicId = gLinkPlayers[0].gender + TRAINER_PIC_BRENDAN;
+            gender = gLinkPlayers[0].gender;
 
+        trainerPicId = GetPlayerTrainerPic(gender, GAME_VERSION);
         if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
         {
             if ((GetBattlerPosition(battler) & BIT_FLANK) != 0) // second mon
@@ -400,12 +403,14 @@ static void RecordedPlayerHandleIntroTrainerBallThrow(enum BattlerId battler)
 {
     enum TrainerPicID trainerPicId;
     const u16 *trainerPal;
+    enum Gender gender;
 
     if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
-        trainerPicId = gLinkPlayers[GetBattlerMultiplayerId(battler)].gender == FEMALE ? TRAINER_PIC_PLAYER_FEMALE : TRAINER_PIC_PLAYER_MALE;
+        gender = gLinkPlayers[GetBattlerMultiplayerId(battler)].gender;
     else
-        trainerPicId = gSaveBlock2Ptr->playerGender == FEMALE ? TRAINER_PIC_PLAYER_FEMALE : TRAINER_PIC_PLAYER_MALE;
+        gender = gSaveBlock2Ptr->playerGender;
 
+    trainerPicId = GetPlayerTrainerPic(gender, GAME_VERSION);
     trainerPal = GetTrainerBackPicPalette(trainerPicId);
     BtlController_HandleIntroTrainerBallThrow(battler, 0xD6F9, trainerPal, 24, Intro_TryShinyAnimShowHealthbox);
 }
