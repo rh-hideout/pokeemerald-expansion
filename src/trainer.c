@@ -22,11 +22,11 @@ enum TrainerPicID GetPlayerTrainerPic(enum Gender gender, enum GameVersion versi
         case VERSION_SAPPHIRE:
         case VERSION_RUBY:
             return GetRSTrainerPic(gender);
-        case VERSION_EMERALD:
-            return GetEmeraldTrainerPic(gender);
         case VERSION_LEAF_GREEN:
         case VERSION_FIRE_RED:
-        default:
             return GetKantoTrainerPic(gender);
+        case VERSION_EMERALD:
+        default:
+            return GetEmeraldTrainerPic(gender);
     }
 }
