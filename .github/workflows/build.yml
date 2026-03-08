@@ -37,7 +37,6 @@ jobs:
         env:
           COMPARE: 0
         run: |
-          make clean
           make firered -j${nproc} -O
 
       - name: ROM (Leafgreen)
