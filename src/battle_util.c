@@ -10972,6 +10972,6 @@ enum BattlerId GetTargetBySlot(enum BattlerId battlerAtk, enum BattlerId battler
         return RIGHT_FOE(battlerAtk);
     default:
         errorf("Illegal battler");
-        return battlerAtk;
+        return B_BATTLER_0;
     }
 }
