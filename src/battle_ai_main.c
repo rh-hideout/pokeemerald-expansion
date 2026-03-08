@@ -446,6 +446,8 @@ void AI_TrySwitchOrUseItem(enum BattlerId battler)
                             continue;
                         if (IsPartyMonOnFieldOrChosenToSwitch(monToSwitchId, battlerIn1, battlerIn2))
                             continue;
+                        if (IsPartyMonPlannedToBeSwitchedInByPartner(monToSwitchId, battler))
+                            continue;
                         if (IsAceMon(battler, monToSwitchId))
                             continue;
 

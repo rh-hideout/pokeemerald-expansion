@@ -274,11 +274,10 @@ AI_DOUBLE_BATTLE_TEST("Choiced Pokémon won't switch out if they can still affec
         OPPONENT(SPECIES_VAPOREON) { Moves(MOVE_SCALD); Item(ITEM_CHOICE_SPECS); }
         OPPONENT(SPECIES_VAPOREON) { Moves(MOVE_SCALD); Item(ITEM_CHOICE_SPECS); }
         OPPONENT(SPECIES_ZIGZAGOON);
-        OPPONENT(SPECIES_ZIGZAGOON);
     } WHEN {
         TURN { SWITCH(playerLeft, 2); MOVE(playerRight, MOVE_CELEBRATE); EXPECT_MOVE(opponentLeft, MOVE_SCALD, target:playerLeft); EXPECT_MOVE(opponentRight, MOVE_SCALD, target:playerLeft); }
         if (defendingSpecies == SPECIES_VAPOREON)
-            TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); EXPECT_SWITCH(opponentLeft, 3); EXPECT_MOVE(opponentRight, MOVE_SCALD); }
+            TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); EXPECT_SWITCH(opponentLeft, 2); EXPECT_MOVE(opponentRight, MOVE_SCALD); }
         else
             TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); EXPECT_MOVE(opponentLeft, MOVE_SCALD, target:playerLeft); EXPECT_MOVE(opponentRight, MOVE_SCALD, target:playerLeft); SEND_OUT(playerLeft, 0); }
     }
