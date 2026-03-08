@@ -878,6 +878,8 @@ static void Cmd_end(void)
     s32 i;
     bool32 continuousAnim = FALSE;
 
+    assertf(sBattleAnimScriptCallDepth == 0, "Call depth not 0 at end of move animation");
+
     // Keep waiting as long as there are animations to be done.
     if (gAnimVisualTaskCount != 0 || gAnimSoundTaskCount != 0
      || sMonAnimTaskIdArray[0] != TASK_NONE || sMonAnimTaskIdArray[1] != TASK_NONE)
