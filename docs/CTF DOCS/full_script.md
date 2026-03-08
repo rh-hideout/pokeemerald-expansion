@@ -32,7 +32,7 @@ fixed: flag1: hint on shifting number: change number or letters
 - flag1: no change in dialogue after freeing everyone
 - flag1: after exiting hyvls room, entering DHBW again initializes whole flag1 process again, Team rocket appears etc. after speaking to jessie, pre-fight dialogue appears but no fight. After speaking again it says "they already fled" but haven't moved. the exit of flag 1 is open 
 - flag2: after exiting lecture room of Houvert, the player is directed to the next flag. However, instead of walking to the next door, the character walks past walls into nothingness.
-fixed: flag2: dialogue is done by "You" instead of [Name]
+fixed: flag2: dialogue is done by "You" instead of [PLAYER]
 - flag2: We might want to be consistent with the lecture rooms
 - flag3: There is no clue for leaving the lecture room to search for the blackhansa building
 - flag3: entrance on phone corp is possible after truck event. however, the door cant be unlocked.
@@ -94,9 +94,9 @@ The choice of character and name are subjective and don't impact the game's proc
 PROFESSOR FARMER's monologue continues:
 
 *PROFESSOR FARMER:*
-> [NAME], right?
+> [PLAYER], right?
 > Ah, okay! \**PROFESSOR FARMER appears back on-screen again*
-> You're [NAME] who's moving to an apartment in JUNGBUSCH.
+> You're [PLAYER] who's moving to an apartment in JUNGBUSCH.
 > I get it now!
 > All right, are you ready? \**showing the chosen character*
 > Your very own adventure is about to unfold.
@@ -115,25 +115,25 @@ Interaction with moving boxes shows:
 The player is able to exit the vehicle by moving towards the daylight.
 
 On exit, the game's background music starts playing and the starting town is shown with three buildings. 
-The one closest to the moving truck is the player's home, referred to as [NAME]'s home. On the left hand side is PROFESSOR BIRCH's home and on the left hand bottom corner is the professor's laboratory.
+The one closest to the moving truck is the player's home, referred to as [PLAYER]'s home. On the left hand side is PROFESSOR BIRCH's home and on the left hand bottom corner is the professor's laboratory.
 > BELLA: There you are at last.
 > Our shared apartment here is nothing special, but it serves its purpose.
 > Well, this is JUNGBUSCH.
 > How do you like it? This is our new home!
 > It has a quaint feel, but it seems to be an easy place to live, don't you think?
-> And, you get your own room, [NAME]! Let's go inside.
+> And, you get your own room, [PLAYER]! Let's go inside.
 
 The player is moved inside the player's home automatically. The scene changes to the living room with Pokemon working on moving in.
-> BELLA: See, [NAME]? The apartment isn't that bad.
+> BELLA: See, [PLAYER]? The apartment isn't that bad.
 > The mover's POKéMON do all the work of moving us in and cleaning up after.
 > This is so convenient!
-> [NAME], your room is upstairs. Is that OK with you?
+> [PLAYER], your room is upstairs. Is that OK with you?
 > Your clock on the wall hast stopped.
 > Don't forget to set it!
 
 The player is able to move gain.
 
-## game walkthrough
+## game intro
 ### inside player's home
 Go straight ahead and upstairs to your room. 
 Interact with the clock on your left hand side hanging on the wall.
@@ -141,21 +141,20 @@ Interact with the clock on your left hand side hanging on the wall.
 > Better set it and start it! \**a menu opens for setting the clock*
 
 Set the minute hand by using the arrow keys and confirm the set time is synchronous with your real-life time.
-> BELLA: [NAME], how do you like your new room?
+> BELLA: [PLAYER], how do you like your new room?
 > Good! Everything's put away neatly!
 > They finished moving everything in downstairs, too.
 > POKéMON movers are so convenient!
 > Oh, you should make sure that everything's all there on your desk.
 
 Walk to your desk and interact with the book laying on top of it.
-> [NAME] flipped open the notebook.
-> ADVENTURE RULE NO. 1 Open the MENU with START.
+> [PLAYER] flipped open the notebook.
+> ADVENTURE RULE NO. 1 Open the MENU with ENTER.
 > ADVENTURE RULE NO. 2 Record your progress with SAVE.
 > The remaining pages are blank...
-! please note that there is no "Start"-button on your keyboard. Use "Enter" instead.
 
 Walk downstairs again.
-> BELLA: Oh! [NAME], [NAME]! Quick! Come quickly!
+> BELLA: Oh! [PLAYER], [PLAYER]! Quick! Come quickly!
 > BELLA: Look, Britney did something stupid again! Maybe we'll see her cameltoe!
 > INTERVIEWER: This was BRITNEY WATCH with all your nasty news!
 > BELLA: Oh... It's over.
@@ -174,24 +173,24 @@ choosing either male or female also switches  player homes position.
 
 
 
-### inside PROFESSOR BIRCH's home
+### inside RIVAL's home
 Walk outside the house by walking towards the orange matt in the bottom left hand corner.
 Walk westwards to PROFESSOR BIRCH's home and enter through the front door.
 > Oh, hello. And you are?
 > ...
-> Oh, you're [NAME], our new next-door neighbor! Hi!
-> We have a [CHILD] about the same age as you.
-> Our [CHILD] was excited about making a new friend.
-> Our [CHILD] is upstairs, I think.
+> Oh, you're [PLAYER], our new next-door neighbor! Hi!
+> We have a [RIVAL] about the same age as you.
+> Our [RIVAL] was excited about making a new friend.
+> Our [RIVAL] is upstairs, I think.
 
 Walk upstairs and walk towards the Pokéball laying next to the bed and interact with it.
 > Hey! You...
 > Who are you?
-> Oh, you're [NAME], aren't you? Moved in next door, right?
-> I didn't know that you're a [CHILD].
+> Oh, you're [PLAYER], aren't you? Moved in next door, right?
+> I didn't know that you're a [RIVAL].
 > Dad, PROF. BIRCH, said that our new next-door neighbor is a student.
-> My name's [RIVAL NAME].
-> Huh? Hey, [NAME], don't you have a POKéMON?
+> My name's [RIVAL].
+> Huh? Hey, [PLAYER], don't you have a POKéMON?
 > Do you want me to go catch you one?
 > Aw, darn, I forgot...
 > I'm supposed to go help my dad catch some wild POKéMON.
@@ -209,7 +208,7 @@ Follow her request and head north a bit further.
 
 Walk towards BUM and interact with him.
 > BUM: Hello! You interested?!
-> [NAME]: You wanna sell me drugs?
+> [PLAYER]: You wanna sell me drugs?
 > BUM: No, no, I'll show you the hottest shit! It's in my BAG!
 > Take a look and pick one!
 
@@ -221,17 +220,17 @@ Fight the Zigzagoon, the entity to the BUM's right hand side, by interacting wit
 Press "Battle" and "Tackle" repetitively until your opponent faints.
 > BUM: Nice one, kid!
 > You had fun? 
-> [NAME]: Yeah!
+> [PLAYER]: Yeah!
 > BUM: You want to keep it?
-> [NAME]: Sure, what do you want for it?
+> [PLAYER]: Sure, what do you want for it?
 > BUM: First one is always free
 > This is not the place to chat, see you later!
-> [NAME]: I should go find [CHILD] at ROUTE 103.
+> [PLAYER]: I should go find [RIVAL] at ROUTE 103.
 
 ------------------------end of logical introduction--------------------
 
 ...going to the lab, even though last narrative indicating going to Route 103
-> PROF. BIRCH: [CHILD]? Gone home, I think.
+> PROF. BIRCH: [RIVAL]? Gone home, I think.
 > Or maybe that kid's scrabbling around in tall grass again somewhere...
 > If you or your POKéMON get tired, you should get some rest at home.
 
@@ -239,15 +238,15 @@ Press "Battle" and "Tackle" repetitively until your opponent faints.
 ...why is BIRCH here after BUM was defeated and walked south? Where is BUM in JUNGBUSCH now? Where did BIRCH come from?
 ...BIRCH never introduced himself or acted like someone who would not know the player yet
 ...Bella insisted on talking to Birch first, after defeating BUM, Bella starts asking:
-> How are you doing, [NAME]? You look hungry.
+> How are you doing, [PLAYER]? You look hungry.
 > I made Pasta with Pesto. \**player resumes on resting automatically, restoring Pokémon's health.*
 > Bella: Take care, hobo!
 
 
-### travel to PROFESSOR BIRCH's child
+### travel to RIVAL
 Before traveling, you should ensure the health of your Pokémon. In this stage of progression, health is restored at home, later on mainly in Pokémon Centers.
 Go talk to Bella to restore your Pokémon's health.
-> How are you doing, [NAME]? You look hungry.
+> How are you doing, [PLAYER]? You look hungry.
 > I made Pasta with Pesto. \**player resumes on resting automatically, restoring Pokémon's health.*
 > Bella: Take care, hobo!
 
@@ -257,47 +256,47 @@ Walk past the point of the fight with BUM and head east through the tall grass, 
 Directly pass the NPC and head northwest to find NEUOSTHEIM further north. 
 Visit the Pokémon Center to rest your Pokémon and head further north to enter Route 103.
 
-Navigate through the tall grass by first walking east and then slightly northwest to find and interact with PROFESSOR BIRCH's child.
-> [CHILD]: Okay, so it's this one and that one that live on ROUTE 103...
-> Hey, it's [NAME]!
+Navigate through the tall grass by first walking east and then slightly northwest to find and interact with your rival.
+> [RIVAL]: Okay, so it's this one and that one that live on ROUTE 103...
+> Hey, it's [PLAYER]!
 > ...Oh, yeah, Dad gave you a POKéMON.
 > Since we're here, how about a little battle?
 > I'll teach you what being a TRAINER's about!
 
-Defeat [CHILD] with your Pokèmon.
-> [CHILD]: I think I get it. I think I know why my dad has his eye
+Defeat [RIVAL] with your Pokèmon.
+> [RIVAL]: I think I get it. I think I know why my dad has his eye
 > out for you now.
 > Look, your POKéMON already likes you, even though you just got it.
-> [NAME], I get the feeling that you could befriend any POKéMON with ease.
+> [PLAYER], I get the feeling that you could befriend any POKéMON with ease.
 > We should head back to the LAB.
 
 ### start CTF journey 
 Head back south to JUNGBUSCH. Use the cliffs as you can skip them while approaching from their northern side.
-> [CHILD]: I'm heading back to my dad's LAB now.
-> [NAME], you should hustel back, too.
+> [RIVAL]: I'm heading back to my dad's LAB now.
+> [PLAYER], you should hustel back, too.
 
 Head further south by skipping the cliffs and enter PROFESSOR BIRCH's laboratory.
-> PROF. BIRCH: Oh, hi, [NAME]!
-> I heard you beat [CHILD] on your first try. That's excellent!
-> [CHILD]'s been helping with my research for a long time.
-> [CHILD] has an extensive history as a TRAINER already.
-> Here, [NAME], I ordered this for my research, but I think you should have 
+> PROF. BIRCH: Oh, hi, [PLAYER]!
+> I heard you beat [RIVAL] on your first try. That's excellent!
+> [RIVAL]'s been helping with my research for a long time.
+> [RIVAL] has an extensive history as a TRAINER already.
+> Here, [PLAYER], I ordered this for my research, but I think you should have 
 > this POKèDEX.
 > PROF. BIRCH: The POKèDEX is a high-tech tool that automatically makes a record
 > of any POKèMON you meet or catch.
-> My kid, [CHILD], goes everywhere with it.
+> My kid, [RIVAL], goes everywhere with it.
 > Whenever my kid catches a rare POKèMON and records its data in the POKèDEX,
-> why, [CHILD] look for me while I'm out
+> why, [RIVAL] look for me while I'm out
 > doing fieldwork, and shows me.
-> [CHILD]: Huh... So you got a POKèDEX, too. 
+> [RIVAL]: Huh... So you got a POKèDEX, too. 
 > Well then, here. I'll give you these. 
-> [CHILD]: You know it's more fun to have a whole bunch of POKèMON.
+> [RIVAL]: You know it's more fun to have a whole bunch of POKèMON.
 > I'm going to explore all over the place to find different POKèMON.
 > If I find any cool POKèMON, you bet I'll try to get them with POKè BALLS.
 
 Head back to Neuostheim.
-> BELLA: Wait, [NAME]!
-> BELLA: [NAME]! [NAME]! Where have you been?
+> BELLA: Wait, [PLAYER]!
+> BELLA: [PLAYER]! [PLAYER]! Where have you been?
 > Oh! What an adorable POKèMON! You got it from a BUM? How strange!
 > Here, this was still in one of your moving boxes. 
 > They'll put a zip in your step! 
@@ -316,7 +315,7 @@ To continue, you must enter the correct keyword into the terminal.
 For the solution, refer to the CTF guide.
 
 After solving flag 0, entering the DHBW is possible.
-> Ahh [NAME], we waited especially for you.
+> Ahh [PLAYER], we waited especially for you.
 > PROF. FARMER: At the beginning of your studies, each student receives an
 > X, which is intended to support you in your learning.
 > PROF. FARMER: Today we will visit the museum...
@@ -331,7 +330,7 @@ After solving flag 0, entering the DHBW is possible.
 > JESSIE: How rude!
 > JAMES: We are TEAM ROCKET and were hired by Business Informatics
 > to steal your MATHALYZER!
-> PROF. FARMER: Go [NAME]. Attack those punks and teach them 
+> PROF. FARMER: Go [PLAYER]. Attack those punks and teach them 
 > some manners!
 
 Before fighting Team Rocket, ask Prof. Farmer to heal your Pokémon.
@@ -364,11 +363,11 @@ Defeat Prof. Hyvl.
 ...DHBW main entrance exit is not the same as DHBW main entrance when entering - moving castle vibes
 
 ------some flags later (door3)-----
-> [NAME]: Sorry, the train was late.
+> [PLAYER]: Sorry, the train was late.
 > APPLES: For today's project, we are using a Raspberry Pi. We will
 > use it to program a small script that allows us to record data. The
 > best script wins a Powerglove!
-> [NAME]: Wow! A Raspberry Pi! Thank you, Mister Apples!
+> [PLAYER]: Wow! A Raspberry Pi! Thank you, Mister Apples!
 
 > APPLES: Now write a script that
 > collects something measurable.
@@ -384,15 +383,15 @@ a stranger approaches
 > I'm roaming the land in search of talented TRAINERS.
 > I'm sorry to have taken your time.
 
-> [NAME]: Huh, what's that Truck doing here?
-> [NAME]: FUCK, he is dead! The driver is fucking dead! Better
+> [PLAYER]: Huh, what's that Truck doing here?
+> [PLAYER]: FUCK, he is dead! The driver is fucking dead! Better
 > call the Police!
 > blablaba
 > afasfsafasf
 receives PHONE CORP ID
 going back to the company
 > GUARD: Ahh, you're from the Phone Company. Please come in.
-> [NAME]: <I was able to fool the security guard here, but it won't be
+> [PLAYER]: <I was able to fool the security guard here, but it won't be
 > so easy with the others.>
 go passt the guards
 > This door is locked, but it has a lock. Maybe I can open it with the
@@ -400,7 +399,7 @@ go passt the guards
 > 
 
 ----door 4----
-> [NAME]: <Fuck, I'm late today, Class is almost over.>
+> [PLAYER]: <Fuck, I'm late today, Class is almost over.>
 > EARTHMAN: ... and because the weather is so beautiful today,
 > I'll let you leave a few minutes early. You'll also all get this
 > SURFBOARD from me, so you can float down the Rhine and maybe 
@@ -453,15 +452,15 @@ official flag 2 after solving:
 
 
 
-some flag?
-> [NAME]: Better go to my desk. 
+flag 8: Bamberger
+> [PLAYER]: Better go to my desk. 
 > PROF. BAMBERGER: Today in Forensics, we... 
 > What was that?!
 > JESSIE: Prepare for trouble... 
 > JAMES: and make it double!
-> [NAME]: Oh no, not again!
+> [PLAYER]: Oh no, not again!
 > JESSIE: Time to collect our Bounty from BLACKHANSA. 
-> ADRIA: What is this? 
+> ADRIA: What is this?
 
 \**upon interaction*
 > ADRIA: Did you find a clue about their whereabouts? 
@@ -469,3 +468,30 @@ some flag?
 \**upon using the GameBoy Cart:*
 > A GameBoy Cartridge and a note with INSPECT written on it. But you 
 > can't find anything else
+
+\**upon entering the wrong code*
+> No, this can't be it
+
+\**upon entering the correct code*
+> Adria: That's it. You have to surf down the Neckar on Route 101, to
+> reach it.
+> Here take this, you will need this to get over the waterfall.
+> [PLAYER]: I should go now.
+
+\**upon entering the destination*
+> JESSIE: He has locked himself in.
+> Come out! Don't think your escape will change anything.
+> We'll breed the POKéMON even without you!
+> JAMES: That little pain in the ass is back again!
+> BOSS: You won't escape us this time. Our experiment will destroy you.
+> BOSS: NO, WHAT HAVE YOU DONE YOU LITTLE PRICK!
+> BOSS: You little rat won't stop us. I'll make sure of that.
+> Soon BLACKHANSA will have control over the entire region!
+
+\**upon entering the room*
+> PROF. BAMBERGER: Have you seen the abomination they've bred? Who knows
+> what they're up to. Thank you for scaring them away. I've just finished
+> treating all my POKéMON. Are you ready for your next test?
+> Let's see what you've learned!
+> You earned the 8th Badge!
+> And take this TM (comes after the automatic text "obtained TM")

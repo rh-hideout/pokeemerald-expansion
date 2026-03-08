@@ -88,13 +88,41 @@ The morse code sounds the following pattern: "... .-.. . . .--."
 in progress
 
 ## Flag 8
-**Description:** The player is ... Team Rocket ... Adria ...
-**Solution:** Use hex editor + gba ... use header 89 50 4E 47 0D 0A 1A 0A footer 49 45 4E 44 AE 42 60 bytes ...
-save the full hex blob including header and footer as png
-Tell Adria you will head to the STADION.
-Head east to Route 101 and north to enter the Neckar with surf. Follow north past the waterfall.
+**Description:** The player is arriving in professor Bamberger's lecture room, when shortly after Team Rocket is kidnapping him.
+Team Rocket leaves an item behind and luckily Adria is left unhurt. The professor is brought to an unknown place and Team Rocket seems to 
+conspire with Blackhansa, a greater technology-heavy firm.
 
-**Flag solution:**
+**Solution:** 
+*Part 1:*
+Look for hints in the room and inspect any found items. One of them is a Gameboy cartridge, resembling the game
+you are playing right now. 
+Use Imhex as the necessary hex editor for this puzzle and open the gba-file as project (gba is abbreviated for gameboy advanced).
+To find clues in the file, look for pictures like png or jpg files. 
+The header 89 50 4E 47 0D 0A 1A 0A and footer 49 45 4E 44 AE 42 60 bytes are used to identify png-files.
+By searching, mark the full png-hex-entry [header; footer] and paste it into a new file.
+Save the full hex blob including header and footer as png.
+When opening the new file you will find the hidden message for Team Rocket where to meet with their contractor.
+Tell Adria you will head to the STADIUM.
+
+*Part 2:*
+Head east to Neuostheim and North to Route 103.
+Head east and then north past the waterfall by surfing. Press X for any water-related obstacles. 
+Enter the Stadium.
+Look for hints inside and follow north to free the professor.
+Defeat Team Rocket and retrieve the missing parts for the final flag by searching for hints in the terminal and arena area.
+
+*Part 3:*
+Identify the ground of the arena area. Take clean screenshots of the game screen and paste them inside paint. 
+By screenshotting every part of the arena you can puzzle them back together in paint.
+Now try to scan the QR with your phone. When failing, edit it again to exclude your own game character.
+When succeeding, the notes app opens and shows "sh"
+East to the terminal, some screens show binary numbers. By converting them, you receive the letter "i".
+When inspecting the picture from part 1 again. Try to recognise more hidden data.
+The last string is base64 encoded, recognised by the ending symbol "=".
+After decoding you receive "sm".
+Combine the three snippets in the correct order to obtain the flag.
+
+**Flag solution:**"Smish"
 
 ## Flag final
 **Description:**

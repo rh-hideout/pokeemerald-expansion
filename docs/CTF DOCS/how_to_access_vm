@@ -1,0 +1,12 @@
+Die vorliegende Abgabe für das Modul offensive Security ist eine virtuelle Maschine mit Windows 10.
+Diese enthält alle nötigen Werkzeuge, Abhängigkeiten und Dokumentation, um das Capture the Flag zu absolvieren.
+Um die VM zu starten, nutzen Sie bitte VirtualBox. Der PIN für die VM ist 0137.
+
+Auf dem Home Desktop finden Sie alle nötigen Dokumente und Werkzeuge zum Lösen der Flags.
+Zum Starten des CTF, führen Sie bitte .BAT-Datei aus. Diese öffnet den GameBoy Advanced Emulator, welche die kompilierte Pokémon ROM Hack lädt.
+Hier ist eine Auflistung aller zu findenden Dateien und nötigen installierten Abhängigkeiten:
+- Python Runtime: zum Ausführen von Python Scripten
+- Autopsy: als forensisches Hilfsmittel
+- ImHex: ein Hexeditor für Reverse Engineering
+- full_guide.md: Ein Leitfaden, der Sie schrittweise durch das gesamte Spiel führt, doch ohne Flag Lösungen
+- CTF_guide.md: Ein Leitfaden für jede einzelne Flag. Dient als Ergänzung zum Spielleitfaden.

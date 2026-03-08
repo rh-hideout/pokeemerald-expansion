@@ -7,7 +7,7 @@
 - brainstorming about last two flags: ideas, scenarios, context of story
 
 # pre-requisites
-- for a fully guided walk-through including explanation on the games key bindings and beginner tips, refer to full_walkthrough.md
+- for a fully guided walk-through including explanation on the games key bindings and beginner tips, refer to full_guide.md
 - for the full CTF solution, refer to CTF_guide.md
 
 ## About this project
