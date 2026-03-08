@@ -494,7 +494,7 @@ SINGLE_BATTLE_TEST("Knock Off doesn't knock off a Paradox mon's Booster Energy")
     }
 }
 
-SINGLE_BATTLE_TEST("Knock Off used by a Paradox mon doesn't knock off a Paradox mon's Booster Energy")
+SINGLE_BATTLE_TEST("Knock Off used by a Paradox mon doesn't knock off a non-Paradox mon's Booster Energy")
 {
     GIVEN {
         PLAYER(SPECIES_GREAT_TUSK);
