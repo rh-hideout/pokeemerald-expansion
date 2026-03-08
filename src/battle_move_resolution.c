@@ -1788,7 +1788,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleContext *ctx)
                 gBattleStruct->moveResultFlags[ctx->battlerDef] = MOVE_RESULT_FAILED;
                 gBattlerAbility = ctx->battlerDef;
                 RecordAbilityBattle(ctx->battlerDef, ctx->abilityDef);
-                BattleScriptCall(BattleScript_AbilityPopUp);
+                BattleScriptCall(BattleScript_NoEffectivenessAbility);
                 targetAvoidedAttack = TRUE;
             }
             else if (ctx->airBalloonBlocked)

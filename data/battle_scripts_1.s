@@ -7720,6 +7720,8 @@ BattleScript_DoesntAffectTargetAtkString::
 	setmoveresultflags MOVE_RESULT_NO_EFFECT
 	goto BattleScript_MoveEnd
 
+BattleScript_NoEffectivenessAbility::
+	call BattleScript_AbilityPopUp
 BattleScript_DoesntAffectScripting::
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_SCR_ITDOESNTAFFECT
