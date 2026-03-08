@@ -775,11 +775,11 @@ static void Task_ShowPokedexAreaScreen(u8 taskId)
         CreateAreaMarkerSprites();
         break;
     case 7:
-        if(!OW_TIME_OF_DAY_ENCOUNTERS)
+        if (!OW_TIME_OF_DAY_ENCOUNTERS)
             LoadAreaUnknownGraphics();
         break;
     case 8:
-        if(!OW_TIME_OF_DAY_ENCOUNTERS)
+        if (!OW_TIME_OF_DAY_ENCOUNTERS)
             CreateAreaUnknownSprites();
         break;
     case 9:

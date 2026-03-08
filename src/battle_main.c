@@ -2,7 +2,7 @@
 #include "battle.h"
 #include "battle_anim.h"
 #include "battle_ai_main.h"
-#include "battle_ai_util.h"
+#include "battle_ai_record.h"
 #include "battle_arena.h"
 #include "battle_controllers.h"
 #include "battle_end_turn.h"
@@ -615,6 +615,13 @@ static void CB2_InitBattleInternal(void)
         // Apply party-wide start-of-battle form changes for both sides.
         TryFormChange(&gPlayerParty[i], FORM_CHANGE_BEGIN_BATTLE);
         TryFormChange(&gEnemyParty[i], FORM_CHANGE_BEGIN_BATTLE);
+    }
+
+    if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
+    {
+        TryFormChange(&gEnemyParty[0], FORM_CHANGE_BEGIN_WILD_ENCOUNTER);
+        if (IsDoubleBattle())
+            TryFormChange(&gEnemyParty[1], FORM_CHANGE_BEGIN_WILD_ENCOUNTER);
     }
 
     #if TESTING
@@ -2009,7 +2016,7 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
             }
             SetMonData(&party[i], MON_DATA_ABILITY_NUM, &abilityNum);
             SetMonData(&party[i], MON_DATA_FRIENDSHIP, &(partyData[monIndex].friendship));
-            if (partyData[monIndex].ball != ITEM_NONE)
+            if (partyData[monIndex].ball < POKEBALL_COUNT)
             {
                 ball = partyData[monIndex].ball;
                 SetMonData(&party[i], MON_DATA_POKEBALL, &ball);
@@ -3038,9 +3045,9 @@ static void ClearSetBScriptingStruct(void)
     gBattleScripting.windowsType = temp;
     gBattleScripting.battleStyle = gSaveBlock2Ptr->optionsBattleStyle;
     #if TESTING
-        gBattleScripting.battleStyle = OPTIONS_BATTLE_STYLE_SET;
+    gBattleScripting.battleStyle = OPTIONS_BATTLE_STYLE_SET;
     #endif
-    gBattleScripting.expOnCatch = (GetConfig(CONFIG_EXP_CATCH) >= GEN_6);
+    gBattleScripting.expOnCatch = (GetConfig(B_EXP_CATCH) >= GEN_6);
     gBattleScripting.specialTrainerBattleType = specialBattleType;
 }
 
@@ -3183,6 +3190,14 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
                 gBattleMons[i].volatiles.lockOn = 0;
                 gBattleMons[i].volatiles.battlerWithSureHit = 0;
             }
+        }
+    }
+    if (effect != EFFECT_BATON_PASS || GetConfig(B_BATON_PASS_TRAPPING) >= GEN_5)
+    {
+        for (enum BattlerId i = 0; i < gBattlersCount; i++)
+        {
+            if (gBattleMons[i].volatiles.escapePrevention && gBattleMons[i].volatiles.battlerPreventingEscape == battler)
+                gBattleMons[i].volatiles.escapePrevention = FALSE;
         }
     }
 
@@ -3381,6 +3396,9 @@ const u8* FaintClearSetData(enum BattlerId battler)
     if (gBattleStruct->battlerState[battler].commanderSpecies != SPECIES_NONE)
     {
         enum BattlerId partner = BATTLE_PARTNER(battler);
+        // Clear commander state immediately so a replacement doesn't inherit it.
+        gBattleStruct->battlerState[battler].commanderSpecies = SPECIES_NONE;
+        gBattleMons[partner].volatiles.semiInvulnerable = STATE_NONE;
         if (IsBattlerAlive(partner))
         {
             BtlController_EmitSpriteInvisibility(partner, B_COMM_TO_CONTROLLER, FALSE);
@@ -3797,6 +3815,7 @@ static void TryDoEventsBeforeFirstTurn(void)
     switch (gBattleStruct->eventState.beforeFirstTurn)
     {
     case FIRST_TURN_EVENTS_START:
+        LoadIndicatorSpritesGfx();
         // Set invalid mons as absent(for example when starting a double battle with only one pokemon).
         if (!(gBattleTypeFlags & BATTLE_TYPE_SAFARI))
         {
@@ -4057,7 +4076,7 @@ u8 IsRunningFromBattleImpossible(enum BattlerId battler)
 
     if (holdEffect == HOLD_EFFECT_CAN_ALWAYS_RUN)
         return BATTLE_RUN_SUCCESS;
-    if (GetConfig(CONFIG_GHOSTS_ESCAPE) >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
+    if (GetConfig(B_GHOSTS_ESCAPE) >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
         return BATTLE_RUN_SUCCESS;
     if (gBattleTypeFlags & BATTLE_TYPE_LINK)
         return BATTLE_RUN_SUCCESS;
@@ -4224,7 +4243,7 @@ static void HandleTurnActionSelectionState(void)
                         gBattleStruct->moveTarget[battler] = gBattleResources->bufferB[battler][3];
                         return;
                     }
-                    else if (GetConfig(CONFIG_ENCORE_TARGET) < GEN_5 && gBattleMons[battler].volatiles.encoredMove != MOVE_NONE)
+                    else if (GetConfig(B_ENCORE_TARGET) < GEN_5 && gBattleMons[battler].volatiles.encoredMove != MOVE_NONE)
                     {
                         gChosenMoveByBattler[battler] = gBattleMons[battler].volatiles.encoredMove;
                         gBattleStruct->chosenMovePositions[battler] = gBattleMons[battler].volatiles.encoredMovePos;
@@ -4781,7 +4800,7 @@ u32 GetBattlerTotalSpeedStat(enum BattlerId battler, enum Ability ability, enum 
 
     // paralysis drop
     if (gBattleMons[battler].status1 & STATUS1_PARALYSIS && ability != ABILITY_QUICK_FEET)
-        speed /= GetConfig(CONFIG_PARALYSIS_SPEED) >= GEN_7 ? 2 : 4;
+        speed /= GetConfig(B_PARALYSIS_SPEED) >= GEN_7 ? 2 : 4;
 
     if (gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SWAMP)
         speed /= 4;
@@ -4820,7 +4839,7 @@ s32 GetBattleMovePriority(enum BattlerId battler, enum Ability ability, enum Mov
         priority = -8;
     }
     else if (ability == ABILITY_GALE_WINGS
-          && (GetConfig(CONFIG_GALE_WINGS) < GEN_7 || IsBattlerAtMaxHp(battler))
+          && (GetConfig(B_GALE_WINGS) < GEN_7 || IsBattlerAtMaxHp(battler))
           && GetMoveType(move) == TYPE_FLYING)
     {
         priority++;
@@ -5139,7 +5158,7 @@ static void TurnValuesCleanUp(bool8 var0)
     ClearDamageCalcResults();
 }
 
-static void PopulateArrayWithBattlers(u8 *battlers)
+static void PopulateArrayWithBattlers(enum BattlerId *battlers)
 {
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
         battlers[i] = i;
@@ -5176,7 +5195,7 @@ static bool32 TryDoGimmicksBeforeMoves(void)
         }
     }
 
-    if (GetConfig(CONFIG_MEGA_EVO_TURN_ORDER) >= GEN_7)
+    if (GetConfig(B_MEGA_EVO_TURN_ORDER) >= GEN_7)
         TryChangeTurnOrder(); // This will just do nothing if no mon has mega evolved.
     return FALSE;
 }

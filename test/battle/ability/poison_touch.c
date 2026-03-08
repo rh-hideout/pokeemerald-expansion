@@ -75,3 +75,38 @@ SINGLE_BATTLE_TEST("Poison Touch applies between multi-hit move hits")
         STATUS_ICON(opponent, poison: TRUE);
     }
 }
+
+SINGLE_BATTLE_TEST("Poison Touch activates when user has Protective Pads, but not with Punching Glove")
+{
+    u32 item;
+
+    PARAMETRIZE { item = ITEM_PROTECTIVE_PADS; }
+    PARAMETRIZE { item = ITEM_PUNCHING_GLOVE; }
+
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_MACH_PUNCH));
+        ASSUME(IsPunchingMove(MOVE_MACH_PUNCH));
+        ASSUME(GetItemHoldEffect(ITEM_PROTECTIVE_PADS) == HOLD_EFFECT_PROTECTIVE_PADS);
+        ASSUME(GetItemHoldEffect(ITEM_PUNCHING_GLOVE) == HOLD_EFFECT_PUNCHING_GLOVE);
+        PLAYER(SPECIES_GRIMER) { Ability(ABILITY_POISON_TOUCH); Item(item); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_MACH_PUNCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MACH_PUNCH, player);
+
+        if (item != ITEM_PUNCHING_GLOVE) {
+            ABILITY_POPUP(player, ABILITY_POISON_TOUCH);
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+            MESSAGE("The opposing Wobbuffet was poisoned by Grimer's Poison Touch!");
+            STATUS_ICON(opponent, poison: TRUE);
+        } else {
+            NONE_OF {
+                ABILITY_POPUP(player, ABILITY_POISON_TOUCH);
+                ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+                MESSAGE("The opposing Wobbuffet was poisoned by Grimer's Poison Touch!");
+                STATUS_ICON(opponent, poison: TRUE);
+            }
+        }
+    }
+}
