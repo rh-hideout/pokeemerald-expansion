@@ -67,7 +67,7 @@ struct TrainerMon
     u16 heldItem;
     enum Ability ability;
     u8 lvl;
-    enum PokeBall ball;
+    enum PokeBall ball:8;
     u8 friendship;
     u8 nature:5;
     bool8 gender:2;

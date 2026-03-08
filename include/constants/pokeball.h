@@ -1,7 +1,7 @@
 #ifndef GUARD_CONSTANTS_POKEBALL_H
 #define GUARD_CONSTANTS_POKEBALL_H
 
-enum __attribute__((packed)) PokeBall
+enum PokeBall
 {
     BALL_STRANGE = 0,
     BALL_POKE = 1,
