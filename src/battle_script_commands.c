@@ -6388,7 +6388,7 @@ static u32 GetPossibleNextTarget(u32 currTarget)
     {
         for (i = 0; i < MAX_BATTLERS_COUNT; i++)
         {
-            if (GetNextTargetBySlot(i) == currTarget)
+            if (GetTargetBySlot(gBattlerAttacker, i) == currTarget)
                 break;
         }
         i++; // next target after finding currTarget
@@ -6396,8 +6396,8 @@ static u32 GetPossibleNextTarget(u32 currTarget)
 
     while (i < MAX_BATTLERS_COUNT)
     {
-        enum BattlerId battler = GetNextTargetBySlot(i);
-        i++
+        enum BattlerId battler = GetTargetBySlot(gBattlerAttacker, i);
+        i++;
 
         if (!IsBattlerAlive(battler))
             continue;
