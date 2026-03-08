@@ -6382,19 +6382,13 @@ static void Cmd_futuresighttargetfailure(void)
 static u32 GetPossibleNextTarget(u32 currTarget)
 {
     u32 i = 0;
-    const u8 targetOrder[MAX_BATTLERS_COUNT] = {
-        gBattlerAttacker,
-        BATTLE_PARTNER(gBattlerAttacker),
-        LEFT_FOE(gBattlerAttacker),
-        RIGHT_FOE(gBattlerAttacker),
-    };
 
     // currTarget allows for a starting point without relying on values for previous targets being set
     if (currTarget != MAX_BATTLERS_COUNT)
     {
         for (i = 0; i < MAX_BATTLERS_COUNT; i++)
         {
-            if (targetOrder[i] == currTarget)
+            if (GetNextTargetBySlot(i) == currTarget)
                 break;
         }
         i++; // next target after finding currTarget
@@ -6402,7 +6396,8 @@ static u32 GetPossibleNextTarget(u32 currTarget)
 
     while (i < MAX_BATTLERS_COUNT)
     {
-        enum BattlerId battler = targetOrder[i++];
+        enum BattlerId battler = GetNextTargetBySlot(i);
+        i++
 
         if (!IsBattlerAlive(battler))
             continue;
