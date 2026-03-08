@@ -10960,12 +10960,18 @@ void SetOrClearRageVolatile(void)
 
 enum BattlerId GetTargetBySlot(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
-    enum BattlerId targetOrder[MAX_BATTLERS_COUNT] = {
-        battlerAtk,
-        BATTLE_PARTNER(battlerAtk),
-        LEFT_FOE(battlerAtk),
-        RIGHT_FOE(battlerAtk),
-    };
-
-    return targetOrder[battlerDef];
+    switch (battlerDef)
+    {
+    case B_BATTLER_0:
+        return battlerAtk;
+    case B_BATTLER_1:
+        return BATTLE_PARTNER(battlerAtk);
+    case B_BATTLER_2:
+        return LEFT_FOE(battlerAtk);
+    case B_BATTLER_3:
+        return RIGHT_FOE(battlerAtk);
+    default:
+        errorf("Illegal battler");
+        return battlerAtk;
+    }
 }

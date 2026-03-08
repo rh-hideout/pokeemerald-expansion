@@ -480,10 +480,10 @@ DOUBLE_BATTLE_TEST("Spread Moves: Earthquake fails in order of ally, left foe, r
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
         ASSUME(GetMoveCategory(MOVE_EARTHQUAKE) == DAMAGE_CATEGORY_PHYSICAL);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_FLYGON) { Ability(ABILITY_LEVITATE); }
-        OPPONENT(SPECIES_FLYGON) { Ability(ABILITY_LEVITATE); }
-        OPPONENT(SPECIES_FLYGON) { Ability(ABILITY_LEVITATE); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(SPECIES_FLYGON) { Speed(1); Ability(ABILITY_LEVITATE); }
+        OPPONENT(SPECIES_FLYGON) { Speed(2); Ability(ABILITY_LEVITATE); }
+        OPPONENT(SPECIES_FLYGON) { Speed(3); Ability(ABILITY_LEVITATE); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_EARTHQUAKE); }
     } SCENE {
