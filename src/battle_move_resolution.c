@@ -1704,9 +1704,13 @@ static enum CancelerResult CancelerTargetFailure(struct BattleContext *ctx)
     ctx->updateFlags = TRUE;
     ctx->runScript = TRUE;
 
-    while (gBattleStruct->eventState.atkCancelerBattler < gBattlersCount)
+    while (gBattleStruct->eventState.atkCancelerBattler < MAX_BATTLERS_COUNT)
     {
-        ctx->battlerDef = gBattleStruct->eventState.atkCancelerBattler++;
+        ctx->battlerDef = GetTargetBySlot(ctx->battlerAtk, gBattleStruct->eventState.atkCancelerBattler);
+        gBattleStruct->eventState.atkCancelerBattler++;
+
+        if (!IsDoubleBattle() && ctx->battlerDef >= gBattlersCount)
+            continue;
 
         if (ShouldSkipFailureCheckOnBattler(ctx->battlerAtk, ctx->battlerDef, FALSE))
             continue;
