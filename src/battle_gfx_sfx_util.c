@@ -1009,7 +1009,7 @@ void HandleSpeciesGfxDataChange(enum BattlerId battlerAtk, enum BattlerId battle
 
 void BattleLoadSubstituteOrMonSpriteGfx(enum BattlerId battler, bool8 loadMonSprite)
 {
-    s32 i, palOffset;
+    s32 palOffset;
     enum BattlerPosition position;
 
     if (!loadMonSprite)
@@ -1026,7 +1026,7 @@ void BattleLoadSubstituteOrMonSpriteGfx(enum BattlerId battler, bool8 loadMonSpr
         else
             DecompressDataWithHeaderVram(gBattleAnimSpriteGfx_SubstituteBack, gMonSpritesGfxPtr->spritesGfx[position]);
 
-        for (i = 1; i < 4; i++)
+        for (u32 i = 1; i < 2; i++)
         {
             Dma3CopyLarge32_(gMonSpritesGfxPtr->spritesGfx[position], &gMonSpritesGfxPtr->spritesGfx[position][MON_PIC_SIZE * i], MON_PIC_SIZE);
         }
