@@ -10960,7 +10960,7 @@ void SetOrClearRageVolatile(void)
 
 enum BattlerId GetTargetBySlot(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
-    const enum BattlerId targetOrder[MAX_BATTLERS_COUNT] = {
+    enum BattlerId targetOrder[MAX_BATTLERS_COUNT] = {
         battlerAtk,
         BATTLE_PARTNER(battlerAtk),
         LEFT_FOE(battlerAtk),
