@@ -48,6 +48,30 @@ struct TrainerBacksprite
     const union AnimCmd *const *const animation;
 };
 
+struct TrainerFrontPicInfo
+{
+    u8 y_offset;
+    const u32 *imageData;
+    const u16 *paletteData;
+    const union AnimCmd *const *const animation;
+    const struct Coords16 mugshotCoords;
+    s16 mugshotRotation;
+};
+
+struct TrainerBackPicInfo
+{
+    const struct MonCoords coordinates;
+    const struct SpriteFrameImage backPic;
+    const u16 *paletteData;
+    const union AnimCmd *const *const animation;
+};
+
+struct TrainerPicInfo
+{
+    const struct TrainerFrontPicInfo *frontPic;
+    const struct TrainerBackPicInfo *backPic;
+};
+
 #define MON_COORDS_SIZE(width, height) (DIV_ROUND_UP(width, 8) << 4 | DIV_ROUND_UP(height, 8))
 #define GET_MON_COORDS_WIDTH(size) ((size >> 4) * 8)
 #define GET_MON_COORDS_HEIGHT(size) ((size & 0xF) * 8)
@@ -204,6 +228,7 @@ extern const union AnimCmd *const gAnims_MonPic[];
 extern const union AnimCmd *const gAnims_Trainer[];
 extern const struct TrainerSprite gTrainerSprites[];
 extern const struct TrainerBacksprite gTrainerBacksprites[];
+extern const struct TrainerPicInfo gTrainerPicInfo[TRAINER_PIC_COUNT];
 
 extern const struct Trainer gTrainers[DIFFICULTY_COUNT][TRAINERS_COUNT];
 extern const struct Trainer gBattlePartners[DIFFICULTY_COUNT][PARTNER_COUNT];

@@ -511,7 +511,7 @@ void HandleInputChooseTarget(enum BattlerId battler)
                  || !CanTargetBattler(battler, gMultiUsePlayerCursor, move)
                  || (moveTarget == TARGET_OPPONENT && IsOnPlayerSide(gMultiUsePlayerCursor)))
                     validTarget = FALSE;
-                
+
                 if (B_SHOW_EFFECTIVENESS && validTarget)
                     MoveSelectionDisplayMoveEffectiveness(CheckTypeEffectiveness(battler, gMultiUsePlayerCursor), battler);
 
@@ -1885,11 +1885,11 @@ enum TrainerPicID LinkPlayerGetTrainerPicId(u32 multiplayerId)
     enum GameVersion version = gLinkPlayers[multiplayerId].version & 0xFF;
 
     if (version == VERSION_FIRE_RED || version == VERSION_LEAF_GREEN)
-        trainerPicId = gender + TRAINER_PIC_BACK_RED;
+        trainerPicId = gender + TRAINER_PIC_RED;
     else if (version == VERSION_RUBY || version == VERSION_SAPPHIRE)
-        trainerPicId = gender + TRAINER_PIC_BACK_RUBY_SAPPHIRE_BRENDAN;
+        trainerPicId = gender + TRAINER_PIC_RS_BRENDAN;
     else
-        trainerPicId = gender + TRAINER_PIC_BACK_BRENDAN;
+        trainerPicId = gender + TRAINER_PIC_BRENDAN;
 
     return trainerPicId;
 }
@@ -1901,7 +1901,7 @@ static enum TrainerPicID PlayerGetTrainerBackPicId(void)
     if (gBattleTypeFlags & BATTLE_TYPE_LINK)
         trainerPicId = LinkPlayerGetTrainerPicId(GetMultiplayerId());
     else
-        trainerPicId = gSaveBlock2Ptr->playerGender == FEMALE ? TRAINER_BACK_PIC_PLAYER_FEMALE : TRAINER_BACK_PIC_PLAYER_MALE;
+        trainerPicId = gSaveBlock2Ptr->playerGender == FEMALE ? TRAINER_PIC_PLAYER_FEMALE : TRAINER_PIC_PLAYER_MALE;
 
     return trainerPicId;
 }
@@ -1917,7 +1917,7 @@ static void PlayerHandleDrawTrainerPic(enum BattlerId battler)
 
     if (IsMultibattleTest())
     {
-        trainerPicId = TRAINER_PIC_BACK_BRENDAN;
+        trainerPicId = TRAINER_PIC_BRENDAN;
         if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
             xPos = 32;
         else
@@ -2300,7 +2300,7 @@ static void PlayerHandleOneReturnValue_Duplicate(enum BattlerId battler)
 
 static void PlayerHandleIntroTrainerBallThrow(enum BattlerId battler)
 {
-    const u32 paletteIndex = PlayerGetTrainerBackPicId() - TRAINER_PIC_FRONT_COUNT;
+    const u32 paletteIndex = PlayerGetTrainerBackPicId();
     const u16 *trainerPal = gTrainerBacksprites[paletteIndex].palette.data;
     BtlController_HandleIntroTrainerBallThrow(battler, 0xD6F8, trainerPal, 31, Intro_TryShinyAnimShowHealthbox);
 }

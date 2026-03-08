@@ -277,7 +277,7 @@ static void RecordedPlayerHandleDrawTrainerPic(enum BattlerId battler)
     // Sets Multibattle test player sprites to not be Hiker
     if (IsMultibattleTest())
     {
-        trainerPicId = TRAINER_PIC_BACK_BRENDAN;
+        trainerPicId = TRAINER_PIC_BRENDAN;
         if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
             xPos = 32;
         else
@@ -289,12 +289,12 @@ static void RecordedPlayerHandleDrawTrainerPic(enum BattlerId battler)
         if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
         {
             if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
-                trainerPicId = GetBattlerLinkPlayerGender(battler) + TRAINER_PIC_BACK_BRENDAN;
+                trainerPicId = GetBattlerLinkPlayerGender(battler) + TRAINER_PIC_BRENDAN;
             else
-                trainerPicId = gLinkPlayers[gRecordedBattleMultiplayerId].gender + TRAINER_PIC_BACK_BRENDAN;
+                trainerPicId = gLinkPlayers[gRecordedBattleMultiplayerId].gender + TRAINER_PIC_BRENDAN;
         }
         else
-            trainerPicId = gLinkPlayers[0].gender + TRAINER_PIC_BACK_BRENDAN;
+            trainerPicId = gLinkPlayers[0].gender + TRAINER_PIC_BRENDAN;
 
         if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
         {
@@ -402,9 +402,9 @@ static void RecordedPlayerHandleIntroTrainerBallThrow(enum BattlerId battler)
     const u16 *trainerPal;
 
     if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
-        trainerPicId = gLinkPlayers[GetBattlerMultiplayerId(battler)].gender == FEMALE ? TRAINER_BACK_PIC_PLAYER_FEMALE : TRAINER_BACK_PIC_PLAYER_MALE;
+        trainerPicId = gLinkPlayers[GetBattlerMultiplayerId(battler)].gender == FEMALE ? TRAINER_PIC_PLAYER_FEMALE : TRAINER_PIC_PLAYER_MALE;
     else
-        trainerPicId = gSaveBlock2Ptr->playerGender == FEMALE ? TRAINER_BACK_PIC_PLAYER_FEMALE : TRAINER_BACK_PIC_PLAYER_MALE;
+        trainerPicId = gSaveBlock2Ptr->playerGender == FEMALE ? TRAINER_PIC_PLAYER_FEMALE : TRAINER_PIC_PLAYER_MALE;
 
     trainerPal = gTrainerBacksprites[trainerPicId].palette.data;
     BtlController_HandleIntroTrainerBallThrow(battler, 0xD6F9, trainerPal, 24, Intro_TryShinyAnimShowHealthbox);
