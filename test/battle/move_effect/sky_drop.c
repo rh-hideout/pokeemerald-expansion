@@ -212,59 +212,65 @@ DOUBLE_BATTLE_TEST("Sky Drop does not trigger Volt Absorb on it's charge turn")
 SINGLE_BATTLE_TEST("Sky Drop: If target was locked into a move that would confuse, the target will be freed and confusion occurs immediately")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_TORKOAL) { Ability(ABILITY_DROUGHT); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_THRASH); MOVE(opponent, MOVE_SKY_DROP);}
         TURN { SKIP_TURN(opponent); }
     } SCENE {
+        ABILITY_POPUP(player, ABILITY_DROUGHT);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THRASH, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, opponent);
         HP_BAR(player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
+        MESSAGE("The sunlight is strong.");
     }
 }
 
-SINGLE_BATTLE_TEST("Sky Drop: If target was locked into a move that would confuse, the target will be freed and confusion occurs immediately (attacker faints due to status)")
+DOUBLE_BATTLE_TEST("Sky Drop: If target was locked into a move that would confuse, the target will be freed and confusion occurs immediately (attacker faints due to status)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(70); MaxHP(490); Status1(STATUS1_BURN); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); MaxHP(2); Status1(STATUS1_BURN); }
+        OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
-            MOVE(player, MOVE_THRASH);
-            MOVE(opponent, MOVE_SKY_DROP);
-            SEND_OUT(opponent, 1);
+            MOVE(playerLeft, MOVE_THRASH, target: opponentRight);
+            MOVE(opponentLeft, MOVE_SKY_DROP, target: playerLeft);
+            SEND_OUT(opponentLeft, 2);
         }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_THRASH, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, opponent);
-        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_THRASH, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, opponentLeft);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, playerLeft);
     }
 }
 
-SINGLE_BATTLE_TEST("Sky Drop: If target was locked into a move that would confuse, the target will be freed and confusion occurs immediately (attacker faints due to target ability)")
+DOUBLE_BATTLE_TEST("Sky Drop: If target was locked into a move that would confuse, the target will be freed and confusion occurs immediately (attacker faints due to target ability)")
 {
     GIVEN {
         PLAYER(SPECIES_SHARPEDO) { Ability(ABILITY_ROUGH_SKIN); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(220); MaxHP(490); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); MaxHP(2); }
+        OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
-            MOVE(player, MOVE_THRASH);
-            MOVE(opponent, MOVE_SKY_DROP);
+            MOVE(playerLeft, MOVE_THRASH, target: opponentRight);
+            MOVE(opponentLeft, MOVE_SKY_DROP, target: playerLeft);
         }
         TURN {
-            SKIP_TURN(opponent);
-            SEND_OUT(opponent, 1);
+            SKIP_TURN(opponentLeft);
+            SEND_OUT(opponentLeft, 2);
         }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_THRASH, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, opponent); // 1st turn
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, opponent); // 2nd turn
-        ABILITY_POPUP(player, ABILITY_ROUGH_SKIN);
-        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_THRASH, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, opponentLeft); // 1st turn
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, opponentLeft); // 2nd turn
+        ABILITY_POPUP(playerLeft, ABILITY_ROUGH_SKIN);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, playerLeft);
     }
 }
 
