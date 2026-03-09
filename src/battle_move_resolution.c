@@ -2248,7 +2248,7 @@ static enum MoveEndResult MoveEndRage(void)
         && IsBattlerAlive(gBattlerTarget)
         && gBattlerAttacker != gBattlerTarget
         && !IsBattlerAlly(gBattlerAttacker, gBattlerTarget)
-        && IsBattlerTurnDamaged(gBattlerTarget, TRUE)
+        && IsBattlerTurnDamaged(gBattlerTarget, FALSE)
         && !IsBattleMoveStatus(gCurrentMove)
         && CompareStat(gBattlerTarget, STAT_ATK, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(gBattlerTarget)))
     {
