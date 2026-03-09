@@ -283,7 +283,7 @@ static void InitBtlControllersInternal(void)
             // Opponent 1
             bool32 isOpponent1Recorded;
             if (isDouble)
-                isOpponent1Recorded = ((!isInGamePartner && isRecorded && !isMulti && isRecordedLink) || ((TESTING && isMulti) && isRecordedLink));
+                isOpponent1Recorded = ((!isInGamePartner && isRecorded && !isMulti && isRecordedLink) || (TESTING && isMulti && isRecordedLink));
             else
                 isOpponent1Recorded = isRecorded && isRecordedLink;
 
@@ -293,11 +293,11 @@ static void InitBtlControllersInternal(void)
                 gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_1)] = SetControllerToOpponent;
 
             // Player 2
-            if ((TESTING && isMulti) && isRecordedLink)
+            if (TESTING && isMulti && isRecordedLink)
             {
                 gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_2)] = SetControllerToRecordedPartner;
             }
-            else if ((TESTING && isMulti) && isRecorded && !isRecordedLink)
+            else if (TESTING && isMulti && isRecorded && !isRecordedLink)
             { // Sets to PlayerPartner if EXPECT_XXXX used in test for partner trainer, else sets to RecordedPartner.
                 if (gBattleTestRunnerState->data.expectedAiActions[B_BATTLER_2][0].actionSet == TRUE)
                     gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_2)] = SetControllerToPlayerPartner;
@@ -319,7 +319,7 @@ static void InitBtlControllersInternal(void)
             }
 
             // Opponent 2
-            if ((TESTING && isMulti) && isRecordedLink)
+            if (TESTING && isMulti && isRecordedLink)
                 gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_3)] = SetControllerToRecordedOpponent;
             else if (isInGamePartner || !isRecorded || isMulti || !isRecordedLink)
                 gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_3)] = SetControllerToOpponent;
@@ -3413,4 +3413,19 @@ bool32 BattleSideHasTwoTrainers(enum BattleSide side)
 bool32 BattlersShareParty(enum BattlerId battler1, enum BattlerId battler2)
 {
     return (GetBattlerParty(battler1) == GetBattlerParty(battler2));
+}
+
+bool32 TrainerHasParty(enum BattleTrainer trainer)
+{
+    switch (trainer)
+    {
+    case B_TRAINER_0:
+    case B_TRAINER_1:
+        return TRUE;
+    case B_TRAINER_2:
+    case B_TRAINER_3:
+        return BattleSideHasTwoTrainers((enum BattleSide)(trainer & BIT_SIDE));
+    default:
+        return FALSE;
+    }
 }

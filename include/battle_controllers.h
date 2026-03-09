@@ -497,6 +497,7 @@ enum BattleTrainer GetAllyTrainerFromTrainer(enum BattleTrainer trainer);
 enum BattleTrainer GetTrainerFromBattlePosition(enum BattlerPosition position);
 bool32 BattleSideHasTwoTrainers(enum BattleSide side);
 bool32 BattlersShareParty(enum BattlerId battler1, enum BattlerId battler2);
+bool32 TrainerHasParty(enum BattleTrainer trainer);
 
 
 // oak and old man controller

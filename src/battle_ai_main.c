@@ -518,10 +518,13 @@ void Ai_InitPartyStruct(void)
     bool32 hasPartyKnowledge = (gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT] & AI_FLAG_KNOW_OPPONENT_PARTY) || (gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_RIGHT] & AI_FLAG_KNOW_OPPONENT_PARTY);
     struct Pokemon *mon;
 
-    gAiPartyData->count[B_TRAINER_0] = CalculatePartyCount(B_TRAINER_0);
-    gAiPartyData->count[B_TRAINER_1] = CalculatePartyCount(B_TRAINER_1);
-    gAiPartyData->count[B_TRAINER_2] = CalculatePartyCount(B_TRAINER_2);
-    gAiPartyData->count[B_TRAINER_3] = CalculatePartyCount(B_TRAINER_3);
+    for (enum BattleTrainer trainer = B_TRAINER_0; trainer < MAX_BATTLE_TRAINERS; trainer++)
+    {
+        if (TrainerHasParty(trainer))
+            gAiPartyData->count[trainer] = CalculatePartyCount(trainer);
+        else
+            gAiPartyData->count[trainer] = 0;
+    }
 
     // Save first 2 or 4(in doubles) mons
     CopyBattlerDataToAIParty(B_POSITION_PLAYER_LEFT, GetTrainerFromBattlePosition(B_POSITION_PLAYER_LEFT));
@@ -538,6 +541,9 @@ void Ai_InitPartyStruct(void)
     // Find fainted mons
     for (enum BattleTrainer trainer = B_TRAINER_0; trainer < MAX_BATTLE_TRAINERS; trainer++)
     {
+        if (!TrainerHasParty(trainer))
+            continue;
+
         for (u32 monIndex = 0; monIndex < PARTY_SIZE; monIndex++)
         {
             if (GetMonData(&gParties[trainer][monIndex], MON_DATA_SPECIES) == SPECIES_NONE)

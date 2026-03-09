@@ -2177,8 +2177,7 @@ static void PlayerHandleChoosePokemon(enum BattlerId battler)
     for (i = 0; i < ARRAY_COUNT(gBattlePartyCurrentOrder); i++)
         gBattlePartyCurrentOrder[i] = gBattleResources->bufferA[battler][4 + i];
 
-    if (gBattleStruct != NULL && battler < gBattlersCount)
-        memcpy(gBattleStruct->battlerPartyOrders[battler], gBattlePartyCurrentOrder, sizeof(gBattlePartyCurrentOrder));
+    memcpy(gBattleStruct->battlerPartyOrders[battler], gBattlePartyCurrentOrder, sizeof(gBattlePartyCurrentOrder));
 
     if (gBattleTypeFlags & BATTLE_TYPE_ARENA && gBattleResources->bufferA[battler][1] != PARTY_ACTION_CANT_SWITCH
         && gBattleResources->bufferA[battler][1] != PARTY_ACTION_CHOOSE_FAINTED_MON
