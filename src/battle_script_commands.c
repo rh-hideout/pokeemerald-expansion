@@ -2824,7 +2824,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
             if (gBattleMons[gEffectBattler].statStages[i] != DEFAULT_STAT_STAGE)
                 break;
         }
-        if (IsBattlerTurnDamaged(gEffectBattler) && i != NUM_BATTLE_STATS)
+        if (IsBattlerTurnDamaged(gEffectBattler, FALSE) && i != NUM_BATTLE_STATS)
         {
             for (i = 0; i < NUM_BATTLE_STATS; i++)
                 gBattleMons[gEffectBattler].statStages[i] = DEFAULT_STAT_STAGE;
@@ -3713,7 +3713,7 @@ static void SetToxicChainPriority(void)
     if (abilityAtk == ABILITY_TOXIC_CHAIN
      && IsBattlerAlive(gBattlerTarget)
      && CanBePoisoned(gBattlerAttacker, gBattlerTarget, abilityAtk, GetBattlerAbility(gBattlerTarget))
-     && IsBattlerTurnDamaged(gBattlerTarget)
+     && IsBattlerTurnDamaged(gBattlerTarget, FALSE)
      && RandomWeighted(RNG_TOXIC_CHAIN, 7, 3))
         gBattleStruct->toxicChainPriority = TRUE;
 }

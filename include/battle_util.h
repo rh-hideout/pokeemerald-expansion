@@ -413,7 +413,7 @@ void RemoveAbilityFlags(enum BattlerId battler);
 void CheckSetUnburden(enum BattlerId battler);
 bool32 IsDazzlingAbility(enum Ability ability);
 bool32 IsAllowedToUseBag(void);
-bool32 IsAnyTargetTurnDamaged(enum BattlerId battlerAtk);
+bool32 IsAnyTargetTurnDamaged(enum BattlerId battlerAtk, bool32 ignoreSub);
 bool32 IsAnyTargetAffected(void);
 bool32 IsMimikyuDisguised(enum BattlerId battler);
 bool32 IsDoubleSpreadMove(void);

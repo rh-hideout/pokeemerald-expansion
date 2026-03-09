@@ -1067,9 +1067,9 @@ static inline bool32 IsBattlerAlive(enum BattlerId battler)
         return TRUE;
 }
 
-static inline bool32 IsBattlerTurnDamaged(enum BattlerId battler)
+static inline bool32 IsBattlerTurnDamaged(enum BattlerId battler, bool32 ignoreSub)
 {
-    return gSpecialStatuses[battler].damagedByAttack;
+    return gSpecialStatuses[battler].damagedByAttack || (ignoreSub && gBattleStruct->moveDamage[battler] > 0);
 }
 
 static inline bool32 IsBattlerAtMaxHp(enum BattlerId battler)
