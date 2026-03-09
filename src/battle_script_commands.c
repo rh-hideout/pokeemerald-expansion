@@ -6488,7 +6488,7 @@ static void Cmd_getpossiblenexttarget(void)
     u32 nextTarget = GetPossibleNextTarget(MAX_BATTLERS_COUNT);
     if (nextTarget != MAX_BATTLERS_COUNT)
     {
-        gBattleMons[gBattlerAttacker].volatiles.moveTarget = gBattlerTarget = nextTarget;
+        gBattlerTarget = SetBattlerMoveTarget(gBattlerAttacker, nextTarget);
         gBattleStruct->battlerState[gBattlerAttacker].targetsDone[gBattlerTarget] = TRUE;
         gBattlescriptCurrInstr = cmd->jumpInstr;
     }
@@ -8846,7 +8846,7 @@ static void Cmd_trysetencore(void)
         // the target will select a random opposing target
         // Redirection such as Follow Me is already covered in HandleAction_UseMove of battle_util.c
         if (gBattleMons[gBattlerTarget].volatiles.encoredMove != GetBattlerMoveFromChosenPosition(gBattlerTarget))
-            gBattleMons[gBattlerTarget].volatiles.moveTarget = SetRandomTarget(gBattlerTarget);
+            SetBattlerMoveTarget(gBattlerTarget, SetRandomTarget(gBattlerTarget));
 
         // Encore always lasts 3 turns, but we need to account for a scenario where Encore changes the move during the same turn.
         if (HasBattlerActedThisTurn(gBattlerTarget))
@@ -9360,7 +9360,7 @@ static void Cmd_jumpifnopursuitswitchdmg(void)
         ChangeOrderTargetAfterAttacker();
         gBattleStruct->battlerState[gBattlerAttacker].pursuitTarget = TRUE;
         gBattleStruct->pursuitStoredSwitch = gBattleStruct->monToSwitchIntoId[gBattlerAttacker];
-        gBattleMons[gBattlerTarget].volatiles.moveTarget = gBattlerAttacker;
+        SetBattlerMoveTarget(gBattlerTarget, gBattlerAttacker);
         gBattlerTarget = savedTarget;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
@@ -14230,7 +14230,7 @@ void BS_TryInstruct(void)
     }
     else
     {
-        gSpecialStatuses[gBattlerTarget].backUpTarget = gBattleMons[gBattlerTarget].volatiles.moveTarget + 1;
+        gSpecialStatuses[gBattlerTarget].backUpTarget = GetBattlerMoveTarget(gBattlerTarget) + 1;
         gCalledMove = move;
         u32 moveIndex;
         bool32 foundMove = FALSE;

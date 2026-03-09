@@ -791,16 +791,16 @@ static bool32 HandleMoveTargetRedirection(enum MoveTarget moveTarget)
         enum DamageCategory reflectCategory = GetReflectDamageMoveDamageCategory(gBattlerAttacker, gCurrentMove);
 
         if (reflectCategory == DAMAGE_CATEGORY_PHYSICAL)
-            gBattlerTarget = gBattleMons[gBattlerAttacker].volatiles.moveTarget = gProtectStructs[gBattlerAttacker].physicalBattlerId;
+            gBattlerTarget = SetBattlerMoveTarget(gBattlerAttacker, gProtectStructs[gBattlerAttacker].physicalBattlerId);
         else
-            gBattlerTarget = gBattleMons[gBattlerAttacker].volatiles.moveTarget = gProtectStructs[gBattlerAttacker].specialBattlerId;
+            gBattlerTarget = SetBattlerMoveTarget(gBattlerAttacker, gProtectStructs[gBattlerAttacker].specialBattlerId);
     }
 
     if (IsAffectedByFollowMe(gBattlerAttacker, side, gCurrentMove)
      && (moveTarget == TARGET_SELECTED || moveTarget == TARGET_SMART || moveEffect == EFFECT_REFLECT_DAMAGE)
      && !IsBattlerAlly(gBattlerAttacker, gSideTimers[side].followmeTarget))
     {
-        gBattleMons[gBattlerAttacker].volatiles.moveTarget = gBattlerTarget = gSideTimers[side].followmeTarget; // follow me moxie fix
+        gBattlerTarget = SetBattlerMoveTarget(gBattlerAttacker, gSideTimers[side].followmeTarget); // follow me moxie fix
         return TRUE;
     }
 
@@ -2703,7 +2703,7 @@ static enum MoveEndResult MoveEndNextTarget(void)
         enum BattlerId partner = BATTLE_PARTNER(gBattlerAttacker);
         if (partner != gBattlerTarget && IsBattlerAlive(partner))
         {
-            gBattleMons[gBattlerAttacker].volatiles.moveTarget = gBattlerTarget = partner;
+            gBattlerTarget = SetBattlerMoveTarget(gBattlerAttacker, partner);
             BattleScriptPush(GetMoveBattleScript(gCurrentMove));
             gBattlescriptCurrInstr = BattleScript_FlushMessageBox;
             gBattleScripting.moveendState = 0;
@@ -2716,7 +2716,7 @@ static enum MoveEndResult MoveEndNextTarget(void)
 
         if (nextTarget != MAX_BATTLERS_COUNT)
         {
-            gBattleMons[gBattlerAttacker].volatiles.moveTarget = gBattlerTarget = nextTarget; // Fix for moxie spread moves
+            gBattlerTarget = SetBattlerMoveTarget(gBattlerAttacker, nextTarget);
             gBattleScripting.moveendState = 0;
             BattleScriptPush(GetMoveBattleScript(gCurrentMove));
             gBattlescriptCurrInstr = BattleScript_FlushMessageBox;
@@ -2735,7 +2735,7 @@ static enum MoveEndResult MoveEndNextTarget(void)
             if (nextTarget != MAX_BATTLERS_COUNT)
             {
                 // We found another target for the original move user.
-                gBattleMons[gBattlerAttacker].volatiles.moveTarget = gBattlerTarget = nextTarget;
+                gBattlerTarget = SetBattlerMoveTarget(gBattlerAttacker, nextTarget);
                 gBattleScripting.moveendState = 0;
                 gBattleScripting.animTurn = 0;
                 gBattleScripting.animTargetsHit = 0;
@@ -3667,7 +3667,7 @@ static enum MoveEndResult MoveEndClearBits(void)
         gBattleMons[gBattlerAttacker].volatiles.stompingTantrumTimer = 2;
 
     if (gSpecialStatuses[gBattlerAttacker].backUpTarget)
-        gBattleMons[gBattlerAttacker].volatiles.moveTarget = gSpecialStatuses[gBattlerAttacker].backUpTarget - 1;
+        SetBattlerMoveTarget(gBattlerAttacker, gSpecialStatuses[gBattlerAttacker].backUpTarget - 1);
 
     // If the Pokémon needs to keep track of move usage for its evolutions, do it
     if (originallyUsedMove != MOVE_NONE)
@@ -3751,7 +3751,7 @@ static enum MoveEndResult MoveEndPursuitNextAction(void)
         if (SetTargetToNextPursuiter(gBattlerTarget))
         {
             ChangeOrderTargetAfterAttacker();
-            gBattleMons[gBattlerTarget].volatiles.moveTarget = storedTarget;
+            SetBattlerMoveTarget(gBattlerTarget, storedTarget);
             gBattlerTarget = storedTarget;
         }
         else if (IsBattlerAlive(gBattlerTarget))

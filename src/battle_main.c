@@ -4213,7 +4213,7 @@ static void HandleTurnActionSelectionState(void)
                         gBattleCommunication[battler] = STATE_SELECTION_SCRIPT;
                         gBattleStruct->battlerState[battler].selectionScriptFinished = FALSE;
                         gBattleStruct->stateIdAfterSelScript[battler] = STATE_WAIT_ACTION_CONFIRMED_STANDBY;
-                        gBattleMons[battler].volatiles.moveTarget = gBattleResources->bufferB[battler][3];
+                        SetBattlerMoveTarget(battler, gBattleResources->bufferB[battler][3]);
                         return;
                     }
                     else if (GetConfig(B_ENCORE_TARGET) < GEN_5 && gBattleMons[battler].volatiles.encoredMove != MOVE_NONE)
@@ -4461,7 +4461,7 @@ static void HandleTurnActionSelectionState(void)
                             // Get the chosen move position (and thus the chosen move) and target from the returned buffer.
                             gBattleMons[battler].volatiles.chosenMovePos = gBattleResources->bufferB[battler][2] & ~RET_GIMMICK;
                             gBattleMons[battler].volatiles.chosenMove = GetBattlerMoveFromChosenPosition(battler);
-                            gBattleMons[battler].volatiles.moveTarget = gBattleResources->bufferB[battler][3];
+                            SetBattlerMoveTarget(battler, gBattleResources->bufferB[battler][3]);
                             if (IsBattleMoveStatus(GetBattlerChosenMove(battler)) && GetBattlerAbility(battler) == ABILITY_MYCELIUM_MIGHT)
                                 gProtectStructs[battler].myceliumMight = TRUE;
                             if (GetBattlerHoldEffect(battler) == HOLD_EFFECT_LAGGING_TAIL)
@@ -4483,7 +4483,7 @@ static void HandleTurnActionSelectionState(void)
                                 UNUSED enum Gimmick gimmick = GIMMICK_NONE;
                                 if (gBattleResources->bufferB[battler][2] & RET_GIMMICK)
                                     gimmick = gBattleStruct->gimmick.usableGimmick[battler];
-                                TestRunner_Battle_CheckChosenMove(battler, GetBattlerChosenMove(battler), gBattleMons[battler].volatiles.moveTarget, gimmick);
+                                TestRunner_Battle_CheckChosenMove(battler, GetBattlerChosenMove(battler), GetBattlerMoveTarget(battler), gimmick);
                             }
                         }
                         break;

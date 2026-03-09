@@ -6737,11 +6737,11 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
     {
         enum Ability ability = GetBattlerAbility(i);
         // if not targeting a slot that got switched, continue
-        if (!IsBattlerAlly(gBattleMons[i].volatiles.moveTarget, battlerAtk))
+        if (!IsBattlerAlly(GetBattlerMoveTarget(i), battlerAtk))
             continue;
 
         if (GetMoveEffect(gBattleMons[i].volatiles.chosenMove) == EFFECT_SNIPE_SHOT || ability == ABILITY_PROPELLER_TAIL || ability == ABILITY_STALWART)
-            gBattleMons[i].volatiles.moveTarget ^= BIT_FLANK;
+            SetBattlerMoveTarget(i, GetBattlerMoveTarget(i) ^ BIT_FLANK);
     }
 
     // For some reason the order in which the sprites are created matters. Looks like an issue with the sprite system, potentially with the Sprite Template.

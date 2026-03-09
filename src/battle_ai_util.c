@@ -4202,7 +4202,7 @@ bool32 AreMovesEquivalent(enum BattlerId battlerAtk, enum BattlerId battlerAtkPa
     if (!IsBattlerAlive(battlerAtkPartner) || partnerMove == MOVE_NONE)
         return FALSE;
 
-    enum BattlerId battlerDef = gBattleMons[battlerAtk].volatiles.moveTarget;
+    enum BattlerId battlerDef = GetBattlerMoveTarget(battlerAtk);
 
     // We don't care the effect is basically the same; we would use this move anyway.
     if (IsBestDmgMove(battlerAtk, battlerDef, AI_ATTACKING, move))
@@ -4216,7 +4216,7 @@ bool32 AreMovesEquivalent(enum BattlerId battlerAtk, enum BattlerId battlerAtkPa
     {
         if (GetMoveTarget(move) == TARGET_SELECTED && GetMoveTarget(partnerMove) == TARGET_SELECTED)
         {
-            if (battlerDef == gBattleMons[battlerAtkPartner].volatiles.moveTarget)
+            if (battlerDef == GetBattlerMoveTarget(battlerAtkPartner))
                 return TRUE;
             else
                 return FALSE;
@@ -4356,7 +4356,7 @@ bool32 DoesPartnerHaveSameMoveEffect(enum BattlerId battlerAtkPartner, enum Batt
     {
         if (GetMoveTarget(move) == TARGET_SELECTED && GetMoveTarget(partnerMove) == TARGET_SELECTED)
         {
-            return gBattleMons[battlerAtkPartner].volatiles.moveTarget == battlerDef;
+            return GetBattlerMoveTarget(battlerAtkPartner) == battlerDef;
         }
         return TRUE;
     }
@@ -4372,7 +4372,7 @@ bool32 PartnerMoveEffectIsStatusSameTarget(enum BattlerId battlerAtkPartner, enu
     enum BattleMoveEffects partnerEffect = GetMoveEffect(partnerMove);
     enum MoveEffect nonVolatileStatus = GetMoveNonVolatileStatus(partnerMove);
     if (partnerMove != MOVE_NONE
-     && gBattleMons[battlerAtkPartner].volatiles.moveTarget == battlerDef
+     && GetBattlerMoveTarget(battlerAtkPartner) == battlerDef
      && (nonVolatileStatus == MOVE_EFFECT_POISON
        || nonVolatileStatus == MOVE_EFFECT_TOXIC
        || nonVolatileStatus == MOVE_EFFECT_SLEEP
@@ -4412,7 +4412,7 @@ bool32 PartnerMoveIsSameAsAttacker(enum BattlerId battlerAtkPartner, enum Battle
     if (!HasPartner(battlerAtkPartner))
         return FALSE;
 
-    if (partnerMove != MOVE_NONE && move == partnerMove && gBattleMons[battlerAtkPartner].volatiles.moveTarget == battlerDef)
+    if (partnerMove != MOVE_NONE && move == partnerMove && GetBattlerMoveTarget(battlerAtkPartner) == battlerDef)
         return TRUE;
     return FALSE;
 }

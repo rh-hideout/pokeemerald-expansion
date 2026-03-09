@@ -386,7 +386,7 @@ void HandleAction_UseMove(void)
     {
         gProtectStructs[gBattlerAttacker].noValidMoves = FALSE;
         gCurrentMove = gChosenMove = MOVE_STRUGGLE;
-        gBattleMons[gBattlerAttacker].volatiles.moveTarget = GetBattleMoveTarget(MOVE_STRUGGLE, TARGET_NONE);
+        SetBattlerMoveTarget(gBattlerAttacker, GetBattleMoveTarget(MOVE_STRUGGLE, TARGET_NONE));
     }
     else if (gBattleMons[gBattlerAttacker].volatiles.multipleTurns || gBattleMons[gBattlerAttacker].volatiles.rechargeTimer > 0)
     {
@@ -399,7 +399,7 @@ void HandleAction_UseMove(void)
         gCurrentMove = gChosenMove = gBattleMons[gBattlerAttacker].volatiles.encoredMove;
         gCurrMovePos = gChosenMovePos = gBattleMons[gBattlerAttacker].volatiles.encoredMovePos;
         if (GetConfig(B_ENCORE_TARGET) < GEN_5)
-            gBattleMons[gBattlerAttacker].volatiles.moveTarget = GetBattleMoveTarget(gCurrentMove, TARGET_NONE);
+            SetBattlerMoveTarget(gBattlerAttacker, GetBattleMoveTarget(gCurrentMove, TARGET_NONE));
     }
     // check if the encored move wasn't overwritten
     else if (GetActiveGimmick(gBattlerAttacker) != GIMMICK_Z_MOVE && gBattleMons[gBattlerAttacker].volatiles.encoredMove != MOVE_NONE
@@ -410,12 +410,12 @@ void HandleAction_UseMove(void)
         gBattleMons[gBattlerAttacker].volatiles.encoredMove = MOVE_NONE;
         gBattleMons[gBattlerAttacker].volatiles.encoredMovePos = 0;
         gBattleMons[gBattlerAttacker].volatiles.encoreTimer = 0;
-        gBattleMons[gBattlerAttacker].volatiles.moveTarget = GetBattleMoveTarget(gCurrentMove, TARGET_NONE);
+        SetBattlerMoveTarget(gBattlerAttacker, GetBattleMoveTarget(gCurrentMove, TARGET_NONE));
     }
     else if (gBattleMons[gBattlerAttacker].moves[gCurrMovePos] != GetBattlerChosenMove(gBattlerAttacker))
     {
         gCurrentMove = gChosenMove = gBattleMons[gBattlerAttacker].moves[gCurrMovePos];
-        gBattleMons[gBattlerAttacker].volatiles.moveTarget = GetBattleMoveTarget(gCurrentMove, TARGET_NONE);
+        SetBattlerMoveTarget(gBattlerAttacker, GetBattleMoveTarget(gCurrentMove, TARGET_NONE));
     }
     else
     {
@@ -450,7 +450,7 @@ void HandleAction_UseMove(void)
     ClearDamageCalcResults();
     gMultiHitCounter = 0;
     gBattleCommunication[MISS_TYPE] = 0;
-    gBattlerTarget = gBattleMons[gBattlerAttacker].volatiles.moveTarget;
+    gBattlerTarget = GetBattlerMoveTarget(gBattlerAttacker);
     // Avoid assert errors before failure script is played (for ally targeting moves)
     if (!IsDoubleBattle() && gBattlerTarget >= gBattlersCount)
         gBattlerTarget = BATTLE_PARTNER(gBattlerTarget);
@@ -3081,7 +3081,7 @@ static bool32 TryDancer(void)
      && gBattlerAttacker != dancerBattler)
     {
         gSpecialStatuses[dancerBattler].dancerUsedMove = TRUE;
-        gSpecialStatuses[dancerBattler].backUpTarget = gBattleMons[dancerBattler].volatiles.moveTarget + 1;
+        gSpecialStatuses[dancerBattler].backUpTarget = GetBattlerMoveTarget(dancerBattler) + 1;
         gBattleMons[dancerBattler].volatiles.activateDancer = FALSE;
         gBattlerAttacker = gBattlerAbility = dancerBattler;
         gCalledMove = gCurrentMove;
@@ -5618,7 +5618,7 @@ u32 GetBattleMoveTarget(enum Move move, enum MoveTarget moveTarget)
         break;
     }
 
-    gBattleMons[gBattlerAttacker].volatiles.moveTarget = targetBattler;
+    SetBattlerMoveTarget(gBattlerAttacker, targetBattler);
 
     return targetBattler;
 }
@@ -9906,7 +9906,7 @@ bool32 SetTargetToNextPursuiter(enum BattlerId battlerDef)
         && IsBattlerAlive(battlerDef)
         && IsBattlerAlive(battler)
         && !IsBattlerAlly(battler, battlerDef)
-        && (B_PURSUIT_TARGET >= GEN_4 || gBattleMons[battler].volatiles.moveTarget == battlerDef)
+        && (B_PURSUIT_TARGET >= GEN_4 || GetBattlerMoveTarget(battler) == battlerDef)
         && !IsGimmickSelected(battler, GIMMICK_Z_MOVE)
         && !IsGimmickSelected(battler, GIMMICK_DYNAMAX)
         && GetActiveGimmick(battler) != GIMMICK_DYNAMAX)
@@ -10959,4 +10959,14 @@ enum Move GetBattlerChosenMove(enum BattlerId battler)
 enum BattleMoveEffects GetBattlerChosenMoveEffect(enum BattlerId battler)
 {
     return GetMoveEffect(GetBattlerChosenMove(battler));
+}
+
+enum BattlerId GetBattlerMoveTarget(enum BattlerId battler)
+{
+    return gBattleMons[battler].volatiles.moveTarget;
+}
+
+enum BattlerId SetBattlerMoveTarget(enum BattlerId battler, enum BattlerId target)
+{
+    return gBattleMons[battler].volatiles.moveTarget = target;
 }
