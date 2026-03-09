@@ -131,6 +131,8 @@ struct SideTimer
 {
     u16 reflectTimer;
     u16 lightscreenTimer;
+    u16 reflectTimerTotal;
+    u16 lightscreenTimerTotal;
     u16 mistTimer;
     u16 safeguardTimer;
     u8 spikesAmount:4;
@@ -138,6 +140,7 @@ struct SideTimer
     u8 stickyWebBattlerId;
     u8 stickyWebBattlerSide; // Used for Court Change
     u16 auroraVeilTimer;
+    u16 auroraVeilTimerTotal;
     u16 tailwindTimer;
     u16 luckyChantTimer;
     // Timers below this point are not swapped by Court Change
@@ -160,6 +163,8 @@ struct FieldTimer
     u16 magicRoomTimer;
     u16 trickRoomTimer;
     u16 terrainTimer;
+    u16 terrainTimerTotal;
+    u8 terrainSide;
     u16 gravityTimer;
     u16 fairyLockTimer;
 };
@@ -555,6 +560,8 @@ struct BattleStruct
     u32 expShareExpValue;
     u32 expValue;
     u8 weatherDuration;
+    u8 weatherDurationTotal;
+    u8 weatherSide;
     u8 expGettersOrder[PARTY_SIZE]; // First battlers which were sent out, then via exp-share
     u8 expGetterMonId;
     u8 expOrderId:3;
@@ -653,6 +660,7 @@ struct BattleStruct
     u8 throwingPokeBall:1;
     u8 ballSpriteIds[2];    // item gfx, window gfx
     u8 moveInfoSpriteId; // move info, window gfx
+    u8 battleStatusHintSpriteId; // battle status hint, window gfx
     u8 skyDropTargets[MAX_BATTLERS_COUNT]; // For Sky Drop, to account for if multiple Pokemon use Sky Drop in a double battle.
     // When using a move which hits multiple opponents which is then bounced by a target, we need to make sure, the move hits both opponents, the one with bounce, and the one without.
     u16 beatUpSpecies[PARTY_SIZE]; // Species for Gen5+ Beat Up, otherwise party indexes

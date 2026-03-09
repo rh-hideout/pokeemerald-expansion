@@ -1347,6 +1347,7 @@ const u32 gBattleArenaJudgmentSymbolsGfx[] = INCBIN_U32("graphics/battle_frontie
 const u16 gBattleArenaJudgmentSymbolsPalette[] = INCBIN_U16("graphics/battle_frontier/arena_judgment_symbols.gbapal");
 
 const u16 gBattleWindowTextPalette[] = INCBIN_U16("graphics/battle_interface/text.gbapal");
+const u16 gBattleStatusTextPalette[] = INCBIN_U16("graphics/battle_interface/battle_status_text.gbapal");
 const u16 gPPTextPalette[] = INCBIN_U16("graphics/battle_interface/text_pp.gbapal");
 
 const u16 gTilesetAnims_BattleDomePals0_0[] = INCBIN_U16("graphics/battle_frontier/dome_anim1.gbapal");

@@ -13,6 +13,7 @@
 #include "battle_pyramid.h"
 #include "battle_scripts.h"
 #include "battle_setup.h"
+#include "battle_status_menu.h"
 #include "battle_tower.h"
 #include "battle_z_move.h"
 #include "battle_gimmick.h"
@@ -3033,6 +3034,7 @@ static void BattleMainCB1(void)
     gBattleMainFunc();
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
         gBattlerControllerFuncs[battler](battler);
+    BattleStatusMenu_TrackUpdateIndicators();
 }
 
 static void ClearSetBScriptingStruct(void)
@@ -3055,6 +3057,7 @@ static void BattleStartClearSetData(void)
 {
     s32 i;
 
+    BattleStatusMenu_ResetUpdateTracker();
     TurnValuesCleanUp(FALSE);
     memset(&gSpecialStatuses, 0, sizeof(gSpecialStatuses));
 
@@ -3815,6 +3818,8 @@ static void TryDoEventsBeforeFirstTurn(void)
     switch (gBattleStruct->eventState.beforeFirstTurn)
     {
     case FIRST_TURN_EVENTS_START:
+        BattleStatusMenu_PrimeUpdateTracker();
+
         LoadIndicatorSpritesGfx();
         // Set invalid mons as absent(for example when starting a double battle with only one pokemon).
         if (!(gBattleTypeFlags & BATTLE_TYPE_SAFARI))

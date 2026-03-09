@@ -310,6 +310,13 @@ const u32 *GetIndicatorSpriteSrc(enum BattlerId battler)
     }
 }
 
+const u32 *GetTeraIndicatorSpriteSrc(enum Type type)
+{
+    if (type >= ARRAY_COUNT(sTeraIndicatorDataPtrs))
+        type = TYPE_NORMAL;
+    return (const u32 *)sTeraIndicatorDataPtrs[type];
+}
+
 u32 GetIndicatorPalTag(enum BattlerId battler)
 {
     u32 gimmick = GetActiveGimmick(battler);
