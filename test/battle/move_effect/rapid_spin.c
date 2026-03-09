@@ -120,3 +120,22 @@ SINGLE_BATTLE_TEST("Rapid Spin doesn't blow away Wrap, hazards or raise Speed wh
         }
     }
 }
+
+SINGLE_BATTLE_TEST("Rapid Spin will remove hazards if the target is behind a Substitute")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(player, MOVE_STEALTH_ROCK); }
+        TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_RAPID_SPIN); }
+        TURN { SWITCH(opponent, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RAPID_SPIN, opponent);
+        SUB_HIT(player);
+        NOT HP_BAR(opponent);
+    }
+}
