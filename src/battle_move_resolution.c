@@ -2628,14 +2628,14 @@ static enum MoveEndResult MoveEndUpdateLastMoves(void)
         {
             if (!gSpecialStatuses[gBattlerAttacker].dancerUsedMove)
             {
-                gBattleMons[gBattlerAttacker].volatiles.lastMove = gChosenMove;
+                SetBattlerLastMove(gBattlerAttacker, gChosenMove);
                 gBattleMons[gBattlerAttacker].volatiles.lastResultingMove = gCurrentMove;
                 gBattleMons[gBattlerAttacker].volatiles.lastUsedMoveType = GetBattleMoveType(gCurrentMove);
             }
         }
         else
         {
-            gBattleMons[gBattlerAttacker].volatiles.lastMove = MOVE_UNAVAILABLE;
+            SetBattlerLastMove(gBattlerAttacker, MOVE_UNAVAILABLE);
             gBattleMons[gBattlerAttacker].volatiles.lastResultingMove = MOVE_UNAVAILABLE;
             gBattleMons[gBattlerAttacker].volatiles.lastUsedMoveType = TYPE_NONE;
         }

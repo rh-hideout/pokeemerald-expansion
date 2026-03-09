@@ -619,12 +619,13 @@ void SetBattlerAiData(enum BattlerId battler, struct AiLogicData *aiData)
 {
     enum Ability ability;
     enum HoldEffect holdEffect;
+    enum Move lastMove = GetBattlerLastMove(battler);
 
     ability = aiData->abilities[battler] = AI_DecideKnownAbilityForTurn(battler);
     aiData->items[battler] = gBattleMons[battler].item;
     holdEffect = aiData->holdEffects[battler] = AI_DecideHoldEffectForTurn(battler);
     aiData->holdEffectParams[battler] = GetBattlerHoldEffectParam(battler);
-    aiData->lastUsedMove[battler] = (gBattleMons[battler].volatiles.lastMove == MOVE_UNAVAILABLE) ? MOVE_NONE : gBattleMons[battler].volatiles.lastMove;
+    aiData->lastUsedMove[battler] = (lastMove == MOVE_UNAVAILABLE) ? MOVE_NONE : lastMove;
     aiData->hpPercents[battler] = GetHealthPercentage(battler);
     aiData->moveLimitations[battler] = CheckMoveLimitations(battler, 0, MOVE_LIMITATIONS_ALL);
     aiData->speedStats[battler] = GetBattlerTotalSpeedStat(battler, ability, holdEffect);

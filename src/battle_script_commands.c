@@ -3156,13 +3156,15 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         }
         break;
     case MOVE_EFFECT_EERIE_SPELL:
-        if (gBattleMons[gBattlerTarget].volatiles.lastMove != MOVE_NONE && gBattleMons[gBattlerTarget].volatiles.lastMove != 0xFFFF)
+    {
+        enum Move lastMove = GetBattlerLastMove(gBattlerTarget);
+        if (lastMove != MOVE_NONE && lastMove != MOVE_UNAVAILABLE)
         {
             u32 i;
 
             for (i = 0; i < MAX_MON_MOVES; i++)
             {
-                if (gBattleMons[gBattlerTarget].volatiles.lastMove == gBattleMons[gBattlerTarget].moves[i])
+                if (lastMove == gBattleMons[gBattlerTarget].moves[i])
                     break;
             }
 
@@ -3173,7 +3175,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
                 if (gBattleMons[gBattlerTarget].pp[i] < ppToDeduct)
                     ppToDeduct = gBattleMons[gBattlerTarget].pp[i];
 
-                PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerTarget].volatiles.lastMove)
+                PREPARE_MOVE_BUFFER(gBattleTextBuff1, lastMove)
                 ConvertIntToDecimalStringN(gBattleTextBuff2, ppToDeduct, STR_CONV_MODE_LEFT_ALIGN, 1);
                 PREPARE_BYTE_NUMBER_BUFFER(gBattleTextBuff2, 1, ppToDeduct)
                 gBattleMons[gBattlerTarget].pp[i] -= ppToDeduct;
@@ -3192,6 +3194,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
             }
         }
         break;
+    }
     case MOVE_EFFECT_FLING:
         if (CanFling(gBattlerAttacker, abilities[gBattlerAttacker]) || gBattleStruct->flungItem == FLUNG_ITEM_REMOVED)
         {
@@ -3499,13 +3502,15 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         }
         break;
     case MOVE_EFFECT_SPITE:
-        if (gBattleMons[gBattlerTarget].volatiles.lastMove != MOVE_NONE
-            && gBattleMons[gBattlerTarget].volatiles.lastMove != MOVE_UNAVAILABLE)
+    {
+        enum Move lastMove = GetBattlerLastMove(gBattlerTarget);
+        if (lastMove != MOVE_NONE && lastMove != MOVE_UNAVAILABLE)
         {
             BattleScriptPush(battleScript);
             gBattlescriptCurrInstr = BattleScript_EffectTryReducePP;
         }
         break;
+    }
     case MOVE_EFFECT_PARALYZE_SIDE:
         BattleScriptPush(battleScript);
         gBattlescriptCurrInstr = BattleScript_EffectParalyzeSide;
@@ -8727,10 +8732,11 @@ static void Cmd_mimicattackcopy(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
-    if (gBattleMons[gBattlerTarget].volatiles.lastMove == MOVE_UNAVAILABLE
-     || gBattleMons[gBattlerTarget].volatiles.lastMove == MOVE_NONE
+    enum Move lastMove = GetBattlerLastMove(gBattlerTarget);
+    if (lastMove == MOVE_UNAVAILABLE
+     || lastMove == MOVE_NONE
      || gBattleMons[gBattlerAttacker].volatiles.transformed
-     || IsMoveMimicBanned(gBattleMons[gBattlerTarget].volatiles.lastMove))
+     || IsMoveMimicBanned(lastMove))
     {
         gBattlescriptCurrInstr = cmd->failInstr;
     }
@@ -8740,21 +8746,21 @@ static void Cmd_mimicattackcopy(void)
 
         for (i = 0; i < MAX_MON_MOVES; i++)
         {
-            if (gBattleMons[gBattlerAttacker].moves[i] == gBattleMons[gBattlerTarget].volatiles.lastMove)
+            if (gBattleMons[gBattlerAttacker].moves[i] == lastMove)
                 break;
         }
 
         if (i == MAX_MON_MOVES)
         {
             gChosenMove = MOVE_UNAVAILABLE;
-            gBattleMons[gBattlerAttacker].moves[gCurrMovePos] = gBattleMons[gBattlerTarget].volatiles.lastMove;
-            u32 pp = GetMovePP(gBattleMons[gBattlerTarget].volatiles.lastMove);
+            gBattleMons[gBattlerAttacker].moves[gCurrMovePos] = lastMove;
+            u32 pp = GetMovePP(lastMove);
             if (pp < 5)
                 gBattleMons[gBattlerAttacker].pp[gCurrMovePos] = pp;
             else
                 gBattleMons[gBattlerAttacker].pp[gCurrMovePos] = 5;
 
-            PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerTarget].volatiles.lastMove)
+            PREPARE_MOVE_BUFFER(gBattleTextBuff1, lastMove)
 
             gBattleMons[gBattlerAttacker].volatiles.mimickedMoves |= 1u << gCurrMovePos;
             gBattlescriptCurrInstr = cmd->nextInstr;
@@ -8779,9 +8785,10 @@ static void Cmd_disablelastusedattack(void)
 
     s32 i;
 
+    enum Move lastMove = GetBattlerLastMove(gBattlerTarget);
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        if (gBattleMons[gBattlerTarget].moves[i] == gBattleMons[gBattlerTarget].volatiles.lastMove)
+        if (gBattleMons[gBattlerTarget].moves[i] == lastMove)
             break;
     }
     if (gBattleMons[gBattlerTarget].volatiles.disabledMove == MOVE_NONE
@@ -8810,7 +8817,8 @@ static void Cmd_trysetencore(void)
 
     s32 i;
 
-    if (IsMaxMove(gBattleMons[gBattlerTarget].volatiles.lastMove) && !(GetActiveGimmick(gBattlerTarget) == GIMMICK_DYNAMAX))
+    enum Move lastMove = GetBattlerLastMove(gBattlerTarget);
+    if (IsMaxMove(lastMove) && !(GetActiveGimmick(gBattlerTarget) == GIMMICK_DYNAMAX))
     {
         for (i = 0; i < MAX_MON_MOVES; i++)
         {
@@ -8822,15 +8830,16 @@ static void Cmd_trysetencore(void)
     {
         for (i = 0; i < MAX_MON_MOVES; i++)
         {
-            if (gBattleMons[gBattlerTarget].moves[i] == gBattleMons[gBattlerTarget].volatiles.lastMove)
+            if (gBattleMons[gBattlerTarget].moves[i] == lastMove)
                 break;
         }
     }
 
-    if ((IsMoveEncoreBanned(gBattleMons[gBattlerTarget].volatiles.lastMove))
+    enum Move lastMove = GetBattlerLastMove(gBattlerTarget);
+    if ((IsMoveEncoreBanned(lastMove))
      || i == MAX_MON_MOVES
-     || gBattleMons[gBattlerTarget].volatiles.lastMove == MOVE_NONE
-     || gBattleMons[gBattlerTarget].volatiles.lastMove == MOVE_UNAVAILABLE
+     || lastMove == MOVE_NONE
+     || lastMove == MOVE_UNAVAILABLE
      || gBattleMons[gBattlerTarget].pp[i] == 0
      || gBattleMons[gBattlerTarget].volatiles.encoredMove != MOVE_NONE
      || GetBattlerChosenMoveEffect(gBattlerTarget) == EFFECT_SHELL_TRAP)
@@ -9049,13 +9058,13 @@ static void Cmd_tryspiteppreduce(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
-    if (gBattleMons[gBattlerTarget].volatiles.lastMove != MOVE_NONE
-     && gBattleMons[gBattlerTarget].volatiles.lastMove != MOVE_UNAVAILABLE)
+    enum Move lastMove = GetBattlerLastMove(gBattlerTarget);
+    if (lastMove != MOVE_NONE && lastMove != MOVE_UNAVAILABLE)
     {
         s32 i;
 
         // Get move slot to reduce PP.
-        if (IsMaxMove(gBattleMons[gBattlerTarget].volatiles.lastMove))
+        if (IsMaxMove(lastMove))
         {
             for (i = 0; i < MAX_MON_MOVES; i++)
             {
@@ -9067,7 +9076,7 @@ static void Cmd_tryspiteppreduce(void)
         {
             for (i = 0; i < MAX_MON_MOVES; i++)
             {
-                if (gBattleMons[gBattlerTarget].volatiles.lastMove == gBattleMons[gBattlerTarget].moves[i])
+                if (lastMove == gBattleMons[gBattlerTarget].moves[i])
                     break;
             }
         }
@@ -9082,7 +9091,7 @@ static void Cmd_tryspiteppreduce(void)
             if (gBattleMons[gBattlerTarget].pp[i] < ppToDeduct)
                 ppToDeduct = gBattleMons[gBattlerTarget].pp[i];
 
-            PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerTarget].volatiles.lastMove)
+            PREPARE_MOVE_BUFFER(gBattleTextBuff1, lastMove)
 
             ConvertIntToDecimalStringN(gBattleTextBuff2, ppToDeduct, STR_CONV_MODE_LEFT_ALIGN, 1);
 

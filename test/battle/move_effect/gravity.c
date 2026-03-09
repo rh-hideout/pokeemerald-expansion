@@ -46,7 +46,7 @@ DOUBLE_BATTLE_TEST("Gravity cancels Fly and Sky Drop if they are in the air")
         visibility = gBattleSpritesDataPtr->battlerData[3].invisible;
         EXPECT_EQ(visibility, 0);
         // ensure moveend properly recorded
-        enum Move lastMove = gBattleMons[0].volatiles.lastMove;
+        enum Move lastMove = GetBattlerLastMove(B_BATTLER_0);
         EXPECT_EQ(lastMove, MOVE_GRAVITY);
     }
 }

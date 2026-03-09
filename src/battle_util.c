@@ -1423,7 +1423,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
         }
     }
 
-    if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && move == gBattleMons[battler].volatiles.lastMove && move != MOVE_STRUGGLE && (gBattleMons[battler].volatiles.torment == TRUE))
+    if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && move == GetBattlerLastMove(battler) && move != MOVE_STRUGGLE && (gBattleMons[battler].volatiles.torment == TRUE))
     {
         CancelMultiTurnMoves(battler, SKY_DROP_IGNORE);
         if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
@@ -1672,7 +1672,7 @@ u32 CheckMoveLimitations(enum BattlerId battler, u8 unusableMoves, u16 check)
         else if (check & MOVE_LIMITATION_DISABLED && move == gBattleMons[battler].volatiles.disabledMove)
             unusableMoves |= 1u << i;
         // Torment
-        else if (check & MOVE_LIMITATION_TORMENTED && move == gBattleMons[battler].volatiles.lastMove && gBattleMons[battler].volatiles.torment == TRUE)
+        else if (check & MOVE_LIMITATION_TORMENTED && move == GetBattlerLastMove(battler) && gBattleMons[battler].volatiles.torment == TRUE)
             unusableMoves |= 1u << i;
         // Taunt
         else if (check & MOVE_LIMITATION_TAUNT
@@ -10969,4 +10969,14 @@ enum BattlerId GetBattlerMoveTarget(enum BattlerId battler)
 enum BattlerId SetBattlerMoveTarget(enum BattlerId battler, enum BattlerId target)
 {
     return gBattleMons[battler].volatiles.moveTarget = target;
+}
+
+enum Move GetBattlerLastMove(enum BattlerId battler)
+{
+    return gBattleMons[battler].volatiles.lastMove;
+}
+
+enum Move SetBattlerLastMove(enum BattlerId battler, enum Move move)
+{
+    return gBattleMons[battler].volatiles.lastMove = move;
 }
