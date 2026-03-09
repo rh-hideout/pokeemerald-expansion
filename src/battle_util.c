@@ -379,7 +379,7 @@ void HandleAction_UseMove(void)
         return;
     }
 
-    gCurrMovePos = gChosenMovePos = gBattleMons[gBattlerAttacker].volatiles.chosenMovePos;
+    gCurrMovePos = gChosenMovePos = GetBattlerChosenMovePos(gBattlerAttacker);
 
     // choose move
     if (gProtectStructs[gBattlerAttacker].noValidMoves)
@@ -10959,6 +10959,16 @@ enum Move GetBattlerChosenMove(enum BattlerId battler)
 enum Move SetBattlerChosenMove(enum BattlerId battler, enum Move move)
 {
     return gBattleMons[battler].volatiles.chosenMove = move;
+}
+
+u32 GetBattlerChosenMovePos(enum BattlerId battler)
+{
+    return gBattleMons[battler].volatiles.chosenMovePos;
+}
+
+u32 SetBattlerChosenMovePos(enum BattlerId battler, u32 movePos)
+{
+    return gBattleMons[battler].volatiles.chosenMovePos = movePos;
 }
 
 enum BattleMoveEffects GetBattlerChosenMoveEffect(enum BattlerId battler)

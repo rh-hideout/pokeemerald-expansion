@@ -4219,7 +4219,7 @@ static void HandleTurnActionSelectionState(void)
                     else if (GetConfig(B_ENCORE_TARGET) < GEN_5 && gBattleMons[battler].volatiles.encoredMove != MOVE_NONE)
                     {
                         SetBattlerChosenMove(battler, gBattleMons[battler].volatiles.encoredMove);
-                        gBattleMons[battler].volatiles.chosenMovePos = gBattleMons[battler].volatiles.encoredMovePos;
+                        SetBattlerChosenMovePos(battler, gBattleMons[battler].volatiles.encoredMovePos);
                         gBattleCommunication[battler] = STATE_WAIT_ACTION_CONFIRMED_STANDBY;
                         if (gTestRunnerEnabled)
                         {
@@ -4459,7 +4459,7 @@ static void HandleTurnActionSelectionState(void)
                             }
 
                             // Get the chosen move position (and thus the chosen move) and target from the returned buffer.
-                            gBattleMons[battler].volatiles.chosenMovePos = gBattleResources->bufferB[battler][2] & ~RET_GIMMICK;
+                            SetBattlerChosenMovePos(battler, gBattleResources->bufferB[battler][2] & ~RET_GIMMICK);
                             SetBattlerChosenMove(battler, GetBattlerMoveFromChosenPosition(battler));
                             SetBattlerMoveTarget(battler, gBattleResources->bufferB[battler][3]);
                             if (IsBattleMoveStatus(GetBattlerChosenMove(battler)) && GetBattlerAbility(battler) == ABILITY_MYCELIUM_MIGHT)

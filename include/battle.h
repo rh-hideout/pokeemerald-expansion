@@ -1136,7 +1136,7 @@ static inline bool32 IsSpreadMove(enum MoveTarget moveTarget)
 
 static inline enum Move GetBattlerMoveFromChosenPosition(enum BattlerId battler)
 {
-    return gBattleMons[battler].moves[gBattleMons[battler].volatiles.chosenMovePos];
+    return gBattleMons[battler].moves[GetBattlerChosenMovePos(battler)];
 }
 
 static inline void SetPassiveDamageAmount(enum BattlerId battler, s32 value)
