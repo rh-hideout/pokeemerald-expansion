@@ -429,6 +429,7 @@ void SetOrClearRageVolatile(void);
 bool32 IsNaturalEnemy(u32 speciesAttacker, u32 speciesTarget);
 // Battler data utility functions
 enum Move GetBattlerChosenMove(enum BattlerId battler);
+enum Move SetBattlerChosenMove(enum BattlerId battler, enum Move move);
 enum BattleMoveEffects GetBattlerChosenMoveEffect(enum BattlerId battler);
 enum BattlerId GetBattlerMoveTarget(enum BattlerId battler);
 enum BattlerId SetBattlerMoveTarget(enum BattlerId battler, enum BattlerId target);

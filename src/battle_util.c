@@ -10956,6 +10956,11 @@ enum Move GetBattlerChosenMove(enum BattlerId battler)
     return gBattleMons[battler].volatiles.chosenMove;
 }
 
+enum Move SetBattlerChosenMove(enum BattlerId battler, enum Move move)
+{
+    return gBattleMons[battler].volatiles.chosenMove = move;
+}
+
 enum BattleMoveEffects GetBattlerChosenMoveEffect(enum BattlerId battler)
 {
     return GetMoveEffect(GetBattlerChosenMove(battler));

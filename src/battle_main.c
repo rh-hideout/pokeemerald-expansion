@@ -3893,7 +3893,7 @@ static void TryDoEventsBeforeFirstTurn(void)
         {
             gBattleStruct->monToSwitchIntoId[battler] = PARTY_SIZE;
             gChosenActionByBattler[battler] = B_ACTION_NONE;
-            gBattleMons[battler].volatiles.chosenMove = MOVE_NONE;
+            SetBattlerChosenMove(battler, MOVE_NONE);
         }
         TurnValuesCleanUp(FALSE);
         memset(&gSpecialStatuses, 0, sizeof(gSpecialStatuses));
@@ -3987,7 +3987,7 @@ void BattleTurnPassed(void)
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
         gChosenActionByBattler[battler] = B_ACTION_NONE;
-        gBattleMons[battler].volatiles.chosenMove = MOVE_NONE;
+        SetBattlerChosenMove(battler, MOVE_NONE);
         gBattleStruct->monToSwitchIntoId[battler] = PARTY_SIZE;
         gBattleMons[battler].volatiles.electrified = FALSE;
         gBattleMons[battler].volatiles.flinched = FALSE;
@@ -4218,7 +4218,7 @@ static void HandleTurnActionSelectionState(void)
                     }
                     else if (GetConfig(B_ENCORE_TARGET) < GEN_5 && gBattleMons[battler].volatiles.encoredMove != MOVE_NONE)
                     {
-                        gBattleMons[battler].volatiles.chosenMove = gBattleMons[battler].volatiles.encoredMove;
+                        SetBattlerChosenMove(battler, gBattleMons[battler].volatiles.encoredMove);
                         gBattleMons[battler].volatiles.chosenMovePos = gBattleMons[battler].volatiles.encoredMovePos;
                         gBattleCommunication[battler] = STATE_WAIT_ACTION_CONFIRMED_STANDBY;
                         if (gTestRunnerEnabled)
@@ -4460,7 +4460,7 @@ static void HandleTurnActionSelectionState(void)
 
                             // Get the chosen move position (and thus the chosen move) and target from the returned buffer.
                             gBattleMons[battler].volatiles.chosenMovePos = gBattleResources->bufferB[battler][2] & ~RET_GIMMICK;
-                            gBattleMons[battler].volatiles.chosenMove = GetBattlerMoveFromChosenPosition(battler);
+                            SetBattlerChosenMove(battler, GetBattlerMoveFromChosenPosition(battler));
                             SetBattlerMoveTarget(battler, gBattleResources->bufferB[battler][3]);
                             if (IsBattleMoveStatus(GetBattlerChosenMove(battler)) && GetBattlerAbility(battler) == ABILITY_MYCELIUM_MIGHT)
                                 gProtectStructs[battler].myceliumMight = TRUE;

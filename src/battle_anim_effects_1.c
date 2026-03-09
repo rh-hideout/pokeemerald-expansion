@@ -6740,7 +6740,7 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
         if (!IsBattlerAlly(GetBattlerMoveTarget(i), battlerAtk))
             continue;
 
-        if (GetMoveEffect(gBattleMons[i].volatiles.chosenMove) == EFFECT_SNIPE_SHOT || ability == ABILITY_PROPELLER_TAIL || ability == ABILITY_STALWART)
+        if (GetBattlerChosenMoveEffect(i) == EFFECT_SNIPE_SHOT || ability == ABILITY_PROPELLER_TAIL || ability == ABILITY_STALWART)
             SetBattlerMoveTarget(i, GetBattlerMoveTarget(i) ^ BIT_FLANK);
     }
 
