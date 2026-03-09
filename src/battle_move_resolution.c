@@ -1305,7 +1305,7 @@ static enum CancelerResult CancelerMoveEffectFailureTarget(struct BattleContext 
             break;
         case EFFECT_SUCKER_PUNCH:
         {
-            u32 defMove = GetBattlerChosenMove(battlerDef);
+            enum Move defMove = GetBattlerMoveFromChosenPosition(battlerDef);
             if (HasBattlerActedThisTurn(battlerDef)
              || (IsBattleMoveStatus(defMove) && !gProtectStructs[battlerDef].noValidMoves && GetMoveEffect(defMove) != EFFECT_ME_FIRST))
             {
@@ -4114,7 +4114,7 @@ static enum Move GetCopycatMove(void)
 
 static enum Move GetMeFirstMove(void)
 {
-    enum Move move = GetBattlerChosenMove(gBattlerTarget);
+    enum Move move = GetBattlerMoveFromChosenPosition(gBattlerTarget);
 
     if (IsBattleMoveStatus(move)
      || IsMoveMeFirstBanned(move)
@@ -4165,7 +4165,7 @@ static bool32 TryMagicCoat(struct BattleContext *ctx)
 
 static bool32 TryActivatePowderStatus(enum Move move)
 {
-    enum Move partnerMove = GetBattlerChosenMove(BATTLE_PARTNER(gBattlerAttacker));
+    enum Move partnerMove = GetBattlerMoveFromChosenPosition(BATTLE_PARTNER(gBattlerAttacker));
     if (!gBattleMons[gBattlerAttacker].volatiles.powder)
         return FALSE;
     if (GetBattleMoveType(move) == TYPE_FIRE && !gBattleStruct->pledgeMove)

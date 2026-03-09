@@ -8845,7 +8845,7 @@ static void Cmd_trysetencore(void)
         // If the target's selected move is not the same as the move being Encored into,
         // the target will select a random opposing target
         // Redirection such as Follow Me is already covered in HandleAction_UseMove of battle_util.c
-        if (gBattleMons[gBattlerTarget].volatiles.encoredMove != GetBattlerChosenMove(gBattlerTarget))
+        if (gBattleMons[gBattlerTarget].volatiles.encoredMove != GetBattlerMoveFromChosenPosition(gBattlerTarget))
             gBattleMons[gBattlerTarget].volatiles.moveTarget = SetRandomTarget(gBattlerTarget);
 
         // Encore always lasts 3 turns, but we need to account for a scenario where Encore changes the move during the same turn.
@@ -12320,7 +12320,7 @@ void BS_SetPledge(void)
     NATIVE_ARGS(const u8 *jumpInstr);
 
     enum BattlerId partner = BATTLE_PARTNER(gBattlerAttacker);
-    enum Move partnerMove = GetBattlerChosenMove(partner);
+    enum Move partnerMove = GetBattlerMoveFromChosenPosition(partner);
     u32 i = 0;
     u32 k = 0;
 

@@ -511,7 +511,7 @@ void HandleInputChooseTarget(enum BattlerId battler)
                  || !CanTargetBattler(battler, gMultiUsePlayerCursor, move)
                  || (moveTarget == TARGET_OPPONENT && IsOnPlayerSide(gMultiUsePlayerCursor)))
                     validTarget = FALSE;
-                
+
                 if (B_SHOW_EFFECTIVENESS && validTarget)
                     MoveSelectionDisplayMoveEffectiveness(CheckTypeEffectiveness(battler, gMultiUsePlayerCursor), battler);
 
@@ -2040,7 +2040,7 @@ static void PlayerHandleChooseAction(enum BattlerId battler)
     if (B_SHOW_PARTNER_TARGET && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER && IsBattlerAlive(partner))
     {
         StringCopy(gStringVar1, COMPOUND_STRING("Partner will use:\n"));
-        enum Move move = GetBattlerChosenMove(partner);
+        enum Move move = GetBattlerMoveFromChosenPosition(partner);
         StringAppend(gStringVar1, GetMoveName(move));
         enum MoveTarget moveTarget = GetBattlerMoveTargetType(partner, move);
         if (moveTarget == TARGET_SELECTED || moveTarget == TARGET_SMART)

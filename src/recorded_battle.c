@@ -776,7 +776,7 @@ void RecordedBattle_CheckMovesetChanges(u8 mode)
 
                         SetMonData(mon, MON_DATA_PP_BONUSES, &ppBonusSet);
                     }
-                    gBattleMons[battler].volatiles.chosenMove = GetBattlerChosenMove(battler);
+                    gBattleMons[battler].volatiles.chosenMove = GetBattlerMoveFromChosenPosition(battler);
                 }
             }
         }
