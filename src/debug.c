@@ -1163,75 +1163,75 @@ static u8 Debug_CheckToggleFlags(u8 id)
 
     switch (id)
     {
-        case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_POKEDEX:
-            result = FlagGet(FLAG_SYS_POKEDEX_GET);
-            break;
-        case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_NATDEX:
-            result = IsNationalPokedexEnabled();
-            break;
-        case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_POKENAV:
-            result = FlagGet(FLAG_SYS_POKENAV_GET);
-            break;
-        case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_MATCH_CALL:
-            result = FlagGet(FLAG_ADDED_MATCH_CALL_TO_POKENAV) && FlagGet(FLAG_HAS_MATCH_CALL);
-            break;
-        case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_RUN_SHOES:
-            result = FlagGet(FLAG_SYS_B_DASH);
-            break;
-        case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_LOCATIONS:
-            result = TRUE;
-            for (u32 i = 0; i < ARRAY_COUNT(sLocationFlags); i++)
+    case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_POKEDEX:
+        result = FlagGet(FLAG_SYS_POKEDEX_GET);
+        break;
+    case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_NATDEX:
+        result = IsNationalPokedexEnabled();
+        break;
+    case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_POKENAV:
+        result = FlagGet(FLAG_SYS_POKENAV_GET);
+        break;
+    case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_MATCH_CALL:
+        result = FlagGet(FLAG_ADDED_MATCH_CALL_TO_POKENAV) && FlagGet(FLAG_HAS_MATCH_CALL);
+        break;
+    case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_RUN_SHOES:
+        result = FlagGet(FLAG_SYS_B_DASH);
+        break;
+    case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_LOCATIONS:
+        result = TRUE;
+        for (u32 i = 0; i < ARRAY_COUNT(sLocationFlags); i++)
+        {
+            if (!FlagGet(sLocationFlags[i]))
             {
-                if (!FlagGet(sLocationFlags[i]))
-                {
-                    result = FALSE;
-                    break;
-                }
+                result = FALSE;
+                break;
             }
-            break;
-        case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BADGES_ALL:
-            result = TRUE;
-            for (u32 i = 0; i < ARRAY_COUNT(gBadgeFlags); i++)
+        }
+        break;
+    case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BADGES_ALL:
+        result = TRUE;
+        for (u32 i = 0; i < ARRAY_COUNT(gBadgeFlags); i++)
+        {
+            if (!FlagGet(gBadgeFlags[i]))
             {
-                if (!FlagGet(gBadgeFlags[i]))
-                {
-                    result = FALSE;
-                    break;
-                }
+                result = FALSE;
+                break;
             }
-            break;
-        case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_GAME_CLEAR:
-            result = FlagGet(FLAG_SYS_GAME_CLEAR);
-            break;
-        case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_FRONTIER_PASS:
-            result = FlagGet(FLAG_SYS_FRONTIER_PASS);
-            break;
+        }
+        break;
+    case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_GAME_CLEAR:
+        result = FlagGet(FLAG_SYS_GAME_CLEAR);
+        break;
+    case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_FRONTIER_PASS:
+        result = FlagGet(FLAG_SYS_FRONTIER_PASS);
+        break;
     #if OW_FLAG_NO_COLLISION != 0
-        case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_COLLISION:
-            result = FlagGet(OW_FLAG_NO_COLLISION);
-            break;
+    case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_COLLISION:
+        result = FlagGet(OW_FLAG_NO_COLLISION);
+        break;
     #endif
     #if OW_FLAG_NO_ENCOUNTER != 0
-        case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_ENCOUNTER:
-            result = FlagGet(OW_FLAG_NO_ENCOUNTER);
-            break;
+    case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_ENCOUNTER:
+        result = FlagGet(OW_FLAG_NO_ENCOUNTER);
+        break;
     #endif
     #if OW_FLAG_NO_TRAINER_SEE != 0
-        case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_TRAINER_SEE:
-            result = FlagGet(OW_FLAG_NO_TRAINER_SEE);
-            break;
+    case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_TRAINER_SEE:
+        result = FlagGet(OW_FLAG_NO_TRAINER_SEE);
+        break;
     #endif
     #if B_FLAG_NO_CATCHING != 0
-        case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_CATCHING:
-            result = FlagGet(B_FLAG_NO_CATCHING);
-            break;
+    case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_CATCHING:
+        result = FlagGet(B_FLAG_NO_CATCHING);
+        break;
     #endif
-        case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BAG_USE:
-            result = VarGet(B_VAR_NO_BAG_USE);
-            break;
-        default:
-            result = 0xFF;
-            break;
+    case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BAG_USE:
+        result = VarGet(B_VAR_NO_BAG_USE);
+        break;
+    default:
+        result = 0xFF;
+        break;
     }
 
     return result;
@@ -1811,13 +1811,13 @@ void DebugMenu_CalculateTimeOfDay(struct ScriptContext *ctx)
     enum TimeOfDay timeOfDay = GetTimeOfDay();
     switch (timeOfDay)
     {
-        case TIME_MORNING:
-        case TIME_DAY:
-        case TIME_EVENING:
-        case TIME_NIGHT:
-            StringExpandPlaceholders(gStringVar1, gTimeOfDayStringsTable[timeOfDay]);
-            break;
-        case TIMES_OF_DAY_COUNT:
+    case TIME_MORNING:
+    case TIME_DAY:
+    case TIME_EVENING:
+    case TIME_NIGHT:
+        StringExpandPlaceholders(gStringVar1, gTimeOfDayStringsTable[timeOfDay]);
+        break;
+    case TIMES_OF_DAY_COUNT:
             break;
     }
 }
@@ -2024,7 +2024,7 @@ static void DebugAction_ChooseTrainerID_Select(u8 taskId)
             max = PARTNER_COUNT - 1;
         }
         Debug_HandleInput_Numeric(taskId, min, max, DEBUG_NUMBER_DIGITS_TRAINERS);
-        switch(gTasks[taskId].tSelection)
+        switch (gTasks[taskId].tSelection)
         {
         case TRAINERS_DEBUG_SELECTION_TRAINER1:
             sDebugMenuListData->data[0] = gTasks[taskId].tInput;
@@ -2077,7 +2077,7 @@ static void DebugAction_Trainers_ChooseTrainer(u8 taskId, u32 selection)
     gTasks[taskId].tDigit = 0;
     gTasks[taskId].tSelection = (s32)selection;
 
-    switch(gTasks[taskId].tSelection)
+    switch (gTasks[taskId].tSelection)
     {
     case TRAINERS_DEBUG_SELECTION_TRAINER1:
         gTasks[taskId].tInput = sDebugMenuListData->data[0];
@@ -3081,10 +3081,11 @@ static void DebugAction_Give_Pokemon_SelectShiny(u8 taskId)
     }
 }
 
-static void Debug_Display_Ability(enum Ability abilityId, u32 digit, u8 windowId)//(u32 natureId, u32 digit, u8 windowId)
+static void Debug_Display_Ability(u32 abilityNum, u32 digit, u8 windowId)//(u32 natureId, u32 digit, u8 windowId)
 {
+    enum Ability abilityId = GetAbilityBySpecies(sDebugMonData->species, abilityNum);
     StringCopy(gStringVar2, gText_DigitIndicator[digit]);
-    ConvertIntToDecimalStringN(gStringVar3, abilityId, STR_CONV_MODE_LEADING_ZEROS, 2);
+    ConvertIntToDecimalStringN(gStringVar3, abilityNum, STR_CONV_MODE_LEFT_ALIGN, 2);
     StringCopyPadded(gStringVar3, gStringVar3, CHAR_SPACE, 15);
     u8 *end = StringCopy(gStringVar1, gAbilitiesInfo[abilityId].name);
     WrapFontIdToFit(gStringVar1, end, DEBUG_MENU_FONT, WindowWidthPx(windowId));
@@ -3123,8 +3124,7 @@ static void DebugAction_Give_Pokemon_SelectNature(u8 taskId)
         gTasks[taskId].tInput = 0;
         gTasks[taskId].tDigit = 0;
 
-        enum Ability abilityId = GetAbilityBySpecies(sDebugMonData->species, 0);
-        Debug_Display_Ability(abilityId, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+        Debug_Display_Ability(0, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
 
         gTasks[taskId].func = DebugAction_Give_Pokemon_SelectAbility;
     }
@@ -3148,8 +3148,7 @@ static void Debug_Display_TeraType(u32 typeId, u32 digit, u8 windowId)
 
 static void DebugAction_Give_Pokemon_SelectAbility(u8 taskId)
 {
-    u8 abilityCount = NUM_ABILITY_SLOTS - 1; //-1 for proper iteration
-    u8 i = 0;
+    s32 abilityNum = -1;
 
     if (JOY_NEW(DPAD_ANY))
     {
@@ -3157,28 +3156,31 @@ static void DebugAction_Give_Pokemon_SelectAbility(u8 taskId)
 
         if (JOY_NEW(DPAD_UP))
         {
-            gTasks[taskId].tInput += sPowersOfTen[gTasks[taskId].tDigit];
-            if (gTasks[taskId].tInput > abilityCount)
-                gTasks[taskId].tInput = abilityCount;
+            abilityNum = gTasks[taskId].tInput + 1;
+            while (GetSpeciesAbility(sDebugMonData->species, abilityNum) == ABILITY_NONE && abilityNum < NUM_ABILITY_SLOTS)
+            {
+                abilityNum++;
+            }
         }
         if (JOY_NEW(DPAD_DOWN))
         {
-            gTasks[taskId].tInput -= sPowersOfTen[gTasks[taskId].tDigit];
-            if (gTasks[taskId].tInput < 0)
-                gTasks[taskId].tInput = 0;
+            abilityNum = gTasks[taskId].tInput - 1;
+            while (GetSpeciesAbility(sDebugMonData->species, abilityNum) == ABILITY_NONE && abilityNum >= 0)
+            {
+                abilityNum--;
+            }
         }
 
-        while (GetAbilityBySpecies(sDebugMonData->species, gTasks[taskId].tInput - i) == ABILITY_NONE && gTasks[taskId].tInput - i < NUM_ABILITY_SLOTS)
+        if (abilityNum >= 0 && abilityNum < NUM_ABILITY_SLOTS)
         {
-            i++;
+            gTasks[taskId].tInput = abilityNum;
+            Debug_Display_Ability(abilityNum, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
         }
-        enum Ability abilityId = GetAbilityBySpecies(sDebugMonData->species, gTasks[taskId].tInput - i);
-        Debug_Display_Ability(abilityId, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
     }
 
     if (JOY_NEW(A_BUTTON))
     {
-        sDebugMonData->abilityNum = gTasks[taskId].tInput - i;
+        sDebugMonData->abilityNum = gTasks[taskId].tInput;
         gTasks[taskId].tInput = 0;
         gTasks[taskId].tDigit = 0;
 
@@ -3706,16 +3708,16 @@ static void DebugAction_TimeMenu_ChangeTimeOfDay(u8 taskId)
     DebugAction_DestroyExtraWindow(taskId);
     switch (input)
     {
-        case TIME_MORNING:
-            FakeRtc_ForwardTimeTo(MORNING_HOUR_BEGIN, 0, 0);
-            break;
-        case TIME_DAY:
-            FakeRtc_ForwardTimeTo(DAY_HOUR_BEGIN, 0, 0);
-            break;
-        case TIME_EVENING:
-            FakeRtc_ForwardTimeTo(EVENING_HOUR_BEGIN, 0, 0);
-            break;
-        case TIME_NIGHT:
+    case TIME_MORNING:
+        FakeRtc_ForwardTimeTo(MORNING_HOUR_BEGIN, 0, 0);
+        break;
+    case TIME_DAY:
+        FakeRtc_ForwardTimeTo(DAY_HOUR_BEGIN, 0, 0);
+        break;
+    case TIME_EVENING:
+        FakeRtc_ForwardTimeTo(EVENING_HOUR_BEGIN, 0, 0);
+        break;
+    case TIME_NIGHT:
             FakeRtc_ForwardTimeTo(NIGHT_HOUR_BEGIN, 0, 0);
             break;
     }

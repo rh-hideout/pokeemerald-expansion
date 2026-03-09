@@ -388,8 +388,8 @@ gFieldEffectScript_CaveDust::
 	field_eff_end
 
 gFieldEffectScript_Defog::
-    field_eff_callnative FldEff_Defog
-    field_eff_end
+	field_eff_callnative FldEff_Defog
+	field_eff_end
 
 gFieldEffectScript_UseRockClimb:: @ 82DBC3F
 	field_eff_callnative FldEff_UseRockClimb

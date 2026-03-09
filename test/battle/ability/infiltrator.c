@@ -167,7 +167,7 @@ SINGLE_BATTLE_TEST("Infiltrator bypasses the opponent's Substitute (Gen 6+)")
     PARAMETRIZE { ability = ABILITY_INFILTRATOR; config = GEN_6; }
 
     GIVEN {
-        WITH_CONFIG(CONFIG_INFILTRATOR_SUBSTITUTE, config);
+        WITH_CONFIG(B_INFILTRATOR_SUBSTITUTE, config);
         ASSUME(GetMoveEffect(MOVE_SUBSTITUTE) == EFFECT_SUBSTITUTE);
         ASSUME(!MoveIgnoresSubstitute(MOVE_SCRATCH));
         PLAYER(SPECIES_DRAGAPULT) { Ability(ability); }
@@ -194,7 +194,7 @@ DOUBLE_BATTLE_TEST("Infiltrator bypasses an ally's Substitute (Gen 6+)")
     PARAMETRIZE { ability = ABILITY_INFILTRATOR; config = GEN_6; }
 
     GIVEN {
-        WITH_CONFIG(CONFIG_INFILTRATOR_SUBSTITUTE, config);
+        WITH_CONFIG(B_INFILTRATOR_SUBSTITUTE, config);
         ASSUME(GetMoveEffect(MOVE_SUBSTITUTE) == EFFECT_SUBSTITUTE);
         ASSUME(!MoveIgnoresSubstitute(MOVE_SCRATCH));
         PLAYER(SPECIES_DRAGAPULT) { Ability(ability); }
@@ -223,7 +223,7 @@ SINGLE_BATTLE_TEST("Infiltrator doesn't ignore a battler's Substitute when using
     PARAMETRIZE { ability = ABILITY_INFILTRATOR; move = MOVE_SKY_DROP;  }
 
     GIVEN {
-        WITH_CONFIG(CONFIG_INFILTRATOR_SUBSTITUTE, GEN_6);
+        WITH_CONFIG(B_INFILTRATOR_SUBSTITUTE, GEN_6);
         ASSUME(GetMoveEffect(MOVE_SUBSTITUTE) == EFFECT_SUBSTITUTE);
         ASSUME(GetMoveEffect(MOVE_TRANSFORM) == EFFECT_TRANSFORM);
         ASSUME(GetMoveEffect(MOVE_SKY_DROP) == EFFECT_SKY_DROP);

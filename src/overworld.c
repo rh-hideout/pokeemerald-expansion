@@ -837,7 +837,7 @@ const struct MapConnection *GetMapConnection(u8 dir)
     if (connection == NULL)
         return NULL;
 
-    for(i = 0; i < count; i++, connection++)
+    for (i = 0; i < count; i++, connection++)
         if (connection->direction == dir)
             return connection;
 
@@ -3149,7 +3149,7 @@ static const u8 *TryInteractWithPlayer(struct CableClubPlayer *player)
     otherPlayerPos = player->pos;
     otherPlayerPos.x += gDirectionToVectors[player->facing].x;
     otherPlayerPos.y += gDirectionToVectors[player->facing].y;
-    otherPlayerPos.elevation = 0;
+    otherPlayerPos.elevation = ELEVATION_TRANSITION;
     linkPlayerId = GetLinkPlayerIdAt(otherPlayerPos.x, otherPlayerPos.y);
 
     if (linkPlayerId != MAX_LINK_PLAYERS)

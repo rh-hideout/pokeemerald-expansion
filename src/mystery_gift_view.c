@@ -212,7 +212,7 @@ s32 WonderCard_Enter(void)
 {
     if (sWonderCardData == NULL)
         return -1;
-    switch(sWonderCardData->enterExitState)
+    switch (sWonderCardData->enterExitState)
     {
     case 0:
         BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);

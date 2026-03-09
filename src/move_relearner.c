@@ -1185,7 +1185,16 @@ static u32 GetRelearnerLevelUpMoves(struct BoxPokemon *mon, u16 *moves)
             if (learnset[i].level > level)
                 break;
 
-            if (!BoxMonKnowsMove(mon, learnset[i].move))
+            if (BoxMonKnowsMove(mon, learnset[i].move))
+                continue;
+
+            bool32 alreadyInList = FALSE;
+            for (u32 j = 0; j < numMoves; j++)
+            {
+                if (learnset[i].move == moves[j])
+                    alreadyInList = TRUE;
+            }
+            if (!alreadyInList)
                 moves[numMoves++] = learnset[i].move;
         }
 

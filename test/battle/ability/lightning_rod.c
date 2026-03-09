@@ -7,7 +7,7 @@ SINGLE_BATTLE_TEST("Lightning Rod absorbs Electric-type moves and increases the 
     PARAMETRIZE { config = GEN_4; }
     PARAMETRIZE { config = GEN_5; }
     GIVEN {
-        WITH_CONFIG(CONFIG_REDIRECT_ABILITY_IMMUNITY, config);
+        WITH_CONFIG(B_REDIRECT_ABILITY_IMMUNITY, config);
         ASSUME(GetMoveType(MOVE_THUNDERBOLT) == TYPE_ELECTRIC);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_RAICHU) { Ability(ABILITY_LIGHTNING_ROD); }
@@ -47,7 +47,7 @@ DOUBLE_BATTLE_TEST("Lightning Rod forces single-target Electric-type moves to ta
     PARAMETRIZE { config = GEN_4; }
     PARAMETRIZE { config = GEN_5; }
     GIVEN {
-        WITH_CONFIG(CONFIG_REDIRECT_ABILITY_IMMUNITY, config);
+        WITH_CONFIG(B_REDIRECT_ABILITY_IMMUNITY, config);
         ASSUME(GetMoveType(MOVE_THUNDERBOLT) == TYPE_ELECTRIC);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
@@ -115,7 +115,7 @@ DOUBLE_BATTLE_TEST("Lightning Rod redirects an ally's attack")
 DOUBLE_BATTLE_TEST("Lightning Rod absorbs moves that targets all battlers but does not redirect (Gen6+)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_REDIRECT_ABILITY_IMMUNITY, GEN_5);
+        WITH_CONFIG(B_REDIRECT_ABILITY_IMMUNITY, GEN_5);
         ASSUME(GetMoveType(MOVE_DISCHARGE) == TYPE_ELECTRIC);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);

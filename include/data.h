@@ -4,6 +4,7 @@
 #include "constants/moves.h"
 #include "constants/trainers.h"
 #include "constants/battle.h"
+#include "constants/pokeball.h"
 #include "difficulty.h"
 #include "debug.h"
 
@@ -66,7 +67,7 @@ struct TrainerMon
     u16 heldItem;
     enum Ability ability;
     u8 lvl;
-    u8 ball;
+    enum PokeBall ball:8;
     u8 friendship;
     u8 nature:5;
     bool8 gender:2;
@@ -244,11 +245,6 @@ static inline u16 SanitizeTrainerId(u16 trainerId)
 {
     switch (trainerId)
     {
-    case TRAINER_RECORD_MIXING_FRIEND:
-    case TRAINER_RECORD_MIXING_APPRENTICE:
-    case TRAINER_EREADER:
-    case TRAINER_FRONTIER_BRAIN:
-    case TRAINER_PLAYER:
     case TRAINER_SECRET_BASE:
     case TRAINER_LINK_OPPONENT:
     case TRAINER_UNION_ROOM:

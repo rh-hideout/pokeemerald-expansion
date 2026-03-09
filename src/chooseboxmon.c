@@ -194,7 +194,7 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
         GetBoxMonNickname(boxmon, gStringVar1);
         StringCopy(gStringVar2, GetMoveName(move));
         gSpecialVar_Result = FALSE;
-        switch(CanMonLearnMove(boxmon))
+        switch (CanMonLearnMove(boxmon))
         {
         case VALID_MON:
             return LEARN_MOVE;
