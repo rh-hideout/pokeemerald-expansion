@@ -5191,7 +5191,7 @@ static bool32 TryDoMoveEffectsBeforeMoves(void)
             {
                 gBattleStruct->battlerState[battler].focusPunchBattlers = TRUE;
                 gBattlerAttacker = battler;
-                switch (GetMoveEffect(GetBattlerChosenMove(gBattlerAttacker)))
+                switch (GetBattlerChosenMoveEffect(gBattlerAttacker))
                 {
                 case EFFECT_FOCUS_PUNCH:
                     BattleScriptExecute(BattleScript_FocusPunchSetUp);
@@ -5281,7 +5281,7 @@ static void CheckChangingTurnOrderEffects(void)
             battler = gBattlerAttacker = gBattleStruct->quickClawBattlerId;
             gBattleStruct->quickClawBattlerId++;
             if (gChosenActionByBattler[battler] == B_ACTION_USE_MOVE
-             && GetMoveEffect(GetBattlerChosenMove(battler)) != EFFECT_FOCUS_PUNCH   // quick claw message doesn't need to activate here
+             && GetBattlerChosenMoveEffect(battler) != EFFECT_FOCUS_PUNCH   // quick claw message doesn't need to activate here
              && (gProtectStructs[battler].usedCustapBerry || gProtectStructs[battler].quickDraw)
              && !(gBattleMons[battler].status1 & STATUS1_SLEEP)
              && !(gBattleMons[gBattlerAttacker].volatiles.truantCounter)

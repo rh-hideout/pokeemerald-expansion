@@ -972,7 +972,7 @@ static inline bool32 IsBattlerUsingBeakBlast(enum BattlerId battler)
 {
     if (gChosenActionByBattler[battler] != B_ACTION_USE_MOVE)
         return FALSE;
-    if (GetMoveEffect(GetBattlerChosenMove(battler)) != EFFECT_BEAK_BLAST)
+    if (GetBattlerChosenMoveEffect(battler) != EFFECT_BEAK_BLAST)
         return FALSE;
     return !HasBattlerActedThisTurn(battler);
 }
@@ -8833,7 +8833,7 @@ static void Cmd_trysetencore(void)
      || gBattleMons[gBattlerTarget].volatiles.lastMove == MOVE_UNAVAILABLE
      || gBattleMons[gBattlerTarget].pp[i] == 0
      || gBattleMons[gBattlerTarget].volatiles.encoredMove != MOVE_NONE
-     || GetMoveEffect(GetBattlerChosenMove(gBattlerTarget)) == EFFECT_SHELL_TRAP)
+     || GetBattlerChosenMoveEffect(gBattlerTarget) == EFFECT_SHELL_TRAP)
     {
         gBattlescriptCurrInstr = cmd->failInstr;
     }
@@ -14206,7 +14206,7 @@ static inline bool32 IsInstructBannedChargingMove(u32 battler)
     if (gChosenActionByBattler[battler] != B_ACTION_USE_MOVE || HasBattlerActedThisTurn(battler))
         return FALSE;
 
-    moveEffect = GetMoveEffect(GetBattlerChosenMove(battler));
+    moveEffect = GetBattlerChosenMoveEffect(battler);
     return moveEffect == EFFECT_FOCUS_PUNCH
         || moveEffect == EFFECT_BEAK_BLAST
         || moveEffect == EFFECT_SHELL_TRAP;

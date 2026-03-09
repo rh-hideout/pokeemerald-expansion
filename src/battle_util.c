@@ -9902,7 +9902,7 @@ bool32 SetTargetToNextPursuiter(enum BattlerId battlerDef)
     {
         enum BattlerId battler = gBattlerByTurnOrder[i];
         if (gChosenActionByBattler[battler] == B_ACTION_USE_MOVE
-        && GetMoveEffect(GetBattlerChosenMove(battler)) == EFFECT_PURSUIT
+        && GetBattlerChosenMoveEffect(battler) == EFFECT_PURSUIT
         && IsBattlerAlive(battlerDef)
         && IsBattlerAlive(battler)
         && !IsBattlerAlly(battler, battlerDef)
@@ -10954,4 +10954,9 @@ bool32 IsNaturalEnemy(u32 speciesAttacker, u32 speciesTarget)
 enum Move GetBattlerChosenMove(enum BattlerId battler)
 {
     return gBattleMons[battler].volatiles.chosenMove;
+}
+
+enum BattleMoveEffects GetBattlerChosenMoveEffect(enum BattlerId battler)
+{
+    return GetMoveEffect(GetBattlerChosenMove(battler));
 }

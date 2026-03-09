@@ -428,5 +428,6 @@ void TryResetConsecutiveUseCounter(enum BattlerId battler);
 void SetOrClearRageVolatile(void);
 bool32 IsNaturalEnemy(u32 speciesAttacker, u32 speciesTarget);
 enum Move GetBattlerChosenMove(enum BattlerId battler);
+enum BattleMoveEffects GetBattlerChosenMoveEffect(enum BattlerId battler);
 
 #endif // GUARD_BATTLE_UTIL_H

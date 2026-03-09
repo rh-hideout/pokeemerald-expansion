@@ -269,7 +269,7 @@ static enum CancelerResult CancelerFocus(struct BattleContext *ctx)
     // In Gens 5-6, only check if the chosen move is Focus Punch.
     // In Gens 7+, check if chose and is using Focus Punch.
     if ((gProtectStructs[ctx->battlerAtk].physicalDmg || gProtectStructs[ctx->battlerAtk].specialDmg)
-     && (focusPunchFailureConfig < GEN_5 || GetMoveEffect(GetBattlerChosenMove(ctx->battlerAtk)) == EFFECT_FOCUS_PUNCH)
+     && (focusPunchFailureConfig < GEN_5 || GetBattlerChosenMoveEffect(ctx->battlerAtk) == EFFECT_FOCUS_PUNCH)
      && (focusPunchFailureConfig == GEN_5 || focusPunchFailureConfig == GEN_6 || GetMoveEffect(ctx->move) == EFFECT_FOCUS_PUNCH)
      && !gProtectStructs[ctx->battlerAtk].survivedOHKO)
     {
@@ -3179,7 +3179,7 @@ static enum MoveEndResult MoveEndShellTrap(void)
             continue;
 
         // Set ShellTrap to activate after the attacker's turn if target was hit by a physical move.
-        if (GetMoveEffect(GetBattlerChosenMove(battlerDef)) == EFFECT_SHELL_TRAP
+        if (GetBattlerChosenMoveEffect(battlerDef) == EFFECT_SHELL_TRAP
          && IsBattleMovePhysical(gCurrentMove)
          && IsBattlerTurnDamaged(battlerDef)
          && gProtectStructs[battlerDef].physicalBattlerId == gBattlerAttacker)
@@ -3919,7 +3919,7 @@ static inline bool32 IsBattlerUsingBeakBlast(enum BattlerId battler)
 {
     if (gChosenActionByBattler[battler] != B_ACTION_USE_MOVE)
         return FALSE;
-    if (GetMoveEffect(GetBattlerChosenMove(battler)) != EFFECT_BEAK_BLAST)
+    if (GetBattlerChosenMoveEffect(battler) != EFFECT_BEAK_BLAST)
         return FALSE;
     return !HasBattlerActedThisTurn(battler);
 }
