@@ -612,16 +612,16 @@ static u8 GetRandomFaceDirectionMovementType()
 
     switch (randomFacingDirection)
     {
-        case 0:
-            return MOVEMENT_TYPE_FACE_UP;
-        case 1:
-            return MOVEMENT_TYPE_FACE_DOWN;
-        case 2:
-            return MOVEMENT_TYPE_FACE_LEFT;
-        case 3:
-            return MOVEMENT_TYPE_FACE_RIGHT;
-        default:
-            return MOVEMENT_TYPE_FACE_DOWN;
+    case 0:
+        return MOVEMENT_TYPE_FACE_UP;
+    case 1:
+        return MOVEMENT_TYPE_FACE_DOWN;
+    case 2:
+        return MOVEMENT_TYPE_FACE_LEFT;
+    case 3:
+        return MOVEMENT_TYPE_FACE_RIGHT;
+    default:
+        return MOVEMENT_TYPE_FACE_DOWN;
     }
 }
 

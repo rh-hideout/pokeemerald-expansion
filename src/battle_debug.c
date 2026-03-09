@@ -20,7 +20,6 @@
 #include "text_window.h"
 #include "international_string_util.h"
 #include "strings.h"
-#include "battle_ai_main.h"
 #include "battle_ai_util.h"
 #include "list_menu.h"
 #include "decompress.h"
@@ -2013,18 +2012,18 @@ static void SetUpModifyArrows(struct BattleDebugMenu *data)
 #define UNPACK_VOLATILE_MAX_SIZE(_enum, _fieldName, _typeMaxValue, ...) case _enum: data->modifyArrows.maxValue = min(MAX_u16, GET_VOLATILE_MAXIMUM(_typeMaxValue)); break;
         switch (data->currentSecondaryListItemId)
         {
-            VOLATILE_DEFINITIONS(UNPACK_VOLATILE_MAX_SIZE)
-            /* Expands to the following:
-             * case VOLATILE_CONFUSION:
-                  data->modifyArrows.maxValue = MAX_BITS(3); // Max value 7
-                  break;
-             * case VOLATILE_FLINCHED:
-                  data->modifyArrows.maxValue = MAX_BITS(1); // Max value 1
-                  break;
-             * ...etc.
-             */
-            default:
-                data->modifyArrows.maxValue = 0;
+        VOLATILE_DEFINITIONS(UNPACK_VOLATILE_MAX_SIZE)
+        /* Expands to the following:
+            * case VOLATILE_CONFUSION:
+                data->modifyArrows.maxValue = MAX_BITS(3); // Max value 7
+                break;
+            * case VOLATILE_FLINCHED:
+                data->modifyArrows.maxValue = MAX_BITS(1); // Max value 1
+                break;
+            * ...etc.
+            */
+        default:
+            data->modifyArrows.maxValue = 0;
         }
         data->modifyArrows.maxDigits = MAX_DIGITS(data->modifyArrows.maxValue);
         break;

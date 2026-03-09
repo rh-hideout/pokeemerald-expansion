@@ -9,7 +9,7 @@ SINGLE_BATTLE_TEST("Synchronize will mirror back non volatile status back at opp
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_TOXIC) == MOVE_EFFECT_TOXIC);
-        WITH_CONFIG(CONFIG_SYNCHRONIZE_TOXIC, config);
+        WITH_CONFIG(B_SYNCHRONIZE_TOXIC, config);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ABRA) { Ability(ABILITY_SYNCHRONIZE); }
     } WHEN {
@@ -30,7 +30,7 @@ SINGLE_BATTLE_TEST("Synchronize will mirror back non volatile status back at opp
 SINGLE_BATTLE_TEST("Synchronize will still show up the ability pop up even if it fails")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_PARALYZE_ELECTRIC, GEN_6);
+        WITH_CONFIG(B_PARALYZE_ELECTRIC, GEN_6);
         ASSUME(MoveMakesContact(MOVE_TACKLE));
         PLAYER(SPECIES_PIKACHU) { Ability(ABILITY_STATIC); }
         OPPONENT(SPECIES_ABRA) { Ability(ABILITY_SYNCHRONIZE); }
@@ -73,3 +73,59 @@ SINGLE_BATTLE_TEST("Synchronize will mirror back static activation")
         STATUS_ICON(player, paralysis: TRUE);
     }
 }
+
+DOUBLE_BATTLE_TEST("Synchronize will trigger on both targets")
+{
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_MORTAL_SPIN, MOVE_EFFECT_POISON));
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LUM_BERRY); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_ABRA) { Item(ITEM_LUM_BERRY); Ability(ABILITY_SYNCHRONIZE); }
+        OPPONENT(SPECIES_ABRA) { Item(ITEM_LUM_BERRY); Ability(ABILITY_SYNCHRONIZE); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_MORTAL_SPIN); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MORTAL_SPIN, playerLeft);
+        HP_BAR(opponentLeft);
+        HP_BAR(opponentRight);
+        ABILITY_POPUP(opponentLeft, ABILITY_SYNCHRONIZE);
+        ABILITY_POPUP(opponentRight, ABILITY_SYNCHRONIZE);
+    } THEN {
+        EXPECT_EQ(gBattleMons[B_BATTLER_0].status1, STATUS1_POISON);
+        EXPECT_EQ(gBattleMons[B_BATTLER_1].status1, STATUS1_NONE);
+        EXPECT_EQ(gBattleMons[B_BATTLER_3].status1, STATUS1_NONE);
+
+    }
+}
+
+SINGLE_BATTLE_TEST("Synchronize can trigger again during the same attack if user cured it's status")
+{
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_MORTAL_SPIN, MOVE_EFFECT_POISON));
+        ASSUME(MoveMakesContact(MOVE_MORTAL_SPIN));
+        PLAYER(SPECIES_SEISMITOAD) { Ability(ABILITY_POISON_TOUCH); Item(ITEM_LUM_BERRY); }
+        OPPONENT(SPECIES_ABRA) { Ability(ABILITY_SYNCHRONIZE); Item(ITEM_LUM_BERRY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_MORTAL_SPIN); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MORTAL_SPIN, player);
+
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+        STATUS_ICON(opponent, poison: TRUE);
+        ABILITY_POPUP(opponent, ABILITY_SYNCHRONIZE);
+
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
+        STATUS_ICON(player, poison: TRUE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        STATUS_ICON(player, poison: FALSE);
+
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        STATUS_ICON(opponent, poison: FALSE);
+
+        ABILITY_POPUP(player, ABILITY_POISON_TOUCH);
+        STATUS_ICON(opponent, poison: TRUE);
+        ABILITY_POPUP(opponent, ABILITY_SYNCHRONIZE);
+        STATUS_ICON(player, poison: TRUE);
+    }
+}
+

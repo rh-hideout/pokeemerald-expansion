@@ -1944,7 +1944,7 @@ static void UpdateLeftNoOfBallsTextOnHealthbox(u8 healthboxSpriteId)
     txtPtr = StringCopy(text, gText_SafariBallLeft);
     ConvertIntToDecimalStringN(txtPtr, gNumSafariBalls, STR_CONV_MODE_LEFT_ALIGN, 2);
 
-    FillSpriteRectColor(healthboxSpriteId, 55, 19, 47, 12, HEALTHBOX_BG_INDEX);
+    FillSpriteRectColor(healthboxSpriteId, 55, 19, 31, 12, HEALTHBOX_BG_INDEX);
     AddSpriteTextPrinterParameterized6(healthboxSpriteId, FONT_SMALL, 55, 19, 0, 0, sHealthBoxTextColor, 0, text);
 
     gSprites[healthboxSpriteId].data[1] = savedValue1;
@@ -2646,11 +2646,11 @@ static void SpriteCb_AbilityPopUp(struct Sprite *sprite)
             xCoord += ABILITY_POP_UP_POS_X_DIFF;
 
         if (fullX == xCoord)
-	{
+        {
             sTimer = ABILITY_POP_UP_WAIT_FRAMES;
             sState = APU_STATE_IDLE;
             break;
-	}
+        }
 
         speed = sIsPlayerSide ? ABILITY_POP_UP_POS_X_SPEED : -ABILITY_POP_UP_POS_X_SPEED;
         sprite->x2 += speed;
@@ -2672,10 +2672,10 @@ static void SpriteCb_AbilityPopUp(struct Sprite *sprite)
     case APU_STATE_SLIDE_OUT:
     {
         if (fullX == sprite->x)
-	{
+    {
             sState = APU_STATE_END;
             break;
-	}
+    }
 
         speed = sIsPlayerSide ? -ABILITY_POP_UP_POS_X_SPEED : ABILITY_POP_UP_POS_X_SPEED;
         sprite->x2 += speed;
@@ -3061,7 +3061,7 @@ static void Task_BounceBall(u8 taskId)
 {
     struct Sprite *sprite = &gSprites[gBattleStruct->ballSpriteIds[0]];
     struct Task *task = &gTasks[taskId];
-    switch(task->sState)
+    switch (task->sState)
     {
     case 0:  // Bounce up
         sprite->sBounce = TRUE;
@@ -3096,7 +3096,7 @@ static void Task_BounceBall(u8 taskId)
         }
         break;
     case 4:  // Destroy Task
-        if(!sprite->sMoving)
+        if (!sprite->sMoving)
         {
             sprite->callback = SpriteCB_LastUsedBall;
             DestroyTask(taskId);

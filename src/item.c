@@ -310,22 +310,22 @@ static bool32 NONNULL BagPocket_AddItem(struct BagPocket *pocket, enum Item item
 
     switch (pocket->id)
     {
-        case POCKET_TM_HM:
-        case POCKET_BERRIES:
-            for (itemLookupIndex = 0; itemLookupIndex < pocket->capacity && count > 0; itemLookupIndex++)
+    case POCKET_TM_HM:
+    case POCKET_BERRIES:
+        for (itemLookupIndex = 0; itemLookupIndex < pocket->capacity && count > 0; itemLookupIndex++)
+        {
+            // Check if we found a slot to store the item but weren't able to reduce count to 0
+            // This means that we have more than one stack's worth, which isn't allowed in these pockets
+            if (CheckSlotAndUpdateCount(pocket, itemId, itemLookupIndex, &itemAddIndex, &count, tempPocketSlotQuantities) && count > 0)
             {
-                // Check if we found a slot to store the item but weren't able to reduce count to 0
-                // This means that we have more than one stack's worth, which isn't allowed in these pockets
-                if (CheckSlotAndUpdateCount(pocket, itemId, itemLookupIndex, &itemAddIndex, &count, tempPocketSlotQuantities) && count > 0)
-                {
-                    Free(tempPocketSlotQuantities);
-                    return FALSE;
-                }
+                Free(tempPocketSlotQuantities);
+                return FALSE;
             }
-            break;
-        default:
-            for (itemLookupIndex = 0; itemLookupIndex < pocket->capacity && count > 0; itemLookupIndex++)
-                CheckSlotAndUpdateCount(pocket, itemId, itemLookupIndex, &itemAddIndex, &count, tempPocketSlotQuantities);
+        }
+        break;
+    default:
+        for (itemLookupIndex = 0; itemLookupIndex < pocket->capacity && count > 0; itemLookupIndex++)
+            CheckSlotAndUpdateCount(pocket, itemId, itemLookupIndex, &itemAddIndex, &count, tempPocketSlotQuantities);
     }
 
     // If the count is still greater than zero, clearly we have not found enough slots for this...
@@ -870,23 +870,23 @@ enum EffectItem GetItemBattleUsage(enum Item itemId)
     {
         switch (GetItemEffectType(gSpecialVar_ItemId))
         {
-            case ITEM_EFFECT_X_ITEM:
-                return EFFECT_ITEM_INCREASE_STAT;
-            case ITEM_EFFECT_HEAL_HP:
-                return EFFECT_ITEM_RESTORE_HP;
-            case ITEM_EFFECT_CURE_POISON:
-            case ITEM_EFFECT_CURE_SLEEP:
-            case ITEM_EFFECT_CURE_BURN:
-            case ITEM_EFFECT_CURE_FREEZE_FROSTBITE:
-            case ITEM_EFFECT_CURE_PARALYSIS:
-            case ITEM_EFFECT_CURE_ALL_STATUS:
-            case ITEM_EFFECT_CURE_CONFUSION:
-            case ITEM_EFFECT_CURE_INFATUATION:
-                return EFFECT_ITEM_CURE_STATUS;
-            case ITEM_EFFECT_HEAL_PP:
-                return EFFECT_ITEM_RESTORE_PP;
-            default:
-                return 0;
+        case ITEM_EFFECT_X_ITEM:
+            return EFFECT_ITEM_INCREASE_STAT;
+        case ITEM_EFFECT_HEAL_HP:
+            return EFFECT_ITEM_RESTORE_HP;
+        case ITEM_EFFECT_CURE_POISON:
+        case ITEM_EFFECT_CURE_SLEEP:
+        case ITEM_EFFECT_CURE_BURN:
+        case ITEM_EFFECT_CURE_FREEZE_FROSTBITE:
+        case ITEM_EFFECT_CURE_PARALYSIS:
+        case ITEM_EFFECT_CURE_ALL_STATUS:
+        case ITEM_EFFECT_CURE_CONFUSION:
+        case ITEM_EFFECT_CURE_INFATUATION:
+            return EFFECT_ITEM_CURE_STATUS;
+        case ITEM_EFFECT_HEAL_PP:
+            return EFFECT_ITEM_RESTORE_PP;
+        default:
+            return 0;
         }
     }
     else
@@ -909,18 +909,18 @@ u32 GetItemStatus1Mask(enum Item itemId)
     const u8 *effect = GetItemEffect(itemId);
     switch (effect[3])
     {
-        case ITEM3_PARALYSIS:
-            return STATUS1_PARALYSIS;
-        case ITEM3_FREEZE:
-            return STATUS1_ICY_ANY;
-        case ITEM3_BURN:
-            return STATUS1_BURN;
-        case ITEM3_POISON:
-            return STATUS1_PSN_ANY | STATUS1_TOXIC_COUNTER;
-        case ITEM3_SLEEP:
-            return STATUS1_SLEEP;
-        case ITEM3_STATUS_ALL:
-            return STATUS1_ANY | STATUS1_TOXIC_COUNTER;
+    case ITEM3_PARALYSIS:
+        return STATUS1_PARALYSIS;
+    case ITEM3_FREEZE:
+        return STATUS1_ICY_ANY;
+    case ITEM3_BURN:
+        return STATUS1_BURN;
+    case ITEM3_POISON:
+        return STATUS1_PSN_ANY | STATUS1_TOXIC_COUNTER;
+    case ITEM3_SLEEP:
+        return STATUS1_SLEEP;
+    case ITEM3_STATUS_ALL:
+        return STATUS1_ANY | STATUS1_TOXIC_COUNTER;
     }
     return 0;
 }

@@ -309,7 +309,7 @@
  * of `enum ConfigTag`
  * Example:
  *     GIVEN {
- *         WITH_CONFIG(CONFIG_GALE_WINGS, GEN_6);
+ *         WITH_CONFIG(B_GALE_WINGS, GEN_6);
  *     }
  * The `value` may be inferred from a local variable, e.g. set by
  * PARAMETRIZE.
@@ -1012,7 +1012,7 @@ struct moveWithPP {
 
 #define FLAG_SET(flagId) SetFlagForTest(__LINE__, flagId)
 #define VAR_SET(varId, value) SetVarForTest(__LINE__, varId, value)
-#define WITH_CONFIG(configTag, value) TestSetConfig(__LINE__, configTag, value)
+#define WITH_CONFIG(configTag, value) TestSetConfig(__LINE__, CONFIG_##configTag, value)
 
 #define PLAYER(species) for (OpenPokemon(__LINE__, B_TRAINER_0, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
 #define OPPONENT(species) for (OpenPokemon(__LINE__, B_TRAINER_1, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
@@ -1039,7 +1039,7 @@ struct moveWithPP {
 #define SpDefenseIV(spDefenseIV) SpDefenseIV_(__LINE__, spDefenseIV)
 #define SpeedIV(speedIV) SpeedIV_(__LINE__, speedIV)
 #define Item(item) Item_(__LINE__, item)
-#define Moves(move1, ...) do { u16 moves_[MAX_MON_MOVES] = {move1, __VA_ARGS__}; Moves_(__LINE__, moves_); } while(0)
+#define Moves(move1, ...) do { u16 moves_[MAX_MON_MOVES] = {move1, __VA_ARGS__}; Moves_(__LINE__, moves_); } while (0)
 #define MovesWithPP(movewithpp1, ...) MovesWithPP_(__LINE__, (struct moveWithPP[MAX_MON_MOVES]) {movewithpp1, __VA_ARGS__})
 #define Friendship(friendship) Friendship_(__LINE__, friendship)
 #define Status1(status1) Status1_(__LINE__, status1)
@@ -1229,8 +1229,7 @@ void SendOut(u32 sourceLine, struct BattlePokemon *, u32 partyIndex);
 #define HP_BAR(battler, ...) QueueHP(__LINE__, battler, (struct HPEventContext) { R_APPEND_TRUE(__VA_ARGS__) })
 #define SUB_HIT(battler, ...) QueueSubHit(__LINE__, battler, (struct SubHitEventContext) { R_APPEND_TRUE(__VA_ARGS__) })
 #define EXPERIENCE_BAR(battler, ...) QueueExp(__LINE__, battler, (struct ExpEventContext) { R_APPEND_TRUE(__VA_ARGS__) })
-// Static const is needed to make the modern compiler put the pattern variable in the .rodata section, instead of putting it on stack(which can break the game).
-#define MESSAGE(pattern) do {static const u8 msg[] = _(pattern); QueueMessage(__LINE__, msg);} while (0)
+#define MESSAGE(pattern) QueueMessage(__LINE__, COMPOUND_STRING(pattern))
 #define STATUS_ICON(battler, status) QueueStatus(__LINE__, battler, (struct StatusEventContext) { status })
 #define CATCHING_CHANCE(address) QueueCatchingChance(__LINE__, address)
 #define FREEZE_OR_FROSTBURN_STATUS(battler, isFrostbite) \

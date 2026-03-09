@@ -98,7 +98,8 @@ static void Task_WaitAndPlaySE(u8 taskId);
 static void LoadDefaultBg(void);
 
 EWRAM_DATA static const u8 *sBattleAnimScriptPtr = NULL;
-EWRAM_DATA static const u8 *sBattleAnimScriptRetAddr = NULL;
+EWRAM_DATA static const u8 *sBattleAnimScriptRetAddr[MAX_ANIM_CALL_DEPTH] = {0};
+EWRAM_DATA static u8 sBattleAnimScriptCallDepth = 0;
 EWRAM_DATA void (*gAnimScriptCallback)(void) = NULL;
 EWRAM_DATA static s8 sAnimFramesToWait = 0;
 EWRAM_DATA bool8 gAnimScriptActive = FALSE;
@@ -261,10 +262,10 @@ static const u8* const sBattleAnims_General[NUM_B_ANIMS_GENERAL] =
     [B_ANIM_SWAP_TO_SUBSTITUTE]     = gBattleAnimGeneral_SwapToSubstitute,
     [B_ANIM_SWAP_FROM_SUBSTITUTE]   = gBattleAnimGeneral_SwapFromSubstitute,
     [B_ANIM_MON_SCARED]             = gBattleAnimGeneral_MonScared,
-	[B_ANIM_GHOST_GET_OUT]          = gBattleAnimGeneral_GhostGetOut,
-	[B_ANIM_SILPH_SCOPED]           = gBattleAnimGeneral_SilphScoped,
-	[B_ANIM_ROCK_THROW]             = gBattleAnimGeneral_SafariRockThrow,
-	[B_ANIM_SAFARI_REACTION]        = gBattleAnimGeneral_SafariReaction,
+    [B_ANIM_GHOST_GET_OUT]          = gBattleAnimGeneral_GhostGetOut,
+    [B_ANIM_SILPH_SCOPED]           = gBattleAnimGeneral_SilphScoped,
+    [B_ANIM_ROCK_THROW]             = gBattleAnimGeneral_SafariRockThrow,
+    [B_ANIM_SAFARI_REACTION]        = gBattleAnimGeneral_SafariReaction,
 };
 
 static const u8* const sBattleAnims_Special[NUM_B_ANIMS_SPECIAL] =
@@ -877,6 +878,8 @@ static void Cmd_end(void)
     s32 i;
     bool32 continuousAnim = FALSE;
 
+    assertf(sBattleAnimScriptCallDepth == 0, "Call depth not 0 at end of move animation");
+
     // Keep waiting as long as there are animations to be done.
     if (gAnimVisualTaskCount != 0 || gAnimSoundTaskCount != 0
      || sMonAnimTaskIdArray[0] != TASK_NONE || sMonAnimTaskIdArray[1] != TASK_NONE)
@@ -1462,14 +1465,18 @@ static void Cmd_blendoff(void)
 
 static void Cmd_call(void)
 {
+    assertf(sBattleAnimScriptCallDepth + 1 < MAX_ANIM_CALL_DEPTH, "Max animation call depth exceeded");
     sBattleAnimScriptPtr++;
-    sBattleAnimScriptRetAddr = sBattleAnimScriptPtr + 4;
+    sBattleAnimScriptRetAddr[sBattleAnimScriptCallDepth++] = sBattleAnimScriptPtr + 4;
     sBattleAnimScriptPtr = T2_READ_PTR(sBattleAnimScriptPtr);
 }
 
 static void Cmd_return(void)
 {
-    sBattleAnimScriptPtr = sBattleAnimScriptRetAddr;
+    assertf(sBattleAnimScriptCallDepth > 0, "return with empty call stack");
+    sBattleAnimScriptPtr = sBattleAnimScriptRetAddr[sBattleAnimScriptCallDepth - 1];
+    sBattleAnimScriptRetAddr[sBattleAnimScriptCallDepth] = 0;
+    sBattleAnimScriptCallDepth--;
 }
 
 static void Cmd_setarg(void)

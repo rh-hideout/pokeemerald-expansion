@@ -1320,8 +1320,6 @@ void CreateMonWithIVs(struct Pokemon *mon, u16 species, u8 level, u32 personalit
 void SetBoxMonIVs(struct BoxPokemon *mon, u8 fixedIV)
 {
     u32 i, value;
-    enum Stat availableIVs[NUM_STATS];
-    enum Stat selectedIvs[NUM_STATS];
 
     if (fixedIV < USE_RANDOM_IVS)
     {
@@ -1351,21 +1349,35 @@ void SetBoxMonIVs(struct BoxPokemon *mon, u8 fixedIV)
     iv = (value & (MAX_IV_MASK << 10)) >> 10;
     SetBoxMonData(mon, MON_DATA_SPDEF_IV, &iv);
 
-    if (gSpeciesInfo[species].perfectIVCount != 0)
-    {
-        iv = MAX_PER_STAT_IVS;
-        // Initialize a list of IV indices.
-        for (i = 0; i < NUM_STATS; i++)
-            availableIVs[i] = i;
+    SetBoxMonPerfectIVs(mon, gSpeciesInfo[species].perfectIVCount);
+}
 
-        // Select the IVs that will be perfected.
-        for (i = 0; i < NUM_STATS && i < gSpeciesInfo[species].perfectIVCount; i++)
-        {
-            u8 index = Random() % (NUM_STATS - i);
-            selectedIvs[i] = availableIVs[index];
-            RemoveIVIndexFromList(availableIVs, index);
-            SetBoxMonData(mon, MON_DATA_HP_IV + selectedIvs[i], &iv);
-        }
+void SetBoxMonPerfectIVs(struct BoxPokemon *mon, u32 numPerfect)
+{
+    if (!numPerfect)
+        return;
+
+    u32 i, iv = MAX_PER_STAT_IVS;
+    if (numPerfect >= NUM_STATS)
+    {
+        for (i = 0; i < NUM_STATS; i++)
+            SetBoxMonData(mon, MON_DATA_HP_IV + i, &iv);
+        return;
+    }
+
+    enum Stat availableIVs[NUM_STATS];
+    enum Stat selectedIvs[NUM_STATS];
+    // Initialize a list of IV indices.
+    for (i = 0; i < NUM_STATS; i++)
+        availableIVs[i] = i;
+
+    // Select the IVs that will be perfected.
+    for (i = 0; i < numPerfect; i++)
+    {
+        u8 index = Random() % (NUM_STATS - i);
+        selectedIvs[i] = availableIVs[index];
+        RemoveIVIndexFromList(availableIVs, index);
+        SetBoxMonData(mon, MON_DATA_HP_IV + selectedIvs[i], &iv);
     }
 }
 
@@ -1463,13 +1475,13 @@ static bool32 IsValidGender(u32 gender)
 {
     switch (gender)
     {
-        case MON_MALE:
-        case MON_FEMALE:
-        case MON_GENDERLESS:
-        case MON_GENDER_RANDOM:
-            return TRUE;
-        default:
-            return FALSE;
+    case MON_MALE:
+    case MON_FEMALE:
+    case MON_GENDERLESS:
+    case MON_GENDER_RANDOM:
+        return TRUE;
+    default:
+        return FALSE;
     }
 }
 
@@ -3926,6 +3938,9 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, enum Item item, u8 partyIndex, 
     u8 effectFlags;
     s8 evChange;
     u16 evCount;
+    u8 levelBefore;
+    bool8 didLevelUp = FALSE;
+    bool8 isLevelUpItem;
 
     // Determine the EV cap to use
     u32 maxAllowedEVs = !B_EV_ITEMS_CAP ? MAX_TOTAL_EVS : GetCurrentEVCap();
@@ -3947,6 +3962,8 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, enum Item item, u8 partyIndex, 
 
     // Get item effect
     itemEffect = GetItemEffect(item);
+    isLevelUpItem = (itemEffect[3] & ITEM3_LEVEL_UP) != 0;
+    levelBefore = GetMonData(mon, MON_DATA_LEVEL, NULL);
 
     // Do item effect
     for (i = 0; i < ITEM_EFFECT_ARG_START; i++)
@@ -4001,6 +4018,8 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, enum Item item, u8 partyIndex, 
                 {
                     SetMonData(mon, MON_DATA_EXP, &dataUnsigned);
                     CalculateMonStats(mon);
+                    if (GetMonData(mon, MON_DATA_LEVEL, NULL) > levelBefore)
+                        didLevelUp = TRUE;
                     retVal = FALSE;
                 }
             }
@@ -4119,6 +4138,11 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, enum Item item, u8 partyIndex, 
                     {
                         u32 currentHP = GetMonData(mon, MON_DATA_HP);
                         u32 maxHP = GetMonData(mon, MON_DATA_MAX_HP);
+                        if (isLevelUpItem && !didLevelUp && (effectFlags & (ITEM4_REVIVE >> 2)))
+                        {
+                            itemEffectParam++;
+                            break;
+                        }
                         // Check use validity.
                         if ((effectFlags & (ITEM4_REVIVE >> 2) && currentHP != 0)
                               || (!(effectFlags & (ITEM4_REVIVE >> 2)) && currentHP == 0))
@@ -4368,7 +4392,7 @@ bool8 HealStatusConditions(struct Pokemon *mon, u32 healMask, enum BattlerId bat
         if (gMain.inBattle && battler != MAX_BATTLERS_COUNT)
         {
             gBattleMons[battler].status1 &= ~healMask;
-            if((healMask & STATUS1_SLEEP))
+            if ((healMask & STATUS1_SLEEP))
             {
                 u32 i = 0;
                 u32 battlerSide = GetBattlerSide(battler);
@@ -4552,24 +4576,24 @@ u8 *UseStatIncreaseItem(enum Item itemId)
 
     switch (itemEffect[1])
     {
-        case ITEM1_X_ATTACK:
-            BufferStatRoseMessage(STAT_ATK);
-            break;
-        case ITEM1_X_DEFENSE:
-            BufferStatRoseMessage(STAT_DEF);
-            break;
-        case ITEM1_X_SPEED:
-            BufferStatRoseMessage(STAT_SPEED);
-            break;
-        case ITEM1_X_SPATK:
-            BufferStatRoseMessage(STAT_SPATK);
-            break;
-        case ITEM1_X_SPDEF:
-            BufferStatRoseMessage(STAT_SPDEF);
-            break;
-        case ITEM1_X_ACCURACY:
-            BufferStatRoseMessage(STAT_ACC);
-            break;
+    case ITEM1_X_ATTACK:
+        BufferStatRoseMessage(STAT_ATK);
+        break;
+    case ITEM1_X_DEFENSE:
+        BufferStatRoseMessage(STAT_DEF);
+        break;
+    case ITEM1_X_SPEED:
+        BufferStatRoseMessage(STAT_SPEED);
+        break;
+    case ITEM1_X_SPATK:
+        BufferStatRoseMessage(STAT_SPATK);
+        break;
+    case ITEM1_X_SPDEF:
+        BufferStatRoseMessage(STAT_SPDEF);
+        break;
+    case ITEM1_X_ACCURACY:
+        BufferStatRoseMessage(STAT_ACC);
+        break;
     }
 
     if (itemEffect[3] & ITEM3_GUARD_SPEC)
@@ -4649,7 +4673,7 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
         enum EvolutionConditions condition = params[i].condition;
         bool32 currentCondition = FALSE;
 
-        switch(condition)
+        switch (condition)
         {
         // Gen 2
         case IF_GENDER:
@@ -6680,6 +6704,7 @@ u32 GetFormChangeTargetSpecies_Internal(struct FormChangeContext ctx)
         case FORM_CHANGE_DEPOSIT:
         case FORM_CHANGE_FAINT:
         case FORM_CHANGE_DAYS_PASSED:
+        case FORM_CHANGE_BEGIN_WILD_ENCOUNTER:
             targetSpecies = formChanges[i].targetSpecies;
             break;
         case FORM_CHANGE_STATUS:
@@ -6722,7 +6747,7 @@ u32 GetFormChangeTargetSpecies_Internal(struct FormChangeContext ctx)
             {
                 // We multiply by 100 to make sure that integer division doesn't mess with the health check.
                 u32 hpCheck = ctx.hp * 100 * 100 / ctx.maxHP;
-                switch(formChanges[i].param2)
+                switch (formChanges[i].param2)
                 {
                 case HP_HIGHER_THAN:
                     if (hpCheck > formChanges[i].param3 * 100)
@@ -6742,7 +6767,7 @@ u32 GetFormChangeTargetSpecies_Internal(struct FormChangeContext ctx)
             {
                 // We multiply by 100 to make sure that integer division doesn't mess with the health check.
                 u32 hpCheck = ctx.hp * 100 * 100 / ctx.maxHP;
-                switch(formChanges[i].param2)
+                switch (formChanges[i].param2)
                 {
                 case HP_HIGHER_THAN:
                     if (hpCheck > formChanges[i].param3 * 100)
@@ -6861,7 +6886,7 @@ u16 MonTryLearningNewMoveEvolution(struct Pokemon *mon, bool8 firstMove)
     {
         sLearningMoveTableID = 0;
     }
-    while(learnset[sLearningMoveTableID].move != LEVEL_UP_MOVE_END)
+    while (learnset[sLearningMoveTableID].move != LEVEL_UP_MOVE_END)
     {
         while ((learnset[sLearningMoveTableID].level == 0 || learnset[sLearningMoveTableID].level == level)
              && !(P_EVOLUTION_LEVEL_1_LEARN >= GEN_8 && learnset[sLearningMoveTableID].level == 1))
@@ -6911,7 +6936,7 @@ void TryScriptEvolution(void)
         {
             GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_SCRIPT_TRIGGER, 0, NULL, &canStopEvo, DO_EVO);
             sTriedEvolving |= 1u << i;
-            if(gMain.callback2 == TryScriptEvolution) // This fixes small graphics glitches.
+            if (gMain.callback2 == TryScriptEvolution) // This fixes small graphics glitches.
                 EvolutionScene(&gPlayerParty[i], targetSpecies, canStopEvo, i);
             else
                 BeginEvolutionScene(&gPlayerParty[i], targetSpecies, canStopEvo, i);
@@ -6942,7 +6967,7 @@ void TrySpecialOverworldEvo(void)
         {
             GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_OVERWORLD_SPECIAL, 0, NULL, &canStopEvo, DO_EVO);
             sTriedEvolving |= 1u << i;
-            if(gMain.callback2 == TrySpecialOverworldEvo) // This fixes small graphics glitches.
+            if (gMain.callback2 == TrySpecialOverworldEvo) // This fixes small graphics glitches.
                 EvolutionScene(&gPlayerParty[i], targetSpecies, canStopEvo, i);
             else
                 BeginEvolutionScene(&gPlayerParty[i], targetSpecies, canStopEvo, i);

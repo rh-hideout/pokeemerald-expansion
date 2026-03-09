@@ -161,6 +161,8 @@ enum FormChanges
     FORM_CHANGE_OVERWORLD_WEATHER,
     // Form change that activates when the Pokémon is deposited into the PC or Daycare.
     FORM_CHANGE_DEPOSIT,
+    // Form change for Minior, which appears unchanged when encountered in the wild
+    FORM_CHANGE_BEGIN_WILD_ENCOUNTER,
 };
 
 #endif // GUARD_CONSTANTS_FORM_CHANGE_TYPES_H

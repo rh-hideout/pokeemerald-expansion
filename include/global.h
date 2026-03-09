@@ -42,6 +42,7 @@
 // We define these when using certain IDEs to fool preproc
 #define _(x)        {x}
 #define __(x)       {x}
+#define COMPOUND_STRING(x) 0
 #define INCBIN(...) {0}
 #define INCBIN_U8   INCBIN
 #define INCBIN_U16  INCBIN
@@ -131,7 +132,7 @@
 ({                           \
     s16 v = (val);           \
     float f = (float)v;      \
-    if(v < 0) f += 65536.0f; \
+    if (v < 0) f += 65536.0f;\
     f;                       \
 })
 
