@@ -8835,7 +8835,6 @@ static void Cmd_trysetencore(void)
         }
     }
 
-    enum Move lastMove = GetBattlerLastMove(gBattlerTarget);
     if ((IsMoveEncoreBanned(lastMove))
      || i == MAX_MON_MOVES
      || lastMove == MOVE_NONE
