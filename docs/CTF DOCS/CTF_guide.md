@@ -57,6 +57,17 @@ example: if the player ID is 3750 and the chosen name is "lilh4cs", then the fla
 **Flag solution:** *an integer, derived from the function: trainer_code("your ID", "your player name")*
 
 ## Flag 3: Mr. Wörner's coding cellar
+**Description:** The player enters the 3rd semester and receives a raspberry py.
+... ...
+**Solution:**
+The player must head west to Oststadt. There is a warehouse from BLACKHANSA. 
+Entering the building is not possible at this point without more exploration.
+To enter, the player needs two items: a corp. ID and a lockpick to break into the warehouse
+To receive the corp ID go further west to encounter a truck, which leaves the ID behind.
+lockpick...
+zigzagoon...
+
+**Flag solution:**
 Apples Raspberri py
 am ende nochmal zurück in dhbw
 
@@ -95,14 +106,15 @@ conspire with Blackhansa, a greater technology-heavy firm.
 **Solution:** 
 *Part 1:*
 Look for hints in the room and inspect any found items. One of them is a Gameboy cartridge, resembling the game
-you are playing right now. 
+the player is inside right now. 
 Use Imhex as the necessary hex editor for this puzzle and open the gba-file as project (gba is abbreviated for gameboy advanced).
 To find clues in the file, look for pictures like png or jpg files. 
 The header 89 50 4E 47 0D 0A 1A 0A and footer 49 45 4E 44 AE 42 60 bytes are used to identify png-files.
 By searching, mark the full png-hex-entry [header; footer] and paste it into a new file.
 Save the full hex blob including header and footer as png.
-When opening the new file you will find the hidden message for Team Rocket where to meet with their contractor.
-Tell Adria you will head to the STADIUM.
+When opening the new file the player needs to find the hidden message for Team Rocket describing their contractor's meeting point.
+Lastly the player must tell Adria to head to the STADIUM.
+![hidden message of flag8.png](./hidden%20message%20of%20flag8.png)
 
 *Part 2:*
 Head east to Neuostheim and North to Route 103.
@@ -113,13 +125,16 @@ Defeat Team Rocket and retrieve the missing parts for the final flag by searchin
 
 *Part 3:*
 Identify the ground of the arena area. Take clean screenshots of the game screen and paste them inside paint. 
-By screenshotting every part of the arena you can puzzle them back together in paint.
-Now try to scan the QR with your phone. When failing, edit it again to exclude your own game character.
+By screenshotting every part of the arena the player can puzzle them back together in paint.
+Now the player shall try to scan the QR-code with one's phone. 
+When failing, editing it again to exclude the own game character from the picture should assist the reader.
 When succeeding, the notes app opens and shows "sh"
+![QR-code of flag8.png](./QR-code%20of%20flag8.png)
+
 East to the terminal, some screens show binary numbers. By converting them, you receive the letter "i".
 When inspecting the picture from part 1 again. Try to recognise more hidden data.
 The last string is base64 encoded, recognised by the ending symbol "=".
-After decoding you receive "sm".
+Decoding it will provide the letters "sm".
 Combine the three snippets in the correct order to obtain the flag.
 
 **Flag solution:**"Smish"
