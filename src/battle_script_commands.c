@@ -972,7 +972,7 @@ static inline bool32 IsBattlerUsingBeakBlast(enum BattlerId battler)
 {
     if (gChosenActionByBattler[battler] != B_ACTION_USE_MOVE)
         return FALSE;
-    if (GetMoveEffect(gBattleMons[battler].volatiles.chosenMove) != EFFECT_BEAK_BLAST)
+    if (GetMoveEffect(GetBattlerChosenMove(battler)) != EFFECT_BEAK_BLAST)
         return FALSE;
     return !HasBattlerActedThisTurn(battler);
 }
@@ -8833,7 +8833,7 @@ static void Cmd_trysetencore(void)
      || gBattleMons[gBattlerTarget].volatiles.lastMove == MOVE_UNAVAILABLE
      || gBattleMons[gBattlerTarget].pp[i] == 0
      || gBattleMons[gBattlerTarget].volatiles.encoredMove != MOVE_NONE
-     || GetMoveEffect(gBattleMons[gBattlerTarget].volatiles.chosenMove) == EFFECT_SHELL_TRAP)
+     || GetMoveEffect(GetBattlerChosenMove(gBattlerTarget)) == EFFECT_SHELL_TRAP)
     {
         gBattlescriptCurrInstr = cmd->failInstr;
     }
@@ -10524,14 +10524,15 @@ static void Cmd_pursuitdoubles(void)
     CMD_ARGS(const u8 *failInstr);
 
     enum BattlerId battler = GetBattlerAtPosition(BATTLE_PARTNER(GetBattlerPosition(gBattlerAttacker)));
+    enum Move chosenMove;
 
     if (IsDoubleBattle()
         && !(gAbsentBattlerFlags & (1u << battler))
         && gChosenActionByBattler[battler] == B_ACTION_USE_MOVE
-        && GetMoveEffect(gBattleMons[battler].volatiles.chosenMove) == EFFECT_PURSUIT)
+        && GetMoveEffect(chosenMove = GetBattlerChosenMove(battler)) == EFFECT_PURSUIT)
     {
         gActionsByTurnOrder[battler] = B_ACTION_TRY_FINISH;
-        gCurrentMove = gBattleMons[battler].volatiles.chosenMove;
+        gCurrentMove = chosenMove;
         gBattlescriptCurrInstr = cmd->nextInstr;
         gBattleScripting.animTurn = 1;
         gBattleScripting.savedBattler = gBattlerAttacker;
@@ -11877,7 +11878,7 @@ static void TryUpdateRoundTurnOrder(void)
         // Get battlers after attacker using round
         for (i = currRounder; i < gBattlersCount; i++)
         {
-            if (gBattleMons[gBattlerByTurnOrder[i]].volatiles.chosenMove == MOVE_ROUND)
+            if (GetBattlerChosenMove(gBattlerByTurnOrder[i]) == MOVE_ROUND)
                 roundUsers[j++] = gBattlerByTurnOrder[i];
             else
                 nonRoundUsers[k++] = gBattlerByTurnOrder[i];
@@ -14205,7 +14206,7 @@ static inline bool32 IsInstructBannedChargingMove(u32 battler)
     if (gChosenActionByBattler[battler] != B_ACTION_USE_MOVE || HasBattlerActedThisTurn(battler))
         return FALSE;
 
-    moveEffect = GetMoveEffect(gBattleMons[battler].volatiles.chosenMove);
+    moveEffect = GetMoveEffect(GetBattlerChosenMove(battler));
     return moveEffect == EFFECT_FOCUS_PUNCH
         || moveEffect == EFFECT_BEAK_BLAST
         || moveEffect == EFFECT_SHELL_TRAP;

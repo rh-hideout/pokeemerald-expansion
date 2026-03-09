@@ -269,7 +269,7 @@ static enum CancelerResult CancelerFocus(struct BattleContext *ctx)
     // In Gens 5-6, only check if the chosen move is Focus Punch.
     // In Gens 7+, check if chose and is using Focus Punch.
     if ((gProtectStructs[ctx->battlerAtk].physicalDmg || gProtectStructs[ctx->battlerAtk].specialDmg)
-     && (focusPunchFailureConfig < GEN_5 || GetMoveEffect(gBattleMons[ctx->battlerAtk].volatiles.chosenMove) == EFFECT_FOCUS_PUNCH)
+     && (focusPunchFailureConfig < GEN_5 || GetMoveEffect(GetBattlerChosenMove(ctx->battlerAtk)) == EFFECT_FOCUS_PUNCH)
      && (focusPunchFailureConfig == GEN_5 || focusPunchFailureConfig == GEN_6 || GetMoveEffect(ctx->move) == EFFECT_FOCUS_PUNCH)
      && !gProtectStructs[ctx->battlerAtk].survivedOHKO)
     {
@@ -1322,10 +1322,11 @@ static enum CancelerResult CancelerMoveEffectFailureTarget(struct BattleContext 
         case EFFECT_UPPER_HAND:
         {
             s32 prio = GetChosenMovePriority(battlerDef, GetBattlerAbility(battlerDef));
+            enum Move chosenMoveDef;
             if (prio < 1 || prio > 3 // Fails if priority is less than 1 or greater than 3, if target already moved, or if using a status
              || HasBattlerActedThisTurn(battlerDef)
-             || gBattleMons[battlerDef].volatiles.chosenMove == MOVE_NONE
-             || IsBattleMoveStatus(gBattleMons[battlerDef].volatiles.chosenMove))
+             || (chosenMoveDef = GetBattlerChosenMove(battlerDef)) == MOVE_NONE
+             || IsBattleMoveStatus(chosenMoveDef))
             {
                 battleScript = BattleScript_ButItFailed;
             }
@@ -3178,7 +3179,7 @@ static enum MoveEndResult MoveEndShellTrap(void)
             continue;
 
         // Set ShellTrap to activate after the attacker's turn if target was hit by a physical move.
-        if (GetMoveEffect(gBattleMons[battlerDef].volatiles.chosenMove) == EFFECT_SHELL_TRAP
+        if (GetMoveEffect(GetBattlerChosenMove(battlerDef)) == EFFECT_SHELL_TRAP
          && IsBattleMovePhysical(gCurrentMove)
          && IsBattlerTurnDamaged(battlerDef)
          && gProtectStructs[battlerDef].physicalBattlerId == gBattlerAttacker)
@@ -3918,7 +3919,7 @@ static inline bool32 IsBattlerUsingBeakBlast(enum BattlerId battler)
 {
     if (gChosenActionByBattler[battler] != B_ACTION_USE_MOVE)
         return FALSE;
-    if (GetMoveEffect(gBattleMons[battler].volatiles.chosenMove) != EFFECT_BEAK_BLAST)
+    if (GetMoveEffect(GetBattlerChosenMove(battler)) != EFFECT_BEAK_BLAST)
         return FALSE;
     return !HasBattlerActedThisTurn(battler);
 }

@@ -4462,7 +4462,7 @@ static void HandleTurnActionSelectionState(void)
                             gBattleMons[battler].volatiles.chosenMovePos = gBattleResources->bufferB[battler][2] & ~RET_GIMMICK;
                             gBattleMons[battler].volatiles.chosenMove = GetBattlerMoveFromChosenPosition(battler);
                             gBattleMons[battler].volatiles.moveTarget = gBattleResources->bufferB[battler][3];
-                            if (IsBattleMoveStatus(gBattleMons[battler].volatiles.chosenMove) && GetBattlerAbility(battler) == ABILITY_MYCELIUM_MIGHT)
+                            if (IsBattleMoveStatus(GetBattlerChosenMove(battler)) && GetBattlerAbility(battler) == ABILITY_MYCELIUM_MIGHT)
                                 gProtectStructs[battler].myceliumMight = TRUE;
                             if (GetBattlerHoldEffect(battler) == HOLD_EFFECT_LAGGING_TAIL)
                                 gProtectStructs[battler].laggingTail = TRUE;
@@ -4483,7 +4483,7 @@ static void HandleTurnActionSelectionState(void)
                                 UNUSED enum Gimmick gimmick = GIMMICK_NONE;
                                 if (gBattleResources->bufferB[battler][2] & RET_GIMMICK)
                                     gimmick = gBattleStruct->gimmick.usableGimmick[battler];
-                                TestRunner_Battle_CheckChosenMove(battler, gBattleMons[battler].volatiles.chosenMove, gBattleMons[battler].volatiles.moveTarget, gimmick);
+                                TestRunner_Battle_CheckChosenMove(battler, GetBattlerChosenMove(battler), gBattleMons[battler].volatiles.moveTarget, gimmick);
                             }
                         }
                         break;
@@ -5191,7 +5191,7 @@ static bool32 TryDoMoveEffectsBeforeMoves(void)
             {
                 gBattleStruct->battlerState[battler].focusPunchBattlers = TRUE;
                 gBattlerAttacker = battler;
-                switch (GetMoveEffect(gBattleMons[gBattlerAttacker].volatiles.chosenMove))
+                switch (GetMoveEffect(GetBattlerChosenMove(gBattlerAttacker)))
                 {
                 case EFFECT_FOCUS_PUNCH:
                     BattleScriptExecute(BattleScript_FocusPunchSetUp);
@@ -5251,7 +5251,7 @@ static void TryChangingTurnOrderEffects(struct BattleCalcValues *calcValues, u32
 
     // Battler 1
     // Quick Draw
-    if (ability1 == ABILITY_QUICK_DRAW && !IsBattleMoveStatus(gBattleMons[battler1].volatiles.chosenMove) && quickDrawRandom[battler1])
+    if (ability1 == ABILITY_QUICK_DRAW && !IsBattleMoveStatus(GetBattlerChosenMove(battler1)) && quickDrawRandom[battler1])
         gProtectStructs[battler1].quickDraw = TRUE;
     // Quick Claw and Custap Berry
     if (!gProtectStructs[battler1].quickDraw
@@ -5261,7 +5261,7 @@ static void TryChangingTurnOrderEffects(struct BattleCalcValues *calcValues, u32
 
     // Battler 2
     // Quick Draw
-    if (ability2 == ABILITY_QUICK_DRAW && !IsBattleMoveStatus(gBattleMons[battler2].volatiles.chosenMove) && quickDrawRandom[battler2])
+    if (ability2 == ABILITY_QUICK_DRAW && !IsBattleMoveStatus(GetBattlerChosenMove(battler2)) && quickDrawRandom[battler2])
         gProtectStructs[battler2].quickDraw = TRUE;
     // Quick Claw and Custap Berry
     if (!gProtectStructs[battler2].quickDraw
@@ -5281,7 +5281,7 @@ static void CheckChangingTurnOrderEffects(void)
             battler = gBattlerAttacker = gBattleStruct->quickClawBattlerId;
             gBattleStruct->quickClawBattlerId++;
             if (gChosenActionByBattler[battler] == B_ACTION_USE_MOVE
-             && GetMoveEffect(gBattleMons[battler].volatiles.chosenMove) != EFFECT_FOCUS_PUNCH   // quick claw message doesn't need to activate here
+             && GetMoveEffect(GetBattlerChosenMove(battler)) != EFFECT_FOCUS_PUNCH   // quick claw message doesn't need to activate here
              && (gProtectStructs[battler].usedCustapBerry || gProtectStructs[battler].quickDraw)
              && !(gBattleMons[battler].status1 & STATUS1_SLEEP)
              && !(gBattleMons[gBattlerAttacker].volatiles.truantCounter)

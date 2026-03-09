@@ -412,7 +412,7 @@ void HandleAction_UseMove(void)
         gBattleMons[gBattlerAttacker].volatiles.encoreTimer = 0;
         gBattleMons[gBattlerAttacker].volatiles.moveTarget = GetBattleMoveTarget(gCurrentMove, TARGET_NONE);
     }
-    else if (gBattleMons[gBattlerAttacker].moves[gCurrMovePos] != gBattleMons[gBattlerAttacker].volatiles.chosenMove)
+    else if (gBattleMons[gBattlerAttacker].moves[gCurrMovePos] != GetBattlerChosenMove(gBattlerAttacker))
     {
         gCurrentMove = gChosenMove = gBattleMons[gBattlerAttacker].moves[gCurrMovePos];
         gBattleMons[gBattlerAttacker].volatiles.moveTarget = GetBattleMoveTarget(gCurrentMove, TARGET_NONE);
@@ -1930,7 +1930,7 @@ void TryClearRageAndFuryCutter(void)
 {
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
-        if (!MoveHasAdditionalEffect(gBattleMons[i].volatiles.chosenMove, MOVE_EFFECT_RAGE))
+        if (!MoveHasAdditionalEffect(GetBattlerChosenMove(i), MOVE_EFFECT_RAGE))
             gBattleMons[i].volatiles.rage = FALSE;
     }
 }
@@ -9902,7 +9902,7 @@ bool32 SetTargetToNextPursuiter(enum BattlerId battlerDef)
     {
         enum BattlerId battler = gBattlerByTurnOrder[i];
         if (gChosenActionByBattler[battler] == B_ACTION_USE_MOVE
-        && GetMoveEffect(gBattleMons[battler].volatiles.chosenMove) == EFFECT_PURSUIT
+        && GetMoveEffect(GetBattlerChosenMove(battler)) == EFFECT_PURSUIT
         && IsBattlerAlive(battlerDef)
         && IsBattlerAlive(battler)
         && !IsBattlerAlly(battler, battlerDef)
@@ -10949,4 +10949,9 @@ bool32 IsNaturalEnemy(u32 speciesAttacker, u32 speciesTarget)
         return FALSE;
     }
     return FALSE;
+}
+
+enum Move GetBattlerChosenMove(enum BattlerId battler)
+{
+    return gBattleMons[battler].volatiles.chosenMove;
 }
