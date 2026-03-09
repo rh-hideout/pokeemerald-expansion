@@ -2208,7 +2208,6 @@ static enum MoveEndResult MoveEndAbsorb(void)
     case EFFECT_ABSORB:
     case EFFECT_DREAM_EATER:
         if (gBattleStruct->moveDamage[gBattlerTarget] > 0
-         && IsBattlerTurnDamaged(gBattlerTarget)
          && IsBattlerAlive(gBattlerAttacker))
         {
             s32 healAmount = (gBattleStruct->moveDamage[gBattlerTarget] * GetMoveAbsorbPercentage(gCurrentMove) / 100);
