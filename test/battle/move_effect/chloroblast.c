@@ -161,13 +161,13 @@ SINGLE_BATTLE_TEST("Chloroblast has recoil if the target is behind a Substitute"
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { HP(400); MaxHP(400); }
     } WHEN {
         TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_CHLOROBLAST); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CHLOROBLAST, opponent);
         SUB_HIT(player);
-        HP_BAR(opponent);
+        HP_BAR(opponent, damage: 200);
     }
 }
