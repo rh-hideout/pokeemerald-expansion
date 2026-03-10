@@ -780,7 +780,7 @@ static const u8 sMovesPPLayout[] = _("{PP}{DYNAMIC 0}/{DYNAMIC 1}");
 
 #define TAG_MOVE_SELECTOR 30000
 #define TAG_MON_STATUS 30001
-#define TAG_MOVE_TYPES 30002
+#define MOVE_TYPE_ICON_TAG 30002
 #define TAG_MON_MARKINGS 30003
 #define TAG_CATEGORY_ICONS 30004
 
@@ -990,12 +990,12 @@ const struct CompressedSpriteSheet gSpriteSheet_MoveTypes =
 {
     .data = gMoveTypes_Gfx,
     .size = (NUMBER_OF_MON_TYPES + CONTEST_CATEGORIES_COUNT) * 0x100,
-    .tag = TAG_MOVE_TYPES
+    .tag = MOVE_TYPE_ICON_TAG
 };
 const struct SpriteTemplate gSpriteTemplate_MoveTypes =
 {
-    .tileTag = TAG_MOVE_TYPES,
-    .paletteTag = TAG_MOVE_TYPES,
+    .tileTag = MOVE_TYPE_ICON_TAG,
+    .paletteTag = MOVE_TYPE_ICON_TAG,
     .oam = &sOamData_MoveTypes,
     .anims = sSpriteAnimTable_MoveTypes,
 };
