@@ -49,6 +49,6 @@ SINGLE_BATTLE_TEST("Core Enforcer suppresses the ability of targets that have al
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CORE_ENFORCER, player);
         SUB_HIT(opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, player);
-        HP_BAR(opponent);
+        SUB_HIT(opponent);
     }
 }
