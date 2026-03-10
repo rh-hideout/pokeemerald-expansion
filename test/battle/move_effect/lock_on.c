@@ -73,7 +73,7 @@ DOUBLE_BATTLE_TEST("Lock-On: Multiple Pokemon can lock-on into a single target (
     }
 }
 
-SINGLE_BATTLE_TEST("Lock-On: Batton Pass does not transfer Lock-On volatile")
+SINGLE_BATTLE_TEST("Lock-On: Baton Pass does not transfer Lock-On volatile")
 {
     PASSES_RANDOMLY(9, 10, RNG_ACCURACY);
     GIVEN {
