@@ -1356,7 +1356,7 @@ enum MoveComparisonResult CompareMoveEffects(enum Move move1, enum Move move2, e
         return MOVE_WON_COMPARISON;
     if (effect1minus && !effect2minus)
         return MOVE_LOST_COMPARISON;
-    
+
     if (effect2plus && !effect1plus)
         return MOVE_LOST_COMPARISON;
     if (effect1plus && !effect2plus)
@@ -2177,10 +2177,8 @@ bool32 ShouldTryOHKO(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
     if (!DoesBattlerIgnoreAbilityChecks(battlerAtk, atkAbility, move) && defAbility == ABILITY_STURDY)
         return FALSE;
 
-    if (((gBattleMons[battlerDef].volatiles.lockOn
-        && gBattleMons[battlerDef].volatiles.battlerWithSureHit == battlerAtk)
-        || atkAbility == ABILITY_NO_GUARD || defAbility == ABILITY_NO_GUARD)
-        && gBattleMons[battlerAtk].level >= gBattleMons[battlerDef].level)
+    bool32 sureHit = (gBattleMons[battlerDef].volatiles.battlerWithSureHit & battlerAtk) || atkAbility == ABILITY_NO_GUARD || defAbility == ABILITY_NO_GUARD;
+    if (sureHit && gBattleMons[battlerAtk].level >= gBattleMons[battlerDef].level)
     {
         return TRUE;
     }
