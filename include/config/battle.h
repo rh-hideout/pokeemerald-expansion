@@ -157,7 +157,7 @@
 #define B_RAGE_BUILDS               GEN_LATEST // In Gen4+, Rage's effect only sets in when it successfully hits. In Gen3, Rage's effect sets in regardless of whether it hits, misses or fails.
 #define B_CHECK_USER_FAILURE        GEN_LATEST // In Gen5+, The user no longer checks it's own failure, e.g. Soundproof will not block it's own Perish Song
 #define B_ABSORB_MESSAGE            GEN_LATEST // In Gen5+, No absorb message is played if user is already at full hp.
-#define B_LOCK_ON                   GEN_LATEST // In Gen5+, Multiple pokemon can lock-in onto one target
+#define B_LOCK_ON                   GEN_LATEST // In Gen5+, Multiple pokemon can lock-on onto one target
 
 // Ability settings
 #define B_GALE_WINGS                GEN_LATEST // In Gen7+ requires full HP to trigger.
