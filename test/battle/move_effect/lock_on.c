@@ -42,7 +42,7 @@ SINGLE_BATTLE_TEST("Lock-On skips the accuracy check for 2 turns")
     }
 }
 
-DOUBLE_BATTLE_TEST("Lock-On: Multiple Pokemon can lock-in into a single target (Gen5+)")
+DOUBLE_BATTLE_TEST("Lock-On: Multiple Pokemon can lock-on into a single target (Gen5+)")
 {
     u32 config;
     PARAMETRIZE { config = GEN_4; }
