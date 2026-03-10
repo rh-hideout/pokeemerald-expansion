@@ -97,15 +97,15 @@ SINGLE_BATTLE_TEST("Stone Axe will set up rocks if the target is behind a Substi
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_STONE_AXE); }
-        TURN { SWITCH(opponent, 1); }
+        TURN { SWITCH(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STONE_AXE, opponent);
         SUB_HIT(player);
-        NOT HP_BAR(opponent);
+        HP_BAR(player);
     }
 }

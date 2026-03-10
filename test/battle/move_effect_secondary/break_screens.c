@@ -177,7 +177,7 @@ SINGLE_BATTLE_TEST("Brick Break and Psychic Fangs can remove screens when the ta
         ANIMATION(ANIM_TYPE_MOVE, MOVE_REFLECT, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
-        SUB_HIT(player);
         MESSAGE("The wall shattered!");
+        SUB_HIT(player);
     }
 }

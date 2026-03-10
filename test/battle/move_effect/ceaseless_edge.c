@@ -99,15 +99,15 @@ SINGLE_BATTLE_TEST("Ceaseless Edge will set up rocks if the target is behind a S
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_CEASELESS_EDGE); }
-        TURN { SWITCH(opponent, 1); }
+        TURN { SWITCH(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CEASELESS_EDGE, opponent);
         SUB_HIT(player);
-        NOT HP_BAR(opponent);
+        HP_BAR(player);
     }
 }
