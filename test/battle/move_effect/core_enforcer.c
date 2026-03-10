@@ -26,9 +26,9 @@ SINGLE_BATTLE_TEST("Core Enforcer doesn't suppresses the ability of targets that
         TURN { MOVE(player, MOVE_CORE_ENFORCER); MOVE(opponent, MOVE_CELEBRATE); }
         TURN { MOVE(player, MOVE_EARTHQUAKE); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CORE_ENFORCER, player);
         HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, player);
             HP_BAR(opponent);
