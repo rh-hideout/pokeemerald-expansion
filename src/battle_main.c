@@ -3186,7 +3186,8 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
             if (gBattleMons[i].volatiles.escapePrevention && gBattleMons[i].volatiles.battlerPreventingEscape == battler)
                 gBattleMons[i].volatiles.escapePrevention = FALSE;
 
-            gBattleMons[i].volatiles.battlerWithSureHit &= ~battler;
+            if (gBattleMons[i].volatiles.battlerWithSureHit == battler + 1)
+                gBattleMons[i].volatiles.battlerWithSureHit = 0;
         }
     }
     if (effect != EFFECT_BATON_PASS || GetConfig(B_BATON_PASS_TRAPPING) >= GEN_5)
@@ -3330,7 +3331,8 @@ const u8* FaintClearSetData(enum BattlerId battler)
 
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
-        gBattleMons[i].volatiles.battlerWithSureHit &= ~battler;
+        if (gBattleMons[i].volatiles.battlerWithSureHit == battler + 1)
+            gBattleMons[i].volatiles.battlerWithSureHit = 0;
         if (gBattleMons[i].volatiles.escapePrevention && gBattleMons[i].volatiles.battlerPreventingEscape == battler)
             gBattleMons[i].volatiles.escapePrevention = FALSE;
         if (gBattleMons[i].volatiles.infatuation == INFATUATED_WITH(battler))

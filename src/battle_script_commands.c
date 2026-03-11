@@ -8901,7 +8901,7 @@ static void Cmd_setalwayshitflag(void)
     if (gBattleMons[gBattlerAttacker].volatiles.battlerWithSureHit == 0)
     {
         gBattleMons[gBattlerAttacker].volatiles.lockOn = 2;
-        gBattleMons[gBattlerAttacker].volatiles.battlerWithSureHit |= gBattlerTarget;
+        gBattleMons[gBattlerAttacker].volatiles.battlerWithSureHit = gBattlerTarget + 1;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
     else

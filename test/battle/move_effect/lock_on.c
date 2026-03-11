@@ -22,7 +22,7 @@ SINGLE_BATTLE_TEST("Lock-On volatile allows to hit through semi-invulnerability"
     }
 }
 
-SINGLE_BATTLE_TEST("Lock-On skips the accuracy check for 2 turns")
+SINGLE_BATTLE_TEST("Lock-On skips the accuracy check for 2 turns (Player uses Lock-On)")
 {
     PASSES_RANDOMLY(10, 10, RNG_ACCURACY);
     GIVEN {
@@ -38,6 +38,27 @@ SINGLE_BATTLE_TEST("Lock-On skips the accuracy check for 2 turns")
     } THEN {
         u32 lockOn = gBattleMons[B_BATTLER_0].volatiles.lockOn;
         u32 battlerWithSureHit = gBattleMons[B_BATTLER_0].volatiles.battlerWithSureHit;
+        EXPECT_EQ(lockOn, 0);
+        EXPECT_EQ(battlerWithSureHit, 0);
+    }
+}
+
+SINGLE_BATTLE_TEST("Lock-On skips the accuracy check for 2 turns (Opponent uses Lock-On)")
+{
+    PASSES_RANDOMLY(10, 10, RNG_ACCURACY);
+    GIVEN {
+        ASSUME(GetMoveAccuracy(MOVE_SKY_UPPERCUT) == 90);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_LOCK_ON); }
+        TURN { MOVE(opponent, MOVE_SKY_UPPERCUT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LOCK_ON, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_UPPERCUT, opponent);
+    } THEN {
+        u32 lockOn = gBattleMons[B_BATTLER_1].volatiles.lockOn;
+        u32 battlerWithSureHit = gBattleMons[B_BATTLER_1].volatiles.battlerWithSureHit;
         EXPECT_EQ(lockOn, 0);
         EXPECT_EQ(battlerWithSureHit, 0);
     }
