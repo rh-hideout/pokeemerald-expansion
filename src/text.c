@@ -480,7 +480,10 @@ bool32 AddTextPrinter(struct TextPrinterTemplate *printerTemplate, u8 speed, voi
     sTempTextPrinter.textSpeed = speed;
 
     if (printerTemplate->type == SPRITE_TEXT_PRINTER)
-        printerTemplate->firstSprite = printerTemplate->spriteId;
+    {
+        sTempTextPrinter.printerTemplate.firstSprite = printerTemplate->spriteId;
+        sTempTextPrinter.printerTemplate.firstSpriteInRow = printerTemplate->spriteId;
+    }
 
 
     GenerateFontHalfRowLookupTable(printerTemplate->color);
