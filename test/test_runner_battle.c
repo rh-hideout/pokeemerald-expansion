@@ -1533,8 +1533,8 @@ static s32 TryMessage(s32 i, s32 n, const u8 *string)
             }
             if (event->pattern[k] == EOS)
             {
-                // Consume any trailing '\p' and '\n'.
-                if (string[j] == CHAR_PROMPT_CLEAR || string[j] == CHAR_NEWLINE)
+                // Consume any trailing '\p'.
+                if (string[j] == CHAR_PROMPT_CLEAR)
                     j++;
             }
             if (string[j] != event->pattern[k])
