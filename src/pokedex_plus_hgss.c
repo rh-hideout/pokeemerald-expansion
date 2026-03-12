@@ -271,7 +271,6 @@ static const u32 sPokedexPlusHGSS_ScreenSearchNational_Tilemap[] = INCBIN_U32("g
 #define MAX_SEARCH_PARAM_ON_SCREEN   6
 #define MAX_SEARCH_PARAM_CURSOR_POS  (MAX_SEARCH_PARAM_ON_SCREEN - 1)
 
-#define MAX_MONS_ON_SCREEN 4
 #define MAX_EVOLUTION_ICONS 8
 
 #define LIST_SCROLL_STEP         16
@@ -324,120 +323,6 @@ struct SearchMenuItem
     u8 selectionBgX;
     u8 selectionBgY;
     u8 selectionBgWidth;
-};
-
-struct PokedexListItem
-{
-    u16 dexNum;
-    u16 seen:1;
-    u16 owned:1;
-};
-
-
-struct PokemonStats
-{
-    u16 species;
-    u8  genderRatio;
-    u8  baseHP;
-    u8  baseSpeed;
-    u8  baseAttack;
-    u8  baseSpAttack;
-    u8  baseDefense;
-    u8  baseSpDefense;
-    u8  differentEVs;
-    u8  evYield_HP;
-    u8  evYield_Speed;
-    u8  evYield_Attack;
-    u8  evYield_SpAttack;
-    u8  evYield_Defense;
-    u8  evYield_SpDefense;
-    u8  catchRate;
-    enum GrowthRate growthRate:8;
-    u8  eggGroup1;
-    u8  eggGroup2;
-    u8  eggCycles;
-    u16 expYield;
-    u8  friendship;
-    enum Ability ability0;
-    enum Ability ability1;
-    enum Ability abilityHidden;
-};
-
-struct EvoScreenData
-{
-    bool8 fromEvoPage;
-    u8 numAllEvolutions;
-    u16 targetSpecies[10];
-    u8 numSeen;
-    bool8 seen[10];
-    u8 menuPos;
-    u8 arrowSpriteId;
-    bool8 isMega;
-    u32 arrowSpriteDist[10];
-};
-
-struct FromScreenData
-{
-    u8 numForms;
-    u16 formIds[30];
-    bool8 inSubmenu;
-    u8 menuPos;
-    u8 arrowSpriteId;
-};
-
-struct PokedexView
-{
-    struct PokedexListItem pokedexList[NATIONAL_DEX_COUNT + 1];
-    u16 pokemonListCount;
-    u16 selectedPokemon;
-    u16 selectedPokemonBackup;
-    u16 dexMode;
-    u16 dexModeBackup;
-    u16 dexOrder;
-    u16 dexOrderBackup;
-    u16 seenCount;
-    u16 ownCount;
-    u16 monSpriteIds[MAX_MONS_ON_SCREEN];
-    u8 typeIconSpriteIds[2];
-    u16 moveSelected;
-    u16 movesTotal;
-    u8 statBarsSpriteId;
-    u8 statBarsBgSpriteId;
-    bool8 justScrolled;
-    u8 categoryIconSpriteId; //Physical/Special/Status category
-    u8 numEggMoves;
-    u8 numLevelUpMoves;
-    u16 numTeachableMoves;
-    u8 numPreEvolutions;
-    struct PokemonStats sPokemonStats;
-    struct EvoScreenData sEvoScreenData;
-    struct FromScreenData sFormScreenData;
-    u16 formSpecies;
-    u16 selectedMonSpriteId;
-    u16 pokeBallRotationStep;
-    u16 pokeBallRotationBackup;
-    u8 pokeBallRotation;
-    u8 initialVOffset;
-    u8 scrollTimer;
-    u8 scrollDirection;
-    s16 listVOffset;
-    s16 listMovingVOffset;
-    u16 scrollMonIncrement;
-    u16 maxScrollTimer;
-    u16 scrollSpeed;
-    u16 unkArr1[4]; // Cleared, never read
-    u16 originalSearchSelectionNum;
-    u8 filler[6];
-    u8 currentPage;
-    u8 currentPageBackup;
-    bool8 isSearchResults:1;
-    u8 selectedScreen;
-    u8 screenSwitchState;
-    u8 menuIsOpen;
-    u16 menuCursorPos;
-    s16 menuY;     //Menu Y position (inverted because we use REG_BG0VOFS for this)
-    u8 unkArr2[8]; // Cleared, never read
-    u8 unkArr3[8]; // Cleared, never read
 };
 
 static void ResetPokedexView(struct PokedexView *pokedexView);
