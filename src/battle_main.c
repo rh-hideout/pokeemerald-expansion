@@ -5864,7 +5864,7 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId
 {
     enum Type moveType = GetMoveType(move);
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
-    u32 species;
+    enum Species species;
     enum Item heldItem;
     enum Type type1, type2, type3;
     enum Ability ability;
@@ -5998,6 +5998,8 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId
         case SPECIES_TAUROS_PALDEA_BLAZE:
         case SPECIES_TAUROS_PALDEA_AQUA:
             return GetSpeciesType(species, 1);
+        default:
+            break;
         }
         break;
     case EFFECT_IVY_CUDGEL:
@@ -6010,6 +6012,8 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId
         case SPECIES_OGERPON_CORNERSTONE:
         case SPECIES_OGERPON_CORNERSTONE_TERA:
             return GetSpeciesType(species, 1);
+        default:
+            break;
         }
         break;
     case EFFECT_NATURAL_GIFT:
