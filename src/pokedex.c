@@ -33,19 +33,6 @@
 #include "constants/songs.h"
 #include "config/pokedex_plus_hgss.h"
 
-// For scrolling search parameter
-#define MAX_SEARCH_PARAM_ON_SCREEN   6
-#define MAX_SEARCH_PARAM_CURSOR_POS  (MAX_SEARCH_PARAM_ON_SCREEN - 1)
-
-#define LIST_SCROLL_STEP         16
-
-#define POKEBALL_ROTATION_TOP    64
-#define POKEBALL_ROTATION_BOTTOM (POKEBALL_ROTATION_TOP - 16)
-
-// Coordinates of the Pokémon sprite on its page (info/cry screens)
-#define MON_PAGE_X 48
-#define MON_PAGE_Y 56
-
 static EWRAM_DATA struct PokedexView *sPokedexView = NULL;
 static EWRAM_DATA u16 sLastSelectedPokemon = 0;
 static EWRAM_DATA u8 sPokeBallRotation = 0;

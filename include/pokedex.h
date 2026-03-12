@@ -102,7 +102,20 @@ enum
     WIN_NAVIGATION_BUTTONS,
 };
 
-#define MAX_MONS_ON_SCREEN          4
+// For scrolling search parameter
+#define MAX_SEARCH_PARAM_ON_SCREEN      6
+#define MAX_SEARCH_PARAM_CURSOR_POS     (MAX_SEARCH_PARAM_ON_SCREEN - 1)
+
+#define LIST_SCROLL_STEP                16
+
+#define POKEBALL_ROTATION_TOP           64
+#define POKEBALL_ROTATION_BOTTOM        (POKEBALL_ROTATION_TOP - 16)
+
+#define MAX_MONS_ON_SCREEN              4
+
+// Coordinates of the Pokémon sprite on its page (info/cry screens)
+#define MON_PAGE_X                      48
+#define MON_PAGE_Y                      56
 
 struct PokedexListItem
 {

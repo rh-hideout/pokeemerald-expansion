@@ -198,24 +198,10 @@ static const u32 sPokedexPlusHGSS_ScreenSearchHoenn_Tilemap[] = INCBIN_U32("grap
 static const u32 sPokedexPlusHGSS_ScreenSearchNational_Tilemap[] = INCBIN_U32("graphics/pokedex/hgss/tilemap_search_screen_national.bin.smolTM");
 
 #define SCROLLING_MON_X 146
-
-// For scrolling search parameter
-#define MAX_SEARCH_PARAM_ON_SCREEN   6
-#define MAX_SEARCH_PARAM_CURSOR_POS  (MAX_SEARCH_PARAM_ON_SCREEN - 1)
-
 #define MAX_EVOLUTION_ICONS 8
-
-#define LIST_SCROLL_STEP         16
-
-#define POKEBALL_ROTATION_TOP    64
-#define POKEBALL_ROTATION_BOTTOM (POKEBALL_ROTATION_TOP - 16)
 
 // for evolution method listings
 #define MAX_EVO_METHOD_LINES 10
-
-// Coordinates of the Pokémon sprite on its page (info/cry screens)
-#define MON_PAGE_X 48
-#define MON_PAGE_Y 56
 
 static EWRAM_DATA struct PokedexView *sPokedexView = NULL;
 static EWRAM_DATA u16 sLastSelectedPokemon = 0;
