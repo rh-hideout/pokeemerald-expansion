@@ -25,6 +25,83 @@ u8* ConvertMonHeightToString(u32 height);
 u8* ConvertMonWeightToString(u32 weight);
 
 // Common Pokédex Definitions and Functions
+enum
+{
+    PAGE_MAIN,
+    PAGE_INFO,
+    PAGE_SEARCH,
+    PAGE_SEARCH_RESULTS,
+    PAGE_UNK,
+    PAGE_AREA,
+    PAGE_CRY,
+    PAGE_SIZE
+};
+
+enum
+{
+    AREA_SCREEN,
+    CRY_SCREEN,
+    SIZE_SCREEN,
+    CANCEL_SCREEN,
+    SCREEN_COUNT,
+    INFO_SCREEN = SCREEN_COUNT,
+    STATS_SCREEN,
+    EVO_SCREEN,
+    FORMS_SCREEN,
+};
+
+enum
+{
+    SEARCH_NAME,
+    SEARCH_COLOR,
+    SEARCH_TYPE_LEFT,
+    SEARCH_TYPE_RIGHT,
+    SEARCH_ORDER,
+    SEARCH_MODE,
+    SEARCH_OK,
+    SEARCH_COUNT
+};
+
+enum
+{
+    SEARCH_TOPBAR_SEARCH,
+    SEARCH_TOPBAR_SHIFT,
+    SEARCH_TOPBAR_CANCEL,
+    SEARCH_TOPBAR_COUNT
+};
+
+enum
+{
+   ORDER_NUMERICAL,
+   ORDER_ALPHABETICAL,
+   ORDER_HEAVIEST,
+   ORDER_LIGHTEST,
+   ORDER_TALLEST,
+   ORDER_SMALLEST
+};
+
+enum
+{
+    NAME_ABC = 1,
+    NAME_DEF,
+    NAME_GHI,
+    NAME_JKL,
+    NAME_MNO,
+    NAME_PQR,
+    NAME_STU,
+    NAME_VWX,
+    NAME_YZ,
+};
+
+enum
+{
+    WIN_INFO,
+    WIN_FOOTPRINT,
+    WIN_CRY_WAVE,
+    WIN_VU_METER,
+    WIN_NAVIGATION_BUTTONS,
+};
+
 #define MAX_MONS_ON_SCREEN          4
 
 struct PokedexListItem

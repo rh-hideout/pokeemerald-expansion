@@ -52,74 +52,6 @@
 #include "constants/songs.h"
 #include "config/pokedex_plus_hgss.h"
 
-enum
-{
-    PAGE_MAIN,
-    PAGE_INFO,
-    PAGE_SEARCH,
-    PAGE_SEARCH_RESULTS,
-    PAGE_UNK,
-    PAGE_AREA,
-    PAGE_CRY,
-    PAGE_SIZE
-};
-
-enum
-{
-    INFO_SCREEN,
-    STATS_SCREEN,
-    EVO_SCREEN,
-    FORMS_SCREEN,
-    AREA_SCREEN,
-    CRY_SCREEN,
-    SIZE_SCREEN,
-    CANCEL_SCREEN,
-    SCREEN_COUNT
-};
-
-enum
-{
-    SEARCH_NAME,
-    SEARCH_COLOR,
-    SEARCH_TYPE_LEFT,
-    SEARCH_TYPE_RIGHT,
-    SEARCH_ORDER,
-    SEARCH_MODE,
-    SEARCH_OK,
-    SEARCH_COUNT
-};
-
-enum
-{
-    SEARCH_TOPBAR_SEARCH,
-    SEARCH_TOPBAR_SHIFT,
-    SEARCH_TOPBAR_CANCEL,
-    SEARCH_TOPBAR_COUNT
-};
-
-enum
-{
-   ORDER_NUMERICAL,
-   ORDER_ALPHABETICAL,
-   ORDER_HEAVIEST,
-   ORDER_LIGHTEST,
-   ORDER_TALLEST,
-   ORDER_SMALLEST
-};
-
-enum
-{
-    NAME_ABC = 1,
-    NAME_DEF,
-    NAME_GHI,
-    NAME_JKL,
-    NAME_MNO,
-    NAME_PQR,
-    NAME_STU,
-    NAME_VWX,
-    NAME_YZ,
-};
-
 extern const u16 gPokedexOrder_Alphabetical[];
 extern const u16 gPokedexOrder_Height[];
 extern const u16 gPokedexOrder_Weight[];
@@ -1124,12 +1056,6 @@ static const struct BgTemplate sInfoScreen_BgTemplate[] =
         .baseTile = 0
     }
 };
-
-#define WIN_INFO 0
-#define WIN_FOOTPRINT 1
-#define WIN_CRY_WAVE 2
-#define WIN_VU_METER 3
-#define WIN_NAVIGATION_BUTTONS 4
 
 static const struct WindowTemplate sInfoScreen_WindowTemplates[] =
 {
