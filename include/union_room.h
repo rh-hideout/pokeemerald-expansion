@@ -148,7 +148,7 @@ struct UnionRoomTrade
 extern u8 gPlayerCurrActivity;
 extern struct RfuGameCompatibilityData gRfuPartnerCompatibilityData;
 
-extern u16 gUnionRoomOfferedSpecies;
+extern enum Species gUnionRoomOfferedSpecies;
 extern enum Type gUnionRoomRequestedMonType;
 
 u8 CreateTask_CreateTradeMenu(void);

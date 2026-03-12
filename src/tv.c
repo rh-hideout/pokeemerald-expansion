@@ -66,7 +66,7 @@ enum {
 COMMON_DATA s8 sCurTVShowSlot = 0;
 
 static s8 sTVShowMixingCurSlot;
-static EWRAM_DATA u16 sPokemonAnglerSpecies = 0;
+static EWRAM_DATA enum Species sPokemonAnglerSpecies = SPECIES_NONE;
 static EWRAM_DATA u16 sPokemonAnglerAttemptCounters = 0;
 static EWRAM_DATA u16 sFindThatGamerCoinsSpent = 0;
 static EWRAM_DATA u8 sFindThatGamerWhichGame = SLOT_MACHINE;
