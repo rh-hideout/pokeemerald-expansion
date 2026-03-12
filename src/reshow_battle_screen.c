@@ -136,7 +136,7 @@ static void CB2_ReshowBattleScreenAfterMenu(void)
     case 19:
         {
             enum BattlerId opponentBattler;
-            u16 species;
+            enum Species species;
 
             LoadAndCreateEnemyShadowSprites();
 

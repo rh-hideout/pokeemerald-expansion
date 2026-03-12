@@ -7818,7 +7818,7 @@ static inline s32 DoFutureSightAttackDamageCalcVars(struct BattleContext *ctx)
     struct Pokemon *party = GetBattlerParty(battlerAtk);
     struct Pokemon *partyMon = &party[gBattleStruct->futureSight[battlerDef].partyIndex];
     u32 partyMonLevel = GetMonData(partyMon, MON_DATA_LEVEL);
-    u32 partyMonSpecies = GetMonData(partyMon, MON_DATA_SPECIES);
+    enum Species partyMonSpecies = GetMonData(partyMon, MON_DATA_SPECIES);
     gBattleMovePower = GetMovePower(move);
 
     if (IsBattleMovePhysical(move))
@@ -8206,7 +8206,7 @@ static inline void MulByTypeEffectiveness(struct BattleContext *ctx, uq4_12_t *m
     *modifier = uq4_12_multiply(*modifier, mod);
 }
 
-static inline void TryNoticeIllusionInTypeEffectiveness(enum Move move, enum Type moveType, enum BattlerId battlerAtk, enum BattlerId battlerDef, uq4_12_t resultingModifier, u32 illusionSpecies)
+static inline void TryNoticeIllusionInTypeEffectiveness(enum Move move, enum Type moveType, enum BattlerId battlerAtk, enum BattlerId battlerDef, uq4_12_t resultingModifier, enum Species illusionSpecies)
 {
     // Check if the type effectiveness would've been different if the pokemon really had the types as the disguise.
     uq4_12_t presumedModifier = UQ_4_12(1.0);
@@ -8256,7 +8256,7 @@ void UpdateMoveResultFlags(uq4_12_t modifier, u16 *resultFlags)
 
 static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct BattleContext *ctx, uq4_12_t modifier)
 {
-    u32 illusionSpecies;
+    enum Species illusionSpecies;
     enum Type types[3];
     GetBattlerTypes(ctx->battlerDef, FALSE, types);
 
@@ -8657,7 +8657,7 @@ bool32 IsBattlerInTeraForm(enum BattlerId battler)
     return (gSpeciesInfo[gBattleMons[battler].species].isTeraForm);
 }
 
-u32 GetBattleFormChangeTargetSpecies(enum BattlerId battler, enum FormChanges method, enum Ability ability)
+enum Species GetBattleFormChangeTargetSpecies(enum BattlerId battler, enum FormChanges method, enum Ability ability)
 {
     enum Species species = gBattleMons[battler].species;
     const struct FormChange *formChanges = GetSpeciesFormChanges(species);
@@ -8742,8 +8742,8 @@ bool32 TryBattleFormChange(enum BattlerId battler, enum FormChanges method, enum
     if (!CanBattlerFormChange(battler, method))
         return FALSE;
 
-    u32 currentSpecies = GetMonData(mon, MON_DATA_SPECIES);
-    u32 targetSpecies = GetBattleFormChangeTargetSpecies(battler, method, ability);
+    enum Species currentSpecies = GetMonData(mon, MON_DATA_SPECIES);
+    enum Species targetSpecies = GetBattleFormChangeTargetSpecies(battler, method, ability);
 
     struct PartyState *battlePartyState = GetBattlerPartyState(battler);
     // If the battle ends, and there's not a specified species to change back to,
@@ -8823,9 +8823,9 @@ bool32 CanBattlerGetOrLoseItem(enum BattlerId fromBattler, enum BattlerId battle
         return TRUE;
 }
 
-u32 GetBattlerVisualSpecies(enum BattlerId battler)
+enum Species GetBattlerVisualSpecies(enum BattlerId battler)
 {
-    u32 illusionSpecies = GetIllusionMonSpecies(battler);
+    enum Species illusionSpecies = GetIllusionMonSpecies(battler);
     if (illusionSpecies != SPECIES_NONE)
         return illusionSpecies;
     return gBattleMons[battler].species;
@@ -8858,7 +8858,7 @@ void ClearIllusionMon(enum BattlerId battler)
     memset(&gBattleStruct->illusion[battler], 0, sizeof(gBattleStruct->illusion[battler]));
 }
 
-u32 GetIllusionMonSpecies(enum BattlerId battler)
+enum Species GetIllusionMonSpecies(enum BattlerId battler)
 {
     struct Pokemon *illusionMon = GetIllusionMonPtr(battler);
     if (illusionMon != NULL)
@@ -10951,4 +10951,3 @@ bool32 IsNaturalEnemy(enum Species speciesAttacker, enum Species speciesTarget)
     }
     return FALSE;
 }
-

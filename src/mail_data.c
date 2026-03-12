@@ -46,7 +46,7 @@ u8 GiveMailToMonByItemId(struct Pokemon *mon, enum Item itemId)
 {
     u8 heldItem[2];
     u8 id, i;
-    u16 species;
+    enum Species species;
     u32 personality;
 
     heldItem[0] = itemId;

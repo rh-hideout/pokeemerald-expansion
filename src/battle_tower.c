@@ -1176,14 +1176,14 @@ static void BattleTowerNop2(void)
 static void GetApprenticeMultiPartnerParty(u16 trainerId)
 {
     s32 i, count;
-    u32 validSpecies[MULTI_PARTY_SIZE];
+    enum Species validSpecies[MULTI_PARTY_SIZE];
     enum Species species1 = GetMonData(&gPlayerParty[0], MON_DATA_SPECIES);
     enum Species species2 = GetMonData(&gPlayerParty[1], MON_DATA_SPECIES);
 
     count = 0;
     for (i = 0; i < MULTI_PARTY_SIZE; i++)
     {
-        u16 apprenticeSpecies = gSaveBlock2Ptr->apprentices[trainerId - TRAINER_RECORD_MIXING_APPRENTICE].party[i].species;
+        enum Species apprenticeSpecies = gSaveBlock2Ptr->apprentices[trainerId - TRAINER_RECORD_MIXING_APPRENTICE].party[i].species;
         if (apprenticeSpecies != species1 && apprenticeSpecies != species2)
         {
             validSpecies[count] = i;
@@ -1201,7 +1201,7 @@ static void GetApprenticeMultiPartnerParty(u16 trainerId)
 static void GetRecordMixFriendMultiPartnerParty(u16 trainerId)
 {
     s32 i, count;
-    u32 validSpecies[3];
+    enum Species validSpecies[3];
     enum FrontierLevelMode lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
     enum Species species1 = GetMonData(&gPlayerParty[0], MON_DATA_SPECIES);
     enum Species species2 = GetMonData(&gPlayerParty[1], MON_DATA_SPECIES);

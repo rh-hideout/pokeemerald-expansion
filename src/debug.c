@@ -2421,7 +2421,7 @@ static void DebugAction_FlagsVars_PokedexFlags_All(u8 taskId)
 static void DebugAction_FlagsVars_PokedexFlags_Reset(u8 taskId)
 {
     int boxId, boxPosition, partyId;
-    u16 species;
+    enum Species species;
 
     // Reset Pokedex to emtpy
     memset(&gSaveBlock1Ptr->dexCaught, 0, sizeof(gSaveBlock1Ptr->dexCaught));

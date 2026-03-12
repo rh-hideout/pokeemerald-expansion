@@ -4474,7 +4474,7 @@ static void InitBoxMonSprites(u8 boxId)
 {
     u8 boxPosition;
     u16 i, j, count;
-    u16 species;
+    enum Species species;
     u32 personality;
 
     count = 0;

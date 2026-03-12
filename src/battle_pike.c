@@ -881,7 +881,7 @@ static bool8 TryInflictRandomStatus(void)
     u8 count;
     u8 indices[FRONTIER_PARTY_SIZE];
     u32 status;
-    u16 species;
+    enum Species species;
     bool8 statusChosen;
     struct Pokemon *mon;
 

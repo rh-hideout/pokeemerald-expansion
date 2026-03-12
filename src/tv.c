@@ -88,7 +88,7 @@ static s8 FindFirstEmptyNormalTVShowSlot(TVShow *);
 static void TryReplaceOldTVShowOfKind(u8);
 static void InterviewBefore_BravoTrainerPkmnProfile(void);
 static void InterviewBefore_NameRater(void);
-static u16 GetRandomDifferentSpeciesSeenByPlayer(u16);
+static enum Species GetRandomDifferentSpeciesSeenByPlayer(enum Species);
 static void Script_FindFirstEmptyNormalTVShowSlot(void);
 static void CompactTVShowArray(TVShow *);
 static s8 GetFirstEmptyPokeNewsSlot(PokeNews *);
@@ -2024,7 +2024,7 @@ static void SecretBaseVisit_CalculatePartyData(TVShow *show)
     struct
     {
         enum Move move;
-        u16 species;
+        enum Species species;
         u8 level;
     } secretBaseVisitMonsTemp[PARTY_SIZE] = {0};
 
@@ -2163,7 +2163,7 @@ void TryPutLotteryWinnerReportOnAir(void)
     }
 }
 
-void TryPutBattleSeminarOnAir(u16 foeSpecies, enum Species species, u8 moveIndex, const u16 *movePtr, u16 betterMove)
+void TryPutBattleSeminarOnAir(enum Species foeSpecies, enum Species species, u8 moveIndex, const u16 *movePtr, u16 betterMove)
 {
     TVShow *show;
     u8 i;
@@ -3040,17 +3040,17 @@ static void CompactTVShowArray(TVShow *shows)
     }
 }
 
-static u16 GetRandomDifferentSpeciesAndNameSeenByPlayer(u8 varIdx, u16 excludedSpecies)
+static enum Species GetRandomDifferentSpeciesAndNameSeenByPlayer(u8 varIdx, enum Species excludedSpecies)
 {
     enum Species species = GetRandomDifferentSpeciesSeenByPlayer(excludedSpecies);
     StringCopy(gTVStringVarPtrs[varIdx], GetSpeciesName(species));
     return species;
 }
 
-static u16 GetRandomDifferentSpeciesSeenByPlayer(u16 excludedSpecies)
+static enum Species GetRandomDifferentSpeciesSeenByPlayer(enum Species excludedSpecies)
 {
     enum Species species = Random() % (NUM_SPECIES - 1) + 1;
-    u16 initSpecies = species;
+    enum Species initSpecies = species;
 
     while (GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_GET_SEEN) != TRUE || species == excludedSpecies)
     {
@@ -3586,7 +3586,8 @@ static s8 FindInactiveShowInArray(TVShow *tvShows)
 static void DeactivateShowsWithUnseenSpecies(void)
 {
     u16 i;
-    u16 species;
+    enum Species species;
+    u16 facilityAndMode;
 
     for (i = 0; i < LAST_TVSHOW_IDX; i++)
     {
@@ -3673,9 +3674,8 @@ static void DeactivateShowsWithUnseenSpecies(void)
             DeactivateShowIfNotSeenSpecies(species, i);
             species = (&gSaveBlock1Ptr->tvShows[i])->frontier.species2;
             DeactivateShowIfNotSeenSpecies(species, i);
-            // Species var re-used here
-            species = (&gSaveBlock1Ptr->tvShows[i])->frontier.facilityAndMode;
-            switch (species)
+            facilityAndMode = (&gSaveBlock1Ptr->tvShows[i])->frontier.facilityAndMode;
+            switch (facilityAndMode)
             {
             case FRONTIER_SHOW_TOWER_MULTIS:
             case FRONTIER_SHOW_TOWER_LINK_MULTIS:

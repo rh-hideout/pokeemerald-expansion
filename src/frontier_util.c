@@ -2136,7 +2136,7 @@ static void CheckPartyIneligibility(void)
     if (numEligibleMons < toChoose)
     {
         u32 i, j;
-        u32 baseSpecies = 0;
+        enum Species baseSpecies = 0;
         u32 totalCaughtBanned = 0;
         u32 totalPartyBanned = 0;
         u32 partyBanned[PARTY_SIZE] = {0};
@@ -2648,7 +2648,7 @@ void CreateFrontierBrainPokemon(void)
     }
 }
 
-u16 GetFrontierBrainMonSpecies(u8 monId)
+enum Species GetFrontierBrainMonSpecies(u8 monId)
 {
     s32 facility = VarGet(VAR_FRONTIER_FACILITY);
     s32 symbol = GetFronterBrainSymbol();
@@ -3352,7 +3352,7 @@ static u16 *MakeCaughtBannesSpeciesList(u32 totalBannedSpecies)
     u16 *list = AllocZeroed(sizeof(u16) * totalBannedSpecies);
     for (u32 i = 0; i < NUM_SPECIES; i++)
     {
-        u32 baseSpecies = GET_BASE_SPECIES_ID(i);
+        enum Species baseSpecies = GET_BASE_SPECIES_ID(i);
         if (baseSpecies == i && gSpeciesInfo[baseSpecies].isFrontierBanned)
         {
             if (GetSetPokedexFlag(SpeciesToNationalPokedexNum(baseSpecies), FLAG_GET_CAUGHT))

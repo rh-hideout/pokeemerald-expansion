@@ -180,7 +180,7 @@ static void Task_BeginEvolutionScene(u8 taskId)
     case 1:
         if (!gPaletteFade.active)
         {
-            u16 postEvoSpecies;
+            enum Species postEvoSpecies;
             bool8 canStopEvo;
             u8 partyId;
 
@@ -196,7 +196,7 @@ static void Task_BeginEvolutionScene(u8 taskId)
     }
 }
 
-void BeginEvolutionScene(struct Pokemon *mon, u16 postEvoSpecies, bool8 canStopEvo, u8 partyId)
+void BeginEvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool8 canStopEvo, u8 partyId)
 {
     u8 taskId = CreateTask(Task_BeginEvolutionScene, 0);
     gTasks[taskId].tState = 0;
@@ -206,10 +206,10 @@ void BeginEvolutionScene(struct Pokemon *mon, u16 postEvoSpecies, bool8 canStopE
     SetMainCallback2(CB2_BeginEvolutionScene);
 }
 
-void EvolutionScene(struct Pokemon *mon, u16 postEvoSpecies, bool8 canStopEvo, u8 partyId)
+void EvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool8 canStopEvo, u8 partyId)
 {
     u8 name[POKEMON_NAME_BUFFER_SIZE];
-    u16 currSpecies;
+    enum Species currSpecies;
     u32 personality;
     bool32 isShiny;
     u8 id;
@@ -311,7 +311,7 @@ void EvolutionScene(struct Pokemon *mon, u16 postEvoSpecies, bool8 canStopEvo, u
 static void CB2_EvolutionSceneLoadGraphics(void)
 {
     u8 id;
-    u16 postEvoSpecies;
+    enum Species postEvoSpecies;
     u32 personality;
     struct Pokemon *mon = &gPlayerParty[gTasks[sEvoStructPtr->evoTaskId].tPartyId];
     bool8 isShiny;
@@ -385,7 +385,7 @@ static void CB2_TradeEvolutionSceneLoadGraphics(void)
         mon = &gEnemyParty[TRADEMON_FROM_PC];
     else
         mon = &gPlayerParty[gTasks[sEvoStructPtr->evoTaskId].tPartyId];
-    u16 postEvoSpecies = gTasks[sEvoStructPtr->evoTaskId].tPostEvoSpecies;
+    enum Species postEvoSpecies = gTasks[sEvoStructPtr->evoTaskId].tPostEvoSpecies;
 
     switch (gMain.state)
     {
@@ -467,10 +467,10 @@ static void CB2_TradeEvolutionSceneLoadGraphics(void)
     }
 }
 
-void TradeEvolutionScene(struct Pokemon *mon, u16 postEvoSpecies, u8 preEvoSpriteId, u8 partyId)
+void TradeEvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, u8 preEvoSpriteId, u8 partyId)
 {
     u8 name[POKEMON_NAME_BUFFER_SIZE];
-    u16 currSpecies;
+    enum Species currSpecies;
     u32 personality;
     u8 id;
     bool8 isShiny;
@@ -547,7 +547,7 @@ static void CB2_TradeEvolutionSceneUpdate(void)
     RunTasks();
 }
 
-static void CreateShedinja(u32 preEvoSpecies, u32 postEvoSpecies, struct Pokemon *mon)
+static void CreateShedinja(enum Species preEvoSpecies, enum Species postEvoSpecies, struct Pokemon *mon)
 {
     u32 data = 0;
     u16 ball = ITEM_POKE_BALL;

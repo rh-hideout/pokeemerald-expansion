@@ -5125,7 +5125,7 @@ static u16 GetWinningMove(int winnerTournamentId, int loserTournamentId, u8 roun
             for (k = 0; k < FRONTIER_PARTY_SIZE; k++)
             {
                 u32 personality = 0;
-                u32 targetSpecies = 0;
+                enum Species targetSpecies = 0;
                 enum Ability targetAbility = 0;
                 uq4_12_t typeMultiplier = 0;
                 do

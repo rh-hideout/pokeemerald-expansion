@@ -1993,7 +1993,7 @@ static bool8 ShouldDoSlideInAnim(enum BattlerId battler)
 
 void StartSendOutAnim(enum BattlerId battler, bool32 dontClearTransform, bool32 dontClearSubstituteBit, bool32 doSlideIn)
 {
-    u16 species;
+    enum Species species;
     struct Pokemon *mon = GetBattlerMon(battler);
     u32 sendoutType;
 

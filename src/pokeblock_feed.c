@@ -649,7 +649,7 @@ static void HandleInitBackgrounds(void)
 
 static bool8 LoadMonAndSceneGfx(struct Pokemon *mon)
 {
-    u16 species;
+    enum Species species;
     u32 personality;
     bool32 isShiny;
 

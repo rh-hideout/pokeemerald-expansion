@@ -1485,7 +1485,7 @@ static void Task_PrepareToGiveExpWithExpBar(u8 taskId)
 static void Task_GiveExpWithExpBar(u8 taskId)
 {
     u32 level, expAfterGain;
-    u16 species;
+    enum Species species;
     u32 oldMaxHP;
     s32 currExp, expOnNextLvl, newExpPoints;
 

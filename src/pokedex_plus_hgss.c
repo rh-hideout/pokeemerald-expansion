@@ -595,7 +595,7 @@ static u16 NationalPokedexNumToSpeciesHGSS(u16 nationalNum);
 //Evo screen
 u32 GetSpeciesNameFontId(u32 nameWidth);
 u32 GetSpeciesNameWidthInChars(const u8 *speciesName);
-bool32 IsSpeciesAlcremie(u32 targetSpecies);
+bool32 IsSpeciesAlcremie(enum Species targetSpecies);
 bool32 IsItemSweet(enum Item item);
 
 //Stat bars by DizzyEgg
@@ -4069,7 +4069,7 @@ static void UNUSED HighlightScreenSelectBarItem(u8 selectedScreen, u16 unused)
 void Task_DisplayCaughtMonDexPageHGSS(u8 taskId)
 {
     u8 spriteId;
-    u16 species;
+    enum Species species;
     enum NationalDexOrder dexNum;
 
     if (!POKEDEX_PLUS_HGSS) return; // prevents the compiler from emitting static .rodata
@@ -4191,7 +4191,7 @@ static void Task_ExitCaughtMonPage(u8 taskId)
 {
     if (!gPaletteFade.active)
     {
-        u16 species;
+        enum Species species;
         u32 otId;
         u32 personality;
         u8 paletteNum;
@@ -4379,7 +4379,7 @@ static void PrintMonInfo(u32 num, u32 value, u32 owned, u32 newEntry)
 {
     u8 str[16];
     u8 str2[32];
-    u16 species;
+    enum Species species;
     const u8 *name;
     const u8 *category;
     const u8 *description;
@@ -5049,7 +5049,7 @@ static bool8 CalculateMoves(void)
     // Egg moves
     if (HGSS_SHOW_EGG_MOVES_FOR_EVOS)
     {
-        u16 preSpecies = species;
+        enum Species preSpecies = species;
         while (preSpecies != SPECIES_NONE)
         {
             numEggMoves = GetEggMovesBySpecies(preSpecies, statsMovesEgg);
@@ -5085,7 +5085,7 @@ static enum Move GetSelectedMove(enum Species species, u32 selected)
     {
         if (!HGSS_SHOW_EGG_MOVES_FOR_EVOS)
             return GetSpeciesEggMoves(species)[selected];
-        u16 preSpecies = species;
+        enum Species preSpecies = species;
         while (GetSpeciesPreEvolution(preSpecies) != SPECIES_NONE)
             preSpecies = GetSpeciesPreEvolution(preSpecies);
         return GetSpeciesEggMoves(preSpecies)[selected];
@@ -5920,7 +5920,7 @@ static void ResetEvoScreenDataStruct(void)
 static void GetSeenFlagTargetSpecies(void)
 {
     u8 i;
-    u16 species;
+    enum Species species;
     for (i = 0; i < sPokedexView->sEvoScreenData.numAllEvolutions; i++)
     {
         species = sPokedexView->sEvoScreenData.targetSpecies[i];
@@ -6100,7 +6100,7 @@ static void Task_HandleEvolutionScreenInput(u8 taskId)
 
         if (JOY_NEW(A_BUTTON))
         {
-            u16 targetSpecies            = sPokedexView->sEvoScreenData.targetSpecies[sPokedexView->sEvoScreenData.menuPos];
+            enum Species targetSpecies            = sPokedexView->sEvoScreenData.targetSpecies[sPokedexView->sEvoScreenData.menuPos];
             enum NationalDexOrder dexNum = SpeciesToNationalPokedexNum(targetSpecies);
             if (sPokedexView->isSearchResults && sPokedexView->originalSearchSelectionNum == 0)
                 sPokedexView->originalSearchSelectionNum = sPokedexListItem->dexNum;
@@ -6154,7 +6154,7 @@ static void Task_HandleEvolutionScreenInput(u8 taskId)
     }
 }
 
-static void HandleTargetSpeciesPrintText(u32 targetSpecies, u32 base_x, u32 base_y, u32 base_y_offset, u32 base_i)
+static void HandleTargetSpeciesPrintText(enum Species targetSpecies, u32 base_x, u32 base_y, u32 base_y_offset, u32 base_i)
 {
     bool32 seen = GetSetPokedexFlag(SpeciesToNationalPokedexNum(targetSpecies), FLAG_GET_SEEN);
     u32 fontId = GetSpeciesNameFontId(GetSpeciesNameWidthInChars(GetSpeciesName(targetSpecies)));
@@ -6167,7 +6167,7 @@ static void HandleTargetSpeciesPrintText(u32 targetSpecies, u32 base_x, u32 base
     PrintInfoScreenTextSmall(gStringVar3, fontId, base_x, base_y + base_y_offset*base_i); //evolution mon name
 }
 
-static void HandleTargetSpeciesPrintIcon(u8 taskId, u16 targetSpecies, u8 base_i, u8 iterations)
+static void HandleTargetSpeciesPrintIcon(u8 taskId, enum Species targetSpecies, u8 base_i, u8 iterations)
 {
     u32 personality = GetPokedexMonPersonality(targetSpecies);
     LoadMonIconPalettePersonality(targetSpecies, personality); //Loads pallete for current mon
@@ -6178,7 +6178,7 @@ static void HandleTargetSpeciesPrintIcon(u8 taskId, u16 targetSpecies, u8 base_i
     gSprites[gTasks[taskId].data[4+base_i]].oam.priority = 0;
 }
 
-static void CreateCaughtBallEvolutionScreen(u16 targetSpecies, u8 x, u8 y, u16 unused)
+static void CreateCaughtBallEvolutionScreen(enum Species targetSpecies, u8 x, u8 y, u16 unused)
 {
     bool8 owned = GetSetPokedexFlag(SpeciesToNationalPokedexNum(targetSpecies), FLAG_GET_CAUGHT);
     if (owned)
@@ -6190,7 +6190,7 @@ static void CreateCaughtBallEvolutionScreen(u16 targetSpecies, u8 x, u8 y, u16 u
     }
 }
 
-static void HandlePreEvolutionSpeciesPrint(u8 taskId, u16 preSpecies, enum Species species, u8 base_x, u8 base_y, u8 base_y_offset, u8 base_i)
+static void HandlePreEvolutionSpeciesPrint(u8 taskId, enum Species preSpecies, enum Species species, u8 base_x, u8 base_y, u8 base_y_offset, u8 base_i)
 {
     bool8 seen = GetSetPokedexFlag(SpeciesToNationalPokedexNum(preSpecies), FLAG_GET_SEEN);
 
@@ -6245,7 +6245,7 @@ static u8 PrintPreEvolutions(u8 taskId, enum Species species)
     u16 preEvolutionTwo = 0;
     u8 numPreEvolutions = 0;
 
-    u16 baseFormSpecies;
+    enum Species baseFormSpecies;
     sPokedexView->sEvoScreenData.isMega = FALSE;
 
     //Check if it's a mega
@@ -6394,7 +6394,7 @@ u32 GetSpeciesNameWidthInChars(const u8 *speciesName)
     return i;
 }
 
-bool32 IsSpeciesAlcremie(u32 targetSpecies)
+bool32 IsSpeciesAlcremie(enum Species targetSpecies)
 {
     return GET_BASE_SPECIES_ID(targetSpecies) == SPECIES_ALCREMIE;
 }
@@ -6410,7 +6410,7 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, enum Species species
     u32 depth_x = 4;
     u32 depth_offset = 8 * (depth + 1);
     int fontId;
-    u16 targetSpecies = 0;
+    enum Species targetSpecies = 0;
     bool8 left = TRUE;
     u32 base_x = 21;
     u32 base_y = 51;
@@ -7029,7 +7029,7 @@ static void Task_HandleFormsScreenInput(u8 taskId)
         if (JOY_NEW(A_BUTTON))
         {
             u8 formId = sPokedexView->sFormScreenData.formIds[menuPos];
-            u16 formSpecies = GetFormSpeciesId(NationalPokedexNumToSpecies(sPokedexListItem->dexNum), formId);
+            enum Species formSpecies = GetFormSpeciesId(NationalPokedexNumToSpecies(sPokedexListItem->dexNum), formId);
             if (sPokedexView->isSearchResults && sPokedexView->originalSearchSelectionNum == 0)
                 sPokedexView->originalSearchSelectionNum = sPokedexListItem->dexNum;
 
@@ -7752,7 +7752,7 @@ static void Task_ClosePokedexFromSearchResultsStartMenu(u8 taskId)
 //************************************
 static int DoPokedexSearch(u8 dexMode, u8 order, u8 abcGroup, enum BodyColor bodyColor, enum Type type1, enum Type type2)
 {
-    u16 species;
+    enum Species species;
     u16 i;
     u16 resultsCount;
     enum Type types[2];

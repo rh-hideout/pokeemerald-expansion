@@ -1559,7 +1559,7 @@ static void CB_ShowTradeMonSummaryScreen(void)
 static u8 CheckValidityOfTradeMons(u8 *aliveMons, u8 playerPartyCount, u8 playerMonIdx, u8 partnerMonIdx)
 {
     int i;
-    u16 partnerSpecies;
+    enum Species partnerSpecies;
     u8 hasLiveMon = 0;
 
     // Make sure mon to be traded isn't player's last alive mon
@@ -4626,7 +4626,7 @@ static void GetInGameTradeMail(struct Mail *mail, const struct InGameTrade *trad
     mail->itemId = trade->heldItem;
 }
 
-u16 GetTradeSpecies(void)
+enum Species GetTradeSpecies(void)
 {
     struct BoxPokemon *boxmon = GetSelectedBoxMonFromPcOrParty();
     if (GetBoxMonData(boxmon, MON_DATA_IS_EGG))

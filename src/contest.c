@@ -100,7 +100,7 @@ static u8 CreateJudgeSprite(void);
 static u8 CreateJudgeSpeechBubbleSprite(void);
 static u8 CreateContestantSprite(enum Species, bool8, u32, u32);
 static void PrintContestMoveDescription(enum Move move);
-static u16 SanitizeSpecies(enum Species);
+static enum Species SanitizeSpecies(enum Species);
 static void ContestClearGeneralTextWindow(void);
 static enum Move GetChosenMove(u8);
 static void GetAllChosenMoves(void);
@@ -5310,7 +5310,7 @@ static u16 SanitizeMove(enum Move move)
     return move;
 }
 
-static u16 SanitizeSpecies(enum Species species)
+static enum Species SanitizeSpecies(enum Species species)
 {
     assertf(species < NUM_SPECIES, "invalid species: %d", species)
     {

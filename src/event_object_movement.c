@@ -218,7 +218,7 @@ static bool8 AreElevationsCompatible(u8, u8);
 static void CopyObjectGraphicsInfoToSpriteTemplate_WithMovementType(u16 graphicsId, u16 movementType, struct SpriteTemplate *spriteTemplate, const struct SubspriteTable **subspriteTables);
 
 static u16 GetGraphicsIdForMon(enum Species species, bool32 shiny, bool32 female);
-static u16 GetUnownSpecies(struct Pokemon *mon);
+static enum Species GetUnownSpecies(struct Pokemon *mon);
 
 static const struct SpriteFrameImage sPicTable_PechaBerryTree[];
 
@@ -11626,7 +11626,7 @@ static u16 GetGraphicsIdForMon(enum Species species, bool32 shiny, bool32 female
     return graphicsId;
 }
 
-static u16 GetUnownSpecies(struct Pokemon *mon)
+static enum Species GetUnownSpecies(struct Pokemon *mon)
 {
     u32 form = GET_UNOWN_LETTER(mon->box.personality);
     if (form == 0)

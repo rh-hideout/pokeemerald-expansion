@@ -87,9 +87,9 @@ static const struct ListMenuTemplate sDaycareListMenuLevelTemplate =
 };
 
 static const struct {
-  u16 currSpecies;
+  enum Species currSpecies;
   enum Item item;
-  u16 babySpecies;
+  enum Species babySpecies;
 } sIncenseBabyTable[] =
 {
     // Regular offspring,   Item,              Incense Offspring
@@ -195,7 +195,7 @@ static void TransferEggMoves(void)
 
     for (i = 0; i < DAYCARE_MON_COUNT; i++)
     {
-        u16 moveLearnerSpecies = GetBoxMonData(&gSaveBlock1Ptr->daycare.mons[i].mon, MON_DATA_SPECIES);
+        enum Species moveLearnerSpecies = GetBoxMonData(&gSaveBlock1Ptr->daycare.mons[i].mon, MON_DATA_SPECIES);
         enum Species eggSpecies = GetEggSpecies(moveLearnerSpecies);
 
         if (!GetBoxMonData(&gSaveBlock1Ptr->daycare.mons[i].mon, MON_DATA_SANITY_HAS_SPECIES))
@@ -221,7 +221,7 @@ static void TransferEggMoves(void)
             // Go through other Daycare mons
             for (k = 0; k < DAYCARE_MON_COUNT; k++)
             {
-                u16 moveTeacherSpecies = GetBoxMonData(&gSaveBlock1Ptr->daycare.mons[k].mon, MON_DATA_SPECIES);
+                enum Species moveTeacherSpecies = GetBoxMonData(&gSaveBlock1Ptr->daycare.mons[k].mon, MON_DATA_SPECIES);
 
                 if (k == i || !GetBoxMonData(&gSaveBlock1Ptr->daycare.mons[k].mon, MON_DATA_SANITY_HAS_SPECIES))
                     continue;
@@ -714,8 +714,8 @@ static void InheritPokeball(struct Pokemon *egg, struct BoxPokemon *father, stru
     enum PokeBall inheritBall = BALL_POKE;
     enum PokeBall fatherBall = GetBoxMonData(father, MON_DATA_POKEBALL);
     enum PokeBall motherBall = GetBoxMonData(mother, MON_DATA_POKEBALL);
-    u16 fatherSpecies = GetBoxMonData(father, MON_DATA_SPECIES);
-    u16 motherSpecies = GetBoxMonData(mother, MON_DATA_SPECIES);
+    enum Species fatherSpecies = GetBoxMonData(father, MON_DATA_SPECIES);
+    enum Species motherSpecies = GetBoxMonData(mother, MON_DATA_SPECIES);
 
     if (fatherBall == BALL_MASTER || fatherBall == BALL_CHERISH || fatherBall == BALL_STRANGE)
         fatherBall = BALL_POKE;
@@ -743,7 +743,7 @@ static void InheritAbility(struct Pokemon *egg, struct BoxPokemon *father, struc
 {
     enum Ability fatherAbility = GetBoxMonData(father, MON_DATA_ABILITY_NUM);
     enum Ability motherAbility = GetBoxMonData(mother, MON_DATA_ABILITY_NUM);
-    u16 motherSpecies = GetBoxMonData(mother, MON_DATA_SPECIES);
+    enum Species motherSpecies = GetBoxMonData(mother, MON_DATA_SPECIES);
     enum Ability inheritAbility = motherAbility;
 
     if (motherSpecies == SPECIES_DITTO)
@@ -1245,7 +1245,7 @@ static void _GetDaycareMonNicknames(struct DayCare *daycare)
     }
 }
 
-u16 GetSelectedMonNicknameAndSpecies(void)
+enum Species GetSelectedMonNicknameAndSpecies(void)
 {
     struct BoxPokemon *boxmon = GetSelectedBoxMonFromPcOrParty();
     GetBoxMonNickname(boxmon, gStringVar1);

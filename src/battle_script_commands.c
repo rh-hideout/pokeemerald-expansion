@@ -10269,7 +10269,8 @@ static void Cmd_pickup(void)
     CMD_ARGS();
 
     u32 i, j;
-    u16 species, heldItem;
+    enum Species species;
+    u16 heldItem;
     u8 lvlDivBy10;
     enum Ability ability;
 
@@ -12251,7 +12252,7 @@ void BS_JumpIfTerrainAffected(void)
 void BS_TryReflectType(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
-    u16 targetBaseSpecies = GET_BASE_SPECIES_ID(gBattleMons[gBattlerTarget].species);
+    enum Species targetBaseSpecies = GET_BASE_SPECIES_ID(gBattleMons[gBattlerTarget].species);
     enum Type targetTypes[3];
     GetBattlerTypes(gBattlerTarget, FALSE, targetTypes);
 
@@ -12944,7 +12945,8 @@ static void UpdatePokeFlutePartyStatus(struct Pokemon* party, u8 position)
     s32 i;
     enum BattlerId battler;
     u32 monToCheck, status;
-    u16 species, abilityNum;
+    enum Species species;
+    u16 abilityNum;
     monToCheck = 0;
     for (i = 0; i < PARTY_SIZE; i++)
     {

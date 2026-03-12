@@ -377,7 +377,7 @@ static void DisplayCantUseSurfMessage(void);
 static void Task_FieldMoveExitAreaYesNo(u8);
 static void Task_HandleFieldMoveExitAreaYesNoInput(u8);
 static void Task_FieldMoveWaitForFade(u8);
-static u16 GetFieldMoveMonSpecies(void);
+static enum Species GetFieldMoveMonSpecies(void);
 static void UpdatePartyMonHPBar(u8, struct Pokemon *);
 static void SpriteCB_UpdatePartyMonIcon(struct Sprite *);
 static void SpriteCB_BouncePartyMonIcon(struct Sprite *);
@@ -4173,7 +4173,7 @@ static void Task_FieldMoveWaitForFade(u8 taskId)
     }
 }
 
-static u16 GetFieldMoveMonSpecies(void)
+static enum Species GetFieldMoveMonSpecies(void)
 {
     return GetMonData(&gPlayerParty[gPartyMenu.slotId], MON_DATA_SPECIES);
 }
@@ -5742,7 +5742,7 @@ void ItemUseCB_RareCandy(u8 taskId, TaskFunc task)
     PlaySE(SE_SELECT);
     if (cannotUseEffect)
     {
-        u32 targetSpecies = SPECIES_NONE;
+        enum Species targetSpecies = SPECIES_NONE;
         bool32 canStopEvo = TRUE;
 
         // Resets values to 0 so other means of teaching moves doesn't overwrite levels
@@ -5934,7 +5934,7 @@ static void CB2_ReturnToPartyMenuUsingRareCandy(void)
 static void PartyMenuTryEvolution(u8 taskId)
 {
     struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
-    u32 targetSpecies = SPECIES_NONE;
+    enum Species targetSpecies = SPECIES_NONE;
     bool32 canStopEvo = TRUE;
 
     // Resets values to 0 so other means of teaching moves doesn't overwrite levels
@@ -6267,7 +6267,7 @@ bool32 DoesMonHaveAnyMoves(struct Pokemon *mon)
 
 bool32 TryItemUseFusionChange(u8 taskId, TaskFunc task)
 {
-    u16 targetSpecies = gTasks[taskId].fusionResult;
+    enum Species targetSpecies = gTasks[taskId].fusionResult;
     s8 *slotPtr = GetCurrentPartySlotPtr();
     *slotPtr = gTasks[taskId].firstFusionSlot;
     if (gTasks[taskId].fusionType == FUSE_MON)
@@ -6395,7 +6395,7 @@ static void Task_TryItemUseFusionChange(u8 taskId)
     struct Sprite *icon = &gSprites[sPartyMenuBoxes[gTasks[taskId].firstFusionSlot].monSpriteId];
     struct Pokemon *mon2;
     struct Sprite *icon2 = &gSprites[sPartyMenuBoxes[gTasks[taskId].secondFusionSlot].monSpriteId];
-    u16 targetSpecies;
+    enum Species targetSpecies;
 
     switch (gTasks[taskId].tState)
     {

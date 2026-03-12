@@ -1718,7 +1718,7 @@ static bool8 CapturedAllLandMons(u32 headerId)
 static bool8 CapturedAllWaterMons(u32 headerId)
 {
     u32 i;
-    u16 species;
+    enum Species species;
     u8 count = 0;
     enum TimeOfDay timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_WATER);
 
@@ -1751,7 +1751,7 @@ static bool8 CapturedAllWaterMons(u32 headerId)
 static bool8 CapturedAllHiddenMons(u32 headerId)
 {
     u32 i;
-    u16 species;
+    enum Species species;
     u8 count = 0;
     enum TimeOfDay timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_HIDDEN);
 
@@ -1893,7 +1893,7 @@ static void DexNavLoadEncounterData(void)
     u8 grassIndex = 0;
     u8 waterIndex = 0;
     u8 hiddenIndex = 0;
-    u16 species;
+    enum Species species;
     u32 i;
     u32 headerId = GetCurrentMapWildMonHeaderId();
     enum TimeOfDay timeOfDay;
@@ -1958,7 +1958,7 @@ static void DrawSpeciesIcons(void)
 {
     s16 x, y;
     u32 i;
-    u16 species;
+    enum Species species;
 
     LoadCompressedSpriteSheetUsingHeap(&sNoDataIconSpriteSheet);
     for (i = 0; i < LAND_WILD_COUNT; i++)
@@ -1991,9 +1991,9 @@ static void DrawSpeciesIcons(void)
     }
 }
 
-static u16 DexNavGetSpecies(void)
+static enum Species DexNavGetSpecies(void)
 {
-    u16 species;
+    enum Species species;
 
     switch (sDexNavUiDataPtr->cursorRow)
     {
@@ -2314,7 +2314,7 @@ static void Task_DexNavWaitFadeIn(u8 taskId)
 static void Task_DexNavMain(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
-    u16 species;
+    enum Species species;
 
     if (IsSEPlaying())
         return;
@@ -2479,7 +2479,7 @@ bool32 TryFindHiddenPokemon(void)
         // hidden pokemon
         u32 headerId = GetCurrentMapWildMonHeaderId();
         u8 index;
-        u16 species;
+        enum Species species;
         enum EncounterType environment;
         enum TimeOfDay timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_HIDDEN);
 

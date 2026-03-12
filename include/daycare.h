@@ -2,6 +2,7 @@
 #define GUARD_DAYCARE_H
 
 #include "constants/daycare.h"
+#include "constants/species.h"
 
 struct RecordMixingDaycareMail
 {
@@ -24,7 +25,7 @@ void RejectEggFromDayCare(void);
 void CreateEgg(struct Pokemon *mon, enum Species species, bool8 setHotSpringsLocation);
 void GiveEggFromDaycare(void);
 bool8 ShouldEggHatch(void);
-u16 GetSelectedMonNicknameAndSpecies(void);
+enum Species GetSelectedMonNicknameAndSpecies(void);
 void GetDaycareMonNicknames(void);
 u8 GetDaycareState(void);
 u8 GetDaycareCompatibilityScore(struct DayCare *daycare);

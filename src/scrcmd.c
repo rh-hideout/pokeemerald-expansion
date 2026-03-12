@@ -3138,7 +3138,7 @@ bool8 Scrcmd_getsetpokedexflag(struct ScriptContext *ctx)
 
 bool8 Scrcmd_checkspecies(struct ScriptContext *ctx)
 {
-    u32 givenSpecies = VarGet(ScriptReadHalfword(ctx));
+    enum Species givenSpecies = VarGet(ScriptReadHalfword(ctx));
 
     Script_RequestEffects(SCREFF_V1);
 
@@ -3149,7 +3149,7 @@ bool8 Scrcmd_checkspecies(struct ScriptContext *ctx)
 
 bool8 Scrcmd_checkspecies_choose(struct ScriptContext *ctx)
 {
-    u32 givenSpecies = VarGet(ScriptReadHalfword(ctx));
+    enum Species givenSpecies = VarGet(ScriptReadHalfword(ctx));
 
     Script_RequestEffects(SCREFF_V1);
 

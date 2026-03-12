@@ -868,7 +868,7 @@ static void Task_ShowWinnerMonBanner(u8 taskId)
 {
     int i;
     u8 spriteId;
-    u16 species;
+    enum Species species;
     bool8 isShiny;
     u32 personality;
 
@@ -2559,7 +2559,7 @@ bool8 IsContestDebugActive(void)
 void ShowContestEntryMonPic(void)
 {
     u32 personality;
-    u16 species;
+    enum Species species;
     u8 spriteId;
     u8 taskId;
     u8 left, top;

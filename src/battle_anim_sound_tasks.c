@@ -307,7 +307,7 @@ void SoundTask_PlayNormalCry(u8 taskId)
 
 void SoundTask_PlayCryWithEcho(u8 taskId)
 {
-    u16 species;
+    enum Species species;
     s8 pan;
 
     gTasks[taskId].tLastCry = gBattleAnimArgs[0];

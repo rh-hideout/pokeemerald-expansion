@@ -1211,7 +1211,7 @@ void CB2_Pokemon_Sprite_Visualizer(void)
     u8 taskId;
     const u16 *palette;
     struct PokemonSpriteVisualizer *data;
-    u16 species;
+    enum Species species;
     s16 offset_y;
     u8 front_x = sBattlerCoords[0][1].x;
     u8 front_y;

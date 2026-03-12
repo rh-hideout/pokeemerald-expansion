@@ -307,7 +307,7 @@ static const s16 sEggShardVelocities[][2] =
 
 static void CreateHatchedMon(struct Pokemon *egg, struct Pokemon *temp)
 {
-    u16 species;
+    enum Species species;
     u32 personality, pokerus;
     enum PokeBall ball;
     u8 i, friendship, language, gameMet, markings, isModernFatefulEncounter;
@@ -633,7 +633,7 @@ static void Task_EggHatchPlayBGM(u8 taskId)
 
 static void CB2_EggHatch(void)
 {
-    u16 species;
+    enum Species species;
     u8 gender;
     u32 personality;
 

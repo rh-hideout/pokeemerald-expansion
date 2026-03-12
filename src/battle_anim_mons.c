@@ -79,7 +79,7 @@ static const struct SpriteSheet sSpriteSheets_MoveEffectMons[] =
 u8 GetBattlerSpriteCoord(enum BattlerId battler, u8 coordType)
 {
     u8 retVal;
-    u16 species;
+    enum Species species;
     struct Pokemon *mon, *illusionMon;
     struct BattleSpriteInfo *spriteInfo;
 
@@ -209,7 +209,7 @@ u8 GetBattlerSpriteFinal_Y(enum BattlerId battler, enum Species species, bool8 a
 
 u8 GetBattlerSpriteCoord2(enum BattlerId battler, u8 coordType)
 {
-    u16 species;
+    enum Species species;
     struct BattleSpriteInfo *spriteInfo;
 
     if (coordType == BATTLER_COORD_Y_PIC_OFFSET || coordType == BATTLER_COORD_Y_PIC_OFFSET_DEFAULT)
@@ -257,7 +257,7 @@ u8 GetSubstituteSpriteDefault_Y(enum BattlerId battler)
 
 u8 GetBattlerYCoordWithElevation(enum BattlerId battler)
 {
-    u16 species;
+    enum Species species;
     u8 y;
     struct BattleSpriteInfo *spriteInfo;
 
@@ -1863,7 +1863,7 @@ static u16 GetBattlerYDeltaFromSpriteId(u8 spriteId)
 {
     struct BattleSpriteInfo *spriteInfo;
     enum BattlerId battler = gSprites[spriteId].data[0];
-    u16 species;
+    enum Species species;
     u16 i;
 
     for (i = 0; i < MAX_BATTLERS_COUNT; i++)
@@ -2081,7 +2081,7 @@ void DestroySpriteAndFreeResources_(struct Sprite *sprite)
 
 s16 GetBattlerSpriteCoordAttr(enum BattlerId battler, u8 attr)
 {
-    u16 species;
+    enum Species species;
     u32 personality;
     int ret;
     u8 size;

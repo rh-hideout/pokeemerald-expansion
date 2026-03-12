@@ -239,7 +239,7 @@ static enum Move GetTypeBasedMaxMove(enum BattlerId battler, enum Type type)
     // Gigantamax check
     u32 i;
     enum Species species = gBattleMons[battler].species;
-    u32 targetSpecies = species;
+    enum Species targetSpecies = species;
     enum Ability ability = GetBattlerAbility(battler);
 
     if (!gSpeciesInfo[species].isGigantamax)

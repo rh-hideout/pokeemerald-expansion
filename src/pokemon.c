@@ -4232,7 +4232,7 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, enum Item item, u8 partyIndex, 
                     case 7: // ITEM4_EVO_STONE
                         {
                             bool32 canStopEvo = TRUE;
-                            u32 targetSpecies = GetEvolutionTargetSpecies(mon, EVO_MODE_ITEM_USE, item, NULL, &canStopEvo, CHECK_EVO);
+                            enum Species targetSpecies = GetEvolutionTargetSpecies(mon, EVO_MODE_ITEM_USE, item, NULL, &canStopEvo, CHECK_EVO);
 
                             if (targetSpecies != SPECIES_NONE)
                             {
@@ -4615,7 +4615,7 @@ u8 GetNatureFromPersonality(u32 personality)
     return personality % NUM_NATURES;
 }
 
-u32 GetGMaxTargetSpecies(enum Species species)
+enum Species GetGMaxTargetSpecies(enum Species species)
 {
     const struct FormChange *formChanges = GetSpeciesFormChanges(species);
     u32 i;
@@ -4643,7 +4643,8 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
     u32 removeBagItem = ITEM_NONE;
     u32 removeBagItemCount = 0;
     u32 evolutionTracker = GetMonData(mon, MON_DATA_EVOLUTION_TRACKER, 0);
-    u32 partnerSpecies, partnerHeldItem;
+    enum Species partnerSpecies;
+    u32 partnerHeldItem;
     enum HoldEffect partnerHoldEffect;
 
     if (tradePartner != NULL)
@@ -4794,7 +4795,7 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
         case IF_TYPE_IN_PARTY:
             for (j = 0; j < PARTY_SIZE; j++)
             {
-                u16 currSpecies = GetMonData(&gPlayerParty[j], MON_DATA_SPECIES);
+                enum Species currSpecies = GetMonData(&gPlayerParty[j], MON_DATA_SPECIES);
                 if (GetSpeciesType(currSpecies, 0) == params[i].arg1
                  || GetSpeciesType(currSpecies, 1) == params[i].arg1)
                 {
@@ -4955,10 +4956,10 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
     return TRUE;
 }
 
-u32 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 evolutionItem, struct Pokemon *tradePartner, bool32 *canStopEvo, enum EvoState evoState)
+enum Species GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 evolutionItem, struct Pokemon *tradePartner, bool32 *canStopEvo, enum EvoState evoState)
 {
     int i;
-    u32 targetSpecies = SPECIES_NONE;
+    enum Species targetSpecies = SPECIES_NONE;
     enum Species species = GetMonData(mon, MON_DATA_SPECIES, 0);
     u32 heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, 0);
     u32 level = GetMonData(mon, MON_DATA_LEVEL, 0);
@@ -5178,12 +5179,12 @@ bool8 IsMonPastEvolutionLevel(struct Pokemon *mon)
     return FALSE;
 }
 
-u16 NationalPokedexNumToSpecies(enum NationalDexOrder nationalNum)
+enum Species NationalPokedexNumToSpecies(enum NationalDexOrder nationalNum)
 {
-    u16 species;
+    enum Species species;
 
     if (!nationalNum)
-        return 0;
+        return SPECIES_NONE;
 
     species = 1;
 
@@ -5191,7 +5192,7 @@ u16 NationalPokedexNumToSpecies(enum NationalDexOrder nationalNum)
         species++;
 
     if (species == NUM_SPECIES)
-        return NATIONAL_DEX_NONE;
+        return SPECIES_NONE;
 
     return GET_BASE_SPECIES_ID(species);
 }
@@ -5392,7 +5393,7 @@ void DrawSpindaSpots(u32 personality, u8 *dest, bool32 isSecondFrame)
     }
 }
 
-void EvolutionRenameMon(struct Pokemon *mon, u16 oldSpecies, u16 newSpecies)
+void EvolutionRenameMon(struct Pokemon *mon, enum Species oldSpecies, enum Species newSpecies)
 {
     u8 language;
     GetMonData(mon, MON_DATA_NICKNAME, gStringVar1);
@@ -5474,7 +5475,8 @@ u16 ModifyStatByNature(u8 nature, u16 stat, enum Stat statIndex)
 
 void AdjustFriendship(struct Pokemon *mon, u8 event)
 {
-    u16 species, heldItem;
+    enum Species species;
+    u16 heldItem;
     enum HoldEffect holdEffect;
     s8 mod;
 
@@ -6082,7 +6084,7 @@ void SetWildMonHeldItem(void)
     if (!(gBattleTypeFlags & (BATTLE_TYPE_LEGENDARY | BATTLE_TYPE_TRAINER | BATTLE_TYPE_PYRAMID | BATTLE_TYPE_PIKE)))
     {
         u16 rnd;
-        u16 species;
+        enum Species species;
         u16 count = (WILD_DOUBLE_BATTLE) ? 2 : 1;
         u16 i;
         bool32 itemHeldBoost = CanFirstMonBoostHeldItemRarity();
@@ -6592,7 +6594,7 @@ u8 GetFormIdFromFormSpeciesId(u16 formSpeciesId)
 }
 
 // Returns the current species if no form change is possible
-u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum FormChanges method)
+enum Species GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum FormChanges method)
 {
     enum Species species = GetBoxMonData(boxMon, MON_DATA_SPECIES, NULL);
     const struct FormChange *formChanges = GetSpeciesFormChanges(species);
@@ -6615,15 +6617,15 @@ u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum FormChanges
 }
 
 // Returns the current species if no form change is possible
-u32 GetFormChangeTargetSpecies(struct Pokemon *mon, enum FormChanges method)
+enum Species GetFormChangeTargetSpecies(struct Pokemon *mon, enum FormChanges method)
 {
     return GetFormChangeTargetSpeciesBoxMon(&mon->box, method);
 }
 
-u32 GetFormChangeTargetSpecies_Internal(struct FormChangeContext ctx)
+enum Species GetFormChangeTargetSpecies_Internal(struct FormChangeContext ctx)
 {
     u32 i;
-    u32 targetSpecies = ctx.currentSpecies;
+    enum Species targetSpecies = ctx.currentSpecies;
     const struct FormChange *formChanges = GetSpeciesFormChanges(ctx.currentSpecies);
 
     if (formChanges == NULL)
@@ -6930,7 +6932,7 @@ void TryScriptEvolution(void)
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        u32 targetSpecies = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_SCRIPT_TRIGGER, 0, NULL, &canStopEvo, CHECK_EVO);
+        enum Species targetSpecies = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_SCRIPT_TRIGGER, 0, NULL, &canStopEvo, CHECK_EVO);
 
         if (targetSpecies != SPECIES_NONE && !(sTriedEvolving & (1u << i)))
         {
@@ -6961,7 +6963,7 @@ void TrySpecialOverworldEvo(void)
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        u32 targetSpecies = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_OVERWORLD_SPECIAL, 0, NULL, &canStopEvo, CHECK_EVO);
+        enum Species targetSpecies = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_OVERWORLD_SPECIAL, 0, NULL, &canStopEvo, CHECK_EVO);
 
         if (targetSpecies != SPECIES_NONE && !(sTriedEvolving & (1u << i)))
         {
@@ -7021,8 +7023,8 @@ bool32 TryFormChange(struct Pokemon *mon, enum FormChanges method)
      || GetMonData(mon, MON_DATA_SPECIES_OR_EGG, 0) == SPECIES_EGG)
         return FALSE;
 
-    u32 currentSpecies = GetMonData(mon, MON_DATA_SPECIES);
-    u32 targetSpecies = GetFormChangeTargetSpecies(mon, method);
+    enum Species currentSpecies = GetMonData(mon, MON_DATA_SPECIES);
+    enum Species targetSpecies = GetFormChangeTargetSpecies(mon, method);
 
     struct PartyState *battlePartyState = GetBattlerPartyStateByPokemon(mon);
     // If the battle ends, and there's not a specified species to change back to,
@@ -7059,8 +7061,8 @@ bool32 TryBoxMonFormChange(struct BoxPokemon *boxMon, enum FormChanges method)
      || GetBoxMonData(boxMon, MON_DATA_SPECIES_OR_EGG, 0) == SPECIES_EGG)
         return FALSE;
 
-    u32 currentSpecies = GetBoxMonData(boxMon, MON_DATA_SPECIES, NULL);
-    u32 targetSpecies = GetFormChangeTargetSpeciesBoxMon(boxMon, method);
+    enum Species currentSpecies = GetBoxMonData(boxMon, MON_DATA_SPECIES, NULL);
+    enum Species targetSpecies = GetFormChangeTargetSpeciesBoxMon(boxMon, method);
 
     assertf(targetSpecies != SPECIES_NONE, "form change target returned NONE. cur:%d, method:%d", currentSpecies, method)
     {
@@ -7259,7 +7261,7 @@ void UpdateDaysPassedSinceFormChange(u16 days)
     for (i = 0; i < PARTY_SIZE; i++)
     {
         struct Pokemon *mon = &gPlayerParty[i];
-        u32 currentSpecies = GetMonData(mon, MON_DATA_SPECIES);
+        enum Species currentSpecies = GetMonData(mon, MON_DATA_SPECIES);
         u8 daysSinceFormChange;
 
         if (currentSpecies == SPECIES_NONE)
@@ -7331,7 +7333,7 @@ bool32 SpeciesHasRegionalForm(enum Species species)
 u32 GetRegionalFormByRegion(enum Species species, u32 region)
 {
     u32 formId = 0;
-    u32 firstFoundSpecies = 0;
+    enum Species firstFoundSpecies = 0;
     const u16 *formTable = GetSpeciesFormTable(species);
 
     if (formTable != NULL)

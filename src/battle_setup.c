@@ -598,7 +598,7 @@ void StartGroudonKyogreBattle(void)
 void StartRegiBattle(void)
 {
     enum BattleTransition transitionId;
-    u16 species;
+    enum Species species;
 
     LockPlayerFieldControls();
     gMain.savedCallback = CB2_EndScriptedWildBattle;
@@ -2130,4 +2130,3 @@ void SetMultiTrainerBattle(struct ScriptContext *ctx)
     TRAINER_BATTLE_PARAM.defeatTextB = (u8*)ScriptReadWord(ctx);
     gPartnerTrainerId = TRAINER_PARTNER(ScriptReadHalfword(ctx));
 };
-

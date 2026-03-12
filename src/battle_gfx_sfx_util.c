@@ -1255,7 +1255,7 @@ void SpriteCB_EnemyShadow(struct Sprite *shadowSprite)
     bool8 invisible = FALSE;
     enum BattlerId battler = shadowSprite->tBattlerId;
     struct Sprite *battlerSprite = &gSprites[gBattlerSpriteIds[battler]];
-    u16 transformSpecies = SanitizeSpeciesId(gBattleSpritesDataPtr->battlerData[battler].transformSpecies);
+    enum Species transformSpecies = SanitizeSpeciesId(gBattleSpritesDataPtr->battlerData[battler].transformSpecies);
 
     if (!battlerSprite->inUse || !IsBattlerSpritePresent(battler))
     {

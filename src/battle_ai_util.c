@@ -298,7 +298,7 @@ bool32 ShouldRecordStatusMove(enum Move move)
     return RandomPercentage(RNG_AI_ASSUME_ALL_STATUS, ASSUME_ALL_STATUS_ODDS) && IsBattleMoveStatus(move);
 }
 
-static bool32 ShouldFailForIllusion(u32 illusionSpecies, enum BattlerId battlerId)
+static bool32 ShouldFailForIllusion(enum Species illusionSpecies, enum BattlerId battlerId)
 {
     u32 learnsetMoveIndex;
     const struct LevelUpMove *learnset;
