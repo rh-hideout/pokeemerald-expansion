@@ -177,16 +177,9 @@ static void Task_HandleSearchMenuInput(u8);
 static void Task_StartPokedexSearch(u8);
 static void Task_WaitAndCompleteSearch(u8);
 static void Task_SearchCompleteWaitForInput(u8);
-static void Task_SelectSearchMenuItem(u8);
-static void Task_HandleSearchParameterInput(u8);
 static void Task_ExitSearch(u8);
 static void Task_ExitSearchWaitForFade(u8);
-static void HighlightSelectedSearchTopBarItem(u8);
-static void HighlightSelectedSearchMenuItem(u8, u8);
-static void PrintSelectedSearchParameters(u8);
 static void DrawOrEraseSearchParameterBox(bool8);
-static void PrintSearchParameterText(u8);
-static u8 GetSearchModeSelection(u8 taskId, u8 option);
 static void SetDefaultSearchModeAndOrder(u8);
 static void CreateSearchParameterScrollArrows(u8);
 static void EraseAndPrintSearchTextBox(const u8 *);
@@ -5265,7 +5258,7 @@ static void Task_SearchCompleteWaitForInput(u8 taskId)
     }
 }
 
-static void Task_SelectSearchMenuItem(u8 taskId)
+void Task_SelectSearchMenuItem(u8 taskId)
 {
     u8 menuItem;
     s16 *cursorPos;
@@ -5285,7 +5278,7 @@ static void Task_SelectSearchMenuItem(u8 taskId)
 }
 
 // Input for scrolling parameter box in right column
-static void Task_HandleSearchParameterInput(u8 taskId)
+void Task_HandleSearchParameterInput(u8 taskId)
 {
     u8 menuItem;
     const struct SearchOptionText *texts;
@@ -5423,7 +5416,7 @@ void SetSearchRectHighlight(u8 flags, u8 x, u8 y, u8 width)
 #define SEARCH_BG_OK                    (SEARCH_OK + SEARCH_TOPBAR_COUNT)
 #define SEARCH_BG_TYPE_TITLE            (SEARCH_COUNT + SEARCH_TOPBAR_COUNT)
 
-static void DrawSearchMenuItemBgHighlight(u8 searchBg, bool8 unselected, bool8 disabled)
+void DrawSearchMenuItemBgHighlight(u8 searchBg, bool8 unselected, bool8 disabled)
 {
     u8 highlightFlags = (unselected & 1) | ((disabled & 1) << 1);
 
@@ -5456,7 +5449,7 @@ static void DrawSearchMenuItemBgHighlight(u8 searchBg, bool8 unselected, bool8 d
     }
 }
 
-static void SetInitialSearchMenuBgHighlights(u8 topBarItem)
+void SetInitialSearchMenuBgHighlights(u8 topBarItem)
 {
     switch (topBarItem)
     {
@@ -5502,13 +5495,13 @@ static void SetInitialSearchMenuBgHighlights(u8 topBarItem)
     }
 }
 
-static void HighlightSelectedSearchTopBarItem(u8 topBarItem)
+void HighlightSelectedSearchTopBarItem(u8 topBarItem)
 {
     SetInitialSearchMenuBgHighlights(topBarItem);
     EraseAndPrintSearchTextBox(sSearchMenuTopBarItems[topBarItem].description);
 }
 
-static void HighlightSelectedSearchMenuItem(u8 topBarItem, u8 menuItem)
+void HighlightSelectedSearchMenuItem(u8 topBarItem, u8 menuItem)
 {
     SetInitialSearchMenuBgHighlights(topBarItem);
     switch (menuItem)
@@ -5541,7 +5534,7 @@ static void HighlightSelectedSearchMenuItem(u8 topBarItem, u8 menuItem)
 }
 
 // Prints the currently selected search parameters in the search menu selection boxes
-static void PrintSelectedSearchParameters(u8 taskId)
+void PrintSelectedSearchParameters(u8 taskId)
 {
     u16 searchParamId;
 
@@ -5604,7 +5597,7 @@ static void DrawOrEraseSearchParameterBox(bool8 erase)
 
 // Prints the currently viewable search parameter titles in the right-hand text box
 // and the currently selected search parameter description in the bottom text box
-static void PrintSearchParameterText(u8 taskId)
+void PrintSearchParameterText(u8 taskId)
 {
     const struct SearchOptionText *texts = sSearchOptions[gTasks[taskId].tMenuItem].texts;
     const s16 *cursorPos = &gTasks[taskId].data[sSearchOptions[gTasks[taskId].tMenuItem].taskDataCursorPos];
@@ -5620,7 +5613,7 @@ static void PrintSearchParameterText(u8 taskId)
     EraseAndPrintSearchTextBox(texts[*cursorPos + *scrollOffset].description);
 }
 
-static u8 GetSearchModeSelection(u8 taskId, u8 option)
+u8 GetSearchModeSelection(u8 taskId, u8 option)
 {
     const s16 *cursorPos = &gTasks[taskId].data[sSearchOptions[option].taskDataCursorPos];
     const s16 *scrollOffset = &gTasks[taskId].data[sSearchOptions[option].taskDataScrollOffset];
@@ -5691,7 +5684,7 @@ static void SetDefaultSearchModeAndOrder(u8 taskId)
     gTasks[taskId].tCursorPos_Order = selected;
 }
 
-static bool8 SearchParamCantScrollUp(u8 taskId)
+bool8 SearchParamCantScrollUp(u8 taskId)
 {
     u8 menuItem = gTasks[taskId].tMenuItem;
     const s16 *scrollOffset = &gTasks[taskId].data[sSearchOptions[menuItem].taskDataScrollOffset];
@@ -5703,7 +5696,7 @@ static bool8 SearchParamCantScrollUp(u8 taskId)
         return TRUE;
 }
 
-static bool8 SearchParamCantScrollDown(u8 taskId)
+bool8 SearchParamCantScrollDown(u8 taskId)
 {
     u8 menuItem = gTasks[taskId].tMenuItem;
     const s16 *scrollOffset = &gTasks[taskId].data[sSearchOptions[menuItem].taskDataScrollOffset];

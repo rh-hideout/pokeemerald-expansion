@@ -233,5 +233,16 @@ struct PokedexView
 };
 
 void ResetPokedexView(struct PokedexView *pokedexView);
+void HighlightSelectedSearchMenuItem(u8 topBarItem, u8 menuItem);
+void DrawSearchMenuItemBgHighlight(u8 searchBg, bool8 unselected, bool8 disabled);
+void Task_SelectSearchMenuItem(u8 taskId);
+void Task_HandleSearchParameterInput(u8);
+void PrintSearchParameterText(u8 taskId);
+u8 GetSearchModeSelection(u8 taskId, u8 option);
+bool8 SearchParamCantScrollUp(u8 taskId);
+bool8 SearchParamCantScrollDown(u8 taskId);
+void SetInitialSearchMenuBgHighlights(u8 topBarItem);
+void HighlightSelectedSearchTopBarItem(u8 topBarItem);
+void PrintSelectedSearchParameters(u8 taskId);
 
 #endif // GUARD_POKEDEX_H
