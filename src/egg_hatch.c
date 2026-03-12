@@ -60,7 +60,7 @@ struct EggHatchData
     u8 windowId;
     u8 unused_9;
     u8 unused_A;
-    u16 species;
+    enum Species species;
     u8 textColor[3];
 };
 

@@ -138,9 +138,9 @@ struct UnionRoomTrade
     u16 type;
     u32 playerPersonality;
     u8 offerPlayerId;
-    u16 playerSpecies;
+    enum Species playerSpecies;
     u16 playerLevel;
-    u16 species;
+    enum Species species;
     u16 level;
     u32 personality;
 };

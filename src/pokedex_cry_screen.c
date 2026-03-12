@@ -44,7 +44,7 @@ struct PokedexCryScreen
     u8 waveformPreviousY;
     u16 unk; // Never read
     u8 playStartPos;
-    u16 species;
+    enum Species species;
     u8 cryOverrideCountdown;
     u8 cryRepeatDelay;
 };

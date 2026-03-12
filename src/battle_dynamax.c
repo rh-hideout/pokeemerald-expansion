@@ -26,7 +26,7 @@ static enum MaxPowerTier GetMaxPowerTier(enum Move move);
 
 struct GMaxMove
 {
-    u16 species;
+    enum Species species;
     enum Type moveType;
     u16 gmaxMove;
 };

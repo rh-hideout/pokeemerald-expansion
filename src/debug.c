@@ -208,7 +208,7 @@ struct DebugMenuOption
 
 struct DebugMonData
 {
-    u16 species;
+    enum Species species;
     u8 level;
     bool8 isShiny:1;
     u8 nature:5;

@@ -150,7 +150,7 @@ enum SignalStatus {
 
 struct InGameTrade {
     u8 nickname[POKEMON_NAME_LENGTH + 1];
-    u16 species;
+    enum Species species;
     u8 ivs[NUM_STATS];
     u8 abilityNum;
     u32 otId;
@@ -161,7 +161,7 @@ struct InGameTrade {
     u8 otName[TRAINER_NAME_LENGTH + 1];
     u8 otGender;
     u8 sheen;
-    u16 requestedSpecies;
+    enum Species requestedSpecies;
 };
 
 static EWRAM_DATA u8 *sMenuTextTileBuffer = NULL;
@@ -247,7 +247,7 @@ static EWRAM_DATA struct {
     u16 gbaScale;
     u16 alpha;
     bool8 isLinkTrade;
-    u16 monSpecies[2];
+    enum Species monSpecies[2];
     u16 cachedMapMusic;
     u8 textColors[3];
     u8 filler_F9;

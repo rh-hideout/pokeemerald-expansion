@@ -62,7 +62,7 @@ struct TrainerMon
     const u8 *ev;
     u32 iv;
     enum Move moves[MAX_MON_MOVES];
-    u16 species;
+    enum Species species;
     u16 heldItem;
     enum Ability ability;
     u8 lvl;

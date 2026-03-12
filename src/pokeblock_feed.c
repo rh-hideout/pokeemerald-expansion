@@ -55,7 +55,7 @@ struct PokeblockFeed
     u8 animId;
     u8 unused2;
     bool8 noMonFlip;
-    u16 species;
+    enum Species species;
     u16 monAnimLength;
     u16 timer;
     u8 nature;

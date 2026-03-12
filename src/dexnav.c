@@ -86,7 +86,7 @@ enum Statuses
 
 struct DexNavSearch
 {
-    u16 species;
+    enum Species species;
     u16 moves[MAX_MON_MOVES];
     u16 heldItem;
     u8 abilityNum;
@@ -119,9 +119,9 @@ struct DexNavGUI
     MainCallback savedCallback;
     u8 state;
     u8 cursorSpriteId;
-    u16 landSpecies[LAND_WILD_COUNT];
-    u16 waterSpecies[WATER_WILD_COUNT];
-    u16 hiddenSpecies[HIDDEN_WILD_COUNT];
+    enum Species landSpecies[LAND_WILD_COUNT];
+    enum Species waterSpecies[WATER_WILD_COUNT];
+    enum Species hiddenSpecies[HIDDEN_WILD_COUNT];
     u8 cursorRow;
     u8 cursorCol;
     u8 environment;

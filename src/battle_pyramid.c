@@ -38,6 +38,7 @@
 #include "constants/layouts.h"
 #include "constants/metatile_labels.h"
 #include "constants/moves.h"
+#include "constants/species.h"
 #include "constants/trainers.h"
 
 #define NUM_LAYOUT_OFFSETS 8
@@ -46,7 +47,7 @@ extern const struct MapLayout *const gMapLayouts[];
 
 struct PyramidWildMon
 {
-    u16 species;
+    enum Species species;
     u8 lvl;
     u8 abilityNum;
     u16 moves[MAX_MON_MOVES];

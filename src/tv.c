@@ -189,7 +189,7 @@ static const u8 sText_Roulette[] = _("ROULETTE");
 static const u8 sText_Jackpot[] = _("jackpot");
 
 static const struct {
-    u16 species;
+    enum Species species;
     u16 moves[MAX_MON_MOVES];
     u8 level;
     u8 location;

@@ -336,7 +336,7 @@ struct Volatiles
 
 struct BattlePokemon
 {
-    /*0x00*/ u16 species;
+    /*0x00*/ enum Species species;
     /*0x02*/ u16 attack;
     /*0x04*/ u16 defense;
     /*0x06*/ u16 speed;
@@ -383,7 +383,7 @@ struct Evolution
 {
     u16 method;
     u16 param;
-    u16 targetSpecies;
+    enum Species targetSpecies;
     const struct EvolutionParam *params;
 };
 
@@ -623,7 +623,7 @@ struct LevelUpMove
 struct FormChange
 {
     u16 method;
-    u16 targetSpecies;
+    enum Species targetSpecies;
     u16 param1;
     u16 param2;
     u16 param3;
@@ -633,7 +633,7 @@ struct FormChange
 struct FormChangeContext
 {
     enum FormChanges method:16;
-    u16 currentSpecies;
+    enum Species currentSpecies;
     u16 partyItemUsed;
     u16 multichoiceSelection;
     u16 heldItem;
@@ -862,7 +862,7 @@ u8 GetTrainerEncounterMusicId(u16 trainerOpponentId);
 u16 ModifyStatByNature(u8 nature, u16 stat, enum Stat statIndex);
 void AdjustFriendship(struct Pokemon *mon, u8 event);
 u8 CalculateFriendshipBonuses(struct Pokemon *mon, u32 modifier, enum HoldEffect itemHoldEffect);
-void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies);
+void MonGainEVs(struct Pokemon *mon, enum Species defeatedSpecies);
 u16 GetMonEVCount(struct Pokemon *mon);
 bool8 TryIncrementMonLevel(struct Pokemon *mon);
 u8 CanLearnTeachableMove(enum Species species, enum Move move);

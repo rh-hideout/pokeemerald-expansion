@@ -88,7 +88,7 @@ struct
     /*0x004*/ MainCallback prev; // unused
     /*0x008*/ MainCallback next; // unused
     /*0x00C*/ u16 state; // unused
-    /*0x00E*/ u16 species;
+    /*0x00E*/ enum Species species;
     /*0x010*/ struct OverworldArea overworldAreasWithMons[MAX_AREA_HIGHLIGHTS];
     /*0x110*/ u16 numOverworldAreas;
     /*0x112*/ u16 numSpecialAreas;

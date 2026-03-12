@@ -87,7 +87,7 @@ enum {
 
 struct ContestPokemon
 {
-    u16 species;
+    enum Species species;
     u8 nickname[POKEMON_NAME_LENGTH + 1];
     u8 trainerName[PLAYER_NAME_LENGTH + 1];
     u8 trainerGfxId;
@@ -124,8 +124,8 @@ struct ContestTempSave
 
 struct ContestMoveAnimData
 {
-    u16 species;
-    u16 targetSpecies;
+    enum Species species;
+    enum Species targetSpecies;
     bool8 hasTargetAnim:1;
     u8 isShiny:1;
     u8 targetIsShiny:1;

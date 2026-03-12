@@ -79,7 +79,7 @@ extern u16 gSpecialVar_ItemId;
 
 struct SpeciesItem
 {
-    u16 species;
+    enum Species species;
     enum Item item;
 };
 
@@ -5561,7 +5561,7 @@ u8 CalculateFriendshipBonuses(struct Pokemon *mon, u32 modifier, enum HoldEffect
     return bonus;
 }
 
-void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies)
+void MonGainEVs(struct Pokemon *mon, enum Species defeatedSpecies)
 {
     u8 evs[NUM_STATS];
     u16 evIncrease = 0;

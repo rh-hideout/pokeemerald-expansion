@@ -19,7 +19,7 @@ struct AnimStatsChangeData
     enum BattlerId battler2;
     bool8 hidBattler2;
     s16 data[8];
-    u16 species;
+    enum Species species;
 };
 
 static EWRAM_DATA struct AnimStatsChangeData *sAnimStatsChangeData = {0};

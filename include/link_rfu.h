@@ -4,6 +4,7 @@
 #include "librfu.h"
 #include "link.h"
 #include "AgbRfu_LinkManager.h"
+#include "constants/species.h"
 
 #define RFUCMD_MASK                0xFF00
 
@@ -103,7 +104,7 @@ struct __attribute__((packed, aligned(2))) RfuGameData
 {
     struct RfuGameCompatibilityData compatibility;
     u8 partnerInfo[RFU_CHILD_MAX];
-    u16 tradeSpecies;
+    enum Species tradeSpecies;
     u8 activity:7;
     u8 startedActivity:1;
     u8 playerGender:1;

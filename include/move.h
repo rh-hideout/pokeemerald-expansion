@@ -164,7 +164,7 @@ struct MoveInfo
             };
         } twoTurnAttack;
         struct {
-            u16 species;
+            enum Species species;
             u16 power:9;
             u16 numOfHits:7;
         } speciesPowerOverride;

@@ -336,7 +336,7 @@ struct PokedexListItem
 
 struct PokemonStats
 {
-    u16 species;
+    enum Species species;
     u8  genderRatio;
     u8  baseHP;
     u8  baseSpeed;
@@ -367,7 +367,7 @@ struct EvoScreenData
 {
     bool8 fromEvoPage;
     u8 numAllEvolutions;
-    u16 targetSpecies[10];
+    enum Species targetSpecies[10];
     u8 numSeen;
     bool8 seen[10];
     u8 menuPos;
@@ -412,7 +412,7 @@ struct PokedexView
     struct PokemonStats sPokemonStats;
     struct EvoScreenData sEvoScreenData;
     struct FromScreenData sFormScreenData;
-    u16 formSpecies;
+    enum Species formSpecies;
     u16 selectedMonSpriteId;
     u16 pokeBallRotationStep;
     u16 pokeBallRotationBackup;

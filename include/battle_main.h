@@ -9,7 +9,7 @@
 // For displaying a multi battle partner's Pokémon in the party menu
 struct MultiPartnerMenuPokemon
 {
-    /*0x00*/ u16 species;
+    /*0x00*/ enum Species species;
     /*0x02*/ u16 heldItem;
     /*0x04*/ u8 nickname[POKEMON_NAME_LENGTH + 1];
     /*0x0F*/ u8 level;

@@ -443,8 +443,8 @@ struct PokemonStorageSystemData
     struct Sprite **shiftMonSpritePtr;
     struct Sprite **releaseMonSpritePtr;
     u16 numIconsPerSpecies[MAX_MON_ICONS];
-    u16 iconSpeciesList[MAX_MON_ICONS];
-    u16 boxSpecies[IN_BOX_COUNT];
+    enum Species iconSpeciesList[MAX_MON_ICONS];
+    enum Species boxSpecies[IN_BOX_COUNT];
     u32 boxPersonalities[IN_BOX_COUNT];
     bool8 boxIsEgg[IN_BOX_COUNT];
     u8 incomingBoxId;
@@ -480,7 +480,7 @@ struct PokemonStorageSystemData
     u8 cursorPalNums[2];
     const u16 *displayMonPalette;
     u32 displayMonPersonality;
-    u16 displayMonSpecies;
+    enum Species displayMonSpecies;
     u16 displayMonItemId;
     u16 displayUnusedVar;
     bool8 setMosaic;
