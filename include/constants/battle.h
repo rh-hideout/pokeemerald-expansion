@@ -183,6 +183,8 @@ enum VolatileFlags
     F(VOLATILE_BIDE,                        bideTurns,                     (u32, 3)) \
     F(VOLATILE_RAMPAGE_TURNS,               rampageTurns,                  (u32, B_RAMPAGE_TURNS + 1)) \
     F(VOLATILE_MULTIPLETURNS,               multipleTurns,                 (u32, 1)) \
+    F(VOLATILE_SKY_DROP_TARGET,             skyDropTarget,                 (enum BattlerId, MAX_BATTLERS_COUNT)) \
+    F(VOLATILE_CONFUSE_AFTER_DROP,          confuseAfterDrop,              (u32, 1)) \
     F(VOLATILE_WRAPPED,                     wrapped,                       (u32, 1)) \
     F(VOLATILE_WRAPPED_BY,                  wrappedBy,                     (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
     F(VOLATILE_WRAPPED_MOVE,                wrappedMove,                   (u32, MOVES_COUNT_ALL - 1)) \
@@ -318,7 +320,8 @@ enum SemiInvulnerableState
     STATE_UNDERWATER,
     STATE_ON_AIR,
     STATE_PHANTOM_FORCE,
-    STATE_SKY_DROP,
+    STATE_SKY_DROP_ATTACKER,
+    STATE_SKY_DROP_TARGET,
     STATE_COMMANDER,
     SEMI_INVULNERABLE_COUNT
 };
@@ -511,7 +514,6 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_SP_DEF_MINUS_2,
     MOVE_EFFECT_ACC_MINUS_2,
     MOVE_EFFECT_EVS_MINUS_2,
-    MOVE_EFFECT_SCALE_SHOT,
     MOVE_EFFECT_THRASH,
     MOVE_EFFECT_DEF_SPDEF_DOWN,
     MOVE_EFFECT_CLEAR_SMOG,
@@ -540,6 +542,7 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_LIGHT_SCREEN,
     MOVE_EFFECT_SALT_CURE,
     MOVE_EFFECT_EERIE_SPELL,
+    MOVE_EFFECT_FLING, // If used without EFFECT_FLING, the move will be a regular damage move with fling as an additional effect without the failure and dmg modifier parts
 
     // Max move effects happen earlier in the execution chain.
     // For example stealth rock from G-Max Stonesurge is set up before abilities but from Stone Axe after.

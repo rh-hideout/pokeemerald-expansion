@@ -427,7 +427,7 @@ bool32 IsBattlerTrapped(enum BattlerId battlerAtk, enum BattlerId battlerDef)
         return TRUE;
     if (gBattleMons[battlerDef].volatiles.escapePrevention)
         return TRUE;
-    if (gBattleMons[battlerDef].volatiles.semiInvulnerable == STATE_SKY_DROP)
+    if (gBattleMons[battlerDef].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET)
         return TRUE;
     if (gBattleMons[battlerDef].volatiles.root)
         return TRUE;
@@ -3697,7 +3697,7 @@ bool32 AI_CanBeConfused(enum BattlerId battlerAtk, enum BattlerId battlerDef, en
     if (gBattleMons[battlerDef].volatiles.confusionTurns > 0
      || (abilityDef == ABILITY_OWN_TEMPO && !DoesBattlerIgnoreAbilityChecks(battlerAtk, gAiLogicData->abilities[battlerAtk], move))
      || IsMistyTerrainAffected(battlerDef, abilityDef, gAiLogicData->holdEffects[battlerDef], gFieldStatuses)
-     || gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_SAFEGUARD
+     || IsSafeguardProtected(battlerAtk, battlerDef, gAiLogicData->abilities[battlerAtk])
      || DoesSubstituteBlockMove(battlerAtk, battlerDef, move))
         return FALSE;
     return TRUE;
@@ -6407,6 +6407,14 @@ bool32 IsPartyMonOnFieldOrChosenToSwitch(u32 partyIndex, enum BattlerId battlerI
         return TRUE;
     if (partyIndex == gBattleStruct->monToSwitchIntoId[battlerIn1]
             || partyIndex == gBattleStruct->monToSwitchIntoId[battlerIn2])
+        return TRUE;
+    return FALSE;
+}
+
+bool32 IsPartyMonPlannedToBeSwitchedInByPartner(u32 partyIndex, enum BattlerId battler)
+{
+    enum BattlerId battlerPartner = BATTLE_PARTNER(battler);
+    if (partyIndex == gAiLogicData->mostSuitableMonId[battlerPartner] && (gAiLogicData->shouldSwitch & (1u << battlerPartner)))
         return TRUE;
     return FALSE;
 }

@@ -46,10 +46,8 @@ enum AbilityEffect
     ABILITYEFFECT_COLOR_CHANGE, // Color Change / Berserk / Anger Shell
     ABILITYEFFECT_MOVE_END,
     ABILITYEFFECT_IMMUNITY,
-    ABILITYEFFECT_SYNCHRONIZE,
-    ABILITYEFFECT_ATK_SYNCHRONIZE,
     ABILITYEFFECT_FORM_CHANGE_ON_HIT,
-    ABILITYEFFECT_MOVE_END_OTHER,
+    ABILITYEFFECT_DANCER,
     ABILITYEFFECT_MOVE_END_FOES_FAINTED, // Moxie-like abilities / Battle Bond / Magician
 
     // On Switch in
@@ -154,19 +152,6 @@ enum SleepClauseBlock
     BLOCKED_BY_SLEEP_CLAUSE,
 };
 
-enum SkyDropState
-{
-    SKY_DROP_IGNORE,
-    SKY_DROP_ATTACKCANCELER_CHECK,
-    SKY_DROP_GRAVITY_ON_AIRBORNE,
-    SKY_DROP_CANCEL_MULTI_TURN_MOVES,
-    SKY_DROP_STATUS_YAWN,
-    SKY_DROP_STATUS_FREEZE_SLEEP,
-};
-
-#define SKY_DROP_NO_TARGET 0xFF
-#define SKY_DROP_RELEASED_TARGET 0xFE
-
 enum EjectPackTiming
 {
     START_OF_TURN,
@@ -199,7 +184,7 @@ enum BattlerId GetBattlerForBattleScript(u8 caseId);
 bool32 IsBattlerMarkedForControllerExec(enum BattlerId battler);
 void MarkBattlerForControllerExec(enum BattlerId battler);
 void MarkBattlerReceivedLinkData(enum BattlerId battler);
-const u8 *CancelMultiTurnMoves(enum BattlerId battler, enum SkyDropState skyDropState);
+void CancelMultiTurnMoves(enum BattlerId battler);
 bool32 IsLastMonToMove(enum BattlerId battler);
 bool32 ShouldDefiantCompetitiveActivate(enum BattlerId battler, enum Ability ability);
 void PrepareStringBattle(enum StringID stringId, enum BattlerId battler);
@@ -297,7 +282,7 @@ bool32 ShouldGetStatBadgeBoost(u16 flagId, enum BattlerId battler);
 uq4_12_t GetBadgeBoostModifier(void);
 enum DamageCategory GetBattleMoveCategory(enum Move move);
 void SetDynamicMoveCategory(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);
-bool32 CanFling(enum BattlerId battlerAtk);
+bool32 CanFling(enum BattlerId battlerAtk, enum Ability abilityAtk);
 bool32 IsTelekinesisBannedSpecies(u16 species);
 bool32 IsHealBlockPreventingMove(enum BattlerId battler, enum Move move);
 bool32 IsGravityPreventingMove(enum Move move);
@@ -351,7 +336,7 @@ bool32 CanBeParalyzed(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
 bool32 CanBeFrozen(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityDef);
 bool32 CanGetFrostbite(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityDef);
 bool32 CanSetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum MoveEffect secondaryMoveEffect, enum ResultOption option);
-bool32 CanBeConfused(enum BattlerId battler);
+bool32 CanBeConfused(enum BattlerId battlerAtk, enum BattlerId effectBattler);
 bool32 IsSafeguardProtected(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk);
 u32 GetBattlerAffectionHearts(enum BattlerId battler);
 void TryToRevertMimicryAndFlags(void);
@@ -407,6 +392,7 @@ bool32 DoesMoveMissTarget(struct BattleCalcValues *cv);
 bool32 IsSemiInvulnerable(enum BattlerId battler, enum SemiInvulnerableExclusion excludeCommander);
 bool32 CanBreakThroughSemiInvulnerablity(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum Move move);
 bool32 BreaksThroughSemiInvulnerableState(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum Move move, enum SemiInvulnerableState state);
+bool32 IsBattlerOnAir(enum BattlerId battler);
 bool32 HasPartnerTrainer(enum BattlerId battler);
 bool32 IsAffectedByPowderMove(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect);
 enum Move GetNaturePowerMove(void);

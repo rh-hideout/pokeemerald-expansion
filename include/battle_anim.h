@@ -61,6 +61,7 @@ struct LinkBattleAnim
 };
 
 #define ANIM_ARGS_COUNT 8
+#define MAX_ANIM_CALL_DEPTH 4
 
 extern void (*gAnimScriptCallback)(void);
 extern bool8 gAnimScriptActive;

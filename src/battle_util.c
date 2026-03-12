@@ -897,7 +897,6 @@ void HandleAction_NothingIsFainted(void)
 {
     gCurrentTurnActionNumber++;
     gCurrentActionFuncId = gActionsByTurnOrder[gCurrentTurnActionNumber];
-    gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_NONE;
 }
 
 void HandleAction_ActionFinished(void)
@@ -920,7 +919,6 @@ void HandleAction_ActionFinished(void)
     gBattleCommunication[3] = 0;
     gBattleCommunication[4] = 0;
     gBattleResources->battleScriptsStack->size = 0;
-    gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_NONE;
 
     if (GetConfig(B_RECALC_TURN_AFTER_ACTIONS) >= GEN_8 && !afterYouActive && !gBattleStruct->pledgeMove && !IsPursuitTargetSet())
     {
@@ -1074,96 +1072,26 @@ void MarkBattlerReceivedLinkData(enum BattlerId battler)
     MarkBattleControllerMessageSynchronizedOverLink(battler);
 }
 
-const u8 *CheckSkyDropState(enum BattlerId battler, enum SkyDropState skyDropState)
+void CancelMultiTurnMoves(enum BattlerId battler)
 {
-    const u8 *result = NULL;
-
-    u8 otherSkyDropper = gBattleStruct->skyDropTargets[battler];
-    gBattleMons[battler].volatiles.semiInvulnerable = STATE_NONE;
-
-    // Makes both attacker and target's sprites visible
-    gSprites[gBattlerSpriteIds[battler]].invisible = FALSE;
-    gSprites[gBattlerSpriteIds[otherSkyDropper]].invisible = FALSE;
-
-    // If target was sky dropped in the middle of Outrage/Thrash/Petal Dance,
-    // confuse them upon release and display "confused by fatigue" message & animation.
-    // Don't do this if this CancelMultiTurnMoves is caused by falling asleep via Yawn.
-    if (gBattleMons[otherSkyDropper].volatiles.rampageTurns && skyDropState != SKY_DROP_STATUS_YAWN)
-    {
-        gBattleMons[otherSkyDropper].volatiles.rampageTurns = 0;
-
-        // If the target can be confused, confuse them.
-        // Don't use CanBeConfused, can cause issues in edge cases.
-        enum Ability ability = GetBattlerAbility(otherSkyDropper);
-        if (!(gBattleMons[otherSkyDropper].volatiles.confusionTurns > 0
-            || IsAbilityAndRecord(otherSkyDropper, ability, ABILITY_OWN_TEMPO)
-            || IsMistyTerrainAffected(otherSkyDropper, ability, GetBattlerHoldEffect(otherSkyDropper), gFieldStatuses)))
-        {
-            gBattleMons[otherSkyDropper].volatiles.confusionTurns = RandomUniform(RNG_CONFUSION_TURNS, 2, B_CONFUSION_TURNS); // 2-5 turns
-            if (skyDropState == SKY_DROP_ATTACKCANCELER_CHECK)
-            {
-                gBattleStruct->skyDropTargets[battler] = SKY_DROP_RELEASED_TARGET;
-            }
-            else if (skyDropState == SKY_DROP_GRAVITY_ON_AIRBORNE)
-            {
-                // Reapplying STATE_SKY_DROPPED allows for avoiding unecessary messages when Gravity is applied to the target.
-                gBattleStruct->skyDropTargets[battler] = SKY_DROP_RELEASED_TARGET;
-                gBattleMons[otherSkyDropper].volatiles.semiInvulnerable = STATE_SKY_DROP;
-            }
-            else if (skyDropState == SKY_DROP_CANCEL_MULTI_TURN_MOVES)
-            {
-                gBattlerAttacker = otherSkyDropper;
-                result = BattleScript_ThrashConfuses;
-            }
-            else if (skyDropState == SKY_DROP_STATUS_FREEZE_SLEEP)
-            {
-                gBattlerAttacker = otherSkyDropper;
-                BattleScriptPush(gBattlescriptCurrInstr + 1);
-                result = BattleScript_ThrashConfuses;
-            }
-        }
-    }
-
-    // Clear skyDropTargets data, unless this CancelMultiTurnMoves is caused by Yawn, attackcanceler, or VARIOUS_GRAVITY_ON_AIRBORNE_MONS
-    if (!(gBattleMons[otherSkyDropper].volatiles.rampageTurns) && gBattleStruct->skyDropTargets[battler] < 4)
-    {
-        gBattleStruct->skyDropTargets[battler] = SKY_DROP_NO_TARGET;
-        gBattleStruct->skyDropTargets[otherSkyDropper] = SKY_DROP_NO_TARGET;
-    }
-
-    return result;
-}
-
-const u8 *CancelMultiTurnMoves(enum BattlerId battler, enum SkyDropState skyDropState)
-{
-    const u8 *result = NULL;
     gBattleMons[battler].volatiles.uproarTurns = 0;
     gBattleMons[battler].volatiles.bideTurns = 0;
-
-    if (B_RAMPAGE_CANCELLING < GEN_5)
-    {
-        gBattleMons[battler].volatiles.multipleTurns = 0;
-        gBattleMons[battler].volatiles.rampageTurns = 0;
-    }
-    else if (!gBattleMons[battler].volatiles.rampageTurns
-     || gBattleMons[battler].volatiles.rampageTurns > 1)
-    {
-        gBattleMons[battler].volatiles.multipleTurns = 0;
-    }
-
-    // Clear battler's semi-invulnerable bits if they are not held by Sky Drop.
-    if (gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP)
-        gBattleMons[battler].volatiles.semiInvulnerable = STATE_NONE;
-
-    if (gBattleStruct->skyDropTargets[battler] != SKY_DROP_NO_TARGET && gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP)
-        result = CheckSkyDropState(battler, skyDropState);
-
     gBattleMons[battler].volatiles.rolloutTimer = 0;
     gBattleMons[battler].volatiles.furyCutterCounter = 0;
 
-    return result;
-}
+    if (B_RAMPAGE_CONFUSION < GEN_5
+     || gBattleMons[battler].volatiles.rampageTurns != 1) // Will be confused at the end of the turn
+    {
+        gLockedMoves[battler] = MOVE_NONE;
+        gBattleMons[battler].volatiles.multipleTurns = 0;
+        gBattleMons[battler].volatiles.rampageTurns = 0;
+    }
 
+    // Clear battler's semi-invulnerable bits if they are not held by Sky Drop.
+    if (gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP_TARGET)
+        gBattleMons[battler].volatiles.semiInvulnerable = STATE_NONE;
+
+}
 
 // Returns TRUE if no other battler after this one in turn order will use a move
 bool32 IsLastMonToMove(enum BattlerId battler)
@@ -1427,7 +1355,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
 
     if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && move == gLastMoves[battler] && move != MOVE_STRUGGLE && (gBattleMons[battler].volatiles.torment == TRUE))
     {
-        CancelMultiTurnMoves(battler, SKY_DROP_IGNORE);
+        CancelMultiTurnMoves(battler);
         if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
         {
             gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingTormentedMoveInPalace;
@@ -1810,7 +1738,7 @@ bool32 BattleArenaTurnEnd(void)
      && IsBattlerAlive(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)) && IsBattlerAlive(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT)))
     {
         for (enum BattlerId battler = 0; battler < 2; battler++)
-            CancelMultiTurnMoves(battler, SKY_DROP_IGNORE);
+            CancelMultiTurnMoves(battler);
 
         gBattlescriptCurrInstr = BattleScript_ArenaDoJudgment;
         BattleScriptExecute(BattleScript_ArenaDoJudgment);
@@ -3047,6 +2975,62 @@ static bool32 IsRestrictedAbility(enum BattlerId battler, enum Ability ability)
     return GetSpeciesAbility(gBattleMons[battler].species, 0) == ability
         || GetSpeciesAbility(gBattleMons[battler].species, 1) == ability
         || GetSpeciesAbility(gBattleMons[battler].species, 2) == ability;
+}
+
+static bool32 TryDancer(void)
+{
+    bool32 anyDancerQueued = FALSE;
+    enum BattlerId dancerBattler = MAX_BATTLERS_COUNT;
+
+    if (!IsDanceMove(gCurrentMove))
+        return FALSE;
+
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+    {
+        if (gBattleMons[battler].volatiles.activateDancer && !gSpecialStatuses[battler].dancerUsedMove)
+        {
+            if (!anyDancerQueued || (gBattleMons[battler].speed < gBattleMons[dancerBattler].speed))
+                dancerBattler = battler;
+            anyDancerQueued = TRUE;
+        }
+    }
+
+    if (!anyDancerQueued)
+        return FALSE;
+
+    // Dance move succeeds
+    // Set target for other Dancer mons; set bit so that mon cannot activate Dancer off of its own move
+    if (!gSpecialStatuses[gBattlerAttacker].dancerUsedMove)
+    {
+        gBattleScripting.savedBattler = gBattlerTarget | 0x4;
+        gBattleScripting.savedBattler |= (gBattlerAttacker << 4);
+        gSpecialStatuses[gBattlerAttacker].dancerUsedMove = TRUE;
+    }
+
+    if (IsBattlerAlive(dancerBattler)
+     && !gSpecialStatuses[dancerBattler].dancerUsedMove
+     && gBattlerAttacker != dancerBattler)
+    {
+        gSpecialStatuses[dancerBattler].dancerUsedMove = TRUE;
+        gSpecialStatuses[dancerBattler].backUpTarget = gBattleStruct->moveTarget[dancerBattler] + 1;
+        gBattleMons[dancerBattler].volatiles.activateDancer = FALSE;
+        gBattlerAttacker = gBattlerAbility = dancerBattler;
+        gCalledMove = gCurrentMove;
+        gLastUsedAbility = ABILITY_DANCER;
+        RecordAbilityBattle(gBattlerAttacker, ABILITY_DANCER);
+
+        // Set the target to the original target of the mon that first used a Dance move
+        gBattlerTarget = gBattleScripting.savedBattler & 0x3;
+
+        // Make sure that the target isn't an ally - if it is, target the original user
+        if (IsBattlerAlly(gBattlerTarget, gBattlerAttacker))
+            gBattlerTarget = (gBattleScripting.savedBattler & 0xF0) >> 4;
+
+        BattleScriptExecute(BattleScript_DancerActivates);
+        return TRUE;
+    }
+
+    return FALSE;
 }
 
 u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum Ability ability, enum Move move, bool32 shouldAbilityTrigger)
@@ -4343,7 +4327,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_POISON_PUPPETEER:
             if (IsRestrictedAbility(gBattlerAttacker, ABILITY_POISON_PUPPETEER)
              && gBattleStruct->poisonPuppeteerConfusion == TRUE
-             && CanBeConfused(gBattlerTarget))
+             && CanBeConfused(gBattlerAttacker, gBattlerTarget))
             {
                 gBattleStruct->poisonPuppeteerConfusion = FALSE;
                 gBattleScripting.moveEffect = MOVE_EFFECT_CONFUSION;
@@ -4403,36 +4387,8 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             break;
         }
         break;
-    case ABILITYEFFECT_MOVE_END_OTHER: // Abilities that activate on *another* battler's moveend: Dancer, Soul-Heart, Receiver, Symbiosis
-        switch (ability)
-        {
-        case ABILITY_DANCER:
-            if (IsBattlerAlive(battler)
-             && IsDanceMove(move)
-             && !gSpecialStatuses[battler].dancerUsedMove
-             && gBattlerAttacker != battler)
-            {
-                // Set bit and save Dancer mon's original target
-                gSpecialStatuses[battler].dancerUsedMove = TRUE;
-                gSpecialStatuses[battler].dancerOriginalTarget = gBattleStruct->moveTarget[battler] | 0x4;
-                gBattleMons[battler].volatiles.activateDancer = FALSE;
-                gBattlerAttacker = gBattlerAbility = battler;
-                gCalledMove = move;
-
-                // Set the target to the original target of the mon that first used a Dance move
-                gBattlerTarget = gBattleScripting.savedBattler & 0x3;
-
-                // Make sure that the target isn't an ally - if it is, target the original user
-                if (IsBattlerAlly(gBattlerTarget, gBattlerAttacker))
-                    gBattlerTarget = (gBattleScripting.savedBattler & 0xF0) >> 4;
-                BattleScriptExecute(BattleScript_DancerActivates);
-                effect++;
-            }
-            break;
-        default:
-            break;
-        }
-        break;
+    case ABILITYEFFECT_DANCER:
+        return TryDancer();
     case ABILITYEFFECT_MOVE_END_FOES_FAINTED:
         switch (ability)
         {
@@ -4600,69 +4556,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         effect = TryImmunityAbilityHealStatus(battler);
         if (effect)
             return effect;
-        break;
-    case ABILITYEFFECT_SYNCHRONIZE:
-        if (gLastUsedAbility == ABILITY_SYNCHRONIZE && gBattleStruct->synchronizeMoveEffect != MOVE_EFFECT_NONE)
-        {
-            gBattleScripting.battler = gBattlerAbility = gBattlerTarget;
-            RecordAbilityBattle(gBattlerTarget, ABILITY_SYNCHRONIZE);
-
-            if (GetConfig(B_SYNCHRONIZE_TOXIC) < GEN_5 && gBattleStruct->synchronizeMoveEffect == MOVE_EFFECT_TOXIC)
-                gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_POISON;
-
-            if (CanSetNonVolatileStatus(
-                    gBattlerTarget,
-                    gBattlerAttacker,
-                    gLastUsedAbility,
-                    GetBattlerAbility(gBattlerAttacker),
-                    gBattleStruct->synchronizeMoveEffect,
-                    CHECK_TRIGGER))
-            {
-                gEffectBattler = gBattlerAttacker;
-                gBattleScripting.moveEffect = gBattleStruct->synchronizeMoveEffect;
-                PREPARE_ABILITY_BUFFER(gBattleTextBuff1, ABILITY_SYNCHRONIZE);
-                BattleScriptCall(BattleScript_SynchronizeActivates);
-                effect++;
-            }
-            else // Synchronize ability pop up still shows up even if status fails
-            {
-                BattleScriptCall(BattleScript_AbilityPopUp);
-            }
-            gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_NONE;
-        }
-        break;
-    case ABILITYEFFECT_ATK_SYNCHRONIZE:
-        if (gLastUsedAbility == ABILITY_SYNCHRONIZE && gBattleStruct->synchronizeMoveEffect != MOVE_EFFECT_NONE)
-        {
-            gBattleScripting.battler = gBattlerAbility = gBattlerAttacker;
-            RecordAbilityBattle(gBattlerAttacker, ABILITY_SYNCHRONIZE);
-
-            if (GetConfig(B_SYNCHRONIZE_TOXIC) < GEN_5 && gBattleStruct->synchronizeMoveEffect == MOVE_EFFECT_TOXIC)
-                gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_POISON;
-
-            if (CanSetNonVolatileStatus(
-                    gBattlerAttacker,
-                    gBattlerTarget,
-                    gLastUsedAbility,
-                    GetBattlerAbility(gBattlerAttacker),
-                    gBattleStruct->synchronizeMoveEffect,
-                    CHECK_TRIGGER))
-            {
-                if (gBattleStruct->synchronizeMoveEffect == MOVE_EFFECT_TOXIC)
-                    gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_POISON;
-
-                gEffectBattler = gBattlerTarget;
-                gBattleScripting.moveEffect = gBattleStruct->synchronizeMoveEffect;
-                PREPARE_ABILITY_BUFFER(gBattleTextBuff1, ABILITY_SYNCHRONIZE);
-                BattleScriptCall(BattleScript_SynchronizeActivates);
-                effect++;
-            }
-            else // Synchronize ability pop up still shows up even if status fails
-            {
-                BattleScriptCall(BattleScript_AbilityPopUp);
-            }
-            gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_NONE;
-        }
         break;
     case ABILITYEFFECT_TERA_SHIFT:
         if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_SWITCH_IN, ability))
@@ -5006,7 +4899,7 @@ u32 IsAbilityPreventingEscape(enum BattlerId battler)
     {
         if (battler == battlerDef || IsBattlerAlly(battler, battlerDef))
             continue;
-        
+
         if (!IsBattlerAlive(battlerDef))
             continue;
 
@@ -5039,7 +4932,7 @@ bool32 CanBattlerEscape(enum BattlerId battler) // no ability check
         return FALSE;
     else if (gFieldStatuses & STATUS_FIELD_FAIRY_LOCK)
         return FALSE;
-    else if (gBattleMons[battler].volatiles.semiInvulnerable == STATE_SKY_DROP)
+    else if (gBattleMons[battler].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET)
         return FALSE;
     else
         return TRUE;
@@ -5528,13 +5421,16 @@ static bool32 CanSleepDueToSleepClause(enum BattlerId battlerAtk, enum BattlerId
     return FALSE;
 }
 
-bool32 CanBeConfused(enum BattlerId battler)
+bool32 CanBeConfused(enum BattlerId battlerAtk, enum BattlerId effectBattler)
 {
-    enum Ability ability = GetBattlerAbility(battler);
-    if (gBattleMons[battler].volatiles.confusionTurns > 0
-     || IsMistyTerrainAffected(battler, ability, GetBattlerHoldEffect(battler), gFieldStatuses)
-     || IsAbilityAndRecord(battler, ability, ABILITY_OWN_TEMPO))
+    enum Ability effectAbility = GetBattlerAbility(effectBattler);
+
+    if (gBattleMons[effectBattler].volatiles.confusionTurns > 0
+     || IsSafeguardProtected(battlerAtk, effectBattler, GetBattlerAbility(battlerAtk))
+     || IsMistyTerrainAffected(effectBattler, effectAbility, GetBattlerHoldEffect(effectBattler), gFieldStatuses)
+     || IsAbilityAndRecord(effectBattler, effectAbility, ABILITY_OWN_TEMPO))
         return FALSE;
+
     return TRUE;
 }
 
@@ -7440,7 +7336,7 @@ static inline uq4_12_t GetDiveModifier(enum Move move, enum BattlerId battlerDef
 
 static inline uq4_12_t GetAirborneModifier(enum Move move, enum BattlerId battlerDef)
 {
-    if (MoveDamagesAirborneDoubleDamage(move) && gBattleMons[battlerDef].volatiles.semiInvulnerable == STATE_ON_AIR)
+    if (MoveDamagesAirborneDoubleDamage(move) && IsBattlerOnAir(battlerDef))
         return UQ_4_12(2.0);
     return UQ_4_12(1.0);
 }
@@ -8559,7 +8455,7 @@ bool32 CanMegaEvolve(enum BattlerId battler)
         return FALSE;
 
     // Check if battler is currently held by Sky Drop.
-    if (gBattleMons[battler].volatiles.semiInvulnerable == STATE_SKY_DROP)
+    if (gBattleMons[battler].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET)
         return FALSE;
 
     // Check if battler is holding a Z-Crystal.
@@ -8600,7 +8496,7 @@ bool32 CanUltraBurst(enum BattlerId battler)
         return FALSE;
 
     // Check if mon is currently held by Sky Drop
-    if (gBattleMons[battler].volatiles.semiInvulnerable == STATE_SKY_DROP)
+    if (gBattleMons[battler].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET)
         return FALSE;
 
     enum Ability ability = GetBattlerAbility(battler);
@@ -9173,12 +9069,12 @@ static u32 GetFlingPowerFromItemId(enum Item itemId)
         return GetItemFlingPower(itemId);
 }
 
-bool32 CanFling(enum BattlerId battlerAtk)
+bool32 CanFling(enum BattlerId battlerAtk, enum Ability abilityAtk)
 {
     enum Item item = gBattleMons[battlerAtk].item;
 
     if (item == ITEM_NONE
-      || (GetConfig(B_KLUTZ_FLING_INTERACTION) >= GEN_5 && GetBattlerAbility(battlerAtk) == ABILITY_KLUTZ)
+      || (GetConfig(B_KLUTZ_FLING_INTERACTION) >= GEN_5 && abilityAtk == ABILITY_KLUTZ)
       || gFieldStatuses & STATUS_FIELD_MAGIC_ROOM
       || gBattleMons[battlerAtk].volatiles.embargo
       || (GetItemTMHMIndex(item) != 0 && GetItemImportance(item) == 1) // don't fling reusable TMs
@@ -10073,7 +9969,7 @@ bool32 EmergencyExitCanBeTriggered(enum BattlerId battler)
      && HadMoreThanHalfHpNowDoesnt(battler)
      && (CanBattlerSwitch(battler) || !(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
      && !(gBattleTypeFlags & BATTLE_TYPE_ARENA)
-     && gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP)
+     && gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP_TARGET)
         return TRUE;
 
     return FALSE;
@@ -10097,8 +9993,7 @@ bool32 TrySymbiosis(enum BattlerId battler, enum Item itemId, bool32 moveEnd)
         && GetBattlerHoldEffect(battler) != HOLD_EFFECT_EJECT_BUTTON
         && GetBattlerHoldEffect(battler) != HOLD_EFFECT_EJECT_PACK
         && (GetConfig(B_SYMBIOSIS_GEMS) < GEN_7 || !(gSpecialStatuses[battler].gemBoost))
-        && GetMoveEffect(gCurrentMove) != EFFECT_FLING //Fling and damage-reducing berries are handled separately.
-        && !gSpecialStatuses[battler].berryReduced
+        && !gSpecialStatuses[battler].berryReduced //Fling and damage-reducing berries are handled separately.
         && TryTriggerSymbiosis(battler, BATTLE_PARTNER(battler)))
     {
         BestowItem(BATTLE_PARTNER(battler), battler);
@@ -10276,6 +10171,14 @@ static bool32 CanMoveSkipAccuracyCheck(enum BattlerId battlerAtk, u32 move)
     return MoveAlwaysHitsOnSameType(move) && IS_BATTLER_OF_TYPE(battlerAtk, GetMoveType(move));
 }
 
+static bool32 IsSkyDropInvolved(enum BattlerId battlerDef, enum BattleMoveEffects moveEffect)
+{
+    if (moveEffect != EFFECT_SKY_DROP)
+        return FALSE;
+    return gBattleMons[battlerDef].volatiles.semiInvulnerable == STATE_SKY_DROP_ATTACKER
+        || gBattleMons[battlerDef].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET;
+}
+
 bool32 CanMoveSkipAccuracyCalc(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum Move move, enum ResultOption option)
 {
     bool32 effect = FALSE;
@@ -10288,17 +10191,14 @@ bool32 CanMoveSkipAccuracyCalc(enum BattlerId battlerAtk, enum BattlerId battler
     {
         effect = TRUE;
     }
-    // If the attacker has the ability No Guard and they aren't targeting a Pokemon involved in a Sky Drop with the move Sky Drop, move hits.
     else if (abilityAtk == ABILITY_NO_GUARD
           && gBattleMons[battlerDef].volatiles.semiInvulnerable != STATE_COMMANDER
-          && (moveEffect != EFFECT_SKY_DROP || gBattleStruct->skyDropTargets[battlerDef] == SKY_DROP_NO_TARGET))
+          && !IsSkyDropInvolved(battlerDef, moveEffect))
     {
         effect = TRUE;
         ability = ABILITY_NO_GUARD;
     }
-    // If the target has the ability No Guard and they aren't involved in a Sky Drop or the current move isn't Sky Drop, move hits.
-    else if (abilityDef == ABILITY_NO_GUARD
-          && (moveEffect != EFFECT_SKY_DROP || gBattleStruct->skyDropTargets[battlerDef] == SKY_DROP_NO_TARGET))
+    else if (abilityDef == ABILITY_NO_GUARD && !IsSkyDropInvolved(battlerDef, moveEffect))
     {
         effect = TRUE;
         ability = ABILITY_NO_GUARD;
@@ -10586,7 +10486,8 @@ static bool32 CanBreakThroughSemiInvulnerablityInternal(enum BattlerId battlerAt
     case STATE_UNDERWATER:
         return MoveDamagesUnderWater(move);
     case STATE_ON_AIR:
-    case STATE_SKY_DROP:
+    case STATE_SKY_DROP_ATTACKER:
+    case STATE_SKY_DROP_TARGET:
         return MoveDamagesAirborne(move) || MoveDamagesAirborneDoubleDamage(move);
     case STATE_PHANTOM_FORCE:
         return FALSE;
@@ -10608,6 +10509,19 @@ bool32 CanBreakThroughSemiInvulnerablity(enum BattlerId battlerAtk, enum Battler
 bool32 BreaksThroughSemiInvulnerableState(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum Move move, enum SemiInvulnerableState state)
 {
     return CanBreakThroughSemiInvulnerablityInternal(battlerAtk, battlerDef, abilityAtk, abilityDef, move, state);
+}
+
+bool32 IsBattlerOnAir(enum BattlerId battler)
+{
+    switch (gBattleMons[battler].volatiles.semiInvulnerable)
+    {
+    case STATE_ON_AIR:
+    case STATE_SKY_DROP_ATTACKER:
+    case STATE_SKY_DROP_TARGET:
+        return TRUE;
+    default:
+        return FALSE;
+    }
 }
 
 bool32 HasPartnerTrainer(enum BattlerId battler)

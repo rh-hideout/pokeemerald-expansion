@@ -219,9 +219,7 @@ void ResetPaletteFadeControl(void)
 // Like normal palette fade, but respects sprite/tile palettes immune to time of day fading
 static u8 UpdateTimeOfDayPaletteFade(void)
 {
-    u16 paletteOffset;
-    u16 selectedPalettes;
-    u16 timePalettes = 0; // palettes passed to the time-blender
+    u32 timePalettes;
     u16 copyPalettes;
     u16 *src;
     u16 *dst;
@@ -232,46 +230,32 @@ static u8 UpdateTimeOfDayPaletteFade(void)
     if (IsSoftwarePaletteFadeFinishing())
         return gPaletteFade.active ? PALETTE_FADE_STATUS_ACTIVE : PALETTE_FADE_STATUS_DONE;
 
+    // In vanilla Emerald, sprite and background palette are faded on alternate frames
+    // In expansion, they are fade simultaneously every two frames to keep the vanilla timing
+    gPaletteFade.objPaletteToggle ^= 1;
     if (!gPaletteFade.objPaletteToggle)
-    {
-        if (gPaletteFade.delayCounter < gPaletteFadeDelay)
-        {
-            gPaletteFade.delayCounter++;
-            return PALETTE_FADE_STATUS_DELAY;
-        }
-        gPaletteFade.delayCounter = 0;
-    }
+        return PALETTE_FADE_STATUS_DELAY;
 
-    paletteOffset = 0;
-
-    if (!gPaletteFade.objPaletteToggle)
+    if (gPaletteFade.delayCounter < gPaletteFadeDelay)
     {
-        selectedPalettes = gPaletteFadeSelectedPalettes;
+        gPaletteFade.delayCounter++;
+        return PALETTE_FADE_STATUS_DELAY;
     }
-    else
-    {
-        selectedPalettes = gPaletteFadeSelectedPalettes >> 16;
-        paletteOffset = 256;
-    }
-
-    src = gPlttBufferUnfaded + paletteOffset;
-    dst = gPlttBufferFaded + paletteOffset;
+    gPaletteFade.delayCounter = 0;
 
     // First pply TOD blend to relevant subset of palettes
-    if (gPaletteFade.objPaletteToggle) // Sprite palettes, don't blend those with tags
+    timePalettes = gPaletteFadeSelectedPalettes & PALETTES_MAP; // tile palettes, don't blend [13, 15]
+    // Sprite palettes, don't blend those with tags
+    u32 i;
+    u32 j = 1 << 16;
+    for (i = 0; i < 16; i++, j <<= 1) // Mask out palettes that should not be light blended
     {
-        u32 i;
-        u32 j = 1;
-        for (i = 0; i < 16; i++, j <<= 1) // Mask out palettes that should not be light blended
-        {
-            if ((selectedPalettes & j) && !IS_BLEND_IMMUNE_TAG(GetSpritePaletteTagByPaletteNum(i)))
-                timePalettes |= j;
-        }
+        if ((gPaletteFadeSelectedPalettes & j) && !IS_BLEND_IMMUNE_TAG(GetSpritePaletteTagByPaletteNum(i)))
+            timePalettes |= j;
     }
-    else // tile palettes, don't blend [13, 15]
-    {
-        timePalettes = selectedPalettes & PALETTES_MAP;
-    }
+
+    src = gPlttBufferUnfaded;
+    dst = gPlttBufferFaded;
     TimeMixPalettes(timePalettes, src, dst, gPaletteFade.bld0, gPaletteFade.bld1, gPaletteFade.weight);
 
     // palettes that were not blended above must be copied through
@@ -290,35 +274,30 @@ static u8 UpdateTimeOfDayPaletteFade(void)
     }
 
     // Then, blend from faded->faded with native BlendPalettes
-    BlendPalettesFine(selectedPalettes, dst, dst, gPaletteFade.y, gPaletteFade.blendColor);
+    BlendPalettesFine(gPaletteFadeSelectedPalettes, dst, dst, gPaletteFade.y, gPaletteFade.blendColor);
 
-    gPaletteFade.objPaletteToggle ^= 1;
-
-    if (!gPaletteFade.objPaletteToggle)
+    if ((gPaletteFade.yDec && gPaletteFade.y == 0) || (!gPaletteFade.yDec && gPaletteFade.y == gPaletteFade.targetY))
     {
-        if ((gPaletteFade.yDec && gPaletteFade.y == 0) || (!gPaletteFade.yDec && gPaletteFade.y == gPaletteFade.targetY))
+        gPaletteFadeSelectedPalettes = 0;
+        gPaletteFade.softwareFadeFinishing = 1;
+    }
+    else
+    {
+        s8 val;
+
+        if (!gPaletteFade.yDec)
         {
-            gPaletteFadeSelectedPalettes = 0;
-            gPaletteFade.softwareFadeFinishing = 1;
+            val = gPaletteFade.y + gPaletteFade.deltaY;
+            if (val > gPaletteFade.targetY)
+                val = gPaletteFade.targetY;
+            gPaletteFade.y = val;
         }
         else
         {
-            s8 val;
-
-            if (!gPaletteFade.yDec)
-            {
-                val = gPaletteFade.y + gPaletteFade.deltaY;
-                if (val > gPaletteFade.targetY)
-                    val = gPaletteFade.targetY;
-                gPaletteFade.y = val;
-            }
-            else
-            {
-                val = gPaletteFade.y - gPaletteFade.deltaY;
-                if (val < 0)
-                    val = 0;
-                gPaletteFade.y = val;
-            }
+            val = gPaletteFade.y - gPaletteFade.deltaY;
+            if (val < 0)
+                val = 0;
+            gPaletteFade.y = val;
         }
     }
 
@@ -330,87 +309,76 @@ static u8 UpdateTimeOfDayPaletteFade(void)
 static u32 UpdateNormalPaletteFade(void)
 {
     u16 paletteOffset;
-    u16 selectedPalettes;
+    u32 selectedPalettes;
 
     if (!gPaletteFade.active)
         return PALETTE_FADE_STATUS_DONE;
 
     if (IsSoftwarePaletteFadeFinishing())
-    {
         return gPaletteFade.active ? PALETTE_FADE_STATUS_ACTIVE : PALETTE_FADE_STATUS_DONE;
+
+    // In vanilla Emerald, sprite and background palette are faded on alternate frames
+    // In expansion, they are fade simultaneously every two frames to keep the vanilla timing
+    gPaletteFade.objPaletteToggle ^= 1;
+    if (!gPaletteFade.objPaletteToggle)
+        return PALETTE_FADE_STATUS_DELAY;
+
+    if (gPaletteFade.delayCounter < gPaletteFadeDelay)
+    {
+        gPaletteFade.delayCounter++;
+        return PALETTE_FADE_STATUS_DELAY;
+    }
+    gPaletteFade.delayCounter = 0;
+
+    paletteOffset = 0;
+
+    selectedPalettes = gPaletteFadeSelectedPalettes;
+    while (selectedPalettes)
+    {
+        if (selectedPalettes & 1)
+        {
+            BlendPalette(
+                paletteOffset,
+                16,
+                gPaletteFade.y,
+                gPaletteFade.blendColor);
+        }
+        selectedPalettes >>= 1;
+        paletteOffset += 16;
+    }
+
+    
+
+    if (gPaletteFade.y == gPaletteFade.targetY)
+    {
+        gPaletteFadeSelectedPalettes = 0;
+        gPaletteFade.softwareFadeFinishing = TRUE;
     }
     else
     {
-        if (!gPaletteFade.objPaletteToggle)
-        {
-            if (gPaletteFade.delayCounter < gPaletteFadeDelay)
-            {
-                gPaletteFade.delayCounter++;
-                return PALETTE_FADE_STATUS_DELAY;
-            }
-            gPaletteFade.delayCounter = 0;
-        }
+        s8 val;
 
-        paletteOffset = 0;
-
-        if (!gPaletteFade.objPaletteToggle)
+        if (!gPaletteFade.yDec)
         {
-            selectedPalettes = gPaletteFadeSelectedPalettes;
+            val = gPaletteFade.y;
+            val += gPaletteFade.deltaY;
+            if (val > gPaletteFade.targetY)
+                val = gPaletteFade.targetY;
+            gPaletteFade.y = val;
         }
         else
         {
-            selectedPalettes = gPaletteFadeSelectedPalettes >> 16;
-            paletteOffset = OBJ_PLTT_OFFSET;
+            val = gPaletteFade.y;
+            val -= gPaletteFade.deltaY;
+            if (val < gPaletteFade.targetY)
+                val = gPaletteFade.targetY;
+            gPaletteFade.y = val;
         }
-
-        while (selectedPalettes)
-        {
-            if (selectedPalettes & 1)
-                BlendPalette(
-                    paletteOffset,
-                    16,
-                    gPaletteFade.y,
-                    gPaletteFade.blendColor);
-            selectedPalettes >>= 1;
-            paletteOffset += 16;
-        }
-
-        gPaletteFade.objPaletteToggle ^= 1;
-
-        if (!gPaletteFade.objPaletteToggle)
-        {
-            if (gPaletteFade.y == gPaletteFade.targetY)
-            {
-                gPaletteFadeSelectedPalettes = 0;
-                gPaletteFade.softwareFadeFinishing = TRUE;
-            }
-            else
-            {
-                s8 val;
-
-                if (!gPaletteFade.yDec)
-                {
-                    val = gPaletteFade.y;
-                    val += gPaletteFade.deltaY;
-                    if (val > gPaletteFade.targetY)
-                        val = gPaletteFade.targetY;
-                    gPaletteFade.y = val;
-                }
-                else
-                {
-                    val = gPaletteFade.y;
-                    val -= gPaletteFade.deltaY;
-                    if (val < gPaletteFade.targetY)
-                        val = gPaletteFade.targetY;
-                    gPaletteFade.y = val;
-                }
-            }
-        }
-
-        // gPaletteFade.active cannot change since the last time it was checked. So this
-        // is equivalent to `return PALETTE_FADE_STATUS_ACTIVE;`
-        return gPaletteFade.active ? PALETTE_FADE_STATUS_ACTIVE : PALETTE_FADE_STATUS_DONE;
     }
+
+    // gPaletteFade.active cannot change since the last time it was checked. So this
+    // is equivalent to `return PALETTE_FADE_STATUS_ACTIVE;`
+    return gPaletteFade.active ? PALETTE_FADE_STATUS_ACTIVE : PALETTE_FADE_STATUS_DONE;
 }
 
 void InvertPlttBuffer(u32 selectedPalettes)
