@@ -573,8 +573,8 @@ static void CreateShedinja(u32 preEvoSpecies, u32 postEvoSpecies, struct Pokemon
             SetMonData(&gPlayerParty[gPlayerPartyCount], MON_DATA_MARKINGS, &data);
             if (P_SHEDINJA_BALL >= GEN_4)
             {
-                enum PokeBall data = GetItemSecondaryId(ball);
-                SetMonData(&gPlayerParty[gPlayerPartyCount], MON_DATA_POKEBALL, &data);
+                enum PokeBall ballData = GetItemSecondaryId(ball);
+                SetMonData(&gPlayerParty[gPlayerPartyCount], MON_DATA_POKEBALL, &ballData);
                 RemoveBagItem(ball, 1);
             }
 
