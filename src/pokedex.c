@@ -173,8 +173,6 @@ static void Task_LoadSearchMenu(u8);
 static void Task_SwitchToSearchMenuTopBar(u8);
 static void Task_HandleSearchTopBarInput(u8);
 static void Task_SwitchToSearchMenu(u8);
-static void Task_HandleSearchMenuInput(u8);
-static void Task_StartPokedexSearch(u8);
 static void Task_WaitAndCompleteSearch(u8);
 static void Task_SearchCompleteWaitForInput(u8);
 static void Task_ExitSearch(u8);
@@ -5110,7 +5108,7 @@ static void Task_SwitchToSearchMenu(u8 taskId)
 }
 
 // Input for main search menu
-static void Task_HandleSearchMenuInput(u8 taskId)
+void Task_HandleSearchMenuInput(u8 taskId)
 {
     const u8 (*movementMap)[4];
 
@@ -5205,7 +5203,7 @@ static void Task_HandleSearchMenuInput(u8 taskId)
     }
 }
 
-static void Task_StartPokedexSearch(u8 taskId)
+void Task_StartPokedexSearch(u8 taskId)
 {
     u8 dexMode = GetSearchModeSelection(taskId, SEARCH_MODE);
     u8 order = GetSearchModeSelection(taskId, SEARCH_ORDER);

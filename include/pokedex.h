@@ -244,5 +244,7 @@ bool8 SearchParamCantScrollDown(u8 taskId);
 void SetInitialSearchMenuBgHighlights(u8 topBarItem);
 void HighlightSelectedSearchTopBarItem(u8 topBarItem);
 void PrintSelectedSearchParameters(u8 taskId);
+void Task_HandleSearchMenuInput(u8 taskId);
+void Task_StartPokedexSearch(u8 taskId);
 
 #endif // GUARD_POKEDEX_H
