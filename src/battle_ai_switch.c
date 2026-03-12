@@ -228,19 +228,30 @@ static bool32 AreStatsRaised(enum BattlerId battler)
 bool32 IsSwitchinTSpikesAffected(enum BattlerId battler)
 {
     enum Ability ability = gAiLogicData->abilities[battler];
-    u32 status = gBattleMons[battler].status1;
     enum HoldEffect heldItemEffect = gAiLogicData->holdEffects[battler];
+    enum BattlerId opposingBattler = GetOppositeBattler(battler);
     bool32 ignoreItem = ((gFieldStatuses & STATUS_FIELD_MAGIC_ROOM) || ability == ABILITY_KLUTZ);
-    if ((!IS_BATTLER_ANY_TYPE(battler, TYPE_POISON, TYPE_STEEL)
-        && ability != ABILITY_IMMUNITY && ability != ABILITY_POISON_HEAL && !IsAbilityOnSide(battler, ABILITY_PASTEL_VEIL)
-        && status == 0
-        && !(heldItemEffect == HOLD_EFFECT_HEAVY_DUTY_BOOTS && ignoreItem)
-        && heldItemEffect != HOLD_EFFECT_CURE_PSN && heldItemEffect != HOLD_EFFECT_CURE_STATUS
-        && AI_IsBattlerGrounded(battler)))
-    {
-        return TRUE;
-    }
-    return FALSE;
+    if (gBattleMons[battler].status1 & STATUS1_ANY)
+        return FALSE;
+    if (IS_BATTLER_ANY_TYPE(battler, TYPE_POISON, TYPE_STEEL))
+        return FALSE;
+    if (ability == ABILITY_IMMUNITY || IsAbilityOnSide(battler, ABILITY_PASTEL_VEIL))
+        return FALSE;
+    if ((heldItemEffect == HOLD_EFFECT_HEAVY_DUTY_BOOTS || heldItemEffect == HOLD_EFFECT_CURE_PSN || heldItemEffect == HOLD_EFFECT_CURE_STATUS) && !ignoreItem)
+        return FALSE;
+    if (!AI_IsBattlerGrounded(battler))
+        return FALSE;
+    if (IsMistyTerrainAffected(battler, ability, heldItemEffect, gFieldStatuses))
+        return FALSE;
+    if (IsLeafGuardProtected(battler, ability))
+        return FALSE;
+    if (IsShieldsDownProtected(battler, ability))
+        return FALSE;
+    if (IsFlowerVeilProtected(battler))
+        return FALSE;
+    if (IsSafeguardProtected(opposingBattler, battler, gAiLogicData->abilities[opposingBattler]))
+        return FALSE;
+    return TRUE;
 }
 
 static inline bool32 SetSwitchinAndSwitch(enum BattlerId battler, u32 switchinId)
