@@ -325,7 +325,6 @@ struct SearchMenuItem
     u8 selectionBgWidth;
 };
 
-static void ResetPokedexView(struct PokedexView *pokedexView);
 static void VBlankCB_Pokedex(void);
 static void CB2_Pokedex(void);
 static void Task_OpenPokedexMainPage(u8);
@@ -1923,58 +1922,6 @@ void CB2_OpenPokedexPlusHGSS(void)
         m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL, 0x80);
         break;
     }
-}
-
-static void ResetPokedexView(struct PokedexView *pokedexView)
-{
-    u16 i;
-
-    for (i = 0; i < NATIONAL_DEX_COUNT; i++)
-    {
-        pokedexView->pokedexList[i].dexNum = 0xFFFF;
-        pokedexView->pokedexList[i].seen = FALSE;
-        pokedexView->pokedexList[i].owned = FALSE;
-    }
-    pokedexView->pokedexList[NATIONAL_DEX_COUNT].dexNum = 0;
-    pokedexView->pokedexList[NATIONAL_DEX_COUNT].seen = FALSE;
-    pokedexView->pokedexList[NATIONAL_DEX_COUNT].owned = FALSE;
-    pokedexView->pokemonListCount = 0;
-    pokedexView->selectedPokemon = 0;
-    pokedexView->selectedPokemonBackup = 0;
-    pokedexView->dexMode = DEX_MODE_HOENN;
-    pokedexView->dexModeBackup = DEX_MODE_HOENN;
-    pokedexView->dexOrder = ORDER_NUMERICAL;
-    pokedexView->dexOrderBackup = ORDER_NUMERICAL;
-    pokedexView->seenCount = 0;
-    pokedexView->ownCount = 0;
-    for (i = 0; i < MAX_MONS_ON_SCREEN; i++)
-        pokedexView->monSpriteIds[i] = 0xFFFF;
-    pokedexView->pokeBallRotationStep = 0;
-    pokedexView->pokeBallRotationBackup = 0;
-    pokedexView->pokeBallRotation = 0;
-    pokedexView->initialVOffset = 0;
-    pokedexView->scrollTimer = 0;
-    pokedexView->scrollDirection = 0;
-    pokedexView->listVOffset = 0;
-    pokedexView->listMovingVOffset = 0;
-    pokedexView->scrollMonIncrement = 0;
-    pokedexView->maxScrollTimer = 0;
-    pokedexView->scrollSpeed = 0;
-    for (i = 0; i < ARRAY_COUNT(pokedexView->unkArr1); i++)
-        pokedexView->unkArr1[i] = 0;
-    pokedexView->currentPage = PAGE_MAIN;
-    pokedexView->currentPageBackup = PAGE_MAIN;
-    pokedexView->isSearchResults = FALSE;
-    pokedexView->selectedScreen = AREA_SCREEN;
-    pokedexView->screenSwitchState = 0;
-    pokedexView->menuIsOpen = 0;
-    pokedexView->menuCursorPos = 0;
-    pokedexView->menuY = 0;
-    for (i = 0; i < ARRAY_COUNT(pokedexView->unkArr2); i++)
-        pokedexView->unkArr2[i] = 0;
-    for (i = 0; i < ARRAY_COUNT(pokedexView->unkArr3); i++)
-        pokedexView->unkArr3[i] = 0;
-    pokedexView->originalSearchSelectionNum = 0;
 }
 
 static void VBlankCB_Pokedex(void)

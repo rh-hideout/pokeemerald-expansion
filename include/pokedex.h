@@ -142,4 +142,6 @@ struct PokedexView
     u16 formSpecies;
 };
 
+void ResetPokedexView(struct PokedexView *pokedexView);
+
 #endif // GUARD_POKEDEX_H

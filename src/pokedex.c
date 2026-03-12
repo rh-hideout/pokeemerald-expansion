@@ -1486,7 +1486,7 @@ static void VBlankCB_Pokedex(void)
     TransferPlttBuffer();
 }
 
-static void ResetPokedexView(struct PokedexView *pokedexView)
+void ResetPokedexView(struct PokedexView *pokedexView)
 {
     u16 i;
 
@@ -1535,6 +1535,7 @@ static void ResetPokedexView(struct PokedexView *pokedexView)
         pokedexView->unkArr2[i] = 0;
     for (i = 0; i < ARRAY_COUNT(pokedexView->unkArr3); i++)
         pokedexView->unkArr3[i] = 0;
+    pokedexView->originalSearchSelectionNum = 0;
 }
 
 void CB2_OpenPokedex(void)
