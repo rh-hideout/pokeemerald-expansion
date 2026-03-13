@@ -265,6 +265,7 @@ void VBlankCB_Pokedex(void);
 void CB2_Pokedex(void);
 
 void Task_OpenPokedexMainPage(u8);
+void Task_HandlePokedexInput(u8);
 void Task_OpenInfoScreenAfterMonMovement(u8);
 u8 LoadInfoScreen(struct PokedexListItem *, u8 monSpriteId);
 void Task_LoadInfoScreen(u8 taskId);
@@ -283,6 +284,12 @@ void HighlightSelectedSearchTopBarItem(u8 topBarItem);
 void PrintSelectedSearchParameters(u8 taskId);
 void Task_HandleSearchMenuInput(u8 taskId);
 void Task_StartPokedexSearch(u8 taskId);
-void CreatePokedexList(u8, u8);;
+void CreatePokedexList(u8, u8);
+
+void Task_ClosePokedex(u8);
+void CreateMonSpritesAtPos(u16, u16);
+void UpdateSelectedMonSpriteId(void);
+void SpriteCB_MoveMonForInfoScreen(struct Sprite *sprite);
+void Task_SwitchToSearchMenuTopBar(u8);
 
 #endif // GUARD_POKEDEX_H
