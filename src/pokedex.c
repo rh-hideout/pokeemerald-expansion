@@ -2353,7 +2353,7 @@ void CreateMonSpritesAtPos(u16 selectedMon, u16 ignored)
     u8 spriteId;
     u32 scrollingMonX = 0x60;
     if (POKEDEX_PLUS_HGSS)
-        scrollingMonX = 146;
+        scrollingMonX = 0x92;
 
     gPaletteFade.bufferTransferDisabled = TRUE;
 
@@ -2443,7 +2443,7 @@ static void CreateScrollingPokemonSprite(u8 direction, u16 selectedMon)
     u8 spriteId;
     u32 scrollingMonX = 0x60;
     if (POKEDEX_PLUS_HGSS)
-        scrollingMonX = 146;
+        scrollingMonX = 0x92;
 
     sPokedexView->listMovingVOffset = sPokedexView->listVOffset;
     switch (direction)
@@ -2931,7 +2931,6 @@ static void SpriteCB_EndMoveMonForInfoScreen(struct Sprite *sprite)
 
 static void SpriteCB_SeenOwnInfo(struct Sprite *sprite)
 {
-    if (sPokedexView->currentPage != PAGE_MAIN && sPokedexView->currentPage != PAGE_SEARCH_RESULTS)
     if (sPokedexView->currentPage != PAGE_MAIN)
         DestroySprite(sprite);
 }
