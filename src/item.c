@@ -134,7 +134,7 @@ void ApplyNewEncryptionKeyToBagItems(u32 newKey)
     enum Item item;
     for (pocketId = 0; pocketId < POCKETS_COUNT; pocketId++)
     {
-        for (item = 0; item < gBagPockets[pocketId].capacity; item++)
+        for (item = ITEM_NONE; item < gBagPockets[pocketId].capacity; item++)
             ApplyNewEncryptionKeyToHword(&(gBagPockets[pocketId].itemSlots[item].quantity), newKey);
     }
 }

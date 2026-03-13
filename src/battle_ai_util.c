@@ -368,12 +368,12 @@ void SetBattlerData(enum BattlerId battlerId)
             gBattleMons[battlerId].ability = ABILITY_NONE;
 
         if (gAiPartyData->mons[side][gBattlerPartyIndexes[battlerId]].heldEffect == 0)
-            gBattleMons[battlerId].item = 0;
+            gBattleMons[battlerId].item = ITEM_NONE;
 
         for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
             if (gAiPartyData->mons[side][gBattlerPartyIndexes[battlerId]].moves[moveIndex] == 0)
-                gBattleMons[battlerId].moves[moveIndex] = 0;
+                gBattleMons[battlerId].moves[moveIndex] = MOVE_NONE;
         }
     }
 }

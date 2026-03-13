@@ -171,7 +171,7 @@ EWRAM_DATA u16 gChosenMove = 0;
 EWRAM_DATA u16 gCalledMove = 0;
 EWRAM_DATA s32 gBideDmg[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u16 gLastUsedItem = 0;
-EWRAM_DATA enum Ability gLastUsedAbility = 0;
+EWRAM_DATA enum Ability gLastUsedAbility = ABILITY_NONE;
 EWRAM_DATA enum BattlerId gBattlerAttacker = 0;
 EWRAM_DATA enum BattlerId gBattlerTarget = 0;
 EWRAM_DATA enum BattlerId gBattlerFainted = 0;
@@ -1440,7 +1440,7 @@ static void CB2_PreInitMultiBattle(void)
                 FREE_AND_SET_NULL(sMultiPartnerPartyBuffer);
             }
         }
-        else if (gReceivedRemoteLinkPlayers == 0)
+        else if (!gReceivedRemoteLinkPlayers)
         {
             gBattleTypeFlags = *savedBattleTypeFlags;
             gMain.savedCallback = *savedCallback;
@@ -2326,7 +2326,7 @@ static void EndLinkBattleInSteps(void)
                     FreeBattleSpritesData();
                     FreeMonSpritesGfx();
                 }
-                else if (gReceivedRemoteLinkPlayers == 0)
+                else if (!gReceivedRemoteLinkPlayers)
                 {
                     // Player can't record battle but
                     // another player can, reconnect with them
@@ -2385,7 +2385,7 @@ static void EndLinkBattleInSteps(void)
         gBattleCommunication[MULTIUSE_STATE]++;
         break;
     case 9:
-        if (!gMain.anyLinkBattlerHasFrontierPass || gWirelessCommType || gReceivedRemoteLinkPlayers != 1)
+        if (!gMain.anyLinkBattlerHasFrontierPass || gWirelessCommType || !gReceivedRemoteLinkPlayers)
         {
             gMain.anyLinkBattlerHasFrontierPass = FALSE;
             SetMainCallback2(gMain.savedCallback);
@@ -2499,7 +2499,7 @@ static void AskRecordBattle(void)
         gBattleCommunication[MULTIUSE_STATE]++;
         break;
     case STATE_LINK:
-        if (gMain.anyLinkBattlerHasFrontierPass && gReceivedRemoteLinkPlayers == 0)
+        if (gMain.anyLinkBattlerHasFrontierPass && !gReceivedRemoteLinkPlayers)
             CreateTask(Task_ReconnectWithLinkPlayers, 5);
         gBattleCommunication[MULTIUSE_STATE]++;
         break;
@@ -2592,7 +2592,7 @@ static void AskRecordBattle(void)
         }
         break;
     case STATE_END:
-        if (!gMain.anyLinkBattlerHasFrontierPass || gWirelessCommType || gReceivedRemoteLinkPlayers != 1)
+        if (!gMain.anyLinkBattlerHasFrontierPass || gWirelessCommType || !gReceivedRemoteLinkPlayers)
         {
             gMain.anyLinkBattlerHasFrontierPass = FALSE;
             if (!gPaletteFade.active)

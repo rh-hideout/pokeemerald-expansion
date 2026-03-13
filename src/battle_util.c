@@ -561,11 +561,11 @@ bool32 TryRunFromBattle(enum BattlerId battler)
     {
         gLastUsedItem = gBattleMons[battler].item;
         gProtectStructs[battler].fleeType = FLEE_ITEM;
-        effect++;
+        effect = TRUE;
     }
     else if (GetConfig(B_GHOSTS_ESCAPE) >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
     {
-        effect++;
+        effect = TRUE;
     }
     else if (GetBattlerAbility(battler) == ABILITY_RUN_AWAY)
     {
@@ -578,28 +578,28 @@ bool32 TryRunFromBattle(enum BattlerId battler)
             {
                 gLastUsedAbility = ABILITY_RUN_AWAY;
                 gProtectStructs[battler].fleeType = FLEE_ABILITY;
-                effect++;
+                effect = TRUE;
             }
         }
         else
         {
             gLastUsedAbility = ABILITY_RUN_AWAY;
             gProtectStructs[battler].fleeType = FLEE_ABILITY;
-            effect++;
+            effect = TRUE;
         }
     }
     else if (IsGhostBattleWithoutScope())
     {
         if (GetBattlerSide(battler) == B_SIDE_PLAYER)
-            effect++;
+            effect = TRUE;
     }
     else if (gBattleTypeFlags & (BATTLE_TYPE_FRONTIER | BATTLE_TYPE_TRAINER_HILL) && gBattleTypeFlags & BATTLE_TYPE_TRAINER)
     {
-        effect++;
+        effect = TRUE;
     }
     else if (CanPlayerForfeitNormalTrainerBattle())
     {
-        effect++;
+        effect = TRUE;
     }
     else
     {
@@ -612,23 +612,23 @@ bool32 TryRunFromBattle(enum BattlerId battler)
             pyramidMultiplier = GetPyramidRunMultiplier();
             speedVar = (gBattleMons[battler].speed * pyramidMultiplier) / (gBattleMons[runningFromBattler].speed) + (gBattleStruct->runTries * 30);
             if (speedVar > (Random() & 0xFF))
-                effect++;
+                effect = TRUE;
         }
         else if (gBattleMons[battler].speed < gBattleMons[runningFromBattler].speed)
         {
             speedVar = (gBattleMons[battler].speed * 128) / (gBattleMons[runningFromBattler].speed) + (gBattleStruct->runTries * 30);
             if (speedVar > (Random() & 0xFF))
-                effect++;
+                effect = TRUE;
         }
         else // same speed or faster
         {
-            effect++;
+            effect = TRUE;
         }
 
         gBattleStruct->runTries++;
     }
 
-    if (effect != 0)
+    if (effect)
     {
         gCurrentTurnActionNumber = gBattlersCount;
         gBattleOutcome = B_OUTCOME_RAN;
@@ -1130,8 +1130,8 @@ bool32 ShouldDefiantCompetitiveActivate(enum BattlerId battler, enum Ability abi
 
 void PrepareStringBattle(enum StringID stringId, enum BattlerId battler)
 {
-    u16 battlerAbility = GetBattlerAbility(battler);
-    u16 targetAbility = GetBattlerAbility(gBattlerTarget);
+    enum Ability battlerAbility = GetBattlerAbility(battler);
+    enum Ability targetAbility = GetBattlerAbility(gBattlerTarget);
     // Support for Contrary ability.
     // If a move attempted to raise stat - print "won't increase".
     // If a move attempted to lower stat - print "won't decrease".
@@ -4979,7 +4979,7 @@ enum Stat GetHighestStatId(enum BattlerId battler)
     bool32 wonderRoom = (gFieldStatuses & STATUS_FIELD_WONDER_ROOM) != 0;
     u32 highestStat = gBattleMons[battler].attack;
 
-    for (u32 stat = STAT_DEF; stat < NUM_STATS; stat++)
+    for (enum Stat stat = STAT_DEF; stat < NUM_STATS; stat++)
     {
         if (stat == STAT_SPEED)
             continue;
@@ -5053,7 +5053,7 @@ enum Stat GetParadoxHighestStatId(enum BattlerId battler)
     bool32 wonderRoom = gFieldStatuses & STATUS_FIELD_WONDER_ROOM;
     u32 highestStat = GetStatValueWithStages(battler, STAT_ATK);
 
-    for (u32 stat = STAT_DEF; stat < NUM_STATS; stat++)
+    for (enum Stat stat = STAT_DEF; stat < NUM_STATS; stat++)
     {
         if (stat == STAT_SPEED)
             continue;
@@ -7132,7 +7132,7 @@ static inline u32 CalcDefenseStat(struct BattleContext *ctx)
         break;
     case ABILITY_QUARK_DRIVE:
         {
-            u32 defHighestStat = GetParadoxBoostedStatId(battlerDef);
+            enum Stat defHighestStat = GetParadoxBoostedStatId(battlerDef);
             if ((gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gBattleMons[battlerDef].volatiles.boosterEnergyActivated)
              && ((IsBattleMovePhysical(move) && defHighestStat == STAT_DEF) || (IsBattleMoveSpecial(move) && defHighestStat == STAT_SPDEF))
              && !(gBattleMons[battlerDef].volatiles.transformed))
@@ -10882,7 +10882,6 @@ bool32 IsNaturalEnemy(u32 speciesAttacker, u32 speciesTarget)
     }
     return FALSE;
 }
-
 
 enum Stat GetDownloadStat(enum BattlerId battler)
 {
