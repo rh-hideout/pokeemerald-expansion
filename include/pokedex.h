@@ -246,5 +246,6 @@ void HighlightSelectedSearchTopBarItem(u8 topBarItem);
 void PrintSelectedSearchParameters(u8 taskId);
 void Task_HandleSearchMenuInput(u8 taskId);
 void Task_StartPokedexSearch(u8 taskId);
+void CreatePokedexList(u8, u8);;
 
 #endif // GUARD_POKEDEX_H

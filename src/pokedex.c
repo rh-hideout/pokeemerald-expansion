@@ -96,7 +96,6 @@ static void Task_ClosePokedexFromSearchResultsStartMenu(u8);
 static bool8 LoadPokedexListPage(u8);
 static void LoadPokedexBgPalette(bool8);
 static void FreeWindowAndBgBuffers(void);
-static void CreatePokedexList(u8, u8);
 static void CreateMonDexNum(u16, u8, u8, u16);
 static void CreateCaughtBall(u16, u8, u8, u16);
 static u8 CreateMonName(u16, u8, u8);
@@ -2037,7 +2036,7 @@ static void FreeWindowAndBgBuffers(void)
         Free(tilemapBuffer);
 }
 
-static void CreatePokedexList(u8 dexMode, u8 order)
+void CreatePokedexList(u8 dexMode, u8 order)
 {
     u32 vars[3]; //I have no idea why three regular variables are stored in an array, but whatever.
 #define temp_dexCount   vars[0]
