@@ -76,7 +76,6 @@ struct SearchMenuItem
 };
 
 // this file's functions
-static void CB2_Pokedex(void);
 static void Task_OpenPokedexMainPage(u8);
 static void Task_HandlePokedexInput(u8);
 static void Task_WaitForScroll(u8);
@@ -1383,7 +1382,7 @@ void ResetPokedexScrollPositions(void)
     sPokeBallRotation = POKEBALL_ROTATION_TOP;
 }
 
-static void VBlankCB_Pokedex(void)
+void VBlankCB_Pokedex(void)
 {
     LoadOam();
     ProcessSpriteCopyRequests();
@@ -1505,7 +1504,7 @@ void CB2_OpenPokedex(void)
     }
 }
 
-static void CB2_Pokedex(void)
+void CB2_Pokedex(void)
 {
     RunTasks();
     AnimateSprites();

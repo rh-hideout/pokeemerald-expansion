@@ -206,8 +206,6 @@ extern EWRAM_DATA struct PokedexListItem *sPokedexListItem;
 //Pokedex Plus HGSS_Ui
 
 
-static void VBlankCB_Pokedex(void);
-static void CB2_Pokedex(void);
 static void Task_OpenPokedexMainPage(u8);
 static void Task_HandlePokedexInput(u8);
 static void Task_WaitForScroll(u8);
@@ -698,21 +696,6 @@ void CB2_OpenPokedexPlusHGSS(void)
         m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL, 0x80);
         break;
     }
-}
-
-static void VBlankCB_Pokedex(void)
-{
-    LoadOam();
-    ProcessSpriteCopyRequests();
-    TransferPlttBuffer();
-}
-
-static void CB2_Pokedex(void)
-{
-    RunTasks();
-    AnimateSprites();
-    BuildOamBuffer();
-    UpdatePaletteFade();
 }
 
 static void Task_OpenPokedexMainPage(u8 taskId)

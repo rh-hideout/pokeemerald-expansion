@@ -261,6 +261,9 @@ extern const struct WindowTemplate sPokemonList_WindowTemplate[];
 extern const struct BgTemplate sInfoScreen_BgTemplate[NUM_INFO_SCREEN_BG_TEMPLATES];
 extern const struct BgTemplate sNewEntryInfoScreen_BgTemplate[NUM_NEW_ENTRY_INFO_BG_TEMPLATES];
 
+void VBlankCB_Pokedex(void);
+void CB2_Pokedex(void);
+
 void ResetPokedexView(struct PokedexView *pokedexView);
 void HighlightSelectedSearchMenuItem(u8 topBarItem, u8 menuItem);
 void DrawSearchMenuItemBgHighlight(u8 searchBg, bool8 unselected, bool8 disabled);
