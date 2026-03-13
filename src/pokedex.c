@@ -76,7 +76,6 @@ struct SearchMenuItem
 };
 
 // this file's functions
-static void Task_OpenPokedexMainPage(u8);
 static void Task_HandlePokedexInput(u8);
 static void Task_WaitForScroll(u8);
 static void Task_HandlePokedexStartMenuInput(u8);
@@ -1443,12 +1442,6 @@ void ResetPokedexView(struct PokedexView *pokedexView)
 
 void CB2_OpenPokedex(void)
 {
-    if (POKEDEX_PLUS_HGSS)
-    {
-        CB2_OpenPokedexPlusHGSS();
-        return;
-    }
-
     switch (gMain.state)
     {
     case 0:
@@ -1515,6 +1508,12 @@ void CB2_Pokedex(void)
 void Task_OpenPokedexMainPage(u8 taskId)
 {
     sPokedexView->isSearchResults = FALSE;
+    sPokedexView->sEvoScreenData.fromEvoPage = FALSE;
+    sPokedexView->formSpecies = 0;
+
+    if (TryOpenPokedexMainPage_HGSS(taskId))
+        return;
+
     if (LoadPokedexListPage(PAGE_MAIN))
         gTasks[taskId].func = Task_HandlePokedexInput;
 }

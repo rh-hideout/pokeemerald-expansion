@@ -206,7 +206,6 @@ extern EWRAM_DATA struct PokedexListItem *sPokedexListItem;
 //Pokedex Plus HGSS_Ui
 
 
-static void Task_OpenPokedexMainPage(u8);
 static void Task_HandlePokedexInput(u8);
 static void Task_WaitForScroll(u8);
 static void Task_HandlePokedexStartMenuInput(u8);
@@ -639,72 +638,15 @@ static const struct WindowTemplate sNewEntryInfoScreen_WindowTemplates[] =
 //*        MAIN                      *
 //*                                  *
 //************************************
-void CB2_OpenPokedexPlusHGSS(void)
+bool32 TryOpenPokedexMainPage_HGSS(u8 taskId)
 {
-    if (!POKEDEX_PLUS_HGSS) return; // prevents the compiler from emitting static .rodata
-                                    // if the feature is disabled
-    switch (gMain.state)
-    {
-    case 0:
-    default:
-        SetVBlankCallback(NULL);
-        ResetOtherVideoRegisters(0);
-        DmaFillLarge16(3, 0, (u8 *)VRAM, VRAM_SIZE, 0x1000);
-        DmaClear32(3, OAM, OAM_SIZE);
-        DmaClear16(3, PLTT, PLTT_SIZE);
-        gMain.state = 1;
-        break;
-    case 1:
-        ScanlineEffect_Stop();
-        ResetTasks();
-        ResetSpriteData();
-        ResetPaletteFade();
-        FreeAllSpritePalettes();
-        gReservedSpritePaletteCount = 8;
-        ResetAllPicSprites();
-        gMain.state++;
-        break;
-    case 2:
-        sPokedexView = AllocZeroed(sizeof(struct PokedexView));
-        ResetPokedexView(sPokedexView);
-        CreateTask(Task_OpenPokedexMainPage, 0);
-        sPokedexView->dexMode = gSaveBlock2Ptr->pokedex.mode;
-        if (!IsNationalPokedexEnabled())
-            sPokedexView->dexMode = DEX_MODE_HOENN;
-        sPokedexView->dexOrder = gSaveBlock2Ptr->pokedex.order;
-        sPokedexView->selectedPokemon = sLastSelectedPokemon;
-        sPokedexView->pokeBallRotation = sPokeBallRotation;
-        sPokedexView->selectedScreen = AREA_SCREEN;
-        if (!IsNationalPokedexEnabled())
-        {
-            sPokedexView->seenCount = GetRegionalPokedexCount(FLAG_GET_SEEN);
-            sPokedexView->ownCount = GetRegionalPokedexCount(FLAG_GET_CAUGHT);
-        }
-        else
-        {
-            sPokedexView->seenCount = GetNationalPokedexCount(FLAG_GET_SEEN);
-            sPokedexView->ownCount = GetNationalPokedexCount(FLAG_GET_CAUGHT);
-        }
-        sPokedexView->initialVOffset = 8;
-        gMain.state++;
-        break;
-    case 3:
-        EnableInterrupts(1);
-        SetVBlankCallback(VBlankCB_Pokedex);
-        SetMainCallback2(CB2_Pokedex);
-        CreatePokedexList(sPokedexView->dexMode, sPokedexView->dexOrder);
-        m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL, 0x80);
-        break;
-    }
-}
-
-static void Task_OpenPokedexMainPage(u8 taskId)
-{
-    sPokedexView->isSearchResults = FALSE;
-    sPokedexView->sEvoScreenData.fromEvoPage = FALSE;
-    sPokedexView->formSpecies = 0;
+    if (!POKEDEX_PLUS_HGSS)
+        return FALSE;
+    
     if (LoadPokedexListPage(PAGE_MAIN))
         gTasks[taskId].func = Task_HandlePokedexInput;
+
+    return TRUE;
 }
 
 #define tLoadScreenTaskId data[0]
