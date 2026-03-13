@@ -209,8 +209,6 @@ extern EWRAM_DATA struct PokedexListItem *sPokedexListItem;
 static void Task_HandlePokedexInput(u8);
 static void Task_WaitForScroll(u8);
 static void Task_HandlePokedexStartMenuInput(u8);
-static void Task_OpenInfoScreenAfterMonMovement(u8);
-static void Task_WaitForExitInfoScreen(u8);
 static void Task_WaitForExitSearch(u8);
 static void Task_ClosePokedex(u8);
 static void Task_OpenSearchResults(u8);
@@ -239,10 +237,8 @@ static u32 CreatePokedexMonSprite(u16, s16, s16);
 static void CreateInterfaceSprites(u8);
 static void SpriteCB_MoveMonForInfoScreen(struct Sprite *sprite);
 static void SpriteCB_PokedexListMonSprite(struct Sprite *sprite);
-static u8 LoadInfoScreen(struct PokedexListItem *, u8 monSpriteId);
 static bool8 IsInfoScreenScrolling(u8);
 static u8 StartInfoScreenScroll(struct PokedexListItem *, u8);
-static void Task_LoadInfoScreen(u8);
 static void Task_HandleInfoScreenInput(u8);
 static void Task_SwitchScreensFromInfoScreen(u8);
 static void Task_LoadInfoScreenWaitForFade(u8);
@@ -487,6 +483,15 @@ static const struct WindowTemplate sInfoScreen_WindowTemplates[] =
 
     DUMMY_WIN_TEMPLATE
 };
+
+bool32 TryInitWindows_HGSS(void)
+{
+    if (!POKEDEX_PLUS_HGSS)
+        return FALSE;
+
+    InitWindows(sInfoScreen_WindowTemplates);
+    return TRUE;
+}
 
 enum
 {
@@ -784,34 +789,6 @@ static void Task_HandlePokedexStartMenuInput(u8 taskId)
             sPokedexView->menuCursorPos++;
             PlaySE(SE_SELECT);
         }
-    }
-}
-
-// Opening the info screen from list view. Pokémon sprite is moving to its new position, wait for it to arrive
-static void Task_OpenInfoScreenAfterMonMovement(u8 taskId)
-{
-    if (gSprites[sPokedexView->selectedMonSpriteId].x == MON_PAGE_X && gSprites[sPokedexView->selectedMonSpriteId].y == MON_PAGE_Y)
-    {
-        sPokedexView->currentPageBackup = sPokedexView->currentPage;
-        gTasks[taskId].tLoadScreenTaskId = LoadInfoScreen(&sPokedexView->pokedexList[sPokedexView->selectedPokemon], sPokedexView->selectedMonSpriteId);
-        gTasks[taskId].func = Task_WaitForExitInfoScreen;
-    }
-}
-
-static void Task_WaitForExitInfoScreen(u8 taskId)
-{
-    if (gTasks[gTasks[taskId].tLoadScreenTaskId].isActive)
-    {
-        // While active, handle scroll input
-        if (sPokedexView->currentPage == PAGE_INFO && !IsInfoScreenScrolling(gTasks[taskId].tLoadScreenTaskId) && TryDoInfoScreenScroll())
-            StartInfoScreenScroll(&sPokedexView->pokedexList[sPokedexView->selectedPokemon], gTasks[taskId].tLoadScreenTaskId);
-    }
-    else
-    {
-        // Exiting, back to list view
-        sLastSelectedPokemon = sPokedexView->selectedPokemon;
-        sPokeBallRotation = sPokedexView->pokeBallRotation;
-        gTasks[taskId].func = Task_OpenPokedexMainPage;
     }
 }
 
@@ -1964,31 +1941,6 @@ static void SpriteCB_StatBarsBg(struct Sprite *sprite)
 #define tMonSpriteId     data[4]
 #define tTrainerSpriteId data[5]
 
-static u8 LoadInfoScreen(struct PokedexListItem *item, u8 monSpriteId)
-{
-    u8 taskId;
-
-    sPokedexListItem = item;
-    gAreaTimeOfDay = GetTimeOfDayForDex();
-    taskId = CreateTask(Task_LoadInfoScreen, 0);
-    gTasks[taskId].tScrolling = FALSE;
-    gTasks[taskId].tMonSpriteDone = TRUE; // Already has sprite from list view
-    gTasks[taskId].tBgLoaded = FALSE;
-    gTasks[taskId].tSkipCry = FALSE;
-    gTasks[taskId].tMonSpriteId = monSpriteId;
-    gTasks[taskId].tTrainerSpriteId = SPRITE_NONE;
-    ResetBgsAndClearDma3BusyFlags(0);
-    InitBgsFromTemplates(0, sInfoScreen_BgTemplate, ARRAY_COUNT(sInfoScreen_BgTemplate));
-    SetBgTilemapBuffer(3, AllocZeroed(BG_SCREEN_SIZE));
-    SetBgTilemapBuffer(2, AllocZeroed(BG_SCREEN_SIZE));
-    SetBgTilemapBuffer(1, AllocZeroed(BG_SCREEN_SIZE));
-    SetBgTilemapBuffer(0, AllocZeroed(BG_SCREEN_SIZE));
-    InitWindows(sInfoScreen_WindowTemplates);
-    DeactivateAllTextPrinters();
-
-    return taskId;
-}
-
 static bool8 IsInfoScreenScrolling(u8 taskId)
 {
     if (!gTasks[taskId].tScrolling && gTasks[taskId].func == Task_HandleInfoScreenInput)
@@ -2007,8 +1959,11 @@ static u8 StartInfoScreenScroll(struct PokedexListItem *item, u8 taskId)
     return taskId;
 }
 
-static void Task_LoadInfoScreen(u8 taskId)
+bool32 Task_TryLoadInfoScreen_HGSS(u8 taskId)
 {
+    if (!POKEDEX_PLUS_HGSS)
+        return FALSE;
+
     switch (gMain.state)
     {
     case 0:
@@ -2109,6 +2064,8 @@ static void Task_LoadInfoScreen(u8 taskId)
         gMain.state = 0;
         break;
     }
+
+    return TRUE;
 }
 
 static void FreeInfoScreenWindowAndBgBuffers(void)

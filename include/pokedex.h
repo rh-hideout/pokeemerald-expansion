@@ -265,6 +265,9 @@ void VBlankCB_Pokedex(void);
 void CB2_Pokedex(void);
 
 void Task_OpenPokedexMainPage(u8);
+void Task_OpenInfoScreenAfterMonMovement(u8);
+u8 LoadInfoScreen(struct PokedexListItem *, u8 monSpriteId);
+void Task_LoadInfoScreen(u8 taskId);
 
 void ResetPokedexView(struct PokedexView *pokedexView);
 void HighlightSelectedSearchMenuItem(u8 topBarItem, u8 menuItem);
