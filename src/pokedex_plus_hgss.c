@@ -208,9 +208,7 @@ extern EWRAM_DATA struct PokedexListItem *sPokedexListItem;
 static bool8 LoadPokedexListPage(u8);
 static void LoadPokedexBgPalette(bool8);
 static void CreateMonDexNum(u16, u8, u8, u16);
-static void CreateCaughtBall(u16, u8, u8, u16);
 static u8 CreateMonName(u16, u8, u8);
-static void ClearMonListEntry(u8 x, u8 y, u16 unused);
 static void CreateInterfaceSprites(u8);
 static void Task_HandleInfoScreenInput(u8);
 static void Task_LoadInfoScreenWaitForFade(u8);
@@ -891,14 +889,6 @@ static void CreateMonDexNum(u16 entryNum, u8 left, u8 top, u16 unused)
     PrintMonDexNumAndName(0, FONT_NARROW, text, left, top);
 }
 
-static void CreateCaughtBall(bool16 owned, u8 x, u8 y, u16 unused)
-{
-    if (owned)
-        BlitBitmapToWindow(0, sCaughtBall_Gfx, x * 6, y * 8, 8, 16);
-    else
-        FillWindowPixelRect(0, PIXEL_FILL(0), x * 6, y * 8, 8, 16);
-}
-
 static u8 CreateMonName(u16 num, u8 left, u8 top)
 {
     const u8 *str;
@@ -910,11 +900,6 @@ static u8 CreateMonName(u16 num, u8 left, u8 top)
         str = sText_TenDashes;
     PrintMonDexNumAndName_2(0, FONT_NARROW, str, left, top);
     return StringLength(str);
-}
-
-static void ClearMonListEntry(u8 x, u8 y, u16 unused)
-{
-    FillWindowPixelRect(0, PIXEL_FILL(0), x * 6, y * 8, 0x60, 16);
 }
 
 #define sIsDownArrow data[1]

@@ -299,4 +299,7 @@ void Task_LoadAreaScreen(u8 taskId);
 void Task_SwitchScreensFromInfoScreen(u8);
 void Task_HandleSizeScreenInput(u8);
 
+void CreateCaughtBall(u16, u8, u8, u16);
+void ClearMonListEntry(u8 x, u8 y, u16 unused);
+
 #endif // GUARD_POKEDEX_H
