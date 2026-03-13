@@ -243,8 +243,6 @@ static void CreateInterfaceSprites(u8);
 static void SpriteCB_MoveMonForInfoScreen(struct Sprite *sprite);
 static void SpriteCB_Scrollbar(struct Sprite *sprite);
 static void SpriteCB_ScrollArrow(struct Sprite *sprite);
-static void SpriteCB_DexListInterfaceText(struct Sprite *sprite);
-static void SpriteCB_RotatingPokeBall(struct Sprite *sprite);
 static void SpriteCB_SeenOwnInfo(struct Sprite *sprite);
 static void SpriteCB_DexListStartMenuCursor(struct Sprite *sprite);
 static void SpriteCB_PokedexListMonSprite(struct Sprite *sprite);
@@ -479,23 +477,6 @@ static const struct OamData sOamData_InterfaceText =
     .affineParam = 0
 };
 
-static const struct OamData sOamData_RotatingPokeBall =
-{
-    .y = DISPLAY_HEIGHT,
-    .affineMode = ST_OAM_AFFINE_OFF,
-    .objMode = ST_OAM_OBJ_WINDOW,
-    .mosaic = FALSE,
-    .bpp = ST_OAM_4BPP,
-    .shape = SPRITE_SHAPE(32x32),
-    .x = 0,
-    .matrixNum = 0,
-    .size = SPRITE_SIZE(32x32),
-    .tileNum = 0,
-    .priority = 1,
-    .paletteNum = 0,
-    .affineParam = 0
-};
-
 static const struct OamData sOamData_SeenOwnText =
 {
     .y = DISPLAY_HEIGHT,
@@ -539,36 +520,6 @@ static const union AnimCmd sSpriteAnim_ScrollBar[] =
 static const union AnimCmd sSpriteAnim_ScrollArrow[] =
 {
     ANIMCMD_FRAME(1, 30),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sSpriteAnim_RotatingPokeBall[] =
-{
-    ANIMCMD_FRAME(16, 30),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sSpriteAnim_StartButton[] =
-{
-    ANIMCMD_FRAME(48, 30),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sSpriteAnim_SearchText[] =
-{
-    ANIMCMD_FRAME(40, 30),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sSpriteAnim_SelectButton[] =
-{
-    ANIMCMD_FRAME(32, 30),
-    ANIMCMD_END
-};
-
-static const union AnimCmd sSpriteAnim_MenuText[] =
-{
-    ANIMCMD_FRAME(56, 30),
     ANIMCMD_END
 };
 
@@ -732,19 +683,6 @@ static const union AnimCmd *const sSpriteAnimTable_ScrollArrow[] =
     sSpriteAnim_ScrollArrow
 };
 
-static const union AnimCmd *const sSpriteAnimTable_RotatingPokeBall[] =
-{
-    sSpriteAnim_RotatingPokeBall
-};
-
-static const union AnimCmd *const sSpriteAnimTable_InterfaceText[] =
-{
-    sSpriteAnim_StartButton,
-    sSpriteAnim_SearchText,
-    sSpriteAnim_SelectButton,
-    sSpriteAnim_MenuText
-};
-
 static const union AnimCmd *const sSpriteAnimTable_SeenOwnText[] =
 {
     sSpriteAnim_SeenText,
@@ -808,24 +746,6 @@ static const struct SpriteTemplate sScrollArrowSpriteTemplate =
     .oam = &sOamData_ScrollArrow,
     .anims = sSpriteAnimTable_ScrollArrow,
     .callback = SpriteCB_ScrollArrow,
-};
-
-static const struct SpriteTemplate sInterfaceTextSpriteTemplate =
-{
-    .tileTag = TAG_DEX_INTERFACE,
-    .paletteTag = TAG_DEX_INTERFACE,
-    .oam = &sOamData_InterfaceText,
-    .anims = sSpriteAnimTable_InterfaceText,
-    .callback = SpriteCB_DexListInterfaceText,
-};
-
-static const struct SpriteTemplate sRotatingPokeBallSpriteTemplate =
-{
-    .tileTag = TAG_DEX_INTERFACE,
-    .paletteTag = TAG_DEX_INTERFACE,
-    .oam = &sOamData_RotatingPokeBall,
-    .anims = sSpriteAnimTable_RotatingPokeBall,
-    .callback = SpriteCB_RotatingPokeBall,
 };
 
 static const struct SpriteTemplate sSeenOwnTextSpriteTemplate =
@@ -2316,37 +2236,6 @@ static void SpriteCB_ScrollArrow(struct Sprite *sprite)
             sprite->invisible = FALSE;
         else
             sprite->invisible = TRUE;
-    }
-}
-
-static void SpriteCB_DexListInterfaceText(struct Sprite *sprite)
-{
-    if (sPokedexView->currentPage != PAGE_MAIN && sPokedexView->currentPage != PAGE_SEARCH_RESULTS)
-        DestroySprite(sprite);
-}
-
-static void SpriteCB_RotatingPokeBall(struct Sprite *sprite)
-{
-    if (sPokedexView->currentPage != PAGE_MAIN && sPokedexView->currentPage != PAGE_SEARCH_RESULTS)
-    {
-        DestroySprite(sprite);
-    }
-    else
-    {
-        u8 val;
-        s16 r3;
-        s16 r0;
-
-        val = sPokedexView->pokeBallRotation + sprite->data[1];
-        r3 = gSineTable[val];
-        r0 = gSineTable[val + 64];
-        SetOamMatrix(sprite->data[0], r0, r3, -r3, r0);
-
-        val = sPokedexView->pokeBallRotation + (sprite->data[1] + 64);
-        r3 = gSineTable[val];
-        r0 = gSineTable[val + 64];
-        sprite->x2 = r0 * 40 / 256;
-        sprite->y2 = r3 * 40 / 256;
     }
 }
 
