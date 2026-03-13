@@ -646,10 +646,10 @@ static const struct SpritePalette sInterfaceSpritePalette[] =
 };
 
 // By scroll speed. Last element of each unused
-static const u8 sScrollMonIncrements[] = {4, 8, 16, 32, 32};
-static const u8 sScrollTimers[] = {8, 4, 2, 1, 1};
+const u8 sScrollMonIncrements[] = {4, 8, 16, 32, 32};
+const u8 sScrollTimers[] = {8, 4, 2, 1, 1};
 
-static const struct BgTemplate sPokedex_BgTemplate[] =
+const struct BgTemplate sPokedex_BgTemplate[] =
 {
     {
         .bg = 0,
@@ -689,7 +689,7 @@ static const struct BgTemplate sPokedex_BgTemplate[] =
     }
 };
 
-static const struct WindowTemplate sPokemonList_WindowTemplate[] =
+const struct WindowTemplate sPokemonList_WindowTemplate[] =
 {
     {
         .bg = 2,
@@ -712,7 +712,7 @@ ALIGNED(4) static const u8 sExpandedPlaceholder_PokedexDescription[] = _("");
 
 static const u16 sSizeScreenSilhouette_Pal[] = INCBIN_U16("graphics/pokedex/size_silhouette.gbapal");
 
-static const struct BgTemplate sInfoScreen_BgTemplate[] =
+const struct BgTemplate sInfoScreen_BgTemplate[] =
 {
     {
         .bg = 0,
@@ -797,7 +797,7 @@ static const struct WindowTemplate sInfoScreen_WindowTemplates[] =
     DUMMY_WIN_TEMPLATE
 };
 
-static const struct BgTemplate sNewEntryInfoScreen_BgTemplate[] =
+const struct BgTemplate sNewEntryInfoScreen_BgTemplate[] =
 {
     {
         .bg = 2,
@@ -1301,7 +1301,7 @@ static const struct SearchOption sSearchOptions[] =
     [SEARCH_MODE]       = {sDexModeOptions,        2,  3, ARRAY_COUNT(sDexModeOptions) - 1},
 };
 
-static const struct BgTemplate sSearchMenu_BgTemplate[] =
+const struct BgTemplate sSearchMenu_BgTemplate[] =
 {
     {
         .bg = 0,
@@ -1341,7 +1341,7 @@ static const struct BgTemplate sSearchMenu_BgTemplate[] =
     }
 };
 
-static const struct WindowTemplate sSearchMenu_WindowTemplate[] =
+const struct WindowTemplate sSearchMenu_WindowTemplate[] =
 {
     {
         .bg = 2,

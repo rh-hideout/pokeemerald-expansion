@@ -1,6 +1,9 @@
 #ifndef GUARD_POKEDEX_H
 #define GUARD_POKEDEX_H
 
+#include "bg.h"
+#include "window.h"
+
 extern u8 gUnusedPokedexU8;
 extern void (*gPokedexVBlankCB)(void);
 
@@ -117,6 +120,12 @@ enum
 #define MON_PAGE_X                      48
 #define MON_PAGE_Y                      56
 
+// Number of background templates in different screens.
+#define NUM_POKEDEX_BG_TEMPLATES        4
+#define NUM_INFO_SCREEN_BG_TEMPLATES    4
+#define NUM_NEW_ENTRY_INFO_BG_TEMPLATES 2
+#define NUM_SEARCH_MENU_BG_TEMPLATES    4
+
 struct PokedexListItem
 {
     u16 dexNum;
@@ -231,6 +240,15 @@ struct PokedexView
     struct FromScreenData sFormScreenData;
     u16 formSpecies;
 };
+
+extern const struct BgTemplate sSearchMenu_BgTemplate[NUM_SEARCH_MENU_BG_TEMPLATES];
+extern const struct WindowTemplate sSearchMenu_WindowTemplate[];
+extern const u8 sScrollMonIncrements[];
+extern const u8 sScrollTimers[];
+extern const struct BgTemplate sPokedex_BgTemplate[NUM_POKEDEX_BG_TEMPLATES];
+extern const struct WindowTemplate sPokemonList_WindowTemplate[];
+extern const struct BgTemplate sInfoScreen_BgTemplate[NUM_INFO_SCREEN_BG_TEMPLATES];
+extern const struct BgTemplate sNewEntryInfoScreen_BgTemplate[NUM_NEW_ENTRY_INFO_BG_TEMPLATES];
 
 void ResetPokedexView(struct PokedexView *pokedexView);
 void HighlightSelectedSearchMenuItem(u8 topBarItem, u8 menuItem);
