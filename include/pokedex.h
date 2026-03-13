@@ -241,6 +241,15 @@ struct PokedexView
     u16 formSpecies;
 };
 
+
+extern const struct SpriteTemplate sScrollBarSpriteTemplate;
+extern const struct SpriteTemplate sScrollArrowSpriteTemplate;
+extern const struct SpriteTemplate sSeenOwnTextSpriteTemplate;
+extern const struct SpriteTemplate sHoennNationalTextSpriteTemplate;
+extern const struct SpriteTemplate sHoennDexSeenOwnNumberSpriteTemplate;
+extern const struct SpriteTemplate sNationalDexSeenOwnNumberSpriteTemplate;
+extern const struct SpriteTemplate sDexListStartMenuCursorSpriteTemplate;
+
 extern const struct BgTemplate sSearchMenu_BgTemplate[NUM_SEARCH_MENU_BG_TEMPLATES];
 extern const struct WindowTemplate sSearchMenu_WindowTemplate[];
 extern const u8 sScrollMonIncrements[];

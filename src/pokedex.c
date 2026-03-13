@@ -552,7 +552,7 @@ static const union AnimCmd *const sSpriteAnimTable_DexListStartMenuCursor[] =
 
 #define TAG_DEX_INTERFACE 4096 // Tile and pal tag used for all interface sprites.
 
-static const struct SpriteTemplate sScrollBarSpriteTemplate =
+const struct SpriteTemplate sScrollBarSpriteTemplate =
 {
     .tileTag = TAG_DEX_INTERFACE,
     .paletteTag = TAG_DEX_INTERFACE,
@@ -561,7 +561,7 @@ static const struct SpriteTemplate sScrollBarSpriteTemplate =
     .callback = SpriteCB_Scrollbar,
 };
 
-static const struct SpriteTemplate sScrollArrowSpriteTemplate =
+const struct SpriteTemplate sScrollArrowSpriteTemplate =
 {
     .tileTag = TAG_DEX_INTERFACE,
     .paletteTag = TAG_DEX_INTERFACE,
@@ -588,7 +588,7 @@ static const struct SpriteTemplate sRotatingPokeBallSpriteTemplate =
     .callback = SpriteCB_RotatingPokeBall,
 };
 
-static const struct SpriteTemplate sSeenOwnTextSpriteTemplate =
+const struct SpriteTemplate sSeenOwnTextSpriteTemplate =
 {
     .tileTag = TAG_DEX_INTERFACE,
     .paletteTag = TAG_DEX_INTERFACE,
@@ -597,7 +597,7 @@ static const struct SpriteTemplate sSeenOwnTextSpriteTemplate =
     .callback = SpriteCB_SeenOwnInfo,
 };
 
-static const struct SpriteTemplate sHoennNationalTextSpriteTemplate =
+const struct SpriteTemplate sHoennNationalTextSpriteTemplate =
 {
     .tileTag = TAG_DEX_INTERFACE,
     .paletteTag = TAG_DEX_INTERFACE,
@@ -606,7 +606,7 @@ static const struct SpriteTemplate sHoennNationalTextSpriteTemplate =
     .callback = SpriteCB_SeenOwnInfo,
 };
 
-static const struct SpriteTemplate sHoennDexSeenOwnNumberSpriteTemplate =
+const struct SpriteTemplate sHoennDexSeenOwnNumberSpriteTemplate =
 {
     .tileTag = TAG_DEX_INTERFACE,
     .paletteTag = TAG_DEX_INTERFACE,
@@ -615,7 +615,7 @@ static const struct SpriteTemplate sHoennDexSeenOwnNumberSpriteTemplate =
     .callback = SpriteCB_SeenOwnInfo,
 };
 
-static const struct SpriteTemplate sNationalDexSeenOwnNumberSpriteTemplate =
+const struct SpriteTemplate sNationalDexSeenOwnNumberSpriteTemplate =
 {
     .tileTag = TAG_DEX_INTERFACE,
     .paletteTag = TAG_DEX_INTERFACE,
@@ -624,7 +624,7 @@ static const struct SpriteTemplate sNationalDexSeenOwnNumberSpriteTemplate =
     .callback = SpriteCB_SeenOwnInfo,
 };
 
-static const struct SpriteTemplate sDexListStartMenuCursorSpriteTemplate =
+const struct SpriteTemplate sDexListStartMenuCursorSpriteTemplate =
 {
     .tileTag = TAG_DEX_INTERFACE,
     .paletteTag = TAG_DEX_INTERFACE,
@@ -2905,6 +2905,7 @@ static void SpriteCB_EndMoveMonForInfoScreen(struct Sprite *sprite)
 
 static void SpriteCB_SeenOwnInfo(struct Sprite *sprite)
 {
+    if (sPokedexView->currentPage != PAGE_MAIN && sPokedexView->currentPage != PAGE_SEARCH_RESULTS)
     if (sPokedexView->currentPage != PAGE_MAIN)
         DestroySprite(sprite);
 }
