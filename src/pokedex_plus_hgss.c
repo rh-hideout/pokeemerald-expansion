@@ -213,20 +213,14 @@ static u8 CreateMonName(u16, u8, u8);
 static void ClearMonListEntry(u8 x, u8 y, u16 unused);
 static void CreateInterfaceSprites(u8);
 static void Task_HandleInfoScreenInput(u8);
-static void Task_SwitchScreensFromInfoScreen(u8);
 static void Task_LoadInfoScreenWaitForFade(u8);
 static void Task_ExitInfoScreen(u8);
-static void Task_LoadAreaScreen(u8 taskId);
 static void Task_ReloadAreaScreen(u8 taskId);
 static void Task_WaitForAreaScreenInput(u8 taskId);
 static void Task_SwitchScreensFromAreaScreen(u8);
-static void Task_LoadCryScreen(u8);
 static void Task_HandleCryScreenInput(u8);
 static void Task_SwitchScreensFromCryScreen(u8);
 static void LoadPlayArrowPalette(bool8);
-static void Task_LoadSizeScreen(u8);
-static void Task_HandleSizeScreenInput(u8);
-static void Task_SwitchScreensFromSizeScreen(u8);
 static void LoadScreenSelectBarMain(u16);
 static void Task_HandleCaughtMonPageInput(u8);
 static void Task_ExitCaughtMonPage(u8);
@@ -1556,27 +1550,6 @@ static void Task_HandleInfoScreenInput(u8 taskId)
 
 }
 
-static void Task_SwitchScreensFromInfoScreen(u8 taskId)
-{
-    if (!gPaletteFade.active)
-    {
-        FreeAndDestroyMonPicSprite(gTasks[taskId].tMonSpriteId);
-        switch (sPokedexView->screenSwitchState)
-        {
-        case 1:
-        default:
-            gTasks[taskId].func = Task_LoadAreaScreen;
-            break;
-        case 2:
-            gTasks[taskId].func = Task_LoadCryScreen;
-            break;
-        case 3:
-            gTasks[taskId].func = Task_LoadSizeScreen;
-            break;
-        }
-    }
-}
-
 static void Task_LoadInfoScreenWaitForFade(u8 taskId)
 {
     if (!gPaletteFade.active)
@@ -1603,8 +1576,11 @@ static void Task_ExitInfoScreen(u8 taskId)
 //*        Area screen               *
 //*                                  *
 //************************************
-static void Task_LoadAreaScreen(u8 taskId)
+bool32 TryLoadAreaScreen_HGSS(u8 taskId)
 {
+    if (!POKEDEX_PLUS_HGSS)
+        return FALSE;
+
     switch (gMain.state)
     {
     case 0:
@@ -1632,6 +1608,8 @@ static void Task_LoadAreaScreen(u8 taskId)
         gTasks[taskId].func = Task_WaitForAreaScreenInput;
         break;
     }
+
+    return TRUE;
 }
 
 static void Task_ReloadAreaScreen(u8 taskId)
@@ -4706,8 +4684,11 @@ static void Task_ExitFormsScreen(u8 taskId)
 #define tMonSpriteId     data[4]
 #define tTrainerSpriteId data[5]
 
-static void Task_LoadCryScreen(u8 taskId)
+bool32 TryLoadCryScreen_HGSS(u8 taskId)
 {
+    if (!POKEDEX_PLUS_HGSS)
+        return FALSE;
+
     switch (gMain.state)
     {
     case 0:
@@ -4806,6 +4787,8 @@ static void Task_LoadCryScreen(u8 taskId)
         gTasks[taskId].func = Task_HandleCryScreenInput;
         break;
     }
+
+    return TRUE;
 }
 
 static void Task_HandleCryScreenInput(u8 taskId)
@@ -4892,8 +4875,11 @@ static void Task_SwitchScreensFromCryScreen(u8 taskId)
 //*        Size screen               *
 //*                                  *
 //************************************
-static void Task_LoadSizeScreen(u8 taskId)
+bool32 TryLoadSizeScreen_HGSS(u8 taskId)
 {
+    if (!POKEDEX_PLUS_HGSS)
+        return FALSE;
+
     u8 spriteId;
 
     switch (gMain.state)
@@ -4986,6 +4972,8 @@ static void Task_LoadSizeScreen(u8 taskId)
         }
         break;
     }
+
+    return TRUE;
 }
 
 static void LoadPlayArrowPalette(bool8 cryPlaying)
@@ -4997,44 +4985,6 @@ static void LoadPlayArrowPalette(bool8 cryPlaying)
     else
         color = RGB(15, 21, 0);
     LoadPalette(&color, BG_PLTT_ID(5) + 13, PLTT_SIZEOF(1));
-}
-
-static void Task_HandleSizeScreenInput(u8 taskId)
-{
-    if (JOY_NEW(B_BUTTON))
-    {
-        BeginNormalPaletteFade(PALETTES_ALL & ~(0x14), 0, 0, 0x10, RGB_BLACK);
-        sPokedexView->screenSwitchState = 1;
-        gTasks[taskId].func = Task_SwitchScreensFromSizeScreen;
-        PlaySE(SE_PC_OFF);
-    }
-    else if (JOY_NEW(DPAD_LEFT)
-     || (JOY_NEW(L_BUTTON) && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_LR))
-    {
-        BeginNormalPaletteFade(PALETTES_ALL & ~(0x14), 0, 0, 0x10, RGB_BLACK);
-        sPokedexView->screenSwitchState = 2;
-        gTasks[taskId].func = Task_SwitchScreensFromSizeScreen;
-        PlaySE(SE_DEX_PAGE);
-    }
-}
-
-static void Task_SwitchScreensFromSizeScreen(u8 taskId)
-{
-    if (!gPaletteFade.active)
-    {
-        FreeAndDestroyMonPicSprite(gTasks[taskId].tMonSpriteId);
-        FreeAndDestroyTrainerPicSprite(gTasks[taskId].tTrainerSpriteId);
-        switch (sPokedexView->screenSwitchState)
-        {
-        default:
-        case 1:
-            gTasks[taskId].func = Task_LoadInfoScreen;
-            break;
-        case 2:
-            gTasks[taskId].func = Task_LoadCryScreen;
-            break;
-        }
-    }
 }
 
 #undef tScrolling

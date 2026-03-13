@@ -292,4 +292,11 @@ void UpdateSelectedMonSpriteId(void);
 void SpriteCB_MoveMonForInfoScreen(struct Sprite *sprite);
 void Task_SwitchToSearchMenuTopBar(u8);
 
+void Task_LoadCryScreen(u8);
+void Task_LoadSizeScreen(u8);
+void Task_LoadAreaScreen(u8 taskId);
+
+void Task_SwitchScreensFromInfoScreen(u8);
+void Task_HandleSizeScreenInput(u8);
+
 #endif // GUARD_POKEDEX_H

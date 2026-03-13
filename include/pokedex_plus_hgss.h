@@ -14,6 +14,9 @@ void TryCreateStatBars(void);
 void TryCreateStatBarsDPAD(void);
 bool32 TryMoveMonForInfoScreen_HGSS(struct Sprite *sprite);
 bool32 TryLoadSearchMenu_HGSS(u8 taskId);
+bool32 TryLoadCryScreen_HGSS(u8 taskId);
+bool32 TryLoadSizeScreen_HGSS(u8 taskId);
+bool32 TryLoadAreaScreen_HGSS(u8 taskId);
 bool32 TryCreateMonListEntry_HGSS(u8 position, u16 b, u16 ignored);
 
 #endif // GUARD_POKEDEX_PLUS_HGSS_H

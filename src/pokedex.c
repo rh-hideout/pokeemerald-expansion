@@ -112,19 +112,14 @@ static void SpriteCB_PokedexListMonSprite(struct Sprite *sprite);
 static bool8 IsInfoScreenScrolling(u8);
 static u8 StartInfoScreenScroll(struct PokedexListItem *, u8);
 static void Task_HandleInfoScreenInput(u8);
-static void Task_SwitchScreensFromInfoScreen(u8);
 static void Task_LoadInfoScreenWaitForFade(u8);
 static void Task_ExitInfoScreen(u8);
-static void Task_LoadAreaScreen(u8 taskId);
 static void Task_ReloadAreaScreen(u8 taskId);
 static void Task_WaitForAreaScreenInput(u8 taskId);
 static void Task_SwitchScreensFromAreaScreen(u8);
-static void Task_LoadCryScreen(u8);
 static void Task_HandleCryScreenInput(u8);
 static void Task_SwitchScreensFromCryScreen(u8);
 static void LoadPlayArrowPalette(bool8);
-static void Task_LoadSizeScreen(u8);
-static void Task_HandleSizeScreenInput(u8);
 static void Task_SwitchScreensFromSizeScreen(u8);
 static void LoadScreenSelectBarMain(u16);
 static void LoadScreenSelectBarSubmenu(u16);
@@ -3367,7 +3362,7 @@ static void Task_HandleInfoScreenInput(u8 taskId)
     }
 }
 
-static void Task_SwitchScreensFromInfoScreen(u8 taskId)
+void Task_SwitchScreensFromInfoScreen(u8 taskId)
 {
     if (!gPaletteFade.active)
     {
@@ -3407,8 +3402,11 @@ static void Task_ExitInfoScreen(u8 taskId)
     }
 }
 
-static void Task_LoadAreaScreen(u8 taskId)
+void Task_LoadAreaScreen(u8 taskId)
 {
+    if (TryLoadAreaScreen_HGSS(taskId))
+        return;
+
     switch (gMain.state)
     {
     case 0:
@@ -3490,8 +3488,11 @@ static void Task_SwitchScreensFromAreaScreen(u8 taskId)
     }
 }
 
-static void Task_LoadCryScreen(u8 taskId)
+void Task_LoadCryScreen(u8 taskId)
 {
+    if (TryLoadCryScreen_HGSS(taskId))
+        return;
+
     switch (gMain.state)
     {
     case 0:
@@ -3683,8 +3684,11 @@ static void LoadPlayArrowPalette(bool8 cryPlaying)
     LoadPalette(&color, BG_PLTT_ID(5) + 13, PLTT_SIZEOF(1));
 }
 
-static void Task_LoadSizeScreen(u8 taskId)
+void Task_LoadSizeScreen(u8 taskId)
 {
+    if (TryLoadSizeScreen_HGSS(taskId))
+        return;
+
     u8 spriteId;
 
     switch (gMain.state)
@@ -3781,7 +3785,7 @@ static void Task_LoadSizeScreen(u8 taskId)
     }
 }
 
-static void Task_HandleSizeScreenInput(u8 taskId)
+void Task_HandleSizeScreenInput(u8 taskId)
 {
     if (JOY_NEW(B_BUTTON))
     {
