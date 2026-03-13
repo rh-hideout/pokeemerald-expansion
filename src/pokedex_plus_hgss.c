@@ -422,8 +422,6 @@ static const struct SpritePalette sStatBarSpritePal[] = //{sStatBarPalette, TAG_
     {0}
 };
 
-#define TAG_DEX_INTERFACE 4096 // Tile and pal tag used for all interface sprites.
-
 static const struct CompressedSpriteSheet sInterfaceSpriteSheet[] =
 {
     {sPokedexPlusHGSS_Interface_Gfx, 0x2000, TAG_DEX_INTERFACE},

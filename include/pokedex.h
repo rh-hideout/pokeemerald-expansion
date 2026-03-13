@@ -126,6 +126,9 @@ enum
 #define NUM_NEW_ENTRY_INFO_BG_TEMPLATES 2
 #define NUM_SEARCH_MENU_BG_TEMPLATES    4
 
+// Tile and pal tag used for all interface sprites.
+#define TAG_DEX_INTERFACE               4096
+
 struct PokedexListItem
 {
     u16 dexNum;
@@ -240,7 +243,6 @@ struct PokedexView
     struct FromScreenData sFormScreenData;
     u16 formSpecies;
 };
-
 
 extern const struct SpriteTemplate sScrollBarSpriteTemplate;
 extern const struct SpriteTemplate sScrollArrowSpriteTemplate;

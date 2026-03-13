@@ -550,8 +550,6 @@ static const union AnimCmd *const sSpriteAnimTable_DexListStartMenuCursor[] =
     sSpriteAnim_DexListStartMenuCursor
 };
 
-#define TAG_DEX_INTERFACE 4096 // Tile and pal tag used for all interface sprites.
-
 const struct SpriteTemplate sScrollBarSpriteTemplate =
 {
     .tileTag = TAG_DEX_INTERFACE,
