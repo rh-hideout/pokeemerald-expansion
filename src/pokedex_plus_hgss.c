@@ -259,6 +259,8 @@ static void Task_ExitEvolutionScreen(u8 taskId);
 static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 depth, u32 *depth_i, u32 alreadyPrintedIcons[], u32 *icon_depth_i, u32 numLines);
 static u8 PrintPreEvolutions(u8 taskId, u16 species);
 //Stat bars on scrolling screens
+static void TryDestroyStatBars(void);
+static void TryDestroyStatBarsBg(void);
 static void CreateStatBars(struct PokedexListItem *dexMon);
 static void CreateStatBarsBg(void);
 static void SpriteCB_StatBars(struct Sprite *sprite);
@@ -1246,9 +1248,6 @@ static const u8 sBaseStatOffsets[] =
 };
 void TryDestroyStatBars(void)
 {
-    if (!POKEDEX_PLUS_HGSS)
-        return;
-
     if (sPokedexView->statBarsSpriteId != 0xFF)
     {
         FreeSpriteTilesByTag(TAG_STAT_BAR);
@@ -1259,9 +1258,6 @@ void TryDestroyStatBars(void)
 }
 void TryDestroyStatBarsBg(void)
 {
-    if (!POKEDEX_PLUS_HGSS)
-        return;
-
     if (sPokedexView->statBarsBgSpriteId != 0xFF)
     {
         FreeSpriteTilesByTag(TAG_STAT_BAR_BG);
@@ -5189,7 +5185,23 @@ static void CreateSearchParameterScrollArrows(u8 taskId)
 #undef sTaskId
 #undef sIsDownArrow
 
-void TryCreateStatBars(void)
+void HandleDestroyStatBars_HGSS(void)
+{
+    if (!POKEDEX_PLUS_HGSS)
+        return;
+
+    TryDestroyStatBars();
+}
+
+void HandleDestroyStatBarsBg_HGSS(void)
+{
+    if (!POKEDEX_PLUS_HGSS)
+        return;
+
+    TryDestroyStatBarsBg();
+}
+
+void HandleCreateStatBars_HGSS(void)
 {
     if (!POKEDEX_PLUS_HGSS)
         return;
@@ -5201,7 +5213,7 @@ void TryCreateStatBars(void)
     }
 }
 
-void TryCreateStatBarsDPAD(void)
+void HandleCreateStatBarsDPAD_HGSS(void)
 {
     if (!POKEDEX_PLUS_HGSS)
         return;

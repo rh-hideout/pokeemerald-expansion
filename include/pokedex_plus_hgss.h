@@ -8,10 +8,10 @@ bool32 TryOpenPokedexPage_HGSS(u8, u8);
 bool32 Task_TryLoadInfoScreen_HGSS(u8);
 bool32 TryInitWindows_HGSS(void);
 
-void TryDestroyStatBars(void);
-void TryDestroyStatBarsBg(void);
-void TryCreateStatBars(void);
-void TryCreateStatBarsDPAD(void);
+void HandleDestroyStatBars_HGSS(void);
+void HandleDestroyStatBarsBg_HGSS(void);
+void HandleCreateStatBars_HGSS(void);
+void HandleCreateStatBarsDPAD_HGSS(void);
 bool32 TryMoveMonForInfoScreen_HGSS(struct Sprite *sprite);
 bool32 TryLoadSearchMenu_HGSS(u8 taskId);
 bool32 TryLoadCryScreen_HGSS(u8 taskId);
