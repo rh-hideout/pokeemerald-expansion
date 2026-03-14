@@ -1843,7 +1843,7 @@ void CalculateMonStats(struct Pokemon *mon)
         return;
 #endif
 
-    if (GetSpeciesBaseHP(species) == 1)
+    if (HasShedinjaHPHandling(species))
     {
         newMaxHP = 1;
     }
@@ -7418,4 +7418,13 @@ void ChangePokemonNicknameWithCallback(void (*callback)(void))
     GetBoxMonData(boxMon, MON_DATA_NICKNAME, gStringVar3);
     GetBoxMonData(boxMon, MON_DATA_NICKNAME, gStringVar2);
     DoNamingScreen(NAMING_SCREEN_NICKNAME, gStringVar2, GetBoxMonData(boxMon, MON_DATA_SPECIES), GetBoxMonGender(boxMon), GetBoxMonData(boxMon, MON_DATA_PERSONALITY), callback);
+}
+
+bool32 HasShedinjaHPHandling(u32 species)
+{
+    if (species == SPECIES_SHEDINJA)
+        return TRUE;
+    if (P_BASE_HP_1_SHEDINJA_HANDLING && GetSpeciesBaseHP(species) == 1)
+        return TRUE;
+    return FALSE;
 }
