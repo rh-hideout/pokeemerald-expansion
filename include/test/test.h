@@ -257,7 +257,7 @@ static inline struct Benchmark BenchmarkStop(void)
 
 #define PARAMETRIZE if (gFunctionTestRunnerState->parameters++ == gFunctionTestRunnerState->runParameter)
 
-#define PARAMETRIZE_LABEL(f, label, ...) if (gFunctionTestRunnerState->parameters++ == gFunctionTestRunnerState->runParameter && (Test_MgbaPrintf(":N%s: (%d/%d) " f, gTestRunnerState.test->name, gFunctionTestRunnerState->runParameter + 1, gFunctionTestRunnerState->parameters, label, DEFAULT(0, __VA_ARGS__)), 1))
+#define PARAMETRIZE_LABEL(f, ...) if (gFunctionTestRunnerState->parameters++ == gFunctionTestRunnerState->runParameter && (Test_MgbaPrintf(":N%s: (%d/%d) " f, gTestRunnerState.test->name, gFunctionTestRunnerState->runParameter + 1, gFunctionTestRunnerState->parameters, __VA_ARGS__), 1))
 
 #define SET_RNG(tag, value) SetupRiggedRng(__LINE__, tag, value)
 
