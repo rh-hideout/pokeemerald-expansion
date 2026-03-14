@@ -110,8 +110,6 @@ static void SpriteCB_PokedexListMonSprite(struct Sprite *sprite);
 static bool8 IsInfoScreenScrolling(u8);
 static u8 StartInfoScreenScroll(struct PokedexListItem *, u8);
 static void Task_HandleInfoScreenInput(u8);
-static void Task_LoadInfoScreenWaitForFade(u8);
-static void Task_ExitInfoScreen(u8);
 static void Task_ReloadAreaScreen(u8 taskId);
 static void Task_WaitForAreaScreenInput(u8 taskId);
 static void Task_SwitchScreensFromAreaScreen(u8);
@@ -3097,7 +3095,7 @@ static void SpriteCB_DexListStartMenuCursor(struct Sprite *sprite)
     }
 }
 
-static void PrintInfoScreenText(const u8 *str, u8 left, u8 top)
+void PrintInfoScreenText(const u8 *str, u8 left, u8 top)
 {
     u8 color[3];
     color[0] = TEXT_COLOR_TRANSPARENT;
@@ -3274,7 +3272,7 @@ void Task_LoadInfoScreen(u8 taskId)
     }
 }
 
-static void FreeInfoScreenWindowAndBgBuffers(void)
+void FreeInfoScreenWindowAndBgBuffers(void)
 {
     void *tilemapBuffer;
 
@@ -3388,7 +3386,7 @@ void Task_SwitchScreensFromInfoScreen(u8 taskId)
     }
 }
 
-static void Task_LoadInfoScreenWaitForFade(u8 taskId)
+void Task_LoadInfoScreenWaitForFade(u8 taskId)
 {
     if (!gPaletteFade.active)
     {
@@ -3397,7 +3395,7 @@ static void Task_LoadInfoScreenWaitForFade(u8 taskId)
     }
 }
 
-static void Task_ExitInfoScreen(u8 taskId)
+void Task_ExitInfoScreen(u8 taskId)
 {
     if (!gPaletteFade.active)
     {

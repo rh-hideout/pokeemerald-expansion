@@ -302,4 +302,9 @@ void Task_HandleSizeScreenInput(u8);
 void CreateCaughtBall(u16, u8, u8, u16);
 void ClearMonListEntry(u8 x, u8 y, u16 unused);
 
+void Task_LoadInfoScreenWaitForFade(u8);
+void FreeInfoScreenWindowAndBgBuffers(void);
+void Task_ExitInfoScreen(u8 taskId);
+void PrintInfoScreenText(const u8 *str, u8 left, u8 top);
+
 #endif // GUARD_POKEDEX_H

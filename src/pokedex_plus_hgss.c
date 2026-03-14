@@ -211,8 +211,6 @@ static void CreateMonDexNum(u16, u8, u8, u16);
 static u8 CreateMonName(u16, u8, u8);
 static void CreateInterfaceSprites(u8);
 static void Task_HandleInfoScreenInput(u8);
-static void Task_LoadInfoScreenWaitForFade(u8);
-static void Task_ExitInfoScreen(u8);
 static void Task_ReloadAreaScreen(u8 taskId);
 static void Task_WaitForAreaScreenInput(u8 taskId);
 static void Task_SwitchScreensFromAreaScreen(u8);
@@ -1483,25 +1481,6 @@ bool32 Task_TryLoadInfoScreen_HGSS(u8 taskId)
     return TRUE;
 }
 
-static void FreeInfoScreenWindowAndBgBuffers(void)
-{
-    void *tilemapBuffer;
-
-    FreeAllWindowBuffers();
-    tilemapBuffer = GetBgTilemapBuffer(0);
-    if (tilemapBuffer)
-        Free(tilemapBuffer);
-    tilemapBuffer = GetBgTilemapBuffer(1);
-    if (tilemapBuffer)
-        Free(tilemapBuffer);
-    tilemapBuffer = GetBgTilemapBuffer(2);
-    if (tilemapBuffer)
-        Free(tilemapBuffer);
-    tilemapBuffer = GetBgTilemapBuffer(3);
-    if (tilemapBuffer)
-        Free(tilemapBuffer);
-}
-
 static void Task_HandleInfoScreenInput(u8 taskId)
 {
     if (gTasks[taskId].tScrolling)
@@ -1529,25 +1508,6 @@ static void Task_HandleInfoScreenInput(u8 taskId)
         PlaySE(SE_PIN);
     }
 
-}
-
-static void Task_LoadInfoScreenWaitForFade(u8 taskId)
-{
-    if (!gPaletteFade.active)
-    {
-        FreeAndDestroyMonPicSprite(gTasks[taskId].tMonSpriteId);
-        gTasks[taskId].func = Task_LoadInfoScreen;
-    }
-}
-
-static void Task_ExitInfoScreen(u8 taskId)
-{
-    if (!gPaletteFade.active)
-    {
-        FreeAndDestroyMonPicSprite(gTasks[taskId].tMonSpriteId);
-        FreeInfoScreenWindowAndBgBuffers();
-        DestroyTask(taskId);
-    }
 }
 
 #undef tMonSpriteId
@@ -1863,15 +1823,6 @@ static void SpriteCB_SlideCaughtMonToCenter(struct Sprite *sprite)
 //*        Print data                *
 //*                                  *
 //************************************
-static void PrintInfoScreenText(const u8 *str, u8 left, u8 top)
-{
-    u8 color[3];
-    color[0] = TEXT_COLOR_TRANSPARENT;
-    color[1] = TEXT_DYNAMIC_COLOR_6;
-    color[2] = TEXT_COLOR_LIGHT_GRAY;
-
-    AddTextPrinterParameterized4(0, 1, left, top, 0, 0, color, -1, str);
-}
 static void PrintInfoScreenTextWhite(const u8* str, u8 left, u8 top)
 {
     u8 color[3];
