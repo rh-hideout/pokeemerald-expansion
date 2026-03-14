@@ -1800,7 +1800,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleContext *ctx)
 
         if (targetAvoidedAttack)
         {
-            gBattleMons[gBattlerTarget].volatiles.lastLandedMove = 0; // Might need investigation on what exactly clears is
+            SetBattlerLastLandedMove(gBattlerTarget, MOVE_NONE);
             gBattleMons[gBattlerTarget].volatiles.lastHitByType = 0;
             gBattleScripting.battler = ctx->battlerDef;
             gBattleStruct->pledgeMove = FALSE;
@@ -2647,11 +2647,11 @@ static enum MoveEndResult MoveEndUpdateLastMoves(void)
         {
             if (gChosenMove == MOVE_UNAVAILABLE)
             {
-                gBattleMons[gBattlerTarget].volatiles.lastLandedMove = gChosenMove;
+                SetBattlerLastLandedMove(gBattlerTarget, gChosenMove);
             }
             else
             {
-                gBattleMons[gBattlerTarget].volatiles.lastLandedMove = gCurrentMove;
+                SetBattlerLastLandedMove(gBattlerTarget, gCurrentMove);
                 gBattleMons[gBattlerTarget].volatiles.lastHitByType = GetBattleMoveType(gCurrentMove);
                 if (!gSpecialStatuses[gBattlerAttacker].dancerUsedMove)
                 {
@@ -2663,7 +2663,7 @@ static enum MoveEndResult MoveEndUpdateLastMoves(void)
         }
         else
         {
-            gBattleMons[gBattlerTarget].volatiles.lastLandedMove = MOVE_UNAVAILABLE;
+            SetBattlerLastLandedMove(gBattlerTarget, MOVE_UNAVAILABLE);
         }
     }
 

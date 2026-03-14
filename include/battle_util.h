@@ -439,5 +439,7 @@ enum Move GetBattlerLastMove(enum BattlerId battler);
 enum Move SetBattlerLastMove(enum BattlerId battler, enum Move move);
 enum Move GetBattlerLockedMove(enum BattlerId battler);
 enum Move SetBattlerLockedMove(enum BattlerId battler, enum Move move);
+enum Move GetBattlerLastLandedMove(enum BattlerId battler);
+enum Move SetBattlerLastLandedMove(enum BattlerId battler, enum Move move);
 
 #endif // GUARD_BATTLE_UTIL_H

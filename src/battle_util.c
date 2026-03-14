@@ -11005,3 +11005,13 @@ enum Move SetBattlerLockedMove(enum BattlerId battler, enum Move move)
 {
     return gBattleMons[battler].volatiles.lockedMove = move;
 }
+
+enum Move GetBattlerLastLandedMove(enum BattlerId battler)
+{
+    return gBattleMons[battler].volatiles.lastLandedMove;
+}
+
+enum Move SetBattlerLastLandedMove(enum BattlerId battler, enum Move move)
+{
+    return gBattleMons[battler].volatiles.lastLandedMove = move;
+}

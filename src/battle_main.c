@@ -3055,7 +3055,7 @@ static void BattleStartClearSetData(void)
     {
         gBattleStruct->battlerState[i].isFirstTurn = 2;
         SetBattlerLastMove(i, MOVE_NONE);
-        gBattleMons[i].volatiles.lastLandedMove = MOVE_NONE;
+        SetBattlerLastLandedMove(i, MOVE_NONE);
         gBattleMons[i].volatiles.lastHitByType = TYPE_NONE;
         gBattleMons[i].volatiles.lastUsedMoveType = TYPE_NONE;
         gBattleMons[i].volatiles.lastResultingMove = MOVE_NONE;
