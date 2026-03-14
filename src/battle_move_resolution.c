@@ -1540,7 +1540,7 @@ static enum CancelerResult HandleSkyDropResult(struct BattleContext *ctx)
 
     gBattleStruct->skyDropTargets[ctx->battlerAtk] = ctx->battlerDef;
     gBattleStruct->skyDropTargets[ctx->battlerDef] = ctx->battlerAtk;
-    gBattleMons[ctx->battlerAtk].volatiles.lockedMove = ctx->move;
+    SetBattlerLockedMove(ctx->battlerAtk, ctx->move);
     gProtectStructs[ctx->battlerAtk].chargingTurn = TRUE;
     gBattleMons[ctx->battlerAtk].volatiles.multipleTurns = TRUE;
     gBattleMons[ctx->battlerAtk].volatiles.semiInvulnerable = STATE_ON_AIR;
@@ -1572,7 +1572,7 @@ static enum CancelerResult CancelerCharging(struct BattleContext *ctx)
     }
     else if (!gProtectStructs[ctx->battlerAtk].chargingTurn) // First turn charge
     {
-        gBattleMons[ctx->battlerAtk].volatiles.lockedMove = ctx->move;
+        SetBattlerLockedMove(ctx->battlerAtk, ctx->move);
         gProtectStructs[ctx->battlerAtk].chargingTurn = TRUE;
         if (gBattleMoveEffects[GetMoveEffect(ctx->move)].semiInvulnerableEffect)
             gBattleMons[ctx->battlerAtk].volatiles.semiInvulnerable = GetMoveTwoTurnAttackStatus(ctx->move);
@@ -3876,7 +3876,7 @@ static void SetSameMoveTurnValues(enum BattleMoveEffects moveEffect)
         if (increment && ++gBattleMons[gBattlerAttacker].volatiles.rolloutTimer < 5)
         {
             gBattleMons[gBattlerAttacker].volatiles.multipleTurns = TRUE;
-            gBattleMons[gBattlerAttacker].volatiles.lockedMove = gCurrentMove;
+            SetBattlerLockedMove(gBattlerAttacker, gCurrentMove);
         }
         else
         {

@@ -390,7 +390,7 @@ void HandleAction_UseMove(void)
     }
     else if (gBattleMons[gBattlerAttacker].volatiles.multipleTurns || gBattleMons[gBattlerAttacker].volatiles.rechargeTimer > 0)
     {
-        gCurrentMove = gChosenMove = gBattleMons[gBattlerAttacker].volatiles.lockedMove;
+        gCurrentMove = gChosenMove = GetBattlerLockedMove(gBattlerAttacker);
     }
     // encore forces you to use the same move
     else if (GetActiveGimmick(gBattlerAttacker) != GIMMICK_Z_MOVE && gBattleMons[gBattlerAttacker].volatiles.encoredMove != MOVE_NONE
@@ -10994,4 +10994,14 @@ enum Move GetBattlerLastMove(enum BattlerId battler)
 enum Move SetBattlerLastMove(enum BattlerId battler, enum Move move)
 {
     return gBattleMons[battler].volatiles.lastMove = move;
+}
+
+enum Move GetBattlerLockedMove(enum BattlerId battler)
+{
+    return gBattleMons[battler].volatiles.lockedMove;
+}
+
+enum Move SetBattlerLockedMove(enum BattlerId battler, enum Move move)
+{
+    return gBattleMons[battler].volatiles.lockedMove = move;
 }

@@ -3060,7 +3060,7 @@ static void BattleStartClearSetData(void)
         gBattleMons[i].volatiles.lastUsedMoveType = TYPE_NONE;
         gBattleMons[i].volatiles.lastResultingMove = MOVE_NONE;
         gBattleMons[i].volatiles.lastHitBy = MAX_BATTLERS_COUNT;
-        gBattleMons[i].volatiles.lockedMove = MOVE_NONE;
+        SetBattlerLockedMove(i, MOVE_NONE);
         gBattleMons[i].volatiles.lastPrintedMove = MOVE_NONE;
         gSelectionBattleScripts[i] = NULL;
         gPalaceSelectionBattleScripts[i] = NULL;

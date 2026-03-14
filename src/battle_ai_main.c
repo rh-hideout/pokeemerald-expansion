@@ -2899,7 +2899,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         break;
     case EFFECT_INSTRUCT:
         {
-            u32 instructedMove;
+            enum Move instructedMove, lockedMove;
             if (AI_IsSlower(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY))
                 instructedMove = predictedMove;
             else
@@ -2909,7 +2909,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
              || IsMoveInstructBanned(instructedMove)
              || MoveHasAdditionalEffectSelf(instructedMove, MOVE_EFFECT_RECHARGE)
              || IsZMove(instructedMove)
-             || (gBattleMons[battlerDef].volatiles.lockedMove != MOVE_NONE && gBattleMons[battlerDef].volatiles.lockedMove != MOVE_UNAVAILABLE)
+             || ((lockedMove = GetBattlerLockedMove(battlerDef)) != MOVE_NONE && lockedMove != MOVE_UNAVAILABLE)
              || gBattleMons[battlerDef].volatiles.multipleTurns
              || PartnerMoveIsSameAsAttacker(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
             {

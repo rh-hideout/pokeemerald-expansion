@@ -1080,7 +1080,7 @@ static void Cmd_setchargingturn(void)
     if (!gBattleMons[gBattlerAttacker].volatiles.multipleTurns)
     {
         gBattleMons[gBattlerAttacker].volatiles.multipleTurns = TRUE;
-        gBattleMons[gBattlerAttacker].volatiles.lockedMove = gCurrentMove;
+        SetBattlerLockedMove(gBattlerAttacker, gCurrentMove);
         gProtectStructs[gBattlerAttacker].chargingTurn = TRUE;
     }
     gBattlescriptCurrInstr = cmd->nextInstr;
@@ -2580,7 +2580,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         if (!gBattleMons[gEffectBattler].volatiles.uproarTurns)
         {
             gBattleMons[gEffectBattler].volatiles.multipleTurns = TRUE;
-            gBattleMons[gEffectBattler].volatiles.lockedMove = gCurrentMove;
+            SetBattlerLockedMove(gEffectBattler, gCurrentMove);
             gBattleMons[gEffectBattler].volatiles.uproarTurns = B_UPROAR_TURNS >= GEN_5
                                                                 ? B_UPROAR_TURN_COUNT - 2
                                                                 : RandomUniform(RNG_CONFUSION_TURNS, 2, B_UPROAR_TURN_COUNT);
@@ -2774,7 +2774,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
             break;
 
         gBattleMons[gEffectBattler].volatiles.rechargeTimer = 2;
-        gBattleMons[gEffectBattler].volatiles.lockedMove = gCurrentMove;
+        SetBattlerLockedMove(gEffectBattler, gCurrentMove);
         gBattlescriptCurrInstr = battleScript;
         break;
     case MOVE_EFFECT_RAGE:
@@ -2840,7 +2840,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         else
         {
             gBattleMons[gEffectBattler].volatiles.multipleTurns = TRUE;
-            gBattleMons[gEffectBattler].volatiles.lockedMove = gCurrentMove;
+            SetBattlerLockedMove(gEffectBattler, gCurrentMove);
             gBattleMons[gEffectBattler].volatiles.rampageTurns = RandomUniform(RNG_RAMPAGE_TURNS, 2, B_RAMPAGE_TURNS);
         }
         break;
@@ -8105,7 +8105,7 @@ static void Cmd_setbide(void)
     CMD_ARGS();
 
     gBattleMons[gBattlerAttacker].volatiles.multipleTurns = TRUE;
-    gBattleMons[gBattlerAttacker].volatiles.lockedMove = gCurrentMove;
+    SetBattlerLockedMove(gBattlerAttacker, gCurrentMove);
     gBattleMons[gBattlerAttacker].volatiles.bideDmg = 0;
     gBattleMons[gBattlerAttacker].volatiles.bideTurns = 2;
 
