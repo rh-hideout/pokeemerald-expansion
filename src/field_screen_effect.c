@@ -1454,7 +1454,15 @@ static void Task_RushInjuredPokemonToCenter(u8 taskId)
         {
             DestroyTask(taskId);
             if (gTasks[taskId].tIsPlayerHouse)
+            {
+                if (IS_FRLG)
+                    StringCopy(gStringVar1, COMPOUND_STRING("PROF. OAK"));
+                else
+                    StringCopy(gStringVar1, COMPOUND_STRING("PROF. BIRCH"));
                 ScriptContext_SetupScript(EventScript_AfterWhiteOutMomHeal);
+            }
+            else if (IS_FRLG)
+                ScriptContext_SetupScript(EventScript_AfterWhiteOutHeal_Frlg);
             else
                 ScriptContext_SetupScript(EventScript_AfterWhiteOutHeal);
         }
