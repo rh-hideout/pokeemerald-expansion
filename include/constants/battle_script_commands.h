@@ -226,6 +226,7 @@ enum BattleScriptOpcode
     B_SCR_OP_SETNONVOLATILESTATUS,
     B_SCR_OP_TRYOVERWRITEABILITY,
     B_SCR_OP_TRY_SYNCHRONIZE,
+    B_SCR_OP_TRY_CONFUSION_AFTER_SKY_DROP,
 
     // Expansion users, please don't use any of the unused commands.
     // They are reserved for expansion usage.
@@ -261,7 +262,6 @@ enum BattleScriptOpcode
     B_SCR_OP_UNUSED_29,
     B_SCR_OP_UNUSED_30,
     B_SCR_OP_UNUSED_31,
-    B_SCR_OP_UNUSED_32,
     B_SCR_OP_CALLNATIVE,
 };
 

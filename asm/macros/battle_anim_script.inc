@@ -1,11 +1,11 @@
 @ commands
 
-	.macro loadspritegfx tag:req
+	.macro unloadspritegfx tag:req
 	.byte 0x0
 	.2byte \tag
 	.endm
 
-	.macro unloadspritegfx tag:req
+	.macro unloadspritepal tag:req
 	.byte 0x1
 	.2byte \tag
 	.endm
@@ -332,6 +332,10 @@
 .Lsprite_\@_1:
 	.2byte \argv
 .Lsprite_\@_2:
+	.endm
+
+	.macro unloadallspritepals
+	.byte 0x35
 	.endm
 
 @ useful macros

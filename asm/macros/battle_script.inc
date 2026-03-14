@@ -1204,6 +1204,11 @@
 	.byte B_SCR_OP_TRY_SYNCHRONIZE
 	.endm
 
+	.macro tryconfusionafterskydrop battler:req
+	.byte B_SCR_OP_TRY_CONFUSION_AFTER_SKY_DROP
+    .byte \battler
+	.endm
+	
 	.macro callnative func:req
 	.byte B_SCR_OP_CALLNATIVE
 	.4byte \func
@@ -2080,10 +2085,6 @@
 	callnative BS_TryHealQuarterHealth
 	.byte \battler
 	.4byte \failInstr
-	.endm
-
-	.macro skydropyawn
-	callnative BS_SkyDropYawn
 	.endm
 
 	.macro jumpifpranksterblocked jumpInstr:req
