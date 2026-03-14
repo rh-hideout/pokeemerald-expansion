@@ -109,7 +109,7 @@ static void SpriteCB_DexListStartMenuCursor(struct Sprite *sprite);
 static void SpriteCB_PokedexListMonSprite(struct Sprite *sprite);
 static bool8 IsInfoScreenScrolling(u8);
 static u8 StartInfoScreenScroll(struct PokedexListItem *, u8);
-static void Task_HandleInfoScreenInput(u8);
+void Task_HandleInfoScreenInput(u8);
 static void Task_ReloadAreaScreen(u8 taskId);
 static void Task_WaitForAreaScreenInput(u8 taskId);
 static void Task_SwitchScreensFromAreaScreen(u8);
@@ -3291,7 +3291,7 @@ void FreeInfoScreenWindowAndBgBuffers(void)
         Free(tilemapBuffer);
 }
 
-static void Task_HandleInfoScreenInput(u8 taskId)
+void Task_HandleInfoScreenInput(u8 taskId)
 {
     if (gTasks[taskId].tScrolling)
     {
@@ -3308,6 +3308,10 @@ static void Task_HandleInfoScreenInput(u8 taskId)
         PlaySE(SE_PC_OFF);
         return;
     }
+    
+    if (TryHandleInfoScreenInput_HGSS(taskId))
+        return;
+
     if (JOY_NEW(A_BUTTON))
     {
         switch (sPokedexView->selectedScreen)

@@ -306,5 +306,6 @@ void Task_LoadInfoScreenWaitForFade(u8);
 void FreeInfoScreenWindowAndBgBuffers(void);
 void Task_ExitInfoScreen(u8 taskId);
 void PrintInfoScreenText(const u8 *str, u8 left, u8 top);
+void Task_HandleInfoScreenInput(u8 taskId);
 
 #endif // GUARD_POKEDEX_H

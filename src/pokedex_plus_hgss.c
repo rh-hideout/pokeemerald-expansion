@@ -210,7 +210,6 @@ static void LoadPokedexBgPalette(bool8);
 static void CreateMonDexNum(u16, u8, u8, u16);
 static u8 CreateMonName(u16, u8, u8);
 static void CreateInterfaceSprites(u8);
-static void Task_HandleInfoScreenInput(u8);
 static void Task_ReloadAreaScreen(u8 taskId);
 static void Task_WaitForAreaScreenInput(u8 taskId);
 static void Task_SwitchScreensFromAreaScreen(u8);
@@ -1481,25 +1480,12 @@ bool32 Task_TryLoadInfoScreen_HGSS(u8 taskId)
     return TRUE;
 }
 
-static void Task_HandleInfoScreenInput(u8 taskId)
+bool32 TryHandleInfoScreenInput_HGSS(u8 taskId)
 {
-    if (gTasks[taskId].tScrolling)
-    {
-        // Scroll up/down
-        BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
-        gTasks[taskId].func = Task_LoadInfoScreenWaitForFade;
-        PlaySE(SE_DEX_SCROLL);
-        return;
-    }
-    if (JOY_NEW(B_BUTTON))
-    {
-        BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
-        gTasks[taskId].func = Task_ExitInfoScreen;
-        PlaySE(SE_PC_OFF);
-        return;
-    }
+    if (!POKEDEX_PLUS_HGSS)
+        return FALSE;
 
-    if ((JOY_NEW(DPAD_RIGHT) || (JOY_NEW(R_BUTTON) && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_LR)))
+    if (POKEDEX_PLUS_HGSS && ((JOY_NEW(DPAD_RIGHT) || (JOY_NEW(R_BUTTON) && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_LR))))
     {
         sPokedexView->selectedScreen = AREA_SCREEN;
         BeginNormalPaletteFade(0xFFFFFFEB, 0, 0, 0x10, RGB_BLACK);
@@ -1508,6 +1494,7 @@ static void Task_HandleInfoScreenInput(u8 taskId)
         PlaySE(SE_PIN);
     }
 
+    return TRUE;
 }
 
 #undef tMonSpriteId

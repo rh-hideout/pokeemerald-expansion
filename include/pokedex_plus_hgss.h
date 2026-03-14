@@ -19,4 +19,6 @@ bool32 TryLoadSizeScreen_HGSS(u8 taskId);
 bool32 TryLoadAreaScreen_HGSS(u8 taskId);
 bool32 TryCreateMonListEntry_HGSS(u8 position, u16 b, u16 ignored);
 
+bool32 TryHandleInfoScreenInput_HGSS(u8 taskId);
+
 #endif // GUARD_POKEDEX_PLUS_HGSS_H
