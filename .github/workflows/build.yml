@@ -199,6 +199,16 @@ jobs:
           TEST: 1
         run: make -j$(nproc) check
 
+  # Gate job: satisfies the "build" branch protection rule.
+  # Passes only when all parallel build/test jobs succeed.
+  build:
+    if: github.actor != 'allcontributors[bot]'
+    runs-on: ubuntu-latest
+    needs: [build-emerald, build-firered, build-leafgreen, release, test]
+    steps:
+      - name: All builds passed
+        run: echo "All builds and tests passed."
+
   docs_validate:
     if: github.actor != 'allcontributors[bot]'
     runs-on: ubuntu-latest
