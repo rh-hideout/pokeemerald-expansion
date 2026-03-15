@@ -343,14 +343,8 @@ static void InitBtlControllersInternal(void)
 
             gBattlerPartyIndexes[0] = 0;
             gBattlerPartyIndexes[1] = 0;
-            if (BattleSideHasTwoTrainers(B_SIDE_PLAYER))
-                gBattlerPartyIndexes[2] = 0;
-            else
-                gBattlerPartyIndexes[2] = 1;
-            if (BattleSideHasTwoTrainers(B_SIDE_OPPONENT))
-                gBattlerPartyIndexes[3] = 0;
-            else
-                gBattlerPartyIndexes[3] = 1;
+            gBattlerPartyIndexes[2] = BattleSideHasTwoTrainers(B_SIDE_PLAYER) ? 0 : 1;
+            gBattlerPartyIndexes[3] = BattleSideHasTwoTrainers(B_SIDE_OPPONENT) ? 0 : 1;
         }
     }
     else
@@ -383,21 +377,10 @@ static void InitBtlControllersInternal(void)
             }
             // Set early to set gBattlerBattleController for GetBattlerTrainer
             linkBtlControllerFunc(gLinkPlayers[i].id);
-            switch (gLinkPlayers[i].id)
-            {
-            case 0:
-            case 1:
-                BufferBattlePartyCurrentOrderBySide(gLinkPlayers[i].id, 0);
-                gBattlerPositions[gLinkPlayers[i].id] = linkPositionLeft;
-                gBattlerPartyIndexes[gLinkPlayers[i].id] = 0;
-                break;
-            case 2:
-            case 3:
-                BufferBattlePartyCurrentOrderBySide(gLinkPlayers[i].id, 1);
-                gBattlerPositions[gLinkPlayers[i].id] = linkPositionRight;
-                gBattlerPartyIndexes[gLinkPlayers[i].id] = 0;
-                break;
-            }
+
+            gBattlerPositions[gLinkPlayers[i].id] = gLinkPlayers[i].id & BIT_FLANK ? linkPositionRight : linkPositionLeft;
+            BufferBattlePartyCurrentOrderBySide(gLinkPlayers[i].id, gLinkPlayers[i].id & BIT_FLANK);
+            gBattlerPartyIndexes[gLinkPlayers[i].id] = 0;
         }
     }
 }
