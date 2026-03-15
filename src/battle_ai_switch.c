@@ -40,6 +40,9 @@ static u32 GetBattlerTypeMatchup(enum BattlerId opposingBattler, enum BattlerId 
 static u32 GetSwitchinHitsToKO(s32 damageTaken, enum BattlerId battler, const struct IncomingHealInfo *healInfo, u32 originalHp);
 static void GetIncomingHealInfo(enum BattlerId battler, struct IncomingHealInfo *healInfo);
 static u32 GetWishHealAmountForBattler(enum BattlerId battler);
+static bool32 IsOpponentPhysicalAttacker(enum BattlerId battler, enum BattlerId opposingBattler);
+static bool32 CanIntimidateLowerOpponentAtk(enum BattlerId battler, enum BattlerId opposingBattler);
+static bool32 ShouldSwitchIfIntimidateBenefit(enum BattlerId battler);
 
 static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, u32 monIndex, struct Pokemon *mon)
 {
@@ -173,6 +176,10 @@ u32 GetSwitchChance(enum ShouldSwitchScenario shouldSwitchScenario)
         return SHOULD_SWITCH_REGENERATOR_PERCENTAGE;
     case SHOULD_SWITCH_REGENERATOR_STATS_RAISED:
         return SHOULD_SWITCH_REGENERATOR_STATS_RAISED_PERCENTAGE;
+    case SHOULD_SWITCH_INTIMIDATE:
+        return SHOULD_SWITCH_INTIMIDATE_PERCENTAGE;
+    case SHOULD_SWITCH_INTIMIDATE_STATS_RAISED:
+        return SHOULD_SWITCH_INTIMIDATE_STATS_RAISED_PERCENTAGE;
     case SHOULD_SWITCH_ENCORE_STATUS:
         return SHOULD_SWITCH_ENCORE_STATUS_PERCENTAGE;
     case SHOULD_SWITCH_ENCORE_DAMAGE:
@@ -916,6 +923,96 @@ static bool32 GetHitEscapeTransformState(enum BattlerId battlerAtk, enum Move mo
     return isFasterThanAll;
 }
 
+static bool32 IsOpponentPhysicalAttacker(enum BattlerId battler, enum BattlerId opposingBattler)
+{
+    if (!IsBattlerAlive(opposingBattler))
+        return FALSE;
+
+    if (GetBestDmgFromBattler(opposingBattler, battler, AI_DEFENDING) > 0 && HasPhysicalBestMove(opposingBattler, battler, AI_DEFENDING))
+        return TRUE;
+
+    return HasMoveWithCategory(opposingBattler, DAMAGE_CATEGORY_PHYSICAL);
+}
+
+static bool32 CanIntimidateLowerOpponentAtk(enum BattlerId battler, enum BattlerId opposingBattler)
+{
+    enum Ability abilityDef = gAiLogicData->abilities[opposingBattler];
+
+    // If Attack is already at -2 or lower, repeated Intimidate cycles aren't worth it.
+    if (gBattleMons[opposingBattler].statStages[STAT_ATK] <= DEFAULT_STAT_STAGE - 2)
+        return FALSE;
+
+    if (gBattleMons[opposingBattler].volatiles.substitute)
+        return FALSE;
+
+    if (gAiLogicData->holdEffects[opposingBattler] == HOLD_EFFECT_CLEAR_AMULET)
+        return FALSE;
+
+    if (gSideStatuses[GetBattlerSide(opposingBattler)] & SIDE_STATUS_MIST)
+        return FALSE;
+
+    if (IS_BATTLER_OF_TYPE(opposingBattler, TYPE_GRASS) && AI_IsAbilityOnSide(opposingBattler, ABILITY_FLOWER_VEIL))
+        return FALSE;
+
+    switch (abilityDef)
+    {
+    case ABILITY_HYPER_CUTTER:
+    case ABILITY_CLEAR_BODY:
+    case ABILITY_FULL_METAL_BODY:
+    case ABILITY_WHITE_SMOKE:
+        return FALSE;
+    default:
+        break;
+    }
+
+    if (GetConfig(B_UPDATED_INTIMIDATE) >= GEN_8)
+    {
+        switch (abilityDef)
+        {
+        case ABILITY_INNER_FOCUS:
+        case ABILITY_SCRAPPY:
+        case ABILITY_OWN_TEMPO:
+        case ABILITY_OBLIVIOUS:
+            return FALSE;
+        default:
+            break;
+        }
+    }
+
+    return TRUE;
+}
+
+static bool32 ShouldSwitchIfIntimidateBenefit(enum BattlerId battler)
+{
+    enum BattlerId opposingBattler = GetOppositeBattler(battler);
+    enum BattlerId opposingPartner = BATTLE_PARTNER(opposingBattler);
+    bool32 hasValidTarget = FALSE;
+
+    if (IsBattlerAlive(opposingBattler))
+    {
+        enum Ability abilityDef = gAiLogicData->abilities[opposingBattler];
+        bool32 canLowerAtk = CanIntimidateLowerOpponentAtk(battler, opposingBattler);
+
+        if (canLowerAtk && (DoesIntimidateRaiseStats(abilityDef) || abilityDef == ABILITY_MIRROR_ARMOR))
+            return FALSE;
+        if (canLowerAtk && IsOpponentPhysicalAttacker(battler, opposingBattler))
+            hasValidTarget = TRUE;
+    }
+
+    if (IsDoubleBattle() && IsBattlerAlive(opposingPartner))
+    {
+        enum Ability abilityDef = gAiLogicData->abilities[opposingPartner];
+        bool32 canLowerAtk = CanIntimidateLowerOpponentAtk(battler, opposingPartner);
+
+        if (canLowerAtk && (DoesIntimidateRaiseStats(abilityDef) || abilityDef == ABILITY_MIRROR_ARMOR))
+            return FALSE;
+        if (canLowerAtk && IsOpponentPhysicalAttacker(battler, opposingPartner))
+            hasValidTarget = TRUE;
+    }
+
+    return hasValidTarget;
+}
+
 static bool32 ShouldSwitchIfAbilityBenefit(enum BattlerId battler)
 {
     bool32 hasStatRaised = AnyUsefulStatIsRaised(battler);
@@ -953,20 +1050,20 @@ static bool32 ShouldSwitchIfAbilityBenefit(enum BattlerId battler)
 
         return FALSE;
 
+    case ABILITY_INTIMIDATE:
+        if (ShouldSwitchIfIntimidateBenefit(battler)
+            && gAiLogicData->mostSuitableMonId[battler] != PARTY_SIZE
+            && (hasStatRaised ? RandomPercentage(RNG_AI_SWITCH_INTIMIDATE, GetSwitchChance(SHOULD_SWITCH_INTIMIDATE_STATS_RAISED)) : RandomPercentage(RNG_AI_SWITCH_INTIMIDATE, GetSwitchChance(SHOULD_SWITCH_INTIMIDATE))))
+            break;
+
+        return FALSE;
+
     case ABILITY_ZERO_TO_HERO:
     {
         enum Move hitEscapeMove = MOVE_NONE;
 
-        for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
-        {
-            enum Move move = gBattleMons[battler].moves[moveIndex];
-
-            if (move != MOVE_NONE && GetMoveEffect(move) == EFFECT_HIT_ESCAPE)
-            {
-                hitEscapeMove = move;
-                break;
-            }
-        }
+        if (GetBattlerMoveIndexWithEffect(battler, EFFECT_HIT_ESCAPE) < MAX_MON_MOVES)
+            hitEscapeMove = gBattleMons[battler].moves[GetBattlerMoveIndexWithEffect(battler, EFFECT_HIT_ESCAPE)];
 
         // Prefer to use a hit escape move if Palafin will move first and can hit
         if (hitEscapeMove != MOVE_NONE && GetHitEscapeTransformState(battler, hitEscapeMove))
