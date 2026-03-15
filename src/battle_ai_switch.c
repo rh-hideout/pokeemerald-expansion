@@ -47,8 +47,9 @@ static void SetBattlerHPChangeForSwitch(enum BattlerId battler, enum BattlerId o
 static void SetBattlerVolatilesForSwitchin(enum BattlerId battler, u32 weather, u32 fieldStatus);
 bool32 IsSwitchinTSpikesAffected(enum BattlerId battler);
 
-static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, struct Pokemon *mon)
+static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, u32 monIndex, struct Pokemon *mon)
 {
+    u32 storeCurrBattlerPartyIndex = gBattlerPartyIndexes[switchinBattler]; // Rage Fist fix
     PokemonToBattleMon(mon, &gBattleMons[switchinBattler]);
     // Setup switchin battler data
     gAiThinkingStruct->saved[switchinBattler].saved = TRUE;
@@ -57,16 +58,19 @@ static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, struct P
     u32 switchinFieldStatus = AI_GetSwitchinFieldStatus(switchinBattler);
     SetBattlerVolatilesForSwitchin(switchinBattler, switchinWeather, switchinFieldStatus);
     SetBattlerStatusForSwitchin(switchinBattler);
+    gBattlerPartyIndexes[switchinBattler] = monIndex;
     for (enum BattlerId battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
     {
         if (switchinBattler == battlerIndex || !IsBattlerAlive(battlerIndex))
             continue;
+
         SetBattlerStatStagesForSwitchin(switchinBattler, battlerIndex, switchinFieldStatus);
         SetBattlerHPChangeForSwitch(switchinBattler, battlerIndex);
-        CalcBattlerAiMovesData(gAiLogicData, switchinBattler, battlerIndex, switchinWeather, switchinFieldStatus);
-        CalcBattlerAiMovesData(gAiLogicData, battlerIndex, switchinBattler, switchinWeather, switchinFieldStatus);
+        CalcBattlerAiMovesData(gAiLogicData, switchinBattler, battlerIndex, AI_GetSwitchinWeather(switchinBattler), AI_GetSwitchinFieldStatus(switchinBattler));
+        CalcBattlerAiMovesData(gAiLogicData, battlerIndex, switchinBattler, AI_GetSwitchinWeather(switchinBattler), AI_GetSwitchinFieldStatus(switchinBattler));
     }
 
+    gBattlerPartyIndexes[switchinBattler] = storeCurrBattlerPartyIndex;
     gAiThinkingStruct->saved[switchinBattler].saved = FALSE;
 }
 
@@ -632,6 +636,7 @@ static bool32 FindMonThatAbsorbsOpponentsMove(enum BattlerId battler)
     if (incomingType == TYPE_FIRE)
     {
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_FLASH_FIRE;
+        absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_WELL_BAKED_BODY;
     }
     if (incomingType == TYPE_WATER)
     {
@@ -2187,7 +2192,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
         }
 
         validMonIds |= (1u << monIndex);
-        InitializeSwitchinCandidate(battler, &party[monIndex]);
+        InitializeSwitchinCandidate(battler, monIndex, &party[monIndex]);
 
         u32 originalHp = gBattleMons[battler].hp;
 
@@ -2444,7 +2449,7 @@ static u32 GetBestMonVanilla(struct Pokemon *party, int firstId, int lastId, enu
             continue;
         }
         validMonIds |= (1u << monIndex);
-        InitializeSwitchinCandidate(battler, &party[monIndex]);
+        InitializeSwitchinCandidate(battler, monIndex, &party[monIndex]);
 
         // While not really invalid per se, not really wise to switch into this mon
         if (gAiLogicData->abilities[battler] == ABILITY_TRUANT && IsTruantMonVulnerable(battler, opposingBattler))
@@ -2606,7 +2611,7 @@ u32 AI_SelectRevivalBlessingMon(enum BattlerId battler)
 
         bool32 isAceMon = IsAceMon(battler, monIndex);
 
-        InitializeSwitchinCandidate(battler, &party[monIndex]);
+        InitializeSwitchinCandidate(battler, monIndex, &party[monIndex]);
         gBattleMons[battler].hp = gBattleMons[battler].maxHP / 2; // Revival Blessing restores half HP
         gBattleMons[battler].status1 = 0;
 

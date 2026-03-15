@@ -389,6 +389,7 @@ extern const u8 BattleScript_TerrainPreventsEnd2[];
 extern const u8 BattleScript_ImmunityProtectedEnd2[];
 extern const u8 BattleScript_MistyTerrainPrevents[];
 extern const u8 BattleScript_ElectricTerrainPrevents[];
+extern const u8 BattleScript_NoEffectivenessAbility[];
 extern const u8 BattleScript_DoesntAffectTargetAtkString[];
 extern const u8 BattleScript_DoesntAffectScripting[];
 extern const u8 BattleScript_GulpMissileGorging[];

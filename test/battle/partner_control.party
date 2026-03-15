@@ -6,7 +6,7 @@ Gender: Male
 Music: Male
 Back Pic: Brendan
 
-=== PARTNER_STEVEN ===
+=== PARTNER_STEVEN_TEST ===
 Name: STEVEN
 Class: Rival
 Pic: Steven
@@ -45,14 +45,40 @@ EVs: 252 Atk / 252 SpA / 6 SpD
 - Solar Beam
 - Dragon Claw
 
-=== PARTNER_DUMMY ===
-Name:
-Class: Pkmn Trainer 1
-Pic: Brendan
+=== 2 ===
+Name: Test2
+Class: Rival
+Pic: Steven
 Gender: Male
 Music: Male
-Back Pic: Brendan
-Party Size: 0
+Back Pic: Steven
+Difficulty: Normal
 
-Wynaut
+Mewtwo
+Level: 50
 
+=== 2 ===
+Name: Test2
+Class: Rival
+Pic: Steven
+Gender: Male
+Music: Male
+Back Pic: Steven
+Battle Type: Singles
+Difficulty: Easy
+
+Metapod
+Level: 1
+
+=== 2 ===
+Name: Test2
+Class: Rival
+Pic: Steven
+Gender: Male
+Music: Male
+Back Pic: Steven
+Battle Type: Singles
+Difficulty: Hard
+
+Arceus
+Level: 99
