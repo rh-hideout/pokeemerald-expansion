@@ -5,13 +5,13 @@
 #include "link.h"
 #include "random.h"
 
-#define BATTLER_RECORD_SIZE 390
+#define BATTLER_RECORD_SIZE 387
 
 struct RecordedBattleSave
 {
     struct Pokemon parties[MAX_BATTLE_TRAINERS][PARTY_SIZE];
     u8 playersName[MAX_LINK_PLAYERS][PLAYER_NAME_LENGTH + 1];
-    u8 playersTrainerId[MAX_LINK_PLAYERS];
+    u32 playersTrainerId[MAX_LINK_PLAYERS];
     u8 playersLanguage[MAX_LINK_PLAYERS];
     rng_value_t rngSeed;
     u32 battleFlags;
