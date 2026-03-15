@@ -3310,31 +3310,13 @@ enum BattleTrainer GetBattlerTrainer(enum BattlerId battler)
         case BATTLE_CONTROLLER_LINK_OPPONENT:
         case BATTLE_CONTROLLER_RECORDED_OPPONENT:
         case BATTLE_CONTROLLER_OPPONENT:
-            return (GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT) ? B_TRAINER_1 : B_TRAINER_3;
+            return (battler & BIT_FLANK) ? B_TRAINER_3 : B_TRAINER_1;
         default:
             break;
         }
     }
 
-    switch (battler)
-    {
-    case B_BATTLER_0:
-        return B_TRAINER_0;
-    case B_BATTLER_1:
-        return B_TRAINER_1;
-    case B_BATTLER_2:
-        if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
-            return B_TRAINER_2;
-        else
-            return B_TRAINER_0;
-    case B_BATTLER_3:
-        if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS || (gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_MULTI))
-            return B_TRAINER_3;
-        else
-            return B_TRAINER_1;
-    default:
-        return B_TRAINER_1;
-    }
+    return (enum BattleTrainer)(BattleSideHasTwoTrainers(battler & BIT_SIDE) ? battler : battler & BIT_SIDE);
 #endif
 }
 
