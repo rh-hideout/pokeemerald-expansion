@@ -403,7 +403,7 @@ static void GetMonNicknameLevelGender(u8 *nick, u8 *level, u8 *gender)
     StringGet_Nickname(nick);
 }
 
-static void GetMonSpeciesPersonalityShiny(u16 *species, u32 *personality, bool8 *isShiny)
+static void GetMonSpeciesPersonalityShiny(enum Species *species, u32 *personality, bool32 *isShiny)
 {
     struct Pokenav_RibbonsSummaryList *list = GetSubstructPtr(POKENAV_SUBSTRUCT_RIBBONS_SUMMARY_LIST);
     struct PokenavMonList *mons = list->monList;

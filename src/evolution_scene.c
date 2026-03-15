@@ -196,7 +196,7 @@ static void Task_BeginEvolutionScene(u8 taskId)
     }
 }
 
-void BeginEvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool8 canStopEvo, u8 partyId)
+void BeginEvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool32 canStopEvo, u8 partyId)
 {
     u8 taskId = CreateTask(Task_BeginEvolutionScene, 0);
     gTasks[taskId].tState = 0;
@@ -206,7 +206,7 @@ void BeginEvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool8
     SetMainCallback2(CB2_BeginEvolutionScene);
 }
 
-void EvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool8 canStopEvo, u8 partyId)
+void EvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool32 canStopEvo, u8 partyId)
 {
     u8 name[POKEMON_NAME_BUFFER_SIZE];
     enum Species currSpecies;

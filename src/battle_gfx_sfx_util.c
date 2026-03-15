@@ -1458,7 +1458,7 @@ bool32 ShouldPlayNormalMonCry(struct Pokemon *mon)
     return TRUE;
 }
 
-void DecompressGhostFrontPic(u32 battler)
+void DecompressGhostFrontPic(enum BattlerId battler)
 {
     u16 palOffset;
     enum BattlerPosition position = GetBattlerPosition(battler);
