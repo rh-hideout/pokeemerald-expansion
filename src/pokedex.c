@@ -109,8 +109,6 @@ static void SpriteCB_DexListStartMenuCursor(struct Sprite *sprite);
 static void SpriteCB_PokedexListMonSprite(struct Sprite *sprite);
 static bool8 IsInfoScreenScrolling(u8);
 static u8 StartInfoScreenScroll(struct PokedexListItem *, u8);
-static void Task_ReloadAreaScreen(u8 taskId);
-static void Task_WaitForAreaScreenInput(u8 taskId);
 static void Task_SwitchScreensFromAreaScreen(u8);
 static void Task_SwitchScreensFromCryScreen(u8);
 static void LoadPlayArrowPalette(bool8);
@@ -3444,8 +3442,7 @@ void Task_LoadAreaScreen(u8 taskId)
     }
 }
 
-
-static void Task_ReloadAreaScreen(u8 taskId)
+void Task_ReloadAreaScreen(u8 taskId)
 {
     switch (gMain.state)
     {
@@ -3467,7 +3464,7 @@ static void Task_ReloadAreaScreen(u8 taskId)
     }
 }
 
-static void Task_WaitForAreaScreenInput(u8 taskId)
+void Task_WaitForAreaScreenInput(u8 taskId)
 {
 // See Task_HandlePokedexAreaScreenInput() in pokedex_area_screen.c
     if (sPokedexView->screenSwitchState != 0)
@@ -3485,7 +3482,8 @@ static void Task_SwitchScreensFromAreaScreen(u8 taskId)
             gTasks[taskId].func = Task_LoadInfoScreen;
             break;
         case 2:
-            gTasks[taskId].func = Task_LoadCryScreen;
+            if (!TrySwitchScreensFromAreaScreen_HGSS(taskId))
+                gTasks[taskId].func = Task_LoadCryScreen;
             break;
         case 3:
             gTasks[taskId].func = Task_ReloadAreaScreen;

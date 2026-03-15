@@ -309,4 +309,7 @@ void PrintInfoScreenText(const u8 *str, u8 left, u8 top);
 void Task_HandleInfoScreenInput(u8 taskId);
 void Task_HandleCryScreenInput(u8);
 
+void Task_ReloadAreaScreen(u8 taskId);
+void Task_WaitForAreaScreenInput(u8 taskId);
+
 #endif // GUARD_POKEDEX_H

@@ -210,9 +210,6 @@ static void LoadPokedexBgPalette(bool8);
 static void CreateMonDexNum(u16, u8, u8, u16);
 static u8 CreateMonName(u16, u8, u8);
 static void CreateInterfaceSprites(u8);
-static void Task_ReloadAreaScreen(u8 taskId);
-static void Task_WaitForAreaScreenInput(u8 taskId);
-static void Task_SwitchScreensFromAreaScreen(u8);
 static void Task_SwitchScreensFromCryScreen(u8);
 static void LoadScreenSelectBarMain(u16);
 static void Task_HandleCaughtMonPageInput(u8);
@@ -1538,56 +1535,17 @@ bool32 TryLoadAreaScreen_HGSS(u8 taskId)
     return TRUE;
 }
 
-static void Task_ReloadAreaScreen(u8 taskId)
+bool32 TrySwitchScreensFromAreaScreen_HGSS(u8 taskId)
 {
-    switch (gMain.state)
-    {
-    case 0:
-    default:
-        sPokedexView->currentPage = PAGE_AREA;
-        gMain.state = 1;
-        break;
-    case 1:
-        LoadPokedexBgPalette(sPokedexView->isSearchResults);
-        SetGpuReg(REG_OFFSET_BG1CNT, BGCNT_PRIORITY(0) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(13) | BGCNT_16COLOR | BGCNT_TXT256x256);
-        gMain.state++;
-        break;
-    case 2:
-        DisplayPokedexAreaScreen(NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum), &sPokedexView->screenSwitchState, gAreaTimeOfDay, DEX_UPDATE_AREA_SCREEN);
-        gMain.state = 0;
-        gTasks[taskId].func = Task_WaitForAreaScreenInput;
-        break;
-    }
-}
+    if (!POKEDEX_PLUS_HGSS)
+        return FALSE;
 
-static void Task_WaitForAreaScreenInput(u8 taskId)
-{
-// See Task_HandlePokedexAreaScreenInput() in pokedex_area_screen.c
-    if (sPokedexView->screenSwitchState != 0)
-        gTasks[taskId].func = Task_SwitchScreensFromAreaScreen;
-}
+    if (sPokedexListItem->owned)
+        gTasks[taskId].func = Task_LoadStatsScreen;
+    else
+        PlaySE(SE_FAILURE);
 
-static void Task_SwitchScreensFromAreaScreen(u8 taskId)
-{
-    if (!gPaletteFade.active)
-    {
-        switch (sPokedexView->screenSwitchState)
-        {
-        case 1:
-        default:
-            gTasks[taskId].func = Task_LoadInfoScreen;
-            break;
-        case 2:
-            if (!sPokedexListItem->owned)
-                PlaySE(SE_FAILURE);
-            else
-                gTasks[taskId].func = Task_LoadStatsScreen;
-            break;
-        case 3:
-            gTasks[taskId].func = Task_ReloadAreaScreen;
-            break;
-        }
-    }
+    return TRUE;
 }
 
 
