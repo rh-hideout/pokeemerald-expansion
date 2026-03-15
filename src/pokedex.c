@@ -164,6 +164,7 @@ static void EraseSelectorArrow(u32);
 static void PrintSelectorArrow(u32);
 static void PrintSearchParameterTitle(u32, const u8 *);
 static void ClearSearchParameterBoxText(void);
+static u16 NationalPokedexNumToSpeciesForm(u16 nationalNum);
 
 // const rom data
 #include "data/pokemon/pokedex_orders.h"
@@ -2325,7 +2326,7 @@ static u8 CreateMonName(u16 num, u8 left, u8 top)
 {
     const u8 *str;
 
-    num = NationalPokedexNumToSpecies(num);
+    num = NationalPokedexNumToSpeciesForm(num);
     if (num)
         str = GetSpeciesName(num);
     else
@@ -2659,7 +2660,7 @@ static u32 CreatePokedexMonSprite(u16 num, s16 x, s16 y)
             gSprites[spriteId].oam.priority = 3;
             gSprites[spriteId].data[0] = 0;
             gSprites[spriteId].data[1] = i;
-            gSprites[spriteId].data[2] = NationalPokedexNumToSpecies(num);
+            gSprites[spriteId].data[2] = NationalPokedexNumToSpeciesForm(num);
             sPokedexView->monSpriteIds[i] = spriteId;
             return spriteId;
         }
@@ -3187,7 +3188,7 @@ void Task_LoadInfoScreen(u8 taskId)
         FillWindowPixelBuffer(WIN_INFO, PIXEL_FILL(0));
         PutWindowTilemap(WIN_INFO);
         PutWindowTilemap(WIN_FOOTPRINT);
-        DrawFootprint(WIN_FOOTPRINT, NationalPokedexNumToSpecies(sPokedexListItem->dexNum));
+        DrawFootprint(WIN_FOOTPRINT, NationalPokedexNumToSpeciesForm(sPokedexListItem->dexNum));
         CopyWindowToVram(WIN_FOOTPRINT, COPYWIN_GFX);
         gMain.state++;
         break;
@@ -3249,7 +3250,7 @@ void Task_LoadInfoScreen(u8 taskId)
             if (!gTasks[taskId].tSkipCry)
             {
                 StopCryAndClearCrySongs();
-                PlayCry_NormalNoDucking(NationalPokedexNumToSpecies(sPokedexListItem->dexNum), 0, CRY_VOLUME_RS, CRY_PRIORITY_NORMAL);
+                PlayCry_NormalNoDucking(NationalPokedexNumToSpeciesForm(sPokedexListItem->dexNum), 0, CRY_VOLUME_RS, CRY_PRIORITY_NORMAL);
             }
             else
             {
@@ -3436,7 +3437,7 @@ void Task_LoadAreaScreen(u8 taskId)
         gMain.state++;
         break;
     case 2:
-        DisplayPokedexAreaScreen(NationalPokedexNumToSpecies(sPokedexListItem->dexNum), &sPokedexView->screenSwitchState, gAreaTimeOfDay, DEX_SHOW_AREA_SCREEN);
+        DisplayPokedexAreaScreen(NationalPokedexNumToSpeciesForm(sPokedexListItem->dexNum), &sPokedexView->screenSwitchState, gAreaTimeOfDay, DEX_SHOW_AREA_SCREEN);
         SetVBlankCallback(gPokedexVBlankCB);
         sPokedexView->screenSwitchState = 0;
         gMain.state = 0;
@@ -3461,7 +3462,7 @@ static void Task_ReloadAreaScreen(u8 taskId)
         gMain.state++;
         break;
     case 2:
-        DisplayPokedexAreaScreen(NationalPokedexNumToSpecies(sPokedexListItem->dexNum), &sPokedexView->screenSwitchState, gAreaTimeOfDay, DEX_UPDATE_AREA_SCREEN);
+        DisplayPokedexAreaScreen(NationalPokedexNumToSpeciesForm(sPokedexListItem->dexNum), &sPokedexView->screenSwitchState, gAreaTimeOfDay, DEX_UPDATE_AREA_SCREEN);
         gMain.state = 0;
         gTasks[taskId].func = Task_WaitForAreaScreenInput;
         break;
@@ -3614,7 +3615,7 @@ static void Task_HandleCryScreenInput(u8 taskId)
     if (JOY_NEW(A_BUTTON))
     {
         LoadPlayArrowPalette(TRUE);
-        CryScreenPlayButton(NationalPokedexNumToSpecies(sPokedexListItem->dexNum));
+        CryScreenPlayButton(NationalPokedexNumToSpeciesForm(sPokedexListItem->dexNum));
         return;
     }
     else if (!gPaletteFade.active)
@@ -4103,7 +4104,7 @@ static void PrintMonInfo(u32 num, u32 value, u32 owned, u32 newEntry)
 
     ConvertIntToDecimalStringN(StringCopy(str, gText_NumberClear01), value, STR_CONV_MODE_LEADING_ZEROS, digitCount);
     PrintInfoScreenText(str, 0x60, 0x19);
-    species = NationalPokedexNumToSpecies(num);
+    species = NationalPokedexNumToSpeciesForm(num);
     if (species)
         name = GetSpeciesName(species);
     else
@@ -4555,7 +4556,7 @@ bool16 HasAllMons(void)
 
     for (i = 1; i < NATIONAL_DEX_COUNT + 1; i++)
     {
-        j = NationalPokedexNumToSpecies(i);
+        j = NationalPokedexNumToSpeciesForm(i);
         if (!(gSpeciesInfo[j].isMythical && !gSpeciesInfo[j].dexForceRequired) && !GetSetPokedexFlag(j, FLAG_GET_CAUGHT))
             return FALSE;
     }
@@ -4630,7 +4631,7 @@ static u8 PrintCryScreenSpeciesName(u8 windowId, u16 num, u8 left, u8 top)
 
     for (i = 0; i < ARRAY_COUNT(str); i++)
         str[i] = EOS;
-    num = NationalPokedexNumToSpecies(num);
+    num = NationalPokedexNumToSpeciesForm(num);
     switch (num)
     {
     default:
@@ -4807,31 +4808,31 @@ static u32 GetPokedexMonPersonality(u16 species)
 
 u16 CreateMonSpriteFromNationalDexNumber(enum NationalDexOrder nationalNum, s16 x, s16 y, u16 paletteSlot)
 {
-    nationalNum = NationalPokedexNumToSpecies(nationalNum);
+    nationalNum = NationalPokedexNumToSpeciesForm(nationalNum);
     return CreateMonPicSprite(nationalNum, FALSE, GetPokedexMonPersonality(nationalNum), TRUE, x, y, paletteSlot, TAG_NONE);
 }
 
 static u16 GetPokemonScaleFromNationalDexNumber(u16 nationalNum)
 {
-    nationalNum = NationalPokedexNumToSpecies(nationalNum);
+    nationalNum = NationalPokedexNumToSpeciesForm(nationalNum);
     return gSpeciesInfo[nationalNum].pokemonScale;
 }
 
 static u16 GetPokemonOffsetFromNationalDexNumber(u16 nationalNum)
 {
-    nationalNum = NationalPokedexNumToSpecies(nationalNum);
+    nationalNum = NationalPokedexNumToSpeciesForm(nationalNum);
     return gSpeciesInfo[nationalNum].pokemonOffset;
 }
 
 static u16 GetTrainerScaleFromNationalDexNumber(u16 nationalNum)
 {
-    nationalNum = NationalPokedexNumToSpecies(nationalNum);
+    nationalNum = NationalPokedexNumToSpeciesForm(nationalNum);
     return gSpeciesInfo[nationalNum].trainerScale;
 }
 
 static u16 GetTrainerOffsetFromNationalDexNumber(u16 nationalNum)
 {
-    nationalNum = NationalPokedexNumToSpecies(nationalNum);
+    nationalNum = NationalPokedexNumToSpeciesForm(nationalNum);
     return gSpeciesInfo[nationalNum].trainerOffset;
 }
 
@@ -4866,7 +4867,7 @@ static int DoPokedexSearch(u8 dexMode, u8 order, u8 abcGroup, enum BodyColor bod
         {
             u8 firstLetter;
 
-            species = NationalPokedexNumToSpecies(sPokedexView->pokedexList[i].dexNum);
+            species = NationalPokedexNumToSpeciesForm(sPokedexView->pokedexList[i].dexNum);
             firstLetter = GetSpeciesName(species)[0];
             if (LETTER_IN_RANGE_UPPER(firstLetter, abcGroup) || LETTER_IN_RANGE_LOWER(firstLetter, abcGroup))
             {
@@ -4882,7 +4883,7 @@ static int DoPokedexSearch(u8 dexMode, u8 order, u8 abcGroup, enum BodyColor bod
     {
         for (i = 0, resultsCount = 0; i < sPokedexView->pokemonListCount; i++)
         {
-            species = NationalPokedexNumToSpecies(sPokedexView->pokedexList[i].dexNum);
+            species = NationalPokedexNumToSpeciesForm(sPokedexView->pokedexList[i].dexNum);
 
             if (bodyColor == gSpeciesInfo[species].bodyColor)
             {
@@ -4908,7 +4909,7 @@ static int DoPokedexSearch(u8 dexMode, u8 order, u8 abcGroup, enum BodyColor bod
             {
                 if (sPokedexView->pokedexList[i].owned)
                 {
-                    species = NationalPokedexNumToSpecies(sPokedexView->pokedexList[i].dexNum);
+                    species = NationalPokedexNumToSpeciesForm(sPokedexView->pokedexList[i].dexNum);
 
                     types[0] = GetSpeciesType(species, 0);
                     types[1] = GetSpeciesType(species, 1);
@@ -4926,7 +4927,7 @@ static int DoPokedexSearch(u8 dexMode, u8 order, u8 abcGroup, enum BodyColor bod
             {
                 if (sPokedexView->pokedexList[i].owned)
                 {
-                    species = NationalPokedexNumToSpecies(sPokedexView->pokedexList[i].dexNum);
+                    species = NationalPokedexNumToSpeciesForm(sPokedexView->pokedexList[i].dexNum);
 
                     types[0] = GetSpeciesType(species, 0);
                     types[1] = GetSpeciesType(species, 1);
@@ -5827,4 +5828,12 @@ static void PrintSearchParameterTitle(u32 y, const u8 *str)
 static void ClearSearchParameterBoxText(void)
 {
     ClearSearchMenuRect(144, 8, 96, 96);
+}
+
+static u16 NationalPokedexNumToSpeciesForm(u16 nationalNum)
+{
+    if (POKEDEX_PLUS_HGSS && nationalNum && sPokedexView->formSpecies)
+        return sPokedexView->formSpecies;
+
+    return NationalPokedexNumToSpecies(nationalNum);
 }
