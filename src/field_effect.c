@@ -3272,15 +3272,13 @@ static u8 InitFieldMoveMonSprite(enum Species species, bool8 isShiny, u32 person
     bool16 noDucking;
     u8 monSprite;
     struct Sprite *sprite;
-    enum Species monSpecies;
     noDucking = (species & SHOW_MON_CRY_NO_DUCKING) >> 16;
     species &= ~SHOW_MON_CRY_NO_DUCKING;
-    monSpecies = species;
-    monSprite = CreateMonSprite_FieldMove(monSpecies, isShiny, personality, 320, 80, 0);
+    monSprite = CreateMonSprite_FieldMove(species, isShiny, personality, 320, 80, 0);
     sprite = &gSprites[monSprite];
     sprite->callback = SpriteCallbackDummy;
     sprite->oam.priority = 0;
-    sprite->sSpecies = monSpecies;
+    sprite->sSpecies = species;
     sprite->data[6] = noDucking;
     return monSprite;
 }
