@@ -10261,7 +10261,7 @@ static void Cmd_pickup(void)
 
     u32 i, j;
     enum Species species;
-    u16 heldItem;
+    enum Item heldItem;
     u8 lvlDivBy10;
     enum Ability ability;
 

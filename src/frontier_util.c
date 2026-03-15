@@ -47,7 +47,7 @@
 struct FrontierBrainMon
 {
     enum Species species;
-    u16 heldItem;
+    enum Item heldItem;
     u8 fixedIV;
     u8 nature;
     u8 evs[NUM_STATS];

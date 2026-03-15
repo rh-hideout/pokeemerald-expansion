@@ -5476,7 +5476,7 @@ u16 ModifyStatByNature(u8 nature, u16 stat, enum Stat statIndex)
 void AdjustFriendship(struct Pokemon *mon, u8 event)
 {
     enum Species species;
-    u16 heldItem;
+    enum Item heldItem;
     enum HoldEffect holdEffect;
     s8 mod;
 

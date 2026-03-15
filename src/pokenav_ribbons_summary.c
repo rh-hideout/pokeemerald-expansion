@@ -948,7 +948,7 @@ static void ResetSpritesAndDrawMonFrontPic(struct Pokenav_RibbonsSummaryMenu *me
 {
     enum Species species;
     u32 personality;
-    bool8 isShiny;
+    bool32 isShiny;
 
     GetMonSpeciesPersonalityShiny(&species, &personality, &isShiny);
     ResetAllPicSprites();
@@ -969,7 +969,7 @@ static u16 DrawRibbonsMonFrontPic(s32 x, s32 y)
     enum Species species;
     u16 spriteId;
     u32 personality;
-    bool8 isShiny;
+    bool32 isShiny;
 
     GetMonSpeciesPersonalityShiny(&species, &personality, &isShiny);
     spriteId = CreateMonPicSprite(species, isShiny, personality, TRUE, MON_SPRITE_X_ON, MON_SPRITE_Y, 15, TAG_NONE);

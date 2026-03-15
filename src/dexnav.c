@@ -87,8 +87,8 @@ enum Statuses
 struct DexNavSearch
 {
     enum Species species;
-    u16 moves[MAX_MON_MOVES];
-    u16 heldItem;
+    enum Move moves[MAX_MON_MOVES];
+    enum Item heldItem;
     u8 abilityNum;
     u8 potential;
     u8 searchLevel;

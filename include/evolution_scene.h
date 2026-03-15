@@ -3,8 +3,8 @@
 
 #include "constants/species.h"
 
-void BeginEvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool8 canStopEvo, u8 partyId);
-void EvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool8 canStopEvo, u8 partyId);
+void BeginEvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool32 canStopEvo, u8 partyId);
+void EvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, bool32 canStopEvo, u8 partyId);
 void TradeEvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, u8 preEvoSpriteId, u8 partyId);
 
 extern void (*gCB2_AfterEvolution)(void);

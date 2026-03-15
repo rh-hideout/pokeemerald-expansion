@@ -4247,7 +4247,7 @@ static void Swap_CreateMonSprite(void)
     struct Pokemon *mon;
     enum Species species;
     u32 personality;
-    bool8 isShiny;
+    bool32 isShiny;
 
     if (!sFactorySwapScreen->inEnemyScreen)
         mon = &gPlayerParty[sFactorySwapScreen->cursorPos];

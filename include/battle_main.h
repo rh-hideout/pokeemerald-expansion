@@ -10,7 +10,7 @@
 struct MultiPartnerMenuPokemon
 {
     /*0x00*/ enum Species species;
-    /*0x02*/ u16 heldItem;
+    /*0x02*/ enum Item heldItem;
     /*0x04*/ u8 nickname[POKEMON_NAME_LENGTH + 1];
     /*0x0F*/ u8 level;
     /*0x10*/ u16 hp;

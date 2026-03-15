@@ -357,7 +357,7 @@ struct Apprentice
 struct BattleTowerPokemon
 {
     enum Species species;
-    u16 heldItem;
+    enum Item heldItem;
     enum Move moves[MAX_MON_MOVES];
     u8 level;
     u8 ppBonuses;
@@ -631,7 +631,7 @@ struct SecretBaseParty
     u32 personality[PARTY_SIZE];
     enum Move moves[PARTY_SIZE * MAX_MON_MOVES];
     enum Species species[PARTY_SIZE];
-    u16 heldItems[PARTY_SIZE];
+    enum Item heldItems[PARTY_SIZE];
     u8 levels[PARTY_SIZE];
     u8 EVs[PARTY_SIZE];
 };

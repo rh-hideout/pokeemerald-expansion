@@ -655,7 +655,7 @@ void FillFactoryBrainParty(void)
 {
     int i, j, k;
     enum Species species[FRONTIER_PARTY_SIZE];
-    u16 heldItems[FRONTIER_PARTY_SIZE];
+    enum Item heldItems[FRONTIER_PARTY_SIZE];
     int monLevel;
     u8 fixedIV;
     u32 otId;

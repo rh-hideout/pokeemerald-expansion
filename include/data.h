@@ -64,7 +64,7 @@ struct TrainerMon
     u32 iv;
     enum Move moves[MAX_MON_MOVES];
     enum Species species;
-    u16 heldItem;
+    enum Item heldItem;
     enum Ability ability;
     u8 lvl;
     enum PokeBall ball:8;

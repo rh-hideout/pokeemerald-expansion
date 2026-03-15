@@ -181,7 +181,7 @@ static void Task_BeginEvolutionScene(u8 taskId)
         if (!gPaletteFade.active)
         {
             enum Species postEvoSpecies;
-            bool8 canStopEvo;
+            bool32 canStopEvo;
             u8 partyId;
 
             mon = &gPlayerParty[gTasks[taskId].tPartyId];
@@ -314,7 +314,7 @@ static void CB2_EvolutionSceneLoadGraphics(void)
     enum Species postEvoSpecies;
     u32 personality;
     struct Pokemon *mon = &gPlayerParty[gTasks[sEvoStructPtr->evoTaskId].tPartyId];
-    bool8 isShiny;
+    bool32 isShiny;
 
     postEvoSpecies = gTasks[sEvoStructPtr->evoTaskId].tPostEvoSpecies;
     isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
@@ -473,7 +473,7 @@ void TradeEvolutionScene(struct Pokemon *mon, enum Species postEvoSpecies, u8 pr
     enum Species currSpecies;
     u32 personality;
     u8 id;
-    bool8 isShiny;
+    bool32 isShiny;
 
     GetMonData(mon, MON_DATA_NICKNAME, name);
     StringCopy_Nickname(gStringVar1, name);
