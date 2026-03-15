@@ -3372,21 +3372,6 @@ enum BattleTrainer GetAllyTrainerFromBattler(enum BattlerId battler)
     return GetBattlerTrainer(BATTLE_PARTNER(battler));
 }
 
-enum BattleTrainer GetAllyTrainerFromTrainer(enum BattleTrainer trainer)
-{
-    switch (trainer)
-    {
-    case B_TRAINER_1:
-        return B_TRAINER_3;
-    case B_TRAINER_2:
-        return B_TRAINER_0;
-    case B_TRAINER_3:
-        return B_TRAINER_1;
-    default:
-        return B_TRAINER_2;
-    }
-}
-
 enum BattleTrainer GetTrainerFromBattlePosition(enum BattlerPosition position)
 {
     return GetBattlerTrainer(GetBattlerAtPosition(position));

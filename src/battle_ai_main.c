@@ -539,11 +539,11 @@ void Ai_InitPartyStruct(void)
 
         for (u32 monIndex = 0; monIndex < PARTY_SIZE; monIndex++)
         {
-            if (GetMonData(&gParties[trainer][monIndex], MON_DATA_SPECIES) == SPECIES_NONE)
+            mon = &gParties[trainer][monIndex];
+            if (GetMonData(mon, MON_DATA_SPECIES) == SPECIES_NONE)
                 continue;
 
-            mon = &gParties[trainer][monIndex];
-            if (GetMonData(&gParties[trainer][monIndex], MON_DATA_HP) == 0)
+            if (GetMonData(mon, MON_DATA_HP) == 0)
                 gAiPartyData->mons[trainer][monIndex].isFainted = TRUE;
 
             if (isOmniscient || hasPartyKnowledge)
@@ -552,7 +552,7 @@ void Ai_InitPartyStruct(void)
             if (isOmniscient)
             {
                 gAiPartyData->mons[trainer][monIndex].item = GetMonData(mon, MON_DATA_HELD_ITEM);
-                gAiPartyData->mons[trainer][monIndex].heldEffect = GetItemHoldEffect(gAiPartyData->mons[B_TRAINER_0][monIndex].item);
+                gAiPartyData->mons[trainer][monIndex].heldEffect = GetItemHoldEffect(gAiPartyData->mons[trainer][monIndex].item);
                 gAiPartyData->mons[trainer][monIndex].ability = GetMonAbility(mon);
                 for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
                     gAiPartyData->mons[trainer][monIndex].moves[moveIndex] = GetMonData(mon, MON_DATA_MOVE1 + moveIndex);
