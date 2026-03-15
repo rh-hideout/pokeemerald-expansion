@@ -87,6 +87,9 @@
 #define B_TXT_ATK_TRAINER_NAME_WITH_CLASS 0x45
 #define B_TXT_EFF_TEAM1 0x46
 #define B_TXT_EFF_TEAM2 0x47
+// Assigned Ribbons
+#define B_TXT_PLAYER_MON1_TITLE 0x48
+#define B_TXT_PLAYER_MON2_TITLE 0x49
 
 #define B_BUFF_STRING                       0
 #define B_BUFF_NUMBER                       1
