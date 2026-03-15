@@ -57,7 +57,7 @@ AI_DOUBLE_BATTLE_TEST("AI uses Sheer Cold")
 
 AI_DOUBLE_BATTLE_TEST("AI can use all moves, 1-100")
 {
-    enum Move moveStart = 0;
+    enum Move moveStart = MOVE_NONE;
     enum Move moveCap = 100;
 
     if (moveCap > MOVES_COUNT)

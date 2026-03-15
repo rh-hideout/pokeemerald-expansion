@@ -269,7 +269,7 @@ AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking 
     enum Move move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
     enum Move expectedMove, expectedMove2 = MOVE_NONE;
     enum Ability abilityAtk = ABILITY_NONE;
-    u32 holdItemAtk = ITEM_NONE;
+    enum Item holdItemAtk = ITEM_NONE;
 
     // Psychic is not very effective, but always hits. Solarbeam requires a charging turn, Double Edge has recoil and Focus Blast can miss;
     PARAMETRIZE { abilityAtk = ABILITY_STURDY; move1 = MOVE_FOCUS_BLAST; move2 = MOVE_SOLAR_BEAM; move3 = MOVE_PSYCHIC; move4 = MOVE_DOUBLE_EDGE; expectedMove = MOVE_PSYCHIC; }
@@ -304,7 +304,7 @@ AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking 
 
 AI_SINGLE_BATTLE_TEST("AI scores KOs with two turn moves correctly, considering Power Herb")
 {
-    u32 aiItem;
+    enum Item aiItem;
 
     PARAMETRIZE { aiItem = ITEM_POWER_HERB; }
     PARAMETRIZE { aiItem= ITEM_NONE; }
@@ -322,7 +322,7 @@ AI_SINGLE_BATTLE_TEST("AI scores KOs with two turn moves correctly, considering 
 AI_SINGLE_BATTLE_TEST("AI won't use Solar Beam if there is no Sun up or the user is not holding Power Herb")
 {
     enum Ability abilityAtk = ABILITY_NONE;
-    u16 holdItemAtk = ITEM_NONE;
+    enum Item holdItemAtk = ITEM_NONE;
 
     PARAMETRIZE { abilityAtk = ABILITY_DROUGHT; }
     PARAMETRIZE { holdItemAtk = ITEM_POWER_HERB; }
@@ -797,7 +797,7 @@ AI_SINGLE_BATTLE_TEST("AI won't boost stats against opponent with Unaware")
 
 AI_SINGLE_BATTLE_TEST("AI won't use status moves against opponents that would benefit")
 {
-    u32 aiMove;
+    enum Move aiMove;
     PARAMETRIZE { aiMove = MOVE_WILL_O_WISP; }
     PARAMETRIZE { aiMove = MOVE_TOXIC; }
     PARAMETRIZE { aiMove = MOVE_THUNDER_WAVE; }
@@ -1065,7 +1065,7 @@ AI_SINGLE_BATTLE_TEST("AI will not prioritize a regular OHKO over a berry-reduce
 
 AI_SINGLE_BATTLE_TEST("AI won't increase its stats if it's about to fall asleep due to Yawn")
 {
-    u32 aiMove;
+    enum Move aiMove;
     PARAMETRIZE { aiMove = MOVE_CELEBRATE; }
     PARAMETRIZE { aiMove = MOVE_SWORDS_DANCE; }
     GIVEN {
@@ -1102,7 +1102,7 @@ AI_SINGLE_BATTLE_TEST("AI will consider using Explosion inversely proportional t
 
 AI_SINGLE_BATTLE_TEST("AI will prioritize non-self-sacrificing moves if they have the same hits to KO")
 {
-    u32 selfSacrificeMove;
+    enum Move selfSacrificeMove;
     PARAMETRIZE { selfSacrificeMove = MOVE_EXPLOSION; }
     PARAMETRIZE { selfSacrificeMove = MOVE_FINAL_GAMBIT; }
     PASSES_RANDOMLY(100, 100, RNG_AI_CONSIDER_EXPLOSION);
@@ -1268,5 +1268,42 @@ AI_SINGLE_BATTLE_TEST("AI will not try to withstand hit with absorbing move if i
         OPPONENT(SPECIES_WOBBUFFET) { Speed(2); MaxHP(40); HP(39); Moves(MOVE_ENERGY_BALL, MOVE_GIGA_DRAIN); }
     } WHEN {
         TURN { MOVE(player, MOVE_DRAGON_RAGE); EXPECT_MOVE(opponent, MOVE_ENERGY_BALL); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI can use Acupressure on its ally")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WYNAUT) { HP(1); Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_ACUPRESSURE); }
+        OPPONENT(SPECIES_WYNAUT) { Moves(MOVE_SCRATCH); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); EXPECT_MOVE(opponentRight, MOVE_SCRATCH, target:playerRight); EXPECT_MOVE(opponentLeft, MOVE_ACUPRESSURE, target:opponentRight); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ACUPRESSURE, opponentLeft);
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI's comparison of damaging moves correctly reads moveset indexes for effects")
+{
+    u32 move = MOVE_NONE;
+    PARAMETRIZE { move = MOVE_TACKLE; }
+    PARAMETRIZE { move = MOVE_DUAL_CHOP; }
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_RAPIDASH_GALAR){ Level(64); HP(1); Nature(NATURE_TIMID); Moves(MOVE_TACKLE);}
+        OPPONENT(SPECIES_HAXORUS){ Level(64); Nature(NATURE_JOLLY); Ability(ABILITY_MOLD_BREAKER); Moves(move, MOVE_EARTHQUAKE, MOVE_POISON_JAB); }
+    } WHEN {
+        TURN { 
+            MOVE(player, MOVE_TACKLE);
+            if (move == MOVE_TACKLE)
+                SCORE_EQ_VAL(opponent, MOVE_TACKLE, 104);
+            else if (move == MOVE_DUAL_CHOP)
+                SCORE_EQ_VAL(opponent, MOVE_DUAL_CHOP, 60);
+            SCORE_EQ_VAL(opponent, MOVE_EARTHQUAKE, 104);
+            SCORE_EQ_VAL(opponent, MOVE_POISON_JAB, 105);
+        }
     }
 }

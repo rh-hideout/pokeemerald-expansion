@@ -175,3 +175,21 @@ SINGLE_BATTLE_TEST("Magic Bounce bounced back status moves can not be bounced ba
         STATUS_ICON(player, badPoison: TRUE);
     }
 }
+
+SINGLE_BATTLE_TEST("Magic Bounce can't reflect back Stealth Rock from a semi-invulnerable posistion even with No Guard")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_STEALTH_ROCK) == TARGET_OPPONENTS_FIELD);
+        ASSUME(GetMoveEffect(MOVE_DIG) == EFFECT_SEMI_INVULNERABLE);
+        PLAYER(SPECIES_MACHAMP) { Ability(ABILITY_NO_GUARD); }
+        OPPONENT(SPECIES_ESPEON) { Ability(ABILITY_MAGIC_BOUNCE); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_DIG); MOVE(player, MOVE_STEALTH_ROCK); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DIG, opponent);
+        NOT ABILITY_POPUP(opponent, ABILITY_MAGIC_BOUNCE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, player);
+        MESSAGE("Pointed stones float in the air around the opposing team!");
+    }
+}
+

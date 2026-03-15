@@ -22,6 +22,15 @@
 
 	.section script_data, "aw", %progbits
 
+BattleScript_TryRevertWeatherform:
+    setbyte gEffectBattler, 0
+    sortbattlers
+BattleScript_TryRevertWeatherformLoop:
+    tryrevertweatherform
+    addbyte gEffectBattler, 1
+    jumpifbytenotequal gEffectBattler, gBattlersCount, BattleScript_TryRevertWeatherformLoop
+    return
+
 BattleScript_FickleBeamMessage::
 	pause B_WAIT_TIME_SHORTEST
 	printstring STRINGID_FICKLEBEAMDOUBLED
@@ -230,7 +239,7 @@ BattleScript_MoveSwitchPursuitRet:
 	jumpifcantswitch SWITCH_IGNORE_ESCAPE_PREVENTION | BS_ATTACKER, BattleScript_MoveSwitchEnd
 	printstring STRINGID_PKMNWENTBACK
 	waitmessage B_WAIT_TIME_SHORT
-	jumpifnopursuitswitchdmg BattleScript_MoveSwitchOpenPartyScreen
+	jumpifnopursuitswitchdmg BattleScript_MoveSwitchOpenPartyScreenRet
 	return
 
 BattleScript_MoveSwitch::
@@ -239,13 +248,17 @@ BattleScript_MoveSwitch::
 	printstring STRINGID_PKMNWENTBACK
 	waitmessage B_WAIT_TIME_SHORT
 BattleScript_MoveSwitchOpenPartyScreen::
+	call BattleScript_MoveSwitchOpenPartyScreenRet
+BattleScript_MoveSwitchEnd:
+	end
+
+BattleScript_MoveSwitchOpenPartyScreenRet:
 	call BattleScript_MoveSwitchOpenPartyScreenReturnWithNoAnim
 	switchinanim BS_ATTACKER, FALSE, FALSE
 	waitstate
 	switchineffects BS_ATTACKER
 	switchinevents
-BattleScript_MoveSwitchEnd:
-	end
+	return
 
 BattleScript_MoveSwitchOpenPartyScreenReturnWithNoAnim:
 	openpartyscreen BS_ATTACKER, BattleScript_MoveSwitchEnd
@@ -890,7 +903,7 @@ BattleScript_MoveEffectCoreEnforcer::
 	printstring STRINGID_PKMNSABILITYSUPPRESSED
 	waitmessage B_WAIT_TIME_LONG
 	trytoclearprimalweather
-	tryrevertweatherform
+	call BattleScript_TryRevertWeatherform
 	flushtextbox
 BattleScript_CoreEnforcerRet:
 	return
@@ -1795,7 +1808,7 @@ BattleScript_EffectEntrainment::
 	printstring STRINGID_PKMNACQUIREDABILITY
 	waitmessage B_WAIT_TIME_LONG
 	trytoclearprimalweather
-	tryrevertweatherform
+	call BattleScript_TryRevertWeatherform
 	flushtextbox
 	tryendneutralizinggas
 	goto BattleScript_MoveEnd
@@ -1830,7 +1843,7 @@ BattleScript_EffectHealingWishGen4:
 	switchindataupdate BS_ATTACKER
 	hpthresholds BS_ATTACKER
 	trytoclearprimalweather
-	tryrevertweatherform
+	call BattleScript_TryRevertWeatherform
 	flushtextbox
 	tryendneutralizinggas
 	flushtextbox
@@ -1874,7 +1887,7 @@ BattleScript_EffectOverwriteAbility::
 	printstring STRINGID_PKMNACQUIREDABILITY
 	waitmessage B_WAIT_TIME_LONG
 	trytoclearprimalweather
-	tryrevertweatherform
+	call BattleScript_TryRevertWeatherform
 	flushtextbox
 	tryendneutralizinggas
 	goto BattleScript_MoveEnd
@@ -1980,7 +1993,7 @@ BattleScript_EffectGastroAcid::
 	printstring STRINGID_PKMNSABILITYSUPPRESSED
 	waitmessage B_WAIT_TIME_LONG
 	trytoclearprimalweather
-	tryrevertweatherform
+	call BattleScript_TryRevertWeatherform
 	flushtextbox
 	tryendneutralizinggas
 	goto BattleScript_MoveEnd
@@ -2118,6 +2131,8 @@ BattleScript_EffectGravitySuccess::
 	selectfirstvalidtarget
 BattleScript_GravityLoop:
 	jumpfifsemiinvulnerable BS_TARGET, STATE_ON_AIR, BattleScript_GravityLoopDrop
+	jumpfifsemiinvulnerable BS_TARGET, STATE_SKY_DROP_ATTACKER, BattleScript_GravityLoopDrop
+	jumpfifsemiinvulnerable BS_TARGET, STATE_SKY_DROP_TARGET, BattleScript_GravityLoopDrop
 	jumpifvolatile BS_TARGET, VOLATILE_MAGNET_RISE, BattleScript_GravityLoopDrop
 	jumpifvolatile BS_TARGET, VOLATILE_TELEKINESIS, BattleScript_GravityLoopDrop
 	goto BattleScript_GravityLoopEnd
@@ -2703,7 +2718,7 @@ BattleScript_EffectEvasionUp2::
 BattleScript_EffectTransform::
 	attackcanceler
 	trytoclearprimalweather
-	tryrevertweatherform
+	call BattleScript_TryRevertWeatherform
 	flushtextbox
 	tryendneutralizinggas
 	flushtextbox
@@ -2832,18 +2847,6 @@ BattleScript_SkyDropFlyingType::
 	printstring STRINGID_ITDOESNTAFFECT
 	waitmessage B_WAIT_TIME_LONG
 	makevisible BS_ATTACKER
-	jumpifvolatile BS_TARGET, VOLATILE_CONFUSION, BattleScript_SkyDropFlyingAlreadyConfused
-	jumpifvolatile BS_TARGET, VOLATILE_RAMPAGE_TURNS, BattleScript_SkyDropFlyingConfuseLock
-	return
-
-BattleScript_SkyDropFlyingConfuseLock:
-	seteffectprimary BS_ATTACKER, BS_TARGET, MOVE_EFFECT_CONFUSION
-BattleScript_SkyDropFlyingAlreadyConfused:
-	clearvolatile BS_TARGET, VOLATILE_RAMPAGE_TURNS
-	jumpifvolatile BS_TARGET, VOLATILE_CONFUSION, BattleScript_SkyDropFlyingAlreadyConfusedRet
-	setbyte BS_ATTACKER, BS_TARGET
-	call BattleScript_ThrashConfusesRet
-BattleScript_SkyDropFlyingAlreadyConfusedRet:
 	return
 
 BattleScript_SkyDropNoTarget::
@@ -3978,9 +3981,10 @@ BattleScript_FaintBattler::
 	dofaintanimation BS_FAINTED
 	copybyte sBATTLER, gBattlerFainted @ for message
 	printstring STRINGID_BATTLERFAINTED
+    tryconfusionafterskydrop BS_FAINTED
 	cleareffectsonfaint BS_FAINTED
 	trytoclearprimalweather
-	tryrevertweatherform
+	call BattleScript_TryRevertWeatherform
 	flushtextbox
 	waitanimation
 	tryactivatereceiver BS_FAINTED
@@ -5406,7 +5410,7 @@ BattleScript_BattlerFormChangeNoPopup::
 BattleScript_BattlerFormChangeFromAfterAnimation::
 	handleformchange BS_SCRIPTING, 1
 	switchinabilities BS_SCRIPTING
-	jumpifability BS_TARGET, ABILITY_DISGUISE, BattleScript_ApplyDisguiseFormChangeHPLoss
+	jumpifability BS_SCRIPTING, ABILITY_DISGUISE, BattleScript_ApplyDisguiseFormChangeHPLoss
 	return
 
 BattleScript_ZenMode::
@@ -5428,7 +5432,8 @@ BattleScript_BattlerFormChangeDisguise::
 	waitanimation
 	printstring STRINGID_PKMNDISGUISEWASBUSTED
 	waitmessage B_WAIT_TIME_SHORT
-	goto BattleScript_BattlerFormChangeFromAfterAnimation
+	call BattleScript_BattlerFormChangeFromAfterAnimation
+    return
 
 BattleScript_BattlerFormChangeEnd3NoPopup::
 	call BattleScript_BattlerFormChangeNoPopup
@@ -5486,9 +5491,10 @@ BattleScript_ApplyDisguiseFormChangeHPLossReturn:
 BattleScript_TargetFormChangeNoPopup:
 	flushtextbox
 	handleformchange BS_SCRIPTING, 0
-	playanimation BS_TARGET, B_ANIM_FORM_CHANGE
+	playanimation BS_SCRIPTING, B_ANIM_FORM_CHANGE
 	waitanimation
-	goto BattleScript_BattlerFormChangeFromAfterAnimation
+	call BattleScript_BattlerFormChangeFromAfterAnimation
+    return
 
 BattleScript_TargetFormChange::
 	pause 5
@@ -5705,7 +5711,7 @@ BattleScript_ThrashConfuses::
 	waitmessage B_WAIT_TIME_LONG
 	end2
 
-BattleScript_ThrashConfusesRet::
+BattleScript_ConfusionAfterRampage::
 	volatileanimation BS_SCRIPTING, VOLATILE_CONFUSION
 	printstring STRINGID_PKMNFATIGUECONFUSION
 	waitmessage B_WAIT_TIME_LONG
@@ -5837,9 +5843,8 @@ BattleScript_YawnMakesAsleepEnd2::
 	updatestatusicon BS_EFFECT_BATTLER
 	waitstate
 	tryactivateitem BS_EFFECT_BATTLER, ACTIVATION_ON_STATUS_CHANGE
-	jumpfifsemiinvulnerable BS_EFFECT_BATTLER, STATE_SKY_DROP, BattleScript_YawnEnd
+	jumpfifsemiinvulnerable BS_EFFECT_BATTLER, STATE_SKY_DROP_TARGET, BattleScript_YawnEnd
 	makevisible BS_EFFECT_BATTLER
-	skydropyawn
 BattleScript_YawnEnd:
 	end2
 
@@ -6642,7 +6647,7 @@ BattleScript_MummyActivates::
 	printstring STRINGID_ATTACKERACQUIREDABILITY
 	waitmessage B_WAIT_TIME_LONG
 	trytoclearprimalweather
-	tryrevertweatherform
+	call BattleScript_TryRevertWeatherform
 	flushtextbox
 	tryendneutralizinggas
 	return
@@ -7689,6 +7694,8 @@ BattleScript_DoesntAffectTargetAtkString::
 	setmoveresultflags MOVE_RESULT_NO_EFFECT
 	goto BattleScript_MoveEnd
 
+BattleScript_NoEffectivenessAbility::
+	call BattleScript_AbilityPopUp
 BattleScript_DoesntAffectScripting::
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_SCR_ITDOESNTAFFECT
@@ -8235,3 +8242,4 @@ BattleScript_SilphScopeUnveiled::
 	printstring STRINGID_GHOSTWASMAROWAK
 	waitmessage B_WAIT_TIME_LONG
 	end2
+

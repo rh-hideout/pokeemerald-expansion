@@ -653,7 +653,6 @@ struct BattleStruct
     u8 throwingPokeBall:1;
     u8 ballSpriteIds[2];    // item gfx, window gfx
     u8 moveInfoSpriteId; // move info, window gfx
-    u8 skyDropTargets[MAX_BATTLERS_COUNT]; // For Sky Drop, to account for if multiple Pokemon use Sky Drop in a double battle.
     // When using a move which hits multiple opponents which is then bounced by a target, we need to make sure, the move hits both opponents, the one with bounce, and the one without.
     u16 beatUpSpecies[PARTY_SIZE]; // Species for Gen5+ Beat Up, otherwise party indexes
     u8 attackerBeforeBounce:2;
@@ -705,6 +704,9 @@ struct BattleStruct
     u8 magicCoatActive:1;
     u8 magicBounceActive:1;
     u8 moveBouncer;
+    u8 dancerSavedAttacker:3;
+    u8 dancerSavedTarget:3;
+    u8 padding:2;
 };
 
 struct AiBattleData
@@ -1066,9 +1068,9 @@ static inline bool32 IsBattlerAlive(enum BattlerId battler)
         return TRUE;
 }
 
-static inline bool32 IsBattlerTurnDamaged(enum BattlerId battler)
+static inline bool32 IsBattlerTurnDamaged(enum BattlerId battler, enum SubCheck subCheck)
 {
-    return gSpecialStatuses[battler].damagedByAttack;
+    return gSpecialStatuses[battler].damagedByAttack || ((subCheck == INCLUDING_SUBSTITUTES) && gBattleStruct->moveDamage[battler] > 0);
 }
 
 static inline bool32 IsBattlerAtMaxHp(enum BattlerId battler)
