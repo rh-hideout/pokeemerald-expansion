@@ -3312,19 +3312,7 @@ void FreeShinyStars(void)
 enum BattleTrainer GetBattlerTrainer(enum BattlerId battler)
 {
 #if TESTING
-    switch (battler)
-    {
-    case B_BATTLER_0:
-        return gBattleTestRunnerState->data.battler0Trainer;
-    case B_BATTLER_1:
-        return gBattleTestRunnerState->data.battler1Trainer;
-    case B_BATTLER_2:
-        return gBattleTestRunnerState->data.battler2Trainer;
-    case B_BATTLER_3:
-        return gBattleTestRunnerState->data.battler3Trainer;
-    default:
-        return B_TRAINER_0;
-    }
+    return (gBattleTestRunnerState->data.battlerTrainers >> (2 * battler)) & 0x3;
 #else
     if (gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_MULTI)
     {
@@ -3379,20 +3367,10 @@ enum BattleTrainer GetTrainerFromBattlePosition(enum BattlerPosition position)
 
 bool32 BattleSideHasTwoTrainers(enum BattleSide side)
 {
-    switch (side)
-    {
-    case B_SIDE_PLAYER:
-        if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
-            return TRUE;
-        break;
-    case B_SIDE_OPPONENT:
-    default:
-        if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS || (gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_MULTI))
-            return TRUE;
-        break;
-    }
-
-    return FALSE;
+    if (side == B_SIDE_PLAYER)
+        return gBattleTypeFlags & BATTLE_TYPE_MULTI;
+    else
+        return (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS || (gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_MULTI));
 }
 
 bool32 BattlersShareParty(enum BattlerId battler1, enum BattlerId battler2)
@@ -3402,15 +3380,5 @@ bool32 BattlersShareParty(enum BattlerId battler1, enum BattlerId battler2)
 
 bool32 TrainerHasParty(enum BattleTrainer trainer)
 {
-    switch (trainer)
-    {
-    case B_TRAINER_0:
-    case B_TRAINER_1:
-        return TRUE;
-    case B_TRAINER_2:
-    case B_TRAINER_3:
-        return BattleSideHasTwoTrainers((enum BattleSide)(trainer & BIT_SIDE));
-    default:
-        return FALSE;
-    }
+    return (trainer < B_TRAINER_2 || BattleSideHasTwoTrainers((enum BattleSide)(trainer & BIT_SIDE)));
 }
