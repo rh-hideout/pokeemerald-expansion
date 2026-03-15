@@ -566,7 +566,7 @@ static void OpponentHandleChoosePokemon(enum BattlerId battler)
         if (chosenMonId == PARTY_SIZE) // Advanced logic failed so we pick the next available battler
         {
             enum BattlerId battler1, battler2;
-            s32 firstId, lastId;
+            s32 lastId = GetAILastPartyIndex(battler); // + 1
 
             if (!IsDoubleBattle())
             {
@@ -578,8 +578,7 @@ static void OpponentHandleChoosePokemon(enum BattlerId battler)
                 battler2 = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
             }
 
-            GetAIPartyIndexes(battler, &firstId, &lastId);
-            for (chosenMonId = firstId; chosenMonId < lastId; chosenMonId++)
+            for (chosenMonId = 0; chosenMonId < lastId; chosenMonId++)
             {
                 if (IsValidForBattle(&gParties[GetBattlerTrainer(battler)][chosenMonId])
                  && !((chosenMonId == gBattlerPartyIndexes[battler1]) && BattlersShareParty(battler, battler1))
