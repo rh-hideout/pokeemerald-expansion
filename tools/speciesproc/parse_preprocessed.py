@@ -15,7 +15,6 @@ EVOLUTION_PAT = re.compile(r"\{\s*(EVO_\w+)\s*,\s*(\w+)\s*,\s*(SPECIES_\w+)\s*,?
 EVO_CONDITION_PAT = re.compile(r"\{\s*(\w+)\s*(,\s*\w+\s*){0,3}\}")
 
 def remove_comment_lines(species_file):
-    #(species_file, n) = re.subn(COMMENT_PAT2, "", species_file)
     (species_file, n) = re.subn(COMMENT_PAT, "", species_file)
     return species_file
 
