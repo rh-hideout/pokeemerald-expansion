@@ -524,6 +524,9 @@ static u8 CheckTrainer(u8 objectEventId)
     {
         trainerBattlePtr = GetTrainerHillTrainerScript();
     }
+    else if (InBattlePyramid()) {
+        trainerBattlePtr = GetBattlePyramidTrainerScript();
+    }
     else
     {
         trainerBattlePtr = GetObjectEventScriptPointerByObjectEventId(objectEventId);
@@ -572,7 +575,7 @@ static u8 CheckTrainer(u8 objectEventId)
         numTrainers = 0xFF;
     }
 
-    if (trainerBattlePtr && !InTrainerHillChallenge())
+    if (trainerBattlePtr && !InTrainerHillChallenge() && !InBattlePyramid()) 
     {
         TrainerBattleParameter *temp = (TrainerBattleParameter *)(trainerBattlePtr + 1);
         if (temp->params.isDoubleBattle)

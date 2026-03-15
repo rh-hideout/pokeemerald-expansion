@@ -22,5 +22,6 @@ void LoadBattlePyramidObjectEventTemplates(void);
 void LoadBattlePyramidFloorObjectEventScripts(void);
 u8 GetNumBattlePyramidObjectEvents(void);
 u16 GetBattlePyramidPickupItemId(void);
+const u8 *GetBattlePyramidTrainerScript();
 
 #endif // GUARD_BATTLE_PYRAMID_H

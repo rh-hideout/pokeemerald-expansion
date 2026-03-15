@@ -2209,3 +2209,7 @@ u16 GetBattlePyramidPickupItemId(void)
     else
         return sPickupItemsLvl50[round][i];
 }
+
+const u8 *GetBattlePyramidTrainerScript() {
+    return BattlePyramid_TrainerBattle;
+}
