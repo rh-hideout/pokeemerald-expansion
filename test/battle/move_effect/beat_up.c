@@ -155,7 +155,7 @@ SINGLE_BATTLE_TEST("Beat Up's damage considers stat stage changes (Gen5+)", s16 
 
 SINGLE_BATTLE_TEST("Beat Up's damage considers Huge Power and Choice Band (Gen5+)", s16 damage)
 {
-    u16 ability;
+    enum Ability ability;
     enum Item item;
 
     PARAMETRIZE { ability = ABILITY_THICK_FAT;   item = ITEM_NONE; }
@@ -350,7 +350,7 @@ SINGLE_BATTLE_TEST("Beat Up ignores stat stage changes", s16 damage)
 
 SINGLE_BATTLE_TEST("Beat Up ignores Huge Power", s16 damage)
 {
-    u16 ability;
+    enum Ability ability;
 
     PARAMETRIZE { ability = ABILITY_THICK_FAT; }
     PARAMETRIZE { ability = ABILITY_HUGE_POWER; }

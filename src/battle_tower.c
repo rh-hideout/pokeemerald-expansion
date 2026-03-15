@@ -1603,7 +1603,7 @@ static void LoadLinkMultiOpponentsData(void)
         gSpecialVar_Result = 5;
         break;
     case 5:
-        if (gReceivedRemoteLinkPlayers == 0)
+        if (!gReceivedRemoteLinkPlayers)
         {
             gSpecialVar_Result = 6;
         }

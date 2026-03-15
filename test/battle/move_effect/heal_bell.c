@@ -169,7 +169,8 @@ SINGLE_BATTLE_TEST("Heal Bell cures a Soundproof user (Gen5, Gen8+)")
 
 DOUBLE_BATTLE_TEST("Aromatherapy cure Soundproof battlers regardless of config")
 {
-    u32 ability, config;
+    enum Ability ability;
+    u32 config;
 
     PARAMETRIZE { ability = ABILITY_SOUNDPROOF; config = GEN_4; }
     PARAMETRIZE { ability = ABILITY_SOUNDPROOF; config = GEN_5; }

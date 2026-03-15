@@ -47,3 +47,30 @@ SINGLE_BATTLE_TEST("Crit Chance: Raising critical hit rate to 3 guarantees a cri
         MESSAGE("A critical hit!");
     }
 }
+
+#define CRIT_MESSAGE "A critical hit!"
+SINGLE_BATTLE_TEST("Crit Change: Fixed damage moves don't print a crit message")
+{
+    enum Move move;
+    PARAMETRIZE { move = MOVE_SCRATCH; }
+    PARAMETRIZE { move = MOVE_DRAGON_RAGE; }
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_LASER_FOCUS) == EFFECT_LASER_FOCUS);
+        ASSUME(GetMoveEffect(MOVE_DRAGON_RAGE) == EFFECT_FIXED_HP_DAMAGE);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_LASER_FOCUS); }
+        TURN { MOVE(player, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LASER_FOCUS, player);
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        if (move == MOVE_SCRATCH) {
+            MESSAGE(CRIT_MESSAGE);
+        }
+        else {
+            NOT MESSAGE(CRIT_MESSAGE);
+        }
+    }
+}
+#undef CRIT_MESSAGE
