@@ -210,7 +210,6 @@ static void LoadPokedexBgPalette(bool8);
 static void CreateMonDexNum(u16, u8, u8, u16);
 static u8 CreateMonName(u16, u8, u8);
 static void CreateInterfaceSprites(u8);
-static void Task_SwitchScreensFromCryScreen(u8);
 static void LoadScreenSelectBarMain(u16);
 static void Task_HandleCaughtMonPageInput(u8);
 static void Task_ExitCaughtMonPage(u8);
@@ -1540,10 +1539,22 @@ bool32 TrySwitchScreensFromAreaScreen_HGSS(u8 taskId)
     if (!POKEDEX_PLUS_HGSS)
         return FALSE;
 
-    if (sPokedexListItem->owned)
-        gTasks[taskId].func = Task_LoadStatsScreen;
-    else
-        PlaySE(SE_FAILURE);
+    switch (sPokedexView->screenSwitchState)
+    {
+    case 1:
+    default:
+        gTasks[taskId].func = Task_LoadInfoScreen;
+        break;
+    case 2:
+        if (sPokedexListItem->owned)
+            gTasks[taskId].func = Task_LoadStatsScreen;
+        else
+            PlaySE(SE_FAILURE);
+        break;
+    case 3:
+        gTasks[taskId].func = Task_ReloadAreaScreen;
+        break;
+    }
 
     return TRUE;
 }
@@ -4666,26 +4677,26 @@ bool32 TryLoadCryScreen_HGSS(u8 taskId)
     return TRUE;
 }
 
-static void Task_SwitchScreensFromCryScreen(u8 taskId)
+bool32 TrySwitchScreensFromCryScreen_HGSS(u8 taskId)
 {
-    if (!gPaletteFade.active)
+    if (!POKEDEX_PLUS_HGSS)
+        return FALSE;
+
+    switch (sPokedexView->screenSwitchState)
     {
-        FreeCryScreen();
-        FreeAndDestroyMonPicSprite(gTasks[taskId].tMonSpriteId);
-        switch (sPokedexView->screenSwitchState)
-        {
-        default:
-        case 1:
-            gTasks[taskId].func = Task_LoadInfoScreen;
-            break;
-        case 2:
-            gTasks[taskId].func = Task_LoadEvolutionScreen;
-            break;
-        case 3:
-            gTasks[taskId].func = Task_LoadSizeScreen;
-            break;
-        }
+    default:
+    case 1:
+        gTasks[taskId].func = Task_LoadInfoScreen;
+        break;
+    case 2:
+        gTasks[taskId].func = Task_LoadEvolutionScreen;
+        break;
+    case 3:
+        gTasks[taskId].func = Task_LoadSizeScreen;
+        break;
     }
+
+    return TRUE;
 }
 
 

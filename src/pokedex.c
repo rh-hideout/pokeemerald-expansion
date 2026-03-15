@@ -3475,6 +3475,9 @@ static void Task_SwitchScreensFromAreaScreen(u8 taskId)
 {
     if (!gPaletteFade.active)
     {
+        if (TrySwitchScreensFromAreaScreen_HGSS(taskId))
+            return;
+
         switch (sPokedexView->screenSwitchState)
         {
         case 1:
@@ -3482,8 +3485,7 @@ static void Task_SwitchScreensFromAreaScreen(u8 taskId)
             gTasks[taskId].func = Task_LoadInfoScreen;
             break;
         case 2:
-            if (!TrySwitchScreensFromAreaScreen_HGSS(taskId))
-                gTasks[taskId].func = Task_LoadCryScreen;
+            gTasks[taskId].func = Task_LoadCryScreen;
             break;
         case 3:
             gTasks[taskId].func = Task_ReloadAreaScreen;
@@ -3661,6 +3663,10 @@ static void Task_SwitchScreensFromCryScreen(u8 taskId)
     {
         FreeCryScreen();
         FreeAndDestroyMonPicSprite(gTasks[taskId].tMonSpriteId);
+
+        if (TrySwitchScreensFromCryScreen_HGSS(taskId))
+            return;
+
         switch (sPokedexView->screenSwitchState)
         {
         default:
