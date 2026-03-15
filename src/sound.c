@@ -4,6 +4,7 @@
 #include "battle.h"
 #include "m4a.h"
 #include "main.h"
+#include "overworld.h"
 #include "pokemon.h"
 #include "constants/cries.h"
 #include "constants/songs.h"
@@ -565,7 +566,7 @@ void PlayBGM(u16 songNum)
 
 void PlaySE(u16 songNum)
 {
-    if (gDisableMapMusicChangeOnMapLoad == 0)
+    if (gDisableMapMusicChangeOnMapLoad == MUSIC_DISABLE_OFF)
         m4aSongNumStart(songNum);
 }
 

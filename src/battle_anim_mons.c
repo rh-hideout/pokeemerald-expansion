@@ -1736,17 +1736,24 @@ static void AnimTask_BlendMonInAndOut_Step(u8 taskId)
 // arg 2: target blend coefficient
 // arg 3: initial delay
 // arg 4: number of times to blend in and out
-void AnimTask_BlendPalInAndOutByTag(u8 task)
+void AnimTask_BlendPalInAndOutByTag(u8 taskId)
 {
+    //  This function probably doesn't need to load a the target palette, but it doesn't hurt to check
+    if (!TryLoadPal(gBattleAnimArgs[0]))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+
     u8 palette = IndexOfSpritePaletteTag(gBattleAnimArgs[0]);
 
     if (palette == 0xff)
     {
-        DestroyAnimVisualTask(task);
+        DestroyAnimVisualTask(taskId);
         return;
     }
-    gTasks[task].data[0] = (palette * 0x10) + 0x101;
-    AnimTask_BlendPalInAndOutSetup(&gTasks[task]);
+    gTasks[taskId].data[0] = (palette * 0x10) + 0x101;
+    AnimTask_BlendPalInAndOutSetup(&gTasks[taskId]);
 }
 
 void PrepareAffineAnimInTaskData(struct Task *task, u8 spriteId, const union AffineAnimCmd *affineAnimCmds)

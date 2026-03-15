@@ -1363,6 +1363,9 @@ static bool32 CheckBattlePyramidEvoRequirement(enum Species species, const u16 *
     u32 i, j, k;
     for (i = 0; i < NUM_SPECIES; i++)
     {
+        if (!IsSpeciesEnabled(i))
+            continue;
+
         const struct Evolution *evolutions = GetSpeciesEvolutions(i);
         if (evolutions == NULL)
             continue;
