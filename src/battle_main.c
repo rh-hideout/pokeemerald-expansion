@@ -5262,7 +5262,7 @@ static void CheckChangingTurnOrderEffects(void)
                 if (gProtectStructs[battler].usedCustapBerry)
                 {
                     gLastUsedItem = gBattleMons[battler].item;
-                    PREPARE_ITEM_BUFFER(gBattleTextBuff1, gLastUsedItem);
+                    PrepareItemBuffer(gBattleTextBuff1, gLastUsedItem);
                     if (GetBattlerHoldEffect(battler) == HOLD_EFFECT_CUSTAP_BERRY)
                     {
                         // don't record berry since its gone now
@@ -5278,7 +5278,7 @@ static void CheckChangingTurnOrderEffects(void)
                 {
                     gBattlerAbility = battler;
                     gLastUsedAbility = gBattleMons[battler].ability;
-                    PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
+                    PrepareAbilityBuffer(gBattleTextBuff1, gLastUsedAbility);
                     RecordAbilityBattle(battler, gLastUsedAbility);
                     BattleScriptExecute(BattleScript_QuickDrawActivation);
                 }
@@ -5495,7 +5495,7 @@ static void HandleEndTurn_MonFled(void)
 {
     gCurrentActionFuncId = 0;
 
-    PREPARE_MON_NICK_BUFFER(gBattleTextBuff1, gBattlerAttacker, gBattlerPartyIndexes[gBattlerAttacker]);
+    PrepareMonNickBuffer(gBattleTextBuff1, gBattlerAttacker, gBattlerPartyIndexes[gBattlerAttacker]);
     gBattlescriptCurrInstr = BattleScript_WildMonFled;
 
     gBattleMainFunc = HandleEndTurn_FinishBattle;

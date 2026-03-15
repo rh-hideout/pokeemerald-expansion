@@ -1443,7 +1443,7 @@ static enum CancelerResult CancelerProtean(struct BattleContext *ctx)
     {
         if (GetConfig(B_PROTEAN_LIBERO) >= GEN_9)
             gBattleMons[ctx->battlerAtk].volatiles.usedProteanLibero = TRUE;
-        PREPARE_TYPE_BUFFER(gBattleTextBuff1, moveType);
+        PrepareTypeBuffer(gBattleTextBuff1, moveType);
         gBattlerAbility = ctx->battlerAtk;
         PrepareStringBattle(STRINGID_EMPTYSTRING3, ctx->battlerAtk);
         gBattleCommunication[MSG_DISPLAY] = 1;
@@ -1917,7 +1917,7 @@ static enum CancelerResult CancelerMultihitMoves(struct BattleContext *ctx)
             SetRandomMultiHitCounter();
         }
 
-        PREPARE_BYTE_NUMBER_BUFFER(gBattleScripting.multihitString, 1, 0)
+        PrepareByteNumberBuffer(gBattleScripting.multihitString, 1, 0);
     }
     else if (GetMoveStrikeCount(ctx->move) > 1)
     {
@@ -1930,7 +1930,7 @@ static enum CancelerResult CancelerMultihitMoves(struct BattleContext *ctx)
             gMultiHitCounter = GetMoveStrikeCount(ctx->move);
         }
 
-        PREPARE_BYTE_NUMBER_BUFFER(gBattleScripting.multihitString, 3, 0)
+        PrepareByteNumberBuffer(gBattleScripting.multihitString, 3, 0);
     }
     else if (GetMoveEffect(ctx->move) == EFFECT_BEAT_UP)
     {
@@ -1956,13 +1956,13 @@ static enum CancelerResult CancelerMultihitMoves(struct BattleContext *ctx)
             }
         }
 
-        PREPARE_BYTE_NUMBER_BUFFER(gBattleScripting.multihitString, 1, 0)
+        PrepareByteNumberBuffer(gBattleScripting.multihitString, 1, 0);
     }
     else if (IsMoveParentalBondAffected(ctx))
     {
         gSpecialStatuses[gBattlerAttacker].parentalBondState = PARENTAL_BOND_1ST_HIT;
         gMultiHitCounter = 2;
-        PREPARE_BYTE_NUMBER_BUFFER(gBattleScripting.multihitString, 1, 0)
+        PrepareByteNumberBuffer(gBattleScripting.multihitString, 1, 0);
     }
     else
     {
@@ -2087,7 +2087,7 @@ static enum MoveEndResult MoveEndProtectLikeEffect(void)
         if (!IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_MAGIC_GUARD))
         {
             SetPassiveDamageAmount(gBattlerAttacker, GetNonDynamaxMaxHP(gBattlerAttacker) / 8);
-            PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_SPIKY_SHIELD);
+            PrepareMoveBuffer(gBattleTextBuff1, MOVE_SPIKY_SHIELD);
             BattleScriptCall(BattleScript_SpikyShieldEffect);
             result = MOVEEND_RESULT_RUN_SCRIPT;
         }
@@ -2558,7 +2558,7 @@ static enum MoveEndResult MoveEndFaintBlock(void)
                 gBattleMons[gBattlerAttacker].pp[moveIndex] = 0;
                 BtlController_EmitSetMonData(gBattlerAttacker, B_COMM_TO_CONTROLLER, moveIndex + REQUEST_PPMOVE1_BATTLE, 0, sizeof(gBattleMons[gBattlerAttacker].pp[moveIndex]), &gBattleMons[gBattlerAttacker].pp[moveIndex]);
                 MarkBattlerForControllerExec(gBattlerAttacker);
-                PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerAttacker].moves[moveIndex])
+                PrepareMoveBuffer(gBattleTextBuff1, gBattleMons[gBattlerAttacker].moves[moveIndex]);
                 BattleScriptCall(BattleScript_GrudgeTakesPp);
                 result = MOVEEND_RESULT_RUN_SCRIPT;
             }
@@ -3073,7 +3073,7 @@ static enum MoveEndResult MoveEndMoveBlock(void)
          && CompareStat(gBattlerAttacker, STAT_ATK, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(gBattlerAttacker)))
         {
             SET_STATCHANGER(STAT_ATK, GetConfig(B_FELL_STINGER_STAT_RAISE) >= GEN_7 ? 3 : 2, FALSE);
-            PREPARE_STAT_BUFFER(gBattleTextBuff1, STAT_ATK);
+            PrepareStatBuffer(gBattleTextBuff1, STAT_ATK);
             BattleScriptPushCursor();
             gBattlescriptCurrInstr = BattleScript_FellStingerRaisesStat;
             result = MOVEEND_RESULT_RUN_SCRIPT;
@@ -4245,5 +4245,5 @@ static void CalculateMagnitudeDamage(void)
         magnitude = 10;
     }
 
-    PREPARE_BYTE_NUMBER_BUFFER(gBattleTextBuff1, 2, magnitude)
+    PrepareByteNumberBuffer(gBattleTextBuff1, 2, magnitude);
 }

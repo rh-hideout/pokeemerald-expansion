@@ -2035,7 +2035,7 @@ static void PlayerHandleChooseAction(enum BattlerId battler)
 
     TryRestoreLastUsedBall();
     ActionSelectionCreateCursorAt(gActionSelectionCursor[battler], 0);
-    PREPARE_MON_NICK_BUFFER(gBattleTextBuff1, battler, gBattlerPartyIndexes[battler]);
+    PrepareMonNickBuffer(gBattleTextBuff1, battler, gBattlerPartyIndexes[battler]);
     BattleStringExpandPlaceholdersToDisplayedString(gText_WhatWillPkmnDo);
 
     enum BattlerId partner = GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT);

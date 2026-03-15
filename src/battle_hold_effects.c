@@ -60,7 +60,7 @@ enum ItemEffect TryBoosterEnergy(enum BattlerId battler, enum Ability ability)
      || ((ability == ABILITY_QUARK_DRIVE) && !(gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)))
     {
         gBattleMons[battler].volatiles.paradoxBoostedStat = GetParadoxHighestStatId(battler);
-        PREPARE_STAT_BUFFER(gBattleTextBuff1, gBattleMons[battler].volatiles.paradoxBoostedStat);
+        PrepareStatBuffer(gBattleTextBuff1, gBattleMons[battler].volatiles.paradoxBoostedStat);
         gBattlerAbility = gBattleScripting.battler = battler;
         gBattleMons[battler].volatiles.boosterEnergyActivated = TRUE;
         RecordAbilityBattle(battler, ability);
@@ -243,7 +243,7 @@ static enum ItemEffect TryRockyHelmet(enum BattlerId battlerDef, enum BattlerId 
      && !IsAbilityAndRecord(battlerAtk, ability, ABILITY_MAGIC_GUARD))
     {
         SetPassiveDamageAmount(battlerAtk, GetNonDynamaxMaxHP(battlerAtk) / 6);
-        PREPARE_ITEM_BUFFER(gBattleTextBuff1, item);
+        PrepareItemBuffer(gBattleTextBuff1, item);
         BattleScriptCall(BattleScript_RockyHelmetActivates);
         effect = ITEM_HP_CHANGE;
     }
@@ -345,7 +345,7 @@ static enum ItemEffect TryJabocaBerry(enum BattlerId battlerDef, enum BattlerId 
             jabocaDamage *= 2;
         SetPassiveDamageAmount(battlerAtk, jabocaDamage);
         BattleScriptCall(BattleScript_JabocaRowapBerryActivates);
-        PREPARE_ITEM_BUFFER(gBattleTextBuff1, item);
+        PrepareItemBuffer(gBattleTextBuff1, item);
         effect = ITEM_HP_CHANGE;
     }
 
@@ -367,7 +367,7 @@ static enum ItemEffect TryRowapBerry(enum BattlerId battlerDef, enum BattlerId b
             rowapDamage *= 2;
         SetPassiveDamageAmount(battlerAtk, rowapDamage);
         BattleScriptCall(BattleScript_JabocaRowapBerryActivates);
-        PREPARE_ITEM_BUFFER(gBattleTextBuff1, item);
+        PrepareItemBuffer(gBattleTextBuff1, item);
         effect = ITEM_HP_CHANGE;
     }
 
@@ -431,7 +431,7 @@ static enum ItemEffect TryMentalHerb(enum BattlerId battler)
         {
             gBattleMons[battler].volatiles.tauntTimer = 0;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MENTALHERBCURE_TAUNT;
-            PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_TAUNT);
+            PrepareMoveBuffer(gBattleTextBuff1, MOVE_TAUNT);
             effect = ITEM_EFFECT_OTHER;
         }
         // Check encore
@@ -586,7 +586,7 @@ static enum ItemEffect TryStickyBarbOnEndTurn(enum BattlerId battler, enum Item 
     if (!IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
     {
         SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
-        PREPARE_ITEM_BUFFER(gBattleTextBuff1, item);
+        PrepareItemBuffer(gBattleTextBuff1, item);
         BattleScriptExecute(BattleScript_ItemHurtEnd2);
         effect = ITEM_HP_CHANGE;
     }
@@ -889,7 +889,7 @@ static u32 ItemRestorePp(enum BattlerId battler, enum Item itemId)
         if (changedPP > maxPP)
             changedPP = maxPP;
 
-        PREPARE_MOVE_BUFFER(gBattleTextBuff1, move);
+        PrepareMoveBuffer(gBattleTextBuff1, move);
 
         BattleScriptCall(BattleScript_BerryPPHeal);
 
@@ -988,7 +988,7 @@ static enum ItemEffect RandomStatRaiseBerry(enum BattlerId battler, enum Item it
             stat = RandomUniformExcept(RNG_RANDOM_STAT_UP, STAT_ATK, NUM_STATS - 1, MoodyCantLowerStat);
         gBattlerAttacker = savedAttacker;
 
-        PREPARE_STAT_BUFFER(gBattleTextBuff1, stat);
+        PrepareStatBuffer(gBattleTextBuff1, stat);
         SET_STATCHANGER(stat, ability == ABILITY_RIPEN ? 4 : 2, FALSE);
         gBattleScripting.animArg1 = STAT_ANIM_PLUS2 + stat;
         gBattleScripting.animArg2 = 0;

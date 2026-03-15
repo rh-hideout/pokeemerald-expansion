@@ -3999,3 +3999,134 @@ u8 GetCurrentPpToMaxPpState(u8 currentPp, u8 maxPp)
 
     return 0;
 }
+
+void PrepareFlavorBuffer(u8 *textVar, u32 flavor)
+{
+    textVar[0] = B_BUFF_PLACEHOLDER_BEGIN;
+    textVar[1] = B_BUFF_NEGATIVE_FLAVOR;
+    textVar[2] = flavor;
+    textVar[3] = B_BUFF_EOS;
+}
+
+void PrepareStatBuffer(u8 *textVar, enum Stat stat)
+{
+    textVar[0] = B_BUFF_PLACEHOLDER_BEGIN;
+    textVar[1] = B_BUFF_STAT;
+    textVar[2] = stat;
+    textVar[3] = B_BUFF_EOS;
+}
+
+void PrepareAbilityBuffer(u8 *textVar, enum Ability ability)
+{
+    textVar[0] = B_BUFF_PLACEHOLDER_BEGIN;
+    textVar[1] = B_BUFF_ABILITY;
+    textVar[2] = ability;
+    textVar[3] = (ability & 0xFF00) >> 8;
+    textVar[4] = B_BUFF_EOS;
+}
+
+void PrepareTypeBuffer(u8 *textVar, enum Type type)
+{
+    textVar[0] = B_BUFF_PLACEHOLDER_BEGIN;
+    textVar[1] = B_BUFF_TYPE;
+    textVar[2] = type;
+    textVar[3] = B_BUFF_EOS;
+}
+
+void PrepareByteNumberBuffer(u8 *textVar, u32 maxDigits, u32 number)
+{
+    textVar[0] = B_BUFF_PLACEHOLDER_BEGIN;
+    textVar[1] = B_BUFF_NUMBER;
+    textVar[2] = 1;
+    textVar[3] = maxDigits;
+    textVar[4] = number;
+    textVar[5] = B_BUFF_EOS;
+}
+
+void PrepareHwordNumberBuffer(u8 *textVar, u32 maxDigits, u32 number)
+{
+    textVar[0] = B_BUFF_PLACEHOLDER_BEGIN;
+    textVar[1] = B_BUFF_NUMBER;
+    textVar[2] = 2;
+    textVar[3] = maxDigits;
+    textVar[4] = number;
+    textVar[5] = (number & 0x0000FF00) >> 8;
+    textVar[6] = B_BUFF_EOS;
+}
+
+void PrepareWordNumberBuffer(u8 *textVar, u32 maxDigits, u32 number)
+{
+    textVar[0] = B_BUFF_PLACEHOLDER_BEGIN;
+    textVar[1] = B_BUFF_NUMBER;
+    textVar[2] = 4;
+    textVar[3] = maxDigits;
+    textVar[4] = number;
+    textVar[5] = (number & 0x000000FF) >> 0;
+    textVar[6] = (number & 0x0000FF00) >> 8;
+    textVar[7] = (number & 0x00FF0000) >> 16;
+    textVar[8] = (number & 0xFF000000) >> 24;
+    textVar[9] = B_BUFF_EOS;
+}
+
+void PrepareStringBuffer(u8 *textVar, u32 string)
+{
+    textVar[0] = B_BUFF_PLACEHOLDER_BEGIN;
+    textVar[1] = B_BUFF_STRING;
+    textVar[2] = string & 0xFF;
+    textVar[3] = (string & 0xFF00) >> 8;
+    textVar[4] = B_BUFF_EOS;
+}
+
+void PrepareMoveBuffer(u8 *textVar, enum Move move)
+{
+    textVar[0] = B_BUFF_PLACEHOLDER_BEGIN;
+    textVar[1] = B_BUFF_MOVE;
+    textVar[2] = move & 0xFF;
+    textVar[3] = (move & 0xFF00) >> 8;
+    textVar[4] = B_BUFF_EOS;
+}
+
+void PrepareItemBuffer(u8 *textVar, enum Item item)
+{
+    textVar[0] = B_BUFF_PLACEHOLDER_BEGIN;
+    textVar[1] = B_BUFF_ITEM;
+    textVar[2] = item;
+    textVar[3] = (item & 0xFF00) >> 8;
+    textVar[4] = B_BUFF_EOS;
+}
+
+void PrepareSpeciesBuffer(u8 *textVar, u32 species)
+{
+    textVar[0] = B_BUFF_PLACEHOLDER_BEGIN;
+    textVar[1] = B_BUFF_SPECIES;
+    textVar[2] = species;
+    textVar[3] = (species & 0xFF00) >> 8;
+    textVar[4] = B_BUFF_EOS;
+}
+
+void PrepareMonNickWithPrefixBuffer(u8 *textVar, enum BattlerId battler, u32 partyId)
+{
+    textVar[0] = B_BUFF_PLACEHOLDER_BEGIN;
+    textVar[1] = B_BUFF_MON_NICK_WITH_PREFIX;
+    textVar[2] = battler;
+    textVar[3] = partyId;
+    textVar[4] = B_BUFF_EOS;
+}
+
+void PrepareMonNickWithPrefixLowerBuffer(u8 *textVar, enum BattlerId battler, u32 partyId)
+{
+    textVar[0] = B_BUFF_PLACEHOLDER_BEGIN;
+    textVar[1] = B_BUFF_MON_NICK_WITH_PREFIX_LOWER;
+    textVar[2] = battler;
+    textVar[3] = partyId;
+    textVar[4] = B_BUFF_EOS;
+}
+
+void PrepareMonNickBuffer(u8 *textVar, enum BattlerId battler, u32 partyId)
+{
+    textVar[0] = B_BUFF_PLACEHOLDER_BEGIN;
+    textVar[1] = B_BUFF_MON_NICK;
+    textVar[2] = battler;
+    textVar[3] = partyId;
+    textVar[4] = B_BUFF_EOS;
+}
