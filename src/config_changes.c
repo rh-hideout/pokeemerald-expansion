@@ -1,7 +1,7 @@
 #include "global.h"
-#include "generational_changes.h"
+#include "config_changes.h"
 #include "malloc.h"
-#include "constants/generational_changes.h"
+#include "constants/config_changes.h"
 #include "config/pokerus.h"
 #include "config/ai.h"
 

@@ -1,7 +1,7 @@
 #ifndef GUARD_GENERATIONAL_CHANGES_H
 #define GUARD_GENERATIONAL_CHANGES_H
 
-#include "constants/generational_changes.h"
+#include "constants/config_changes.h"
 #include "config/battle.h"
 #include "config/pokerus.h"
 #include "config/ai.h"
