@@ -3685,6 +3685,9 @@ static void Task_SwitchScreensFromCryScreen(u8 taskId)
 
 static void LoadPlayArrowPalette(bool8 cryPlaying)
 {
+    if (TryLoadPlayArrowPalette_HGSS(cryPlaying))
+        return;
+    
     u16 color;
 
     if (cryPlaying)

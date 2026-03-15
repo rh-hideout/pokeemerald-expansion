@@ -4806,6 +4806,32 @@ bool32 TryLoadSizeScreen_HGSS(u8 taskId)
     return TRUE;
 }
 
+bool32 TryLoadPlayArrowPalette_HGSS(bool8 cryPlaying)
+{
+    if (!POKEDEX_PLUS_HGSS)
+        return FALSE;
+
+    u16 color;
+
+    if (!HGSS_DARK_MODE)
+    {
+        if (cryPlaying)
+            color = RGB(29, 9, 4);
+        else
+            color = RGB(18, 2, 4);
+    }
+    else
+    {
+        if (cryPlaying)
+            color = RGB(9, 9, 9);
+        else
+            color = RGB(3, 3, 3);
+    }
+
+    LoadPalette(&color, BG_PLTT_ID(0) + 11, PLTT_SIZEOF(1));
+    return TRUE;
+}
+
 #undef tScrolling
 #undef tMonSpriteDone
 #undef tBgLoaded
