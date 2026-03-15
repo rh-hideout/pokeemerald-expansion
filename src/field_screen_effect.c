@@ -1462,9 +1462,13 @@ static void Task_RushInjuredPokemonToCenter(u8 taskId)
                 ScriptContext_SetupScript(EventScript_AfterWhiteOutMomHeal);
             }
             else if (IS_FRLG)
+            {
                 ScriptContext_SetupScript(EventScript_AfterWhiteOutHeal_Frlg);
+            }
             else
+            {
                 ScriptContext_SetupScript(EventScript_AfterWhiteOutHeal);
+            }
         }
         break;
     }
