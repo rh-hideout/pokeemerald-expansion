@@ -452,8 +452,6 @@ enum
     WIN_STATS_MOVES_DESCRIPTION,
     WIN_STATS_MOVES_BOTTOM,
     WIN_STATS_ABILITIES,
-    WIN_STATS_LEFT_UNUSED,
-    WIN_STATS_END = WIN_STATS_LEFT_UNUSED
 };
 static const struct WindowTemplate sStatsScreen_WindowTemplates[] =
 {
@@ -546,16 +544,6 @@ static const struct WindowTemplate sStatsScreen_WindowTemplates[] =
         .height = 8,
         .paletteNum = 0,
         .baseBlock = 1 + 60 + 40 + 48 + 96 + 24 + 72 + 72 + 36,
-    },
-    [WIN_STATS_LEFT_UNUSED] =
-    {
-        .bg = 2,
-        .tilemapLeft = 0,
-        .tilemapTop = 14,
-        .width = 12,
-        .height = 4,
-        .paletteNum = 0,
-        .baseBlock = 1 + 60 + 40 + 48 + 96 + 24 + 72 + 72 + 36 + 144,
     },
     DUMMY_WIN_TEMPLATE
 };
@@ -2153,10 +2141,11 @@ static void ResetStatsWindows(void)
 {
     u8 i;
 
+    ClearWindowTilemap(WIN_INFO);
     FreeAllWindowBuffers();
     InitWindows(sStatsScreen_WindowTemplates);
 
-    for (i = 0; i < WIN_STATS_END + 1; i++)
+    for (i = 0; i < ARRAY_COUNT(sStatsScreen_WindowTemplates); i++)
     {
         FillWindowPixelBuffer(i, PIXEL_FILL(0));
         PutWindowTilemap(i);
