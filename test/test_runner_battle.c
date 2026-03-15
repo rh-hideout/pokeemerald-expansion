@@ -462,7 +462,7 @@ static void BattleTest_Run(void *data)
         DATA.recordedBattle.playersName[i][0] = CHAR_1 + i;
         DATA.recordedBattle.playersName[i][1] = EOS;
         DATA.recordedBattle.playersLanguage[i] = GAME_LANGUAGE;
-        DATA.recordedBattle.playersBattlers[i] = i;
+        DATA.recordedBattle.playersBattlers |= (i << (2 * (i >> 1) + 4 * (i & BIT_SIDE)));
     }
 
     STATE->runRandomly = TRUE;

@@ -5,7 +5,7 @@
 #include "link.h"
 #include "random.h"
 
-#define BATTLER_RECORD_SIZE 387
+#define BATTLER_RECORD_SIZE 388
 
 struct RecordedBattleSave
 {
@@ -15,7 +15,6 @@ struct RecordedBattleSave
     u8 playersLanguage[MAX_LINK_PLAYERS];
     rng_value_t rngSeed;
     u32 battleFlags;
-    u8 playersBattlers[MAX_LINK_PLAYERS];
     u16 opponentA;
     u16 opponentB;
     u16 partnerId;
@@ -31,8 +30,9 @@ struct RecordedBattleSave
     u8 recordMixFriendClass;
     u8 apprenticeId;
     u8 recordMixFriendLanguage:3; // 7 languages
-    u8 apprenticeLanguage:3; // 7 languages
+    u8 apprenticeLanguage:3;
     u8 multiplayerId:2;
+    u8 playersBattlers; // Setup so player 2/3 battler and player 0/1 second battler occupy same bits
     u16 easyChatSpeech[EASY_CHAT_BATTLE_WORDS_COUNT];
     u8 battleRecord[MAX_BATTLERS_COUNT][BATTLER_RECORD_SIZE];
     u32 checksum;

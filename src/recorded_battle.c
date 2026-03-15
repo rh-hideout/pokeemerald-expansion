@@ -311,7 +311,8 @@ bool32 MoveRecordedBattleToSaveData(void)
         if (sPlayers[i].gender)
             battleSave->playersGender |= (1 << i);
         battleSave->playersLanguage[i] = sPlayers[i].language;
-        battleSave->playersBattlers[i] = sPlayers[i].battler;
+        // Player 2 battler and player 0 second battler, and player 3 battler and player 1 second battler can occupy the same 2 bits
+        battleSave->playersBattlers |= (sPlayers[i].battler << (2 * (i >> 1) + 4 * (i & BIT_SIDE)));
         battleSave->playersTrainerId[i] = sPlayers[i].trainerId;
         battleSave->AI_scripts[i] = sAI_Scripts[i];
     }
@@ -525,7 +526,7 @@ void SetVariablesForRecordedBattle(struct RecordedBattleSave *src)
         }
         gLinkPlayers[i].gender = (src->playersGender >> i) & 1;
         gLinkPlayers[i].language = src->playersLanguage[i];
-        gLinkPlayers[i].id = src->playersBattlers[i];
+        gLinkPlayers[i].id = (src->playersBattlers >> (2 * (i >> 1) + 4 * (i & BIT_SIDE))) & 0x3;
         gLinkPlayers[i].trainerId = src->playersTrainerId[i];
         sAI_Scripts[i] = src->AI_scripts[i];
 
