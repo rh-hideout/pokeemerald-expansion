@@ -21,7 +21,7 @@ When you `make`, a file will be generated in `src/data/pokemon/teachable_learnse
 
 The potential moveset of each pokemon is defined in `src/data/pokemon/all_learnables.json`. If you don't have the file yet, a version will be generated automatically after you run `make`. 
 On its first creation, the file is based on the list of moves a pokemon can learn in official Pokemon games. Those lists are found in `tools/learnset_helpers/porymoves_files`, if a Pokemon learned a move in any way in the game (from level-up, egg move, tm or tutor), it will be added to its teachable learnset. You can delete some of the files mix-and-match from different games list. This is justa  tool to help you quickly generate a vanilla-ish etachable learnset.
-After `src/data/pokemon/all_learnables.json` has been created, this file will NEVER be modified by running `make` so you don't have to worry abour your changes being reverted. However you can choose to remake the file by using a different set of game move list by deleting `src/data/pokemon/all_learnables.json` and running `make` again.
+After `src/data/pokemon/all_learnables.json` has been created, this file will NEVER be modified by running `make` so you don't have to worry abour your changes being reverted. However you can choose to remake the file by using a different set of game move list by running `make clean-teachables` and then running `make` again.
 
 ## Teaching Types
 

@@ -29,13 +29,13 @@ This section lists all of expansion’s AI Flags and briefly describes the effec
 
 ## Composite AI Flags
 
-Expansion has a few "composite" AI flags. This means that these flags have no unique functionality themselves, and can instead be thought of as groups of other flags that are all enabled when this flag is enabled. The idea behind these flags is that if you don't care to manage the detailed behaviour of a particular trainer, you can use these as a baseline instead, and expansion will keep them updated for you. 
+Expansion has a few "composite" AI flags. This means that these flags have no unique functionality themselves, and can instead be thought of as groups of other flags that are all enabled when this flag is enabled. The idea behind these flags is that if you don't care to manage the detailed behaviour of a particular trainer, you can use these as a baseline instead, and expansion will keep them updated for you.
 
 `AI_FLAG_BASIC_TRAINER` is expansion's version of generic, normal AI behaviour. It includes `AI_FLAG_CHECK_BAD_MOVE` (don't use bad moves), `AI_FLAG_TRY_TO_FAINT` (faint the player where possible), and `AI_FLAG_CHECK_VIABILITY` (choose the most effective move to use in the current context). Trainers with this flag will still be smarter than they are in vanilla as there have been dramatic improvements made to move selection, but not incredibly so. Trainers with this flag should feel like normal trainers. In general we recommend these three flags be used in all cases, unless you specifically want a trainer who makes obvious mistakes in battle.
 
 `AI_FLAG_SMART_TRAINER` is expansion's version of a "smart AI". It includes everything in `AI_FLAG_BASIC_TRAINER` along with `AI_FLAG_SMART_SWITCHING` (make smart decisions about when to switch), `AI_FLAG_SMART_MON_CHOICES` (make smart decisions about what mon to send in after a switch / KO), `AI_FLAG_OMNISCIENT` (awareness of what moves, items, and abilities the player's mons have to better inform decisions), and `AI_FLAG_SMART_TERA` (make smart decisions about when to terastalize). Expansion will keep this updated to represent the most objectively intelligent behaviour our flags are capable of producing.
 
-`AI_FLAG_PREDICTION` will enable all of the prediction flags at once, so the AI can perform as well as possible. It is best paired with the flags in `AI_FLAG_SMART_TRAINER` for optimal behaviour. This currently includes `AI_FLAG_PREDICT_SWITCH` and `AI_FLAG_PREDICT_INCOMING_MON`, but will likely be expanded in the future. 
+`AI_FLAG_PREDICTION` will enable all of the prediction flags at once, so the AI can perform as well as possible. It is best paired with the flags in `AI_FLAG_SMART_TRAINER` for optimal behaviour. This currently includes `AI_FLAG_PREDICT_SWITCH` and `AI_FLAG_PREDICT_INCOMING_MON`, but will likely be expanded in the future.
 
 Expansion has LOADS of flags, which will be covered in the rest of this guide. If you don't want to engage with detailed trainer AI tuning though, you can just use these two composite flags, and trust that expansion will keep their contents updated to always represent the most standard and the smartest behaviour we can.
 
@@ -207,3 +207,6 @@ This flag aims to prevent the player from PP stalling the AI by switching betwee
 
 ## `AI_FLAG_RANDOMIZE_SWITCHIN`
 AI will randomly choose between eligible switchin candidates rather than always picking the last one in the party. For example, if the AI has two mons that can revenge kill the player's mon after a KO, by default the AI will only track the most recent eligible candidate, and will always send in the last one in party order as a result. With this flag, it will instead track all of the eligible mons, and randomly choose between them when deciding which to send out.
+
+## `AI_FLAG_RANDOMIZE_PARTY_INDICES`
+AI will randomize the order of the mons in their party before battle starts. This means that lead choice is randommized, but so is the last mon for things like Illusion or the Ace flag, so be mindful when using it.

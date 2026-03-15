@@ -3,7 +3,7 @@
 
 SINGLE_BATTLE_TEST("Thunder and Bleakwind/Wildbolt/Sandsear Storm bypass accuracy checks in Rain")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_THUNDER; }
     PARAMETRIZE { move = MOVE_BLEAKWIND_STORM; }
     PARAMETRIZE { move = MOVE_WILDBOLT_STORM; }

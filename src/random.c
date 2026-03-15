@@ -33,7 +33,7 @@ static void SFC32_Seed(struct Sfc32State *state, u32 seed, u8 stream)
     state->a = state->b = 0;
     state->c = seed;
     state->ctr = stream;
-    for(i = 0; i < 16; i++)
+    for (i = 0; i < 16; i++)
     {
         _SFC32_Next_Stream(state, stream);
     }
@@ -166,7 +166,7 @@ __attribute__((weak, alias("RandomUniformExceptDefault")))
 u32 RandomUniformExcept(enum RandomTag, u32 lo, u32 hi, bool32 (*reject)(u32));
 
 __attribute__((weak, alias("RandomWeightedArrayDefault")))
-u32 RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, const u8 *weights);
+u32 RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, const u16 *weights);
 
 __attribute__((weak, alias("RandomElementArrayDefault")))
 const void *RandomElementArray(enum RandomTag tag, const void *array, size_t size, size_t count);
@@ -191,16 +191,17 @@ u32 RandomUniformExceptDefault(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reje
     LOOP_RANDOM_END;
 }
 
-u32 RandomWeightedArrayDefault(enum RandomTag tag, u32 sum, u32 n, const u8 *weights)
+u32 RandomWeightedArrayDefault(enum RandomTag tag, u32 sum, u32 n, const u16 *weights)
 {
     assertf(n > 0);
-    s32 i, targetSum;
+    assertf(sum <= MAX_u16);
+    u32 i, targetSum;
     targetSum = (sum * Random()) >> 16;
     for (i = 0; i < n - 1; i++)
     {
-        targetSum -= weights[i];
-        if (targetSum < 0)
+        if (targetSum < weights[i])
             return i;
+        targetSum -= weights[i];
     }
     return n - 1;
 }

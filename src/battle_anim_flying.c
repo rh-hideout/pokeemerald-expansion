@@ -560,7 +560,8 @@ struct FeatherDanceData
 
 static void AnimFallingFeather(struct Sprite *sprite)
 {
-    u8 battler, matrixNum, sinIndex;
+    enum BattlerId battler;
+    u8 matrixNum, sinIndex;
     s16 spriteCoord;
 
     struct FeatherDanceData *data = (struct FeatherDanceData *)sprite->data;
@@ -932,14 +933,20 @@ static void AnimWhirlwindLine_Step(struct Sprite *sprite)
         DestroyAnimSprite(sprite);
 }
 
-void AnimTask_DrillPeckHitSplats(u8 task)
+void AnimTask_DrillPeckHitSplats(u8 taskId)
 {
-    if (!(gTasks[task].data[0] % 32))
+    if (!(gTasks[taskId].data[0] % 32))
     {
+        if (!TryLoadSpriteAssets(&gFlashingHitSplatSpriteTemplate))
+        {
+            DestroyAnimVisualTask(taskId);
+            return;
+        }
+
         gAnimVisualTaskCount++;
 
-        gBattleAnimArgs[0] = Sin(gTasks[task].data[0], -13);
-        gBattleAnimArgs[1] = Cos(gTasks[task].data[0], -13);
+        gBattleAnimArgs[0] = Sin(gTasks[taskId].data[0], -13);
+        gBattleAnimArgs[1] = Cos(gTasks[taskId].data[0], -13);
         gBattleAnimArgs[2] = 1;
         gBattleAnimArgs[3] = 3;
 
@@ -949,10 +956,10 @@ void AnimTask_DrillPeckHitSplats(u8 task)
                                3);
     }
 
-    gTasks[task].data[0] += 8;
+    gTasks[taskId].data[0] += 8;
 
-    if (gTasks[task].data[0] > 255)
-        DestroyAnimVisualTask(task);
+    if (gTasks[taskId].data[0] > 255)
+        DestroyAnimVisualTask(taskId);
 }
 
 static void AnimBounceBallShrink(struct Sprite *sprite)
@@ -1251,7 +1258,7 @@ void AnimTask_LoadWindstormBackground(u8 taskId)
     GetBattleAnimBg1Data(&animBg);
     AnimLoadCompressedBgGfx(animBg.bgId, gBattleAnimBgImage_Sandstorm, animBg.tilesOffset);
     AnimLoadCompressedBgTilemapHandleContest(&animBg, gBattleAnimBgTilemap_Sandstorm, 0);
-    LoadPalette(gBattleAnimSpritePal_Windstorm, animBg.paletteId * 16, 32);
+    LoadPalette(gBattleAnimSpritePal_Windstorm, BG_PLTT_ID(animBg.paletteId), PLTT_SIZE_4BPP);
 
     if (gBattleAnimArgs[0] && !IsOnPlayerSide(gBattleAnimAttacker))
         var0 = 1;

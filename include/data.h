@@ -4,6 +4,7 @@
 #include "constants/moves.h"
 #include "constants/trainers.h"
 #include "constants/battle.h"
+#include "constants/pokeball.h"
 #include "difficulty.h"
 #include "debug.h"
 
@@ -61,12 +62,12 @@ struct TrainerMon
     const u8 *nickname;
     const u8 *ev;
     u32 iv;
-    u16 moves[4];
+    enum Move moves[MAX_MON_MOVES];
     u16 species;
     u16 heldItem;
     enum Ability ability;
     u8 lvl;
-    u8 ball;
+    enum PokeBall ball:8;
     u8 friendship;
     u8 nature:5;
     bool8 gender:2;
@@ -116,11 +117,12 @@ struct Trainer
 {
     u64 aiFlags;
     const struct TrainerMon *party;
-    u16 items[MAX_TRAINER_ITEMS];
+    enum Item items[MAX_TRAINER_ITEMS];
     struct StartingStatuses startingStatus; // this trainer starts a battle with a given status. see include/constants/battle.h for values
     u8 trainerClass;
-    u8 encounterMusic_gender; // last bit is gender
-    u8 trainerPic;
+    u8 encounterMusic:7;
+    u8 gender:1;
+    enum TrainerPicID trainerPic;
     u8 trainerName[TRAINER_NAME_LENGTH + 1];
     u8 battleType:2;
     u8 mugshotColor:6;
@@ -130,7 +132,7 @@ struct Trainer
     u8 poolPickIndex;
     u8 poolPruneIndex;
     u16 overrideTrainer;
-    u8 trainerBackPic;
+    enum TrainerPicID trainerBackPic;
 };
 
 struct TrainerClass
@@ -226,7 +228,7 @@ extern const struct FollowerMsgInfo gFollowerPoisonedMessages[];
 
 static inline bool8 IsPartnerTrainerId(u16 trainerId)
 {
-    if (trainerId >= TRAINER_PARTNER(PARTNER_NONE) && trainerId < TRAINER_PARTNER(PARTNER_COUNT))
+    if (trainerId > TRAINER_PARTNER(PARTNER_NONE) && trainerId < TRAINER_PARTNER(PARTNER_COUNT))
         return TRUE;
     return FALSE;
 }
@@ -235,11 +237,6 @@ static inline u16 SanitizeTrainerId(u16 trainerId)
 {
     switch (trainerId)
     {
-    case TRAINER_RECORD_MIXING_FRIEND:
-    case TRAINER_RECORD_MIXING_APPRENTICE:
-    case TRAINER_EREADER:
-    case TRAINER_FRONTIER_BRAIN:
-    case TRAINER_PLAYER:
     case TRAINER_SECRET_BASE:
     case TRAINER_LINK_OPPONENT:
     case TRAINER_UNION_ROOM:
@@ -259,12 +256,17 @@ static inline const struct Trainer *GetTrainerStructFromId(u16 trainerId)
     u32 sanitizedTrainerId = 0;
     if (gIsDebugBattle) return GetDebugAiTrainer();
     sanitizedTrainerId = SanitizeTrainerId(trainerId);
-    enum DifficultyLevel difficulty = GetTrainerDifficultyLevel(sanitizedTrainerId);
 
     if (IsPartnerTrainerId(trainerId))
+    {
+        enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(sanitizedTrainerId);
         return &gBattlePartners[difficulty][sanitizedTrainerId - TRAINER_PARTNER(PARTNER_NONE)];
+    }
     else
+    {
+        enum DifficultyLevel difficulty = GetTrainerDifficultyLevel(sanitizedTrainerId);
         return &gTrainers[difficulty][sanitizedTrainerId];
+    }
 }
 
 static inline const enum TrainerClassID GetTrainerClassFromId(u16 trainerId)
@@ -293,7 +295,7 @@ static inline const u8 *GetTrainerNameFromId(u16 trainerId)
     return GetTrainerStructFromId(trainerId)->trainerName;
 }
 
-static inline const u8 GetTrainerPicFromId(u16 trainerId)
+static inline const enum TrainerPicID GetTrainerPicFromId(u16 trainerId)
 {
     enum DifficultyLevel partnerDifficulty = GetBattlePartnerDifficultyLevel(trainerId);
 

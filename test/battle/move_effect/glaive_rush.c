@@ -55,7 +55,7 @@ SINGLE_BATTLE_TEST("If Glaive Rush is successful, moves targeted at the user dea
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); MOVE(player, MOVE_GLAIVE_RUSH); }
-        TURN { MOVE(opponent, MOVE_SCRATCH); MOVE(player, MOVE_CELEBRATE);  }
+        TURN { MOVE(opponent, MOVE_SCRATCH); MOVE(player, MOVE_CELEBRATE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         HP_BAR(player, captureDamage: &normalDmg);
@@ -118,7 +118,7 @@ SINGLE_BATTLE_TEST("Glaive Rush doesn't affect the user if the effect is blocked
 
 SINGLE_BATTLE_TEST("Glaive Rush status last until the the user's next turn")
 {
-    s16 normalDmgFristHit;
+    s16 normalDmgFirstHit;
     s16 normalDmgSecondHit;
 
     GIVEN {
@@ -133,11 +133,11 @@ SINGLE_BATTLE_TEST("Glaive Rush status last until the the user's next turn")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
-        HP_BAR(player, captureDamage: &normalDmgFristHit);
+        HP_BAR(player, captureDamage: &normalDmgFirstHit);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         HP_BAR(player, captureDamage: &normalDmgSecondHit);
     } THEN {
-        EXPECT_EQ(normalDmgFristHit, normalDmgSecondHit);
+        EXPECT_EQ(normalDmgFirstHit, normalDmgSecondHit);
     }
 }

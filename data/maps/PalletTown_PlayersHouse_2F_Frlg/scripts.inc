@@ -1,4 +1,4 @@
-PalletTown_PlayersHouse_2F_MapScripts::
+PalletTown_PlayersHouse_2F_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, PalletTown_PlayersHouse_2F_OnTransition
 	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, PalletTown_PlayersHouse_2F_OnWarp
 	.byte 0
@@ -29,12 +29,12 @@ PalletTown_PlayersHouse_2F_EventScript_Sign::
 	end
 
 PalletTown_PlayersHouse_2F_Text_PlayedWithNES::
-    .string "{PLAYER} played with the NES.\p"
-    .string "…Okay!\n"
-    .string "It's time to go!$"
+	.string "{PLAYER} played with the NES.\p"
+	.string "…Okay!\n"
+	.string "It's time to go!$"
 
 PalletTown_PlayersHouse_2F_Text_PressLRForHelp::
-    .string "It's a posted notice…\p"
-    .string "If you're confused, ask for HELP!\n"
-    .string "Press the L or R Button!$"
+	.string "It's a posted notice…\p"
+	.string "If you're confused, ask for HELP!\n"
+	.string "Press the L or R Button!$"
 

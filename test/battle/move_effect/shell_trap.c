@@ -11,7 +11,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Shell Trap activates only if hit by a physical move")
 {
-    u32 move;
+    enum Move move;
     bool32 activate;
     PARAMETRIZE { move = MOVE_SCRATCH; activate = TRUE; }
     PARAMETRIZE { move = MOVE_WATER_GUN; activate = FALSE; }
@@ -44,7 +44,7 @@ SINGLE_BATTLE_TEST("Shell Trap activates only if hit by a physical move")
 
 SINGLE_BATTLE_TEST("Shell Trap does not activate if attacker's Sheer Force applied")
 {
-    u32 move;
+    enum Move move;
     bool32 activate;
     PARAMETRIZE { move = MOVE_SCRATCH; activate = TRUE; }
     PARAMETRIZE { move = MOVE_STOMP; activate = FALSE; }
@@ -279,3 +279,26 @@ DOUBLE_BATTLE_TEST("Shell Trap does not trigger when hit into Substitute")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_TRAP, playerLeft);
     }
 }
+
+DOUBLE_BATTLE_TEST("Shell Trap activates on both opposing Targets")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
+        PLAYER(SPECIES_WYNAUT);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_SHELL_TRAP);
+            MOVE(playerRight, MOVE_SHELL_TRAP);
+            MOVE(opponentLeft, MOVE_EARTHQUAKE);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponentLeft);
+        // Order might be incorrect compared to vanilla
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_TRAP, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_TRAP, playerRight);
+    }
+}
+

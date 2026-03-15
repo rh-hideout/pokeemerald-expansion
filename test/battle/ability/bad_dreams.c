@@ -9,9 +9,9 @@ SINGLE_BATTLE_TEST("Bad Dreams causes the sleeping enemy Pokemon to lose 1/8 of 
     PARAMETRIZE { status = STATUS1_SLEEP; }
     GIVEN {
         PLAYER(SPECIES_DARKRAI);
-        OPPONENT(SPECIES_WOBBUFFET) {Status1(status);}
+        OPPONENT(SPECIES_WOBBUFFET) { Status1(status); }
     } WHEN {
-        TURN {;}
+        TURN {}
     } SCENE {
         if (status == STATUS1_SLEEP) {
             ABILITY_POPUP(player, ABILITY_BAD_DREAMS);
@@ -41,7 +41,7 @@ SINGLE_BATTLE_TEST("Bad Dreams causes Pokémon with Comatose to lose 1/8 of HP")
         PLAYER(SPECIES_DARKRAI);
         OPPONENT(SPECIES_KOMALA) { Ability(ABILITY_COMATOSE); }
     } WHEN {
-        TURN {;}
+        TURN {}
     } SCENE {
         ABILITY_POPUP(player, ABILITY_BAD_DREAMS);
         MESSAGE("The opposing Komala is tormented!");
@@ -55,11 +55,11 @@ DOUBLE_BATTLE_TEST("Bad Dreams does not activate if only the partner Pokemon is 
 {
     GIVEN {
         PLAYER(SPECIES_DARKRAI);
-        PLAYER(SPECIES_WOBBUFFET) {Status1(STATUS1_SLEEP);}
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); }
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN {;}
+        TURN {}
     } SCENE {
         NONE_OF {
             ABILITY_POPUP(playerLeft, ABILITY_BAD_DREAMS);
@@ -76,12 +76,12 @@ DOUBLE_BATTLE_TEST("Bad Dreams does not activate if only the partner Pokemon is 
 DOUBLE_BATTLE_TEST("Bad Dreams activates for both sleeping Pokémon on the player side")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) {Status1(STATUS1_SLEEP);}
-        PLAYER(SPECIES_WOBBUFFET) {Status1(STATUS1_SLEEP);}
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); }
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); }
         OPPONENT(SPECIES_DARKRAI);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN {;}
+        TURN {}
     } SCENE {
         ABILITY_POPUP(opponentLeft, ABILITY_BAD_DREAMS);
         MESSAGE("Wobbuffet is tormented!");
@@ -99,14 +99,14 @@ DOUBLE_BATTLE_TEST("Bad Dreams activates for both sleeping Pokémon on the playe
 DOUBLE_BATTLE_TEST("Bad Dreams faints both sleeping Pokemon on player side")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) {Status1(STATUS1_SLEEP); HP(1);}
-        PLAYER(SPECIES_WOBBUFFET) {Status1(STATUS1_SLEEP); HP(1);}
-        PLAYER(SPECIES_WOBBUFFET) {Status1(STATUS1_SLEEP);}
-        PLAYER(SPECIES_WOBBUFFET) {Status1(STATUS1_SLEEP);}
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); HP(1); }
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); HP(1); }
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); }
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); }
         OPPONENT(SPECIES_DARKRAI);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN {SEND_OUT(playerLeft, 2); SEND_OUT(playerRight, 3);}
+        TURN { SEND_OUT(playerLeft, 2); SEND_OUT(playerRight, 3); }
     } SCENE {
         ABILITY_POPUP(opponentLeft, ABILITY_BAD_DREAMS);
         MESSAGE("Wobbuffet is tormented!");
@@ -123,12 +123,12 @@ DOUBLE_BATTLE_TEST("Bad Dreams faints both sleeping Pokemon on opponent side")
     GIVEN {
         PLAYER(SPECIES_DARKRAI);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) {Status1(STATUS1_SLEEP); HP(1);}
-        OPPONENT(SPECIES_WOBBUFFET) {Status1(STATUS1_SLEEP); HP(1);}
-        OPPONENT(SPECIES_WOBBUFFET) {Status1(STATUS1_SLEEP);}
-        OPPONENT(SPECIES_WOBBUFFET) {Status1(STATUS1_SLEEP);}
+        OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); }
+        OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); }
     } WHEN {
-        TURN {SEND_OUT(opponentLeft, 2); SEND_OUT(opponentRight, 3);}
+        TURN { SEND_OUT(opponentLeft, 2); SEND_OUT(opponentRight, 3); }
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_BAD_DREAMS);
         MESSAGE("The opposing Wobbuffet is tormented!");

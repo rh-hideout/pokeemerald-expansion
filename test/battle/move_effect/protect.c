@@ -23,15 +23,15 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Protect: Protect, Detect, Spiky Shield, Baneful Bunker and Burning Bulwark protect from all moves")
 {
     u32 j;
-    static const u16 protectMoves[] = {
+    static const enum Move protectMoves[] = {
         MOVE_PROTECT,
         MOVE_DETECT,
         MOVE_SPIKY_SHIELD,
         MOVE_BANEFUL_BUNKER,
         MOVE_BURNING_BULWARK,
     };
-    u16 protectMove = MOVE_NONE;
-    u16 usedMove = MOVE_NONE;
+    enum Move protectMove = MOVE_NONE;
+    enum Move usedMove = MOVE_NONE;
 
     for (j = 0; j < ARRAY_COUNT(protectMoves); j++)
     {
@@ -62,14 +62,14 @@ SINGLE_BATTLE_TEST("Protect: Protect, Detect, Spiky Shield, Baneful Bunker and B
 SINGLE_BATTLE_TEST("Protect: King's Shield, Silk Trap and Obstruct protect from damaging moves and lower stats on contact")
 {
     u32 j;
-    static const u16 protectMoves[][3] =
+    static const enum Move protectMoves[][3] =
     {   // Move             Stat      Stages
         {MOVE_KINGS_SHIELD, STAT_ATK,   (B_KINGS_SHIELD_LOWER_ATK >= GEN_8) ? 1 : 2},
         {MOVE_SILK_TRAP,    STAT_SPEED, 1},
         {MOVE_OBSTRUCT,     STAT_DEF,   2},
     };
-    u16 protectMove = MOVE_NONE;
-    u16 usedMove = MOVE_NONE;
+    enum Move protectMove = MOVE_NONE;
+    enum Move usedMove = MOVE_NONE;
     u16 statId = 0, lowersBy = 0;
 
     for (j = 0; j < ARRAY_COUNT(protectMoves); j++)
@@ -125,9 +125,39 @@ SINGLE_BATTLE_TEST("Protect: King's Shield, Silk Trap and Obstruct protect from 
     }
 }
 
+SINGLE_BATTLE_TEST("Protect: King's Shield, Silk Trap and Obstruct don't lower stats when charging a two turn move")
+{
+    u32 move, protectMove;
+    PARAMETRIZE { move = MOVE_BOUNCE; protectMove = MOVE_KINGS_SHIELD; }
+    PARAMETRIZE { move = MOVE_DIG;    protectMove = MOVE_KINGS_SHIELD; }
+    PARAMETRIZE { move = MOVE_BOUNCE; protectMove = MOVE_SILK_TRAP; }
+    PARAMETRIZE { move = MOVE_DIG;    protectMove = MOVE_SILK_TRAP; }
+    PARAMETRIZE { move = MOVE_BOUNCE; protectMove = MOVE_OBSTRUCT; }
+    PARAMETRIZE { move = MOVE_DIG;    protectMove = MOVE_OBSTRUCT; }
+
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_BOUNCE));
+        ASSUME(MoveMakesContact(MOVE_DIG));
+        ASSUME(gBattleMoveEffects[GetMoveEffect(MOVE_BOUNCE)].twoTurnEffect);
+        ASSUME(gBattleMoveEffects[GetMoveEffect(MOVE_DIG)].twoTurnEffect);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, protectMove); MOVE(opponent, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, protectMove, player);
+
+        ANIMATION(ANIM_TYPE_MOVE, move, opponent);
+        NONE_OF {
+            HP_BAR(player);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        }
+    }
+}
+
 SINGLE_BATTLE_TEST("Protect: Spiky Shield does 1/8 dmg of max hp of attackers making contact and may faint them")
 {
-    u16 usedMove = MOVE_NONE;
+    enum Move usedMove = MOVE_NONE;
     u16 hp = 400, maxHp = 400;
 
     PARAMETRIZE { usedMove = MOVE_SCRATCH; hp = 1; }
@@ -162,13 +192,39 @@ SINGLE_BATTLE_TEST("Protect: Spiky Shield does 1/8 dmg of max hp of attackers ma
     }
 }
 
+SINGLE_BATTLE_TEST("Protect: Spiky Shield doesn't hurt attacker when charging a two turn move")
+{
+    u32 move;
+    PARAMETRIZE { move = MOVE_BOUNCE; }
+    PARAMETRIZE { move = MOVE_DIG; }
+
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_BOUNCE));
+        ASSUME(MoveMakesContact(MOVE_DIG));
+        ASSUME(gBattleMoveEffects[GetMoveEffect(MOVE_BOUNCE)].twoTurnEffect);
+        ASSUME(gBattleMoveEffects[GetMoveEffect(MOVE_DIG)].twoTurnEffect);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SPIKY_SHIELD); MOVE(opponent, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIKY_SHIELD, player);
+
+        ANIMATION(ANIM_TYPE_MOVE, move, opponent);
+        NONE_OF {
+            HP_BAR(player);
+            HP_BAR(opponent);
+        }
+    }
+}
+
 SINGLE_BATTLE_TEST("Protect: Baneful Bunker poisons Pokémon for moves making contact")
 {
-    u16 usedMove = MOVE_NONE;
+    enum Move usedMove = MOVE_NONE;
 
-    PARAMETRIZE {usedMove = MOVE_SCRATCH; }
-    PARAMETRIZE {usedMove = MOVE_LEER; }
-    PARAMETRIZE {usedMove = MOVE_WATER_GUN; }
+    PARAMETRIZE { usedMove = MOVE_SCRATCH; }
+    PARAMETRIZE { usedMove = MOVE_LEER; }
+    PARAMETRIZE { usedMove = MOVE_WATER_GUN; }
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -214,13 +270,39 @@ SINGLE_BATTLE_TEST("Protect: Baneful Bunker can't poison Pokémon if they are al
     }
 }
 
+SINGLE_BATTLE_TEST("Protect: Baneful Bunker doesn't poison attacker when charging a two turn move")
+{
+    u32 move;
+    PARAMETRIZE { move = MOVE_BOUNCE; }
+    PARAMETRIZE { move = MOVE_DIG; }
+
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_BOUNCE));
+        ASSUME(MoveMakesContact(MOVE_DIG));
+        ASSUME(gBattleMoveEffects[GetMoveEffect(MOVE_BOUNCE)].twoTurnEffect);
+        ASSUME(gBattleMoveEffects[GetMoveEffect(MOVE_DIG)].twoTurnEffect);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_BANEFUL_BUNKER); MOVE(opponent, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BANEFUL_BUNKER, player);
+
+        ANIMATION(ANIM_TYPE_MOVE, move, opponent);
+        NONE_OF {
+            HP_BAR(player);
+            STATUS_ICON(opponent, STATUS1_POISON);
+        }
+    }
+}
+
 SINGLE_BATTLE_TEST("Protect: Burning Bulwark burns Pokémon for moves making contact")
 {
-    u16 usedMove = MOVE_NONE;
+    enum Move usedMove = MOVE_NONE;
 
-    PARAMETRIZE {usedMove = MOVE_SCRATCH; }
-    PARAMETRIZE {usedMove = MOVE_LEER; }
-    PARAMETRIZE {usedMove = MOVE_WATER_GUN; }
+    PARAMETRIZE { usedMove = MOVE_SCRATCH; }
+    PARAMETRIZE { usedMove = MOVE_LEER; }
+    PARAMETRIZE { usedMove = MOVE_WATER_GUN; }
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -266,13 +348,39 @@ SINGLE_BATTLE_TEST("Protect: Burning Bulwark can't burn Pokémon if they are alr
     }
 }
 
+SINGLE_BATTLE_TEST("Protect: Burning Bulwark doesn't burn attacker when charging a two turn move")
+{
+    u32 move;
+    PARAMETRIZE { move = MOVE_BOUNCE; }
+    PARAMETRIZE { move = MOVE_DIG; }
+
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_BOUNCE));
+        ASSUME(MoveMakesContact(MOVE_DIG));
+        ASSUME(gBattleMoveEffects[GetMoveEffect(MOVE_BOUNCE)].twoTurnEffect);
+        ASSUME(gBattleMoveEffects[GetMoveEffect(MOVE_DIG)].twoTurnEffect);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_BURNING_BULWARK); MOVE(opponent, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BURNING_BULWARK, player);
+
+        ANIMATION(ANIM_TYPE_MOVE, move, opponent);
+        NONE_OF {
+            HP_BAR(player);
+            STATUS_ICON(opponent, STATUS1_BURN);
+        }
+    }
+}
+
 SINGLE_BATTLE_TEST("Protect: Recoil damage is not applied if target was protected")
 {
     u32 j, k;
-    static const u16 protectMoves[] = { MOVE_PROTECT, MOVE_DETECT, MOVE_KINGS_SHIELD, MOVE_BANEFUL_BUNKER, MOVE_SILK_TRAP, MOVE_OBSTRUCT, MOVE_SPIKY_SHIELD };
-    static const u16 recoilMoves[] = { MOVE_VOLT_TACKLE, MOVE_HEAD_SMASH, MOVE_TAKE_DOWN, MOVE_DOUBLE_EDGE };
-    u16 protectMove = MOVE_NONE;
-    u16 recoilMove = MOVE_NONE;
+    static const u16 protectMoves[] = {MOVE_PROTECT, MOVE_DETECT, MOVE_KINGS_SHIELD, MOVE_BANEFUL_BUNKER, MOVE_SILK_TRAP, MOVE_OBSTRUCT, MOVE_SPIKY_SHIELD};
+    static const u16 recoilMoves[] = {MOVE_VOLT_TACKLE, MOVE_HEAD_SMASH, MOVE_TAKE_DOWN, MOVE_DOUBLE_EDGE};
+    enum Move protectMove = MOVE_NONE;
+    enum Move recoilMove = MOVE_NONE;
 
     for (j = 0; j < ARRAY_COUNT(protectMoves); j++)
     {
@@ -311,7 +419,7 @@ SINGLE_BATTLE_TEST("Protect: Recoil damage is not applied if target was protecte
 
 SINGLE_BATTLE_TEST("Protect: Multi-hit moves don't hit a protected target and fail only once")
 {
-    u16 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
 
     PARAMETRIZE { move = MOVE_PROTECT; }
     PARAMETRIZE { move = MOVE_DETECT; }
@@ -394,7 +502,7 @@ DOUBLE_BATTLE_TEST("Protect fails when the only slower battler is a fainted ally
 
 DOUBLE_BATTLE_TEST("Protect: Wide Guard protects self and ally from multi-target moves")
 {
-    u16 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
 
     PARAMETRIZE { move = MOVE_SCRATCH; }      // Single target
     PARAMETRIZE { move = MOVE_SURF; }        // All targets
@@ -421,14 +529,16 @@ DOUBLE_BATTLE_TEST("Protect: Wide Guard protects self and ally from multi-target
         } else if (move == MOVE_HYPER_VOICE) {
             NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
             MESSAGE("The opposing Wobbuffet protected itself!");
-            NOT HP_BAR(opponentLeft);
             MESSAGE("The opposing Wobbuffet protected itself!");
-            NOT HP_BAR(opponentRight);
+            NONE_OF {
+                HP_BAR(opponentLeft);
+                HP_BAR(opponentRight);
+            }
         } else { // Surf
+            MESSAGE("The opposing Wobbuffet protected itself!");
             MESSAGE("The opposing Wobbuffet protected itself!");
             NOT HP_BAR(opponentLeft);
             HP_BAR(playerRight);
-            MESSAGE("The opposing Wobbuffet protected itself!");
             NOT HP_BAR(opponentRight);
         }
     }
@@ -442,7 +552,7 @@ DOUBLE_BATTLE_TEST("Protect: Wide Guard can not fail on consecutive turns (Gen6+
     PARAMETRIZE { config = GEN_6; passes = 2; }
     PASSES_RANDOMLY(passes, 2);
     GIVEN {
-        WITH_CONFIG(CONFIG_WIDE_GUARD, config);
+        WITH_CONFIG(B_WIDE_GUARD, config);
         ASSUME(GetMoveTarget(MOVE_HYPER_VOICE) == TARGET_BOTH);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
@@ -467,7 +577,7 @@ DOUBLE_BATTLE_TEST("Protect: Wide Guard can not fail on consecutive turns (Gen6+
 
 DOUBLE_BATTLE_TEST("Protect: Quick Guard protects self and ally from priority moves")
 {
-    u16 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
     struct BattlePokemon *targetOpponent = NULL;
 
     PARAMETRIZE { move = MOVE_SCRATCH;      targetOpponent = opponentLeft; }
@@ -508,7 +618,7 @@ DOUBLE_BATTLE_TEST("Protect: Quick Guard can not fail on consecutive turns (Gen6
     PARAMETRIZE { config = GEN_6; passes = 2; }
     PASSES_RANDOMLY(passes, 2);
     GIVEN {
-        WITH_CONFIG(CONFIG_QUICK_GUARD, config);
+        WITH_CONFIG(B_QUICK_GUARD, config);
         ASSUME(GetMovePriority(MOVE_QUICK_ATTACK) == 1);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
@@ -528,9 +638,9 @@ DOUBLE_BATTLE_TEST("Protect: Quick Guard can not fail on consecutive turns (Gen6
     }
 }
 
-DOUBLE_BATTLE_TEST("Protect: Crafty Shield protects self and ally from status moves")
+DOUBLE_BATTLE_TEST("Crafty Shield protects self and ally from opposing status moves")
 {
-    u16 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
     struct BattlePokemon *targetOpponent = NULL;
 
     PARAMETRIZE { move = MOVE_HYPER_VOICE; }
@@ -569,9 +679,75 @@ DOUBLE_BATTLE_TEST("Protect: Crafty Shield protects self and ally from status mo
     }
 }
 
-SINGLE_BATTLE_TEST("Protect: Protect does not block Confide or Decorate")
+DOUBLE_BATTLE_TEST("Crafty Shield does not protect against status moves used on the user's side")
 {
     u32 move;
+
+    PARAMETRIZE { move = MOVE_AROMATHERAPY; }
+    PARAMETRIZE { move = MOVE_ACUPRESSURE; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_AROMATHERAPY) == EFFECT_HEAL_BELL);
+        ASSUME(GetMoveEffect(MOVE_ACUPRESSURE) == EFFECT_ACUPRESSURE);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(5); Status1(STATUS1_BURN); }
+    } WHEN {
+        TURN {
+            MOVE(opponentLeft, MOVE_CRAFTY_SHIELD);
+            if (move == MOVE_ACUPRESSURE)
+                MOVE(opponentRight, move, target: opponentLeft);
+            else
+                MOVE(opponentRight, move);
+        }
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CRAFTY_SHIELD, opponentLeft);
+        if (move == MOVE_ACUPRESSURE) {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_ACUPRESSURE, opponentRight);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+        } else {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_AROMATHERAPY, opponentRight);
+            STATUS_ICON(opponentRight, none: TRUE);
+        }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Crafty Shield does not protect against entry hazard moves")
+{
+    u32 move;
+
+    PARAMETRIZE { move = MOVE_SPIKES; }
+    PARAMETRIZE { move = MOVE_STEALTH_ROCK; }
+    PARAMETRIZE { move = MOVE_TOXIC_SPIKES; }
+    PARAMETRIZE { move = MOVE_STICKY_WEB; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_CRAFTY_SHIELD); MOVE(playerLeft, move, target: opponentLeft); }
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CRAFTY_SHIELD, opponentLeft);
+        if (move == MOVE_SPIKES) {
+            MESSAGE("Spikes were scattered on the ground all around the opposing team!");
+        } else if (move == MOVE_TOXIC_SPIKES) {
+            MESSAGE("Poison spikes were scattered on the ground all around the opposing team!");
+        } else if (move == MOVE_STEALTH_ROCK) {
+            MESSAGE("Pointed stones float in the air around the opposing team!");
+        } else {
+            MESSAGE("A sticky web has been laid out on the ground around the opposing team!");
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Protect: Protect does not block Confide or Decorate")
+{
+    enum Move move;
     PARAMETRIZE { move = MOVE_CONFIDE; }
     PARAMETRIZE { move = MOVE_DECORATE; }
 
@@ -593,7 +769,7 @@ SINGLE_BATTLE_TEST("Protect: Protect does not block Confide or Decorate")
 
 DOUBLE_BATTLE_TEST("Crafty Shield protects self and ally from Confide and Decorate")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_CONFIDE; }
     PARAMETRIZE { move = MOVE_DECORATE; }
 
@@ -618,6 +794,11 @@ DOUBLE_BATTLE_TEST("Crafty Shield protects self and ally from Confide and Decora
 
 DOUBLE_BATTLE_TEST("Crafty Shield does not protect against moves that target all battlers")
 {
+    u32 move;
+
+    PARAMETRIZE { move = MOVE_FLOWER_SHIELD; }
+    PARAMETRIZE { move = MOVE_PERISH_SONG; }
+
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_TANGELA, 0) == TYPE_GRASS);
         ASSUME(GetSpeciesType(SPECIES_TANGROWTH, 0) == TYPE_GRASS);
@@ -628,28 +809,33 @@ DOUBLE_BATTLE_TEST("Crafty Shield does not protect against moves that target all
         OPPONENT(SPECIES_SUNKERN);
         OPPONENT(SPECIES_SUNFLORA);
     } WHEN {
-        TURN { MOVE(opponentLeft, MOVE_CRAFTY_SHIELD); MOVE(opponentRight, MOVE_CELEBRATE); MOVE(playerLeft, MOVE_FLOWER_SHIELD); MOVE(playerRight, MOVE_CELEBRATE); }
+        TURN { MOVE(opponentLeft, MOVE_CRAFTY_SHIELD); MOVE(opponentRight, MOVE_CELEBRATE); MOVE(playerLeft, move); MOVE(playerRight, MOVE_CELEBRATE); }
     } SCENE {
-        MESSAGE("Tangela used Flower Shield!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLOWER_SHIELD, playerLeft);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
-        MESSAGE("Tangela's Defense rose!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLOWER_SHIELD, playerLeft);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-        MESSAGE("The opposing Sunkern's Defense rose!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLOWER_SHIELD, playerLeft);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
-        MESSAGE("Tangrowth's Defense rose!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLOWER_SHIELD, playerLeft);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
-        MESSAGE("The opposing Sunflora's Defense rose!");
+        if (move == MOVE_FLOWER_SHIELD) {
+            MESSAGE("Tangela used Flower Shield!");
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_FLOWER_SHIELD, playerLeft);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+            MESSAGE("Tangela's Defense rose!");
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+            MESSAGE("The opposing Sunkern's Defense rose!");
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+            MESSAGE("Tangrowth's Defense rose!");
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
+            MESSAGE("The opposing Sunflora's Defense rose!");
+        } else {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_PERISH_SONG, playerLeft);
+            NONE_OF {
+                MESSAGE("The opposing Sunkern protected itself!");
+                MESSAGE("The opposing Sunflora protected itself!");
+            }
+        }
     }
 }
 
 SINGLE_BATTLE_TEST("Protect: Quick Guard, Wide Guard and Crafty Shield don't reduce Max Move demage", s16 damage)
 {
     s16 dmg[2];
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_WIDE_GUARD; }
     PARAMETRIZE { move = MOVE_QUICK_GUARD; }
@@ -672,7 +858,7 @@ SINGLE_BATTLE_TEST("Protect: Quick Guard, Wide Guard and Crafty Shield don't red
 SINGLE_BATTLE_TEST("Protect: Quick Guard, Wide Guard and Crafty Shield don't reduce Z-Move demage", s16 damage)
 {
     bool32 protected;
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { protected = TRUE; move = MOVE_WIDE_GUARD; }
     PARAMETRIZE { protected = FALSE; move = MOVE_WIDE_GUARD; }
@@ -721,7 +907,7 @@ SINGLE_BATTLE_TEST("Protect: Protective Pads protects from secondary effects")
 DOUBLE_BATTLE_TEST("Protect is not transferred to a mon that is switched in due to Eject Button")
 {
     GIVEN {
-        PLAYER(SPECIES_URSHIFU) { Ability(ABILITY_UNSEEN_FIST); };
+        PLAYER(SPECIES_URSHIFU) { Ability(ABILITY_UNSEEN_FIST); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT) { Item(ITEM_EJECT_BUTTON); }
@@ -772,3 +958,33 @@ DOUBLE_BATTLE_TEST("Wide Guard is still activate even if user is switched out du
         }
     }
 }
+
+DOUBLE_BATTLE_TEST("Protect is not ignored after a new mon switched in because of U-Turn")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN {
+            MOVE(playerRight, MOVE_PROTECT);
+            MOVE(opponentLeft, MOVE_POUND, target: playerRight);
+            MOVE(opponentRight, MOVE_U_TURN, target: playerLeft);
+            SEND_OUT(opponentRight, 2);
+        }
+        TURN {
+            MOVE(playerLeft, MOVE_DETECT);
+            MOVE(opponentLeft, MOVE_POUND, target: playerRight);
+            MOVE(opponentRight, MOVE_POUND, target: playerLeft);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DETECT, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, opponentLeft);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, opponentRight);
+    }
+}
+

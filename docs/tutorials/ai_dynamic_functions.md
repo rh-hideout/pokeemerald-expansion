@@ -12,7 +12,7 @@ There are a few steps involved:
 - In the script the triggers the battle, add a call to `setdynamicaifunc` specifying your function, as in:
 ```
 setdynamicaifunc AI_TagBattlePreferFoe
-multi_2_vs_2 TRAINER_SIRIUS_NOVA_HYPERION_TAG, Text_NovaInsurgence_Arrival_Hyperion_Loss, TRAINER_SIRIUS_NOVA_DEIMOS_RECRUIT_TAG, Text_NovaInsurgence_Arrival_DeimosRecruit_Loss, TRAINER_SIRIUS_WHARF_TRITON_PARTNER, TRAINER_BACK_PIC_TRITON
+multi_2_vs_2 TRAINER_SIRIUS_NOVA_HYPERION_TAG, Text_NovaInsurgence_Arrival_Hyperion_Loss, TRAINER_SIRIUS_NOVA_DEIMOS_RECRUIT_TAG, Text_NovaInsurgence_Arrival_DeimosRecruit_Loss, TRAINER_SIRIUS_WHARF_TRITON_PARTNER, TRAINER_PIC_BACK_TRITON
 ```
 That's it! The scoring function will be used in the battle immediately following it, and automatically cleared at the end of the battle. You can then use `setdynamicaifunc` with the same or a different AI scoring function as you see fit.
 

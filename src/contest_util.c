@@ -1911,6 +1911,7 @@ static void AddContestTextPrinterFitWidth(int windowId, u8 *str, int x, int widt
 {
     struct TextPrinterTemplate textPrinter;
     textPrinter.currentChar = str;
+    textPrinter.type = WINDOW_TEXT_PRINTER;
     textPrinter.windowId = windowId;
     textPrinter.fontId = GetFontIdToFit(str, FONT_NARROW, 0, widthPx);
     textPrinter.x = x;
@@ -1971,6 +1972,8 @@ u16 HasMonWonThisContestBefore(void)
     case CONTEST_CATEGORY_TOUGH:
         if (GetMonData(mon, MON_DATA_TOUGH_RIBBON) > gSpecialVar_ContestRank)
             hasRankRibbon = TRUE;
+        break;
+    default:
         break;
     }
 
@@ -2035,6 +2038,8 @@ void GiveMonContestRibbon(void)
             if (GetRibbonCount(&gPlayerParty[gContestMonPartyIndex]) > NUM_CUTIES_RIBBONS)
                 TryPutSpotTheCutiesOnAir(&gPlayerParty[gContestMonPartyIndex], MON_DATA_TOUGH_RIBBON);
         }
+        break;
+    default:
         break;
     }
 }
@@ -2466,7 +2471,7 @@ void SetLinkContestPlayerGfx(void)
     {
         for (i = 0; i < gNumLinkContestPlayers; i++)
         {
-            int version = (u8)gLinkPlayers[i].version;
+            enum GameVersion version = (u8)gLinkPlayers[i].version;
             if (version == VERSION_RUBY || version == VERSION_SAPPHIRE)
             {
                 if (gLinkPlayers[i].gender == MALE)
@@ -2487,7 +2492,7 @@ void LoadLinkContestPlayerPalettes(void)
 {
     int i;
     u8 objectEventId;
-    int version;
+    enum GameVersion version;
     struct Sprite *sprite;
     static const u8 sContestantLocalIds[CONTESTANT_COUNT] = {
         LOCALID_CONTESTANT_1,
@@ -2611,7 +2616,7 @@ static void Task_ShowContestEntryMonPic(u8 taskId)
     struct Task *task = &gTasks[taskId];
     struct Sprite *sprite;
 
-    switch(task->data[0])
+    switch (task->data[0])
     {
     case 0:
         task->data[0]++;
@@ -2627,7 +2632,7 @@ static void Task_ShowContestEntryMonPic(u8 taskId)
         sprite = &gSprites[task->data[2]];
         FreeSpritePaletteByTag(GetSpritePaletteTagByPaletteNum(sprite->oam.paletteNum));
 
-        if(sprite->oam.affineMode)
+        if (sprite->oam.affineMode)
             FreeOamMatrix(sprite->oam.matrixNum);
 
         DestroySprite(sprite);

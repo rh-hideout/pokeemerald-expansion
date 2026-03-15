@@ -15,13 +15,13 @@ body:
       description: |
         What is the current behavior? What behavior would you expect your feature request to provide? What other information can you provide to help your feature get implemented?
       placeholder: |
-        Provide as much context as possible. 
+        Provide as much context as possible.
     validations:
       required: true
   - type: textarea
     id: media
     attributes:
-      label: Images / Video 
+      label: Images / Video
       description: |
         Have other projects or games solved this problem? Do you have images or video to show this happening?
       placeholder: |

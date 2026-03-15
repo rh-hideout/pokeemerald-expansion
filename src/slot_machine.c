@@ -650,6 +650,12 @@ static void SpriteCB_ReelTimeDuck(struct Sprite *);
 static void SpriteCB_ReelTimeSmoke(struct Sprite *);
 static void SpriteCB_PikaPowerBolt(struct Sprite *);
 
+static const u8 sText_QuitTheGame[] = _("Quit the game?");
+static const u8 sText_YouveGot9999Coins[] = _("You've got 9,999 COINS.");
+static const u8 sText_YouveRunOutOfCoins[] = _("You've run out of COINS.\nGame over!");
+static const u8 sText_YouDontHaveThreeCoins[] = _("You don't have three COINS.");
+static const u8 sText_ReelTimeHelp[] = _("REEL TIME\nHere's your chance to take\naim and nail marks!\nReel Time continues for the\nawarded number of spins.\nIt all ends on a Big Bonus.");
+
 // Ewram variables
 static EWRAM_DATA u16 *sMenuGfx = NULL;
 static EWRAM_DATA u16 *sSelectedPikaPowerTile = NULL;
@@ -1038,60 +1044,60 @@ static void CB2_SlotMachineSetup(void)
 {
     switch (gMain.state)
     {
-        case 0:
-            SlotMachineSetup_InitBgsWindows();
-            InitSlotMachine();
-            gMain.state++;
-            break;
-        case 1:
-            SlotMachineSetup_InitVRAM();
-            gMain.state++;
-            break;
-        case 2:
-            SlotMachineSetup_InitOAM();
-            SlotMachineSetup_InitGpuRegs();
-            gMain.state++;
-            break;
-        case 3:
-            SlotMachineSetup_InitPalsSpritesTasks();
-            gMain.state++;
-            break;
-        case 4:
-            SlotMachineSetup_InitTilemaps();
-            gMain.state++;
-            break;
-        case 5:
-            SlotMachineSetup_LoadGfxAndTilemaps();
-            gMain.state++;
-            break;
-        case 6:
-            SlotMachineSetup_InitVBlank();
-            gMain.state++;
-            break;
-        case 7:
-            BeginNormalPaletteFade(-1, 0, 0x10, 0, RGB_BLACK);
-            ShowBg(0);
-            ShowBg(1);
-            ShowBg(2);
-            ShowBg(3);
-            gMain.state++;
-            break;
-        case 8:
-            AllocDigitalDisplayGfx();
-            gMain.state++;
-            break;
-        case 9:
-            SetDigitalDisplayImagePtrs();
-            gMain.state++;
-            break;
-        case 10:
-            CreateSlotMachineSprites();
-            CreateGameplayTasks();
-            gMain.state++;
-            break;
-        case 11:
-            SetMainCallback2(CB2_SlotMachine);
-            break;
+    case 0:
+        SlotMachineSetup_InitBgsWindows();
+        InitSlotMachine();
+        gMain.state++;
+        break;
+    case 1:
+        SlotMachineSetup_InitVRAM();
+        gMain.state++;
+        break;
+    case 2:
+        SlotMachineSetup_InitOAM();
+        SlotMachineSetup_InitGpuRegs();
+        gMain.state++;
+        break;
+    case 3:
+        SlotMachineSetup_InitPalsSpritesTasks();
+        gMain.state++;
+        break;
+    case 4:
+        SlotMachineSetup_InitTilemaps();
+        gMain.state++;
+        break;
+    case 5:
+        SlotMachineSetup_LoadGfxAndTilemaps();
+        gMain.state++;
+        break;
+    case 6:
+        SlotMachineSetup_InitVBlank();
+        gMain.state++;
+        break;
+    case 7:
+        BeginNormalPaletteFade(-1, 0, 0x10, 0, RGB_BLACK);
+        ShowBg(0);
+        ShowBg(1);
+        ShowBg(2);
+        ShowBg(3);
+        gMain.state++;
+        break;
+    case 8:
+        AllocDigitalDisplayGfx();
+        gMain.state++;
+        break;
+    case 9:
+        SetDigitalDisplayImagePtrs();
+        gMain.state++;
+        break;
+    case 10:
+        CreateSlotMachineSprites();
+        CreateGameplayTasks();
+        gMain.state++;
+        break;
+    case 11:
+        SetMainCallback2(CB2_SlotMachine);
+        break;
     }
 }
 
@@ -1396,7 +1402,7 @@ static bool8 SlotTask_HandleBetInput(struct Task *task)
 static bool8 SlotTask_PrintMsg_Need3Coins(struct Task *task)
 {
     DrawDialogueFrame(WIN_MSG, FALSE);
-    AddTextPrinterParameterized(WIN_MSG, FONT_NORMAL, gText_YouDontHaveThreeCoins, 0, 1, 0, 0);
+    AddTextPrinterParameterized(WIN_MSG, FONT_NORMAL, sText_YouDontHaveThreeCoins, 0, 1, 0, 0);
     CopyWindowToVram(WIN_MSG, COPYWIN_FULL);
     sSlotMachine->state = SLOTTASK_WAIT_MSG_NEED_3_COINS;
     return FALSE;
@@ -1661,7 +1667,7 @@ static bool8 SlotTask_NoMatches(struct Task *task)
 static bool8 SlotTask_AskQuit(struct Task *task)
 {
     DrawDialogueFrame(WIN_MSG, FALSE);
-    AddTextPrinterParameterized(WIN_MSG, FONT_NORMAL, gText_QuitTheGame, 0, 1, 0, 0);
+    AddTextPrinterParameterized(WIN_MSG, FONT_NORMAL, sText_QuitTheGame, 0, 1, 0, 0);
     CopyWindowToVram(WIN_MSG, COPYWIN_FULL);
     CreateYesNoMenuParameterized(0x15, 7, 0x214, 0x180, 0xE, 0xF);
     sSlotMachine->state = SLOTTASK_HANDLE_QUIT_INPUT;
@@ -1693,7 +1699,7 @@ static bool8 SlotTask_HandleQuitInput(struct Task *task)
 static bool8 SlotTask_PrintMsg_MaxCoins(struct Task *task)
 {
     DrawDialogueFrame(WIN_MSG, FALSE);
-    AddTextPrinterParameterized(WIN_MSG, FONT_NORMAL, gText_YouveGot9999Coins, 0, 1, 0, 0);
+    AddTextPrinterParameterized(WIN_MSG, FONT_NORMAL, sText_YouveGot9999Coins, 0, 1, 0, 0);
     CopyWindowToVram(WIN_MSG, COPYWIN_FULL);
     sSlotMachine->state = SLOTTASK_WAIT_MSG_MAX_COINS;
     return FALSE;
@@ -1714,7 +1720,7 @@ static bool8 SlotTask_WaitMsg_MaxCoins(struct Task *task)
 static bool8 SlotTask_PrintMsg_NoMoreCoins(struct Task *task)
 {
     DrawDialogueFrame(WIN_MSG, FALSE);
-    AddTextPrinterParameterized(WIN_MSG, FONT_NORMAL, gText_YouveRunOutOfCoins, 0, 1, 0, 0);
+    AddTextPrinterParameterized(WIN_MSG, FONT_NORMAL, sText_YouveRunOutOfCoins, 0, 1, 0, 0);
     CopyWindowToVram(WIN_MSG, COPYWIN_FULL);
     sSlotMachine->state = SLOTTASK_WAIT_MSG_NO_MORE_COINS;
     return FALSE;
@@ -3722,7 +3728,7 @@ static void ReelTime_PikachuReact(struct Task *task)
         DestroyReelTimeBoltSprites();
         DestroyReelTimePikachuAuraSprites();
         task->tState++; // RT_TASK_WAIT_CLEAR_POWER
-        if(sSlotMachine->reelTimeDraw == 0)
+        if (sSlotMachine->reelTimeDraw == 0)
         {
             task->tTimer2 = 0xa0;
             StartSpriteAnimIfDifferent(&gSprites[sSlotMachine->reelTimePikachuSpriteId], 5);
@@ -3934,7 +3940,7 @@ static void InfoBox_DrawWindow(struct Task *task)
 
 static void InfoBox_AddText(struct Task *task)
 {
-    AddTextPrinterParameterized3(WIN_INFO, FONT_NORMAL, 2, 5, sColors_ReeltimeHelp, 0, gText_ReelTimeHelp);
+    AddTextPrinterParameterized3(WIN_INFO, FONT_NORMAL, 2, 5, sColors_ReeltimeHelp, 0, sText_ReelTimeHelp);
     CopyWindowToVram(WIN_INFO, COPYWIN_FULL);
     BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
     task->tState++;
@@ -4942,53 +4948,53 @@ static void SpriteCB_DigitalDisplay_AButtonStart(struct Sprite *sprite)
 {
     switch (sprite->sState)
     {
-        case 0:
-            sSlotMachine->winIn = WININ_WIN0_BG_ALL | WININ_WIN0_CLR;
-            sSlotMachine->winOut = WINOUT_WIN01_BG_ALL | WINOUT_WIN01_OBJ | WINOUT_WIN01_CLR;
-            sSlotMachine->win0v = WIN_RANGE(32, 136);
-            sprite->invisible = TRUE;
+    case 0:
+        sSlotMachine->winIn = WININ_WIN0_BG_ALL | WININ_WIN0_CLR;
+        sSlotMachine->winOut = WINOUT_WIN01_BG_ALL | WINOUT_WIN01_OBJ | WINOUT_WIN01_CLR;
+        sSlotMachine->win0v = WIN_RANGE(32, 136);
+        sprite->invisible = TRUE;
+        sprite->sState++;
+        // fallthrough
+    case 1:
+        sprite->sCounter += 2;
+        sprite->data[2] = sprite->sCounter + 176;
+        sprite->data[3] = DISPLAY_WIDTH - sprite->sCounter;
+        if (sprite->data[2] > 208)
+            sprite->data[2] = 208;
+        if (sprite->data[3] < 208)
+            sprite->data[3] = 208;
+        sSlotMachine->win0h = (sprite->data[2] << 8) | sprite->data[3];
+        if (sprite->sCounter > 51)
+        {
             sprite->sState++;
-            // fallthrough
-        case 1:
-            sprite->sCounter += 2;
-            sprite->data[2] = sprite->sCounter + 176;
-            sprite->data[3] = DISPLAY_WIDTH - sprite->sCounter;
-            if (sprite->data[2] > 208)
-                sprite->data[2] = 208;
-            if (sprite->data[3] < 208)
-                sprite->data[3] = 208;
-            sSlotMachine->win0h = (sprite->data[2] << 8) | sprite->data[3];
-            if (sprite->sCounter > 51)
-            {
-                sprite->sState++;
-                sSlotMachine->winIn = WININ_WIN0_BG_ALL | WININ_WIN0_OBJ | WININ_WIN0_CLR;
-            }
+            sSlotMachine->winIn = WININ_WIN0_BG_ALL | WININ_WIN0_OBJ | WININ_WIN0_CLR;
+        }
+        break;
+    case 2:
+        if (sSlotMachine->bet == 0)
             break;
-        case 2:
-            if (sSlotMachine->bet == 0)
-                break;
-            AddDigitalDisplaySprite(DIG_SPRITE_A_BUTTON, SpriteCallbackDummy, 208, 116, 0);
-            sSlotMachine->win0h = WIN_RANGE(192, 224);
-            sSlotMachine->win0v = WIN_RANGE(104, 128);
-            sSlotMachine->winIn = WININ_WIN0_BG_ALL | WININ_WIN0_CLR;
+        AddDigitalDisplaySprite(DIG_SPRITE_A_BUTTON, SpriteCallbackDummy, 208, 116, 0);
+        sSlotMachine->win0h = WIN_RANGE(192, 224);
+        sSlotMachine->win0v = WIN_RANGE(104, 128);
+        sSlotMachine->winIn = WININ_WIN0_BG_ALL | WININ_WIN0_CLR;
+        sprite->sState++;
+        sprite->sCounter = 0;
+        // fallthrough
+    case 3:
+        sprite->sCounter += 2;
+        sprite->data[2] = sprite->sCounter + 192;
+        sprite->data[3] = DISPLAY_WIDTH - 16 - sprite->sCounter;
+        if (sprite->data[2] > 208)
+            sprite->data[2] = 208;
+        if (sprite->data[3] < 208)
+            sprite->data[3] = 208;
+        sSlotMachine->win0h = (sprite->data[2] << 8) | sprite->data[3];
+        if (sprite->sCounter > 15)
+        {
             sprite->sState++;
-            sprite->sCounter = 0;
-            // fallthrough
-        case 3:
-            sprite->sCounter += 2;
-            sprite->data[2] = sprite->sCounter + 192;
-            sprite->data[3] = DISPLAY_WIDTH - 16 - sprite->sCounter;
-            if (sprite->data[2] > 208)
-                sprite->data[2] = 208;
-            if (sprite->data[3] < 208)
-                sprite->data[3] = 208;
-            sSlotMachine->win0h = (sprite->data[2] << 8) | sprite->data[3];
-            if (sprite->sCounter > 15)
-            {
-                sprite->sState++;
-                sSlotMachine->winIn = WININ_WIN0_BG_ALL | WININ_WIN0_OBJ | WININ_WIN0_CLR;
-            }
-            break;
+            sSlotMachine->winIn = WININ_WIN0_BG_ALL | WININ_WIN0_OBJ | WININ_WIN0_CLR;
+        }
+        break;
     }
 }
 

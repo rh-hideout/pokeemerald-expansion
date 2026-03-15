@@ -40,6 +40,7 @@
 #define AI_FLAG_ATTACKS_PARTNER             AI_FLAG(30)  // AI specific to double battles; AI can deliberately attack its 'partner.'
 #define AI_FLAG_KNOW_OPPONENT_PARTY         AI_FLAG(31)  // AI knows all the species in the player's party, but not moves/items/abilities unless they've been seen.
 #define AI_FLAG_RANDOMIZE_SWITCHIN          AI_FLAG(32)  // AI will randomly choose between eligible switchin candidates of a given category instead of picking the last one in the party.
+#define AI_FLAG_RANDOMIZE_PARTY_INDICES     AI_FLAG(33)  // AI will randomize the order of the mons in its party, including the lead. Not an AI flag really, just a way to trigger TPP functionality
 
 // The following options are enough to have a basic/smart trainer. Any other addtion could make the trainer worse/better depending on the flag
 #define AI_FLAG_BASIC_TRAINER         (AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY)

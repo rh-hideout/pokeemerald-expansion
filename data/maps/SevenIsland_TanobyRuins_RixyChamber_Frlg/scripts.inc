@@ -1,4 +1,4 @@
-SevenIsland_TanobyRuins_RixyChamber_MapScripts::
+SevenIsland_TanobyRuins_RixyChamber_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, SevenIsland_TanobyRuins_RixyChamber_OnTransition
 	.byte 0
 

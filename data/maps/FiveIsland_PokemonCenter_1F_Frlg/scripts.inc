@@ -1,4 +1,4 @@
-FiveIsland_PokemonCenter_1F_MapScripts::
+FiveIsland_PokemonCenter_1F_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, FiveIsland_PokemonCenter_1F_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, CableClub_OnResume
 	.byte 0
@@ -10,7 +10,7 @@ FiveIsland_PokemonCenter_1F_OnTransition::
 FiveIsland_PokemonCenter_1F_EventScript_Nurse::
 	lock
 	faceplayer
-	call Common_EventScript_PkmnCenterNurse
+	call EventScript_PkmnCenterNurse_Frlg
 	release
 	end
 
@@ -23,12 +23,12 @@ FiveIsland_PokemonCenter_1F_EventScript_CooltrainerF::
 	end
 
 FiveIsland_PokemonCenter_1F_Text_OnMyWayToPrepareMeal::
-    .string "I'm on my way to prepare a meal\n"
-    .string "for a certain high-society person.$"
+	.string "I'm on my way to prepare a meal\n"
+	.string "for a certain high-society person.$"
 
 FiveIsland_PokemonCenter_1F_Text_YoureOnQuestToCatchEveryMon::
-    .string "You're on a quest to catch every\n"
-    .string "single kind of POKéMON?\p"
-    .string "…How incredible. Please tell me if\n"
-    .string "you catch a strong one!$"
+	.string "You're on a quest to catch every\n"
+	.string "single kind of POKéMON?\p"
+	.string "…How incredible. Please tell me if\n"
+	.string "you catch a strong one!$"
 

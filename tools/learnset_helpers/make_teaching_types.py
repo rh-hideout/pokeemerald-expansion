@@ -100,15 +100,15 @@ def main():
     teaching_types_list = extract_repo_species_data()
     teaching_types_list = add_whitesspaces(teaching_types_list)
     new_teaching_types = json.dumps(teaching_types_list, indent=2)
+    old_teaching_types = ""
     if OUTPUT_FILE.exists() and OUTPUT_FILE.is_file():
         with open(OUTPUT_FILE, "r") as fp:
             old_teaching_types = fp.read()
-    else:
-        dump_output(OUTPUT_FILE, new_teaching_types)
-        return
+
+    dump_output(OUTPUT_FILE, new_teaching_types)
 
     if new_teaching_types != old_teaching_types:
-         dump_output(OUTPUT_FILE, new_teaching_types)
+        pathlib.Path("./tools/learnset_helpers/make_teachables.py").touch()
 
 
 if __name__ == "__main__":

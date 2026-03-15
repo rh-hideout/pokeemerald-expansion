@@ -9,27 +9,6 @@
 #include "constants/item_effects.h"
 #include "constants/hold_effects.h"
 
-/* Expands to:
- * enum
- * {
- *   ITEM_TM_FOCUS_PUNCH = ITEM_TM01,
- *   ...
- *   ITEM_HM_CUT = ITM_HM01,
- *   ...
- * }; */
-#define ENUM_TM(n, id) CAT(ITEM_TM_, id) = CAT(ITEM_TM, n),
-#define ENUM_HM(n, id) CAT(ITEM_HM_, id) = CAT(ITEM_HM, n),
-#define TO_TMHM_NUMS(a, ...) (__VA_ARGS__)
-enum TMHMItemId
-{
-    RECURSIVELY(R_ZIP(ENUM_TM, TO_TMHM_NUMS NUMBERS_256, (FOREACH_TM(APPEND_COMMA))))
-    RECURSIVELY(R_ZIP(ENUM_HM, TO_TMHM_NUMS NUMBERS_256, (FOREACH_HM(APPEND_COMMA))))
-};
-
-#undef ENUM_TM
-#undef ENUM_HM
-#undef TO_TMHM_NUMS
-
 /* Each of these TM_HM enums corresponds an index in the list of TMs + HMs item ids in
  * gTMHMItemMoveIds. The index for an item can be retrieved with GetItemTMHMIndex below.
  */
@@ -41,7 +20,6 @@ enum TMHMIndex
     NUM_TECHNICAL_MACHINES = (0 FOREACH_TM(PLUS_ONE)),
     NUM_HIDDEN_MACHINES = (0 FOREACH_HM(PLUS_ONE)),
 };
-
 #undef UNPACK_TM_HM_ENUM
 
 enum PACKED ItemSortType
@@ -86,7 +64,7 @@ enum PACKED ItemSortType
 
 typedef void (*ItemUseFunc)(u8);
 
-struct Item
+struct ItemInfo
 {
     u32 price;
     u16 secondaryId;
@@ -117,12 +95,12 @@ struct ALIGNED(2) BagPocket
 
 struct TmHmIndexKey
 {
-    enum TMHMItemId itemId:16;
-    u16 moveId;
+    enum Item itemId;
+    enum Move moveId;
 };
 
 extern const u8 gQuestionMarksItemName[];
-extern const struct Item gItemsInfo[];
+extern const struct ItemInfo gItemsInfo[];
 extern struct BagPocket gBagPockets[];
 extern const struct TmHmIndexKey gTMHMItemMoveIds[];
 
@@ -133,54 +111,54 @@ extern const struct TmHmIndexKey gTMHMItemMoveIds[];
 #define UNPACK_TM_MOVE_TO_ITEM_ID(_move) case CAT(MOVE_, _move): return CAT(ITEM_TM_, _move);
 #define UNPACK_HM_MOVE_TO_ITEM_ID(_move) case CAT(MOVE_, _move): return CAT(ITEM_HM_, _move);
 
-static inline enum TMHMIndex GetItemTMHMIndex(u16 item)
+static inline enum TMHMIndex GetItemTMHMIndex(enum Item item)
 {
     switch (item)
     {
-        /* Expands to:
-         * case ITEM_TM_FOCUS_PUNCH:
-         *     return 1;
-         * case ITEM_TM_DRAGON_CLAW:
-         *      return 2;
-         * etc */
-        FOREACH_TM(UNPACK_ITEM_TO_TM_INDEX)
-        FOREACH_HM(UNPACK_ITEM_TO_HM_INDEX)
-        default:
-            return 0;
+    /* Expands to:
+        * case ITEM_TM_FOCUS_PUNCH:
+        *     return 1;
+        * case ITEM_TM_DRAGON_CLAW:
+        *      return 2;
+        * etc */
+    FOREACH_TM(UNPACK_ITEM_TO_TM_INDEX)
+    FOREACH_HM(UNPACK_ITEM_TO_HM_INDEX)
+    default:
+        return 0;
     }
 }
 
-static inline u16 GetItemTMHMMoveId(u16 item)
+static inline enum Move GetItemTMHMMoveId(enum Item item)
 {
     switch (item)
     {
-        /* Expands to:
-         * case ITEM_TM_FOCUS_PUNCH:
-         *     return MOVE_FOCUS_PUNCH;
-         * case ITEM_TM_DRAGON_CLAW:
-         *      return MOVE_DRAGON_CLAW;
-         * etc */
-        FOREACH_TM(UNPACK_ITEM_TO_TM_MOVE_ID)
-        FOREACH_HM(UNPACK_ITEM_TO_HM_MOVE_ID)
-        default:
-            return MOVE_NONE;
+    /* Expands to:
+        * case ITEM_TM_FOCUS_PUNCH:
+        *     return MOVE_FOCUS_PUNCH;
+        * case ITEM_TM_DRAGON_CLAW:
+        *      return MOVE_DRAGON_CLAW;
+        * etc */
+    FOREACH_TM(UNPACK_ITEM_TO_TM_MOVE_ID)
+    FOREACH_HM(UNPACK_ITEM_TO_HM_MOVE_ID)
+    default:
+        return MOVE_NONE;
     }
 }
 
-static inline enum TMHMItemId GetTMHMItemIdFromMoveId(u16 move)
+static inline enum Item GetTMHMItemIdFromMoveId(enum Move move)
 {
     switch (move)
     {
-        /* Expands to:
-         * case MOVE_FOCUS_PUNCH:
-         *     return ITEM_TM_FOCUS_PUNCH;
-         * case MOVE_DRAGON_CLAW:
-         *      return ITEM_TM_DRAGON_CLAW;
-         * etc */
-        FOREACH_TM(UNPACK_TM_MOVE_TO_ITEM_ID)
-        FOREACH_HM(UNPACK_HM_MOVE_TO_ITEM_ID)
-        default:
-            return ITEM_NONE;
+    /* Expands to:
+        * case MOVE_FOCUS_PUNCH:
+        *     return ITEM_TM_FOCUS_PUNCH;
+        * case MOVE_DRAGON_CLAW:
+        *      return ITEM_TM_DRAGON_CLAW;
+        * etc */
+    FOREACH_TM(UNPACK_TM_MOVE_TO_ITEM_ID)
+    FOREACH_HM(UNPACK_HM_MOVE_TO_ITEM_ID)
+    default:
+        return ITEM_NONE;
     }
 }
 
@@ -191,7 +169,7 @@ static inline enum TMHMItemId GetTMHMItemIdFromMoveId(u16 move)
 #undef UNPACK_TM_MOVE_TO_ITEM_ID
 #undef UNPACK_HM_MOVE_TO_ITEM_ID
 
-static inline enum TMHMItemId GetTMHMItemId(enum TMHMIndex index)
+static inline enum Item GetTMHMItemId(enum TMHMIndex index)
 {
     return gTMHMItemMoveIds[index].itemId;
 }
@@ -204,7 +182,7 @@ static inline u16 GetTMHMMoveId(enum TMHMIndex index)
 void BagPocket_SetSlotData(struct BagPocket *pocket, u32 pocketPos, struct ItemSlot newSlot);
 struct ItemSlot BagPocket_GetSlotData(struct BagPocket *pocket, u32 pocketPos);
 
-static inline void BagPocket_SetSlotItemIdAndCount(struct BagPocket *pocket, u32 pocketPos, u16 itemId, u16 quantity)
+static inline void BagPocket_SetSlotItemIdAndCount(struct BagPocket *pocket, u32 pocketPos, enum Item itemId, u16 quantity)
 {
     BagPocket_SetSlotData(pocket, pocketPos, (struct ItemSlot) {itemId, quantity});
 }
@@ -226,20 +204,20 @@ static inline struct ItemSlot GetBagItemIdAndQuantity(enum Pocket pocketId, u32 
 
 void ApplyNewEncryptionKeyToBagItems(u32 newKey);
 void SetBagItemsPointers(void);
-u8 *CopyItemName(u16 itemId, u8 *dst);
-u8 *CopyItemNameHandlePlural(u16 itemId, u8 *dst, u32 quantity);
+u8 *CopyItemName(enum Item itemId, u8 *dst);
+u8 *CopyItemNameHandlePlural(enum Item itemId, u8 *dst, u32 quantity);
 bool32 IsBagPocketNonEmpty(enum Pocket pocketId);
-bool32 CheckBagHasItem(u16 itemId, u16 count);
+bool32 CheckBagHasItem(enum Item itemId, u16 count);
 bool32 HasAtLeastOneBerry(void);
 bool32 HasAtLeastOnePokeBall(void);
-bool32 CheckBagHasSpace(u16 itemId, u16 count);
-u32 GetFreeSpaceForItemInBag(u16 itemId);
-bool32 AddBagItem(u16 itemId, u16 count);
-bool32 RemoveBagItem(u16 itemId, u16 count);
+bool32 CheckBagHasSpace(enum Item itemId, u16 count);
+u32 GetFreeSpaceForItemInBag(enum Item itemId);
+bool32 AddBagItem(enum Item itemId, u16 count);
+bool32 RemoveBagItem(enum Item itemId, u16 count);
 void RemoveBagItemFromSlot(struct BagPocket *pocket, u16 slotId, u16 count);
 u8 CountUsedPCItemSlots(void);
-bool32 CheckPCHasItem(u16 itemId, u16 count);
-bool32 AddPCItem(u16 itemId, u16 count);
+bool32 CheckPCHasItem(enum Item itemId, u16 count);
+bool32 AddPCItem(enum Item itemId, u16 count);
 void RemovePCItem(u8 index, u16 count);
 void CompactPCItems(void);
 void SwapRegisteredBike(void);
@@ -247,26 +225,26 @@ void CompactItemsInBagPocket(enum Pocket pocketId);
 void MoveItemSlotInPocket(enum Pocket pocketId, u32 from, u32 to);
 void MoveItemSlotInPC(struct ItemSlot *itemSlots, u32 from, u32 to);
 void ClearBag(void);
-u16 CountTotalItemQuantityInBag(u16 itemId);
-bool32 AddPyramidBagItem(u16 itemId, u16 count);
-bool32 RemovePyramidBagItem(u16 itemId, u16 count);
-const u8 *GetItemName(u16 itemId);
-u32 GetItemPrice(u16 itemId);
-const u8 *GetItemEffect(u32 itemId);
-enum HoldEffect GetItemHoldEffect(u32 itemId);
-u32 GetItemHoldEffectParam(u32 itemId);
-const u8 *GetItemDescription(u16 itemId);
-u8 GetItemImportance(u16 itemId);
-u8 GetItemConsumability(u16 itemId);
-enum Pocket GetItemPocket(u16 itemId);
-u8 GetItemType(u16 itemId);
-ItemUseFunc GetItemFieldFunc(u16 itemId);
-u8 GetItemBattleUsage(u16 itemId);
-u32 GetItemSecondaryId(u32 itemId);
-u32 GetItemFlingPower(u32 itemId);
-u32 GetItemStatus1Mask(u16 itemId);
-bool32 ItemHasVolatileFlag(u16 itemId, enum Volatile volatile);
-u32 GetItemSellPrice(u32 itemId);
+u16 CountTotalItemQuantityInBag(enum Item itemId);
+bool32 AddPyramidBagItem(enum Item itemId, u16 count);
+bool32 RemovePyramidBagItem(enum Item itemId, u16 count);
+const u8 *GetItemName(enum Item itemId);
+u32 GetItemPrice(enum Item itemId);
+const u8 *GetItemEffect(enum Item itemId);
+enum HoldEffect GetItemHoldEffect(enum Item itemId);
+u32 GetItemHoldEffectParam(enum Item itemId);
+const u8 *GetItemDescription(enum Item itemId);
+u8 GetItemImportance(enum Item itemId);
+u8 GetItemConsumability(enum Item itemId);
+enum Pocket GetItemPocket(enum Item itemId);
+enum ItemType GetItemType(enum Item itemId);
+ItemUseFunc GetItemFieldFunc(enum Item itemId);
+enum EffectItem GetItemBattleUsage(enum Item itemId);
+u32 GetItemSecondaryId(enum Item itemId);
+u32 GetItemFlingPower(enum Item itemId);
+u32 GetItemStatus1Mask(enum Item itemId);
+bool32 ItemHasVolatileFlag(enum Item itemId, enum Volatile volatile);
+u32 GetItemSellPrice(enum Item itemId);
 bool32 IsHoldEffectChoice(enum HoldEffect holdEffect);
 
 #endif // GUARD_ITEM_H

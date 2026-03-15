@@ -268,7 +268,7 @@ SINGLE_BATTLE_TEST("Using X items in battle raises Friendship", s16 damage)
     PARAMETRIZE { startingFriendship = 0; }
     PARAMETRIZE { startingFriendship = X_ITEM_MAX_FRIENDSHIP; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Friendship(startingFriendship); };
+        PLAYER(SPECIES_WOBBUFFET) { Friendship(startingFriendship); }
         // Set met location to currentMapSec + 1 to avoid getting the friendship boost
         // from being met in the current map section
         SetMonData(&PLAYER_PARTY[0], MON_DATA_MET_LOCATION, &metLocation);
@@ -291,7 +291,7 @@ SINGLE_BATTLE_TEST("Using X items in battle where Pokemon was met raises Friends
     PARAMETRIZE { startingFriendship = 0; }
     PARAMETRIZE { startingFriendship = X_ITEM_MAX_FRIENDSHIP; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Friendship(startingFriendship); };
+        PLAYER(SPECIES_WOBBUFFET) { Friendship(startingFriendship); }
         // Set met location to currentMapSec to get the friendship boost
         SetMonData(&PLAYER_PARTY[0], MON_DATA_MET_LOCATION, &metLocation);
         OPPONENT(SPECIES_WOBBUFFET);

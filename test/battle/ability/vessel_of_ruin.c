@@ -34,7 +34,7 @@ SINGLE_BATTLE_TEST("Vessel of Ruin's message displays correctly after all battle
 {
     GIVEN {
         ASSUME(IsExplosionMove(MOVE_EXPLOSION));
-        PLAYER(SPECIES_WOBBUFFET) { HP(1);}
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         PLAYER(SPECIES_TING_LU);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -58,7 +58,7 @@ SINGLE_BATTLE_TEST("Vessel of Ruin's message displays correctly after all battle
         ASSUME(IsExplosionMove(MOVE_EXPLOSION));
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1);}
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_TING_LU);
     } WHEN {
         TURN { MOVE(player, MOVE_EXPLOSION); SEND_OUT(player, 1); SEND_OUT(opponent, 1); }

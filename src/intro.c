@@ -24,6 +24,8 @@
 #include "util.h"
 #include "title_screen.h"
 #include "expansion_intro.h"
+#include "battle_anim.h"
+#include "intro_frlg.h"
 #include "constants/rgb.h"
 #include "constants/battle_anim.h"
 
@@ -108,8 +110,7 @@ static void SpriteCB_RayquazaOrb(struct Sprite *sprite);
 
 static void MainCB2_EndIntro(void);
 
-extern const struct CompressedSpriteSheet gBattleAnimPicTable[];
-extern const struct SpritePalette gBattleAnimPaletteTable[];
+extern const struct BattleAnimation gBattleAnimTable[ANIM_TAG_COUNT];
 extern const struct SpriteTemplate gAncientPowerRockSpriteTemplate;
 
 enum {
@@ -175,7 +176,7 @@ enum {
 #define TIMER_POKEBALL_FADE              28
 #define TIMER_START_LEGENDARIES          43
 
-static EWRAM_DATA u16 sIntroCharacterGender = 0;
+static EWRAM_DATA enum Gender sIntroCharacterGender = 0;
 static EWRAM_DATA u16 sFlygonYOffset = 0;
 
 COMMON_DATA u32 gIntroFrameCounter = 0;
@@ -1049,6 +1050,9 @@ static void SerialCB_CopyrightScreen(void)
 
 static u8 SetUpCopyrightScreen(void)
 {
+    if (IS_FRLG)
+        return SetUpCopyrightScreenFrlg();
+
     switch (gMain.state)
     {
     case COPYRIGHT_INITIALIZE:
@@ -1767,8 +1771,8 @@ static void Task_Scene3_LoadGroudon(u8 taskId)
         DecompressDataWithHeaderVram(gIntroGroudon_Tilemap, (void *)(BG_CHAR_ADDR(3)));
         DecompressDataWithHeaderVram(gIntroLegendBg_Gfx, (void *)(BG_CHAR_ADDR(1)));
         DecompressDataWithHeaderVram(gIntroGroudonBg_Tilemap, (void *)(BG_SCREEN_ADDR(28)));
-        LoadCompressedSpriteSheetUsingHeap(&gBattleAnimPicTable[GET_TRUE_SPRITE_INDEX(ANIM_TAG_ROCKS)]);
-        LoadSpritePalette(&gBattleAnimPaletteTable[GET_TRUE_SPRITE_INDEX(ANIM_TAG_ROCKS)]);
+        LoadCompressedSpriteSheetUsingHeap(&gBattleAnimTable[GET_TRUE_SPRITE_INDEX(ANIM_TAG_ROCKS)].pic);
+        LoadSpritePalette(&gBattleAnimTable[GET_TRUE_SPRITE_INDEX(ANIM_TAG_ROCKS)].palette);
         CpuCopy16(gIntro3Bg_Pal, gPlttBufferUnfaded, sizeof(gIntro3Bg_Pal));
         gTasks[taskId].func = Task_Scene3_InitGroudonBg;
     }
@@ -1999,7 +2003,7 @@ static void SpriteCB_GroudonRocks(struct Sprite *sprite)
     if (sprite->sTimer % 2 == 0)
         sprite->y2 ^= 3;
 
-    switch(sprite->sState)
+    switch (sprite->sState)
     {
     case 0:
         // Rock floats up
@@ -2264,7 +2268,7 @@ static void CreateKyogreBubbleSprites_Fins(void)
 
 static void SpriteCB_KyogreBubbles(struct Sprite *sprite)
 {
-    switch(sprite->sState)
+    switch (sprite->sState)
     {
     case 0:
         if (sprite->sDelay == 0)
@@ -2482,7 +2486,7 @@ static void SpriteCB_Lightning(struct Sprite *sprite)
     if (sprite->animEnded)
         sprite->invisible = TRUE;
 
-    switch(sprite->sState)
+    switch (sprite->sState)
     {
     case 0:
         sprite->sPalIdx = 0x1C2;
@@ -2545,7 +2549,7 @@ static void Task_Scene3_Rayquaza(u8 taskId)
 
     tTimer++;
 
-    switch(tState)
+    switch (tState)
     {
     case 0:
         if ((tTimer & 1) != 0)
@@ -2597,7 +2601,7 @@ static void Task_RayquazaAttack(u8 taskId)
     s16 *data = gTasks[taskId].data;
     data[2]++;
 
-    switch(tState)
+    switch (tState)
     {
     case 0:
         if ((data[2] & 1) != 0)
@@ -3260,7 +3264,7 @@ static void SpriteCB_LogoLetter(struct Sprite *sprite)
 
 static void SpriteCB_GameFreakLogo(struct Sprite *sprite)
 {
-    switch(sprite->sState)
+    switch (sprite->sState)
     {
     case 0:
         if (gIntroFrameCounter == TIMER_LOGO_APPEAR)
