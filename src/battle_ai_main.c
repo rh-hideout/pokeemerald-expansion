@@ -519,12 +519,7 @@ void Ai_InitPartyStruct(void)
     struct Pokemon *mon;
 
     for (enum BattleTrainer trainer = B_TRAINER_0; trainer < MAX_BATTLE_TRAINERS; trainer++)
-    {
-        if (TrainerHasParty(trainer))
-            gAiPartyData->count[trainer] = CalculatePartyCount(trainer);
-        else
-            gAiPartyData->count[trainer] = 0;
-    }
+        gAiPartyData->count[trainer] = TrainerHasParty(trainer) ? CalculatePartyCount(trainer) : 0;
 
     // Save first 2 or 4(in doubles) mons
     CopyBattlerDataToAIParty(B_POSITION_PLAYER_LEFT, GetTrainerFromBattlePosition(B_POSITION_PLAYER_LEFT));
