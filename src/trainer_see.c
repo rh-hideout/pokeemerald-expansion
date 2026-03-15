@@ -520,7 +520,7 @@ static u8 CheckTrainer(u8 objectEventId)
     if (approachDistance == 0)
         return 0;
 
-    if (InTrainerHill() == TRUE)
+    if (InTrainerHill())
     {
         trainerBattlePtr = GetTrainerHillTrainerScript();
     }
@@ -546,7 +546,7 @@ static u8 CheckTrainer(u8 objectEventId)
         if (GetBattlePyramidTrainerFlag(objectEventId))
             return 0;
     }
-    else if (InTrainerHill() == TRUE)
+    else if (InTrainerHill())
     {
         if (GetHillTrainerFlag(objectEventId))
             return 0;
@@ -572,7 +572,7 @@ static u8 CheckTrainer(u8 objectEventId)
         numTrainers = 0xFF;
     }
 
-    if (trainerBattlePtr)
+    if (trainerBattlePtr && !InTrainerHillChallenge())
     {
         TrainerBattleParameter *temp = (TrainerBattleParameter *)(trainerBattlePtr + 1);
         if (temp->params.isDoubleBattle)

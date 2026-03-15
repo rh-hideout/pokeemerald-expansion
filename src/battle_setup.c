@@ -1154,9 +1154,9 @@ static void BattleSetup_ConfigureFacilityTrainerBattle(TrainerBattleParameter *b
 {
     SetMapVarsToTrainerA();
 
-    PUSH       (EventSnippet_Lock)
-    PUSH_IF_SET(EventSnippet_FacePlayer, battleParams->params.facePlayer)
-    PUSH       (EventSnippet_RevealTrainer)
+    PUSH(EventSnippet_Lock)
+    PUSH(EventSnippet_FacePlayer)
+    PUSH(EventSnippet_RevealTrainer)
 
     if (GetTrainerFlag()) {
         PUSH(EventSnippet_GotoPostBattleScript)
@@ -1268,25 +1268,38 @@ void ConfigureApproachingTrainerBattle(struct ApproachingTrainer *approachingTra
 
 static bool8 SetFacilityOpponent(u8 facility, u8 localId, bool8 isTrainerA)
 {
-    switch (facility)
-    {
-    case FACILITY_BATTLE_PYRAMID:
-        if (isTrainerA)
-            TRAINER_BATTLE_PARAM.opponentA = LocalIdToPyramidTrainerId(localId);
-        else
-            TRAINER_BATTLE_PARAM.opponentB = LocalIdToPyramidTrainerId(localId);
-
+    if (isTrainerA) {
+        switch (facility){
+            case FACILITY_BATTLE_PYRAMID:
+                TRAINER_BATTLE_PARAM.opponentA = LocalIdToPyramidTrainerId(localId);
+                break;
+            case FACILITY_BATTLE_TRAINER_HILL:
+                TRAINER_BATTLE_PARAM.opponentA = LocalIdToHillTrainerId(localId);
+                break;
+            
+            default:
+                return FALSE;   
+        }
+        
+        TRAINER_BATTLE_PARAM.objEventLocalIdA = localId;
         return TRUE;
-    case FACILITY_BATTLE_TRAINER_HILL:
-        if (isTrainerA)
-            TRAINER_BATTLE_PARAM.opponentA = LocalIdToHillTrainerId(localId);
-        else
-            TRAINER_BATTLE_PARAM.opponentB = LocalIdToHillTrainerId(localId);
-
+    } else {
+        switch (facility){
+            case FACILITY_BATTLE_PYRAMID:
+                TRAINER_BATTLE_PARAM.opponentB = LocalIdToPyramidTrainerId(localId);
+                break;
+            case FACILITY_BATTLE_TRAINER_HILL:
+                TRAINER_BATTLE_PARAM.opponentB = LocalIdToHillTrainerId(localId);
+                break;
+            
+            default:
+                return FALSE;   
+        }
+        
+        TRAINER_BATTLE_PARAM.objEventLocalIdB = localId;
         return TRUE;
-    default:
-        return FALSE;
     }
+   
 }
 
 void ConfigureFacilityTrainerBattle(u8 facility, const u8* scriptEndPtr)
@@ -1323,7 +1336,7 @@ void ConfigureApproachingFacilityTrainerBattle(struct ApproachingTrainer *approa
     
     if (gNoOfApproachingTrainers > 1)
     {
-        gApproachingTrainerId++; // TODO might not be needed here. 
+        gApproachingTrainerId++;
         facility = *(approachingTrainer[1].trainerScriptPtr + FACILITYBATTLE_OPCODE_OFFSET);
         localId = gObjectEvents[approachingTrainer[1].objectEventId].localId;
         scriptEndPtr = approachingTrainer[1].trainerScriptPtr + FACILITYBATTLE_OPCODE_OFFSET + 1; 
@@ -1646,7 +1659,7 @@ void ShowTrainerIntroSpeech(void)
     {
         if (gNoOfApproachingTrainers == 0 || gNoOfApproachingTrainers == 1)
             CopyTrainerHillTrainerText(TRAINER_HILL_TEXT_INTRO, LocalIdToHillTrainerId(gSpecialVar_LastTalked));
-        else
+        else 
             CopyTrainerHillTrainerText(TRAINER_HILL_TEXT_INTRO, LocalIdToHillTrainerId(gObjectEvents[gApproachingTrainers[gApproachingTrainerId].objectEventId].localId));
 
         ShowFieldMessageFromBuffer();
