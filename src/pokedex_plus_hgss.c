@@ -213,9 +213,7 @@ static void CreateInterfaceSprites(u8);
 static void Task_ReloadAreaScreen(u8 taskId);
 static void Task_WaitForAreaScreenInput(u8 taskId);
 static void Task_SwitchScreensFromAreaScreen(u8);
-static void Task_HandleCryScreenInput(u8);
 static void Task_SwitchScreensFromCryScreen(u8);
-static void LoadPlayArrowPalette(bool8);
 static void LoadScreenSelectBarMain(u16);
 static void Task_HandleCaughtMonPageInput(u8);
 static void Task_ExitCaughtMonPage(u8);
@@ -4710,62 +4708,6 @@ bool32 TryLoadCryScreen_HGSS(u8 taskId)
     return TRUE;
 }
 
-static void Task_HandleCryScreenInput(u8 taskId)
-{
-    UpdateCryWaveformWindow(2);
-
-    if (IsCryPlaying())
-        LoadPlayArrowPalette(TRUE);
-    else
-        LoadPlayArrowPalette(FALSE);
-
-    if (JOY_NEW(A_BUTTON))
-    {
-        LoadPlayArrowPalette(TRUE);
-        CryScreenPlayButton(NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum));
-        return;
-    }
-    else if (!gPaletteFade.active)
-    {
-        if (JOY_NEW(B_BUTTON))
-        {
-            BeginNormalPaletteFade(PALETTES_ALL & ~(0x14), 0, 0, 0x10, RGB_BLACK);
-            m4aMPlayContinue(&gMPlayInfo_BGM);
-            sPokedexView->screenSwitchState = 1;
-            gTasks[taskId].func = Task_SwitchScreensFromCryScreen;
-            PlaySE(SE_PC_OFF);
-            return;
-        }
-        if (JOY_NEW(DPAD_LEFT)
-         || (JOY_NEW(L_BUTTON) && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_LR))
-        {
-            BeginNormalPaletteFade(PALETTES_ALL & ~(0x14), 0, 0, 0x10, RGB_BLACK);
-            m4aMPlayContinue(&gMPlayInfo_BGM);
-            sPokedexView->screenSwitchState = 2;
-            gTasks[taskId].func = Task_SwitchScreensFromCryScreen;
-            PlaySE(SE_DEX_PAGE);
-            return;
-        }
-        if (JOY_NEW(DPAD_RIGHT)
-         || (JOY_NEW(R_BUTTON) && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_LR))
-        {
-            if (!sPokedexListItem->owned)
-            {
-                PlaySE(SE_FAILURE);
-            }
-            else
-            {
-                BeginNormalPaletteFade(PALETTES_ALL & ~(0x14), 0, 0, 0x10, RGB_BLACK);
-                m4aMPlayContinue(&gMPlayInfo_BGM);
-                sPokedexView->screenSwitchState = 3;
-                gTasks[taskId].func = Task_SwitchScreensFromCryScreen;
-                PlaySE(SE_DEX_PAGE);
-            }
-            return;
-        }
-    }
-}
-
 static void Task_SwitchScreensFromCryScreen(u8 taskId)
 {
     if (!gPaletteFade.active)
@@ -4893,17 +4835,6 @@ bool32 TryLoadSizeScreen_HGSS(u8 taskId)
     }
 
     return TRUE;
-}
-
-static void LoadPlayArrowPalette(bool8 cryPlaying)
-{
-    u16 color;
-
-    if (cryPlaying)
-        color = RGB(18, 28, 0);
-    else
-        color = RGB(15, 21, 0);
-    LoadPalette(&color, BG_PLTT_ID(5) + 13, PLTT_SIZEOF(1));
 }
 
 #undef tScrolling
