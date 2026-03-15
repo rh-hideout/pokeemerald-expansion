@@ -2426,6 +2426,9 @@ u32 GetBoxMonData3(struct BoxPokemon *boxMon, s32 field, u8 *data)
                 }.combinedValue;
             }
             break;
+        case MON_DATA_ASSIGNED_RIBBON:
+            retVal = GetSubstruct0(boxMon)->assignedRibbon;
+            break;
         default:
             break;
         }
@@ -2858,6 +2861,9 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
             substruct1->evolutionTracker2 = evoTracker.tracker2;
             break;
         }
+        case MON_DATA_ASSIGNED_RIBBON:
+            SET8(GetSubstruct0(boxMon)->assignedRibbon);
+            break;
         default:
             break;
         }
