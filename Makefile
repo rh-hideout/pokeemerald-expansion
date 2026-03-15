@@ -567,7 +567,7 @@ $(DATA_SRC_SUBDIR)/tutor_moves.h: $(DATA_SRC_SUBDIR)/pokemon/special_movesets.js
 	python3 $(LEARNSET_HELPERS_DIR)/make_teachables.py  --tutors $(LEARNSET_HELPERS_BUILD_DIR)
 
 $(DATA_SRC_SUBDIR)/species.json: $(wildcard $(DATA_SRC_SUBDIR)/pokemon/species_info/*_families.h) tools/speciesproc/species.c tools/speciesproc/parse_preprocessed.py
-	gcc -I src/data -I include -std=gnu17 -C -E tools/speciesproc/species.c | python3 tools/speciesproc/parse_preprocessed.py $@
+	$(CPP) $(CPPFLAGS) -iquote src/data tools/speciesproc/species.c | python3 tools/speciesproc/parse_preprocessed.py $@
 
 # Linker script
 LD_SCRIPT := ld_script_modern.ld
