@@ -2366,12 +2366,8 @@ static void InitPartyMenuWindows(u8 layout)
 {
     switch (layout)
     {
-    case PARTY_LAYOUT_SINGLE:
-    case PARTY_LAYOUT_MULTI_FULL:
-    case PARTY_LAYOUT_MULTI_FULL_PARTNER:
-    case PARTY_LAYOUT_MULTI_FULL_SHOWCASE:
-    case PARTY_LAYOUT_MULTI_FULL_SHOWCASE_PARTNER:
-        InitWindows(sSinglePartyMenuWindowTemplate);
+    case PARTY_LAYOUT_MULTI_SHOWCASE:
+        InitWindows(sShowcaseMultiPartyMenuWindowTemplate);
         break;
     case PARTY_LAYOUT_DOUBLE:
         InitWindows(sDoublePartyMenuWindowTemplate);
@@ -2379,8 +2375,8 @@ static void InitPartyMenuWindows(u8 layout)
     case PARTY_LAYOUT_MULTI:
         InitWindows(sMultiPartyMenuWindowTemplate);
         break;
-    default: // PARTY_LAYOUT_MULTI_SHOWCASE
-        InitWindows(sShowcaseMultiPartyMenuWindowTemplate);
+    default: // Singles and full-party multibattle menus
+        InitWindows(sSinglePartyMenuWindowTemplate);
         break;
     }
     LoadPartyMenuWindows();
@@ -5498,7 +5494,7 @@ static void TryUseItemOnMove(u8 taskId)
         }
         else
         {
-            gBattleStruct->itemPartyIndex[gBattlerInMenuId] = GetPartyIdFromBattleSlot(ptr->slotId);
+            gBattleStruct->itemPartyIndex[gBattlerInMenuId] = GetPartyIdFromBattleSlot(gPartyMenu.slotId);
             gBattleStruct->itemMoveIndex[gBattlerInMenuId] = ptr->data1;
             gPartyMenuUseExitCallback = TRUE;
             RemoveBagItem(gSpecialVar_ItemId, 1);
@@ -7852,35 +7848,18 @@ u8 GetPartyIdFromBattlePartyId(u8 battlePartyId)
     return 0;
 }
 
+static const u8 sMultiBattlePartyIdToMenuId_Left[PARTY_SIZE] = { 0, 2, 3, 1, 4, 5};
+static const u8 sMultiBattlePartyIdToMenuId_Right[PARTY_SIZE] = { 1, 4, 5, 0, 2, 3};
+
 static void UpdatePartyToBattleOrder(void)
 {
     struct Pokemon *partyBuffer = Alloc(sizeof(gParties[B_TRAINER_0]));
     u8 i;
+    const u8 *multiBattlePartyIdToMenuId = sMultiBattlePartyIdToMenuId_Left;
 
-    static const u8 sMultiBattlePartyIdToMenuId_LeftBattler[PARTY_SIZE] =
-    {
-        [0] = 0,
-        [1] = 2,
-        [2] = 3,
-        [3] = 1,
-        [4] = 4,
-        [5] = 5,
-    };
-    static const u8 sMultiBattlePartyIdToMenuId_RightBattler[PARTY_SIZE] =
-    {
-        [3] = 0,
-        [4] = 2,
-        [5] = 3,
-        [0] = 1,
-        [1] = 4,
-        [2] = 5,
-    };
-    const u8 *multiBattlePartyIdToMenuId = sMultiBattlePartyIdToMenuId_LeftBattler;
-    if ((gBattleTypeFlags & BATTLE_TYPE_LINK)
-     && ((gBattlerInMenuId & BIT_FLANK) != B_FLANK_LEFT))
-    {
-        multiBattlePartyIdToMenuId = sMultiBattlePartyIdToMenuId_RightBattler;
-    }
+    if ((gBattleTypeFlags & BATTLE_TYPE_LINK) && ((gBattlerInMenuId & BIT_FLANK) != B_FLANK_LEFT))
+        multiBattlePartyIdToMenuId = sMultiBattlePartyIdToMenuId_Right;
+
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
@@ -7909,26 +7888,6 @@ static void UpdatePartyToFieldOrder(void)
 {
     struct Pokemon *partyBuffer = Alloc(sizeof(gParties[B_TRAINER_0]));
     u8 i;
-
-    static const u8 sMultiBattlePartyIdToMenuId_Left[PARTY_SIZE] =
-    {
-        [0] = 0,
-        [1] = 2,
-        [2] = 3,
-        [3] = 1,
-        [4] = 4,
-        [5] = 5,
-    };
-
-    static const u8 sMultiBattlePartyIdToMenuId_Right[PARTY_SIZE] =
-    {
-        [3] = 0,
-        [4] = 2,
-        [5] = 3,
-        [0] = 1,
-        [1] = 4,
-        [2] = 5,
-    };
 
     const u8 *multiBattlePartyIdToMenuId = sMultiBattlePartyIdToMenuId_Left;
     
@@ -8035,7 +7994,8 @@ static void Task_WaitAfterMultiPartnerFullParty(u8 taskId)
     if (data[0] == 0)
         PlaySE(SE_M_HARDEN); // The Harden SE plays when the partner party is displayed
 
-    if (FollowerNPCIsBattlePartner()) {
+    if (FollowerNPCIsBattlePartner())
+    {
         if (++data[0] == 128)
             Task_ClosePartyMenu(taskId);
     }
@@ -8061,7 +8021,8 @@ static void Task_WaitAfterMultiPartnerPartySlideIn(u8 taskId)
     s16 *data = gTasks[taskId].data;
 
     // data[0] used as a timer afterwards rather than the x pos
-    if (FollowerNPCIsBattlePartner()) {
+    if (FollowerNPCIsBattlePartner())
+    {
         if (++data[0] == 128)
             Task_ClosePartyMenu(taskId);
     }
