@@ -86,37 +86,33 @@ def prepare_output(all_learnables: dict[str, set[str]], tms: list[str], tutors: 
     """)
 
     joinpat = ",\n    "
-    for species_data in repo_teaching_types:
-        if isinstance(species_data, str):
-            new += (species_data)
-            continue
-        species = species_data["name"]
-        teaching_type = species_data["teaching_type"]
-        new += f"static const u16 s{species}TeachableLearnset[] = "
+    for learnset, species_data in repo_teaching_types.items():
+        species = species_data["species_name"]
+        teaching_type = species_data["teachingType"]
+        new += f"static const u16 {learnset}[] = "
         new += "{\n"
-        species_upper =  SNAKIFY_PAT.sub(r"_\1", species).upper()
         if teaching_type == "ALL_TEACHABLES":
             part1 = list(filter(lambda m: m not in special_movesets["signatureTeachables"], tms))
             part2 = list(filter(lambda m: m not in special_movesets["signatureTeachables"], tutors))
         else:
             if teaching_type == "TM_ILLITERATE":
-                learnables = all_learnables[species_upper]
+                learnables = all_learnables[species]
                 if not tm_litteracy_config:
                     learnables = filter(lambda m: m not in special_movesets["universalMoves"], learnables)
             else:
-                learnables = all_learnables[species_upper] + special_movesets["universalMoves"]
+                learnables = all_learnables[species] + special_movesets["universalMoves"]
             part1 = list(filter(lambda m: m in learnables, tms))
             part2 = list(filter(lambda m: m in learnables, tutors))
 
 
         repo_species_teachables = part1 + part2
-        if species_upper == "TERAPAGOS":
+        if species == "TERAPAGOS":
              repo_species_teachables = filter(lambda m: m != "MOVE_TERA_BLAST", repo_species_teachables)
 
         repo_species_teachables = list(dict.fromkeys(repo_species_teachables))
         new += "\n".join([
             f"    {joinpat.join(chain(repo_species_teachables, ('MOVE_UNAVAILABLE',)))},",
-            "};\n",
+            "};\n\n",
         ])
 
     return new
