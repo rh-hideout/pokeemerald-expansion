@@ -1285,12 +1285,6 @@ void ZeroPlayerPartyMons(void)
         ZeroMonData(&gParties[B_TRAINER_0][i]);
 }
 
-void ZeroPartnerPartyMons(void)
-{
-    for (s32 i = 0; i < PARTY_SIZE; i++)
-        ZeroMonData(&gParties[B_TRAINER_2][i]);
-}
-
 void ZeroEnemyPartyMons(void)
 {
     for (s32 i = 0; i < PARTY_SIZE; i++)

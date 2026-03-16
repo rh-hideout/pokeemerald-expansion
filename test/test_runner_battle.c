@@ -1767,9 +1767,8 @@ void TestRunner_Battle_AfterLastTurn(void)
 static void TearDownBattle(void)
 {
     // Zero out the parties, data in them could potentially carry over
-    ZeroPlayerPartyMons();
-    ZeroPartnerPartyMons();
-    ZeroEnemyPartyMons();
+    for (enum BattleTrainer trainer = B_TRAINER_0; trainer < MAX_BATTLE_TRAINERS; trainer++)
+        ZeroPartyMons(gParties[trainer]);
     SetCurrentDifficultyLevel(DIFFICULTY_NORMAL);
 
     // Set Battle Controllers to BATTLE_CONTROLLER_NONE

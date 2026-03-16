@@ -732,7 +732,6 @@ void ZeroBoxMonData(struct BoxPokemon *boxMon);
 void ZeroMonData(struct Pokemon *mon);
 void ZeroPartyMons(struct Pokemon *party);
 void ZeroPlayerPartyMons(void);
-void ZeroPartnerPartyMons(void);
 void ZeroEnemyPartyMons(void);
 u32 GetMonPersonality(u16 species, u8 gender, u8 nature, u8 unownLetter);
 void CreateMon(struct Pokemon *mon, u16 species, u8 level, u32 personality, struct OriginalTrainerId);

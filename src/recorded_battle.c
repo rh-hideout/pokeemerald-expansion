@@ -496,17 +496,11 @@ static void Task_StartAfterCountdown(u8 taskId)
 
 void SetPartiesFromRecordedSave(struct RecordedBattleSave *src)
 {
-    s32 i;
-
-    ZeroPlayerPartyMons();
-    ZeroPartnerPartyMons();
-    ZeroEnemyPartyMons();
-    for (i = 0; i < PARTY_SIZE; i++)
+    for (enum BattleTrainer trainer = B_TRAINER_0; trainer < MAX_BATTLE_TRAINERS; trainer++)
     {
-        gParties[B_TRAINER_0][i] = src->parties[B_TRAINER_0][i];
-        gParties[B_TRAINER_1][i] = src->parties[B_TRAINER_1][i];
-        gParties[B_TRAINER_2][i] = src->parties[B_TRAINER_2][i];
-        gParties[B_TRAINER_3][i] = src->parties[B_TRAINER_3][i];
+        ZeroPartyMons(gParties[trainer]);
+        for (s32 i = 0; i < PARTY_SIZE; i++)
+            gParties[trainer][i] = src->parties[trainer][i];
     }
 }
 

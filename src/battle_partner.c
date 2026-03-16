@@ -31,7 +31,7 @@ void FillPartnerParty(u16 trainerId)
     u8 trainerName[(PLAYER_NAME_LENGTH * 3) + 1];
     enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(trainerId);
     SetFacilityPtrsGetLevel();
-    ZeroPartnerPartyMons();
+    ZeroPartyMons(gParties[B_TRAINER_2]);
 
     if (trainerId > TRAINER_PARTNER(PARTNER_NONE))
     {
