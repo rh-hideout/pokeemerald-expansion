@@ -286,6 +286,7 @@ static const u32 sPokedexPlusHGSS_ScreenSearchNational_Tilemap[] = INCBIN_U32("g
 #define MON_PAGE_X 48
 #define MON_PAGE_Y 56
 
+// Width of pixels one line of text in the species box can be
 #define STATS_PAGE_SPECIES_MAX_WIDTH 55
 
 static EWRAM_DATA struct PokedexView *sPokedexView = NULL;
