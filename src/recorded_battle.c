@@ -50,7 +50,7 @@ EWRAM_DATA static u8 sBattleScene = 0;
 EWRAM_DATA static u8 sTextSpeed = 0;
 EWRAM_DATA static u32 sBattleFlags = 0;
 EWRAM_DATA static u64 sAI_Scripts[MAX_BATTLERS_COUNT] = {0};
-EWRAM_DATA static struct Pokemon sSavedParties[MAX_BATTLE_TRAINERS][PARTY_SIZE] = {0};
+EWRAM_DATA static struct Pokemon *sSavedParties = NULL;
 EWRAM_DATA static u16 sPlayerMonMoves[MAX_BATTLERS_COUNT / 2][MAX_MON_MOVES] = {0};
 EWRAM_DATA static struct PlayerInfo sPlayers[MAX_LINK_PLAYERS] = {0};
 EWRAM_DATA static bool8 sIsPlaybackFinished = 0;
@@ -294,13 +294,7 @@ bool32 MoveRecordedBattleToSaveData(void)
     battleSave = AllocZeroed(sizeof(struct RecordedBattleSave));
     savSection = AllocZeroed(SECTOR_SIZE);
 
-    for (i = 0; i < PARTY_SIZE; i++)
-    {
-        battleSave->parties[B_TRAINER_0][i] = sSavedParties[B_TRAINER_0][i];
-        battleSave->parties[B_TRAINER_1][i] = sSavedParties[B_TRAINER_1][i];
-        battleSave->parties[B_TRAINER_2][i] = sSavedParties[B_TRAINER_2][i];
-        battleSave->parties[B_TRAINER_3][i] = sSavedParties[B_TRAINER_3][i];
-    }
+    memcpy(battleSave->parties, gParties, sizeof(struct Pokemon[MAX_BATTLE_TRAINERS][PARTY_SIZE]));
 
     battleSave->playersGender = 0;
 
@@ -599,28 +593,16 @@ u8 GetRecordedBattleFronterBrainSymbol(void)
 
 void RecordedBattle_SaveParties(void)
 {
-    s32 i;
+    sSavedParties = AllocZeroed(sizeof(struct Pokemon[MAX_BATTLE_TRAINERS][PARTY_SIZE]));
 
-    for (i = 0; i < PARTY_SIZE; i++)
-    {
-        sSavedParties[B_TRAINER_0][i] = gParties[B_TRAINER_0][i];
-        sSavedParties[B_TRAINER_1][i] = gParties[B_TRAINER_1][i];
-        sSavedParties[B_TRAINER_2][i] = gParties[B_TRAINER_2][i];
-        sSavedParties[B_TRAINER_3][i] = gParties[B_TRAINER_3][i];
-    }
+    memcpy(sSavedParties, gParties, sizeof(struct Pokemon[MAX_BATTLE_TRAINERS][PARTY_SIZE]));
 }
 
 static void RecordedBattle_RestoreSavedParties(void)
 {
-    s32 i;
+    memcpy(gParties, sSavedParties, sizeof(struct Pokemon[MAX_BATTLE_TRAINERS][PARTY_SIZE]));
 
-    for (i = 0; i < PARTY_SIZE; i++)
-    {
-        gParties[B_TRAINER_0][i] = sSavedParties[B_TRAINER_0][i];
-        gParties[B_TRAINER_1][i] = sSavedParties[B_TRAINER_1][i];
-        gParties[B_TRAINER_2][i] = sSavedParties[B_TRAINER_2][i];
-        gParties[B_TRAINER_3][i] = sSavedParties[B_TRAINER_3][i];
-    }
+    Free(sSavedParties);
 }
 
 u8 GetBattlerLinkPlayerGender(enum BattlerId battler)
