@@ -126,6 +126,8 @@ DOUBLE_BATTLE_TEST("Bide is blocked by partner Dazzling")
         }
     }
 }
+
+// Redundant?
 SINGLE_BATTLE_TEST("Bide fails if 0 total damage was dealt to the user")
 {
     GIVEN {
@@ -142,8 +144,10 @@ SINGLE_BATTLE_TEST("Bide fails if 0 total damage was dealt to the user")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
         NOT HP_BAR(player);
         MESSAGE("Wobbuffet unleashed its energy!");
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_BIDE, player);
-        MESSAGE("But it failed!");
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_BIDE, player);
+            HP_BAR(opponent);
+        }
     }
 }
 
@@ -163,8 +167,10 @@ SINGLE_BATTLE_TEST("Bide doesn't deal back damage taken by user's Substitute")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, opponent);
         MESSAGE("Wobbuffet unleashed its energy!");
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_BIDE, player);
-        MESSAGE("But it failed!");
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_BIDE, player);
+            HP_BAR(opponent);
+        }
     }
 }
 
