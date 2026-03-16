@@ -44,7 +44,7 @@ SINGLE_BATTLE_TEST("Psych Up displays the correct battlers when used by the oppo
 
 SINGLE_BATTLE_TEST("Psych Up ignores Spiky Shield and Baneful Bunker but fails against Crafty Shield")
 {
-    u32 protectMove = MOVE_NONE;
+    enum Move protectMove = MOVE_NONE;
     bool32 shouldFail = FALSE;
 
     PARAMETRIZE { protectMove = MOVE_SPIKY_SHIELD; shouldFail = FALSE; }

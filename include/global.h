@@ -42,6 +42,7 @@
 // We define these when using certain IDEs to fool preproc
 #define _(x)        {x}
 #define __(x)       {x}
+#define COMPOUND_STRING(x) 0
 #define INCBIN(...) {0}
 #define INCBIN_U8   INCBIN
 #define INCBIN_U16  INCBIN
@@ -1216,10 +1217,10 @@ struct MapPosition
     s8 elevation;
 };
 
-#if T_SHOULD_RUN_MOVE_ANIM
+#if TESTING
 extern bool32 gLoadFail;
 extern bool32 gCountAllocs;
 extern s32 gSpriteAllocs;
-#endif // T_SHOULD_RUN_MOVE_ANIM
+#endif // TESTING
 
 #endif // GUARD_GLOBAL_H

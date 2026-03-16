@@ -207,3 +207,17 @@ SINGLE_BATTLE_TEST("Hit Escape: U-turn will fail to switch if the user faints")
         HP_BAR(opponent);
     }
 }
+
+SINGLE_BATTLE_TEST("Hit Escape: U-turn will switch if the target is behind a Substitute")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_U_TURN); SEND_OUT(opponent, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, opponent);
+    }
+}

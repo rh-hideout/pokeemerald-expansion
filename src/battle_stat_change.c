@@ -3,6 +3,7 @@
 #include "battle_scripts.h"
 #include "battle_util.h"
 #include "battle_stat_change.h"
+#include "battle_ai_record.h"
 #include "battle_anim.h"
 #include "battle_controllers.h"
 #include "battle_ai_util.h"
@@ -456,7 +457,7 @@ static void TryPlayStatChangeAnimation(struct BattleCalcValues *cv, struct StatC
 
 static void AdjustStatStage(struct BattleCalcValues *cv, struct StatChange *st)
 {
-    if (GetMoveEffect(cv->move) == EFFECT_GROWTH && IsBattlerWeatherAffected(cv->effectBattler, B_WEATHER_SUN))
+    if (GetMoveEffect(cv->move) == EFFECT_GROWTH && IsBattlerWeatherAffected(cv->holdEffects[cv->effectBattler], GetWeather(), B_WEATHER_SUN))
         st->stage = 2;
 
     switch (cv->abilities[cv->effectBattler])

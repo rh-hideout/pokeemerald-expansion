@@ -204,8 +204,8 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent S
 {
     u32 j, species = SPECIES_NONE;
     enum Ability ability = ABILITY_NONE;
-    u16 heldItem = ITEM_NONE;
-    static const u16 heldItems[] = {
+    enum Item heldItem = ITEM_NONE;
+    static const enum Item heldItems[] = {
         ITEM_NONE,
         ITEM_IRON_BALL,
     };

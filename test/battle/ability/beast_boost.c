@@ -19,7 +19,7 @@ SINGLE_BATTLE_TEST("Beast Boost boosts the most proficient stat when knocking ou
         ABILITY_POPUP(player, ABILITY_BEAST_BOOST);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
     } THEN {
-        u32 expectedStat = STAT_ATK;
+        enum Stat expectedStat = STAT_ATK;
 
         switch (i) {
         case 1:
@@ -78,7 +78,7 @@ SINGLE_BATTLE_TEST("Beast Boost prioritizes stats in the case of a tie in the fo
         ABILITY_POPUP(player, ABILITY_BEAST_BOOST);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
     } THEN {
-        u32 expectedStat = STAT_ATK;
+        enum Stat expectedStat = STAT_ATK;
 
         switch (i) {
         case 1:

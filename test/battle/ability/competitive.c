@@ -3,7 +3,7 @@
 
 DOUBLE_BATTLE_TEST("Competitive sharply raises player's Sp. Atk after Intimidate")
 {
-    u32 abilityLeft, abilityRight;
+    enum Ability abilityLeft, abilityRight;
 
     PARAMETRIZE { abilityLeft = ABILITY_FRIEND_GUARD; abilityRight = ABILITY_FRIEND_GUARD; }
     PARAMETRIZE { abilityLeft = ABILITY_FRIEND_GUARD; abilityRight = ABILITY_COMPETITIVE; }
@@ -60,7 +60,7 @@ DOUBLE_BATTLE_TEST("Competitive sharply raises player's Sp. Atk after Intimidate
 // Same as above, but for opponent.
 DOUBLE_BATTLE_TEST("Competitive sharply raises opponent's Sp. Atk after Intimidate")
 {
-    u32 abilityLeft, abilityRight;
+    enum Ability abilityLeft, abilityRight;
 
     PARAMETRIZE { abilityLeft = ABILITY_FRIEND_GUARD; abilityRight = ABILITY_FRIEND_GUARD; }
     PARAMETRIZE { abilityLeft = ABILITY_FRIEND_GUARD; abilityRight = ABILITY_COMPETITIVE; }
