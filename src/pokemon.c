@@ -6999,9 +6999,6 @@ static struct PartyState *GetBattlerPartyStateByPokemon(struct Pokemon *partyMon
 {
     struct Pokemon *party = GetTrainerParty(trainer);
     
-    if (gBattleStruct == NULL)
-        return NULL;
-
     for (int i = 0; i < PARTY_SIZE; i++)
     {
         struct Pokemon *mon = &party[i];
