@@ -151,7 +151,8 @@ def main():
     for a in re.finditer(TERNARY_CONDITION_PAT, species_file):
         condition = a[1].strip("() ")
         (condition, n) = re.subn(r"([A-Z_]+)", r'"\1"', condition)
-        for b in [("||", "or"), ("&&", "and"), ("!", "not ")]:
+        (condition, n) = re.subn(r"!([^=])", r'"not \1"', condition)
+        for b in [("||", "or"), ("&&", "and")]:
             condition = condition.replace(b[0], b[1])
         if eval(condition):
             species_file = species_file.replace(a[1], "1")
