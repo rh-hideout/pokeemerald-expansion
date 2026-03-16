@@ -1632,9 +1632,10 @@ static void CB2_HandleStartMultiBattle(void)
             ResetBlockReceivedFlags();
             for (id = 0; id < MAX_LINK_PLAYERS; id++)
             {
-                bool32 sameSide = (!(gLinkPlayers[id].id & 1) && !(gLinkPlayers[playerMultiplayerId].id & 1))
-                               || ((gLinkPlayers[id].id & 1) && (gLinkPlayers[playerMultiplayerId].id & 1));
                 enum BattleTrainer trainer;
+                bool32 sameSide = (!(gLinkPlayers[id].id & 1) && !(gLinkPlayers[playerMultiplayerId].id & 1))
+                 || ((gLinkPlayers[id].id & 1) && (gLinkPlayers[playerMultiplayerId].id & 1));
+
                 if (id == playerMultiplayerId)
                     trainer = B_TRAINER_0;
                 else if (sameSide)
@@ -1661,9 +1662,10 @@ static void CB2_HandleStartMultiBattle(void)
             ResetBlockReceivedFlags();
             for (id = 0; id < MAX_LINK_PLAYERS; id++)
             {
-                bool32 sameSide = (!(gLinkPlayers[id].id & 1) && !(gLinkPlayers[playerMultiplayerId].id & 1))
-                               || ((gLinkPlayers[id].id & 1) && (gLinkPlayers[playerMultiplayerId].id & 1));
                 enum BattleTrainer trainer;
+                bool32 sameSide = (!(gLinkPlayers[id].id & 1) && !(gLinkPlayers[playerMultiplayerId].id & 1))
+                 || ((gLinkPlayers[id].id & 1) && (gLinkPlayers[playerMultiplayerId].id & 1));
+
                 if (id == playerMultiplayerId)
                     trainer = B_TRAINER_0;
                 else if (sameSide)
@@ -1675,11 +1677,11 @@ static void CB2_HandleStartMultiBattle(void)
                 memcpy(&gParties[trainer][2], gBlockRecvBuffer[id], sizeof(struct Pokemon));
             }
 
-            for (enum BattleTrainer trainer = B_TRAINER_0; trainer < MAX_BATTLE_TRAINERS; trainer++)
+            for (enum BattleTrainer trainerParty = B_TRAINER_0; trainerParty < MAX_BATTLE_TRAINERS; trainerParty++)
             {
                 for (u32 i = 0; i < MULTI_PARTY_SIZE; i++)
                 {
-                    TryCorrectShedinjaLanguage(&gParties[trainer][i]);
+                    TryCorrectShedinjaLanguage(&gParties[trainerParty][i]);
                 }
             }
 
