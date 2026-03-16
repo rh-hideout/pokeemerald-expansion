@@ -3502,10 +3502,7 @@ u8 CalculatePartyCount(enum BattleTrainer trainer)
 
 u8 CalculatePartyCountOfSide(enum BattlerId battler)
 {
-    if (GetBattlerTrainer(battler) != GetAllyTrainerFromBattler(battler))
-        return CalculatePartyCount(GetBattlerTrainer(battler)) + CalculatePartyCount(GetAllyTrainerFromBattler(battler));
-    else
-        return CalculatePartyCount(GetBattlerTrainer(battler));
+    return CalculatePartyCount(GetBattlerTrainer(battler)) + (BattleSideHasTwoTrainers(battler & BIT_SIDE) ? CalculatePartyCount(BATTLE_PARTNER(battler)) : 0);
 }
 
 u8 CalculatePlayerPartyCount(void)

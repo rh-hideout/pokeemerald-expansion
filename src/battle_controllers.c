@@ -3320,11 +3320,6 @@ enum BattleTrainer GetBattlerTrainer(enum BattlerId battler)
 #endif
 }
 
-enum BattleTrainer GetAllyTrainerFromBattler(enum BattlerId battler)
-{
-    return GetBattlerTrainer(BATTLE_PARTNER(battler));
-}
-
 enum BattleTrainer GetTrainerFromBattlePosition(enum BattlerPosition position)
 {
     return GetBattlerTrainer(GetBattlerAtPosition(position));
