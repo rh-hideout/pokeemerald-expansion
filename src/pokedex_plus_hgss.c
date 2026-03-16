@@ -286,6 +286,8 @@ static const u32 sPokedexPlusHGSS_ScreenSearchNational_Tilemap[] = INCBIN_U32("g
 #define MON_PAGE_X 48
 #define MON_PAGE_Y 56
 
+#define STATS_PAGE_SPECIES_MAX_WIDTH 55
+
 static EWRAM_DATA struct PokedexView *sPokedexView = NULL;
 static EWRAM_DATA u16 sLastSelectedPokemon = 0;
 static EWRAM_DATA u8 sPokeBallRotation = 0;
@@ -5295,7 +5297,7 @@ static void PrintStatsScreen_NameGender(u8 taskId, u32 num, u32 value)
 
     //Name
     const u8 *name = GetSpeciesName(species);
-    if (GetStringWidth(FONT_SMALL, name, 0) <= 55)
+    if (GetStringWidth(FONT_SMALL, name, 0) <= STATS_PAGE_SPECIES_MAX_WIDTH)
         PrintStatsScreenTextSmall(WIN_STATS_NAME_GENDER, name, base_x, base_y);
     else
         PrintStatsScreenTextSmallNarrower(WIN_STATS_NAME_GENDER, name, base_x, base_y);
