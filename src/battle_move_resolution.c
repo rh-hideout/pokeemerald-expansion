@@ -1567,20 +1567,11 @@ static enum CancelerResult HandleSkyDropResult(struct BattleContext *ctx)
     return CANCELER_RESULT_BREAK;
 }
 
-static enum CancelerResult HandleBideResult(struct BattleContext *ctx)
-{
-    return CANCELER_RESULT_SUCCESS;
-}
-
 static enum CancelerResult CancelerCharging(struct BattleContext *ctx)
 {
     enum CancelerResult result = CANCELER_RESULT_SUCCESS;
 
-    if (GetMoveEffect(ctx->move) == EFFECT_BIDE)
-    {
-        result = HandleBideResult(ctx);
-    }
-    else if (!gBattleMoveEffects[GetMoveEffect(ctx->move)].twoTurnEffect)
+    if (!gBattleMoveEffects[GetMoveEffect(ctx->move)].twoTurnEffect)
     {
         result = CANCELER_RESULT_SUCCESS;
     }
