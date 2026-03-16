@@ -65,16 +65,9 @@ DOUBLE_BATTLE_TEST("Bide hits the last Pokémon that attacked the user, even all
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
-        TURN {
-            MOVE(playerLeft, MOVE_BIDE);
-            MOVE(playerRight, MOVE_POUND, target: playerLeft);
-        } TURN {
-            SKIP_TURN(playerLeft);
-            MOVE(playerRight, MOVE_POUND, target: playerLeft);
-
-        } TURN {
-            SKIP_TURN(playerLeft);
-        }
+        TURN { MOVE(playerLeft, MOVE_BIDE); MOVE(playerRight, MOVE_POUND, target: playerLeft); }
+        TURN { SKIP_TURN(playerLeft); MOVE(playerRight, MOVE_POUND, target: playerLeft); }
+        TURN { SKIP_TURN(playerLeft); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BIDE, playerLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, playerRight);
@@ -118,15 +111,9 @@ DOUBLE_BATTLE_TEST("Bide is blocked by partner Dazzling")
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_BRUXISH) { Ability(ABILITY_DAZZLING); }
     } WHEN {
-        TURN {
-            MOVE(playerLeft, MOVE_BIDE, target: opponentLeft);
-            MOVE(opponentLeft, MOVE_POUND, target: playerLeft);
-        } TURN {
-            SKIP_TURN(playerLeft);
-            MOVE(opponentLeft, MOVE_POUND, target: playerLeft);
-        } TURN {
-            SKIP_TURN(playerLeft);
-        }
+        TURN { MOVE(playerLeft, MOVE_BIDE); MOVE(opponentLeft, MOVE_POUND, target: playerLeft); }
+        TURN { SKIP_TURN(playerLeft); MOVE(opponentLeft, MOVE_POUND, target: playerLeft); }
+        TURN { SKIP_TURN(playerLeft); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BIDE, playerLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, opponentLeft);
@@ -139,6 +126,47 @@ DOUBLE_BATTLE_TEST("Bide is blocked by partner Dazzling")
         }
     }
 }
+SINGLE_BATTLE_TEST("Bide fails if 0 total damage was dealt to the user")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_BIDE); }
+        TURN { SKIP_TURN(player); }
+        TURN { SKIP_TURN(player); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BIDE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        NOT HP_BAR(player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        NOT HP_BAR(player);
+        MESSAGE("Wobbuffet unleashed its energy!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_BIDE, player);
+        MESSAGE("But it failed!");
+    }
+}
 
-TO_DO_BATTLE_TEST("Bide has +1 priority if called via a different move");
+SINGLE_BATTLE_TEST("Bide doesn't deal back damage taken by user's Substitute")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUBSTITUTE); }
+        TURN { MOVE(player, MOVE_BIDE); MOVE(opponent, MOVE_POUND); }
+        TURN { SKIP_TURN(player); MOVE(opponent, MOVE_POUND); }
+        TURN { SKIP_TURN(player); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BIDE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, opponent);
+        MESSAGE("Wobbuffet unleashed its energy!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_BIDE, player);
+        MESSAGE("But it failed!");
+    }
+}
+
+TO_DO_BATTLE_TEST("Bide has +1 priority on following turns if called via a different move");
 

@@ -305,8 +305,7 @@ static enum CancelerResult CancelerBide(struct BattleContext *ctx)
             gBattleMons[ctx->battlerAtk].volatiles.multipleTurns = FALSE;
             if (!IsBattlerAlive(gBattlerTarget))
                 gBattlerTarget = GetBattleMoveTarget(gCurrentMove, TARGET_SELECTED);
-            if (IsBattlerAlive(gBattlerTarget))
-                gBattleStruct->battlerState[ctx->battlerAtk].targetsDone[gBattlerTarget] = FALSE;
+            gBattleStruct->battlerState[ctx->battlerAtk].targetsDone[gBattlerTarget] = FALSE;
             BattleScriptCall(BattleScript_BideAttack);
             return CANCELER_RESULT_BREAK;
         }

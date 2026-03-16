@@ -7721,6 +7721,7 @@ s32 DoFixedDamageMoveCalc(struct BattleContext *ctx)
         break;
     case EFFECT_BIDE:
         dmg = gBideDmg[ctx->battlerAtk] * 2;
+        break;
     default:
         break;
     }
