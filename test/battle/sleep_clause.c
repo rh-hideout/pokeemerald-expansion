@@ -893,7 +893,7 @@ DOUBLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mo
 
 SINGLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mon is woken up by using a held item")
 {
-    u32 heldItem = ITEM_NONE;
+    enum Item heldItem = ITEM_NONE;
     PARAMETRIZE { heldItem = ITEM_CHESTO_BERRY; }
     PARAMETRIZE { heldItem = ITEM_LUM_BERRY; }
     GIVEN {
@@ -925,7 +925,7 @@ SINGLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mo
 
 DOUBLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mon is woken up by Flinging a held item")
 {
-    u32 heldItem = ITEM_NONE;
+    enum Item heldItem = ITEM_NONE;
     PARAMETRIZE { heldItem = ITEM_CHESTO_BERRY; }
     PARAMETRIZE { heldItem = ITEM_LUM_BERRY; }
     GIVEN {

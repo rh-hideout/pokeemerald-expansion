@@ -61,7 +61,7 @@ AI_DOUBLE_BATTLE_TEST("AI will not use Helping Hand if partner does not have any
 AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow when items are missing or target already holds one")
 {
     enum Move move = MOVE_NONE;
-    u32 atkItem = ITEM_NONE, targetItem = ITEM_NONE;
+    enum Item atkItem = ITEM_NONE, targetItem = ITEM_NONE;
 
     PARAMETRIZE { move = MOVE_TRICK;  atkItem = ITEM_NONE;        targetItem = ITEM_NONE; }
     PARAMETRIZE { move = MOVE_BESTOW; atkItem = ITEM_NONE;        targetItem = ITEM_NONE; }
@@ -81,7 +81,7 @@ AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow when items are missing or target al
 AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow with unexchangeable items")
 {
     enum Move move = MOVE_NONE;
-    u32 atkItem = ITEM_NONE, targetItem = ITEM_NONE;
+    enum Item atkItem = ITEM_NONE, targetItem = ITEM_NONE;
 
     PARAMETRIZE { move = MOVE_TRICK;  atkItem = ITEM_ORANGE_MAIL; targetItem = ITEM_NONE; }
     PARAMETRIZE { move = MOVE_TRICK;  atkItem = ITEM_ORAN_BERRY;  targetItem = ITEM_ORANGE_MAIL; }
@@ -116,7 +116,7 @@ AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow if the target has a Substitute")
     ASSUME(GetMoveEffect(MOVE_SUBSTITUTE) == EFFECT_SUBSTITUTE);
 
     enum Move move = MOVE_NONE;
-    u32 atkItem = ITEM_NONE, targetItem = ITEM_NONE;
+    enum Item atkItem = ITEM_NONE, targetItem = ITEM_NONE;
 
     PARAMETRIZE { move = MOVE_TRICK;  atkItem = ITEM_ORAN_BERRY; targetItem = ITEM_LEFTOVERS; }
     PARAMETRIZE { move = MOVE_BESTOW; atkItem = ITEM_ORAN_BERRY; targetItem = ITEM_NONE; }
@@ -138,7 +138,9 @@ AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow if the target has a Substitute")
 
 AI_DOUBLE_BATTLE_TEST("AI considers status orbs and abilities for Trick/Bestow")
 {
-    u16 move = MOVE_NONE, item = ITEM_NONE, status = STATUS1_NONE, species = SPECIES_NONE;
+    enum Move move = MOVE_NONE;
+    enum Item item = ITEM_NONE;
+    u16 status = STATUS1_NONE, species = SPECIES_NONE;
     enum Ability ability = ABILITY_NONE;
     u8 turnToTrick = 0;
 
@@ -240,7 +242,7 @@ AI_DOUBLE_BATTLE_TEST("AI steals Utility Umbrella to handle sun and Dry Skin but
 
 AI_DOUBLE_BATTLE_TEST("AI treats Harvest as a sun benefit only when a berry is involved")
 {
-    u16 targetItem = ITEM_NONE;
+    enum Item targetItem = ITEM_NONE;
     bool32 expectTrick = FALSE;
 
     PARAMETRIZE { targetItem = ITEM_ORAN_BERRY; expectTrick = TRUE; }

@@ -958,3 +958,33 @@ DOUBLE_BATTLE_TEST("Wide Guard is still activate even if user is switched out du
         }
     }
 }
+
+DOUBLE_BATTLE_TEST("Protect is not ignored after a new mon switched in because of U-Turn")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN {
+            MOVE(playerRight, MOVE_PROTECT);
+            MOVE(opponentLeft, MOVE_POUND, target: playerRight);
+            MOVE(opponentRight, MOVE_U_TURN, target: playerLeft);
+            SEND_OUT(opponentRight, 2);
+        }
+        TURN {
+            MOVE(playerLeft, MOVE_DETECT);
+            MOVE(opponentLeft, MOVE_POUND, target: playerRight);
+            MOVE(opponentRight, MOVE_POUND, target: playerLeft);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DETECT, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, opponentLeft);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, opponentRight);
+    }
+}
+

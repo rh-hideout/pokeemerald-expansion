@@ -8,6 +8,7 @@
 #include "load_save.h"
 #include "m4a.h"
 #include "main.h"
+#include "intro_frlg.h"
 #include "malloc.h"
 #include "menu.h"
 #include "new_game.h"
