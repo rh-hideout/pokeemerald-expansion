@@ -1442,10 +1442,7 @@ static void CB2_PreInitMultiBattle(void)
             *savedCallback = gMain.savedCallback;
             *savedBattleTypeFlags = gBattleTypeFlags;
             gMain.savedCallback = CB2_PreInitMultiBattle;
-            if (AreMultiPartiesFullTeams())
-                ShowPartyMenuToShowcaseMultiBattleFullParty();
-            else
-                ShowPartyMenuToShowcaseMultiBattleParty();
+            ShowPartyMenuToShowcaseMultiBattleParty();
         }
         break;
     case 2:
@@ -1503,10 +1500,7 @@ static void CB2_PreInitIngamePlayerPartnerBattle(void)
         gMain.savedCallback = CB2_PreInitIngamePlayerPartnerBattle;
         if ((!PlayerHasFollowerNPC() || !FollowerNPCIsBattlePartner() || (FNPC_NPC_FOLLOWER_PARTY_PREVIEW && FollowerNPCIsBattlePartner())))
         {
-            if (AreMultiPartiesFullTeams())
-                ShowPartyMenuToShowcaseMultiBattleFullParty();
-            else
-                ShowPartyMenuToShowcaseMultiBattleParty();
+            ShowPartyMenuToShowcaseMultiBattleParty();
         }
 
         break;
