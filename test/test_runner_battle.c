@@ -199,6 +199,7 @@ NAKED static void InvokeOneVsTwoTestFunctionWithStack(void *results, u32 i, stru
 static void InvokeTestFunction(const struct BattleTest *test)
 {
     STATE->parametersCount = 0;
+    // 2 bits per battler; battler0/1 are always trainer0/1, respectively
     DATA.battlerTrainers = B_TRAINER_1 << 2;
     switch (test->type)
     {
@@ -340,12 +341,12 @@ static void SetImplicitSpeeds(void)
         {
             for (i = 0; i < DATA.partySizes[trainer]; i++)
             {
-                if (!(hasSpeeds & (1 << ((6 * trainer) + i)))
-                && !(DATA.slowerThan[trainer][i] & ~hasSpeeds))
+                if (!(hasSpeeds & ((1 << (6 * trainer)) << i))
+                 && !(DATA.slowerThan[trainer][i] & ~hasSpeeds))
                 {
                     SetMonData(&DATA.recordedBattle.parties[trainer][i], MON_DATA_SPEED, &speed);
                     speed--;
-                    hasSpeeds |= 1 << ((6 * trainer) + i);
+                    hasSpeeds |= ((1 << (6 * trainer)) << i);
                     madeProgress = TRUE;
                 }
             }
@@ -472,7 +473,7 @@ static void BattleTest_Run(void *data)
         DATA.recordedBattle.playersName[i][0] = CHAR_1 + i;
         DATA.recordedBattle.playersName[i][1] = EOS;
         DATA.recordedBattle.playersLanguage[i] = GAME_LANGUAGE;
-        DATA.recordedBattle.playersBattlers |= (i << (2 * (i >> 1) + 4 * (i & BIT_SIDE)));
+        DATA.recordedBattle.playersBattlers |= (i << (2 * (i >> 1) + 4 * (i & BIT_SIDE))); // Trainer0/1 second mon occupies same bits as trainer2/3 mon
     }
 
     STATE->runRandomly = TRUE;

@@ -20,15 +20,15 @@ AI_MULTI_BATTLE_TEST("AI will only explode and kill everything on the field with
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         BATTLER_AI_FLAGS(battler, aiFlags);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
-        PARTNER(SPECIES_WOBBUFFET) { HP(1); Speed(2); }
-        OPPONENT_A(SPECIES_ELECTRODE) { Moves(MOVE_EXPLOSION, MOVE_ELECTRO_BALL); HP(1); Speed(3); }
-        OPPONENT_B(SPECIES_VOLTORB) { Moves(MOVE_EXPLOSION, MOVE_ELECTRO_BALL); HP(1); Speed(4); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PARTNER(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT_A(SPECIES_VOLTORB) { Moves(MOVE_EXPLOSION, MOVE_HYPER_VOICE); HP(1); }
+        OPPONENT_B(SPECIES_ELECTRODE) { Moves(MOVE_EXPLOSION, MOVE_HYPER_VOICE); HP(1); }
     } WHEN {
         if (aiFlags == 0)
-            TURN { EXPECT_MOVE(opponentLeft, MOVE_ELECTRO_BALL, target: playerLeft); EXPECT_MOVE(opponentRight, MOVE_ELECTRO_BALL, target: playerLeft); }
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_HYPER_VOICE); EXPECT_MOVE(opponentRight, MOVE_HYPER_VOICE); }
         else
-            TURN { EXPECT_MOVE(&gBattleMons[BATTLE_PARTNER(battler)], MOVE_ELECTRO_BALL, target: playerLeft); EXPECT_MOVE(&gBattleMons[battler], MOVE_EXPLOSION); }
+            TURN { EXPECT_MOVE(&gBattleMons[BATTLE_PARTNER(battler)], MOVE_HYPER_VOICE); EXPECT_MOVE(&gBattleMons[battler], MOVE_EXPLOSION); }
     }
 }
 
@@ -114,22 +114,21 @@ AI_TWO_VS_ONE_BATTLE_TEST("Battler 3 has Battler 1 AI flags set correctly (2v1)"
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         BATTLER_AI_FLAGS(battler, aiFlags);
-        TIE_BREAK_TARGET(TARGET_TIE_LO, 0);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
-        PARTNER(SPECIES_WOBBUFFET) { HP(1); Speed(2); }
-        OPPONENT_A(SPECIES_VOLTORB) { Moves(MOVE_EXPLOSION, MOVE_ELECTRO_BALL); HP(1); Speed(3); }
-        OPPONENT_A(SPECIES_ELECTRODE) { Moves(MOVE_EXPLOSION, MOVE_ELECTRO_BALL); HP(1); Speed(4); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PARTNER(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT_A(SPECIES_VOLTORB) { Moves(MOVE_EXPLOSION, MOVE_HYPER_VOICE); HP(1); }
+        OPPONENT_A(SPECIES_ELECTRODE) { Moves(MOVE_EXPLOSION, MOVE_HYPER_VOICE); HP(1); }
     } WHEN {
-        if (aiFlags == 0 || battler == 3)
-            TURN { 
-                EXPECT_MOVE(opponentLeft, MOVE_ELECTRO_BALL, target: playerLeft);
-                EXPECT_MOVE(opponentRight, MOVE_ELECTRO_BALL, target: playerLeft);
+        TURN {
+            if (aiFlags == 0 || battler == 3) {
+                NOT_EXPECT_MOVE(opponentLeft, MOVE_EXPLOSION);
+                NOT_EXPECT_MOVE(opponentRight, MOVE_EXPLOSION);
             }
-        else
-            TURN { 
-                EXPECT_MOVE(opponentLeft, MOVE_EXPLOSION, target: playerLeft);
-                EXPECT_MOVE(opponentRight, MOVE_EXPLOSION);
+            else {
+                NOT_EXPECT_MOVE(opponentLeft, MOVE_HYPER_VOICE);
+                NOT_EXPECT_MOVE(opponentRight, MOVE_HYPER_VOICE);
             }
+        }
     }
 }
 
