@@ -3352,6 +3352,9 @@ static u16 *MakeCaughtBannesSpeciesList(u32 totalBannedSpecies)
     u16 *list = AllocZeroed(sizeof(u16) * totalBannedSpecies);
     for (u32 i = 0; i < NUM_SPECIES; i++)
     {
+        if (!IsSpeciesEnabled(i))
+            continue;
+
         u32 baseSpecies = GET_BASE_SPECIES_ID(i);
         if (baseSpecies == i && gSpeciesInfo[baseSpecies].isFrontierBanned)
         {

@@ -1287,14 +1287,6 @@ static inline void CalculateAndSetMoveDamage(struct BattleContext *ctx)
     }
 }
 
-static u32 GetWeather(void)
-{
-    if (gBattleWeather == B_WEATHER_NONE || !HasWeatherEffect())
-        return B_WEATHER_NONE;
-    else
-        return gBattleWeather;
-}
-
 static void Cmd_damagecalc(void)
 {
     CMD_ARGS();
@@ -2430,6 +2422,26 @@ static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect) //
     }
 }
 
+static bool32 DoesSubstituteBlockMoveEffectOnTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum MoveEffect moveEffect)
+{
+    if (battlerAtk == battlerDef)
+        return FALSE;
+
+    if (moveEffect != MOVE_EFFECT_BUG_BITE && IgnoreTargetingForMoveEffect(moveEffect))
+        return FALSE;
+
+    if (moveEffect == MOVE_EFFECT_CORE_ENFORCER)
+        return FALSE;
+
+    if (moveEffect == MOVE_EFFECT_BREAK_SCREEN)
+        return FALSE;
+
+    if (DoesSubstituteBlockMove(battlerAtk, battlerDef, gCurrentMove))
+        return TRUE;
+
+    return FALSE;
+}
+
 void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect moveEffect, const u8 *battleScript, enum SetMoveEffectFlags effectFlags)
 {
     enum Ability abilities[MAX_BATTLERS_COUNT] = {ABILITY_NONE};
@@ -2462,7 +2474,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         moveEffect = MOVE_EFFECT_NONE;
     else if (!IsBattlerAlive(effectBattler) && !IgnoreTargetingForMoveEffect(moveEffect))
         moveEffect = MOVE_EFFECT_NONE;
-    else if (DoesSubstituteBlockMove(battlerAtk, effectBattler, gCurrentMove) && !affectsUser)
+    else if (DoesSubstituteBlockMoveEffectOnTarget(battlerAtk, effectBattler, moveEffect))
         moveEffect = MOVE_EFFECT_NONE;
 
     gBattleScripting.moveEffect = moveEffect; // ChangeStatBuffs still needs the global moveEffect
@@ -2815,7 +2827,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
             if (gBattleMons[effectBattler].statStages[i] != DEFAULT_STAT_STAGE)
                 break;
         }
-        if (IsBattlerTurnDamaged(effectBattler) && i != NUM_BATTLE_STATS)
+        if (IsBattlerTurnDamaged(effectBattler, EXCLUDING_SUBSTITUTES) && i != NUM_BATTLE_STATS)
         {
             for (i = 0; i < NUM_BATTLE_STATS; i++)
                 gBattleMons[effectBattler].statStages[i] = DEFAULT_STAT_STAGE;
@@ -2985,32 +2997,31 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         }
         break;
     case MOVE_EFFECT_SECRET_POWER:
-        if (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
+        if (IsBattlerAlive(battlerAtk))
         {
-            switch (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
+            moveEffect = gBattleEnvironmentInfo[gBattleEnvironment].secretPowerEffect;
+            if (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
             {
-            case STATUS_FIELD_MISTY_TERRAIN:
-                moveEffect = MOVE_EFFECT_SP_ATK_MINUS_1;
-                break;
-            case STATUS_FIELD_GRASSY_TERRAIN:
-                moveEffect = MOVE_EFFECT_SLEEP;
-                break;
-            case STATUS_FIELD_ELECTRIC_TERRAIN:
-                moveEffect = MOVE_EFFECT_PARALYSIS;
-                break;
-            case STATUS_FIELD_PSYCHIC_TERRAIN:
-                moveEffect = MOVE_EFFECT_SPD_MINUS_1;
-                break;
-            default:
-                moveEffect = MOVE_EFFECT_PARALYSIS;
-                break;
+                switch (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
+                {
+                case STATUS_FIELD_MISTY_TERRAIN:
+                    moveEffect = MOVE_EFFECT_SP_ATK_MINUS_1;
+                    break;
+                case STATUS_FIELD_GRASSY_TERRAIN:
+                    moveEffect = MOVE_EFFECT_SLEEP;
+                    break;
+                case STATUS_FIELD_ELECTRIC_TERRAIN:
+                    moveEffect = MOVE_EFFECT_PARALYSIS;
+                    break;
+                case STATUS_FIELD_PSYCHIC_TERRAIN:
+                    moveEffect = MOVE_EFFECT_SPD_MINUS_1;
+                    break;
+                default:
+                    moveEffect = MOVE_EFFECT_PARALYSIS;
+                    break;
+                }
             }
-
             SetMoveEffect(battlerAtk, effectBattler, moveEffect, battleScript, effectFlags);
-        }
-        else
-        {
-            SetMoveEffect(battlerAtk, effectBattler, gBattleEnvironmentInfo[gBattleEnvironment].secretPowerEffect, battleScript, effectFlags);
         }
         break;
     case MOVE_EFFECT_PSYCHIC_NOISE:
@@ -3772,7 +3783,7 @@ static void SetToxicChainPriority(void)
     if (abilityAtk == ABILITY_TOXIC_CHAIN
      && IsBattlerAlive(gBattlerTarget)
      && CanBePoisoned(gBattlerAttacker, gBattlerTarget, abilityAtk, GetBattlerAbility(gBattlerTarget))
-     && IsBattlerTurnDamaged(gBattlerTarget)
+     && IsBattlerTurnDamaged(gBattlerTarget, EXCLUDING_SUBSTITUTES)
      && RandomWeighted(RNG_TOXIC_CHAIN, 7, 3))
         gBattleStruct->toxicChainPriority = TRUE;
 }
@@ -6245,6 +6256,8 @@ static void Cmd_getmoneyreward(void)
             }
             money = sWhiteOutBadgeMoney[count] * sPartyLevel;
         }
+        if (!IsEnoughMoney(&gSaveBlock1Ptr->money, money))
+            money = GetMoney(&gSaveBlock1Ptr->money);
         RemoveMoney(&gSaveBlock1Ptr->money, money);
     }
 
@@ -6411,19 +6424,13 @@ static void Cmd_futuresighttargetfailure(void)
 static u32 GetPossibleNextTarget(u32 currTarget)
 {
     u32 i = 0;
-    const u8 targetOrder[MAX_BATTLERS_COUNT] = {
-        gBattlerAttacker,
-        BATTLE_PARTNER(gBattlerAttacker),
-        LEFT_FOE(gBattlerAttacker),
-        RIGHT_FOE(gBattlerAttacker),
-    };
 
     // currTarget allows for a starting point without relying on values for previous targets being set
     if (currTarget != MAX_BATTLERS_COUNT)
     {
         for (i = 0; i < MAX_BATTLERS_COUNT; i++)
         {
-            if (targetOrder[i] == currTarget)
+            if (GetTargetBySlot(gBattlerAttacker, i) == currTarget)
                 break;
         }
         i++; // next target after finding currTarget
@@ -6431,7 +6438,8 @@ static u32 GetPossibleNextTarget(u32 currTarget)
 
     while (i < MAX_BATTLERS_COUNT)
     {
-        enum BattlerId battler = targetOrder[i++];
+        enum BattlerId battler = GetTargetBySlot(gBattlerAttacker, i);
+        i++;
 
         if (!IsBattlerAlive(battler))
             continue;
@@ -7205,7 +7213,7 @@ u32 IsFlowerVeilProtected(enum BattlerId battler)
 
 u32 IsLeafGuardProtected(enum BattlerId battler, enum Ability ability)
 {
-    if (IsBattlerWeatherAffected(battler, B_WEATHER_SUN))
+    if (IsBattlerWeatherAffected(GetBattlerHoldEffect(battler), GetWeather(), B_WEATHER_SUN))
         return ability == ABILITY_LEAF_GUARD;
     else
         return 0;
@@ -8918,9 +8926,17 @@ static void Cmd_settypetorandomresistance(void)
 static void Cmd_setalwayshitflag(void)
 {
     CMD_ARGS();
-    gBattleMons[gBattlerTarget].volatiles.lockOn = 2;
-    gBattleMons[gBattlerTarget].volatiles.battlerWithSureHit = gBattlerAttacker;
-    gBattlescriptCurrInstr = cmd->nextInstr;
+
+    if (gBattleMons[gBattlerAttacker].volatiles.battlerWithSureHit == 0)
+    {
+        gBattleMons[gBattlerAttacker].volatiles.lockOn = 2;
+        gBattleMons[gBattlerAttacker].volatiles.battlerWithSureHit = gBattlerTarget + 1;
+        gBattlescriptCurrInstr = cmd->nextInstr;
+    }
+    else
+    {
+        gBattlescriptCurrInstr = BattleScript_ButItFailed;
+    }
 }
 
 // Sketch
@@ -9674,15 +9690,15 @@ static void Cmd_settaunt(void)
     else if (gBattleMons[gBattlerTarget].volatiles.tauntTimer == 0)
     {
         u8 turns;
-        if (B_TAUNT_TURNS >= GEN_5)
+        if (GetConfig(B_TAUNT_TURNS) >= GEN_5)
         {
             turns = B_TAUNT_TIMER - 1; // 4 turns
             if (!HasBattlerActedThisTurn(gBattlerTarget))
                 turns--; // If the target hasn't yet moved this turn, Taunt lasts for only three turns (source: Bulbapedia)
         }
-        else if (B_TAUNT_TURNS >= GEN_4)
+        else if (GetConfig(B_TAUNT_TURNS) >= GEN_4)
         {
-            turns = RandomUniform(RNG_TAUNT, 3, B_TAUNT_TIMER);
+            turns = RandomUniform(RNG_TAUNT_TURNS, 3, B_TAUNT_TIMER);
         }
         else
         {
@@ -12161,10 +12177,11 @@ void BS_ItemRestorePP(void)
 void BS_TryRevertWeatherForm(void)
 {
     NATIVE_ARGS();
-    if (IsBattlerAlive(gBattlerTarget)
-        && TryBattleFormChange(gBattlerTarget, FORM_CHANGE_BATTLE_WEATHER, GetBattlerAbility(gBattlerTarget)))
+    enum BattlerId battler = gBattlersBySpeed[gEffectBattler];
+    if (IsBattlerAlive(battler)
+        && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_WEATHER, GetBattlerAbility(battler)))
     {
-        gBattleScripting.battler = gBattlerTarget;
+        gBattleScripting.battler = battler;
         BattleScriptPush(cmd->nextInstr);
         gBattlescriptCurrInstr = BattleScript_TargetFormChangeWithStringNoPopup;
         return;
@@ -13939,15 +13956,16 @@ void BS_SwitchinAbilities(void)
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
     enum Ability ability = GetBattlerAbility(battler);
     gBattlescriptCurrInstr = cmd->nextInstr;
-    AbilityBattleEffects(ABILITYEFFECT_TERA_SHIFT, battler, ability, MOVE_NONE, TRUE);
-    AbilityBattleEffects(ABILITYEFFECT_NEUTRALIZINGGAS, battler, ability, MOVE_NONE, TRUE);
-    AbilityBattleEffects(ABILITYEFFECT_UNNERVE, battler, ability, MOVE_NONE, TRUE);
-    AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN, battler, ability, MOVE_NONE, TRUE);
-    AbilityBattleEffects(ABILITYEFFECT_IMMUNITY, battler, ability, MOVE_NONE, TRUE);
-    AbilityBattleEffects(ABILITYEFFECT_COMMANDER, battler, ability, MOVE_NONE, TRUE);
-    AbilityBattleEffects(ABILITYEFFECT_ON_WEATHER, battler, ability, MOVE_NONE, TRUE);
-    AbilityBattleEffects(ABILITYEFFECT_ON_TERRAIN, battler, ability, MOVE_NONE, TRUE);
-    AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, battler, ability, MOVE_NONE, TRUE);
+    if (AbilityBattleEffects(ABILITYEFFECT_TERA_SHIFT, battler, ability, MOVE_NONE, TRUE)
+     || AbilityBattleEffects(ABILITYEFFECT_NEUTRALIZINGGAS, battler, ability, MOVE_NONE, TRUE)
+     || AbilityBattleEffects(ABILITYEFFECT_UNNERVE, battler, ability, MOVE_NONE, TRUE)
+     || AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN, battler, ability, MOVE_NONE, TRUE)
+     || AbilityBattleEffects(ABILITYEFFECT_IMMUNITY, battler, ability, MOVE_NONE, TRUE)
+     || AbilityBattleEffects(ABILITYEFFECT_COMMANDER, battler, ability, MOVE_NONE, TRUE)
+     || AbilityBattleEffects(ABILITYEFFECT_ON_WEATHER, battler, ability, MOVE_NONE, TRUE)
+     || AbilityBattleEffects(ABILITYEFFECT_ON_TERRAIN, battler, ability, MOVE_NONE, TRUE)
+     || AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, battler, ability, MOVE_NONE, TRUE))
+        return;
 }
 
 void BS_InstantHpDrop(void)
@@ -14764,7 +14782,7 @@ void BS_JumpIfWeatherAffected(void)
 {
     NATIVE_ARGS(u16 flags, const u8 *jumpInstr);
     u32 weather = cmd->flags;
-    if (IsBattlerWeatherAffected(gBattlerAttacker, weather))
+    if (IsBattlerWeatherAffected(GetBattlerHoldEffect(gBattlerAttacker), GetWeather(), weather))
         gBattlescriptCurrInstr = cmd->jumpInstr;
     else
         gBattlescriptCurrInstr = cmd->nextInstr;

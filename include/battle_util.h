@@ -159,6 +159,12 @@ enum EjectPackTiming
     OTHER,
 };
 
+enum SubCheck
+{
+    EXCLUDING_SUBSTITUTES,
+    INCLUDING_SUBSTITUTES
+};
+
 void HandleAction_ThrowBall(void);
 uq4_12_t CalcTypeEffectivenessMultiplierHelper(enum Move move, enum Type moveType, enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk, enum Ability abilityDef, bool32 recordAbilities);
 u32 GetCurrentBattleWeather(void);
@@ -302,7 +308,8 @@ bool32 CompareStat(enum BattlerId battler, enum Stat statId, u32 cmpTo, u32 cmpK
 bool32 BlocksPrankster(enum Move move, enum BattlerId battlerPrankster, enum BattlerId battlerDef, bool32 checkTarget);
 bool32 PickupHasValidTarget(enum BattlerId battler);
 bool32 CantPickupItem(u32 battler);
-bool32 IsBattlerWeatherAffected(enum BattlerId battler, u32 weatherFlags);
+u32 GetWeather(void);
+bool32 IsBattlerWeatherAffected(enum HoldEffect holdEffect, u32 weather, u32 weatherFlags);
 enum MoveTarget GetBattlerMoveTargetType(enum BattlerId battler, enum Move move);
 bool32 CanTargetBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);
 u32 GetNextTarget(u32 moveTarget, bool32 excludeCurrent);
@@ -400,7 +407,7 @@ void RemoveAbilityFlags(enum BattlerId battler);
 void CheckSetUnburden(enum BattlerId battler);
 bool32 IsDazzlingAbility(enum Ability ability);
 bool32 IsAllowedToUseBag(void);
-bool32 IsAnyTargetTurnDamaged(enum BattlerId battlerAtk);
+bool32 IsAnyTargetTurnDamaged(enum BattlerId battlerAtk, enum SubCheck subCheck);
 bool32 IsAnyTargetAffected(void);
 bool32 IsMimikyuDisguised(enum BattlerId battler);
 bool32 IsDoubleSpreadMove(void);
@@ -414,6 +421,7 @@ void TryUpdateEvolutionTracker(enum EvolutionConditions evolutionCondition, u32 
 bool32 CanUseMoveConsecutively(enum BattlerId battler);
 void TryResetConsecutiveUseCounter(enum BattlerId battler);
 void SetOrClearRageVolatile(void);
+enum BattlerId GetTargetBySlot(enum BattlerId battlerAtk, enum BattlerId battlerDef);
 bool32 IsNaturalEnemy(u32 speciesAttacker, u32 speciesTarget);
 
 #endif // GUARD_BATTLE_UTIL_H
