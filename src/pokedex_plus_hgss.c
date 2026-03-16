@@ -597,6 +597,7 @@ u32 GetSpeciesNameFontId(u32 nameWidth);
 u32 GetSpeciesNameWidthInChars(const u8 *speciesName);
 bool32 IsSpeciesAlcremie(u32 targetSpecies);
 bool32 IsItemSweet(enum Item item);
+static void TryLoadDarkModeArrowPalette(void);
 
 //Stat bars by DizzyEgg
 #define TAG_STAT_BAR 4097
@@ -1140,6 +1141,7 @@ static const struct CompressedSpriteSheet sInterfaceSpriteSheet[] =
 static const struct SpritePalette sInterfaceSpritePalette[] =
 {
     {sPokedexPlusHGSS_Default_Pal, TAG_DEX_INTERFACE},
+    {sPokedexPlusHGSS_Default_dark_Pal, TAG_DEX_INTERFACE},
     {0}
 };
 
@@ -2377,7 +2379,7 @@ static bool8 LoadPokedexListPage(u8 page)
         FreeAllSpritePalettes();
         gReservedSpritePaletteCount = 8;
         LoadCompressedSpriteSheet(&sInterfaceSpriteSheet[HGSS_DECAPPED]);
-        LoadSpritePalettes(sInterfaceSpritePalette);
+        LoadSpritePalette(&sInterfaceSpritePalette[HGSS_DARK_MODE]);
         LoadSpritePalettes(sStatBarSpritePal);
         CreateInterfaceSprites(page);
         gMain.state++;
@@ -5999,6 +6001,7 @@ static void Task_LoadEvolutionScreen(u8 taskId)
         gTasks[taskId].data[3] = 0;
         PrintEvolutionTargetSpeciesAndMethod(taskId, NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum), 0, &depth, alreadyPrintedIcons, &iconDepth, 0);
         LoadSpritePalette(&gSpritePalette_Arrow);
+        TryLoadDarkModeArrowPalette();
         GetSeenFlagTargetSpecies();
         if (sPokedexView->sEvoScreenData.numAllEvolutions > 0 && sPokedexView->sEvoScreenData.numSeen > 0)
         {
@@ -6915,6 +6918,7 @@ static void Task_LoadFormsScreen(u8 taskId)
         gTasks[taskId].data[3] = 0;
         PrintForms(taskId, NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum));
         LoadSpritePalette(&gSpritePalette_Arrow);
+        TryLoadDarkModeArrowPalette();
         gMain.state++;
         break;
     case 5:
@@ -7947,7 +7951,7 @@ static void Task_LoadSearchMenu(u8 taskId)
         break;
     case 1:
         LoadCompressedSpriteSheet(&sInterfaceSpriteSheet[HGSS_DECAPPED]);
-        LoadSpritePalettes(sInterfaceSpritePalette);
+        LoadSpritePalette(&sInterfaceSpritePalette[HGSS_DARK_MODE]);
         LoadSpritePalettes(sStatBarSpritePal);
         CreateSearchParameterScrollArrows(taskId);
         for (i = 0; i < NUM_TASK_DATA; i++)
@@ -8747,4 +8751,17 @@ static void PrintSearchParameterTitle(u32 y, const u8 *str)
 static void ClearSearchParameterBoxText(void)
 {
     ClearSearchMenuRect(144, 8, 96, 96);
+}
+
+static void TryLoadDarkModeArrowPalette(void)
+{
+    if (!HGSS_DARK_MODE)
+        return;
+
+    u32 index = IndexOfSpritePaletteTag(gSpritePalette_Arrow.tag);
+    u32 colorArrow = RGB2GBA(72, 72, 72);
+    u32 colorOutline = RGB2GBA(24, 24, 24);
+
+    LoadPalette(&colorArrow, OBJ_PLTT_ID(index) + 1, sizeof(colorArrow));
+    LoadPalette(&colorOutline, OBJ_PLTT_ID(index) + 2, sizeof(colorOutline));
 }
