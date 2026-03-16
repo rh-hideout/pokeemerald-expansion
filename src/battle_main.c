@@ -3537,7 +3537,7 @@ static void DoBattleIntro(void)
             {
                 if (position > B_POSITION_OPPONENT_LEFT && !BattleSideHasTwoTrainers(position & BIT_SIDE))
                     continue;
-                battler = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+                battler = GetBattlerAtPosition(position);
                 BtlController_EmitDrawPartyStatusSummary(battler, B_COMM_TO_CONTROLLER, hpStatus[GetBattlerTrainer(battler)], PARTY_SUMM_SKIP_DRAW_DELAY);
                 MarkBattlerForControllerExec(battler);
             }
