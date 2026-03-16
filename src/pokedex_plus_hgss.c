@@ -277,6 +277,9 @@ bool32 IsSpeciesAlcremie(u32 targetSpecies);
 bool32 IsItemSweet(enum Item item);
 static void TryLoadDarkModeArrowPalette(void);
 
+//Cry screen
+static void FillCryMeterWindowTilemapWithBg(void);
+
 //Stat bars by DizzyEgg
 #define TAG_STAT_BAR 4097
 #define TAG_STAT_BAR_BG 4098
@@ -4649,6 +4652,7 @@ bool32 TryLoadCryScreen_HGSS(u8 taskId)
             cryMeter.yPos = 3;
             if (LoadCryMeter(&cryMeter, 3))
                 gMain.state++;
+            FillCryMeterWindowTilemapWithBg();
             CopyWindowToVram(WIN_VU_METER, COPYWIN_GFX);
             CopyWindowToVram(WIN_INFO, COPYWIN_FULL);
             CopyBgTilemapBufferToVram(0);
@@ -5103,4 +5107,21 @@ static void TryLoadDarkModeArrowPalette(void)
 
     LoadPalette(&colorArrow, OBJ_PLTT_ID(index) + 1, sizeof(colorArrow));
     LoadPalette(&colorOutline, OBJ_PLTT_ID(index) + 2, sizeof(colorOutline));
+}
+
+static void FillCryMeterWindowTilemapWithBg(void)
+{
+    // This fills the window behind the 'VU' text on the cry meter.
+    // It is filled with blank tiles, showing as black.
+
+    struct Window windowLocal = gWindows[WIN_VU_METER];
+
+    FillBgTilemapBufferRect(
+        3,
+        0,
+        windowLocal.window.tilemapLeft,
+        windowLocal.window.tilemapTop,
+        windowLocal.window.width,
+        windowLocal.window.height,
+        windowLocal.window.paletteNum);
 }
