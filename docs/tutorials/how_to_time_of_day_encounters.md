@@ -1,14 +1,20 @@
 # Time-Based Encounters Tutorial
 
 ## Table of Contents:
-- [What is the Time-Based Encounters feature?](#what-is-the-time-based-encounters-feature)
-  - [Sounds rad, how do I add it to my romhack?](#sounds-rad-how-do-i-add-it-to-my-romhack)
-  - [I've never added one by hand, but I want to!](#ive-never-added-one-by-hand-but-i-want-to)
-  - [What are "supported suffixes?"](#what-are-supported-suffixes)
-  - [That's a lot of manual editing.](#thats-a-lot-of-manual-editing)
-  - [That's *still* a lot of editing.](#thats-still-a-lot-of-editing)
-- [So what are the `#define` options in `overworld.h`?](#so-what-are-the-define-options-in-overworldh)
-- [Examples](#examples)
+- [Time-Based Encounters Tutorial](#time-based-encounters-tutorial)
+  - [Table of Contents:](#table-of-contents)
+  - [What is the Time-Based Encounters feature?](#what-is-the-time-based-encounters-feature)
+    - [Sounds rad, how do I add it to my romhack?](#sounds-rad-how-do-i-add-it-to-my-romhack)
+    - [I've never added one by hand, but I want to!](#ive-never-added-one-by-hand-but-i-want-to)
+    - [What are "supported suffixes?"](#what-are-supported-suffixes)
+    - [That's a lot of manual editing.](#thats-a-lot-of-manual-editing)
+    - [That's *still* a lot of editing.](#thats-still-a-lot-of-editing)
+  - [So what are the `#define` options in `overworld.h`?](#so-what-are-the-define-options-in-overworldh)
+  - [Examples](#examples)
+    - [Running the migration script without the `--copy` option](#running-the-migration-script-without-the---copy-option)
+      - [Result:](#result)
+    - [Running the migration script with the `--copy` option](#running-the-migration-script-with-the---copy-option)
+      - [Result:](#result-1)
 
 ## What is the Time-Based Encounters feature?
 Time-Based Encounters lets you pick which Pokémon appear based on the in-game clock, per route!
@@ -30,81 +36,59 @@ To get started, we'll use Route 101 as an example:
 {
   "map": "MAP_ROUTE101",
   "base_label": "gRoute101",
-  "land_mons": {
-    "encounter_rate": 20,
-    "mons": [
-      {
-        "min_level": 2,
-        "max_level": 2,
-        "species": "SPECIES_WURMPLE"
-      },
-      {
-        "min_level": 2,
-        "max_level": 2,
-        "species": "SPECIES_POOCHYENA"
-      },
-      {
-        "min_level": 2,
-        "max_level": 2,
-        "species": "SPECIES_WURMPLE"
-      },
-      {
-        "min_level": 3,
-        "max_level": 3,
-        "species": "SPECIES_WURMPLE"
-      },
-      {
-        "min_level": 3,
-        "max_level": 3,
-        "species": "SPECIES_POOCHYENA"
-      },
-      {
-        "min_level": 3,
-        "max_level": 3,
-        "species": "SPECIES_POOCHYENA"
-      },
-      {
-        "min_level": 3,
-        "max_level": 3,
-        "species": "SPECIES_WURMPLE"
-      },
-      {
-        "min_level": 3,
-        "max_level": 3,
-        "species": "SPECIES_POOCHYENA"
-      },
-      {
-        "min_level": 2,
-        "max_level": 2,
-        "species": "SPECIES_ZIGZAGOON"
-      },
-      {
-        "min_level": 2,
-        "max_level": 2,
-        "species": "SPECIES_ZIGZAGOON"
-      },
-      {
-        "min_level": 3,
-        "max_level": 3,
-        "species": "SPECIES_ZIGZAGOON"
-      },
-      {
-        "min_level": 3,
-        "max_level": 3,
-        "species": "SPECIES_ZIGZAGOON"
-      }
-    ]
+  "encounter_sets": {
+    "land_mons": {
+      "encounter_rate": 20,
+      "mons": [
+        {
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_POOCHYENA",
+          "weight": 20
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_POOCHYENA",
+          "weight": 25
+        },
+        {
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_ZIGZAGOON",
+          "weight": 8
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_ZIGZAGOON",
+          "weight": 2
+        },
+        {
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_WURMPLE",
+          "weight": 30
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_WURMPLE",
+          "weight": 15
+        }
+      ]
+    }
   }
 },
 ```
-That's it! That's the entire encounter group for Route 101. In other Routes or maps, you'll likely see other encounters listed; here we have only have `land_mons`, but vanilla emerald supports three more types of encounters, for a total of four:
+That's it! That's the entire encounter group for Route 101. In other Routes or maps, you'll likely see other encounters listed; here we have only have `land_mons`, but vanilla emerald supports six more types of encounters, for a total of seven:
 - `land_mons`, your standard grass or cave or sand encounter.
 - `water_mons`, used for surfing
 - `rock_smash_mons`, for when you get jumpscared by a Geodude in Route 111 after using Rock Smash.
-- `fishing_mons`, for fishing
+- `fishing_mons_old_rod`, `fishing_mons_good_rod`, and `fishing_mons_super_rod` for fishing
 
 
-> **NOTE**: You can also have more of these encounter types- in fact, expansion has a fifth type of encounter for the Dexnav feature called `hidden_mons`, and some people have entries for `honey_mons` and `headbutt_mons` in their personal hacks as well! This system supports those too, you just need to make sure to update your [`WildEncounters` struct](../../include/wild_encounter.h) definition. You need to keep the order consistent, so as a standard, any custom encounter types should go before `hidden_mons` but after `fishing_mons`. To use the earlier examples:
+> **NOTE**: You can also have more of these encounter types- in fact, expansion has a fifth type of encounter for the Dexnav feature called `hidden_mons`, and some people have entries for `honey_mons` and `headbutt_mons` in their personal hacks as well! This system supports those too, you just need to make sure to update your [`WildEncounters` struct](../../include/wild_encounter.h) definition. You need to keep the order consistent, so as a standard, any custom encounter types should go before `hidden_mons` but after the `fishing_mons_<rod_type>_rod` encounter types. To use the earlier examples:
 
 ```c
 struct WildEncounterTypes
@@ -112,13 +96,17 @@ struct WildEncounterTypes
     const struct WildPokemonInfo *landMonsInfo;
     const struct WildPokemonInfo *waterMonsInfo;
     const struct WildPokemonInfo *rockSmashMonsInfo;
-    const struct WildPokemonInfo *fishingMonsInfo;
+    const struct WildPokemonInfo *fishingMonsOldRodInfo;
+    const struct WildPokemonInfo *fishingMonsGoodRodInfo;
+    const struct WildPokemonInfo *fishingMonsSuperRodInfo;
+    //new encounter types below ∨ here
     const struct WildPokemonInfo *honeyMonsInfo;
     const struct WildPokemonInfo *headbuttMonsInfo;
+    //new encounter types above ∧ here
     const struct WildPokemonInfo *hiddenMonsInfo;
 };
 ```
-> You can see that the two new entries, `honeyMonsInfo` and `headbuttMonsInfo` (corresponding with `honey_mons` and `headbutt_mons`) are slotted in between `fishingMonsInfo` and `hiddenMonsInfo`. Structs in the C programming language rely on consistent placement with their members, so this is the order that every other instance of these encounter types should maintain. In my ~~expert~~ opinion, the easiest way to add these is again [with Porymap](https://huderlem.github.io/porymap/manual/editing-wild-encounters.html). Okay, take a breath, stretch, and we'll get back to the tutorial!
+> You can see that the two new entries, `honeyMonsInfo` and `headbuttMonsInfo` (corresponding with `honey_mons` and `headbutt_mons`) are slotted in between `fishingMonsSuperRodInfo` and `hiddenMonsInfo`. Structs in the C programming language rely on consistent placement with their members, so this is the order that every other instance of these encounter types should maintain. In my ~~expert~~ opinion, the easiest way to add these is again [with Porymap](https://huderlem.github.io/porymap/manual/editing-wild-encounters.html). Okay, take a breath, stretch, and we'll get back to the tutorial!
 
 
 For the sake of simplicity, I'll show you how to add another encounter group here and pop a supported prefix on it. I want my new encounter group to:
@@ -132,241 +120,193 @@ With all of these things in mind, let's craft an encounter! We'll start off by c
 {
   "map": "MAP_ROUTE101",
   "base_label": "gRoute101",
-  "land_mons": {
-    "encounter_rate": 20,
-    "mons": [
-      {
-        "min_level": 2,
-        "max_level": 2,
-        "species": "SPECIES_WURMPLE"
-      },
-      {
-        "min_level": 2,
-        "max_level": 2,
-        "species": "SPECIES_POOCHYENA"
-      },
-      {
-        "min_level": 2,
-        "max_level": 2,
-        "species": "SPECIES_WURMPLE"
-      },
-      {
-        "min_level": 3,
-        "max_level": 3,
-        "species": "SPECIES_WURMPLE"
-      },
-      {
-        "min_level": 3,
-        "max_level": 3,
-        "species": "SPECIES_POOCHYENA"
-      },
-      {
-        "min_level": 3,
-        "max_level": 3,
-        "species": "SPECIES_POOCHYENA"
-      },
-      {
-        "min_level": 3,
-        "max_level": 3,
-        "species": "SPECIES_WURMPLE"
-      },
-      {
-        "min_level": 3,
-        "max_level": 3,
-        "species": "SPECIES_POOCHYENA"
-      },
-      {
-        "min_level": 2,
-        "max_level": 2,
-        "species": "SPECIES_ZIGZAGOON"
-      },
-      {
-        "min_level": 2,
-        "max_level": 2,
-        "species": "SPECIES_ZIGZAGOON"
-      },
-      {
-        "min_level": 3,
-        "max_level": 3,
-        "species": "SPECIES_ZIGZAGOON"
-      },
-      {
-        "min_level": 3,
-        "max_level": 3,
-        "species": "SPECIES_ZIGZAGOON"
-      }
-    ]
+  "encounter_sets": {
+    "land_mons": {
+      "encounter_rate": 20,
+      "mons": [
+        {
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_POOCHYENA",
+          "weight": 20
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_POOCHYENA",
+          "weight": 25
+        },
+        {
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_ZIGZAGOON",
+          "weight": 8
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_ZIGZAGOON",
+          "weight": 2
+        },
+        {
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_WURMPLE",
+          "weight": 30
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_WURMPLE",
+          "weight": 15
+        }
+      ]
+    }
   }
 },
 {
   "map": "MAP_ROUTE101",
   "base_label": "gRoute101_Night",
-  "land_mons": {
-    "encounter_rate": 20,
-    "mons": [
-      {
-        "min_level": 2,
-        "max_level": 2,
-        "species": "SPECIES_WURMPLE"
-      },
-      {
-        "min_level": 2,
-        "max_level": 2,
-        "species": "SPECIES_POOCHYENA"
-      },
-      {
-        "min_level": 2,
-        "max_level": 2,
-        "species": "SPECIES_WURMPLE"
-      },
-      {
-        "min_level": 3,
-        "max_level": 3,
-        "species": "SPECIES_WURMPLE"
-      },
-      {
-        "min_level": 3,
-        "max_level": 3,
-        "species": "SPECIES_POOCHYENA"
-      },
-      {
-        "min_level": 3,
-        "max_level": 3,
-        "species": "SPECIES_POOCHYENA"
-      },
-      {
-        "min_level": 3,
-        "max_level": 3,
-        "species": "SPECIES_WURMPLE"
-      },
-      {
-        "min_level": 3,
-        "max_level": 3,
-        "species": "SPECIES_POOCHYENA"
-      },
-      {
-        "min_level": 2,
-        "max_level": 2,
-        "species": "SPECIES_ZIGZAGOON"
-      },
-      {
-        "min_level": 2,
-        "max_level": 2,
-        "species": "SPECIES_ZIGZAGOON"
-      },
-      {
-        "min_level": 3,
-        "max_level": 3,
-        "species": "SPECIES_ZIGZAGOON"
-      },
-      {
-        "min_level": 3,
-        "max_level": 3,
-        "species": "SPECIES_ZIGZAGOON"
-      }
-    ]
+  "encounter_sets": {
+    "land_mons": {
+      "encounter_rate": 20,
+      "mons": [
+        {
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_POOCHYENA",
+          "weight": 20
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_POOCHYENA",
+          "weight": 25
+        },
+        {
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_ZIGZAGOON",
+          "weight": 8
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_ZIGZAGOON",
+          "weight": 2
+        },
+        {
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_WURMPLE",
+          "weight": 30
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_WURMPLE",
+          "weight": 15
+        }
+      ]
+    }
   }
 },
 ```
-Okay, we have it duplicated. We leave the value for "map": the same as the original so the game knows that both of these encounters are for Route 101. You can see I changed the name of the copy to `gRoute101_Night`; that's one bullet point down! If we enable `OW_TIME_BASED_ENCOUNTERS` in [`overworld.h`](../../include/config/overworld.h), the game will recognize this encounter group goes in the `Night` slot and will switch which group is used to generate the encounters when the in-game clock changes to `TIME_NIGHT`. Next, let's add Spiky Eared Pichu and our two new encounter tables (`fishing_mons` and `rock_smash_mons`).
+Okay, we have it duplicated. We leave the value for `"map":` the same as the original so the game knows that both of these encounters are for Route 101. You can see I changed the name of the copy to `gRoute101_Night`; that's one bullet point down! If we enable `OW_TIME_BASED_ENCOUNTERS` in [`overworld.h`](../../include/config/overworld.h), the game will recognize this encounter group goes in the `Night` slot and will switch which group is used to generate the encounters when the in-game clock changes to `TIME_NIGHT`. Next, let's add Spiky Eared Pichu and our two new encounter tables (`fishing_mons_old_rod` and `rock_smash_mons`).
 
 ```json
 {
   "map": "MAP_ROUTE101",
   "base_label": "gRoute101_Night",
-  "land_mons": {
-    "encounter_rate": 20,
-    "mons": [
-      {
-        "min_level": 2,
-        "max_level": 2,
-        "species": "SPECIES_PICHU_SPIKY_EARED"
-      },
-      {
-        "min_level": 2,
-        "max_level": 2,
-        "species": "SPECIES_POOCHYENA"
-      },
-      {
-        "min_level": 2,
-        "max_level": 2,
-        "species": "SPECIES_WURMPLE"
-      },
-      {
-        "min_level": 3,
-        "max_level": 3,
-        "species": "SPECIES_WURMPLE"
-      },
-      {
-        "min_level": 3,
-        "max_level": 3,
-        "species": "SPECIES_POOCHYENA"
-      },
-      {
-        "min_level": 3,
-        "max_level": 3,
-        "species": "SPECIES_POOCHYENA"
-      },
-      {
-        "min_level": 3,
-        "max_level": 3,
-        "species": "SPECIES_WURMPLE"
-      },
-      {
-        "min_level": 3,
-        "max_level": 3,
-        "species": "SPECIES_POOCHYENA"
-      },
-      {
-        "min_level": 2,
-        "max_level": 2,
-        "species": "SPECIES_ZIGZAGOON"
-      },
-      {
-        "min_level": 2,
-        "max_level": 2,
-        "species": "SPECIES_ZIGZAGOON"
-      },
-      {
-        "min_level": 3,
-        "max_level": 3,
-        "species": "SPECIES_ZIGZAGOON"
-      },
-      {
-        "min_level": 3,
-        "max_level": 3,
-        "species": "SPECIES_ZIGZAGOON"
-      }
-    ]
-  },
-  "fishing_mons": {
-    "encounter_rate": 30,
-    "mons": [
-      {
-        "min_level": 2,
-        "max_level": 2,
-        "species": "SPECIES_MAGIKARP"
-      },
-      {
-        "min_level": 2,
-        "max_level": 2,
-        "species": "SPECIES_MARILL"
-      }
-    ]
-  },
-  "rock_smash_mons": {
-    "encounter_rate": 20,
-    "mons": [
-      {
-        "min_level": 2,
-        "max_level": 2,
-        "species": "SPECIES_GEODUDE"
-      }
-    ]
+  "encounter_sets": {
+    "land_mons": {
+      "encounter_rate": 20,
+      "mons": [
+        {
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_POOCHYENA",
+          "weight": 20
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_POOCHYENA",
+          "weight": 25
+        },
+        {
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_ZIGZAGOON",
+          "weight": 8
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_ZIGZAGOON",
+          "weight": 2
+        },
+        {
+          "min_level": 2,
+          "max_level": 2,
+          "species": "SPECIES_WURMPLE",
+          "weight": 30
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_PICHU_SPIKY_EARED",
+          "weight": 15
+        }
+      ]
+    },
+    "fishing_mons_old_rod": {
+      "encounter_rate": 30,
+      "mons": [
+        {
+          "min_level": 5,
+          "max_level": 10,
+          "species": "SPECIES_GOLDEEN",
+          "weight": 30
+        },
+        {
+          "min_level": 5,
+          "max_level": 10,
+          "species": "SPECIES_MAGIKARP",
+          "weight": 70
+        }
+      ]
+    },
+    "rock_smash_mons": {
+      "encounter_rate": 20,
+      "mons": [
+        {
+          "min_level": 5,
+          "max_level": 10,
+          "species": "SPECIES_GEODUDE",
+          "weight": 30
+        },
+        {
+          "min_level": 10,
+          "max_level": 15,
+          "species": "SPECIES_GEODUDE",
+          "weight": 60
+        },
+        {
+          "min_level": 15,
+          "max_level": 20,
+          "species": "SPECIES_GEODUDE",
+          "weight": 10
+        }
+      ]
+    },
   }
 },
 ```
 And there we go! It has the `_Night` suffix, has Spiky Eared Pichu right up at the top of the list, has a couple of fishing encounters, and will jumpscare us with about a 20% chance every time we break a rock with rock smash. That's what the `encounter_rate` line means, by the way- the overall percentage you have of encountering *any* of the Pokémon listed.
+
+> **NOTE**: The `"weight"` variable is essentially how likely that Pokémon is to appear. The game takes each `"mons"` element and uses those weights to determine which Pokémon shows up; a higher weight means a higher chance.
+
 Congrats! You've just created a brand new encounter group, set its time, and adjusted the encounters! I'd highly recommend doing this [with Porymap](https://huderlem.github.io/porymap/manual/editing-wild-encounters.html)- the interface is very useful for editing maps, including wild encounters!
 
 ### What are "supported suffixes?"
@@ -394,14 +334,14 @@ The script is at [`migration_scripts/add_time_based_encounters.py`](../../migrat
 3. Runs through `wild_encounters.json` and adds dummy encounter groups for each time denomination to each group
     - ie, `gRoute101` becomes `gRoute101_Morning`, `gRoute101_Day`, `gRoute101_Evening`, and `gRoute101_Night`
 
-This script works kind of like a "template" feature- when you open it up to edit either in Porymap or a text editor, you will see the encounter groups, but they won't be filled out with encounters. This lets you add Pokémon with your own encounter rates however you want.
+This script works kind of like a "template" feature- when you open the [`wild_encounters.json`](../../src/data/wild_encounters.json) file to edit either in Porymap or a text editor, you will see the encounter groups, but they won't be filled out with encounters. This lets you add Pokémon with your own encounter rates however you want.
 
 ### That's *still* a lot of editing.
 You're *still* so right bestie! Luckily for you, there's an optional argument you can add when you run the script: `--copy`.
 This duplicates the encounter group's encounters as well as their labels/map group values. When you open [`wild_encounters.json`](../../src/data/wild_encounters.json) for editing either in Porymap or a text editor, you'll notice that each group (`gRoute101_Morning`, `gRoute101_Day`, `gRoute101_Evening`, and `gRoute101_Night`) now all have the same encounters as `gRoute101` did. If you only want to add a couple of Pokémon here and there for each time of day, this is probably the easier option.
 
 
-> **NOTE**: the `--copy` option will use up at least an additional 9kb of ROM space. Obviously that's not much even for a GBA ROM, but it's something to keep in mind.
+> **NOTE**: the `--copy` option will use up at least an additional few KiB of ROM space. Obviously that's not much even for a GBA ROM, but it's something to keep in mind.
 
 
 ## So what are the `#define` options in [`overworld.h`](../../include/config/overworld.h)?
@@ -440,83 +380,64 @@ python3 migration_scripts/add_time_based_encounters.py
   {
     "map": "MAP_ROUTE101",
     "base_label": "gRoute101_Morning",
-    "land_mons": {
-      "encounter_rate": 20,
-      "mons": [
-        {
-          "min_level": 2,
-          "max_level": 2,
-          "species": "SPECIES_WURMPLE"
-        },
-        {
-          "min_level": 2,
-          "max_level": 2,
-          "species": "SPECIES_POOCHYENA"
-        },
-        {
-          "min_level": 2,
-          "max_level": 2,
-          "species": "SPECIES_WURMPLE"
-        },
-        {
-          "min_level": 3,
-          "max_level": 3,
-          "species": "SPECIES_WURMPLE"
-        },
-        {
-          "min_level": 3,
-          "max_level": 3,
-          "species": "SPECIES_POOCHYENA"
-        },
-        {
-          "min_level": 3,
-          "max_level": 3,
-          "species": "SPECIES_POOCHYENA"
-        },
-        {
-          "min_level": 3,
-          "max_level": 3,
-          "species": "SPECIES_WURMPLE"
-        },
-        {
-          "min_level": 3,
-          "max_level": 3,
-          "species": "SPECIES_POOCHYENA"
-        },
-        {
-          "min_level": 2,
-          "max_level": 2,
-          "species": "SPECIES_ZIGZAGOON"
-        },
-        {
-          "min_level": 2,
-          "max_level": 2,
-          "species": "SPECIES_ZIGZAGOON"
-        },
-        {
-          "min_level": 3,
-          "max_level": 3,
-          "species": "SPECIES_ZIGZAGOON"
-        },
-        {
-          "min_level": 3,
-          "max_level": 3,
-          "species": "SPECIES_ZIGZAGOON"
-        }
-      ]
+    "encounter_sets": {
+      "land_mons": {
+        "encounter_rate": 20,
+        "mons": [
+          {
+            "min_level": 2,
+            "max_level": 2,
+            "species": "SPECIES_POOCHYENA",
+            "weight": 20
+          },
+          {
+            "min_level": 3,
+            "max_level": 3,
+            "species": "SPECIES_POOCHYENA",
+            "weight": 25
+          },
+          {
+            "min_level": 2,
+            "max_level": 2,
+            "species": "SPECIES_ZIGZAGOON",
+            "weight": 8
+          },
+          {
+            "min_level": 3,
+            "max_level": 3,
+            "species": "SPECIES_ZIGZAGOON",
+            "weight": 2
+          },
+          {
+            "min_level": 2,
+            "max_level": 2,
+            "species": "SPECIES_WURMPLE",
+            "weight": 30
+          },
+          {
+            "min_level": 3,
+            "max_level": 3,
+            "species": "SPECIES_WURMPLE",
+            "weight": 15
+          }
+        ]
+      }
     }
   },
   {
     "map": "MAP_ROUTE101",
-    "base_label": "gRoute101_Day"
+    "base_label": "gRoute101_Day",
+    "encounter_sets": {}
   },
   {
     "map": "MAP_ROUTE101",
-    "base_label": "gRoute101_Evening"
+    "base_label": "gRoute101_Evening",
+    "encounter_sets": {}
   },
   {
     "map": "MAP_ROUTE101",
-    "base_label": "gRoute101_Night"
+    "base_label": "gRoute101_Night",
+    "encounter_sets": {}
   },
 ]
 ```
@@ -532,282 +453,193 @@ python3 migration_scripts/add_time_based_encounters.py --copy
 #### Result:
 ```json
 "encounters": [
-  {
-    "map": "MAP_ROUTE101",
-    "base_label": "gRoute101_Morning",
+{
+  "map": "MAP_ROUTE101",
+  "base_label": "gRoute101_Morning",
+  "encounter_sets": {
     "land_mons": {
       "encounter_rate": 20,
       "mons": [
         {
           "min_level": 2,
           "max_level": 2,
-          "species": "SPECIES_WURMPLE"
+          "species": "SPECIES_POOCHYENA",
+          "weight": 20
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_POOCHYENA",
+          "weight": 25
         },
         {
           "min_level": 2,
           "max_level": 2,
-          "species": "SPECIES_POOCHYENA"
+          "species": "SPECIES_ZIGZAGOON",
+          "weight": 8
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_ZIGZAGOON",
+          "weight": 2
         },
         {
           "min_level": 2,
           "max_level": 2,
-          "species": "SPECIES_WURMPLE"
+          "species": "SPECIES_WURMPLE",
+          "weight": 30
         },
         {
           "min_level": 3,
           "max_level": 3,
-          "species": "SPECIES_WURMPLE"
-        },
-        {
-          "min_level": 3,
-          "max_level": 3,
-          "species": "SPECIES_POOCHYENA"
-        },
-        {
-          "min_level": 3,
-          "max_level": 3,
-          "species": "SPECIES_POOCHYENA"
-        },
-        {
-          "min_level": 3,
-          "max_level": 3,
-          "species": "SPECIES_WURMPLE"
-        },
-        {
-          "min_level": 3,
-          "max_level": 3,
-          "species": "SPECIES_POOCHYENA"
-        },
-        {
-          "min_level": 2,
-          "max_level": 2,
-          "species": "SPECIES_ZIGZAGOON"
-        },
-        {
-          "min_level": 2,
-          "max_level": 2,
-          "species": "SPECIES_ZIGZAGOON"
-        },
-        {
-          "min_level": 3,
-          "max_level": 3,
-          "species": "SPECIES_ZIGZAGOON"
-        },
-        {
-          "min_level": 3,
-          "max_level": 3,
-          "species": "SPECIES_ZIGZAGOON"
+          "species": "SPECIES_WURMPLE",
+          "weight": 15
         }
       ]
     }
-  },
-  {
-    "map": "MAP_ROUTE101",
-    "base_label": "gRoute101_Day",
+  }
+},
+{
+  "map": "MAP_ROUTE101",
+  "base_label": "gRoute101_Day",
+  "encounter_sets": {
     "land_mons": {
       "encounter_rate": 20,
       "mons": [
         {
           "min_level": 2,
           "max_level": 2,
-          "species": "SPECIES_WURMPLE"
+          "species": "SPECIES_POOCHYENA",
+          "weight": 20
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_POOCHYENA",
+          "weight": 25
         },
         {
           "min_level": 2,
           "max_level": 2,
-          "species": "SPECIES_POOCHYENA"
+          "species": "SPECIES_ZIGZAGOON",
+          "weight": 8
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_ZIGZAGOON",
+          "weight": 2
         },
         {
           "min_level": 2,
           "max_level": 2,
-          "species": "SPECIES_WURMPLE"
+          "species": "SPECIES_WURMPLE",
+          "weight": 30
         },
         {
           "min_level": 3,
           "max_level": 3,
-          "species": "SPECIES_WURMPLE"
-        },
-        {
-          "min_level": 3,
-          "max_level": 3,
-          "species": "SPECIES_POOCHYENA"
-        },
-        {
-          "min_level": 3,
-          "max_level": 3,
-          "species": "SPECIES_POOCHYENA"
-        },
-        {
-          "min_level": 3,
-          "max_level": 3,
-          "species": "SPECIES_WURMPLE"
-        },
-        {
-          "min_level": 3,
-          "max_level": 3,
-          "species": "SPECIES_POOCHYENA"
-        },
-        {
-          "min_level": 2,
-          "max_level": 2,
-          "species": "SPECIES_ZIGZAGOON"
-        },
-        {
-          "min_level": 2,
-          "max_level": 2,
-          "species": "SPECIES_ZIGZAGOON"
-        },
-        {
-          "min_level": 3,
-          "max_level": 3,
-          "species": "SPECIES_ZIGZAGOON"
-        },
-        {
-          "min_level": 3,
-          "max_level": 3,
-          "species": "SPECIES_ZIGZAGOON"
+          "species": "SPECIES_WURMPLE",
+          "weight": 15
         }
       ]
     }
-  },
-  {
-    "map": "MAP_ROUTE101",
-    "base_label": "gRoute101_Evening",
+  }
+},
+{
+  "map": "MAP_ROUTE101",
+  "base_label": "gRoute101_Evening",
+  "encounter_sets": {
     "land_mons": {
       "encounter_rate": 20,
       "mons": [
         {
           "min_level": 2,
           "max_level": 2,
-          "species": "SPECIES_WURMPLE"
+          "species": "SPECIES_POOCHYENA",
+          "weight": 20
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_POOCHYENA",
+          "weight": 25
         },
         {
           "min_level": 2,
           "max_level": 2,
-          "species": "SPECIES_POOCHYENA"
+          "species": "SPECIES_ZIGZAGOON",
+          "weight": 8
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_ZIGZAGOON",
+          "weight": 2
         },
         {
           "min_level": 2,
           "max_level": 2,
-          "species": "SPECIES_WURMPLE"
+          "species": "SPECIES_WURMPLE",
+          "weight": 30
         },
         {
           "min_level": 3,
           "max_level": 3,
-          "species": "SPECIES_WURMPLE"
-        },
-        {
-          "min_level": 3,
-          "max_level": 3,
-          "species": "SPECIES_POOCHYENA"
-        },
-        {
-          "min_level": 3,
-          "max_level": 3,
-          "species": "SPECIES_POOCHYENA"
-        },
-        {
-          "min_level": 3,
-          "max_level": 3,
-          "species": "SPECIES_WURMPLE"
-        },
-        {
-          "min_level": 3,
-          "max_level": 3,
-          "species": "SPECIES_POOCHYENA"
-        },
-        {
-          "min_level": 2,
-          "max_level": 2,
-          "species": "SPECIES_ZIGZAGOON"
-        },
-        {
-          "min_level": 2,
-          "max_level": 2,
-          "species": "SPECIES_ZIGZAGOON"
-        },
-        {
-          "min_level": 3,
-          "max_level": 3,
-          "species": "SPECIES_ZIGZAGOON"
-        },
-        {
-          "min_level": 3,
-          "max_level": 3,
-          "species": "SPECIES_ZIGZAGOON"
+          "species": "SPECIES_WURMPLE",
+          "weight": 15
         }
       ]
     }
-  },
-  {
-    "map": "MAP_ROUTE101",
-    "base_label": "gRoute101_Night",
+  }
+},
+{
+  "map": "MAP_ROUTE101",
+  "base_label": "gRoute101_Night",
+  "encounter_sets": {
     "land_mons": {
       "encounter_rate": 20,
       "mons": [
         {
           "min_level": 2,
           "max_level": 2,
-          "species": "SPECIES_WURMPLE"
+          "species": "SPECIES_POOCHYENA",
+          "weight": 20
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_POOCHYENA",
+          "weight": 25
         },
         {
           "min_level": 2,
           "max_level": 2,
-          "species": "SPECIES_POOCHYENA"
+          "species": "SPECIES_ZIGZAGOON",
+          "weight": 8
+        },
+        {
+          "min_level": 3,
+          "max_level": 3,
+          "species": "SPECIES_ZIGZAGOON",
+          "weight": 2
         },
         {
           "min_level": 2,
           "max_level": 2,
-          "species": "SPECIES_WURMPLE"
+          "species": "SPECIES_WURMPLE",
+          "weight": 30
         },
         {
           "min_level": 3,
           "max_level": 3,
-          "species": "SPECIES_WURMPLE"
-        },
-        {
-          "min_level": 3,
-          "max_level": 3,
-          "species": "SPECIES_POOCHYENA"
-        },
-        {
-          "min_level": 3,
-          "max_level": 3,
-          "species": "SPECIES_POOCHYENA"
-        },
-        {
-          "min_level": 3,
-          "max_level": 3,
-          "species": "SPECIES_WURMPLE"
-        },
-        {
-          "min_level": 3,
-          "max_level": 3,
-          "species": "SPECIES_POOCHYENA"
-        },
-        {
-          "min_level": 2,
-          "max_level": 2,
-          "species": "SPECIES_ZIGZAGOON"
-        },
-        {
-          "min_level": 2,
-          "max_level": 2,
-          "species": "SPECIES_ZIGZAGOON"
-        },
-        {
-          "min_level": 3,
-          "max_level": 3,
-          "species": "SPECIES_ZIGZAGOON"
-        },
-        {
-          "min_level": 3,
-          "max_level": 3,
-          "species": "SPECIES_ZIGZAGOON"
+          "species": "SPECIES_WURMPLE",
+          "weight": 15
         }
       ]
     }
-  },
-]
+  }
+},
 ```
 As you can see, the group `gRoute101` and all its encounters were copied into groups that correspond with the four vanilla times of day (Morning/Day/Evening/Night).
