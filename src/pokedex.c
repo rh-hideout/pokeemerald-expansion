@@ -118,7 +118,6 @@ static void LoadScreenSelectBarSubmenu(u16);
 static void HighlightScreenSelectBarItem(u8, u16);
 static void HighlightSubmenuScreenSelectBarItem(u8, u16);
 static void Task_DisplayCaughtMonDexPage(u8);
-static void Task_HandleCaughtMonPageInput(u8);
 static void Task_ExitCaughtMonPage(u8);
 static void SpriteCB_SlideCaughtMonToCenter(struct Sprite *sprite);
 static void PrintMonInfo(u32 num, u32, u32 owned, u32 newEntry);
@@ -4026,13 +4025,18 @@ static void Task_DisplayCaughtMonDexPage(u8 taskId)
     }
 }
 
-static void Task_HandleCaughtMonPageInput(u8 taskId)
+void Task_HandleCaughtMonPageInput(u8 taskId)
 {
     if (JOY_NEW(A_BUTTON | B_BUTTON))
     {
         BeginNormalPaletteFade(PALETTES_BG, 0, 0, 16, RGB_BLACK);
         gSprites[gTasks[taskId].tMonSpriteId].callback = SpriteCB_SlideCaughtMonToCenter;
         gTasks[taskId].func = Task_ExitCaughtMonPage;
+        HandleCaughtMonPageTypeIcons_HGSS();
+    }
+    else if (TryHandleCaughtMonPageFlicker_HGSS(taskId))
+    {
+        return;
     }
     // Flicker caught screen color
     else if (++gTasks[taskId].tPalTimer & 16)
@@ -4063,6 +4067,13 @@ static void Task_ExitCaughtMonPage(u8 taskId)
 
         isShiny = (bool8)gTasks[taskId].tIsShiny;
         LoadDexMonPalette(taskId, isShiny);
+
+        if (sPokedexView)
+        {
+            Free(sPokedexView);
+            sPokedexView = NULL;
+        }
+
         DestroyTask(taskId);
     }
 }

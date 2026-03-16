@@ -24,4 +24,7 @@ bool32 TrySwitchScreensFromAreaScreen_HGSS(u8 taskId);
 bool32 TrySwitchScreensFromCryScreen_HGSS(u8 taskId);
 bool32 TryLoadPlayArrowPalette_HGSS(bool8 cryPlaying);
 
+void HandleCaughtMonPageTypeIcons_HGSS(void);
+bool32 TryHandleCaughtMonPageFlicker_HGSS(u8 taskId);
+
 #endif // GUARD_POKEDEX_PLUS_HGSS_H

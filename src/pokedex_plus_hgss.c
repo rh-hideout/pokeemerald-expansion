@@ -211,9 +211,6 @@ static void CreateMonDexNum(u16, u8, u8, u16);
 static u8 CreateMonName(u16, u8, u8);
 static void CreateInterfaceSprites(u8);
 static void LoadScreenSelectBarMain(u16);
-static void Task_HandleCaughtMonPageInput(u8);
-static void Task_ExitCaughtMonPage(u8);
-static void SpriteCB_SlideCaughtMonToCenter(struct Sprite *sprite);
 static void PrintMonInfo(u32 num, u32, u32 owned, u32 newEntry);
 static void ResetOtherVideoRegisters(u16);
 static u8 PrintCryScreenSpeciesName(u8, u16, u8, u8);
@@ -1679,83 +1676,6 @@ void Task_DisplayCaughtMonDexPageHGSS(u8 taskId)
     }
 }
 
-static void Task_HandleCaughtMonPageInput(u8 taskId)
-{
-    if (JOY_NEW(A_BUTTON | B_BUTTON))
-    {
-        BeginNormalPaletteFade(PALETTES_BG, 0, 0, 16, RGB_BLACK);
-        SetSpriteInvisibility(0, TRUE);
-        SetSpriteInvisibility(1, TRUE);
-        gSprites[gTasks[taskId].tMonSpriteId].callback = SpriteCB_SlideCaughtMonToCenter;
-        gTasks[taskId].func = Task_ExitCaughtMonPage;
-    }
-    // Flicker caught screen color
-    else if (++gTasks[taskId].tPalTimer & 16)
-    {
-        if (!HGSS_DARK_MODE)
-            LoadPalette(sPokedexPlusHGSS_Default_Pal + 1, BG_PLTT_ID(3) + 1, PLTT_SIZEOF(7));
-        else
-            LoadPalette(sPokedexPlusHGSS_Default_dark_Pal + 1, BG_PLTT_ID(3) + 1, PLTT_SIZEOF(7));
-    }
-    else
-    {
-        if (!HGSS_DARK_MODE)
-            LoadPalette(sPokedexPlusHGSS_Default_Pal + 1, BG_PLTT_ID(3) + 1, PLTT_SIZEOF(7));
-        else
-            LoadPalette(sPokedexPlusHGSS_Default_dark_Pal + 1, BG_PLTT_ID(3) + 1, PLTT_SIZEOF(7));
-    }
-}
-
-static void Task_ExitCaughtMonPage(u8 taskId)
-{
-    if (!gPaletteFade.active)
-    {
-        u16 species;
-        u32 otId;
-        u32 personality;
-        u8 paletteNum;
-        const u16 *paletteData;
-        void *buffer;
-
-        SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_1D_MAP | DISPCNT_OBJ_ON);
-        FreeAllWindowBuffers();
-        buffer = GetBgTilemapBuffer(2);
-        if (buffer)
-            Free(buffer);
-        buffer = GetBgTilemapBuffer(3);
-        if (buffer)
-            Free(buffer);
-
-        species = gTasks[taskId].tSpecies;
-        otId = ((u16)gTasks[taskId].tOtIdHi << 16) | (u16)gTasks[taskId].tOtIdLo;
-        personality = ((u16)gTasks[taskId].tPersonalityHi << 16) | (u16)gTasks[taskId].tPersonalityLo;
-        paletteNum = gSprites[gTasks[taskId].tMonSpriteId].oam.paletteNum;
-        paletteData = GetMonSpritePalFromSpeciesAndPersonality(species, otId, personality);
-        LoadPalette(paletteData, OBJ_PLTT_ID(paletteNum), PLTT_SIZE_4BPP);
-
-        if (sPokedexView)
-        {
-            Free(sPokedexView);
-            sPokedexView = NULL;
-        }
-
-        DestroyTask(taskId);
-    }
-}
-
-static void SpriteCB_SlideCaughtMonToCenter(struct Sprite *sprite)
-{
-    if (sprite->x < 0x78)
-        sprite->x += 2;
-    if (sprite->x > 0x78)
-        sprite->x -= 2;
-
-    if (sprite->y < 0x50)
-        sprite->y += 1;
-    if (sprite->y > 0x50)
-        sprite->y -= 1;
-}
-
 #undef tState
 #undef tDexNum
 #undef tPalTimer
@@ -1819,7 +1739,7 @@ static void PrintStatsScreenTextSmallWhite(u8 windowId, const u8* str, u8 left, 
 }
 
 //Type Icon
-static void SetSpriteInvisibility(u8 spriteArrayId, bool8 invisible)
+void SetSpriteInvisibility(u8 spriteArrayId, bool8 invisible)
 {
     gSprites[sPokedexView->typeIconSpriteIds[spriteArrayId]].invisible = invisible;
 }
@@ -5124,4 +5044,39 @@ static void FillCryMeterWindowTilemapWithBg(void)
         windowLocal.window.width,
         windowLocal.window.height,
         windowLocal.window.paletteNum);
+}
+
+void HandleCaughtMonPageTypeIcons_HGSS(void)
+{
+    if (!POKEDEX_PLUS_HGSS)
+        return;
+
+    SetSpriteInvisibility(0, TRUE);
+    SetSpriteInvisibility(1, TRUE);
+}
+
+bool32 TryHandleCaughtMonPageFlicker_HGSS(u8 taskId)
+{
+    if (!POKEDEX_PLUS_HGSS)
+        return FALSE;
+
+    // Implementation of HGSS screen flickering like vanilla did not
+    // work. However, it is preserved in case it is to be implemented.
+
+    // if (++gTasks[taskId].tPalTimer & 16)
+    // {
+    //     if (!HGSS_DARK_MODE)
+    //         LoadPalette(sPokedexPlusHGSS_Default_Pal + 1, BG_PLTT_ID(3) + 1, PLTT_SIZEOF(7));
+    //     else
+    //         LoadPalette(sPokedexPlusHGSS_Default_dark_Pal + 1, BG_PLTT_ID(3) + 1, PLTT_SIZEOF(7));
+    // }
+    // else
+    // {
+    //     if (!HGSS_DARK_MODE)
+    //         LoadPalette(sPokedexPlusHGSS_Default_Pal + 1, BG_PLTT_ID(3) + 1, PLTT_SIZEOF(7));
+    //     else
+    //         LoadPalette(sPokedexPlusHGSS_Default_dark_Pal + 1, BG_PLTT_ID(3) + 1, PLTT_SIZEOF(7));
+    // }
+
+    return TRUE;
 }
