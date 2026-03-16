@@ -154,7 +154,7 @@ void TestRunner_CheckMemory(void)
                 const char *location = MemBlockLocation(block);
                 if (location)
                 {
-                    const char *cmpString = "src/generational_changes.c";
+                    const char *cmpString = "src/config_changes.c";
                     for (u32 charIndex = 0; charIndex < 26; charIndex++)
                     {
                         if (cmpString[charIndex] != location[charIndex])
