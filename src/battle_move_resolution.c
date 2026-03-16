@@ -287,6 +287,49 @@ static enum CancelerResult CancelerFocusPreGen5(struct BattleContext *ctx)
     return CANCELER_RESULT_SUCCESS;
 }
 
+static enum CancelerResult CancelerBide(struct BattleContext *ctx)
+{
+    if (GetMoveEffect(ctx->move) != EFFECT_BIDE)
+        return CANCELER_RESULT_SUCCESS;
+
+    if (gBattleMons[ctx->battlerAtk].volatiles.bideTurns)
+    {
+        if (--gBattleMons[ctx->battlerAtk].volatiles.bideTurns)
+        {
+            gBattlescriptCurrInstr = BattleScript_BideStoringEnergy;
+            return CANCELER_RESULT_BREAK; // Jump to moveend
+        }
+        else if (gBideDmg[ctx->battlerAtk])
+        {
+            gBattlerTarget = gBideTarget[ctx->battlerAtk];
+            gBattleMons[ctx->battlerAtk].volatiles.multipleTurns = FALSE;
+            if (!IsBattlerAlive(gBattlerTarget))
+                gBattlerTarget = GetBattleMoveTarget(gCurrentMove, TARGET_SELECTED);
+            if (IsBattlerAlive(gBattlerTarget))
+                gBattleStruct->battlerState[ctx->battlerAtk].targetsDone[gBattlerTarget] = FALSE;
+            BattleScriptCall(BattleScript_BideAttack);
+            return CANCELER_RESULT_BREAK;
+        }
+        else
+        {
+            gBattleMons[ctx->battlerAtk].volatiles.multipleTurns = FALSE;
+            gBattlescriptCurrInstr = BattleScript_BideNoEnergyToAttack;
+            return CANCELER_RESULT_FAILURE;
+        }
+    }
+    else
+    {
+        gBattleMons[gBattlerAttacker].volatiles.multipleTurns = TRUE;
+        gLockedMoves[gBattlerAttacker] = gCurrentMove;
+        gBideDmg[gBattlerAttacker] = 0;
+        gBattleMons[gBattlerAttacker].volatiles.bideTurns = 2;
+        gBattlescriptCurrInstr = BattleScript_SetUpBide;
+        return CANCELER_RESULT_BREAK; // Jump to moveend
+    }
+
+    return CANCELER_RESULT_SUCCESS;
+}
+
 static enum CancelerResult CancelerFocusGen5(struct BattleContext *ctx)
 {
     if (GetConfig(B_FOCUS_PUNCH_FAILURE) >= GEN_5)
@@ -1526,44 +1569,6 @@ static enum CancelerResult HandleSkyDropResult(struct BattleContext *ctx)
 
 static enum CancelerResult HandleBideResult(struct BattleContext *ctx)
 {
-    if (gBattleMons[ctx->battlerAtk].volatiles.bideTurns)
-    {
-        if (--gBattleMons[ctx->battlerAtk].volatiles.bideTurns)
-        {
-            gBattlescriptCurrInstr = BattleScript_BideStoringEnergy;
-            return CANCELER_RESULT_BREAK; // Jump to moveend
-        }
-        else
-        {
-            if (gBideDmg[ctx->battlerAtk])
-            {
-                gCurrentMove = MOVE_BIDE;
-                gBattlerTarget = gBideTarget[ctx->battlerAtk];
-                if (!IsBattlerAlive(gBattlerTarget))
-                    gBattlerTarget = GetBattleMoveTarget(MOVE_BIDE, TARGET_SELECTED);
-                BattleScriptCall(BattleScript_BideAttack);
-                return CANCELER_RESULT_BREAK;
-            }
-            else
-            {
-                gBattlescriptCurrInstr = BattleScript_BideNoEnergyToAttack;
-                return CANCELER_RESULT_FAILURE;
-            }
-
-            gBattleMons[gBattlerAttacker].volatiles.multipleTurns = FALSE;
-        }
-    }
-    else
-    {
-        gBattleMons[gBattlerAttacker].volatiles.multipleTurns = TRUE;
-        gLockedMoves[gBattlerAttacker] = gCurrentMove;
-        gBideDmg[gBattlerAttacker] = 0;
-        gBattleMons[gBattlerAttacker].volatiles.bideTurns = 2;
-        gBattlescriptCurrInstr = BattleScript_SetUpBide;
-        return CANCELER_RESULT_BREAK; // Jump to moveend
-    }
-
-
     return CANCELER_RESULT_SUCCESS;
 }
 
@@ -2028,6 +2033,7 @@ static enum CancelerResult (*const sMoveSuccessOrderCancelers[])(struct BattleCo
     [CANCELER_SKY_BATTLE] = CancelerSkyBattle,
     [CANCELER_WEATHER_PRIMAL] = CancelerWeatherPrimal,
     [CANCELER_FOCUS_PRE_GEN5] = CancelerFocusPreGen5,
+    [CANCELER_BIDE] = CancelerBide,
     [CANCELER_MOVE_FAILURE] = CancelerMoveFailure,
     [CANCELER_MOVE_EFFECT_FAILURE_TARGET] = CancelerMoveEffectFailureTarget,
     [CANCELER_POWDER_STATUS] = CancelerPowderStatus,
