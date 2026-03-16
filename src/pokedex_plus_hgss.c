@@ -158,8 +158,6 @@ static const u8 sText_FORMS_Buttons_Submenu_Decapped_PE[] = _("{START_BUTTON}Evo
 static const u8 sText_FORMS_NONE[] = _("{STR_VAR_1} has no alternate forms.");
 static const u8 sText_PlusSymbol[] = _("+");
 
-static const u8 sText_CryOf_Decapped[] = _("Cry of");
-
 // static .rodata graphics
 
 static const u16 sPokedexPlusHGSS_Default_Pal[] = INCBIN_U16("graphics/pokedex/hgss/palette_default.gbapal");
@@ -4616,10 +4614,7 @@ bool32 TryLoadCryScreen_HGSS(u8 taskId)
         gMain.state++;
         break;
     case 4:
-        if (!HGSS_DECAPPED)
-            PrintInfoScreenText(gText_CryOf, 82, 33);
-        else
-            PrintInfoScreenText(sText_CryOf_Decapped, 82, 33);
+        PrintInfoScreenText(gText_CryOf, 82, 33);
         PrintCryScreenSpeciesName(0, sPokedexListItem->dexNum, 82, 49);
         gMain.state++;
         break;
