@@ -2689,7 +2689,7 @@ static void PrintStatsScreen_NameGender(u8 taskId, u32 num, u32 value)
 
     //Name
     const u8 *name = GetSpeciesName(species);
-    if (GetStringWidth(FONT_SMALL, name, 0) < 55)
+    if (GetStringWidth(FONT_SMALL, name, 0) <= 55)
         PrintStatsScreenTextSmall(WIN_STATS_NAME_GENDER, name, base_x, base_y);
     else
         PrintStatsScreenTextSmallNarrower(WIN_STATS_NAME_GENDER, name, base_x, base_y);
