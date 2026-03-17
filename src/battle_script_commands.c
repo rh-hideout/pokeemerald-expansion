@@ -5888,10 +5888,10 @@ static void Cmd_getmoneyreward(void)
             money += GetTrainerMoneyToGive(TRAINER_BATTLE_PARAM.opponentB);
 
         if (IsSavingMoney()) {
-            deposit = CalcAmountToSave(money);
+            deposit = CalcAmountToDeposit(money);
             money -= deposit;
-            u32 savings = deposit + GetSavings();
-            SetSavings(savings);
+            u32 savings = deposit + GetMoneyInBank();
+            SetMoneyInBank(savings);
         }
         AddMoney(&gSaveBlock1Ptr->money, money);
     }

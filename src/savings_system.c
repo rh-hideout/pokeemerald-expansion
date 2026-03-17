@@ -12,8 +12,8 @@
 #include "menu.h"
 #include "money.h"
 #include "overworld.h"
-#include "script.h"
 #include "savings_system.h"
+#include "script.h"
 #include "string_util.h"
 #include "task.h"
 #include "text.h"
@@ -22,9 +22,6 @@
 
 u32 sWithdrawalAmount = 0;
 u8 sWithdrawalWindowId = 0;
-
-// Config
-#define SAVINGS_AMOUNT 4 // Amount is 1/val
 
 // Static Functions
 static u32 GetStepSize(s16 heldFrames);
@@ -48,19 +45,31 @@ bool32 IsSavingMoney(void)
     return FlagGet(SAVINGS_FLAG);
 }
 
-u32 GetSavings(void)
+u32 GetMoneyInBank(void)
 {
     return gSaveBlock3Ptr->savedMoney;
 }
 
-void SetSavings(u32 amount)
+void GetMoneyInBankFromScript(struct ScriptContext ctx)
+{
+    gSpecialVar_Result = GetMoneyInBank();
+}
+
+void SetMoneyInBank(u32 amount)
 {
     gSaveBlock3Ptr->savedMoney = amount;
 }
 
-u32 CalcAmountToSave(u32 money)
+void SetMoneyInBankFromScript(struct ScriptContext *ctx)
 {
-    return money / SAVINGS_AMOUNT;
+    u32 amount = ScriptReadWord(ctx);
+    SetMoneyInBank(amount);
+}
+
+u32 CalcAmountToDeposit(u32 money)
+{
+    return (money / 100) * SAVINGS_PERCENT
+         + ((money % 100) * SAVINGS_PERCENT) / 100;
 }
 
 u32 GetWithdrawalAmount(void)
@@ -111,7 +120,7 @@ static bool32 HandleAmountInput(u32 *amount, s32 max, s32 min, s16 *heldFrames)
 static void PrintWithdrawalAmount(u8 windowId, s16 amount)
 {
     ConvertIntToDecimalStringN(gStringVar4, amount, STR_CONV_MODE_LEADING_ZEROS,
-                               Util_CountDigits(GetSavings()));
+                               Util_CountDigits(GetMoneyInBank()));
     AddTextPrinterParameterized(
         windowId, FONT_NORMAL, gStringVar4,
         GetStringCenterAlignXOffset(FONT_NORMAL, gStringVar4, 0x28), 2, 0, 0);
@@ -139,7 +148,7 @@ static void Task_ShowWithdrawalMenu(u8 taskId)
         tState++;
         break;
     case 2:
-        sWithdrawalAmount = GetSavings();
+        sWithdrawalAmount = GetMoneyInBank();
         PrintWithdrawalAmount(sWithdrawalWindowId, sWithdrawalAmount);
         tState++;
         break;
@@ -166,7 +175,8 @@ static void Task_HandleWithdrawalInput(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
 
-    if (HandleAmountInput(&sWithdrawalAmount, GetSavings(), 0, &tHeldFrames))
+    if (HandleAmountInput(&sWithdrawalAmount, GetMoneyInBank(), 0,
+                          &tHeldFrames))
     {
         PrintWithdrawalAmount(sWithdrawalWindowId, sWithdrawalAmount);
     }
@@ -184,13 +194,13 @@ static void Task_HandleWithdrawalInput(u8 taskId)
 }
 #undef tHeldFrames
 
-void WithdrawSavings(void)
+void StartWithdrawMoneyTask(void)
 {
     CreateTask(Task_ShowWithdrawalMenu, 2);
 }
 
-void UpdateSavingsAfterWithdrawal(void)
+void UpdateBankAccountAfterWithdrawal(void)
 {
-    SetSavings(GetSavings() - sWithdrawalAmount);
+    SetMoneyInBank(GetMoneyInBank() - sWithdrawalAmount);
     AddMoney(&gSaveBlock1Ptr->money, sWithdrawalAmount);
 }
