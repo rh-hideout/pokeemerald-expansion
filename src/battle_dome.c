@@ -2132,7 +2132,7 @@ static void CalcDomeMonStats(const struct TrainerMon *fmon, int level, u8 ivs, i
             evs[i] = 0;
     }
 
-    if (fmon->species == SPECIES_SHEDINJA)
+    if (HasShedinjaHPHandling(fmon->species))
     {
         stats[STAT_HP] = 1;
     }
@@ -5126,7 +5126,7 @@ static u16 GetWinningMove(int winnerTournamentId, int loserTournamentId, u8 roun
             {
                 u32 personality = 0;
                 u32 targetSpecies = 0;
-                enum Ability targetAbility = 0;
+                enum Ability targetAbility = ABILITY_NONE;
                 uq4_12_t typeMultiplier = 0;
                 do
                 {

@@ -489,6 +489,7 @@ SINGLE_BATTLE_TEST("Fling - thrown berry's effect activates for the target even 
         else if (statId != 0) {
             EXPECT_EQ(opponent->statStages[statId], DEFAULT_STAT_STAGE + 1);
         }
+        EXPECT(player->item == ITEM_NONE);
     }
 }
 

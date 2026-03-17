@@ -3147,6 +3147,12 @@ void AnimTask_CreateSmallSolarBeamOrbs(u8 taskId)
 {
     if (--gTasks[taskId].data[0] == -1)
     {
+        if (!TryLoadSpriteAssets(&gSolarBeamSmallOrbSpriteTemplate))
+        {
+            DestroyAnimVisualTask(taskId);
+            return;
+        }
+
         gTasks[taskId].data[1]++;
         gTasks[taskId].data[0] = 6;
         gBattleAnimArgs[0] = 15;
@@ -4546,6 +4552,12 @@ static void AnimTrickBag_Step3(struct Sprite *sprite)
 void AnimTask_LeafBlade(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
+
+    if (!TryLoadSpriteAssets(&gLeafBladeSpriteTemplate))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
 
     task->data[4] = GetBattlerSpriteSubpriority(gBattleAnimTarget) - 1;
     task->data[6] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
@@ -6583,24 +6595,6 @@ static void ReloadBattlerSprites(enum BattlerId battler, struct Pokemon *party)
     }
 }
 
-static void TrySwapSkyDropTargets(enum BattlerId battlerAtk, enum BattlerId battlerPartner)
-{
-    u32 temp;
-
-    // battlerAtk is using Ally Switch
-    // check if our partner is the target of sky drop
-    // If so, change that index to battlerAtk
-    for (enum BattlerId i = 0; i < gBattlersCount; i++) {
-        if (gBattleStruct->skyDropTargets[i] == battlerPartner) {
-            gBattleStruct->skyDropTargets[i] = battlerAtk;
-            break;
-        }
-    }
-
-    // Then swap our own sky drop targets with the partner in case our partner is mid-skydrop
-    SWAP(gBattleStruct->skyDropTargets[battlerAtk], gBattleStruct->skyDropTargets[battlerPartner], temp);
-}
-
 #define TRY_SIDE_TIMER_BATTLER_ID_SWAP(battlerAtk, battlerPartner, side, field)    \
     if (gSideTimers[side].field == battlerAtk)                      \
         gSideTimers[side].field = battlerPartner;                   \
@@ -6717,6 +6711,10 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
     SwapStructData(&gBattleStruct->illusion[battlerAtk], &gBattleStruct->illusion[battlerPartner], data, sizeof(struct Illusion));
     SwapStructData(&gBattleStruct->battlerState[battlerAtk], &gBattleStruct->battlerState[battlerPartner], data, sizeof(struct BattlerState));
 
+    // Swap those back since they aren't affected by ally switch
+    SWAP(gBattleStruct->battlerState[battlerAtk].storedHealingWish, gBattleStruct->battlerState[battlerPartner].storedHealingWish, temp);
+    SWAP(gBattleStruct->battlerState[battlerAtk].storedLunarDance, gBattleStruct->battlerState[battlerPartner].storedLunarDance, temp);
+
     SWAP(gBattleSpritesDataPtr->battlerData[battlerAtk].invisible, gBattleSpritesDataPtr->battlerData[battlerPartner].invisible, temp);
     SWAP(gTransformedPersonalities[battlerAtk], gTransformedPersonalities[battlerPartner], temp);
     SWAP(gTransformedShininess[battlerAtk], gTransformedShininess[battlerPartner], temp);
@@ -6744,7 +6742,6 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
     SwitchTwoBattlersInParty(battlerAtk, battlerPartner);
     SWAP(gBattlerPartyIndexes[battlerAtk], gBattlerPartyIndexes[battlerPartner], temp);
 
-    TrySwapSkyDropTargets(battlerAtk, battlerPartner);
     TrySwapStickyWebBattlerId(battlerAtk, battlerPartner);
     TrySwapWishBattlerIds(battlerAtk, battlerPartner);
     TrySwapAttractBattlerIds(battlerAtk, battlerPartner);
@@ -7370,6 +7367,12 @@ void AnimTask_CreateSmallSteelBeamOrbs(u8 taskId)
 {
     if (--gTasks[taskId].data[0] == -1)
     {
+        if (!TryLoadSpriteAssets(&gSteelBeamSmallOrbSpriteTemplate))
+        {
+            DestroyAnimVisualTask(taskId);
+            return;
+        }
+
         gTasks[taskId].data[1]++;
         gTasks[taskId].data[0] = 6;
         gBattleAnimArgs[0] = 15;

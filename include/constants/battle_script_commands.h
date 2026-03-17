@@ -39,9 +39,6 @@ enum BattleScriptOpcode
     B_SCR_OP_JUMPBASEDONTYPE,
     B_SCR_OP_GETEXP,
     B_SCR_OP_CHECKTEAMSLOST,
-    B_SCR_OP_MOVEVALUESCLEANUP,
-    B_SCR_OP_SETMULTIHIT,
-    B_SCR_OP_DECREMENTMULTIHIT,
     B_SCR_OP_GOTO,
     B_SCR_OP_JUMPIFBYTE,
     B_SCR_OP_JUMPIFHALFWORD,
@@ -228,6 +225,8 @@ enum BattleScriptOpcode
     B_SCR_OP_JUMPIFCAPTIVATEAFFECTED,
     B_SCR_OP_SETNONVOLATILESTATUS,
     B_SCR_OP_TRYOVERWRITEABILITY,
+    B_SCR_OP_TRY_SYNCHRONIZE,
+    B_SCR_OP_TRY_CONFUSION_AFTER_SKY_DROP,
 
     // Expansion users, please don't use any of the unused commands.
     // They are reserved for expansion usage.
@@ -262,6 +261,7 @@ enum BattleScriptOpcode
     B_SCR_OP_UNUSED_28,
     B_SCR_OP_UNUSED_29,
     B_SCR_OP_UNUSED_30,
+    B_SCR_OP_UNUSED_31,
     B_SCR_OP_CALLNATIVE,
 };
 
@@ -421,6 +421,22 @@ enum HealthUpdate
 {
     PASSIVE_HP_UPDATE,
     MOVE_DAMAGE_HP_UPDATE,
+};
+
+enum FlungItem
+{
+    FLUNG_ITEM_NONE,
+    FLUNG_ITEM_REMOVE,
+    FLUNG_ITEM_REMOVED,
+};
+
+enum SynchronizeState
+{
+    SYNCH_STATE_NONE,
+    SYNCH_STATE_START,
+    SYNCH_STATE_SET_STATUS,
+    SYNCH_STATE_SHOW_ABILITY_POPUP,
+    SYNCH_STATE_END,
 };
 
 #endif // GUARD_CONSTANTS_BATTLE_SCRIPT_COMMANDS_H

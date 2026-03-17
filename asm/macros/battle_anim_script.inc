@@ -1,11 +1,11 @@
 @ commands
 
-	.macro loadspritegfx tag:req
+	.macro unloadspritegfx tag:req
 	.byte 0x0
 	.2byte \tag
 	.endm
 
-	.macro unloadspritegfx tag:req
+	.macro unloadspritepal tag:req
 	.byte 0x1
 	.2byte \tag
 	.endm
@@ -334,6 +334,10 @@
 .Lsprite_\@_2:
 	.endm
 
+	.macro unloadallspritepals
+	.byte 0x35
+	.endm
+
 @ useful macros
 	.macro jumpreteq value:req, ptr:req
 	jumpargeq ARG_RET_ID, \value, \ptr
@@ -458,6 +462,10 @@
 
 	.macro create_poison_powder_particle_sprite anim_battler:req, subpriority_offset:req, x:req, y:req, duration:req, y_velocity:req, wave_amplitude:req, wave_speed:req
 	createsprite gPoisonPowderParticleSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \duration, 256 * \y_velocity, \wave_amplitude, \wave_speed
+	.endm
+
+	.macro create_magic_powder_particle_sprite anim_battler:req, subpriority_offset:req, x:req, y:req, duration:req, y_velocity:req, wave_amplitude:req, wave_speed:req
+	createsprite gMagicPowderBluePowderTemplate, \anim_battler, \subpriority_offset, \x, \y, \duration, 256 * \y_velocity, \wave_amplitude, \wave_speed
 	.endm
 
 	.macro create_power_absorption_orb_sprite anim_battler:req, subpriority_offset:req, x:req, y:req, duration:req
@@ -647,4 +655,8 @@
 
 	.macro shake_battle_platforms priority=2, x_offset:req, y_offset:req, shakes:req, delay:req
 	createvisualtask AnimTask_ShakeBattlePlatforms, \priority, \x_offset, \y_offset, \shakes, \delay
+	.endm
+
+	.macro create_surf_wave priority=2, palette:req
+	createvisualtask AnimTask_CreateSurfWave, \priority, \palette
 	.endm

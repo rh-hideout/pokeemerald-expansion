@@ -364,17 +364,19 @@
 #define ANIM_HOOKED_POKEMON_EAST  11
 
 // IDs for how NPCs that copy player movement should respond.
-// Most go unused.
-#define COPY_MOVE_NONE           0
-#define COPY_MOVE_FACE           1
-#define COPY_MOVE_WALK           2
-#define COPY_MOVE_WALK_FAST      3
-#define COPY_MOVE_WALK_FASTER    4
-#define COPY_MOVE_SLIDE          5
-#define COPY_MOVE_JUMP_IN_PLACE  6
-#define COPY_MOVE_JUMP           7
-#define COPY_MOVE_JUMP2          8
-#define COPY_MOVE_EMPTY_1        9
-#define COPY_MOVE_EMPTY_2       10
+enum CopyMovement
+{
+	COPY_MOVE_NONE,
+	COPY_MOVE_FACE,
+	COPY_MOVE_WALK,
+	COPY_MOVE_WALK_FAST,
+	COPY_MOVE_WALK_FASTER,
+	COPY_MOVE_SLIDE,
+	COPY_MOVE_JUMP_IN_PLACE,
+	COPY_MOVE_JUMP,
+	COPY_MOVE_JUMP2,
+	COPY_MOVE_WALK_COLLIDE,
+	COPY_MOVE_WALK_COLLIDE_SLOW,
+};
 
 #endif // GUARD_CONSTANTS_EVENT_OBJECT_MOVEMENT_H

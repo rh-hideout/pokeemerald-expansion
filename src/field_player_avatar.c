@@ -1013,9 +1013,9 @@ static enum Collision CheckForObjectEventStaticCollision(struct ObjectEvent *obj
 static bool8 CanStopSurfing(s16 x, s16 y, enum Direction direction)
 {
     if ((gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_SURFING)
-     && MapGridGetElevationAt(x, y) == 3
-     && (GetObjectEventIdByPosition(x, y, 3) == OBJECT_EVENTS_COUNT
-     || GetObjectEventIdByPosition(x, y, 3) == GetFollowerNPCObjectId()
+     && MapGridGetElevationAt(x, y) == ELEVATION_DEFAULT
+     && (GetObjectEventIdByPosition(x, y, ELEVATION_DEFAULT) == OBJECT_EVENTS_COUNT
+     || GetObjectEventIdByPosition(x, y, ELEVATION_DEFAULT) == GetFollowerNPCObjectId()
      ))
     {
         CreateStopSurfingTask(direction);
@@ -1240,12 +1240,12 @@ static bool8 PlayerCheckIfAnimFinishedOrInactive(void)
     return ObjectEventCheckHeldMovementStatus(&gObjectEvents[gPlayerAvatar.objectEventId]);
 }
 
-static void PlayerSetCopyableMovement(u8 movement)
+static void PlayerSetCopyableMovement(enum CopyMovement movement)
 {
     gObjectEvents[gPlayerAvatar.objectEventId].playerCopyableMovement = movement;
 }
 
-u8 PlayerGetCopyableMovement(void)
+enum CopyMovement PlayerGetCopyableMovement(void)
 {
     return gObjectEvents[gPlayerAvatar.objectEventId].playerCopyableMovement;
 }
@@ -1255,7 +1255,7 @@ static void PlayerForceSetHeldMovement(u8 movementActionId)
     ObjectEventForceSetHeldMovement(&gObjectEvents[gPlayerAvatar.objectEventId], movementActionId);
 }
 
-void PlayerSetAnimId(u8 movementActionId, u8 copyableMovement)
+void PlayerSetAnimId(u8 movementActionId, enum CopyMovement copyableMovement)
 {
     if (!PlayerIsAnimActive())
     {
@@ -1310,7 +1310,7 @@ static void PlayerRun(enum Direction direction)
 void PlayerOnBikeCollide(enum Direction direction)
 {
     PlayCollisionSoundIfNotFacingWarp(direction);
-    PlayerSetAnimId(GetWalkInPlaceNormalMovementAction(direction), COPY_MOVE_FACE);
+    PlayerSetAnimId(GetWalkInPlaceNormalMovementAction(direction), COPY_MOVE_WALK_COLLIDE);
     // Edge case: If the player stops at the top of a mud slide, but the NPC follower is still on a mud slide tile,
     // move the follower into the player and hide them.
     if (PlayerHasFollowerNPC())
@@ -1331,18 +1331,18 @@ void PlayerOnBikeCollide(enum Direction direction)
 
 void PlayerOnBikeCollideWithFarawayIslandMew(enum Direction direction)
 {
-    PlayerSetAnimId(GetWalkInPlaceNormalMovementAction(direction), COPY_MOVE_FACE);
+    PlayerSetAnimId(GetWalkInPlaceNormalMovementAction(direction), COPY_MOVE_WALK_COLLIDE);
 }
 
 static void PlayerNotOnBikeCollide(enum Direction direction)
 {
     PlayCollisionSoundIfNotFacingWarp(direction);
-    PlayerSetAnimId(GetWalkInPlaceSlowMovementAction(direction), COPY_MOVE_FACE);
+    PlayerSetAnimId(GetWalkInPlaceSlowMovementAction(direction), COPY_MOVE_WALK_COLLIDE_SLOW);
 }
 
 static void PlayerNotOnBikeCollideWithFarawayIslandMew(enum Direction direction)
 {
-    PlayerSetAnimId(GetWalkInPlaceSlowMovementAction(direction), COPY_MOVE_FACE);
+    PlayerSetAnimId(GetWalkInPlaceSlowMovementAction(direction), COPY_MOVE_WALK_COLLIDE);
 }
 
 void PlayerFaceDirection(enum Direction direction)
@@ -1663,7 +1663,7 @@ bool8 IsPlayerFacingSurfableFishableWater(void)
 
     MoveCoords(playerObjEvent->facingDirection, &x, &y);
     if (GetCollisionAtCoords(playerObjEvent, x, y, playerObjEvent->facingDirection) == COLLISION_ELEVATION_MISMATCH
-     && PlayerGetElevation() == 3
+     && PlayerGetElevation() == ELEVATION_DEFAULT
      && MetatileBehavior_IsSurfableFishableWater(MapGridGetMetatileBehaviorAt(x, y)))
         return TRUE;
     else
@@ -1724,7 +1724,7 @@ void InitPlayerAvatar(s16 x, s16 y, enum Direction direction, enum Gender gender
     playerObjEventTemplate.graphicsId = GetPlayerAvatarGraphicsIdByStateIdAndGender(PLAYER_AVATAR_STATE_NORMAL, gender);
     playerObjEventTemplate.x = x - MAP_OFFSET;
     playerObjEventTemplate.y = y - MAP_OFFSET;
-    playerObjEventTemplate.elevation = 0;
+    playerObjEventTemplate.elevation = ELEVATION_TRANSITION;
     playerObjEventTemplate.movementType = MOVEMENT_TYPE_PLAYER;
     playerObjEventTemplate.movementRangeX = 0;
     playerObjEventTemplate.movementRangeY = 0;

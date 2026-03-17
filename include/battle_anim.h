@@ -61,6 +61,7 @@ struct LinkBattleAnim
 };
 
 #define ANIM_ARGS_COUNT 8
+#define MAX_ANIM_CALL_DEPTH 4
 
 extern void (*gAnimScriptCallback)(void);
 extern bool8 gAnimScriptActive;
@@ -96,6 +97,14 @@ s16 CalculatePanIncrement(s16 sourcePan, s16 targetPan, s16 incrementPan);
 void RelocateBattleBgPal(u16 paletteNum, u16 *dest, u32 offset, bool8 largeScreen);
 void ResetBattleAnimBg(bool8 toBG2);
 void LoadMoveBg(u16 bgId);
+
+bool32 IsGfxLoaded(u32 tag);
+bool32 IsPalLoaded(u32 tag);
+bool32 TryLoadGfx(u32 tag);
+bool32 TryLoadPal(u32 tag);
+bool32 TryLoadSpriteAssets(const struct SpriteTemplate *template);
+bool32 StorePalTag(u32 tag);
+bool32 StoreGfxTag(u32 tag);
 
 // battle_intro.c
 void SetAnimBgAttribute(u8 bgId, u8 attributeId, u8 value);
@@ -465,6 +474,7 @@ extern const struct OamData gOamData_AffineDouble_ObjBlend_32x8;
 extern const struct BattleAnimation gBattleAnimTable[ANIM_TAG_COUNT];
 
 extern const struct SpriteTemplate gWaterHitSplatSpriteTemplate;
+extern const struct SpriteTemplate gGrudgeFlameSpriteTemplate;
 
 extern const union AnimCmd *const gAnims_WaterMudOrb[];
 extern const union AnimCmd *const gAnims_BasicFire[];
