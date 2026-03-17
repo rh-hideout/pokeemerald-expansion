@@ -1316,7 +1316,7 @@ AI_SINGLE_BATTLE_TEST("Switch AI: AI will not cycle Intimidate when target is a 
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("Switch AI: AI will switch out to cycle Intimidate in doubles when at least one target is physical")
+AI_DOUBLE_BATTLE_TEST("Switch AI: AI will switch out to cycle Intimidate in doubles when at least one target is valid")
 {
     PASSES_RANDOMLY(SHOULD_SWITCH_INTIMIDATE_PERCENTAGE, 100, RNG_AI_SWITCH_INTIMIDATE);
     GIVEN {
