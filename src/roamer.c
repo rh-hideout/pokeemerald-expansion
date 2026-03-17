@@ -98,7 +98,7 @@ void MoveAllRoamers(void)
         RoamerMove(i);
 }
 
-static void CreateInitialRoamerMon(u8 index, u16 species, u8 level)
+static void CreateInitialRoamerMon(u8 index, enum Species species, u8 level)
 {
     ClearRoamerLocationHistory(index);
     u32 personality = GetMonPersonality(species,
@@ -137,7 +137,7 @@ static u8 GetFirstInactiveRoamerIndex(void)
     return ROAMER_COUNT;
 }
 
-bool8 TryAddRoamer(u16 species, u8 level)
+bool8 TryAddRoamer(enum Species species, u8 level)
 {
     u8 index = GetFirstInactiveRoamerIndex();
 

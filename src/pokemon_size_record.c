@@ -85,7 +85,7 @@ static u8 TranslateBigMonSizeTableIndex(u16 a)
     return i;
 }
 
-static u32 GetMonSize(u16 species, u16 b)
+static u32 GetMonSize(enum Species species, u16 b)
 {
     u64 unk2;
     u64 unk4;
@@ -124,7 +124,7 @@ static u8* ReturnHeightStringNoWhitespace(u32 size)
     return heightStr;
 }
 
-static u8 CompareMonSize(u16 species, u16 *sizeRecord)
+static u8 CompareMonSize(enum Species species, u16 *sizeRecord)
 {
     if (gSpecialVar_Result == 0xFF)
     {
@@ -159,7 +159,7 @@ static u8 CompareMonSize(u16 species, u16 *sizeRecord)
 }
 
 // Stores species name in gStringVar1, trainer's name in gStringVar2, and size in gStringVar3
-static void GetMonSizeRecordInfo(u16 species, u16 *sizeRecord)
+static void GetMonSizeRecordInfo(enum Species species, u16 *sizeRecord)
 {
     u32 size = GetMonSize(species, *sizeRecord);
 

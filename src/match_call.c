@@ -1777,7 +1777,7 @@ static u8 GetWaterEncounterSlot(void)
 
 static void PopulateSpeciesFromTrainerLocation(int matchCallId, u8 *destStr)
 {
-    u16 species[2];
+    enum Species species[2];
     int numSpecies;
     u8 slot;
     int i = 0;

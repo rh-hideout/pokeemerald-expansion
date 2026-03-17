@@ -387,7 +387,7 @@ static void InitBtlControllersInternal(void)
 
 bool32 IsValidForBattle(struct Pokemon *mon)
 {
-    u32 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    enum Species species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
     return (species != SPECIES_NONE
          && species != SPECIES_EGG
          && GetMonData(mon, MON_DATA_HP) != 0
@@ -396,7 +396,7 @@ bool32 IsValidForBattle(struct Pokemon *mon)
 
 bool32 IsValidForBattleButDead(struct Pokemon *mon)
 {
-    u32 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    enum Species species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
     return (species != SPECIES_NONE
          && species != SPECIES_EGG
          && GetMonData(mon, MON_DATA_IS_EGG) == FALSE);
@@ -1995,7 +1995,7 @@ static bool8 ShouldDoSlideInAnim(enum BattlerId battler)
 
 void StartSendOutAnim(enum BattlerId battler, bool32 dontClearTransform, bool32 dontClearSubstituteBit, bool32 doSlideIn)
 {
-    u16 species;
+    enum Species species;
     struct Pokemon *mon = GetBattlerMon(battler);
     u32 sendoutType;
 
@@ -2339,7 +2339,7 @@ void BtlController_HandleLoadMonSprite(enum BattlerId battler)
 {
     u32 y;
     struct Pokemon *mon = GetBattlerMon(battler);
-    u16 species = GetBattlerVisualSpecies(battler);
+    enum Species species = GetBattlerVisualSpecies(battler);
 
     if (gBattleTypeFlags & BATTLE_TYPE_GHOST && GetBattlerSide(battler) == B_SIDE_OPPONENT)
     {
@@ -3061,7 +3061,7 @@ static void AnimateMonAfterKnockout(enum BattlerId battler)
 
 static void LaunchKOAnimation(enum BattlerId battlerId, u16 animId, bool32 isFront)
 {
-    u32 species = GetBattlerVisualSpecies(battlerId);
+    enum Species species = GetBattlerVisualSpecies(battlerId);
     u32 spriteId = gBattlerSpriteIds[battlerId];
 
     gBattleStruct->battlerKOAnimsRunning++;
@@ -3083,7 +3083,7 @@ static void LaunchKOAnimation(enum BattlerId battlerId, u16 animId, bool32 isFro
 
 static u32 ReturnAnimIdForBattler(bool32 wasPlayerSideKnockedOut, u32 specificBattler)
 {
-    u32 species = GetBattlerVisualSpecies(specificBattler);
+    enum Species species = GetBattlerVisualSpecies(specificBattler);
     if (wasPlayerSideKnockedOut)
         return gSpeciesInfo[species].frontAnimId;
     else

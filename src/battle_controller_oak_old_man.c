@@ -850,7 +850,7 @@ static void OakOldManHandlePlaySE(enum BattlerId battler)
 static void OakOldManHandleFaintingCry(enum BattlerId battler)
 {
     struct Pokemon *party = GetBattlerParty(battler);
-    u16 species = GetMonData(&party[gBattlerPartyIndexes[battler]], MON_DATA_SPECIES);
+    enum Species species = GetMonData(&party[gBattlerPartyIndexes[battler]], MON_DATA_SPECIES);
 
     PlayCry_Normal(species, 25);
     OakOldManBufferExecCompleted(battler);

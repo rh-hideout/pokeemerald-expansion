@@ -107,7 +107,7 @@ static u32 GetPartyMonCount(u32 lastId, struct Pokemon *party, bool32 onlyAlive)
 
     for (u32 i = 0; i < lastId; i++)
     {
-        u32 species = GetMonData(&party[i], MON_DATA_SPECIES_OR_EGG);
+        enum Species species = GetMonData(&party[i], MON_DATA_SPECIES_OR_EGG);
         if (species != SPECIES_NONE
                 && species != SPECIES_EGG
                 && (!onlyAlive || GetMonData(&party[i], MON_DATA_HP)))

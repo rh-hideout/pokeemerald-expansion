@@ -204,8 +204,8 @@ static EWRAM_DATA union
     struct WirelessLink_URoom *uRoom;
 } sWirelessLinkMain = {};
 EWRAM_DATA struct RfuGameCompatibilityData gRfuPartnerCompatibilityData = {};
-EWRAM_DATA u16 gUnionRoomOfferedSpecies = 0;
-EWRAM_DATA enum Type gUnionRoomRequestedMonType = 0;
+EWRAM_DATA enum Species gUnionRoomOfferedSpecies = SPECIES_NONE;
+EWRAM_DATA enum Type gUnionRoomRequestedMonType = TYPE_NONE;
 static EWRAM_DATA struct UnionRoomTrade sUnionRoomTrade = {};
 
 static struct WirelessLink_Leader *sLeader;
@@ -270,7 +270,7 @@ static void GetURoomActivityRejectMsg(u8 *, s32, u32);
 static u32 ConvPartnerUnameAndGetWhetherMetAlready(struct RfuPlayer *);
 static void GetURoomActivityStartMsg(u8 *, u8);
 static void UR_ClearBg0(void);
-static s32 IsRequestedTradeInPlayerParty(enum Type, u32);
+static s32 IsRequestedTradeInPlayerParty(enum Type, enum Species);
 static bool32 UR_PrintFieldMessage(const u8 *);
 static s32 GetChatLeaderActionRequestMessage(u8 *, u32, u16 *, struct WirelessLink_URoom *);
 static void Task_InitUnionRoom(u8 taskId);
@@ -4110,7 +4110,7 @@ static void ItemPrintFunc_EmptyList(u8 windowId, u32 itemId, u8 y)
 static void TradeBoardPrintItemInfo(u8 windowId, u8 y, struct RfuGameData *data, const u8 *playerName, u8 colorIdx)
 {
     u8 levelStr[4];
-    u16 species = data->tradeSpecies;
+    enum Species species = data->tradeSpecies;
     enum Type type = data->tradeType;
     u8 level = data->tradeLevel;
 
@@ -4181,7 +4181,7 @@ static s32 GetUnionRoomPlayerGender(s32 playerIdx, struct RfuPlayerList *list)
     return list->players[playerIdx].rfu.data.playerGender;
 }
 
-static s32 IsRequestedTradeInPlayerParty(enum Type type, u32 species)
+static s32 IsRequestedTradeInPlayerParty(enum Type type, enum Species species)
 {
     s32 i;
 
@@ -4248,7 +4248,7 @@ static void GetURoomActivityStartMsg(u8 *dst, u8 acitivty)
 static s32 GetChatLeaderActionRequestMessage(u8 *dst, u32 gender, u16 *activityData, struct WirelessLink_URoom *uroom)
 {
     s32 result = 0;
-    u16 species = SPECIES_NONE;
+    enum Species species = SPECIES_NONE;
     s32 i;
 
     switch (activityData[0])
@@ -4380,10 +4380,10 @@ static void RegisterTradeMon(u32 monId, struct UnionRoomTrade *trade)
 static u32 GetPartyPositionOfRegisteredMon(struct UnionRoomTrade *trade, u8 multiplayerId)
 {
     u16 response = 0;
-    u16 species;
+    enum Species species;
     u32 personality;
     u32 cur_personality;
-    u16 cur_species;
+    enum Species cur_species;
     s32 i;
 
     if (multiplayerId == 0)

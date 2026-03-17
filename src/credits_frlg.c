@@ -1191,7 +1191,7 @@ static void LoadCreditsMonPic(u8 whichMon)
     CopyWindowToVram(2, COPYWIN_GFX);
 }
 
-static u16 GetCreditsMonSpecies(u8 whichMon)
+static enum Species GetCreditsMonSpecies(u8 whichMon)
 {
     switch (whichMon)
     {

@@ -314,7 +314,7 @@ static u16 GetRandomAlternateMove(u8 monId)
     u8 i, j;
     u8 id;
     u8 numLearnsetMoves;
-    u16 species;
+    enum Species species;
     const struct LevelUpMove *learnset;
     bool32 needTMs = FALSE;
     enum Move move = MOVE_NONE;
@@ -434,7 +434,7 @@ static bool8 TrySetMove(u8 monId, enum Move move)
     return TRUE;
 }
 
-static void GetLatestLearnedMoves(u16 species, u16 *moves)
+static void GetLatestLearnedMoves(enum Species species, u16 *moves)
 {
     u8 i, j;
     u8 level, numLearnsetMoves;
@@ -564,7 +564,7 @@ static void CreateApprenticeMenu(u8 menu)
         top = 6;
         for (i = 0; i < MULTI_PARTY_SIZE; i++)
         {
-            u16 species;
+            enum Species species;
             u32 speciesTableId;
 
             speciesTableId = APPRENTICE_SPECIES_ID(i);

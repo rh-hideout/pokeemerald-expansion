@@ -1076,8 +1076,8 @@ void GetConditionMenuMonGfx(void *tilesDst, void *palDst, u16 boxId, u16 monId, 
 
     if (partyId != numMons)
     {
-        u16 species = GetBoxOrPartyMonData(boxId, monId, MON_DATA_SPECIES, NULL);
-        bool8 isShiny = GetBoxOrPartyMonData(boxId, monId, MON_DATA_IS_SHINY, NULL);
+        enum Species species = GetBoxOrPartyMonData(boxId, monId, MON_DATA_SPECIES, NULL);
+        bool32 isShiny = GetBoxOrPartyMonData(boxId, monId, MON_DATA_IS_SHINY, NULL);
         u32 personality = GetBoxOrPartyMonData(boxId, monId, MON_DATA_PERSONALITY, NULL);
         bool32 isEgg = GetBoxOrPartyMonData(boxId, monId, MON_DATA_IS_EGG, NULL);
 

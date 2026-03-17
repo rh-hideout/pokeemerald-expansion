@@ -1942,7 +1942,7 @@ static enum CancelerResult CancelerMultihitMoves(struct BattleContext *ctx)
 
         for (i = 0; i < PARTY_SIZE; i++)
         {
-            u32 species = GetMonData(&party[i], MON_DATA_SPECIES);
+            enum Species species = GetMonData(&party[i], MON_DATA_SPECIES);
             if (species != SPECIES_NONE
              && GetMonData(&party[i], MON_DATA_HP)
              && !GetMonData(&party[i], MON_DATA_IS_EGG)

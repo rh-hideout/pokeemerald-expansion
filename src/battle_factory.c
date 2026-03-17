@@ -235,7 +235,7 @@ static void SetPerformedRentalSwap(void)
 static void GenerateOpponentMons(void)
 {
     int i, j, k;
-    u16 species[FRONTIER_PARTY_SIZE];
+    enum Species species[FRONTIER_PARTY_SIZE];
     u16 heldItems[FRONTIER_PARTY_SIZE];
     int firstMonId = 0;
     u16 trainerId = 0;
@@ -390,8 +390,8 @@ static void GenerateInitialRentalMons(void)
     u8 factoryBattleMode;
     u8 rentalRank;
     u16 monId;
-    u16 currSpecies;
-    u16 species[PARTY_SIZE];
+    enum Species currSpecies;
+    enum Species species[PARTY_SIZE];
     u16 monIds[PARTY_SIZE];
     u16 heldItems[PARTY_SIZE];
 
@@ -490,7 +490,7 @@ static void GetOpponentMostCommonMonType(void)
         typeCounts[i] = 0;
     for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
     {
-        u32 species = gFacilityTrainerMons[gFrontierTempParty[i]].species;
+        enum Species species = gFacilityTrainerMons[gFrontierTempParty[i]].species;
         typeCounts[GetSpeciesType(species, 0)]++;
         if (GetSpeciesType(species, 0) != GetSpeciesType(species, 1))
             typeCounts[GetSpeciesType(species, 1)]++;
@@ -654,8 +654,8 @@ u8 GetFactoryMonFixedIV(u8 challengeNum, bool8 isLastBattle)
 void FillFactoryBrainParty(void)
 {
     int i, j, k;
-    u16 species[FRONTIER_PARTY_SIZE];
-    u16 heldItems[FRONTIER_PARTY_SIZE];
+    enum Species species[FRONTIER_PARTY_SIZE];
+    enum Item heldItems[FRONTIER_PARTY_SIZE];
     int monLevel;
     u8 fixedIV;
     u32 otId;
