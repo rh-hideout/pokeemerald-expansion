@@ -31,6 +31,7 @@ let state = {
     items: null,
     abilities: null,
     config: null,
+    maps: null,
     search: '',
     configFilter: 'all',
 };
@@ -277,6 +278,8 @@ function parseMoves(text) {
         const ppMatch = body.match(/\.pp\s*=\s*(\w+)/);
         const catMatch = body.match(/\.category\s*=\s*(\w+)/);
         const prioMatch = body.match(/\.priority\s*=\s*(-?\d+)/);
+        const effectMatch = body.match(/\.effect\s*=\s*(\w+)/);
+        const targetMatch = body.match(/\.target\s*=\s*(\w+)/);
         if (nameMatch) move.name = nameMatch[1];
         if (descMatch) move.description = descMatch[1] || descMatch[2];
         if (powerMatch) move.power = powerMatch[1];
@@ -285,9 +288,33 @@ function parseMoves(text) {
         if (ppMatch) move.pp = ppMatch[1];
         if (catMatch) move.category = catMatch[1].replace('DAMAGE_CATEGORY_', '');
         if (prioMatch) move.priority = parseInt(prioMatch[1]);
+        if (effectMatch) move.effect = effectMatch[1];
+        if (targetMatch) move.target = targetMatch[1];
         moves.push(move);
     }
     return moves;
+}
+
+function updateMoveInFile(move) {
+    const filePath = 'src/data/moves_info.h';
+    let fileContent = pendingChanges[filePath] || originalContent[filePath];
+    if (!fileContent) { toast('Move data not loaded yet', true); return; }
+
+    const entryRegex = new RegExp(`(\\[${move.id}\\]\\s*=\\s*\\{[\\s\\S]*?\\.power\\s*=\\s*)\\w+`, 'm');
+    const accRegex = new RegExp(`(\\[${move.id}\\]\\s*=\\s*\\{[\\s\\S]*?\\.accuracy\\s*=\\s*)\\w+`, 'm');
+    const ppRegex = new RegExp(`(\\[${move.id}\\]\\s*=\\s*\\{[\\s\\S]*?\\.pp\\s*=\\s*)\\w+`, 'm');
+    const typeRegex = new RegExp(`(\\[${move.id}\\]\\s*=\\s*\\{[\\s\\S]*?\\.type\\s*=\\s*)\\w+`, 'm');
+    const catRegex = new RegExp(`(\\[${move.id}\\]\\s*=\\s*\\{[\\s\\S]*?\\.category\\s*=\\s*)\\w+`, 'm');
+    const prioRegex = new RegExp(`(\\[${move.id}\\]\\s*=\\s*\\{[\\s\\S]*?\\.priority\\s*=\\s*)-?\\d+`, 'm');
+
+    fileContent = fileContent.replace(entryRegex, `$1${move.power}`);
+    fileContent = fileContent.replace(accRegex, `$1${move.accuracy}`);
+    fileContent = fileContent.replace(ppRegex, `$1${move.pp}`);
+    fileContent = fileContent.replace(typeRegex, `$1TYPE_${move.type}`);
+    fileContent = fileContent.replace(catRegex, `$1DAMAGE_CATEGORY_${move.category}`);
+    fileContent = fileContent.replace(prioRegex, `$1${move.priority}`);
+
+    markChanged(filePath, fileContent);
 }
 
 function parseItems(text) {
@@ -311,6 +338,20 @@ function parseItems(text) {
     return items;
 }
 
+function updateItemInFile(item) {
+    const filePath = 'src/data/items.h';
+    let fileContent = pendingChanges[filePath] || originalContent[filePath];
+    if (!fileContent) { toast('Item data not loaded yet', true); return; }
+
+    const priceRegex = new RegExp(`(\\[${item.id}\\]\\s*=\\s*\\{[\\s\\S]*?\\.price\\s*=\\s*)\\w+`, 'm');
+    const pocketRegex = new RegExp(`(\\[${item.id}\\]\\s*=\\s*\\{[\\s\\S]*?\\.pocket\\s*=\\s*)\\w+`, 'm');
+
+    fileContent = fileContent.replace(priceRegex, `$1${item.price}`);
+    fileContent = fileContent.replace(pocketRegex, `$1POCKET_${item.pocket}`);
+
+    markChanged(filePath, fileContent);
+}
+
 function parseAbilities(text) {
     const abilities = [];
     const regex = /\[(\w+)\]\s*=\s*\{([^}]+)\}/g;
@@ -331,6 +372,30 @@ function parseAbilities(text) {
         abilities.push(ability);
     }
     return abilities;
+}
+
+function updateAbilityInFile(ability) {
+    const filePath = 'src/data/abilities.h';
+    let fileContent = pendingChanges[filePath] || originalContent[filePath];
+    if (!fileContent) { toast('Ability data not loaded yet', true); return; }
+
+    const ratingRegex = new RegExp(`(\\[${ability.id}\\]\\s*=\\s*\\{[\\s\\S]*?\\.aiRating\\s*=\\s*)\\d+`, 'm');
+    const descRegex = new RegExp(`(\\[${ability.id}\\]\\s*=\\s*\\{[\\s\\S]*?\\.description\\s*=\\s*COMPOUND_STRING\\(")([^"]+)`, 'm');
+
+    fileContent = fileContent.replace(ratingRegex, `$1${ability.aiRating}`);
+    fileContent = fileContent.replace(descRegex, `$1${ability.description}`);
+
+    // Handle boolean flags
+    const boolFlags = ['breakable', 'cantBeSwapped', 'cantBeTraced'];
+    for (const flag of boolFlags) {
+        const flagRegex = new RegExp(`(\\[${ability.id}\\]\\s*=\\s*\\{[\\s\\S]*?\\.${flag}\\s*=\\s*)(TRUE|FALSE)`, 'm');
+        const value = ability[flag] ? 'TRUE' : 'FALSE';
+        if (flagRegex.test(fileContent)) {
+            fileContent = fileContent.replace(flagRegex, `$1${value}`);
+        }
+    }
+
+    markChanged(filePath, fileContent);
 }
 
 function parseConfig(text, filename) {
@@ -405,6 +470,29 @@ async function loadConfig() {
     return state.config;
 }
 
+async function loadMaps() {
+    if (!state.maps) {
+        const listing = await ghFetch(`/repos/${REPO_OWNER}/${REPO_NAME}/contents/data/maps?ref=${BRANCH}`);
+        const dirs = listing.filter(f => f.type === 'dir');
+        const maps = [];
+        // Load map.json for each map directory (batch in groups of 10 for perf)
+        for (let i = 0; i < dirs.length; i += 10) {
+            const batch = dirs.slice(i, i + 10);
+            const results = await Promise.all(batch.map(async d => {
+                try {
+                    const text = await fetchFile(`data/maps/${d.name}/map.json`);
+                    const data = JSON.parse(text);
+                    data._dirName = d.name;
+                    return data;
+                } catch { return null; }
+            }));
+            maps.push(...results.filter(Boolean));
+        }
+        state.maps = maps;
+    }
+    return state.maps;
+}
+
 // ─── Navigation ─────────────────────────────────────────────────────────────
 $$('.nav-item').forEach(item => {
     item.addEventListener('click', () => {
@@ -447,6 +535,7 @@ async function render() {
             case 'items': await renderItems(); break;
             case 'abilities': await renderAbilities(); break;
             case 'config': await renderConfig(); break;
+            case 'maps': await renderMaps(); break;
         }
     } catch (e) {
         content.innerHTML = `<div class="loading-center" style="color:var(--red)">Error loading data: ${escHtml(e.message)}</div>`;
@@ -501,15 +590,19 @@ async function renderDashboard() {
             </div>
             <div class="stat-card" style="cursor:pointer" onclick="navigateTo('moves')">
                 <div class="label">&#10038; Moves</div>
-                <div class="sub" style="margin-top:8px">Browse the complete moves database</div>
+                <div class="sub" style="margin-top:8px">Edit move stats: type, power, accuracy, PP, and more</div>
             </div>
             <div class="stat-card" style="cursor:pointer" onclick="navigateTo('items')">
                 <div class="label">&#9830; Items</div>
-                <div class="sub" style="margin-top:8px">Browse item data, prices, and pockets</div>
+                <div class="sub" style="margin-top:8px">Edit item prices and pocket assignments</div>
             </div>
             <div class="stat-card" style="cursor:pointer" onclick="navigateTo('abilities')">
                 <div class="label">&#10024; Abilities</div>
-                <div class="sub" style="margin-top:8px">Browse ability stats and descriptions</div>
+                <div class="sub" style="margin-top:8px">Edit ability descriptions, AI ratings, and flags</div>
+            </div>
+            <div class="stat-card" style="cursor:pointer" onclick="navigateTo('maps')">
+                <div class="label">&#9873; Maps &amp; Areas</div>
+                <div class="sub" style="margin-top:8px">Edit map settings, weather, connections, and flags</div>
             </div>
             <div class="stat-card" style="cursor:pointer" onclick="navigateTo('config')">
                 <div class="label">&#9881; Config</div>
@@ -820,7 +913,7 @@ function openTrainerModal(trainer, isNew) {
     });
 }
 
-// ─── Encounters (read-only browsing) ────────────────────────────────────────
+// ─── Encounters ─────────────────────────────────────────────────────────────
 async function renderEncounters() {
     const data = await loadEncounters();
     const encounters = data.wild_encounter_groups?.[0]?.encounters || [];
@@ -878,12 +971,92 @@ async function renderEncounters() {
                     <span style="font-size:11px;color:var(--text-dim);font-family:monospace">${enc.map}</span>
                 </div>
                 ${sections || '<div class="encounter-section" style="color:var(--text-dim)">No encounters defined</div>'}
+                <div style="margin-top:8px;text-align:right">
+                    <button class="btn btn-sm" onclick="editEncounter('${escAttr(enc.map)}')">Edit</button>
+                </div>
             </div>
         `;
     }
 
     $('#enc-search').addEventListener('input', e => {
         state.search = e.target.value;
+        renderEncounters();
+    });
+}
+
+function editEncounter(mapName) {
+    const data = state.encounters;
+    const encounters = data.wild_encounter_groups?.[0]?.encounters || [];
+    const enc = encounters.find(e => e.map === mapName);
+    if (!enc) return;
+
+    const fieldTypes = ['land_mons', 'water_mons', 'rock_smash_mons', 'fishing_mons'];
+    const fieldLabels = { land_mons: 'Grass/Land', water_mons: 'Surfing', rock_smash_mons: 'Rock Smash', fishing_mons: 'Fishing' };
+
+    let sectionsHtml = '';
+    for (const type of fieldTypes) {
+        if (!enc[type]) continue;
+        sectionsHtml += `
+            <div style="margin-bottom:16px">
+                <h3 style="font-size:14px;margin-bottom:8px">${fieldLabels[type]}
+                    <span style="font-weight:normal;font-size:12px;color:var(--text-dim)">Encounter Rate:</span>
+                    <input type="number" class="enc-rate" data-type="${type}" value="${enc[type].encounter_rate}" min="0" max="100" style="width:60px">%
+                </h3>
+                <div class="table-container" style="margin:0">
+                    <table>
+                        <thead><tr><th>Species</th><th>Min Lv</th><th>Max Lv</th></tr></thead>
+                        <tbody>
+                            ${enc[type].mons.map((m, i) => `
+                                <tr>
+                                    <td><input type="text" class="enc-species" data-type="${type}" data-idx="${i}" value="${escAttr(m.species)}" style="width:180px;font-family:monospace;font-size:12px"></td>
+                                    <td><input type="number" class="enc-min-lv" data-type="${type}" data-idx="${i}" value="${m.min_level}" min="1" max="100" style="width:60px"></td>
+                                    <td><input type="number" class="enc-max-lv" data-type="${type}" data-idx="${i}" value="${m.max_level}" min="1" max="100" style="width:60px"></td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+    }
+
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+        <div class="modal" style="max-width:700px">
+            <div class="modal-header">
+                <h2>Edit Encounters: ${mapName.replace('MAP_', '').replace(/_/g, ' ')}</h2>
+                <button class="btn btn-sm" onclick="this.closest('.modal-overlay').remove()">&#10005;</button>
+            </div>
+            <div class="modal-body" style="max-height:70vh;overflow-y:auto">
+                ${sectionsHtml || '<p style="color:var(--text-dim)">No encounter types defined for this map.</p>'}
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+                <button class="btn btn-primary" id="save-enc-btn">Save</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+
+    $('#save-enc-btn').addEventListener('click', () => {
+        for (const type of fieldTypes) {
+            if (!enc[type]) continue;
+            const rateEl = overlay.querySelector(`.enc-rate[data-type="${type}"]`);
+            if (rateEl) enc[type].encounter_rate = parseInt(rateEl.value);
+            enc[type].mons.forEach((m, i) => {
+                const sp = overlay.querySelector(`.enc-species[data-type="${type}"][data-idx="${i}"]`);
+                const minLv = overlay.querySelector(`.enc-min-lv[data-type="${type}"][data-idx="${i}"]`);
+                const maxLv = overlay.querySelector(`.enc-max-lv[data-type="${type}"][data-idx="${i}"]`);
+                if (sp) m.species = sp.value;
+                if (minLv) m.min_level = parseInt(minLv.value);
+                if (maxLv) m.max_level = parseInt(maxLv.value);
+            });
+        }
+        markChanged('src/data/wild_encounters.json', JSON.stringify(data, null, 2));
+        toast(`Encounters for ${mapName} updated (pending PR submission)`);
+        overlay.remove();
         renderEncounters();
     });
 }
@@ -920,6 +1093,7 @@ async function renderMoves() {
                         <th>Accuracy</th>
                         <th>PP</th>
                         <th>Priority</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody id="moves-tbody"></tbody>
@@ -951,6 +1125,7 @@ function renderMovesPage(moves, page) {
             <td>${m.accuracy === '0' || !m.accuracy ? '-' : m.accuracy}</td>
             <td>${m.pp || '-'}</td>
             <td>${m.priority || '0'}</td>
+            <td><button class="btn btn-sm" onclick="editMove('${escAttr(m.id)}')">Edit</button></td>
         </tr>
     `).join('');
 
@@ -962,6 +1137,89 @@ function renderMovesPage(moves, page) {
         </div>
     `;
     window._movesFiltered = moves;
+}
+
+const POKEMON_TYPES = ['NORMAL','FIRE','WATER','GRASS','ELECTRIC','ICE','FIGHTING','POISON','GROUND','FLYING','PSYCHIC','BUG','ROCK','GHOST','DRAGON','DARK','STEEL','FAIRY'];
+const DAMAGE_CATEGORIES = ['PHYSICAL','SPECIAL','STATUS'];
+
+function editMove(id) {
+    const move = state.moves.find(m => m.id === id);
+    if (!move) return;
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Edit Move: ${escHtml(move.name || move.id)}</h2>
+                <button class="btn btn-sm" onclick="this.closest('.modal-overlay').remove()">&#10005;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Move ID</label>
+                        <input type="text" value="${escAttr(move.id)}" readonly style="opacity:0.6">
+                    </div>
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" value="${escAttr(move.name || '')}" readonly style="opacity:0.6" title="Name is set in the source file">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Type</label>
+                        <select id="move-type">
+                            ${POKEMON_TYPES.map(t => `<option value="${t}" ${move.type === t ? 'selected' : ''}>${t}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="move-category">
+                            ${DAMAGE_CATEGORIES.map(c => `<option value="${c}" ${move.category === c ? 'selected' : ''}>${c}</option>`).join('')}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Power</label>
+                        <input type="number" id="move-power" value="${move.power || 0}" min="0" max="999">
+                    </div>
+                    <div class="form-group">
+                        <label>Accuracy</label>
+                        <input type="number" id="move-accuracy" value="${move.accuracy || 0}" min="0" max="100">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>PP</label>
+                        <input type="number" id="move-pp" value="${move.pp || 0}" min="1" max="64">
+                    </div>
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <input type="number" id="move-priority" value="${move.priority || 0}" min="-7" max="7">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+                <button class="btn btn-primary" id="save-move-btn">Save</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+
+    $('#save-move-btn').addEventListener('click', () => {
+        move.type = $('#move-type').value;
+        move.category = $('#move-category').value;
+        move.power = $('#move-power').value;
+        move.accuracy = $('#move-accuracy').value;
+        move.pp = $('#move-pp').value;
+        move.priority = parseInt($('#move-priority').value);
+        updateMoveInFile(move);
+        toast(`Move ${move.name || move.id} updated (pending PR submission)`);
+        overlay.remove();
+        renderMoves();
+    });
 }
 
 // ─── Items ──────────────────────────────────────────────────────────────────
@@ -993,6 +1251,7 @@ async function renderItems() {
                         <th>ID</th>
                         <th>Pocket</th>
                         <th>Price</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody id="items-tbody"></tbody>
@@ -1020,6 +1279,7 @@ function renderItemsPage(items, page) {
             <td style="font-family:monospace;font-size:12px;color:var(--text-dim)">${m.id}</td>
             <td>${m.pocket || '-'}</td>
             <td>${m.price || '0'}</td>
+            <td><button class="btn btn-sm" onclick="editItem('${escAttr(m.id)}')">Edit</button></td>
         </tr>
     `).join('');
 
@@ -1031,6 +1291,62 @@ function renderItemsPage(items, page) {
         </div>
     `;
     window._itemsFiltered = items;
+}
+
+const ITEM_POCKETS = ['POKE_BALLS','ITEMS','KEY_ITEMS','BERRIES','TM_HM','MEDICINE'];
+
+function editItem(id) {
+    const item = state.items.find(i => i.id === id);
+    if (!item) return;
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Edit Item: ${escHtml(item.name || item.id)}</h2>
+                <button class="btn btn-sm" onclick="this.closest('.modal-overlay').remove()">&#10005;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Item ID</label>
+                        <input type="text" value="${escAttr(item.id)}" readonly style="opacity:0.6">
+                    </div>
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" value="${escAttr(item.name || '')}" readonly style="opacity:0.6" title="Name is set in the source file">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Price</label>
+                        <input type="number" id="item-price" value="${item.price || 0}" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Pocket</label>
+                        <select id="item-pocket">
+                            ${ITEM_POCKETS.map(p => `<option value="${p}" ${item.pocket === p ? 'selected' : ''}>${p}</option>`).join('')}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+                <button class="btn btn-primary" id="save-item-btn">Save</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+
+    $('#save-item-btn').addEventListener('click', () => {
+        item.price = $('#item-price').value;
+        item.pocket = $('#item-pocket').value;
+        updateItemInFile(item);
+        toast(`Item ${item.name || item.id} updated (pending PR submission)`);
+        overlay.remove();
+        renderItems();
+    });
 }
 
 // ─── Abilities ──────────────────────────────────────────────────────────────
@@ -1062,6 +1378,7 @@ async function renderAbilities() {
                         <th>Description</th>
                         <th>AI Rating</th>
                         <th>Breakable</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -1071,6 +1388,7 @@ async function renderAbilities() {
                             <td>${escHtml(a.description || '-')}</td>
                             <td>${a.aiRating ?? '-'}</td>
                             <td>${a.breakable ? '<span style="color:var(--yellow)">Yes</span>' : '-'}</td>
+                            <td><button class="btn btn-sm" onclick="editAbility('${escAttr(a.id)}')">Edit</button></td>
                         </tr>
                     `).join('')}
                 </tbody>
@@ -1081,6 +1399,310 @@ async function renderAbilities() {
     $('#ability-search').addEventListener('input', e => {
         state.search = e.target.value;
         renderAbilities();
+    });
+}
+
+function editAbility(id) {
+    const ability = state.abilities.find(a => a.id === id);
+    if (!ability) return;
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Edit Ability: ${escHtml(ability.name || ability.id)}</h2>
+                <button class="btn btn-sm" onclick="this.closest('.modal-overlay').remove()">&#10005;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Ability ID</label>
+                        <input type="text" value="${escAttr(ability.id)}" readonly style="opacity:0.6">
+                    </div>
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" value="${escAttr(ability.name || '')}" readonly style="opacity:0.6" title="Name is set in the source file">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" id="ability-desc" value="${escAttr(ability.description || '')}" style="width:100%">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>AI Rating</label>
+                        <input type="number" id="ability-rating" value="${ability.aiRating || 0}" min="0" max="10">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Breakable (by Mold Breaker etc.)</label>
+                        <select id="ability-breakable">
+                            <option value="false" ${!ability.breakable ? 'selected' : ''}>No</option>
+                            <option value="true" ${ability.breakable ? 'selected' : ''}>Yes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Can't Be Swapped</label>
+                        <select id="ability-noswap">
+                            <option value="false" ${!ability.cantBeSwapped ? 'selected' : ''}>No</option>
+                            <option value="true" ${ability.cantBeSwapped ? 'selected' : ''}>Yes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Can't Be Traced</label>
+                        <select id="ability-notrace">
+                            <option value="false" ${!ability.cantBeTraced ? 'selected' : ''}>No</option>
+                            <option value="true" ${ability.cantBeTraced ? 'selected' : ''}>Yes</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+                <button class="btn btn-primary" id="save-ability-btn">Save</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+
+    $('#save-ability-btn').addEventListener('click', () => {
+        ability.description = $('#ability-desc').value;
+        ability.aiRating = parseInt($('#ability-rating').value);
+        ability.breakable = $('#ability-breakable').value === 'true';
+        ability.cantBeSwapped = $('#ability-noswap').value === 'true';
+        ability.cantBeTraced = $('#ability-notrace').value === 'true';
+        updateAbilityInFile(ability);
+        toast(`Ability ${ability.name || ability.id} updated (pending PR submission)`);
+        overlay.remove();
+        renderAbilities();
+    });
+}
+
+// ─── Maps/Areas ─────────────────────────────────────────────────────────────
+async function renderMaps() {
+    const maps = await loadMaps();
+    const search = state.search.toLowerCase();
+    const filtered = maps.filter(m =>
+        !search ||
+        (m.id || '').toLowerCase().includes(search) ||
+        (m.name || '').toLowerCase().includes(search) ||
+        (m._dirName || '').toLowerCase().includes(search) ||
+        (m.map_type || '').toLowerCase().includes(search) ||
+        (m.weather || '').toLowerCase().includes(search)
+    );
+
+    const typeGroups = {};
+    for (const m of filtered) {
+        const type = (m.map_type || 'UNKNOWN').replace('MAP_TYPE_', '');
+        if (!typeGroups[type]) typeGroups[type] = [];
+        typeGroups[type].push(m);
+    }
+
+    content.innerHTML = `
+        <div class="page-header">
+            <h1>Maps &amp; Areas <span style="color:var(--text-dim);font-size:14px">(${filtered.length}/${maps.length})</span></h1>
+        </div>
+        <div class="search-bar">
+            <span class="search-icon">&#128269;</span>
+            <input type="text" placeholder="Search maps by name, type, or weather..." id="map-search" value="${state.search}">
+        </div>
+        <div class="card-grid" id="map-grid"></div>
+    `;
+
+    const grid = $('#map-grid');
+    const typeOrder = ['CITY', 'TOWN', 'ROUTE', 'UNDERGROUND', 'INDOOR', 'SECRET_BASE'];
+
+    const sortedTypes = Object.keys(typeGroups).sort((a, b) => {
+        const ai = typeOrder.indexOf(a);
+        const bi = typeOrder.indexOf(b);
+        if (ai >= 0 && bi >= 0) return ai - bi;
+        if (ai >= 0) return -1;
+        if (bi >= 0) return 1;
+        return a.localeCompare(b);
+    });
+
+    for (const type of sortedTypes) {
+        const typeMaps = typeGroups[type];
+        for (const m of typeMaps.slice(0, 200)) {
+            const displayName = (m._dirName || m.name || '').replace(/([A-Z])/g, ' $1').trim().replace(/_/g, ' ');
+            const connCount = (m.connections || []).length;
+            const objCount = (m.object_events || []).length;
+            const warpCount = (m.warp_events || []).length;
+            const bgCount = (m.bg_events || []).length;
+
+            grid.innerHTML += `
+                <div class="encounter-card">
+                    <div class="encounter-card-header">
+                        <h3>${escHtml(displayName)}</h3>
+                        <span style="font-size:11px;color:var(--text-dim);font-family:monospace">${escHtml(m.id || '')}</span>
+                    </div>
+                    <div class="encounter-section">
+                        <div class="encounter-row"><span>Type</span><span>${type}</span></div>
+                        <div class="encounter-row"><span>Music</span><span>${(m.music || '-').replace('MUS_', '')}</span></div>
+                        <div class="encounter-row"><span>Weather</span><span>${(m.weather || '-').replace('WEATHER_', '')}</span></div>
+                        <div class="encounter-row"><span>Connections</span><span>${connCount}</span></div>
+                        <div class="encounter-row"><span>Objects</span><span>${objCount}</span></div>
+                        <div class="encounter-row"><span>Warps</span><span>${warpCount}</span></div>
+                        <div class="encounter-row"><span>Signs/Items</span><span>${bgCount}</span></div>
+                        <div class="encounter-row">
+                            <span>Flags</span>
+                            <span>
+                                ${m.allow_cycling ? 'Bike' : ''}
+                                ${m.allow_running ? 'Run' : ''}
+                                ${m.show_map_name ? 'Name' : ''}
+                                ${m.requires_flash ? 'Flash' : ''}
+                            </span>
+                        </div>
+                    </div>
+                    <div style="margin-top:8px;text-align:right">
+                        <button class="btn btn-sm" onclick="editMap('${escAttr(m._dirName)}')">Edit</button>
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+    $('#map-search').addEventListener('input', e => {
+        state.search = e.target.value;
+        renderMaps();
+    });
+}
+
+function editMap(dirName) {
+    const map = state.maps.find(m => m._dirName === dirName);
+    if (!map) return;
+
+    const WEATHER_OPTIONS = ['WEATHER_NONE','WEATHER_SUNNY_CLOUDS','WEATHER_SUNNY','WEATHER_RAIN','WEATHER_SNOW','WEATHER_RAIN_THUNDERSTORM','WEATHER_FOG_HORIZONTAL','WEATHER_VOLCANIC_ASH','WEATHER_SANDSTORM','WEATHER_FOG_DIAGONAL','WEATHER_UNDERWATER','WEATHER_SHADE','WEATHER_DROUGHT','WEATHER_DOWNPOUR','WEATHER_UNDERWATER_BUBBLES','WEATHER_ABNORMAL','WEATHER_ROUTE119_CYCLE','WEATHER_ROUTE123_CYCLE'];
+    const MAP_TYPES = ['MAP_TYPE_NONE','MAP_TYPE_TOWN','MAP_TYPE_CITY','MAP_TYPE_ROUTE','MAP_TYPE_UNDERGROUND','MAP_TYPE_UNDERWATER','MAP_TYPE_OCEAN_ROUTE','MAP_TYPE_INDOOR','MAP_TYPE_SECRET_BASE'];
+    const BATTLE_SCENES = ['MAP_BATTLE_SCENE_NORMAL','MAP_BATTLE_SCENE_GYM','MAP_BATTLE_SCENE_MAGMA','MAP_BATTLE_SCENE_AQUA','MAP_BATTLE_SCENE_SIDNEY','MAP_BATTLE_SCENE_PHOEBE','MAP_BATTLE_SCENE_GLACIA','MAP_BATTLE_SCENE_DRAKE','MAP_BATTLE_SCENE_FRONTIER'];
+
+    const displayName = (map._dirName || '').replace(/([A-Z])/g, ' $1').trim();
+
+    let connectionsHtml = (map.connections || []).map((c, i) => `
+        <div class="form-row" style="margin-bottom:4px">
+            <div class="form-group" style="flex:2">
+                <input type="text" class="conn-map" data-idx="${i}" value="${escAttr(c.map)}" placeholder="MAP_..." style="font-family:monospace;font-size:12px">
+            </div>
+            <div class="form-group" style="flex:1">
+                <select class="conn-dir" data-idx="${i}">
+                    ${['up','down','left','right','dive','emerge'].map(d => `<option ${c.direction === d ? 'selected' : ''}>${d}</option>`).join('')}
+                </select>
+            </div>
+            <div class="form-group" style="flex:1">
+                <input type="number" class="conn-offset" data-idx="${i}" value="${c.offset || 0}" style="width:60px" title="Offset">
+            </div>
+        </div>
+    `).join('');
+
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+        <div class="modal" style="max-width:650px">
+            <div class="modal-header">
+                <h2>Edit Map: ${escHtml(displayName)}</h2>
+                <button class="btn btn-sm" onclick="this.closest('.modal-overlay').remove()">&#10005;</button>
+            </div>
+            <div class="modal-body" style="max-height:70vh;overflow-y:auto">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Map ID</label>
+                        <input type="text" value="${escAttr(map.id || '')}" readonly style="opacity:0.6">
+                    </div>
+                    <div class="form-group">
+                        <label>Music</label>
+                        <input type="text" id="map-music" value="${escAttr(map.music || '')}" style="font-family:monospace;font-size:12px">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Weather</label>
+                        <select id="map-weather">
+                            ${WEATHER_OPTIONS.map(w => `<option value="${w}" ${map.weather === w ? 'selected' : ''}>${w.replace('WEATHER_', '')}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Map Type</label>
+                        <select id="map-type">
+                            ${MAP_TYPES.map(t => `<option value="${t}" ${map.map_type === t ? 'selected' : ''}>${t.replace('MAP_TYPE_', '')}</option>`).join('')}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Battle Scene</label>
+                        <select id="map-battle-scene">
+                            ${BATTLE_SCENES.map(s => `<option value="${s}" ${map.battle_scene === s ? 'selected' : ''}>${s.replace('MAP_BATTLE_SCENE_', '')}</option>`).join('')}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Allow Cycling</label>
+                        <select id="map-cycling"><option value="true" ${map.allow_cycling ? 'selected' : ''}>Yes</option><option value="false" ${!map.allow_cycling ? 'selected' : ''}>No</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Allow Running</label>
+                        <select id="map-running"><option value="true" ${map.allow_running ? 'selected' : ''}>Yes</option><option value="false" ${!map.allow_running ? 'selected' : ''}>No</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Allow Escaping</label>
+                        <select id="map-escaping"><option value="true" ${map.allow_escaping ? 'selected' : ''}>Yes</option><option value="false" ${!map.allow_escaping ? 'selected' : ''}>No</option></select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Show Map Name</label>
+                        <select id="map-showname"><option value="true" ${map.show_map_name ? 'selected' : ''}>Yes</option><option value="false" ${!map.show_map_name ? 'selected' : ''}>No</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Requires Flash</label>
+                        <select id="map-flash"><option value="true" ${map.requires_flash ? 'selected' : ''}>Yes</option><option value="false" ${!map.requires_flash ? 'selected' : ''}>No</option></select>
+                    </div>
+                </div>
+                <h3 style="margin:16px 0 8px;font-size:14px">Connections (${(map.connections || []).length})</h3>
+                <div id="map-connections">${connectionsHtml || '<span style="color:var(--text-dim);font-size:12px">No connections</span>'}</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+                <button class="btn btn-primary" id="save-map-btn">Save</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+
+    $('#save-map-btn').addEventListener('click', () => {
+        map.music = $('#map-music').value;
+        map.weather = $('#map-weather').value;
+        map.map_type = $('#map-type').value;
+        map.battle_scene = $('#map-battle-scene').value;
+        map.allow_cycling = $('#map-cycling').value === 'true';
+        map.allow_running = $('#map-running').value === 'true';
+        map.allow_escaping = $('#map-escaping').value === 'true';
+        map.show_map_name = $('#map-showname').value === 'true';
+        map.requires_flash = $('#map-flash').value === 'true';
+
+        // Update connections
+        if (map.connections) {
+            map.connections.forEach((c, i) => {
+                const mapEl = overlay.querySelector(`.conn-map[data-idx="${i}"]`);
+                const dirEl = overlay.querySelector(`.conn-dir[data-idx="${i}"]`);
+                const offEl = overlay.querySelector(`.conn-offset[data-idx="${i}"]`);
+                if (mapEl) c.map = mapEl.value;
+                if (dirEl) c.direction = dirEl.value;
+                if (offEl) c.offset = parseInt(offEl.value);
+            });
+        }
+
+        // Serialize the map JSON, excluding internal _dirName
+        const serialized = { ...map };
+        delete serialized._dirName;
+        markChanged(`data/maps/${map._dirName}/map.json`, JSON.stringify(serialized, null, 2) + '\n');
+        toast(`Map ${map._dirName} updated (pending PR submission)`);
+        overlay.remove();
+        renderMaps();
     });
 }
 
