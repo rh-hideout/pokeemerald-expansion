@@ -34,6 +34,8 @@ let state = {
     maps: null,
     search: '',
     configFilter: 'all',
+    mapDetail: null,
+    mapTypeFilter: 'all',
 };
 
 // Track pending changes: { filePath: newContent }
@@ -500,6 +502,7 @@ $$('.nav-item').forEach(item => {
         item.classList.add('active');
         state.page = item.dataset.page;
         state.search = '';
+        state.mapDetail = null;
         render();
     });
 });
@@ -510,6 +513,7 @@ function navigateTo(page) {
     });
     state.page = page;
     state.search = '';
+    state.mapDetail = null;
     render();
 }
 
@@ -1480,40 +1484,82 @@ function editAbility(id) {
     });
 }
 
-// ─── Maps/Areas ─────────────────────────────────────────────────────────────
+// ─── Maps/Areas (Unified View) ──────────────────────────────────────────────
+const WEATHER_OPTIONS = ['WEATHER_NONE','WEATHER_SUNNY_CLOUDS','WEATHER_SUNNY','WEATHER_RAIN','WEATHER_SNOW','WEATHER_RAIN_THUNDERSTORM','WEATHER_FOG_HORIZONTAL','WEATHER_VOLCANIC_ASH','WEATHER_SANDSTORM','WEATHER_FOG_DIAGONAL','WEATHER_UNDERWATER','WEATHER_SHADE','WEATHER_DROUGHT','WEATHER_DOWNPOUR','WEATHER_UNDERWATER_BUBBLES','WEATHER_ABNORMAL','WEATHER_ROUTE119_CYCLE','WEATHER_ROUTE123_CYCLE'];
+const MAP_TYPES = ['MAP_TYPE_NONE','MAP_TYPE_TOWN','MAP_TYPE_CITY','MAP_TYPE_ROUTE','MAP_TYPE_UNDERGROUND','MAP_TYPE_UNDERWATER','MAP_TYPE_OCEAN_ROUTE','MAP_TYPE_INDOOR','MAP_TYPE_SECRET_BASE'];
+const BATTLE_SCENES = ['MAP_BATTLE_SCENE_NORMAL','MAP_BATTLE_SCENE_GYM','MAP_BATTLE_SCENE_MAGMA','MAP_BATTLE_SCENE_AQUA','MAP_BATTLE_SCENE_SIDNEY','MAP_BATTLE_SCENE_PHOEBE','MAP_BATTLE_SCENE_GLACIA','MAP_BATTLE_SCENE_DRAKE','MAP_BATTLE_SCENE_FRONTIER'];
+const ENC_COLORS = { land_mons: '#22c55e', water_mons: '#6890f0', rock_smash_mons: '#b8a038', fishing_mons: '#06b6d4' };
+const ENC_LABELS = { land_mons: 'Grass / Land', water_mons: 'Surfing', rock_smash_mons: 'Rock Smash', fishing_mons: 'Fishing' };
+const ENC_ICONS = { land_mons: '&#127793;', water_mons: '&#127754;', rock_smash_mons: '&#9968;', fishing_mons: '&#127907;' };
+
+function getMapDisplayName(m) {
+    return (m._dirName || m.name || '').replace(/([A-Z])/g, ' $1').trim().replace(/_/g, ' ');
+}
+
+function getMapType(m) {
+    return (m.map_type || 'MAP_TYPE_NONE').replace('MAP_TYPE_', '');
+}
+
+function getMapEncounters(map) {
+    if (!state.encounters) return null;
+    const encounters = state.encounters.wild_encounter_groups?.[0]?.encounters || [];
+    return encounters.find(e => e.map === map.id) || null;
+}
+
+function getMapTrainers(map) {
+    return (map.object_events || []).filter(e => e.trainer_type && e.trainer_type !== 'TRAINER_TYPE_NONE');
+}
+
+function getMapItemBalls(map) {
+    return (map.object_events || []).filter(e => (e.graphics_id || '').includes('ITEM_BALL'));
+}
+
+function getMapHiddenItems(map) {
+    return (map.bg_events || []).filter(e => e.type === 'hidden_item');
+}
+
+function getEncounterRates() {
+    if (!state.encounters) return [];
+    return state.encounters.wild_encounter_groups?.[0]?.fields || [];
+}
+
 async function renderMaps() {
+    // If viewing a specific map area, render the detail view
+    if (state.mapDetail) {
+        await renderMapDetail(state.mapDetail);
+        return;
+    }
+
     const maps = await loadMaps();
+    // Also pre-load encounters for the tags
+    try { await loadEncounters(); } catch {}
+
     const search = state.search.toLowerCase();
-    const filtered = maps.filter(m =>
-        !search ||
-        (m.id || '').toLowerCase().includes(search) ||
-        (m.name || '').toLowerCase().includes(search) ||
-        (m._dirName || '').toLowerCase().includes(search) ||
-        (m.map_type || '').toLowerCase().includes(search) ||
-        (m.weather || '').toLowerCase().includes(search)
-    );
+    const filtered = maps.filter(m => {
+        if (!search) return true;
+        const enc = getMapEncounters(m);
+        const hasSearchInEnc = enc && Object.values(enc).some(v => {
+            if (v && typeof v === 'object' && v.mons) {
+                return v.mons.some(mon => mon.species.toLowerCase().includes(search));
+            }
+            return false;
+        });
+        return (m.id || '').toLowerCase().includes(search) ||
+            (m.name || '').toLowerCase().includes(search) ||
+            (m._dirName || '').toLowerCase().includes(search) ||
+            (m.map_type || '').toLowerCase().includes(search) ||
+            (m.weather || '').toLowerCase().includes(search) ||
+            hasSearchInEnc;
+    });
 
     const typeGroups = {};
     for (const m of filtered) {
-        const type = (m.map_type || 'UNKNOWN').replace('MAP_TYPE_', '');
+        const type = getMapType(m);
         if (!typeGroups[type]) typeGroups[type] = [];
         typeGroups[type].push(m);
     }
 
-    content.innerHTML = `
-        <div class="page-header">
-            <h1>Maps &amp; Areas <span style="color:var(--text-dim);font-size:14px">(${filtered.length}/${maps.length})</span></h1>
-        </div>
-        <div class="search-bar">
-            <span class="search-icon">&#128269;</span>
-            <input type="text" placeholder="Search maps by name, type, or weather..." id="map-search" value="${state.search}">
-        </div>
-        <div class="card-grid" id="map-grid"></div>
-    `;
-
-    const grid = $('#map-grid');
-    const typeOrder = ['CITY', 'TOWN', 'ROUTE', 'UNDERGROUND', 'INDOOR', 'SECRET_BASE'];
-
+    const typeOrder = ['ROUTE', 'CITY', 'TOWN', 'UNDERGROUND', 'OCEAN_ROUTE', 'UNDERWATER', 'INDOOR', 'SECRET_BASE'];
     const sortedTypes = Object.keys(typeGroups).sort((a, b) => {
         const ai = typeOrder.indexOf(a);
         const bi = typeOrder.indexOf(b);
@@ -1523,45 +1569,77 @@ async function renderMaps() {
         return a.localeCompare(b);
     });
 
-    for (const type of sortedTypes) {
-        const typeMaps = typeGroups[type];
-        for (const m of typeMaps.slice(0, 200)) {
-            const displayName = (m._dirName || m.name || '').replace(/([A-Z])/g, ' $1').trim().replace(/_/g, ' ');
-            const connCount = (m.connections || []).length;
-            const objCount = (m.object_events || []).length;
-            const warpCount = (m.warp_events || []).length;
-            const bgCount = (m.bg_events || []).length;
+    // Build filter chips for map types
+    const typeFilter = state.mapTypeFilter || 'all';
+    const typeChips = sortedTypes.map(t => {
+        const count = typeGroups[t].length;
+        return `<span class="filter-chip ${typeFilter === t ? 'active' : ''}" onclick="state.mapTypeFilter='${t}'; renderMaps()">${t} (${count})</span>`;
+    }).join('');
+
+    content.innerHTML = `
+        <div class="page-header">
+            <h1>Map Areas <span style="color:var(--text-dim);font-size:14px">(${filtered.length}/${maps.length})</span></h1>
+        </div>
+        <div class="search-bar">
+            <span class="search-icon">&#128269;</span>
+            <input type="text" placeholder="Search by map name, type, species..." id="map-search" value="${state.search}">
+        </div>
+        <div class="filter-row">
+            <span class="filter-chip ${typeFilter === 'all' ? 'active' : ''}" onclick="state.mapTypeFilter='all'; renderMaps()">All (${filtered.length})</span>
+            ${typeChips}
+        </div>
+        <div class="card-grid" id="map-grid"></div>
+    `;
+
+    const grid = $('#map-grid');
+    const typesToShow = typeFilter === 'all' ? sortedTypes : [typeFilter];
+    let count = 0;
+    const maxCards = 120;
+
+    for (const type of typesToShow) {
+        if (!typeGroups[type]) continue;
+        for (const m of typeGroups[type]) {
+            if (count >= maxCards) break;
+            count++;
+            const enc = getMapEncounters(m);
+            const trainers = getMapTrainers(m);
+            const itemBalls = getMapItemBalls(m);
+            const hiddenItems = getMapHiddenItems(m);
+            const displayName = getMapDisplayName(m);
+            const bannerClass = `banner-${type}`;
+
+            let tags = '';
+            if (enc) {
+                const encTypes = ['land_mons','water_mons','rock_smash_mons','fishing_mons'].filter(t => enc[t]);
+                tags += `<span class="tag has-encounters">${encTypes.length} encounter type${encTypes.length !== 1 ? 's' : ''}</span>`;
+            }
+            if (trainers.length > 0) {
+                tags += `<span class="tag has-trainers">${trainers.length} trainer${trainers.length !== 1 ? 's' : ''}</span>`;
+            }
+            if (itemBalls.length + hiddenItems.length > 0) {
+                tags += `<span class="tag has-items">${itemBalls.length + hiddenItems.length} item${itemBalls.length + hiddenItems.length !== 1 ? 's' : ''}</span>`;
+            }
+            const conns = (m.connections || []).length;
+            if (conns > 0) tags += `<span class="tag has-data">${conns} connection${conns !== 1 ? 's' : ''}</span>`;
 
             grid.innerHTML += `
-                <div class="encounter-card">
-                    <div class="encounter-card-header">
+                <div class="map-list-card" onclick="openMapDetail('${escAttr(m._dirName)}')">
+                    <div class="map-list-card-banner ${bannerClass}"></div>
+                    <div class="map-list-card-body">
                         <h3>${escHtml(displayName)}</h3>
-                        <span style="font-size:11px;color:var(--text-dim);font-family:monospace">${escHtml(m.id || '')}</span>
-                    </div>
-                    <div class="encounter-section">
-                        <div class="encounter-row"><span>Type</span><span>${type}</span></div>
-                        <div class="encounter-row"><span>Music</span><span>${(m.music || '-').replace('MUS_', '')}</span></div>
-                        <div class="encounter-row"><span>Weather</span><span>${(m.weather || '-').replace('WEATHER_', '')}</span></div>
-                        <div class="encounter-row"><span>Connections</span><span>${connCount}</span></div>
-                        <div class="encounter-row"><span>Objects</span><span>${objCount}</span></div>
-                        <div class="encounter-row"><span>Warps</span><span>${warpCount}</span></div>
-                        <div class="encounter-row"><span>Signs/Items</span><span>${bgCount}</span></div>
-                        <div class="encounter-row">
-                            <span>Flags</span>
-                            <span>
-                                ${m.allow_cycling ? 'Bike' : ''}
-                                ${m.allow_running ? 'Run' : ''}
-                                ${m.show_map_name ? 'Name' : ''}
-                                ${m.requires_flash ? 'Flash' : ''}
-                            </span>
+                        <div class="map-list-id">${escHtml(m.id || '')}</div>
+                        <div class="map-list-card-tags">
+                            <span class="tag">${type}</span>
+                            <span class="tag">${(m.weather || 'WEATHER_NONE').replace('WEATHER_', '')}</span>
+                            ${tags}
                         </div>
-                    </div>
-                    <div style="margin-top:8px;text-align:right">
-                        <button class="btn btn-sm" onclick="editMap('${escAttr(m._dirName)}')">Edit</button>
                     </div>
                 </div>
             `;
         }
+    }
+    if (count >= maxCards) {
+        grid.innerHTML += `<div style="padding:20px;color:var(--text-dim);font-size:13px;grid-column:1/-1">Showing ${maxCards} of ${filtered.length} maps. Use search or filters to narrow down.</div>`;
     }
 
     $('#map-search').addEventListener('input', e => {
@@ -1570,139 +1648,640 @@ async function renderMaps() {
     });
 }
 
-function editMap(dirName) {
+function openMapDetail(dirName) {
+    state.mapDetail = dirName;
+    renderMaps();
+}
+
+async function renderMapDetail(dirName) {
+    const maps = await loadMaps();
+    const map = maps.find(m => m._dirName === dirName);
+    if (!map) { state.mapDetail = null; renderMaps(); return; }
+
+    try { await loadEncounters(); } catch {}
+
+    const displayName = getMapDisplayName(map);
+    const mapType = getMapType(map);
+    const bannerClass = `banner-${mapType}`;
+    const enc = getMapEncounters(map);
+    const trainers = getMapTrainers(map);
+    const itemBalls = getMapItemBalls(map);
+    const hiddenItems = getMapHiddenItems(map);
+    const encounterRates = getEncounterRates();
+
+    content.innerHTML = `
+        <button class="back-btn" onclick="state.mapDetail=null; renderMaps()">&#8592; Back to Map Areas</button>
+
+        <!-- Banner -->
+        <div class="map-area-header">
+            <div class="map-area-banner ${bannerClass}">
+                <div class="map-area-banner-content">
+                    <div>
+                        <h1>${escHtml(displayName)}</h1>
+                        <div class="map-id-label">${escHtml(map.id || '')}</div>
+                    </div>
+                    <span class="map-type-pill">${mapType}</span>
+                </div>
+            </div>
+            <div class="map-area-info-bar">
+                <span><span class="info-icon">&#9835;</span> ${(map.music || 'None').replace('MUS_', '')}</span>
+                <span><span class="info-icon">&#9729;</span> ${(map.weather || 'None').replace('WEATHER_', '')}</span>
+                <span><span class="info-icon">&#9949;</span> ${(map.connections || []).length} connections</span>
+                <span><span class="info-icon">&#9872;</span> ${(map.object_events || []).length} objects</span>
+                <span><span class="info-icon">&#8644;</span> ${(map.warp_events || []).length} warps</span>
+            </div>
+        </div>
+
+        <div class="map-area-sections" id="map-area-sections"></div>
+    `;
+
+    const sections = $('#map-area-sections');
+
+    // ── Section 1: Wild Encounters ──
+    sections.innerHTML += buildEncounterSection(enc, encounterRates, map);
+
+    // ── Section 2: Trainers ──
+    sections.innerHTML += buildTrainerSection(trainers, map);
+
+    // ── Section 3: Items ──
+    sections.innerHTML += buildItemSection(itemBalls, hiddenItems, map);
+
+    // ── Section 4: Connections ──
+    sections.innerHTML += buildConnectionSection(map);
+
+    // ── Section 5: Map Properties (editable) ──
+    sections.innerHTML += buildPropertiesSection(map);
+
+    // Wire up section toggles
+    $$('.map-area-section-header').forEach(header => {
+        header.addEventListener('click', () => {
+            const body = header.nextElementSibling;
+            if (body) body.classList.toggle('collapsed');
+            const arrow = header.querySelector('.toggle-arrow');
+            if (arrow) arrow.textContent = body.classList.contains('collapsed') ? '&#9654;' : '&#9660;';
+        });
+    });
+}
+
+// ── Wild Encounters Section ──
+function buildEncounterSection(enc, encounterRates, map) {
+    const fieldTypes = ['land_mons', 'water_mons', 'rock_smash_mons', 'fishing_mons'];
+    let totalMons = 0;
+    if (enc) {
+        for (const t of fieldTypes) {
+            if (enc[t]) totalMons += enc[t].mons.length;
+        }
+    }
+
+    let body = '';
+    if (!enc) {
+        body = `<div class="empty-state"><div class="empty-icon">&#9733;</div>No wild encounters defined for this area</div>`;
+    } else {
+        for (const type of fieldTypes) {
+            if (!enc[type]) continue;
+            const rateField = encounterRates.find(f => f.type === type);
+            const rates = rateField?.encounter_rates || [];
+            const color = ENC_COLORS[type];
+
+            // Aggregate encounters: combine duplicate species
+            const speciesMap = {};
+            enc[type].mons.forEach((m, i) => {
+                const name = m.species.replace('SPECIES_', '');
+                const rate = rates[i] || 0;
+                if (!speciesMap[name]) {
+                    speciesMap[name] = { species: m.species, name, minLevel: m.min_level, maxLevel: m.max_level, totalRate: 0, count: 0 };
+                }
+                speciesMap[name].totalRate += rate;
+                speciesMap[name].count++;
+                speciesMap[name].minLevel = Math.min(speciesMap[name].minLevel, m.min_level);
+                speciesMap[name].maxLevel = Math.max(speciesMap[name].maxLevel, m.max_level);
+            });
+            const aggregated = Object.values(speciesMap).sort((a, b) => b.totalRate - a.totalRate);
+
+            let chartHtml = aggregated.map(a => `
+                <div class="encounter-bar-row">
+                    <span class="encounter-bar-species">${escHtml(a.name)}</span>
+                    <div class="encounter-bar-track">
+                        <div class="encounter-bar-fill" style="width:${Math.max(a.totalRate, 2)}%;background:${color}"></div>
+                    </div>
+                    <span class="encounter-bar-level">Lv ${a.minLevel}${a.minLevel !== a.maxLevel ? '-' + a.maxLevel : ''}</span>
+                    <span class="encounter-bar-pct" style="color:${color}">${a.totalRate}%</span>
+                </div>
+            `).join('');
+
+            body += `
+                <div class="encounter-chart-group">
+                    <h3>${ENC_ICONS[type]} ${ENC_LABELS[type]} <span class="rate-badge">Rate: ${enc[type].encounter_rate}%</span></h3>
+                    ${chartHtml}
+                </div>
+            `;
+        }
+        body += `<div style="text-align:right;margin-top:12px"><button class="btn btn-sm" onclick="editMapEncounters('${escAttr(map._dirName)}')">Edit Encounters</button></div>`;
+    }
+
+    return `
+        <div class="map-area-section">
+            <div class="map-area-section-header">
+                <h2><span class="section-icon">&#9733;</span> Wild Pokemon <span class="section-count">${totalMons} entries</span></h2>
+                <span class="toggle-arrow">&#9660;</span>
+            </div>
+            <div class="map-area-section-body">${body}</div>
+        </div>
+    `;
+}
+
+// ── Trainers Section ──
+function buildTrainerSection(trainers, map) {
+    let body = '';
+    if (trainers.length === 0) {
+        body = `<div class="empty-state"><div class="empty-icon">&#9876;</div>No trainers in this area</div>`;
+    } else {
+        body = trainers.map((t, i) => {
+            const scriptName = (t.script || '').replace(/_EventScript_/g, ' - ').replace(/_/g, ' ');
+            const gfx = (t.graphics_id || '').replace('OBJ_EVENT_GFX_', '').replace(/_/g, ' ');
+            return `
+                <div class="area-trainer-row">
+                    <div class="area-trainer-icon">&#9876;</div>
+                    <div class="area-trainer-info">
+                        <div class="area-trainer-name">${escHtml(scriptName || 'Trainer #' + (i + 1))}</div>
+                        <div class="area-trainer-detail">${escHtml(gfx)} &middot; Sight: ${t.trainer_sight_or_berry_tree_id || '0'} &middot; (${t.x}, ${t.y})</div>
+                    </div>
+                    <button class="btn btn-sm" onclick="editMapTrainer('${escAttr(map._dirName)}', ${i})">Edit</button>
+                </div>
+            `;
+        }).join('');
+    }
+
+    return `
+        <div class="map-area-section">
+            <div class="map-area-section-header">
+                <h2><span class="section-icon">&#9876;</span> Trainers <span class="section-count">${trainers.length}</span></h2>
+                <span class="toggle-arrow">&#9660;</span>
+            </div>
+            <div class="map-area-section-body">${body}</div>
+        </div>
+    `;
+}
+
+// ── Items Section ──
+function buildItemSection(itemBalls, hiddenItems, map) {
+    const totalItems = itemBalls.length + hiddenItems.length;
+    let body = '';
+    if (totalItems === 0) {
+        body = `<div class="empty-state"><div class="empty-icon">&#9830;</div>No items in this area</div>`;
+    } else {
+        const itemRows = itemBalls.map((item, i) => {
+            const itemName = (item.trainer_sight_or_berry_tree_id || '').replace('ITEM_', '').replace(/_/g, ' ');
+            return `
+                <div class="area-item-row">
+                    <div class="area-item-icon visible">&#9830;</div>
+                    <span class="area-item-name">${escHtml(itemName)}</span>
+                    <span class="area-item-type">Item Ball</span>
+                    <span class="area-item-coords">(${item.x}, ${item.y})</span>
+                    <button class="btn btn-sm" onclick="editMapItemBall('${escAttr(map._dirName)}', ${i})">Edit</button>
+                </div>
+            `;
+        }).join('');
+
+        const hiddenRows = hiddenItems.map((item, i) => {
+            const itemName = (item.item || '').replace('ITEM_', '').replace(/_/g, ' ');
+            return `
+                <div class="area-item-row">
+                    <div class="area-item-icon hidden">&#10043;</div>
+                    <span class="area-item-name">${escHtml(itemName)}</span>
+                    <span class="area-item-type">Hidden</span>
+                    <span class="area-item-coords">(${item.x}, ${item.y})</span>
+                    <button class="btn btn-sm" onclick="editMapHiddenItem('${escAttr(map._dirName)}', ${i})">Edit</button>
+                </div>
+            `;
+        }).join('');
+
+        body = itemRows + hiddenRows;
+    }
+
+    return `
+        <div class="map-area-section">
+            <div class="map-area-section-header">
+                <h2><span class="section-icon">&#9830;</span> Items <span class="section-count">${totalItems}</span></h2>
+                <span class="toggle-arrow">&#9660;</span>
+            </div>
+            <div class="map-area-section-body">${body}</div>
+        </div>
+    `;
+}
+
+// ── Connections Section ──
+function buildConnectionSection(map) {
+    const conns = map.connections || [];
+    let body = '';
+    if (conns.length === 0) {
+        body = `<div class="empty-state"><div class="empty-icon">&#8644;</div>No connections</div>`;
+    } else {
+        body = conns.map(c => {
+            const connName = (c.map || '').replace('MAP_', '').replace(/_/g, ' ');
+            return `
+                <div class="connection-row">
+                    <span class="connection-dir ${c.direction || ''}">${c.direction || '?'}</span>
+                    <span class="connection-map">${escHtml(c.map || '')}</span>
+                    <span style="color:var(--text-dim);font-size:12px">${escHtml(connName)}</span>
+                    <span style="color:var(--text-dim);font-size:11px">offset: ${c.offset || 0}</span>
+                </div>
+            `;
+        }).join('');
+    }
+
+    return `
+        <div class="map-area-section">
+            <div class="map-area-section-header">
+                <h2><span class="section-icon">&#8644;</span> Connections <span class="section-count">${conns.length}</span></h2>
+                <span class="toggle-arrow">&#9660;</span>
+            </div>
+            <div class="map-area-section-body">${body}</div>
+        </div>
+    `;
+}
+
+// ── Map Properties Section ──
+function buildPropertiesSection(map) {
+    const opt = (arr, current, strip) => arr.map(v => `<option value="${v}" ${v === current ? 'selected' : ''}>${v.replace(strip, '')}</option>`).join('');
+    const boolSel = (val) => `<option value="true" ${val ? 'selected' : ''}>Yes</option><option value="false" ${!val ? 'selected' : ''}>No</option>`;
+
+    return `
+        <div class="map-area-section">
+            <div class="map-area-section-header">
+                <h2><span class="section-icon">&#9881;</span> Properties</h2>
+                <span class="toggle-arrow">&#9660;</span>
+            </div>
+            <div class="map-area-section-body">
+                <div class="map-props-grid">
+                    <div class="map-prop">
+                        <label>Music</label>
+                        <input type="text" id="mp-music" value="${escAttr(map.music || '')}" style="font-family:monospace">
+                    </div>
+                    <div class="map-prop">
+                        <label>Weather</label>
+                        <select id="mp-weather">${opt(WEATHER_OPTIONS, map.weather, 'WEATHER_')}</select>
+                    </div>
+                    <div class="map-prop">
+                        <label>Map Type</label>
+                        <select id="mp-type">${opt(MAP_TYPES, map.map_type, 'MAP_TYPE_')}</select>
+                    </div>
+                    <div class="map-prop">
+                        <label>Battle Scene</label>
+                        <select id="mp-battle">${opt(BATTLE_SCENES, map.battle_scene, 'MAP_BATTLE_SCENE_')}</select>
+                    </div>
+                    <div class="map-prop">
+                        <label>Allow Cycling</label>
+                        <select id="mp-cycling">${boolSel(map.allow_cycling)}</select>
+                    </div>
+                    <div class="map-prop">
+                        <label>Allow Running</label>
+                        <select id="mp-running">${boolSel(map.allow_running)}</select>
+                    </div>
+                    <div class="map-prop">
+                        <label>Allow Escaping</label>
+                        <select id="mp-escaping">${boolSel(map.allow_escaping)}</select>
+                    </div>
+                    <div class="map-prop">
+                        <label>Show Map Name</label>
+                        <select id="mp-showname">${boolSel(map.show_map_name)}</select>
+                    </div>
+                    <div class="map-prop">
+                        <label>Requires Flash</label>
+                        <select id="mp-flash">${boolSel(map.requires_flash)}</select>
+                    </div>
+                </div>
+                <div style="text-align:right;margin-top:16px">
+                    <button class="btn btn-primary" onclick="saveMapProperties('${escAttr(map._dirName)}')">Save Properties</button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function saveMapProperties(dirName) {
     const map = state.maps.find(m => m._dirName === dirName);
     if (!map) return;
 
-    const WEATHER_OPTIONS = ['WEATHER_NONE','WEATHER_SUNNY_CLOUDS','WEATHER_SUNNY','WEATHER_RAIN','WEATHER_SNOW','WEATHER_RAIN_THUNDERSTORM','WEATHER_FOG_HORIZONTAL','WEATHER_VOLCANIC_ASH','WEATHER_SANDSTORM','WEATHER_FOG_DIAGONAL','WEATHER_UNDERWATER','WEATHER_SHADE','WEATHER_DROUGHT','WEATHER_DOWNPOUR','WEATHER_UNDERWATER_BUBBLES','WEATHER_ABNORMAL','WEATHER_ROUTE119_CYCLE','WEATHER_ROUTE123_CYCLE'];
-    const MAP_TYPES = ['MAP_TYPE_NONE','MAP_TYPE_TOWN','MAP_TYPE_CITY','MAP_TYPE_ROUTE','MAP_TYPE_UNDERGROUND','MAP_TYPE_UNDERWATER','MAP_TYPE_OCEAN_ROUTE','MAP_TYPE_INDOOR','MAP_TYPE_SECRET_BASE'];
-    const BATTLE_SCENES = ['MAP_BATTLE_SCENE_NORMAL','MAP_BATTLE_SCENE_GYM','MAP_BATTLE_SCENE_MAGMA','MAP_BATTLE_SCENE_AQUA','MAP_BATTLE_SCENE_SIDNEY','MAP_BATTLE_SCENE_PHOEBE','MAP_BATTLE_SCENE_GLACIA','MAP_BATTLE_SCENE_DRAKE','MAP_BATTLE_SCENE_FRONTIER'];
+    map.music = $('#mp-music').value;
+    map.weather = $('#mp-weather').value;
+    map.map_type = $('#mp-type').value;
+    map.battle_scene = $('#mp-battle').value;
+    map.allow_cycling = $('#mp-cycling').value === 'true';
+    map.allow_running = $('#mp-running').value === 'true';
+    map.allow_escaping = $('#mp-escaping').value === 'true';
+    map.show_map_name = $('#mp-showname').value === 'true';
+    map.requires_flash = $('#mp-flash').value === 'true';
 
-    const displayName = (map._dirName || '').replace(/([A-Z])/g, ' $1').trim();
+    const serialized = { ...map };
+    delete serialized._dirName;
+    markChanged(`data/maps/${map._dirName}/map.json`, JSON.stringify(serialized, null, 2) + '\n');
+    toast('Map properties saved (pending PR submission)');
+    renderMapDetail(dirName);
+}
 
-    let connectionsHtml = (map.connections || []).map((c, i) => `
-        <div class="form-row" style="margin-bottom:4px">
-            <div class="form-group" style="flex:2">
-                <input type="text" class="conn-map" data-idx="${i}" value="${escAttr(c.map)}" placeholder="MAP_..." style="font-family:monospace;font-size:12px">
+// ── Edit Encounters Modal (inline in detail view) ──
+function editMapEncounters(dirName) {
+    const map = state.maps.find(m => m._dirName === dirName);
+    if (!map) return;
+    const enc = getMapEncounters(map);
+    if (!enc) return;
+
+    const fieldTypes = ['land_mons', 'water_mons', 'rock_smash_mons', 'fishing_mons'];
+    let sectionsHtml = '';
+    for (const type of fieldTypes) {
+        if (!enc[type]) continue;
+        sectionsHtml += `
+            <div style="margin-bottom:16px">
+                <h3 style="font-size:14px;margin-bottom:8px">${ENC_LABELS[type]}
+                    <span style="font-weight:normal;font-size:12px;color:var(--text-dim)">Rate:</span>
+                    <input type="number" class="enc-rate" data-type="${type}" value="${enc[type].encounter_rate}" min="0" max="100" style="width:60px;background:var(--bg-input);border:1px solid var(--border);border-radius:4px;color:var(--text);padding:3px 6px;font-size:12px">%
+                </h3>
+                <table class="enc-edit-table">
+                    <thead><tr><th>Species</th><th>Min Lv</th><th>Max Lv</th></tr></thead>
+                    <tbody>
+                        ${enc[type].mons.map((m, i) => `
+                            <tr>
+                                <td><input type="text" class="enc-species" data-type="${type}" data-idx="${i}" value="${escAttr(m.species)}"></td>
+                                <td><input type="number" class="enc-min-lv" data-type="${type}" data-idx="${i}" value="${m.min_level}" min="1" max="100"></td>
+                                <td><input type="number" class="enc-max-lv" data-type="${type}" data-idx="${i}" value="${m.max_level}" min="1" max="100"></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
             </div>
-            <div class="form-group" style="flex:1">
-                <select class="conn-dir" data-idx="${i}">
-                    ${['up','down','left','right','dive','emerge'].map(d => `<option ${c.direction === d ? 'selected' : ''}>${d}</option>`).join('')}
-                </select>
-            </div>
-            <div class="form-group" style="flex:1">
-                <input type="number" class="conn-offset" data-idx="${i}" value="${c.offset || 0}" style="width:60px" title="Offset">
-            </div>
-        </div>
-    `).join('');
+        `;
+    }
 
     const overlay = document.createElement('div');
     overlay.className = 'modal-overlay';
     overlay.innerHTML = `
-        <div class="modal" style="max-width:650px">
+        <div class="modal" style="max-width:700px">
             <div class="modal-header">
-                <h2>Edit Map: ${escHtml(displayName)}</h2>
+                <h2>Edit Encounters: ${getMapDisplayName(map)}</h2>
                 <button class="btn btn-sm" onclick="this.closest('.modal-overlay').remove()">&#10005;</button>
             </div>
             <div class="modal-body" style="max-height:70vh;overflow-y:auto">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Map ID</label>
-                        <input type="text" value="${escAttr(map.id || '')}" readonly style="opacity:0.6">
-                    </div>
-                    <div class="form-group">
-                        <label>Music</label>
-                        <input type="text" id="map-music" value="${escAttr(map.music || '')}" style="font-family:monospace;font-size:12px">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Weather</label>
-                        <select id="map-weather">
-                            ${WEATHER_OPTIONS.map(w => `<option value="${w}" ${map.weather === w ? 'selected' : ''}>${w.replace('WEATHER_', '')}</option>`).join('')}
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Map Type</label>
-                        <select id="map-type">
-                            ${MAP_TYPES.map(t => `<option value="${t}" ${map.map_type === t ? 'selected' : ''}>${t.replace('MAP_TYPE_', '')}</option>`).join('')}
-                        </select>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Battle Scene</label>
-                        <select id="map-battle-scene">
-                            ${BATTLE_SCENES.map(s => `<option value="${s}" ${map.battle_scene === s ? 'selected' : ''}>${s.replace('MAP_BATTLE_SCENE_', '')}</option>`).join('')}
-                        </select>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Allow Cycling</label>
-                        <select id="map-cycling"><option value="true" ${map.allow_cycling ? 'selected' : ''}>Yes</option><option value="false" ${!map.allow_cycling ? 'selected' : ''}>No</option></select>
-                    </div>
-                    <div class="form-group">
-                        <label>Allow Running</label>
-                        <select id="map-running"><option value="true" ${map.allow_running ? 'selected' : ''}>Yes</option><option value="false" ${!map.allow_running ? 'selected' : ''}>No</option></select>
-                    </div>
-                    <div class="form-group">
-                        <label>Allow Escaping</label>
-                        <select id="map-escaping"><option value="true" ${map.allow_escaping ? 'selected' : ''}>Yes</option><option value="false" ${!map.allow_escaping ? 'selected' : ''}>No</option></select>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Show Map Name</label>
-                        <select id="map-showname"><option value="true" ${map.show_map_name ? 'selected' : ''}>Yes</option><option value="false" ${!map.show_map_name ? 'selected' : ''}>No</option></select>
-                    </div>
-                    <div class="form-group">
-                        <label>Requires Flash</label>
-                        <select id="map-flash"><option value="true" ${map.requires_flash ? 'selected' : ''}>Yes</option><option value="false" ${!map.requires_flash ? 'selected' : ''}>No</option></select>
-                    </div>
-                </div>
-                <h3 style="margin:16px 0 8px;font-size:14px">Connections (${(map.connections || []).length})</h3>
-                <div id="map-connections">${connectionsHtml || '<span style="color:var(--text-dim);font-size:12px">No connections</span>'}</div>
+                ${sectionsHtml || '<p style="color:var(--text-dim)">No encounter types defined.</p>'}
             </div>
             <div class="modal-footer">
                 <button class="btn" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
-                <button class="btn btn-primary" id="save-map-btn">Save</button>
+                <button class="btn btn-primary" id="save-enc-btn">Save</button>
             </div>
         </div>
     `;
     document.body.appendChild(overlay);
     overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
 
-    $('#save-map-btn').addEventListener('click', () => {
-        map.music = $('#map-music').value;
-        map.weather = $('#map-weather').value;
-        map.map_type = $('#map-type').value;
-        map.battle_scene = $('#map-battle-scene').value;
-        map.allow_cycling = $('#map-cycling').value === 'true';
-        map.allow_running = $('#map-running').value === 'true';
-        map.allow_escaping = $('#map-escaping').value === 'true';
-        map.show_map_name = $('#map-showname').value === 'true';
-        map.requires_flash = $('#map-flash').value === 'true';
-
-        // Update connections
-        if (map.connections) {
-            map.connections.forEach((c, i) => {
-                const mapEl = overlay.querySelector(`.conn-map[data-idx="${i}"]`);
-                const dirEl = overlay.querySelector(`.conn-dir[data-idx="${i}"]`);
-                const offEl = overlay.querySelector(`.conn-offset[data-idx="${i}"]`);
-                if (mapEl) c.map = mapEl.value;
-                if (dirEl) c.direction = dirEl.value;
-                if (offEl) c.offset = parseInt(offEl.value);
+    $('#save-enc-btn').addEventListener('click', () => {
+        for (const type of fieldTypes) {
+            if (!enc[type]) continue;
+            const rateEl = overlay.querySelector(`.enc-rate[data-type="${type}"]`);
+            if (rateEl) enc[type].encounter_rate = parseInt(rateEl.value);
+            enc[type].mons.forEach((m, i) => {
+                const sp = overlay.querySelector(`.enc-species[data-type="${type}"][data-idx="${i}"]`);
+                const minLv = overlay.querySelector(`.enc-min-lv[data-type="${type}"][data-idx="${i}"]`);
+                const maxLv = overlay.querySelector(`.enc-max-lv[data-type="${type}"][data-idx="${i}"]`);
+                if (sp) m.species = sp.value;
+                if (minLv) m.min_level = parseInt(minLv.value);
+                if (maxLv) m.max_level = parseInt(maxLv.value);
             });
         }
+        markChanged('src/data/wild_encounters.json', JSON.stringify(state.encounters, null, 2));
+        toast('Encounters updated (pending PR submission)');
+        overlay.remove();
+        renderMapDetail(dirName);
+    });
+}
 
-        // Serialize the map JSON, excluding internal _dirName
+// ── Edit Trainer Event Modal ──
+function editMapTrainer(dirName, trainerIdx) {
+    const map = state.maps.find(m => m._dirName === dirName);
+    if (!map) return;
+    const trainers = getMapTrainers(map);
+    const trainer = trainers[trainerIdx];
+    if (!trainer) return;
+    // Find the actual index in object_events
+    const allEvents = map.object_events || [];
+    const realIdx = allEvents.indexOf(trainer);
+
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Edit Trainer Event</h2>
+                <button class="btn btn-sm" onclick="this.closest('.modal-overlay').remove()">&#10005;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Graphics ID</label>
+                        <input type="text" id="te-gfx" value="${escAttr(trainer.graphics_id || '')}" style="font-family:monospace;font-size:12px">
+                    </div>
+                    <div class="form-group">
+                        <label>Script</label>
+                        <input type="text" id="te-script" value="${escAttr(trainer.script || '')}" style="font-family:monospace;font-size:12px">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>X</label>
+                        <input type="number" id="te-x" value="${trainer.x || 0}">
+                    </div>
+                    <div class="form-group">
+                        <label>Y</label>
+                        <input type="number" id="te-y" value="${trainer.y || 0}">
+                    </div>
+                    <div class="form-group">
+                        <label>Elevation</label>
+                        <input type="number" id="te-elev" value="${trainer.elevation || 0}">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Movement Type</label>
+                        <input type="text" id="te-move" value="${escAttr(trainer.movement_type || '')}" style="font-family:monospace;font-size:12px">
+                    </div>
+                    <div class="form-group">
+                        <label>Trainer Sight Range</label>
+                        <input type="text" id="te-sight" value="${escAttr(trainer.trainer_sight_or_berry_tree_id || '0')}">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Trainer Type</label>
+                        <input type="text" id="te-ttype" value="${escAttr(trainer.trainer_type || '')}" style="font-family:monospace;font-size:12px">
+                    </div>
+                    <div class="form-group">
+                        <label>Flag</label>
+                        <input type="text" id="te-flag" value="${escAttr(trainer.flag || '0')}" style="font-family:monospace;font-size:12px">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+                <button class="btn btn-primary" id="save-te-btn">Save</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+
+    $('#save-te-btn').addEventListener('click', () => {
+        const evt = allEvents[realIdx];
+        evt.graphics_id = $('#te-gfx').value;
+        evt.script = $('#te-script').value;
+        evt.x = parseInt($('#te-x').value);
+        evt.y = parseInt($('#te-y').value);
+        evt.elevation = parseInt($('#te-elev').value);
+        evt.movement_type = $('#te-move').value;
+        evt.trainer_sight_or_berry_tree_id = $('#te-sight').value;
+        evt.trainer_type = $('#te-ttype').value;
+        evt.flag = $('#te-flag').value;
+
         const serialized = { ...map };
         delete serialized._dirName;
         markChanged(`data/maps/${map._dirName}/map.json`, JSON.stringify(serialized, null, 2) + '\n');
-        toast(`Map ${map._dirName} updated (pending PR submission)`);
+        toast('Trainer event updated (pending PR submission)');
         overlay.remove();
-        renderMaps();
+        renderMapDetail(dirName);
+    });
+}
+
+// ── Edit Item Ball Modal ──
+function editMapItemBall(dirName, itemIdx) {
+    const map = state.maps.find(m => m._dirName === dirName);
+    if (!map) return;
+    const itemBalls = getMapItemBalls(map);
+    const item = itemBalls[itemIdx];
+    if (!item) return;
+    const allEvents = map.object_events || [];
+    const realIdx = allEvents.indexOf(item);
+
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Edit Item Ball</h2>
+                <button class="btn btn-sm" onclick="this.closest('.modal-overlay').remove()">&#10005;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Item</label>
+                    <input type="text" id="ib-item" value="${escAttr(item.trainer_sight_or_berry_tree_id || '')}" style="font-family:monospace" placeholder="ITEM_RARE_CANDY">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>X</label>
+                        <input type="number" id="ib-x" value="${item.x || 0}">
+                    </div>
+                    <div class="form-group">
+                        <label>Y</label>
+                        <input type="number" id="ib-y" value="${item.y || 0}">
+                    </div>
+                    <div class="form-group">
+                        <label>Elevation</label>
+                        <input type="number" id="ib-elev" value="${item.elevation || 0}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Flag</label>
+                    <input type="text" id="ib-flag" value="${escAttr(item.flag || '')}" style="font-family:monospace;font-size:12px">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+                <button class="btn btn-primary" id="save-ib-btn">Save</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+
+    $('#save-ib-btn').addEventListener('click', () => {
+        const evt = allEvents[realIdx];
+        evt.trainer_sight_or_berry_tree_id = $('#ib-item').value;
+        evt.x = parseInt($('#ib-x').value);
+        evt.y = parseInt($('#ib-y').value);
+        evt.elevation = parseInt($('#ib-elev').value);
+        evt.flag = $('#ib-flag').value;
+
+        const serialized = { ...map };
+        delete serialized._dirName;
+        markChanged(`data/maps/${map._dirName}/map.json`, JSON.stringify(serialized, null, 2) + '\n');
+        toast('Item ball updated (pending PR submission)');
+        overlay.remove();
+        renderMapDetail(dirName);
+    });
+}
+
+// ── Edit Hidden Item Modal ──
+function editMapHiddenItem(dirName, hiddenIdx) {
+    const map = state.maps.find(m => m._dirName === dirName);
+    if (!map) return;
+    const hiddenItems = getMapHiddenItems(map);
+    const item = hiddenItems[hiddenIdx];
+    if (!item) return;
+    const allBg = map.bg_events || [];
+    const realIdx = allBg.indexOf(item);
+
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Edit Hidden Item</h2>
+                <button class="btn btn-sm" onclick="this.closest('.modal-overlay').remove()">&#10005;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Item</label>
+                    <input type="text" id="hi-item" value="${escAttr(item.item || '')}" style="font-family:monospace" placeholder="ITEM_REVIVE">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>X</label>
+                        <input type="number" id="hi-x" value="${item.x || 0}">
+                    </div>
+                    <div class="form-group">
+                        <label>Y</label>
+                        <input type="number" id="hi-y" value="${item.y || 0}">
+                    </div>
+                    <div class="form-group">
+                        <label>Elevation</label>
+                        <input type="number" id="hi-elev" value="${item.elevation || 0}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Flag</label>
+                    <input type="text" id="hi-flag" value="${escAttr(item.flag || '')}" style="font-family:monospace;font-size:12px">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+                <button class="btn btn-primary" id="save-hi-btn">Save</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+
+    $('#save-hi-btn').addEventListener('click', () => {
+        const evt = allBg[realIdx];
+        evt.item = $('#hi-item').value;
+        evt.x = parseInt($('#hi-x').value);
+        evt.y = parseInt($('#hi-y').value);
+        evt.elevation = parseInt($('#hi-elev').value);
+        evt.flag = $('#hi-flag').value;
+
+        const serialized = { ...map };
+        delete serialized._dirName;
+        markChanged(`data/maps/${map._dirName}/map.json`, JSON.stringify(serialized, null, 2) + '\n');
+        toast('Hidden item updated (pending PR submission)');
+        overlay.remove();
+        renderMapDetail(dirName);
     });
 }
 
