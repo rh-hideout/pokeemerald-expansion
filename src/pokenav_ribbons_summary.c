@@ -403,7 +403,7 @@ static void GetMonNicknameLevelGender(u8 *nick, u8 *level, u8 *gender)
     StringGet_Nickname(nick);
 }
 
-static void GetMonSpeciesPersonalityShiny(u16 *species, u32 *personality, bool8 *isShiny)
+static void GetMonSpeciesPersonalityShiny(enum Species *species, u32 *personality, bool32 *isShiny)
 {
     struct Pokenav_RibbonsSummaryList *list = GetSubstructPtr(POKENAV_SUBSTRUCT_RIBBONS_SUMMARY_LIST);
     struct PokenavMonList *mons = list->monList;
@@ -946,9 +946,9 @@ static void PrintRibbonsMonListIndex(struct Pokenav_RibbonsSummaryMenu *menu)
 
 static void ResetSpritesAndDrawMonFrontPic(struct Pokenav_RibbonsSummaryMenu *menu)
 {
-    u16 species;
+    enum Species species;
     u32 personality;
-    bool8 isShiny;
+    bool32 isShiny;
 
     GetMonSpeciesPersonalityShiny(&species, &personality, &isShiny);
     ResetAllPicSprites();
@@ -966,9 +966,10 @@ static void DestroyRibbonsMonFrontPic(struct Pokenav_RibbonsSummaryMenu *menu)
 // x is given as either MON_SPRITE_X_ON or MON_SPRITE_X_OFF (but ignored and MON_SPRITE_X_ON is used)
 static u16 DrawRibbonsMonFrontPic(s32 x, s32 y)
 {
-    u16 species, spriteId;
+    enum Species species;
+    u16 spriteId;
     u32 personality;
-    bool8 isShiny;
+    bool32 isShiny;
 
     GetMonSpeciesPersonalityShiny(&species, &personality, &isShiny);
     spriteId = CreateMonPicSprite(species, isShiny, personality, TRUE, MON_SPRITE_X_ON, MON_SPRITE_Y, 15, TAG_NONE);

@@ -9,8 +9,8 @@
 // For displaying a multi battle partner's Pokémon in the party menu
 struct MultiPartnerMenuPokemon
 {
-    /*0x00*/ u16 species;
-    /*0x02*/ u16 heldItem;
+    /*0x00*/ enum Species species;
+    /*0x02*/ enum Item heldItem;
     /*0x04*/ u8 nickname[POKEMON_NAME_LENGTH + 1];
     /*0x0F*/ u8 level;
     /*0x10*/ u16 hp;
@@ -90,7 +90,7 @@ void AnimSetCenterToCornerVecX(struct Sprite *sprite);
 void BeginBattleIntroDummy(void);
 void BeginBattleIntro(void);
 void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCopy);
-const u8 *FaintClearSetData(enum BattlerId battler);
+void FaintClearSetData(enum BattlerId battler);
 void BattleTurnPassed(void);
 u8 IsRunningFromBattleImpossible(enum BattlerId battler);
 void SwitchTwoBattlersInParty(enum BattlerId battler, enum BattlerId battler2);

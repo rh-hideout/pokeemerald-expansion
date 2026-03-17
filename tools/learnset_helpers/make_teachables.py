@@ -178,7 +178,7 @@ def make_move_tutors(build_dir, special_movesets):
     with open(SOURCE_TUTORS_JSON, "r") as fp:
         repo_tutors = json.load(fp)
 
-    repo_tutors = sorted(repo_tutors + special_movesets["extraTutors"])
+    repo_tutors = sorted(list(set(repo_tutors + special_movesets["extraTutors"])))
     create_tutor_moves_array(repo_tutors)
 
     return repo_tutors

@@ -96,7 +96,7 @@ void SetBattlerData(enum BattlerId battlerId);
 void SetBattlerAiData(enum BattlerId battler, struct AiLogicData *aiData);
 void RestoreBattlerData(enum BattlerId battlerId);
 enum Move GetAIChosenMove(enum BattlerId battlerId);
-u32 GetTotalBaseStat(u32 species);
+u32 GetTotalBaseStat(enum Species species);
 bool32 IsTruantMonVulnerable(enum BattlerId battlerAI, enum BattlerId opposingBattler);
 bool32 AI_BattlerAtMaxHp(enum BattlerId battler);
 u32 GetHealthPercentage(enum BattlerId battler);
@@ -297,6 +297,7 @@ bool32 SideHasMoveCategory(enum BattlerId battlerId, enum DamageCategory categor
 void GetAIPartyIndexes(enum BattlerId battlerId, s32 *firstId, s32 *lastId);
 u32 GetActiveBattlerIds(enum BattlerId battler, enum BattlerId *battlerIn1, enum BattlerId *battlerIn2);
 bool32 IsPartyMonOnFieldOrChosenToSwitch(u32 partyIndex, enum BattlerId battlerIn1, enum BattlerId battlerIn2);
+bool32 IsPartyMonPlannedToBeSwitchedInByPartner(u32 partyIndex, enum BattlerId battler);
 
 // score increases
 enum AIScore IncreaseStatUpScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum StatChange statId);
