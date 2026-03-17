@@ -6363,17 +6363,28 @@ static inline u32 CalcMoveBasePower(struct BattleContext *ctx)
         }
         break;
     case EFFECT_PAYBACK:
-        if (ctx->aiCalc && Ai_AttackerMovesAfterTarget(ctx))
-            basePower *= 2;
+        if (ctx->aiCalc)
+        {
+            if (Ai_AttackerMovesAfterTarget(ctx))
+                basePower *= 2;
+        }
         else if (HasBattlerActedThisTurn(battlerDef)
             && (B_PAYBACK_SWITCH_BOOST < GEN_5 || gBattleStruct->battlerState[battlerDef].isFirstTurn != 2))
+        {
             basePower *= 2;
+        }
         break;
     case EFFECT_BOLT_BEAK:
-        if (!HasBattlerActedThisTurn(battlerDef)
-         || gBattleStruct->battlerState[battlerDef].isFirstTurn == 2
-         || (ctx->aiCalc && ctx->aiTurnOrder[0] == battlerAtk))
+        if (ctx->aiCalc)
+        {
+            if (ctx->aiTurnOrder[0] == battlerAtk)
+                basePower *= 2;
+        }
+        else if (!HasBattlerActedThisTurn(battlerDef)
+              || gBattleStruct->battlerState[battlerDef].isFirstTurn == 2)
+        {
             basePower *= 2;
+        }
         break;
     case EFFECT_FUSION_COMBO:
         if (move == gLastUsedMove)
@@ -6569,10 +6580,17 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct BattleContext *ctx)
             modifier = uq4_12_multiply(modifier, UQ_4_12(0.75));
         break;
     case ABILITY_ANALYTIC:
-        if (moveEffect != EFFECT_FUTURE_SIGHT)
+        if (moveEffect == EFFECT_FUTURE_SIGHT)
+            break;
+
+        if (ctx->aiCalc)
         {
-            if (IsLastMonToMove(battlerAtk) || (ctx->aiCalc && !Ai_AttackerMovesLast(ctx)))
+            if (!Ai_AttackerMovesLast(ctx))
                modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
+        }
+        else if (IsLastMonToMove(battlerAtk))
+        {
+            modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
         }
         break;
     case ABILITY_TOUGH_CLAWS:
