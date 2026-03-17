@@ -1300,7 +1300,7 @@ static void EndLink(void)
             sGame->state++;
         break;
     default:
-        if (gReceivedRemoteLinkPlayers == 0)
+        if (!gReceivedRemoteLinkPlayers)
         {
             SetGameFunc(FUNC_EXIT);
         }
@@ -1393,7 +1393,7 @@ static void ResetGame(void)
         CreateDodrioGameTask(Task_NewGameIntro);
         ResetGfxState();
         InitDodrioGame(sGame);
-        if (gReceivedRemoteLinkPlayers == 0)
+        if (!gReceivedRemoteLinkPlayers)
             sGame->numPlayers = 1;
 
         SetRandomPrize();
@@ -4375,35 +4375,35 @@ static s16 GetDodrioXPos(u8 playerId, u8 numPlayers)
     case 2:
         switch (playerId)
         {
-            case 0: x = 12; break;
-            case 1: x = 18; break;
+        case 0: x = 12; break;
+        case 1: x = 18; break;
         }
         break;
     case 3:
         switch (playerId)
         {
-            case 0: x = 15; break;
-            case 1: x = 21; break;
-            case 2: x =  9; break;
+        case 0: x = 15; break;
+        case 1: x = 21; break;
+        case 2: x =  9; break;
         }
         break;
     case 4:
         switch (playerId)
         {
-            case 0: x = 12; break;
-            case 1: x = 18; break;
-            case 2: x = 24; break;
-            case 3: x =  6; break;
+        case 0: x = 12; break;
+        case 1: x = 18; break;
+        case 2: x = 24; break;
+        case 3: x =  6; break;
         }
         break;
     case 5:
         switch (playerId)
         {
-            case 0: x = 15; break;
-            case 1: x = 21; break;
-            case 2: x = 27; break;
-            case 3: x =  3; break;
-            case 4: x =  9; break;
+        case 0: x = 15; break;
+        case 1: x = 21; break;
+        case 2: x = 27; break;
+        case 3: x =  3; break;
+        case 4: x =  9; break;
         }
         break;
     }

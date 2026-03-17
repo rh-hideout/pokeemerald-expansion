@@ -4,7 +4,7 @@
 #include "battle_setup.h"
 #include "battle_util.h"
 #include "battle_controllers.h"
-#include "battle_ai_util.h"
+#include "battle_ai_record.h"
 #include "battle_gimmick.h"
 #include "battle_scripts.h"
 #include "constants/battle.h"
@@ -60,8 +60,8 @@ static bool32 HandleEndTurnVarious(enum BattlerId battler)
         if (gBattleMons[i].volatiles.throatChopTimer > 0)
             gBattleMons[i].volatiles.throatChopTimer--;
 
-        if (gBattleMons[i].volatiles.lockOn > 0)
-            gBattleMons[i].volatiles.lockOn--;
+        if (gBattleMons[i].volatiles.lockOn > 0 && --gBattleMons[i].volatiles.lockOn == 0)
+            gBattleMons[i].volatiles.battlerWithSureHit = 0;
 
         if (B_CHARGE < GEN_9 && gBattleMons[i].volatiles.chargeTimer > 0)
             gBattleMons[i].volatiles.chargeTimer--;
@@ -268,7 +268,7 @@ static bool32 HandleEndTurnWish(enum BattlerId battler)
         s32 wishHeal = 0;
         gBattlerTarget = battler;
         PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, battler, gBattleStruct->wish[battler].partyId)
-        if (GetConfig(CONFIG_WISH_HP_SOURCE) >= GEN_5)
+        if (GetConfig(B_WISH_HP_SOURCE) >= GEN_5)
             wishHeal = GetMonData(&GetBattlerParty(battler)[gBattleStruct->wish[battler].partyId], MON_DATA_MAX_HP) / 2;
         else
             wishHeal = GetNonDynamaxMaxHP(battler) / 2;
@@ -329,12 +329,14 @@ static bool32 HandleEndTurnFirstEventBlock(enum BattlerId battler)
         gBattleStruct->eventState.endTurnBlock++;
         break;
     case FIRST_EVENT_BLOCK_THRASH:
-        if (gBattleMons[battler].volatiles.rampageTurns && gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP)
+        if (B_RAMPAGE_CONFUSION < GEN_5
+         && gBattleMons[battler].volatiles.rampageTurns
+         && gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP_TARGET)
         {
             gBattleMons[battler].volatiles.rampageTurns--;
             if (gBattleMons[battler].volatiles.unableToUseMove)
             {
-                CancelMultiTurnMoves(battler, SKY_DROP_IGNORE);
+                CancelMultiTurnMoves(battler);
             }
             else if (!gBattleMons[battler].volatiles.rampageTurns && gBattleMons[battler].volatiles.multipleTurns)
             {
@@ -522,7 +524,7 @@ static bool32 HandleEndTurnBurn(enum BattlerId battler)
      && IsBattlerAlive(battler)
      && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
     {
-        s32 burnDamage = GetNonDynamaxMaxHP(battler) / ((GetConfig(CONFIG_BURN_DAMAGE) >= GEN_7 || GetConfig(CONFIG_BURN_DAMAGE) == GEN_1) ? 16 : 8);
+        s32 burnDamage = GetNonDynamaxMaxHP(battler) / ((GetConfig(B_BURN_DAMAGE) >= GEN_7 || GetConfig(B_BURN_DAMAGE) == GEN_1) ? 16 : 8);
         if (ability == ABILITY_HEATPROOF)
         {
             if (burnDamage > (burnDamage / 2) + 1) // Record ability if the burn takes less damage than it normally would.
@@ -547,7 +549,7 @@ static bool32 HandleEndTurnFrostbite(enum BattlerId battler)
      && IsBattlerAlive(battler)
      && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
     {
-        SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / ((GetConfig(CONFIG_BURN_DAMAGE) >= GEN_7 || GetConfig(CONFIG_BURN_DAMAGE) == GEN_1) ? 16 : 8));
+        SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / ((GetConfig(B_BURN_DAMAGE) >= GEN_7 || GetConfig(B_BURN_DAMAGE) == GEN_1) ? 16 : 8));
         BattleScriptExecute(BattleScript_FrostbiteTurnDmg);
         effect = TRUE;
     }
@@ -905,7 +907,7 @@ static bool32 HandleEndTurnYawn(enum BattlerId battler)
                 else
                     gBattleMons[battler].status1 |= (RandomUniform(RNG_SLEEP_TURNS, 2, 8));
 
-                CancelMultiTurnMoves(battler, SKY_DROP_STATUS_YAWN);
+                CancelMultiTurnMoves(battler);
                 TryActivateSleepClause(battler, gBattlerPartyIndexes[battler]);
                 BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[battler].status1);
                 MarkBattlerForControllerExec(battler);
@@ -1241,7 +1243,7 @@ static bool32 HandleEndTurnThirdEventBlock(enum BattlerId battler)
                 gBattleMons[battler].volatiles.uproarTurns--;  // uproar timer goes down
                 if (gBattleMons[battler].volatiles.unableToUseMove)
                 {
-                    CancelMultiTurnMoves(battler, SKY_DROP_IGNORE);
+                    CancelMultiTurnMoves(battler);
                     gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_UPROAR_ENDS;
                 }
                 else if (gBattleMons[battler].volatiles.uproarTurns)
@@ -1252,7 +1254,7 @@ static bool32 HandleEndTurnThirdEventBlock(enum BattlerId battler)
                 else
                 {
                     gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_UPROAR_ENDS;
-                    CancelMultiTurnMoves(battler, SKY_DROP_IGNORE);
+                    CancelMultiTurnMoves(battler);
                 }
                 BattleScriptExecute(BattleScript_PrintUproarOverTurns);
                 effect = TRUE;
@@ -1324,12 +1326,26 @@ static bool32 HandleEndTurnFormChange(enum BattlerId battler)
     {
         gBattleScripting.battler = battler;
         gBattleScripting.abilityPopupOverwrite = ability; // To prevent the new form's ability from pop up
-        if (ability == ABILITY_POWER_CONSTRUCT) // Special animation
+        switch (ability)
+        {
+        case ABILITY_POWER_CONSTRUCT:
             BattleScriptExecute(BattleScript_PowerConstruct);
-        else if (ability == ABILITY_HUNGER_SWITCH)
+            break;
+        case ABILITY_HUNGER_SWITCH:
             BattleScriptExecute(BattleScript_BattlerFormChangeEnd3NoPopup);
-        else
+            break;
+        case ABILITY_ZEN_MODE:
+            if (gBattleMons[battler].species == SPECIES_DARMANITAN_ZEN
+            || gBattleMons[battler].species == SPECIES_DARMANITAN_GALAR_ZEN)
+                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ZEN_MODE_TRIGGERED;
+            else
+                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ZEN_MODE_ENDED;
+            BattleScriptExecute(BattleScript_ZenMode);
+            break;
+        default:
             BattleScriptExecute(BattleScript_BattlerFormChangeEnd2); // Generic animation
+            break;
+        }
         effect = TRUE;
     }
 

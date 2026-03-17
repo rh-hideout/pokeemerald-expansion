@@ -64,25 +64,14 @@ enum {
 };
 
 COMMON_DATA s8 sCurTVShowSlot = 0;
-COMMON_DATA u16 sTV_SecretBaseVisitMovesTemp[8] = {0};
-COMMON_DATA u8 sTV_DecorationsBuffer[DECOR_MAX_SECRET_BASE] = {0};
-COMMON_DATA struct {
-    u8 level;
-    u16 species;
-    u16 move;
-} sTV_SecretBaseVisitMonsTemp[10] = {0};
 
-static u8 sTVShowMixingNumPlayers;
-static u8 sTVShowNewsMixingNumPlayers;
 static s8 sTVShowMixingCurSlot;
-
-static EWRAM_DATA u16 sPokemonAnglerSpecies = 0;
+static EWRAM_DATA enum Species sPokemonAnglerSpecies = SPECIES_NONE;
 static EWRAM_DATA u16 sPokemonAnglerAttemptCounters = 0;
 static EWRAM_DATA u16 sFindThatGamerCoinsSpent = 0;
 static EWRAM_DATA u8 sFindThatGamerWhichGame = SLOT_MACHINE;
 static EWRAM_DATA ALIGNED(4) u8 sRecordMixingPartnersWithoutShowsToShare = 0;
 static EWRAM_DATA ALIGNED(4) u8 sTVShowState = 0;
-static EWRAM_DATA u8 sTVSecretBaseSecretsRandomValues[3] = {};
 
 static void ClearPokeNews(void);
 static u8 GetTVGroupByShowId(u8);
@@ -99,7 +88,7 @@ static s8 FindFirstEmptyNormalTVShowSlot(TVShow *);
 static void TryReplaceOldTVShowOfKind(u8);
 static void InterviewBefore_BravoTrainerPkmnProfile(void);
 static void InterviewBefore_NameRater(void);
-static u16 GetRandomDifferentSpeciesSeenByPlayer(u16);
+static enum Species GetRandomDifferentSpeciesSeenByPlayer(enum Species);
 static void Script_FindFirstEmptyNormalTVShowSlot(void);
 static void CompactTVShowArray(TVShow *);
 static s8 GetFirstEmptyPokeNewsSlot(PokeNews *);
@@ -117,7 +106,7 @@ static bool8 TryMixNormalTVShow(TVShow *, TVShow *, u8);
 static bool8 TryMixRecordMixTVShow(TVShow *, TVShow *, u8);
 static bool8 TryMixOutbreakTVShow(TVShow *, TVShow *, u8);
 static void DeactivateShow(u8 showIdx);
-static void DeactivateShowIfNotSeenSpecies(u16, u8);
+static void DeactivateShowIfNotSeenSpecies(enum Species, u8);
 static void SetMixedPokeNews(PokeNews[POKE_NEWS_COUNT], PokeNews[POKE_NEWS_COUNT], PokeNews[POKE_NEWS_COUNT], PokeNews[POKE_NEWS_COUNT]);
 static void ClearInvalidPokeNews(void);
 static void ClearPokeNewsIfGameNotComplete(void);
@@ -200,7 +189,7 @@ static const u8 sText_Roulette[] = _("ROULETTE");
 static const u8 sText_Jackpot[] = _("jackpot");
 
 static const struct {
-    u16 species;
+    enum Species species;
     u16 moves[MAX_MON_MOVES];
     u8 level;
     u8 location;
@@ -1257,7 +1246,7 @@ static void InterviewAfter_ContestLiveUpdates(void)
     }
 }
 
-void PutBattleUpdateOnTheAir(u8 opponentLinkPlayerId, enum Move move, u16 speciesPlayer, u16 speciesOpponent)
+void PutBattleUpdateOnTheAir(u8 opponentLinkPlayerId, enum Move move, enum Species speciesPlayer, enum Species speciesOpponent)
 {
     TVShow *show;
     u8 name[32];
@@ -1780,7 +1769,7 @@ static void TryPutFishingAdviceOnAir(void)
     }
 }
 
-void SetPokemonAnglerSpecies(u16 species)
+void SetPokemonAnglerSpecies(enum Species species)
 {
     sPokemonAnglerSpecies = species;
 }
@@ -1975,32 +1964,32 @@ void AlertTVThatPlayerPlayedRoulette(u16 nCoinsSpent)
 
 static void SecretBaseVisit_CalculateDecorationData(TVShow *show)
 {
-    u8 i, j;
-    u8 n;
+    u8 decorationsBuffer[DECOR_MAX_SECRET_BASE] = {0};
     u8 decoration;
+    u8 n = 0;
 
-    for (i = 0; i < DECOR_MAX_SECRET_BASE; i++)
-        sTV_DecorationsBuffer[i] = DECOR_NONE;
+    for (u32 i = 0; i < DECOR_MAX_SECRET_BASE; i++)
+        decorationsBuffer[i] = DECOR_NONE;
 
     // Count (and save) the unique decorations in the base
-    for (i = 0, n = 0; i < DECOR_MAX_SECRET_BASE; i++)
+    for (u32 i = 0; i < DECOR_MAX_SECRET_BASE; i++)
     {
         decoration = gSaveBlock1Ptr->secretBases[0].decorations[i];
         if (decoration != DECOR_NONE)
         {
             // Search for an empty spot to save decoration
-            for (j = 0; j < DECOR_MAX_SECRET_BASE; j++)
+            for (u32 j = 0; j < DECOR_MAX_SECRET_BASE; j++)
             {
-                if (sTV_DecorationsBuffer[j] == DECOR_NONE)
+                if (decorationsBuffer[j] == DECOR_NONE)
                 {
                     // Save and count new unique decoration
-                    sTV_DecorationsBuffer[j] = decoration;
+                    decorationsBuffer[j] = decoration;
                     n++;
                     break;
                 }
 
                 // Decoration has already been saved, skip and move on to the next base decoration
-                if (sTV_DecorationsBuffer[j] == decoration)
+                if (decorationsBuffer[j] == decoration)
                     break;
             }
         }
@@ -2017,75 +2006,65 @@ static void SecretBaseVisit_CalculateDecorationData(TVShow *show)
     case 0:
         break;
     case 1:
-        show->secretBaseVisit.decorations[0] = sTV_DecorationsBuffer[0];
+        show->secretBaseVisit.decorations[0] = decorationsBuffer[0];
         break;
     default:
         // More than 1 decoration, randomize the full list
-        Shuffle(sTV_DecorationsBuffer, n, sizeof(sTV_DecorationsBuffer[0]));
+        Shuffle(decorationsBuffer, n, sizeof(decorationsBuffer[0]));
 
         // Pick the first decorations in the randomized list to talk about on the show
-        for (i = 0; i < show->secretBaseVisit.numDecorations; i++)
-            show->secretBaseVisit.decorations[i] = sTV_DecorationsBuffer[i];
+        for (u32 i = 0; i < show->secretBaseVisit.numDecorations; i++)
+            show->secretBaseVisit.decorations[i] = decorationsBuffer[i];
         break;
     }
 }
 
 static void SecretBaseVisit_CalculatePartyData(TVShow *show)
 {
-    u8 i;
-    enum Move move;
-    u16 j;
-    u8 numMoves;
-    u8 numPokemon;
-    u16 sum;
+    struct
+    {
+        enum Move move;
+        enum Species species;
+        u8 level;
+    } secretBaseVisitMonsTemp[PARTY_SIZE] = {0};
 
-    for (i = 0, numPokemon = 0; i < PARTY_SIZE; i++)
+    u8 numPokemon = 0;
+    for (u32 i = 0; i < PARTY_SIZE; i++)
     {
         if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) != SPECIES_NONE && !GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG))
         {
-            sTV_SecretBaseVisitMonsTemp[numPokemon].level = GetMonData(&gPlayerParty[i], MON_DATA_LEVEL);
-            sTV_SecretBaseVisitMonsTemp[numPokemon].species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES);
+            enum Move monMoves[MAX_MON_MOVES];
+            u8 moveNum = 0;
+
+            secretBaseVisitMonsTemp[numPokemon].level = GetMonData(&gPlayerParty[i], MON_DATA_LEVEL);
+            secretBaseVisitMonsTemp[numPokemon].species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES);
 
             // Check all the Pokémon's moves, then randomly select one to save
-            numMoves = 0;
-            move = GetMonData(&gPlayerParty[i], MON_DATA_MOVE1);
-            if (move != MOVE_NONE)
+            for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
             {
-                sTV_SecretBaseVisitMovesTemp[numMoves] = move;
-                numMoves++;
+                enum Move move = GetMonData(&gPlayerParty[i], MON_DATA_MOVE1 + moveIndex);
+                if (move != MOVE_NONE)
+                {
+                    monMoves[moveNum] = move;
+                    moveNum++;
+                }
             }
-            move = GetMonData(&gPlayerParty[i], MON_DATA_MOVE2);
-            if (move != MOVE_NONE)
-            {
-                sTV_SecretBaseVisitMovesTemp[numMoves] = move;
-                numMoves++;
-            }
-            move = GetMonData(&gPlayerParty[i], MON_DATA_MOVE3);
-            if (move != MOVE_NONE)
-            {
-                sTV_SecretBaseVisitMovesTemp[numMoves] = move;
-                numMoves++;
-            }
-            move = GetMonData(&gPlayerParty[i], MON_DATA_MOVE4);
-            if (move != MOVE_NONE)
-            {
-                sTV_SecretBaseVisitMovesTemp[numMoves] = move;
-                numMoves++;
-            }
-            sTV_SecretBaseVisitMonsTemp[numPokemon].move = sTV_SecretBaseVisitMovesTemp[Random() % numMoves];
+
+            secretBaseVisitMonsTemp[numPokemon].move = monMoves[Random() % moveNum];
             numPokemon++;
         }
     }
 
-    for (i = 0, sum = 0; i < numPokemon; i++)
-        sum += sTV_SecretBaseVisitMonsTemp[i].level;
+    u16 sum = 0;
+    for (u32 i = 0; i < numPokemon; i++)
+        sum += secretBaseVisitMonsTemp[i].level;
 
     // Using the data calculated above, save the data to talk about on the show
     // (average level, and one randomly selected species / move)
+    u16 monIndex = Random() % numPokemon;
     show->secretBaseVisit.avgLevel = sum / numPokemon;
-    j = Random() % numPokemon;
-    show->secretBaseVisit.species = sTV_SecretBaseVisitMonsTemp[j].species;
-    show->secretBaseVisit.move = sTV_SecretBaseVisitMonsTemp[j].move;
+    show->secretBaseVisit.species = secretBaseVisitMonsTemp[monIndex].species;
+    show->secretBaseVisit.move = secretBaseVisitMonsTemp[monIndex].move;
 }
 
 void TryPutSecretBaseVisitOnAir(void)
@@ -2184,7 +2163,7 @@ void TryPutLotteryWinnerReportOnAir(void)
     }
 }
 
-void TryPutBattleSeminarOnAir(u16 foeSpecies, u16 species, u8 moveIndex, const u16 *movePtr, u16 betterMove)
+void TryPutBattleSeminarOnAir(enum Species foeSpecies, enum Species species, u8 moveIndex, const u16 *movePtr, enum Move betterMove)
 {
     TVShow *show;
     u8 i;
@@ -3061,17 +3040,17 @@ static void CompactTVShowArray(TVShow *shows)
     }
 }
 
-static u16 GetRandomDifferentSpeciesAndNameSeenByPlayer(u8 varIdx, u16 excludedSpecies)
+static enum Species GetRandomDifferentSpeciesAndNameSeenByPlayer(u8 varIdx, enum Species excludedSpecies)
 {
-    u16 species = GetRandomDifferentSpeciesSeenByPlayer(excludedSpecies);
+    enum Species species = GetRandomDifferentSpeciesSeenByPlayer(excludedSpecies);
     StringCopy(gTVStringVarPtrs[varIdx], GetSpeciesName(species));
     return species;
 }
 
-static u16 GetRandomDifferentSpeciesSeenByPlayer(u16 excludedSpecies)
+static enum Species GetRandomDifferentSpeciesSeenByPlayer(enum Species excludedSpecies)
 {
-    u16 species = Random() % (NUM_SPECIES - 1) + 1;
-    u16 initSpecies = species;
+    enum Species species = Random() % (NUM_SPECIES - 1) + 1;
+    enum Species initSpecies = species;
 
     while (GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_GET_SEEN) != TRUE || species == excludedSpecies)
     {
@@ -3169,7 +3148,7 @@ static u8 GetRandomNameRaterStateFromName(TVShow *show)
     return nameSum & 7;
 }
 
-static void GetNicknameSubstring(u8 varIdx, u8 whichPosition, u8 charParam, u16 whichString, u16 species, TVShow *show)
+static void GetNicknameSubstring(u8 varIdx, u8 whichPosition, u8 charParam, u16 whichString, enum Species species, TVShow *show)
 {
     u8 buff[16];
     u8 i;
@@ -3472,10 +3451,11 @@ static void SetMixedTVShows(TVShow player1[TV_SHOWS_COUNT], TVShow player2[TV_SH
     tvShows[1] = &player2;
     tvShows[2] = &player3;
     tvShows[3] = &player4;
-    sTVShowMixingNumPlayers = GetLinkPlayerCount();
+    u8 tvShowMixingNumPlayers = GetLinkPlayerCount();
+
     while (1)
     {
-        for (i = 0; i < sTVShowMixingNumPlayers; i++)
+        for (i = 0; i < tvShowMixingNumPlayers; i++)
         {
             if (i == 0)
                 sRecordMixingPartnersWithoutShowsToShare = 0;
@@ -3484,19 +3464,19 @@ static void SetMixedTVShows(TVShow player1[TV_SHOWS_COUNT], TVShow player2[TV_SH
             if (sTVShowMixingCurSlot == -1)
             {
                 sRecordMixingPartnersWithoutShowsToShare++;
-                if (sRecordMixingPartnersWithoutShowsToShare == sTVShowMixingNumPlayers)
+                if (sRecordMixingPartnersWithoutShowsToShare == tvShowMixingNumPlayers)
                     return;
             }
             else
             {
-                for (j = 0; j < sTVShowMixingNumPlayers - 1; j++)
+                for (j = 0; j < tvShowMixingNumPlayers - 1; j++)
                 {
-                    sCurTVShowSlot = FindFirstEmptyRecordMixTVShowSlot(tvShows[(i + j + 1) % sTVShowMixingNumPlayers][0]);
+                    sCurTVShowSlot = FindFirstEmptyRecordMixTVShowSlot(tvShows[(i + j + 1) % tvShowMixingNumPlayers][0]);
                     if (sCurTVShowSlot != -1
-                        && TryMixTVShow(&tvShows[(i + j + 1) % sTVShowMixingNumPlayers][0], &tvShows[i][0], (i + j + 1) % sTVShowMixingNumPlayers) == 1)
+                        && TryMixTVShow(&tvShows[(i + j + 1) % tvShowMixingNumPlayers][0], &tvShows[i][0], (i + j + 1) % tvShowMixingNumPlayers) == 1)
                         break;
                 }
-                if (j == sTVShowMixingNumPlayers - 1)
+                if (j == tvShowMixingNumPlayers - 1)
                     DeleteTVShowInArrayByIdx(tvShows[i][0], sTVShowMixingCurSlot);
             }
         }
@@ -3606,7 +3586,8 @@ static s8 FindInactiveShowInArray(TVShow *tvShows)
 static void DeactivateShowsWithUnseenSpecies(void)
 {
     u16 i;
-    u16 species;
+    enum Species species;
+    u16 facilityAndMode;
 
     for (i = 0; i < LAST_TVSHOW_IDX; i++)
     {
@@ -3693,9 +3674,8 @@ static void DeactivateShowsWithUnseenSpecies(void)
             DeactivateShowIfNotSeenSpecies(species, i);
             species = (&gSaveBlock1Ptr->tvShows[i])->frontier.species2;
             DeactivateShowIfNotSeenSpecies(species, i);
-            // Species var re-used here
-            species = (&gSaveBlock1Ptr->tvShows[i])->frontier.facilityAndMode;
-            switch (species)
+            facilityAndMode = (&gSaveBlock1Ptr->tvShows[i])->frontier.facilityAndMode;
+            switch (facilityAndMode)
             {
             case FRONTIER_SHOW_TOWER_MULTIS:
             case FRONTIER_SHOW_TOWER_LINK_MULTIS:
@@ -3752,7 +3732,7 @@ static void DeactivateShow(u8 showIdx)
     gSaveBlock1Ptr->tvShows[showIdx].common.active = FALSE;
 }
 
-static void DeactivateShowIfNotSeenSpecies(u16 species, u8 showIdx)
+static void DeactivateShowIfNotSeenSpecies(enum Species species, u8 showIdx)
 {
     if (!GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_GET_SEEN))
         gSaveBlock1Ptr->tvShows[showIdx].common.active = FALSE;
@@ -3844,19 +3824,19 @@ static void SetMixedPokeNews(PokeNews player1[POKE_NEWS_COUNT], PokeNews player2
     pokeNews[1] = &player2;
     pokeNews[2] = &player3;
     pokeNews[3] = &player4;
-    sTVShowNewsMixingNumPlayers = GetLinkPlayerCount();
+    u8 tvShowNewsMixingNumPlayers = GetLinkPlayerCount();
     for (i = 0; i < POKE_NEWS_COUNT; i++)
     {
-        for (j = 0; j < sTVShowNewsMixingNumPlayers; j++)
+        for (j = 0; j < tvShowNewsMixingNumPlayers; j++)
         {
             sTVShowMixingCurSlot = GetPokeNewsSlotIfActive(*pokeNews[j], i);
             if (sTVShowMixingCurSlot != -1)
             {
-                for (k = 0; k < sTVShowNewsMixingNumPlayers - 1; k++)
+                for (k = 0; k < tvShowNewsMixingNumPlayers - 1; k++)
                 {
-                    sCurTVShowSlot = GetFirstEmptyPokeNewsSlot(*pokeNews[(j + k + 1) % sTVShowNewsMixingNumPlayers]);
+                    sCurTVShowSlot = GetFirstEmptyPokeNewsSlot(*pokeNews[(j + k + 1) % tvShowNewsMixingNumPlayers]);
                     if (sCurTVShowSlot != -1)
-                        InitTryMixPokeNewsShow(pokeNews[(j + k + 1) % sTVShowNewsMixingNumPlayers], pokeNews[j]);
+                        InitTryMixPokeNewsShow(pokeNews[(j + k + 1) % tvShowNewsMixingNumPlayers], pokeNews[j]);
                 }
             }
         }
@@ -4038,7 +4018,7 @@ static void TranslateJapaneseEmeraldShows(TVShow *shows)
 
     for (curShow = shows; curShow < shows + LAST_TVSHOW_IDX; curShow++)
     {
-        switch(curShow->common.kind)
+        switch (curShow->common.kind)
         {
         case TVSHOW_FAN_CLUB_LETTER:
             curShow->fanclubLetter.language = GetStringLanguage(curShow->fanclubLetter.playerName);
@@ -4351,7 +4331,7 @@ static void DoTVShowBravoTrainerBattleTower(void)
     show = &gSaveBlock1Ptr->tvShows[gSpecialVar_0x8004];
     gSpecialVar_Result = FALSE;
     state = sTVShowState;
-    switch(state)
+    switch (state)
     {
     case BRAVOTOWER_STATE_INTRO:
         TVShowConvertInternationalString(gStringVar1, show->bravoTrainerTower.playerName, show->bravoTrainerTower.playerLanguage);
@@ -4446,7 +4426,7 @@ static void DoTVShowTodaysSmartShopper(void)
     show = &gSaveBlock1Ptr->tvShows[gSpecialVar_0x8004];
     gSpecialVar_Result = FALSE;
     state = sTVShowState;
-    switch(state)
+    switch (state)
     {
     case SMARTSHOPPER_STATE_INTRO:
         TVShowConvertInternationalString(gStringVar1, show->smartshopperShow.playerName, show->smartshopperShow.language);
@@ -6573,6 +6553,9 @@ static void DoTVShowSecretBaseSecrets(void)
     show = &gSaveBlock1Ptr->tvShows[gSpecialVar_0x8004];
     gSpecialVar_Result = FALSE;
     state = sTVShowState;
+
+    u8 tvSecretBaseSecretsRandomValues[3] = {};
+
     switch (state)
     {
     case SBSECRETS_STATE_INTRO:
@@ -6586,8 +6569,8 @@ static void DoTVShowSecretBaseSecrets(void)
         else
         {
             show->secretBaseSecrets.savedState = SBSECRETS_STATE_DO_NEXT1;
-            sTVSecretBaseSecretsRandomValues[0] = Random() % numActions;
-            sTVShowState = SecretBaseSecrets_GetStateByFlagNumber(show, sTVSecretBaseSecretsRandomValues[0]);
+            tvSecretBaseSecretsRandomValues[0] = Random() % numActions;
+            sTVShowState = SecretBaseSecrets_GetStateByFlagNumber(show, tvSecretBaseSecretsRandomValues[0]);
         }
         break;
     case SBSECRETS_STATE_DO_NEXT1:
@@ -6600,7 +6583,7 @@ static void DoTVShowSecretBaseSecrets(void)
             break;
         case 2:
             show->secretBaseSecrets.savedState = SBSECRETS_STATE_DO_NEXT2;
-            if (sTVSecretBaseSecretsRandomValues[0] == 0)
+            if (tvSecretBaseSecretsRandomValues[0] == 0)
                 sTVShowState = SecretBaseSecrets_GetStateByFlagNumber(show, 1);
             else
                 sTVShowState = SecretBaseSecrets_GetStateByFlagNumber(show, 0);
@@ -6608,12 +6591,12 @@ static void DoTVShowSecretBaseSecrets(void)
         default:
             for (i = 0; i < 0xFFFF; i++)
             {
-                sTVSecretBaseSecretsRandomValues[1] = Random() % numActions;
-                if (sTVSecretBaseSecretsRandomValues[1] != sTVSecretBaseSecretsRandomValues[0])
+                tvSecretBaseSecretsRandomValues[1] = Random() % numActions;
+                if (tvSecretBaseSecretsRandomValues[1] != tvSecretBaseSecretsRandomValues[0])
                     break;
             }
             show->secretBaseSecrets.savedState = SBSECRETS_STATE_DO_NEXT2;
-            sTVShowState = SecretBaseSecrets_GetStateByFlagNumber(show, sTVSecretBaseSecretsRandomValues[1]);
+            sTVShowState = SecretBaseSecrets_GetStateByFlagNumber(show, tvSecretBaseSecretsRandomValues[1]);
             break;
         }
         break;
@@ -6628,12 +6611,12 @@ static void DoTVShowSecretBaseSecrets(void)
         {
             for (i = 0; i < 0xFFFF; i++)
             {
-                sTVSecretBaseSecretsRandomValues[2] = Random() % numActions;
-                if (sTVSecretBaseSecretsRandomValues[2] != sTVSecretBaseSecretsRandomValues[0] && sTVSecretBaseSecretsRandomValues[2] != sTVSecretBaseSecretsRandomValues[1])
+                tvSecretBaseSecretsRandomValues[2] = Random() % numActions;
+                if (tvSecretBaseSecretsRandomValues[2] != tvSecretBaseSecretsRandomValues[0] && tvSecretBaseSecretsRandomValues[2] != tvSecretBaseSecretsRandomValues[1])
                     break;
             }
             show->secretBaseSecrets.savedState = SBSECRETS_STATE_TOOK_X_STEPS;
-            sTVShowState = SecretBaseSecrets_GetStateByFlagNumber(show, sTVSecretBaseSecretsRandomValues[2]);
+            sTVShowState = SecretBaseSecrets_GetStateByFlagNumber(show, tvSecretBaseSecretsRandomValues[2]);
         }
         break;
     case SBSECRETS_STATE_TOOK_X_STEPS:

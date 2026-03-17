@@ -172,7 +172,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: A spread move attack will be weakened by stron
 DOUBLE_BATTLE_TEST("Spread Moves: AOE move vs Disguise, Volt Absorb (right) and Lightning Rod (left)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_REDIRECT_ABILITY_IMMUNITY, GEN_5);
+        WITH_CONFIG(B_REDIRECT_ABILITY_IMMUNITY, GEN_5);
         ASSUME(GetMoveTarget(MOVE_DISCHARGE) == TARGET_FOES_AND_ALLY);
         ASSUME(GetMoveType(MOVE_DISCHARGE) == TYPE_ELECTRIC);
         PLAYER(SPECIES_WOBBUFFET);
@@ -192,7 +192,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: AOE move vs Disguise, Volt Absorb (right) and 
 DOUBLE_BATTLE_TEST("Spread Moves: AOE move vs Disguise, Volt Absorb (left) and Lightning Rod (right)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_REDIRECT_ABILITY_IMMUNITY, GEN_5);
+        WITH_CONFIG(B_REDIRECT_ABILITY_IMMUNITY, GEN_5);
         ASSUME(GetMoveTarget(MOVE_DISCHARGE) == TARGET_FOES_AND_ALLY);
         ASSUME(GetMoveType(MOVE_DISCHARGE) == TYPE_ELECTRIC);
         PLAYER(SPECIES_WOBBUFFET);
@@ -472,5 +472,24 @@ DOUBLE_BATTLE_TEST("Spread Moves: AOE ground type move vs Levitate and Air Ballo
         MESSAGE("It doesn't affect the opposing Wynaut…");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerLeft);
         HP_BAR(playerRight);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Spread Moves: Earthquake fails in order of ally, left foe, right foe")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveCategory(MOVE_EARTHQUAKE) == DAMAGE_CATEGORY_PHYSICAL);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(SPECIES_FLYGON) { Speed(1); Ability(ABILITY_LEVITATE); }
+        OPPONENT(SPECIES_FLYGON) { Speed(2); Ability(ABILITY_LEVITATE); }
+        OPPONENT(SPECIES_FLYGON) { Speed(3); Ability(ABILITY_LEVITATE); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_EARTHQUAKE); }
+    } SCENE {
+        ABILITY_POPUP(playerRight, ABILITY_LEVITATE);
+        ABILITY_POPUP(opponentLeft, ABILITY_LEVITATE);
+        ABILITY_POPUP(opponentRight, ABILITY_LEVITATE);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerLeft);
     }
 }

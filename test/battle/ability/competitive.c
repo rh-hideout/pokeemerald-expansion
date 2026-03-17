@@ -3,7 +3,7 @@
 
 DOUBLE_BATTLE_TEST("Competitive sharply raises player's Sp. Atk after Intimidate")
 {
-    u32 abilityLeft, abilityRight;
+    enum Ability abilityLeft, abilityRight;
 
     PARAMETRIZE { abilityLeft = ABILITY_FRIEND_GUARD; abilityRight = ABILITY_FRIEND_GUARD; }
     PARAMETRIZE { abilityLeft = ABILITY_FRIEND_GUARD; abilityRight = ABILITY_COMPETITIVE; }
@@ -60,7 +60,7 @@ DOUBLE_BATTLE_TEST("Competitive sharply raises player's Sp. Atk after Intimidate
 // Same as above, but for opponent.
 DOUBLE_BATTLE_TEST("Competitive sharply raises opponent's Sp. Atk after Intimidate")
 {
-    u32 abilityLeft, abilityRight;
+    enum Ability abilityLeft, abilityRight;
 
     PARAMETRIZE { abilityLeft = ABILITY_FRIEND_GUARD; abilityRight = ABILITY_FRIEND_GUARD; }
     PARAMETRIZE { abilityLeft = ABILITY_FRIEND_GUARD; abilityRight = ABILITY_COMPETITIVE; }
@@ -140,7 +140,7 @@ SINGLE_BATTLE_TEST("Competitive activates after Sticky Web lowers Speed")
 SINGLE_BATTLE_TEST("Competitive doesn't activate after Sticky Web lowers Speed if Court Changed (gen8)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_DEFIANT_STICKY_WEB, GEN_8);
+        WITH_CONFIG(B_DEFIANT_STICKY_WEB, GEN_8);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_IGGLYBUFF) { Ability(ABILITY_COMPETITIVE); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -167,7 +167,7 @@ SINGLE_BATTLE_TEST("Competitive doesn't activate after Sticky Web lowers Speed i
 SINGLE_BATTLE_TEST("Competitive correctly activates after Sticky Web lowers Speed if Court Changed (Gen8)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_DEFIANT_STICKY_WEB, GEN_8);
+        WITH_CONFIG(B_DEFIANT_STICKY_WEB, GEN_8);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_IGGLYBUFF) { Ability(ABILITY_COMPETITIVE); }
         OPPONENT(SPECIES_WOBBUFFET);

@@ -552,7 +552,7 @@ DOUBLE_BATTLE_TEST("Protect: Wide Guard can not fail on consecutive turns (Gen6+
     PARAMETRIZE { config = GEN_6; passes = 2; }
     PASSES_RANDOMLY(passes, 2);
     GIVEN {
-        WITH_CONFIG(CONFIG_WIDE_GUARD, config);
+        WITH_CONFIG(B_WIDE_GUARD, config);
         ASSUME(GetMoveTarget(MOVE_HYPER_VOICE) == TARGET_BOTH);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
@@ -618,7 +618,7 @@ DOUBLE_BATTLE_TEST("Protect: Quick Guard can not fail on consecutive turns (Gen6
     PARAMETRIZE { config = GEN_6; passes = 2; }
     PASSES_RANDOMLY(passes, 2);
     GIVEN {
-        WITH_CONFIG(CONFIG_QUICK_GUARD, config);
+        WITH_CONFIG(B_QUICK_GUARD, config);
         ASSUME(GetMovePriority(MOVE_QUICK_ATTACK) == 1);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
@@ -958,3 +958,33 @@ DOUBLE_BATTLE_TEST("Wide Guard is still activate even if user is switched out du
         }
     }
 }
+
+DOUBLE_BATTLE_TEST("Protect is not ignored after a new mon switched in because of U-Turn")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN {
+            MOVE(playerRight, MOVE_PROTECT);
+            MOVE(opponentLeft, MOVE_POUND, target: playerRight);
+            MOVE(opponentRight, MOVE_U_TURN, target: playerLeft);
+            SEND_OUT(opponentRight, 2);
+        }
+        TURN {
+            MOVE(playerLeft, MOVE_DETECT);
+            MOVE(opponentLeft, MOVE_POUND, target: playerRight);
+            MOVE(opponentRight, MOVE_POUND, target: playerLeft);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DETECT, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, opponentLeft);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, opponentRight);
+    }
+}
+

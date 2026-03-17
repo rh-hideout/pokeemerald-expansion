@@ -29,7 +29,7 @@ static u8 GetWeedingBonusByBerryType(u8);
 static u8 GetPestsBonusByBerryType(u8);
 static void SetTreeMutations(u8 id, u8 berry);
 static u8 GetTreeMutationValue(u8 id);
-static u16 GetBerryPestSpecies(u8 berryId);
+static enum Species GetBerryPestSpecies(u8 berryId);
 static void TryForWeeds(struct BerryTree *tree);
 static void TryForPests(struct BerryTree *tree);
 static void AddTreeBonus(struct BerryTree *tree, u8 bonus);
@@ -2286,7 +2286,7 @@ bool8 ObjectEventInteractionBerryHasWeed(void)
 
 bool8 ObjectEventInteractionBerryHasPests(void)
 {
-    u16 species;
+    enum Species species;
     if (!OW_BERRY_PESTS || !gSaveBlock1Ptr->berryTrees[GetObjectEventBerryTreeId(gSelectedObjectEvent)].pests)
         return FALSE;
     species = GetBerryPestSpecies(gSaveBlock1Ptr->berryTrees[GetObjectEventBerryTreeId(gSelectedObjectEvent)].berry);
@@ -2370,7 +2370,7 @@ static const u8 sBerryMutations[][3] = {
 static u8 GetMutationOutcome(u8 berry1, u8 berry2)
 {
     u8 i;
-    for(i = 0; i < ARRAY_COUNT(sBerryMutations); i++)
+    for (i = 0; i < ARRAY_COUNT(sBerryMutations); i++)
     {
         if ((sBerryMutations[i][0] == berry1 && sBerryMutations[i][1] == berry2)
           ||(sBerryMutations[i][0] == berry2 && sBerryMutations[i][1] == berry1))
@@ -2458,30 +2458,30 @@ static void SetTreeMutations(u8 id, u8 berry)
 #endif
 }
 
-static u16 GetBerryPestSpecies(u8 berryId)
+static enum Species GetBerryPestSpecies(u8 berryId)
 {
 #if OW_BERRY_PESTS == TRUE
     const struct Berry *berry = GetBerryInfo(berryId);
-    switch(berry->color)
+    switch (berry->color)
     {
-        case BERRY_COLOR_RED:
-            return P_FAMILY_LEDYBA ? SPECIES_LEDYBA : SPECIES_NONE;
-            break;
-        case BERRY_COLOR_BLUE:
-            return P_FAMILY_VOLBEAT_ILLUMISE ? SPECIES_VOLBEAT : SPECIES_NONE;
-            break;
-        case BERRY_COLOR_PURPLE:
-            return P_FAMILY_VOLBEAT_ILLUMISE ? SPECIES_ILLUMISE : SPECIES_NONE;
-            break;
-        case BERRY_COLOR_GREEN:
-            return P_FAMILY_BURMY ? SPECIES_BURMY_PLANT : SPECIES_NONE;
-            break;
-        case BERRY_COLOR_YELLOW:
-            return P_FAMILY_COMBEE ? SPECIES_COMBEE : SPECIES_NONE;
-            break;
-        case BERRY_COLOR_PINK:
-            return P_FAMILY_SCATTERBUG ? SPECIES_SPEWPA : SPECIES_NONE;
-            break;
+    case BERRY_COLOR_RED:
+        return P_FAMILY_LEDYBA ? SPECIES_LEDYBA : SPECIES_NONE;
+        break;
+    case BERRY_COLOR_BLUE:
+        return P_FAMILY_VOLBEAT_ILLUMISE ? SPECIES_VOLBEAT : SPECIES_NONE;
+        break;
+    case BERRY_COLOR_PURPLE:
+        return P_FAMILY_VOLBEAT_ILLUMISE ? SPECIES_ILLUMISE : SPECIES_NONE;
+        break;
+    case BERRY_COLOR_GREEN:
+        return P_FAMILY_BURMY ? SPECIES_BURMY_PLANT : SPECIES_NONE;
+        break;
+    case BERRY_COLOR_YELLOW:
+        return P_FAMILY_COMBEE ? SPECIES_COMBEE : SPECIES_NONE;
+        break;
+    case BERRY_COLOR_PINK:
+        return P_FAMILY_SCATTERBUG ? SPECIES_SPEWPA : SPECIES_NONE;
+        break;
     }
 #endif
     return SPECIES_NONE;

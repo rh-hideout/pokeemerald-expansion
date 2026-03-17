@@ -5,7 +5,7 @@
 SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves do not retain priority")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_MEGA_EVO_TURN_ORDER, GEN_7); // TODO: Decouple this config from other gimmicks
+        WITH_CONFIG(B_MEGA_EVO_TURN_ORDER, GEN_7); // TODO: Decouple this config from other gimmicks
         ASSUME(GetMoveType(MOVE_QUICK_ATTACK) == TYPE_NORMAL);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); Speed(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
@@ -123,7 +123,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z_EFFECT_BOOST_CRITS raises a battler's critical hi
         PARAMETRIZE { genConfig = j; chance = 2; } // 50%
     PASSES_RANDOMLY(1, chance, RNG_CRITICAL_HIT);
     GIVEN {
-        WITH_CONFIG(CONFIG_CRIT_CHANCE, genConfig);
+        WITH_CONFIG(B_CRIT_CHANCE, genConfig);
         ASSUME(GetMoveType(MOVE_FORESIGHT) == TYPE_NORMAL);
         ASSUME(GetMoveZEffect(MOVE_FORESIGHT) == Z_EFFECT_BOOST_CRITS);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
@@ -532,7 +532,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) 10,000,000 Volt Thunderbolt has an increased critic
         PARAMETRIZE { genConfig = j; chance = 2; }
     PASSES_RANDOMLY(1, chance, RNG_CRITICAL_HIT);
     GIVEN {
-        WITH_CONFIG(CONFIG_CRIT_CHANCE, genConfig);
+        WITH_CONFIG(B_CRIT_CHANCE, genConfig);
         ASSUME(GetMoveCriticalHitStage(MOVE_10_000_000_VOLT_THUNDERBOLT) == 2);
         ASSUME(GetSpeciesBaseSpeed(SPECIES_PIKACHU_PARTNER) == 90);
         PLAYER(SPECIES_PIKACHU_PARTNER) { Item(ITEM_PIKASHUNIUM_Z); }
@@ -598,6 +598,24 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Genesis Supernova sets up psychic terrain")
     }
 }
 
+SINGLE_BATTLE_TEST("(Z-MOVE) Genesis Supernova sets up psychic terrain when the target is behind a Substitute")
+{
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_GENESIS_SUPERNOVA, MOVE_EFFECT_PSYCHIC_TERRAIN));
+        PLAYER(SPECIES_MEW) { Item(ITEM_MEWNIUM_Z); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_PSYCHIC, gimmick: GIMMICK_Z_MOVE); }
+        TURN { MOVE(player, MOVE_QUICK_ATTACK); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GENESIS_SUPERNOVA, player);
+        SUB_HIT(opponent);
+        NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_ATTACK, player); }
+        MESSAGE("The opposing Wobbuffet is protected by the Psychic Terrain!");
+    }
+}
+
 SINGLE_BATTLE_TEST("(Z-MOVE) Splintered Stormshards removes terrain")
 {
     GIVEN {
@@ -613,6 +631,25 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Splintered Stormshards removes terrain")
         MESSAGE("The weirdness disappeared from the battlefield!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_ATTACK, player);
         HP_BAR(opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("(Z-MOVE) Splintered Stormshards removes terrain when the target is behind a Substitute")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SPLINTERED_STORMSHARDS) == EFFECT_ICE_SPINNER);
+        PLAYER(SPECIES_LYCANROC_DUSK) { Item(ITEM_LYCANIUM_Z); }
+        OPPONENT(SPECIES_TAPU_LELE) { Ability(ABILITY_PSYCHIC_SURGE); HP(1000); MaxHP(1000); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_STONE_EDGE, gimmick: GIMMICK_Z_MOVE); }
+        TURN { MOVE(player, MOVE_QUICK_ATTACK); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLINTERED_STORMSHARDS, player);
+        SUB_HIT(opponent);
+        MESSAGE("The weirdness disappeared from the battlefield!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_ATTACK, player);
     }
 }
 

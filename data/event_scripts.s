@@ -50,6 +50,7 @@
 #include "constants/moves.h"
 #include "constants/mystery_gift.h"
 #include "constants/party_menu.h"
+#include "constants/pokeball.h"
 #include "constants/pokedex.h"
 #include "constants/pokemon.h"
 #include "constants/rtc.h"
@@ -1525,9 +1526,8 @@ gText_WantWhichFloor::
 	.include "data/text/abnormal_weather.inc"
 
 EventScript_GetInGameTradeSpeciesInfo::
-	copyvar VAR_0x8004, VAR_0x8008
-	specialvar VAR_RESULT, GetInGameTradeSpeciesInfo
-	copyvar VAR_0x8009, VAR_RESULT
+	copyvar VAR_0x8005, VAR_0x8008
+	specialvar VAR_0x8009, GetInGameTradeSpeciesInfo
 	return
 
 EventScript_ChooseMonForInGameTrade::
@@ -1535,18 +1535,13 @@ EventScript_ChooseMonForInGameTrade::
 	waitstate
 	lock
 	faceplayer
-	copyvar VAR_0x800A, VAR_0x8004
 	return
 
 EventScript_GetInGameTradeSpecies::
-	copyvar VAR_0x8005, VAR_0x800A
 	specialvar VAR_RESULT, GetTradeSpecies
-	copyvar VAR_0x800B, VAR_RESULT
 	return
 
 EventScript_DoInGameTrade::
-	copyvar VAR_0x8004, VAR_0x8008
-	copyvar VAR_0x8005, VAR_0x800A
 	special CreateInGameTradePokemon
 	special DoInGameTradeScene
 	waitstate

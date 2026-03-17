@@ -263,7 +263,7 @@ static const u8 *const sModeStrings[NUM_TRAINER_HILL_MODES] =
 static const struct ObjectEventTemplate sTrainerObjectEventTemplate =
 {
     .graphicsId = OBJ_EVENT_GFX_RIVAL_BRENDAN_NORMAL,
-    .elevation = 3,
+    .elevation = ELEVATION_DEFAULT,
     .movementType = MOVEMENT_TYPE_LOOK_AROUND,
     .movementRangeX = 1,
     .movementRangeY = 1,
@@ -716,7 +716,7 @@ static u16 GetMapDataForFloor(u8 floorId, u32 x, u32 y, u32 floorWidth) // floor
 
     impassable = (sHillData->floors[floorId].map.collisionData[y] >> (15 - x) & 1);
     metatileId = sHillData->floors[floorId].map.metatileData[floorWidth * y + x] + NUM_METATILES_IN_PRIMARY;
-    elevation = PACK_ELEVATION(3);
+    elevation = PACK_ELEVATION(ELEVATION_DEFAULT);
 
     return PACK_COLLISION(impassable) | elevation | PACK_METATILE(metatileId);
 }
@@ -962,7 +962,7 @@ u8 GetTrainerEncounterMusicIdInTrainerHill(u16 trainerId)
 
 static void SetTrainerHillMonLevel(struct Pokemon *mon, u8 level)
 {
-    u16 species = GetMonData(mon, MON_DATA_SPECIES);
+    enum Species species = GetMonData(mon, MON_DATA_SPECIES);
     u32 exp = gExperienceTables[gSpeciesInfo[species].growthRate][level];
 
     SetMonData(mon, MON_DATA_EXP, &exp);

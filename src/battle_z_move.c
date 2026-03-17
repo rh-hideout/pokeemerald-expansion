@@ -2,8 +2,7 @@
 #include "malloc.h"
 #include "battle.h"
 #include "pokemon.h"
-#include "battle_ai_main.h"
-#include "battle_ai_util.h"
+#include "battle_ai_record.h"
 #include "battle_controllers.h"
 #include "battle_interface.h"
 #include "battle_message.h"
@@ -228,7 +227,7 @@ bool32 TryChangeZTrigger(enum BattlerId battler, u32 moveIndex)
     return viableZMove;
 }
 
-enum Move GetSignatureZMove(enum Move move, u32 species, enum Item item)
+enum Move GetSignatureZMove(enum Move move, enum Species species, enum Item item)
 {
     u32 i;
 

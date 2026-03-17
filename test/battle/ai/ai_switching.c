@@ -132,10 +132,9 @@ AI_DOUBLE_BATTLE_TEST("AI will not try to switch for the same Pokémon for 2 spo
         // No moves to damage player.
         OPPONENT(SPECIES_GENGAR) { Moves(MOVE_SHADOW_BALL); }
         OPPONENT(SPECIES_HAUNTER) { Moves(MOVE_SHADOW_BALL); }
-        OPPONENT(SPECIES_GENGAR) { Moves(MOVE_SHADOW_BALL); }
         OPPONENT(SPECIES_RATICATE) { Moves(MOVE_HEADBUTT); }
     } WHEN {
-        TURN { EXPECT_SWITCH(opponentLeft, 3); }
+        TURN { EXPECT_SWITCH(opponentLeft, 2); }
     } SCENE {
         MESSAGE(AI_TRAINER_NAME " withdrew Gengar!");
         MESSAGE(AI_TRAINER_NAME " sent out Raticate!");
@@ -353,8 +352,12 @@ AI_TWO_VS_ONE_BATTLE_TEST("AI will not try to switch for the same pokemon for 2 
     } SCENE {
         MESSAGE(AI_TRAINER_NAME " withdrew Gengar!");
         MESSAGE(AI_TRAINER_NAME " sent out Raticate!");
-        NONE_OF {
+        if (flags & AI_FLAG_SMART_SWITCHING)
+        {
             MESSAGE(AI_TRAINER_NAME " withdrew Haunter!");
+            MESSAGE(AI_TRAINER_NAME " sent out Gastly!");
+        }
+        NONE_OF {
             MESSAGE(AI_TRAINER_NAME " sent out Raticate!");
         }
     }
@@ -451,7 +454,7 @@ AI_SINGLE_BATTLE_TEST("When AI switches out due to having no move that affects t
 
 AI_DOUBLE_BATTLE_TEST("AI will not try to switch for the same Pokémon for 2 spots in a double battle (Wonder Guard)")
 {
-    PASSES_RANDOMLY(SHOULD_SWITCH_WONDER_GUARD_PERCENTAGE, 100, RNG_AI_SWITCH_WONDER_GUARD);
+    PASSES_RANDOMLY(SHOULD_SWITCH_ALL_MOVES_BAD_PERCENTAGE, 100, RNG_AI_SWITCH_ALL_MOVES_BAD);
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING);
         PLAYER(SPECIES_SHEDINJA);
@@ -459,7 +462,7 @@ AI_DOUBLE_BATTLE_TEST("AI will not try to switch for the same Pokémon for 2 spo
         // No moves to damage player.
         OPPONENT(SPECIES_LINOONE) { Moves(MOVE_SCRATCH); }
         OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_SCRATCH); }
-        OPPONENT(SPECIES_LINOONE) { Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_SENTRET) { Moves(MOVE_SCRATCH); }
         OPPONENT(SPECIES_GENGAR) { Moves(MOVE_SHADOW_BALL); }
     } WHEN {
         TURN { EXPECT_SWITCH(opponentLeft, 3); }
@@ -467,7 +470,7 @@ AI_DOUBLE_BATTLE_TEST("AI will not try to switch for the same Pokémon for 2 spo
         MESSAGE(AI_TRAINER_NAME " withdrew Linoone!");
         MESSAGE(AI_TRAINER_NAME " sent out Gengar!");
         NONE_OF {
-            MESSAGE(AI_TRAINER_NAME " withdrew Zigzagoon!");
+            MESSAGE(AI_TRAINER_NAME "sent out Linoone!");
             MESSAGE(AI_TRAINER_NAME " sent out Gengar!");
         }
     }
@@ -490,7 +493,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: Switch effect moves will send 
         ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
         ASSUME(GetMoveEffect(MOVE_CHILLY_RECEPTION) == EFFECT_WEATHER_AND_SWITCH);
         ASSUME(GetMoveEffect(MOVE_SHED_TAIL) == EFFECT_SHED_TAIL);
-        WITH_CONFIG(CONFIG_TELEPORT_BEHAVIOR, GEN_8);
+        WITH_CONFIG(B_TELEPORT_BEHAVIOR, GEN_8);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_ACE_POKEMON);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(aiMove); }
@@ -1115,6 +1118,21 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if player's m
     }
 }
 
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out on turn 1 if it predicts a semi-invulnerable move and it has a good switchin")
+{
+    PASSES_RANDOMLY(PREDICT_MOVE_CHANCE, 100, RNG_AI_PREDICT_MOVE);
+    PASSES_RANDOMLY(SHOULD_SWITCH_FREE_TURN_PERCENTAGE, 100, RNG_AI_SWITCH_FREE_TURN);
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_DIVE) == TYPE_WATER);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_OMNISCIENT | AI_FLAG_PREDICT_MOVE);
+        PLAYER(SPECIES_LUVDISC) { Level(1); Moves(MOVE_DIVE); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_PIKACHU) { Moves(MOVE_THUNDERBOLT); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_DIVE); EXPECT_SWITCH(opponent, 1); }
+    }
+}
+
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if it has an absorber but current mon has SE move 33% of the time")
 {
     PASSES_RANDOMLY(33, 100, RNG_AI_SWITCH_ABSORBING_STAY_IN);
@@ -1181,6 +1199,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if it has an 
     enum Move move;
     enum Ability absorbingAbility;
     PARAMETRIZE { aiMon = SPECIES_NINETALES; absorbingAbility = ABILITY_FLASH_FIRE; move = MOVE_FLAMETHROWER; }
+    PARAMETRIZE { aiMon = SPECIES_DACHSBUN;  absorbingAbility = ABILITY_WELL_BAKED_BODY; move = MOVE_FLAMETHROWER; }
     PARAMETRIZE { aiMon = SPECIES_MANTINE;   absorbingAbility = ABILITY_WATER_ABSORB; move = MOVE_SURF; }
     PARAMETRIZE { aiMon = SPECIES_TOXICROAK; absorbingAbility = ABILITY_DRY_SKIN; move = MOVE_SURF; }
     PARAMETRIZE { aiMon = SPECIES_GASTRODON; absorbingAbility = ABILITY_STORM_DRAIN; move = MOVE_SURF; }
@@ -1197,8 +1216,8 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if it has an 
     PARAMETRIZE { aiMon = SPECIES_SHELLDER; absorbingAbility = ABILITY_OVERCOAT; move = MOVE_MAGIC_POWDER; }
     PARAMETRIZE { aiMon = SPECIES_SHELLDER; absorbingAbility = ABILITY_OVERCOAT; move = MOVE_STUN_SPORE; }
     GIVEN {
-        WITH_CONFIG(CONFIG_REDIRECT_ABILITY_IMMUNITY, GEN_5);
-        WITH_CONFIG(CONFIG_POWDER_OVERCOAT, GEN_6);
+        WITH_CONFIG(B_REDIRECT_ABILITY_IMMUNITY, GEN_5);
+        WITH_CONFIG(B_POWDER_OVERCOAT, GEN_6);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING);
         PLAYER(SPECIES_ZIGZAGOON) { Moves(move); }
         OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_SCRATCH); }
@@ -1290,7 +1309,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if Encore'd i
 {
     PASSES_RANDOMLY(SHOULD_SWITCH_ENCORE_DAMAGE_PERCENTAGE, 100, RNG_AI_SWITCH_ENCORE);
     GIVEN {
-        WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_3);
+        WITH_CONFIG(B_ENCORE_TARGET, GEN_3);
         ASSUME(GetMoveEffect(MOVE_ENCORE) == EFFECT_ENCORE);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING);
         PLAYER(SPECIES_AZURILL) { Moves(MOVE_SCRATCH, MOVE_ENCORE); }
@@ -1411,7 +1430,7 @@ AI_SINGLE_BATTLE_TEST("Switch AI: AI will switch into mon with good type matchup
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI correctly handles abilities when scoring moves")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_PRANKSTER_DARK_TYPES, GEN_7);
+        WITH_CONFIG(B_PRANKSTER_DARK_TYPES, GEN_7);
         ASSUME(GetSpeciesType(SPECIES_GRENINJA, 1) == TYPE_DARK);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT | AI_FLAG_SMART_MON_CHOICES);
         PLAYER(SPECIES_GRENINJA) { Moves(MOVE_WATER_GUN); }
@@ -1921,7 +1940,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will consider Hidden Power wh
 {
     PASSES_RANDOMLY(SHOULD_SWITCH_ABSORBS_HIDDEN_POWER_PERCENTAGE, 100, RNG_AI_SWITCH_ABSORBING_HIDDEN_POWER);
     GIVEN {
-        WITH_CONFIG(CONFIG_REDIRECT_ABILITY_IMMUNITY, GEN_5);
+        WITH_CONFIG(B_REDIRECT_ABILITY_IMMUNITY, GEN_5);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING);
         PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_HIDDEN_POWER); HPIV(31); AttackIV(30); DefenseIV(31); SpAttackIV(30); SpDefenseIV(31); SpeedIV(30); }
         OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_SCRATCH); }
@@ -1998,10 +2017,11 @@ AI_DOUBLE_BATTLE_TEST("AI will not choose to switch out Dondozo with Commander T
         PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_CELEBRATE); }
         PLAYER(SPECIES_ZIGZAGOON) { Moves (MOVE_CELEBRATE); }
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_PERISH_SONG); }
-        TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); }
-        TURN { SWITCH(playerLeft, 2); SWITCH(playerRight, 3); }
-        TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); EXPECT_MOVE(opponentLeft, MOVE_WATER_GUN); }
+        // Commander Tatsugiri cannot act while swallowed, so skip its turn explicitly.
+        TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_PERISH_SONG); SKIP_TURN(opponentRight); }
+        TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); SKIP_TURN(opponentRight); }
+        TURN { SWITCH(playerLeft, 2); SWITCH(playerRight, 3); SKIP_TURN(opponentRight); }
+        TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); EXPECT_MOVE(opponentLeft, MOVE_WATER_GUN); SKIP_TURN(opponentRight); }
     }
 }
 
@@ -2186,12 +2206,41 @@ AI_MULTI_BATTLE_TEST("AI will not switch out if the opposite battler is absent a
         MULTI_OPPONENT_B(SPECIES_WYNAUT) { Speed(2); HP(41); }
     } WHEN {
         TURN {
-            EXPECT_MOVE(opponentLeft, MOVE_BODY_SLAM, target: playerLeft); 
-            EXPECT_MOVE(playerRight, MOVE_SHADOW_BALL, target: opponentRight); 
+            EXPECT_MOVE(opponentLeft, MOVE_BODY_SLAM, target: playerLeft);
+            EXPECT_MOVE(playerRight, MOVE_SHADOW_BALL, target: opponentRight);
         }
         TURN {
             EXPECT_MOVE(opponentLeft, MOVE_DRAGON_RAGE, target: playerRight);
             EXPECT_MOVE(playerRight, MOVE_DRAGON_RAGE, target: opponentLeft);
         }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("Rage Fist stacks are seen properly for switch logic")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_VICTINI) { Level(70); Speed(2); Ability(ABILITY_VICTORY_STAR); Moves(MOVE_V_CREATE, MOVE_PSYCHIC); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Level(1); Speed(1); HP(1); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_GROUDON) { Level(85); Speed(3); Moves(MOVE_PRECIPICE_BLADES); }
+        OPPONENT(SPECIES_ANNIHILAPE) { Level(85); Speed(3); Moves(MOVE_RAGE_FIST); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_PSYCHIC); EXPECT_SEND_OUT(opponent, 1); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI can switch out both mons on the same turn in double battles")
+{
+    PASSES_RANDOMLY(SHOULD_SWITCH_ALL_MOVES_BAD_PERCENTAGE, 100, RNG_AI_SWITCH_ALL_MOVES_BAD);
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_RATTATA);
+        PLAYER(SPECIES_RATTATA);
+        OPPONENT(SPECIES_GENGAR) { Moves(MOVE_SHADOW_BALL); }
+        OPPONENT(SPECIES_GASTLY) { Moves(MOVE_SHADOW_BALL); }
+        OPPONENT(SPECIES_RATTATA) { Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_SCRATCH);}
+    } WHEN {
+        TURN { EXPECT_SWITCH(opponentLeft, 2); EXPECT_SWITCH(opponentRight, 3); }
     }
 }

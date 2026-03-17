@@ -1,7 +1,6 @@
 #include "global.h"
 #include "battle.h"
 #include "battle_ai_main.h"
-#include "battle_ai_util.h"
 #include "battle_anim.h"
 #include "battle_arena.h"
 #include "battle_controllers.h"
@@ -386,7 +385,7 @@ static void InitBtlControllersInternal(void)
 
 bool32 IsValidForBattle(struct Pokemon *mon)
 {
-    u32 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    enum Species species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
     return (species != SPECIES_NONE
          && species != SPECIES_EGG
          && GetMonData(mon, MON_DATA_HP) != 0
@@ -395,7 +394,7 @@ bool32 IsValidForBattle(struct Pokemon *mon)
 
 bool32 IsValidForBattleButDead(struct Pokemon *mon)
 {
-    u32 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    enum Species species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
     return (species != SPECIES_NONE
          && species != SPECIES_EGG
          && GetMonData(mon, MON_DATA_IS_EGG) == FALSE);
@@ -1994,7 +1993,7 @@ static bool8 ShouldDoSlideInAnim(enum BattlerId battler)
 
 void StartSendOutAnim(enum BattlerId battler, bool32 dontClearTransform, bool32 dontClearSubstituteBit, bool32 doSlideIn)
 {
-    u16 species;
+    enum Species species;
     struct Pokemon *mon = GetBattlerMon(battler);
     u32 sendoutType;
 
@@ -2338,7 +2337,7 @@ void BtlController_HandleLoadMonSprite(enum BattlerId battler)
 {
     u32 y;
     struct Pokemon *mon = GetBattlerMon(battler);
-    u16 species = GetBattlerVisualSpecies(battler);
+    enum Species species = GetBattlerVisualSpecies(battler);
 
     if (gBattleTypeFlags & BATTLE_TYPE_GHOST && GetBattlerSide(battler) == B_SIDE_OPPONENT)
     {
@@ -2472,8 +2471,7 @@ void BtlController_HandleDrawTrainerPic(enum BattlerId battler, enum TrainerPicI
 
             // Sets sprite priority to 1 so mons don't remain in foreground
             gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.priority = 1;
-            // Aiming for palette slots 8 and 9 for Player and PlayerPartner to prevent Trainer Slides causing mons to change colour
-            gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.paletteNum = (8 + battler/2);
+            gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.paletteNum = IndexOfSpritePaletteTag(gTrainerBacksprites[trainerPicId].palette.tag);
         }
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].x2 = DISPLAY_WIDTH;
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].sSpeedX = -2;
@@ -2500,8 +2498,7 @@ void BtlController_HandleTrainerSlide(enum BattlerId battler, enum TrainerPicID 
             gBattlerSpriteIds[battler] = gBattleStruct->trainerSlideSpriteIds[battler];
         // Sets sprite priority to 1 so mons don't remain in foreground
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.priority = 1;
-        // Aiming for palette slots 8 and 9 for Player and PlayerPartner to prevent Trainer Slides causing mons to change colour
-        gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.paletteNum = (8 + battler/2);
+        gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.paletteNum = IndexOfSpritePaletteTag(gTrainerBacksprites[trainerPicId].palette.tag);
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].x2 = -96;
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].sSpeedX = 2;
     }
@@ -2566,6 +2563,7 @@ void BtlController_HandleFaintAnimation(enum BattlerId battler)
             {
                 PlaySE12WithPanning(SE_FAINT, SOUND_PAN_TARGET);
                 gSprites[gBattlerSpriteIds[battler]].callback = SpriteCB_FaintOpponentMon;
+                gSprites[gBattlerSpriteIds[battler]].data[0] = battler;
                 gBattlerControllerFuncs[battler] = Controller_FaintOpponentMon;
             }
             // The player's sprite callback just slides the mon, the opponent's removes the sprite.
@@ -2849,7 +2847,7 @@ bool32 TwoOpponentIntroMons(enum BattlerId battler) // Double battle with both o
 
 void BtlController_HandleIntroTrainerBallThrow(enum BattlerId battler, u16 tagTrainerPal, const u16 *trainerPal, s16 framesToWait, void (*controllerCallback)(enum BattlerId battler))
 {
-    u8 paletteNum, taskId;
+    u8 taskId;
     enum BattleSide side = GetBattlerSide(battler);
 
     SetSpritePrimaryCoordsFromSecondaryCoords(&gSprites[gBattleStruct->trainerSlideSpriteIds[battler]]);
@@ -2872,10 +2870,6 @@ void BtlController_HandleIntroTrainerBallThrow(enum BattlerId battler, u16 tagTr
     {
         StoreSpriteCallbackInData6(&gSprites[gBattleStruct->trainerSlideSpriteIds[battler]], SpriteCB_FreePlayerSpriteLoadMonSprite);
         StartSpriteAnim(&gSprites[gBattleStruct->trainerSlideSpriteIds[battler]], ShouldDoSlideInAnim(battler) ? 2 : 1);
-
-        paletteNum = AllocSpritePalette(tagTrainerPal);
-        LoadPalette(trainerPal, OBJ_PLTT_ID(paletteNum), PLTT_SIZE_4BPP);
-        gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.paletteNum = (8 + battler/2);
     }
     else
     {
@@ -3065,7 +3059,7 @@ static void AnimateMonAfterKnockout(enum BattlerId battler)
 
 static void LaunchKOAnimation(enum BattlerId battlerId, u16 animId, bool32 isFront)
 {
-    u32 species = GetBattlerVisualSpecies(battlerId);
+    enum Species species = GetBattlerVisualSpecies(battlerId);
     u32 spriteId = gBattlerSpriteIds[battlerId];
 
     gBattleStruct->battlerKOAnimsRunning++;
@@ -3087,7 +3081,7 @@ static void LaunchKOAnimation(enum BattlerId battlerId, u16 animId, bool32 isFro
 
 static u32 ReturnAnimIdForBattler(bool32 wasPlayerSideKnockedOut, u32 specificBattler)
 {
-    u32 species = GetBattlerVisualSpecies(specificBattler);
+    enum Species species = GetBattlerVisualSpecies(specificBattler);
     if (wasPlayerSideKnockedOut)
         return gSpeciesInfo[species].frontAnimId;
     else

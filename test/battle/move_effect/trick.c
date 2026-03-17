@@ -58,7 +58,7 @@ SINGLE_BATTLE_TEST("Trick fails if both battlers have no held item")
 
 SINGLE_BATTLE_TEST("Trick fails if either item is Mail")
 {
-    u16 atkItem = ITEM_NONE, defItem = ITEM_NONE;
+    enum Item atkItem = ITEM_NONE, defItem = ITEM_NONE;
 
     ASSUME(ItemIsMail(ITEM_ORANGE_MAIL));
     PARAMETRIZE { atkItem = ITEM_ORANGE_MAIL; defItem = ITEM_NONE; }
@@ -79,7 +79,7 @@ SINGLE_BATTLE_TEST("Trick fails if either item is Mail")
 
 SINGLE_BATTLE_TEST("Trick fails if either item is a Z-Crystal")
 {
-    u16 atkItem = ITEM_NONE, defItem = ITEM_NONE;
+    enum Item atkItem = ITEM_NONE, defItem = ITEM_NONE;
 
     ASSUME(GetItemHoldEffect(ITEM_FIGHTINIUM_Z) == HOLD_EFFECT_Z_CRYSTAL);
     PARAMETRIZE { atkItem = ITEM_FIGHTINIUM_Z; defItem = ITEM_NONE; }
@@ -100,7 +100,7 @@ SINGLE_BATTLE_TEST("Trick fails if either item is a Z-Crystal")
 
 SINGLE_BATTLE_TEST("Trick fails if either battler holds a Mega Stone")
 {
-    u16 atkItem = ITEM_NONE, defItem = ITEM_NONE;
+    enum Item atkItem = ITEM_NONE, defItem = ITEM_NONE;
     u16 atkSpecies = SPECIES_WOBBUFFET, defSpecies = SPECIES_WOBBUFFET;
 
     PARAMETRIZE { atkSpecies = SPECIES_BLAZIKEN; atkItem = ITEM_BLAZIKENITE; defSpecies = SPECIES_WOBBUFFET; defItem = ITEM_SITRUS_BERRY; }
@@ -121,7 +121,7 @@ SINGLE_BATTLE_TEST("Trick fails if either battler holds a Mega Stone")
 
 SINGLE_BATTLE_TEST("Trick fails if an item changes the holder's form")
 {
-    u16 atkItem = ITEM_NONE, defItem = ITEM_NONE;
+    enum Item atkItem = ITEM_NONE, defItem = ITEM_NONE;
 
     PARAMETRIZE { atkItem = ITEM_GRISEOUS_CORE; defItem = ITEM_SITRUS_BERRY; }
     PARAMETRIZE { atkItem = ITEM_SITRUS_BERRY; defItem = ITEM_GRISEOUS_CORE; }
@@ -199,7 +199,7 @@ SINGLE_BATTLE_TEST("Trick can be used against targets with an active form change
 SINGLE_BATTLE_TEST("Trick does not remove the user's choice lock if both the target and use are holding choice items before Gen 5")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_MODERN_TRICK_CHOICE_LOCK, GEN_4);
+        WITH_CONFIG(B_MODERN_TRICK_CHOICE_LOCK, GEN_4);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_CHOICE_SCARF); MovesWithPP({MOVE_TRICK, 1}, {MOVE_CELEBRATE, 10}); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_CHOICE_SCARF); }
     }
@@ -216,7 +216,7 @@ SINGLE_BATTLE_TEST("Trick does not remove the user's choice lock if both the tar
 SINGLE_BATTLE_TEST("Trick removes the user's choice lock if both the target and use are holding choice items from Gen 5 onwards")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_MODERN_TRICK_CHOICE_LOCK, GEN_5);
+        WITH_CONFIG(B_MODERN_TRICK_CHOICE_LOCK, GEN_5);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_CHOICE_SCARF); MovesWithPP({MOVE_TRICK, 1}, {MOVE_CELEBRATE, 10}); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_CHOICE_SCARF); }
     }
@@ -229,4 +229,3 @@ SINGLE_BATTLE_TEST("Trick removes the user's choice lock if both the target and 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
     }
 }
-

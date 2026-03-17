@@ -218,20 +218,6 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro movevaluescleanup
-	.byte B_SCR_OP_MOVEVALUESCLEANUP
-	.endm
-
-	.macro setmultihit value:req
-	.byte B_SCR_OP_SETMULTIHIT
-	.byte \value
-	.endm
-
-	.macro decrementmultihit loopInstr:req
-	.byte B_SCR_OP_DECREMENTMULTIHIT
-	.4byte \loopInstr
-	.endm
-
 	.macro goto instr:req
 	.byte B_SCR_OP_GOTO
 	.4byte \instr
@@ -1214,6 +1200,15 @@
 	.4byte \failInstr
 	.endm
 
+	.macro trysynchronize
+	.byte B_SCR_OP_TRY_SYNCHRONIZE
+	.endm
+
+	.macro tryconfusionafterskydrop battler:req
+	.byte B_SCR_OP_TRY_CONFUSION_AFTER_SKY_DROP
+    .byte \battler
+	.endm
+	
 	.macro callnative func:req
 	.byte B_SCR_OP_CALLNATIVE
 	.4byte \func
@@ -1307,7 +1302,7 @@
 	@ Used by effects that may proc Symbiosis but do not call removeitem.
 	.macro trysymbiosis battler:req
 	callnative BS_TrySymbiosis
-    .byte \battler
+	.byte \battler
 	.endm
 
 	@ returns B_SIDE_x to gBattleCommunication[0]
@@ -1462,10 +1457,6 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro trytwoturnmovespowerherbformchange
-	callnative BS_TryTwoTurnMovesPowerHerbFormChange
-	.endm
-
 	.macro tryquash failInstr:req
 	callnative BS_TryQuash
 	.4byte \failInstr
@@ -1522,9 +1513,9 @@
 	.byte \battler
 	.endm
 
-    .macro resetterrainabilityflags
-    callnative BS_ResetTerrainAbilityFlags
-    .endm
+	.macro resetterrainabilityflags
+	callnative BS_ResetTerrainAbilityFlags
+	.endm
 
 	@ Stores Healing Wish effect.
 	.macro storehealingwish battler:req
@@ -1602,10 +1593,6 @@
 	callnative BS_JumpIfCanGigantamax
 	.byte \battler
 	.4byte \jumpInstr
-	.endm
-
-	.macro tryflingholdeffect
-	callnative BS_TryFlingHoldEffect
 	.endm
 
 	.macro swapsidestatuses
@@ -2098,24 +2085,6 @@
 	callnative BS_TryHealQuarterHealth
 	.byte \battler
 	.4byte \failInstr
-	.endm
-
-	.macro jumpifunder200 jumpInstr:req
-	callnative BS_JumpIfUnder200
-	.4byte \jumpInstr
-	.endm
-
-	.macro setskydrop
-	callnative BS_SetSkyDrop
-	.endm
-
-	.macro clearskydrop failInstr:req
-	callnative BS_ClearSkyDrop
-	.4byte \failInstr
-	.endm
-
-	.macro skydropyawn
-	callnative BS_SkyDropYawn
 	.endm
 
 	.macro jumpifpranksterblocked jumpInstr:req

@@ -1170,7 +1170,7 @@ static void SortMovesAlphabetically(u16 *moves, u32 numMoves)
 static u32 GetRelearnerLevelUpMoves(struct BoxPokemon *mon, u16 *moves)
 {
     u32 numMoves = 0;
-    u32 species = GetBoxMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    enum Species species = GetBoxMonData(mon, MON_DATA_SPECIES_OR_EGG);
 
     if (species == SPECIES_EGG)
         return 0;
@@ -1185,7 +1185,16 @@ static u32 GetRelearnerLevelUpMoves(struct BoxPokemon *mon, u16 *moves)
             if (learnset[i].level > level)
                 break;
 
-            if (!BoxMonKnowsMove(mon, learnset[i].move))
+            if (BoxMonKnowsMove(mon, learnset[i].move))
+                continue;
+
+            bool32 alreadyInList = FALSE;
+            for (u32 j = 0; j < numMoves; j++)
+            {
+                if (learnset[i].move == moves[j])
+                    alreadyInList = TRUE;
+            }
+            if (!alreadyInList)
                 moves[numMoves++] = learnset[i].move;
         }
 
@@ -1203,7 +1212,7 @@ static u32 GetRelearnerEggMoves(struct BoxPokemon *mon, u16 *moves)
     if (!FlagGet(P_FLAG_EGG_MOVES) && !P_ENABLE_MOVE_RELEARNERS)
         return 0;
 
-    u32 species = GetBoxMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    enum Species species = GetBoxMonData(mon, MON_DATA_SPECIES_OR_EGG);
 
     if (species == SPECIES_EGG)
         return 0;
@@ -1234,7 +1243,7 @@ static u32 GetRelearnerTMMoves(struct BoxPokemon *mon, u16 *moves)
     if (!P_TM_MOVES_RELEARNER && !P_ENABLE_MOVE_RELEARNERS)
         return 0;
 
-    u32 species = GetBoxMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    enum Species species = GetBoxMonData(mon, MON_DATA_SPECIES_OR_EGG);
 
     if (species == SPECIES_EGG)
         return 0;
@@ -1270,7 +1279,7 @@ static u32 GetRelearnerTutorMoves(struct BoxPokemon *mon, u16 *moves)
     if (!FlagGet(P_FLAG_TUTOR_MOVES) && !P_ENABLE_MOVE_RELEARNERS)
         return 0;
 
-    u32 species = GetBoxMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    enum Species species = GetBoxMonData(mon, MON_DATA_SPECIES_OR_EGG);
 
     if (species == SPECIES_EGG)
         return 0;
@@ -1320,7 +1329,7 @@ bool32 CanBoxMonRelearnMoves(struct BoxPokemon *boxMon, enum MoveRelearnerStates
 
 static bool32 HasRelearnerLevelUpMoves(struct BoxPokemon *boxMon)
 {
-    u32 species = GetBoxMonData(boxMon, MON_DATA_SPECIES_OR_EGG);
+    enum Species species = GetBoxMonData(boxMon, MON_DATA_SPECIES_OR_EGG);
 
     if (species == SPECIES_EGG)
         return FALSE;
@@ -1352,7 +1361,7 @@ static bool32 HasRelearnerEggMoves(struct BoxPokemon *boxMon)
     if (!FlagGet(P_FLAG_EGG_MOVES) && !P_ENABLE_MOVE_RELEARNERS)
         return FALSE;
 
-    u32 species = GetBoxMonData(boxMon, MON_DATA_SPECIES_OR_EGG);
+    enum Species species = GetBoxMonData(boxMon, MON_DATA_SPECIES_OR_EGG);
 
     if (species == SPECIES_EGG)
         return FALSE;
@@ -1379,7 +1388,7 @@ static bool32 HasRelearnerTMMoves(struct BoxPokemon *boxMon)
     if (!P_TM_MOVES_RELEARNER && !P_ENABLE_MOVE_RELEARNERS)
         return FALSE;
 
-    u32 species = GetBoxMonData(boxMon, MON_DATA_SPECIES_OR_EGG);
+    enum Species species = GetBoxMonData(boxMon, MON_DATA_SPECIES_OR_EGG);
 
     if (species == SPECIES_EGG)
         return FALSE;
@@ -1410,7 +1419,7 @@ static bool32 HasRelearnerTutorMoves(struct BoxPokemon *boxMon)
     if (!FlagGet(P_FLAG_TUTOR_MOVES) && !P_ENABLE_MOVE_RELEARNERS)
         return FALSE;
 
-    u32 species = GetBoxMonData(boxMon, MON_DATA_SPECIES_OR_EGG);
+    enum Species species = GetBoxMonData(boxMon, MON_DATA_SPECIES_OR_EGG);
 
     if (species == SPECIES_EGG)
         return FALSE;
