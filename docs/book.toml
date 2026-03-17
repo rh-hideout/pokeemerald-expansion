@@ -6,7 +6,7 @@ title = "pokeemerald-expansion"
 [output.html]
 git-repository-url = "https://github.com/theReuben/pokemon-brazilianite"
 edit-url-template = "https://github.com/theReuben/pokemon-brazilianite/edit/master/docs/{path}"
-site-url = "/pokemon-brazilianite/"
+site-url = "/pokemon-brazilianite/docs/"
 
 [preprocessor.fix_links]
 command = "python3 fix_links.py"

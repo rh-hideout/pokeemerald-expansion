@@ -38,13 +38,14 @@ jobs:
           cd docs
           mdbook build
 
-      - name: Copy editor to Pages output
+      - name: Assemble Pages output
         run: |
-          mkdir -p docs/book/editor
-          cp editor/index.html editor/app.js editor/style.css docs/book/editor/
-
-      - name: Add .nojekyll
-        run: touch docs/book/.nojekyll
+          mkdir -p _site/docs
+          # Editor app at the root
+          cp editor/index.html editor/app.js editor/style.css _site/
+          # mdbook docs under /docs/
+          cp -r docs/book/* _site/docs/
+          touch _site/.nojekyll
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -52,7 +53,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'docs/book'
+          path: '_site'
 
       - name: Deploy to GitHub Pages
         id: deployment
