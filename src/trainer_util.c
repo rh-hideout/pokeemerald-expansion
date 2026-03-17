@@ -129,11 +129,20 @@ void GenerateMonFromTrainerMon(struct Pokemon *mon, const struct TrainerMon *tra
 
     SetMonData(mon, MON_DATA_IVS, &trainerMon->iv);
     CustomTrainerPartyAssignMoves(mon, trainerMon);
-    
     SetMonData(mon, MON_DATA_HELD_ITEM, &trainerMon->heldItem);
+
     if (trainerMon->ability)
+    {
         SetCorrectAbilityNum(mon, trainerMon->species, trainerMon->ability);
-    
+    }
+    else if (B_TRAINER_MON_HIDDEN_ABILITY)
+    {
+        do {
+            data = Random() % NUM_ABILITY_SLOTS; // includes hidden abilities
+        } while (GetAbilityBySpecies(trainerMon->species, data) == ABILITY_NONE);
+        SetMonData(mon, MON_DATA_ABILITY_NUM, &data);
+    }
+
     if (trainerMon->ball < POKEBALL_COUNT)
     {
         data = trainerMon->ball;
