@@ -661,3 +661,455 @@ tbody tr:last-child td { border-bottom: none; }
 .help-text a:hover {
     text-decoration: underline;
 }
+
+/* ─── Map Area Detail View ──────────────────────── */
+.map-area-header {
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 24px;
+    border: 1px solid var(--border);
+}
+.map-area-banner {
+    height: 140px;
+    display: flex;
+    align-items: flex-end;
+    padding: 20px 24px;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+}
+.map-area-banner::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(transparent 30%, rgba(15,20,25,0.85));
+}
+.map-area-banner-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    width: 100%;
+}
+.map-area-banner h1 {
+    font-size: 24px;
+    font-weight: 700;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+.map-area-banner .map-id-label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.7);
+    font-family: monospace;
+    margin-top: 2px;
+}
+.map-area-banner .map-type-pill {
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(4px);
+    color: #fff;
+}
+.map-area-info-bar {
+    display: flex;
+    gap: 24px;
+    padding: 12px 24px;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text-dim);
+    flex-wrap: wrap;
+}
+.map-area-info-bar span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.map-area-info-bar .info-icon {
+    font-size: 14px;
+}
+
+/* banner colors by map type */
+.banner-ROUTE      { background: linear-gradient(135deg, #1a4a2e 0%, #2d6b45 50%, #1a3a28 100%); }
+.banner-CITY       { background: linear-gradient(135deg, #1a2a4e 0%, #2d4a7b 50%, #1a2540 100%); }
+.banner-TOWN       { background: linear-gradient(135deg, #3a2a1a 0%, #5a4530 50%, #2a2018 100%); }
+.banner-UNDERGROUND{ background: linear-gradient(135deg, #2a1a2e 0%, #4a3050 50%, #1a1020 100%); }
+.banner-UNDERWATER { background: linear-gradient(135deg, #0a2a3e 0%, #1a4a6e 50%, #0a1828 100%); }
+.banner-OCEAN_ROUTE{ background: linear-gradient(135deg, #0a2040 0%, #1a406a 50%, #0a1530 100%); }
+.banner-INDOOR     { background: linear-gradient(135deg, #2a2020 0%, #3a3030 50%, #1a1515 100%); }
+.banner-SECRET_BASE{ background: linear-gradient(135deg, #2a2a10 0%, #4a4a20 50%, #1a1a08 100%); }
+.banner-NONE       { background: linear-gradient(135deg, #1a1a2e 0%, #2a2a40 50%, #141420 100%); }
+
+/* ─── Map Area Sections ─────────────────────────── */
+.map-area-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.map-area-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+.map-area-section-header {
+    padding: 14px 20px;
+    background: var(--bg-hover);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+}
+.map-area-section-header:hover {
+    background: rgba(79,143,247,0.05);
+}
+.map-area-section-header h2 {
+    font-size: 15px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.map-area-section-header .section-icon {
+    font-size: 18px;
+    width: 24px;
+    text-align: center;
+}
+.map-area-section-header .section-count {
+    font-size: 12px;
+    color: var(--text-dim);
+    font-weight: 400;
+}
+.map-area-section-body {
+    padding: 16px 20px;
+}
+.map-area-section-body.collapsed {
+    display: none;
+}
+
+/* ─── Encounter Chart ───────────────────────────── */
+.encounter-chart-group {
+    margin-bottom: 20px;
+}
+.encounter-chart-group:last-child {
+    margin-bottom: 0;
+}
+.encounter-chart-group h3 {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.encounter-chart-group h3 .rate-badge {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-dim);
+    background: var(--bg);
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+.encounter-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 4px 0;
+    font-size: 13px;
+}
+.encounter-bar-species {
+    min-width: 140px;
+    font-weight: 500;
+}
+.encounter-bar-track {
+    flex: 1;
+    height: 20px;
+    background: var(--bg);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+.encounter-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    min-width: 2px;
+    transition: width 0.3s ease;
+}
+.encounter-bar-level {
+    min-width: 70px;
+    text-align: right;
+    font-size: 12px;
+    color: var(--text-dim);
+}
+.encounter-bar-pct {
+    min-width: 40px;
+    text-align: right;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* ─── Trainer List in Map Area ──────────────────── */
+.area-trainer-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+}
+.area-trainer-row:last-child { border-bottom: none; }
+.area-trainer-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+.area-trainer-info {
+    flex: 1;
+    min-width: 0;
+}
+.area-trainer-name {
+    font-size: 13px;
+    font-weight: 600;
+}
+.area-trainer-detail {
+    font-size: 11px;
+    color: var(--text-dim);
+    font-family: monospace;
+}
+
+/* ─── Item List in Map Area ─────────────────────── */
+.area-item-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+}
+.area-item-row:last-child { border-bottom: none; }
+.area-item-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+.area-item-icon.visible { background: var(--accent); color: #fff; }
+.area-item-icon.hidden { background: var(--purple); color: #fff; }
+.area-item-name { font-weight: 500; flex: 1; }
+.area-item-type {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: var(--bg);
+    color: var(--text-dim);
+}
+.area-item-coords {
+    font-size: 11px;
+    color: var(--text-dim);
+    font-family: monospace;
+}
+
+/* ─── Map Properties Grid ───────────────────────── */
+.map-props-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+}
+.map-prop {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.map-prop label {
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+}
+.map-prop select, .map-prop input {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    padding: 7px 10px;
+    font-size: 13px;
+    outline: none;
+}
+.map-prop select:focus, .map-prop input:focus {
+    border-color: var(--accent);
+}
+
+/* ─── Connections ───────────────────────────────── */
+.connection-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+}
+.connection-row:last-child { border-bottom: none; }
+.connection-dir {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 4px;
+    min-width: 60px;
+    text-align: center;
+}
+.connection-dir.up    { background: rgba(34,197,94,0.15); color: var(--green); }
+.connection-dir.down  { background: rgba(239,68,68,0.15); color: var(--red); }
+.connection-dir.left  { background: rgba(168,85,247,0.15); color: var(--purple); }
+.connection-dir.right { background: rgba(79,143,247,0.15); color: var(--accent); }
+.connection-dir.dive  { background: rgba(6,182,212,0.15); color: var(--cyan); }
+.connection-dir.emerge{ background: rgba(234,179,8,0.15); color: var(--yellow); }
+.connection-map {
+    font-family: monospace;
+    font-size: 12px;
+    flex: 1;
+}
+
+/* ─── Back Button ───────────────────────────────── */
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-dim);
+    font-size: 13px;
+    cursor: pointer;
+    padding: 6px 0;
+    margin-bottom: 16px;
+    border: none;
+    background: none;
+    transition: color 0.15s;
+}
+.back-btn:hover { color: var(--accent); }
+
+/* ─── Map Area List Cards ───────────────────────── */
+.map-list-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.map-list-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.map-list-card-banner {
+    height: 48px;
+    position: relative;
+}
+.map-list-card-body {
+    padding: 12px 16px;
+}
+.map-list-card-body h3 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+.map-list-card-body .map-list-id {
+    font-size: 11px;
+    color: var(--text-dim);
+    font-family: monospace;
+    margin-bottom: 8px;
+}
+.map-list-card-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+.map-list-card-tags .tag {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: var(--bg);
+    color: var(--text-dim);
+}
+.map-list-card-tags .tag.has-data {
+    background: rgba(79,143,247,0.15);
+    color: var(--accent);
+}
+.map-list-card-tags .tag.has-encounters {
+    background: rgba(34,197,94,0.15);
+    color: var(--green);
+}
+.map-list-card-tags .tag.has-trainers {
+    background: rgba(239,68,68,0.15);
+    color: var(--red);
+}
+.map-list-card-tags .tag.has-items {
+    background: rgba(234,179,8,0.15);
+    color: var(--yellow);
+}
+
+/* ─── Edit Inline Encounter Table ───────────────── */
+.enc-edit-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+.enc-edit-table th {
+    text-align: left;
+    padding: 6px 8px;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    border-bottom: 1px solid var(--border);
+}
+.enc-edit-table td {
+    padding: 4px 8px;
+    border-bottom: 1px solid var(--border);
+}
+.enc-edit-table input {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    padding: 4px 8px;
+    font-size: 12px;
+    font-family: monospace;
+    outline: none;
+    width: 100%;
+}
+.enc-edit-table input:focus {
+    border-color: var(--accent);
+}
+.enc-edit-table input[type="number"] {
+    width: 60px;
+}
+
+/* ─── Empty State ───────────────────────────────── */
+.empty-state {
+    text-align: center;
+    padding: 24px;
+    color: var(--text-dim);
+    font-size: 13px;
+}
+.empty-state .empty-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+    opacity: 0.5;
+}
