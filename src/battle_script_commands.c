@@ -13,7 +13,7 @@
 #include "battle_stat_change.h"
 #include "battle_move_resolution.h"
 #include "item.h"
-#include "savings_system.h"
+#include "banking_system.h"
 #include "util.h"
 #include "pokemon.h"
 #include "random.h"

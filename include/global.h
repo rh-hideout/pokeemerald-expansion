@@ -25,7 +25,7 @@
 #include "constants/items.h"
 #include "constants/moves.h"
 #include "config/save.h"
-#include "config/savings.h"
+#include "config/banking.h"
 
 
 // Prevent cross-jump optimization.
