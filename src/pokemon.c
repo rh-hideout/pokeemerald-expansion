@@ -7063,7 +7063,7 @@ bool32 TryBoxMonFormChange(struct BoxPokemon *boxMon, enum FormChanges method)
     return FALSE;
 }
 
-u16 SanitizeSpeciesId(enum Species species)
+enum Species SanitizeSpeciesId(enum Species species)
 {
     assertf(species <= NUM_SPECIES && (species == SPECIES_NONE || IsSpeciesEnabled(species)), "invalid species: %d", species)
     {
@@ -7218,7 +7218,7 @@ enum PokemonCry GetCryIdBySpecies(enum Species species)
     return gSpeciesInfo[species].cryId;
 }
 
-u16 GetSpeciesPreEvolution(enum Species species)
+enum Species GetSpeciesPreEvolution(enum Species species)
 {
     int i, j;
 
