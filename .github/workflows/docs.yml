@@ -43,6 +43,9 @@ jobs:
           mkdir -p docs/book/editor
           cp editor/index.html editor/app.js editor/style.css docs/book/editor/
 
+      - name: Add .nojekyll
+        run: touch docs/book/.nojekyll
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 

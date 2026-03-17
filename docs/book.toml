@@ -4,9 +4,9 @@ src = "."
 title = "pokeemerald-expansion"
 
 [output.html]
-git-repository-url = "https://github.com/rh-hideout/pokeemerald-expansion"
-edit-url-template = "https://github.com/rh-hideout/pokeemerald-expansion/edit/master/docs/{path}"
-site-url = "/pokeemerald-expansion/"
+git-repository-url = "https://github.com/theReuben/pokemon-brazilianite"
+edit-url-template = "https://github.com/theReuben/pokemon-brazilianite/edit/master/docs/{path}"
+site-url = "/pokemon-brazilianite/"
 
 [preprocessor.fix_links]
 command = "python3 fix_links.py"
