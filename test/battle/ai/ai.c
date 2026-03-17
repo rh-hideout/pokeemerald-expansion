@@ -1296,7 +1296,7 @@ AI_SINGLE_BATTLE_TEST("AI's comparison of damaging moves correctly reads moveset
         PLAYER(SPECIES_RAPIDASH_GALAR){ Level(64); HP(1); Nature(NATURE_TIMID); Moves(MOVE_TACKLE);}
         OPPONENT(SPECIES_HAXORUS){ Level(64); Nature(NATURE_JOLLY); Ability(ABILITY_MOLD_BREAKER); Moves(move, MOVE_EARTHQUAKE, MOVE_POISON_JAB); }
     } WHEN {
-        TURN { 
+        TURN {
             MOVE(player, MOVE_TACKLE);
             if (move == MOVE_TACKLE)
                 SCORE_EQ_VAL(opponent, MOVE_TACKLE, 104);
@@ -1307,3 +1307,26 @@ AI_SINGLE_BATTLE_TEST("AI's comparison of damaging moves correctly reads moveset
         }
     }
 }
+
+AI_SINGLE_BATTLE_TEST("Bolt Beak damage will be correctly seen by ai")
+{
+    u32 playerSpeed, aiSpeed;
+
+    PARAMETRIZE { playerSpeed = 20; aiSpeed = 10; }
+    PARAMETRIZE { playerSpeed = 10; aiSpeed = 20; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_STARMIE) { Speed(playerSpeed); Moves(MOVE_PROTECT, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_ZAPDOS) { Speed(aiSpeed); Moves(MOVE_BOLT_BEAK, MOVE_THUNDER); }
+    } WHEN {
+        if (playerSpeed > aiSpeed) {
+            TURN { MOVE(player, MOVE_PROTECT); EXPECT_MOVE(opponent, MOVE_THUNDER); }
+            TURN { EXPECT_MOVE(opponent, MOVE_THUNDER); }
+        } else {
+            TURN { MOVE(player, MOVE_PROTECT); EXPECT_MOVE(opponent, MOVE_BOLT_BEAK); }
+            TURN { EXPECT_MOVE(opponent, MOVE_BOLT_BEAK); }
+        }
+    }
+}
+

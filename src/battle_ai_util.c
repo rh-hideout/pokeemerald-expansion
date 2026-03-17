@@ -23,6 +23,7 @@
 #include "constants/moves.h"
 #include "constants/items.h"
 
+static void AI_SetBattlerTurnOrder(u8 *aiTurnOrder);
 static u32 GetAIEffectGroup(enum BattleMoveEffects effect);
 static u32 GetAIEffectGroupFromMove(enum BattlerId battler, enum Move move);
 
@@ -889,6 +890,7 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
     ctx.abilityDef = AI_GetMoldBreakerSanitizedAbility(battlerAtk, ctx.abilityAtk, aiData->abilities[battlerDef], ctx.holdEffectDef, move);
     ctx.isCrit = ShouldCalcCritDamage(&ctx);
     ctx.typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(&ctx);
+    AI_SetBattlerTurnOrder(ctx.aiTurnOrder);
 
     u32 movePower = GetMovePower(move);
 
@@ -6443,3 +6445,23 @@ bool32 IsPartyMonPlannedToBeSwitchedInByPartner(u32 partyIndex, enum BattlerId b
         return TRUE;
     return FALSE;
 }
+
+static void AI_SetBattlerTurnOrder(u8 *aiTurnOrder)
+{
+    for (u32 battler = 0; battler < gBattlersCount; battler++)
+        aiTurnOrder[battler] = battler;
+
+    for (u32 i = 0; i < gBattlersCount; i++)
+    {
+        for (u32 j = 0; j < gBattlersCount; j++)
+        {
+            if (AI_WhoStrikesFirst(aiTurnOrder[i], aiTurnOrder[j], MOVE_NONE, MOVE_NONE, DONT_CONSIDER_PRIORITY) == AI_IS_FASTER)
+            {
+                u32 temp = aiTurnOrder[i];
+                aiTurnOrder[i] = aiTurnOrder[j];
+                aiTurnOrder[j] = temp;
+            }
+        }
+    }
+}
+
