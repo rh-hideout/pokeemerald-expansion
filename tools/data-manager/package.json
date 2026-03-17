@@ -1,0 +1,12 @@
+{
+  "name": "pokemon-brazilianite-data-manager",
+  "version": "1.0.0",
+  "description": "Web UI for managing Pokemon Brazilianite game data",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0"
+  }
+}
