@@ -24,7 +24,7 @@ const API_BASE = 'https://api.github.com';
 
 // ─── State ──────────────────────────────────────────────────────────────────
 let state = {
-    page: 'dashboard',
+    page: 'maps',
     trainers: null,
     encounters: null,
     moves: null,
@@ -532,14 +532,11 @@ async function render() {
     content.innerHTML = '<div class="loading-center"><div class="spinner"></div> Loading...</div>';
     try {
         switch (page) {
+            case 'maps': await renderMaps(); break;
             case 'dashboard': await renderDashboard(); break;
-            case 'trainers': await renderTrainers(); break;
-            case 'encounters': await renderEncounters(); break;
             case 'moves': await renderMoves(); break;
-            case 'items': await renderItems(); break;
             case 'abilities': await renderAbilities(); break;
             case 'config': await renderConfig(); break;
-            case 'maps': await renderMaps(); break;
         }
     } catch (e) {
         content.innerHTML = `<div class="loading-center" style="color:var(--red)">Error loading data: ${escHtml(e.message)}</div>`;
@@ -552,15 +549,11 @@ async function renderDashboard() {
     const encounters = await loadEncounters();
     const encCount = encounters.wild_encounter_groups?.[0]?.encounters?.length || 0;
 
-    const b = (id, val) => { const el = $(`#${id}`); if (el) el.textContent = val; };
-    b('badge-trainers', trainers.length);
-    b('badge-encounters', encCount);
-
     content.innerHTML = `
         <div class="page-header"><h1>Dashboard</h1></div>
         <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:24px;font-size:13px;color:var(--text-dim)">
             <strong style="color:var(--accent)">Welcome!</strong> This is the web editor for Pokemon Brazilianite.
-            Browse game data, make edits, then click <strong>"Submit PR"</strong> to send your changes for review.
+            Browse areas to edit trainers, wild encounters, and items. Use <strong>"Submit PR"</strong> to send your changes for review.
             ${!ghToken ? '<br><span style="color:var(--yellow)">Sign in with GitHub (top right) to enable PR submission.</span>' : ''}
         </div>
         <div class="stat-grid">
@@ -584,29 +577,17 @@ async function renderDashboard() {
         </div>
         <div class="page-header"><h1>Quick Access</h1></div>
         <div class="stat-grid">
-            <div class="stat-card" style="cursor:pointer" onclick="navigateTo('trainers')">
-                <div class="label">&#9876; Trainers</div>
-                <div class="sub" style="margin-top:8px">Edit trainer teams, AI flags, and party Pokemon</div>
-            </div>
-            <div class="stat-card" style="cursor:pointer" onclick="navigateTo('encounters')">
-                <div class="label">&#9733; Wild Encounters</div>
-                <div class="sub" style="margin-top:8px">Browse per-route wild Pokemon and encounter rates</div>
+            <div class="stat-card" style="cursor:pointer" onclick="navigateTo('maps')">
+                <div class="label">&#9873; Areas</div>
+                <div class="sub" style="margin-top:8px">Browse areas to edit trainers, wild encounters, items, and map properties</div>
             </div>
             <div class="stat-card" style="cursor:pointer" onclick="navigateTo('moves')">
                 <div class="label">&#10038; Moves</div>
                 <div class="sub" style="margin-top:8px">Edit move stats: type, power, accuracy, PP, and more</div>
             </div>
-            <div class="stat-card" style="cursor:pointer" onclick="navigateTo('items')">
-                <div class="label">&#9830; Items</div>
-                <div class="sub" style="margin-top:8px">Edit item prices and pocket assignments</div>
-            </div>
             <div class="stat-card" style="cursor:pointer" onclick="navigateTo('abilities')">
                 <div class="label">&#10024; Abilities</div>
                 <div class="sub" style="margin-top:8px">Edit ability descriptions, AI ratings, and flags</div>
-            </div>
-            <div class="stat-card" style="cursor:pointer" onclick="navigateTo('maps')">
-                <div class="label">&#9873; Maps &amp; Areas</div>
-                <div class="sub" style="margin-top:8px">Edit map settings, weather, connections, and flags</div>
             </div>
             <div class="stat-card" style="cursor:pointer" onclick="navigateTo('config')">
                 <div class="label">&#9881; Config</div>
@@ -1578,7 +1559,7 @@ async function renderMaps() {
 
     content.innerHTML = `
         <div class="page-header">
-            <h1>Map Areas <span style="color:var(--text-dim);font-size:14px">(${filtered.length}/${maps.length})</span></h1>
+            <h1>Areas <span style="color:var(--text-dim);font-size:14px">(${filtered.length}/${maps.length})</span></h1>
         </div>
         <div class="search-bar">
             <span class="search-icon">&#128269;</span>
@@ -1670,7 +1651,7 @@ async function renderMapDetail(dirName) {
     const encounterRates = getEncounterRates();
 
     content.innerHTML = `
-        <button class="back-btn" onclick="state.mapDetail=null; renderMaps()">&#8592; Back to Map Areas</button>
+        <button class="back-btn" onclick="state.mapDetail=null; renderMaps()">&#8592; Back to Areas</button>
 
         <!-- Banner -->
         <div class="map-area-header">
