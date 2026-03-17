@@ -26,6 +26,10 @@ jobs:
         run: |
           cd docs
           mdbook build
+      - name: Copy editor to Pages output
+        run: |
+          mkdir -p docs/book/editor
+          cp editor/index.html editor/app.js editor/style.css docs/book/editor/
       - name: Check if Pages is enabled
         uses: octokit/request-action@v2.x
         id: check_pages
