@@ -72,6 +72,7 @@ void SetMovingNpcId(u16 npcId);
 
 extern u8 gMsgIsSignPost;
 extern u8 gMsgBoxIsCancelable;
+extern bool8 OpenStarterSelectionMenu(void);
 
 /* Script effects analysis.
  *

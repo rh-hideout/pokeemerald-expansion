@@ -102,5 +102,4 @@ void SetWhiteoutRespawnWarpAndHealerNPC(struct WarpData *warp)
     warp->x = sWhiteoutRespawnHealCenterMapIdxs[healLocationId - 1][2];
     warp->y = sWhiteoutRespawnHealCenterMapIdxs[healLocationId - 1][3];
     gSpecialVar_LastTalked = healNpcLocalId;
-    gSpecialVar_0x800B = healNpcLocalId;
 }

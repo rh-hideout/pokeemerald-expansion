@@ -627,12 +627,23 @@
 #define TRAINER_CHAMPION_REMATCH_BULBASAUR         621
 #define TRAINER_CHAMPION_REMATCH_CHARMANDER        622
 #define TRAINER_CUE_BALL_PAXTON                    623
+#define TRAINER_RIVAL_OAKS_LAB_CHIKORITA   624
+#define TRAINER_RIVAL_OAKS_LAB_CYNDAQUIL   625
+#define TRAINER_RIVAL_OAKS_LAB_TOTODILE    626
+#define TRAINER_RIVAL_OAKS_LAB_TREECKO     627
+#define TRAINER_RIVAL_OAKS_LAB_TORCHIC     628
+#define TRAINER_RIVAL_OAKS_LAB_MUDKIP      629
+#define TRAINER_RIVAL_OAKS_LAB_TURTWIG     630
+#define TRAINER_RIVAL_OAKS_LAB_CHIMCHAR    631
+#define TRAINER_RIVAL_OAKS_LAB_PIPLUP      632
+
+// K4nto
 
 // NOTE: Because each Trainer uses a flag to determine when they are defeated, there is
 //       only space for 25 additional trainers before trainer flag space overflows.
 //       MAX_TRAINERS_COUNT_FRLG can be increased but will take up additional saveblock space
 
-#define TRAINERS_COUNT_FRLG                      624
+#define TRAINERS_COUNT_FRLG                      768
 #define MAX_TRAINERS_COUNT_FRLG                  768
 
 #endif  // GUARD_CONSTANTS_OPPONENTS_FRLG_H
