@@ -58,7 +58,6 @@
 #include "test/battle.h"
 #include "test_runner.h"
 #include "text.h"
-#include "trainer_pools.h"
 #include "trainer_util.h"
 #include "trig.h"
 #include "tv.h"
@@ -92,7 +91,6 @@ static void CB2_HandleStartMultiPartnerBattle(void);
 static void CB2_HandleStartMultiBattle(void);
 static void CB2_HandleStartBattle(void);
 static void TryCorrectShedinjaLanguage(struct Pokemon *mon);
-static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum, bool8 firstTrainer);
 static void BattleMainCB1(void);
 static void CB2_EndLinkBattle(void);
 static void EndLinkBattleInSteps(void);
@@ -592,18 +590,6 @@ static void CB2_InitBattleInternal(void)
     else
         SetMainCallback2(CB2_HandleStartBattle);
 
-    if (!DEBUG_OVERWORLD_MENU || (DEBUG_OVERWORLD_MENU && !gIsDebugBattle))
-    {
-        if (!(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED)))
-        {
-            CreateNPCTrainerParty(&gEnemyParty[0], TRAINER_BATTLE_PARAM.opponentA, TRUE);
-            if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && !BATTLE_TWO_VS_ONE_OPPONENT)
-                CreateNPCTrainerParty(&gEnemyParty[PARTY_SIZE / 2], TRAINER_BATTLE_PARAM.opponentB, FALSE);
-            SetWildMonHeldItem();
-            CalculateEnemyPartyCount();
-        }
-    }
-
     gMain.inBattle = TRUE;
     gSaveBlock2Ptr->frontier.disableRecordBattle = FALSE;
 
@@ -618,14 +604,16 @@ static void CB2_InitBattleInternal(void)
 
     if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
     {
+        if (!(gBattleTypeFlags & (BATTLE_TYPE_LEGENDARY | BATTLE_TYPE_PYRAMID | BATTLE_TYPE_PIKE)))
+            SetWildMonHeldItem();
         TryFormChange(&gEnemyParty[0], FORM_CHANGE_BEGIN_WILD_ENCOUNTER);
         if (IsDoubleBattle())
             TryFormChange(&gEnemyParty[1], FORM_CHANGE_BEGIN_WILD_ENCOUNTER);
     }
 
+    CalculateEnemyPartyCount();
     #if TESTING
     gPlayerPartyCount = CalculatePartyCount(gPlayerParty);
-    gEnemyPartyCount = CalculatePartyCount(gEnemyParty);
     #endif
 
     gBattleCommunication[MULTIUSE_STATE] = 0;
@@ -1858,83 +1846,6 @@ void ModifyPersonalityForNature(u32 *personality, u32 newNature)
         sign *= -1;
     }
     *personality -= (diff * sign);
-}
-
-static void MakeTrainerGenerator(struct TrainerGenerator *trainerGen, const struct Trainer *trainer)
-{
-    trainerGen->gender = trainer->gender;
-    trainerGen->isFrontier = FALSE;
-    StringCopyN(trainerGen->name, trainer->trainerName, TRAINER_NAME_LENGTH + 1);
-    trainerGen->trainerClass = trainer->trainerClass;
-    trainerGen->otID = OTID_STRUCT_RANDOM_NO_SHINY;
-    trainerGen->localRngState = GeneratePartySeed(trainer);
-}
-
-u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer, u32 battleTypeFlags)
-{
-    s32 i;
-    u8 monsCount;
-    if (battleTypeFlags & BATTLE_TYPE_TRAINER && !(battleTypeFlags & (BATTLE_TYPE_FRONTIER
-                                                                        | BATTLE_TYPE_EREADER_TRAINER
-                                                                        | BATTLE_TYPE_TRAINER_HILL)))
-    {
-        if (firstTrainer == TRUE)
-            ZeroEnemyPartyMons();
-
-        if (battleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && trainer->partySize > PARTY_SIZE / 2)
-            monsCount = PARTY_SIZE / 2;
-        else
-            monsCount = trainer->partySize;
-
-        u32 monIndices[monsCount];
-        struct TrainerGenerator *trainerGen = AllocZeroed(sizeof(struct TrainerGenerator));
-        MakeTrainerGenerator(trainerGen, trainer);
-        DoTrainerPartyPool(trainer, monIndices, monsCount, battleTypeFlags);
-
-        for (i = 0; i < monsCount; i++)
-        {
-            u32 monIndex = monIndices[i];
-            GenerateMonFromTrainerMon(&party[i], &trainer->party[monIndex], trainerGen);
-        }
-        Free(trainerGen);
-    }
-
-    return trainer->partySize;
-}
-
-static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum, bool8 firstTrainer)
-{
-    u8 retVal;
-    if (trainerNum == TRAINER_SECRET_BASE)
-        return 0;
-    if (GetTrainerStructFromId(trainerNum)->overrideTrainer)
-    {
-        struct Trainer tempTrainer;
-        memcpy(&tempTrainer, GetTrainerStructFromId(trainerNum), sizeof(struct Trainer));
-        const struct Trainer *origTrainer = GetTrainerStructFromId(tempTrainer.overrideTrainer);
-
-        tempTrainer.party = origTrainer->party;
-
-        tempTrainer.poolSize = origTrainer->poolSize;
-        if (tempTrainer.partySize == 0)
-            tempTrainer.partySize = origTrainer->partySize;
-
-        retVal = CreateNPCTrainerPartyFromTrainer(party, (const struct Trainer *)(&tempTrainer), firstTrainer, gBattleTypeFlags);
-    }
-    else
-    {
-        retVal = CreateNPCTrainerPartyFromTrainer(party, GetTrainerStructFromId(trainerNum), firstTrainer, gBattleTypeFlags);
-    }
-    return retVal;
-}
-
-void CreateTrainerPartyForPlayer(void)
-{
-    Script_RequestEffects(SCREFF_V1);
-
-    ZeroPlayerPartyMons();
-    gPartnerTrainerId = gSpecialVar_0x8004;
-    CreateNPCTrainerPartyFromTrainer(gPlayerParty, GetTrainerStructFromId(gSpecialVar_0x8004), TRUE, BATTLE_TYPE_TRAINER);
 }
 
 void VBlankCB_Battle(void)
