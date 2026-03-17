@@ -13,15 +13,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 function parseTrainers(content) {
     const trainers = [];
-    // Split on the === TRAINER_XXX === pattern, keeping the delimiter
     const trainerBlocks = content.split(/^=== (TRAINER_\w+) ===/m);
-    // trainerBlocks: [preamble, TRAINER_ID1, body1, TRAINER_ID2, body2, ...]
     for (let i = 1; i < trainerBlocks.length; i += 2) {
         const trainerId = trainerBlocks[i].trim();
         const body = (trainerBlocks[i + 1] || '').trim();
         const trainer = { id: trainerId, pokemon: [] };
         const lines = body.split('\n');
-        let parsingPokemon = false;
         let currentMon = null;
         let pastTrainerFields = false;
 
@@ -36,11 +33,9 @@ function parseTrainers(content) {
                     trainer[key] = fieldMatch[2].trim();
                     continue;
                 }
-                // If we hit a line that's not a field, it's the start of pokemon
                 pastTrainerFields = true;
             }
 
-            // Pokemon parsing
             const moveMatch = line.match(/^-\s+(.+)$/);
             if (moveMatch) {
                 if (currentMon) {
@@ -59,7 +54,6 @@ function parseTrainers(content) {
                 continue;
             }
 
-            // If it's not a field or move, it's a species line
             if (line && !line.startsWith('-')) {
                 if (currentMon) trainer.pokemon.push(currentMon);
                 currentMon = { species: line };
@@ -265,6 +259,18 @@ function parseConfig(content, filename) {
     return settings;
 }
 
+// ─── Serializers for C header files ─────────────────────────────────────────
+
+function updateCHeaderField(content, id, field, newValue) {
+    // Find the block for [ID] = { ... }
+    const blockRegex = new RegExp(`(\\[${id}\\]\\s*=\\s*\\{)([\\s\\S]*?)(\\n    \\})`, 'g');
+    return content.replace(blockRegex, (match, prefix, body, suffix) => {
+        const fieldRegex = new RegExp(`(\\.${field}\\s*=\\s*)([^,\\n]+)`);
+        const newBody = body.replace(fieldRegex, `$1${newValue}`);
+        return prefix + newBody + suffix;
+    });
+}
+
 // ─── API Routes ─────────────────────────────────────────────────────────────
 
 // Trainers
@@ -298,7 +304,7 @@ app.post('/api/encounters', (req, res) => {
     } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// Moves (read-only)
+// Moves (now editable)
 app.get('/api/moves', (req, res) => {
     try {
         const content = fs.readFileSync(path.join(ROOT, 'src/data/moves_info.h'), 'utf-8');
@@ -306,7 +312,34 @@ app.get('/api/moves', (req, res) => {
     } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// Items (read-only)
+app.post('/api/moves', (req, res) => {
+    try {
+        const { id, field, value } = req.body;
+        const filePath = path.join(ROOT, 'src/data/moves_info.h');
+        let content = fs.readFileSync(filePath, 'utf-8');
+
+        // Map frontend field names to C struct fields and format values
+        const fieldMap = {
+            name: { cField: 'name', format: v => `COMPOUND_STRING("${v}")` },
+            description: { cField: 'description', format: v => `COMPOUND_STRING("${v}")` },
+            power: { cField: 'power', format: v => v },
+            type: { cField: 'type', format: v => v.startsWith('TYPE_') ? v : `TYPE_${v}` },
+            accuracy: { cField: 'accuracy', format: v => v },
+            pp: { cField: 'pp', format: v => v },
+            category: { cField: 'category', format: v => v.startsWith('DAMAGE_CATEGORY_') ? v : `DAMAGE_CATEGORY_${v}` },
+            priority: { cField: 'priority', format: v => v },
+        };
+
+        const mapping = fieldMap[field];
+        if (!mapping) return res.status(400).json({ error: `Unknown field: ${field}` });
+
+        content = updateCHeaderField(content, id, mapping.cField, mapping.format(value));
+        fs.writeFileSync(filePath, content, 'utf-8');
+        res.json({ success: true });
+    } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Items (now editable)
 app.get('/api/items', (req, res) => {
     try {
         const content = fs.readFileSync(path.join(ROOT, 'src/data/items.h'), 'utf-8');
@@ -314,11 +347,157 @@ app.get('/api/items', (req, res) => {
     } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// Abilities (read-only)
+app.post('/api/items', (req, res) => {
+    try {
+        const { id, field, value } = req.body;
+        const filePath = path.join(ROOT, 'src/data/items.h');
+        let content = fs.readFileSync(filePath, 'utf-8');
+
+        const fieldMap = {
+            name: { cField: 'name', format: v => `_("${v}")` },
+            price: { cField: 'price', format: v => v },
+            pocket: { cField: 'pocket', format: v => v.startsWith('POCKET_') ? v : `POCKET_${v}` },
+            importance: { cField: 'importance', format: v => v },
+        };
+
+        const mapping = fieldMap[field];
+        if (!mapping) return res.status(400).json({ error: `Unknown field: ${field}` });
+
+        content = updateCHeaderField(content, id, mapping.cField, mapping.format(value));
+        fs.writeFileSync(filePath, content, 'utf-8');
+        res.json({ success: true });
+    } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Abilities (now editable)
 app.get('/api/abilities', (req, res) => {
     try {
         const content = fs.readFileSync(path.join(ROOT, 'src/data/abilities.h'), 'utf-8');
         res.json(parseAbilities(content));
+    } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.post('/api/abilities', (req, res) => {
+    try {
+        const { id, field, value } = req.body;
+        const filePath = path.join(ROOT, 'src/data/abilities.h');
+        let content = fs.readFileSync(filePath, 'utf-8');
+
+        const fieldMap = {
+            name: { cField: 'name', format: v => `_("${v}")` },
+            description: { cField: 'description', format: v => `COMPOUND_STRING("${v}")` },
+            aiRating: { cField: 'aiRating', format: v => v },
+            breakable: { cField: 'breakable', format: v => v },
+            cantBeSwapped: { cField: 'cantBeSwapped', format: v => v },
+            cantBeTraced: { cField: 'cantBeTraced', format: v => v },
+        };
+
+        const mapping = fieldMap[field];
+        if (!mapping) return res.status(400).json({ error: `Unknown field: ${field}` });
+
+        content = updateCHeaderField(content, id, mapping.cField, mapping.format(value));
+        fs.writeFileSync(filePath, content, 'utf-8');
+        res.json({ success: true });
+    } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Routes/Maps
+app.get('/api/maps', (req, res) => {
+    try {
+        const mapsDir = path.join(ROOT, 'data/maps');
+        const mapFolders = fs.readdirSync(mapsDir).filter(f => {
+            return fs.statSync(path.join(mapsDir, f)).isDirectory();
+        });
+        const maps = [];
+        for (const folder of mapFolders) {
+            const mapJsonPath = path.join(mapsDir, folder, 'map.json');
+            if (!fs.existsSync(mapJsonPath)) continue;
+            try {
+                const mapData = JSON.parse(fs.readFileSync(mapJsonPath, 'utf-8'));
+                // Extract trainers from scripts.inc if it exists
+                const trainersOnMap = [];
+                const scriptsPath = path.join(mapsDir, folder, 'scripts.inc');
+                if (fs.existsSync(scriptsPath)) {
+                    const scripts = fs.readFileSync(scriptsPath, 'utf-8');
+                    const trainerRegex = /trainerbattle_(?:single|double|rematch)\s+(TRAINER_\w+)/g;
+                    let m;
+                    const seen = new Set();
+                    while ((m = trainerRegex.exec(scripts)) !== null) {
+                        if (!seen.has(m[1])) {
+                            seen.add(m[1]);
+                            trainersOnMap.push(m[1]);
+                        }
+                    }
+                }
+                maps.push({
+                    folder,
+                    id: mapData.id,
+                    name: mapData.name,
+                    layout: mapData.layout,
+                    music: mapData.music,
+                    weather: mapData.weather,
+                    map_type: mapData.map_type,
+                    region_map_section: mapData.region_map_section,
+                    allow_cycling: mapData.allow_cycling,
+                    allow_escaping: mapData.allow_escaping,
+                    allow_running: mapData.allow_running,
+                    show_map_name: mapData.show_map_name,
+                    requires_flash: mapData.requires_flash,
+                    battle_scene: mapData.battle_scene,
+                    connections: mapData.connections || [],
+                    object_events_count: (mapData.object_events || []).length,
+                    warp_events_count: (mapData.warp_events || []).length,
+                    trainers: trainersOnMap,
+                });
+            } catch (e) { /* skip malformed map.json */ }
+        }
+        res.json(maps);
+    } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.get('/api/maps/:folder', (req, res) => {
+    try {
+        const mapJsonPath = path.join(ROOT, 'data/maps', req.params.folder, 'map.json');
+        const mapData = JSON.parse(fs.readFileSync(mapJsonPath, 'utf-8'));
+
+        // Get trainers from scripts
+        const trainersOnMap = [];
+        const scriptsPath = path.join(ROOT, 'data/maps', req.params.folder, 'scripts.inc');
+        if (fs.existsSync(scriptsPath)) {
+            const scripts = fs.readFileSync(scriptsPath, 'utf-8');
+            const trainerRegex = /trainerbattle_(?:single|double|rematch)\s+(TRAINER_\w+)/g;
+            let m;
+            const seen = new Set();
+            while ((m = trainerRegex.exec(scripts)) !== null) {
+                if (!seen.has(m[1])) {
+                    seen.add(m[1]);
+                    trainersOnMap.push(m[1]);
+                }
+            }
+        }
+
+        mapData.trainers = trainersOnMap;
+        mapData.folder = req.params.folder;
+        res.json(mapData);
+    } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.post('/api/maps/:folder', (req, res) => {
+    try {
+        const mapJsonPath = path.join(ROOT, 'data/maps', req.params.folder, 'map.json');
+        const mapData = JSON.parse(fs.readFileSync(mapJsonPath, 'utf-8'));
+
+        // Update allowed fields
+        const editableFields = ['music', 'weather', 'map_type', 'allow_cycling', 'allow_escaping',
+            'allow_running', 'show_map_name', 'requires_flash', 'battle_scene'];
+        for (const field of editableFields) {
+            if (req.body[field] !== undefined) {
+                mapData[field] = req.body[field];
+            }
+        }
+
+        fs.writeFileSync(mapJsonPath, JSON.stringify(mapData, null, 2) + '\n', 'utf-8');
+        res.json({ success: true });
     } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
@@ -362,11 +541,18 @@ app.get('/api/stats', (req, res) => {
             const content = fs.readFileSync(path.join(configDir, file), 'utf-8');
             configCount += parseConfig(content, file).length;
         }
+        // Count maps
+        const mapsDir = path.join(ROOT, 'data/maps');
+        const mapCount = fs.readdirSync(mapsDir).filter(f => {
+            return fs.statSync(path.join(mapsDir, f)).isDirectory() &&
+                fs.existsSync(path.join(mapsDir, f, 'map.json'));
+        }).length;
         res.json({
             trainers: trainerCount,
             encounters: encounterCount,
             configSettings: configCount,
-            configFiles: configFiles.length
+            configFiles: configFiles.length,
+            maps: mapCount
         });
     } catch (e) { res.status(500).json({ error: e.message }); }
 });
