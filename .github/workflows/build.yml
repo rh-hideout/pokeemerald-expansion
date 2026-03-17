@@ -52,76 +52,6 @@ jobs:
           GAME_VERSION: EMERALD
         run: make -j$(nproc) -O all
 
-  build-firered:
-    if: github.actor != 'allcontributors[bot]'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install binutils
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi libpng-dev python3
-
-      - name: Cache build tools
-        uses: actions/cache@v4
-        with:
-          path: |
-            tools/bin2c/bin2c
-            tools/gbafix/gbafix
-            tools/gbagfx/gbagfx
-            tools/jsonproc/jsonproc
-            tools/mapjson/mapjson
-            tools/mid2agb/mid2agb
-            tools/preproc/preproc
-            tools/ramscrgen/ramscrgen
-            tools/rsfont/rsfont
-            tools/scaninc/scaninc
-            tools/trainerproc/trainerproc
-            tools/compresSmol/compresSmol
-            tools/compresSmol/compresSmolTilemap
-            tools/wav2agb/wav2agb
-          key: tools-${{ runner.os }}-${{ hashFiles('tools/*/Makefile', 'tools/**/*.c', 'tools/**/*.cpp', 'tools/**/*.h') }}
-
-      - name: ROM (Firered)
-        run: make firered -j$(nproc) -O
-
-  build-leafgreen:
-    if: github.actor != 'allcontributors[bot]'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install binutils
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi libpng-dev python3
-
-      - name: Cache build tools
-        uses: actions/cache@v4
-        with:
-          path: |
-            tools/bin2c/bin2c
-            tools/gbafix/gbafix
-            tools/gbagfx/gbagfx
-            tools/jsonproc/jsonproc
-            tools/mapjson/mapjson
-            tools/mid2agb/mid2agb
-            tools/preproc/preproc
-            tools/ramscrgen/ramscrgen
-            tools/rsfont/rsfont
-            tools/scaninc/scaninc
-            tools/trainerproc/trainerproc
-            tools/compresSmol/compresSmol
-            tools/compresSmol/compresSmolTilemap
-            tools/wav2agb/wav2agb
-          key: tools-${{ runner.os }}-${{ hashFiles('tools/*/Makefile', 'tools/**/*.c', 'tools/**/*.cpp', 'tools/**/*.h') }}
-
-      - name: ROM (Leafgreen)
-        run: make leafgreen -j$(nproc) -O
-
   release:
     if: github.actor != 'allcontributors[bot]'
     runs-on: ubuntu-latest
@@ -204,7 +134,7 @@ jobs:
   build:
     if: github.actor != 'allcontributors[bot]'
     runs-on: ubuntu-latest
-    needs: [build-emerald, build-firered, build-leafgreen, release, test]
+    needs: [build-emerald, release, test]
     steps:
       - name: All builds passed
         run: echo "All builds and tests passed."
