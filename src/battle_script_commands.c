@@ -9966,6 +9966,7 @@ static void HandleRoomMove(u32 statusFlag, u16 *timer, u8 stringId)
     if (gFieldStatuses & statusFlag)
     {
         gFieldStatuses &= ~statusFlag;
+        *timer = 0;
         gBattleCommunication[MULTISTRING_CHOOSER] = stringId + 1;
     }
     else
