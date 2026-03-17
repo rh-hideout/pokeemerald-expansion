@@ -6,7 +6,7 @@ ASSUMPTIONS
     ASSUME(GetMoveEffect(MOVE_TRICK_ROOM) == EFFECT_TRICK_ROOM);
 }
 
-SINGLE_BATTLE_TEST("Trick Room doesn't print its ending message twice when canceled")
+SINGLE_BATTLE_TEST("Trick Room doesn't print its ending message twice when used again")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Speed(10); Moves(MOVE_TRICK_ROOM, MOVE_CELEBRATE); }
