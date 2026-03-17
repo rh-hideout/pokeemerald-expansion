@@ -25,6 +25,7 @@ u8 sWithdrawalWindowId = 0;
 
 // Static Functions
 static u32 GetStepSize(s16 heldFrames);
+static bool32 HandleAmountInput(u32 *amount, s32 max, s32 min, s16 *heldFrames);
 
 // Tasks
 static void Task_ShowWithdrawalMenu(u8 taskId);
