@@ -307,9 +307,9 @@ enum TrainerSlideTargets ShouldDoTrainerSlide(enum BattlerId battler, enum Train
 
     SetTrainerSlideParameters(battler, &firstId, &lastId, &trainerId, &retValue);
     if (IsSpecialTrainer(trainerId))
-        trainerId = TRAINER_NONE;
-    enum DifficultyLevel difficulty = GetCurrentDifficultyLevel();
+        return TRAINER_SLIDE_TARGET_NONE;
 
+    enum DifficultyLevel difficulty = GetCurrentDifficultyLevel();
     gBattleScripting.battler = battler;
 
     if (IsTrainerSlidePlayed(battler, slideId))
