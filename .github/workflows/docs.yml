@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - master
+    paths:
+      - 'docs/**'
+      - 'editor/**'
+      - '.github/workflows/docs.yml'
 
 # Allow only one concurrent deployment
 concurrency:
@@ -22,8 +26,6 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Install latest mdbook
         run: |
