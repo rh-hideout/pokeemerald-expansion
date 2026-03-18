@@ -14,15 +14,14 @@ SINGLE_BATTLE_TEST("Encore forces consecutive move uses for 3 turns: Encore used
     PARAMETRIZE { encoreUser = opponent; encoreTarget = player; speedPlayer = 10; speedOpponent = 20; }
     PARAMETRIZE { encoreUser = player; encoreTarget = opponent; speedPlayer = 20; speedOpponent = 10; }
     GIVEN {
-        WITH_CONFIG(B_ENCORE_TARGET, GEN_4);
         WITH_CONFIG(B_ENCORE_TURNS, GEN_5);
         PLAYER(SPECIES_WOBBUFFET) { Speed(speedPlayer); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(speedOpponent); }
     } WHEN {
         TURN { MOVE(encoreUser, MOVE_CELEBRATE); MOVE(encoreTarget, MOVE_CELEBRATE); }
         TURN { MOVE(encoreUser, MOVE_ENCORE); MOVE(encoreTarget, MOVE_CELEBRATE); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
+        TURN { MOVE(encoreTarget, MOVE_CELEBRATE); }
+        TURN { MOVE(encoreTarget, MOVE_CELEBRATE); }
         TURN { MOVE(encoreTarget, MOVE_SPLASH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreUser);
@@ -43,15 +42,14 @@ SINGLE_BATTLE_TEST("Encore forces consecutive move uses for 4 turns: Encore used
     PARAMETRIZE { encoreUser = opponent; encoreTarget = player; speedPlayer = 20; speedOpponent = 10; }
     PARAMETRIZE { encoreUser = player; encoreTarget = opponent; speedPlayer = 10; speedOpponent = 20; }
     GIVEN {
-        WITH_CONFIG(B_ENCORE_TARGET, GEN_4);
         WITH_CONFIG(B_ENCORE_TURNS, GEN_5);
         PLAYER(SPECIES_WOBBUFFET) { Speed(speedPlayer); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(speedOpponent); }
     } WHEN {
         TURN { MOVE(encoreTarget, MOVE_CELEBRATE); MOVE(encoreUser, MOVE_ENCORE); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
-        TURN { FORCED_MOVE(encoreTarget); }
+        TURN { MOVE(encoreTarget, MOVE_CELEBRATE); }
+        TURN { MOVE(encoreTarget, MOVE_CELEBRATE); }
+        TURN { MOVE(encoreTarget, MOVE_CELEBRATE); }
         TURN { MOVE(encoreTarget, MOVE_SPLASH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, encoreTarget);
