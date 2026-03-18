@@ -1105,6 +1105,20 @@ tbody tr:last-child td { border-bottom: none; }
     width: 60px;
 }
 
+/* ─── Map Preview Image ────────────────────────── */
+.map-preview-container {
+    text-align: center;
+    padding: 16px;
+}
+.map-preview-container img {
+    max-width: 100%;
+    height: auto;
+    image-rendering: pixelated;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+}
+
 /* ─── Empty State ───────────────────────────────── */
 .empty-state {
     text-align: center;

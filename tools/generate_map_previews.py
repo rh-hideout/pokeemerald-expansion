@@ -28,6 +28,11 @@ DEFAULT_OUTPUT = ROOT / "editor" / "previews"
 
 NUM_METATILES_IN_PRIMARY = 512
 NUM_METATILES_IN_PRIMARY_FRLG = 640
+NUM_TILES_IN_PRIMARY = 512
+NUM_TILES_IN_PRIMARY_FRLG = 640
+NUM_PALS_IN_PRIMARY = 6
+NUM_PALS_IN_PRIMARY_FRLG = 7
+NUM_PALS_TOTAL = 13
 TILE_SIZE = 8       # 8x8 pixels per tile
 METATILE_SIZE = 16   # 16x16 pixels per metatile
 TILES_PER_ROW = 16   # tiles.png is 128px wide = 16 tiles
@@ -232,7 +237,9 @@ def render_map(layout, tileset_mapping):
     primary_info = tileset_mapping[primary_name]
     secondary_info = tileset_mapping[secondary_name]
 
-    num_primary = NUM_METATILES_IN_PRIMARY_FRLG if is_frlg else NUM_METATILES_IN_PRIMARY
+    num_primary_metatiles = NUM_METATILES_IN_PRIMARY_FRLG if is_frlg else NUM_METATILES_IN_PRIMARY
+    num_primary_tiles = NUM_TILES_IN_PRIMARY_FRLG if is_frlg else NUM_TILES_IN_PRIMARY
+    num_primary_pals = NUM_PALS_IN_PRIMARY_FRLG if is_frlg else NUM_PALS_IN_PRIMARY
 
     # Load tilesets
     primary_tiles = load_tile_pixels(ROOT / primary_info["tiles_dir"] / "tiles.png")
@@ -240,9 +247,28 @@ def render_map(layout, tileset_mapping):
     primary_palettes = load_palettes(primary_info["tiles_dir"])
     secondary_palettes = load_palettes(secondary_info["tiles_dir"])
 
-    # Merge palettes: primary uses slots 0-5, secondary uses slots 6-12 typically
-    # But actually each metatile entry selects its own palette slot.
-    # Primary tilesets use primary palettes, secondary use secondary palettes.
+    # Merge tiles: the GBA loads primary tiles at offset 0 and secondary tiles
+    # at offset NUM_TILES_IN_PRIMARY.  Metatile entries in both tilesets reference
+    # absolute tile IDs in this combined space.
+    merged_tiles = list(primary_tiles)
+    # Pad primary tiles to the expected count
+    while len(merged_tiles) < num_primary_tiles:
+        merged_tiles.append([[0] * TILE_SIZE for _ in range(TILE_SIZE)])
+    merged_tiles.extend(secondary_tiles)
+
+    # Merge palettes: primary tileset provides palette slots 0..(num_primary_pals-1),
+    # secondary provides slots num_primary_pals..(NUM_PALS_TOTAL-1).
+    # Metatile entries reference absolute palette slot indices.
+    merged_palettes = []
+    for i in range(NUM_PALS_TOTAL):
+        if i < num_primary_pals:
+            merged_palettes.append(primary_palettes[i] if i < len(primary_palettes) else [(0, 0, 0)] * 16)
+        else:
+            sec_idx = i - num_primary_pals
+            merged_palettes.append(secondary_palettes[sec_idx] if sec_idx < len(secondary_palettes) else [(0, 0, 0)] * 16)
+    # Pad to 16 slots for safety
+    while len(merged_palettes) < 16:
+        merged_palettes.append([(0, 0, 0)] * 16)
 
     primary_metatiles = load_metatiles(ROOT / primary_info["meta_dir"] / "metatiles.bin")
     secondary_metatiles = load_metatiles(ROOT / secondary_info["meta_dir"] / "metatiles.bin")
@@ -258,8 +284,7 @@ def render_map(layout, tileset_mapping):
         return None
 
     # Pre-render all metatiles
-    primary_cache = {}
-    secondary_cache = {}
+    metatile_cache = {}
 
     img = Image.new("RGB", (width * METATILE_SIZE, height * METATILE_SIZE), (0, 0, 0))
 
@@ -269,29 +294,27 @@ def render_map(layout, tileset_mapping):
             block = blocks[idx]
             metatile_id = block & 0x3FF
 
-            if metatile_id < num_primary:
-                # Primary tileset
+            if metatile_id in metatile_cache:
+                mt_img = metatile_cache[metatile_id]
+            elif metatile_id < num_primary_metatiles:
+                # Primary tileset metatile
                 if metatile_id >= len(primary_metatiles):
                     continue
-                cache = primary_cache
-                if metatile_id not in cache:
-                    cache[metatile_id] = render_metatile(
-                        primary_metatiles[metatile_id],
-                        primary_tiles, primary_palettes,
-                    )
-                mt_img = cache[metatile_id]
+                mt_img = render_metatile(
+                    primary_metatiles[metatile_id],
+                    merged_tiles, merged_palettes,
+                )
+                metatile_cache[metatile_id] = mt_img
             else:
-                # Secondary tileset
-                sec_id = metatile_id - num_primary
+                # Secondary tileset metatile
+                sec_id = metatile_id - num_primary_metatiles
                 if sec_id >= len(secondary_metatiles):
                     continue
-                cache = secondary_cache
-                if sec_id not in cache:
-                    cache[sec_id] = render_metatile(
-                        secondary_metatiles[sec_id],
-                        secondary_tiles, secondary_palettes,
-                    )
-                mt_img = cache[sec_id]
+                mt_img = render_metatile(
+                    secondary_metatiles[sec_id],
+                    merged_tiles, merged_palettes,
+                )
+                metatile_cache[metatile_id] = mt_img
 
             img.paste(mt_img, (x * METATILE_SIZE, y * METATILE_SIZE))
 
@@ -348,6 +371,7 @@ def main():
     parser.add_argument("--force", action="store_true", help="Regenerate all previews")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT, help="Output directory")
     parser.add_argument("--max-size", type=int, default=256, help="Max dimension in pixels (thumbnails)")
+    parser.add_argument("--full-size", action="store_true", help="Also save full-size images (no downscaling)")
     parser.add_argument("maps", nargs="*", help="Only generate for specific map directories")
     args = parser.parse_args()
 
@@ -420,6 +444,14 @@ def main():
             if img is None:
                 failed += 1
                 continue
+
+            # Save full-size version if requested
+            if args.full_size:
+                full_dir = args.output / "full"
+                full_dir.mkdir(parents=True, exist_ok=True)
+                img.save(full_dir / f"{out_name}.png", optimize=True)
+                for extra_dir in map_dirs[1:]:
+                    img.save(full_dir / f"{extra_dir}.png", optimize=True)
 
             # Resize to thumbnail
             w, h_px = img.size
