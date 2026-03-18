@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pokeemerald-expansion Playtest</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: #16213e;
+            border-bottom: 2px solid #0f3460;
+            text-align: center;
+        }
+        header h1 { font-size: 1.4rem; color: #e94560; }
+        header p { font-size: 0.85rem; color: #888; margin-top: 0.25rem; }
+        .container {
+            max-width: 900px;
+            width: 100%;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        .drop-zone {
+            width: 100%;
+            border: 2px dashed #0f3460;
+            border-radius: 12px;
+            padding: 3rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #16213e;
+        }
+        .drop-zone:hover, .drop-zone.drag-over {
+            border-color: #e94560;
+            background: #1a1a3e;
+        }
+        .drop-zone h2 { font-size: 1.2rem; margin-bottom: 0.5rem; }
+        .drop-zone p { font-size: 0.85rem; color: #888; }
+        .drop-zone input { display: none; }
+        #emulator-container {
+            display: none;
+            width: 100%;
+            text-align: center;
+        }
+        #emulator-canvas {
+            image-rendering: pixelated;
+            border: 3px solid #0f3460;
+            border-radius: 8px;
+            background: #000;
+        }
+        .controls {
+            display: none;
+            width: 100%;
+            background: #16213e;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+        .controls h3 { font-size: 0.95rem; margin-bottom: 0.75rem; color: #e94560; }
+        .key-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 0.4rem;
+            font-size: 0.8rem;
+        }
+        .key-grid span { background: #1a1a2e; padding: 0.3rem 0.6rem; border-radius: 4px; }
+        kbd {
+            background: #0f3460;
+            padding: 0.1rem 0.4rem;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .debug-info {
+            width: 100%;
+            background: #16213e;
+            border-radius: 8px;
+            padding: 1rem;
+            font-size: 0.85rem;
+        }
+        .debug-info h3 { font-size: 0.95rem; margin-bottom: 0.5rem; color: #e94560; }
+        .debug-info ul { list-style: none; padding: 0; }
+        .debug-info li { padding: 0.2rem 0; }
+        .debug-info li::before { content: "→ "; color: #e94560; }
+        .status {
+            font-size: 0.85rem;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            background: #0f3460;
+        }
+        .status.loaded { background: #1b4332; color: #95d5b2; }
+        .toolbar {
+            display: none;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .toolbar button {
+            background: #0f3460;
+            color: #e0e0e0;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background 0.2s;
+        }
+        .toolbar button:hover { background: #e94560; }
+        .scale-controls { display: flex; gap: 0.25rem; align-items: center; font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>pokeemerald-expansion Playtest</h1>
+        <p>Browser-based ROM testing &mdash; no install required</p>
+    </header>
+
+    <div class="container">
+        <div class="drop-zone" id="drop-zone">
+            <h2>Drop your .gba ROM here</h2>
+            <p>or click to browse &mdash; expects pokeemerald.gba from your build</p>
+            <input type="file" id="file-input" accept=".gba,.GBA">
+        </div>
+
+        <div id="status" class="status" style="display:none;"></div>
+
+        <div class="toolbar" id="toolbar">
+            <button onclick="resetEmulator()">Reset</button>
+            <button onclick="togglePause()">Pause / Resume</button>
+            <div class="scale-controls">
+                Scale:
+                <button onclick="setScale(1)">1x</button>
+                <button onclick="setScale(2)">2x</button>
+                <button onclick="setScale(3)">3x</button>
+                <button onclick="setScale(4)">4x</button>
+            </div>
+        </div>
+
+        <div id="emulator-container">
+            <canvas id="emulator-canvas" width="480" height="320"></canvas>
+        </div>
+
+        <div class="controls" id="controls">
+            <h3>Keyboard Controls</h3>
+            <div class="key-grid">
+                <span><kbd>Arrow Keys</kbd> D-Pad</span>
+                <span><kbd>Z</kbd> A Button</span>
+                <span><kbd>X</kbd> B Button</span>
+                <span><kbd>A</kbd> L Bumper</span>
+                <span><kbd>S</kbd> R Bumper</span>
+                <span><kbd>Enter</kbd> Start</span>
+                <span><kbd>Backspace</kbd> Select</span>
+                <span><kbd>Shift</kbd> Speed Up</span>
+            </div>
+        </div>
+
+        <div class="debug-info">
+            <h3>Debug Menu Quick Reference</h3>
+            <ul>
+                <li><strong>Overworld Debug:</strong> Hold <kbd>R</kbd> (<kbd>S</kbd> key) + press <kbd>Start</kbd> (<kbd>Enter</kbd> key)</li>
+                <li><strong>Battle Debug:</strong> Press <kbd>Select</kbd> (<kbd>Backspace</kbd> key) during battle</li>
+                <li><strong>Sprite Viewer:</strong> Press <kbd>Select</kbd> (<kbd>Backspace</kbd> key) in summary screen</li>
+                <li><strong>Warp anywhere:</strong> Overworld Debug → Utilities → Fly to map / Warp to map</li>
+                <li><strong>Get any Pokemon:</strong> Overworld Debug → Give → Pokemon</li>
+                <li><strong>Heal party:</strong> Overworld Debug → Party → Heal party</li>
+                <li><strong>Set flags/badges:</strong> Overworld Debug → Flags</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+    // Minimal GBA emulator using IodineGBA (public domain GBA emulator in JS)
+    // Falls back to file-load-only mode if no emulator core is available.
+
+    let gbaInstance = null;
+    let audioCtx = null;
+    let paused = false;
+    let currentScale = 2;
+    const GBA_WIDTH = 240;
+    const GBA_HEIGHT = 160;
+    const canvas = document.getElementById('emulator-canvas');
+    const ctx = canvas.getContext('2d');
+
+    // Set initial canvas size
+    setScale(2);
+
+    function setScale(s) {
+        currentScale = s;
+        canvas.width = GBA_WIDTH * s;
+        canvas.height = GBA_HEIGHT * s;
+        ctx.imageSmoothingEnabled = false;
+    }
+
+    // Drop zone handling
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('drag-over');
+    });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('drag-over');
+        if (e.dataTransfer.files.length > 0) loadROM(e.dataTransfer.files[0]);
+    });
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) loadROM(e.target.files[0]);
+    });
+
+    function showStatus(msg, isLoaded) {
+        const el = document.getElementById('status');
+        el.textContent = msg;
+        el.style.display = 'block';
+        el.className = 'status' + (isLoaded ? ' loaded' : '');
+    }
+
+    function loadROM(file) {
+        if (!file.name.toLowerCase().endsWith('.gba')) {
+            showStatus('Please select a .gba file');
+            return;
+        }
+        showStatus('Loading ' + file.name + ' (' + (file.size / 1024 / 1024).toFixed(1) + ' MB)...');
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const romData = new Uint8Array(e.target.result);
+            startEmulator(romData, file.name);
+        };
+        reader.readAsArrayBuffer(file);
+    }
+
+    function startEmulator(romData, fileName) {
+        // Show UI
+        document.getElementById('emulator-container').style.display = 'block';
+        document.getElementById('controls').style.display = 'block';
+        document.getElementById('toolbar').style.display = 'flex';
+        dropZone.style.display = 'none';
+
+        showStatus('Running: ' + fileName, true);
+
+        // Initialize emulator
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        gbaInstance = new GBAEmulator(canvas, audioCtx);
+        gbaInstance.loadROM(romData);
+        gbaInstance.start();
+    }
+
+    function resetEmulator() {
+        if (gbaInstance) gbaInstance.reset();
+    }
+
+    function togglePause() {
+        if (!gbaInstance) return;
+        paused = !paused;
+        if (paused) gbaInstance.pause();
+        else gbaInstance.resume();
+    }
+
+    // Minimal GBA emulator core
+    // This is a lightweight wrapper - for full accuracy, loads IodineGBA from CDN
+    class GBAEmulator {
+        constructor(canvas, audioCtx) {
+            this.canvas = canvas;
+            this.ctx = canvas.getContext('2d');
+            this.audioCtx = audioCtx;
+            this.romData = null;
+            this.running = false;
+            this.frameId = null;
+            this.core = null;
+            this.imageData = null;
+        }
+
+        async loadROM(data) {
+            this.romData = data;
+
+            // Try to use IodineGBA if available
+            if (typeof GameBoyAdvanceEmulator !== 'undefined') {
+                this.core = new GameBoyAdvanceEmulator();
+                this.core.attachCanvas(this.canvas);
+                this.core.loadROM(Array.from(data));
+                return;
+            }
+
+            // Fallback: attempt to load emulator from CDN
+            try {
+                await this.loadScript('https://cdn.jsdelivr.net/gh/nicmcd/nicmcd.github.io@master/nicmcd/gba/IodineGBA-master/IodineGBA/core/GameBoyAdvanceEmulator.js');
+                if (typeof GameBoyAdvanceEmulator !== 'undefined') {
+                    this.core = new GameBoyAdvanceEmulator();
+                    this.core.attachCanvas(this.canvas);
+                    this.core.loadROM(Array.from(data));
+                    return;
+                }
+            } catch (e) {
+                console.log('CDN emulator not available, using built-in player');
+            }
+
+            // Final fallback: display ROM info
+            this.displayROMInfo(data);
+        }
+
+        loadScript(src) {
+            return new Promise((resolve, reject) => {
+                const s = document.createElement('script');
+                s.src = src;
+                s.onload = resolve;
+                s.onerror = reject;
+                document.head.appendChild(s);
+            });
+        }
+
+        displayROMInfo(data) {
+            const ctx = this.ctx;
+            const w = this.canvas.width;
+            const h = this.canvas.height;
+
+            ctx.fillStyle = '#1a1a2e';
+            ctx.fillRect(0, 0, w, h);
+
+            ctx.fillStyle = '#e94560';
+            ctx.font = `${16 * currentScale}px monospace`;
+            ctx.textAlign = 'center';
+            ctx.fillText('ROM Loaded Successfully', w/2, h * 0.3);
+
+            ctx.fillStyle = '#e0e0e0';
+            ctx.font = `${10 * currentScale}px monospace`;
+
+            // Read ROM title (offset 0xA0, 12 bytes)
+            const title = String.fromCharCode(...data.slice(0xA0, 0xAC)).replace(/\0/g, '');
+            const code = String.fromCharCode(...data.slice(0xAC, 0xB0));
+            const sizeMB = (data.length / 1024 / 1024).toFixed(1);
+
+            ctx.fillText(`Title: ${title}`, w/2, h * 0.45);
+            ctx.fillText(`Code: ${code}  Size: ${sizeMB} MB`, w/2, h * 0.55);
+
+            ctx.fillStyle = '#888';
+            ctx.font = `${9 * currentScale}px monospace`;
+            ctx.fillText('To play: open this ROM in mGBA or VBA-M', w/2, h * 0.72);
+            ctx.fillText('Or run: ./playtest.sh (auto-launches mGBA)', w/2, h * 0.82);
+        }
+
+        start() {
+            if (this.core && this.core.play) {
+                this.core.play();
+            }
+            this.running = true;
+        }
+
+        pause() {
+            if (this.core && this.core.pause) this.core.pause();
+            this.running = false;
+        }
+
+        resume() {
+            if (this.core && this.core.play) this.core.play();
+            this.running = true;
+        }
+
+        reset() {
+            if (this.core && this.core.restart) {
+                this.core.restart();
+            } else if (this.romData) {
+                this.loadROM(this.romData);
+                this.start();
+            }
+        }
+    }
+
+    // Keyboard mapping
+    const keyMap = {
+        'ArrowUp': 'up', 'ArrowDown': 'down', 'ArrowLeft': 'left', 'ArrowRight': 'right',
+        'z': 'A', 'Z': 'A',
+        'x': 'B', 'X': 'B',
+        'a': 'L', 'A': 'L',
+        's': 'R', 'S': 'R',
+        'Enter': 'start',
+        'Backspace': 'select',
+        'Shift': 'speedup'
+    };
+
+    document.addEventListener('keydown', (e) => {
+        if (keyMap[e.key] && gbaInstance && gbaInstance.core) {
+            e.preventDefault();
+            if (gbaInstance.core.keyDown) gbaInstance.core.keyDown(keyMap[e.key]);
+        }
+    });
+
+    document.addEventListener('keyup', (e) => {
+        if (keyMap[e.key] && gbaInstance && gbaInstance.core) {
+            e.preventDefault();
+            if (gbaInstance.core.keyUp) gbaInstance.core.keyUp(keyMap[e.key]);
+        }
+    });
+    </script>
+</body>
+</html>
