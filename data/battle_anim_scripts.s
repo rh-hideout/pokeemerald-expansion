@@ -11783,6 +11783,7 @@ gBattleAnimMove_PhotonGeyser::
 	unloadspritegfx ANIM_TAG_ORBS @recover
 	unloadspritepal ANIM_TAG_ORBS @recover
 	unloadspritegfx ANIM_TAG_SHOCK_3 @charge
+	unloadspritepal ANIM_TAG_SHOCK_3 @charge
 	createsprite gPhotonGeyserWhiteRingTemplate, ANIM_ATTACKER, 3, 0, 0, 0, 0, 31, 8
 	createsprite gPhotonGeyserZapBallTemplate, ANIM_TARGET, 3, 10, 0, 0, 0, 30, 0
 	createsprite gPhotonGeyserZapCannonSparkTemplate, ANIM_TARGET, 4, 10, 0, 16, 30, 0, 40, 0
@@ -12923,10 +12924,10 @@ gBattleAnimMove_AuraWheel::
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 5, 0, 23, 1
 	create_basic_hitsplat_sprite ANIM_ATTACKER, 4, x=-10, y=0, relative_to=ANIM_TARGET, animation=0
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_SPARK_2, 2, 12, 0, RGB(1, 23, 29)  @Revert blue Electricity
-	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 48, 44, 0, 40, 0, 32771
-	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 48, 44, 64, 40, 1, 32771
-	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 48, 44, 128, 40, 0, 32771
-	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 48, 44, 192, 40, 2, 32771
+	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 48, 44, 0, 40, 0, -32765
+	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 48, 44, 64, 40, 1, -32765
+	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 48, 44, 128, 40, 0, -32765
+	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 48, 44, 192, 40, 2, -32765
 	delay 7
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, 0, 0, 9
 	waitforvisualfinish
@@ -21462,7 +21463,7 @@ HornDrillContinue:
 	waitforvisualfinish
 	restorebg
 	waitbgfadeout
-	setarg 7, 0xFFFF
+	setarg 7, -1
 	waitbgfadein
 	end
 
@@ -31516,14 +31517,14 @@ gBattleAnimMove_GigavoltHavoc::
 	unloadspritepal ANIM_TAG_HAVOC_SPEAR
 	createsprite gThunderboltOrbSpriteTemplate, ANIM_TARGET, 3, 44, 0, 0, 3
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_TARGET, 0, 0, 12, RGB(31, 31, 22)
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 32, 44, 0, 40, 0, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 32, 44, 64, 40, 1, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 32, 44, 128, 40, 0, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 32, 44, SOUND_PAN_ATTACKER, 40, 2, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 16, 44, 32, 40, 0, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 16, 44, 96, 40, 1, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 16, 44, 160, 40, 0, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 16, 44, 224, 40, 2, 32771
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 32, 44, 0, 40, 0, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 32, 44, 64, 40, 1, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 32, 44, 128, 40, 0, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 32, 44, SOUND_PAN_ATTACKER, 40, 2, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 16, 44, 32, 40, 0, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 16, 44, 96, 40, 1, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 16, 44, 160, 40, 0, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 16, 44, 224, 40, 2, -32765
 	playsewithpan SE_M_HYPER_BEAM, SOUND_PAN_TARGET
 	delay 25
 	playsewithpan SE_M_THUNDER_WAVE, SOUND_PAN_TARGET
@@ -32603,7 +32604,7 @@ gBattleAnimMove_10000000VoltThunderbolt::
 	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_ATTACKER, 2, 0, 0, 20, 44, SOUND_PAN_ATTACKER, 40, 2, 3
 	delay 16
 	playsewithpan SE_M_THUNDER_WAVE, SOUND_PAN_TARGET
-	invert_screen_color scenery=257@thunder flash
+	invert_screen_color scenery=257	@thunder flash
 	createsprite gGrowingChargeOrbSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER	@ charge
 	createsprite gLightningSpriteTemplate, ANIM_TARGET, 2, 64, -36
 	delay 1
@@ -32618,7 +32619,7 @@ gBattleAnimMove_10000000VoltThunderbolt::
 @	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_ATTACKER, 2, 0, 0, 24, 44, SOUND_PAN_ATTACKER, 40, 2, 3
 	delay 20
 	playsewithpan SE_M_THUNDER_WAVE, SOUND_PAN_TARGET
-	invert_screen_color scenery=257@thunder flash
+	invert_screen_color scenery=257	@thunder flash
 	createsprite gLightningSpriteTemplate, ANIM_TARGET, 2, -64, -36
 	delay 1
 	createsprite gLightningSpriteTemplate, ANIM_TARGET, 2, -64, -20
@@ -32632,7 +32633,7 @@ gBattleAnimMove_10000000VoltThunderbolt::
 	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_ATTACKER, 2, 0, 0, 28, 44, SOUND_PAN_ATTACKER, 40, 2, 3
 	delay 20
 	playsewithpan SE_M_THUNDER_WAVE, SOUND_PAN_TARGET
-	invert_screen_color scenery=257@thunder flash
+	invert_screen_color scenery=257	@thunder flash
 	createsprite gLightningSpriteTemplate, ANIM_TARGET, 2, -112, -36
 	delay 1
 	createsprite gLightningSpriteTemplate, ANIM_TARGET, 2, -112, -20
@@ -32646,7 +32647,7 @@ gBattleAnimMove_10000000VoltThunderbolt::
 @	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_ATTACKER, 2, 0, 0, 32, 44, SOUND_PAN_ATTACKER, 40, 2, 3
 	delay 16
 	playsewithpan SE_M_THUNDER_WAVE, SOUND_PAN_TARGET
-	invert_screen_color scenery=257@thunder flash
+	invert_screen_color scenery=257	@thunder flash
 	createsprite gLightningSpriteTemplate, ANIM_TARGET, 2, -48, -36
 	delay 1
 	createsprite gLightningSpriteTemplate, ANIM_TARGET, 2, -48, -20
@@ -32692,20 +32693,20 @@ gBattleAnimMove_10000000VoltThunderbolt::
 @	call TenMillionVoltThunderboltBeamGreen
 @	call TenMillionVoltThunderboltBeamPurple
 	playsewithpan SE_M_THUNDERBOLT2, SOUND_PAN_ATTACKER
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 37, 44, 0, 40, 0, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 37, 44, 64, 40, 1, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 37, 44, 128, 40, 0, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 37, 44, SOUND_PAN_ATTACKER, 40, 2, 32771
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 37, 44, 0, 40, 0, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 37, 44, 64, 40, 1, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 37, 44, 128, 40, 0, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 37, 44, SOUND_PAN_ATTACKER, 40, 2, -32765
 @	delay 6
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 53, 44, 0, 40, 0, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 53, 44, 64, 40, 1, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 53, 44, 128, 40, 0, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 53, 44, SOUND_PAN_ATTACKER, 40, 2, 32771
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 53, 44, 0, 40, 0, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 53, 44, 64, 40, 1, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 53, 44, 128, 40, 0, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 53, 44, SOUND_PAN_ATTACKER, 40, 2, -32765
 @	delay 6
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 64, 44, 0, 40, 0, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 64, 44, 64, 40, 1, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 64, 44, 128, 40, 0, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 64, 44, SOUND_PAN_ATTACKER, 40, 2, 32771
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 64, 44, 0, 40, 0, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 64, 44, 64, 40, 1, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 64, 44, 128, 40, 0, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 64, 44, SOUND_PAN_ATTACKER, 40, 2, -32765
 	playsewithpan SE_M_CHARGE, SOUND_PAN_ATTACKER
 	createsprite g10MillionVoltBoltShockwaveSpriteTemplate, ANIM_TARGET, 2 	@ charge out and in
 	waitforvisualfinish
@@ -32722,15 +32723,15 @@ gBattleAnimMove_10000000VoltThunderbolt::
 	unloadspritegfx ANIM_TAG_POISON_BUBBLE @purple
 	unloadspritepal ANIM_TAG_POISON_BUBBLE @purple
 	createvisualtask AnimTask_HorizontalShake, 5, ANIM_TARGET, 2, 44
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 48, 44, 0, 40, 0, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 48, 44, 64, 40, 1, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 48, 44, 128, 40, 0, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 48, 44, SOUND_PAN_ATTACKER, 40, 2, 32771
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 48, 44, 0, 40, 0, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 48, 44, 64, 40, 1, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 48, 44, 128, 40, 0, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 48, 44, SOUND_PAN_ATTACKER, 40, 2, -32765
 	call TenMillionVoltThunderboltSparkGeyser
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 55, 44, 0, 40, 0, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 55, 44, 64, 40, 1, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 55, 44, 128, 40, 0, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 55, 44, SOUND_PAN_ATTACKER, 40, 2, 32771
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 55, 44, 0, 40, 0, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 55, 44, 64, 40, 1, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 55, 44, 128, 40, 0, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 55, 44, SOUND_PAN_ATTACKER, 40, 2, -32765
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, (F_PAL_BG | F_PAL_BATTLERS_2), 2, 0, 16, RGB_WHITE
 	call TenMillionVoltThunderboltSparkGeyser
 	waitforvisualfinish
@@ -32773,32 +32774,32 @@ TenMillionVoltThunderboltBeamPurple:
 TenMillionVoltThunderboltSparkGeyser:
 	playsewithpan SE_M_EXPLOSION, SOUND_PAN_TARGET
 	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 3, 0, 0, ANIM_TARGET, 1
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 5, 44, 0, 40, 0, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 5, 44, 64, 40, 1, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 5, 44, 128, 40, 0, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 21, 44, 0, 40, 0, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 21, 44, 64, 40, 1, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 21, 44, 128, 40, 0, 32771
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 5, 44, 0, 40, 0, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 5, 44, 64, 40, 1, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 5, 44, 128, 40, 0, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 21, 44, 0, 40, 0, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 21, 44, 64, 40, 1, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 21, 44, 128, 40, 0, -32765
 	delay 4
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -22, 5, 44, 0, 40, 0, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -22, 5, 44, 64, 40, 1, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -22, 5, 44, 128, 40, 0, 32771
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -22, 5, 44, 0, 40, 0, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -22, 5, 44, 64, 40, 1, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -22, 5, 44, 128, 40, 0, -32765
 	delay 4
 	playsewithpan SE_M_EXPLOSION, SOUND_PAN_TARGET
 	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 3, 24, -24, ANIM_TARGET, 1
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -44, 5, 44, 0, 40, 0, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -44, 5, 44, 64, 40, 1, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -44, 5, 44, 128, 40, 0, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -44, 21, 44, 0, 40, 0, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -44, 21, 44, 64, 40, 1, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -44, 21, 44, 128, 40, 0, 32771
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -44, 5, 44, 0, 40, 0, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -44, 5, 44, 64, 40, 1, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -44, 5, 44, 128, 40, 0, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -44, 21, 44, 0, 40, 0, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -44, 21, 44, 64, 40, 1, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -44, 21, 44, 128, 40, 0, -32765
 	delay 4
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -66, 5, 44, 0, 40, 0, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -66, 5, 44, 64, 40, 1, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -66, 5, 44, 128, 40, 0, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -66, 21, 44, 0, 40, 0, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -66, 21, 44, 64, 40, 1, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -66, 21, 44, 128, 40, 0, 32771
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -66, 5, 44, 0, 40, 0, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -66, 5, 44, 64, 40, 1, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -66, 5, 44, 128, 40, 0, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -66, 21, 44, 0, 40, 0, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -66, 21, 44, 64, 40, 1, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -66, 21, 44, 128, 40, 0, -32765
 	delay 4
 	playsewithpan SE_M_EXPLOSION, SOUND_PAN_TARGET
 	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 3, -16, 16, ANIM_TARGET, 1
@@ -32891,16 +32892,16 @@ StokedSparksurferFinish:
 	unloadspritegfx ANIM_TAG_CIRCLE_OF_LIGHT
 	unloadspritepal ANIM_TAG_CIRCLE_OF_LIGHT
 	createvisualtask AnimTask_HorizontalShake, 5, ANIM_TARGET, 5, 28
-	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 48, 44, 0, 40, 0, 32771
-	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 48, 44, 64, 40, 1, 32771
-	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 48, 44, 128, 40, 0, 32771
-	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 48, 44, 192, 40, 2, 32771
+	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 48, 44, 0, 40, 0, -32765
+	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 48, 44, 64, 40, 1, -32765
+	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 48, 44, 128, 40, 0, -32765
+	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 48, 44, 192, 40, 2, -32765
 	call StokedSparksurferSparkGeyser
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, (F_PAL_TARGET | F_PAL_ATTACKER), 2, 0, 16, RGB(31, 31, 22)
-	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 55, 44, 0, 40, 0, 32771
-	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 55, 44, 64, 40, 1, 32771
-	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 55, 44, 128, 40, 0, 32771
-	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 55, 44, 192, 40, 2, 32771
+	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 55, 44, 0, 40, 0, -32765
+	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 55, 44, 64, 40, 1, -32765
+	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 55, 44, 128, 40, 0, -32765
+	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 55, 44, 192, 40, 2, -32765
 	call StokedSparksurferSparkGeyser
 	createvisualtask AnimTask_VoltTackleAttackerReappear, 5 	@ attacker flicker back
 	playsewithpan SE_M_THUNDERBOLT2, SOUND_PAN_TARGET
@@ -32919,30 +32920,30 @@ StokedSparksurferFinish:
 
 StokedSparksurferSparkGeyser:
 	playsewithpan SE_M_TRI_ATTACK2, SOUND_PAN_TARGET
-	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 5, 44, 0, 40, 0, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 5, 44, 64, 40, 1, 32771
-	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 5, 44, 128, 40, 0, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 21, 44, 0, 40, 0, 32771
-	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 21, 44, 64, 40, 1, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 21, 44, 128, 40, 0, 32771
+	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 5, 44, 0, 40, 0, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 5, 44, 64, 40, 1, -32765
+	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 5, 44, 128, 40, 0, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 21, 44, 0, 40, 0, -32765
+	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 21, 44, 64, 40, 1, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, 0, 21, 44, 128, 40, 0, -32765
 	delay 4
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -22, 5, 44, 0, 40, 0, 32771
-	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -22, 5, 44, 64, 40, 1, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -22, 5, 44, 128, 40, 0, 32771
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -22, 5, 44, 0, 40, 0, -32765
+	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -22, 5, 44, 64, 40, 1, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -22, 5, 44, 128, 40, 0, -32765
 	delay 4
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -44, 5, 44, 0, 40, 0, 32771
-	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -44, 5, 44, 64, 40, 1, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -44, 5, 44, 128, 40, 0, 32771
-	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -44, 21, 44, 0, 40, 0, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -44, 21, 44, 64, 40, 1, 32771
-	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -44, 21, 44, 128, 40, 0, 32771
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -44, 5, 44, 0, 40, 0, -32765
+	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -44, 5, 44, 64, 40, 1, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -44, 5, 44, 128, 40, 0, -32765
+	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -44, 21, 44, 0, 40, 0, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -44, 21, 44, 64, 40, 1, -32765
+	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -44, 21, 44, 128, 40, 0, -32765
 	delay 4
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -66, 5, 44, 0, 40, 0, 32771
-	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -66, 5, 44, 64, 40, 1, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -66, 5, 44, 128, 40, 0, 32771
-	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -66, 21, 44, 0, 40, 0, 32771
-@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -66, 21, 44, 64, 40, 1, 32771
-	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -66, 21, 44, 128, 40, 0, 32771
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -66, 5, 44, 0, 40, 0, -32765
+	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -66, 5, 44, 64, 40, 1, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -66, 5, 44, 128, 40, 0, -32765
+	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -66, 21, 44, 0, 40, 0, -32765
+@	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -66, 21, 44, 64, 40, 1, -32765
+	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_TARGET, 4, 0, -66, 21, 44, 128, 40, 0, -32765
 	delay 26
 	return
 
@@ -34809,6 +34810,7 @@ SearingSunrazeSmashImpact:
 	delay 2
 	delay 0
 	unloadspritegfx ANIM_TAG_METEOR @superpower
+	unloadspritepal ANIM_TAG_METEOR @superpower
 	createsprite gSearingSunrazeSmashCrossImpactSpriteTemplate, ANIM_TARGET, 2, 0, 0, 1, 36
 	playsewithpan SE_M_LEER, SOUND_PAN_TARGET
 	visible ANIM_ATTACKER
