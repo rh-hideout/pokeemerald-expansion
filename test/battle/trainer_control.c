@@ -1,7 +1,7 @@
 #include "global.h"
 #include "test/test.h"
 #include "battle.h"
-#include "battle_main.h"
+#include "battle_setup.h"
 #include "data.h"
 #include "malloc.h"
 #include "random.h"
@@ -244,10 +244,12 @@ TEST("Trainer Party Pool picks according to custom rules")
 {
     struct Pokemon *testParty = Alloc(6 * sizeof(struct Pokemon));
     u32 currTrainer = 8;
-    CreateNPCTrainerPartyFromTrainer(testParty, GetTrainerStructFromId(currTrainer), TRUE, BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE);
+    gBattleTypeFlags = BATTLE_TYPE_DOUBLE;
+    CreateNPCTrainerPartyFromTrainer(testParty, GetTrainerStructFromId(currTrainer), TRUE);
     EXPECT(GetMonData(&testParty[0], MON_DATA_SPECIES) == SPECIES_TORKOAL);    //  Lead + Weather Setter
     EXPECT(GetMonData(&testParty[1], MON_DATA_SPECIES) == SPECIES_BULBASAUR);  //  Lead + Weather Abuser
     EXPECT(GetMonData(&testParty[2], MON_DATA_SPECIES) == SPECIES_EEVEE);      //  Anything else
+    gBattleTypeFlags = 0;
     Free(testParty);
 }
 
