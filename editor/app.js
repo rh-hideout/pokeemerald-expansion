@@ -1473,6 +1473,10 @@ const ENC_COLORS = { land_mons: '#22c55e', water_mons: '#6890f0', rock_smash_mon
 const ENC_LABELS = { land_mons: 'Grass / Land', water_mons: 'Surfing', rock_smash_mons: 'Rock Smash', fishing_mons: 'Fishing' };
 const ENC_ICONS = { land_mons: '&#127793;', water_mons: '&#127754;', rock_smash_mons: '&#9968;', fishing_mons: '&#127907;' };
 
+function getPreviewUrl(dirName) {
+    return `previews/${encodeURIComponent(dirName)}.png`;
+}
+
 function getMapDisplayName(m) {
     return (m._dirName || m.name || '').replace(/([A-Z])/g, ' $1').trim().replace(/_/g, ' ');
 }
@@ -1603,9 +1607,10 @@ async function renderMaps() {
             const conns = (m.connections || []).length;
             if (conns > 0) tags += `<span class="tag has-data">${conns} connection${conns !== 1 ? 's' : ''}</span>`;
 
+            const previewUrl = getPreviewUrl(m._dirName);
             grid.innerHTML += `
                 <div class="map-list-card" onclick="openMapDetail('${escAttr(m._dirName)}')">
-                    <div class="map-list-card-banner ${bannerClass}"></div>
+                    <div class="map-list-card-banner ${bannerClass}" style="background-image:url('${previewUrl}')"></div>
                     <div class="map-list-card-body">
                         <h3>${escHtml(displayName)}</h3>
                         <div class="map-list-id">${escHtml(m.id || '')}</div>
@@ -1655,7 +1660,7 @@ async function renderMapDetail(dirName) {
 
         <!-- Banner -->
         <div class="map-area-header">
-            <div class="map-area-banner ${bannerClass}">
+            <div class="map-area-banner ${bannerClass}" style="background-image:url('${getPreviewUrl(dirName)}')">
                 <div class="map-area-banner-content">
                     <div>
                         <h1>${escHtml(displayName)}</h1>

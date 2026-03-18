@@ -677,6 +677,7 @@ tbody tr:last-child td { border-bottom: none; }
     position: relative;
     background-size: cover;
     background-position: center;
+    image-rendering: pixelated;
 }
 .map-area-banner::after {
     content: '';
@@ -733,16 +734,16 @@ tbody tr:last-child td { border-bottom: none; }
     font-size: 14px;
 }
 
-/* banner colors by map type */
-.banner-ROUTE      { background: linear-gradient(135deg, #1a4a2e 0%, #2d6b45 50%, #1a3a28 100%); }
-.banner-CITY       { background: linear-gradient(135deg, #1a2a4e 0%, #2d4a7b 50%, #1a2540 100%); }
-.banner-TOWN       { background: linear-gradient(135deg, #3a2a1a 0%, #5a4530 50%, #2a2018 100%); }
-.banner-UNDERGROUND{ background: linear-gradient(135deg, #2a1a2e 0%, #4a3050 50%, #1a1020 100%); }
-.banner-UNDERWATER { background: linear-gradient(135deg, #0a2a3e 0%, #1a4a6e 50%, #0a1828 100%); }
-.banner-OCEAN_ROUTE{ background: linear-gradient(135deg, #0a2040 0%, #1a406a 50%, #0a1530 100%); }
-.banner-INDOOR     { background: linear-gradient(135deg, #2a2020 0%, #3a3030 50%, #1a1515 100%); }
-.banner-SECRET_BASE{ background: linear-gradient(135deg, #2a2a10 0%, #4a4a20 50%, #1a1a08 100%); }
-.banner-NONE       { background: linear-gradient(135deg, #1a1a2e 0%, #2a2a40 50%, #141420 100%); }
+/* banner colors by map type (used as fallback behind preview images) */
+.banner-ROUTE      { background-color: #1a4a2e; }
+.banner-CITY       { background-color: #1a2a4e; }
+.banner-TOWN       { background-color: #3a2a1a; }
+.banner-UNDERGROUND{ background-color: #2a1a2e; }
+.banner-UNDERWATER { background-color: #0a2a3e; }
+.banner-OCEAN_ROUTE{ background-color: #0a2040; }
+.banner-INDOOR     { background-color: #2a2020; }
+.banner-SECRET_BASE{ background-color: #2a2a10; }
+.banner-NONE       { background-color: #1a1a2e; }
 
 /* ─── Map Area Sections ─────────────────────────── */
 .map-area-sections {
@@ -1017,8 +1018,11 @@ tbody tr:last-child td { border-bottom: none; }
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 .map-list-card-banner {
-    height: 48px;
+    height: 80px;
     position: relative;
+    background-size: cover;
+    background-position: center;
+    image-rendering: pixelated;
 }
 .map-list-card-body {
     padding: 12px 16px;

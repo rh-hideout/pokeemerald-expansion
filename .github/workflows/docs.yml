@@ -7,6 +7,10 @@ on:
     paths:
       - 'docs/**'
       - 'editor/**'
+      - 'data/layouts/**'
+      - 'data/tilesets/**'
+      - 'data/maps/**'
+      - 'tools/generate_map_previews.py'
       - '.github/workflows/docs.yml'
 
 # Allow only one concurrent deployment
@@ -40,11 +44,23 @@ jobs:
           cd docs
           mdbook build
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Generate map previews
+        run: |
+          pip install Pillow
+          python3 tools/generate_map_previews.py --force
+
       - name: Assemble Pages output
         run: |
-          mkdir -p _site/docs
+          mkdir -p _site/docs _site/previews
           # Editor app at the root
           cp editor/index.html editor/app.js editor/style.css _site/
+          # Map preview images
+          cp editor/previews/*.png _site/previews/
           # mdbook docs under /docs/
           cp -r docs/book/* _site/docs/
           touch _site/.nojekyll
