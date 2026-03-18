@@ -124,12 +124,64 @@
             text-align: center;
             padding: 0.5rem;
         }
+        .error-container {
+            width: 100%;
+            background: #16213e;
+            border: 1px solid #4a1525;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+        }
+        .error-container h2 { font-size: 1.1rem; color: #f5a5a5; margin-bottom: 0.5rem; }
+        .error-container p { font-size: 0.85rem; color: #aaa; margin-bottom: 1rem; }
+        .error-container .error-details {
+            font-size: 0.8rem;
+            color: #888;
+            background: #1a1a2e;
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-family: monospace;
+        }
+        .error-actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            padding: 0.5rem 1.25rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: opacity 0.2s;
+        }
+        .btn:hover { opacity: 0.85; }
+        .btn-primary { background: #e94560; color: #fff; }
+        .btn-secondary { background: #0f3460; color: #e0e0e0; }
+        .nav-btn {
+            padding: 0.4rem 1rem;
+            border: 1px solid #0f3460;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            text-decoration: none;
+            color: #e0e0e0;
+            background: transparent;
+            transition: all 0.2s;
+        }
+        .nav-btn:hover { background: #0f3460; }
     </style>
 </head>
 <body>
     <header>
-        <h1>pokeemerald-expansion Playtest</h1>
-        <p>Test your ROM hack in the browser &mdash; no install, no setup</p>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <h1>pokeemerald-expansion Playtest</h1>
+                <p>Test your ROM hack in the browser &mdash; no install, no setup</p>
+            </div>
+            <a href="../../editor/index.html" class="nav-btn">&#9998; Open Editor</a>
+        </div>
     </header>
 
     <div class="container">
@@ -143,6 +195,17 @@
             <h2>Or drop a custom .gba ROM here</h2>
             <p>Click to browse or drag and drop a .gba file to test a specific build</p>
             <input type="file" id="file-input" accept=".gba,.GBA">
+        </div>
+
+        <div id="error-container" class="error-container" style="display:none;">
+            <h2 id="error-title">ROM Not Found</h2>
+            <p id="error-message">Could not load the ROM file.</p>
+            <div id="error-details" class="error-details" style="display:none;"></div>
+            <div class="error-actions">
+                <button class="btn btn-primary" onclick="retryLoadROM()">&#8635; Retry</button>
+                <button class="btn btn-secondary" onclick="showManualUpload()">&#128193; Load ROM Manually</button>
+                <a href="../../editor/index.html" class="btn btn-secondary">&#9998; Go to Editor</a>
+            </div>
         </div>
 
         <div id="status" class="status" style="display:none;"></div>
@@ -188,25 +251,83 @@
     const dropZone = document.getElementById('drop-zone');
     const fileInput = document.getElementById('file-input');
     const loadingScreen = document.getElementById('loading-screen');
+    const errorContainer = document.getElementById('error-container');
     let emulatorLoaded = false;
+    let romLoadAttempts = 0;
+    const MAX_ROM_RETRIES = 3;
 
-    // Try to auto-load the latest ROM built by CI
-    (async function autoLoadROM() {
+    function showError(title, message, details) {
+        loadingScreen.style.display = 'none';
+        dropZone.style.display = 'none';
+        errorContainer.style.display = 'block';
+        document.getElementById('error-title').textContent = title;
+        document.getElementById('error-message').textContent = message;
+        const detailsEl = document.getElementById('error-details');
+        if (details) {
+            detailsEl.textContent = details;
+            detailsEl.style.display = 'block';
+        } else {
+            detailsEl.style.display = 'none';
+        }
+    }
+
+    function showManualUpload() {
+        errorContainer.style.display = 'none';
+        dropZone.style.display = 'block';
+    }
+
+    async function retryLoadROM() {
+        errorContainer.style.display = 'none';
+        romLoadAttempts = 0;
+        await autoLoadROM();
+    }
+
+    async function autoLoadROM() {
+        loadingScreen.style.display = 'block';
+        romLoadAttempts++;
         try {
             const resp = await fetch('rom.gba');
-            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+            if (resp.status === 404) {
+                showError(
+                    'ROM Not Found',
+                    'No pre-built ROM is available. The CI build may not have run yet, or the ROM file has not been deployed.',
+                    'GET rom.gba — 404 Not Found'
+                );
+                return;
+            }
+            if (!resp.ok) {
+                throw new Error(`Server returned HTTP ${resp.status}`);
+            }
             const blob = await resp.blob();
-            if (blob.size < 1024) throw new Error('ROM too small');
+            if (blob.size < 1024) {
+                showError(
+                    'Invalid ROM File',
+                    'The ROM file was found but appears to be corrupt or incomplete (less than 1 KB).',
+                    `File size: ${blob.size} bytes`
+                );
+                return;
+            }
             const romURL = URL.createObjectURL(blob);
             loadingScreen.style.display = 'none';
             launchEmulator(romURL, 'pokeemerald.gba (latest build)');
         } catch (e) {
-            // No pre-built ROM available — show drop zone as fallback
-            loadingScreen.style.display = 'none';
-            dropZone.style.display = 'block';
-            showStatus('No pre-built ROM found. Drop your own .gba file to play.', 'error');
+            if (romLoadAttempts < MAX_ROM_RETRIES) {
+                const delay = Math.pow(2, romLoadAttempts) * 1000;
+                loadingScreen.querySelector('h2').textContent = `Retrying... (attempt ${romLoadAttempts + 1}/${MAX_ROM_RETRIES})`;
+                await new Promise(r => setTimeout(r, delay));
+                await autoLoadROM();
+            } else {
+                showError(
+                    'Failed to Load ROM',
+                    'Could not fetch the ROM after multiple attempts. This may be a network issue.',
+                    e.message
+                );
+            }
         }
-    })();
+    }
+
+    // Try to auto-load the latest ROM built by CI
+    autoLoadROM();
 
     // Drop zone as fallback for custom ROMs
     dropZone.addEventListener('click', () => fileInput.click());
