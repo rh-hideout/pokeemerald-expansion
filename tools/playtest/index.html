@@ -33,11 +33,28 @@
             align-items: center;
             gap: 1.5rem;
         }
+        #loading-screen {
+            width: 100%;
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+        #loading-screen h2 { font-size: 1.2rem; margin-bottom: 1rem; }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #0f3460;
+            border-top-color: #e94560;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        #loading-screen p { font-size: 0.85rem; color: #888; }
         .drop-zone {
             width: 100%;
             border: 2px dashed #0f3460;
             border-radius: 12px;
-            padding: 3rem 2rem;
+            padding: 2rem;
             text-align: center;
             cursor: pointer;
             transition: all 0.2s;
@@ -47,8 +64,8 @@
             border-color: #e94560;
             background: #1a1a3e;
         }
-        .drop-zone h2 { font-size: 1.2rem; margin-bottom: 0.5rem; }
-        .drop-zone p { font-size: 0.85rem; color: #888; }
+        .drop-zone h2 { font-size: 1.1rem; margin-bottom: 0.3rem; }
+        .drop-zone p { font-size: 0.8rem; color: #888; }
         .drop-zone input { display: none; }
         #emulator-area {
             display: none;
@@ -101,70 +118,6 @@
             font-family: monospace;
             font-size: 0.8rem;
         }
-        .how-it-works {
-            width: 100%;
-            background: #16213e;
-            border-radius: 8px;
-            padding: 1rem;
-            font-size: 0.85rem;
-        }
-        .how-it-works h3 { font-size: 0.95rem; margin-bottom: 0.5rem; color: #e94560; }
-        .steps {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-        .step {
-            flex: 1;
-            min-width: 150px;
-            background: #1a1a2e;
-            padding: 0.75rem;
-            border-radius: 6px;
-            text-align: center;
-        }
-        .step-num {
-            display: inline-block;
-            background: #e94560;
-            color: white;
-            width: 1.5rem;
-            height: 1.5rem;
-            line-height: 1.5rem;
-            border-radius: 50%;
-            font-size: 0.8rem;
-            font-weight: bold;
-            margin-bottom: 0.4rem;
-        }
-        .step p { font-size: 0.8rem; color: #ccc; }
-        .rom-source {
-            width: 100%;
-            background: #16213e;
-            border-radius: 8px;
-            padding: 1rem;
-            font-size: 0.85rem;
-        }
-        .rom-source h3 { font-size: 0.95rem; margin-bottom: 0.5rem; color: #e94560; }
-        .rom-source > p { color: #aaa; margin-bottom: 0.75rem; }
-        .source-options {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.75rem;
-        }
-        @media (max-width: 640px) {
-            .source-options { grid-template-columns: 1fr; }
-        }
-        .source-option {
-            background: #1a1a2e;
-            padding: 0.75rem;
-            border-radius: 6px;
-        }
-        .source-option strong { color: #e94560; display: block; margin-bottom: 0.3rem; }
-        .source-option p { color: #aaa; font-size: 0.8rem; margin: 0; }
-        .source-option code {
-            background: #0f3460;
-            padding: 0.1rem 0.3rem;
-            border-radius: 3px;
-            font-size: 0.8rem;
-        }
         .privacy-note {
             font-size: 0.75rem;
             color: #666;
@@ -180,42 +133,15 @@
     </header>
 
     <div class="container">
-        <div class="how-it-works" id="how-it-works">
-            <h3>How it works</h3>
-            <div class="steps">
-                <div class="step">
-                    <div class="step-num">1</div>
-                    <p>Download the ROM from your repo's <strong>Actions</strong> tab (or get it from the developer)</p>
-                </div>
-                <div class="step">
-                    <div class="step-num">2</div>
-                    <p>Drop the <strong>.gba</strong> file below</p>
-                </div>
-                <div class="step">
-                    <div class="step-num">3</div>
-                    <p>Play and test directly in your browser</p>
-                </div>
-            </div>
+        <div id="loading-screen">
+            <div class="spinner"></div>
+            <h2>Loading latest build...</h2>
+            <p>Fetching the ROM built from the latest push to master</p>
         </div>
 
-        <div class="rom-source" id="rom-source">
-            <h3>Get the ROM</h3>
-            <p>Every push to the repo automatically builds a ROM. Download it from:</p>
-            <div class="source-options">
-                <div class="source-option">
-                    <strong>GitHub Actions</strong>
-                    <p>Go to your repo &rarr; Actions tab &rarr; latest passing build &rarr; download <code>pokeemerald-debug</code> artifact</p>
-                </div>
-                <div class="source-option">
-                    <strong>Direct link</strong>
-                    <p>Or have the developer share a direct link to the artifact or the .gba file</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="drop-zone" id="drop-zone">
-            <h2>Drop your .gba ROM here</h2>
-            <p>or click to browse</p>
+        <div class="drop-zone" id="drop-zone" style="display:none;">
+            <h2>Or drop a custom .gba ROM here</h2>
+            <p>Click to browse or drag and drop a .gba file to test a specific build</p>
             <input type="file" id="file-input" accept=".gba,.GBA">
         </div>
 
@@ -261,9 +187,28 @@
     <script>
     const dropZone = document.getElementById('drop-zone');
     const fileInput = document.getElementById('file-input');
-    const gameDiv = document.getElementById('game');
+    const loadingScreen = document.getElementById('loading-screen');
     let emulatorLoaded = false;
 
+    // Try to auto-load the latest ROM built by CI
+    (async function autoLoadROM() {
+        try {
+            const resp = await fetch('rom.gba');
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+            const blob = await resp.blob();
+            if (blob.size < 1024) throw new Error('ROM too small');
+            const romURL = URL.createObjectURL(blob);
+            loadingScreen.style.display = 'none';
+            launchEmulator(romURL, 'pokeemerald.gba (latest build)');
+        } catch (e) {
+            // No pre-built ROM available — show drop zone as fallback
+            loadingScreen.style.display = 'none';
+            dropZone.style.display = 'block';
+            showStatus('No pre-built ROM found. Drop your own .gba file to play.', 'error');
+        }
+    })();
+
+    // Drop zone as fallback for custom ROMs
     dropZone.addEventListener('click', () => fileInput.click());
     dropZone.addEventListener('dragover', (e) => {
         e.preventDefault();
@@ -291,7 +236,6 @@
             showStatus('Please select a .gba file', 'error');
             return;
         }
-
         const sizeMB = (file.size / 1024 / 1024).toFixed(1);
         showStatus(`Loading ${file.name} (${sizeMB} MB)...`);
 
@@ -306,8 +250,7 @@
 
     function launchEmulator(romURL, fileName) {
         dropZone.style.display = 'none';
-        document.getElementById('how-it-works').style.display = 'none';
-        document.getElementById('rom-source').style.display = 'none';
+        loadingScreen.style.display = 'none';
         document.getElementById('emulator-area').style.display = 'block';
         showStatus(`Playing: ${fileName}`, 'loaded');
 
@@ -329,7 +272,6 @@
             script.onerror = () => {
                 showStatus('Failed to load emulator. Check your internet connection and try again.', 'error');
                 dropZone.style.display = 'block';
-                document.getElementById('how-it-works').style.display = 'block';
                 document.getElementById('emulator-area').style.display = 'none';
             };
             document.body.appendChild(script);
