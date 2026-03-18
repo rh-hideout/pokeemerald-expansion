@@ -11,6 +11,7 @@ on:
       - 'data/tilesets/**'
       - 'data/maps/**'
       - 'tools/generate_map_previews.py'
+      - 'tools/playtest/**'
       - '.github/workflows/docs.yml'
 
 # Allow only one concurrent deployment
@@ -56,13 +57,15 @@ jobs:
 
       - name: Assemble Pages output
         run: |
-          mkdir -p _site/docs _site/previews
+          mkdir -p _site/docs _site/previews _site/playtest
           # Editor app at the root
           cp editor/index.html editor/app.js editor/style.css _site/
           # Map preview images
           cp editor/previews/*.png _site/previews/
           # mdbook docs under /docs/
           cp -r docs/book/* _site/docs/
+          # Playtest page at /playtest/
+          cp tools/playtest/index.html _site/playtest/
           touch _site/.nojekyll
 
       - name: Setup Pages

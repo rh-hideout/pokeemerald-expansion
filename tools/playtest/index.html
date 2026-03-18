@@ -25,7 +25,7 @@
         header h1 { font-size: 1.4rem; color: #e94560; }
         header p { font-size: 0.85rem; color: #888; margin-top: 0.25rem; }
         .container {
-            max-width: 900px;
+            max-width: 960px;
             width: 100%;
             padding: 2rem;
             display: flex;
@@ -50,49 +50,16 @@
         .drop-zone h2 { font-size: 1.2rem; margin-bottom: 0.5rem; }
         .drop-zone p { font-size: 0.85rem; color: #888; }
         .drop-zone input { display: none; }
-        #emulator-container {
+        #emulator-area {
             display: none;
             width: 100%;
             text-align: center;
         }
-        #emulator-canvas {
-            image-rendering: pixelated;
-            border: 3px solid #0f3460;
-            border-radius: 8px;
-            background: #000;
-        }
-        .controls {
-            display: none;
+        #game {
             width: 100%;
-            background: #16213e;
-            border-radius: 8px;
-            padding: 1rem;
+            max-width: 720px;
+            aspect-ratio: 3/2;
         }
-        .controls h3 { font-size: 0.95rem; margin-bottom: 0.75rem; color: #e94560; }
-        .key-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 0.4rem;
-            font-size: 0.8rem;
-        }
-        .key-grid span { background: #1a1a2e; padding: 0.3rem 0.6rem; border-radius: 4px; }
-        kbd {
-            background: #0f3460;
-            padding: 0.1rem 0.4rem;
-            border-radius: 3px;
-            font-family: monospace;
-        }
-        .debug-info {
-            width: 100%;
-            background: #16213e;
-            border-radius: 8px;
-            padding: 1rem;
-            font-size: 0.85rem;
-        }
-        .debug-info h3 { font-size: 0.95rem; margin-bottom: 0.5rem; color: #e94560; }
-        .debug-info ul { list-style: none; padding: 0; }
-        .debug-info li { padding: 0.2rem 0; }
-        .debug-info li::before { content: "→ "; color: #e94560; }
         .status {
             font-size: 0.85rem;
             padding: 0.5rem 1rem;
@@ -100,110 +67,157 @@
             background: #0f3460;
         }
         .status.loaded { background: #1b4332; color: #95d5b2; }
-        .toolbar {
-            display: none;
-            gap: 0.5rem;
+        .status.error { background: #4a1525; color: #f5a5a5; }
+        .info-panels {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        @media (max-width: 640px) {
+            .info-panels { grid-template-columns: 1fr; }
+        }
+        .panel {
+            background: #16213e;
+            border-radius: 8px;
+            padding: 1rem;
+            font-size: 0.85rem;
+        }
+        .panel h3 { font-size: 0.95rem; margin-bottom: 0.5rem; color: #e94560; }
+        .panel ul { list-style: none; padding: 0; }
+        .panel li { padding: 0.2rem 0; }
+        .panel li::before { content: "\2192 "; color: #e94560; }
+        .key-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.3rem;
+            font-size: 0.8rem;
+        }
+        .key-grid span { background: #1a1a2e; padding: 0.25rem 0.5rem; border-radius: 4px; }
+        kbd {
+            background: #0f3460;
+            padding: 0.1rem 0.35rem;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 0.8rem;
+        }
+        .how-it-works {
+            width: 100%;
+            background: #16213e;
+            border-radius: 8px;
+            padding: 1rem;
+            font-size: 0.85rem;
+        }
+        .how-it-works h3 { font-size: 0.95rem; margin-bottom: 0.5rem; color: #e94560; }
+        .steps {
+            display: flex;
+            gap: 1rem;
             flex-wrap: wrap;
         }
-        .toolbar button {
-            background: #0f3460;
-            color: #e0e0e0;
-            border: none;
-            padding: 0.5rem 1rem;
+        .step {
+            flex: 1;
+            min-width: 150px;
+            background: #1a1a2e;
+            padding: 0.75rem;
             border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: background 0.2s;
+            text-align: center;
         }
-        .toolbar button:hover { background: #e94560; }
-        .scale-controls { display: flex; gap: 0.25rem; align-items: center; font-size: 0.85rem; }
+        .step-num {
+            display: inline-block;
+            background: #e94560;
+            color: white;
+            width: 1.5rem;
+            height: 1.5rem;
+            line-height: 1.5rem;
+            border-radius: 50%;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 0.4rem;
+        }
+        .step p { font-size: 0.8rem; color: #ccc; }
+        .privacy-note {
+            font-size: 0.75rem;
+            color: #666;
+            text-align: center;
+            padding: 0.5rem;
+        }
     </style>
 </head>
 <body>
     <header>
         <h1>pokeemerald-expansion Playtest</h1>
-        <p>Browser-based ROM testing &mdash; no install required</p>
+        <p>Test your ROM hack in the browser &mdash; no install, no setup</p>
     </header>
 
     <div class="container">
+        <div class="how-it-works" id="how-it-works">
+            <h3>How it works</h3>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <p>Developer sends you a <strong>.gba</strong> ROM file</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <p>Drop it on this page</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <p>Play and test directly in your browser</p>
+                </div>
+            </div>
+        </div>
+
         <div class="drop-zone" id="drop-zone">
             <h2>Drop your .gba ROM here</h2>
-            <p>or click to browse &mdash; expects pokeemerald.gba from your build</p>
+            <p>or click to browse</p>
             <input type="file" id="file-input" accept=".gba,.GBA">
         </div>
 
         <div id="status" class="status" style="display:none;"></div>
 
-        <div class="toolbar" id="toolbar">
-            <button onclick="resetEmulator()">Reset</button>
-            <button onclick="togglePause()">Pause / Resume</button>
-            <div class="scale-controls">
-                Scale:
-                <button onclick="setScale(1)">1x</button>
-                <button onclick="setScale(2)">2x</button>
-                <button onclick="setScale(3)">3x</button>
-                <button onclick="setScale(4)">4x</button>
+        <div id="emulator-area">
+            <div id="game"></div>
+        </div>
+
+        <div class="info-panels">
+            <div class="panel">
+                <h3>Keyboard Controls</h3>
+                <div class="key-grid">
+                    <span><kbd>&uarr;&darr;&larr;&rarr;</kbd> D-Pad</span>
+                    <span><kbd>Z</kbd> A Button</span>
+                    <span><kbd>X</kbd> B Button</span>
+                    <span><kbd>A</kbd> L Bumper</span>
+                    <span><kbd>S</kbd> R Bumper</span>
+                    <span><kbd>Enter</kbd> Start</span>
+                    <span><kbd>Backspace</kbd> Select</span>
+                    <span><kbd>Shift</kbd> Fast Forward</span>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>Debug Menu Quick Reference</h3>
+                <ul>
+                    <li><strong>Overworld Debug:</strong> Hold <kbd>S</kbd> + press <kbd>Enter</kbd></li>
+                    <li><strong>Battle Debug:</strong> Press <kbd>Backspace</kbd> during battle</li>
+                    <li><strong>Sprite Viewer:</strong> <kbd>Backspace</kbd> in summary screen</li>
+                    <li><strong>Warp:</strong> Debug &rarr; Utilities &rarr; Fly/Warp</li>
+                    <li><strong>Give Pokemon:</strong> Debug &rarr; Give &rarr; Pokemon</li>
+                    <li><strong>Heal:</strong> Debug &rarr; Party &rarr; Heal party</li>
+                </ul>
             </div>
         </div>
 
-        <div id="emulator-container">
-            <canvas id="emulator-canvas" width="480" height="320"></canvas>
-        </div>
-
-        <div class="controls" id="controls">
-            <h3>Keyboard Controls</h3>
-            <div class="key-grid">
-                <span><kbd>Arrow Keys</kbd> D-Pad</span>
-                <span><kbd>Z</kbd> A Button</span>
-                <span><kbd>X</kbd> B Button</span>
-                <span><kbd>A</kbd> L Bumper</span>
-                <span><kbd>S</kbd> R Bumper</span>
-                <span><kbd>Enter</kbd> Start</span>
-                <span><kbd>Backspace</kbd> Select</span>
-                <span><kbd>Shift</kbd> Speed Up</span>
-            </div>
-        </div>
-
-        <div class="debug-info">
-            <h3>Debug Menu Quick Reference</h3>
-            <ul>
-                <li><strong>Overworld Debug:</strong> Hold <kbd>R</kbd> (<kbd>S</kbd> key) + press <kbd>Start</kbd> (<kbd>Enter</kbd> key)</li>
-                <li><strong>Battle Debug:</strong> Press <kbd>Select</kbd> (<kbd>Backspace</kbd> key) during battle</li>
-                <li><strong>Sprite Viewer:</strong> Press <kbd>Select</kbd> (<kbd>Backspace</kbd> key) in summary screen</li>
-                <li><strong>Warp anywhere:</strong> Overworld Debug → Utilities → Fly to map / Warp to map</li>
-                <li><strong>Get any Pokemon:</strong> Overworld Debug → Give → Pokemon</li>
-                <li><strong>Heal party:</strong> Overworld Debug → Party → Heal party</li>
-                <li><strong>Set flags/badges:</strong> Overworld Debug → Flags</li>
-            </ul>
-        </div>
+        <p class="privacy-note">
+            Your ROM never leaves your device. Everything runs locally in the browser.
+        </p>
     </div>
 
     <script>
-    // Minimal GBA emulator using IodineGBA (public domain GBA emulator in JS)
-    // Falls back to file-load-only mode if no emulator core is available.
-
-    let gbaInstance = null;
-    let audioCtx = null;
-    let paused = false;
-    let currentScale = 2;
-    const GBA_WIDTH = 240;
-    const GBA_HEIGHT = 160;
-    const canvas = document.getElementById('emulator-canvas');
-    const ctx = canvas.getContext('2d');
-
-    // Set initial canvas size
-    setScale(2);
-
-    function setScale(s) {
-        currentScale = s;
-        canvas.width = GBA_WIDTH * s;
-        canvas.height = GBA_HEIGHT * s;
-        ctx.imageSmoothingEnabled = false;
-    }
-
-    // Drop zone handling
     const dropZone = document.getElementById('drop-zone');
     const fileInput = document.getElementById('file-input');
+    const gameDiv = document.getElementById('game');
+    let emulatorLoaded = false;
 
     dropZone.addEventListener('click', () => fileInput.click());
     dropZone.addEventListener('dragover', (e) => {
@@ -214,198 +228,68 @@
     dropZone.addEventListener('drop', (e) => {
         e.preventDefault();
         dropZone.classList.remove('drag-over');
-        if (e.dataTransfer.files.length > 0) loadROM(e.dataTransfer.files[0]);
+        if (e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]);
     });
     fileInput.addEventListener('change', (e) => {
-        if (e.target.files.length > 0) loadROM(e.target.files[0]);
+        if (e.target.files.length > 0) handleFile(e.target.files[0]);
     });
 
-    function showStatus(msg, isLoaded) {
+    function showStatus(msg, type) {
         const el = document.getElementById('status');
         el.textContent = msg;
         el.style.display = 'block';
-        el.className = 'status' + (isLoaded ? ' loaded' : '');
+        el.className = 'status' + (type ? ' ' + type : '');
     }
 
-    function loadROM(file) {
+    function handleFile(file) {
         if (!file.name.toLowerCase().endsWith('.gba')) {
-            showStatus('Please select a .gba file');
+            showStatus('Please select a .gba file', 'error');
             return;
         }
-        showStatus('Loading ' + file.name + ' (' + (file.size / 1024 / 1024).toFixed(1) + ' MB)...');
+
+        const sizeMB = (file.size / 1024 / 1024).toFixed(1);
+        showStatus(`Loading ${file.name} (${sizeMB} MB)...`);
 
         const reader = new FileReader();
         reader.onload = (e) => {
-            const romData = new Uint8Array(e.target.result);
-            startEmulator(romData, file.name);
+            const romBlob = new Blob([e.target.result], { type: 'application/octet-stream' });
+            const romURL = URL.createObjectURL(romBlob);
+            launchEmulator(romURL, file.name);
         };
         reader.readAsArrayBuffer(file);
     }
 
-    function startEmulator(romData, fileName) {
-        // Show UI
-        document.getElementById('emulator-container').style.display = 'block';
-        document.getElementById('controls').style.display = 'block';
-        document.getElementById('toolbar').style.display = 'flex';
+    function launchEmulator(romURL, fileName) {
         dropZone.style.display = 'none';
+        document.getElementById('how-it-works').style.display = 'none';
+        document.getElementById('emulator-area').style.display = 'block';
+        showStatus(`Playing: ${fileName}`, 'loaded');
 
-        showStatus('Running: ' + fileName, true);
+        // EmulatorJS configuration
+        // https://emulatorjs.org - open source browser emulator
+        window.EJS_player = '#game';
+        window.EJS_core = 'gba';
+        window.EJS_gameUrl = romURL;
+        window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
+        window.EJS_startOnLoaded = true;
+        window.EJS_DEBUG_XX = false;
+        window.EJS_color = '#0f3460';
+        window.EJS_backgroundColor = '#1a1a2e';
 
-        // Initialize emulator
-        if (!audioCtx) {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-
-        gbaInstance = new GBAEmulator(canvas, audioCtx);
-        gbaInstance.loadROM(romData);
-        gbaInstance.start();
-    }
-
-    function resetEmulator() {
-        if (gbaInstance) gbaInstance.reset();
-    }
-
-    function togglePause() {
-        if (!gbaInstance) return;
-        paused = !paused;
-        if (paused) gbaInstance.pause();
-        else gbaInstance.resume();
-    }
-
-    // Minimal GBA emulator core
-    // This is a lightweight wrapper - for full accuracy, loads IodineGBA from CDN
-    class GBAEmulator {
-        constructor(canvas, audioCtx) {
-            this.canvas = canvas;
-            this.ctx = canvas.getContext('2d');
-            this.audioCtx = audioCtx;
-            this.romData = null;
-            this.running = false;
-            this.frameId = null;
-            this.core = null;
-            this.imageData = null;
-        }
-
-        async loadROM(data) {
-            this.romData = data;
-
-            // Try to use IodineGBA if available
-            if (typeof GameBoyAdvanceEmulator !== 'undefined') {
-                this.core = new GameBoyAdvanceEmulator();
-                this.core.attachCanvas(this.canvas);
-                this.core.loadROM(Array.from(data));
-                return;
-            }
-
-            // Fallback: attempt to load emulator from CDN
-            try {
-                await this.loadScript('https://cdn.jsdelivr.net/gh/nicmcd/nicmcd.github.io@master/nicmcd/gba/IodineGBA-master/IodineGBA/core/GameBoyAdvanceEmulator.js');
-                if (typeof GameBoyAdvanceEmulator !== 'undefined') {
-                    this.core = new GameBoyAdvanceEmulator();
-                    this.core.attachCanvas(this.canvas);
-                    this.core.loadROM(Array.from(data));
-                    return;
-                }
-            } catch (e) {
-                console.log('CDN emulator not available, using built-in player');
-            }
-
-            // Final fallback: display ROM info
-            this.displayROMInfo(data);
-        }
-
-        loadScript(src) {
-            return new Promise((resolve, reject) => {
-                const s = document.createElement('script');
-                s.src = src;
-                s.onload = resolve;
-                s.onerror = reject;
-                document.head.appendChild(s);
-            });
-        }
-
-        displayROMInfo(data) {
-            const ctx = this.ctx;
-            const w = this.canvas.width;
-            const h = this.canvas.height;
-
-            ctx.fillStyle = '#1a1a2e';
-            ctx.fillRect(0, 0, w, h);
-
-            ctx.fillStyle = '#e94560';
-            ctx.font = `${16 * currentScale}px monospace`;
-            ctx.textAlign = 'center';
-            ctx.fillText('ROM Loaded Successfully', w/2, h * 0.3);
-
-            ctx.fillStyle = '#e0e0e0';
-            ctx.font = `${10 * currentScale}px monospace`;
-
-            // Read ROM title (offset 0xA0, 12 bytes)
-            const title = String.fromCharCode(...data.slice(0xA0, 0xAC)).replace(/\0/g, '');
-            const code = String.fromCharCode(...data.slice(0xAC, 0xB0));
-            const sizeMB = (data.length / 1024 / 1024).toFixed(1);
-
-            ctx.fillText(`Title: ${title}`, w/2, h * 0.45);
-            ctx.fillText(`Code: ${code}  Size: ${sizeMB} MB`, w/2, h * 0.55);
-
-            ctx.fillStyle = '#888';
-            ctx.font = `${9 * currentScale}px monospace`;
-            ctx.fillText('To play: open this ROM in mGBA or VBA-M', w/2, h * 0.72);
-            ctx.fillText('Or run: ./playtest.sh (auto-launches mGBA)', w/2, h * 0.82);
-        }
-
-        start() {
-            if (this.core && this.core.play) {
-                this.core.play();
-            }
-            this.running = true;
-        }
-
-        pause() {
-            if (this.core && this.core.pause) this.core.pause();
-            this.running = false;
-        }
-
-        resume() {
-            if (this.core && this.core.play) this.core.play();
-            this.running = true;
-        }
-
-        reset() {
-            if (this.core && this.core.restart) {
-                this.core.restart();
-            } else if (this.romData) {
-                this.loadROM(this.romData);
-                this.start();
-            }
+        // Load EmulatorJS
+        if (!emulatorLoaded) {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.emulatorjs.org/stable/data/loader.js';
+            script.onerror = () => {
+                showStatus('Failed to load emulator. Check your internet connection and try again.', 'error');
+                dropZone.style.display = 'block';
+                document.getElementById('how-it-works').style.display = 'block';
+                document.getElementById('emulator-area').style.display = 'none';
+            };
+            document.body.appendChild(script);
+            emulatorLoaded = true;
         }
     }
-
-    // Keyboard mapping
-    const keyMap = {
-        'ArrowUp': 'up', 'ArrowDown': 'down', 'ArrowLeft': 'left', 'ArrowRight': 'right',
-        'z': 'A', 'Z': 'A',
-        'x': 'B', 'X': 'B',
-        'a': 'L', 'A': 'L',
-        's': 'R', 'S': 'R',
-        'Enter': 'start',
-        'Backspace': 'select',
-        'Shift': 'speedup'
-    };
-
-    document.addEventListener('keydown', (e) => {
-        if (keyMap[e.key] && gbaInstance && gbaInstance.core) {
-            e.preventDefault();
-            if (gbaInstance.core.keyDown) gbaInstance.core.keyDown(keyMap[e.key]);
-        }
-    });
-
-    document.addEventListener('keyup', (e) => {
-        if (keyMap[e.key] && gbaInstance && gbaInstance.core) {
-            e.preventDefault();
-            if (gbaInstance.core.keyUp) gbaInstance.core.keyUp(keyMap[e.key]);
-        }
-    });
     </script>
 </body>
 </html>
