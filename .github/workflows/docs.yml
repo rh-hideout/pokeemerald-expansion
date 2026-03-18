@@ -11,7 +11,13 @@ on:
       - 'data/tilesets/**'
       - 'data/maps/**'
       - 'tools/generate_map_previews.py'
+      - 'tools/playtest/**'
       - '.github/workflows/docs.yml'
+  # Rebuild playtest ROM when source changes
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches: [master]
 
 # Allow only one concurrent deployment
 concurrency:
@@ -30,6 +36,17 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install ARM toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi libpng-dev
+
+      - name: Build playtest ROM
+        env:
+          GAME_VERSION: EMERALD
+          COMPARE: 0
+        run: make -j$(nproc) -O all
 
       - name: Install latest mdbook
         run: |
@@ -56,13 +73,16 @@ jobs:
 
       - name: Assemble Pages output
         run: |
-          mkdir -p _site/docs _site/previews
+          mkdir -p _site/docs _site/previews _site/playtest
           # Editor app at the root
           cp editor/index.html editor/app.js editor/style.css _site/
           # Map preview images
           cp editor/previews/*.png _site/previews/
           # mdbook docs under /docs/
           cp -r docs/book/* _site/docs/
+          # Playtest page + ROM at /playtest/
+          cp tools/playtest/index.html _site/playtest/
+          cp pokeemerald.gba _site/playtest/rom.gba
           touch _site/.nojekyll
 
       - name: Setup Pages

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pokeemerald-expansion Playtest</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: #16213e;
+            border-bottom: 2px solid #0f3460;
+            text-align: center;
+        }
+        header h1 { font-size: 1.4rem; color: #e94560; }
+        header p { font-size: 0.85rem; color: #888; margin-top: 0.25rem; }
+        .container {
+            max-width: 960px;
+            width: 100%;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        #loading-screen {
+            width: 100%;
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+        #loading-screen h2 { font-size: 1.2rem; margin-bottom: 1rem; }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #0f3460;
+            border-top-color: #e94560;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        #loading-screen p { font-size: 0.85rem; color: #888; }
+        .drop-zone {
+            width: 100%;
+            border: 2px dashed #0f3460;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #16213e;
+        }
+        .drop-zone:hover, .drop-zone.drag-over {
+            border-color: #e94560;
+            background: #1a1a3e;
+        }
+        .drop-zone h2 { font-size: 1.1rem; margin-bottom: 0.3rem; }
+        .drop-zone p { font-size: 0.8rem; color: #888; }
+        .drop-zone input { display: none; }
+        #emulator-area {
+            display: none;
+            width: 100%;
+            text-align: center;
+        }
+        #game {
+            width: 100%;
+            max-width: 720px;
+            aspect-ratio: 3/2;
+        }
+        .status {
+            font-size: 0.85rem;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            background: #0f3460;
+        }
+        .status.loaded { background: #1b4332; color: #95d5b2; }
+        .status.error { background: #4a1525; color: #f5a5a5; }
+        .info-panels {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        @media (max-width: 640px) {
+            .info-panels { grid-template-columns: 1fr; }
+        }
+        .panel {
+            background: #16213e;
+            border-radius: 8px;
+            padding: 1rem;
+            font-size: 0.85rem;
+        }
+        .panel h3 { font-size: 0.95rem; margin-bottom: 0.5rem; color: #e94560; }
+        .panel ul { list-style: none; padding: 0; }
+        .panel li { padding: 0.2rem 0; }
+        .panel li::before { content: "\2192 "; color: #e94560; }
+        .key-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.3rem;
+            font-size: 0.8rem;
+        }
+        .key-grid span { background: #1a1a2e; padding: 0.25rem 0.5rem; border-radius: 4px; }
+        kbd {
+            background: #0f3460;
+            padding: 0.1rem 0.35rem;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 0.8rem;
+        }
+        .privacy-note {
+            font-size: 0.75rem;
+            color: #666;
+            text-align: center;
+            padding: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>pokeemerald-expansion Playtest</h1>
+        <p>Test your ROM hack in the browser &mdash; no install, no setup</p>
+    </header>
+
+    <div class="container">
+        <div id="loading-screen">
+            <div class="spinner"></div>
+            <h2>Loading latest build...</h2>
+            <p>Fetching the ROM built from the latest push to master</p>
+        </div>
+
+        <div class="drop-zone" id="drop-zone" style="display:none;">
+            <h2>Or drop a custom .gba ROM here</h2>
+            <p>Click to browse or drag and drop a .gba file to test a specific build</p>
+            <input type="file" id="file-input" accept=".gba,.GBA">
+        </div>
+
+        <div id="status" class="status" style="display:none;"></div>
+
+        <div id="emulator-area">
+            <div id="game"></div>
+        </div>
+
+        <div class="info-panels">
+            <div class="panel">
+                <h3>Keyboard Controls</h3>
+                <div class="key-grid">
+                    <span><kbd>&uarr;&darr;&larr;&rarr;</kbd> D-Pad</span>
+                    <span><kbd>Z</kbd> A Button</span>
+                    <span><kbd>X</kbd> B Button</span>
+                    <span><kbd>A</kbd> L Bumper</span>
+                    <span><kbd>S</kbd> R Bumper</span>
+                    <span><kbd>Enter</kbd> Start</span>
+                    <span><kbd>Backspace</kbd> Select</span>
+                    <span><kbd>Shift</kbd> Fast Forward</span>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>Debug Menu Quick Reference</h3>
+                <ul>
+                    <li><strong>Overworld Debug:</strong> Hold <kbd>S</kbd> + press <kbd>Enter</kbd></li>
+                    <li><strong>Battle Debug:</strong> Press <kbd>Backspace</kbd> during battle</li>
+                    <li><strong>Sprite Viewer:</strong> <kbd>Backspace</kbd> in summary screen</li>
+                    <li><strong>Warp:</strong> Debug &rarr; Utilities &rarr; Fly/Warp</li>
+                    <li><strong>Give Pokemon:</strong> Debug &rarr; Give &rarr; Pokemon</li>
+                    <li><strong>Heal:</strong> Debug &rarr; Party &rarr; Heal party</li>
+                </ul>
+            </div>
+        </div>
+
+        <p class="privacy-note">
+            Your ROM never leaves your device. Everything runs locally in the browser.
+        </p>
+    </div>
+
+    <script>
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const loadingScreen = document.getElementById('loading-screen');
+    let emulatorLoaded = false;
+
+    // Try to auto-load the latest ROM built by CI
+    (async function autoLoadROM() {
+        try {
+            const resp = await fetch('rom.gba');
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+            const blob = await resp.blob();
+            if (blob.size < 1024) throw new Error('ROM too small');
+            const romURL = URL.createObjectURL(blob);
+            loadingScreen.style.display = 'none';
+            launchEmulator(romURL, 'pokeemerald.gba (latest build)');
+        } catch (e) {
+            // No pre-built ROM available — show drop zone as fallback
+            loadingScreen.style.display = 'none';
+            dropZone.style.display = 'block';
+            showStatus('No pre-built ROM found. Drop your own .gba file to play.', 'error');
+        }
+    })();
+
+    // Drop zone as fallback for custom ROMs
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('drag-over');
+    });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('drag-over');
+        if (e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]);
+    });
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) handleFile(e.target.files[0]);
+    });
+
+    function showStatus(msg, type) {
+        const el = document.getElementById('status');
+        el.textContent = msg;
+        el.style.display = 'block';
+        el.className = 'status' + (type ? ' ' + type : '');
+    }
+
+    function handleFile(file) {
+        if (!file.name.toLowerCase().endsWith('.gba')) {
+            showStatus('Please select a .gba file', 'error');
+            return;
+        }
+        const sizeMB = (file.size / 1024 / 1024).toFixed(1);
+        showStatus(`Loading ${file.name} (${sizeMB} MB)...`);
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const romBlob = new Blob([e.target.result], { type: 'application/octet-stream' });
+            const romURL = URL.createObjectURL(romBlob);
+            launchEmulator(romURL, file.name);
+        };
+        reader.readAsArrayBuffer(file);
+    }
+
+    function launchEmulator(romURL, fileName) {
+        dropZone.style.display = 'none';
+        loadingScreen.style.display = 'none';
+        document.getElementById('emulator-area').style.display = 'block';
+        showStatus(`Playing: ${fileName}`, 'loaded');
+
+        // EmulatorJS configuration
+        // https://emulatorjs.org - open source browser emulator
+        window.EJS_player = '#game';
+        window.EJS_core = 'gba';
+        window.EJS_gameUrl = romURL;
+        window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
+        window.EJS_startOnLoaded = true;
+        window.EJS_DEBUG_XX = false;
+        window.EJS_color = '#0f3460';
+        window.EJS_backgroundColor = '#1a1a2e';
+
+        // Load EmulatorJS
+        if (!emulatorLoaded) {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.emulatorjs.org/stable/data/loader.js';
+            script.onerror = () => {
+                showStatus('Failed to load emulator. Check your internet connection and try again.', 'error');
+                dropZone.style.display = 'block';
+                document.getElementById('emulator-area').style.display = 'none';
+            };
+            document.body.appendChild(script);
+            emulatorLoaded = true;
+        }
+    }
+    </script>
+</body>
+</html>

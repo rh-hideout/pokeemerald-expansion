@@ -70,6 +70,13 @@ jobs:
           GAME_VERSION: EMERALD
         run: make -j$(nproc) -O all
 
+      - name: Upload debug ROM
+        uses: actions/upload-artifact@v4
+        with:
+          name: pokeemerald-debug
+          path: pokeemerald.gba
+          retention-days: 30
+
       - name: Clean build objects
         run: rm -rf build/emerald
 
@@ -77,6 +84,13 @@ jobs:
         env:
           GAME_VERSION: EMERALD
         run: make -j$(nproc) release
+
+      - name: Upload release ROM
+        uses: actions/upload-artifact@v4
+        with:
+          name: pokeemerald-release
+          path: pokeemerald.gba
+          retention-days: 30
 
   test:
     if: github.actor != 'allcontributors[bot]'
