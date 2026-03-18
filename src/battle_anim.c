@@ -119,7 +119,7 @@ EWRAM_DATA static u8 sAnimBackgroundFadeState = 0;
 EWRAM_DATA u16 gAnimMoveIndex = 0;
 EWRAM_DATA enum BattlerId gBattleAnimAttacker = 0;
 EWRAM_DATA enum BattlerId gBattleAnimTarget = 0;
-EWRAM_DATA u16 gAnimBattlerSpecies[MAX_BATTLERS_COUNT] = {0};
+EWRAM_DATA enum Species gAnimBattlerSpecies[MAX_BATTLERS_COUNT] = {SPECIES_NONE};
 EWRAM_DATA u8 gAnimCustomPanning = 0;
 EWRAM_DATA static bool8 sAnimHideHpBoxes = FALSE;
 

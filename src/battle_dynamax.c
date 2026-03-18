@@ -26,7 +26,7 @@ static enum MaxPowerTier GetMaxPowerTier(enum Move move);
 
 struct GMaxMove
 {
-    u16 species;
+    enum Species species;
     enum Type moveType;
     u16 gmaxMove;
 };
@@ -72,7 +72,7 @@ static const struct GMaxMove sGMaxMoveTable[] =
 // Returns whether a battler can Dynamax.
 bool32 CanDynamax(enum BattlerId battler)
 {
-    u16 species = GetBattlerVisualSpecies(battler);
+    enum Species species = GetBattlerVisualSpecies(battler);
     enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
 
     // Prevents Zigzagoon from dynamaxing in vanilla.
@@ -244,8 +244,8 @@ static enum Move GetTypeBasedMaxMove(enum BattlerId battler, enum Type type)
 {
     // Gigantamax check
     u32 i;
-    u32 species = gBattleMons[battler].species;
-    u32 targetSpecies = species;
+    enum Species species = gBattleMons[battler].species;
+    enum Species targetSpecies = species;
     enum Ability ability = GetBattlerAbility(battler);
 
     if (!gSpeciesInfo[species].isGigantamax)

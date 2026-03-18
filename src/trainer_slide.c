@@ -110,7 +110,7 @@ static u32 GetPartyMonCount(u32 firstId, u32 lastId, enum BattleSide side, bool3
     {
         for (u32 i = firstId; i < lastId; i++)
         {
-            u32 species = GetMonData(&party[sMultiBattleOrder[i]], MON_DATA_SPECIES_OR_EGG);
+            enum Species species = GetMonData(&party[sMultiBattleOrder[i]], MON_DATA_SPECIES_OR_EGG);
             if (species != SPECIES_NONE
                     && species != SPECIES_EGG
                     && (!onlyAlive || GetMonData(&party[sMultiBattleOrder[i]], MON_DATA_HP)))
@@ -123,7 +123,7 @@ static u32 GetPartyMonCount(u32 firstId, u32 lastId, enum BattleSide side, bool3
     {
         for (u32 i = firstId; i < lastId; i++)
         {
-            u32 species = GetMonData(&party[i], MON_DATA_SPECIES_OR_EGG);
+            enum Species species = GetMonData(&party[i], MON_DATA_SPECIES_OR_EGG);
             if (species != SPECIES_NONE
                     && species != SPECIES_EGG
                     && (!onlyAlive || GetMonData(&party[i], MON_DATA_HP)))
