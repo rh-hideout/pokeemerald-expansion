@@ -1477,6 +1477,10 @@ function getPreviewUrl(dirName) {
     return `previews/${encodeURIComponent(dirName)}.png`;
 }
 
+function getFullPreviewUrl(dirName) {
+    return `previews/full/${encodeURIComponent(dirName)}.png`;
+}
+
 function getMapDisplayName(m) {
     return (m._dirName || m.name || '').replace(/([A-Z])/g, ' $1').trim().replace(/_/g, ' ');
 }
@@ -1683,6 +1687,9 @@ async function renderMapDetail(dirName) {
 
     const sections = $('#map-area-sections');
 
+    // ── Section 0: Map Preview Image ──
+    sections.innerHTML += buildMapPreviewSection(map);
+
     // ── Section 1: Wild Encounters ──
     sections.innerHTML += buildEncounterSection(enc, encounterRates, map);
 
@@ -1707,6 +1714,31 @@ async function renderMapDetail(dirName) {
             if (arrow) arrow.textContent = body.classList.contains('collapsed') ? '&#9654;' : '&#9660;';
         });
     });
+}
+
+// ── Map Preview Section ──
+function buildMapPreviewSection(map) {
+    const fullUrl = getFullPreviewUrl(map._dirName);
+    const thumbUrl = getPreviewUrl(map._dirName);
+    return `
+        <div class="map-area-section">
+            <div class="map-area-section-header">
+                <h2><span class="section-icon">&#128506;</span> Map Preview</h2>
+                <span class="toggle-arrow">&#9660;</span>
+            </div>
+            <div class="map-area-section-body" style="text-align:center;padding:16px">
+                <img
+                    src="${fullUrl}"
+                    onerror="this.src='${thumbUrl}'; this.onerror=null;"
+                    alt="Map preview of ${escAttr(getMapDisplayName(map))}"
+                    style="max-width:100%;height:auto;image-rendering:pixelated;border-radius:6px;border:1px solid var(--border);background:var(--bg)"
+                >
+                <div style="margin-top:8px;font-size:11px;color:var(--text-dim)">
+                    Full-size map image (pixel-accurate rendering from tileset data)
+                </div>
+            </div>
+        </div>
+    `;
 }
 
 // ── Wild Encounters Section ──
@@ -1785,6 +1817,9 @@ function buildTrainerSection(trainers, map) {
         body = trainers.map((t, i) => {
             const scriptName = (t.script || '').replace(/_EventScript_/g, ' - ').replace(/_/g, ' ');
             const gfx = (t.graphics_id || '').replace('OBJ_EVENT_GFX_', '').replace(/_/g, ' ');
+            // Try to extract trainer ID from script name for party editing
+            const trainerIdMatch = (t.script || '').match(/(\w+)_EventScript/);
+            const possibleTrainerId = trainerIdMatch ? `TRAINER_${trainerIdMatch[1].toUpperCase()}` : '';
             return `
                 <div class="area-trainer-row">
                     <div class="area-trainer-icon">&#9876;</div>
@@ -1792,11 +1827,15 @@ function buildTrainerSection(trainers, map) {
                         <div class="area-trainer-name">${escHtml(scriptName || 'Trainer #' + (i + 1))}</div>
                         <div class="area-trainer-detail">${escHtml(gfx)} &middot; Sight: ${t.trainer_sight_or_berry_tree_id || '0'} &middot; (${t.x}, ${t.y})</div>
                     </div>
-                    <button class="btn btn-sm" onclick="editMapTrainer('${escAttr(map._dirName)}', ${i})">Edit</button>
+                    <div style="display:flex;gap:6px">
+                        <button class="btn btn-sm" onclick="editMapTrainer('${escAttr(map._dirName)}', ${i})">Edit Event</button>
+                        <button class="btn btn-sm" onclick="editTrainerPartyFromMap('${escAttr(map._dirName)}', ${i})" title="Edit trainer party data">Edit Party</button>
+                    </div>
                 </div>
             `;
         }).join('');
     }
+    body += `<div style="text-align:right;margin-top:12px"><button class="btn btn-sm btn-primary" onclick="addMapTrainer('${escAttr(map._dirName)}')">+ Add Trainer</button></div>`;
 
     return `
         <div class="map-area-section">
@@ -2132,6 +2171,282 @@ function editMapTrainer(dirName, trainerIdx) {
         toast('Trainer event updated (pending PR submission)');
         overlay.remove();
         renderMapDetail(dirName);
+    });
+}
+
+// ── Add Trainer to Map ──
+function addMapTrainer(dirName) {
+    const map = state.maps.find(m => m._dirName === dirName);
+    if (!map) return;
+    if (!map.object_events) map.object_events = [];
+
+    const newTrainer = {
+        graphics_id: 'OBJ_EVENT_GFX_YOUNGSTER',
+        x: 0,
+        y: 0,
+        elevation: 3,
+        movement_type: 'MOVEMENT_TYPE_FACE_DOWN',
+        movement_range_x: 0,
+        movement_range_y: 0,
+        trainer_type: 'TRAINER_TYPE_NORMAL',
+        trainer_sight_or_berry_tree_id: '3',
+        script: `${dirName}_EventScript_NewTrainer`,
+        flag: '0'
+    };
+
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Add Trainer Event</h2>
+                <button class="btn btn-sm" onclick="this.closest('.modal-overlay').remove()">&#10005;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Graphics ID</label>
+                        <input type="text" id="at-gfx" value="${escAttr(newTrainer.graphics_id)}" style="font-family:monospace;font-size:12px">
+                    </div>
+                    <div class="form-group">
+                        <label>Script</label>
+                        <input type="text" id="at-script" value="${escAttr(newTrainer.script)}" style="font-family:monospace;font-size:12px">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>X</label>
+                        <input type="number" id="at-x" value="${newTrainer.x}">
+                    </div>
+                    <div class="form-group">
+                        <label>Y</label>
+                        <input type="number" id="at-y" value="${newTrainer.y}">
+                    </div>
+                    <div class="form-group">
+                        <label>Elevation</label>
+                        <input type="number" id="at-elev" value="${newTrainer.elevation}">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Movement Type</label>
+                        <input type="text" id="at-move" value="${escAttr(newTrainer.movement_type)}" style="font-family:monospace;font-size:12px">
+                    </div>
+                    <div class="form-group">
+                        <label>Trainer Sight Range</label>
+                        <input type="text" id="at-sight" value="${newTrainer.trainer_sight_or_berry_tree_id}">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Trainer Type</label>
+                        <input type="text" id="at-ttype" value="${escAttr(newTrainer.trainer_type)}" style="font-family:monospace;font-size:12px">
+                    </div>
+                    <div class="form-group">
+                        <label>Flag</label>
+                        <input type="text" id="at-flag" value="${escAttr(newTrainer.flag)}" style="font-family:monospace;font-size:12px">
+                    </div>
+                </div>
+                <div style="margin-top:16px;padding:12px;background:var(--bg);border-radius:6px;border:1px solid var(--border)">
+                    <div style="font-size:12px;color:var(--text-dim);margin-bottom:8px">Also create trainer party data?</div>
+                    <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer">
+                        <input type="checkbox" id="at-create-party" checked> Create matching trainer party entry
+                    </label>
+                    <div class="form-row" style="margin-top:8px">
+                        <div class="form-group">
+                            <label>Trainer ID</label>
+                            <input type="text" id="at-trainer-id" value="" placeholder="TRAINER_NEW_TRAINER" style="font-family:monospace;font-size:12px">
+                        </div>
+                        <div class="form-group">
+                            <label>Trainer Name</label>
+                            <input type="text" id="at-trainer-name" value="" placeholder="NEW TRAINER">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Class</label>
+                            <input type="text" id="at-trainer-class" value="Youngster" placeholder="e.g. Youngster, Hiker">
+                        </div>
+                        <div class="form-group">
+                            <label>Pic</label>
+                            <input type="text" id="at-trainer-pic" value="Youngster" placeholder="e.g. Youngster">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+                <button class="btn btn-primary" id="add-trainer-btn">Add Trainer</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+
+    $('#add-trainer-btn').addEventListener('click', async () => {
+        const evt = {
+            graphics_id: $('#at-gfx').value,
+            x: parseInt($('#at-x').value),
+            y: parseInt($('#at-y').value),
+            elevation: parseInt($('#at-elev').value),
+            movement_type: $('#at-move').value,
+            movement_range_x: 0,
+            movement_range_y: 0,
+            trainer_type: $('#at-ttype').value,
+            trainer_sight_or_berry_tree_id: $('#at-sight').value,
+            script: $('#at-script').value,
+            flag: $('#at-flag').value
+        };
+
+        map.object_events.push(evt);
+
+        const serialized = { ...map };
+        delete serialized._dirName;
+        markChanged(`data/maps/${map._dirName}/map.json`, JSON.stringify(serialized, null, 2) + '\n');
+
+        // Optionally create trainer party entry
+        if ($('#at-create-party').checked) {
+            const trainerId = $('#at-trainer-id').value.trim() || ('TRAINER_' + dirName.toUpperCase() + '_NEW');
+            const trainerName = $('#at-trainer-name').value.trim() || 'NEW TRAINER';
+            const trainerClass = $('#at-trainer-class').value.trim() || 'Youngster';
+            const trainerPic = $('#at-trainer-pic').value.trim() || 'Youngster';
+
+            // Load trainers if not already loaded
+            try { await loadTrainers(); } catch {}
+            if (state.trainers) {
+                const newTrainerData = {
+                    id: trainerId,
+                    name: trainerName,
+                    class: trainerClass,
+                    pic: trainerPic,
+                    gender: 'Male',
+                    music: trainerClass,
+                    double_battle: 'No',
+                    ai: 'Check Bad Move / Try To Faint',
+                    pokemon: [{ species: 'Zigzagoon', level: '5', moves: [] }]
+                };
+                state.trainers.push(newTrainerData);
+                markChanged('src/data/trainers.party', serializeTrainers(state.trainers));
+            }
+        }
+
+        toast('Trainer added (pending PR submission)');
+        overlay.remove();
+        renderMapDetail(dirName);
+    });
+}
+
+// ── Edit Trainer Party from Map ──
+async function editTrainerPartyFromMap(dirName, trainerIdx) {
+    const map = state.maps.find(m => m._dirName === dirName);
+    if (!map) return;
+    const trainers = getMapTrainers(map);
+    const trainerEvt = trainers[trainerIdx];
+    if (!trainerEvt) return;
+
+    // Try to load trainers data
+    try { await loadTrainers(); } catch {
+        toast('Could not load trainer data', true);
+        return;
+    }
+
+    // Try to find the matching trainer party by script name
+    const scriptName = trainerEvt.script || '';
+    // Common patterns: MapName_EventScript_TrainerName → TRAINER_TRAINERNAME
+    // Try multiple heuristics to match
+    let matchedTrainer = null;
+
+    // 1. Try extracting trainer ID directly from script
+    const scriptParts = scriptName.split('_EventScript_');
+    if (scriptParts.length >= 2) {
+        const trainerSuffix = scriptParts[scriptParts.length - 1];
+        // Look for trainers whose ID contains this suffix
+        matchedTrainer = state.trainers.find(t =>
+            t.id.toUpperCase().includes(trainerSuffix.toUpperCase())
+        );
+    }
+
+    // 2. Try matching by map name prefix
+    if (!matchedTrainer) {
+        const candidates = state.trainers.filter(t =>
+            t.id.toUpperCase().includes(dirName.toUpperCase().replace(/\s/g, '_'))
+        );
+        if (candidates.length === 1) matchedTrainer = candidates[0];
+    }
+
+    if (matchedTrainer) {
+        // Open the trainer party editor
+        editTrainer(matchedTrainer.id);
+    } else {
+        // Show a picker modal to find or create the trainer
+        showTrainerMatchModal(dirName, trainerEvt, trainerIdx);
+    }
+}
+
+function showTrainerMatchModal(dirName, trainerEvt, trainerIdx) {
+    const scriptName = trainerEvt.script || 'Unknown';
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Find Trainer Party</h2>
+                <button class="btn btn-sm" onclick="this.closest('.modal-overlay').remove()">&#10005;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:13px;color:var(--text-dim);margin-bottom:12px">
+                    Could not automatically match the map event <code style="color:var(--cyan)">${escHtml(scriptName)}</code> to a trainer party entry.
+                    Search for the trainer or create a new one.
+                </p>
+                <div class="search-bar" style="margin-bottom:12px">
+                    <span class="search-icon">&#128269;</span>
+                    <input type="text" placeholder="Search trainers by ID or name..." id="tm-search">
+                </div>
+                <div id="tm-results" style="max-height:300px;overflow-y:auto"></div>
+                <div style="margin-top:12px;text-align:center">
+                    <button class="btn btn-primary" id="tm-create-btn">Create New Trainer Party</button>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+
+    function renderResults(search) {
+        const filtered = (state.trainers || []).filter(t =>
+            !search ||
+            t.id.toLowerCase().includes(search) ||
+            (t.name || '').toLowerCase().includes(search)
+        ).slice(0, 20);
+
+        const resultsEl = overlay.querySelector('#tm-results');
+        resultsEl.innerHTML = filtered.map(t => `
+            <div class="area-trainer-row" style="cursor:pointer" onclick="document.querySelector('.modal-overlay').remove(); editTrainer('${escAttr(t.id)}')">
+                <div class="area-trainer-icon">&#9876;</div>
+                <div class="area-trainer-info">
+                    <div class="area-trainer-name">${escHtml(t.name || '(unnamed)')}</div>
+                    <div class="area-trainer-detail">${escHtml(t.id)} &middot; ${t.pokemon.length} Pokemon</div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    renderResults('');
+    overlay.querySelector('#tm-search').addEventListener('input', e => renderResults(e.target.value.toLowerCase()));
+
+    overlay.querySelector('#tm-create-btn').addEventListener('click', () => {
+        overlay.remove();
+        // Derive a trainer ID from the script name
+        const parts = scriptName.split('_EventScript_');
+        const suffix = parts.length >= 2 ? parts[parts.length - 1] : 'NewTrainer';
+        addTrainer();
+        // Pre-fill the ID field after the modal opens
+        setTimeout(() => {
+            const idField = document.querySelector('#t-id');
+            if (idField && idField.value.startsWith('TRAINER_NEW_')) {
+                idField.value = 'TRAINER_' + suffix.toUpperCase();
+            }
+        }, 100);
     });
 }
 
