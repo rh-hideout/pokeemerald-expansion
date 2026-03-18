@@ -4,20 +4,6 @@ on:
   push:
     branches:
       - master
-    paths:
-      - 'docs/**'
-      - 'editor/**'
-      - 'data/layouts/**'
-      - 'data/tilesets/**'
-      - 'data/maps/**'
-      - 'tools/generate_map_previews.py'
-      - 'tools/playtest/**'
-      - '.github/workflows/docs.yml'
-  # Rebuild playtest ROM when source changes
-  workflow_run:
-    workflows: ["CI"]
-    types: [completed]
-    branches: [master]
 
 # Allow only one concurrent deployment
 concurrency:

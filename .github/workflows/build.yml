@@ -1,17 +1,6 @@
 name: CI
 
 on:
-  push:
-    branches:
-      - master
-      - upcoming
-    paths-ignore:
-      - 'docs/**'
-      - 'editor/**'
-      - '**/*.md'
-      - '.github/workflows/docs.yml'
-      - '.github/workflows/labels.yml'
-      - 'LICENSE'
   pull_request:
     paths-ignore:
       - 'docs/**'
