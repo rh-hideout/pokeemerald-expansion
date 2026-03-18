@@ -2,6 +2,7 @@
 #include "bg.h"
 #include "decompress.h"
 #include "event_data.h"
+#include "fieldmap.h"
 #include "gpu_regs.h"
 #include "graphics.h"
 #include "international_string_util.h"
@@ -24,6 +25,7 @@
 #include "pokedex_area_region_map.h"
 #include "wild_encounter.h"
 #include "window.h"
+#include "constants/metatile_behaviors.h"
 #include "constants/region_map_sections.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
@@ -69,6 +71,15 @@
 #define LABEL_WINDOW_BG 1
 #define NUM_LABEL_WINDOWS 2
 
+#define MINIMAP_WINDOW_WIDTH   8  // tiles
+#define MINIMAP_WINDOW_HEIGHT  6  // tiles
+#define MINIMAP_PIXEL_WIDTH   (MINIMAP_WINDOW_WIDTH * 8)
+#define MINIMAP_PIXEL_HEIGHT  (MINIMAP_WINDOW_HEIGHT * 8)
+#define MINIMAP_BORDER         2  // pixels
+#define MINIMAP_INNER_WIDTH   (MINIMAP_PIXEL_WIDTH - MINIMAP_BORDER * 2)
+#define MINIMAP_INNER_HEIGHT  (MINIMAP_PIXEL_HEIGHT - MINIMAP_BORDER * 2)
+#define MINIMAP_PALETTE       13
+
 enum PokedexAreaLabels
 {
     DEX_AREA_LABEL_TIME_OF_DAY,
@@ -112,6 +123,8 @@ struct
     /*0xFBC*/ u8 areaUnknownGraphicsBuffer[0x600];
     /*0xFC0*/ u8 areaScreenLabelIds[NUM_LABEL_WINDOWS];
     /*0xFC8*/ u8 areaState;
+              u8 areaImageWindowId;
+              bool8 hasAreaImage;
 } static EWRAM_DATA *sPokedexAreaScreen = NULL;
 
 EWRAM_DATA u8 gAreaTimeOfDay = 0;
@@ -137,6 +150,8 @@ static void ShowEncounterInfoLabel(void);
 static void ShowAreaUnknownLabel(void);
 static void PrintAreaLabelText(const u8 *text, enum PokedexAreaLabels labelId, int textXPos);
 static void ClearAreaWindowLabel(enum PokedexAreaLabels labelId);
+static void ShowAreaMinimap(void);
+static void DestroyAreaMinimap(void);
 
 bool32 ShouldShowAreaUnknownLabel(void);
 
@@ -231,6 +246,26 @@ static const struct SpriteTemplate sAreaUnknownSpriteTemplate =
 };
 
 static const u8 sFontColor_AreaInfo[3] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_WHITE, 5};
+
+// Minimap palette for aerial area view
+static const u16 sMinimapPalette[16] = {
+    [0]  = RGB(2, 2, 2),      // Border/void
+    [1]  = RGB(24, 22, 16),    // Normal ground
+    [2]  = RGB(6, 20, 6),      // Tall grass (encounter)
+    [3]  = RGB(14, 24, 10),    // Short grass
+    [4]  = RGB(8, 16, 28),     // Shallow water
+    [5]  = RGB(4, 8, 20),      // Deep water
+    [6]  = RGB(26, 22, 14),    // Sand
+    [7]  = RGB(16, 16, 18),    // Cave/indoor floor
+    [8]  = RGB(24, 28, 30),    // Ice
+    [9]  = RGB(20, 14, 8),     // Bridge
+    [10] = RGB(8, 8, 8),       // Wall/impassable
+    [11] = RGB(10, 18, 28),    // Waterfall/fast water
+    [12] = RGB(22, 18, 12),    // Door/warp
+    [13] = RGB(4, 12, 4),      // Dark green (trees)
+    [14] = RGB(24, 10, 6),     // Lava/hot
+    [15] = RGB(1, 1, 1),       // Void/black
+};
 static const struct WindowTemplate sTimeOfDayWindowLabelTemplates[] =
 {
     [DEX_AREA_LABEL_TIME_OF_DAY] =
@@ -796,6 +831,7 @@ static void Task_ShowPokedexAreaScreen(u8 taskId)
                 ShowAreaUnknownLabel();
             DoScheduledBgTilemapCopiesToVram();
         }
+        ShowAreaMinimap();
         if (POKEDEX_PLUS_HGSS)
             LoadHGSSScreenSelectBarSubmenu();
         ShowBg(2);
@@ -818,6 +854,7 @@ static void Task_UpdatePokedexAreaScreen(u8 taskId)
     case 0:
         ClearAreaWindowLabel(DEX_AREA_LABEL_TIME_OF_DAY);
         ClearAreaWindowLabel(DEX_AREA_LABEL_AREA_UNKNOWN);
+        DestroyAreaMinimap();
         ResetSpriteData();
         FreeAllSpritePalettes();
         ResetDrawAreaGlowState();
@@ -851,6 +888,7 @@ static void Task_UpdatePokedexAreaScreen(u8 taskId)
         ShowEncounterInfoLabel();
         if (ShouldShowAreaUnknownLabel())
             ShowAreaUnknownLabel();
+        ShowAreaMinimap();
         ShowBg(2);
         SetGpuRegBits(REG_OFFSET_DISPCNT, DISPCNT_OBJ_ON);
         break;
@@ -925,6 +963,7 @@ static void Task_HandlePokedexAreaScreenInput(u8 taskId)
         if (gPaletteFade.active)
             return;
         DestroyAreaScreenSprites();
+        DestroyAreaMinimap();
         if (OW_TIME_OF_DAY_ENCOUNTERS)
         {
             ClearAreaWindowLabel(DEX_AREA_LABEL_TIME_OF_DAY);
@@ -1042,6 +1081,218 @@ static void CreateAreaUnknownSprites(void)
                 sPokedexAreaScreen->areaUnknownSprites[i] = NULL;
             }
         }
+    }
+}
+
+static u8 GetMinimapColorForBehavior(u8 behavior)
+{
+    switch (behavior)
+    {
+    case MB_NORMAL:
+    case MB_NO_RUNNING:
+    case MB_SIGNPOST:
+    case MB_POKEMON_CENTER_SIGN:
+    case MB_POKEMART_SIGN:
+    case MB_FOOTPRINTS:
+    case MB_MOUNTAIN_TOP:
+    case MB_STRENGTH_BUTTON:
+    case MB_REFLECTION_UNDER_BRIDGE:
+        return 1; // Normal ground
+    case MB_TALL_GRASS:
+    case MB_LONG_GRASS:
+    case MB_LONG_GRASS_SOUTH_EDGE:
+    case MB_ASHGRASS:
+        return 2; // Encounter grass
+    case MB_SHORT_GRASS:
+        return 3; // Short grass
+    case MB_POND_WATER:
+    case MB_SHALLOW_WATER:
+    case MB_PUDDLE:
+        return 4; // Shallow water
+    case MB_DEEP_WATER:
+    case MB_INTERIOR_DEEP_WATER:
+    case MB_OCEAN_WATER:
+    case MB_SOOTOPOLIS_DEEP_WATER:
+    case MB_SEAWEED:
+    case MB_NO_SURFACING:
+    case MB_SEAWEED_NO_SURFACING:
+    case MB_CYCLING_ROAD_WATER:
+        return 5; // Deep water
+    case MB_SAND:
+    case MB_DEEP_SAND:
+        return 6; // Sand
+    case MB_CAVE:
+    case MB_INDOOR_ENCOUNTER:
+        return 7; // Cave/indoor
+    case MB_ICE:
+    case MB_THIN_ICE:
+    case MB_CRACKED_ICE:
+        return 8; // Ice
+    case MB_BRIDGE_OVER_OCEAN:
+    case MB_BRIDGE_OVER_POND_LOW:
+    case MB_BRIDGE_OVER_POND_MED:
+    case MB_BRIDGE_OVER_POND_HIGH:
+    case MB_FORTREE_BRIDGE:
+    case MB_BIKE_BRIDGE_OVER_BARRIER:
+        return 9; // Bridge
+    case MB_SECRET_BASE_WALL:
+        return 10; // Wall
+    case MB_WATERFALL:
+    case MB_FAST_WATER:
+        return 11; // Waterfall
+    case MB_HOT_SPRINGS:
+        return 14; // Hot
+    default:
+        if (behavior >= MB_IMPASSABLE_EAST && behavior <= MB_IMPASSABLE_SOUTHWEST)
+            return 10; // Impassable
+        if (behavior >= MB_EASTWARD_CURRENT && behavior <= MB_SOUTHWARD_CURRENT)
+            return 5;  // Water current
+        return 1; // Default ground
+    }
+}
+
+static void SetMinimapPixel(u8 windowId, u32 x, u32 y, u8 color)
+{
+    u32 tileX = x >> 3;
+    u32 tileY = y >> 3;
+    u32 localX = x & 7;
+    u32 localY = y & 7;
+    u32 byteIdx = ((tileY * MINIMAP_WINDOW_WIDTH + tileX) << 5) + (localY << 2) + (localX >> 1);
+    u8 *buffer = gWindows[windowId].tileData;
+
+    if (localX & 1)
+        buffer[byteIdx] = (buffer[byteIdx] & 0x0F) | (color << 4);
+    else
+        buffer[byteIdx] = (buffer[byteIdx] & 0xF0) | color;
+}
+
+static u8 GetBehaviorFromLayout(const struct MapLayout *layout, u16 metatileId)
+{
+    u16 numPrimary = layout->isFrlg ? NUM_METATILES_IN_PRIMARY_FRLG : NUM_METATILES_IN_PRIMARY;
+
+    if (metatileId < numPrimary)
+    {
+        if (layout->isFrlg)
+            return ((const u32 *)layout->primaryTileset->metatileAttributes)[metatileId] & 0x1FF;
+        else
+            return layout->primaryTileset->metatileAttributes[metatileId] & 0xFF;
+    }
+    else if (metatileId < NUM_METATILES_TOTAL)
+    {
+        u16 adjustedId = metatileId - numPrimary;
+        if (layout->isFrlg)
+            return ((const u32 *)layout->secondaryTileset->metatileAttributes)[adjustedId] & 0x1FF;
+        else
+            return layout->secondaryTileset->metatileAttributes[adjustedId] & 0xFF;
+    }
+    return MB_NORMAL;
+}
+
+static void ShowAreaMinimap(void)
+{
+    static const struct WindowTemplate sAreaImageWindowTemplate = {
+        .bg = LABEL_WINDOW_BG,
+        .tilemapLeft = 0,
+        .tilemapTop = 0,
+        .width = MINIMAP_WINDOW_WIDTH,
+        .height = MINIMAP_WINDOW_HEIGHT,
+        .paletteNum = MINIMAP_PALETTE,
+        .baseBlock = 0x280,
+    };
+
+    const struct MapHeader *header;
+    const struct MapLayout *layout;
+    u32 mapWidth, mapHeight;
+    u32 scaleX256, scaleY256, scale256;
+    u32 renderWidth, renderHeight;
+    u32 offsetX, offsetY;
+    u32 px, py;
+
+    if (sPokedexAreaScreen->numOverworldAreas == 0 && sPokedexAreaScreen->numSpecialAreas == 0)
+        return;
+
+    // Get the first area's map layout
+    if (sPokedexAreaScreen->numOverworldAreas > 0)
+    {
+        header = Overworld_GetMapHeaderByGroupAndId(
+            sPokedexAreaScreen->overworldAreasWithMons[0].mapGroup,
+            sPokedexAreaScreen->overworldAreasWithMons[0].mapNum);
+    }
+    else
+    {
+        return; // Special areas don't store mapGroup/mapNum directly
+    }
+
+    layout = header->mapLayout;
+    if (layout == NULL || layout->map == NULL)
+        return;
+
+    mapWidth = layout->width;
+    mapHeight = layout->height;
+    if (mapWidth == 0 || mapHeight == 0)
+        return;
+
+    // Create the minimap window
+    sPokedexAreaScreen->areaImageWindowId = AddWindow(&sAreaImageWindowTemplate);
+    sPokedexAreaScreen->hasAreaImage = TRUE;
+
+    // Load minimap palette
+    LoadPalette(sMinimapPalette, BG_PLTT_ID(MINIMAP_PALETTE), sizeof(sMinimapPalette));
+
+    // Fill with border color
+    FillWindowPixelBuffer(sPokedexAreaScreen->areaImageWindowId, PIXEL_FILL(0));
+
+    // Calculate scaling to fit the map into the inner area
+    scaleX256 = (mapWidth << 8) / MINIMAP_INNER_WIDTH;
+    scaleY256 = (mapHeight << 8) / MINIMAP_INNER_HEIGHT;
+    scale256 = (scaleX256 > scaleY256) ? scaleX256 : scaleY256;
+
+    // Minimum scale: 1 pixel per metatile
+    if (scale256 < 256)
+        scale256 = 256;
+
+    // Calculate rendered dimensions
+    renderWidth = (mapWidth << 8) / scale256;
+    renderHeight = (mapHeight << 8) / scale256;
+
+    if (renderWidth > MINIMAP_INNER_WIDTH)
+        renderWidth = MINIMAP_INNER_WIDTH;
+    if (renderHeight > MINIMAP_INNER_HEIGHT)
+        renderHeight = MINIMAP_INNER_HEIGHT;
+
+    // Center in the inner area
+    offsetX = MINIMAP_BORDER + (MINIMAP_INNER_WIDTH - renderWidth) / 2;
+    offsetY = MINIMAP_BORDER + (MINIMAP_INNER_HEIGHT - renderHeight) / 2;
+
+    // Render the minimap
+    for (py = 0; py < renderHeight; py++)
+    {
+        for (px = 0; px < renderWidth; px++)
+        {
+            u32 mapX = (px * scale256) >> 8;
+            u32 mapY = (py * scale256) >> 8;
+
+            if (mapX < mapWidth && mapY < mapHeight)
+            {
+                u16 metatileId = layout->map[mapY * mapWidth + mapX] & 0x3FF;
+                u8 behavior = GetBehaviorFromLayout(layout, metatileId);
+                u8 color = GetMinimapColorForBehavior(behavior);
+                SetMinimapPixel(sPokedexAreaScreen->areaImageWindowId, offsetX + px, offsetY + py, color);
+            }
+        }
+    }
+
+    PutWindowTilemap(sPokedexAreaScreen->areaImageWindowId);
+    CopyWindowToVram(sPokedexAreaScreen->areaImageWindowId, COPYWIN_FULL);
+}
+
+static void DestroyAreaMinimap(void)
+{
+    if (sPokedexAreaScreen->hasAreaImage)
+    {
+        ClearWindowTilemap(sPokedexAreaScreen->areaImageWindowId);
+        RemoveWindow(sPokedexAreaScreen->areaImageWindowId);
+        sPokedexAreaScreen->hasAreaImage = FALSE;
     }
 }
 
