@@ -173,7 +173,7 @@ static u32 PickMonFromPool(const struct Trainer *trainer, u8 *poolIndexArray, u3
         return monIndex;
 
     u32 chosenTags = trainer->party[monIndex].tags;
-    u16 chosenSpecies = trainer->party[monIndex].species;
+    enum Species chosenSpecies = trainer->party[monIndex].species;
     enum Item chosenItem = trainer->party[monIndex].heldItem;
     enum NationalDexOrder chosenNatDex = gSpeciesInfo[chosenSpecies].natDexNum;
     //  If tag was required, change pool rule to account for the required tag already being picked
@@ -201,7 +201,7 @@ static u32 PickMonFromPool(const struct Trainer *trainer, u8 *poolIndexArray, u3
         if (poolIndexArray[currIndex] != POOL_SLOT_DISABLED)
         {
             u32 currentTags = trainer->party[poolIndexArray[currIndex]].tags;
-            u16 currentSpecies = trainer->party[poolIndexArray[currIndex]].species;
+            enum Species currentSpecies = trainer->party[poolIndexArray[currIndex]].species;
             enum Item currentItem = trainer->party[poolIndexArray[currIndex]].heldItem;
             enum NationalDexOrder currentNatDex = gSpeciesInfo[currentSpecies].natDexNum;
             if (currentTags & tagsToEliminate)

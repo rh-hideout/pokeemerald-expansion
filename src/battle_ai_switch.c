@@ -1042,7 +1042,7 @@ static bool32 FindMonWithFlagsAndSuperEffective(enum BattlerId battler, u16 flag
 
     for (u32 monIndex = firstId; monIndex < lastId; monIndex++)
     {
-        u16 species;
+        enum Species species;
         enum Ability monAbility;
         uq4_12_t typeMultiplier;
         u16 moveFlags = 0;

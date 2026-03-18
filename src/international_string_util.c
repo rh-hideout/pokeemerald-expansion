@@ -82,7 +82,7 @@ int Intl_GetListMenuWidth(const struct ListMenuTemplate *listMenu)
     return finalWidth;
 }
 
-void CopyMonCategoryText(u16 species, u8 *dest)
+void CopyMonCategoryText(enum Species species, u8 *dest)
 {
     u8 *str = StringCopy(dest, GetSpeciesCategory(species));
     *str = CHAR_SPACE;

@@ -79,6 +79,6 @@ u32 CalculateDexNavShinyRolls(void);
 void IncrementDexNavChain(void);
 bool32 OnStep_DexNavSearch(void);
 
-extern u16 gDexNavSpecies;
+extern enum Species gDexNavSpecies;
 
 #endif // GUARD_DEXNAV_H

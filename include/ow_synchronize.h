@@ -9,7 +9,7 @@ enum GeneratedMonOrigin
     GIFTMON_ORIGIN
 };
 
-u32 GetSynchronizedNature(enum GeneratedMonOrigin origin, u32 species);
-u32 GetSynchronizedGender(enum GeneratedMonOrigin origin, u32 species);
+u32 GetSynchronizedNature(enum GeneratedMonOrigin origin, enum Species species);
+u32 GetSynchronizedGender(enum GeneratedMonOrigin origin, enum Species species);
 
 #endif // GUARD_OW_SYNCHRONIZE_H
