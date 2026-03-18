@@ -1023,6 +1023,10 @@ static bool32 CanIntimidateLowerOpponentAtk(enum BattlerId battler, enum Battler
 
 static bool32 ShouldSwitchIfIntimidateBenefit(enum BattlerId battler)
 {
+    // Keep Intimidate cycling behavior restricted to smart-switching AI
+    if (!(gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_SWITCHING))
+        return FALSE;
+
     enum BattlerId opposingBattler = GetOppositeBattler(battler);
     enum BattlerId opposingPartner = BATTLE_PARTNER(opposingBattler);
     bool32 hasValidTarget = FALSE;
