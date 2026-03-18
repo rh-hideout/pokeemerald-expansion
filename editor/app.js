@@ -2792,7 +2792,11 @@ async function createPullRequest(title, description) {
         // Encode content to base64, handling UTF-8 properly
         const encoder = new TextEncoder();
         const bytes = encoder.encode(newContent);
-        const base64 = btoa(String.fromCharCode(...bytes));
+        let binary = '';
+        for (let i = 0; i < bytes.length; i++) {
+            binary += String.fromCharCode(bytes[i]);
+        }
+        const base64 = btoa(binary);
 
         await ghFetch(`/repos/${REPO_OWNER}/${REPO_NAME}/contents/${filePath}`, {
             method: 'PUT',
