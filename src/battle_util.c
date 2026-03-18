@@ -1133,7 +1133,7 @@ static bool32 Ai_AttackerMovesLast(struct BattleContext *ctx)
     u32 numAliveBattlers = 0;
     u32 battlerTurnOrder = GetAiTurnOrder(ctx->aiTurnOrder, ctx->battlerAtk);
 
-    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+    for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
     {
         if (IsBattlerAlive(battler))
             numAliveBattlers++;
@@ -6377,7 +6377,7 @@ static inline u32 CalcMoveBasePower(struct BattleContext *ctx)
     case EFFECT_BOLT_BEAK:
         if (ctx->aiCalc)
         {
-            if (ctx->aiTurnOrder[0] == battlerAtk)
+            if (!Ai_AttackerMovesAfterTarget(ctx))
                 basePower *= 2;
         }
         else if (!HasBattlerActedThisTurn(battlerDef)
@@ -6585,7 +6585,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct BattleContext *ctx)
 
         if (ctx->aiCalc)
         {
-            if (!Ai_AttackerMovesLast(ctx))
+            if (Ai_AttackerMovesLast(ctx))
                modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
         }
         else if (IsLastMonToMove(battlerAtk))
