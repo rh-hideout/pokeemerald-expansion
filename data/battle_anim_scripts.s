@@ -12353,8 +12353,8 @@ BitePlayer:
 	return
 BiteOpponent:
 	playsewithpan SE_M_BITE, SOUND_PAN_TARGET
-	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=33, y=-48, animation=0, x_velocity=0/256, y_velocity=819/256, half_duration=10
-	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=33, y=16, animation=4, x_velocity=0/256, y_velocity=-819/256, half_duration=10
+	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=-33, y=-48, animation=0, x_velocity=0/256, y_velocity=819/256, half_duration=10
+	create_sharp_teeth_sprite ANIM_ATTACKER, 2, x=-33, y=16, animation=4, x_velocity=0/256, y_velocity=-819/256, half_duration=10
 	return
 
 gBattleAnimMove_NoRetreat::
