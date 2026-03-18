@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_CONFIDE) == EFFECT_STAT_CHANGE_TARGET);
+    ASSUME_STAT_CHANGE(MOVE_CONFIDE, spAtk: -1);
 }
 
 SINGLE_BATTLE_TEST("Confide lowers Special Attack", s16 damage)

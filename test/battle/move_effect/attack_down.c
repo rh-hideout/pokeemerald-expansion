@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_GROWL) == EFFECT_STAT_CHANGE_TARGET);
+    ASSUME_STAT_CHANGE(MOVE_GROWL, attack: -1);
 }
 
 SINGLE_BATTLE_TEST("Growl lowers Attack by 1 stage", s16 damage)

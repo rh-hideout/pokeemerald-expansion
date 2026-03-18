@@ -6,7 +6,7 @@ ASSUMPTIONS
     ASSUME(GetMoveEffect(MOVE_TIDY_UP) == EFFECT_TIDY_UP);
 }
 
-SINGLE_BATTLE_TEST("Tidy Up raises Attack and Speed by one")
+SINGLE_BATTLE_TEST("1-Tidy Up raises Attack and Speed by one")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);

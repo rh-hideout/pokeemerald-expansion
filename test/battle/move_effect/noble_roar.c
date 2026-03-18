@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_NOBLE_ROAR) == EFFECT_STAT_CHANGE_TARGET);
+    ASSUME_STAT_CHANGE(MOVE_NOBLE_ROAR, attack: -1, spAtk: -1);
 }
 
 SINGLE_BATTLE_TEST("Noble Roar reduces the target's Attack and Sp. Attack by 1 stage each")

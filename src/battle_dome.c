@@ -4078,8 +4078,7 @@ static bool32 IsDomeComboMove(enum Move move)
     case EFFECT_SLEEP_TALK:
     case EFFECT_SNORE:
     // Anything that ups offensive stats by more than one
-    case EFFECT_STAT_CHANGE_USER:
-    case EFFECT_STAT_CHANGE_HALF_HP:
+    case EFFECT_STAT_CHANGE:
     case EFFECT_CHARGE:
     // Others
     case EFFECT_FOCUS_ENERGY:

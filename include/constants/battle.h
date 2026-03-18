@@ -409,18 +409,22 @@ enum TypeSideHazard
 #define STATUS_FIELD_TERRAIN_ANY        (STATUS_FIELD_GRASSY_TERRAIN | STATUS_FIELD_MISTY_TERRAIN | STATUS_FIELD_ELECTRIC_TERRAIN | STATUS_FIELD_PSYCHIC_TERRAIN)
 
 // Flags describing move's result
-#define MOVE_RESULT_MISSED                (1 << 0)
-#define MOVE_RESULT_SUPER_EFFECTIVE       (1 << 1)
-#define MOVE_RESULT_NOT_VERY_EFFECTIVE    (1 << 2)
-#define MOVE_RESULT_DOESNT_AFFECT_FOE     (1 << 3)
-#define MOVE_RESULT_ONE_HIT_KO            (1 << 4)
-#define MOVE_RESULT_ONE_HIT_KO_NO_AFFECT  (1 << 5)
-#define MOVE_RESULT_ONE_HIT_KO_STURDY     (1 << 6)
-#define MOVE_RESULT_FAILED                (1 << 7)
-#define MOVE_RESULT_FOE_ENDURED           (1 << 8)
-#define MOVE_RESULT_FOE_HUNG_ON           (1 << 9)
-#define MOVE_RESULT_STURDIED              (1 << 10)
-#define MOVE_RESULT_FOE_ENDURED_AFFECTION (1 << 11)
+#define MOVE_RESULT_MISSED                 (1 << 0)
+#define MOVE_RESULT_SUPER_EFFECTIVE        (1 << 1)
+#define MOVE_RESULT_NOT_VERY_EFFECTIVE     (1 << 2)
+#define MOVE_RESULT_DOESNT_AFFECT_FOE      (1 << 3)
+#define MOVE_RESULT_ONE_HIT_KO             (1 << 4)
+#define MOVE_RESULT_ONE_HIT_KO_NO_AFFECT   (1 << 5)
+#define MOVE_RESULT_ONE_HIT_KO_STURDY      (1 << 6)
+#define MOVE_RESULT_FAILED                 (1 << 7)
+#define MOVE_RESULT_FOE_ENDURED            (1 << 8)
+#define MOVE_RESULT_FOE_HUNG_ON            (1 << 9)
+#define MOVE_RESULT_STURDIED               (1 << 10)
+#define MOVE_RESULT_FOE_ENDURED_AFFECTION  (1 << 11)
+#define MOVE_RESULT_ATTEMPT_STAT_CHANGE    (1 << 12)
+#define MOVE_RESULT_STAT_CHANGE_PREVENTED  (1 << 13)
+#define MOVE_RESULT_MIRROR_ARMOR_PENDING         (1 << 14)
+#define MOVE_RESULT_STAT_CHANGED           (1 << 15)
 #define MOVE_RESULT_AVOIDED_ATTACK        (MOVE_RESULT_MISSED | MOVE_RESULT_FAILED)
 #define MOVE_RESULT_NO_EFFECT             (MOVE_RESULT_MISSED | MOVE_RESULT_FAILED | MOVE_RESULT_DOESNT_AFFECT_FOE)
 
@@ -543,22 +547,11 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_SALT_CURE,
     MOVE_EFFECT_EERIE_SPELL,
     MOVE_EFFECT_FLING, // If used without EFFECT_FLING, the move will be a regular damage move with fling as an additional effect without the failure and dmg modifier parts
-    MOVE_EFFECT_DECREASE_WEIGHT, // TODO: Might be better to remove
 
     // Max move effects happen earlier in the execution chain.
     // For example stealth rock from G-Max Stonesurge is set up before abilities but from Stone Axe after.
     // Stone Axe can also fail to set up rocks if user faints where as Stonesurge will always go up.
     // This means we need to be careful if we want to re-use those effects for (new) vanilla moves
-    MOVE_EFFECT_RAISE_TEAM_ATTACK,
-    MOVE_EFFECT_RAISE_TEAM_DEFENSE,
-    MOVE_EFFECT_RAISE_TEAM_SPEED,
-    MOVE_EFFECT_RAISE_TEAM_SP_ATK,
-    MOVE_EFFECT_RAISE_TEAM_SP_DEF,
-    MOVE_EFFECT_LOWER_ATTACK_SIDE,
-    MOVE_EFFECT_LOWER_DEFENSE_SIDE,
-    MOVE_EFFECT_LOWER_SPEED_SIDE,
-    MOVE_EFFECT_LOWER_SP_ATK_SIDE,
-    MOVE_EFFECT_LOWER_SP_DEF_SIDE,
     MOVE_EFFECT_SUN,
     MOVE_EFFECT_RAIN,
     MOVE_EFFECT_SANDSTORM,
@@ -598,26 +591,13 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_FIXED_POWER,
     // Max move effects end. They can be used for (custom) normal moves.
 
+    STAT_CHANGE_EFFECT_PLUS,
+    STAT_CHANGE_EFFECT_MINUS,
+
     // Move effects that happen before the move hits. Set in SetPreAttackMoveEffect
     MOVE_EFFECT_BREAK_SCREEN,
     MOVE_EFFECT_STEAL_STATS,
     MOVE_EFFECT_BEAT_UP_MESSAGE, // Handles the message printing for gen2,3 and 4
-    MOVE_EFFECT_DEFENSE_CURL_VOLATILE,
-    MOVE_EFFECT_MINIMIZE_VOLATILE,
-
-    // Used for EFFECT_STAT_CHANGE_USER / EFFECT_STAT_CHANGE_TARGET
-    STAT_CHANGE_EFFECT_PLUS_1,
-    STAT_CHANGE_EFFECT_PLUS_2,
-    STAT_CHANGE_EFFECT_PLUS_3,
-    STAT_CHANGE_EFFECT_PLUS_4,
-    STAT_CHANGE_EFFECT_PLUS_5,
-    STAT_CHANGE_EFFECT_PLUS_6,
-    STAT_CHANGE_EFFECT_MINUS_1,
-    STAT_CHANGE_EFFECT_MINUS_2,
-    STAT_CHANGE_EFFECT_MINUS_3,
-    STAT_CHANGE_EFFECT_MINUS_4,
-    STAT_CHANGE_EFFECT_MINUS_5,
-    STAT_CHANGE_EFFECT_MINUS_6,
 
     NUM_MOVE_EFFECTS
 };

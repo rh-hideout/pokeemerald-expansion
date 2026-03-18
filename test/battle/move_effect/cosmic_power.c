@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_COSMIC_POWER) == EFFECT_STAT_CHANGE_USER);
+    ASSUME_STAT_CHANGE(MOVE_COSMIC_POWER, defense: +1, spDef: +1);
 }
 
 SINGLE_BATTLE_TEST("Cosmic Power increases the user's Defense and Sp. Defense by 1 stage each")

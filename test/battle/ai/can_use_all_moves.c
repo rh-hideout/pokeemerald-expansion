@@ -450,7 +450,6 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 501-600")
         case EFFECT_SKY_DROP:
         case EFFECT_MAT_BLOCK:
         case EFFECT_ION_DELUGE:
-        case EFFECT_AROMATIC_MIST:
         case EFFECT_POWDER:
         case EFFECT_ELECTRIFY:
 
@@ -462,7 +461,6 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 501-600")
         case EFFECT_FAIRY_LOCK:
 
         // tests exist elsewhere
-        case EFFECT_FLOWER_SHIELD:
         case EFFECT_ROTOTILLER:
         case EFFECT_GRASSY_TERRAIN:
         case EFFECT_MISTY_TERRAIN:

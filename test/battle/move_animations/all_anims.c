@@ -26,7 +26,7 @@ static void ParametrizeMovesAndSpecies(u32 j, u32 *pMove, u32 *pSpecies, u32 var
         *pMove = j;
         *pSpecies = SPECIES_MORPEKO_FULL_BELLY;
     }
-    else if (effect == EFFECT_ROTOTILLER || effect == EFFECT_FLOWER_SHIELD) // User needs to be Grass-type
+    else if (effect == EFFECT_ROTOTILLER) // User needs to be Grass-type
     {
         *pMove = j;
         *pSpecies = SPECIES_TANGELA;
@@ -248,7 +248,7 @@ static void WhenSingles(enum Move move, struct BattlePokemon *attacker, struct B
     { // defender needs to be asleep
         TURN { MOVE(defender, MOVE_REST); }
     }
-    else if (effect == EFFECT_VENOM_DRENCH
+    else if (effect == EFFECT_STAT_CHANGE_ON_STATUS
           || effect == EFFECT_PURIFY)
     { // defender needs to be poisoned
         TURN { MOVE(attacker, MOVE_POISON_POWDER); }
@@ -403,7 +403,6 @@ static void SceneSingles(enum Move move, struct BattlePokemon *mon)
      || effect == EFFECT_HELPING_HAND
      || effect == EFFECT_AFTER_YOU
      || effect == EFFECT_ALLY_SWITCH
-     || effect == EFFECT_AROMATIC_MIST
      || effect == EFFECT_DRAGON_CHEER
      || GetMoveTarget(move) == TARGET_ALLY)
     {
@@ -465,7 +464,7 @@ static void DoublesWhen(enum Move move, struct BattlePokemon *attacker, struct B
     { // Opponent needs to be asleep
         TURN { MOVE(target, MOVE_REST); }
     }
-    else if (effect == EFFECT_VENOM_DRENCH
+    else if (effect == EFFECT_STAT_CHANGE_ON_STATUS
           || effect == EFFECT_PURIFY)
     { // Opponent needs to be poisoned
         TURN { MOVE(attacker, MOVE_POISON_POWDER, target: target); }

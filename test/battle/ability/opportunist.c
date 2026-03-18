@@ -63,14 +63,14 @@ DOUBLE_BATTLE_TEST("Opportunist raises Attack only once when partner has Intimid
             MESSAGE("The opposing Spinda's Attack rose!");
         } else {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-            MESSAGE("Mightyena's Intimidate cuts the opposing Spinda's Attack!");
+            MESSAGE("The opposing Spinda's Attack fell!");
         }
         if (abilityRight == ABILITY_CONTRARY) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
             MESSAGE("The opposing Spinda's Attack rose!");
         } else {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
-            MESSAGE("Mightyena's Intimidate cuts the opposing Spinda's Attack!");
+            MESSAGE("The opposing Spinda's Attack fell!");
         }
 
         if ((abilityLeft == ABILITY_CONTRARY && abilityRight != ABILITY_CONTRARY)

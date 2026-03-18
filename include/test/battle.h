@@ -1311,6 +1311,20 @@ struct StatusEventContext
     bool8 frostbite:1;
 };
 
+
+struct StatChangeAssumption
+{
+    s8 attack;
+    s8 defense;
+    s8 spAtk;
+    s8 spDef;
+    s8 speed;
+    s8 accuracy;
+    s8 evasion;
+};
+
+void AssumeStatChange_(u32 sourceLine, u32 moveId, struct StatChangeAssumption asc);
+#define ASSUME_STAT_CHANGE(moveId, ...) AssumeStatChange_(__LINE__, moveId, (struct StatChangeAssumption) { __VA_ARGS__ })
 void OpenQueueGroup(u32 sourceLine, enum QueueGroupType);
 void CloseQueueGroup(u32 sourceLine);
 

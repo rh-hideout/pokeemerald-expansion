@@ -34,26 +34,24 @@ struct AdditionalEffect
     u8 onChargeTurnOnly:1;
     u8 sheerForceOverride:1; // Handles edge cases for Sheer Force - if TRUE, boosts when it shouldn't, or doesn't boost when it should
     u8 preAttackEffect:1;
-    u8 padding:3;
+    u8 onSide:1; // works only for stat changes
+    u8 padding:2;
 
     union PACKED {
         enum WrappedStringID wrapped;
     } multistring;
 
-    union PACKED {
-        u8 chance; // 0% = effect certain, primary effect
-        u8 stats;
-        struct PACKED {
-            u8 hp:1; // unused, to avoid shifting
-            u8 attack:1;
-            u8 defense:1;
-            u8 speed:1;
-            u8 spAtk:1;
-            u8 spDef:1;
-            u8 evasion:1;
-            u8 accuracy:1;
-        };
-    };
+    u8 chance; // 0% = effect certain, primary effect
+    u8 stats;
+
+    u32 attack:3;
+    u32 defense:3;
+    u32 spAtk:3;
+    u32 spDef:3;
+    u32 speed:3;
+    u32 accuracy:3;
+    u32 evasion:3;
+    u32 padding2:11;
 };
 
 enum ProtectType
@@ -687,6 +685,13 @@ static inline u32 GetMoveEffectArg_Status(enum Move moveId)
     return gMovesInfo[moveId].argument.status;
 }
 
+static inline u32 GetMoveStatusOnStatChange(enum Move moveId)
+{
+    moveId = SanitizeMoveId(moveId);
+    assertf(gMovesInfo[moveId].effect == EFFECT_STAT_CHANGE_ON_STATUS, "not a stat change on status move: %S", gMovesInfo[moveId].name);
+    return gMovesInfo[moveId].argument.status;
+}
+
 static inline u32 GetMoveEffectArg_MoveProperty(enum Move moveId)
 {
     moveId = SanitizeMoveId(moveId);
@@ -707,7 +712,12 @@ static inline u32 GetMoveArgType(enum Move moveId)
 {
     moveId = SanitizeMoveId(moveId);
     enum BattleMoveEffects effect = gMovesInfo[moveId].effect;
-    assertf(effect == EFFECT_SOAK || effect == EFFECT_TWO_TYPED_MOVE || effect == EFFECT_THIRD_TYPE || effect == EFFECT_SUPER_EFFECTIVE_ON_ARG || effect == EFFECT_FAIL_IF_NOT_ARG_TYPE, "not a move with a type: %S", gMovesInfo[moveId].name);
+    assertf(effect == EFFECT_SOAK
+         || effect == EFFECT_TWO_TYPED_MOVE
+         || effect == EFFECT_THIRD_TYPE
+         || effect == EFFECT_SUPER_EFFECTIVE_ON_ARG
+         || effect == EFFECT_FAIL_IF_NOT_ARG_TYPE
+         || effect == EFFECT_ROTOTILLER, "not a move with a type: %S", gMovesInfo[moveId].name);
     return gMovesInfo[moveId].argument.type;
 }
 

@@ -266,18 +266,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
     case STRINGID_CRITICALHIT:
         AddMovePoints(PTS_CRITICAL_HIT, moveSlot, 0, 0);
         break;
-    case STRINGID_ATTACKERSSTATROSE:
-        if (gBattleTextBuff1[2] != 0)
-        {
-            if (*statStringId == STRINGID_DRASTICALLY)
-                AddMovePoints(PTS_STAT_INCREASE_3, moveSlot, gBattleTextBuff1[2] - 1, 0);
-            else if (*statStringId == STRINGID_STATSHARPLY)
-                AddMovePoints(PTS_STAT_INCREASE_2, moveSlot, gBattleTextBuff1[2] - 1, 0);
-            else
-                AddMovePoints(PTS_STAT_INCREASE_1, moveSlot, gBattleTextBuff1[2] - 1, 0);
-        }
-        break;
-    case STRINGID_DEFENDERSSTATROSE:
+    case STRINGID_STATROSE:
         if (gBattleTextBuff1[2] != 0)
         {
             if (gBattlerAttacker == gBattlerTarget)
@@ -295,19 +284,22 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
             }
         }
         break;
-    case STRINGID_ATTACKERSSTATFELL:
-        if (gBattleTextBuff1[2] != 0)
-            AddMovePoints(PTS_STAT_DECREASE_SELF, moveSlot, gBattleTextBuff1[2] - 1, 0);
-        break;
-    case STRINGID_DEFENDERSSTATFELL:
+    case STRINGID_STATFELL:
         if (gBattleTextBuff1[2] != 0)
         {
-            if (*statStringId == STRINGID_SEVERELY)
-                AddMovePoints(PTS_STAT_DECREASE_3, moveSlot, gBattleTextBuff1[2] - 1, 0);
-            else if (*statStringId == STRINGID_STATHARSHLY)
-                AddMovePoints(PTS_STAT_DECREASE_2, moveSlot, gBattleTextBuff1[2] - 1, 0);
+            if (gBattlerAttacker != gBattlerTarget)
+            {
+                if (*statStringId == STRINGID_SEVERELY)
+                    AddMovePoints(PTS_STAT_DECREASE_3, moveSlot, gBattleTextBuff1[2] - 1, 0);
+                else if (*statStringId == STRINGID_STATHARSHLY)
+                    AddMovePoints(PTS_STAT_DECREASE_2, moveSlot, gBattleTextBuff1[2] - 1, 0);
+                else
+                    AddMovePoints(PTS_STAT_DECREASE_1, moveSlot, gBattleTextBuff1[2] - 1, 0);
+            }
             else
-                AddMovePoints(PTS_STAT_DECREASE_1, moveSlot, gBattleTextBuff1[2] - 1, 0);
+            {
+                AddMovePoints(PTS_STAT_DECREASE_SELF, moveSlot, gBattleTextBuff1[2] - 1, 0);
+            }
         }
         break;
     case STRINGID_PKMNLAIDCURSE:

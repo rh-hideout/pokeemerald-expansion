@@ -99,6 +99,14 @@ struct ProtectStruct
     u8 padding3:1;
 };
 
+struct StatStages
+{
+    u8 stat:7;
+    u8 done:1;
+    s8 stage;
+    u16 padding;
+};
+
 // Cleared at the start of HandleAction_ActionFinished
 struct SpecialStatus
 {
@@ -126,8 +134,10 @@ struct SpecialStatus
     u8 teraShellAbilityDone:1;
     u8 backUpTarget:3;
     // End of byte
-    u8 statsToChange[NUM_STATS];
-    s8 statStages[NUM_STATS];
+    struct StatStages statStageQueue[NUM_BATTLE_STATS];
+    struct StatStages statStageQueue2[NUM_BATTLE_STATS]; // For Mirror Armor, Defiant, Competitive and Rattled (avoids overwriting the first queue)
+    u8 statStageAmount:4;
+    u8 statStageAmount2:4;
     // End of byte
 };
 
@@ -558,9 +568,6 @@ struct BattleStruct
     u16 moveTarget[MAX_BATTLERS_COUNT];
     u32 expShareExpValue;
     u32 expValue;
-    u8 currStatToChange:4;
-    enum StatChangeProcess statChangeProcess:2;
-    u8 statChangeMoveAnimPlayed:2;
     u8 weatherDuration;
     u8 expGettersOrder[PARTY_SIZE]; // First battlers which were sent out, then via exp-share
     u8 expGetterMonId;
@@ -643,7 +650,6 @@ struct BattleStruct
     struct DynamaxData dynamax;
     struct BattleGimmickData gimmick;
     const u8 *trainerSlideMsg;
-    u8 stolenStats[NUM_BATTLE_STATS]; // hp byte is used for which stats to raise, other inform about by how many stages
     enum Ability tracedAbility[MAX_BATTLERS_COUNT];
     struct Illusion illusion[MAX_BATTLERS_COUNT];
     enum BattlerId soulheartBattlerId;
@@ -666,7 +672,7 @@ struct BattleStruct
     u8 beatUpSlot:3;
     u8 pledgeMove:1;
     u8 effectsBeforeUsingMoveDone:1; // Mega Evo and Focus Punch/Shell Trap effects.
-    u8 unused3:1;
+    u8 unused:1;
     u16 flingItem:14;
     enum FlungItem flungItem:2;
     u8 itemPartyIndex[MAX_BATTLERS_COUNT];
@@ -714,7 +720,17 @@ struct BattleStruct
     u8 moveBouncer;
     u8 dancerSavedAttacker:3;
     u8 dancerSavedTarget:3;
-    u8 padding:2;
+    u8 statChangeMoveAnim:1;
+    u8 tidyUpActivates:1;
+    u8 positiveAnimPlayed:1;
+    u8 negativeAnimPlayed:1;
+    u8 statChangeBattler:3; // will be removed
+    u8 defogSavedBattler:3;
+    u8 selfStatDrop:1; // for defiant and competitive
+    u8 statChangeUser:1;
+    u8 intimidateActivated:1;
+    u8 allowPartingShot:1;
+    u8 statChangePrevented:1;
 };
 
 struct AiBattleData
@@ -989,6 +1005,7 @@ extern enum BattlerId gBattlerAttacker;
 extern enum BattlerId gBattlerTarget;
 extern enum BattlerId gBattlerFainted;
 extern enum BattlerId gEffectBattler;
+extern enum BattlerId gStatChangeBattler;
 extern enum BattlerId gPotentialItemEffectBattler;
 extern u8 gAbsentBattlerFlags;
 extern u8 gMultiHitCounter;

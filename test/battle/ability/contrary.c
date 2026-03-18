@@ -23,7 +23,7 @@ SINGLE_BATTLE_TEST("Contrary raises Attack when Intimidated in a single battle",
             MESSAGE("The opposing Spinda's Attack rose!");
         } else {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("Mightyena's Intimidate cuts the opposing Spinda's Attack!");
+            MESSAGE("The opposing Spinda's Attack fell!");
         }
         HP_BAR(player, captureDamage: &results[i].damage);
     } THEN {
@@ -56,14 +56,14 @@ DOUBLE_BATTLE_TEST("Contrary raises Attack when Intimidated in a double battle",
             MESSAGE("The opposing Spinda's Attack rose!");
         } else {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-            MESSAGE("Mightyena's Intimidate cuts the opposing Spinda's Attack!");
+            MESSAGE("The opposing Spinda's Attack fell!");
         }
         if (abilityRight == ABILITY_CONTRARY) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
             MESSAGE("The opposing Spinda's Attack rose!");
         } else {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
-            MESSAGE("Mightyena's Intimidate cuts the opposing Spinda's Attack!");
+            MESSAGE("The opposing Spinda's Attack fell!");
         }
         HP_BAR(playerLeft, captureDamage: &results[i].damageLeft);
         HP_BAR(playerRight, captureDamage: &results[i].damageRight);
@@ -126,7 +126,7 @@ SINGLE_BATTLE_TEST("Contrary lowers a stat after using a move which would normal
     PARAMETRIZE { ability = ABILITY_CONTRARY; }
     PARAMETRIZE { ability = ABILITY_TANGLED_FEET; }
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_STAT_CHANGE_USER);
+        ASSUME_STAT_CHANGE(MOVE_SWORDS_DANCE, attack: +2);
         PLAYER(SPECIES_WOBBUFFET) { Defense(102); }
         OPPONENT(SPECIES_SPINDA) { Ability(ability); Attack(100); }
     } WHEN {
@@ -163,7 +163,7 @@ SINGLE_BATTLE_TEST("Contrary raises a stat after using a move which would normal
     PARAMETRIZE { ability = ABILITY_CONTRARY; }
     PARAMETRIZE { ability = ABILITY_TANGLED_FEET; }
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_GROWL) == EFFECT_STAT_CHANGE_TARGET);
+        ASSUME_STAT_CHANGE(MOVE_GROWL, attack: -1);
         PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
         OPPONENT(SPECIES_SPINDA) { Ability(ability); Speed(2); }
     } WHEN {
@@ -272,7 +272,7 @@ AI_SINGLE_BATTLE_TEST("AI sees Contrary-effected moves correctly in MoveEffectIn
 SINGLE_BATTLE_TEST("Contrary does not invert stat changes that have been Baton-passed")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_STAT_CHANGE_USER);
+        ASSUME_STAT_CHANGE(MOVE_SWORDS_DANCE, attack: +2);
         ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);

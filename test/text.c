@@ -709,7 +709,6 @@ TEST("Battle strings fit on the battle message window")
     // Buffer Stat name to B_BUFF1
     case STRINGID_STATSWONTINCREASE:
     case STRINGID_STATSWONTDECREASE:
-    case STRINGID_PKMNSXPREVENTSYLOSS:
     case STRINGID_TARGETABILITYSTATRAISE:
     case STRINGID_TARGETSSTATWASMAXEDOUT:
     case STRINGID_ATTACKERABILITYSTATRAISE:
@@ -776,8 +775,6 @@ TEST("Battle strings fit on the battle message window")
         break;
     // Buffer Stat name to B_BUFF1, "drastically rose" to B_BUFF2
     case STRINGID_STATROSE:
-    case STRINGID_ATTACKERSSTATROSE:
-    case STRINGID_DEFENDERSSTATROSE:
     case STRINGID_USINGITEMSTATOFPKMNROSE:
         StringCopy(gBattleTextBuff1, gStatNamesTable[longStatName]);
         StringCopy(gBattleTextBuff2, gText_drastically);
@@ -785,8 +782,6 @@ TEST("Battle strings fit on the battle message window")
         break;
     // Buffer Stat name to B_BUFF1, "severely fell" to B_BUFF2
     case STRINGID_STATFELL:
-    case STRINGID_ATTACKERSSTATFELL:
-    case STRINGID_DEFENDERSSTATFELL:
         StringCopy(gBattleTextBuff1, gStatNamesTable[longStatName]);
         StringCopy(gBattleTextBuff2, gText_severely);
         StringAppend(gBattleTextBuff2, gText_StatFell);

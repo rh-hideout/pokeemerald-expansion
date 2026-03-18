@@ -1255,6 +1255,7 @@ static bool32 SelectedMonHasVolatile(enum Item itemId)
 // Returns whether an item can be used in battle and sets the fail text.
 bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon)
 {
+    DebugPrintf("???");
     u16 battleUsage = GetItemBattleUsage(itemId);
     bool8 cannotUse = FALSE;
     const u8* failStr = NULL;
@@ -1283,6 +1284,8 @@ bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon)
             cannotUse = TRUE;
         else if (CompareStat(battlerTarget, GetItemEffect(itemId)[1], MAX_STAT_STAGE, CMP_EQUAL, GetBattlerAbility(battlerTarget)))
             cannotUse = TRUE;
+        if (!cannotUse)
+            SetStatChange(battlerTarget, GetItemEffect(itemId)[1], 1);
         break;
     case EFFECT_ITEM_SET_FOCUS_ENERGY:
         if (hp == 0 ||gPartyMenu.slotId > 1)
@@ -1320,6 +1323,7 @@ bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon)
         }
         break;
     case EFFECT_ITEM_INCREASE_ALL_STATS:
+    // Never called
     {
         if (hp == 0 || gPartyMenu.slotId > 1)
         {

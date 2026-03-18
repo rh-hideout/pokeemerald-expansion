@@ -7,7 +7,11 @@ SINGLE_BATTLE_TEST("MinimizeDoubleDamage flag makes moves cause double damage to
     PARAMETRIZE { useMinimize = FALSE; }
     PARAMETRIZE { useMinimize = TRUE; }
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_MINIMIZE) == EFFECT_STAT_CHANGE_USER);
+        #if B_MINIMIZE_EVASION >= GEN_5
+        ASSUME_STAT_CHANGE(MOVE_MINIMIZE, evasion: +2);
+        #else
+        ASSUME_STAT_CHANGE(MOVE_MINIMIZE, evasion: +1);
+        #endif
         ASSUME(MoveIncreasesPowerToMinimizedTargets(MOVE_STEAMROLLER));
         PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }

@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_NASTY_PLOT) == EFFECT_STAT_CHANGE_USER);
+    ASSUME_STAT_CHANGE(MOVE_NASTY_PLOT, spAtk: +2);
 }
 
 SINGLE_BATTLE_TEST("Nasty Plot increases the user's Sp. Attack by 2 stages")

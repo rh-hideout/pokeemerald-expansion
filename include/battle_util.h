@@ -377,7 +377,6 @@ void ClearPursuitValues(void);
 bool32 HasWeatherEffect(void);
 bool32 IsFutureSightAttackerInParty(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);
 bool32 HadMoreThanHalfHpNowDoesnt(enum BattlerId battler);
-void ChooseStatBoostAnimation(enum BattlerId battler);
 void UpdateStallMons(void);
 bool32 TrySwitchInEjectPack(enum EjectPackTiming timing);
 bool32 EmergencyExitCanBeTriggered(enum BattlerId battler);
@@ -424,5 +423,7 @@ void TryResetConsecutiveUseCounter(enum BattlerId battler);
 void SetOrClearRageVolatile(void);
 enum BattlerId GetTargetBySlot(enum BattlerId battlerAtk, enum BattlerId battlerDef);
 bool32 IsNaturalEnemy(u32 speciesAttacker, u32 speciesTarget);
+bool32 TryDefogClear(enum BattlerId battlerAtk, bool32 clear);
+bool32 TryTidyUpClear(enum BattlerId battlerAtk, bool32 clear);
 
 #endif // GUARD_BATTLE_UTIL_H

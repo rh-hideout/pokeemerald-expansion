@@ -26,12 +26,6 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent intimid
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         }
         ABILITY_POPUP(opponent, ability);
-        if (ability == ABILITY_FULL_METAL_BODY)
-            MESSAGE("The opposing Solgaleo's Full Metal Body prevents stat loss!");
-        else if (ability == ABILITY_WHITE_SMOKE)
-            MESSAGE("The opposing Torkoal's White Smoke prevents stat loss!");
-        else
-            MESSAGE("The opposing Metang's Clear Body prevents stat loss!");
         HP_BAR(player, captureDamage: &turnTwoHit);
     } THEN {
         EXPECT_EQ(turnOneHit, turnTwoHit);
@@ -60,13 +54,13 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent stat st
         }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_GROWL) == EFFECT_STAT_CHANGE_TARGET);
-        ASSUME(GetMoveEffect(MOVE_LEER) == EFFECT_STAT_CHANGE_TARGET);
-        ASSUME(GetMoveEffect(MOVE_CONFIDE) == EFFECT_STAT_CHANGE_TARGET);
-        ASSUME(GetMoveEffect(MOVE_FAKE_TEARS) == EFFECT_STAT_CHANGE_TARGET);
-        ASSUME(GetMoveEffect(MOVE_SCARY_FACE) == EFFECT_STAT_CHANGE_TARGET);
-        ASSUME(GetMoveEffect(MOVE_SWEET_SCENT) == (B_UPDATED_MOVE_DATA >= GEN_6 ? EFFECT_STAT_CHANGE_TARGET : EFFECT_STAT_CHANGE_TARGET));
-        ASSUME(GetMoveEffect(MOVE_SAND_ATTACK) == EFFECT_STAT_CHANGE_TARGET);
+        ASSUME_STAT_CHANGE(MOVE_GROWL, attack: -1);
+        ASSUME_STAT_CHANGE(MOVE_LEER, defense: -1);
+        ASSUME_STAT_CHANGE(MOVE_CONFIDE, spAtk: -1);
+        ASSUME_STAT_CHANGE(MOVE_FAKE_TEARS, spDef: -2);
+        ASSUME_STAT_CHANGE(MOVE_SCARY_FACE, speed: -2);
+        ASSUME(GetMoveEffect(MOVE_SWEET_SCENT) == (B_UPDATED_MOVE_DATA >= GEN_6 ? EFFECT_STAT_CHANGE : EFFECT_STAT_CHANGE));
+        ASSUME_STAT_CHANGE(MOVE_SAND_ATTACK, accuracy: -1);
         PLAYER(SPECIES_WOBBUFFET)
         OPPONENT(species) { Ability(ability); }
     } WHEN {
@@ -77,12 +71,6 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent stat st
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         }
         ABILITY_POPUP(opponent, ability);
-        if (ability == ABILITY_FULL_METAL_BODY)
-            MESSAGE("The opposing Solgaleo's Full Metal Body prevents stat loss!");
-        else if (ability == ABILITY_WHITE_SMOKE)
-            MESSAGE("The opposing Torkoal's White Smoke prevents stat loss!");
-        else
-            MESSAGE("The opposing Metang's Clear Body prevents stat loss!");
     }
 }
 
@@ -106,12 +94,6 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent Sticky 
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         }
         ABILITY_POPUP(opponent, ability);
-        if (ability == ABILITY_FULL_METAL_BODY)
-            MESSAGE("The opposing Solgaleo's Full Metal Body prevents stat loss!");
-        else if (ability == ABILITY_WHITE_SMOKE)
-            MESSAGE("The opposing Torkoal's White Smoke prevents stat loss!");
-        else
-            MESSAGE("The opposing Metang's Clear Body prevents stat loss!");
     }
 }
 
@@ -171,13 +153,13 @@ SINGLE_BATTLE_TEST("Mold Breaker, Teravolt, and Turboblaze ignore Clear Body and
     }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_GROWL) == EFFECT_STAT_CHANGE_TARGET);
-        ASSUME(GetMoveEffect(MOVE_LEER) == EFFECT_STAT_CHANGE_TARGET);
-        ASSUME(GetMoveEffect(MOVE_CONFIDE) == EFFECT_STAT_CHANGE_TARGET);
-        ASSUME(GetMoveEffect(MOVE_FAKE_TEARS) == EFFECT_STAT_CHANGE_TARGET);
-        ASSUME(GetMoveEffect(MOVE_SCARY_FACE) == EFFECT_STAT_CHANGE_TARGET);
-        ASSUME(GetMoveEffect(MOVE_SWEET_SCENT) == (B_UPDATED_MOVE_DATA >= GEN_6 ? EFFECT_STAT_CHANGE_TARGET : EFFECT_STAT_CHANGE_TARGET));
-        ASSUME(GetMoveEffect(MOVE_SAND_ATTACK) == EFFECT_STAT_CHANGE_TARGET);
+        ASSUME_STAT_CHANGE(MOVE_GROWL, attack: -1);
+        ASSUME_STAT_CHANGE(MOVE_LEER, defense: -1);
+        ASSUME_STAT_CHANGE(MOVE_CONFIDE, spAtk: -1);
+        ASSUME_STAT_CHANGE(MOVE_FAKE_TEARS, spDef: -2);
+        ASSUME_STAT_CHANGE(MOVE_SCARY_FACE, speed: -2);
+        ASSUME(GetMoveEffect(MOVE_SWEET_SCENT) == (B_UPDATED_MOVE_DATA >= GEN_6 ? EFFECT_STAT_CHANGE : EFFECT_STAT_CHANGE));
+        ASSUME_STAT_CHANGE(MOVE_SAND_ATTACK, accuracy: -1);
         PLAYER(SPECIES_WOBBUFFET) { Ability(breakerAbility); }
         OPPONENT(species) { Ability(ability); }
     } WHEN {
@@ -186,16 +168,10 @@ SINGLE_BATTLE_TEST("Mold Breaker, Teravolt, and Turboblaze ignore Clear Body and
         if (ability == ABILITY_FULL_METAL_BODY){ // Full Metal Body can't be ignored by breaker abilities
             NOT ANIMATION(ANIM_TYPE_MOVE, move, player);
             ABILITY_POPUP(opponent, ability);
-            MESSAGE("The opposing Solgaleo's Full Metal Body prevents stat loss!");
         }
         else{
             ANIMATION(ANIM_TYPE_MOVE, move, player);
-            NONE_OF {
-                ABILITY_POPUP(opponent, ability);
-                MESSAGE("The opposing Solgaleo's Full Metal Body prevents stat loss!");
-                MESSAGE("The opposing Torkoal's White Smoke prevents stat loss!");
-                MESSAGE("The opposing Metang's Clear Body prevents stat loss!");
-            }
+            NOT ABILITY_POPUP(opponent, ability);
         }
     }
 }
@@ -315,7 +291,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent r
     PARAMETRIZE{ species = SPECIES_TORKOAL; ability = ABILITY_WHITE_SMOKE; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SCARY_FACE) == EFFECT_STAT_CHANGE_TARGET);
+        ASSUME_STAT_CHANGE(MOVE_SCARY_FACE, speed: -2);
         ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(3); }
@@ -347,7 +323,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent T
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TOPSY_TURVY) == EFFECT_TOPSY_TURVY);
-        ASSUME(GetMoveEffect(MOVE_SCARY_FACE) == EFFECT_STAT_CHANGE_TARGET);
+        ASSUME_STAT_CHANGE(MOVE_SCARY_FACE, speed: -2);
         ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(3); }
@@ -389,7 +365,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent S
 
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_SPECTRAL_THIEF, MOVE_EFFECT_STEAL_STATS));
-        ASSUME(GetMoveEffect(MOVE_AGILITY) == EFFECT_STAT_CHANGE_USER);
+        ASSUME_STAT_CHANGE(MOVE_AGILITY, speed: +2);
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
         OPPONENT(species) { Speed(5); Ability(ability); }
     } WHEN {

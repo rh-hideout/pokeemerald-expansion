@@ -298,7 +298,9 @@ void GetAIPartyIndexes(enum BattlerId battlerId, s32 *firstId, s32 *lastId);
 u32 GetActiveBattlerIds(enum BattlerId battler, enum BattlerId *battlerIn1, enum BattlerId *battlerIn2);
 bool32 IsPartyMonOnFieldOrChosenToSwitch(u32 partyIndex, enum BattlerId battlerIn1, enum BattlerId battlerIn2);
 bool32 IsPartyMonPlannedToBeSwitchedInByPartner(u32 partyIndex, enum BattlerId battler);
-s32 GetSelfStatChangeScore(u32 battlerAtk, u32 battlerDef, u32 move);
+s32 GetStatChangeScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);
+s32 GetSelfStatChangeScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);
+s32 GetFoeStatChangeScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);
 
 // score increases
 enum AIScore IncreaseStatUpScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Stat stat, u32 stage);
@@ -326,6 +328,7 @@ bool32 AI_OpponentCanFaintAiWithMod(enum BattlerId battler, u32 healAmount);
 void SetBattlerFieldStatusForSwitchin(enum BattlerId battler);
 bool32 ShouldInstructPartner(enum BattlerId partner, enum Move move);
 bool32 CanMoveBeBouncedBack(enum BattlerId battler, enum Move move);
+bool32 AI_CanAnyStatChange(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);
 
 // Switching and item helpers
 bool32 AiExpectsToFaintPlayer(enum BattlerId battler);

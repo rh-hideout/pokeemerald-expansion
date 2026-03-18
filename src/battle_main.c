@@ -176,6 +176,7 @@ EWRAM_DATA enum BattlerId gBattlerAttacker = 0;
 EWRAM_DATA enum BattlerId gBattlerTarget = 0;
 EWRAM_DATA enum BattlerId gBattlerFainted = 0;
 EWRAM_DATA enum BattlerId gEffectBattler = 0;
+EWRAM_DATA enum BattlerId gStatChangeBattler = 0;
 EWRAM_DATA enum BattlerId gPotentialItemEffectBattler = 0;
 EWRAM_DATA u8 gAbsentBattlerFlags = 0;
 EWRAM_DATA u8 gMultiHitCounter = 0;
@@ -3813,12 +3814,29 @@ static void TryDoEventsBeforeFirstTurn(void)
     case FIRST_TURN_EVENTS_TOTEM_BOOST:
         for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
         {
-            if (gQueuedStatBoosts[battler].stats != 0 && !gProtectStructs[battler].eatMirrorHerb && gProtectStructs[battler].activateOpportunist == 0)
+            if (gQueuedStatBoosts[battler].stats == 0)
+                continue;
+
+            // This is vanilla and a regression from expansion behavior
+            // In vanilla, just one string and the anim are shown
+            // If needed the old behavior can be restored
+            for (enum Stat stat = STAT_ATK; stat < gBattlersCount; stat++)
             {
-                gBattlerAttacker = battler;
-                BattleScriptExecute(BattleScript_TotemVar);
-                return;
+                if (gQueuedStatBoosts[battler].stats & (1 << stat))
+                {
+                    s32 stage = gQueuedStatBoosts[battler].statChanges[stat];
+                    gBattleMons[battler].statStages[stat] += stage;
+                    if (gBattleMons[battler].statStages[stat] > MAX_STAT_STAGE)
+                        gBattleMons[battler].statStages[stat] = MAX_STAT_STAGE;
+                    else if (gBattleMons[battler].statStages[stat] < MIN_STAT_STAGE)
+                        gBattleMons[battler].statStages[stat] = MIN_STAT_STAGE;
+                }
             }
+
+            gBattlerAttacker = battler;
+            gQueuedStatBoosts[battler].stats = 0;
+            BattleScriptPushCursorAndCallback(BattleScript_TotemBoost);
+            return;
         }
         memset(gQueuedStatBoosts, 0, sizeof(gQueuedStatBoosts)); // erase all totem boosts for Mirror Herb and Opportunist
         gBattleStruct->eventState.beforeFirstTurn++;
@@ -6086,19 +6104,16 @@ void SetTypeBeforeUsingMove(enum Move move, enum BattlerId battler)
 void ScriptSetTotemBoost(struct ScriptContext *ctx)
 {
     enum BattlerId battler = VarGet(ScriptReadHalfword(ctx));
-    u32 stat;
-    u32 i;
 
     Script_RequestEffects(SCREFF_V1);
 
-    for (i = 0; i < (NUM_BATTLE_STATS - 1); i++)
+    for (enum Stat stat = 0; stat < NUM_BATTLE_STATS; stat++)
     {
-        stat = VarGet(ScriptReadHalfword(ctx));
-        if (stat)
+        u32 stage = VarGet(ScriptReadHalfword(ctx));
+        if (stage)
         {
-            gQueuedStatBoosts[battler].stats |= (1 << i);
-            gQueuedStatBoosts[battler].statChanges[i] = stat;
-            gQueuedStatBoosts[battler].stats |= 0x80;  // used as a flag for the "totem flared to life" script
+            gQueuedStatBoosts[battler].stats |= (1 << stat);
+            gQueuedStatBoosts[battler].statChanges[stat] = stage;
         }
     }
 }

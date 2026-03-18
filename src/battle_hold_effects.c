@@ -78,7 +78,7 @@ static enum ItemEffect TryRoomService(enum BattlerId battler)
     {
         gEffectBattler = gBattleScripting.battler = battler;
         gLastUsedItem = gBattleMons[battler].item;
-        gSpecialStatuses[battler].statStages[STAT_SPEED] = 1;
+        SetStatChange(battler, STAT_SPEED, 1);
         BattleScriptCall(BattleScript_ItemStatRaise);
         return ITEM_STATS_CHANGE;
     }
@@ -91,7 +91,7 @@ enum ItemEffect TryHandleSeed(enum BattlerId battler, u32 terrainFlag, enum Stat
     if (gFieldStatuses & terrainFlag && CompareStat(battler, statId, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(battler)))
     {
         gEffectBattler = gBattleScripting.battler = battler;
-        gSpecialStatuses[battler].statStages[statId] = 1;
+        SetStatChange(battler, statId, 1);
         BattleScriptCall(BattleScript_ItemStatRaise);
         return ITEM_STATS_CHANGE;
     }
@@ -136,7 +136,8 @@ static enum ItemEffect TryBerserkGene(enum BattlerId battler)
     if (CanBeInfinitelyConfused(battler))
         gBattleMons[battler].volatiles.infiniteConfusion = TRUE;
 
-    gSpecialStatuses[battler].statStages[STAT_ATK] = 2;
+    // Does Berserk activate if stat can't be increased?
+    SetStatChange(battler, STAT_ATK, 2);
     BattleScriptCall(BattleScript_BerserkGeneRet);
     return ITEM_STATS_CHANGE;
 }
@@ -170,8 +171,14 @@ static enum ItemEffect TryConsumeMirrorHerb(enum BattlerId battler)
 
     if (gProtectStructs[battler].eatMirrorHerb)
     {
+        for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
+        {
+            u32 queuedStat = stat - 1;
+            if (gQueuedStatBoosts[battler].stats & (1 << queuedStat))
+                SetStatChange(battler, stat, gQueuedStatBoosts[battler].statChanges[queuedStat]);
+
+        }
         gProtectStructs[battler].eatMirrorHerb = 0;
-        ChooseStatBoostAnimation(battler);
         BattleScriptCall(BattleScript_MirrorHerbCopyStatChange);
         effect = ITEM_STATS_CHANGE;
     }
@@ -254,7 +261,9 @@ static enum ItemEffect TryWeaknessPolicy(enum BattlerId battlerDef)
      && IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)
      && gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_SUPER_EFFECTIVE)
     {
-        BattleScriptCall(BattleScript_WeaknessPolicy);
+        SetStatChange(battlerDef, STAT_ATK, 2);
+        SetStatChange(battlerDef, STAT_SPATK, 2);
+        BattleScriptCall(BattleScript_ItemStatChange);
         effect = ITEM_STATS_CHANGE;
     }
 
@@ -269,8 +278,8 @@ static enum ItemEffect TrySnowball(enum BattlerId battlerDef)
      && IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)
      && GetBattleMoveType(gCurrentMove) == TYPE_ICE)
     {
-        gSpecialStatuses[battlerDef].statStages[STAT_ATK] = 1;
-        BattleScriptCall(BattleScript_TargetItemStatRaise);
+        SetStatChange(battlerDef, STAT_ATK, 1);
+        BattleScriptCall(BattleScript_ItemStatChange);
         effect = ITEM_STATS_CHANGE;
     }
 
@@ -285,8 +294,8 @@ static enum ItemEffect TryLuminousMoss(enum BattlerId battlerDef)
      && IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)
      && GetBattleMoveType(gCurrentMove) == TYPE_WATER)
     {
-        gSpecialStatuses[battlerDef].statStages[STAT_SPDEF] = 1;
-        BattleScriptCall(BattleScript_TargetItemStatRaise);
+        SetStatChange(battlerDef, STAT_SPDEF, 1);
+        BattleScriptCall(BattleScript_ItemStatChange);
         effect = ITEM_STATS_CHANGE;
     }
 
@@ -301,8 +310,8 @@ static enum ItemEffect TryCellBattery(enum BattlerId battlerDef)
      && IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)
      && GetBattleMoveType(gCurrentMove) == TYPE_ELECTRIC)
     {
-        gSpecialStatuses[battlerDef].statStages[STAT_ATK] = 1;
-        BattleScriptCall(BattleScript_TargetItemStatRaise);
+        SetStatChange(battlerDef, STAT_ATK, 1);
+        BattleScriptCall(BattleScript_ItemStatChange);
         effect = ITEM_STATS_CHANGE;
     }
 
@@ -317,8 +326,8 @@ static enum ItemEffect TryAbsorbBulb(enum BattlerId battlerDef)
      && IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)
      && GetBattleMoveType(gCurrentMove) == TYPE_WATER)
     {
-        gSpecialStatuses[battlerDef].statStages[STAT_SPATK] = 1;
-        BattleScriptCall(BattleScript_TargetItemStatRaise);
+        SetStatChange(battlerDef, STAT_SPATK, 1);
+        BattleScriptCall(BattleScript_ItemStatChange);
         effect = ITEM_STATS_CHANGE;
     }
 
@@ -399,8 +408,8 @@ static enum ItemEffect TryBlunderPolicy(enum BattlerId battlerAtk)
      && CompareStat(battlerAtk, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(battlerAtk)))
     {
         gBattleStruct->blunderPolicy = FALSE;
-        gSpecialStatuses[battlerAtk].statStages[STAT_SPEED] = 2;
-        BattleScriptCall(BattleScript_AttackerItemStatRaise);
+        SetStatChange(battlerAtk, STAT_SPEED, 2);
+        BattleScriptCall(BattleScript_ItemStatChange);
         effect = ITEM_STATS_CHANGE;
     }
 
@@ -479,8 +488,8 @@ static enum ItemEffect TryThroatSpray(enum BattlerId battlerAtk)
      && CompareStat(battlerAtk, STAT_SPATK, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(battlerAtk))
      && !NoAliveMonsForEitherParty())   // Don't activate if battle will end
     {
-        gSpecialStatuses[battlerAtk].statStages[STAT_SPATK] = 1;
-        BattleScriptCall(BattleScript_AttackerItemStatRaise);
+        SetStatChange(battlerAtk, STAT_SPATK, 1);
+        BattleScriptCall(BattleScript_ItemStatChange);
         effect = ITEM_STATS_CHANGE;
     }
 
@@ -501,12 +510,12 @@ static enum ItemEffect DamagedStatBoostBerryEffect(enum BattlerId battlerDef, en
     {
         if (GetBattlerAbility(battlerDef) == ABILITY_RIPEN)
         {
-            gSpecialStatuses[battlerDef].statStages[statId] = 2;
+            SetStatChange(battlerDef, statId, 2);
             BattleScriptCall(BattleScript_BerryStatRaiseRippen);
         }
         else
         {
-            gSpecialStatuses[battlerDef].statStages[statId] = 1;
+            SetStatChange(battlerDef, statId, 1);
             BattleScriptCall(BattleScript_ItemStatRaise);
         }
 
@@ -936,12 +945,12 @@ static enum ItemEffect StatRaiseBerry(enum BattlerId battler, enum Item itemId, 
         if (ability == ABILITY_RIPEN)
         {
             BattleScriptCall(BattleScript_BerryStatRaiseRippen);
-            gSpecialStatuses[battler].statStages[statId] = 2;
+            SetStatChange(battler, statId, 2);
         }
         else
         {
             BattleScriptCall(BattleScript_ItemStatRaise);
-            gSpecialStatuses[battler].statStages[statId] = 1;
+            SetStatChange(battler, statId, 1);
         }
         effect = ITEM_STATS_CHANGE;
     }
@@ -994,12 +1003,12 @@ static enum ItemEffect RandomStatRaiseBerry(enum BattlerId battler, enum Item it
         if (ability == ABILITY_RIPEN)
         {
             BattleScriptCall(BattleScript_BerryStatRaiseRippen);
-            gSpecialStatuses[battler].statStages[stat] = 4;
+            SetStatChange(battler, stat, 4);
         }
         else
         {
             BattleScriptCall(BattleScript_ItemStatRaise);
-            gSpecialStatuses[battler].statStages[stat] = 2;
+            SetStatChange(battler, stat, 2);
         }
         effect = ITEM_STATS_CHANGE;
     }

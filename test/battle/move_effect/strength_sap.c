@@ -69,8 +69,8 @@ SINGLE_BATTLE_TEST("Strength Sap lowers Attack by 1 and restores HP based on tar
     }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_WORK_UP) == EFFECT_STAT_CHANGE_USER);
-        ASSUME(GetMoveEffect(MOVE_GROWL) == EFFECT_STAT_CHANGE_TARGET);
+        ASSUME_STAT_CHANGE(MOVE_WORK_UP, attack: +1, spAtk: +1);
+        ASSUME_STAT_CHANGE(MOVE_GROWL, attack: -1);
         PLAYER(SPECIES_WOBBUFFET) { HP(50); }
         OPPONENT(SPECIES_WOBBUFFET) { Attack(60); }
     } WHEN {
@@ -117,7 +117,7 @@ SINGLE_BATTLE_TEST("Strength Sap lowers Attack by 1 and restores HP based on tar
 SINGLE_BATTLE_TEST("Strength Sap fails if target is at -6 Atk")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_CHARM) == EFFECT_STAT_CHANGE_TARGET);
+        ASSUME_STAT_CHANGE(MOVE_CHARM, attack: -2);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

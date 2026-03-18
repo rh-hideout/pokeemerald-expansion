@@ -92,15 +92,15 @@ DOUBLE_BATTLE_TEST("Intimidate doesn't activate on an empty field in a double ba
         // Intimidate activates after all battlers have been brought out
         ABILITY_POPUP(playerLeft, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-        MESSAGE("Ekans's Intimidate cuts the opposing Arbok's Attack!");
+        MESSAGE("The opposing Arbok's Attack fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
-        MESSAGE("Ekans's Intimidate cuts the opposing Wynaut's Attack!");
+        MESSAGE("The opposing Wynaut's Attack fell!");
 
         ABILITY_POPUP(opponentLeft, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
-        MESSAGE("The opposing Arbok's Intimidate cuts Ekans's Attack!");
+        MESSAGE("Ekans's Attack fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
-        MESSAGE("The opposing Arbok's Intimidate cuts Abra's Attack!");
+        MESSAGE("Abra's Attack fell!");
     }
 }
 
@@ -309,7 +309,7 @@ SINGLE_BATTLE_TEST("Intimidate activates when it's no longer affected by Neutral
     GIVEN {
         ASSUME(gItemsInfo[ITEM_EJECT_BUTTON].holdEffect == HOLD_EFFECT_EJECT_BUTTON);
         ASSUME(gItemsInfo[ITEM_EJECT_PACK].holdEffect == HOLD_EFFECT_EJECT_PACK);
-        ASSUME(GetMoveEffect(MOVE_GROWL) == EFFECT_STAT_CHANGE_TARGET);
+        ASSUME_STAT_CHANGE(MOVE_GROWL, attack: -1);
         ASSUME(GetMoveEffect(MOVE_ROAR) == EFFECT_ROAR);
         ASSUME(GetMoveEffect(MOVE_DRAGON_TAIL) == EFFECT_HIT_SWITCH_TARGET);
         PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); Item(item); }

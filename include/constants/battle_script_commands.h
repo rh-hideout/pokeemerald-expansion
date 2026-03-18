@@ -228,6 +228,7 @@ enum BattleScriptOpcode
     B_SCR_OP_TRYANYSTATCHANGE,
     B_SCR_OP_TRYSTATCHANGE,
     B_SCR_OP_TRYNONMOVESTATCHANGE,
+    B_SCR_OP_TRYBATTLERSTATCHANGE,
 
     // Expansion users, please don't use any of the unused commands.
     // They are reserved for expansion usage.
@@ -260,7 +261,6 @@ enum BattleScriptOpcode
     B_SCR_OP_UNUSED_26,
     B_SCR_OP_UNUSED_27,
     B_SCR_OP_UNUSED_28,
-    B_SCR_OP_UNUSED_29,
     B_SCR_OP_CALLNATIVE,
 };
 
@@ -360,6 +360,7 @@ enum SetMoveEffectFlags
     NO_FLAGS          = 0,
     EFFECT_PRIMARY    = (1 << 0),
     EFFECT_CERTAIN    = (1 << 1),
+    EFFECT_ON_SIDE    = (1 << 2),
 };
 
 enum FaintBlockStates

@@ -116,10 +116,8 @@ BattleScript_ItemHealAndCureStatusEnd::
 
 BattleScript_ItemIncreaseStat::
 	call BattleScript_UseItemMessage
-	itemincreasestat
-	statbuffchange BS_ATTACKER, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_ALLOW_PTR, BattleScript_ItemEnd
-	printfromtable gStatUpStringIds
-	waitmessage B_WAIT_TIME_LONG
+    itemincreasestat
+	trybattlerstatchange BS_ATTACKER, STAT_CHANGE_NO_FLAGS
 	end
 
 BattleScript_UsePokeFlute::
@@ -173,7 +171,7 @@ BattleScript_ItemRestorePP::
 BattleScript_ItemIncreaseAllStats::
 	call BattleScript_UseItemMessage
 	itemincreasestat
-	call BattleScript_AllStatsUp
+	trybattlerstatchange BS_ATTACKER, STAT_CHANGE_NO_FLAGS
 	end
 
 BattleScript_BallThrow::

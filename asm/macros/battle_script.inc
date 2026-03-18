@@ -1197,7 +1197,7 @@
 	.byte B_SCR_OP_TRY_CONFUSION_AFTER_SKY_DROP
     .byte \battler
 	.endm
-	
+
 	.macro tryanystatchange jumpInstr:req
 	.byte B_SCR_OP_TRYANYSTATCHANGE
 	.4byte \jumpInstr
@@ -1207,8 +1207,16 @@
 	.byte B_SCR_OP_TRYSTATCHANGE
 	.endm
 
-	.macro trynonmovestatchange
+	.macro trynonmovestatchange battler:req statChangeFlags:req
 	.byte B_SCR_OP_TRYNONMOVESTATCHANGE
+    .byte \battler
+    .2byte \statChangeFlags
+	.endm
+
+	.macro trybattlerstatchange battler:req statChangeFlags:req
+	.byte B_SCR_OP_TRYBATTLERSTATCHANGE
+    .byte \battler
+    .2byte \statChangeFlags
 	.endm
 
 	.macro callnative func:req
@@ -1232,10 +1240,6 @@
 	callnative BS_RestoreAttacker
 	.endm
 
-	.macro jumpifintimidateabilityprevented
-	callnative BS_JumpIfIntimidateAbilityPrevented
-	.endm
-
 	.macro allyswitchswapbattlers
 	callnative BS_AllySwitchSwapBattler
 	.endm
@@ -1245,10 +1249,9 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro dostockpilestatchangeswearoff, battler:req, statChangeInstr:req
+	.macro dostockpilestatchangeswearoff, battler:req
 	callnative BS_DoStockpileStatChangesWearOff
 	.byte \battler
-	.4byte \statChangeInstr
 	.endm
 
 	.macro jumpifmorethanhalfHP battler:req, jumpInstr:req
@@ -1483,11 +1486,6 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro trytarshot failInstr:req
-	callnative BS_TryTarShot
-	.4byte \failInstr
-	.endm
-
 	.macro jumpifnoberry battler:req, jumpInstr:req
 	callnative BS_JumpIfNoBerry
 	.byte \battler
@@ -1553,17 +1551,8 @@
 	callnative BS_WaitFanfare
 	.endm
 
-	.macro cantarshotwork failInstr:req
-	callnative BS_CanTarShotWork
-	.4byte \failInstr
-	.endm
-
 	.macro removeterrain
 	callnative BS_RemoveTerrain
-	.endm
-
-	.macro spectralthiefprintstats
-	callnative BS_SpectralThiefPrintStats
 	.endm
 
 	.macro setmoveresultflags flags:req
@@ -1609,6 +1598,15 @@
 	.macro restoresavedmove
 	callnative BS_RestoreSavedMove
 	.endm
+
+    .macro trydefiantrattled
+    callnative BS_TryDefiantRattled
+    .endm
+
+    .macro forceplaystatchangeanim battler:req
+    callnative BS_ForcePlayStatChangeAnim
+    .byte \battler
+    .endm
 
 @ helpful macros
 	.macro setstatchanger stat:req, stages:req, down:req
@@ -1744,11 +1742,6 @@
 	.macro trysetfairylock failInstr:req
 	callnative BS_TrySetFairyLock
 	.4byte \failInstr
-	.endm
-
-	.macro getstatvalue stat:req
-	callnative BS_GetStatValue
-	.byte \stat
 	.endm
 
 	.macro jumpiffullhp battler:req, jumpInstr:req
@@ -2047,11 +2040,6 @@
 	callnative BS_DestroyAbilityPopup
 	.endm
 
-	.macro gettotemboost jumpInstr:req
-	callnative BS_GetTotemBoost
-	.4byte \jumpInstr
-	.endm
-
 	.macro activateitemeffects
 	callnative BS_ActivateItemEffects
 	.endm
@@ -2097,11 +2085,6 @@
 	callnative BS_TryEndNeutralizingGas
 	.endm
 
-	.macro getrototillertargets failInstr:req
-	callnative BS_GetRototillerTargets
-	.4byte \failInstr
-	.endm
-
 	.macro consumeberry battler:req, fromBattler:req
 	callnative BS_ConsumeBerry
 	.byte \battler
@@ -2128,11 +2111,6 @@
 
 	.macro setattackertostickywebuser
 	callnative BS_SetAttackerToStickyWebUser
-	.endm
-
-	.macro cutonethirdhpandraisestats failInstr:req
-	callnative BS_CutOneThirdHpAndRaiseStats
-	.4byte \failInstr
 	.endm
 
 	.macro setpoltergeistmessage
@@ -2194,7 +2172,7 @@
 	.if \animation == FALSE
 		setbyte sSTAT_ANIM_PLAYED, TRUE
 	.endif
-	statbuffchange BS_TARGET, STAT_CHANGE_ALLOW_PTR, \script
+	statbuffchange BS_TARGET, 0, \script
 	.ifnb \customString
 		printstring \customString
 	.else

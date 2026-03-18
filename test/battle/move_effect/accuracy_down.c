@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_SAND_ATTACK) == EFFECT_STAT_CHANGE_TARGET);
+    ASSUME_STAT_CHANGE(MOVE_SAND_ATTACK, accuracy: -1);
 }
 
 SINGLE_BATTLE_TEST("Sand Attack lowers Accuracy by 1 stage")
