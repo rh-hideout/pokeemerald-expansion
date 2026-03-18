@@ -134,8 +134,13 @@ SINGLE_BATTLE_TEST("Encore's effect ends if the encored move runs out of PP")
         OPPONENT(SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_ENCORE, MOVE_CELEBRATE); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_CELEBRATE); }
-        TURN { MOVE(opponent, MOVE_ENCORE); MOVE(player, MOVE_SCRATCH); }
+        TURN { MOVE(opponent, MOVE_ENCORE); MOVE(player, MOVE_CELEBRATE); }
         TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        MESSAGE("Wobbuffet ended its encore!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
     }
 }
 
