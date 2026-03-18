@@ -32,10 +32,13 @@ let state = {
     abilities: null,
     config: null,
     maps: null,
+    pokemon: null,
     search: '',
     configFilter: 'all',
     mapDetail: null,
     mapTypeFilter: 'all',
+    npcDetail: null,
+    pokemonPage: 0,
 };
 
 // Track pending changes: { filePath: newContent }
@@ -533,6 +536,8 @@ async function render() {
     try {
         switch (page) {
             case 'maps': await renderMaps(); break;
+            case 'npcs': await renderNPCs(); break;
+            case 'pokemon': await renderPokemonPage(); break;
             case 'dashboard': await renderDashboard(); break;
             case 'moves': await renderMoves(); break;
             case 'abilities': await renderAbilities(); break;
@@ -719,11 +724,11 @@ function openTrainerModal(trainer, isNew) {
             <div class="form-row">
                 <div class="form-group">
                     <label>Class</label>
-                    <input type="text" id="t-class" value="${escAttr(trainer.class || '')}">
+                    ${makeDatalistHtml('t-class', trainer.class || '', getUniqueTrainerClasses())}
                 </div>
                 <div class="form-group">
                     <label>Pic</label>
-                    <input type="text" id="t-pic" value="${escAttr(trainer.pic || '')}">
+                    ${makeDatalistHtml('t-pic', trainer.pic || '', getUniqueTrainerPics())}
                 </div>
             </div>
             <div class="form-row">
@@ -736,7 +741,7 @@ function openTrainerModal(trainer, isNew) {
                 </div>
                 <div class="form-group">
                     <label>Music</label>
-                    <input type="text" id="t-music" value="${escAttr(trainer.music || '')}">
+                    ${makeDatalistHtml('t-music', trainer.music || '', getUniqueTrainerMusic())}
                 </div>
             </div>
             <div class="form-row">
@@ -759,7 +764,7 @@ function openTrainerModal(trainer, isNew) {
                 </div>
                 <div class="form-group">
                     <label>Mugshot</label>
-                    <input type="text" id="t-mugshot" value="${escAttr(trainer.mugshot || '')}" placeholder="Purple, Green, Pink, Blue, Yellow">
+                    ${makeSelectHtml('t-mugshot', trainer.mugshot || '', MUGSHOT_OPTIONS)}
                 </div>
             </div>
             <div class="form-row">
@@ -786,11 +791,14 @@ function openTrainerModal(trainer, isNew) {
                     <div class="form-row">
                         <div class="form-group">
                             <label>Level</label>
-                            <input type="text" class="mon-level" data-idx="${i}" value="${escAttr(mon.level || '')}" placeholder="1-100">
+                            <input type="number" class="mon-level" data-idx="${i}" value="${escAttr(mon.level || '')}" min="1" max="100" placeholder="1-100">
                         </div>
                         <div class="form-group">
                             <label>Nature</label>
-                            <input type="text" class="mon-nature" data-idx="${i}" value="${escAttr(mon.nature || '')}" placeholder="e.g. Adamant">
+                            <select class="mon-nature" data-idx="${i}">
+                                <option value="">Default (Hardy)</option>
+                                ${NATURES.map(n => `<option value="${n}" ${mon.nature === n ? 'selected' : ''}>${n}</option>`).join('')}
+                            </select>
                         </div>
                         <div class="form-group">
                             <label>Ability</label>
@@ -810,7 +818,10 @@ function openTrainerModal(trainer, isNew) {
                     <div class="form-row">
                         <div class="form-group">
                             <label>Ball</label>
-                            <input type="text" class="mon-ball" data-idx="${i}" value="${escAttr(mon.ball || '')}">
+                            <select class="mon-ball" data-idx="${i}">
+                                <option value="">Default (Poke Ball)</option>
+                                ${BALLS.map(b => `<option value="${b}" ${mon.ball === b ? 'selected' : ''}>${b}</option>`).join('')}
+                            </select>
                         </div>
                         <div class="form-group">
                             <label>Shiny</label>
@@ -822,7 +833,9 @@ function openTrainerModal(trainer, isNew) {
                         </div>
                         <div class="form-group">
                             <label>Tera Type</label>
-                            <input type="text" class="mon-tera" data-idx="${i}" value="${escAttr(mon.tera_type || '')}">
+                            <select class="mon-tera" data-idx="${i}">
+                                ${TERA_TYPES.map(t => `<option value="${t}" ${mon.tera_type === t ? 'selected' : ''}>${t || 'None'}</option>`).join('')}
+                            </select>
                         </div>
                     </div>
                     <div class="form-group">
@@ -1473,6 +1486,93 @@ const ENC_COLORS = { land_mons: '#22c55e', water_mons: '#6890f0', rock_smash_mon
 const ENC_LABELS = { land_mons: 'Grass / Land', water_mons: 'Surfing', rock_smash_mons: 'Rock Smash', fishing_mons: 'Fishing' };
 const ENC_ICONS = { land_mons: '&#127793;', water_mons: '&#127754;', rock_smash_mons: '&#9968;', fishing_mons: '&#127907;' };
 
+const TRAINER_TYPES_LIST = ['TRAINER_TYPE_NONE', 'TRAINER_TYPE_NORMAL', 'TRAINER_TYPE_SEE_ALL_DIRECTIONS', 'TRAINER_TYPE_BURIED'];
+const MUGSHOT_OPTIONS = ['', 'Purple', 'Green', 'Pink', 'Blue', 'Yellow'];
+const NATURES = ['Hardy','Lonely','Brave','Adamant','Naughty','Bold','Docile','Relaxed','Impish','Lax','Timid','Hasty','Serious','Jolly','Naive','Modest','Mild','Quiet','Bashful','Rash','Calm','Gentle','Sassy','Careful','Quirky'];
+const BALLS = ['Poke Ball','Great Ball','Ultra Ball','Master Ball','Net Ball','Dive Ball','Nest Ball','Repeat Ball','Timer Ball','Luxury Ball','Premier Ball','Dusk Ball','Heal Ball','Quick Ball','Cherish Ball','Dream Ball','Beast Ball'];
+const TERA_TYPES = ['','Normal','Fire','Water','Grass','Electric','Ice','Fighting','Poison','Ground','Flying','Psychic','Bug','Rock','Ghost','Dragon','Dark','Steel','Fairy','Stellar'];
+
+// Dynamic option extraction helpers
+function getUniqueGraphicsIds() {
+    if (!state.maps) return [];
+    const ids = new Set();
+    for (const m of state.maps) {
+        for (const evt of (m.object_events || [])) {
+            if (evt.graphics_id) ids.add(evt.graphics_id);
+        }
+    }
+    return [...ids].sort();
+}
+
+function getUniqueMovementTypes() {
+    if (!state.maps) return [];
+    const types = new Set();
+    for (const m of state.maps) {
+        for (const evt of (m.object_events || [])) {
+            if (evt.movement_type) types.add(evt.movement_type);
+        }
+    }
+    return [...types].sort();
+}
+
+function getUniqueTrainerPics() {
+    if (!state.trainers) return [];
+    return [...new Set(state.trainers.map(t => t.pic).filter(Boolean))].sort();
+}
+
+function getUniqueTrainerClasses() {
+    if (!state.trainers) return [];
+    return [...new Set(state.trainers.map(t => t.class).filter(Boolean))].sort();
+}
+
+function getUniqueTrainerMusic() {
+    if (!state.trainers) return [];
+    return [...new Set(state.trainers.map(t => t.music).filter(Boolean))].sort();
+}
+
+function getUniqueMusicConstants() {
+    if (!state.maps) return [];
+    const music = new Set();
+    for (const m of state.maps) {
+        if (m.music) music.add(m.music);
+    }
+    return [...music].sort();
+}
+
+function getUniqueScripts() {
+    if (!state.maps) return [];
+    const scripts = new Set();
+    for (const m of state.maps) {
+        for (const evt of (m.object_events || [])) {
+            if (evt.script) scripts.add(evt.script);
+        }
+    }
+    return [...scripts].sort();
+}
+
+function makeDatalistHtml(id, value, options, extraAttrs = '') {
+    const listId = `dl-${id}-${Date.now()}`;
+    return `<input type="text" id="${id}" value="${escAttr(value)}" list="${listId}" ${extraAttrs}><datalist id="${listId}">${options.map(o => `<option value="${escAttr(o)}">`).join('')}</datalist>`;
+}
+
+function makeSelectHtml(id, value, options, extraAttrs = '') {
+    return `<select id="${id}" ${extraAttrs}>${options.map(o => `<option value="${escAttr(o)}" ${o === value ? 'selected' : ''}>${escHtml(o)}</option>`).join('')}</select>`;
+}
+
+function getSpriteUrl(graphicsId) {
+    const name = (graphicsId || '').replace('OBJ_EVENT_GFX_', '').toLowerCase();
+    return `../graphics/object_events/pics/people/${name}/anim_front.png`;
+}
+
+function getSpriteHtml(graphicsId, size = 32) {
+    const url = getSpriteUrl(graphicsId);
+    const name = (graphicsId || '').replace('OBJ_EVENT_GFX_', '').replace(/_/g, ' ');
+    return `<div class="sprite-container" style="width:${size}px;height:${size}px">
+        <img src="${url}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" style="width:${size}px;height:${size}px;image-rendering:pixelated" alt="${escAttr(name)}">
+        <div class="sprite-fallback" style="display:none;width:${size}px;height:${size}px">${escHtml(name.substring(0, 2).toUpperCase())}</div>
+    </div>`;
+}
+
 function getPreviewUrl(dirName) {
     return `previews/${encodeURIComponent(dirName)}.png`;
 }
@@ -1699,10 +1799,16 @@ async function renderMapDetail(dirName) {
     // ── Section 3: Items ──
     sections.innerHTML += buildItemSection(itemBalls, hiddenItems, map);
 
-    // ── Section 4: Connections ──
+    // ── Section 4: Warps ──
+    sections.innerHTML += buildWarpSection(map);
+
+    // ── Section 5: Connections ──
     sections.innerHTML += buildConnectionSection(map);
 
-    // ── Section 5: Map Properties (editable) ──
+    // ── Section 6: Object Scripts / NPCs ──
+    sections.innerHTML += buildObjectScriptsSection(map);
+
+    // ── Section 7: Map Properties (editable) ──
     sections.innerHTML += buildPropertiesSection(map);
 
     // Wire up section toggles
@@ -1817,12 +1923,11 @@ function buildTrainerSection(trainers, map) {
         body = trainers.map((t, i) => {
             const scriptName = (t.script || '').replace(/_EventScript_/g, ' - ').replace(/_/g, ' ');
             const gfx = (t.graphics_id || '').replace('OBJ_EVENT_GFX_', '').replace(/_/g, ' ');
-            // Try to extract trainer ID from script name for party editing
             const trainerIdMatch = (t.script || '').match(/(\w+)_EventScript/);
             const possibleTrainerId = trainerIdMatch ? `TRAINER_${trainerIdMatch[1].toUpperCase()}` : '';
             return `
                 <div class="area-trainer-row">
-                    <div class="area-trainer-icon">&#9876;</div>
+                    ${getSpriteHtml(t.graphics_id, 40)}
                     <div class="area-trainer-info">
                         <div class="area-trainer-name">${escHtml(scriptName || 'Trainer #' + (i + 1))}</div>
                         <div class="area-trainer-detail">${escHtml(gfx)} &middot; Sight: ${t.trainer_sight_or_berry_tree_id || '0'} &middot; (${t.x}, ${t.y})</div>
@@ -1941,7 +2046,7 @@ function buildPropertiesSection(map) {
                 <div class="map-props-grid">
                     <div class="map-prop">
                         <label>Music</label>
-                        <input type="text" id="mp-music" value="${escAttr(map.music || '')}" style="font-family:monospace">
+                        ${makeDatalistHtml('mp-music', map.music || '', getUniqueMusicConstants(), 'style="font-family:monospace"')}
                     </div>
                     <div class="map-prop">
                         <label>Weather</label>
@@ -2099,10 +2204,17 @@ function editMapTrainer(dirName, trainerIdx) {
                 <button class="btn btn-sm" onclick="this.closest('.modal-overlay').remove()">&#10005;</button>
             </div>
             <div class="modal-body">
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;padding:12px;background:var(--bg);border-radius:6px;border:1px solid var(--border)">
+                    ${getSpriteHtml(trainer.graphics_id, 48)}
+                    <div>
+                        <div style="font-size:13px;font-weight:600">${escHtml((trainer.graphics_id || '').replace('OBJ_EVENT_GFX_', '').replace(/_/g, ' '))}</div>
+                        <div style="font-size:11px;color:var(--text-dim)">${escHtml(trainer.script || '')}</div>
+                    </div>
+                </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Graphics ID</label>
-                        <input type="text" id="te-gfx" value="${escAttr(trainer.graphics_id || '')}" style="font-family:monospace;font-size:12px">
+                        <label>Graphics ID (Sprite)</label>
+                        ${makeDatalistHtml('te-gfx', trainer.graphics_id || '', getUniqueGraphicsIds(), 'style="font-family:monospace;font-size:12px"')}
                     </div>
                     <div class="form-group">
                         <label>Script</label>
@@ -2126,7 +2238,7 @@ function editMapTrainer(dirName, trainerIdx) {
                 <div class="form-row">
                     <div class="form-group">
                         <label>Movement Type</label>
-                        <input type="text" id="te-move" value="${escAttr(trainer.movement_type || '')}" style="font-family:monospace;font-size:12px">
+                        ${makeDatalistHtml('te-move', trainer.movement_type || '', getUniqueMovementTypes(), 'style="font-family:monospace;font-size:12px"')}
                     </div>
                     <div class="form-group">
                         <label>Trainer Sight Range</label>
@@ -2136,7 +2248,7 @@ function editMapTrainer(dirName, trainerIdx) {
                 <div class="form-row">
                     <div class="form-group">
                         <label>Trainer Type</label>
-                        <input type="text" id="te-ttype" value="${escAttr(trainer.trainer_type || '')}" style="font-family:monospace;font-size:12px">
+                        ${makeSelectHtml('te-ttype', trainer.trainer_type || '', TRAINER_TYPES_LIST, 'style="font-family:monospace;font-size:12px"')}
                     </div>
                     <div class="form-group">
                         <label>Flag</label>
@@ -2205,8 +2317,8 @@ function addMapTrainer(dirName) {
             <div class="modal-body">
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Graphics ID</label>
-                        <input type="text" id="at-gfx" value="${escAttr(newTrainer.graphics_id)}" style="font-family:monospace;font-size:12px">
+                        <label>Graphics ID (Sprite)</label>
+                        ${makeDatalistHtml('at-gfx', newTrainer.graphics_id, getUniqueGraphicsIds(), 'style="font-family:monospace;font-size:12px"')}
                     </div>
                     <div class="form-group">
                         <label>Script</label>
@@ -2230,7 +2342,7 @@ function addMapTrainer(dirName) {
                 <div class="form-row">
                     <div class="form-group">
                         <label>Movement Type</label>
-                        <input type="text" id="at-move" value="${escAttr(newTrainer.movement_type)}" style="font-family:monospace;font-size:12px">
+                        ${makeDatalistHtml('at-move', newTrainer.movement_type, getUniqueMovementTypes(), 'style="font-family:monospace;font-size:12px"')}
                     </div>
                     <div class="form-group">
                         <label>Trainer Sight Range</label>
@@ -2240,7 +2352,7 @@ function addMapTrainer(dirName) {
                 <div class="form-row">
                     <div class="form-group">
                         <label>Trainer Type</label>
-                        <input type="text" id="at-ttype" value="${escAttr(newTrainer.trainer_type)}" style="font-family:monospace;font-size:12px">
+                        ${makeSelectHtml('at-ttype', newTrainer.trainer_type, TRAINER_TYPES_LIST, 'style="font-family:monospace;font-size:12px"')}
                     </div>
                     <div class="form-group">
                         <label>Flag</label>
@@ -2849,6 +2961,695 @@ function showPRSuccess(prUrl) {
     `;
     document.body.appendChild(overlay);
     overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+}
+
+// ─── Warp Section ───────────────────────────────────────────────────────────
+function buildWarpSection(map) {
+    const warps = map.warp_events || [];
+    let body = '';
+    if (warps.length === 0) {
+        body = `<div class="empty-state"><div class="empty-icon">&#128682;</div>No warps in this area</div>`;
+    } else {
+        body = warps.map((w, i) => {
+            const destName = (w.dest_map || '').replace('MAP_', '').replace(/_/g, ' ');
+            return `
+                <div class="warp-row">
+                    <div class="warp-icon">&#128682;</div>
+                    <div class="warp-info">
+                        <div class="warp-dest">${escHtml(destName)}</div>
+                        <div class="warp-detail">${escHtml(w.dest_map || '')} &middot; Warp #${w.dest_warp_id || '0'}</div>
+                    </div>
+                    <div class="warp-coords">(${w.x}, ${w.y})</div>
+                    <button class="btn btn-sm" onclick="editWarp('${escAttr(map._dirName)}', ${i})">Edit</button>
+                </div>
+            `;
+        }).join('');
+    }
+
+    return `
+        <div class="map-area-section">
+            <div class="map-area-section-header">
+                <h2><span class="section-icon">&#128682;</span> Warps <span class="section-count">${warps.length}</span></h2>
+                <span class="toggle-arrow">&#9660;</span>
+            </div>
+            <div class="map-area-section-body">${body}</div>
+        </div>
+    `;
+}
+
+function editWarp(dirName, warpIdx) {
+    const map = state.maps.find(m => m._dirName === dirName);
+    if (!map) return;
+    const warps = map.warp_events || [];
+    const warp = warps[warpIdx];
+    if (!warp) return;
+
+    // Collect all map IDs for destination dropdown
+    const mapIds = (state.maps || []).map(m => m.id).filter(Boolean).sort();
+
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Edit Warp</h2>
+                <button class="btn btn-sm" onclick="this.closest('.modal-overlay').remove()">&#10005;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Destination Map</label>
+                    ${makeDatalistHtml('warp-dest', warp.dest_map || '', mapIds, 'style="font-family:monospace;font-size:12px"')}
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Dest Warp ID</label>
+                        <input type="text" id="warp-dest-id" value="${escAttr(warp.dest_warp_id || '0')}">
+                    </div>
+                    <div class="form-group">
+                        <label>X</label>
+                        <input type="number" id="warp-x" value="${warp.x || 0}">
+                    </div>
+                    <div class="form-group">
+                        <label>Y</label>
+                        <input type="number" id="warp-y" value="${warp.y || 0}">
+                    </div>
+                    <div class="form-group">
+                        <label>Elevation</label>
+                        <input type="number" id="warp-elev" value="${warp.elevation || 0}">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+                <button class="btn btn-primary" id="save-warp-btn">Save</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+
+    $('#save-warp-btn').addEventListener('click', () => {
+        warp.dest_map = $('#warp-dest').value;
+        warp.dest_warp_id = $('#warp-dest-id').value;
+        warp.x = parseInt($('#warp-x').value);
+        warp.y = parseInt($('#warp-y').value);
+        warp.elevation = parseInt($('#warp-elev').value);
+
+        const serialized = { ...map };
+        delete serialized._dirName;
+        markChanged(`data/maps/${map._dirName}/map.json`, JSON.stringify(serialized, null, 2) + '\n');
+        toast('Warp updated (pending PR submission)');
+        overlay.remove();
+        renderMapDetail(dirName);
+    });
+}
+
+// ─── Object Scripts Section ─────────────────────────────────────────────────
+function buildObjectScriptsSection(map) {
+    const events = (map.object_events || []).filter(e => {
+        // Exclude trainers and item balls (they have their own sections)
+        if (e.trainer_type && e.trainer_type !== 'TRAINER_TYPE_NONE') return false;
+        if ((e.graphics_id || '').includes('ITEM_BALL')) return false;
+        return true;
+    });
+
+    let body = '';
+    if (events.length === 0) {
+        body = `<div class="empty-state"><div class="empty-icon">&#9786;</div>No NPC/object scripts in this area</div>`;
+    } else {
+        body = events.map((evt, i) => {
+            const gfx = (evt.graphics_id || '').replace('OBJ_EVENT_GFX_', '').replace(/_/g, ' ');
+            const scriptName = (evt.script || 'No script').replace(/_/g, ' ');
+            const realIdx = (map.object_events || []).indexOf(evt);
+            return `
+                <div class="area-trainer-row">
+                    ${getSpriteHtml(evt.graphics_id, 36)}
+                    <div class="area-trainer-info">
+                        <div class="area-trainer-name">${escHtml(gfx)}</div>
+                        <div class="area-trainer-detail">${escHtml(evt.script || '')} &middot; ${evt.movement_type ? evt.movement_type.replace('MOVEMENT_TYPE_', '') : 'NONE'} &middot; (${evt.x}, ${evt.y})</div>
+                    </div>
+                    <button class="btn btn-sm" onclick="editObjectEvent('${escAttr(map._dirName)}', ${realIdx})">Edit</button>
+                </div>
+            `;
+        }).join('');
+    }
+
+    return `
+        <div class="map-area-section">
+            <div class="map-area-section-header">
+                <h2><span class="section-icon">&#9786;</span> NPCs / Objects <span class="section-count">${events.length}</span></h2>
+                <span class="toggle-arrow">&#9660;</span>
+            </div>
+            <div class="map-area-section-body">${body}</div>
+        </div>
+    `;
+}
+
+function editObjectEvent(dirName, evtIdx) {
+    const map = state.maps.find(m => m._dirName === dirName);
+    if (!map) return;
+    const evt = (map.object_events || [])[evtIdx];
+    if (!evt) return;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Edit Object Event</h2>
+                <button class="btn btn-sm" onclick="this.closest('.modal-overlay').remove()">&#10005;</button>
+            </div>
+            <div class="modal-body">
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;padding:12px;background:var(--bg);border-radius:6px;border:1px solid var(--border)">
+                    ${getSpriteHtml(evt.graphics_id, 48)}
+                    <div>
+                        <div style="font-size:13px;font-weight:600">${escHtml((evt.graphics_id || '').replace('OBJ_EVENT_GFX_', '').replace(/_/g, ' '))}</div>
+                        <div style="font-size:11px;color:var(--text-dim)">${escHtml(evt.script || '')}</div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Graphics ID (Sprite)</label>
+                        ${makeDatalistHtml('oe-gfx', evt.graphics_id || '', getUniqueGraphicsIds(), 'style="font-family:monospace;font-size:12px"')}
+                    </div>
+                    <div class="form-group">
+                        <label>Script</label>
+                        <input type="text" id="oe-script" value="${escAttr(evt.script || '')}" style="font-family:monospace;font-size:12px">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>X</label>
+                        <input type="number" id="oe-x" value="${evt.x || 0}">
+                    </div>
+                    <div class="form-group">
+                        <label>Y</label>
+                        <input type="number" id="oe-y" value="${evt.y || 0}">
+                    </div>
+                    <div class="form-group">
+                        <label>Elevation</label>
+                        <input type="number" id="oe-elev" value="${evt.elevation || 0}">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Movement Type</label>
+                        ${makeDatalistHtml('oe-move', evt.movement_type || '', getUniqueMovementTypes(), 'style="font-family:monospace;font-size:12px"')}
+                    </div>
+                    <div class="form-group">
+                        <label>Movement Range</label>
+                        <div style="display:flex;gap:6px">
+                            <input type="number" id="oe-mx" value="${evt.movement_range_x || 0}" min="0" style="width:60px" title="Range X">
+                            <input type="number" id="oe-my" value="${evt.movement_range_y || 0}" min="0" style="width:60px" title="Range Y">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Flag</label>
+                        <input type="text" id="oe-flag" value="${escAttr(evt.flag || '0')}" style="font-family:monospace;font-size:12px">
+                    </div>
+                    <div class="form-group">
+                        <label>Trainer Type</label>
+                        ${makeSelectHtml('oe-ttype', evt.trainer_type || 'TRAINER_TYPE_NONE', TRAINER_TYPES_LIST, 'style="font-family:monospace;font-size:12px"')}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+                <button class="btn btn-primary" id="save-oe-btn">Save</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+
+    $('#save-oe-btn').addEventListener('click', () => {
+        evt.graphics_id = $('#oe-gfx').value;
+        evt.script = $('#oe-script').value;
+        evt.x = parseInt($('#oe-x').value);
+        evt.y = parseInt($('#oe-y').value);
+        evt.elevation = parseInt($('#oe-elev').value);
+        evt.movement_type = $('#oe-move').value;
+        evt.movement_range_x = parseInt($('#oe-mx').value);
+        evt.movement_range_y = parseInt($('#oe-my').value);
+        evt.flag = $('#oe-flag').value;
+        evt.trainer_type = $('#oe-ttype').value;
+
+        const serialized = { ...map };
+        delete serialized._dirName;
+        markChanged(`data/maps/${map._dirName}/map.json`, JSON.stringify(serialized, null, 2) + '\n');
+        toast('Object event updated (pending PR submission)');
+        overlay.remove();
+        renderMapDetail(dirName);
+    });
+}
+
+// ─── NPC Tab ────────────────────────────────────────────────────────────────
+function collectNPCs() {
+    if (!state.maps) return [];
+    const npcs = [];
+    for (const map of state.maps) {
+        for (const evt of (map.object_events || [])) {
+            // Include all non-item-ball events (trainers can also be NPCs of interest)
+            if ((evt.graphics_id || '').includes('ITEM_BALL')) continue;
+            if ((evt.graphics_id || '').includes('BERRY_TREE')) continue;
+            npcs.push({ ...evt, _mapDirName: map._dirName, _mapName: getMapDisplayName(map), _mapId: map.id });
+        }
+    }
+    return npcs;
+}
+
+async function renderNPCs() {
+    const maps = await loadMaps();
+    try { await loadTrainers(); } catch {}
+
+    const allNPCs = collectNPCs();
+    const search = state.search.toLowerCase();
+
+    const filtered = allNPCs.filter(n => {
+        if (!search) return true;
+        return (n.graphics_id || '').toLowerCase().includes(search) ||
+            (n.script || '').toLowerCase().includes(search) ||
+            (n._mapName || '').toLowerCase().includes(search) ||
+            (n._mapId || '').toLowerCase().includes(search);
+    });
+
+    // Group by graphics_id for a summary view
+    const groups = {};
+    for (const n of filtered) {
+        const key = n.graphics_id || 'UNKNOWN';
+        if (!groups[key]) groups[key] = { graphics_id: key, count: 0, maps: new Set(), npcs: [] };
+        groups[key].count++;
+        groups[key].maps.add(n._mapName);
+        groups[key].npcs.push(n);
+    }
+
+    const sortedGroups = Object.values(groups).sort((a, b) => b.count - a.count);
+
+    content.innerHTML = `
+        <div class="page-header">
+            <h1>NPCs <span style="color:var(--text-dim);font-size:14px">(${filtered.length} events, ${sortedGroups.length} types)</span></h1>
+        </div>
+        <div class="search-bar">
+            <span class="search-icon">&#128269;</span>
+            <input type="text" placeholder="Search NPCs by sprite, script, or map name..." id="npc-search" value="${state.search}">
+        </div>
+        <div id="npc-list"></div>
+    `;
+
+    const list = $('#npc-list');
+
+    // Show individual NPC events in a table-like view
+    const maxShow = 200;
+    const toShow = filtered.slice(0, maxShow);
+
+    let rows = toShow.map((n, i) => {
+        const gfx = (n.graphics_id || '').replace('OBJ_EVENT_GFX_', '').replace(/_/g, ' ');
+        const isTrainer = n.trainer_type && n.trainer_type !== 'TRAINER_TYPE_NONE';
+        const scriptShort = (n.script || '').replace(/_EventScript_/g, ' ').replace(/_/g, ' ');
+        return `
+            <div class="npc-row">
+                ${getSpriteHtml(n.graphics_id, 36)}
+                <div class="npc-row-info">
+                    <div class="npc-row-name">${escHtml(gfx)}${isTrainer ? ' <span style="color:var(--red);font-size:10px">TRAINER</span>' : ''}</div>
+                    <div class="npc-row-detail">${escHtml(n.script || 'No script')}</div>
+                </div>
+                <div class="npc-row-map" onclick="openMapDetail('${escAttr(n._mapDirName)}')" style="cursor:pointer" title="Go to map">
+                    ${escHtml(n._mapName)}
+                </div>
+                <div class="npc-row-coords">(${n.x}, ${n.y})</div>
+                <div class="npc-row-actions">
+                    <button class="btn btn-sm" onclick="editNPCFromList('${escAttr(n._mapDirName)}', '${escAttr(n.script || '')}', ${n.x}, ${n.y})">Edit</button>
+                    ${isTrainer ? `<button class="btn btn-sm" onclick="editNPCParty('${escAttr(n._mapDirName)}', '${escAttr(n.script || '')}')">Party</button>` : ''}
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    if (filtered.length > maxShow) {
+        rows += `<div style="padding:16px;color:var(--text-dim);font-size:13px;text-align:center">Showing ${maxShow} of ${filtered.length} NPCs. Use search to narrow down.</div>`;
+    }
+
+    list.innerHTML = `
+        <div class="npc-table">
+            <div class="npc-table-header">
+                <div style="min-width:36px"></div>
+                <div style="flex:2">Name / Script</div>
+                <div style="flex:1">Map</div>
+                <div style="min-width:70px">Position</div>
+                <div style="min-width:130px"></div>
+            </div>
+            ${rows || '<div class="empty-state">No NPCs found matching your search.</div>'}
+        </div>
+    `;
+
+    $('#npc-search').addEventListener('input', e => {
+        state.search = e.target.value;
+        renderNPCs();
+    });
+}
+
+function editNPCFromList(dirName, script, x, y) {
+    const map = state.maps.find(m => m._dirName === dirName);
+    if (!map) return;
+    const events = map.object_events || [];
+    const idx = events.findIndex(e => e.script === script && e.x === x && e.y === y);
+    if (idx >= 0) editObjectEvent(dirName, idx);
+}
+
+function editNPCParty(dirName, script) {
+    const scriptParts = script.split('_EventScript_');
+    if (scriptParts.length >= 2) {
+        const trainerSuffix = scriptParts[scriptParts.length - 1];
+        const matched = (state.trainers || []).find(t =>
+            t.id.toUpperCase().includes(trainerSuffix.toUpperCase())
+        );
+        if (matched) {
+            editTrainer(matched.id);
+            return;
+        }
+    }
+    toast('Could not match NPC to a trainer party entry', true);
+}
+
+// ─── Pokemon Species Tab ────────────────────────────────────────────────────
+function parsePokemonSpecies(text) {
+    const pokemon = [];
+    const regex = /\[(SPECIES_\w+)\]\s*=\s*\{([\s\S]*?)\n    \}/g;
+    let match;
+    while ((match = regex.exec(text)) !== null) {
+        const id = match[1];
+        if (id === 'SPECIES_NONE') continue;
+        const body = match[2];
+        const mon = { id };
+
+        const nameM = body.match(/\.speciesName\s*=\s*_\("([^"]+)"\)/);
+        const hpM = body.match(/\.baseHP\s*=\s*(\d+)/);
+        const atkM = body.match(/\.baseAttack\s*=\s*(\d+)/);
+        const defM = body.match(/\.baseDefense\s*=\s*(\d+)/);
+        const spdM = body.match(/\.baseSpeed\s*=\s*(\d+)/);
+        const spaM = body.match(/\.baseSpAttack\s*=\s*(\d+)/);
+        const spdM2 = body.match(/\.baseSpDefense\s*=\s*(\d+)/);
+        const typesM = body.match(/\.types\s*=\s*MON_TYPES\((\w+)(?:,\s*(\w+))?\)/);
+        const catchM = body.match(/\.catchRate\s*=\s*(\d+)/);
+        const expM = body.match(/\.expYield\s*=\s*(\d+)/);
+        const abilitiesM = body.match(/\.abilities\s*=\s*\{([^}]+)\}/);
+        const growthM = body.match(/\.growthRate\s*=\s*(\w+)/);
+        const eggM = body.match(/\.eggGroups\s*=\s*MON_EGG_GROUPS\((\w+)(?:,\s*(\w+))?\)/);
+
+        if (nameM) mon.name = nameM[1];
+        if (hpM) mon.baseHP = parseInt(hpM[1]);
+        if (atkM) mon.baseAttack = parseInt(atkM[1]);
+        if (defM) mon.baseDefense = parseInt(defM[1]);
+        if (spdM) mon.baseSpeed = parseInt(spdM[1]);
+        if (spaM) mon.baseSpAttack = parseInt(spaM[1]);
+        if (spdM2) mon.baseSpDefense = parseInt(spdM2[1]);
+        if (typesM) {
+            mon.type1 = (typesM[1] || '').replace('TYPE_', '');
+            mon.type2 = typesM[2] ? typesM[2].replace('TYPE_', '') : mon.type1;
+        }
+        if (catchM) mon.catchRate = parseInt(catchM[1]);
+        if (expM) mon.expYield = parseInt(expM[1]);
+        if (abilitiesM) mon.abilities = abilitiesM[1].trim();
+        if (growthM) mon.growthRate = growthM[1].replace('GROWTH_', '');
+        if (eggM) {
+            mon.eggGroup1 = (eggM[1] || '').replace('EGG_GROUP_', '');
+            mon.eggGroup2 = eggM[2] ? eggM[2].replace('EGG_GROUP_', '') : '';
+        }
+
+        mon.bst = (mon.baseHP || 0) + (mon.baseAttack || 0) + (mon.baseDefense || 0) +
+            (mon.baseSpeed || 0) + (mon.baseSpAttack || 0) + (mon.baseSpDefense || 0);
+
+        if (mon.name) pokemon.push(mon);
+    }
+    return pokemon;
+}
+
+async function loadPokemonSpecies() {
+    if (!state.pokemon) {
+        const listing = await ghFetch(`/repos/${REPO_OWNER}/${REPO_NAME}/contents/src/data/pokemon/species_info?ref=${BRANCH}`);
+        const genFiles = listing.filter(f => f.name.startsWith('gen_') && f.name.endsWith('.h'));
+        const allPokemon = [];
+        // Load in batches of 3
+        for (let i = 0; i < genFiles.length; i += 3) {
+            const batch = genFiles.slice(i, i + 3);
+            const results = await Promise.all(batch.map(async f => {
+                try {
+                    const text = await fetchFile(`src/data/pokemon/species_info/${f.name}`);
+                    return { file: f.name, pokemon: parsePokemonSpecies(text) };
+                } catch { return { file: f.name, pokemon: [] }; }
+            }));
+            for (const r of results) {
+                for (const p of r.pokemon) {
+                    p._file = r.file;
+                }
+                allPokemon.push(...r.pokemon);
+            }
+        }
+        state.pokemon = allPokemon;
+    }
+    return state.pokemon;
+}
+
+function updatePokemonInFile(mon) {
+    const filePath = `src/data/pokemon/species_info/${mon._file}`;
+    let fileContent = pendingChanges[filePath] || originalContent[filePath];
+    if (!fileContent) { toast('Pokemon data not loaded yet', true); return; }
+
+    const fields = ['baseHP', 'baseAttack', 'baseDefense', 'baseSpeed', 'baseSpAttack', 'baseSpDefense', 'catchRate', 'expYield'];
+
+    // Replace within the specific species block
+    const blockRegex = new RegExp(`(\\[${mon.id}\\]\\s*=\\s*\\{)([\\s\\S]*?)(\\n    \\})`, 'm');
+    const blockMatch = fileContent.match(blockRegex);
+    if (blockMatch) {
+        let block = blockMatch[2];
+        for (const key of fields) {
+            if (mon[key] !== undefined) {
+                const fieldRegex = new RegExp(`(\\.${key}\\s*=\\s*)\\d+`);
+                block = block.replace(fieldRegex, `$1${mon[key]}`);
+            }
+        }
+
+        // Update types
+        if (mon.type1) {
+            const typeRegex = /\.types\s*=\s*MON_TYPES\(\w+(?:,\s*\w+)?\)/;
+            const type2 = mon.type2 && mon.type2 !== mon.type1 ? `, TYPE_${mon.type2}` : '';
+            block = block.replace(typeRegex, `.types = MON_TYPES(TYPE_${mon.type1}${type2})`);
+        }
+
+        fileContent = fileContent.replace(blockRegex, `$1${block}$3`);
+    }
+
+    markChanged(filePath, fileContent);
+}
+
+async function renderPokemonPage() {
+    const pokemon = await loadPokemonSpecies();
+    const search = state.search.toLowerCase();
+
+    const filtered = pokemon.filter(p =>
+        !search ||
+        (p.name || '').toLowerCase().includes(search) ||
+        p.id.toLowerCase().includes(search) ||
+        (p.type1 || '').toLowerCase().includes(search) ||
+        (p.type2 || '').toLowerCase().includes(search)
+    );
+
+    const perPage = 50;
+    const page = state.pokemonPage || 0;
+    const totalPages = Math.ceil(filtered.length / perPage);
+    const pageItems = filtered.slice(page * perPage, (page + 1) * perPage);
+
+    content.innerHTML = `
+        <div class="page-header">
+            <h1>Pokemon <span style="color:var(--text-dim);font-size:14px">(${filtered.length})</span></h1>
+        </div>
+        <div class="search-bar">
+            <span class="search-icon">&#128269;</span>
+            <input type="text" placeholder="Search Pokemon by name, ID, or type..." id="pokemon-search" value="${state.search}">
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Pokemon</th>
+                        <th>Type</th>
+                        <th>HP</th>
+                        <th>Atk</th>
+                        <th>Def</th>
+                        <th>SpA</th>
+                        <th>SpD</th>
+                        <th>Spe</th>
+                        <th>BST</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="pokemon-tbody">
+                    ${pageItems.map(p => `
+                        <tr>
+                            <td>
+                                <strong>${escHtml(p.name || '-')}</strong><br>
+                                <span style="font-size:11px;color:var(--text-dim);font-family:monospace">${p.id}</span>
+                            </td>
+                            <td>
+                                <span class="type-badge type-${p.type1 || 'NORMAL'}">${p.type1 || '-'}</span>
+                                ${p.type2 && p.type2 !== p.type1 ? `<span class="type-badge type-${p.type2}">${p.type2}</span>` : ''}
+                            </td>
+                            <td>${p.baseHP ?? '-'}</td>
+                            <td>${p.baseAttack ?? '-'}</td>
+                            <td>${p.baseDefense ?? '-'}</td>
+                            <td>${p.baseSpAttack ?? '-'}</td>
+                            <td>${p.baseSpDefense ?? '-'}</td>
+                            <td>${p.baseSpeed ?? '-'}</td>
+                            <td><strong>${p.bst || '-'}</strong></td>
+                            <td><button class="btn btn-sm" onclick="editPokemon('${escAttr(p.id)}')">Edit</button></td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
+        <div class="pagination" id="pokemon-pagination">
+            <span>Page ${page + 1} of ${totalPages} (${filtered.length} Pokemon)</span>
+            <div class="pagination-btns">
+                ${page > 0 ? `<button class="btn btn-sm" onclick="state.pokemonPage=${page - 1}; renderPokemonPage()">Prev</button>` : ''}
+                ${page < totalPages - 1 ? `<button class="btn btn-sm" onclick="state.pokemonPage=${page + 1}; renderPokemonPage()">Next</button>` : ''}
+            </div>
+        </div>
+    `;
+
+    $('#pokemon-search').addEventListener('input', e => {
+        state.search = e.target.value;
+        state.pokemonPage = 0;
+        renderPokemonPage();
+    });
+}
+
+function editPokemon(id) {
+    const mon = state.pokemon.find(p => p.id === id);
+    if (!mon) return;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+        <div class="modal" style="max-width:650px">
+            <div class="modal-header">
+                <h2>Edit ${escHtml(mon.name || mon.id)}</h2>
+                <button class="btn btn-sm" onclick="this.closest('.modal-overlay').remove()">&#10005;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Species ID</label>
+                        <input type="text" value="${escAttr(mon.id)}" readonly style="opacity:0.6">
+                    </div>
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" value="${escAttr(mon.name || '')}" readonly style="opacity:0.6" title="Name is set in source">
+                    </div>
+                </div>
+                <div style="margin:12px 0 8px;font-size:13px;font-weight:600">Base Stats</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>HP</label>
+                        <input type="number" id="pk-hp" value="${mon.baseHP || 0}" min="1" max="255">
+                    </div>
+                    <div class="form-group">
+                        <label>Attack</label>
+                        <input type="number" id="pk-atk" value="${mon.baseAttack || 0}" min="1" max="255">
+                    </div>
+                    <div class="form-group">
+                        <label>Defense</label>
+                        <input type="number" id="pk-def" value="${mon.baseDefense || 0}" min="1" max="255">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Sp. Atk</label>
+                        <input type="number" id="pk-spa" value="${mon.baseSpAttack || 0}" min="1" max="255">
+                    </div>
+                    <div class="form-group">
+                        <label>Sp. Def</label>
+                        <input type="number" id="pk-spd" value="${mon.baseSpDefense || 0}" min="1" max="255">
+                    </div>
+                    <div class="form-group">
+                        <label>Speed</label>
+                        <input type="number" id="pk-spe" value="${mon.baseSpeed || 0}" min="1" max="255">
+                    </div>
+                </div>
+                <div style="margin:12px 0 8px;font-size:13px;font-weight:600">Types</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Type 1</label>
+                        <select id="pk-type1">
+                            ${POKEMON_TYPES.map(t => `<option value="${t}" ${mon.type1 === t ? 'selected' : ''}>${t}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Type 2</label>
+                        <select id="pk-type2">
+                            ${POKEMON_TYPES.map(t => `<option value="${t}" ${mon.type2 === t ? 'selected' : ''}>${t}</option>`).join('')}
+                        </select>
+                    </div>
+                </div>
+                <div style="margin:12px 0 8px;font-size:13px;font-weight:600">Other</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Catch Rate</label>
+                        <input type="number" id="pk-catch" value="${mon.catchRate || 0}" min="1" max="255">
+                    </div>
+                    <div class="form-group">
+                        <label>Exp Yield</label>
+                        <input type="number" id="pk-exp" value="${mon.expYield || 0}" min="0" max="999">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Abilities</label>
+                        <input type="text" id="pk-abilities" value="${escAttr(mon.abilities || '')}" style="font-family:monospace;font-size:12px" readonly style="opacity:0.6" title="Edit in source">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Growth Rate</label>
+                        <input type="text" value="${escAttr(mon.growthRate || '')}" readonly style="opacity:0.6;font-family:monospace;font-size:12px">
+                    </div>
+                    <div class="form-group">
+                        <label>Egg Groups</label>
+                        <input type="text" value="${escAttr((mon.eggGroup1 || '') + (mon.eggGroup2 ? ', ' + mon.eggGroup2 : ''))}" readonly style="opacity:0.6;font-family:monospace;font-size:12px">
+                    </div>
+                </div>
+                <div style="margin-top:12px;padding:10px;background:var(--bg);border-radius:6px;font-size:12px;color:var(--text-dim)">
+                    BST: <strong style="color:var(--text)">${mon.bst || 0}</strong> &middot; File: ${escHtml(mon._file || '')}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+                <button class="btn btn-primary" id="save-pk-btn">Save</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+
+    $('#save-pk-btn').addEventListener('click', () => {
+        mon.baseHP = parseInt($('#pk-hp').value);
+        mon.baseAttack = parseInt($('#pk-atk').value);
+        mon.baseDefense = parseInt($('#pk-def').value);
+        mon.baseSpAttack = parseInt($('#pk-spa').value);
+        mon.baseSpDefense = parseInt($('#pk-spd').value);
+        mon.baseSpeed = parseInt($('#pk-spe').value);
+        mon.type1 = $('#pk-type1').value;
+        mon.type2 = $('#pk-type2').value;
+        mon.catchRate = parseInt($('#pk-catch').value);
+        mon.expYield = parseInt($('#pk-exp').value);
+        mon.bst = mon.baseHP + mon.baseAttack + mon.baseDefense + mon.baseSpAttack + mon.baseSpDefense + mon.baseSpeed;
+
+        updatePokemonInFile(mon);
+        toast(`${mon.name || mon.id} updated (pending PR submission)`);
+        overlay.remove();
+        renderPokemonPage();
+    });
 }
 
 // ─── Utils ──────────────────────────────────────────────────────────────────
