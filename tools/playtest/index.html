@@ -135,6 +135,36 @@
             margin-bottom: 0.4rem;
         }
         .step p { font-size: 0.8rem; color: #ccc; }
+        .rom-source {
+            width: 100%;
+            background: #16213e;
+            border-radius: 8px;
+            padding: 1rem;
+            font-size: 0.85rem;
+        }
+        .rom-source h3 { font-size: 0.95rem; margin-bottom: 0.5rem; color: #e94560; }
+        .rom-source > p { color: #aaa; margin-bottom: 0.75rem; }
+        .source-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+        @media (max-width: 640px) {
+            .source-options { grid-template-columns: 1fr; }
+        }
+        .source-option {
+            background: #1a1a2e;
+            padding: 0.75rem;
+            border-radius: 6px;
+        }
+        .source-option strong { color: #e94560; display: block; margin-bottom: 0.3rem; }
+        .source-option p { color: #aaa; font-size: 0.8rem; margin: 0; }
+        .source-option code {
+            background: #0f3460;
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+        }
         .privacy-note {
             font-size: 0.75rem;
             color: #666;
@@ -155,15 +185,30 @@
             <div class="steps">
                 <div class="step">
                     <div class="step-num">1</div>
-                    <p>Developer sends you a <strong>.gba</strong> ROM file</p>
+                    <p>Download the ROM from your repo's <strong>Actions</strong> tab (or get it from the developer)</p>
                 </div>
                 <div class="step">
                     <div class="step-num">2</div>
-                    <p>Drop it on this page</p>
+                    <p>Drop the <strong>.gba</strong> file below</p>
                 </div>
                 <div class="step">
                     <div class="step-num">3</div>
                     <p>Play and test directly in your browser</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="rom-source" id="rom-source">
+            <h3>Get the ROM</h3>
+            <p>Every push to the repo automatically builds a ROM. Download it from:</p>
+            <div class="source-options">
+                <div class="source-option">
+                    <strong>GitHub Actions</strong>
+                    <p>Go to your repo &rarr; Actions tab &rarr; latest passing build &rarr; download <code>pokeemerald-debug</code> artifact</p>
+                </div>
+                <div class="source-option">
+                    <strong>Direct link</strong>
+                    <p>Or have the developer share a direct link to the artifact or the .gba file</p>
                 </div>
             </div>
         </div>
@@ -262,6 +307,7 @@
     function launchEmulator(romURL, fileName) {
         dropZone.style.display = 'none';
         document.getElementById('how-it-works').style.display = 'none';
+        document.getElementById('rom-source').style.display = 'none';
         document.getElementById('emulator-area').style.display = 'block';
         showStatus(`Playing: ${fileName}`, 'loaded');
 
