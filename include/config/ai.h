@@ -88,6 +88,8 @@
 #define AI_ROLL_MIN                                             1
 #define AI_ROLL_MEDIAN                                          2
 #define AI_ROLL_MAX                                             3
+#define AI_ROLL_RANDOM                                          4
+#define AI_ROLL_TYPE_COUNT                                      5
 
 // Define which roll type to use in each context; overridden by AI_FLAG_RISKY and AI_FLAG_CONSERVATIVE
 #define AI_ROLL_ATTACKING                                       AI_ROLL_MAX

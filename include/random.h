@@ -244,6 +244,7 @@ enum RandomTag
     RNG_FISHING_GEN3_STICKY,
     RNG_WILD_MON_TARGET,
     RNG_AI_FAKE_OUT_SAVE_ALLY,
+    RNG_AI_DMG_ROLL_RANDOM,
 };
 
 #define RandomWeighted(tag, ...) \

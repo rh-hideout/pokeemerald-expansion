@@ -101,6 +101,8 @@ u32 AI_GetDefaultDamageRollForContext(enum BattlerId battlerAtk, enum BattlerId 
         return aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex].median;
     case AI_ROLL_MAX:
         return aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex].maximum;
+    case AI_ROLL_RANDOM:
+        return aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex].random;
     default:
         return aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex].median; // Default assumes it deals median damage
     }
@@ -114,7 +116,7 @@ u32 AI_GetDamage(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveI
             return aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex].maximum;
         if ((gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSERVATIVE) && !(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_RISKY)) // Conservative assumes it deals min damage
             return aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex].minimum;
-        return AI_GetDefaultDamageRollForContext(battlerAtk, battlerDef, moveIndex, aiData, AI_ROLL_ATTACKING);
+        return AI_GetDefaultDamageRollForContext(battlerAtk, battlerDef, moveIndex, aiData, GetConfig(AI_ROLL_ATTACKING));
     }
     else if (calcContext == AI_DEFENDING && BattlerHasAi(battlerDef))
     {
@@ -619,6 +621,14 @@ static inline s32 DmgRoll(s32 dmg)
     return dmg;
 }
 
+static inline s32 RandomRollDmg(s32 dmg)
+{
+    u32 randomRollPercentage = RandomUniform(RNG_AI_DMG_ROLL_RANDOM, MIN_ROLL_PERCENTAGE, MAX_ROLL_PERCENTAGE);
+    dmg *= randomRollPercentage;
+    dmg /= 100;
+    return dmg;
+}
+
 bool32 IsDamageMoveUnusable(struct BattleContext *ctx)
 {
     enum Ability battlerDefAbility;
@@ -729,6 +739,8 @@ static inline s32 GetDamageByRollType(s32 dmg, enum DamageRollType rollType)
         return LowestRollDmg(dmg);
     else if (rollType == DMG_ROLL_HIGHEST)
         return HighestRollDmg(dmg);
+    else if (rollType == DMG_ROLL_RANDOM)
+        return RandomRollDmg(dmg);
     else
         return DmgRoll(dmg);
 }
@@ -747,12 +759,13 @@ static inline void AI_RestoreBattlerTypes(enum BattlerId battlerAtk, enum Type *
     gBattleMons[battlerAtk].types[2] = types[2];
 }
 
-static inline void CalcDynamicMoveDamage(struct BattleContext *ctx, u16 *medianDamage, u16 *minimumDamage, u16 *maximumDamage)
+static inline void CalcDynamicMoveDamage(struct BattleContext *ctx, u16 *medianDamage, u16 *minimumDamage, u16 *maximumDamage, u16 *randomDamage)
 {
     enum BattleMoveEffects effect = GetMoveEffect(ctx->move);
     u16 median = *medianDamage;
     u16 minimum = *minimumDamage;
     u16 maximum = *maximumDamage;
+    u16 random = *randomDamage;
 
     u32 strikeCount = GetMoveStrikeCount(ctx->move);
 
@@ -766,7 +779,7 @@ static inline void CalcDynamicMoveDamage(struct BattleContext *ctx, u16 *medianD
         median = 0;
         for (i = 0; i < partyCount; i++)
             median += CalculateMoveDamage(ctx);
-        maximum = minimum = median;
+        maximum = minimum = median = random;
         gBattleStruct->beatUpSlot = 0;
     }
     else if (strikeCount > 1 && effect != EFFECT_TRIPLE_KICK)
@@ -774,6 +787,7 @@ static inline void CalcDynamicMoveDamage(struct BattleContext *ctx, u16 *medianD
         median *= strikeCount;
         minimum *= strikeCount;
         maximum *= strikeCount;
+        random *= strikeCount;
     }
     else if (IsMultiHitMove(ctx->move))
     {
@@ -782,12 +796,14 @@ static inline void CalcDynamicMoveDamage(struct BattleContext *ctx, u16 *medianD
             median *= GetMoveSpeciesPowerOverride_NumOfHits(ctx->move);
             minimum *= GetMoveSpeciesPowerOverride_NumOfHits(ctx->move);
             maximum *= GetMoveSpeciesPowerOverride_NumOfHits(ctx->move);
+            random *= GetMoveSpeciesPowerOverride_NumOfHits(ctx->move);
         }
         else if (ctx->abilityAtk == ABILITY_SKILL_LINK)
         {
             median *= 5;
             minimum *= 5;
             maximum *= 5;
+            random *= 5;
         }
         else if (ctx->holdEffectAtk == HOLD_EFFECT_LOADED_DICE)
         {
@@ -795,12 +811,14 @@ static inline void CalcDynamicMoveDamage(struct BattleContext *ctx, u16 *medianD
             median /= 2;
             minimum *= 4;
             maximum *= 5;
+            random *= RandomUniform(RNG_AI_DMG_ROLL_RANDOM, 4, 5);
         }
         else
         {
             median *= 3;
             minimum *= 2;
             maximum *= 5;
+            random *= RandomUniform(RNG_AI_DMG_ROLL_RANDOM, 2, 5);
         }
     }
     else if (ctx->abilityAtk == ABILITY_PARENTAL_BOND
@@ -810,6 +828,7 @@ static inline void CalcDynamicMoveDamage(struct BattleContext *ctx, u16 *medianD
         median  += median  / (B_PARENTAL_BOND_DMG >= GEN_7 ? 4 : 2);
         minimum += minimum / (B_PARENTAL_BOND_DMG >= GEN_7 ? 4 : 2);
         maximum += maximum / (B_PARENTAL_BOND_DMG >= GEN_7 ? 4 : 2);
+        random  += random  / (B_PARENTAL_BOND_DMG >= GEN_7 ? 4 : 2);
     }
 
     if (median == 0)
@@ -818,10 +837,13 @@ static inline void CalcDynamicMoveDamage(struct BattleContext *ctx, u16 *medianD
         minimum = 1;
     if (maximum == 0)
         maximum = 1;
+    if (random == 0)
+        random = 1;
 
     *medianDamage = median;
     *minimumDamage = minimum;
     *maximumDamage = maximum;
+    *randomDamage = random;
 }
 
 static inline bool32 ShouldCalcCritDamage(struct BattleContext *ctx)
@@ -950,7 +972,7 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
         s32 fixedDamage = DoFixedDamageMoveCalc(&ctx);
         if (fixedDamage != INT32_MAX)
         {
-            simDamage.minimum = simDamage.median = simDamage.maximum = fixedDamage;
+            simDamage.minimum = simDamage.median = simDamage.maximum = simDamage.random = fixedDamage;
         }
         else if (moveEffect == EFFECT_TRIPLE_KICK)
         {
@@ -968,6 +990,9 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
 
                 damageByRollType = GetDamageByRollType(oneTripleKickHit, DMG_ROLL_HIGHEST);
                 simDamage.maximum += AI_ApplyModifiersAfterDmgRoll(&ctx, damageByRollType);
+
+                damageByRollType = GetDamageByRollType(oneTripleKickHit, DMG_ROLL_RANDOM);
+                simDamage.random += AI_ApplyModifiersAfterDmgRoll(&ctx, damageByRollType);
             }
         }
         else
@@ -982,10 +1007,13 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
 
             simDamage.maximum = GetDamageByRollType(damage, DMG_ROLL_HIGHEST);
             simDamage.maximum = AI_ApplyModifiersAfterDmgRoll(&ctx, simDamage.maximum);
+
+            simDamage.random = GetDamageByRollType(damage, DMG_ROLL_RANDOM);
+            simDamage.random = AI_ApplyModifiersAfterDmgRoll(&ctx, simDamage.random);
         }
 
         if (GetActiveGimmick(battlerAtk) != GIMMICK_Z_MOVE)
-            CalcDynamicMoveDamage(&ctx, &simDamage.median, &simDamage.minimum, &simDamage.maximum);
+            CalcDynamicMoveDamage(&ctx, &simDamage.median, &simDamage.minimum, &simDamage.maximum, &simDamage.random);
 
         AI_RestoreBattlerTypes(battlerAtk, types);
     }
@@ -994,6 +1022,7 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
         simDamage.minimum = 0;
         simDamage.median = 0;
         simDamage.maximum = 0;
+        simDamage.random = 0;
     }
 
     // convert multiper to AI_EFFECTIVENESS_xX

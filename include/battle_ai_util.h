@@ -14,6 +14,7 @@ enum DamageRollType
     DMG_ROLL_LOWEST,
     DMG_ROLL_MEDIAN,
     DMG_ROLL_HIGHEST,
+    DMG_ROLL_RANDOM,
 };
 
 enum DamageCalcContext
