@@ -1,0 +1,55 @@
+name: Playtest Build
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: playtest-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GAME_REVISION: 0
+  GAME_LANGUAGE: ENGLISH
+  GAME_VERSION: EMERALD
+  COMPARE: 0
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install ARM toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi libpng-dev
+
+      - name: Cache build tools
+        uses: actions/cache@v4
+        with:
+          path: |
+            tools/bin2c/bin2c
+            tools/gbafix/gbafix
+            tools/gbagfx/gbagfx
+            tools/jsonproc/jsonproc
+            tools/mapjson/mapjson
+            tools/mid2agb/mid2agb
+            tools/preproc/preproc
+            tools/ramscrgen/ramscrgen
+            tools/rsfont/rsfont
+            tools/scaninc/scaninc
+            tools/trainerproc/trainerproc
+            tools/compresSmol/compresSmol
+            tools/compresSmol/compresSmolTilemap
+            tools/wav2agb/wav2agb
+          key: tools-${{ runner.os }}-${{ hashFiles('tools/*/Makefile', 'tools/**/*.c', 'tools/**/*.cpp', 'tools/**/*.h') }}
+
+      - name: Build ROM
+        run: make -j$(nproc) -O all
+
+      - name: Upload ROM
+        uses: actions/upload-artifact@v4
+        with:
+          name: playtest-rom
+          path: pokeemerald.gba
+          retention-days: 7

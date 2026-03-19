@@ -125,25 +125,28 @@
             text-align: center;
             padding: 0.5rem;
         }
-        .branch-picker {
+        .branch-builder {
             width: 100%;
             background: #16213e;
             border-radius: 8px;
-            padding: 1rem;
+            padding: 1.25rem;
+        }
+        .branch-builder h3 {
+            font-size: 0.95rem;
+            color: #e94560;
+            margin-bottom: 0.75rem;
+        }
+        .branch-row {
             display: flex;
             gap: 0.5rem;
             align-items: center;
             flex-wrap: wrap;
+            margin-bottom: 0.5rem;
         }
-        .branch-picker label {
-            font-size: 0.85rem;
-            color: #aaa;
-            white-space: nowrap;
-        }
-        .branch-picker input {
+        .branch-row input[type="text"] {
             flex: 1;
             min-width: 150px;
-            padding: 0.4rem 0.75rem;
+            padding: 0.5rem 0.75rem;
             border: 1px solid #0f3460;
             border-radius: 6px;
             background: #1a1a2e;
@@ -151,16 +154,65 @@
             font-size: 0.85rem;
             font-family: monospace;
         }
-        .branch-picker input:focus {
-            outline: none;
-            border-color: #e94560;
+        .branch-row input:focus { outline: none; border-color: #e94560; }
+        .token-row {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 0.5rem;
         }
-        .branch-picker .btn { flex-shrink: 0; }
-        .branch-picker .hint {
-            width: 100%;
+        .token-row input[type="password"] {
+            flex: 1;
+            min-width: 150px;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #0f3460;
+            border-radius: 6px;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            font-size: 0.85rem;
+            font-family: monospace;
+        }
+        .token-row input:focus { outline: none; border-color: #e94560; }
+        .token-row label {
+            font-size: 0.8rem;
+            color: #aaa;
+            white-space: nowrap;
+        }
+        .branch-builder .hint {
             font-size: 0.75rem;
             color: #666;
-            margin-top: 0.25rem;
+        }
+        .branch-builder .hint a { color: #e94560; }
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #0f3460;
+            border-radius: 2px;
+            margin-top: 0.75rem;
+            overflow: hidden;
+            display: none;
+        }
+        .progress-bar .fill {
+            height: 100%;
+            background: #e94560;
+            border-radius: 2px;
+            width: 0%;
+            transition: width 0.5s;
+        }
+        .progress-bar.indeterminate .fill {
+            width: 30%;
+            animation: slide 1.5s ease-in-out infinite;
+        }
+        @keyframes slide {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(400%); }
+        }
+        .build-status {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 0.5rem;
+            display: none;
         }
         .error-container {
             width: 100%;
@@ -195,8 +247,10 @@
             transition: opacity 0.2s;
         }
         .btn:hover { opacity: 0.85; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .btn-primary { background: #e94560; color: #fff; }
         .btn-secondary { background: #0f3460; color: #e0e0e0; }
+        .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.8rem; }
         .nav-btn {
             padding: 0.4rem 1rem;
             border: 1px solid #0f3460;
@@ -229,11 +283,23 @@
             <p>Fetching the ROM built from the latest push to master</p>
         </div>
 
-        <div class="branch-picker" id="branch-picker" style="display:none;">
-            <label for="branch-input">Load ROM from branch:</label>
-            <input type="text" id="branch-input" placeholder="e.g. my-feature-branch" spellcheck="false">
-            <button class="btn btn-primary" onclick="loadFromBranch()">Load</button>
-            <span class="hint">Loads the latest CI build artifact for any branch with a successful workflow run (via nightly.link)</span>
+        <div class="branch-builder" id="branch-builder" style="display:none;">
+            <h3>Build &amp; Play from Branch</h3>
+            <div class="branch-row">
+                <input type="text" id="branch-input" placeholder="branch name, e.g. my-feature" spellcheck="false">
+                <button class="btn btn-primary" id="build-btn" onclick="buildAndPlay()">Build &amp; Play</button>
+            </div>
+            <div class="token-row">
+                <label for="token-input">GitHub token:</label>
+                <input type="password" id="token-input" placeholder="ghp_... (needs actions + repo scope)">
+                <button class="btn btn-secondary btn-sm" onclick="toggleTokenVisibility()" id="token-toggle">Show</button>
+            </div>
+            <div class="hint">
+                Token is stored locally in your browser and never sent anywhere except the GitHub API.
+                Needs <strong>repo</strong> and <strong>actions:write</strong> scope.
+            </div>
+            <div class="progress-bar" id="progress-bar"><div class="fill" id="progress-fill"></div></div>
+            <div class="build-status" id="build-status"></div>
         </div>
 
         <div class="drop-zone" id="drop-zone" style="display:none;">
@@ -297,8 +363,13 @@
     const fileInput = document.getElementById('file-input');
     const loadingScreen = document.getElementById('loading-screen');
     const errorContainer = document.getElementById('error-container');
-    const branchPicker = document.getElementById('branch-picker');
+    const branchBuilder = document.getElementById('branch-builder');
     const branchInput = document.getElementById('branch-input');
+    const tokenInput = document.getElementById('token-input');
+    const buildBtn = document.getElementById('build-btn');
+    const progressBar = document.getElementById('progress-bar');
+    const progressFill = document.getElementById('progress-fill');
+    const buildStatusEl = document.getElementById('build-status');
     let emulatorLoaded = false;
     let romLoadAttempts = 0;
     const MAX_ROM_RETRIES = 3;
@@ -315,15 +386,55 @@
         return 'pokemon-brazilianite';
     })();
 
-    // Check for ?branch= query parameter
+    const API_BASE = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`;
+    const WORKFLOW_FILE = 'playtest.yml';
+    const ARTIFACT_NAME = 'playtest-rom';
+
+    // Restore saved token and branch
+    tokenInput.value = localStorage.getItem('gh_playtest_token') || '';
     const urlParams = new URLSearchParams(location.search);
     const requestedBranch = urlParams.get('branch');
+    if (requestedBranch) branchInput.value = requestedBranch;
+
+    // Save token on change
+    tokenInput.addEventListener('input', () => {
+        localStorage.setItem('gh_playtest_token', tokenInput.value.trim());
+    });
+
+    function toggleTokenVisibility() {
+        const btn = document.getElementById('token-toggle');
+        if (tokenInput.type === 'password') {
+            tokenInput.type = 'text';
+            btn.textContent = 'Hide';
+        } else {
+            tokenInput.type = 'password';
+            btn.textContent = 'Show';
+        }
+    }
+
+    function ghFetch(path, opts = {}) {
+        const token = tokenInput.value.trim();
+        const headers = {
+            'Accept': 'application/vnd.github+json',
+            ...(opts.headers || {}),
+        };
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+        return fetch(path.startsWith('http') ? path : `${API_BASE}${path}`, {
+            ...opts,
+            headers,
+        });
+    }
+
+    function setBuildStatus(msg) {
+        buildStatusEl.style.display = 'block';
+        buildStatusEl.textContent = msg;
+    }
 
     function showError(title, message, details) {
         loadingScreen.style.display = 'none';
         dropZone.style.display = 'none';
         errorContainer.style.display = 'block';
-        branchPicker.style.display = 'block';
+        branchBuilder.style.display = 'block';
         document.getElementById('error-title').textContent = title;
         document.getElementById('error-message').textContent = message;
         const detailsEl = document.getElementById('error-details');
@@ -343,80 +454,153 @@
     async function retryLoadROM() {
         errorContainer.style.display = 'none';
         romLoadAttempts = 0;
-        if (requestedBranch) {
-            await loadBranchROM(requestedBranch);
-        } else {
-            await autoLoadROM();
-        }
+        await autoLoadROM();
     }
 
-    async function loadBranchROM(branch) {
-        loadingScreen.style.display = 'block';
-        loadingScreen.querySelector('h2').textContent = `Loading ROM from branch: ${branch}`;
-        loadingScreen.querySelector('p').textContent = 'Fetching CI build artifact via nightly.link...';
-        branchPicker.style.display = 'none';
+    // --- Build & Play: trigger workflow, poll, download artifact ---
 
-        const nightlyURL = `https://nightly.link/${REPO_OWNER}/${REPO_NAME}/workflows/build.yml/${encodeURIComponent(branch)}/pokeemerald-debug.zip`;
-        try {
-            const resp = await fetch(nightlyURL);
-            if (resp.status === 404) {
-                showError(
-                    'No CI Build Found',
-                    `No successful CI build was found for branch "${branch}". Make sure the branch exists and has a passing CI workflow run.`,
-                    `GET ${nightlyURL} — 404 Not Found`
-                );
-                return;
-            }
-            if (!resp.ok) {
-                throw new Error(`nightly.link returned HTTP ${resp.status}`);
-            }
-            const zipBlob = await resp.blob();
-            const zip = await JSZip.loadAsync(zipBlob);
-            // Find the .gba file inside the zip
-            const gbaFile = Object.keys(zip.files).find(name => name.endsWith('.gba'));
-            if (!gbaFile) {
-                showError(
-                    'ROM Not Found in Artifact',
-                    'The CI artifact was downloaded but no .gba file was found inside it.',
-                    `Zip contents: ${Object.keys(zip.files).join(', ')}`
-                );
-                return;
-            }
-            const romData = await zip.files[gbaFile].async('blob');
-            if (romData.size < 1024) {
-                showError(
-                    'Invalid ROM File',
-                    'The ROM file extracted from the artifact appears corrupt or incomplete.',
-                    `File size: ${romData.size} bytes`
-                );
-                return;
-            }
-            const romURL = URL.createObjectURL(romData);
-            loadingScreen.style.display = 'none';
-            launchEmulator(romURL, `pokeemerald.gba (${branch})`);
-        } catch (e) {
-            showError(
-                'Failed to Load Branch ROM',
-                `Could not fetch the CI build for branch "${branch}".`,
-                e.message
-            );
-        }
-    }
-
-    function loadFromBranch() {
+    async function buildAndPlay() {
         const branch = branchInput.value.trim();
-        if (!branch) return;
-        // Update URL so the branch is bookmarkable
+        const token = tokenInput.value.trim();
+        if (!branch) { branchInput.focus(); return; }
+        if (!token) {
+            tokenInput.focus();
+            setBuildStatus('A GitHub token is required to trigger builds and download artifacts.');
+            return;
+        }
+
+        // Update URL
         const url = new URL(location);
         url.searchParams.set('branch', branch);
         history.replaceState(null, '', url);
-        loadBranchROM(branch);
+
+        buildBtn.disabled = true;
+        progressBar.style.display = 'block';
+        progressBar.classList.add('indeterminate');
+        progressFill.style.width = '0%';
+        setBuildStatus(`Triggering playtest build on "${branch}"...`);
+
+        try {
+            // 1. Trigger the workflow
+            const triggerResp = await ghFetch(`/actions/workflows/${WORKFLOW_FILE}/dispatches`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ref: branch }),
+            });
+            if (triggerResp.status === 404) {
+                throw new Error('Workflow not found. Make sure playtest.yml exists on this branch and has workflow_dispatch enabled.');
+            }
+            if (triggerResp.status === 422) {
+                throw new Error(`Branch "${branch}" not found or workflow cannot run on it.`);
+            }
+            if (!triggerResp.ok) {
+                const body = await triggerResp.text();
+                throw new Error(`Failed to trigger workflow: HTTP ${triggerResp.status} — ${body}`);
+            }
+
+            // 2. Wait a moment for GH to register the run, then find it
+            setBuildStatus('Waiting for build to start...');
+            await sleep(3000);
+
+            const runId = await pollForRun(branch);
+            if (!runId) throw new Error('Could not find the triggered workflow run. It may have been cancelled.');
+
+            // 3. Poll until the run completes
+            const result = await pollRunCompletion(runId);
+            if (result !== 'success') {
+                throw new Error(`Build ${result}. Check the Actions tab on GitHub for details.`);
+            }
+
+            // 4. Download the artifact
+            progressBar.classList.remove('indeterminate');
+            progressFill.style.width = '90%';
+            setBuildStatus('Build complete! Downloading ROM...');
+
+            const romBlob = await downloadArtifact(runId);
+            progressFill.style.width = '100%';
+
+            const romURL = URL.createObjectURL(romBlob);
+            progressBar.style.display = 'none';
+            buildStatusEl.style.display = 'none';
+            launchEmulator(romURL, `pokeemerald.gba (${branch})`);
+        } catch (e) {
+            progressBar.style.display = 'none';
+            progressBar.classList.remove('indeterminate');
+            setBuildStatus(`Error: ${e.message}`);
+            buildStatusEl.style.color = '#f5a5a5';
+        } finally {
+            buildBtn.disabled = false;
+            buildStatusEl.style.color = '';
+        }
+    }
+
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    async function pollForRun(branch, maxAttempts = 15) {
+        for (let i = 0; i < maxAttempts; i++) {
+            const resp = await ghFetch(`/actions/workflows/${WORKFLOW_FILE}/runs?branch=${encodeURIComponent(branch)}&per_page=1&event=workflow_dispatch`);
+            if (resp.ok) {
+                const data = await resp.json();
+                if (data.workflow_runs && data.workflow_runs.length > 0) {
+                    const run = data.workflow_runs[0];
+                    // Make sure it's recent (within last 2 minutes)
+                    const created = new Date(run.created_at);
+                    if (Date.now() - created.getTime() < 120000) {
+                        return run.id;
+                    }
+                }
+            }
+            await sleep(2000);
+        }
+        return null;
+    }
+
+    async function pollRunCompletion(runId) {
+        const startTime = Date.now();
+        const timeout = 15 * 60 * 1000; // 15 min max
+        while (Date.now() - startTime < timeout) {
+            const resp = await ghFetch(`/actions/runs/${runId}`);
+            if (!resp.ok) { await sleep(5000); continue; }
+            const run = await resp.json();
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const mins = Math.floor(elapsed / 60);
+            const secs = elapsed % 60;
+            setBuildStatus(`Building... ${mins}:${secs.toString().padStart(2, '0')} elapsed (${run.status})`);
+
+            if (run.status === 'completed') {
+                return run.conclusion; // 'success', 'failure', 'cancelled', etc.
+            }
+            await sleep(5000);
+        }
+        throw new Error('Build timed out after 15 minutes.');
+    }
+
+    async function downloadArtifact(runId) {
+        // List artifacts for the run
+        const listResp = await ghFetch(`/actions/runs/${runId}/artifacts`);
+        if (!listResp.ok) throw new Error('Failed to list artifacts.');
+        const { artifacts } = await listResp.json();
+        const artifact = artifacts.find(a => a.name === ARTIFACT_NAME);
+        if (!artifact) throw new Error(`Artifact "${ARTIFACT_NAME}" not found in build. Found: ${artifacts.map(a => a.name).join(', ')}`);
+
+        // Download the zip
+        const dlResp = await ghFetch(`/actions/artifacts/${artifact.id}/zip`);
+        if (!dlResp.ok) throw new Error(`Failed to download artifact: HTTP ${dlResp.status}`);
+        const zipBlob = await dlResp.blob();
+
+        // Extract the .gba
+        const zip = await JSZip.loadAsync(zipBlob);
+        const gbaFile = Object.keys(zip.files).find(name => name.endsWith('.gba'));
+        if (!gbaFile) throw new Error('No .gba file found inside the artifact zip.');
+        return await zip.files[gbaFile].async('blob');
     }
 
     // Allow pressing Enter in the branch input
     branchInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') loadFromBranch();
+        if (e.key === 'Enter') buildAndPlay();
     });
+
+    // --- Auto-load the deployed ROM (master build) ---
 
     async function autoLoadROM() {
         loadingScreen.style.display = 'block';
@@ -464,21 +648,17 @@
         }
     }
 
-    // Load ROM based on query parameter or default to deployed build
-    if (requestedBranch) {
-        branchInput.value = requestedBranch;
-        loadBranchROM(requestedBranch);
-    } else {
-        autoLoadROM();
-    }
+    // On page load: auto-load deployed ROM
+    autoLoadROM();
 
-    // Show branch picker and drop zone as secondary options
+    // --- Secondary options (shown after emulator loads or on error) ---
+
     function showSecondaryOptions() {
-        branchPicker.style.display = 'block';
+        branchBuilder.style.display = 'block';
         dropZone.style.display = 'block';
     }
 
-    // Drop zone as fallback for custom ROMs
+    // Drop zone for custom ROMs
     dropZone.addEventListener('click', () => fileInput.click());
     dropZone.addEventListener('dragover', (e) => {
         e.preventDefault();
