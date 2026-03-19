@@ -208,14 +208,12 @@ static void LoadPokedexBgPalette(bool8);
 static void CreateInterfaceSprites(u8);
 static void LoadScreenSelectBarMain(u16);
 static void PrintMonInfo(u32 num, u32, u32 owned, u32 newEntry);
-static u8 PrintCryScreenSpeciesName(u8, u16, u8, u8);
 static u16 CreateMonSpriteFromNationalDexNumberHGSS(u16 nationalNum, s16 x, s16 y, u16 paletteSlot);
 static u16 CreateSizeScreenTrainerPic(u16, s16, s16, s8);
 static void SetDefaultSearchModeAndOrder(u8);
 static void CreateSearchParameterScrollArrows(u8);
 static void SetSpriteInvisibility(u8 spriteArrayId, bool8 invisible);
 static void CreateTypeIconSprites(void);
-static void PrintInfoSubMenuText(u8 windowId, const u8 *str, u8 left, u8 top);
 
 //Stats screen HGSS_Ui
 
@@ -1789,39 +1787,6 @@ static void PrintMonInfo(u32 num, u32 value, u32 owned, u32 newEntry)
     //Type Icon(s)
     if (owned)
         PrintCurrentSpeciesTypeInfo(newEntry, species);
-}
-
-static void PrintInfoSubMenuText(u8 windowId, const u8 *str, u8 left, u8 top)
-{
-    u8 color[3];
-    color[0] = TEXT_COLOR_TRANSPARENT;
-    color[1] = TEXT_DYNAMIC_COLOR_6;
-    color[2] = TEXT_COLOR_LIGHT_GRAY;
-
-    AddTextPrinterParameterized4(windowId, FONT_NORMAL, left, top, 0, 0, color, TEXT_SKIP_DRAW, str);
-}
-
-static u8 PrintCryScreenSpeciesName(u8 windowId, u16 num, u8 left, u8 top)
-{
-    u8 str[POKEMON_NAME_LENGTH + 1];
-    u8 i;
-
-    for (i = 0; i < ARRAY_COUNT(str); i++)
-        str[i] = EOS;
-    num = NationalPokedexNumToSpeciesHGSS(num);
-    switch (num)
-    {
-    default:
-        for (i = 0; GetSpeciesName(num)[i] != EOS && i < POKEMON_NAME_LENGTH; i++)
-            str[i] = GetSpeciesName(num)[i];
-        break;
-    case 0:
-        for (i = 0; i < 5; i++)
-            str[i] = CHAR_HYPHEN;
-        break;
-    }
-    PrintInfoSubMenuText(windowId, str, left, top);
-    return i;
 }
 
 #define MALE_PERSONALITY 0xFE
