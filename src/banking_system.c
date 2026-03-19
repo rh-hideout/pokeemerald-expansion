@@ -259,6 +259,7 @@ static void Task_HandleMoneyInput(u8 taskId)
             sTransactionAmount = 0;
         gSpecialVar_Result = sTransactionAmount;
         ClearStdWindowAndFrame(sWithdrawalWindowId, TRUE);
+        ClearStdWindowAndFrame(sBankingModeWindowId, TRUE);
         UnfreezeObjectEvents();
         ScriptContext_Enable();
         UnlockPlayerFieldControls();
