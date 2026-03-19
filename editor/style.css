@@ -1462,3 +1462,148 @@ tbody tr:last-child td { border-bottom: none; }
     .encounter-bar-species { min-width: 80px; flex: 1 1 100%; }
     .encounter-bar-track { flex: 1 1 60%; }
 }
+
+/* ─── Section Tier Headers ────────────────────── */
+.section-tier {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    padding: 20px 0 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.section-tier:first-child { padding-top: 0; }
+.section-tier::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+}
+
+/* ─── NPC Card (expandable) ───────────────────── */
+.npc-card {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 8px;
+    overflow: hidden;
+    transition: border-color 0.15s;
+}
+.npc-card:last-child { margin-bottom: 0; }
+.npc-card:hover { border-color: var(--text-dim); }
+.npc-card.expanded { border-color: var(--accent); }
+.npc-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    cursor: pointer;
+    user-select: none;
+    background: var(--bg-card);
+    transition: background 0.15s;
+}
+.npc-card-header:hover { background: var(--bg-hover); }
+.npc-card-info { flex: 1; min-width: 0; }
+.npc-card-name {
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.npc-card-detail {
+    font-size: 11px;
+    color: var(--text-dim);
+    font-family: monospace;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.npc-card-badges {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+}
+.npc-badge {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+.npc-badge-trainer { background: rgba(239,68,68,0.15); color: var(--red); }
+.npc-badge-script { background: rgba(168,85,247,0.15); color: var(--purple); }
+.npc-badge-hidden { background: rgba(234,179,8,0.15); color: var(--yellow); }
+.npc-card-expand {
+    font-size: 12px;
+    color: var(--text-dim);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+}
+.npc-card.expanded .npc-card-expand { transform: rotate(90deg); }
+.npc-card-body {
+    display: none;
+    border-top: 1px solid var(--border);
+    background: var(--bg);
+}
+.npc-card.expanded .npc-card-body { display: block; }
+.npc-card-events {
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.npc-event-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.npc-event-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-dim);
+    font-weight: 600;
+}
+.npc-dialogue-preview {
+    font-size: 12px;
+    white-space: pre-wrap;
+    line-height: 1.5;
+    background: var(--bg-card);
+    padding: 8px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    max-height: 120px;
+    overflow-y: auto;
+}
+.npc-card-actions {
+    padding: 8px 14px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 4px;
+    justify-content: flex-end;
+    background: var(--bg-card);
+}
+
+/* ─── Navigation Section (Routes + Doors) ───── */
+.nav-subsection-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-dim);
+    padding: 10px 0 6px;
+    margin-top: 8px;
+}
+.nav-subsection-label:first-child { margin-top: 0; padding-top: 0; }
+
+/* ─── Signs & Triggers combined ─────────────── */
+.trigger-type-badge {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+.trigger-type-sign { background: rgba(234,179,8,0.15); color: var(--yellow); }
+.trigger-type-step { background: rgba(6,182,212,0.15); color: var(--cyan); }
+.trigger-type-secret { background: rgba(168,85,247,0.15); color: var(--purple); }

@@ -1916,6 +1916,11 @@ async function renderMapDetail(dirName) {
     const itemBalls = getMapItemBalls(map);
     const hiddenItems = getMapHiddenItems(map);
     const encounterRates = getEncounterRates();
+    const npcCount = (map.object_events || []).filter(e =>
+        !(e.graphics_id || '').includes('ITEM_BALL') && !(e.graphics_id || '').includes('BERRY_TREE')
+    ).length;
+    const conns = (map.connections || []).length;
+    const doors = (map.warp_events || []).length;
 
     content.innerHTML = `
         <button class="back-btn" onclick="state.mapDetail=null; renderMaps()">&#8592; Back to Areas</button>
@@ -1934,9 +1939,8 @@ async function renderMapDetail(dirName) {
             <div class="map-area-info-bar">
                 <span><span class="info-icon">&#9835;</span> ${(map.music || 'None').replace('MUS_', '')}</span>
                 <span><span class="info-icon">&#9729;</span> ${(map.weather || 'None').replace('WEATHER_', '')}</span>
-                <span><span class="info-icon">&#9949;</span> ${(map.connections || []).length} connections</span>
-                <span><span class="info-icon">&#9872;</span> ${(map.object_events || []).length} objects</span>
-                <span><span class="info-icon">&#8644;</span> ${(map.warp_events || []).length} warps</span>
+                <span><span class="info-icon">&#9786;</span> ${npcCount} NPCs</span>
+                <span><span class="info-icon">&#8644;</span> ${conns} routes, ${doors} doors</span>
             </div>
         </div>
 
@@ -1945,38 +1949,27 @@ async function renderMapDetail(dirName) {
 
     const sections = $('#map-area-sections');
 
-    // ── Section 0: Map Preview Image ──
+    // ═══════════════════════════════════════════
+    // TIER 1: AREA — about the place itself
+    // ═══════════════════════════════════════════
+    sections.innerHTML += `<div class="section-tier">Area</div>`;
     sections.innerHTML += buildMapPreviewSection(map);
-
-    // ── Section 1: Wild Encounters ──
-    sections.innerHTML += buildEncounterSection(enc, encounterRates, map);
-
-    // ── Section 2: Trainers ──
-    sections.innerHTML += buildTrainerSection(trainers, map);
-
-    // ── Section 3: Items ──
-    sections.innerHTML += buildItemSection(itemBalls, hiddenItems, map);
-
-    // ── Section 4: Warps ──
-    sections.innerHTML += buildWarpSection(map);
-
-    // ── Section 5: Connections ──
-    sections.innerHTML += buildConnectionSection(map);
-
-    // ── Section 6: Object Scripts / NPCs ──
-    sections.innerHTML += buildObjectScriptsSection(map, trainers);
-
-    // ── Section 7: Dialogue / Text ──
-    sections.innerHTML += buildDialogueSection(map, scriptText);
-
-    // ── Section 8: Coordinate Events ──
-    sections.innerHTML += buildCoordEventsSection(map);
-
-    // ── Section 9: Background Events (signs, scripts) ──
-    sections.innerHTML += buildBgEventsSection(map);
-
-    // ── Section 10: Map Properties (editable) ──
     sections.innerHTML += buildPropertiesSection(map);
+    sections.innerHTML += buildNavigationSection(map);
+
+    // ═══════════════════════════════════════════
+    // TIER 2: NPCs — who's here
+    // ═══════════════════════════════════════════
+    sections.innerHTML += `<div class="section-tier">NPCs</div>`;
+    sections.innerHTML += buildUnifiedNPCSection(map, trainers, scriptText);
+
+    // ═══════════════════════════════════════════
+    // TIER 3: WORLD — things in the environment
+    // ═══════════════════════════════════════════
+    sections.innerHTML += `<div class="section-tier">World</div>`;
+    sections.innerHTML += buildEncounterSection(enc, encounterRates, map);
+    sections.innerHTML += buildItemSection(itemBalls, hiddenItems, map);
+    sections.innerHTML += buildSignsAndTriggersSection(map);
 
     // Wire up section toggles
     $$('.map-area-section-header').forEach(header => {
@@ -1985,6 +1978,15 @@ async function renderMapDetail(dirName) {
             if (body) body.classList.toggle('collapsed');
             const arrow = header.querySelector('.toggle-arrow');
             if (arrow) arrow.textContent = body.classList.contains('collapsed') ? '&#9654;' : '&#9660;';
+        });
+    });
+
+    // Wire up NPC card expansion
+    $$('.npc-card-header').forEach(header => {
+        header.addEventListener('click', (e) => {
+            // Don't expand if clicking a button
+            if (e.target.closest('.btn')) return;
+            header.closest('.npc-card').classList.toggle('expanded');
         });
     });
 }
@@ -2081,49 +2083,9 @@ function buildEncounterSection(enc, encounterRates, map) {
     `;
 }
 
-// ── Trainers Section ──
+// ── Trainers Section (legacy, kept for compatibility) ──
 function buildTrainerSection(trainers, map) {
-    let body = '';
-    if (trainers.length === 0) {
-        body = `<div class="empty-state"><div class="empty-icon">&#9876;</div>No trainers in this area</div>`;
-    } else {
-        body = trainers.map((t, i) => {
-            const scriptName = (t.script || '').replace(/_EventScript_/g, ' - ').replace(/_/g, ' ');
-            const gfx = (t.graphics_id || '').replace('OBJ_EVENT_GFX_', '').replace(/_/g, ' ');
-            const trainerIdMatch = (t.script || '').match(/(\w+)_EventScript/);
-            const possibleTrainerId = trainerIdMatch ? `TRAINER_${trainerIdMatch[1].toUpperCase()}` : '';
-            const isScriptBased = t.trainer_type === 'TRAINER_TYPE_NONE' || !t.trainer_type;
-            const typeBadge = isScriptBased
-                ? '<span style="background:var(--purple,#8b5cf6);color:white;font-size:10px;padding:1px 6px;border-radius:8px;margin-left:6px">Script Battle</span>'
-                : '';
-            const realIdx = (map.object_events || []).indexOf(t);
-            return `
-                <div class="area-trainer-row">
-                    ${getSpriteHtml(t.graphics_id, 40)}
-                    <div class="area-trainer-info">
-                        <div class="area-trainer-name">${escHtml(scriptName || 'Trainer #' + (i + 1))}${typeBadge}</div>
-                        <div class="area-trainer-detail">${escHtml(gfx)} &middot; ${isScriptBased ? 'Script battle' : 'Sight: ' + (t.trainer_sight_or_berry_tree_id || '0')} &middot; (${t.x}, ${t.y})</div>
-                    </div>
-                    <div style="display:flex;gap:4px;flex-wrap:wrap">
-                        <button class="btn btn-sm" onclick="editObjectEvent('${escAttr(map._dirName)}', ${realIdx})">Edit Event</button>
-                        <button class="btn btn-sm" onclick="editTrainerPartyFromScript('${escAttr(map._dirName)}', '${escAttr(t.script || '')}')" title="Edit trainer party data">Party</button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteObjectEvent('${escAttr(map._dirName)}', ${realIdx})">Delete</button>
-                    </div>
-                </div>
-            `;
-        }).join('');
-    }
-    body += `<div style="text-align:right;margin-top:12px"><button class="btn btn-sm btn-primary" onclick="addMapTrainer('${escAttr(map._dirName)}')">+ Add Trainer</button></div>`;
-
-    return `
-        <div class="map-area-section">
-            <div class="map-area-section-header">
-                <h2><span class="section-icon">&#9876;</span> Trainers <span class="section-count">${trainers.length}</span></h2>
-                <span class="toggle-arrow">&#9660;</span>
-            </div>
-            <div class="map-area-section-body">${body}</div>
-        </div>
-    `;
+    return ''; // Absorbed into buildUnifiedNPCSection
 }
 
 // ── Items Section ──
@@ -2183,18 +2145,27 @@ function buildItemSection(itemBalls, hiddenItems, map) {
     `;
 }
 
-// ── Connections Section ──
+// ── Connections Section (legacy, kept for compatibility) ──
 function buildConnectionSection(map) {
+    return ''; // Absorbed into buildNavigationSection
+}
+
+// ── Navigation Section (Routes + Doors) ──
+function buildNavigationSection(map) {
     const conns = map.connections || [];
-    let body = '';
+    const warps = map.warp_events || [];
+    const dirLabels = { left: 'West', right: 'East', up: 'North', down: 'South', dive: 'Dive', emerge: 'Emerge' };
+
+    let routesHtml = '';
     if (conns.length === 0) {
-        body = `<div class="empty-state"><div class="empty-icon">&#8644;</div>No connections</div>`;
+        routesHtml = `<div class="empty-state" style="padding:12px"><div class="empty-icon">&#8644;</div>No routes connected</div>`;
     } else {
-        body = conns.map((c, i) => {
+        routesHtml = conns.map((c, i) => {
             const connName = (c.map || '').replace('MAP_', '').replace(/_/g, ' ');
+            const dir = dirLabels[c.direction] || c.direction || '?';
             return `
                 <div class="connection-row">
-                    <span class="connection-dir ${c.direction || ''}">${c.direction || '?'}</span>
+                    <span class="connection-dir ${c.direction || ''}">${dir}</span>
                     <span class="connection-map">${escHtml(c.map || '')}</span>
                     <span style="color:var(--text-dim);font-size:12px">${escHtml(connName)}</span>
                     <span style="color:var(--text-dim);font-size:11px">offset: ${c.offset || 0}</span>
@@ -2206,15 +2177,44 @@ function buildConnectionSection(map) {
             `;
         }).join('');
     }
-    body += `<div style="text-align:right;margin-top:12px"><button class="btn btn-sm btn-primary" onclick="addConnection('${escAttr(map._dirName)}')">+ Add Connection</button></div>`;
+    routesHtml += `<div style="text-align:right;margin-top:8px"><button class="btn btn-sm btn-primary" onclick="addConnection('${escAttr(map._dirName)}')">+ Add Route</button></div>`;
+
+    let doorsHtml = '';
+    if (warps.length === 0) {
+        doorsHtml = `<div class="empty-state" style="padding:12px"><div class="empty-icon">&#128682;</div>No doors</div>`;
+    } else {
+        doorsHtml = warps.map((w, i) => {
+            const destName = (w.dest_map || '').replace('MAP_', '').replace(/_/g, ' ');
+            return `
+                <div class="warp-row">
+                    <div class="warp-icon">&#128682;</div>
+                    <div class="warp-info">
+                        <div class="warp-dest">${escHtml(destName)}</div>
+                        <div class="warp-detail">${escHtml(w.dest_map || '')} &middot; Warp #${w.dest_warp_id || '0'}</div>
+                    </div>
+                    <div class="warp-coords">(${w.x}, ${w.y})</div>
+                    <div style="display:flex;gap:4px">
+                        <button class="btn btn-sm" onclick="editWarp('${escAttr(map._dirName)}', ${i})">Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteWarp('${escAttr(map._dirName)}', ${i})">Delete</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+    doorsHtml += `<div style="text-align:right;margin-top:8px"><button class="btn btn-sm btn-primary" onclick="addWarp('${escAttr(map._dirName)}')">+ Add Door</button></div>`;
 
     return `
         <div class="map-area-section">
             <div class="map-area-section-header">
-                <h2><span class="section-icon">&#8644;</span> Connections <span class="section-count">${conns.length}</span></h2>
+                <h2><span class="section-icon">&#8644;</span> Navigation <span class="section-count">${conns.length} routes, ${warps.length} doors</span></h2>
                 <span class="toggle-arrow">&#9660;</span>
             </div>
-            <div class="map-area-section-body">${body}</div>
+            <div class="map-area-section-body">
+                <div class="nav-subsection-label">Routes (connected areas)</div>
+                ${routesHtml}
+                <div class="nav-subsection-label">Doors (entrances &amp; exits)</div>
+                ${doorsHtml}
+            </div>
         </div>
     `;
 }
@@ -3189,40 +3189,7 @@ function showPRSuccess(prUrl) {
 
 // ─── Warp Section ───────────────────────────────────────────────────────────
 function buildWarpSection(map) {
-    const warps = map.warp_events || [];
-    let body = '';
-    if (warps.length === 0) {
-        body = `<div class="empty-state"><div class="empty-icon">&#128682;</div>No warps in this area</div>`;
-    } else {
-        body = warps.map((w, i) => {
-            const destName = (w.dest_map || '').replace('MAP_', '').replace(/_/g, ' ');
-            return `
-                <div class="warp-row">
-                    <div class="warp-icon">&#128682;</div>
-                    <div class="warp-info">
-                        <div class="warp-dest">${escHtml(destName)}</div>
-                        <div class="warp-detail">${escHtml(w.dest_map || '')} &middot; Warp #${w.dest_warp_id || '0'}</div>
-                    </div>
-                    <div class="warp-coords">(${w.x}, ${w.y})</div>
-                    <div style="display:flex;gap:4px">
-                        <button class="btn btn-sm" onclick="editWarp('${escAttr(map._dirName)}', ${i})">Edit</button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteWarp('${escAttr(map._dirName)}', ${i})">Delete</button>
-                    </div>
-                </div>
-            `;
-        }).join('');
-    }
-    body += `<div style="text-align:right;margin-top:12px"><button class="btn btn-sm btn-primary" onclick="addWarp('${escAttr(map._dirName)}')">+ Add Warp</button></div>`;
-
-    return `
-        <div class="map-area-section">
-            <div class="map-area-section-header">
-                <h2><span class="section-icon">&#128682;</span> Warps <span class="section-count">${warps.length}</span></h2>
-                <span class="toggle-arrow">&#9660;</span>
-            </div>
-            <div class="map-area-section-body">${body}</div>
-        </div>
-    `;
+    return ''; // Absorbed into buildNavigationSection
 }
 
 function editWarp(dirName, warpIdx) {
@@ -3359,48 +3326,174 @@ function editWarp(dirName, warpIdx) {
     });
 }
 
-// ─── Object Scripts Section ─────────────────────────────────────────────────
+// ─── Object Scripts Section (legacy, kept for compatibility) ─────────────────
 function buildObjectScriptsSection(map, allTrainers) {
-    // allTrainers includes both normal and script-based trainers
+    return ''; // Absorbed into buildUnifiedNPCSection
+}
+
+// ─── Unified NPC Section (Area > NPC > Events hierarchy) ────────────────────
+function buildUnifiedNPCSection(map, allTrainers, scriptText) {
+    const dirName = map._dirName;
     const trainerSet = new Set(allTrainers || []);
-    const events = (map.object_events || []).filter(e => {
-        // Exclude trainers (normal + script-based) and item balls (they have their own sections)
-        if (trainerSet.has(e)) return false;
-        if (e.trainer_type && e.trainer_type !== 'TRAINER_TYPE_NONE') return false;
-        if ((e.graphics_id || '').includes('ITEM_BALL')) return false;
-        return true;
-    });
+    // All NPCs = every object_event that isn't an item ball or berry tree
+    const allNPCs = (map.object_events || []).filter(e =>
+        !(e.graphics_id || '').includes('ITEM_BALL') &&
+        !(e.graphics_id || '').includes('BERRY_TREE')
+    );
+
+    // Parse all dialogue blocks from script for inline preview
+    const dialogueBlocks = parseDialogueBlocksAll(scriptText, dirName);
+
+    // Helper: find dialogue text for an NPC's script
+    function getNPCDialogue(evt) {
+        if (!evt.script || evt.script === '0x0') return [];
+        const scriptLabel = evt.script + '::';
+        const labelIdx = scriptText.indexOf(scriptLabel);
+        if (labelIdx < 0) return [];
+        const afterLabel = scriptText.substring(labelIdx);
+        const nextLabelMatch = afterLabel.substring(scriptLabel.length).match(/\n\S+::/);
+        const scriptBlock = nextLabelMatch ? afterLabel.substring(0, scriptLabel.length + nextLabelMatch.index) : afterLabel;
+        // Find text labels referenced in this script block
+        const textRefs = [];
+        const refRegex = /(?:msgbox|trainerbattle\w*|message|pokenavcall)\s+(?:TRAINER_\w+,\s*)?(\w+_Text_\w+)/g;
+        let refMatch;
+        while ((refMatch = refRegex.exec(scriptBlock)) !== null) {
+            textRefs.push(refMatch[1]);
+        }
+        // Also check goto/call targets
+        const gotoRegex = /(?:goto|call)\s+(\w+EventScript\w+)/g;
+        while ((refMatch = gotoRegex.exec(scriptBlock)) !== null) {
+            const target = refMatch[1] + '::';
+            const tidx = scriptText.indexOf(target);
+            if (tidx >= 0) {
+                const tBlock = scriptText.substring(tidx);
+                const tNext = tBlock.substring(target.length).match(/\n\S+::/);
+                const tContent = tNext ? tBlock.substring(0, target.length + tNext.index) : tBlock;
+                const innerRefRegex = /(?:msgbox|trainerbattle\w*|message|pokenavcall)\s+(?:TRAINER_\w+,\s*)?(\w+_Text_\w+)/g;
+                let rm;
+                while ((rm = innerRefRegex.exec(tContent)) !== null) {
+                    textRefs.push(rm[1]);
+                }
+            }
+        }
+        return dialogueBlocks.filter(b => textRefs.includes(b.label));
+    }
 
     let body = '';
-    if (events.length === 0) {
-        body = `<div class="empty-state"><div class="empty-icon">&#9786;</div>No NPC/object scripts in this area</div>`;
+    if (allNPCs.length === 0) {
+        body = `<div class="empty-state"><div class="empty-icon">&#9786;</div>No NPCs in this area</div>`;
     } else {
-        body = events.map((evt, i) => {
-            const gfx = (evt.graphics_id || '').replace('OBJ_EVENT_GFX_', '').replace(/_/g, ' ');
-            const scriptName = (evt.script || 'No script').replace(/_/g, ' ');
+        body = allNPCs.map((evt) => {
             const realIdx = (map.object_events || []).indexOf(evt);
-            return `
-                <div class="area-trainer-row">
-                    ${getSpriteHtml(evt.graphics_id, 36)}
-                    <div class="area-trainer-info">
-                        <div class="area-trainer-name">${escHtml(gfx)}</div>
-                        <div class="area-trainer-detail">${escHtml(evt.script || '')} &middot; ${evt.movement_type ? evt.movement_type.replace('MOVEMENT_TYPE_', '') : 'NONE'} &middot; (${evt.x}, ${evt.y})</div>
+            const gfx = (evt.graphics_id || '').replace('OBJ_EVENT_GFX_', '').replace(/_/g, ' ');
+            const isTrainer = trainerSet.has(evt);
+            const isScriptTrainer = isTrainer && (evt.trainer_type === 'TRAINER_TYPE_NONE' || !evt.trainer_type);
+            const hasFlag = evt.flag && evt.flag !== '0';
+            const movement = (evt.movement_type || '').replace('MOVEMENT_TYPE_', '').replace(/_/g, ' ').toLowerCase();
+            const npcDialogue = getNPCDialogue(evt);
+
+            // Readable name from script label
+            let npcName = gfx;
+            if (evt.script && evt.script !== '0x0') {
+                const parts = evt.script.split('_EventScript_');
+                if (parts.length >= 2) npcName = parts[parts.length - 1].replace(/_/g, ' ');
+            }
+
+            // Badges
+            let badges = '';
+            if (isTrainer && !isScriptTrainer) badges += `<span class="npc-badge npc-badge-trainer">Trainer</span>`;
+            if (isScriptTrainer) badges += `<span class="npc-badge npc-badge-script">Script Battle</span>`;
+            if (hasFlag) badges += `<span class="npc-badge npc-badge-hidden">Conditional</span>`;
+
+            // Inline dialogue preview (first block only)
+            let dialogueHtml = '';
+            if (npcDialogue.length > 0) {
+                const firstText = npcDialogue[0].text
+                    .replace(/\\n/g, '\n').replace(/\\p/g, '\n\n').replace(/\\l/g, '\n').replace(/\$$/g, '');
+                const truncated = firstText.length > 200 ? firstText.substring(0, 200) + '...' : firstText;
+                dialogueHtml = `
+                    <div class="npc-event-group">
+                        <div class="npc-event-label">Dialogue${npcDialogue.length > 1 ? ` (${npcDialogue.length} blocks)` : ''}</div>
+                        <div class="npc-dialogue-preview">${escHtml(truncated)}</div>
                     </div>
-                    <div style="display:flex;gap:4px">
-                        <button class="btn btn-sm" onclick="editObjectEvent('${escAttr(map._dirName)}', ${realIdx})">Edit</button>
-                        ${evt.script ? `<button class="btn btn-sm" onclick="editNPCDialogue('${escAttr(map._dirName)}', '${escAttr(evt.script)}')" title="Edit dialogue for this NPC">Dialogue</button>` : ''}
-                        <button class="btn btn-sm btn-danger" onclick="deleteObjectEvent('${escAttr(map._dirName)}', ${realIdx})">Delete</button>
+                `;
+            }
+
+            // Trainer-specific info
+            let trainerHtml = '';
+            if (isTrainer) {
+                const sight = evt.trainer_sight_or_berry_tree_id || '0';
+                trainerHtml = `
+                    <div class="npc-event-group">
+                        <div class="npc-event-label">Battle Info</div>
+                        <div style="font-size:12px;color:var(--text-dim)">
+                            ${isScriptTrainer ? 'Triggered via script' : `Sight range: ${sight} tiles`}
+                            &middot; ${(evt.trainer_type || 'TRAINER_TYPE_NONE').replace('TRAINER_TYPE_', '')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Script + movement info
+            let scriptHtml = '';
+            if (evt.script && evt.script !== '0x0') {
+                scriptHtml = `
+                    <div class="npc-event-group">
+                        <div class="npc-event-label">Script</div>
+                        <div style="font-size:12px;font-family:monospace;color:var(--cyan)">${escHtml(evt.script)}</div>
+                    </div>
+                `;
+            }
+
+            let movementHtml = '';
+            if (movement && movement !== 'none') {
+                movementHtml = `
+                    <div class="npc-event-group">
+                        <div class="npc-event-label">Movement</div>
+                        <div style="font-size:12px;color:var(--text-dim)">${escHtml(movement)}${evt.movement_range_x || evt.movement_range_y ? ` (range: ${evt.movement_range_x || 0}x${evt.movement_range_y || 0})` : ''}</div>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="npc-card">
+                    <div class="npc-card-header">
+                        ${getSpriteHtml(evt.graphics_id, 36)}
+                        <div class="npc-card-info">
+                            <div class="npc-card-name">${escHtml(npcName)}</div>
+                            <div class="npc-card-detail">${escHtml(gfx)} &middot; (${evt.x}, ${evt.y})</div>
+                        </div>
+                        <div class="npc-card-badges">${badges}</div>
+                        <span class="npc-card-expand">&#9654;</span>
+                    </div>
+                    <div class="npc-card-body">
+                        <div class="npc-card-events">
+                            ${dialogueHtml}
+                            ${trainerHtml}
+                            ${scriptHtml}
+                            ${movementHtml}
+                        </div>
+                        <div class="npc-card-actions">
+                            <button class="btn btn-sm" onclick="editObjectEvent('${escAttr(dirName)}', ${realIdx})">Edit NPC</button>
+                            ${evt.script && evt.script !== '0x0' ? `<button class="btn btn-sm" onclick="editNPCDialogue('${escAttr(dirName)}', '${escAttr(evt.script)}')" title="Edit dialogue for this NPC">Dialogue</button>` : ''}
+                            ${isTrainer ? `<button class="btn btn-sm" onclick="editTrainerPartyFromScript('${escAttr(dirName)}', '${escAttr(evt.script || '')}')" title="Edit trainer party">Party</button>` : ''}
+                            <button class="btn btn-sm btn-danger" onclick="deleteObjectEvent('${escAttr(dirName)}', ${realIdx})">Delete</button>
+                        </div>
                     </div>
                 </div>
             `;
         }).join('');
     }
-    body += `<div style="text-align:right;margin-top:12px"><button class="btn btn-sm btn-primary" onclick="addObjectEvent('${escAttr(map._dirName)}')">+ Add Object</button></div>`;
+
+    body += `<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+        <button class="btn btn-sm btn-primary" onclick="addObjectEvent('${escAttr(dirName)}')">+ Add NPC</button>
+        <button class="btn btn-sm btn-primary" onclick="addMapTrainer('${escAttr(dirName)}')">+ Add Trainer</button>
+    </div>`;
 
     return `
         <div class="map-area-section">
             <div class="map-area-section-header">
-                <h2><span class="section-icon">&#9786;</span> NPCs / Objects <span class="section-count">${events.length}</span></h2>
+                <h2><span class="section-icon">&#9786;</span> People <span class="section-count">${allNPCs.length} NPCs, ${allTrainers.length} trainers</span></h2>
                 <span class="toggle-arrow">&#9660;</span>
             </div>
             <div class="map-area-section-body">${body}</div>
@@ -3408,46 +3501,9 @@ function buildObjectScriptsSection(map, allTrainers) {
     `;
 }
 
-// ─── Dialogue / Text Section ────────────────────────────────────────────────
+// ─── Dialogue / Text Section (legacy, kept for compatibility) ────────────────
 function buildDialogueSection(map, scriptText) {
-    const dirName = map._dirName;
-    const blocks = parseDialogueBlocksAll(scriptText, dirName);
-
-    let body = '';
-    if (blocks.length === 0) {
-        body = `<div class="empty-state"><div class="empty-icon">&#128172;</div>No dialogue text found in this map's scripts</div>`;
-    } else {
-        body = blocks.map((block, i) => {
-            const labelShort = block.label
-                .replace(dirName + '_Text_', '')
-                .replace(/_/g, ' ');
-            // Format the text for display - replace game format chars
-            const displayText = block.text
-                .replace(/\\n/g, '\n')
-                .replace(/\\p/g, '\n\n')
-                .replace(/\\l/g, '\n')
-                .replace(/\$$/g, '');
-            return `
-                <div class="dialogue-row" style="padding:10px 12px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:12px">
-                    <div style="flex:1;min-width:0">
-                        <div style="font-weight:600;font-size:12px;color:var(--text-dim);margin-bottom:4px;font-family:monospace">${escHtml(block.label)}</div>
-                        <div style="font-size:13px;white-space:pre-wrap;line-height:1.5;background:var(--bg);padding:8px 10px;border-radius:4px;border:1px solid var(--border)">${escHtml(displayText)}</div>
-                    </div>
-                    <button class="btn btn-sm" onclick="editDialogue('${escAttr(dirName)}', '${escAttr(block.label)}')">Edit</button>
-                </div>
-            `;
-        }).join('');
-    }
-
-    return `
-        <div class="map-area-section">
-            <div class="map-area-section-header">
-                <h2><span class="section-icon">&#128172;</span> Dialogue / Text <span class="section-count">${blocks.length}</span></h2>
-                <span class="toggle-arrow">&#9660;</span>
-            </div>
-            <div class="map-area-section-body" style="padding:0">${body}</div>
-        </div>
-    `;
+    return ''; // Dialogue is now shown inline within each NPC card in buildUnifiedNPCSection
 }
 
 async function editDialogue(dirName, label) {
@@ -3967,32 +4023,78 @@ function addConnection(dirName) {
 
 // ─── Coordinate Events Section ──────────────────────────────────────────────
 function buildCoordEventsSection(map) {
+    return ''; // Absorbed into buildSignsAndTriggersSection
+}
+
+// ─── Signs & Triggers Section (merged BG Events + Coord Events) ─────────────
+function buildSignsAndTriggersSection(map) {
+    const bgEvents = (map.bg_events || []).filter(e => e.type !== 'hidden_item');
     const coords = map.coord_events || [];
-    let body = '';
-    if (coords.length === 0) {
-        body = `<div class="empty-state"><div class="empty-icon">&#9678;</div>No coordinate events</div>`;
+    const totalCount = bgEvents.length + coords.length;
+
+    let signsHtml = '';
+    if (bgEvents.length === 0) {
+        signsHtml = `<div class="empty-state" style="padding:12px"><div class="empty-icon">&#128220;</div>No signs</div>`;
     } else {
-        body = coords.map((c, i) => `
-            <div class="area-item-row">
-                <div class="area-item-icon" style="background:var(--cyan);color:#fff">&#9678;</div>
-                <span class="area-item-name" style="font-family:monospace;font-size:12px">${escHtml(c.type || c.script || 'coord_event')}</span>
-                <span class="area-item-coords">(${c.x}, ${c.y})</span>
-                <div style="display:flex;gap:4px">
-                    <button class="btn btn-sm" onclick="editCoordEvent('${escAttr(map._dirName)}', ${i})">Edit</button>
-                    <button class="btn btn-sm btn-danger" onclick="deleteCoordEvent('${escAttr(map._dirName)}', ${i})">Delete</button>
+        signsHtml = bgEvents.map((evt) => {
+            const allBg = map.bg_events || [];
+            const realIdx = allBg.indexOf(evt);
+            const scriptShort = (evt.script || '').split('_EventScript_').pop().replace(/_/g, ' ');
+            const typeBadge = evt.type === 'secret_base'
+                ? '<span class="trigger-type-badge trigger-type-secret">Secret Base</span>'
+                : '<span class="trigger-type-badge trigger-type-sign">Sign</span>';
+            return `
+                <div class="area-item-row">
+                    <div class="area-item-icon" style="background:var(--yellow);color:#333">&#128220;</div>
+                    ${typeBadge}
+                    <span class="area-item-name">${escHtml(scriptShort || evt.type || 'sign')}</span>
+                    <span class="area-item-coords">(${evt.x}, ${evt.y})</span>
+                    <div style="display:flex;gap:4px">
+                        <button class="btn btn-sm" onclick="editBgEvent('${escAttr(map._dirName)}', ${realIdx})">Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteBgEvent('${escAttr(map._dirName)}', ${realIdx})">Delete</button>
+                    </div>
                 </div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
     }
-    body += `<div style="text-align:right;margin-top:12px"><button class="btn btn-sm btn-primary" onclick="addCoordEvent('${escAttr(map._dirName)}')">+ Add Coord Event</button></div>`;
+    signsHtml += `<div style="text-align:right;margin-top:8px"><button class="btn btn-sm btn-primary" onclick="addBgEvent('${escAttr(map._dirName)}')">+ Add Sign</button></div>`;
+
+    let triggersHtml = '';
+    if (coords.length === 0) {
+        triggersHtml = `<div class="empty-state" style="padding:12px"><div class="empty-icon">&#9678;</div>No step triggers</div>`;
+    } else {
+        triggersHtml = coords.map((c, i) => {
+            const scriptShort = (c.script || '').split('_EventScript_').pop().replace(/_/g, ' ');
+            const conditionText = c.var ? `${(c.var || '').replace('VAR_', '')} = ${c.var_value || '0'}` : '';
+            return `
+                <div class="area-item-row">
+                    <div class="area-item-icon" style="background:var(--cyan);color:#fff">&#9678;</div>
+                    <span class="trigger-type-badge trigger-type-step">Step Trigger</span>
+                    <span class="area-item-name">${escHtml(scriptShort || 'trigger')}</span>
+                    ${conditionText ? `<span style="font-size:11px;color:var(--text-dim);font-family:monospace">${escHtml(conditionText)}</span>` : ''}
+                    <span class="area-item-coords">(${c.x}, ${c.y})</span>
+                    <div style="display:flex;gap:4px">
+                        <button class="btn btn-sm" onclick="editCoordEvent('${escAttr(map._dirName)}', ${i})">Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteCoordEvent('${escAttr(map._dirName)}', ${i})">Delete</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+    triggersHtml += `<div style="text-align:right;margin-top:8px"><button class="btn btn-sm btn-primary" onclick="addCoordEvent('${escAttr(map._dirName)}')">+ Add Step Trigger</button></div>`;
 
     return `
         <div class="map-area-section">
             <div class="map-area-section-header">
-                <h2><span class="section-icon">&#9678;</span> Coordinate Events <span class="section-count">${coords.length}</span></h2>
+                <h2><span class="section-icon">&#128220;</span> Signs &amp; Triggers <span class="section-count">${totalCount}</span></h2>
                 <span class="toggle-arrow">&#9660;</span>
             </div>
-            <div class="map-area-section-body">${body}</div>
+            <div class="map-area-section-body">
+                <div class="nav-subsection-label">Signs (things you read)</div>
+                ${signsHtml}
+                <div class="nav-subsection-label">Step Triggers (walk-over events)</div>
+                ${triggersHtml}
+            </div>
         </div>
     `;
 }
@@ -4073,42 +4175,9 @@ function addCoordEvent(dirName) {
     setTimeout(() => editCoordEvent(dirName, map.coord_events.length - 1), 200);
 }
 
-// ─── Background Events Section ──────────────────────────────────────────────
+// ─── Background Events Section (legacy, kept for compatibility) ─────────────
 function buildBgEventsSection(map) {
-    // Show non-hidden-item bg events (signs, scripts, etc.)
-    const bgEvents = (map.bg_events || []).filter(e => e.type !== 'hidden_item');
-    let body = '';
-    if (bgEvents.length === 0) {
-        body = `<div class="empty-state"><div class="empty-icon">&#128220;</div>No signs or background scripts</div>`;
-    } else {
-        body = bgEvents.map((evt, i) => {
-            const allBg = map.bg_events || [];
-            const realIdx = allBg.indexOf(evt);
-            return `
-                <div class="area-item-row">
-                    <div class="area-item-icon" style="background:var(--yellow);color:#333">&#128220;</div>
-                    <span class="area-item-name">${escHtml(evt.type || 'sign')}</span>
-                    <span style="font-family:monospace;font-size:11px;color:var(--text-dim);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(evt.script || '')}</span>
-                    <span class="area-item-coords">(${evt.x}, ${evt.y})</span>
-                    <div style="display:flex;gap:4px">
-                        <button class="btn btn-sm" onclick="editBgEvent('${escAttr(map._dirName)}', ${realIdx})">Edit</button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteBgEvent('${escAttr(map._dirName)}', ${realIdx})">Delete</button>
-                    </div>
-                </div>
-            `;
-        }).join('');
-    }
-    body += `<div style="text-align:right;margin-top:12px"><button class="btn btn-sm btn-primary" onclick="addBgEvent('${escAttr(map._dirName)}')">+ Add Sign/Script</button></div>`;
-
-    return `
-        <div class="map-area-section">
-            <div class="map-area-section-header">
-                <h2><span class="section-icon">&#128220;</span> Signs / BG Scripts <span class="section-count">${bgEvents.length}</span></h2>
-                <span class="toggle-arrow">&#9660;</span>
-            </div>
-            <div class="map-area-section-body">${body}</div>
-        </div>
-    `;
+    return ''; // Absorbed into buildSignsAndTriggersSection
 }
 
 function editBgEvent(dirName, realIdx) {
