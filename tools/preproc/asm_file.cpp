@@ -160,8 +160,8 @@ Directive AsmFile::GetDirective()
         return Directive::Unknown;
 }
 
-// Checks if we're at label that ends with '::'.
-// Returns the name if so and an empty string if not.
+// Checks if we're at label and if so, returns its symbol and scope.
+// Returns 'label::none' if not.
 Label AsmFile::GetLabel()
 {
     long start = m_pos;
