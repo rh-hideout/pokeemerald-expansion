@@ -1274,7 +1274,7 @@ AI_SINGLE_BATTLE_TEST("Switch AI: AI will switch out if it has <= 66% HP remaini
     }
 }
 
-AI_SINGLE_BATTLE_TEST("Switch AI: AI will switch out to cycle Intimidate when facing a physical attacker")
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out to cycle Intimidate when facing a physical attacker")
 {
     PASSES_RANDOMLY(SHOULD_SWITCH_INTIMIDATE_PERCENTAGE, 100, RNG_AI_SWITCH_INTIMIDATE);
     GIVEN {
@@ -1287,7 +1287,7 @@ AI_SINGLE_BATTLE_TEST("Switch AI: AI will switch out to cycle Intimidate when fa
     }
 }
 
-AI_SINGLE_BATTLE_TEST("Switch AI: AI will not cycle Intimidate when target blocks or punishes Attack drops")
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will not cycle Intimidate when target blocks or punishes Attack drops")
 {
     u32 Species = SPECIES_NONE;
     enum Ability ability;
@@ -1304,7 +1304,7 @@ AI_SINGLE_BATTLE_TEST("Switch AI: AI will not cycle Intimidate when target block
     }
 }
 
-AI_SINGLE_BATTLE_TEST("Switch AI: AI will not cycle Intimidate when target is a special attacker")
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will not cycle Intimidate when target is a special attacker")
 {
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING);
@@ -1316,7 +1316,7 @@ AI_SINGLE_BATTLE_TEST("Switch AI: AI will not cycle Intimidate when target is a 
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("Switch AI: AI will switch out to cycle Intimidate in doubles when at least one target is valid")
+AI_DOUBLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out to cycle Intimidate in doubles when at least one target is valid")
 {
     PASSES_RANDOMLY(SHOULD_SWITCH_INTIMIDATE_PERCENTAGE, 100, RNG_AI_SWITCH_INTIMIDATE);
     GIVEN {
@@ -1331,7 +1331,7 @@ AI_DOUBLE_BATTLE_TEST("Switch AI: AI will switch out to cycle Intimidate in doub
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("Switch AI: AI will not cycle Intimidate in doubles when both targets block Attack drops")
+AI_DOUBLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will not cycle Intimidate in doubles when both targets block Attack drops")
 {
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_OMNISCIENT);
@@ -1345,7 +1345,7 @@ AI_DOUBLE_BATTLE_TEST("Switch AI: AI will not cycle Intimidate in doubles when b
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("Switch AI: AI will not cycle Intimidate in doubles when one target punishes stat drops")
+AI_DOUBLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will not cycle Intimidate in doubles when one target punishes stat drops")
 {
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_OMNISCIENT);
@@ -1359,7 +1359,7 @@ AI_DOUBLE_BATTLE_TEST("Switch AI: AI will not cycle Intimidate in doubles when o
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("Switch AI: AI will not cycle Intimidate in doubles when both targets are special attackers")
+AI_DOUBLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will not cycle Intimidate in doubles when both targets are special attackers")
 {
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_OMNISCIENT);
