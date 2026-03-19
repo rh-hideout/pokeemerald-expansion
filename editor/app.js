@@ -33,6 +33,8 @@ let state = {
     config: null,
     maps: null,
     pokemon: null,
+    learnsets: null,   // { varName: { gen: 'gen_X', moves: [{level, move}] } }
+    learnables: null,  // all_learnables.json content
     search: '',
     configFilter: 'all',
     mapDetail: null,
@@ -4347,8 +4349,10 @@ function parsePokemonSpecies(text) {
         const abilitiesM = body.match(/\.abilities\s*=\s*\{([^}]+)\}/);
         const growthM = body.match(/\.growthRate\s*=\s*(\w+)/);
         const eggM = body.match(/\.eggGroups\s*=\s*MON_EGG_GROUPS\((\w+)(?:,\s*(\w+))?\)/);
+        const learnsetM = body.match(/\.levelUpLearnset\s*=\s*(\w+)/);
 
         if (nameM) mon.name = nameM[1];
+        if (learnsetM) mon.learnsetVar = learnsetM[1];
         if (hpM) mon.baseHP = parseInt(hpM[1]);
         if (atkM) mon.baseAttack = parseInt(atkM[1]);
         if (defM) mon.baseDefense = parseInt(defM[1]);
@@ -4434,6 +4438,279 @@ function updatePokemonInFile(mon) {
     markChanged(filePath, fileContent);
 }
 
+// ─── Learnset Data ─────────────────────────────────────────────────────────
+function parseLevelUpLearnsets(text, genName) {
+    const learnsets = {};
+    const regex = /static const struct LevelUpMove (s\w+LevelUpLearnset)\[\]\s*=\s*\{([\s\S]*?)\};/g;
+    let match;
+    while ((match = regex.exec(text)) !== null) {
+        const varName = match[1];
+        const body = match[2];
+        const moves = [];
+        const moveRegex = /LEVEL_UP_MOVE\(\s*(\d+)\s*,\s*(MOVE_\w+)\s*\)/g;
+        let moveMatch;
+        while ((moveMatch = moveRegex.exec(body)) !== null) {
+            moves.push({ level: parseInt(moveMatch[1]), move: moveMatch[2] });
+        }
+        learnsets[varName] = { gen: genName, moves };
+    }
+    return learnsets;
+}
+
+async function loadLearnsets() {
+    if (!state.learnsets) {
+        const listing = await ghFetch(`/repos/${REPO_OWNER}/${REPO_NAME}/contents/src/data/pokemon/level_up_learnsets?ref=${BRANCH}`);
+        const genFiles = listing.filter(f => f.name.startsWith('gen_') && f.name.endsWith('.h'));
+        const all = {};
+        for (let i = 0; i < genFiles.length; i += 3) {
+            const batch = genFiles.slice(i, i + 3);
+            const results = await Promise.all(batch.map(async f => {
+                try {
+                    const text = await fetchFile(`src/data/pokemon/level_up_learnsets/${f.name}`);
+                    return parseLevelUpLearnsets(text, f.name.replace('.h', ''));
+                } catch { return {}; }
+            }));
+            for (const r of results) Object.assign(all, r);
+        }
+        state.learnsets = all;
+    }
+    return state.learnsets;
+}
+
+async function loadLearnables() {
+    if (!state.learnables) {
+        state.learnables = await fetchJSON('src/data/pokemon/all_learnables.json');
+    }
+    return state.learnables;
+}
+
+// Build lookup: MOVE_XXX -> "Readable Name"
+function getMoveNameMap(moves) {
+    const map = {};
+    for (const m of moves) {
+        map[m.id] = m.name || m.id.replace('MOVE_', '').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    }
+    return map;
+}
+
+// Build reverse lookup: "readable name" (lowercase) -> MOVE_XXX
+function getMoveIdMap(moves) {
+    const map = {};
+    for (const m of moves) {
+        const name = m.name || m.id.replace('MOVE_', '').replace(/_/g, ' ');
+        map[name.toLowerCase()] = m.id;
+    }
+    return map;
+}
+
+// Get the all_learnables key from a SPECIES_XXX id
+function speciesKeyFromId(speciesId) {
+    return speciesId.replace('SPECIES_', '');
+}
+
+function updateLevelUpLearnsetInFile(varName, genName, moves) {
+    const filePath = `src/data/pokemon/level_up_learnsets/${genName}.h`;
+    let fileContent = pendingChanges[filePath] || originalContent[filePath];
+    if (!fileContent) { toast('Learnset file not loaded yet', true); return; }
+
+    const blockRegex = new RegExp(
+        `(static const struct LevelUpMove ${varName}\\[\\]\\s*=\\s*\\{)([\\s\\S]*?)(\\};)`, 'm'
+    );
+    const blockMatch = fileContent.match(blockRegex);
+    if (!blockMatch) { toast(`Could not find ${varName} in ${genName}.h`, true); return; }
+
+    const movesStr = moves.map(m => {
+        const lvl = String(m.level).padStart(2, ' ');
+        return `    LEVEL_UP_MOVE(${lvl}, ${m.move}),`;
+    }).join('\n');
+
+    fileContent = fileContent.replace(blockRegex, `$1\n${movesStr}\n    LEVEL_UP_END\n$3`);
+    markChanged(filePath, fileContent);
+}
+
+function updateLearnablesInFile(speciesKey, moveList) {
+    const filePath = 'src/data/pokemon/all_learnables.json';
+    let fileContent = pendingChanges[filePath] || originalContent[filePath];
+    if (!fileContent) { toast('Learnables data not loaded yet', true); return; }
+
+    const data = JSON.parse(fileContent);
+    data[speciesKey] = moveList.sort();
+    markChanged(filePath, JSON.stringify(data, null, 2) + '\n');
+    state.learnables = data;
+}
+
+async function editLearnset(speciesId) {
+    const [moves, learnsets, learnables] = await Promise.all([
+        loadMoves(), loadLearnsets(), loadLearnables()
+    ]);
+    const mon = state.pokemon.find(p => p.id === speciesId);
+    if (!mon) return;
+
+    const nameMap = getMoveNameMap(moves);
+    const idMap = getMoveIdMap(moves);
+    const allMoveNames = moves.map(m => m.name || m.id.replace('MOVE_', '').replace(/_/g, ' ')).sort();
+    const allMoveIds = moves.map(m => m.id).sort();
+
+    // Get level-up moves
+    const varName = mon.learnsetVar;
+    const learnsetData = varName && learnsets[varName] ? learnsets[varName] : null;
+    const levelUpMoves = learnsetData ? learnsetData.moves.map(m => ({ ...m })) : [];
+
+    // Get teachable moves
+    const speciesKey = speciesKeyFromId(speciesId);
+    const teachableMoves = learnables[speciesKey] ? [...learnables[speciesKey]] : [];
+
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+
+    function renderModal() {
+        overlay.innerHTML = `
+            <div class="modal" style="max-width:800px;max-height:90vh;display:flex;flex-direction:column">
+                <div class="modal-header">
+                    <h2>Learnset &mdash; ${escHtml(mon.name || mon.id)}</h2>
+                    <button class="btn btn-sm" onclick="this.closest('.modal-overlay').remove()">&#10005;</button>
+                </div>
+                <div class="modal-body" style="overflow-y:auto;flex:1">
+                    <div style="margin-bottom:16px">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+                            <strong style="font-size:14px">Level-Up Moves</strong>
+                            <button class="btn btn-sm btn-primary" id="add-levelup-btn">+ Add Move</button>
+                        </div>
+                        ${!varName ? '<div style="color:var(--text-dim);font-size:13px">No learnset variable found for this species.</div>' : ''}
+                        <table style="width:100%">
+                            <thead><tr><th style="width:60px">Lvl</th><th>Move</th><th style="width:40px"></th></tr></thead>
+                            <tbody id="levelup-tbody">
+                                ${levelUpMoves.map((m, i) => `
+                                    <tr>
+                                        <td><input type="number" class="lu-level" data-idx="${i}" value="${m.level}" min="1" max="100" style="width:50px"></td>
+                                        <td>
+                                            <input type="text" class="lu-move" data-idx="${i}" value="${escAttr(nameMap[m.move] || m.move)}" list="move-datalist" style="width:100%">
+                                        </td>
+                                        <td><button class="btn btn-sm" data-remove-lu="${i}" title="Remove" style="color:#e55">&#10005;</button></td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+                            <strong style="font-size:14px">Teachable Moves <span style="color:var(--text-dim);font-weight:normal">(${teachableMoves.length})</span></strong>
+                            <button class="btn btn-sm btn-primary" id="add-teachable-btn">+ Add Move</button>
+                        </div>
+                        <div id="teachable-list" style="display:flex;flex-wrap:wrap;gap:4px">
+                            ${teachableMoves.map((m, i) => `
+                                <span class="type-badge" style="cursor:pointer;display:inline-flex;align-items:center;gap:4px" data-remove-teach="${i}">
+                                    ${escHtml(nameMap[m] || m)}
+                                    <span style="color:#e55;font-weight:bold" title="Remove">&times;</span>
+                                </span>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <datalist id="move-datalist">
+                        ${allMoveNames.map(n => `<option value="${escAttr(n)}">`).join('')}
+                    </datalist>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+                    <button class="btn btn-primary" id="save-learnset-btn">Save</button>
+                </div>
+            </div>
+        `;
+
+        // Event: remove level-up move
+        overlay.querySelectorAll('[data-remove-lu]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                levelUpMoves.splice(parseInt(btn.dataset.removeLu), 1);
+                renderModal();
+            });
+        });
+
+        // Event: remove teachable move
+        overlay.querySelectorAll('[data-remove-teach]').forEach(el => {
+            el.addEventListener('click', () => {
+                teachableMoves.splice(parseInt(el.dataset.removeTeach), 1);
+                renderModal();
+            });
+        });
+
+        // Event: add level-up move
+        const addLuBtn = overlay.querySelector('#add-levelup-btn');
+        if (addLuBtn) addLuBtn.addEventListener('click', () => {
+            levelUpMoves.push({ level: 1, move: 'MOVE_NONE' });
+            renderModal();
+            // Focus the last move input
+            const inputs = overlay.querySelectorAll('.lu-move');
+            if (inputs.length) inputs[inputs.length - 1].focus();
+        });
+
+        // Event: add teachable move
+        const addTeachBtn = overlay.querySelector('#add-teachable-btn');
+        if (addTeachBtn) addTeachBtn.addEventListener('click', () => {
+            const name = prompt('Enter move name:');
+            if (!name) return;
+            const moveId = idMap[name.toLowerCase()];
+            if (!moveId) { toast(`Unknown move: ${name}`, true); return; }
+            if (!teachableMoves.includes(moveId)) {
+                teachableMoves.push(moveId);
+                renderModal();
+            } else {
+                toast('Move already in teachable list');
+            }
+        });
+
+        // Event: sync level/move inputs on change
+        overlay.querySelectorAll('.lu-level').forEach(input => {
+            input.addEventListener('change', () => {
+                const idx = parseInt(input.dataset.idx);
+                levelUpMoves[idx].level = parseInt(input.value) || 1;
+            });
+        });
+        overlay.querySelectorAll('.lu-move').forEach(input => {
+            input.addEventListener('change', () => {
+                const idx = parseInt(input.dataset.idx);
+                const val = input.value.trim();
+                const moveId = idMap[val.toLowerCase()];
+                if (moveId) {
+                    levelUpMoves[idx].move = moveId;
+                } else {
+                    toast(`Unknown move: ${val}`, true);
+                }
+            });
+        });
+
+        // Event: save
+        const saveBtn = overlay.querySelector('#save-learnset-btn');
+        if (saveBtn) saveBtn.addEventListener('click', () => {
+            // Validate all level-up moves have valid IDs
+            for (const m of levelUpMoves) {
+                if (!m.move || m.move === 'MOVE_NONE') {
+                    toast('Please fill in all moves before saving', true);
+                    return;
+                }
+            }
+
+            // Sort level-up moves by level
+            levelUpMoves.sort((a, b) => a.level - b.level);
+
+            // Save level-up learnset
+            if (varName && learnsetData) {
+                learnsetData.moves = levelUpMoves;
+                updateLevelUpLearnsetInFile(varName, learnsetData.gen, levelUpMoves);
+            }
+
+            // Save teachable moves
+            updateLearnablesInFile(speciesKey, teachableMoves);
+
+            toast(`Learnset for ${mon.name || mon.id} updated (pending PR submission)`);
+            overlay.remove();
+        });
+    }
+
+    renderModal();
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+}
+
 async function renderPokemonPage() {
     const pokemon = await loadPokemonSpecies();
     const search = state.search.toLowerCase();
@@ -4493,7 +4770,10 @@ async function renderPokemonPage() {
                             <td>${p.baseSpDefense ?? '-'}</td>
                             <td>${p.baseSpeed ?? '-'}</td>
                             <td><strong>${p.bst || '-'}</strong></td>
-                            <td><button class="btn btn-sm" onclick="editPokemon('${escAttr(p.id)}')">Edit</button></td>
+                            <td>
+                                <button class="btn btn-sm" onclick="editPokemon('${escAttr(p.id)}')">Stats</button>
+                                <button class="btn btn-sm" onclick="editLearnset('${escAttr(p.id)}')">Moves</button>
+                            </td>
                         </tr>
                     `).join('')}
                 </tbody>
