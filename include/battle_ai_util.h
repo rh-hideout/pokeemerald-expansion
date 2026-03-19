@@ -87,6 +87,7 @@ u32 AI_GetDamage(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveI
 bool32 IsAiFlagPresent(u64 flag);
 bool32 IsAiBattlerAware(enum BattlerId battlerId);
 bool32 CanAiPredictMove(enum BattlerId battlerId);
+bool32 CanAiPredictSwitch(enum BattlerId battlerId);
 bool32 IsAiBattlerAssumingStab(enum BattlerId battlerId);
 bool32 IsAiBattlerAssumingStatusMoves(enum BattlerId battlerId);
 bool32 IsAiBattlerPredictingAbility(enum BattlerId battlerId);

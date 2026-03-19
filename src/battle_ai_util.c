@@ -188,12 +188,20 @@ bool32 CanAiPredictMove(enum BattlerId battlerId)
     return FALSE;
 }
 
+bool32 CanAiPredictSwitch(enum BattlerId battlerId)
+{
+    if (IsAiFlagPresent(AI_FLAG_PREDICT_SWITCH))
+        return TRUE;
+
+    return FALSE;
+}
+
 bool32 IsBattlerPredictedToSwitch(enum BattlerId battler)
 {
     // Check for prediction flag on AI, whether they're using those predictions this turn, and whether the AI thinks the player should switch
     for (enum BattlerId battlerIndex = 0; battlerIndex < MAX_BATTLERS_COUNT; battlerIndex++)
     {
-        if (gAiThinkingStruct->aiFlags[battlerIndex] & AI_FLAG_PREDICT_SWITCH)
+        if (CanAiPredictSwitch(battlerIndex))
         {
             if (gAiLogicData->predictingSwitch && gAiLogicData->shouldSwitch & (1u << battler))
                 return TRUE;
