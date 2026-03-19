@@ -199,8 +199,6 @@ static const u32 sPokedexPlusHGSS_ScreenSearchNational_Tilemap[] = INCBIN_U32("g
 #define MAX_EVO_METHOD_LINES 10
 
 extern EWRAM_DATA struct PokedexView *sPokedexView;
-extern EWRAM_DATA u16 sLastSelectedPokemon;
-extern EWRAM_DATA u8 sPokeBallRotation;
 extern EWRAM_DATA struct PokedexListItem *sPokedexListItem;
 //Pokedex Plus HGSS_Ui
 

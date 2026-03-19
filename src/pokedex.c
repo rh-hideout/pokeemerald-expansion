@@ -34,8 +34,8 @@
 #include "config/pokedex_plus_hgss.h"
 
 EWRAM_DATA struct PokedexView *sPokedexView = NULL;
-EWRAM_DATA u16 sLastSelectedPokemon = 0;
-EWRAM_DATA u8 sPokeBallRotation = 0;
+static EWRAM_DATA u16 sLastSelectedPokemon = 0;
+static EWRAM_DATA u8 sPokeBallRotation = 0;
 EWRAM_DATA struct PokedexListItem *sPokedexListItem = NULL;
 
 // This is written to, but never read.
