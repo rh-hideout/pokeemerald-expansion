@@ -255,10 +255,10 @@ static u8 ShowCategoryIcon(enum DamageCategory category);
 static void DestroyCategoryIcon(void);
 
 //Evo screen
-u32 GetSpeciesNameFontId(u32 nameWidth);
-u32 GetSpeciesNameWidthInChars(const u8 *speciesName);
-bool32 IsSpeciesAlcremie(enum Species targetSpecies);
-bool32 IsItemSweet(enum Item item);
+static u32 GetSpeciesNameFontId(u32 nameWidth);
+static u32 GetSpeciesNameWidthInChars(const u8 *speciesName);
+static bool32 IsSpeciesAlcremie(enum Species targetSpecies);
+static bool32 IsItemSweet(enum Item item);
 static void TryLoadDarkModeArrowPalette(void);
 
 //Cry screen
@@ -3546,7 +3546,7 @@ static u8 PrintPreEvolutions(u8 taskId, enum Species species)
 #define EVO_SCREEN_CRITS_DIGITS 1
 #define EVO_SCREEN_DMG_DIGITS 2
 
-u32 GetSpeciesNameFontId(u32 nameWidth)
+static u32 GetSpeciesNameFontId(u32 nameWidth)
 {
     if (nameWidth <= 8)
         return FONT_SMALL;
@@ -3556,7 +3556,7 @@ u32 GetSpeciesNameFontId(u32 nameWidth)
         return FONT_SMALL;//_NARROWER;
 }
 
-u32 GetSpeciesNameWidthInChars(const u8 *speciesName)
+static u32 GetSpeciesNameWidthInChars(const u8 *speciesName)
 {
     u32 i = 0;
 
@@ -3565,12 +3565,12 @@ u32 GetSpeciesNameWidthInChars(const u8 *speciesName)
     return i;
 }
 
-bool32 IsSpeciesAlcremie(enum Species targetSpecies)
+static bool32 IsSpeciesAlcremie(enum Species targetSpecies)
 {
     return GET_BASE_SPECIES_ID(targetSpecies) == SPECIES_ALCREMIE;
 }
 
-bool32 IsItemSweet(enum Item item)
+static bool32 IsItemSweet(enum Item item)
 {
     return item >= ITEM_STRAWBERRY_SWEET && item <= ITEM_RIBBON_SWEET;
 }
