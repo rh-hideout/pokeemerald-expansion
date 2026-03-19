@@ -75,11 +75,26 @@ async function ghFetch(path, opts = {}) {
 }
 
 async function fetchFile(filePath) {
-    const data = await ghFetch(`/repos/${REPO_OWNER}/${REPO_NAME}/contents/${filePath}?ref=${BRANCH}`);
-    const text = atob(data.content.replace(/\n/g, ''));
-    // Handle UTF-8 properly
-    const bytes = Uint8Array.from(text, c => c.charCodeAt(0));
-    const decoded = new TextDecoder().decode(bytes);
+    try {
+        const data = await ghFetch(`/repos/${REPO_OWNER}/${REPO_NAME}/contents/${filePath}?ref=${BRANCH}`);
+        if (data.content) {
+            const text = atob(data.content.replace(/\n/g, ''));
+            // Handle UTF-8 properly
+            const bytes = Uint8Array.from(text, c => c.charCodeAt(0));
+            const decoded = new TextDecoder().decode(bytes);
+            originalContent[filePath] = decoded;
+            return decoded;
+        }
+        // File too large for Contents API — fall through to raw fetch
+    } catch {
+        // File may exceed GitHub's 1MB Contents API limit — fall through to raw fetch
+    }
+    const rawUrl = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/${filePath}`;
+    const headers = {};
+    if (ghToken) headers['Authorization'] = `token ${ghToken}`;
+    const res = await fetch(rawUrl, { headers });
+    if (!res.ok) throw new Error(`Failed to fetch file: ${res.status}`);
+    const decoded = await res.text();
     originalContent[filePath] = decoded;
     return decoded;
 }
