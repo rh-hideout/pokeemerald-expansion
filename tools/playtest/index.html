@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>pokeemerald-expansion Playtest</title>
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3/dist/jszip.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -124,6 +125,43 @@
             text-align: center;
             padding: 0.5rem;
         }
+        .branch-picker {
+            width: 100%;
+            background: #16213e;
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .branch-picker label {
+            font-size: 0.85rem;
+            color: #aaa;
+            white-space: nowrap;
+        }
+        .branch-picker input {
+            flex: 1;
+            min-width: 150px;
+            padding: 0.4rem 0.75rem;
+            border: 1px solid #0f3460;
+            border-radius: 6px;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            font-size: 0.85rem;
+            font-family: monospace;
+        }
+        .branch-picker input:focus {
+            outline: none;
+            border-color: #e94560;
+        }
+        .branch-picker .btn { flex-shrink: 0; }
+        .branch-picker .hint {
+            width: 100%;
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
         .error-container {
             width: 100%;
             background: #16213e;
@@ -191,9 +229,16 @@
             <p>Fetching the ROM built from the latest push to master</p>
         </div>
 
+        <div class="branch-picker" id="branch-picker" style="display:none;">
+            <label for="branch-input">Load ROM from branch:</label>
+            <input type="text" id="branch-input" placeholder="e.g. my-feature-branch" spellcheck="false">
+            <button class="btn btn-primary" onclick="loadFromBranch()">Load</button>
+            <span class="hint">Loads the latest CI build artifact for any branch with a successful workflow run (via nightly.link)</span>
+        </div>
+
         <div class="drop-zone" id="drop-zone" style="display:none;">
-            <h2>Or drop a custom .gba ROM here</h2>
-            <p>Click to browse or drag and drop a .gba file to test a specific build</p>
+            <h2>Or load a custom .gba ROM</h2>
+            <p>Click to browse or drag and drop a .gba file</p>
             <input type="file" id="file-input" accept=".gba,.GBA">
         </div>
 
@@ -252,14 +297,33 @@
     const fileInput = document.getElementById('file-input');
     const loadingScreen = document.getElementById('loading-screen');
     const errorContainer = document.getElementById('error-container');
+    const branchPicker = document.getElementById('branch-picker');
+    const branchInput = document.getElementById('branch-input');
     let emulatorLoaded = false;
     let romLoadAttempts = 0;
     const MAX_ROM_RETRIES = 3;
+
+    // Detect repo owner/name from the URL (works on GitHub Pages)
+    const REPO_OWNER = (() => {
+        const host = location.hostname;
+        if (host.endsWith('.github.io')) return host.replace('.github.io', '');
+        return 'theReuben';
+    })();
+    const REPO_NAME = (() => {
+        const parts = location.pathname.split('/').filter(Boolean);
+        if (location.hostname.endsWith('.github.io') && parts.length > 0) return parts[0];
+        return 'pokemon-brazilianite';
+    })();
+
+    // Check for ?branch= query parameter
+    const urlParams = new URLSearchParams(location.search);
+    const requestedBranch = urlParams.get('branch');
 
     function showError(title, message, details) {
         loadingScreen.style.display = 'none';
         dropZone.style.display = 'none';
         errorContainer.style.display = 'block';
+        branchPicker.style.display = 'block';
         document.getElementById('error-title').textContent = title;
         document.getElementById('error-message').textContent = message;
         const detailsEl = document.getElementById('error-details');
@@ -279,11 +343,85 @@
     async function retryLoadROM() {
         errorContainer.style.display = 'none';
         romLoadAttempts = 0;
-        await autoLoadROM();
+        if (requestedBranch) {
+            await loadBranchROM(requestedBranch);
+        } else {
+            await autoLoadROM();
+        }
     }
+
+    async function loadBranchROM(branch) {
+        loadingScreen.style.display = 'block';
+        loadingScreen.querySelector('h2').textContent = `Loading ROM from branch: ${branch}`;
+        loadingScreen.querySelector('p').textContent = 'Fetching CI build artifact via nightly.link...';
+        branchPicker.style.display = 'none';
+
+        const nightlyURL = `https://nightly.link/${REPO_OWNER}/${REPO_NAME}/workflows/build.yml/${encodeURIComponent(branch)}/pokeemerald-debug.zip`;
+        try {
+            const resp = await fetch(nightlyURL);
+            if (resp.status === 404) {
+                showError(
+                    'No CI Build Found',
+                    `No successful CI build was found for branch "${branch}". Make sure the branch exists and has a passing CI workflow run.`,
+                    `GET ${nightlyURL} — 404 Not Found`
+                );
+                return;
+            }
+            if (!resp.ok) {
+                throw new Error(`nightly.link returned HTTP ${resp.status}`);
+            }
+            const zipBlob = await resp.blob();
+            const zip = await JSZip.loadAsync(zipBlob);
+            // Find the .gba file inside the zip
+            const gbaFile = Object.keys(zip.files).find(name => name.endsWith('.gba'));
+            if (!gbaFile) {
+                showError(
+                    'ROM Not Found in Artifact',
+                    'The CI artifact was downloaded but no .gba file was found inside it.',
+                    `Zip contents: ${Object.keys(zip.files).join(', ')}`
+                );
+                return;
+            }
+            const romData = await zip.files[gbaFile].async('blob');
+            if (romData.size < 1024) {
+                showError(
+                    'Invalid ROM File',
+                    'The ROM file extracted from the artifact appears corrupt or incomplete.',
+                    `File size: ${romData.size} bytes`
+                );
+                return;
+            }
+            const romURL = URL.createObjectURL(romData);
+            loadingScreen.style.display = 'none';
+            launchEmulator(romURL, `pokeemerald.gba (${branch})`);
+        } catch (e) {
+            showError(
+                'Failed to Load Branch ROM',
+                `Could not fetch the CI build for branch "${branch}".`,
+                e.message
+            );
+        }
+    }
+
+    function loadFromBranch() {
+        const branch = branchInput.value.trim();
+        if (!branch) return;
+        // Update URL so the branch is bookmarkable
+        const url = new URL(location);
+        url.searchParams.set('branch', branch);
+        history.replaceState(null, '', url);
+        loadBranchROM(branch);
+    }
+
+    // Allow pressing Enter in the branch input
+    branchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') loadFromBranch();
+    });
 
     async function autoLoadROM() {
         loadingScreen.style.display = 'block';
+        loadingScreen.querySelector('h2').textContent = 'Loading latest build...';
+        loadingScreen.querySelector('p').textContent = 'Fetching the ROM built from the latest push to master';
         romLoadAttempts++;
         try {
             const resp = await fetch('rom.gba');
@@ -326,8 +464,19 @@
         }
     }
 
-    // Try to auto-load the latest ROM built by CI
-    autoLoadROM();
+    // Load ROM based on query parameter or default to deployed build
+    if (requestedBranch) {
+        branchInput.value = requestedBranch;
+        loadBranchROM(requestedBranch);
+    } else {
+        autoLoadROM();
+    }
+
+    // Show branch picker and drop zone as secondary options
+    function showSecondaryOptions() {
+        branchPicker.style.display = 'block';
+        dropZone.style.display = 'block';
+    }
 
     // Drop zone as fallback for custom ROMs
     dropZone.addEventListener('click', () => fileInput.click());
@@ -372,8 +521,10 @@
     function launchEmulator(romURL, fileName) {
         dropZone.style.display = 'none';
         loadingScreen.style.display = 'none';
+        errorContainer.style.display = 'none';
         document.getElementById('emulator-area').style.display = 'block';
         showStatus(`Playing: ${fileName}`, 'loaded');
+        showSecondaryOptions();
 
         // EmulatorJS configuration
         // https://emulatorjs.org - open source browser emulator
