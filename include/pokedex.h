@@ -138,28 +138,28 @@ struct PokedexListItem
 
 struct PokemonStats
 {
-    u8  genderRatio;
-    u8  baseHP;
-    u8  baseSpeed;
-    u8  baseAttack;
-    u8  baseSpAttack;
-    u8  baseDefense;
-    u8  baseSpDefense;
-    u8  differentEVs;
-    u8  evYield_HP;
-    u8  evYield_Speed;
-    u8  evYield_Attack;
-    u8  evYield_SpAttack;
-    u8  evYield_Defense;
-    u8  evYield_SpDefense;
-    u8  catchRate;
     enum Species species;
+    u8 genderRatio;
+    u8 baseHP;
+    u8 baseSpeed;
+    u8 baseAttack;
+    u8 baseSpAttack;
+    u8 baseDefense;
+    u8 baseSpDefense;
+    u8 differentEVs;
+    u8 evYield_HP;
+    u8 evYield_Speed;
+    u8 evYield_Attack;
+    u8 evYield_SpAttack;
+    u8 evYield_Defense;
+    u8 evYield_SpDefense;
+    u8 catchRate;
     enum GrowthRate growthRate:8;
-    u8  eggGroup1;
-    u8  eggGroup2;
-    u8  eggCycles;
+    u8 eggGroup1;
+    u8 eggGroup2;
+    u8 eggCycles;
     u16 expYield;
-    u8  friendship;
+    u8 friendship;
     enum Ability ability0;
     enum Ability ability1;
     enum Ability abilityHidden;
