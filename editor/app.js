@@ -51,6 +51,13 @@ const originalContent = {};
 let ghToken = localStorage.getItem('gh_token') || '';
 let ghUser = null;
 
+// ─── Editor Branch State ────────────────────────────────────────────────────
+// Active editing branch — created on first edit, persisted across reloads
+let editorBranch = localStorage.getItem('editor_branch') || '';
+let editorBranchLastCommit = localStorage.getItem('editor_branch_last_commit') || '';
+// Queue for serialising auto-commits (prevents races)
+let commitQueue = Promise.resolve();
+
 const $ = (sel, el = document) => el.querySelector(sel);
 const $$ = (sel, el = document) => [...el.querySelectorAll(sel)];
 const content = $('#content');
@@ -83,9 +90,78 @@ async function fetchJSON(filePath) {
 }
 
 // ─── Change Tracking ────────────────────────────────────────────────────────
+
+// Generate a readable timestamp for branch names: YYYY-MM-DD_HH-mm
+function readableTimestamp() {
+    const d = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}_${pad(d.getHours())}-${pad(d.getMinutes())}`;
+}
+
+// Format an ISO timestamp for display
+function formatCommitTime(iso) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    return d.toLocaleString(undefined, {
+        month: 'short', day: 'numeric',
+        hour: '2-digit', minute: '2-digit',
+    });
+}
+
+// Ensure the editor branch exists; create it on first edit
+async function ensureEditorBranch() {
+    if (editorBranch) return editorBranch;
+    if (!ghUser) throw new Error('Sign in with GitHub before making changes.');
+    return await createNewEditorBranch();
+}
+
+// Commit a single file to the editor branch
+async function commitFile(filePath, content) {
+    const branch = await ensureEditorBranch();
+
+    // Get the current file SHA on the branch (needed for updates)
+    let fileSha;
+    try {
+        const existing = await ghFetch(`/repos/${REPO_OWNER}/${REPO_NAME}/contents/${filePath}?ref=${branch}`);
+        fileSha = existing.sha;
+    } catch { /* new file */ }
+
+    const encoder = new TextEncoder();
+    const bytes = encoder.encode(content);
+    let binary = '';
+    for (let i = 0; i < bytes.length; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    const base64 = btoa(binary);
+
+    const result = await ghFetch(`/repos/${REPO_OWNER}/${REPO_NAME}/contents/${filePath}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            message: `Update ${filePath} via web editor`,
+            content: base64,
+            sha: fileSha,
+            branch
+        })
+    });
+
+    // Update last commit timestamp
+    editorBranchLastCommit = result.commit?.committer?.date || new Date().toISOString();
+    localStorage.setItem('editor_branch_last_commit', editorBranchLastCommit);
+    updateBranchUI();
+}
+
+// markChanged: queue an auto-commit for this file
 function markChanged(filePath, newContent) {
     pendingChanges[filePath] = newContent;
     updateChangesUI();
+
+    // Auto-commit (serialised via queue to prevent races)
+    commitQueue = commitQueue
+        .then(() => commitFile(filePath, newContent))
+        .catch(e => {
+            toast('Auto-save failed: ' + e.message, true);
+        });
 }
 
 function getChangeCount() {
@@ -100,6 +176,194 @@ function updateChangesUI() {
         $('#changes-count').textContent = `${count} change${count > 1 ? 's' : ''}`;
     } else {
         el.style.display = 'none';
+    }
+    updateBranchUI();
+}
+
+function updateBranchUI() {
+    const el = $('#branch-info');
+    if (!el) return;
+    if (editorBranch) {
+        const shortBranch = editorBranch.replace(/^editor\//, '');
+        const timeStr = editorBranchLastCommit ? ` · ${formatCommitTime(editorBranchLastCommit)}` : '';
+        el.style.display = 'inline-flex';
+        el.innerHTML = `
+            <span class="branch-info-label" onclick="openBranchPicker()" title="Click to switch branch">
+                &#9741; ${escHtml(shortBranch)}${timeStr}
+            </span>`;
+    } else if (ghUser) {
+        el.style.display = 'inline-flex';
+        el.innerHTML = `
+            <span class="branch-info-label" onclick="openBranchPicker()" title="Select or create an editing branch">
+                &#9741; No branch &mdash; pick one
+            </span>`;
+    } else {
+        el.style.display = 'none';
+    }
+}
+
+function clearEditorBranch() {
+    editorBranch = '';
+    editorBranchLastCommit = '';
+    localStorage.removeItem('editor_branch');
+    localStorage.removeItem('editor_branch_last_commit');
+    Object.keys(pendingChanges).forEach(k => delete pendingChanges[k]);
+    updateChangesUI();
+}
+
+// Switch to an existing branch (updates local state, no data reload)
+function switchToBranch(branchName, lastCommitDate) {
+    editorBranch = branchName;
+    editorBranchLastCommit = lastCommitDate || '';
+    localStorage.setItem('editor_branch', branchName);
+    if (lastCommitDate) localStorage.setItem('editor_branch_last_commit', lastCommitDate);
+    else localStorage.removeItem('editor_branch_last_commit');
+    // Clear local pending changes — the branch has its own committed state
+    Object.keys(pendingChanges).forEach(k => delete pendingChanges[k]);
+    updateChangesUI();
+    toast(`Switched to ${branchName.replace(/^editor\//, '')}`);
+}
+
+// Create a fresh branch and switch to it
+async function createNewEditorBranch() {
+    if (!ghUser) { openAuthModal(); return; }
+    const ref = await ghFetch(`/repos/${REPO_OWNER}/${REPO_NAME}/git/refs/heads/${BRANCH}`);
+    const baseSha = ref.object.sha;
+    const branchName = `editor/${ghUser.login}/${readableTimestamp()}`;
+    await ghFetch(`/repos/${REPO_OWNER}/${REPO_NAME}/git/refs`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ref: `refs/heads/${branchName}`, sha: baseSha })
+    });
+    switchToBranch(branchName, '');
+    return branchName;
+}
+
+// Fetch all editor/* branches with latest commit info
+async function fetchEditorBranches() {
+    // List branches matching editor/ prefix. GitHub API doesn't filter by prefix
+    // on the list-branches endpoint, so we fetch pages and filter client-side.
+    // For repos with many branches we limit to 100 most recent.
+    let branches = [];
+    let page = 1;
+    while (page <= 3) { // max 300 branches scanned
+        const batch = await ghFetch(
+            `/repos/${REPO_OWNER}/${REPO_NAME}/branches?per_page=100&page=${page}`
+        );
+        branches = branches.concat(batch);
+        if (batch.length < 100) break;
+        page++;
+    }
+    const editorBranches = branches.filter(b => b.name.startsWith('editor/'));
+
+    // Fetch latest commit date for each branch (in parallel, batched)
+    const enriched = await Promise.all(editorBranches.map(async (b) => {
+        try {
+            const commit = await ghFetch(
+                `/repos/${REPO_OWNER}/${REPO_NAME}/commits/${b.commit.sha}`
+            );
+            return {
+                name: b.name,
+                sha: b.commit.sha,
+                date: commit.commit.committer.date,
+                message: commit.commit.message,
+            };
+        } catch {
+            return { name: b.name, sha: b.commit.sha, date: '', message: '' };
+        }
+    }));
+
+    // Sort newest first
+    enriched.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+    return enriched;
+}
+
+async function openBranchPicker() {
+    if (!ghUser) { openAuthModal(); return; }
+
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+        <div class="modal" style="width:560px">
+            <div class="modal-header">
+                <h2>Switch Branch</h2>
+                <button class="btn btn-sm" onclick="this.closest('.modal-overlay').remove()">&#10005;</button>
+            </div>
+            <div class="modal-body" style="padding:0">
+                <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+                    <span style="font-size:13px;color:var(--text-dim)">Your editor branches</span>
+                    <button class="btn btn-primary btn-sm" id="new-branch-btn">+ New Branch</button>
+                </div>
+                <div id="branch-list" style="max-height:400px;overflow-y:auto;padding:8px 0">
+                    <div class="loading-center" style="padding:32px"><div class="spinner"></div> Loading branches...</div>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+
+    // New branch button
+    overlay.querySelector('#new-branch-btn').addEventListener('click', async () => {
+        const btn = overlay.querySelector('#new-branch-btn');
+        btn.disabled = true;
+        btn.textContent = 'Creating...';
+        try {
+            await createNewEditorBranch();
+            overlay.remove();
+        } catch (e) {
+            toast('Failed to create branch: ' + e.message, true);
+            btn.disabled = false;
+            btn.textContent = '+ New Branch';
+        }
+    });
+
+    // Load branches
+    try {
+        const branches = await fetchEditorBranches();
+        const listEl = overlay.querySelector('#branch-list');
+        if (branches.length === 0) {
+            listEl.innerHTML = `
+                <div style="padding:32px;text-align:center;color:var(--text-dim);font-size:13px">
+                    No editor branches found.<br>Click <strong>+ New Branch</strong> to start editing, or just make an edit and one will be created automatically.
+                </div>`;
+            return;
+        }
+
+        listEl.innerHTML = branches.map(b => {
+            const short = b.name.replace(/^editor\//, '');
+            const isCurrent = b.name === editorBranch;
+            const timeStr = b.date ? formatCommitTime(b.date) : 'no commits';
+            const lastMsg = b.message ? b.message.split('\n')[0] : '';
+            // Truncate commit message
+            const msgDisplay = lastMsg.length > 60 ? lastMsg.slice(0, 57) + '...' : lastMsg;
+            return `
+                <div class="branch-row${isCurrent ? ' active' : ''}"
+                     data-branch="${escAttr(b.name)}" data-date="${escAttr(b.date)}">
+                    <div class="branch-row-main">
+                        <span class="branch-row-name">${escHtml(short)}</span>
+                        ${isCurrent ? '<span class="branch-row-current">current</span>' : ''}
+                    </div>
+                    <div class="branch-row-meta">
+                        <span>${escHtml(timeStr)}</span>
+                        ${msgDisplay ? `<span class="branch-row-msg" title="${escAttr(lastMsg)}">${escHtml(msgDisplay)}</span>` : ''}
+                    </div>
+                </div>`;
+        }).join('');
+
+        // Click to switch
+        listEl.querySelectorAll('.branch-row').forEach(row => {
+            row.addEventListener('click', () => {
+                const name = row.dataset.branch;
+                const date = row.dataset.date;
+                if (name === editorBranch) { overlay.remove(); return; }
+                switchToBranch(name, date);
+                overlay.remove();
+            });
+        });
+    } catch (e) {
+        const listEl = overlay.querySelector('#branch-list');
+        listEl.innerHTML = `<div style="padding:20px;color:var(--red);font-size:13px">Failed to load branches: ${escHtml(e.message)}</div>`;
     }
 }
 
@@ -116,6 +380,7 @@ async function checkAuth() {
         $('#auth-status').textContent = `Signed in as ${ghUser.login}`;
         $('#auth-btn').textContent = 'Sign out';
         $('#auth-btn').onclick = signOut;
+        updateBranchUI();
     } catch {
         $('#auth-status').textContent = 'Invalid token';
         ghToken = '';
@@ -129,6 +394,7 @@ function signOut() {
     ghToken = '';
     ghUser = null;
     localStorage.removeItem('gh_token');
+    clearEditorBranch();
     checkAuth();
     toast('Signed out');
 }
@@ -814,7 +1080,7 @@ function deleteTrainer(id) {
     if (!confirm(`Delete trainer ${id}?`)) return;
     state.trainers = state.trainers.filter(t => t.id !== id);
     markChanged('src/data/trainers.party', serializeTrainers(state.trainers));
-    toast('Trainer deleted (pending PR submission)');
+    toast('Trainer deleted (auto-saved)');
     renderTrainers();
 }
 
@@ -1034,7 +1300,7 @@ function openTrainerModal(trainer, isNew) {
         }
 
         markChanged('src/data/trainers.party', serializeTrainers(state.trainers));
-        toast('Trainer saved (pending PR submission)');
+        toast('Trainer saved (auto-saved)');
         overlay.remove();
         renderTrainers();
     });
@@ -1185,7 +1451,7 @@ function editEncounter(mapName) {
             });
         }
         markChanged('src/data/wild_encounters.json', JSON.stringify(data, null, 2));
-        toast(`Encounters for ${mapName} updated (pending PR submission)`);
+        toast(`Encounters for ${mapName} updated (auto-saved)`);
         overlay.remove();
         renderEncounters();
     });
@@ -1349,7 +1615,7 @@ function editMove(id) {
         move.pp = $('#move-pp').value;
         move.priority = parseInt($('#move-priority').value);
         updateMoveInFile(move);
-        toast(`Move ${move.name || move.id} updated (pending PR submission)`);
+        toast(`Move ${move.name || move.id} updated (auto-saved)`);
         overlay.remove();
         renderMoves();
     });
@@ -1479,7 +1745,7 @@ function editItem(id) {
         item.price = $('#item-price').value;
         item.pocket = $('#item-pocket').value;
         updateItemInFile(item);
-        toast(`Item ${item.name || item.id} updated (pending PR submission)`);
+        toast(`Item ${item.name || item.id} updated (auto-saved)`);
         overlay.remove();
         renderItems();
     });
@@ -1613,7 +1879,7 @@ function editAbility(id) {
         ability.cantBeSwapped = $('#ability-noswap').value === 'true';
         ability.cantBeTraced = $('#ability-notrace').value === 'true';
         updateAbilityInFile(ability);
-        toast(`Ability ${ability.name || ability.id} updated (pending PR submission)`);
+        toast(`Ability ${ability.name || ability.id} updated (auto-saved)`);
         overlay.remove();
         renderAbilities();
     });
@@ -2296,7 +2562,7 @@ function saveMapProperties(dirName) {
     const serialized = { ...map };
     delete serialized._dirName;
     markChanged(`data/maps/${map._dirName}/map.json`, JSON.stringify(serialized, null, 2) + '\n');
-    toast('Map properties saved (pending PR submission)');
+    toast('Map properties saved (auto-saved)');
     renderMapDetail(dirName);
 }
 
@@ -2368,7 +2634,7 @@ function editMapEncounters(dirName) {
             });
         }
         markChanged('src/data/wild_encounters.json', JSON.stringify(state.encounters, null, 2));
-        toast('Encounters updated (pending PR submission)');
+        toast('Encounters updated (auto-saved)');
         overlay.remove();
         renderMapDetail(dirName);
     });
@@ -2470,7 +2736,7 @@ function editMapTrainer(dirName, trainerIdx) {
         const serialized = { ...map };
         delete serialized._dirName;
         markChanged(`data/maps/${map._dirName}/map.json`, JSON.stringify(serialized, null, 2) + '\n');
-        toast('Trainer event updated (pending PR submission)');
+        toast('Trainer event updated (auto-saved)');
         overlay.remove();
         renderMapDetail(dirName);
     });
@@ -2632,7 +2898,7 @@ function addMapTrainer(dirName) {
             }
         }
 
-        toast('Trainer added (pending PR submission)');
+        toast('Trainer added (auto-saved)');
         overlay.remove();
         renderMapDetail(dirName);
     });
@@ -2847,7 +3113,7 @@ function editMapItemBall(dirName, itemIdx) {
         const serialized = { ...map };
         delete serialized._dirName;
         markChanged(`data/maps/${map._dirName}/map.json`, JSON.stringify(serialized, null, 2) + '\n');
-        toast('Item ball updated (pending PR submission)');
+        toast('Item ball updated (auto-saved)');
         overlay.remove();
         renderMapDetail(dirName);
     });
@@ -2915,7 +3181,7 @@ function editMapHiddenItem(dirName, hiddenIdx) {
         const serialized = { ...map };
         delete serialized._dirName;
         markChanged(`data/maps/${map._dirName}/map.json`, JSON.stringify(serialized, null, 2) + '\n');
-        toast('Hidden item updated (pending PR submission)');
+        toast('Hidden item updated (auto-saved)');
         overlay.remove();
         renderMapDetail(dirName);
     });
@@ -3029,7 +3295,7 @@ function updateConfig(file, name, value) {
     const regex = new RegExp(`^(#define\\s+${name}\\s+)(.+?)(\\s*(?:\\/\\/.*)?)$`, 'm');
     fileContent = fileContent.replace(regex, `$1${value}$3`);
     markChanged(filePath, fileContent);
-    toast(`Updated ${name} (pending PR submission)`);
+    toast(`Updated ${name} (auto-saved)`);
 }
 
 // ─── PR Submission ──────────────────────────────────────────────────────────
@@ -3038,10 +3304,15 @@ function openPRModal() {
         openAuthModal();
         return;
     }
-    if (getChangeCount() === 0) {
-        toast('No changes to submit', true);
+    if (!editorBranch) {
+        toast('No changes to submit — make an edit first', true);
         return;
     }
+
+    const changedFiles = Object.keys(pendingChanges);
+    const fileList = changedFiles.length > 0
+        ? changedFiles.map(f => `<li>${escHtml(f)}</li>`).join('')
+        : '<li style="color:var(--text-dim)">All changes already committed to branch</li>';
 
     const overlay = document.createElement('div');
     overlay.className = 'modal-overlay';
@@ -3053,11 +3324,11 @@ function openPRModal() {
             </div>
             <div class="modal-body">
                 <p style="font-size:13px;color:var(--text-dim);margin-bottom:12px">
-                    Your changes will be submitted as a Pull Request for review.
+                    Your changes on <code style="font-size:12px;background:var(--bg-input);padding:2px 6px;border-radius:3px">${escHtml(editorBranch)}</code> will be submitted as a Pull Request for review.
                 </p>
                 <div style="font-size:12px;color:var(--text-dim);margin-bottom:12px">Changed files:</div>
                 <ul class="pr-changes-list">
-                    ${Object.keys(pendingChanges).map(f => `<li>${escHtml(f)}</li>`).join('')}
+                    ${fileList}
                 </ul>
                 <div class="form-group">
                     <label>PR Title</label>
@@ -3087,9 +3358,8 @@ function openPRModal() {
         try {
             const prUrl = await createPullRequest(title, desc);
             overlay.remove();
-            // Clear pending changes
-            Object.keys(pendingChanges).forEach(k => delete pendingChanges[k]);
-            updateChangesUI();
+            // Clear branch + pending state (next edit starts a fresh branch)
+            clearEditorBranch();
             // Show success with link
             showPRSuccess(prUrl);
         } catch (e) {
@@ -3101,54 +3371,10 @@ function openPRModal() {
 }
 
 async function createPullRequest(title, description) {
-    // 1. Get the latest commit SHA of the base branch
-    const ref = await ghFetch(`/repos/${REPO_OWNER}/${REPO_NAME}/git/refs/heads/${BRANCH}`);
-    const baseSha = ref.object.sha;
+    if (!editorBranch) throw new Error('No changes have been committed yet.');
 
-    // 2. Create a new branch
-    const branchName = `editor/${ghUser.login}/${Date.now()}`;
-    await ghFetch(`/repos/${REPO_OWNER}/${REPO_NAME}/git/refs`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            ref: `refs/heads/${branchName}`,
-            sha: baseSha
-        })
-    });
-
-    // 3. Create commits for each changed file
-    for (const [filePath, newContent] of Object.entries(pendingChanges)) {
-        // Get the current file to obtain its SHA
-        let fileSha;
-        try {
-            const existing = await ghFetch(`/repos/${REPO_OWNER}/${REPO_NAME}/contents/${filePath}?ref=${branchName}`);
-            fileSha = existing.sha;
-        } catch {
-            // File doesn't exist yet, that's OK
-        }
-
-        // Encode content to base64, handling UTF-8 properly
-        const encoder = new TextEncoder();
-        const bytes = encoder.encode(newContent);
-        let binary = '';
-        for (let i = 0; i < bytes.length; i++) {
-            binary += String.fromCharCode(bytes[i]);
-        }
-        const base64 = btoa(binary);
-
-        await ghFetch(`/repos/${REPO_OWNER}/${REPO_NAME}/contents/${filePath}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                message: `Update ${filePath} via web editor`,
-                content: base64,
-                sha: fileSha,
-                branch: branchName
-            })
-        });
-    }
-
-    // 4. Create the pull request
+    // All changes are already committed to the editor branch.
+    // Just create the PR.
     const body = description
         ? `${description}\n\n---\n*Submitted via the Brazilianite web editor*`
         : '*Submitted via the Brazilianite web editor*';
@@ -3159,7 +3385,7 @@ async function createPullRequest(title, description) {
         body: JSON.stringify({
             title,
             body,
-            head: branchName,
+            head: editorBranch,
             base: BRANCH
         })
     });
@@ -3322,7 +3548,7 @@ function editWarp(dirName, warpIdx) {
         const serialized = { ...map };
         delete serialized._dirName;
         markChanged(`data/maps/${map._dirName}/map.json`, JSON.stringify(serialized, null, 2) + '\n');
-        toast('Warp updated (pending PR submission)');
+        toast('Warp updated (auto-saved)');
         overlay.remove();
         renderMapDetail(dirName);
     });
@@ -3620,7 +3846,7 @@ async function editDialogue(dirName, label) {
         markChanged(filePath, scriptText);
         scriptCache[dirName] = scriptText;
 
-        toast('Dialogue updated (pending PR submission)');
+        toast('Dialogue updated (auto-saved)');
         overlay.remove();
         renderMapDetail(dirName);
     });
@@ -3808,7 +4034,7 @@ function editObjectEvent(dirName, evtIdx) {
         const serialized = { ...map };
         delete serialized._dirName;
         markChanged(`data/maps/${map._dirName}/map.json`, JSON.stringify(serialized, null, 2) + '\n');
-        toast('Object event updated (pending PR submission)');
+        toast('Object event updated (auto-saved)');
         overlay.remove();
         renderMapDetail(dirName);
     });
@@ -3831,7 +4057,7 @@ function deleteMapTrainer(dirName, trainerIdx) {
     if (!trainer || !confirm('Delete this trainer event?')) return;
     const realIdx = (map.object_events || []).indexOf(trainer);
     if (realIdx >= 0) map.object_events.splice(realIdx, 1);
-    saveMapAndRefresh(map, dirName, 'Trainer deleted (pending PR submission)');
+    saveMapAndRefresh(map, dirName, 'Trainer deleted (auto-saved)');
 }
 
 function deleteObjectEvent(dirName, evtIdx) {
@@ -3839,7 +4065,7 @@ function deleteObjectEvent(dirName, evtIdx) {
     if (!map) return;
     if (!confirm('Delete this object event?')) return;
     (map.object_events || []).splice(evtIdx, 1);
-    saveMapAndRefresh(map, dirName, 'Object event deleted (pending PR submission)');
+    saveMapAndRefresh(map, dirName, 'Object event deleted (auto-saved)');
 }
 
 function addObjectEvent(dirName) {
@@ -3859,7 +4085,7 @@ function addObjectEvent(dirName) {
     };
     map.object_events.push(newEvt);
     const idx = map.object_events.length - 1;
-    saveMapAndRefresh(map, dirName, 'Object event added (pending PR submission)');
+    saveMapAndRefresh(map, dirName, 'Object event added (auto-saved)');
     // Open the edit modal after refresh
     setTimeout(() => editObjectEvent(dirName, idx), 200);
 }
@@ -3872,7 +4098,7 @@ function deleteMapItemBall(dirName, itemIdx) {
     if (!item || !confirm('Delete this item ball?')) return;
     const realIdx = (map.object_events || []).indexOf(item);
     if (realIdx >= 0) map.object_events.splice(realIdx, 1);
-    saveMapAndRefresh(map, dirName, 'Item ball deleted (pending PR submission)');
+    saveMapAndRefresh(map, dirName, 'Item ball deleted (auto-saved)');
 }
 
 function addMapItemBall(dirName) {
@@ -3891,7 +4117,7 @@ function addMapItemBall(dirName) {
         flag: 'FLAG_ITEM_' + dirName.toUpperCase() + '_NEW'
     };
     map.object_events.push(newItem);
-    saveMapAndRefresh(map, dirName, 'Item ball added (pending PR submission)');
+    saveMapAndRefresh(map, dirName, 'Item ball added (auto-saved)');
     const itemBalls = getMapItemBalls(map);
     setTimeout(() => editMapItemBall(dirName, itemBalls.length - 1), 200);
 }
@@ -3904,7 +4130,7 @@ function deleteMapHiddenItem(dirName, hiddenIdx) {
     if (!item || !confirm('Delete this hidden item?')) return;
     const realIdx = (map.bg_events || []).indexOf(item);
     if (realIdx >= 0) map.bg_events.splice(realIdx, 1);
-    saveMapAndRefresh(map, dirName, 'Hidden item deleted (pending PR submission)');
+    saveMapAndRefresh(map, dirName, 'Hidden item deleted (auto-saved)');
 }
 
 function addMapHiddenItem(dirName) {
@@ -3919,7 +4145,7 @@ function addMapHiddenItem(dirName) {
         flag: 'FLAG_HIDDEN_ITEM_' + dirName.toUpperCase() + '_NEW'
     };
     map.bg_events.push(newItem);
-    saveMapAndRefresh(map, dirName, 'Hidden item added (pending PR submission)');
+    saveMapAndRefresh(map, dirName, 'Hidden item added (auto-saved)');
     const hiddenItems = getMapHiddenItems(map);
     setTimeout(() => editMapHiddenItem(dirName, hiddenItems.length - 1), 200);
 }
@@ -3929,7 +4155,7 @@ function deleteWarp(dirName, warpIdx) {
     if (!map) return;
     if (!confirm('Delete this warp?')) return;
     (map.warp_events || []).splice(warpIdx, 1);
-    saveMapAndRefresh(map, dirName, 'Warp deleted (pending PR submission)');
+    saveMapAndRefresh(map, dirName, 'Warp deleted (auto-saved)');
 }
 
 function addWarp(dirName) {
@@ -3942,7 +4168,7 @@ function addWarp(dirName) {
         dest_map: 'MAP_LITTLEROOT_TOWN',
         dest_warp_id: '0'
     });
-    saveMapAndRefresh(map, dirName, 'Warp added (pending PR submission)');
+    saveMapAndRefresh(map, dirName, 'Warp added (auto-saved)');
     setTimeout(() => editWarp(dirName, map.warp_events.length - 1), 200);
 }
 
@@ -3996,7 +4222,7 @@ function editConnection(dirName, connIdx) {
         conn.offset = parseInt($('#conn-offset').value);
         conn.map = $('#conn-map').value;
         overlay.remove();
-        saveMapAndRefresh(map, dirName, 'Connection updated (pending PR submission)');
+        saveMapAndRefresh(map, dirName, 'Connection updated (auto-saved)');
     });
 }
 
@@ -4006,7 +4232,7 @@ function deleteConnection(dirName, connIdx) {
     if (!confirm('Delete this connection?')) return;
     (map.connections || []).splice(connIdx, 1);
     if (map.connections && map.connections.length === 0) map.connections = null;
-    saveMapAndRefresh(map, dirName, 'Connection deleted (pending PR submission)');
+    saveMapAndRefresh(map, dirName, 'Connection deleted (auto-saved)');
 }
 
 function addConnection(dirName) {
@@ -4019,7 +4245,7 @@ function addConnection(dirName) {
         offset: 0,
         map: 'MAP_LITTLEROOT_TOWN'
     });
-    saveMapAndRefresh(map, dirName, 'Connection added (pending PR submission)');
+    saveMapAndRefresh(map, dirName, 'Connection added (auto-saved)');
     setTimeout(() => editConnection(dirName, map.connections.length - 1), 200);
 }
 
@@ -4157,7 +4383,7 @@ function editCoordEvent(dirName, idx) {
         evt.y = parseInt($('#ce-y').value);
         evt.elevation = parseInt($('#ce-elev').value);
         overlay.remove();
-        saveMapAndRefresh(map, dirName, 'Coordinate event updated (pending PR submission)');
+        saveMapAndRefresh(map, dirName, 'Coordinate event updated (auto-saved)');
     });
 }
 
@@ -4165,7 +4391,7 @@ function deleteCoordEvent(dirName, idx) {
     const map = state.maps.find(m => m._dirName === dirName);
     if (!map || !confirm('Delete this coordinate event?')) return;
     (map.coord_events || []).splice(idx, 1);
-    saveMapAndRefresh(map, dirName, 'Coordinate event deleted (pending PR submission)');
+    saveMapAndRefresh(map, dirName, 'Coordinate event deleted (auto-saved)');
 }
 
 function addCoordEvent(dirName) {
@@ -4173,7 +4399,7 @@ function addCoordEvent(dirName) {
     if (!map) return;
     if (!map.coord_events) map.coord_events = [];
     map.coord_events.push({ type: 'trigger', x: 0, y: 0, elevation: 0, script: `${dirName}_EventScript_NewTrigger` });
-    saveMapAndRefresh(map, dirName, 'Coordinate event added (pending PR submission)');
+    saveMapAndRefresh(map, dirName, 'Coordinate event added (auto-saved)');
     setTimeout(() => editCoordEvent(dirName, map.coord_events.length - 1), 200);
 }
 
@@ -4240,7 +4466,7 @@ function editBgEvent(dirName, realIdx) {
         evt.y = parseInt($('#bg-y').value);
         evt.elevation = parseInt($('#bg-elev').value);
         overlay.remove();
-        saveMapAndRefresh(map, dirName, 'Background event updated (pending PR submission)');
+        saveMapAndRefresh(map, dirName, 'Background event updated (auto-saved)');
     });
 }
 
@@ -4248,7 +4474,7 @@ function deleteBgEvent(dirName, realIdx) {
     const map = state.maps.find(m => m._dirName === dirName);
     if (!map || !confirm('Delete this background event?')) return;
     (map.bg_events || []).splice(realIdx, 1);
-    saveMapAndRefresh(map, dirName, 'Background event deleted (pending PR submission)');
+    saveMapAndRefresh(map, dirName, 'Background event deleted (auto-saved)');
 }
 
 function addBgEvent(dirName) {
@@ -4259,7 +4485,7 @@ function addBgEvent(dirName) {
     const newEvt = { type: 'sign', x: 0, y: 0, elevation: 0, script: `${dirName}_EventScript_NewSign` };
     map.bg_events.push(newEvt);
     const realIdx = map.bg_events.length - 1;
-    saveMapAndRefresh(map, dirName, 'Background event added (pending PR submission)');
+    saveMapAndRefresh(map, dirName, 'Background event added (auto-saved)');
     setTimeout(() => editBgEvent(dirName, realIdx), 200);
 }
 
@@ -4988,7 +5214,7 @@ function editPokemon(id) {
         mon.bst = mon.baseHP + mon.baseAttack + mon.baseDefense + mon.baseSpAttack + mon.baseSpDefense + mon.baseSpeed;
 
         updatePokemonInFile(mon);
-        toast(`${mon.name || mon.id} updated (pending PR submission)`);
+        toast(`${mon.name || mon.id} updated (auto-saved)`);
         overlay.remove();
         renderPokemonPage();
     });
@@ -5005,4 +5231,5 @@ function escAttr(s) {
 // ─── Init ───────────────────────────────────────────────────────────────────
 checkAuth();
 updateChangesUI();
+updateBranchUI();
 render();
