@@ -314,4 +314,6 @@ void Task_WaitForAreaScreenInput(u8 taskId);
 
 void Task_HandleCaughtMonPageInput(u8 taskId);
 
+void CreateMonDexNum(u16 entryNum, u8 left, u8 top, u16 unused);
+
 #endif // GUARD_POKEDEX_H

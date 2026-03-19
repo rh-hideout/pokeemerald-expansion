@@ -205,7 +205,6 @@ extern EWRAM_DATA struct PokedexListItem *sPokedexListItem;
 
 static bool8 LoadPokedexListPage(u8);
 static void LoadPokedexBgPalette(bool8);
-static void CreateMonDexNum(u16, u8, u8, u16);
 static u8 CreateMonName(u16, u8, u8);
 static void CreateInterfaceSprites(u8);
 static void LoadScreenSelectBarMain(u16);
@@ -735,16 +734,6 @@ static bool8 LoadPokedexListPage(u8 page)
     return FALSE;
 }
 
-static void PrintMonDexNumAndName(u8 windowId, u8 fontId, const u8 *str, u8 left, u8 top)
-{
-    u8 color[3];
-
-    color[0] = TEXT_COLOR_TRANSPARENT;
-    color[1] = TEXT_DYNAMIC_COLOR_6;
-    color[2] = TEXT_COLOR_LIGHT_GRAY;
-    AddTextPrinterParameterized4(windowId, fontId, left * 8 - 4, (top * 8) + 1, 0, 0, color, TEXT_SKIP_DRAW, str);
-}
-
 static void PrintMonDexNumAndName_2(u8 windowId, u8 fontId, const u8* str, u8 left, u8 top) //offset for closer numer + text
 {
     u8 color[3];
@@ -847,27 +836,6 @@ bool32 TryCreateMonListEntry_HGSS(u8 position, u16 b, u16 ignored)
     CopyWindowToVram(0, COPYWIN_GFX);
 
     return TRUE;
-}
-
-static void CreateMonDexNum(u16 entryNum, u8 left, u8 top, u16 unused)
-{
-    u8 text[5];
-    u16 dexNum, offset = 0;
-
-    dexNum = sPokedexView->pokedexList[entryNum].dexNum;
-    if (sPokedexView->dexMode == DEX_MODE_HOENN)
-        dexNum = NationalToRegionalOrder(dexNum);
-    memcpy(text, sText_No0000, ARRAY_COUNT(sText_No0000));
-    if (NATIONAL_DEX_COUNT > 999 && sPokedexView->dexMode != DEX_MODE_HOENN)
-    {
-        text[0] = CHAR_0 + dexNum / 1000;
-        offset++;
-    }
-    text[offset++] = CHAR_0 + (dexNum % 1000) / 100;
-    text[offset++] = CHAR_0 + ((dexNum % 1000) % 100) / 10;
-    text[offset++] = CHAR_0 + ((dexNum % 1000) % 100) % 10;
-    text[offset++] = EOS;
-    PrintMonDexNumAndName(0, FONT_NARROW, text, left, top);
 }
 
 static u8 CreateMonName(u16 num, u8 left, u8 top)
