@@ -970,7 +970,10 @@ static bool32 IsOpponentPhysicalAttacker(enum BattlerId battler, enum BattlerId 
     if (GetBestDmgFromBattler(opposingBattler, battler, AI_DEFENDING) > 0 && HasPhysicalBestMove(opposingBattler, battler, AI_DEFENDING))
         return TRUE;
 
-    return HasMoveWithCategory(opposingBattler, DAMAGE_CATEGORY_PHYSICAL);
+    enum Move incomingMove = GetIncomingMove(battler, opposingBattler, gAiLogicData);
+    return incomingMove != MOVE_NONE
+        && incomingMove != MOVE_UNAVAILABLE
+        && GetBattleMoveCategory(incomingMove) == DAMAGE_CATEGORY_PHYSICAL;
 }
 
 static bool32 CanIntimidateLowerOpponentAtk(enum BattlerId battler, enum BattlerId opposingBattler)
@@ -1094,6 +1097,7 @@ static bool32 ShouldSwitchIfAbilityBenefit(enum BattlerId battler)
         return FALSE;
 
     case ABILITY_INTIMIDATE:
+        // TODO: In ShouldSwitch cleanup, gate Intimidate cycling behind "stay in instead if the current mon wins the 1v1" to avoid duplicating Bad Odds logic here.
         if (ShouldSwitchIfIntimidateBenefit(battler)
             && gAiLogicData->mostSuitableMonId[battler] != PARTY_SIZE
             && (hasStatRaised ? RandomPercentage(RNG_AI_SWITCH_INTIMIDATE, GetSwitchChance(SHOULD_SWITCH_INTIMIDATE_STATS_RAISED)) : RandomPercentage(RNG_AI_SWITCH_INTIMIDATE, GetSwitchChance(SHOULD_SWITCH_INTIMIDATE))))
