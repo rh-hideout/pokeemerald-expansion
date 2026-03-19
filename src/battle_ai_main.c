@@ -376,8 +376,9 @@ void ComputeAiBattlerDecisions(enum BattlerId battler)
     BattleAI_SetupAIData(0xF, battler);
 
     // Determine whether AI will use predictions this turn
-    gAiLogicData->predictingSwitch = RandomPercentage(RNG_AI_PREDICT_SWITCH, PREDICT_SWITCH_CHANCE);
-    gAiLogicData->predictingMove = RandomPercentage(RNG_AI_PREDICT_MOVE, PREDICT_MOVE_CHANCE);
+
+    gAiLogicData->predictingSwitch = (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_PREDICT_SWITCH) ? RandomPercentage(RNG_AI_PREDICT_SWITCH, PREDICT_SWITCH_CHANCE) : FALSE;
+    gAiLogicData->predictingMove = (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_PREDICT_MOVE) ? RandomPercentage(RNG_AI_PREDICT_MOVE, PREDICT_MOVE_CHANCE) : FALSE;
 
     // AI's switching data
     gAiLogicData->mostSuitableMonId[battler] = GetMostSuitableMonToSwitchInto(battler, switchType);
