@@ -208,7 +208,6 @@ static void LoadPokedexBgPalette(bool8);
 static void CreateInterfaceSprites(u8);
 static void LoadScreenSelectBarMain(u16);
 static void PrintMonInfo(u32 num, u32, u32 owned, u32 newEntry);
-static u16 CreateMonSpriteFromNationalDexNumberHGSS(u16 nationalNum, s16 x, s16 y, u16 paletteSlot);
 static u16 CreateSizeScreenTrainerPic(u16, s16, s16, s8);
 static void SetDefaultSearchModeAndOrder(u8);
 static void CreateSearchParameterScrollArrows(u8);
@@ -1350,7 +1349,7 @@ bool32 Task_TryLoadInfoScreen_HGSS(u8 taskId)
     case 5:
         if (!gTasks[taskId].tMonSpriteDone)
         {
-            gTasks[taskId].tMonSpriteId = (u16)CreateMonSpriteFromNationalDexNumberHGSS(sPokedexListItem->dexNum, MON_PAGE_X, MON_PAGE_Y, 0);
+            gTasks[taskId].tMonSpriteId = (u16)CreateMonSpriteFromNationalDexNumber(sPokedexListItem->dexNum, MON_PAGE_X, MON_PAGE_Y, 0);
             gSprites[gTasks[taskId].tMonSpriteId].oam.priority = 0;
         }
         gMain.state++;
@@ -1804,12 +1803,6 @@ static u32 GetPokedexMonPersonality(enum Species species)
     {
         return MALE_PERSONALITY;
     }
-}
-
-static u16 CreateMonSpriteFromNationalDexNumberHGSS(u16 nationalNum, s16 x, s16 y, u16 paletteSlot)
-{
-    enum Species species = NationalPokedexNumToSpeciesForm(nationalNum);
-    return CreateMonPicSprite(species, FALSE, GetPokedexMonPersonality(species), TRUE, x, y, paletteSlot, TAG_NONE);
 }
 
 static u16 GetPokemonScaleFromNationalDexNumber(u16 nationalNum)
@@ -4390,7 +4383,7 @@ bool32 TryLoadCryScreen_HGSS(u8 taskId)
         gMain.state++;
         break;
     case 5:
-        gTasks[taskId].tMonSpriteId = CreateMonSpriteFromNationalDexNumberHGSS(sPokedexListItem->dexNum, MON_PAGE_X, MON_PAGE_Y, 0);
+        gTasks[taskId].tMonSpriteId = CreateMonSpriteFromNationalDexNumber(sPokedexListItem->dexNum, MON_PAGE_X, MON_PAGE_Y, 0);
         gSprites[gTasks[taskId].tMonSpriteId].oam.priority = 0;
         gDexCryScreenState = 0;
         gMain.state++;
@@ -4541,7 +4534,7 @@ bool32 TryLoadSizeScreen_HGSS(u8 taskId)
         gMain.state++;
         break;
     case 6:
-        spriteId = CreateMonSpriteFromNationalDexNumberHGSS(sPokedexListItem->dexNum, 88, 56, 1);
+        spriteId = CreateMonSpriteFromNationalDexNumber(sPokedexListItem->dexNum, 88, 56, 1);
         gSprites[spriteId].oam.affineMode = ST_OAM_AFFINE_NORMAL;
         gSprites[spriteId].oam.matrixNum = 2;
         gSprites[spriteId].oam.priority = 0;
