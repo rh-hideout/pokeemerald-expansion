@@ -413,6 +413,14 @@
 #define OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG         386
 #define OBJ_EVENT_GFX_BREAKABLE_ROCK_FRLG        387
 
+// Team Galactic (Platinum)
+#define OBJ_EVENT_GFX_GALACTIC_GRUNT_M           388
+#define OBJ_EVENT_GFX_GALACTIC_GRUNT_F           389
+#define OBJ_EVENT_GFX_GALACTIC_COMMANDER_MARS    390
+#define OBJ_EVENT_GFX_GALACTIC_COMMANDER_JUPITER 391
+#define OBJ_EVENT_GFX_GALACTIC_COMMANDER_SATURN  392
+#define OBJ_EVENT_GFX_GALACTIC_LEADER_CYRUS      393
+
 // FRLG equivalents
 
 // #define OBJ_EVENT_GFX_MEW OBJ_EVENT_GFX_NINJA_BOY
@@ -423,7 +431,7 @@
 // NOTE: The maximum amount of object events has been expanded from 255 to 65535.
 // Since dynamic graphics ids still require at least 16 free values, the actual limit
 // is 65519, but even considering follower Pokémon, this should be more than enough :)
-#define NUM_OBJ_EVENT_GFX                        388
+#define NUM_OBJ_EVENT_GFX                        394
 
 
 // These are dynamic object gfx ids.
