@@ -1,4 +1,5 @@
 #include "global.h"
+#include "banking_system.h"
 #include "new_game.h"
 #include "random.h"
 #include "pokemon.h"
@@ -188,6 +189,7 @@ void NewGameInitData(void)
     ClearSecretBases();
     ClearBerryTrees();
     SetMoney(&gSaveBlock1Ptr->money, 3000);
+    SetMoneyInBank(6000);
     SetCoins(0);
     ResetLinkContestBoolean();
     ResetGameStats();

@@ -2910,3 +2910,17 @@
 	getbraillestringwidth \text
 	call EventScript_BrailleCursorWaitButton
 	.endm
+
+@ allows the player to withdraw money from the bank
+.macro withdrawmoney
+  callnative StartWithdrawMoneyTask
+.endm
+
+@ Sets the banking mode to withdraw or deposit
+.macro setbankingmode mode:req
+  callnative Script_SetBankingMode
+  .4byte \mode
+.endm
+
+
+
