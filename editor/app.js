@@ -949,6 +949,7 @@ async function render() {
             case 'moves': await renderMoves(); break;
             case 'abilities': await renderAbilities(); break;
             case 'config': await renderConfig(); break;
+            case 'starters': await renderStarters(); break;
         }
     } catch (e) {
         content.innerHTML = `<div class="loading-center" style="color:var(--red)">Error loading data: ${escHtml(e.message)}</div>`;
@@ -5233,6 +5234,88 @@ function editPokemon(id) {
         overlay.remove();
         renderPokemonPage();
     });
+}
+
+// ─── Starters ───────────────────────────────────────────────────────────────
+const STARTER_FILE = 'src/starter_choose.c';
+const STARTER_LABELS = [
+    { macro: 'GRASS_STARTER', rseLabel: 'Starter 1 — Emerald (left)', frlgLabel: 'Starter 1 — FRLG (left)' },
+    { macro: 'FIRE_STARTER',  rseLabel: 'Starter 2 — Emerald (middle)', frlgLabel: 'Starter 2 — FRLG (middle)' },
+    { macro: 'WATER_STARTER', rseLabel: 'Starter 3 — Emerald (right)', frlgLabel: 'Starter 3 — FRLG (right)' },
+];
+
+function parseStarters(text) {
+    const starters = [];
+    for (const s of STARTER_LABELS) {
+        const regex = new RegExp(`^#define\\s+${s.macro}\\s+\\(IS_FRLG\\s*\\?\\s*(SPECIES_\\w+)\\s*:\\s*(SPECIES_\\w+)\\s*\\)`, 'm');
+        const m = text.match(regex);
+        if (m) {
+            starters.push({ macro: s.macro, frlg: m[1], rse: m[2], rseLabel: s.rseLabel, frlgLabel: s.frlgLabel });
+        }
+    }
+    return starters;
+}
+
+async function renderStarters() {
+    const text = pendingChanges[STARTER_FILE] || originalContent[STARTER_FILE] || await fetchFile(STARTER_FILE);
+    if (!originalContent[STARTER_FILE]) originalContent[STARTER_FILE] = text;
+    const starters = parseStarters(text);
+
+    if (starters.length === 0) {
+        content.innerHTML = `
+            <div class="page-header"><h1>Starters</h1></div>
+            <div style="color:var(--text-dim);padding:24px">Could not parse starter defines from ${STARTER_FILE}.</div>`;
+        return;
+    }
+
+    let rows = '';
+    for (const s of starters) {
+        rows += `
+            <div class="config-row">
+                <span class="config-name">${s.rseLabel}</span>
+                <span class="config-value">
+                    <input type="text" value="${escAttr(s.rse)}" onchange="updateStarter('${s.macro}','rse',this.value)" style="width:200px">
+                </span>
+                <span class="config-comment">${s.rse.replace('SPECIES_', '')}</span>
+            </div>
+            <div class="config-row">
+                <span class="config-name">${s.frlgLabel}</span>
+                <span class="config-value">
+                    <input type="text" value="${escAttr(s.frlg)}" onchange="updateStarter('${s.macro}','frlg',this.value)" style="width:200px">
+                </span>
+                <span class="config-comment">${s.frlg.replace('SPECIES_', '')}</span>
+            </div>`;
+    }
+
+    content.innerHTML = `
+        <div class="page-header"><h1>Starters</h1></div>
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:24px;font-size:13px;color:var(--text-dim)">
+            Set the starter Pokemon for Emerald (RSE) and FireRed/LeafGreen (FRLG).
+            Use <code style="font-size:12px;background:var(--bg-input);padding:2px 6px;border-radius:3px">SPECIES_XXX</code> format (e.g. <code style="font-size:12px;background:var(--bg-input);padding:2px 6px;border-radius:3px">SPECIES_PIKACHU</code>).
+        </div>
+        <div class="config-group">
+            <div class="config-group-header">
+                <span>Starter Pokemon</span>
+                <span class="count">${starters.length * 2} settings</span>
+            </div>
+            <div>${rows}</div>
+        </div>`;
+}
+
+function updateStarter(macro, version, value) {
+    let fileContent = pendingChanges[STARTER_FILE] || originalContent[STARTER_FILE];
+    if (!fileContent) { toast('Starter file not loaded yet', true); return; }
+
+    // Match: #define MACRO (IS_FRLG ? SPECIES_X : SPECIES_Y)
+    const regex = new RegExp(`^(#define\\s+${macro}\\s+\\(IS_FRLG\\s*\\?\\s*)(SPECIES_\\w+)(\\s*:\\s*)(SPECIES_\\w+)(\\s*\\))`, 'm');
+    if (version === 'frlg') {
+        fileContent = fileContent.replace(regex, `$1${value}$3$4$5`);
+    } else {
+        fileContent = fileContent.replace(regex, `$1$2$3${value}$5`);
+    }
+    markChanged(STARTER_FILE, fileContent);
+    toast(`Updated ${macro} ${version.toUpperCase()} (auto-saved)`);
+    renderStarters();
 }
 
 // ─── Utils ──────────────────────────────────────────────────────────────────

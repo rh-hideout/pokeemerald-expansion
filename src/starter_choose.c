@@ -21,7 +21,6 @@
 #include "trainer_pokemon_sprites.h"
 #include "trig.h"
 #include "window.h"
-#include "config/starters.h"
 #include "constants/songs.h"
 #include "constants/rgb.h"
 
@@ -111,9 +110,9 @@ static const u8 sStarterLabelCoords[STARTER_MON_COUNT][2] =
     {8, 4},
 };
 
-#define GRASS_STARTER (IS_FRLG ? STARTER_1_FRLG : STARTER_1_RSE)
-#define FIRE_STARTER  (IS_FRLG ? STARTER_2_FRLG : STARTER_2_RSE)
-#define WATER_STARTER (IS_FRLG ? STARTER_3_FRLG : STARTER_3_RSE)
+#define GRASS_STARTER (IS_FRLG ? SPECIES_BULBASAUR  : SPECIES_TREECKO)
+#define FIRE_STARTER  (IS_FRLG ? SPECIES_CHARMANDER : SPECIES_TORCHIC)
+#define WATER_STARTER (IS_FRLG ? SPECIES_SQUIRTLE   : SPECIES_MUDKIP )
 
 static const u16 sStarterMon[STARTER_MON_COUNT] =
 {
