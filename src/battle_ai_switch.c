@@ -2756,6 +2756,7 @@ static void SetBattlerStatStagesForSwitchin(enum BattlerId battler, enum Battler
     switch(GetItemHoldEffect(aiItem))
     {
     case HOLD_EFFECT_TERRAIN_SEED:
+    {
         u32 seedParam = GetItemHoldEffectParam(aiItem);
         if ((seedParam == HOLD_EFFECT_PARAM_ELECTRIC_TERRAIN && (fieldStatus & STATUS_FIELD_ELECTRIC_TERRAIN))
          || (seedParam == HOLD_EFFECT_PARAM_GRASSY_TERRAIN && (fieldStatus & STATUS_FIELD_GRASSY_TERRAIN))
@@ -2763,6 +2764,7 @@ static void SetBattlerStatStagesForSwitchin(enum BattlerId battler, enum Battler
          || (seedParam == HOLD_EFFECT_PARAM_PSYCHIC_TERRAIN && (fieldStatus & STATUS_FIELD_PSYCHIC_TERRAIN)))
             gBattleMons[battler].statStages[STAT_DEF] += 1;
         break;
+    }
     case HOLD_EFFECT_ATTACK_UP:
         if (HasEnoughHpToEatBerry(battler, aiAbility, GetItemHoldEffectParam(aiItem), aiItem))
             gBattleMons[battler].statStages[STAT_ATK] += 1;
