@@ -323,5 +323,6 @@ u8 PrintCryScreenSpeciesName(u8, u16, u8, u8);
 enum Species NationalPokedexNumToSpeciesForm(enum NationalDexOrder nationalNum);
 
 void SetDefaultSearchModeAndOrder(u8);
+void CreateSearchParameterScrollArrows(u8);
 
 #endif // GUARD_POKEDEX_H

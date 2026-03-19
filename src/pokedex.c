@@ -149,7 +149,6 @@ static void Task_SearchCompleteWaitForInput(u8);
 static void Task_ExitSearch(u8);
 static void Task_ExitSearchWaitForFade(u8);
 static void DrawOrEraseSearchParameterBox(bool8);
-static void CreateSearchParameterScrollArrows(u8);
 static void EraseAndPrintSearchTextBox(const u8 *);
 static void EraseSelectorArrow(u32);
 static void PrintSelectorArrow(u32);
@@ -5804,7 +5803,7 @@ static void SpriteCB_SearchParameterScrollArrow(struct Sprite *sprite)
     }
 }
 
-static void CreateSearchParameterScrollArrows(u8 taskId)
+void CreateSearchParameterScrollArrows(u8 taskId)
 {
     u8 spriteId;
 

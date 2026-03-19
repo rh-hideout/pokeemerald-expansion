@@ -209,7 +209,6 @@ static void CreateInterfaceSprites(u8);
 static void LoadScreenSelectBarMain(u16);
 static void PrintMonInfo(u32 num, u32, u32 owned, u32 newEntry);
 static u16 CreateSizeScreenTrainerPic(u16, s16, s16, s8);
-static void CreateSearchParameterScrollArrows(u8);
 static void SetSpriteInvisibility(u8 spriteArrayId, bool8 invisible);
 static void CreateTypeIconSprites(void);
 
@@ -4727,55 +4726,6 @@ bool32 TryLoadSearchMenu_HGSS(u8 taskId)
     return TRUE;
 }
 
-#define sTaskId      data[0]
-
-static void SpriteCB_SearchParameterScrollArrow(struct Sprite *sprite)
-{
-    if (gTasks[sprite->sTaskId].func == Task_HandleSearchParameterInput)
-    {
-        u8 val;
-
-        if (sprite->sIsDownArrow)
-        {
-            if (SearchParamCantScrollDown(sprite->sTaskId))
-                sprite->invisible = TRUE;
-            else
-                sprite->invisible = FALSE;
-        }
-        else
-        {
-            if (SearchParamCantScrollUp(sprite->sTaskId))
-                sprite->invisible = TRUE;
-            else
-                sprite->invisible = FALSE;
-        }
-        val = sprite->data[2] + sprite->sIsDownArrow * 128;
-        sprite->y2 = gSineTable[val] / 128;
-        sprite->data[2] += 8;
-    }
-    else
-    {
-        sprite->invisible = TRUE;
-    }
-}
-
-static void CreateSearchParameterScrollArrows(u8 taskId)
-{
-    u8 spriteId;
-
-    spriteId = CreateSprite(&sScrollArrowSpriteTemplate, 184, 4, 0);
-    gSprites[spriteId].sTaskId = taskId;
-    gSprites[spriteId].sIsDownArrow = FALSE;
-    gSprites[spriteId].callback = SpriteCB_SearchParameterScrollArrow;
-
-    spriteId = CreateSprite(&sScrollArrowSpriteTemplate, 184, 108, 0);
-    gSprites[spriteId].sTaskId = taskId;
-    gSprites[spriteId].sIsDownArrow = TRUE;
-    gSprites[spriteId].vFlip = TRUE;
-    gSprites[spriteId].callback = SpriteCB_SearchParameterScrollArrow;
-}
-
-#undef sTaskId
 #undef sIsDownArrow
 
 void HandleDestroyStatBars_HGSS(void)
