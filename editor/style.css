@@ -1131,3 +1131,144 @@ tbody tr:last-child td { border-bottom: none; }
     margin-bottom: 8px;
     opacity: 0.5;
 }
+
+/* ─── Sprite Display ───────────────────────────── */
+.sprite-container {
+    flex-shrink: 0;
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.sprite-fallback {
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-dim);
+    background: var(--bg-hover);
+    border-radius: 6px;
+}
+
+/* ─── Warp Rows ────────────────────────────────── */
+.warp-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+}
+.warp-row:last-child { border-bottom: none; }
+.warp-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(168,85,247,0.15);
+    color: var(--purple);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+.warp-info { flex: 1; min-width: 0; }
+.warp-dest {
+    font-size: 13px;
+    font-weight: 600;
+}
+.warp-detail {
+    font-size: 11px;
+    color: var(--text-dim);
+    font-family: monospace;
+}
+.warp-coords {
+    font-size: 11px;
+    color: var(--text-dim);
+    font-family: monospace;
+    min-width: 60px;
+    text-align: right;
+}
+
+/* ─── NPC Table ────────────────────────────────── */
+.npc-table {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+.npc-table-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    background: var(--bg-hover);
+    border-bottom: 1px solid var(--border);
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+.npc-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+}
+.npc-row:last-child { border-bottom: none; }
+.npc-row:hover { background: var(--bg-hover); }
+.npc-row-info { flex: 2; min-width: 0; }
+.npc-row-name {
+    font-weight: 600;
+    font-size: 13px;
+}
+.npc-row-detail {
+    font-size: 11px;
+    color: var(--text-dim);
+    font-family: monospace;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.npc-row-map {
+    flex: 1;
+    font-size: 12px;
+    color: var(--accent);
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.npc-row-map:hover { text-decoration: underline; }
+.npc-row-coords {
+    font-size: 11px;
+    color: var(--text-dim);
+    font-family: monospace;
+    min-width: 70px;
+    text-align: right;
+}
+.npc-row-actions {
+    display: flex;
+    gap: 4px;
+    min-width: 130px;
+    justify-content: flex-end;
+}
+
+/* ─── Pokemon Stat Bar ─────────────────────────── */
+.stat-bar {
+    height: 6px;
+    background: var(--bg);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 2px;
+}
+.stat-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
