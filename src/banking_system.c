@@ -84,21 +84,10 @@ u32 GetMoneyInBank(void)
     return gSaveBlock3Ptr->savedMoney;
 }
 
-void GetMoneyInBankFromScript(struct ScriptContext ctx)
-{
-    gSpecialVar_Result = GetMoneyInBank();
-}
-
 void SetMoneyInBank(u32 amount)
 {
     assertf(amount <= MAX_BANK_MONEY, "Amount greater than MAX_BANK_MONEY");
     gSaveBlock3Ptr->savedMoney = amount;
-}
-
-void SetMoneyInBankFromScript(struct ScriptContext *ctx)
-{
-    u32 amount = ScriptReadWord(ctx);
-    SetMoneyInBank(amount);
 }
 
 void Script_CompareBankBalance(struct ScriptContext *ctx)
@@ -106,12 +95,55 @@ void Script_CompareBankBalance(struct ScriptContext *ctx)
     u32 value = ScriptReadWord(ctx);
     u32 balance = GetMoneyInBank();
 
-    if (value == balance)
-        gSpecialVar_Result = 0;
-    else if (value < balance)
-        gSpecialVar_Result = 1;
-    else if (value > balance)
-        gSpecialVar_Result = 2;
+    if (value > balance)
+        gSpecialVar_Result = FALSE;
+    else if (value <= balance)
+        gSpecialVar_Result = TRUE;
+}
+
+void Script_WithdrawFromBank(struct ScriptContext *ctx)
+{
+    u32 amount = ScriptReadWord(ctx);
+    u32 balance = GetMoneyInBank();
+
+    if (amount > balance)
+    {
+        gSpecialVar_Result = FALSE;
+        amount = balance;
+    }
+    else
+    {
+        gSpecialVar_Result = TRUE;
+    }
+
+    SetMoneyInBank(balance - amount);
+    AddMoney(&gSaveBlock1Ptr->money, amount);
+}
+
+void Script_DepositInBank(struct ScriptContext *ctx)
+{
+    u32 amount = ScriptReadWord(ctx);
+    u32 balance = GetMoneyInBank();
+    u32 wallet = GetMoney(&gSaveBlock1Ptr->money);
+
+    gSpecialVar_Result = TRUE;
+
+    if (amount > wallet)
+    {
+        amount = wallet;
+        gSpecialVar_Result = FALSE;
+    }
+
+    u32 newBalance = balance + amount;
+
+    if (newBalance > MAX_BANK_MONEY)
+    {
+        amount = MAX_BANK_MONEY - balance;
+        gSpecialVar_Result = FALSE;
+    }
+
+    SetMoneyInBank(balance + amount);
+    RemoveMoney(&gSaveBlock1Ptr->money, amount);
 }
 
 u32 CalcAmountToDeposit(u32 money)

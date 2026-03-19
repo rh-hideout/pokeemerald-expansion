@@ -2935,10 +2935,22 @@
 .endm
 
 @ Compares the current bank balance with a user-provided value.
-@ Sets VAR_RESULT to 0 if values are equal, 1 if value is less than the balance and 2 if value is greater than the balance
+@ Sets VAR_RESULT to FALSE if values is greater than the balance and TRUE if the value is less than or equal to the balance
 .macro comparebankbalnce value:req
   callnative Script_CompareBankBalance
   .4byte \value
+.endm
+
+@ Deposits an amount into the bank
+.macro depositmoney amount:req
+  callnative Script_DepositInBank
+  .4byte \amount
+.endm
+
+@ Withdraws an amount from the bank
+.macro withdrawmoney amount:req
+  callnative Script_WithdrawFromBank
+  .4byte \amount
 .endm
 
 
