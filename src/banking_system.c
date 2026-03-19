@@ -1,5 +1,6 @@
 #include "global.h"
 #include "assertf.h"
+#include "banking_system.h"
 #include "battle_message.h"
 #include "config/banking.h"
 #include "constants/flags.h"
@@ -13,7 +14,6 @@
 #include "menu.h"
 #include "money.h"
 #include "overworld.h"
-#include "banking_system.h"
 #include "script.h"
 #include "string_util.h"
 #include "task.h"
@@ -28,8 +28,8 @@
 
 enum BankingMode
 {
-    BANK_DEPOSIT,
-    BANK_WITHDRAW
+    MODE_DEPOSIT,
+    MODE_WITHDRAW
 };
 
 static const u8 sText_Deposit[] = _("Deposit");
@@ -66,7 +66,7 @@ static const struct WindowTemplate sBankingModeWindowTemplate = {
     .width = 7,
     .height = 2,
     .paletteNum = 15,
-    .baseBlock = 1 + 13*2};
+    .baseBlock = 1 + 13 * 2};
 
 bool32 IsSavingMoney(void)
 {
@@ -91,7 +91,7 @@ void GetMoneyInBankFromScript(struct ScriptContext ctx)
 
 void SetMoneyInBank(u32 amount)
 {
-    assertf(amount <= MAX_BANK_MONEY, "Amount greater than MAX_BANK_MONEY")
+    assertf(amount <= MAX_BANK_MONEY, "Amount greater than MAX_BANK_MONEY");
     gSaveBlock3Ptr->savedMoney = amount;
 }
 
@@ -122,11 +122,11 @@ void CreateBankingWindow(void)
 
 void CreateBankingModeWindow(void)
 {
-    const u8* text = NULL;
+    const u8 *text = NULL;
 
-    if (gBankingMode == BANK_DEPOSIT)
+    if (gBankingMode == MODE_DEPOSIT)
         text = sText_Deposit;
-    else if (gBankingMode == BANK_WITHDRAW)
+    else if (gBankingMode == MODE_WITHDRAW)
         text = sText_Withdraw;
 
     sBankingModeWindowId = AddWindow(&sBankingModeWindowTemplate);
@@ -184,12 +184,12 @@ static u32 GetTransactionMaxAmount(void)
     u32 savings = GetMoneyInBank();
     u32 max = 0;
 
-    if (gBankingMode == BANK_DEPOSIT)
+    if (gBankingMode == MODE_DEPOSIT)
     {
         u32 bankCapacity = MAX_BANK_MONEY - savings;
         max = Clamp(money, 0, bankCapacity);
     }
-    else if (gBankingMode == BANK_WITHDRAW)
+    else if (gBankingMode == MODE_WITHDRAW)
     {
         u32 walletCapacity = MAX_MONEY - money;
         max = Clamp(savings, 0, walletCapacity);
@@ -268,13 +268,23 @@ static void Task_HandleMoneyInput(u8 taskId)
 }
 #undef tHeldFrames
 
-void StartWithdrawMoneyTask(void)
+void StartTransactionTask(void)
 {
     CreateTask(Task_ShowBankingInput, 2);
 }
 
-void UpdateBankAccountAfterTransaction(void)
+void UpdateBankBalanceAfterTransaction(void)
 {
-    SetMoneyInBank(GetMoneyInBank() - sTransactionAmount);
-    AddMoney(&gSaveBlock1Ptr->money, sTransactionAmount);
+    if (gBankingMode == MODE_WITHDRAW)
+    {
+        SetMoneyInBank(GetMoneyInBank() - sTransactionAmount);
+        AddMoney(&gSaveBlock1Ptr->money, sTransactionAmount);
+    }
+    else if (gBankingMode == MODE_DEPOSIT)
+    {
+        SetMoneyInBank(GetMoneyInBank() + sTransactionAmount);
+        RemoveMoney(&gSaveBlock1Ptr->money, sTransactionAmount);
+    }
+
+    sTransactionAmount = 0;
 }

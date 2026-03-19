@@ -2911,9 +2911,11 @@
 	call EventScript_BrailleCursorWaitButton
 	.endm
 
+
+@ BANKING SYSTEM
 @ allows the player to withdraw money from the bank
-.macro withdrawmoney
-  callnative StartWithdrawMoneyTask
+.macro starttransaction
+  callnative StartTransactionTask
 .endm
 
 @ Sets the banking mode to withdraw or deposit
@@ -2921,6 +2923,13 @@
   callnative Script_SetBankingMode
   .4byte \mode
 .endm
+
+@ Updates Bank Balance and Wallet after transaction
+.macro settletransaction
+  callnative UpdateBankBalanceAfterTransaction
+.endm
+
+@ END OF BANKING SYSTEM
 
 
 

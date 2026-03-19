@@ -10,7 +10,7 @@ void Script_SetBankingMode(struct ScriptContext *ctx);
 bool32 IsSavingMoney(void);
 u32 GetTransactionAmount(void);
 void CreateBankingWindow(void);
-void StartWithdrawMoneyTask(void);
-void UpdateBankAccountAfterTransaction(void);
+void StartTransactionTask(void);
+void UpdateBankBalanceAfterTransaction(void);
 
 #endif // GUARD_SAVINGS_SYSTEM_H
