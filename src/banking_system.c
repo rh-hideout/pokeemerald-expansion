@@ -106,7 +106,7 @@ u32 CalcAmountToDeposit(u32 money)
          + ((money % 100) * SAVINGS_PERCENT) / 100;
 }
 
-u32 GetWithdrawalAmount(void)
+u32 GetTransactionAmount(void)
 {
     return sTransactionAmount;
 }
@@ -271,7 +271,7 @@ void StartWithdrawMoneyTask(void)
     CreateTask(Task_ShowBankingInput, 2);
 }
 
-void UpdateBankAccountAfterWithdrawal(void)
+void UpdateBankAccountAfterTransaction(void)
 {
     SetMoneyInBank(GetMoneyInBank() - sTransactionAmount);
     AddMoney(&gSaveBlock1Ptr->money, sTransactionAmount);

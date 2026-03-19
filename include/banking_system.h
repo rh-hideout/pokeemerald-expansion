@@ -8,9 +8,9 @@ void SetMoneyInBank(u32 amount);
 u32 CalcAmountToDeposit(u32 money);
 void Script_SetBankingMode(struct ScriptContext *ctx);
 bool32 IsSavingMoney(void);
-u32 GetWithdrawalAmount(void);
+u32 GetTransactionAmount(void);
 void CreateBankingWindow(void);
 void StartWithdrawMoneyTask(void);
-void UpdateBankAccountAfterWithdrawal(void);
+void UpdateBankAccountAfterTransaction(void);
 
 #endif // GUARD_SAVINGS_SYSTEM_H
