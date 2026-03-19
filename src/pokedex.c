@@ -25,6 +25,7 @@
 #include "string_util.h"
 #include "strings.h"
 #include "task.h"
+#include "text.h"
 #include "text_window.h"
 #include "trainer_pokemon_sprites.h"
 #include "trig.h"
@@ -91,7 +92,6 @@ static void Task_ClosePokedexFromSearchResultsStartMenu(u8);
 static bool8 LoadPokedexListPage(u8);
 static void LoadPokedexBgPalette(bool8);
 static void FreeWindowAndBgBuffers(void);
-static u8 CreateMonName(u16, u8, u8);
 static bool8 UpdateDexListScroll(u8, u8, u8);
 static u16 TryDoPokedexScroll(u16, u16);
 static bool8 TryDoInfoScreenScroll(void);
@@ -2189,8 +2189,11 @@ static void PrintMonDexNum(u8 windowId, u8 fontId, const u8 *str, u8 left, u8 to
 static void PrintMonName(u8 windowId, u8 fontId, const u8 *str, u8 left, u8 top)
 {
     static const u8 color[3] = { TEXT_COLOR_TRANSPARENT, TEXT_DYNAMIC_COLOR_6, TEXT_COLOR_LIGHT_GRAY };
-    fontId = GetFontIdToFit(str, fontId, 0, 50);
-    AddTextPrinterParameterized4(windowId, fontId, left * 8, (top * 8) + 1, 0, 0, color, TEXT_SKIP_DRAW, str);
+    u32 xOffset = 0;
+    if (POKEDEX_PLUS_HGSS)
+        xOffset = 13;
+    fontId = GetFontIdToFit(str, fontId, 0, 50 - xOffset);
+    AddTextPrinterParameterized4(windowId, fontId, left * 8 - xOffset, (top * 8) + 1, 0, 0, color, TEXT_SKIP_DRAW, str);
 }
 
 // u16 ignored is passed but never used
@@ -2321,7 +2324,7 @@ void CreateCaughtBall(bool16 owned, u8 x, u8 y, u16 unused)
         FillWindowPixelRect(0, PIXEL_FILL(0), x * xMultiplier, y * 8, 8, 16);
 }
 
-static u8 CreateMonName(u16 num, u8 left, u8 top)
+u8 CreateMonName(u16 num, u8 left, u8 top)
 {
     const u8 *str;
 

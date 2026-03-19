@@ -205,7 +205,6 @@ extern EWRAM_DATA struct PokedexListItem *sPokedexListItem;
 
 static bool8 LoadPokedexListPage(u8);
 static void LoadPokedexBgPalette(bool8);
-static u8 CreateMonName(u16, u8, u8);
 static void CreateInterfaceSprites(u8);
 static void LoadScreenSelectBarMain(u16);
 static void PrintMonInfo(u32 num, u32, u32 owned, u32 newEntry);
@@ -734,16 +733,6 @@ static bool8 LoadPokedexListPage(u8 page)
     return FALSE;
 }
 
-static void PrintMonDexNumAndName_2(u8 windowId, u8 fontId, const u8* str, u8 left, u8 top) //offset for closer numer + text
-{
-    u8 color[3];
-
-    color[0] = TEXT_COLOR_TRANSPARENT;
-    color[1] = TEXT_DYNAMIC_COLOR_6;
-    color[2] = TEXT_COLOR_LIGHT_GRAY;
-    AddTextPrinterParameterized4(windowId, fontId, left * 8 - 13, (top * 8) + 1, 0, 0, color, TEXT_SKIP_DRAW, str);
-}
-
 // u16 ignored is passed but never used
 #define MON_LIST_X 2
 bool32 TryCreateMonListEntry_HGSS(u8 position, u16 b, u16 ignored)
@@ -836,19 +825,6 @@ bool32 TryCreateMonListEntry_HGSS(u8 position, u16 b, u16 ignored)
     CopyWindowToVram(0, COPYWIN_GFX);
 
     return TRUE;
-}
-
-static u8 CreateMonName(u16 num, u8 left, u8 top)
-{
-    const u8 *str;
-
-    num = NationalPokedexNumToSpecies(num);
-    if (num)
-        str = GetSpeciesName(num);
-    else
-        str = sText_TenDashes;
-    PrintMonDexNumAndName_2(0, FONT_NARROW, str, left, top);
-    return StringLength(str);
 }
 
 #define sIsDownArrow data[1]
