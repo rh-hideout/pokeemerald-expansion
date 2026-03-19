@@ -2189,7 +2189,7 @@ static void PrintMonName(u8 windowId, u8 fontId, const u8 *str, u8 left, u8 top)
     u32 xOffset = 0;
     if (POKEDEX_PLUS_HGSS)
         xOffset = 13;
-    fontId = GetFontIdToFit(str, fontId, 0, 50 - xOffset);
+    fontId = GetFontIdToFit(str, fontId, 0, 50 + xOffset);
     AddTextPrinterParameterized4(windowId, fontId, left * 8 - xOffset, (top * 8) + 1, 0, 0, color, TEXT_SKIP_DRAW, str);
 }
 
