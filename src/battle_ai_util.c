@@ -2508,7 +2508,7 @@ bool32 CanIndexMoveFaintTarget(enum BattlerId battlerAtk, enum BattlerId battler
     enum Move *moves = gBattleMons[battlerAtk].moves;
 
     if (IsDoubleBattle() && battlerDef == BATTLE_PARTNER(battlerAtk))
-        dmg = gAiLogicData->simulatedDmg[battlerAtk][battlerDef][moveIndex].maximum; // Attacking partner, be careful
+        dmg = AI_GetDamage(battlerAtk, battlerDef, moveIndex, AI_ATTACKING_PARTNER, gAiLogicData); // Attacking partner, be careful
     else
         dmg = AI_GetDamage(battlerAtk, battlerDef, moveIndex, calcContext, gAiLogicData);
 
