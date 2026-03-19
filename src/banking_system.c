@@ -37,7 +37,7 @@ static const u8 sText_Withdraw[] = _("Withdraw");
 
 // Variables
 u32 sTransactionAmount = 0;
-u8 sWithdrawalWindowId = 0;
+u8 sTransactionWindowId = 0;
 u8 sBankingModeWindowId = 0;
 enum BankingMode gBankingMode;
 
@@ -160,9 +160,9 @@ u32 GetTransactionAmount(void)
 void CreateBankingWindow(void)
 {
     // print window
-    sWithdrawalWindowId = AddWindow(&sSavingsWithdrawalWindowTemplate);
-    DrawStdWindowFrame(sWithdrawalWindowId, FALSE);
-    CopyWindowToVram(sWithdrawalWindowId, COPYWIN_FULL);
+    sTransactionWindowId = AddWindow(&sSavingsWithdrawalWindowTemplate);
+    DrawStdWindowFrame(sTransactionWindowId, FALSE);
+    CopyWindowToVram(sTransactionWindowId, COPYWIN_FULL);
 }
 
 void CreateBankingModeWindow(void)
@@ -267,7 +267,7 @@ static void Task_ShowBankingInput(u8 taskId)
         break;
     case 2:
         sTransactionAmount = GetTransactionMaxAmount();
-        PrintTransactionAmount(sWithdrawalWindowId, sTransactionAmount);
+        PrintTransactionAmount(sTransactionWindowId, sTransactionAmount);
         tState++;
         break;
     case 3:
@@ -296,14 +296,14 @@ static void Task_HandleMoneyInput(u8 taskId)
     if (HandleAmountInput(&sTransactionAmount, GetTransactionMaxAmount(), 0,
                           &tHeldFrames))
     {
-        PrintTransactionAmount(sWithdrawalWindowId, sTransactionAmount);
+        PrintTransactionAmount(sTransactionWindowId, sTransactionAmount);
     }
     else if (JOY_NEW(A_BUTTON | B_BUTTON))
     {
         if (JOY_NEW(B_BUTTON))
             sTransactionAmount = 0;
         gSpecialVar_Result = sTransactionAmount;
-        ClearStdWindowAndFrame(sWithdrawalWindowId, TRUE);
+        ClearStdWindowAndFrame(sTransactionWindowId, TRUE);
         ClearStdWindowAndFrame(sBankingModeWindowId, TRUE);
         UnfreezeObjectEvents();
         ScriptContext_Enable();
