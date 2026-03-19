@@ -346,7 +346,7 @@ void SetupAIPredictionData(enum BattlerId battler, enum SwitchType switchType)
     gAiLogicData->aiPredictionInProgress = TRUE;
 
     // Switch prediction
-    if (CanAiPredictSwitch(battler))
+    if (IsAiFlagPresent(AI_FLAG_PREDICT_SWITCH))
     {
         gAiLogicData->mostSuitableMonId[battler] = GetMostSuitableMonToSwitchInto(battler, switchType);
         if (ShouldSwitch(battler))
@@ -355,7 +355,7 @@ void SetupAIPredictionData(enum BattlerId battler, enum SwitchType switchType)
     }
 
     // Move prediction
-    if (CanAiPredictMove(battler))
+    if (IsAiFlagPresent(AI_FLAG_PREDICT_MOVE))
     {
         gAiBattleData->chosenMoveIndex[battler] = BattleAI_ChooseMoveIndex(battler);
         gAiLogicData->predictedMove[battler] = gBattleMons[battler].moves[gAiBattleData->chosenMoveIndex[battler]];

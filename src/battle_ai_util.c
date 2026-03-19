@@ -180,40 +180,17 @@ bool32 IsAiBattlerPredictingAbility(enum BattlerId battlerId)
     return FALSE;
 }
 
-bool32 CanAiPredictMove(enum BattlerId battlerId)
-{
-    if (IsAiFlagPresent(AI_FLAG_PREDICT_MOVE))
-        return TRUE;
-
-    return FALSE;
-}
-
-bool32 CanAiPredictSwitch(enum BattlerId battlerId)
-{
-    if (IsAiFlagPresent(AI_FLAG_PREDICT_SWITCH))
-        return TRUE;
-
-    return FALSE;
-}
-
 bool32 IsBattlerPredictedToSwitch(enum BattlerId battler)
 {
-    // Check for prediction flag on AI, whether they're using those predictions this turn, and whether the AI thinks the player should switch
-    for (enum BattlerId battlerIndex = 0; battlerIndex < MAX_BATTLERS_COUNT; battlerIndex++)
-    {
-        if (CanAiPredictSwitch(battlerIndex))
-        {
-            if (gAiLogicData->predictingSwitch && gAiLogicData->shouldSwitch & (1u << battler))
-                return TRUE;
-        }
-    }
+    if (gAiLogicData->predictingSwitch && gAiLogicData->shouldSwitch & (1u << battler))
+        return TRUE;
     return FALSE;
 }
 
 // Either a predicted move or the last used move from an opposing battler
 enum Move GetIncomingMove(enum BattlerId battler, enum BattlerId opposingBattler, struct AiLogicData *aiData)
 {
-    if (aiData->predictingMove && CanAiPredictMove(battler))
+    if (aiData->predictingMove)
         return aiData->predictedMove[opposingBattler];
     return aiData->lastUsedMove[opposingBattler];
 }
@@ -221,7 +198,7 @@ enum Move GetIncomingMove(enum BattlerId battler, enum BattlerId opposingBattler
 // When not predicting, don't want to reference player's previous move; leads to weird behaviour for cases like Fake Out or Protect, especially in doubles
 enum Move GetIncomingMoveSpeedCheck(enum BattlerId battler, enum BattlerId opposingBattler, struct AiLogicData *aiData)
 {
-    if (aiData->predictingMove && CanAiPredictMove(battler))
+    if (aiData->predictingMove)
     {
         // Ignore moves that don't do damage or only have priority one time
         if (GetMovePower(aiData->predictedMove[opposingBattler]) != 0 && GetMoveEffect(aiData->predictedMove[opposingBattler]) != EFFECT_FIRST_TURN_ONLY)
