@@ -1,7 +1,7 @@
-#ifndef GUARD_GENERATIONAL_CHANGES_H
-#define GUARD_GENERATIONAL_CHANGES_H
+#ifndef GUARD_CONFIG_CHANGES_H
+#define GUARD_CONFIG_CHANGES_H
 
-#include "constants/generational_changes.h"
+#include "constants/config_changes.h"
 #include "config/battle.h"
 #include "config/pokerus.h"
 #include "config/ai.h"
@@ -30,4 +30,4 @@ void TestInitConfigData(void);
 void TestFreeConfigData(void);
 #endif
 
-#endif // GUARD_GENERATIONAL_CHANGES_H
+#endif // GUARD_CONFIG_CHANGES_H

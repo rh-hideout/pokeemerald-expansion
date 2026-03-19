@@ -202,7 +202,8 @@ static EWRAM_DATA struct {
     u8 partnerCursorPosition;
     u16 linkData[20];
     u8 timer;
-    u8 giftRibbons[GIFT_RIBBONS_COUNT];
+    u8 giftRibbons[NUM_GIFT_RIBBONS];
+    u8 padding[4];
     u8 filler_B4[0x81C];
     struct {
         bool8 active;

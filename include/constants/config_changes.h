@@ -1,5 +1,5 @@
-#ifndef GUARD_CONSTANTS_GENERATIONAL_CHANGES_H
-#define GUARD_CONSTANTS_GENERATIONAL_CHANGES_H
+#ifndef GUARD_CONSTANTS_CONFIG_CHANGES_H
+#define GUARD_CONSTANTS_CONFIG_CHANGES_H
 
 /* Config definitions */
 #define BATTLE_CONFIG_DEFINITIONS(F) \
@@ -55,6 +55,7 @@
     F(B_TAILWIND_TURNS,            tailwindTurns,           (u32, GEN_COUNT - 1)) \
     F(B_SLEEP_TURNS,               sleepTurns,              (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_TAUNT_TURNS,               tauntTurns,              (u32, GEN_COUNT - 1)) \
+    F(B_ENCORE_TURNS,              encoreTurns,             (u32, GEN_COUNT - 1)) \
     F(B_SPORT_TURNS,               sportTurns,              (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_MEGA_EVO_TURN_ORDER,       megaEvoTurnOrder,        (u32, GEN_COUNT - 1)) \
     F(B_RECALC_TURN_AFTER_ACTIONS, recalcTurnAfterActions,  (u32, GEN_COUNT - 1)) \
@@ -246,4 +247,4 @@ enum ConfigTag
     CONFIG_COUNT
 };
 
-#endif // GUARD_CONSTANTS_GENERATIONAL_CHANGES_H
+#endif // GUARD_CONSTANTS_CONFIG_CHANGES_H

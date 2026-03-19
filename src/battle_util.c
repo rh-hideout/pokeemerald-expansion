@@ -11,7 +11,7 @@
 #include "battle_z_move.h"
 #include "battle_gimmick.h"
 #include "battle_hold_effects.h"
-#include "generational_changes.h"
+#include "config_changes.h"
 #include "party_menu.h"
 #include "pokemon.h"
 #include "international_string_util.h"
@@ -1111,6 +1111,38 @@ bool32 IsLastMonToMove(enum BattlerId battler)
             return FALSE;
     }
     return TRUE;
+}
+
+static u32 GetAiTurnOrder(u8 *aiTurnOrder, enum BattlerId battler)
+{
+    for (u32 i = 0; i < gBattlersCount; i++)
+    {
+        if (aiTurnOrder[i] == battler)
+            return i;
+    }
+    return 0;
+}
+
+static bool32 Ai_AttackerMovesAfterTarget(struct BattleContext *ctx)
+{
+    return GetAiTurnOrder(ctx->aiTurnOrder, ctx->battlerAtk) > GetAiTurnOrder(ctx->aiTurnOrder, ctx->battlerDef);
+}
+
+static bool32 Ai_AttackerMovesLast(struct BattleContext *ctx)
+{
+    u32 numAliveBattlers = 0;
+    u32 battlerTurnOrder = GetAiTurnOrder(ctx->aiTurnOrder, ctx->battlerAtk);
+
+    for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
+    {
+        if (IsBattlerAlive(battler))
+            numAliveBattlers++;
+    }
+
+    if (battlerTurnOrder >= numAliveBattlers - 1)
+        return TRUE;
+
+    return FALSE;
 }
 
 bool32 ShouldDefiantCompetitiveActivate(enum BattlerId battler, enum Ability ability)
@@ -3239,28 +3271,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_DOWNLOAD:
             if (shouldAbilityTrigger)
             {
-                enum Stat statId;
-                enum BattlerId opposingBattler;
-                u32 opposingDef = 0, opposingSpDef = 0;
-
-                opposingBattler = BATTLE_OPPOSITE(battler);
-                for (i = 0; i < 2; opposingBattler ^= BIT_FLANK, i++)
-                {
-                    if (IsBattlerAlive(opposingBattler))
-                    {
-                        opposingDef += gBattleMons[opposingBattler].defense
-                                    * gStatStageRatios[gBattleMons[opposingBattler].statStages[STAT_DEF]][0]
-                                    / gStatStageRatios[gBattleMons[opposingBattler].statStages[STAT_DEF]][1];
-                        opposingSpDef += gBattleMons[opposingBattler].spDefense
-                                      * gStatStageRatios[gBattleMons[opposingBattler].statStages[STAT_SPDEF]][0]
-                                      / gStatStageRatios[gBattleMons[opposingBattler].statStages[STAT_SPDEF]][1];
-                    }
-                }
-
-                if (opposingDef < opposingSpDef)
-                    statId = STAT_ATK;
-                else
-                    statId = STAT_SPATK;
+                enum Stat statId = GetDownloadStat(battler);
 
                 if (CompareStat(battler, statId, MAX_STAT_STAGE, CMP_LESS_THAN, gLastUsedAbility))
                 {
@@ -6331,14 +6342,28 @@ static inline u32 CalcMoveBasePower(struct BattleContext *ctx)
         }
         break;
     case EFFECT_PAYBACK:
-        if (HasBattlerActedThisTurn(battlerDef)
+        if (ctx->aiCalc)
+        {
+            if (Ai_AttackerMovesAfterTarget(ctx))
+                basePower *= 2;
+        }
+        else if (HasBattlerActedThisTurn(battlerDef)
             && (B_PAYBACK_SWITCH_BOOST < GEN_5 || gBattleStruct->battlerState[battlerDef].isFirstTurn != 2))
+        {
             basePower *= 2;
+        }
         break;
     case EFFECT_BOLT_BEAK:
-        if (!HasBattlerActedThisTurn(battlerDef)
-            || gBattleStruct->battlerState[battlerDef].isFirstTurn == 2)
+        if (ctx->aiCalc)
+        {
+            if (!Ai_AttackerMovesAfterTarget(ctx))
+                basePower *= 2;
+        }
+        else if (!HasBattlerActedThisTurn(battlerDef)
+              || gBattleStruct->battlerState[battlerDef].isFirstTurn == 2)
+        {
             basePower *= 2;
+        }
         break;
     case EFFECT_FUSION_COMBO:
         if (move == gLastUsedMove)
@@ -6534,8 +6559,18 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct BattleContext *ctx)
             modifier = uq4_12_multiply(modifier, UQ_4_12(0.75));
         break;
     case ABILITY_ANALYTIC:
-        if (IsLastMonToMove(battlerAtk) && moveEffect != EFFECT_FUTURE_SIGHT)
-           modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
+        if (moveEffect == EFFECT_FUTURE_SIGHT)
+            break;
+
+        if (ctx->aiCalc)
+        {
+            if (Ai_AttackerMovesLast(ctx))
+               modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
+        }
+        else if (IsLastMonToMove(battlerAtk))
+        {
+            modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
+        }
         break;
     case ABILITY_TOUGH_CLAWS:
         if (IsMoveMakingContact(battlerAtk, battlerDef, ctx->abilityAtk, ctx->holdEffectAtk, ctx->move))
@@ -10938,4 +10973,29 @@ bool32 IsNaturalEnemy(enum Species speciesAttacker, enum Species speciesTarget)
         return FALSE;
     }
     return FALSE;
+}
+
+enum Stat GetDownloadStat(enum BattlerId battler)
+{
+    enum BattlerId opposingBattler;
+    u32 opposingDef = 0, opposingSpDef = 0;
+
+    opposingBattler = BATTLE_OPPOSITE(battler);
+    for (u32 i = 0; i < 2; opposingBattler ^= BIT_FLANK, i++)
+    {
+        if (IsBattlerAlive(opposingBattler))
+        {
+            opposingDef += gBattleMons[opposingBattler].defense
+                        * gStatStageRatios[gBattleMons[opposingBattler].statStages[STAT_DEF]][0]
+                        / gStatStageRatios[gBattleMons[opposingBattler].statStages[STAT_DEF]][1];
+            opposingSpDef += gBattleMons[opposingBattler].spDefense
+                            * gStatStageRatios[gBattleMons[opposingBattler].statStages[STAT_SPDEF]][0]
+                            / gStatStageRatios[gBattleMons[opposingBattler].statStages[STAT_SPDEF]][1];
+        }
+    }
+
+    if (opposingDef < opposingSpDef)
+        return STAT_ATK;
+    else
+        return STAT_SPATK;
 }

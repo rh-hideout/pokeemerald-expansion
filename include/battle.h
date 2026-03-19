@@ -23,7 +23,7 @@
 #include "battle_dynamax.h"
 #include "battle_terastal.h"
 #include "battle_gimmick.h"
-#include "generational_changes.h"
+#include "config_changes.h"
 #include "item.h"
 #include "move.h"
 #include "random.h" // for rng_value_t

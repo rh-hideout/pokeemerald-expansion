@@ -4,8 +4,6 @@
 
 #define PARTNER_NONE 0
 #define PARTNER_STEVEN 1
-#define PARTNER_DUMMY 2
-#define PARTNER_COUNT 3
-//Tests need PARTNER_COUNT to be at least 3 so we add a dummy partner
+#define PARTNER_COUNT 2
 
 #endif  // GUARD_CONSTANTS_BATTLE_PARTNERS_H
