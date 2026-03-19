@@ -59,6 +59,15 @@ body {
     font-size: 12px;
     color: var(--text-dim);
 }
+.branch-info {
+    font-size: 11px;
+    color: var(--text-dim);
+    font-family: monospace;
+    padding: 2px 8px;
+    background: var(--bg-card);
+    border-radius: 4px;
+    cursor: default;
+}
 .changes-badge {
     font-size: 11px;
     background: var(--orange);
