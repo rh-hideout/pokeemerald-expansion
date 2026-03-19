@@ -320,4 +320,6 @@ u8 CreateMonName(u16 num, u8 left, u8 top);
 void ResetOtherVideoRegisters(u16);
 u8 PrintCryScreenSpeciesName(u8, u16, u8, u8);
 
+enum Species NationalPokedexNumToSpeciesForm(enum NationalDexOrder nationalNum);
+
 #endif // GUARD_POKEDEX_H

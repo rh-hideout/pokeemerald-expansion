@@ -258,8 +258,6 @@ static void Task_ExitFormsScreen(u8 taskId);
 static u8 ShowCategoryIcon(enum DamageCategory category);
 static void DestroyCategoryIcon(void);
 
-static u16 NationalPokedexNumToSpeciesHGSS(u16 nationalNum);
-
 //Evo screen
 u32 GetSpeciesNameFontId(u32 nameWidth);
 u32 GetSpeciesNameWidthInChars(const u8 *speciesName);
@@ -1324,7 +1322,7 @@ bool32 Task_TryLoadInfoScreen_HGSS(u8 taskId)
         FillWindowPixelBuffer(WIN_INFO, PIXEL_FILL(0));
         PutWindowTilemap(WIN_INFO);
         PutWindowTilemap(WIN_FOOTPRINT);
-        DrawFootprint(WIN_FOOTPRINT, NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum));
+        DrawFootprint(WIN_FOOTPRINT, NationalPokedexNumToSpeciesForm(sPokedexListItem->dexNum));
         CopyWindowToVram(WIN_FOOTPRINT, COPYWIN_GFX);
         gMain.state++;
         break;
@@ -1452,7 +1450,7 @@ bool32 TryLoadAreaScreen_HGSS(u8 taskId)
         gMain.state++;
         break;
     case 2:
-        DisplayPokedexAreaScreen(NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum), &sPokedexView->screenSwitchState, gAreaTimeOfDay, DEX_SHOW_AREA_SCREEN);
+        DisplayPokedexAreaScreen(NationalPokedexNumToSpeciesForm(sPokedexListItem->dexNum), &sPokedexView->screenSwitchState, gAreaTimeOfDay, DEX_SHOW_AREA_SCREEN);
         SetVBlankCallback(gPokedexVBlankCB);
         sPokedexView->screenSwitchState = 0;
         gMain.state = 0;
@@ -1703,7 +1701,7 @@ static void PrintCurrentSpeciesTypeInfo(u8 newEntry, enum Species species)
 
     if (!newEntry)
     {
-        species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
+        species = NationalPokedexNumToSpeciesForm(sPokedexListItem->dexNum);
     }
     //type icon(s)
     #ifdef TX_RANDOMIZER_AND_CHALLENGES
@@ -1761,7 +1759,7 @@ static void PrintMonInfo(u32 num, u32 value, u32 owned, u32 newEntry)
         value = num;
     ConvertIntToDecimalStringN(StringCopy(str, gText_NumberClear01), value, STR_CONV_MODE_LEADING_ZEROS, digitCount);
     PrintInfoScreenTextWhite(str, 123, 17);
-    species = NationalPokedexNumToSpeciesHGSS(num);
+    species = NationalPokedexNumToSpeciesForm(num);
     if (species)
         name = GetSpeciesName(species);
     else
@@ -1810,31 +1808,31 @@ static u32 GetPokedexMonPersonality(enum Species species)
 
 static u16 CreateMonSpriteFromNationalDexNumberHGSS(u16 nationalNum, s16 x, s16 y, u16 paletteSlot)
 {
-    enum Species species = NationalPokedexNumToSpeciesHGSS(nationalNum);
+    enum Species species = NationalPokedexNumToSpeciesForm(nationalNum);
     return CreateMonPicSprite(species, FALSE, GetPokedexMonPersonality(species), TRUE, x, y, paletteSlot, TAG_NONE);
 }
 
 static u16 GetPokemonScaleFromNationalDexNumber(u16 nationalNum)
 {
-    nationalNum = NationalPokedexNumToSpeciesHGSS(nationalNum);
+    nationalNum = NationalPokedexNumToSpeciesForm(nationalNum);
     return gSpeciesInfo[nationalNum].pokemonScale;
 }
 
 static u16 GetPokemonOffsetFromNationalDexNumber(u16 nationalNum)
 {
-    nationalNum = NationalPokedexNumToSpeciesHGSS(nationalNum);
+    nationalNum = NationalPokedexNumToSpeciesForm(nationalNum);
     return gSpeciesInfo[nationalNum].pokemonOffset;
 }
 
 static u16 GetTrainerScaleFromNationalDexNumber(u16 nationalNum)
 {
-    nationalNum = NationalPokedexNumToSpeciesHGSS(nationalNum);
+    nationalNum = NationalPokedexNumToSpeciesForm(nationalNum);
     return gSpeciesInfo[nationalNum].trainerScale;
 }
 
 static u16 GetTrainerOffsetFromNationalDexNumber(u16 nationalNum)
 {
-    nationalNum = NationalPokedexNumToSpeciesHGSS(nationalNum);
+    nationalNum = NationalPokedexNumToSpeciesForm(nationalNum);
     return gSpeciesInfo[nationalNum].trainerOffset;
 }
 
@@ -1852,17 +1850,6 @@ static u16 CreateSizeScreenTrainerPic(u16 species, s16 x, s16 y, s8 paletteSlot)
 //*        HGSS                      *
 //*                                  *
 //************************************
-static u16 NationalPokedexNumToSpeciesHGSS(u16 nationalNum)
-{
-    if (!nationalNum)
-        return 0;
-
-    if (sPokedexView->formSpecies != 0)
-        return sPokedexView->formSpecies;
-    else
-        return NationalPokedexNumToSpecies(nationalNum);
-}
-
 static void LoadTilesetTilemapHGSS(u8 page)
 {
     switch (page)
@@ -1950,7 +1937,7 @@ static void ResetStatsWindows(void)
 
 static void SaveMonDataInStruct(void)
 {
-    enum Species species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
+    enum Species species = NationalPokedexNumToSpeciesForm(sPokedexListItem->dexNum);
     u8 evs[NUM_STATS] =
     {
         [STAT_HP]    = gSpeciesInfo[species].evYield_HP,
@@ -2059,7 +2046,7 @@ static void Task_LoadStatsScreen(u8 taskId)
         if (gTasks[taskId].data[1] == 0)
         {
             //Icon
-            enum Species species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
+            enum Species species = NationalPokedexNumToSpeciesForm(sPokedexListItem->dexNum);
             u32 personality = GetPokedexMonPersonality(species);
             FreeMonIconPalettes(); //Free space for new pallete
             LoadMonIconPalettePersonality(species, personality); //Loads pallete for current mon
@@ -2222,7 +2209,7 @@ static void PrintStatsScreen_DestroyMoveItemIcon(u8 taskId)
 
 static bool8 CalculateMoves(void)
 {
-    enum Species species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
+    enum Species species = NationalPokedexNumToSpeciesForm(sPokedexListItem->dexNum);
 
     u16 statsMovesEgg[EGG_MOVES_ARRAY_COUNT] = {0};
 
@@ -2294,7 +2281,7 @@ static void PrintStatsScreen_Moves_Top(u8 taskId)
     u8 moves_y = 3;
 
     enum Item item = ITEM_MASTER_BALL;
-    enum Species species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
+    enum Species species = NationalPokedexNumToSpeciesForm(sPokedexListItem->dexNum);
     u32 selected = sPokedexView->moveSelected;
     enum Move move = GetSelectedMove(species, selected);
     //Moves selected from move max
@@ -2372,7 +2359,7 @@ static void PrintStatsScreen_Moves_Description(u8 taskId)
     u8 moves_x = 5;
     u8 moves_y = 5;
 
-    enum Species species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
+    enum Species species = NationalPokedexNumToSpeciesForm(sPokedexListItem->dexNum);
     enum Move move = GetSelectedMove(species, sPokedexView->moveSelected);
 
     //Move description
@@ -2415,7 +2402,7 @@ static void PrintStatsScreen_Moves_Bottom(u8 taskId)
     u8 contest_appeal = 0;
     u8 contest_jam = 0;
 
-    enum Species species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
+    enum Species species = NationalPokedexNumToSpeciesForm(sPokedexListItem->dexNum);
     enum Move move = GetSelectedMove(species, sPokedexView->moveSelected);
 
     //Power + Accuracy
@@ -2465,7 +2452,7 @@ static void PrintStatsScreen_Moves_Bottom(u8 taskId)
 static void PrintStatsScreen_NameGender(u8 taskId, u32 num, u32 value)
 {
     u8 str[16];
-    enum Species species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
+    enum Species species = NationalPokedexNumToSpeciesForm(sPokedexListItem->dexNum);
 
     u8 base_x = 38;
     u8 base_y = 0;
@@ -3169,7 +3156,7 @@ static void Task_LoadEvolutionScreen(u8 taskId)
     case 3:
         if (gTasks[taskId].data[1] == 0)
         {
-            enum Species species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
+            enum Species species = NationalPokedexNumToSpeciesForm(sPokedexListItem->dexNum);
             u32 personality = GetPokedexMonPersonality(species);
             sPokedexView->selectedScreen = EVO_SCREEN;
             ResetEvoScreenDataStruct();
@@ -3190,7 +3177,7 @@ static void Task_LoadEvolutionScreen(u8 taskId)
         u32 iconDepth = depth;
         //Print evo info and icons
         gTasks[taskId].data[3] = 0;
-        PrintEvolutionTargetSpeciesAndMethod(taskId, NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum), 0, &depth, alreadyPrintedIcons, &iconDepth, 0);
+        PrintEvolutionTargetSpeciesAndMethod(taskId, NationalPokedexNumToSpeciesForm(sPokedexListItem->dexNum), 0, &depth, alreadyPrintedIcons, &iconDepth, 0);
         LoadSpritePalette(&gSpritePalette_Arrow);
         TryLoadDarkModeArrowPalette();
         GetSeenFlagTargetSpecies();
@@ -4093,7 +4080,7 @@ static void Task_LoadFormsScreen(u8 taskId)
         if (gTasks[taskId].data[1] == 0)
         {
             //Icon
-            enum Species species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
+            enum Species species = NationalPokedexNumToSpeciesForm(sPokedexListItem->dexNum);
             u32 personality = GetPokedexMonPersonality(species);
             FreeMonIconPalettes(); //Free space for new pallete
             LoadMonIconPalettePersonality(species, personality); //Loads pallete for current mon
@@ -4107,7 +4094,7 @@ static void Task_LoadFormsScreen(u8 taskId)
     case 4:
         //Print form icons
         gTasks[taskId].data[3] = 0;
-        PrintForms(taskId, NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum));
+        PrintForms(taskId, NationalPokedexNumToSpeciesForm(sPokedexListItem->dexNum));
         LoadSpritePalette(&gSpritePalette_Arrow);
         TryLoadDarkModeArrowPalette();
         gMain.state++;

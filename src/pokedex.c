@@ -156,7 +156,6 @@ static void EraseSelectorArrow(u32);
 static void PrintSelectorArrow(u32);
 static void PrintSearchParameterTitle(u32, const u8 *);
 static void ClearSearchParameterBoxText(void);
-static enum Species NationalPokedexNumToSpeciesForm(u16 nationalNum);
 
 // const rom data
 #include "data/pokemon/pokedex_orders.h"
@@ -5851,7 +5850,7 @@ static void ClearSearchParameterBoxText(void)
     ClearSearchMenuRect(144, 8, 96, 96);
 }
 
-static enum Species NationalPokedexNumToSpeciesForm(u16 nationalNum)
+enum Species NationalPokedexNumToSpeciesForm(enum NationalDexOrder nationalNum)
 {
     if (POKEDEX_PLUS_HGSS && nationalNum && sPokedexView->formSpecies)
         return sPokedexView->formSpecies;
