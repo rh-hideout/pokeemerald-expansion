@@ -315,11 +315,11 @@ void CreateFacilityMon(const struct TrainerMon *fmon, u16 level, u8 fixedIV, u32
 
     if (fmon->gender == TRAINER_MON_MALE)
     {
-        personality = GeneratePersonalityForGender(MON_MALE, fmon->species, 0);
+        personality = GeneratePersonalityForGender(MON_MALE, fmon->species);
     }
     else if (fmon->gender == TRAINER_MON_FEMALE)
     {
-        personality = GeneratePersonalityForGender(MON_FEMALE, fmon->species, 0);
+        personality = GeneratePersonalityForGender(MON_FEMALE, fmon->species);
     }
 
     ModifyPersonalityForNature(&personality, fmon->nature);
