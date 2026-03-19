@@ -489,6 +489,30 @@ static const struct SpriteFrameImage sPicTable_MagmaMemberF[] = {
     overworld_ascending_frames(gObjectEventPic_MagmaMemberF, 2, 4),
 };
 
+static const struct SpriteFrameImage sPicTable_GalacticGruntM[] = {
+    overworld_ascending_frames(gObjectEventPic_GalacticGruntM, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_GalacticGruntF[] = {
+    overworld_ascending_frames(gObjectEventPic_GalacticGruntF, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_GalacticCommanderMars[] = {
+    overworld_ascending_frames(gObjectEventPic_GalacticCommanderMars, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_GalacticCommanderJupiter[] = {
+    overworld_ascending_frames(gObjectEventPic_GalacticCommanderJupiter, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_GalacticCommanderSaturn[] = {
+    overworld_ascending_frames(gObjectEventPic_GalacticCommanderSaturn, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_GalacticLeaderCyrus[] = {
+    overworld_ascending_frames(gObjectEventPic_GalacticLeaderCyrus, 2, 4),
+};
+
 static const struct SpriteFrameImage sPicTable_Sidney[] = {
     overworld_frame(gObjectEventPic_Sidney, 2, 4, 0),
     overworld_frame(gObjectEventPic_Sidney, 2, 4, 1),

@@ -118,6 +118,12 @@ extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_AquaMemberM
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_AquaMemberF;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_MagmaMemberM;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_MagmaMemberF;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_GalacticGruntM;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_GalacticGruntF;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_GalacticCommanderMars;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_GalacticCommanderJupiter;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_GalacticCommanderSaturn;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_GalacticLeaderCyrus;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Sidney;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Phoebe;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Glacia;
@@ -645,6 +651,13 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_OW_MON] =                   &gObjectEventGraphicsInfo_Follower,
     [OBJ_EVENT_GFX_LIGHT_SPRITE] =             &gObjectEventGraphicsInfo_BallLight,
     [OBJ_EVENT_GFX_APRICORN_TREE] =            &gObjectEventGraphicsInfo_ApricornTree,
+    // Team Galactic (Platinum)
+    [OBJ_EVENT_GFX_GALACTIC_GRUNT_M] =         &gObjectEventGraphicsInfo_GalacticGruntM,
+    [OBJ_EVENT_GFX_GALACTIC_GRUNT_F] =         &gObjectEventGraphicsInfo_GalacticGruntF,
+    [OBJ_EVENT_GFX_GALACTIC_COMMANDER_MARS] =  &gObjectEventGraphicsInfo_GalacticCommanderMars,
+    [OBJ_EVENT_GFX_GALACTIC_COMMANDER_JUPITER] = &gObjectEventGraphicsInfo_GalacticCommanderJupiter,
+    [OBJ_EVENT_GFX_GALACTIC_COMMANDER_SATURN] = &gObjectEventGraphicsInfo_GalacticCommanderSaturn,
+    [OBJ_EVENT_GFX_GALACTIC_LEADER_CYRUS] =    &gObjectEventGraphicsInfo_GalacticLeaderCyrus,
 #if IS_FRLG
     [OBJ_EVENT_GFX_RED_NORMAL] =               &gObjectEventGraphicsInfo_RedNormal,
     [OBJ_EVENT_GFX_RED_BIKE] =                 &gObjectEventGraphicsInfo_RedBike,
