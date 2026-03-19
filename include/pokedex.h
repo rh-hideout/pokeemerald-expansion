@@ -317,4 +317,6 @@ void Task_HandleCaughtMonPageInput(u8 taskId);
 void CreateMonDexNum(u16 entryNum, u8 left, u8 top, u16 unused);
 u8 CreateMonName(u16 num, u8 left, u8 top);
 
+void ResetOtherVideoRegisters(u16);
+
 #endif // GUARD_POKEDEX_H

@@ -133,7 +133,6 @@ static u8* ConvertMonHeightToMetricString(u32 height);
 static u8* ConvertMonWeightToImperialString(u32 weight);
 static u8* ConvertMonWeightToMetricString(u32 weight);
 static u8* ConvertMeasurementToMetricString(u32 num, u32* index);
-static void ResetOtherVideoRegisters(u16);
 static u8 PrintCryScreenSpeciesName(u8, u16, u8, u8);
 static void PrintDecimalNum(u8 windowId, u16 num, u8 left, u8 top);
 static u16 GetPokemonScaleFromNationalDexNumber(u16 nationalNum);
@@ -4587,7 +4586,7 @@ bool16 HasAllMons(void)
     return TRUE;
 }
 
-static void ResetOtherVideoRegisters(u16 regBits)
+void ResetOtherVideoRegisters(u16 regBits)
 {
     if (!(regBits & DISPCNT_BG0_ON))
     {

@@ -208,7 +208,6 @@ static void LoadPokedexBgPalette(bool8);
 static void CreateInterfaceSprites(u8);
 static void LoadScreenSelectBarMain(u16);
 static void PrintMonInfo(u32 num, u32, u32 owned, u32 newEntry);
-static void ResetOtherVideoRegisters(u16);
 static u8 PrintCryScreenSpeciesName(u8, u16, u8, u8);
 static u16 CreateMonSpriteFromNationalDexNumberHGSS(u16 nationalNum, s16 x, s16 y, u16 paletteSlot);
 static u16 CreateSizeScreenTrainerPic(u16, s16, s16, s8);
@@ -1880,51 +1879,6 @@ static u16 CreateSizeScreenTrainerPic(u16 species, s16 x, s16 y, s8 paletteSlot)
 }
 
 #undef TYPE_INFO_PALETTE_NUM_OFFSET
-
-//************************************
-//*                                  *
-//*        Helper functions          *
-//*                                  *
-//************************************
-
-static void ResetOtherVideoRegisters(u16 regBits)
-{
-    if (!(regBits & DISPCNT_BG0_ON))
-    {
-        ClearGpuRegBits(0, DISPCNT_BG0_ON);
-        SetGpuReg(REG_OFFSET_BG0CNT, 0);
-        SetGpuReg(REG_OFFSET_BG0HOFS, 0);
-        SetGpuReg(REG_OFFSET_BG0VOFS, 0);
-    }
-    if (!(regBits & DISPCNT_BG1_ON))
-    {
-        ClearGpuRegBits(0, DISPCNT_BG1_ON);
-        SetGpuReg(REG_OFFSET_BG1CNT, 0);
-        SetGpuReg(REG_OFFSET_BG1HOFS, 0);
-        SetGpuReg(REG_OFFSET_BG1VOFS, 0);
-    }
-    if (!(regBits & DISPCNT_BG2_ON))
-    {
-        ClearGpuRegBits(0, DISPCNT_BG2_ON);
-        SetGpuReg(REG_OFFSET_BG2CNT, 0);
-        SetGpuReg(REG_OFFSET_BG2HOFS, 0);
-        SetGpuReg(REG_OFFSET_BG2VOFS, 0);
-    }
-    if (!(regBits & DISPCNT_BG3_ON))
-    {
-        ClearGpuRegBits(0, DISPCNT_BG3_ON);
-        SetGpuReg(REG_OFFSET_BG3CNT, 0);
-        SetGpuReg(REG_OFFSET_BG3HOFS, 0);
-        SetGpuReg(REG_OFFSET_BG3VOFS, 0);
-    }
-    if (!(regBits & DISPCNT_OBJ_ON))
-    {
-        ClearGpuRegBits(0, DISPCNT_OBJ_ON);
-        ResetSpriteData();
-        FreeAllSpritePalettes();
-        gReservedSpritePaletteCount = 8;
-    }
-}
 
 
 
