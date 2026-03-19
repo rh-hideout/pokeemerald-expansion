@@ -878,6 +878,11 @@ enum BattleTransition GetTrainerBattleTransition(void)
         || trainerClass == TRAINER_CLASS_AQUA_ADMIN)
         return B_TRANSITION_AQUA;
 
+    if (trainerClass == TRAINER_CLASS_TEAM_GALACTIC
+        || trainerClass == TRAINER_CLASS_GALACTIC_COMMANDER
+        || trainerClass == TRAINER_CLASS_GALACTIC_LEADER)
+        return B_TRANSITION_MAGMA; // TODO: Create a dedicated Team Galactic battle transition
+
     switch (GetTrainerBattleType(trainerId))
     {
     case TRAINER_BATTLE_TYPE_SINGLES:

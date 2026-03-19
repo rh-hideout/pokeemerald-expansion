@@ -482,6 +482,25 @@ const u16 gTrainerBackPicPalette_Leaf[] = INCBIN_U16("graphics/trainers/back_pic
 const u16 gTrainerBackPicPalette_Pokedude[] = INCBIN_U16("graphics/trainers/back_pics/pokedude.gbapal");
 const u16 gTrainerBackPicPalette_OldMan[] = INCBIN_U16("graphics/trainers/back_pics/old_man.gbapal");
 
+// Team Galactic (Platinum)
+const u32 gTrainerFrontPic_GalacticGruntM[] = INCBIN_U32("graphics/trainers/front_pics/galactic_grunt_m.4bpp.smol");
+const u16 gTrainerPalette_GalacticGruntM[] = INCBIN_U16("graphics/trainers/front_pics/galactic_grunt_m.gbapal");
+
+const u32 gTrainerFrontPic_GalacticGruntF[] = INCBIN_U32("graphics/trainers/front_pics/galactic_grunt_f.4bpp.smol");
+const u16 gTrainerPalette_GalacticGruntF[] = INCBIN_U16("graphics/trainers/front_pics/galactic_grunt_f.gbapal");
+
+const u32 gTrainerFrontPic_GalacticCommanderMars[] = INCBIN_U32("graphics/trainers/front_pics/galactic_commander_mars.4bpp.smol");
+const u16 gTrainerPalette_GalacticCommanderMars[] = INCBIN_U16("graphics/trainers/front_pics/galactic_commander_mars.gbapal");
+
+const u32 gTrainerFrontPic_GalacticCommanderJupiter[] = INCBIN_U32("graphics/trainers/front_pics/galactic_commander_jupiter.4bpp.smol");
+const u16 gTrainerPalette_GalacticCommanderJupiter[] = INCBIN_U16("graphics/trainers/front_pics/galactic_commander_jupiter.gbapal");
+
+const u32 gTrainerFrontPic_GalacticCommanderSaturn[] = INCBIN_U32("graphics/trainers/front_pics/galactic_commander_saturn.4bpp.smol");
+const u16 gTrainerPalette_GalacticCommanderSaturn[] = INCBIN_U16("graphics/trainers/front_pics/galactic_commander_saturn.gbapal");
+
+const u32 gTrainerFrontPic_GalacticLeaderCyrus[] = INCBIN_U32("graphics/trainers/front_pics/galactic_leader_cyrus.4bpp.smol");
+const u16 gTrainerPalette_GalacticLeaderCyrus[] = INCBIN_U16("graphics/trainers/front_pics/galactic_leader_cyrus.gbapal");
+
 // The first two parameters invoke a front pic and palette by
 // calling a "TRAINER_PIC" constant (e.g. TRAINER_PIC_FRONT_HIKER), and
 // gTrainerFrontPic/gTrainerPalette pointers, (e.g "gTrainerFrontPic_Hiker" and "gTrainerPalette_Hiker").
@@ -653,6 +672,13 @@ const struct TrainerSprite gTrainerSprites[] =
     TRAINER_SPRITE(TRAINER_PIC_FRONT_RUIN_MANIAC_FRLG, gTrainerFrontPic_RuinManiacFrlg, gTrainerPalette_RuinManiacFrlg),
     TRAINER_SPRITE(TRAINER_PIC_FRONT_LADY_FRLG, gTrainerFrontPic_LadyFrlg, gTrainerPalette_LadyFrlg),
     TRAINER_SPRITE(TRAINER_PIC_FRONT_PAINTER_FRLG, gTrainerFrontPic_PainterFrlg, gTrainerPalette_PainterFrlg),
+    // Team Galactic (Platinum)
+    TRAINER_SPRITE(TRAINER_PIC_FRONT_GALACTIC_GRUNT_M, gTrainerFrontPic_GalacticGruntM, gTrainerPalette_GalacticGruntM),
+    TRAINER_SPRITE(TRAINER_PIC_FRONT_GALACTIC_GRUNT_F, gTrainerFrontPic_GalacticGruntF, gTrainerPalette_GalacticGruntF),
+    TRAINER_SPRITE(TRAINER_PIC_FRONT_GALACTIC_COMMANDER_MARS, gTrainerFrontPic_GalacticCommanderMars, gTrainerPalette_GalacticCommanderMars),
+    TRAINER_SPRITE(TRAINER_PIC_FRONT_GALACTIC_COMMANDER_JUPITER, gTrainerFrontPic_GalacticCommanderJupiter, gTrainerPalette_GalacticCommanderJupiter),
+    TRAINER_SPRITE(TRAINER_PIC_FRONT_GALACTIC_COMMANDER_SATURN, gTrainerFrontPic_GalacticCommanderSaturn, gTrainerPalette_GalacticCommanderSaturn),
+    TRAINER_SPRITE(TRAINER_PIC_FRONT_GALACTIC_LEADER_CYRUS, gTrainerFrontPic_GalacticLeaderCyrus, gTrainerPalette_GalacticLeaderCyrus),
 };
 
 static const union AnimCmd sAnimCmd_Hoenn[] =
