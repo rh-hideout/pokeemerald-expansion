@@ -63,10 +63,61 @@ body {
     font-size: 11px;
     color: var(--text-dim);
     font-family: monospace;
-    padding: 2px 8px;
-    background: var(--bg-card);
+    padding: 0;
     border-radius: 4px;
-    cursor: default;
+}
+.branch-info-label {
+    cursor: pointer;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--bg-card);
+    transition: background 0.15s;
+}
+.branch-info-label:hover {
+    background: var(--bg-hover);
+    color: var(--text);
+}
+
+/* Branch picker rows */
+.branch-row {
+    padding: 10px 20px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+}
+.branch-row:last-child { border-bottom: none; }
+.branch-row:hover { background: var(--bg-hover); }
+.branch-row.active { background: var(--bg-hover); }
+.branch-row-main {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 2px;
+}
+.branch-row-name {
+    font-family: monospace;
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 500;
+}
+.branch-row-current {
+    font-size: 10px;
+    background: var(--green);
+    color: #fff;
+    padding: 1px 6px;
+    border-radius: 8px;
+}
+.branch-row-meta {
+    display: flex;
+    gap: 12px;
+    font-size: 11px;
+    color: var(--text-dim);
+}
+.branch-row-msg {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 300px;
 }
 .changes-badge {
     font-size: 11px;

@@ -110,21 +110,7 @@ function formatCommitTime(iso) {
 async function ensureEditorBranch() {
     if (editorBranch) return editorBranch;
     if (!ghUser) throw new Error('Sign in with GitHub before making changes.');
-
-    const ref = await ghFetch(`/repos/${REPO_OWNER}/${REPO_NAME}/git/refs/heads/${BRANCH}`);
-    const baseSha = ref.object.sha;
-
-    const branchName = `editor/${ghUser.login}/${readableTimestamp()}`;
-    await ghFetch(`/repos/${REPO_OWNER}/${REPO_NAME}/git/refs`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ref: `refs/heads/${branchName}`, sha: baseSha })
-    });
-
-    editorBranch = branchName;
-    localStorage.setItem('editor_branch', branchName);
-    updateBranchUI();
-    return branchName;
+    return await createNewEditorBranch();
 }
 
 // Commit a single file to the editor branch
@@ -198,8 +184,17 @@ function updateBranchUI() {
     if (editorBranch) {
         const shortBranch = editorBranch.replace(/^editor\//, '');
         const timeStr = editorBranchLastCommit ? ` · ${formatCommitTime(editorBranchLastCommit)}` : '';
-        el.style.display = 'inline';
-        el.innerHTML = `<span title="${escAttr(editorBranch)}">&#9741; ${escHtml(shortBranch)}${timeStr}</span>`;
+        el.style.display = 'inline-flex';
+        el.innerHTML = `
+            <span class="branch-info-label" onclick="openBranchPicker()" title="Click to switch branch">
+                &#9741; ${escHtml(shortBranch)}${timeStr}
+            </span>`;
+    } else if (ghUser) {
+        el.style.display = 'inline-flex';
+        el.innerHTML = `
+            <span class="branch-info-label" onclick="openBranchPicker()" title="Select or create an editing branch">
+                &#9741; No branch &mdash; pick one
+            </span>`;
     } else {
         el.style.display = 'none';
     }
@@ -212,6 +207,162 @@ function clearEditorBranch() {
     localStorage.removeItem('editor_branch_last_commit');
     Object.keys(pendingChanges).forEach(k => delete pendingChanges[k]);
     updateChangesUI();
+}
+
+// Switch to an existing branch (updates local state, no data reload)
+function switchToBranch(branchName, lastCommitDate) {
+    editorBranch = branchName;
+    editorBranchLastCommit = lastCommitDate || '';
+    localStorage.setItem('editor_branch', branchName);
+    if (lastCommitDate) localStorage.setItem('editor_branch_last_commit', lastCommitDate);
+    else localStorage.removeItem('editor_branch_last_commit');
+    // Clear local pending changes — the branch has its own committed state
+    Object.keys(pendingChanges).forEach(k => delete pendingChanges[k]);
+    updateChangesUI();
+    toast(`Switched to ${branchName.replace(/^editor\//, '')}`);
+}
+
+// Create a fresh branch and switch to it
+async function createNewEditorBranch() {
+    if (!ghUser) { openAuthModal(); return; }
+    const ref = await ghFetch(`/repos/${REPO_OWNER}/${REPO_NAME}/git/refs/heads/${BRANCH}`);
+    const baseSha = ref.object.sha;
+    const branchName = `editor/${ghUser.login}/${readableTimestamp()}`;
+    await ghFetch(`/repos/${REPO_OWNER}/${REPO_NAME}/git/refs`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ref: `refs/heads/${branchName}`, sha: baseSha })
+    });
+    switchToBranch(branchName, '');
+    return branchName;
+}
+
+// Fetch all editor/* branches with latest commit info
+async function fetchEditorBranches() {
+    // List branches matching editor/ prefix. GitHub API doesn't filter by prefix
+    // on the list-branches endpoint, so we fetch pages and filter client-side.
+    // For repos with many branches we limit to 100 most recent.
+    let branches = [];
+    let page = 1;
+    while (page <= 3) { // max 300 branches scanned
+        const batch = await ghFetch(
+            `/repos/${REPO_OWNER}/${REPO_NAME}/branches?per_page=100&page=${page}`
+        );
+        branches = branches.concat(batch);
+        if (batch.length < 100) break;
+        page++;
+    }
+    const editorBranches = branches.filter(b => b.name.startsWith('editor/'));
+
+    // Fetch latest commit date for each branch (in parallel, batched)
+    const enriched = await Promise.all(editorBranches.map(async (b) => {
+        try {
+            const commit = await ghFetch(
+                `/repos/${REPO_OWNER}/${REPO_NAME}/commits/${b.commit.sha}`
+            );
+            return {
+                name: b.name,
+                sha: b.commit.sha,
+                date: commit.commit.committer.date,
+                message: commit.commit.message,
+            };
+        } catch {
+            return { name: b.name, sha: b.commit.sha, date: '', message: '' };
+        }
+    }));
+
+    // Sort newest first
+    enriched.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+    return enriched;
+}
+
+async function openBranchPicker() {
+    if (!ghUser) { openAuthModal(); return; }
+
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+        <div class="modal" style="width:560px">
+            <div class="modal-header">
+                <h2>Switch Branch</h2>
+                <button class="btn btn-sm" onclick="this.closest('.modal-overlay').remove()">&#10005;</button>
+            </div>
+            <div class="modal-body" style="padding:0">
+                <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+                    <span style="font-size:13px;color:var(--text-dim)">Your editor branches</span>
+                    <button class="btn btn-primary btn-sm" id="new-branch-btn">+ New Branch</button>
+                </div>
+                <div id="branch-list" style="max-height:400px;overflow-y:auto;padding:8px 0">
+                    <div class="loading-center" style="padding:32px"><div class="spinner"></div> Loading branches...</div>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+
+    // New branch button
+    overlay.querySelector('#new-branch-btn').addEventListener('click', async () => {
+        const btn = overlay.querySelector('#new-branch-btn');
+        btn.disabled = true;
+        btn.textContent = 'Creating...';
+        try {
+            await createNewEditorBranch();
+            overlay.remove();
+        } catch (e) {
+            toast('Failed to create branch: ' + e.message, true);
+            btn.disabled = false;
+            btn.textContent = '+ New Branch';
+        }
+    });
+
+    // Load branches
+    try {
+        const branches = await fetchEditorBranches();
+        const listEl = overlay.querySelector('#branch-list');
+        if (branches.length === 0) {
+            listEl.innerHTML = `
+                <div style="padding:32px;text-align:center;color:var(--text-dim);font-size:13px">
+                    No editor branches found.<br>Click <strong>+ New Branch</strong> to start editing, or just make an edit and one will be created automatically.
+                </div>`;
+            return;
+        }
+
+        listEl.innerHTML = branches.map(b => {
+            const short = b.name.replace(/^editor\//, '');
+            const isCurrent = b.name === editorBranch;
+            const timeStr = b.date ? formatCommitTime(b.date) : 'no commits';
+            const lastMsg = b.message ? b.message.split('\n')[0] : '';
+            // Truncate commit message
+            const msgDisplay = lastMsg.length > 60 ? lastMsg.slice(0, 57) + '...' : lastMsg;
+            return `
+                <div class="branch-row${isCurrent ? ' active' : ''}"
+                     data-branch="${escAttr(b.name)}" data-date="${escAttr(b.date)}">
+                    <div class="branch-row-main">
+                        <span class="branch-row-name">${escHtml(short)}</span>
+                        ${isCurrent ? '<span class="branch-row-current">current</span>' : ''}
+                    </div>
+                    <div class="branch-row-meta">
+                        <span>${escHtml(timeStr)}</span>
+                        ${msgDisplay ? `<span class="branch-row-msg" title="${escAttr(lastMsg)}">${escHtml(msgDisplay)}</span>` : ''}
+                    </div>
+                </div>`;
+        }).join('');
+
+        // Click to switch
+        listEl.querySelectorAll('.branch-row').forEach(row => {
+            row.addEventListener('click', () => {
+                const name = row.dataset.branch;
+                const date = row.dataset.date;
+                if (name === editorBranch) { overlay.remove(); return; }
+                switchToBranch(name, date);
+                overlay.remove();
+            });
+        });
+    } catch (e) {
+        const listEl = overlay.querySelector('#branch-list');
+        listEl.innerHTML = `<div style="padding:20px;color:var(--red);font-size:13px">Failed to load branches: ${escHtml(e.message)}</div>`;
+    }
 }
 
 // ─── Auth ───────────────────────────────────────────────────────────────────
@@ -227,6 +378,7 @@ async function checkAuth() {
         $('#auth-status').textContent = `Signed in as ${ghUser.login}`;
         $('#auth-btn').textContent = 'Sign out';
         $('#auth-btn').onclick = signOut;
+        updateBranchUI();
     } catch {
         $('#auth-status').textContent = 'Invalid token';
         ghToken = '';
