@@ -1272,3 +1272,193 @@ tbody tr:last-child td { border-bottom: none; }
     border-radius: 3px;
     transition: width 0.3s ease;
 }
+
+/* ─── Mobile Menu Toggle ─────────────────────── */
+.mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text);
+    font-size: 22px;
+    cursor: pointer;
+    padding: 4px 8px;
+    line-height: 1;
+}
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 599;
+}
+
+/* ─── Responsive ─────────────────────────────── */
+@media (max-width: 768px) {
+    /* Auth bar */
+    .auth-bar-inner { padding: 0 12px; }
+    .auth-logo { font-size: 12px; }
+    #auth-status { display: none; }
+    .mobile-menu-btn { display: block; }
+
+    /* Sidebar: hidden by default, shown as overlay */
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        z-index: 600;
+        width: 260px;
+    }
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    .sidebar-overlay.active {
+        display: block;
+    }
+
+    /* Main content: full width */
+    .main {
+        margin-left: 0;
+        padding: 16px;
+    }
+
+    /* Page header */
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    .page-header h1 { font-size: 18px; }
+
+    /* Cards grid */
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Stat grid */
+    .stat-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    /* Map props grid */
+    .map-props-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    /* Filter row: scroll horizontally */
+    .filter-row {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch;
+    }
+    .filter-chip {
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    /* Tables: horizontal scroll */
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    table { min-width: 600px; }
+
+    /* Modal: full-width on mobile */
+    .modal {
+        width: calc(100vw - 24px) !important;
+        max-width: calc(100vw - 24px) !important;
+        max-height: 90vh;
+        margin: 12px;
+    }
+
+    /* Form rows: stack vertically on small screens */
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    /* Buttons: larger touch targets */
+    .btn {
+        min-height: 36px;
+        padding: 8px 14px;
+    }
+    .btn-sm {
+        min-height: 32px;
+        padding: 6px 12px;
+    }
+
+    /* NPC table: simplify layout */
+    .npc-table-header { display: none; }
+    .npc-row {
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 10px 12px;
+    }
+    .npc-row-info { flex: 1 1 60%; min-width: 150px; }
+    .npc-row-map { flex: 1 1 100%; font-size: 11px; order: 3; }
+    .npc-row-coords { order: 4; }
+    .npc-row-actions { flex: 1 1 100%; order: 5; justify-content: flex-start; }
+
+    /* Map area info bar */
+    .map-area-info-bar {
+        gap: 12px;
+        padding: 10px 16px;
+        font-size: 11px;
+    }
+
+    /* Map area banner */
+    .map-area-banner { height: 100px; }
+    .map-area-banner h1 { font-size: 18px; }
+
+    /* Map area section body */
+    .map-area-section-body { padding: 12px; }
+
+    /* Config rows */
+    .config-row {
+        flex-direction: column;
+        gap: 6px;
+        align-items: flex-start;
+    }
+    .config-name { min-width: unset; font-size: 11px; }
+    .config-comment {
+        white-space: normal;
+        font-size: 10px;
+    }
+
+    /* Trainer/item/warp rows */
+    .area-trainer-row,
+    .area-item-row,
+    .warp-row,
+    .connection-row {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    /* Encounter chart */
+    .encounter-bar-species { min-width: 100px; font-size: 12px; }
+    .encounter-bar-level { min-width: 50px; font-size: 11px; }
+
+    /* Toast: bottom center */
+    .toast {
+        left: 12px;
+        right: 12px;
+        bottom: 16px;
+        text-align: center;
+    }
+
+    /* Pagination */
+    .pagination {
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .stat-grid { grid-template-columns: 1fr; }
+    .map-props-grid { grid-template-columns: 1fr; }
+    .map-area-info-bar { flex-direction: column; gap: 6px; }
+    .encounter-bar-row { flex-wrap: wrap; }
+    .encounter-bar-species { min-width: 80px; flex: 1 1 100%; }
+    .encounter-bar-track { flex: 1 1 60%; }
+}
