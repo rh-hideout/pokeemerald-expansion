@@ -149,7 +149,6 @@ static void Task_SearchCompleteWaitForInput(u8);
 static void Task_ExitSearch(u8);
 static void Task_ExitSearchWaitForFade(u8);
 static void DrawOrEraseSearchParameterBox(bool8);
-static void SetDefaultSearchModeAndOrder(u8);
 static void CreateSearchParameterScrollArrows(u8);
 static void EraseAndPrintSearchTextBox(const u8 *);
 static void EraseSelectorArrow(u32);
@@ -5708,7 +5707,7 @@ u8 GetSearchModeSelection(u8 taskId, u8 option)
     }
 }
 
-static void SetDefaultSearchModeAndOrder(u8 taskId)
+void SetDefaultSearchModeAndOrder(u8 taskId)
 {
     u16 selected;
 
