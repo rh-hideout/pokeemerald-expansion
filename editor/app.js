@@ -460,6 +460,109 @@ async function loadAbilities() {
     return state.abilities;
 }
 
+// Cache for map script files
+const scriptCache = {};
+
+async function loadMapScript(dirName) {
+    if (scriptCache[dirName]) return scriptCache[dirName];
+    try {
+        const path = `data/maps/${dirName}/scripts.inc`;
+        // Check if we have a pending change for this file
+        if (pendingChanges[path]) {
+            scriptCache[dirName] = pendingChanges[path];
+            return scriptCache[dirName];
+        }
+        const text = await fetchFile(path);
+        scriptCache[dirName] = text;
+        return text;
+    } catch {
+        scriptCache[dirName] = '';
+        return '';
+    }
+}
+
+// Detect script-based trainers (gym leaders, elite 4 members) that use TRAINER_TYPE_NONE
+// but have trainerbattle commands in their scripts
+function getScriptTrainers(map, scriptText) {
+    if (!scriptText) return [];
+    const npcEvents = (map.object_events || []).filter(e => {
+        if (!e.script) return false;
+        if (e.trainer_type && e.trainer_type !== 'TRAINER_TYPE_NONE') return false;
+        if ((e.graphics_id || '').includes('ITEM_BALL')) return false;
+        return true;
+    });
+    return npcEvents.filter(evt => {
+        // Check if this NPC's script label contains a trainerbattle command
+        const scriptLabel = evt.script + '::';
+        const labelIdx = scriptText.indexOf(scriptLabel);
+        if (labelIdx < 0) return false;
+        // Find the next label or end of file to scope the search
+        const afterLabel = scriptText.substring(labelIdx + scriptLabel.length);
+        const nextLabelMatch = afterLabel.match(/\n\S+::/);
+        const block = nextLabelMatch ? afterLabel.substring(0, nextLabelMatch.index) : afterLabel;
+        // Check for trainerbattle commands or goto to scripts that have them
+        if (/trainerbattle/.test(block)) return true;
+        // Check for goto references that lead to trainerbattle scripts
+        const gotoMatch = block.match(/goto\s+(\S+)/g);
+        if (gotoMatch) {
+            for (const g of gotoMatch) {
+                const target = g.replace('goto ', '').trim();
+                const targetLabel = target + '::';
+                const targetIdx = scriptText.indexOf(targetLabel);
+                if (targetIdx >= 0) {
+                    const afterTarget = scriptText.substring(targetIdx);
+                    const nextTarget = afterTarget.substring(targetLabel.length).match(/\n\S+::/);
+                    const targetBlock = nextTarget ? afterTarget.substring(0, targetLabel.length + nextTarget.index) : afterTarget;
+                    if (/trainerbattle/.test(targetBlock)) return true;
+                }
+            }
+        }
+        return false;
+    });
+}
+
+// Parse dialogue text blocks from a script file for a given NPC script name
+function parseDialogueBlocks(scriptText, dirName) {
+    const blocks = [];
+    if (!scriptText) return blocks;
+    // Match text labels and their .string contents
+    const regex = /^(\w+_Text_\w+)::\n((?:\s+\.string\s+"[^"]*"\n?)+)/gm;
+    let match;
+    while ((match = regex.exec(scriptText)) !== null) {
+        const label = match[1];
+        const rawStrings = match[2];
+        // Extract individual .string values and join them
+        const strings = [];
+        const strRegex = /\.string\s+"([^"]*)"/g;
+        let sm;
+        while ((sm = strRegex.exec(rawStrings)) !== null) {
+            strings.push(sm[1]);
+        }
+        blocks.push({ label, strings, text: strings.join('\n'), raw: match[0] });
+    }
+    return blocks;
+}
+
+// Also match single-colon text labels (some scripts use single colon)
+function parseDialogueBlocksAll(scriptText, dirName) {
+    const blocks = [];
+    if (!scriptText) return blocks;
+    const regex = /^(\w+_Text_\w+)::?\n((?:\s+\.string\s+"[^"]*"\n?)+)/gm;
+    let match;
+    while ((match = regex.exec(scriptText)) !== null) {
+        const label = match[1];
+        const rawStrings = match[2];
+        const strings = [];
+        const strRegex = /\.string\s+"([^"]*)"/g;
+        let sm;
+        while ((sm = strRegex.exec(rawStrings)) !== null) {
+            strings.push(sm[1]);
+        }
+        blocks.push({ label, strings, text: strings.join('\n'), raw: match[0] });
+    }
+    return blocks;
+}
+
 async function loadConfig() {
     if (!state.config) {
         // List config files
@@ -1635,6 +1738,18 @@ function getMapTrainers(map) {
     return (map.object_events || []).filter(e => e.trainer_type && e.trainer_type !== 'TRAINER_TYPE_NONE');
 }
 
+// Get trainers including script-based ones (gym leaders, elite 4)
+function getAllMapTrainers(map, scriptText) {
+    const normalTrainers = getMapTrainers(map);
+    const scriptTrainers = getScriptTrainers(map, scriptText);
+    // Combine, avoiding duplicates
+    const combined = [...normalTrainers];
+    for (const st of scriptTrainers) {
+        if (!combined.includes(st)) combined.push(st);
+    }
+    return combined;
+}
+
 function getMapItemBalls(map) {
     return (map.object_events || []).filter(e => (e.graphics_id || '').includes('ITEM_BALL'));
 }
@@ -1789,11 +1904,15 @@ async function renderMapDetail(dirName) {
 
     try { await loadEncounters(); } catch {}
 
+    // Load script file for this map (for script-based trainer detection and dialogue)
+    let scriptText = '';
+    try { scriptText = await loadMapScript(dirName); } catch {}
+
     const displayName = getMapDisplayName(map);
     const mapType = getMapType(map);
     const bannerClass = `banner-${mapType}`;
     const enc = getMapEncounters(map);
-    const trainers = getMapTrainers(map);
+    const trainers = getAllMapTrainers(map, scriptText);
     const itemBalls = getMapItemBalls(map);
     const hiddenItems = getMapHiddenItems(map);
     const encounterRates = getEncounterRates();
@@ -1845,15 +1964,18 @@ async function renderMapDetail(dirName) {
     sections.innerHTML += buildConnectionSection(map);
 
     // ── Section 6: Object Scripts / NPCs ──
-    sections.innerHTML += buildObjectScriptsSection(map);
+    sections.innerHTML += buildObjectScriptsSection(map, trainers);
 
-    // ── Section 7: Coordinate Events ──
+    // ── Section 7: Dialogue / Text ──
+    sections.innerHTML += buildDialogueSection(map, scriptText);
+
+    // ── Section 8: Coordinate Events ──
     sections.innerHTML += buildCoordEventsSection(map);
 
-    // ── Section 8: Background Events (signs, scripts) ──
+    // ── Section 9: Background Events (signs, scripts) ──
     sections.innerHTML += buildBgEventsSection(map);
 
-    // ── Section 9: Map Properties (editable) ──
+    // ── Section 10: Map Properties (editable) ──
     sections.innerHTML += buildPropertiesSection(map);
 
     // Wire up section toggles
@@ -1970,17 +2092,22 @@ function buildTrainerSection(trainers, map) {
             const gfx = (t.graphics_id || '').replace('OBJ_EVENT_GFX_', '').replace(/_/g, ' ');
             const trainerIdMatch = (t.script || '').match(/(\w+)_EventScript/);
             const possibleTrainerId = trainerIdMatch ? `TRAINER_${trainerIdMatch[1].toUpperCase()}` : '';
+            const isScriptBased = t.trainer_type === 'TRAINER_TYPE_NONE' || !t.trainer_type;
+            const typeBadge = isScriptBased
+                ? '<span style="background:var(--purple,#8b5cf6);color:white;font-size:10px;padding:1px 6px;border-radius:8px;margin-left:6px">Script Battle</span>'
+                : '';
+            const realIdx = (map.object_events || []).indexOf(t);
             return `
                 <div class="area-trainer-row">
                     ${getSpriteHtml(t.graphics_id, 40)}
                     <div class="area-trainer-info">
-                        <div class="area-trainer-name">${escHtml(scriptName || 'Trainer #' + (i + 1))}</div>
-                        <div class="area-trainer-detail">${escHtml(gfx)} &middot; Sight: ${t.trainer_sight_or_berry_tree_id || '0'} &middot; (${t.x}, ${t.y})</div>
+                        <div class="area-trainer-name">${escHtml(scriptName || 'Trainer #' + (i + 1))}${typeBadge}</div>
+                        <div class="area-trainer-detail">${escHtml(gfx)} &middot; ${isScriptBased ? 'Script battle' : 'Sight: ' + (t.trainer_sight_or_berry_tree_id || '0')} &middot; (${t.x}, ${t.y})</div>
                     </div>
                     <div style="display:flex;gap:4px;flex-wrap:wrap">
-                        <button class="btn btn-sm" onclick="editMapTrainer('${escAttr(map._dirName)}', ${i})">Edit Event</button>
-                        <button class="btn btn-sm" onclick="editTrainerPartyFromMap('${escAttr(map._dirName)}', ${i})" title="Edit trainer party data">Party</button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteMapTrainer('${escAttr(map._dirName)}', ${i})">Delete</button>
+                        <button class="btn btn-sm" onclick="editObjectEvent('${escAttr(map._dirName)}', ${realIdx})">Edit Event</button>
+                        <button class="btn btn-sm" onclick="editTrainerPartyFromScript('${escAttr(map._dirName)}', '${escAttr(t.script || '')}')" title="Edit trainer party data">Party</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteObjectEvent('${escAttr(map._dirName)}', ${realIdx})">Delete</button>
                     </div>
                 </div>
             `;
@@ -2510,6 +2637,39 @@ function addMapTrainer(dirName) {
 }
 
 // ── Edit Trainer Party from Map ──
+async function editTrainerPartyFromScript(dirName, scriptName) {
+    try { await loadTrainers(); } catch {
+        toast('Could not load trainer data', true);
+        return;
+    }
+
+    let matchedTrainer = null;
+    const scriptParts = scriptName.split('_EventScript_');
+    if (scriptParts.length >= 2) {
+        const trainerSuffix = scriptParts[scriptParts.length - 1];
+        matchedTrainer = state.trainers.find(t =>
+            t.id.toUpperCase().includes(trainerSuffix.toUpperCase())
+        );
+    }
+
+    // Also try looking in the script file for the TRAINER_ constant
+    if (!matchedTrainer) {
+        try {
+            const scriptText = await loadMapScript(dirName);
+            const trainerMatch = scriptText.match(new RegExp(scriptName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '[\\s\\S]*?trainerbattle\\w*\\s+(TRAINER_\\w+)'));
+            if (trainerMatch) {
+                matchedTrainer = state.trainers.find(t => t.id === trainerMatch[1]);
+            }
+        } catch {}
+    }
+
+    if (matchedTrainer) {
+        editTrainer(matchedTrainer.id);
+    } else {
+        toast('Could not match script to a trainer party entry. Try searching in the Trainers tab.', true);
+    }
+}
+
 async function editTrainerPartyFromMap(dirName, trainerIdx) {
     const map = state.maps.find(m => m._dirName === dirName);
     if (!map) return;
@@ -3075,10 +3235,31 @@ function editWarp(dirName, warpIdx) {
     // Collect all map IDs for destination dropdown
     const mapIds = (state.maps || []).map(m => m.id).filter(Boolean).sort();
 
+    // Build reference list of existing warps and objects for coordinate context
+    const refPoints = [];
+    (map.warp_events || []).forEach((w, i) => {
+        if (i !== warpIdx) refPoints.push({ type: 'warp', x: w.x, y: w.y, label: `Warp #${i} → ${(w.dest_map || '').replace('MAP_', '')}` });
+    });
+    (map.object_events || []).forEach(o => {
+        const gfx = (o.graphics_id || '').replace('OBJ_EVENT_GFX_', '').replace(/_/g, ' ');
+        refPoints.push({ type: 'npc', x: o.x, y: o.y, label: gfx });
+    });
+    const refHtml = refPoints.length > 0 ? `
+        <div style="margin-top:12px;font-size:11px;color:var(--text-dim)">
+            <div style="font-weight:600;margin-bottom:4px">Reference points (click to use coordinates):</div>
+            <div style="max-height:100px;overflow-y:auto;display:flex;flex-wrap:wrap;gap:4px">
+                ${refPoints.map(p => `<span class="ref-point-chip" onclick="document.getElementById('warp-x').value=${p.x};document.getElementById('warp-y').value=${p.y}" style="cursor:pointer;padding:2px 8px;background:var(--bg);border:1px solid var(--border);border-radius:10px;font-size:11px" title="${escAttr(p.label)}">${p.type === 'warp' ? '&#128682;' : '&#9786;'} (${p.x},${p.y}) ${escHtml(p.label.substring(0, 20))}</span>`).join('')}
+            </div>
+        </div>
+    ` : '';
+
+    const fullUrl = getFullPreviewUrl(dirName);
+    const thumbUrl = getPreviewUrl(dirName);
+
     const overlay = document.createElement('div');
     overlay.className = 'modal-overlay';
     overlay.innerHTML = `
-        <div class="modal">
+        <div class="modal" style="max-width:700px">
             <div class="modal-header">
                 <h2>Edit Warp</h2>
                 <button class="btn btn-sm" onclick="this.closest('.modal-overlay').remove()">&#10005;</button>
@@ -3106,6 +3287,16 @@ function editWarp(dirName, warpIdx) {
                         <input type="number" id="warp-elev" value="${warp.elevation || 0}">
                     </div>
                 </div>
+                <div style="margin-top:12px">
+                    <label style="font-size:12px;font-weight:600">Click map to pick warp position (each tile = 16px):</label>
+                    <div id="warp-map-picker" style="position:relative;margin-top:6px;overflow:auto;max-height:300px;border:1px solid var(--border);border-radius:6px;cursor:crosshair">
+                        <img id="warp-map-img" src="${fullUrl}" onerror="this.src='${thumbUrl}';this.onerror=null;"
+                            style="image-rendering:pixelated;max-width:none;display:block" alt="Map preview">
+                        <div id="warp-marker" style="position:absolute;width:16px;height:16px;border:2px solid red;background:rgba(255,0,0,0.3);pointer-events:none;display:none"></div>
+                    </div>
+                    <div id="warp-pick-info" style="font-size:11px;color:var(--text-dim);margin-top:4px"></div>
+                </div>
+                ${refHtml}
             </div>
             <div class="modal-footer">
                 <button class="btn" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
@@ -3116,12 +3307,48 @@ function editWarp(dirName, warpIdx) {
     document.body.appendChild(overlay);
     overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
 
-    $('#save-warp-btn').addEventListener('click', () => {
-        warp.dest_map = $('#warp-dest').value;
-        warp.dest_warp_id = $('#warp-dest-id').value;
-        warp.x = parseInt($('#warp-x').value);
-        warp.y = parseInt($('#warp-y').value);
-        warp.elevation = parseInt($('#warp-elev').value);
+    // Setup map click-to-pick
+    const mapImg = overlay.querySelector('#warp-map-img');
+    const marker = overlay.querySelector('#warp-marker');
+    const pickInfo = overlay.querySelector('#warp-pick-info');
+
+    function updateMarker() {
+        const x = parseInt(overlay.querySelector('#warp-x').value) || 0;
+        const y = parseInt(overlay.querySelector('#warp-y').value) || 0;
+        if (mapImg.naturalWidth > 0) {
+            marker.style.display = 'block';
+            marker.style.left = (x * 16) + 'px';
+            marker.style.top = (y * 16) + 'px';
+        }
+    }
+
+    mapImg.addEventListener('load', updateMarker);
+    overlay.querySelector('#warp-x').addEventListener('input', updateMarker);
+    overlay.querySelector('#warp-y').addEventListener('input', updateMarker);
+
+    overlay.querySelector('#warp-map-picker').addEventListener('click', (e) => {
+        if (e.target === marker) return;
+        const rect = mapImg.getBoundingClientRect();
+        const scrollContainer = overlay.querySelector('#warp-map-picker');
+        const px = e.clientX - rect.left;
+        const py = e.clientY - rect.top;
+        // Calculate scale (image may be rendered at different size than natural)
+        const scaleX = mapImg.naturalWidth / mapImg.offsetWidth;
+        const scaleY = mapImg.naturalHeight / mapImg.offsetHeight;
+        const tileX = Math.floor((px * scaleX) / 16);
+        const tileY = Math.floor((py * scaleY) / 16);
+        overlay.querySelector('#warp-x').value = tileX;
+        overlay.querySelector('#warp-y').value = tileY;
+        pickInfo.textContent = `Selected tile: (${tileX}, ${tileY})`;
+        updateMarker();
+    });
+
+    overlay.querySelector('#save-warp-btn').addEventListener('click', () => {
+        warp.dest_map = overlay.querySelector('#warp-dest').value;
+        warp.dest_warp_id = overlay.querySelector('#warp-dest-id').value;
+        warp.x = parseInt(overlay.querySelector('#warp-x').value);
+        warp.y = parseInt(overlay.querySelector('#warp-y').value);
+        warp.elevation = parseInt(overlay.querySelector('#warp-elev').value);
 
         const serialized = { ...map };
         delete serialized._dirName;
@@ -3133,9 +3360,12 @@ function editWarp(dirName, warpIdx) {
 }
 
 // ─── Object Scripts Section ─────────────────────────────────────────────────
-function buildObjectScriptsSection(map) {
+function buildObjectScriptsSection(map, allTrainers) {
+    // allTrainers includes both normal and script-based trainers
+    const trainerSet = new Set(allTrainers || []);
     const events = (map.object_events || []).filter(e => {
-        // Exclude trainers and item balls (they have their own sections)
+        // Exclude trainers (normal + script-based) and item balls (they have their own sections)
+        if (trainerSet.has(e)) return false;
         if (e.trainer_type && e.trainer_type !== 'TRAINER_TYPE_NONE') return false;
         if ((e.graphics_id || '').includes('ITEM_BALL')) return false;
         return true;
@@ -3158,6 +3388,7 @@ function buildObjectScriptsSection(map) {
                     </div>
                     <div style="display:flex;gap:4px">
                         <button class="btn btn-sm" onclick="editObjectEvent('${escAttr(map._dirName)}', ${realIdx})">Edit</button>
+                        ${evt.script ? `<button class="btn btn-sm" onclick="editNPCDialogue('${escAttr(map._dirName)}', '${escAttr(evt.script)}')" title="Edit dialogue for this NPC">Dialogue</button>` : ''}
                         <button class="btn btn-sm btn-danger" onclick="deleteObjectEvent('${escAttr(map._dirName)}', ${realIdx})">Delete</button>
                     </div>
                 </div>
@@ -3175,6 +3406,254 @@ function buildObjectScriptsSection(map) {
             <div class="map-area-section-body">${body}</div>
         </div>
     `;
+}
+
+// ─── Dialogue / Text Section ────────────────────────────────────────────────
+function buildDialogueSection(map, scriptText) {
+    const dirName = map._dirName;
+    const blocks = parseDialogueBlocksAll(scriptText, dirName);
+
+    let body = '';
+    if (blocks.length === 0) {
+        body = `<div class="empty-state"><div class="empty-icon">&#128172;</div>No dialogue text found in this map's scripts</div>`;
+    } else {
+        body = blocks.map((block, i) => {
+            const labelShort = block.label
+                .replace(dirName + '_Text_', '')
+                .replace(/_/g, ' ');
+            // Format the text for display - replace game format chars
+            const displayText = block.text
+                .replace(/\\n/g, '\n')
+                .replace(/\\p/g, '\n\n')
+                .replace(/\\l/g, '\n')
+                .replace(/\$$/g, '');
+            return `
+                <div class="dialogue-row" style="padding:10px 12px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:12px">
+                    <div style="flex:1;min-width:0">
+                        <div style="font-weight:600;font-size:12px;color:var(--text-dim);margin-bottom:4px;font-family:monospace">${escHtml(block.label)}</div>
+                        <div style="font-size:13px;white-space:pre-wrap;line-height:1.5;background:var(--bg);padding:8px 10px;border-radius:4px;border:1px solid var(--border)">${escHtml(displayText)}</div>
+                    </div>
+                    <button class="btn btn-sm" onclick="editDialogue('${escAttr(dirName)}', '${escAttr(block.label)}')">Edit</button>
+                </div>
+            `;
+        }).join('');
+    }
+
+    return `
+        <div class="map-area-section">
+            <div class="map-area-section-header">
+                <h2><span class="section-icon">&#128172;</span> Dialogue / Text <span class="section-count">${blocks.length}</span></h2>
+                <span class="toggle-arrow">&#9660;</span>
+            </div>
+            <div class="map-area-section-body" style="padding:0">${body}</div>
+        </div>
+    `;
+}
+
+async function editDialogue(dirName, label) {
+    let scriptText = await loadMapScript(dirName);
+    if (!scriptText) {
+        toast('Could not load script file', true);
+        return;
+    }
+
+    // Find the text block for this label
+    const regex = new RegExp('(^' + label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '::?\\n)((?:\\s+\\.string\\s+"[^"]*"\\n?)+)', 'm');
+    const match = scriptText.match(regex);
+    if (!match) {
+        toast('Could not find text label in script', true);
+        return;
+    }
+
+    // Extract individual strings
+    const strings = [];
+    const strRegex = /\.string\s+"([^"]*)"/g;
+    let sm;
+    while ((sm = strRegex.exec(match[2])) !== null) {
+        strings.push(sm[1]);
+    }
+
+    const labelShort = label.replace(dirName + '_Text_', '').replace(/_/g, ' ');
+
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+        <div class="modal" style="max-width:600px">
+            <div class="modal-header">
+                <h2>Edit Dialogue: ${escHtml(labelShort)}</h2>
+                <button class="btn btn-sm" onclick="this.closest('.modal-overlay').remove()">&#10005;</button>
+            </div>
+            <div class="modal-body">
+                <div style="margin-bottom:8px;font-size:11px;color:var(--text-dim);font-family:monospace">${escHtml(label)}</div>
+                <div style="margin-bottom:12px;font-size:12px;color:var(--text-dim)">
+                    Format: Use <code>\\n</code> for newline within box, <code>\\p</code> for new textbox/page, <code>\\l</code> for scroll line, <code>$</code> at end to terminate.
+                    Use <code>{PLAYER}</code> for player name.
+                </div>
+                <div id="dialogue-lines" style="display:flex;flex-direction:column;gap:6px">
+                    ${strings.map((s, i) => `
+                        <div class="dialogue-line-row" style="display:flex;gap:6px;align-items:center">
+                            <span style="font-size:10px;color:var(--text-dim);min-width:20px">${i + 1}</span>
+                            <input type="text" class="dialogue-line-input" value="${escAttr(s)}" style="flex:1;font-family:monospace;font-size:12px">
+                            <button class="btn btn-sm btn-danger" onclick="this.closest('.dialogue-line-row').remove()" title="Remove line" style="padding:2px 6px">&#10005;</button>
+                        </div>
+                    `).join('')}
+                </div>
+                <div style="margin-top:8px;display:flex;gap:6px">
+                    <button class="btn btn-sm" id="add-dialogue-line">+ Add Line</button>
+                </div>
+                <div style="margin-top:12px;padding:10px;background:var(--bg);border-radius:4px;border:1px solid var(--border)">
+                    <div style="font-size:11px;font-weight:600;margin-bottom:4px;color:var(--text-dim)">Preview:</div>
+                    <div id="dialogue-preview" style="font-size:13px;white-space:pre-wrap;line-height:1.5"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+                <button class="btn btn-primary" id="save-dialogue-btn">Save</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+
+    function updatePreview() {
+        const inputs = overlay.querySelectorAll('.dialogue-line-input');
+        const text = [...inputs].map(el => el.value).join('\n')
+            .replace(/\\n/g, '\n').replace(/\\p/g, '\n\n').replace(/\\l/g, '\n').replace(/\$$/g, '');
+        const preview = overlay.querySelector('#dialogue-preview');
+        if (preview) preview.textContent = text;
+    }
+
+    // Wire up preview updates
+    overlay.querySelectorAll('.dialogue-line-input').forEach(el => {
+        el.addEventListener('input', updatePreview);
+    });
+    updatePreview();
+
+    overlay.querySelector('#add-dialogue-line').addEventListener('click', () => {
+        const container = overlay.querySelector('#dialogue-lines');
+        const count = container.querySelectorAll('.dialogue-line-row').length;
+        const row = document.createElement('div');
+        row.className = 'dialogue-line-row';
+        row.style.cssText = 'display:flex;gap:6px;align-items:center';
+        row.innerHTML = `
+            <span style="font-size:10px;color:var(--text-dim);min-width:20px">${count + 1}</span>
+            <input type="text" class="dialogue-line-input" value="" style="flex:1;font-family:monospace;font-size:12px">
+            <button class="btn btn-sm btn-danger" onclick="this.closest('.dialogue-line-row').remove()" title="Remove line" style="padding:2px 6px">&#10005;</button>
+        `;
+        container.appendChild(row);
+        row.querySelector('input').addEventListener('input', updatePreview);
+        row.querySelector('input').focus();
+    });
+
+    overlay.querySelector('#save-dialogue-btn').addEventListener('click', () => {
+        const inputs = overlay.querySelectorAll('.dialogue-line-input');
+        const newStrings = [...inputs].map(el => el.value);
+        if (newStrings.length === 0) {
+            toast('Dialogue must have at least one line', true);
+            return;
+        }
+
+        // Rebuild the .string block
+        const newBlock = match[1] + newStrings.map(s => `\t.string "${s}"`).join('\n') + '\n';
+        scriptText = scriptText.replace(match[0], newBlock);
+
+        // Save to pending changes and clear cache
+        const filePath = `data/maps/${dirName}/scripts.inc`;
+        markChanged(filePath, scriptText);
+        scriptCache[dirName] = scriptText;
+
+        toast('Dialogue updated (pending PR submission)');
+        overlay.remove();
+        renderMapDetail(dirName);
+    });
+}
+
+async function editNPCDialogue(dirName, scriptName) {
+    let scriptText = await loadMapScript(dirName);
+    if (!scriptText) {
+        toast('Could not load script file for this map', true);
+        return;
+    }
+
+    // Find the script label and extract all text labels it references
+    const scriptLabel = scriptName + '::';
+    const labelIdx = scriptText.indexOf(scriptLabel);
+    if (labelIdx < 0) {
+        toast('Script not found in this map\'s scripts.inc', true);
+        return;
+    }
+
+    // Get the script block to find referenced text labels
+    const afterLabel = scriptText.substring(labelIdx);
+    const nextLabelMatch = afterLabel.substring(scriptLabel.length).match(/\n\S+::/);
+    // Extend search through goto/call references - collect all related labels
+    const allBlocks = parseDialogueBlocksAll(scriptText, dirName);
+
+    // Find text labels referenced by this script (look for msgbox, trainerbattle, etc.)
+    const scriptBlock = nextLabelMatch ? afterLabel.substring(0, scriptLabel.length + nextLabelMatch.index) : afterLabel;
+    const textRefs = [];
+    const refRegex = /(?:msgbox|trainerbattle\w*|message|pokenavcall)\s+(?:TRAINER_\w+,\s*)?(\w+_Text_\w+)/g;
+    let refMatch;
+    while ((refMatch = refRegex.exec(scriptBlock)) !== null) {
+        textRefs.push(refMatch[1]);
+    }
+
+    // Also check goto/call targets for more text refs
+    const gotoRegex = /(?:goto|call)\s+(\w+EventScript\w+)/g;
+    while ((refMatch = gotoRegex.exec(scriptBlock)) !== null) {
+        const target = refMatch[1] + '::';
+        const tidx = scriptText.indexOf(target);
+        if (tidx >= 0) {
+            const tBlock = scriptText.substring(tidx);
+            const tNext = tBlock.substring(target.length).match(/\n\S+::/);
+            const tContent = tNext ? tBlock.substring(0, target.length + tNext.index) : tBlock;
+            let rm;
+            while ((rm = refRegex.exec(tContent)) !== null) {
+                textRefs.push(rm[1]);
+            }
+        }
+    }
+
+    // Find matching dialogue blocks
+    const relatedBlocks = allBlocks.filter(b => textRefs.includes(b.label));
+
+    if (relatedBlocks.length === 0) {
+        toast('No dialogue text labels found for this NPC script', true);
+        return;
+    }
+
+    // Show a modal listing all related dialogue blocks with edit buttons
+    const npcName = scriptName.split('_EventScript_').pop().replace(/_/g, ' ');
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+        <div class="modal" style="max-width:650px">
+            <div class="modal-header">
+                <h2>Dialogue for: ${escHtml(npcName)}</h2>
+                <button class="btn btn-sm" onclick="this.closest('.modal-overlay').remove()">&#10005;</button>
+            </div>
+            <div class="modal-body" style="padding:0">
+                ${relatedBlocks.map(block => {
+                    const labelShort = block.label.replace(dirName + '_Text_', '').replace(/_/g, ' ');
+                    const displayText = block.text.replace(/\\n/g, '\n').replace(/\\p/g, '\n\n').replace(/\\l/g, '\n').replace(/\$$/g, '');
+                    return `
+                        <div style="padding:12px 16px;border-bottom:1px solid var(--border)">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                                <span style="font-weight:600;font-size:12px;color:var(--text-dim)">${escHtml(labelShort)}</span>
+                                <button class="btn btn-sm" onclick="this.closest('.modal-overlay').remove();editDialogue('${escAttr(dirName)}', '${escAttr(block.label)}')">Edit</button>
+                            </div>
+                            <div style="font-size:13px;white-space:pre-wrap;line-height:1.5;background:var(--bg);padding:8px 10px;border-radius:4px;border:1px solid var(--border)">${escHtml(displayText)}</div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="this.closest('.modal-overlay').remove()">Close</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
 }
 
 function editObjectEvent(dirName, evtIdx) {
