@@ -23,6 +23,7 @@
 
 // Config
 #define MAX_STEP       1000
+#define STEP_SPEED     360
 #define MAX_BANK_MONEY 9999999
 
 enum BankingMode
@@ -233,13 +234,13 @@ static void Task_ShowBankingInput(u8 taskId)
 
 static u32 GetStepSize(s16 heldFrames)
 {
-    if (heldFrames < 60)
-        return 1 + heldFrames / 20;
+    u32 t = heldFrames;
+    if (t > STEP_SPEED)
+        t = STEP_SPEED;
 
-    u32 step = 5 + (heldFrames - 60) / 5;
-    step = step > MAX_STEP ? MAX_STEP : step;
+    u32 eased = (t * t * t) / (STEP_SPEED * STEP_SPEED);
 
-    return step;
+    return 1 + (eased * (MAX_STEP - 1)) / STEP_SPEED;
 }
 
 #define tHeldFrames data[0]
