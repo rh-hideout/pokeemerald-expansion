@@ -355,6 +355,8 @@ void CreateBattlerSprite(enum BattlerId battler)
             struct Pokemon *mon = GetBattlerMon(battler);
             if (!IsValidForBattle(mon))
                 return;
+            if (gBattleStruct->battlerState[battler].notOnField) // Don't create sprite for a mon that has switched out
+                return;
             u32 species = GetMonData(mon, MON_DATA_SPECIES);
 
             SetMultiuseSpriteTemplateToPokemon(species, position);
