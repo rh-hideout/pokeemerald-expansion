@@ -1,4 +1,5 @@
 #include "global.h"
+#include "assertf.h"
 #include "battle_message.h"
 #include "config/banking.h"
 #include "constants/flags.h"
@@ -89,6 +90,7 @@ void GetMoneyInBankFromScript(struct ScriptContext ctx)
 
 void SetMoneyInBank(u32 amount)
 {
+    assertf(amount <= MAX_BANK_MONEY, "Amount greater than MAX_BANK_MONEY")
     gSaveBlock3Ptr->savedMoney = amount;
 }
 
