@@ -711,13 +711,13 @@ AI_DOUBLE_BATTLE_TEST("AI sees corresponding absorbing abilities on partners")
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_ZIGZAGOON);
         PLAYER(SPECIES_ZIGZAGOON);
-        OPPONENT(SPECIES_SLAKING) { Moves(move, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_SLAKING) { Moves(move, MOVE_CONSTRICT); }
         OPPONENT(species) { HP(1); Ability(ability); Moves(MOVE_POUND, MOVE_EMBER, MOVE_ROUND); }
     } WHEN {
         if (ability != ABILITY_CLOUD_NINE)
             TURN { EXPECT_MOVE(opponentLeft, move); }
         else
-            TURN { EXPECT_MOVE(opponentLeft, MOVE_SCRATCH); }
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_CONSTRICT); }
     }
 }
 
