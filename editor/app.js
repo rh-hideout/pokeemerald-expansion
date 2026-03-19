@@ -684,9 +684,12 @@ async function renderTrainers() {
         grid.innerHTML += `<div style="padding:20px;color:var(--text-dim);font-size:13px">Showing 100 of ${filtered.length} trainers. Use search to narrow down.</div>`;
     }
 
-    $('#trainer-search').addEventListener('input', e => {
+    $('#trainer-search').addEventListener('input', async e => {
+        const pos = e.target.selectionStart;
         state.search = e.target.value;
-        renderTrainers();
+        await renderTrainers();
+        const el = $('#trainer-search');
+        if (el) { el.focus(); el.selectionStart = el.selectionEnd = pos; }
     });
 }
 
@@ -997,9 +1000,12 @@ async function renderEncounters() {
         `;
     }
 
-    $('#enc-search').addEventListener('input', e => {
+    $('#enc-search').addEventListener('input', async e => {
+        const pos = e.target.selectionStart;
         state.search = e.target.value;
-        renderEncounters();
+        await renderEncounters();
+        const el = $('#enc-search');
+        if (el) { el.focus(); el.selectionStart = el.selectionEnd = pos; }
     });
 }
 
@@ -1122,9 +1128,12 @@ async function renderMoves() {
     `;
 
     renderMovesPage(filtered, 0);
-    $('#move-search').addEventListener('input', e => {
+    $('#move-search').addEventListener('input', async e => {
+        const pos = e.target.selectionStart;
         state.search = e.target.value;
-        renderMoves();
+        await renderMoves();
+        const el = $('#move-search');
+        if (el) { el.focus(); el.selectionStart = el.selectionEnd = pos; }
     });
 }
 
@@ -1280,9 +1289,12 @@ async function renderItems() {
     `;
 
     renderItemsPage(filtered, 0);
-    $('#item-search').addEventListener('input', e => {
+    $('#item-search').addEventListener('input', async e => {
+        const pos = e.target.selectionStart;
         state.search = e.target.value;
-        renderItems();
+        await renderItems();
+        const el = $('#item-search');
+        if (el) { el.focus(); el.selectionStart = el.selectionEnd = pos; }
     });
 }
 
@@ -1415,9 +1427,12 @@ async function renderAbilities() {
         </div>
     `;
 
-    $('#ability-search').addEventListener('input', e => {
+    $('#ability-search').addEventListener('input', async e => {
+        const pos = e.target.selectionStart;
         state.search = e.target.value;
-        renderAbilities();
+        await renderAbilities();
+        const el = $('#ability-search');
+        if (el) { el.focus(); el.selectionStart = el.selectionEnd = pos; }
     });
 }
 
@@ -1753,9 +1768,12 @@ async function renderMaps() {
         grid.innerHTML += `<div style="padding:20px;color:var(--text-dim);font-size:13px;grid-column:1/-1">Showing ${maxCards} of ${filtered.length} maps. Use search or filters to narrow down.</div>`;
     }
 
-    $('#map-search').addEventListener('input', e => {
+    $('#map-search').addEventListener('input', async e => {
+        const pos = e.target.selectionStart;
         state.search = e.target.value;
-        renderMaps();
+        await renderMaps();
+        const el = $('#map-search');
+        if (el) { el.focus(); el.selectionStart = el.selectionEnd = pos; }
     });
 }
 
@@ -2823,9 +2841,12 @@ async function renderConfig() {
         `;
     }
 
-    $('#config-search').addEventListener('input', e => {
+    $('#config-search').addEventListener('input', async e => {
+        const pos = e.target.selectionStart;
         state.search = e.target.value;
-        renderConfig();
+        await renderConfig();
+        const el = $('#config-search');
+        if (el) { el.focus(); el.selectionStart = el.selectionEnd = pos; }
     });
 }
 
@@ -3791,9 +3812,12 @@ async function renderNPCs() {
         </div>
     `;
 
-    $('#npc-search').addEventListener('input', e => {
+    $('#npc-search').addEventListener('input', async e => {
+        const pos = e.target.selectionStart;
         state.search = e.target.value;
-        renderNPCs();
+        await renderNPCs();
+        const el = $('#npc-search');
+        if (el) { el.focus(); el.selectionStart = el.selectionEnd = pos; }
     });
 }
 
@@ -4005,10 +4029,13 @@ async function renderPokemonPage() {
         </div>
     `;
 
-    $('#pokemon-search').addEventListener('input', e => {
+    $('#pokemon-search').addEventListener('input', async e => {
+        const pos = e.target.selectionStart;
         state.search = e.target.value;
         state.pokemonPage = 0;
-        renderPokemonPage();
+        await renderPokemonPage();
+        const el = $('#pokemon-search');
+        if (el) { el.focus(); el.selectionStart = el.selectionEnd = pos; }
     });
 }
 
