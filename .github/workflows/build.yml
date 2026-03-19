@@ -4,7 +4,6 @@ on:
   pull_request:
     paths-ignore:
       - 'docs/**'
-      - 'editor/**'
       - '**/*.md'
       - '.github/workflows/docs.yml'
       - '.github/workflows/labels.yml'
@@ -22,8 +21,41 @@ env:
   DEPRECATED_ERROR: 1
 
 jobs:
-  build-and-release:
+  detect-changes:
     if: github.actor != 'allcontributors[bot]'
+    runs-on: ubuntu-latest
+    outputs:
+      rom: ${{ steps.filter.outputs.rom }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Detect changed paths
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            rom:
+              - 'src/**'
+              - 'asm/**'
+              - 'data/**'
+              - 'graphics/**'
+              - 'sound/**'
+              - 'include/**'
+              - 'tools/**'
+              - 'Makefile'
+              - 'make_tools.mk'
+              - '*.mk'
+              - 'ld_script*'
+              - 'config.mk'
+              - 'gflib/**'
+              - 'test/**'
+              - 'common_syms/**'
+              - 'sym_*'
+
+  build-debug:
+    needs: detect-changes
+    if: github.actor != 'allcontributors[bot]' && needs.detect-changes.outputs.rom == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -54,7 +86,7 @@ jobs:
             tools/wav2agb/wav2agb
           key: tools-${{ runner.os }}-${{ hashFiles('tools/*/Makefile', 'tools/**/*.c', 'tools/**/*.cpp', 'tools/**/*.h') }}
 
-      - name: ROM (Emerald)
+      - name: ROM (Emerald) Debug
         env:
           GAME_VERSION: EMERALD
         run: make -j$(nproc) -O all
@@ -66,10 +98,40 @@ jobs:
           path: pokeemerald.gba
           retention-days: 30
 
-      - name: Clean build objects
-        run: rm -rf build/emerald
+  build-release:
+    needs: detect-changes
+    if: github.actor != 'allcontributors[bot]' && needs.detect-changes.outputs.rom == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Release
+      - name: Install binutils
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi libpng-dev python3
+
+      - name: Cache build tools
+        uses: actions/cache@v4
+        with:
+          path: |
+            tools/bin2c/bin2c
+            tools/gbafix/gbafix
+            tools/gbagfx/gbagfx
+            tools/jsonproc/jsonproc
+            tools/mapjson/mapjson
+            tools/mid2agb/mid2agb
+            tools/preproc/preproc
+            tools/ramscrgen/ramscrgen
+            tools/rsfont/rsfont
+            tools/scaninc/scaninc
+            tools/trainerproc/trainerproc
+            tools/compresSmol/compresSmol
+            tools/compresSmol/compresSmolTilemap
+            tools/wav2agb/wav2agb
+          key: tools-${{ runner.os }}-${{ hashFiles('tools/*/Makefile', 'tools/**/*.c', 'tools/**/*.cpp', 'tools/**/*.h') }}
+
+      - name: ROM (Emerald) Release
         env:
           GAME_VERSION: EMERALD
         run: make -j$(nproc) release
@@ -82,7 +144,8 @@ jobs:
           retention-days: 30
 
   test:
-    if: github.actor != 'allcontributors[bot]'
+    needs: detect-changes
+    if: github.actor != 'allcontributors[bot]' && needs.detect-changes.outputs.rom == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -122,14 +185,19 @@ jobs:
         run: make -j$(nproc) check
 
   # Gate job: satisfies the "build" branch protection rule.
-  # Passes only when all parallel build/test jobs succeed.
+  # Passes when ROM jobs succeed or are skipped (no ROM file changes).
   build:
-    if: github.actor != 'allcontributors[bot]'
+    if: always() && github.actor != 'allcontributors[bot]'
     runs-on: ubuntu-latest
-    needs: [build-and-release, test]
+    needs: [detect-changes, build-debug, build-release, test]
     steps:
-      - name: All builds passed
-        run: echo "All builds and tests passed."
+      - name: Check results
+        run: |
+          if [[ "${{ needs.build-debug.result }}" == "failure" || "${{ needs.build-release.result }}" == "failure" || "${{ needs.test.result }}" == "failure" ]]; then
+            echo "One or more ROM jobs failed."
+            exit 1
+          fi
+          echo "All required checks passed."
 
   docs_validate:
     if: github.actor != 'allcontributors[bot]'
