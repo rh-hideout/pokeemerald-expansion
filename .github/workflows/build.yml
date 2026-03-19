@@ -53,7 +53,7 @@ jobs:
               - 'common_syms/**'
               - 'sym_*'
 
-  build-and-release:
+  build-debug:
     needs: detect-changes
     if: github.actor != 'allcontributors[bot]' && needs.detect-changes.outputs.rom == 'true'
     runs-on: ubuntu-latest
@@ -86,7 +86,7 @@ jobs:
             tools/wav2agb/wav2agb
           key: tools-${{ runner.os }}-${{ hashFiles('tools/*/Makefile', 'tools/**/*.c', 'tools/**/*.cpp', 'tools/**/*.h') }}
 
-      - name: ROM (Emerald)
+      - name: ROM (Emerald) Debug
         env:
           GAME_VERSION: EMERALD
         run: make -j$(nproc) -O all
@@ -98,10 +98,40 @@ jobs:
           path: pokeemerald.gba
           retention-days: 30
 
-      - name: Clean build objects
-        run: rm -rf build/emerald
+  build-release:
+    needs: detect-changes
+    if: github.actor != 'allcontributors[bot]' && needs.detect-changes.outputs.rom == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Release
+      - name: Install binutils
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi libpng-dev python3
+
+      - name: Cache build tools
+        uses: actions/cache@v4
+        with:
+          path: |
+            tools/bin2c/bin2c
+            tools/gbafix/gbafix
+            tools/gbagfx/gbagfx
+            tools/jsonproc/jsonproc
+            tools/mapjson/mapjson
+            tools/mid2agb/mid2agb
+            tools/preproc/preproc
+            tools/ramscrgen/ramscrgen
+            tools/rsfont/rsfont
+            tools/scaninc/scaninc
+            tools/trainerproc/trainerproc
+            tools/compresSmol/compresSmol
+            tools/compresSmol/compresSmolTilemap
+            tools/wav2agb/wav2agb
+          key: tools-${{ runner.os }}-${{ hashFiles('tools/*/Makefile', 'tools/**/*.c', 'tools/**/*.cpp', 'tools/**/*.h') }}
+
+      - name: ROM (Emerald) Release
         env:
           GAME_VERSION: EMERALD
         run: make -j$(nproc) release
@@ -159,11 +189,11 @@ jobs:
   build:
     if: always() && github.actor != 'allcontributors[bot]'
     runs-on: ubuntu-latest
-    needs: [detect-changes, build-and-release, test]
+    needs: [detect-changes, build-debug, build-release, test]
     steps:
       - name: Check results
         run: |
-          if [[ "${{ needs.build-and-release.result }}" == "failure" || "${{ needs.test.result }}" == "failure" ]]; then
+          if [[ "${{ needs.build-debug.result }}" == "failure" || "${{ needs.build-release.result }}" == "failure" || "${{ needs.test.result }}" == "failure" ]]; then
             echo "One or more ROM jobs failed."
             exit 1
           fi
