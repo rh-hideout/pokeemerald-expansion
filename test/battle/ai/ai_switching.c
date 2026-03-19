@@ -1199,6 +1199,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if it has an 
     enum Move move;
     enum Ability absorbingAbility;
     PARAMETRIZE { aiMon = SPECIES_NINETALES; absorbingAbility = ABILITY_FLASH_FIRE; move = MOVE_FLAMETHROWER; }
+    PARAMETRIZE { aiMon = SPECIES_DACHSBUN;  absorbingAbility = ABILITY_WELL_BAKED_BODY; move = MOVE_FLAMETHROWER; }
     PARAMETRIZE { aiMon = SPECIES_MANTINE;   absorbingAbility = ABILITY_WATER_ABSORB; move = MOVE_SURF; }
     PARAMETRIZE { aiMon = SPECIES_TOXICROAK; absorbingAbility = ABILITY_DRY_SKIN; move = MOVE_SURF; }
     PARAMETRIZE { aiMon = SPECIES_GASTRODON; absorbingAbility = ABILITY_STORM_DRAIN; move = MOVE_SURF; }
@@ -2205,13 +2206,26 @@ AI_MULTI_BATTLE_TEST("AI will not switch out if the opposite battler is absent a
         MULTI_OPPONENT_B(SPECIES_WYNAUT) { Speed(2); HP(41); }
     } WHEN {
         TURN {
-            EXPECT_MOVE(opponentLeft, MOVE_BODY_SLAM, target: playerLeft); 
-            EXPECT_MOVE(playerRight, MOVE_SHADOW_BALL, target: opponentRight); 
+            EXPECT_MOVE(opponentLeft, MOVE_BODY_SLAM, target: playerLeft);
+            EXPECT_MOVE(playerRight, MOVE_SHADOW_BALL, target: opponentRight);
         }
         TURN {
             EXPECT_MOVE(opponentLeft, MOVE_DRAGON_RAGE, target: playerRight);
             EXPECT_MOVE(playerRight, MOVE_DRAGON_RAGE, target: opponentLeft);
         }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("Rage Fist stacks are seen properly for switch logic")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_VICTINI) { Level(70); Speed(2); Ability(ABILITY_VICTORY_STAR); Moves(MOVE_V_CREATE, MOVE_PSYCHIC); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Level(1); Speed(1); HP(1); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_GROUDON) { Level(85); Speed(3); Moves(MOVE_PRECIPICE_BLADES); }
+        OPPONENT(SPECIES_ANNIHILAPE) { Level(85); Speed(3); Moves(MOVE_RAGE_FIST); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_PSYCHIC); EXPECT_SEND_OUT(opponent, 1); }
     }
 }
 
@@ -2228,5 +2242,62 @@ AI_DOUBLE_BATTLE_TEST("AI can switch out both mons on the same turn in double ba
         OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_SCRATCH);}
     } WHEN {
         TURN { EXPECT_SWITCH(opponentLeft, 2); EXPECT_SWITCH(opponentRight, 3); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI sees stat stage changes on switchin when doing switching calcs")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_LUXIO) { Speed(2); Ability(ABILITY_GUTS); Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(1); HP(1); MaxHP(100); Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_LUXIO) { Speed(1); Ability(ABILITY_GUTS); Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_LUXIO) { Speed(1); Ability(ABILITY_INTIMIDATE); Moves(MOVE_SCRATCH); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_SCRATCH); EXPECT_SEND_OUT(opponent, 2); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI sees status changes on switchin when doing switching calcs")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZIGZAGOON) { Speed(2); HP(1); MaxHP(100); Moves(MOVE_TOXIC_SPIKES); }
+        PLAYER(SPECIES_LUXIO) { Speed(2); Ability(ABILITY_GUTS); Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(1); HP(1); MaxHP(100); Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_LUXIO) { Speed(1); Ability(ABILITY_INTIMIDATE); Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_LUXIO) { Speed(1); Ability(ABILITY_GUTS); Moves(MOVE_SCRATCH); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TOXIC_SPIKES); EXPECT_MOVE(opponent, MOVE_SCRATCH); SEND_OUT(player, 1); }
+        TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_SCRATCH); EXPECT_SEND_OUT(opponent, 2); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI sees volate changes on switchin when doing switching calcs")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_BOOSTER_ENERGY) == HOLD_EFFECT_BOOSTER_ENERGY);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ROARING_MOON) { Speed(2); Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(1); HP(1); MaxHP(100); Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_ROARING_MOON) { Speed(1); Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_ROARING_MOON) { Speed(1); Moves(MOVE_SCRATCH); Item(ITEM_BOOSTER_ENERGY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_SCRATCH); EXPECT_SEND_OUT(opponent, 2); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI sees HP changes on switchin when doing switchin calcs")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZIGZAGOON) { Speed(2); HP(1); MaxHP(100); Moves(MOVE_SPIKES); }
+        PLAYER(SPECIES_BLAZIKEN) { Speed(2); HP(130); MaxHP(400); Ability(ABILITY_SPEED_BOOST); Moves(MOVE_EMBER); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(1); HP(1); MaxHP(100); Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_BLAZIKEN) { Speed(1); HP(180); MaxHP(400); Ability(ABILITY_SPEED_BOOST); Moves(MOVE_EMBER); }
+        OPPONENT(SPECIES_BLAZIKEN) { Speed(1); HP(180); MaxHP(400); Ability(ABILITY_BLAZE); Moves(MOVE_EMBER); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SPIKES); EXPECT_MOVE(opponent, MOVE_SCRATCH); SEND_OUT(player, 1); }
+        TURN { MOVE(player, MOVE_EMBER); EXPECT_MOVE(opponent, MOVE_SCRATCH); EXPECT_SEND_OUT(opponent, 2); }
     }
 }

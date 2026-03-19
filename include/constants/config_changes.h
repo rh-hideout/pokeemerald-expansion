@@ -1,5 +1,5 @@
-#ifndef GUARD_CONSTANTS_GENERATIONAL_CHANGES_H
-#define GUARD_CONSTANTS_GENERATIONAL_CHANGES_H
+#ifndef GUARD_CONSTANTS_CONFIG_CHANGES_H
+#define GUARD_CONSTANTS_CONFIG_CHANGES_H
 
 /* Config definitions */
 #define BATTLE_CONFIG_DEFINITIONS(F) \
@@ -54,7 +54,8 @@
     F(B_DISABLE_TURNS,             disableTurns,            (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_TAILWIND_TURNS,            tailwindTurns,           (u32, GEN_COUNT - 1)) \
     F(B_SLEEP_TURNS,               sleepTurns,              (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
-    F(B_TAUNT_TURNS,               tauntTurns,              (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
+    F(B_TAUNT_TURNS,               tauntTurns,              (u32, GEN_COUNT - 1)) \
+    F(B_ENCORE_TURNS,              encoreTurns,             (u32, GEN_COUNT - 1)) \
     F(B_SPORT_TURNS,               sportTurns,              (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_MEGA_EVO_TURN_ORDER,       megaEvoTurnOrder,        (u32, GEN_COUNT - 1)) \
     F(B_RECALC_TURN_AFTER_ACTIONS, recalcTurnAfterActions,  (u32, GEN_COUNT - 1)) \
@@ -231,6 +232,7 @@
     F(POKERUS_HERD_IMMUNITY,     pokerusHerdImmunity,     (u32, TRUE))          \
     F(POKERUS_WEAK_VARIANT,      pokerusWeakVariant,      (u32, TRUE))          \
 
+#define AI_CONFIG_DEFINITIONS(F) \
 
 #define GET_CONFIG_MAXIMUM(_typeMaxValue, ...) INVOKE_WITH_B(GET_CONFIG_MAXIMUM_, _typeMaxValue)
 #define GET_CONFIG_MAXIMUM_(_type, ...) FIRST(__VA_OPT__(FIRST(__VA_ARGS__),) MAX_BITS((sizeof(_type) * 8)))
@@ -241,7 +243,8 @@ enum ConfigTag
 {
     BATTLE_CONFIG_DEFINITIONS(UNPACK_CONFIG_ENUMS)
     POKEMON_CONFIG_DEFINITIONS(UNPACK_CONFIG_ENUMS)
+    AI_CONFIG_DEFINITIONS(UNPACK_CONFIG_ENUMS)
     CONFIG_COUNT
 };
 
-#endif // GUARD_CONSTANTS_GENERATIONAL_CHANGES_H
+#endif // GUARD_CONSTANTS_CONFIG_CHANGES_H

@@ -582,7 +582,7 @@ AI_DOUBLE_BATTLE_TEST("AI sees type-changing moves as the correct type")
 
 AI_SINGLE_BATTLE_TEST("AI uses Sparkling Aria to cure an enemy with Guts")
 {
-    u32 ability;
+    enum Ability ability;
 
     PARAMETRIZE { ability = ABILITY_GUTS; }
     PARAMETRIZE { ability = ABILITY_BULLETPROOF; }
