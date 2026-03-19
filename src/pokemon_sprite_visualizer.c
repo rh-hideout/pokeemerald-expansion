@@ -575,7 +575,7 @@ static void SetStructPtr(u8 taskId, void *ptr)
 static void PrintDigitChars(struct PokemonSpriteVisualizer *data)
 {
     s32 i;
-    u16 species = IsSpeciesEnabled(data->modifyArrows.currValue) ? data->modifyArrows.currValue : 0;
+    u16 species = IsSpeciesEnabled(data->modifyArrows.currValue) ? data->modifyArrows.currValue : SPECIES_NONE;
 
     u8 text[MODIFY_DIGITS_MAX + POKEMON_NAME_LENGTH + 8];
 
