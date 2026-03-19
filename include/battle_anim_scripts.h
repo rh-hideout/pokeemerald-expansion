@@ -943,6 +943,16 @@ extern const u8 gBattleAnimMove_WindScythe[];
 extern const u8 gBattleAnimMove_SavageSpin[];
 extern const u8 gBattleAnimMove_DustTornado[];
 extern const u8 gBattleAnimMove_CuteChomp[];
+extern const u8 gBattleAnimMove_AerialCharge[];
+extern const u8 gBattleAnimMove_WarCry[];
+extern const u8 gBattleAnimMove_DragonRoar[];
+extern const u8 gBattleAnimMove_MountainSlam[];
+extern const u8 gBattleAnimMove_VenomLeaf[];
+extern const u8 gBattleAnimMove_VenomBlade[];
+extern const u8 gBattleAnimMove_HornRut[];
+extern const u8 gBattleAnimMove_ShockingSilkWall[];
+extern const u8 gBattleAnimMove_BurningAcid[];
+extern const u8 gBattleAnimMove_ToxicScreech[];
 
 // status animations
 extern const u8 gBattleAnimStatus_Poison[];

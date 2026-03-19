@@ -58,6 +58,7 @@ enum ProtectMethod
     PROTECT_QUICK_GUARD,
     PROTECT_CRAFTY_SHIELD,
     PROTECT_MAT_BLOCK,
+    PROTECT_SHOCKING_SILK_WALL,
 };
 
 struct MoveInfo
@@ -101,6 +102,7 @@ struct MoveInfo
     bool32 minimizeDoubleDamage:1;
     bool32 ignoresTargetAbility:1;
     bool32 ignoresTargetDefenseEvasionStages:1;
+    bool32 kickingMove : 1;
     // end of word
     bool32 damagesUnderground:1;
     bool32 damagesUnderwater:1;
@@ -331,6 +333,11 @@ static inline bool32 IsSlicingMove(u32 moveId)
 static inline bool32 IsHealingMove(u32 moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].healingMove;
+}
+
+static inline bool32 IsKickingMove(u32 moveId)
+{
+    return gMovesInfo[SanitizeMoveId(moveId)].kickingMove;
 }
 
 static inline bool32 MoveIncreasesPowerToMinimizedTargets(u32 moveId)

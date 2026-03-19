@@ -1093,3 +1093,14 @@ void GetIsDoomDesireHitTurn(u8 taskId)
 
     DestroyAnimVisualTask(taskId);
 }
+
+const struct SpriteTemplate gWeatherBallDarkDownSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_PURPLE_FLAME,
+    .paletteTag = ANIM_TAG_PURPLE_FLAME,
+    .oam = &gOamData_AffineOff_ObjNormal_32x32,
+    .anims = gAnims_GrudgeFlame,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimWeatherBallDown,
+};

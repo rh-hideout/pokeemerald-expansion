@@ -856,5 +856,10 @@ extern const u8 BattleScript_ShellBurstActivates[];
 extern const u8 BattleScript_PoisonBarbsActivates[];
 extern const u8 BattleScript_MagmaArmorStatChange[];
 extern const u8 BattleScript_EffectPreventEscape[];
+extern const u8 BattleScript_ForestBlessingActivates[];
+extern const u8 BattleScript_TrickRealmActivates[];
+extern const u8 BattleScript_WonderRealmActivates[];
+extern const u8 BattleScript_FaeTouchedActivates[];
+extern const u8 BattleScript_AntifreezeActivates[];
 
 #endif // GUARD_BATTLE_SCRIPTS_H

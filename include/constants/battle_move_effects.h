@@ -354,6 +354,7 @@ enum __attribute__((packed)) BattleMoveEffects
     EFFECT_STONE_AXE, // Not to be confused with MOVE_EFFECT_STEALTH_ROCK. They have two different activation timings.
     EFFECT_CEASELESS_EDGE, // Same applies to spikes
     EFFECT_LONG_NIGHT,
+    EFFECT_HORN_RUT,
     NUM_BATTLE_MOVE_EFFECTS,
 };
 

@@ -1653,7 +1653,8 @@ s32 CalcCritChanceStage(u32 battlerAtk, u32 battlerDef, u32 move, bool32 recordA
     else if (gBattleMons[battlerAtk].volatiles.laserFocus
           || MoveAlwaysCrits(move)
           || (abilityAtk == ABILITY_MERCILESS && gBattleMons[battlerDef].status1 & STATUS1_PSN_ANY)
-          || (abilityAtk == ABILITY_SILENT_HUNTER && gBattleWeather & B_WEATHER_DARKNESS && HasWeatherEffect()))
+          || (abilityAtk == ABILITY_SILENT_HUNTER && gBattleWeather & B_WEATHER_DARKNESS && HasWeatherEffect())
+          || (abilityAtk == ABILITY_WEB_PREDATOR && gBattleMons[battlerDef].status1 & STATUS1_PARALYSIS))
     {
         critChance = CRITICAL_HIT_ALWAYS;
     }
@@ -1741,7 +1742,9 @@ s32 CalcCritChanceStageGen1(u32 battlerAtk, u32 battlerDef, u32 move, bool32 rec
     // Guaranteed crits
     else if (gBattleMons[battlerAtk].volatiles.laserFocus
              || MoveAlwaysCrits(move)
-             || (abilityAtk == ABILITY_MERCILESS && gBattleMons[battlerDef].status1 & STATUS1_PSN_ANY))
+             || (abilityAtk == ABILITY_MERCILESS && gBattleMons[battlerDef].status1 & STATUS1_PSN_ANY)
+             || (abilityAtk == ABILITY_WEB_PREDATOR && gBattleMons[battlerDef].status1 & STATUS1_PARALYSIS)
+             || (abilityAtk == ABILITY_SILENT_HUNTER && gBattleWeather & B_WEATHER_DARKNESS && HasWeatherEffect()))
     {
         critChance = CRITICAL_HIT_ALWAYS;
     }
@@ -3498,6 +3501,10 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
     case MOVE_EFFECT_THRASH:
         // Petal Dance doesn't lock mons that copy the move with Dancer
         if (gSpecialStatuses[gEffectBattler].dancerUsedMove || gBattleMons[gEffectBattler].volatiles.lockConfusionTurns)
+        {
+            gBattlescriptCurrInstr = battleScript;
+        }
+        else if (battlerAbility == ABILITY_FEROCITY)
         {
             gBattlescriptCurrInstr = battleScript;
         }
@@ -6253,6 +6260,16 @@ static void Cmd_moveend(void)
                         SWAP(gBattlerAttacker, gBattlerTarget, i); // gBattlerTarget and gBattlerAttacker are swapped in order to activate Defiant, if applicable
                         gBattleScripting.moveEffect = MOVE_EFFECT_SPD_MINUS_1;
                         BattleScriptCall(BattleScript_KingsShieldEffect);
+                        effect = 1;
+                    }
+                    break;
+                case PROTECT_SHOCKING_SILK_WALL:
+                    if (!IsProtectivePadsProtected(gBattlerAttacker, GetBattlerHoldEffect(gBattlerAttacker))
+                        && CanBeParalyzed(gBattlerTarget, gBattlerAttacker, GetBattlerAbility(gBattlerAttacker)))
+                    {
+                        gProtectStructs[gBattlerAttacker].touchedProtectLike = FALSE;
+                        gBattleScripting.moveEffect = MOVE_EFFECT_PARALYSIS;
+                        BattleScriptCall(BattleScript_BanefulBunkerEffect);
                         effect = 1;
                     }
                     break;

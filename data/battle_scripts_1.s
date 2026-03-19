@@ -9129,3 +9129,48 @@ BattleScript_EffectPreventEscapeIncrement:
 BattleScript_EffectPreventEscapeEnd:
 	restoretarget
 	return
+
+BattleScript_ForestBlessingActivates::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_GRASSYTERRAINACTIVATEDABILITY
+	waitmessage B_WAIT_TIME_MED
+	printstring STRINGID_STATWASHEIGHTENED
+	waitmessage B_WAIT_TIME_MED
+	end3
+	
+BattleScript_TrickRealmActivates::
+	pause B_WAIT_TIME_SHORT
+	call BattleScript_AbilityPopUp
+	setroom
+	playanimation BS_ATTACKER, B_ANIM_TRICK_ROOM
+	waitanimation
+	printstring STRINGID_DIMENSIONSWERETWISTED
+	waitmessage B_WAIT_TIME_LONG
+	call BattleScript_TryRoomServiceLoop
+	end3
+
+BattleScript_WonderRealmActivates::
+	pause B_WAIT_TIME_SHORT
+	call BattleScript_AbilityPopUp
+	setroom
+	playanimation BS_ATTACKER, B_ANIM_WONDER_ROOM
+	waitanimation
+	printstring STRINGID_BIZARREAREACREATED
+	waitmessage B_WAIT_TIME_LONG
+	end3
+
+BattleScript_FaeTouchedActivates::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_MISTYTERRAINACTIVATEDABILITY
+	waitmessage B_WAIT_TIME_MED
+	printstring STRINGID_STATWASHEIGHTENED
+	waitmessage B_WAIT_TIME_MED
+	end3
+
+BattleScript_AntifreezeActivates::
+	call BattleScript_AbilityPopUp
+	printstring STRINGID_SNOWACTIVATEDABILITY
+	waitmessage B_WAIT_TIME_MED
+	printstring STRINGID_STATWASHEIGHTENED
+	waitmessage B_WAIT_TIME_MED
+	end3

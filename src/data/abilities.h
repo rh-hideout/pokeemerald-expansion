@@ -850,7 +850,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_STORM_DRAIN] =
     {
         .name = _("Storm Drain"),
-        .description = COMPOUND_STRING("Draws in Water moves."),
+        .description = COMPOUND_STRING("Draws in Water moves and boost Sp.Atk."),
         .aiRating = 7,
         .breakable = TRUE,
     },
@@ -1460,7 +1460,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_WATER_COMPACTION] =
     {
         .name = _("Water Compaction"),
-        .description = COMPOUND_STRING("Water boosts Defense."),
+        .description = COMPOUND_STRING("Water boosts Defense. Immune to Water."),
         .aiRating = 4,
     },
 
@@ -1606,7 +1606,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_CORROSION] =
     {
         .name = _("Corrosion"),
-        .description = COMPOUND_STRING("Poisons any type."),
+        .description = COMPOUND_STRING("Poisons any type. Psn moves hit Steel-types."),
         .aiRating = 5,
     },
 
@@ -2478,7 +2478,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_HELLFIRE] =
     {
         .name = _("Hellfire"),
-        .description = COMPOUND_STRING("Fire moves not resisted. Immune to Fire moves."),
+        .description = COMPOUND_STRING("Powers up weakened Fire moves. Immune to Fire."),
         .aiRating = 8,
         .breakable = TRUE,
     },
@@ -2708,5 +2708,193 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Misty Step"),
         .description = COMPOUND_STRING("Raises Speed in Misty Terrain."),
         .aiRating = 6,
+    },
+    [ABILITY_FOREST_BLESSING] =
+    {
+        .name = _("Forest Blessing"),
+        .description = COMPOUND_STRING("Grassy Terrain boosts best stat."),
+        .aiRating = 7,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+        .failsOnImposter = TRUE,
+    },
+    [ABILITY_POWER_KICKER] =
+    {
+        .name = _("Power Kicker"),
+        .description = COMPOUND_STRING("Boosts kicking moves."),
+        .aiRating = 6,
+    },
+    [ABILITY_LEECH] =
+    {
+        .name = _("Leech"),
+        .description = COMPOUND_STRING("Draining moves heal more."),
+        .aiRating = 6,
+    },
+    [ABILITY_TOXIC_AURA] =
+    {
+        .name = _("Toxic Aura"),
+        .description = COMPOUND_STRING("Boosts Psn moves for all POKEMON."),
+        .aiRating = 6,
+    },
+    [ABILITY_STORM_BRINGER] =
+    {
+        .name = _("Storm Bringer"),
+        .description = COMPOUND_STRING("Boost wind moves. Bigger boost in Tailwind."),
+        .aiRating = 7,
+    },
+    [ABILITY_ARMOR_BREAK] =
+    {
+        .name = _("Armor Break"),
+        .description = COMPOUND_STRING("Physical moves hit through protect slightly."),
+        .aiRating = 6,
+    },
+    [ABILITY_REVERBERATION] =
+    {
+        .name = _("Reverberation"),
+        .description = COMPOUND_STRING("Sound moves hit through protect decently."),
+        .aiRating = 6,
+    },
+    [ABILITY_DARKVISION] =
+    {
+        .name = _("Darkvision"),
+        .description = COMPOUND_STRING("Moves always hit in the dark."),
+        .aiRating = 6,
+    },
+    [ABILITY_GEM_FIEND] =
+    {
+        .name = _("Gem Fiend"),
+        .description = COMPOUND_STRING("Deals more damage to Rock types."),
+        .aiRating = 6,
+    },
+    [ABILITY_OVERCHARGE] =
+    {
+        .name = _("Overcharge"),
+        .description = COMPOUND_STRING("Ups Sp. Atk in electricity."),
+        .aiRating = 2,
+        .breakable = TRUE,
+    },
+    [ABILITY_FROST_FIEND] =
+    {
+        .name = _("Frost Fiend"),
+        .description = COMPOUND_STRING("Ice-moves power up in snow."),
+        .aiRating = 3,
+    },
+    [ABILITY_SEA_DWELLER] =
+    {
+        .name = _("Sea Dweller"),
+        .description = COMPOUND_STRING("Boost water moves."),
+        .aiRating = 6,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+    },
+    [ABILITY_SHADOW_CLONE] =
+    {
+        .name = _("Shadow Clone"),
+        .description = COMPOUND_STRING("Boost evasion. Greater at night."),
+        .aiRating = 6,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+    },
+    [ABILITY_LIFE_GUARD] =
+    {
+        .name = _("Life Guard"),
+        .description = COMPOUND_STRING("Draws in Water moves and boost Def."),
+        .aiRating = 7,
+        .breakable = TRUE,
+    },
+    [ABILITY_BATTLE_AURA] =
+    {
+        .name = _("Battle Aura"),
+        .description = COMPOUND_STRING("Boosts Fighting moves for all POKEMON."),
+        .aiRating = 6,
+    },
+    [ABILITY_SCORPION] =
+    {
+        .name = _("Scorpion"),
+        .description = COMPOUND_STRING("Boost Bug moves."),
+        .aiRating = 6,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+    },
+    [ABILITY_FEROCITY] =
+    {
+        .name = _("Ferocity"),
+        .description = COMPOUND_STRING("Thrashing moves don't confuse."),
+        .aiRating = 6,
+    },
+    [ABILITY_TRICK_REALM] =
+    {
+        .name = _("Trick Realm"),
+        .description = COMPOUND_STRING("Summons Trick Room in battle."),
+        .aiRating = 6,
+    },
+    [ABILITY_WONDER_REALM] =
+    {
+        .name = _("Wonder Realm"),
+        .description = COMPOUND_STRING("Summons Wonder Room in battle."),
+        .aiRating = 6,
+    },
+    [ABILITY_ANTIFREEZE] =
+    {
+        .name = _("Antifreeze"),
+        .description = COMPOUND_STRING("Snow boosts best stat."),
+        .aiRating = 7,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+        .failsOnImposter = TRUE,
+    },
+    [ABILITY_FAE_TOUCHED] =
+    {
+        .name = _("Fae Touched"),
+        .description = COMPOUND_STRING("Misty Terrain boosts best stat."),
+        .aiRating = 7,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+        .failsOnImposter = TRUE,
+    },
+    [ABILITY_WEB_PREDATOR] =
+    {
+        .name = _("Web Predator"),
+        .description = COMPOUND_STRING("Criticals paralysed foes."),
+        .aiRating = 4,
+    },
+    [ABILITY_WATER_FORM] =
+    {
+        .name = _("Water Form"),
+        .description = COMPOUND_STRING("Immune to Water. Boosts Def in rain."),
+        .aiRating = 7,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+    },
+    [ABILITY_GRASS_GRAZER] =
+    {
+        .name = _("Grass Grazer"),
+        .description = COMPOUND_STRING("Faster on grass."),
+        .aiRating = 4,
+    },
+    [ABILITY_NIGHT_PREDATOR] =
+    {
+        .name = _("Night Predator"),
+        .description = COMPOUND_STRING("Boost Sp.Atk in darkness."),
+        .aiRating = 6,
+    },
+    [ABILITY_WEREWOLF] =
+    {
+        .name = _("Werewolf"),
+        .description = COMPOUND_STRING("Boost Atk and Speed in darkness."),
+        .aiRating = 6,
+    },
+    [ABILITY_PSYCHIC_BREAK] =
+    {
+        .name = _("Psychic Break"),
+        .description = COMPOUND_STRING("Moves go first in Trick Room."),
+        .aiRating = 8,
     },
 };

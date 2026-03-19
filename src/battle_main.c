@@ -4825,6 +4825,8 @@ u32 GetBattlerTotalSpeedStat(u32 battler, enum Ability ability, enum HoldEffect 
             speed *= 2;
         else if (ability == ABILITY_SHADOW_STEP && (gBattleWeather & (B_WEATHER_DARKNESS)))
             speed *= 2;
+        else if (ability == ABILITY_WEREWOLF && (gBattleWeather & (B_WEATHER_DARKNESS)))
+            speed = (speed * 150) / 100;
     }
 
     // other abilities
@@ -4840,9 +4842,17 @@ u32 GetBattlerTotalSpeedStat(u32 battler, enum Ability ability, enum HoldEffect 
         speed /= 2;
     else if (ability == ABILITY_PROTOSYNTHESIS && !(gBattleMons[battler].volatiles.transformed) && ((gBattleWeather & B_WEATHER_SUN && HasWeatherEffect()) || gDisableStructs[battler].boosterEnergyActivated))
         speed = (GetParadoxBoostedStatId(battler) == STAT_SPEED) ? (speed * 150) / 100 : speed;
+    else if (ability == ABILITY_ANTIFREEZE && !(gBattleMons[battler].volatiles.transformed) && (gBattleWeather & B_WEATHER_SNOW && HasWeatherEffect()))
+        speed = (GetParadoxBoostedStatId(battler) == STAT_SPEED) ? (speed * 150) / 100 : speed;
     else if (ability == ABILITY_QUARK_DRIVE && !(gBattleMons[battler].volatiles.transformed) && (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gDisableStructs[battler].boosterEnergyActivated))
         speed = (GetParadoxBoostedStatId(battler) == STAT_SPEED) ? (speed * 150) / 100 : speed;
+    else if (ability == ABILITY_FOREST_BLESSING && !(gBattleMons[battler].volatiles.transformed) && (gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN))
+        speed = (GetParadoxBoostedStatId(battler) == STAT_SPEED) ? (speed * 150) / 100 : speed;
+    else if (ability == ABILITY_FAE_TOUCHED && !(gBattleMons[battler].volatiles.transformed) && (gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN))
+        speed = (GetParadoxBoostedStatId(battler) == STAT_SPEED) ? (speed * 150) / 100 : speed;
     else if (ability == ABILITY_UNBURDEN && gDisableStructs[battler].unburdenActive)
+        speed *= 2;
+    else if (ability == ABILITY_GRASS_GRAZER && gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN)
         speed *= 2;
 
     // player's badge boost
@@ -4929,6 +4939,10 @@ s32 GetBattleMovePriority(u32 battler, enum Ability ability, u32 move)
     else if (ability == ABILITY_RAPID_FIST && IsPunchingMove(move))
     {
         priority += 3;
+    }
+    else if (ability == ABILITY_PSYCHIC_BREAK && (gFieldStatuses & STATUS_FIELD_TRICK_ROOM))
+    {
+        priority += 2;
     }
 
     return priority;
@@ -5965,6 +5979,8 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum Mo
                     return TYPE_FIRE;
                 else if (gBattleWeather & (B_WEATHER_SNOW | B_WEATHER_HAIL))
                     return TYPE_ICE;
+                else if (gBattleWeather & B_WEATHER_DARKNESS)
+                    return TYPE_DARK;
                 else
                     return moveType;
             }
@@ -5987,6 +6003,8 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum Mo
                 return TYPE_ICE;
             case WEATHER_SANDSTORM:
                 return TYPE_ROCK;
+            case WEATHER_DARKNESS:
+                return TYPE_DARK;
             }
             return moveType;
         }
@@ -6065,6 +6083,15 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum Mo
         case SPECIES_OGERPON_CORNERSTONE:
         case SPECIES_OGERPON_CORNERSTONE_TERA:
             return GetSpeciesType(species, 1);
+        }
+        break;
+    case EFFECT_HORN_RUT:
+        switch (species)
+        {
+        case SPECIES_SAWSBUCK_SPRING:
+        case SPECIES_SAWSBUCK_AUTUMN:
+        case SPECIES_SAWSBUCK_WINTER:
+            return GetSpeciesType(species, 0);
         }
         break;
     case EFFECT_NATURAL_GIFT:

@@ -885,6 +885,11 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_JUMPSCAREENTERS]                      = COMPOUND_STRING("{B_EFF_TEAM1} team is too scared to use items!"), //not in gen 5+, ability popup
     [STRINGID_PKMNCUTSSPATKWITH]                    = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s {B_SCR_ABILITY} cuts {B_DEF_NAME_WITH_PREFIX2}'s Special Attack!"), //not in gen 5+, ability popup
     [STRINGID_BATTLEREADYACTIVATES]                 = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} became fully charged due to its ability!"),
+    [STRINGID_GRASSYTERRAINACTIVATEDABILITY]        = COMPOUND_STRING("The Grassy Terrain activated {B_SCR_NAME_WITH_PREFIX2}'s Forest Blessing!"),
+    [STRINGID_TOXICAURAENTERS]                      = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} is radiating a nauseating aura!"),
+    [STRINGID_BATTLEAURAENTERS]                     = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} is radiating an intense aura!"),
+    [STRINGID_MISTYTERRAINACTIVATEDABILITY]         = COMPOUND_STRING("The Misty Terrain activated {B_SCR_NAME_WITH_PREFIX2}'s Fae Touched!"),
+    [STRINGID_SNOWACTIVATEDABILITY]                 = COMPOUND_STRING("The fierce snow activated {B_SCR_NAME_WITH_PREFIX2}'s Antifreeze!"),
     };
 
 const u16 gTrainerUsedItemStringIds[] =
@@ -986,6 +991,8 @@ const u16 gSwitchInAbilityStringIds[] =
     [B_MSG_SWITCHIN_SHADOWAURA] = STRINGID_SHADOWAURAENTERS,
     [B_MSG_SWITCHIN_DAMP] = STRINGID_DAMPENTERS,
     [B_MSG_SWITCHIN_JUMPSCARE] = STRINGID_JUMPSCAREENTERS,
+    [B_MSG_SWITCHIN_TOXICAURA] = STRINGID_TOXICAURAENTERS,
+    [B_MSG_SWITCHIN_BATTLEAURA] = STRINGID_BATTLEAURAENTERS,
 };
 
 const u16 gMissStringIds[] =
