@@ -378,7 +378,7 @@ static bool32 ShouldSwitchIfHasBadOdds(enum BattlerId battler)
                     hasSuperEffectiveMove = TRUE;
 
                 // Check if can win 1v1
-                hitsToKOPlayer = GetNoOfHitsToKOBattler(battler, opposingBattler, moveIndex, AI_ATTACKING, CONSIDER_ENDURE);
+                hitsToKOPlayer = GetNoOfHitsToKOBattler(battler, opposingBattler, moveIndex, AI_SWITCHIN_ATTACKING, CONSIDER_ENDURE);
                 if (!canBattlerWin1v1 ) // Once we can win a 1v1 we don't need to track this, but want to run the rest of the function to keep the runtime the same regardless of when we find the winning move
                 {
                     isBattlerFirst = AI_IsFaster(battler, opposingBattler, aiMove, expectedMove, CONSIDER_PRIORITY);
@@ -625,7 +625,7 @@ static bool32 FindMonThatAbsorbsOpponentsMove(enum BattlerId battler)
             // Only check damage if it's a damaging move
             if (!IsBattleMoveStatus(aiMove))
             {
-                if (!AI_DoesChoiceEffectBlockMove(battler, aiMove) && AI_GetDamage(battler, opposingBattler, moveIndex, AI_ATTACKING, gAiLogicData) > gBattleMons[opposingBattler].hp)
+                if (!AI_DoesChoiceEffectBlockMove(battler, aiMove) && AI_GetDamage(battler, opposingBattler, moveIndex, AI_SWITCHIN_ATTACKING, gAiLogicData) > gBattleMons[opposingBattler].hp)
                     return FALSE;
             }
         }
@@ -2024,7 +2024,7 @@ static s32 GetMaxDamagePlayerCouldDealToSwitchin(enum BattlerId battler, enum Ba
         playerMove = SMART_SWITCHING_OMNISCIENT ? gBattleMons[opposingBattler].moves[moveIndex] : playerMoves[moveIndex];
         if (playerMove != MOVE_NONE && !IsBattleMoveStatus(playerMove) && GetMoveEffect(playerMove) != EFFECT_FOCUS_PUNCH && gBattleMons[opposingBattler].pp[moveIndex] > 0)
         {
-            damageTaken = AI_GetDamage(opposingBattler, battler, moveIndex, AI_DEFENDING, gAiLogicData);
+            damageTaken = AI_GetDamage(opposingBattler, battler, moveIndex, AI_SWITCHIN_DEFENDING, gAiLogicData);
             if (playerMove == gBattleStruct->choicedMove[opposingBattler]) // If player is choiced, only care about the choice locked move
             {
                 *bestPlayerMove = playerMove;
@@ -2055,7 +2055,7 @@ static s32 GetMaxPriorityDamagePlayerCouldDealToSwitchin(enum BattlerId battler,
         if (GetBattleMovePriority(opposingBattler, gAiLogicData->abilities[opposingBattler], playerMove) > 0
             && playerMove != MOVE_NONE && !IsBattleMoveStatus(playerMove) && GetMoveEffect(playerMove) != EFFECT_FOCUS_PUNCH && gBattleMons[opposingBattler].pp[moveIndex] > 0)
         {
-            damageTaken = AI_GetDamage(opposingBattler, battler, moveIndex, AI_DEFENDING, gAiLogicData);
+            damageTaken = AI_GetDamage(opposingBattler, battler, moveIndex, AI_SWITCHIN_DEFENDING, gAiLogicData);
             if (playerMove == gBattleStruct->choicedMove[opposingBattler]) // If player is choiced, only care about the choice locked move
             {
                 *bestPlayerPriorityMove = playerMove;
@@ -2221,8 +2221,8 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
                 continue;
 
             aiMove = gBattleMons[battler].moves[moveIndex];
-            damageDealt = AI_GetDamage(battler, opposingBattler, moveIndex, AI_ATTACKING, gAiLogicData);
-            hitsToKOPlayer = GetNoOfHitsToKOBattler(battler, opposingBattler, moveIndex, AI_ATTACKING, CONSIDER_ENDURE);
+            damageDealt = AI_GetDamage(battler, opposingBattler, moveIndex, AI_SWITCHIN_ATTACKING, gAiLogicData);
+            hitsToKOPlayer = GetNoOfHitsToKOBattler(battler, opposingBattler, moveIndex, AI_SWITCHIN_ATTACKING, CONSIDER_ENDURE);
 
             // Offensive switchin decisions are based on which whether switchin moves first and whether it can win a 1v1
             isSwitchinFirst = AI_IsFaster(battler, opposingBattler, aiMove, bestPlayerMove, CONSIDER_PRIORITY);
@@ -2480,7 +2480,7 @@ static u32 GetBestMonVanilla(struct Pokemon *party, int firstId, int lastId, enu
             // Best damage
             if (aiMove != MOVE_NONE && !IsBattleMoveStatus(aiMove))
             {
-                u32 aiDmg = AI_GetDamage(battler, opposingBattler, moveIndex, AI_ATTACKING, gAiLogicData);
+                u32 aiDmg = AI_GetDamage(battler, opposingBattler, moveIndex, AI_SWITCHIN_ATTACKING, gAiLogicData);
                 if (aiDmg > bestDamage)
                 {
                     bestDamage = aiDmg;
@@ -2625,7 +2625,7 @@ u32 AI_SelectRevivalBlessingMon(enum BattlerId battler)
             if (aiMove == MOVE_NONE || gBattleMons[battler].pp[moveIndex] == 0)
                 continue;
 
-            s32 damage = AI_GetDamage(battler, opposingBattler, moveIndex, AI_ATTACKING, gAiLogicData);
+            s32 damage = AI_GetDamage(battler, opposingBattler, moveIndex, AI_SWITCHIN_ATTACKING, gAiLogicData);
             if (damage > bestDamage)
                 bestDamage = damage;
         }

@@ -84,6 +84,21 @@
 #define AI_DAMAGES_THROUGH_BERRIES                              TRUE // AI will see through resist berries when considering a certain KO threshold for the purposes damage calcs; this is considered when comparing best moves to KO to still pick the actual OHKO if needed
 #define AI_IGNORE_BERRY_KO_THRESHOLD                            2   // KO threshold AI must meet in order to treat it berry though it doesn't exist (ie. 2 means "If the AI can 2HKO with berry resisted attack + not-berry resisted next attack, ignore berry resistence when calcing first attack"). Requires AI_DAMAGES_THROUGH_BERRIES
 
+// AI damage calc roll considerations
+#define AI_ROLL_MIN                                             1
+#define AI_ROLL_MEDIAN                                          2
+#define AI_ROLL_MAX                                             3
+#define AI_ROLL_RANDOM                                          4
+#define AI_ROLL_TYPE_COUNT                                      5
+
+// Define which roll type to use in each context; overridden by AI_FLAG_RISKY and AI_FLAG_CONSERVATIVE
+#define AI_ROLL_ATTACKING                                       AI_ROLL_MAX
+#define AI_ROLL_DEFENDING                                       AI_ROLL_MEDIAN
+#define AI_ROLL_SWITCHIN_ATTACKING                              AI_ROLL_MEDIAN
+#define AI_ROLL_SWITCHIN_DEFENDING                              AI_ROLL_MEDIAN
+#define AI_ROLL_SHOULD_SETUP_DEFENDING                          AI_ROLL_MAX
+#define AI_ROLL_ATTACKING_PARTNER                               AI_ROLL_MAX
+
 // AI prediction chances
 #define PREDICT_SWITCH_CHANCE                                   50
 #define PREDICT_MOVE_CHANCE                                     100

@@ -201,6 +201,7 @@ struct SimulatedDamage
     u16 minimum;
     u16 median;
     u16 maximum;
+    u16 random;
 };
 
 // Ai Data used when deciding which move to use, computed only once before each turn's start.
