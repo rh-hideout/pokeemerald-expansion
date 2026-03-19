@@ -20,6 +20,10 @@
 #include "util.h"
 #include "window.h"
 
+// Config
+#define MAX_STEP 1000
+
+// Variables
 u32 sWithdrawalAmount = 0;
 u8 sWithdrawalWindowId = 0;
 
@@ -166,7 +170,7 @@ static u32 GetStepSize(s16 heldFrames)
         return 1 + heldFrames / 20;
 
     u32 step = 5 + (heldFrames - 60) / 5;
-    step = step > 500 ? 500 : step;
+    step = step > MAX_STEP ? MAX_STEP : step;
 
     return step;
 }
