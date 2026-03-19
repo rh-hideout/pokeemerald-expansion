@@ -9,7 +9,10 @@
 <body>
 <div id="auth-bar">
     <div class="auth-bar-inner">
-        <span class="auth-logo">Brazilianite Editor</span>
+        <div style="display:flex;align-items:center;gap:8px">
+            <button class="mobile-menu-btn" id="menu-toggle" aria-label="Toggle menu">&#9776;</button>
+            <span class="auth-logo">Brazilianite Editor</span>
+        </div>
         <div class="auth-right">
             <div id="auth-status"></div>
             <div id="pending-changes" style="display:none">
@@ -21,7 +24,8 @@
     </div>
 </div>
 <div class="app">
-    <aside class="sidebar">
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <aside class="sidebar" id="sidebar">
         <div class="sidebar-logo">
             Brazilianite<br>
             <small>Data Editor</small>

@@ -498,6 +498,26 @@ async function loadMaps() {
     return state.maps;
 }
 
+// ─── Mobile Sidebar Toggle ──────────────────────────────────────────────────
+function closeSidebar() {
+    const sidebar = $('#sidebar');
+    const overlay = $('#sidebar-overlay');
+    if (sidebar) sidebar.classList.remove('open');
+    if (overlay) overlay.classList.remove('active');
+}
+function openSidebar() {
+    const sidebar = $('#sidebar');
+    const overlay = $('#sidebar-overlay');
+    if (sidebar) sidebar.classList.add('open');
+    if (overlay) overlay.classList.add('active');
+}
+$('#menu-toggle')?.addEventListener('click', () => {
+    const sidebar = $('#sidebar');
+    if (sidebar?.classList.contains('open')) closeSidebar();
+    else openSidebar();
+});
+$('#sidebar-overlay')?.addEventListener('click', closeSidebar);
+
 // ─── Navigation ─────────────────────────────────────────────────────────────
 $$('.nav-item').forEach(item => {
     item.addEventListener('click', () => {
@@ -506,6 +526,7 @@ $$('.nav-item').forEach(item => {
         state.page = item.dataset.page;
         state.search = '';
         state.mapDetail = null;
+        closeSidebar();
         render();
     });
 });
@@ -1808,7 +1829,13 @@ async function renderMapDetail(dirName) {
     // ── Section 6: Object Scripts / NPCs ──
     sections.innerHTML += buildObjectScriptsSection(map);
 
-    // ── Section 7: Map Properties (editable) ──
+    // ── Section 7: Coordinate Events ──
+    sections.innerHTML += buildCoordEventsSection(map);
+
+    // ── Section 8: Background Events (signs, scripts) ──
+    sections.innerHTML += buildBgEventsSection(map);
+
+    // ── Section 9: Map Properties (editable) ──
     sections.innerHTML += buildPropertiesSection(map);
 
     // Wire up section toggles
@@ -1932,9 +1959,10 @@ function buildTrainerSection(trainers, map) {
                         <div class="area-trainer-name">${escHtml(scriptName || 'Trainer #' + (i + 1))}</div>
                         <div class="area-trainer-detail">${escHtml(gfx)} &middot; Sight: ${t.trainer_sight_or_berry_tree_id || '0'} &middot; (${t.x}, ${t.y})</div>
                     </div>
-                    <div style="display:flex;gap:6px">
+                    <div style="display:flex;gap:4px;flex-wrap:wrap">
                         <button class="btn btn-sm" onclick="editMapTrainer('${escAttr(map._dirName)}', ${i})">Edit Event</button>
-                        <button class="btn btn-sm" onclick="editTrainerPartyFromMap('${escAttr(map._dirName)}', ${i})" title="Edit trainer party data">Edit Party</button>
+                        <button class="btn btn-sm" onclick="editTrainerPartyFromMap('${escAttr(map._dirName)}', ${i})" title="Edit trainer party data">Party</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteMapTrainer('${escAttr(map._dirName)}', ${i})">Delete</button>
                     </div>
                 </div>
             `;
@@ -1968,7 +1996,10 @@ function buildItemSection(itemBalls, hiddenItems, map) {
                     <span class="area-item-name">${escHtml(itemName)}</span>
                     <span class="area-item-type">Item Ball</span>
                     <span class="area-item-coords">(${item.x}, ${item.y})</span>
-                    <button class="btn btn-sm" onclick="editMapItemBall('${escAttr(map._dirName)}', ${i})">Edit</button>
+                    <div style="display:flex;gap:4px">
+                        <button class="btn btn-sm" onclick="editMapItemBall('${escAttr(map._dirName)}', ${i})">Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteMapItemBall('${escAttr(map._dirName)}', ${i})">Delete</button>
+                    </div>
                 </div>
             `;
         }).join('');
@@ -1981,13 +2012,20 @@ function buildItemSection(itemBalls, hiddenItems, map) {
                     <span class="area-item-name">${escHtml(itemName)}</span>
                     <span class="area-item-type">Hidden</span>
                     <span class="area-item-coords">(${item.x}, ${item.y})</span>
-                    <button class="btn btn-sm" onclick="editMapHiddenItem('${escAttr(map._dirName)}', ${i})">Edit</button>
+                    <div style="display:flex;gap:4px">
+                        <button class="btn btn-sm" onclick="editMapHiddenItem('${escAttr(map._dirName)}', ${i})">Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteMapHiddenItem('${escAttr(map._dirName)}', ${i})">Delete</button>
+                    </div>
                 </div>
             `;
         }).join('');
 
         body = itemRows + hiddenRows;
     }
+    body += `<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+        <button class="btn btn-sm btn-primary" onclick="addMapItemBall('${escAttr(map._dirName)}')">+ Item Ball</button>
+        <button class="btn btn-sm btn-primary" onclick="addMapHiddenItem('${escAttr(map._dirName)}')">+ Hidden Item</button>
+    </div>`;
 
     return `
         <div class="map-area-section">
@@ -2007,7 +2045,7 @@ function buildConnectionSection(map) {
     if (conns.length === 0) {
         body = `<div class="empty-state"><div class="empty-icon">&#8644;</div>No connections</div>`;
     } else {
-        body = conns.map(c => {
+        body = conns.map((c, i) => {
             const connName = (c.map || '').replace('MAP_', '').replace(/_/g, ' ');
             return `
                 <div class="connection-row">
@@ -2015,10 +2053,15 @@ function buildConnectionSection(map) {
                     <span class="connection-map">${escHtml(c.map || '')}</span>
                     <span style="color:var(--text-dim);font-size:12px">${escHtml(connName)}</span>
                     <span style="color:var(--text-dim);font-size:11px">offset: ${c.offset || 0}</span>
+                    <div style="display:flex;gap:4px">
+                        <button class="btn btn-sm" onclick="editConnection('${escAttr(map._dirName)}', ${i})">Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteConnection('${escAttr(map._dirName)}', ${i})">Delete</button>
+                    </div>
                 </div>
             `;
         }).join('');
     }
+    body += `<div style="text-align:right;margin-top:12px"><button class="btn btn-sm btn-primary" onclick="addConnection('${escAttr(map._dirName)}')">+ Add Connection</button></div>`;
 
     return `
         <div class="map-area-section">
@@ -2980,11 +3023,15 @@ function buildWarpSection(map) {
                         <div class="warp-detail">${escHtml(w.dest_map || '')} &middot; Warp #${w.dest_warp_id || '0'}</div>
                     </div>
                     <div class="warp-coords">(${w.x}, ${w.y})</div>
-                    <button class="btn btn-sm" onclick="editWarp('${escAttr(map._dirName)}', ${i})">Edit</button>
+                    <div style="display:flex;gap:4px">
+                        <button class="btn btn-sm" onclick="editWarp('${escAttr(map._dirName)}', ${i})">Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteWarp('${escAttr(map._dirName)}', ${i})">Delete</button>
+                    </div>
                 </div>
             `;
         }).join('');
     }
+    body += `<div style="text-align:right;margin-top:12px"><button class="btn btn-sm btn-primary" onclick="addWarp('${escAttr(map._dirName)}')">+ Add Warp</button></div>`;
 
     return `
         <div class="map-area-section">
@@ -3088,11 +3135,15 @@ function buildObjectScriptsSection(map) {
                         <div class="area-trainer-name">${escHtml(gfx)}</div>
                         <div class="area-trainer-detail">${escHtml(evt.script || '')} &middot; ${evt.movement_type ? evt.movement_type.replace('MOVEMENT_TYPE_', '') : 'NONE'} &middot; (${evt.x}, ${evt.y})</div>
                     </div>
-                    <button class="btn btn-sm" onclick="editObjectEvent('${escAttr(map._dirName)}', ${realIdx})">Edit</button>
+                    <div style="display:flex;gap:4px">
+                        <button class="btn btn-sm" onclick="editObjectEvent('${escAttr(map._dirName)}', ${realIdx})">Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteObjectEvent('${escAttr(map._dirName)}', ${realIdx})">Delete</button>
+                    </div>
                 </div>
             `;
         }).join('');
     }
+    body += `<div style="text-align:right;margin-top:12px"><button class="btn btn-sm btn-primary" onclick="addObjectEvent('${escAttr(map._dirName)}')">+ Add Object</button></div>`;
 
     return `
         <div class="map-area-section">
@@ -3203,6 +3254,442 @@ function editObjectEvent(dirName, evtIdx) {
         overlay.remove();
         renderMapDetail(dirName);
     });
+}
+
+// ─── Delete Helpers ─────────────────────────────────────────────────────────
+function saveMapAndRefresh(map, dirName, msg) {
+    const serialized = { ...map };
+    delete serialized._dirName;
+    markChanged(`data/maps/${dirName}/map.json`, JSON.stringify(serialized, null, 2) + '\n');
+    toast(msg);
+    renderMapDetail(dirName);
+}
+
+function deleteMapTrainer(dirName, trainerIdx) {
+    const map = state.maps.find(m => m._dirName === dirName);
+    if (!map) return;
+    const trainers = getMapTrainers(map);
+    const trainer = trainers[trainerIdx];
+    if (!trainer || !confirm('Delete this trainer event?')) return;
+    const realIdx = (map.object_events || []).indexOf(trainer);
+    if (realIdx >= 0) map.object_events.splice(realIdx, 1);
+    saveMapAndRefresh(map, dirName, 'Trainer deleted (pending PR submission)');
+}
+
+function deleteObjectEvent(dirName, evtIdx) {
+    const map = state.maps.find(m => m._dirName === dirName);
+    if (!map) return;
+    if (!confirm('Delete this object event?')) return;
+    (map.object_events || []).splice(evtIdx, 1);
+    saveMapAndRefresh(map, dirName, 'Object event deleted (pending PR submission)');
+}
+
+function addObjectEvent(dirName) {
+    const map = state.maps.find(m => m._dirName === dirName);
+    if (!map) return;
+    if (!map.object_events) map.object_events = [];
+
+    const newEvt = {
+        graphics_id: 'OBJ_EVENT_GFX_WOMAN_1',
+        x: 0, y: 0, elevation: 3,
+        movement_type: 'MOVEMENT_TYPE_FACE_DOWN',
+        movement_range_x: 0, movement_range_y: 0,
+        trainer_type: 'TRAINER_TYPE_NONE',
+        trainer_sight_or_berry_tree_id: '0',
+        script: `${dirName}_EventScript_NewNPC`,
+        flag: '0'
+    };
+    map.object_events.push(newEvt);
+    const idx = map.object_events.length - 1;
+    saveMapAndRefresh(map, dirName, 'Object event added (pending PR submission)');
+    // Open the edit modal after refresh
+    setTimeout(() => editObjectEvent(dirName, idx), 200);
+}
+
+function deleteMapItemBall(dirName, itemIdx) {
+    const map = state.maps.find(m => m._dirName === dirName);
+    if (!map) return;
+    const itemBalls = getMapItemBalls(map);
+    const item = itemBalls[itemIdx];
+    if (!item || !confirm('Delete this item ball?')) return;
+    const realIdx = (map.object_events || []).indexOf(item);
+    if (realIdx >= 0) map.object_events.splice(realIdx, 1);
+    saveMapAndRefresh(map, dirName, 'Item ball deleted (pending PR submission)');
+}
+
+function addMapItemBall(dirName) {
+    const map = state.maps.find(m => m._dirName === dirName);
+    if (!map) return;
+    if (!map.object_events) map.object_events = [];
+
+    const newItem = {
+        graphics_id: 'OBJ_EVENT_GFX_ITEM_BALL',
+        x: 0, y: 0, elevation: 3,
+        movement_type: 'MOVEMENT_TYPE_NONE',
+        movement_range_x: 0, movement_range_y: 0,
+        trainer_type: 'TRAINER_TYPE_NONE',
+        trainer_sight_or_berry_tree_id: 'ITEM_RARE_CANDY',
+        script: `${dirName}_EventScript_ItemBall`,
+        flag: 'FLAG_ITEM_' + dirName.toUpperCase() + '_NEW'
+    };
+    map.object_events.push(newItem);
+    saveMapAndRefresh(map, dirName, 'Item ball added (pending PR submission)');
+    const itemBalls = getMapItemBalls(map);
+    setTimeout(() => editMapItemBall(dirName, itemBalls.length - 1), 200);
+}
+
+function deleteMapHiddenItem(dirName, hiddenIdx) {
+    const map = state.maps.find(m => m._dirName === dirName);
+    if (!map) return;
+    const hiddenItems = getMapHiddenItems(map);
+    const item = hiddenItems[hiddenIdx];
+    if (!item || !confirm('Delete this hidden item?')) return;
+    const realIdx = (map.bg_events || []).indexOf(item);
+    if (realIdx >= 0) map.bg_events.splice(realIdx, 1);
+    saveMapAndRefresh(map, dirName, 'Hidden item deleted (pending PR submission)');
+}
+
+function addMapHiddenItem(dirName) {
+    const map = state.maps.find(m => m._dirName === dirName);
+    if (!map) return;
+    if (!map.bg_events) map.bg_events = [];
+
+    const newItem = {
+        type: 'hidden_item',
+        x: 0, y: 0, elevation: 0,
+        item: 'ITEM_RARE_CANDY',
+        flag: 'FLAG_HIDDEN_ITEM_' + dirName.toUpperCase() + '_NEW'
+    };
+    map.bg_events.push(newItem);
+    saveMapAndRefresh(map, dirName, 'Hidden item added (pending PR submission)');
+    const hiddenItems = getMapHiddenItems(map);
+    setTimeout(() => editMapHiddenItem(dirName, hiddenItems.length - 1), 200);
+}
+
+function deleteWarp(dirName, warpIdx) {
+    const map = state.maps.find(m => m._dirName === dirName);
+    if (!map) return;
+    if (!confirm('Delete this warp?')) return;
+    (map.warp_events || []).splice(warpIdx, 1);
+    saveMapAndRefresh(map, dirName, 'Warp deleted (pending PR submission)');
+}
+
+function addWarp(dirName) {
+    const map = state.maps.find(m => m._dirName === dirName);
+    if (!map) return;
+    if (!map.warp_events) map.warp_events = [];
+
+    map.warp_events.push({
+        x: 0, y: 0, elevation: 0,
+        dest_map: 'MAP_LITTLEROOT_TOWN',
+        dest_warp_id: '0'
+    });
+    saveMapAndRefresh(map, dirName, 'Warp added (pending PR submission)');
+    setTimeout(() => editWarp(dirName, map.warp_events.length - 1), 200);
+}
+
+// ─── Connection Edit/Add/Delete ─────────────────────────────────────────────
+const CONNECTION_DIRECTIONS = ['up', 'down', 'left', 'right', 'dive', 'emerge'];
+
+function editConnection(dirName, connIdx) {
+    const map = state.maps.find(m => m._dirName === dirName);
+    if (!map) return;
+    const conns = map.connections || [];
+    const conn = conns[connIdx];
+    if (!conn) return;
+
+    const mapIds = (state.maps || []).map(m => m.id).filter(Boolean).sort();
+
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Edit Connection</h2>
+                <button class="btn btn-sm" onclick="this.closest('.modal-overlay').remove()">&#10005;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Direction</label>
+                        ${makeSelectHtml('conn-dir', conn.direction || 'up', CONNECTION_DIRECTIONS)}
+                    </div>
+                    <div class="form-group">
+                        <label>Offset</label>
+                        <input type="number" id="conn-offset" value="${conn.offset || 0}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Destination Map</label>
+                    ${makeDatalistHtml('conn-map', conn.map || '', mapIds, 'style="font-family:monospace;font-size:12px"')}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+                <button class="btn btn-primary" id="save-conn-btn">Save</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+
+    $('#save-conn-btn').addEventListener('click', () => {
+        conn.direction = $('#conn-dir').value;
+        conn.offset = parseInt($('#conn-offset').value);
+        conn.map = $('#conn-map').value;
+        overlay.remove();
+        saveMapAndRefresh(map, dirName, 'Connection updated (pending PR submission)');
+    });
+}
+
+function deleteConnection(dirName, connIdx) {
+    const map = state.maps.find(m => m._dirName === dirName);
+    if (!map) return;
+    if (!confirm('Delete this connection?')) return;
+    (map.connections || []).splice(connIdx, 1);
+    if (map.connections && map.connections.length === 0) map.connections = null;
+    saveMapAndRefresh(map, dirName, 'Connection deleted (pending PR submission)');
+}
+
+function addConnection(dirName) {
+    const map = state.maps.find(m => m._dirName === dirName);
+    if (!map) return;
+    if (!map.connections) map.connections = [];
+
+    map.connections.push({
+        direction: 'up',
+        offset: 0,
+        map: 'MAP_LITTLEROOT_TOWN'
+    });
+    saveMapAndRefresh(map, dirName, 'Connection added (pending PR submission)');
+    setTimeout(() => editConnection(dirName, map.connections.length - 1), 200);
+}
+
+// ─── Coordinate Events Section ──────────────────────────────────────────────
+function buildCoordEventsSection(map) {
+    const coords = map.coord_events || [];
+    let body = '';
+    if (coords.length === 0) {
+        body = `<div class="empty-state"><div class="empty-icon">&#9678;</div>No coordinate events</div>`;
+    } else {
+        body = coords.map((c, i) => `
+            <div class="area-item-row">
+                <div class="area-item-icon" style="background:var(--cyan);color:#fff">&#9678;</div>
+                <span class="area-item-name" style="font-family:monospace;font-size:12px">${escHtml(c.type || c.script || 'coord_event')}</span>
+                <span class="area-item-coords">(${c.x}, ${c.y})</span>
+                <div style="display:flex;gap:4px">
+                    <button class="btn btn-sm" onclick="editCoordEvent('${escAttr(map._dirName)}', ${i})">Edit</button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteCoordEvent('${escAttr(map._dirName)}', ${i})">Delete</button>
+                </div>
+            </div>
+        `).join('');
+    }
+    body += `<div style="text-align:right;margin-top:12px"><button class="btn btn-sm btn-primary" onclick="addCoordEvent('${escAttr(map._dirName)}')">+ Add Coord Event</button></div>`;
+
+    return `
+        <div class="map-area-section">
+            <div class="map-area-section-header">
+                <h2><span class="section-icon">&#9678;</span> Coordinate Events <span class="section-count">${coords.length}</span></h2>
+                <span class="toggle-arrow">&#9660;</span>
+            </div>
+            <div class="map-area-section-body">${body}</div>
+        </div>
+    `;
+}
+
+function editCoordEvent(dirName, idx) {
+    const map = state.maps.find(m => m._dirName === dirName);
+    if (!map) return;
+    const evt = (map.coord_events || [])[idx];
+    if (!evt) return;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Edit Coordinate Event</h2>
+                <button class="btn btn-sm" onclick="this.closest('.modal-overlay').remove()">&#10005;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Type</label>
+                        <input type="text" id="ce-type" value="${escAttr(evt.type || '')}" style="font-family:monospace;font-size:12px">
+                    </div>
+                    <div class="form-group">
+                        <label>Script</label>
+                        <input type="text" id="ce-script" value="${escAttr(evt.script || '')}" style="font-family:monospace;font-size:12px">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>X</label>
+                        <input type="number" id="ce-x" value="${evt.x || 0}">
+                    </div>
+                    <div class="form-group">
+                        <label>Y</label>
+                        <input type="number" id="ce-y" value="${evt.y || 0}">
+                    </div>
+                    <div class="form-group">
+                        <label>Elevation</label>
+                        <input type="number" id="ce-elev" value="${evt.elevation || 0}">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+                <button class="btn btn-primary" id="save-ce-btn">Save</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+
+    $('#save-ce-btn').addEventListener('click', () => {
+        evt.type = $('#ce-type').value;
+        evt.script = $('#ce-script').value;
+        evt.x = parseInt($('#ce-x').value);
+        evt.y = parseInt($('#ce-y').value);
+        evt.elevation = parseInt($('#ce-elev').value);
+        overlay.remove();
+        saveMapAndRefresh(map, dirName, 'Coordinate event updated (pending PR submission)');
+    });
+}
+
+function deleteCoordEvent(dirName, idx) {
+    const map = state.maps.find(m => m._dirName === dirName);
+    if (!map || !confirm('Delete this coordinate event?')) return;
+    (map.coord_events || []).splice(idx, 1);
+    saveMapAndRefresh(map, dirName, 'Coordinate event deleted (pending PR submission)');
+}
+
+function addCoordEvent(dirName) {
+    const map = state.maps.find(m => m._dirName === dirName);
+    if (!map) return;
+    if (!map.coord_events) map.coord_events = [];
+    map.coord_events.push({ type: 'trigger', x: 0, y: 0, elevation: 0, script: `${dirName}_EventScript_NewTrigger` });
+    saveMapAndRefresh(map, dirName, 'Coordinate event added (pending PR submission)');
+    setTimeout(() => editCoordEvent(dirName, map.coord_events.length - 1), 200);
+}
+
+// ─── Background Events Section ──────────────────────────────────────────────
+function buildBgEventsSection(map) {
+    // Show non-hidden-item bg events (signs, scripts, etc.)
+    const bgEvents = (map.bg_events || []).filter(e => e.type !== 'hidden_item');
+    let body = '';
+    if (bgEvents.length === 0) {
+        body = `<div class="empty-state"><div class="empty-icon">&#128220;</div>No signs or background scripts</div>`;
+    } else {
+        body = bgEvents.map((evt, i) => {
+            const allBg = map.bg_events || [];
+            const realIdx = allBg.indexOf(evt);
+            return `
+                <div class="area-item-row">
+                    <div class="area-item-icon" style="background:var(--yellow);color:#333">&#128220;</div>
+                    <span class="area-item-name">${escHtml(evt.type || 'sign')}</span>
+                    <span style="font-family:monospace;font-size:11px;color:var(--text-dim);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(evt.script || '')}</span>
+                    <span class="area-item-coords">(${evt.x}, ${evt.y})</span>
+                    <div style="display:flex;gap:4px">
+                        <button class="btn btn-sm" onclick="editBgEvent('${escAttr(map._dirName)}', ${realIdx})">Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteBgEvent('${escAttr(map._dirName)}', ${realIdx})">Delete</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+    body += `<div style="text-align:right;margin-top:12px"><button class="btn btn-sm btn-primary" onclick="addBgEvent('${escAttr(map._dirName)}')">+ Add Sign/Script</button></div>`;
+
+    return `
+        <div class="map-area-section">
+            <div class="map-area-section-header">
+                <h2><span class="section-icon">&#128220;</span> Signs / BG Scripts <span class="section-count">${bgEvents.length}</span></h2>
+                <span class="toggle-arrow">&#9660;</span>
+            </div>
+            <div class="map-area-section-body">${body}</div>
+        </div>
+    `;
+}
+
+function editBgEvent(dirName, realIdx) {
+    const map = state.maps.find(m => m._dirName === dirName);
+    if (!map) return;
+    const evt = (map.bg_events || [])[realIdx];
+    if (!evt) return;
+
+    const bgTypes = ['sign', 'hidden_item', 'secret_base'];
+
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Edit Background Event</h2>
+                <button class="btn btn-sm" onclick="this.closest('.modal-overlay').remove()">&#10005;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Type</label>
+                        ${makeSelectHtml('bg-type', evt.type || 'sign', bgTypes)}
+                    </div>
+                    <div class="form-group">
+                        <label>Script</label>
+                        <input type="text" id="bg-script" value="${escAttr(evt.script || '')}" style="font-family:monospace;font-size:12px">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>X</label>
+                        <input type="number" id="bg-x" value="${evt.x || 0}">
+                    </div>
+                    <div class="form-group">
+                        <label>Y</label>
+                        <input type="number" id="bg-y" value="${evt.y || 0}">
+                    </div>
+                    <div class="form-group">
+                        <label>Elevation</label>
+                        <input type="number" id="bg-elev" value="${evt.elevation || 0}">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+                <button class="btn btn-primary" id="save-bg-btn">Save</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+
+    $('#save-bg-btn').addEventListener('click', () => {
+        evt.type = $('#bg-type').value;
+        evt.script = $('#bg-script').value;
+        evt.x = parseInt($('#bg-x').value);
+        evt.y = parseInt($('#bg-y').value);
+        evt.elevation = parseInt($('#bg-elev').value);
+        overlay.remove();
+        saveMapAndRefresh(map, dirName, 'Background event updated (pending PR submission)');
+    });
+}
+
+function deleteBgEvent(dirName, realIdx) {
+    const map = state.maps.find(m => m._dirName === dirName);
+    if (!map || !confirm('Delete this background event?')) return;
+    (map.bg_events || []).splice(realIdx, 1);
+    saveMapAndRefresh(map, dirName, 'Background event deleted (pending PR submission)');
+}
+
+function addBgEvent(dirName) {
+    const map = state.maps.find(m => m._dirName === dirName);
+    if (!map) return;
+    if (!map.bg_events) map.bg_events = [];
+
+    const newEvt = { type: 'sign', x: 0, y: 0, elevation: 0, script: `${dirName}_EventScript_NewSign` };
+    map.bg_events.push(newEvt);
+    const realIdx = map.bg_events.length - 1;
+    saveMapAndRefresh(map, dirName, 'Background event added (pending PR submission)');
+    setTimeout(() => editBgEvent(dirName, realIdx), 200);
 }
 
 // ─── NPC Tab ────────────────────────────────────────────────────────────────
