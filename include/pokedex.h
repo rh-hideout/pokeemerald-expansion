@@ -262,36 +262,20 @@ extern const struct BgTemplate sInfoScreen_BgTemplate[NUM_INFO_SCREEN_BG_TEMPLAT
 extern const struct BgTemplate sNewEntryInfoScreen_BgTemplate[NUM_NEW_ENTRY_INFO_BG_TEMPLATES];
 
 void VBlankCB_Pokedex(void);
-void CB2_Pokedex(void);
-
-void Task_OpenPokedexMainPage(u8);
-void Task_HandlePokedexInput(u8);
-void Task_OpenInfoScreenAfterMonMovement(u8);
-u8 LoadInfoScreen(struct PokedexListItem *, u8 monSpriteId);
-void Task_LoadInfoScreen(u8 taskId);
-
 void ResetPokedexView(struct PokedexView *pokedexView);
-void HighlightSelectedSearchMenuItem(u8 topBarItem, u8 menuItem);
-void DrawSearchMenuItemBgHighlight(u8 searchBg, bool8 unselected, bool8 disabled);
-void Task_SelectSearchMenuItem(u8 taskId);
-void Task_HandleSearchParameterInput(u8);
-void PrintSearchParameterText(u8 taskId);
-u8 GetSearchModeSelection(u8 taskId, u8 option);
-bool8 SearchParamCantScrollUp(u8 taskId);
-bool8 SearchParamCantScrollDown(u8 taskId);
-void SetInitialSearchMenuBgHighlights(u8 topBarItem);
-void HighlightSelectedSearchTopBarItem(u8 topBarItem);
-void PrintSelectedSearchParameters(u8 taskId);
-void Task_HandleSearchMenuInput(u8 taskId);
-void Task_StartPokedexSearch(u8 taskId);
+void Task_HandlePokedexInput(u8);
 void CreatePokedexList(u8, u8);
 
-void Task_ClosePokedex(u8);
 void CreateMonSpritesAtPos(u16, u16);
-void UpdateSelectedMonSpriteId(void);
 void SpriteCB_MoveMonForInfoScreen(struct Sprite *sprite);
+
+void HighlightSelectedSearchTopBarItem(u8 topBarItem);
+void PrintSelectedSearchParameters(u8 taskId);
+
+
 void Task_SwitchToSearchMenuTopBar(u8);
 
+void Task_LoadInfoScreen(u8);
 void Task_LoadCryScreen(u8);
 void Task_LoadSizeScreen(u8);
 void Task_LoadAreaScreen(u8 taskId);
@@ -304,7 +288,6 @@ void ClearMonListEntry(u8 x, u8 y, u16 unused);
 
 void Task_LoadInfoScreenWaitForFade(u8);
 void FreeInfoScreenWindowAndBgBuffers(void);
-void Task_ExitInfoScreen(u8 taskId);
 void PrintInfoScreenText(const u8 *str, u8 left, u8 top);
 void Task_HandleInfoScreenInput(u8 taskId);
 void Task_HandleCryScreenInput(u8);

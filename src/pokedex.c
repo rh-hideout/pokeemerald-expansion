@@ -77,11 +77,15 @@ struct SearchMenuItem
 };
 
 // this file's functions
+static void CB2_Pokedex(void);
+static void Task_OpenPokedexMainPage(u8);
 static void Task_WaitForScroll(u8);
 static void Task_HandlePokedexStartMenuInput(u8);
+static void Task_OpenInfoScreenAfterMonMovement(u8);
 static void Task_WaitForExitInfoScreen(u8);
 static void Task_WaitForExitSearch(u8);
 static void Task_OpenSearchResults(u8);
+static void Task_ClosePokedex(u8);
 static void Task_HandleSearchResultsInput(u8);
 static void Task_WaitForSearchResultsScroll(u8);
 static void Task_HandleSearchResultsStartMenuInput(u8);
@@ -94,6 +98,7 @@ static void LoadPokedexBgPalette(bool8);
 static void FreeWindowAndBgBuffers(void);
 static bool8 UpdateDexListScroll(u8, u8, u8);
 static u16 TryDoPokedexScroll(u16, u16);
+static void UpdateSelectedMonSpriteId(void);
 static bool8 TryDoInfoScreenScroll(void);
 static u8 ClearMonSprites(void);
 static u16 GetPokemonSpriteToDisplay(u16);
@@ -106,8 +111,10 @@ static void SpriteCB_RotatingPokeBall(struct Sprite *sprite);
 static void SpriteCB_SeenOwnInfo(struct Sprite *sprite);
 static void SpriteCB_DexListStartMenuCursor(struct Sprite *sprite);
 static void SpriteCB_PokedexListMonSprite(struct Sprite *sprite);
+static u8 LoadInfoScreen(struct PokedexListItem *, u8 monSpriteId);
 static bool8 IsInfoScreenScrolling(u8);
 static u8 StartInfoScreenScroll(struct PokedexListItem *, u8);
+static void Task_ExitInfoScreen(u8);
 static void Task_SwitchScreensFromAreaScreen(u8);
 static void Task_SwitchScreensFromCryScreen(u8);
 static void LoadPlayArrowPalette(bool8);
@@ -144,11 +151,18 @@ static u8 LoadSearchMenu(void);
 static void Task_LoadSearchMenu(u8);
 static void Task_HandleSearchTopBarInput(u8);
 static void Task_SwitchToSearchMenu(u8);
+static void Task_HandleSearchMenuInput(u8);
+static void Task_StartPokedexSearch(u8);
 static void Task_WaitAndCompleteSearch(u8);
 static void Task_SearchCompleteWaitForInput(u8);
+static void Task_SelectSearchMenuItem(u8);
+static void Task_HandleSearchParameterInput(u8);
 static void Task_ExitSearch(u8);
 static void Task_ExitSearchWaitForFade(u8);
+static void HighlightSelectedSearchMenuItem(u8, u8);
 static void DrawOrEraseSearchParameterBox(bool8);
+static void PrintSearchParameterText(u8);
+static u8 GetSearchModeSelection(u8 taskId, u8 option);
 static void EraseAndPrintSearchTextBox(const u8 *);
 static void EraseSelectorArrow(u32);
 static void PrintSelectorArrow(u32);
@@ -1469,7 +1483,7 @@ void CB2_OpenPokedex(void)
     }
 }
 
-void CB2_Pokedex(void)
+static void CB2_Pokedex(void)
 {
     RunTasks();
     AnimateSprites();
@@ -1477,7 +1491,7 @@ void CB2_Pokedex(void)
     UpdatePaletteFade();
 }
 
-void Task_OpenPokedexMainPage(u8 taskId)
+static void Task_OpenPokedexMainPage(u8 taskId)
 {
     sPokedexView->isSearchResults = FALSE;
     sPokedexView->sEvoScreenData.fromEvoPage = FALSE;
@@ -1624,7 +1638,7 @@ static void Task_HandlePokedexStartMenuInput(u8 taskId)
 }
 
 // Opening the info screen from list view. Pokémon sprite is moving to its new position, wait for it to arrive
-void Task_OpenInfoScreenAfterMonMovement(u8 taskId)
+static void Task_OpenInfoScreenAfterMonMovement(u8 taskId)
 {
     if (gSprites[sPokedexView->selectedMonSpriteId].x == MON_PAGE_X && gSprites[sPokedexView->selectedMonSpriteId].y == MON_PAGE_Y)
     {
@@ -1680,7 +1694,7 @@ static void Task_WaitForExitSearch(u8 taskId)
     }
 }
 
-void Task_ClosePokedex(u8 taskId)
+static void Task_ClosePokedex(u8 taskId)
 {
     if (!gPaletteFade.active)
     {
@@ -2544,7 +2558,7 @@ static u16 TryDoPokedexScroll(u16 selectedMon, u16 ignored)
     return selectedMon;
 }
 
-void UpdateSelectedMonSpriteId(void)
+static void UpdateSelectedMonSpriteId(void)
 {
     u16 i;
 
@@ -3110,7 +3124,7 @@ void PrintInfoScreenText(const u8 *str, u8 left, u8 top)
 #define tMonSpriteId     data[4]
 #define tTrainerSpriteId data[5]
 
-u8 LoadInfoScreen(struct PokedexListItem *item, u8 monSpriteId)
+static u8 LoadInfoScreen(struct PokedexListItem *item, u8 monSpriteId)
 {
     u8 taskId;
 
@@ -3397,7 +3411,7 @@ void Task_LoadInfoScreenWaitForFade(u8 taskId)
     }
 }
 
-void Task_ExitInfoScreen(u8 taskId)
+static void Task_ExitInfoScreen(u8 taskId)
 {
     if (!gPaletteFade.active)
     {
@@ -5173,7 +5187,7 @@ static void Task_SwitchToSearchMenu(u8 taskId)
 }
 
 // Input for main search menu
-void Task_HandleSearchMenuInput(u8 taskId)
+static void Task_HandleSearchMenuInput(u8 taskId)
 {
     const u8 (*movementMap)[4];
 
@@ -5268,7 +5282,7 @@ void Task_HandleSearchMenuInput(u8 taskId)
     }
 }
 
-void Task_StartPokedexSearch(u8 taskId)
+static void Task_StartPokedexSearch(u8 taskId)
 {
     u8 dexMode = GetSearchModeSelection(taskId, SEARCH_MODE);
     u8 order = GetSearchModeSelection(taskId, SEARCH_ORDER);
@@ -5321,7 +5335,7 @@ static void Task_SearchCompleteWaitForInput(u8 taskId)
     }
 }
 
-void Task_SelectSearchMenuItem(u8 taskId)
+static void Task_SelectSearchMenuItem(u8 taskId)
 {
     u8 menuItem;
     s16 *cursorPos;
@@ -5341,7 +5355,7 @@ void Task_SelectSearchMenuItem(u8 taskId)
 }
 
 // Input for scrolling parameter box in right column
-void Task_HandleSearchParameterInput(u8 taskId)
+static void Task_HandleSearchParameterInput(u8 taskId)
 {
     u8 menuItem;
     const struct SearchOptionText *texts;
@@ -5479,7 +5493,7 @@ void SetSearchRectHighlight(u8 flags, u8 x, u8 y, u8 width)
 #define SEARCH_BG_OK                    (SEARCH_OK + SEARCH_TOPBAR_COUNT)
 #define SEARCH_BG_TYPE_TITLE            (SEARCH_COUNT + SEARCH_TOPBAR_COUNT)
 
-void DrawSearchMenuItemBgHighlight(u8 searchBg, bool8 unselected, bool8 disabled)
+static void DrawSearchMenuItemBgHighlight(u8 searchBg, bool8 unselected, bool8 disabled)
 {
     u8 highlightFlags = (unselected & 1) | ((disabled & 1) << 1);
 
@@ -5512,7 +5526,7 @@ void DrawSearchMenuItemBgHighlight(u8 searchBg, bool8 unselected, bool8 disabled
     }
 }
 
-void SetInitialSearchMenuBgHighlights(u8 topBarItem)
+static void SetInitialSearchMenuBgHighlights(u8 topBarItem)
 {
     switch (topBarItem)
     {
@@ -5564,7 +5578,7 @@ void HighlightSelectedSearchTopBarItem(u8 topBarItem)
     EraseAndPrintSearchTextBox(sSearchMenuTopBarItems[topBarItem].description);
 }
 
-void HighlightSelectedSearchMenuItem(u8 topBarItem, u8 menuItem)
+static void HighlightSelectedSearchMenuItem(u8 topBarItem, u8 menuItem)
 {
     SetInitialSearchMenuBgHighlights(topBarItem);
     switch (menuItem)
@@ -5660,7 +5674,7 @@ static void DrawOrEraseSearchParameterBox(bool8 erase)
 
 // Prints the currently viewable search parameter titles in the right-hand text box
 // and the currently selected search parameter description in the bottom text box
-void PrintSearchParameterText(u8 taskId)
+static void PrintSearchParameterText(u8 taskId)
 {
     const struct SearchOptionText *texts = sSearchOptions[gTasks[taskId].tMenuItem].texts;
     const s16 *cursorPos = &gTasks[taskId].data[sSearchOptions[gTasks[taskId].tMenuItem].taskDataCursorPos];
@@ -5676,7 +5690,7 @@ void PrintSearchParameterText(u8 taskId)
     EraseAndPrintSearchTextBox(texts[*cursorPos + *scrollOffset].description);
 }
 
-u8 GetSearchModeSelection(u8 taskId, u8 option)
+static u8 GetSearchModeSelection(u8 taskId, u8 option)
 {
     const s16 *cursorPos = &gTasks[taskId].data[sSearchOptions[option].taskDataCursorPos];
     const s16 *scrollOffset = &gTasks[taskId].data[sSearchOptions[option].taskDataScrollOffset];
@@ -5747,7 +5761,7 @@ void SetDefaultSearchModeAndOrder(u8 taskId)
     gTasks[taskId].tCursorPos_Order = selected;
 }
 
-bool8 SearchParamCantScrollUp(u8 taskId)
+static bool8 SearchParamCantScrollUp(u8 taskId)
 {
     u8 menuItem = gTasks[taskId].tMenuItem;
     const s16 *scrollOffset = &gTasks[taskId].data[sSearchOptions[menuItem].taskDataScrollOffset];
@@ -5759,7 +5773,7 @@ bool8 SearchParamCantScrollUp(u8 taskId)
         return TRUE;
 }
 
-bool8 SearchParamCantScrollDown(u8 taskId)
+static bool8 SearchParamCantScrollDown(u8 taskId)
 {
     u8 menuItem = gTasks[taskId].tMenuItem;
     const s16 *scrollOffset = &gTasks[taskId].data[sSearchOptions[menuItem].taskDataScrollOffset];
