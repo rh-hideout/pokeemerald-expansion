@@ -1,4 +1,5 @@
 #include "global.h"
+#include "banking_system.h"
 #include "debug.h"
 #include "malloc.h"
 #include "battle.h"
@@ -54,6 +55,7 @@
 #include "text_window.h"
 #include "tilesets.h"
 #include "tv.h"
+#include "util.h"
 #include "wallclock.h"
 #include "window.h"
 #include "constants/battle_frontier.h"
@@ -5778,4 +5780,11 @@ bool8 CheckAddCoins(void)
         return FALSE;
     else
         return TRUE;
+}
+
+void GetBankBalanceString(void)
+{
+    u32 savings = GetMoneyInBank();
+    u32 digits = Util_CountDigits(savings);
+    ConvertIntToDecimalStringN(gStringVar2, savings, STR_CONV_MODE_LEFT_ALIGN, digits);
 }

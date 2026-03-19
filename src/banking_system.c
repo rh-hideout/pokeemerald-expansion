@@ -101,6 +101,19 @@ void SetMoneyInBankFromScript(struct ScriptContext *ctx)
     SetMoneyInBank(amount);
 }
 
+void Script_CompareBankBalance(struct ScriptContext *ctx)
+{
+    u32 value = ScriptReadWord(ctx);
+    u32 balance = GetMoneyInBank();
+
+    if (value == balance)
+        gSpecialVar_Result = 0;
+    else if (value < balance)
+        gSpecialVar_Result = 1;
+    else if (value > balance)
+        gSpecialVar_Result = 2;
+}
+
 u32 CalcAmountToDeposit(u32 money)
 {
     return (money / 100) * SAVINGS_PERCENT

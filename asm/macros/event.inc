@@ -2929,6 +2929,19 @@
   callnative UpdateBankBalanceAfterTransaction
 .endm
 
+@ Copies the current Bank Balance into STR_VAR_2
+.macro getbankbalancestring
+  special GetBankBalanceString
+.endm
+
+@ Compares the current bank balance with a user-provided value.
+@ Sets VAR_RESULT to 0 if values are equal, 1 if value is less than the balance and 2 if value is greater than the balance
+.macro comparebankbalnce value:req
+  callnative Script_CompareBankBalance
+  .4byte \value
+.endm
+
+
 @ END OF BANKING SYSTEM
 
 
