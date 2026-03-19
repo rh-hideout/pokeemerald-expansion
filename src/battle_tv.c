@@ -660,13 +660,13 @@ void BattleTv_SetDataBasedOnAnimation(u8 animationId)
 
 void TryPutLinkBattleTvShowOnAir(void)
 {
-    u16 playerBestSpecies = 0, opponentBestSpecies = 0;
+    enum Species playerBestSpecies = 0, opponentBestSpecies = 0;
     s16 playerBestSum = 0, opponentBestSum = SHRT_MAX;
     u8 playerBestMonId = 0, opponentBestMonId = 0;
     struct BattleTvMovePoints *movePoints = NULL;
     u8 countPlayer = 0, countOpponent = 0;
     s16 sum = 0;
-    u16 species = SPECIES_NONE;
+    enum Species species = SPECIES_NONE;
     enum Move move = MOVE_NONE;
     s32 i, j;
     int zero = 0, one = 1; //needed for matching
@@ -1307,7 +1307,7 @@ static void TrySetBattleSeminarShow(void)
     {
         if (i != gMoveSelectionCursor[gBattlerAttacker] && dmgByMove[i] > dmgByMove[gMoveSelectionCursor[gBattlerAttacker]])
         {
-            u16 opponentSpecies, playerSpecies;
+            enum Species opponentSpecies, playerSpecies;
             s32 bestMoveId;
 
             if (gMoveSelectionCursor[gBattlerAttacker] != 0)

@@ -536,7 +536,7 @@ static void ConditionGraphDrawMonPic(s16 listId, u8 loadId)
 
     u32 boxId = monListPtr->monData[listId].boxId;
     u32 monId = monListPtr->monData[listId].monId;
-    u32 species = GetBoxOrPartyMonData(boxId, monId, MON_DATA_SPECIES, NULL);
+    enum Species species = GetBoxOrPartyMonData(boxId, monId, MON_DATA_SPECIES, NULL);
     bool32 isShiny = GetBoxOrPartyMonData(boxId, monId, MON_DATA_IS_SHINY, NULL);
     u32 personality = GetBoxOrPartyMonData(boxId, monId, MON_DATA_PERSONALITY, NULL);
     bool32 isEgg = GetBoxOrPartyMonData(boxId, monId, MON_DATA_IS_EGG, NULL);

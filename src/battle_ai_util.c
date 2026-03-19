@@ -23,6 +23,7 @@
 #include "constants/moves.h"
 #include "constants/items.h"
 
+static void AI_SetBattlerTurnOrder(u8 *aiTurnOrder);
 static u32 GetAIEffectGroup(enum BattleMoveEffects effect);
 static u32 GetAIEffectGroupFromMove(enum BattlerId battler, enum Move move);
 
@@ -298,7 +299,7 @@ bool32 ShouldRecordStatusMove(enum Move move)
     return RandomPercentage(RNG_AI_ASSUME_ALL_STATUS, ASSUME_ALL_STATUS_ODDS) && IsBattleMoveStatus(move);
 }
 
-static bool32 ShouldFailForIllusion(u32 illusionSpecies, enum BattlerId battlerId)
+static bool32 ShouldFailForIllusion(enum Species illusionSpecies, enum BattlerId battlerId)
 {
     u32 learnsetMoveIndex;
     const struct LevelUpMove *learnset;
@@ -338,7 +339,7 @@ void SetBattlerData(enum BattlerId battlerId)
 {
     if (!BattlerHasAi(battlerId) && gAiThinkingStruct->saved[battlerId].saved)
     {
-        u32 species, illusionSpecies;
+        enum Species species, illusionSpecies;
         enum BattleSide side = GetBattlerSide(battlerId);
 
         // Simulate Illusion
@@ -449,7 +450,7 @@ bool32 IsBattlerTrapped(enum BattlerId battlerAtk, enum BattlerId battlerDef)
     return FALSE;
 }
 
-u32 GetTotalBaseStat(u32 species)
+u32 GetTotalBaseStat(enum Species species)
 {
     return GetSpeciesBaseHP(species)
          + GetSpeciesBaseAttack(species)
@@ -889,6 +890,7 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
     ctx.abilityDef = AI_GetMoldBreakerSanitizedAbility(battlerAtk, ctx.abilityAtk, aiData->abilities[battlerDef], ctx.holdEffectDef, move);
     ctx.isCrit = ShouldCalcCritDamage(&ctx);
     ctx.typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(&ctx);
+    AI_SetBattlerTurnOrder(ctx.aiTurnOrder);
 
     u32 movePower = GetMovePower(move);
 
@@ -1873,6 +1875,7 @@ u32 AI_GetSwitchinWeather(enum BattlerId battler)
     case ABILITY_DRIZZLE:
         return B_WEATHER_RAIN_NORMAL;
     case ABILITY_DROUGHT:
+    case ABILITY_ORICHALCUM_PULSE:
         return B_WEATHER_SUN_NORMAL;
     case ABILITY_SAND_STREAM:
         return B_WEATHER_SANDSTORM;
@@ -4531,28 +4534,6 @@ void FreeRestoreAiLogicData(struct AiLogicData *savedAiLogicData)
     Free(savedAiLogicData);
 }
 
-// Set potential field effect from ability for switch in
-void SetBattlerFieldStatusForSwitchin(enum BattlerId battler)
-{
-    switch (gAiLogicData->abilities[battler])
-    {
-    case ABILITY_VESSEL_OF_RUIN:
-        gBattleMons[battler].volatiles.vesselOfRuin = TRUE;
-        break;
-    case ABILITY_SWORD_OF_RUIN:
-        gBattleMons[battler].volatiles.swordOfRuin = TRUE;
-        break;
-    case ABILITY_TABLETS_OF_RUIN:
-        gBattleMons[battler].volatiles.tabletsOfRuin = TRUE;
-        break;
-    case ABILITY_BEADS_OF_RUIN:
-        gBattleMons[battler].volatiles.beadsOfRuin = TRUE;
-        break;
-    default:
-        break;
-    }
-}
-
 // party logic
 s32 CountUsablePartyMons(enum BattlerId battlerId)
 {
@@ -6443,3 +6424,23 @@ bool32 IsPartyMonPlannedToBeSwitchedInByPartner(u32 partyIndex, enum BattlerId b
         return TRUE;
     return FALSE;
 }
+
+static void AI_SetBattlerTurnOrder(u8 *aiTurnOrder)
+{
+    for (u32 battler = 0; battler < gBattlersCount; battler++)
+        aiTurnOrder[battler] = battler;
+
+    for (u32 i = 0; i < gBattlersCount; i++)
+    {
+        for (u32 j = 0; j < gBattlersCount; j++)
+        {
+            if (AI_WhoStrikesFirst(aiTurnOrder[i], aiTurnOrder[j], MOVE_NONE, MOVE_NONE, DONT_CONSIDER_PRIORITY) == AI_IS_FASTER)
+            {
+                u32 temp = aiTurnOrder[i];
+                aiTurnOrder[i] = aiTurnOrder[j];
+                aiTurnOrder[j] = temp;
+            }
+        }
+    }
+}
+

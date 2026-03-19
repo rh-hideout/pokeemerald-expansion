@@ -63,7 +63,7 @@ static void HealPlayerBoxes(void)
     }
 }
 
-u8 ScriptGiveEgg(u16 species)
+u8 ScriptGiveEgg(enum Species species)
 {
     struct Pokemon mon;
     u8 isEgg;
@@ -97,7 +97,7 @@ static bool32 CheckPartyMonHasHeldItem(enum Item item)
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        u16 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
+        enum Species species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
         if (species != SPECIES_NONE && species != SPECIES_EGG && GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM) == item)
             return TRUE;
     }
@@ -113,7 +113,7 @@ bool8 DoesPartyHaveEnigmaBerry(void)
     return hasItem;
 }
 
-void CreateScriptedWildMon(u16 species, u8 level, enum Item item)
+void CreateScriptedWildMon(enum Species species, u8 level, enum Item item)
 {
     u8 heldItem[2];
 
@@ -131,7 +131,7 @@ void CreateScriptedWildMon(u16 species, u8 level, enum Item item)
         SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM, heldItem);
     }
 }
-void CreateScriptedDoubleWildMon(u16 species1, u8 level1, enum Item item1, u16 species2, u8 level2, enum Item item2)
+void CreateScriptedDoubleWildMon(enum Species species1, u8 level1, enum Item item1, enum Species species2, u8 level2, enum Item item2)
 {
     u8 heldItem1[2];
     u8 heldItem2[2];
@@ -358,7 +358,7 @@ void SetTeraType(struct ScriptContext *ctx)
  * if side/slot are assigned, it will create the mon at the assigned party location
  * if slot == PARTY_SIZE, it will give the mon to first available party or storage slot
  */
-static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, enum Item item, enum PokeBall ball, u8 nature, u8 abilityNum, u8 gender, u16 *evs, u16 *ivs, enum Move *moves, enum ShinyMode shinyMode, bool8 gmaxFactor, enum Type teraType, u8 dmaxLevel)
+static u32 ScriptGiveMonParameterized(u8 side, u8 slot, enum Species species, u8 level, enum Item item, enum PokeBall ball, u8 nature, u8 abilityNum, u8 gender, u16 *evs, u16 *ivs, enum Move *moves, enum ShinyMode shinyMode, bool8 gmaxFactor, enum Type teraType, u8 dmaxLevel)
 {
     struct Pokemon mon;
     u32 i;
@@ -473,7 +473,7 @@ static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, e
     return MON_GIVEN_TO_PARTY;
 }
 
-u32 ScriptGiveMon(u16 species, u8 level, enum Item item)
+u32 ScriptGiveMon(enum Species species, u8 level, enum Item item)
 {
     struct Pokemon mon;
     u8 heldItem[2];
@@ -513,7 +513,7 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
 {
     u8 side            = ScriptReadByte(ctx);
     u8 slot            = ScriptReadByte(ctx);
-    u16 species        = VarGet(ScriptReadHalfword(ctx));
+    enum Species species = VarGet(ScriptReadHalfword(ctx));
     u8 level           = VarGet(ScriptReadHalfword(ctx));
 
     u32 flags          = ScriptReadWord(ctx);
@@ -652,7 +652,7 @@ void Script_SetStatus1(struct ScriptContext *ctx)
 
     if (slot >= PARTY_SIZE)
     {
-        u16 species;
+        enum Species species;
 
         for (slot = 0; slot < PARTY_SIZE; slot++)
         {
