@@ -244,6 +244,8 @@ struct PokedexView
     enum Species formSpecies;
 };
 
+extern const u8 sCaughtBall_Gfx[];
+
 extern const struct SpriteTemplate sScrollBarSpriteTemplate;
 extern const struct SpriteTemplate sScrollArrowSpriteTemplate;
 extern const struct SpriteTemplate sSeenOwnTextSpriteTemplate;
