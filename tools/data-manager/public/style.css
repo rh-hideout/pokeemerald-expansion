@@ -782,6 +782,147 @@ tbody tr:last-child td { border-bottom: none; }
     color: var(--text-dim);
 }
 
+/* ─── Music Player Bar ───────────────────────────── */
+.music-player-bar {
+    position: fixed;
+    bottom: 0;
+    left: 240px;
+    right: 0;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border);
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 999;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.3);
+}
+.music-player-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.music-player-icon {
+    font-size: 18px;
+    color: var(--accent);
+}
+.music-player-title {
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+.music-player-controls {
+    display: flex;
+    gap: 6px;
+}
+
+/* ─── Music Cards ────────────────────────────────── */
+.music-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color 0.15s;
+}
+.music-card:hover { border-color: var(--accent); }
+.music-card.music-playing {
+    border-color: var(--green);
+    box-shadow: 0 0 12px rgba(34,197,94,0.15);
+}
+.music-card-header {
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg-hover);
+    border-bottom: 1px solid var(--border);
+}
+.music-card-header h3 {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+.music-card-id {
+    font-size: 11px;
+    color: var(--text-dim);
+    font-family: monospace;
+    margin-top: 2px;
+}
+.music-card-meta {
+    padding: 10px 16px;
+    font-size: 12px;
+    color: var(--text-dim);
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.music-file-tag {
+    font-family: monospace;
+    font-size: 11px;
+    padding: 1px 6px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+}
+.music-no-file {
+    font-size: 11px;
+    color: var(--text-dim);
+    opacity: 0.6;
+}
+
+/* ─── Play Buttons ───────────────────────────────── */
+.music-play-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 14px;
+    padding: 0;
+    flex-shrink: 0;
+}
+.music-play-btn.playing {
+    background: var(--green);
+    border-color: var(--green);
+    color: #fff;
+}
+.btn-play-inline {
+    background: none;
+    border: none;
+    color: var(--accent);
+    cursor: pointer;
+    font-size: 12px;
+    padding: 0 4px;
+    margin-left: 4px;
+    transition: color 0.15s;
+}
+.btn-play-inline:hover { color: var(--green); }
+
+.map-music-info {
+    display: flex;
+    align-items: center;
+}
+
+/* ─── Upload Zone ────────────────────────────────── */
+.upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text-dim);
+}
+.upload-zone:hover, .upload-zone.dragover {
+    border-color: var(--accent);
+    background: rgba(79,143,247,0.05);
+    color: var(--text);
+}
+.upload-zone-content {
+    pointer-events: none;
+}
+
 /* ─── Scrollbar ──────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
