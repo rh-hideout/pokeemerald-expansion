@@ -261,51 +261,38 @@ extern const struct WindowTemplate sPokemonList_WindowTemplate[];
 extern const struct BgTemplate sInfoScreen_BgTemplate[NUM_INFO_SCREEN_BG_TEMPLATES];
 extern const struct BgTemplate sNewEntryInfoScreen_BgTemplate[NUM_NEW_ENTRY_INFO_BG_TEMPLATES];
 
-void VBlankCB_Pokedex(void);
-void ResetPokedexView(struct PokedexView *pokedexView);
 void Task_HandlePokedexInput(u8);
 void CreatePokedexList(u8, u8);
-
+void CreateMonDexNum(u16, u8, u8, u16);
+void CreateCaughtBall(u16, u8, u8, u16);
+u8 CreateMonName(u16, u8, u8);
+void ClearMonListEntry(u8 x, u8 y, u16 unused);
 void CreateMonSpritesAtPos(u16, u16);
 void SpriteCB_MoveMonForInfoScreen(struct Sprite *sprite);
-
-void HighlightSelectedSearchTopBarItem(u8 topBarItem);
-void PrintSelectedSearchParameters(u8 taskId);
-
-
-void Task_SwitchToSearchMenuTopBar(u8);
-
 void Task_LoadInfoScreen(u8);
-void Task_LoadCryScreen(u8);
-void Task_LoadSizeScreen(u8);
-void Task_LoadAreaScreen(u8 taskId);
-
+void Task_HandleInfoScreenInput(u8);
 void Task_SwitchScreensFromInfoScreen(u8);
-void Task_HandleSizeScreenInput(u8);
-
-void CreateCaughtBall(u16, u8, u8, u16);
-void ClearMonListEntry(u8 x, u8 y, u16 unused);
-
 void Task_LoadInfoScreenWaitForFade(u8);
-void FreeInfoScreenWindowAndBgBuffers(void);
-void PrintInfoScreenText(const u8 *str, u8 left, u8 top);
-void Task_HandleInfoScreenInput(u8 taskId);
-void Task_HandleCryScreenInput(u8);
-
+void Task_LoadAreaScreen(u8 taskId);
 void Task_ReloadAreaScreen(u8 taskId);
 void Task_WaitForAreaScreenInput(u8 taskId);
-
-void Task_HandleCaughtMonPageInput(u8 taskId);
-
-void CreateMonDexNum(u16 entryNum, u8 left, u8 top, u16 unused);
-u8 CreateMonName(u16 num, u8 left, u8 top);
-
+void Task_LoadCryScreen(u8);
+void Task_HandleCryScreenInput(u8);
+void Task_LoadSizeScreen(u8);
+void Task_HandleSizeScreenInput(u8);
+void Task_HandleCaughtMonPageInput(u8);
 void ResetOtherVideoRegisters(u16);
 u8 PrintCryScreenSpeciesName(u8, u16, u8, u8);
-
-enum Species NationalPokedexNumToSpeciesForm(enum NationalDexOrder nationalNum);
-
+void Task_SwitchToSearchMenuTopBar(u8);
+void HighlightSelectedSearchTopBarItem(u8);
+void PrintSelectedSearchParameters(u8);
 void SetDefaultSearchModeAndOrder(u8);
 void CreateSearchParameterScrollArrows(u8);
+
+void VBlankCB_Pokedex(void);
+void ResetPokedexView(struct PokedexView *pokedexView);
+void PrintInfoScreenText(const u8 *str, u8 left, u8 top);
+void FreeInfoScreenWindowAndBgBuffers(void);
+enum Species NationalPokedexNumToSpeciesForm(enum NationalDexOrder nationalNum);
 
 #endif // GUARD_POKEDEX_H
