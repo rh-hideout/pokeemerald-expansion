@@ -72,7 +72,6 @@ private:
     long m_lineNum;
     long m_lineStart;
     std::string m_filename;
-    bool m_scriptData;
 
     bool ConsumeComma();
     int ReadPadLength();
