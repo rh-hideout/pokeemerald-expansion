@@ -1,16 +1,11 @@
-import glob
 import json
 import pathlib
 import re
 import sys
-import typing
 
 CONFIG_ENABLED_PAT = re.compile(r"#define P_LEARNSET_HELPER_TEACHABLE\s+(?P<cfg_val>[^ ]*)")
-
-TEACHING_TYPE_PAT =  re.compile(r"\s*\.teachingType\s*=\s*(?P<teaching_type>[A-Z_]+),")
-LEARNSET_PAT = re.compile(r"\s*\.teachableLearnset\s*=\s*s(?P<name>\w+?)TeachableLearnset")
-PREPROC_START_PAT = re.compile(r"#if(def)?\s+\w+")
-PREPROC_END_PAT = re.compile(r"#endif\s*(//\s*\w+)?")
+LEARNSET_PAT = re.compile(r"s(?P<name>\w+?)TeachableLearnset")
+SNAKIFY_PAT = re.compile(r"(?!^)([A-Z]+)")
 
 def enabled() -> bool:
     """
@@ -21,64 +16,26 @@ def enabled() -> bool:
         cfg_defined = CONFIG_ENABLED_PAT.search(cfg_pokemon)
         return cfg_defined is not None and cfg_defined.group("cfg_val") in ("TRUE", "1")
 
-def is_valid_preprocessor(line: str) -> bool:
-    match = re.match(PREPROC_START_PAT, line)
-    if match:
-        return True
-    match = re.match(PREPROC_END_PAT, line)
-    if match:
-        return True
-    return False
-
 def extract_repo_species_data() -> list:
-    species_data = []
-    pokemon_list = []
-    teaching_type = "DEFAULT_LEARNING"
-    file_list = sorted(glob.glob("src/data/pokemon/species_info/*_families.h"))
-    file_list.append(pathlib.Path("./src/data/pokemon/species_info.h"))
-    for families_fname in file_list:
-        with open(families_fname, "r") as family_fp:
-            species_lines = family_fp.readlines()
-        is_last_line_preprocessor = False
-        for line in species_lines:
-            if is_valid_preprocessor(line):
-                is_last_line_preprocessor = True
-                if line.startswith("#endif") and (isinstance(species_data[-1], str) and species_data[-1].startswith("#if")):
-                    del species_data[-1]
-                else:
-                    species_data.append(line)
-                continue
+    teaching_types = {}
 
-            match = re.match(LEARNSET_PAT, line)
-            if match:
-                if match.group("name") == "None":
-                    continue
-                if match.group("name") not in pokemon_list:
-                    if not is_last_line_preprocessor:
-                        species_data.append("\n")
-                    is_last_line_preprocessor = False
-                    species_data.append({"name": match.group("name"), "teaching_type": teaching_type})
-                    pokemon_list.append(match.group("name"))
-                teaching_type = "DEFAULT_LEARNING"
-                continue
-            match = re.match(TEACHING_TYPE_PAT, line)
-            if match:
-                teaching_type = match.group("teaching_type")
-    return species_data
+    with open("build/emerald/species.json", "r") as f:
+        species_data = json.load(f)
 
-def add_whitesspaces(parsed_list) ->list:
-    for i, item in enumerate(parsed_list):
-        if i == 0:
+    for name, species in species_data.items():
+        learnset_name = species["teachableLearnset"]
+        species_name = re.sub(LEARNSET_PAT, r"\1", learnset_name)
+        species_name = SNAKIFY_PAT.sub(r"_\1", species_name).upper()
+        learnset = {"species_name": species_name}
+        if species["teachableLearnset"] in teaching_types:
             continue
-        if not isinstance(item, str):
-            continue
-        if item.startswith("#if"):
-            if not isinstance(parsed_list[i - 1], str):
-                parsed_list[i] = "\n" + item
-            elif parsed_list[i - 1].startswith("#endif"):
-                parsed_list[i] = "\n" + item
-    return parsed_list
+        if "teachingType" in species:
+            learnset["teachingType"] = species["teachingType"]
+        else:
+            learnset["teachingType"] = "DEFAULT_LEARNING"
+        teaching_types[learnset_name] = learnset
 
+    return teaching_types
 
 def dump_output(file, data):
     with open(file, "w") as fp:
@@ -98,7 +55,6 @@ def main():
     assert OUTPUT_FILE.parent.exists(), f"parent of {OUTPUT_FILE=} does not exist"
 
     teaching_types_list = extract_repo_species_data()
-    teaching_types_list = add_whitesspaces(teaching_types_list)
     new_teaching_types = json.dumps(teaching_types_list, indent=2)
     old_teaching_types = ""
     if OUTPUT_FILE.exists() and OUTPUT_FILE.is_file():
