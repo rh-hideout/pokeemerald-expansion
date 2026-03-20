@@ -1323,10 +1323,126 @@ function openTrainerModal(trainer, isNew) {
 }
 
 // ─── Encounters ─────────────────────────────────────────────────────────────
+
+// Game progression order starting from Littleroot Town.
+// Areas are listed in the order the player first encounters them.
+const AREA_PROGRESSION_ORDER = [
+    // Hoenn: Littleroot -> Oldale
+    'MAP_ROUTE101', 'MAP_ROUTE103', 'MAP_ROUTE102',
+    'MAP_PETALBURG_CITY',
+    // Petalburg -> Rustboro
+    'MAP_ROUTE104', 'MAP_PETALBURG_WOODS',
+    'MAP_ROUTE116', 'MAP_RUSTURF_TUNNEL', 'MAP_ROUTE115',
+    // Dewford via Mr. Briney
+    'MAP_ROUTE106', 'MAP_DEWFORD_TOWN',
+    'MAP_GRANITE_CAVE_1F', 'MAP_GRANITE_CAVE_B1F', 'MAP_GRANITE_CAVE_B2F', 'MAP_GRANITE_CAVE_STEVENS_ROOM',
+    // Slateport
+    'MAP_ROUTE107', 'MAP_ROUTE108', 'MAP_ROUTE109', 'MAP_SLATEPORT_CITY',
+    // Mauville
+    'MAP_ROUTE110', 'MAP_NEW_MAUVILLE_ENTRANCE', 'MAP_NEW_MAUVILLE_INSIDE',
+    'MAP_ROUTE117',
+    // Route 111 / Desert
+    'MAP_ROUTE111', 'MAP_MIRAGE_TOWER_1F', 'MAP_MIRAGE_TOWER_2F', 'MAP_MIRAGE_TOWER_3F', 'MAP_MIRAGE_TOWER_4F',
+    // Lavaridge
+    'MAP_ROUTE112', 'MAP_FIERY_PATH', 'MAP_JAGGED_PASS',
+    // Fallarbor / Meteor Falls
+    'MAP_ROUTE113', 'MAP_ROUTE114',
+    'MAP_METEOR_FALLS_1F_1R', 'MAP_METEOR_FALLS_1F_2R', 'MAP_METEOR_FALLS_B1F_1R', 'MAP_METEOR_FALLS_B1F_2R', 'MAP_METEOR_FALLS_STEVENS_CAVE',
+    // Fortree
+    'MAP_ROUTE118', 'MAP_ROUTE119', 'MAP_ROUTE120', 'MAP_ROUTE121',
+    // Mt. Pyre
+    'MAP_ROUTE122',
+    'MAP_MT_PYRE_1F', 'MAP_MT_PYRE_2F', 'MAP_MT_PYRE_3F', 'MAP_MT_PYRE_4F', 'MAP_MT_PYRE_5F', 'MAP_MT_PYRE_6F', 'MAP_MT_PYRE_EXTERIOR', 'MAP_MT_PYRE_SUMMIT',
+    'MAP_ROUTE123',
+    // Lilycove / Safari Zone
+    'MAP_LILYCOVE_CITY',
+    'MAP_SAFARI_ZONE_SOUTH', 'MAP_SAFARI_ZONE_SOUTHWEST', 'MAP_SAFARI_ZONE_NORTH', 'MAP_SAFARI_ZONE_NORTHWEST', 'MAP_SAFARI_ZONE_SOUTHEAST', 'MAP_SAFARI_ZONE_NORTHEAST',
+    // Magma Hideout
+    'MAP_MAGMA_HIDEOUT_1F', 'MAP_MAGMA_HIDEOUT_2F_1R', 'MAP_MAGMA_HIDEOUT_2F_2R', 'MAP_MAGMA_HIDEOUT_2F_3R',
+    'MAP_MAGMA_HIDEOUT_3F_1R', 'MAP_MAGMA_HIDEOUT_3F_2R', 'MAP_MAGMA_HIDEOUT_3F_3R', 'MAP_MAGMA_HIDEOUT_4F',
+    // Mossdeep / Shoal Cave
+    'MAP_ROUTE124', 'MAP_UNDERWATER_ROUTE124', 'MAP_MOSSDEEP_CITY',
+    'MAP_ROUTE125',
+    'MAP_SHOAL_CAVE_LOW_TIDE_ENTRANCE_ROOM', 'MAP_SHOAL_CAVE_LOW_TIDE_INNER_ROOM', 'MAP_SHOAL_CAVE_LOW_TIDE_STAIRS_ROOM', 'MAP_SHOAL_CAVE_LOW_TIDE_LOWER_ROOM', 'MAP_SHOAL_CAVE_LOW_TIDE_ICE_ROOM',
+    // Seafloor Cavern
+    'MAP_ROUTE126', 'MAP_UNDERWATER_ROUTE126', 'MAP_ROUTE127', 'MAP_ROUTE128',
+    'MAP_SEAFLOOR_CAVERN_ENTRANCE', 'MAP_SEAFLOOR_CAVERN_ROOM1', 'MAP_SEAFLOOR_CAVERN_ROOM2', 'MAP_SEAFLOOR_CAVERN_ROOM3', 'MAP_SEAFLOOR_CAVERN_ROOM4',
+    'MAP_SEAFLOOR_CAVERN_ROOM5', 'MAP_SEAFLOOR_CAVERN_ROOM6', 'MAP_SEAFLOOR_CAVERN_ROOM7', 'MAP_SEAFLOOR_CAVERN_ROOM8',
+    // Sootopolis / Cave of Origin
+    'MAP_SOOTOPOLIS_CITY',
+    'MAP_CAVE_OF_ORIGIN_ENTRANCE', 'MAP_CAVE_OF_ORIGIN_1F', 'MAP_CAVE_OF_ORIGIN_UNUSED_RUBY_SAPPHIRE_MAP1', 'MAP_CAVE_OF_ORIGIN_UNUSED_RUBY_SAPPHIRE_MAP2', 'MAP_CAVE_OF_ORIGIN_UNUSED_RUBY_SAPPHIRE_MAP3',
+    'MAP_ROUTE105',
+    // Water routes / Pacifidlog / Sky Pillar
+    'MAP_ROUTE129', 'MAP_ROUTE130', 'MAP_ROUTE131',
+    'MAP_PACIFIDLOG_TOWN',
+    'MAP_SKY_PILLAR_1F', 'MAP_SKY_PILLAR_3F', 'MAP_SKY_PILLAR_5F',
+    'MAP_ROUTE132', 'MAP_ROUTE133', 'MAP_ROUTE134',
+    // Abandoned Ship
+    'MAP_ABANDONED_SHIP_ROOMS_B1F', 'MAP_ABANDONED_SHIP_HIDDEN_FLOOR_CORRIDORS',
+    // Victory Road
+    'MAP_EVER_GRANDE_CITY', 'MAP_VICTORY_ROAD_1F', 'MAP_VICTORY_ROAD_B1F', 'MAP_VICTORY_ROAD_B2F',
+    // Post-game Hoenn
+    'MAP_DESERT_UNDERPASS', 'MAP_ARTISAN_CAVE_B1F', 'MAP_ARTISAN_CAVE_1F', 'MAP_ALTERING_CAVE',
+    // === Kanto (FRLG) ===
+    'MAP_PALLET_TOWN', 'MAP_ROUTE1', 'MAP_VIRIDIAN_CITY', 'MAP_ROUTE22',
+    'MAP_VIRIDIAN_FOREST', 'MAP_ROUTE2',
+    'MAP_ROUTE3', 'MAP_MT_MOON_1F', 'MAP_MT_MOON_B1F', 'MAP_MT_MOON_B2F',
+    'MAP_ROUTE4', 'MAP_CERULEAN_CITY', 'MAP_ROUTE24', 'MAP_ROUTE25',
+    'MAP_ROUTE5', 'MAP_ROUTE6', 'MAP_VERMILION_CITY', 'MAP_SSANNE_EXTERIOR',
+    'MAP_ROUTE11', 'MAP_DIGLETTS_CAVE_B1F',
+    'MAP_ROUTE9', 'MAP_ROUTE10', 'MAP_ROCK_TUNNEL_1F', 'MAP_ROCK_TUNNEL_B1F', 'MAP_POWER_PLANT',
+    'MAP_ROUTE7', 'MAP_CELADON_CITY', 'MAP_ROUTE8',
+    'MAP_POKEMON_TOWER_3F', 'MAP_POKEMON_TOWER_4F', 'MAP_POKEMON_TOWER_5F', 'MAP_POKEMON_TOWER_6F', 'MAP_POKEMON_TOWER_7F',
+    'MAP_ROUTE12', 'MAP_ROUTE13', 'MAP_ROUTE14', 'MAP_ROUTE15',
+    'MAP_FUCHSIA_CITY',
+    'MAP_SAFARI_ZONE_CENTER', 'MAP_SAFARI_ZONE_EAST', 'MAP_SAFARI_ZONE_NORTH_FRLG', 'MAP_SAFARI_ZONE_WEST',
+    'MAP_ROUTE16', 'MAP_ROUTE17', 'MAP_ROUTE18',
+    'MAP_ROUTE19', 'MAP_ROUTE20',
+    'MAP_SEAFOAM_ISLANDS_1F', 'MAP_SEAFOAM_ISLANDS_B1F', 'MAP_SEAFOAM_ISLANDS_B2F', 'MAP_SEAFOAM_ISLANDS_B3F', 'MAP_SEAFOAM_ISLANDS_B4F',
+    'MAP_CINNABAR_ISLAND',
+    'MAP_POKEMON_MANSION_1F', 'MAP_POKEMON_MANSION_2F', 'MAP_POKEMON_MANSION_3F', 'MAP_POKEMON_MANSION_B1F',
+    'MAP_ROUTE21_NORTH', 'MAP_ROUTE21_SOUTH',
+    'MAP_ROUTE23', 'MAP_VICTORY_ROAD_1F_FRLG', 'MAP_VICTORY_ROAD_2F', 'MAP_VICTORY_ROAD_3F',
+    'MAP_CERULEAN_CAVE_1F', 'MAP_CERULEAN_CAVE_2F', 'MAP_CERULEAN_CAVE_B1F',
+    // === Sevii Islands ===
+    'MAP_ONE_ISLAND', 'MAP_ONE_ISLAND_KINDLE_ROAD', 'MAP_ONE_ISLAND_TREASURE_BEACH',
+    'MAP_MT_EMBER_EXTERIOR', 'MAP_MT_EMBER_SUMMIT_PATH_1F', 'MAP_MT_EMBER_SUMMIT_PATH_2F', 'MAP_MT_EMBER_SUMMIT_PATH_3F',
+    'MAP_MT_EMBER_RUBY_PATH_1F', 'MAP_MT_EMBER_RUBY_PATH_B1F', 'MAP_MT_EMBER_RUBY_PATH_B1F_STAIRS', 'MAP_MT_EMBER_RUBY_PATH_B2F', 'MAP_MT_EMBER_RUBY_PATH_B2F_STAIRS', 'MAP_MT_EMBER_RUBY_PATH_B3F',
+    'MAP_TWO_ISLAND_CAPE_BRINK',
+    'MAP_THREE_ISLAND_PORT', 'MAP_THREE_ISLAND_BOND_BRIDGE', 'MAP_THREE_ISLAND_BERRY_FOREST',
+    'MAP_FOUR_ISLAND', 'MAP_FOUR_ISLAND_ICEFALL_CAVE_ENTRANCE', 'MAP_FOUR_ISLAND_ICEFALL_CAVE_1F', 'MAP_FOUR_ISLAND_ICEFALL_CAVE_B1F', 'MAP_FOUR_ISLAND_ICEFALL_CAVE_BACK',
+    'MAP_FIVE_ISLAND', 'MAP_FIVE_ISLAND_RESORT_GORGEOUS', 'MAP_FIVE_ISLAND_WATER_LABYRINTH', 'MAP_FIVE_ISLAND_MEADOW', 'MAP_FIVE_ISLAND_MEMORIAL_PILLAR',
+    'MAP_FIVE_ISLAND_LOST_CAVE_ROOM1', 'MAP_FIVE_ISLAND_LOST_CAVE_ROOM2', 'MAP_FIVE_ISLAND_LOST_CAVE_ROOM3', 'MAP_FIVE_ISLAND_LOST_CAVE_ROOM4', 'MAP_FIVE_ISLAND_LOST_CAVE_ROOM5',
+    'MAP_FIVE_ISLAND_LOST_CAVE_ROOM6', 'MAP_FIVE_ISLAND_LOST_CAVE_ROOM7', 'MAP_FIVE_ISLAND_LOST_CAVE_ROOM8', 'MAP_FIVE_ISLAND_LOST_CAVE_ROOM9', 'MAP_FIVE_ISLAND_LOST_CAVE_ROOM10',
+    'MAP_FIVE_ISLAND_LOST_CAVE_ROOM11', 'MAP_FIVE_ISLAND_LOST_CAVE_ROOM12', 'MAP_FIVE_ISLAND_LOST_CAVE_ROOM13', 'MAP_FIVE_ISLAND_LOST_CAVE_ROOM14',
+    'MAP_SIX_ISLAND_PATTERN_BUSH', 'MAP_SIX_ISLAND_OUTCAST_ISLAND', 'MAP_SIX_ISLAND_GREEN_PATH', 'MAP_SIX_ISLAND_WATER_PATH', 'MAP_SIX_ISLAND_RUIN_VALLEY', 'MAP_SIX_ISLAND_ALTERING_CAVE',
+    'MAP_SEVEN_ISLAND_TRAINER_TOWER', 'MAP_SEVEN_ISLAND_SEVAULT_CANYON_ENTRANCE', 'MAP_SEVEN_ISLAND_SEVAULT_CANYON', 'MAP_SEVEN_ISLAND_TANOBY_RUINS',
+    'MAP_SEVEN_ISLAND_TANOBY_RUINS_MONEAN_CHAMBER', 'MAP_SEVEN_ISLAND_TANOBY_RUINS_LIPTOO_CHAMBER', 'MAP_SEVEN_ISLAND_TANOBY_RUINS_WEEPTH_CHAMBER',
+    'MAP_SEVEN_ISLAND_TANOBY_RUINS_DILFORD_CHAMBER', 'MAP_SEVEN_ISLAND_TANOBY_RUINS_SCUFIB_CHAMBER', 'MAP_SEVEN_ISLAND_TANOBY_RUINS_RIXY_CHAMBER', 'MAP_SEVEN_ISLAND_TANOBY_RUINS_VIAPOIS_CHAMBER',
+];
+
+// Build a lookup for encounter ordering; unknown maps sort to end.
+const AREA_ORDER_MAP = {};
+AREA_PROGRESSION_ORDER.forEach((name, i) => { AREA_ORDER_MAP[name] = i; });
+function areaOrder(mapName) { return AREA_ORDER_MAP[mapName] ?? 99999; }
+
+// Resolve SPECIES_XXX to a display name using loaded pokemon data, falling back to title-cased code.
+function speciesDisplayName(speciesCode) {
+    if (state.pokemon) {
+        const mon = state.pokemon.find(p => p.id === speciesCode);
+        if (mon?.name) return mon.name;
+    }
+    return speciesCode.replace('SPECIES_', '').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+}
+
 async function renderEncounters() {
     const data = await loadEncounters();
     const encounters = data.wild_encounter_groups?.[0]?.encounters || [];
     const encounterRates = data.wild_encounter_groups?.[0]?.fields || [];
+
+    // Pre-load pokemon names for display (non-blocking: falls back to code if not ready)
+    loadPokemonSpecies().catch(() => {});
+
     const search = state.search.toLowerCase();
     const filtered = encounters.filter(e =>
         !search ||
@@ -1339,9 +1455,12 @@ async function renderEncounters() {
         })
     );
 
+    // Sort by game progression order
+    const sorted = [...filtered].sort((a, b) => areaOrder(a.map) - areaOrder(b.map));
+
     content.innerHTML = `
         <div class="page-header">
-            <h1>Wild Encounters <span style="color:var(--text-dim);font-size:14px">(${filtered.length}/${encounters.length})</span></h1>
+            <h1>Wild Encounters <span style="color:var(--text-dim);font-size:14px">(${sorted.length}/${encounters.length})</span></h1>
         </div>
         <div class="search-bar">
             <span class="search-icon">&#128269;</span>
@@ -1354,7 +1473,7 @@ async function renderEncounters() {
     const fieldTypes = ['land_mons', 'water_mons', 'rock_smash_mons', 'fishing_mons'];
     const fieldLabels = { land_mons: 'Grass/Land', water_mons: 'Surfing', rock_smash_mons: 'Rock Smash', fishing_mons: 'Fishing' };
 
-    for (const enc of filtered.slice(0, 60)) {
+    for (const enc of sorted.slice(0, 60)) {
         let sections = '';
         for (const type of fieldTypes) {
             if (!enc[type]) continue;
@@ -1365,7 +1484,7 @@ async function renderEncounters() {
                     <h4>${fieldLabels[type]} (Rate: ${enc[type].encounter_rate}%)</h4>
                     ${enc[type].mons.map((m, i) => `
                         <div class="encounter-row">
-                            <span>${m.species.replace('SPECIES_', '')}</span>
+                            <span>${speciesDisplayName(m.species)}</span>
                             <span>Lv ${m.min_level}-${m.max_level}</span>
                             <span class="rate">${rates[i] || '?'}%</span>
                         </div>
@@ -2323,7 +2442,7 @@ function buildEncounterSection(enc, encounterRates, map) {
             // Aggregate encounters: combine duplicate species
             const speciesMap = {};
             enc[type].mons.forEach((m, i) => {
-                const name = m.species.replace('SPECIES_', '');
+                const name = speciesDisplayName(m.species);
                 const rate = rates[i] || 0;
                 if (!speciesMap[name]) {
                     speciesMap[name] = { species: m.species, name, minLevel: m.min_level, maxLevel: m.max_level, totalRate: 0, count: 0 };
