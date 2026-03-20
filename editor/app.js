@@ -32,11 +32,13 @@ let state = {
     abilities: null,
     config: null,
     maps: null,
+    music: null,
     pokemon: null,
     learnsets: null,   // { varName: { gen: 'gen_X', moves: [{level, move}] } }
     learnables: null,  // all_learnables.json content
     search: '',
     configFilter: 'all',
+    musicFilter: 'all',
     mapDetail: null,
     mapTypeFilter: 'all',
     npcDetail: null,
@@ -950,6 +952,7 @@ async function render() {
             case 'abilities': await renderAbilities(); break;
             case 'config': await renderConfig(); break;
             case 'starters': await renderStarters(); break;
+            case 'music': await renderMusic(); break;
         }
     } catch (e) {
         content.innerHTML = `<div class="loading-center" style="color:var(--red)">Error loading data: ${escHtml(e.message)}</div>`;
@@ -2355,7 +2358,7 @@ async function renderMapDetail(dirName) {
                 </div>
             </div>
             <div class="map-area-info-bar">
-                <span><span class="info-icon">&#9835;</span> ${(map.music || 'None').replace('MUS_', '')}</span>
+                <span class="map-music-info"><span class="info-icon">&#9835;</span> ${(map.music || 'None').replace('MUS_', '')}${map.music && map.music !== 'MUS_DUMMY' ? ` <button class="btn-play-inline" onclick="event.stopPropagation(); playMapMusic('${escAttr(map.music)}')" title="Play music">&#9654;</button>` : ''}</span>
                 <span><span class="info-icon">&#9729;</span> ${(map.weather || 'None').replace('WEATHER_', '')}</span>
                 <span><span class="info-icon">&#9786;</span> ${npcCount} NPCs</span>
                 <span><span class="info-icon">&#8644;</span> ${conns} routes, ${doors} doors</span>
@@ -2651,7 +2654,7 @@ function buildPropertiesSection(map) {
             <div class="map-area-section-body">
                 <div class="map-props-grid">
                     <div class="map-prop">
-                        <label>Music</label>
+                        <label>Music ${map.music && map.music !== 'MUS_DUMMY' ? `<button class="btn btn-sm music-play-btn" onclick="playMapMusic('${escAttr(map.music)}')" style="margin-left:6px" title="Play">&#9654;</button>` : ''}</label>
                         ${makeDatalistHtml('mp-music', map.music || '', getUniqueMusicConstants(), 'style="font-family:monospace"')}
                     </div>
                     <div class="map-prop">
@@ -5459,6 +5462,297 @@ function escHtml(s) {
 }
 function escAttr(s) {
     return String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+// ─── MIDI Player Engine ─────────────────────────────────────────────────────
+
+window.musicPlayer = (() => {
+    let audioCtx = null;
+    let instruments = {};
+    let player = null;
+    let currentTrack = null;
+    let isPlaying = false;
+
+    function getAudioContext() {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        return audioCtx;
+    }
+
+    async function loadInstrument(programNum) {
+        const ac = getAudioContext();
+        const gmNames = [
+            'acoustic_grand_piano', 'bright_acoustic_piano', 'electric_grand_piano', 'honkytonk_piano',
+            'electric_piano_1', 'electric_piano_2', 'harpsichord', 'clavinet',
+            'celesta', 'glockenspiel', 'music_box', 'vibraphone',
+            'marimba', 'xylophone', 'tubular_bells', 'dulcimer',
+            'drawbar_organ', 'percussive_organ', 'rock_organ', 'church_organ',
+            'reed_organ', 'accordion', 'harmonica', 'tango_accordion',
+            'acoustic_guitar_nylon', 'acoustic_guitar_steel', 'electric_guitar_jazz', 'electric_guitar_clean',
+            'electric_guitar_muted', 'overdriven_guitar', 'distortion_guitar', 'guitar_harmonics',
+            'acoustic_bass', 'electric_bass_finger', 'electric_bass_pick', 'fretless_bass',
+            'slap_bass_1', 'slap_bass_2', 'synth_bass_1', 'synth_bass_2',
+            'violin', 'viola', 'cello', 'contrabass',
+            'tremolo_strings', 'pizzicato_strings', 'orchestral_harp', 'timpani',
+            'string_ensemble_1', 'string_ensemble_2', 'synth_strings_1', 'synth_strings_2',
+            'choir_aahs', 'voice_oohs', 'synth_choir', 'orchestra_hit',
+            'trumpet', 'trombone', 'tuba', 'muted_trumpet',
+            'french_horn', 'brass_section', 'synth_brass_1', 'synth_brass_2',
+            'soprano_sax', 'alto_sax', 'tenor_sax', 'baritone_sax',
+            'oboe', 'english_horn', 'bassoon', 'clarinet',
+            'piccolo', 'flute', 'recorder', 'pan_flute',
+            'blown_bottle', 'shakuhachi', 'whistle', 'ocarina',
+            'lead_1_square', 'lead_2_sawtooth', 'lead_3_calliope', 'lead_4_chiff',
+            'lead_5_charang', 'lead_6_voice', 'lead_7_fifths', 'lead_8_bass_lead',
+            'pad_1_new_age', 'pad_2_warm', 'pad_3_polysynth', 'pad_4_choir',
+            'pad_5_bowed', 'pad_6_metallic', 'pad_7_halo', 'pad_8_sweep',
+            'fx_1_rain', 'fx_2_soundtrack', 'fx_3_crystal', 'fx_4_atmosphere',
+            'fx_5_brightness', 'fx_6_goblins', 'fx_7_echoes', 'fx_8_scifi',
+            'sitar', 'banjo', 'shamisen', 'koto',
+            'kalimba', 'bagpipe', 'fiddle', 'shanai',
+            'tinkle_bell', 'agogo', 'steel_drums', 'woodblock',
+            'taiko_drum', 'melodic_tom', 'synth_drum', 'reverse_cymbal',
+            'guitar_fret_noise', 'breath_noise', 'seashore', 'bird_tweet',
+            'telephone_ring', 'helicopter', 'applause', 'gunshot'
+        ];
+        const name = gmNames[programNum] || 'acoustic_grand_piano';
+        if (!instruments[name]) {
+            try {
+                instruments[name] = await Soundfont.instrument(ac, name);
+            } catch {
+                if (!instruments['acoustic_grand_piano']) {
+                    instruments['acoustic_grand_piano'] = await Soundfont.instrument(ac, 'acoustic_grand_piano');
+                }
+                instruments[name] = instruments['acoustic_grand_piano'];
+            }
+        }
+        return instruments[name];
+    }
+
+    const channelPrograms = {};
+    for (let i = 0; i < 16; i++) channelPrograms[i] = 0;
+
+    async function play(filename, trackId) {
+        stop();
+        const ac = getAudioContext();
+        if (ac.state === 'suspended') await ac.resume();
+
+        currentTrack = trackId || filename;
+        const bar = document.getElementById('music-player-bar');
+        const title = document.getElementById('music-player-title');
+        const playBtn = document.getElementById('music-player-play');
+        if (bar) bar.style.display = 'flex';
+        if (title) title.textContent = (trackId || filename).replace('MUS_', '').replace(/_/g, ' ');
+
+        await loadInstrument(0);
+
+        // Fetch MIDI file from GitHub raw URL
+        const rawUrl = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/sound/songs/midi/${encodeURIComponent(filename)}`;
+        const headers = {};
+        if (ghToken) headers['Authorization'] = `token ${ghToken}`;
+        const response = await fetch(rawUrl, { headers });
+        const arrayBuffer = await response.arrayBuffer();
+        const uint8 = new Uint8Array(arrayBuffer);
+
+        let binary = '';
+        for (let i = 0; i < uint8.length; i++) binary += String.fromCharCode(uint8[i]);
+        const dataUri = 'data:audio/midi;base64,' + btoa(binary);
+
+        player = new MidiPlayer.Player(async (event) => {
+            if (event.name === 'Program Change') {
+                channelPrograms[event.channel - 1] = event.value;
+                loadInstrument(event.value);
+            }
+            if (event.name === 'Note on' && event.velocity > 0) {
+                const ch = event.channel - 1;
+                if (ch === 9) return;
+                const prog = channelPrograms[ch] || 0;
+                const inst = instruments[Object.keys(instruments)[0]] || await loadInstrument(prog);
+                try {
+                    inst.play(event.noteName, ac.currentTime, {
+                        gain: event.velocity / 127,
+                        duration: 1.5
+                    });
+                } catch {}
+            }
+        });
+
+        player.on('endOfFile', () => {
+            player.play();
+        });
+
+        player.loadDataUri(dataUri);
+        player.play();
+        isPlaying = true;
+        if (playBtn) playBtn.innerHTML = '&#10074;&#10074;';
+    }
+
+    function stop() {
+        if (player) {
+            player.stop();
+            player = null;
+        }
+        for (const inst of Object.values(instruments)) {
+            try { inst.stop(); } catch {}
+        }
+        isPlaying = false;
+        currentTrack = null;
+        const bar = document.getElementById('music-player-bar');
+        const playBtn = document.getElementById('music-player-play');
+        if (bar) bar.style.display = 'none';
+        if (playBtn) playBtn.innerHTML = '&#9654;';
+    }
+
+    function toggle() {
+        if (!player) return;
+        const playBtn = document.getElementById('music-player-play');
+        if (isPlaying) {
+            player.pause();
+            isPlaying = false;
+            if (playBtn) playBtn.innerHTML = '&#9654;';
+        } else {
+            player.play();
+            isPlaying = true;
+            if (playBtn) playBtn.innerHTML = '&#10074;&#10074;';
+        }
+    }
+
+    function isCurrentlyPlaying(trackId) {
+        return isPlaying && currentTrack === trackId;
+    }
+
+    return { play, stop, toggle, isCurrentlyPlaying };
+})();
+
+// ─── Music Page ─────────────────────────────────────────────────────────────
+
+async function loadMusic() {
+    if (!state.music) {
+        const songsH = await fetchFile('include/constants/songs.h');
+        // List MIDI files from the repo
+        let midiFiles = [];
+        try {
+            const listing = await ghFetch(`/repos/${REPO_OWNER}/${REPO_NAME}/contents/sound/songs/midi?ref=${BRANCH}`);
+            midiFiles = listing.filter(f => f.name.endsWith('.mid')).map(f => f.name);
+        } catch {}
+
+        const tracks = [];
+        const musRegex = /^#define\s+(MUS_\w+)\s+(\d+)\s*\/\/\s*(.*)?$/gm;
+        let match;
+        while ((match = musRegex.exec(songsH)) !== null) {
+            const id = match[1];
+            const num = parseInt(match[2]);
+            const comment = (match[3] || '').trim();
+            const expectedFile = id.toLowerCase() + '.mid';
+            const hasMidi = midiFiles.includes(expectedFile);
+            tracks.push({ id, num, comment, file: hasMidi ? expectedFile : null });
+        }
+        const knownFiles = new Set(tracks.filter(t => t.file).map(t => t.file));
+        for (const f of midiFiles) {
+            if (!knownFiles.has(f) && f !== 'midi.cfg') {
+                tracks.push({
+                    id: f.replace('.mid', '').toUpperCase(),
+                    num: null,
+                    comment: 'Custom (unregistered)',
+                    file: f
+                });
+            }
+        }
+        state.music = tracks;
+    }
+    return state.music;
+}
+
+async function renderMusic() {
+    const tracks = await loadMusic();
+    const search = state.search.toLowerCase();
+
+    const activeFilter = state.musicFilter;
+    const filtered = tracks.filter(t => {
+        if (activeFilter === 'has_midi' && !t.file) return false;
+        if (activeFilter === 'no_midi' && t.file) return false;
+        if (!search) return true;
+        return t.id.toLowerCase().includes(search) ||
+            (t.comment || '').toLowerCase().includes(search);
+    });
+
+    const withMidi = tracks.filter(t => t.file).length;
+
+    content.innerHTML = `
+        <div class="page-header">
+            <h1>Music <span style="color:var(--text-dim);font-size:14px">(${filtered.length}/${tracks.length})</span></h1>
+        </div>
+        <div class="search-bar">
+            <span class="search-icon">&#128269;</span>
+            <input type="text" placeholder="Search music tracks by name..." id="music-search" value="${state.search}">
+        </div>
+        <div class="filter-row">
+            <span class="filter-chip ${activeFilter === 'all' ? 'active' : ''}" onclick="state.musicFilter='all'; renderMusic()">All (${tracks.length})</span>
+            <span class="filter-chip ${activeFilter === 'has_midi' ? 'active' : ''}" onclick="state.musicFilter='has_midi'; renderMusic()">Has MIDI (${withMidi})</span>
+            <span class="filter-chip ${activeFilter === 'no_midi' ? 'active' : ''}" onclick="state.musicFilter='no_midi'; renderMusic()">No MIDI (${tracks.length - withMidi})</span>
+        </div>
+        <div class="card-grid" id="music-grid"></div>
+    `;
+
+    const grid = $('#music-grid');
+    for (const t of filtered.slice(0, 100)) {
+        const displayName = t.id.replace('MUS_', '').replace(/_/g, ' ');
+        const isPlaying = window.musicPlayer.isCurrentlyPlaying(t.id);
+        grid.innerHTML += `
+            <div class="music-card ${isPlaying ? 'music-playing' : ''}">
+                <div class="music-card-header">
+                    <div>
+                        <h3>${escHtml(displayName)}</h3>
+                        <div class="music-card-id">${escHtml(t.id)}</div>
+                    </div>
+                    ${t.file ? `
+                        <button class="btn btn-sm music-play-btn ${isPlaying ? 'playing' : ''}" onclick="event.stopPropagation(); playTrack('${escAttr(t.file)}', '${escAttr(t.id)}')" title="Play">
+                            ${isPlaying ? '&#9632;' : '&#9654;'}
+                        </button>
+                    ` : '<span class="music-no-file">No MIDI</span>'}
+                </div>
+                <div class="music-card-meta">
+                    ${t.num !== null ? `<span>ID: ${t.num}</span>` : ''}
+                    ${t.comment ? `<span>${escHtml(t.comment)}</span>` : ''}
+                    ${t.file ? `<span class="music-file-tag">${escHtml(t.file)}</span>` : ''}
+                </div>
+            </div>
+        `;
+    }
+    if (filtered.length > 100) {
+        grid.innerHTML += `<div style="padding:20px;color:var(--text-dim);font-size:13px">Showing 100 of ${filtered.length} tracks. Use search to narrow down.</div>`;
+    }
+
+    if ($('#badge-music')) $('#badge-music').textContent = withMidi;
+
+    $('#music-search').addEventListener('input', e => {
+        state.search = e.target.value;
+        renderMusic();
+    });
+}
+
+function playTrack(filename, trackId) {
+    if (window.musicPlayer.isCurrentlyPlaying(trackId)) {
+        window.musicPlayer.stop();
+        if (state.page === 'music') renderMusic();
+    } else {
+        window.musicPlayer.play(filename, trackId).then(() => {
+            if (state.page === 'music') renderMusic();
+        });
+    }
+}
+
+async function playMapMusic(musicId) {
+    if (window.musicPlayer.isCurrentlyPlaying(musicId)) {
+        window.musicPlayer.stop();
+        return;
+    }
+    const tracks = state.music || await loadMusic();
+    const track = tracks.find(t => t.id === musicId);
+    if (track && track.file) {
+        window.musicPlayer.play(track.file, musicId);
+    } else {
+        toast('No MIDI file available for ' + musicId, true);
+    }
 }
 
 // ─── Init ───────────────────────────────────────────────────────────────────
