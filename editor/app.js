@@ -4905,7 +4905,13 @@ function parseLevelUpLearnsets(text, genName) {
 
 async function loadLearnsets() {
     if (!state.learnsets) {
-        const listing = await ghFetch(`/repos/${REPO_OWNER}/${REPO_NAME}/contents/src/data/pokemon/level_up_learnsets?ref=${BRANCH}`);
+        let listing;
+        try {
+            listing = await ghFetch(`/repos/${REPO_OWNER}/${REPO_NAME}/contents/src/data/pokemon/level_up_learnsets?ref=${BRANCH}`);
+        } catch (e) {
+            throw new Error(`Could not list learnset files: ${e.message}`);
+        }
+        if (!Array.isArray(listing)) throw new Error('Unexpected response when listing learnset files');
         const genFiles = listing.filter(f => f.name.startsWith('gen_') && f.name.endsWith('.h'));
         const all = {};
         for (let i = 0; i < genFiles.length; i += 3) {
@@ -4986,11 +4992,29 @@ function updateLearnablesInFile(speciesKey, moveList) {
 }
 
 async function editLearnset(speciesId) {
-    const [moves, learnsets, learnables] = await Promise.all([
-        loadMoves(), loadLearnsets(), loadLearnables()
-    ]);
     const mon = state.pokemon.find(p => p.id === speciesId);
     if (!mon) return;
+
+    // Show loading indicator
+    const loadingOverlay = document.createElement('div');
+    loadingOverlay.className = 'modal-overlay';
+    loadingOverlay.innerHTML = `<div class="modal" style="padding:32px;text-align:center">
+        <div class="spinner"></div>
+        <div style="margin-top:12px">Loading learnset data for ${escHtml(mon.name || mon.id)}...</div>
+    </div>`;
+    document.body.appendChild(loadingOverlay);
+
+    let moves, learnsets, learnables;
+    try {
+        [moves, learnsets, learnables] = await Promise.all([
+            loadMoves(), loadLearnsets(), loadLearnables()
+        ]);
+    } catch (e) {
+        loadingOverlay.remove();
+        toast(`Failed to load learnset data: ${e.message}`, true);
+        return;
+    }
+    loadingOverlay.remove();
 
     const nameMap = getMoveNameMap(moves);
     const idMap = getMoveIdMap(moves);
