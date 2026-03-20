@@ -139,6 +139,11 @@ struct PokedexListItem
 struct PokemonStats
 {
     enum Species species;
+    enum Ability ability0;
+    enum Ability ability1;
+    enum Ability abilityHidden;
+    enum GrowthRate growthRate;
+    u16 expYield;
     u8 genderRatio;
     u8 baseHP;
     u8 baseSpeed;
@@ -154,35 +159,30 @@ struct PokemonStats
     u8 evYield_Defense;
     u8 evYield_SpDefense;
     u8 catchRate;
-    enum GrowthRate growthRate:8;
     u8 eggGroup1;
     u8 eggGroup2;
     u8 eggCycles;
-    u16 expYield;
     u8 friendship;
-    enum Ability ability0;
-    enum Ability ability1;
-    enum Ability abilityHidden;
 };
 
 struct EvoScreenData
 {
-    bool8 fromEvoPage;
-    u8 numAllEvolutions;
+    u32 arrowSpriteDist[10];
     enum Species targetSpecies[10];
-    u8 numSeen;
     bool8 seen[10];
+    bool8 fromEvoPage;
+    bool8 isMega;
+    u8 numAllEvolutions;
+    u8 numSeen;
     u8 menuPos;
     u8 arrowSpriteId;
-    bool8 isMega;
-    u32 arrowSpriteDist[10];
 };
 
 struct FromScreenData
 {
-    u8 numForms;
     u16 formIds[30];
     bool8 inSubmenu;
+    u8 numForms;
     u8 menuPos;
     u8 arrowSpriteId;
 };
@@ -226,22 +226,22 @@ struct PokedexView
     u8 unkArr3[8]; // Cleared, never read
 
     // HGSS
-    u16 originalSearchSelectionNum;
-    u8 typeIconSpriteIds[2];
-    u16 moveSelected;
-    u16 movesTotal;
-    u8 statBarsSpriteId;
-    u8 statBarsBgSpriteId;
-    bool8 justScrolled;
-    u8 categoryIconSpriteId; //Physical/Special/Status category
-    u8 numEggMoves;
-    u8 numLevelUpMoves;
-    u16 numTeachableMoves;
-    u8 numPreEvolutions;
     struct PokemonStats sPokemonStats;
     struct EvoScreenData sEvoScreenData;
     struct FromScreenData sFormScreenData;
     enum Species formSpecies;
+    u16 originalSearchSelectionNum;
+    u16 moveSelected;
+    u16 movesTotal;
+    u16 numTeachableMoves;
+    bool8 justScrolled;
+    u8 typeIconSpriteIds[2];
+    u8 statBarsSpriteId;
+    u8 statBarsBgSpriteId;
+    u8 categoryIconSpriteId; //Physical/Special/Status category
+    u8 numEggMoves;
+    u8 numLevelUpMoves;
+    u8 numPreEvolutions;
 };
 
 extern const u8 sCaughtBall_Gfx[];

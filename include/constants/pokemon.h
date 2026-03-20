@@ -240,7 +240,7 @@ enum __attribute__((packed)) DamageCategory
 };
 
 // Growth rates
-enum GrowthRate
+enum __attribute__((packed)) GrowthRate
 {
     GROWTH_MEDIUM_FAST,
     GROWTH_ERRATIC,
