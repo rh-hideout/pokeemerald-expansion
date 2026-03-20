@@ -7,6 +7,7 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.21.0"
+    "express": "^4.21.0",
+    "multer": "^2.1.1"
   }
 }

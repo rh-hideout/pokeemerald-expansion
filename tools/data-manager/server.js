@@ -1,10 +1,35 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const multer = require('multer');
 
 const app = express();
 const PORT = 3000;
 const ROOT = path.resolve(__dirname, '..', '..');
+
+// Multer storage for MIDI uploads
+const midiStorage = multer.diskStorage({
+    destination: path.join(ROOT, 'sound/songs/midi'),
+    filename: (req, file, cb) => {
+        // Sanitize: lowercase, replace spaces with underscores, ensure .mid extension
+        let name = file.originalname.toLowerCase().replace(/\s+/g, '_');
+        if (!name.startsWith('mus_')) name = 'mus_' + name;
+        if (!name.endsWith('.mid')) name = name.replace(/\.[^.]+$/, '') + '.mid';
+        cb(null, name);
+    }
+});
+const uploadMidi = multer({
+    storage: midiStorage,
+    fileFilter: (req, file, cb) => {
+        const ext = path.extname(file.originalname).toLowerCase();
+        if (ext === '.mid' || ext === '.midi') {
+            cb(null, true);
+        } else {
+            cb(new Error('Only MIDI files (.mid, .midi) are allowed'));
+        }
+    },
+    limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
+});
 
 app.use(express.json({ limit: '50mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -523,6 +548,104 @@ app.post('/api/config', (req, res) => {
         const regex = new RegExp(`^(#define\\s+${name}\\s+)(.+?)(\\s*(?:\\/\\/.*)?)$`, 'm');
         content = content.replace(regex, `$1${value}$3`);
         fs.writeFileSync(filePath, content, 'utf-8');
+        res.json({ success: true });
+    } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// ─── Music ──────────────────────────────────────────────────────────────────
+
+// List all music tracks (MUS_ constants from songs.h) with MIDI file availability
+app.get('/api/music', (req, res) => {
+    try {
+        const songsH = fs.readFileSync(path.join(ROOT, 'include/constants/songs.h'), 'utf-8');
+        const midiDir = path.join(ROOT, 'sound/songs/midi');
+        const midiFiles = fs.readdirSync(midiDir).filter(f => f.endsWith('.mid'));
+
+        const tracks = [];
+        const musRegex = /^#define\s+(MUS_\w+)\s+(\d+)\s*\/\/\s*(.*)?$/gm;
+        let match;
+        while ((match = musRegex.exec(songsH)) !== null) {
+            const id = match[1];
+            const num = parseInt(match[2]);
+            const comment = (match[3] || '').trim();
+            // Map MUS_ROUTE101 -> mus_route101.mid
+            const expectedFile = id.toLowerCase() + '.mid';
+            const hasMidi = midiFiles.includes(expectedFile);
+            tracks.push({ id, num, comment, file: hasMidi ? expectedFile : null });
+        }
+        // Also include any MIDI files that don't have a matching constant
+        const knownFiles = new Set(tracks.filter(t => t.file).map(t => t.file));
+        for (const f of midiFiles) {
+            if (!knownFiles.has(f) && f !== 'midi.cfg') {
+                tracks.push({
+                    id: f.replace('.mid', '').toUpperCase(),
+                    num: null,
+                    comment: 'Custom (unregistered)',
+                    file: f
+                });
+            }
+        }
+
+        res.json(tracks);
+    } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Serve a MIDI file for playback
+app.get('/api/music/file/:filename', (req, res) => {
+    const filename = path.basename(req.params.filename);
+    const filePath = path.join(ROOT, 'sound/songs/midi', filename);
+    if (!fs.existsSync(filePath)) {
+        return res.status(404).json({ error: 'MIDI file not found' });
+    }
+    res.setHeader('Content-Type', 'audio/midi');
+    res.sendFile(filePath);
+});
+
+// Upload a new MIDI file
+app.post('/api/music/upload', uploadMidi.single('midi'), (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ error: 'No file uploaded' });
+        }
+
+        const filename = req.file.filename;
+        const trackName = filename.replace('.mid', '');
+
+        // Add to midi.cfg if not already present
+        const cfgPath = path.join(ROOT, 'sound/songs/midi/midi.cfg');
+        let cfg = fs.readFileSync(cfgPath, 'utf-8');
+        if (!cfg.includes(filename)) {
+            // Use a default voice group and settings
+            const entry = `${filename}:${' '.repeat(Math.max(1, 30 - filename.length))}-E -R50 -V080`;
+            cfg = cfg.trimEnd() + '\n' + entry + '\n';
+            fs.writeFileSync(cfgPath, cfg, 'utf-8');
+        }
+
+        res.json({
+            success: true,
+            filename,
+            trackName,
+            message: `Uploaded ${filename}. Add a MUS_ constant to songs.h and register in song_table.inc to use in-game.`
+        });
+    } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// Delete a custom MIDI file
+app.delete('/api/music/file/:filename', (req, res) => {
+    try {
+        const filename = path.basename(req.params.filename);
+        const filePath = path.join(ROOT, 'sound/songs/midi', filename);
+        if (!fs.existsSync(filePath)) {
+            return res.status(404).json({ error: 'File not found' });
+        }
+        fs.unlinkSync(filePath);
+
+        // Remove from midi.cfg
+        const cfgPath = path.join(ROOT, 'sound/songs/midi/midi.cfg');
+        let cfg = fs.readFileSync(cfgPath, 'utf-8');
+        const lines = cfg.split('\n').filter(line => !line.startsWith(filename + ':'));
+        fs.writeFileSync(cfgPath, lines.join('\n'), 'utf-8');
+
         res.json({ success: true });
     } catch (e) { res.status(500).json({ error: e.message }); }
 });
