@@ -3763,7 +3763,7 @@ void Task_LoadSizeScreen(u8 taskId)
         gSprites[spriteId].oam.priority = 0;
         gSprites[spriteId].y2 = GetTrainerOffsetFromNationalDexNumber(sPokedexListItem->dexNum);
         SetOamMatrix(1, GetTrainerScaleFromNationalDexNumber(sPokedexListItem->dexNum), 0, 0, GetTrainerScaleFromNationalDexNumber(sPokedexListItem->dexNum));
-        LoadPalette(sSizeScreenSilhouette_Pal, OBJ_PLTT_ID2(gSprites[spriteId].oam.paletteNum), PLTT_SIZE_4BPP);
+        LoadSpriteSilhouettePalette(spriteId);
         gTasks[taskId].tTrainerSpriteId = spriteId;
         gMain.state++;
         break;
@@ -3774,7 +3774,7 @@ void Task_LoadSizeScreen(u8 taskId)
         gSprites[spriteId].oam.priority = 0;
         gSprites[spriteId].y2 = GetPokemonOffsetFromNationalDexNumber(sPokedexListItem->dexNum);
         SetOamMatrix(2, GetPokemonScaleFromNationalDexNumber(sPokedexListItem->dexNum), 0, 0, GetPokemonScaleFromNationalDexNumber(sPokedexListItem->dexNum));
-        LoadPalette(sSizeScreenSilhouette_Pal, OBJ_PLTT_ID2(gSprites[spriteId].oam.paletteNum), PLTT_SIZE_4BPP);
+        LoadSpriteSilhouettePalette(spriteId);
         gTasks[taskId].tMonSpriteId = spriteId;
         CopyWindowToVram(WIN_INFO, COPYWIN_FULL);
         CopyBgTilemapBufferToVram(1);
@@ -5864,4 +5864,9 @@ enum Species NationalPokedexNumToSpeciesForm(enum NationalDexOrder nationalNum)
         return sPokedexView->formSpecies;
 
     return NationalPokedexNumToSpecies(nationalNum);
+}
+
+void LoadSpriteSilhouettePalette(u32 spriteId)
+{
+    LoadPalette(sSizeScreenSilhouette_Pal, OBJ_PLTT_ID2(gSprites[spriteId].oam.paletteNum), PLTT_SIZE_4BPP);
 }

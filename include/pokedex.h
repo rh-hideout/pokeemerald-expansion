@@ -300,5 +300,6 @@ void ResetPokedexView(struct PokedexView *pokedexView);
 void PrintInfoScreenText(const u8 *str, u8 left, u8 top);
 void FreeInfoScreenWindowAndBgBuffers(void);
 enum Species NationalPokedexNumToSpeciesForm(enum NationalDexOrder nationalNum);
+void LoadSpriteSilhouettePalette(u32 spriteId);
 
 #endif // GUARD_POKEDEX_H
