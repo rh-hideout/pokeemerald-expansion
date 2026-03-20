@@ -25,7 +25,6 @@
 #include "string_util.h"
 #include "strings.h"
 #include "task.h"
-#include "text.h"
 #include "text_window.h"
 #include "trainer_pokemon_sprites.h"
 #include "trig.h"
