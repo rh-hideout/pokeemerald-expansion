@@ -125,6 +125,61 @@
             text-align: center;
             padding: 0.5rem;
         }
+        /* Mobile display options */
+        .mobile-display-options {
+            display: none;
+            width: 100%;
+            max-width: 720px;
+            background: #16213e;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .mobile-display-options h3 {
+            font-size: 0.85rem;
+            color: #e94560;
+            margin-bottom: 0.5rem;
+        }
+        .display-option-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.5rem;
+        }
+        .display-option-row:last-child { margin-bottom: 0; }
+        .display-option-row label {
+            font-size: 0.8rem;
+            color: #ccc;
+            white-space: nowrap;
+        }
+        .display-btn-group {
+            display: flex;
+            gap: 0.35rem;
+        }
+        .display-btn {
+            padding: 0.3rem 0.6rem;
+            border: 1px solid #0f3460;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            color: #e0e0e0;
+            background: #1a1a2e;
+            transition: all 0.15s;
+        }
+        .display-btn:hover { border-color: #e94560; }
+        .display-btn.active {
+            background: #0f3460;
+            border-color: #e94560;
+            color: #fff;
+        }
+        @media (max-width: 768px) {
+            .mobile-display-options { display: block; }
+        }
+        @media (min-width: 769px) {
+            .mobile-display-options.force-show { display: block; }
+        }
         .branch-builder {
             width: 100%;
             background: #16213e;
@@ -322,6 +377,32 @@
         <div id="status" class="status" style="display:none;"></div>
 
         <div id="emulator-area">
+            <div class="mobile-display-options" id="display-options">
+                <h3>Display Options</h3>
+                <div class="display-option-row">
+                    <label>Touch Controls</label>
+                    <div class="display-btn-group">
+                        <button class="display-btn active" onclick="setTouchControls('on')" id="touch-on">On</button>
+                        <button class="display-btn" onclick="setTouchControls('off')" id="touch-off">Off</button>
+                    </div>
+                </div>
+                <div class="display-option-row">
+                    <label>Screen Size</label>
+                    <div class="display-btn-group">
+                        <button class="display-btn active" onclick="setScreenSize('fit')" id="size-fit">Fit</button>
+                        <button class="display-btn" onclick="setScreenSize('1x')" id="size-1x">1x</button>
+                        <button class="display-btn" onclick="setScreenSize('2x')" id="size-2x">2x</button>
+                        <button class="display-btn" onclick="setScreenSize('3x')" id="size-3x">3x</button>
+                    </div>
+                </div>
+                <div class="display-option-row">
+                    <label>View</label>
+                    <div class="display-btn-group">
+                        <button class="display-btn" onclick="toggleFullscreen()" id="fullscreen-btn">Fullscreen</button>
+                        <button class="display-btn" onclick="toggleInfoPanels()" id="panels-btn">Hide Info</button>
+                    </div>
+                </div>
+            </div>
             <div id="game"></div>
         </div>
 
@@ -728,6 +809,89 @@
             };
             document.body.appendChild(script);
             emulatorLoaded = true;
+        }
+
+        // Restore any saved display preferences
+        restoreDisplayPrefs();
+    }
+    // --- Mobile display options ---
+
+    function setTouchControls(mode) {
+        document.getElementById('touch-on').classList.toggle('active', mode === 'on');
+        document.getElementById('touch-off').classList.toggle('active', mode === 'off');
+        const gameDiv = document.getElementById('game');
+        // EmulatorJS renders virtual gamepad elements inside the game container
+        const vgp = gameDiv.querySelector('.ejs--virtual-gamepad') ||
+                     gameDiv.querySelector('[class*="virtual-gamepad"]') ||
+                     gameDiv.querySelector('[data-btn]')?.parentElement;
+        if (vgp) {
+            vgp.style.display = mode === 'on' ? '' : 'none';
+        }
+        // Also try the common EmulatorJS control overlay
+        const overlays = gameDiv.querySelectorAll('div[style*="touch-action"]');
+        overlays.forEach(el => {
+            if (el.querySelector('button') || el.querySelector('[data-btn]')) {
+                el.style.display = mode === 'on' ? '' : 'none';
+            }
+        });
+        localStorage.setItem('playtest_touch', mode);
+    }
+
+    function setScreenSize(size) {
+        ['fit', '1x', '2x', '3x'].forEach(s => {
+            document.getElementById('size-' + s).classList.toggle('active', s === size);
+        });
+        const gameDiv = document.getElementById('game');
+        // GBA native: 240x160
+        switch (size) {
+            case '1x':
+                gameDiv.style.width = '240px';
+                gameDiv.style.maxWidth = '240px';
+                break;
+            case '2x':
+                gameDiv.style.width = '480px';
+                gameDiv.style.maxWidth = '480px';
+                break;
+            case '3x':
+                gameDiv.style.width = '720px';
+                gameDiv.style.maxWidth = '720px';
+                break;
+            default: // fit
+                gameDiv.style.width = '100%';
+                gameDiv.style.maxWidth = '720px';
+                break;
+        }
+        localStorage.setItem('playtest_size', size);
+    }
+
+    function toggleFullscreen() {
+        const gameDiv = document.getElementById('game');
+        if (!document.fullscreenElement) {
+            (gameDiv.requestFullscreen || gameDiv.webkitRequestFullscreen || gameDiv.msRequestFullscreen).call(gameDiv);
+        } else {
+            (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document);
+        }
+    }
+
+    let infoPanelsHidden = false;
+    function toggleInfoPanels() {
+        infoPanelsHidden = !infoPanelsHidden;
+        const panels = document.querySelector('.info-panels');
+        const btn = document.getElementById('panels-btn');
+        panels.style.display = infoPanelsHidden ? 'none' : '';
+        btn.textContent = infoPanelsHidden ? 'Show Info' : 'Hide Info';
+    }
+
+    // Restore saved preferences after emulator loads
+    function restoreDisplayPrefs() {
+        const savedTouch = localStorage.getItem('playtest_touch');
+        if (savedTouch === 'off') {
+            // Delay to let EmulatorJS render controls
+            setTimeout(() => setTouchControls('off'), 2000);
+        }
+        const savedSize = localStorage.getItem('playtest_size');
+        if (savedSize && savedSize !== 'fit') {
+            setScreenSize(savedSize);
         }
     }
     </script>
