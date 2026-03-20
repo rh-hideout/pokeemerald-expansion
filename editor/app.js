@@ -2121,7 +2121,7 @@ function makeSelectHtml(id, value, options, extraAttrs = '') {
 
 function getSpriteUrl(graphicsId) {
     const name = (graphicsId || '').replace('OBJ_EVENT_GFX_', '').toLowerCase();
-    return `../graphics/object_events/pics/people/${name}/anim_front.png`;
+    return `../graphics/object_events/pics/people/${name}.png`;
 }
 
 function getSpriteHtml(graphicsId, size = 32) {
