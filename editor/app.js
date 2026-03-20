@@ -5569,13 +5569,26 @@ window.musicPlayer = (() => {
 
         await loadInstrument(0);
 
-        // Fetch MIDI file from GitHub raw URL
-        const rawUrl = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/sound/songs/midi/${encodeURIComponent(filename)}`;
-        const headers = {};
-        if (ghToken) headers['Authorization'] = `token ${ghToken}`;
-        const response = await fetch(rawUrl, { headers });
-        const arrayBuffer = await response.arrayBuffer();
-        const uint8 = new Uint8Array(arrayBuffer);
+        // Fetch MIDI file via GitHub Contents API (handles auth & CORS), with raw URL fallback
+        let uint8;
+        const midiPath = `sound/songs/midi/${filename}`;
+        try {
+            const data = await ghFetch(`/repos/${REPO_OWNER}/${REPO_NAME}/contents/${midiPath}?ref=${BRANCH}`);
+            if (data.content) {
+                const raw = atob(data.content.replace(/\n/g, ''));
+                uint8 = Uint8Array.from(raw, c => c.charCodeAt(0));
+            } else {
+                throw new Error('No content in API response');
+            }
+        } catch {
+            // Fallback to raw URL
+            const rawUrl = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/${midiPath}`;
+            const headers = {};
+            if (ghToken) headers['Authorization'] = `token ${ghToken}`;
+            const response = await fetch(rawUrl, { headers });
+            if (!response.ok) throw new Error(`Failed to fetch MIDI: ${response.status}`);
+            uint8 = new Uint8Array(await response.arrayBuffer());
+        }
 
         let binary = '';
         for (let i = 0; i < uint8.length; i++) binary += String.fromCharCode(uint8[i]);
