@@ -730,15 +730,16 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
     if (!(gBattleTypeFlags & BATTLE_TYPE_HAS_AI) && !IsWildMonSmart())
         return;
 
+    gAiLogicData->aiCalcInProgress = TRUE;
+    
+    if (DEBUG_AI_DELAY_TIMER)
+        AIDebugTimerStart();
+
     aiData->weatherHasEffect = HasWeatherEffect();
     weather = AI_GetWeather();
 
     // get/assume all battler data and simulate AI damage
     battlersCount = gBattlersCount;
-
-    gAiLogicData->aiCalcInProgress = TRUE;
-    if (DEBUG_AI_DELAY_TIMER)
-        AIDebugTimerStart();
 
     for (enum BattlerId battlerAtk = 0; battlerAtk < battlersCount; battlerAtk++)
     {
