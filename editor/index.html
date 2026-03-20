@@ -55,6 +55,11 @@
             <span class="nav-icon">&#9881;</span> Config
             <span class="nav-badge" id="badge-config">-</span>
         </div>
+        <div class="nav-section">Audio</div>
+        <div class="nav-item" data-page="music">
+            <span class="nav-icon">&#9835;</span> Music
+            <span class="nav-badge" id="badge-music">-</span>
+        </div>
         <div class="nav-section">Overview</div>
         <div class="nav-item" data-page="dashboard">
             <span class="nav-icon">&#9671;</span> Dashboard
@@ -64,10 +69,23 @@
             <span class="nav-icon">&#9654;</span> Playtest ROM
         </a>
     </aside>
+    <!-- Global Music Player Bar -->
+    <div class="music-player-bar" id="music-player-bar" style="display:none">
+        <div class="music-player-info">
+            <span class="music-player-icon">&#9835;</span>
+            <span class="music-player-title" id="music-player-title">No track</span>
+        </div>
+        <div class="music-player-controls">
+            <button class="btn btn-sm" id="music-player-play" onclick="window.musicPlayer.toggle()">&#9654;</button>
+            <button class="btn btn-sm" id="music-player-stop" onclick="window.musicPlayer.stop()">&#9632;</button>
+        </div>
+    </div>
     <main class="main" id="content">
         <div class="loading-center"><div class="spinner"></div> Loading...</div>
     </main>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/midi-player-js@2.0.16/browser/midiplayer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/soundfont-player@0.12.0/dist/soundfont-player.min.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
