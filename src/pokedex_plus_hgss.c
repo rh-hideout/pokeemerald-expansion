@@ -207,7 +207,6 @@ static void LoadPokedexBgPalette(bool8);
 static void CreateInterfaceSprites(u8);
 static void LoadScreenSelectBarMain(u16);
 static void PrintMonInfo(u32 num, u32, u32 owned, u32 newEntry);
-static u16 CreateSizeScreenTrainerPic(u16, s16, s16, s8);
 static void SetSpriteInvisibility(u8 spriteArrayId, bool8 invisible);
 static void CreateTypeIconSprites(void);
 
@@ -1800,35 +1799,6 @@ static u32 GetPokedexMonPersonality(enum Species species)
     {
         return MALE_PERSONALITY;
     }
-}
-
-static u16 GetPokemonScaleFromNationalDexNumber(u16 nationalNum)
-{
-    nationalNum = NationalPokedexNumToSpeciesForm(nationalNum);
-    return gSpeciesInfo[nationalNum].pokemonScale;
-}
-
-static u16 GetPokemonOffsetFromNationalDexNumber(u16 nationalNum)
-{
-    nationalNum = NationalPokedexNumToSpeciesForm(nationalNum);
-    return gSpeciesInfo[nationalNum].pokemonOffset;
-}
-
-static u16 GetTrainerScaleFromNationalDexNumber(u16 nationalNum)
-{
-    nationalNum = NationalPokedexNumToSpeciesForm(nationalNum);
-    return gSpeciesInfo[nationalNum].trainerScale;
-}
-
-static u16 GetTrainerOffsetFromNationalDexNumber(u16 nationalNum)
-{
-    nationalNum = NationalPokedexNumToSpeciesForm(nationalNum);
-    return gSpeciesInfo[nationalNum].trainerOffset;
-}
-
-static u16 CreateSizeScreenTrainerPic(u16 species, s16 x, s16 y, s8 paletteSlot)
-{
-    return CreateTrainerPicSprite(species, TRUE, x, y, paletteSlot, TAG_NONE);
 }
 
 #undef TYPE_INFO_PALETTE_NUM_OFFSET
