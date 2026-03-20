@@ -1516,14 +1516,6 @@ u32 GetMonPersonality(enum Species species, u8 gender, u8 nature, u8 unownLetter
     return personality;
 }
 
-// This is only used to create Wally's Ralts.
-void CreateMaleMon(struct Pokemon *mon, enum Species species, u8 level)
-{
-    u32 personality = GetMonPersonality(species, MON_MALE, NATURE_RANDOM, RANDOM_UNOWN_LETTER);
-    CreateMonWithIVs(mon, species, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
-    GiveMonInitialMoveset(mon);
-}
-
 void CreateMonWithIVsPersonality(struct Pokemon *mon, enum Species species, u8 level, u32 ivs, u32 personality)
 {
     CreateMon(mon, species, level, personality, OTID_STRUCT_PLAYER_ID);

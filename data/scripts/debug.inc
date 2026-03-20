@@ -362,7 +362,8 @@ Debug_EventScript_Steven_Multi::
 Debug_EventScript_WallyTutorial::
 	special SavePlayerParty
 	special LoadWallyZigzagoon
-	special StartWallyTutorialBattle
+	createmon 1, 0, SPECIES_RALTS, 5, gender=MON_MALE
+	startcatchtutorial
 	waitstate
 	special LoadPlayerParty
 	release

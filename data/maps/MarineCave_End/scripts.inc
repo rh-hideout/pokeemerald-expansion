@@ -35,7 +35,7 @@ MarineCave_End_EventScript_Kyogre::
 	setvar VAR_LAST_TALKED, LOCALID_MARINE_CAVE_KYOGRE
 	setwildbattle SPECIES_KYOGRE, 70
 	setflag FLAG_SYS_CTRL_OBJ_DELETE
-	special BattleSetup_StartLegendaryBattle
+	startlegendarybattle
 	waitstate
 	clearflag FLAG_SYS_CTRL_OBJ_DELETE
 	setvar VAR_TEMP_1, 0

@@ -51,17 +51,8 @@ extern u16 gPartnerTrainerId;
 
 #define TRAINER_BATTLE_PARAM gTrainerBattleParameter.params
 
-void BattleSetup_StartWildBattle(void);
-void BattleSetup_StartDoubleWildBattle(void);
-void BattleSetup_StartBattlePikeWildBattle(void);
-void BattleSetup_StartRoamerBattle(void);
-void StartWallyTutorialBattle(void);
-void BattleSetup_StartScriptedWildBattle(void);
-void BattleSetup_StartScriptedDoubleWildBattle(void);
-void BattleSetup_StartLatiBattle(void);
-void BattleSetup_StartLegendaryBattle(void);
-void StartGroudonKyogreBattle(void);
-void StartRegiBattle(void);
+void BattleSetup_StartWildBattle(bool32 isDouble);
+void DoBattleSetup(bool32 fromScript);
 enum BattleEnvironments BattleSetup_GetEnvironmentId(void);
 enum BattleTransition GetWildBattleTransition(void);
 enum BattleTransition GetTrainerBattleTransition(void);
@@ -107,8 +98,6 @@ void ShouldTryGetTrainerScript(void);
 u16 CountMaxPossibleRematch(u16 trainerId);
 u16 CountBattledRematchTeams(u16 trainerId);
 void TrainerBattleLoadArgs(const u8 *data);
-void TrainerBattleLoadArgsTrainerA(const u8 *data);
-void TrainerBattleLoadArgsTrainerB(const u8 *data);
 void TrainerBattleLoadArgsSecondTrainer(const u8 *data);
 void InitTrainerBattleParameter(void);
 

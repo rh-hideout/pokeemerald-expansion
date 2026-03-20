@@ -5,8 +5,8 @@ PokemonTower_6F_EventScript_MarowakGhost::
 	lockall
 	textcolor NPC_TEXT_COLOR_MON
 	msgbox PokemonTower_6F_Text_BeGoneIntruders
-	setwildbattle SPECIES_MAROWAK, 30
-	special StartMarowakBattle
+	createmon 1, 0, SPECIES_MAROWAK, 30, gender=MON_FEMALE, nature=NATURE_SERIOUS, hpIv=31, atkIv=31, defIv=31, speedIv=31, spAtkIv=31, spDefIv=31
+	startghostbattle
 	waitstate
 	goto_if_eq VAR_RESULT, FALSE, PokemonTower_6F_EventScript_DefeatedMarowakGhost  @ VAR_RESULT set by CB2_EndMarowakBattle
 	applymovement LOCALID_PLAYER, PokemonTower_6F_Movement_ForcePlayerUp

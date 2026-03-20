@@ -113,55 +113,27 @@ bool8 DoesPartyHaveEnigmaBerry(void)
     return hasItem;
 }
 
-void CreateScriptedWildMon(enum Species species, u8 level, enum Item item)
+void CreateStaticWildMon(struct Pokemon *mon, enum Species species, u8 level, enum Item item)
 {
     u8 heldItem[2];
-
-    ZeroEnemyPartyMons();
     u32 personality = GetMonPersonality(species,
         GetSynchronizedGender(STATIC_WILDMON_ORIGIN, species),
         GetSynchronizedNature(STATIC_WILDMON_ORIGIN, species),
         RANDOM_UNOWN_LETTER);
-    CreateMonWithIVs(&gEnemyParty[0], species, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
-    GiveMonInitialMoveset(&gEnemyParty[0]);
+    CreateMonWithIVs(mon, species, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
+    GiveMonInitialMoveset(mon);
     if (item)
     {
         heldItem[0] = item;
         heldItem[1] = item >> 8;
-        SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM, heldItem);
+        SetMonData(mon, MON_DATA_HELD_ITEM, heldItem);
     }
 }
-void CreateScriptedDoubleWildMon(enum Species species1, u8 level1, enum Item item1, enum Species species2, u8 level2, enum Item item2)
+
+void CreateScriptedWildMon(enum Species species, u8 level, enum Item item)
 {
-    u8 heldItem1[2];
-    u8 heldItem2[2];
-
     ZeroEnemyPartyMons();
-    u32 personality = GetMonPersonality(species1,
-        GetSynchronizedGender(STATIC_WILDMON_ORIGIN, species1),
-        GetSynchronizedNature(STATIC_WILDMON_ORIGIN, species1),
-        RANDOM_UNOWN_LETTER);
-    CreateMonWithIVs(&gEnemyParty[0], species1, level1, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
-    GiveMonInitialMoveset(&gEnemyParty[0]);
-    if (item1)
-    {
-        heldItem1[0] = item1;
-        heldItem1[1] = item1 >> 8;
-        SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM, heldItem1);
-    }
-
-    personality = GetMonPersonality(species2,
-        GetSynchronizedGender(STATIC_WILDMON_ORIGIN, species2),
-        GetSynchronizedNature(STATIC_WILDMON_ORIGIN, species2),
-        RANDOM_UNOWN_LETTER);
-    CreateMonWithIVs(&gEnemyParty[1], species2, level2, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
-    GiveMonInitialMoveset(&gEnemyParty[1]);
-    if (item2)
-    {
-        heldItem2[0] = item2;
-        heldItem2[1] = item2 >> 8;
-        SetMonData(&gEnemyParty[1], MON_DATA_HELD_ITEM, heldItem2);
-    }
+    CreateStaticWildMon(&gEnemyParty[0], species, level, item);
 }
 
 void ScriptSetMonMoveSlot(u8 monIndex, enum Move move, u8 slot)

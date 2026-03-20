@@ -13,7 +13,6 @@
 #include "constants/battle_pike.h"
 #include "constants/battle_pyramid.h"
 #include "constants/battle_setup.h"
-#include "constants/battle_special.h"
 #include "constants/battle_tent.h"
 #include "constants/battle_tower.h"
 #include "constants/berry.h"

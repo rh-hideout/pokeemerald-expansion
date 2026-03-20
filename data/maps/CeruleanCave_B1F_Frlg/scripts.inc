@@ -34,7 +34,7 @@ CeruleanCave_B1F_EventScript_Mewtwo::
 	waitbuttonpress
 	setwildbattle SPECIES_MEWTWO, 70
 	setflag FLAG_SYS_CTRL_OBJ_DELETE
-	special BattleSetup_StartLegendaryBattle
+	startlegendarybattle
 	waitstate
 	clearflag FLAG_SYS_CTRL_OBJ_DELETE
 	specialvar VAR_RESULT, GetBattleOutcome

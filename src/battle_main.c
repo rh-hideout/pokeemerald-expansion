@@ -3492,7 +3492,7 @@ static void DoBattleIntro(void)
             if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
             {
                 statusesOpponentA = GetTrainerStartingStatusFromId(TRAINER_BATTLE_PARAM.opponentA);
-                if (TRAINER_BATTLE_PARAM.opponentB != 0xFFFF)
+                if (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE)
                     statusesOpponentB = GetTrainerStartingStatusFromId(TRAINER_BATTLE_PARAM.opponentB);
             }
             STARTING_STATUS_DEFINITIONS(UNPACK_STARTING_STATUS_TO_BATTLE);
@@ -3599,8 +3599,7 @@ static void TryDoEventsBeforeFirstTurn(void)
         {
             // Ensures only trainer A slide is played in single-trainer doubles (B == A / B == TRAINER_NONE) and 2v1 multibattles (B == 0xFFFF)
             if (!((TRAINER_BATTLE_PARAM.opponentB == TRAINER_BATTLE_PARAM.opponentA)
-            || (TRAINER_BATTLE_PARAM.opponentB == TRAINER_NONE)
-            || (TRAINER_BATTLE_PARAM.opponentB == 0xFFFF)))
+            || (TRAINER_BATTLE_PARAM.opponentB == TRAINER_NONE)))
             {
                 BattleScriptExecute(BattleScript_TrainerBSlideMsgEnd2);
             }

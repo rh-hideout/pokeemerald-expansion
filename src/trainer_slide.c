@@ -359,9 +359,8 @@ enum TrainerSlideTargets ShouldDoTrainerSlide(enum BattlerId battler, enum Train
         return TRAINER_SLIDE_TARGET_NONE;
 
     // Prevents slides triggering twice in single-trainer doubles (B == A / B == TRAINER_NONE) and 2v1 multibattles (B == 0xFFFF)
-    if (((TRAINER_BATTLE_PARAM.opponentB == TRAINER_BATTLE_PARAM.opponentA)
-     || (TRAINER_BATTLE_PARAM.opponentB == TRAINER_NONE)
-     || (TRAINER_BATTLE_PARAM.opponentB == 0xFFFF)))
+    if ((TRAINER_BATTLE_PARAM.opponentB == TRAINER_BATTLE_PARAM.opponentA)
+     || (TRAINER_BATTLE_PARAM.opponentB == TRAINER_NONE))
     {
         MarkTrainerSlideAsPlayed(BATTLE_PARTNER(battler), slideId);
     }
