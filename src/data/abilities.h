@@ -1030,7 +1030,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_TOXIC_BOOST] =
     {
         .name = _("Toxic Boost"),
-        .description = COMPOUND_STRING("Ups Speed and boost physical moves if poisoned."),
+        .description = COMPOUND_STRING("Ups Speed and Attack if poisoned."),
         .aiRating = 6,
     },
 
@@ -1462,6 +1462,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Water Compaction"),
         .description = COMPOUND_STRING("Water boosts Defense. Immune to Water."),
         .aiRating = 4,
+        .breakable = TRUE,
     },
 
     [ABILITY_MERCILESS] =
@@ -2497,6 +2498,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Sludge Body"),
         .description = COMPOUND_STRING("Poison Point. Reduce damage from contact moves."),
         .aiRating = 8,
+        .breakable = TRUE,
     },
     [ABILITY_HYPNOTISER] =
     {
@@ -2552,6 +2554,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Nocturnal"),
         .description = COMPOUND_STRING("Insomnia, Compound Eyes, Keen Eye."),
         .aiRating = 6,
+        .breakable = TRUE,
     },
     [ABILITY_ECLIPSE] =
     {
@@ -2695,7 +2698,6 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Ice Tusks"),
         .description = COMPOUND_STRING("Boosts contact moves in snow."),
         .aiRating = 7,
-        .breakable = TRUE,
     },
     [ABILITY_BATTLE_READY] =
     {
@@ -2794,6 +2796,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Shadow Clone"),
         .description = COMPOUND_STRING("Boost evasion. Greater at night."),
         .aiRating = 6,
+        .breakable = TRUE,
         .cantBeCopied = TRUE,
         .cantBeSwapped = TRUE,
         .cantBeTraced = TRUE,
@@ -2869,6 +2872,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Water Form"),
         .description = COMPOUND_STRING("Immune to Water. Boosts Def in rain."),
         .aiRating = 7,
+        .breakable = TRUE,
         .cantBeCopied = TRUE,
         .cantBeSwapped = TRUE,
         .cantBeTraced = TRUE,
@@ -2890,6 +2894,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Werewolf"),
         .description = COMPOUND_STRING("Boost Atk and Speed in darkness."),
         .aiRating = 6,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
     },
     [ABILITY_PSYCHIC_BREAK] =
     {

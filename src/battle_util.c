@@ -8130,7 +8130,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
         GetBattlerTypes(battlerDef, FALSE, types);
         if (types[0] == TYPE_ROCK || types[1] == TYPE_ROCK || types[2] == TYPE_ROCK)
         {
-            modifier = uq4_12_multiply(modifier, UQ_4_12(1.75));
+            modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
         }
         break;
     default:
@@ -8603,6 +8603,14 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(0.5));
             if (ctx->updateFlags)
                 RecordAbilityBattle(battlerDef, ABILITY_PURIFYING_SALT);
+        }
+        break;
+    case ABILITY_POISON_HEAL:
+        if (moveType == TYPE_POISON)
+        {
+            modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(0.5));
+            if (ctx->updateFlags)
+                RecordAbilityBattle(battlerDef, ABILITY_POISON_HEAL);
         }
         break;
     default:
@@ -11733,6 +11741,8 @@ bool32 CanMoveSkipAccuracyCalc(u32 battlerAtk, u32 battlerDef, enum Ability abil
         if (MoveAlwaysHitsInRain(move) && IsBattlerWeatherAffected(battlerDef, B_WEATHER_RAIN))
             effect = TRUE;
         else if ((gBattleWeather & (B_WEATHER_HAIL | B_WEATHER_SNOW)) && MoveAlwaysHitsInHailSnow(move))
+            effect = TRUE;
+        else if (move == MOVE_DESERT_TORNADO && IsBattlerWeatherAffected(battlerDef, B_WEATHER_SANDSTORM))
             effect = TRUE;
         else if ((gBattleWeather & (B_WEATHER_DARKNESS)) && abilityAtk == ABILITY_DARKVISION)
             effect = TRUE;

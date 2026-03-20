@@ -38314,7 +38314,9 @@ gBattleAnimMove_MountainSlam::
 	playsewithpan SE_M_VITAL_THROW2, SOUND_PAN_TARGET
 	waitforvisualfinish
 	restorebg
-	waitbgfadeout
+	waitbgfadeout	
+	set_original_pal battler=ANIM_ATTACKER
+	waitforvisualfinish
 	end
 
 gBattleAnimMove_VenomLeaf::
@@ -38388,6 +38390,8 @@ gBattleAnimMove_VenomBlade::
 	blendoff
 	waitforvisualfinish
 	call PoisonBubblesEffect
+	waitforvisualfinish
+	set_original_pal battler=ANIM_ATTACKER
 	waitforvisualfinish
 	end
 

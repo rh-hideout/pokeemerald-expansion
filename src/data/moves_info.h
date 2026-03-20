@@ -21365,7 +21365,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Vacuum Burst"),
         .description = COMPOUND_STRING(
             "User unleashes a strong\n"
-            "air bullet. May lower DEF."),
+            "air bullet. May lower Sp Def."),
         .effect = EFFECT_HIT,
         .power = 90,
         .type = TYPE_FLYING,
@@ -21377,7 +21377,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .pulseMove = TRUE,
         .windMove = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_DEF_MINUS_1,
+            .moveEffect = MOVE_EFFECT_SP_DEF_MINUS_1,
             .chance = 20,
         }),
         .contestEffect = CONTEST_EFFECT_STARTLE_MON_WITH_JUDGES_ATTENTION,
@@ -21650,7 +21650,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Dragon Roar"),
         .description = COMPOUND_STRING(
             "A powerful roar that hurts\n"
-            "foes. May lower speed"),
+            "foes. May lower Speed."),
         .effect = EFFECT_HIT,
         .power = 90,
         .type = TYPE_DRAGON,
@@ -21725,9 +21725,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "Does Poison and Steel-type\n"
             "damage. May poison."),
         .effect = EFFECT_TWO_TYPED_MOVE,
-        .power = 50,
+        .power = 90,
         .type = TYPE_STEEL,
-        .accuracy = 95,
+        .accuracy = 100,
         .pp = 10,
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
@@ -21768,7 +21768,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_USER_MORE_EASILY_STARTLED : CONTEST_EFFECT_JAMS_OTHERS_BUT_MISS_ONE_TURN,
         .contestComboStarterId = 0,
         .contestComboMoves = {0},
-        .battleAnimScript = gBattleAnimMove_RagingFury,
+        .battleAnimScript = gBattleAnimMove_FierceFrost,
     },
 
     [MOVE_HORN_RUT] =

@@ -953,6 +953,7 @@ extern const u8 gBattleAnimMove_HornRut[];
 extern const u8 gBattleAnimMove_ShockingSilkWall[];
 extern const u8 gBattleAnimMove_BurningAcid[];
 extern const u8 gBattleAnimMove_ToxicScreech[];
+extern const u8 gBattleAnimMove_FierceFrost[];
 
 // status animations
 extern const u8 gBattleAnimStatus_Poison[];
