@@ -203,7 +203,6 @@ extern EWRAM_DATA struct PokedexListItem *sPokedexListItem;
 
 
 static bool8 LoadPokedexListPage(u8);
-static void LoadPokedexBgPalette(bool8);
 static void CreateInterfaceSprites(u8);
 static void LoadScreenSelectBarMain(u16);
 static void PrintMonInfo(u32 num, u32, u32 owned, u32 newEntry);
@@ -580,8 +579,11 @@ bool32 TryOpenPokedexPage_HGSS(u8 taskId, u8 page)
 
 #define tLoadScreenTaskId data[0]
 
-static void LoadPokedexBgPalette(bool8 isSearchResults)
+bool32 TryLoadPokedexBgPalette_HGSS(bool8 isSearchResults)
 {
+    if (!POKEDEX_PLUS_HGSS)
+        return FALSE;
+
     if (!HGSS_DARK_MODE)
     {
         if (isSearchResults == TRUE)
@@ -602,6 +604,7 @@ static void LoadPokedexBgPalette(bool8 isSearchResults)
     }
 
     LoadPalette(GetOverworldTextboxPalettePtr(), BG_PLTT_ID(15), PLTT_SIZE_4BPP);
+    return TRUE;
 }
 
 

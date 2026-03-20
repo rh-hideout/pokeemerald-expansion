@@ -262,6 +262,7 @@ extern const struct BgTemplate sInfoScreen_BgTemplate[NUM_INFO_SCREEN_BG_TEMPLAT
 extern const struct BgTemplate sNewEntryInfoScreen_BgTemplate[NUM_NEW_ENTRY_INFO_BG_TEMPLATES];
 
 void Task_HandlePokedexInput(u8);
+void LoadPokedexBgPalette(bool8);
 void CreatePokedexList(u8, u8);
 void CreateMonDexNum(u16, u8, u8, u16);
 void CreateCaughtBall(u16, u8, u8, u16);
