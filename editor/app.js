@@ -1165,7 +1165,7 @@ function openTrainerModal(trainer, isNew) {
                 </div>
                 <div class="form-group">
                     <label>AI Flags</label>
-                    <input type="text" id="t-ai" value="${escAttr(trainer.ai || '')}" placeholder="e.g. Check Bad Move / Try To Faint">
+                    ${makeDatalistHtml('t-ai', trainer.ai || '', AI_PRESETS, 'placeholder="e.g. Check Bad Move / Try To Faint"')}
                 </div>
             </div>
             <div class="form-row">
@@ -1181,7 +1181,7 @@ function openTrainerModal(trainer, isNew) {
             <div class="form-row">
                 <div class="form-group">
                     <label>Starting Status</label>
-                    <input type="text" id="t-starting-status" value="${escAttr(trainer.starting_status || '')}" placeholder="e.g. STATUS1_NONE">
+                    ${makeSelectHtml('t-starting-status', trainer.starting_status || '', STARTING_STATUS_OPTIONS)}
                 </div>
             </div>
             <h3 style="margin:16px 0 10px;font-size:14px">Pokemon (${trainer.pokemon.length})</h3>
@@ -1539,7 +1539,7 @@ function editEncounter(mapName) {
                         <tbody>
                             ${enc[type].mons.map((m, i) => `
                                 <tr>
-                                    <td><input type="text" class="enc-species" data-type="${type}" data-idx="${i}" value="${escAttr(m.species)}" style="width:180px;font-family:monospace;font-size:12px"></td>
+                                    <td><input type="text" class="enc-species" data-type="${type}" data-idx="${i}" value="${escAttr(m.species)}" list="dl-enc-species" style="width:180px;font-family:monospace;font-size:12px"></td>
                                     <td><input type="number" class="enc-min-lv" data-type="${type}" data-idx="${i}" value="${m.min_level}" min="1" max="100" style="width:60px"></td>
                                     <td><input type="number" class="enc-max-lv" data-type="${type}" data-idx="${i}" value="${m.max_level}" min="1" max="100" style="width:60px"></td>
                                 </tr>
@@ -1561,6 +1561,7 @@ function editEncounter(mapName) {
             </div>
             <div class="modal-body" style="max-height:70vh;overflow-y:auto">
                 ${sectionsHtml || '<p style="color:var(--text-dim)">No encounter types defined for this map.</p>'}
+                <datalist id="dl-enc-species">${getUniqueSpeciesIds().map(s => `<option value="${escAttr(s)}">`).join('')}</datalist>
             </div>
             <div class="modal-footer">
                 <button class="btn" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
@@ -2030,6 +2031,10 @@ const ENC_ICONS = { land_mons: '&#127793;', water_mons: '&#127754;', rock_smash_
 
 const TRAINER_TYPES_LIST = ['TRAINER_TYPE_NONE', 'TRAINER_TYPE_NORMAL', 'TRAINER_TYPE_SEE_ALL_DIRECTIONS', 'TRAINER_TYPE_BURIED'];
 const MUGSHOT_OPTIONS = ['', 'Purple', 'Green', 'Pink', 'Blue', 'Yellow'];
+const AI_FLAG_OPTIONS = ['Check Bad Move','Try To Faint','Check Viability','Force Setup First Turn','Risky','Try To 2HKO','Prefer Baton Pass','Double Battle','HP Aware','Powerful Status','Negate Unaware','Will Suicide','Prefer Status Moves','Stall','Smart Switching','Ace Pokemon','Omniscient','Smart Mon Choices','Conservative','Sequence Switching','Double Ace Pokemon','Weigh Ability Prediction','Prefer Highest Damage Move','Predict Switch','Predict Incoming Mon','PP Stall Prevention','Predict Move','Smart Tera','Assume STAB','Assume Status Moves'];
+const AI_PRESETS = ['Basic Trainer','Check Bad Move','Check Bad Move / Try To Faint','Check Bad Move / Try To Faint / Force Setup First Turn','Basic Trainer / Force Setup First Turn','Basic Trainer / Risky'];
+const STARTING_STATUS_OPTIONS = ['', 'STATUS1_NONE', 'STATUS1_POISON', 'STATUS1_BURN', 'STATUS1_FREEZE', 'STATUS1_PARALYSIS', 'STATUS1_TOXIC_POISON', 'STATUS1_SLEEP', 'STATUS1_FROSTBITE'];
+const COORD_EVENT_TYPES = ['trigger', 'weather'];
 const NATURES = ['Hardy','Lonely','Brave','Adamant','Naughty','Bold','Docile','Relaxed','Impish','Lax','Timid','Hasty','Serious','Jolly','Naive','Modest','Mild','Quiet','Bashful','Rash','Calm','Gentle','Sassy','Careful','Quirky'];
 const BALLS = ['Poke Ball','Great Ball','Ultra Ball','Master Ball','Net Ball','Dive Ball','Nest Ball','Repeat Ball','Timer Ball','Luxury Ball','Premier Ball','Dusk Ball','Heal Ball','Quick Ball','Cherish Ball','Dream Ball','Beast Ball'];
 const TERA_TYPES = ['','Normal','Fire','Water','Grass','Electric','Ice','Fighting','Poison','Ground','Flying','Psychic','Bug','Rock','Ghost','Dragon','Dark','Steel','Fairy','Stellar'];
@@ -2090,6 +2095,16 @@ function getUniqueScripts() {
         }
     }
     return [...scripts].sort();
+}
+
+function getUniqueItemIds() {
+    if (!state.items) return [];
+    return state.items.map(i => i.id).filter(Boolean).sort();
+}
+
+function getUniqueSpeciesIds() {
+    if (!state.pokemon) return [];
+    return state.pokemon.map(p => p.id).filter(Boolean).sort();
 }
 
 function makeDatalistHtml(id, value, options, extraAttrs = '') {
@@ -2723,7 +2738,7 @@ function editMapEncounters(dirName) {
                     <tbody>
                         ${enc[type].mons.map((m, i) => `
                             <tr>
-                                <td><input type="text" class="enc-species" data-type="${type}" data-idx="${i}" value="${escAttr(m.species)}"></td>
+                                <td><input type="text" class="enc-species" data-type="${type}" data-idx="${i}" value="${escAttr(m.species)}" list="dl-map-enc-species"></td>
                                 <td><input type="number" class="enc-min-lv" data-type="${type}" data-idx="${i}" value="${m.min_level}" min="1" max="100"></td>
                                 <td><input type="number" class="enc-max-lv" data-type="${type}" data-idx="${i}" value="${m.max_level}" min="1" max="100"></td>
                             </tr>
@@ -2744,6 +2759,7 @@ function editMapEncounters(dirName) {
             </div>
             <div class="modal-body" style="max-height:70vh;overflow-y:auto">
                 ${sectionsHtml || '<p style="color:var(--text-dim)">No encounter types defined.</p>'}
+                <datalist id="dl-map-enc-species">${getUniqueSpeciesIds().map(s => `<option value="${escAttr(s)}">`).join('')}</datalist>
             </div>
             <div class="modal-footer">
                 <button class="btn" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
@@ -2833,7 +2849,7 @@ function editMapTrainer(dirName, trainerIdx) {
                     </div>
                     <div class="form-group">
                         <label>Trainer Sight Range</label>
-                        <input type="text" id="te-sight" value="${escAttr(trainer.trainer_sight_or_berry_tree_id || '0')}">
+                        <input type="number" id="te-sight" value="${escAttr(trainer.trainer_sight_or_berry_tree_id || '0')}" min="0" max="20">
                     </div>
                 </div>
                 <div class="form-row">
@@ -2937,7 +2953,7 @@ function addMapTrainer(dirName) {
                     </div>
                     <div class="form-group">
                         <label>Trainer Sight Range</label>
-                        <input type="text" id="at-sight" value="${newTrainer.trainer_sight_or_berry_tree_id}">
+                        <input type="number" id="at-sight" value="${newTrainer.trainer_sight_or_berry_tree_id}" min="0" max="20">
                     </div>
                 </div>
                 <div class="form-row">
@@ -2968,11 +2984,11 @@ function addMapTrainer(dirName) {
                     <div class="form-row">
                         <div class="form-group">
                             <label>Class</label>
-                            <input type="text" id="at-trainer-class" value="Youngster" placeholder="e.g. Youngster, Hiker">
+                            ${makeDatalistHtml('at-trainer-class', 'Youngster', getUniqueTrainerClasses(), 'placeholder="e.g. Youngster, Hiker"')}
                         </div>
                         <div class="form-group">
                             <label>Pic</label>
-                            <input type="text" id="at-trainer-pic" value="Youngster" placeholder="e.g. Youngster">
+                            ${makeDatalistHtml('at-trainer-pic', 'Youngster', getUniqueTrainerPics(), 'placeholder="e.g. Youngster"')}
                         </div>
                     </div>
                 </div>
@@ -3207,7 +3223,7 @@ function editMapItemBall(dirName, itemIdx) {
             <div class="modal-body">
                 <div class="form-group">
                     <label>Item</label>
-                    <input type="text" id="ib-item" value="${escAttr(item.trainer_sight_or_berry_tree_id || '')}" style="font-family:monospace" placeholder="ITEM_RARE_CANDY">
+                    ${makeDatalistHtml('ib-item', item.trainer_sight_or_berry_tree_id || '', getUniqueItemIds(), 'style="font-family:monospace" placeholder="ITEM_RARE_CANDY"')}
                 </div>
                 <div class="form-row">
                     <div class="form-group">
@@ -3275,7 +3291,7 @@ function editMapHiddenItem(dirName, hiddenIdx) {
             <div class="modal-body">
                 <div class="form-group">
                     <label>Item</label>
-                    <input type="text" id="hi-item" value="${escAttr(item.item || '')}" style="font-family:monospace" placeholder="ITEM_REVIVE">
+                    ${makeDatalistHtml('hi-item', item.item || '', getUniqueItemIds(), 'style="font-family:monospace" placeholder="ITEM_REVIVE"')}
                 </div>
                 <div class="form-row">
                     <div class="form-group">
@@ -3602,7 +3618,7 @@ function editWarp(dirName, warpIdx) {
                 <div class="form-row">
                     <div class="form-group">
                         <label>Dest Warp ID</label>
-                        <input type="text" id="warp-dest-id" value="${escAttr(warp.dest_warp_id || '0')}">
+                        <input type="number" id="warp-dest-id" value="${escAttr(warp.dest_warp_id || '0')}" min="0">
                     </div>
                     <div class="form-group">
                         <label>X</label>
@@ -4480,7 +4496,7 @@ function editCoordEvent(dirName, idx) {
                 <div class="form-row">
                     <div class="form-group">
                         <label>Type</label>
-                        <input type="text" id="ce-type" value="${escAttr(evt.type || '')}" style="font-family:monospace;font-size:12px">
+                        ${makeSelectHtml('ce-type', evt.type || '', COORD_EVENT_TYPES, 'style="font-family:monospace;font-size:12px"')}
                     </div>
                     <div class="form-group">
                         <label>Script</label>
@@ -5393,14 +5409,14 @@ async function renderStarters() {
             <div class="config-row">
                 <span class="config-name">${s.rseLabel}</span>
                 <span class="config-value">
-                    <input type="text" value="${escAttr(s.rse)}" onchange="updateStarter('${s.macro}','rse',this.value)" style="width:200px">
+                    ${makeDatalistHtml('starter-rse-' + s.macro, s.rse, getUniqueSpeciesIds(), 'onchange="updateStarter(\'' + s.macro + '\',\'rse\',this.value)" style="width:200px"')}
                 </span>
                 <span class="config-comment">${s.rse.replace('SPECIES_', '')}</span>
             </div>
             <div class="config-row">
                 <span class="config-name">${s.frlgLabel}</span>
                 <span class="config-value">
-                    <input type="text" value="${escAttr(s.frlg)}" onchange="updateStarter('${s.macro}','frlg',this.value)" style="width:200px">
+                    ${makeDatalistHtml('starter-frlg-' + s.macro, s.frlg, getUniqueSpeciesIds(), 'onchange="updateStarter(\'' + s.macro + '\',\'frlg\',this.value)" style="width:200px"')}
                 </span>
                 <span class="config-comment">${s.frlg.replace('SPECIES_', '')}</span>
             </div>`;
