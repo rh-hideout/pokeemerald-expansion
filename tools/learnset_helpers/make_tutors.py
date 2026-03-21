@@ -1,5 +1,12 @@
+#!/usr/bin/env python3
+
+"""
+Usage: python3 make_tutors.py OUTPUT_FILE
+
+Build a primary store of move-tutors in the repository and what moves they teach.
+"""
+
 from itertools import chain
-from textwrap import dedent
 
 import glob
 import json
@@ -8,7 +15,7 @@ import re
 import sys
 import typing
 
-CONFIG_ENABLED_PAT = re.compile(r"#define P_LEARNSET_HELPER_TEACHABLE\s+(?P<cfg_val>[^ ]*)")
+CONFIG_ENABLED_PAT = re.compile(r"^#define P_LEARNSET_HELPER_TEACHABLE\s+(?P<cfg_val>[^ ]*)", flags=re.MULTILINE)
 INCFILE_HAS_TUTOR_PAT = re.compile(r"special ChooseMonForMoveTutor")
 INCFILE_HAS_TUTOR_PAT2 = re.compile(r"chooseboxmon SELECT_PC_MON_MOVE_TUTOR")
 INCFILE_MOVE_PAT = re.compile(r"setvar VAR_0x8005, (MOVE_[A-Z_]*)")

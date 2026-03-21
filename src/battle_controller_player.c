@@ -2003,8 +2003,6 @@ static void HandleChooseActionAfterDma3(enum BattlerId battler)
         gBattle_BG0_Y = DISPLAY_HEIGHT;
         if (gBattleStruct->aiDelayTimer != 0)
         {
-            gBattleStruct->aiDelayFrames = gMain.vblankCounter1 - gBattleStruct->aiDelayTimer;
-            gBattleStruct->aiDelayTimer = 0;
             if (DEBUG_AI_DELAY_TIMER)
             {
                 static const u8 sFramesText[] = _(" frames thinking\n");
@@ -2017,6 +2015,8 @@ static void HandleChooseActionAfterDma3(enum BattlerId battler)
                 StringAppend(gDisplayedStringBattle, sCyclesText);
                 BattlePutTextOnWindow(gDisplayedStringBattle, B_WIN_ACTION_PROMPT);
             }
+            gBattleStruct->aiDelayTimer = 0;
+            gBattleStruct->aiDelayFrames = 0;
         }
         gBattlerControllerFuncs[battler] = HandleInputChooseAction;
     }

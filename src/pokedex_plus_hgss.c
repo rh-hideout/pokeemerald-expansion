@@ -195,6 +195,9 @@ static const u32 sPokedexPlusHGSS_ScreenSearchNational_Tilemap[] = INCBIN_U32("g
 // for evolution method listings
 #define MAX_EVO_METHOD_LINES 10
 
+// Width of pixels one line of text in the species box can be
+#define STATS_PAGE_SPECIES_MAX_WIDTH 55
+
 extern EWRAM_DATA struct PokedexView *sPokedexView;
 extern EWRAM_DATA struct PokedexListItem *sPokedexListItem;
 //Pokedex Plus HGSS_Ui
@@ -2421,7 +2424,7 @@ static void PrintStatsScreen_NameGender(u8 taskId, u32 num, u32 value)
 
     //Name
     const u8 *name = GetSpeciesName(species);
-    if (GetStringWidth(FONT_SMALL, name, 0) <= 55)
+    if (GetStringWidth(FONT_SMALL, name, 0) <= STATS_PAGE_SPECIES_MAX_WIDTH)
         PrintStatsScreenTextSmall(WIN_STATS_NAME_GENDER, name, base_x, base_y);
     else
         PrintStatsScreenTextSmallNarrower(WIN_STATS_NAME_GENDER, name, base_x, base_y);
@@ -4735,36 +4738,6 @@ void HandleCreateStatBarsDPAD_HGSS(void)
         CreateStatBars(&sPokedexView->pokedexList[sPokedexView->selectedPokemon]);
 }
 
-static void TryLoadDarkModeArrowPalette(void)
-{
-    if (!HGSS_DARK_MODE)
-        return;
-
-    u32 index = IndexOfSpritePaletteTag(gSpritePalette_Arrow.tag);
-    u32 colorArrow = RGB2GBA(72, 72, 72);
-    u32 colorOutline = RGB2GBA(24, 24, 24);
-
-    LoadPalette(&colorArrow, OBJ_PLTT_ID(index) + 1, sizeof(colorArrow));
-    LoadPalette(&colorOutline, OBJ_PLTT_ID(index) + 2, sizeof(colorOutline));
-}
-
-static void FillCryMeterWindowTilemapWithBg(void)
-{
-    // This fills the window behind the 'VU' text on the cry meter.
-    // It is filled with blank tiles, showing as black.
-
-    struct Window windowLocal = gWindows[WIN_VU_METER];
-
-    FillBgTilemapBufferRect(
-        3,
-        0,
-        windowLocal.window.tilemapLeft,
-        windowLocal.window.tilemapTop,
-        windowLocal.window.width,
-        windowLocal.window.height,
-        windowLocal.window.paletteNum);
-}
-
 void HandleCaughtMonPageTypeIcons_HGSS(void)
 {
     if (!POKEDEX_PLUS_HGSS)
@@ -4798,4 +4771,34 @@ bool32 TryHandleCaughtMonPageFlicker_HGSS(u8 taskId)
     // }
 
     return TRUE;
+}
+
+static void TryLoadDarkModeArrowPalette(void)
+{
+    if (!HGSS_DARK_MODE)
+        return;
+
+    u32 index = IndexOfSpritePaletteTag(gSpritePalette_Arrow.tag);
+    u32 colorArrow = RGB2GBA(72, 72, 72);
+    u32 colorOutline = RGB2GBA(24, 24, 24);
+
+    LoadPalette(&colorArrow, OBJ_PLTT_ID(index) + 1, sizeof(colorArrow));
+    LoadPalette(&colorOutline, OBJ_PLTT_ID(index) + 2, sizeof(colorOutline));
+}
+
+static void FillCryMeterWindowTilemapWithBg(void)
+{
+    // This fills the window behind the 'VU' text on the cry meter.
+    // It is filled with blank tiles, showing as black.
+
+    struct Window windowLocal = gWindows[WIN_VU_METER];
+
+    FillBgTilemapBufferRect(
+        3,
+        0,
+        windowLocal.window.tilemapLeft,
+        windowLocal.window.tilemapTop,
+        windowLocal.window.width,
+        windowLocal.window.height,
+        windowLocal.window.paletteNum);
 }

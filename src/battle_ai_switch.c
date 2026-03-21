@@ -46,6 +46,9 @@ static void SetBattlerStatStagesForSwitchin(enum BattlerId battler, enum Battler
 static void SetBattlerHPChangeForSwitch(enum BattlerId battler, enum BattlerId opposingBattler);
 static void SetBattlerVolatilesForSwitchin(enum BattlerId battler, u32 weather, u32 fieldStatus);
 bool32 IsSwitchinTSpikesAffected(enum BattlerId battler);
+static bool32 IsOpponentPhysicalAttacker(enum BattlerId battler, enum BattlerId opposingBattler);
+static bool32 CanIntimidateLowerOpponentAtk(enum BattlerId battler, enum BattlerId opposingBattler);
+static bool32 ShouldSwitchIfIntimidateBenefit(enum BattlerId battler);
 
 static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, u32 monIndex, struct Pokemon *mon)
 {
@@ -59,6 +62,8 @@ static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, u32 monI
     SetBattlerVolatilesForSwitchin(switchinBattler, switchinWeather, switchinFieldStatus);
     SetBattlerStatusForSwitchin(switchinBattler);
     gBattlerPartyIndexes[switchinBattler] = monIndex;
+    gAiLogicData->switchInCalc = TRUE;
+
     for (enum BattlerId battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
     {
         if (switchinBattler == battlerIndex || !IsBattlerAlive(battlerIndex))
@@ -69,6 +74,7 @@ static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, u32 monI
         CalcBattlerAiMovesData(gAiLogicData, battlerIndex, switchinBattler, switchinWeather, switchinFieldStatus);
     }
 
+    gAiLogicData->switchInCalc = FALSE;
     gBattlerPartyIndexes[switchinBattler] = storeCurrBattlerPartyIndex;
     gAiThinkingStruct->saved[switchinBattler].saved = FALSE;
 }
@@ -183,6 +189,10 @@ u32 GetSwitchChance(enum ShouldSwitchScenario shouldSwitchScenario)
         return SHOULD_SWITCH_REGENERATOR_PERCENTAGE;
     case SHOULD_SWITCH_REGENERATOR_STATS_RAISED:
         return SHOULD_SWITCH_REGENERATOR_STATS_RAISED_PERCENTAGE;
+    case SHOULD_SWITCH_INTIMIDATE:
+        return SHOULD_SWITCH_INTIMIDATE_PERCENTAGE;
+    case SHOULD_SWITCH_INTIMIDATE_STATS_RAISED:
+        return SHOULD_SWITCH_INTIMIDATE_STATS_RAISED_PERCENTAGE;
     case SHOULD_SWITCH_ENCORE_STATUS:
         return SHOULD_SWITCH_ENCORE_STATUS_PERCENTAGE;
     case SHOULD_SWITCH_ENCORE_DAMAGE:
@@ -955,6 +965,103 @@ static bool32 GetHitEscapeTransformState(enum BattlerId battlerAtk, enum Move mo
     return isFasterThanAll;
 }
 
+static bool32 IsOpponentPhysicalAttacker(enum BattlerId battler, enum BattlerId opposingBattler)
+{
+    if (!IsBattlerAlive(opposingBattler))
+        return FALSE;
+
+    if (GetBestDmgFromBattler(opposingBattler, battler, AI_DEFENDING) > 0 && HasPhysicalBestMove(opposingBattler, battler, AI_DEFENDING))
+        return TRUE;
+
+    enum Move incomingMove = GetIncomingMove(battler, opposingBattler, gAiLogicData);
+    return incomingMove != MOVE_NONE
+        && incomingMove != MOVE_UNAVAILABLE
+        && GetBattleMoveCategory(incomingMove) == DAMAGE_CATEGORY_PHYSICAL;
+}
+
+static bool32 CanIntimidateLowerOpponentAtk(enum BattlerId battler, enum BattlerId opposingBattler)
+{
+    enum Ability abilityDef = gAiLogicData->abilities[opposingBattler];
+
+    // If Attack is already at -2 or lower, repeated Intimidate cycles aren't worth it.
+    if (gBattleMons[opposingBattler].statStages[STAT_ATK] <= DEFAULT_STAT_STAGE - 2)
+        return FALSE;
+
+    if (gBattleMons[opposingBattler].volatiles.substitute)
+        return FALSE;
+
+    if (gAiLogicData->holdEffects[opposingBattler] == HOLD_EFFECT_CLEAR_AMULET)
+        return FALSE;
+
+    if (gSideStatuses[GetBattlerSide(opposingBattler)] & SIDE_STATUS_MIST)
+        return FALSE;
+
+    if (IS_BATTLER_OF_TYPE(opposingBattler, TYPE_GRASS) && AI_IsAbilityOnSide(opposingBattler, ABILITY_FLOWER_VEIL))
+        return FALSE;
+
+    switch (abilityDef)
+    {
+    case ABILITY_HYPER_CUTTER:
+    case ABILITY_CLEAR_BODY:
+    case ABILITY_FULL_METAL_BODY:
+    case ABILITY_WHITE_SMOKE:
+        return FALSE;
+    default:
+        break;
+    }
+
+    if (GetConfig(B_UPDATED_INTIMIDATE) >= GEN_8)
+    {
+        switch (abilityDef)
+        {
+        case ABILITY_INNER_FOCUS:
+        case ABILITY_SCRAPPY:
+        case ABILITY_OWN_TEMPO:
+        case ABILITY_OBLIVIOUS:
+            return FALSE;
+        default:
+            break;
+        }
+    }
+
+    return TRUE;
+}
+
+static bool32 ShouldSwitchIfIntimidateBenefit(enum BattlerId battler)
+{
+    // Keep Intimidate cycling behavior restricted to smart-switching AI
+    if (!(gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_SWITCHING))
+        return FALSE;
+
+    enum BattlerId opposingBattler = GetOppositeBattler(battler);
+    enum BattlerId opposingPartner = BATTLE_PARTNER(opposingBattler);
+    bool32 hasValidTarget = FALSE;
+
+    if (IsBattlerAlive(opposingBattler))
+    {
+        enum Ability abilityDef = gAiLogicData->abilities[opposingBattler];
+        bool32 canLowerAtk = CanIntimidateLowerOpponentAtk(battler, opposingBattler);
+
+        if (canLowerAtk && (DoesIntimidateRaiseStats(abilityDef) || abilityDef == ABILITY_MIRROR_ARMOR))
+            return FALSE;
+        if (canLowerAtk && IsOpponentPhysicalAttacker(battler, opposingBattler))
+            hasValidTarget = TRUE;
+    }
+
+    if (IsDoubleBattle() && IsBattlerAlive(opposingPartner))
+    {
+        enum Ability abilityDef = gAiLogicData->abilities[opposingPartner];
+        bool32 canLowerAtk = CanIntimidateLowerOpponentAtk(battler, opposingPartner);
+
+        if (canLowerAtk && (DoesIntimidateRaiseStats(abilityDef) || abilityDef == ABILITY_MIRROR_ARMOR))
+            return FALSE;
+        if (canLowerAtk && IsOpponentPhysicalAttacker(battler, opposingPartner))
+            hasValidTarget = TRUE;
+    }
+
+    return hasValidTarget;
+}
+
 static bool32 ShouldSwitchIfAbilityBenefit(enum BattlerId battler)
 {
     bool32 hasStatRaised = AnyUsefulStatIsRaised(battler);
@@ -992,20 +1099,21 @@ static bool32 ShouldSwitchIfAbilityBenefit(enum BattlerId battler)
 
         return FALSE;
 
+    case ABILITY_INTIMIDATE:
+        // TODO: In ShouldSwitch cleanup, gate Intimidate cycling behind "stay in instead if the current mon wins the 1v1" to avoid duplicating Bad Odds logic here.
+        if (ShouldSwitchIfIntimidateBenefit(battler)
+            && gAiLogicData->mostSuitableMonId[battler] != PARTY_SIZE
+            && (hasStatRaised ? RandomPercentage(RNG_AI_SWITCH_INTIMIDATE, GetSwitchChance(SHOULD_SWITCH_INTIMIDATE_STATS_RAISED)) : RandomPercentage(RNG_AI_SWITCH_INTIMIDATE, GetSwitchChance(SHOULD_SWITCH_INTIMIDATE))))
+            break;
+
+        return FALSE;
+
     case ABILITY_ZERO_TO_HERO:
     {
         enum Move hitEscapeMove = MOVE_NONE;
 
-        for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
-        {
-            enum Move move = gBattleMons[battler].moves[moveIndex];
-
-            if (move != MOVE_NONE && GetMoveEffect(move) == EFFECT_HIT_ESCAPE)
-            {
-                hitEscapeMove = move;
-                break;
-            }
-        }
+        if (GetBattlerMoveIndexWithEffect(battler, EFFECT_HIT_ESCAPE) < MAX_MON_MOVES)
+            hitEscapeMove = gBattleMons[battler].moves[GetBattlerMoveIndexWithEffect(battler, EFFECT_HIT_ESCAPE)];
 
         // Prefer to use a hit escape move if Palafin will move first and can hit
         if (hitEscapeMove != MOVE_NONE && GetHitEscapeTransformState(battler, hitEscapeMove))
@@ -2756,6 +2864,7 @@ static void SetBattlerStatStagesForSwitchin(enum BattlerId battler, enum Battler
     switch(GetItemHoldEffect(aiItem))
     {
     case HOLD_EFFECT_TERRAIN_SEED:
+    {
         u32 seedParam = GetItemHoldEffectParam(aiItem);
         if ((seedParam == HOLD_EFFECT_PARAM_ELECTRIC_TERRAIN && (fieldStatus & STATUS_FIELD_ELECTRIC_TERRAIN))
          || (seedParam == HOLD_EFFECT_PARAM_GRASSY_TERRAIN && (fieldStatus & STATUS_FIELD_GRASSY_TERRAIN))
@@ -2763,6 +2872,7 @@ static void SetBattlerStatStagesForSwitchin(enum BattlerId battler, enum Battler
          || (seedParam == HOLD_EFFECT_PARAM_PSYCHIC_TERRAIN && (fieldStatus & STATUS_FIELD_PSYCHIC_TERRAIN)))
             gBattleMons[battler].statStages[STAT_DEF] += 1;
         break;
+    }
     case HOLD_EFFECT_ATTACK_UP:
         if (HasEnoughHpToEatBerry(battler, aiAbility, GetItemHoldEffectParam(aiItem), aiItem))
             gBattleMons[battler].statStages[STAT_ATK] += 1;

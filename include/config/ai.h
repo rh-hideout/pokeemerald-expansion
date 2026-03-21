@@ -46,6 +46,8 @@
 #define SHOULD_SWITCH_NATURAL_CURE_WEAK_STATS_RAISED_PERCENTAGE     10
 #define SHOULD_SWITCH_REGENERATOR_PERCENTAGE                        50
 #define SHOULD_SWITCH_REGENERATOR_STATS_RAISED_PERCENTAGE           20
+#define SHOULD_SWITCH_INTIMIDATE_PERCENTAGE                         25
+#define SHOULD_SWITCH_INTIMIDATE_STATS_RAISED_PERCENTAGE            10
 
 // AI switchin considerations
 #define ALL_MOVES_BAD_STATUS_MOVES_BAD                          FALSE // If the AI has no moves that affect the target, ShouldSwitchIfAllMovesBad can prompt a switch. Enabling this config will ignore status moves that can affect the target when making this decision.

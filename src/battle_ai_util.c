@@ -5934,8 +5934,9 @@ bool32 DoesIntimidateRaiseStats(enum Ability ability)
     case ABILITY_CONTRARY:
     case ABILITY_DEFIANT:
     case ABILITY_GUARD_DOG:
-    case ABILITY_RATTLED:
         return TRUE;
+    case ABILITY_RATTLED:
+        return GetConfig(B_UPDATED_INTIMIDATE) >= GEN_8;
     default:
         return FALSE;
     }
