@@ -2131,16 +2131,108 @@ function rawFileUrl(filePath) {
     return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/${filePath}`;
 }
 
+// Map graphics IDs to trainer front pic filenames where the name doesn't match directly
+const FRONT_PIC_MAP = {
+    'archie': 'aqua_leader_archie',
+    'maxie': 'magma_leader_maxie',
+    'aqua_member_m': 'aqua_grunt_m',
+    'aqua_member_f': 'aqua_grunt_f',
+    'magma_member_m': 'magma_grunt_m',
+    'magma_member_f': 'magma_grunt_f',
+    'brawly': 'leader_brawly',
+    'roxanne': 'leader_roxanne',
+    'flannery': 'leader_flannery',
+    'norman': 'leader_norman',
+    'wattson': 'leader_wattson',
+    'winona': 'leader_winona',
+    'juan': 'leader_juan',
+    'wallace': 'champion_wallace',
+    'drake': 'elite_four_drake',
+    'phoebe': 'elite_four_phoebe',
+    'glacia': 'elite_four_glacia',
+    'sidney': 'elite_four_sidney',
+    'brandon': 'pyramid_king_brandon',
+    'rival_brendan_normal': 'brendan',
+    'rival_may_normal': 'may',
+    'brendan_normal': 'brendan',
+    'may_normal': 'may',
+    'rocker': 'guitarist',
+    'maniac': 'ruin_maniac',
+    'rocket_m': 'rocket_grunt_m_frlg',
+    'rocket_f': 'rocket_grunt_f_frlg',
+    'blackbelt': 'black_belt',
+    'fisher': 'fisherman',
+    'prof_birch': 'brendan', // no prof_birch front pic
+    'prof_oak': 'professor_oak_frlg',
+    'agatha': 'elite_four_agatha_frlg',
+    'bruno': 'elite_four_bruno_frlg',
+    'lorelei': 'elite_four_lorelei_frlg',
+    'lance': 'elite_four_lance_frlg',
+    'brock': 'leader_brock_frlg',
+    'misty': 'leader_misty_frlg',
+    'lt_surge': 'leader_lt_surge_frlg',
+    'erika': 'leader_erika_frlg',
+    'koga': 'leader_koga_frlg',
+    'sabrina': 'leader_sabrina_frlg',
+    'blaine': 'leader_blaine_frlg',
+    'giovanni': 'leader_giovanni_frlg',
+    'blue': 'rival_early_frlg',
+    'channeler': 'channeler_frlg',
+    'super_nerd': 'super_nerd_frlg',
+    'cook': 'kindler',
+    'scientist_1': 'scientist_frlg',
+    'scientist_2': 'scientist_frlg',
+    'tate': 'leader_tate_and_liza',
+    'liza': 'leader_tate_and_liza',
+    'swimmer_f_land': 'swimmer_f',
+    'swimmer_f_water': 'swimmer_f',
+    'swimmer_m_land': 'swimmer_m',
+    'swimmer_m_water': 'swimmer_m',
+    'tuber_m_swimming': 'tuber_m',
+    'tuber_m_water': 'tuber_m',
+};
+
+// Graphics IDs that are overworld-only (no trainer front pic exists) - use overworld sprite
+const OVERWORLD_ONLY = new Set([
+    'boy', 'boy_1', 'boy_2', 'boy_3', 'girl_1', 'girl_2', 'girl_3',
+    'woman_1', 'woman_2', 'woman_3', 'woman_4', 'woman_5',
+    'woman_1_frlg', 'woman_2_frlg', 'woman_3_frlg',
+    'man', 'man_1', 'man_2', 'man_3', 'man_4', 'man_5',
+    'old_man', 'old_man_1', 'old_man_2', 'old_woman', 'old_woman_frlg',
+    'little_boy', 'little_boy_frlg', 'little_girl', 'little_girl_frlg',
+    'fat_man', 'fat_man_frlg', 'balding_man', 'twin',
+    'cable_club_receptionist', 'link_receptionist', 'union_room_receptionist',
+    'union_room_nurse', 'nurse', 'nurse_frlg', 'mart_employee',
+    'policeman', 'devon_employee', 'gym_guy', 'captain',
+    'hot_springs_old_woman', 'contest_judge', 'artist', 'cameraman',
+    'reporter_f', 'reporter_m', 'clerk', 'chef',
+    'rooftop_sale_woman', 'gameboy_kid', 'gba_kid', 'sitting_boy',
+    'quinty_plump', 'scott', 'teala', 'mom', 'mom_frlg',
+    'bill', 'celio', 'daisy', 'mr_fuji', 'trainer_tower_dude',
+    'mg_deliveryman', 'mystery_gift_man', 'worker_f', 'worker_m',
+]);
+
 function getSpriteUrl(graphicsId) {
     const name = (graphicsId || '').replace('OBJ_EVENT_GFX_', '').toLowerCase();
-    return rawFileUrl(`graphics/object_events/pics/people/${name}.png`);
+
+    // Try trainer front pic first (mapped name or direct match)
+    if (!OVERWORLD_ONLY.has(name)) {
+        const frontPicName = FRONT_PIC_MAP[name] || name;
+        return { url: rawFileUrl(`graphics/trainers/front_pics/${frontPicName}.png`), type: 'front' };
+    }
+
+    // Fall back to overworld sprite
+    return { url: rawFileUrl(`graphics/object_events/pics/people/${name}.png`), type: 'overworld' };
 }
 
 function getSpriteHtml(graphicsId, size = 32) {
-    const url = getSpriteUrl(graphicsId);
+    const { url, type } = getSpriteUrl(graphicsId);
     const name = (graphicsId || '').replace('OBJ_EVENT_GFX_', '').replace(/_/g, ' ');
+    const imgStyle = type === 'front'
+        ? `width:${size}px;height:${size}px;object-fit:contain;image-rendering:pixelated`
+        : `height:${size}px;width:auto;image-rendering:pixelated`;
     return `<div class="sprite-container" style="width:${size}px;height:${size}px">
-        <img src="${url}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" style="height:${size}px;width:auto;image-rendering:pixelated" alt="${escAttr(name)}">
+        <img src="${url}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" style="${imgStyle}" alt="${escAttr(name)}">
         <div class="sprite-fallback" style="display:none;width:${size}px;height:${size}px">${escHtml(name.substring(0, 2).toUpperCase())}</div>
     </div>`;
 }
