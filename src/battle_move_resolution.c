@@ -2711,8 +2711,7 @@ static enum MoveEndResult MoveEndMirrorMove(void)
      && gBattlerAttacker != gBattlerTarget
      && IsBattlerAlive(gBattlerAttacker)
      && IsBattlerAlive(gBattlerTarget)
-     && !IsMoveMirrorMoveBanned(GetOriginallyUsedMove(gChosenMove))
-     && !IsBattlerUnaffectedByMove(gBattlerTarget))
+     && !IsMoveMirrorMoveBanned(GetOriginallyUsedMove(gChosenMove)))
     {
         gBattleStruct->lastTakenMove[gBattlerTarget] = gChosenMove;
         gBattleStruct->lastTakenMoveFrom[gBattlerTarget][gBattlerAttacker] = gChosenMove;
