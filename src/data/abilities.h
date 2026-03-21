@@ -281,7 +281,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Copies special ability."),
         .aiRating = 6,
         .cantBeCopied = TRUE,
-        .cantBeTraced = B_UPDATED_ABILITY_DATA >= GEN_4,
+        .cantBeTraced = TRUE, //B_UPDATED_ABILITY_DATA >= GEN_4
     },
 
     [ABILITY_HUGE_POWER] =
