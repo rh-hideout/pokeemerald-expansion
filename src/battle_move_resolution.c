@@ -824,9 +824,6 @@ static bool32 HandleMoveTargetRedirection(enum MoveTarget moveTarget)
         enum BattlerId battler;
         for (battler = 0; battler < gBattlersCount; battler++)
         {
-            if (!IsBattlerAlive(battler) || gBattlerAttacker == battler)
-                continue;
-
             ability = GetBattlerAbility(battler);
             if ((B_REDIRECT_ABILITY_ALLIES >= GEN_4 || !IsBattlerAlly(gBattlerAttacker, battler))
                 && battler != gBattlerAttacker
@@ -952,7 +949,7 @@ static enum CancelerResult CancelerPPDeduction(struct BattleContext *ctx)
     {
         for (u32 i = 0; i < gBattlersCount; i++)
         {
-            if (!IsBattlerAlly(i, ctx->battlerAtk) && IsBattlerAlive(i))
+            if (!IsBattlerAlly(i, ctx->battlerAtk))
                 ppToDeduct += (GetBattlerAbility(i) == ABILITY_PRESSURE);
         }
     }
@@ -2306,7 +2303,7 @@ static enum MoveEndResult MoveEndQueueDancer(void)
 
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
-        if (battler == gBattlerAttacker || !IsBattlerAlive(battler))
+        if (battler == gBattlerAttacker)
             continue;
 
         if (GetBattlerAbility(battler) == ABILITY_DANCER)
@@ -3470,8 +3467,6 @@ static enum MoveEndResult MoveEndWhiteHerb(void)
     while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
     {
         enum BattlerId battler = gBattleStruct->eventState.moveEndBattler++;
-        if (!IsBattlerAlive(battler))
-            continue;
 
         if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsWhiteHerbActivation))
             return MOVEEND_RESULT_RUN_SCRIPT;
@@ -3487,8 +3482,7 @@ static enum MoveEndResult MoveEndOpportunist(void)
     while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
     {
         enum BattlerId battler = gBattleStruct->eventState.moveEndBattler++;
-        if (!IsBattlerAlive(battler))
-            continue;
+
         if (AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, battler, GetBattlerAbility(battler), 0, TRUE))
             return MOVEEND_RESULT_RUN_SCRIPT;
     }
@@ -3503,8 +3497,6 @@ static enum MoveEndResult MoveEndMirrorHerb(void)
     while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
     {
         enum BattlerId battler = gBattleStruct->eventState.moveEndBattler++;
-        if (!IsBattlerAlive(battler))
-            continue;
 
         if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsMirrorHerbActivation))
             return MOVEEND_RESULT_RUN_SCRIPT;

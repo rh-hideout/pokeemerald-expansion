@@ -349,9 +349,6 @@ static bool32 IsUnnerveAbilityOnOpposingSide(enum BattlerId battler)
         if (battler == battlerDef || IsBattlerAlly(battler, battlerDef))
             continue;
 
-        if (!IsBattlerAlive(battlerDef))
-            continue;
-
         enum Ability ability = GetBattlerAbility(battlerDef);
         switch (ability)
         {
@@ -1695,7 +1692,7 @@ u32 GetBattlerAffectionHearts(enum BattlerId battler)
     struct Pokemon *mon = GetBattlerMon(battler);
     u16 species = GetMonData(mon, MON_DATA_SPECIES);
 
-    if (!IsOnPlayerSide(battler))
+    if (!IsOnPlayerSide(battler) || gBattleStruct->battlerState[battler].notOnField)
         return AFFECTION_NO_HEARTS;
     else if (gSpeciesInfo[species].isMegaEvolution
           || (gBattleTypeFlags & (BATTLE_TYPE_EREADER_TRAINER
@@ -3819,7 +3816,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         {
         case ABILITY_COLOR_CHANGE:
             if (IsBattlerTurnDamaged(battler, EXCLUDING_SUBSTITUTES)
-             && IsBattlerAlive(battler)
              && !IS_BATTLER_OF_TYPE(battler, moveType)
              && move != MOVE_STRUGGLE
              && moveType != TYPE_STELLAR
@@ -3834,7 +3830,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             break;
         case ABILITY_BERSERK:
             if (IsBattlerTurnDamaged(battler, EXCLUDING_SUBSTITUTES)
-             && IsBattlerAlive(battler)
              && HadMoreThanHalfHpNowDoesnt(battler)
              && CompareStat(battler, STAT_SPATK, MAX_STAT_STAGE, CMP_LESS_THAN, gLastUsedAbility))
             {
@@ -3846,7 +3841,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             break;
         case ABILITY_ANGER_SHELL:
             if (IsBattlerTurnDamaged(battler, EXCLUDING_SUBSTITUTES)
-             && IsBattlerAlive(battler)
              && HadMoreThanHalfHpNowDoesnt(battler))
             {
                 gEffectBattler = gBattlerAbility = battler;
@@ -4424,7 +4418,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             if (GetMoveEffect(move) != EFFECT_FLING
              && GetMoveEffect(move) != EFFECT_NATURAL_GIFT
              && gBattleMons[battler].item == ITEM_NONE
-             && IsBattlerAlive(battler)
              && !gSpecialStatuses[battler].gemBoost) // In base game, gems are consumed after magician would activate.
             {
                 u32 numMagicianTargets = 0;
@@ -4438,7 +4431,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                      && CanStealItem(battler, battlerDef, gBattleMons[battlerDef].item)
                      && !GetBattlerPartyState(battlerDef)->isKnockedOff
                      && !DoesSubstituteBlockMove(battler, battlerDef, move)
-                     && (GetBattlerAbility(battlerDef) != ABILITY_STICKY_HOLD || !IsBattlerAlive(battlerDef)))
+                     && GetBattlerAbility(battlerDef) != ABILITY_STICKY_HOLD)
                     {
                         magicianTargets |= 1u << battlerDef;
                         numMagicianTargets++;
@@ -4478,7 +4471,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_AS_ONE_SHADOW_RIDER:
         case ABILITY_BEAST_BOOST:
             {
-                if (!IsBattlerAlive(battler) || NoAliveMonsForEitherParty())
+                if (NoAliveMonsForEitherParty())
                     break;
 
                 enum Stat stat = STAT_ATK;
@@ -4507,8 +4500,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             break;
         case ABILITY_BATTLE_BOND:
             {
-                if (!IsBattlerAlive(battler)
-                 || NoAliveMonsForEitherParty()
+                if (NoAliveMonsForEitherParty()
                  || NumFaintedBattlersByAttacker(battler) == 0)
                     break;
 
@@ -4641,7 +4633,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         {
         case ABILITY_COMMANDER:
             if (IsBattlerAlive(partner)
-             && IsBattlerAlive(battler)
              && gBattleStruct->battlerState[partner].commanderSpecies == SPECIES_NONE
              && gBattleMons[partner].species == SPECIES_DONDOZO
              && (gChosenActionByBattler[partner] != B_ACTION_SWITCH || HasBattlerActedThisTurn(partner))
@@ -4695,8 +4686,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         }
         break;
     case ABILITYEFFECT_ON_WEATHER: // For ability effects that activate when the battle weather changes.
-        if (!IsBattlerAlive(battler))
-            return effect;
         gLastUsedAbility = GetBattlerAbility(battler);
         switch (gLastUsedAbility)
         {
@@ -4741,8 +4730,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         }
         break;
     case ABILITYEFFECT_ON_TERRAIN:  // For ability effects that activate when the field terrain changes.
-        if (!IsBattlerAlive(battler))
-            return effect;
         gLastUsedAbility = GetBattlerAbility(battler);
         switch (gLastUsedAbility)
         {
@@ -4928,9 +4915,6 @@ u32 IsAbilityPreventingEscape(enum BattlerId battler)
     for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
         if (battler == battlerDef || IsBattlerAlly(battler, battlerDef))
-            continue;
-
-        if (!IsBattlerAlive(battlerDef))
             continue;
 
         enum Ability ability = GetBattlerAbility(battlerDef);
@@ -9902,9 +9886,6 @@ bool32 HasWeatherEffect(void)
 {
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
-        if (!IsBattlerAlive(battler))
-            continue;
-
         enum Ability ability = GetBattlerAbility(battler);
         switch (ability)
         {

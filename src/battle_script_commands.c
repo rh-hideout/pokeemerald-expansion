@@ -14604,9 +14604,6 @@ void BS_ActivateItemEffects(void)
     NATIVE_ARGS();
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
-        if (!IsBattlerAlive(battler))
-            continue;
-
         if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsForceTriggerItemActivation))
             return;
     }
