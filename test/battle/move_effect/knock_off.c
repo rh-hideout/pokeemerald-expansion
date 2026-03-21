@@ -6,6 +6,33 @@ ASSUMPTIONS
     ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
 }
 
+WILD_BATTLE_TEST("Knock Off does not remove item when used by Wild Pokemon (Gen 5+)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LEFTOVERS); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_EVIOLITE); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_KNOCK_OFF); }
+        TURN { MOVE(player, MOVE_KNOCK_OFF); }
+    } SCENE {
+        // Turn 1
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, opponent);
+        if (B_KNOCK_OFF_REMOVAL >= GEN_5)
+            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF, player);
+        else
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF, player);
+        // Turn 2
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF, opponent);
+    } THEN {
+        EXPECT(player->item == ITEM_LEFTOVERS);
+        if (B_KNOCK_OFF_REMOVAL >= GEN_5)
+            EXPECT(opponent->item == ITEM_NONE);
+        else
+            EXPECT(opponent->item == ITEM_EVIOLITE);
+    }
+}
+
 SINGLE_BATTLE_TEST("Knock Off knocks a healing berry before it has the chance to activate")
 {
     GIVEN {
@@ -28,7 +55,7 @@ SINGLE_BATTLE_TEST("Knock Off knocks a healing berry before it has the chance to
 
 SINGLE_BATTLE_TEST("Knock Off activates after Rocky Helmet and Weakness Policy")
 {
-    u16 item = 0;
+    enum Item item = ITEM_NONE;
 
     PARAMETRIZE { item = ITEM_WEAKNESS_POLICY; }
     PARAMETRIZE { item = ITEM_ROCKY_HELMET; }
@@ -58,14 +85,14 @@ SINGLE_BATTLE_TEST("Knock Off activates after Rocky Helmet and Weakness Policy")
 
 SINGLE_BATTLE_TEST("Knock Off deals additional damage to opponents holding an item in Gen 6+", s16 damage)
 {
-    u16 item = 0;
+    enum Item item = ITEM_NONE;
 
     PARAMETRIZE { item = ITEM_NONE; }
     PARAMETRIZE { item = ITEM_LEFTOVERS; }
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(item); };
+        OPPONENT(SPECIES_WOBBUFFET) { Item(item); }
     } WHEN {
         TURN { MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
@@ -88,7 +115,7 @@ SINGLE_BATTLE_TEST("Knock Off does not remove items through Substitute")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LEFTOVERS); };
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LEFTOVERS); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
@@ -103,7 +130,7 @@ SINGLE_BATTLE_TEST("Knock Off does not remove items through Substitute even if i
 {
     GIVEN {
         PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(4); HP(4); Item(ITEM_LEFTOVERS); };
+        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(4); HP(4); Item(ITEM_LEFTOVERS); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
@@ -119,7 +146,7 @@ SINGLE_BATTLE_TEST("Knock Off does not remove items through Protect")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LEFTOVERS); };
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LEFTOVERS); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_PROTECT); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
@@ -138,7 +165,7 @@ SINGLE_BATTLE_TEST("Knock Off does not remove items if target is immune")
         ASSUME(GetMoveEffect(MOVE_ELECTRIFY) == EFFECT_ELECTRIFY);
         ASSUME(GetSpeciesType(SPECIES_DONPHAN, 0) == TYPE_GROUND || GetSpeciesType(SPECIES_DONPHAN, 1) == TYPE_GROUND);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_DONPHAN) { Item(ITEM_LEFTOVERS); };
+        OPPONENT(SPECIES_DONPHAN) { Item(ITEM_LEFTOVERS); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_ELECTRIFY); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
@@ -392,5 +419,91 @@ SINGLE_BATTLE_TEST("Knock Off doesn't remove item if it's prevented by Sticky Ho
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_STICKY_HOLD);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Knock Off does not activate if the item was previously consumed")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_AIR_BALLOON); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_KNOCK_OFF); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, player);
+        MESSAGE("The opposing Wobbuffet's Air Balloon popped!");
+        NOT MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Air Balloon!");
+    } THEN {
+        EXPECT(opponent->item == ITEM_NONE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Knock Off does knock off Ogerpon masks from Pokemon that aren't Ogerpon")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_HEARTHFLAME_MASK); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
+    } SCENE {
+        MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Hearthflame Mask!");
+    } THEN {
+        EXPECT(opponent->item == ITEM_NONE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Knock Off doesn't knock off Ogerpon masks from Ogerpon")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_OGERPON) { Item(ITEM_HEARTHFLAME_MASK); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
+    } SCENE {
+        NOT MESSAGE("Wobbuffet knocked off the opposing Ogerpon's Hearthflame Mask!");
+    } THEN {
+        EXPECT(opponent->item == ITEM_HEARTHFLAME_MASK);
+    }
+}
+
+SINGLE_BATTLE_TEST("Knock Off does knock off a Booster Energy from a non Paradox Pokemon")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_BOOSTER_ENERGY); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
+    } SCENE {
+        MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Booster Energy!");
+    } THEN {
+        EXPECT(opponent->item == ITEM_NONE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Knock Off doesn't knock off a Paradox mon's Booster Energy")
+{
+    GIVEN {
+        PLAYER(SPECIES_TORKOAL) { Ability(ABILITY_DROUGHT); }
+        OPPONENT(SPECIES_GREAT_TUSK) { Item(ITEM_BOOSTER_ENERGY); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
+    } SCENE {
+        NOT MESSAGE("Wobbuffet knocked off the opposing Great Tusk's Booster Energy!");
+    } THEN {
+        EXPECT(opponent->item == ITEM_BOOSTER_ENERGY);
+    }
+}
+
+SINGLE_BATTLE_TEST("Knock Off used by a Paradox mon doesn't knock off a non-Paradox mon's Booster Energy")
+{
+    GIVEN {
+        PLAYER(SPECIES_GREAT_TUSK);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_BOOSTER_ENERGY); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
+    } SCENE {
+        NOT MESSAGE("Great Tust knocked off the opposing Wobbuffet's Booster Energy!");
+    } THEN {
+        EXPECT(opponent->item == ITEM_BOOSTER_ENERGY);
     }
 }

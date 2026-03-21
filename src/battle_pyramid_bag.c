@@ -16,7 +16,6 @@
 #include "item_use.h"
 #include "list_menu.h"
 #include "mail.h"
-#include "main.h"
 #include "malloc.h"
 #include "menu.h"
 #include "menu_helpers.h"
@@ -83,8 +82,8 @@ static void ShowNumToToss(void);
 static void CloseBattlePyramidBagTextWindow(void);
 static bool8 LoadPyramidBagGfx(void);
 static bool8 LoadPyramidBagMenu(void);
-static void ShowItemIcon(u16, u8);
-static void CopyBagItemName(u8 *, u16);
+static void ShowItemIcon(enum Item itemId, bool8 isAlt);
+static void CopyBagItemName(u8 *dst, enum Item itemId);
 static void FreeItemIconSpriteByAltId(u8);
 static void PrintItemDescription(s32);
 static void PrintSelectorArrowAtPos(u8, u8);
@@ -366,9 +365,7 @@ static const struct SpriteTemplate sSpriteTemplate_PyramidBag =
     .paletteTag = TAG_PYRAMID_BAG,
     .oam = &sOamData_PyramidBag,
     .anims = sAnims_PyramidBag,
-    .images = NULL,
     .affineAnims = sAffineAnims_PyramidBag,
-    .callback = SpriteCallbackDummy
 };
 
 void InitBattlePyramidBagCursorPosition(void)
@@ -414,7 +411,7 @@ void CB2_ReturnToPyramidBagMenu(void)
     GoToBattlePyramidBagMenu(PYRAMIDBAG_LOC_PREV, gPyramidBagMenuState.exitCallback);
 }
 
-void GoToBattlePyramidBagMenu(u8 location, void (*exitCallback)(void))
+void GoToBattlePyramidBagMenu(u8 location, MainCallback exitCallback)
 {
     gPyramidBagMenu = AllocZeroed(sizeof(*gPyramidBagMenu));
 
@@ -461,85 +458,85 @@ static bool8 LoadPyramidBagMenu(void)
 {
     switch (gMain.state)
     {
-        case 0:
-            SetVBlankHBlankCallbacksToNull();
-            ClearScheduledBgCopiesToVram();
+    case 0:
+        SetVBlankHBlankCallbacksToNull();
+        ClearScheduledBgCopiesToVram();
+        gMain.state++;
+        break;
+    case 1:
+        ScanlineEffect_Stop();
+        gMain.state++;
+        break;
+    case 2:
+        FreeAllSpritePalettes();
+        gMain.state++;
+        break;
+    case 3:
+        ResetPaletteFade();
+        gPaletteFade.bufferTransferDisabled = TRUE;
+        gMain.state++;
+        break;
+    case 4:
+        ResetSpriteData();
+        gMain.state++;
+        break;
+    case 5:
+        if (!MenuHelpers_IsLinkActive())
+            ResetTasks();
+        gMain.state++;
+        break;
+    case 6:
+        InitPyramidBagBgs();
+        gPyramidBagMenu->state = 0;
+        gMain.state++;
+        break;
+    case 7:
+        if (LoadPyramidBagGfx())
             gMain.state++;
-            break;
-        case 1:
-            ScanlineEffect_Stop();
-            gMain.state++;
-            break;
-        case 2:
-            FreeAllSpritePalettes();
-            gMain.state++;
-            break;
-        case 3:
-            ResetPaletteFade();
-            gPaletteFade.bufferTransferDisabled = TRUE;
-            gMain.state++;
-            break;
-        case 4:
-            ResetSpriteData();
-            gMain.state++;
-            break;
-        case 5:
-            if (!MenuHelpers_IsLinkActive())
-                ResetTasks();
-            gMain.state++;
-            break;
-        case 6:
-            InitPyramidBagBgs();
-            gPyramidBagMenu->state = 0;
-            gMain.state++;
-            break;
-        case 7:
-            if (LoadPyramidBagGfx())
-                gMain.state++;
-            break;
-        case 8:
-            InitPyramidBagWindows();
-            gMain.state++;
-            break;
-        case 9:
-            UpdatePyramidBagList();
-            UpdatePyramidBagCursorPos();
-            InitPyramidBagScroll();
-            gMain.state++;
-            break;
-        case 10:
-            SetBagItemsListTemplate();
-            gMain.state++;
-            break;
-        case 11:
-            CreatePyramidBagInputTask();
-            gMain.state++;
-            break;
-        case 12:
-            CreatePyramidBagSprite();
-            gMain.state++;
-            break;
-        case 13:
-            AddScrollArrows();
-            gMain.state++;
-            break;
-        case 14:
-            CreateSwapLine();
-            gMain.state++;
-            break;
-        case 15:
-            BlendPalettes(PALETTES_ALL, 16, 0);
-            gMain.state++;
-            break;
-        case 16:
-            BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
-            gPaletteFade.bufferTransferDisabled = FALSE;
-            gMain.state++;
-            break;
-        default:
-            SetVBlankCallback(VBlankCB_PyramidBag);
-            SetMainCallback2(CB2_PyramidBag);
-            return TRUE;
+        break;
+    case 8:
+        InitPyramidBagWindows();
+        gMain.state++;
+        break;
+    case 9:
+        UpdatePyramidBagList();
+        UpdatePyramidBagCursorPos();
+        InitPyramidBagScroll();
+        gMain.state++;
+        break;
+    case 10:
+        SetBagItemsListTemplate();
+        gMain.state++;
+        break;
+    case 11:
+        CreatePyramidBagInputTask();
+        gMain.state++;
+        break;
+    case 12:
+        CreatePyramidBagSprite();
+        gMain.state++;
+        break;
+    case 13:
+        AddScrollArrows();
+        gMain.state++;
+        break;
+    case 14:
+        CreateSwapLine();
+        gMain.state++;
+        break;
+    case 15:
+        BlendPalettes(PALETTES_ALL, 16, 0);
+        gMain.state++;
+        break;
+    case 16:
+        BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
+        gPaletteFade.bufferTransferDisabled = FALSE;
+        gMain.state++;
+        break;
+    default:
+        SetVBlankCallback(VBlankCB_PyramidBag);
+        SetMainCallback2(CB2_PyramidBag);
+        return TRUE;
     }
     return FALSE;
 }
@@ -618,11 +615,11 @@ static void SetBagItemsListTemplate(void)
     gMultiuseListMenuTemplate.maxShowed = gPyramidBagMenu->listMenuMaxShown;
 }
 
-static void CopyBagItemName(u8 *dst, u16 itemId)
+static void CopyBagItemName(u8 *dst, enum Item itemId)
 {
     if (GetItemPocket(itemId) == POCKET_BERRIES)
     {
-        ConvertIntToDecimalStringN(gStringVar1, GetBerryIndex(itemId), STR_CONV_MODE_LEADING_ZEROS, MAX_PYRAMID_ITEM_DIGITS);
+        ConvertIntToDecimalStringN(gStringVar1, ItemIdToBerryType(itemId), STR_CONV_MODE_LEADING_ZEROS, MAX_PYRAMID_ITEM_DIGITS);
         CopyItemName(itemId, gStringVar2);
         StringExpandPlaceholders(dst, gText_NumberItem_TMBerry);
     }
@@ -1312,7 +1309,7 @@ static void TryCloseBagToGiveItem(u8 taskId)
 static void BagAction_UseInBattle(u8 taskId)
 {
     // Safety check
-    u16 type = GetItemType(gSpecialVar_ItemId);
+    enum ItemType type = GetItemType(gSpecialVar_ItemId);
     if (!GetItemBattleUsage(gSpecialVar_ItemId))
         return;
 
@@ -1526,7 +1523,7 @@ static void CreatePyramidBagYesNo(u8 taskId, const struct YesNoFuncTable *yesNoT
     CreateYesNoMenuWithCallbacks(taskId, &sWindowTemplates_MenuActions[MENU_WIN_YESNO], 1, 0, 2, 1, 0xE, yesNoTable);
 }
 
-void DisplayItemMessageInBattlePyramid(u8 taskId, const u8 *str, void (*callback)(u8 taskId))
+void DisplayItemMessageInBattlePyramid(u8 taskId, const u8 *str, TaskFunc callback)
 {
     FillWindowPixelBuffer(WIN_MSG, PIXEL_FILL(1));
     DisplayMessageAndContinueTask(taskId, WIN_MSG, 0xA, 0xD, FONT_NORMAL, GetPlayerTextSpeedDelay(), str, callback);
@@ -1590,7 +1587,7 @@ static void SpriteCB_BagWaitForShake(struct Sprite *sprite)
     }
 }
 
-static void ShowItemIcon(u16 itemId, bool8 isAlt)
+static void ShowItemIcon(enum Item itemId, bool8 isAlt)
 {
     u8 itemSpriteId;
     u8 *spriteId = &gPyramidBagMenu->spriteIds[isAlt + PBAG_SPRITE_ITEM_ICON];

@@ -1,9 +1,14 @@
 #include "global.h"
 #include "test/battle.h"
 
+ASSUMPTIONS
+{
+    ASSUME(GetMoveEffect(MOVE_ME_FIRST) == EFFECT_ME_FIRST);
+}
+
 SINGLE_BATTLE_TEST("Me First copies the move from the target and increases it's power by 1.5", s16 damage)
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_TACKLE; }
     PARAMETRIZE { move = MOVE_ME_FIRST; }
@@ -74,6 +79,54 @@ SINGLE_BATTLE_TEST("Me First can be selected if users holds Assault Vest")
         TURN { MOVE(player, MOVE_ME_FIRST); MOVE(opponent, MOVE_TACKLE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ME_FIRST, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Me First can be selected under Taunt in Gen5+")
+{
+    u32 gen = 0;
+
+    PARAMETRIZE { gen = GEN_4; }
+    PARAMETRIZE { gen = GEN_5; }
+
+    GIVEN {
+        WITH_CONFIG(B_TAUNT_ME_FIRST, gen);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(100); Moves(MOVE_ME_FIRST, MOVE_TACKLE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); Moves(MOVE_TAUNT, MOVE_TACKLE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TACKLE); MOVE(opponent, MOVE_TAUNT); }
+        if (gen >= GEN_5) {
+            TURN { MOVE(player, MOVE_ME_FIRST); MOVE(opponent, MOVE_TACKLE); }
+        } else {
+            TURN {
+                MOVE(player, MOVE_ME_FIRST, allowed: FALSE);
+                MOVE(player, MOVE_TACKLE);
+                MOVE(opponent, MOVE_TACKLE);
+            }
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TAUNT, opponent);
+        if (gen >= GEN_5)
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_ME_FIRST, player);
+        else
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Me First deducts power points from itself, not the copied move")
+{
+    ASSUME(GetMovePP(MOVE_ME_FIRST) == 20);
+    ASSUME(GetMovePP(MOVE_POUND) == 35);
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(100); Moves(MOVE_ME_FIRST); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); Moves(MOVE_POUND); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_ME_FIRST); MOVE(opponent, MOVE_POUND); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ME_FIRST, player);
+    } THEN {
+        EXPECT_EQ(opponent->pp[0], 34);
+        EXPECT_EQ(player->pp[0], 19);
     }
 }
 

@@ -3,8 +3,8 @@
 
 SINGLE_BATTLE_TEST("Rocky Payload increases Rock-type move damage", s16 damage)
 {
-    u32 move;
-    u16 ability;
+    enum Move move;
+    enum Ability ability;
 
     PARAMETRIZE { move = MOVE_SCRATCH; ability = ABILITY_BIG_PECKS; }
     PARAMETRIZE { move = MOVE_SCRATCH; ability = ABILITY_ROCKY_PAYLOAD; }

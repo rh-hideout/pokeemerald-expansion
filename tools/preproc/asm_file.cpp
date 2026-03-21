@@ -160,9 +160,9 @@ Directive AsmFile::GetDirective()
         return Directive::Unknown;
 }
 
-// Checks if we're at label that ends with '::'.
-// Returns the name if so and an empty string if not.
-std::string AsmFile::GetGlobalLabel()
+// Checks if we're at label and if so, returns its symbol and scope.
+// Returns 'label::none' if not.
+Label AsmFile::GetLabel()
 {
     long start = m_pos;
     long pos = m_pos;
@@ -175,14 +175,57 @@ std::string AsmFile::GetGlobalLabel()
             pos++;
     }
 
-    if (m_buffer[pos] == ':' && m_buffer[pos + 1] == ':')
+    if (m_buffer[pos] == ':')
     {
-        m_pos = pos + 2;
-        ExpectEmptyRestOfLine();
-        return std::string(&m_buffer[start], pos - start);
+        std::string symbol(&m_buffer[start], pos - start);
+        if (m_buffer[pos + 1] == ':')
+        {
+            m_pos = pos + 2;
+            ExpectEmptyRestOfLine();
+            return Label(symbol, Label::global);
+        }
+        else
+        {
+            m_pos = pos + 1;
+            return Label(symbol, Label::local);
+        }
     }
 
-    return std::string();
+    return Label("", Label::none);
+}
+
+std::string AsmFile::PeekSection()
+{
+    long oldPos = m_pos;
+    std::string section;
+
+    SkipWhitespace();
+
+    // TODO: Support 'pushsection', 'popsection', '.previous'.
+    if (CheckForDirective(".bss"))
+    {
+        section = ".bss";
+    }
+    else if (CheckForDirective(".data"))
+    {
+        section = ".data";
+    }
+    else if (CheckForDirective(".rodata"))
+    {
+        section = ".rodata";
+    }
+    else if (CheckForDirective(".text"))
+    {
+        section = ".text";
+    }
+    else if (CheckForDirective(".section"))
+    {
+        SkipWhitespace();
+        section = ReadIdentifier();
+    }
+
+    m_pos = oldPos;
+    return section;
 }
 
 // Skips tabs and spaces.
@@ -620,6 +663,10 @@ bool AsmFile::ParseEnum()
                 }
                 enumCounter = 0;
             }
+            // HACK(#7394): Make the definitions global so that C 'asm'
+            // statements are able to reference them (if they happen to
+            // be available in an assembled object file).
+            std::printf(".global %s; ", currentIdentName.c_str());
             std::printf(".equiv %s, (%s) + %ld\n", currentIdentName.c_str(), enumBase.c_str(), enumCounter);
             enumCounter++;
             symbolCount++;
@@ -629,7 +676,11 @@ bool AsmFile::ParseEnum()
             RaiseError("%s:%ld: empty enum is invalid", headerFilename.c_str(), currentHeaderLine);
         }
 
-        if (m_buffer[m_pos] != ',')
+        if (m_buffer[m_pos] == '#')
+        {
+            currentHeaderLine = ParseLineSkipInEnum();
+        }
+        else if (m_buffer[m_pos] != ',')
         {
             currentHeaderLine += SkipWhitespaceAndEol();
             if (m_buffer[m_pos++] == '}' && m_buffer[m_pos++] == ';')
@@ -724,13 +775,57 @@ void AsmFile::RaiseWarning(const char* format, ...)
 int AsmFile::SkipWhitespaceAndEol()
 {
     int newlines = 0;
-    while (m_buffer[m_pos] == '\t' || m_buffer[m_pos] == ' ' || m_buffer[m_pos] == '\n')
+    while (m_buffer[m_pos] == '\t' || m_buffer[m_pos] == ' ' || m_buffer[m_pos] == '\r' || m_buffer[m_pos] == '\n')
     {
         if (m_buffer[m_pos] == '\n')
             newlines++;
         m_pos++;
     }
     return newlines;
+}
+
+int AsmFile::ParseLineSkipInEnum(void)
+{
+    m_pos++;
+    while (m_buffer[m_pos] == ' ' || m_buffer[m_pos] == '\t')
+        m_pos++;
+
+     if (!IsAsciiDigit(m_buffer[m_pos]))
+        RaiseError("malformatted line indicator found inside `enum`, expected line number");
+
+    unsigned n = 0;
+    int digit = 0;
+    while ((digit = ConvertDigit(m_buffer[m_pos++], 10)) != -1)
+        n = 10 * n + digit;
+
+    while (m_buffer[m_pos] == ' ' || m_buffer[m_pos] == '\t')
+        m_pos++;
+
+    if (m_buffer[m_pos++] != '"')
+        RaiseError("malformatted line indicator found before `enum`, expected filename");
+
+    while (m_buffer[m_pos] != '"')
+    {
+        unsigned char c = m_buffer[m_pos++];
+
+        if (c == 0)
+        {
+            if (m_pos >= m_size)
+                RaiseError("unexpected EOF in line indicator");
+            else
+                RaiseError("unexpected null character in line indicator");
+        }
+
+        if (!IsAsciiPrintable(c))
+            RaiseError("unexpected character '\\x%02X' in line indicator", c);
+
+        if (c == '\\')
+        {
+            c = m_buffer[m_pos];
+            RaiseError("unexpected escape '\\%c' in line indicator", c);
+        }
+    }
+    return n - 1;
 }
 
 // returns the last line indicator and its corresponding file name without modifying the token index

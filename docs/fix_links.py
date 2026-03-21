@@ -46,6 +46,6 @@ if __name__ == '__main__':
             sys.exit(0)
 
     context, book = json.load(sys.stdin)
-    proc_items(book['sections'])
+    proc_items(book['items'])
 
     print(json.dumps(book))

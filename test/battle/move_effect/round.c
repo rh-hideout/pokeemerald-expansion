@@ -94,7 +94,7 @@ DOUBLE_BATTLE_TEST("Round still preserves the turn order outside of the other Ro
     }
 }
 
-DOUBLE_BATTLE_TEST("Round causes opposing pokemon to use Round immediately")
+DOUBLE_BATTLE_TEST("Round causes opposing Pokémon to use Round immediately")
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_LAGGING_TAIL].holdEffect == HOLD_EFFECT_LAGGING_TAIL);
@@ -110,5 +110,26 @@ DOUBLE_BATTLE_TEST("Round causes opposing pokemon to use Round immediately")
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROUND, opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerLeft);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Round usages beyond the first one has double base power even if the first attacker fainted")
+{
+    s16 damage[2];
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); Item(ITEM_LIFE_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LIFE_ORB); }
+    } WHEN {
+        TURN {
+            MOVE(opponentLeft, MOVE_ROUND, target: playerLeft);
+            MOVE(opponentRight, MOVE_ROUND, target: playerLeft);
+        }
+    } SCENE {
+        HP_BAR(playerLeft, captureDamage: &damage[0]);
+        HP_BAR(playerLeft, captureDamage: &damage[1]);
+    } THEN {
+        EXPECT_MUL_EQ(damage[0], Q_4_12(2.0), damage[1]);
     }
 }

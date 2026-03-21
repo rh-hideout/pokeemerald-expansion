@@ -948,6 +948,7 @@ extern const u8 gBattleAnimStatus_Paralysis[];
 extern const u8 gBattleAnimStatus_Freeze[];
 extern const u8 gBattleAnimStatus_Curse[];
 extern const u8 gBattleAnimStatus_Nightmare[];
+extern const u8 gBattleAnimStatus_Frostbite[];
 
 // general animations
 extern const u8 gBattleAnimGeneral_StatsChange[];
@@ -975,6 +976,8 @@ extern const u8 gBattleAnimGeneral_WishHeal[];
 extern const u8 gBattleAnimGeneral_MegaEvolution[];
 extern const u8 gBattleAnimGeneral_IllusionOff[];
 extern const u8 gBattleAnimGeneral_FormChange[];
+extern const u8 gBattleAnimGeneral_FormChangeInstant[];
+extern const u8 gBattleAnimGeneral_FormChangeDisguise[];
 extern const u8 gBattleAnimGeneral_SlideOffScreen[];
 extern const u8 gBattleAnimGeneral_RestoreBg[];
 extern const u8 gBattleAnimGeneral_TotemFlare[];
@@ -1004,6 +1007,13 @@ extern const u8 gBattleAnimGeneral_TeraCharge[];
 extern const u8 gBattleAnimGeneral_TeraActivate[];
 extern const u8 gBattleAnimGeneral_SimpleHeal[];
 extern const u8 gBattleAnimGeneral_PowerConstruct[];
+extern const u8 gBattleAnimGeneral_SwapToSubstitute[];
+extern const u8 gBattleAnimGeneral_SwapFromSubstitute[];
+extern const u8 gBattleAnimGeneral_MonScared[];
+extern const u8 gBattleAnimGeneral_GhostGetOut[];
+extern const u8 gBattleAnimGeneral_SilphScoped[];
+extern const u8 gBattleAnimGeneral_SafariRockThrow[];
+extern const u8 gBattleAnimGeneral_SafariReaction[];
 
 // special animations
 extern const u8 gBattleAnimSpecial_LevelUp[];
@@ -1014,6 +1024,5 @@ extern const u8 gBattleAnimSpecial_BallThrowWithTrainer[];
 extern const u8 gBattleAnimSpecial_SubstituteToMon[];
 extern const u8 gBattleAnimSpecial_MonToSubstitute[];
 extern const u8 gBattleAnimSpecial_CriticalCaptureBallThrow[];
-
 
 #endif // GUARD_BATTLE_ANIM_SCRIPTS_H

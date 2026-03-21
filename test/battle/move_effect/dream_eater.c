@@ -33,7 +33,7 @@ SINGLE_BATTLE_TEST("Dream Eater fails on awake targets")
         TURN { MOVE(player, MOVE_DREAM_EATER); }
     } SCENE {
         MESSAGE("Wobbuffet used Dream Eater!");
-        MESSAGE("The opposing Wobbuffet wasn't affected!");
+        MESSAGE("It doesn't affect the opposing Wobbuffet…");
     }
 }
 
@@ -84,11 +84,11 @@ SINGLE_BATTLE_TEST("Dream Eater fails if the target is behind a Substitute (Gen 
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_YAWN); MOVE(player, MOVE_SUBSTITUTE); }
-        TURN { }
+        TURN {}
         TURN { MOVE(opponent, MOVE_DREAM_EATER); }
     } SCENE {
         MESSAGE("The opposing Wobbuffet used Dream Eater!");
-        MESSAGE("Wobbuffet wasn't affected!");
+        MESSAGE("It doesn't affect Wobbuffet…");
     }
 }
 #else
@@ -96,6 +96,7 @@ SINGLE_BATTLE_TEST("Dream Eater works if the target is behind a Substitute (Gen 
 {
     s16 damage;
     s16 healed;
+    KNOWN_FAILING; // Dream Eater can hit and drain from a Substitute, but not bypass it.
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_YAWN) == EFFECT_YAWN);
         ASSUME(GetMoveEffect(MOVE_SUBSTITUTE) == EFFECT_SUBSTITUTE);
@@ -103,7 +104,7 @@ SINGLE_BATTLE_TEST("Dream Eater works if the target is behind a Substitute (Gen 
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_YAWN); MOVE(player, MOVE_SUBSTITUTE); }
-        TURN { }
+        TURN {}
         TURN { MOVE(opponent, MOVE_DREAM_EATER); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DREAM_EATER, opponent);

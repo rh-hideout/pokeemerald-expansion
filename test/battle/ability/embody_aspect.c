@@ -4,7 +4,8 @@
 
 SINGLE_BATTLE_TEST("Embody Aspect raises a stat depending on the users form by one stage")
 {
-    u16 species, ability;
+    u16 species;
+    enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_OGERPON_TEAL_TERA; ability = ABILITY_EMBODY_ASPECT_TEAL_MASK; }
     PARAMETRIZE { species = SPECIES_OGERPON_HEARTHFLAME_TERA; ability = ABILITY_EMBODY_ASPECT_HEARTHFLAME_MASK; }
@@ -15,7 +16,7 @@ SINGLE_BATTLE_TEST("Embody Aspect raises a stat depending on the users form by o
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(species) { Ability(ability); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ABILITY_POPUP(opponent, ability);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);

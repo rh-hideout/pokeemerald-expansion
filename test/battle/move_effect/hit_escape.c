@@ -113,10 +113,10 @@ SINGLE_BATTLE_TEST("Hit Escape: U-turn switches the user out after Ice Face acti
     }
 }
 
-SINGLE_BATTLE_TEST("Hit Escape: Held items are consumed immediately after a mon switched in by U-turn and Intimidate activates after it: player side")
+SINGLE_BATTLE_TEST("Hit Escape: Held items are consumed immediately after a mon switched in by U-turn: player side")
 {
     GIVEN {
-        PLAYER(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); };
+        PLAYER(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); }
         PLAYER(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); Item(ITEM_ELECTRIC_SEED); }
         OPPONENT(SPECIES_WYNAUT) { HP(1); }
         OPPONENT(SPECIES_WYNAUT);
@@ -126,7 +126,6 @@ SINGLE_BATTLE_TEST("Hit Escape: Held items are consumed immediately after a mon 
         ABILITY_POPUP(player, ABILITY_ELECTRIC_SURGE);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, player);
         HP_BAR(opponent);
-        ABILITY_POPUP(player, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("2 sent out Wynaut!");
@@ -136,11 +135,11 @@ SINGLE_BATTLE_TEST("Hit Escape: Held items are consumed immediately after a mon 
     }
 }
 
-SINGLE_BATTLE_TEST("Hit Escape: Held items are consumed immediately after a mon switched in by U-turn and Intimidate activates after it: opposing side")
+SINGLE_BATTLE_TEST("Hit Escape: Held items are consumed immediately after a mon switched in by U-turn: opposing side")
 {
     GIVEN {
-        PLAYER(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); };
-        PLAYER(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE);  }
+        PLAYER(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); }
+        PLAYER(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
         OPPONENT(SPECIES_WYNAUT) { HP(1); }
         OPPONENT(SPECIES_WYNAUT) { Item(ITEM_ELECTRIC_SEED); }
     } WHEN {
@@ -149,7 +148,6 @@ SINGLE_BATTLE_TEST("Hit Escape: Held items are consumed immediately after a mon 
         ABILITY_POPUP(player, ABILITY_ELECTRIC_SURGE);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, player);
         HP_BAR(opponent);
-        ABILITY_POPUP(player, ABILITY_INTIMIDATE);
         MESSAGE("2 sent out Wynaut!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
@@ -159,10 +157,10 @@ SINGLE_BATTLE_TEST("Hit Escape: Held items are consumed immediately after a mon 
     }
 }
 
-SINGLE_BATTLE_TEST("Hit Escape: Electric Seed boost is received by the right pokemon after U-turn and Intimidate")
+SINGLE_BATTLE_TEST("Hit Escape: Electric Seed boost is received by the right Pokémon after U-turn and Intimidate")
 {
     GIVEN {
-        PLAYER(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); };
+        PLAYER(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); }
         PLAYER(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); Item(ITEM_ELECTRIC_SEED); }
         OPPONENT(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WYNAUT);
@@ -183,9 +181,9 @@ SINGLE_BATTLE_TEST("Hit Escape: Electric Seed boost is received by the right pok
 SINGLE_BATTLE_TEST("Hit Escape: U-turn triggers before Eject Pack")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); };
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
         PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_GOODRA_HISUI) { Ability(ABILITY_GOOEY); };
+        OPPONENT(SPECIES_GOODRA_HISUI) { Ability(ABILITY_GOOEY); }
     } WHEN {
         TURN { MOVE(player, MOVE_U_TURN); SEND_OUT(player, 1); }
     } SCENE {
@@ -207,5 +205,19 @@ SINGLE_BATTLE_TEST("Hit Escape: U-turn will fail to switch if the user faints")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, player);
         HP_BAR(opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Hit Escape: U-turn will switch if the target is behind a Substitute")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_U_TURN); SEND_OUT(opponent, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, opponent);
     }
 }

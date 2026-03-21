@@ -21,6 +21,7 @@ enum FollowerNPCDataTypes
     FNPC_DATA_WARP_END,
     FNPC_DATA_SURF_BLOB,
     FNPC_DATA_COME_OUT_DOOR,
+    FNPC_DATA_FORCED_MOVEMENT,
     FNPC_DATA_OBJ_ID,
     FNPC_DATA_CURRENT_SPRITE,
     FNPC_DATA_DELAYED_STATE,
@@ -60,7 +61,8 @@ enum FollowerNPCSurfBlobStates
     FNPC_SURF_BLOB_DESTROY
 };
 
-enum FollowerNPCOutOfDoorTaskStates{
+enum FollowerNPCOutOfDoorTaskStates
+{
     OPEN_DOOR,
     NPC_WALK_OUT,
     CLOSE_DOOR,
@@ -68,7 +70,8 @@ enum FollowerNPCOutOfDoorTaskStates{
     REALLOW_MOVEMENT
 };
 
-enum FollowerNPCHandleEscalatorFinishTaskStates{
+enum FollowerNPCHandleEscalatorFinishTaskStates
+{
     MOVE_TO_PLAYER_POS,
     WAIT_FOR_PLAYER_MOVE,
     SHOW_FOLLOWER_DOWN,
@@ -76,6 +79,13 @@ enum FollowerNPCHandleEscalatorFinishTaskStates{
     SHOW_FOLLOWER_UP,
     MOVE_FOLLOWER_UP,
     MOVEMENT_FINISH
+};
+
+enum FollowerNPCForcedMovementStates
+{
+    FNPC_FORCED_NONE,
+    FNPC_FORCED_FOLLOW,
+    FNPC_FORCED_STAY
 };
 
 #define FOLLOWER_NPC_FLAG_HAS_RUNNING_FRAMES    0x1
@@ -90,14 +100,14 @@ void ClearFollowerNPCData(void);
 
 void CreateFollowerNPC(u32 gfx, u32 followerFlags, const u8 *scriptPtr);
 void DestroyFollowerNPC(void);
-u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, u32 direction);
+u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, enum Direction direction);
 void SetFollowerNPCSprite(u32 spriteIndex);
 
 bool32 PlayerHasFollowerNPC(void);
 void NPCFollow(struct ObjectEvent *npc, u32 state, bool32 ignoreScriptActive);
 void CreateFollowerNPCAvatar(void);
 void FollowerNPC_HandleSprite(void);
-u32 DetermineFollowerNPCDirection(struct ObjectEvent *player, struct ObjectEvent *follower);
+enum Direction DetermineFollowerNPCDirection(struct ObjectEvent *player, struct ObjectEvent *follower);
 u32 GetFollowerNPCObjectId(void);
 bool32 CheckFollowerNPCFlag(u32 flag);
 bool32 FollowerNPC_IsCollisionExempt(struct ObjectEvent *obstacle, struct ObjectEvent *collider);

@@ -6,9 +6,9 @@ ASSUMPTIONS
     ASSUME(GetMoveEffect(MOVE_FOUL_PLAY) == EFFECT_FOUL_PLAY);
 }
 
-SINGLE_BATTLE_TEST("Foul Play uses physical attack stat of target", s16 damage)
+SINGLE_BATTLE_TEST("Foul Play uses the target's Attack stat and stat stages of target", s16 damage)
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_HIGH_HORSEPOWER; }
     PARAMETRIZE { move = MOVE_FOUL_PLAY; }
@@ -27,3 +27,7 @@ SINGLE_BATTLE_TEST("Foul Play uses physical attack stat of target", s16 damage)
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(2.0), results[1].damage);
     }
 }
+
+TO_DO_BATTLE_TEST("Foul Play uses the user's attack modifiers - Held Item")
+TO_DO_BATTLE_TEST("Foul Play uses the user's attack modifiers - Ability")
+TO_DO_BATTLE_TEST("Foul Play uses the user's attack modifiers - Burn")

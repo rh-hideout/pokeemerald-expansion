@@ -212,7 +212,7 @@ static void SetRectangleCursorPos_GroupMode(s8, s8);
 static void SetRectangleCursorPos_AlphabetMode(s8, s8);
 static void SpriteCB_WordSelectCursor(struct Sprite *);
 static void SetWordSelectCursorPos(u8, u8);
-static bool8 EasyChatIsNationalPokedexEnabled(void);
+static bool32 EasyChatIsNationalPokedexEnabled(void);
 static u16 GetRandomUnlockedEasyChatPokemon(void);
 static void SetUnlockedEasyChatGroups(void);
 static void SetUnlockedWordsByAlphabet(void);
@@ -220,8 +220,8 @@ static u8 *CopyEasyChatWordPadded(u8 *, u16, u16);
 static u8 IsEasyChatWordUnlocked(u16);
 static u16 SetSelectedWordGroup_GroupMode(u16);
 static u16 SetSelectedWordGroup_AlphabetMode(u16);
-static bool8 IsEasyChatIndexAndGroupUnlocked(u16, u8);
-static int IsRestrictedWordSpecies(u16);
+static bool32 IsEasyChatIndexAndGroupUnlocked(u16, u8);
+static bool32 IsRestrictedWordSpecies(enum Species);
 static void DoQuizAnswerEasyChatScreen(void);
 static void DoQuizQuestionEasyChatScreen(void);
 static void DoQuizSetAnswerEasyChatScreen(void);
@@ -962,9 +962,6 @@ static const struct SpriteTemplate sSpriteTemplate_TriangleCursor =
     .tileTag = PALTAG_TRIANGLE_CURSOR,
     .paletteTag = GFXTAG_TRIANGLE_CURSOR,
     .oam = &sOamData_TriangleCursor,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Cursor,
 };
 
@@ -1025,8 +1022,6 @@ static const struct SpriteTemplate sSpriteTemplate_RectangleCursor =
     .paletteTag = PALTAG_RECTANGLE_CURSOR,
     .oam = &sOamData_RectangleCursor,
     .anims = sAnims_RectangleCursor,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Cursor,
 };
 
@@ -1096,9 +1091,6 @@ static const struct SpriteTemplate sSpriteTemplate_ModeWindow =
     .paletteTag = PALTAG_MISC_UI,
     .oam = &sOamData_ModeWindow,
     .anims = sAnims_ModeWindow,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const struct OamData sOamData_ButtonWindow = {
@@ -1122,10 +1114,6 @@ static const struct SpriteTemplate sSpriteTemplate_ButtonWindow =
     .tileTag = GFXTAG_BUTTON_WINDOW,
     .paletteTag = PALTAG_MISC_UI,
     .oam = &sOamData_ButtonWindow,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const struct OamData sOamData_StartSelectButton = {
@@ -1182,9 +1170,6 @@ static const struct SpriteTemplate sSpriteTemplate_StartSelectButton =
     .paletteTag = PALTAG_MISC_UI,
     .oam = &sOamData_StartSelectButton,
     .anims = sAnims_TwoFrame,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const struct SpriteTemplate sSpriteTemplate_ScrollIndicator =
@@ -1193,9 +1178,6 @@ static const struct SpriteTemplate sSpriteTemplate_ScrollIndicator =
     .paletteTag = PALTAG_MISC_UI,
     .oam = &sOamData_ScrollIndicator,
     .anims = sAnims_TwoFrame,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const u8 sFooterOptionXOffsets[NUM_FOOTER_TYPES][4] = {
@@ -1212,31 +1194,6 @@ static const u8 *const sFooterTextOptions[NUM_FOOTER_TYPES][4] = {
 
 #include "data/easy_chat/easy_chat_groups.h"
 #include "data/easy_chat/easy_chat_words_by_letter.h"
-
-static const u8 *const sEasyChatGroupNamePointers[EC_NUM_GROUPS] = {
-    [EC_GROUP_POKEMON]          = gEasyChatGroupName_Pokemon,
-    [EC_GROUP_TRAINER]          = gEasyChatGroupName_Trainer,
-    [EC_GROUP_STATUS]           = gEasyChatGroupName_Status,
-    [EC_GROUP_BATTLE]           = gEasyChatGroupName_Battle,
-    [EC_GROUP_GREETINGS]        = gEasyChatGroupName_Greetings,
-    [EC_GROUP_PEOPLE]           = gEasyChatGroupName_People,
-    [EC_GROUP_VOICES]           = gEasyChatGroupName_Voices,
-    [EC_GROUP_SPEECH]           = gEasyChatGroupName_Speech,
-    [EC_GROUP_ENDINGS]          = gEasyChatGroupName_Endings,
-    [EC_GROUP_FEELINGS]         = gEasyChatGroupName_Feelings,
-    [EC_GROUP_CONDITIONS]       = gEasyChatGroupName_Conditions,
-    [EC_GROUP_ACTIONS]          = gEasyChatGroupName_Actions,
-    [EC_GROUP_LIFESTYLE]        = gEasyChatGroupName_Lifestyle,
-    [EC_GROUP_HOBBIES]          = gEasyChatGroupName_Hobbies,
-    [EC_GROUP_TIME]             = gEasyChatGroupName_Time,
-    [EC_GROUP_MISC]             = gEasyChatGroupName_Misc,
-    [EC_GROUP_ADJECTIVES]       = gEasyChatGroupName_Adjectives,
-    [EC_GROUP_EVENTS]           = gEasyChatGroupName_Events,
-    [EC_GROUP_MOVE_1]           = gEasyChatGroupName_Move1,
-    [EC_GROUP_MOVE_2]           = gEasyChatGroupName_Move2,
-    [EC_GROUP_TRENDY_SAYING]    = gEasyChatGroupName_TrendySaying,
-    [EC_GROUP_POKEMON_NATIONAL] = gEasyChatGroupName_Pokemon2,
-};
 
 static const u16 sDefaultProfileWords[EASY_CHAT_BATTLE_WORDS_COUNT - 2] = {
     EC_WORD_I_AM,
@@ -5526,7 +5483,7 @@ static u16 UNUSED GetRandomUnlockedTrendySaying(void)
     return EC_EMPTY_WORD;
 }
 
-static bool8 EasyChatIsNationalPokedexEnabled(void)
+static bool32 EasyChatIsNationalPokedexEnabled(void)
 {
     return IsNationalPokedexEnabled();
 }
@@ -5653,7 +5610,7 @@ static u8 GetUnlockedEasyChatGroupId(u8 index)
 static u8 UNUSED *BufferEasyChatWordGroupName(u8 *dest, u8 groupId, u16 totalChars)
 {
     u16 i;
-    u8 *str = StringCopy(dest, sEasyChatGroupNamePointers[groupId]);
+    u8 *str = StringCopy(dest, gEasyChatGroups[groupId].name);
     for (i = str - dest; i < totalChars; i++)
     {
         *str = CHAR_SPACE;
@@ -5666,7 +5623,7 @@ static u8 UNUSED *BufferEasyChatWordGroupName(u8 *dest, u8 groupId, u16 totalCha
 
 static const u8 *GetEasyChatWordGroupName(u8 groupId)
 {
-    return sEasyChatGroupNamePointers[groupId];
+    return gEasyChatGroups[groupId].name;
 }
 
 static u8 *CopyEasyChatWordPadded(u8 *dest, u16 easyChatWord, u16 totalChars)
@@ -5804,7 +5761,7 @@ static bool8 IsEasyChatGroupUnlocked2(u8 groupId)
     return FALSE;
 }
 
-static bool8 IsEasyChatIndexAndGroupUnlocked(u16 wordIndex, u8 groupId)
+static bool32 IsEasyChatIndexAndGroupUnlocked(u16 wordIndex, u8 groupId)
 {
     switch (groupId)
     {
@@ -5826,7 +5783,7 @@ static bool8 IsEasyChatIndexAndGroupUnlocked(u16 wordIndex, u8 groupId)
 
 // Pokémon words in EC_GROUP_POKEMON_NATIONAL are always allowed (assuming the group is unlocked)
 // unless they are in this group. If they are in this group (just Deoxys), they must also have been seen.
-static int IsRestrictedWordSpecies(u16 species)
+static bool32 IsRestrictedWordSpecies(enum Species species)
 {
     u32 i;
     for (i = 0; i < ARRAY_COUNT(sRestrictedWordSpecies); i++)
@@ -5851,16 +5808,23 @@ static u8 IsEasyChatWordUnlocked(u16 easyChatWord)
 void InitializeEasyChatWordArray(u16 *words, u16 length)
 {
     u16 i;
-    for (i = length - 1; i != EC_EMPTY_WORD; i--)
-        *(words++) = EC_EMPTY_WORD;
+    if (words != NULL)
+    {
+        for (i = length - 1; i != EC_EMPTY_WORD; i--)
+            *(words++) = EC_EMPTY_WORD;
+    }
 }
 
 void InitQuestionnaireWords(void)
 {
     int i;
     u16 *words = GetQuestionnaireWordsPtr();
-    for (i = 0; i < NUM_QUESTIONNAIRE_WORDS; i++)
-        words[i] = EC_EMPTY_WORD;
+
+    if (words != NULL)
+    {
+        for (i = 0; i < NUM_QUESTIONNAIRE_WORDS; i++)
+            words[i] = EC_EMPTY_WORD;
+    }
 }
 
 bool32 IsEasyChatAnswerUnlocked(int easyChatWord)

@@ -13,7 +13,7 @@ TEST("Form species ID tables are shared between all forms")
     {
         if (gSpeciesInfo[i].formSpeciesIdTable)
         {
-            PARAMETRIZE_LABEL("%S", gSpeciesInfo[i].speciesName) { species = i; }
+            PARAMETRIZE_LABEL("ID:%d - %S", i, gSpeciesInfo[i].speciesName) { species = i; }
         }
     }
 
@@ -36,7 +36,7 @@ TEST("Form change tables contain only forms in the form species ID table")
     {
         if (gSpeciesInfo[i].formChangeTable)
         {
-            PARAMETRIZE_LABEL("%S", gSpeciesInfo[i].speciesName) { species = i; }
+            PARAMETRIZE_LABEL("ID:%d - %S", i, gSpeciesInfo[i].speciesName) { species = i; }
         }
     }
 
@@ -59,6 +59,48 @@ TEST("Form change tables contain only forms in the form species ID table")
     }
 }
 
+TEST("Forms have the appropriate species form changes")
+{
+    u32 i;
+    u32 species = SPECIES_NONE;
+
+    for (i = 0; i < NUM_SPECIES; i++)
+    {
+        if (gSpeciesInfo[i].isMegaEvolution
+            || gSpeciesInfo[i].isGigantamax
+            || gSpeciesInfo[i].isUltraBurst
+            || gSpeciesInfo[i].isPrimalReversion)
+        {
+            PARAMETRIZE_LABEL("ID:%d - %S", i, gSpeciesInfo[i].speciesName) { species = i; }
+        }
+    }
+    bool32 hasBattleEnd = FALSE, hasFaint = FALSE;
+
+    const struct FormChange *formChanges = GetSpeciesFormChanges(species);
+    EXPECT(formChanges != NULL);
+
+    for (u32 j = 0; formChanges[j].method != FORM_CHANGE_TERMINATOR; j++)
+    {
+        if (species != formChanges[j].targetSpecies)
+        {
+            if (formChanges[j].method == FORM_CHANGE_END_BATTLE)
+                hasBattleEnd = TRUE;
+            else if (formChanges[j].method == FORM_CHANGE_FAINT)
+                hasFaint = TRUE;
+        }
+    }
+
+    EXPECT(hasBattleEnd);
+
+    // Primal Reversion don't change forms upon fainting
+    if (gSpeciesInfo[species].isMegaEvolution
+        || gSpeciesInfo[species].isGigantamax
+        || gSpeciesInfo[species].isUltraBurst)
+    {
+        EXPECT(hasFaint);
+    }
+}
+
 TEST("Form change targets have the appropriate species flags")
 {
     u32 i;
@@ -69,7 +111,7 @@ TEST("Form change targets have the appropriate species flags")
     {
         if (gSpeciesInfo[i].formChangeTable)
         {
-            PARAMETRIZE_LABEL("%S", gSpeciesInfo[i].speciesName) { species = i; }
+            PARAMETRIZE_LABEL("ID:%d - %S", i, gSpeciesInfo[i].speciesName) { species = i; }
         }
     }
 
@@ -106,7 +148,8 @@ TEST("No species has two evolutions that use the evolution tracker")
 
     for (i = 0; i < NUM_SPECIES; i++)
     {
-        if (GetSpeciesEvolutions(i) != NULL) PARAMETRIZE { species = i; }
+        if (IsSpeciesEnabled(i) && GetSpeciesEvolutions(i) != NULL)
+            PARAMETRIZE_LABEL("ID:%d - %S", i, GetSpeciesName(i)) { species = i; }
     }
 
     evolutionTrackerEvolutions = 0;
@@ -148,7 +191,7 @@ TEST("Every species has a description")
     for (i = 1; i < NUM_SPECIES; i++)
     {
         if (IsSpeciesEnabled(i))
-            PARAMETRIZE { species = i; }
+            PARAMETRIZE_LABEL("ID:%d - %S", i, GetSpeciesName(i)) { species = i; }
     }
 
     EXPECT_NE(StringCompare(GetSpeciesPokedexDescription(species), gFallbackPokedexText), 0);

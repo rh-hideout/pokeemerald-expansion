@@ -21,7 +21,7 @@
 
 static bool32 IsMonValidSpecies(struct Pokemon *pokemon)
 {
-    u16 species = GetMonData(pokemon, MON_DATA_SPECIES_OR_EGG);
+    enum Species species = GetMonData(pokemon, MON_DATA_SPECIES_OR_EGG);
     if (species == SPECIES_NONE || species == SPECIES_EGG)
         return FALSE;
 
@@ -94,9 +94,9 @@ static void Task_TryFieldPoisonWhiteOut(u8 taskId)
         {
             // Battle facilities have their own white out script to handle the challenge loss
 #ifdef BUGFIX
-            if (InBattlePyramid() || InBattlePike() || InTrainerHillChallenge())
+            if (CurrentBattlePyramidLocation() || InBattlePike() || InTrainerHillChallenge())
 #else
-            if (InBattlePyramid() | InBattlePike() || InTrainerHillChallenge())
+            if (CurrentBattlePyramidLocation() | InBattlePike() || InTrainerHillChallenge())
 #endif
                 gSpecialVar_Result = FLDPSN_FRONTIER_WHITEOUT;
             else
@@ -138,7 +138,7 @@ s32 DoPoisonFieldEffect(void)
             hp = GetMonData(pokemon, MON_DATA_HP);
             if (OW_POISON_DAMAGE < GEN_4 && (hp == 0 || --hp == 0))
             {
-                TryFormChange(i, B_SIDE_PLAYER, FORM_CHANGE_FAINT);
+                TryFormChange(&gPlayerParty[i], FORM_CHANGE_FAINT);
                 numFainted++;
             }
             else if (OW_POISON_DAMAGE >= GEN_4 && (hp == 1 || --hp == 1))

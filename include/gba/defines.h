@@ -14,6 +14,7 @@
 #define UNUSED __attribute__((unused))
 #define USED __attribute__((used))
 #define KEEP_SECTION __attribute__((section(".text.consts")))
+#define DEPRECATED(msg) __attribute__((deprecated(msg)))
 
 #define ARM_FUNC __attribute__((target("arm")))
 
@@ -26,6 +27,7 @@
 #define ALIGNED(n) __attribute__((aligned(n)))
 #define PACKED __attribute__((packed))
 #define TRANSPARENT __attribute__ ((__transparent_union__))
+#define ALWAYS_INLINE inline __attribute__((always_inline))
 #define NONNULL __attribute__((__nonnull__))
 
 #define SOUND_INFO_PTR (*(struct SoundInfo **)0x3007FF0)

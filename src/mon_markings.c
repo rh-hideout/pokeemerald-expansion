@@ -23,7 +23,7 @@ static void SpriteCB_Cursor(struct Sprite *);
 static struct Sprite *CreateMarkingComboSprite(u16, u16, const u16 *, u16);
 
 static const u16 sMonMarkings_Pal[] = INCBIN_U16("graphics/interface/mon_markings.gbapal");
-static const u8 sMonMarkings_Gfx[] = INCBIN_U8("graphics/interface/mon_markings.4bpp");
+static const ALIGNED(4) u8 sMonMarkings_Gfx[] = INCBIN_U8("graphics/interface/mon_markings.4bpp"); // Alignment needed for dma copy
 
 static const struct OamData sOamData_MenuWindow =
 {
@@ -466,8 +466,6 @@ static void CreateMonMarkingsMenuSprites(s16 x, s16 y, u16 baseTileTag, u16 base
         .paletteTag = basePaletteTag,
         .oam = &sOamData_MenuWindow,
         .anims = sAnims_MenuWindow,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_Dummy,
     };
 

@@ -25,7 +25,9 @@ static const u16 sMoveItemTable[][18] =
 
 SINGLE_BATTLE_TEST("Type-enhancing items increase the base power of moves by 20%", s16 damage)
 {
-    u32 move = 0, item = 0, type = 0;
+    enum Move move = MOVE_NONE;
+    enum Item item = ITEM_NONE;
+    enum Type type = TYPE_NONE;
 
     for (u32 j = 0; j < ARRAY_COUNT(sMoveItemTable); j++) {
         PARAMETRIZE { type = sMoveItemTable[j][0]; move = sMoveItemTable[j][1]; item = ITEM_NONE; }
@@ -51,5 +53,29 @@ SINGLE_BATTLE_TEST("Type-enhancing items increase the base power of moves by 20%
             else
                 EXPECT_MUL_EQ(results[j*2].damage, Q_4_12(1.1), results[(j*2)+1].damage);
         }
+    }
+}
+
+SINGLE_BATTLE_TEST("Type-enhancing items do not increase the power of Struggle", s16 damage)
+{
+    enum Item item = ITEM_NONE;
+
+    PARAMETRIZE { item = ITEM_NONE; }
+    PARAMETRIZE { item = ITEM_SILK_SCARF; }
+
+    GIVEN {
+        if (item != ITEM_NONE) {
+            ASSUME(GetItemHoldEffect(item) == HOLD_EFFECT_TYPE_POWER);
+            ASSUME(GetItemSecondaryId(item) == GetMoveType(MOVE_STRUGGLE));
+        }
+        PLAYER(SPECIES_WOBBUFFET) { Item(item); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_STRUGGLE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STRUGGLE, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
     }
 }

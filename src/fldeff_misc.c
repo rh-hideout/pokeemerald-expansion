@@ -198,7 +198,6 @@ static const struct SpriteTemplate sSpriteTemplate_SecretPowerCave =
     .oam = &sOam_SecretPower,
     .anims = sAnimTable_SecretPowerCave,
     .images = sPicTable_SecretPowerCave,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_CaveEntranceInit,
 };
 
@@ -209,7 +208,6 @@ static const struct SpriteTemplate sSpriteTemplate_SecretPowerTree =
     .oam = &sOam_SecretPower,
     .anims = sAnimTable_SecretPowerTree,
     .images = sPicTable_SecretPowerTree,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_TreeEntranceInit,
 };
 
@@ -220,7 +218,6 @@ static const struct SpriteTemplate sSpriteTemplate_SecretPowerShrub =
     .oam = &sOam_SecretPower,
     .anims = sAnimTable_SecretPowerShrub,
     .images = sPicTable_SecretPowerShrub,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_ShrubEntranceInit,
 };
 
@@ -266,7 +263,6 @@ static const struct SpriteTemplate sSpriteTemplate_SandPillar =
     .oam = &sOam_SandPillar,
     .anims = sAnimTable_SandPillar,
     .images = sPicTable_SandPillar,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_SandPillar_BreakTop,
 };
 
@@ -304,8 +300,6 @@ static const struct SpriteTemplate sSpriteTemplate_RecordMixLights =
     .oam = &gObjectEventBaseOam_32x8,
     .anims = sAnimTable_RecordMixLights,
     .images = sPicTable_RecordMixLights,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 // For accessing Pokémon storage PC or the Hall of Fame PC
@@ -339,9 +333,9 @@ bool8 IsComputerScreenCloseEffectActive(void)
 #define tBlendCnt      data[7]
 #define tBlendY        data[8]
 
-static void CreateComputerScreenEffectTask(void (*taskfunc) (u8), u16 increment, u16 unused, u8 priority)
+static void CreateComputerScreenEffectTask(TaskFunc func, u16 increment, u16 unused, u8 priority)
 {
-    u8 taskId = CreateTask(taskfunc, priority);
+    u8 taskId = CreateTask(func, priority);
 
     gTasks[taskId].tState = 0;
     gTasks[taskId].tHorzIncrement = increment == 0 ? 16 : increment;
@@ -498,9 +492,10 @@ static void SetCurrentSecretBase(void)
 
 static void AdjustSecretPowerSpritePixelOffsets(void)
 {
+    enum Direction direction = gFieldEffectArguments[1];
     if (gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE))
     {
-        switch (gFieldEffectArguments[1])
+        switch (direction)
         {
         case DIR_SOUTH:
             gFieldEffectArguments[5] = 16;
@@ -517,12 +512,14 @@ static void AdjustSecretPowerSpritePixelOffsets(void)
         case DIR_EAST:
             gFieldEffectArguments[5] = 24;
             gFieldEffectArguments[6] = 24;
+            break;
+        default:
             break;
         }
     }
     else
     {
-        switch (gFieldEffectArguments[1])
+        switch (direction)
         {
         case DIR_SOUTH:
             gFieldEffectArguments[5] = 8;
@@ -539,6 +536,8 @@ static void AdjustSecretPowerSpritePixelOffsets(void)
         case DIR_EAST:
             gFieldEffectArguments[5] = 24;
             gFieldEffectArguments[6] = 24;
+            break;
+        default:
             break;
         }
     }
@@ -840,9 +839,9 @@ void DoSecretBasePCTurnOffEffect(void)
     PlaySE(SE_PC_OFF);
 
     if (!VarGet(VAR_CURRENT_SECRET_BASE))
-        MapGridSetMetatileIdAt(x, y, METATILE_SecretBase_PC | MAPGRID_COLLISION_MASK);
+        MapGridSetMetatileIdAt(x, y, METATILE_SecretBase_PC | MAPGRID_IMPASSABLE);
     else
-        MapGridSetMetatileIdAt(x, y, METATILE_SecretBase_RegisterPC | MAPGRID_COLLISION_MASK);
+        MapGridSetMetatileIdAt(x, y, METATILE_SecretBase_RegisterPC | MAPGRID_IMPASSABLE);
 
     CurrentMapDrawMetatileAt(x, y);
 }
@@ -935,7 +934,7 @@ static void Task_ShatterSecretBaseBreakableDoor(u8 taskId)
 
 void ShatterSecretBaseBreakableDoor(s16 x, s16 y)
 {
-    u8 dir = GetPlayerFacingDirection();
+    enum Direction dir = GetPlayerFacingDirection();
 
     if (dir == DIR_SOUTH)
     {
@@ -1073,6 +1072,8 @@ bool8 FldEff_SandPillar(void)
                      148);
 
         break;
+    default:
+        break;
     }
 
     return FALSE;
@@ -1083,7 +1084,7 @@ static void SpriteCB_SandPillar_BreakTop(struct Sprite *sprite)
     PlaySE(SE_M_ROCK_THROW);
 
     if (MapGridGetMetatileIdAt(gFieldEffectArguments[5], gFieldEffectArguments[6] - 1) == METATILE_SecretBase_SandOrnament_TopWall)
-        MapGridSetMetatileIdAt(gFieldEffectArguments[5], gFieldEffectArguments[6] - 1, METATILE_SecretBase_Wall_TopMid | MAPGRID_COLLISION_MASK);
+        MapGridSetMetatileIdAt(gFieldEffectArguments[5], gFieldEffectArguments[6] - 1, METATILE_SecretBase_Wall_TopMid | MAPGRID_IMPASSABLE);
     else
         MapGridSetMetatileIdAt(gFieldEffectArguments[5], gFieldEffectArguments[6] - 1, METATILE_SecretBase_SandOrnament_BrokenTop);
 
@@ -1103,7 +1104,7 @@ static void SpriteCB_SandPillar_BreakBase(struct Sprite *sprite)
     }
     else
     {
-        MapGridSetMetatileIdAt(gFieldEffectArguments[5], gFieldEffectArguments[6], METATILE_SecretBase_SandOrnament_BrokenBase | MAPGRID_COLLISION_MASK);
+        MapGridSetMetatileIdAt(gFieldEffectArguments[5], gFieldEffectArguments[6], METATILE_SecretBase_SandOrnament_BrokenBase | MAPGRID_IMPASSABLE);
         CurrentMapDrawMetatileAt(gFieldEffectArguments[5], gFieldEffectArguments[6]);
         sprite->data[0] = 0;
         sprite->callback = SpriteCB_SandPillar_End;

@@ -9,7 +9,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Triple Arrows may lower Defense by one stage")
 {
-    u32 ability;
+    enum Ability ability;
     u32 chance;
     PARAMETRIZE { ability = ABILITY_HUSTLE; chance = 50; }
     PARAMETRIZE { ability = ABILITY_SERENE_GRACE; chance = 100; }
@@ -28,7 +28,7 @@ SINGLE_BATTLE_TEST("Triple Arrows may lower Defense by one stage")
 
 SINGLE_BATTLE_TEST("Triple Arrows makes the foe flinch 30% of the time")
 {
-    u32 ability;
+    enum Ability ability;
     u32 chance;
     PARAMETRIZE { ability = ABILITY_HUSTLE; chance = 30; }
     PARAMETRIZE { ability = ABILITY_SERENE_GRACE; chance = 60; }
@@ -54,7 +54,7 @@ SINGLE_BATTLE_TEST("Triple Arrows has an increased critical hit ratio")
     }
     PASSES_RANDOMLY(passes, trials, RNG_CRITICAL_HIT);
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_CRIT_CHANCE, genConfig);
+        WITH_CONFIG(B_CRIT_CHANCE, genConfig);
         ASSUME(GetMoveCriticalHitStage(MOVE_TRIPLE_ARROWS) == 1);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);

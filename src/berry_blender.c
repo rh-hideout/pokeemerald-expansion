@@ -115,9 +115,9 @@ enum {
 
 struct BlenderBerry
 {
-    u16 itemId;
+    enum Item itemId;
     u8 name[BERRY_NAME_LENGTH + 1];
-    u8 flavors[FLAVOR_COUNT + 1]; // 5 flavors, + 1 for feel
+    enum Flavor flavors[FLAVOR_COUNT + 1]; // 5 flavors, + 1 for feel
 };
 
 struct TimeAndRPM
@@ -218,7 +218,7 @@ static bool8 UpdateBlenderLandScreenShake(void);
 static void SetPlayerIdMaps(void);
 static void PrintPlayerNames(void);
 static void InitBlenderBgs(void);
-static void SetPlayerBerryData(u8, u16);
+static void SetPlayerBerryData(u8 playerId, enum Item itemId);
 static void Blender_AddTextPrinter(u8, const u8 *, u8, u8, s32, s32);
 static void ResetLinkCmds(void);
 static void CreateParticleSprites(void);
@@ -285,6 +285,10 @@ static const u8 sText_Ranking[] = _("RANKING");
 static const u8 sText_TheLevelIs[] = _("The level is ");
 static const u8 sText_TheFeelIs[] = _(", and the feel is ");
 static const u8 sText_Dot2[] = _(".");
+
+static const u8 sText_SavingDontTurnOff2[] = _("SAVING…\nDON'T TURN OFF THE POWER.");
+static const u8 sText_BlenderMaxSpeedRecord[] = _("BERRY BLENDER\nMAXIMUM SPEED RECORD!");
+static const u8 sText_234Players[] = _("2 PLAYERS\n3 PLAYERS\n4 PLAYERS");
 
 static const struct BgTemplate sBgTemplates[3] =
 {
@@ -576,8 +580,6 @@ static const struct SpriteTemplate sSpriteTemplate_PlayerArrow =
     .paletteTag = PALTAG_PLAYER_ARROW,
     .oam = &sOam_PlayerArrow,
     .anims = sAnims_PlayerArrow,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_PlayerArrow
 };
 
@@ -645,8 +647,6 @@ static const struct SpriteTemplate sSpriteTemplate_ScoreSymbols =
     .paletteTag = PALTAG_MISC,
     .oam = &sOam_ScoreSymbols,
     .anims = sAnims_ScoreSymbols,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_ScoreSymbol
 };
 
@@ -732,9 +732,6 @@ static const struct SpriteTemplate sSpriteTemplate_Particles =
     .paletteTag = PALTAG_MISC,
     .oam = &sOam_Particles,
     .anims = sAnims_Particles,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct OamData sOam_CountdownNumbers =
@@ -790,8 +787,6 @@ static const struct SpriteTemplate sSpriteTemplate_CountdownNumbers =
     .paletteTag = PALTAG_MISC,
     .oam = &sOam_CountdownNumbers,
     .anims = sAnims_CountdownNumbers,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_CountdownNumber
 };
 
@@ -834,8 +829,6 @@ static const struct SpriteTemplate sSpriteTemplate_Start =
     .paletteTag = PALTAG_MISC,
     .oam = &sOam_Start,
     .anims = sAnims_Start,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Start
 };
 
@@ -1190,9 +1183,9 @@ static void SetBerrySpriteData(struct Sprite *sprite, s32 x, s32 y, s32 bounceSp
     sprite->callback = SpriteCB_Berry;
 }
 
-static void CreateBerrySprite(u32 itemId, u32 playerId)
+static void CreateBerrySprite(enum Item itemId, u32 playerId)
 {
-    enum BerryIndex berryId = GetBerryIndex(itemId);
+    enum BerryIndex berryId = ItemIdToBerryType(itemId);
     u32 spriteId = CreateSpinningBerrySprite(berryId, 0, 80, playerId & 1);
     SetBerrySpriteData(&gSprites[spriteId],
                         sBerrySpriteData[playerId][0],
@@ -1203,9 +1196,9 @@ static void CreateBerrySprite(u32 itemId, u32 playerId)
                         berryId);
 }
 
-static void ConvertItemToBlenderBerry(struct BlenderBerry *berry, u16 itemId)
+static void ConvertItemToBlenderBerry(struct BlenderBerry *berry, enum Item itemId)
 {
-    const struct BerryInfo *berryInfo = GetBerryInfo(GetBerryIndex(itemId));
+    const struct BerryInfo *berryInfo = GetBerryInfo(ItemIdToBerryType(itemId));
 
     berry->itemId = itemId;
     StringCopy(berry->name, berryInfo->name);
@@ -1553,14 +1546,14 @@ static void SetOpponentsBerryData(u16 playerBerryItemId, u8 playersNum, struct B
     }
     else
     {
-        opponentSetId = GetBerryIndex(playerBerryItemId);
+        opponentSetId = ItemIdToBerryType(playerBerryItemId);
         if (opponentSetId > NUM_NPC_BERRIES)
             opponentSetId = ((opponentSetId - 1) % NUM_NPC_BERRIES) + NUM_NPC_BERRIES;
     }
     for (i = 0; i < playersNum - 1; i++)
     {
         opponentBerryId = sOpponentBerrySets[opponentSetId][i];
-        berryMasterDiff = GetBerryIndex(playerBerryItemId) - INDEX_SPELON_BERRY;
+        berryMasterDiff = ItemIdToBerryType(playerBerryItemId) - INDEX_SPELON_BERRY;
         if (!FlagGet(FLAG_HIDE_LILYCOVE_CONTEST_HALL_BLEND_MASTER) && gSpecialVar_0x8004 == 1)
         {
             opponentSetId %= ARRAY_COUNT(sBerryMasterBerries);
@@ -1571,7 +1564,7 @@ static void SetOpponentsBerryData(u16 playerBerryItemId, u8 playersNum, struct B
             if (berryMasterDiff < ARRAY_COUNT(sBerryMasterBerries))
                 opponentBerryId -= ARRAY_COUNT(sBerryMasterBerries);
         }
-        SetPlayerBerryData(i + 1, GetBerryItemId(opponentBerryId));
+        SetPlayerBerryData(i + 1, BerryTypeToItemId(opponentBerryId));
     }
 }
 
@@ -1819,7 +1812,7 @@ static void ResetLinkCmds(void)
 
 static void Task_OpponentMiss(u8 taskId)
 {
-   if(++gTasks[taskId].tTimer > gTasks[taskId].tDelay)
+   if (++gTasks[taskId].tTimer > gTasks[taskId].tDelay)
    {
         gRecvCmds[gTasks[taskId].tPlayerId][BLENDER_COMM_SCORE] = LINKCMD_BLENDER_SCORE_MISS;
         DestroyTask(taskId);
@@ -2432,6 +2425,7 @@ static void CalculatePokeblock(struct BlenderBerry *berries, struct Pokeblock *p
     }
 
     // Factor in max RPM and round
+    multiuseVar = maxRPM / 333 + 100;
     for (i = 0; i < FLAVOR_COUNT; i++)
     {
         s32 remainder;
@@ -2856,7 +2850,7 @@ static void CB2_CheckPlayAgainLink(void)
             sBerryBlender->gameEndState = 5;
         break;
     case 5:
-        PrintMessage(&sBerryBlender->textState, gText_SavingDontTurnOff2, 0);
+        PrintMessage(&sBerryBlender->textState, sText_SavingDontTurnOff2, 0);
         SetLinkStandbyCallback();
         sBerryBlender->gameEndState++;
         break;
@@ -3201,7 +3195,7 @@ static void SpriteCB_ScoreSymbolBest(struct Sprite *sprite)
         DestroySprite(sprite);
 }
 
-static void SetPlayerBerryData(u8 playerId, u16 itemId)
+static void SetPlayerBerryData(u8 playerId, enum Item itemId)
 {
     sBerryBlender->chosenItemId[playerId] = itemId;
     ConvertItemToBlenderBerry(&sBerryBlender->blendedBerries[playerId], itemId);
@@ -3448,7 +3442,7 @@ static bool8 PrintBlendingResults(void)
     s32 xPos, yPos;
 
     struct Pokeblock pokeblock;
-    u8 flavors[FLAVOR_COUNT + 1];
+    enum Flavor flavors[FLAVOR_COUNT + 1];
     u8 text[40];
     u16 UNUSED berryIds[4];
 
@@ -3545,7 +3539,7 @@ static bool8 PrintBlendingResults(void)
         for (i = 0; i < BLENDER_MAX_PLAYERS; i++)
         {
             if (sBerryBlender->chosenItemId[i] != 0)
-                berryIds[i] = GetBerryIndex(sBerryBlender->chosenItemId[i]);
+                berryIds[i] = ItemIdToBerryType(sBerryBlender->chosenItemId[i]);
             if (sBerryBlender->arrowIdToPlayerId[i] != NO_PLAYER)
             {
                 PutWindowTilemap(i);
@@ -3754,9 +3748,9 @@ void ShowBerryBlenderRecordWindow(void)
     DrawStdWindowFrame(gRecordsWindowId, FALSE);
     FillWindowPixelBuffer(gRecordsWindowId, PIXEL_FILL(1));
 
-    xPos = GetStringCenterAlignXOffset(FONT_NORMAL, gText_BlenderMaxSpeedRecord, 144);
-    AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, gText_BlenderMaxSpeedRecord, xPos, 1, 0, NULL);
-    AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, gText_234Players, 4, 41, 0, NULL);
+    xPos = GetStringCenterAlignXOffset(FONT_NORMAL, sText_BlenderMaxSpeedRecord, 144);
+    AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, sText_BlenderMaxSpeedRecord, xPos, 1, 0, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, FONT_NORMAL, sText_234Players, 4, 41, 0, NULL);
 
     for (i = 0, yPos = 41; i < NUM_SCORE_TYPES; i++)
     {
@@ -3882,7 +3876,7 @@ static bool32 PrintMessage(s16 *textState, const u8 *string, s32 textSpeed)
         (*textState)++;
         break;
     case 1:
-        if (!IsTextPrinterActive(WIN_MSG))
+        if (!IsTextPrinterActiveOnWindow(WIN_MSG))
         {
             *textState = 0;
             return TRUE;

@@ -1,52 +1,52 @@
 #include "global.h"
 #include "test/battle.h"
+#include "battle_anim_scripts.h"
 
 // These tests are very heavy computationally. Only use them to review animation PRs.
-
-#if T_SHOULD_RUN_MOVE_ANIM
 
 #define ANIM_TEST_START_MOVE 1              //  First move to test
 #define ANIM_TEST_END_MOVE   MOVES_COUNT-1  //  Last move to test
 
 
-static void ParametrizeMovesAndSpecies(u32 j, u32 *pMove, u32 *pSpecies)
+static void ParametrizeMovesAndSpecies(u32 j, u32 *pMove, u32 *pSpecies, u32 variation)
 {
-    if (gMovesInfo[j].effect == EFFECT_DARK_VOID) // User needs to be Darkrai
+    enum BattleMoveEffects effect = GetMoveEffect(j);
+    if (effect == EFFECT_DARK_VOID) // User needs to be Darkrai
     {
         *pMove = j;
         *pSpecies = SPECIES_DARKRAI;
     }
-    else if (gMovesInfo[j].effect == EFFECT_HYPERSPACE_FURY) // User needs to be Hoopa Unbound
+    else if (effect == EFFECT_HYPERSPACE_FURY) // User needs to be Hoopa Unbound
     {
         *pMove = j;
         *pSpecies = SPECIES_HOOPA_UNBOUND;
     }
-    else if (gMovesInfo[j].effect == EFFECT_AURA_WHEEL) // User needs to be Morpeko
+    else if (effect == EFFECT_AURA_WHEEL) // User needs to be Morpeko
     {
         *pMove = j;
         *pSpecies = SPECIES_MORPEKO_FULL_BELLY;
     }
-    else if (gMovesInfo[j].effect == EFFECT_ROTOTILLER || gMovesInfo[j].effect == EFFECT_FLOWER_SHIELD) // User needs to be Grass-type
+    else if (effect == EFFECT_ROTOTILLER || effect == EFFECT_FLOWER_SHIELD) // User needs to be Grass-type
     {
         *pMove = j;
         *pSpecies = SPECIES_TANGELA;
     }
-    else if (gMovesInfo[j].effect == EFFECT_FAIL_IF_NOT_ARG_TYPE && gMovesInfo[j].argument.type == TYPE_FIRE) // User needs to be Fire-type
+    else if (effect == EFFECT_FAIL_IF_NOT_ARG_TYPE && GetMoveArgType(j) == TYPE_FIRE) // User needs to be Fire-type
     {
         *pMove = j;
         *pSpecies = SPECIES_FLAREON;
     }
-    else if (gMovesInfo[j].effect == EFFECT_FAIL_IF_NOT_ARG_TYPE && gMovesInfo[j].argument.type == TYPE_ELECTRIC) // User needs to be Electric-type
+    else if (effect == EFFECT_FAIL_IF_NOT_ARG_TYPE && GetMoveArgType(j) == TYPE_ELECTRIC) // User needs to be Electric-type
     {
         *pMove = j;
         *pSpecies = SPECIES_JOLTEON;
     }
-    else if (gMovesInfo[j].effect == EFFECT_MAGNETIC_FLUX || gMovesInfo[j].effect == EFFECT_GEAR_UP) // User needs to have Plus
+    else if (effect == EFFECT_MAGNETIC_FLUX || effect == EFFECT_GEAR_UP) // User needs to have Plus
     {
         *pMove = j;
         *pSpecies = SPECIES_KLINKLANG;
     }
-    else if (gMovesInfo[j].effect == EFFECT_PLACEHOLDER) // Ignore placeholder *pMoves
+    else if (effect == EFFECT_PLACEHOLDER) // Ignore placeholder *pMoves
     {
         *pMove = MOVE_POUND;
         *pSpecies = SPECIES_WOBBUFFET;
@@ -58,118 +58,258 @@ static void ParametrizeMovesAndSpecies(u32 j, u32 *pMove, u32 *pSpecies)
     }
 }
 
-static bool32 TargetHasToMove(u32 move) // Opponent needs to hit the player first
+static u32 ParametrizeFriendship(enum Move move, u32 variation)
 {
-    if (gMovesInfo[move].effect == EFFECT_COUNTER
-     || gMovesInfo[move].effect == EFFECT_MIRROR_MOVE
-     || gMovesInfo[move].effect == EFFECT_CONVERSION_2
-     || gMovesInfo[move].effect == EFFECT_MIRROR_COAT
-     || gMovesInfo[move].effect == EFFECT_METAL_BURST
-     || gMovesInfo[move].effect == EFFECT_COPYCAT
-     || gMovesInfo[move].effect == EFFECT_SUCKER_PUNCH
-     || gMovesInfo[move].effect == EFFECT_INSTRUCT)
+    if (gMovesInfo[move].effect == EFFECT_FRUSTRATION
+        || gMovesInfo[move].effect == EFFECT_RETURN
+        )
+    {
+        if (variation == 0)
+           return 1;
+        else if (variation == 1)
+            return 61;
+        else if (variation == 2)
+            return 101;
+        else if (variation == 3)
+            return 201;
+    }
+    return 0;
+}
+
+static u32 GetParametrizedHP(enum Move move, u32 variation)
+{
+    if (gMovesInfo[move].effect == EFFECT_POWER_BASED_ON_USER_HP && variation > 0)
+    {
+        if (variation == 1)
+            return 6000;
+        else if (variation == 2)
+            return 4000;
+        else if (variation == 3)
+            return 2000;
+    }
+    return 9997;
+}
+
+static u32 GetParametrizedItem(enum Move move, u32 variation)
+{
+    if ((move == MOVE_TECHNO_BLAST) && variation > 0)
+    {
+        if (variation == 1)
+            return ITEM_DOUSE_DRIVE;
+        else if (variation == 2)
+            return ITEM_SHOCK_DRIVE;
+        else if (variation == 3)
+            return ITEM_BURN_DRIVE;
+        else if (variation == 4)
+            return ITEM_CHILL_DRIVE;
+    }
+    return ITEM_ORAN_BERRY;
+}
+
+static u32 GetParametrizedLevel(enum Move move, u32 variation)
+{
+    if (gMovesInfo[move].effect == EFFECT_LEVEL_DAMAGE && variation > 0)
+    {
+        if (variation == 1)
+            return 50;
+        else if (variation == 2)
+            return 20;
+    }
+    return 100;
+}
+
+static bool32 GetParametrizedShinyness(enum Move move, u32 variation)
+{
+    if ((GetMoveAnimationScript(move) == gBattleAnimMove_DragonDarts && variation == 2)
+        || (GetMoveAnimationScript(move) == gBattleAnimMove_SyrupBomb && variation == 1)
+        )
         return TRUE;
     return FALSE;
 }
 
-static bool32 AttackerHasToSwitch(u32 move) // User needs to send out a different team member
+static bool32 TargetHasToMove(enum Move move) // Opponent needs to hit the player first
 {
-    if (gMovesInfo[move].effect == EFFECT_TELEPORT
-     || gMovesInfo[move].effect == EFFECT_EXPLOSION
-     || gMovesInfo[move].effect == EFFECT_MISTY_EXPLOSION
-     || gMovesInfo[move].effect == EFFECT_BATON_PASS
-     || gMovesInfo[move].effect == EFFECT_MEMENTO
-     || gMovesInfo[move].effect == EFFECT_HEALING_WISH
-     || gMovesInfo[move].effect == EFFECT_HIT_ESCAPE
-     || gMovesInfo[move].effect == EFFECT_FINAL_GAMBIT
-     || gMovesInfo[move].effect == EFFECT_PARTING_SHOT
-     || gMovesInfo[move].effect == EFFECT_SHED_TAIL
-     || gMovesInfo[move].effect == EFFECT_CHILLY_RECEPTION)
+    enum BattleMoveEffects effect = GetMoveEffect(move);
+    if (effect == EFFECT_REFLECT_DAMAGE
+     || effect == EFFECT_MIRROR_MOVE
+     || effect == EFFECT_CONVERSION_2
+     || effect == EFFECT_COPYCAT
+     || effect == EFFECT_SUCKER_PUNCH
+     || effect == EFFECT_INSTRUCT
+     || effect == EFFECT_DISABLE
+     || effect == EFFECT_MIMIC
+     || effect == EFFECT_SPITE
+     || effect == EFFECT_ENCORE)
         return TRUE;
     return FALSE;
 }
 
-static bool32 UserHasToGoFirst(u32 move) // Player needs to go first
+static bool32 AttackerHasToSwitch(enum Move move) // User needs to send out a different team member
 {
-    if (gMovesInfo[move].effect == EFFECT_PROTECT
-     || gMovesInfo[move].effect == EFFECT_ENDURE
-     || gMovesInfo[move].effect == EFFECT_FOLLOW_ME
-     || gMovesInfo[move].effect == EFFECT_MAGIC_COAT
-     || gMovesInfo[move].effect == EFFECT_ME_FIRST
-     || gMovesInfo[move].effect == EFFECT_QUASH
-     || gMovesInfo[move].effect == EFFECT_MAT_BLOCK
-     || gMovesInfo[move].effect == EFFECT_ELECTRIFY
-     || gMovesInfo[move].effect == EFFECT_SHELL_TRAP)
+    enum BattleMoveEffects effect = GetMoveEffect(move);
+    if (IsExplosionMove(move)
+     || effect == EFFECT_TELEPORT
+     || effect == EFFECT_BATON_PASS
+     || effect == EFFECT_MEMENTO
+     || effect == EFFECT_HEALING_WISH
+     || effect == EFFECT_LUNAR_DANCE
+     || effect == EFFECT_HIT_ESCAPE
+     || effect == EFFECT_FINAL_GAMBIT
+     || effect == EFFECT_PARTING_SHOT
+     || effect == EFFECT_SHED_TAIL
+     || effect == EFFECT_WEATHER_AND_SWITCH)
         return TRUE;
     return FALSE;
 }
 
-static void WhenSingles(u32 move, struct BattlePokemon *attacker, struct BattlePokemon *defender)
+static bool32 UserHasToGoFirst(enum Move move) // Player needs to go first
 {
+    enum BattleMoveEffects effect = GetMoveEffect(move);
+    if (effect == EFFECT_PROTECT
+     || effect == EFFECT_ENDURE
+     || effect == EFFECT_FOLLOW_ME
+     || effect == EFFECT_MAGIC_COAT
+     || effect == EFFECT_ME_FIRST
+     || effect == EFFECT_QUASH
+     || effect == EFFECT_MAT_BLOCK
+     || effect == EFFECT_ELECTRIFY
+     || effect == EFFECT_SHELL_TRAP)
+        return TRUE;
+    return FALSE;
+}
+
+static u32 GetVariationsNumber(enum Move move, bool8 isDouble)
+{
+    u32 variationsNumber;
+
+    if (gMovesInfo[move].effect == EFFECT_WEATHER_BALL
+     || gMovesInfo[move].effect == EFFECT_TERRAIN_PULSE
+     || move == MOVE_TECHNO_BLAST)
+        variationsNumber = 5;
+    else if (gMovesInfo[move].effect == EFFECT_FRUSTRATION
+          || gMovesInfo[move].effect == EFFECT_RETURN
+          || gMovesInfo[move].effect == EFFECT_IVY_CUDGEL
+          || move == MOVE_WATER_SPOUT) //we don't use the effect because other moves with the water spout effect don't have animation variations
+        variationsNumber = 4;
+    else if (gMovesInfo[move].effect == EFFECT_SPIT_UP
+          || gMovesInfo[move].effect == EFFECT_SWALLOW
+          || GetMoveAnimationScript(move) == gBattleAnimMove_DragonDarts
+          || move == MOVE_SEISMIC_TOSS)
+        variationsNumber = 3;
+    else if (gMovesInfo[move].effect == EFFECT_CURSE
+          || gMovesInfo[move].effect == EFFECT_PRESENT
+          || gMovesInfo[move].effect == EFFECT_SHELL_SIDE_ARM
+          || gMovesInfo[move].effect == EFFECT_FICKLE_BEAM
+          || gMovesInfo[move].effect == EFFECT_MAGNITUDE
+          || (isDouble && gMovesInfo[move].effect == EFFECT_TERA_STARSTORM)
+          || move == MOVE_SYRUP_BOMB)
+        variationsNumber = 2;
+    else
+        variationsNumber = 1;
+    return variationsNumber;
+}
+static void WhenSingles(enum Move move, struct BattlePokemon *attacker, struct BattlePokemon *defender, u32 variation)
+{
+    enum BattleMoveEffects effect = GetMoveEffect(move);
     // Setup turn
-    if (gMovesInfo[move].effect == EFFECT_SNORE
-     || gMovesInfo[move].effect == EFFECT_SLEEP_TALK)
+    if (effect == EFFECT_SNORE
+     || effect == EFFECT_SLEEP_TALK)
     {  // attacker needs to be asleep
         TURN { MOVE(attacker, MOVE_REST); }
     }
-    else if (gMovesInfo[move].effect == EFFECT_SPIT_UP
-          || gMovesInfo[move].effect == EFFECT_SWALLOW)
+    else if (effect == EFFECT_SPIT_UP
+          || effect == EFFECT_SWALLOW)
     { // attacker needs to have used Stockpile
-        TURN { MOVE(attacker, MOVE_STOCKPILE); }
+        for (u32 i = 0; i <= variation; i++)
+        {
+            TURN { MOVE(attacker, MOVE_STOCKPILE); }
+        }
     }
-    else if ((gMovesInfo[move].effect == EFFECT_DOUBLE_POWER_ON_ARG_STATUS && gMovesInfo[move].argument.status == STATUS1_PARALYSIS))
+    else if ((effect == EFFECT_DOUBLE_POWER_ON_ARG_STATUS && GetMoveEffectArg_Status(move) == STATUS1_PARALYSIS))
     { // defender needs to be paralyzed
         TURN { MOVE(attacker, MOVE_THUNDER_WAVE); }
     }
-    else if (gMovesInfo[move].effect == EFFECT_RECYCLE
-          || gMovesInfo[move].effect == EFFECT_BELCH)
+    else if (effect == EFFECT_RECYCLE
+          || effect == EFFECT_BELCH)
     { // attacker needs to have eaten its Berry
         TURN { MOVE(attacker, MOVE_STUFF_CHEEKS); }
     }
-    else if (gMovesInfo[move].effect == EFFECT_REFRESH
-          || gMovesInfo[move].effect == EFFECT_PSYCHO_SHIFT)
+    else if (effect == EFFECT_REFRESH
+          || effect == EFFECT_PSYCHO_SHIFT)
     { // attacker needs to be paralyzed
         TURN { MOVE(defender, MOVE_THUNDER_WAVE); }
     }
-    else if (gMovesInfo[move].effect == EFFECT_LAST_RESORT)
+    else if (effect == EFFECT_LAST_RESORT)
     { // attacker needs to have used all other moves
         TURN { MOVE(attacker, MOVE_POUND); }
     }
-    else if (gMovesInfo[move].effect == EFFECT_DREAM_EATER
-          || gMovesInfo[move].effect == EFFECT_NIGHTMARE)
+    else if (effect == EFFECT_DREAM_EATER
+          || effect == EFFECT_NIGHTMARE)
     { // defender needs to be asleep
         TURN { MOVE(defender, MOVE_REST); }
     }
-    else if (gMovesInfo[move].effect == EFFECT_VENOM_DRENCH
-          || gMovesInfo[move].effect == EFFECT_PURIFY)
+    else if (effect == EFFECT_VENOM_DRENCH
+          || effect == EFFECT_PURIFY)
     { // defender needs to be poisoned
         TURN { MOVE(attacker, MOVE_POISON_POWDER); }
     }
-    else if (gMovesInfo[move].effect == EFFECT_TOPSY_TURVY)
+    else if (effect == EFFECT_TOPSY_TURVY)
     { // defender needs to have its stats buffed
         TURN { MOVE(defender, MOVE_SWORDS_DANCE); }
     }
-    else if (gMovesInfo[move].effect == EFFECT_AURORA_VEIL)
+    else if (effect == EFFECT_AURORA_VEIL)
     { // Has to be hailing
         TURN { MOVE(attacker, MOVE_HAIL); }
     }
-    else if (gMovesInfo[move].effect == EFFECT_STEEL_ROLLER)
+    else if (effect == EFFECT_STEEL_ROLLER)
     { // Needs a terrain
         TURN { MOVE(attacker, MOVE_ELECTRIC_TERRAIN); }
     }
+    else if (gMovesInfo[move].effect == EFFECT_WEATHER_BALL && variation > 0)
+    {
+        if (variation == 1)
+            TURN { MOVE(attacker, MOVE_SUNNY_DAY); }
+        else if (variation == 2)
+            TURN { MOVE(attacker, MOVE_RAIN_DANCE); }
+        else if (variation == 3)
+            TURN { MOVE(attacker, MOVE_SANDSTORM); }
+        else
+            TURN { MOVE(attacker, MOVE_HAIL); }
+    }
+    else if (gMovesInfo[move].effect == EFFECT_TERRAIN_PULSE && variation > 0)
+    {
+        if (variation == 1)
+            TURN { MOVE(attacker, MOVE_ELECTRIC_TERRAIN); }
+        else if (variation == 2)
+            TURN { MOVE(attacker, MOVE_GRASSY_TERRAIN); }
+        else if (variation == 3)
+            TURN { MOVE(attacker, MOVE_PSYCHIC_TERRAIN); }
+        else if (variation == 4)
+            TURN { MOVE(attacker, MOVE_MISTY_TERRAIN); }
+    }
+    else if (gBattleMoveEffects[gMovesInfo[move].effect].twoTurnEffect)
+    {
+        TURN { MOVE(attacker, move); }
+    }
     // Effective turn
     TURN {
-        if (TargetHasToMove(move))
+        if (effect == EFFECT_REFLECT_DAMAGE)
         {
-            MOVE(defender, gMovesInfo[move].effect == EFFECT_MIRROR_COAT ? MOVE_SWIFT : MOVE_POUND);
+            bool32 useSpecialMove = GetMoveReflectDamage_DamageCategories(move) == 1u << DAMAGE_CATEGORY_SPECIAL;
+            MOVE(defender, useSpecialMove ? MOVE_SWIFT : MOVE_POUND);
             MOVE(attacker, move);
         }
-        else if (gMovesInfo[move].effect == EFFECT_SNATCH)
+        else if (TargetHasToMove(move))
+        {
+            MOVE(defender, MOVE_POUND);
+            MOVE(attacker, move);
+        }
+        else if (effect == EFFECT_SNATCH)
         { // defender needs to steal the defender's buffing move
             MOVE(attacker, move);
             MOVE(defender, MOVE_SWORDS_DANCE);
         }
-        else if (gMovesInfo[move].effect == EFFECT_OHKO || gMovesInfo[move].effect == EFFECT_SHEER_COLD)
+        else if (effect == EFFECT_OHKO)
         { // defender needs to send out a different team member
             MOVE(attacker, move);
             SEND_OUT(defender, 1);
@@ -184,19 +324,52 @@ static void WhenSingles(u32 move, struct BattlePokemon *attacker, struct BattleP
             MOVE(attacker, move);
             MOVE(defender, MOVE_POUND);
         }
-        else if (gMovesInfo[move].effect == EFFECT_REVIVAL_BLESSING)
+        else if (effect == EFFECT_REVIVAL_BLESSING)
         { // attacker selects party member
             MOVE(attacker, move, partyIndex: 1);
             MOVE(defender, MOVE_HELPING_HAND);
         }
-        else if (gMovesInfo[move].effect == EFFECT_UPPER_HAND)
+        else if (effect == EFFECT_UPPER_HAND)
         { // defender needs to choose priority move
             MOVE(attacker, move);
             MOVE(defender, MOVE_QUICK_ATTACK);
         }
-        else if (gMovesInfo[move].effect == EFFECT_ACUPRESSURE)
+        else if (effect == EFFECT_ACUPRESSURE)
         {
             MOVE(attacker, move, target: attacker);
+        }
+        else if (gBattleMoveEffects[gMovesInfo[move].effect].twoTurnEffect)
+        {
+            MOVE(defender, MOVE_HELPING_HAND);
+            SKIP_TURN(attacker);
+        }
+        else if (gMovesInfo[move].effect == EFFECT_PRESENT)
+        {
+            if (variation == 0)
+                MOVE(attacker, move, WITH_RNG(RNG_PRESENT, 1));
+            else if (variation == 1)
+                MOVE(attacker, move, WITH_RNG(RNG_PRESENT, 254));
+        }
+        else if (gMovesInfo[move].effect == EFFECT_MAGNITUDE)
+        {
+            if (variation == 0)
+                MOVE(attacker, move, WITH_RNG(RNG_MAGNITUDE, 50));
+            else if (variation == 1)
+                MOVE(attacker, move, WITH_RNG(RNG_MAGNITUDE, 99));
+        }
+        else if (gMovesInfo[move].effect == EFFECT_FICKLE_BEAM)
+        {
+            if (variation == 0)
+                MOVE(attacker, move, WITH_RNG(RNG_FICKLE_BEAM, FALSE));
+            else if (variation == 1)
+                MOVE(attacker, move, WITH_RNG(RNG_FICKLE_BEAM, TRUE));
+        }
+        else if (gMovesInfo[move].effect == EFFECT_SHELL_SIDE_ARM)
+        {
+            if (variation == 0)
+                MOVE(attacker, move, WITH_RNG(RNG_SHELL_SIDE_ARM, FALSE));
+            else if (variation == 1)
+                MOVE(attacker, move, WITH_RNG(RNG_SHELL_SIDE_ARM, TRUE));
         }
         else
         { // All other moves
@@ -204,26 +377,44 @@ static void WhenSingles(u32 move, struct BattlePokemon *attacker, struct BattleP
             MOVE(attacker, move);
         }
     }
+    if (gMovesInfo[move].effect == EFFECT_WISH)
+    {
+        TURN {};
+    }
+    else if (gMovesInfo[move].effect == EFFECT_FUTURE_SIGHT)
+    {
+        TURN {};
+        TURN {};
+    }
+    else if (gMovesInfo[move].effect == EFFECT_ROLLOUT)
+    {
+        TURN { MOVE(attacker, move); }
+        TURN { MOVE(attacker, move); }
+        TURN { MOVE(attacker, move); }
+        TURN { MOVE(attacker, move); }
+        TURN { MOVE(attacker, MOVE_HELPING_HAND); }
+    }
 }
 
-static void SceneSingles(u32 move, struct BattlePokemon *mon)
+static void SceneSingles(enum Move move, struct BattlePokemon *mon)
 {
-    if (gMovesInfo[move].effect == EFFECT_FOLLOW_ME
-     || gMovesInfo[move].effect == EFFECT_HELPING_HAND
-     || gMovesInfo[move].effect == EFFECT_AFTER_YOU
-     || gMovesInfo[move].effect == EFFECT_ALLY_SWITCH
-     || gMovesInfo[move].effect == EFFECT_AROMATIC_MIST
+    enum BattleMoveEffects effect = GetMoveEffect(move);
+    if (effect == EFFECT_FOLLOW_ME
+     || effect == EFFECT_HELPING_HAND
+     || effect == EFFECT_AFTER_YOU
+     || effect == EFFECT_ALLY_SWITCH
+     || effect == EFFECT_AROMATIC_MIST
      || move == MOVE_HOLD_HANDS // Hack here because it shares its effect with Splash and Celebrate
-     || gMovesInfo[move].effect == EFFECT_COACHING
-     || gMovesInfo[move].effect == EFFECT_DRAGON_CHEER)
+     || effect == EFFECT_COACHING
+     || effect == EFFECT_DRAGON_CHEER)
     {
         // Moves that fail in Single Battles
     }
-    else if (gMovesInfo[move].effect == EFFECT_MIRROR_MOVE) // Copy the opponent's move
+    else if (effect == EFFECT_MIRROR_MOVE) // Copy the opponent's move
     {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, mon);
     }
-    else if (gMovesInfo[move].effect == EFFECT_NATURE_POWER) // Recorded battles always use BATTLE_ENVIRONMENT_BUILDING
+    else if (effect == EFFECT_NATURE_POWER) // Recorded battles always use BATTLE_ENVIRONMENT_BUILDING
     {
         ANIMATION(ANIM_TYPE_MOVE, B_NATURE_POWER_MOVES >= GEN_4 ? MOVE_TRI_ATTACK : MOVE_SWIFT, mon);
     }
@@ -233,72 +424,110 @@ static void SceneSingles(u32 move, struct BattlePokemon *mon)
     }
 }
 
-static void DoublesWhen(u32 move, struct BattlePokemon *attacker, struct BattlePokemon *target, struct BattlePokemon *ignore1, struct BattlePokemon *ignore2)
+#if T_SHOULD_RUN_MOVE_ANIM
+
+static void DoublesWhen(enum Move move, struct BattlePokemon *attacker, struct BattlePokemon *target, struct BattlePokemon *ignore1, struct BattlePokemon *ignore2, u32 variation)
 {
+    enum BattleMoveEffects effect = GetMoveEffect(move);
     // Setup turn
-    if (gMovesInfo[move].effect == EFFECT_SNORE
-     || gMovesInfo[move].effect == EFFECT_SLEEP_TALK)
+    if (effect == EFFECT_SNORE
+     || effect == EFFECT_SLEEP_TALK)
     {  // Player needs to be asleep
         TURN { MOVE(attacker, MOVE_REST); }
     }
-    else if (gMovesInfo[move].effect == EFFECT_SPIT_UP
-            || gMovesInfo[move].effect == EFFECT_SWALLOW)
+    else if (effect == EFFECT_SPIT_UP
+            || effect == EFFECT_SWALLOW)
     { // Player needs to have used Stockpile
-        TURN { MOVE(attacker, MOVE_STOCKPILE); }
+        for (u32 i = 0; i <= variation; i++)
+        {
+            TURN { MOVE(attacker, MOVE_STOCKPILE); }
+        }
     }
-    else if ((gMovesInfo[move].effect == EFFECT_DOUBLE_POWER_ON_ARG_STATUS && gMovesInfo[move].argument.status == STATUS1_PARALYSIS))
+    else if ((effect == EFFECT_DOUBLE_POWER_ON_ARG_STATUS && GetMoveEffectArg_Status(move) == STATUS1_PARALYSIS))
     { // Opponent needs to be paralyzed
         TURN { MOVE(attacker, MOVE_THUNDER_WAVE, target: target); }
     }
-    else if (gMovesInfo[move].effect == EFFECT_RECYCLE
-          || gMovesInfo[move].effect == EFFECT_BELCH)
+    else if (effect == EFFECT_RECYCLE
+          || effect == EFFECT_BELCH)
     { // Player needs to have eaten its Berry
         TURN { MOVE(attacker, MOVE_STUFF_CHEEKS); }
     }
-    else if (gMovesInfo[move].effect == EFFECT_REFRESH
-          || gMovesInfo[move].effect == EFFECT_PSYCHO_SHIFT)
+    else if (effect == EFFECT_REFRESH
+          || effect == EFFECT_PSYCHO_SHIFT)
     { // Player needs to be paralyzed
         TURN { MOVE(target, MOVE_THUNDER_WAVE, target: attacker); }
     }
-    else if (gMovesInfo[move].effect == EFFECT_LAST_RESORT)
+    else if (effect == EFFECT_LAST_RESORT)
     { // Player needs to have used all other moves
         TURN { MOVE(attacker, MOVE_POUND, target: target); }
     }
-    else if (gMovesInfo[move].effect == EFFECT_DREAM_EATER
-          || gMovesInfo[move].effect == EFFECT_NIGHTMARE)
+    else if (effect == EFFECT_DREAM_EATER
+          || effect == EFFECT_NIGHTMARE)
     { // Opponent needs to be asleep
         TURN { MOVE(target, MOVE_REST); }
     }
-    else if (gMovesInfo[move].effect == EFFECT_VENOM_DRENCH
-          || gMovesInfo[move].effect == EFFECT_PURIFY)
+    else if (effect == EFFECT_VENOM_DRENCH
+          || effect == EFFECT_PURIFY)
     { // Opponent needs to be poisoned
         TURN { MOVE(attacker, MOVE_POISON_POWDER, target: target); }
     }
-    else if (gMovesInfo[move].effect == EFFECT_TOPSY_TURVY)
+    else if (effect == EFFECT_TOPSY_TURVY)
     { // Opponent needs to have its stats buffed
         TURN { MOVE(target, MOVE_SWORDS_DANCE); }
     }
-    else if (gMovesInfo[move].effect == EFFECT_AURORA_VEIL)
+    else if (effect == EFFECT_AURORA_VEIL)
     { // Has to be hailing
         TURN { MOVE(attacker, MOVE_HAIL); }
     }
-    else if (gMovesInfo[move].effect == EFFECT_STEEL_ROLLER)
+    else if (effect == EFFECT_STEEL_ROLLER)
     { // Needs a terrain
         TURN { MOVE(attacker, MOVE_ELECTRIC_TERRAIN); }
     }
+    else if (gMovesInfo[move].effect == EFFECT_WEATHER_BALL && variation > 0)
+    {
+        if (variation == 1)
+            TURN { MOVE(attacker, MOVE_SUNNY_DAY); }
+        else if (variation == 2)
+            TURN { MOVE(attacker, MOVE_RAIN_DANCE); }
+        else if (variation == 3)
+            TURN { MOVE(attacker, MOVE_SANDSTORM); }
+        else
+            TURN { MOVE(attacker, MOVE_HAIL); }
+    }
+    else if (gMovesInfo[move].effect == EFFECT_TERRAIN_PULSE && variation > 0)
+    {
+        if (variation == 1)
+            TURN { MOVE(attacker, MOVE_ELECTRIC_TERRAIN); }
+        else if (variation == 2)
+            TURN { MOVE(attacker, MOVE_GRASSY_TERRAIN); }
+        else if (variation == 3)
+            TURN { MOVE(attacker, MOVE_PSYCHIC_TERRAIN); }
+        else if (variation == 4)
+            TURN { MOVE(attacker, MOVE_MISTY_TERRAIN); }
+    }
+    else if (gBattleMoveEffects[gMovesInfo[move].effect].twoTurnEffect)
+    {
+        TURN { MOVE(attacker, move, target: target); }
+    }
     // Effective turn
     TURN {
-        if (TargetHasToMove(move))
-        { // Opponent needs to hit the player first
-            MOVE(target, gMovesInfo[move].effect == EFFECT_MIRROR_COAT ? MOVE_SWIFT : MOVE_POUND, target: attacker);
+        if (effect == EFFECT_REFLECT_DAMAGE)
+        {
+            bool32 useSpecialMove = GetMoveReflectDamage_DamageCategories(move) == 1u << DAMAGE_CATEGORY_SPECIAL;
+            MOVE(target, useSpecialMove ? MOVE_SWIFT : MOVE_POUND, target: attacker);
+            MOVE(attacker, move);
+        }
+        else if (TargetHasToMove(move))
+        {
+            MOVE(target, MOVE_POUND, target: attacker);
             MOVE(attacker, move, target: target);
         }
-        else if (gMovesInfo[move].effect == EFFECT_SNATCH)
+        else if (effect == EFFECT_SNATCH)
         { // Opponent needs to steal the opponent's buffing move
             MOVE(attacker, move, target: target);
             MOVE(target, MOVE_SWORDS_DANCE);
         }
-        else if (gMovesInfo[move].effect == EFFECT_OHKO || gMovesInfo[move].effect == EFFECT_SHEER_COLD)
+        else if (effect == EFFECT_OHKO)
         { // Opponent needs to send out a different team member
             MOVE(attacker, move, target: target);
             SEND_OUT(target, 2);
@@ -313,48 +542,103 @@ static void DoublesWhen(u32 move, struct BattlePokemon *attacker, struct BattleP
             MOVE(attacker, move, target: target);
             MOVE(target, MOVE_POUND, target: attacker);
         }
-        else if (gMovesInfo[move].effect == EFFECT_AFTER_YOU)
+        else if (effect == EFFECT_AFTER_YOU)
         { // Player goes first, opponent third
             MOVE(attacker, move, target: target);
             MOVE(ignore1, MOVE_CELEBRATE);
             MOVE(target, MOVE_POUND, target: attacker);
             MOVE(ignore2, MOVE_CELEBRATE);
         }
-        else if (gMovesInfo[move].effect == EFFECT_REVIVAL_BLESSING)
+        else if (effect == EFFECT_REVIVAL_BLESSING)
         { // Player selects party member
             MOVE(attacker, move, partyIndex: 2);
             MOVE(target, MOVE_LAST_RESORT, target: attacker); // Last Resort, so there's no anim on the opponent's side.
         }
-        else if (gMovesInfo[move].effect == EFFECT_UPPER_HAND)
+        else if (effect == EFFECT_UPPER_HAND)
         { // Opponent needs to choose priority move
             MOVE(attacker, move, target: target);
             MOVE(target, MOVE_QUICK_ATTACK, target: attacker);
+        }
+        else if (effect == EFFECT_ACUPRESSURE)
+        {
+            MOVE(attacker, move, target: attacker);
+        }
+        else if (gBattleMoveEffects[gMovesInfo[move].effect].twoTurnEffect)
+        {
+            MOVE(target, MOVE_LAST_RESORT, target: attacker);
+            SKIP_TURN(attacker);
+        }
+        else if (gMovesInfo[move].effect == EFFECT_PRESENT)
+        {
+            if (variation == 0)
+                MOVE(attacker, move, target: target, WITH_RNG(RNG_PRESENT, 1));
+            else if (variation == 1)
+                MOVE(attacker, move, target: target, WITH_RNG(RNG_PRESENT, 254));
+        }
+        else if (gMovesInfo[move].effect == EFFECT_MAGNITUDE)
+        {
+            if (variation == 0)
+                MOVE(attacker, move, WITH_RNG(RNG_MAGNITUDE, 50));
+            else if (variation == 1)
+                MOVE(attacker, move, WITH_RNG(RNG_MAGNITUDE, 99));
+        }
+        else if (gMovesInfo[move].effect == EFFECT_FICKLE_BEAM)
+        {
+            if (variation == 0)
+                MOVE(attacker, move, target: target, WITH_RNG(RNG_FICKLE_BEAM, FALSE));
+            else if (variation == 1)
+                MOVE(attacker, move, target: target, WITH_RNG(RNG_FICKLE_BEAM, TRUE));
+        }
+        else if (gMovesInfo[move].effect == EFFECT_SHELL_SIDE_ARM)
+        {
+            if (variation == 0)
+                MOVE(attacker, move, target: target, WITH_RNG(RNG_SHELL_SIDE_ARM, FALSE));
+            else if (variation == 1)
+                MOVE(attacker, move, target: target, WITH_RNG(RNG_SHELL_SIDE_ARM, TRUE));
         }
         else
         { // All other moves
             MOVE(target, MOVE_LAST_RESORT, target: attacker); // Last Resort, so there's no anim on the opponent's side.
             MOVE(attacker, move, target: target);
         }
-        if (gMovesInfo[move].effect != EFFECT_AFTER_YOU)
+        if (effect != EFFECT_AFTER_YOU)
         {
             // Actions for the remaining battlers
             MOVE(ignore1, MOVE_CELEBRATE);
             MOVE(ignore2, MOVE_CELEBRATE);
         }
     }
+    if (gMovesInfo[move].effect == EFFECT_WISH)
+    {
+        TURN {};
+    }
+    else if (gMovesInfo[move].effect == EFFECT_FUTURE_SIGHT)
+    {
+        TURN {};
+        TURN {};
+    }
+    else if (gMovesInfo[move].effect == EFFECT_ROLLOUT)
+    {
+        TURN { MOVE(attacker, move, target: target); }
+        TURN { MOVE(attacker, move, target: target); }
+        TURN { MOVE(attacker, move, target: target); }
+        TURN { MOVE(attacker, move, target: target); }
+        TURN { MOVE(attacker, MOVE_LAST_RESORT, target: attacker); }
+    }
 }
 
-static void DoublesScene(u32 move, struct BattlePokemon *attacker)
+static void DoublesScene(enum Move move, struct BattlePokemon *attacker)
 {
-    if (gMovesInfo[move].effect == EFFECT_MAGNETIC_FLUX || gMovesInfo[move].effect == EFFECT_GEAR_UP) // For some reason, Magnetic Flux and Gear Up are failing in Double Battles here
+    enum BattleMoveEffects effect = GetMoveEffect(move);
+    if (effect == EFFECT_MAGNETIC_FLUX || effect == EFFECT_GEAR_UP) // For some reason, Magnetic Flux and Gear Up are failing in Double Battles here
     {
         // Moves that fail in Double Battles
     }
-    else if (gMovesInfo[move].effect == EFFECT_MIRROR_MOVE)
+    else if (effect == EFFECT_MIRROR_MOVE)
     { // Copy the opponent's move
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, attacker);
     }
-    else if (gMovesInfo[move].effect == EFFECT_NATURE_POWER)
+    else if (effect == EFFECT_NATURE_POWER)
     { // Recorded battles always use BATTLE_ENVIRONMENT_BUILDING
         ANIMATION(ANIM_TYPE_MOVE, B_NATURE_POWER_MOVES >= GEN_4 ? MOVE_TRI_ATTACK : MOVE_SWIFT, attacker);
     }
@@ -364,7 +648,7 @@ static void DoublesScene(u32 move, struct BattlePokemon *attacker)
     }
 }
 
-//static void SameSideTargeting(u32 move, struct BattlePokemon *attacker)
+//static void SameSideTargeting(enum Move move, struct BattlePokemon *attacker)
 //{
 //    //  Don't know how to make sure this is correct, some moves don't display
 //}
@@ -372,82 +656,104 @@ static void DoublesScene(u32 move, struct BattlePokemon *attacker)
 SINGLE_BATTLE_TEST("Move Animations don't leak when used - Singles (player to opponent)")
 {
     u32 j = ANIM_TEST_START_MOVE, move = 0, species = 0;
+    u32 k = 0, variation = 0, variationsNumber;
+    u32 friendship = 0, tempFriendship;
     u32 tempMove, tempSpecies;
     FORCE_MOVE_ANIM(TRUE);
     for (; j <= ANIM_TEST_END_MOVE; j++) {
-        ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies);
-        PARAMETRIZE { move = tempMove; species = tempSpecies; }
+        variationsNumber = GetVariationsNumber(j, FALSE);
+        for (k = 0; k < variationsNumber; k++) {
+            ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
+            tempFriendship = ParametrizeFriendship(j, k);
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
+        }
     }
     GIVEN {
         PLAYER(species) {
-            HP(9997); MaxHP(9999); Item(ITEM_ORAN_BERRY);
+            Level(GetParametrizedLevel(move, variation));
+            HP(GetParametrizedHP(move, variation)); MaxHP(9999); Item(GetParametrizedItem(move, variation));
             if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
-            if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+            if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
             if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+            if (friendship) Friendship(friendship);
+            if (GetParametrizedShinyness(move, variation)) Shiny(TRUE);
         }
         PLAYER(SPECIES_WOBBUFFET)   {
             Gender(MON_MALE); MaxHP(9999); Moves(MOVE_POUND);
-            HP(gMovesInfo[move].effect == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
+            HP(GetMoveEffect(move) == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
         }
         OPPONENT(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
-            if (gMovesInfo[move].effect != EFFECT_BESTOW)
+            if (GetMoveEffect(move) != EFFECT_BESTOW)
                 Item(ITEM_ORAN_BERRY);
         }
         OPPONENT(SPECIES_WOBBUFFET) { Gender(MON_FEMALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); }
     } WHEN {
-        WhenSingles(move, player, opponent);
+        WhenSingles(move, player, opponent, variation);
     } SCENE {
         SceneSingles(move, player);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
 SINGLE_BATTLE_TEST("Move Animations don't leak when used - Singles (opponent to player)")
 {
     u32 j = ANIM_TEST_START_MOVE, move = 0, species = 0;
+    u32 k = 0, variation = 0, variationsNumber;
+    u32 friendship = 0, tempFriendship;
     u32 tempMove, tempSpecies;
     FORCE_MOVE_ANIM(TRUE);
     for (; j <= ANIM_TEST_END_MOVE; j++) {
-        ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies);
-        PARAMETRIZE { move = tempMove; species = tempSpecies; }
+        variationsNumber = GetVariationsNumber(j, FALSE);
+        for (k = 0; k < variationsNumber; k++) {
+            ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
+            tempFriendship = ParametrizeFriendship(j, k);
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
+        }
     }
     GIVEN {
         OPPONENT(species) {
-            HP(9997); MaxHP(9999); Item(ITEM_ORAN_BERRY);
+            Level(GetParametrizedLevel(move, variation));
+            HP(GetParametrizedHP(move, variation)); MaxHP(9999); Item(GetParametrizedItem(move, variation));
             if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
-            if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+            if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
             if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+            if (friendship) Friendship(friendship);
+            if (GetParametrizedShinyness(move, variation)) Shiny(TRUE);
         }
         OPPONENT(SPECIES_WOBBUFFET)   {
             Gender(MON_MALE); MaxHP(9999); Moves(MOVE_POUND);
-            HP(gMovesInfo[move].effect == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
+            HP(GetMoveEffect(move) == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
         }
         PLAYER(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
-            if (gMovesInfo[move].effect != EFFECT_BESTOW)
+            if (GetMoveEffect(move) != EFFECT_BESTOW)
                 Item(ITEM_ORAN_BERRY);
         }
         PLAYER(SPECIES_WOBBUFFET) { Gender(MON_FEMALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); }
     } WHEN {
-        WhenSingles(move, opponent, player);
+        WhenSingles(move, opponent, player, variation);
     } SCENE {
         SceneSingles(move, opponent);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
 DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerLeft to opponentLeft)")
 {
     u32 j = ANIM_TEST_START_MOVE, move = 0, species = 0;
+    u32 k = 0, variation = 0, variationsNumber;
+    u32 friendship = 0, tempFriendship;
     u32 tempMove, tempSpecies;
     FORCE_MOVE_ANIM(TRUE);
     struct BattlePokemon *attacker = playerLeft;
@@ -455,57 +761,70 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerLeft t
     struct BattlePokemon *ignore1 = playerRight;
     struct BattlePokemon *ignore2 = opponentRight;
     for (; j <= ANIM_TEST_END_MOVE; j++) {
-        ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies);
-        PARAMETRIZE { move = tempMove; species = tempSpecies; }
+        variationsNumber = GetVariationsNumber(j, TRUE);
+        for (k = 0; k < variationsNumber; k++) {
+            ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
+            tempFriendship = ParametrizeFriendship(j, k);
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
+        }
     }
     GIVEN {
         PLAYER(species) {
-            HP(9997); MaxHP(9999); Item(ITEM_ORAN_BERRY);
+            Level(GetParametrizedLevel(move, variation));
+            HP(GetParametrizedHP(move, variation)); MaxHP(9999); Item(GetParametrizedItem(move, variation));
             if (attacker == playerLeft) {
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
-                if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+                if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
+                if (GetParametrizedShinyness(move, variation)) Shiny(TRUE);
             }
         }
         PLAYER(species) {
-            HP(9997); MaxHP(9999); Item(ITEM_ORAN_BERRY);
+            Level(GetParametrizedLevel(move, variation));
+            HP(GetParametrizedHP(move, variation)); MaxHP(9999); Item(GetParametrizedItem(move, variation));
             if (attacker == playerRight)
             {
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
-                if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+                if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
+                if (GetParametrizedShinyness(move, variation)) Shiny(TRUE);
             }
         }
         PLAYER(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); MaxHP(9999); Moves(MOVE_POUND, MOVE_CELEBRATE);
-            HP(gMovesInfo[move].effect == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
+            HP(GetMoveEffect(move) == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
         }
         OPPONENT(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
-            if (gMovesInfo[move].effect != EFFECT_BESTOW)
+            if (GetMoveEffect(move) != EFFECT_BESTOW)
                 Item(ITEM_ORAN_BERRY);
         }
         OPPONENT(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
-            if (gMovesInfo[move].effect != EFFECT_BESTOW)
+            if (GetMoveEffect(move) != EFFECT_BESTOW)
                 Item(ITEM_ORAN_BERRY);
         }
         OPPONENT(SPECIES_WOBBUFFET) { Gender(MON_FEMALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); }
     } WHEN {
-        DoublesWhen(move, attacker, target, ignore1, ignore2);
+        DoublesWhen(move, attacker, target, ignore1, ignore2, variation);
     } SCENE {
         DoublesScene(move, attacker);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
 DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentLeft to playerLeft)")
 {
     u32 j = ANIM_TEST_START_MOVE, move = 0, species = 0;
+    u32 k = 0, variation = 0, variationsNumber;
+    u32 friendship = 0, tempFriendship;
     u32 tempMove, tempSpecies;
     FORCE_MOVE_ANIM(TRUE);
     struct BattlePokemon *attacker = opponentLeft;
@@ -513,58 +832,71 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentLeft
     struct BattlePokemon *ignore1 = opponentRight;
     struct BattlePokemon *ignore2 = playerRight;
     for (; j <= ANIM_TEST_END_MOVE; j++) {
-        ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies);
-        PARAMETRIZE { move = tempMove; species = tempSpecies; }
+        variationsNumber = GetVariationsNumber(j, TRUE);
+        for (k = 0; k < variationsNumber; k++) {
+            ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
+            tempFriendship = ParametrizeFriendship(j, k);
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
+        }
     }
     GIVEN {
         OPPONENT(species) {
-            HP(9997); MaxHP(9999); Item(ITEM_ORAN_BERRY);
+            Level(GetParametrizedLevel(move, variation));
+            HP(GetParametrizedHP(move, variation)); MaxHP(9999); Item(GetParametrizedItem(move, variation));
             if (attacker == opponentLeft) {
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
-                if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+                if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
+                if (GetParametrizedShinyness(move, variation)) Shiny(TRUE);
             }
         }
         OPPONENT(species) {
-            HP(9997); MaxHP(9999); Item(ITEM_ORAN_BERRY);
+            Level(GetParametrizedLevel(move, variation));
+            HP(GetParametrizedHP(move, variation)); MaxHP(9999); Item(GetParametrizedItem(move, variation));
             if (attacker == opponentRight) {
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
-                if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+                if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
+                if (GetParametrizedShinyness(move, variation)) Shiny(TRUE);
             }
         }
         OPPONENT(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); MaxHP(9999); Moves(MOVE_POUND, MOVE_CELEBRATE);
-            HP(gMovesInfo[move].effect == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
+            HP(GetMoveEffect(move) == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
         }
         PLAYER(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
-            if (gMovesInfo[move].effect != EFFECT_BESTOW) {
+            if (GetMoveEffect(move) != EFFECT_BESTOW) {
                 Item(ITEM_ORAN_BERRY);
             }
         }
         PLAYER(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
-            if (gMovesInfo[move].effect != EFFECT_BESTOW) {
+            if (GetMoveEffect(move) != EFFECT_BESTOW) {
                 Item(ITEM_ORAN_BERRY);
             }
         }
         PLAYER(SPECIES_WOBBUFFET) { Gender(MON_FEMALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); }
     } WHEN {
-        DoublesWhen(move, attacker, target, ignore1, ignore2);
+        DoublesWhen(move, attacker, target, ignore1, ignore2, variation);
     } SCENE {
         DoublesScene(move, attacker);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
 DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerLeft to opponentRight)")
 {
     u32 j = ANIM_TEST_START_MOVE, move = 0, species = 0;
+    u32 k = 0, variation = 0, variationsNumber;
+    u32 friendship = 0, tempFriendship;
     u32 tempMove, tempSpecies;
     FORCE_MOVE_ANIM(TRUE);
     struct BattlePokemon *attacker = playerLeft;
@@ -572,58 +904,71 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerLeft t
     struct BattlePokemon *ignore1 = playerRight;
     struct BattlePokemon *ignore2 = opponentLeft;
     for (; j <= ANIM_TEST_END_MOVE; j++) {
-        ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies);
-        PARAMETRIZE { move = tempMove; species = tempSpecies; }
+        variationsNumber = GetVariationsNumber(j, TRUE);
+        for (k = 0; k < variationsNumber; k++) {
+            ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
+            tempFriendship = ParametrizeFriendship(j, k);
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
+        }
     }
     GIVEN {
         PLAYER(species) {
-            HP(9997); MaxHP(9999); Item(ITEM_ORAN_BERRY);
+            Level(GetParametrizedLevel(move, variation));
+            HP(GetParametrizedHP(move, variation)); MaxHP(9999); Item(GetParametrizedItem(move, variation));
             if (attacker == playerLeft) {
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
-                if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+                if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
+                if (GetParametrizedShinyness(move, variation)) Shiny(TRUE);
             }
         }
         PLAYER(species) {
-            HP(9997); MaxHP(9999); Item(ITEM_ORAN_BERRY);
+            Level(GetParametrizedLevel(move, variation));
+            HP(GetParametrizedHP(move, variation)); MaxHP(9999); Item(GetParametrizedItem(move, variation));
             if (attacker == playerRight) {
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
-                if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+                if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
+                if (GetParametrizedShinyness(move, variation)) Shiny(TRUE);
             }
         }
         PLAYER(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); MaxHP(9999); Moves(MOVE_POUND, MOVE_CELEBRATE);
-            HP(gMovesInfo[move].effect == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
+            HP(GetMoveEffect(move) == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
         }
         OPPONENT(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
-            if (gMovesInfo[move].effect != EFFECT_BESTOW) {
+            if (GetMoveEffect(move) != EFFECT_BESTOW) {
                 Item(ITEM_ORAN_BERRY);
             }
         }
         OPPONENT(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
-            if (gMovesInfo[move].effect != EFFECT_BESTOW) {
+            if (GetMoveEffect(move) != EFFECT_BESTOW) {
                 Item(ITEM_ORAN_BERRY);
             }
         }
         OPPONENT(SPECIES_WOBBUFFET) { Gender(MON_FEMALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); }
     } WHEN {
-        DoublesWhen(move, attacker, target, ignore1, ignore2);
+        DoublesWhen(move, attacker, target, ignore1, ignore2, variation);
     } SCENE {
         DoublesScene(move, attacker);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
 DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentRight to playerLeft)")
 {
     u32 j = ANIM_TEST_START_MOVE, move = 0, species = 0;
+    u32 k = 0, variation = 0, variationsNumber;
+    u32 friendship = 0, tempFriendship;
     u32 tempMove, tempSpecies;
     FORCE_MOVE_ANIM(TRUE);
     struct BattlePokemon *attacker = opponentRight;
@@ -631,58 +976,71 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentRigh
     struct BattlePokemon *ignore1 = opponentLeft;
     struct BattlePokemon *ignore2 = playerRight;
     for (; j <= ANIM_TEST_END_MOVE; j++) {
-        ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies);
-        PARAMETRIZE { move = tempMove; species = tempSpecies; }
+        variationsNumber = GetVariationsNumber(j, TRUE);
+        for (k = 0; k < variationsNumber; k++) {
+            ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
+            tempFriendship = ParametrizeFriendship(j, k);
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
+        }
     }
     GIVEN {
         OPPONENT(species) {
-            HP(9997); MaxHP(9999); Item(ITEM_ORAN_BERRY);
+            Level(GetParametrizedLevel(move, variation));
+            HP(GetParametrizedHP(move, variation)); MaxHP(9999); Item(GetParametrizedItem(move, variation));
             if (attacker == opponentLeft) {
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
-                if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+                if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
+                if (GetParametrizedShinyness(move, variation)) Shiny(TRUE);
             }
         }
         OPPONENT(species) {
-            HP(9997); MaxHP(9999); Item(ITEM_ORAN_BERRY);
+            Level(GetParametrizedLevel(move, variation));
+            HP(GetParametrizedHP(move, variation)); MaxHP(9999); Item(GetParametrizedItem(move, variation));
             if (attacker == opponentRight) {
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
-                if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+                if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
+                if (GetParametrizedShinyness(move, variation)) Shiny(TRUE);
             }
         }
         OPPONENT(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); MaxHP(9999); Moves(MOVE_POUND, MOVE_CELEBRATE);
-            HP(gMovesInfo[move].effect == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
+            HP(GetMoveEffect(move) == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
         }
         PLAYER(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
-            if (gMovesInfo[move].effect != EFFECT_BESTOW) {
+            if (GetMoveEffect(move) != EFFECT_BESTOW) {
                 Item(ITEM_ORAN_BERRY);
             }
         }
         PLAYER(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
-            if (gMovesInfo[move].effect != EFFECT_BESTOW) {
+            if (GetMoveEffect(move) != EFFECT_BESTOW) {
                 Item(ITEM_ORAN_BERRY);
             }
         }
         PLAYER(SPECIES_WOBBUFFET) { Gender(MON_FEMALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); }
     } WHEN {
-        DoublesWhen(move, attacker, target, ignore1, ignore2);
+        DoublesWhen(move, attacker, target, ignore1, ignore2, variation);
     } SCENE {
         DoublesScene(move, attacker);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
 DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerRight to opponentLeft)")
 {
     u32 j = ANIM_TEST_START_MOVE, move = 0, species = 0;
+    u32 k = 0, variation = 0, variationsNumber;
+    u32 friendship = 0, tempFriendship;
     u32 tempMove, tempSpecies;
     FORCE_MOVE_ANIM(TRUE);
     struct BattlePokemon *attacker = playerRight;
@@ -690,58 +1048,71 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerRight 
     struct BattlePokemon *ignore1 = playerLeft;
     struct BattlePokemon *ignore2 = opponentRight;
     for (; j <= ANIM_TEST_END_MOVE; j++) {
-        ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies);
-        PARAMETRIZE { move = tempMove; species = tempSpecies; }
+        variationsNumber = GetVariationsNumber(j, TRUE);
+        for (k = 0; k < variationsNumber; k++) {
+            ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
+            tempFriendship = ParametrizeFriendship(j, k);
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
+        }
     }
     GIVEN {
         PLAYER(species) {
-            HP(9997); MaxHP(9999); Item(ITEM_ORAN_BERRY);
+            Level(GetParametrizedLevel(move, variation));
+            HP(GetParametrizedHP(move, variation)); MaxHP(9999); Item(GetParametrizedItem(move, variation));
             if (attacker == playerLeft) {
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
-                if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+                if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
+                if (GetParametrizedShinyness(move, variation)) Shiny(TRUE);
             }
         }
         PLAYER(species) {
-            HP(9997); MaxHP(9999); Item(ITEM_ORAN_BERRY);
+            Level(GetParametrizedLevel(move, variation));
+            HP(GetParametrizedHP(move, variation)); MaxHP(9999); Item(GetParametrizedItem(move, variation));
             if (attacker == playerRight) {
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
-                if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+                if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
+                if (GetParametrizedShinyness(move, variation)) Shiny(TRUE);
             }
         }
         PLAYER(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); MaxHP(9999); Moves(MOVE_POUND, MOVE_CELEBRATE);
-            HP(gMovesInfo[move].effect == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
+            HP(GetMoveEffect(move) == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
         }
         OPPONENT(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
-            if (gMovesInfo[move].effect != EFFECT_BESTOW) {
+            if (GetMoveEffect(move) != EFFECT_BESTOW) {
                 Item(ITEM_ORAN_BERRY);
             }
         }
         OPPONENT(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
-            if (gMovesInfo[move].effect != EFFECT_BESTOW) {
+            if (GetMoveEffect(move) != EFFECT_BESTOW) {
                 Item(ITEM_ORAN_BERRY);
             }
         }
         OPPONENT(SPECIES_WOBBUFFET) { Gender(MON_FEMALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); }
     } WHEN {
-        DoublesWhen(move, attacker, target, ignore1, ignore2);
+        DoublesWhen(move, attacker, target, ignore1, ignore2, variation);
     } SCENE {
         DoublesScene(move, attacker);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
 DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentLeft to playerRight)")
 {
     u32 j = ANIM_TEST_START_MOVE, move = 0, species = 0;
+    u32 k = 0, variation = 0, variationsNumber;
+    u32 friendship = 0, tempFriendship;
     u32 tempMove, tempSpecies;
     FORCE_MOVE_ANIM(TRUE);
     struct BattlePokemon *attacker = opponentLeft;
@@ -749,58 +1120,71 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentLeft
     struct BattlePokemon *ignore1 = playerLeft;
     struct BattlePokemon *ignore2 = opponentRight;
     for (; j <= ANIM_TEST_END_MOVE; j++) {
-        ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies);
-        PARAMETRIZE { move = tempMove; species = tempSpecies; }
+        variationsNumber = GetVariationsNumber(j, TRUE);
+        for (k = 0; k < variationsNumber; k++) {
+            ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
+            tempFriendship = ParametrizeFriendship(j, k);
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
+        }
     }
     GIVEN {
         OPPONENT(species) {
-            HP(9997); MaxHP(9999); Item(ITEM_ORAN_BERRY);
+            Level(GetParametrizedLevel(move, variation));
+            HP(GetParametrizedHP(move, variation)); MaxHP(9999); Item(GetParametrizedItem(move, variation));
             if (attacker == opponentLeft) {
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
-                if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+                if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
+                if (GetParametrizedShinyness(move, variation)) Shiny(TRUE);
             }
         }
         OPPONENT(species) {
-            HP(9997); MaxHP(9999); Item(ITEM_ORAN_BERRY);
+            Level(GetParametrizedLevel(move, variation));
+            HP(GetParametrizedHP(move, variation)); MaxHP(9999); Item(GetParametrizedItem(move, variation));
             if (attacker == opponentRight) {
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
-                if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+                if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
+                if (GetParametrizedShinyness(move, variation)) Shiny(TRUE);
             }
         }
         OPPONENT(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); MaxHP(9999); Moves(MOVE_POUND, MOVE_CELEBRATE);
-            HP(gMovesInfo[move].effect == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
+            HP(GetMoveEffect(move) == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
         }
         PLAYER(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
-            if (gMovesInfo[move].effect != EFFECT_BESTOW) {
+            if (GetMoveEffect(move) != EFFECT_BESTOW) {
                 Item(ITEM_ORAN_BERRY);
             }
         }
         PLAYER(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
-            if (gMovesInfo[move].effect != EFFECT_BESTOW) {
+            if (GetMoveEffect(move) != EFFECT_BESTOW) {
                 Item(ITEM_ORAN_BERRY);
             }
         }
         PLAYER(SPECIES_WOBBUFFET) { Gender(MON_FEMALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); }
     } WHEN {
-        DoublesWhen(move, attacker, target, ignore1, ignore2);
+        DoublesWhen(move, attacker, target, ignore1, ignore2, variation);
     } SCENE {
         DoublesScene(move, attacker);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
 DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerRight to opponentRight)")
 {
     u32 j = ANIM_TEST_START_MOVE, move = 0, species = 0;
+    u32 k = 0, variation = 0, variationsNumber;
+    u32 friendship = 0, tempFriendship;
     u32 tempMove, tempSpecies;
     FORCE_MOVE_ANIM(TRUE);
     struct BattlePokemon *attacker = playerRight;
@@ -808,58 +1192,71 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerRight 
     struct BattlePokemon *ignore1 = playerLeft;
     struct BattlePokemon *ignore2 = opponentLeft;
     for (; j <= ANIM_TEST_END_MOVE; j++) {
-        ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies);
-        PARAMETRIZE { move = tempMove; species = tempSpecies; }
+        variationsNumber = GetVariationsNumber(j, TRUE);
+        for (k = 0; k < variationsNumber; k++) {
+            ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
+            tempFriendship = ParametrizeFriendship(j, k);
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
+        }
     }
     GIVEN {
         PLAYER(species) {
-            HP(9997); MaxHP(9999); Item(ITEM_ORAN_BERRY);
+            Level(GetParametrizedLevel(move, variation));
+            HP(GetParametrizedHP(move, variation)); MaxHP(9999); Item(GetParametrizedItem(move, variation));
             if (attacker == playerLeft) {
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
-                if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+                if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
+                if (GetParametrizedShinyness(move, variation)) Shiny(TRUE);
             }
         }
         PLAYER(species) {
-            HP(9997); MaxHP(9999); Item(ITEM_ORAN_BERRY);
+            Level(GetParametrizedLevel(move, variation));
+            HP(GetParametrizedHP(move, variation)); MaxHP(9999); Item(GetParametrizedItem(move, variation));
             if (attacker == playerRight) {
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
-                if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+                if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
+                if (GetParametrizedShinyness(move, variation)) Shiny(TRUE);
             }
         }
         PLAYER(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); MaxHP(9999); Moves(MOVE_POUND, MOVE_CELEBRATE);
-            HP(gMovesInfo[move].effect == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
+            HP(GetMoveEffect(move) == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
         }
         OPPONENT(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
-            if (gMovesInfo[move].effect != EFFECT_BESTOW) {
+            if (GetMoveEffect(move) != EFFECT_BESTOW) {
                 Item(ITEM_ORAN_BERRY);
             }
         }
         OPPONENT(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
-            if (gMovesInfo[move].effect != EFFECT_BESTOW) {
+            if (GetMoveEffect(move) != EFFECT_BESTOW) {
                 Item(ITEM_ORAN_BERRY);
             }
         }
         OPPONENT(SPECIES_WOBBUFFET) { Gender(MON_FEMALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); }
     } WHEN {
-        DoublesWhen(move, attacker, target, ignore1, ignore2);
+        DoublesWhen(move, attacker, target, ignore1, ignore2, variation);
     } SCENE {
         DoublesScene(move, attacker);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
 DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentRight to playerRight)")
 {
     u32 j = ANIM_TEST_START_MOVE, move = 0, species = 0;
+    u32 k = 0, variation = 0, variationsNumber;
+    u32 friendship = 0, tempFriendship;
     u32 tempMove, tempSpecies;
     FORCE_MOVE_ANIM(TRUE);
     struct BattlePokemon *attacker = opponentRight;
@@ -867,52 +1264,63 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentRigh
     struct BattlePokemon *ignore1 = playerLeft;
     struct BattlePokemon *ignore2 = opponentLeft;
     for (; j <= ANIM_TEST_END_MOVE; j++) {
-        ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies);
-        PARAMETRIZE { move = tempMove; species = tempSpecies; }
+        variationsNumber = GetVariationsNumber(j, TRUE);
+        for (k = 0; k < variationsNumber; k++) {
+            ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
+            tempFriendship = ParametrizeFriendship(j, k);
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
+        }
     }
     GIVEN {
         OPPONENT(species) {
-            HP(9997); MaxHP(9999); Item(ITEM_ORAN_BERRY);
+            Level(GetParametrizedLevel(move, variation));
+            HP(GetParametrizedHP(move, variation)); MaxHP(9999); Item(GetParametrizedItem(move, variation));
             if (attacker == opponentLeft) {
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
-                if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+                if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
+                if (GetParametrizedShinyness(move, variation)) Shiny(TRUE);
             }
         }
         OPPONENT(species) {
-            HP(9997); MaxHP(9999); Item(ITEM_ORAN_BERRY);
+            Level(GetParametrizedLevel(move, variation));
+            HP(GetParametrizedHP(move, variation)); MaxHP(9999); Item(GetParametrizedItem(move, variation));
             if (attacker == opponentRight) {
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
-                if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+                if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
+                if (GetParametrizedShinyness(move, variation)) Shiny(TRUE);
             }
         }
         OPPONENT(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); MaxHP(9999); Moves(MOVE_POUND, MOVE_CELEBRATE);
-            HP(gMovesInfo[move].effect == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
+            HP(GetMoveEffect(move) == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
         }
         PLAYER(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
-            if (gMovesInfo[move].effect != EFFECT_BESTOW) {
+            if (GetMoveEffect(move) != EFFECT_BESTOW) {
                 Item(ITEM_ORAN_BERRY);
             }
         }
         PLAYER(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
-            if (gMovesInfo[move].effect != EFFECT_BESTOW) {
+            if (GetMoveEffect(move) != EFFECT_BESTOW) {
                 Item(ITEM_ORAN_BERRY);
             }
         }
         PLAYER(SPECIES_WOBBUFFET) { Gender(MON_FEMALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); }
     } WHEN {
-        DoublesWhen(move, attacker, target, ignore1, ignore2);
+        DoublesWhen(move, attacker, target, ignore1, ignore2, variation);
     } SCENE {
         DoublesScene(move, attacker);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -927,7 +1335,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerLeft t
     struct BattlePokemon *ignore1 = opponentRight;
     struct BattlePokemon *ignore2 = opponentLeft;
     for (; j <= ANIM_TEST_END_MOVE; j++) {
-        ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies);
+        ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, 0);
         PARAMETRIZE { move = tempMove; species = tempSpecies; }
     }
     GIVEN {
@@ -935,7 +1343,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerLeft t
             HP(9997); MaxHP(9999); Item(ITEM_ORAN_BERRY);
             if (attacker == opponentLeft) {
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
-                if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+                if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
             }
         }
@@ -943,23 +1351,23 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerLeft t
             HP(9997); MaxHP(9999); Item(ITEM_ORAN_BERRY);
             if (attacker == opponentRight) {
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
-                if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+                if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
             }
         }
         OPPONENT(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); MaxHP(9999); Moves(MOVE_POUND, MOVE_CELEBRATE);
-            HP(gMovesInfo[move].effect == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
+            HP(GetMoveEffect(move) == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
         }
         PLAYER(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
-            if (gMovesInfo[move].effect != EFFECT_BESTOW) {
+            if (GetMoveEffect(move) != EFFECT_BESTOW) {
                 Item(ITEM_ORAN_BERRY);
             }
         }
         PLAYER(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
-            if (gMovesInfo[move].effect != EFFECT_BESTOW) {
+            if (GetMoveEffect(move) != EFFECT_BESTOW) {
                 Item(ITEM_ORAN_BERRY);
             }
         }
@@ -971,7 +1379,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerLeft t
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
         if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
     }
 }
@@ -986,7 +1394,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerRight 
     struct BattlePokemon *ignore1 = opponentRight;
     struct BattlePokemon *ignore2 = opponentLeft;
     for (; j <= ANIM_TEST_END_MOVE; j++) {
-        ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies);
+        ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, 0);
         PARAMETRIZE { move = tempMove; species = tempSpecies; }
     }
     GIVEN {
@@ -994,7 +1402,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerRight 
             HP(9997); MaxHP(9999); Item(ITEM_ORAN_BERRY);
             if (attacker == opponentLeft) {
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
-                if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+                if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
             }
         }
@@ -1002,23 +1410,23 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerRight 
             HP(9997); MaxHP(9999); Item(ITEM_ORAN_BERRY);
             if (attacker == opponentRight) {
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
-                if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+                if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
             }
         }
         OPPONENT(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); MaxHP(9999); Moves(MOVE_POUND, MOVE_CELEBRATE);
-            HP(gMovesInfo[move].effect == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
+            HP(GetMoveEffect(move) == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
         }
         PLAYER(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
-            if (gMovesInfo[move].effect != EFFECT_BESTOW) {
+            if (GetMoveEffect(move) != EFFECT_BESTOW) {
                 Item(ITEM_ORAN_BERRY);
             }
         }
         PLAYER(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
-            if (gMovesInfo[move].effect != EFFECT_BESTOW) {
+            if (GetMoveEffect(move) != EFFECT_BESTOW) {
                 Item(ITEM_ORAN_BERRY);
             }
         }
@@ -1030,7 +1438,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerRight 
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
         if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
     }
 }
@@ -1045,7 +1453,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentleft
     struct BattlePokemon *ignore1 = playerLeft;
     struct BattlePokemon *ignore2 = playerRight;
     for (; j <= ANIM_TEST_END_MOVE; j++) {
-        ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies);
+        ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, 0);
         PARAMETRIZE { move = tempMove; species = tempSpecies; }
     }
     GIVEN {
@@ -1053,7 +1461,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentleft
             HP(9997); MaxHP(9999); Item(ITEM_ORAN_BERRY);
             if (attacker == opponentLeft) {
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
-                if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+                if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
             }
         }
@@ -1061,23 +1469,23 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentleft
             HP(9997); MaxHP(9999); Item(ITEM_ORAN_BERRY);
             if (attacker == opponentRight) {
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
-                if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+                if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
             }
         }
         OPPONENT(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); MaxHP(9999); Moves(MOVE_POUND, MOVE_CELEBRATE);
-            HP(gMovesInfo[move].effect == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
+            HP(GetMoveEffect(move) == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
         }
         PLAYER(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
-            if (gMovesInfo[move].effect != EFFECT_BESTOW) {
+            if (GetMoveEffect(move) != EFFECT_BESTOW) {
                 Item(ITEM_ORAN_BERRY);
             }
         }
         PLAYER(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
-            if (gMovesInfo[move].effect != EFFECT_BESTOW) {
+            if (GetMoveEffect(move) != EFFECT_BESTOW) {
                 Item(ITEM_ORAN_BERRY);
             }
         }
@@ -1089,7 +1497,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentleft
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
         if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
     }
 }
@@ -1104,7 +1512,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentRigh
     struct BattlePokemon *ignore1 = playerLeft;
     struct BattlePokemon *ignore2 = playerRight;
     for (; j <= ANIM_TEST_END_MOVE; j++) {
-        ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies);
+        ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, 0);
         PARAMETRIZE { move = tempMove; species = tempSpecies; }
     }
     GIVEN {
@@ -1112,7 +1520,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentRigh
             HP(9997); MaxHP(9999); Item(ITEM_ORAN_BERRY);
             if (attacker == opponentLeft) {
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
-                if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+                if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
             }
         }
@@ -1120,23 +1528,23 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentRigh
             HP(9997); MaxHP(9999); Item(ITEM_ORAN_BERRY);
             if (attacker == opponentRight) {
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
-                if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+                if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
             }
         }
         OPPONENT(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); MaxHP(9999); Moves(MOVE_POUND, MOVE_CELEBRATE);
-            HP(gMovesInfo[move].effect == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
+            HP(GetMoveEffect(move) == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
         }
         PLAYER(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
-            if (gMovesInfo[move].effect != EFFECT_BESTOW) {
+            if (GetMoveEffect(move) != EFFECT_BESTOW) {
                 Item(ITEM_ORAN_BERRY);
             }
         }
         PLAYER(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
-            if (gMovesInfo[move].effect != EFFECT_BESTOW) {
+            if (GetMoveEffect(move) != EFFECT_BESTOW) {
                 Item(ITEM_ORAN_BERRY);
             }
         }
@@ -1148,7 +1556,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentRigh
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
         if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
     }
 }
@@ -1157,37 +1565,46 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentRigh
 SINGLE_BATTLE_TEST("Move Animations occur before their stat change animations - Singles (player to opponent)")
 {
     u32 j = ANIM_TEST_START_MOVE, move = 0, species = 0;
+    u32 k = 0, variation = 0, variationsNumber;
+    u32 friendship = 0, tempFriendship;
     u32 tempMove, tempSpecies;
     FORCE_MOVE_ANIM(TRUE);
     for (; j <= ANIM_TEST_END_MOVE; j++) {
-        ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies);
-        PARAMETRIZE { move = tempMove; species = tempSpecies; }
+        variationsNumber = GetVariationsNumber(j, FALSE);
+        for (k = 0; k < variationsNumber; k++) {
+            ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
+            tempFriendship = ParametrizeFriendship(j, k);
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship; }
+        }
     }
     GIVEN {
         PLAYER(species) {
-            HP(9997); MaxHP(9999); Item(ITEM_ORAN_BERRY);
+            Level(GetParametrizedLevel(move, variation));
+            HP(GetParametrizedHP(move, variation)); MaxHP(9999); Item(GetParametrizedItem(move, variation));
             if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
-            if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+            if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
             if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+            if (friendship) Friendship(friendship);
+            if (GetParametrizedShinyness(move, variation)) Shiny(TRUE);
         }
         PLAYER(SPECIES_WOBBUFFET)   {
             Gender(MON_MALE); MaxHP(9999); Moves(MOVE_POUND);
-            HP(gMovesInfo[move].effect == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
+            HP(GetMoveEffect(move) == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
         }
         OPPONENT(SPECIES_WOBBUFFET) {
             Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
-            if (gMovesInfo[move].effect != EFFECT_BESTOW)
+            if (GetMoveEffect(move) != EFFECT_BESTOW)
                 Item(ITEM_ORAN_BERRY);
         }
         OPPONENT(SPECIES_WOBBUFFET) { Gender(MON_FEMALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); }
     } WHEN {
-        WhenSingles(move, player, opponent);
+        WhenSingles(move, player, opponent, variation);
     } SCENE {
-        if (!(gMovesInfo[move].effect == EFFECT_RECYCLE
-          || gMovesInfo[move].effect == EFFECT_BELCH
-          || gMovesInfo[move].effect == EFFECT_SPIT_UP
-          || gMovesInfo[move].effect == EFFECT_SWALLOW
-          || gMovesInfo[move].effect == EFFECT_TOPSY_TURVY)) // require a move that boosts stats before using this move
+        if (!(GetMoveEffect(move) == EFFECT_RECYCLE
+          || GetMoveEffect(move) == EFFECT_BELCH
+          || GetMoveEffect(move) == EFFECT_SPIT_UP
+          || GetMoveEffect(move) == EFFECT_SWALLOW
+          || GetMoveEffect(move) == EFFECT_TOPSY_TURVY)) // require a move that boosts stats before using this move
         {
             NONE_OF {
                 ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
@@ -1197,11 +1614,14 @@ SINGLE_BATTLE_TEST("Move Animations occur before their stat change animations - 
         SceneSingles(move, player);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
+
+#endif // T_SHOULD_RUN_MOVE_ANIM
 
 //  Z-Moves
 #define Z_MOVE_PARAMETERS PARAMETRIZE { zmove = MOVE_BREAKNECK_BLITZ; species = SPECIES_WOBBUFFET; move = MOVE_TACKLE; item = ITEM_NORMALIUM_Z; } \
@@ -1242,6 +1662,8 @@ SINGLE_BATTLE_TEST("Move Animations occur before their stat change animations - 
     PARAMETRIZE { zmove = MOVE_10_000_000_VOLT_THUNDERBOLT; species = SPECIES_PIKACHU_ALOLA; move = MOVE_THUNDERBOLT; item = ITEM_PIKASHUNIUM_Z; } \
     PARAMETRIZE { zmove = MOVE_LIGHT_THAT_BURNS_THE_SKY; species = SPECIES_NECROZMA_DAWN_WINGS; move = MOVE_PHOTON_GEYSER; item = ITEM_ULTRANECROZIUM_Z; }
 
+#if T_SHOULD_RUN_MOVE_ANIM
+
 SINGLE_BATTLE_TEST("Z-Moves don't leak when used - Singles (player to opponent)")
 {
     FORCE_MOVE_ANIM(TRUE);
@@ -1265,9 +1687,10 @@ SINGLE_BATTLE_TEST("Z-Moves don't leak when used - Singles (player to opponent)"
         ANIMATION(ANIM_TYPE_MOVE, zmove, player);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1294,9 +1717,10 @@ SINGLE_BATTLE_TEST("Z-Moves don't leak when used - Singles (opponent to player)"
         ANIMATION(ANIM_TYPE_MOVE, zmove, opponent);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1325,9 +1749,10 @@ DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (playerLeft to oppone
         ANIMATION(ANIM_TYPE_MOVE, zmove, playerLeft);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1356,9 +1781,10 @@ DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (playerLeft to oppone
         ANIMATION(ANIM_TYPE_MOVE, zmove, playerLeft);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1387,9 +1813,10 @@ DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (playerRight to oppon
         ANIMATION(ANIM_TYPE_MOVE, zmove, playerRight);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1418,9 +1845,10 @@ DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (playerRight to oppon
         ANIMATION(ANIM_TYPE_MOVE, zmove, playerRight);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1449,9 +1877,10 @@ DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (opponentLeft to play
         ANIMATION(ANIM_TYPE_MOVE, zmove, opponentLeft);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1480,9 +1909,10 @@ DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (opponentLeft to play
         ANIMATION(ANIM_TYPE_MOVE, zmove, opponentLeft);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1511,9 +1941,10 @@ DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (opponentRight to pla
         ANIMATION(ANIM_TYPE_MOVE, zmove, opponentRight);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1542,11 +1973,14 @@ DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (opponentRight to pla
         ANIMATION(ANIM_TYPE_MOVE, zmove, opponentRight);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
+
+#endif // T_SHOULD_RUN_MOVE_ANIM
 
 //  Max Moves
 
@@ -1571,6 +2005,8 @@ DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (opponentRight to pla
     PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_TERA_BLAST; type = TYPE_FAIRY; } \
     PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_TERA_BLAST; type = TYPE_STELLAR; }
 
+#if T_SHOULD_RUN_MOVE_ANIM
+
 SINGLE_BATTLE_TEST("Tera Blast doesn't leak when used - Singles (player to opponent)")
 {
     FORCE_MOVE_ANIM(TRUE);
@@ -1587,9 +2023,10 @@ SINGLE_BATTLE_TEST("Tera Blast doesn't leak when used - Singles (player to oppon
         ANIMATION(ANIM_TYPE_MOVE, move, player);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1609,9 +2046,10 @@ SINGLE_BATTLE_TEST("Tera Blast doesn't leak when used - Singles (opponent to pla
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1633,9 +2071,10 @@ DOUBLE_BATTLE_TEST("Tera Blast doesn't leak when used - Doubles (playerLeft to o
         ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1657,9 +2096,10 @@ DOUBLE_BATTLE_TEST("Tera Blast doesn't leak when used - Doubles (playerLeft to o
         ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1681,9 +2121,10 @@ DOUBLE_BATTLE_TEST("Tera Blast doesn't leak when used - Doubles (playerRight to 
         ANIMATION(ANIM_TYPE_MOVE, move, playerRight);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1705,9 +2146,10 @@ DOUBLE_BATTLE_TEST("Tera Blast doesn't leak when used - Doubles (playerRight to 
         ANIMATION(ANIM_TYPE_MOVE, move, playerRight);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1729,9 +2171,10 @@ DOUBLE_BATTLE_TEST("Tera Blast doesn't leak when used - Doubles (opponentLeft to
         ANIMATION(ANIM_TYPE_MOVE, move, opponentLeft);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1753,9 +2196,10 @@ DOUBLE_BATTLE_TEST("Tera Blast doesn't leak when used - Doubles (opponentLeft to
         ANIMATION(ANIM_TYPE_MOVE, move, opponentLeft);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1777,9 +2221,10 @@ DOUBLE_BATTLE_TEST("Tera Blast doesn't leak when used - Doubles (opponentRight t
         ANIMATION(ANIM_TYPE_MOVE, move, opponentRight);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1801,10 +2246,258 @@ DOUBLE_BATTLE_TEST("Tera Blast doesn't leak when used - Doubles (opponentRight t
         ANIMATION(ANIM_TYPE_MOVE, move, opponentRight);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
-            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
-#endif
+#else // T_SHOULD_RUN_MOVE_ANIM
+
+SINGLE_BATTLE_TEST("Move Animations work 1")
+{
+    u32 j = ANIM_TEST_START_MOVE + 0, move = 0, species = 0;
+    u32 k = 0, variation = 0, variationsNumber;
+    u32 friendship = 0, tempFriendship;
+    u32 tempMove, tempSpecies;
+    FORCE_MOVE_ANIM(TRUE);
+    for (; j <= ANIM_TEST_END_MOVE; j += 4) {
+        variationsNumber = GetVariationsNumber(j, FALSE);
+        for (k = 0; k < variationsNumber; k++) {
+            ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
+            tempFriendship = ParametrizeFriendship(j, k);
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
+        }
+    }
+    GIVEN {
+        PLAYER(species) {
+            Level(GetParametrizedLevel(move, variation));
+            HP(GetParametrizedHP(move, variation)); MaxHP(9999); Item(GetParametrizedItem(move, variation));
+            if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
+            if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+            if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+            if (friendship) Friendship(friendship);
+            if (GetParametrizedShinyness(move, variation)) Shiny(TRUE);
+        }
+        PLAYER(SPECIES_WOBBUFFET)   {
+            Gender(MON_MALE); MaxHP(9999); Moves(MOVE_POUND);
+            HP(GetMoveEffect(move) == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
+        }
+        OPPONENT(SPECIES_WOBBUFFET) {
+            Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
+            if (GetMoveEffect(move) != EFFECT_BESTOW)
+                Item(ITEM_ORAN_BERRY);
+        }
+        OPPONENT(SPECIES_WOBBUFFET) { Gender(MON_FEMALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); }
+    } WHEN {
+        WhenSingles(move, player, opponent, variation);
+    } SCENE {
+        SceneSingles(move, player);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
+        EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
+    }
+}
+
+SINGLE_BATTLE_TEST("Move Animations work 2")
+{
+    u32 j = ANIM_TEST_START_MOVE + 1, move = 0, species = 0;
+    u32 k = 0, variation = 0, variationsNumber;
+    u32 friendship = 0, tempFriendship;
+    u32 tempMove, tempSpecies;
+    FORCE_MOVE_ANIM(TRUE);
+    for (; j <= ANIM_TEST_END_MOVE; j += 4) {
+        variationsNumber = GetVariationsNumber(j, FALSE);
+        for (k = 0; k < variationsNumber; k++) {
+            ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
+            tempFriendship = ParametrizeFriendship(j, k);
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
+        }
+    }
+    GIVEN {
+        PLAYER(species) {
+            Level(GetParametrizedLevel(move, variation));
+            HP(GetParametrizedHP(move, variation)); MaxHP(9999); Item(GetParametrizedItem(move, variation));
+            if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
+            if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+            if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+            if (friendship) Friendship(friendship);
+            if (GetParametrizedShinyness(move, variation)) Shiny(TRUE);
+        }
+        PLAYER(SPECIES_WOBBUFFET)   {
+            Gender(MON_MALE); MaxHP(9999); Moves(MOVE_POUND);
+            HP(GetMoveEffect(move) == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
+        }
+        OPPONENT(SPECIES_WOBBUFFET) {
+            Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
+            if (GetMoveEffect(move) != EFFECT_BESTOW)
+                Item(ITEM_ORAN_BERRY);
+        }
+        OPPONENT(SPECIES_WOBBUFFET) { Gender(MON_FEMALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); }
+    } WHEN {
+        WhenSingles(move, player, opponent, variation);
+    } SCENE {
+        SceneSingles(move, player);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
+        EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
+    }
+}
+
+SINGLE_BATTLE_TEST("Move Animations work 3")
+{
+    u32 j = ANIM_TEST_START_MOVE + 2, move = 0, species = 0;
+    u32 k = 0, variation = 0, variationsNumber;
+    u32 friendship = 0, tempFriendship;
+    u32 tempMove, tempSpecies;
+    FORCE_MOVE_ANIM(TRUE);
+    for (; j <= ANIM_TEST_END_MOVE; j += 4) {
+        variationsNumber = GetVariationsNumber(j, FALSE);
+        for (k = 0; k < variationsNumber; k++) {
+            ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
+            tempFriendship = ParametrizeFriendship(j, k);
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
+        }
+    }
+    GIVEN {
+        PLAYER(species) {
+            Level(GetParametrizedLevel(move, variation));
+            HP(GetParametrizedHP(move, variation)); MaxHP(9999); Item(GetParametrizedItem(move, variation));
+            if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
+            if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+            if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+            if (friendship) Friendship(friendship);
+            if (GetParametrizedShinyness(move, variation)) Shiny(TRUE);
+        }
+        PLAYER(SPECIES_WOBBUFFET)   {
+            Gender(MON_MALE); MaxHP(9999); Moves(MOVE_POUND);
+            HP(GetMoveEffect(move) == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
+        }
+        OPPONENT(SPECIES_WOBBUFFET) {
+            Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
+            if (GetMoveEffect(move) != EFFECT_BESTOW)
+                Item(ITEM_ORAN_BERRY);
+        }
+        OPPONENT(SPECIES_WOBBUFFET) { Gender(MON_FEMALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); }
+    } WHEN {
+        WhenSingles(move, player, opponent, variation);
+    } SCENE {
+        SceneSingles(move, player);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
+        EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
+    }
+}
+
+SINGLE_BATTLE_TEST("Move Animations work 4")
+{
+    u32 j = ANIM_TEST_START_MOVE + 3, move = 0, species = 0;
+    u32 k = 0, variation = 0, variationsNumber;
+    u32 friendship = 0, tempFriendship;
+    u32 tempMove, tempSpecies;
+    FORCE_MOVE_ANIM(TRUE);
+    for (; j <= ANIM_TEST_END_MOVE; j += 4) {
+        variationsNumber = GetVariationsNumber(j, FALSE);
+        for (k = 0; k < variationsNumber; k++) {
+            ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
+            tempFriendship = ParametrizeFriendship(j, k);
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
+        }
+    }
+    GIVEN {
+        PLAYER(species) {
+            Level(GetParametrizedLevel(move, variation));
+            HP(GetParametrizedHP(move, variation)); MaxHP(9999); Item(GetParametrizedItem(move, variation));
+            if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
+            if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+            if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+            if (friendship) Friendship(friendship);
+            if (GetParametrizedShinyness(move, variation)) Shiny(TRUE);
+        }
+        PLAYER(SPECIES_WOBBUFFET)   {
+            Gender(MON_MALE); MaxHP(9999); Moves(MOVE_POUND);
+            HP(GetMoveEffect(move) == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
+        }
+        OPPONENT(SPECIES_WOBBUFFET) {
+            Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
+            if (GetMoveEffect(move) != EFFECT_BESTOW)
+                Item(ITEM_ORAN_BERRY);
+        }
+        OPPONENT(SPECIES_WOBBUFFET) { Gender(MON_FEMALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); }
+    } WHEN {
+        WhenSingles(move, player, opponent, variation);
+    } SCENE {
+        SceneSingles(move, player);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
+        EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
+    }
+}
+
+SINGLE_BATTLE_TEST("Z-Moves animations work")
+{
+    FORCE_MOVE_ANIM(TRUE);
+    u32 species, move, item, zmove;
+    Z_MOVE_PARAMETERS;
+    GIVEN {
+        PLAYER(species) { Item(item); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
+    } WHEN {
+        if (species == SPECIES_NECROZMA_DAWN_WINGS)
+        {
+            TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST); }
+            TURN { MOVE(player, move, gimmick: GIMMICK_Z_MOVE); }
+        }
+        else
+        {
+            TURN { MOVE(player, move, gimmick: GIMMICK_Z_MOVE); }
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, zmove, player);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
+        EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
+    }
+}
+
+SINGLE_BATTLE_TEST("Tera Blast animations work")
+{
+    FORCE_MOVE_ANIM(TRUE);
+    u32 species, move, type;
+    TERA_BLAST_PARAMETERS;
+    GIVEN {
+        PLAYER(species) { TeraType(type); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
+    } WHEN {
+        TURN { MOVE(player, move, gimmick: GIMMICK_TERA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
+        EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
+    }
+}
+
+#endif // !T_SHOULD_RUN_MOVE_ANIM

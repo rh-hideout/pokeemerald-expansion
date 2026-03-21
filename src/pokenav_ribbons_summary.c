@@ -403,7 +403,7 @@ static void GetMonNicknameLevelGender(u8 *nick, u8 *level, u8 *gender)
     StringGet_Nickname(nick);
 }
 
-static void GetMonSpeciesPersonalityShiny(u16 *species, u32 *personality, bool8 *isShiny)
+static void GetMonSpeciesPersonalityShiny(enum Species *species, u32 *personality, bool32 *isShiny)
 {
     struct Pokenav_RibbonsSummaryList *list = GetSubstructPtr(POKENAV_SUBSTRUCT_RIBBONS_SUMMARY_LIST);
     struct PokenavMonList *mons = list->monList;
@@ -585,7 +585,11 @@ static u32 LoopedTask_OpenRibbonsSummaryMenu(s32 state)
             DecompressAndCopyTileDataToVram(1, sRibbonIconsSmall_Gfx, 0, 1, 0);
             SetBgTilemapBuffer(1, menu->tilemapBuffers[1]);
             FillBgTilemapBufferRect_Palette0(1, 0, 0, 0, 32, 20);
-            CopyPaletteIntoBufferUnfaded(sRibbonIcons1_Pal, BG_PLTT_ID(2), 5 * PLTT_SIZE_4BPP);
+            CopyPaletteIntoBufferUnfaded(sRibbonIcons1_Pal, BG_PLTT_ID(2), PLTT_SIZE_4BPP);
+            CopyPaletteIntoBufferUnfaded(sRibbonIcons2_Pal, BG_PLTT_ID(3), PLTT_SIZE_4BPP);
+            CopyPaletteIntoBufferUnfaded(sRibbonIcons3_Pal, BG_PLTT_ID(4), PLTT_SIZE_4BPP);
+            CopyPaletteIntoBufferUnfaded(sRibbonIcons4_Pal, BG_PLTT_ID(5), PLTT_SIZE_4BPP);
+            CopyPaletteIntoBufferUnfaded(sRibbonIcons5_Pal, BG_PLTT_ID(6), PLTT_SIZE_4BPP);
             CopyPaletteIntoBufferUnfaded(sMonInfo_Pal, BG_PLTT_ID(10), sizeof(sMonInfo_Pal));
             CopyBgTilemapBufferToVram(1);
             return LT_INC_AND_PAUSE;
@@ -867,8 +871,8 @@ static void AddRibbonSummaryMonNameWindow(struct Pokenav_RibbonsSummaryMenu *men
     PrintRibbbonsSummaryMonInfo(menu);
 }
 
-static const u8 sMaleIconString[] = _("{COLOR_HIGHLIGHT_SHADOW}{LIGHT_RED}{WHITE}{GREEN}♂{COLOR_HIGHLIGHT_SHADOW}{DARK_GRAY}{WHITE}{LIGHT_GRAY}");
-static const u8 sFemaleIconString[] = _("{COLOR_HIGHLIGHT_SHADOW}{LIGHT_GREEN}{WHITE}{BLUE}♀{COLOR_HIGHLIGHT_SHADOW}{DARK_GRAY}{WHITE}{LIGHT_GRAY}");
+static const u8 sMaleIconString[] = _("{TEXT_COLORS LIGHT_RED GREEN WHITE}{BACKGROUND WHITE}♂{TEXT_COLORS DARK_GRAY LIGHT_GRAY WHITE}{BACKGROUND WHITE}");
+static const u8 sFemaleIconString[] = _("{TEXT_COLORS LIGHT_GREEN BLUE WHITE}{BACKGROUND WHITE}♀{TEXT_COLORS DARK_GRAY LIGHT_GRAY WHITE}{BACKGROUND WHITE}");
 static const u8 sGenderlessIconString[] = _("{UNK_SPACER}");
 
 static void PrintRibbbonsSummaryMonInfo(struct Pokenav_RibbonsSummaryMenu *menu)
@@ -942,9 +946,9 @@ static void PrintRibbonsMonListIndex(struct Pokenav_RibbonsSummaryMenu *menu)
 
 static void ResetSpritesAndDrawMonFrontPic(struct Pokenav_RibbonsSummaryMenu *menu)
 {
-    u16 species;
+    enum Species species;
     u32 personality;
-    bool8 isShiny;
+    bool32 isShiny;
 
     GetMonSpeciesPersonalityShiny(&species, &personality, &isShiny);
     ResetAllPicSprites();
@@ -962,9 +966,10 @@ static void DestroyRibbonsMonFrontPic(struct Pokenav_RibbonsSummaryMenu *menu)
 // x is given as either MON_SPRITE_X_ON or MON_SPRITE_X_OFF (but ignored and MON_SPRITE_X_ON is used)
 static u16 DrawRibbonsMonFrontPic(s32 x, s32 y)
 {
-    u16 species, spriteId;
+    enum Species species;
+    u16 spriteId;
     u32 personality;
-    bool8 isShiny;
+    bool32 isShiny;
 
     GetMonSpeciesPersonalityShiny(&species, &personality, &isShiny);
     spriteId = CreateMonPicSprite(species, isShiny, personality, TRUE, MON_SPRITE_X_ON, MON_SPRITE_Y, 15, TAG_NONE);
@@ -1209,10 +1214,7 @@ static const struct SpriteTemplate sSpriteTemplate_RibbonIconBig =
     .tileTag = GFXTAG_RIBBON_ICONS_BIG,
     .paletteTag = PALTAG_RIBBON_ICONS_1,
     .oam = &sOamData_RibbonIconBig,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
     .affineAnims = sAffineAnims_RibbonIconBig,
-    .callback = SpriteCallbackDummy,
 };
 
 // Create dummy sprite to be used for the zoomed in version of the selected ribbon

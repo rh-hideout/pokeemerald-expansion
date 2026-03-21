@@ -185,7 +185,7 @@ static const u8 sText_ThreeMarks[] = _("???");
 void DoBerryTagScreen(void)
 {
     sBerryTag = AllocZeroed(sizeof(*sBerryTag));
-    sBerryTag->berryId = GetBerryIndex(gSpecialVar_ItemId);
+    sBerryTag->berryId = ItemIdToBerryType(gSpecialVar_ItemId);
     SetMainCallback2(CB2_InitBerryTagScreen);
 }
 
@@ -447,7 +447,7 @@ static void PrintBerryFirmness(void)
 {
     const struct BerryInfo *berryInfo = GetBerryInfo(sBerryTag->berryId);
     AddTextPrinterParameterized(WIN_SIZE_FIRM, FONT_NORMAL, sText_FirmSlash, 0, 0x11, TEXT_SKIP_DRAW, NULL);
-    if (berryInfo->firmness != 0)
+    if (berryInfo->firmness != BERRY_FIRMNESS_UNKNOWN)
         AddTextPrinterParameterized(WIN_SIZE_FIRM, FONT_NORMAL, sBerryFirmnessStrings[berryInfo->firmness], 0x28, 0x11, 0, NULL);
     else
         AddTextPrinterParameterized(WIN_SIZE_FIRM, FONT_NORMAL, sText_ThreeMarks, 0x28, 0x11, 0, NULL);
@@ -598,7 +598,7 @@ static void HandleBagCursorPositionChange(s8 toMove)
             *scrollPos += toMove;
     }
 
-    sBerryTag->berryId = GetBerryIndex(GetBagItemId(POCKET_BERRIES, *scrollPos + *cursorPos));
+    sBerryTag->berryId = ItemIdToBerryType(GetBagItemId(POCKET_BERRIES, *scrollPos + *cursorPos));
 }
 
 #define DISPLAY_SPEED 16

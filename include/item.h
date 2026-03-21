@@ -10,27 +10,6 @@
 #include "constants/item_effects.h"
 #include "constants/hold_effects.h"
 
-/* Expands to:
- * enum
- * {
- *   ITEM_TM_FOCUS_PUNCH = ITEM_TM01,
- *   ...
- *   ITEM_HM_CUT = ITM_HM01,
- *   ...
- * }; */
-#define ENUM_TM(n, id) CAT(ITEM_TM_, id) = CAT(ITEM_TM, n),
-#define ENUM_HM(n, id) CAT(ITEM_HM_, id) = CAT(ITEM_HM, n),
-#define TO_TMHM_NUMS(a, ...) (__VA_ARGS__)
-enum TMHMItemId
-{
-    RECURSIVELY(R_ZIP(ENUM_TM, TO_TMHM_NUMS NUMBERS_256, (FOREACH_TM(APPEND_COMMA))))
-    RECURSIVELY(R_ZIP(ENUM_HM, TO_TMHM_NUMS NUMBERS_256, (FOREACH_HM(APPEND_COMMA))))
-};
-
-#undef ENUM_TM
-#undef ENUM_HM
-#undef TO_TMHM_NUMS
-
 /* Each of these TM_HM enums corresponds an index in the list of TMs + HMs item ids in
  * gTMHMItemMoveIds. The index for an item can be retrieved with GetItemTMHMIndex below.
  */
@@ -42,26 +21,65 @@ enum TMHMIndex
     NUM_TECHNICAL_MACHINES = (0 FOREACH_TM(PLUS_ONE)),
     NUM_HIDDEN_MACHINES = (0 FOREACH_HM(PLUS_ONE)),
 };
-
 #undef UNPACK_TM_HM_ENUM
+
+enum PACKED ItemSortType
+{
+    ITEM_TYPE_UNCATEGORIZED,
+    ITEM_TYPE_FIELD_USE,
+    ITEM_TYPE_LEVEL_UP_ITEM,
+    ITEM_TYPE_HEALTH_RECOVERY,
+    ITEM_TYPE_STATUS_RECOVERY,
+    ITEM_TYPE_PP_RECOVERY,
+    ITEM_TYPE_NATURE_MINT,
+    ITEM_TYPE_STAT_BOOST_DRINK,
+    ITEM_TYPE_STAT_BOOST_FEATHER,
+    ITEM_TYPE_STAT_BOOST_MOCHI,
+    ITEM_TYPE_BATTLE_ITEM,
+    ITEM_TYPE_FLUTE,
+    ITEM_TYPE_X_ITEM,
+    ITEM_TYPE_AUX_ITEM,
+    ITEM_TYPE_EVOLUTION_STONE,
+    ITEM_TYPE_EVOLUTION_ITEM,
+    ITEM_TYPE_SPECIAL_HELD_ITEM,
+    ITEM_TYPE_MEGA_STONE,
+    ITEM_TYPE_Z_CRYSTAL,
+    ITEM_TYPE_TERA_SHARD,
+    ITEM_TYPE_HELD_ITEM,
+    ITEM_TYPE_TYPE_BOOST_HELD_ITEM,
+    ITEM_TYPE_CONTEST_HELD_ITEM,
+    ITEM_TYPE_EV_BOOST_HELD_ITEM,
+    ITEM_TYPE_GEM,
+    ITEM_TYPE_PLATE,
+    ITEM_TYPE_MEMORY,
+    ITEM_TYPE_DRIVE,
+    ITEM_TYPE_INCENSE,
+    ITEM_TYPE_NECTAR,
+    ITEM_TYPE_GROWTH,
+    ITEM_TYPE_SHARD,
+    ITEM_TYPE_SELLABLE,
+    ITEM_TYPE_RELIC,
+    ITEM_TYPE_FOSSIL,
+    ITEM_TYPE_MAIL,
+};
 
 typedef void (*ItemUseFunc)(u8);
 
-struct Item
+struct ItemInfo
 {
     u32 price;
     u16 secondaryId;
     ItemUseFunc fieldUseFunc;
     const u8 *description;
     const u8 *effect;
-    u8 name[ITEM_NAME_LENGTH];
-    u8 pluralName[ITEM_NAME_PLURAL_LENGTH];
+    const u8 *name;
+    const u8 *pluralName;
     u8 holdEffect;
     u8 holdEffectParam;
     u8 importance:2;
     u8 notConsumed:1;
     enum Pocket pocket:5;
-    u8 padding;
+    enum ItemSortType sortType;
     u8 type;
     u8 battleUsage;
     u8 flingPower;
@@ -78,11 +96,12 @@ struct ALIGNED(2) BagPocket
 
 struct TmHmIndexKey
 {
-    enum TMHMItemId itemId:16;
-    u16 moveId;
+    enum Item itemId;
+    enum Move moveId;
 };
 
-extern const struct Item gItemsInfo[];
+extern const u8 gQuestionMarksItemName[];
+extern const struct ItemInfo gItemsInfo[];
 extern struct BagPocket gBagPockets[];
 extern const struct TmHmIndexKey gTMHMItemMoveIds[];
 
@@ -90,38 +109,57 @@ extern const struct TmHmIndexKey gTMHMItemMoveIds[];
 #define UNPACK_ITEM_TO_HM_INDEX(_hm) case CAT(ITEM_HM_, _hm): return CAT(ENUM_TM_HM_, _hm) + 1;
 #define UNPACK_ITEM_TO_TM_MOVE_ID(_tm) case CAT(ITEM_TM_, _tm): return CAT(MOVE_, _tm);
 #define UNPACK_ITEM_TO_HM_MOVE_ID(_hm) case CAT(ITEM_HM_, _hm): return CAT(MOVE_, _hm);
+#define UNPACK_TM_MOVE_TO_ITEM_ID(_move) case CAT(MOVE_, _move): return CAT(ITEM_TM_, _move);
+#define UNPACK_HM_MOVE_TO_ITEM_ID(_move) case CAT(MOVE_, _move): return CAT(ITEM_HM_, _move);
 
-static inline enum TMHMIndex GetItemTMHMIndex(u16 item)
+static inline enum TMHMIndex GetItemTMHMIndex(enum Item item)
 {
     switch (item)
     {
-        /* Expands to:
-         * case ITEM_TM_FOCUS_PUNCH:
-         *     return 1;
-         * case ITEM_TM_DRAGON_CLAW:
-         *      return 2;
-         * etc */
-        FOREACH_TM(UNPACK_ITEM_TO_TM_INDEX)
-        FOREACH_HM(UNPACK_ITEM_TO_HM_INDEX)
-        default:
-            return 0;
+    /* Expands to:
+        * case ITEM_TM_FOCUS_PUNCH:
+        *     return 1;
+        * case ITEM_TM_DRAGON_CLAW:
+        *      return 2;
+        * etc */
+    FOREACH_TM(UNPACK_ITEM_TO_TM_INDEX)
+    FOREACH_HM(UNPACK_ITEM_TO_HM_INDEX)
+    default:
+        return 0;
     }
 }
 
-static inline u16 GetItemTMHMMoveId(u16 item)
+static inline enum Move GetItemTMHMMoveId(enum Item item)
 {
     switch (item)
     {
-        /* Expands to:
-         * case ITEM_TM_FOCUS_PUNCH:
-         *     return MOVE_FOCUS_PUNCH;
-         * case ITEM_TM_DRAGON_CLAW:
-         *      return MOVE_DRAGON_CLAW;
-         * etc */
-        FOREACH_TM(UNPACK_ITEM_TO_TM_MOVE_ID)
-        FOREACH_HM(UNPACK_ITEM_TO_HM_MOVE_ID)
-        default:
-            return MOVE_NONE;
+    /* Expands to:
+        * case ITEM_TM_FOCUS_PUNCH:
+        *     return MOVE_FOCUS_PUNCH;
+        * case ITEM_TM_DRAGON_CLAW:
+        *      return MOVE_DRAGON_CLAW;
+        * etc */
+    FOREACH_TM(UNPACK_ITEM_TO_TM_MOVE_ID)
+    FOREACH_HM(UNPACK_ITEM_TO_HM_MOVE_ID)
+    default:
+        return MOVE_NONE;
+    }
+}
+
+static inline enum Item GetTMHMItemIdFromMoveId(enum Move move)
+{
+    switch (move)
+    {
+    /* Expands to:
+        * case MOVE_FOCUS_PUNCH:
+        *     return ITEM_TM_FOCUS_PUNCH;
+        * case MOVE_DRAGON_CLAW:
+        *      return ITEM_TM_DRAGON_CLAW;
+        * etc */
+    FOREACH_TM(UNPACK_TM_MOVE_TO_ITEM_ID)
+    FOREACH_HM(UNPACK_HM_MOVE_TO_ITEM_ID)
+    default:
+        return ITEM_NONE;
     }
 }
 
@@ -129,13 +167,15 @@ static inline u16 GetItemTMHMMoveId(u16 item)
 #undef UNPACK_ITEM_TO_HM_INDEX
 #undef UNPACK_ITEM_TO_TM_MOVE_ID
 #undef UNPACK_ITEM_TO_HM_MOVE_ID
+#undef UNPACK_TM_MOVE_TO_ITEM_ID
+#undef UNPACK_HM_MOVE_TO_ITEM_ID
 
-static inline enum TMHMItemId GetTMHMItemId(enum TMHMIndex index)
+static inline enum Item GetTMHMItemId(enum TMHMIndex index)
 {
     return gTMHMItemMoveIds[index].itemId;
 }
 
-static inline u16 GetTMHMMoveId(enum TMHMIndex index)
+static inline enum Move GetTMHMMoveId(enum TMHMIndex index)
 {
     return gTMHMItemMoveIds[index].moveId;
 }
@@ -143,7 +183,7 @@ static inline u16 GetTMHMMoveId(enum TMHMIndex index)
 #define GET_BERRY_INDEX(_berry) case ITEM_##_berry##_BERRY: return INDEX_##_berry##_BERRY;
 #define GET_BERRY_ITEM_ID(_berry) case INDEX_##_berry##_BERRY: return ITEM_##_berry##_BERRY;
 
-static inline enum BerryIndex GetBerryIndex(u32 itemId)
+static inline enum BerryIndex ItemIdToBerryType(enum Item itemId)
 {
     switch (itemId)
     {
@@ -155,7 +195,7 @@ static inline enum BerryIndex GetBerryIndex(u32 itemId)
     }
 };
 
-static inline u32 GetBerryItemId(enum BerryIndex berryIndex)
+static inline enum Item BerryTypeToItemId(enum BerryIndex berryIndex)
 {
     switch (berryIndex)
     {
@@ -170,60 +210,72 @@ static inline u32 GetBerryItemId(enum BerryIndex berryIndex)
 #undef GET_BERRY_INDEX
 #undef GET_BERRY_ITEM_ID
 
-enum SortPocket
-{
-    SORT_NONE,
-    SORT_POCKET_BY_ITEM_ID,
-    SORT_POCKET_TM_HM,
-    SORT_POCKET_BERRIES,
-};
+void BagPocket_SetSlotData(struct BagPocket *pocket, u32 pocketPos, struct ItemSlot newSlot);
+struct ItemSlot BagPocket_GetSlotData(struct BagPocket *pocket, u32 pocketPos);
 
-void GetBagItemIdAndQuantity(enum Pocket pocketId, u32 pocketPos, u16 *itemId, u16 *quantity);
-u16 GetBagItemId(enum Pocket pocketId, u32 pocketPos);
-u16 GetBagItemQuantity(enum Pocket pocketId, u32 pocketPos);
+static inline void BagPocket_SetSlotItemIdAndCount(struct BagPocket *pocket, u32 pocketPos, enum Item itemId, u16 quantity)
+{
+    BagPocket_SetSlotData(pocket, pocketPos, (struct ItemSlot) {itemId, quantity});
+}
+
+static inline enum Item GetBagItemId(enum Pocket pocketId, u32 pocketPos)
+{
+    return BagPocket_GetSlotData(&gBagPockets[pocketId], pocketPos).itemId;
+}
+
+static inline u16 GetBagItemQuantity(enum Pocket pocketId, u32 pocketPos)
+{
+    return BagPocket_GetSlotData(&gBagPockets[pocketId], pocketPos).quantity;
+}
+
+static inline struct ItemSlot GetBagItemIdAndQuantity(enum Pocket pocketId, u32 pocketPos)
+{
+    return BagPocket_GetSlotData(&gBagPockets[pocketId], pocketPos);
+}
+
 void ApplyNewEncryptionKeyToBagItems(u32 newKey);
 void SetBagItemsPointers(void);
-u8 *CopyItemName(u16 itemId, u8 *dst);
-u8 *CopyItemNameHandlePlural(u16 itemId, u8 *dst, u32 quantity);
+u8 *CopyItemName(enum Item itemId, u8 *dst);
+u8 *CopyItemNameHandlePlural(enum Item itemId, u8 *dst, u32 quantity);
 bool32 IsBagPocketNonEmpty(enum Pocket pocketId);
-bool32 CheckBagHasItem(u16 itemId, u16 count);
+bool32 CheckBagHasItem(enum Item itemId, u16 count);
 bool32 HasAtLeastOneBerry(void);
 bool32 HasAtLeastOnePokeBall(void);
-bool32 CheckBagHasSpace(u16 itemId, u16 count);
-u32 GetFreeSpaceForItemInBag(u16 itemId);
-bool32 AddBagItem(u16 itemId, u16 count);
-bool32 RemoveBagItem(u16 itemId, u16 count);
+bool32 CheckBagHasSpace(enum Item itemId, u16 count);
+u32 GetFreeSpaceForItemInBag(enum Item itemId);
+bool32 AddBagItem(enum Item itemId, u16 count);
+bool32 RemoveBagItem(enum Item itemId, u16 count);
+void RemoveBagItemFromSlot(struct BagPocket *pocket, u16 slotId, u16 count);
 u8 CountUsedPCItemSlots(void);
-bool32 CheckPCHasItem(u16 itemId, u16 count);
-bool32 AddPCItem(u16 itemId, u16 count);
+bool32 CheckPCHasItem(enum Item itemId, u16 count);
+bool32 AddPCItem(enum Item itemId, u16 count);
 void RemovePCItem(u8 index, u16 count);
 void CompactPCItems(void);
 void SwapRegisteredBike(void);
 void CompactItemsInBagPocket(enum Pocket pocketId);
-void SortPocket(enum Pocket pocketId, enum SortPocket sortPocket);
 void MoveItemSlotInPocket(enum Pocket pocketId, u32 from, u32 to);
 void MoveItemSlotInPC(struct ItemSlot *itemSlots, u32 from, u32 to);
 void ClearBag(void);
-u16 CountTotalItemQuantityInBag(u16 itemId);
-bool32 AddPyramidBagItem(u16 itemId, u16 count);
-bool32 RemovePyramidBagItem(u16 itemId, u16 count);
-const u8 *GetItemName(u16 itemId);
-u32 GetItemPrice(u16 itemId);
-const u8 *GetItemEffect(u32 itemId);
-u32 GetItemHoldEffect(u32 itemId);
-u32 GetItemHoldEffectParam(u32 itemId);
-const u8 *GetItemDescription(u16 itemId);
-u8 GetItemImportance(u16 itemId);
-u8 GetItemConsumability(u16 itemId);
-enum Pocket GetItemPocket(u16 itemId);
-u8 GetItemType(u16 itemId);
-ItemUseFunc GetItemFieldFunc(u16 itemId);
-u8 GetItemBattleUsage(u16 itemId);
-u32 GetItemSecondaryId(u32 itemId);
-u32 GetItemFlingPower(u32 itemId);
-u32 GetItemStatus1Mask(u16 itemId);
-bool32 ItemHasVolatileFlag(u16 itemId, enum Volatile volatile);
-u32 GetItemSellPrice(u32 itemId);
-bool32 IsHoldEffectChoice(enum ItemHoldEffect holdEffect);
+u16 CountTotalItemQuantityInBag(enum Item itemId);
+bool32 AddPyramidBagItem(enum Item itemId, u16 count);
+bool32 RemovePyramidBagItem(enum Item itemId, u16 count);
+const u8 *GetItemName(enum Item itemId);
+u32 GetItemPrice(enum Item itemId);
+const u8 *GetItemEffect(enum Item itemId);
+enum HoldEffect GetItemHoldEffect(enum Item itemId);
+u32 GetItemHoldEffectParam(enum Item itemId);
+const u8 *GetItemDescription(enum Item itemId);
+u8 GetItemImportance(enum Item itemId);
+u8 GetItemConsumability(enum Item itemId);
+enum Pocket GetItemPocket(enum Item itemId);
+enum ItemType GetItemType(enum Item itemId);
+ItemUseFunc GetItemFieldFunc(enum Item itemId);
+enum EffectItem GetItemBattleUsage(enum Item itemId);
+u32 GetItemSecondaryId(enum Item itemId);
+u32 GetItemFlingPower(enum Item itemId);
+u32 GetItemStatus1Mask(enum Item itemId);
+bool32 ItemHasVolatileFlag(enum Item itemId, enum Volatile volatile);
+u32 GetItemSellPrice(enum Item itemId);
+bool32 IsHoldEffectChoice(enum HoldEffect holdEffect);
 
 #endif // GUARD_ITEM_H
