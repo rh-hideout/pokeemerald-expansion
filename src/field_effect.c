@@ -29,6 +29,7 @@
 #include "sound.h"
 #include "sprite.h"
 #include "task.h"
+#include "trainer.h"
 #include "trainer_pokemon_sprites.h"
 #include "trig.h"
 #include "util.h"
@@ -976,7 +977,7 @@ bool8 FieldEffectActiveListContains(u8 id)
     return FALSE;
 }
 
-u8 CreateTrainerSprite(u8 trainerSpriteID, s16 x, s16 y, u8 subpriority, u8 *buffer)
+u8 CreateTrainerSprite(enum TrainerPicID trainerPicId, s16 x, s16 y, u8 subpriority, u8 *buffer)
 {
     struct CompressedSpriteSheet spriteSheet;
     struct SpriteTemplate spriteTemplate;
@@ -989,17 +990,17 @@ u8 CreateTrainerSprite(u8 trainerSpriteID, s16 x, s16 y, u8 subpriority, u8 *buf
         alloced = TRUE;
     }
 
-    spriteSheet.data = GetTrainerFrontPicData(trainerSpriteID);
+    spriteSheet.data = GetTrainerFrontPicData(trainerPicId);
     spriteSheet.size = TRAINER_PIC_SIZE;
-    spriteSheet.tag = trainerSpriteID;
+    spriteSheet.tag = GetTrainerPicTag(trainerPicId, TRUE);
 
-    LoadSpritePaletteWithTag(GetTrainerFrontPicPalette(trainerSpriteID), trainerSpriteID);
+    LoadSpritePaletteWithTag(GetTrainerFrontPicPalette(trainerPicId), GetTrainerPicTag(trainerPicId, TRUE));
     LoadCompressedSpriteSheetOverrideBuffer(&spriteSheet, buffer);
     if (alloced)
         Free(buffer);
 
-    spriteTemplate.tileTag = trainerSpriteID;
-    spriteTemplate.paletteTag = trainerSpriteID;
+    spriteTemplate.tileTag = GetTrainerPicTag(trainerPicId, TRUE);
+    spriteTemplate.paletteTag = GetTrainerPicTag(trainerPicId, TRUE);
     spriteTemplate.oam = &sOam_64x64;
     spriteTemplate.anims = gDummySpriteAnimTable;
     spriteTemplate.images = NULL;

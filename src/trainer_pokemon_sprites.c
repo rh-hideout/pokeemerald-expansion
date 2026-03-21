@@ -4,6 +4,7 @@
 #include "malloc.h"
 #include "palette.h"
 #include "decompress.h"
+#include "trainer.h"
 #include "trainer_pokemon_sprites.h"
 #include "data.h"
 #include "pokemon.h"
@@ -100,7 +101,7 @@ static void LoadPicPaletteByTagOrSlot(u16 species, bool8 isShiny, u32 personalit
         else
         {
             sCreatingSpriteTemplate.paletteTag = paletteTag;
-            LoadSpritePaletteWithTag(GetTrainerFrontPicPalette(species), species);
+            LoadSpritePaletteWithTag(GetTrainerFrontPicPalette(species), GetTrainerPicTag(species, TRUE));
         }
     }
 }
