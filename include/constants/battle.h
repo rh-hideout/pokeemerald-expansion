@@ -183,6 +183,8 @@ enum VolatileFlags
     F(VOLATILE_BIDE,                        bideTurns,                     (u32, 3)) \
     F(VOLATILE_RAMPAGE_TURNS,               rampageTurns,                  (u32, B_RAMPAGE_TURNS + 1)) \
     F(VOLATILE_MULTIPLETURNS,               multipleTurns,                 (u32, 1)) \
+    F(VOLATILE_SKY_DROP_TARGET,             skyDropTarget,                 (enum BattlerId, MAX_BATTLERS_COUNT)) \
+    F(VOLATILE_CONFUSE_AFTER_DROP,          confuseAfterDrop,              (u32, 1)) \
     F(VOLATILE_WRAPPED,                     wrapped,                       (u32, 1)) \
     F(VOLATILE_WRAPPED_BY,                  wrappedBy,                     (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
     F(VOLATILE_WRAPPED_MOVE,                wrappedMove,                   (u32, MOVES_COUNT_ALL - 1)) \
@@ -211,7 +213,7 @@ enum VolatileFlags
     F(VOLATILE_STICKY_SYRUPED_BY,           stickySyrupedBy,               (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
     F(VOLATILE_GLAIVE_RUSH,                 glaiveRush,                    (u32, 1)) \
     F(VOLATILE_LEECH_SEED,                  leechSeed,                     (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT)), V_BATON_PASSABLE) \
-    F(VOLATILE_LOCK_ON,                     lockOn,                        (u32, 2), V_BATON_PASSABLE) \
+    F(VOLATILE_LOCK_ON,                     lockOn,                        (u32, 2)) \
     F(VOLATILE_PERISH_SONG,                 perishSong,                    (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_MINIMIZE,                    minimize,                      (u32, 1)) \
     F(VOLATILE_CHARGE_TIMER,                chargeTimer,                   (u32, 3)) \
@@ -254,7 +256,7 @@ enum VolatileFlags
     F(VOLATILE_FURY_CUTTER_COUNTER,         furyCutterCounter,             (u32, UINT8_MAX)) \
     F(VOLATILE_METRONOME_ITEM_COUNTER,      metronomeItemCounter,          (u32, UINT8_MAX)) \
     F(VOLATILE_BATTLER_PREVENTING_ESCAPE,   battlerPreventingEscape,       (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
-    F(VOLATILE_BATTLER_WITH_SURE_HIT,       battlerWithSureHit,            (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
+    F(VOLATILE_BATTLER_WITH_SURE_HIT,       battlerWithSureHit,            (enum BattlerId, MAX_BATTLERS_COUNT)) \
     F(VOLATILE_MIMICKED_MOVES,              mimickedMoves,                 (u32, MAX_BITS(MAX_MON_MOVES))) \
     F(VOLATILE_RECHARGE_TIMER,              rechargeTimer,                 (u32, 2)) \
     F(VOLATILE_AUTOTOMIZE_COUNT,            autotomizeCount,               (u32, UINT8_MAX)) \
@@ -318,7 +320,8 @@ enum SemiInvulnerableState
     STATE_UNDERWATER,
     STATE_ON_AIR,
     STATE_PHANTOM_FORCE,
-    STATE_SKY_DROP,
+    STATE_SKY_DROP_ATTACKER,
+    STATE_SKY_DROP_TARGET,
     STATE_COMMANDER,
     SEMI_INVULNERABLE_COUNT
 };

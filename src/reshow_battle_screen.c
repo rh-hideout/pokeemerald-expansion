@@ -137,7 +137,7 @@ static void CB2_ReshowBattleScreenAfterMenu(void)
     case 19:
         {
             enum BattlerId opponentBattler;
-            u16 species;
+            enum Species species;
 
             LoadAndCreateEnemyShadowSprites();
 
@@ -317,7 +317,7 @@ void CreateBattlerSprite(enum BattlerId battler)
                 return;
             if (gBattleScripting.monCaught) // Don't create opponent sprite if it has been caught.
                 return;
-            u32 species = GetMonData(mon, MON_DATA_SPECIES);
+            enum Species species = GetMonData(mon, MON_DATA_SPECIES);
 
             SetMultiuseSpriteTemplateToPokemon(species, position);
             gBattlerSpriteIds[battler] = CreateSprite(&gMultiuseSpriteTemplate, GetBattlerSpriteCoord(battler, BATTLER_COORD_X_2), posY, GetBattlerSpriteSubpriority(battler));
@@ -354,7 +354,7 @@ void CreateBattlerSprite(enum BattlerId battler)
             struct Pokemon *mon = GetBattlerMon(battler);
             if (!IsValidForBattle(mon))
                 return;
-            u32 species = GetMonData(mon, MON_DATA_SPECIES);
+            enum Species species = GetMonData(mon, MON_DATA_SPECIES);
 
             SetMultiuseSpriteTemplateToPokemon(species, position);
             gBattlerSpriteIds[battler] = CreateSprite(&gMultiuseSpriteTemplate, GetBattlerSpriteCoord(battler, BATTLER_COORD_X_2), posY, GetBattlerSpriteSubpriority(battler));

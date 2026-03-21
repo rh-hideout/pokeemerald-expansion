@@ -692,7 +692,7 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Last Switchin")
         MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_CELEBRATE); }
     } WHEN {
         TURN { 
-            EXPECT_MOVE(opponentLeft, MOVE_MEMENTO, target: opponentRight); EXPECT_SEND_OUT(opponentLeft,1); 
+            EXPECT_MOVE(opponentLeft, MOVE_MEMENTO, target: playerRight); EXPECT_SEND_OUT(opponentLeft,1); 
             MOVE(playerRight, MOVE_MEMENTO, target: opponentRight); SEND_OUT(playerRight,4); 
             EXPECT_MOVE(opponentRight, MOVE_MEMENTO, target: playerRight); EXPECT_SEND_OUT(opponentRight,4); 
         }

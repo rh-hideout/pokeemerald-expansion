@@ -244,12 +244,12 @@ u32 LoadCompressedSpriteSheetByTemplate(const struct SpriteTemplate *template, s
 
 }
 
-void HandleLoadSpecialPokePic(bool32 isFrontPic, void *dest, s32 species, u32 personality)
+void HandleLoadSpecialPokePic(bool32 isFrontPic, void *dest, enum Species species, u32 personality)
 {
     LoadSpecialPokePicIsEgg(dest, species, personality, isFrontPic, FALSE);
 }
 
-void HandleLoadSpecialPokePicIsEgg(bool32 isFrontPic, void *dest, s32 species, u32 personality, bool32 isEgg)
+void HandleLoadSpecialPokePicIsEgg(bool32 isFrontPic, void *dest, enum Species species, u32 personality, bool32 isEgg)
 {
     LoadSpecialPokePicIsEgg(dest, species, personality, isFrontPic, isEgg);
 }
@@ -1124,12 +1124,12 @@ static bool32 isModeSymDelta(enum CompressionMode mode)
     return FALSE;
 }
 
-void LoadSpecialPokePic(void *dest, s32 species, u32 personality, bool8 isFrontPic)
+void LoadSpecialPokePic(void *dest, enum Species species, u32 personality, bool8 isFrontPic)
 {
     LoadSpecialPokePicIsEgg(dest, species, personality, isFrontPic, FALSE);
 }
 
-void LoadSpecialPokePicIsEgg(void *dest, s32 species, u32 personality, bool8 isFrontPic, bool32 isEgg)
+void LoadSpecialPokePicIsEgg(void *dest, enum Species species, u32 personality, bool8 isFrontPic, bool32 isEgg)
 {
     species = SanitizeSpeciesId(species);
     if (species == SPECIES_UNOWN)

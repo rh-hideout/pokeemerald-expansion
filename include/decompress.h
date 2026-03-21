@@ -74,11 +74,11 @@ u32 LoadCompressedSpriteSheetByTemplate(const struct SpriteTemplate *template, s
 u32 LoadCompressedSpriteSheetOverrideBuffer(const struct CompressedSpriteSheet *src, void *buffer);
 bool8 LoadCompressedSpriteSheetUsingHeap(const struct CompressedSpriteSheet *src);
 
-void HandleLoadSpecialPokePic(bool32 isFrontPic, void *dest, s32 species, u32 personality);
-void HandleLoadSpecialPokePicIsEgg(bool32 isFrontPic, void *dest, s32 species, u32 personality, bool32 isEgg);
+void HandleLoadSpecialPokePic(bool32 isFrontPic, void *dest, enum Species species, u32 personality);
+void HandleLoadSpecialPokePicIsEgg(bool32 isFrontPic, void *dest, enum Species species, u32 personality, bool32 isEgg);
 
-void LoadSpecialPokePic(void *dest, s32 species, u32 personality, bool8 isFrontPic);
-void LoadSpecialPokePicIsEgg(void *dest, s32 species, u32 personality, bool8 isFrontPic, bool32 isEgg);
+void LoadSpecialPokePic(void *dest, enum Species species, u32 personality, bool8 isFrontPic);
+void LoadSpecialPokePicIsEgg(void *dest, enum Species species, u32 personality, bool8 isFrontPic, bool32 isEgg);
 
 u32 GetDecompressedDataSize(const u32 *ptr);
 bool32 IsCompressedData(const u32 *ptr);
