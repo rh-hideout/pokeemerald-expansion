@@ -5,7 +5,7 @@
 #include "battle_scripts.h"
 #include "battle_switch_in.h"
 #include "battle_controllers.h"
-#include "generational_changes.h"
+#include "config_changes.h"
 #include "constants/battle.h"
 #include "constants/moves.h"
 

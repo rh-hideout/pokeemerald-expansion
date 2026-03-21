@@ -146,7 +146,7 @@ void ClearObjectEventMovement(struct ObjectEvent *objectEvent, struct Sprite *sp
 void ObjectEventClearHeldMovement(struct ObjectEvent *objectEvent);
 void ObjectEventClearHeldMovementIfActive(struct ObjectEvent *objectEvent);
 struct Pokemon *GetFirstLiveMon(void);
-u16 GetOverworldWeatherSpecies(u16 species);
+enum Species GetOverworldWeatherSpecies(enum Species species);
 void UpdateFollowingPokemon(void);
 void RemoveFollowingPokemon(void);
 struct ObjectEvent *GetFollowerObject(void);
@@ -263,7 +263,7 @@ bool8 IsBerryTreeSparkling(u8 localId, u8 mapNum, u8 mapGroup);
 const struct ObjectEventTemplate *GetObjectEventTemplateByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup);
 u8 TrySpawnObjectEventTemplate(const struct ObjectEventTemplate *objectEventTemplate, u8 mapNum, u8 mapGroup, s16 cameraX, s16 cameraY);
 bool8 GetFollowerInfo(u32 *species, bool32 *shiny, bool32 *female);
-const struct ObjectEventGraphicsInfo *SpeciesToGraphicsInfo(u32 species, bool32 shiny, bool32 female);
+const struct ObjectEventGraphicsInfo *SpeciesToGraphicsInfo(enum Species species, bool32 shiny, bool32 female);
 u16 GetObjectEventFlagIdByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup);
 void CopyObjectGraphicsInfoToSpriteTemplate(u16 graphicsId, void (*callback)(struct Sprite *), struct SpriteTemplate *spriteTemplate, const struct SubspriteTable **subspriteTables);
 

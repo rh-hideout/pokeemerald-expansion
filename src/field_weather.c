@@ -247,8 +247,8 @@ static void UpdateWeatherForms(void)
     for (i = 0; i < PARTY_SIZE; i++)
     {
         struct Pokemon *mon = &gPlayerParty[i];
-        u16 species = GetMonData(mon, MON_DATA_SPECIES);
-        u16 targetSpecies = GetOverworldWeatherSpecies(species);
+        enum Species species = GetMonData(mon, MON_DATA_SPECIES);
+        enum Species targetSpecies = GetOverworldWeatherSpecies(species);
         if (species != targetSpecies)
         {
             SetMonData(mon, MON_DATA_SPECIES, &targetSpecies);

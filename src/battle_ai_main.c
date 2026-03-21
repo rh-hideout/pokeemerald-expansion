@@ -142,6 +142,20 @@ static s32 (*const sBattleAiFuncTable[])(enum BattlerId, enum BattlerId, enum Mo
 };
 
 // Functions
+void AIDebugTimerStart()
+{
+    // Set delay timer to count how long it takes for AI to choose action/move
+    gBattleStruct->aiDelayTimer = gMain.vblankCounter1;
+    CycleCountStart();
+}
+
+void AIDebugTimerEnd()
+{
+    // We add to existing to compound multiple calls
+    gBattleStruct->aiDelayFrames += gMain.vblankCounter1 - gBattleStruct->aiDelayTimer;
+    gBattleStruct->aiDelayCycles += CycleCountEnd();
+}
+
 void BattleAI_SetupAIData(u8 defaultScoreMoves, enum BattlerId battler)
 {
     u32 moveLimitations;
@@ -290,8 +304,8 @@ void BattleAI_SetupFlags(void)
         // The check is here because wild natural enemies are not symmetrical.
         if (B_WILD_NATURAL_ENEMIES && IsDoubleBattle())
         {
-            u32 speciesLeft = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES);
-            u32 speciesRight = GetMonData(&gEnemyParty[1], MON_DATA_SPECIES);
+            enum Species speciesLeft = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES);
+            enum Species speciesRight = GetMonData(&gEnemyParty[1], MON_DATA_SPECIES);
             if (IsNaturalEnemy(speciesLeft, speciesRight))
                 gAiThinkingStruct->aiFlags[B_BATTLER_1] |= AI_FLAG_ATTACKS_PARTNER;
             if (IsNaturalEnemy(speciesRight, speciesLeft))
@@ -371,6 +385,9 @@ void ComputeBattlerDecisions(enum BattlerId battler)
 
         gAiLogicData->aiCalcInProgress = TRUE;
 
+        if (DEBUG_AI_DELAY_TIMER)
+            AIDebugTimerStart();
+
         // Setup battler and prediction data
         BattleAI_SetupAIData(0xF, battler);
         SetupAIPredictionData(battler, SWITCH_MID_BATTLE_OPTIONAL);
@@ -389,6 +406,9 @@ void ComputeBattlerDecisions(enum BattlerId battler)
         if (isAiBattler)
             BattlerChooseNonMoveAction();
         ModifySwitchAfterMoveScoring(battler);
+
+        if (DEBUG_AI_DELAY_TIMER)
+            AIDebugTimerEnd();
 
         gAiLogicData->aiCalcInProgress = FALSE;
     }
@@ -710,8 +730,10 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
     if (!(gBattleTypeFlags & BATTLE_TYPE_HAS_AI) && !IsWildMonSmart())
         return;
 
-    // Set delay timer to count how long it takes for AI to choose action/move
-    gBattleStruct->aiDelayTimer = gMain.vblankCounter1;
+       gAiLogicData->aiCalcInProgress = TRUE;
+    
+    if (DEBUG_AI_DELAY_TIMER)
+        AIDebugTimerStart();
 
     aiData->weatherHasEffect = HasWeatherEffect();
     weather = AI_GetWeather();
@@ -719,9 +741,6 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
     // get/assume all battler data and simulate AI damage
     battlersCount = gBattlersCount;
 
-    gAiLogicData->aiCalcInProgress = TRUE;
-    if (DEBUG_AI_DELAY_TIMER)
-        CycleCountStart();
     for (enum BattlerId battlerAtk = 0; battlerAtk < battlersCount; battlerAtk++)
     {
         if (!IsBattlerAlive(battlerAtk))
@@ -752,15 +771,15 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
     }
 
     if (DEBUG_AI_DELAY_TIMER)
-        // We add to existing to compound multiple calls
-        gBattleStruct->aiDelayCycles += CycleCountEnd();
+        AIDebugTimerEnd();
+        
     gAiLogicData->aiCalcInProgress = FALSE;
 }
 
 enum Ability GetPartyMonAbility(struct Pokemon *mon)
 {
     // Doesn't have any special handling yet
-    u32 species = GetMonData(mon, MON_DATA_SPECIES);
+    enum Species species = GetMonData(mon, MON_DATA_SPECIES);
     enum Ability ability = GetSpeciesAbility(species, GetMonData(mon, MON_DATA_ABILITY_NUM));
     return ability;
 }
@@ -3203,8 +3222,8 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     bool32 hasTwoOpponents = HasTwoOpponents(battlerAtk);
     bool32 hasPartner = HasPartner(battlerAtk);
     u32 friendlyFireThreshold = GetFriendlyFireKOThreshold(battlerAtk);
-    u32 noOfHitsToKOPartner = GetNoOfHitsToKOBattler(battlerAtk, battlerAtkPartner, gAiThinkingStruct->movesetIndex, AI_ATTACKING, CONSIDER_ENDURE);
-    bool32 wouldPartnerFaint = hasPartner && CanIndexMoveFaintTarget(battlerAtk, battlerAtkPartner, gAiThinkingStruct->movesetIndex, AI_ATTACKING) && !partnerProtecting;
+    u32 noOfHitsToKOPartner = GetNoOfHitsToKOBattler(battlerAtk, battlerAtkPartner, gAiThinkingStruct->movesetIndex, AI_ATTACKING_PARTNER, CONSIDER_ENDURE);
+    bool32 wouldPartnerFaint = hasPartner && CanIndexMoveFaintTarget(battlerAtk, battlerAtkPartner, gAiThinkingStruct->movesetIndex, AI_ATTACKING_PARTNER) && !partnerProtecting;
     bool32 isFriendlyFireOK = !wouldPartnerFaint && (noOfHitsToKOPartner == 0 || noOfHitsToKOPartner > friendlyFireThreshold);
 
     // check what effect partner is using
@@ -4104,7 +4123,7 @@ static enum MoveComparisonResult CompareMoveTwoTurnEffect(enum BattlerId battler
 static inline bool32 ShouldUseSpreadDamageMove(enum BattlerId battlerAtk, enum Move move, u32 moveIndex, u32 hitsToFaintOpposingBattler)
 {
     enum BattlerId partnerBattler = BATTLE_PARTNER(battlerAtk);
-    u32 noOfHitsToFaintPartner = GetNoOfHitsToKOBattler(battlerAtk, partnerBattler, moveIndex, AI_ATTACKING, CONSIDER_ENDURE);
+    u32 noOfHitsToFaintPartner = GetNoOfHitsToKOBattler(battlerAtk, partnerBattler, moveIndex, AI_ATTACKING_PARTNER, CONSIDER_ENDURE);
     u32 friendlyFireThreshold = GetFriendlyFireKOThreshold(battlerAtk);
     return (HasPartnerIgnoreFlags(battlerAtk)
          && noOfHitsToFaintPartner != 0 // Immunity check

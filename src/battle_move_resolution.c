@@ -1098,7 +1098,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
     case EFFECT_FLING:
         if (!CanFling(ctx->battlerAtk, ctx->abilityAtk))
             battleScript = BattleScript_ButItFailed;
-        else // set fling item
+        else // for Fling message
             gLastUsedItem = gBattleMons[ctx->battlerAtk].item;
         break;
     case EFFECT_FAIL_IF_NOT_ARG_TYPE:
@@ -1939,7 +1939,7 @@ static enum CancelerResult CancelerMultihitMoves(struct BattleContext *ctx)
 
         for (i = 0; i < PARTY_SIZE; i++)
         {
-            u32 species = GetMonData(&party[i], MON_DATA_SPECIES);
+            enum Species species = GetMonData(&party[i], MON_DATA_SPECIES);
             if (species != SPECIES_NONE
              && GetMonData(&party[i], MON_DATA_HP)
              && !GetMonData(&party[i], MON_DATA_IS_EGG)
@@ -3083,7 +3083,7 @@ static enum MoveEndResult MoveEndMoveBlock(void)
         {
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_POINTEDSTONESFLOAT;
             BattleScriptPushCursor();
-            gBattlescriptCurrInstr = BattleScript_StealthRockActivates;
+            gBattlescriptCurrInstr = BattleScript_MoveEffectStealthRock;
             result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
@@ -3101,7 +3101,7 @@ static enum MoveEndResult MoveEndMoveBlock(void)
             else
             {
                 BattleScriptPushCursor();
-                gBattlescriptCurrInstr = BattleScript_SpikesActivates;
+                gBattlescriptCurrInstr = BattleScript_MoveEffectSpikes;
                 result = MOVEEND_RESULT_RUN_SCRIPT;
             }
         }

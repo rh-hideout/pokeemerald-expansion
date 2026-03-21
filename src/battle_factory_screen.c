@@ -1831,7 +1831,7 @@ static void Select_PrintRentalPkmnString(void)
 
 static void Select_PrintMonSpecies(void)
 {
-    u16 species;
+    enum Species species;
     u8 x;
     u8 monId = sFactorySelectScreen->cursorPos;
 
@@ -1948,7 +1948,7 @@ static u8 Select_OptionOthers(void)
 
 static void Select_PrintMonCategory(void)
 {
-    u16 species;
+    enum Species species;
     u8 text[30];
     u8 x;
     u8 monId = sFactorySelectScreen->cursorPos;
@@ -1968,7 +1968,7 @@ static void Select_CreateMonSprite(void)
 {
     u8 monId = sFactorySelectScreen->cursorPos;
     struct Pokemon *mon = &sFactorySelectScreen->mons[monId].monData;
-    u16 species = GetMonData(mon, MON_DATA_SPECIES);
+    enum Species species = GetMonData(mon, MON_DATA_SPECIES);
     u32 personality = GetMonData(mon, MON_DATA_PERSONALITY);
     bool8 isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
 
@@ -1987,7 +1987,7 @@ static void Select_SetMonPicAnimating(bool8 animating)
 static void Select_ReshowMonSprite(void)
 {
     struct Pokemon *mon;
-    u16 species;
+    enum Species species;
     u32 personality;
     bool8 isShiny;
 
@@ -2017,7 +2017,7 @@ static void Select_CreateChosenMonsSprites(void)
             if (sFactorySelectScreen->mons[j].selectedId == i + 1)
             {
                 struct Pokemon *mon = &sFactorySelectScreen->mons[j].monData;
-                u16 species = GetMonData(mon, MON_DATA_SPECIES);
+                enum Species species = GetMonData(mon, MON_DATA_SPECIES);
                 u32 personality = GetMonData(mon, MON_DATA_PERSONALITY);
                 bool8 isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
 
@@ -2209,7 +2209,7 @@ static void Select_SetWinRegs(s16 mWin0H, s16 nWin0H, s16 mWin0V, s16 nWin0V)
 static bool32 Select_AreSpeciesValid(u16 monId)
 {
     u8 i, j;
-    u32 species = gFacilityTrainerMons[monId].species;
+    enum Species species = gFacilityTrainerMons[monId].species;
     u8 selectState = sFactorySelectScreen->selectingMonsState;
 
     for (i = 1; i < selectState; i++)
@@ -3728,7 +3728,7 @@ static void Swap_PrintPkmnSwap(void)
 
 static void Swap_PrintMonSpecies(void)
 {
-    u16 species;
+    enum Species species;
     u8 x;
 
     FillWindowPixelBuffer(SWAP_WIN_SPECIES, PIXEL_FILL(0));
@@ -3828,7 +3828,7 @@ static void Swap_PrintOneActionString(u8 which)
 // For printing the species name once its selected. Keep the current fade but don't keep fading in and out
 static void Swap_PrintMonSpeciesAtFade(void)
 {
-    u16 species;
+    enum Species species;
     u8 x;
     u16 pal[5];
 
@@ -3862,7 +3862,7 @@ static void Swap_PrintMonSpeciesAtFade(void)
 // Reprints the species name over the faded one after a transition
 static void Swap_PrintMonSpeciesForTransition(void)
 {
-    u16 species;
+    enum Species species;
     u8 x;
 
     LoadPalette(sSwapText_Pal, BG_PLTT_ID(PALNUM_FADE_TEXT), sizeof(sSwapText_Pal));
@@ -3888,7 +3888,7 @@ static void Swap_PrintMonSpeciesForTransition(void)
 
 static void Swap_PrintMonCategory(void)
 {
-    u16 species;
+    enum Species species;
     u8 text[30];
     u8 x;
     u8 monId = sFactorySwapScreen->cursorPos;
@@ -4029,7 +4029,7 @@ static void OpenMonPic(u8 *spriteId, bool8 *animating, bool8 swapScreen)
 static void Swap_ShowSummaryMonSprite(void)
 {
     struct Pokemon *mon;
-    u16 species;
+    enum Species species;
     u32 personality;
     bool8 isShiny;
 
@@ -4113,7 +4113,7 @@ static void Swap_TaskCantHaveSameMons(u8 taskId)
 static bool8 Swap_AlreadyHasSameSpecies(u8 monId)
 {
     u8 i;
-    u16 species = GetMonData(&gEnemyParty[monId], MON_DATA_SPECIES);
+    enum Species species = GetMonData(&gEnemyParty[monId], MON_DATA_SPECIES);
 
     for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
     {
@@ -4245,9 +4245,9 @@ static void Task_CloseMonPic(u8 taskId)
 static void Swap_CreateMonSprite(void)
 {
     struct Pokemon *mon;
-    u16 species;
+    enum Species species;
     u32 personality;
-    bool8 isShiny;
+    bool32 isShiny;
 
     if (!sFactorySwapScreen->inEnemyScreen)
         mon = &gPlayerParty[sFactorySwapScreen->cursorPos];
