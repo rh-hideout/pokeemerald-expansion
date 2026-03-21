@@ -58,7 +58,7 @@ static void AddTreeBonus(struct BerryTree *tree, u8 bonus);
 
 const struct Berry gBerries[NUM_BERRIES + 1] =
 {
-    [INDEX_BERRY_NONE] = {
+    [BERRY_ID_NONE] = {
         .info = {
             .name = _("?????"),
             .description1 = COMPOUND_STRING("????????"),
@@ -69,7 +69,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePicTable = gPicTable_DurinBerryTree,
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Durin,
     },
-    [INDEX_CHERI_BERRY] =
+    [BERRY_ID_CHERI] =
     {
         .info = {
             .name = _("Cheri"),
@@ -102,7 +102,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Cheri,
     },
 
-    [INDEX_CHESTO_BERRY] =
+    [BERRY_ID_CHESTO] =
     {
         .info = {
             .name = _("Chesto"),
@@ -135,7 +135,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Chesto,
     },
 
-    [INDEX_PECHA_BERRY] =
+    [BERRY_ID_PECHA] =
     {
         .info = {
             .name = _("Pecha"),
@@ -168,7 +168,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Pecha,
     },
 
-    [INDEX_RAWST_BERRY] =
+    [BERRY_ID_RAWST] =
     {
         .info = {
             .name = _("Rawst"),
@@ -201,7 +201,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Rawst,
     },
 
-    [INDEX_ASPEAR_BERRY] =
+    [BERRY_ID_ASPEAR] =
     {
         .info = {
             .name = _("Aspear"),
@@ -234,7 +234,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Aspear,
     },
 
-    [INDEX_LEPPA_BERRY] =
+    [BERRY_ID_LEPPA] =
     {
         .info = {
             .name = _("Leppa"),
@@ -267,7 +267,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Leppa,
     },
 
-    [INDEX_ORAN_BERRY] =
+    [BERRY_ID_ORAN] =
     {
         .info = {
             .name = _("Oran"),
@@ -300,7 +300,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Oran,
     },
 
-    [INDEX_PERSIM_BERRY] =
+    [BERRY_ID_PERSIM] =
     {
         .info = {
             .name = _("Persim"),
@@ -333,7 +333,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Persim,
     },
 
-    [INDEX_LUM_BERRY] =
+    [BERRY_ID_LUM] =
     {
         .info = {
             .name = _("Lum"),
@@ -366,7 +366,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Lum,
     },
 
-    [INDEX_SITRUS_BERRY] =
+    [BERRY_ID_SITRUS] =
     {
         .info = {
             .name = _("Sitrus"),
@@ -399,7 +399,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Sitrus,
     },
 
-    [INDEX_FIGY_BERRY] =
+    [BERRY_ID_FIGY] =
     {
         .info = {
             .name = _("Figy"),
@@ -432,7 +432,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Figy,
     },
 
-    [INDEX_WIKI_BERRY] =
+    [BERRY_ID_WIKI] =
     {
         .info = {
             .name = _("Wiki"),
@@ -465,7 +465,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Wiki,
     },
 
-    [INDEX_MAGO_BERRY] =
+    [BERRY_ID_MAGO] =
     {
         .info = {
             .name = _("Mago"),
@@ -498,7 +498,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Mago,
     },
 
-    [INDEX_AGUAV_BERRY] =
+    [BERRY_ID_AGUAV] =
     {
         .info = {
             .name = _("Aguav"),
@@ -531,7 +531,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Aguav,
     },
 
-    [INDEX_IAPAPA_BERRY] =
+    [BERRY_ID_IAPAPA] =
     {
         .info = {
             .name = _("Iapapa"),
@@ -564,7 +564,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Iapapa,
     },
 
-    [INDEX_RAZZ_BERRY] =
+    [BERRY_ID_RAZZ] =
     {
         .info = {
             .name = _("Razz"),
@@ -597,7 +597,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Razz,
     },
 
-    [INDEX_BLUK_BERRY] =
+    [BERRY_ID_BLUK] =
     {
         .info = {
             .name = _("Bluk"),
@@ -630,7 +630,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Razz,
     },
 
-    [INDEX_NANAB_BERRY] =
+    [BERRY_ID_NANAB] =
     {
         .info = {
             .name = _("Nanab"),
@@ -663,7 +663,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Mago,
     },
 
-    [INDEX_WEPEAR_BERRY] =
+    [BERRY_ID_WEPEAR] =
     {
         .info = {
             .name = _("Wepear"),
@@ -696,7 +696,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Wepear,
     },
 
-    [INDEX_PINAP_BERRY] =
+    [BERRY_ID_PINAP] =
     {
         .info = {
             .name = _("Pinap"),
@@ -729,7 +729,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Iapapa,
     },
 
-    [INDEX_POMEG_BERRY] =
+    [BERRY_ID_POMEG] =
     {
         .info = {
             .name = _("Pomeg"),
@@ -762,7 +762,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Pomeg,
     },
 
-    [INDEX_KELPSY_BERRY] =
+    [BERRY_ID_KELPSY] =
     {
         .info = {
             .name = _("Kelpsy"),
@@ -795,7 +795,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Kelpsy,
     },
 
-    [INDEX_QUALOT_BERRY] =
+    [BERRY_ID_QUALOT] =
     {
         .info = {
             .name = _("Qualot"),
@@ -828,7 +828,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Wepear,
     },
 
-    [INDEX_HONDEW_BERRY] =
+    [BERRY_ID_HONDEW] =
     {
         .info = {
             .name = _("Hondew"),
@@ -861,7 +861,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Hondew,
     },
 
-    [INDEX_GREPA_BERRY] =
+    [BERRY_ID_GREPA] =
     {
         .info = {
             .name = _("Grepa"),
@@ -894,7 +894,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Grepa,
     },
 
-    [INDEX_TAMATO_BERRY] =
+    [BERRY_ID_TAMATO] =
     {
         .info = {
             .name = _("Tamato"),
@@ -927,7 +927,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Tamato,
     },
 
-    [INDEX_CORNN_BERRY] =
+    [BERRY_ID_CORNN] =
     {
         .info = {
             .name = _("Cornn"),
@@ -960,7 +960,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Cornn,
     },
 
-    [INDEX_MAGOST_BERRY] =
+    [BERRY_ID_MAGOST] =
     {
         .info = {
             .name = _("Magost"),
@@ -993,7 +993,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Pomeg,
     },
 
-    [INDEX_RABUTA_BERRY] =
+    [BERRY_ID_RABUTA] =
     {
         .info = {
             .name = _("Rabuta"),
@@ -1026,7 +1026,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Rabuta,
     },
 
-    [INDEX_NOMEL_BERRY] =
+    [BERRY_ID_NOMEL] =
     {
         .info = {
             .name = _("Nomel"),
@@ -1059,7 +1059,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Nomel,
     },
 
-    [INDEX_SPELON_BERRY] =
+    [BERRY_ID_SPELON] =
     {
         .info = {
             .name = _("Spelon"),
@@ -1092,7 +1092,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Spelon,
     },
 
-    [INDEX_PAMTRE_BERRY] =
+    [BERRY_ID_PAMTRE] =
     {
         .info = {
             .name = _("Pamtre"),
@@ -1125,7 +1125,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Pamtre,
     },
 
-    [INDEX_WATMEL_BERRY] =
+    [BERRY_ID_WATMEL] =
     {
         .info = {
             .name = _("Watmel"),
@@ -1158,7 +1158,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Rabuta,
     },
 
-    [INDEX_DURIN_BERRY] =
+    [BERRY_ID_DURIN] =
     {
         .info = {
             .name = _("Durin"),
@@ -1191,7 +1191,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Durin,
     },
 
-    [INDEX_BELUE_BERRY] =
+    [BERRY_ID_BELUE] =
     {
         .info = {
             .name = _("Belue"),
@@ -1224,7 +1224,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Hondew,
     },
 
-    [INDEX_OCCA_BERRY] =
+    [BERRY_ID_OCCA] =
     {
         .info = {
             .name = _("Occa"),
@@ -1257,7 +1257,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Occa,
     },
 
-    [INDEX_PASSHO_BERRY] =
+    [BERRY_ID_PASSHO] =
     {
         .info = {
             .name = _("Passho"),
@@ -1290,7 +1290,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Cornn,
     },
 
-    [INDEX_WACAN_BERRY] =
+    [BERRY_ID_WACAN] =
     {
         .info = {
             .name = _("Wacan"),
@@ -1323,7 +1323,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Razz,
     },
 
-    [INDEX_RINDO_BERRY] =
+    [BERRY_ID_RINDO] =
     {
         .info = {
             .name = _("Rindo"),
@@ -1356,7 +1356,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Tamato,
     },
 
-    [INDEX_YACHE_BERRY] =
+    [BERRY_ID_YACHE] =
     {
         .info = {
             .name = _("Yache"),
@@ -1389,7 +1389,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Yache,
     },
 
-    [INDEX_CHOPLE_BERRY] =
+    [BERRY_ID_CHOPLE] =
     {
         .info = {
             .name = _("Chople"),
@@ -1422,7 +1422,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Chople,
     },
 
-    [INDEX_KEBIA_BERRY] =
+    [BERRY_ID_KEBIA] =
     {
         .info = {
             .name = _("Kebia"),
@@ -1455,7 +1455,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Kebia,
     },
 
-    [INDEX_SHUCA_BERRY] =
+    [BERRY_ID_SHUCA] =
     {
         .info = {
             .name = _("Shuca"),
@@ -1488,7 +1488,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Shuca,
     },
 
-    [INDEX_COBA_BERRY] =
+    [BERRY_ID_COBA] =
     {
         .info = {
             .name = _("Coba"),
@@ -1521,7 +1521,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Rawst,
     },
 
-    [INDEX_PAYAPA_BERRY] =
+    [BERRY_ID_PAYAPA] =
     {
         .info = {
             .name = _("Payapa"),
@@ -1554,7 +1554,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Payapa,
     },
 
-    [INDEX_TANGA_BERRY] =
+    [BERRY_ID_TANGA] =
     {
         .info = {
             .name = _("Tanga"),
@@ -1587,7 +1587,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Tanga,
     },
 
-    [INDEX_CHARTI_BERRY] =
+    [BERRY_ID_CHARTI] =
     {
         .info = {
             .name = _("Charti"),
@@ -1620,7 +1620,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Lansat,
     },
 
-    [INDEX_KASIB_BERRY] =
+    [BERRY_ID_KASIB] =
     {
         .info = {
             .name = _("Kasib"),
@@ -1653,7 +1653,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Kasib,
     },
 
-    [INDEX_HABAN_BERRY] =
+    [BERRY_ID_HABAN] =
     {
         .info = {
             .name = _("Haban"),
@@ -1686,7 +1686,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Haban,
     },
 
-    [INDEX_COLBUR_BERRY] =
+    [BERRY_ID_COLBUR] =
     {
         .info = {
             .name = _("Colbur"),
@@ -1719,7 +1719,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Colbur,
     },
 
-    [INDEX_BABIRI_BERRY] =
+    [BERRY_ID_BABIRI] =
     {
         .info = {
             .name = _("Babiri"),
@@ -1752,7 +1752,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Liechi,
     },
 
-    [INDEX_CHILAN_BERRY] =
+    [BERRY_ID_CHILAN] =
     {
         .info = {
             .name = _("Chilan"),
@@ -1785,7 +1785,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Grepa,
     },
 
-    [INDEX_LIECHI_BERRY] =
+    [BERRY_ID_LIECHI] =
     {
         .info = {
             .name = _("Liechi"),
@@ -1818,7 +1818,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Liechi,
     },
 
-    [INDEX_GANLON_BERRY] =
+    [BERRY_ID_GANLON] =
     {
         .info = {
             .name = _("Ganlon"),
@@ -1851,7 +1851,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Hondew,
     },
 
-    [INDEX_SALAC_BERRY] =
+    [BERRY_ID_SALAC] =
     {
         .info = {
             .name = _("Salac"),
@@ -1884,7 +1884,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Aguav,
     },
 
-    [INDEX_PETAYA_BERRY] =
+    [BERRY_ID_PETAYA] =
     {
         .info = {
             .name = _("Petaya"),
@@ -1917,7 +1917,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Pomeg,
     },
 
-    [INDEX_APICOT_BERRY] =
+    [BERRY_ID_APICOT] =
     {
         .info = {
             .name = _("Apicot"),
@@ -1950,7 +1950,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Grepa,
     },
 
-    [INDEX_LANSAT_BERRY] =
+    [BERRY_ID_LANSAT] =
     {
         .info = {
             .name = _("Lansat"),
@@ -1983,7 +1983,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Lansat,
     },
 
-    [INDEX_STARF_BERRY] =
+    [BERRY_ID_STARF] =
     {
         .info = {
             .name = _("Starf"),
@@ -2016,7 +2016,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Cornn,
     },
 
-    [INDEX_ENIGMA_BERRY] =
+    [BERRY_ID_ENIGMA] =
     {
         .info = {
             .name = _("Enigma"),
@@ -2049,7 +2049,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Durin,
     },
 
-    [INDEX_MICLE_BERRY] =
+    [BERRY_ID_MICLE] =
     {
         .info = {
             .name = _("Micle"),
@@ -2082,7 +2082,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Micle,
     },
 
-    [INDEX_CUSTAP_BERRY] =
+    [BERRY_ID_CUSTAP] =
     {
         .info = {
             .name = _("Custap"),
@@ -2115,7 +2115,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Custap,
     },
 
-    [INDEX_JABOCA_BERRY] =
+    [BERRY_ID_JABOCA] =
     {
         .info = {
             .name = _("Jaboca"),
@@ -2148,7 +2148,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Jaboca,
     },
 
-    [INDEX_ROWAP_BERRY] =
+    [BERRY_ID_ROWAP] =
     {
         .info = {
             .name = _("Rowap"),
@@ -2181,7 +2181,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Rowap,
     },
 
-    [INDEX_ROSELI_BERRY] =
+    [BERRY_ID_ROSELI] =
     {
         .info = {
             .name = _("Roseli"),
@@ -2214,7 +2214,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Roseli,
     },
 
-    [INDEX_KEE_BERRY] =
+    [BERRY_ID_KEE] =
     {
         .info = {
             .name = _("Kee"),
@@ -2247,7 +2247,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Pecha,
     },
 
-    [INDEX_MARANGA_BERRY] =
+    [BERRY_ID_MARANGA] =
     {
         .info = {
             .name = _("Marnga"), // "Maranga" is too long
@@ -2280,7 +2280,7 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Occa,
     },
 
-    [INDEX_ENIGMA_BERRY_E_READER] =
+    [BERRY_ID_ENGIMA_E_READER] =
     {
         .info = {
             .name = _("Enigma"),
@@ -2356,19 +2356,19 @@ bool32 IsEnigmaBerryValid(void)
 #endif //FREE_ENIGMA_BERRY
 }
 
-const struct BerryInfo *GetBerryInfo(enum BerryIndex berry)
+const struct BerryInfo *GetBerryInfo(enum BerryId berry)
 {
-    if (berry == INDEX_ENIGMA_BERRY_E_READER && IsEnigmaBerryValid())
+    if (berry == BERRY_ID_ENGIMA_E_READER && IsEnigmaBerryValid())
     {
     #if FREE_ENIGMA_BERRY == FALSE
         return (struct BerryInfo *)(&gSaveBlock1Ptr->enigmaBerry.berry);
     #else
-        return &gBerries[INDEX_BERRY_NONE].info;    //never reached, but will appease the compiler gods
+        return &gBerries[BERRY_ID_NONE].info;    //never reached, but will appease the compiler gods
     #endif //FREE_ENIGMA_BERRY
     }
     else
     {
-        if (berry == INDEX_BERRY_NONE || berry > NUM_BERRIES)
+        if (berry == BERRY_ID_NONE || berry > NUM_BERRIES)
             berry = 1;
         return &gBerries[berry].info;
     }
@@ -2575,7 +2575,7 @@ void BerryTreeTimeUpdate(s32 minutes)
     }
 }
 
-void PlantBerryTree(u8 id, u8 berry, u8 stage, bool8 allowGrowth)
+void PlantBerryTree(u8 id, enum BerryId berry, u8 stage, bool8 allowGrowth)
 {
     struct BerryTree *tree = GetBerryTreeInfo(id);
 
@@ -2947,20 +2947,20 @@ bool8 PlayerHasMulch(void)
 
 #if OW_BERRY_MUTATIONS == TRUE
 static const u8 sBerryMutations[][3] = {
-    {INDEX_IAPAPA_BERRY, INDEX_MAGO_BERRY,   INDEX_POMEG_BERRY},
-    {INDEX_CHESTO_BERRY, INDEX_PERSIM_BERRY, INDEX_KELPSY_BERRY},
-    {INDEX_ORAN_BERRY,   INDEX_PECHA_BERRY,  INDEX_QUALOT_BERRY},
-    {INDEX_CHESTO_BERRY, INDEX_PERSIM_BERRY, INDEX_KELPSY_BERRY},
-    {INDEX_ASPEAR_BERRY, INDEX_LEPPA_BERRY,  INDEX_HONDEW_BERRY},
-    {INDEX_AGUAV_BERRY,  INDEX_FIGY_BERRY,   INDEX_GREPA_BERRY},
-    {INDEX_LUM_BERRY,    INDEX_SITRUS_BERRY, INDEX_TAMATO_BERRY},
-    {INDEX_HONDEW_BERRY, INDEX_YACHE_BERRY,  INDEX_LIECHI_BERRY},
-    {INDEX_QUALOT_BERRY, INDEX_TANGA_BERRY,  INDEX_GANLON_BERRY},
-    {INDEX_GREPA_BERRY,  INDEX_ROSELI_BERRY, INDEX_SALAC_BERRY},
-    {INDEX_POMEG_BERRY,  INDEX_KASIB_BERRY,  INDEX_PETAYA_BERRY},
-    {INDEX_KELPSY_BERRY, INDEX_WACAN_BERRY,  INDEX_APICOT_BERRY},
-    {INDEX_GANLON_BERRY, INDEX_LIECHI_BERRY, INDEX_KEE_BERRY},
-    {INDEX_SALAC_BERRY,  INDEX_PETAYA_BERRY, INDEX_MARANGA_BERRY},
+    {BERRY_ID_IAPAPA, BERRY_ID_MAGO,   BERRY_ID_POMEG},
+    {BERRY_ID_CHESTO, BERRY_ID_PERSIM, BERRY_ID_KELPSY},
+    {BERRY_ID_ORAN,   BERRY_ID_PECHA,  BERRY_ID_QUALOT},
+    {BERRY_ID_CHESTO, BERRY_ID_PERSIM, BERRY_ID_KELPSY},
+    {BERRY_ID_ASPEAR, BERRY_ID_LEPPA,  BERRY_ID_HONDEW},
+    {BERRY_ID_AGUAV,  BERRY_ID_FIGY,   BERRY_ID_GREPA},
+    {BERRY_ID_LUM,    BERRY_ID_SITRUS, BERRY_ID_TAMATO},
+    {BERRY_ID_HONDEW, BERRY_ID_YACHE,  BERRY_ID_LIECHI},
+    {BERRY_ID_QUALOT, BERRY_ID_TANGA,  BERRY_ID_GANLON},
+    {BERRY_ID_GREPA,  BERRY_ID_ROSELI, BERRY_ID_SALAC},
+    {BERRY_ID_POMEG,  BERRY_ID_KASIB,  BERRY_ID_PETAYA},
+    {BERRY_ID_KELPSY, BERRY_ID_WACAN,  BERRY_ID_APICOT},
+    {BERRY_ID_GANLON, BERRY_ID_LIECHI, BERRY_ID_KEE},
+    {BERRY_ID_SALAC,  BERRY_ID_PETAYA, BERRY_ID_MARANGA},
     // Up to one more Mutation can be added here for a total of 15 (only 4 bits are allocated)
 };
 

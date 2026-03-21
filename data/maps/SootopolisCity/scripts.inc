@@ -714,7 +714,7 @@ SootopolisCity_EventScript_KiriGiveBerry::
 	special GetPlayerBigGuyGirlString
 	goto_if_set FLAG_DAILY_SOOTOPOLIS_RECEIVED_BERRY, SootopolisCity_EventScript_KiriReceivedBerry
 	msgbox SootopolisCity_Text_NameIsKiriHaveOneOfThese, MSGBOX_DEFAULT
-	giverandomberry INDEX_POMEG_BERRY, INDEX_NOMEL_BERRY
+	giverandomberry BERRY_ID_POMEG, BERRY_ID_NOMEL
 	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
 	setflag FLAG_DAILY_SOOTOPOLIS_RECEIVED_BERRY
 	msgbox SootopolisCity_Text_GiveYouThisBerryToo, MSGBOX_DEFAULT

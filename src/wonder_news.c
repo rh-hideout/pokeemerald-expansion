@@ -31,11 +31,11 @@ void WonderNews_SetReward(u32 newsType)
     case WONDER_NEWS_RECV_FRIEND:
     case WONDER_NEWS_RECV_WIRELESS:
         // Random berry between ITEM_RAZZ_BERRY and ITEM_NOMEL_BERRY
-        data->berry = RandomUniform(RNG_RANDOM_BERRY, INDEX_RAZZ_BERRY, INDEX_NOMEL_BERRY);
+        data->berry = RandomUniform(RNG_RANDOM_BERRY, BERRY_ID_RAZZ, BERRY_ID_NOMEL);
         break;
     case WONDER_NEWS_SENT:
         // Random berry between ITEM_CHERI_BERRY and ITEM_IAPAPA_BERRY
-        data->berry = RandomUniform(RNG_RANDOM_BERRY, INDEX_CHERI_BERRY, INDEX_IAPAPA_BERRY);
+        data->berry = RandomUniform(RNG_RANDOM_BERRY, BERRY_ID_CHERI, BERRY_ID_IAPAPA);
         break;
     }
 }

@@ -592,40 +592,40 @@ ALIGNED(4)
 static const u8 sPrizeBerryIds[][10] =
 {
     { // Possible prizes with 3 players
-        INDEX_RAZZ_BERRY,
-        INDEX_BLUK_BERRY,
-        INDEX_NANAB_BERRY,
-        INDEX_WEPEAR_BERRY,
-        INDEX_PINAP_BERRY,
-        INDEX_PINAP_BERRY,
-        INDEX_WEPEAR_BERRY,
-        INDEX_NANAB_BERRY,
-        INDEX_BLUK_BERRY,
-        INDEX_RAZZ_BERRY
+        BERRY_ID_RAZZ,
+        BERRY_ID_BLUK,
+        BERRY_ID_NANAB,
+        BERRY_ID_WEPEAR,
+        BERRY_ID_PINAP,
+        BERRY_ID_PINAP,
+        BERRY_ID_WEPEAR,
+        BERRY_ID_NANAB,
+        BERRY_ID_BLUK,
+        BERRY_ID_RAZZ
     },
     { // Possible prizes with 4 players
-        INDEX_POMEG_BERRY,
-        INDEX_KELPSY_BERRY,
-        INDEX_QUALOT_BERRY,
-        INDEX_HONDEW_BERRY,
-        INDEX_GREPA_BERRY,
-        INDEX_TAMATO_BERRY,
-        INDEX_CORNN_BERRY,
-        INDEX_MAGOST_BERRY,
-        INDEX_RABUTA_BERRY,
-        INDEX_NOMEL_BERRY
+        BERRY_ID_POMEG,
+        BERRY_ID_KELPSY,
+        BERRY_ID_QUALOT,
+        BERRY_ID_HONDEW,
+        BERRY_ID_GREPA,
+        BERRY_ID_TAMATO,
+        BERRY_ID_CORNN,
+        BERRY_ID_MAGOST,
+        BERRY_ID_RABUTA,
+        BERRY_ID_NOMEL
     },
     { // Possible prizes with 5 players
-        INDEX_SPELON_BERRY,
-        INDEX_PAMTRE_BERRY,
-        INDEX_WATMEL_BERRY,
-        INDEX_DURIN_BERRY,
-        INDEX_BELUE_BERRY,
-        INDEX_BELUE_BERRY,
-        INDEX_DURIN_BERRY,
-        INDEX_WATMEL_BERRY,
-        INDEX_PAMTRE_BERRY,
-        INDEX_SPELON_BERRY
+        BERRY_ID_SPELON,
+        BERRY_ID_PAMTRE,
+        BERRY_ID_WATMEL,
+        BERRY_ID_DURIN,
+        BERRY_ID_BELUE,
+        BERRY_ID_BELUE,
+        BERRY_ID_DURIN,
+        BERRY_ID_WATMEL,
+        BERRY_ID_PAMTRE,
+        BERRY_ID_SPELON
     },
 };
 

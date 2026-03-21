@@ -1024,7 +1024,7 @@ void StartBerryCrush(MainCallback exitCallback)
 
 static void GetBerryFromBag(void)
 {
-    enum BerryIndex berryId = ItemIdToBerryType(gSpecialVar_ItemId);
+    enum BerryId berryId = ItemIdToBerryType(gSpecialVar_ItemId);
     if (!berryId)
     {
         berryId = 1;

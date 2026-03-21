@@ -3187,7 +3187,7 @@ static void SetBerryTreeGraphicsById(struct ObjectEvent *objectEvent, u8 berryId
 static void SetBerryTreeGraphics(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     u8 berryStage;
-    enum BerryIndex berryId;
+    enum BerryId berryId;
 
     objectEvent->invisible = TRUE;
     sprite->invisible = TRUE;

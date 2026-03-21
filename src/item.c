@@ -225,9 +225,9 @@ bool32 CheckBagHasItem(enum Item itemId, u16 count)
 
 bool32 HasAtLeastOneBerry(void)
 {
-    for (enum BerryIndex berryIndex = 1; berryIndex < NUM_BERRIES; berryIndex++)
+    for (enum BerryId berryId = 1; berryId < NUM_BERRIES; berryId++)
     {
-        if (CheckBagHasItem(BerryTypeToItemId(berryIndex), 1) == TRUE)
+        if (CheckBagHasItem(BerryTypeToItemId(berryId), 1) == TRUE)
             return (gSpecialVar_Result = TRUE);
     }
 

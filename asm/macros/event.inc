@@ -1279,14 +1279,14 @@
 	.endm
 
 	@ Sets a berry tree's berry and growth stage. treeId is any BERRY_TREE_* constant (an index into berryTrees in SaveBlock1),
-	@ berryIndex is any INDEX_X_BERRY value, and growthStage is any BERRY_STAGE_* constant.
-	.macro setberrytree treeId:req, berryIndex:req, growthStage:req
-	.if \berryIndex == 0 || \berryIndex > NUM_BERRIES
+	@ berryId is any BERRY_ID_X value, and growthStage is any BERRY_STAGE_* constant.
+	.macro setberrytree treeId:req, berryId:req, growthStage:req
+	.if \berryId == 0 || \berryId > NUM_BERRIES
 		.error "setberrytree must use a valid berry index"
 	.endif
 	.byte SCR_OP_SETBERRYTREE
 	.byte \treeId
-	.byte \berryIndex
+	.byte \berryId
 	.byte \growthStage
 	.endm
 

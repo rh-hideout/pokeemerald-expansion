@@ -3853,9 +3853,9 @@ static void DebugAction_PCBag_Fill_PocketBerries(u8 taskId)
 {
     enum Item itemId;
 
-    for (enum BerryIndex berryIndex = 1; berryIndex < NUM_BERRIES; berryIndex++)
+    for (enum BerryId berryId = 1; berryId < NUM_BERRIES; berryId++)
     {
-        itemId = BerryTypeToItemId(berryIndex);
+        itemId = BerryTypeToItemId(berryId);
         if (CheckBagHasSpace(itemId, MAX_BAG_ITEM_CAPACITY))
             AddBagItem(itemId, MAX_BAG_ITEM_CAPACITY);
     }

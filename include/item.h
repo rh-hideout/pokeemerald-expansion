@@ -180,34 +180,34 @@ static inline enum Move GetTMHMMoveId(enum TMHMIndex index)
     return gTMHMItemMoveIds[index].moveId;
 }
 
-#define GET_BERRY_INDEX(_berry) case ITEM_##_berry##_BERRY: return INDEX_##_berry##_BERRY;
-#define GET_BERRY_ITEM_ID(_berry) case INDEX_##_berry##_BERRY: return ITEM_##_berry##_BERRY;
+#define GET_BERRY_ID(_berry) case ITEM_##_berry##_BERRY: return BERRY_ID_##_berry;
+#define GET_BERRY_ITEM_ID(_berry) case BERRY_ID_##_berry: return ITEM_##_berry##_BERRY;
 
-static inline enum BerryIndex ItemIdToBerryType(enum Item itemId)
+static inline enum BerryId ItemIdToBerryType(enum Item itemId)
 {
     switch (itemId)
     {
-    FOREACH_BERRY(GET_BERRY_INDEX)
+    FOREACH_BERRY(GET_BERRY_ID)
     case ITEM_ENIGMA_BERRY_E_READER:
-        return INDEX_ENIGMA_BERRY_E_READER;
+        return BERRY_ID_ENGIMA_E_READER;
     default:
-        return INDEX_BERRY_NONE;
+        return BERRY_ID_NONE;
     }
 };
 
-static inline enum Item BerryTypeToItemId(enum BerryIndex berryIndex)
+static inline enum Item BerryTypeToItemId(enum BerryId berryId)
 {
-    switch (berryIndex)
+    switch (berryId)
     {
     FOREACH_BERRY(GET_BERRY_ITEM_ID)
-    case INDEX_ENIGMA_BERRY_E_READER:
+    case BERRY_ID_ENGIMA_E_READER:
         return ITEM_ENIGMA_BERRY_E_READER;
     default:
         return ITEM_NONE;
     }
 };
 
-#undef GET_BERRY_INDEX
+#undef GET_BERRY_ID
 #undef GET_BERRY_ITEM_ID
 
 void BagPocket_SetSlotData(struct BagPocket *pocket, u32 pocketPos, struct ItemSlot newSlot);
