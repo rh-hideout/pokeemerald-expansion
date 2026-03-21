@@ -1044,6 +1044,7 @@ async function renderTrainers() {
         grid.innerHTML += `
             <div class="trainer-card">
                 <div class="trainer-card-header">
+                    ${getTrainerPicHtml(t.pic, 48)}
                     <div>
                         <h3>${escHtml(t.name || '(unnamed)')}</h3>
                         <div class="trainer-id">${escHtml(t.id)}</div>
@@ -1125,6 +1126,13 @@ function openTrainerModal(trainer, isNew) {
     function renderModalBody() {
         const body = $('#trainer-modal-body');
         body.innerHTML = `
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;padding:12px;background:var(--bg);border-radius:6px;border:1px solid var(--border)">
+                ${getTrainerPicHtml(trainer.pic, 64)}
+                <div>
+                    <div style="font-size:14px;font-weight:600">${escHtml(trainer.name || '(unnamed)')}</div>
+                    <div style="font-size:12px;color:var(--text-dim)">${escHtml(trainer.pic || 'No pic set')}</div>
+                </div>
+            </div>
             <div class="form-row">
                 <div class="form-group">
                     <label>Trainer ID</label>
@@ -2130,6 +2138,20 @@ function getSpriteHtml(graphicsId, size = 32) {
     return `<div class="sprite-container" style="width:${size}px;height:${size}px">
         <img src="${url}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" style="width:${size}px;height:${size}px;image-rendering:pixelated" alt="${escAttr(name)}">
         <div class="sprite-fallback" style="display:none;width:${size}px;height:${size}px">${escHtml(name.substring(0, 2).toUpperCase())}</div>
+    </div>`;
+}
+
+function getTrainerPicUrl(pic) {
+    const name = (pic || '').toLowerCase().replace(/\s+/g, '_');
+    return `../graphics/trainers/front_pics/${name}.png`;
+}
+
+function getTrainerPicHtml(pic, size = 64) {
+    const url = getTrainerPicUrl(pic);
+    const name = pic || '';
+    return `<div class="sprite-container" style="width:${size}px;height:${size}px">
+        <img src="${url}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" style="width:${size}px;height:${size}px;image-rendering:pixelated" alt="${escAttr(name)}">
+        <div class="sprite-fallback" style="display:none;width:${size}px;height:${size}px">${escHtml((name || '??').substring(0, 2).toUpperCase())}</div>
     </div>`;
 }
 
