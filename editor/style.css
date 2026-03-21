@@ -2151,3 +2151,88 @@ tbody tr:last-child td { border-bottom: none; }
 .evo-cond-list {
     margin-top: 6px;
 }
+
+/* ─── Sprite Creator ──────────────────────────── */
+.sprite-editor-layout {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+.sprite-editor-toolbar {
+    flex: 0 0 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.sprite-canvas-wrap {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    padding: 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: auto;
+}
+#sprite-canvas {
+    border: 1px solid var(--border);
+    border-radius: 2px;
+}
+.sprite-tool-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.sprite-tool-group > label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    letter-spacing: 0.5px;
+}
+.sprite-tool-btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+.sprite-tool.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+.sprite-palette {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+}
+.sprite-palette-swatch {
+    width: 22px;
+    height: 22px;
+    border-radius: 3px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.1s, transform 0.1s;
+}
+.sprite-palette-swatch:hover {
+    transform: scale(1.15);
+    border-color: var(--text-dim);
+}
+.sprite-palette-swatch.active {
+    border-color: var(--accent);
+    transform: scale(1.2);
+    box-shadow: 0 0 6px var(--accent);
+}
+
+@media (max-width: 768px) {
+    .sprite-editor-layout {
+        flex-direction: column;
+    }
+    .sprite-editor-toolbar {
+        flex: 0 0 auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    .sprite-canvas-wrap {
+        width: 100%;
+    }
+}
