@@ -2533,31 +2533,277 @@ async function renderMapDetail(dirName) {
             header.closest('.npc-card').classList.toggle('expanded');
         });
     });
+
+    // Initialize interactive map markers
+    initInteractiveMap(map);
 }
 
-// ── Map Preview Section ──
+// ── Interactive Map Section ──
 function buildMapPreviewSection(map) {
     const fullUrl = getFullPreviewUrl(map._dirName);
     const thumbUrl = getPreviewUrl(map._dirName);
+    const dirName = map._dirName;
+
+    // Collect all plottable entities
+    const npcs = (map.object_events || []).filter(e =>
+        !(e.graphics_id || '').includes('ITEM_BALL') && !(e.graphics_id || '').includes('BERRY_TREE')
+    );
+    const itemBalls = getMapItemBalls(map);
+    const hiddenItems = getMapHiddenItems(map);
+    const warps = map.warp_events || [];
+    const signs = (map.bg_events || []).filter(e => e.type === 'sign');
+    const coordEvents = map.coord_events || [];
+
+    // Legend items
+    const legendItems = [];
+    if (npcs.length) legendItems.push(`<span class="imap-legend-item"><span class="imap-legend-dot imap-dot-npc"></span> NPCs (${npcs.length})</span>`);
+    if (itemBalls.length) legendItems.push(`<span class="imap-legend-item"><span class="imap-legend-dot imap-dot-item"></span> Items (${itemBalls.length})</span>`);
+    if (hiddenItems.length) legendItems.push(`<span class="imap-legend-item"><span class="imap-legend-dot imap-dot-hidden"></span> Hidden (${hiddenItems.length})</span>`);
+    if (warps.length) legendItems.push(`<span class="imap-legend-item"><span class="imap-legend-dot imap-dot-warp"></span> Doors (${warps.length})</span>`);
+    if (signs.length) legendItems.push(`<span class="imap-legend-item"><span class="imap-legend-dot imap-dot-sign"></span> Signs (${signs.length})</span>`);
+
     return `
         <div class="map-area-section">
             <div class="map-area-section-header">
-                <h2><span class="section-icon">&#128506;</span> Map Preview</h2>
+                <h2><span class="section-icon">&#128506;</span> Interactive Map</h2>
                 <span class="toggle-arrow">&#9660;</span>
             </div>
-            <div class="map-area-section-body" style="text-align:center;padding:16px">
-                <img
-                    src="${fullUrl}"
-                    onerror="this.src='${thumbUrl}'; this.onerror=null;"
-                    alt="Map preview of ${escAttr(getMapDisplayName(map))}"
-                    style="max-width:100%;height:auto;image-rendering:pixelated;border-radius:6px;border:1px solid var(--border);background:var(--bg)"
-                >
-                <div style="margin-top:8px;font-size:11px;color:var(--text-dim)">
-                    Full-size map image (pixel-accurate rendering from tileset data)
+            <div class="map-area-section-body" style="padding:16px">
+                <div class="imap-legend">${legendItems.join('')}</div>
+                <div class="imap-container" id="imap-container" data-dir="${escAttr(dirName)}">
+                    <img
+                        id="imap-img"
+                        src="${fullUrl}"
+                        onerror="this.src='${thumbUrl}'; this.onerror=null;"
+                        alt="Interactive map of ${escAttr(getMapDisplayName(map))}"
+                        style="max-width:100%;height:auto;image-rendering:pixelated;display:block"
+                    >
+                    <div class="imap-markers" id="imap-markers"></div>
                 </div>
+                <div class="imap-hint">Click a marker to edit. Drag to reposition.</div>
             </div>
         </div>
     `;
+}
+
+// Place interactive markers on the map image once it loads
+function initInteractiveMap(map) {
+    const container = $('#imap-container');
+    const img = $('#imap-img');
+    const markersEl = $('#imap-markers');
+    if (!container || !img || !markersEl) return;
+
+    const dirName = map._dirName;
+
+    function placeMarkers() {
+        markersEl.innerHTML = '';
+        const imgW = img.naturalWidth;
+        const imgH = img.naturalHeight;
+        if (!imgW || !imgH) return;
+
+        // Compute tile size: GBA maps use 16px tiles in the source images
+        const TILE = 16;
+
+        // Collect all entities with positions
+        const entities = [];
+
+        // NPCs (non-item, non-berry)
+        (map.object_events || []).forEach((evt, i) => {
+            if ((evt.graphics_id || '').includes('ITEM_BALL')) {
+                entities.push({ type: 'item', x: evt.x, y: evt.y, idx: i, evt, label: (evt.trainer_sight_or_berry_tree_id || '').replace('ITEM_', '').replace(/_/g, ' ') });
+            } else if ((evt.graphics_id || '').includes('BERRY_TREE')) {
+                // Skip berry trees
+            } else {
+                const isTrainer = evt.trainer_type && evt.trainer_type !== 'TRAINER_TYPE_NONE';
+                let name = (evt.graphics_id || '').replace('OBJ_EVENT_GFX_', '').replace(/_/g, ' ');
+                if (evt.script && evt.script !== '0x0') {
+                    const parts = evt.script.split('_EventScript_');
+                    if (parts.length >= 2) name = parts[parts.length - 1].replace(/_/g, ' ');
+                }
+                entities.push({ type: isTrainer ? 'trainer' : 'npc', x: evt.x, y: evt.y, idx: i, evt, label: name });
+            }
+        });
+
+        // Hidden items
+        (map.bg_events || []).forEach((evt, i) => {
+            if (evt.type === 'hidden_item') {
+                entities.push({ type: 'hidden', x: evt.x, y: evt.y, bgIdx: i, evt, label: (evt.item || '').replace('ITEM_', '').replace(/_/g, ' ') });
+            } else if (evt.type === 'sign') {
+                entities.push({ type: 'sign', x: evt.x, y: evt.y, bgIdx: i, evt, label: 'Sign' });
+            }
+        });
+
+        // Warps
+        (map.warp_events || []).forEach((evt, i) => {
+            const dest = (evt.dest_map || '').replace('MAP_', '').replace(/_/g, ' ');
+            entities.push({ type: 'warp', x: evt.x, y: evt.y, warpIdx: i, evt, label: dest || 'Warp' });
+        });
+
+        for (const ent of entities) {
+            const marker = document.createElement('div');
+            marker.className = `imap-marker imap-marker-${ent.type}`;
+            // Position as percentage relative to image size
+            // +7 offset: maps typically have a 7-tile border on each side
+            const px = ((ent.x + 7) * TILE + TILE / 2) / imgW * 100;
+            const py = ((ent.y + 7) * TILE + TILE / 2) / imgH * 100;
+            marker.style.left = px + '%';
+            marker.style.top = py + '%';
+            marker.title = `${ent.type.toUpperCase()}: ${ent.label} (${ent.x}, ${ent.y})`;
+            marker.dataset.entityType = ent.type;
+            marker.dataset.x = ent.x;
+            marker.dataset.y = ent.y;
+
+            // Icon inside marker
+            const icons = { npc: '\u263A', trainer: '\u2694', item: '\u2666', hidden: '\u2733', warp: '\uD83D\uDEAA', sign: '\uD83D\uDCCB' };
+            marker.innerHTML = icons[ent.type] || '\u2022';
+
+            // Click to open edit menu
+            marker.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openMarkerMenu(ent, map, marker);
+            });
+
+            // Drag to reposition
+            setupMarkerDrag(marker, ent, map, img, TILE);
+
+            markersEl.appendChild(marker);
+        }
+    }
+
+    if (img.complete && img.naturalWidth) {
+        placeMarkers();
+    } else {
+        img.addEventListener('load', placeMarkers);
+    }
+    // Recompute on resize
+    const observer = new ResizeObserver(() => placeMarkers());
+    observer.observe(container);
+    // Store cleanup ref
+    container._resizeObserver = observer;
+}
+
+function setupMarkerDrag(marker, entity, map, img, TILE) {
+    let isDragging = false;
+    let startX, startY;
+    const DRAG_THRESHOLD = 4;
+
+    marker.addEventListener('mousedown', (e) => {
+        if (e.button !== 0) return;
+        isDragging = false;
+        startX = e.clientX;
+        startY = e.clientY;
+        marker.classList.add('imap-marker-dragging');
+
+        const onMove = (e2) => {
+            const dx = e2.clientX - startX;
+            const dy = e2.clientY - startY;
+            if (Math.abs(dx) > DRAG_THRESHOLD || Math.abs(dy) > DRAG_THRESHOLD) {
+                isDragging = true;
+                // Move marker visually
+                const rect = img.getBoundingClientRect();
+                const pxX = ((e2.clientX - rect.left) / rect.width) * 100;
+                const pxY = ((e2.clientY - rect.top) / rect.height) * 100;
+                marker.style.left = Math.max(0, Math.min(100, pxX)) + '%';
+                marker.style.top = Math.max(0, Math.min(100, pxY)) + '%';
+            }
+        };
+
+        const onUp = (e2) => {
+            document.removeEventListener('mousemove', onMove);
+            document.removeEventListener('mouseup', onUp);
+            marker.classList.remove('imap-marker-dragging');
+
+            if (isDragging) {
+                // Calculate new tile coords
+                const rect = img.getBoundingClientRect();
+                const relX = (e2.clientX - rect.left) / rect.width;
+                const relY = (e2.clientY - rect.top) / rect.height;
+                const newX = Math.round((relX * img.naturalWidth) / TILE - 7 - 0.5);
+                const newY = Math.round((relY * img.naturalHeight) / TILE - 7 - 0.5);
+
+                if (newX !== entity.x || newY !== entity.y) {
+                    entity.evt.x = newX;
+                    entity.evt.y = newY;
+                    entity.x = newX;
+                    entity.y = newY;
+                    const serialized = { ...map };
+                    delete serialized._dirName;
+                    markChanged(`data/maps/${map._dirName}/map.json`, JSON.stringify(serialized, null, 2) + '\n');
+                    toast(`Moved ${entity.type} to (${newX}, ${newY})`);
+                    renderMapDetail(map._dirName);
+                }
+            }
+        };
+
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
+        e.preventDefault();
+    });
+}
+
+function openMarkerMenu(entity, map, markerEl) {
+    // Remove any existing popup
+    $$('.imap-popup').forEach(p => p.remove());
+
+    const popup = document.createElement('div');
+    popup.className = 'imap-popup';
+
+    const dirName = map._dirName;
+    let buttonsHtml = '';
+
+    if (entity.type === 'npc' || entity.type === 'trainer') {
+        buttonsHtml = `
+            <button class="btn btn-sm" onclick="editObjectEvent('${escAttr(dirName)}', ${entity.idx}); this.closest('.imap-popup').remove()">Edit</button>
+            ${entity.type === 'trainer' ? `<button class="btn btn-sm" onclick="editTrainerPartyFromScript('${escAttr(dirName)}', '${escAttr(entity.evt.script || '')}'); this.closest('.imap-popup').remove()">Party</button>` : ''}
+            <button class="btn btn-sm btn-danger" onclick="deleteObjectEvent('${escAttr(dirName)}', ${entity.idx}); this.closest('.imap-popup').remove()">Delete</button>
+        `;
+    } else if (entity.type === 'item') {
+        const itemIdx = getMapItemBalls(map).indexOf(entity.evt);
+        buttonsHtml = `
+            <button class="btn btn-sm" onclick="editMapItemBall('${escAttr(dirName)}', ${itemIdx}); this.closest('.imap-popup').remove()">Edit</button>
+            <button class="btn btn-sm btn-danger" onclick="deleteMapItemBall('${escAttr(dirName)}', ${itemIdx}); this.closest('.imap-popup').remove()">Delete</button>
+        `;
+    } else if (entity.type === 'warp') {
+        buttonsHtml = `
+            <button class="btn btn-sm" onclick="editWarp('${escAttr(dirName)}', ${entity.warpIdx}); this.closest('.imap-popup').remove()">Edit</button>
+            <button class="btn btn-sm btn-danger" onclick="deleteWarp('${escAttr(dirName)}', ${entity.warpIdx}); this.closest('.imap-popup').remove()">Delete</button>
+        `;
+    } else if (entity.type === 'hidden') {
+        const hiddenIdx = (map.bg_events || []).filter(e => e.type === 'hidden_item').indexOf(entity.evt);
+        buttonsHtml = `
+            <button class="btn btn-sm" onclick="editMapHiddenItem('${escAttr(dirName)}', ${hiddenIdx}); this.closest('.imap-popup').remove()">Edit</button>
+            <button class="btn btn-sm btn-danger" onclick="deleteMapHiddenItem('${escAttr(dirName)}', ${hiddenIdx}); this.closest('.imap-popup').remove()">Delete</button>
+        `;
+    } else if (entity.type === 'sign') {
+        buttonsHtml = `<span style="font-size:11px;color:var(--text-dim)">Sign at (${entity.x}, ${entity.y})</span>`;
+    }
+
+    popup.innerHTML = `
+        <div class="imap-popup-header">
+            <strong>${escHtml(entity.label)}</strong>
+            <span class="imap-popup-type imap-dot-${entity.type}">${entity.type}</span>
+        </div>
+        <div class="imap-popup-coords">(${entity.x}, ${entity.y})</div>
+        <div class="imap-popup-actions">${buttonsHtml}</div>
+    `;
+
+    // Position near the marker
+    const container = $('#imap-container');
+    const markerRect = markerEl.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+    popup.style.left = (markerRect.left - containerRect.left + markerRect.width / 2) + 'px';
+    popup.style.top = (markerRect.top - containerRect.top - 8) + 'px';
+
+    container.appendChild(popup);
+
+    // Close on click elsewhere
+    const closeHandler = (e) => {
+        if (!popup.contains(e.target) && !markerEl.contains(e.target)) {
+            popup.remove();
+            document.removeEventListener('click', closeHandler);
+        }
+    };
+    setTimeout(() => document.addEventListener('click', closeHandler), 0);
 }
 
 // ── Wild Encounters Section ──
@@ -4782,6 +5028,12 @@ function collectNPCs() {
 }
 
 async function renderNPCs() {
+    // If viewing a specific NPC group, render detail
+    if (state.npcDetail) {
+        await renderNPCGroupDetail(state.npcDetail);
+        return;
+    }
+
     const maps = await loadMaps();
     try { await loadTrainers(); } catch {}
 
@@ -4796,14 +5048,15 @@ async function renderNPCs() {
             (n._mapId || '').toLowerCase().includes(search);
     });
 
-    // Group by graphics_id for a summary view
+    // Group by graphics_id
     const groups = {};
     for (const n of filtered) {
         const key = n.graphics_id || 'UNKNOWN';
-        if (!groups[key]) groups[key] = { graphics_id: key, count: 0, maps: new Set(), npcs: [] };
+        if (!groups[key]) groups[key] = { graphics_id: key, count: 0, maps: new Set(), npcs: [], hasTrainer: false };
         groups[key].count++;
         groups[key].maps.add(n._mapName);
         groups[key].npcs.push(n);
+        if (n.trainer_type && n.trainer_type !== 'TRAINER_TYPE_NONE') groups[key].hasTrainer = true;
     }
 
     const sortedGroups = Object.values(groups).sort((a, b) => b.count - a.count);
@@ -4821,57 +5074,137 @@ async function renderNPCs() {
 
     const list = $('#npc-list');
 
-    // Show individual NPC events in a table-like view
-    const maxShow = 200;
-    const toShow = filtered.slice(0, maxShow);
+    // Group view: each graphics_id gets a card. Click to expand into individual entries.
+    const maxGroups = 100;
+    const groupsToShow = sortedGroups.slice(0, maxGroups);
 
-    let rows = toShow.map((n, i) => {
-        const gfx = (n.graphics_id || '').replace('OBJ_EVENT_GFX_', '').replace(/_/g, ' ');
-        const isTrainer = n.trainer_type && n.trainer_type !== 'TRAINER_TYPE_NONE';
-        const scriptShort = (n.script || '').replace(/_EventScript_/g, ' ').replace(/_/g, ' ');
+    let groupCards = groupsToShow.map(g => {
+        const gfx = g.graphics_id.replace('OBJ_EVENT_GFX_', '').replace(/_/g, ' ');
+        const mapList = [...g.maps].slice(0, 3).join(', ') + (g.maps.size > 3 ? ` +${g.maps.size - 3} more` : '');
+        const trainerCount = g.npcs.filter(n => n.trainer_type && n.trainer_type !== 'TRAINER_TYPE_NONE').length;
+
+        // If only 1 NPC, show inline with direct actions
+        if (g.count === 1) {
+            const n = g.npcs[0];
+            const isTrainer = n.trainer_type && n.trainer_type !== 'TRAINER_TYPE_NONE';
+            return `
+                <div class="npc-group-card npc-group-single">
+                    <div class="npc-group-header">
+                        ${getSpriteHtml(g.graphics_id, 40)}
+                        <div class="npc-group-info">
+                            <div class="npc-group-name">${escHtml(gfx)}${isTrainer ? ' <span class="npc-badge npc-badge-trainer">Trainer</span>' : ''}</div>
+                            <div class="npc-group-meta">${escHtml(n._mapName)} &middot; (${n.x}, ${n.y})</div>
+                        </div>
+                        <div class="npc-group-actions">
+                            <button class="btn btn-sm" onclick="editNPCFromList('${escAttr(n._mapDirName)}', '${escAttr(n.script || '')}', ${n.x}, ${n.y})">Edit</button>
+                            ${isTrainer ? `<button class="btn btn-sm" onclick="editNPCParty('${escAttr(n._mapDirName)}', '${escAttr(n.script || '')}')">Party</button>` : ''}
+                            <button class="btn btn-sm" onclick="openMapDetail('${escAttr(n._mapDirName)}')" title="Go to map">Map</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Multiple NPCs: show as group card that can be clicked into
         return `
-            <div class="npc-row">
-                ${getSpriteHtml(n.graphics_id, 36)}
-                <div class="npc-row-info">
-                    <div class="npc-row-name">${escHtml(gfx)}${isTrainer ? ' <span style="color:var(--red);font-size:10px">TRAINER</span>' : ''}</div>
-                    <div class="npc-row-detail">${escHtml(n.script || 'No script')}</div>
-                </div>
-                <div class="npc-row-map" onclick="openMapDetail('${escAttr(n._mapDirName)}')" style="cursor:pointer" title="Go to map">
-                    ${escHtml(n._mapName)}
-                </div>
-                <div class="npc-row-coords">(${n.x}, ${n.y})</div>
-                <div class="npc-row-actions">
-                    <button class="btn btn-sm" onclick="editNPCFromList('${escAttr(n._mapDirName)}', '${escAttr(n.script || '')}', ${n.x}, ${n.y})">Edit</button>
-                    ${isTrainer ? `<button class="btn btn-sm" onclick="editNPCParty('${escAttr(n._mapDirName)}', '${escAttr(n.script || '')}')">Party</button>` : ''}
+            <div class="npc-group-card" onclick="state.npcDetail='${escAttr(g.graphics_id)}'; renderNPCs()" style="cursor:pointer">
+                <div class="npc-group-header">
+                    ${getSpriteHtml(g.graphics_id, 40)}
+                    <div class="npc-group-info">
+                        <div class="npc-group-name">${escHtml(gfx)}</div>
+                        <div class="npc-group-meta">${g.count} instances across ${g.maps.size} map${g.maps.size !== 1 ? 's' : ''}</div>
+                        <div class="npc-group-maps">${escHtml(mapList)}</div>
+                    </div>
+                    <div class="npc-group-badges">
+                        <span class="npc-group-count">${g.count}</span>
+                        ${trainerCount > 0 ? `<span class="npc-badge npc-badge-trainer">${trainerCount} trainer${trainerCount !== 1 ? 's' : ''}</span>` : ''}
+                    </div>
+                    <span class="npc-group-arrow">&#9654;</span>
                 </div>
             </div>
         `;
     }).join('');
 
-    if (filtered.length > maxShow) {
-        rows += `<div style="padding:16px;color:var(--text-dim);font-size:13px;text-align:center">Showing ${maxShow} of ${filtered.length} NPCs. Use search to narrow down.</div>`;
+    if (sortedGroups.length > maxGroups) {
+        groupCards += `<div style="padding:16px;color:var(--text-dim);font-size:13px;text-align:center">Showing ${maxGroups} of ${sortedGroups.length} NPC types. Use search to narrow down.</div>`;
     }
 
-    list.innerHTML = `
-        <div class="npc-table">
-            <div class="npc-table-header">
-                <div style="min-width:36px"></div>
-                <div style="flex:2">Name / Script</div>
-                <div style="flex:1">Map</div>
-                <div style="min-width:70px">Position</div>
-                <div style="min-width:130px"></div>
-            </div>
-            ${rows || '<div class="empty-state">No NPCs found matching your search.</div>'}
-        </div>
-    `;
+    list.innerHTML = groupCards || '<div class="empty-state">No NPCs found matching your search.</div>';
 
     $('#npc-search').addEventListener('input', async e => {
         const pos = e.target.selectionStart;
         state.search = e.target.value;
+        state.npcDetail = null;
         await renderNPCs();
         const el = $('#npc-search');
         if (el) { el.focus(); el.selectionStart = el.selectionEnd = pos; }
     });
+}
+
+// Detail view for a specific NPC graphics_id group
+async function renderNPCGroupDetail(graphicsId) {
+    const allNPCs = collectNPCs();
+    const groupNPCs = allNPCs.filter(n => n.graphics_id === graphicsId);
+    const gfx = graphicsId.replace('OBJ_EVENT_GFX_', '').replace(/_/g, ' ');
+
+    content.innerHTML = `
+        <button class="back-btn" onclick="state.npcDetail=null; renderNPCs()">&#8592; Back to NPCs</button>
+        <div class="page-header" style="margin-bottom:16px">
+            <div style="display:flex;align-items:center;gap:14px">
+                ${getSpriteHtml(graphicsId, 48)}
+                <div>
+                    <h1>${escHtml(gfx)}</h1>
+                    <div style="color:var(--text-dim);font-size:13px">${groupNPCs.length} instance${groupNPCs.length !== 1 ? 's' : ''} across ${new Set(groupNPCs.map(n => n._mapName)).size} maps</div>
+                </div>
+            </div>
+        </div>
+        <div id="npc-group-list"></div>
+    `;
+
+    const list = $('#npc-group-list');
+
+    // Group by map for better organization
+    const byMap = {};
+    for (const n of groupNPCs) {
+        if (!byMap[n._mapDirName]) byMap[n._mapDirName] = { name: n._mapName, npcs: [] };
+        byMap[n._mapDirName].npcs.push(n);
+    }
+
+    let html = '';
+    for (const [dirName, mapGroup] of Object.entries(byMap)) {
+        html += `<div class="npc-group-map-section">
+            <div class="npc-group-map-header" onclick="openMapDetail('${escAttr(dirName)}')" style="cursor:pointer" title="Go to map">
+                <span>${escHtml(mapGroup.name)}</span>
+                <span class="npc-group-map-count">${mapGroup.npcs.length}</span>
+            </div>`;
+
+        for (const n of mapGroup.npcs) {
+            const isTrainer = n.trainer_type && n.trainer_type !== 'TRAINER_TYPE_NONE';
+            let npcName = gfx;
+            if (n.script && n.script !== '0x0') {
+                const parts = n.script.split('_EventScript_');
+                if (parts.length >= 2) npcName = parts[parts.length - 1].replace(/_/g, ' ');
+            }
+
+            html += `
+                <div class="npc-row">
+                    ${getSpriteHtml(n.graphics_id, 36)}
+                    <div class="npc-row-info">
+                        <div class="npc-row-name">${escHtml(npcName)}${isTrainer ? ' <span style="color:var(--red);font-size:10px">TRAINER</span>' : ''}</div>
+                        <div class="npc-row-detail">${escHtml(n.script || 'No script')}</div>
+                    </div>
+                    <div class="npc-row-coords">(${n.x}, ${n.y})</div>
+                    <div class="npc-row-actions">
+                        <button class="btn btn-sm" onclick="editNPCFromList('${escAttr(n._mapDirName)}', '${escAttr(n.script || '')}', ${n.x}, ${n.y})">Edit</button>
+                        ${isTrainer ? `<button class="btn btn-sm" onclick="editNPCParty('${escAttr(n._mapDirName)}', '${escAttr(n.script || '')}')">Party</button>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+        html += '</div>';
+    }
+
+    list.innerHTML = html || '<div class="empty-state">No NPCs found.</div>';
 }
 
 function editNPCFromList(dirName, script, x, y) {
@@ -4922,9 +5255,30 @@ function parsePokemonSpecies(text) {
         const growthM = body.match(/\.growthRate\s*=\s*(\w+)/);
         const eggM = body.match(/\.eggGroups\s*=\s*MON_EGG_GROUPS\((\w+)(?:,\s*(\w+))?\)/);
         const learnsetM = body.match(/\.levelUpLearnset\s*=\s*(\w+)/);
+        const evosM = body.match(/\.evolutions\s*=\s*EVOLUTION\((.+)\)\s*,/);
 
         if (nameM) mon.name = nameM[1];
         if (learnsetM) mon.learnsetVar = learnsetM[1];
+
+        // Parse evolution data
+        if (evosM) {
+            mon.evolutions = [];
+            const evoStr = evosM[1];
+            // Match each {EVO_METHOD, param, SPECIES_TARGET, ...} block
+            const evoBlockRegex = /\{(EVO_\w+),\s*([^,}]+),\s*(SPECIES_\w+)(?:,\s*CONDITIONS\(([^)]+)\))?\}/g;
+            let evoMatch;
+            while ((evoMatch = evoBlockRegex.exec(evoStr)) !== null) {
+                const evo = {
+                    method: evoMatch[1],
+                    param: evoMatch[2].trim(),
+                    target: evoMatch[3],
+                };
+                if (evoMatch[4]) {
+                    evo.conditions = evoMatch[4].trim();
+                }
+                mon.evolutions.push(evo);
+            }
+        }
         if (hpM) mon.baseHP = parseInt(hpM[1]);
         if (atkM) mon.baseAttack = parseInt(atkM[1]);
         if (defM) mon.baseDefense = parseInt(defM[1]);
@@ -4976,6 +5330,32 @@ async function loadPokemonSpecies() {
         state.pokemon = allPokemon;
     }
     return state.pokemon;
+}
+
+function formatEvoMethod(evo) {
+    const method = (evo.method || '').replace('EVO_', '');
+    const param = (evo.param || '').replace('ITEM_', '').replace(/_/g, ' ');
+    const conditions = (evo.conditions || '').replace(/\{IF_/g, '').replace(/}/g, '').replace(/_/g, ' ').replace(/,\s*/g, ': ');
+    const labels = {
+        'LEVEL': `Level ${param}`,
+        'ITEM': `Use ${param}`,
+        'TRADE': 'Trade',
+        'TRADE_ITEM': `Trade holding ${param}`,
+        'FRIENDSHIP': 'Friendship',
+        'LEVEL_NIGHT': `Level ${param} (Night)`,
+        'LEVEL_DAY': `Level ${param} (Day)`,
+        'BEAUTY': `Beauty ${param}`,
+        'ITEM_HOLD_DAY': `Hold ${param} (Day)`,
+        'ITEM_HOLD_NIGHT': `Hold ${param} (Night)`,
+        'MOVE': `Know ${param}`,
+        'MOVE_TYPE': `Know ${param}-type move`,
+        'SPECIFIC_MON_IN_PARTY': `${param} in party`,
+        'LEVEL_RAIN': `Level ${param} (Rain)`,
+        'LEVEL_DARK_TYPE_MON_IN_PARTY': `Level ${param} (Dark-type in party)`,
+    };
+    let result = labels[method] || `${method} ${param}`.trim();
+    if (conditions) result += ` [${conditions}]`;
+    return result;
 }
 
 function updatePokemonInFile(mon) {
@@ -5324,6 +5704,17 @@ async function renderPokemonPage() {
     const totalPages = Math.ceil(filtered.length / perPage);
     const pageItems = filtered.slice(page * perPage, (page + 1) * perPage);
 
+    // Build evolution lookup: species -> what evolves INTO it (prevolutions)
+    const prevolutionMap = {};
+    for (const p of pokemon) {
+        if (p.evolutions) {
+            for (const evo of p.evolutions) {
+                if (!prevolutionMap[evo.target]) prevolutionMap[evo.target] = [];
+                prevolutionMap[evo.target].push({ from: p.id, fromName: p.name, method: evo.method, param: evo.param, conditions: evo.conditions });
+            }
+        }
+    }
+
     content.innerHTML = `
         <div class="page-header">
             <h1>Pokemon <span style="color:var(--text-dim);font-size:14px">(${filtered.length})</span></h1>
@@ -5345,11 +5736,33 @@ async function renderPokemonPage() {
                         <th>SpD</th>
                         <th>Spe</th>
                         <th>BST</th>
+                        <th>Evolution</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody id="pokemon-tbody">
-                    ${pageItems.map(p => `
+                    ${pageItems.map(p => {
+                        // Evolution display
+                        let evoHtml = '';
+                        if (p.evolutions && p.evolutions.length > 0) {
+                            evoHtml = p.evolutions.map(e => {
+                                const targetName = (pokemon.find(x => x.id === e.target) || {}).name || e.target.replace('SPECIES_', '');
+                                return `<span class="evo-pill" title="${escAttr(formatEvoMethod(e))}">${escHtml(targetName)}</span>`;
+                            }).join(' ');
+                        }
+                        // Show prevolution if exists
+                        const prevos = prevolutionMap[p.id];
+                        if (prevos && prevos.length > 0) {
+                            const prevoHtml = prevos.map(pr => {
+                                const fromName = pr.fromName || pr.from.replace('SPECIES_', '');
+                                return `<span class="evo-pill evo-pill-from" title="${escAttr(formatEvoMethod(pr))}">${escHtml(fromName)}</span>`;
+                            }).join(' ');
+                            evoHtml = prevoHtml + (evoHtml ? ' &#8594; ' : '') + evoHtml;
+                        } else if (evoHtml) {
+                            evoHtml = '&#8594; ' + evoHtml;
+                        }
+
+                        return `
                         <tr>
                             <td>
                                 <strong>${escHtml(p.name || '-')}</strong><br>
@@ -5366,12 +5779,13 @@ async function renderPokemonPage() {
                             <td>${p.baseSpDefense ?? '-'}</td>
                             <td>${p.baseSpeed ?? '-'}</td>
                             <td><strong>${p.bst || '-'}</strong></td>
+                            <td style="font-size:11px;max-width:180px">${evoHtml || '<span style="color:var(--text-dim)">-</span>'}</td>
                             <td>
                                 <button class="btn btn-sm" onclick="editPokemon('${escAttr(p.id)}')">Stats</button>
                                 <button class="btn btn-sm" onclick="editLearnset('${escAttr(p.id)}')">Moves</button>
                             </td>
                         </tr>
-                    `).join('')}
+                    `}).join('')}
                 </tbody>
             </table>
         </div>
@@ -5488,6 +5902,19 @@ function editPokemon(id) {
                         <input type="text" value="${escAttr((mon.eggGroup1 || '') + (mon.eggGroup2 ? ', ' + mon.eggGroup2 : ''))}" readonly style="opacity:0.6;font-family:monospace;font-size:12px">
                     </div>
                 </div>
+                ${mon.evolutions && mon.evolutions.length > 0 ? `
+                <div style="margin:12px 0 8px;font-size:13px;font-weight:600">Evolution</div>
+                <div class="evo-chain-display">
+                    ${mon.evolutions.map(e => {
+                        const targetMon = (state.pokemon || []).find(p => p.id === e.target);
+                        const targetName = targetMon ? targetMon.name : e.target.replace('SPECIES_', '');
+                        return `<div class="evo-chain-entry">
+                            <span class="evo-chain-arrow">&#8594;</span>
+                            <span class="evo-chain-target">${escHtml(targetName)}</span>
+                            <span class="evo-chain-method">${escHtml(formatEvoMethod(e))}</span>
+                        </div>`;
+                    }).join('')}
+                </div>` : ''}
                 <div style="margin-top:12px;padding:10px;background:var(--bg);border-radius:6px;font-size:12px;color:var(--text-dim)">
                     BST: <strong style="color:var(--text)">${mon.bst || 0}</strong> &middot; File: ${escHtml(mon._file || '')}
                 </div>
