@@ -43,6 +43,8 @@ let state = {
     mapTypeFilter: 'all',
     npcDetail: null,
     pokemonPage: 0,
+    customSprites: JSON.parse(localStorage.getItem('custom_sprites') || '{}'),
+    spriteCreatorEdit: null, // name of sprite being edited
 };
 
 // Track pending changes: { filePath: newContent }
@@ -953,6 +955,7 @@ async function render() {
             case 'config': await renderConfig(); break;
             case 'starters': await renderStarters(); break;
             case 'music': await renderMusic(); break;
+            case 'sprite-creator': await renderSpriteCreator(); break;
         }
     } catch (e) {
         content.innerHTML = `<div class="loading-center" style="color:var(--red)">Error loading data: ${escHtml(e.message)}</div>`;
@@ -6549,6 +6552,589 @@ async function playMapMusic(musicId) {
         toast('No MIDI file available for ' + musicId, true);
     }
 }
+
+// ─── Sprite Creator ─────────────────────────────────────────────────────────
+
+function saveCustomSprites() {
+    localStorage.setItem('custom_sprites', JSON.stringify(state.customSprites));
+}
+
+// GBA-accurate 15-bit palette (common NPC colors)
+const SPRITE_PALETTE = [
+    'transparent',
+    '#000000', '#ffffff', '#f8f8f8', '#d0d0d0', '#a8a8a8', '#787878', '#505050',
+    '#f85858', '#d03030', '#a01818', '#f8a878', '#e88040', '#c06020',
+    '#f8d878', '#e8b830', '#c09018', '#78f878', '#30b830', '#187818',
+    '#58a8f8', '#3070d0', '#1840a0', '#7858f8', '#5030d0', '#3018a0',
+    '#f878d8', '#d040a0', '#a01870', '#f8c8a0', '#d89868', '#a07040',
+];
+
+async function renderSpriteCreator() {
+    const spriteNames = Object.keys(state.customSprites);
+    const editing = state.spriteCreatorEdit;
+
+    if (editing !== null) {
+        renderSpriteEditor(editing);
+        return;
+    }
+
+    content.innerHTML = `
+        <div class="page-header">
+            <h1>Sprite Creator</h1>
+            <div class="page-header-actions">
+                <button class="btn btn-primary" id="new-sprite-btn">+ New Sprite</button>
+            </div>
+        </div>
+        <p style="color:var(--text-dim);margin-bottom:16px">Create custom overworld sprites from scratch or start from an existing base sprite. Custom sprites can be assigned to NPCs.</p>
+        <div id="custom-sprite-list"></div>
+    `;
+
+    const list = $('#custom-sprite-list');
+
+    if (spriteNames.length === 0) {
+        list.innerHTML = '<div class="empty-state">No custom sprites yet. Click <strong>+ New Sprite</strong> to get started.</div>';
+    } else {
+        list.innerHTML = spriteNames.map(name => {
+            const sprite = state.customSprites[name];
+            const dataUrl = spriteDataToImage(sprite.pixels, sprite.width, sprite.height, 4);
+            return `
+                <div class="npc-group-card npc-group-single">
+                    <div class="npc-group-header">
+                        <div class="sprite-container" style="width:48px;height:48px">
+                            <img src="${dataUrl}" style="width:48px;height:48px;image-rendering:pixelated" alt="${escAttr(name)}">
+                        </div>
+                        <div class="npc-group-info">
+                            <div class="npc-group-name">${escHtml(name)}</div>
+                            <div class="npc-group-meta">${sprite.width}x${sprite.height} &middot; Created ${new Date(sprite.created).toLocaleDateString()}</div>
+                        </div>
+                        <div class="npc-group-actions">
+                            <button class="btn btn-sm" onclick="state.spriteCreatorEdit='${escAttr(name)}'; renderSpriteCreator()">Edit</button>
+                            <button class="btn btn-sm" onclick="exportCustomSprite('${escAttr(name)}')">Export PNG</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteCustomSprite('${escAttr(name)}')">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    $('#new-sprite-btn').addEventListener('click', () => openNewSpriteModal());
+}
+
+function openNewSpriteModal() {
+    const graphicsIds = getUniqueGraphicsIds();
+    const overworldIds = graphicsIds.filter(id => {
+        const name = id.replace('OBJ_EVENT_GFX_', '').toLowerCase();
+        return OVERWORLD_ONLY.has(name);
+    });
+
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+        <div class="modal">
+            <div class="modal-header">
+                <h2>New Custom Sprite</h2>
+                <button class="btn btn-sm" onclick="this.closest('.modal-overlay').remove()">&#10005;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Sprite Name</label>
+                    <input type="text" id="new-sprite-name" placeholder="e.g. custom_villager">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Width (px)</label>
+                        <select id="new-sprite-w">
+                            <option value="16">16</option>
+                            <option value="32" selected>32</option>
+                            <option value="64">64</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Height (px)</label>
+                        <select id="new-sprite-h">
+                            <option value="16">16</option>
+                            <option value="32" selected>32</option>
+                            <option value="64">64</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Start from base sprite (optional)</label>
+                    ${makeDatalistHtml('new-sprite-base', '', graphicsIds, 'placeholder="Select a sprite to use as starting point"')}
+                </div>
+                <div id="base-sprite-preview" style="margin-top:12px;display:none">
+                    <div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg);border-radius:6px;border:1px solid var(--border)">
+                        <div id="base-preview-img"></div>
+                        <span style="color:var(--text-dim);font-size:12px">This sprite will be loaded into the editor as your starting point</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+                <button class="btn btn-primary" id="create-sprite-btn">Create</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+
+    // Live preview of base sprite
+    const baseInput = $('#new-sprite-base');
+    baseInput.addEventListener('input', () => {
+        const gfxId = baseInput.value;
+        const preview = $('#base-sprite-preview');
+        if (gfxId && graphicsIds.includes(gfxId)) {
+            preview.style.display = 'block';
+            $('#base-preview-img').innerHTML = getSpriteHtml(gfxId, 64);
+        } else {
+            preview.style.display = 'none';
+        }
+    });
+
+    $('#create-sprite-btn').addEventListener('click', async () => {
+        const name = $('#new-sprite-name').value.trim().replace(/\s+/g, '_');
+        if (!name) { toast('Please enter a sprite name', true); return; }
+        if (state.customSprites[name]) { toast('A sprite with that name already exists', true); return; }
+
+        const w = parseInt($('#new-sprite-w').value);
+        const h = parseInt($('#new-sprite-h').value);
+        const baseGfx = baseInput.value;
+
+        // Create empty pixel array
+        let pixels = new Array(w * h).fill(0); // 0 = transparent
+
+        // If base sprite selected, load its pixels
+        if (baseGfx && graphicsIds.includes(baseGfx)) {
+            try {
+                pixels = await loadSpritePixels(baseGfx, w, h);
+            } catch (e) {
+                toast('Could not load base sprite, starting blank', true);
+            }
+        }
+
+        state.customSprites[name] = {
+            pixels,
+            width: w,
+            height: h,
+            created: Date.now(),
+        };
+        saveCustomSprites();
+        overlay.remove();
+        state.spriteCreatorEdit = name;
+        renderSpriteCreator();
+    });
+}
+
+// Load pixels from an existing game sprite into a pixel array
+async function loadSpritePixels(graphicsId, targetW, targetH) {
+    const { url } = getSpriteUrl(graphicsId);
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = targetW;
+            canvas.height = targetH;
+            const ctx = canvas.getContext('2d');
+            ctx.imageSmoothingEnabled = false;
+            // Draw source image scaled to fit target, centered
+            const scale = Math.min(targetW / img.width, targetH / img.height);
+            const sw = img.width * scale;
+            const sh = img.height * scale;
+            const sx = (targetW - sw) / 2;
+            const sy = (targetH - sh) / 2;
+            ctx.drawImage(img, sx, sy, sw, sh);
+            const imageData = ctx.getImageData(0, 0, targetW, targetH);
+            const pixels = [];
+            for (let i = 0; i < targetW * targetH; i++) {
+                const r = imageData.data[i * 4];
+                const g = imageData.data[i * 4 + 1];
+                const b = imageData.data[i * 4 + 2];
+                const a = imageData.data[i * 4 + 3];
+                if (a < 128) {
+                    pixels.push(0); // transparent
+                } else {
+                    // Find nearest palette color
+                    pixels.push(nearestPaletteIndex(r, g, b));
+                }
+            }
+            resolve(pixels);
+        };
+        img.onerror = reject;
+        img.src = url;
+    });
+}
+
+function nearestPaletteIndex(r, g, b) {
+    let best = 1;
+    let bestDist = Infinity;
+    for (let i = 1; i < SPRITE_PALETTE.length; i++) {
+        const c = hexToRgb(SPRITE_PALETTE[i]);
+        const dr = r - c.r, dg = g - c.g, db = b - c.b;
+        const dist = dr * dr + dg * dg + db * db;
+        if (dist < bestDist) { bestDist = dist; best = i; }
+    }
+    return best;
+}
+
+function hexToRgb(hex) {
+    const v = parseInt(hex.slice(1), 16);
+    return { r: (v >> 16) & 255, g: (v >> 8) & 255, b: v & 255 };
+}
+
+// Convert pixel array to a data URL for preview
+function spriteDataToImage(pixels, w, h, scale = 1) {
+    const canvas = document.createElement('canvas');
+    canvas.width = w * scale;
+    canvas.height = h * scale;
+    const ctx = canvas.getContext('2d');
+    for (let y = 0; y < h; y++) {
+        for (let x = 0; x < w; x++) {
+            const idx = y * w + x;
+            const palIdx = pixels[idx];
+            if (palIdx === 0) continue; // transparent
+            ctx.fillStyle = SPRITE_PALETTE[palIdx] || '#ff00ff';
+            ctx.fillRect(x * scale, y * scale, scale, scale);
+        }
+    }
+    return canvas.toDataURL();
+}
+
+function renderSpriteEditor(name) {
+    const sprite = state.customSprites[name];
+    if (!sprite) { state.spriteCreatorEdit = null; renderSpriteCreator(); return; }
+
+    const w = sprite.width;
+    const h = sprite.height;
+    const pixelSize = Math.min(Math.floor(480 / Math.max(w, h)), 20);
+    const canvasW = w * pixelSize;
+    const canvasH = h * pixelSize;
+
+    content.innerHTML = `
+        <button class="back-btn" onclick="state.spriteCreatorEdit=null; renderSpriteCreator()">&#8592; Back to Sprites</button>
+        <div class="page-header" style="margin-bottom:16px">
+            <div style="display:flex;align-items:center;gap:14px">
+                <div id="sprite-preview-thumb" class="sprite-container" style="width:64px;height:64px"></div>
+                <div>
+                    <h1>${escHtml(name)}</h1>
+                    <div style="color:var(--text-dim);font-size:13px">${w}x${h} pixels</div>
+                </div>
+            </div>
+            <div class="page-header-actions">
+                <button class="btn" id="sprite-undo-btn" title="Undo">Undo</button>
+                <button class="btn" id="sprite-redo-btn" title="Redo">Redo</button>
+                <button class="btn btn-primary" id="sprite-save-btn">Save</button>
+            </div>
+        </div>
+        <div class="sprite-editor-layout">
+            <div class="sprite-editor-toolbar">
+                <div class="sprite-tool-group">
+                    <label>Tool</label>
+                    <div class="sprite-tool-btns">
+                        <button class="btn btn-sm sprite-tool active" data-tool="draw" title="Draw (D)">&#9998; Draw</button>
+                        <button class="btn btn-sm sprite-tool" data-tool="erase" title="Erase (E)">&#9746; Erase</button>
+                        <button class="btn btn-sm sprite-tool" data-tool="fill" title="Fill (F)">&#9724; Fill</button>
+                        <button class="btn btn-sm sprite-tool" data-tool="pick" title="Color Pick (I)">&#10023; Pick</button>
+                    </div>
+                </div>
+                <div class="sprite-tool-group">
+                    <label>Color</label>
+                    <div class="sprite-palette" id="sprite-palette"></div>
+                </div>
+                <div class="sprite-tool-group">
+                    <label>Preview</label>
+                    <div id="sprite-live-preview" style="display:flex;gap:8px;align-items:end"></div>
+                </div>
+            </div>
+            <div class="sprite-canvas-wrap">
+                <canvas id="sprite-canvas" width="${canvasW}" height="${canvasH}" style="cursor:crosshair"></canvas>
+            </div>
+        </div>
+    `;
+
+    const canvas = $('#sprite-canvas');
+    const ctx = canvas.getContext('2d');
+    let currentTool = 'draw';
+    let currentColor = 1; // black
+    let isDrawing = false;
+    let undoStack = [sprite.pixels.slice()];
+    let redoStack = [];
+
+    function pushUndo() {
+        undoStack.push(sprite.pixels.slice());
+        if (undoStack.length > 50) undoStack.shift();
+        redoStack = [];
+    }
+
+    function undo() {
+        if (undoStack.length <= 1) return;
+        redoStack.push(undoStack.pop());
+        sprite.pixels = undoStack[undoStack.length - 1].slice();
+        drawCanvas();
+        updatePreview();
+    }
+
+    function redo() {
+        if (redoStack.length === 0) return;
+        const state_ = redoStack.pop();
+        undoStack.push(state_);
+        sprite.pixels = state_.slice();
+        drawCanvas();
+        updatePreview();
+    }
+
+    // Draw the pixel canvas
+    function drawCanvas() {
+        ctx.clearRect(0, 0, canvasW, canvasH);
+        // Checkerboard background for transparency
+        for (let y = 0; y < h; y++) {
+            for (let x = 0; x < w; x++) {
+                const light = (x + y) % 2 === 0;
+                ctx.fillStyle = light ? '#2a2a3a' : '#222233';
+                ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+            }
+        }
+        // Draw pixels
+        for (let y = 0; y < h; y++) {
+            for (let x = 0; x < w; x++) {
+                const palIdx = sprite.pixels[y * w + x];
+                if (palIdx === 0) continue;
+                ctx.fillStyle = SPRITE_PALETTE[palIdx] || '#ff00ff';
+                ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+            }
+        }
+        // Grid lines
+        ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+        ctx.lineWidth = 0.5;
+        for (let x = 0; x <= w; x++) {
+            ctx.beginPath();
+            ctx.moveTo(x * pixelSize, 0);
+            ctx.lineTo(x * pixelSize, canvasH);
+            ctx.stroke();
+        }
+        for (let y = 0; y <= h; y++) {
+            ctx.beginPath();
+            ctx.moveTo(0, y * pixelSize);
+            ctx.lineTo(canvasW, y * pixelSize);
+            ctx.stroke();
+        }
+    }
+
+    function updatePreview() {
+        const prev = $('#sprite-live-preview');
+        if (prev) {
+            prev.innerHTML = [1, 2, 4].map(s => {
+                const url = spriteDataToImage(sprite.pixels, w, h, s);
+                return `<img src="${url}" style="image-rendering:pixelated;border:1px solid var(--border);border-radius:4px" title="${s}x">`;
+            }).join('');
+        }
+        const thumb = $('#sprite-preview-thumb');
+        if (thumb) {
+            const url = spriteDataToImage(sprite.pixels, w, h, 4);
+            thumb.innerHTML = `<img src="${url}" style="width:64px;height:64px;image-rendering:pixelated">`;
+        }
+    }
+
+    function getPixelCoord(e) {
+        const rect = canvas.getBoundingClientRect();
+        const x = Math.floor((e.clientX - rect.left) / pixelSize);
+        const y = Math.floor((e.clientY - rect.top) / pixelSize);
+        return { x: Math.max(0, Math.min(w - 1, x)), y: Math.max(0, Math.min(h - 1, y)) };
+    }
+
+    function setPixel(x, y) {
+        if (currentTool === 'draw') {
+            sprite.pixels[y * w + x] = currentColor;
+        } else if (currentTool === 'erase') {
+            sprite.pixels[y * w + x] = 0;
+        }
+        drawCanvas();
+        updatePreview();
+    }
+
+    function floodFill(startX, startY) {
+        const target = sprite.pixels[startY * w + startX];
+        if (target === currentColor) return;
+        pushUndo();
+        const stack = [[startX, startY]];
+        const visited = new Set();
+        while (stack.length) {
+            const [fx, fy] = stack.pop();
+            const key = fy * w + fx;
+            if (fx < 0 || fx >= w || fy < 0 || fy >= h) continue;
+            if (visited.has(key)) continue;
+            if (sprite.pixels[key] !== target) continue;
+            visited.add(key);
+            sprite.pixels[key] = currentColor;
+            stack.push([fx + 1, fy], [fx - 1, fy], [fx, fy + 1], [fx, fy - 1]);
+        }
+        drawCanvas();
+        updatePreview();
+    }
+
+    function pickColor(x, y) {
+        const palIdx = sprite.pixels[y * w + x];
+        if (palIdx > 0) {
+            currentColor = palIdx;
+            updatePaletteUI();
+            currentTool = 'draw';
+            updateToolUI();
+        }
+    }
+
+    // Canvas mouse events
+    canvas.addEventListener('mousedown', e => {
+        e.preventDefault();
+        const { x, y } = getPixelCoord(e);
+        if (currentTool === 'fill') { floodFill(x, y); return; }
+        if (currentTool === 'pick') { pickColor(x, y); return; }
+        isDrawing = true;
+        pushUndo();
+        setPixel(x, y);
+    });
+    canvas.addEventListener('mousemove', e => {
+        if (!isDrawing) return;
+        const { x, y } = getPixelCoord(e);
+        setPixel(x, y);
+    });
+    canvas.addEventListener('mouseup', () => { isDrawing = false; });
+    canvas.addEventListener('mouseleave', () => { isDrawing = false; });
+
+    // Touch support
+    canvas.addEventListener('touchstart', e => {
+        e.preventDefault();
+        const touch = e.touches[0];
+        const { x, y } = getPixelCoord(touch);
+        if (currentTool === 'fill') { floodFill(x, y); return; }
+        if (currentTool === 'pick') { pickColor(x, y); return; }
+        isDrawing = true;
+        pushUndo();
+        setPixel(x, y);
+    }, { passive: false });
+    canvas.addEventListener('touchmove', e => {
+        e.preventDefault();
+        if (!isDrawing) return;
+        const touch = e.touches[0];
+        const { x, y } = getPixelCoord(touch);
+        setPixel(x, y);
+    }, { passive: false });
+    canvas.addEventListener('touchend', () => { isDrawing = false; });
+
+    // Palette UI
+    function updatePaletteUI() {
+        const pal = $('#sprite-palette');
+        pal.innerHTML = SPRITE_PALETTE.map((color, i) => {
+            const isTransparent = i === 0;
+            const bg = isTransparent
+                ? 'background:repeating-conic-gradient(#555 0% 25%, #333 0% 50%) 50%/12px 12px'
+                : `background:${color}`;
+            return `<div class="sprite-palette-swatch${currentColor === i ? ' active' : ''}" data-idx="${i}" style="${bg}" title="${isTransparent ? 'Transparent' : color}"></div>`;
+        }).join('');
+        pal.querySelectorAll('.sprite-palette-swatch').forEach(el => {
+            el.addEventListener('click', () => {
+                currentColor = parseInt(el.dataset.idx);
+                if (currentColor === 0) currentTool = 'erase';
+                else if (currentTool === 'erase') currentTool = 'draw';
+                updatePaletteUI();
+                updateToolUI();
+            });
+        });
+    }
+
+    // Tool buttons
+    function updateToolUI() {
+        $$('.sprite-tool').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.tool === currentTool);
+        });
+    }
+    $$('.sprite-tool').forEach(btn => {
+        btn.addEventListener('click', () => {
+            currentTool = btn.dataset.tool;
+            updateToolUI();
+        });
+    });
+
+    // Keyboard shortcuts
+    function handleKey(e) {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        if (e.key === 'd') { currentTool = 'draw'; updateToolUI(); }
+        if (e.key === 'e') { currentTool = 'erase'; updateToolUI(); }
+        if (e.key === 'f') { currentTool = 'fill'; updateToolUI(); }
+        if (e.key === 'i') { currentTool = 'pick'; updateToolUI(); }
+        if (e.ctrlKey && e.key === 'z') { e.preventDefault(); undo(); }
+        if (e.ctrlKey && e.key === 'y') { e.preventDefault(); redo(); }
+    }
+    document.addEventListener('keydown', handleKey);
+    // Clean up on page change
+    const origRender = window._spriteEditorCleanup;
+    if (origRender) document.removeEventListener('keydown', origRender);
+    window._spriteEditorCleanup = handleKey;
+
+    // Undo/Redo buttons
+    $('#sprite-undo-btn').addEventListener('click', undo);
+    $('#sprite-redo-btn').addEventListener('click', redo);
+
+    // Save button
+    $('#sprite-save-btn').addEventListener('click', () => {
+        state.customSprites[name] = sprite;
+        saveCustomSprites();
+        toast('Sprite saved');
+    });
+
+    // Initial render
+    updatePaletteUI();
+    drawCanvas();
+    updatePreview();
+}
+
+function deleteCustomSprite(name) {
+    if (!confirm(`Delete custom sprite "${name}"?`)) return;
+    delete state.customSprites[name];
+    saveCustomSprites();
+    renderSpriteCreator();
+}
+
+function exportCustomSprite(name) {
+    const sprite = state.customSprites[name];
+    if (!sprite) return;
+    const dataUrl = spriteDataToImage(sprite.pixels, sprite.width, sprite.height, 1);
+    const link = document.createElement('a');
+    link.download = `${name}.png`;
+    link.href = dataUrl;
+    link.click();
+}
+
+// Get list of custom sprite names for NPC assignment
+function getCustomSpriteNames() {
+    return Object.keys(state.customSprites);
+}
+
+// Override getSpriteHtml to support custom sprites
+const _origGetSpriteHtml = getSpriteHtml;
+getSpriteHtml = function(graphicsId, size = 32) {
+    if (graphicsId && graphicsId.startsWith('CUSTOM_SPRITE_')) {
+        const name = graphicsId.replace('CUSTOM_SPRITE_', '');
+        const sprite = state.customSprites[name];
+        if (sprite) {
+            const dataUrl = spriteDataToImage(sprite.pixels, sprite.width, sprite.height, Math.max(1, Math.round(size / Math.max(sprite.width, sprite.height))));
+            return `<div class="sprite-container" style="width:${size}px;height:${size}px">
+                <img src="${dataUrl}" style="width:${size}px;height:${size}px;image-rendering:pixelated" alt="${escAttr(name)}">
+            </div>`;
+        }
+    }
+    return _origGetSpriteHtml(graphicsId, size);
+};
+
+// Extend getUniqueGraphicsIds to include custom sprites
+const _origGetUniqueGraphicsIds = getUniqueGraphicsIds;
+getUniqueGraphicsIds = function() {
+    const ids = _origGetUniqueGraphicsIds();
+    for (const name of Object.keys(state.customSprites)) {
+        ids.push(`CUSTOM_SPRITE_${name}`);
+    }
+    return ids.sort();
+};
 
 // ─── Init ───────────────────────────────────────────────────────────────────
 checkAuth();
