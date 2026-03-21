@@ -2140,7 +2140,7 @@ function getSpriteHtml(graphicsId, size = 32) {
     const url = getSpriteUrl(graphicsId);
     const name = (graphicsId || '').replace('OBJ_EVENT_GFX_', '').replace(/_/g, ' ');
     return `<div class="sprite-container" style="width:${size}px;height:${size}px">
-        <img src="${url}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" style="width:${size}px;height:${size}px;image-rendering:pixelated" alt="${escAttr(name)}">
+        <img src="${url}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" style="height:${size}px;width:auto;image-rendering:pixelated" alt="${escAttr(name)}">
         <div class="sprite-fallback" style="display:none;width:${size}px;height:${size}px">${escHtml(name.substring(0, 2).toUpperCase())}</div>
     </div>`;
 }

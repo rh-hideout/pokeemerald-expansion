@@ -1200,7 +1200,7 @@ tbody tr:last-child td { border-bottom: none; }
     background: var(--bg);
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
 }
 .sprite-fallback {
     align-items: center;
