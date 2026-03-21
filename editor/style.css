@@ -815,12 +815,12 @@ tbody tr:last-child td { border-bottom: none; }
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    overflow: hidden;
 }
 .map-area-section-header {
     padding: 14px 20px;
     background: var(--bg-hover);
     border-bottom: 1px solid var(--border);
+    border-radius: var(--radius) var(--radius) 0 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -1843,6 +1843,7 @@ tbody tr:last-child td { border-bottom: none; }
 .imap-marker-hidden { background: var(--purple); color: #fff; }
 .imap-marker-warp { background: var(--cyan); color: #fff; font-size: 9px; }
 .imap-marker-sign { background: var(--orange); color: #fff; font-size: 9px; }
+.imap-marker-trigger { background: var(--green, #4caf50); color: #fff; font-size: 9px; }
 
 .imap-legend {
     display: flex;
@@ -1869,6 +1870,7 @@ tbody tr:last-child td { border-bottom: none; }
 .imap-dot-warp { background: var(--cyan); }
 .imap-dot-sign { background: var(--orange); }
 .imap-dot-trainer { background: var(--red); }
+.imap-dot-trigger { background: var(--green, #4caf50); }
 
 .imap-hint {
     text-align: center;

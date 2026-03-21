@@ -2564,9 +2564,11 @@ function buildMapPreviewSection(map) {
     const dirName = map._dirName;
 
     // Collect all plottable entities
-    const npcs = (map.object_events || []).filter(e =>
+    const allPeople = (map.object_events || []).filter(e =>
         !(e.graphics_id || '').includes('ITEM_BALL') && !(e.graphics_id || '').includes('BERRY_TREE')
     );
+    const trainers = allPeople.filter(e => e.trainer_type && e.trainer_type !== 'TRAINER_TYPE_NONE');
+    const npcs = allPeople.filter(e => !e.trainer_type || e.trainer_type === 'TRAINER_TYPE_NONE');
     const itemBalls = getMapItemBalls(map);
     const hiddenItems = getMapHiddenItems(map);
     const warps = map.warp_events || [];
@@ -2576,10 +2578,12 @@ function buildMapPreviewSection(map) {
     // Legend items
     const legendItems = [];
     if (npcs.length) legendItems.push(`<span class="imap-legend-item"><span class="imap-legend-dot imap-dot-npc"></span> NPCs (${npcs.length})</span>`);
+    if (trainers.length) legendItems.push(`<span class="imap-legend-item"><span class="imap-legend-dot imap-dot-trainer"></span> Trainers (${trainers.length})</span>`);
     if (itemBalls.length) legendItems.push(`<span class="imap-legend-item"><span class="imap-legend-dot imap-dot-item"></span> Items (${itemBalls.length})</span>`);
     if (hiddenItems.length) legendItems.push(`<span class="imap-legend-item"><span class="imap-legend-dot imap-dot-hidden"></span> Hidden (${hiddenItems.length})</span>`);
     if (warps.length) legendItems.push(`<span class="imap-legend-item"><span class="imap-legend-dot imap-dot-warp"></span> Doors (${warps.length})</span>`);
     if (signs.length) legendItems.push(`<span class="imap-legend-item"><span class="imap-legend-dot imap-dot-sign"></span> Signs (${signs.length})</span>`);
+    if (coordEvents.length) legendItems.push(`<span class="imap-legend-item"><span class="imap-legend-dot imap-dot-trigger"></span> Triggers (${coordEvents.length})</span>`);
 
     return `
         <div class="map-area-section">
@@ -2658,6 +2662,12 @@ function initInteractiveMap(map) {
             entities.push({ type: 'warp', x: evt.x, y: evt.y, warpIdx: i, evt, label: dest || 'Warp' });
         });
 
+        // Coord events (step triggers)
+        (map.coord_events || []).forEach((evt, i) => {
+            const scriptShort = (evt.script || '').split('_EventScript_').pop().replace(/_/g, ' ');
+            entities.push({ type: 'trigger', x: evt.x, y: evt.y, coordIdx: i, evt, label: scriptShort || 'Trigger' });
+        });
+
         for (const ent of entities) {
             const marker = document.createElement('div');
             marker.className = `imap-marker imap-marker-${ent.type}`;
@@ -2673,7 +2683,7 @@ function initInteractiveMap(map) {
             marker.dataset.y = ent.y;
 
             // Icon inside marker
-            const icons = { npc: '\u263A', trainer: '\u2694', item: '\u2666', hidden: '\u2733', warp: '\uD83D\uDEAA', sign: '\uD83D\uDCCB' };
+            const icons = { npc: '\u263A', trainer: '\u2694', item: '\u2666', hidden: '\u2733', warp: '\uD83D\uDEAA', sign: '\uD83D\uDCCB', trigger: '\u25CE' };
             marker.innerHTML = icons[ent.type] || '\u2022';
 
             // Click to open edit menu
@@ -2795,6 +2805,11 @@ function openMarkerMenu(entity, map, markerEl) {
         `;
     } else if (entity.type === 'sign') {
         buttonsHtml = `<span style="font-size:11px;color:var(--text-dim)">Sign at (${entity.x}, ${entity.y})</span>`;
+    } else if (entity.type === 'trigger') {
+        buttonsHtml = `
+            <button class="btn btn-sm" onclick="editCoordEvent('${escAttr(dirName)}', ${entity.coordIdx}); this.closest('.imap-popup').remove()">Edit</button>
+            <button class="btn btn-sm btn-danger" onclick="deleteCoordEvent('${escAttr(dirName)}', ${entity.coordIdx}); this.closest('.imap-popup').remove()">Delete</button>
+        `;
     }
 
     popup.innerHTML = `

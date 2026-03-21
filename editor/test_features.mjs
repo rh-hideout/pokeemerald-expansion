@@ -153,8 +153,9 @@ const markerInfo = await page.evaluate((dir) => {
     ).length;
     const warps = (map.warp_events || []).length;
     const bgs = (map.bg_events || []).length;
+    const coords = (map.coord_events || []).length;
     const markerEls = document.querySelectorAll('.imap-marker');
-    return { expected: npcs + warps + bgs, actual: markerEls.length };
+    return { expected: npcs + warps + bgs + coords, actual: markerEls.length };
 }, testMapDir);
 assert(markerInfo.actual === markerInfo.expected, `Marker count matches entities (${markerInfo.actual}/${markerInfo.expected})`);
 
