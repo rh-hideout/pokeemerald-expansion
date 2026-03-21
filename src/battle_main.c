@@ -3388,11 +3388,14 @@ const u8* FaintClearSetData(enum BattlerId battler)
         enum BattlerId partner = BATTLE_PARTNER(battler);
         // Clear commander state immediately so a replacement doesn't inherit it.
         gBattleStruct->battlerState[battler].commanderSpecies = SPECIES_NONE;
-        gBattleMons[partner].volatiles.semiInvulnerable = STATE_NONE;
-        if (IsBattlerAlive(partner))
+        if (gBattleMons[partner].volatiles.semiInvulnerable == STATE_COMMANDER)
         {
-            BtlController_EmitSpriteInvisibility(partner, B_COMM_TO_CONTROLLER, FALSE);
-            MarkBattlerForControllerExec(partner);
+            gBattleMons[partner].volatiles.semiInvulnerable = STATE_NONE;
+            if (IsBattlerAlive(partner))
+            {
+                BtlController_EmitSpriteInvisibility(partner, B_COMM_TO_CONTROLLER, FALSE);
+                MarkBattlerForControllerExec(partner);
+            }
         }
     }
 

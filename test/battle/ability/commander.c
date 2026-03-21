@@ -529,8 +529,8 @@ DOUBLE_BATTLE_TEST("Commander does not clear semi-invulnerability of non-Tatsugi
         MESSAGE("Tatsugiri fainted!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLY, playerRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
+        HP_BAR(playerLeft);
         MESSAGE("Dondozo fainted!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentRight);
         NOT HP_BAR(playerRight);
     } THEN {
         EXPECT_EQ(playerRight->hp, playerRight->maxHP);

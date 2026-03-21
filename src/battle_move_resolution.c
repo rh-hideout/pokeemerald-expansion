@@ -3751,7 +3751,7 @@ static enum MoveEndResult MoveEndClearBits(void)
         {
             enum BattlerId partner = BATTLE_PARTNER(i);
             gBattleStruct->battlerState[i].commanderSpecies = SPECIES_NONE;
-            if (IsBattlerAlive(partner))
+            if (gBattleMons[partner].volatiles.semiInvulnerable == STATE_COMMANDER)
                 gBattleMons[partner].volatiles.semiInvulnerable = STATE_NONE;
         }
     }
