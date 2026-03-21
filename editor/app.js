@@ -5255,29 +5255,14 @@ function parsePokemonSpecies(text) {
         const growthM = body.match(/\.growthRate\s*=\s*(\w+)/);
         const eggM = body.match(/\.eggGroups\s*=\s*MON_EGG_GROUPS\((\w+)(?:,\s*(\w+))?\)/);
         const learnsetM = body.match(/\.levelUpLearnset\s*=\s*(\w+)/);
-        const evosM = body.match(/\.evolutions\s*=\s*EVOLUTION\((.+)\)\s*,/);
+        const evosM = body.match(/\.evolutions\s*=\s*EVOLUTION\(([\s\S]+?)\)\s*,/);
 
         if (nameM) mon.name = nameM[1];
         if (learnsetM) mon.learnsetVar = learnsetM[1];
 
         // Parse evolution data
         if (evosM) {
-            mon.evolutions = [];
-            const evoStr = evosM[1];
-            // Match each {EVO_METHOD, param, SPECIES_TARGET, ...} block
-            const evoBlockRegex = /\{(EVO_\w+),\s*([^,}]+),\s*(SPECIES_\w+)(?:,\s*CONDITIONS\(([^)]+)\))?\}/g;
-            let evoMatch;
-            while ((evoMatch = evoBlockRegex.exec(evoStr)) !== null) {
-                const evo = {
-                    method: evoMatch[1],
-                    param: evoMatch[2].trim(),
-                    target: evoMatch[3],
-                };
-                if (evoMatch[4]) {
-                    evo.conditions = evoMatch[4].trim();
-                }
-                mon.evolutions.push(evo);
-            }
+            mon.evolutions = parseEvolutionEntries(evosM[1]);
         }
         if (hpM) mon.baseHP = parseInt(hpM[1]);
         if (atkM) mon.baseAttack = parseInt(atkM[1]);
@@ -5332,29 +5317,94 @@ async function loadPokemonSpecies() {
     return state.pokemon;
 }
 
+// ─── Evolution Constants ─────────────────────────────────────────────────────
+const EVO_METHODS = [
+    'EVO_LEVEL', 'EVO_ITEM', 'EVO_TRADE', 'EVO_SPIN', 'EVO_BATTLE_END',
+    'EVO_THRESHOLD', 'EVO_SCRIPT_TRIGGER', 'EVO_LEVEL_BATTLE_ONLY',
+    'EVO_SPLIT_FROM_EVO', 'EVO_NONE'
+];
+
+const EVO_CONDITIONS = [
+    'IF_MIN_FRIENDSHIP', 'IF_TIME', 'IF_NOT_TIME', 'IF_REGION', 'IF_NOT_REGION',
+    'IF_HOLD_ITEM', 'IF_KNOWS_MOVE', 'IF_KNOWS_MOVE_TYPE', 'IF_GENDER',
+    'IF_ATK_GT_DEF', 'IF_ATK_LT_DEF', 'IF_ATK_EQ_DEF', 'IF_IN_MAP',
+    'IF_IN_MAPSEC', 'IF_WEATHER', 'IF_SPECIES_IN_PARTY', 'IF_TYPE_IN_PARTY',
+    'IF_MIN_BEAUTY', 'IF_MIN_OVERWORLD_STEPS', 'IF_BAG_ITEM_COUNT',
+    'IF_CRITICAL_HITS_GE', 'IF_CURRENT_DAMAGE_GE', 'IF_RECOIL_DAMAGE_GE',
+    'IF_USED_MOVE_X_TIMES', 'IF_DEFEAT_X_WITH_ITEMS', 'IF_TRADE_PARTNER_SPECIES',
+    'IF_AMPED_NATURE', 'IF_LOW_KEY_NATURE',
+    'IF_PID_MODULO_100_GT', 'IF_PID_MODULO_100_EQ',
+    'IF_PID_MODULO_', 'IF_PID_UPPER_MODULO_'
+];
+
+function parseEvolutionEntries(evoStr) {
+    const evolutions = [];
+    // Strip preprocessor directives (#if, #endif, #else, etc.)
+    evoStr = evoStr.replace(/^\s*#\w+.*$/gm, '');
+    // Match each {EVO_METHOD, param, SPECIES_TARGET[, CONDITIONS(...)]} block
+    const regex = /\{(EVO_\w+),\s*([^,}]+),\s*(SPECIES_\w+)(?:,\s*CONDITIONS\(([\s\S]*?)\)\s*)?\}/g;
+    let match;
+    while ((match = regex.exec(evoStr)) !== null) {
+        const evo = {
+            method: match[1],
+            param: match[2].trim(),
+            target: match[3],
+            conditions: []
+        };
+        if (match[4]) {
+            // Parse individual condition blocks: {IF_X, VALUE}
+            const condRegex = /\{(\w+),\s*([^}]+)\}/g;
+            let cm;
+            while ((cm = condRegex.exec(match[4])) !== null) {
+                evo.conditions.push({ type: cm[1], value: cm[2].trim() });
+            }
+        }
+        evolutions.push(evo);
+    }
+    return evolutions;
+}
+
+function serializeEvolutions(evolutions) {
+    if (!evolutions || evolutions.length === 0) return null;
+    const entries = evolutions.map(evo => {
+        let s = `{${evo.method}, ${evo.param}, ${evo.target}`;
+        if (evo.conditions && evo.conditions.length > 0) {
+            const conds = evo.conditions.map(c => `{${c.type}, ${c.value}}`).join(', ');
+            s += `, CONDITIONS(${conds})`;
+        }
+        s += '}';
+        return s;
+    });
+    if (entries.length === 1) {
+        return `EVOLUTION(${entries[0]})`;
+    }
+    return `EVOLUTION(${entries.join(',\n                                ')})`;
+}
+
 function formatEvoMethod(evo) {
     const method = (evo.method || '').replace('EVO_', '');
     const param = (evo.param || '').replace('ITEM_', '').replace(/_/g, ' ');
-    const conditions = (evo.conditions || '').replace(/\{IF_/g, '').replace(/}/g, '').replace(/_/g, ' ').replace(/,\s*/g, ': ');
     const labels = {
         'LEVEL': `Level ${param}`,
         'ITEM': `Use ${param}`,
         'TRADE': 'Trade',
-        'TRADE_ITEM': `Trade holding ${param}`,
-        'FRIENDSHIP': 'Friendship',
-        'LEVEL_NIGHT': `Level ${param} (Night)`,
-        'LEVEL_DAY': `Level ${param} (Day)`,
-        'BEAUTY': `Beauty ${param}`,
-        'ITEM_HOLD_DAY': `Hold ${param} (Day)`,
-        'ITEM_HOLD_NIGHT': `Hold ${param} (Night)`,
-        'MOVE': `Know ${param}`,
-        'MOVE_TYPE': `Know ${param}-type move`,
-        'SPECIFIC_MON_IN_PARTY': `${param} in party`,
-        'LEVEL_RAIN': `Level ${param} (Rain)`,
-        'LEVEL_DARK_TYPE_MON_IN_PARTY': `Level ${param} (Dark-type in party)`,
+        'SPIN': 'Spin',
+        'BATTLE_END': 'After Battle',
+        'THRESHOLD': `Threshold ${param}`,
+        'SCRIPT_TRIGGER': 'Script Trigger',
+        'LEVEL_BATTLE_ONLY': `Level ${param} (Battle)`,
     };
     let result = labels[method] || `${method} ${param}`.trim();
-    if (conditions) result += ` [${conditions}]`;
+    // Format conditions
+    const conds = Array.isArray(evo.conditions) ? evo.conditions : [];
+    if (conds.length > 0) {
+        const condStrs = conds.map(c => {
+            const ct = (c.type || '').replace('IF_', '').replace(/_/g, ' ').toLowerCase();
+            const cv = (c.value || '').replace(/^(ITEM_|MOVE_|TYPE_|TIME_|REGION_|FRIENDSHIP_|SPECIES_)/, '').replace(/_/g, ' ');
+            return `${ct}: ${cv}`;
+        });
+        result += ` [${condStrs.join(', ')}]`;
+    }
     return result;
 }
 
@@ -5382,6 +5432,25 @@ function updatePokemonInFile(mon) {
             const typeRegex = /\.types\s*=\s*MON_TYPES\(\w+(?:,\s*\w+)?\)/;
             const type2 = mon.type2 && mon.type2 !== mon.type1 ? `, TYPE_${mon.type2}` : '';
             block = block.replace(typeRegex, `.types = MON_TYPES(TYPE_${mon.type1}${type2})`);
+        }
+
+        // Update evolutions
+        const hasExistingEvos = /\.evolutions\s*=\s*EVOLUTION\([\s\S]+?\)\s*,/.test(block);
+        const newEvoStr = serializeEvolutions(mon.evolutions);
+
+        if (hasExistingEvos && newEvoStr) {
+            // Replace existing evolutions line(s) — greedy enough to span multi-line blocks with #if
+            block = block.replace(/\.evolutions\s*=\s*EVOLUTION\([\s\S]+?\)\s*,/, `.evolutions = ${newEvoStr},`);
+        } else if (hasExistingEvos && !newEvoStr) {
+            // Remove evolutions line(s)
+            block = block.replace(/\n\s*\.evolutions\s*=\s*EVOLUTION\([\s\S]+?\)\s*,/, '');
+        } else if (!hasExistingEvos && newEvoStr) {
+            // Add evolutions before the closing brace — find last field line
+            const lastFieldMatch = block.match(/(.*\S.*)\n\s*$/s);
+            if (lastFieldMatch) {
+                const insertPos = block.lastIndexOf(lastFieldMatch[1]) + lastFieldMatch[1].length;
+                block = block.substring(0, insertPos) + `\n        .evolutions = ${newEvoStr},` + block.substring(insertPos);
+            }
         }
 
         fileContent = fileContent.replace(blockRegex, `$1${block}$3`);
@@ -5902,19 +5971,11 @@ function editPokemon(id) {
                         <input type="text" value="${escAttr((mon.eggGroup1 || '') + (mon.eggGroup2 ? ', ' + mon.eggGroup2 : ''))}" readonly style="opacity:0.6;font-family:monospace;font-size:12px">
                     </div>
                 </div>
-                ${mon.evolutions && mon.evolutions.length > 0 ? `
-                <div style="margin:12px 0 8px;font-size:13px;font-weight:600">Evolution</div>
-                <div class="evo-chain-display">
-                    ${mon.evolutions.map(e => {
-                        const targetMon = (state.pokemon || []).find(p => p.id === e.target);
-                        const targetName = targetMon ? targetMon.name : e.target.replace('SPECIES_', '');
-                        return `<div class="evo-chain-entry">
-                            <span class="evo-chain-arrow">&#8594;</span>
-                            <span class="evo-chain-target">${escHtml(targetName)}</span>
-                            <span class="evo-chain-method">${escHtml(formatEvoMethod(e))}</span>
-                        </div>`;
-                    }).join('')}
-                </div>` : ''}
+                <div style="margin:12px 0 8px;font-size:13px;font-weight:600">Evolutions</div>
+                <div id="evo-editor"></div>
+                <div style="margin-top:8px">
+                    <button class="btn btn-sm btn-primary" id="add-evo-btn">+ Add Evolution</button>
+                </div>
                 <div style="margin-top:12px;padding:10px;background:var(--bg);border-radius:6px;font-size:12px;color:var(--text-dim)">
                     BST: <strong style="color:var(--text)">${mon.bst || 0}</strong> &middot; File: ${escHtml(mon._file || '')}
                 </div>
@@ -5928,6 +5989,150 @@ function editPokemon(id) {
     document.body.appendChild(overlay);
     overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
 
+    // ── Evolution CRUD editor ──
+    const editEvos = mon.evolutions ? JSON.parse(JSON.stringify(mon.evolutions)) : [];
+    const speciesIds = getUniqueSpeciesIds();
+
+    function renderEvoEditor() {
+        const container = overlay.querySelector('#evo-editor');
+        if (!container) return;
+
+        if (editEvos.length === 0) {
+            container.innerHTML = '<div class="empty-state" style="padding:12px"><div class="empty-icon">&#9733;</div>No evolutions defined</div>';
+            return;
+        }
+
+        container.innerHTML = editEvos.map((evo, i) => {
+            const methodOpts = EVO_METHODS.map(m =>
+                `<option value="${m}" ${evo.method === m ? 'selected' : ''}>${m.replace('EVO_', '')}</option>`
+            ).join('');
+
+            const conds = evo.conditions || [];
+            const condRows = conds.map((c, ci) => {
+                const condTypeOpts = EVO_CONDITIONS.map(ct =>
+                    `<option value="${ct}" ${c.type === ct ? 'selected' : ''}>${ct}</option>`
+                ).join('');
+                return `
+                    <div class="evo-cond-row" data-evo="${i}" data-cond="${ci}">
+                        <select class="evo-cond-type" data-evo="${i}" data-cond="${ci}" style="flex:1;min-width:0">
+                            ${condTypeOpts}
+                        </select>
+                        <input type="text" class="evo-cond-value" data-evo="${i}" data-cond="${ci}" value="${escAttr(c.value)}" placeholder="Value" style="flex:1;min-width:0;font-family:monospace;font-size:12px">
+                        <button class="btn btn-sm btn-danger evo-remove-cond" data-evo="${i}" data-cond="${ci}" title="Remove condition">&#10005;</button>
+                    </div>
+                `;
+            }).join('');
+
+            const targetMon = (state.pokemon || []).find(p => p.id === evo.target);
+            const targetName = targetMon ? targetMon.name : '';
+
+            return `
+                <div class="evo-edit-card" data-evo="${i}">
+                    <div class="evo-edit-header">
+                        <span class="evo-edit-num">#${i + 1}</span>
+                        <span class="evo-edit-summary">${escHtml(formatEvoMethod(evo))} &#8594; ${escHtml(targetName || evo.target.replace('SPECIES_', ''))}</span>
+                        <button class="btn btn-sm btn-danger evo-remove" data-evo="${i}" title="Delete evolution">&#128465;</button>
+                    </div>
+                    <div class="evo-edit-body">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Method</label>
+                                <select class="evo-method" data-evo="${i}" style="font-family:monospace;font-size:12px">${methodOpts}</select>
+                            </div>
+                            <div class="form-group">
+                                <label>Parameter</label>
+                                <input type="text" class="evo-param" data-evo="${i}" value="${escAttr(evo.param)}" style="font-family:monospace;font-size:12px" placeholder="e.g. 16, ITEM_THUNDER_STONE">
+                            </div>
+                            <div class="form-group">
+                                <label>Target Species</label>
+                                <input type="text" class="evo-target" data-evo="${i}" value="${escAttr(evo.target)}" list="dl-evo-species" style="font-family:monospace;font-size:12px">
+                            </div>
+                        </div>
+                        <div style="margin-top:8px">
+                            <label style="font-size:11px;color:var(--text-dim);font-weight:600;text-transform:uppercase;letter-spacing:0.5px">Conditions</label>
+                            <div class="evo-cond-list" data-evo="${i}">
+                                ${condRows || '<div style="font-size:12px;color:var(--text-dim);padding:4px 0">No conditions</div>'}
+                            </div>
+                            <button class="btn btn-sm evo-add-cond" data-evo="${i}" style="margin-top:4px">+ Condition</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        // Add species datalist
+        container.innerHTML += `<datalist id="dl-evo-species">${speciesIds.map(s => `<option value="${escAttr(s)}">`).join('')}</datalist>`;
+
+        // Wire up events
+        container.querySelectorAll('.evo-method').forEach(el => {
+            el.addEventListener('change', () => {
+                editEvos[parseInt(el.dataset.evo)].method = el.value;
+                renderEvoEditor();
+            });
+        });
+        container.querySelectorAll('.evo-param').forEach(el => {
+            el.addEventListener('change', () => {
+                editEvos[parseInt(el.dataset.evo)].param = el.value;
+                renderEvoEditor();
+            });
+        });
+        container.querySelectorAll('.evo-target').forEach(el => {
+            el.addEventListener('change', () => {
+                editEvos[parseInt(el.dataset.evo)].target = el.value;
+                renderEvoEditor();
+            });
+        });
+        container.querySelectorAll('.evo-cond-type').forEach(el => {
+            el.addEventListener('change', () => {
+                const ei = parseInt(el.dataset.evo), ci = parseInt(el.dataset.cond);
+                editEvos[ei].conditions[ci].type = el.value;
+                renderEvoEditor();
+            });
+        });
+        container.querySelectorAll('.evo-cond-value').forEach(el => {
+            el.addEventListener('change', () => {
+                const ei = parseInt(el.dataset.evo), ci = parseInt(el.dataset.cond);
+                editEvos[ei].conditions[ci].value = el.value;
+                renderEvoEditor();
+            });
+        });
+        container.querySelectorAll('.evo-remove').forEach(el => {
+            el.addEventListener('click', () => {
+                editEvos.splice(parseInt(el.dataset.evo), 1);
+                renderEvoEditor();
+            });
+        });
+        container.querySelectorAll('.evo-remove-cond').forEach(el => {
+            el.addEventListener('click', () => {
+                const ei = parseInt(el.dataset.evo), ci = parseInt(el.dataset.cond);
+                editEvos[ei].conditions.splice(ci, 1);
+                renderEvoEditor();
+            });
+        });
+        container.querySelectorAll('.evo-add-cond').forEach(el => {
+            el.addEventListener('click', () => {
+                const ei = parseInt(el.dataset.evo);
+                if (!editEvos[ei].conditions) editEvos[ei].conditions = [];
+                editEvos[ei].conditions.push({ type: 'IF_MIN_FRIENDSHIP', value: 'FRIENDSHIP_EVO_THRESHOLD' });
+                renderEvoEditor();
+            });
+        });
+    }
+
+    renderEvoEditor();
+
+    // Add evolution button
+    overlay.querySelector('#add-evo-btn').addEventListener('click', () => {
+        editEvos.push({
+            method: 'EVO_LEVEL',
+            param: '0',
+            target: 'SPECIES_NONE',
+            conditions: []
+        });
+        renderEvoEditor();
+    });
+
+    // ── Save handler ──
     $('#save-pk-btn').addEventListener('click', () => {
         mon.baseHP = parseInt($('#pk-hp').value);
         mon.baseAttack = parseInt($('#pk-atk').value);
@@ -5940,6 +6145,9 @@ function editPokemon(id) {
         mon.catchRate = parseInt($('#pk-catch').value);
         mon.expYield = parseInt($('#pk-exp').value);
         mon.bst = mon.baseHP + mon.baseAttack + mon.baseDefense + mon.baseSpAttack + mon.baseSpDefense + mon.baseSpeed;
+
+        // Save evolution changes
+        mon.evolutions = editEvos.length > 0 ? editEvos : undefined;
 
         updatePokemonInFile(mon);
         toast(`${mon.name || mon.id} updated (auto-saved)`);
