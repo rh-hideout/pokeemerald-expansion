@@ -41,6 +41,7 @@ let state = {
     musicFilter: 'all',
     mapDetail: null,
     mapTypeFilter: 'all',
+    gameVersionFilter: 'all',
     npcDetail: null,
     pokemonPage: 0,
 };
@@ -2272,6 +2273,10 @@ function getMapType(m) {
     return (m.map_type || 'MAP_TYPE_NONE').replace('MAP_TYPE_', '');
 }
 
+function getGameVersion(m) {
+    return (m._dirName || '').endsWith('_Frlg') ? 'frlg' : 'rse';
+}
+
 function getMapEncounters(map) {
     if (!state.encounters) return null;
     const encounters = state.encounters.wild_encounter_groups?.[0]?.encounters || [];
@@ -2319,7 +2324,10 @@ async function renderMaps() {
     try { await loadEncounters(); } catch {}
 
     const search = state.search.toLowerCase();
+    const versionFilter = state.gameVersionFilter || 'all';
     const filtered = maps.filter(m => {
+        // Game version filter
+        if (versionFilter !== 'all' && getGameVersion(m) !== versionFilter) return false;
         if (!search) return true;
         const enc = getMapEncounters(m);
         const hasSearchInEnc = enc && Object.values(enc).some(v => {
@@ -2360,6 +2368,9 @@ async function renderMaps() {
         return `<span class="filter-chip ${typeFilter === t ? 'active' : ''}" onclick="state.mapTypeFilter='${t}'; renderMaps()">${t} (${count})</span>`;
     }).join('');
 
+    const rseCount = filtered.filter(m => getGameVersion(m) === 'rse').length;
+    const frlgCount = filtered.filter(m => getGameVersion(m) === 'frlg').length;
+
     content.innerHTML = `
         <div class="page-header">
             <h1>Areas <span style="color:var(--text-dim);font-size:14px">(${filtered.length}/${maps.length})</span></h1>
@@ -2367,6 +2378,11 @@ async function renderMaps() {
         <div class="search-bar">
             <span class="search-icon">&#128269;</span>
             <input type="text" placeholder="Search by map name, type, species..." id="map-search" value="${state.search}">
+        </div>
+        <div class="filter-row">
+            <span class="filter-chip ${versionFilter === 'all' ? 'active' : ''}" onclick="state.gameVersionFilter='all'; renderMaps()">All Versions (${filtered.length})</span>
+            <span class="filter-chip ${versionFilter === 'rse' ? 'active' : ''}" onclick="state.gameVersionFilter='rse'; renderMaps()">Emerald / RS (${rseCount})</span>
+            <span class="filter-chip ${versionFilter === 'frlg' ? 'active' : ''}" onclick="state.gameVersionFilter='frlg'; renderMaps()">FireRed / LeafGreen (${frlgCount})</span>
         </div>
         <div class="filter-row">
             <span class="filter-chip ${typeFilter === 'all' ? 'active' : ''}" onclick="state.mapTypeFilter='all'; renderMaps()">All (${filtered.length})</span>
@@ -5039,8 +5055,15 @@ async function renderNPCs() {
 
     const allNPCs = collectNPCs();
     const search = state.search.toLowerCase();
+    const versionFilter = state.gameVersionFilter || 'all';
 
     const filtered = allNPCs.filter(n => {
+        // Game version filter based on parent map
+        if (versionFilter !== 'all') {
+            const isFrlg = (n._mapDirName || '').endsWith('_Frlg');
+            const npcVersion = isFrlg ? 'frlg' : 'rse';
+            if (npcVersion !== versionFilter) return false;
+        }
         if (!search) return true;
         return (n.graphics_id || '').toLowerCase().includes(search) ||
             (n.script || '').toLowerCase().includes(search) ||
@@ -5061,6 +5084,9 @@ async function renderNPCs() {
 
     const sortedGroups = Object.values(groups).sort((a, b) => b.count - a.count);
 
+    const rseCount = allNPCs.filter(n => !(n._mapDirName || '').endsWith('_Frlg')).length;
+    const frlgCount = allNPCs.filter(n => (n._mapDirName || '').endsWith('_Frlg')).length;
+
     content.innerHTML = `
         <div class="page-header">
             <h1>NPCs <span style="color:var(--text-dim);font-size:14px">(${filtered.length} events, ${sortedGroups.length} types)</span></h1>
@@ -5068,6 +5094,11 @@ async function renderNPCs() {
         <div class="search-bar">
             <span class="search-icon">&#128269;</span>
             <input type="text" placeholder="Search NPCs by sprite, script, or map name..." id="npc-search" value="${state.search}">
+        </div>
+        <div class="filter-row">
+            <span class="filter-chip ${versionFilter === 'all' ? 'active' : ''}" onclick="state.gameVersionFilter='all'; renderNPCs()">All Versions (${allNPCs.length})</span>
+            <span class="filter-chip ${versionFilter === 'rse' ? 'active' : ''}" onclick="state.gameVersionFilter='rse'; renderNPCs()">Emerald / RS (${rseCount})</span>
+            <span class="filter-chip ${versionFilter === 'frlg' ? 'active' : ''}" onclick="state.gameVersionFilter='frlg'; renderNPCs()">FireRed / LeafGreen (${frlgCount})</span>
         </div>
         <div id="npc-list"></div>
     `;
@@ -5144,7 +5175,15 @@ async function renderNPCs() {
 // Detail view for a specific NPC graphics_id group
 async function renderNPCGroupDetail(graphicsId) {
     const allNPCs = collectNPCs();
-    const groupNPCs = allNPCs.filter(n => n.graphics_id === graphicsId);
+    const versionFilter = state.gameVersionFilter || 'all';
+    const groupNPCs = allNPCs.filter(n => {
+        if (n.graphics_id !== graphicsId) return false;
+        if (versionFilter !== 'all') {
+            const npcVersion = (n._mapDirName || '').endsWith('_Frlg') ? 'frlg' : 'rse';
+            if (npcVersion !== versionFilter) return false;
+        }
+        return true;
+    });
     const gfx = graphicsId.replace('OBJ_EVENT_GFX_', '').replace(/_/g, ' ');
 
     content.innerHTML = `
