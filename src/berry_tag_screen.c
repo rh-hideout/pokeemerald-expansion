@@ -467,7 +467,7 @@ static void PrintBerryDescription2(void)
 
 static void CreateBerrySprite(void)
 {
-    sBerryTag->currentSpriteBerryId = sBerryTag->berryId - 1;
+    sBerryTag->currentSpriteBerryId = sBerryTag->berryId;
     sBerryTag->berrySpriteId = CreateBerryTagSprite(sBerryTag->currentSpriteBerryId, 56, 64);
 }
 
