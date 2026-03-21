@@ -8257,7 +8257,11 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct BattleCont
         TryNoticeIllusionInTypeEffectiveness(ctx->move, ctx->moveType, ctx->battlerAtk, ctx->battlerDef, modifier, illusionSpecies);
 
     bool32 isPresentHealing = GetMoveEffect(ctx->move) == EFFECT_PRESENT && gBattleStruct->presentBasePower == 0;
-    bool32 ignoreTypeCalc = isPresentHealing || GetMoveCategory(ctx->move) == DAMAGE_CATEGORY_STATUS;
+    // If the move's type was dynamically changed (e.g. via Electrify, Ion Deluge, Normalize),
+    // type immunity should apply even for status moves.
+    bool32 isDynamicTypeOverride = (gBattleStruct->dynamicMoveType & F_DYNAMIC_TYPE_SET)
+                                 && ctx->moveType != GetMoveType(ctx->move);
+    bool32 ignoreTypeCalc = isPresentHealing || (GetMoveCategory(ctx->move) == DAMAGE_CATEGORY_STATUS && !isDynamicTypeOverride);
     if (ignoreTypeCalc && ctx->move != MOVE_THUNDER_WAVE)
     {
         modifier = UQ_4_12(1.0);

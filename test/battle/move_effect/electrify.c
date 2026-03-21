@@ -42,7 +42,6 @@ DOUBLE_BATTLE_TEST("Electrify makes the target's move Electric-type for the rema
 
 SINGLE_BATTLE_TEST("Electrify can change status moves to Electric-type")
 {
-    KNOWN_FAILING;
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_SANDSLASH, 0) == TYPE_GROUND || GetSpeciesType(SPECIES_SANDSLASH, 1) == TYPE_GROUND);
         ASSUME(GetMoveCategory(MOVE_LEER) == DAMAGE_CATEGORY_STATUS);
