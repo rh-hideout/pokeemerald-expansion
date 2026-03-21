@@ -5894,7 +5894,7 @@ static void GetCursorCoordsByPos(u8 cursorArea, u8 cursorPosition, u16 *x, u16 *
     }
 }
 
-static u16 GetSpeciesAtCursorPosition(void)
+static enum Species GetSpeciesAtCursorPosition(void)
 {
     switch (sCursorArea)
     {

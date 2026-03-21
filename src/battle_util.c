@@ -6798,7 +6798,7 @@ static inline u32 CalcAttackStat(struct BattleContext *ctx)
     u8 atkStage;
     u32 atkStat;
     uq4_12_t modifier;
-    u16 atkBaseSpeciesId;
+    enum Species atkBaseSpeciesId;
     enum BattlerId battlerAtk = ctx->battlerAtk;
     enum BattlerId battlerDef = ctx->battlerDef;
     enum Move move = ctx->move;

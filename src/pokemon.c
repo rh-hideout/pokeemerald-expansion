@@ -6339,7 +6339,7 @@ u8 *MonSpritesGfxManager_GetSpritePtr(u8 managerId, u8 spriteNum)
     }
 }
 
-u16 GetFormSpeciesId(enum Species speciesId, u8 formId)
+enum Species GetFormSpeciesId(enum Species speciesId, u8 formId)
 {
     if (GetSpeciesFormTable(speciesId) != NULL)
         return GetSpeciesFormTable(speciesId)[formId];
@@ -6347,7 +6347,7 @@ u16 GetFormSpeciesId(enum Species speciesId, u8 formId)
         return speciesId;
 }
 
-u8 GetFormIdFromFormSpeciesId(u16 formSpeciesId)
+u8 GetFormIdFromFormSpeciesId(enum Species formSpeciesId)
 {
     u8 targetFormId = 0;
 
@@ -6963,7 +6963,7 @@ void HealBoxPokemon(struct BoxPokemon *boxMon)
     BoxMonRestorePP(boxMon);
 }
 
-u16 GetSpeciesPreEvolution(enum Species species)
+enum Species GetSpeciesPreEvolution(enum Species species)
 {
     int i, j;
 
@@ -7044,7 +7044,7 @@ bool32 IsSpeciesRegionalFormFromRegion(enum Species species, u32 region)
 bool32 SpeciesHasRegionalForm(enum Species species)
 {
     u32 formId;
-    const u16 *formTable = GetSpeciesFormTable(species);
+    const enum Species *formTable = GetSpeciesFormTable(species);
     for (formId = 0; formTable != NULL && formTable[formId] != FORM_SPECIES_END; formId++)
     {
         if (IsSpeciesRegionalForm(formTable[formId]))
@@ -7057,7 +7057,7 @@ u32 GetRegionalFormByRegion(enum Species species, u32 region)
 {
     u32 formId = 0;
     enum Species firstFoundSpecies = 0;
-    const u16 *formTable = GetSpeciesFormTable(species);
+    const enum Species *formTable = GetSpeciesFormTable(species);
 
     if (formTable != NULL)
     {

@@ -138,7 +138,7 @@ struct SpeciesInfo /*0xC4*/
     const u16 *teachableLearnset;
     const u16 *eggMoveLearnset;
     const struct Evolution *evolutions;
-    const u16 *formSpeciesIdTable;
+    const enum Species *formSpeciesIdTable;
     const struct FormChange *formChangeTable;
 #if OW_POKEMON_OBJECT_EVENTS
     struct ObjectEventGraphicsInfo overworldData;
@@ -778,9 +778,9 @@ static inline const struct Evolution *GetSpeciesEvolutions(enum Species species)
     return evolutions;
 }
 
-static inline const u16 *GetSpeciesFormTable(enum Species species)
+static inline const enum Species *GetSpeciesFormTable(enum Species species)
 {
-    const u16 *formTable = gSpeciesInfo[SanitizeSpeciesId(species)].formSpeciesIdTable;
+    const enum Species *formTable = gSpeciesInfo[SanitizeSpeciesId(species)].formSpeciesIdTable;
     if (formTable == NULL)
         return gSpeciesInfo[SPECIES_NONE].formSpeciesIdTable;
     return formTable;

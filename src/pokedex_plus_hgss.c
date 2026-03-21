@@ -593,7 +593,7 @@ static void Task_ExitFormsScreen(u8 taskId);
 static u8 ShowCategoryIcon(enum DamageCategory category);
 static void DestroyCategoryIcon(void);
 
-static u16 NationalPokedexNumToSpeciesHGSS(u16 nationalNum);
+static enum Species NationalPokedexNumToSpeciesHGSS(enum NationalDexOrder nationalNum);
 
 //Evo screen
 u32 GetSpeciesNameFontId(u32 nameWidth);
@@ -4650,7 +4650,7 @@ static u16 GetNextPosition(u8 direction, u16 position, u16 min, u16 max)
 //*        HGSS                      *
 //*                                  *
 //************************************
-static u16 NationalPokedexNumToSpeciesHGSS(u16 nationalNum)
+static enum Species NationalPokedexNumToSpeciesHGSS(enum NationalDexOrder nationalNum)
 {
     if (!nationalNum)
         return 0;

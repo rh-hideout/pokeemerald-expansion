@@ -7,7 +7,7 @@ TEST("Form species ID tables are shared between all forms")
 {
     u32 i;
     u32 species = SPECIES_NONE;
-    const u16 *formSpeciesIdTable;
+    const enum Species *formSpeciesIdTable;
 
     for (i = 0; i < NUM_SPECIES; i++)
     {
@@ -30,7 +30,7 @@ TEST("Form change tables contain only forms in the form species ID table")
     u32 i, j;
     u32 species = SPECIES_NONE;
     const struct FormChange *formChangeTable;
-    const u16 *formSpeciesIdTable;
+    const enum Species *formSpeciesIdTable;
 
     for (i = 0; i < NUM_SPECIES; i++)
     {

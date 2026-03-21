@@ -1437,11 +1437,12 @@ static void UpdateSubmenuOneOptionValue(u8 taskId, bool8 increment)
         UpdateBattleBg(taskId, increment);
         break;
     case 3:
-        if (GetSpeciesFormTable(species) != NULL)
+    {
+        const enum Species *formTable = GetSpeciesFormTable(species);
+        if (formTable != NULL)
         {
             struct PokemonSpriteVisualizerModifyArrows *modArrows = &data->modifyArrows;
-            u8 formId = GetFormIdFromFormSpeciesId(species);
-            const u16 *formTable = GetSpeciesFormTable(species);
+            u32 formId = GetFormIdFromFormSpeciesId(species);
             if (increment)
             {
                 if (formTable[formId + 1] != FORM_SPECIES_END)
@@ -1476,6 +1477,7 @@ static void UpdateSubmenuOneOptionValue(u8 taskId, bool8 increment)
             PlaySE(SE_DEX_SCROLL);
         }
         break;
+    }
     default:
         break;
     }

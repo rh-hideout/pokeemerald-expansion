@@ -4,7 +4,7 @@
 SINGLE_BATTLE_TEST("Reflect Type does not affect any of Arceus' forms")
 {
     u32 j;
-    static const u16 sArceusFormSpeciesIdTable[] = {
+    static const enum Species sArceusFormSpeciesIdTable[] = {
         SPECIES_ARCEUS,
         SPECIES_ARCEUS_FIGHTING,
         SPECIES_ARCEUS_FLYING,
@@ -45,7 +45,7 @@ SINGLE_BATTLE_TEST("Reflect Type does not affect any of Arceus' forms")
 SINGLE_BATTLE_TEST("Reflect Type does not affect any of Silvally's forms")
 {
     u32 j;
-    static const u16 sSilvallyFormSpeciesIdTable[] = {
+    static const enum Species sSilvallyFormSpeciesIdTable[] = {
         SPECIES_SILVALLY,
         SPECIES_SILVALLY_FIGHTING,
         SPECIES_SILVALLY_FLYING,
