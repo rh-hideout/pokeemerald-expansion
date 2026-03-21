@@ -2145,7 +2145,7 @@ static void CheckPartyIneligibility(void)
         {
             if (!IsSpeciesEnabled(i))
                 continue;
-            baseSpecies = GET_BASE_SPECIES_ID(i);
+            baseSpecies = GetBaseSpeciesId(i);
             if (baseSpecies == i && IsSpeciesFrontierBanned(baseSpecies))
             {
                 if (GetSetPokedexFlag(SpeciesToNationalPokedexNum(baseSpecies), FLAG_GET_CAUGHT))
@@ -2158,7 +2158,7 @@ static void CheckPartyIneligibility(void)
             enum Species species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
             if (species == SPECIES_EGG || species == SPECIES_NONE)
                 continue;
-            if (IsSpeciesFrontierBanned(GET_BASE_SPECIES_ID(species)))
+            if (IsSpeciesFrontierBanned(GetBaseSpeciesId(species)))
             {
                 bool32 addToList = TRUE;
                 for (j = 0; j < totalPartyBanned; j++)
@@ -3355,7 +3355,7 @@ static u16 *MakeCaughtBannesSpeciesList(u32 totalBannedSpecies)
         if (!IsSpeciesEnabled(i))
             continue;
 
-        enum Species baseSpecies = GET_BASE_SPECIES_ID(i);
+        enum Species baseSpecies = GetBaseSpeciesId(i);
         if (baseSpecies == i && IsSpeciesFrontierBanned(baseSpecies))
         {
             if (GetSetPokedexFlag(SpeciesToNationalPokedexNum(baseSpecies), FLAG_GET_CAUGHT))

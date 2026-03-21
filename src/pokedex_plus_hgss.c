@@ -5040,7 +5040,7 @@ static bool8 CalculateMoves(void)
 
     // Mega and Gmax Pokémon don't have distinct learnsets from their base form; so use base species for calculation
     if (IsSpeciesMegaEvolution(species) || IsSpeciesGigantamax(species))
-        species = GetFormSpeciesId(species, 0);
+        species = GetBaseSpeciesId(species);
 
     // Egg moves
     if (HGSS_SHOW_EGG_MOVES_FOR_EVOS)
@@ -6250,7 +6250,7 @@ static u8 PrintPreEvolutions(u8 taskId, enum Species species)
     sPokedexView->sEvoScreenData.isMega = FALSE;
 
     //Check if it's a mega
-    baseFormSpecies = GetFormSpeciesId(species, 0);
+    baseFormSpecies = GetBaseSpeciesId(species);
     if (baseFormSpecies != species)
     {
         const struct FormChange *formChanges = GetSpeciesFormChanges(baseFormSpecies);
@@ -6397,7 +6397,7 @@ u32 GetSpeciesNameWidthInChars(const u8 *speciesName)
 
 bool32 IsSpeciesAlcremie(enum Species targetSpecies)
 {
-    return GET_BASE_SPECIES_ID(targetSpecies) == SPECIES_ALCREMIE;
+    return GetBaseSpeciesId(targetSpecies) == SPECIES_ALCREMIE;
 }
 
 bool32 IsItemSweet(enum Item item)
@@ -7035,7 +7035,7 @@ static void Task_HandleFormsScreenInput(u8 taskId)
             if (sPokedexView->isSearchResults && sPokedexView->originalSearchSelectionNum == 0)
                 sPokedexView->originalSearchSelectionNum = sPokedexListItem->dexNum;
 
-            if (formSpecies == GetFormSpeciesId(formSpecies, 0))
+            if (formSpecies == GetBaseSpeciesId(formSpecies))
                 sPokedexView->formSpecies = 0;
             else
                 sPokedexView->formSpecies = formSpecies;
@@ -7073,7 +7073,7 @@ static void PrintForms(u8 taskId, enum Species species)
     if (species == SPECIES_UNOWN)
         y_offset_icons = 8;
 
-    if (GetFormSpeciesId(species, 0) == SPECIES_UNOWN)
+    if (GetBaseSpeciesId(species) == SPECIES_UNOWN)
         y_offset_icons = 8;
 
     StringCopy(gStringVar1, GetSpeciesName(species));

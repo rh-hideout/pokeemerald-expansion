@@ -786,6 +786,20 @@ static inline const enum Species *GetSpeciesFormTable(enum Species species)
     return formTable;
 }
 
+static inline enum Species GetFormSpeciesId(enum Species species, u8 formId)
+{
+    const enum Species *formTable = GetSpeciesFormTable(species);
+    if (formTable != NULL)
+        return formTable[formId];
+    else
+        return species;
+}
+
+static inline enum Species GetBaseSpeciesId(enum Species species)
+{
+    return GetFormSpeciesId(species, 0);
+}
+
 static inline const struct FormChange *GetSpeciesFormChanges(enum Species species)
 {
     const struct FormChange *formChanges = gSpeciesInfo[SanitizeSpeciesId(species)].formChangeTable;

@@ -14,30 +14,42 @@ The main things that the Expansion changes are listed here.
 * Most tables that use `SPECIES_x` as indexes have been moved to `gSpeciesInfo`.
 
 # Content
-* [Useful resources](#useful-resources)
-* [The Data - Part 1](#the-data---part-1)
-  * [1. Declare a species constant](#1-Declare-a-species-constant)
-  * [2. `SpeciesInfo`'s structure](#2-speciesinfos-structure)
-  * [3. Define its basic species information](#3-define-its-basic-species-information)
-  * [4. Species Name](#4-species-name)
-  * [5. Define its cry](#5-define-its-cry)
-  * [6. Define its Pokédex entry](#6-define-its-pokédex-entry)
-* [The Graphics](#the-graphics)
-  * [1. Edit the sprites](#1-edit-the-sprites)
-  * [2. Add the sprites to the rom](#2-add-the-sprites-to-the-rom)
-  * [3. Add the animations to the rom](#3-add-the-animations-to-the-rom)
-  * [4. Linking graphic information to our Pokémon](#4-linking-graphic-information-to-our-pokémon)
-* [The Data - Part 2](#the-data---part-2)
-  * [1. Species Flags](#1-species-flags)
-  * [2. Delimit the moveset](#2-delimit-the-moveset)
-  * [3. Define the Evolutions](#3-define-the-evolutions)
-  * [4. Make it appear!](#4-make-it-appear)
-* [Optional data](#optional-data)
-  * [1. Form tables](#1-form-tables)
-  * [2. Form change tables](#2-form-change-tables)
-  * [3. Gender differences](#3-gender-differences)
-  * [4. Overworld Data (v1.9 onwards)](#4-overworld-data-v19-onwards)
-  * [5. In-battle shadows (v1.10 onwards)](#5-in-battle-shadows-v110-onwards)
+- [Changes compared to vanilla](#changes-compared-to-vanilla)
+- [Content](#content)
+- [Useful resources](#useful-resources)
+- [The Data - Part 1](#the-data---part-1)
+  - [1. Declare a species constant](#1-declare-a-species-constant)
+  - [2. `SpeciesInfo`'s structure](#2-speciesinfos-structure)
+  - [3. Define its basic species information](#3-define-its-basic-species-information)
+  - [4. Species Name](#4-species-name)
+  - [5. Define its cry](#5-define-its-cry)
+  - [6. Define its Pokédex entry](#6-define-its-pokédex-entry)
+- [The Graphics](#the-graphics)
+  - [1. Edit the sprites](#1-edit-the-sprites)
+  - [2. Add the sprites to the rom](#2-add-the-sprites-to-the-rom)
+  - [3. Add the animations to the rom](#3-add-the-animations-to-the-rom)
+    - [Version 1.11.0 or later](#version-1110-or-later)
+    - [Version 1.10.3 or earlier](#version-1103-or-earlier)
+  - [4. Linking graphic information to our Pokémon](#4-linking-graphic-information-to-our-pokémon)
+- [The Data - Part 2](#the-data---part-2)
+  - [1. Species Flags](#1-species-flags)
+  - [2. Delimit the moveset](#2-delimit-the-moveset)
+  - [3. Define the Evolutions](#3-define-the-evolutions)
+  - [4. Make it appear!](#4-make-it-appear)
+- [Optional data](#optional-data)
+  - [1. Form tables](#1-form-tables)
+  - [2. Form change tables](#2-form-change-tables)
+  - [3. Gender differences](#3-gender-differences)
+  - [4. Overworld Data (v1.9 onwards)](#4-overworld-data-v19-onwards)
+    - [Sprite Size](#sprite-size)
+    - [Shadows](#shadows)
+    - [Tracks](#tracks)
+    - [Asymmetric sprites (Version 1.10.0 onwards)](#asymmetric-sprites-version-1100-onwards)
+      - [Version 1.11.0 onwards](#version-1110-onwards)
+      - [Version 1.10.x](#version-110x)
+    - [How to add the Pokémon Object Events to map](#how-to-add-the-pokémon-object-events-to-map)
+  - [5. In-battle shadows (v1.10 onwards)](#5-in-battle-shadows-v110-onwards)
+  - [6. Limiting species allowed as followers](#6-limiting-species-allowed-as-followers)
 
 # Useful resources
 You can open a sprite debug menu by pressing `Select` in a Pokémon's summary screen outside of battle.
@@ -1003,10 +1015,10 @@ For example, in the HGSS dex, it lets us browse between the entries of every for
 
 ![hgssdex1](img/add_pokemon/hgssdex1.png) ![image](img/add_pokemon/hgssdex2.png)
 
-In addition, we have the `GET_BASE_SPECIES_ID` macro, which returns the first entry of the table (or return the species itself if it doesn't have a table registered). With this, you can check if a Pokémon is any form of a species. For example, making it so that the Light Ball affects all Pikachu forms:
+In addition, we have the `GetBaseSpeciesId` function, which returns the first entry of the table (or return the species itself if it doesn't have a table registered). With this, you can check if a Pokémon is any form of a species. For example, making it so that the Light Ball affects all Pikachu forms:
 ```c
     case HOLD_EFFECT_LIGHT_BALL:
-        if (GET_BASE_SPECIES_ID(gBattleMons[battlerAtk].species) == SPECIES_PIKACHU && IS_MOVE_SPECIAL(move))
+        if (GetBaseSpeciesId(gBattleMons[battlerAtk].species) == SPECIES_PIKACHU && IS_MOVE_SPECIAL(move))
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(2.0));
         break;
 ```

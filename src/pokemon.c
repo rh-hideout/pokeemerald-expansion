@@ -5034,7 +5034,7 @@ enum Species NationalPokedexNumToSpecies(enum NationalDexOrder nationalNum)
     if (species == NUM_SPECIES)
         return SPECIES_NONE;
 
-    return GET_BASE_SPECIES_ID(species);
+    return GetBaseSpeciesId(species);
 }
 
 u32 NationalToRegionalOrder(enum NationalDexOrder nationalNum)
@@ -6339,23 +6339,16 @@ u8 *MonSpritesGfxManager_GetSpritePtr(u8 managerId, u8 spriteNum)
     }
 }
 
-enum Species GetFormSpeciesId(enum Species speciesId, u8 formId)
-{
-    if (GetSpeciesFormTable(speciesId) != NULL)
-        return GetSpeciesFormTable(speciesId)[formId];
-    else
-        return speciesId;
-}
-
 u8 GetFormIdFromFormSpeciesId(enum Species formSpeciesId)
 {
+    const enum Species *formTable = GetSpeciesFormTable(formSpeciesId);
     u8 targetFormId = 0;
 
-    if (GetSpeciesFormTable(formSpeciesId) != NULL)
+    if (formTable != NULL)
     {
-        for (targetFormId = 0; GetSpeciesFormTable(formSpeciesId)[targetFormId] != FORM_SPECIES_END; targetFormId++)
+        for (targetFormId = 0; formTable[targetFormId] != FORM_SPECIES_END; targetFormId++)
         {
-            if (formSpeciesId == GetSpeciesFormTable(formSpeciesId)[targetFormId])
+            if (formSpeciesId == formTable[targetFormId])
                 break;
         }
     }
