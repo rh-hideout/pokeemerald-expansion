@@ -506,3 +506,33 @@ DOUBLE_BATTLE_TEST("Commander clears when Dondozo is replaced and Tatsugiri can 
         HP_BAR(playerRight);
     }
 }
+
+DOUBLE_BATTLE_TEST("Commander does not clear semi-invulnerability of non-Tatsugiri partner")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FLY) == EFFECT_SEMI_INVULNERABLE);
+        PLAYER(SPECIES_DONDOZO) { HP(1); Speed(1); }
+        PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); HP(1); Status1(STATUS1_POISON); Speed(2); }
+        PLAYER(SPECIES_PIDGEOT) { Speed(100); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(90); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(80); }
+    } WHEN {
+        TURN { SKIP_TURN(playerRight); SEND_OUT(playerRight, 2); }
+        TURN {
+            MOVE(playerRight, MOVE_FLY, target: opponentLeft);
+            MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft);
+            MOVE(opponentRight, MOVE_SCRATCH, target: playerRight);
+        }
+    } SCENE {
+        ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
+        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        MESSAGE("Tatsugiri fainted!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLY, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
+        MESSAGE("Dondozo fainted!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentRight);
+        NOT HP_BAR(playerRight);
+    } THEN {
+        EXPECT_EQ(playerRight->hp, playerRight->maxHP);
+    }
+}
