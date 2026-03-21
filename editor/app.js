@@ -2127,9 +2127,13 @@ function makeSelectHtml(id, value, options, extraAttrs = '') {
     return `<select id="${id}" ${extraAttrs}>${options.map(o => `<option value="${escAttr(o)}" ${o === value ? 'selected' : ''}>${escHtml(o)}</option>`).join('')}</select>`;
 }
 
+function rawFileUrl(filePath) {
+    return `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/${filePath}`;
+}
+
 function getSpriteUrl(graphicsId) {
     const name = (graphicsId || '').replace('OBJ_EVENT_GFX_', '').toLowerCase();
-    return `../graphics/object_events/pics/people/${name}.png`;
+    return rawFileUrl(`graphics/object_events/pics/people/${name}.png`);
 }
 
 function getSpriteHtml(graphicsId, size = 32) {
@@ -2142,8 +2146,13 @@ function getSpriteHtml(graphicsId, size = 32) {
 }
 
 function getTrainerPicUrl(pic) {
-    const name = (pic || '').toLowerCase().replace(/\s+/g, '_');
-    return `../graphics/trainers/front_pics/${name}.png`;
+    const picNameOverrides = {
+        'rs brendan': 'brendan_rs',
+        'rs may': 'may_rs',
+    };
+    const lower = (pic || '').toLowerCase();
+    const name = picNameOverrides[lower] || lower.replace(/\s+/g, '_');
+    return rawFileUrl(`graphics/trainers/front_pics/${name}.png`);
 }
 
 function getTrainerPicHtml(pic, size = 64) {
