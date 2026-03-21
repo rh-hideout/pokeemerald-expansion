@@ -766,13 +766,12 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
         aiData->turnOrder[battler] = battler;
     SetBattlerTurnOrder(aiData->turnOrder);
 
-    for (enum BattlerId battler = 0; battler < battlersCount; battler++)
+    for (enum BattlerId battlerAtk = 0; battlerAtk < battlersCount; battlerAtk++)
     {
-        if (!IsBattlerAlive(battler))
+        if (!IsBattlerAlive(battlerAtk))
             continue;
 
-        SetBattlerAiMovesData(aiData, battler, battlersCount, weather);
-        aiData->turnOrder[battler] = battler;
+        SetBattlerAiMovesData(aiData, battlerAtk, battlersCount, weather);
     }
 
     for (enum BattlerId battler = 0; battler < battlersCount; battler++)
