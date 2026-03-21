@@ -2540,7 +2540,7 @@ async function renderMapDetail(dirName) {
             const body = header.nextElementSibling;
             if (body) body.classList.toggle('collapsed');
             const arrow = header.querySelector('.toggle-arrow');
-            if (arrow) arrow.textContent = body.classList.contains('collapsed') ? '&#9654;' : '&#9660;';
+            if (arrow) arrow.innerHTML = body.classList.contains('collapsed') ? '&#9654;' : '&#9660;';
         });
     });
 
