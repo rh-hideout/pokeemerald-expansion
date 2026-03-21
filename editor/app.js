@@ -2142,7 +2142,12 @@ function getSpriteHtml(graphicsId, size = 32) {
 }
 
 function getTrainerPicUrl(pic) {
-    const name = (pic || '').toLowerCase().replace(/\s+/g, '_');
+    const picNameOverrides = {
+        'rs brendan': 'brendan_rs',
+        'rs may': 'may_rs',
+    };
+    const lower = (pic || '').toLowerCase();
+    const name = picNameOverrides[lower] || lower.replace(/\s+/g, '_');
     return `../graphics/trainers/front_pics/${name}.png`;
 }
 
