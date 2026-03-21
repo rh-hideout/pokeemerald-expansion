@@ -94,9 +94,9 @@ SINGLE_BATTLE_TEST("Dream Eater fails if the target is behind a Substitute (Gen 
 #else
 SINGLE_BATTLE_TEST("Dream Eater works if the target is behind a Substitute (Gen 5+)")
 {
-    s16 damage;
+    u16 damage;
     s16 healed;
-    KNOWN_FAILING; // Dream Eater can hit and drain from a Substitute, but not bypass it.
+    // Dream Eater can hit and drain from a Substitute, but not bypass it.
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_YAWN) == EFFECT_YAWN);
         ASSUME(GetMoveEffect(MOVE_SUBSTITUTE) == EFFECT_SUBSTITUTE);
@@ -108,7 +108,7 @@ SINGLE_BATTLE_TEST("Dream Eater works if the target is behind a Substitute (Gen 
         TURN { MOVE(opponent, MOVE_DREAM_EATER); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DREAM_EATER, opponent);
-        HP_BAR(player, captureDamage: &damage);
+        SUB_HIT(player, captureDamage: &damage);
         HP_BAR(opponent, captureDamage: &healed);
     } THEN {
         EXPECT_MUL_EQ(damage, Q_4_12(-1.0/2.0), healed);
