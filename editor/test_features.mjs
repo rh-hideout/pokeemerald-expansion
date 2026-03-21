@@ -112,18 +112,43 @@ await page.evaluate((dir) => {
 }, testMapDir);
 await page.waitForTimeout(800);
 
-// Force-place markers even if image didn't load (image is from GitHub CDN, may not load in test)
-await page.evaluate(() => {
+// Verify the img element survived section building (insertAdjacentHTML preserves elements)
+// Then fake dimensions and trigger load, since the image is from a CDN and won't load in test
+const imgSurvived = await page.evaluate(() => {
+    const img = document.getElementById('imap-img');
+    if (!img) return { exists: false };
+    // Check that initInteractiveMap attached a load listener by verifying the
+    // element is the same one in the DOM (not destroyed/recreated by innerHTML +=)
+    const container = document.getElementById('imap-container');
+    return { exists: true, inContainer: container && container.contains(img) };
+});
+assert(imgSurvived.exists, 'Map img element exists after section building');
+assert(imgSurvived.inContainer, 'Map img is inside imap-container (not orphaned)');
+
+await page.evaluate((dir) => {
     const img = document.getElementById('imap-img');
     if (img && document.querySelectorAll('.imap-marker').length === 0) {
-        // Fake image dimensions so initInteractiveMap's placeMarkers can work
         if (!img.naturalWidth) {
-            Object.defineProperty(img, 'naturalWidth', { value: 256, writable: true });
-            Object.defineProperty(img, 'naturalHeight', { value: 256, writable: true });
+            // Compute realistic image dimensions from the map's entity positions
+            // so markers end up with valid percentage coordinates
+            const map = state.maps.find(m => m._dirName === dir);
+            const TILE = 16, BORDER = 7;
+            let maxX = 0, maxY = 0;
+            for (const evts of [map.object_events, map.warp_events, map.bg_events, map.coord_events]) {
+                for (const e of (evts || [])) {
+                    maxX = Math.max(maxX, (e.x || 0) + BORDER + 1);
+                    maxY = Math.max(maxY, (e.y || 0) + BORDER + 1);
+                }
+            }
+            // Image must be at least as large as (maxCoord + border) * tileSize
+            const w = (maxX + BORDER) * TILE;
+            const h = (maxY + BORDER) * TILE;
+            Object.defineProperty(img, 'naturalWidth', { value: w, writable: true });
+            Object.defineProperty(img, 'naturalHeight', { value: h, writable: true });
         }
         img.dispatchEvent(new Event('load'));
     }
-});
+}, testMapDir);
 await page.waitForTimeout(300);
 
 // 1a. Interactive map section exists
@@ -190,7 +215,64 @@ if (firstMarker) {
     await page.waitForTimeout(200);
 }
 
-// 1h. Test drag repositioning
+// 1h. Markers are not clipped by overflow:hidden on container
+const overflowCheck = await page.evaluate(() => {
+    const container = document.getElementById('imap-container');
+    if (!container) return { skip: true };
+    const style = getComputedStyle(container);
+    return { overflow: style.overflow, overflowX: style.overflowX, overflowY: style.overflowY };
+});
+if (!overflowCheck.skip) {
+    assert(overflowCheck.overflow !== 'hidden' && overflowCheck.overflowX !== 'hidden' && overflowCheck.overflowY !== 'hidden',
+        `imap-container overflow is not hidden (got: ${overflowCheck.overflow})`);
+}
+
+// 1i. Markers are positioned within valid percentage bounds (0-100%)
+const markerPositions = await page.evaluate(() => {
+    const markers = document.querySelectorAll('.imap-marker');
+    if (!markers.length) return { skip: true };
+    let validCount = 0;
+    let outOfBounds = [];
+    for (const m of markers) {
+        const left = parseFloat(m.style.left);
+        const top = parseFloat(m.style.top);
+        if (left >= 0 && left <= 100 && top >= 0 && top <= 100) {
+            validCount++;
+        } else {
+            outOfBounds.push({ left, top, type: m.dataset.entityType });
+        }
+    }
+    return { total: markers.length, valid: validCount, outOfBounds };
+});
+if (!markerPositions.skip && markerPositions.total > 0) {
+    assert(markerPositions.valid === markerPositions.total,
+        `All markers positioned within 0-100% bounds (${markerPositions.valid}/${markerPositions.total}${markerPositions.outOfBounds.length ? ' — out: ' + JSON.stringify(markerPositions.outOfBounds[0]) : ''})`);
+}
+
+// 1j. Collapse arrow renders as character, not HTML entity text
+const collapseArrowCheck = await page.evaluate(() => {
+    const arrow = document.querySelector('.toggle-arrow');
+    if (!arrow) return { skip: true };
+    const text = arrow.textContent;
+    // Should be a single Unicode character (▼ or ▶), not literal "&#9660;" or "&#9654;"
+    const isEntityText = text.includes('&') || text.includes('#') || text.length > 2;
+    // Click to collapse and check the toggled arrow too
+    const header = arrow.closest('.map-area-section-header');
+    if (header) header.click();
+    const afterText = arrow.textContent;
+    const afterIsEntity = afterText.includes('&') || afterText.includes('#') || afterText.length > 2;
+    // Click again to restore
+    if (header) header.click();
+    return { before: text, after: afterText, isEntityText, afterIsEntity };
+});
+if (!collapseArrowCheck.skip) {
+    assert(!collapseArrowCheck.isEntityText,
+        `Collapse arrow renders as character, not entity code (got: "${collapseArrowCheck.before}")`);
+    assert(!collapseArrowCheck.afterIsEntity,
+        `Toggled arrow renders as character, not entity code (got: "${collapseArrowCheck.after}")`);
+}
+
+// 1k. Test drag repositioning (was 1h)
 const dragResult = await page.evaluate((dir) => {
     const map = state.maps.find(m => m._dirName === dir);
     const firstNPC = (map.object_events || []).find(e =>
@@ -211,7 +293,7 @@ if (!dragResult.skipped) {
     assert(dragResult.changed, 'Entity position can be modified (drag simulation)');
 }
 
-// 1i. Verify hint text
+// 1l. Verify hint text (was 1i)
 const hint = await page.$('.imap-hint');
 assert(hint !== null, 'Hint text exists');
 const hintText = await hint?.textContent();

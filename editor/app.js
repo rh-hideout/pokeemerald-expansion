@@ -2515,24 +2515,24 @@ async function renderMapDetail(dirName) {
     // ═══════════════════════════════════════════
     // TIER 1: AREA — about the place itself
     // ═══════════════════════════════════════════
-    sections.innerHTML += `<div class="section-tier">Area</div>`;
-    sections.innerHTML += buildMapPreviewSection(map);
-    sections.innerHTML += buildPropertiesSection(map);
-    sections.innerHTML += buildNavigationSection(map);
+    sections.insertAdjacentHTML('beforeend', `<div class="section-tier">Area</div>`);
+    sections.insertAdjacentHTML('beforeend', buildMapPreviewSection(map));
+    sections.insertAdjacentHTML('beforeend', buildPropertiesSection(map));
+    sections.insertAdjacentHTML('beforeend', buildNavigationSection(map));
 
     // ═══════════════════════════════════════════
     // TIER 2: NPCs — who's here
     // ═══════════════════════════════════════════
-    sections.innerHTML += `<div class="section-tier">NPCs</div>`;
-    sections.innerHTML += buildUnifiedNPCSection(map, trainers, scriptText);
+    sections.insertAdjacentHTML('beforeend', `<div class="section-tier">NPCs</div>`);
+    sections.insertAdjacentHTML('beforeend', buildUnifiedNPCSection(map, trainers, scriptText));
 
     // ═══════════════════════════════════════════
     // TIER 3: WORLD — things in the environment
     // ═══════════════════════════════════════════
-    sections.innerHTML += `<div class="section-tier">World</div>`;
-    sections.innerHTML += buildEncounterSection(enc, encounterRates, map);
-    sections.innerHTML += buildItemSection(itemBalls, hiddenItems, map);
-    sections.innerHTML += buildSignsAndTriggersSection(map);
+    sections.insertAdjacentHTML('beforeend', `<div class="section-tier">World</div>`);
+    sections.insertAdjacentHTML('beforeend', buildEncounterSection(enc, encounterRates, map));
+    sections.insertAdjacentHTML('beforeend', buildItemSection(itemBalls, hiddenItems, map));
+    sections.insertAdjacentHTML('beforeend', buildSignsAndTriggersSection(map));
 
     // Wire up section toggles
     $$('.map-area-section-header').forEach(header => {
@@ -2540,7 +2540,7 @@ async function renderMapDetail(dirName) {
             const body = header.nextElementSibling;
             if (body) body.classList.toggle('collapsed');
             const arrow = header.querySelector('.toggle-arrow');
-            if (arrow) arrow.textContent = body.classList.contains('collapsed') ? '&#9654;' : '&#9660;';
+            if (arrow) arrow.innerHTML = body.classList.contains('collapsed') ? '&#9654;' : '&#9660;';
         });
     });
 

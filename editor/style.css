@@ -1796,7 +1796,6 @@ tbody tr:last-child td { border-bottom: none; }
     width: 100%;
     border-radius: 6px;
     border: 1px solid var(--border);
-    overflow: hidden;
     background: var(--bg);
 }
 .imap-container img {
@@ -1804,6 +1803,7 @@ tbody tr:last-child td { border-bottom: none; }
     width: 100%;
     height: auto;
     image-rendering: pixelated;
+    border-radius: 5px;
 }
 .imap-markers {
     position: absolute;
