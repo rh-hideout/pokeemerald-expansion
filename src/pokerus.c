@@ -1,6 +1,6 @@
 #include "global.h"
 #include "event_data.h"
-#include "generational_changes.h"
+#include "config_changes.h"
 #include "pokemon.h"
 #include "pokerus.h"
 #include "random.h"

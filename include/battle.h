@@ -23,7 +23,7 @@
 #include "battle_dynamax.h"
 #include "battle_terastal.h"
 #include "battle_gimmick.h"
-#include "generational_changes.h"
+#include "config_changes.h"
 #include "item.h"
 #include "move.h"
 #include "random.h" // for rng_value_t
@@ -201,6 +201,7 @@ struct SimulatedDamage
     u16 minimum;
     u16 median;
     u16 maximum;
+    u16 random;
 };
 
 // Ai Data used when deciding which move to use, computed only once before each turn's start.
@@ -234,7 +235,8 @@ struct AiLogicData
     u32 shouldConsiderExplosion:1; // Determines whether AI should consider explosion moves this turn
     u32 shouldSwitch:4; // Stores result of ShouldSwitch, which decides whether a mon should be switched out
     u32 shouldConsiderFinalGambit:1; // Determines whether AI should consider Final Gambit this turn
-    u32 padding2:19;
+    u32 switchInCalc:1; // Indicates if we're doing switch in calcs, this is purely for Retaliate damage calcs
+    u32 padding2:18;
 };
 
 struct AiThinkingStruct

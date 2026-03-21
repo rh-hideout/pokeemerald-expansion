@@ -3,7 +3,7 @@
 #include "event_data.h"
 #include "pokemon.h"
 #include "pokerus.h"
-#include "generational_changes.h"
+#include "config_changes.h"
 #include "random.h"
 #include "test/overworld_script.h"
 #include "test/test.h"
