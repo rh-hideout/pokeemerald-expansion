@@ -76,7 +76,7 @@ extern s16 gBattleAnimArgs[ANIM_ARGS_COUNT];
 extern u8 gAnimMoveTurn;
 extern enum BattlerId gBattleAnimAttacker;
 extern enum BattlerId gBattleAnimTarget;
-extern u16 gAnimBattlerSpecies[MAX_BATTLERS_COUNT];
+extern enum Species gAnimBattlerSpecies[MAX_BATTLERS_COUNT];
 extern u8 gAnimCustomPanning;
 extern u16 gAnimMoveIndex;
 
@@ -168,7 +168,7 @@ u32 GetBattleMonSpritePalettesMask(u8 playerLeft, u8 playerRight, u8 opponentLef
 u8 GetSpritePalIdxByBattler(enum BattlerId battler);
 s16 CloneBattlerSpriteWithBlend(enum AnimBattler animBattler);
 void DestroySpriteWithActiveSheet(struct Sprite *sprite);
-u8 CreateInvisibleSpriteCopy(int battler, u8 spriteId, int species);
+u8 CreateInvisibleSpriteCopy(enum BattlerId battler, u8 spriteId, enum Species species);
 void AnimLoadCompressedBgTilemapHandleContest(struct BattleAnimBgData *data, const void *src, bool32 largeScreen);
 void AnimLoadCompressedBgGfx(u32 bgId, const u32 *src, u32 tilesOffset);
 void UpdateAnimBg3ScreenSize(bool8 largeScreenSize);
@@ -191,7 +191,7 @@ void PrepareAffineAnimInTaskData(struct Task *task, u8 spriteId, const union Aff
 bool8 RunAffineAnimFromTaskData(struct Task *task);
 void AnimThrowProjectile(struct Sprite *sprite);
 void GetBgDataForTransform(struct BattleAnimBgData *out, enum BattlerId battler);
-u8 CreateAdditionalMonSpriteForMoveAnim(u16 species, bool8 isBackpic, u8 id, s16 x, s16 y, u8 subpriority, u32 personality, bool8 isShiny, enum BattlerId battler);
+u8 CreateAdditionalMonSpriteForMoveAnim(enum Species species, bool32 isBackpic, u8 id, s16 x, s16 y, u8 subpriority, u32 personality, bool32 isShiny, enum BattlerId battler);
 void ResetSpriteRotScale_PreserveAffine(struct Sprite *sprite);
 void Trade_MoveSelectedMonToTarget(struct Sprite *sprite);
 void DestroyAnimVisualTaskAndDisableBlend(u8 taskId);
@@ -422,7 +422,7 @@ u8 SmokescreenImpact(s16 x, s16 y, bool8 persist);
 
 u32 UnpackSelectedBattlePalettes(s16 selector);
 
-u8 GetBattlerSpriteFinal_Y(enum BattlerId battler, u16 species, bool8 a3);
+u8 GetBattlerSpriteFinal_Y(enum BattlerId battler, enum Species species, bool32 a3);
 
 extern const struct OamData gOamData_AffineOff_ObjNormal_8x16;
 extern const struct OamData gOamData_AffineNormal_ObjBlend_16x16;

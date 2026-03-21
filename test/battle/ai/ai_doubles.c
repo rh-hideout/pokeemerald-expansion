@@ -708,16 +708,33 @@ AI_DOUBLE_BATTLE_TEST("AI sees corresponding absorbing abilities on partners")
 
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_DISCHARGE) == TARGET_FOES_AND_ALLY);
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_HP_AWARE);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_ZIGZAGOON);
         PLAYER(SPECIES_ZIGZAGOON);
-        OPPONENT(SPECIES_SLAKING) { Moves(move, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_SLAKING) { Moves(move, MOVE_CONSTRICT); }
         OPPONENT(species) { HP(1); Ability(ability); Moves(MOVE_POUND, MOVE_EMBER, MOVE_ROUND); }
     } WHEN {
         if (ability != ABILITY_CLOUD_NINE)
             TURN { EXPECT_MOVE(opponentLeft, move); }
         else
-            TURN { EXPECT_MOVE(opponentLeft, MOVE_SCRATCH); }
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_CONSTRICT); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI sees random rolls correctly")
+{
+    PASSES_RANDOMLY(3, 15, RNG_AI_DMG_ROLL_RANDOM); // Slaking KOs with 3 rolls
+    GIVEN {
+        WITH_CONFIG(AI_ROLL_ATTACKING, AI_ROLL_RANDOM);
+        ASSUME(GetMoveTarget(MOVE_DISCHARGE) == TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveType(MOVE_DISCHARGE) == TYPE_ELECTRIC);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_ZIGZAGOON);
+        PLAYER(SPECIES_ZIGZAGOON);
+        OPPONENT(SPECIES_SLAKING) { Moves(MOVE_DISCHARGE, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_PIKACHU) { HP(1); Ability(ABILITY_LIGHTNING_ROD); Moves(MOVE_SCRATCH); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponentLeft, MOVE_SCRATCH); }
     }
 }
 

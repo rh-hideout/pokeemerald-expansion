@@ -962,7 +962,7 @@ u8 GetTrainerEncounterMusicIdInTrainerHill(u16 trainerId)
 
 static void SetTrainerHillMonLevel(struct Pokemon *mon, u8 level)
 {
-    u16 species = GetMonData(mon, MON_DATA_SPECIES);
+    enum Species species = GetMonData(mon, MON_DATA_SPECIES);
     u32 exp = gExperienceTables[GetSpeciesGrowthRate(species)][level];
 
     SetMonData(mon, MON_DATA_EXP, &exp);

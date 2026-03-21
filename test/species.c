@@ -13,7 +13,7 @@ TEST("Form species ID tables are shared between all forms")
     {
         if (IsSpeciesEnabled(i) && GetSpeciesFormTable(i))
         {
-            PARAMETRIZE_LABEL("%S", GetSpeciesName(i)) { species = i; }
+            PARAMETRIZE_LABEL("ID:%d - %S", i, GetSpeciesName(i)) { species = i; }
         }
     }
 
@@ -36,7 +36,7 @@ TEST("Form change tables contain only forms in the form species ID table")
     {
         if (IsSpeciesEnabled(i) && GetSpeciesFormChanges(i))
         {
-            PARAMETRIZE_LABEL("%S", GetSpeciesName(i)) { species = i; }
+            PARAMETRIZE_LABEL("ID:%d - %S", i, GetSpeciesName(i)) { species = i; }
         }
     }
 
@@ -74,7 +74,7 @@ TEST("Forms have the appropriate species form changes")
             || IsSpeciesUltraBurst(i)
             || IsSpeciesPrimalReversion(i))
         {
-            PARAMETRIZE_LABEL("%S", GetSpeciesName(i)) { species = i; }
+            PARAMETRIZE_LABEL("ID:%d - %S", i, GetSpeciesName(i)) { species = i; }
         }
     }
     bool32 hasBattleEnd = FALSE, hasFaint = FALSE;
@@ -114,7 +114,7 @@ TEST("Form change targets have the appropriate species flags")
     {
         if (IsSpeciesEnabled(i) && GetSpeciesFormChanges(i))
         {
-            PARAMETRIZE_LABEL("%S", GetSpeciesName(i)) { species = i; }
+            PARAMETRIZE_LABEL("ID:%d - %S", i, GetSpeciesName(i)) { species = i; }
         }
     }
 
@@ -153,7 +153,8 @@ TEST("No species has two evolutions that use the evolution tracker")
 
     for (i = 0; i < NUM_SPECIES; i++)
     {
-        if (IsSpeciesEnabled(i) && GetSpeciesEvolutions(i) != NULL) PARAMETRIZE { species = i; }
+        if (IsSpeciesEnabled(i) && GetSpeciesEvolutions(i) != NULL)
+            PARAMETRIZE_LABEL("ID:%d - %S", i, GetSpeciesName(i)) { species = i; }
     }
 
     evolutionTrackerEvolutions = 0;
@@ -195,7 +196,7 @@ TEST("Every species has a description")
     for (i = 1; i < NUM_SPECIES; i++)
     {
         if (IsSpeciesEnabled(i))
-            PARAMETRIZE { species = i; }
+            PARAMETRIZE_LABEL("ID:%d - %S", i, GetSpeciesName(i)) { species = i; }
     }
 
     EXPECT_NE(StringCompare(GetSpeciesPokedexDescription(species), gFallbackPokedexText), 0);

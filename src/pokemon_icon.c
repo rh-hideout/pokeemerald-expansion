@@ -134,12 +134,12 @@ static const u16 sSpriteImageSizes[3][4] =
     },
 };
 
-u8 CreateMonIcon(u16 species, void (*callback)(struct Sprite *), s16 x, s16 y, u8 subpriority, u32 personality)
+u8 CreateMonIcon(enum Species species, void (*callback)(struct Sprite *), s16 x, s16 y, u8 subpriority, u32 personality)
 {
     return CreateMonIconIsEgg(species, callback, x, y, subpriority, personality, FALSE);
 }
 
-u8 CreateMonIconIsEgg(u16 species, void (*callback)(struct Sprite *), s16 x, s16 y, u8 subpriority, u32 personality, bool32 isEgg)
+u8 CreateMonIconIsEgg(enum Species species, void (*callback)(struct Sprite *), s16 x, s16 y, u8 subpriority, u32 personality, bool32 isEgg)
 {
     u8 spriteId;
     struct MonIconSpriteTemplate iconTemplate =
@@ -177,11 +177,11 @@ u8 CreateMonIconIsEgg(u16 species, void (*callback)(struct Sprite *), s16 x, s16
 }
 
 
-u8 CreateMonIconNoPersonality(u16 species, void (*callback)(struct Sprite *), s16 x, s16 y, u8 subpriority)
+u8 CreateMonIconNoPersonality(enum Species species, void (*callback)(struct Sprite *), s16 x, s16 y, u8 subpriority)
 {
     return CreateMonIconNoPersonalityIsEgg(species, callback, x, y, subpriority, FALSE);
 }
-u8 CreateMonIconNoPersonalityIsEgg(u16 species, void (*callback)(struct Sprite *), s16 x, s16 y, u8 subpriority, bool32 isEgg)
+u8 CreateMonIconNoPersonalityIsEgg(enum Species species, void (*callback)(struct Sprite *), s16 x, s16 y, u8 subpriority, bool32 isEgg)
 {
     u8 spriteId;
     struct MonIconSpriteTemplate iconTemplate =
@@ -202,7 +202,7 @@ u8 CreateMonIconNoPersonalityIsEgg(u16 species, void (*callback)(struct Sprite *
     return spriteId;
 }
 
-u16 GetIconSpecies(u16 species, u32 personality)
+enum Species GetIconSpecies(enum Species species, u32 personality)
 {
     species = SanitizeSpeciesId(species);
     if (species == SPECIES_UNOWN)
@@ -218,7 +218,7 @@ u16 GetUnownLetterByPersonality(u32 personality)
         return GET_UNOWN_LETTER(personality);
 }
 
-u16 GetIconSpeciesNoPersonality(u16 species)
+enum Species GetIconSpeciesNoPersonality(enum Species species)
 {
     species = SanitizeSpeciesId(species);
 
@@ -227,12 +227,12 @@ u16 GetIconSpeciesNoPersonality(u16 species)
     return GetIconSpecies(species, 0);
 }
 
-const u8 *GetMonIconPtr(u16 species, u32 personality)
+const u8 *GetMonIconPtr(enum Species species, u32 personality)
 {
     return GetMonIconPtrIsEgg(species, personality, FALSE);
 }
 
-const u8 *GetMonIconPtrIsEgg(u16 species, u32 personality, bool32 isEgg)
+const u8 *GetMonIconPtrIsEgg(enum Species species, u32 personality, bool32 isEgg)
 {
     return GetMonIconTilesIsEgg(GetIconSpecies(species, personality), personality, isEgg);
 }
@@ -249,14 +249,14 @@ void LoadMonIconPalettes(void)
         LoadSpritePalette(&gMonIconPaletteTable[i]);
 }
 
-void LoadMonIconPalette(u16 species)
+void LoadMonIconPalette(enum Species species)
 {
     u8 palIndex = GetSpeciesIconPalIndex(species);
     if (IndexOfSpritePaletteTag(gMonIconPaletteTable[palIndex].tag) == 0xFF)
         LoadSpritePalette(&gMonIconPaletteTable[palIndex]);
 }
 
-void LoadMonIconPalettePersonality(u16 species, u32 personality)
+void LoadMonIconPalettePersonality(enum Species species, u32 personality)
 {
     u8 palIndex;
     if (IsPersonalityFemale(species, personality))
@@ -275,7 +275,7 @@ void FreeMonIconPalettes(void)
         FreeSpritePaletteByTag(gMonIconPaletteTable[i].tag);
 }
 
-void FreeMonIconPalette(u16 species)
+void FreeMonIconPalette(enum Species species)
 {
     u8 palIndex = GetSpeciesIconPalIndex(species);
     FreeSpritePaletteByTag(gMonIconPaletteTable[palIndex].tag);
@@ -286,12 +286,12 @@ void SpriteCB_MonIcon(struct Sprite *sprite)
     UpdateMonIconFrame(sprite);
 }
 
-const u8 *GetMonIconTiles(u16 species, u32 personality)
+const u8 *GetMonIconTiles(enum Species species, u32 personality)
 {
     return GetMonIconTilesIsEgg(species, personality, FALSE);
 }
 
-const u8 *GetMonIconTilesIsEgg(u16 species, u32 personality, bool32 isEgg)
+const u8 *GetMonIconTilesIsEgg(enum Species species, u32 personality, bool32 isEgg)
 {
     const u8 *iconSprite;
 
@@ -329,7 +329,7 @@ void TryLoadAllMonIconPalettesAtOffset(u16 offset)
     }
 }
 
-const u16 *GetValidMonIconPalettePtr(u16 species)
+const u16 *GetValidMonIconPalettePtr(enum Species species)
 {
     return gMonIconPaletteTable[GetSpeciesIconPalIndex(species)].data;
 }

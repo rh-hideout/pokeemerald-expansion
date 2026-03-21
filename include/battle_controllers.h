@@ -220,7 +220,7 @@ struct ChooseMoveStruct
     enum Move moves[MAX_MON_MOVES];
     u8 currentPp[MAX_MON_MOVES];
     u8 maxPp[MAX_MON_MOVES];
-    u16 species;
+    enum Species species;
     enum Type monTypes[3];
     struct ZMoveData zmove;
 };

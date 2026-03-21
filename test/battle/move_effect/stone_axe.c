@@ -92,3 +92,20 @@ SINGLE_BATTLE_TEST("Stone Axe fails to set up hazards if user faints")
         NOT MESSAGE("Pointed stones float in the air around the opposing team!");
     }
 }
+
+SINGLE_BATTLE_TEST("Stone Axe will set up rocks if the target is behind a Substitute")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_STONE_AXE); }
+        TURN { SWITCH(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STONE_AXE, opponent);
+        SUB_HIT(player);
+        HP_BAR(player);
+    }
+}

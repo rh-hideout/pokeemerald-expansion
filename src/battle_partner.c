@@ -12,10 +12,12 @@
 #include "constants/abilities.h"
 #include "constants/battle_ai.h"
 
+#if !TESTING
 const struct Trainer gBattlePartners[DIFFICULTY_COUNT][PARTNER_COUNT] =
 {
 #include "data/battle_partners.h"
 };
+#endif
 
 #define STEVEN_OTID 61226
 

@@ -60,8 +60,8 @@ static bool32 HandleEndTurnVarious(enum BattlerId battler)
         if (gBattleMons[i].volatiles.throatChopTimer > 0)
             gBattleMons[i].volatiles.throatChopTimer--;
 
-        if (gBattleMons[i].volatiles.lockOn > 0)
-            gBattleMons[i].volatiles.lockOn--;
+        if (gBattleMons[i].volatiles.lockOn > 0 && --gBattleMons[i].volatiles.lockOn == 0)
+            gBattleMons[i].volatiles.battlerWithSureHit = 0;
 
         if (B_CHARGE < GEN_9 && gBattleMons[i].volatiles.chargeTimer > 0)
             gBattleMons[i].volatiles.chargeTimer--;

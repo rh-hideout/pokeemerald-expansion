@@ -1756,6 +1756,8 @@ const u16 gItemIconPalette_DarkTMHM[] = INCBIN_U16("graphics/items/icon_palettes
 
 const u16 gItemIconPalette_SteelTMHM[] = INCBIN_U16("graphics/items/icon_palettes/steel_tm_hm.gbapal");
 
+const u16 gItemIconPalette_MysteryTMHM[] = INCBIN_U16("graphics/items/icon_palettes/mystery_tm_hm.gbapal");
+
 const u16 gItemIconPalette_FairyTMHM[] = INCBIN_U16("graphics/items/icon_palettes/fairy_tm_hm.gbapal");
 
 // Charms
