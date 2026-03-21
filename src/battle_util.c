@@ -5695,6 +5695,9 @@ enum HoldEffect GetBattlerHoldEffectInternal(enum BattlerId battler, enum Abilit
 
 enum HoldEffect GetBattlerHoldEffectIgnoreNegation(enum BattlerId battler)
 {
+    if (gBattleStruct->battlerState[battler].notOnField)
+        return HOLD_EFFECT_NONE;
+
     gPotentialItemEffectBattler = battler;
     if (gBattleMons[battler].item == ITEM_ENIGMA_BERRY_E_READER)
         return gEnigmaBerries[battler].holdEffect;
