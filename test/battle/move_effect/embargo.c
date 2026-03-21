@@ -27,9 +27,6 @@ SINGLE_BATTLE_TEST("Embargo blocks the effect of an affected Pokémon's held ite
 
 SINGLE_BATTLE_TEST("Embargo blocks an affected Pokémon's trainer from using items")
 {
-    // As of writing, the battle tests system doesn't perform all the operations involved
-    // in the action of an NPC using an item in battle.
-    KNOWN_FAILING;
     GIVEN {
         ASSUME(gItemsInfo[ITEM_POTION].battleUsage == EFFECT_ITEM_RESTORE_HP);
         PLAYER(SPECIES_WOBBUFFET);

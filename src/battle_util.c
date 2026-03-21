@@ -530,6 +530,11 @@ void HandleAction_UseItem(void)
     ClearVariousBattlerFlags(gBattlerAttacker);
 
     gLastUsedItem = gBattleResources->bufferB[gBattlerAttacker][1] | (gBattleResources->bufferB[gBattlerAttacker][2] << 8);
+    if (gBattleMons[gBattlerAttacker].volatiles.embargo)
+    {
+        gCurrentActionFuncId = B_ACTION_FINISHED;
+        return;
+    }
     if (X_ITEM_FRIENDSHIP_INCREASE > 0
         && GetItemEffectType(gLastUsedItem) == ITEM_EFFECT_X_ITEM
         && !ShouldSkipFriendshipChange())
