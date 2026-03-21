@@ -5143,10 +5143,10 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .teachableLearnset = sGoomyTeachableLearnset,
         .eggMoveLearnset = sGoomyEggMoveLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 40, SPECIES_SLIGGOO, CONDITIONS({IF_NOT_REGION, REGION_HISUI})}
-#if P_HISUIAN_FORMS
+                            #if P_HISUIAN_FORMS
                                 ,{EVO_LEVEL, 40, SPECIES_SLIGGOO_HISUI, CONDITIONS({IF_REGION, REGION_HISUI})}
-#endif
-                                ),
+                            #endif
+                            ),
     },
 
     [SPECIES_SLIGGOO] =
@@ -6252,10 +6252,10 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .teachableLearnset = sBergmiteTeachableLearnset,
         .eggMoveLearnset = sBergmiteEggMoveLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 37, SPECIES_AVALUGG, CONDITIONS({IF_NOT_REGION, REGION_HISUI})}
-#if P_HISUIAN_FORMS
+                            #if P_HISUIAN_FORMS
                                 ,{EVO_LEVEL, 37, SPECIES_AVALUGG_HISUI, CONDITIONS({IF_REGION, REGION_HISUI})}
-#endif
-                                ),
+                            #endif
+                            ),
     },
 
     [SPECIES_AVALUGG] =
