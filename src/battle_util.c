@@ -1113,25 +1113,25 @@ bool32 IsLastMonToMove(enum BattlerId battler)
     return TRUE;
 }
 
-static u32 GetAiTurnOrder(u8 *aiTurnOrder, enum BattlerId battler)
+static u32 GetAiTurnOrder(enum BattlerId battler)
 {
     for (u32 i = 0; i < gBattlersCount; i++)
     {
-        if (aiTurnOrder[i] == battler)
+        if (gAiLogicData->turnOrder[i] == battler)
             return i;
     }
     return 0;
 }
 
-static bool32 Ai_AttackerMovesAfterTarget(struct BattleContext *ctx)
+static bool32 Ai_AttackerMovesAfterTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
-    return GetAiTurnOrder(ctx->aiTurnOrder, ctx->battlerAtk) > GetAiTurnOrder(ctx->aiTurnOrder, ctx->battlerDef);
+    return GetAiTurnOrder(battlerAtk) > GetAiTurnOrder(battlerDef);
 }
 
-static bool32 Ai_AttackerMovesLast(struct BattleContext *ctx)
+static bool32 Ai_AttackerMovesLast(enum BattlerId battlerAtk)
 {
     u32 numAliveBattlers = 0;
-    u32 battlerTurnOrder = GetAiTurnOrder(ctx->aiTurnOrder, ctx->battlerAtk);
+    u32 battlerTurnOrder = GetAiTurnOrder(battlerAtk);
 
     for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
     {
@@ -6344,7 +6344,7 @@ static inline u32 CalcMoveBasePower(struct BattleContext *ctx)
     case EFFECT_PAYBACK:
         if (ctx->aiCalc)
         {
-            if (Ai_AttackerMovesAfterTarget(ctx))
+            if (Ai_AttackerMovesAfterTarget(battlerAtk, battlerDef))
                 basePower *= 2;
         }
         else if (HasBattlerActedThisTurn(battlerDef)
@@ -6356,7 +6356,7 @@ static inline u32 CalcMoveBasePower(struct BattleContext *ctx)
     case EFFECT_BOLT_BEAK:
         if (ctx->aiCalc)
         {
-            if (!Ai_AttackerMovesAfterTarget(ctx))
+            if (!Ai_AttackerMovesAfterTarget(battlerAtk, battlerDef))
                 basePower *= 2;
         }
         else if (!HasBattlerActedThisTurn(battlerDef)
@@ -6567,7 +6567,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct BattleContext *ctx)
 
         if (ctx->aiCalc)
         {
-            if (Ai_AttackerMovesLast(ctx))
+            if (Ai_AttackerMovesLast(battlerAtk))
                modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
         }
         else if (IsLastMonToMove(battlerAtk))

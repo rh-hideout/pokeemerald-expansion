@@ -121,8 +121,6 @@ struct BattleContext
     enum HoldEffect holdEffectAtk;
     enum HoldEffect holdEffectDef;
 
-    u8 aiTurnOrder[MAX_BATTLERS_COUNT];
-
     // Flags
     u32 isCrit:1;
     u32 randomFactor:1;
