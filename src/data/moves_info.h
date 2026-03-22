@@ -9996,7 +9996,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             .moveEffect = MOVE_EFFECT_ITEM_MESSAGE,
             .preAttackEffect = TRUE,
             .self = TRUE,
-        }, {
+        },
+        {
             .moveEffect = MOVE_EFFECT_FLING,
         }),
         .contestEffect = CONTEST_EFFECT_WORSEN_CONDITION_OF_PREV_MONS,
