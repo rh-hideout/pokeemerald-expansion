@@ -386,6 +386,7 @@ u8 *StringExpandPlaceholders(u8 *dest, const u8 *src)
             case EXT_CTRL_CODE_RESUME_MUSIC:
                 break;
             case EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW:
+            case EXT_CTRL_CODE_TEXT_COLORS:
                 *dest++ = *src++;
             case EXT_CTRL_CODE_PLAY_BGM:
                 *dest++ = *src++;
@@ -478,10 +479,15 @@ static const u8 *ExpandPlaceholder_KunChan(void)
 
 static const u8 *ExpandPlaceholder_RivalName(void)
 {
+#if IS_FRLG
+    if (gSaveBlock1Ptr->rivalName[0] != EOS)
+        return gSaveBlock1Ptr->rivalName;
+#endif
+
     if (gSaveBlock2Ptr->playerGender == MALE)
-        return gText_ExpandedPlaceholder_May;
+        return (IS_FRLG ? gText_ExpandedPlaceholder_Green : gText_ExpandedPlaceholder_May);
     else
-        return gText_ExpandedPlaceholder_Brendan;
+        return (IS_FRLG ? gText_ExpandedPlaceholder_Red : gText_ExpandedPlaceholder_Brendan);
 }
 
 static const u8 *ExpandPlaceholder_Version(void)
@@ -519,6 +525,14 @@ static const u8 *ExpandPlaceholder_Groudon(void)
     return gText_ExpandedPlaceholder_Groudon;
 }
 
+static const u8 *ExpandPlaceholder_Region(void)
+{
+    if (IS_FRLG)
+        return gText_Kanto;
+    else
+        return gText_Hoenn;
+}
+
 const u8 *GetExpandedPlaceholder(u32 id)
 {
     typedef const u8 *(*ExpandPlaceholderFunc)(void);
@@ -539,6 +553,7 @@ const u8 *GetExpandedPlaceholder(u32 id)
         [PLACEHOLDER_ID_MAXIE]        = ExpandPlaceholder_Maxie,
         [PLACEHOLDER_ID_KYOGRE]       = ExpandPlaceholder_Kyogre,
         [PLACEHOLDER_ID_GROUDON]      = ExpandPlaceholder_Groudon,
+        [PLACEHOLDER_ID_REGION]       = ExpandPlaceholder_Region,
     };
 
     if (id >= ARRAY_COUNT(funcs))
@@ -622,23 +637,31 @@ u32 StringLength_Multibyte(const u8 *str)
     return length;
 }
 
-u8 *WriteColorChangeControlCode(u8 *dest, u32 colorType, u8 color)
+u8 *WriteColorChangeControlCode(u8 *dest, enum TextColorType colorType, u8 color)
 {
     *dest = EXT_CTRL_CODE_BEGIN;
     dest++;
 
     switch (colorType)
     {
-    case 0:
+    case TEXT_COLOR_TYPE_FOREGROUND:
         *dest = EXT_CTRL_CODE_COLOR;
         dest++;
         break;
-    case 1:
+    case TEXT_COLOR_TYPE_SHADOW:
         *dest = EXT_CTRL_CODE_SHADOW;
         dest++;
         break;
-    case 2:
+    case TEXT_COLOR_TYPE_HIGHLIGHT:
         *dest = EXT_CTRL_CODE_HIGHLIGHT;
+        dest++;
+        break;
+    case TEXT_COLOR_TYPE_ACCENT:
+        *dest = EXT_CTRL_CODE_ACCENT;
+        dest++;
+        break;
+    case TEXT_COLOR_TYPE_BACKGROUND:
+        *dest = EXT_CTRL_CODE_BACKGROUND;
         dest++;
         break;
     }
@@ -707,6 +730,9 @@ u8 GetExtCtrlCodeLength(u8 code)
         [EXT_CTRL_CODE_PAUSE_MUSIC]            = 1,
         [EXT_CTRL_CODE_RESUME_MUSIC]           = 1,
         [EXT_CTRL_CODE_SPEAKER]                = 1,
+        [EXT_CTRL_CODE_ACCENT]                 = 2,
+        [EXT_CTRL_CODE_BACKGROUND]             = 2,
+        [EXT_CTRL_CODE_TEXT_COLORS]            = 4,
     };
 
     u8 length = 0;
@@ -760,7 +786,7 @@ s32 StringCompareWithoutExtCtrlCodes(const u8 *str1, const u8 *str2)
     return retVal;
 }
 
-void ConvertInternationalString(u8 *s, u8 language)
+void ConvertInternationalString(u8 *s, enum Language language)
 {
     if (language == LANGUAGE_JAPANESE)
     {
@@ -818,4 +844,15 @@ u8 *StringCopyUppercase(u8 *dest, const u8 *src)
 
     *dest = EOS;
     return dest;
+}
+
+bool32 DoesStringProperlyTerminate(const u8 *str, u32 last)
+{
+    for (u32 i = 0; i < last; i++)
+    {
+        if (str[i] == EOS)
+            return TRUE;
+    }
+
+    return FALSE;
 }

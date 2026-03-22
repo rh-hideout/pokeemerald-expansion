@@ -167,10 +167,6 @@ static const struct SpriteTemplate sSpriteTemplate_StampShadow =
     .tileTag = TAG_STAMP_SHADOW,
     .paletteTag = TAG_STAMP_SHADOW,
     .oam = &gOamData_AffineOff_ObjNormal_32x16,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct WonderGraphics sCardGraphics[NUM_WONDER_BGS] = {
@@ -216,7 +212,7 @@ s32 WonderCard_Enter(void)
 {
     if (sWonderCardData == NULL)
         return -1;
-    switch(sWonderCardData->enterExitState)
+    switch (sWonderCardData->enterExitState)
     {
     case 0:
         BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);

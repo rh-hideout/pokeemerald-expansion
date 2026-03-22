@@ -11,6 +11,15 @@
 #define MAPGRID_COLLISION_SHIFT  10
 #define MAPGRID_ELEVATION_SHIFT  12
 
+enum
+{
+    ELEVATION_TRANSITION = 0,
+    ELEVATION_SURF = 1,
+    ELEVATION_DEFAULT = 3,
+    ELEVATION_MULTI_LEVEL = 15,
+    ELEVATION_INVALID = 0xFFFF
+};
+
 #define PACK_METATILE(metatileId) PACK(metatileId, MAPGRID_METATILE_ID_SHIFT, MAPGRID_METATILE_ID_MASK)
 #define PACK_COLLISION(collision) PACK(collision, MAPGRID_COLLISION_SHIFT, MAPGRID_COLLISION_MASK)
 #define PACK_ELEVATION(elevation) PACK(elevation, MAPGRID_ELEVATION_SHIFT, MAPGRID_ELEVATION_MASK)
@@ -31,6 +40,10 @@
 #define METATILE_ATTR_LAYER_MASK    0xF000 // Bits 12-15
 #define METATILE_ATTR_BEHAVIOR_SHIFT 0
 #define METATILE_ATTR_LAYER_SHIFT   12
+#define METATILE_ATTR_BEHAVIOR_MASK_FRLG  0x000001ff // Bits 0-8
+#define METATILE_ATTR_LAYER_MASK_FRLG     0x60000000 // Bits 29-30
+#define METATILE_ATTR_BEHAVIOR_SHIFT_FRLG 0
+#define METATILE_ATTR_LAYER_SHIFT_FRLG    29
 
 #define PACK_BEHAVIOR(behavior) PACK(behavior, METATILE_ATTR_BEHAVIOR_SHIFT, METATILE_ATTR_BEHAVIOR_MASK)
 #define PACK_LAYER_TYPE(layerType) PACK(layerType, METATILE_ATTR_LAYER_SHIFT, METATILE_ATTR_LAYER_MASK)
@@ -44,6 +57,35 @@ enum {
 };
 
 #define METATILE_ID(tileset, name) (METATILE_##tileset##_##name)
+
+enum
+{
+    METATILE_ATTRIBUTE_BEHAVIOR,
+    METATILE_ATTRIBUTE_TERRAIN,
+    METATILE_ATTRIBUTE_2,
+    METATILE_ATTRIBUTE_3,
+    METATILE_ATTRIBUTE_ENCOUNTER_TYPE,
+    METATILE_ATTRIBUTE_5,
+    METATILE_ATTRIBUTE_LAYER_TYPE,
+    METATILE_ATTRIBUTE_7,
+    METATILE_ATTRIBUTE_COUNT,
+    METATILE_ATTRIBUTES_ALL = 255  // Special id to get the full attributes value
+};
+
+enum
+{
+    TILE_ENCOUNTER_NONE,
+    TILE_ENCOUNTER_LAND,
+    TILE_ENCOUNTER_WATER,
+};
+
+enum
+{
+    TILE_TERRAIN_NORMAL,
+    TILE_TERRAIN_GRASS,
+    TILE_TERRAIN_WATER,
+    TILE_TERRAIN_WATERFALL,
+};
 
 // Rows of metatiles do not actually have a strict width.
 // This constant is used for calculations for finding the next row of metatiles
@@ -74,6 +116,10 @@ struct MapLayout
     /*0x0C*/ const u16 *map;
     /*0x10*/ const struct Tileset *primaryTileset;
     /*0x14*/ const struct Tileset *secondaryTileset;
+    bool8 isFrlg;
+    u8 borderWidth;
+    u8 borderHeight;
+    u8 padding;
 };
 
 struct BackupMapLayout
@@ -90,13 +136,27 @@ struct __attribute__((packed, aligned(4))) ObjectEventTemplate
     /*0x03*/ u8 kind; // Always OBJ_KIND_NORMAL in Emerald.
     /*0x04*/ s16 x;
     /*0x06*/ s16 y;
-    /*0x08*/ u8 elevation;
-    /*0x09*/ u8 movementType;
-    /*0x0A*/ u16 movementRangeX:4;
-             u16 movementRangeY:4;
-             u16 unused:8;
-    /*0x0C*/ u16 trainerType;
-    /*0x0E*/ u16 trainerRange_berryTreeId;
+    union
+    {
+        struct
+        {
+
+            /*0x08*/ u8 elevation;
+            /*0x09*/ u8 movementType;
+            /*0x0A*/ u16 movementRangeX:4;
+            u16 movementRangeY:4;
+            u16 unused:8;
+            /*0x0C*/ u16 trainerType;
+            /*0x0E*/ u16 trainerRange_berryTreeId;
+        };
+        struct
+        {
+            u8 targetLocalId;
+            u8 padding[3];
+            u16 targetMapNum;
+            u16 targetMapGroup;
+        };
+    };
     /*0x10*/ const u8 *script;
     /*0x14*/ u16 flagId;
     /*0x16*/ u16 filler;
@@ -128,8 +188,10 @@ struct BgEvent
     union {
         const u8 *script;
         struct {
-            u16 item;
-            u16 hiddenItemId;
+            u32 item:11;
+            u32 hiddenItemId:13;
+            u32 quantity:7;
+            u32 underfoot:1;
         } hiddenItem;
         u32 secretBaseId;
     } bgUnion;
@@ -306,7 +368,7 @@ enum
     ACRO_BIKE_STATE6,
 };
 
-enum
+enum Collision
 {
     COLLISION_NONE,
     COLLISION_OUTSIDE_RANGE,
@@ -364,6 +426,7 @@ struct PlayerAvatar
     // these two are timer history arrays which [0] is the active timer for acro bike. every element is backed up to the next element upon update.
     /*0x14*/ u8 dirTimerHistory[8];
     /*0x1C*/ u8 abStartSelectTimerHistory[8];
+    u16 lastSpinTile;
 };
 
 struct Camera

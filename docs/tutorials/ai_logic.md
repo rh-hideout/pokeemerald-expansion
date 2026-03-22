@@ -10,17 +10,17 @@ Open `include/constants/battle_ai.h`. We have many unused flags, but you can add
 
 ## 2. Make your new function
 
-Open `src/battle_ai_main.c`. Search for the array `static s16 (*const sBattleAiFuncTable[])(u8, u8, u16, s16)`. We want to add our new function to this table. Since we have defined our flag as `(1 << 16)`, find the 16th entry in the table (identifiable by the initializer, `[16]`), and replace it with:
+Open `src/battle_ai_main.c`. Search for the array `static s16 (*const sBattleAiFuncTable[])(u8, u8, enum Move, s16)`. We want to add our new function to this table. Since we have defined our flag as `(1 << 16)`, find the 16th entry in the table (identifiable by the initializer, `[16]`), and replace it with:
 
 `[16] = AI_Support,   // AI_FLAG_SUPPORT`
 
-Define your function above the table as `static s16 AI_Support(u8 battlerAtk, u8 battlerDef, u16 move, s16 score);`
+Define your function above the table as `static s16 AI_Support(u8 battlerAtk, u8 battlerDef, enum Move move, s16 score);`
 
 ## Make your function do something
 
 at the bottom of the file, add:
 ```c
-static s16 AI_Support(u8 battlerAtk, u8 battlerDef, u16 move, s16 score)
+static s16 AI_Support(u8 battlerAtk, u8 battlerDef, enum Move move, s16 score)
 {
     // Add your logic here!
 }

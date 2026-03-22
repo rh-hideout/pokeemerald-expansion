@@ -51,11 +51,9 @@ enum PokemonSummarySkillsMode
 };
 
 void ShowPokemonSummaryScreen(u8 mode, void *mons, u8 monIndex, u8 maxMonIndex, void (*callback)(void));
-void ShowSelectMovePokemonSummaryScreen(struct Pokemon *mons, u8 monIndex, u8 maxMonIndex, void (*callback)(void), u16 newMove);
-void ShowPokemonSummaryScreenHandleDeoxys(u8 mode, struct BoxPokemon *mons, u8 monIndex, u8 maxMonIndex, void (*callback)(void));
+void ShowSelectMovePokemonSummaryScreen(struct Pokemon *mons, u8 monIndex, void (*callback)(void), u16 newMove);
 u8 GetMoveSlotToReplace(void);
 void SummaryScreen_SetAnimDelayTaskId(u8 taskId);
-void ShowRelearnPrompt(void);
-void TryUpdateRelearnType(enum IncrDecrUpdateValues delta);
+bool32 CheckRelearnerStateFlag(enum MoveRelearnerStates state);
 
 #endif // GUARD_POKEMON_SUMMARY_SCREEN_H

@@ -6,6 +6,7 @@
 #include "random.h"
 #include "trainer_pools.h"
 #include "constants/battle.h"
+#include "constants/battle_ai.h"
 #include "constants/items.h"
 
 #include "data/battle_pool_rules.h"
@@ -247,7 +248,7 @@ static u32 GetPoolSeed(const struct Trainer *trainer)
     if (B_POOL_SETTING_USE_FIXED_SEED)
         seed = B_POOL_SETTING_FIXED_SEED;
     else
-        seed = gSaveBlock2Ptr->playerTrainerId[0] + (gSaveBlock2Ptr->playerTrainerId[1] << 8) + (gSaveBlock2Ptr->playerTrainerId[2] << 16) + (gSaveBlock2Ptr->playerTrainerId[3] << 24);
+        seed = READ_OTID_FROM_SAVE;
     seed ^= (u32)trainer;
     return seed;
 }
@@ -313,21 +314,21 @@ static struct PickFunctions GetPickFunctions(const struct Trainer *trainer)
     switch (trainer->poolPickIndex)
     {
         //  Repeats, but better to have the safety
-        case POOL_PICK_DEFAULT:
-            pickFunctions.LeadFunction = &DefaultLeadPickFunction;
-            pickFunctions.AceFunction = &DefaultAcePickFunction;
-            pickFunctions.OtherFunction = &DefaultOtherPickFunction;
-            break;
-        case POOL_PICK_LOWEST:
-            pickFunctions.LeadFunction = &PickLowest;
-            pickFunctions.AceFunction = &PickLowest;
-            pickFunctions.OtherFunction = &PickLowest;
-            break;
-        default:
-            pickFunctions.LeadFunction = &DefaultLeadPickFunction;
-            pickFunctions.AceFunction = &DefaultAcePickFunction;
-            pickFunctions.OtherFunction = &DefaultOtherPickFunction;
-            break;
+    case POOL_PICK_DEFAULT:
+        pickFunctions.LeadFunction = &DefaultLeadPickFunction;
+        pickFunctions.AceFunction = &DefaultAcePickFunction;
+        pickFunctions.OtherFunction = &DefaultOtherPickFunction;
+        break;
+    case POOL_PICK_LOWEST:
+        pickFunctions.LeadFunction = &PickLowest;
+        pickFunctions.AceFunction = &PickLowest;
+        pickFunctions.OtherFunction = &PickLowest;
+        break;
+    default:
+        pickFunctions.LeadFunction = &DefaultLeadPickFunction;
+        pickFunctions.AceFunction = &DefaultAcePickFunction;
+        pickFunctions.OtherFunction = &DefaultOtherPickFunction;
+        break;
     }
     return pickFunctions;
 }
@@ -353,16 +354,16 @@ static void PrunePool(const struct Trainer *trainer, u8 *poolIndexArray, const s
     //  Use defined pruning functions go here
     switch (trainer->poolPruneIndex)
     {
-        case POOL_PRUNE_NONE:
-            break;
-        case POOL_PRUNE_TEST:
-            TestPrune(trainer, poolIndexArray, rules);
-            break;
-        case POOL_PRUNE_RANDOM_TAG:
-            RandomTagPrune(trainer, poolIndexArray, rules);
-            break;
-        default:
-            break;
+    case POOL_PRUNE_NONE:
+        break;
+    case POOL_PRUNE_TEST:
+        TestPrune(trainer, poolIndexArray, rules);
+        break;
+    case POOL_PRUNE_RANDOM_TAG:
+        RandomTagPrune(trainer, poolIndexArray, rules);
+        break;
+    default:
+        break;
     }
 }
 
@@ -370,6 +371,14 @@ void DoTrainerPartyPool(const struct Trainer *trainer, u32 *monIndices, u8 monsC
 {
         bool32 usingPool = FALSE;
         struct PoolRules rules = defaultPoolRules;
+        struct Trainer tempTrainer;
+        if (trainer->poolSize == 0 && (trainer->aiFlags & AI_FLAG_RANDOMIZE_PARTY_INDICES))
+        {
+            tempTrainer = *trainer;
+            tempTrainer.poolSize = tempTrainer.partySize;
+            trainer = &tempTrainer;
+        }
+
         if (trainer->poolSize != 0)
         {
             usingPool = TRUE;

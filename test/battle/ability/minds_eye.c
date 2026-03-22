@@ -3,7 +3,7 @@
 
 SINGLE_BATTLE_TEST("Mind's Eye allows to hit Ghost-type Pokémon with Normal- and Fighting-type moves")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_SCRATCH; }
     PARAMETRIZE { move = MOVE_KARATE_CHOP; }
 
@@ -21,7 +21,7 @@ SINGLE_BATTLE_TEST("Mind's Eye allows to hit Ghost-type Pokémon with Normal- an
 // No current official way to test this, effect based on Smogon's NatDex format.
 SINGLE_BATTLE_TEST("Mind's Eye doesn't bypass a Ghost-type's Wonder Guard")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_SCRATCH; }
     PARAMETRIZE { move = MOVE_KARATE_CHOP; }
 
@@ -36,7 +36,6 @@ SINGLE_BATTLE_TEST("Mind's Eye doesn't bypass a Ghost-type's Wonder Guard")
             HP_BAR(opponent);
         }
         ABILITY_POPUP(opponent, ABILITY_WONDER_GUARD);
-        MESSAGE("The opposing Shedinja avoided damage with Wonder Guard!");
     }
 }
 

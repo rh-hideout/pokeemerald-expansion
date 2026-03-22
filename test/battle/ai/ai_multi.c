@@ -4,11 +4,11 @@
 
 AI_MULTI_BATTLE_TEST("AI will only explode and kill everything on the field with Risky or Will Suicide (multi)")
 {
-    ASSUME(GetMoveTarget(MOVE_EXPLOSION) == MOVE_TARGET_FOES_AND_ALLY);
-    ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
+    ASSUME(GetMoveTarget(MOVE_EXPLOSION) == TARGET_FOES_AND_ALLY);
+    ASSUME(IsExplosionMove(MOVE_EXPLOSION));
 
     u32 aiFlags;
-    u32 battler;
+    enum BattlerId battler;
 
     PARAMETRIZE { aiFlags = 0; battler = 1; }
     PARAMETRIZE { aiFlags = 0; battler = 3; }
@@ -34,11 +34,11 @@ AI_MULTI_BATTLE_TEST("AI will only explode and kill everything on the field with
 
 AI_ONE_VS_TWO_BATTLE_TEST("AI will only explode and kill everything on the field with Risky or Will Suicide (1v2)")
 {
-    ASSUME(GetMoveTarget(MOVE_EXPLOSION) == MOVE_TARGET_FOES_AND_ALLY);
-    ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
+    ASSUME(GetMoveTarget(MOVE_EXPLOSION) == TARGET_FOES_AND_ALLY);
+    ASSUME(IsExplosionMove(MOVE_EXPLOSION));
 
     u32 aiFlags;
-    u32 battler;
+    enum BattlerId battler;
 
     PARAMETRIZE { aiFlags = 0; battler = 1; }
     PARAMETRIZE { aiFlags = 0; battler = 3; }
@@ -98,11 +98,11 @@ AI_TWO_VS_ONE_BATTLE_TEST("AI partner makes sensible move selections in battle (
 
 AI_TWO_VS_ONE_BATTLE_TEST("Battler 3 has Battler 1 AI flags set correctly (2v1)")
 {
-    ASSUME(GetMoveTarget(MOVE_EXPLOSION) == MOVE_TARGET_FOES_AND_ALLY);
-    ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
+    ASSUME(GetMoveTarget(MOVE_EXPLOSION) == TARGET_FOES_AND_ALLY);
+    ASSUME(IsExplosionMove(MOVE_EXPLOSION));
 
     u32 aiFlags;
-    u32 battler;
+    enum BattlerId battler;
 
     PARAMETRIZE { aiFlags = 0; battler = 1; }
     PARAMETRIZE { aiFlags = 0; battler = 3; }
@@ -187,7 +187,8 @@ AI_MULTI_BATTLE_TEST("AI opponents do not steal their partner pokemon in multi b
 
 AI_MULTI_BATTLE_TEST("AI opponents do not steal their partner pokemon in multi battle when forced out")
 {
-    u32 item, move;
+    enum Item item;
+    enum Move move;
     PARAMETRIZE { item = ITEM_EJECT_BUTTON; move = MOVE_TACKLE; }
     PARAMETRIZE { item = ITEM_EJECT_PACK; move = MOVE_TAIL_WHIP; }
     PARAMETRIZE { item = ITEM_NONE; move = MOVE_ROAR; }
@@ -234,7 +235,7 @@ AI_MULTI_BATTLE_TEST("Pollen Puff: AI correctly scores moves with EFFECT_HIT_ENE
         MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Speed(1); HP(50); Moves(MOVE_POLLEN_PUFF);                 }
         MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { Speed(1); HP(50); Moves(MOVE_POLLEN_PUFF);                 }
     } WHEN {
-        TURN { 
+        TURN {
             // Targeting ally
             SCORE_EQ_VAL(opponentLeft,  MOVE_POLLEN_PUFF, AI_SCORE_DEFAULT + WEAK_EFFECT, target:opponentRight);
             SCORE_EQ_VAL(playerRight,   MOVE_POLLEN_PUFF, AI_SCORE_DEFAULT + WEAK_EFFECT, target:playerLeft);

@@ -444,8 +444,8 @@ void CB2_FlashNotDetectedScreen(void)
     DeactivateAllTextPrinters();
     ResetTasks();
     ResetPaletteFade();
-    LoadPalette(gTextWindowFrame1_Pal, 0xE0, 0x20);
-    LoadPalette(gStandardMenuPalette, 0xF0, 0x20);
+    LoadPalette(gTextWindowFrame1_Pal, BG_PLTT_ID(14), PLTT_SIZE_4BPP);
+    LoadPalette(gStandardMenuPalette, BG_PLTT_ID(15), PLTT_SIZE_4BPP);
     InitWindows(textWin);
     DrawStdFrameWithCustomTileAndPalette(0, TRUE, 0x214, 0xE);
     static const u8 saveFailedMessage[] =_(

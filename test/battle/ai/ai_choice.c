@@ -61,7 +61,7 @@ AI_SINGLE_BATTLE_TEST("Choiced Pokémon only consider their own status moves whe
 
 AI_SINGLE_BATTLE_TEST("Choiced Pokémon won't use stat boosting moves")
 {
-    // Moves defined by MOVE_TARGET_USER (with exceptions?)
+    // Moves defined by TARGET_USER (with exceptions?)
     u32 j, heldItem = ITEM_NONE;
     enum Ability ability = ABILITY_NONE;
 
@@ -78,7 +78,7 @@ AI_SINGLE_BATTLE_TEST("Choiced Pokémon won't use stat boosting moves")
     }
 
     GIVEN {
-        ASSUME(GetMoveTarget(MOVE_SWORDS_DANCE) == MOVE_TARGET_USER);
+        ASSUME(GetMoveTarget(MOVE_SWORDS_DANCE) == TARGET_USER);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_RHYDON)
         OPPONENT(SPECIES_LOPUNNY) { Moves(MOVE_SWORDS_DANCE, MOVE_SCRATCH); Item(heldItem); Ability(ability); }
@@ -130,7 +130,9 @@ AI_SINGLE_BATTLE_TEST("Choiced Pokémon won't use status move if they are the on
 
 AI_SINGLE_BATTLE_TEST("Choiced Pokémon won't use status move if they don't have a good switchin")
 {
-    u32 j, move = MOVE_NONE, species = SPECIES_NONE, heldItem = ITEM_NONE;
+    u32 j;
+    enum Move move = MOVE_NONE;
+    u32 species = SPECIES_NONE, heldItem = ITEM_NONE;
     enum Ability ability = ABILITY_NONE;
     static const u32 choiceItems[] = {
         ITEM_CHOICE_SPECS,
@@ -165,7 +167,9 @@ AI_SINGLE_BATTLE_TEST("Choiced Pokémon won't use status move if they don't have
 
 AI_SINGLE_BATTLE_TEST("Choiced Pokémon won't use status move if they are trapped")
 {
-    u32 j, aiAbility = ABILITY_NONE, playerAbility = MOVE_NONE, species = SPECIES_NONE, heldItem = ITEM_NONE;
+    u32 j;
+    enum Ability aiAbility = ABILITY_NONE, playerAbility = ABILITY_NONE;
+    u32 species = SPECIES_NONE, heldItem = ITEM_NONE;
 
     static const u32 choiceItems[] = {
         ITEM_CHOICE_SPECS,
@@ -250,5 +254,32 @@ AI_SINGLE_BATTLE_TEST("Choiced Pokémon will only see choiced moves when conside
         TURN { SWITCH(player, 1); EXPECT_MOVE(opponent, MOVE_SCRATCH); }
         TURN { MOVE(player, MOVE_WATER_GUN); EXPECT_MOVE(opponent, MOVE_SCRATCH); }
         TURN { MOVE(player, MOVE_WATER_GUN); EXPECT_SWITCH(opponent, 1); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("Choiced Pokémon won't switch out if they can still affect one opposing Pokémon in doubles")
+{
+    u32 defendingSpecies = SPECIES_NONE;
+    enum Ability defendingAbility = ABILITY_NONE;
+    PARAMETRIZE { defendingSpecies = SPECIES_VAPOREON; defendingAbility = ABILITY_WATER_ABSORB; }
+    PARAMETRIZE { defendingSpecies = SPECIES_ZIGZAGOON; defendingAbility = SPECIES_ZIGZAGOON; }
+
+    PASSES_RANDOMLY(SHOULD_SWITCH_CHOICE_LOCKED_PERCENTAGE, 100, RNG_AI_SWITCH_CHOICE_LOCKED);
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_RISKY | AI_FLAG_SMART_SWITCHING | AI_FLAG_OMNISCIENT | AI_FLAG_SMART_MON_CHOICES);
+        PLAYER(SPECIES_CHARMANDER) { Level(5); Moves(MOVE_CELEBRATE); }
+        PLAYER(SPECIES_VAPOREON) { Ability(ABILITY_WATER_ABSORB); Moves(MOVE_CELEBRATE); }
+        PLAYER(defendingSpecies) { Ability(defendingAbility); SpDefense(500); Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_VAPOREON) { Moves(MOVE_SCALD); Item(ITEM_CHOICE_SPECS); }
+        OPPONENT(SPECIES_VAPOREON) { Moves(MOVE_SCALD); Item(ITEM_CHOICE_SPECS); }
+        OPPONENT(SPECIES_ZIGZAGOON);
+        OPPONENT(SPECIES_ZIGZAGOON);
+    } WHEN {
+        TURN { SWITCH(playerLeft, 2); MOVE(playerRight, MOVE_CELEBRATE); EXPECT_MOVE(opponentLeft, MOVE_SCALD, target:playerLeft); EXPECT_MOVE(opponentRight, MOVE_SCALD, target:playerLeft); }
+        if (defendingSpecies == SPECIES_VAPOREON)
+            TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); EXPECT_SWITCH(opponentLeft, 3); EXPECT_MOVE(opponentRight, MOVE_SCALD); }
+        else
+            TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); EXPECT_MOVE(opponentLeft, MOVE_SCALD, target:playerLeft); EXPECT_MOVE(opponentRight, MOVE_SCALD, target:playerLeft); SEND_OUT(playerLeft, 0); }
     }
 }
