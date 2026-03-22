@@ -868,7 +868,7 @@ static void Task_ShowWinnerMonBanner(u8 taskId)
 {
     int i;
     u8 spriteId;
-    u16 species;
+    enum Species species;
     bool8 isShiny;
     u32 personality;
 
@@ -1081,7 +1081,7 @@ static void Task_FlashStarsAndHearts(u8 taskId)
         sContestResults->data->pointsFlashing = TRUE;
 }
 
-static void LoadContestMonIcon(u16 species, u8 monIndex, u8 srcOffset, u8 useDmaNow, u32 personality)
+static void LoadContestMonIcon(enum Species species, u8 monIndex, u8 srcOffset, u8 useDmaNow, u32 personality)
 {
     const u8 *iconPtr;
     u16 var0, var1;
@@ -2559,7 +2559,7 @@ bool8 IsContestDebugActive(void)
 void ShowContestEntryMonPic(void)
 {
     u32 personality;
-    u16 species;
+    enum Species species;
     u8 spriteId;
     u8 taskId;
     u8 left, top;

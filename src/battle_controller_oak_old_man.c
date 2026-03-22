@@ -846,7 +846,7 @@ static void OakOldManHandlePlaySE(enum BattlerId battler)
 
 static void OakOldManHandleFaintingCry(enum BattlerId battler)
 {
-    u16 species = GetMonData(&gPlayerParty[gBattlerPartyIndexes[battler]], MON_DATA_SPECIES);
+    enum Species species = GetMonData(&gPlayerParty[gBattlerPartyIndexes[battler]], MON_DATA_SPECIES);
 
     PlayCry_Normal(species, 25);
     OakOldManBufferExecCompleted(battler);

@@ -335,7 +335,7 @@ static void VBlankCB_ContestPainting(void)
     TransferPlttBuffer();
 }
 
-static void InitContestMonPixels(u16 species, bool8 backPic)
+static void InitContestMonPixels(enum Species species, bool8 backPic)
 {
     const void *pal = GetMonSpritePalFromSpeciesAndPersonality(species, gContestPaintingWinner->isShiny, gContestPaintingWinner->personality);
     memcpy(gContestPaintingMonPalette, pal, PLTT_SIZE_4BPP);
