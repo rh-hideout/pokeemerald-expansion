@@ -507,11 +507,12 @@ BattleScript_BeakBlastBurn::
 BattleScript_EffectFling::
 	attackcanceler
 	accuracycheck BattleScript_FlingMissed
-	pause B_WAIT_TIME_SHORT
-    jumpifbyte CMP_EQUAL, sB_ANIM_TARGETS_HIT, 1, BattleScript_HitFromDamageCalc
+	goto BattleScript_HitFromPreAttackEffects
+
+BattleScript_FlingMessage::
 	printstring STRINGID_PKMNFLUNG
-	waitmessage B_WAIT_TIME_SHORT
-	goto BattleScript_HitFromDamageCalc
+	waitmessage B_WAIT_TIME_LONG
+	return
 
 BattleScript_EffectFlingConsumeBerry::
 	setbyte sBERRY_OVERRIDE, 1 @ override the requirements for eating berries
@@ -582,13 +583,10 @@ BattleScript_OctolockTryLowerSpDef:
 BattleScript_OctlockTurnDmgEnd:
 	end2
 
-BattleScript_EffectPoltergeist::
-	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause
-	setpoltergeistmessage
+BattleScript_PoltergeistMessage::
 	printstring STRINGID_ABOUTTOUSEPOLTERGEIST
 	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_HitFromDamageCalc
+	return
 
 BattleScript_EffectTarShot::
 	attackcanceler
@@ -2178,6 +2176,7 @@ BattleScript_EffectHit::
 	attackcanceler
 BattleScript_HitFromAccCheck::
 	accuracycheck BattleScript_MoveMissedPause
+BattleScript_HitFromPreAttackEffects::
 	copybyte gEffectBattler, gBattlerAttacker
 	setpreattackadditionaleffect
 BattleScript_HitFromDamageCalc::

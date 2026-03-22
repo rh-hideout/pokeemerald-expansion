@@ -1957,7 +1957,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_POLTERGEIST] =
     {
-        .battleScript = BattleScript_EffectPoltergeist,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 0, // TODO: Assign points
     },
 

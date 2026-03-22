@@ -3689,6 +3689,18 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
             gBattlescriptCurrInstr = BattleScript_BeatUpAttackMessage;
         }
         break;
+    case MOVE_EFFECT_ITEM_MESSAGE:
+        if (!gBattleStruct->unableToUseMove)
+        {
+            gLastUsedItem = gBattleMons[effectBattler].item;
+            BattleScriptPush(battleScript);
+
+            if (effectBattler == battlerAtk)
+                gBattlescriptCurrInstr = BattleScript_FlingMessage;
+            else
+                gBattlescriptCurrInstr = BattleScript_PoltergeistMessage;
+        }
+        break;
     default:
         break;
     }
@@ -14840,14 +14852,6 @@ void BS_CutOneThirdHpAndRaiseStats(void)
     {
         gBattlescriptCurrInstr = cmd->failInstr;
     }
-}
-
-void BS_SetPoltergeistMessage(void)
-{
-    NATIVE_ARGS();
-    PREPARE_ITEM_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerTarget].item);
-    gLastUsedItem = gBattleMons[gBattlerTarget].item;
-    gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 void BS_TryResetNegativeStatStages(void)

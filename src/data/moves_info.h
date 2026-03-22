@@ -9993,6 +9993,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .parentalBondBanned = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_ITEM_MESSAGE,
+            .preAttackEffect = TRUE,
+            .self = TRUE,
+        }, {
             .moveEffect = MOVE_EFFECT_FLING,
         }),
         .contestEffect = CONTEST_EFFECT_WORSEN_CONDITION_OF_PREV_MONS,
@@ -18922,6 +18926,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_ITEM_MESSAGE,
+            .preAttackEffect = TRUE,
+        }),
         .contestEffect = CONTEST_EFFECT_BETTER_IF_FIRST,
         .contestCategory = CONTEST_CATEGORY_SMART,
         .contestComboStarterId = 0,
