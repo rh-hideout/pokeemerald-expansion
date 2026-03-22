@@ -133,6 +133,7 @@ DOUBLE_BATTLE_TEST("Commander cannot affect a Dondozo that was previously affect
 DOUBLE_BATTLE_TEST("Commander prevents Whirlwind from working against Dondozo or Tatsugiri while it's active")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_WHIRLWIND) == EFFECT_ROAR);
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
         PLAYER(SPECIES_DONDOZO);
         PLAYER(SPECIES_WOBBUFFET);
@@ -223,6 +224,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri takes no damage from multi-target damagi
 DOUBLE_BATTLE_TEST("Commander doesn't prevent Transform from working on a Commander Tatsugiri")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TRANSFORM) == EFFECT_TRANSFORM);
         PLAYER(SPECIES_DONDOZO);
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -258,6 +260,7 @@ DOUBLE_BATTLE_TEST("Commander doesn't prevent Imposter from working on a Command
 DOUBLE_BATTLE_TEST("Commander Tatsugiri faints from Perish Song if it heard the song before being swallowed")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_PERISH_SONG) == EFFECT_PERISH_SONG);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
         PLAYER(SPECIES_DONDOZO);
@@ -282,6 +285,8 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri faints from Perish Song if it heard the 
 DOUBLE_BATTLE_TEST("Commander Tatsugiri is still affected by Haze while controlling Dondozo")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
+        ASSUME(GetMoveEffect(MOVE_HAZE) == EFFECT_HAZE);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
         PLAYER(SPECIES_DONDOZO);
