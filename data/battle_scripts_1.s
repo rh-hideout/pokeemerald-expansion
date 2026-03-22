@@ -552,7 +552,7 @@ BattleScript_FlingBlockedByShieldDust::
 	removeitem BS_ATTACKER
 	return
 
-BattleScript_FlingMissed:
+BattleScript_FlingMissed::
 	removeitem BS_ATTACKER
 	goto BattleScript_MoveMissedPause
 
@@ -2186,7 +2186,6 @@ BattleScript_EffectHit::
 	attackcanceler
 BattleScript_HitFromAccCheck::
 	accuracycheck BattleScript_MoveMissedPause
-BattleScript_HitFromPreAttackEffects::
 	copybyte gEffectBattler, gBattlerAttacker
 	setpreattackadditionaleffect
 BattleScript_HitFromDamageCalc::
