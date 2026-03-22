@@ -165,6 +165,7 @@ void FillPartnerParty(u16 trainerId)
             SetMonData(&gPlayerParty[MULTI_PARTY_SIZE + i], MON_DATA_OT_GENDER, &j);
         }
     }
+#if FREE_FRONTIER_APPRENTICES == FALSE
     else
     {
         trainerId -= TRAINER_RECORD_MIXING_APPRENTICE;
@@ -175,4 +176,5 @@ void FillPartnerParty(u16 trainerId)
             SetMonData(&gPlayerParty[MULTI_PARTY_SIZE + i], MON_DATA_OT_GENDER, &j);
         }
     }
+#endif //FREE_FRONTIER_APPRENTICES
 }

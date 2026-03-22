@@ -1,3 +1,4 @@
+.if FREE_FRONTIER_APPRENTICES == FALSE
 gText_ApprenticeChallenge0::
 	.string "Um, I'm {STR_VAR_1}'s no. {STR_VAR_2} apprentice.\n"
 	.string "Snivel… This tension is getting to me…$"
@@ -2525,3 +2526,4 @@ gText_ApprenticeWinSpeechThanks15::
 	.string "farewell and strike out on my own.\p"
 	.string "Thank you, my mentor!\n"
 	.string "I apologize for my skepticism!$"
+.endif //FREE_FRONTIER_APPRENTICES

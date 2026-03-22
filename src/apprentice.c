@@ -76,6 +76,7 @@ struct ApprenticeQuestionData
 };
 
 // IWRAM common
+#if FREE_FRONTIER_APPRENTICES == FALSE
 COMMON_DATA struct ApprenticePartyMovesData *gApprenticePartyMovesData = NULL;
 COMMON_DATA struct ApprenticeQuestionData *gApprenticeQuestionData = NULL;
 COMMON_DATA void (*gApprenticeFunc)(void) = NULL;
@@ -83,10 +84,13 @@ COMMON_DATA void (*gApprenticeFunc)(void) = NULL;
 // This file's functions.
 static u16 GetRandomAlternateMove(u8 monId);
 static bool8 TrySetMove(u8 monId, enum Move move);
+#endif //FREE_FRONTIER_APPRENTICES
 static void CreateChooseAnswerTask(bool8 noBButton, u8 itemsCount, u8 windowId);
 static u8 CreateAndShowWindow(u8 left, u8 top, u8 width, u8 height);
 static void RemoveAndHideWindow(u8 windowId);
+#if FREE_FRONTIER_APPRENTICES == FALSE
 static void ExecuteFuncAfterButtonPress(void (*func)(void));
+#endif //FREE_FRONTIER_APPRENTICES
 
 static void Script_GivenApprenticeLvlMode(void);
 static void Script_SetApprenticeLvlMode(void);
@@ -119,6 +123,7 @@ static void ShiftSavedApprentices(void);
 
 void BufferApprenticeChallengeText(u8 saveApprenticeId)
 {
+#if FREE_FRONTIER_APPRENTICES == FALSE
     u8 i, num;
     const u8 *challengeText;
 
@@ -131,6 +136,7 @@ void BufferApprenticeChallengeText(u8 saveApprenticeId)
     ConvertIntToDecimalStringN(gStringVar2, gSaveBlock2Ptr->apprentices[saveApprenticeId].number, STR_CONV_MODE_RIGHT_ALIGN, i);
     challengeText = sApprenticeChallengeTexts[gSaveBlock2Ptr->apprentices[saveApprenticeId].id];
     StringExpandPlaceholders(gStringVar4, challengeText);
+#endif //FREE_FRONTIER_APPRENTICES
 }
 
 void Apprentice_ScriptContext_Enable(void)
@@ -151,6 +157,7 @@ void ResetApprenticeStruct(struct Apprentice *apprentice)
 
 void ResetAllApprenticeData(void)
 {
+#if FREE_FRONTIER_APPRENTICES == FALSE
     u8 i, j;
 
     PLAYER_APPRENTICE.saveId = 0;
@@ -168,17 +175,23 @@ void ResetAllApprenticeData(void)
         gSaveBlock2Ptr->apprentices[i].language = gGameLanguage;
         gSaveBlock2Ptr->apprentices[i].checksum = 0;
     }
+#endif //FREE_FRONTIER_APPRENTICES
 
     Script_ResetPlayerApprentice();
 }
 
 static bool8 GivenApprenticeLvlMode(void)
 {
+#if FREE_FRONTIER_APPRENTICES == FALSE
     return (PLAYER_APPRENTICE.lvlMode != 0);
+#else
+    return FALSE;
+#endif //FREE_FRONTIER_APPRENTICES
 }
 
 static void SetApprenticeId(void)
 {
+#if FREE_FRONTIER_APPRENTICES == FALSE
     if (gSaveBlock2Ptr->apprentices[0].number == 0)
     {
         do
@@ -193,15 +206,19 @@ static void SetApprenticeId(void)
             PLAYER_APPRENTICE.id = Random() % (NUM_APPRENTICES);
         } while (PLAYER_APPRENTICE.id == gSaveBlock2Ptr->apprentices[0].id);
     }
+#endif //FREE_FRONTIER_APPRENTICES
 }
 
 static void SetPlayersApprenticeLvlMode(u8 mode)
 {
+#if FREE_FRONTIER_APPRENTICES == FALSE
     PLAYER_APPRENTICE.lvlMode = mode;
+#endif //FREE_FRONTIER_APPRENTICES
 }
 
 static void ShuffleApprenticeSpecies(void)
 {
+#if FREE_FRONTIER_APPRENTICES == FALSE
     u8 species[APPRENTICE_SPECIES_COUNT];
     u8 i;
 
@@ -212,8 +229,10 @@ static void ShuffleApprenticeSpecies(void)
 
     for (i = 0; i < MULTI_PARTY_SIZE; i++)
         PLAYER_APPRENTICE.speciesIds[i] = ((species[i * 2] & 0xF) << 4) | ((species[i * 2 + 1]) & 0xF);
+#endif //FREE_FRONTIER_APPRENTICES
 }
 
+#if FREE_FRONTIER_APPRENTICES == FALSE
 // Pick one of the Apprentice's mons to ask the question about
 // Picking a move chooses a random mon, picking a held item is sequential (so that none are repeated)
 static u8 GetMonIdForQuestion(u8 questionId, u8 *party, u8 *partySlot)
@@ -241,10 +260,12 @@ static u8 GetMonIdForQuestion(u8 questionId, u8 *party, u8 *partySlot)
 
     return monId;
 }
+#endif //FREE_FRONTIER_APPRENTICES
 
 // Sets the random order and data for the remaining questions after the initial "choose mon" questions
 static void SetRandomQuestionData(void)
 {
+#if FREE_FRONTIER_APPRENTICES == FALSE
     u8 questionOrder[APPRENTICE_MAX_QUESTIONS + 1];
     u8 partyOrder[MULTI_PARTY_SIZE];
     u8 partySlot;
@@ -298,6 +319,7 @@ static void SetRandomQuestionData(void)
     }
 
     FREE_AND_SET_NULL(gApprenticePartyMovesData);
+#endif //FREE_FRONTIER_APPRENTICES
 }
 
 #define APPRENTICE_SPECIES_ID(monId) \
@@ -307,6 +329,7 @@ static void SetRandomQuestionData(void)
     monId = ((PLAYER_APPRENTICE.party >> count) & 1); \
     monId = ((PLAYER_APPRENTICE.speciesIds[count]) >> (monId << 2)) & 0xF; \
 
+#if FREE_FRONTIER_APPRENTICES == FALSE
 // Get the second move choice for the "Which move" question
 // Unlike the first move choice, this can be either a level up move or a TM/HM move
 static u16 GetRandomAlternateMove(u8 monId)
@@ -538,6 +561,7 @@ static void SaveApprenticeParty(u8 numQuestions)
         }
     }
 }
+#endif //FREE_FRONTIER_APPRENTICES
 
 static void CreateApprenticeMenu(u8 menu)
 {
@@ -558,6 +582,7 @@ static void CreateApprenticeMenu(u8 menu)
         strings[0] = gText_Lv50;
         strings[1] = gText_OpenLevel;
         break;
+#if FREE_FRONTIER_APPRENTICES == FALSE
     case APPRENTICE_ASK_3SPECIES:
         count = MULTI_PARTY_SIZE;
         left = 18;
@@ -586,6 +611,7 @@ static void CreateApprenticeMenu(u8 menu)
         strings[0] = GetMoveName(gApprenticeQuestionData->move1);
         strings[1] = GetMoveName(gApprenticeQuestionData->move2);
         break;
+#endif //FREE_FRONTIER_APPRENTICES
     case APPRENTICE_ASK_GIVE:
         left = 18;
         top = 8;
@@ -704,6 +730,7 @@ void CallApprenticeFunction(void)
 
 static void Script_ResetPlayerApprentice(void)
 {
+#if FREE_FRONTIER_APPRENTICES == FALSE
     u8 i;
 
     SetApprenticeId();
@@ -723,6 +750,7 @@ static void Script_ResetPlayerApprentice(void)
         PLAYER_APPRENTICE.questions[i].suggestedChange = 0;
         PLAYER_APPRENTICE.questions[i].data = 0;
     }
+#endif //FREE_FRONTIER_APPRENTICES
 }
 
 static void Script_GivenApprenticeLvlMode(void)
@@ -753,19 +781,24 @@ static void Script_SetRandomQuestionData(void)
 
 static void IncrementQuestionsAnswered(void)
 {
+#if FREE_FRONTIER_APPRENTICES == FALSE
     PLAYER_APPRENTICE.questionsAnswered++;
+#endif //FREE_FRONTIER_APPRENTICES
 }
 
 // The first 3 questions answered after meeting the Apprentice are always selecting party mons
 //  after which this is never called
 static void GetNumApprenticePartyMonsAssigned(void)
 {
+#if FREE_FRONTIER_APPRENTICES == FALSE
     gSpecialVar_Result = PLAYER_APPRENTICE.questionsAnswered;
+#endif //FREE_FRONTIER_APPRENTICES
 }
 
 // Never called, APPRENTICE_FUNC_IS_FINAL_QUESTION is unused
 static void IsFinalQuestion(void)
 {
+#if FREE_FRONTIER_APPRENTICES == FALSE
     s32 questionNum = CURRENT_QUESTION_NUM;
 
     if (questionNum < 0)
@@ -783,6 +816,7 @@ static void IsFinalQuestion(void)
         else
             gSpecialVar_Result = FALSE;
     }
+#endif //FREE_FRONTIER_APPRENTICES
 }
 
 static void Script_CreateApprenticeMenu(void)
@@ -790,6 +824,7 @@ static void Script_CreateApprenticeMenu(void)
     CreateApprenticeMenu(gSpecialVar_0x8005);
 }
 
+#if FREE_FRONTIER_APPRENTICES == FALSE
 static void Task_WaitForPrintingMessage(u8 taskId)
 {
     if (!RunTextPrintersAndIsPrinter0Active())
@@ -801,9 +836,11 @@ static void Task_WaitForPrintingMessage(u8 taskId)
             ScriptContext_Enable();
     }
 }
+#endif //FREE_FRONTIER_APPRENTICES
 
 static void PrintApprenticeMessage(void)
 {
+#if FREE_FRONTIER_APPRENTICES == FALSE
     const u8 *string;
 
     if (gSpecialVar_0x8006 == APPRENTICE_MSG_WHICH_MON)
@@ -883,6 +920,7 @@ static void PrintApprenticeMessage(void)
     StringExpandPlaceholders(gStringVar4, string);
     AddTextPrinterForMessage(TRUE);
     CreateTask(Task_WaitForPrintingMessage, 1);
+#endif //FREE_FRONTIER_APPRENTICES
 }
 
 static void Script_PrintApprenticeMessage(void)
@@ -897,6 +935,7 @@ static void Script_PrintApprenticeMessage(void)
 
 static void ApprenticeGetQuestion(void)
 {
+#if FREE_FRONTIER_APPRENTICES == FALSE
     if (PLAYER_APPRENTICE.questionsAnswered < NUM_WHICH_MON_QUESTIONS)
     {
         gSpecialVar_Result = APPRENTICE_QUESTION_WHICH_MON;
@@ -925,23 +964,27 @@ static void ApprenticeGetQuestion(void)
             break;
         }
     }
+#endif //FREE_FRONTIER_APPRENTICES
 }
 
 // gSpecialVar_0x8005 is 0 or 1 for the mon selection (0 is already on the team)
 // gSpecialVar_0x8006 is 0-2 for the number of party mons selected so far
 static void SetApprenticePartyMon(void)
 {
+#if FREE_FRONTIER_APPRENTICES == FALSE
     if (gSpecialVar_0x8005)
     {
         u8 partySlot = gSpecialVar_0x8006;
         PLAYER_APPRENTICE.party |= 1 << partySlot;
     }
+#endif //FREE_FRONTIER_APPRENTICES
 }
 
 // gSpecialVar_0x8005 is 0 or 1 for the move selection
 // Selection 0 is implicitly the default move assigned
 static void SetApprenticeMonMove(void)
 {
+#if FREE_FRONTIER_APPRENTICES == FALSE
     if (PLAYER_APPRENTICE.questionsAnswered >= NUM_WHICH_MON_QUESTIONS)
     {
         u8 id = CURRENT_QUESTION_NUM;
@@ -950,10 +993,12 @@ static void SetApprenticeMonMove(void)
         else
             PLAYER_APPRENTICE.questions[id].suggestedChange = FALSE;
     }
+#endif //FREE_FRONTIER_APPRENTICES
 }
 
 static void InitQuestionData(void)
 {
+#if FREE_FRONTIER_APPRENTICES == FALSE
     u8 i;
     u8 count = 0;
     u8 id1, id2;
@@ -1000,15 +1045,19 @@ static void InitQuestionData(void)
             gApprenticeQuestionData->speciesId = gApprentices[PLAYER_APPRENTICE.id].species[id2];
         }
     }
+#endif //FREE_FRONTIER_APPRENTICES
 }
 
 static void FreeQuestionData(void)
 {
+#if FREE_FRONTIER_APPRENTICES == FALSE
     FREE_AND_SET_NULL(gApprenticeQuestionData);
+#endif //FREE_FRONTIER_APPRENTICES
 }
 
 static void ApprenticeBufferString(void)
 {
+#if FREE_FRONTIER_APPRENTICES == FALSE
     u8 *stringDst;
     u8 text[16];
     u32 speciesArrayId;
@@ -1067,11 +1116,14 @@ static void ApprenticeBufferString(void)
         StringCopy(stringDst, GetSpeciesName(gApprentices[PLAYER_APPRENTICE.id].species[speciesArrayId]));
         break;
     }
+#endif //FREE_FRONTIER_APPRENTICES
 }
 
 static void SetLeadApprenticeMon(void)
 {
+#if FREE_FRONTIER_APPRENTICES == FALSE
     PLAYER_APPRENTICE.leadMonId = gSpecialVar_0x8005;
+#endif //FREE_FRONTIER_APPRENTICES
 }
 
 static void Script_ApprenticeOpenBagMenu(void)
@@ -1081,6 +1133,7 @@ static void Script_ApprenticeOpenBagMenu(void)
 
 static void TrySetApprenticeHeldItem(void)
 {
+#if FREE_FRONTIER_APPRENTICES == FALSE
     u8 i, j;
     u8 count;
 
@@ -1115,10 +1168,12 @@ static void TrySetApprenticeHeldItem(void)
     PLAYER_APPRENTICE.questions[CURRENT_QUESTION_NUM].suggestedChange = TRUE;
     PLAYER_APPRENTICE.questions[CURRENT_QUESTION_NUM].data = gSpecialVar_0x8005;
     gSpecialVar_Result = TRUE;
+#endif //FREE_FRONTIER_APPRENTICES
 }
 
 static void ShiftSavedApprentices(void)
 {
+#if FREE_FRONTIER_APPRENTICES == FALSE
     s32 i;
     s32 apprenticeNum;
     s32 apprenticeIdx;
@@ -1149,11 +1204,13 @@ static void ShiftSavedApprentices(void)
 
     if (apprenticeIdx > 0)
         gSaveBlock2Ptr->apprentices[apprenticeIdx] = gSaveBlock2Ptr->apprentices[0];
+#endif //FREE_FRONTIER_APPRENTICES
 }
 
 // Apprentice is always saved in the first slot. Pre-existing Apprentices are moved by ShiftSavedApprentices
 static void SaveApprentice(void)
 {
+#if FREE_FRONTIER_APPRENTICES == FALSE
     u8 i;
 
     gSaveBlock2Ptr->apprentices[0].id = PLAYER_APPRENTICE.id;
@@ -1174,11 +1231,13 @@ static void SaveApprentice(void)
     StringCopy(gSaveBlock2Ptr->apprentices[0].playerName, gSaveBlock2Ptr->playerName);
     gSaveBlock2Ptr->apprentices[0].language = gGameLanguage;
     CalcApprenticeChecksum(&gSaveBlock2Ptr->apprentices[0]);
+#endif //FREE_FRONTIER_APPRENTICES
 }
 
 // Never called, APPRENTICE_FUNC_SET_GFX_SAVED is unused
 static void SetSavedApprenticeTrainerGfxId(void)
 {
+#if FREE_FRONTIER_APPRENTICES == FALSE
     u8 i;
     u8 objectEventGfxId;
     u8 class = gApprentices[gSaveBlock2Ptr->apprentices[0].id].facilityClass;
@@ -1199,10 +1258,12 @@ static void SetSavedApprenticeTrainerGfxId(void)
         objectEventGfxId = gTowerFemaleTrainerGfxIds[i];
         VarSet(VAR_OBJ_GFX_ID_0, objectEventGfxId);
     }
+#endif //FREE_FRONTIER_APPRENTICES
 }
 
 static void SetPlayerApprenticeTrainerGfxId(void)
 {
+#if FREE_FRONTIER_APPRENTICES == FALSE
     u8 i;
     u8 objectEventGfxId;
     u8 class = gApprentices[PLAYER_APPRENTICE.id].facilityClass;
@@ -1223,6 +1284,7 @@ static void SetPlayerApprenticeTrainerGfxId(void)
         objectEventGfxId = gTowerFemaleTrainerGfxIds[i];
         VarSet(VAR_OBJ_GFX_ID_0, objectEventGfxId);
     }
+#endif //FREE_FRONTIER_APPRENTICES
 }
 
 // Both of the below functions may have been dummied / used for debug
@@ -1239,6 +1301,7 @@ static void GetShouldApprenticeLeave(void)
 
 const u8 *GetApprenticeNameInLanguage(u32 apprenticeId, enum Language language)
 {
+#if FREE_FRONTIER_APPRENTICES == FALSE
     const struct ApprenticeTrainer *apprentice = &gApprentices[apprenticeId];
 
     switch (language)
@@ -1257,6 +1320,9 @@ const u8 *GetApprenticeNameInLanguage(u32 apprenticeId, enum Language language)
     default:
         return apprentice->name[5];
     }
+#else
+    return NULL;
+#endif //FREE_FRONTIER_APPRENTICES
 }
 
 static void UNUSED Task_SwitchToFollowupFuncAfterButtonPress(u8 taskId)
@@ -1265,6 +1331,7 @@ static void UNUSED Task_SwitchToFollowupFuncAfterButtonPress(u8 taskId)
         SwitchTaskToFollowupFunc(taskId);
 }
 
+#if FREE_FRONTIER_APPRENTICES == FALSE
 static void Task_ExecuteFuncAfterButtonPress(u8 taskId)
 {
     if (JOY_NEW(A_BUTTON) || JOY_NEW(B_BUTTON))
@@ -1281,6 +1348,7 @@ static void ExecuteFuncAfterButtonPress(void (*func)(void))
     gTasks[taskId].data[0] = (u32)(func);
     gTasks[taskId].data[1] = (u32)(func) >> 16;
 }
+#endif //FREE_FRONTIER_APPRENTICES
 
 static void UNUSED ExecuteFollowupFuncAfterButtonPress(TaskFunc task)
 {

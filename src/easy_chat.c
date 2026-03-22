@@ -1492,7 +1492,11 @@ void ShowEasyChatScreen(void)
         words = &gSaveBlock1Ptr->lilycoveLady.quiz.correctAnswer;
         break;
     case EASY_CHAT_TYPE_APPRENTICE:
+    #if FREE_FRONTIER_APPRENTICES == FALSE
         words = gSaveBlock2Ptr->apprentices[0].speechWon;
+    #else
+        return;
+    #endif //FREE_FRONTIER_APPRENTICES
         break;
     case EASY_CHAT_TYPE_QUESTIONNAIRE:
         words = GetQuestionnaireWordsPtr();

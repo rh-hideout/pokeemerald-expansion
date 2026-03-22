@@ -13,7 +13,9 @@ struct ApprenticeTrainer
     u16 speechLost[EASY_CHAT_BATTLE_WORDS_COUNT];
 };
 
+#if FREE_FRONTIER_APPRENTICES == FALSE
 extern const struct ApprenticeTrainer gApprentices[];
+#endif //FREE_FRONTIER_APPRENTICES
 
 void BufferApprenticeChallengeText(u8 saveApprenticeId);
 void Apprentice_ScriptContext_Enable(void);
