@@ -154,6 +154,7 @@ DOUBLE_BATTLE_TEST("Commander prevents Whirlwind from working against Dondozo or
 DOUBLE_BATTLE_TEST("Commander prevents Red Card from working while Commander is active")
 {
     GIVEN {
+        ASSUME(gItemsInfo[ITEM_RED_CARD].holdEffect == HOLD_EFFECT_RED_CARD);
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
         PLAYER(SPECIES_DONDOZO);
         PLAYER(SPECIES_WOBBUFFET);
@@ -534,5 +535,66 @@ DOUBLE_BATTLE_TEST("Commander does not clear semi-invulnerability of non-Tatsugi
         NOT HP_BAR(playerRight);
     } THEN {
         EXPECT_EQ(playerRight->hp, playerRight->maxHP);
+    }
+}
+
+DOUBLE_BATTLE_TEST("322 Commander still blocks forced switch after swallowed Tatsugiri faints")
+{
+    enum Move move;
+    PARAMETRIZE { move = MOVE_DRAGON_TAIL; }
+    PARAMETRIZE { move = MOVE_WHIRLWIND; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_DRAGON_TAIL) == EFFECT_HIT_SWITCH_TARGET);
+        ASSUME(GetMoveEffect(MOVE_WHIRLWIND) == EFFECT_ROAR);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_DONDOZO);
+        OPPONENT(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); HP(1); Status1(STATUS1_POISON); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { SKIP_TURN(opponentRight); SEND_OUT(opponentRight, 2); }
+        TURN { MOVE(playerLeft, move, target: opponentLeft); }
+    } SCENE {
+        ABILITY_POPUP(opponentRight, ABILITY_COMMANDER);
+        MESSAGE("The opposing Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        MESSAGE("The opposing Tatsugiri fainted!");
+        if (move == MOVE_DRAGON_TAIL)
+        {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, playerLeft);
+            NOT MESSAGE("The opposing Dondozo was dragged out!");
+        }
+        else
+        {
+            MESSAGE("But it failed!");
+        }
+    } THEN {
+        EXPECT(opponentLeft->species == SPECIES_DONDOZO);
+    }
+}
+
+DOUBLE_BATTLE_TEST("322 Red Card is still consumed but cannot force out Dondozo after swallowed Tatsugiri faints")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_RED_CARD].holdEffect == HOLD_EFFECT_RED_CARD);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_DONDOZO);
+        OPPONENT(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); HP(1); Status1(STATUS1_POISON); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { SKIP_TURN(opponentRight); SEND_OUT(opponentRight, 2); }
+        TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); }
+    } SCENE {
+        ABILITY_POPUP(opponentRight, ABILITY_COMMANDER);
+        MESSAGE("The opposing Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        MESSAGE("The opposing Tatsugiri fainted!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+    } THEN {
+        EXPECT(playerLeft->item == ITEM_NONE);
+        EXPECT(opponentLeft->species == SPECIES_DONDOZO);
     }
 }
