@@ -1,3 +1,4 @@
+#if FREE_FRONTIER_APPRENTICES == FALSE
 // data/text/apprentice.inc
 extern const u8 gText_ApprenticePleaseTeach0[];
 extern const u8 gText_ApprenticePleaseTeach1[];
@@ -294,7 +295,6 @@ extern const u8 gText_ApprenticeChallenge13[];
 extern const u8 gText_ApprenticeChallenge14[];
 extern const u8 gText_ApprenticeChallenge15[];
 
-#if FREE_FRONTIER_APPRENTICES == FALSE
 const struct ApprenticeTrainer gApprentices[NUM_APPRENTICES] =
 {
     {
@@ -426,7 +426,6 @@ const struct ApprenticeTrainer gApprentices[NUM_APPRENTICES] =
         .speechLost = {EC_WORD_THIS, EC_WORD_HAS, EC_WORD_TO, EC_WORD_BE, EC_WORD_A, EC_WORD_LIE},
     },
 };
-#endif //FREE_FRONTIER_APPRENTICES
 
 // Sequence of 4 messages for the first meeting with the apprentice
 static const u8 *const sApprenticeFirstMeetingTexts[NUM_APPRENTICES][4] =
@@ -569,6 +568,7 @@ static const u8 *const sApprenticeChallengeTexts[NUM_APPRENTICES] =
     gText_ApprenticeChallenge14,
     gText_ApprenticeChallenge15,
 };
+#endif //FREE_FRONTIER_APPRENTICES
 
 // The possible questions to ask after the initial 3 WHICH MON questions. Retrieved from here and shuffled
 // WHAT_ITEM has max 3 occurrences, one for each party member

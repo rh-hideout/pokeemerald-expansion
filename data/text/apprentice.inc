@@ -1,3 +1,5 @@
+#include "config/save.h"
+
 .if FREE_FRONTIER_APPRENTICES == FALSE
 gText_ApprenticeChallenge0::
 	.string "Um, I'm {STR_VAR_1}'s no. {STR_VAR_2} apprentice.\n"
