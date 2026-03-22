@@ -504,11 +504,6 @@ BattleScript_BeakBlastBurn::
 	call BattleScript_MoveEffectBurn
 	return
 
-BattleScript_EffectFling::
-	attackcanceler
-	accuracycheck BattleScript_FlingMissed
-	goto BattleScript_HitFromPreAttackEffects
-
 BattleScript_FlingMessage::
 	printstring STRINGID_PKMNFLUNG
 	waitmessage B_WAIT_TIME_LONG
