@@ -21,8 +21,8 @@
 #define FREE_POKEMON_JUMP                   FALSE   // Frees up Pokémon Jump data (16 bytes).
 #define FREE_RECORD_MIXING_HALL_RECORDS     FALSE   // Frees up hall records for record mixing (1032 bytes).
 #define FREE_EXTRA_SEEN_FLAGS_SAVEBLOCK2    FALSE   // Free up unused Pokédex seen flags (108 bytes).
-                                            // SaveBlock2 total: 1274 bytes
+                                            // SaveBlock2 total: 1344 bytes
 
-                                            // Grand Total: 3790
+                                            // Grand Total: 7060 bytes
 
 #endif // GUARD_CONFIG_SAVE_H
