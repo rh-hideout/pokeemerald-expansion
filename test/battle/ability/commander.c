@@ -255,33 +255,27 @@ DOUBLE_BATTLE_TEST("Commander doesn't prevent Imposter from working on a Command
     }
 }
 
-DOUBLE_BATTLE_TEST("Commander Tatsugiri is still affected by Perish Song while controlling Dondozo")
+DOUBLE_BATTLE_TEST("Commander Tatsugiri faints from Perish Song if it heard the song before being swallowed")
 {
     GIVEN {
-        PLAYER(SPECIES_DONDOZO);
+        PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
+        PLAYER(SPECIES_DONDOZO);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_PERISH_SONG); }
-        TURN {}
+        TURN { SWITCH(playerLeft, 2); }
         TURN {}
         TURN {}
     } SCENE {
-        ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
-        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PERISH_SONG, opponentLeft);
         MESSAGE("All Pokémon that heard the song will faint in three turns!");
-        MESSAGE("Dondozo's perish count fell to 0!");
-        MESSAGE("Dondozo fainted!");
-        MESSAGE("The opposing Wobbuffet's perish count fell to 0!");
-        MESSAGE("The opposing Wobbuffet fainted!");
-        NONE_OF {
-            MESSAGE("Tatsugiri's perish count fell to 0!");
-            MESSAGE("Tatsugiri fainted!");
-        }
-        MESSAGE("The opposing Wynaut's perish count fell to 0!");
-        MESSAGE("The opposing Wynaut fainted!");
+        ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
+        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+    } THEN {
+        EXPECT_GT(playerLeft->hp, 0);
+        EXPECT_EQ(playerRight->hp, 0);
     }
 }
 
@@ -538,7 +532,7 @@ DOUBLE_BATTLE_TEST("Commander does not clear semi-invulnerability of non-Tatsugi
     }
 }
 
-DOUBLE_BATTLE_TEST("322 Commander still blocks forced switch after swallowed Tatsugiri faints")
+DOUBLE_BATTLE_TEST("Commander still blocks forced switch after swallowed Tatsugiri faints")
 {
     enum Move move;
     PARAMETRIZE { move = MOVE_DRAGON_TAIL; }
@@ -574,7 +568,7 @@ DOUBLE_BATTLE_TEST("322 Commander still blocks forced switch after swallowed Tat
     }
 }
 
-DOUBLE_BATTLE_TEST("322 Red Card is still consumed but cannot force out Dondozo after swallowed Tatsugiri faints")
+DOUBLE_BATTLE_TEST("Red Card is still consumed but cannot force out Dondozo after swallowed Tatsugiri faints")
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_RED_CARD].holdEffect == HOLD_EFFECT_RED_CARD);
