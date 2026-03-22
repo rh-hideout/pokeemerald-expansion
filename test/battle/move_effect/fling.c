@@ -578,6 +578,7 @@ SINGLE_BATTLE_TEST("Fling doesn't fail when holding a Booster Energy and the tar
 SINGLE_BATTLE_TEST("Fling reveals the user's item before dealing damage")
 {
     GIVEN {
+        ASSUME(MoveHasAdditionalEffectSelf(MOVE_FLING, MOVE_EFFECT_ITEM_MESSAGE));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_POTION); }
     } WHEN {
@@ -592,6 +593,7 @@ SINGLE_BATTLE_TEST("Fling reveals the user's item before dealing damage")
 SINGLE_BATTLE_TEST("Fling doesn't reveal the user's item if it failed to use the move")
 {
     GIVEN {
+        ASSUME(MoveHasAdditionalEffectSelf(MOVE_FLING, MOVE_EFFECT_ITEM_MESSAGE));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_POTION); Status1(STATUS1_SLEEP); }
     } WHEN {
@@ -605,9 +607,10 @@ SINGLE_BATTLE_TEST("Fling doesn't reveal the user's item if it failed to use the
     }
 }
 
-SINGLE_BATTLE_TEST("Poltergeist doesn't reveal the target's item if it missed")
+SINGLE_BATTLE_TEST("Fling doesn't reveal the user's item if it missed")
 {
     GIVEN {
+        ASSUME(MoveHasAdditionalEffectSelf(MOVE_FLING, MOVE_EFFECT_ITEM_MESSAGE));
         ASSUME(GetItemHoldEffect(ITEM_BRIGHT_POWDER) == HOLD_EFFECT_EVASION_UP);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_BRIGHT_POWDER); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_POTION); }

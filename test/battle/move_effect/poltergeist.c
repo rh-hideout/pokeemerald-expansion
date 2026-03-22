@@ -4,7 +4,7 @@
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_POLTERGEIST) == EFFECT_POLTERGEIST);
-    ASSUME(MoveHasAdditionalEffectSelf(MOVE_POLTERGEIST, MOVE_EFFECT_ITEM_MESSAGE));
+    ASSUME(MoveHasAdditionalEffect(MOVE_POLTERGEIST, MOVE_EFFECT_ITEM_MESSAGE));
 }
 
 SINGLE_BATTLE_TEST("Poltergeist fails if the target isn't holding an item")
