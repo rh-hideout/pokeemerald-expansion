@@ -4001,7 +4001,6 @@ static void LoadDisplayMonGfx(u16 species, u32 pid, bool32 isEgg)
 
     if (species != SPECIES_NONE)
     {
-        DebugPrintf("species:%d, isEgg:%d", species, isEgg);
         LoadSpecialPokePicIsEgg(sStorage->tileBuffer, species, pid, TRUE, isEgg);
         CpuCopy32(sStorage->tileBuffer, sStorage->displayMonTilePtr, MON_PIC_SIZE);
         LoadPalette(sStorage->displayMonPalette, sStorage->displayMonPalOffset, PLTT_SIZE_4BPP);
