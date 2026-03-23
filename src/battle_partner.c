@@ -111,7 +111,7 @@ void FillPartnerParty(u16 trainerId)
             }
             CalculateMonStats(&gPlayerParty[i + 3]);
 
-            u16 partnerId = SanitizePartnerId(trainerId);
+            u16 partnerId = GetPartnerIdFromTrainerId(trainerId);
             StringCopy(trainerName, gBattlePartners[difficulty][partnerId].trainerName);
             SetMonData(&gPlayerParty[i + 3], MON_DATA_OT_NAME, trainerName);
             j = gBattlePartners[difficulty][partnerId].gender;

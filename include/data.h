@@ -255,7 +255,7 @@ static inline u16 SanitizeTrainerId(u16 trainerId)
 }
 
 //sanitizes but also converts partner trainer ids into gBattlePartners indexes
-static inline u16 SanitizePartnerId(u16 trainerId)
+static inline u16 GetPartnerIdFromTrainerId(u16 trainerId)
 {
     assertf(IsPartnerTrainerId(trainerId), "invalid trainer id for partner: %d", trainerId)
     {
@@ -273,7 +273,7 @@ static inline const struct Trainer *GetTrainerStructFromId(u16 trainerId)
     if (IsPartnerTrainerId(trainerId))
     {
         difficulty = GetBattlePartnerDifficultyLevel(trainerId);
-        return &gBattlePartners[difficulty][SanitizePartnerId(trainerId)];
+        return &gBattlePartners[difficulty][GetPartnerIdFromTrainerId(trainerId)];
     }
     else
     {
