@@ -2953,6 +2953,22 @@
   .4byte \amount
 .endm
 
+@ Shows the bank balance box at (x, y)
+.macro showbankbalancebox x:req, y:req
+  callnative Script_ShowBankBalanceBox
+  .byte \x
+  .byte \y
+.endm
+
+@ Hides the bank balance box
+.macro hidebankbalancebox
+  callnative Script_HideBankBalanceBox
+.endm
+
+@ Updates the bank balance box with current value
+.macro updatebankbalancebox
+  callnative Script_UpdateBankBalanceBox
+.endm
 
 @ END OF BANKING SYSTEM
 

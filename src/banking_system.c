@@ -146,6 +146,30 @@ void Script_DepositInBank(struct ScriptContext *ctx)
     RemoveMoney(&gSaveBlock1Ptr->money, amount);
 }
 
+void Script_ShowBankBalanceBox(struct ScriptContext *ctx)
+{
+    u8 x = ScriptReadByte(ctx);
+    u8 y = ScriptReadByte(ctx);
+
+    Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
+
+    DrawMoneyBox(GetMoneyInBank(), x, y);
+}
+
+
+void Script_HideBankBalanceBox(struct ScriptContext *ctx)
+{
+    Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
+
+    HideMoneyBox();
+}
+
+void Script_UpdateBankBalanceBox(struct ScriptContext *ctx)
+{
+    Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
+    ChangeAmountInMoneyBox(GetMoneyInBank());
+}
+
 u32 CalcAmountToDeposit(u32 money)
 {
     return (money / 100) * SAVINGS_PERCENT
