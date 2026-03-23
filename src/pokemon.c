@@ -1648,9 +1648,9 @@ void CreateBattleTowerMon_HandleLevel(struct Pokemon *mon, struct BattleTowerPok
     CalculateMonStats(mon);
 }
 
+#if FREE_FRONTIER_APPRENTICES == FALSE
 void CreateApprenticeMon(struct Pokemon *mon, const struct Apprentice *src, u8 monId)
 {
-#if FREE_FRONTIER_APPRENTICES == FALSE
     s32 i;
     u16 evAmount;
     u8 language;
@@ -1676,8 +1676,8 @@ void CreateApprenticeMon(struct Pokemon *mon, const struct Apprentice *src, u8 m
     SetMonData(mon, MON_DATA_LANGUAGE, &language);
     SetMonData(mon, MON_DATA_OT_NAME, GetApprenticeNameInLanguage(src->id, language));
     CalculateMonStats(mon);
-#endif //FREE_FRONTIER_APPRENTICES
 }
+#endif //FREE_FRONTIER_APPRENTICES
 
 void ConvertPokemonToBattleTowerPokemon(struct Pokemon *mon, struct BattleTowerPokemon *dest)
 {

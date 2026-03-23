@@ -64,7 +64,9 @@ static void SetMultiPartnerGfx(void);
 static void SetTowerInterviewData(void);
 static void ValidateBattleTowerRecordChecksums(void);
 static void SaveCurrentWinStreak(void);
+#if FREE_FRONTIER_APPRENTICES == FALSE
 static void ValidateApprenticesChecksums(void);
+#endif //FREE_FRONTIER_APPRENTICES
 static void SetNextBattleTentOpponent(void);
 static void ClearBattleTowerRecord(struct EmeraldBattleTowerRecord *record);
 static void FillTentTrainerParty_(u16 trainerId, u8 firstMonId, u8 monCount);
@@ -1302,8 +1304,8 @@ static void LoadMultiPartnerCandidatesData(void)
     }
 
     r10 = 0;
-    ValidateApprenticesChecksums();
 #if FREE_FRONTIER_APPRENTICES == FALSE
+    ValidateApprenticesChecksums();
     for (i = 0; i < APPRENTICE_COUNT; i++)
     {
         if (gSaveBlock2Ptr->apprentices[i].lvlMode != 0
@@ -1924,11 +1926,9 @@ static void ClearApprentice(struct Apprentice *apprentice)
         ((u32 *)apprentice)[i] = 0;
     ResetApprenticeStruct(apprentice);
 }
-#endif //FREE_FRONTIER_APPRENTICES
 
 static void ValidateApprenticesChecksums(void)
 {
-#if FREE_FRONTIER_APPRENTICES == FALSE
     s32 i, j;
 
     for (i = 0; i < APPRENTICE_COUNT; i++)
@@ -1940,8 +1940,8 @@ static void ValidateApprenticesChecksums(void)
         if (gSaveBlock2Ptr->apprentices[i].checksum != checksum)
             ClearApprentice(&gSaveBlock2Ptr->apprentices[i]);
     }
-#endif //FREE_FRONTIER_APPRENTICES
 }
+#endif //FREE_FRONTIER_APPRENTICES
 
 void GetBattleTowerTrainerLanguage(u8 *dst, u16 trainerId)
 {

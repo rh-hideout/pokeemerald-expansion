@@ -742,7 +742,9 @@ void CreateMaleMon(struct Pokemon *mon, enum Species species, u8 level);
 void CreateMonWithIVsPersonality(struct Pokemon *mon, enum Species species, u8 level, u32 ivs, u32 personality);
 void CreateBattleTowerMon(struct Pokemon *mon, struct BattleTowerPokemon *src);
 void CreateBattleTowerMon_HandleLevel(struct Pokemon *mon, struct BattleTowerPokemon *src, bool8 lvl50);
+#if FREE_FRONTIER_APPRENTICES == FALSE
 void CreateApprenticeMon(struct Pokemon *mon, const struct Apprentice *src, u8 monId);
+#endif //FREE_FRONTIER_APPRENTICES
 void ConvertPokemonToBattleTowerPokemon(struct Pokemon *mon, struct BattleTowerPokemon *dest);
 enum TrainerPicID GetUnionRoomTrainerPic(void);
 enum TrainerClassID GetUnionRoomTrainerClass(void);

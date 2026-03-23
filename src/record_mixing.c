@@ -125,8 +125,8 @@ static void ReceiveGiftItem(u16 *, u8 );
 static void Task_DoRecordMixing(u8);
 #if FREE_FRONTIER_APPRENTICES == FALSE
 static void GetSavedApprentices(struct Apprentice *, struct Apprentice *);
-#endif //FREE_FRONTIER_APPRENTICES
 static void ReceiveApprenticeData(struct Apprentice *, size_t, u32);
+#endif //FREE_FRONTIER_APPRENTICES
 static void ReceiveRankingHallRecords(struct PlayerHallRecords *, size_t, u32);
 static void GetRecordMixingDaycareMail(struct RecordMixingDaycareMail *);
 static void SanitizeDaycareMailForRuby(struct RecordMixingDaycareMail *);
@@ -288,7 +288,9 @@ static void ReceiveExchangePacket(u32 multiplayerId)
         ReceiveBattleTowerData(&sReceivedRecords->emerald.battleTowerRecord, sizeof(sReceivedRecords->emerald), multiplayerId);
         ReceiveGiftItem(&sReceivedRecords->emerald.giftItem, multiplayerId);
         ReceiveLilycoveLadyData(&sReceivedRecords->emerald.lilycoveLady, sizeof(sReceivedRecords->emerald), multiplayerId);
+    #if FREE_FRONTIER_APPRENTICES == FALSE
         ReceiveApprenticeData(sReceivedRecords->emerald.apprentices, sizeof(sReceivedRecords->emerald), (u8)multiplayerId);
+    #endif //FREE_FRONTIER_APPRENTICES
         ReceiveRankingHallRecords(&sReceivedRecords->emerald.hallRecords, sizeof(sReceivedRecords->emerald), (u8)multiplayerId);
     }
 }
@@ -1172,9 +1174,9 @@ static bool32 IsApprenticeAlreadySaved(struct Apprentice *mixApprentice, struct 
 }
 #endif //FREE_FRONTIER_APPRENTICES
 
+#if FREE_FRONTIER_APPRENTICES == FALSE
 static void ReceiveApprenticeData(struct Apprentice *records, size_t recordSize, u32 multiplayerId)
 {
-#if FREE_FRONTIER_APPRENTICES == FALSE
     s32 i, numApprentices, apprenticeId;
     struct Apprentice *mixApprentice;
     u32 mixIndices[MAX_LINK_PLAYERS];
@@ -1209,8 +1211,8 @@ static void ReceiveApprenticeData(struct Apprentice *records, size_t recordSize,
         gSaveBlock2Ptr->playerApprentice.saveId = (gSaveBlock2Ptr->playerApprentice.saveId + 2) % (APPRENTICE_COUNT - 1);
         break;
     }
-#endif //FREE_FRONTIER_APPRENTICES
 }
+#endif //FREE_FRONTIER_APPRENTICES
 
 #if FREE_RECORD_MIXING_HALL_RECORDS == FALSE
 static void GetNewHallRecords(struct RecordMixingHallRecords *dst, void *records, size_t recordSize, u32 multiplayerId, s32 linkPlayerCount)
