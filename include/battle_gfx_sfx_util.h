@@ -15,7 +15,6 @@ void BattleLoadMonSpriteGfx(struct Pokemon *mon, enum BattlerId battler);
 void DecompressGhostFrontPic(enum BattlerId battler);
 void BattleGfxSfxDummy2(enum Species species);
 void DecompressTrainerFrontPic(enum TrainerPicID trainerPicId, enum BattlerId battler);
-void DecompressTrainerBackPic(enum TrainerPicID trainerPicId, enum BattlerId battler);
 void FreeTrainerFrontPicPalette(enum TrainerPicID trainerPicId);
 bool8 BattleLoadAllHealthBoxesGfx(u8 state);
 void LoadBattleBarGfx(u8 unused);

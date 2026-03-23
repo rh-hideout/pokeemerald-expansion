@@ -283,9 +283,12 @@ static bool8 LoadBattlerSpriteGfx(enum BattlerId battler)
                 BattleLoadSubstituteOrMonSpriteGfx(battler, FALSE);
         }
         else if (gBattleTypeFlags & BATTLE_TYPE_SAFARI && position == B_POSITION_PLAYER_LEFT)
-            DecompressTrainerBackPic(GetPlayerTrainerPic(gSaveBlock2Ptr->playerGender, GAME_VERSION), battler);
+        {
+            enum TrainerPicID trainerPicId = GetPlayerTrainerPic(gSaveBlock2Ptr->playerGender, GAME_VERSION);
+            LoadSpritePaletteWithTag(GetTrainerBackPicPalette(trainerPicId), GetTrainerPicTag(trainerPicId, FALSE));
+        }
         else if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL && position == B_POSITION_PLAYER_LEFT)
-            DecompressTrainerBackPic(CATCH_TUTORIAL_TRAINER_PIC, battler);
+            LoadSpritePaletteWithTag(GetTrainerBackPicPalette(CATCH_TUTORIAL_TRAINER_PIC), GetTrainerPicTag(CATCH_TUTORIAL_TRAINER_PIC, FALSE));
         else if (!gBattleSpritesDataPtr->battlerData[battler].behindSubstitute)
             BattleLoadMonSpriteGfx(GetBattlerMon(battler), battler);
         else

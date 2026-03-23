@@ -83,14 +83,6 @@ enum ItemEffect
 #define CRITICAL_HIT_BLOCKED -1
 #define CRITICAL_HIT_ALWAYS  -2
 
-// for Natural Gift and Fling
-struct TypePower
-{
-    enum Type type:8;
-    u8 power;
-    u16 effect;
-};
-
 enum ImmunityHealStatusOutcome
 {
     IMMUNITY_NO_EFFECT,
@@ -99,8 +91,6 @@ enum ImmunityHealStatusOutcome
     IMMUNITY_INFATUATION_CLEARED,
     IMMUNITY_TAUNT_CLEARED,
 };
-
-extern const struct TypePower gNaturalGiftTable[];
 
 struct BattleContext
 {

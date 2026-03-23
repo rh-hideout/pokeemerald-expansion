@@ -108,7 +108,7 @@ bool8 DoesPartyHaveEnigmaBerry(void)
 {
     bool8 hasItem = CheckPartyMonHasHeldItem(ITEM_ENIGMA_BERRY_E_READER);
     if (hasItem == TRUE)
-        GetBerryNameByBerryType(ItemIdToBerryType(ITEM_ENIGMA_BERRY_E_READER), gStringVar1);
+        GetBerryNameByBerryType(BERRY_ID_ENGIMA_E_READER, gStringVar1);
 
     return hasItem;
 }
@@ -680,4 +680,12 @@ void Script_SetKO(struct ScriptContext *ctx)
         u32 hp = 0;
         SetMonData(&gPlayerParty[slot], MON_DATA_HP, &hp);
     }
+}
+
+void Script_GiveRandomBerry(struct ScriptContext *ctx)
+{
+    enum BerryId loBerry = ScriptReadByte(ctx);
+    enum BerryId hiBerry = ScriptReadByte(ctx);
+
+    gSpecialVar_Result = BerryTypeToItemId(RandomUniform(RNG_RANDOM_BERRY, loBerry, hiBerry));
 }

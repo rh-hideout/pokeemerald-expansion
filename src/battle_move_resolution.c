@@ -1101,8 +1101,6 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
     case EFFECT_FLING:
         if (!CanFling(ctx->battlerAtk, ctx->abilityAtk))
             battleScript = BattleScript_ButItFailed;
-        else // for Fling message
-            gLastUsedItem = gBattleMons[ctx->battlerAtk].item;
         break;
     case EFFECT_FAIL_IF_NOT_ARG_TYPE:
         if (!IS_BATTLER_OF_TYPE(ctx->battlerAtk, GetMoveArgType(ctx->move)))
@@ -1166,7 +1164,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
         break;
     case EFFECT_PROTECT:
     case EFFECT_ENDURE:
-        TryResetConsecutiveUseCounter(gBattlerAttacker);
+        TryResetConsecutiveUseCounter(ctx->battlerAtk);
         if (IsLastMonToMove(ctx->battlerAtk))
         {
             battleScript = BattleScript_ButItFailed;
@@ -1186,8 +1184,8 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
         }
         if (battleScript != NULL)
         {
-            gBattleMons[gBattlerAttacker].volatiles.consecutiveMoveUses = 0;
-            gBattleStruct->battlerState[gBattlerAttacker].stompingTantrumTimer = 2;
+            gBattleMons[ctx->battlerAtk].volatiles.consecutiveMoveUses = 0;
+            gBattleStruct->battlerState[ctx->battlerAtk].stompingTantrumTimer = 2;
         }
         break;
     case EFFECT_REST:
