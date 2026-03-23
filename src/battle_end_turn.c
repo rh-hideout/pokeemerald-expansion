@@ -875,7 +875,7 @@ static bool32 HandleEndTurnYawn(enum BattlerId battler)
          && !(gBattleMons[battler].status1 & STATUS1_ANY)
          && ability != ABILITY_VITAL_SPIRIT
          && ability != ABILITY_INSOMNIA
-         && !(GetConfig(B_UPROAR) >= GEN_5 && UproarWakeUpCheck(battler))
+         && !UproarWakeUpCheck(battler)
          && !IsLeafGuardProtected(battler, ability))
         {
             gEffectBattler = gBattlerTarget = battler;
