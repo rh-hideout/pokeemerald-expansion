@@ -95,7 +95,7 @@ static void ModifyPersonalityForNature(u32 *personality, s32 newNature)
     *personality += (sModuloLUT[diff] * 0x100 * sign);
 }
 
-static void SetCorrectAbilityNum(struct Pokemon *mon, u32 species, u32 ability)
+static bool32 SetCorrectAbilityNum(struct Pokemon *mon, u32 species, u32 ability)
 {
     const struct SpeciesInfo *speciesInfo = &gSpeciesInfo[species];
     u32 abilityNum;
@@ -107,9 +107,10 @@ static void SetCorrectAbilityNum(struct Pokemon *mon, u32 species, u32 ability)
     }
     assertf(abilityNum < maxAbilityNum, "illegal ability %S for %S", gAbilitiesInfo[ability].name, speciesInfo->speciesName)
     {
-        return;
+        return FALSE;
     }
     SetMonData(mon, MON_DATA_ABILITY_NUM, &abilityNum);
+    return TRUE;
 }
 
 void GenerateMonFromTrainerMon(struct Pokemon *mon, const struct TrainerMon *trainerMon, struct TrainerGenerator *trainer)
@@ -149,21 +150,26 @@ void GenerateMonFromTrainerMon(struct Pokemon *mon, const struct TrainerMon *tra
     CustomTrainerPartyAssignMoves(mon, trainerMon);
     SetMonData(mon, MON_DATA_HELD_ITEM, &trainerMon->heldItem);
 
+    bool32 abilitySet = FALSE;
     if (trainerMon->ability)
     {
-        SetCorrectAbilityNum(mon, trainerMon->species, trainerMon->ability);
+        abilitySet = SetCorrectAbilityNum(mon, trainerMon->species, trainerMon->ability);
     }
-    else if (B_TRAINER_MON_RANDOM_ABILITY == 2)
+
+    if (!abilitySet)
     {
-        do {
-            data = Random() % NUM_ABILITY_SLOTS; // includes hidden abilities
-        } while (GetAbilityBySpecies(trainerMon->species, data) == ABILITY_NONE);
-        SetMonData(mon, MON_DATA_ABILITY_NUM, &data);
-    }
-    else if (B_TRAINER_MON_RANDOM_ABILITY == 0)
-    {
-        data = 0;
-        SetMonData(mon, MON_DATA_ABILITY_NUM, &data);
+        if (B_TRAINER_MON_RANDOM_ABILITY == 2)
+        {
+            do {
+                data = Random() % NUM_ABILITY_SLOTS; // includes hidden abilities
+            } while (GetAbilityBySpecies(trainerMon->species, data) == ABILITY_NONE);
+            SetMonData(mon, MON_DATA_ABILITY_NUM, &data);
+        }
+        else if (B_TRAINER_MON_RANDOM_ABILITY == 0)
+        {
+            data = 0;
+            SetMonData(mon, MON_DATA_ABILITY_NUM, &data);
+        }
     }
 
     if (trainerMon->ball < POKEBALL_COUNT)
