@@ -20,7 +20,7 @@
 #define FREE_POKEMON_JUMP                   FALSE   // Frees up Pokémon Jump data (16 bytes).
 #define FREE_RECORD_MIXING_HALL_RECORDS     FALSE   // Frees up hall records for record mixing (1032 bytes).
 #define FREE_EXTRA_SEEN_FLAGS_SAVEBLOCK2    FALSE   // Frees up unused Pokédex seen flags (108 bytes).
-#define FREE_FRONTIER_APPRENTICES           FALSE   // Frees up Battle Frontier Apprentices (396 bytes).
+#define FREE_FRONTIER_APPRENTICES           FALSE   // Frees up Battle Frontier Apprentices (396 bytes). WARNING: Remove the apprentice from the Battle Tower to avoid it crashing your game when talked to.
                                             // SaveBlock2 total: 1740 bytes
 
                                             // Grand Total: 4308 bytes
