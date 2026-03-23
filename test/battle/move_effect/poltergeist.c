@@ -71,7 +71,7 @@ SINGLE_BATTLE_TEST("Poltergeist doesn't reveal the target's item if target is im
         TURN { MOVE(player, MOVE_POLTERGEIST); }
     } SCENE {
         NONE_OF {
-            MESSAGE("The opposing Wobbuffet is about to be attacked by its Potion!");
+            MESSAGE("The opposing Pidgey is about to be attacked by its Potion!");
             ANIMATION(ANIM_TYPE_MOVE, MOVE_POLTERGEIST, player);
             HP_BAR(opponent);
         };

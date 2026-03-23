@@ -1164,7 +1164,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
         break;
     case EFFECT_PROTECT:
     case EFFECT_ENDURE:
-        TryResetConsecutiveUseCounter(gBattlerAttacker);
+        TryResetConsecutiveUseCounter(ctx->battlerAtk);
         if (IsLastMonToMove(ctx->battlerAtk))
         {
             battleScript = BattleScript_ButItFailed;
@@ -1184,8 +1184,8 @@ static enum CancelerResult CancelerMoveFailure(struct BattleContext *ctx)
         }
         if (battleScript != NULL)
         {
-            gBattleMons[gBattlerAttacker].volatiles.consecutiveMoveUses = 0;
-            gBattleStruct->battlerState[gBattlerAttacker].stompingTantrumTimer = 2;
+            gBattleMons[ctx->battlerAtk].volatiles.consecutiveMoveUses = 0;
+            gBattleStruct->battlerState[ctx->battlerAtk].stompingTantrumTimer = 2;
         }
         break;
     case EFFECT_REST:
