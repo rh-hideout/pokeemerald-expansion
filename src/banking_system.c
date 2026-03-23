@@ -272,6 +272,11 @@ static void UpdateBankBalanceAfterTransaction(enum BankingMode mode)
         RemoveMoney(&gSaveBlock1Ptr->money, sTransactionAmount);
     }
 
+    if (sTransactionAmount)
+        gSpecialVar_Result = TRUE;
+    else
+        gSpecialVar_Result = FALSE;
+
     sTransactionAmount = 0;
 }
 
