@@ -270,7 +270,7 @@ static inline const struct Trainer *GetTrainerStructFromId(u16 trainerId)
     if (gIsDebugBattle) return GetDebugAiTrainer();
     enum DifficultyLevel difficulty;
 
-   if (IsPartnerTrainerId(trainerId))
+    if (IsPartnerTrainerId(trainerId))
     {
         difficulty = GetBattlePartnerDifficultyLevel(trainerId);
         return &gBattlePartners[difficulty][SanitizePartnerId(trainerId)];
