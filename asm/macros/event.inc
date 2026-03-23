@@ -2931,15 +2931,17 @@
   .4byte \value
 .endm
 
-@ Deposits an amount into the bank
-.macro depositmoney amount:req
-  callnative Script_DepositInBank
+@ Adds an amount into the bank
+@ NOTE: Does not accept VAR as argument
+.macro addtobank amount:req
+  callnative Script_AddToBank
   .4byte \amount
 .endm
 
-@ Withdraws an amount from the bank
-.macro withdrawmoney amount:req
-  callnative Script_WithdrawFromBank
+@ Removes an amount from the bank
+@ NOTE: Does not accept VAR as argument
+.macro removefrombank amount:req
+  callnative Script_RemoveFromBank
   .4byte \amount
 .endm
 

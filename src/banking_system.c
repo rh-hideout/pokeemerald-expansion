@@ -96,7 +96,7 @@ void Script_CompareBankBalance(struct ScriptContext *ctx)
         gSpecialVar_Result = TRUE;
 }
 
-void Script_WithdrawFromBank(struct ScriptContext *ctx)
+void Script_RemoveFromBank(struct ScriptContext *ctx)
 {
     u32 amount = ScriptReadWord(ctx);
     u32 balance = GetMoneyInBank();
@@ -112,10 +112,9 @@ void Script_WithdrawFromBank(struct ScriptContext *ctx)
     }
 
     SetMoneyInBank(balance - amount);
-    AddMoney(&gSaveBlock1Ptr->money, amount);
 }
 
-void Script_DepositInBank(struct ScriptContext *ctx)
+void Script_AddToBank(struct ScriptContext *ctx)
 {
     u32 amount = ScriptReadWord(ctx);
     u32 balance = GetMoneyInBank();
@@ -138,7 +137,6 @@ void Script_DepositInBank(struct ScriptContext *ctx)
     }
 
     SetMoneyInBank(balance + amount);
-    RemoveMoney(&gSaveBlock1Ptr->money, amount);
 }
 
 void Script_ShowBankBalanceBox(struct ScriptContext *ctx)
