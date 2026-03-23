@@ -2914,19 +2914,9 @@
 
 @ BANKING SYSTEM
 @ allows the player to withdraw money from the bank
-.macro starttransaction
+.macro starttransaction mode:req
   callnative StartTransactionTask
-.endm
-
-@ Sets the banking mode to withdraw or deposit
-.macro setbankingmode mode:req
-  callnative Script_SetBankingMode
-  .4byte \mode
-.endm
-
-@ Updates Bank Balance and Wallet after transaction
-.macro settletransaction
-  callnative UpdateBankBalanceAfterTransaction
+  .byte \mode
 .endm
 
 @ Copies the current Bank Balance into STR_VAR_2

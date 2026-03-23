@@ -39,11 +39,12 @@ static const u8 sText_Withdraw[] = _("Withdraw");
 u32 sTransactionAmount = 0;
 u8 sTransactionWindowId = 0;
 u8 sBankingModeWindowId = 0;
-enum BankingMode gBankingMode;
 
 // Static Functions
 static u32 GetStepSize(s16 heldFrames);
 static bool32 HandleAmountInput(u32 *amount, s32 max, s32 min, s16 *heldFrames);
+static u32 GetTransactionMaxAmount(enum BankingMode mode);
+static void UpdateBankBalanceAfterTransaction(enum BankingMode mode);
 
 // Tasks
 static void Task_ShowBankingInput(u8 taskId);
@@ -71,12 +72,6 @@ static const struct WindowTemplate sBankingModeWindowTemplate = {
 bool32 IsSavingMoney(void)
 {
     return FlagGet(SAVINGS_FLAG);
-}
-
-void Script_SetBankingMode(struct ScriptContext *ctx)
-{
-    enum BankingMode mode = ScriptReadWord(ctx);
-    gBankingMode = mode;
 }
 
 u32 GetMoneyInBank(void)
@@ -156,7 +151,6 @@ void Script_ShowBankBalanceBox(struct ScriptContext *ctx)
     DrawMoneyBox(GetMoneyInBank(), x, y);
 }
 
-
 void Script_HideBankBalanceBox(struct ScriptContext *ctx)
 {
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
@@ -189,13 +183,13 @@ void CreateBankingWindow(void)
     CopyWindowToVram(sTransactionWindowId, COPYWIN_FULL);
 }
 
-void CreateBankingModeWindow(void)
+void CreateBankingModeWindow(enum BankingMode mode)
 {
     const u8 *text = NULL;
 
-    if (gBankingMode == MODE_DEPOSIT)
+    if (mode == MODE_DEPOSIT)
         text = sText_Deposit;
-    else if (gBankingMode == MODE_WITHDRAW)
+    else if (mode == MODE_WITHDRAW)
         text = sText_Withdraw;
 
     sBankingModeWindowId = AddWindow(&sBankingModeWindowTemplate);
@@ -247,18 +241,18 @@ static void PrintTransactionAmount(u8 windowId, s16 amount)
         GetStringCenterAlignXOffset(FONT_NORMAL, gStringVar4, 0x28), 2, 0, 0);
 }
 
-static u32 GetTransactionMaxAmount(void)
+static u32 GetTransactionMaxAmount(enum BankingMode mode)
 {
     u32 money = GetMoney(&gSaveBlock1Ptr->money);
     u32 savings = GetMoneyInBank();
     u32 max = 0;
 
-    if (gBankingMode == MODE_DEPOSIT)
+    if (mode == MODE_DEPOSIT)
     {
         u32 bankCapacity = MAX_BANK_MONEY - savings;
         max = Clamp(money, 0, bankCapacity);
     }
-    else if (gBankingMode == MODE_WITHDRAW)
+    else if (mode == MODE_WITHDRAW)
     {
         u32 walletCapacity = MAX_MONEY - money;
         max = Clamp(savings, 0, walletCapacity);
@@ -267,7 +261,24 @@ static u32 GetTransactionMaxAmount(void)
     return max;
 }
 
-#define tState data[0]
+static void UpdateBankBalanceAfterTransaction(enum BankingMode mode)
+{
+    if (mode == MODE_WITHDRAW)
+    {
+        SetMoneyInBank(GetMoneyInBank() - sTransactionAmount);
+        AddMoney(&gSaveBlock1Ptr->money, sTransactionAmount);
+    }
+    else if (mode == MODE_DEPOSIT)
+    {
+        SetMoneyInBank(GetMoneyInBank() + sTransactionAmount);
+        RemoveMoney(&gSaveBlock1Ptr->money, sTransactionAmount);
+    }
+
+    sTransactionAmount = 0;
+}
+
+#define tState       data[0]
+#define tBankingMode data[1]
 static void Task_ShowBankingInput(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
@@ -286,11 +297,11 @@ static void Task_ShowBankingInput(u8 taskId)
         break;
     case 1:
         CreateBankingWindow();
-        CreateBankingModeWindow();
+        CreateBankingModeWindow(tBankingMode);
         tState++;
         break;
     case 2:
-        sTransactionAmount = GetTransactionMaxAmount();
+        sTransactionAmount = GetTransactionMaxAmount(tBankingMode);
         PrintTransactionAmount(sTransactionWindowId, sTransactionAmount);
         tState++;
         break;
@@ -300,6 +311,7 @@ static void Task_ShowBankingInput(u8 taskId)
     }
 }
 #undef tState
+#undef tBankingMode
 
 static u32 GetStepSize(s16 heldFrames)
 {
@@ -312,12 +324,14 @@ static u32 GetStepSize(s16 heldFrames)
     return 1 + (eased * (MAX_STEP - 1)) / STEP_SPEED;
 }
 
-#define tHeldFrames data[0]
+#define tHeldFrames  data[0]
+#define tBankingMode data[1]
 static void Task_HandleMoneyInput(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
 
-    if (HandleAmountInput(&sTransactionAmount, GetTransactionMaxAmount(), 0,
+    if (HandleAmountInput(&sTransactionAmount,
+                          GetTransactionMaxAmount(tBankingMode), 0,
                           &tHeldFrames))
     {
         PrintTransactionAmount(sTransactionWindowId, sTransactionAmount);
@@ -332,28 +346,19 @@ static void Task_HandleMoneyInput(u8 taskId)
         UnfreezeObjectEvents();
         ScriptContext_Enable();
         UnlockPlayerFieldControls();
+        UpdateBankBalanceAfterTransaction(tBankingMode);
         DestroyTask(taskId);
     }
 }
 #undef tHeldFrames
+#undef tBankingMode
 
-void StartTransactionTask(void)
+#define tBankingMode data[1]
+void StartTransactionTask(struct ScriptContext *ctx)
 {
-    CreateTask(Task_ShowBankingInput, 2);
+    u8 bankingMode = ScriptReadByte(ctx);
+    u8 taskId = CreateTask(Task_ShowBankingInput, 2);
+    gTasks[taskId].tBankingMode = bankingMode;
 }
+#undef tBankingMode
 
-void UpdateBankBalanceAfterTransaction(void)
-{
-    if (gBankingMode == MODE_WITHDRAW)
-    {
-        SetMoneyInBank(GetMoneyInBank() - sTransactionAmount);
-        AddMoney(&gSaveBlock1Ptr->money, sTransactionAmount);
-    }
-    else if (gBankingMode == MODE_DEPOSIT)
-    {
-        SetMoneyInBank(GetMoneyInBank() + sTransactionAmount);
-        RemoveMoney(&gSaveBlock1Ptr->money, sTransactionAmount);
-    }
-
-    sTransactionAmount = 0;
-}

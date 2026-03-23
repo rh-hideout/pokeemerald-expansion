@@ -11,7 +11,6 @@ void Script_CompareBankBalance(struct ScriptContext *ctx);
 bool32 IsSavingMoney(void);
 u32 GetTransactionAmount(void);
 void CreateBankingWindow(void);
-void StartTransactionTask(void);
-void UpdateBankBalanceAfterTransaction(void);
+void StartTransactionTask(struct ScriptContext *ctx);
 
 #endif // GUARD_SAVINGS_SYSTEM_H
