@@ -228,12 +228,42 @@ Class: Team Aqua
 Pic: Aqua Grunt M
 Gender: Male
 Music: Aqua
-Double Battle: No
+Party Size: 2
+Double Battle: Yes
 AI: Check Bad Move
 
-Poochyena
+Poochyena @ Lum Berry
 Level: 9
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- Tackle
+
+Snorlax @ Leftovers
+Level: 100
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Tags: Lead
+- Splash
+
+Pidgey @ Iron Ball
+Level: 9
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- Splash
+
+Gulpin @ Safety Goggles
+Level: 9
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Tags: Ace
+- Tailwind
+
+Carvanha @ Red Card
+Level: 9
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- Splash
+
+Octillery @ Red Card
+Level: 30
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Ability: Suction Cups
+- Splash
 
 === TRAINER_MARCEL ===
 Name: MARCEL

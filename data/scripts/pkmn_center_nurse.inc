@@ -131,3 +131,80 @@ Movement_PkmnCenterNurse_Bow:
 Movement_PkmnCenterNurse_Turn:
 	walk_in_place_faster_left
 	step_end
+
+EventScript_TimeSetter::
+	lock
+	faceplayer
+	msgbox Text_ChangeTime, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, YES, EventScript_ChangeTime
+	goto_if_eq VAR_RESULT, NO, EventScript_DontChangeTime
+	releaseall
+	end
+
+EventScript_ChangeTime::
+	msgbox Text_WhatTime
+	multichoice 0, 0, 115, FALSE
+	switch VAR_RESULT
+	case 0, EventScript_ChangeTimeToDawn
+	case 1, EventScript_ChangeTimeToNoon
+	case 2, EventScript_ChangeTimeToDusk
+	case 3, EventScript_ChangeTimeToMidnight
+	case MULTI_B_PRESSED, EventScript_DontChangeTime
+	closemessage
+	end
+
+EventScript_ChangeTimeToDawn::
+	initclock 7, 0
+	msgbox Text_ChangeTimeToDawn, MSGBOX_DEFAULT
+	closemessage
+	releaseall
+	end
+
+EventScript_ChangeTimeToNoon::
+	initclock 12, 0
+	msgbox Text_ChangeTimeToNoon, MSGBOX_DEFAULT
+	closemessage
+	releaseall
+	end
+
+EventScript_ChangeTimeToDusk::
+	initclock 19, 0
+	msgbox Text_ChangeTimeToDusk, MSGBOX_DEFAULT
+	closemessage
+	releaseall
+	end
+
+EventScript_ChangeTimeToMidnight::
+	initclock 24, 0
+	msgbox Text_ChangeTimeToMidnight, MSGBOX_DEFAULT
+	closemessage
+	releaseall
+	end
+
+EventScript_DontChangeTime::
+	msgbox Text_DontChangeTime, MSGBOX_DEFAULT
+	closemessage
+	releaseall
+	end
+
+Text_ChangeTime:
+	.string "Would you like to change the time?$"
+
+Text_WhatTime:
+	.string "What time would you like to change to?$"
+
+Text_ChangeTimeToDawn:
+	.string "The time has been changed to 7 am!$"
+
+Text_ChangeTimeToNoon:
+	.string "The time has been changed to 12 pm!$"
+
+Text_ChangeTimeToDusk:
+	.string "The time has been changed to 7 pm!$"
+
+Text_ChangeTimeToMidnight:
+	.string "The time has been changed to 12 am!$"
+
+Text_DontChangeTime:
+	.string "The time has not been changed.$"
+

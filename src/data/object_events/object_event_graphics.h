@@ -392,6 +392,63 @@ const u16 gObjectEventPal_Substitute[] = INCBIN_U16("graphics/object_events/pics
 const u16 gObjectEventPaletteEmotes[] = INCBIN_U16("graphics/misc/emotes.gbapal");
 const u16 gObjectEventPaletteNeonLight[] = INCBIN_U16("graphics/object_events/palettes/neon_light.gbapal");
 
+// Fire Red palettes
+const u16 gObjectEventPal_NpcBlue[] = INCBIN_U16("graphics/object_events/palettes/npc_blue.gbapal");
+const u16 gObjectEventPal_NpcPink[] = INCBIN_U16("graphics/object_events/palettes/npc_pink.gbapal");
+const u16 gObjectEventPal_NpcGreen[] = INCBIN_U16("graphics/object_events/palettes/npc_green.gbapal");
+const u16 gObjectEventPal_NpcWhite[] = INCBIN_U16("graphics/object_events/palettes/npc_white.gbapal");
+
+// Fire Red sprites
+const u32 gObjectEventPic_Biker[] = INCBIN_U32("graphics/object_events/pics/people/z_biker.4bpp");
+const u32 gObjectEventPic_Bill[] = INCBIN_U32("graphics/object_events/pics/people/z_bill.4bpp");
+const u32 gObjectEventPic_Captain[] = INCBIN_U32("graphics/object_events/pics/people/z_captain.4bpp");
+const u32 gObjectEventPic_Channeler[] = INCBIN_U32("graphics/object_events/pics/people/z_channeler.4bpp");
+const u32 gObjectEventPic_Chef[] = INCBIN_U32("graphics/object_events/pics/people/z_chef.4bpp");
+const u32 gObjectEventPic_CooltrainerF[] = INCBIN_U32("graphics/object_events/pics/people/z_cooltrainer_f.4bpp");
+const u32 gObjectEventPic_CooltrainerM[] = INCBIN_U32("graphics/object_events/pics/people/z_cooltrainer_m.4bpp");
+const u32 gObjectEventPic_Delivery[] = INCBIN_U32("graphics/object_events/pics/people/z_delivery.4bpp");
+const u32 gObjectEventPic_Dude[] = INCBIN_U32("graphics/object_events/pics/people/z_dude.4bpp");
+const u32 gObjectEventPic_Fisherman2[] = INCBIN_U32("graphics/object_events/pics/people/z_fisherman.4bpp");
+const u32 gObjectEventPic_Fuji[] = INCBIN_U32("graphics/object_events/pics/people/z_fuji.4bpp");
+const u32 gObjectEventPic_Gary[] = INCBIN_U32("graphics/object_events/pics/people/z_gary.4bpp");
+const u32 gObjectEventPic_Girl4[] = INCBIN_U32("graphics/object_events/pics/people/z_girl.4bpp");
+const u32 gObjectEventPic_GymGuy[] = INCBIN_U32("graphics/object_events/pics/people/z_gym_guy.4bpp");
+const u32 gObjectEventPic_Man6[] = INCBIN_U32("graphics/object_events/pics/people/z_man.4bpp");
+const u32 gObjectEventPic_Man7[] = INCBIN_U32("graphics/object_events/pics/people/z_man2.4bpp");
+const u32 gObjectEventPic_Man8[] = INCBIN_U32("graphics/object_events/pics/people/z_man3.4bpp");
+const u32 gObjectEventPic_Man9[] = INCBIN_U32("graphics/object_events/pics/people/z_man4.4bpp");
+const u32 gObjectEventPic_Man10[] = INCBIN_U32("graphics/object_events/pics/people/z_man5.4bpp");
+const u32 gObjectEventPic_Nerd[] = INCBIN_U32("graphics/object_events/pics/people/z_nerd.4bpp");
+const u32 gObjectEventPic_Oak[] = INCBIN_U32("graphics/object_events/pics/people/z_oak.4bpp");
+const u32 gObjectEventPic_OldMan2[] = INCBIN_U32("graphics/object_events/pics/people/z_oldman.4bpp");
+const u32 gObjectEventPic_Police[] = INCBIN_U32("graphics/object_events/pics/people/z_police.4bpp");
+const u32 gObjectEventPic_Receptionist[] = INCBIN_U32("graphics/object_events/pics/people/z_receptionist.4bpp");
+const u32 gObjectEventPic_Rocker[] = INCBIN_U32("graphics/object_events/pics/people/z_rocker.4bpp");
+const u32 gObjectEventPic_RocketF[] = INCBIN_U32("graphics/object_events/pics/people/z_rocket_f.4bpp");
+const u32 gObjectEventPic_RocketM[] = INCBIN_U32("graphics/object_events/pics/people/z_rocket_m.4bpp");
+const u32 gObjectEventPic_Scientist3[] = INCBIN_U32("graphics/object_events/pics/people/z_scientist.4bpp");
+const u32 gObjectEventPic_SwimmerM2[] = INCBIN_U32("graphics/object_events/pics/people/z_swimmer_m.4bpp");
+const u32 gObjectEventPic_SwimmerM2Water[] = INCBIN_U32("graphics/object_events/pics/people/z_swimmer_m_water.4bpp");
+const u32 gObjectEventPic_TuberF2[] = INCBIN_U32("graphics/object_events/pics/people/z_tuber_f.4bpp");
+const u32 gObjectEventPic_TuberM2[] = INCBIN_U32("graphics/object_events/pics/people/z_tuber_m.4bpp");
+const u32 gObjectEventPic_TuberM2Water[] = INCBIN_U32("graphics/object_events/pics/people/z_tuber_m_water.4bpp");
+const u32 gObjectEventPic_Woman6[] = INCBIN_U32("graphics/object_events/pics/people/z_woman.4bpp");
+const u32 gObjectEventPic_SwimmerFWater[] = INCBIN_U32("graphics/object_events/pics/people/z_woman2.4bpp");
+const u32 gObjectEventPic_Woman7[] = INCBIN_U32("graphics/object_events/pics/people/z_woman3.4bpp");
+const u32 gObjectEventPic_Woman8[] = INCBIN_U32("graphics/object_events/pics/people/z_woman4.4bpp");
+const u32 gObjectEventPic_Agatha[] = INCBIN_U32("graphics/object_events/pics/people/elite_four/agatha.4bpp");
+const u32 gObjectEventPic_Bruno[] = INCBIN_U32("graphics/object_events/pics/people/elite_four/bruno.4bpp");
+const u32 gObjectEventPic_Lance[] = INCBIN_U32("graphics/object_events/pics/people/elite_four/lance.4bpp");
+const u32 gObjectEventPic_Lorelei[] = INCBIN_U32("graphics/object_events/pics/people/elite_four/lorelei.4bpp");
+const u32 gObjectEventPic_Blaine[] = INCBIN_U32("graphics/object_events/pics/people/gym_leaders/blaine.4bpp");
+const u32 gObjectEventPic_Brock[] = INCBIN_U32("graphics/object_events/pics/people/gym_leaders/brock.4bpp");
+const u32 gObjectEventPic_Erika[] = INCBIN_U32("graphics/object_events/pics/people/gym_leaders/erika.4bpp");
+const u32 gObjectEventPic_Giovanni[] = INCBIN_U32("graphics/object_events/pics/people/gym_leaders/giovanni.4bpp");
+const u32 gObjectEventPic_Koga[] = INCBIN_U32("graphics/object_events/pics/people/gym_leaders/koga.4bpp");
+const u32 gObjectEventPic_Misty[] = INCBIN_U32("graphics/object_events/pics/people/gym_leaders/misty.4bpp");
+const u32 gObjectEventPic_Sabrina[] = INCBIN_U32("graphics/object_events/pics/people/gym_leaders/sabrina.4bpp");
+const u32 gObjectEventPic_Surge[] = INCBIN_U32("graphics/object_events/pics/people/gym_leaders/surge.4bpp");
+
 #if OW_FOLLOWERS_POKEBALLS
 const u32 gObjectEventPic_MasterBall[] = INCBIN_U32("graphics/object_events/pics/misc/ball_master.4bpp");
 const u32 gObjectEventPic_UltraBall[] = INCBIN_U32("graphics/object_events/pics/misc/ball_ultra.4bpp");
