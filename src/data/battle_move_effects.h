@@ -861,12 +861,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .encourageEncore = TRUE,
     },
 
-    [EFFECT_UPROAR] =
-    {
-        .battleScript = BattleScript_EffectHit,
-        .battleTvScore = 4,
-    },
-
     [EFFECT_STOCKPILE] =
     {
         .battleScript = BattleScript_EffectStockpile,

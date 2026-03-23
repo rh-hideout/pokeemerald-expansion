@@ -58,7 +58,11 @@ static bool32 HandleEndTurnVarious(enum BattlerId battler)
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         if (gBattleMons[i].volatiles.throatChopTimer > 0)
+        {
             gBattleMons[i].volatiles.throatChopTimer--;
+            if (gBattleMons[i].volatiles.uproarTurns)
+                gBattleMons[i].volatiles.uproarTurns = 1; // end the move this turn
+        }
 
         if (gBattleMons[i].volatiles.lockOn > 0 && --gBattleMons[i].volatiles.lockOn == 0)
             gBattleMons[i].volatiles.battlerWithSureHit = 0;
@@ -871,7 +875,7 @@ static bool32 HandleEndTurnYawn(enum BattlerId battler)
          && !(gBattleMons[battler].status1 & STATUS1_ANY)
          && ability != ABILITY_VITAL_SPIRIT
          && ability != ABILITY_INSOMNIA
-         && !UproarWakeUpCheck(battler)
+         && !(GetConfig(B_UPROAR) >= GEN_5 && UproarWakeUpCheck(battler))
          && !IsLeafGuardProtected(battler, ability))
         {
             gEffectBattler = gBattlerTarget = battler;
@@ -1224,8 +1228,13 @@ static bool32 HandleEndTurnThirdEventBlock(enum BattlerId battler)
         {
             for (gEffectBattler = 0; gEffectBattler < gBattlersCount; gEffectBattler++)
             {
+                bool32 hasSoundproof = GetConfig(B_UPROAR_IGNORE_SOUNDPROOF) < GEN_5 && GetBattlerAbility(gEffectBattler) == ABILITY_SOUNDPROOF;
+
+                if (GetConfig(B_UPROAR) >= GEN_5) // This effect is only present in pre-Gen 5 Uproar
+                    break;
+
                 if ((gBattleMons[gEffectBattler].status1 & STATUS1_SLEEP)
-                 && GetBattlerAbility(gEffectBattler) != ABILITY_SOUNDPROOF)
+                 && !hasSoundproof)
                 {
                     gBattleMons[gEffectBattler].status1 &= ~STATUS1_SLEEP;
                     gBattleMons[gEffectBattler].volatiles.nightmare = FALSE;
@@ -1240,7 +1249,7 @@ static bool32 HandleEndTurnThirdEventBlock(enum BattlerId battler)
             if (effect == FALSE)
             {
                 gBattlerAttacker = battler;
-                gBattleMons[battler].volatiles.uproarTurns--;  // uproar timer goes down
+                gBattleMons[battler].volatiles.uproarTurns--; // uproar timer goes down
                 if (gBattleMons[battler].volatiles.unableToUseMove)
                 {
                     CancelMultiTurnMoves(battler);

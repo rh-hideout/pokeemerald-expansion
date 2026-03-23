@@ -110,7 +110,7 @@ static enum CancelerResult CancelerAsleepOrFrozen(struct BattleContext *ctx)
 
     if (gBattleMons[ctx->battlerAtk].status1 & STATUS1_SLEEP)
     {
-        if (UproarWakeUpCheck(ctx->battlerAtk))
+        if (GetConfig(B_UPROAR) < GEN_5 && UproarWakeUpCheck(ctx->battlerAtk))
         {
             TryDeactivateSleepClause(GetBattlerSide(ctx->battlerAtk), gBattlerPartyIndexes[ctx->battlerAtk]);
             gBattleMons[ctx->battlerAtk].status1 &= ~STATUS1_SLEEP;

@@ -688,7 +688,7 @@ DOUBLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mo
         FLAG_SET(B_FLAG_SLEEP_CLAUSE);
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
-        ASSUME(GetMoveEffect(MOVE_UPROAR) == EFFECT_UPROAR);
+        ASSUME(MoveHasAdditionalEffectSelf(MOVE_UPROAR, MOVE_EFFECT_UPROAR));
         PLAYER(SPECIES_ZIGZAGOON);
         PLAYER(SPECIES_ZIGZAGOON);
         PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_CELEBRATE); }
