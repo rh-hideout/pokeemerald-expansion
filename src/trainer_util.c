@@ -153,11 +153,16 @@ void GenerateMonFromTrainerMon(struct Pokemon *mon, const struct TrainerMon *tra
     {
         SetCorrectAbilityNum(mon, trainerMon->species, trainerMon->ability);
     }
-    else if (B_TRAINER_MON_HIDDEN_ABILITY)
+    else if (B_TRAINER_MON_RANDOM_ABILITY == 2)
     {
         do {
             data = Random() % NUM_ABILITY_SLOTS; // includes hidden abilities
         } while (GetAbilityBySpecies(trainerMon->species, data) == ABILITY_NONE);
+        SetMonData(mon, MON_DATA_ABILITY_NUM, &data);
+    }
+    else if (B_TRAINER_MON_RANDOM_ABILITY == 0)
+    {
+        data = 0;
         SetMonData(mon, MON_DATA_ABILITY_NUM, &data);
     }
 
