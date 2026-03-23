@@ -3713,7 +3713,7 @@ static void Cmd_setpreattackadditionaleffect(void)
 {
     CMD_ARGS();
 
-    if (gBattleStruct->preAttackEffectHappened || !IsAnyTargetAffected(gBattlerAttacker))
+    if (gBattleStruct->preAttackEffectHappened || !IsAnyTargetAffected())
     {
         gBattlescriptCurrInstr = cmd->nextInstr;
         return;
