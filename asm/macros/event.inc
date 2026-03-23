@@ -2915,7 +2915,7 @@
 @ BANKING SYSTEM
 @ allows the player to withdraw money from the bank
 .macro starttransaction mode:req
-  callnative StartTransactionTask
+  callnative Script_StartTransactionTask
   .byte \mode
 .endm
 

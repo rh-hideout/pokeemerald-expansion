@@ -21,6 +21,15 @@
 #include "util.h"
 #include "window.h"
 
+#define EnsureBankingEnabled()                                              \
+    {                                                                       \
+        assertf(IsBankingEnabled(),"Banking functionality is not enabled")  \
+            {                                                               \
+                UnlockPlayerFieldControls();                                \
+                return;                                                     \
+            }                                                               \
+    }
+
 // Config
 #define MAX_STEP       1000
 #define STEP_SPEED     360
@@ -69,24 +78,50 @@ static const struct WindowTemplate sBankingModeWindowTemplate = {
     .paletteNum = 15,
     .baseBlock = 1 + 13 * 2};
 
+bool32 IsBankingEnabled(void)
+{
+    return SAVINGS_ENABLED;
+}
+
 bool32 IsSavingMoney(void)
 {
-    return FlagGet(SAVINGS_FLAG);
+    return IsBankingEnabled() && FlagGet(SAVINGS_FLAG);
+}
+
+u32* GetSavedMoneyPtr(void)
+{
+    #if SAVINGS_ENABLED
+        return &gSaveBlock3Ptr->savedMoney;
+    #else
+        return NULL;
+    #endif /* if SAVINGS_ENABLED */
 }
 
 u32 GetMoneyInBank(void)
 {
-    return gSaveBlock3Ptr->savedMoney;
+    assertf(IsBankingEnabled(), "Banking functionality is not enabled")
+    {
+        return 0;
+    }
+
+    return *GetSavedMoneyPtr();
 }
 
 void SetMoneyInBank(u32 amount)
 {
-    assertf(amount <= MAX_BANK_MONEY, "Amount greater than MAX_BANK_MONEY");
-    gSaveBlock3Ptr->savedMoney = amount;
+
+    assertf(IsBankingEnabled(), "Banking functionality is not enabled")
+    {
+        return;
+    }
+
+    *GetSavedMoneyPtr() = amount;
 }
 
 void Script_CompareBankBalance(struct ScriptContext *ctx)
 {
+    EnsureBankingEnabled();
+
     u32 value = ScriptReadWord(ctx);
     u32 balance = GetMoneyInBank();
 
@@ -98,6 +133,8 @@ void Script_CompareBankBalance(struct ScriptContext *ctx)
 
 void Script_RemoveFromBank(struct ScriptContext *ctx)
 {
+    EnsureBankingEnabled();
+
     u32 amount = ScriptReadWord(ctx);
     u32 balance = GetMoneyInBank();
 
@@ -116,6 +153,8 @@ void Script_RemoveFromBank(struct ScriptContext *ctx)
 
 void Script_AddToBank(struct ScriptContext *ctx)
 {
+    EnsureBankingEnabled();
+
     u32 amount = ScriptReadWord(ctx);
     u32 balance = GetMoneyInBank();
     u32 wallet = GetMoney(&gSaveBlock1Ptr->money);
@@ -141,6 +180,8 @@ void Script_AddToBank(struct ScriptContext *ctx)
 
 void Script_ShowBankBalanceBox(struct ScriptContext *ctx)
 {
+    EnsureBankingEnabled();
+
     u8 x = ScriptReadByte(ctx);
     u8 y = ScriptReadByte(ctx);
 
@@ -151,6 +192,8 @@ void Script_ShowBankBalanceBox(struct ScriptContext *ctx)
 
 void Script_HideBankBalanceBox(struct ScriptContext *ctx)
 {
+    EnsureBankingEnabled();
+
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
 
     HideMoneyBox();
@@ -158,6 +201,8 @@ void Script_HideBankBalanceBox(struct ScriptContext *ctx)
 
 void Script_UpdateBankBalanceBox(struct ScriptContext *ctx)
 {
+    EnsureBankingEnabled();
+
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
     ChangeAmountInMoneyBox(GetMoneyInBank());
 }
@@ -357,11 +402,11 @@ static void Task_HandleMoneyInput(u8 taskId)
 #undef tBankingMode
 
 #define tBankingMode data[1]
-void StartTransactionTask(struct ScriptContext *ctx)
+void Script_StartTransactionTask(struct ScriptContext *ctx)
 {
+    EnsureBankingEnabled();
     u8 bankingMode = ScriptReadByte(ctx);
     u8 taskId = CreateTask(Task_ShowBankingInput, 2);
     gTasks[taskId].tBankingMode = bankingMode;
 }
 #undef tBankingMode
-
