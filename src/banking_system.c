@@ -531,7 +531,7 @@ void Script_GetPurchaseFromSavings()
     gSpecialVar_Result = currentPurchase.itemId;
 }
 
-bool32 PurchaseFromSavings()
+void PurchaseFromSavings()
 {
     u32 savings = GetMoneyInBank();
     u32 lastPurchase = *GetPurchaseIndexPtr();
