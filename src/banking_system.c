@@ -86,7 +86,7 @@ u8 sBankingModeWindowId = 0;
 
 // Static Functions
 static u32 GetStepSize(s16 heldFrames);
-static bool32 HandleAmountInput(u32 *amount, s32 max, s32 min, s16 *heldFrames);
+static bool32 HandleAmountInput(u32 *amount, u32 max, u32 min, s16 *heldFrames);
 static u32 GetTransactionMaxAmount(enum BankingMode mode);
 static void UpdateBankBalanceAfterTransaction(enum BankingMode mode);
 
@@ -313,7 +313,7 @@ void CreateBankingModeWindow(enum BankingMode mode)
         GetStringCenterAlignXOffset(FONT_NARROW, text, 0x28), 2, 0, 0);
 }
 
-static bool32 HandleAmountInput(u32 *amount, s32 max, s32 min, s16 *heldFrames)
+static bool32 HandleAmountInput(u32 *amount, u32 max, u32 min, s16 *heldFrames)
 {
     u32 original = *amount;
 
