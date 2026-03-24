@@ -127,22 +127,21 @@ DOUBLE_BATTLE_TEST("Bide is blocked by partner Dazzling")
     }
 }
 
-// Redundant?
-SINGLE_BATTLE_TEST("Bide fails if 0 total damage was dealt to the user")
+SINGLE_BATTLE_TEST("Bide fails if 0 total damage was dealt to the user by a move")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); };
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(player, MOVE_BIDE); }
-        TURN { SKIP_TURN(player); }
+        TURN { MOVE(player, MOVE_BIDE); MOVE(opponent, MOVE_FALSE_SWIPE); }
+        TURN { SKIP_TURN(player); MOVE(opponent, MOVE_FALSE_SWIPE); }
         TURN { SKIP_TURN(player); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BIDE, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
-        NOT HP_BAR(player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
-        NOT HP_BAR(player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FALSE_SWIPE, opponent);
+        HP_BAR(player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FALSE_SWIPE, opponent);
+        HP_BAR(player);
         MESSAGE("Wobbuffet unleashed its energy!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_BIDE, player);
@@ -171,6 +170,31 @@ SINGLE_BATTLE_TEST("Bide doesn't deal back damage taken by user's Substitute")
             ANIMATION(ANIM_TYPE_MOVE, MOVE_BIDE, player);
             HP_BAR(opponent);
         }
+    }
+}
+
+SINGLE_BATTLE_TEST("Bide doesn't deal damage through protect")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_PROTECT) == EFFECT_PROTECT);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_BIDE); MOVE(opponent, MOVE_POUND); }
+        TURN { SKIP_TURN(player); MOVE(opponent, MOVE_POUND); }
+        TURN { SKIP_TURN(player); MOVE(opponent, MOVE_PROTECT); }
+        TURN {MOVE(opponent, MOVE_CELEBRATE);}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BIDE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, opponent);
+        MESSAGE("Wobbuffet unleashed its energy!");
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_BIDE, player);
+            HP_BAR(opponent);
+        }
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
     }
 }
 
