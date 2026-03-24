@@ -132,7 +132,7 @@ u32* GetSavedMoneyPtr(void)
     #endif /* if SAVINGS_ENABLED */
 }
 
-u32* GetPurchaseIndexPtr(void)
+u8* GetPurchaseIndexPtr(void)
 {
     #if SAVINGS_ENABLED
         return &gSaveBlock3Ptr->lastPurchase;
@@ -141,7 +141,7 @@ u32* GetPurchaseIndexPtr(void)
     #endif /* if SAVINGS_ENABLED */
 }
 
-u32* GetPendingPurchasePtr(void)
+u8* GetPendingPurchasePtr(void)
 {
     #if SAVINGS_ENABLED
         return &gSaveBlock3Ptr->pendingPurchase;
