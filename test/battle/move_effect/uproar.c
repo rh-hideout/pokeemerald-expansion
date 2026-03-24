@@ -65,6 +65,7 @@ DOUBLE_BATTLE_TEST("Uproar status prevents any battler from falling asleep")
     PARAMETRIZE { config = GEN_5; }
 
     GIVEN {
+        WITH_CONFIG(B_UPROAR, config);
         ASSUME(GetMoveEffect(MOVE_REST) == EFFECT_REST);
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
@@ -91,7 +92,6 @@ DOUBLE_BATTLE_TEST("Uproar status prevents any battler from falling asleep")
 SINGLE_BATTLE_TEST("Uproar doesn't wake up other pokemon on field after first turn (Gen 5+)")
 {
     GIVEN {
-        ASSUME(B_UPROAR_TURNS >= GEN_5);
         WITH_CONFIG(B_UPROAR, GEN_5);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); }
