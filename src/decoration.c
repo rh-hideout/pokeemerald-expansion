@@ -95,12 +95,6 @@ struct DecorationPCContext
     u8 isPlayerRoom;
 };
 
-struct DecorItem
-{
-    const u32 *pic;
-    const u16 *pal;
-};
-
 enum Windows
 {
     WINDOW_MAIN_MENU,
@@ -325,7 +319,6 @@ static const struct ListMenuTemplate sDecorationItemsListMenuTemplate =
     .cursorKind = CURSOR_BLACK_ARROW,
 };
 
-#include "data/decoration/icon.h"
 #include "data/decoration/tilemaps.h"
 
 static const struct {
@@ -2117,7 +2110,7 @@ static const u32 *GetDecorationIconPic(u16 decor)
     if (decor > NUM_DECORATIONS)
         decor = DECOR_NONE;
 
-    return gDecorIconTable[decor].pic;
+    return gDecorations[decor].icon.pic;
 }
 
 static const u16 *GetDecorationIconPalette(u16 decor)
@@ -2125,7 +2118,7 @@ static const u16 *GetDecorationIconPalette(u16 decor)
     if (decor > NUM_DECORATIONS)
         decor = DECOR_NONE;
 
-    return gDecorIconTable[decor].pal;
+    return gDecorations[decor].icon.pal;
 }
 
 static u8 AddDecorationIconObjectFromObjectEvent(u16 tilesTag, u16 paletteTag, u8 decor)
@@ -2177,7 +2170,7 @@ u8 AddDecorationIconObject(u8 decor, s16 x, s16 y, u8 priority, u16 tilesTag, u1
         gSprites[spriteId].x2 = x + 4;
         gSprites[spriteId].y2 = y + 4;
     }
-    else if (gDecorIconTable[decor].pic == NULL)
+    else if (gDecorations[decor].icon.pic == NULL)
     {
         spriteId = AddDecorationIconObjectFromObjectEvent(tilesTag, paletteTag, decor);
         if (spriteId == MAX_SPRITES)

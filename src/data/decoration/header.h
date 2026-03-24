@@ -10,6 +10,7 @@ const struct Decoration gDecorations[] =
         .price = 0,
         .description = DecorDesc_SMALL_DESK,
         .tiles = DecorGfx_SMALL_DESK,
+        .icon = {gItemIcon_QuestionMark, gItemIconPalette_QuestionMark},
     },
 
     [DECOR_SMALL_DESK] =
@@ -22,6 +23,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_SMALL_DESK,
         .tiles = DecorGfx_SMALL_DESK,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_POKEMON_DESK] =
@@ -34,6 +36,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_POKEMON_DESK,
         .tiles = DecorGfx_POKEMON_DESK,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_HEAVY_DESK] =
@@ -46,6 +49,7 @@ const struct Decoration gDecorations[] =
         .price = 6000,
         .description = DecorDesc_HEAVY_DESK,
         .tiles = DecorGfx_HEAVY_DESK,
+        .icon = {gDecorIcon_HeavyDesk, gDecorIconPalette_HeavyDesk},
     },
 
     [DECOR_RAGGED_DESK] =
@@ -58,6 +62,7 @@ const struct Decoration gDecorations[] =
         .price = 6000,
         .description = DecorDesc_RAGGED_DESK,
         .tiles = DecorGfx_RAGGED_DESK,
+        .icon = {gDecorIcon_RaggedDesk, gDecorIconPalette_RaggedDesk},
     },
 
     [DECOR_COMFORT_DESK] =
@@ -70,6 +75,7 @@ const struct Decoration gDecorations[] =
         .price = 6000,
         .description = DecorDesc_COMFORT_DESK,
         .tiles = DecorGfx_COMFORT_DESK,
+        .icon = {gDecorIcon_ComfortDesk, gDecorIconPalette_ComfortDesk},
     },
 
     [DECOR_PRETTY_DESK] =
@@ -82,6 +88,7 @@ const struct Decoration gDecorations[] =
         .price = 9000,
         .description = DecorDesc_PRETTY_DESK,
         .tiles = DecorGfx_PRETTY_DESK,
+        .icon = {gDecorIcon_PrettyDesk, gDecorIconPalette_PrettyDesk},
     },
 
     [DECOR_BRICK_DESK] =
@@ -94,6 +101,7 @@ const struct Decoration gDecorations[] =
         .price = 9000,
         .description = DecorDesc_BRICK_DESK,
         .tiles = DecorGfx_BRICK_DESK,
+        .icon = {gDecorIcon_BrickDesk, gDecorIconPalette_BrickDesk},
     },
 
     [DECOR_CAMP_DESK] =
@@ -106,6 +114,7 @@ const struct Decoration gDecorations[] =
         .price = 9000,
         .description = DecorDesc_CAMP_DESK,
         .tiles = DecorGfx_CAMP_DESK,
+        .icon = {gDecorIcon_CampDesk, gDecorIconPalette_CampDesk},
     },
 
     [DECOR_HARD_DESK] =
@@ -118,6 +127,7 @@ const struct Decoration gDecorations[] =
         .price = 9000,
         .description = DecorDesc_HARD_DESK,
         .tiles = DecorGfx_HARD_DESK,
+        .icon = {gDecorIcon_HardDesk, gDecorIconPalette_HardDesk},
     },
 
     [DECOR_SMALL_CHAIR] =
@@ -130,6 +140,7 @@ const struct Decoration gDecorations[] =
         .price = 2000,
         .description = DecorDesc_SMALL_CHAIR,
         .tiles = DecorGfx_SMALL_CHAIR,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_POKEMON_CHAIR] =
@@ -142,6 +153,7 @@ const struct Decoration gDecorations[] =
         .price = 2000,
         .description = DecorDesc_POKEMON_CHAIR,
         .tiles = DecorGfx_POKEMON_CHAIR,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_HEAVY_CHAIR] =
@@ -154,6 +166,7 @@ const struct Decoration gDecorations[] =
         .price = 2000,
         .description = DecorDesc_HEAVY_CHAIR,
         .tiles = DecorGfx_HEAVY_CHAIR,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_PRETTY_CHAIR] =
@@ -166,6 +179,7 @@ const struct Decoration gDecorations[] =
         .price = 2000,
         .description = DecorDesc_PRETTY_CHAIR,
         .tiles = DecorGfx_PRETTY_CHAIR,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_COMFORT_CHAIR] =
@@ -178,6 +192,7 @@ const struct Decoration gDecorations[] =
         .price = 2000,
         .description = DecorDesc_COMFORT_CHAIR,
         .tiles = DecorGfx_COMFORT_CHAIR,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_RAGGED_CHAIR] =
@@ -190,6 +205,7 @@ const struct Decoration gDecorations[] =
         .price = 2000,
         .description = DecorDesc_RAGGED_CHAIR,
         .tiles = DecorGfx_RAGGED_CHAIR,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_BRICK_CHAIR] =
@@ -202,6 +218,7 @@ const struct Decoration gDecorations[] =
         .price = 2000,
         .description = DecorDesc_BRICK_CHAIR,
         .tiles = DecorGfx_BRICK_CHAIR,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_CAMP_CHAIR] =
@@ -214,6 +231,7 @@ const struct Decoration gDecorations[] =
         .price = 2000,
         .description = DecorDesc_CAMP_CHAIR,
         .tiles = DecorGfx_CAMP_CHAIR,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_HARD_CHAIR] =
@@ -226,6 +244,7 @@ const struct Decoration gDecorations[] =
         .price = 2000,
         .description = DecorDesc_HARD_CHAIR,
         .tiles = DecorGfx_HARD_CHAIR,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_RED_PLANT] =
@@ -238,6 +257,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_RED_PLANT,
         .tiles = DecorGfx_RED_PLANT,
+        .icon = {gDecorIcon_RedPlant, gDecorIconPalette_RedPlant},
     },
 
     [DECOR_TROPICAL_PLANT] =
@@ -250,6 +270,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_TROPICAL_PLANT,
         .tiles = DecorGfx_TROPICAL_PLANT,
+        .icon = {gDecorIcon_TropicalPlant, gDecorIconPalette_TropicalPlant},
     },
 
     [DECOR_PRETTY_FLOWERS] =
@@ -262,6 +283,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_PRETTY_FLOWERS,
         .tiles = DecorGfx_PRETTY_FLOWERS,
+        .icon = {gDecorIcon_PrettyFlowers, gDecorIconPalette_PrettyFlowers},
     },
 
     [DECOR_COLORFUL_PLANT] =
@@ -274,6 +296,7 @@ const struct Decoration gDecorations[] =
         .price = 5000,
         .description = DecorDesc_COLORFUL_PLANT,
         .tiles = DecorGfx_COLORFUL_PLANT,
+        .icon = {gDecorIcon_ColorfulPlant, gDecorIconPalette_ColorfulPlant},
     },
 
     [DECOR_BIG_PLANT] =
@@ -286,6 +309,7 @@ const struct Decoration gDecorations[] =
         .price = 5000,
         .description = DecorDesc_BIG_PLANT,
         .tiles = DecorGfx_BIG_PLANT,
+        .icon = {gDecorIcon_BigPlant, gDecorIconPalette_BigPlant},
     },
 
     [DECOR_GORGEOUS_PLANT] =
@@ -298,6 +322,7 @@ const struct Decoration gDecorations[] =
         .price = 5000,
         .description = DecorDesc_GORGEOUS_PLANT,
         .tiles = DecorGfx_GORGEOUS_PLANT,
+        .icon = {gDecorIcon_GorgeousPlant, gDecorIconPalette_GorgeousPlant},
     },
 
     [DECOR_RED_BRICK] =
@@ -310,6 +335,7 @@ const struct Decoration gDecorations[] =
         .price = 500,
         .description = DecorDesc_RED_BRICK,
         .tiles = DecorGfx_RED_BRICK,
+        .icon = {gDecorIcon_RedBrick, gDecorIconPalette_RedBrick},
     },
 
     [DECOR_YELLOW_BRICK] =
@@ -322,6 +348,7 @@ const struct Decoration gDecorations[] =
         .price = 500,
         .description = DecorDesc_YELLOW_BRICK,
         .tiles = DecorGfx_YELLOW_BRICK,
+        .icon = {gDecorIcon_YellowBrick, gDecorIconPalette_YellowBrick},
     },
 
     [DECOR_BLUE_BRICK] =
@@ -334,6 +361,7 @@ const struct Decoration gDecorations[] =
         .price = 500,
         .description = DecorDesc_BLUE_BRICK,
         .tiles = DecorGfx_BLUE_BRICK,
+        .icon = {gDecorIcon_BlueBrick, gDecorIconPalette_BlueBrick},
     },
 
     [DECOR_RED_BALLOON] =
@@ -346,6 +374,7 @@ const struct Decoration gDecorations[] =
         .price = 500,
         .description = DecorDesc_RED_BALLOON,
         .tiles = DecorGfx_RED_BALLOON,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_BLUE_BALLOON] =
@@ -358,6 +387,7 @@ const struct Decoration gDecorations[] =
         .price = 500,
         .description = DecorDesc_BLUE_BALLOON,
         .tiles = DecorGfx_BLUE_BALLOON,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_YELLOW_BALLOON] =
@@ -370,6 +400,7 @@ const struct Decoration gDecorations[] =
         .price = 500,
         .description = DecorDesc_YELLOW_BALLOON,
         .tiles = DecorGfx_YELLOW_BALLOON,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_RED_TENT] =
@@ -382,6 +413,7 @@ const struct Decoration gDecorations[] =
         .price = 10000,
         .description = DecorDesc_RED_TENT,
         .tiles = DecorGfx_RED_TENT,
+        .icon = {gDecorIcon_RedTent, gDecorIconPalette_RedTent},
     },
 
     [DECOR_BLUE_TENT] =
@@ -394,6 +426,7 @@ const struct Decoration gDecorations[] =
         .price = 10000,
         .description = DecorDesc_BLUE_TENT,
         .tiles = DecorGfx_BLUE_TENT,
+        .icon = {gDecorIcon_BlueTent, gDecorIconPalette_BlueTent},
     },
 
     [DECOR_SOLID_BOARD] =
@@ -406,6 +439,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_SOLID_BOARD,
         .tiles = DecorGfx_SOLID_BOARD,
+        .icon = {gDecorIcon_SolidBoard, gDecorIconPalette_SolidBoard},
     },
 
     [DECOR_SLIDE] =
@@ -418,6 +452,7 @@ const struct Decoration gDecorations[] =
         .price = 8000,
         .description = DecorDesc_SLIDE,
         .tiles = DecorGfx_SLIDE,
+        .icon = {gDecorIcon_Slide, gDecorIconPalette_Slide},
     },
 
     [DECOR_FENCE_LENGTH] =
@@ -430,6 +465,7 @@ const struct Decoration gDecorations[] =
         .price = 500,
         .description = DecorDesc_FENCE_LENGTH,
         .tiles = DecorGfx_FENCE_LENGTH,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_FENCE_WIDTH] =
@@ -442,6 +478,7 @@ const struct Decoration gDecorations[] =
         .price = 500,
         .description = DecorDesc_FENCE_WIDTH,
         .tiles = DecorGfx_FENCE_WIDTH,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_TIRE] =
@@ -454,6 +491,7 @@ const struct Decoration gDecorations[] =
         .price = 800,
         .description = DecorDesc_TIRE,
         .tiles = DecorGfx_TIRE,
+        .icon = {gDecorIcon_Tire, gDecorIconPalette_Tire},
     },
 
     [DECOR_STAND] =
@@ -466,6 +504,7 @@ const struct Decoration gDecorations[] =
         .price = 7000,
         .description = DecorDesc_STAND,
         .tiles = DecorGfx_STAND,
+        .icon = {gDecorIcon_Stand, gDecorIconPalette_Stand},
     },
 
     [DECOR_MUD_BALL] =
@@ -478,6 +517,7 @@ const struct Decoration gDecorations[] =
         .price = 200,
         .description = DecorDesc_MUD_BALL,
         .tiles = DecorGfx_MUD_BALL,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_BREAKABLE_DOOR] =
@@ -490,6 +530,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_BREAKABLE_DOOR,
         .tiles = DecorGfx_BREAKABLE_DOOR,
+        .icon = {gDecorIcon_BreakableDoor, gDecorIconPalette_BreakableDoor},
     },
 
     [DECOR_SAND_ORNAMENT] =
@@ -502,6 +543,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_SAND_ORNAMENT,
         .tiles = DecorGfx_SAND_ORNAMENT,
+        .icon = {gDecorIcon_SandOrnament, gDecorIconPalette_SandOrnament},
     },
 
     [DECOR_SILVER_SHIELD] =
@@ -514,6 +556,7 @@ const struct Decoration gDecorations[] =
         .price = 0,
         .description = DecorDesc_SILVER_SHIELD,
         .tiles = DecorGfx_SILVER_SHIELD,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_GOLD_SHIELD] =
@@ -526,6 +569,7 @@ const struct Decoration gDecorations[] =
         .price = 0,
         .description = DecorDesc_GOLD_SHIELD,
         .tiles = DecorGfx_GOLD_SHIELD,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_GLASS_ORNAMENT] =
@@ -538,6 +582,7 @@ const struct Decoration gDecorations[] =
         .price = 0,
         .description = DecorDesc_GLASS_ORNAMENT,
         .tiles = DecorGfx_GLASS_ORNAMENT,
+        .icon = {gDecorIcon_GlassOrnament, gDecorIconPalette_GlassOrnament},
     },
 
     [DECOR_TV] =
@@ -550,6 +595,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_TV,
         .tiles = DecorGfx_TV,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_ROUND_TV] =
@@ -562,6 +608,7 @@ const struct Decoration gDecorations[] =
         .price = 4000,
         .description = DecorDesc_ROUND_TV,
         .tiles = DecorGfx_ROUND_TV,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_CUTE_TV] =
@@ -574,6 +621,7 @@ const struct Decoration gDecorations[] =
         .price = 4000,
         .description = DecorDesc_CUTE_TV,
         .tiles = DecorGfx_CUTE_TV,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_GLITTER_MAT] =
@@ -586,6 +634,7 @@ const struct Decoration gDecorations[] =
         .price = 2000,
         .description = DecorDesc_GLITTER_MAT,
         .tiles = DecorGfx_GLITTER_MAT,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_JUMP_MAT] =
@@ -598,6 +647,7 @@ const struct Decoration gDecorations[] =
         .price = 2000,
         .description = DecorDesc_JUMP_MAT,
         .tiles = DecorGfx_JUMP_MAT,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_SPIN_MAT] =
@@ -610,6 +660,7 @@ const struct Decoration gDecorations[] =
         .price = 2000,
         .description = DecorDesc_SPIN_MAT,
         .tiles = DecorGfx_SPIN_MAT,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_C_LOW_NOTE_MAT] =
@@ -622,6 +673,7 @@ const struct Decoration gDecorations[] =
         .price = 500,
         .description = DecorDesc_C_LOW_NOTE_MAT,
         .tiles = DecorGfx_C_LOW_NOTE_MAT,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_D_NOTE_MAT] =
@@ -634,6 +686,7 @@ const struct Decoration gDecorations[] =
         .price = 500,
         .description = DecorDesc_D_NOTE_MAT,
         .tiles = DecorGfx_D_NOTE_MAT,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_E_NOTE_MAT] =
@@ -646,6 +699,7 @@ const struct Decoration gDecorations[] =
         .price = 500,
         .description = DecorDesc_E_NOTE_MAT,
         .tiles = DecorGfx_E_NOTE_MAT,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_F_NOTE_MAT] =
@@ -658,6 +712,7 @@ const struct Decoration gDecorations[] =
         .price = 500,
         .description = DecorDesc_F_NOTE_MAT,
         .tiles = DecorGfx_F_NOTE_MAT,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_G_NOTE_MAT] =
@@ -670,6 +725,7 @@ const struct Decoration gDecorations[] =
         .price = 500,
         .description = DecorDesc_G_NOTE_MAT,
         .tiles = DecorGfx_G_NOTE_MAT,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_A_NOTE_MAT] =
@@ -682,6 +738,7 @@ const struct Decoration gDecorations[] =
         .price = 500,
         .description = DecorDesc_A_NOTE_MAT,
         .tiles = DecorGfx_A_NOTE_MAT,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_B_NOTE_MAT] =
@@ -694,6 +751,7 @@ const struct Decoration gDecorations[] =
         .price = 500,
         .description = DecorDesc_B_NOTE_MAT,
         .tiles = DecorGfx_B_NOTE_MAT,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_C_HIGH_NOTE_MAT] =
@@ -706,6 +764,7 @@ const struct Decoration gDecorations[] =
         .price = 500,
         .description = DecorDesc_C_HIGH_NOTE_MAT,
         .tiles = DecorGfx_C_HIGH_NOTE_MAT,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_SURF_MAT] =
@@ -718,6 +777,7 @@ const struct Decoration gDecorations[] =
         .price = 4000,
         .description = DecorDesc_SURF_MAT,
         .tiles = DecorGfx_SURF_MAT,
+        .icon = {gDecorIcon_SurfMat, gDecorIconPalette_SurfMat},
     },
 
     [DECOR_THUNDER_MAT] =
@@ -730,6 +790,7 @@ const struct Decoration gDecorations[] =
         .price = 4000,
         .description = DecorDesc_THUNDER_MAT,
         .tiles = DecorGfx_THUNDER_MAT,
+        .icon = {gDecorIcon_ThunderMat, gDecorIconPalette_ThunderMat},
     },
 
     [DECOR_FIRE_BLAST_MAT] =
@@ -742,6 +803,7 @@ const struct Decoration gDecorations[] =
         .price = 4000,
         .description = DecorDesc_FIRE_BLAST_MAT,
         .tiles = DecorGfx_FIRE_BLAST_MAT,
+        .icon = {gDecorIcon_FireBlastMat, gDecorIconPalette_FireBlastMat},
     },
 
     [DECOR_POWDER_SNOW_MAT] =
@@ -754,6 +816,7 @@ const struct Decoration gDecorations[] =
         .price = 4000,
         .description = DecorDesc_POWDER_SNOW_MAT,
         .tiles = DecorGfx_POWDER_SNOW_MAT,
+        .icon = {gDecorIcon_PowderSnowMat, gDecorIconPalette_PowderSnowMat},
     },
 
     [DECOR_ATTRACT_MAT] =
@@ -766,6 +829,7 @@ const struct Decoration gDecorations[] =
         .price = 4000,
         .description = DecorDesc_ATTRACT_MAT,
         .tiles = DecorGfx_ATTRACT_MAT,
+        .icon = {gDecorIcon_AttractMat, gDecorIconPalette_AttractMat},
     },
 
     [DECOR_FISSURE_MAT] =
@@ -778,6 +842,7 @@ const struct Decoration gDecorations[] =
         .price = 4000,
         .description = DecorDesc_FISSURE_MAT,
         .tiles = DecorGfx_FISSURE_MAT,
+        .icon = {gDecorIcon_FissureMat, gDecorIconPalette_FissureMat},
     },
 
     [DECOR_SPIKES_MAT] =
@@ -790,6 +855,7 @@ const struct Decoration gDecorations[] =
         .price = 4000,
         .description = DecorDesc_SPIKES_MAT,
         .tiles = DecorGfx_SPIKES_MAT,
+        .icon = {gDecorIcon_SpikesMat, gDecorIconPalette_SpikesMat},
     },
 
     [DECOR_BALL_POSTER] =
@@ -802,6 +868,7 @@ const struct Decoration gDecorations[] =
         .price = 1000,
         .description = DecorDesc_BALL_POSTER,
         .tiles = DecorGfx_BALL_POSTER,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_GREEN_POSTER] =
@@ -814,6 +881,7 @@ const struct Decoration gDecorations[] =
         .price = 1000,
         .description = DecorDesc_GREEN_POSTER,
         .tiles = DecorGfx_GREEN_POSTER,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_RED_POSTER] =
@@ -826,6 +894,7 @@ const struct Decoration gDecorations[] =
         .price = 1000,
         .description = DecorDesc_RED_POSTER,
         .tiles = DecorGfx_RED_POSTER,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_BLUE_POSTER] =
@@ -838,6 +907,7 @@ const struct Decoration gDecorations[] =
         .price = 1000,
         .description = DecorDesc_BLUE_POSTER,
         .tiles = DecorGfx_BLUE_POSTER,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_CUTE_POSTER] =
@@ -850,6 +920,7 @@ const struct Decoration gDecorations[] =
         .price = 1000,
         .description = DecorDesc_CUTE_POSTER,
         .tiles = DecorGfx_CUTE_POSTER,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_PIKA_POSTER] =
@@ -862,6 +933,7 @@ const struct Decoration gDecorations[] =
         .price = 1500,
         .description = DecorDesc_PIKA_POSTER,
         .tiles = DecorGfx_PIKA_POSTER,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_LONG_POSTER] =
@@ -874,6 +946,7 @@ const struct Decoration gDecorations[] =
         .price = 1500,
         .description = DecorDesc_LONG_POSTER,
         .tiles = DecorGfx_LONG_POSTER,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_SEA_POSTER] =
@@ -886,6 +959,7 @@ const struct Decoration gDecorations[] =
         .price = 1500,
         .description = DecorDesc_SEA_POSTER,
         .tiles = DecorGfx_SEA_POSTER,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_SKY_POSTER] =
@@ -898,6 +972,7 @@ const struct Decoration gDecorations[] =
         .price = 1500,
         .description = DecorDesc_SKY_POSTER,
         .tiles = DecorGfx_SKY_POSTER,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_KISS_POSTER] =
@@ -910,6 +985,7 @@ const struct Decoration gDecorations[] =
         .price = 1500,
         .description = DecorDesc_KISS_POSTER,
         .tiles = DecorGfx_KISS_POSTER,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_PICHU_DOLL] =
@@ -922,6 +998,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_PICHU_DOLL,
         .tiles = DecorGfx_PICHU_DOLL,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_PIKACHU_DOLL] =
@@ -934,6 +1011,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_PIKACHU_DOLL,
         .tiles = DecorGfx_PIKACHU_DOLL,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_MARILL_DOLL] =
@@ -946,6 +1024,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_MARILL_DOLL,
         .tiles = DecorGfx_MARILL_DOLL,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_TOGEPI_DOLL] =
@@ -958,6 +1037,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_TOGEPI_DOLL,
         .tiles = DecorGfx_TOGEPI_DOLL,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_CYNDAQUIL_DOLL] =
@@ -970,6 +1050,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_CYNDAQUIL_DOLL,
         .tiles = DecorGfx_CYNDAQUIL_DOLL,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_CHIKORITA_DOLL] =
@@ -982,6 +1063,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_CHIKORITA_DOLL,
         .tiles = DecorGfx_CHIKORITA_DOLL,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_TOTODILE_DOLL] =
@@ -994,6 +1076,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_TOTODILE_DOLL,
         .tiles = DecorGfx_TOTODILE_DOLL,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_JIGGLYPUFF_DOLL] =
@@ -1006,6 +1089,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_JIGGLYPUFF_DOLL,
         .tiles = DecorGfx_JIGGLYPUFF_DOLL,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_MEOWTH_DOLL] =
@@ -1018,6 +1102,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_MEOWTH_DOLL,
         .tiles = DecorGfx_MEOWTH_DOLL,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_CLEFAIRY_DOLL] =
@@ -1030,6 +1115,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_CLEFAIRY_DOLL,
         .tiles = DecorGfx_CLEFAIRY_DOLL,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_DITTO_DOLL] =
@@ -1042,6 +1128,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_DITTO_DOLL,
         .tiles = DecorGfx_DITTO_DOLL,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_SMOOCHUM_DOLL] =
@@ -1054,6 +1141,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_SMOOCHUM_DOLL,
         .tiles = DecorGfx_SMOOCHUM_DOLL,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_TREECKO_DOLL] =
@@ -1066,6 +1154,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_TREECKO_DOLL,
         .tiles = DecorGfx_TREECKO_DOLL,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_TORCHIC_DOLL] =
@@ -1078,6 +1167,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_TORCHIC_DOLL,
         .tiles = DecorGfx_TORCHIC_DOLL,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_MUDKIP_DOLL] =
@@ -1090,6 +1180,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_MUDKIP_DOLL,
         .tiles = DecorGfx_MUDKIP_DOLL,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_DUSKULL_DOLL] =
@@ -1102,6 +1193,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_DUSKULL_DOLL,
         .tiles = DecorGfx_DUSKULL_DOLL,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_WYNAUT_DOLL] =
@@ -1114,6 +1206,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_WYNAUT_DOLL,
         .tiles = DecorGfx_WYNAUT_DOLL,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_BALTOY_DOLL] =
@@ -1126,6 +1219,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_BALTOY_DOLL,
         .tiles = DecorGfx_BALTOY_DOLL,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_KECLEON_DOLL] =
@@ -1138,6 +1232,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_KECLEON_DOLL,
         .tiles = DecorGfx_KECLEON_DOLL,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_AZURILL_DOLL] =
@@ -1150,6 +1245,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_AZURILL_DOLL,
         .tiles = DecorGfx_AZURILL_DOLL,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_SKITTY_DOLL] =
@@ -1162,6 +1258,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_SKITTY_DOLL,
         .tiles = DecorGfx_SKITTY_DOLL,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_SWABLU_DOLL] =
@@ -1174,6 +1271,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_SWABLU_DOLL,
         .tiles = DecorGfx_SWABLU_DOLL,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_GULPIN_DOLL] =
@@ -1186,6 +1284,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_GULPIN_DOLL,
         .tiles = DecorGfx_GULPIN_DOLL,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_LOTAD_DOLL] =
@@ -1198,6 +1297,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_LOTAD_DOLL,
         .tiles = DecorGfx_LOTAD_DOLL,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_SEEDOT_DOLL] =
@@ -1210,6 +1310,7 @@ const struct Decoration gDecorations[] =
         .price = 3000,
         .description = DecorDesc_SEEDOT_DOLL,
         .tiles = DecorGfx_SEEDOT_DOLL,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_PIKA_CUSHION] =
@@ -1222,6 +1323,7 @@ const struct Decoration gDecorations[] =
         .price = 2000,
         .description = DecorDesc_PIKA_CUSHION,
         .tiles = DecorGfx_PIKA_CUSHION,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_ROUND_CUSHION] =
@@ -1234,6 +1336,7 @@ const struct Decoration gDecorations[] =
         .price = 2000,
         .description = DecorDesc_ROUND_CUSHION,
         .tiles = DecorGfx_ROUND_CUSHION,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_KISS_CUSHION] =
@@ -1246,6 +1349,7 @@ const struct Decoration gDecorations[] =
         .price = 2000,
         .description = DecorDesc_KISS_CUSHION,
         .tiles = DecorGfx_KISS_CUSHION,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_ZIGZAG_CUSHION] =
@@ -1258,6 +1362,7 @@ const struct Decoration gDecorations[] =
         .price = 2000,
         .description = DecorDesc_ZIGZAG_CUSHION,
         .tiles = DecorGfx_ZIGZAG_CUSHION,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_SPIN_CUSHION] =
@@ -1270,6 +1375,7 @@ const struct Decoration gDecorations[] =
         .price = 2000,
         .description = DecorDesc_SPIN_CUSHION,
         .tiles = DecorGfx_SPIN_CUSHION,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_DIAMOND_CUSHION] =
@@ -1282,6 +1388,7 @@ const struct Decoration gDecorations[] =
         .price = 2000,
         .description = DecorDesc_DIAMOND_CUSHION,
         .tiles = DecorGfx_DIAMOND_CUSHION,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_BALL_CUSHION] =
@@ -1294,6 +1401,7 @@ const struct Decoration gDecorations[] =
         .price = 2000,
         .description = DecorDesc_BALL_CUSHION,
         .tiles = DecorGfx_BALL_CUSHION,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_GRASS_CUSHION] =
@@ -1306,6 +1414,7 @@ const struct Decoration gDecorations[] =
         .price = 2000,
         .description = DecorDesc_GRASS_CUSHION,
         .tiles = DecorGfx_GRASS_CUSHION,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_FIRE_CUSHION] =
@@ -1318,6 +1427,7 @@ const struct Decoration gDecorations[] =
         .price = 2000,
         .description = DecorDesc_FIRE_CUSHION,
         .tiles = DecorGfx_FIRE_CUSHION,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_WATER_CUSHION] =
@@ -1330,6 +1440,7 @@ const struct Decoration gDecorations[] =
         .price = 2000,
         .description = DecorDesc_WATER_CUSHION,
         .tiles = DecorGfx_WATER_CUSHION,
+        .icon = {NULL, NULL},
     },
 
     [DECOR_SNORLAX_DOLL] =
@@ -1342,6 +1453,7 @@ const struct Decoration gDecorations[] =
         .price = 10000,
         .description = DecorDesc_SNORLAX_DOLL,
         .tiles = DecorGfx_SNORLAX_DOLL,
+        .icon = {gDecorIcon_SnorlaxDoll, gDecorIconPalette_SnorlaxDoll},
     },
 
     [DECOR_RHYDON_DOLL] =
@@ -1354,6 +1466,7 @@ const struct Decoration gDecorations[] =
         .price = 10000,
         .description = DecorDesc_RHYDON_DOLL,
         .tiles = DecorGfx_RHYDON_DOLL,
+        .icon = {gDecorIcon_RhydonDoll, gDecorIconPalette_RhydonDoll},
     },
 
     [DECOR_LAPRAS_DOLL] =
@@ -1366,6 +1479,7 @@ const struct Decoration gDecorations[] =
         .price = 10000,
         .description = DecorDesc_LAPRAS_DOLL,
         .tiles = DecorGfx_LAPRAS_DOLL,
+        .icon = {gDecorIcon_LaprasDoll, gDecorIconPalette_LaprasDoll},
     },
 
     [DECOR_VENUSAUR_DOLL] =
@@ -1378,6 +1492,7 @@ const struct Decoration gDecorations[] =
         .price = 10000,
         .description = DecorDesc_VENUSAUR_DOLL,
         .tiles = DecorGfx_VENUSAUR_DOLL,
+        .icon = {gDecorIcon_VenusaurDoll, gDecorIconPalette_VenusaurDoll},
     },
 
     [DECOR_CHARIZARD_DOLL] =
@@ -1390,6 +1505,7 @@ const struct Decoration gDecorations[] =
         .price = 10000,
         .description = DecorDesc_CHARIZARD_DOLL,
         .tiles = DecorGfx_CHARIZARD_DOLL,
+        .icon = {gDecorIcon_CharizardDoll, gDecorIconPalette_CharizardDoll},
     },
 
     [DECOR_BLASTOISE_DOLL] =
@@ -1402,6 +1518,7 @@ const struct Decoration gDecorations[] =
         .price = 10000,
         .description = DecorDesc_BLASTOISE_DOLL,
         .tiles = DecorGfx_BLASTOISE_DOLL,
+        .icon = {gDecorIcon_BlastoiseDoll, gDecorIconPalette_BlastoiseDoll},
     },
 
     [DECOR_WAILMER_DOLL] =
@@ -1414,6 +1531,7 @@ const struct Decoration gDecorations[] =
         .price = 10000,
         .description = DecorDesc_WAILMER_DOLL,
         .tiles = DecorGfx_WAILMER_DOLL,
+        .icon = {gDecorIcon_WailmerDoll, gDecorIconPalette_WailmerDoll},
     },
 
     [DECOR_REGIROCK_DOLL] =
@@ -1426,6 +1544,7 @@ const struct Decoration gDecorations[] =
         .price = 10000,
         .description = DecorDesc_REGIROCK_DOLL,
         .tiles = DecorGfx_REGIROCK_DOLL,
+        .icon = {gDecorIcon_RegirockDoll, gDecorIconPalette_RegirockDoll},
     },
 
     [DECOR_REGICE_DOLL] =
@@ -1438,6 +1557,7 @@ const struct Decoration gDecorations[] =
         .price = 10000,
         .description = DecorDesc_REGICE_DOLL,
         .tiles = DecorGfx_REGICE_DOLL,
+        .icon = {gDecorIcon_RegiceDoll, gDecorIconPalette_RegiceDoll},
     },
 
     [DECOR_REGISTEEL_DOLL] =
@@ -1450,5 +1570,6 @@ const struct Decoration gDecorations[] =
         .price = 10000,
         .description = DecorDesc_REGISTEEL_DOLL,
         .tiles = DecorGfx_REGISTEEL_DOLL,
+        .icon = {gDecorIcon_RegisteelDoll, gDecorIconPalette_RegisteelDoll},
     }
 };
