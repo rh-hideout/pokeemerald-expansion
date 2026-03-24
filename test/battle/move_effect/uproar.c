@@ -8,7 +8,6 @@ ASSUMPTIONS
 
 DOUBLE_BATTLE_TEST("Uproar status causes sleeping Pokémon to wake up before they move except those with Soundproof (Gen 3-4)")
 {
-    PASSES_RANDOMLY(1, 2, RNG_RANDOM_TARGET); // test fails if we target soundproof mon
     GIVEN {
         WITH_CONFIG(B_UPROAR, GEN_4);
         WITH_CONFIG(B_UPROAR_IGNORE_SOUNDPROOF, GEN_4);
@@ -17,7 +16,7 @@ DOUBLE_BATTLE_TEST("Uproar status causes sleeping Pokémon to wake up before the
         OPPONENT(SPECIES_VOLTORB) { Ability(ABILITY_SOUNDPROOF); Status1(STATUS1_SLEEP); }
         OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); }
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_UPROAR); }
+        TURN { MOVE(playerLeft, MOVE_UPROAR, target: opponentRight); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_UPROAR, playerLeft);
         HP_BAR(opponentRight);
@@ -32,7 +31,6 @@ DOUBLE_BATTLE_TEST("Uproar status causes sleeping Pokémon to wake up before the
 
 DOUBLE_BATTLE_TEST("Uproar status causes sleeping Pokémon to wake up immediately after damage is dealt on the first turn (Gen 5+)")
 {
-    PASSES_RANDOMLY(1, 2, RNG_RANDOM_TARGET); // test fails if we target soundproof mon
     GIVEN {
         WITH_CONFIG(B_UPROAR, GEN_5);
         WITH_CONFIG(B_UPROAR_IGNORE_SOUNDPROOF, GEN_5);
@@ -41,13 +39,13 @@ DOUBLE_BATTLE_TEST("Uproar status causes sleeping Pokémon to wake up immediatel
         OPPONENT(SPECIES_VOLTORB) { Ability(ABILITY_SOUNDPROOF); Status1(STATUS1_SLEEP); }
         OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); }
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_UPROAR); }
+        TURN { MOVE(playerLeft, MOVE_UPROAR, target: opponentRight); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_UPROAR, playerLeft);
         HP_BAR(opponentRight);
-        MESSAGE("The uproar woke Wobbuffet!");
-        MESSAGE("The uproar woke the opposing Voltorb!");
-        MESSAGE("The uproar woke the opposing Wobbuffet!");
+        MESSAGE("The opposing Voltorb woke up!");
+        MESSAGE("Wobbuffet woke up!");
+        MESSAGE("The opposing Wobbuffet woke up!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
@@ -58,13 +56,14 @@ SINGLE_BATTLE_TEST("Uproar wakes up other pokemon on field (Gen 5)")
 {
     GIVEN {
         ASSUME(B_UPROAR_TURNS >= GEN_5);
+        WITH_CONFIG(B_UPROAR, GEN_5);
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_UPROAR); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_UPROAR, opponent);
-        MESSAGE("The uproar woke Wobbuffet!");
+        MESSAGE("Wobbuffet woke up!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
     }
 }
