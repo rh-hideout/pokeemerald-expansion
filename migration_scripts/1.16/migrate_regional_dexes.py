@@ -23,6 +23,7 @@ hoennMacro = """
 output = ""
 crossEvo = False
 lastSpecies = ""
+hoennDone = False
 
 with open("include/constants/pokedex.h", "r") as file:
     lines = file.readlines()
@@ -39,19 +40,21 @@ with open("include/constants/pokedex.h", "r") as file:
                 hoennMacro += macroedSpecies.strip().replace(",", ")) \\")
             else:
                 hoennMacro += macroedSpecies.replace(",", ") \\")
-        elif "P_NEW_EVOS_IN_REGIONAL_DEX" in line:
+        elif "P_NEW_EVOS_IN_REGIONAL_DEX" in line and not hoennDone:
             crossEvo = True
             config = line.replace("#if P_NEW_EVOS_IN_REGIONAL_DEX && ", "").replace("\n", "")
             hoennMacro += f"    HOENN_DEX_IF({config}, "
-        elif "#else" in line and crossEvo:
+        elif "#else" in line and crossEvo and not hoennDone:
             continue
-        elif "#endif" in line:
+        elif "#endif" in line and not hoennDone:
             if crossEvo:
                 hoennMacro += "\n"
                 crossEvo = False
             else:
                 output += line
         else:
+            if lastSpecies != "" and line == "};\n":
+                hoennDone = True
             output += line
 
 lineBeforeMacro = "#define POKEMON_SLOTS_NUMBER (NATIONAL_DEX_COUNT + 1)"
@@ -87,6 +90,10 @@ with open("src/pokemon.c", "r") as file:
 hoennToNationalDefine = "#define HOENN_TO_NATIONAL(name)     [HOENN_DEX_##name - 1] = NATIONAL_DEX_##name"
 output = output.replace(hoennToNationalDefine, hoennToNationalDefine + ",")
 
+with open("src/pokemon.c", "w") as f:
+    f.write(output)
+    print("src/pokemon.c has been updated")
+
 #Kanto
 ##include/constants/pokedex.h
 kantoMacro = """
@@ -121,7 +128,7 @@ with open("include/constants/pokedex.h", "r") as file:
                 kantoMacro += macroedSpecies.strip().replace(",", ")) \\")
             else:
                 kantoMacro += macroedSpecies.replace(",", ") \\")
-        elif "P_NEW_EVOS_IN_REGIONAL_DEX" in line:
+        elif "P_NEW_EVOS_IN_REGIONAL_DEX" in line and line != "#if P_NEW_EVOS_IN_REGIONAL_DEX\n":
             crossEvo = True
             config = line.replace("#if P_NEW_EVOS_IN_REGIONAL_DEX && ", "").replace("\n", "")
             kantoMacro += f"    KANTO_DEX_IF({config}, "
@@ -136,7 +143,7 @@ with open("include/constants/pokedex.h", "r") as file:
         else:
             output += line
 
-lineBeforeMacro = "#define POKEMON_SLOTS_NUMBER (NATIONAL_DEX_COUNT + 1)"
+lineBeforeMacro = "// Kanto Pokedex order"
 kantoMacro = kantoMacro.replace(lastSpecies + ") \\", lastSpecies + ")")
 output = output.replace(lineBeforeMacro, lineBeforeMacro + kantoMacro)
 
