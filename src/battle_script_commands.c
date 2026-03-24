@@ -7527,8 +7527,7 @@ static void Cmd_jumpifuproarwakes(void)
 {
     CMD_ARGS(const u8 *jumpInstr);
 
-    // Currently the only use for this involves the Gen 5+ Uproar
-    if (GetConfig(B_UPROAR) >= GEN_5 && UproarWakeUpCheck(gBattlerTarget))
+    if (UproarWakeUpCheck(gBattlerTarget))
         gBattlescriptCurrInstr = cmd->jumpInstr;
     else
         gBattlescriptCurrInstr = cmd->nextInstr;
