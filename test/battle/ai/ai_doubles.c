@@ -61,7 +61,7 @@ AI_DOUBLE_BATTLE_TEST("AI will not use Helping Hand if partner does not have any
 AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow when items are missing or target already holds one")
 {
     enum Move move = MOVE_NONE;
-    u32 atkItem = ITEM_NONE, targetItem = ITEM_NONE;
+    enum Item atkItem = ITEM_NONE, targetItem = ITEM_NONE;
 
     PARAMETRIZE { move = MOVE_TRICK;  atkItem = ITEM_NONE;        targetItem = ITEM_NONE; }
     PARAMETRIZE { move = MOVE_BESTOW; atkItem = ITEM_NONE;        targetItem = ITEM_NONE; }
@@ -81,7 +81,7 @@ AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow when items are missing or target al
 AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow with unexchangeable items")
 {
     enum Move move = MOVE_NONE;
-    u32 atkItem = ITEM_NONE, targetItem = ITEM_NONE;
+    enum Item atkItem = ITEM_NONE, targetItem = ITEM_NONE;
 
     PARAMETRIZE { move = MOVE_TRICK;  atkItem = ITEM_ORANGE_MAIL; targetItem = ITEM_NONE; }
     PARAMETRIZE { move = MOVE_TRICK;  atkItem = ITEM_ORAN_BERRY;  targetItem = ITEM_ORANGE_MAIL; }
@@ -116,7 +116,7 @@ AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow if the target has a Substitute")
     ASSUME(GetMoveEffect(MOVE_SUBSTITUTE) == EFFECT_SUBSTITUTE);
 
     enum Move move = MOVE_NONE;
-    u32 atkItem = ITEM_NONE, targetItem = ITEM_NONE;
+    enum Item atkItem = ITEM_NONE, targetItem = ITEM_NONE;
 
     PARAMETRIZE { move = MOVE_TRICK;  atkItem = ITEM_ORAN_BERRY; targetItem = ITEM_LEFTOVERS; }
     PARAMETRIZE { move = MOVE_BESTOW; atkItem = ITEM_ORAN_BERRY; targetItem = ITEM_NONE; }
@@ -138,7 +138,9 @@ AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow if the target has a Substitute")
 
 AI_DOUBLE_BATTLE_TEST("AI considers status orbs and abilities for Trick/Bestow")
 {
-    u16 move = MOVE_NONE, item = ITEM_NONE, status = STATUS1_NONE, species = SPECIES_NONE;
+    enum Move move = MOVE_NONE;
+    enum Item item = ITEM_NONE;
+    u16 status = STATUS1_NONE, species = SPECIES_NONE;
     enum Ability ability = ABILITY_NONE;
     u8 turnToTrick = 0;
 
@@ -240,7 +242,7 @@ AI_DOUBLE_BATTLE_TEST("AI steals Utility Umbrella to handle sun and Dry Skin but
 
 AI_DOUBLE_BATTLE_TEST("AI treats Harvest as a sun benefit only when a berry is involved")
 {
-    u16 targetItem = ITEM_NONE;
+    enum Item targetItem = ITEM_NONE;
     bool32 expectTrick = FALSE;
 
     PARAMETRIZE { targetItem = ITEM_ORAN_BERRY; expectTrick = TRUE; }
@@ -468,6 +470,57 @@ AI_DOUBLE_BATTLE_TEST("AI will choose Beat Up on an ally with Justified if it wi
     }
 }
 
+AI_DOUBLE_BATTLE_TEST("AI will choose Beat Up on an ally with Rage Fist if it will benefit the ally")
+{
+    u32 currentHP, movePP;
+    enum Move move;
+    bool32 shouldBeatUp;
+
+    PARAMETRIZE { move = MOVE_DRAIN_PUNCH; currentHP = 400; movePP = 10; shouldBeatUp = FALSE; }
+    PARAMETRIZE { move = MOVE_RAGE_FIST;   currentHP = 400; movePP = 10; shouldBeatUp = TRUE; }
+    PARAMETRIZE { move = MOVE_RAGE_FIST;   currentHP = 400; movePP = 0;  shouldBeatUp = FALSE; }
+    PARAMETRIZE { move = MOVE_RAGE_FIST;   currentHP = 1;   movePP = 10; shouldBeatUp = FALSE; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BEAT_UP) == EFFECT_BEAT_UP);
+        ASSUME(GetMoveEffect(MOVE_RAGE_FIST) == EFFECT_RAGE_FIST);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WHIMSICOTT) { Moves(MOVE_BEAT_UP); }
+        OPPONENT(SPECIES_ANNIHILAPE) { MovesWithPP({move, movePP}, {MOVE_CELEBRATE, 10}); HP(currentHP); }
+    } WHEN {
+        if (shouldBeatUp)
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_BEAT_UP, target: opponentRight); }
+        else
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_BEAT_UP, target: playerLeft); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI will only Beat Up for Rage Fist if it can hit at least one opponent")
+{
+    u32 species;
+    bool32 shouldBeatUp;
+
+    PARAMETRIZE { species = SPECIES_MEOWTH;    shouldBeatUp = FALSE; }
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; shouldBeatUp = TRUE; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BEAT_UP) == EFFECT_BEAT_UP);
+        ASSUME(GetMoveEffect(MOVE_RAGE_FIST) == EFFECT_RAGE_FIST);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_MEOWTH);
+        PLAYER(species);
+        OPPONENT(SPECIES_WHIMSICOTT) { Moves(MOVE_BEAT_UP); }
+        OPPONENT(SPECIES_ANNIHILAPE) { MovesWithPP({MOVE_RAGE_FIST, 10}, {MOVE_CELEBRATE, 10}); HP(400); }
+    } WHEN {
+        if (shouldBeatUp)
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_BEAT_UP, target: opponentRight); }
+        else
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_BEAT_UP, target: playerLeft); }
+    }
+}
+
 AI_DOUBLE_BATTLE_TEST("AI will choose Earthquake if partner is not alive")
 {
     ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
@@ -655,16 +708,33 @@ AI_DOUBLE_BATTLE_TEST("AI sees corresponding absorbing abilities on partners")
 
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_DISCHARGE) == TARGET_FOES_AND_ALLY);
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_HP_AWARE);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_ZIGZAGOON);
         PLAYER(SPECIES_ZIGZAGOON);
-        OPPONENT(SPECIES_SLAKING) { Moves(move, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_SLAKING) { Moves(move, MOVE_CONSTRICT); }
         OPPONENT(species) { HP(1); Ability(ability); Moves(MOVE_POUND, MOVE_EMBER, MOVE_ROUND); }
     } WHEN {
         if (ability != ABILITY_CLOUD_NINE)
             TURN { EXPECT_MOVE(opponentLeft, move); }
         else
-            TURN { EXPECT_MOVE(opponentLeft, MOVE_SCRATCH); }
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_CONSTRICT); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI sees random rolls correctly")
+{
+    PASSES_RANDOMLY(3, 15, RNG_AI_DMG_ROLL_RANDOM); // Slaking KOs with 3 rolls
+    GIVEN {
+        WITH_CONFIG(AI_ROLL_ATTACKING, AI_ROLL_RANDOM);
+        ASSUME(GetMoveTarget(MOVE_DISCHARGE) == TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveType(MOVE_DISCHARGE) == TYPE_ELECTRIC);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_ZIGZAGOON);
+        PLAYER(SPECIES_ZIGZAGOON);
+        OPPONENT(SPECIES_SLAKING) { Moves(MOVE_DISCHARGE, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_PIKACHU) { HP(1); Ability(ABILITY_LIGHTNING_ROD); Moves(MOVE_SCRATCH); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponentLeft, MOVE_SCRATCH); }
     }
 }
 
