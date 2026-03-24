@@ -62,6 +62,7 @@
 #include "list_menu.h"
 #include "malloc.h"
 #include "battle.h"
+#include "constants/battle_setup.h"
 #include "constants/event_objects.h"
 #include "constants/map_types.h"
 
@@ -2524,14 +2525,10 @@ bool8 ScrCmd_setwildbattle(struct ScriptContext *ctx)
 
     Script_RequestEffects(SCREFF_V1);
 
-    if (species2 == SPECIES_NONE)
+    CreateScriptedWildMon(species, level, item);
+    if (species2 != SPECIES_NONE)
     {
-        CreateScriptedWildMon(species, level, item);
-        sIsScriptedWildDouble = FALSE;
-    }
-    else
-    {
-        CreateScriptedDoubleWildMon(species, level, item, species2, level2, item2);
+        CreateStaticWildMon(&gEnemyParty[1], species2, level2, item2);
         sIsScriptedWildDouble = TRUE;
     }
 
@@ -2542,10 +2539,22 @@ bool8 ScrCmd_dowildbattle(struct ScriptContext *ctx)
 {
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
 
-    if (sIsScriptedWildDouble == FALSE)
-        BattleSetup_StartScriptedWildBattle();
+    u8 special = ScriptReadByte(ctx);
+
+    gBattleTypeFlags = BATTLE_TYPE_BASIC_WILD;
+    if (special == SPECIAL_WILD_LEGENDARY)
+        gBattleTypeFlags = BATTLE_TYPE_BASIC_WILD;
+    else if (special == SPECIAL_WILD_GHOST)
+        gBattleTypeFlags = BATTLE_TYPE_GHOST;
+    else if (special == SPECIAL_WILD_CATCH_TUTORIAL)
+        gBattleTypeFlags = BATTLE_TYPE_CATCH_TUTORIAL;
     else
-        BattleSetup_StartScriptedDoubleWildBattle();
+        assertf(special != SPECIAL_WILD_NONE, "Unkwown value for special wild battle %d", special);
+
+    if (sIsScriptedWildDouble == TRUE)
+        gBattleTypeFlags |= BATTLE_TYPE_DOUBLE;
+
+    DoBattleSetup(TRUE);
 
     ScriptContext_Stop();
 

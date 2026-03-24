@@ -2164,12 +2164,13 @@ static void DebugAction_Trainers_TryBattle(u8 taskId)
     }
     gBattleTypeFlags = BATTLE_TYPE_TRAINER;
     TRAINER_BATTLE_PARAM.opponentA = trainer1Id;
-    TRAINER_BATTLE_PARAM.opponentB = 0xFFFF;
+    TRAINER_BATTLE_PARAM.opponentB = trainer2Id;
+    CreateNPCTrainerPartyFromTrainer(&gEnemyParty[0], GetTrainerStructFromId(trainer1Id), TRUE);
     if (sDebugMenuListData->data[5] || partnerId != PARTNER_NONE || trainer2Id != TRAINER_NONE)
         gBattleTypeFlags |= BATTLE_TYPE_DOUBLE;
     if (trainer2Id != TRAINER_NONE)
     {
-        TRAINER_BATTLE_PARAM.opponentB = trainer2Id;
+        CreateNPCTrainerPartyFromTrainer(&gEnemyParty[PARTY_SIZE / 2], GetTrainerStructFromId(trainer2Id), FALSE);
         gBattleTypeFlags |= BATTLE_TYPE_TWO_OPPONENTS;
     }
     if (partnerId != PARTNER_NONE)
@@ -4899,7 +4900,7 @@ const struct Trainer* GetDebugAiTrainer(void)
 static void DebugAction_Party_SetParty(u8 taskId)
 {
     ZeroPlayerPartyMons();
-    CreateNPCTrainerPartyFromTrainer(gPlayerParty, &sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_PLAYER], TRUE, BATTLE_TYPE_TRAINER);
+    CreateNPCTrainerPartyFromTrainer(gPlayerParty, &sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_PLAYER], TRUE);
     ScriptContext_Enable();
     Debug_DestroyMenu_Full(taskId);
 }
@@ -4908,8 +4909,8 @@ static void DebugAction_Party_BattleSingle(u8 taskId)
 {
     ZeroPlayerPartyMons();
     ZeroEnemyPartyMons();
-    CreateNPCTrainerPartyFromTrainer(gPlayerParty, &sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_PLAYER], TRUE, BATTLE_TYPE_TRAINER);
-    CreateNPCTrainerPartyFromTrainer(gEnemyParty, GetDebugAiTrainer(), FALSE, BATTLE_TYPE_TRAINER);
+    CreateNPCTrainerPartyFromTrainer(gPlayerParty, &sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_PLAYER], TRUE);
+    CreateNPCTrainerPartyFromTrainer(gEnemyParty, GetDebugAiTrainer(), FALSE);
 
     gBattleTypeFlags = BATTLE_TYPE_TRAINER;
     if (sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_AI].battleType == TRAINER_BATTLE_TYPE_DOUBLES)

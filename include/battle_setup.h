@@ -2,6 +2,7 @@
 #define GUARD_BATTLE_SETUP_H
 
 #include "battle_transition.h"
+#include "data.h"
 #include "gym_leader_rematch.h"
 
 #define REMATCHES_COUNT 5
@@ -50,17 +51,8 @@ extern u16 gPartnerTrainerId;
 
 #define TRAINER_BATTLE_PARAM gTrainerBattleParameter.params
 
-void BattleSetup_StartWildBattle(void);
-void BattleSetup_StartDoubleWildBattle(void);
-void BattleSetup_StartBattlePikeWildBattle(void);
-void BattleSetup_StartRoamerBattle(void);
-void StartWallyTutorialBattle(void);
-void BattleSetup_StartScriptedWildBattle(void);
-void BattleSetup_StartScriptedDoubleWildBattle(void);
-void BattleSetup_StartLatiBattle(void);
-void BattleSetup_StartLegendaryBattle(void);
-void StartGroudonKyogreBattle(void);
-void StartRegiBattle(void);
+void BattleSetup_StartWildBattle(bool32 isDouble);
+void DoBattleSetup(bool32 fromScript);
 enum BattleEnvironments BattleSetup_GetEnvironmentId(void);
 enum BattleTransition GetWildBattleTransition(void);
 enum BattleTransition GetTrainerBattleTransition(void);
@@ -106,8 +98,6 @@ void ShouldTryGetTrainerScript(void);
 u16 CountMaxPossibleRematch(u16 trainerId);
 u16 CountBattledRematchTeams(u16 trainerId);
 void TrainerBattleLoadArgs(const u8 *data);
-void TrainerBattleLoadArgsTrainerA(const u8 *data);
-void TrainerBattleLoadArgsTrainerB(const u8 *data);
 void TrainerBattleLoadArgsSecondTrainer(const u8 *data);
 void InitTrainerBattleParameter(void);
 
@@ -117,5 +107,7 @@ s32 TrainerIdToRematchTableId(const struct RematchTrainer *table, u16 trainerId)
 s32 FirstBattleTrainerIdToRematchTableId(const struct RematchTrainer *table, u16 trainerId);
 u16 GetRematchTrainerIdFromTable(const struct RematchTrainer *table, u16 firstBattleTrainerId);
 u8 GetRivalBattleFlags(void);
+
+void CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer);
 
 #endif // GUARD_BATTLE_SETUP_H

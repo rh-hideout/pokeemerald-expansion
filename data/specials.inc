@@ -175,7 +175,6 @@ gSpecials::
 	def_special StartWallClock
 	def_special Special_ViewWallClock
 	def_special ChooseStarter
-	def_special StartWallyTutorialBattle
 	def_special ChangePokemonNickname
 	def_special ChoosePartyMon
 	def_special GetFirstFreePokeblockSlot
@@ -328,9 +327,6 @@ gSpecials::
 	def_special IsPokerusInParty
 	def_special SetSootopolisGymCrackedIceMetatiles
 	def_special ShakeCamera
-	def_special StartGroudonKyogreBattle
-	def_special BattleSetup_StartLegendaryBattle
-	def_special StartRegiBattle
 	def_special SetTrainerFacingDirection
 	def_special DoSealedChamberShakingEffect_Short
 	def_special FoundBlackGlasses
@@ -340,7 +336,6 @@ gSpecials::
 	def_special ShowContestEntryMonPic
 	def_special HideContestEntryMonPic
 	def_special SetEReaderTrainerGfxId
-	def_special BattleSetup_StartLatiBattle
 	def_special SetRoute119Weather
 	def_special SetRoute123Weather
 	def_special GetContestMultiplayerId
@@ -575,7 +570,6 @@ gSpecials::
 	def_special SetFlavorTextFlagFromSpecialVars
 	def_special DisableMsgBoxWalkaway
 	def_special SetWalkingIntoSignVars
-	def_special StartOldManTutorialBattle
 	def_special DaisyMassageServices
 	def_special GetLeadMonFriendship
 	def_special OpenMuseumFossilPic
@@ -597,7 +591,6 @@ gSpecials::
 	def_special IsPlayerLeftOfVermilionSailor
 	def_special SetVermilionTrashCans
 	def_special DoSSAnneDepartureCutscene
-	def_special StartMarowakBattle
 	def_special DoesPlayerPartyContainSpecies
 	def_special GetMagikarpSizeRecordInfo
 	def_special CompareMagikarpSize

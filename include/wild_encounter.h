@@ -58,7 +58,6 @@ u16 GetLocalWildMon(bool8 *isWaterMon);
 u16 GetLocalWaterMon(void);
 bool8 UpdateRepelCounter(void);
 bool8 TryDoDoubleWildBattle(void);
-bool8 StandardWildEncounter_Debug(void);
 u32 CalculateChainFishingShinyRolls(void);
 void CreateWildMon(enum Species species, u8 level);
 u16 GetCurrentMapWildMonHeaderId(void);

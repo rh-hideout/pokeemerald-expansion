@@ -83,7 +83,7 @@ BirthIsland_Exterior_EventScript_Deoxys::
 	setvar VAR_LAST_TALKED, LOCALID_BIRTH_ISLAND_DEOXYS
 	seteventmon SPECIES_DEOXYS_NORMAL, 30
 	setflag FLAG_SYS_CTRL_OBJ_DELETE
-	special BattleSetup_StartLegendaryBattle
+	startlegendarybattle
 	waitstate
 	clearflag FLAG_SYS_CTRL_OBJ_DELETE
 	specialvar VAR_RESULT, GetBattleOutcome

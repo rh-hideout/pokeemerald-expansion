@@ -315,7 +315,7 @@ void BattleAI_SetupFlags(void)
     else
     {
         gAiThinkingStruct->aiFlags[B_BATTLER_1] = GetAiFlags(TRAINER_BATTLE_PARAM.opponentA, B_BATTLER_1);
-        if ((TRAINER_BATTLE_PARAM.opponentB != 0) && (TRAINER_BATTLE_PARAM.opponentB != 0xFFFF))
+        if (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE)
             gAiThinkingStruct->aiFlags[B_BATTLER_3] = GetAiFlags(TRAINER_BATTLE_PARAM.opponentB, B_BATTLER_3);
         else
             gAiThinkingStruct->aiFlags[B_BATTLER_3] = gAiThinkingStruct->aiFlags[B_BATTLER_1];

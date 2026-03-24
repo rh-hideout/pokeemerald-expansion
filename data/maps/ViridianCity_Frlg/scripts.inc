@@ -131,14 +131,6 @@ ViridianCity_EventScript_WatchToLearnBasics::
 	release
 	end
 
-@ Unused. Starts battle after the post battle text, which is odd.
-ViridianCity_EventScript_TutorialUnused::
-	msgbox ViridianCity_Text_ThatWasEducationalTakeThis
-	special StartOldManTutorialBattle
-	waitstate
-	release
-	end
-
 ViridianCity_EventScript_TutorialNotReady::
 	msgbox ViridianCity_Text_ThisIsPrivateProperty
 	closemessage
@@ -222,7 +214,8 @@ ViridianCity_EventScript_TutorialTriggerRight::
 ViridianCity_EventScript_DoTutorialBattle::
 	msgbox ViridianCity_Text_ShowYouHowToCatchMons
 	closemessage
-	special StartOldManTutorialBattle
+	createmon 1, 0, SPECIES_WEEDLE, 5, gender=MON_MALE
+	startcatchtutorial
 	waitstate
 	lock
 	faceplayer

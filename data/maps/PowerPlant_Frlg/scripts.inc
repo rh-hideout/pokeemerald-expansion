@@ -45,7 +45,7 @@ PowerPlant_EventScript_Zapdos::
 	playbgm MUS_RG_ENCOUNTER_GYM_LEADER, 0
 	waitbuttonpress
 	setflag FLAG_SYS_CTRL_OBJ_DELETE
-	special BattleSetup_StartLegendaryBattle
+	startlegendarybattle
 	waitstate
 	clearflag FLAG_SYS_CTRL_OBJ_DELETE
 	specialvar VAR_RESULT, GetBattleOutcome
