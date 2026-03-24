@@ -275,8 +275,8 @@ struct SaveBlock3
 #endif
 #if SAVINGS_ENABLED
     u32 savedMoney;
-    u8 lastPurchase;
-    u8 pendingPurchase;
+    u8 lastPurchase:7;
+    u8 pendingPurchase:1;
 
 #endif
 }; /* max size 1624 bytes */

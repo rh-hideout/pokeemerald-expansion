@@ -16,6 +16,7 @@
 #include "menu.h"
 #include "money.h"
 #include "overworld.h"
+#include "random.h"
 #include "script.h"
 #include "string_util.h"
 #include "strings.h"
@@ -77,6 +78,26 @@ static const struct UniquePurchaseItem sUniquePurchaseTable[] = {
     {ITEM_NONE}
 };
 
+static const struct RepeatPurchaseItem sRepeatPurchaseTable[] = {
+    {ITEM_OCCA_BERRY,   5, 100},
+    {ITEM_PASSHO_BERRY, 5, 100},
+    {ITEM_WACAN_BERRY,  5, 100},
+    {ITEM_RINDO_BERRY,  5, 100},
+    {ITEM_YACHE_BERRY,  5, 100},
+    {ITEM_CHOPLE_BERRY, 5, 100},
+    {ITEM_KEBIA_BERRY,  5, 100},
+    {ITEM_SHUCA_BERRY,  5, 100},
+    {ITEM_COBA_BERRY,   5, 100},
+    {ITEM_PAYAPA_BERRY, 5, 100},
+    {ITEM_TANGA_BERRY,  5, 100},
+    {ITEM_CHARTI_BERRY, 5, 100},
+    {ITEM_KASIB_BERRY,  5, 100},
+    {ITEM_HABAN_BERRY,  5, 100},
+    {ITEM_COLBUR_BERRY, 5, 100},
+    {ITEM_BABIRI_BERRY, 5, 100},
+    {ITEM_CHILAN_BERRY, 5, 100},
+};
+
 // Strings
 static const u8 sText_Deposit[] = _("Deposit");
 static const u8 sText_Withdraw[] = _("Withdraw");
@@ -134,21 +155,35 @@ u32* GetSavedMoneyPtr(void)
     #endif /* if SAVINGS_ENABLED */
 }
 
-u8* GetPurchaseIndexPtr(void)
+u8 GetPurchaseIndex(void)
 {
     #if SAVINGS_ENABLED
-        return &gSaveBlock3Ptr->lastPurchase;
+        return gSaveBlock3Ptr->lastPurchase;
     #else
-        return NULL;
+        return 0;
     #endif /* if SAVINGS_ENABLED */
 }
 
-u8* GetPendingPurchasePtr(void)
+bool32 IsPurchasePending(void)
 {
     #if SAVINGS_ENABLED
-        return &gSaveBlock3Ptr->pendingPurchase;
+        return !!gSaveBlock3Ptr->pendingPurchase;
     #else
-        return NULL;
+        return FALSE;
+    #endif /* if SAVINGS_ENABLED */
+}
+
+void SetPurchasePending(bool32 bool)
+{
+    #if SAVINGS_ENABLED
+        gSaveBlock3Ptr->pendingPurchase = bool;
+    #endif /* if SAVINGS_ENABLED */
+}
+
+void SetPurchaseIndex(u8 index)
+{
+    #if SAVINGS_ENABLED
+        gSaveBlock3Ptr->lastPurchase = index;
     #endif /* if SAVINGS_ENABLED */
 }
 
@@ -177,8 +212,8 @@ void NewGameInitBanking(void)
 {
     #if SAVINGS_ENABLED
         SetMoneyInBank(0);
-        *GetPendingPurchasePtr() = 0;
-        *GetPurchaseIndexPtr() = 0;
+        gSaveBlock3Ptr->lastPurchase = 0;
+        gSaveBlock3Ptr->pendingPurchase = FALSE;
     #endif /* if SAVINGS_ENABLED */
     DebugPrintf("In Bank:%d", *GetSavedMoneyPtr());
 }
@@ -494,10 +529,9 @@ void Script_StartTransactionTask(struct ScriptContext *ctx)
 void Script_CheckPurchaseFromSavings()
 {
     EnsureBankingEnabled();
-    u32 purchaseIdx = *GetPurchaseIndexPtr();
-    u32 pendingPurchases = *GetPendingPurchasePtr();
+    u32 purchaseIdx = GetPurchaseIndex();
 
-    if (!pendingPurchases)
+    if (!IsPurchasePending())
     {
         gSpecialVar_Result = ITEM_NONE;
         return;
@@ -511,10 +545,7 @@ void Script_CheckPurchaseFromSavings()
 void Script_CheckSavingsPurchaseQuantity()
 {
     EnsureBankingEnabled();
-    u32 purchaseIdx = *GetPurchaseIndexPtr();
-    u32 pendingPurchases = *GetPendingPurchasePtr();
-
-    purchaseIdx -= --pendingPurchases;
+    u32 purchaseIdx = GetPurchaseIndex();
 
     struct UniquePurchaseItem currentPurchase =
         sUniquePurchaseTable[purchaseIdx];
@@ -525,23 +556,18 @@ void Script_CheckSavingsPurchaseQuantity()
 void Script_GetPurchaseFromSavings()
 {
     EnsureBankingEnabled();
-    u8 *indexPtr = GetPurchaseIndexPtr();
-    u8 *pendingPtr = GetPendingPurchasePtr();
-    u32 idx = *indexPtr;
-    u32 pending = *pendingPtr;
+    u32 idx = GetPurchaseIndex();
 
-    assertf(pending, "No pending purchases to get")
+    assertf(IsPurchasePending(), "No pending purchases to get")
     {
         return;
     }
 
-    pending--;
-    u32 curr = idx - pending;
-
     struct UniquePurchaseItem currentPurchase =
-        sUniquePurchaseTable[curr];
+        sUniquePurchaseTable[idx];
 
-    *pendingPtr = pending;
+    SetPurchasePending(FALSE);
+
     gSpecialVar_Result = currentPurchase.itemId;
     gSpecialVar_0x8001 = currentPurchase.quantity;
 }
@@ -549,27 +575,15 @@ void Script_GetPurchaseFromSavings()
 void PurchaseFromSavings()
 {
     u32 savings = GetMoneyInBank();
-    u8 *indexPtr = GetPurchaseIndexPtr();
-    u8 *pendingPtr = GetPendingPurchasePtr();
+    u32 idx = GetPurchaseIndex();
+    struct UniquePurchaseItem next = sUniquePurchaseTable[idx + 1];
 
-    u32 idx = *indexPtr;
-    u32 pending = *pendingPtr;
+    if (savings < next.thresholdMoney)
+        return;
+    if (IsPurchasePending())
+        return;
 
-    while (TRUE)
-    {
-        if (pending == MAX_PENDING)
-            break;
-
-        struct UniquePurchaseItem next = sUniquePurchaseTable[idx + 1];
-
-        if (next.itemId == ITEM_NONE)
-            break;
-        if (savings < next.thresholdMoney)
-            break;
-
-        idx++;
-        pending++;
-    }
-    *indexPtr = idx;
-    *pendingPtr = pending;
+    idx++;
+    SetPurchaseIndex(idx);
+    SetPurchasePending(TRUE);
 }
