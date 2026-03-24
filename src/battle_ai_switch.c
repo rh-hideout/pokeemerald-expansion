@@ -62,6 +62,8 @@ static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, u32 monI
     SetBattlerVolatilesForSwitchin(switchinBattler, switchinWeather, switchinFieldStatus);
     SetBattlerStatusForSwitchin(switchinBattler);
     gBattlerPartyIndexes[switchinBattler] = monIndex;
+    gAiLogicData->switchInCalc = TRUE;
+
     for (enum BattlerId battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
     {
         if (switchinBattler == battlerIndex || !IsBattlerAlive(battlerIndex))
@@ -72,6 +74,7 @@ static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, u32 monI
         CalcBattlerAiMovesData(gAiLogicData, battlerIndex, switchinBattler, switchinWeather, switchinFieldStatus);
     }
 
+    gAiLogicData->switchInCalc = FALSE;
     gBattlerPartyIndexes[switchinBattler] = storeCurrBattlerPartyIndex;
     gAiThinkingStruct->saved[switchinBattler].saved = FALSE;
 }
@@ -2861,6 +2864,7 @@ static void SetBattlerStatStagesForSwitchin(enum BattlerId battler, enum Battler
     switch(GetItemHoldEffect(aiItem))
     {
     case HOLD_EFFECT_TERRAIN_SEED:
+    {
         u32 seedParam = GetItemHoldEffectParam(aiItem);
         if ((seedParam == HOLD_EFFECT_PARAM_ELECTRIC_TERRAIN && (fieldStatus & STATUS_FIELD_ELECTRIC_TERRAIN))
          || (seedParam == HOLD_EFFECT_PARAM_GRASSY_TERRAIN && (fieldStatus & STATUS_FIELD_GRASSY_TERRAIN))
@@ -2868,6 +2872,7 @@ static void SetBattlerStatStagesForSwitchin(enum BattlerId battler, enum Battler
          || (seedParam == HOLD_EFFECT_PARAM_PSYCHIC_TERRAIN && (fieldStatus & STATUS_FIELD_PSYCHIC_TERRAIN)))
             gBattleMons[battler].statStages[STAT_DEF] += 1;
         break;
+    }
     case HOLD_EFFECT_ATTACK_UP:
         if (HasEnoughHpToEatBerry(battler, aiAbility, GetItemHoldEffectParam(aiItem), aiItem))
             gBattleMons[battler].statStages[STAT_ATK] += 1;
