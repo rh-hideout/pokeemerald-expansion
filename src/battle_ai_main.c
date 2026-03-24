@@ -769,22 +769,22 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
         aiData->turnOrder[battler] = battler;
     SetBattlerTurnOrder(aiData->turnOrder);
 
-    for (enum BattlerId battlerAtk = 0; battlerAtk < battlersCount; battlerAtk++)
+    for (enum BattlerId battler = 0; battler < battlersCount; battler++)
     {
-        if (!IsBattlerAlive(battlerAtk))
+        if (!IsBattlerAlive(battler))
             continue;
 
-        SetBattlerAiMovesData(aiData, battlerAtk, battlersCount, weather);
+        SetBattlerAiMovesData(aiData, battler, battlersCount, weather);
     }
 
     for (enum BattlerId battler = 0; battler < battlersCount; battler++)
     {
         // Prediction limited to player side but can be expanded to read partners move in the future
-        if (!IsOnPlayerSide(battlerAtk))
+        if (!IsOnPlayerSide(battler))
             continue;
 
-        BattleAI_SetupAIData(0xF, battlerAtk);
-        SetupAIPredictionData(battlerAtk, SWITCH_MID_BATTLE_OPTIONAL);
+        BattleAI_SetupAIData(0xF, battler);
+        SetupAIPredictionData(battler, SWITCH_MID_BATTLE_OPTIONAL);
     }
 
     if (DEBUG_AI_DELAY_TIMER)
