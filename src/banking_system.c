@@ -532,9 +532,12 @@ void PurchaseFromSavings()
     struct UniquePurchaseItem nextPurchase =
         sUniquePurchaseTable[++lastPurchase];
 
-    if (savings >= nextPurchase.thresholdMoney)
+    while (savings >= nextPurchase.thresholdMoney)
     {
         (*GetPurchaseIndexPtr())++;
         (*GetPendingPurchasePtr())++;
+        nextPurchase = sUniquePurchaseTable[lastPurchase++];
+        if (nextPurchase.itemId == ITEM_NONE)
+            break;
     }
 }
