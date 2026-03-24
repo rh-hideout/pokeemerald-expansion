@@ -159,3 +159,25 @@ DOUBLE_BATTLE_TEST("Brick Break and Psychic Fangs can remove Light Screen, Refle
     }
 }
 
+SINGLE_BATTLE_TEST("Brick Break and Psychic Fangs can remove screens when the target is behind a Substitute")
+{
+    enum Move move;
+
+    PARAMETRIZE { move = MOVE_BRICK_BREAK; }
+    PARAMETRIZE { move = MOVE_PSYCHIC_FANGS; }
+
+    GIVEN {
+
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_REFLECT); }
+        TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_REFLECT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
+        ANIMATION(ANIM_TYPE_MOVE, move, opponent);
+        MESSAGE("The wall shattered!");
+        SUB_HIT(player);
+    }
+}

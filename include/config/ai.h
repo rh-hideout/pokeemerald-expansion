@@ -46,6 +46,8 @@
 #define SHOULD_SWITCH_NATURAL_CURE_WEAK_STATS_RAISED_PERCENTAGE     10
 #define SHOULD_SWITCH_REGENERATOR_PERCENTAGE                        50
 #define SHOULD_SWITCH_REGENERATOR_STATS_RAISED_PERCENTAGE           20
+#define SHOULD_SWITCH_INTIMIDATE_PERCENTAGE                         25
+#define SHOULD_SWITCH_INTIMIDATE_STATS_RAISED_PERCENTAGE            10
 
 // AI switchin considerations
 #define ALL_MOVES_BAD_STATUS_MOVES_BAD                          FALSE // If the AI has no moves that affect the target, ShouldSwitchIfAllMovesBad can prompt a switch. Enabling this config will ignore status moves that can affect the target when making this decision.
@@ -76,12 +78,28 @@
 #define EXPLOSION_MAXIMUM_CHANCE                                90 // Highest possible percent chance of the AI using explosion based on its current HP
 #define FINAL_GAMBIT_CHANCE                                     50 // Chance for AI to consider using Final Gambit if it outspeeds the player and thinks it has more HP
 #define SHOULD_PIVOT_BREAK_SASH_CHANCE                          50 // Chance for ShouldPivot to return true when trying to break Multiscale and Focus Sash type effects while having a good switchin
+#define FAKE_OUT_SAVE_ALLY_CHANCE                               50 // Chance for AI to Fake Out to save its ally when ally is fast KO'd by both opponents
 
 // AI damage calc considerations
 #define RISKY_AI_CRIT_STAGE_THRESHOLD                           2   // Stat stages at which Risky will assume it gets a crit
 #define RISKY_AI_CRIT_THRESHOLD_GEN_1                           128 // "Stat stage" at which Risky will assume it gets a crit with gen 1 mechanics (this translates to an X / 255 % crit threshold)
 #define AI_DAMAGES_THROUGH_BERRIES                              TRUE // AI will see through resist berries when considering a certain KO threshold for the purposes damage calcs; this is considered when comparing best moves to KO to still pick the actual OHKO if needed
 #define AI_IGNORE_BERRY_KO_THRESHOLD                            2   // KO threshold AI must meet in order to treat it berry though it doesn't exist (ie. 2 means "If the AI can 2HKO with berry resisted attack + not-berry resisted next attack, ignore berry resistence when calcing first attack"). Requires AI_DAMAGES_THROUGH_BERRIES
+
+// AI damage calc roll considerations
+#define AI_ROLL_MIN                                             1
+#define AI_ROLL_MEDIAN                                          2
+#define AI_ROLL_MAX                                             3
+#define AI_ROLL_RANDOM                                          4
+#define AI_ROLL_TYPE_COUNT                                      5
+
+// Define which roll type to use in each context; overridden by AI_FLAG_RISKY and AI_FLAG_CONSERVATIVE
+#define AI_ROLL_ATTACKING                                       AI_ROLL_MAX
+#define AI_ROLL_DEFENDING                                       AI_ROLL_MEDIAN
+#define AI_ROLL_SWITCHIN_ATTACKING                              AI_ROLL_MEDIAN
+#define AI_ROLL_SWITCHIN_DEFENDING                              AI_ROLL_MEDIAN
+#define AI_ROLL_SHOULD_SETUP_DEFENDING                          AI_ROLL_MAX
+#define AI_ROLL_ATTACKING_PARTNER                               AI_ROLL_MAX
 
 // AI prediction chances
 #define PREDICT_SWITCH_CHANCE                                   50

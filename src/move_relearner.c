@@ -866,7 +866,7 @@ static bool32 IsTmAvailable(enum Item item)
 
 static u32 GetRelearnerLevelUpMoves(struct BoxPokemon *mon, u16 *moves)
 {
-    u32 species = GetBoxMonData(mon, MON_DATA_SPECIES);
+    enum Species species = GetBoxMonData(mon, MON_DATA_SPECIES);
     u32 level = (P_ENABLE_ALL_LEVEL_UP_MOVES ? MAX_LEVEL : GetLevelFromBoxMonExp(mon));
     u32 numMoves = 0;
     do
@@ -899,7 +899,7 @@ static u32 GetRelearnerLevelUpMoves(struct BoxPokemon *mon, u16 *moves)
 
 static u32 GetRelearnerEggMoves(struct BoxPokemon *mon, u16 *moves)
 {
-    u32 species = GetBoxMonData(mon, MON_DATA_SPECIES);
+    enum Species species = GetBoxMonData(mon, MON_DATA_SPECIES);
     u32 numMoves = 0;
     while (GetSpeciesPreEvolution(species) != SPECIES_NONE)
         species = GetSpeciesPreEvolution(species);
@@ -920,7 +920,7 @@ static u32 GetRelearnerEggMoves(struct BoxPokemon *mon, u16 *moves)
 
 static u32 GetRelearnerTMMoves(struct BoxPokemon *mon, u16 *moves)
 {
-    u32 species = GetBoxMonData(mon, MON_DATA_SPECIES);
+    enum Species species = GetBoxMonData(mon, MON_DATA_SPECIES);
     u32 numMoves = 0;
 
     for (u32 i = 0; i < NUM_ALL_MACHINES; i++)
@@ -946,7 +946,7 @@ static u32 GetRelearnerTMMoves(struct BoxPokemon *mon, u16 *moves)
 
 static u32 GetRelearnerTutorMoves(struct BoxPokemon *mon, u16 *moves)
 {
-    u32 species = GetBoxMonData(mon, MON_DATA_SPECIES);
+    enum Species species = GetBoxMonData(mon, MON_DATA_SPECIES);
     u32 numMoves = 0;
 
     for (u32 i = 0; gTutorMoves[i] != MOVE_UNAVAILABLE; i++)
@@ -1002,7 +1002,7 @@ bool32 HasMoveToRelearn(struct BoxPokemon *boxMon, enum MoveRelearnerStates stat
 
 static bool32 HasRelearnerLevelUpMoves(struct BoxPokemon *boxMon)
 {
-    u32 species = GetBoxMonData(boxMon, MON_DATA_SPECIES);
+    enum Species species = GetBoxMonData(boxMon, MON_DATA_SPECIES);
     u32 level = (P_ENABLE_ALL_LEVEL_UP_MOVES == TRUE) ? MAX_LEVEL : GetLevelFromBoxMonExp(boxMon);
 
     do
@@ -1027,7 +1027,7 @@ static bool32 HasRelearnerLevelUpMoves(struct BoxPokemon *boxMon)
 
 static bool32 HasRelearnerEggMoves(struct BoxPokemon *boxMon)
 {
-    u32 species = GetBoxMonData(boxMon, MON_DATA_SPECIES);
+    enum Species species = GetBoxMonData(boxMon, MON_DATA_SPECIES);
     while (GetSpeciesPreEvolution(species) != SPECIES_NONE)
         species = GetSpeciesPreEvolution(species);
 
@@ -1047,7 +1047,7 @@ static bool32 HasRelearnerEggMoves(struct BoxPokemon *boxMon)
 
 static bool32 HasRelearnerTMMoves(struct BoxPokemon *boxMon)
 {
-    u32 species = GetBoxMonData(boxMon, MON_DATA_SPECIES);
+    enum Species species = GetBoxMonData(boxMon, MON_DATA_SPECIES);
     for (u32 i = 0; i < NUM_ALL_MACHINES; i++)
     {
         enum Item item = GetTMHMItemId(i + 1);
@@ -1072,7 +1072,7 @@ static bool32 HasRelearnerTMMoves(struct BoxPokemon *boxMon)
 
 static bool32 HasRelearnerTutorMoves(struct BoxPokemon *boxMon)
 {
-    u32 species = GetBoxMonData(boxMon, MON_DATA_SPECIES);
+    enum Species species = GetBoxMonData(boxMon, MON_DATA_SPECIES);
     for (u32 i = 0; gTutorMoves[i] != MOVE_UNAVAILABLE; i++)
     {
         enum Move move = gTutorMoves[i];

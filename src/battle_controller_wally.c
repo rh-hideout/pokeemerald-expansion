@@ -358,7 +358,7 @@ static void WallyHandleChooseItem(enum BattlerId battler)
 // Wally's Pokémon during the tutorial is never intended to faint, so that's probably why it's different here.
 static void WallyHandleFaintingCry(enum BattlerId battler)
 {
-    u16 species = GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES);
+    enum Species species = GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES);
 
     PlayCry_Normal(species, 25);
     BtlController_Complete(battler);
