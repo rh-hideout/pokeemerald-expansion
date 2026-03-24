@@ -320,23 +320,116 @@ static const struct ListMenuTemplate sDecorationItemsListMenuTemplate =
 
 #include "data/decoration/tilemaps.h"
 
-static const struct {
-    u8 shape;
-    u8 size;
+struct DecorShape {
+    u16 size;
+    u16 width;
+    u16 height;
+    u8 spriteShape;
+    u8 spriteSize;
     u8 cameraX;
     u8 cameraY;
-} sDecorationMovementInfo[] =
-{
-    [DECORSHAPE_1x1] = {SPRITE_SHAPE(16x16), SPRITE_SIZE(16x16), 120, 78},
-    [DECORSHAPE_2x1] = {SPRITE_SHAPE(32x16), SPRITE_SIZE(32x16), 128, 78},
-    [DECORSHAPE_3x1] = {SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), 144, 86},
-    [DECORSHAPE_4x2] = {SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), 144, 70},
-    [DECORSHAPE_2x2] = {SPRITE_SHAPE(32x32), SPRITE_SIZE(32x32), 128, 70},
-    [DECORSHAPE_1x2] = {SPRITE_SHAPE(16x32), SPRITE_SIZE(16x32), 120, 70},
-    [DECORSHAPE_1x3] = {SPRITE_SHAPE(32x64), SPRITE_SIZE(32x64), 128, 86},
-    [DECORSHAPE_2x4] = {SPRITE_SHAPE(32x64), SPRITE_SIZE(32x64), 128, 54},
-    [DECORSHAPE_3x3] = {SPRITE_SHAPE(64x64), SPRITE_SIZE(64x64), 144, 70},
-    [DECORSHAPE_3x2] = {SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), 144, 70},
+};
+
+static const struct DecorShape sDecorShapes[] = {
+    [DECORSHAPE_1x1] = {
+        .size = 4,
+        .width = 1,
+        .height = 1,
+        .spriteShape = SPRITE_SHAPE(16x16),
+        .spriteSize = SPRITE_SIZE(16x16),
+        .cameraX = 120,
+        .cameraY= 78,
+    },
+
+    [DECORSHAPE_2x1] = {
+        .size = 8,
+        .width = 2,
+        .height = 1,
+        .spriteShape = SPRITE_SHAPE(32x16),
+        .spriteSize = SPRITE_SIZE(32x16),
+        .cameraX = 128,
+        .cameraY= 78,
+    },
+
+    [DECORSHAPE_3x1] = {
+        .size = 16,
+        .width = 3,
+        .height = 1,
+        .spriteShape = SPRITE_SHAPE(64x32),
+        .spriteSize = SPRITE_SIZE(64x32),
+        .cameraX = 144,
+        .cameraY= 86,
+    },
+
+    [DECORSHAPE_4x2] = {
+        .size = 32,
+        .width = 4,
+        .height = 2,
+        .spriteShape = SPRITE_SHAPE(64x32),
+        .spriteSize = SPRITE_SIZE(64x32),
+        .cameraX = 144,
+        .cameraY= 70,
+    },
+
+    [DECORSHAPE_2x2] = {
+        .size = 16,
+        .width = 2,
+        .height = 2,
+        .spriteShape = SPRITE_SHAPE(32x32),
+        .spriteSize = SPRITE_SIZE(32x32),
+        .cameraX = 128,
+        .cameraY= 70,
+    },
+
+    [DECORSHAPE_1x2] = {
+        .size = 8,
+        .width = 1,
+        .height = 2,
+        .spriteShape = SPRITE_SHAPE(16x32),
+        .spriteSize = SPRITE_SIZE(16x32),
+        .cameraX = 120,
+        .cameraY= 70,
+    },
+
+    [DECORSHAPE_1x3] = {
+        .size = 16,
+        .width = 1,
+        .height = 3,
+        .spriteShape = SPRITE_SHAPE(32x64),
+        .spriteSize = SPRITE_SIZE(32x64),
+        .cameraX = 128,
+        .cameraY= 86,
+    },
+
+    [DECORSHAPE_2x4] = {
+        .size = 32,
+        .width = 2,
+        .height = 4,
+        .spriteShape = SPRITE_SHAPE(32x64),
+        .spriteSize = SPRITE_SIZE(32x64),
+        .cameraX = 128,
+        .cameraY= 54,
+    },
+
+    [DECORSHAPE_3x3] = {
+        .size = 64,
+        .width = 3,
+        .height = 3,
+        .spriteShape = SPRITE_SHAPE(64x64),
+        .spriteSize = SPRITE_SIZE(64x64),
+        .cameraX = 144,
+        .cameraY= 70,
+    },
+
+    [DECORSHAPE_3x2] = {
+        .size = 32,
+        .width = 3,
+        .height = 2,
+        .spriteShape = SPRITE_SHAPE(64x32),
+        .spriteSize = SPRITE_SIZE(64x32),
+        .cameraX = 144,
+        .cameraY= 70,
+    },
 };
 
 static const union AnimCmd sDecorSelectorAnimCmd0[] =
@@ -417,65 +510,6 @@ static const u8 sDecorationSlideElevation[] =
     4, 4,
     0, 4,
     3, 0,
-};
-
-struct DecorShape {
-    u16 size;
-    u16 width;
-    u16 height;
-};
-
-static const struct DecorShape sDecorShapes[] = {
-    [DECORSHAPE_1x1] = {
-        .size = 4,
-        .width = 1,
-        .height = 1,
-    },
-    [DECORSHAPE_2x1] = {
-        .size = 8,
-        .width = 2,
-        .height = 1,
-    },
-    [DECORSHAPE_3x1] = {
-        .size = 16,
-        .width = 3,
-        .height = 1,
-    },
-    [DECORSHAPE_4x2] = {
-        .size = 32,
-        .width = 4,
-        .height = 2,
-    },
-    [DECORSHAPE_2x2] = {
-        .size = 16,
-        .width = 2,
-        .height = 2,
-    },
-    [DECORSHAPE_1x2] = {
-        .size = 8,
-        .width = 1,
-        .height = 2,
-    },
-    [DECORSHAPE_1x3] = {
-        .size = 16,
-        .width = 1,
-        .height = 3,
-    },
-    [DECORSHAPE_2x4] = {
-        .size = 32,
-        .width = 2,
-        .height = 4,
-    },
-    [DECORSHAPE_3x3] = {
-        .size = 64,
-        .width = 3,
-        .height = 3,
-    },
-    [DECORSHAPE_3x2] = {
-        .size = 32,
-        .width = 3,
-        .height = 2,
-    },
 };
 
 static const u16 sBrendanPalette[] = INCBIN_U16("graphics/decorations/brendan.gbapal");
@@ -1409,15 +1443,15 @@ static void ConfigureCameraObjectForPlacingDecoration(struct PlaceDecorationGrap
     gFieldCamera.spriteId = gpu_pal_decompress_alloc_tag_and_upload(data, decor);
     gSprites[gFieldCamera.spriteId].oam.priority = 1;
     gSprites[gFieldCamera.spriteId].callback = InitializePuttingAwayCursorSprite;
-    gSprites[gFieldCamera.spriteId].x = sDecorationMovementInfo[data->decoration->shape].cameraX;
-    gSprites[gFieldCamera.spriteId].y = sDecorationMovementInfo[data->decoration->shape].cameraY;
+    gSprites[gFieldCamera.spriteId].x = sDecorShapes[data->decoration->shape].cameraX;
+    gSprites[gFieldCamera.spriteId].y = sDecorShapes[data->decoration->shape].cameraY;
 }
 
 static void SetUpPlacingDecorationPlayerAvatar(u8 taskId, struct PlaceDecorationGraphicsDataBuffer *data)
 {
     u8 x;
 
-    x = 16 * (u8)gTasks[taskId].tDecorWidth + sDecorationMovementInfo[data->decoration->shape].cameraX - 8 * ((u8)gTasks[taskId].tDecorWidth - 1);
+    x = 16 * (u8)gTasks[taskId].tDecorWidth + sDecorShapes[data->decoration->shape].cameraX - 8 * ((u8)gTasks[taskId].tDecorWidth - 1);
     if (data->decoration->shape == DECORSHAPE_3x1 || data->decoration->shape == DECORSHAPE_3x3 || data->decoration->shape == DECORSHAPE_3x2)
         x -= 8;
 
@@ -1993,10 +2027,10 @@ static void SetDecorSelectionBoxOamAttributes(u8 decorShape)
     sDecorSelectorOam.objMode = ST_OAM_OBJ_NORMAL;
     sDecorSelectorOam.mosaic = FALSE;
     sDecorSelectorOam.bpp = ST_OAM_4BPP;
-    sDecorSelectorOam.shape = sDecorationMovementInfo[decorShape].shape;
+    sDecorSelectorOam.shape = sDecorShapes[decorShape].spriteShape;
     sDecorSelectorOam.x = 0;
     sDecorSelectorOam.matrixNum = 0;
-    sDecorSelectorOam.size = sDecorationMovementInfo[decorShape].size;
+    sDecorSelectorOam.size = sDecorShapes[decorShape].spriteSize;
     sDecorSelectorOam.tileNum = 0;
     sDecorSelectorOam.priority = 0;
     sDecorSelectorOam.paletteNum = 0;
