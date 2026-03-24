@@ -220,15 +220,8 @@ void Script_AddToBank(struct ScriptContext *ctx)
 
     u32 amount = ScriptReadWord(ctx);
     u32 balance = GetMoneyInBank();
-    u32 wallet = GetMoney(&gSaveBlock1Ptr->money);
 
     gSpecialVar_Result = TRUE;
-
-    if (amount > wallet)
-    {
-        amount = wallet;
-        gSpecialVar_Result = FALSE;
-    }
 
     u32 newBalance = balance + amount;
 
