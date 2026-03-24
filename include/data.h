@@ -4,6 +4,7 @@
 #include "constants/moves.h"
 #include "constants/trainers.h"
 #include "constants/battle.h"
+#include "constants/pokeball.h"
 #include "difficulty.h"
 #include "debug.h"
 
@@ -62,11 +63,11 @@ struct TrainerMon
     const u8 *ev;
     u32 iv;
     enum Move moves[MAX_MON_MOVES];
-    u16 species;
-    u16 heldItem;
+    enum Species species;
+    enum Item heldItem;
     enum Ability ability;
     u8 lvl;
-    u8 ball;
+    enum PokeBall ball:8;
     u8 friendship;
     u8 nature:5;
     bool8 gender:2;
@@ -227,22 +228,25 @@ extern const struct FollowerMsgInfo gFollowerPoisonedMessages[];
 
 static inline bool8 IsPartnerTrainerId(u16 trainerId)
 {
-    if (trainerId >= TRAINER_PARTNER(PARTNER_NONE) && trainerId < TRAINER_PARTNER(PARTNER_COUNT))
+    if (trainerId > TRAINER_PARTNER(PARTNER_NONE) && trainerId < TRAINER_PARTNER(PARTNER_COUNT))
         return TRUE;
+    return FALSE;
+}
+
+static inline bool32 IsSpecialTrainer(u16 trainerId)
+{
+    if (trainerId == TRAINER_SECRET_BASE ||
+        trainerId == TRAINER_LINK_OPPONENT ||
+        trainerId == TRAINER_UNION_ROOM)
+    {
+        return TRUE;
+    }
     return FALSE;
 }
 
 static inline u16 SanitizeTrainerId(u16 trainerId)
 {
-    switch (trainerId)
-    {
-    case TRAINER_SECRET_BASE:
-    case TRAINER_LINK_OPPONENT:
-    case TRAINER_UNION_ROOM:
-        return TRAINER_NONE;
-    }
-
-    assertf(trainerId < TRAINERS_COUNT || IsPartnerTrainerId(trainerId), "invalid trainer: %d", trainerId)
+    assertf(trainerId < TRAINERS_COUNT, "invalid trainer: %d", trainerId)
     {
         return TRAINER_NONE;
     }
@@ -250,17 +254,32 @@ static inline u16 SanitizeTrainerId(u16 trainerId)
     return trainerId;
 }
 
+//sanitizes but also converts partner trainer ids into gBattlePartners indexes
+static inline u16 GetPartnerIdFromTrainerId(u16 trainerId)
+{
+    assertf(IsPartnerTrainerId(trainerId), "invalid trainer id for partner: %d", trainerId)
+    {
+        return PARTNER_NONE;
+    }
+
+    return (trainerId - TRAINER_PARTNER(PARTNER_NONE));
+}
+
 static inline const struct Trainer *GetTrainerStructFromId(u16 trainerId)
 {
-    u32 sanitizedTrainerId = 0;
     if (gIsDebugBattle) return GetDebugAiTrainer();
-    sanitizedTrainerId = SanitizeTrainerId(trainerId);
-    enum DifficultyLevel difficulty = GetTrainerDifficultyLevel(sanitizedTrainerId);
+    enum DifficultyLevel difficulty;
 
     if (IsPartnerTrainerId(trainerId))
-        return &gBattlePartners[difficulty][sanitizedTrainerId - TRAINER_PARTNER(PARTNER_NONE)];
+    {
+        difficulty = GetBattlePartnerDifficultyLevel(trainerId);
+        return &gBattlePartners[difficulty][GetPartnerIdFromTrainerId(trainerId)];
+    }
     else
-        return &gTrainers[difficulty][sanitizedTrainerId];
+    {
+        difficulty = GetTrainerDifficultyLevel(trainerId);
+        return &gTrainers[difficulty][SanitizeTrainerId(trainerId)];
+    }
 }
 
 static inline const enum TrainerClassID GetTrainerClassFromId(u16 trainerId)
@@ -272,40 +291,21 @@ static inline const enum TrainerClassID GetTrainerClassFromId(u16 trainerId)
 
 static inline const u8 *GetTrainerClassNameFromId(u16 trainerId)
 {
-    enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(trainerId);
-
-    if (trainerId > TRAINER_PARTNER(PARTNER_NONE))
-        return gTrainerClasses[gBattlePartners[difficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerClass].name;
     return gTrainerClasses[GetTrainerClassFromId(trainerId)].name;
 }
 
 static inline const u8 *GetTrainerNameFromId(u16 trainerId)
 {
-    if (trainerId > TRAINER_PARTNER(PARTNER_NONE))
-    {
-        enum DifficultyLevel partnerDifficulty = GetBattlePartnerDifficultyLevel(trainerId);
-        return gBattlePartners[partnerDifficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerName;
-    }
     return GetTrainerStructFromId(trainerId)->trainerName;
 }
 
 static inline const enum TrainerPicID GetTrainerPicFromId(u16 trainerId)
 {
-    enum DifficultyLevel partnerDifficulty = GetBattlePartnerDifficultyLevel(trainerId);
-
-    if (trainerId > TRAINER_PARTNER(PARTNER_NONE))
-        return gBattlePartners[partnerDifficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerPic;
-
     return GetTrainerStructFromId(trainerId)->trainerPic;
 }
 
 static inline const u8 GetTrainerBackPicFromId(u16 trainerId)
 {
-    enum DifficultyLevel partnerDifficulty = GetBattlePartnerDifficultyLevel(trainerId);
-
-    if (trainerId > TRAINER_PARTNER(PARTNER_NONE))
-        return gBattlePartners[partnerDifficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerBackPic;
-
     return GetTrainerStructFromId(trainerId)->trainerBackPic;
 }
 

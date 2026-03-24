@@ -28,6 +28,9 @@
 #include <map>
 #include "preproc.h"
 
+#define __STDC_FORMAT_MACROS 1
+#include <inttypes.h>
+
 class CFile
 {
 public:

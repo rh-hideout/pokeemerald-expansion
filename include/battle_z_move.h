@@ -5,7 +5,7 @@
 
 struct SignatureZMove
 {
-    u16 species;
+    enum Species species;
     enum Item item;
     enum Move move;
     enum Move zmove;
@@ -18,7 +18,7 @@ void ActivateZMove(enum BattlerId battler);
 bool32 IsViableZMove(enum BattlerId battler, enum Move move);
 bool32 TryChangeZTrigger(enum BattlerId battler, u32 moveIndex);
 enum Move GetTypeBasedZMove(enum Move move);
-enum Move GetSignatureZMove(enum Move move, u32 species, enum Item item);
+enum Move GetSignatureZMove(enum Move move, enum Species species, enum Item item);
 bool32 MoveSelectionDisplayZMove(enum Move zmove, enum BattlerId battler);
 void SetZEffect(void);
 void AssignUsableZMoves(enum BattlerId battler, enum Move *moves);

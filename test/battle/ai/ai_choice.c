@@ -132,9 +132,10 @@ AI_SINGLE_BATTLE_TEST("Choiced Pokémon won't use status move if they don't have
 {
     u32 j;
     enum Move move = MOVE_NONE;
-    u32 species = SPECIES_NONE, heldItem = ITEM_NONE;
+    u32 species = SPECIES_NONE;
+    enum Item heldItem = ITEM_NONE;
     enum Ability ability = ABILITY_NONE;
-    static const u32 choiceItems[] = {
+    static const enum Item choiceItems[] = {
         ITEM_CHOICE_SPECS,
         ITEM_CHOICE_BAND,
         ITEM_CHOICE_SCARF,
@@ -169,7 +170,8 @@ AI_SINGLE_BATTLE_TEST("Choiced Pokémon won't use status move if they are trappe
 {
     u32 j;
     enum Ability aiAbility = ABILITY_NONE, playerAbility = ABILITY_NONE;
-    u32 species = SPECIES_NONE, heldItem = ITEM_NONE;
+    u32 species = SPECIES_NONE;
+    enum Item heldItem = ITEM_NONE;
 
     static const u32 choiceItems[] = {
         ITEM_CHOICE_SPECS,
@@ -274,11 +276,10 @@ AI_DOUBLE_BATTLE_TEST("Choiced Pokémon won't switch out if they can still affec
         OPPONENT(SPECIES_VAPOREON) { Moves(MOVE_SCALD); Item(ITEM_CHOICE_SPECS); }
         OPPONENT(SPECIES_VAPOREON) { Moves(MOVE_SCALD); Item(ITEM_CHOICE_SPECS); }
         OPPONENT(SPECIES_ZIGZAGOON);
-        OPPONENT(SPECIES_ZIGZAGOON);
     } WHEN {
         TURN { SWITCH(playerLeft, 2); MOVE(playerRight, MOVE_CELEBRATE); EXPECT_MOVE(opponentLeft, MOVE_SCALD, target:playerLeft); EXPECT_MOVE(opponentRight, MOVE_SCALD, target:playerLeft); }
         if (defendingSpecies == SPECIES_VAPOREON)
-            TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); EXPECT_SWITCH(opponentLeft, 3); EXPECT_MOVE(opponentRight, MOVE_SCALD); }
+            TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); EXPECT_SWITCH(opponentLeft, 2); EXPECT_MOVE(opponentRight, MOVE_SCALD); }
         else
             TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); EXPECT_MOVE(opponentLeft, MOVE_SCALD, target:playerLeft); EXPECT_MOVE(opponentRight, MOVE_SCALD, target:playerLeft); SEND_OUT(playerLeft, 0); }
     }

@@ -660,6 +660,12 @@ void AnimTask_BlendColorCycleByTag(u8 taskId)
 {
     CMD_ARGS(tag, delay, numBlends, initialBlendY, targetBlendY, color);
 
+    if (!TryLoadPal(cmd->tag))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+
     gTasks[taskId].tPalTag = cmd->tag;
     gTasks[taskId].tDelay = cmd->delay;
     gTasks[taskId].tNumBlends = cmd->numBlends;
@@ -741,6 +747,13 @@ static void AnimTask_BlendColorCycleByTagLoop(u8 taskId)
 void AnimTask_FlashAnimTagWithColor(u8 taskId)
 {
     CMD_ARGS(tag, delay, numBlends, color1, blendY1, color2, blendY2);
+
+    //  This function probably doesn't need to load a the target palette, but it doesn't hurt to check
+    if (!TryLoadPal(cmd->tag))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
 
     u8 paletteIndex;
 

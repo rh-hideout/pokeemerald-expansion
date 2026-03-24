@@ -1,7 +1,7 @@
 #ifndef GUARD_MOVES_H
 #define GUARD_MOVES_H
 
-#include "generational_changes.h"
+#include "config_changes.h"
 #include "contest_effect.h"
 #include "constants/battle.h"
 #include "constants/battle_factory.h"
@@ -164,7 +164,7 @@ struct MoveInfo
             };
         } twoTurnAttack;
         struct {
-            u16 species;
+            enum Species species;
             u16 power:9;
             u16 numOfHits:7;
         } speciesPowerOverride;

@@ -594,7 +594,7 @@ SINGLE_BATTLE_TEST("(TERA) Terastallizing into the Stellar type boosts all moves
 
 SINGLE_BATTLE_TEST("(TERA) Protean/Libero cannot change the type of a Terastallized Pokemon")
 {
-    u32 ability, species;
+    enum Ability ability; u32 species;
     PARAMETRIZE { ability = ABILITY_PROTEAN; species = SPECIES_GRENINJA; }
     PARAMETRIZE { ability = ABILITY_LIBERO;  species = SPECIES_RABOOT; }
     GIVEN {
