@@ -543,6 +543,7 @@ void Script_GetPurchaseFromSavings()
 
     *pendingPtr = pending;
     gSpecialVar_Result = currentPurchase.itemId;
+    gSpecialVar_0x8001 = currentPurchase.quantity;
 }
 
 void PurchaseFromSavings()
