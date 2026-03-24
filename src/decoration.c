@@ -419,17 +419,63 @@ static const u8 sDecorationSlideElevation[] =
     3, 0,
 };
 
-static const u16 sDecorShapeSizes[] = {
-    [DECORSHAPE_1x1] = 4,
-    [DECORSHAPE_2x1] = 8,
-    [DECORSHAPE_3x1] = 16,
-    [DECORSHAPE_4x2] = 32,
-    [DECORSHAPE_2x2] = 16,
-    [DECORSHAPE_1x2] = 8,
-    [DECORSHAPE_1x3] = 16,
-    [DECORSHAPE_2x4] = 32,
-    [DECORSHAPE_3x3] = 64,
-    [DECORSHAPE_3x2] = 32,
+struct DecorShape {
+    u16 size;
+    u16 width;
+    u16 height;
+};
+
+static const struct DecorShape sDecorShapes[] = {
+    [DECORSHAPE_1x1] = {
+        .size = 4,
+        .width = 1,
+        .height = 1,
+    },
+    [DECORSHAPE_2x1] = {
+        .size = 8,
+        .width = 2,
+        .height = 1,
+    },
+    [DECORSHAPE_3x1] = {
+        .size = 16,
+        .width = 3,
+        .height = 1,
+    },
+    [DECORSHAPE_4x2] = {
+        .size = 32,
+        .width = 4,
+        .height = 2,
+    },
+    [DECORSHAPE_2x2] = {
+        .size = 16,
+        .width = 2,
+        .height = 2,
+    },
+    [DECORSHAPE_1x2] = {
+        .size = 8,
+        .width = 1,
+        .height = 2,
+    },
+    [DECORSHAPE_1x3] = {
+        .size = 16,
+        .width = 1,
+        .height = 3,
+    },
+    [DECORSHAPE_2x4] = {
+        .size = 32,
+        .width = 2,
+        .height = 4,
+    },
+    [DECORSHAPE_3x3] = {
+        .size = 64,
+        .width = 3,
+        .height = 3,
+    },
+    [DECORSHAPE_3x2] = {
+        .size = 32,
+        .width = 3,
+        .height = 2,
+    },
 };
 
 static const u16 sBrendanPalette[] = INCBIN_U16("graphics/decorations/brendan.gbapal");
@@ -1244,39 +1290,7 @@ static void ShowDecorationOnMap_(u16 mapX, u16 mapY, u8 decWidth, u8 decHeight, 
 
 void ShowDecorationOnMap(u16 mapX, u16 mapY, u16 decoration)
 {
-    switch (gDecorations[decoration].shape)
-    {
-    case DECORSHAPE_1x1:
-        ShowDecorationOnMap_(mapX, mapY, 1, 1, decoration);
-        break;
-    case DECORSHAPE_2x1:
-        ShowDecorationOnMap_(mapX, mapY, 2, 1, decoration);
-        break;
-    case DECORSHAPE_3x1: // unused
-        ShowDecorationOnMap_(mapX, mapY, 3, 1, decoration);
-        break;
-    case DECORSHAPE_4x2:
-        ShowDecorationOnMap_(mapX, mapY, 4, 2, decoration);
-        break;
-    case DECORSHAPE_2x2:
-        ShowDecorationOnMap_(mapX, mapY, 2, 2, decoration);
-        break;
-    case DECORSHAPE_1x2:
-        ShowDecorationOnMap_(mapX, mapY, 1, 2, decoration);
-        break;
-    case DECORSHAPE_1x3: // unused
-        ShowDecorationOnMap_(mapX, mapY, 1, 3, decoration);
-        break;
-    case DECORSHAPE_2x4:
-        ShowDecorationOnMap_(mapX, mapY, 2, 4, decoration);
-        break;
-    case DECORSHAPE_3x3:
-        ShowDecorationOnMap_(mapX, mapY, 3, 3, decoration);
-        break;
-    case DECORSHAPE_3x2:
-        ShowDecorationOnMap_(mapX, mapY, 3, 2, decoration);
-        break;
-    }
+    ShowDecorationOnMap_(mapX, mapY, sDecorShapes[gDecorations[decoration].shape].width, sDecorShapes[gDecorations[decoration].shape].height , decoration);
 }
 
 void SetDecoration(void)
@@ -1419,50 +1433,8 @@ static void SetUpPlacingDecorationPlayerAvatar(u8 taskId, struct PlaceDecoration
 
 static void SetUpDecorationShape(u8 taskId)
 {
-    switch (gDecorations[gCurDecorationItems[gCurDecorationIndex]].shape)
-    {
-    case DECORSHAPE_1x1:
-        gTasks[taskId].tDecorWidth = 1;
-        gTasks[taskId].tDecorHeight = 1;
-        break;
-    case DECORSHAPE_2x1:
-        gTasks[taskId].tDecorWidth = 2;
-        gTasks[taskId].tDecorHeight = 1;
-        break;
-    case DECORSHAPE_3x1:
-        gTasks[taskId].tDecorWidth = 3;
-        gTasks[taskId].tDecorHeight = 1;
-        break;
-    case DECORSHAPE_4x2:
-        gTasks[taskId].tDecorWidth = 4;
-        gTasks[taskId].tDecorHeight = 2;
-        break;
-    case DECORSHAPE_2x2:
-        gTasks[taskId].tDecorWidth = 2;
-        gTasks[taskId].tDecorHeight = 2;
-        break;
-    case DECORSHAPE_1x2:
-        gTasks[taskId].tDecorWidth = 1;
-        gTasks[taskId].tDecorHeight = 2;
-        break;
-    case DECORSHAPE_1x3:
-        gTasks[taskId].tDecorWidth = 1;
-        gTasks[taskId].tDecorHeight = 3;
-        gTasks[taskId].tCursorY++;
-        break;
-    case DECORSHAPE_2x4:
-        gTasks[taskId].tDecorWidth = 2;
-        gTasks[taskId].tDecorHeight = 4;
-        break;
-    case DECORSHAPE_3x3:
-        gTasks[taskId].tDecorWidth = 3;
-        gTasks[taskId].tDecorHeight = 3;
-        break;
-    case DECORSHAPE_3x2:
-        gTasks[taskId].tDecorWidth = 3;
-        gTasks[taskId].tDecorHeight = 2;
-        break;
-    }
+    gTasks[taskId].tDecorWidth = sDecorShapes[gDecorations[gCurDecorationItems[gCurDecorationIndex]].shape].width;
+    gTasks[taskId].tDecorHeight = sDecorShapes[gDecorations[gCurDecorationItems[gCurDecorationIndex]].shape].height;
 }
 
 static void AttemptPlaceDecoration(u8 taskId)
@@ -2136,7 +2108,7 @@ static u8 AddDecorationIconObjectFromObjectEvent(u16 tilesTag, u16 paletteTag, u
         SetDecorSelectionBoxTiles(&sPlaceDecorationGraphicsDataBuffer);
         CopyPalette(sPlaceDecorationGraphicsDataBuffer.palette, gTilesetPointer_SecretBaseRedCave->metatiles[(sPlaceDecorationGraphicsDataBuffer.decoration->tiles[0] * NUM_TILES_PER_METATILE) + 7] >> 12);
         sheet.data = sPlaceDecorationGraphicsDataBuffer.image;
-        sheet.size = sDecorShapeSizes[sPlaceDecorationGraphicsDataBuffer.decoration->shape] * TILE_SIZE_4BPP;
+        sheet.size = sDecorShapes[sPlaceDecorationGraphicsDataBuffer.decoration->shape].size * TILE_SIZE_4BPP;
         sheet.tag = tilesTag;
         LoadSpriteSheet(&sheet);
         palette.data = sPlaceDecorationGraphicsDataBuffer.palette;
@@ -2440,56 +2412,8 @@ static void ContinuePuttingAwayDecorationsPrompt(u8 taskId)
 
 static void SetDecorRearrangementShape(u8 decor, struct DecorRearrangementDataBuffer *data)
 {
-    if (gDecorations[decor].shape == DECORSHAPE_1x1)
-    {
-        data->width = 1;
-        data->height = 1;
-    }
-    else if (gDecorations[decor].shape == DECORSHAPE_2x1)
-    {
-        data->width = 2;
-        data->height = 1;
-    }
-    else if (gDecorations[decor].shape == DECORSHAPE_3x1)
-    {
-        data->width = 3;
-        data->height = 1;
-    }
-    else if (gDecorations[decor].shape == DECORSHAPE_4x2)
-    {
-        data->width = 4;
-        data->height = 2;
-    }
-    else if (gDecorations[decor].shape == DECORSHAPE_2x2)
-    {
-        data->width = 2;
-        data->height = 2;
-    }
-    else if (gDecorations[decor].shape == DECORSHAPE_1x2)
-    {
-        data->width = 1;
-        data->height = 2;
-    }
-    else if (gDecorations[decor].shape == DECORSHAPE_1x3)
-    {
-        data->width = 1;
-        data->height = 3;
-    }
-    else if (gDecorations[decor].shape == DECORSHAPE_2x4)
-    {
-        data->width = 2;
-        data->height = 4;
-    }
-    else if (gDecorations[decor].shape == DECORSHAPE_3x3)
-    {
-        data->width = 3;
-        data->height = 3;
-    }
-    else if (gDecorations[decor].shape == DECORSHAPE_3x2)
-    {
-        data->width = 3;
-        data->height = 2;
-    }
+    data->width = sDecorShapes[gDecorations[decor].shape].width;
+    data->height = sDecorShapes[gDecorations[decor].shape].height;
 }
 
 static void SetCameraSpritePosition(u8 x, u8 y)
