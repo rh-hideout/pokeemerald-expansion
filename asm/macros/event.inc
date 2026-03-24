@@ -2921,7 +2921,7 @@
 
 @ Copies the current Bank Balance into STR_VAR_2
 .macro getbankbalancestring
-  special GetBankBalanceString
+  void Script_GetBankBalanceString
 .endm
 
 @ Compares the current bank balance with a user-provided value.

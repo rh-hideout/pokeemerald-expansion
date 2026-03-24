@@ -5781,10 +5781,3 @@ bool8 CheckAddCoins(void)
     else
         return TRUE;
 }
-
-void GetBankBalanceString(void)
-{
-    u32 savings = GetMoneyInBank();
-    u32 digits = Util_CountDigits(savings);
-    ConvertIntToDecimalStringN(gStringVar2, savings, STR_CONV_MODE_LEFT_ALIGN, digits);
-}

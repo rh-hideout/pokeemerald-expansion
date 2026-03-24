@@ -207,6 +207,13 @@ void Script_UpdateBankBalanceBox(struct ScriptContext *ctx)
     ChangeAmountInMoneyBox(GetMoneyInBank());
 }
 
+void Script_GetBankBalanceString(void)
+{
+    u32 savings = GetMoneyInBank();
+    u32 digits = Util_CountDigits(savings);
+    ConvertIntToDecimalStringN(gStringVar2, savings, STR_CONV_MODE_LEFT_ALIGN, digits);
+}
+
 u32 CalcAmountToDeposit(u32 money)
 {
     return (money / 100) * SAVINGS_PERCENT
