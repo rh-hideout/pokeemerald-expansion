@@ -38,6 +38,7 @@
 #define MAX_STEP       1000
 #define STEP_SPEED     360
 #define MAX_BANK_MONEY 9999999
+#define MAX_PENDING    5
 
 // Enums
 enum BankingMode
@@ -524,36 +525,50 @@ void Script_CheckSavingsPurchaseQuantity()
 void Script_GetPurchaseFromSavings()
 {
     EnsureBankingEnabled();
-    u32 purchaseIdx = *GetPurchaseIndexPtr();
-    u32 pendingPurchases = *GetPendingPurchasePtr();
+    u8 *indexPtr = GetPurchaseIndexPtr();
+    u8 *pendingPtr = GetPendingPurchasePtr();
+    u32 idx = *indexPtr;
+    u32 pending = *pendingPtr;
 
-    assertf(pendingPurchases, "No pending purchases to get")
+    assertf(pending, "No pending purchases to get")
     {
         return;
     }
 
-    purchaseIdx -= --(*GetPendingPurchasePtr());
+    pending--;
+    u32 curr = idx - pending;
 
     struct UniquePurchaseItem currentPurchase =
-        sUniquePurchaseTable[purchaseIdx];
+        sUniquePurchaseTable[curr];
 
+    *pendingPtr = pending;
     gSpecialVar_Result = currentPurchase.itemId;
 }
 
 void PurchaseFromSavings()
 {
     u32 savings = GetMoneyInBank();
-    u32 lastPurchase = *GetPurchaseIndexPtr();
+    u8 *indexPtr = GetPurchaseIndexPtr();
+    u8 *pendingPtr = GetPendingPurchasePtr();
 
-    struct UniquePurchaseItem nextPurchase =
-        sUniquePurchaseTable[++lastPurchase];
+    u32 idx = *indexPtr;
+    u32 pending = *pendingPtr;
 
-    while (savings >= nextPurchase.thresholdMoney)
+    while (TRUE)
     {
-        (*GetPurchaseIndexPtr())++;
-        (*GetPendingPurchasePtr())++;
-        nextPurchase = sUniquePurchaseTable[lastPurchase++];
-        if (nextPurchase.itemId == ITEM_NONE)
+        if (pending == MAX_PENDING)
             break;
+
+        struct UniquePurchaseItem next = sUniquePurchaseTable[idx + 1];
+
+        if (next.itemId == ITEM_NONE)
+            break;
+        if (savings < next.thresholdMoney)
+            break;
+
+        idx++;
+        pending++;
     }
+    *indexPtr = idx;
+    *pendingPtr = pending;
 }
