@@ -22,7 +22,12 @@ u32 Util_CountDigits(u32 value);
 
 static inline u32 Clamp(u32 value, u32 min, u32 max)
 {
-    return (value < min) ? min : (value > max) ? max : value;
+    if (value < min)
+        return min;
+    else if (value > max)
+        return max;
+    else
+        return value;
 }
 
 #endif // GUARD_UTIL_H
