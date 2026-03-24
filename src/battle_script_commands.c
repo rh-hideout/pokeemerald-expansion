@@ -14991,17 +14991,15 @@ void BS_TryWakeBattlerUproar(void)
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
     bool32 hasSoundproof = GetConfig(B_UPROAR_IGNORE_SOUNDPROOF) < GEN_5 && GetBattlerAbility(battler) == ABILITY_SOUNDPROOF;
 
+    gBattlescriptCurrInstr = cmd->nextInstr;
+
     if (gBattleMons[battler].status1 & STATUS1_SLEEP && !hasSoundproof)
     {
+        TryDeactivateSleepClause(GetBattlerSide(battler), gBattlerPartyIndexes[battler]);
         gBattleMons[battler].status1 = 0;
         BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[battler].status1), &gBattleMons[battler].status1);
         MarkBattlerForControllerExec(battler);
 
-        BattleScriptPush(cmd->nextInstr);
-        gBattlescriptCurrInstr = BattleScript_TargetWokeUp;
-    }
-    else
-    {
-        gBattlescriptCurrInstr = cmd->nextInstr;
+        BattleScriptCall(BattleScript_TargetWokeUp);
     }
 }
