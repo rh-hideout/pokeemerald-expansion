@@ -1708,6 +1708,7 @@ static void CreateEventMon(struct Pokemon *mon, u16 species, u8 level, u32 perso
 
     CreateMon(mon, species, level, personality, otId);
     SetMonData(mon, MON_DATA_MODERN_FATEFUL_ENCOUNTER, &isModernFatefulEncounter);
+    CalculateMonStats(mon);
 }
 
 enum TrainerPicID GetUnionRoomTrainerPic(void)
