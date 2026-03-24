@@ -18,6 +18,7 @@
 #include "overworld.h"
 #include "script.h"
 #include "string_util.h"
+#include "strings.h"
 #include "task.h"
 #include "text.h"
 #include "util.h"
@@ -338,13 +339,28 @@ static bool32 HandleAmountInput(u32 *amount, u32 max, u32 min, s16 *heldFrames)
     return *amount != original;
 }
 
-static void PrintTransactionAmount(u8 windowId, s16 amount)
+static void PrintTransactionAmount(u8 windowId, u32 amount)
 {
-    ConvertIntToDecimalStringN(gStringVar4, amount, STR_CONV_MODE_LEADING_ZEROS,
-                               Util_CountDigits(GetMoneyInBank()));
-    AddTextPrinterParameterized(
-        windowId, FONT_NORMAL, gStringVar4,
-        GetStringCenterAlignXOffset(FONT_NORMAL, gStringVar4, 0x28), 2, 0, 0);
+
+    u8 *txtPtr = gStringVar4;
+    u32 numDigits = Util_CountDigits(amount);
+    u32 maxDigits = (numDigits > 6) ? MAX_MONEY_DIGITS : 6;
+
+    ConvertIntToDecimalStringN(gStringVar1, amount, STR_CONV_MODE_LEFT_ALIGN,
+                               maxDigits);
+
+    StringExpandPlaceholders(txtPtr, gText_PokedollarVar1);
+
+    u8 x = 1;
+    u8 y = 2;
+
+    if (numDigits > 8)
+        PrependFontIdToFit(gStringVar4, txtPtr + 1 + numDigits, FONT_NORMAL,
+                           54);
+
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
+    AddTextPrinterParameterized(windowId, FONT_NORMAL, gStringVar4, x, y, 0,
+                                NULL);
 }
 
 static u32 GetTransactionMaxAmount(enum BankingMode mode)
