@@ -440,7 +440,7 @@ u16 MapPreview_CreateMapNameWindow(mapsec_u8_t mapsec)
     u8 color[0];
     #endif
 
-    GetMapName(gStringVar4, mapsec, 0);
+    GetPopUpMapName(gStringVar4, mapsec, 0);
     // Use a longer window size if the map name is too long to fit.
     fontId = GetFontIdToFit(gStringVar4, FONT_NORMAL, 0, 104);
     stringWidth = GetStringWidth(fontId, gStringVar4, 0);
