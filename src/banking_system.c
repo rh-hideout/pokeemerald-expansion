@@ -4,12 +4,14 @@
 #include "battle_message.h"
 #include "config/banking.h"
 #include "constants/flags.h"
+#include "constants/items.h"
 #include "event_data.h"
 #include "event_object_movement.h"
 #include "field_player_avatar.h"
 #include "gba/defines.h"
 #include "gba/io_reg.h"
 #include "international_string_util.h"
+#include "item.h"
 #include "main.h"
 #include "menu.h"
 #include "money.h"
@@ -21,6 +23,7 @@
 #include "util.h"
 #include "window.h"
 
+// Macros
 #define EnsureBankingEnabled()                                              \
     {                                                                       \
         assertf(IsBankingEnabled(),"Banking functionality is not enabled")  \
@@ -35,12 +38,44 @@
 #define STEP_SPEED     360
 #define MAX_BANK_MONEY 9999999
 
+// Enums
 enum BankingMode
 {
     MODE_DEPOSIT,
     MODE_WITHDRAW
 };
 
+// Structs
+struct UniquePurchaseItem
+{
+    enum Item itemId;
+    u32 thresholdMoney;
+    u16 quantity;
+    s32 price;
+};
+
+struct RepeatPurchaseItem
+{
+    enum Item itemId;
+    s32 quantity;
+    s32 price;
+};
+
+static const struct UniquePurchaseItem sUniquePurchaseTable[] = {
+    {ITEM_NONE},
+    {ITEM_SUPER_POTION,  900,   1,  600},
+    {ITEM_REPEL,         4000,  1,  270},
+    {ITEM_SUPER_POTION,  7000,  1,  600},
+    {ITEM_SILK_SCARF,    10000, 1,  100},
+    {ITEM_MOON_STONE,    15000, 1, 3000},
+    {ITEM_HYPER_POTION,  19000, 1,  900},
+    {ITEM_CHOICE_SCARF,  30000, 1,  200},
+    {ITEM_MUSCLE_BAND,   40000, 1,  200},
+    {ITEM_FOCUS_SASH,    50000, 1,  200},
+    {ITEM_NONE}
+};
+
+// Strings
 static const u8 sText_Deposit[] = _("Deposit");
 static const u8 sText_Withdraw[] = _("Withdraw");
 
@@ -92,6 +127,24 @@ u32* GetSavedMoneyPtr(void)
 {
     #if SAVINGS_ENABLED
         return &gSaveBlock3Ptr->savedMoney;
+    #else
+        return NULL;
+    #endif /* if SAVINGS_ENABLED */
+}
+
+u32* GetPurchaseIndexPtr(void)
+{
+    #if SAVINGS_ENABLED
+        return &gSaveBlock3Ptr->lastPurchase;
+    #else
+        return NULL;
+    #endif /* if SAVINGS_ENABLED */
+}
+
+u32* GetPendingPurchasePtr(void)
+{
+    #if SAVINGS_ENABLED
+        return &gSaveBlock3Ptr->pendingPurchase;
     #else
         return NULL;
     #endif /* if SAVINGS_ENABLED */
@@ -417,3 +470,68 @@ void Script_StartTransactionTask(struct ScriptContext *ctx)
     gTasks[taskId].tBankingMode = bankingMode;
 }
 #undef tBankingMode
+
+void Script_CheckPurchaseFromSavings()
+{
+    EnsureBankingEnabled();
+    u32 purchaseIdx = *GetPurchaseIndexPtr();
+    u32 pendingPurchases = *GetPendingPurchasePtr();
+
+    if (!pendingPurchases)
+    {
+        gSpecialVar_Result = ITEM_NONE;
+        return;
+    }
+
+    struct UniquePurchaseItem purchase = sUniquePurchaseTable[purchaseIdx];
+    gSpecialVar_Result = purchase.itemId;
+    return;
+}
+
+void Script_CheckSavingsPurchaseQuantity()
+{
+    EnsureBankingEnabled();
+    u32 purchaseIdx = *GetPurchaseIndexPtr();
+    u32 pendingPurchases = *GetPendingPurchasePtr();
+
+    purchaseIdx -= --pendingPurchases;
+
+    struct UniquePurchaseItem currentPurchase =
+        sUniquePurchaseTable[purchaseIdx];
+
+    gSpecialVar_Result = currentPurchase.quantity;
+}
+
+void Script_GetPurchaseFromSavings()
+{
+    EnsureBankingEnabled();
+    u32 purchaseIdx = *GetPurchaseIndexPtr();
+    u32 pendingPurchases = *GetPendingPurchasePtr();
+
+    assertf(pendingPurchases, "No pending purchases to get")
+    {
+        return;
+    }
+
+    purchaseIdx -= --(*GetPendingPurchasePtr());
+
+    struct UniquePurchaseItem currentPurchase =
+        sUniquePurchaseTable[purchaseIdx];
+
+    gSpecialVar_Result = currentPurchase.itemId;
+}
+
+bool32 PurchaseFromSavings()
+{
+    u32 savings = GetMoneyInBank();
+    u32 lastPurchase = *GetPurchaseIndexPtr();
+
+    struct UniquePurchaseItem nextPurchase =
+        sUniquePurchaseTable[++lastPurchase];
+
+    if (savings >= nextPurchase.thresholdMoney)
+    {
+        (*GetPurchaseIndexPtr())++;
+        (*GetPendingPurchasePtr())++;
+    }
+}
