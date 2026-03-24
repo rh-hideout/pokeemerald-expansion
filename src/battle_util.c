@@ -1113,25 +1113,25 @@ bool32 IsLastMonToMove(enum BattlerId battler)
     return TRUE;
 }
 
-static u32 GetAiTurnOrder(u8 *aiTurnOrder, enum BattlerId battler)
+static u32 GetAiTurnOrder(enum BattlerId battler)
 {
     for (u32 i = 0; i < gBattlersCount; i++)
     {
-        if (aiTurnOrder[i] == battler)
+        if (gAiLogicData->turnOrder[i] == battler)
             return i;
     }
     return 0;
 }
 
-static bool32 Ai_AttackerMovesAfterTarget(struct BattleContext *ctx)
+static bool32 Ai_AttackerMovesAfterTarget(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
-    return GetAiTurnOrder(ctx->aiTurnOrder, ctx->battlerAtk) > GetAiTurnOrder(ctx->aiTurnOrder, ctx->battlerDef);
+    return GetAiTurnOrder(battlerAtk) > GetAiTurnOrder(battlerDef);
 }
 
-static bool32 Ai_AttackerMovesLast(struct BattleContext *ctx)
+static bool32 Ai_AttackerMovesLast(enum BattlerId battlerAtk)
 {
     u32 numAliveBattlers = 0;
-    u32 battlerTurnOrder = GetAiTurnOrder(ctx->aiTurnOrder, ctx->battlerAtk);
+    u32 battlerTurnOrder = GetAiTurnOrder(battlerAtk);
 
     for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
     {
@@ -6033,77 +6033,6 @@ static const u8 sSpeedDiffPowerTable[] = {40, 60, 80, 120, 150};
 static const u8 sHeatCrashPowerTable[] = {40, 40, 60, 80, 100, 120};
 static const u8 sTrumpCardPowerTable[] = {200, 80, 60, 50, 40};
 
-const struct TypePower gNaturalGiftTable[] =
-{
-    [ITEM_TO_BERRY(ITEM_CHERI_BERRY)] = {TYPE_FIRE, 80},
-    [ITEM_TO_BERRY(ITEM_CHESTO_BERRY)] = {TYPE_WATER, 80},
-    [ITEM_TO_BERRY(ITEM_PECHA_BERRY)] = {TYPE_ELECTRIC, 80},
-    [ITEM_TO_BERRY(ITEM_RAWST_BERRY)] = {TYPE_GRASS, 80},
-    [ITEM_TO_BERRY(ITEM_ASPEAR_BERRY)] = {TYPE_ICE, 80},
-    [ITEM_TO_BERRY(ITEM_LEPPA_BERRY)] = {TYPE_FIGHTING, 80},
-    [ITEM_TO_BERRY(ITEM_ORAN_BERRY)] = {TYPE_POISON, 80},
-    [ITEM_TO_BERRY(ITEM_PERSIM_BERRY)] = {TYPE_GROUND, 80},
-    [ITEM_TO_BERRY(ITEM_LUM_BERRY)] = {TYPE_FLYING, 80},
-    [ITEM_TO_BERRY(ITEM_SITRUS_BERRY)] = {TYPE_PSYCHIC, 80},
-    [ITEM_TO_BERRY(ITEM_FIGY_BERRY)] = {TYPE_BUG, 80},
-    [ITEM_TO_BERRY(ITEM_WIKI_BERRY)] = {TYPE_ROCK, 80},
-    [ITEM_TO_BERRY(ITEM_MAGO_BERRY)] = {TYPE_GHOST, 80},
-    [ITEM_TO_BERRY(ITEM_AGUAV_BERRY)] = {TYPE_DRAGON, 80},
-    [ITEM_TO_BERRY(ITEM_IAPAPA_BERRY)] = {TYPE_DARK, 80},
-    [ITEM_TO_BERRY(ITEM_RAZZ_BERRY)] = {TYPE_STEEL, 80},
-    [ITEM_TO_BERRY(ITEM_OCCA_BERRY)] = {TYPE_FIRE, 80},
-    [ITEM_TO_BERRY(ITEM_PASSHO_BERRY)] = {TYPE_WATER, 80},
-    [ITEM_TO_BERRY(ITEM_WACAN_BERRY)] = {TYPE_ELECTRIC, 80},
-    [ITEM_TO_BERRY(ITEM_RINDO_BERRY)] = {TYPE_GRASS, 80},
-    [ITEM_TO_BERRY(ITEM_YACHE_BERRY)] = {TYPE_ICE, 80},
-    [ITEM_TO_BERRY(ITEM_CHOPLE_BERRY)] = {TYPE_FIGHTING, 80},
-    [ITEM_TO_BERRY(ITEM_KEBIA_BERRY)] = {TYPE_POISON, 80},
-    [ITEM_TO_BERRY(ITEM_SHUCA_BERRY)] = {TYPE_GROUND, 80},
-    [ITEM_TO_BERRY(ITEM_COBA_BERRY)] = {TYPE_FLYING, 80},
-    [ITEM_TO_BERRY(ITEM_PAYAPA_BERRY)] = {TYPE_PSYCHIC, 80},
-    [ITEM_TO_BERRY(ITEM_TANGA_BERRY)] = {TYPE_BUG, 80},
-    [ITEM_TO_BERRY(ITEM_CHARTI_BERRY)] = {TYPE_ROCK, 80},
-    [ITEM_TO_BERRY(ITEM_KASIB_BERRY)] = {TYPE_GHOST, 80},
-    [ITEM_TO_BERRY(ITEM_HABAN_BERRY)] = {TYPE_DRAGON, 80},
-    [ITEM_TO_BERRY(ITEM_COLBUR_BERRY)] = {TYPE_DARK, 80},
-    [ITEM_TO_BERRY(ITEM_BABIRI_BERRY)] = {TYPE_STEEL, 80},
-    [ITEM_TO_BERRY(ITEM_CHILAN_BERRY)] = {TYPE_NORMAL, 80},
-    [ITEM_TO_BERRY(ITEM_ROSELI_BERRY)] = {TYPE_FAIRY, 80},
-    [ITEM_TO_BERRY(ITEM_BLUK_BERRY)] = {TYPE_FIRE, 90},
-    [ITEM_TO_BERRY(ITEM_NANAB_BERRY)] = {TYPE_WATER, 90},
-    [ITEM_TO_BERRY(ITEM_WEPEAR_BERRY)] = {TYPE_ELECTRIC, 90},
-    [ITEM_TO_BERRY(ITEM_PINAP_BERRY)] = {TYPE_GRASS, 90},
-    [ITEM_TO_BERRY(ITEM_POMEG_BERRY)] = {TYPE_ICE, 90},
-    [ITEM_TO_BERRY(ITEM_KELPSY_BERRY)] = {TYPE_FIGHTING, 90},
-    [ITEM_TO_BERRY(ITEM_QUALOT_BERRY)] = {TYPE_POISON, 90},
-    [ITEM_TO_BERRY(ITEM_HONDEW_BERRY)] = {TYPE_GROUND, 90},
-    [ITEM_TO_BERRY(ITEM_GREPA_BERRY)] = {TYPE_FLYING, 90},
-    [ITEM_TO_BERRY(ITEM_TAMATO_BERRY)] = {TYPE_PSYCHIC, 90},
-    [ITEM_TO_BERRY(ITEM_CORNN_BERRY)] = {TYPE_BUG, 90},
-    [ITEM_TO_BERRY(ITEM_MAGOST_BERRY)] = {TYPE_ROCK, 90},
-    [ITEM_TO_BERRY(ITEM_RABUTA_BERRY)] = {TYPE_GHOST, 90},
-    [ITEM_TO_BERRY(ITEM_NOMEL_BERRY)] = {TYPE_DRAGON, 90},
-    [ITEM_TO_BERRY(ITEM_SPELON_BERRY)] = {TYPE_DARK, 90},
-    [ITEM_TO_BERRY(ITEM_PAMTRE_BERRY)] = {TYPE_STEEL, 90},
-    [ITEM_TO_BERRY(ITEM_WATMEL_BERRY)] = {TYPE_FIRE, 100},
-    [ITEM_TO_BERRY(ITEM_DURIN_BERRY)] = {TYPE_WATER, 100},
-    [ITEM_TO_BERRY(ITEM_BELUE_BERRY)] = {TYPE_ELECTRIC, 100},
-    [ITEM_TO_BERRY(ITEM_LIECHI_BERRY)] = {TYPE_GRASS, 100},
-    [ITEM_TO_BERRY(ITEM_GANLON_BERRY)] = {TYPE_ICE, 100},
-    [ITEM_TO_BERRY(ITEM_SALAC_BERRY)] = {TYPE_FIGHTING, 100},
-    [ITEM_TO_BERRY(ITEM_PETAYA_BERRY)] = {TYPE_POISON, 100},
-    [ITEM_TO_BERRY(ITEM_APICOT_BERRY)] = {TYPE_GROUND, 100},
-    [ITEM_TO_BERRY(ITEM_LANSAT_BERRY)] = {TYPE_FLYING, 100},
-    [ITEM_TO_BERRY(ITEM_STARF_BERRY)] = {TYPE_PSYCHIC, 100},
-    [ITEM_TO_BERRY(ITEM_ENIGMA_BERRY)] = {TYPE_BUG, 100},
-    [ITEM_TO_BERRY(ITEM_MICLE_BERRY)] = {TYPE_ROCK, 100},
-    [ITEM_TO_BERRY(ITEM_CUSTAP_BERRY)] = {TYPE_GHOST, 100},
-    [ITEM_TO_BERRY(ITEM_JABOCA_BERRY)] = {TYPE_DRAGON, 100},
-    [ITEM_TO_BERRY(ITEM_ROWAP_BERRY)] = {TYPE_DARK, 100},
-    [ITEM_TO_BERRY(ITEM_KEE_BERRY)] = {TYPE_FAIRY, 100},
-    [ITEM_TO_BERRY(ITEM_MARANGA_BERRY)] = {TYPE_DARK, 100},
-};
-
 static inline u32 CalcRolloutBasePower(enum BattlerId battlerAtk, u32 basePower)
 {
     u32 i;
@@ -6253,7 +6182,7 @@ static inline u32 CalcMoveBasePower(struct BattleContext *ctx)
             basePower *= 2;
         break;
     case EFFECT_NATURAL_GIFT:
-        basePower = gNaturalGiftTable[ITEM_TO_BERRY(gBattleMons[battlerAtk].item)].power;
+        basePower = gBerries[ItemIdToBerryType(gBattleMons[battlerAtk].item)].naturalGiftPower;
         break;
     case EFFECT_DOUBLE_POWER_ON_ARG_STATUS:
         // Comatose targets treated as if asleep
@@ -6344,7 +6273,7 @@ static inline u32 CalcMoveBasePower(struct BattleContext *ctx)
     case EFFECT_PAYBACK:
         if (ctx->aiCalc)
         {
-            if (Ai_AttackerMovesAfterTarget(ctx))
+            if (Ai_AttackerMovesAfterTarget(battlerAtk, battlerDef))
                 basePower *= 2;
         }
         else if (HasBattlerActedThisTurn(battlerDef)
@@ -6356,7 +6285,7 @@ static inline u32 CalcMoveBasePower(struct BattleContext *ctx)
     case EFFECT_BOLT_BEAK:
         if (ctx->aiCalc)
         {
-            if (!Ai_AttackerMovesAfterTarget(ctx))
+            if (!Ai_AttackerMovesAfterTarget(battlerAtk, battlerDef))
                 basePower *= 2;
         }
         else if (!HasBattlerActedThisTurn(battlerDef)
@@ -6470,9 +6399,12 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct BattleContext *ctx)
             modifier = uq4_12_multiply(modifier, UQ_4_12(2.0));
         break;
     case EFFECT_RETALIATE:
-        if (gSideTimers[atkSide].retaliateTimer == 1)
+    {
+        u32 retaliateTimer = gSideTimers[atkSide].retaliateTimer;
+        if (retaliateTimer  == 1 || (gAiLogicData->switchInCalc && retaliateTimer == 2))
             modifier = uq4_12_multiply(modifier, UQ_4_12(2.0));
         break;
+    }
     case EFFECT_SOLAR_BEAM:
         if ((GetConfig(B_SANDSTORM_SOLAR_BEAM) >= GEN_3 && IsBattlerWeatherAffected(ctx->holdEffectAtk, ctx->weather, B_WEATHER_LOW_LIGHT))
             || IsBattlerWeatherAffected(ctx->holdEffectAtk, ctx->weather, (B_WEATHER_RAIN | B_WEATHER_ICY_ANY | B_WEATHER_FOG))) // Excludes Sandstorm
@@ -6564,7 +6496,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct BattleContext *ctx)
 
         if (ctx->aiCalc)
         {
-            if (Ai_AttackerMovesLast(ctx))
+            if (Ai_AttackerMovesLast(battlerAtk))
                modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
         }
         else if (IsLastMonToMove(battlerAtk))

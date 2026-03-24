@@ -201,6 +201,7 @@ struct SimulatedDamage
     u16 minimum;
     u16 median;
     u16 maximum;
+    u16 random;
 };
 
 // Ai Data used when deciding which move to use, computed only once before each turn's start.
@@ -209,7 +210,6 @@ struct AiLogicData
     enum Ability abilities[MAX_BATTLERS_COUNT];
     enum Item items[MAX_BATTLERS_COUNT];
     enum HoldEffect holdEffects[MAX_BATTLERS_COUNT];
-    u8 holdEffectParams[MAX_BATTLERS_COUNT];
     enum Move lastUsedMove[MAX_BATTLERS_COUNT];
     u8 hpPercents[MAX_BATTLERS_COUNT];
     enum Move partnerMove;
@@ -222,6 +222,7 @@ struct AiLogicData
     u8 mostSuitableMonId[MAX_BATTLERS_COUNT]; // Stores result of GetMostSuitableMonToSwitchInto, which decides which generic mon the AI would switch into if they decide to switch. This can be overruled by specific mons found in ShouldSwitch; the final resulting mon is stored in AI_monToSwitchIntoId.
     enum Move predictedMove[MAX_BATTLERS_COUNT];
     u8 resistBerryAffected[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT][MAX_MON_MOVES]; // Tracks whether currently calc'd move is affected by a resist berry into given target
+    u8 turnOrder[MAX_BATTLERS_COUNT];
 
     // Flags
     u32 weatherHasEffect:1; // The same as HasWeatherEffect(). Stored here, so it's called only once.
@@ -234,7 +235,8 @@ struct AiLogicData
     u32 shouldConsiderExplosion:1; // Determines whether AI should consider explosion moves this turn
     u32 shouldSwitch:4; // Stores result of ShouldSwitch, which decides whether a mon should be switched out
     u32 shouldConsiderFinalGambit:1; // Determines whether AI should consider Final Gambit this turn
-    u32 padding2:19;
+    u32 switchInCalc:1; // Indicates if we're doing switch in calcs, this is purely for Retaliate damage calcs
+    u32 padding2:18;
 };
 
 struct AiThinkingStruct

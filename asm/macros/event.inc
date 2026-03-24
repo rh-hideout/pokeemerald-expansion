@@ -1279,11 +1279,14 @@
 	.endm
 
 	@ Sets a berry tree's berry and growth stage. treeId is any BERRY_TREE_* constant (an index into berryTrees in SaveBlock1),
-	@ berry is any ITEM_TO_BERRY(ITEM_BERRY_NAME) value, and growthStage is any BERRY_STAGE_* constant.
-	.macro setberrytree treeId:req, berry:req, growthStage:req
+	@ berryId is any BERRY_ID_X value, and growthStage is any BERRY_STAGE_* constant.
+	.macro setberrytree treeId:req, berryId:req, growthStage:req
+	.if \berryId == 0 || \berryId > NUM_BERRIES
+		.error "setberrytree must use a valid berry index"
+	.endif
 	.byte SCR_OP_SETBERRYTREE
 	.byte \treeId
-	.byte \berry
+	.byte \berryId
 	.byte \growthStage
 	.endm
 
@@ -2783,6 +2786,20 @@
 	.macro setspeaker name:req
 	callnative SetSpeaker
 	.4byte \name
+	.endm
+
+	@ Gives a random berry between the index ranges
+	.macro giverandomberry loBerry:req, hiBerry:req
+	.if \loBerry == 0 || \loBerry > NUM_BERRIES
+		.error "giverandomberry must use a valid berry index for first argument"
+	.endif
+	.if \hiBerry == 0 || \hiBerry > NUM_BERRIES
+		.error "giverandomberry must use a valid berry index for second argument"
+	.endif
+	callnative Script_GiveRandomBerry
+	.byte \loBerry
+	.byte \hiBerry
+	giveitem VAR_RESULT
 	.endm
 
 @ VS Seeker

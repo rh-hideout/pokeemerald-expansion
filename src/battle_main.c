@@ -695,10 +695,10 @@ static void SetPlayerBerryDataInBattleStruct(void)
     }
     else
     {
-        const struct Berry *berryData = GetBerryInfo(ItemIdToBerryType(ITEM_ENIGMA_BERRY_E_READER));
+        const struct BerryInfo *berryInfo = GetBerryInfo(BERRY_ID_ENGIMA_E_READER);
 
         for (i = 0; i < BERRY_NAME_LENGTH; i++)
-            battleBerry->name[i] = berryData->name[i];
+            battleBerry->name[i] = berryInfo->name[i];
         battleBerry->name[i] = EOS;
 
         for (i = 0; i < BERRY_ITEM_EFFECT_COUNT; i++)
@@ -740,12 +740,12 @@ static void SetAllPlayersBerryData(void)
         }
         else
         {
-            const struct Berry *berryData = GetBerryInfo(ItemIdToBerryType(ITEM_ENIGMA_BERRY_E_READER));
+            const struct BerryInfo *berryInfo = GetBerryInfo(BERRY_ID_ENGIMA_E_READER);
 
             for (i = 0; i < BERRY_NAME_LENGTH; i++)
             {
-                gEnigmaBerries[0].name[i] = berryData->name[i];
-                gEnigmaBerries[2].name[i] = berryData->name[i];
+                gEnigmaBerries[0].name[i] = berryInfo->name[i];
+                gEnigmaBerries[2].name[i] = berryInfo->name[i];
             }
             gEnigmaBerries[0].name[i] = EOS;
             gEnigmaBerries[2].name[i] = EOS;
@@ -3737,7 +3737,7 @@ static void DoBattleIntro(void)
             struct StartingStatuses statusesOpponentB = {0};
 
             // Try to set a status to start the battle with
-            if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+            if (gBattleTypeFlags & BATTLE_TYPE_TRAINER && !IsSpecialTrainer(TRAINER_BATTLE_PARAM.opponentA))
             {
                 statusesOpponentA = GetTrainerStartingStatusFromId(TRAINER_BATTLE_PARAM.opponentA);
                 if (TRAINER_BATTLE_PARAM.opponentB != 0xFFFF)
@@ -3973,7 +3973,7 @@ void BattleTurnPassed(void)
     {
         if (gSideTimers[i].retaliateTimer > 0)
             gSideTimers[i].retaliateTimer--;
-    }
+    }    
 
     gFieldStatuses &= ~STATUS_FIELD_ION_DELUGE;
 
@@ -5967,7 +5967,7 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId
         break;
     case EFFECT_NATURAL_GIFT:
         if (GetItemPocket(heldItem) == POCKET_BERRIES)
-            return gNaturalGiftTable[ITEM_TO_BERRY(heldItem)].type;
+            return gBerries[ItemIdToBerryType(heldItem)].naturalGiftType;
         else
             return moveType;
     case EFFECT_TERRAIN_PULSE:

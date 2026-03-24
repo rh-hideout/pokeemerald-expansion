@@ -197,14 +197,14 @@ AI_SINGLE_BATTLE_TEST("AI prefers Earthquake over Drill Run if both require the 
     }
 }
 
-AI_SINGLE_BATTLE_TEST("AI prefers a weaker move over a one with a downside effect if both require the same number of hits to ko")
+AI_SINGLE_BATTLE_TEST("AI prefers a weaker move over one with a downside effect if both require the same number of hits to ko")
 {
     enum Move move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
     enum Move expectedMove;
     u16 hp, turns;
 
     // Both moves require the same number of turns but Flamethrower will be chosen over Overheat (powerful effect)
-    PARAMETRIZE { move1 = MOVE_OVERHEAT; move2 = MOVE_FLAMETHROWER; hp = 300; expectedMove = MOVE_FLAMETHROWER; turns = 2; }
+    PARAMETRIZE { move1 = MOVE_OVERHEAT; move2 = MOVE_FLAMETHROWER; hp = 320; expectedMove = MOVE_FLAMETHROWER; turns = 2; }
     // Overheat kill in least amount of turns
     PARAMETRIZE { move1 = MOVE_OVERHEAT; move2 = MOVE_FLAMETHROWER; hp = 250; expectedMove = MOVE_OVERHEAT; turns = 1; }
 
@@ -1007,7 +1007,7 @@ AI_SINGLE_BATTLE_TEST("AI has a chance to prioritize last chance priority damage
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
         PLAYER(SPECIES_CAMERUPT) { Speed(2); Moves(MOVE_FLAMETHROWER, MOVE_CELEBRATE); }
-        OPPONENT(SPECIES_FLOATZEL) { Level(90); Speed(1); HP(1); Moves(MOVE_WAVE_CRASH, MOVE_AQUA_JET); }
+        OPPONENT(SPECIES_FLOATZEL) { Level(85); Speed(1); HP(1); Moves(MOVE_WAVE_CRASH, MOVE_AQUA_JET); }
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_AQUA_JET); }
     }

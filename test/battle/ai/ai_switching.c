@@ -1274,6 +1274,105 @@ AI_SINGLE_BATTLE_TEST("Switch AI: AI will switch out if it has <= 66% HP remaini
     }
 }
 
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out to cycle Intimidate when facing a physical attacker")
+{
+    PASSES_RANDOMLY(SHOULD_SWITCH_INTIMIDATE_PERCENTAGE, 100, RNG_AI_SWITCH_INTIMIDATE);
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_ARCANINE) { Ability(ABILITY_INTIMIDATE); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_TACKLE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TACKLE); EXPECT_SWITCH(opponent, 1); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will not cycle Intimidate when target blocks or punishes Attack drops")
+{
+    u32 Species = SPECIES_NONE;
+    enum Ability ability;
+    PARAMETRIZE { Species = SPECIES_TENTACRUEL; ability = ABILITY_CLEAR_BODY; }
+    PARAMETRIZE { Species = SPECIES_BRAVIARY; ability = ABILITY_DEFIANT; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING);
+        PLAYER(Species) { Ability(ability); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_ARCANINE) { Ability(ABILITY_INTIMIDATE); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_TACKLE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_TACKLE); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will not cycle Intimidate when target is a special attacker")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING);
+        PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_WATER_GUN); }
+        OPPONENT(SPECIES_ARCANINE) { Ability(ABILITY_INTIMIDATE); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_TACKLE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_WATER_GUN); EXPECT_MOVE(opponent, MOVE_TACKLE); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out to cycle Intimidate in doubles when at least one target is valid")
+{
+    PASSES_RANDOMLY(SHOULD_SWITCH_INTIMIDATE_PERCENTAGE, 100, RNG_AI_SWITCH_INTIMIDATE);
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_TACKLE); }
+        PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_WATER_GUN); }
+        OPPONENT(SPECIES_ARCANINE) { Ability(ABILITY_INTIMIDATE); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_TACKLE); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_TACKLE, target: opponentLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentRight); EXPECT_SWITCH(opponentLeft, 2); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will not cycle Intimidate in doubles when both targets block Attack drops")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_TENTACRUEL) { Ability(ABILITY_CLEAR_BODY); Moves(MOVE_TACKLE); }
+        PLAYER(SPECIES_KINGLER) { Ability(ABILITY_HYPER_CUTTER); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_ARCANINE) { Ability(ABILITY_INTIMIDATE); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_TACKLE); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_TACKLE, target: opponentLeft); MOVE(playerRight, MOVE_TACKLE, target: opponentRight); EXPECT_MOVE(opponentLeft, MOVE_TACKLE); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will not cycle Intimidate in doubles when one target punishes stat drops")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_BRAVIARY) { Ability(ABILITY_DEFIANT); Moves(MOVE_TACKLE); }
+        PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_ARCANINE) { Ability(ABILITY_INTIMIDATE); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_TACKLE); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_TACKLE, target: opponentLeft); MOVE(playerRight, MOVE_TACKLE, target: opponentRight); EXPECT_MOVE(opponentLeft, MOVE_TACKLE); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will not cycle Intimidate in doubles when both targets are special attackers")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_WATER_GUN); }
+        PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_WATER_GUN); }
+        OPPONENT(SPECIES_ARCANINE) { Ability(ABILITY_INTIMIDATE); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_TACKLE); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_WATER_GUN, target: opponentLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentRight); EXPECT_MOVE(opponentLeft, MOVE_TACKLE); }
+    }
+}
+
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if it has been Encore'd into a status move")
 {
     PASSES_RANDOMLY(SHOULD_SWITCH_ENCORE_STATUS_PERCENTAGE, 100, RNG_AI_SWITCH_ENCORE);
@@ -2299,5 +2398,18 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI sees HP changes on switchin
     } WHEN {
         TURN { MOVE(player, MOVE_SPIKES); EXPECT_MOVE(opponent, MOVE_SCRATCH); SEND_OUT(player, 1); }
         TURN { MOVE(player, MOVE_EMBER); EXPECT_MOVE(opponent, MOVE_SCRATCH); EXPECT_SEND_OUT(opponent, 2); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("Retaliate sees damage correctly for post ko switch in")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_GABITE) { Level(50); Speed(2);}
+        OPPONENT(SPECIES_ZIGZAGOON) { Level(1); Speed(3); HP(1); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_GROUDON) { Level(85); Speed(3); Moves(MOVE_PRECIPICE_BLADES); }
+        OPPONENT(SPECIES_STOUTLAND) { Level(50); Speed(3); Moves(MOVE_RETALIATE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TACKLE); EXPECT_SEND_OUT(opponent, 2); }
     }
 }

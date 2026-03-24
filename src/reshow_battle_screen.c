@@ -282,9 +282,9 @@ static bool8 LoadBattlerSpriteGfx(enum BattlerId battler)
                 BattleLoadSubstituteOrMonSpriteGfx(battler, FALSE);
         }
         else if (gBattleTypeFlags & BATTLE_TYPE_SAFARI && position == B_POSITION_PLAYER_LEFT)
-            DecompressTrainerBackPic((gSaveBlock2Ptr->playerGender == FEMALE) ? TRAINER_BACK_PIC_PLAYER_FEMALE : TRAINER_BACK_PIC_PLAYER_MALE, battler);
+            LoadSpritePalette(&gTrainerBacksprites[(gSaveBlock2Ptr->playerGender == FEMALE) ? TRAINER_BACK_PIC_PLAYER_FEMALE : TRAINER_BACK_PIC_PLAYER_MALE].palette);
         else if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL && position == B_POSITION_PLAYER_LEFT)
-            DecompressTrainerBackPic(CATCH_TUTORIAL_TRAINER_PIC_BACK, battler);
+            LoadSpritePalette(&gTrainerBacksprites[CATCH_TUTORIAL_TRAINER_PIC_BACK].palette);
         else if (!gBattleSpritesDataPtr->battlerData[battler].behindSubstitute)
             BattleLoadMonSpriteGfx(GetBattlerMon(battler), battler);
         else
