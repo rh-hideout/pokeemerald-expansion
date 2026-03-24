@@ -6,16 +6,22 @@ struct ScriptContext;
 typedef bool8 (*ScrCmdFunc)(struct ScriptContext *);
 typedef u8 Script[];
 
-struct ScriptContext
+#define SCRIPT_STACK_SIZE 20
+struct ScriptStack
 {
     u8 stackDepth;
+    const u8 *stack[SCRIPT_STACK_SIZE];
+};
+
+struct ScriptContext
+{
     u8 mode;
     u8 comparisonResult;
     bool8 breakOnTrainerBattle:1;
     bool8 waitAfterCallNative:1;
     u8 (*nativePtr)(void);
     const u8 *scriptPtr;
-    const u8 *stack[20];
+    struct ScriptStack scrStack;
     ScrCmdFunc *cmdTable;
     ScrCmdFunc *cmdTableEnd;
     u32 data[4];
@@ -23,11 +29,36 @@ struct ScriptContext
 
 #define ScriptReadByte(ctx) (*(ctx->scriptPtr++))
 
+#define DebugPrintScriptStack \
+do { \
+    u8 i; \
+    DebugPrintfLevel(MGBA_LOG_DEBUG, "_______ScriptStack________"); \
+    for (i = ctx->scrStack.stackDepth; i > 0; i--) { \
+        DebugPrintfLevel(MGBA_LOG_DEBUG, "%d: %x", i-1, ctx->scrStack.stack[i-1]); \
+    } \
+    DebugPrintfLevel(MGBA_LOG_DEBUG, "_______StackFloor_________"); \
+} while(0);
+
+#define DebugPrintGlobalScriptStack \
+do { \
+    u8 i; \
+    DebugPrintfLevel(MGBA_LOG_DEBUG, "_______GlobalScriptStack________"); \
+    for (i = sGlobalScriptContext.scrStack.stackDepth; i > 0; i--) { \
+        DebugPrintfLevel(MGBA_LOG_DEBUG, "%d: %x", i-1, sGlobalScriptContext.srcStack.stack[i-1]); \
+    } \
+    DebugPrintfLevel(MGBA_LOG_DEBUG, "_______GlobalStackFloor_________"); \
+} while(0);
+
+void InitScriptStack(struct ScriptStack *stk);
 void InitScriptContext(struct ScriptContext *ctx, void *cmdTable, void *cmdTableEnd);
 u8 SetupBytecodeScript(struct ScriptContext *ctx, const u8 *ptr);
 void SetupNativeScript(struct ScriptContext *ctx, bool8 (*ptr)(void));
 void StopScript(struct ScriptContext *ctx);
 bool8 RunScriptCommand(struct ScriptContext *ctx);
+bool8 ScriptStackPush(struct ScriptStack *stk, const u8 *ptr);
+bool8 ScriptPush(struct ScriptContext *scrStack, const u8 *ptr);
+const u8 *ScriptStackPop(struct ScriptStack *stk);
+const u8 *ScriptPop(struct ScriptContext *scrStack);
 void ScriptJump(struct ScriptContext *ctx, const u8 *ptr);
 void ScriptCall(struct ScriptContext *ctx, const u8 *ptr);
 void ScriptReturn(struct ScriptContext *ctx);
@@ -45,6 +76,10 @@ void ScriptContext_SetupScript(const u8 *ptr);
 void ScriptContext_ContinueScript(struct ScriptContext *ctx);
 void ScriptContext_Stop(void);
 void ScriptContext_Enable(void);
+bool8 ScriptContext_ScriptPushStackToContext(struct ScriptStack *stk, struct ScriptContext *ctx);
+bool8 ScriptContext_ScriptPushStackToGlobal(struct ScriptStack *stk);
+void ScriptContext_RunContextFromTop(struct ScriptContext *ctx);
+void ScriptContext_RunGlobalFromTop(void);
 void RunScriptImmediately(const u8 *ptr);
 const u8 *MapHeaderGetScriptTable(u8 tag);
 void MapHeaderRunScriptType(u8 tag);
