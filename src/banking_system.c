@@ -171,6 +171,16 @@ void SetMoneyInBank(u32 amount)
     *GetSavedMoneyPtr() = amount;
 }
 
+void NewGameInitBanking(void)
+{
+    #if SAVINGS_ENABLED
+        SetMoneyInBank(0);
+        *GetPendingPurchasePtr() = 0;
+        *GetPurchaseIndexPtr() = 0;
+    #endif /* if SAVINGS_ENABLED */
+    DebugPrintf("In Bank:%d", *GetSavedMoneyPtr());
+}
+
 void Script_CompareBankBalance(struct ScriptContext *ctx)
 {
     EnsureBankingEnabled();
