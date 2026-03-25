@@ -45,6 +45,7 @@ static inline void BattleAI_DoAIProcessing(struct AiThinkingStruct *aiThink, enu
 static inline void BattleAI_DoAIProcessing_PredictedSwitchin(struct AiThinkingStruct *aiThink, struct AiLogicData *aiData, enum BattlerId battlerAtk, enum BattlerId battlerDef);
 static bool32 IsPinchBerryItemEffect(enum HoldEffect holdEffect);
 static bool32 DoesAbilityBenefitFromSunOrRain(enum BattlerId battler, enum Ability ability, u32 weather);
+static bool32 DoesTargetInvalidateYawn(enum BattlerId battlerDef, struct AiLogicData *aiData);
 static void AI_CompareDamagingMoves(enum BattlerId battlerAtk, enum BattlerId battlerDef);
 static u32 GetWindAbilityScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, struct AiLogicData *aiData);
 
@@ -2589,6 +2590,8 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     case EFFECT_YAWN:
         if (gBattleMons[battlerDef].volatiles.yawn)
             ADJUST_SCORE(-10);
+        else if (DoesTargetInvalidateYawn(battlerDef, aiData))
+            ADJUST_SCORE(-10);
         else if (!AI_CanPutToSleep(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, aiData->partnerMove))
             ADJUST_SCORE(-10);
         if (PartnerMoveActivatesSleepClause(aiData->partnerMove))
@@ -3998,6 +4001,24 @@ static bool32 DoesAbilityBenefitFromSunOrRain(enum BattlerId battler, enum Abili
         break;
     }
     return FALSE;
+}
+
+static bool32 DoesTargetInvalidateYawn(enum BattlerId battlerDef, struct AiLogicData *aiData)
+{
+    enum Ability abilityDef = aiData->abilities[battlerDef];
+
+    if (!IsBattlerItemEnabled(battlerDef))
+        return FALSE;
+
+    switch (aiData->holdEffects[battlerDef])
+    {
+    case HOLD_EFFECT_FLAME_ORB:
+        return CanBeBurned(battlerDef, battlerDef, abilityDef);
+    case HOLD_EFFECT_TOXIC_ORB:
+        return CanBePoisoned(battlerDef, battlerDef, abilityDef, abilityDef);
+    default:
+        return FALSE;
+    }
 }
 
 static u32 GetWindAbilityScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, struct AiLogicData *aiData)
