@@ -150,8 +150,8 @@ SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail do not block Haze")
     }
 }
 
-// Moves that target all battlers are blocked
-SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail on opponents block Teatime")
+// Moves that target all battlers are not blocked, except Perish Song.
+SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail do not block Teatime")
 {
     u32 species;
     enum Ability ability;
@@ -169,11 +169,36 @@ SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail on opponents block 
     } WHEN {
         TURN { MOVE(player, MOVE_TEATIME); }
     } SCENE {
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_TEATIME, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TEATIME, player);
+        NOT ABILITY_POPUP(opponent, ability);
+    } THEN {
+        EXPECT_EQ(player->item, ITEM_NONE);
+        EXPECT_EQ(opponent->item, ITEM_NONE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail block Prankster-boosted Perish Song")
+{
+    u32 species;
+    enum Ability ability;
+
+    PARAMETRIZE { species = SPECIES_BRUXISH; ability = ABILITY_DAZZLING; }
+    PARAMETRIZE { species = SPECIES_FARIGIRAF; ability = ABILITY_ARMOR_TAIL; }
+    PARAMETRIZE { species = SPECIES_TSAREENA; ability = ABILITY_QUEENLY_MAJESTY; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_PERISH_SONG) == EFFECT_PERISH_SONG);
+        ASSUME(GetMoveTarget(MOVE_PERISH_SONG) == TARGET_ALL_BATTLERS);
+        PLAYER(SPECIES_MURKROW) { Ability(ABILITY_PRANKSTER); }
+        OPPONENT(species) { Ability(ability); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_PERISH_SONG); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_PERISH_SONG, player);
         ABILITY_POPUP(opponent, ability);
     } THEN {
-        EXPECT_NE(player->item, ITEM_NONE);
-        EXPECT_NE(opponent->item, ITEM_NONE);
+        EXPECT(!player->volatiles.perishSong);
+        EXPECT(!opponent->volatiles.perishSong);
     }
 }
 
