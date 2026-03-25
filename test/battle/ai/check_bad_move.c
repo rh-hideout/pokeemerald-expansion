@@ -231,17 +231,19 @@ AI_DOUBLE_BATTLE_TEST("Protect: AI avoids Protect vs moves that ignore protectio
     }
 }
 
-AI_SINGLE_BATTLE_TEST("AI penalizes Yawn when target can self-burn with Flame Orb")
+AI_SINGLE_BATTLE_TEST("AI penalizes Yawn when target can self-status with Flame/Toxic Orb")
 {
     u32 heldItem = ITEM_NONE;
     bool32 shouldYawn = FALSE;
 
     PARAMETRIZE { heldItem = ITEM_NONE;      shouldYawn = TRUE; }
     PARAMETRIZE { heldItem = ITEM_FLAME_ORB; shouldYawn = FALSE; }
+    PARAMETRIZE { heldItem = ITEM_TOXIC_ORB; shouldYawn = FALSE; }
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_YAWN) == EFFECT_YAWN);
         ASSUME(gItemsInfo[ITEM_FLAME_ORB].holdEffect == HOLD_EFFECT_FLAME_ORB);
+        ASSUME(gItemsInfo[ITEM_TOXIC_ORB].holdEffect == HOLD_EFFECT_TOXIC_ORB);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
         PLAYER(SPECIES_WOBBUFFET) { Item(heldItem); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_YAWN, MOVE_SCRATCH); }
