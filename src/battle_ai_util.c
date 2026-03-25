@@ -599,28 +599,28 @@ struct SimulatedDamage AI_CalcDamageSaveBattlers(enum Move move, enum BattlerId 
     return dmg;
 }
 
-static inline s32 LowestRollDmg(s32 dmg)
+static __attribute__((noinline)) ARM_FUNC s32 LowestRollDmg(s32 dmg)
 {
     dmg *= MIN_ROLL_PERCENTAGE;
     dmg /= 100;
     return dmg;
 }
 
-static inline s32 HighestRollDmg(s32 dmg)
+static __attribute__((noinline)) ARM_FUNC s32 HighestRollDmg(s32 dmg)
 {
     dmg *= MAX_ROLL_PERCENTAGE;
     dmg /= 100;
     return dmg;
 }
 
-static inline s32 DmgRoll(s32 dmg)
+static __attribute__((noinline)) ARM_FUNC s32 DmgRoll(s32 dmg)
 {
     dmg *= DMG_ROLL_PERCENTAGE;
     dmg /= 100;
     return dmg;
 }
 
-static inline s32 RandomRollDmg(s32 dmg)
+static __attribute__((noinline)) ARM_FUNC s32 RandomRollDmg(s32 dmg)
 {
     u32 randomRollPercentage = RandomUniform(RNG_AI_DMG_ROLL_RANDOM, MIN_ROLL_PERCENTAGE, MAX_ROLL_PERCENTAGE);
     dmg *= randomRollPercentage;
