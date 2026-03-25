@@ -606,7 +606,7 @@ static __attribute__((noinline)) ARM_FUNC s32 LowestRollDmg(s32 dmg)
     return dmg;
 }
 
-static __attribute__((noinline)) ARM_FUNC s32 HighestRollDmg(s32 dmg)
+static inline s32 HighestRollDmg(s32 dmg)
 {
     dmg *= MAX_ROLL_PERCENTAGE;
     dmg /= 100;
