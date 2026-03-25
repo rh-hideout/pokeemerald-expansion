@@ -1403,7 +1403,10 @@ static enum CancelerResult CancelerPriorityBlock(struct BattleContext *ctx)
     s32 priority = GetChosenMovePriority(ctx->battlerAtk, ctx->abilityAtk);
     enum MoveTarget moveTarget = GetBattlerMoveTargetType(ctx->battlerAtk, ctx->move);
 
-    if (priority <= 0 || moveTarget == TARGET_FIELD || moveTarget == TARGET_OPPONENTS_FIELD)
+    if (priority <= 0
+     || moveTarget == TARGET_FIELD
+     || moveTarget == TARGET_OPPONENTS_FIELD
+     || (moveTarget == TARGET_ALL_BATTLERS && ctx->move != MOVE_PERISH_SONG))
         return CANCELER_RESULT_SUCCESS;
 
     enum BattlerId battler;

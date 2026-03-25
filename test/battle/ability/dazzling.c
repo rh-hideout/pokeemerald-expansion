@@ -150,6 +150,31 @@ SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail do not block Haze")
     }
 }
 
+// Moves that target the opposing side of the field don't get blocked
+SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail do not block Stealth Rock")
+{
+    u32 species;
+    enum Ability ability;
+
+    PARAMETRIZE { species = SPECIES_BRUXISH; ability = ABILITY_DAZZLING; }
+    PARAMETRIZE { species = SPECIES_FARIGIRAF; ability = ABILITY_ARMOR_TAIL; }
+    PARAMETRIZE { species = SPECIES_TSAREENA; ability = ABILITY_QUEENLY_MAJESTY; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_STEALTH_ROCK) == EFFECT_STEALTH_ROCK);
+        ASSUME(GetMoveTarget(MOVE_STEALTH_ROCK) == TARGET_OPPONENTS_FIELD);
+        PLAYER(SPECIES_MURKROW) { Ability(ABILITY_PRANKSTER); }
+        OPPONENT(species) { Ability(ability); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_STEALTH_ROCK); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, player);
+        NOT ABILITY_POPUP(opponent, ability);
+    } THEN {
+        EXPECT(IsHazardOnSide(B_SIDE_OPPONENT, HAZARDS_STEALTH_ROCK));
+    }
+}
+
 // Moves that target all battlers are not blocked, except Perish Song.
 SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail do not block Teatime")
 {
