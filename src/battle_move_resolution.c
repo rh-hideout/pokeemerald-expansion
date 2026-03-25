@@ -1406,7 +1406,7 @@ static enum CancelerResult CancelerPriorityBlock(struct BattleContext *ctx)
     if (priority <= 0
      || moveTarget == TARGET_FIELD
      || moveTarget == TARGET_OPPONENTS_FIELD
-     || (moveTarget == TARGET_ALL_BATTLERS && ctx->move != MOVE_PERISH_SONG))
+     || (moveTarget == TARGET_ALL_BATTLERS && GetMoveEffect(ctx->move) != EFFECT_PERISH_SONG))
         return CANCELER_RESULT_SUCCESS;
 
     enum BattlerId battler;
