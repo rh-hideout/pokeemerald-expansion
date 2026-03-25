@@ -2034,7 +2034,7 @@ void ClearVarAfterTest(void)
     }
 }
 
-void OpenPokemon(u32 sourceLine, enum BattleTrainer trainer, enum Species species)
+void OpenPokemon(u32 sourceLine, enum BattleTrainer trainer, u32 species)
 {
     s32 i, data;
     u8 *partySize;
@@ -2073,7 +2073,7 @@ void OpenPokemon(u32 sourceLine, enum BattleTrainer trainer, enum Species specie
     CalculateMonStats(DATA.currentMon);
 }
 
-void OpenPokemonMulti(u32 sourceLine, enum BattleTrainer trainer, enum Species species)
+void OpenPokemonMulti(u32 sourceLine, enum BattleTrainer trainer, u32 species)
 {
 
     s32 i, data;

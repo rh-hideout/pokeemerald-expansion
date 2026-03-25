@@ -38,7 +38,6 @@
 #include "constants/layouts.h"
 #include "constants/metatile_labels.h"
 #include "constants/moves.h"
-#include "constants/species.h"
 #include "constants/trainers.h"
 
 #define NUM_LAYOUT_OFFSETS 8
@@ -47,7 +46,7 @@ extern const struct MapLayout *const gMapLayouts[];
 
 struct PyramidWildMon
 {
-    enum Species species;
+    u16 species;
     u8 lvl;
     u8 abilityNum;
     u16 moves[MAX_MON_MOVES];
@@ -1358,7 +1357,7 @@ static void MarkPyramidTrainerAsBattled(u16 trainerId)
 #if BATTLE_PYRAMID_RANDOM_ENCOUNTERS == TRUE
 // check if given species evolved from a specific evolutionary stone
 // if nItems is passed as 0, it will check for any EVO_ITEM case
-static bool32 CheckBattlePyramidEvoRequirement(enum Species species, const u16 *evoItems, u8 nItems)
+static bool32 CheckBattlePyramidEvoRequirement(u16 species, const u16 *evoItems, u8 nItems)
 {
     u32 i, j, k;
     for (i = 0; i < NUM_SPECIES; i++)
@@ -1394,7 +1393,7 @@ static bool32 CheckBattlePyramidEvoRequirement(enum Species species, const u16 *
     return FALSE;
 }
 
-extern u32 GetTotalBaseStat(enum Species species);
+extern u32 GetTotalBaseStat(u32 species);
 void GenerateBattlePyramidWildMon(void)
 {
     u8 name[POKEMON_NAME_LENGTH + 1];
@@ -1403,7 +1402,7 @@ void GenerateBattlePyramidWildMon(void)
     u32 lvl = gSaveBlock2Ptr->frontier.lvlMode;
     u16 round = (gSaveBlock2Ptr->frontier.pyramidWinStreaks[lvl] / 7) % TOTAL_PYRAMID_ROUNDS;
     const struct BattlePyramidRequirement *reqs = &sBattlePyramidRequirementsByRound[round];
-    enum Species species;
+    u16 species;
     u32 bstLim;
     u16 *moves = NULL;
     u16 *abilities = NULL;

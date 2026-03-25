@@ -211,7 +211,7 @@ WILD_BATTLE_TEST("Capture: when CRITICAL_CAPTURE_IF_OWNED is enabled, failed cap
 
 WILD_BATTLE_TEST("Capture: ball data is properly set in captured pokemon")
 {
-    enum Item item = ITEM_NONE;
+    u32 item = ITEM_NONE;
     for (enum PokeBall ballId = BALL_STRANGE; ballId < POKEBALL_COUNT; ballId++)
     {
         PARAMETRIZE(item = gPokeBalls[ballId].itemId);

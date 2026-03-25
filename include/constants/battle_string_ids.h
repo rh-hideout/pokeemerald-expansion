@@ -292,6 +292,7 @@ enum StringID
     STRINGID_PKMNSXPREVENTSYLOSS,
     STRINGID_PKMNSXINFATUATEDY,
     STRINGID_PKMNSXMADEYINEFFECTIVE,
+    STRINGID_PKMNSXCUREDYPROBLEM,
     STRINGID_ITSUCKEDLIQUIDOOZE,
     STRINGID_PKMNTRANSFORMED,
     STRINGID_ELECTRICITYWEAKENED,
@@ -821,13 +822,6 @@ enum ProtectLikeUsedStringID
     B_MSG_PROTECTED_TEAM,
 };
 
-// gBrokeProtectionStringIds
-enum BrokeProtectionStringID
-{
-    B_MSG_FEINT,
-    B_MSG_HYPERSPACE_FURY,
-};
-
 // gRestUsedStringIds
 enum RestUsedStringID
 {
@@ -926,7 +920,7 @@ enum SportsUsedStringID
 // gCaughtMonStringIds
 enum CaughtMonStringID
 {
-    B_MSG_NO_MESSAGE_SKIP,
+    B_MSG_NO_MESSSAGE_SKIP,
     // "Lanette's" should always follow "someone's"
     B_MSG_SENT_SOMEONES_PC,
     B_MSG_SENT_LANETTES_PC,

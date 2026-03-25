@@ -154,15 +154,18 @@ void TestRunner_CheckMemory(void)
                 const char *location = MemBlockLocation(block);
                 if (location)
                 {
-                    const char cmpString[] = "src/config_changes.c";
-                    if (strncmp(cmpString, location, sizeof(cmpString) - 1) != 0)
+                    const char *cmpString = "src/generational_changes.c";
+                    for (u32 charIndex = 0; charIndex < 26; charIndex++)
                     {
-                        Test_MgbaPrintf("%s: %d bytes not freed", location, block->size);
-                        gTestRunnerState.result = TEST_RESULT_FAIL;
-    
-                        if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
-                            gTestRunnerState.expectedFailState = EXPECT_FAIL_SUCCESS;
-                        break;
+                        if (cmpString[charIndex] != location[charIndex])
+                        {
+                            Test_MgbaPrintf("%s: %d bytes not freed", location, block->size);
+                            gTestRunnerState.result = TEST_RESULT_FAIL;
+       
+                            if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
+                                gTestRunnerState.expectedFailState = EXPECT_FAIL_SUCCESS;
+                            break;
+                        }
                     }
                 }
                 else

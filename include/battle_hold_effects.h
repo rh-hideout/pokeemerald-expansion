@@ -13,14 +13,13 @@ struct HoldEffectInfo
     u32 MentalHerb:1;
     u32 onTargetAfterHit:1;
     u32 onAttackerAfterHit:1;
-    u32 sprayLeppaBlunder:1;
     u32 lifeOrbShellBell:1;
     u32 leftovers:1;
     u32 orbs:1;
     u32 onEffect:1;
     u32 onFling:1;
     u32 boosterEnergy:1;
-    u32 padding:15;
+    u32 padding:16;
 };
 
 extern const struct HoldEffectInfo gHoldEffectsInfo[];
@@ -37,7 +36,6 @@ bool32 IsOnHpThresholdActivation(enum HoldEffect holdEffect);
 bool32 IsKeeMarangaBerryActivation(enum HoldEffect holdEffect);
 bool32 IsOnTargetHitActivation(enum HoldEffect holdEffect);
 bool32 IsOnAttackerAfterHitActivation(enum HoldEffect holdEffect);
-bool32 IsSprayLeppaBlunderActivation(enum HoldEffect holdEffect);
 bool32 IsLifeOrbShellBellActivation(enum HoldEffect holdEffect);
 bool32 IsLeftoversActivation(enum HoldEffect holdEffect);
 bool32 IsOrbsActivation(enum HoldEffect holdEffect);

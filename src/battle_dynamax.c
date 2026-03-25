@@ -26,7 +26,7 @@ static enum MaxPowerTier GetMaxPowerTier(enum Move move);
 
 struct GMaxMove
 {
-    enum Species species;
+    u16 species;
     enum Type moveType;
     u16 gmaxMove;
 };
@@ -72,7 +72,7 @@ static const struct GMaxMove sGMaxMoveTable[] =
 // Returns whether a battler can Dynamax.
 bool32 CanDynamax(enum BattlerId battler)
 {
-    enum Species species = GetBattlerVisualSpecies(battler);
+    u16 species = GetBattlerVisualSpecies(battler);
     enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
 
     // Prevents Zigzagoon from dynamaxing in vanilla.
@@ -131,10 +131,8 @@ bool32 IsGigantamaxed(enum BattlerId battler)
 // Applies the HP Multiplier for Dynamaxed Pokemon and Raid Bosses.
 void ApplyDynamaxHPMultiplier(struct Pokemon* mon)
 {
-    if (HasShedinjaHPHandling(GetMonData(mon, MON_DATA_SPECIES)))
-    {
+    if (GetMonData(mon, MON_DATA_SPECIES) == SPECIES_SHEDINJA)
         return;
-    }
     else
     {
         uq4_12_t multiplier = GetDynamaxLevelHPMultiplier(GetMonData(mon, MON_DATA_DYNAMAX_LEVEL), FALSE);
@@ -148,10 +146,8 @@ void ApplyDynamaxHPMultiplier(struct Pokemon* mon)
 // Returns the non-Dynamax HP of a Pokemon.
 u32 GetNonDynamaxHP(enum BattlerId battler)
 {
-    if (GetActiveGimmick(battler) != GIMMICK_DYNAMAX || HasShedinjaHPHandling(gBattleMons[battler].species))
-    {
+    if (GetActiveGimmick(battler) != GIMMICK_DYNAMAX || gBattleMons[battler].species == SPECIES_SHEDINJA)
         return gBattleMons[battler].hp;
-    }
     else
     {
         struct Pokemon *mon = GetBattlerMon(battler);
@@ -164,10 +160,8 @@ u32 GetNonDynamaxHP(enum BattlerId battler)
 // Returns the non-Dynamax Max HP of a Pokemon.
 u32 GetNonDynamaxMaxHP(enum BattlerId battler)
 {
-    if (GetActiveGimmick(battler) != GIMMICK_DYNAMAX || HasShedinjaHPHandling(gBattleMons[battler].species))
-    {
+    if (GetActiveGimmick(battler) != GIMMICK_DYNAMAX || gBattleMons[battler].species == SPECIES_SHEDINJA)
         return gBattleMons[battler].maxHP;
-    }
     else
     {
         struct Pokemon *mon = GetBattlerMon(battler);
@@ -244,8 +238,8 @@ static enum Move GetTypeBasedMaxMove(enum BattlerId battler, enum Type type)
 {
     // Gigantamax check
     u32 i;
-    enum Species species = gBattleMons[battler].species;
-    enum Species targetSpecies = species;
+    u32 species = gBattleMons[battler].species;
+    u32 targetSpecies = species;
     enum Ability ability = GetBattlerAbility(battler);
 
     if (!gSpeciesInfo[species].isGigantamax)

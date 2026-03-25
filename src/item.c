@@ -134,7 +134,7 @@ void ApplyNewEncryptionKeyToBagItems(u32 newKey)
     enum Item item;
     for (pocketId = 0; pocketId < POCKETS_COUNT; pocketId++)
     {
-        for (item = ITEM_NONE; item < gBagPockets[pocketId].capacity; item++)
+        for (item = 0; item < gBagPockets[pocketId].capacity; item++)
             ApplyNewEncryptionKeyToHword(&(gBagPockets[pocketId].itemSlots[item].quantity), newKey);
     }
 }
@@ -225,13 +225,12 @@ bool32 CheckBagHasItem(enum Item itemId, u16 count)
 
 bool32 HasAtLeastOneBerry(void)
 {
-    for (enum BerryId berryId = 1; berryId <= NUM_BERRIES; berryId++)
-    {
-        if (CheckBagHasItem(BerryTypeToItemId(berryId), 1) == TRUE)
-            return (gSpecialVar_Result = TRUE);
-    }
+    gSpecialVar_Result = FALSE;
 
-    return (gSpecialVar_Result = FALSE);
+    for (u32 i = FIRST_BERRY_INDEX; i <= LAST_BERRY_INDEX && gSpecialVar_Result == FALSE; i++)
+        gSpecialVar_Result = CheckBagHasItem(i, 1);
+
+    return gSpecialVar_Result;
 }
 
 bool32 HasAtLeastOnePokeBall(void)

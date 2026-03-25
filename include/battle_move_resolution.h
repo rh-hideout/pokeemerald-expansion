@@ -5,5 +5,6 @@
 
 enum CancelerResult DoAttackCanceler(void);
 enum MoveEndResult DoMoveEnd(enum MoveEndState endMode, enum MoveEndState endState);
+void MoveValuesCleanUp(void);
 
 #endif // GUARD_BATTLE_MOVE_RESOLUTION_H

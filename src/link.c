@@ -498,7 +498,7 @@ static void HandleReceiveRemoteLinkPlayer(u8 who)
     {
         count += gRemoteLinkPlayersNotReceived[i];
     }
-    if (count == 0 && !gReceivedRemoteLinkPlayers)
+    if (count == 0 && gReceivedRemoteLinkPlayers == 0)
     {
         gReceivedRemoteLinkPlayers = 1;
     }
@@ -1760,19 +1760,19 @@ bool8 HandleLinkConnection(void)
 
 void SetWirelessCommType1(void)
 {
-    if (!gReceivedRemoteLinkPlayers)
+    if (gReceivedRemoteLinkPlayers == 0)
         gWirelessCommType = 1;
 }
 
 static void SetWirelessCommType0_Internal(void)
 {
-    if (!gReceivedRemoteLinkPlayers)
+    if (gReceivedRemoteLinkPlayers == 0)
         gWirelessCommType = 0;
 }
 
 void SetWirelessCommType0(void)
 {
-    if (!gReceivedRemoteLinkPlayers)
+    if (gReceivedRemoteLinkPlayers == 0)
         gWirelessCommType = 0;
 }
 

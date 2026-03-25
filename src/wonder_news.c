@@ -4,7 +4,6 @@
 #include "event_data.h"
 #include "wonder_news.h"
 #include "constants/items.h"
-#include "item.h"
 
 // Every 4th reward for sending Wonder News to a link partner is a "big" reward.
 #define MAX_SENT_REWARD 4
@@ -31,11 +30,11 @@ void WonderNews_SetReward(u32 newsType)
     case WONDER_NEWS_RECV_FRIEND:
     case WONDER_NEWS_RECV_WIRELESS:
         // Random berry between ITEM_RAZZ_BERRY and ITEM_NOMEL_BERRY
-        data->berry = RandomUniform(RNG_RANDOM_BERRY, BERRY_ID_RAZZ, BERRY_ID_NOMEL);
+        data->berry = (Random() % 15) + ITEM_TO_BERRY(ITEM_RAZZ_BERRY);
         break;
     case WONDER_NEWS_SENT:
         // Random berry between ITEM_CHERI_BERRY and ITEM_IAPAPA_BERRY
-        data->berry = RandomUniform(RNG_RANDOM_BERRY, BERRY_ID_CHERI, BERRY_ID_IAPAPA);
+        data->berry = (Random() % 15) + ITEM_TO_BERRY(ITEM_CHERI_BERRY);
         break;
     }
 }
@@ -107,7 +106,7 @@ static u32 GetRewardItem(struct WonderNewsMetadata *data)
 {
     enum Item itemId;
     data->newsType = WONDER_NEWS_NONE;
-    itemId = BerryTypeToItemId(data->berry);
+    itemId = data->berry + FIRST_BERRY_INDEX - 1;
     data->berry = 0;
     IncrementRewardCounter(data);
     return itemId;

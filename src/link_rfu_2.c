@@ -65,11 +65,16 @@ struct SioInfo
 // its fields was largely removed before release
 struct RfuDebug
 {
+    u8 unused0[6];
     u16 recvCount;
-    u16 blockSendFailures;
+    u8 unused1[6];
+    vu8 unkFlag;
     u8 childJoinCount;
+    u8 unused2[84];
+    u16 blockSendFailures;
+    u8 unused3[29];
     u8 blockSendTime;
-    u8 padding[2];
+    u8 unused4[88];
 };
 
 COMMON_DATA u32 gRfuAPIBuffer[RFU_API_BUFF_SIZE_RAM / 4] = {0};
@@ -873,6 +878,7 @@ static bool32 RfuMain2_Parent(void)
             CallRfuFunc();
             if (gRfu.nextChildBits && !gRfu.stopNewConnections)
             {
+                sRfuDebug.unkFlag = FALSE;
                 rfu_clearSlot(TYPE_UNI_SEND | TYPE_UNI_RECV, gRfu.parentSendSlot);
                 for (i = 0; i < RFU_CHILD_MAX; i++)
                 {
@@ -2068,7 +2074,7 @@ void SetHostRfuWonderFlags(bool32 hasNews, bool32 hasCard)
     gHostRfuGameData.compatibility.hasCard = hasCard;
 }
 
-void SetTradeBoardRegisteredMonInfo(u32 type, enum Species species, u32 level)
+void SetTradeBoardRegisteredMonInfo(u32 type, u32 species, u32 level)
 {
     gHostRfuGameData.tradeType = type;
     gHostRfuGameData.tradeSpecies = species;
@@ -2228,7 +2234,7 @@ static void LinkManagerCB_Parent(u8 msg, u8 paramCount)
     case LMAN_MSG_LINK_RECOVERY_FAILED_AND_DISCONNECTED:
         gRfu.linkLossRecoveryState = 4;
         gRfu.parentSlots &= ~lman.param[0];
-        if (gReceivedRemoteLinkPlayers)
+        if (gReceivedRemoteLinkPlayers == 1)
         {
             if (gRfu.parentSlots == 0)
                 RfuSetErrorParams(msg);
@@ -2296,7 +2302,7 @@ static void LinkManagerCB_Child(u8 msg, u8 unused1)
         if (gRfu.childRecvStatus != RFU_STATUS_LEAVE_GROUP)
             RfuSetStatus(RFU_STATUS_CONNECTION_ERROR, msg);
         Debug_PrintString(sASCII_LinkLossDisconnect, 5, 5);
-        if (gReceivedRemoteLinkPlayers)
+        if (gReceivedRemoteLinkPlayers == 1)
             RfuSetErrorParams(msg);
         break;
     case LMAN_MSG_LINK_LOSS_DETECTED_AND_START_RECOVERY:
@@ -2463,7 +2469,7 @@ static void LinkManagerCB_UnionRoom(u8 msg, u8 paramCount)
             gRfu.linkLossRecoveryState = 4;
         if (gRfu.parentChild == MODE_PARENT)
         {
-            if (gReceivedRemoteLinkPlayers)
+            if (gReceivedRemoteLinkPlayers == 1)
             {
                 gRfu.parentSlots &= ~(lman.param[0]);
                 if (gRfu.parentSlots == 0)
@@ -2472,7 +2478,7 @@ static void LinkManagerCB_UnionRoom(u8 msg, u8 paramCount)
                     StartDisconnectNewChild();
             }
         }
-        else if (gRfu.disconnectMode != RFU_DISCONNECT_NORMAL && gReceivedRemoteLinkPlayers)
+        else if (gRfu.disconnectMode != RFU_DISCONNECT_NORMAL && gReceivedRemoteLinkPlayers == 1)
         {
             RfuSetErrorParams(msg);
             rfu_LMAN_stopManager(FALSE);

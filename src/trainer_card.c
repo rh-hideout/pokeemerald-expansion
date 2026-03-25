@@ -1718,7 +1718,7 @@ static bool8 Task_DrawFlippedCardSide(struct Task *task)
             return FALSE;
         }
         sData->flipDrawState++;
-    } while (!gReceivedRemoteLinkPlayers);
+    } while (gReceivedRemoteLinkPlayers == 0);
 
     return FALSE;
 }
@@ -1883,7 +1883,7 @@ static u8 VersionToCardType(enum GameVersion version)
 
 static void CreateTrainerCardTrainerPic(void)
 {
-    if (InUnionRoom() == TRUE && gReceivedRemoteLinkPlayers)
+    if (InUnionRoom() == TRUE && gReceivedRemoteLinkPlayers == 1)
     {
         CreateTrainerCardTrainerPicSprite(FacilityClassToPicIndex(sData->trainerCard.unionRoomClass),
                     TRUE,

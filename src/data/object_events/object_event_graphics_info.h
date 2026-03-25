@@ -1093,7 +1093,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BerryTree = {
     .oam = &gObjectEventBaseOam_16x16,
     .subspriteTables = NULL,
     .anims = sAnimTable_BerryTree,
-    .images = gPicTable_PechaBerryTree,
+    .images = sPicTable_PechaBerryTree,
 };
 
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BerryTreeEarlyStages = {
@@ -1111,7 +1111,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BerryTreeEarlyStag
     .oam = &gObjectEventBaseOam_16x16,
     .subspriteTables = sOamTables_16x16,
     .anims = sAnimTable_BerryTree,
-    .images = gPicTable_PechaBerryTree,
+    .images = sPicTable_PechaBerryTree,
 };
 
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BerryTreeLateStages = {
@@ -1129,7 +1129,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BerryTreeLateStage
     .oam = &gObjectEventBaseOam_16x32,
     .subspriteTables = sOamTables_16x32,
     .anims = sAnimTable_BerryTree,
-    .images = gPicTable_PechaBerryTree,
+    .images = sPicTable_PechaBerryTree,
 };
 
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_ProfBirch = {
@@ -4906,7 +4906,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Boy = {
     .affineAnims = gDummySpriteAffineAnimTable,
 };
 
-const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_CrushGirl = {
+const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BattleGirl = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_WHITE,
     .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
@@ -4921,7 +4921,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_CrushGirl = {
     .oam = &gObjectEventBaseOam_16x32,
     .subspriteTables = sOamTables_16x32,
     .anims = sAnimTable_Standard,
-    .images = sPicTable_CrushGirl,
+    .images = sPicTable_BattleGirl,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
 
@@ -5210,7 +5210,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_CooltrainerF = {
     .affineAnims = gDummySpriteAffineAnimTable,
 };
 
-const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PokeManiacFrlg = {
+const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_SuperNerd = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_PINK,
     .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
@@ -5225,7 +5225,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PokeManiacFrlg = {
     .oam = &gObjectEventBaseOam_16x32,
     .subspriteTables = sOamTables_16x32,
     .anims = sAnimTable_Standard,
-    .images = sPicTable_PokeManiacFrlg,
+    .images = sPicTable_SuperNerd,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
 
@@ -5343,7 +5343,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_SwimmerFLand = {
     .affineAnims = gDummySpriteAffineAnimTable,
 };
 
-const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BlackBeltFrlg = {
+const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Blackbelt = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_WHITE,
     .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
@@ -5358,7 +5358,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BlackBeltFrlg = {
     .oam = &gObjectEventBaseOam_16x32,
     .subspriteTables = sOamTables_16x32,
     .anims = sAnimTable_Standard,
-    .images = sPicTable_BlackBeltFrlg,
+    .images = sPicTable_Blackbelt,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
 

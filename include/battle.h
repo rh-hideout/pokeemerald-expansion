@@ -23,7 +23,7 @@
 #include "battle_dynamax.h"
 #include "battle_terastal.h"
 #include "battle_gimmick.h"
-#include "config_changes.h"
+#include "generational_changes.h"
 #include "item.h"
 #include "move.h"
 #include "random.h" // for rng_value_t
@@ -101,12 +101,7 @@ struct ProtectStruct
 // Cleared at the start of HandleAction_ActionFinished
 struct SpecialStatus
 {
-    u8 changedStatsBattlerId:3; // Battler that was responsible for the latest stat change. Can be self.
-    u8 neutralizingGasRemoved:1;
-    u8 berryReduced:1;
-    u8 mindBlownRecoil:1;
-    u8 padding:2;
-    // End of byte
+    u8 changedStatsBattlerId; // Battler that was responsible for the latest stat change. Can be self.
     u8 statLowered:1;
     u8 abilityRedirected:1;
     u8 restoredBattlerSprite: 1;
@@ -116,6 +111,12 @@ struct SpecialStatus
     u8 dancerUsedMove:1;
     u8 criticalHit:1;
     // End of byte
+    u8 instructedChosenTarget:3;
+    u8 neutralizingGasRemoved:1;
+    u8 berryReduced:1;
+    u8 mindBlownRecoil:1;
+    u8 padding2:2;
+    // End of byte
     u8 gemParam:7;
     u8 gemBoost:1;
     // End of byte
@@ -123,9 +124,8 @@ struct SpecialStatus
     u8 multiHitOn:1;
     u8 distortedTypeMatchups:1;
     u8 teraShellAbilityDone:1;
-    u8 backUpTarget:3;
+    u8 dancerOriginalTarget:3;
     // End of byte
-    enum QueuedSwitch queuedSwitch;
 };
 
 struct SideTimer
@@ -177,7 +177,7 @@ struct AI_SavedBattleMon
 
 struct AiPartyMon
 {
-    enum Species species;
+    u16 species;
     enum Item item;
     enum HoldEffect heldEffect;
     enum Ability ability;
@@ -202,7 +202,6 @@ struct SimulatedDamage
     u16 minimum;
     u16 median;
     u16 maximum;
-    u16 random;
 };
 
 // Ai Data used when deciding which move to use, computed only once before each turn's start.
@@ -211,6 +210,7 @@ struct AiLogicData
     enum Ability abilities[MAX_BATTLERS_COUNT];
     enum Item items[MAX_BATTLERS_COUNT];
     enum HoldEffect holdEffects[MAX_BATTLERS_COUNT];
+    u8 holdEffectParams[MAX_BATTLERS_COUNT];
     enum Move lastUsedMove[MAX_BATTLERS_COUNT];
     u8 hpPercents[MAX_BATTLERS_COUNT];
     enum Move partnerMove;
@@ -223,7 +223,6 @@ struct AiLogicData
     u8 mostSuitableMonId[MAX_BATTLERS_COUNT]; // Stores result of GetMostSuitableMonToSwitchInto, which decides which generic mon the AI would switch into if they decide to switch. This can be overruled by specific mons found in ShouldSwitch; the final resulting mon is stored in AI_monToSwitchIntoId.
     enum Move predictedMove[MAX_BATTLERS_COUNT];
     u8 resistBerryAffected[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT][MAX_MON_MOVES]; // Tracks whether currently calc'd move is affected by a resist berry into given target
-    u8 turnOrder[MAX_BATTLERS_COUNT];
 
     // Flags
     u32 weatherHasEffect:1; // The same as HasWeatherEffect(). Stored here, so it's called only once.
@@ -306,16 +305,16 @@ struct BattleResults
     u8 playerMonWasDamaged:1; // 0x5
     u8 caughtMonBall:4;       // 0x5
     u8 shinyWildMon:1;        // 0x5
-    enum Species playerMon1Species;    // 0x6
+    u16 playerMon1Species;    // 0x6
     u8 playerMon1Name[POKEMON_NAME_LENGTH + 1];    // 0x8
     u8 battleTurnCounter;     // 0x13
     u8 playerMon2Name[POKEMON_NAME_LENGTH + 1];    // 0x14
     u8 pokeblockThrows;       // 0x1F
-    enum Species lastOpponentSpecies;  // 0x20
+    u16 lastOpponentSpecies;  // 0x20
     u16 lastUsedMovePlayer;   // 0x22
     u16 lastUsedMoveOpponent; // 0x24
-    enum Species playerMon2Species;    // 0x26
-    enum Species caughtMonSpecies;     // 0x28
+    u16 playerMon2Species;    // 0x26
+    u16 caughtMonSpecies;     // 0x28
     u8 caughtMonNick[POKEMON_NAME_LENGTH + 1];     // 0x2A
     u8 filler35;           // 0x35
     u8 catchAttempts[POKEBALL_COUNT];     // 0x36
@@ -506,10 +505,9 @@ struct BattlerState
     // End of Word
     u16 hpOnSwitchout;
     u16 switchIn:1;
-    u16 notOnField:1;
-    u16 redCardSwitched:1;
+    u16 fainted:1;
     u16 isFirstTurn:2;
-    u16 padding:11;
+    u16 padding:12;
 };
 
 struct PartyState
@@ -599,12 +597,13 @@ struct BattleStruct
     u32 savedBattleTypeFlags;
     u16 abilityPreventingSwitchout;
     u8 hpScale;
+    u16 synchronizeMoveEffect;
     u8 anyMonHasTransformed:1; // Only used in battle_tv.c
     u8 sleepClauseNotBlocked:1;
     u8 isSkyBattle:1;
     u8 unableToUseMove:1; // for the current action only, to check if the battler failed to act at end turn use the DisableStruct member
     u8 triAttackBurn:1;
-    enum SynchronizeState synchronizeState:3;
+    u8 unused:3;
     void (*savedCallback)(void);
     u16 chosenItem[MAX_BATTLERS_COUNT];
     u16 choicedMove[MAX_BATTLERS_COUNT];
@@ -657,15 +656,14 @@ struct BattleStruct
     u8 throwingPokeBall:1;
     u8 ballSpriteIds[2];    // item gfx, window gfx
     u8 moveInfoSpriteId; // move info, window gfx
+    u8 skyDropTargets[MAX_BATTLERS_COUNT]; // For Sky Drop, to account for if multiple Pokemon use Sky Drop in a double battle.
     // When using a move which hits multiple opponents which is then bounced by a target, we need to make sure, the move hits both opponents, the one with bounce, and the one without.
-    enum Species beatUpSpecies[PARTY_SIZE]; // Species for Gen5+ Beat Up, otherwise party indexes
+    u16 beatUpSpecies[PARTY_SIZE]; // Species for Gen5+ Beat Up, otherwise party indexes
     u8 attackerBeforeBounce:2;
     u8 beatUpSlot:3;
     u8 pledgeMove:1;
     u8 effectsBeforeUsingMoveDone:1; // Mega Evo and Focus Punch/Shell Trap effects.
-    u8 unused3:1;
-    u16 flingItem:14;
-    enum FlungItem flungItem:2;
+    u8 padding3:1;
     u8 itemPartyIndex[MAX_BATTLERS_COUNT];
     u8 itemMoveIndex[MAX_BATTLERS_COUNT];
     s32 aiDelayTimer; // Counts number of frames AI takes to choose an action.
@@ -682,7 +680,7 @@ struct BattleStruct
     u16 additionalEffectsCounter:4; // A counter for the additionalEffects applied by the current move in Cmd_setadditionaleffects
     u8 pursuitStoredSwitch; // Stored id for the Pursuit target's switch
     s32 battlerExpReward;
-    enum Species prevTurnSpecies[MAX_BATTLERS_COUNT]; // Stores species the AI has in play at start of turn
+    u16 prevTurnSpecies[MAX_BATTLERS_COUNT]; // Stores species the AI has in play at start of turn
     s16 passiveHpUpdate[MAX_BATTLERS_COUNT]; // non-move damage and healing
     s16 moveDamage[MAX_BATTLERS_COUNT];
     u16 moveResultFlags[MAX_BATTLERS_COUNT];
@@ -701,6 +699,7 @@ struct BattleStruct
     enum SubmoveState submoveAnnouncement:2;
     u8 tryDestinyBond:1;
     u8 tryGrudge:1;
+    u16 flingItem;
     u8 incrementEchoedVoice:1;
     u8 echoedVoiceCounter:3;
     u8 attackAnimPlayed:1;
@@ -848,7 +847,7 @@ struct BattleSpriteInfo
     u16 behindSubstitute:1; // 0x4
     u16 flag_x8:1; // 0x8
     u16 hpNumbersNoBars:1; // 0x10
-    enum Species transformSpecies;
+    u16 transformSpecies;
 };
 
 struct BattleAnimationInfo
@@ -1071,6 +1070,12 @@ static inline bool32 IsBattlerAlive(enum BattlerId battler)
     else
         return TRUE;
 }
+
+enum SubCheck
+{
+    EXCLUDING_SUBSTITUTES,
+    INCLUDING_SUBSTITUTES
+};
 
 static inline bool32 IsBattlerTurnDamaged(enum BattlerId battler, enum SubCheck subCheck)
 {

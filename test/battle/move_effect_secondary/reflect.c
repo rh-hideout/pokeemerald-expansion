@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(MoveHasAdditionalEffectSelf(MOVE_BADDY_BAD, MOVE_EFFECT_REFLECT) == TRUE);
+    ASSUME(MoveHasAdditionalEffect(MOVE_BADDY_BAD, MOVE_EFFECT_REFLECT) == TRUE);
 }
 
 SINGLE_BATTLE_TEST("Baddy Bad sets up Reflect when it was succesful")

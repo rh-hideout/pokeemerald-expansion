@@ -24,7 +24,7 @@ AI_DOUBLE_BATTLE_TEST("AI uses Purify")
 
 AI_SINGLE_BATTLE_TEST("AI uses Purify to heal an enemy with Guts")
 {
-    enum Ability ability;
+    u32 ability;
 
     PARAMETRIZE { ability = ABILITY_GUTS; }
     PARAMETRIZE { ability = ABILITY_BULLETPROOF; }
@@ -43,7 +43,7 @@ AI_SINGLE_BATTLE_TEST("AI uses Purify to heal an enemy with Guts")
 
 AI_DOUBLE_BATTLE_TEST("AI does not use Purify to heal an ally with Guts")
 {
-    enum Ability ability;
+    u32 ability;
 
     PARAMETRIZE { ability = ABILITY_GUTS; }
     PARAMETRIZE { ability = ABILITY_BULLETPROOF; }

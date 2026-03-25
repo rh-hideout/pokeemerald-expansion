@@ -448,7 +448,7 @@ DOUBLE_BATTLE_TEST("Ally Switch does not update Wish recovery position")
 
 DOUBLE_BATTLE_TEST("Ally Switch does not update Healing Wish/Lunar Dance recovery position")
 {
-    enum Move move = MOVE_NONE;
+    u16 move = MOVE_NONE;
     struct BattlePokemon *switchTarget = NULL;
 
     PARAMETRIZE { move = MOVE_HEALING_WISH; switchTarget = playerLeft; }

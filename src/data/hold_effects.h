@@ -43,7 +43,7 @@ const struct HoldEffectInfo gHoldEffectsInfo[HOLD_EFFECT_COUNT] =
     [HOLD_EFFECT_RESTORE_PP] =
     {
         .onSwitchIn = TRUE,
-        .sprayLeppaBlunder = TRUE,
+        .onAttackerAfterHit = TRUE,
     },
 
     [HOLD_EFFECT_CURE_CONFUSION] =
@@ -555,7 +555,7 @@ const struct HoldEffectInfo gHoldEffectsInfo[HOLD_EFFECT_COUNT] =
 
     [HOLD_EFFECT_BLUNDER_POLICY] =
     {
-        .sprayLeppaBlunder = TRUE,
+        .onAttackerAfterHit = TRUE,
     },
 
     [HOLD_EFFECT_HEAVY_DUTY_BOOTS] =
@@ -564,7 +564,7 @@ const struct HoldEffectInfo gHoldEffectsInfo[HOLD_EFFECT_COUNT] =
 
     [HOLD_EFFECT_THROAT_SPRAY] =
     {
-        .sprayLeppaBlunder = TRUE,
+        .onAttackerAfterHit = TRUE,
     },
 
     [HOLD_EFFECT_ABILITY_SHIELD] =

@@ -4280,7 +4280,6 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
             gOverworldPalette_Sandygast,
             gShinyOverworldPalette_Sandygast
         )
-        .isTelekinesisBanned = TRUE,
         .levelUpLearnset = sSandygastLevelUpLearnset,
         .teachableLearnset = sSandygastTeachableLearnset,
         .eggMoveLearnset = sSandygastEggMoveLearnset,
@@ -4347,7 +4346,6 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
             gOverworldPalette_Palossand,
             gShinyOverworldPalette_Palossand
         )
-        .isTelekinesisBanned = TRUE,
         .levelUpLearnset = sPalossandLevelUpLearnset,
         .teachableLearnset = sPalossandTeachableLearnset,
     },

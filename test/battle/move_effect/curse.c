@@ -39,8 +39,7 @@ SINGLE_BATTLE_TEST("Curse cuts the user's HP in half when used by Ghost-types")
 
 SINGLE_BATTLE_TEST("Curse applies to the user if used with Protean/Libero")
 {
-    enum Ability ability;
-    u32 species;
+    u32 ability, species;
     PARAMETRIZE { ability = ABILITY_PROTEAN; species = SPECIES_KECLEON; }
     PARAMETRIZE { ability = ABILITY_LIBERO;  species = SPECIES_RABOOT; }
     GIVEN {

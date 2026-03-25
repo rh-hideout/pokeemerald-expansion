@@ -111,7 +111,7 @@ DOUBLE_BATTLE_TEST("Beads of Ruin increases damage taken by physical moves in Wo
 
 SINGLE_BATTLE_TEST("Beads of Ruin doesn't activate when dragged out by Mold Breaker attacker")
 {
-    enum Ability ability;
+    u32 ability;
 
     PARAMETRIZE { ability = ABILITY_MOLD_BREAKER; }
     PARAMETRIZE { ability = ABILITY_SAND_RUSH; }
@@ -142,7 +142,7 @@ SINGLE_BATTLE_TEST("Beads of Ruin doesn't activate when dragged out by Mold Brea
 
 DOUBLE_BATTLE_TEST("Beads of Ruin's Sp. Def reduction is not ignored by Mold Breaker", s16 damage)
 {
-    enum Ability ability;
+    u32 ability;
 
     PARAMETRIZE { ability = ABILITY_MOLD_BREAKER; }
     PARAMETRIZE { ability = ABILITY_SAND_RUSH; }

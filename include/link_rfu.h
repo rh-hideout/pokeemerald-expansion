@@ -4,7 +4,6 @@
 #include "librfu.h"
 #include "link.h"
 #include "AgbRfu_LinkManager.h"
-#include "constants/species.h"
 
 #define RFUCMD_MASK                0xFF00
 
@@ -104,7 +103,7 @@ struct __attribute__((packed, aligned(2))) RfuGameData
 {
     struct RfuGameCompatibilityData compatibility;
     u8 partnerInfo[RFU_CHILD_MAX];
-    enum Species tradeSpecies;
+    u16 tradeSpecies;
     u8 activity:7;
     u8 startedActivity:1;
     u8 playerGender:1;
@@ -295,7 +294,7 @@ void UpdateGameData_SetActivity(u8 activity, u32 partnerInfo, bool32 startedActi
 void CreateTask_RfuReconnectWithParent(const u8 *name, u16 trainerId);
 void SetHostRfuWonderFlags(bool32 hasNews, bool32 hasCard);
 void ResetHostRfuGameData(void);
-void SetTradeBoardRegisteredMonInfo(u32 type, enum Species species, u32 level);
+void SetTradeBoardRegisteredMonInfo(u32 type, u32 species, u32 level);
 void InitializeRfuLinkManager_EnterUnionRoom(void);
 void TryConnectToUnionRoomParent(const u8 *name, struct RfuGameData *parent, u8 activity);
 bool32 IsUnionRoomListenTaskActive(void);

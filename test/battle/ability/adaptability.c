@@ -82,7 +82,7 @@ SINGLE_BATTLE_TEST("(TERA) Adaptability does not increase non-Tera base STAB bey
 
 SINGLE_BATTLE_TEST("(TERA) Adaptability does not affect Stellar-type moves", s16 damage)
 {
-    enum Ability ability;
+    u32 ability;
     PARAMETRIZE { ability = ABILITY_HYPER_CUTTER; }
     PARAMETRIZE { ability = ABILITY_ADAPTABILITY; }
     GIVEN {

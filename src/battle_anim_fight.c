@@ -487,12 +487,6 @@ void AnimBasicFistOrFoot(struct Sprite *sprite)
 
 static void AnimFistOrFootRandomPos(struct Sprite *sprite)
 {
-    if (!TryLoadSpriteAssets(&gBasicHitSplatSpriteTemplate))
-    {
-        DestroyAnimSprite(sprite);
-        return;
-    }
-
     enum BattlerId battler;
     s16 xMod, yMod;
     s16 x, y;

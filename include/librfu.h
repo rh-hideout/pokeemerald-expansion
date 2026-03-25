@@ -325,7 +325,7 @@ struct STWIStatus
     void (*callbackID)(void);
     union RfuPacket *txPacket;
     union RfuPacket *rxPacket;
-    vbool8 sending;
+    vu8 sending;
 };
 
 // This struct is used as u8 array in SDK.

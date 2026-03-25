@@ -138,9 +138,9 @@ struct UnionRoomTrade
     u16 type;
     u32 playerPersonality;
     u8 offerPlayerId;
-    enum Species playerSpecies;
+    u16 playerSpecies;
     u16 playerLevel;
-    enum Species species;
+    u16 species;
     u16 level;
     u32 personality;
 };
@@ -148,7 +148,7 @@ struct UnionRoomTrade
 extern u8 gPlayerCurrActivity;
 extern struct RfuGameCompatibilityData gRfuPartnerCompatibilityData;
 
-extern enum Species gUnionRoomOfferedSpecies;
+extern u16 gUnionRoomOfferedSpecies;
 extern enum Type gUnionRoomRequestedMonType;
 
 u8 CreateTask_CreateTradeMenu(void);

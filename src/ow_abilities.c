@@ -4,13 +4,13 @@
 #include "random.h"
 #include "constants/pokemon.h"
 
-static UNUSED bool32 HasHalfChance(enum Species species);
-static UNUSED bool32 HasTwoThirdsChance(enum Species species);
-static UNUSED bool32 IsFalse(enum Species species);
-static UNUSED bool32 IsTrue(enum Species species);
-static UNUSED bool32 IsTrueIfUndiscoveredEggGroup(enum Species species);
+static UNUSED bool32 HasHalfChance(u32 species);
+static UNUSED bool32 HasTwoThirdsChance(u32 species);
+static UNUSED bool32 IsFalse(u32 species);
+static UNUSED bool32 IsTrue(u32 species);
+static UNUSED bool32 IsTrueIfUndiscoveredEggGroup(u32 species);
 
-const static bool32 (*sSynchronizeModes[])(enum Species) = 
+const static bool32 (*sSynchronizeModes[]) (u32) = 
 {
 #if OW_SYNCHRONIZE_NATURE == GEN_3
     [WILDMON_ORIGIN] = HasHalfChance,
@@ -45,7 +45,7 @@ const static bool32 (*sSynchronizeModes[])(enum Species) =
 #endif
 };
 
-const static bool32 (*sCuteCharmModes[])(enum Species) = 
+const static bool32 (*sCuteCharmModes[]) (u32) = 
 {
     [WILDMON_ORIGIN] = HasTwoThirdsChance,
     [STATIC_WILDMON_ORIGIN] = HasTwoThirdsChance,
@@ -53,27 +53,27 @@ const static bool32 (*sCuteCharmModes[])(enum Species) =
     [GIFTMON_ORIGIN] = IsFalse,
 };
 
-static UNUSED bool32 HasHalfChance(enum Species species)
+static UNUSED bool32 HasHalfChance(u32 species)
 {
     return Random() % 2;
 }
 
-static UNUSED bool32 HasTwoThirdsChance(enum Species species)
+static UNUSED bool32 HasTwoThirdsChance(u32 species)
 {
     return Random() % 3;
 }
 
-static UNUSED bool32 IsFalse(enum Species species)
+static UNUSED bool32 IsFalse(u32 species)
 {
     return FALSE;
 }
 
-static UNUSED bool32 IsTrue(enum Species species)
+static UNUSED bool32 IsTrue(u32 species)
 {
     return TRUE;
 }
 
-static UNUSED bool32 IsTrueIfUndiscoveredEggGroup(enum Species species)
+static UNUSED bool32 IsTrueIfUndiscoveredEggGroup(u32 species)
 {
     return (gSpeciesInfo[species].eggGroups[0] == EGG_GROUP_NO_EGGS_DISCOVERED);
 }
@@ -90,7 +90,7 @@ static bool32 IsCuteCharmActive(void)
         && GetMonAbility(&gPlayerParty[0]) == ABILITY_CUTE_CHARM));
 }
 
-u32 GetSynchronizedNature(enum GeneratedMonOrigin origin, enum Species species)
+u32 GetSynchronizedNature(enum GeneratedMonOrigin origin, u32 species)
 {
     if (!IsSynchronizeActive())
         return NATURE_RANDOM;
@@ -99,7 +99,7 @@ u32 GetSynchronizedNature(enum GeneratedMonOrigin origin, enum Species species)
     return GetMonData(&gPlayerParty[0], MON_DATA_PERSONALITY) % NUM_NATURES;
 }
 
-u32 GetSynchronizedGender(enum GeneratedMonOrigin origin, enum Species species)
+u32 GetSynchronizedGender(enum GeneratedMonOrigin origin, u32 species)
 {
     if (!IsCuteCharmActive())
         return MON_GENDER_RANDOM;

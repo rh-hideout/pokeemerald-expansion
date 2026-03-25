@@ -1965,12 +1965,6 @@ static void RapinSpinMonElevation_Step(u8 taskId)
 
 void AnimTask_TormentAttacker(u8 taskId)
 {
-    if (!TryLoadSpriteAssets(&gThoughtBubbleSpriteTemplate))
-    {
-        DestroyAnimVisualTask(taskId);
-        return;
-    }
-
     struct Task *task = &gTasks[taskId];
 
     task->data[0] = 0;
@@ -3372,7 +3366,7 @@ void AnimTask_RolePlaySilhouette(u8 taskId)
 {
     bool8 isBackPic, isShiny;
     u32 personality;
-    enum Species species;
+    u16 species;
     s16 xOffset;
     u32 priority;
     u8 spriteId;
@@ -3966,9 +3960,7 @@ static void AnimTask_SquishAndSweatDroplets_Step(u8 taskId)
 
 static void CreateSweatDroplets(u8 taskId, bool8 lowerDroplets)
 {
-    if (!TryLoadSpriteAssets(&gFacadeSweatDropSpriteTemplate))
-        return;
-
+    u8 i;
     s8 xOffset, yOffset;
     struct Task *task;
     s16 xCoords[4];
@@ -3993,7 +3985,7 @@ static void CreateSweatDroplets(u8 taskId, bool8 lowerDroplets)
     yCoords[0] = task->tBaseY + yOffset;
     yCoords[1] = task->tBaseY + yOffset + 6;
 
-    for (u32 i = 0; i < 4; i++)
+    for (i = 0; i < 4; i++)
     {
         u8 spriteId = CreateSprite(&gFacadeSweatDropSpriteTemplate, xCoords[i], yCoords[i & 1], task->tSubpriority - 5);
         if (spriteId != MAX_SPRITES)
@@ -4154,12 +4146,6 @@ static void AnimRoarNoiseLine_Step(struct Sprite *sprite)
 // arg 0: unused
 void AnimTask_GlareEyeDots(u8 taskId)
 {
-    if (!TryLoadSpriteAssets(&gGlareEyeDotSpriteTemplate))
-    {
-        DestroyAnimVisualTask(taskId);
-        return;
-    }
-
     struct Task *task = &gTasks[taskId];
 
     if (IsContest())
@@ -4329,12 +4315,6 @@ void AnimAssistPawprint(struct Sprite *sprite)
 // No args.
 void AnimTask_BarrageBall(u8 taskId)
 {
-    if (!TryLoadSpriteAssets(&gBarrageBallSpriteTemplate))
-    {
-        DestroyAnimVisualTask(taskId);
-        return;
-    }
-
     struct Task *task = &gTasks[taskId];
 
     task->data[11] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
@@ -5259,7 +5239,7 @@ void AnimTask_SnatchOpposingMonMove(u8 taskId)
 {
     u8 spriteId, spriteId2;
     int personality;
-    enum Species species;
+    u16 species;
     u8 subpriority;
     bool8 isBackPic, isShiny;
     s16 x;
