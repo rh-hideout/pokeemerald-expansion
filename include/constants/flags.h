@@ -53,7 +53,7 @@
 
 #define FLAG_SYS_DEXNAV_SEARCHING            0x20 // DexNav Searching
 #define FLAG_SYS_DEXNAV_GET                  0x21 // DexNav Get
-#define FLAG SYS DEXNAV DETECTOR MODE        0x22 // DexNav Detector Mode
+#define FLAG_SYS_DEXNAV_DETECTOR_MODE        0x22 // DexNav Detector Mode
 #define FLAG_UNUSED_0x023    0x23 // Unused Flag
 #define FLAG_UNUSED_0x024    0x24 // Unused Flag
 #define FLAG_UNUSED_0x025    0x25 // Unused Flag
