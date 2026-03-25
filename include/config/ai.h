@@ -2,12 +2,12 @@
 #define GUARD_CONFIG_AI_H
 
 // Frame count references; tests inflate by ~5 frames, actual frame counts are lower
-#define AI_FRAME_CEILING_SINGLES_NO_FLAGS                       8
-#define AI_FRAME_CEILING_SINGLES_SMART_TRAINER                  18
-#define AI_FRAME_CEILING_DOUBLES_NO_FLAGS                       44
-#define AI_FRAME_CEILING_DOUBLES_SMART_TRAINER                  77
-#define AI_FRAME_CEILING_STEVEN_MULTI                           37
-#define AI_FRAME_CEILING_STEVEN_MULTI_SMART_TRAINER             46
+#define AI_FRAME_CEILING_SINGLES_NO_FLAGS                       1//8
+#define AI_FRAME_CEILING_SINGLES_SMART_TRAINER                  1//18
+#define AI_FRAME_CEILING_DOUBLES_NO_FLAGS                       1//44
+#define AI_FRAME_CEILING_DOUBLES_SMART_TRAINER                  1//77
+#define AI_FRAME_CEILING_STEVEN_MULTI                           1//37
+#define AI_FRAME_CEILING_STEVEN_MULTI_SMART_TRAINER             1//46
 
 // For the details on what specific factors the switching functions are considering, go read the corresponding function inside ShouldSwitch in src/battle_ai_switch_items.c
 // These configuration options control how likely the AI is to switch if it determines that a switch meets all of its criteria

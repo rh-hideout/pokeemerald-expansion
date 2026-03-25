@@ -144,7 +144,7 @@ static s32 (*const sBattleAiFuncTable[])(enum BattlerId, enum BattlerId, enum Mo
 void AIDebugTimerStart()
 {
     // Set delay timer to count how long it takes for AI to choose action/move
-    if (TESTING || DEBUG_AI_DELAY_TIMER)
+    if ((TESTING && gBattleTurnCounter == 0) || DEBUG_AI_DELAY_TIMER)
         gBattleStruct->aiDelayTimer = gMain.vblankCounter1;
     if (!TESTING)
         CycleCountStart();
@@ -153,7 +153,7 @@ void AIDebugTimerStart()
 void AIDebugTimerEnd()
 {
     // We add to existing to compound multiple calls
-    if (TESTING || DEBUG_AI_DELAY_TIMER)
+    if ((TESTING && gBattleTurnCounter == 0) || DEBUG_AI_DELAY_TIMER)
         gBattleStruct->aiDelayFrames += gMain.vblankCounter1 - gBattleStruct->aiDelayTimer;
     if (!TESTING)
         gBattleStruct->aiDelayCycles += CycleCountEnd();
