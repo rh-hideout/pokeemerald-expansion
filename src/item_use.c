@@ -1257,8 +1257,7 @@ bool32 CannotSelectItemsInBattle(enum Item itemId, struct Pokemon *mon)
     u16 battleUsage = GetItemBattleUsage(itemId);
     bool8 cannotUse = FALSE;
     const u8* failStr = NULL;
-    u32 i, battlerTarget;
-    u16 hp = GetMonData(mon, MON_DATA_HP);
+    u32 battlerTarget;
 
     if (gPartyMenu.slotId == 0)
         battlerTarget = B_POSITION_PLAYER_LEFT;
