@@ -184,6 +184,7 @@ void NewGameInitBanking(void)
     struct Banking *banking = GetBankingPtr();
     SetMoneyInBank(0);
     banking->lastBought = 0;
+    banking->deposited = 0;
     banking->isPending = FALSE;
 }
 
