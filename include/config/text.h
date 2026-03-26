@@ -14,6 +14,6 @@
 #define TEXT_SPEED_INSTANT           FALSE   // Renders all text as fast as it can, basically instant. Overrides FLAG_TEXT_SPEED_INSTANT and in-game player options menu setting.
 
 // Text speed flag:
-#define FLAG_TEXT_SPEED_INSTANT      0       // Use this if you want to toggle instant text speed
+#define FLAG_TEXT_SPEED_INSTANT      FLAG_INSTANT_TEXT       // Use this if you want to toggle instant text speed
 
 #endif // GUARD_CONFIG_TEXT_H
