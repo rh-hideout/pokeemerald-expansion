@@ -185,7 +185,6 @@ void NewGameInitBanking(void)
     SetMoneyInBank(0);
     banking->lastBought = 0;
     banking->isPending = FALSE;
-    DebugPrintf("In Bank:%d", GetMoneyInBank());
 }
 
 void Script_CompareBankBalance(struct ScriptContext *ctx)
