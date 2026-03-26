@@ -2945,6 +2945,19 @@
   .4byte \amount
 .endm
 
+@ Adds an amount into the bank using a VAR
+@ The argument should be a VAR
+.macro addtobankvar varId:req
+  callnative Script_AddToBankWithVar
+  .2byte \varId
+.endm
+
+@ Removes an amount from the bank using a VAR
+.macro removefrombankvar varId:req
+  callnative Script_RemoveFromBankWithVar
+  .2byte \varId
+.endm
+
 @ Shows the bank balance box at (x, y)
 .macro showbankbalancebox x:req, y:req
   callnative Script_ShowBankBalanceBox
@@ -2960,6 +2973,12 @@
 @ Updates the bank balance box with current value
 .macro updatebankbalancebox
   callnative Script_UpdateBankBalanceBox
+.endm
+
+@ Purchases an item from sUniquePurchaseTable/sRepeatPurchaseTable. Sets VAR_RESULT to the price of the item
+@ NOTE: The Amount is not deducted automatically
+.macro purchasefromsavings
+  callnative Script_PurchaseFromSavings
 .endm
 
 @ END OF BANKING SYSTEM

@@ -10,6 +10,7 @@
 #include "field_player_avatar.h"
 #include "gba/defines.h"
 #include "gba/io_reg.h"
+#include "gba/types.h"
 #include "international_string_util.h"
 #include "item.h"
 #include "main.h"
@@ -201,44 +202,69 @@ void Script_CompareBankBalance(struct ScriptContext *ctx)
         gSpecialVar_Result = TRUE;
 }
 
+bool32 RemoveFromBank(u32 amount)
+{
+    u32 balance = GetMoneyInBank();
+    bool32 res;
+
+    if (amount > balance)
+    {
+        res = FALSE;
+        amount = balance;
+    }
+    else
+    {
+        res = TRUE;
+    }
+
+    SetMoneyInBank(balance - amount);
+    return res;
+}
+
 void Script_RemoveFromBank(struct ScriptContext *ctx)
 {
     EnsureBankingEnabled();
 
     u32 amount = ScriptReadWord(ctx);
+    gSpecialVar_Result = RemoveFromBank(amount);
+}
+
+void Script_RemoveFromBankWithVar(struct ScriptContext *ctx)
+{
+    EnsureBankingEnabled();
+    u32 amount = VarGet(ScriptReadHalfword(ctx));
+    gSpecialVar_Result = RemoveFromBank(amount);
+}
+
+bool32 AddToBank(u32 amount)
+{
     u32 balance = GetMoneyInBank();
+    u32 tentativeBalance = balance + amount;
 
-    if (amount > balance)
+    bool32 res = TRUE;
+
+    if (tentativeBalance > MAX_BANK_MONEY)
     {
-        gSpecialVar_Result = FALSE;
-        amount = balance;
-    }
-    else
-    {
-        gSpecialVar_Result = TRUE;
+        amount = MAX_BANK_MONEY - balance;
+        res = FALSE;
     }
 
-    SetMoneyInBank(balance - amount);
+    SetMoneyInBank(balance + amount);
+    return res;
 }
 
 void Script_AddToBank(struct ScriptContext *ctx)
 {
     EnsureBankingEnabled();
-
     u32 amount = ScriptReadWord(ctx);
-    u32 balance = GetMoneyInBank();
+    gSpecialVar_Result = AddToBank(amount);
+}
 
-    gSpecialVar_Result = TRUE;
-
-    u32 newBalance = balance + amount;
-
-    if (newBalance > MAX_BANK_MONEY)
-    {
-        amount = MAX_BANK_MONEY - balance;
-        gSpecialVar_Result = FALSE;
-    }
-
-    SetMoneyInBank(balance + amount);
+void Script_AddToBankWithVar(struct ScriptContext *ctx)
+{
+    EnsureBankingEnabled();
+    u32 amount = VarGet(ScriptReadHalfword(ctx));
+    gSpecialVar_Result = AddToBank(amount);
 }
 
 void Script_ShowBankBalanceBox(struct ScriptContext *ctx)
@@ -546,7 +572,7 @@ void Script_GetPurchaseFromSavings()
     gSpecialVar_0x8001 = currentPurchase.quantity;
 }
 
-void PurchaseFromSavings()
+u32 PurchaseFromSavings()
 {
     struct Banking* banking = GetBankingPtr();
     u32 idx = banking->lastBought;
@@ -554,11 +580,18 @@ void PurchaseFromSavings()
     struct UniquePurchaseItem next = sUniquePurchaseTable[idx + 1];
 
     if (savings < next.thresholdMoney)
-        return;
+        return 0;
     if (banking->isPending)
-        return;
+        return 0;
 
     idx++;
     banking->lastBought = idx;
     banking->isPending = TRUE;
+    return next.price;
+}
+
+void Script_PurchaseFromSavings(struct ScriptContext* ctx)
+{
+    EnsureBankingEnabled();
+    gSpecialVar_Result = PurchaseFromSavings();
 }
