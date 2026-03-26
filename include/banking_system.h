@@ -3,6 +3,14 @@
 
 #include "script.h"
 
+ struct __attribute__((packed)) Banking
+{
+    u32 savings;
+    u16 deposited;
+    u8 lastBought:6;
+    bool8 isPending:1;
+    bool8 isRepeat:1;
+};
 bool32 IsBankingEnabled(void);
 u32 GetMoneyInBank(void);
 void SetMoneyInBank(u32 amount);

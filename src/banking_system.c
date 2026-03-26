@@ -146,45 +146,14 @@ bool32 IsSavingMoney(void)
     return IsBankingEnabled() && FlagGet(SAVINGS_FLAG);
 }
 
-u32* GetSavedMoneyPtr(void)
+struct Banking* GetBankingPtr(void)
 {
     #if SAVINGS_ENABLED
-        return &gSaveBlock3Ptr->savedMoney;
+        return &gSaveBlock3Ptr->banking;
     #else
         return NULL;
     #endif /* if SAVINGS_ENABLED */
-}
-
-u8 GetPurchaseIndex(void)
-{
-    #if SAVINGS_ENABLED
-        return gSaveBlock3Ptr->lastPurchase;
-    #else
-        return 0;
-    #endif /* if SAVINGS_ENABLED */
-}
-
-bool32 IsPurchasePending(void)
-{
-    #if SAVINGS_ENABLED
-        return !!gSaveBlock3Ptr->pendingPurchase;
-    #else
-        return FALSE;
-    #endif /* if SAVINGS_ENABLED */
-}
-
-void SetPurchasePending(bool32 bool)
-{
-    #if SAVINGS_ENABLED
-        gSaveBlock3Ptr->pendingPurchase = bool;
-    #endif /* if SAVINGS_ENABLED */
-}
-
-void SetPurchaseIndex(u8 index)
-{
-    #if SAVINGS_ENABLED
-        gSaveBlock3Ptr->lastPurchase = index;
-    #endif /* if SAVINGS_ENABLED */
+    
 }
 
 u32 GetMoneyInBank(void)
@@ -194,7 +163,8 @@ u32 GetMoneyInBank(void)
         return 0;
     }
 
-    return *GetSavedMoneyPtr();
+    struct Banking *banking = GetBankingPtr();
+    return banking->savings;
 }
 
 void SetMoneyInBank(u32 amount)
@@ -205,17 +175,17 @@ void SetMoneyInBank(u32 amount)
         return;
     }
 
-    *GetSavedMoneyPtr() = amount;
+    struct Banking *banking = GetBankingPtr();
+    banking->savings = amount;
 }
 
 void NewGameInitBanking(void)
 {
-    #if SAVINGS_ENABLED
-        SetMoneyInBank(0);
-        gSaveBlock3Ptr->lastPurchase = 0;
-        gSaveBlock3Ptr->pendingPurchase = FALSE;
-    #endif /* if SAVINGS_ENABLED */
-    DebugPrintf("In Bank:%d", *GetSavedMoneyPtr());
+    struct Banking *banking = GetBankingPtr();
+    SetMoneyInBank(0);
+    banking->lastBought = 0;
+    banking->isPending = FALSE;
+    DebugPrintf("In Bank:%d", GetMoneyInBank());
 }
 
 void Script_CompareBankBalance(struct ScriptContext *ctx)
@@ -528,10 +498,12 @@ void Script_StartTransactionTask(struct ScriptContext *ctx)
 
 void Script_CheckPurchaseFromSavings()
 {
+    
     EnsureBankingEnabled();
-    u32 purchaseIdx = GetPurchaseIndex();
+    struct Banking* banking = GetBankingPtr();
+    u32 purchaseIdx = banking->lastBought;
 
-    if (!IsPurchasePending())
+    if (!banking->isPending)
     {
         gSpecialVar_Result = ITEM_NONE;
         return;
@@ -545,7 +517,8 @@ void Script_CheckPurchaseFromSavings()
 void Script_CheckSavingsPurchaseQuantity()
 {
     EnsureBankingEnabled();
-    u32 purchaseIdx = GetPurchaseIndex();
+    struct Banking *banking = GetBankingPtr();
+    u32 purchaseIdx = banking->isPending;
 
     struct UniquePurchaseItem currentPurchase =
         sUniquePurchaseTable[purchaseIdx];
@@ -556,9 +529,10 @@ void Script_CheckSavingsPurchaseQuantity()
 void Script_GetPurchaseFromSavings()
 {
     EnsureBankingEnabled();
-    u32 idx = GetPurchaseIndex();
+    struct Banking* banking = GetBankingPtr();
+    u32 idx = banking->lastBought;
 
-    assertf(IsPurchasePending(), "No pending purchases to get")
+    assertf(banking->isPending, "No pending purchases to get")
     {
         return;
     }
@@ -566,7 +540,7 @@ void Script_GetPurchaseFromSavings()
     struct UniquePurchaseItem currentPurchase =
         sUniquePurchaseTable[idx];
 
-    SetPurchasePending(FALSE);
+    banking->isPending = FALSE;
 
     gSpecialVar_Result = currentPurchase.itemId;
     gSpecialVar_0x8001 = currentPurchase.quantity;
@@ -574,16 +548,17 @@ void Script_GetPurchaseFromSavings()
 
 void PurchaseFromSavings()
 {
+    struct Banking* banking = GetBankingPtr();
+    u32 idx = banking->lastBought;
     u32 savings = GetMoneyInBank();
-    u32 idx = GetPurchaseIndex();
     struct UniquePurchaseItem next = sUniquePurchaseTable[idx + 1];
 
     if (savings < next.thresholdMoney)
         return;
-    if (IsPurchasePending())
+    if (banking->isPending)
         return;
 
     idx++;
-    SetPurchaseIndex(idx);
-    SetPurchasePending(TRUE);
+    banking->lastBought = idx;
+    banking->isPending = TRUE;
 }

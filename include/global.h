@@ -26,6 +26,7 @@
 #include "constants/moves.h"
 #include "config/save.h"
 #include "config/banking.h"
+#include "banking_system.h"
 
 
 // Prevent cross-jump optimization.
@@ -274,10 +275,7 @@ struct SaveBlock3
     u8 apricornTrees[NUM_APRICORN_TREE_BYTES];
 #endif
 #if SAVINGS_ENABLED
-    u32 savedMoney;
-    u8 lastPurchase:7;
-    u8 pendingPurchase:1;
-
+    struct Banking banking;
 #endif
 }; /* max size 1624 bytes */
 
