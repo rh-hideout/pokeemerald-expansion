@@ -812,8 +812,9 @@
 	.byte \battler
 	.endm
 
-	.macro setmist
+	.macro setmist failInstr:req
 	.byte B_SCR_OP_SETMIST
+	.4byte \failInstr
 	.endm
 
 	.macro setfocusenergy battler:req
@@ -1265,6 +1266,10 @@
 
 	.macro itemrestorepp
 	callnative BS_ItemRestorePP
+	.endm
+
+	.macro cancelitemusage
+	callnative BS_CancelItemUsage
 	.endm
 
 	.macro tryrevertweatherform

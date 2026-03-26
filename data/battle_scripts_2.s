@@ -58,9 +58,15 @@ BattleScript_ItemRestoreHPRet:
 	waitmessage B_WAIT_TIME_LONG
 	return
 
+BattleScript_ItemNoEffect::
+	cancelitemusage
+	printstring STRINGID_ITEMHADNOEFFECT
+	waitmessage B_WAIT_TIME_LONG
+	end
+
 BattleScript_ItemRestoreHP::
 	call BattleScript_UseItemMessage
-	itemrestorehp BattleScript_ItemRestoreHPEnd, BattleScript_ItemRestoreHP_Battler
+	itemrestorehp BattleScript_ItemNoEffect, BattleScript_ItemRestoreHP_Battler
 	call BattleScript_ItemRestoreHP_Party
 	goto BattleScript_ItemRestoreHPEnd
 
@@ -90,7 +96,7 @@ BattleScript_ItemRestoreHP_SendOutRevivedBattler:
 BattleScript_ItemCureStatus::
 	call BattleScript_UseItemMessage
 BattleScript_ItemCureStatusAfterItemMsg:
-	itemcurestatus BattleScript_ItemCureStatusEnd, BattleScript_CureStatus_Battler
+	itemcurestatus BattleScript_ItemNoEffect, BattleScript_CureStatus_Battler
 	printstring STRINGID_ITEMCUREDSPECIESSTATUS
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_ItemCureStatusEnd:
@@ -116,7 +122,8 @@ BattleScript_ItemHealAndCureStatusEnd::
 BattleScript_ItemIncreaseStat::
 	call BattleScript_UseItemMessage
 	itemincreasestat
-	statbuffchange BS_ATTACKER, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_ALLOW_PTR, BattleScript_ItemEnd
+	jumpifabsent BS_ATTACKER, BattleScript_ItemNoEffect
+	statbuffchange BS_ATTACKER, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_ALLOW_PTR, BattleScript_ItemNoEffect
 	printfromtable gStatUpStringIds
 	waitmessage B_WAIT_TIME_LONG
 	end
@@ -142,7 +149,7 @@ BattleScript_PokeFluteEnd::
 
 BattleScript_ItemSetMist::
 	call BattleScript_UseItemMessage
-	setmist
+	setmist BattleScript_ItemNoEffect
 	playmoveanimation MOVE_MIST
 	waitanimation
 	printfromtable gMistUsedStringIds
@@ -152,8 +159,9 @@ BattleScript_ItemSetMist::
 BattleScript_ItemSetFocusEnergy::
 	call BattleScript_UseItemMessage
 	itemincreasestat
-	jumpifvolatile BS_ATTACKER, VOLATILE_DRAGON_CHEER, BattleScript_ButItFailed
-	jumpifvolatile BS_ATTACKER, VOLATILE_FOCUS_ENERGY, BattleScript_ButItFailed
+	jumpifabsent BS_ATTACKER, BattleScript_ItemNoEffect
+	jumpifvolatile BS_ATTACKER, VOLATILE_DRAGON_CHEER, BattleScript_ItemNoEffect
+	jumpifvolatile BS_ATTACKER, VOLATILE_FOCUS_ENERGY, BattleScript_ItemNoEffect
 	setfocusenergy BS_ATTACKER
 	playmoveanimation MOVE_FOCUS_ENERGY
 	waitanimation

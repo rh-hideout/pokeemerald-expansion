@@ -8547,19 +8547,18 @@ static void Cmd_updatestatusicon(void)
 
 static void Cmd_setmist(void)
 {
-    CMD_ARGS();
+    CMD_ARGS(const u8 *failInstr);
 
     if (gSideTimers[GetBattlerSide(gBattlerAttacker)].mistTimer)
     {
         gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_FAILED;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MIST_FAILED;
+        gBattlescriptCurrInstr = cmd->failInstr;
+        return;
     }
-    else
-    {
-        gSideTimers[GetBattlerSide(gBattlerAttacker)].mistTimer = 5;
-        gSideStatuses[GetBattlerSide(gBattlerAttacker)] |= SIDE_STATUS_MIST;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_MIST;
-    }
+    gSideTimers[GetBattlerSide(gBattlerAttacker)].mistTimer = 5;
+    gSideStatuses[GetBattlerSide(gBattlerAttacker)] |= SIDE_STATUS_MIST;
+    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_MIST;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -12191,6 +12190,14 @@ void BS_ItemRestorePP(void)
     }
     gBattleScripting.battler = battler;
     PREPARE_SPECIES_BUFFER(gBattleTextBuff1, GetMonData(mon, MON_DATA_SPECIES));
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_CancelItemUsage(void)
+{
+    NATIVE_ARGS();
+    if (GetConfig(B_SELECT_NO_EFFECT_ITEMS) >= GEN_5)
+        AddBagItem(gLastUsedItem, 1);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
