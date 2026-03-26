@@ -170,7 +170,6 @@ u32 GetMoneyInBank(void)
 
 void SetMoneyInBank(u32 amount)
 {
-
     assertf(IsBankingEnabled(), "Banking functionality is not enabled")
     {
         return;
@@ -224,7 +223,6 @@ bool32 RemoveFromBank(u32 amount)
 void Script_RemoveFromBank(struct ScriptContext *ctx)
 {
     EnsureBankingEnabled();
-
     u32 amount = ScriptReadWord(ctx);
     gSpecialVar_Result = RemoveFromBank(amount);
 }
@@ -524,7 +522,6 @@ void Script_StartTransactionTask(struct ScriptContext *ctx)
 
 void Script_CheckPurchaseFromSavings()
 {
-    
     EnsureBankingEnabled();
     struct Banking* banking = GetBankingPtr();
     u32 purchaseIdx = banking->lastBought;
