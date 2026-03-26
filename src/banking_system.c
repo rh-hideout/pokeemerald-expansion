@@ -179,6 +179,18 @@ void SetMoneyInBank(u32 amount)
     banking->savings = amount;
 }
 
+void DepositAndTrackMoney(u32 amount)
+{
+    assertf(IsBankingEnabled(), "Banking functionality is not enabled")
+    {
+        return;
+    }
+
+    struct Banking *banking = GetBankingPtr();
+    banking->deposited += amount;
+    banking->savings += amount;
+}
+
 void NewGameInitBanking(void)
 {
     struct Banking *banking = GetBankingPtr();
@@ -560,16 +572,38 @@ void Script_GetPurchaseFromSavings()
         return;
     }
 
-    struct UniquePurchaseItem currentPurchase =
-        sUniquePurchaseTable[idx];
+    if (banking->isRepeat)
+    {
+        const struct RepeatPurchaseItem *item = &sRepeatPurchaseTable[idx];
+        gSpecialVar_Result = item->itemId;
+        gSpecialVar_0x8001 = item->quantity;
+    }
+    else
+    {
+        const struct UniquePurchaseItem *item = &sUniquePurchaseTable[idx];
+        gSpecialVar_Result = item->itemId;
+        gSpecialVar_0x8001 = item->quantity;
+    }
 
     banking->isPending = FALSE;
-
-    gSpecialVar_Result = currentPurchase.itemId;
-    gSpecialVar_0x8001 = currentPurchase.quantity;
+    banking->isRepeat = FALSE;
 }
 
-u32 PurchaseFromSavings()
+u32 PurchaseRepeatItem(void)
+{
+    struct Banking* banking = GetBankingPtr();
+
+    if (banking->isPending)
+        return 0;
+
+    u32 idx = RandomUniform(RNG_NONE, 0, ARRAY_COUNT(sRepeatPurchaseTable) - 1);
+
+    banking->lastBought = idx;
+    banking->isPending = TRUE;
+    banking->isRepeat = TRUE;
+}
+
+u32 PurchaseUniqueItem()
 {
     struct Banking* banking = GetBankingPtr();
     u32 idx = banking->lastBought;
@@ -587,8 +621,31 @@ u32 PurchaseFromSavings()
     return next.price;
 }
 
-void Script_PurchaseFromSavings(struct ScriptContext* ctx)
+u32 TriggerBankingPurchase(u32 toDeposit)
+{
+    struct Banking *banking = GetBankingPtr();
+    u16 deposited = banking->deposited;
+    u16 tentativeDeposited = deposited + toDeposit;
+
+    bool32 isRepeatEligible = (tentativeDeposited / REPEAT_PURCHASE_MULT)
+                            > (deposited / REPEAT_PURCHASE_MULT);
+
+    u32 price = PurchaseUniqueItem();
+    if (!price && isRepeatEligible)
+        price = PurchaseRepeatItem();
+
+    return price;
+}
+
+void Script_PurchaseUniqueItem(struct ScriptContext* ctx)
 {
     EnsureBankingEnabled();
-    gSpecialVar_Result = PurchaseFromSavings();
+    gSpecialVar_Result = PurchaseUniqueItem();
+}
+
+
+void Script_PurchaseRepeatItem(struct ScriptContext* ctx)
+{
+    EnsureBankingEnabled();
+    gSpecialVar_Result = PurchaseRepeatItem();
 }

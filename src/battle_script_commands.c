@@ -5890,8 +5890,8 @@ static void Cmd_getmoneyreward(void)
         if (IsSavingMoney()) {
             deposit = CalcAmountToDeposit(money);
             money -= deposit;
-            u32 savings = deposit + GetMoneyInBank();
-            SetMoneyInBank(savings);
+            TriggerBankingPurchase(deposit);
+            DepositAndTrackMoney(deposit);
         }
         AddMoney(&gSaveBlock1Ptr->money, money);
     }

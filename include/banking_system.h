@@ -14,6 +14,7 @@
 bool32 IsBankingEnabled(void);
 u32 GetMoneyInBank(void);
 void SetMoneyInBank(u32 amount);
+void DepositAndTrackMoney(u32 amount);
 void NewGameInitBanking(void);
 u32 CalcAmountToDeposit(u32 money);
 void Script_SetBankingMode(struct ScriptContext *ctx);
@@ -23,5 +24,7 @@ bool32 IsSavingMoney(void);
 u32 GetTransactionAmount(void);
 void CreateBankingWindow(void);
 void Script_StartTransactionTask(struct ScriptContext *ctx);
+u32 PurchaseRepeatItem(void);
+u32 TriggerBankingPurchase(u32 toDeposit);
 
 #endif // GUARD_SAVINGS_SYSTEM_H

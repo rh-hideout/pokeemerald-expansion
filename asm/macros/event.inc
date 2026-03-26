@@ -2977,8 +2977,8 @@
 
 @ Purchases an item from sUniquePurchaseTable/sRepeatPurchaseTable. Sets VAR_RESULT to the price of the item
 @ NOTE: The Amount is not deducted automatically
-.macro purchasefromsavings
-  callnative Script_PurchaseFromSavings
+.macro purchaseuniqueitem
+  callnative Script_PurchaseUniqueItem
 .endm
 
 @ END OF BANKING SYSTEM
