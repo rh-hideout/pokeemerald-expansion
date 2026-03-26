@@ -3903,7 +3903,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .criticalHitStage = B_UPDATED_MOVE_DATA >= GEN_3,
         .sleepTalkBanned = TRUE,
         .instructBanned = TRUE,
-        .argument.twoTurnAttack = { .stringId = B_UPDATED_MOVE_DATA >= GEN_4 ? STRINGID_CLOAKEDINAHARSHLIGHT : STRINGID_PKMNISGLOWING },
+        .argument.twoTurnAttack = { .stringId = STRINGID_CLOAKEDINAHARSHLIGHT },
     #if B_UPDATED_MOVE_DATA >= GEN_3
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_FLINCH,
