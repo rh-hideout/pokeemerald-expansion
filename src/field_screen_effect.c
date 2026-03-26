@@ -20,6 +20,7 @@
 #include "link_rfu.h"
 #include "load_save.h"
 #include "main.h"
+#include "map_preview_screen.h"
 #include "menu.h"
 #include "mirage_tower.h"
 #include "metatile_behavior.h"
@@ -384,7 +385,10 @@ static void Task_ExitDoor(u8 taskId)
         }
         break;
     case 4:
-        UnlockPlayerFieldControls();
+        // Don't unlock controls until the map preview has finished.
+        if (!FadeInMapPreviewScreenIsRunning())
+            UnlockPlayerFieldControls();
+
         DestroyTask(taskId);
         break;
     }
@@ -431,7 +435,10 @@ static void Task_ExitNonAnimDoor(u8 taskId)
         }
         break;
     case 3:
-        UnlockPlayerFieldControls();
+        // Don't unlock controls until the map preview has finished.
+        if (!FadeInMapPreviewScreenIsRunning())
+            UnlockPlayerFieldControls();
+
         DestroyTask(taskId);
         break;
     }
@@ -450,7 +457,10 @@ static void Task_ExitNonDoor(u8 taskId)
         if (WaitForWeatherFadeIn())
         {
             UnfreezeObjectEvents();
-            UnlockPlayerFieldControls();
+            // Don't unlock controls until the map preview has finished.
+            if (!FadeInMapPreviewScreenIsRunning())
+                UnlockPlayerFieldControls();
+
             DestroyTask(taskId);
         }
         break;

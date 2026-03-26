@@ -574,3 +574,53 @@ SINGLE_BATTLE_TEST("Fling doesn't fail when holding a Booster Energy and the tar
         EXPECT(player->item == ITEM_NONE);
     }
 }
+
+SINGLE_BATTLE_TEST("Fling reveals the user's item before dealing damage")
+{
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffectSelf(MOVE_FLING, MOVE_EFFECT_ITEM_MESSAGE));
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_POTION); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_FLING); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet flung its Potion!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, opponent);
+        HP_BAR(player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Fling doesn't reveal the user's item if it failed to use the move")
+{
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffectSelf(MOVE_FLING, MOVE_EFFECT_ITEM_MESSAGE));
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_POTION); Status1(STATUS1_SLEEP); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_FLING); }
+    } SCENE {
+        NONE_OF {
+            MESSAGE("The opposing Wobbuffet flung its Potion!");
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, opponent);
+            HP_BAR(player);
+        };
+    }
+}
+
+SINGLE_BATTLE_TEST("Fling doesn't reveal the user's item if it missed")
+{
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffectSelf(MOVE_FLING, MOVE_EFFECT_ITEM_MESSAGE));
+        ASSUME(GetItemHoldEffect(ITEM_BRIGHT_POWDER) == HOLD_EFFECT_EVASION_UP);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_BRIGHT_POWDER); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_POTION); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_FLING, hit: FALSE); }
+    } SCENE {
+        NONE_OF {
+            MESSAGE("The opposing Wobbuffet flung its Potion!");
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, opponent);
+            HP_BAR(player);
+        };
+    }
+}

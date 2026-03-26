@@ -1498,7 +1498,7 @@ void GenerateBattlePyramidWildMon(void)
     }
     SetMonData(&gEnemyParty[0],
                MON_DATA_EXP,
-               &gExperienceTables[gSpeciesInfo[species].growthRate][lvl]);
+               &gExperienceTables[GetSpeciesGrowthRate(species)][lvl]);
 
     // Give initial moves and replace one with desired move
     GiveBoxMonInitialMoveset(&gEnemyParty[0].box);
