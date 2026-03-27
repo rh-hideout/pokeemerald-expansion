@@ -743,10 +743,6 @@
 	.byte B_SCR_OP_NORMALISEBUFFS
 	.endm
 
-	.macro setbide
-	.byte B_SCR_OP_SETBIDE
-	.endm
-
 	.macro twoturnmoveschargestringandanimation
 	.byte B_SCR_OP_TWOTURNMOVESCHARGESTRINGANDANIMATION
 	.4byte 1f @animation then attack string
@@ -799,10 +795,6 @@
 	.byte B_SCR_OP_CHECKNONVOLATILETRIGGER
 	.2byte \nonVolatile
 	.4byte \failInstr
-	.endm
-
-	.macro copybidedmg
-	.byte B_SCR_OP_COPYBIDEDMG
 	.endm
 
 	.macro animatewildpokemonafterfailedpokeball battler:req
@@ -1208,7 +1200,7 @@
 	.byte B_SCR_OP_TRY_CONFUSION_AFTER_SKY_DROP
     .byte \battler
 	.endm
-	
+
 	.macro callnative func:req
 	.byte B_SCR_OP_CALLNATIVE
 	.4byte \func
@@ -2136,10 +2128,6 @@
 	.macro cutonethirdhpandraisestats failInstr:req
 	callnative BS_CutOneThirdHpAndRaiseStats
 	.4byte \failInstr
-	.endm
-
-	.macro setpoltergeistmessage
-	callnative BS_SetPoltergeistMessage
 	.endm
 
 	.macro tryresetnegativestatstages
