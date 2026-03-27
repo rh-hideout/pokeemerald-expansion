@@ -3139,7 +3139,7 @@ static bool32 CheckTestInventoryHasSpace(enum Item itemId, u16 count)
 static void AddToTestInventory(enum Item itemId, u16 count)
 {
     struct ItemSlot tempItem;
-    for (u32 i = 0; i < TEST_ITEM_SLOTS; i++)
+    for (u32 i = 0; i < TEST_ITEM_SLOTS && count > 0; i++)
     {
         tempItem = DATA.inventory[i];
         if (tempItem.itemId == ITEM_NONE || tempItem.itemId == itemId)
