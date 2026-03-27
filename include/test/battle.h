@@ -572,6 +572,7 @@
 #define MAX_TURNS 16
 #define MAX_QUEUED_EVENTS 30
 #define MAX_EXPECTED_ACTIONS 10
+#define TEST_ITEM_SLOTS 10
 
 enum {
     BATTLE_TEST_SINGLES,
@@ -798,6 +799,7 @@ struct BattleTestData
     bool8 logAI:1;
     bool8 explicitInventory:1;
 
+    struct ItemSlot inventory[TEST_ITEM_SLOTS];
     struct RecordedBattleSave recordedBattle;
     u8 battleRecordTypes[MAX_BATTLERS_COUNT][BATTLER_RECORD_SIZE];
     u8 battleRecordTurnNumbers[MAX_BATTLERS_COUNT][BATTLER_RECORD_SIZE];

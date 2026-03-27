@@ -1828,6 +1828,16 @@ static inline rng_value_t MakeRngValue(const u16 seed)
     return result;
 }
 
+static void ResetTestInventory()
+{
+    ClearBag();
+    for (u32 i = 0; i < TEST_ITEM_SLOTS; i++)
+    {
+        if (DATA.inventory[i].itemId != ITEM_NONE)
+            AddBagItem(DATA.inventory[i].itemId, DATA.inventory[i].quantity);
+    }
+}
+
 static void CB2_BattleTest_NextTrial(void)
 {
     TearDownBattle();
@@ -1853,6 +1863,7 @@ static void CB2_BattleTest_NextTrial(void)
         gTestRunnerState.result = TEST_RESULT_PASS;
         DATA.recordedBattle.rngSeed = MakeRngValue(STATE->runTrial);
         memset(&DATA.trial, 0, sizeof(DATA.trial));
+        ResetTestInventory();
         SetVariablesForRecordedBattle(&DATA.recordedBattle);
         SetMainCallback2(CB2_InitBattle);
     }
@@ -3111,11 +3122,49 @@ void SendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
     DATA.currentMonIndexes[battlerId] = partyIndex;
 }
 
+static bool32 CheckTestInventoryHasSpace(enum Item itemId, u16 count)
+{
+    u32 spaceForItem = 0;
+    struct ItemSlot tempItem;
+
+    for (u32 i = 0; i < TEST_ITEM_SLOTS; i++)
+    {
+        tempItem = DATA.inventory[i];
+        if (tempItem.itemId == ITEM_NONE || tempItem.itemId == itemId)
+            spaceForItem += (tempItem.itemId ? (MAX_BAG_ITEM_CAPACITY - tempItem.quantity) : MAX_BAG_ITEM_CAPACITY);
+    }
+    return (spaceForItem >= count);
+}
+
+static void AddToTestInventory(enum Item itemId, u16 count)
+{
+    struct ItemSlot tempItem;
+    for (u32 i = 0; i < TEST_ITEM_SLOTS; i++)
+    {
+        tempItem = DATA.inventory[i];
+        if (tempItem.itemId == ITEM_NONE || tempItem.itemId == itemId)
+        {
+            if (tempItem.itemId == ITEM_NONE)
+            {
+                tempItem.quantity = 0;
+                DATA.inventory[i].itemId = itemId;
+            }
+
+            // Record slot quantity in tempPocketSlotQuantities, adjust count
+            DATA.inventory[i].quantity = min(MAX_BAG_ITEM_CAPACITY, count + tempItem.quantity);
+            count -= min(count, MAX_BAG_ITEM_CAPACITY - tempItem.quantity);
+        }
+    }
+}
+
 void GivePlayerItem(u32 sourceLine, enum Item itemId, u32 quantity)
 {
     INVALID_IF(!CheckBagHasSpace(itemId, quantity), "Not enough space in bag");
+    INVALID_IF(!CheckTestInventoryHasSpace(itemId, quantity), "Not enough space in test inventory");
+
     DATA.explicitInventory = TRUE;
     AddBagItem(itemId, quantity);
+    AddToTestInventory(itemId, quantity);
 }
 
 void UseItem(u32 sourceLine, struct BattlePokemon *battler, struct ItemContext ctx)
@@ -3151,7 +3200,12 @@ void UseItem(u32 sourceLine, struct BattlePokemon *battler, struct ItemContext c
     }
 
     if (!DATA.explicitInventory && (battlerId & BIT_SIDE) == B_SIDE_PLAYER)
+    {
+        INVALID_IF(!CheckBagHasSpace(ctx.itemId, 1), "Not enough space in bag");
+        INVALID_IF(!CheckTestInventoryHasSpace(ctx.itemId, 1), "Not enough space in test inventory");
         AddBagItem(ctx.itemId, 1);
+        AddToTestInventory(ctx.itemId, 1);
+    }
     if (ctx.explicitRNG)
         DATA.battleRecordTurns[DATA.turns][battlerId].rng = ctx.rng;
     PushBattlerAction(sourceLine, battlerId, RECORDED_ACTION_TYPE, B_ACTION_USE_ITEM);
