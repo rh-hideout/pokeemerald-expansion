@@ -770,6 +770,9 @@ void Test_ExitWithResult_(enum TestResult result, u32 stopLine, const void *retu
          gTestRunnerState.expectedFailLine, stopLine);
     }
 
+    if (result == TEST_RESULT_ASSERT_FAIL && gTestRunnerState.expectedResult != result)
+        gTestRunnerState.result = TEST_RESULT_INVALID;
+
     ReinitCallbacks();
     if (gTestRunnerState.state == STATE_REPORT_RESULT
      && gTestRunnerState.result != gTestRunnerState.expectedResult)
