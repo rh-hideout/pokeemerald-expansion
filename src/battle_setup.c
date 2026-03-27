@@ -2178,16 +2178,6 @@ void SetMultiTrainerBattle(struct ScriptContext *ctx)
     gPartnerTrainerId = TRAINER_PARTNER(ScriptReadHalfword(ctx));
 };
 
-static void MakeTrainerGenerator(struct TrainerGenerator *trainerGen, const struct Trainer *trainer)
-{
-    trainerGen->gender = trainer->gender;
-    trainerGen->isFrontier = FALSE;
-    StringCopyN(trainerGen->name, trainer->trainerName, TRAINER_NAME_LENGTH + 1);
-    trainerGen->trainerClass = trainer->trainerClass;
-    trainerGen->otID = OTID_STRUCT_RANDOM_NO_SHINY;
-    trainerGen->localRngState = GeneratePartySeed(trainer);
-}
-
 void CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer)
 {
     s32 i;

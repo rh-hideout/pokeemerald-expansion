@@ -23,18 +23,6 @@ const struct Trainer gBattlePartners[DIFFICULTY_COUNT][PARTNER_COUNT] =
 
 #define STEVEN_OTID 61226
 
-static void MakePartnerGenerator(struct TrainerGenerator *trainerGen, const struct Trainer *trainer)
-{
-    u32 otID;
-    trainerGen->gender = trainer->gender;
-    trainerGen->isFrontier = FALSE;
-    StringCopyN(trainerGen->name, trainer->trainerName, TRAINER_NAME_LENGTH + 1);
-    trainerGen->trainerClass = trainer->trainerClass;
-    otID = Crc32B((const u8 *)trainer, sizeof(struct Trainer));
-    trainerGen->otID = OTID_STRUCT_PRESET(otID);
-    trainerGen->localRngState = LocalRandomSeed(otID);
-}
-
 void FillPartnerParty(u16 trainerId)
 {
     s32 i, j;

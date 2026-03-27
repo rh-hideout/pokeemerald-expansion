@@ -16,5 +16,7 @@ u32 Crc32B(const u8 *data, u32 size);
 rng_value_t GeneratePartySeed(const struct Trainer *trainer);
 void GenerateMonFromTrainerMon(struct Pokemon *mon, const struct TrainerMon *trainerMon, struct TrainerGenerator *trainer);
 u32 GeneratePersonalityForGender(u32 gender, u32 species);
+void MakeTrainerGenerator(struct TrainerGenerator *trainerGen, const struct Trainer *trainer);
+void MakePartnerGenerator(struct TrainerGenerator *trainerGen, const struct Trainer *partner);
 
 #endif // GUARD_TRAINER_UTIL_H

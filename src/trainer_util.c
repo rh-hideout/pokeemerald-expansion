@@ -113,6 +113,28 @@ static bool32 SetCorrectAbilityNum(struct Pokemon *mon, u32 species, u32 ability
     return TRUE;
 }
 
+void MakeTrainerGenerator(struct TrainerGenerator *trainerGen, const struct Trainer *trainer)
+{
+    trainerGen->gender = trainer->gender;
+    trainerGen->isFrontier = FALSE;
+    StringCopyN(trainerGen->name, trainer->trainerName, TRAINER_NAME_LENGTH + 1);
+    trainerGen->trainerClass = trainer->trainerClass;
+    trainerGen->otID = OTID_STRUCT_RANDOM_NO_SHINY;
+    trainerGen->localRngState = GeneratePartySeed(trainer);
+}
+
+void MakePartnerGenerator(struct TrainerGenerator *trainerGen, const struct Trainer *partner)
+{
+    u32 otID;
+    trainerGen->gender = partner->gender;
+    trainerGen->isFrontier = FALSE;
+    StringCopyN(trainerGen->name, partner->trainerName, TRAINER_NAME_LENGTH + 1);
+    trainerGen->trainerClass = partner->trainerClass;
+    otID = Crc32B((const u8 *)partner, sizeof(struct Trainer));
+    trainerGen->otID = OTID_STRUCT_PRESET(otID);
+    trainerGen->localRngState = LocalRandomSeed(otID);
+}
+
 void GenerateMonFromTrainerMon(struct Pokemon *mon, const struct TrainerMon *trainerMon, struct TrainerGenerator *trainer)
 {
     u32 data;
