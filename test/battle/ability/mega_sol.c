@@ -8,10 +8,10 @@
 SINGLE_BATTLE_TEST("Mega Sol multiplies the power of Fire-type moves by 1.5x", s16 damage)
 {
     enum Ability ability;
-    PARAMETRIZE { ability = ABILITY_NONE;}
+    PARAMETRIZE { ability = ABILITY_FLAME_BODY;}
     PARAMETRIZE { ability = ABILITY_MEGA_SOL;}
     GIVEN {
-        PLAYER(SPECIES_MEGANIUM_MEGA) { Ability(ability);}
+        PLAYER(SPECIES_LARVESTA) { Ability(ability);}
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_EMBER); }
@@ -26,11 +26,11 @@ SINGLE_BATTLE_TEST("Mega Sol multiplies the power of Fire-type moves by 1.5x", s
 SINGLE_BATTLE_TEST("Mega Sol multiplies the power of Water-type moves by 0.5x", s16 damage)
 {
     enum Ability ability;
-    PARAMETRIZE { ability = ABILITY_NONE;}
+    PARAMETRIZE { ability = ABILITY_FLAME_BODY;}
     PARAMETRIZE { ability = ABILITY_MEGA_SOL;}
 
     GIVEN {
-        PLAYER(SPECIES_MEGANIUM_MEGA) { Ability(ability);}
+        PLAYER(SPECIES_LARVESTA) { Ability(ability);}
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_WATER_GUN); }
@@ -46,7 +46,7 @@ SINGLE_BATTLE_TEST("Mega Sol multiplies the power of Water-type moves by 0.5x", 
 SINGLE_BATTLE_TEST("Weather Ball doubles its power and turns to a Fire-type move if user has Mega Sol", s16 damage)
 {
     enum Ability ability;
-    PARAMETRIZE { ability = ABILITY_NONE;}
+    PARAMETRIZE { ability = ABILITY_FLAME_BODY;}
     PARAMETRIZE { ability = ABILITY_MEGA_SOL;}
 
     GIVEN {
@@ -66,7 +66,7 @@ SINGLE_BATTLE_TEST("Synthesis recovers 2/3 of the user's max HP if user has Mega
 {
     GIVEN {
         WITH_CONFIG(B_TIME_OF_DAY_HEALING_MOVES, GEN_3);
-        PLAYER(SPECIES_MEGANIUM_MEGA) { HP(1); MaxHP(300); Ability(ABILITY_MEGA_SOL);  }
+        PLAYER(SPECIES_MEGANIUM) { HP(1); MaxHP(300); Ability(ABILITY_MEGA_SOL);  }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SYNTHESIS); }
@@ -80,10 +80,10 @@ SINGLE_BATTLE_TEST("Solar Beam does not need a charging turn if user has Mega So
     enum Ability ability;
 
     PARAMETRIZE { ability = ABILITY_MEGA_SOL; }
-    PARAMETRIZE { ability = ABILITY_NONE; }
+    PARAMETRIZE { ability = ABILITY_FLAME_BODY; }
 
     GIVEN {
-        PLAYER(SPECIES_MEGANIUM_MEGA) { Ability(ability); }
+        PLAYER(SPECIES_LARVESTA) { Ability(ability); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SOLAR_BEAM); }
@@ -92,11 +92,11 @@ SINGLE_BATTLE_TEST("Solar Beam does not need a charging turn if user has Mega So
         }
     } SCENE {
         if (ability == ABILITY_NONE) {
-            MESSAGE("Meganium used Solar Beam!");
-            MESSAGE("Meganium absorbed light!");
+            MESSAGE("Larvesta used Solar Beam!");
+            MESSAGE("Larvesta absorbed light!");
             ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
         }
-        MESSAGE("Meganium used Solar Beam!");
+        MESSAGE("Larvesta used Solar Beam!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SOLAR_BEAM, player);
     }
 }
