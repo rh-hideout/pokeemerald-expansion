@@ -6118,6 +6118,8 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
     case EFFECT_WEATHER_BALL:
         if (ctx->weather & B_WEATHER_ANY)
             basePower *= 2;
+        else if (GetBattlerAbility(battlerAtk) == ABILITY_MEGA_SOL)
+            basePower *= 2;
         break;
     case EFFECT_PURSUIT:
         if (gBattleStruct->battlerState[battlerDef].pursuitTarget)
@@ -6480,6 +6482,10 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
         break;
     case ABILITY_AERILATE:
         if (moveType == TYPE_FLYING && gBattleStruct->battlerState[battlerAtk].ateBoost)
+            modifier = uq4_12_multiply(modifier, UQ_4_12(GetConfig(B_ATE_MULTIPLIER) >= GEN_7 ? 1.2 : 1.3));
+        break;
+    case ABILITY_DRAGONIZE:
+        if (moveType == TYPE_DRAGON && gBattleStruct->battlerState[battlerAtk].ateBoost)
             modifier = uq4_12_multiply(modifier, UQ_4_12(GetConfig(B_ATE_MULTIPLIER) >= GEN_7 ? 1.2 : 1.3));
         break;
     case ABILITY_NORMALIZE:
@@ -7190,6 +7196,13 @@ static inline uq4_12_t GetSameTypeAttackBonusModifier(struct DamageContext *ctx)
 // Utility Umbrella holders take normal damage from what would be rain- and sun-weakened attacks.
 static uq4_12_t GetWeatherDamageModifier(struct DamageContext *ctx)
 {
+    if (ctx->abilityAtk == ABILITY_MEGA_SOL)
+    {
+        if (ctx->moveType != TYPE_FIRE && ctx->moveType != TYPE_WATER)
+            return UQ_4_12(1.0);
+        return (ctx->moveType == TYPE_WATER) ? UQ_4_12(0.5) : UQ_4_12(1.5);
+    }
+
     if (ctx->weather == B_WEATHER_NONE)
         return UQ_4_12(1.0);
     if (GetMoveEffect(ctx->move) == EFFECT_HYDRO_STEAM && (ctx->weather & B_WEATHER_SUN) && ctx->holdEffectAtk != HOLD_EFFECT_UTILITY_UMBRELLA)
@@ -7197,18 +7210,20 @@ static uq4_12_t GetWeatherDamageModifier(struct DamageContext *ctx)
     if (ctx->holdEffectDef == HOLD_EFFECT_UTILITY_UMBRELLA)
         return UQ_4_12(1.0);
 
-    if (ctx->weather & B_WEATHER_RAIN)
-    {
-        if (ctx->moveType != TYPE_FIRE && ctx->moveType != TYPE_WATER)
-            return UQ_4_12(1.0);
-        return (ctx->moveType == TYPE_FIRE) ? UQ_4_12(0.5) : UQ_4_12(1.5);
-    }
     if (ctx->weather & B_WEATHER_SUN)
     {
         if (ctx->moveType != TYPE_FIRE && ctx->moveType != TYPE_WATER)
             return UQ_4_12(1.0);
         return (ctx->moveType == TYPE_WATER) ? UQ_4_12(0.5) : UQ_4_12(1.5);
     }
+
+    if (ctx->weather & B_WEATHER_RAIN)
+    {
+        if (ctx->moveType != TYPE_FIRE && ctx->moveType != TYPE_WATER)
+            return UQ_4_12(1.0);
+        return (ctx->moveType == TYPE_FIRE) ? UQ_4_12(0.5) : UQ_4_12(1.5);
+    }
+
     return UQ_4_12(1.0);
 }
 
@@ -9287,10 +9302,13 @@ bool32 PickupHasValidTarget(enum BattlerId battler)
 
 u32 GetWeather(void)
 {
-    if (gBattleWeather == B_WEATHER_NONE || !HasWeatherEffect())
-        return B_WEATHER_NONE;
-    return gBattleWeather;
-}
+    if ((weatherFlags == B_WEATHER_SUN) && (GetBattlerAbility(battler) == ABILITY_MEGA_SOL))
+        return TRUE;
+    if (gBattleWeather & weatherFlags && HasWeatherEffect())
+    {
+        // given weather is active -> check if its sun, rain against utility umbrella (since only 1 weather can be active at once)
+        if (gBattleWeather & (B_WEATHER_SUN | B_WEATHER_RAIN) && GetBattlerHoldEffect(battler) == HOLD_EFFECT_UTILITY_UMBRELLA)
+            return FALSE; // utility umbrella blocks sun, rain effects
 
 bool32 IsBattlerWeatherAffected(enum HoldEffect holdEffect, u32 weather, u32 weatherFlags)
 {
