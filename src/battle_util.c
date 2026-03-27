@@ -7394,6 +7394,7 @@ static uq4_12_t GetWeatherDamageModifier(struct BattleContext *ctx)
 {
     if (ctx->abilityAtk == ABILITY_MEGA_SOL)
     {
+	//RecordAbilityBattle(ctx->battlerAtk, ctx->abilityAtk);
         if (ctx->moveType != TYPE_FIRE && ctx->moveType != TYPE_WATER)
             return UQ_4_12(1.0);
         return (ctx->moveType == TYPE_WATER) ? UQ_4_12(0.5) : UQ_4_12(1.5);
@@ -9484,7 +9485,15 @@ bool32 PickupHasValidTarget(enum BattlerId battler)
 
 bool32 IsBattlerWeatherAffected(enum BattlerId battler, u32 weatherFlags)
 {
-    if ((weatherFlags == B_WEATHER_SUN) && (GetBattlerAbility(battler) == ABILITY_MEGA_SOL))
+    if (gBattleWeather == B_WEATHER_NONE || !HasWeatherEffect())
+        return B_WEATHER_NONE;
+    return gBattleWeather;
+}
+
+bool32 IsBattlerWeatherAffected(enum BattlerId battler, u32 weather, u32 weatherFlags)
+{
+    if ((weatherFlags & B_WEATHER_SUN) && GetBattlerAbility(battler) == ABILITY_MEGA_SOL)
+	//RecordAbilityBattle(battler, ABILITY_MEGA_SOL);
         return TRUE;
     if (gBattleWeather & weatherFlags && HasWeatherEffect())
     {
@@ -9492,9 +9501,13 @@ bool32 IsBattlerWeatherAffected(enum BattlerId battler, u32 weatherFlags)
         if (gBattleWeather & (B_WEATHER_SUN | B_WEATHER_RAIN) && GetBattlerHoldEffect(battler) == HOLD_EFFECT_UTILITY_UMBRELLA)
             return FALSE; // utility umbrella blocks sun, rain effects
 
-        return TRUE;
-    }
-    return FALSE;
+    if (weather == B_WEATHER_NONE || !(gBattleWeather & weatherFlags))
+        return FALSE;
+
+    if (weather & (B_WEATHER_SUN | B_WEATHER_RAIN) && GetBattlerHoldEffect(battler) == HOLD_EFFECT_UTILITY_UMBRELLA)
+        return FALSE;
+
+    return TRUE;
 }
 
 static u32 CanBattlerHitBothFoesInTerrain(enum BattlerId battler, enum Move move, enum BattleMoveEffects effect)

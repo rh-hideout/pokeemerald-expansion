@@ -5895,9 +5895,11 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId
     case EFFECT_WEATHER_BALL:
 	if (ability == ABILITY_MEGA_SOL)
             return TYPE_FIRE;
-        else if (state == MON_IN_BATTLE)
+        if (state == MON_IN_BATTLE)
         {
-            if (HasWeatherEffect())
+	    if (ability == ABILITY_MEGA_SOL)
+                return TYPE_FIRE;
+            else if (HasWeatherEffect())
             {
                 if (gBattleWeather & B_WEATHER_RAIN && holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA)
                     return TYPE_WATER;
