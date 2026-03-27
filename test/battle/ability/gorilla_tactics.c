@@ -29,7 +29,7 @@ SINGLE_BATTLE_TEST("Gorilla Tactics stacks with Choice Band to reach 2.25x Attac
     PARAMETRIZE { ability = ABILITY_GORILLA_TACTICS;  item = ITEM_CHOICE_BAND; }
 
     GIVEN {
-        ASSUME(GetItemHoldEffect(ITEM_CHOICE_BAND) == HOLD_EFFECT_CHOICE_BAND)
+        ASSUME(GetItemHoldEffect(ITEM_CHOICE_BAND) == HOLD_EFFECT_CHOICE_BAND);
         PLAYER(SPECIES_DARMANITAN_GALAR) { Ability(ability); Item(item); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -65,7 +65,7 @@ SINGLE_BATTLE_TEST("Gorilla Tactics does not boost damage while Dynamaxed", s16 
 SINGLE_BATTLE_TEST("Gorilla Tactics does not lock moves while Dynamaxed")
 {
     GIVEN {
-        PLAYER(SPECIES_DARMANITAN_GALAR) { Ability(ABILITY_GORILLA_TACTICS); Moves(MOVE_SCRATCH, MOVE_EMBER); }
+        PLAYER(SPECIES_DARMANITAN_GALAR) { Ability(ABILITY_GORILLA_TACTICS); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); }
