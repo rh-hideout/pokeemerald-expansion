@@ -1164,7 +1164,7 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
         if (DoesMoveMissTarget(&cv))
         {
             gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_MISSED;
-            gBattleCommunication[MISS_TYPE] = B_MSG_MISSED;
+            gBattleCommunication[MISS_TYPE] = STRINGID_PKMNEVADEDATTACK;
             numMisses++;
 
             if (holdEffectAtk == HOLD_EFFECT_BLUNDER_POLICY)
@@ -1979,7 +1979,7 @@ static void Cmd_resultmessage(void)
         else
         {
             gBattleCommunication[MSG_DISPLAY] = 1;
-            stringId = STRINGID_ATTACKMISSED;
+            stringId = STRINGID_PKMNEVADEDATTACK;
         }
     }
     else
