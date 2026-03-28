@@ -559,8 +559,6 @@ static void CB2_InitBuyMenu(void)
 
 static void BuyMenuFreeMemory(void)
 {
-    // Unset so that rebuilding the dynamic list works
-    // when entering Buy menu again.
     if (sShopData->dynItemList != NULL)
     {
         FREE_AND_SET_NULL(sShopData->dynItemList);
@@ -1314,28 +1312,25 @@ static void BuyMenuTryBuildDynamicItemList(void)
     if (sMartInfo.itemList != NULL)
         return;
 
-    // Allocate a dynamic list if no list is found.
+    assertf(sMartInfo.martType != MART_TYPE_NORMAL, "No explicit item list found for Decorations Shop")
+    {
+        return;
+    }
+
     sShopData->dynItemList = AllocZeroed(MAX_DYN_LIST_ITEMS * sizeof(u16));
 
     u32 count = 0;
 
     for (u32 itemId = 0; itemId < ITEMS_COUNT; itemId++)
     {
-        // No support for decors for now.
-        if (sMartInfo.martType != MART_TYPE_NORMAL)
-            break;
-
-        if (count >= MAX_DYN_LIST_ITEMS)
-        {
-            count = MAX_DYN_LIST_ITEMS;
-            break;
-        }
-
         if (IsItemShopCriteriaFulfilled(itemId))
         {
             sShopData->dynItemList[count] = itemId;
             count++;
         }
+
+        if (count == MAX_DYN_LIST_ITEMS)
+            break;
     }
 
     sMartInfo.itemList = sShopData->dynItemList;
