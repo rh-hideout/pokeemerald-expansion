@@ -3208,7 +3208,7 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
         if (gBattleMons[i].volatiles.infatuation == INFATUATED_WITH(battler))
             gBattleMons[i].volatiles.infatuation = 0;
         if (IsBattlerWrappedBy(i, battler))
-            UnsetWrap(i);
+            UnsetBattlerWrap(i);
         if (gBattleMons[i].volatiles.syrupBomb && gBattleMons[i].volatiles.stickySyrupedBy == battler)
             gBattleMons[i].volatiles.syrupBomb = FALSE;
         if (gBattleMons[i].volatiles.octolock && gBattleMons[i].volatiles.octolockedBy == battler)
@@ -3314,7 +3314,7 @@ void FaintClearSetData(enum BattlerId battler)
         if (gBattleMons[i].volatiles.infatuation == INFATUATED_WITH(battler))
             gBattleMons[i].volatiles.infatuation = 0;
         if (IsBattlerWrappedBy(i, battler))
-            UnsetWrap(i);
+            UnsetBattlerWrap(i);
         if (gBattleMons[i].volatiles.syrupBomb && gBattleMons[i].volatiles.stickySyrupedBy == battler)
             gBattleMons[i].volatiles.syrupBomb = FALSE;
         if (gBattleMons[i].volatiles.octolock && gBattleMons[i].volatiles.octolockedBy == battler)

@@ -621,7 +621,7 @@ static bool32 HandleEndTurnWrap(enum BattlerId battler)
         }
         else  // broke free
         {
-            UnsetWrap(battler);
+            UnsetBattlerWrap(battler);
             PREPARE_MOVE_BUFFER(gBattleTextBuff1, GetBattlerWrappedMove(battler));
             BattleScriptExecute(BattleScript_WrapEnds);
         }

@@ -10713,7 +10713,7 @@ bool32 TryReduceWrapTurns(enum BattlerId battler)
     return FALSE;
 }
 
-void UnsetWrap(enum BattlerId battler)
+void UnsetBattlerWrap(enum BattlerId battler)
 {
     gBattleMons[battler].volatiles.wrapped = FALSE;
 }

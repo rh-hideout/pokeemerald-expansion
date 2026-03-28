@@ -8678,7 +8678,7 @@ static void Cmd_setsubstitute(void)
     else
     {
         gBattleMons[gBattlerAttacker].volatiles.substitute = TRUE;
-        UnsetWrap(gBattlerAttacker);
+        UnsetBattlerWrap(gBattlerAttacker);
         if (factor == 2)
             gBattleMons[gBattlerAttacker].volatiles.substituteHP = hp / 2;
         else
@@ -9446,7 +9446,7 @@ static void Cmd_rapidspinfree(void)
     if (IsBattlerWrapped(gBattlerAttacker))
     {
         gBattleScripting.battler = gBattlerTarget;
-        UnsetWrap(gBattlerAttacker);
+        UnsetBattlerWrap(gBattlerAttacker);
         gBattlerTarget = GetBattlerWrappedBy(gBattlerAttacker);
         PREPARE_MOVE_BUFFER(gBattleTextBuff1, GetBattlerWrappedMove(gBattlerAttacker));
         BattleScriptCall(BattleScript_WrapFree);

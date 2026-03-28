@@ -405,7 +405,7 @@ void ResetStartingStatuses(void);
 bool32 IsUsableWhileAsleepEffect(enum BattleMoveEffects effect);
 bool32 TrySetWrap(enum BattlerId battler, enum BattlerId wrappedBy, enum Move wrapMove, enum HoldEffect holdEffect);
 bool32 TryReduceWrapTurns(enum BattlerId battler);
-void UnsetWrap(enum BattlerId battler);
+void UnsetBattlerWrap(enum BattlerId battler);
 bool32 IsBattlerWrapped(enum BattlerId battler);
 enum BattlerId GetBattlerWrappedBy(enum BattlerId battler);
 bool32 IsBattlerWrappedBy(enum BattlerId battler, enum BattlerId wrappedBy);
