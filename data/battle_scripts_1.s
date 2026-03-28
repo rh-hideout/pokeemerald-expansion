@@ -5917,11 +5917,8 @@ BattleScript_MoveEffectUproar::
 	waitmessage B_WAIT_TIME_LONG
 	jumpifgenconfiglowerthan CONFIG_B_UPROAR, GEN_5, BattleScript_MoveEffectUproarEnd
 	savetarget
-	setbyte gBattlerTarget, 0
-BattleScript_MoveEffectUproarWakeLoop: @ in position order
-	trywakebattleruproar BS_TARGET
-	addbyte gBattlerTarget, 1
-	jumpifbytenotequal gBattlerTarget, gBattlersCount, BattleScript_MoveEffectUproarWakeLoop
+	setbyte sBATTLER, 0
+	trywakebattlersuproar
 	restoretarget
 BattleScript_MoveEffectUproarEnd:
 	return

@@ -2240,7 +2240,6 @@
 	.byte \switchedItems
 	.endm
 
-	.macro trywakebattleruproar battler:req
-	callnative BS_TryWakeBattlerUproar
-	.byte \battler
+	.macro trywakebattlersuproar
+	callnative BS_TryWakeBattlersUproar
 	.endm
