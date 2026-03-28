@@ -1808,7 +1808,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleContext *ctx)
         if (targetAvoidedAttack)
         {
             SetBattlerLastLandedMove(gBattlerTarget, MOVE_NONE);
-            gBattleMons[gBattlerTarget].volatiles.lastHitByType = 0;
+            SetBattlerLastHitByType(gBattlerTarget, TYPE_NONE);
             gBattleScripting.battler = ctx->battlerDef;
             gBattleStruct->pledgeMove = FALSE;
             CancelMultiTurnMoves(ctx->battlerAtk);
@@ -2638,7 +2638,7 @@ static enum MoveEndResult MoveEndUpdateLastMoves(void)
             else
             {
                 SetBattlerLastLandedMove(gBattlerTarget, gCurrentMove);
-                gBattleMons[gBattlerTarget].volatiles.lastHitByType = GetBattleMoveType(gCurrentMove);
+                SetBattlerLastHitByType(gBattlerTarget, GetBattleMoveType(gCurrentMove));
                 if (!gSpecialStatuses[gBattlerAttacker].dancerUsedMove)
                 {
                     gLastUsedMove = gCurrentMove;

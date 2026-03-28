@@ -1197,7 +1197,7 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
     if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_MISSED)
     {
         SetBattlerLastLandedMove(gBattlerTarget, MOVE_NONE);
-        gBattleMons[gBattlerTarget].volatiles.lastHitByType = 0;
+        SetBattlerLastHitByType(gBattlerTarget, TYPE_NONE);
 
         if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_ONE_HIT_KO_STURDY)
         {
@@ -8874,7 +8874,7 @@ static void Cmd_settypetorandomresistance(void)
         if (GetMoveEffect(moveToCheck) == EFFECT_STRUGGLE)
             typeToCheck = TYPE_NORMAL;
         else
-            typeToCheck = gBattleMons[gBattlerAttacker].volatiles.lastHitByType;
+            typeToCheck = GetBattlerLastHitByType(gBattlerAttacker);
     }
     else
     {

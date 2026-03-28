@@ -419,6 +419,8 @@ void SetOrClearRageVolatile(void);
 enum BattlerId GetTargetBySlot(enum BattlerId battlerAtk, enum BattlerId battlerDef);
 bool32 IsNaturalEnemy(enum Species speciesAttacker, enum Species speciesTarget);
 enum Stat GetDownloadStat(enum BattlerId battler);
+bool32 TryResetBattlerChoicedMove(enum BattlerId battler, enum Ability ability);
+
 // Battler data utility functions
 enum Move GetBattlerChosenMove(enum BattlerId battler);
 enum Move SetBattlerChosenMove(enum BattlerId battler, enum Move move);
@@ -441,8 +443,9 @@ enum Move GetBattlerLastPrintedMove(enum BattlerId battler);
 enum Move SetBattlerLastPrintedMove(enum BattlerId battler, enum Move move);
 enum Move GetBattlerChoicedMove(enum BattlerId battler);
 enum Move SetBattlerChoicedMove(enum BattlerId battler, enum Move move);
-bool32 TryResetBattlerChoicedMove(enum BattlerId battler, enum Ability ability);
 u32 GetBattlerMoveSelectionCursor(enum BattlerId battler);
 u32 SetBattlerMoveSelectionCursor(enum BattlerId battler, u32 selection);
+enum Type GetBattlerLastHitByType(enum BattlerId battler);
+enum Type SetBattlerLastHitByType(enum BattlerId battler, enum Type type);
 
 #endif // GUARD_BATTLE_UTIL_H

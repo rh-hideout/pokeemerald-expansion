@@ -11112,3 +11112,13 @@ u32 SetBattlerMoveSelectionCursor(enum BattlerId battler, u32 selection)
 {
     return gBattleMons[battler].volatiles.moveSelectionCursor = selection;
 }
+
+enum Type GetBattlerLastHitByType(enum BattlerId battler)
+{
+    return gBattleMons[battler].volatiles.lastHitByType;
+}
+
+enum Type SetBattlerLastHitByType(enum BattlerId battler, enum Type type)
+{
+    return gBattleMons[battler].volatiles.lastHitByType = type;
+}
