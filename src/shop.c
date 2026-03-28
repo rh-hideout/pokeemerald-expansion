@@ -1312,7 +1312,7 @@ static void BuyMenuTryBuildDynamicItemList(void)
     if (sMartInfo.itemList != NULL)
         return;
 
-    assertf(sMartInfo.martType != MART_TYPE_NORMAL, "No explicit item list found for Decorations Shop")
+    assertf(sMartInfo.martType == MART_TYPE_NORMAL, "No explicit item list found for non-Items Shop")
     {
         return;
     }
