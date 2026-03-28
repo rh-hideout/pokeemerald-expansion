@@ -2751,7 +2751,7 @@ void ClearEnemyPartyAfterChallenge()
 bool8 IsFrontierTrainerFemale(u16 trainerId)
 {
     u32 i;
-    u8 facilityClass = 0;
+    u8 facilityClass = FACILITY_CLASS_HIKER;
 
     SetFacilityPtrsGetLevel();
 #if FREE_BATTLE_TOWER_E_READER == FALSE
@@ -2879,7 +2879,7 @@ static void UNUSED GetRandomScaledFrontierTrainerIdRange(u8 challengeNum, u8 bat
 void SetBattleFacilityTrainerGfxId(u16 trainerId, u8 tempVarId)
 {
     u32 i;
-    u8 facilityClass = 0;
+    u8 facilityClass = FACILITY_CLASS_HIKER;
     u8 trainerObjectGfxId;
 
     SetFacilityPtrsGetLevel();
@@ -2976,7 +2976,7 @@ void SetBattleFacilityTrainerGfxId(u16 trainerId, u8 tempVarId)
 u16 GetBattleFacilityTrainerGfxId(u16 trainerId)
 {
     u32 i;
-    u8 facilityClass = 0;
+    u8 facilityClass = FACILITY_CLASS_HIKER;
     u16 trainerObjectGfxId;
 
     SetFacilityPtrsGetLevel();
@@ -3066,7 +3066,7 @@ u8 GetFrontierTrainerFrontSpriteId(u16 trainerId)
         else
             return gFacilityClassToPicIndex[gApprentices[gSaveBlock2Ptr->apprentices[trainerId - TRAINER_RECORD_MIXING_APPRENTICE].id].facilityClass];
     #else
-        return 0;
+        return FACILITY_CLASS_HIKER;
     #endif //FREE_FRONTIER_APPRENTICES
     }
 }
@@ -3126,7 +3126,7 @@ enum TrainerClassID GetFrontierOpponentClass(u16 trainerId)
 
 u8 GetFrontierTrainerFacilityClass(u16 trainerId)
 {
-    u8 facilityClass = 0;
+    u8 facilityClass = FACILITY_CLASS_HIKER;
     SetFacilityPtrsGetLevel();
 
 #if FREE_BATTLE_TOWER_E_READER == FALSE
