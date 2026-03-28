@@ -2225,7 +2225,7 @@
 	setvar VAR_0x8000, \evoMethod
 	setvar VAR_0x8001, \canStopEvo
 	setvar VAR_0x8002, \tryMultiple
-	special TrySpecialScriptEvolution
+	special TryScriptEvolution
 	.endm
 
 	.macro ai_vs_ai_battle trainer1:req, trainer2:req
@@ -2649,7 +2649,7 @@
 	callnative DoFacilityTrainerBattle
 	.byte \facility
 	.endm
-	
+
 	.macro ingame_trade tradeId:req wantTradeMsg:req, declineTradeJump:req, wrongMonJump:req, tradeCompleteMsg:req
 	setvar VAR_0x8005, \tradeId
 	specialvar VAR_0x8009, GetInGameTradeSpeciesInfo

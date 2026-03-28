@@ -6933,13 +6933,13 @@ void TryScriptEvolution(void)
             if (tryMultiple)
                 gCB2_AfterEvolution = TryScriptEvolution;
             else
-                gCB2_AfterEvolution = CB2_ReturnToField;
+                gCB2_AfterEvolution = CB2_ReturnToFieldContinueScriptPlayMapMusic;
             return;
         }
     }
 
     sTriedEvolving = 0;
-    SetMainCallback2(CB2_ReturnToField);
+    SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
 }
 
 void TrySpecialOverworldEvo(void)
