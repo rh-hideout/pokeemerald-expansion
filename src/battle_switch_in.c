@@ -5,7 +5,7 @@
 #include "battle_scripts.h"
 #include "battle_switch_in.h"
 #include "battle_controllers.h"
-#include "generational_changes.h"
+#include "config_changes.h"
 #include "constants/battle.h"
 #include "constants/moves.h"
 
@@ -250,7 +250,7 @@ static bool32 FirstEventBlockEvents(struct BattleCalcValues *calcValues)
             gBattleScripting.battler = gBattlerAbility = battler;
             gBattleStruct->battlerState[battler].forcedSwitch = FALSE;
             gBattleStruct->eventState.switchIn = 0;
-            BattleScriptCall(BattleScript_EmergencyExit);
+            BattleScriptCall(BattleScript_EmergencyExitRet);
             effect = TRUE;
         }
         else
