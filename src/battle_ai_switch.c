@@ -1178,7 +1178,7 @@ static bool32 FindMonWithFlagsAndSuperEffective(enum BattlerId battler, u16 flag
         return FALSE;
     if (lastLandedMove == MOVE_UNAVAILABLE)
         return FALSE;
-    if (gBattleMons[battler].volatiles.lastHitBy == MAX_BATTLERS_COUNT)
+    if (GetBattlerLastHitBy(battler) == MAX_BATTLERS_COUNT)
         return FALSE;
     if (IsBattleMoveStatus(lastLandedMove))
         return FALSE;
@@ -1210,7 +1210,7 @@ static bool32 FindMonWithFlagsAndSuperEffective(enum BattlerId battler, u16 flag
         UpdateMoveResultFlags(typeMultiplier, &moveFlags);
         if (moveFlags & flags)
         {
-            battlerIn1 = gBattleMons[battler].volatiles.lastHitBy;
+            battlerIn1 = GetBattlerLastHitBy(battler);
 
             for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
             {

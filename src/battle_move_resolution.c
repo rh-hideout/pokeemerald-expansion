@@ -2627,7 +2627,7 @@ static enum MoveEndResult MoveEndUpdateLastMoves(void)
         }
 
         if (!(gHitMarker & HITMARKER_FAINTED(gBattlerTarget)))
-            gBattleMons[gBattlerTarget].volatiles.lastHitBy = gBattlerAttacker;
+            SetBattlerLastHitBy(gBattlerTarget, gBattlerAttacker);
 
         if (!gBattleStruct->unableToUseMove && !IsBattlerUnaffectedByMove(gBattlerTarget))
         {

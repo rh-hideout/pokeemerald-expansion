@@ -11013,6 +11013,16 @@ enum BattlerId SetBattlerMoveTarget(enum BattlerId battler, enum BattlerId targe
     return gBattleMons[battler].volatiles.moveTarget = target;
 }
 
+enum BattlerId GetBattlerLastHitBy(enum BattlerId battler)
+{
+    return gBattleMons[battler].volatiles.lastHitBy;
+}
+
+enum BattlerId SetBattlerLastHitBy(enum BattlerId battler, enum BattlerId lastHitBy)
+{
+    return gBattleMons[battler].volatiles.lastHitBy = lastHitBy;
+}
+
 enum Move GetBattlerLastMove(enum BattlerId battler)
 {
     return gBattleMons[battler].volatiles.lastMove;

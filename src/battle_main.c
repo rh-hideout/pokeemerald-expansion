@@ -3059,7 +3059,7 @@ static void BattleStartClearSetData(void)
         gBattleMons[i].volatiles.lastHitByType = TYPE_NONE;
         gBattleMons[i].volatiles.lastUsedMoveType = TYPE_NONE;
         gBattleMons[i].volatiles.lastResultingMove = MOVE_NONE;
-        gBattleMons[i].volatiles.lastHitBy = MAX_BATTLERS_COUNT;
+        SetBattlerLastHitBy(i, MAX_BATTLERS_COUNT);
         SetBattlerLockedMove(i, MOVE_NONE);
         gBattleMons[i].volatiles.lastPrintedMove = MOVE_NONE;
         gSelectionBattleScripts[i] = NULL;
@@ -3239,7 +3239,7 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
     gBattleStruct->battlerState[battler].isFirstTurn = 2;
     gBattleStruct->battlerState[battler].notOnField = FALSE;
     gBattleMons[battler].volatiles.truantSwitchInHack = volatilesCopy->truantSwitchInHack;
-    gBattleMons[battler].volatiles.lastHitBy = MAX_BATTLERS_COUNT;
+    SetBattlerLastHitBy(battler, MAX_BATTLERS_COUNT);
 
     gBattleStruct->lastTakenMove[battler] = 0;
     gBattleStruct->lastTakenMoveFrom[battler][0] = 0;
@@ -3340,7 +3340,7 @@ void FaintClearSetData(enum BattlerId battler)
 
     gBattleStruct->battlerState[battler].isFirstTurn = 2;
 
-    gBattleMons[battler].volatiles.lastHitBy = MAX_BATTLERS_COUNT;
+    SetBattlerLastHitBy(battler, MAX_BATTLERS_COUNT);
 
     gBattleStruct->lastTakenMove[battler] = MOVE_NONE;
     gBattleStruct->lastTakenMoveFrom[battler][0] = 0;

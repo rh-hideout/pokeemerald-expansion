@@ -427,6 +427,8 @@ u32 SetBattlerChosenMovePos(enum BattlerId battler, u32 movePos);
 enum BattleMoveEffects GetBattlerChosenMoveEffect(enum BattlerId battler);
 enum BattlerId GetBattlerMoveTarget(enum BattlerId battler);
 enum BattlerId SetBattlerMoveTarget(enum BattlerId battler, enum BattlerId target);
+enum BattlerId GetBattlerLastHitBy(enum BattlerId battler);
+enum BattlerId SetBattlerLastHitBy(enum BattlerId battler, enum BattlerId lastHitBy);
 enum Move GetBattlerLastMove(enum BattlerId battler);
 enum Move SetBattlerLastMove(enum BattlerId battler, enum Move move);
 enum Move GetBattlerLockedMove(enum BattlerId battler);
