@@ -1,16 +1,24 @@
+#!/usr/bin/env python3
+
+"""
+Usage: python3 make_teaching_types.py OUTPUT_FILE
+
+Build a primary store of "teaching-types" for each enabled species in the repository as an
+input for make_teachables.py.
+"""
+
 import glob
 import json
 import pathlib
 import re
 import sys
-import typing
 
-CONFIG_ENABLED_PAT = re.compile(r"#define P_LEARNSET_HELPER_TEACHABLE\s+(?P<cfg_val>[^ ]*)")
+CONFIG_ENABLED_PAT = re.compile(r"^#define P_LEARNSET_HELPER_TEACHABLE\s+(?P<cfg_val>[^ ]*)", flags=re.MULTILINE)
 
 TEACHING_TYPE_PAT =  re.compile(r"\s*\.teachingType\s*=\s*(?P<teaching_type>[A-Z_]+),")
 LEARNSET_PAT = re.compile(r"\s*\.teachableLearnset\s*=\s*s(?P<name>\w+?)TeachableLearnset")
-PREPROC_START_PAT = re.compile(r"#if(def)?\s+\w+")
-PREPROC_END_PAT = re.compile(r"#endif\s*(//\s*\w+)?")
+PREPROC_START_PAT = re.compile(r"^#if(def)?\s+\w+", flags=re.MULTILINE)
+PREPROC_END_PAT = re.compile(r"^#endif\s*(//\s*\w+)?", flags=re.MULTILINE)
 
 def enabled() -> bool:
     """
@@ -35,7 +43,7 @@ def extract_repo_species_data() -> list:
     pokemon_list = []
     teaching_type = "DEFAULT_LEARNING"
     file_list = sorted(glob.glob("src/data/pokemon/species_info/*_families.h"))
-    file_list.append(pathlib.Path("./src/data/pokemon/species_info.h"))
+    file_list.append("./src/data/pokemon/species_info.h")
     for families_fname in file_list:
         with open(families_fname, "r") as family_fp:
             species_lines = family_fp.readlines()
@@ -66,7 +74,7 @@ def extract_repo_species_data() -> list:
                 teaching_type = match.group("teaching_type")
     return species_data
 
-def add_whitesspaces(parsed_list) ->list:
+def add_whitesspaces(parsed_list) -> list:
     for i, item in enumerate(parsed_list):
         if i == 0:
             continue

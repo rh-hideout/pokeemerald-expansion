@@ -46,7 +46,7 @@ u8 GiveMailToMonByItemId(struct Pokemon *mon, enum Item itemId)
 {
     u8 heldItem[2];
     u8 id, i;
-    u16 species;
+    enum Species species;
     u32 personality;
 
     heldItem[0] = itemId;
@@ -80,11 +80,11 @@ u8 GiveMailToMonByItemId(struct Pokemon *mon, enum Item itemId)
     return MAIL_NONE;
 }
 
-u16 SpeciesToMailSpecies(u16 species, u32 personality)
+u16 SpeciesToMailSpecies(enum Species species, u32 personality)
 {
     if (species == SPECIES_UNOWN)
     {
-        u32 species = GetUnownLetterByPersonality(personality) + UNOWN_OFFSET;
+        enum Species species = GetUnownLetterByPersonality(personality) + UNOWN_OFFSET;
         return species;
     }
 

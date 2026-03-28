@@ -2,7 +2,10 @@
 #include "event_data.h"
 #include "field_screen_effect.h"
 #include "field_weather.h"
+#include "fldeff.h"
 #include "gpu_regs.h"
+#include "io_reg.h"
+#include "main.h"
 #include "malloc.h"
 #include "map_preview_screen.h"
 #include "menu.h"
@@ -12,14 +15,12 @@
 #include "script.h"
 #include "string_util.h"
 #include "constants/region_map_sections.h"
+#include "constants/rgb.h"
 
 static EWRAM_DATA bool8 sHasVisitedMapBefore = FALSE;
-
-#if IS_FRLG
-
 static EWRAM_DATA bool8 sAllocedBg0TilemapBuffer = FALSE;
 
-static void Task_RunMapPreviewScreenForest(u8 taskId);
+static void Task_MapPreviewScreen_FadeIn(u8 taskId);
 
 static const u8 sViridianForestMapPreviewPalette[] = INCBIN_U8("graphics/map_preview/viridian_forest/tiles.gbapal");
 static const u8 sViridianForestMapPreviewTiles[] = INCBIN_U8("graphics/map_preview/viridian_forest/tiles.4bpp.smol");
@@ -88,7 +89,7 @@ static const u8 sAlteringCaveMapPreviewTilemap[] = INCBIN_U8("graphics/map_previ
 static const struct MapPreviewScreen sMapPreviewScreenData[MPS_COUNT] = {
     [MPS_VIRIDIAN_FOREST] = {
         .mapsec = MAPSEC_VIRIDIAN_FOREST,
-        .type = MPS_TYPE_FOREST,
+        .type = MPS_TYPE_FADE_IN,
         .flagId = FLAG_WORLD_MAP_VIRIDIAN_FOREST,
         .tilesptr = sViridianForestMapPreviewTiles,
         .tilemapptr = sViridianForestMapPreviewTilemap,
@@ -128,7 +129,7 @@ static const struct MapPreviewScreen sMapPreviewScreenData[MPS_COUNT] = {
     },
     [MPS_SAFARI_ZONE] = {
         .mapsec = MAPSEC_KANTO_SAFARI_ZONE,
-        .type = MPS_TYPE_FOREST,
+        .type = MPS_TYPE_FADE_IN,
         .flagId = FLAG_WORLD_MAP_SAFARI_ZONE_CENTER,
         .tilesptr = sSafariZoneMapPreviewTiles,
         .tilemapptr = sSafariZoneMapPreviewTilemap,
@@ -144,7 +145,7 @@ static const struct MapPreviewScreen sMapPreviewScreenData[MPS_COUNT] = {
     },
     [MPS_POKEMON_MANSION] = {
         .mapsec = MAPSEC_POKEMON_MANSION,
-        .type = MPS_TYPE_FOREST,
+        .type = MPS_TYPE_FADE_IN,
         .flagId = FLAG_WORLD_MAP_POKEMON_MANSION_1F,
         .tilesptr = sPokemonMansionMapPreviewTiles,
         .tilemapptr = sPokemonMansionMapPreviewTilemap,
@@ -152,7 +153,7 @@ static const struct MapPreviewScreen sMapPreviewScreenData[MPS_COUNT] = {
     },
     [MPS_ROCKET_HIDEOUT] = {
         .mapsec = MAPSEC_ROCKET_HIDEOUT,
-        .type = MPS_TYPE_FOREST,
+        .type = MPS_TYPE_FADE_IN,
         .flagId = FLAG_WORLD_MAP_ROCKET_HIDEOUT_B1F,
         .tilesptr = sRocketHideoutMapPreviewTiles,
         .tilemapptr = sRocketHideoutMapPreviewTilemap,
@@ -184,7 +185,7 @@ static const struct MapPreviewScreen sMapPreviewScreenData[MPS_COUNT] = {
     },
     [MPS_POWER_PLANT] = {
         .mapsec = MAPSEC_POWER_PLANT,
-        .type = MPS_TYPE_FOREST,
+        .type = MPS_TYPE_FADE_IN,
         .flagId = FLAG_WORLD_MAP_POWER_PLANT,
         .tilesptr = sPowerPlantMapPreviewTiles,
         .tilemapptr = sPowerPlantMapPreviewTilemap,
@@ -200,7 +201,7 @@ static const struct MapPreviewScreen sMapPreviewScreenData[MPS_COUNT] = {
     },
     [MPS_ROCKET_WAREHOUSE] = {
         .mapsec = MAPSEC_ROCKET_WAREHOUSE,
-        .type = MPS_TYPE_FOREST,
+        .type = MPS_TYPE_FADE_IN,
         .flagId = FLAG_WORLD_MAP_THREE_ISLAND_BERRY_FOREST,
         .tilesptr = sRocketWarehouseMapPreviewTiles,
         .tilemapptr = sRocketWarehouseMapPreviewTilemap,
@@ -224,7 +225,7 @@ static const struct MapPreviewScreen sMapPreviewScreenData[MPS_COUNT] = {
     },
     [MPS_BERRY_FOREST] = {
         .mapsec = MAPSEC_BERRY_FOREST,
-        .type = MPS_TYPE_FOREST,
+        .type = MPS_TYPE_FADE_IN,
         .flagId = FLAG_WORLD_MAP_THREE_ISLAND_BERRY_FOREST,
         .tilesptr = sBerryForestMapPreviewTiles,
         .tilemapptr = sBerryForestMapPreviewTilemap,
@@ -256,7 +257,7 @@ static const struct MapPreviewScreen sMapPreviewScreenData[MPS_COUNT] = {
     },
     [MPS_PATTERN_BUSH] = {
         .mapsec = MAPSEC_PATTERN_BUSH,
-        .type = MPS_TYPE_FOREST,
+        .type = MPS_TYPE_FADE_IN,
         .flagId = FLAG_WORLD_MAP_SIX_ISLAND_PATTERN_BUSH,
         .tilesptr = sViridianForestMapPreviewTiles,
         .tilemapptr = sViridianForestMapPreviewTilemap,
@@ -322,11 +323,29 @@ static const struct WindowTemplate sMapNameWindow = {
     .baseBlock = 0x1C2
 };
 
+static const struct WindowTemplate sMapNameWindowLarge = {
+    .bg = 0,
+    .tilemapLeft = 0,
+    .tilemapTop = 0,
+    .width = 22,
+    .height = 2,
+    .paletteNum = 14,
+    .baseBlock = 0x259
+};
+
 static const struct BgTemplate sMapPreviewBgTemplate[1] = {
     {
         .mapBaseIndex = 31
     }
 };
+
+bool32 ShouldRunMapPreview(void)
+{
+    if (MPS_ENABLE_MAP_PREVIEWS && FlagGet(FLAG_HIDE_MAP_NAME_POPUP) != TRUE && GetLastUsedWarpMapSectionId() != gMapHeader.regionMapSectionId)
+        return TRUE;
+
+    return FALSE;
+}
 
 static u8 GetMapPreviewScreenIdx(mapsec_u8_t mapsec)
 {
@@ -342,31 +361,22 @@ static u8 GetMapPreviewScreenIdx(mapsec_u8_t mapsec)
     return MPS_COUNT;
 }
 
-bool8 MapHasPreviewScreen(mapsec_u8_t mapsec, u8 type)
+bool32 CurrentMapHasPreviewScreen(u8 type)
 {
     u8 idx;
 
-    idx = GetMapPreviewScreenIdx(mapsec);
+    idx = GetMapPreviewScreenIdx(gMapHeader.regionMapSectionId);
     if (idx != MPS_COUNT)
     {
         if (type == MPS_TYPE_ANY)
-        {
             return TRUE;
-        }
         else
-        {
             return sMapPreviewScreenData[idx].type == type ? TRUE : FALSE;
-        }
     }
     else
     {
         return FALSE;
     }
-}
-
-bool32 MapHasPreviewScreen_HandleQLState2(mapsec_u8_t mapsec, u8 type)
-{
-    return MapHasPreviewScreen(mapsec, type);
 }
 
 void MapPreview_InitBgs(void)
@@ -382,20 +392,24 @@ void MapPreview_LoadGfx(mapsec_u8_t mapsec)
     idx = GetMapPreviewScreenIdx(mapsec);
     if (idx != MPS_COUNT)
     {
-       ResetTempTileDataBuffers();
-       LoadPalette(sMapPreviewScreenData[idx].palptr, BG_PLTT_ID(13), 3 * PLTT_SIZE_4BPP);
-       DecompressAndCopyTileDataToVram(0, sMapPreviewScreenData[idx].tilesptr, 0, 0, 0);
-       if (GetBgTilemapBuffer(0) == NULL)
-       {
-           SetBgTilemapBuffer(0, Alloc(BG_SCREEN_SIZE));
-           sAllocedBg0TilemapBuffer = TRUE;
-       }
-       else
-       {
-           sAllocedBg0TilemapBuffer = FALSE;
-       }
-       CopyToBgTilemapBuffer(0, sMapPreviewScreenData[idx].tilemapptr, 0, 0x000);
-       CopyBgTilemapBufferToVram(0);
+        ResetTempTileDataBuffers();
+        if (sMapPreviewScreenData[idx].usesAllPalettes)
+            LoadPalette(sMapPreviewScreenData[idx].palptr, BG_PLTT_ID(0), 16 * PLTT_SIZE_4BPP);
+        else
+            LoadPalette(sMapPreviewScreenData[idx].palptr, BG_PLTT_ID(13), 3 * PLTT_SIZE_4BPP);
+
+        DecompressAndCopyTileDataToVram(0, sMapPreviewScreenData[idx].tilesptr, 0, 0, 0);
+        if (GetBgTilemapBuffer(0) == NULL)
+        {
+            SetBgTilemapBuffer(0, Alloc(BG_SCREEN_SIZE));
+            sAllocedBg0TilemapBuffer = TRUE;
+        }
+        else
+        {
+            sAllocedBg0TilemapBuffer = FALSE;
+        }
+        CopyToBgTilemapBuffer(0, sMapPreviewScreenData[idx].tilemapptr, 0, 0x000);
+        CopyBgTilemapBufferToVram(0);
     }
 }
 
@@ -413,33 +427,12 @@ bool32 MapPreview_IsGfxLoadFinished(void)
     return FreeTempTileDataBuffersIfPossible();
 }
 
-void MapPreview_StartForestTransition(mapsec_u8_t mapsec)
-{
-    u8 taskId;
-
-    taskId = CreateTask(Task_RunMapPreviewScreenForest, 0);
-    gTasks[taskId].data[2] = GetBgAttribute(0, BG_ATTR_PRIORITY);
-    gTasks[taskId].data[4] = GetGpuReg(REG_OFFSET_BLDCNT);
-    gTasks[taskId].data[5] = GetGpuReg(REG_OFFSET_BLDALPHA);
-    gTasks[taskId].data[3] = GetGpuReg(REG_OFFSET_DISPCNT);
-    gTasks[taskId].data[6] = GetGpuReg(REG_OFFSET_WININ);
-    gTasks[taskId].data[7] = GetGpuReg(REG_OFFSET_WINOUT);
-    gTasks[taskId].data[10] = MapPreview_GetDuration(mapsec);
-    gTasks[taskId].data[8] = 16;
-    gTasks[taskId].data[9] = 0;
-    SetBgAttribute(0, BG_ATTR_PRIORITY, 0);
-    SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT1_BG0 | BLDCNT_EFFECT_BLEND | BLDCNT_TGT2_BG1 | BLDCNT_TGT2_BG2 | BLDCNT_TGT2_BG3 | BLDCNT_TGT2_OBJ | BLDCNT_TGT2_BD);
-    SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(16, 0));
-    SetGpuRegBits(REG_OFFSET_WININ, WININ_WIN0_CLR | WININ_WIN1_CLR);
-    SetGpuRegBits(REG_OFFSET_WINOUT, WINOUT_WIN01_CLR);
-    gTasks[taskId].data[11] = MapPreview_CreateMapNameWindow(mapsec);
-    LockPlayerFieldControls();
-}
-
 u16 MapPreview_CreateMapNameWindow(mapsec_u8_t mapsec)
 {
     u16 windowId;
     u32 xctr;
+    s32 stringWidth;
+    u32 fontId;
     #ifdef BUGFIX
     // Fixes access violations indicated below.
     u8 color[3];
@@ -447,123 +440,243 @@ u16 MapPreview_CreateMapNameWindow(mapsec_u8_t mapsec)
     u8 color[0];
     #endif
 
-    windowId = AddWindow(&sMapNameWindow);
+    GetMapName(gStringVar4, mapsec, 0);
+    // Use a longer window size if the map name is too long to fit.
+    fontId = GetFontIdToFit(gStringVar4, FONT_NORMAL, 0, 104);
+    stringWidth = GetStringWidth(fontId, gStringVar4, 0);
+    if (stringWidth > 104)
+    {
+        windowId = AddWindow(&sMapNameWindowLarge);
+        xctr = 177 - stringWidth;
+    }
+    else
+    {
+        xctr = 104 - stringWidth;
+        windowId = AddWindow(&sMapNameWindow);
+    }
     FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
     PutWindowTilemap(windowId);
     color[0] = TEXT_COLOR_WHITE; // Access violation
     color[1] = TEXT_COLOR_RED; // Access violation
     color[2] = TEXT_COLOR_LIGHT_GRAY; // Access violation
-    GetMapName(gStringVar4, mapsec, 0);
-    xctr = 104 - GetStringWidth(FONT_NORMAL, gStringVar4, 0);
-    AddTextPrinterParameterized4(windowId, FONT_NORMAL, xctr / 2, 2, 0, 0, color/* Access violation */, -1, gStringVar4);
+    AddTextPrinterParameterized4(windowId, fontId, xctr / 2, 2, 0, 0, color/* Access violation */, -1, gStringVar4);
     return windowId;
 }
 
-bool32 ForestMapPreviewScreenIsRunning(void)
+#define tState      data[0]
+#define tCounter    data[1]
+#define tDuration   data[2]
+#define tMapSecId   data[3]
+#define tWindowId   data[4]
+
+void RunMapPreviewScreenNonFade(u8 mapSecId)
 {
-    if (FuncIsActiveTask(Task_RunMapPreviewScreenForest) == TRUE)
+    u8 taskId = CreateTask(Task_MapPreviewScreen_NonFade, 0);
+    gTasks[taskId].tMapSecId = mapSecId;
+}
+
+void Task_MapPreviewScreen_NonFade(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+    switch (tState)
     {
-        return FALSE;
-    }
-    else
-    {
-        return TRUE;
+    case 0:
+        SetWordTaskArg(taskId, 5, (uintptr_t)gMain.vblankCallback);
+        SetVBlankCallback(NULL);
+        MapPreview_InitBgs();
+        MapPreview_LoadGfx(tMapSecId);
+        BlendPalettes(PALETTES_ALL, 0x10, RGB_WHITE);
+        tState++;
+        break;
+    case 1:
+        if (!MapPreview_IsGfxLoadFinished())
+        {
+            tWindowId = MapPreview_CreateMapNameWindow(tMapSecId);
+            CopyWindowToVram(tWindowId, COPYWIN_FULL);
+            tState++;
+        }
+        break;
+    case 2:
+        if (!IsDma3ManagerBusyWithBgCopy())
+        {
+            if (CurrentMapHasPreviewScreen(MPS_TYPE_CAVE))
+                BeginNormalPaletteFade(PALETTES_ALL, -1, 16, 0, RGB_WHITE);
+            else
+                BeginNormalPaletteFade(PALETTES_ALL, -1, 16, 0, RGB_BLACK);
+
+            SetVBlankCallback((IntrCallback)GetWordTaskArg(taskId, 5));
+            tState++;
+        }
+        break;
+    case 3:
+        if (!UpdatePaletteFade())
+        {
+            tDuration = MapPreview_GetDuration(tMapSecId);
+            tState++;
+        }
+        break;
+    case 4:
+        tCounter++;
+        if (tCounter > tDuration || JOY_NEW(B_BUTTON))
+        {
+            if (CurrentMapHasPreviewScreen(MPS_TYPE_CAVE))
+                BeginNormalPaletteFade(PALETTES_ALL, -2, 0, 16, RGB_WHITE);
+            else
+                BeginNormalPaletteFade(PALETTES_ALL, MPS_BASIC_FADE_SPEED, 0, 16, RGB_BLACK);
+            tState++;
+        }
+        break;
+    case 5:
+        if (!UpdatePaletteFade())
+        {
+            int i;
+            for (i = 0; i < 16; i++)
+            {
+                data[i] = 0;
+            }
+            MapPreview_Unload(tWindowId);
+            if (CurrentMapHasPreviewScreen(MPS_TYPE_CAVE))
+                gTasks[taskId].func = Task_EnterCaveTransition2;
+            else
+                SetMainCallback2(gMain.savedCallback);
+        }
+        break;
     }
 }
 
-static void Task_RunMapPreviewScreenForest(u8 taskId)
+#undef tDuration
+#undef tMapSecId
+#undef tWindowId
+
+#define tBGPriority     data[2]
+#define tDISPCNT        data[3]
+#define tBLDCNT         data[4]
+#define tBLDALPHA       data[5]
+#define tWININ          data[6]
+#define tWINOUT         data[7]
+#define tBlendTgt1      data[8]
+#define tBlendTgt2      data[9]
+#define tDuration       data[10]
+#define tWindowId       data[11]
+
+void RunMapPreviewScreenFadeIn(mapsec_u8_t mapsec)
+{
+    u8 taskId;
+
+    taskId = CreateTask(Task_MapPreviewScreen_FadeIn, 0);
+    gTasks[taskId].tBGPriority = GetBgAttribute(0, BG_ATTR_PRIORITY);
+    gTasks[taskId].tBLDCNT = GetGpuReg(REG_OFFSET_BLDCNT);
+    gTasks[taskId].tBLDALPHA = GetGpuReg(REG_OFFSET_BLDALPHA);
+    gTasks[taskId].tDISPCNT = GetGpuReg(REG_OFFSET_DISPCNT);
+    gTasks[taskId].tWININ = GetGpuReg(REG_OFFSET_WININ);
+    gTasks[taskId].tWINOUT = GetGpuReg(REG_OFFSET_WINOUT);
+    gTasks[taskId].tDuration = MapPreview_GetDuration(mapsec);
+    gTasks[taskId].tBlendTgt1 = 16;
+    gTasks[taskId].tBlendTgt2 = 0;
+    SetBgAttribute(0, BG_ATTR_PRIORITY, 0);
+    SetGpuRegBits(REG_OFFSET_WININ, WININ_WIN0_CLR | WININ_WIN1_CLR);
+    SetGpuRegBits(REG_OFFSET_WINOUT, WINOUT_WIN01_CLR);
+    gTasks[taskId].tWindowId = MapPreview_CreateMapNameWindow(mapsec);
+    LockPlayerFieldControls();
+}
+
+bool32 FadeInMapPreviewScreenIsRunning(void)
+{
+    return FuncIsActiveTask(Task_MapPreviewScreen_FadeIn);
+}
+
+static void Task_MapPreviewScreen_FadeIn(u8 taskId)
 {
     s16 * data;
 
     data = gTasks[taskId].data;
-    switch (data[0])
+    switch (tState)
     {
     case 0:
         if (!MapPreview_IsGfxLoadFinished() && !IsDma3ManagerBusyWithBgCopy())
         {
-            CopyWindowToVram(data[11], COPYWIN_FULL);
-            data[0]++;
+            CopyWindowToVram(tWindowId, COPYWIN_FULL);
+            tState++;
         }
         break;
     case 1:
         if (!IsDma3ManagerBusyWithBgCopy())
         {
             FadeInFromBlack();
-            data[0]++;
+            tState++;
         }
         break;
     case 2:
         if (IsWeatherNotFadingIn())
         {
             Overworld_PlaySpecialMapMusic();
-            data[0]++;
+            tState++;
         }
         break;
     case 3:
-        data[1]++;
-        if (data[1] > data[10])
+        tCounter++;
+        if (tCounter > tDuration || JOY_NEW(B_BUTTON))
         {
-            data[1] = 0;
-            data[0]++;
+            SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT1_BG0 | BLDCNT_EFFECT_BLEND | BLDCNT_TGT2_BG1 | BLDCNT_TGT2_BG2 | BLDCNT_TGT2_BG3 | BLDCNT_TGT2_OBJ | BLDCNT_TGT2_BD);
+            SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(16, 0));
+            tCounter = 0;
+            tState++;
         }
         break;
     case 4:
-        switch (data[1])
+        switch (tCounter)
         {
         case 0:
-            data[9]++;
-            if (data[9] > 16)
+            tBlendTgt2++;
+            if (tBlendTgt2 > 16)
             {
-                data[9] = 16;
+                tBlendTgt2 = 16;
             }
             break;
         case 1:
-            data[8]--;
-            if (data[8] < 0)
+            tBlendTgt1--;
+            if (tBlendTgt1 < 0)
             {
-                data[8] = 0;
+                tBlendTgt1 = 0;
             }
             break;
         }
-        data[1] = (data[1] + 1) % 3;
-        SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(data[8], data[9]));
-        if (data[8] == 0 && data[9] == 16)
+        tCounter = (tCounter + 1) % 3;
+        SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(tBlendTgt1, tBlendTgt2));
+        if (tBlendTgt1 == 0 && tBlendTgt2 == 16)
         {
             FillBgTilemapBufferRect_Palette0(0, 0, 0, 0, 32, 32);
             CopyBgTilemapBufferToVram(0);
-            data[0]++;
+            tState++;
         }
         break;
     case 5:
         if (!IsDma3ManagerBusyWithBgCopy())
         {
-            MapPreview_Unload(data[11]);
-            SetBgAttribute(0, BG_ATTR_PRIORITY, data[2]);
-            SetGpuReg(REG_OFFSET_DISPCNT, data[3]);
-            SetGpuReg(REG_OFFSET_BLDCNT, data[4]);
-            SetGpuReg(REG_OFFSET_BLDALPHA, data[5]);
-            SetGpuReg(REG_OFFSET_WININ, data[6]);
-            SetGpuReg(REG_OFFSET_WINOUT, data[7]);
+            MapPreview_Unload(tWindowId);
+            SetBgAttribute(0, BG_ATTR_PRIORITY, tBGPriority);
+            SetGpuReg(REG_OFFSET_DISPCNT, tDISPCNT);
+            SetGpuReg(REG_OFFSET_BLDCNT, tBLDCNT);
+            SetGpuReg(REG_OFFSET_BLDALPHA, tBLDALPHA);
+            SetGpuReg(REG_OFFSET_WININ, tWININ);
+            SetGpuReg(REG_OFFSET_WINOUT, tWINOUT);
+            UnlockPlayerFieldControls();
             DestroyTask(taskId);
         }
         break;
     }
 }
 
-const struct MapPreviewScreen * GetDungeonMapPreviewScreenInfo(mapsec_u8_t mapsec)
-{
-    u8 idx;
-
-    idx = GetMapPreviewScreenIdx(mapsec);
-    if (idx == MPS_COUNT)
-    {
-        return NULL;
-    }
-    else
-    {
-        return &sMapPreviewScreenData[idx];
-    }
-}
+#undef tBGPriority
+#undef tDISPCNT
+#undef tBLDCNT
+#undef tBLDALPHA
+#undef tWININ
+#undef tWINOUT
+#undef tBlendTgt1
+#undef tBlendTgt2
+#undef tDuration
+#undef tWindowId
 
 u16 MapPreview_GetDuration(mapsec_u8_t mapsec)
 {
@@ -571,35 +684,29 @@ u16 MapPreview_GetDuration(mapsec_u8_t mapsec)
     u16 flagId;
 
     idx = GetMapPreviewScreenIdx(mapsec);
+
     if (idx == MPS_COUNT)
-    {
         return 0;
-    }
+
     flagId = sMapPreviewScreenData[idx].flagId;
-    if (sMapPreviewScreenData[idx].type == MPS_TYPE_CAVE)
+
+    if (flagId == MPS_FLAG_NULL)
+    {
+        return MPS_DURATION_NO_FLAG;
+    }
+    else
     {
         if (!FlagGet(flagId))
         {
-            return 120;
+            FlagSet(flagId);
+            return MPS_DURATION_LONG;
         }
         else
         {
-            return 40;
-        }
-    }
-    else {
-        if (sHasVisitedMapBefore)
-        {
-            return 120;
-        }
-        else
-        {
-            return 40;
+            return MPS_DURATION_SHORT;
         }
     }
 }
-
-#endif // IS_FRLG
 
 void MapPreview_SetFlag(u16 flagId)
 {
@@ -612,4 +719,89 @@ void MapPreview_SetFlag(u16 flagId)
         sHasVisitedMapBefore = FALSE;
     }
     FlagSet(flagId);
+}
+
+static void VblankCB_MapPreviewScript(void)
+{
+    TransferPlttBuffer();
+}
+
+static void CB2_MapPreviewScript(void)
+{
+    RunTasks();
+    DoScheduledBgTilemapCopiesToVram();
+    UpdatePaletteFade();
+}
+
+#define tTaskStep       data[0]
+#define tFrameCounter   data[1]
+#define tWindowId       data[2]
+#define tDuration       data[3]
+
+static void Task_MapPreviewScreen_Script(u8 taskId)
+{
+    s16 *data;
+
+    data = gTasks[taskId].data;
+    switch (tTaskStep)
+    {
+    case 0:
+        if (!UpdatePaletteFade())
+        {
+            SetVBlankCallback(NULL);
+            MapPreview_LoadGfx(gMapHeader.regionMapSectionId);
+            BlendPalettes(PALETTES_ALL, 16, RGB_BLACK);
+            gMain.savedCallback = CB2_ReturnToFieldContinueScript;
+            SetMainCallback2(CB2_MapPreviewScript);
+            tTaskStep++;
+        }
+        break;
+    case 1:
+        if (!MapPreview_IsGfxLoadFinished() && !IsDma3ManagerBusyWithBgCopy())
+        {
+            tWindowId = MapPreview_CreateMapNameWindow(gMapHeader.regionMapSectionId);
+            CopyWindowToVram(tWindowId, COPYWIN_FULL);
+            tTaskStep++;
+        }
+        break;
+    case 2:
+        if (!IsDma3ManagerBusyWithBgCopy())
+        {
+            SetVBlankCallback(VblankCB_MapPreviewScript);
+            FadeInFromBlack();
+            tTaskStep++;
+        }
+        break;
+    case 3:
+        tFrameCounter++;
+        if (tFrameCounter > tDuration || JOY_NEW(B_BUTTON))
+        {
+            BeginNormalPaletteFade(PALETTES_ALL, MPS_BASIC_FADE_SPEED, 0, 16, RGB_BLACK);
+            tFrameCounter = 0;
+            tTaskStep++;
+        }
+        break;
+    case 4:
+        if (!UpdatePaletteFade())
+        {
+            MapPreview_Unload(tWindowId);
+            DestroyTask(taskId);
+            SetMainCallback2(gMain.savedCallback);
+        }
+        break;
+    }
+}
+
+void MapPreviewScript(struct ScriptContext *ctx)
+{
+    u32 duration = ScriptReadHalfword(ctx);
+    u32 taskId;
+
+    if (!CurrentMapHasPreviewScreen(MPS_TYPE_ANY))
+        return;
+
+    ScriptContext_Stop();
+    FadeScreen(FADE_TO_BLACK, 0);
+    taskId = CreateTask(Task_MapPreviewScreen_Script, 0);
+    gTasks[taskId].tDuration = duration;
 }

@@ -167,7 +167,7 @@ static void AnimateElevatorWindowView(u16 nfloors, bool8 direction);
 static void Task_AnimateElevatorWindowView(u8 taskId);
 static void Task_RunPokemonLeagueLightingEffect(u8 taskId);
 static void Task_CancelPokemonLeagueLightingEffect(u8 taskId);
-static u16 SampleResortGorgeousMon(void);
+static enum Species SampleResortGorgeousMon(void);
 static u16 SampleResortGorgeousReward(void);
 static void Task_ShakeScreen(u8 taskId);
 static void Task_EndScreenShake(u8 taskId);
@@ -1335,7 +1335,7 @@ bool8 CheckLeadMonTough(void)
 void IsGrassTypeInParty(void)
 {
     u8 i;
-    u16 species;
+    enum Species species;
     struct Pokemon *pokemon;
     for (i = 0; i < PARTY_SIZE; i++)
     {
@@ -1638,12 +1638,12 @@ u8 GetLeadMonIndex(void)
     return 0;
 }
 
-u16 ScriptGetPartyMonSpecies(void)
+enum Species ScriptGetPartyMonSpecies(void)
 {
     return GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPECIES_OR_EGG, NULL);
 }
 
-u16 ScriptGetSelectedMonSpecies(void)
+enum Species ScriptGetSelectedMonSpecies(void)
 {
     struct BoxPokemon *boxmon = GetSelectedBoxMonFromPcOrParty();
     return GetBoxMonData(boxmon, MON_DATA_SPECIES_OR_EGG);
@@ -4456,7 +4456,7 @@ bool32 CheckObjectAtXY(u32 x, u32 y)
     return FALSE;
 }
 
-bool32 CheckPartyHasSpecies(u32 givenSpecies)
+bool32 CheckPartyHasSpecies(enum Species givenSpecies)
 {
     u32 partyIndex;
 
@@ -4623,7 +4623,7 @@ u8 GetLeadMonFriendship(void)
         return 0;
 }
 
-enum Move GetFirstPartnerMove(u16 species)
+enum Move GetFirstPartnerMove(enum Species species)
 {
     switch (species)
     {
@@ -5583,7 +5583,7 @@ void UpdateLoreleiDollCollection(void)
 
 void SampleResortGorgeousMonAndReward(void)
 {
-    u16 requestedSpecies = VarGet(VAR_RESORT_GORGEOUS_REQUESTED_MON);
+    enum Species requestedSpecies = VarGet(VAR_RESORT_GORGEOUS_REQUESTED_MON);
     if (requestedSpecies == SPECIES_NONE || requestedSpecies == 0xFFFF)
     {
         VarSet(VAR_RESORT_GORGEOUS_REQUESTED_MON, SampleResortGorgeousMon());
@@ -5593,10 +5593,10 @@ void SampleResortGorgeousMonAndReward(void)
     StringCopy(gStringVar1, gSpeciesInfo[VarGet(VAR_RESORT_GORGEOUS_REQUESTED_MON)].speciesName);
 }
 
-static u16 SampleResortGorgeousMon(void)
+static enum Species SampleResortGorgeousMon(void)
 {
     u16 i;
-    u16 species;
+    enum Species species;
     for (i = 0; i < 100; i++)
     {
         species = (Random() % (NUM_SPECIES - 1)) + 1;
@@ -5729,7 +5729,7 @@ void ForcePlayerToStartSurfing(void)
 
 void UpdateTrainerCardPhotoIcons(void)
 {
-    u16 species[PARTY_SIZE];
+    enum Species species[PARTY_SIZE];
     u32 personality[PARTY_SIZE];
     u8 i;
     u8 partyCount;

@@ -454,3 +454,30 @@ DOUBLE_BATTLE_TEST("Forecast reverts Castform back after Teraform Zero clears we
         EXPECT_EQ(playerRight->species, SPECIES_CASTFORM_NORMAL);
     }
 }
+
+DOUBLE_BATTLE_TEST("Forecast: All Forecast mons revert on the field if Primal Weather is removed due to fainting")
+{
+    GIVEN {
+        PLAYER(SPECIES_KYOGRE) { Speed(20); HP(1); Item(ITEM_BLUE_ORB); }
+        PLAYER(SPECIES_CASTFORM) { Speed(10); Ability(ABILITY_FORECAST); }
+        OPPONENT(SPECIES_CASTFORM) { Speed(40); Ability(ABILITY_FORECAST); }
+        OPPONENT(SPECIES_CASTFORM) { Speed(30); Ability(ABILITY_FORECAST); }
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_POUND, target: playerLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_PRIMAL_REVERSION, playerLeft);
+
+        ABILITY_POPUP(opponentLeft, ABILITY_FORECAST);
+        ABILITY_POPUP(opponentRight, ABILITY_FORECAST);
+        ABILITY_POPUP(playerRight, ABILITY_FORECAST);
+
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, opponentRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, playerRight);
+    } THEN {
+        EXPECT_EQ(opponentLeft->species, SPECIES_CASTFORM_NORMAL);
+        EXPECT_EQ(opponentRight->species, SPECIES_CASTFORM_NORMAL);
+        EXPECT_EQ(playerRight->species, SPECIES_CASTFORM_NORMAL);
+    }
+}
+
