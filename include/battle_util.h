@@ -435,6 +435,8 @@ enum Move GetBattlerLockedMove(enum BattlerId battler);
 enum Move SetBattlerLockedMove(enum BattlerId battler, enum Move move);
 enum Move GetBattlerLastLandedMove(enum BattlerId battler);
 enum Move SetBattlerLastLandedMove(enum BattlerId battler, enum Move move);
+enum Move GetBattlerLastResultingMove(enum BattlerId battler);
+enum Move SetBattlerLastResultingMove(enum BattlerId battler, enum Move move);
 enum Move GetBattlerChoicedMove(enum BattlerId battler);
 enum Move SetBattlerChoicedMove(enum BattlerId battler, enum Move move);
 bool32 TryResetBattlerChoicedMove(enum BattlerId battler, enum Ability ability);

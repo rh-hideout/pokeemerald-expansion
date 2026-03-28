@@ -1508,7 +1508,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
         }
     }
 
-    if (MoveCantBeUsedTwice(move) && move == gBattleMons[battler].volatiles.lastResultingMove)
+    if (MoveCantBeUsedTwice(move) && move == GetBattlerLastResultingMove(battler))
     {
         gCurrentMove = move;
         PREPARE_MOVE_BUFFER(gBattleTextBuff1, gCurrentMove);
@@ -1670,7 +1670,7 @@ u32 CheckMoveLimitations(enum BattlerId battler, u8 unusableMoves, u16 check)
         else if (check & MOVE_LIMITATION_CHOICE_ITEM && GetBattlerAbility(battler) == ABILITY_GORILLA_TACTICS && choicedMove != MOVE_NONE && choicedMove != MOVE_UNAVAILABLE && choicedMove != move)
             unusableMoves |= 1u << i;
         // Can't Use Twice flag
-        else if (check & MOVE_LIMITATION_CANT_USE_TWICE && MoveCantBeUsedTwice(move) && move == gBattleMons[battler].volatiles.lastResultingMove)
+        else if (check & MOVE_LIMITATION_CANT_USE_TWICE && MoveCantBeUsedTwice(move) && move == GetBattlerLastResultingMove(battler))
             unusableMoves |= 1u << i;
     }
     return unusableMoves;
@@ -10887,7 +10887,7 @@ bool32 CanUseMoveConsecutively(enum BattlerId battler)
 // Used for Protect, Endure and Ally switch
 void TryResetConsecutiveUseCounter(enum BattlerId battler)
 {
-    u32 lastMove = gBattleMons[battler].volatiles.lastResultingMove;
+    u32 lastMove = GetBattlerLastResultingMove(battler);
     if (lastMove == MOVE_UNAVAILABLE)
     {
         gBattleMons[battler].volatiles.consecutiveMoveUses = 0;
@@ -11051,6 +11051,16 @@ enum Move GetBattlerLastLandedMove(enum BattlerId battler)
 enum Move SetBattlerLastLandedMove(enum BattlerId battler, enum Move move)
 {
     return gBattleMons[battler].volatiles.lastLandedMove = move;
+}
+
+enum Move GetBattlerLastResultingMove(enum BattlerId battler)
+{
+    return gBattleMons[battler].volatiles.lastResultingMove;
+}
+
+enum Move SetBattlerLastResultingMove(enum BattlerId battler, enum Move move)
+{
+    return gBattleMons[battler].volatiles.lastResultingMove = move;
 }
 
 enum Move GetBattlerChoicedMove(enum BattlerId battler)

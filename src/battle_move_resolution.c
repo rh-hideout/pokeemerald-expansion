@@ -949,7 +949,7 @@ static enum CancelerResult CancelerPPDeduction(struct BattleContext *ctx)
     }
 
     // For item Metronome, echoed voice
-    if (ctx->move != gBattleMons[ctx->battlerAtk].volatiles.lastResultingMove || gBattleStruct->unableToUseMove)
+    if (ctx->move != GetBattlerLastResultingMove(ctx->battlerAtk) || gBattleStruct->unableToUseMove)
         gBattleMons[ctx->battlerAtk].volatiles.metronomeItemCounter = 0;
 
     if (gBattleMons[ctx->battlerAtk].pp[movePosition] > ppToDeduct)
@@ -2615,14 +2615,14 @@ static enum MoveEndResult MoveEndUpdateLastMoves(void)
             if (!gSpecialStatuses[gBattlerAttacker].dancerUsedMove)
             {
                 SetBattlerLastMove(gBattlerAttacker, gChosenMove);
-                gBattleMons[gBattlerAttacker].volatiles.lastResultingMove = gCurrentMove;
+                SetBattlerLastResultingMove(gBattlerAttacker, gCurrentMove);
                 gBattleMons[gBattlerAttacker].volatiles.lastUsedMoveType = GetBattleMoveType(gCurrentMove);
             }
         }
         else
         {
             SetBattlerLastMove(gBattlerAttacker, MOVE_UNAVAILABLE);
-            gBattleMons[gBattlerAttacker].volatiles.lastResultingMove = MOVE_UNAVAILABLE;
+            SetBattlerLastResultingMove(gBattlerAttacker, MOVE_UNAVAILABLE);
             gBattleMons[gBattlerAttacker].volatiles.lastUsedMoveType = TYPE_NONE;
         }
 
@@ -3963,7 +3963,7 @@ static void SetSameMoveTurnValues(enum BattleMoveEffects moveEffect)
 {
     bool32 increment = IsAnyTargetAffected()
                     && !gBattleStruct->unableToUseMove
-                    && gBattleMons[gBattlerAttacker].volatiles.lastResultingMove == gCurrentMove;
+                    && GetBattlerLastResultingMove(gBattlerAttacker) == gCurrentMove;
 
     switch (moveEffect)
     {
