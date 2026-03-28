@@ -1531,8 +1531,6 @@ static bool8 KeyboardKeyHandler_Character(u8 input)
     {
         bool8 textFull = AddTextCharacter();
 
-        SwapKeyboardToLowerAfterFirstCapitalLetter();
-
         SquishCursor();
         if (textFull)
         {
