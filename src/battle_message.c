@@ -670,7 +670,7 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_ILLUSIONWOREOFF]                      = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s illusion wore off!"),
     [STRINGID_ATTACKERCUREDTARGETSTATUS]            = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} cured {B_DEF_NAME_WITH_PREFIX2}'s problem!"),
     [STRINGID_ATTACKERLOSTFIRETYPE]                 = COMPOUND_STRING("{B_EFF_NAME_WITH_PREFIX} burned itself out!"),
-    [STRINGID_HEALERCURE]                           = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX}'s {B_LAST_ABILITY} cured {B_SCR_NAME_WITH_PREFIX2}'s problem!"),
+    [STRINGID_HEALERCURE]                           = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} was cured of {B_SCR_NAME_WITH_PREFIX2}!"),
     [STRINGID_SCRIPTINGABILITYSTATRAISE]            = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s {B_SCR_ABILITY} {B_BUFF2}raised its {B_BUFF1}!"),
     [STRINGID_RECEIVERABILITYTAKEOVER]              = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s {B_SCR_ABILITY} was taken over!"),
     [STRINGID_PKNMABSORBINGPOWER]                   = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} is absorbing power!"),
@@ -875,6 +875,13 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_PKMNDISGUISEWASBUSTED]                = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s disguise was busted!"),
     [STRINGID_ZENMODETRIGGERED]                     = COMPOUND_STRING("{B_SCR_ABILITY} triggered!"),
     [STRINGID_ZENMODEENDED]                         = COMPOUND_STRING("{B_SCR_ABILITY} ended!"),
+    [STRINGID_ABILITYHEALSSTATUS]                   = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}{B_BUFF1}"),
+    [STRINGID_ABILITYHEALSPARALYSIS]                = COMPOUND_STRING(" was cured of paralysis!"),
+    [STRINGID_ABILITYHEALSPOISON]                   = COMPOUND_STRING(" was cured of its poisoning!"),
+    [STRINGID_ABILITYHEALSBURN]                     = COMPOUND_STRING("'s burn was cured!"),
+    [STRINGID_ABILITYHEALSSLEEP]                    = COMPOUND_STRING(" woke up!"),
+    [STRINGID_ABILITYHEALSFROZEN]                   = COMPOUND_STRING(" thawed out!"),
+    [STRINGID_ABILITYHEALSFROSTBITE]                = COMPOUND_STRING(" was cured of its frostbite!"),
 };
 
 const u16 gTrainerUsedItemStringIds[] =

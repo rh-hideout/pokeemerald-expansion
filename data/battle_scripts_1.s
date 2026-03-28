@@ -6134,7 +6134,7 @@ BattleScript_HealerActivates::
 
 BattleScript_ShedSkinActivates::
 	call BattleScript_AbilityPopUp
-	printstring STRINGID_PKMNSXCUREDITSYPROBLEM
+	printstring STRINGID_ABILITYHEALSSTATUS
 	waitmessage B_WAIT_TIME_LONG
 	updatestatusicon BS_ATTACKER
 	end2

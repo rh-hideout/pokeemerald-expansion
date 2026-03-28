@@ -3689,19 +3689,21 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 {
                 ABILITY_HEAL_MON_STATUS:
                     if (gBattleMons[battler].status1 & (STATUS1_POISON | STATUS1_TOXIC_POISON))
-                        StringCopy(gBattleTextBuff1, gStatusConditionString_PoisonJpn);
+                        StringCopy(gBattleTextBuff1, gBattleStringsTable[STRINGID_ABILITYHEALSPOISON]);
                     if (gBattleMons[battler].status1 & STATUS1_SLEEP)
                     {
-                        StringCopy(gBattleTextBuff1, gStatusConditionString_SleepJpn);
+                        StringCopy(gBattleTextBuff1, gBattleStringsTable[STRINGID_ABILITYHEALSSLEEP]);
                         TryDeactivateSleepClause(GetBattlerSide(battler), gBattlerPartyIndexes[battler]);
                     }
 
                     if (gBattleMons[battler].status1 & STATUS1_PARALYSIS)
-                        StringCopy(gBattleTextBuff1, gStatusConditionString_ParalysisJpn);
+                        StringCopy(gBattleTextBuff1, gBattleStringsTable[STRINGID_ABILITYHEALSPARALYSIS]);
                     if (gBattleMons[battler].status1 & STATUS1_BURN)
-                        StringCopy(gBattleTextBuff1, gStatusConditionString_BurnJpn);
-                    if (gBattleMons[battler].status1 & STATUS1_ICY_ANY)
-                        StringCopy(gBattleTextBuff1, gStatusConditionString_IceJpn);
+                        StringCopy(gBattleTextBuff1, gBattleStringsTable[STRINGID_ABILITYHEALSBURN]);
+                    if (gBattleMons[battler].status1 & STATUS1_FREEZE)
+                        StringCopy(gBattleTextBuff1, gBattleStringsTable[STRINGID_ABILITYHEALSFROZEN]);
+                    if (gBattleMons[battler].status1 & STATUS1_FROSTBITE)
+                        StringCopy(gBattleTextBuff1, gBattleStringsTable[STRINGID_ABILITYHEALSFROSTBITE]);
 
                     gBattleMons[battler].status1 = 0;
                     gBattleMons[battler].volatiles.nightmare = FALSE;
