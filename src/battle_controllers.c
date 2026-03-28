@@ -142,7 +142,7 @@ void SetUpBattleVarsAndBirchZigzagoon(void)
         gBattlerControllerFuncs[i] = BattleControllerDummy;
         gBattlerPositions[i] = B_POSITION_ABSENT;
         gActionSelectionCursor[i] = 0;
-        gBattleMons[i].volatiles.moveSelectionCursor = 0;
+        SetBattlerMoveSelectionCursor(i, 0);
     }
 
     HandleLinkBattleSetup();
@@ -2384,7 +2384,7 @@ void BtlController_HandleSwitchInAnim(enum BattlerId battler)
     if (IsControllerPlayer(battler))
     {
         gActionSelectionCursor[battler] = 0;
-        gBattleMons[battler].volatiles.moveSelectionCursor = 0;
+        SetBattlerMoveSelectionCursor(battler, 0);
     }
     else if (IsControllerOpponent(battler))
     {

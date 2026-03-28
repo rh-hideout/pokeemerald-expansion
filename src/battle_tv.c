@@ -1250,6 +1250,7 @@ static void TrySetBattleSeminarShow(void)
     s32 dmgByMove[MAX_MON_MOVES];
     u16 powerOverride;
     u16 currMoveSaved;
+    u32 moveSelectionCursor;
 
     if (gBattleTypeFlags & (BATTLE_TYPE_DOUBLE | BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
         return;
@@ -1263,11 +1264,11 @@ static void TrySetBattleSeminarShow(void)
         return;
     else if (gBattleTypeFlags & (BATTLE_TYPE_PALACE | BATTLE_TYPE_PIKE | BATTLE_TYPE_PYRAMID))
         return;
-    else if (IsBattleMoveStatus(gBattleMons[gBattlerAttacker].moves[gBattleMons[gBattlerAttacker].volatiles.moveSelectionCursor]))
+    else if (IsBattleMoveStatus(gBattleMons[gBattlerAttacker].moves[moveSelectionCursor = GetBattlerMoveSelectionCursor(gBattlerAttacker)]))
         return;
 
     i = 0;
-    currMoveSaved = gBattleMons[gBattlerAttacker].moves[gBattleMons[gBattlerAttacker].volatiles.moveSelectionCursor];
+    currMoveSaved = gBattleMons[gBattlerAttacker].moves[moveSelectionCursor];
     do
     {
         if (currMoveSaved == sVariableDmgMoves[i])
@@ -1278,7 +1279,7 @@ static void TrySetBattleSeminarShow(void)
     if (sVariableDmgMoves[i] != TABLE_END)
         return;
 
-    dmgByMove[gBattleMons[gBattlerAttacker].volatiles.moveSelectionCursor] = gBattleStruct->moveDamage[gBattlerTarget]; // TODO: Not sure
+    dmgByMove[moveSelectionCursor] = gBattleStruct->moveDamage[gBattlerTarget]; // TODO: Not sure
     currMoveSaved = gCurrentMove;
     u16 storedMoveResultFlags = gBattleStruct->moveResultFlags[gBattlerTarget];
     for (i = 0; i < MAX_MON_MOVES; i++)
@@ -1305,25 +1306,25 @@ static void TrySetBattleSeminarShow(void)
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        if (i != gBattleMons[gBattlerAttacker].volatiles.moveSelectionCursor && dmgByMove[i] > dmgByMove[gBattleMons[gBattlerAttacker].volatiles.moveSelectionCursor])
+        if (i != moveSelectionCursor && dmgByMove[i] > dmgByMove[moveSelectionCursor])
         {
             enum Species opponentSpecies, playerSpecies;
             s32 bestMoveId;
 
-            if (gBattleMons[gBattlerAttacker].volatiles.moveSelectionCursor != 0)
+            if (moveSelectionCursor != 0)
                 bestMoveId = 0;
             else
                 bestMoveId = 1;
 
             for (i = 0; i < MAX_MON_MOVES; i++)
             {
-                if (i != gBattleMons[gBattlerAttacker].volatiles.moveSelectionCursor && dmgByMove[i] > dmgByMove[bestMoveId])
+                if (i != moveSelectionCursor && dmgByMove[i] > dmgByMove[bestMoveId])
                     bestMoveId = i;
             }
 
             opponentSpecies = GetMonData(GetBattlerMon(gBattlerTarget),   MON_DATA_SPECIES);
             playerSpecies   = GetMonData(GetBattlerMon(gBattlerAttacker), MON_DATA_SPECIES);
-            TryPutBattleSeminarOnAir(opponentSpecies, playerSpecies, gBattleMons[gBattlerAttacker].volatiles.moveSelectionCursor, gBattleMons[gBattlerAttacker].moves, gBattleMons[gBattlerAttacker].moves[bestMoveId]);
+            TryPutBattleSeminarOnAir(opponentSpecies, playerSpecies, moveSelectionCursor, gBattleMons[gBattlerAttacker].moves, gBattleMons[gBattlerAttacker].moves[bestMoveId]);
             break;
         }
     }

@@ -505,7 +505,7 @@ void HandleAction_Switch(void)
     gBattle_BG0_X = 0;
     gBattle_BG0_Y = 0;
     gActionSelectionCursor[gBattlerAttacker] = 0;
-    gBattleMons[gBattlerAttacker].volatiles.moveSelectionCursor = 0;
+    SetBattlerMoveSelectionCursor(gBattlerAttacker, 0);
 
     PREPARE_MON_NICK_BUFFER(gBattleTextBuff1, gBattlerAttacker, gBattleStruct->battlerPartyIndexes[gBattlerAttacker]);
 
@@ -11081,4 +11081,14 @@ bool32 TryResetBattlerChoicedMove(enum BattlerId battler, enum Ability ability)
         }
     }
     return FALSE;
+}
+
+u32 GetBattlerMoveSelectionCursor(enum BattlerId battler)
+{
+    return gBattleMons[battler].volatiles.moveSelectionCursor;
+}
+
+u32 SetBattlerMoveSelectionCursor(enum BattlerId battler, u32 selection)
+{
+    return gBattleMons[battler].volatiles.moveSelectionCursor = selection;
 }

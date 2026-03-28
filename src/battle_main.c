@@ -3216,7 +3216,7 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
     }
 
     gActionSelectionCursor[battler] = 0;
-    gBattleMons[battler].volatiles.moveSelectionCursor = 0;
+    SetBattlerMoveSelectionCursor(battler, 0);
 
     if (GetProtectType(gProtectStructs[battler].protected) == PROTECT_TYPE_SINGLE) // Side type protects expire at the end of the turn
         gProtectStructs[battler].protected = PROTECT_NONE;
@@ -3322,7 +3322,7 @@ void FaintClearSetData(enum BattlerId battler)
     }
 
     gActionSelectionCursor[battler] = 0;
-    gBattleMons[battler].volatiles.moveSelectionCursor = 0;
+    SetBattlerMoveSelectionCursor(battler, 0);
 
     if (GetProtectType(gProtectStructs[battler].protected) == PROTECT_TYPE_SINGLE) // Side type protects expire at the end of the turn
         gProtectStructs[battler].protected = PROTECT_NONE;

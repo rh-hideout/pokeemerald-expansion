@@ -438,5 +438,7 @@ enum Move SetBattlerLastLandedMove(enum BattlerId battler, enum Move move);
 enum Move GetBattlerChoicedMove(enum BattlerId battler);
 enum Move SetBattlerChoicedMove(enum BattlerId battler, enum Move move);
 bool32 TryResetBattlerChoicedMove(enum BattlerId battler, enum Ability ability);
+u32 GetBattlerMoveSelectionCursor(enum BattlerId battler);
+u32 SetBattlerMoveSelectionCursor(enum BattlerId battler, u32 selection);
 
 #endif // GUARD_BATTLE_UTIL_H
