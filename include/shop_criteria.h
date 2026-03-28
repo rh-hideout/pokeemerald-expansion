@@ -10,7 +10,6 @@
 #define READ_CRITERIA_GOAL_VAR_ID(criteria) ((criteria) >> 16)
 #define READ_CRITERIA_GOAL_VAR_VALUE(criteria) ((criteria) & 0xFFFF)
 
-bool32 ShopCriteriaByNothing(u32 itemId);
 bool32 ShopCriteriaByTheStart(u32 itemId);
 bool32 ShopCriteriaByBadgeCount(u32 itemId);
 bool32 ShopCriteriaByFlag(u32 itemId);

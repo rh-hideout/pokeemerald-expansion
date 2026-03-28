@@ -3,11 +3,6 @@
 #include "event_data.h"
 #include "shop_criteria.h"
 
-bool32 ShopCriteriaByNothing(u32 itemId)
-{
-    return FALSE;
-}
-
 // Always appears from the start, basically.
 bool32 ShopCriteriaByTheStart(u32 itemId)
 {
