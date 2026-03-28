@@ -10,7 +10,10 @@
 #define DN_FLAG_DETECTOR_MODE         FLAG_SYS_DEXNAV_DETECTOR_MODE // Allow player to find hidden mons
 #define DN_VAR_SPECIES                VAR_DEXNAV_SPECIES // Registered DexNav species
 #define DN_VAR_STEP_COUNTER           VAR_DEXNAV_STEP_COUNTER // Steps for finding hidden pokemon
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/phoenix-battle-changes
 // Search parameters
 #define DEXNAV_TIMEOUT                  15  // 15 seconds is the time out. Max of 1092 seconds allowed
 #define SNEAKING_PROXIMITY              4   // Tile amount
