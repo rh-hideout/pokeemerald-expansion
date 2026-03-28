@@ -6474,7 +6474,7 @@ BattleScript_SturdyPreventsOHKO::
 BattleScript_DampStopsExplosion::
 	pause B_WAIT_TIME_SHORT
 	call BattleScript_AbilityPopUpScripting
-	printstring STRINGID_PKMNPREVENTSUSAGE
+	printstring STRINGID_POKEMONCANNOTUSEMOVE
 	pause B_WAIT_TIME_LONG
 	moveendto MOVEEND_NEXT_TARGET
 	moveendcase MOVEEND_CLEAR_BITS
@@ -6713,7 +6713,7 @@ BattleScript_WeakArmorActivates::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_WeakArmorActivatesSpeed
 BattleScript_WeakArmorDefPrintString:
-	printstring STRINGID_TARGETABILITYSTATLOWER
+	printstring STRINGID_DEFENDERSSTATFELL
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_WeakArmorActivatesSpeed:
 	jumpifgenconfiglowerthan CONFIG_B_WEAK_ARMOR_SPEED, GEN_7, BattleScript_WeakArmorSetSpeedGen6
@@ -6731,7 +6731,7 @@ BattleScript_WeakArmorDoSpeed:
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_WeakArmorActivatesEnd
 BattleScript_WeakArmorSpeedPrintString:
-	printstring STRINGID_TARGETABILITYSTATRAISE
+	printstring STRINGID_DEFENDERSSTATROSE
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_WeakArmorActivatesEnd:
 	return
