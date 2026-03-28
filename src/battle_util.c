@@ -1345,7 +1345,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
     u8 moveId = gBattleResources->bufferB[battler][2] & ~RET_GIMMICK;
     enum Move move = gBattleMons[battler].moves[moveId];
     enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
-    enum Move choicedMove = gBattleMons[battler].volatiles.choicedMove;
+    enum Move choicedMove = GetBattlerChoicedMove(battler);
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
 
     if (GetConfig(B_ENCORE_TARGET) >= GEN_5
@@ -1609,7 +1609,7 @@ u32 CheckMoveLimitations(enum BattlerId battler, u8 unusableMoves, u16 check)
     enum Move move;
     enum BattleMoveEffects moveEffect;
     enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
-    enum Move choicedMove = gBattleMons[battler].volatiles.choicedMove;
+    enum Move choicedMove = GetBattlerChoicedMove(battler);
     s32 i;
 
     gPotentialItemEffectBattler = battler;
@@ -11041,4 +11041,34 @@ enum Move GetBattlerLastLandedMove(enum BattlerId battler)
 enum Move SetBattlerLastLandedMove(enum BattlerId battler, enum Move move)
 {
     return gBattleMons[battler].volatiles.lastLandedMove = move;
+}
+
+enum Move GetBattlerChoicedMove(enum BattlerId battler)
+{
+    return gBattleMons[battler].volatiles.choicedMove;
+}
+
+enum Move SetBattlerChoicedMove(enum BattlerId battler, enum Move move)
+{
+    return gBattleMons[battler].volatiles.choicedMove = move;
+}
+
+// Try remove choiced move if it's no longer one of the battler's moves and it doesn't have Gorilla Tactics.
+bool32 TryResetBattlerChoicedMove(enum BattlerId battler, enum Ability ability)
+{
+    if (GetBattlerAbility(gBattlerTarget) != ABILITY_GORILLA_TACTICS)
+    {
+        u32 moveIndex;
+        for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+        {
+            if (gBattleMons[battler].moves[moveIndex] == GetBattlerChoicedMove(battler))
+                break;
+        }
+        if (moveIndex == MAX_MON_MOVES)
+        {
+            SetBattlerChoicedMove(battler, MOVE_NONE);
+            return TRUE;
+        }
+    }
+    return FALSE;
 }

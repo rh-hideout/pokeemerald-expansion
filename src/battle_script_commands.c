@@ -2228,8 +2228,7 @@ void StealTargetItem(enum BattlerId battlerStealer, enum BattlerId itemBattler)
     BtlController_EmitSetMonData(itemBattler, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[itemBattler].item), &gBattleMons[itemBattler].item);  // remove target item
     MarkBattlerForControllerExec(itemBattler);
 
-    if (GetBattlerAbility(itemBattler) != ABILITY_GORILLA_TACTICS)
-        gBattleMons[itemBattler].volatiles.choicedMove = MOVE_NONE;
+    TryResetBattlerChoicedMove(itemBattler, GetBattlerAbility(itemBattler));
 
     TrySaveExchangedItem(itemBattler, gLastUsedItem);
 }
@@ -9824,14 +9823,13 @@ static void Cmd_tryswapitems(void)
             BtlController_EmitSetMonData(gBattlerTarget, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[gBattlerTarget].item), &gBattleMons[gBattlerTarget].item);
             MarkBattlerForControllerExec(gBattlerTarget);
 
-            if (GetBattlerAbility(gBattlerTarget) != ABILITY_GORILLA_TACTICS)
-                gBattleMons[gBattlerTarget].volatiles.choicedMove = MOVE_NONE;
+            TryResetBattlerChoicedMove(gBattlerTarget, GetBattlerAbility(gBattlerTarget));
 
             if (GetBattlerAbility(gBattlerAttacker) != ABILITY_GORILLA_TACTICS
              && (!IsHoldEffectChoice(GetItemHoldEffect(oldItemDef))
              || (GetConfig(B_MODERN_TRICK_CHOICE_LOCK) >= GEN_5)))
             {
-                gBattleMons[gBattlerAttacker].volatiles.choicedMove = MOVE_NONE;
+                SetBattlerChoicedMove(gBattlerAttacker, MOVE_NONE);
             }
 
             gBattlescriptCurrInstr = cmd->nextInstr;
@@ -13733,14 +13731,7 @@ void BS_UpdateChoiceMoveOnLvlUp(void)
         else
             battler = 2;
 
-        u32 moveIndex;
-        for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
-        {
-            if (gBattleMons[battler].moves[moveIndex] == gBattleMons[battler].volatiles.choicedMove)
-                break;
-        }
-        if (moveIndex == MAX_MON_MOVES)
-            gBattleMons[battler].volatiles.choicedMove = MOVE_NONE;
+        TryResetBattlerChoicedMove(battler, GetBattlerAbility(battler));
     }
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
