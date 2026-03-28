@@ -8955,11 +8955,12 @@ static void Cmd_copymovepermanently(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
+    enum Move lastPrintedMove;
     gChosenMove = MOVE_UNAVAILABLE;
 
     if (!(gBattleMons[gBattlerAttacker].volatiles.transformed)
-        && gBattleMons[gBattlerTarget].volatiles.lastPrintedMove != MOVE_UNAVAILABLE
-        && !IsMoveSketchBanned(gBattleMons[gBattlerTarget].volatiles.lastPrintedMove))
+        && (lastPrintedMove = GetBattlerLastPrintedMove(gBattlerTarget)) != MOVE_UNAVAILABLE
+        && !IsMoveSketchBanned(lastPrintedMove))
     {
         s32 i;
 
@@ -8967,7 +8968,7 @@ static void Cmd_copymovepermanently(void)
         {
             if (GetMoveEffect(gBattleMons[gBattlerAttacker].moves[i]) == EFFECT_SKETCH)
                 continue;
-            if (gBattleMons[gBattlerAttacker].moves[i] == gBattleMons[gBattlerTarget].volatiles.lastPrintedMove)
+            if (gBattleMons[gBattlerAttacker].moves[i] == lastPrintedMove)
                 break;
         }
 
@@ -8979,8 +8980,8 @@ static void Cmd_copymovepermanently(void)
         {
             struct MovePpInfo movePpData;
 
-            gBattleMons[gBattlerAttacker].moves[gCurrMovePos] = gBattleMons[gBattlerTarget].volatiles.lastPrintedMove;
-            gBattleMons[gBattlerAttacker].pp[gCurrMovePos] = GetMovePP(gBattleMons[gBattlerTarget].volatiles.lastPrintedMove);
+            gBattleMons[gBattlerAttacker].moves[gCurrMovePos] = lastPrintedMove;
+            gBattleMons[gBattlerAttacker].pp[gCurrMovePos] = GetMovePP(lastPrintedMove);
 
             for (i = 0; i < MAX_MON_MOVES; i++)
             {
@@ -8992,7 +8993,7 @@ static void Cmd_copymovepermanently(void)
             BtlController_EmitSetMonData(gBattlerAttacker, B_COMM_TO_CONTROLLER, REQUEST_MOVES_PP_BATTLE, 0, sizeof(movePpData), &movePpData);
             MarkBattlerForControllerExec(gBattlerAttacker);
 
-            PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerTarget].volatiles.lastPrintedMove)
+            PREPARE_MOVE_BUFFER(gBattleTextBuff1, lastPrintedMove)
 
             gBattlescriptCurrInstr = cmd->nextInstr;
         }
@@ -14239,7 +14240,7 @@ static inline bool32 IsInstructBannedChargingMove(u32 battler)
 void BS_TryInstruct(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
-    enum Move move = gBattleMons[gBattlerTarget].volatiles.lastPrintedMove;
+    enum Move move = GetBattlerLastPrintedMove(gBattlerTarget);
     if (move == MOVE_NONE || move == MOVE_UNAVAILABLE || MoveHasAdditionalEffectSelf(move, MOVE_EFFECT_RECHARGE)
         || IsMoveInstructBanned(move)
         || IsInstructBannedChargingMove(gBattlerTarget)

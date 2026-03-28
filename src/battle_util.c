@@ -11063,6 +11063,16 @@ enum Move SetBattlerLastResultingMove(enum BattlerId battler, enum Move move)
     return gBattleMons[battler].volatiles.lastResultingMove = move;
 }
 
+enum Move GetBattlerLastPrintedMove(enum BattlerId battler)
+{
+    return gBattleMons[battler].volatiles.lastPrintedMove;
+}
+
+enum Move SetBattlerLastPrintedMove(enum BattlerId battler, enum Move move)
+{
+    return gBattleMons[battler].volatiles.lastPrintedMove = move;
+}
+
 enum Move GetBattlerChoicedMove(enum BattlerId battler)
 {
     return gBattleMons[battler].volatiles.choicedMove;

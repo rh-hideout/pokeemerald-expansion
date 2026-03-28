@@ -606,7 +606,7 @@ static enum CancelerResult CancelerAttackstring(struct BattleContext *ctx)
     {
         gBattleMons[gBattlerAttacker].volatiles.usedMoves |= 1u << gCurrMovePos;
         gBattleStruct->battlerState[gBattlerAttacker].lastMoveTarget = gBattlerTarget;
-        gBattleMons[gBattlerAttacker].volatiles.lastPrintedMove = gChosenMove;
+        SetBattlerLastPrintedMove(gBattlerAttacker, gChosenMove);
         RecordKnownMove(gBattlerAttacker, gChosenMove);
     }
     return CANCELER_RESULT_BREAK;
@@ -3532,7 +3532,7 @@ static enum MoveEndResult MoveEndThirdMoveBlock(void)
         break;
     case EFFECT_ICE_SPINNER:
         if (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY
-         && gBattleMons[gBattlerAttacker].volatiles.lastPrintedMove == gCurrentMove
+         && GetBattlerLastPrintedMove(gBattlerAttacker) == gCurrentMove
          && IsBattlerAlive(gBattlerAttacker)
          && IsAnyTargetTurnDamaged(gBattlerAttacker, INCLUDING_SUBSTITUTES))
         {
