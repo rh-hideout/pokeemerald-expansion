@@ -3207,8 +3207,8 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
     {
         if (gBattleMons[i].volatiles.infatuation == INFATUATED_WITH(battler))
             gBattleMons[i].volatiles.infatuation = 0;
-        if (gBattleMons[i].volatiles.wrapped && gBattleMons[i].volatiles.wrappedBy == battler)
-            gBattleMons[i].volatiles.wrapped = FALSE;
+        if (IsBattlerWrappedBy(i, battler))
+            UnsetWrap(i);
         if (gBattleMons[i].volatiles.syrupBomb && gBattleMons[i].volatiles.stickySyrupedBy == battler)
             gBattleMons[i].volatiles.syrupBomb = FALSE;
         if (gBattleMons[i].volatiles.octolock && gBattleMons[i].volatiles.octolockedBy == battler)
@@ -3313,8 +3313,8 @@ void FaintClearSetData(enum BattlerId battler)
             gBattleMons[i].volatiles.escapePrevention = FALSE;
         if (gBattleMons[i].volatiles.infatuation == INFATUATED_WITH(battler))
             gBattleMons[i].volatiles.infatuation = 0;
-        if (gBattleMons[i].volatiles.wrapped && gBattleMons[i].volatiles.wrappedBy == battler)
-            gBattleMons[i].volatiles.wrapped = FALSE;
+        if (IsBattlerWrappedBy(i, battler))
+            UnsetWrap(i);
         if (gBattleMons[i].volatiles.syrupBomb && gBattleMons[i].volatiles.stickySyrupedBy == battler)
             gBattleMons[i].volatiles.syrupBomb = FALSE;
         if (gBattleMons[i].volatiles.octolock && gBattleMons[i].volatiles.octolockedBy == battler)
@@ -3946,7 +3946,7 @@ void BattleTurnPassed(void)
     {
         if (gSideTimers[i].retaliateTimer > 0)
             gSideTimers[i].retaliateTimer--;
-    }    
+    }
 
     gFieldStatuses &= ~STATUS_FIELD_ION_DELUGE;
 

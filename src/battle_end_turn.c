@@ -605,29 +605,24 @@ static bool32 HandleEndTurnWrap(enum BattlerId battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (gBattleMons[battler].volatiles.wrapped && IsBattlerAlive(battler))
+    if (IsBattlerWrapped(battler) && IsBattlerAlive(battler))
     {
-        if (gBattleMons[battler].volatiles.wrapTurns != 0)
+        if (TryReduceWrapTurns(battler))
         {
-            gBattleMons[battler].volatiles.wrapTurns--;
             if (IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
                 return effect;
 
-            gBattleScripting.animArg1 = gBattleMons[battler].volatiles.wrappedMove;
-            gBattleScripting.animArg2 = gBattleMons[battler].volatiles.wrappedMove >> 8;
-            PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[battler].volatiles.wrappedMove);
+            enum Move wrappedMove = GetBattlerWrappedMove(battler);
+            gBattleScripting.animArg1 = wrappedMove;
+            gBattleScripting.animArg2 = wrappedMove >> 8;
+            PREPARE_MOVE_BUFFER(gBattleTextBuff1, wrappedMove);
             BattleScriptExecute(BattleScript_WrapTurnDmg);
-            s32 bindDamage = 0;
-            if (GetBattlerHoldEffect(gBattleMons[battler].volatiles.wrappedBy) == HOLD_EFFECT_BINDING_BAND)
-                bindDamage = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 6 : 8);
-            else
-                bindDamage = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 8 : 16);
-            SetPassiveDamageAmount(battler, bindDamage);
+            SetPassiveDamageAmount(battler, GetWrapDamage(battler, GetBattlerHoldEffect(GetBattlerWrappedBy(battler))));
         }
         else  // broke free
         {
-            gBattleMons[battler].volatiles.wrapped = FALSE;
-            PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[battler].volatiles.wrappedMove);
+            UnsetWrap(battler);
+            PREPARE_MOVE_BUFFER(gBattleTextBuff1, GetBattlerWrappedMove(battler));
             BattleScriptExecute(BattleScript_WrapEnds);
         }
         effect = TRUE;

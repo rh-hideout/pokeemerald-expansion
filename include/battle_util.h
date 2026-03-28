@@ -403,7 +403,14 @@ bool32 IsBattlerInvalidForSpreadMove(enum BattlerId battlerAtk, enum BattlerId b
 void SetStartingStatus(enum StartingStatus status);
 void ResetStartingStatuses(void);
 bool32 IsUsableWhileAsleepEffect(enum BattleMoveEffects effect);
-void SetWrapTurns(enum BattlerId battler, enum HoldEffect holdEffect);
+bool32 TrySetWrap(enum BattlerId battler, enum BattlerId wrappedBy, enum Move wrapMove, enum HoldEffect holdEffect);
+bool32 TryReduceWrapTurns(enum BattlerId battler);
+void UnsetWrap(enum BattlerId battler);
+bool32 IsBattlerWrapped(enum BattlerId battler);
+enum BattlerId GetBattlerWrappedBy(enum BattlerId battler);
+bool32 IsBattlerWrappedBy(enum BattlerId battler, enum BattlerId wrappedBy);
+enum Move GetBattlerWrappedMove(enum BattlerId battler);
+u32 GetWrapDamage(enum BattlerId battler, enum HoldEffect holdEffect);
 bool32 ChangeOrderTargetAfterAttacker(void);
 void TryUpdateEvolutionTracker(enum EvolutionConditions evolutionCondition, u32 upAmount, enum Move usedMove);
 bool32 CanUseMoveConsecutively(enum BattlerId battler);

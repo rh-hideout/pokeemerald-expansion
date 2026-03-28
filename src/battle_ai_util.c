@@ -472,7 +472,7 @@ bool32 IsBattlerTrapped(enum BattlerId battlerAtk, enum BattlerId battlerDef)
     if (AI_CanBattlerEscape(battlerDef))
         return FALSE;
 
-    if (gBattleMons[battlerDef].volatiles.wrapped)
+    if (IsBattlerWrapped(battlerDef))
         return TRUE;
     if (gBattleMons[battlerDef].volatiles.escapePrevention)
         return TRUE;
@@ -2282,7 +2282,7 @@ bool32 ShouldClearFieldStatus(enum BattlerId battler, u32 fieldStatus)
 bool32 IsBattlerDamagedByStatus(enum BattlerId battler)
 {
     return gBattleMons[battler].status1 & STATUS1_DAMAGING
-        || gBattleMons[battler].volatiles.wrapped
+        || IsBattlerWrapped(battler)
         || gBattleMons[battler].volatiles.nightmare
         || gBattleMons[battler].volatiles.cursed
         || gBattleMons[battler].volatiles.saltCure
@@ -3387,23 +3387,6 @@ static u32 GetCurseDamage(enum BattlerId battlerId)
     return damage;
 }
 
-static u32 GetTrapDamage(enum BattlerId battler)
-{
-    // ai has no knowledge about turns remaining
-    u32 damage = 0;
-    if (gBattleMons[battler].volatiles.wrapped)
-    {
-        if (gAiLogicData->holdEffects[gBattleMons[battler].volatiles.wrappedBy] == HOLD_EFFECT_BINDING_BAND)
-            damage = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 6 : 8);
-        else
-            damage = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 8 : 16);
-
-        if (damage == 0)
-            damage = 1;
-    }
-    return damage;
-}
-
 static u32 GetPoisonDamage(enum BattlerId battlerId)
 {
     u32 damage = 0;
@@ -3505,9 +3488,12 @@ u32 GetBattlerSecondaryDamage(enum BattlerId battlerId)
     secondaryDamage = GetLeechSeedDamage(battlerId)
      + GetNightmareDamage(battlerId)
      + GetCurseDamage(battlerId)
-     + GetTrapDamage(battlerId)
      + GetPoisonDamage(battlerId)
      + GetWeatherDamage(battlerId);
+
+    // AI has no knowledge about turns remaining
+    if (IsBattlerWrapped(battlerId))
+        secondaryDamage += GetWrapDamage(battlerId, gAiLogicData->holdEffects[GetBattlerWrappedBy(battlerId)]);
 
     return secondaryDamage;
 }

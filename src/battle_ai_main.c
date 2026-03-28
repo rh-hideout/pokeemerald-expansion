@@ -3261,7 +3261,7 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                 ADJUST_SCORE(-7);
             break;
         case EFFECT_PERISH_SONG:
-            if (!(gBattleMons[battlerDef].volatiles.escapePrevention || gBattleMons[battlerDef].volatiles.wrapped))
+            if (!(gBattleMons[battlerDef].volatiles.escapePrevention || IsBattlerWrapped(battlerDef)))
             {
                 if (IsTrappingMove(aiData->partnerMove) || predictedMove == MOVE_INGRAIN)
                     ADJUST_SCORE(WEAK_EFFECT);
@@ -5924,7 +5924,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
     }
     case EFFECT_RAPID_SPIN:
         if ((AreAnyHazardsOnSide(GetBattlerSide(battlerAtk)) && CountUsablePartyMons(battlerAtk) != 0)
-         || (gBattleMons[battlerAtk].volatiles.leechSeed || gBattleMons[battlerAtk].volatiles.wrapped))
+         || (gBattleMons[battlerAtk].volatiles.leechSeed || IsBattlerWrapped(battlerAtk)))
             ADJUST_SCORE(GOOD_EFFECT);
         break;
     case EFFECT_SMACK_DOWN:

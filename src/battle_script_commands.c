@@ -2623,18 +2623,14 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         break;
     }
     case MOVE_EFFECT_WRAP:
-        if (gBattleMons[effectBattler].volatiles.wrapped)
+        if (TrySetWrap(effectBattler, battlerAtk, gCurrentMove, GetBattlerHoldEffect(battlerAtk)))
         {
-            gBattlescriptCurrInstr = battleScript;
+            BattleScriptPush(battleScript);
+            gBattlescriptCurrInstr = BattleScript_MoveEffectWrap;
         }
         else
         {
-            SetWrapTurns(effectBattler, GetBattlerHoldEffect(battlerAtk));
-            gBattleMons[effectBattler].volatiles.wrapped = TRUE;
-            gBattleMons[effectBattler].volatiles.wrappedMove = gCurrentMove;
-            gBattleMons[effectBattler].volatiles.wrappedBy = battlerAtk;
-            BattleScriptPush(battleScript);
-            gBattlescriptCurrInstr = BattleScript_MoveEffectWrap;
+            gBattlescriptCurrInstr = battleScript;
         }
         break;
     case MOVE_EFFECT_ATK_PLUS_1:
@@ -3457,17 +3453,15 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         {
             if (!IsBattlerAlly(battler, effectBattler))
                 continue;
-            if (!gBattleMons[battler].volatiles.wrapped)
-            {
-                gBattleMons[battler].volatiles.wrapped = TRUE;
-                SetWrapTurns(battler, GetBattlerHoldEffect(battlerAtk));
-                // The Wrap effect does not expire when the user switches, so here's some cheese.
-                gBattleMons[battler].volatiles.wrappedBy = effectBattler;
-                if (moveEffect == MOVE_EFFECT_SANDBLAST_SIDE)
-                    gBattleMons[battler].volatiles.wrappedMove = MOVE_SAND_TOMB;
-                else
-                    gBattleMons[battler].volatiles.wrappedMove = MOVE_FIRE_SPIN;
-            }
+
+            enum Move wrapMove;
+            if (moveEffect == MOVE_EFFECT_SANDBLAST_SIDE)
+                wrapMove = MOVE_SAND_TOMB;
+            else
+                wrapMove = MOVE_FIRE_SPIN;
+            // The Wrap effect does not expire when the user switches,
+            // so here's some cheese by passing effectBattler instead of battlerAtk.
+            TrySetWrap(battler, effectBattler, wrapMove, GetBattlerHoldEffect(battlerAtk));
         }
         break;
     case MOVE_EFFECT_YAWN_FOE:
@@ -8685,7 +8679,7 @@ static void Cmd_setsubstitute(void)
     else
     {
         gBattleMons[gBattlerAttacker].volatiles.substitute = TRUE;
-        gBattleMons[gBattlerAttacker].volatiles.wrapped = FALSE;
+        UnsetWrap(gBattlerAttacker);
         if (factor == 2)
             gBattleMons[gBattlerAttacker].volatiles.substituteHP = hp / 2;
         else
@@ -9449,12 +9443,12 @@ static void Cmd_rapidspinfree(void)
 
     u8 atkSide = GetBattlerSide(gBattlerAttacker);
 
-    if (gBattleMons[gBattlerAttacker].volatiles.wrapped)
+    if (IsBattlerWrapped(gBattlerAttacker))
     {
         gBattleScripting.battler = gBattlerTarget;
-        gBattleMons[gBattlerAttacker].volatiles.wrapped = FALSE;
-        gBattlerTarget = gBattleMons[gBattlerAttacker].volatiles.wrappedBy;
-        PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerAttacker].volatiles.wrappedMove);
+        UnsetWrap(gBattlerAttacker);
+        gBattlerTarget = GetBattlerWrappedBy(gBattlerAttacker);
+        PREPARE_MOVE_BUFFER(gBattleTextBuff1, GetBattlerWrappedMove(gBattlerAttacker));
         BattleScriptCall(BattleScript_WrapFree);
     }
     else if (gBattleMons[gBattlerAttacker].volatiles.leechSeed)

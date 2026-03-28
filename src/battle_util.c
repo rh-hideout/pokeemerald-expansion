@@ -4950,7 +4950,7 @@ bool32 CanBattlerEscape(enum BattlerId battler) // no ability check
         return TRUE;
     else if (gBattleMons[battler].volatiles.escapePrevention)
         return FALSE;
-    else if (gBattleMons[battler].volatiles.wrapped)
+    else if (IsBattlerWrapped(battler))
         return FALSE;
     else if (gBattleMons[battler].volatiles.root)
         return FALSE;
@@ -10687,13 +10687,68 @@ bool32 IsUsableWhileAsleepEffect(enum BattleMoveEffects effect)
     }
 }
 
-void SetWrapTurns(enum BattlerId battler, enum HoldEffect holdEffect)
+bool32 TrySetWrap(enum BattlerId battler, enum BattlerId wrappedBy, enum Move wrapMove, enum HoldEffect holdEffect)
 {
+    if (IsBattlerWrapped(battler))
+        return FALSE;
+
     u32 normalWrapTurns = B_WRAP_TURNS - 2; // 5 turns
     if (holdEffect == HOLD_EFFECT_GRIP_CLAW)
         gBattleMons[battler].volatiles.wrapTurns = GetConfig(B_BINDING_TURNS) >= GEN_5 ? B_WRAP_TURNS : normalWrapTurns;
     else
         gBattleMons[battler].volatiles.wrapTurns = GetConfig(B_BINDING_TURNS) >= GEN_5 ? RandomUniform(RNG_WRAP, 4, normalWrapTurns) : RandomUniform(RNG_WRAP, 2, normalWrapTurns);
+    gBattleMons[battler].volatiles.wrappedMove = wrapMove;
+    gBattleMons[battler].volatiles.wrappedBy = wrappedBy;
+    gBattleMons[battler].volatiles.wrapped = TRUE;
+    return TRUE;
+}
+
+bool32 TryReduceWrapTurns(enum BattlerId battler)
+{
+    if (gBattleMons[battler].volatiles.wrapTurns != 0)
+    {
+        gBattleMons[battler].volatiles.wrapTurns--;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+void UnsetWrap(enum BattlerId battler)
+{
+    gBattleMons[battler].volatiles.wrapped = FALSE;
+}
+
+bool32 IsBattlerWrapped(enum BattlerId battler)
+{
+    return gBattleMons[battler].volatiles.wrapped;
+}
+
+enum BattlerId GetBattlerWrappedBy(enum BattlerId battler)
+{
+    return gBattleMons[battler].volatiles.wrappedBy;
+}
+
+bool32 IsBattlerWrappedBy(enum BattlerId battler, enum BattlerId wrappedBy)
+{
+    return IsBattlerWrapped(battler) && GetBattlerWrappedBy(battler) == wrappedBy;
+}
+
+enum Move GetBattlerWrappedMove(enum BattlerId battler)
+{
+    return gBattleMons[battler].volatiles.wrappedMove;
+}
+
+u32 GetWrapDamage(enum BattlerId battler, enum HoldEffect holdEffect)
+{
+    u32 damage;
+    if (holdEffect == HOLD_EFFECT_BINDING_BAND)
+        damage = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 6 : 8);
+    else
+        damage = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 8 : 16);
+
+    if (damage == 0)
+        damage = 1;
+    return damage;
 }
 
 // Return True if the order was changed, and false if the order was not changed(for example because the target would move after the attacker anyway).

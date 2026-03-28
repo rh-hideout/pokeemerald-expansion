@@ -1405,7 +1405,7 @@ bool32 ShouldSwitchDynFuncExample(enum BattlerId battler)
 
 static bool32 CanBattlerConsiderSwitch(enum BattlerId battler)
 {
-    if (gBattleMons[battler].volatiles.wrapped)
+    if (IsBattlerWrapped(battler))
         return FALSE;
     if (gBattleMons[battler].volatiles.escapePrevention)
         return FALSE;
