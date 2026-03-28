@@ -3937,9 +3937,7 @@ void BattleTurnPassed(void)
         gBattleMons[battler].volatiles.electrified = FALSE;
         gBattleMons[battler].volatiles.flinched = FALSE;
         gBattleMons[battler].volatiles.powder = FALSE;
-
-        if (gBattleMons[battler].volatiles.stompingTantrumTimer > 0)
-            gBattleMons[battler].volatiles.stompingTantrumTimer--;
+        TryReduceStompingTantrumTimer(battler);
     }
 
     for (i = 0; i < NUM_BATTLE_SIDES; i++)

@@ -607,7 +607,7 @@ static bool32 HandleEndTurnWrap(enum BattlerId battler)
 
     if (IsBattlerWrapped(battler) && IsBattlerAlive(battler))
     {
-        if (TryReduceWrapTurns(battler))
+        if (TryReduceWrapTimer(battler))
         {
             if (IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
                 return effect;

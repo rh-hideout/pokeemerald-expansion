@@ -208,7 +208,7 @@
 #define B_HEAL_BLOCK_TIMER   5
 #define B_LASER_FOCUS_TIMER  2
 #define B_THROAT_CHOP_TIMER  2
-#define B_WRAP_TURNS         7 // Max number of turns with Grip Claw
+#define B_WRAP_TIMER         7 // Max number of turns with Grip Claw
 #define B_SYRUP_BOMB_TIMER   3
 #define B_TORMENT_TIMER      3
 

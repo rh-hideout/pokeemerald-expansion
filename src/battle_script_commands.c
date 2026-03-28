@@ -1188,7 +1188,7 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
     if (numTargets != 0 && numTargets == numMisses)
     {
         SetOrClearRageVolatile();
-        gBattleMons[gBattlerAttacker].volatiles.stompingTantrumTimer = 2;
+        SetStompingTantrumTimer(gBattlerAttacker);
     }
 
     if (calcSpreadMove)

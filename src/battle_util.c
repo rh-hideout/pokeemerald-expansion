@@ -6402,7 +6402,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct BattleContext *ctx)
             modifier = uq4_12_multiply(modifier, UQ_4_12(0.5));
         break;
     case EFFECT_STOMPING_TANTRUM:
-        if (gBattleMons[battlerAtk].volatiles.stompingTantrumTimer == 1)
+        if (GetStompingTantrumTimer(battlerAtk) == 1)
             modifier = uq4_12_multiply(modifier, UQ_4_12(2.0));
         break;
     case EFFECT_MAGNITUDE:
@@ -10692,22 +10692,22 @@ bool32 TrySetWrap(enum BattlerId battler, enum BattlerId wrappedBy, enum Move wr
     if (IsBattlerWrapped(battler))
         return FALSE;
 
-    u32 normalWrapTurns = B_WRAP_TURNS - 2; // 5 turns
+    u32 normalWrapTurns = B_WRAP_TIMER - 2; // 5 turns
     if (holdEffect == HOLD_EFFECT_GRIP_CLAW)
-        gBattleMons[battler].volatiles.wrapTurns = GetConfig(B_BINDING_TURNS) >= GEN_5 ? B_WRAP_TURNS : normalWrapTurns;
+        gBattleMons[battler].volatiles.wrapTimer = GetConfig(B_BINDING_TURNS) >= GEN_5 ? B_WRAP_TIMER : normalWrapTurns;
     else
-        gBattleMons[battler].volatiles.wrapTurns = GetConfig(B_BINDING_TURNS) >= GEN_5 ? RandomUniform(RNG_WRAP, 4, normalWrapTurns) : RandomUniform(RNG_WRAP, 2, normalWrapTurns);
+        gBattleMons[battler].volatiles.wrapTimer = GetConfig(B_BINDING_TURNS) >= GEN_5 ? RandomUniform(RNG_WRAP, 4, normalWrapTurns) : RandomUniform(RNG_WRAP, 2, normalWrapTurns);
     gBattleMons[battler].volatiles.wrappedMove = wrapMove;
     gBattleMons[battler].volatiles.wrappedBy = wrappedBy;
     gBattleMons[battler].volatiles.wrapped = TRUE;
     return TRUE;
 }
 
-bool32 TryReduceWrapTurns(enum BattlerId battler)
+bool32 TryReduceWrapTimer(enum BattlerId battler)
 {
-    if (gBattleMons[battler].volatiles.wrapTurns != 0)
+    if (gBattleMons[battler].volatiles.wrapTimer != 0)
     {
-        gBattleMons[battler].volatiles.wrapTurns--;
+        gBattleMons[battler].volatiles.wrapTimer--;
         return TRUE;
     }
     return FALSE;
@@ -10749,6 +10749,26 @@ u32 GetWrapDamage(enum BattlerId battler, enum HoldEffect holdEffect)
     if (damage == 0)
         damage = 1;
     return damage;
+}
+
+u32 GetStompingTantrumTimer(enum BattlerId battler)
+{
+    return gBattleMons[battler].volatiles.stompingTantrumTimer;
+}
+
+void SetStompingTantrumTimer(enum BattlerId battler)
+{
+    gBattleMons[battler].volatiles.stompingTantrumTimer = 2;
+}
+
+bool32 TryReduceStompingTantrumTimer(enum BattlerId battler)
+{
+    if (gBattleMons[battler].volatiles.stompingTantrumTimer != 0)
+    {
+        gBattleMons[battler].volatiles.stompingTantrumTimer--;
+        return TRUE;
+    }
+    return FALSE;
 }
 
 // Return True if the order was changed, and false if the order was not changed(for example because the target would move after the attacker anyway).
