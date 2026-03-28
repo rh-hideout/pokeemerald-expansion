@@ -8879,7 +8879,7 @@ static void Cmd_settypetorandomresistance(void)
     else
     {
         moveToCheck = GetBattlerLastResultingMove(gBattlerTarget);
-        typeToCheck = gBattleMons[gBattlerTarget].volatiles.lastUsedMoveType;
+        typeToCheck = GetBattlerLastUsedMoveType(gBattlerTarget);
     }
 
     if (moveToCheck == MOVE_NONE

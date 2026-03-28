@@ -447,5 +447,7 @@ u32 GetBattlerMoveSelectionCursor(enum BattlerId battler);
 u32 SetBattlerMoveSelectionCursor(enum BattlerId battler, u32 selection);
 enum Type GetBattlerLastHitByType(enum BattlerId battler);
 enum Type SetBattlerLastHitByType(enum BattlerId battler, enum Type type);
+enum Type GetBattlerLastUsedMoveType(enum BattlerId battler);
+enum Type SetBattlerLastUsedMoveType(enum BattlerId battler, enum Type type);
 
 #endif // GUARD_BATTLE_UTIL_H

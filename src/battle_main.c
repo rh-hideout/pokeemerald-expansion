@@ -3057,7 +3057,7 @@ static void BattleStartClearSetData(void)
         SetBattlerLastMove(i, MOVE_NONE);
         SetBattlerLastLandedMove(i, MOVE_NONE);
         SetBattlerLastHitByType(i, TYPE_NONE);
-        gBattleMons[i].volatiles.lastUsedMoveType = TYPE_NONE;
+        SetBattlerLastUsedMoveType(i, TYPE_NONE);
         SetBattlerLastResultingMove(i, MOVE_NONE);
         SetBattlerLastHitBy(i, MAX_BATTLERS_COUNT);
         SetBattlerLockedMove(i, MOVE_NONE);

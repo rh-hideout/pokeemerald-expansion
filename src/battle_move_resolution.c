@@ -2616,14 +2616,14 @@ static enum MoveEndResult MoveEndUpdateLastMoves(void)
             {
                 SetBattlerLastMove(gBattlerAttacker, gChosenMove);
                 SetBattlerLastResultingMove(gBattlerAttacker, gCurrentMove);
-                gBattleMons[gBattlerAttacker].volatiles.lastUsedMoveType = GetBattleMoveType(gCurrentMove);
+                SetBattlerLastUsedMoveType(gBattlerAttacker, GetBattleMoveType(gCurrentMove));
             }
         }
         else
         {
             SetBattlerLastMove(gBattlerAttacker, MOVE_UNAVAILABLE);
             SetBattlerLastResultingMove(gBattlerAttacker, MOVE_UNAVAILABLE);
-            gBattleMons[gBattlerAttacker].volatiles.lastUsedMoveType = TYPE_NONE;
+            SetBattlerLastUsedMoveType(gBattlerAttacker, TYPE_NONE);
         }
 
         if (!(gHitMarker & HITMARKER_FAINTED(gBattlerTarget)))

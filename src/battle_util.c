@@ -11122,3 +11122,13 @@ enum Type SetBattlerLastHitByType(enum BattlerId battler, enum Type type)
 {
     return gBattleMons[battler].volatiles.lastHitByType = type;
 }
+
+enum Type GetBattlerLastUsedMoveType(enum BattlerId battler)
+{
+    return gBattleMons[battler].volatiles.lastUsedMoveType;
+}
+
+enum Type SetBattlerLastUsedMoveType(enum BattlerId battler, enum Type type)
+{
+    return gBattleMons[battler].volatiles.lastUsedMoveType = type;
+}
