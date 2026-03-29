@@ -1,15 +1,53 @@
 #include "global.h"
 #include "item.h"
+#include "script.h"
 #include "event_data.h"
+#include "malloc.h"
 #include "shop_criteria.h"
 
-// Always appears from the start, basically.
+static EWRAM_DATA u16 *sDynamicShopItemsListPtr = NULL;
+static EWRAM_DATA const u16 *sDynamicShopItemListRef = NULL;
+
+// Remove the UNUSED if you'll use the functions!
+static UNUSED bool32 ShopCriteriaByBadgeCount(u32 count);
+static UNUSED bool32 ShopCriteriaByFlag(u32 flagId);
+static UNUSED bool32 ShopCriteriaByVar(u32 varId, u32 varValue);
+
+void TryBuildDynamicShopItemList(const u16 **ogItemList, u16 *resultingTotal)
+{
+    sDynamicShopItemListRef = *ogItemList;
+    sDynamicShopItemsListPtr = AllocZeroed(MAX_DYN_LIST_ITEMS * sizeof(u16));
+
+    u32 overallIdx = 0;
+
+    for (u32 itemId = 0; itemId < ITEMS_COUNT; itemId++)
+    {
+        if (IsItemShopCriteriaFulfilled(itemId))
+        {
+            sDynamicShopItemsListPtr[overallIdx] = itemId;
+            overallIdx++;
+        }
+
+        if (overallIdx == MAX_DYN_LIST_ITEMS)
+            break;
+    }
+
+    *ogItemList = sDynamicShopItemsListPtr;
+    *resultingTotal = overallIdx;
+}
+
+void TryFreeDynamicShopItemList(const u16 **ogItemList)
+{
+    TRY_FREE_AND_SET_NULL(sDynamicShopItemsListPtr);
+    *ogItemList = sDynamicShopItemListRef;
+}
+
 bool32 ShopCriteriaByTheStart(u32 itemId)
 {
     return TRUE;
 }
 
-bool32 ShopCriteriaByBadgeCount(u32 itemId)
+static UNUSED bool32 ShopCriteriaByBadgeCount(u32 count)
 {
     u32 badgeCount = 0;
 
@@ -19,7 +57,7 @@ bool32 ShopCriteriaByBadgeCount(u32 itemId)
             badgeCount++;
     }
 
-    if (badgeCount >= GetItemShopCriteriaGoal(itemId))
+    if (badgeCount >= count)
         return TRUE;
 
     return FALSE;
@@ -29,20 +67,16 @@ bool32 ShopCriteriaByBadgeCount(u32 itemId)
 // but uses only one specific event var/flag check. Useful if you need
 // a specific badge flag instead of just the badge total.
 
-bool32 ShopCriteriaByFlag(u32 itemId)
+static UNUSED bool32 ShopCriteriaByFlag(u32 flagId)
 {
-    if (FlagGet(GetItemShopCriteriaGoal(itemId)))
+    if (FlagGet(flagId))
         return TRUE;
 
     return FALSE;
 }
 
-bool32 ShopCriteriaByVar(u32 itemId)
+static UNUSED bool32 ShopCriteriaByVar(u32 varId, u32 varValue)
 {
-    u32 criteria = GetItemShopCriteriaGoal(itemId);
-    u32 varId = READ_CRITERIA_GOAL_VAR_ID(criteria);
-    u32 varValue = READ_CRITERIA_GOAL_VAR_VALUE(criteria);
-
     if (VarGet(varId) >= varValue)
         return TRUE;
 

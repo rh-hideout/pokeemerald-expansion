@@ -8,7 +8,7 @@ This is a feature for the Shop Menu to allow developers to have a shop with auto
 
 ## Usage
 
-To use this feature, simply use `pokemart` in a script without any arguments.
+To use this feature, simply use `pokemart` as you normally do. The real Sauce will be the Criterias that the items would get filtered on, as all items are added by Expansion's default.
 ```
 MartScript::
 	lock
@@ -20,18 +20,13 @@ MartScript::
 	release
 	end
 ```
-
-Using `pokemart 0` also works.
+You can also use it without any arguments to instead use `Pokemart_DefaultItemList` in `data/scripts/mart_clerk.inc`, useful for general pokemart shops.
 
 ## What is a Criteria?
 
-Criteria is the meat that helps the code automagically add items. By default, no items will be added to the shop as you'll need to explicitly set the criteria for desired items. This prevents unintended items from appearing.
+Criteria is the meat that helps the code automagically add items based on your feeded items list. By default, all items are added regardless to not break existing shops. This prevents unintended items from appearing.
 
-A Criteria is split into two parts:
-- a *goal* for the minimum requirement of a criteria (if necessary), and
-- a *function* for checking if the criteria is fulfilled.
-
-For example, a badge count Criteria would need a goal for the minimum amount of badges the player owns and a function for checking if the player has said minimum amount.
+Internally, a Criteria is actually a *function* that returns either `TRUE` or `FALSE` depending if a criteria is fulfilled.
 
 ## Adding Criteria to an Item
 
@@ -51,18 +46,14 @@ Adding a Criteria to an Item is simple enough, you'd just add the fields at the 
          .secondaryId = BALL_POKE,
          .iconPic = gItemIcon_PokeBall,
          .iconPalette = gItemIconPalette_PokeBall,
-+        .shopCriteriaGoal = <goal>,
 +        .shopCriteriaFunc = <func>,
      },
 ```
 
-`.shopCriteriaGoal` typically depends on what Criteria function you're using for `.shopScriteriaFunc`, below are Criteria functions that are shipped by default.
+Below are Criteria functions that are shipped by default.
 
-### `ShopCriteriaByNothing`
-This function only returns `FALSE`, this is the failsafe function that prevents unintended items from being added. There is no reason to use it explicitly, all items will have this Criteria unless otherwise defined.
-
-### `ShopCriteriaByTheStart`
-This function only returns `TRUE`, the opposite of `Nothing`. This lets you always add the item regardless of any conditions.
+## `ShopCriteriaByTheStart`
+This function only returns `TRUE`. As previously mentioned, all items are added regardless by default but this'll turn useful once you start adding Criterias to items as this function lets you always add the item regardless of any conditions.
 ```diff
      [ITEM_POKE_BALL] =
      {
@@ -82,104 +73,61 @@ This function only returns `TRUE`, the opposite of `Nothing`. This lets you alwa
      },
 ```
 
-In this example, regardless of `shopCriteriaGoal`, PokeBalls will always be available for purchase from dynamic shops.
+In this example, Poke Balls now will always be available for purchase from dynamic shops that sells this item.
+
+Below are helper functions for the average usecases. They're not meant to be directly used as the Criteria function itself, only for the actual Criteria function you're making. Be sure to remove the `UNUSED` label from the function you're using after.
 
 ### `ShopCriteriaByBadgeCount`
-This function is what you'll probably be using the most. It has the goal of a certain number of badges the player owns.
-```diff
-     [ITEM_ULTRA_BALL] =
-     {
-         .name = ITEM_NAME("Ultra Ball"),
-         .price = (I_PRICE >= GEN_7) ? 800 : 1200,
-         .description = COMPOUND_STRING(
-                 "A better Ball with\n"
-                 "a higher catch rate\n"
-                 "than a Great Ball."),
-         .pocket = POCKET_POKE_BALLS,
-         .type = ITEM_USE_BAG_MENU,
-         .battleUsage = EFFECT_ITEM_THROW_BALL,
-         .secondaryId = BALL_ULTRA,
-         .iconPic = gItemIcon_UltraBall,
-         .iconPalette = gItemIconPalette_UltraBall,
-+        .shopCriteriaGoal = 6,
-+        .shopCriteriaFunc = ShopCriteriaByBadgeCount,
-    },
+This function is what you'll probably be using the most. You must provide one argument containing a number of total badges the player must own.
+Example:
 ```
-
-Here, Ultra Balls will appear in the dynamic shop if the player has 6 or more badges.
+bool32 ShopCriteriaByTwoBadges(u32 itemId)
+{
+    return ShopCriteriaByBadgeCount(2);
+}
+```
 
 ### `ShopCriteriaByFlag`
-This function is basically what `BadgeCount` partially do, but you'd explicitly use one flag instead. Useful if you need a certain badge flag instead of just the amount, or a quest-only item. The goal uses the flag ids found in [`include/constants/flags.h`](/include/constants/flags.h), like `FLAG_BADGE07_GET`, and returns depending on if the flag is set or not.
-```diff
-     [ITEM_MASTER_BALL] =
-     {
-         .name = ITEM_NAME("Master Ball"),
-         .price = 0,
-         .description = COMPOUND_STRING(
-                 "The best Ball that\n"
-                 "catches a Pokémon\n"
-                 "without fail."),
-         .pocket = POCKET_POKE_BALLS,
-         .type = ITEM_USE_BAG_MENU,
-         .battleUsage = EFFECT_ITEM_THROW_BALL,
-         .secondaryId = BALL_MASTER,
-         .iconPic = gItemIcon_MasterBall,
-         .iconPalette = gItemIconPalette_MasterBall,
-+        .shopCriteriaGoal = FLAG_SYS_GAME_CLEAR,
-+        .shopCriteriaFunc = ShopCriteriaByFlag,
-     },
+This function is basically what `BadgeCount` partially do, but you'd explicitly use one flag instead. Useful if you need a certain badge flag instead of just the _total amount_ of badges, or a quest-only item. You must provide one argument for the flag id you want, the flag ids found in [`include/constants/flags.h`](/include/constants/flags.h), like `FLAG_BADGE07_GET`. This function will returns `TRUE`/`FALSE` depending on if the flag is set or not.
+Example:
 ```
-
-Master Balls will be able available in the dynamic shop after the player defeated the Champion.
+bool32 ShopCriteriaByChampionFlag(u32 itemId)
+{
+    return ShopCriteriaByFlag(FLAG_IS_CHAMPION);
+}
+```
 
 ### `ShopCriteriaByVar`
-This function is basically the `Flag` function but with variables instead. The goal is both the variable id found in [`include/constants/vars.h`](/include/constants/vars.h) and a value to compare with said variable id. *Be sure to use `WRITE_CRITERIA_GOAL_VAR` for setting the `.shopCriteriaGoal`*, like so: `.shopCriteriaGoal = WRITE_CRITERIA_GOAL_VAR(VAR_LITTLEROOT_TOWN_STATE, 3)`
-```diff
-     [ITEM_FERALIGITE] =
-     {
-         .name = ITEM_NAME("Feraligite"),
-         .price = 0,
-         .holdEffect = HOLD_EFFECT_MEGA_STONE,
-         .description = COMPOUND_STRING(
-             "This stone enables\n"
-             "Feraligatr to Mega\n"
-             "Evolve in battle."),
-         .pocket = POCKET_ITEMS,
-         .sortType = ITEM_TYPE_MEGA_STONE,
-         .type = ITEM_USE_BAG_MENU,
-         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-         .flingPower = 80,
-         .iconPic = gItemIcon_QuestionMark, // gItemIcon_Feraligite,
-         .iconPalette = gItemIconPalette_QuestionMark, // gItemIconPalette_Feraligite,
-+        .shopCriteriaGoal = WRITE_CRITERIA_GOAL_VAR(VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 6),
-+        .shopCriteriaFunc = ShopCriteriaByVar,
-     },
+This function is basically the `Flag` function but with variables instead. You must provide both the variable id found in [`include/constants/vars.h`](/include/constants/vars.h) and a value to compare with said variable id as the arguments.
+Example:
+```
+bool32 ShopCriteriaBySpecificValueInSpecificVar(u32 itemId)
+{
+    return ShopCriteriaByVar(VAR_ASH_GATHER_COUNT, 20);
+}
 ```
 
-This will add Feraligite to dynamic shops once the player has recieved the Johto Starter from Professor Birch.
-
 ## Create a Custom Criteria
-But what if you need a specific criteria that cannot be covered by the default shipped criterias? Well, you can write your own! Here's how:
 
-First, we'll add a function for our criteria in [`src/shop_criteria.c`](/src/shop_criteria.c), preferably at the bottom of the file, like so:
+First, add a new function for your criteria in [`src/shop_criteria.c`](/src/shop_criteria.c), preferably after `ShopCriteriaByTheStart`, like so:
 ```diff
  }
 +
 +bool32 ShopCriteriaByMyNeed(u32 itemId)
 +{
-+    // add your stuff here, be sure to handle both boolean values!
++    // add your stuff here, be sure to handle both `TRUE`/`FALSE` return values!
 +}
 ```
 
 Then, you'll need to add a declaration for your custom function so that it can be used by your items.
 ```diff
- bool32 ShopCriteriaByVar(u32 itemId);
+ bool32 ShopCriteriaByTheStart(u32 itemId);
 +bool32 ShopCriteriaByMyNeed(u32 itemId);
 
  #endif // GUARD_SHOP_CRITERIA_H
 ```
 
-And that's it! You should now be good to go and can immediately use that function for your items. Don't forget to set the goal as well if your function uses it, too.
+And that's it! You should now be good to go and can immediately use that function for your items.
 ```diff
      [ITEM_POKE_BALL] =
      {
@@ -195,7 +143,6 @@ And that's it! You should now be good to go and can immediately use that functio
          .secondaryId = BALL_POKE,
          .iconPic = gItemIcon_PokeBall,
          .iconPalette = gItemIconPalette_PokeBall,
-+        .shopCriteriaGoal = 0,
 +        .shopCriteriaFunc = ShopCriteriaByMyNeed,
      },
 ```
@@ -206,6 +153,8 @@ We want to allow the player to purchase the Light Ball, but only after they have
 
 #### [`src/shop_criteria.c`](/src/shop_criteria.c)
 ```diff
+ }
+ 
 +bool32 ShopCriteriaHasPikachu(u32 itemId)
 +{
 +    if (FlagGet(TRAINER_FLAGS_START + WATTSON_5) == FALSE)
@@ -217,6 +166,7 @@ We want to allow the player to purchase the Light Ball, but only after they have
 
 #### [`include/shop_criteria.h`](/include/shop_criteria.h)
 ```diff
+ bool32 ShopCriteriaByTheStart(u32 itemId);
 +bool32 ShopCriteriaHasPikachu(u32 itemId);
 ```
 
@@ -238,7 +188,6 @@ We want to allow the player to purchase the Light Ball, but only after they have
          .flingPower = 30,
          .iconPic = gItemIcon_LightBall,
          .iconPalette = gItemIconPalette_LightBall,
-+        .shopCriteriaGoal = TRUE,
 +        .shopCriteriaFunc = ShopCriteriaHasPikachu,
       },
 ```

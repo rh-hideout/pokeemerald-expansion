@@ -97,7 +97,6 @@ struct MartInfo
 struct ShopData
 {
     u16 tilemapBuffers[4][0x400];
-    u16 *dynItemList;
     u32 totalCost;
     u16 itemsShowed;
     u16 selectedRow;
@@ -153,7 +152,6 @@ static void BuyMenuPrintItemQuantityAndPrice(u8 taskId);
 static void Task_BuyHowManyDialogueHandleInput(u8 taskId);
 static void BuyMenuSubtractMoney(u8 taskId);
 static void RecordItemPurchase(u8 taskId);
-static void BuyMenuTryBuildDynamicItemList(void);
 static void Task_ReturnToItemListAfterItemPurchase(u8 taskId);
 static void Task_ReturnToItemListAfterDecorationPurchase(u8 taskId);
 static void Task_HandleShopMenuBuy(u8 taskId);
@@ -388,8 +386,7 @@ static void SetShopItemsForSale(const u16 *items)
     sMartInfo.itemList = items;
     sMartInfo.itemCount = 0;
 
-    // We'll default with allocating a dynamic
-    // list within the Buy Menu instead.
+    // When itemCount is set to 0, it won't try to iterate itemList.
     if (items == NULL)
         return;
 
@@ -529,7 +526,7 @@ static void CB2_InitBuyMenu(void)
         sShopData->scrollIndicatorsTaskId = TASK_NONE;
         sShopData->itemSpriteIds[0] = SPRITE_NONE;
         sShopData->itemSpriteIds[1] = SPRITE_NONE;
-        BuyMenuTryBuildDynamicItemList();
+        TryBuildDynamicShopItemList(&sMartInfo.itemList, &sMartInfo.itemCount);
         BuyMenuBuildListMenuTemplate();
         BuyMenuInitBgs();
         FillBgTilemapBufferRect_Palette0(0, 0, 0, 0, 0x20, 0x20);
@@ -559,13 +556,7 @@ static void CB2_InitBuyMenu(void)
 
 static void BuyMenuFreeMemory(void)
 {
-    if (sShopData->dynItemList != NULL)
-    {
-        FREE_AND_SET_NULL(sShopData->dynItemList);
-        sMartInfo.itemList = NULL;
-        sMartInfo.itemCount = 0;
-    }
-
+    TryFreeDynamicShopItemList(&sMartInfo.itemList);
     Free(sShopData);
     Free(sListMenuItems);
     Free(sItemNames);
@@ -1305,36 +1296,6 @@ static void RecordItemPurchase(u8 taskId)
         gMartPurchaseHistory[sPurchaseHistoryId].quantity = tItemCount;
         sPurchaseHistoryId++;
     }
-}
-
-static void BuyMenuTryBuildDynamicItemList(void)
-{
-    if (sMartInfo.itemList != NULL)
-        return;
-
-    assertf(sMartInfo.martType == MART_TYPE_NORMAL, "No explicit item list found for non-Items Shop")
-    {
-        return;
-    }
-
-    sShopData->dynItemList = AllocZeroed(MAX_DYN_LIST_ITEMS * sizeof(u16));
-
-    u32 count = 0;
-
-    for (u32 itemId = 0; itemId < ITEMS_COUNT; itemId++)
-    {
-        if (IsItemShopCriteriaFulfilled(itemId))
-        {
-            sShopData->dynItemList[count] = itemId;
-            count++;
-        }
-
-        if (count == MAX_DYN_LIST_ITEMS)
-            break;
-    }
-
-    sMartInfo.itemList = sShopData->dynItemList;
-    sMartInfo.itemCount = count;
 }
 
 #undef tItemCount
