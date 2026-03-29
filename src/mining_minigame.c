@@ -1,5 +1,4 @@
 // TODO: Define iterator inside the for loop. FIX
-// TODO: Use Fisher-Yates-Shuffle to generate the items in the zones
 // TODO: Rewrite Debug System for Mining Minigame from scratch -> Outdated Debug Mode from PSF
 
 #include "mining_minigame.h"
@@ -1410,53 +1409,24 @@ static void Mining_Init(MainCallback callback)
     // Generate Items
     u32 amountItemsToSelect = Debug_SetNumberOfBuriedItems(random(3) + 2); // The `+ 2` says that the min. amount of items to be generated are 2.
 
-    u32 itemStateIdsStep1[4] = {0,1,2,3};
-    u32 itemStateIdsStep2[3];
-    u32 itemStateIdsStep3[2];
+    // Fisher-Yates shuffle implementation
+    u32 n = 4;
+    u32 zones[4] = {0,1,2,3};
 
-    u32 firstBuriedItemId = itemStateIdsStep1[random(4)];
-    sMiningUiState->buriedItems[firstBuriedItemId].isSelected = TRUE;
-
-    for (u32 i = 0; i < 4; i++)
-    {
-        if (itemStateIdsStep1[i] == firstBuriedItemId)
-            continue;
-
-        if (itemStateIdsStep1[i] > firstBuriedItemId)
-            itemStateIdsStep2[i-1] = itemStateIdsStep1[i];
-        else
-            itemStateIdsStep2[i] = itemStateIdsStep1[i];
+    // Do the shuffle
+    for (u32 i = n - 1; i > 0; i--) {
+        // Pick a random index from 0 to i (inclusive)
+        u32 j = random(i + 1);
+        // Swap the current element with the element at random index
+        u32 temp = zones[i];
+        zones[i] = zones[j];
+        zones[j] = temp;
     }
 
-    u32 secondBuriedItemId = itemStateIdsStep2[random(3)];
-    sMiningUiState->buriedItems[secondBuriedItemId].isSelected = TRUE;
-
-    if (amountItemsToSelect > 2)
+    // Select the zones from the shuffled array
+    for (u32 i = 0; i < amountItemsToSelect; i++)
     {
-        for (u32 i = 0; i < 3; i++)
-        {
-            if (itemStateIdsStep2[i] == secondBuriedItemId)
-                continue;
-
-            if (itemStateIdsStep2[i] > secondBuriedItemId)
-                itemStateIdsStep3[i-1] = itemStateIdsStep2[i];
-            else
-                itemStateIdsStep3[i] = itemStateIdsStep2[i];
-        }
-
-        u32 thirdBuriedItemId = itemStateIdsStep3[random(2)];
-        sMiningUiState->buriedItems[thirdBuriedItemId].isSelected = TRUE;
-
-        if (amountItemsToSelect == 4)
-        {
-            u32 fourthBuriedItemId;
-            if (itemStateIdsStep3[0] == thirdBuriedItemId)
-                fourthBuriedItemId = itemStateIdsStep3[1];
-            else
-                fourthBuriedItemId = itemStateIdsStep3[0];
-
-            sMiningUiState->buriedItems[fourthBuriedItemId].isSelected = TRUE;
-        }
+        sMiningUiState->buriedItems[zones[i]].isSelected = TRUE;
     }
 
     SetMainCallback2(Mining_SetupCB);
@@ -3151,7 +3121,7 @@ static void InitBuriedItems(void)
 static void SetBuriedItemsId(u32 index, u32 itemId)
 {
     sMiningUiState->buriedItems[index].bagItemId = MiningItemList[itemId].bagItemId;
-    sMiningUiState->buriedItems[index].miningItemId = itemId;//MiningItemList[itemId].miningItemId;
+    sMiningUiState->buriedItems[index].miningItemId = itemId;
 }
 
 static void SetBuriedItemStatus(u32 index, bool32 status)
