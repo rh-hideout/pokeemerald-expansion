@@ -55,7 +55,7 @@ struct PokeblockFeed
     u8 animId;
     u8 unused2;
     bool8 noMonFlip;
-    u16 species;
+    enum Species species;
     u16 monAnimLength;
     u16 timer;
     u8 nature;
@@ -524,7 +524,6 @@ static const struct SpriteTemplate sSpriteTemplate_Pokeblock =
     .paletteTag = TAG_POKEBLOCK,
     .oam = &sOamData_Pokeblock,
     .anims = sAnims_Pokeblock,
-    .images = NULL,
     .affineAnims = sAffineAnims_Pokeblock,
     .callback = SpriteCB_ThrownPokeblock
 };
@@ -650,7 +649,7 @@ static void HandleInitBackgrounds(void)
 
 static bool8 LoadMonAndSceneGfx(struct Pokemon *mon)
 {
-    u16 species;
+    enum Species species;
     u32 personality;
     bool32 isShiny;
 
@@ -838,7 +837,7 @@ static void Task_FadeOutPokeblockFeed(u8 taskId)
 
 static u8 CreateMonSprite(struct Pokemon *mon)
 {
-    u16 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    enum Species species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
     u8 spriteId = CreateSprite(&gMultiuseSpriteTemplate, MON_X, MON_Y, 2);
 
     sPokeblockFeed->species = species;

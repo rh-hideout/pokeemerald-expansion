@@ -3,8 +3,8 @@
 
 SINGLE_BATTLE_TEST("Dragon's Maw increases Dragon-type move damage", s16 damage)
 {
-    u32 move;
-    u16 ability;
+    enum Move move;
+    enum Ability ability;
 
     PARAMETRIZE { move = MOVE_SCRATCH; ability = ABILITY_KLUTZ; }
     PARAMETRIZE { move = MOVE_SCRATCH; ability = ABILITY_DRAGONS_MAW; }

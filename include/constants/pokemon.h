@@ -2,28 +2,31 @@
 #define GUARD_CONSTANTS_POKEMON_H
 
 // Pokémon types
-#define TYPE_NONE             0
-#define TYPE_NORMAL           1
-#define TYPE_FIGHTING         2
-#define TYPE_FLYING           3
-#define TYPE_POISON           4
-#define TYPE_GROUND           5
-#define TYPE_ROCK             6
-#define TYPE_BUG              7
-#define TYPE_GHOST            8
-#define TYPE_STEEL            9
-#define TYPE_MYSTERY          10
-#define TYPE_FIRE             11
-#define TYPE_WATER            12
-#define TYPE_GRASS            13
-#define TYPE_ELECTRIC         14
-#define TYPE_PSYCHIC          15
-#define TYPE_ICE              16
-#define TYPE_DRAGON           17
-#define TYPE_DARK             18
-#define TYPE_FAIRY            19
-#define TYPE_STELLAR          20
-#define NUMBER_OF_MON_TYPES   21
+enum __attribute__((packed)) Type
+{
+    TYPE_NONE = 0,
+    TYPE_NORMAL = 1,
+    TYPE_FIGHTING = 2,
+    TYPE_FLYING = 3,
+    TYPE_POISON = 4,
+    TYPE_GROUND = 5,
+    TYPE_ROCK = 6,
+    TYPE_BUG = 7,
+    TYPE_GHOST = 8,
+    TYPE_STEEL = 9,
+    TYPE_MYSTERY = 10,
+    TYPE_FIRE = 11,
+    TYPE_WATER = 12,
+    TYPE_GRASS = 13,
+    TYPE_ELECTRIC = 14,
+    TYPE_PSYCHIC = 15,
+    TYPE_ICE = 16,
+    TYPE_DRAGON = 17,
+    TYPE_DARK = 18,
+    TYPE_FAIRY = 19,
+    TYPE_STELLAR = 20,
+    NUMBER_OF_MON_TYPES
+};
 
 // Pokémon egg groups
 #define EGG_GROUP_NONE                0
@@ -73,17 +76,22 @@
 #define NATURE_QUIRKY   24 // Neutral
 #define NUM_NATURES     25
 
-// Pokémon Stats
-#define STAT_HP      0
-#define STAT_ATK     1
-#define STAT_DEF     2
-#define STAT_SPEED   3
-#define STAT_SPATK   4
-#define STAT_SPDEF   5
-#define NUM_STATS    6
+#define NATURE_RANDOM            NUM_NATURES
+#define NATURE_MAY_SYNCHRONIZE   NUM_NATURES + 1
 
-#define STAT_ACC     6 // Only in battles.
-#define STAT_EVASION 7 // Only in battles.
+// Pokémon Stats
+enum __attribute__((packed)) Stat
+{
+    STAT_HP,
+    STAT_ATK,
+    STAT_DEF,
+    STAT_SPEED,
+    STAT_SPATK,
+    STAT_SPDEF,
+    NUM_STATS,
+    STAT_ACC = NUM_STATS, // Only in battles.
+    STAT_EVASION,         // Only in battles.
+};
 
 #define NUM_NATURE_STATS (NUM_STATS - 1) // excludes HP
 #define NUM_BATTLE_STATS (NUM_STATS + 2) // includes Accuracy and Evasion
@@ -149,9 +157,12 @@
 
 #define MAX_DYNAMAX_LEVEL 10
 
-#define OT_ID_PLAYER_ID       0
-#define OT_ID_PRESET          1
-#define OT_ID_RANDOM_NO_SHINY 2
+enum OtIdMethod
+{
+    OT_ID_PLAYER_ID,
+    OT_ID_PRESET,
+    OT_ID_RANDOM_NO_SHINY
+};
 
 #define MON_GIVEN_TO_PARTY      0
 #define MON_GIVEN_TO_PC         1
@@ -169,11 +180,13 @@
 #define LEVEL_UP_MOVE_END  0xFFFF
 
 #define MAX_LEVEL_UP_MOVES       20
-#define MAX_RELEARNER_MOVES      max(MAX_LEVEL_UP_MOVES, 25)
 
 #define MON_MALE       0x00
 #define MON_FEMALE     0xFE
 #define MON_GENDERLESS 0xFF
+
+#define MON_GENDER_RANDOM         0x01
+#define MON_GENDER_MAY_CUTE_CHARM 0x02
 
 // Constants for AdjustFriendship
 #define FRIENDSHIP_EVENT_GROW_LEVEL       0
@@ -185,6 +198,7 @@
 #define FRIENDSHIP_EVENT_FAINT_SMALL      6
 #define FRIENDSHIP_EVENT_FAINT_FIELD_PSN  7
 #define FRIENDSHIP_EVENT_FAINT_LARGE      8 // If opponent was >= 30 levels higher. See AdjustFriendshipOnBattleFaint
+#define FRIENDSHIP_EVENT_MASSAGE          9
 
 // Constants for GetLeadMonFriendshipScore
 #define FRIENDSHIP_NONE        0
@@ -218,7 +232,7 @@
 #define EV_ITEM_RAISE_LIMIT ((I_VITAMIN_EV_CAP >= GEN_8) ? MAX_PER_STAT_EVS : 100)
 
 // Move category defines.
-enum DamageCategory
+enum __attribute__((packed)) DamageCategory
 {
     DAMAGE_CATEGORY_PHYSICAL,
     DAMAGE_CATEGORY_SPECIAL,
@@ -300,6 +314,8 @@ enum EvolutionConditions {
     IF_PID_MODULO_100_LT,               // The Pokémon's personality value's modulo by 100 is lower than the defined value.
     IF_MIN_OVERWORLD_STEPS,             // The Player has taken a specific amount of steps in the overworld with the Pokémon following them or in the first slot of the party.
     IF_BAG_ITEM_COUNT,                  // The Player has the specific amount of an item in the bag. It then removes those items.
+    IF_REGION,                          // The Player is in the specific region.
+    IF_NOT_REGION,                      // The Player is NOT in the specific region.
     CONDITIONS_END
 };
 
@@ -322,6 +338,7 @@ enum EvolutionMode {
     EVO_MODE_ITEM_CHECK,         // If an Everstone is being held, still want to show that the stone *could* be used on that Pokémon to evolve
     EVO_MODE_BATTLE_SPECIAL,
     EVO_MODE_OVERWORLD_SPECIAL,
+    EVO_MODE_SCRIPT_TRIGGER,
     EVO_MODE_BATTLE_ONLY,        // This mode is only used in battles to support Tandemaus' unique requirement
 };
 
@@ -344,6 +361,12 @@ enum EvoSpinDirections {
     SPIN_CCW_SHORT,             // Player spins counter-clockwise
     SPIN_CCW_LONG,              // Player spins counter-clockwise
     SPIN_EITHER,                // Player spins either clockwise or counter-clockwise
+};
+
+enum ShinyMode {
+    SHINY_MODE_ALWAYS,
+    SHINY_MODE_RANDOM,
+    SHINY_MODE_NEVER
 };
 
 #define MON_PIC_WIDTH 64

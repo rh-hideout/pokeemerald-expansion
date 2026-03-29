@@ -8,13 +8,13 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Big Root increases healing from absorbing moves", s16 damage, s16 heal)
 {
-    u32 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_NONE; }
     PARAMETRIZE { item = ITEM_BIG_ROOT; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(200); Item(item); }
+        PLAYER(SPECIES_XURKITREE) { HP(200); Item(item); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ABSORB); }
@@ -24,14 +24,14 @@ SINGLE_BATTLE_TEST("Big Root increases healing from absorbing moves", s16 damage
         HP_BAR(player, captureDamage: &results[i].heal);
     } FINALLY {
         EXPECT_EQ(results[0].damage, results[1].damage); // Damage is unaffected
-        EXPECT_MUL_EQ(results[1].heal, Q_4_12(5234 / 4096), results[0].heal);
+        EXPECT_MUL_EQ(results[0].heal, Q_4_12(1.3), results[1].heal);
     }
 }
 
 SINGLE_BATTLE_TEST("Big Root increases the damage restored from Leech Seed, Ingrain and Aqua Ring", s16 heal, s16 damage)
 {
-    u32 item;
-    u32 move;
+    enum Item item;
+    enum Move move;
 
     PARAMETRIZE { item = ITEM_NONE;     move = MOVE_LEECH_SEED; }
     PARAMETRIZE { item = ITEM_BIG_ROOT; move = MOVE_LEECH_SEED; }
@@ -59,13 +59,13 @@ SINGLE_BATTLE_TEST("Big Root increases the damage restored from Leech Seed, Ingr
 
 SINGLE_BATTLE_TEST("Big Root increases damage from absorbing Liquid Ooze", s16 damage)
 {
-    u32 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_NONE; }
     PARAMETRIZE { item = ITEM_BIG_ROOT; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(200); Item(item); }
+        PLAYER(SPECIES_XURKITREE) { HP(200); Item(item); }
         OPPONENT(SPECIES_TENTACOOL) { Ability(ABILITY_LIQUID_OOZE); }
     } WHEN {
         TURN { MOVE(player, MOVE_ABSORB); }
@@ -73,6 +73,6 @@ SINGLE_BATTLE_TEST("Big Root increases damage from absorbing Liquid Ooze", s16 d
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ABSORB, player);
         HP_BAR(player, captureDamage: &results[i].damage);
     } FINALLY {
-        EXPECT_MUL_EQ(results[1].damage, Q_4_12(5234 / 4096), results[0].damage);
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.3), results[1].damage);
     }
 }

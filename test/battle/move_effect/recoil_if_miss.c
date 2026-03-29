@@ -41,7 +41,7 @@ SINGLE_BATTLE_TEST("Recoil if miss: Jump Kick has 50% recoil on protect")
 SINGLE_BATTLE_TEST("Recoil if miss: Jump Kick has no recoil if no target")
 {
     GIVEN {
-        ASSUME(B_HEALING_WISH_SWITCH >= GEN_5);
+        WITH_CONFIG(B_HEALING_WISH_SWITCH, GEN_5);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
@@ -74,7 +74,7 @@ SINGLE_BATTLE_TEST("Recoil if miss: Jump Kick's recoil happens after Spiky Shiel
         } else {
             TURN { MOVE(opponent, MOVE_SPIKY_SHIELD); MOVE(player, MOVE_JUMP_KICK, hit: FALSE); SEND_OUT(player, 1); }
         }
-        TURN { ; }
+        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIKY_SHIELD, opponent);
         MESSAGE("Wobbuffet used Jump Kick!");
@@ -134,12 +134,12 @@ SINGLE_BATTLE_TEST("Recoil if miss: Supercell Slam causes recoil if it is absorb
 
 SINGLE_BATTLE_TEST("Recoil if miss: Disguise doesn't prevent crash damage from Jump Kick into ghost types")
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_EARLY_BIRD; }
     PARAMETRIZE { ability = ABILITY_SCRAPPY; }
 
     GIVEN {
-        PLAYER(SPECIES_KANGASKHAN) { Ability(ability); };
+        PLAYER(SPECIES_KANGASKHAN) { Ability(ability); }
         OPPONENT(SPECIES_MIMIKYU_DISGUISED) { Ability(ABILITY_DISGUISE); }
     } WHEN {
         TURN { MOVE(player, MOVE_JUMP_KICK); }
@@ -154,4 +154,3 @@ SINGLE_BATTLE_TEST("Recoil if miss: Disguise doesn't prevent crash damage from J
         }
     }
 }
-

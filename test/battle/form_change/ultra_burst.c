@@ -58,16 +58,16 @@ DOUBLE_BATTLE_TEST("Ultra Burst's order is determined by Speed - player faster")
 SINGLE_BATTLE_TEST("Ultra Burst affects turn order")
 {
     GIVEN {
-        ASSUME(B_MEGA_EVO_TURN_ORDER >= GEN_7);
-        PLAYER(SPECIES_NECROZMA_DUSK_MANE) { Item(ITEM_ULTRANECROZIUM_Z); Speed(105); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(106); }
+        WITH_CONFIG(B_MEGA_EVO_TURN_ORDER, GEN_7);
+        PLAYER(SPECIES_NECROZMA_DUSK_MANE) { Item(ITEM_ULTRANECROZIUM_Z); }
+        OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST); }
+        TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST); }
     } SCENE {
         MESSAGE("Necrozma used Celebrate!");
         MESSAGE("The opposing Wobbuffet used Celebrate!");
     } THEN {
-        ASSUME(player->speed == 263);
+        EXPECT_EQ(player->speed, 263);
     }
 }
 
@@ -117,5 +117,43 @@ SINGLE_BATTLE_TEST("Ultra Burst and Mega Evolution can happen on the same turn")
     } THEN {
         EXPECT_EQ(player->species, SPECIES_NECROZMA_ULTRA);
         EXPECT_EQ(opponent->species, SPECIES_GARDEVOIR_MEGA);
+    }
+}
+
+SINGLE_BATTLE_TEST("Necrozma returns its proper Form upon battle end after Ultra Bursting")
+{
+    u32 species;
+    PARAMETRIZE { species = SPECIES_NECROZMA_DUSK_MANE; }
+    PARAMETRIZE { species = SPECIES_NECROZMA_DAWN_WINGS; }
+    GIVEN {
+        PLAYER(species) { Item(ITEM_ULTRANECROZIUM_Z); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST); }
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_NECROZMA_ULTRA);
+        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), species);
+    }
+}
+
+SINGLE_BATTLE_TEST("Necrozma returns its proper Form upon fainting after Ultra Bursting")
+{
+    u32 species;
+    PARAMETRIZE { species = SPECIES_NECROZMA_DUSK_MANE; }
+    PARAMETRIZE { species = SPECIES_NECROZMA_DAWN_WINGS; }
+    GIVEN {
+        PLAYER(species) { HP(1); Item(ITEM_ULTRANECROZIUM_Z); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST);
+            MOVE(opponent, MOVE_SCRATCH);
+            SEND_OUT(player, 1);
+        }
+        TURN { USE_ITEM(player, ITEM_REVIVE, 0); }
+        TURN { SWITCH(player, 0); }
+    } THEN {
+        EXPECT_EQ(player->species, species);
     }
 }

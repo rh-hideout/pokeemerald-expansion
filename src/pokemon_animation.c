@@ -468,7 +468,7 @@ static void SetPosForRotation(struct Sprite *sprite, u16 index, s16 amplitudeX, 
     sprite->y2 = yAdder + amplitudeY;
 }
 
-enum BackAnim GetSpeciesBackAnimSet(u16 species)
+enum BackAnim GetSpeciesBackAnimSet(enum Species species)
 {
     if (gSpeciesInfo[species].backAnimId != BACK_ANIM_NONE)
         return gSpeciesInfo[species].backAnimId - 1;
@@ -501,7 +501,7 @@ static void Task_HandleMonAnimation(u8 taskId)
 
     if (gTasks[taskId].tState == 0)
     {
-        gTasks[taskId].tBattlerId = sprite->data[0];
+        gTasks[taskId].tBattlerId = sprite->oam.paletteNum;
         gTasks[taskId].tSpeciesId = sprite->data[2];
         sprite->sDontFlip = TRUE;
         sprite->data[0] = 0;
@@ -523,6 +523,11 @@ static void Task_HandleMonAnimation(u8 taskId)
         sprite->data[2] = gTasks[taskId].tSpeciesId;
         sprite->data[1] = 0;
 
+        // Task_HandleMonAnimation handles more than just KO animations,
+        // but if the counter is non-zero then only KO animations are running.
+        // This assumption is not checked.
+        if (gBattleStruct->battlerKOAnimsRunning > 0)
+            gBattleStruct->battlerKOAnimsRunning--;
         DestroyTask(taskId);
     }
 }
@@ -1940,7 +1945,7 @@ static void FrontFlip_2(struct Sprite *sprite)
 {
     TryFlipX(sprite);
     sprite->x2++;
-    sprite->y2--;;
+    sprite->y2--;
 
     if (sprite->x2 >= 0)
     {

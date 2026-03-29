@@ -11,7 +11,6 @@
 #include "link.h"
 #include "link_rfu.h"
 #include "m4a.h"
-#include "main.h"
 #include "palette.h"
 #include "minigame_countdown.h"
 #include "random.h"
@@ -224,7 +223,7 @@ struct DodrioGame_ScoreResults
 
 struct DodrioGame
 {
-    /*0x0000*/ void (*exitCallback)(void);
+    /*0x0000*/ MainCallback exitCallback;
     /*0x0004*/ u8 ALIGNED(4) taskId;
     /*0x0008*/ u8 ALIGNED(4) playersReceived;
     /*0x000C*/ u8 ALIGNED(4) startState;
@@ -593,40 +592,40 @@ ALIGNED(4)
 static const u8 sPrizeBerryIds[][10] =
 {
     { // Possible prizes with 3 players
-        ITEM_TO_BERRY(ITEM_RAZZ_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_BLUK_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_NANAB_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_WEPEAR_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_PINAP_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_PINAP_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_WEPEAR_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_NANAB_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_BLUK_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_RAZZ_BERRY) - 1
+        BERRY_ID_RAZZ,
+        BERRY_ID_BLUK,
+        BERRY_ID_NANAB,
+        BERRY_ID_WEPEAR,
+        BERRY_ID_PINAP,
+        BERRY_ID_PINAP,
+        BERRY_ID_WEPEAR,
+        BERRY_ID_NANAB,
+        BERRY_ID_BLUK,
+        BERRY_ID_RAZZ
     },
     { // Possible prizes with 4 players
-        ITEM_TO_BERRY(ITEM_POMEG_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_KELPSY_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_QUALOT_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_HONDEW_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_GREPA_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_TAMATO_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_CORNN_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_MAGOST_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_RABUTA_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_NOMEL_BERRY) - 1
+        BERRY_ID_POMEG,
+        BERRY_ID_KELPSY,
+        BERRY_ID_QUALOT,
+        BERRY_ID_HONDEW,
+        BERRY_ID_GREPA,
+        BERRY_ID_TAMATO,
+        BERRY_ID_CORNN,
+        BERRY_ID_MAGOST,
+        BERRY_ID_RABUTA,
+        BERRY_ID_NOMEL
     },
     { // Possible prizes with 5 players
-        ITEM_TO_BERRY(ITEM_SPELON_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_PAMTRE_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_WATMEL_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_DURIN_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_BELUE_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_BELUE_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_DURIN_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_WATMEL_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_PAMTRE_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_SPELON_BERRY) - 1
+        BERRY_ID_SPELON,
+        BERRY_ID_PAMTRE,
+        BERRY_ID_WATMEL,
+        BERRY_ID_DURIN,
+        BERRY_ID_BELUE,
+        BERRY_ID_BELUE,
+        BERRY_ID_DURIN,
+        BERRY_ID_WATMEL,
+        BERRY_ID_PAMTRE,
+        BERRY_ID_SPELON
     },
 };
 
@@ -662,7 +661,7 @@ static void (*const sMemberFuncs[])(void) =
     [FUNC_WAIT_END_GAME]  = WaitEndGame_Member
 };
 
-void StartDodrioBerryPicking(u16 partyId, void (*exitCallback)(void))
+void StartDodrioBerryPicking(u16 partyId, MainCallback exitCallback)
 {
     sExitingGame = FALSE;
 
@@ -1301,7 +1300,7 @@ static void EndLink(void)
             sGame->state++;
         break;
     default:
-        if (gReceivedRemoteLinkPlayers == 0)
+        if (!gReceivedRemoteLinkPlayers)
         {
             SetGameFunc(FUNC_EXIT);
         }
@@ -1394,7 +1393,7 @@ static void ResetGame(void)
         CreateDodrioGameTask(Task_NewGameIntro);
         ResetGfxState();
         InitDodrioGame(sGame);
-        if (gReceivedRemoteLinkPlayers == 0)
+        if (!gReceivedRemoteLinkPlayers)
             sGame->numPlayers = 1;
 
         SetRandomPrize();
@@ -2696,7 +2695,7 @@ static void ResetPickState(void)
 
 static u16 GetPrizeItemId(void)
 {
-    return sGame->berryResults[sGame->multiplayerId][BERRY_PRIZE] + FIRST_BERRY_INDEX;
+    return BerryTypeToItemId(sGame->berryResults[sGame->multiplayerId][BERRY_PRIZE]);
 }
 
 static u8 GetNumPlayers(void)
@@ -2873,7 +2872,7 @@ enum {
 static u8 TryGivePrize(void)
 {
     u8 multiplayerId = sGame->multiplayerId;
-    u16 itemId = GetPrizeItemId();
+    enum Item itemId = GetPrizeItemId();
 
     if (GetScore(multiplayerId) != GetHighestScore())
         return NO_PRIZE;
@@ -3853,8 +3852,6 @@ static void CreateDodrioSprite(struct DodrioGame_MonInfo *monInfo, u8 playerId, 
         .paletteTag = monInfo->isShiny, // PALTAG_DODRIO_NORMAL / PALTAG_DODRIO_SHINY
         .oam = &sOamData_Dodrio,
         .anims = sAnims_Dodrio,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_Dodrio,
     };
 
@@ -4028,8 +4025,6 @@ static void CreateStatusBarSprites(void)
             .paletteTag = PALTAG_STATUS,
             .oam = &sOamData_16x16_Priority0,
             .anims = sAnims_StatusBar,
-            .images = NULL,
-            .affineAnims = gDummySpriteAffineAnimTable,
             .callback = SpriteCB_Status,
         };
 
@@ -4183,9 +4178,6 @@ static void CreateBerrySprites(void)
         .paletteTag = PALTAG_BERRIES,
         .oam = &sOamData_Berry,
         .anims = sAnims_Berry,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
-        .callback = SpriteCallbackDummy,
     };
     struct SpriteTemplate berryIcon =
     {
@@ -4193,9 +4185,6 @@ static void CreateBerrySprites(void)
         .paletteTag = PALTAG_BERRIES,
         .oam = &sOamData_16x16_Priority0,
         .anims = sAnims_Berry,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
-        .callback = SpriteCallbackDummy,
     };
 
     // Create berry sprites that fall during gameplay
@@ -4317,8 +4306,6 @@ static void CreateCloudSprites(void)
             .paletteTag = PALTAG_CLOUD,
             .oam = &sOamData_Cloud,
             .anims = sAnims_Cloud,
-            .images = NULL,
-            .affineAnims = gDummySpriteAffineAnimTable,
             .callback = SpriteCB_Cloud,
         };
 
@@ -4388,35 +4375,35 @@ static s16 GetDodrioXPos(u8 playerId, u8 numPlayers)
     case 2:
         switch (playerId)
         {
-            case 0: x = 12; break;
-            case 1: x = 18; break;
+        case 0: x = 12; break;
+        case 1: x = 18; break;
         }
         break;
     case 3:
         switch (playerId)
         {
-            case 0: x = 15; break;
-            case 1: x = 21; break;
-            case 2: x =  9; break;
+        case 0: x = 15; break;
+        case 1: x = 21; break;
+        case 2: x =  9; break;
         }
         break;
     case 4:
         switch (playerId)
         {
-            case 0: x = 12; break;
-            case 1: x = 18; break;
-            case 2: x = 24; break;
-            case 3: x =  6; break;
+        case 0: x = 12; break;
+        case 1: x = 18; break;
+        case 2: x = 24; break;
+        case 3: x =  6; break;
         }
         break;
     case 5:
         switch (playerId)
         {
-            case 0: x = 15; break;
-            case 1: x = 21; break;
-            case 2: x = 27; break;
-            case 3: x =  3; break;
-            case 4: x =  9; break;
+        case 0: x = 15; break;
+        case 1: x = 21; break;
+        case 2: x = 27; break;
+        case 3: x =  3; break;
+        case 4: x =  9; break;
         }
         break;
     }

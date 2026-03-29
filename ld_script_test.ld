@@ -19,6 +19,7 @@ SECTIONS {
     {
         __ewram_start = .;
         *(.ewram*)
+        . = ALIGN(4);
         __ewram_end = .;
     } > EWRAM
 
@@ -93,6 +94,12 @@ SECTIONS {
         *libgcc.a:*.o(.text*);
         *libc.a:*.o(.text*);
         *libnosys.a:*.o(.text*);
+    } > ROM =0
+
+    .rodata.compound_string :
+    SUBALIGN(0)
+    {
+        *.o(.rodata.compound_string.*);
     } > ROM =0
 
     .rodata :

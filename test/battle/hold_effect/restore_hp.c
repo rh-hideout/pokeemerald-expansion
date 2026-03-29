@@ -3,7 +3,7 @@
 
 DOUBLE_BATTLE_TEST("Restore HP Item effects do not miss timing")
 {
-    u16 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_BERRY_JUICE; }
     PARAMETRIZE { item = ITEM_ORAN_BERRY; }
@@ -30,7 +30,7 @@ DOUBLE_BATTLE_TEST("Restore HP Item effects do not miss timing")
 
 DOUBLE_BATTLE_TEST("Restore HP Item effects do not miss timing after a recoil move")
 {
-    u16 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_BERRY_JUICE; }
     PARAMETRIZE { item = ITEM_ORAN_BERRY; }
@@ -64,19 +64,58 @@ DOUBLE_BATTLE_TEST("Restore HP Item effects do not miss timing after a recoil mo
     }
 }
 
-#if B_HP_BERRIES <= GEN_3
-SINGLE_BATTLE_TEST("Restore HP Berry triggers only during the end turn")
+SINGLE_BATTLE_TEST("Sitrus Berry restores HP immediately after Leech Seed damage")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_LEECH_SEED) == EFFECT_LEECH_SEED);
+        ASSUME(gItemsInfo[ITEM_SITRUS_BERRY].holdEffect == HOLD_EFFECT_RESTORE_PCT_HP);
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(80); HP(41); Item(ITEM_SITRUS_BERRY); }
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_LEECH_SEED); }
+        TURN { }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LEECH_SEED, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_LEECH_SEED_DRAIN, player);
+        HP_BAR(player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        HP_BAR(player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Healing berry animates on the correct battler at battle start")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT) { MaxHP(100); HP(51); Item(ITEM_ORAN_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); MaxHP(400); Item(ITEM_ORAN_BERRY); }
     } WHEN {
-        TURN { MOVE(player, MOVE_TACKLE); }
-        TURN {}
+        TURN {  }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
     }
 }
-#endif
+
+SINGLE_BATTLE_TEST("Sitrus Berry restores HP before Shields Down form change")
+{
+    GIVEN {
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_MINIOR_CORE) {
+            Ability(ABILITY_SHIELDS_DOWN); HP(53); MaxHP(101); Item(ITEM_SITRUS_BERRY);
+        }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_SHIELDS_DOWN);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        HP_BAR(opponent); // Scratch
+        NONE_OF {
+            ABILITY_POPUP(opponent, ABILITY_SHIELDS_DOWN);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, opponent);
+        }
+        HP_BAR(opponent); // Heal
+    } THEN {
+        EXPECT_EQ(opponent->species, SPECIES_MINIOR_METEOR);
+    }
+}

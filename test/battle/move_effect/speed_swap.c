@@ -24,17 +24,19 @@ SINGLE_BATTLE_TEST("Speed Swap swaps user and target's speed stats")
     } THEN {
         EXPECT_EQ(player->speed, 10);
         EXPECT_EQ(opponent->speed, 6);
-    } 
+    }
 }
 
 SINGLE_BATTLE_TEST("Speed Swap doesn't swap user and target's speed modifiers")
 {
-    u32 species, ability, move;
+    u32 species, move;
+    enum Ability ability;
     PARAMETRIZE { species = SPECIES_WOBBUFFET; ability = ABILITY_TELEPATHY;  move = MOVE_ROCK_POLISH; } // x2.0
     PARAMETRIZE { species = SPECIES_PSYDUCK;   ability = ABILITY_SWIFT_SWIM; move = MOVE_RAIN_DANCE;  } // x2.0
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ROCK_POLISH) == EFFECT_SPEED_UP_2);
-        ASSUME(GetMoveEffect(MOVE_RAIN_DANCE) == EFFECT_RAIN_DANCE);
+        ASSUME(GetMoveEffect(MOVE_RAIN_DANCE) == EFFECT_WEATHER);
+        ASSUME(GetMoveWeatherType(MOVE_RAIN_DANCE) == BATTLE_WEATHER_RAIN);
         PLAYER(SPECIES_WOBBUFFET) { Speed(8); }
         OPPONENT(species) { Speed(10); Ability(ability); }
     }WHEN {
@@ -54,5 +56,5 @@ SINGLE_BATTLE_TEST("Speed Swap doesn't swap user and target's speed modifiers")
             EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
             EXPECT_EQ(opponent->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 2);
         }
-    } 
+    }
 }

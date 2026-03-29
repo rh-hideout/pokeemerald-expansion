@@ -15,9 +15,9 @@ ASSUMPTIONS
     ASSUME(GetMoveNonVolatileStatus(MOVE_HYPNOSIS) == MOVE_EFFECT_SLEEP);
 }
 
-DOUBLE_BATTLE_TEST("Flower Veil prevents Toxic bad poison on partner - right target")
+DOUBLE_BATTLE_TEST("Flower Veil prevents status on allied Grass-types - right target")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_TOXIC; }
     PARAMETRIZE { move = MOVE_POISON_GAS; }
@@ -39,9 +39,9 @@ DOUBLE_BATTLE_TEST("Flower Veil prevents Toxic bad poison on partner - right tar
     }
 }
 
-DOUBLE_BATTLE_TEST("Flower Veil prevents Toxic bad poison on partner - left target")
+DOUBLE_BATTLE_TEST("Flower Veil prevents status on allied Grass-types - left target")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_TOXIC; }
     PARAMETRIZE { move = MOVE_POISON_GAS; }
@@ -60,5 +60,25 @@ DOUBLE_BATTLE_TEST("Flower Veil prevents Toxic bad poison on partner - left targ
         NOT ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
         ABILITY_POPUP(opponentRight, ABILITY_FLOWER_VEIL);
         MESSAGE("The opposing Chikorita surrounded itself with a veil of petals!");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Flower Veil's stat reduction protection considers Contrary") // Eg. If a move would reduce stats due to Contrary, it will be protected by Mist.
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SWAGGER) == EFFECT_SWAGGER);
+        ASSUME(GetSpeciesType(SPECIES_SNIVY, 0) == TYPE_GRASS || GetSpeciesType(SPECIES_SNIVY, 1) == TYPE_GRASS);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_COMFEY) { Ability(ABILITY_FLOWER_VEIL); }
+        OPPONENT(SPECIES_SNIVY) { Ability(ABILITY_CONTRARY); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_SWAGGER, target: opponentRight); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWAGGER, playerLeft);
+        ABILITY_POPUP(opponentLeft, ABILITY_FLOWER_VEIL);
+        MESSAGE("The opposing Snivy surrounded itself with a veil of petals!");
+    } THEN {
+        EXPECT_EQ(opponentRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
     }
 }

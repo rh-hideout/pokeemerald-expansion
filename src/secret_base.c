@@ -1332,7 +1332,7 @@ void SecretBasePerStepCallback(u8 taskId)
 #undef tPlayerY
 #undef tFldEff
 
-static void SaveSecretBase(u8 secretBaseIdx, struct SecretBase *secretBase, u32 version, u32 language)
+static void SaveSecretBase(u8 secretBaseIdx, struct SecretBase *secretBase, enum GameVersion version, enum Language language)
 {
     int stringLength;
     u8 *name;
@@ -1891,24 +1891,24 @@ void CheckInteractedWithFriendsPosterDecor(void)
     GetXYCoordsOneStepInFrontOfPlayer(&x, &y);
     switch (MapGridGetMetatileIdAt(x, y))
     {
-        case METATILE_SecretBase_PikaPoster_Left:
-        case METATILE_SecretBase_PikaPoster_Right:
-        case METATILE_SecretBase_LongPoster_Left:
-        case METATILE_SecretBase_LongPoster_Right:
-        case METATILE_SecretBase_SeaPoster_Left:
-        case METATILE_SecretBase_SeaPoster_Right:
-        case METATILE_SecretBase_SkyPoster_Left:
-        case METATILE_SecretBase_SkyPoster_Right:
-        case METATILE_SecretBase_KissPoster_Left:
-        case METATILE_SecretBase_KissPoster_Right:
-        case METATILE_SecretBase_BallPoster:
-        case METATILE_SecretBase_GreenPoster:
-        case METATILE_SecretBase_RedPoster:
-        case METATILE_SecretBase_BluePoster:
-        case METATILE_SecretBase_CutePoster:
-            if (VarGet(VAR_CURRENT_SECRET_BASE) != 0)
-                VarSet(VAR_SECRET_BASE_LOW_TV_FLAGS, VarGet(VAR_SECRET_BASE_LOW_TV_FLAGS) | SECRET_BASE_USED_POSTER);
-            break;
+    case METATILE_SecretBase_PikaPoster_Left:
+    case METATILE_SecretBase_PikaPoster_Right:
+    case METATILE_SecretBase_LongPoster_Left:
+    case METATILE_SecretBase_LongPoster_Right:
+    case METATILE_SecretBase_SeaPoster_Left:
+    case METATILE_SecretBase_SeaPoster_Right:
+    case METATILE_SecretBase_SkyPoster_Left:
+    case METATILE_SecretBase_SkyPoster_Right:
+    case METATILE_SecretBase_KissPoster_Left:
+    case METATILE_SecretBase_KissPoster_Right:
+    case METATILE_SecretBase_BallPoster:
+    case METATILE_SecretBase_GreenPoster:
+    case METATILE_SecretBase_RedPoster:
+    case METATILE_SecretBase_BluePoster:
+    case METATILE_SecretBase_CutePoster:
+        if (VarGet(VAR_CURRENT_SECRET_BASE) != 0)
+            VarSet(VAR_SECRET_BASE_LOW_TV_FLAGS, VarGet(VAR_SECRET_BASE_LOW_TV_FLAGS) | SECRET_BASE_USED_POSTER);
+        break;
     }
 }
 
@@ -1919,71 +1919,71 @@ void CheckInteractedWithFriendsFurnitureBottom(void)
     GetXYCoordsOneStepInFrontOfPlayer(&x, &y);
     switch (MapGridGetMetatileIdAt(x, y))
     {
-        case METATILE_SecretBase_GlassOrnament_Base1:
-        case METATILE_SecretBase_GlassOrnament_Base2:
-            if (VarGet(VAR_CURRENT_SECRET_BASE) != 0)
-                VarSet(VAR_SECRET_BASE_LOW_TV_FLAGS, VarGet(VAR_SECRET_BASE_LOW_TV_FLAGS) | SECRET_BASE_USED_GLASS_ORNAMENT);
-            break;
-        case METATILE_SecretBase_RedPlant_Base1:
-        case METATILE_SecretBase_RedPlant_Base2:
-        case METATILE_SecretBase_TropicalPlant_Base1:
-        case METATILE_SecretBase_TropicalPlant_Base2:
-        case METATILE_SecretBase_PrettyFlowers_Base1:
-        case METATILE_SecretBase_PrettyFlowers_Base2:
-        case METATILE_SecretBase_ColorfulPlant_BaseLeft1:
-        case METATILE_SecretBase_ColorfulPlant_BaseRight1:
-        case METATILE_SecretBase_ColorfulPlant_BaseLeft2:
-        case METATILE_SecretBase_ColorfulPlant_BaseRight2:
-        case METATILE_SecretBase_BigPlant_BaseLeft1:
-        case METATILE_SecretBase_BigPlant_BaseRight1:
-        case METATILE_SecretBase_BigPlant_BaseLeft2:
-        case METATILE_SecretBase_BigPlant_BaseRight2:
-        case METATILE_SecretBase_GorgeousPlant_BaseLeft1:
-        case METATILE_SecretBase_GorgeousPlant_BaseRight1:
-        case METATILE_SecretBase_GorgeousPlant_BaseLeft2:
-        case METATILE_SecretBase_GorgeousPlant_BaseRight2:
-            if (VarGet(VAR_CURRENT_SECRET_BASE) != 0)
-                VarSet(VAR_SECRET_BASE_LOW_TV_FLAGS, VarGet(VAR_SECRET_BASE_LOW_TV_FLAGS) | SECRET_BASE_USED_PLANT);
-            break;
-        case METATILE_SecretBase_Fence_Horizontal:
-        case METATILE_SecretBase_Fence_Vertical:
-            if (VarGet(VAR_CURRENT_SECRET_BASE) != 0)
-                VarSet(VAR_SECRET_BASE_HIGH_TV_FLAGS, VarGet(VAR_SECRET_BASE_HIGH_TV_FLAGS) | SECRET_BASE_USED_FENCE);
-            break;
-        case METATILE_SecretBase_Tire_BottomLeft:
-        case METATILE_SecretBase_Tire_BottomRight:
-            if (VarGet(VAR_CURRENT_SECRET_BASE) != 0)
-                VarSet(VAR_SECRET_BASE_HIGH_TV_FLAGS, VarGet(VAR_SECRET_BASE_HIGH_TV_FLAGS) | SECRET_BASE_USED_TIRE);
-            break;
-        case METATILE_SecretBase_RedBrick_Bottom:
-        case METATILE_SecretBase_YellowBrick_Bottom:
-        case METATILE_SecretBase_BlueBrick_Bottom:
-            if (VarGet(VAR_CURRENT_SECRET_BASE) != 0)
-                VarSet(VAR_SECRET_BASE_HIGH_TV_FLAGS, VarGet(VAR_SECRET_BASE_HIGH_TV_FLAGS) | SECRET_BASE_USED_BRICK);
-            break;
-        case METATILE_SecretBase_SmallDesk:
-        case METATILE_SecretBase_PokemonDesk:
-        case METATILE_SecretBase_HeavyDesk_BottomLeft:
-        case METATILE_SecretBase_HeavyDesk_BottomMid:
-        case METATILE_SecretBase_HeavyDesk_BottomRight:
-        case METATILE_SecretBase_RaggedDesk_BottomLeft:
-        case METATILE_SecretBase_RaggedDesk_BottomMid:
-        case METATILE_SecretBase_RaggedDesk_BottomRight:
-        case METATILE_SecretBase_ComfortDesk_BottomLeft:
-        case METATILE_SecretBase_ComfortDesk_BottomMid:
-        case METATILE_SecretBase_ComfortDesk_BottomRight:
-        case METATILE_SecretBase_BrickDesk_BottomLeft:
-        case METATILE_SecretBase_BrickDesk_BottomMid:
-        case METATILE_SecretBase_BrickDesk_BottomRight:
-        case METATILE_SecretBase_CampDesk_BottomLeft:
-        case METATILE_SecretBase_CampDesk_BottomMid:
-        case METATILE_SecretBase_CampDesk_BottomRight:
-        case METATILE_SecretBase_HardDesk_BottomLeft:
-        case METATILE_SecretBase_HardDesk_BottomMid:
-        case METATILE_SecretBase_HardDesk_BottomRight:
-        case METATILE_SecretBase_PrettyDesk_BottomLeft:
-        case METATILE_SecretBase_PrettyDesk_BottomMid:
-        case METATILE_SecretBase_PrettyDesk_BottomRight:
+    case METATILE_SecretBase_GlassOrnament_Base1:
+    case METATILE_SecretBase_GlassOrnament_Base2:
+        if (VarGet(VAR_CURRENT_SECRET_BASE) != 0)
+            VarSet(VAR_SECRET_BASE_LOW_TV_FLAGS, VarGet(VAR_SECRET_BASE_LOW_TV_FLAGS) | SECRET_BASE_USED_GLASS_ORNAMENT);
+        break;
+    case METATILE_SecretBase_RedPlant_Base1:
+    case METATILE_SecretBase_RedPlant_Base2:
+    case METATILE_SecretBase_TropicalPlant_Base1:
+    case METATILE_SecretBase_TropicalPlant_Base2:
+    case METATILE_SecretBase_PrettyFlowers_Base1:
+    case METATILE_SecretBase_PrettyFlowers_Base2:
+    case METATILE_SecretBase_ColorfulPlant_BaseLeft1:
+    case METATILE_SecretBase_ColorfulPlant_BaseRight1:
+    case METATILE_SecretBase_ColorfulPlant_BaseLeft2:
+    case METATILE_SecretBase_ColorfulPlant_BaseRight2:
+    case METATILE_SecretBase_BigPlant_BaseLeft1:
+    case METATILE_SecretBase_BigPlant_BaseRight1:
+    case METATILE_SecretBase_BigPlant_BaseLeft2:
+    case METATILE_SecretBase_BigPlant_BaseRight2:
+    case METATILE_SecretBase_GorgeousPlant_BaseLeft1:
+    case METATILE_SecretBase_GorgeousPlant_BaseRight1:
+    case METATILE_SecretBase_GorgeousPlant_BaseLeft2:
+    case METATILE_SecretBase_GorgeousPlant_BaseRight2:
+        if (VarGet(VAR_CURRENT_SECRET_BASE) != 0)
+            VarSet(VAR_SECRET_BASE_LOW_TV_FLAGS, VarGet(VAR_SECRET_BASE_LOW_TV_FLAGS) | SECRET_BASE_USED_PLANT);
+        break;
+    case METATILE_SecretBase_Fence_Horizontal:
+    case METATILE_SecretBase_Fence_Vertical:
+        if (VarGet(VAR_CURRENT_SECRET_BASE) != 0)
+            VarSet(VAR_SECRET_BASE_HIGH_TV_FLAGS, VarGet(VAR_SECRET_BASE_HIGH_TV_FLAGS) | SECRET_BASE_USED_FENCE);
+        break;
+    case METATILE_SecretBase_Tire_BottomLeft:
+    case METATILE_SecretBase_Tire_BottomRight:
+        if (VarGet(VAR_CURRENT_SECRET_BASE) != 0)
+            VarSet(VAR_SECRET_BASE_HIGH_TV_FLAGS, VarGet(VAR_SECRET_BASE_HIGH_TV_FLAGS) | SECRET_BASE_USED_TIRE);
+        break;
+    case METATILE_SecretBase_RedBrick_Bottom:
+    case METATILE_SecretBase_YellowBrick_Bottom:
+    case METATILE_SecretBase_BlueBrick_Bottom:
+        if (VarGet(VAR_CURRENT_SECRET_BASE) != 0)
+            VarSet(VAR_SECRET_BASE_HIGH_TV_FLAGS, VarGet(VAR_SECRET_BASE_HIGH_TV_FLAGS) | SECRET_BASE_USED_BRICK);
+        break;
+    case METATILE_SecretBase_SmallDesk:
+    case METATILE_SecretBase_PokemonDesk:
+    case METATILE_SecretBase_HeavyDesk_BottomLeft:
+    case METATILE_SecretBase_HeavyDesk_BottomMid:
+    case METATILE_SecretBase_HeavyDesk_BottomRight:
+    case METATILE_SecretBase_RaggedDesk_BottomLeft:
+    case METATILE_SecretBase_RaggedDesk_BottomMid:
+    case METATILE_SecretBase_RaggedDesk_BottomRight:
+    case METATILE_SecretBase_ComfortDesk_BottomLeft:
+    case METATILE_SecretBase_ComfortDesk_BottomMid:
+    case METATILE_SecretBase_ComfortDesk_BottomRight:
+    case METATILE_SecretBase_BrickDesk_BottomLeft:
+    case METATILE_SecretBase_BrickDesk_BottomMid:
+    case METATILE_SecretBase_BrickDesk_BottomRight:
+    case METATILE_SecretBase_CampDesk_BottomLeft:
+    case METATILE_SecretBase_CampDesk_BottomMid:
+    case METATILE_SecretBase_CampDesk_BottomRight:
+    case METATILE_SecretBase_HardDesk_BottomLeft:
+    case METATILE_SecretBase_HardDesk_BottomMid:
+    case METATILE_SecretBase_HardDesk_BottomRight:
+    case METATILE_SecretBase_PrettyDesk_BottomLeft:
+    case METATILE_SecretBase_PrettyDesk_BottomMid:
+    case METATILE_SecretBase_PrettyDesk_BottomRight:
             if (VarGet(VAR_CURRENT_SECRET_BASE) != 0)
                 VarSet(VAR_SECRET_BASE_HIGH_TV_FLAGS, VarGet(VAR_SECRET_BASE_HIGH_TV_FLAGS) | SECRET_BASE_USED_DESK);
             break;
@@ -1997,17 +1997,17 @@ void CheckInteractedWithFriendsFurnitureMiddle(void)
     GetXYCoordsOneStepInFrontOfPlayer(&x, &y);
     switch (MapGridGetMetatileIdAt(x, y))
     {
-        case METATILE_SecretBase_HeavyDesk_TopMid:
-        case METATILE_SecretBase_RaggedDesk_TopMid:
-        case METATILE_SecretBase_ComfortDesk_TopMid:
-        case METATILE_SecretBase_BrickDesk_TopMid:
-        case METATILE_SecretBase_BrickDesk_Center:
-        case METATILE_SecretBase_CampDesk_TopMid:
-        case METATILE_SecretBase_CampDesk_Center:
-        case METATILE_SecretBase_HardDesk_TopMid:
-        case METATILE_SecretBase_HardDesk_Center:
-        case METATILE_SecretBase_PrettyDesk_TopMid:
-        case METATILE_SecretBase_PrettyDesk_Center:
+    case METATILE_SecretBase_HeavyDesk_TopMid:
+    case METATILE_SecretBase_RaggedDesk_TopMid:
+    case METATILE_SecretBase_ComfortDesk_TopMid:
+    case METATILE_SecretBase_BrickDesk_TopMid:
+    case METATILE_SecretBase_BrickDesk_Center:
+    case METATILE_SecretBase_CampDesk_TopMid:
+    case METATILE_SecretBase_CampDesk_Center:
+    case METATILE_SecretBase_HardDesk_TopMid:
+    case METATILE_SecretBase_HardDesk_Center:
+    case METATILE_SecretBase_PrettyDesk_TopMid:
+    case METATILE_SecretBase_PrettyDesk_Center:
             if (VarGet(VAR_CURRENT_SECRET_BASE) != 0)
                 VarSet(VAR_SECRET_BASE_HIGH_TV_FLAGS, VarGet(VAR_SECRET_BASE_HIGH_TV_FLAGS) | SECRET_BASE_USED_DESK);
             break;
@@ -2021,39 +2021,39 @@ void CheckInteractedWithFriendsFurnitureTop(void)
     GetXYCoordsOneStepInFrontOfPlayer(&x, &y);
     switch (MapGridGetMetatileIdAt(x, y))
     {
-        case METATILE_SecretBase_HeavyDesk_TopLeft:
-        case METATILE_SecretBase_HeavyDesk_TopRight:
-        case METATILE_SecretBase_RaggedDesk_TopLeft:
-        case METATILE_SecretBase_RaggedDesk_TopRight:
-        case METATILE_SecretBase_ComfortDesk_TopLeft:
-        case METATILE_SecretBase_ComfortDesk_TopRight:
-        case METATILE_SecretBase_BrickDesk_TopLeft:
-        case METATILE_SecretBase_BrickDesk_TopRight:
-        case METATILE_SecretBase_BrickDesk_MidLeft:
-        case METATILE_SecretBase_BrickDesk_MidRight:
-        case METATILE_SecretBase_CampDesk_TopLeft:
-        case METATILE_SecretBase_CampDesk_TopRight:
-        case METATILE_SecretBase_CampDesk_MidLeft:
-        case METATILE_SecretBase_CampDesk_MidRight:
-        case METATILE_SecretBase_HardDesk_TopLeft:
-        case METATILE_SecretBase_HardDesk_TopRight:
-        case METATILE_SecretBase_HardDesk_MidLeft:
-        case METATILE_SecretBase_HardDesk_MidRight:
-        case METATILE_SecretBase_PrettyDesk_TopLeft:
-        case METATILE_SecretBase_PrettyDesk_TopRight:
-        case METATILE_SecretBase_PrettyDesk_MidLeft:
-        case METATILE_SecretBase_PrettyDesk_MidRight:
-            if (VarGet(VAR_CURRENT_SECRET_BASE) != 0)
-                VarSet(VAR_SECRET_BASE_HIGH_TV_FLAGS, VarGet(VAR_SECRET_BASE_HIGH_TV_FLAGS) | SECRET_BASE_USED_DESK);
-            break;
-        case METATILE_SecretBase_Tire_TopLeft:
-        case METATILE_SecretBase_Tire_TopRight:
-            if (VarGet(VAR_CURRENT_SECRET_BASE) != 0)
-                VarSet(VAR_SECRET_BASE_HIGH_TV_FLAGS, VarGet(VAR_SECRET_BASE_HIGH_TV_FLAGS) | SECRET_BASE_USED_TIRE);
-            break;
-        case METATILE_SecretBase_RedBrick_Top:
-        case METATILE_SecretBase_YellowBrick_Top:
-        case METATILE_SecretBase_BlueBrick_Top:
+    case METATILE_SecretBase_HeavyDesk_TopLeft:
+    case METATILE_SecretBase_HeavyDesk_TopRight:
+    case METATILE_SecretBase_RaggedDesk_TopLeft:
+    case METATILE_SecretBase_RaggedDesk_TopRight:
+    case METATILE_SecretBase_ComfortDesk_TopLeft:
+    case METATILE_SecretBase_ComfortDesk_TopRight:
+    case METATILE_SecretBase_BrickDesk_TopLeft:
+    case METATILE_SecretBase_BrickDesk_TopRight:
+    case METATILE_SecretBase_BrickDesk_MidLeft:
+    case METATILE_SecretBase_BrickDesk_MidRight:
+    case METATILE_SecretBase_CampDesk_TopLeft:
+    case METATILE_SecretBase_CampDesk_TopRight:
+    case METATILE_SecretBase_CampDesk_MidLeft:
+    case METATILE_SecretBase_CampDesk_MidRight:
+    case METATILE_SecretBase_HardDesk_TopLeft:
+    case METATILE_SecretBase_HardDesk_TopRight:
+    case METATILE_SecretBase_HardDesk_MidLeft:
+    case METATILE_SecretBase_HardDesk_MidRight:
+    case METATILE_SecretBase_PrettyDesk_TopLeft:
+    case METATILE_SecretBase_PrettyDesk_TopRight:
+    case METATILE_SecretBase_PrettyDesk_MidLeft:
+    case METATILE_SecretBase_PrettyDesk_MidRight:
+        if (VarGet(VAR_CURRENT_SECRET_BASE) != 0)
+            VarSet(VAR_SECRET_BASE_HIGH_TV_FLAGS, VarGet(VAR_SECRET_BASE_HIGH_TV_FLAGS) | SECRET_BASE_USED_DESK);
+        break;
+    case METATILE_SecretBase_Tire_TopLeft:
+    case METATILE_SecretBase_Tire_TopRight:
+        if (VarGet(VAR_CURRENT_SECRET_BASE) != 0)
+            VarSet(VAR_SECRET_BASE_HIGH_TV_FLAGS, VarGet(VAR_SECRET_BASE_HIGH_TV_FLAGS) | SECRET_BASE_USED_TIRE);
+        break;
+    case METATILE_SecretBase_RedBrick_Top:
+    case METATILE_SecretBase_YellowBrick_Top:
+    case METATILE_SecretBase_BlueBrick_Top:
             if (VarGet(VAR_CURRENT_SECRET_BASE) != 0)
                 VarSet(VAR_SECRET_BASE_HIGH_TV_FLAGS, VarGet(VAR_SECRET_BASE_HIGH_TV_FLAGS) | SECRET_BASE_USED_BRICK);
             break;
@@ -2067,8 +2067,8 @@ void CheckInteractedWithFriendsSandOrnament(void)
     GetXYCoordsOneStepInFrontOfPlayer(&x, &y);
     switch ((int)MapGridGetMetatileIdAt(x, y))
     {
-        case METATILE_SecretBase_SandOrnament_Base1:
-        case METATILE_SecretBase_SandOrnament_Base2:
+    case METATILE_SecretBase_SandOrnament_Base1:
+    case METATILE_SecretBase_SandOrnament_Base2:
             if (VarGet(VAR_CURRENT_SECRET_BASE) != 0)
                 VarSet(VAR_SECRET_BASE_HIGH_TV_FLAGS, VarGet(VAR_SECRET_BASE_HIGH_TV_FLAGS) | SECRET_BASE_USED_SAND_ORNAMENT);
             break;

@@ -5,8 +5,8 @@ AI_DOUBLE_BATTLE_TEST("AI prefers Entrainment'ing good abilities onto partner wi
 {
     GIVEN {
         AI_FLAGS(AI_FLAG_SMART_TRAINER);
-        PLAYER(SPECIES_QUAXWELL) { Level(18); Ability(ABILITY_TORRENT); Moves(MOVE_WATER_GUN); };
-        PLAYER(SPECIES_CORPHISH) { Level(18); Moves(MOVE_WATER_GUN); };
+        PLAYER(SPECIES_QUAXWELL) { Level(18); Ability(ABILITY_TORRENT); Moves(MOVE_WATER_GUN); }
+        PLAYER(SPECIES_CORPHISH) { Level(18); Moves(MOVE_WATER_GUN); }
         OPPONENT(SPECIES_SMEARGLE) { Level(17); Ability(ABILITY_TECHNICIAN); Moves(MOVE_AERIAL_ACE, MOVE_ENTRAINMENT, MOVE_FLAME_WHEEL, MOVE_MAGICAL_LEAF); }
         OPPONENT(SPECIES_ARCHEN) { Level(17); Ability(ABILITY_DEFEATIST); Moves(MOVE_DUAL_WINGBEAT, MOVE_ROCK_TOMB); }
     } WHEN {
@@ -55,6 +55,21 @@ SINGLE_BATTLE_TEST("Entrainment fails if the target's ability has cantBeOverwrit
     } THEN {
         EXPECT(player->ability   == ABILITY_TELEPATHY);
         EXPECT(opponent->ability == ABILITY_MULTITYPE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Entrainment causes primal weather to revert")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
+        OPPONENT(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_ENTRAINMENT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENTRAINMENT, player);
+        MESSAGE("The extremely harsh sunlight faded!");
+    } THEN {
+        EXPECT(opponent->ability == ABILITY_TELEPATHY);
     }
 }
 

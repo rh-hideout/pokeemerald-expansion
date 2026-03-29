@@ -20,10 +20,12 @@
 #include "link_rfu.h"
 #include "load_save.h"
 #include "main.h"
+#include "map_preview_screen.h"
 #include "menu.h"
 #include "mirage_tower.h"
 #include "metatile_behavior.h"
 #include "palette.h"
+#include "oras_dowse.h"
 #include "overworld.h"
 #include "scanline_effect.h"
 #include "script.h"
@@ -58,6 +60,11 @@ static bool8 WaitStairExitMovementFinished(s16*, s16*, s16*, s16*, s16*);
 static void UpdateStairsMovement(s16, s16, s16*, s16*, s16*);
 static void Task_StairWarp(u8);
 static void ForceStairsMovement(u32, s16*, s16*);
+
+static const u8 sText_PlayerScurriedToCenter[] = _("{PLAYER} scurried to a POKéMON CENTER,\nprotecting the exhausted and fainted\nPOKéMON from further harm…\p");
+static const u8 sText_PlayerScurriedBackHome[] = _("{PLAYER} scurried back home, protecting\nthe exhausted and fainted POKéMON from\nfurther harm…\p");
+static const u8 sText_PlayerRegroupCenter[] = _("{PLAYER} scurried to a POKéMON CENTER,\nto regroup and reconsider the battle\nstrategy…\p");
+static const u8 sText_PlayerRegroupHome[] = _("{PLAYER} scurried back home, to regroup\nand reconsider the battle strategy…\p");
 
 // data[0] is used universally by tasks in this file as a state for switches
 #define tState       data[0]
@@ -378,7 +385,10 @@ static void Task_ExitDoor(u8 taskId)
         }
         break;
     case 4:
-        UnlockPlayerFieldControls();
+        // Don't unlock controls until the map preview has finished.
+        if (!FadeInMapPreviewScreenIsRunning())
+            UnlockPlayerFieldControls();
+
         DestroyTask(taskId);
         break;
     }
@@ -425,7 +435,10 @@ static void Task_ExitNonAnimDoor(u8 taskId)
         }
         break;
     case 3:
-        UnlockPlayerFieldControls();
+        // Don't unlock controls until the map preview has finished.
+        if (!FadeInMapPreviewScreenIsRunning())
+            UnlockPlayerFieldControls();
+
         DestroyTask(taskId);
         break;
     }
@@ -444,7 +457,10 @@ static void Task_ExitNonDoor(u8 taskId)
         if (WaitForWeatherFadeIn())
         {
             UnfreezeObjectEvents();
-            UnlockPlayerFieldControls();
+            // Don't unlock controls until the map preview has finished.
+            if (!FadeInMapPreviewScreenIsRunning())
+                UnlockPlayerFieldControls();
+
             DestroyTask(taskId);
         }
         break;
@@ -684,6 +700,7 @@ void Task_WarpAndLoadMap(u8 taskId)
     case 0:
         FreezeObjectEvents();
         LockPlayerFieldControls();
+        EndORASDowsing();
         task->tState++;
         break;
     case 1:
@@ -745,6 +762,7 @@ void Task_DoDoorWarp(u8 taskId)
             ObjectEventSetHeldMovement(followerObject, MOVEMENT_ACTION_ENTER_POKEBALL);
         }
         task->tDoorTask = FieldAnimateDoorOpen(*x, *y - 1);
+        EndORASDowsing();
         task->tState = DOORWARP_START_WALK_UP;
         break;
     case DOORWARP_START_WALK_UP:
@@ -1373,7 +1391,7 @@ static bool32 PrintWhiteOutRecoveryMessage(u8 taskId, const u8 *text, u32 x, u32
         break;
     case 1:
         RunTextPrinters();
-        if (!IsTextPrinterActive(windowId))
+        if (!IsTextPrinterActiveOnWindow(windowId))
         {
             gTasks[taskId].tPrintState = 0;
             return TRUE;
@@ -1396,13 +1414,13 @@ static const u8 *GenerateRecoveryMessage(u8 taskId)
     bool32 destinationIsPlayersHouse = (gTasks[taskId].tIsPlayerHouse == TRUE);
 
     if (forfeitTrainer && destinationIsPlayersHouse)
-        return gText_PlayerRegroupHome;
+        return sText_PlayerRegroupHome;
     else if (forfeitTrainer && !destinationIsPlayersHouse)
-        return gText_PlayerRegroupCenter;
+        return sText_PlayerRegroupCenter;
     else if (!forfeitTrainer && destinationIsPlayersHouse)
-        return gText_PlayerScurriedBackHome;
+        return sText_PlayerScurriedBackHome;
     else
-        return gText_PlayerScurriedToCenter;
+        return sText_PlayerScurriedToCenter;
 }
 
 static void Task_RushInjuredPokemonToCenter(u8 taskId)
@@ -1446,9 +1464,21 @@ static void Task_RushInjuredPokemonToCenter(u8 taskId)
         {
             DestroyTask(taskId);
             if (gTasks[taskId].tIsPlayerHouse)
+            {
+                if (IS_FRLG)
+                    StringCopy(gStringVar1, COMPOUND_STRING("PROF. OAK"));
+                else
+                    StringCopy(gStringVar1, COMPOUND_STRING("PROF. BIRCH"));
                 ScriptContext_SetupScript(EventScript_AfterWhiteOutMomHeal);
+            }
+            else if (IS_FRLG)
+            {
+                ScriptContext_SetupScript(EventScript_AfterWhiteOutHeal_Frlg);
+            }
             else
+            {
                 ScriptContext_SetupScript(EventScript_AfterWhiteOutHeal);
+            }
         }
         break;
     }
@@ -1682,7 +1712,7 @@ void DoStairWarp(u16 metatileBehavior, u16 delay)
 #undef tTimer
 #undef tDelay
 
-bool32 IsDirectionalStairWarpMetatileBehavior(u16 metatileBehavior, u8 playerDirection)
+bool32 IsDirectionalStairWarpMetatileBehavior(u16 metatileBehavior, enum Direction playerDirection)
 {
     if (playerDirection == DIR_WEST)
     {

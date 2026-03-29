@@ -9,7 +9,8 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_RISKY: AI will blindly Mirror Coat against specia
     PARAMETRIZE { aiRiskyFlag = AI_FLAG_RISKY; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_MIRROR_COAT) == EFFECT_MIRROR_COAT);
+        ASSUME(GetMoveEffect(MOVE_MIRROR_COAT) == EFFECT_REFLECT_DAMAGE);
+        ASSUME(GetMoveReflectDamage_DamageCategories(MOVE_MIRROR_COAT) == (1u << DAMAGE_CATEGORY_SPECIAL));
         ASSUME(GetSpeciesBaseSpAttack(SPECIES_GROVYLE) == 85);
         ASSUME(GetSpeciesBaseAttack(SPECIES_GROVYLE) == 65);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | aiRiskyFlag);
@@ -28,7 +29,8 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_RISKY: AI will blindly Counter against physical a
     PARAMETRIZE { aiRiskyFlag = AI_FLAG_RISKY; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_COUNTER) == EFFECT_COUNTER);
+        ASSUME(GetMoveEffect(MOVE_COUNTER) == EFFECT_REFLECT_DAMAGE);
+        ASSUME(GetMoveReflectDamage_DamageCategories(MOVE_COUNTER) == (1u << DAMAGE_CATEGORY_PHYSICAL));
         ASSUME(GetSpeciesBaseAttack(SPECIES_MARSHTOMP) == 85);
         ASSUME(GetSpeciesBaseSpAttack(SPECIES_MARSHTOMP) == 60);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | aiRiskyFlag);
@@ -64,13 +66,14 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_RISKY: Mid-battle switches prioritize offensive o
     PARAMETRIZE { aiRiskyFlag = AI_FLAG_RISKY; }
 
     GIVEN {
+        ASSUME(P_UPDATED_STATS >= GEN_7); // Swellow's 50 Sp.Atk in Gen 6 instead of the current 75 causes the AI to switch to Electrode
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT | aiRiskyFlag);
         PLAYER(SPECIES_SWELLOW) { Level(30); Moves(MOVE_WING_ATTACK, MOVE_BOOMBURST); Speed(5); }
         OPPONENT(SPECIES_PONYTA) { Level(1); Moves(MOVE_NONE); Speed(4); } // Forces switchout
         OPPONENT(SPECIES_ARON) { Level(30); Moves(MOVE_HEADBUTT); Speed(4); SpDefense(41); } // Mid battle, AI sends out Aron
         OPPONENT(SPECIES_ELECTRODE) { Level(30); Moves(MOVE_CHARGE_BEAM); Speed(6); Ability(ABILITY_STATIC); }
     } WHEN {
-            TURN { MOVE(player, MOVE_WING_ATTACK); EXPECT_SWITCH(opponent, aiRiskyFlag? 2 : 1); }
+        TURN { MOVE(player, MOVE_WING_ATTACK); EXPECT_SWITCH(opponent, aiRiskyFlag? 2 : 1); }
     }
 }
 

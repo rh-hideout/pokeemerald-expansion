@@ -3,7 +3,7 @@
 
 SINGLE_BATTLE_TEST("Shield Dust blocks secondary effects")
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_NUZZLE; }
     PARAMETRIZE { move = MOVE_INFERNO; }
     PARAMETRIZE { move = MOVE_MORTAL_SPIN; }
@@ -42,7 +42,7 @@ SINGLE_BATTLE_TEST("Shield Dust blocks secondary effects")
 
 SINGLE_BATTLE_TEST("Shield Dust does not block primary effects")
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_INFESTATION; }
     PARAMETRIZE { move = MOVE_THOUSAND_ARROWS; }
     PARAMETRIZE { move = MOVE_JAW_LOCK; }
@@ -75,6 +75,8 @@ SINGLE_BATTLE_TEST("Shield Dust does not block primary effects")
             case MOVE_PAY_DAY:
                 MESSAGE("Coins were scattered everywhere!");
                 break;
+            default:
+                break;
         }
     } THEN { // Can't find good way to test trapping
         if (move == MOVE_JAW_LOCK) {
@@ -86,14 +88,14 @@ SINGLE_BATTLE_TEST("Shield Dust does not block primary effects")
 
 SINGLE_BATTLE_TEST("Shield Dust does not block self-targeting effects, primary or secondary")
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_POWER_UP_PUNCH; }
-    PARAMETRIZE { move = MOVE_RAPID_SPIN; }
+    PARAMETRIZE { move = MOVE_FLAME_CHARGE; }
     PARAMETRIZE { move = MOVE_LEAF_STORM; }
     PARAMETRIZE { move = MOVE_METEOR_ASSAULT; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_RAPID_SPIN) == EFFECT_RAPID_SPIN);
+        ASSUME(MoveHasAdditionalEffectSelf(MOVE_FLAME_CHARGE, MOVE_EFFECT_SPD_PLUS_1) == TRUE);
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_POWER_UP_PUNCH, MOVE_EFFECT_ATK_PLUS_1) == TRUE);
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_LEAF_STORM, MOVE_EFFECT_SP_ATK_MINUS_2) == TRUE);
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_METEOR_ASSAULT, MOVE_EFFECT_RECHARGE) == TRUE);
@@ -110,12 +112,14 @@ SINGLE_BATTLE_TEST("Shield Dust does not block self-targeting effects, primary o
         switch (move)
         {
             case MOVE_POWER_UP_PUNCH:
-            case MOVE_RAPID_SPIN:
+            case MOVE_FLAME_CHARGE:
             case MOVE_LEAF_STORM:
                 ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
                 break;
             case MOVE_METEOR_ASSAULT: // second turn
                 MESSAGE("Wobbuffet must recharge!");
+                break;
+            default:
                 break;
         }
     }
@@ -123,7 +127,7 @@ SINGLE_BATTLE_TEST("Shield Dust does not block self-targeting effects, primary o
 
 DOUBLE_BATTLE_TEST("Shield Dust does or does not block Sparkling Aria depending on number of targets hit")
 {
-    u32 moveToUse;
+    enum Move moveToUse;
     PARAMETRIZE { moveToUse = MOVE_FINAL_GAMBIT; }
     PARAMETRIZE { moveToUse = MOVE_SCRATCH; }
     GIVEN {
@@ -186,5 +190,33 @@ SINGLE_BATTLE_TEST("Shield Dust does not prevent ability stat changes")
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
         MESSAGE("Vivillon's Speed fell!");
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will score secondary effects against shield dust correctly")
+{
+    AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+    GIVEN {
+        PLAYER(SPECIES_DUSTOX){ Ability(ABILITY_SHIELD_DUST); Moves(MOVE_GUST); }
+        OPPONENT(SPECIES_SUNFLORA){ Ability(ABILITY_EARLY_BIRD); Moves(MOVE_MYSTICAL_FIRE, MOVE_FIERY_DANCE); }
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_GUST);
+            EXPECT_MOVE(opponent, MOVE_FIERY_DANCE);
+        }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will score secondary effects against shield dust correctly when it has Mold Breaker")
+{
+    AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+    GIVEN {
+        PLAYER(SPECIES_DUSTOX){ Ability(ABILITY_SHIELD_DUST); Moves(MOVE_GUST); }
+        OPPONENT(SPECIES_SUNFLORA){ Ability(ABILITY_MOLD_BREAKER); Moves(MOVE_MYSTICAL_FIRE, MOVE_FIERY_DANCE); }
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_GUST);
+            EXPECT_MOVE(opponent, MOVE_MYSTICAL_FIRE);
+        }
     }
 }

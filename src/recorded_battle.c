@@ -49,7 +49,7 @@ EWRAM_DATA static u8 sFrontierPassFlag = 0;
 EWRAM_DATA static u8 sBattleScene = 0;
 EWRAM_DATA static u8 sTextSpeed = 0;
 EWRAM_DATA static u32 sBattleFlags = 0;
-EWRAM_DATA static u64 sAI_Scripts = 0;
+EWRAM_DATA static u64 sAI_Scripts[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA static struct Pokemon sSavedPlayerParty[PARTY_SIZE] = {0};
 EWRAM_DATA static struct Pokemon sSavedOpponentParty[PARTY_SIZE] = {0};
 EWRAM_DATA static u16 sPlayerMonMoves[MAX_BATTLERS_COUNT / 2][MAX_MON_MOVES] = {0};
@@ -87,7 +87,7 @@ void RecordedBattle_Init(u8 mode)
             for (j = 0; j < BATTLER_RECORD_SIZE; j++)
                 sBattleRecords[i][j] = 0xFF;
             sBattleFlags = gBattleTypeFlags;
-            sAI_Scripts = gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT];
+            sAI_Scripts[i] = gAiThinkingStruct->aiFlags[i];
         }
     }
 }
@@ -140,10 +140,7 @@ void RecordedBattle_SetTrainerInfo(void)
     else
     {
         // Local battle, just record own info
-        sPlayers[0].trainerId = (gSaveBlock2Ptr->playerTrainerId[0])
-                              | (gSaveBlock2Ptr->playerTrainerId[1] << 8)
-                              | (gSaveBlock2Ptr->playerTrainerId[2] << 16)
-                              | (gSaveBlock2Ptr->playerTrainerId[3] << 24);
+        sPlayers[0].trainerId = READ_OTID_FROM_SAVE;
 
         sPlayers[0].gender = gSaveBlock2Ptr->playerGender;
         sPlayers[0].battler = 0;
@@ -154,13 +151,13 @@ void RecordedBattle_SetTrainerInfo(void)
     }
 }
 
-void RecordedBattle_SetBattlerAction(u8 battler, u8 action)
+void RecordedBattle_SetBattlerAction(enum BattlerId battler, u8 action)
 {
     if (sBattlerRecordSizes[battler] < BATTLER_RECORD_SIZE && sRecordMode != B_RECORD_MODE_PLAYBACK)
         sBattleRecords[battler][sBattlerRecordSizes[battler]++] = action;
 }
 
-void RecordedBattle_ClearBattlerAction(u8 battler, u8 bytesToClear)
+void RecordedBattle_ClearBattlerAction(enum BattlerId battler, u8 bytesToClear)
 {
     s32 i;
 
@@ -173,7 +170,7 @@ void RecordedBattle_ClearBattlerAction(u8 battler, u8 bytesToClear)
     }
 }
 
-u8 RecordedBattle_GetBattlerAction(u32 actionType, u8 battler)
+u8 RecordedBattle_GetBattlerAction(u32 actionType, enum BattlerId battler)
 {
     if (gTestRunnerEnabled)
         TestRunner_Battle_CheckBattleRecordActionType(battler, sBattlerRecordSizes[battler], actionType);
@@ -239,7 +236,7 @@ void RecordedBattle_RecordAllBattlerData(u8 *src)
     {
         for (size = *src; size != 0;)
         {
-            u8 battler = GetNextRecordedDataByte(src, &idx, &size);
+            enum BattlerId battler = GetNextRecordedDataByte(src, &idx, &size);
             u8 numActions = GetNextRecordedDataByte(src, &idx, &size);
 
             for (i = 0; i < numActions; i++)
@@ -312,6 +309,7 @@ bool32 MoveRecordedBattleToSaveData(void)
         battleSave->playersLanguage[i] = sPlayers[i].language;
         battleSave->playersBattlers[i] = sPlayers[i].battler;
         battleSave->playersTrainerId[i] = sPlayers[i].trainerId;
+        battleSave->AI_scripts[i] = sAI_Scripts[i];
     }
 
     battleSave->rngSeed = gRecordedBattleRngSeed;
@@ -358,7 +356,6 @@ bool32 MoveRecordedBattleToSaveData(void)
     battleSave->frontierBrainSymbol = sFrontierBrainSymbol;
     battleSave->battleScene = gSaveBlock2Ptr->optionsBattleSceneOff;
     battleSave->textSpeed = gSaveBlock2Ptr->optionsTextSpeed;
-    battleSave->AI_scripts = sAI_Scripts;
 
     if (TRAINER_BATTLE_PARAM.opponentA >= TRAINER_RECORD_MIXING_FRIEND && TRAINER_BATTLE_PARAM.opponentA < TRAINER_RECORD_MIXING_APPRENTICE)
     {
@@ -523,6 +520,7 @@ void SetVariablesForRecordedBattle(struct RecordedBattleSave *src)
         gLinkPlayers[i].language = src->playersLanguage[i];
         gLinkPlayers[i].id = src->playersBattlers[i];
         gLinkPlayers[i].trainerId = src->playersTrainerId[i];
+        sAI_Scripts[i] = src->AI_scripts[i];
 
         if (var)
             ConvertInternationalString(gLinkPlayers[i].name, gLinkPlayers[i].language);
@@ -539,7 +537,6 @@ void SetVariablesForRecordedBattle(struct RecordedBattleSave *src)
     sFrontierBrainSymbol = src->frontierBrainSymbol;
     sBattleScene = src->battleScene;
     sTextSpeed = src->textSpeed;
-    sAI_Scripts = src->AI_scripts;
 
     for (i = 0; i < PLAYER_NAME_LENGTH + 1; i++)
         sRecordMixFriendName[i] = src->recordMixFriendName[i];
@@ -620,7 +617,7 @@ static void RecordedBattle_RestoreSavedParties(void)
     }
 }
 
-u8 GetBattlerLinkPlayerGender(u32 battler)
+u8 GetBattlerLinkPlayerGender(enum BattlerId battler)
 {
     s32 i;
 
@@ -662,7 +659,7 @@ u8 GetTextSpeedInRecordedBattle(void)
     return sTextSpeed;
 }
 
-void RecordedBattle_CopyBattlerMoves(u32 battler)
+void RecordedBattle_CopyBattlerMoves(enum BattlerId battler)
 {
     s32 i;
 
@@ -683,12 +680,12 @@ void RecordedBattle_CopyBattlerMoves(u32 battler)
 
 void RecordedBattle_CheckMovesetChanges(u8 mode)
 {
-    s32 battler, j, k;
+    s32 j, k;
 
     if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
         return;
 
-    for (battler = 0; battler < gBattlersCount; battler++)
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
         // Player's side only
         if (IsOnPlayerSide(battler))
@@ -741,7 +738,7 @@ void RecordedBattle_CheckMovesetChanges(u8 mode)
                         movePp.moves[j] = gBattleMons[battler].moves[moveSlots[j]];
                         movePp.currentPp[j] = gBattleMons[battler].pp[moveSlots[j]];
                         movePp.maxPp[j] = ppBonuses[moveSlots[j]];
-                        mimickedMoveSlots[j] = (gDisableStructs[battler].mimickedMoves & (1u << j)) >> j;
+                        mimickedMoveSlots[j] = (gBattleMons[battler].volatiles.mimickedMoves & (1u << j)) >> j;
                     }
                     for (j = 0; j < MAX_MON_MOVES; j++)
                     {
@@ -749,23 +746,23 @@ void RecordedBattle_CheckMovesetChanges(u8 mode)
                         gBattleMons[battler].pp[j] = movePp.currentPp[j];
                     }
                     gBattleMons[battler].ppBonuses = 0;
-                    gDisableStructs[battler].mimickedMoves = 0;
+                    gBattleMons[battler].volatiles.mimickedMoves = 0;
                     for (j = 0; j < MAX_MON_MOVES; j++)
                     {
                         gBattleMons[battler].ppBonuses |= movePp.maxPp[j] << (j << 1);
-                        gDisableStructs[battler].mimickedMoves |= mimickedMoveSlots[j] << j;
+                        gBattleMons[battler].volatiles.mimickedMoves |= mimickedMoveSlots[j] << j;
                     }
 
                     if (!(gBattleMons[battler].volatiles.transformed))
                     {
                         struct Pokemon *mon = GetBattlerMon(battler);
                         for (j = 0; j < MAX_MON_MOVES; j++)
-                            ppBonuses[j] = (GetMonData(mon, MON_DATA_PP_BONUSES, NULL) & ((3 << (j << 1)))) >> (j << 1);
+                            ppBonuses[j] = (GetMonData(mon, MON_DATA_PP_BONUSES) & ((3 << (j << 1)))) >> (j << 1);
 
                         for (j = 0; j < MAX_MON_MOVES; j++)
                         {
-                            movePp.moves[j] = GetMonData(mon, MON_DATA_MOVE1 + moveSlots[j], NULL);
-                            movePp.currentPp[j] = GetMonData(mon, MON_DATA_PP1 + moveSlots[j], NULL);
+                            movePp.moves[j] = GetMonData(mon, MON_DATA_MOVE1 + moveSlots[j]);
+                            movePp.currentPp[j] = GetMonData(mon, MON_DATA_PP1 + moveSlots[j]);
                             movePp.maxPp[j] = ppBonuses[moveSlots[j]];
                         }
                         for (j = 0; j < MAX_MON_MOVES; j++)
@@ -779,16 +776,16 @@ void RecordedBattle_CheckMovesetChanges(u8 mode)
 
                         SetMonData(mon, MON_DATA_PP_BONUSES, &ppBonusSet);
                     }
-                    gChosenMoveByBattler[battler] = gBattleMons[battler].moves[gBattleStruct->chosenMovePositions[battler]];
+                    gChosenMoveByBattler[battler] = GetBattlerChosenMove(battler);
                 }
             }
         }
     }
 }
 
-u64 GetAiScriptsInRecordedBattle(void)
+u64 GetAiScriptsInRecordedBattle(enum BattlerId battler)
 {
-    return sAI_Scripts;
+    return sAI_Scripts[battler];
 }
 
 // Used to determine when the player is allowed to press B to end a recorded battle's playback

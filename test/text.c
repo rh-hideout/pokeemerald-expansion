@@ -6,6 +6,7 @@
 #include "battle_setup.h"
 #include "item.h"
 #include "malloc.h"
+#include "party_menu.h"
 #include "main_menu.h"
 #include "string_util.h"
 #include "text.h"
@@ -20,7 +21,7 @@ TEST("Move names fit on Pokemon Summary Screen")
 {
     u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 72;
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
     for (i = 1; i < MOVES_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", GetMoveName(i)) { move = i; }
@@ -33,7 +34,7 @@ TEST("Move names fit on Battle Screen")
 {
     u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 64;
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
     for (i = 1; i < MOVES_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", GetMoveName(i)) { move = i; }
@@ -45,7 +46,7 @@ TEST("Move names fit on Contest Screen")
 {
     u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 59;
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
     for (i = 1; i < MOVES_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", GetMoveName(i)) { move = i; }
@@ -66,12 +67,13 @@ TEST("Move names fit on Contest Screen")
 
 TEST("Move names fit on TMs & HMs Bag Screen")
 {
-    u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 61;
-    u32 move = MOVE_NONE;
-    for (i = 1; i < MOVES_COUNT; i++)
+    enum Move move = MOVE_NONE;
+
+    for (enum TMHMIndex tm = 1; tm <= NUM_ALL_MACHINES; tm++)
     {
-        PARAMETRIZE_LABEL("%S", GetMoveName(i)) { move = i; }
+        u32 tmMove = GetTMHMMoveId(tm);
+        PARAMETRIZE_LABEL("%S", GetMoveName(tmMove)) { move = tmMove; }
     }
     EXPECT_LE(GetStringWidth(fontId, GetMoveName(move), 0), widthPx);
 }
@@ -80,7 +82,7 @@ TEST("Move names fit on Move Relearner Screen")
 {
     u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 72;
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
     for (i = 1; i < MOVES_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", GetMoveName(i)) { move = i; }
@@ -92,7 +94,7 @@ TEST("Move descriptions fit on Pokemon Summary Screen")
 {
     u32 i;
     const u32 fontId = FONT_NORMAL, widthPx = 152;
-    u32 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
     for (i = 1; i < MOVES_COUNT_ALL; i++)
     {
         PARAMETRIZE_LABEL("%S", GetMoveDescription(i)) { move = i; }
@@ -105,7 +107,7 @@ TEST("Item names fit on Bag Screen (list)")
     u32 i;
     const u32 fontId = FONT_NARROWER;
     const u32 tmHmBerryWidthPx = 61, restWidthPx = 88;
-    u32 item = ITEM_NONE;
+    enum Item item = ITEM_NONE;
     for (i = 1; i < ITEMS_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", gItemsInfo[i].name) { item = i; }
@@ -122,7 +124,7 @@ TEST("Item plural names fit on Bag Screen (left box)")
     u32 i;
     // -6 for the question mark in FONT_NORMAL.
     const u32 fontId = FONT_NARROWER, widthPx = 101 - 6;
-    u32 item = ITEM_NONE;
+    enum Item item = ITEM_NONE;
     u8 pluralName[ITEM_NAME_PLURAL_LENGTH + 1];
     for (i = 1; i < ITEMS_COUNT; i++)
     {
@@ -136,7 +138,7 @@ TEST("Item names fit on PC Storage (list)")
 {
     u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 73;
-    u32 item = ITEM_NONE;
+    enum Item item = ITEM_NONE;
     for (i = 1; i < ITEMS_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", gItemsInfo[i].name) { item = i; }
@@ -149,7 +151,7 @@ TEST("Item plural names fit on PC storage (left box)")
     u32 i;
     // -6 for the question mark in FONT_NORMAL.
     const u32 fontId = FONT_NARROWER, widthPx = 104 - 6;
-    u32 item = ITEM_NONE;
+    enum Item item = ITEM_NONE;
     u8 pluralName[ITEM_NAME_PLURAL_LENGTH + 1];
     for (i = 1; i < ITEMS_COUNT; i++)
     {
@@ -163,7 +165,7 @@ TEST("Item names fit on Pokemon Storage System")
 {
     u32 i;
     const u32 fontId = FONT_SMALL_NARROWER, widthPx = 66;
-    u32 item = ITEM_NONE;
+    enum Item item = ITEM_NONE;
     for (i = 1; i < ITEMS_COUNT; i++)
     {
         if (gItemsInfo[i].importance) continue;
@@ -190,7 +192,7 @@ TEST("Item names fit on Pokemon Summary Screen")
 {
     u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 72;
-    u32 item = ITEM_NONE;
+    enum Item item = ITEM_NONE;
     for (i = 1; i < ITEMS_COUNT; i++)
     {
         if (gItemsInfo[i].importance) continue;
@@ -212,7 +214,7 @@ TEST("Item names fit on Shop Screen")
 {
     u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 84;
-    u32 item = ITEM_NONE;
+    enum Item item = ITEM_NONE;
     for (i = 1; i < ITEMS_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", gItemsInfo[i].name) { item = i; }
@@ -224,7 +226,7 @@ TEST("Item descriptions fit on Bag and Shop Screen")
 {
     u32 i;
     const u32 fontId = FONT_NORMAL, widthPx = 102;
-    u32 item = ITEM_NONE;
+    enum Item item = ITEM_NONE;
     for (i = 1; i < ITEMS_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", gItemsInfo[i].description) { item = i; }
@@ -499,7 +501,7 @@ TEST("Ability names fit on Pokemon Summary Screen")
 {
     u32 i;
     const u32 fontId = FONT_NORMAL, widthPx = 144;
-    u32 ability = ABILITY_NONE;
+    enum Ability ability = ABILITY_NONE;
     for (i = 1; i < ABILITIES_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", gAbilitiesInfo[i].name) { ability = i; }
@@ -511,7 +513,7 @@ TEST("Ability names fit on Ability Pop-Up")
 {
     u32 i;
     const u32 fontId = FONT_SMALL_NARROWER, widthPx = 76;
-    u32 ability = ABILITY_NONE;
+    enum Ability ability = ABILITY_NONE;
     for (i = 1; i < ABILITIES_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", gAbilitiesInfo[i].name) { ability = i; }
@@ -523,7 +525,7 @@ TEST("Ability descriptions fit on Pokemon Summary Screen")
 {
     u32 i;
     const u32 fontId = FONT_NORMAL, widthPx = 146;
-    u32 ability = ABILITY_NONE;
+    enum Ability ability = ABILITY_NONE;
     for (i = 1; i < ABILITIES_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", gAbilitiesInfo[i].description) { ability = i; }
@@ -535,7 +537,7 @@ TEST("Type names fit on Battle Screen")
 {
     u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 39;
-    u32 type = TYPE_NORMAL;
+    enum Type type = TYPE_NORMAL;
     for (i = 0; i < NUMBER_OF_MON_TYPES; i++)
     {
         PARAMETRIZE_LABEL("%S", gTypesInfo[i].name) { type = i; }
@@ -547,7 +549,7 @@ TEST("Type names fit on Pokedex Search Screen")
 {
     u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 38;
-    u32 type = TYPE_NORMAL;
+    enum Type type = TYPE_NORMAL;
     for (i = 0; i < NUMBER_OF_MON_TYPES; i++)
     {
         PARAMETRIZE_LABEL("%S", gTypesInfo[i].name) { type = i; }
@@ -569,12 +571,12 @@ TEST("Battle strings fit on the battle message window")
 
     s32 sixDigitNines = 999999;                                 // 36 pixels.
     u8 nickname[POKEMON_NAME_LENGTH + 1] = _("MMMMMMMMMMMM");   // 72 pixels.
-    u32 longMoveID = MOVE_NATURES_MADNESS;                      // 89 pixels.
-    u32 longAbilityID = ABILITY_SUPERSWEET_SYRUP;               // 91 pixels.
-    u32 longStatName = STAT_EVASION;                            // 40 pixels.
-    u32 longTypeName = TYPE_ELECTRIC;                           // 43 pixels.
+    enum Move longMoveID = MOVE_NATURES_MADNESS;                // 89 pixels.
+    enum Ability longAbilityID = ABILITY_SUPERSWEET_SYRUP;      // 91 pixels.
+    enum Stat longStatName = STAT_EVASION;                      // 40 pixels.
+    enum Type longTypeName = TYPE_ELECTRIC;                     // 43 pixels.
     u32 longSpeciesName = SPECIES_SANDY_SHOCKS;                 // 47 pixels.
-    u32 longItemName = ITEM_UNREMARKABLE_TEACUP;                // 73 pixels.
+    enum Item longItemName = ITEM_UNREMARKABLE_TEACUP;          // 73 pixels.
     u8 boxName[9] = _("MMMMMMMM");                              // 54 pixels.
 
     // Set longest default player name, JOHNNY
@@ -663,8 +665,6 @@ TEST("Battle strings fit on the battle message window")
         break;
     // Buffer Move name to B_BUFF1
     case STRINGID_PKMNLEARNEDMOVE2:
-    case STRINGID_TEAMSTOPPEDWORKING: // Unused
-    case STRINGID_FOESTOPPEDWORKING: // Unused
     case STRINGID_PKMNHURTBY:
     case STRINGID_PKMNFREEDFROM:
     case STRINGID_PKMNMOVEWASDISABLED:
@@ -675,7 +675,7 @@ TEST("Battle strings fit on the battle message window")
     case STRINGID_PKMNSXWOREOFF:
     case STRINGID_BUFFERENDS:
     case STRINGID_FOREWARNACTIVATES:
-    case STRINGID_CUSEDBODYDISABLED:
+    case STRINGID_CURSEDBODYDISABLED:
     case STRINGID_CURRENTMOVECANTSELECT:
     case STRINGID_TARGETISHURTBYSALTCURE:
         PREPARE_MOVE_BUFFER(gBattleTextBuff1, longMoveID);
@@ -715,8 +715,6 @@ TEST("Battle strings fit on the battle message window")
     case STRINGID_ATTACKERABILITYSTATRAISE:
     case STRINGID_TARGETABILITYSTATLOWER:
     case STRINGID_SCRIPTINGABILITYSTATRAISE:
-    case STRINGID_BATTLERABILITYRAISEDSTAT:
-    case STRINGID_ABILITYRAISEDSTATDRASTICALLY:
     case STRINGID_STATWASHEIGHTENED:
         StringCopy(gBattleTextBuff1, gStatNamesTable[longStatName]);
         break;
@@ -758,7 +756,6 @@ TEST("Battle strings fit on the battle message window")
     case STRINGID_PKMNCURIOUSABOUTX:
     case STRINGID_PKMNENTHRALLEDBYX:
     case STRINGID_PKMNIGNOREDX:
-    case STRINGID_PREVENTEDFROMWORKING:
     case STRINGID_PKMNOBTAINEDX:
     case STRINGID_ABOUTTOUSEPOLTERGEIST:
         PREPARE_ITEM_BUFFER(gBattleTextBuff1, longItemName);
@@ -794,7 +791,6 @@ TEST("Battle strings fit on the battle message window")
         break;
     // Buffer Status name to B_BUFF2
     case STRINGID_PKMNSITEMCUREDPROBLEM:
-    case STRINGID_PKMNSXCUREDYPROBLEM:
     case STRINGID_PKMNSXCUREDITSYPROBLEM:
         StringCopy(gBattleTextBuff1, gText_Confusion);
         break;

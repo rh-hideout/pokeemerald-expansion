@@ -8,7 +8,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Covert Cloak blocks secondary effects")
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_NUZZLE; }
     PARAMETRIZE { move = MOVE_INFERNO; }
     PARAMETRIZE { move = MOVE_MORTAL_SPIN; }
@@ -47,7 +47,7 @@ SINGLE_BATTLE_TEST("Covert Cloak blocks secondary effects")
 
 SINGLE_BATTLE_TEST("Covert Cloak does not block primary effects")
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_INFESTATION; }
     PARAMETRIZE { move = MOVE_THOUSAND_ARROWS; }
     PARAMETRIZE { move = MOVE_JAW_LOCK; }
@@ -79,6 +79,8 @@ SINGLE_BATTLE_TEST("Covert Cloak does not block primary effects")
             case MOVE_PAY_DAY:
                 MESSAGE("Coins were scattered everywhere!");
                 break;
+            default:
+                break;
         }
     } THEN { // Can't find good way to test trapping
         if (move == MOVE_JAW_LOCK) {
@@ -90,14 +92,14 @@ SINGLE_BATTLE_TEST("Covert Cloak does not block primary effects")
 
 SINGLE_BATTLE_TEST("Covert Cloak does not block self-targeting effects, primary or secondary")
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_POWER_UP_PUNCH; }
-    PARAMETRIZE { move = MOVE_RAPID_SPIN; }
+    PARAMETRIZE { move = MOVE_FLAME_CHARGE; }
     PARAMETRIZE { move = MOVE_LEAF_STORM; }
     PARAMETRIZE { move = MOVE_METEOR_ASSAULT; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_RAPID_SPIN) == EFFECT_RAPID_SPIN);
+        ASSUME(MoveHasAdditionalEffectSelf(MOVE_FLAME_CHARGE, MOVE_EFFECT_SPD_PLUS_1) == TRUE);
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_POWER_UP_PUNCH, MOVE_EFFECT_ATK_PLUS_1) == TRUE);
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_LEAF_STORM, MOVE_EFFECT_SP_ATK_MINUS_2) == TRUE);
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_METEOR_ASSAULT, MOVE_EFFECT_RECHARGE) == TRUE);
@@ -113,12 +115,14 @@ SINGLE_BATTLE_TEST("Covert Cloak does not block self-targeting effects, primary 
         HP_BAR(opponent);
         switch (move) {
             case MOVE_POWER_UP_PUNCH:
-            case MOVE_RAPID_SPIN:
+            case MOVE_FLAME_CHARGE:
             case MOVE_LEAF_STORM:
                 ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
                 break;
             case MOVE_METEOR_ASSAULT: // second turn
                 MESSAGE("Wobbuffet must recharge!");
+                break;
+            default:
                 break;
         }
     }
@@ -126,7 +130,7 @@ SINGLE_BATTLE_TEST("Covert Cloak does not block self-targeting effects, primary 
 
 DOUBLE_BATTLE_TEST("Covert Cloak does or does not block Sparkling Aria depending on number of targets hit")
 {
-    u32 moveToUse;
+    enum Move moveToUse;
     PARAMETRIZE { moveToUse = MOVE_FINAL_GAMBIT; }
     PARAMETRIZE { moveToUse = MOVE_SCRATCH; }
     GIVEN {
@@ -152,7 +156,7 @@ DOUBLE_BATTLE_TEST("Covert Cloak does or does not block Sparkling Aria depending
 
 DOUBLE_BATTLE_TEST("Covert Cloak does block Sparkling Aria when only one mon is hit")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_PROTECT; }
     PARAMETRIZE { move = MOVE_FLY; }
 

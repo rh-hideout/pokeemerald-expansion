@@ -5,7 +5,7 @@ SINGLE_BATTLE_TEST("Grassy Terrain recovers 1/16th HP at end of turn")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); };
+        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); }
     } WHEN {
         TURN { MOVE(player, MOVE_GRASSY_TERRAIN); }
         TURN {}
@@ -81,11 +81,11 @@ SINGLE_BATTLE_TEST("Grassy Terrain lasts for 5 turns")
     }
 }
 
-SINGLE_BATTLE_TEST("Grassy Terrain heals the pokemon on the field for the duration of the terrain, including last turn")
+SINGLE_BATTLE_TEST("Grassy Terrain heals the Pokémon on the field for the duration of the terrain, including last turn")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); };
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_GRASSY_TERRAIN); }
         TURN {}

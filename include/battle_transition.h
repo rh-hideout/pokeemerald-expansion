@@ -10,7 +10,8 @@ void GetBg0TilesDst(u16 **tilemap, u16 **tileset);
 
 extern const struct SpritePalette gSpritePalette_Pokeball;
 
-enum {
+enum MugshotColor
+{
     MUGSHOT_COLOR_NONE,
     MUGSHOT_COLOR_PURPLE,
     MUGSHOT_COLOR_GREEN,
@@ -20,7 +21,8 @@ enum {
     MUGSHOT_COLOR_COUNT
 };
 
-enum {
+enum BattleTransition
+{
     B_TRANSITION_BLUR,
     B_TRANSITION_SWIRL,
     B_TRANSITION_SHUFFLE,
@@ -63,7 +65,8 @@ enum {
 };
 
 // IDs for GetSpecialBattleTransition
-enum {
+enum BattleTransitionGroup
+{
     B_TRANSITION_GROUP_B_TOWER,
     B_TRANSITION_GROUP_B_DOME = 3,
     B_TRANSITION_GROUP_B_PALACE,

@@ -3,8 +3,8 @@
 
 SINGLE_BATTLE_TEST("Sand Force prevents damage from sandstorm")
 {
-    u32 type1 = GetSpeciesType(SPECIES_SHELLOS, 0);
-    u32 type2 = GetSpeciesType(SPECIES_SHELLOS, 1);
+    enum Type type1 = GetSpeciesType(SPECIES_SHELLOS, 0);
+    enum Type type2 = GetSpeciesType(SPECIES_SHELLOS, 1);
     GIVEN {
         ASSUME(type1 != TYPE_ROCK && type2 != TYPE_ROCK);
         ASSUME(type1 != TYPE_GROUND && type2 != TYPE_GROUND);
@@ -20,7 +20,7 @@ SINGLE_BATTLE_TEST("Sand Force prevents damage from sandstorm")
 
 SINGLE_BATTLE_TEST("Sand Force increases the power of Rock-, Ground- and Steel-type moves by 30% in sandstorm", s16 damage)
 {
-    u32 moveOpponent, movePlayer;
+    enum Move moveOpponent, movePlayer;
     PARAMETRIZE { moveOpponent = MOVE_CELEBRATE; movePlayer = MOVE_ROCK_THROW; }
     PARAMETRIZE { moveOpponent = MOVE_SANDSTORM; movePlayer = MOVE_ROCK_THROW; }
     PARAMETRIZE { moveOpponent = MOVE_CELEBRATE; movePlayer = MOVE_EARTHQUAKE; }
@@ -46,7 +46,7 @@ SINGLE_BATTLE_TEST("Sand Force increases the power of Rock-, Ground- and Steel-t
 
 SINGLE_BATTLE_TEST("Sand Force don't increase move power if Cloud Nine/Air Lock is on the field", s16 damage)
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_CELEBRATE; }
     PARAMETRIZE { move = MOVE_SANDSTORM; }
     GIVEN {
