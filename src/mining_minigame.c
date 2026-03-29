@@ -1,5 +1,7 @@
 // TODO: Define iterator inside the for loop. FIX
 // TODO: Use Fisher-Yates-Shuffle to generate the items in the zones
+// TODO: Try to autogenerate `top` and `left` in `MiningItemList[]` from `sSpriteTileTable[][16]`
+// TODO: Remove `miningItemId` from `MiningItemList[]`
 // TODO: Rewrite Debug System for Mining Minigame from scratch -> Outdated Debug Mode from PSF
 
 #include "mining_minigame.h"
@@ -1736,7 +1738,7 @@ static void MoveItemSprites(s16 dx, s16 dy)
 
     if (sMiningUiState->toggleShakeDuringAnimation == FALSE)
     {
-        for (i=0;i<MAX_SPRITES;i++)
+        for (i = 0; i < MAX_SPRITES; i++)
         {
             gSprites[i].x += dx;
             gSprites[i].y += dy;
@@ -1909,9 +1911,9 @@ static bool8 Mining_LoadBgGraphics(void)
         case 1:
             if (FreeTempTileDataBuffersIfPossible() != TRUE)
             {
-                for (i = 0; i<32; i++)
+                for (i = 0; i < 32; i++)
                 {
-                    for (j = 0; j<32; j++)
+                    for (j = 0; j < 32; j++)
                         OverwriteTileDataInTilemapBuffer(0, i, j, tilemapBuf, 2);
                 }
                 DecompressDataWithHeaderWram(gStressLevelAndTerrainTilemap, sMiningUiState->sBg2TilemapBuffer);
@@ -1938,7 +1940,7 @@ static void ClearItemMap(void)
 {
     u8 i;
 
-    for (i=0; i < 96; i++)
+    for (i = 0; i < 96; i++)
         sMiningUiState->itemMap[i] = MINING_ITEM_TILE_NONE;
 }
 
@@ -2056,7 +2058,7 @@ static void Mining_LoadSpriteGraphics(void)
     InitItemsIfSelected(3, itemId4);
 
     // Stones
-    for (i=0; i<MINING_COUNT_MAX_NUMBER_STONES; i++)
+    for (i = 0; i < MINING_COUNT_MAX_NUMBER_STONES; i++)
     {
         stone = MININGID_NONE;
         while (!DoesStoneFitInItemMap(stone))
@@ -2536,9 +2538,9 @@ static void OverwriteItemMapData(u8 posX, u8 posY, u8 itemStateId, u8 itemId)
 {
     u32 x, y;
 
-    for (x=0; x<4; x++)
+    for (x = 0; x < 4; x++)
     {
-        for (y=0; y<4; y++)
+        for (y = 0; y < 4; y++)
         {
             if (sSpriteTileTable[itemId][x+y*4] == 1)
                 SetItemState(posX, posY, x, y, itemStateId);
@@ -2555,7 +2557,7 @@ static u8 CheckIfItemCanBePlaced(u8 itemId, u8 posX, u8 posY, u8 xBorder, u8 yBo
 {
     u32 i;
 
-    for(i=1;i<=4;i++)
+    for(i = 1; i <= 4; i++)
     {
         if (BORDERCHECK_COND(itemId)) {
             return 0;
@@ -2605,9 +2607,9 @@ static void DoDrawRandomItem(u8 itemStateId, u8 itemId)
             break;
     }
 
-    for(y=yMin; y<=yMax; y++)
+    for(y = yMin; y <= yMax; y++)
     {
-        for(x=xMin; x<=xMax; x++)
+        for(x = xMin; x <= xMax; x++)
         {
             if (isItemPlaced)
                 continue;
@@ -2697,7 +2699,7 @@ static void HandleItemState(u32 itemId) {
 
     if (sMiningUiState->buriedItems[itemId].buriedState < full && sMiningUiState->buriedItems[itemId].isSelected)
     {
-        for(i=0;i<96;i++)
+        for(i = 0; i < 96; i++)
         {
             if(sMiningUiState->itemMap[i] == itemId+1 && sMiningUiState->layerMap[i] == 6)
             {
@@ -2721,7 +2723,7 @@ static void Mining_CheckItemFound(void)
     HandleItemState(2);
     HandleItemState(3);
 
-    for (u32 i=0;i<96;i++)
+    for (u32 i = 0; i < 96; i++)
     {
         if(sMiningUiState->itemMap[i] == 6 && sMiningUiState->layerMap[i] == 6)
             sMiningUiState->itemMap[i] = MINING_ITEM_TILE_DUG_UP;
