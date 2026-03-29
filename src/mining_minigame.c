@@ -1,6 +1,5 @@
 // TODO: Define iterator inside the for loop. FIX
 // TODO: Use Fisher-Yates-Shuffle to generate the items in the zones
-// TODO: Try to autogenerate `top` and `left` in `MiningItemList[]` from `sSpriteTileTable[][16]`
 // TODO: Remove `miningItemId` from `MiningItemList[]`
 // TODO: Rewrite Debug System for Mining Minigame from scratch -> Outdated Debug Mode from PSF
 
@@ -1110,17 +1109,9 @@ struct MiningItem
 {
     u32 miningItemId;
     u32 bagItemId;
-    u32 top;        // starts with 0
-    u32 left;       // starts with 0
     u32 tag;
     const struct CompressedSpriteSheet* sheet;
     const u16* paldata;
-};
-
-struct MiningStone
-{
-    u32 top;        // starts with 0
-    u32 left;       // starts with 0
 };
 
 static const struct MiningItem MiningItemList[] =
@@ -1129,8 +1120,6 @@ static const struct MiningItem MiningItemList[] =
     {
         .miningItemId = MININGID_NONE,
         .bagItemId = 0,
-        .top = 0,
-        .left = 0,
         .tag = 0,
         .sheet = NULL,
         .paldata = NULL,
@@ -1139,8 +1128,6 @@ static const struct MiningItem MiningItemList[] =
     {
         .miningItemId = MININGID_HARD_STONE,
         .bagItemId = ITEM_HARD_STONE,
-        .top = 1,
-        .left = 1,
         .tag = MINING_TAG_ITEM_HARDSTONE,
         .sheet = &sSpriteSheet_ItemHardStone,
         .paldata = gItemHardStonePal,
@@ -1149,8 +1136,6 @@ static const struct MiningItem MiningItemList[] =
     {
         .miningItemId = MININGID_REVIVE,
         .bagItemId = ITEM_REVIVE,
-        .top = 2,
-        .left = 2,
         .tag = MINING_TAG_ITEM_REVIVE,
         .sheet = &sSpriteSheet_ItemRevive,
         .paldata = gItemRevivePal,
@@ -1159,8 +1144,6 @@ static const struct MiningItem MiningItemList[] =
     {
         .miningItemId = MININGID_STAR_PIECE,
         .bagItemId = ITEM_STAR_PIECE,
-        .top = 2,
-        .left = 2,
         .tag = MINING_TAG_ITEM_STAR_PIECE,
         .sheet = &sSpriteSheet_ItemStarPiece,
         .paldata = gItemStarPiecePal,
@@ -1169,8 +1152,6 @@ static const struct MiningItem MiningItemList[] =
     {
         .miningItemId = MININGID_DAMP_ROCK,
         .bagItemId = ITEM_DAMP_ROCK,
-        .top = 2,
-        .left = 2,
         .tag = MINING_TAG_ITEM_DAMP_ROCK,
         .sheet = &sSpriteSheet_ItemDampRock,
         .paldata = gItemDampRockPal,
@@ -1179,8 +1160,6 @@ static const struct MiningItem MiningItemList[] =
     {
         .miningItemId = MININGID_RED_SHARD,
         .bagItemId = ITEM_RED_SHARD,
-        .top = 2,
-        .left = 2,
         .tag = MINING_TAG_ITEM_RED_SHARD,
         .sheet = &sSpriteSheet_ItemRedShard,
         .paldata = gItemRedShardPal,
@@ -1189,8 +1168,6 @@ static const struct MiningItem MiningItemList[] =
     {
         .miningItemId = MININGID_BLUE_SHARD,
         .bagItemId = ITEM_BLUE_SHARD,
-        .top = 2,
-        .left = 2,
         .tag = MINING_TAG_ITEM_BLUE_SHARD,
         .sheet = &sSpriteSheet_ItemBlueShard,
         .paldata = gItemBlueShardPal,
@@ -1199,8 +1176,6 @@ static const struct MiningItem MiningItemList[] =
     {
         .miningItemId = MININGID_YELLOW_SHARD,
         .bagItemId = ITEM_YELLOW_SHARD,
-        .top = 2,
-        .left = 3,
         .tag = MINING_TAG_ITEM_YELLOW_SHARD,
         .sheet = &sSpriteSheet_ItemYellowShard,
         .paldata = gItemYellowShardPal,
@@ -1209,8 +1184,6 @@ static const struct MiningItem MiningItemList[] =
     {
         .miningItemId = MININGID_GREEN_SHARD,
         .bagItemId = ITEM_GREEN_SHARD,
-        .top = 2,
-        .left = 3,
         .tag = MINING_TAG_ITEM_GREEN_SHARD,
         .sheet = &sSpriteSheet_ItemGreenShard,
         .paldata = gItemGreenShardPal,
@@ -1219,8 +1192,6 @@ static const struct MiningItem MiningItemList[] =
     {
         .miningItemId = MININGID_IRON_BALL,
         .bagItemId = ITEM_IRON_BALL,
-        .top = 2,
-        .left = 2,
         .tag = MINING_TAG_ITEM_IRON_BALL,
         .sheet = &sSpriteSheet_ItemIronBall,
         .paldata = gItemIronBallPal,
@@ -1229,8 +1200,6 @@ static const struct MiningItem MiningItemList[] =
     {
         .miningItemId = MININGID_REVIVE_MAX,
         .bagItemId = ITEM_MAX_REVIVE,
-        .top = 2,
-        .left = 2,
         .tag = MINING_TAG_ITEM_REVIVE_MAX,
         .sheet = &sSpriteSheet_ItemReviveMax,
         .paldata = gItemReviveMaxPal,
@@ -1239,8 +1208,6 @@ static const struct MiningItem MiningItemList[] =
     {
         .miningItemId = MININGID_EVER_STONE,
         .bagItemId = ITEM_EVERSTONE,
-        .top = 1,
-        .left = 3,
         .tag = MINING_TAG_ITEM_EVER_STONE,
         .sheet = &sSpriteSheet_ItemEverStone,
         .paldata = gItemEverStonePal,
@@ -1249,8 +1216,6 @@ static const struct MiningItem MiningItemList[] =
     {
         .miningItemId = MININGID_HEART_SCALE,
         .bagItemId = ITEM_HEART_SCALE,
-        .top = 1,
-        .left = 1,
         .tag = MINING_TAG_ITEM_HEARTSCALE,
         .sheet = &sSpriteSheet_ItemHeartScale,
         .paldata = gItemHeartScalePal,
@@ -1259,8 +1224,6 @@ static const struct MiningItem MiningItemList[] =
     {
         .miningItemId = MININGID_OVAL_STONE,
         .bagItemId = ITEM_OVAL_STONE,
-        .top = 2,
-        .left = 2,
         .tag = MINING_TAG_ITEM_OVAL_STONE,
         .sheet = &sSpriteSheet_ItemOvalStone,
         .paldata = gItemOvalStonePal,
@@ -1269,8 +1232,6 @@ static const struct MiningItem MiningItemList[] =
     {
         .miningItemId = MININGID_LIGHT_CLAY,
         .bagItemId = ITEM_LIGHT_CLAY,
-        .top = 3,
-        .left = 3,
         .tag = MINING_TAG_ITEM_LIGHT_CLAY,
         .sheet = &sSpriteSheet_ItemLightClay,
         .paldata = gItemLightClayPal,
@@ -1279,8 +1240,6 @@ static const struct MiningItem MiningItemList[] =
     {
         .miningItemId = MININGID_HEAT_ROCK,
         .bagItemId = ITEM_HEAT_ROCK,
-        .top = 2,
-        .left = 3,
         .tag = MINING_TAG_ITEM_HEAT_ROCK,
         .sheet = &sSpriteSheet_ItemHeatRock,
         .paldata = gItemHeatRockPal,
@@ -1289,8 +1248,6 @@ static const struct MiningItem MiningItemList[] =
     {
         .miningItemId = MININGID_ICY_ROCK,
         .bagItemId = ITEM_ICY_ROCK,
-        .top = 3,
-        .left = 3,
         .tag = MINING_TAG_ITEM_ICY_ROCK,
         .sheet = &sSpriteSheet_ItemIcyRock,
         .paldata = gItemIcyRockPal,
@@ -1299,8 +1256,6 @@ static const struct MiningItem MiningItemList[] =
     {
         .miningItemId = MININGID_SMOOTH_ROCK,
         .bagItemId = ITEM_SMOOTH_ROCK,
-        .top = 3,
-        .left = 3,
         .tag = MINING_TAG_ITEM_SMOOTH_ROCK,
         .sheet = &sSpriteSheet_ItemSmoothRock,
         .paldata = gItemSmoothRockPal,
@@ -1309,8 +1264,6 @@ static const struct MiningItem MiningItemList[] =
     {
         .miningItemId = MININGID_LEAF_STONE,
         .bagItemId = ITEM_LEAF_STONE,
-        .top = 3,
-        .left = 2,
         .tag = MINING_TAG_ITEM_LEAF_STONE,
         .sheet = &sSpriteSheet_ItemLeafStone,
         .paldata = gItemLeafStonePal,
@@ -1319,8 +1272,6 @@ static const struct MiningItem MiningItemList[] =
     {
         .miningItemId = MININGID_FIRE_STONE,
         .bagItemId = ITEM_FIRE_STONE,
-        .top = 2,
-        .left = 2,
         .tag = MINING_TAG_ITEM_FIRE_STONE,
         .sheet = &sSpriteSheet_ItemFireStone,
         .paldata = gItemFireStonePal,
@@ -1329,8 +1280,6 @@ static const struct MiningItem MiningItemList[] =
     {
         .miningItemId = MININGID_WATER_STONE,
         .bagItemId = ITEM_WATER_STONE,
-        .top = 2,
-        .left = 2,
         .tag = MINING_TAG_ITEM_WATER_STONE,
         .sheet = &sSpriteSheet_ItemWaterStone,
         .paldata = gItemWaterStonePal,
@@ -1339,8 +1288,6 @@ static const struct MiningItem MiningItemList[] =
     {
         .miningItemId = MININGID_THUNDER_STONE,
         .bagItemId = ITEM_THUNDER_STONE,
-        .top = 2,
-        .left = 2,
         .tag = MINING_TAG_ITEM_THUNDER_STONE,
         .sheet = &sSpriteSheet_ItemThunderStone,
         .paldata = gItemThunderStonePal,
@@ -1349,8 +1296,6 @@ static const struct MiningItem MiningItemList[] =
     {
         .miningItemId = MININGID_MOON_STONE,
         .bagItemId = ITEM_MOON_STONE,
-        .top = 1,
-        .left = 3,
         .tag = MINING_TAG_ITEM_MOON_STONE,
         .sheet = &sSpriteSheet_ItemMoonStone,
         .paldata = gItemMoonStonePal,
@@ -1359,8 +1304,6 @@ static const struct MiningItem MiningItemList[] =
     {
         .miningItemId = MININGID_SUN_STONE,
         .bagItemId = ITEM_SUN_STONE,
-        .top = 2,
-        .left = 2,
         .tag = MINING_TAG_ITEM_SUN_STONE,
         .sheet = &sSpriteSheet_ItemSunStone,
         .paldata = gItemSunStonePal,
@@ -1369,8 +1312,6 @@ static const struct MiningItem MiningItemList[] =
     {
         .miningItemId = MININGID_ODD_KEY_STONE,
         .bagItemId = ITEM_ODD_KEYSTONE,
-        .top = 3,
-        .left = 3,
         .tag = MINING_TAG_ITEM_ODD_KEY_STONE,
         .sheet = &sSpriteSheet_ItemOddKeyStone,
         .paldata = gItemOddKeyStonePal,
@@ -1379,8 +1320,6 @@ static const struct MiningItem MiningItemList[] =
     {
         .miningItemId = MININGID_SKULL_FOSSIL,
         .bagItemId = ITEM_SKULL_FOSSIL,
-        .top = 3,
-        .left = 3,
         .tag = MINING_TAG_ITEM_SKULL_FOSSIL,
         .sheet = &sSpriteSheet_ItemSkullFossil,
         .paldata = gItemFossilPal,
@@ -1389,66 +1328,9 @@ static const struct MiningItem MiningItemList[] =
     {
         .miningItemId = MININGID_ARMOR_FOSSIL,
         .bagItemId = ITEM_ARMOR_FOSSIL,
-        .top = 3,
-        .left = 3,
         .tag = MINING_TAG_ITEM_ARMOR_FOSSIL,
         .sheet = &sSpriteSheet_ItemArmorFossil,
         .paldata = gItemFossilPal,
-    },
-};
-
-static const struct MiningStone MiningStoneList[] =
-{
-    [MININGID_STONE_1x4] =
-    {
-        .top = 3,
-        .left = 0,
-    },
-    [MININGID_STONE_4x1] =
-    {
-
-        .top = 0,
-        .left = 3,
-    },
-    [MININGID_STONE_2x4] =
-    {
-        .top = 3,
-        .left = 1,
-    },
-    [MININGID_STONE_4x2] =
-    {
-        .top = 1,
-        .left = 3,
-    },
-    [MININGID_STONE_2x2] =
-    {
-        .top = 1,
-        .left = 1,
-    },
-    [MININGID_STONE_3x3] =
-    {
-        .top = 2,
-        .left = 2,
-    },
-    [MININGID_STONE_SNAKE1] =
-    {
-        .top = 1,
-        .left = 2,
-    },
-    [MININGID_STONE_SNAKE2] =
-    {
-        .top = 1,
-        .left = 2,
-    },
-    [MININGID_STONE_MUSHROOM1] =
-    {
-        .top = 1,
-        .left = 2,
-    },
-    [MININGID_STONE_MUSHROOM2] =
-    {
-        .top = 1,
-        .left = 2,
     },
 };
 
@@ -2639,8 +2521,8 @@ static void DoDrawRandomItem(u8 itemStateId, u8 itemId)
 static bool32 CanStoneBePlacedAtXY(u32 x, u32 y, u32 itemId) // PSF magic
 {
     u32 dx, dy;
-    u32 height = MiningStoneList[itemId].top+1;
-    u32 width = MiningStoneList[itemId].left+1;
+    u32 height = MiningUtil_GetTopValue(itemId) + 1;
+    u32 width =  MiningUtil_GetLeftValue(itemId) + 1;
 
     if ((x + width) > MINING_ZONE_WIDTH)
         return FALSE;
