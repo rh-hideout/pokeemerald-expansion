@@ -778,6 +778,7 @@ static bool32 HandleEndTurnDisable(enum BattlerId battler)
         }
         else if (--gBattleMons[battler].volatiles.disableTimer == 0)  // disable ends
         {
+            PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[battler].volatiles.disabledMove)
             gBattleMons[battler].volatiles.disabledMove = 0;
             gBattleScripting.battler = battler;
             BattleScriptExecute(BattleScript_DisabledNoMore);

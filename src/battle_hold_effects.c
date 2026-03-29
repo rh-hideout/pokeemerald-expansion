@@ -700,7 +700,7 @@ static enum ItemEffect TryCureFreezeOrFrostbite(enum BattlerId battler)
     if (gBattleMons[battler].status1 & STATUS1_FREEZE)
     {
         gBattleMons[battler].status1 &= ~STATUS1_FREEZE;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_FREEEZE;
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_FREEZE;
         effect = ITEM_STATUS_CHANGE;
     }
     else if (gBattleMons[battler].status1 & STATUS1_FROSTBITE)
@@ -750,49 +750,53 @@ static enum ItemEffect TryCureConfusion(enum BattlerId battler)
 static enum ItemEffect TryCureAnyStatus(enum BattlerId battler)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
-    u32 string = 0;
+    bool32 curedStatus = FALSE;
+    bool32 curedConfusion = FALSE;
 
-    if ((gBattleMons[battler].status1 & STATUS1_ANY || gBattleMons[battler].volatiles.confusionTurns > 0))
+    if (gBattleMons[battler].status1 & STATUS1_ANY || gBattleMons[battler].volatiles.confusionTurns > 0)
     {
         if (gBattleMons[battler].status1 & STATUS1_PSN_ANY)
         {
-            StringCopy(gBattleTextBuff1, gStatusConditionString_PoisonJpn);
-            string++;
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_POISON;
+            curedStatus = TRUE;
         }
         if (gBattleMons[battler].status1 & STATUS1_SLEEP)
         {
             gBattleMons[battler].volatiles.nightmare = FALSE;
-            StringCopy(gBattleTextBuff1, gStatusConditionString_SleepJpn);
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_SLEEP;
             TryDeactivateSleepClause(GetBattlerSide(battler), gBattlerPartyIndexes[battler]);
-            string++;
+            curedStatus = TRUE;
         }
         if (gBattleMons[battler].status1 & STATUS1_PARALYSIS)
         {
-            StringCopy(gBattleTextBuff1, gStatusConditionString_ParalysisJpn);
-            string++;
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_PARALYSIS;
+            curedStatus = TRUE;
         }
         if (gBattleMons[battler].status1 & STATUS1_BURN)
         {
-            StringCopy(gBattleTextBuff1, gStatusConditionString_BurnJpn);
-            string++;
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_BURN;
+            curedStatus = TRUE;
         }
-        if (gBattleMons[battler].status1 & STATUS1_FREEZE || gBattleMons[battler].status1 & STATUS1_FROSTBITE)
+        if (gBattleMons[battler].status1 & STATUS1_FREEZE)
         {
-            StringCopy(gBattleTextBuff1, gStatusConditionString_IceJpn);
-            string++;
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_FREEZE;
+            curedStatus = TRUE;
+        }
+        if (gBattleMons[battler].status1 & STATUS1_FROSTBITE)
+        {
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_FROSTBITE;
+            curedStatus = TRUE;
         }
         if (gBattleMons[battler].volatiles.confusionTurns > 0)
-        {
-            StringCopy(gBattleTextBuff1, gStatusConditionString_ConfusionJpn);
-            string++;
-        }
-        if (string <= 1)
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_PROBLEM;
-        else
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_NORMALIZED_STATUS;
+            curedConfusion = TRUE;
         gBattleMons[battler].status1 = 0;
         RemoveConfusionStatus(battler);
-        BattleScriptCall(BattleScript_BerryCureStatusRet);
+        if (curedStatus && curedConfusion)
+            BattleScriptCall(BattleScript_BerryCureStatusAndConfusionRet);
+        else if (curedConfusion)
+            BattleScriptCall(BattleScript_BerryCureConfusionRet);
+        else
+            BattleScriptCall(BattleScript_BerryCureStatusRet);
         effect = ITEM_STATUS_CHANGE;
     }
 
