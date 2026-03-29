@@ -73,6 +73,12 @@ SECTIONS {
 		data/*.o(script_data);
     } > ROM =0
 
+    .rodata.compound_string :
+    SUBALIGN(0)
+    {
+        *.o(.rodata.compound_string.*);
+    } > ROM =0
+
     .rodata :
     ALIGN(4)
     {
@@ -123,6 +129,9 @@ SECTIONS {
     .debug_str      0 : { *(.debug_str) }
     .debug_loc      0 : { *(.debug_loc) }
     .debug_macinfo  0 : { *(.debug_macinfo) }
+
+    /* DWARF 5*/
+    .debug_line_str     0 : { *(.debug_line_str) }
 
     /* Discard everything not specifically mentioned above. */
     /DISCARD/ :

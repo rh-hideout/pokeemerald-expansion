@@ -52,7 +52,7 @@ DOUBLE_BATTLE_TEST("Toxic Chain can inflict bad poison on both foes")
 {
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_RAZOR_LEAF) != DAMAGE_CATEGORY_STATUS);
-        ASSUME(GetMoveTarget(MOVE_RAZOR_LEAF) == MOVE_TARGET_BOTH);
+        ASSUME(GetMoveTarget(MOVE_RAZOR_LEAF) == TARGET_BOTH);
         ASSUME(GetMovePower(MOVE_RAZOR_LEAF) > 0);
         PLAYER(SPECIES_OKIDOGI) { Ability(ABILITY_TOXIC_CHAIN); }
         PLAYER(SPECIES_WOBBUFFET);
@@ -79,7 +79,7 @@ DOUBLE_BATTLE_TEST("Toxic Chain can inflict bad poison on both foes")
 
 SINGLE_BATTLE_TEST("Toxic Chain makes Lum/Pecha Berry trigger before being knocked off")
 {
-    u16 item = 0;
+    enum Item item = ITEM_NONE;
 
     PARAMETRIZE { item = ITEM_PECHA_BERRY; }
     PARAMETRIZE { item = ITEM_LUM_BERRY; }

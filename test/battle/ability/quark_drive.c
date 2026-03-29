@@ -25,7 +25,7 @@ SINGLE_BATTLE_TEST("Quark Drive boosts the highest stat")
 SINGLE_BATTLE_TEST("Quark Drive boosts either Attack or Special Attack, not both")
 {
     u16 species;
-    u32 move;
+    enum Move move;
     s16 damage[2];
 
     PARAMETRIZE { species = SPECIES_IRON_VALIANT; move = MOVE_SCRATCH; }
@@ -143,7 +143,7 @@ SINGLE_BATTLE_TEST("Quark Drive activates on switch-in")
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_IRON_MOTH) { Ability(ABILITY_QUARK_DRIVE); }
-        OPPONENT(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); };
+        OPPONENT(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); }
     } WHEN {
         TURN { SWITCH(player, 1); }
     } SCENE {
@@ -159,9 +159,9 @@ SINGLE_BATTLE_TEST("Quark Drive activates on Electric Terrain even if not ground
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_IRON_JUGULIS, 0) == TYPE_FLYING || GetSpeciesType(SPECIES_IRON_JUGULIS, 1) == TYPE_FLYING);
         PLAYER(SPECIES_IRON_JUGULIS) { Ability(ABILITY_QUARK_DRIVE); }
-        OPPONENT(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); };
+        OPPONENT(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_ELECTRIC_SURGE);
         ABILITY_POPUP(player, ABILITY_QUARK_DRIVE);
@@ -180,7 +180,7 @@ SINGLE_BATTLE_TEST("Quark Drive prioritizes stats in the case of a tie in the fo
         PLAYER(SPECIES_IRON_TREADS) { Ability(ABILITY_QUARK_DRIVE); Attack(stats[0]); Defense(stats[1]); SpAttack(stats[2]); SpDefense(stats[3]); Speed(stats[4]); }
         OPPONENT(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); Speed(5); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_ELECTRIC_SURGE);
         ABILITY_POPUP(player, ABILITY_QUARK_DRIVE);
@@ -198,6 +198,23 @@ SINGLE_BATTLE_TEST("Quark Drive prioritizes stats in the case of a tie in the fo
                 MESSAGE("Iron Treads's Sp. Def was heightened!");
                 break;
         }
+    }
+}
+
+SINGLE_BATTLE_TEST("Quark Drive uses Wonder Room swapped defenses when choosing boosted stat")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_WONDER_ROOM) == EFFECT_WONDER_ROOM);
+        PLAYER(SPECIES_IRON_LEAVES) { Ability(ABILITY_QUARK_DRIVE); Attack(50); Defense(200); SpAttack(40); SpDefense(60); Speed(70); Moves(MOVE_WONDER_ROOM); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_ELECTRIC_TERRAIN); Speed(60); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_WONDER_ROOM); MOVE(opponent, MOVE_ELECTRIC_TERRAIN); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WONDER_ROOM, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIC_TERRAIN, opponent);
+        ABILITY_POPUP(player, ABILITY_QUARK_DRIVE);
+        MESSAGE("The Electric Terrain activated Iron Leaves's Quark Drive!");
+        MESSAGE("Iron Leaves's Sp. Def was heightened!");
     }
 }
 

@@ -293,7 +293,7 @@ MysteryGift_EventScript_Celebi::
 	end
 ```
 
-Walking through this, it's clear we'll need some more scripting. We first check if Celebi's corresponding Mystery Gift flag has been set, and if it has, we need to tell the player they've already redeemed it and can't again. If they haven't though, we get ourselves setup for the givemon, do the givemon, and set the mystery gift flag. Then we need soem more generic handling to prompt nicknaming and some fanfare. 
+Walking through this, it's clear we'll need some more scripting. We first check if Celebi's corresponding Mystery Gift flag has been set, and if it has, we need to tell the player they've already redeemed it and can't again. If they haven't though, we get ourselves setup for the givemon, do the givemon, and set the mystery gift flag. Then we need soem more generic handling to prompt nicknaming and some fanfare.
 
 Two things, then; an event script to handle the case where a mystery gift mon has already been redeemed, and an event script to handle when a mystery gift mon has successfully been received.
 
@@ -327,13 +327,13 @@ Almost done! Just need to handle the specific nicknaming scripts, and then add a
 MysteryGift_EventScript_NicknamePartyMon::
 	msgbox gText_NicknameThisPokemon, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, MysteryGift_EventScript_Exit
-	call Common_EventScript_GetGiftMonPartySlot 
-	call Common_EventScript_NameReceivedPartyMon 
+	call Common_EventScript_GetGiftMonPartySlot
+	call Common_EventScript_NameReceivedPartyMon
 	goto MysteryGift_EventScript_Exit
 	end
 
 MysteryGift_EventScript_NicknamePCMon::
-	msgbox gText_NicknameThisPokemon, MSGBOX_YESNO 
+	msgbox gText_NicknameThisPokemon, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, MysteryGift_EventScript_TransferredToPC
 	call Common_EventScript_NameReceivedBoxMon
 	call Common_EventScript_TransferredToPC

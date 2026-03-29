@@ -60,6 +60,7 @@ enum {
     GFXTAG_CURSOR_FILLED,
     GFXTAG_INPUT_ARROW,
     GFXTAG_UNDERSCORE,
+    GFXTAG_RIVAL = 255,
 };
 
 enum {
@@ -71,6 +72,7 @@ enum {
     PALTAG_CURSOR,
     PALTAG_BACK_BUTTON,
     PALTAG_OK_BUTTON,
+    PALTAG_RIVAL = 255,
 };
 
 enum {
@@ -175,7 +177,7 @@ struct NamingScreenData
     const struct NamingScreenTemplate *template;
     u8 templateNum;
     u8 *destBuffer;
-    u16 monSpecies;
+    enum Species monSpecies;
     u16 monGender;
     u32 monPersonality;
     MainCallback returnCallback;
@@ -186,7 +188,8 @@ EWRAM_DATA static struct NamingScreenData *sNamingScreen = NULL;
 static const u8 sPCIconOff_Gfx[] = INCBIN_U8("graphics/naming_screen/pc_icon_off.4bpp");
 static const u8 sPCIconOn_Gfx[] = INCBIN_U8("graphics/naming_screen/pc_icon_on.4bpp");
 static const u16 sKeyboard_Pal[] = INCBIN_U16("graphics/naming_screen/keyboard.gbapal");
-static const u16 sRival_Pal[] = INCBIN_U16("graphics/naming_screen/rival.gbapal"); // Unused, leftover from FRLG rival
+static const u16 sRival_Gfx[] = INCBIN_U16("graphics/naming_screen/rival.4bpp");
+static const u16 sRival_Pal[] = INCBIN_U16("graphics/naming_screen/rival.gbapal");
 
 static const u8 *const sTransferredToPCMessages[] =
 {
@@ -196,6 +199,8 @@ static const u8 *const sTransferredToPCMessages[] =
     gText_PkmnTransferredLanettesPCBoxFull
 };
 
+
+static const u8 sText_RivalsName[] = _("RIVAL's NAME?");
 static const u8 sText_AlphabetUpperLower[] = _("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!");
 
 static const struct BgTemplate sBgTemplates[] =
@@ -393,7 +398,9 @@ static void VBlankCB_NamingScreen(void);
 static void NamingScreen_ShowBgs(void);
 static bool8 IsWideLetter(u8);
 
-void DoNamingScreen(u8 templateNum, u8 *destBuffer, u16 monSpecies, u16 monGender, u32 monPersonality, MainCallback returnCallback)
+static const u8 sText_MoveOkBack[] = _("{DPAD_NONE}MOVE  {A_BUTTON}OK  {B_BUTTON}BACK");
+
+void DoNamingScreen(u8 templateNum, u8 *destBuffer, u16 monSpeciesOrPlayerGender, u16 monGender, u32 monPersonality, MainCallback returnCallback)
 {
     sNamingScreen = Alloc(sizeof(struct NamingScreenData));
     if (!sNamingScreen)
@@ -403,7 +410,7 @@ void DoNamingScreen(u8 templateNum, u8 *destBuffer, u16 monSpecies, u16 monGende
     else
     {
         sNamingScreen->templateNum = templateNum;
-        sNamingScreen->monSpecies = monSpecies;
+        sNamingScreen->monSpecies = monSpeciesOrPlayerGender;
         sNamingScreen->monGender = monGender;
         sNamingScreen->monPersonality = monPersonality;
         sNamingScreen->destBuffer = destBuffer;
@@ -732,7 +739,7 @@ static UNUSED void DisplaySentToPCMessage(void)
 static bool8 MainState_WaitSentToPCMessage(void)
 {
     RunTextPrinters();
-    if (!IsTextPrinterActive(0) && JOY_NEW(A_BUTTON))
+    if (!IsTextPrinterActiveOnWindow(0) && JOY_NEW(A_BUTTON))
         sNamingScreen->state = STATE_FADE_OUT;
 
     return FALSE;
@@ -1369,6 +1376,7 @@ static void NamingScreen_CreatePCIcon(void);
 static void NamingScreen_CreateMonIcon(void);
 static void NamingScreen_CreateWaldaDadIcon(void);
 static void NamingScreen_CreateCodeIcon(void);
+static void NamingScreen_CreateRivalIcon(void);
 
 static void (*const sIconFunctions[])(void) =
 {
@@ -1378,6 +1386,7 @@ static void (*const sIconFunctions[])(void) =
     NamingScreen_CreateMonIcon,
     NamingScreen_CreateWaldaDadIcon,
     NamingScreen_CreateCodeIcon,
+    NamingScreen_CreateRivalIcon,
 };
 
 static void CreateInputTargetIcon(void)
@@ -1395,7 +1404,7 @@ static void NamingScreen_CreatePlayerIcon(void)
     u16 rivalGfxId;
     u8 spriteId;
 
-    rivalGfxId = GetRivalAvatarGraphicsIdByStateIdAndGender(PLAYER_AVATAR_STATE_NORMAL, sNamingScreen->monSpecies);
+    rivalGfxId = GetRivalAvatarGraphicsIdByStateIdAndGender(PLAYER_AVATAR_STATE_NORMAL, (enum Gender)sNamingScreen->monSpecies);
     spriteId = CreateObjectGraphicsSprite(rivalGfxId, SpriteCallbackDummy, 56, 37, 0);
     gSprites[spriteId].oam.priority = 3;
     StartSpriteAnim(&gSprites[spriteId], ANIM_STD_GO_SOUTH);
@@ -1432,6 +1441,43 @@ static void NamingScreen_CreateCodeIcon(void)
 {
     u8 spriteId;
     spriteId = CreateObjectGraphicsSprite(OBJ_EVENT_GFX_MYSTERY_GIFT_MAN, SpriteCallbackDummy, 56, 37, 0);
+    gSprites[spriteId].oam.priority = 3;
+}
+
+static const union AnimCmd sAnim_Rival[] =
+{
+    ANIMCMD_FRAME( 0, 10),
+    ANIMCMD_FRAME(24, 10),
+    ANIMCMD_FRAME( 0, 10),
+    ANIMCMD_FRAME(32, 10),
+    ANIMCMD_JUMP(0)
+};
+
+static const union AnimCmd *const sAnims_Rival[] =
+{
+    sAnim_Rival
+};
+
+static void NamingScreen_CreateRivalIcon(void)
+{
+    const struct SpriteSheet sheet = {
+        sRival_Gfx, 0x900, GFXTAG_RIVAL
+    };
+    const struct SpritePalette palette = {
+        sRival_Pal, PALTAG_RIVAL
+    };
+    struct SpriteTemplate template;
+    const struct SubspriteTable * tables_p;
+    u8 spriteId;
+
+    CopyObjectGraphicsInfoToSpriteTemplate(OBJ_EVENT_GFX_RED_NORMAL, SpriteCallbackDummy, &template, &tables_p);
+
+    template.tileTag = sheet.tag;
+    template.paletteTag = palette.tag;
+    template.anims = sAnims_Rival;
+    LoadSpriteSheet(&sheet);
+    LoadSpritePalette(&palette);
+    spriteId = CreateSprite(&template, 56, 37, 0);
     gSprites[spriteId].oam.priority = 3;
 }
 
@@ -1749,6 +1795,7 @@ static void (*const sDrawTextEntryBoxFuncs[])(void) =
     [NAMING_SCREEN_NICKNAME]   = DrawMonTextEntryBox,
     [NAMING_SCREEN_WALDA]      = DrawNormalTextEntryBox,
     [NAMING_SCREEN_CODE]       = DrawNormalTextEntryBox,
+    [NAMING_SCREEN_RIVAL]      = DrawNormalTextEntryBox
 };
 
 static void DrawTextEntryBox(void)
@@ -2016,7 +2063,7 @@ static void PrintControls(void)
     const u8 color[3] = { TEXT_DYNAMIC_COLOR_6, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY };
 
     FillWindowPixelBuffer(sNamingScreen->windows[WIN_BANNER], PIXEL_FILL(15));
-    AddTextPrinterParameterized3(sNamingScreen->windows[WIN_BANNER], FONT_SMALL, 2, 1, color, 0, gText_MoveOkBack);
+    AddTextPrinterParameterized3(sNamingScreen->windows[WIN_BANNER], FONT_SMALL, 2, 1, color, 0, sText_MoveOkBack);
     PutWindowTilemap(sNamingScreen->windows[WIN_BANNER]);
     CopyWindowToVram(sNamingScreen->windows[WIN_BANNER], COPYWIN_FULL);
 }
@@ -2108,7 +2155,7 @@ static const struct NamingScreenTemplate sPlayerNamingScreenTemplate =
     .addGenderIcon = FALSE,
     .initialPage = KBPAGE_LETTERS_UPPER,
     .unused = 35,
-    .title = gText_YourName,
+    .title = COMPOUND_STRING("YOUR NAME?"),
 };
 
 static const struct NamingScreenTemplate sPCBoxNamingTemplate =
@@ -2119,7 +2166,7 @@ static const struct NamingScreenTemplate sPCBoxNamingTemplate =
     .addGenderIcon = FALSE,
     .initialPage = KBPAGE_LETTERS_UPPER,
     .unused = 19,
-    .title = gText_BoxName,
+    .title = COMPOUND_STRING("BOX NAME?"),
 };
 
 static const struct NamingScreenTemplate sMonNamingScreenTemplate =
@@ -2130,7 +2177,7 @@ static const struct NamingScreenTemplate sMonNamingScreenTemplate =
     .addGenderIcon = TRUE,
     .initialPage = KBPAGE_LETTERS_UPPER,
     .unused = 35,
-    .title = gText_PkmnsNickname,
+    .title = COMPOUND_STRING("{STR_VAR_1}'s nickname?"),
 };
 
 static const struct NamingScreenTemplate sWaldaWordsScreenTemplate =
@@ -2141,11 +2188,10 @@ static const struct NamingScreenTemplate sWaldaWordsScreenTemplate =
     .addGenderIcon = FALSE,
     .initialPage = KBPAGE_LETTERS_UPPER,
     .unused = 11,
-    .title = gText_TellHimTheWords,
+    .title = COMPOUND_STRING("Tell him the words."),
 };
 
-static const u8 sText_EnterCode[] = _("Enter code:");
-static const struct NamingScreenTemplate sCodeScreenTemplate = 
+static const struct NamingScreenTemplate sCodeScreenTemplate =
 {
     .copyExistingString = FALSE,
     .maxChars = CODE_NAME_LENGTH,
@@ -2153,7 +2199,17 @@ static const struct NamingScreenTemplate sCodeScreenTemplate =
     .addGenderIcon = FALSE,
     .initialPage = KBPAGE_LETTERS_UPPER,
     .unused = 35,
-    .title = sText_EnterCode,
+    .title = COMPOUND_STRING("Enter code:"),
+};
+
+static const struct NamingScreenTemplate sRivalNamingScreenTemplate =
+{
+    .copyExistingString = FALSE,
+    .maxChars = PLAYER_NAME_LENGTH,
+    .iconFunction = 6,
+    .addGenderIcon = FALSE,
+    .initialPage = KBPAGE_LETTERS_UPPER,
+    .title = sText_RivalsName,
 };
 
 static const struct NamingScreenTemplate *const sNamingScreenTemplates[] =
@@ -2164,6 +2220,7 @@ static const struct NamingScreenTemplate *const sNamingScreenTemplates[] =
     [NAMING_SCREEN_NICKNAME]   = &sMonNamingScreenTemplate,
     [NAMING_SCREEN_WALDA]      = &sWaldaWordsScreenTemplate,
     [NAMING_SCREEN_CODE]       = &sCodeScreenTemplate,
+    [NAMING_SCREEN_RIVAL]      = &sRivalNamingScreenTemplate,
 };
 
 static const struct OamData sOam_8x8 =
@@ -2591,5 +2648,3 @@ static const struct SpritePalette sSpritePalettes[] =
     {gNamingScreenMenu_Pal[4], PALTAG_OK_BUTTON},
     {}
 };
-
-

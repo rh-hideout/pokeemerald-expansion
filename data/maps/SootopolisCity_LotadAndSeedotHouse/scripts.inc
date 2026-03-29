@@ -6,11 +6,10 @@ SootopolisCity_LotadAndSeedotHouse_EventScript_SeedotBrother::
 	lock
 	faceplayer
 	msgbox SootopolisCity_LotadAndSeedotHouse_Text_PleaseShowMeBigSeedot, MSGBOX_DEFAULT
-	fadescreen FADE_TO_BLACK
-	special ChooseBoxMon
+	setvar VAR_0x8009, SPECIES_SEEDOT
+	chooseboxmon SELECT_PC_MON_TRADE
 	waitstate
-	copyvar VAR_RESULT, VAR_0x8004
-	goto_if_eq VAR_RESULT, PARTY_NOTHING_CHOSEN, SootopolisCity_LotadAndSeedotHouse_EventScript_CancelShowSeedot
+	goto_if_eq VAR_0x8004, PARTY_NOTHING_CHOSEN, SootopolisCity_LotadAndSeedotHouse_EventScript_CancelShowSeedot
 	special CompareSeedotSize
 	goto_if_eq VAR_RESULT, 1, SootopolisCity_LotadAndSeedotHouse_EventScript_NotSeedot
 	goto_if_eq VAR_RESULT, 2, SootopolisCity_LotadAndSeedotHouse_EventScript_SmallSeedot
@@ -51,11 +50,10 @@ SootopolisCity_LotadAndSeedotHouse_EventScript_LotadBrother::
 	lock
 	faceplayer
 	msgbox SootopolisCity_LotadAndSeedotHouse_Text_PleaseShowMeBigLotad, MSGBOX_DEFAULT
-	fadescreen FADE_TO_BLACK
-	special ChooseBoxMon
+	setvar VAR_0x8009, SPECIES_LOTAD
+	chooseboxmon SELECT_PC_MON_TRADE
 	waitstate
-	copyvar VAR_RESULT, VAR_0x8004
-	goto_if_eq VAR_RESULT, PARTY_NOTHING_CHOSEN, SootopolisCity_LotadAndSeedotHouse_EventScript_CancelShowLotad
+	goto_if_eq VAR_0x8004, PARTY_NOTHING_CHOSEN, SootopolisCity_LotadAndSeedotHouse_EventScript_CancelShowLotad
 	special CompareLotadSize
 	goto_if_eq VAR_RESULT, 1, SootopolisCity_LotadAndSeedotHouse_EventScript_NotLotad
 	goto_if_eq VAR_RESULT, 2, SootopolisCity_LotadAndSeedotHouse_EventScript_SmallLotad

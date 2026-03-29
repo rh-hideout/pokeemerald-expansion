@@ -114,9 +114,9 @@ SINGLE_BATTLE_TEST("Full Restore restores a battler's HP and cures confusion")
         PLAYER(SPECIES_WOBBUFFET) { HP(1); MaxHP(300); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN{ MOVE(opponent, MOVE_CONFUSE_RAY); }
-        TURN{ USE_ITEM(player, ITEM_FULL_RESTORE, partyIndex: 0); }
-        TURN{ MOVE(player, MOVE_SCRATCH); }
+        TURN { MOVE(opponent, MOVE_CONFUSE_RAY); }
+        TURN { USE_ITEM(player, ITEM_FULL_RESTORE, partyIndex: 0); }
+        TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
         MESSAGE("Wobbuffet had its HP restored.");
         NONE_OF { MESSAGE("Wobbuffet is confused!"); }
@@ -132,7 +132,7 @@ SINGLE_BATTLE_TEST("Full Restore resets Toxic Counter")
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_TOXIC); }
-        TURN { ; }
+        TURN {}
         TURN { USE_ITEM(player, ITEM_FULL_RESTORE, partyIndex: 0); }
     } SCENE {
         MESSAGE("The opposing Wobbuffet used Toxic!");

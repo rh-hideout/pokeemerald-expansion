@@ -25,7 +25,9 @@ static const u16 sMoveItemTable[][4] =
 
 SINGLE_BATTLE_TEST("Weakness berries decrease the base power of moves by half", s16 damage)
 {
-    u32 move = 0, item = 0, defender = 0;
+    enum Move move = MOVE_NONE;
+    enum Item item = ITEM_NONE;
+    u32 defender = 0;
     enum Type type = TYPE_NONE;
 
     for (u32 j = 0; j < ARRAY_COUNT(sMoveItemTable); j++)
@@ -63,7 +65,9 @@ SINGLE_BATTLE_TEST("Weakness berries decrease the base power of moves by half", 
 
 SINGLE_BATTLE_TEST("Weakness berries do not activate unless a move is super effective", s16 damage)
 {
-    u32 move = 0, item = 0, defender = 0;
+    enum Move move = MOVE_NONE;
+    enum Item item = ITEM_NONE;
+    u32 defender = 0;
     enum Type type = TYPE_NONE;
 
     for (u32 j = 0; j < ARRAY_COUNT(sMoveItemTable); j++)
@@ -99,7 +103,7 @@ SINGLE_BATTLE_TEST("Weakness berries do not activate unless a move is super effe
 
 SINGLE_BATTLE_TEST("Weakness berries do not decrease the power of Struggle", s16 damage)
 {
-    u32 item = 0;
+    enum Item item = ITEM_NONE;
 
     PARAMETRIZE { item = ITEM_NONE; }
     PARAMETRIZE { item = ITEM_CHILAN_BERRY; }
@@ -122,5 +126,24 @@ SINGLE_BATTLE_TEST("Weakness berries do not decrease the power of Struggle", s16
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
         EXPECT_EQ(results[0].damage, results[1].damage);
+    }
+}
+
+SINGLE_BATTLE_TEST("Weakness berries do not activate if Disguise blocks the damage")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_BABIRI_BERRY) == HOLD_EFFECT_RESIST_BERRY);
+        ASSUME(GetItemHoldEffectParam(ITEM_BABIRI_BERRY) == TYPE_STEEL);
+        ASSUME(GetMoveType(MOVE_METAL_CLAW) == TYPE_STEEL);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_MIMIKYU) { Item(ITEM_BABIRI_BERRY); Ability(ABILITY_DISGUISE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_METAL_CLAW); }
+    } SCENE {
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+            MESSAGE("The Babiri Berry weakened the damage to the opposing Mimikyu!");
+        }
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_METAL_CLAW, player);
     }
 }

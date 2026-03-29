@@ -1,4 +1,3 @@
-from enum import Enum, auto
 import re
 import tempfile
 
@@ -23,7 +22,7 @@ bg_color_re = re.compile(r"(?P<indent>\s*)\.bgColor\s*=\s*(?P<bg_color>[a-zA-Z0-
 def replace_color_defs(m):
     s = m[0]
     if ".accentColor" not in s:
-        s = bg_color_re.sub(lambda m: f"{m["indent"]}.bgColor = {m["bg_color"]},{m["indent"]}.accentColor = {m["bg_color"]}{m["comma"]}", s)
+        s = bg_color_re.sub(lambda m: f'{m["indent"]}.bgColor = {m["bg_color"]},{m["indent"]}.accentColor = {m["bg_color"]}{m["comma"]}', s)
     s = s.replace(".bgColor", ".color.background")
     s = s.replace(".fgColor", ".color.foreground")
     s = s.replace(".shadowColor", ".color.shadow")
@@ -37,7 +36,7 @@ if __name__ == "__main__":
             text_c = f.read()
         m = font_infos_re.search(text_c)
         if m is not None:
-            print(f"src/text.c: Updating {m["name"]}...")
+            print(f'src/text.c: Updating {m["name"]}...')
             font_infos_elems = m.group("elems")
             fi_start, fi_end = m.span("elems")
 
@@ -60,7 +59,7 @@ if __name__ == "__main__":
 
         search_start = 0
         while (m := text_on_windows_info_re.search(text_c, search_start)) is not None:
-            print(f"src/battle_message.c: Updating {m["name"]}...")
+            print(f'src/battle_message.c: Updating {m["name"]}...')
             text_on_windows_elems = m.group("elems")
             match_start, match_end = m.span("elems")
 

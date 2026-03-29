@@ -1,4 +1,4 @@
-FiveIsland_LostCave_Entrance_MapScripts::
+FiveIsland_LostCave_Entrance_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, FiveIsland_LostCave_Entrance_OnTransition
 	.byte 0
 

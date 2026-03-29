@@ -272,7 +272,7 @@ static void InitGame(struct PokemonJump *);
 static void ResetForNewGame(struct PokemonJump *);
 static void InitPlayerAndJumpTypes(void);
 static void ResetPlayersForNewGame(void);
-static s16 GetSpeciesPokemonJumpType(u16 species);
+static s16 GetSpeciesPokemonJumpType(enum Species species);
 static void InitJumpMonInfo(struct PokemonJump_MonInfo *, struct Pokemon *);
 static void CB2_PokemonJump(void);
 static void Task_StartPokemonJump(u8);
@@ -339,7 +339,7 @@ static u16 GetPrizeData(void);
 static void UnpackPrizeData(u16, u16 *, u16 *);
 static u16 GetPrizeItemId(void);
 static u16 GetPrizeQuantity(void);
-static u16 GetQuantityLimitedByBag(u16, u16);
+static u16 GetQuantityLimitedByBag(enum Item, u16);
 static void SpriteCB_Star(struct Sprite *);
 static void SpriteCB_MonHitShake(struct Sprite *);
 static void SpriteCB_MonHitFlash(struct Sprite *);
@@ -352,9 +352,9 @@ static void SetUpPokeJumpGfxFuncById(int);
 static bool32 IsPokeJumpGfxFuncFinished(void);
 static void SetUpResetVineGfx(void);
 static bool32 ResetVineGfx(void);
-static void PrintPrizeMessage(u16, u16);
-static void PrintPrizeFilledBagMessage(u16);
-static void PrintNoRoomForPrizeMessage(u16);
+static void PrintPrizeMessage(enum Item, u16);
+static void PrintPrizeFilledBagMessage(enum Item);
+static void PrintNoRoomForPrizeMessage(enum Item);
 static bool32 DoPrizeMessageAndFanfare(void);
 static void ClearMessageWindow(void);
 static void SetMonSpriteY(u32, s16);
@@ -520,7 +520,7 @@ static void ResetPlayersForNewGame(void)
     }
 }
 
-static s16 GetSpeciesPokemonJumpType(u16 species)
+static s16 GetSpeciesPokemonJumpType(enum Species species)
 {
     return gSpeciesInfo[SanitizeSpeciesId(species)].pokemonJumpType;
 }
@@ -2153,7 +2153,7 @@ static bool32 HasEnoughScoreForPrize(void)
 
 static u16 GetPrizeData(void)
 {
-    u16 itemId = GetPrizeItemId();
+    enum Item itemId = GetPrizeItemId();
     u16 quantity = GetPrizeQuantity();
     return (quantity << 12) | (itemId & 0xFFF);
 }
@@ -2186,7 +2186,7 @@ static u16 GetPrizeQuantity(void)
     return quantity;
 }
 
-static u16 GetQuantityLimitedByBag(u16 item, u16 quantity)
+static u16 GetQuantityLimitedByBag(enum Item item, u16 quantity)
 {
     while (quantity && !CheckBagHasSpace(item, quantity))
         quantity--;
@@ -2214,7 +2214,7 @@ static u8 *GetPokeJumpPlayerName(u8 multiplayerId)
     return sPokemonJump->players[multiplayerId].name;
 }
 
-bool32 IsSpeciesAllowedInPokemonJump(u16 species)
+bool32 IsSpeciesAllowedInPokemonJump(enum Species species)
 {
     return GetSpeciesPokemonJumpType(species) != PKMN_JUMP_TYPE_NONE;
 }
@@ -2227,7 +2227,7 @@ void IsPokemonJumpSpeciesInParty(void)
     {
         if (GetMonData(&gPlayerParty[i], MON_DATA_SANITY_HAS_SPECIES))
         {
-            u16 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
+            enum Species species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
             if (IsSpeciesAllowedInPokemonJump(species))
             {
                 gSpecialVar_Result = TRUE;
@@ -3331,7 +3331,7 @@ static bool32 ResetVineGfx(void)
     return TRUE;
 }
 
-static void PrintPrizeMessage(u16 itemId, u16 quantity)
+static void PrintPrizeMessage(enum Item itemId, u16 quantity)
 {
     CopyItemNameHandlePlural(itemId, sPokemonJumpGfx->itemName, quantity);
     ConvertIntToDecimalStringN(sPokemonJumpGfx->itemQuantityStr, quantity, STR_CONV_MODE_LEFT_ALIGN, 1);
@@ -3346,7 +3346,7 @@ static void PrintPrizeMessage(u16 itemId, u16 quantity)
     sPokemonJumpGfx->msgWindowState = 0;
 }
 
-static void PrintPrizeFilledBagMessage(u16 itemId)
+static void PrintPrizeFilledBagMessage(enum Item itemId)
 {
     CopyItemName(itemId, sPokemonJumpGfx->itemName);
     DynamicPlaceholderTextUtil_Reset();
@@ -3359,7 +3359,7 @@ static void PrintPrizeFilledBagMessage(u16 itemId)
     sPokemonJumpGfx->msgWindowState = 0;
 }
 
-static void PrintNoRoomForPrizeMessage(u16 itemId)
+static void PrintNoRoomForPrizeMessage(enum Item itemId)
 {
     CopyItemName(itemId, sPokemonJumpGfx->itemName);
     DynamicPlaceholderTextUtil_Reset();

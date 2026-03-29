@@ -5,6 +5,7 @@
 #include "malloc.h"
 #include "pokemon.h"
 #include "trainer_hill.h"
+#include "trainer_tower.h"
 #include "party_menu.h"
 #include "event_data.h"
 #include "constants/abilities.h"
@@ -14,7 +15,9 @@
 
 void AllocateBattleResources(void)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
+    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_TOWER && gMapHeader.regionMapSectionId == MAPSEC_TRAINER_TOWER_2)
+        InitTrainerTowerBattleStruct();
+    else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
         InitTrainerHillBattleStruct();
 
     gBattleStruct = AllocZeroed(sizeof(*gBattleStruct));
@@ -49,7 +52,9 @@ void AllocateBattleResources(void)
 
 void FreeBattleResources(void)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
+    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_TOWER && gMapHeader.regionMapSectionId == MAPSEC_TRAINER_TOWER_2)
+        FreeTrainerTowerBattleStruct();
+    else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
         FreeTrainerHillBattleStruct();
 
     gFieldStatuses = 0;
@@ -76,13 +81,13 @@ void FreeBattleResources(void)
     }
 }
 
-void AdjustFriendshipOnBattleFaint(u8 battler)
+void AdjustFriendshipOnBattleFaint(enum BattlerId battler)
 {
-    u8 opposingBattlerId;
+    enum BattlerId opposingBattlerId;
 
     if (IsDoubleBattle())
     {
-        u8 opposingBattlerId2;
+        enum BattlerId opposingBattlerId2;
 
         opposingBattlerId = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
         opposingBattlerId2 = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
@@ -101,7 +106,7 @@ void AdjustFriendshipOnBattleFaint(u8 battler)
         AdjustFriendship(GetBattlerMon(battler), FRIENDSHIP_EVENT_FAINT_SMALL);
 }
 
-void SwitchPartyOrderInGameMulti(u8 battler, u8 arg1)
+void SwitchPartyOrderInGameMulti(enum BattlerId battler, u8 arg1)
 {
     if (IsOnPlayerSide(battler))
     {
@@ -118,7 +123,7 @@ void SwitchPartyOrderInGameMulti(u8 battler, u8 arg1)
 
 // Called when a Pokémon is unable to attack during a Battle Palace battle.
 // Check if it was because they are frozen/asleep, and if so try to cure the status.
-u32 BattlePalace_TryEscapeStatus(u8 battler)
+u32 BattlePalace_TryEscapeStatus(enum BattlerId battler)
 {
     u32 effect = 0;
 
@@ -184,7 +189,8 @@ u32 BattlePalace_TryEscapeStatus(u8 battler)
                 {
                     // Unfreeze
                     gBattleMons[battler].status1 &= ~(STATUS1_FREEZE);
-                    BattleScriptCall(BattleScript_MoveUsedUnfroze);
+                    gBattleScripting.battler = battler;
+                    BattleScriptCall(BattleScript_BattlerDefrosted);
                     gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_DEFROSTED;
                 }
                 effect = 2;

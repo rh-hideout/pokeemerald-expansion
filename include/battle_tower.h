@@ -16,10 +16,16 @@ struct RSBattleTowerRecord
     /*0xA0*/ u32 checksum;
 };
 
-extern const u8 gTowerMaleFacilityClasses[30];
-extern const u16 gTowerMaleTrainerGfxIds[30];
-extern const u8 gTowerFemaleFacilityClasses[20];
-extern const u16 gTowerFemaleTrainerGfxIds[20];
+struct FacilityClass {
+    u16 class;
+    u16 gfxId;
+};
+
+#define FACILITY_CLASSES_MALE   30
+#define FACILITY_CLASSES_FEMALE 20
+
+extern const struct FacilityClass gTowerMaleFacilityClasses[FACILITY_CLASSES_MALE];
+extern const struct FacilityClass gTowerFemaleFacilityClasses[FACILITY_CLASSES_FEMALE];
 extern const struct TrainerMon gSlateportBattleTentMons[];
 extern const struct BattleFrontierTrainer gSlateportBattleTentTrainers[];
 
@@ -27,7 +33,7 @@ void CallBattleTowerFunc(void);
 void PutNewBattleTowerRecord(struct EmeraldBattleTowerRecord *newRecordEm);
 void CalcEmeraldBattleTowerChecksum(struct EmeraldBattleTowerRecord *record);
 void CalcRubyBattleTowerChecksum(struct RSBattleTowerRecord *record);
-u16 GetCurrentBattleTowerWinStreak(u8 lvlMode, u8 battleMode);
+u16 GetCurrentBattleTowerWinStreak(enum FrontierLevelMode lvlMode, u8 battleMode);
 void TryHideBattleTowerReporter(void);
 bool32 RubyBattleTowerRecordToEmerald(struct RSBattleTowerRecord *src, struct EmeraldBattleTowerRecord *dst);
 bool32 EmeraldBattleTowerRecordToRuby(struct EmeraldBattleTowerRecord *src, struct RSBattleTowerRecord *dst);

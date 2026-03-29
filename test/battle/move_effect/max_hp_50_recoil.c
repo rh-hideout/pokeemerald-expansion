@@ -77,9 +77,9 @@ SINGLE_BATTLE_TEST("Steel Beam causes the user & the target to faint when below 
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STEEL_BEAM, player);
         HP_BAR(opponent, hp: 0);
-        MESSAGE("The opposing Wobbuffet fainted!");
         HP_BAR(player, hp: 0);
         MESSAGE("Wobbuffet fainted!");
+        MESSAGE("The opposing Wobbuffet fainted!");
     }
 }
 
@@ -145,5 +145,20 @@ SINGLE_BATTLE_TEST("Steel Beam is not blocked by Damp")
             ABILITY_POPUP(opponent, ABILITY_DAMP);
             MESSAGE("The opposing Golduck's Damp prevents Wobbuffet from using Steel Beam!");
         }
+    }
+}
+
+SINGLE_BATTLE_TEST("Steel Beam inflicts recoil if it hits a Substitute")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { HP(400); MaxHP(400); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_STEEL_BEAM); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STEEL_BEAM, player);
+        SUB_HIT(opponent);
+        HP_BAR(player, damage: 200);
     }
 }
