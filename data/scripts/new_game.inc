@@ -114,6 +114,7 @@ EventScript_ResetAllBerries::
 
 EventScript_ResetAllMapFlags::
 	setflag FLAG_INSTANT_TEXT
+	setflag FLAG_SYS_PC_LANETTE
     setflag FLAG_HIDE_CONTEST_POKE_BALL
 	setflag FLAG_HIDE_ROUTE_111_VICTORIA_WINSTRATE
 	setflag FLAG_HIDE_ROUTE_111_VIVI_WINSTRATE
