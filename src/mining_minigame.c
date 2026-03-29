@@ -1,3 +1,5 @@
+// TODO: Define iterator inside the for loop. FIX
+// TODO: Use Fisher-Yates-Shuffle to generate the items in the zones
 // TODO: Rewrite Debug System for Mining Minigame from scratch -> Outdated Debug Mode from PSF
 
 #include "mining_minigame.h"
