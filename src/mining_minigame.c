@@ -1,6 +1,5 @@
 // TODO: Define iterator inside the for loop. FIX
 // TODO: Use Fisher-Yates-Shuffle to generate the items in the zones
-// TODO: Remove `miningItemId` from `MiningItemList[]`
 // TODO: Rewrite Debug System for Mining Minigame from scratch -> Outdated Debug Mode from PSF
 
 #include "mining_minigame.h"
@@ -1107,7 +1106,6 @@ static const struct SpriteTemplate gSpriteStoneMushroom2 =
 
 struct MiningItem
 {
-    u32 miningItemId;
     u32 bagItemId;
     u32 tag;
     const struct CompressedSpriteSheet* sheet;
@@ -1118,7 +1116,6 @@ static const struct MiningItem MiningItemList[] =
 {
     [MININGID_NONE] =
     {
-        .miningItemId = MININGID_NONE,
         .bagItemId = 0,
         .tag = 0,
         .sheet = NULL,
@@ -1126,7 +1123,6 @@ static const struct MiningItem MiningItemList[] =
     },
     [MININGID_HARD_STONE] =
     {
-        .miningItemId = MININGID_HARD_STONE,
         .bagItemId = ITEM_HARD_STONE,
         .tag = MINING_TAG_ITEM_HARDSTONE,
         .sheet = &sSpriteSheet_ItemHardStone,
@@ -1134,7 +1130,6 @@ static const struct MiningItem MiningItemList[] =
     },
     [MININGID_REVIVE] =
     {
-        .miningItemId = MININGID_REVIVE,
         .bagItemId = ITEM_REVIVE,
         .tag = MINING_TAG_ITEM_REVIVE,
         .sheet = &sSpriteSheet_ItemRevive,
@@ -1142,7 +1137,6 @@ static const struct MiningItem MiningItemList[] =
     },
     [MININGID_STAR_PIECE] =
     {
-        .miningItemId = MININGID_STAR_PIECE,
         .bagItemId = ITEM_STAR_PIECE,
         .tag = MINING_TAG_ITEM_STAR_PIECE,
         .sheet = &sSpriteSheet_ItemStarPiece,
@@ -1150,7 +1144,6 @@ static const struct MiningItem MiningItemList[] =
     },
     [MININGID_DAMP_ROCK] =
     {
-        .miningItemId = MININGID_DAMP_ROCK,
         .bagItemId = ITEM_DAMP_ROCK,
         .tag = MINING_TAG_ITEM_DAMP_ROCK,
         .sheet = &sSpriteSheet_ItemDampRock,
@@ -1158,7 +1151,6 @@ static const struct MiningItem MiningItemList[] =
     },
     [MININGID_RED_SHARD] =
     {
-        .miningItemId = MININGID_RED_SHARD,
         .bagItemId = ITEM_RED_SHARD,
         .tag = MINING_TAG_ITEM_RED_SHARD,
         .sheet = &sSpriteSheet_ItemRedShard,
@@ -1166,7 +1158,6 @@ static const struct MiningItem MiningItemList[] =
     },
     [MININGID_BLUE_SHARD] =
     {
-        .miningItemId = MININGID_BLUE_SHARD,
         .bagItemId = ITEM_BLUE_SHARD,
         .tag = MINING_TAG_ITEM_BLUE_SHARD,
         .sheet = &sSpriteSheet_ItemBlueShard,
@@ -1174,7 +1165,6 @@ static const struct MiningItem MiningItemList[] =
     },
     [MININGID_YELLOW_SHARD] =
     {
-        .miningItemId = MININGID_YELLOW_SHARD,
         .bagItemId = ITEM_YELLOW_SHARD,
         .tag = MINING_TAG_ITEM_YELLOW_SHARD,
         .sheet = &sSpriteSheet_ItemYellowShard,
@@ -1182,7 +1172,6 @@ static const struct MiningItem MiningItemList[] =
     },
     [MININGID_GREEN_SHARD] =
     {
-        .miningItemId = MININGID_GREEN_SHARD,
         .bagItemId = ITEM_GREEN_SHARD,
         .tag = MINING_TAG_ITEM_GREEN_SHARD,
         .sheet = &sSpriteSheet_ItemGreenShard,
@@ -1190,7 +1179,6 @@ static const struct MiningItem MiningItemList[] =
     },
     [MININGID_IRON_BALL] =
     {
-        .miningItemId = MININGID_IRON_BALL,
         .bagItemId = ITEM_IRON_BALL,
         .tag = MINING_TAG_ITEM_IRON_BALL,
         .sheet = &sSpriteSheet_ItemIronBall,
@@ -1198,7 +1186,6 @@ static const struct MiningItem MiningItemList[] =
     },
     [MININGID_REVIVE_MAX] =
     {
-        .miningItemId = MININGID_REVIVE_MAX,
         .bagItemId = ITEM_MAX_REVIVE,
         .tag = MINING_TAG_ITEM_REVIVE_MAX,
         .sheet = &sSpriteSheet_ItemReviveMax,
@@ -1206,7 +1193,6 @@ static const struct MiningItem MiningItemList[] =
     },
     [MININGID_EVER_STONE] =
     {
-        .miningItemId = MININGID_EVER_STONE,
         .bagItemId = ITEM_EVERSTONE,
         .tag = MINING_TAG_ITEM_EVER_STONE,
         .sheet = &sSpriteSheet_ItemEverStone,
@@ -1214,7 +1200,6 @@ static const struct MiningItem MiningItemList[] =
     },
     [MININGID_HEART_SCALE] =
     {
-        .miningItemId = MININGID_HEART_SCALE,
         .bagItemId = ITEM_HEART_SCALE,
         .tag = MINING_TAG_ITEM_HEARTSCALE,
         .sheet = &sSpriteSheet_ItemHeartScale,
@@ -1222,7 +1207,6 @@ static const struct MiningItem MiningItemList[] =
     },
     [MININGID_OVAL_STONE] =
     {
-        .miningItemId = MININGID_OVAL_STONE,
         .bagItemId = ITEM_OVAL_STONE,
         .tag = MINING_TAG_ITEM_OVAL_STONE,
         .sheet = &sSpriteSheet_ItemOvalStone,
@@ -1230,7 +1214,6 @@ static const struct MiningItem MiningItemList[] =
     },
     [MININGID_LIGHT_CLAY] =
     {
-        .miningItemId = MININGID_LIGHT_CLAY,
         .bagItemId = ITEM_LIGHT_CLAY,
         .tag = MINING_TAG_ITEM_LIGHT_CLAY,
         .sheet = &sSpriteSheet_ItemLightClay,
@@ -1238,7 +1221,6 @@ static const struct MiningItem MiningItemList[] =
     },
     [MININGID_HEAT_ROCK] =
     {
-        .miningItemId = MININGID_HEAT_ROCK,
         .bagItemId = ITEM_HEAT_ROCK,
         .tag = MINING_TAG_ITEM_HEAT_ROCK,
         .sheet = &sSpriteSheet_ItemHeatRock,
@@ -1246,7 +1228,6 @@ static const struct MiningItem MiningItemList[] =
     },
     [MININGID_ICY_ROCK] =
     {
-        .miningItemId = MININGID_ICY_ROCK,
         .bagItemId = ITEM_ICY_ROCK,
         .tag = MINING_TAG_ITEM_ICY_ROCK,
         .sheet = &sSpriteSheet_ItemIcyRock,
@@ -1254,7 +1235,6 @@ static const struct MiningItem MiningItemList[] =
     },
     [MININGID_SMOOTH_ROCK] =
     {
-        .miningItemId = MININGID_SMOOTH_ROCK,
         .bagItemId = ITEM_SMOOTH_ROCK,
         .tag = MINING_TAG_ITEM_SMOOTH_ROCK,
         .sheet = &sSpriteSheet_ItemSmoothRock,
@@ -1262,7 +1242,6 @@ static const struct MiningItem MiningItemList[] =
     },
     [MININGID_LEAF_STONE] =
     {
-        .miningItemId = MININGID_LEAF_STONE,
         .bagItemId = ITEM_LEAF_STONE,
         .tag = MINING_TAG_ITEM_LEAF_STONE,
         .sheet = &sSpriteSheet_ItemLeafStone,
@@ -1270,7 +1249,6 @@ static const struct MiningItem MiningItemList[] =
     },
     [MININGID_FIRE_STONE] =
     {
-        .miningItemId = MININGID_FIRE_STONE,
         .bagItemId = ITEM_FIRE_STONE,
         .tag = MINING_TAG_ITEM_FIRE_STONE,
         .sheet = &sSpriteSheet_ItemFireStone,
@@ -1278,7 +1256,6 @@ static const struct MiningItem MiningItemList[] =
     },
     [MININGID_WATER_STONE] =
     {
-        .miningItemId = MININGID_WATER_STONE,
         .bagItemId = ITEM_WATER_STONE,
         .tag = MINING_TAG_ITEM_WATER_STONE,
         .sheet = &sSpriteSheet_ItemWaterStone,
@@ -1286,7 +1263,6 @@ static const struct MiningItem MiningItemList[] =
     },
     [MININGID_THUNDER_STONE] =
     {
-        .miningItemId = MININGID_THUNDER_STONE,
         .bagItemId = ITEM_THUNDER_STONE,
         .tag = MINING_TAG_ITEM_THUNDER_STONE,
         .sheet = &sSpriteSheet_ItemThunderStone,
@@ -1294,7 +1270,6 @@ static const struct MiningItem MiningItemList[] =
     },
     [MININGID_MOON_STONE] =
     {
-        .miningItemId = MININGID_MOON_STONE,
         .bagItemId = ITEM_MOON_STONE,
         .tag = MINING_TAG_ITEM_MOON_STONE,
         .sheet = &sSpriteSheet_ItemMoonStone,
@@ -1302,7 +1277,6 @@ static const struct MiningItem MiningItemList[] =
     },
     [MININGID_SUN_STONE] =
     {
-        .miningItemId = MININGID_SUN_STONE,
         .bagItemId = ITEM_SUN_STONE,
         .tag = MINING_TAG_ITEM_SUN_STONE,
         .sheet = &sSpriteSheet_ItemSunStone,
@@ -1310,7 +1284,6 @@ static const struct MiningItem MiningItemList[] =
     },
     [MININGID_ODD_KEY_STONE] =
     {
-        .miningItemId = MININGID_ODD_KEY_STONE,
         .bagItemId = ITEM_ODD_KEYSTONE,
         .tag = MINING_TAG_ITEM_ODD_KEY_STONE,
         .sheet = &sSpriteSheet_ItemOddKeyStone,
@@ -1318,7 +1291,6 @@ static const struct MiningItem MiningItemList[] =
     },
     [MININGID_SKULL_FOSSIL] =
     {
-        .miningItemId = MININGID_SKULL_FOSSIL,
         .bagItemId = ITEM_SKULL_FOSSIL,
         .tag = MINING_TAG_ITEM_SKULL_FOSSIL,
         .sheet = &sSpriteSheet_ItemSkullFossil,
@@ -1326,7 +1298,6 @@ static const struct MiningItem MiningItemList[] =
     },
     [MININGID_ARMOR_FOSSIL] =
     {
-        .miningItemId = MININGID_ARMOR_FOSSIL,
         .bagItemId = ITEM_ARMOR_FOSSIL,
         .tag = MINING_TAG_ITEM_ARMOR_FOSSIL,
         .sheet = &sSpriteSheet_ItemArmorFossil,
@@ -3180,7 +3151,7 @@ static void InitBuriedItems(void)
 static void SetBuriedItemsId(u32 index, u32 itemId)
 {
     sMiningUiState->buriedItems[index].bagItemId = MiningItemList[itemId].bagItemId;
-    sMiningUiState->buriedItems[index].miningItemId = MiningItemList[itemId].miningItemId;
+    sMiningUiState->buriedItems[index].miningItemId = itemId;//MiningItemList[itemId].miningItemId;
 }
 
 static void SetBuriedItemStatus(u32 index, bool32 status)
