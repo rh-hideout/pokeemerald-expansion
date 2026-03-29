@@ -105,7 +105,8 @@ struct SpecialStatus
     u8 neutralizingGasRemoved:1;
     u8 berryReduced:1;
     u8 mindBlownRecoil:1;
-    u8 padding:2;
+    u8 updateStallMons:1;
+    u8 padding:1;
     // End of byte
     u8 statLowered:1;
     u8 abilityRedirected:1;
