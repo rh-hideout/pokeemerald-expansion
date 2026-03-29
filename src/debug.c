@@ -2881,48 +2881,6 @@ static void DebugAction_Give_PokemonComplex(u8 taskId)
     gTasks[taskId].tIterator = 0;
 }
 
-static void DebugAction_Give_NewEgg(u8 taskId)
-{
-    u8 windowId;
-
-    //Mon data struct
-    sDebugMonData = AllocZeroed(sizeof(struct DebugMonData));
-    ResetMonDataStruct(sDebugMonData);
-
-    //Window initialization
-    ClearStdWindowAndFrame(gTasks[taskId].tWindowId, TRUE);
-    RemoveWindow(gTasks[taskId].tWindowId);
-
-    HideMapNamePopUpWindow();
-    LoadMessageBoxAndBorderGfx();
-    windowId = AddWindow(&sDebugMenuWindowTemplateExtra);
-    DrawStdWindowFrame(windowId, FALSE);
-
-    CopyWindowToVram(windowId, COPYWIN_FULL);
-
-    // Display initial Pokémon
-    u32 species;
-    if (!IsSpeciesEnabled(gTasks[taskId].tInput))
-        species = SPECIES_NONE;
-    else
-        species = sDebugMonData->species;
-
-    Debug_Display_SpeciesInfo(species, gTasks[taskId].tInput, 0, windowId);
-
-    //Set task data
-    gTasks[taskId].func = DebugAction_Give_Pokemon_SelectId;
-    gTasks[taskId].tSubWindowId = windowId;
-    gTasks[taskId].tInput = sDebugMonData->species;
-    gTasks[taskId].tDigit = 0;
-    gTasks[taskId].tIsComplex = FALSE;
-    gTasks[taskId].tIsEgg = TRUE;
-
-    FreeMonIconPalettes();
-    LoadMonIconPalette(species);
-    gTasks[taskId].tSpriteId = CreateMonIcon(species, SpriteCB_MonIcon, DEBUG_NUMBER_ICON_X, DEBUG_NUMBER_ICON_Y, 4, 0);
-    gSprites[gTasks[taskId].tSpriteId].oam.priority = 0;
-}
-
 static void Debug_Display_Level(u32 level, u32 digit, u8 windowId)
 {
     StringCopy(gStringVar2, gText_DigitIndicator[digit]);
