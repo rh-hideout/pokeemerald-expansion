@@ -24,9 +24,13 @@ const u8 gNotDoneYetDescription[] = _(
 
 static const u8 sNullDescription[] = _("");
 
-static const u8 sMegaDrainDescription[] = _(
+static const u8 sAbsorbHalfDescription[] = _(
     "An attack that absorbs\n"
     "half the damage inflicted.");
+
+static const u8 sStealHalfDescription[] = _(
+    "An attack that steals half\n"
+    "the damage inflicted.");
 
 #if B_SKIP_RECHARGE != GEN_1
 static const u8 sHyperBeamDescription[] = _(
@@ -1984,9 +1988,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     [MOVE_ABSORB] =
     {
         .name = COMPOUND_STRING("Absorb"),
-        .description = COMPOUND_STRING(
-            "An attack that absorbs\n"
-            "half the damage inflicted."),
+        .description = sAbsorbHalfDescription,
         .effect = EFFECT_ABSORB,
         .power = 20,
         .type = TYPE_GRASS,
@@ -2008,7 +2010,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     [MOVE_MEGA_DRAIN] =
     {
         .name = COMPOUND_STRING("Mega Drain"),
-        .description = sMegaDrainDescription,
+        .description = sAbsorbHalfDescription,
         .effect = EFFECT_ABSORB,
         .power = 40,
         .type = TYPE_GRASS,
@@ -3839,9 +3841,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     [MOVE_LEECH_LIFE] =
     {
         .name = COMPOUND_STRING("Leech Life"),
-        .description = COMPOUND_STRING(
-            "An attack that steals half\n"
-            "the damage inflicted."),
+        .description = sStealHalfDescription,
         .effect = EFFECT_ABSORB,
         .power = B_UPDATED_MOVE_DATA >= GEN_7 ? 80 : 20,
         .type = TYPE_BUG,
@@ -5492,9 +5492,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     [MOVE_GIGA_DRAIN] =
     {
         .name = COMPOUND_STRING("Giga Drain"),
-        .description = COMPOUND_STRING(
-            "An attack that steals half\n"
-            "the damage inflicted."),
+        .description = sStealHalfDescription,,
         .effect = EFFECT_ABSORB,
         .power = B_UPDATED_MOVE_DATA >= GEN_5 ? 75 : 60,
         .type = TYPE_GRASS,
@@ -10844,7 +10842,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     [MOVE_DRAIN_PUNCH] =
     {
         .name = COMPOUND_STRING("Drain Punch"),
-        .description = sMegaDrainDescription,
+        .description = sAbsorbHalfDescription,
         .effect = EFFECT_ABSORB,
         .power = B_UPDATED_MOVE_DATA >= GEN_5 ? 75 : 60,
         .type = TYPE_FIGHTING,
@@ -13827,7 +13825,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     [MOVE_HORN_LEECH] =
     {
         .name = COMPOUND_STRING("Horn Leech"),
-        .description = sMegaDrainDescription,
+        .description = sAbsorbHalfDescription,
         .effect = EFFECT_ABSORB,
         .power = 75,
         .type = TYPE_GRASS,
@@ -17520,13 +17518,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     [MOVE_BOUNCY_BUBBLE] =
     {
         .name = COMPOUND_STRING("Bouncy Bubble"),
-        .description = COMPOUND_STRING(
+        .description = B_UPDATED_MOVE_DATA >= GEN_8 ? COMPOUND_STRING(
             "An attack that absorbs\n"
-        #if B_UPDATED_MOVE_DATA >= GEN_8
-            "all the damage inflicted."),
-        #else
-            "half the damage inflicted."),
-        #endif
+            "all the damage inflicted.") : sAbsorbHalfDescription,
         .effect = EFFECT_ABSORB,
         .power = B_UPDATED_MOVE_DATA >= GEN_8 ? 60 : 90,
         .type = TYPE_WATER,
@@ -20741,9 +20735,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     [MOVE_BITTER_BLADE] =
     {
         .name = COMPOUND_STRING("Bitter Blade"),
-        .description = COMPOUND_STRING(
-            "An attack that absorbs\n"
-            "half the damage inflicted."),
+        .description = sAbsorbHalfDescription,
         .effect = EFFECT_ABSORB,
         .power = 90,
         .type = TYPE_FIRE,
