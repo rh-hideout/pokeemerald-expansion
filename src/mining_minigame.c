@@ -91,25 +91,6 @@ static bool32 GetBuriedItemStatus(u32 index);
 static void ExitMiningUI(u8 taskId);
 static void WallCollapseAnimation();
 
-/* >> Debug << */
-static u32 Debug_SetNumberOfBuriedItems(u32 rnd);
-static u32 Debug_DetermineStoneSize(u32 stone, u32 stoneIndex);
-static void Debug_DetermineLocation(u32* x, u32* y, u32 item);
-static void Debug_RaiseSpritePriority(u32 spriteId);
-#if DEBUG_ENABLE_ITEM_GENERATION_OPTIONS == TRUE
-static u32 Debug_CreateRandomItem(u32 random, u32 itemId);
-
-#define DEBUG_DESIRED_NUMBER_OF_ITEMS   3
-#define DEBUG_MININGID_ITEM1            MININGID_THUNDER_STONE
-#define DEBUG_MININGID_ITEM2            MININGID_THUNDER_STONE
-#define DEBUG_MININGID_ITEM3            MININGID_THUNDER_STONE
-#define DEBUG_MININGID_ITEM4            MININGID_THUNDER_STONE
-#define DEBUG_MININGID_STONE1           MININGID_STONE_MUSHROOM1
-#define DEBUG_MININGID_STONE2           MININGID_STONE_MUSHROOM2
-
-#endif
-
-
 struct BuriedItem
 {
     u32 bagItemId;
@@ -232,10 +213,6 @@ enum
 };
 
 static EWRAM_DATA struct MiningState *sMiningUiState = NULL;
-
-#if DEBUG_ENABLE_ITEM_GENERATION_OPTIONS == TRUE
-static EWRAM_DATA u8 debugVariable = 0; // Debug
-#endif
 
 static const struct WindowTemplate sWindowTemplates[] =
 {
@@ -1407,7 +1384,7 @@ static void Mining_Init(MainCallback callback)
     sMiningUiState->buriedStones[1].isSelected = TRUE;
 
     // Generate Items
-    u32 amountItemsToSelect = Debug_SetNumberOfBuriedItems(random(3) + 2); // The `+ 2` says that the min. amount of items to be generated are 2.
+    u32 amountItemsToSelect = random(3) + 2; // The `+ 2` says that the min. amount of items to be generated are 2.
 
     // Fisher-Yates shuffle implementation
     u32 n = 4;
@@ -1839,13 +1816,7 @@ static u8 GetRandomItemId()
             break;
     }
 
-#if DEBUG_ENABLE_ITEM_GENERATION_OPTIONS == TRUE
-    return Debug_CreateRandomItem(rarity,itemId);
-#else
     return itemId;
-#endif
-
-    return 0;
 }
 
 static void InitItemsIfSelected(u32 item, u32 itemId) {
@@ -1887,7 +1858,6 @@ static void Mining_LoadSpriteGraphics(void)
         while (!DoesStoneFitInItemMap(stone))
             stone = ((Random() % MINING_COUNT_ID_STONE) + MININGID_STONE_1x4);
 
-        stone = Debug_DetermineStoneSize(stone,i);
         DoDrawRandomStone(stone);
     }
 
@@ -2285,70 +2255,66 @@ static void DrawItemSprite(u8 x, u8 y, u8 itemId, u32 itemNumPalTag, u32 itemSta
     struct SpriteTemplate gSpriteTemplate;
     u8 posX = x * 16;
     u8 posY = y * 16 + 32;
-    u32 spriteId;
 
     switch(itemId)
     {
         case MININGID_STONE_1x4:
             LoadSpritePalette(sSpritePal_Stone1x4);
             LoadCompressedSpriteSheet(sSpriteSheet_Stone1x4);
-            spriteId = CreateSprite(&gSpriteStone1x4, posX + POS_OFFS_64X64, posY + POS_OFFS_64X64, 3);
+            CreateSprite(&gSpriteStone1x4, posX + POS_OFFS_64X64, posY + POS_OFFS_64X64, 3);
             break;
         case MININGID_STONE_4x1:
             LoadSpritePalette(sSpritePal_Stone4x1);
             LoadCompressedSpriteSheet(sSpriteSheet_Stone4x1);
-            spriteId = CreateSprite(&gSpriteStone4x1, posX + POS_OFFS_64X64, posY + POS_OFFS_64X64, 3);
+            CreateSprite(&gSpriteStone4x1, posX + POS_OFFS_64X64, posY + POS_OFFS_64X64, 3);
             break;
         case MININGID_STONE_2x4:
             LoadSpritePalette(sSpritePal_Stone2x4);
             LoadCompressedSpriteSheet(sSpriteSheet_Stone2x4);
-            spriteId = CreateSprite(&gSpriteStone2x4, posX + POS_OFFS_64X64, posY + POS_OFFS_64X64, 3);
+            CreateSprite(&gSpriteStone2x4, posX + POS_OFFS_64X64, posY + POS_OFFS_64X64, 3);
             break;
         case MININGID_STONE_4x2:
             LoadSpritePalette(sSpritePal_Stone4x2);
             LoadCompressedSpriteSheet(sSpriteSheet_Stone4x2);
-            spriteId = CreateSprite(&gSpriteStone4x2, posX + POS_OFFS_64X64, posY + POS_OFFS_64X64, 3);
+            CreateSprite(&gSpriteStone4x2, posX + POS_OFFS_64X64, posY + POS_OFFS_64X64, 3);
             break;
         case MININGID_STONE_2x2:
             LoadSpritePalette(sSpritePal_Stone2x2);
             LoadCompressedSpriteSheet(sSpriteSheet_Stone2x2);
-            spriteId = CreateSprite(&gSpriteStone2x2, posX + POS_OFFS_64X64, posY + POS_OFFS_64X64, 3);
+            CreateSprite(&gSpriteStone2x2, posX + POS_OFFS_64X64, posY + POS_OFFS_64X64, 3);
             break;
         case MININGID_STONE_3x3:
             LoadSpritePalette(sSpritePal_Stone3x3);
             LoadCompressedSpriteSheet(sSpriteSheet_Stone3x3);
-            spriteId = CreateSprite(&gSpriteStone3x3, posX + POS_OFFS_64X64, posY + POS_OFFS_64X64, 3);
+            CreateSprite(&gSpriteStone3x3, posX + POS_OFFS_64X64, posY + POS_OFFS_64X64, 3);
             break;
         case MININGID_STONE_SNAKE1:
             LoadSpritePalette(sSpritePal_StoneSnake1);
             LoadCompressedSpriteSheet(sSpriteSheet_StoneSnake1);
-            spriteId = CreateSprite(&gSpriteStoneSnake1, posX + POS_OFFS_64X64, posY + POS_OFFS_64X64, 3);
+            CreateSprite(&gSpriteStoneSnake1, posX + POS_OFFS_64X64, posY + POS_OFFS_64X64, 3);
             break;
         case MININGID_STONE_SNAKE2:
             LoadSpritePalette(sSpritePal_StoneSnake2);
             LoadCompressedSpriteSheet(sSpriteSheet_StoneSnake2);
-            spriteId = CreateSprite(&gSpriteStoneSnake2, posX + POS_OFFS_64X64, posY + POS_OFFS_64X64, 3);
+            CreateSprite(&gSpriteStoneSnake2, posX + POS_OFFS_64X64, posY + POS_OFFS_64X64, 3);
             break;
         case MININGID_STONE_MUSHROOM1:
             LoadSpritePalette(sSpritePal_StoneMushroom1);
             LoadCompressedSpriteSheet(sSpriteSheet_StoneMushroom1);
-            spriteId = CreateSprite(&gSpriteStoneMushroom1, posX + POS_OFFS_64X64, posY + POS_OFFS_64X64, 3);
+            CreateSprite(&gSpriteStoneMushroom1, posX + POS_OFFS_64X64, posY + POS_OFFS_64X64, 3);
             break;
         case MININGID_STONE_MUSHROOM2:
             LoadSpritePalette(sSpritePal_StoneMushroom2);
             LoadCompressedSpriteSheet(sSpriteSheet_StoneMushroom2);
-            spriteId = CreateSprite(&gSpriteStoneMushroom2, posX + POS_OFFS_64X64, posY + POS_OFFS_64X64, 3);
+            CreateSprite(&gSpriteStoneMushroom2, posX + POS_OFFS_64X64, posY + POS_OFFS_64X64, 3);
             break;
         default: // If Item and not Stone
             gSpriteTemplate = CreatePaletteAndReturnTemplate(MiningItemList[itemId].tag, itemNumPalTag, itemId);
             LoadCompressedSpriteSheet(MiningItemList[itemId].sheet);
             sMiningUiState->buriedItems[itemStateId].spriteId = CreateSprite(&gSpriteTemplate, posX+POS_OFFS_64X64, posY+POS_OFFS_64X64, 3);
-            Debug_RaiseSpritePriority(sMiningUiState->buriedItems[itemStateId].spriteId);
             return;
             break;
     }
-
-    Debug_RaiseSpritePriority(spriteId);
 }
 
 // Defines && Macros
@@ -2439,8 +2405,6 @@ static void DoDrawRandomItem(u8 itemStateId, u8 itemId)
 
             if (Random() <= 49151)
                 continue;
-
-            Debug_DetermineLocation(&x,&y,itemStateId); // Debug
 
             if (MiningUtil_GetTopValue(itemId) == 3)
                 y = yMin;
@@ -3149,74 +3113,4 @@ static void ExitMiningUI(u8 taskId)
     PlaySE(SE_PC_OFF);
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
     gTasks[taskId].func = Task_MiningFadeAndExitMenu;
-}
-
-static u32 Debug_SetNumberOfBuriedItems(u32 rnd)
-{
-#if DEBUG_ENABLE_ITEM_GENERATION_OPTIONS == TRUE
-    return DEBUG_DESIRED_NUMBER_OF_ITEMS;
-#else
-    return rnd;
-#endif
-}
-
-#if DEBUG_ENABLE_ITEM_GENERATION_OPTIONS == TRUE
-static u32 Debug_CreateRandomItem(u32 random, u32 itemId)
-{
-    switch (debugVariable++)
-    {
-        case 0: return DEBUG_MININGID_ITEM1;
-        case 1: return DEBUG_MININGID_ITEM2;
-        case 2: return DEBUG_MININGID_ITEM3;
-        case 3: return DEBUG_MININGID_ITEM4;
-        default: return itemId;
-    }
-}
-#endif
-
-static u32 Debug_DetermineStoneSize(u32 stone, u32 stoneIndex)
-{
-#if DEBUG_ENABLE_ITEM_GENERATION_OPTIONS == TRUE
-    u32 desiredStones[2] = {DEBUG_MININGID_STONE1, DEBUG_MININGID_STONE2};
-    stoneIndex = (stoneIndex > 1) ? 1 : stoneIndex;
-    return (desiredStones[stoneIndex] == MININGID_NONE) ? stone : desiredStones[stoneIndex];
-#else
-    return stone;
-#endif
-}
-
-static void Debug_DetermineLocation(u32* x, u32* y, u32 item)
-{
-#if DEBUG_ENABLE_ITEM_GENERATION_OPTIONS == TRUE
-    {
-        switch (item)
-        {
-            default:
-            case 1:
-                *x = 1;
-                *y = 1;
-                break;
-            case 2:
-                *x = 1;
-                *y = 5;
-                break;
-            case 3:
-                *x = 7;
-                *y = 1;
-                break;
-            case 4:
-                *x = 7;
-                *y = 5;
-                break;
-        }
-    }
-#endif
-    return;
-}
-
-static void Debug_RaiseSpritePriority(u32 spriteId)
-{
-#if DEBUG_ENABLE_ITEM_GENERATION_OPTIONS == TRUE
-    gSprites[spriteId].oam.priority = 0;
-#endif
 }
