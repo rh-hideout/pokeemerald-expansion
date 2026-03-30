@@ -13,6 +13,10 @@ For Porymap to work with FRLG maps you need to adjust a few settings (`Options >
 
 ![porymap_general](./img/frlg/porymap_general.png)
 
+-  in the `Tilesets` tab change the metatile attribute size to `2` bytes
+
+![porymap_general](./img/frlg/porymap_tileests.png)
+
 - in the `Identifiers` tab change the following attributes:
   - define_tiles_primary: `NUM_TILES_IN_PRIMARY_FRLG`
   - define_metatiles_primary: `NUM_METATILES_IN_PRIMARY_FRLG`
@@ -44,23 +48,6 @@ Porymap:
 ## Migrating FRLG tilesets
 To migrate tilesets that have been previously created for pokefirered you can use [this script](/migration_scripts/frlg_metatile_behavior_converter.py).<br>
 Instructions are in the script.
-
-## Creating a new tileset
-If you create a new tileset after the changes made above Porymap will define that tileset's metatile attributes as u32 like this
-
-```diff
-+const u16 gMetatiles_General_Platinum[] = INCBIN_U16("data/tilesets/primary/general_platinum/metatiles.bin");
-+const u32 gMetatileAttributes_General_Platinum[] = INCBIN_U32("data/tilesets/primary/general_platinum/metatile_attributes.bin");
-```
-
-Which would be fine if it was pokefirered but in pokeemerald they should be u16
-
-Make the following changes to make them u16
-```diff
-const u16 gMetatiles_General_Platinum[] = INCBIN_U16("data/tilesets/primary/general_platinum/metatiles.bin");
--const u32 gMetatileAttributes_General_Platinum[] = INCBIN_U32("data/tilesets/primary/general_platinum/metatile_attributes.bin");
-+const u16 gMetatileAttributes_General_Platinum[] = INCBIN_U16("data/tilesets/primary/general_platinum/metatile_attributes.bin");
-```
 
 ## Disclaimer: The changes below aren't the permanent solution for the problems, A better build system is being worked on so these solutions might cause merge conflicts down the line
 
