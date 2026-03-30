@@ -56,7 +56,7 @@ Below are extra helper functions for the average usecases. They're not meant to 
 This function is what you'll probably be using the most. You must provide one argument containing a number of total badges the player must own.
 Example:
 ```
-bool32 ShopCriteriaByTwoBadges(u32 itemId)
+bool32 ShopCriteriaByTwoBadges(enum Item item)
 {
     return ShopCriteriaByBadgeCount(2);
 }
@@ -66,7 +66,7 @@ bool32 ShopCriteriaByTwoBadges(u32 itemId)
 This function is basically what `BadgeCount` partially do, but you'd explicitly use one flag instead. Useful if you need a certain badge flag instead of just the _total amount_ of badges, or a quest-only item. You must provide one argument for the flag id you want, the flag ids found in [`include/constants/flags.h`](/include/constants/flags.h), like `FLAG_BADGE07_GET`. This function will returns `TRUE`/`FALSE` depending on if the flag is set or not.
 Example:
 ```
-bool32 ShopCriteriaByChampionFlag(u32 itemId)
+bool32 ShopCriteriaByChampionFlag(enum Item item)
 {
     return ShopCriteriaByFlag(FLAG_IS_CHAMPION);
 }
@@ -76,7 +76,7 @@ bool32 ShopCriteriaByChampionFlag(u32 itemId)
 This function is basically the `Flag` function but with variables instead. You must provide both the variable id found in [`include/constants/vars.h`](/include/constants/vars.h) and a value to compare with said variable id as the arguments.
 Example:
 ```
-bool32 ShopCriteriaBySpecificValueInSpecificVar(u32 itemId)
+bool32 ShopCriteriaBySpecificValueInSpecificVar(enum Item item)
 {
     return ShopCriteriaByVar(VAR_ASH_GATHER_COUNT, 20);
 }
@@ -87,7 +87,7 @@ bool32 ShopCriteriaBySpecificValueInSpecificVar(u32 itemId)
 First, add a new function for your criteria in [`src/shop_criteria.c`](/src/shop_criteria.c), preferably after the `// Add new Criterias below!` comment, like so:
 ```diff
  // Add new Criterias below!
-+bool32 ShopCriteriaByMyNeed(u32 itemId)
++bool32 ShopCriteriaByMyNeed(enum Item item)
 +{
 +    // add your stuff here, be sure to handle both `TRUE`/`FALSE` return values!
 +}
@@ -96,7 +96,7 @@ First, add a new function for your criteria in [`src/shop_criteria.c`](/src/shop
 Then, you'll need to add a declaration for your custom function so that it can be used by your items.
 ```diff
  // Add new Criterias below!
-+bool32 ShopCriteriaByMyNeed(u32 itemId);
++bool32 ShopCriteriaByMyNeed(enum Item item);
 
  #endif // GUARD_SHOP_CRITERIA_H
 ```
@@ -128,7 +128,7 @@ We want to allow the player to purchase the Light Ball, but only after they have
 #### [`src/shop_criteria.c`](/src/shop_criteria.c)
 ```diff
  // Add new Criterias below!
-+bool32 ShopCriteriaHasPikachu(u32 itemId)
++bool32 ShopCriteriaHasPikachu(enum Item item)
 +{
 +    if (FlagGet(TRAINER_FLAGS_START + WATTSON_5) == FALSE)
 +        return FALSE;
@@ -140,7 +140,7 @@ We want to allow the player to purchase the Light Ball, but only after they have
 #### [`include/shop_criteria.h`](/include/shop_criteria.h)
 ```diff
  // Add new Criterias below!
-+bool32 ShopCriteriaHasPikachu(u32 itemId);
++bool32 ShopCriteriaHasPikachu(enum Item item);
 ```
 
 #### [`src/data/items`](/src/data/items.c)
