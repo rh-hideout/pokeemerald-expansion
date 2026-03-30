@@ -5838,6 +5838,11 @@ BattleScript_TelekinesisEndTurn::
 	waitmessage B_WAIT_TIME_LONG
 	end2
 
+BattleScript_HealBlockEndTurn::
+	printstring STRINGID_HEALBLOCKEDNOMORE
+	waitmessage B_WAIT_TIME_LONG
+	end2
+
 BattleScript_BufferEndTurn::
 	printstring STRINGID_BUFFERENDS
 	waitmessage B_WAIT_TIME_LONG
@@ -6204,7 +6209,7 @@ BattleScript_IntimidateLoopIncrement:
 BattleScript_IntimidatePrevented::
 	copybyte sBATTLER, gBattlerTarget
 	call BattleScript_AbilityPopUp
-	printstring STRINGID_PKMNPREVENTSSTATLOSSWITH
+	printstring STRINGID_PKMNATKNOTLOWERED
 	goto BattleScript_IntimidateEffect_WaitString
 
 BattleScript_IntimidateWontDecrease:

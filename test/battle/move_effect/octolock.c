@@ -39,7 +39,7 @@ SINGLE_BATTLE_TEST("Octolock reduction is prevented by Clear Body, White Smoke a
         {
             MESSAGE("The opposing Beldum can no longer escape because of Octolock!");
             ABILITY_POPUP(opponent, ABILITY_CLEAR_BODY);
-            MESSAGE("The opposing Beldum's Clear Body prevents stat loss!");
+            MESSAGE("The opposing Beldum's stats were not lowered!");
             NONE_OF {
                 MESSAGE("The opposing Beldum's Defense fell!");
                 MESSAGE("The opposing Beldum's Sp. Def fell!");
@@ -49,7 +49,7 @@ SINGLE_BATTLE_TEST("Octolock reduction is prevented by Clear Body, White Smoke a
         {
             MESSAGE("The opposing Torkoal can no longer escape because of Octolock!");
             ABILITY_POPUP(opponent, ABILITY_WHITE_SMOKE);
-            MESSAGE("The opposing Torkoal's White Smoke prevents stat loss!");
+            MESSAGE("The opposing Torkoal's stats were not lowered!");
             NONE_OF {
                 MESSAGE("The opposing Torkoal's Defense fell!");
                 MESSAGE("The opposing Torkoal's Sp. Def fell!");
@@ -59,7 +59,7 @@ SINGLE_BATTLE_TEST("Octolock reduction is prevented by Clear Body, White Smoke a
         {
             MESSAGE("The opposing Solgaleo can no longer escape because of Octolock!");
             ABILITY_POPUP(opponent, ABILITY_FULL_METAL_BODY);
-            MESSAGE("The opposing Solgaleo's Full Metal Body prevents stat loss!");
+            MESSAGE("The opposing Solgaleo's stats were not lowered!");
             NONE_OF {
                 MESSAGE("The opposing Solgaleo's Defense fell!");
                 MESSAGE("The opposing Solgaleo's Sp. Def fell!");

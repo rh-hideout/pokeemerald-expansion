@@ -121,13 +121,13 @@ SINGLE_BATTLE_TEST("Parting Shot: Mirror Armor switches the user even if reflect
         ABILITY_POPUP(opponent, ABILITY_MIRROR_ARMOR);
         if (ability == ABILITY_CLEAR_BODY) {
             ABILITY_POPUP(player, ABILITY_CLEAR_BODY);
-            MESSAGE("Metagross's Clear Body prevents stat loss!");
+            MESSAGE("Metagross's stats were not lowered!");
         } else if (ability == ABILITY_WHITE_SMOKE) {
             ABILITY_POPUP(player, ABILITY_WHITE_SMOKE);
-            MESSAGE("Torkoal's White Smoke prevents stat loss!");
+            MESSAGE("Torkoal's stats were not lowered!");
         } else if (ability == ABILITY_FULL_METAL_BODY) {
             ABILITY_POPUP(player, ABILITY_FULL_METAL_BODY);
-            MESSAGE("Solgaleo's Full Metal Body prevents stat loss!");
+            MESSAGE("Solgaleo's stats were not lowered!");
         } else if (item == ITEM_CLEAR_AMULET) {
             MESSAGE("The effects of the Clear Amulet held by Lucario prevents its stats from being lowered!");
         }

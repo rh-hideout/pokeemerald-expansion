@@ -21,7 +21,7 @@ SINGLE_BATTLE_TEST("Psychic Noise blocks healing moves for 2 turns")
         MESSAGE("The opposing Wobbuffet was prevented from healing!");
         MESSAGE("The opposing Wobbuffet was prevented from healing!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STRUGGLE, opponent);
-        MESSAGE("The opposing Wobbuffet's Heal Block wore off!");
+        MESSAGE("The opposing Wobbuffet is no longer prevented from healing!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RECOVER, opponent);
     }
 }
