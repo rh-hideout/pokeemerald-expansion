@@ -146,12 +146,12 @@ SINGLE_BATTLE_TEST("Octolock triggers Defiant for both stat reductions")
         MESSAGE("The opposing Bisharp's Defense fell!");
         ABILITY_POPUP(opponent, ABILITY_DEFIANT);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Bisharp's Attack sharply rose!");
+        MESSAGE("The opposing Bisharp's Attack rose sharply!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         MESSAGE("The opposing Bisharp's Sp. Def fell!");
         ABILITY_POPUP(opponent, ABILITY_DEFIANT);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Bisharp's Attack sharply rose!");
+        MESSAGE("The opposing Bisharp's Attack rose sharply!");
     }
 }
 

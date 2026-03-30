@@ -25,11 +25,11 @@ DOUBLE_BATTLE_TEST("Moxie/Chilling Neigh raises Attack by one stage after direct
         ABILITY_POPUP(playerLeft, abilityPopUp);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
         if (species == SPECIES_SALAMENCE)
-            MESSAGE("Salamence's Attack drastically rose!");
+            MESSAGE("Salamence's Attack rose drastically!");
         else if (species == SPECIES_GLASTRIER)
-            MESSAGE("Glastrier's Attack drastically rose!");
+            MESSAGE("Glastrier's Attack rose drastically!");
         else
-            MESSAGE("Calyrex's Attack drastically rose!");
+            MESSAGE("Calyrex's Attack rose drastically!");
     } THEN {
         EXPECT_EQ(playerLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 3);
     }

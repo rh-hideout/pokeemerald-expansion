@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Recoil if miss: Jump Kick has 50% recoil on miss")
     } SCENE {
         s32 maxHP = GetMonData(&PLAYER_PARTY[0], MON_DATA_MAX_HP);
         MESSAGE("Wobbuffet used Jump Kick!");
-        MESSAGE("Wobbuffet's attack missed!");
+        MESSAGE("The opposing Wobbuffet avoided the attack!");
         MESSAGE("Wobbuffet kept going and crashed!");
         HP_BAR(player, damage: maxHP / 2);
     }

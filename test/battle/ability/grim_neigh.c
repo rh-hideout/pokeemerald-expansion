@@ -24,9 +24,9 @@ DOUBLE_BATTLE_TEST("Grim Neigh raises Sp. Attack by one stage after directly cau
         ABILITY_POPUP(playerLeft, abilityPopUp);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
         if (species == SPECIES_SPECTRIER)
-            MESSAGE("Spectrier's Sp. Atk drastically rose!");
+            MESSAGE("Spectrier's Sp. Atk rose drastically!");
         else
-            MESSAGE("Calyrex's Sp. Atk drastically rose!");
+            MESSAGE("Calyrex's Sp. Atk rose drastically!");
     } THEN {
         EXPECT_EQ(playerLeft->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 3);
     }

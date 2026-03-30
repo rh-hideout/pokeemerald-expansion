@@ -21,7 +21,7 @@ SINGLE_BATTLE_TEST("Snatch steals stat-boosting moves from the opponent")
         MESSAGE("Wobbuffet waits for a target to make a move!");
         MESSAGE("Wobbuffet snatched the opposing Wynaut's move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
-        MESSAGE("Wobbuffet's Attack sharply rose!");
+        MESSAGE("Wobbuffet's Attack rose sharply!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
@@ -70,7 +70,7 @@ DOUBLE_BATTLE_TEST("Snatch does not steal a move that was already snatched this 
         // Slowest opponent uses Swords Dance - only the first Snatch user should steal it
         MESSAGE("Wobbuffet snatched the opposing Kadabra's move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, playerLeft);
-        MESSAGE("Wobbuffet's Attack sharply rose!");
+        MESSAGE("Wobbuffet's Attack rose sharply!");
         // The second Snatch user should NOT steal the already-snatched move
         NOT MESSAGE("Wynaut snatched the opposing Kadabra's move!");
     } THEN {
@@ -101,10 +101,10 @@ DOUBLE_BATTLE_TEST("Snatch steals from the correct target when multiple snatchab
         // First snatchable move is Swords Dance from opponentLeft
         MESSAGE("Wobbuffet snatched the opposing Abra's move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, playerLeft);
-        MESSAGE("Wobbuffet's Attack sharply rose!");
+        MESSAGE("Wobbuffet's Attack rose sharply!");
         // Agility should NOT be snatched (Snatch was already used)
         ANIMATION(ANIM_TYPE_MOVE, MOVE_AGILITY, opponentRight);
-        MESSAGE("The opposing Kadabra's Speed sharply rose!");
+        MESSAGE("The opposing Kadabra's Speed rose sharply!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerRight);
     } THEN {
         EXPECT_EQ(playerLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);

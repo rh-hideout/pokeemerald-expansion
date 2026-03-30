@@ -287,7 +287,7 @@ DOUBLE_BATTLE_TEST("Dancer doesn't activate if the original move missed")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DOUBLE_TEAM, opponentLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerLeft);
-        MESSAGE("Wobbuffet's attack missed!");
+        MESSAGE("The opposing Oricorio avoided the attack!");
         NONE_OF {
             ABILITY_POPUP(opponentLeft, ABILITY_DANCER);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, opponentLeft);

@@ -183,7 +183,7 @@ const u8 gText_EmptyString3[] = _("");
 static const u8 sText_TwoInGameTrainersDefeated[] = _("You defeated {B_TRAINER1_NAME_WITH_CLASS} and {B_TRAINER2_NAME_WITH_CLASS}!\p");
 
 // New battle strings.
-const u8 gText_drastically[] = _("drastically ");
+const u8 gText_drastically[] = _(" drastically");
 const u8 gText_severely[] = _("severely ");
 static const u8 sText_TerrainReturnedToNormal[] = _("The terrain returned to normal!"); // Unused
 
@@ -602,7 +602,7 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_UNNERVEENTERS]                        = COMPOUND_STRING("{B_EFF_TEAM1} team is too nervous to eat Berries!"),
     [STRINGID_HARVESTBERRY]                         = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} harvested its {B_LAST_ITEM}!"),
     [STRINGID_PROTEANTYPECHANGE]                    = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX}'s {B_ATK_ABILITY} transformed it into the {B_BUFF1} type!"),
-    [STRINGID_SYMBIOSISITEMPASS]                    = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} passed its {B_LAST_ITEM} to {B_EFF_NAME_WITH_PREFIX2} through {B_LAST_ABILITY}!"),
+    [STRINGID_SYMBIOSISITEMPASS]                    = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} shared its {B_LAST_ITEM} with {B_EFF_NAME_WITH_PREFIX2}!"),
     [STRINGID_STEALTHROCKDMG]                       = COMPOUND_STRING("Pointed stones dug into {B_SCR_NAME_WITH_PREFIX2}!"),
     [STRINGID_TOXICSPIKESABSORBED]                  = COMPOUND_STRING("The poison spikes disappeared from the ground around {B_EFF_TEAM2} team!"),
     [STRINGID_TOXICSPIKESPOISONED]                  = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} was poisoned!"),
@@ -880,6 +880,12 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_SCRCUREDBURN]                         = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s burn was cured!"),
     [STRINGID_SCRCUREDSLEEP]                        = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} woke up!"),
     [STRINGID_SCRCUREDCONFUSION]                    = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} snapped out of its confusion!"),
+    [STRINGID_PARTYCUREDPARALYSIS]                  = COMPOUND_STRING("{B_BUFF1} was cured of paralysis!"),
+    [STRINGID_PARTYCUREDPOISON]                     = COMPOUND_STRING("{B_BUFF1} was cured of its poisoning!"),
+    [STRINGID_PARTYCUREDBURN]                       = COMPOUND_STRING("{B_BUFF1}'s burn was cured!"),
+    [STRINGID_PARTYCUREDSLEEP]                      = COMPOUND_STRING("{B_BUFF1} woke up!"),
+    [STRINGID_PARTYCUREDFREEZE]                     = COMPOUND_STRING("{B_BUFF1} thawed out!"),
+    [STRINGID_PARTYCUREDFROSTBITE]                  = COMPOUND_STRING("{B_BUFF1}'s frostbite was cured!"),
 };
 
 const u16 gTrainerUsedItemStringIds[] =
@@ -986,6 +992,7 @@ const u16 gSwitchInAbilityStringIds[] =
 
 const u16 gMissStringIds[] =
 {
+    [B_MSG_MISSED]      = STRINGID_PKMNAVOIDEDATTACK,
     [B_MSG_PROTECTED]   = STRINGID_PKMNPROTECTEDITSELF,
     [B_MSG_AVOIDED_ATK] = STRINGID_PKMNAVOIDEDATTACK,
 };
@@ -1422,6 +1429,19 @@ const u16 gCureStatusStringIds[] =
     [B_MSG_CURED_SLEEP] = STRINGID_SCRCUREDSLEEP,
     [B_MSG_CURED_FREEZE] = STRINGID_PKMNWASDEFROSTED,
     [B_MSG_CURED_FROSTBITE] = STRINGID_PKMNFROSTBITEHEALED,
+    [B_MSG_CURED_CONFUSION] = STRINGID_SCRCUREDCONFUSION,
+    [B_MSG_CURED_INFATUATION] = STRINGID_PKMNGOTOVERITSINFATUATION,
+    [B_MSG_CURED_TAUNT] = STRINGID_PKMNSHOOKOFFTHETAUNT,
+};
+
+const u16 gPartyCureStatusStringIds[] = 
+{
+    [B_MSG_CURED_PARALYSIS] = STRINGID_PARTYCUREDPARALYSIS,
+    [B_MSG_CURED_POISON] = STRINGID_PARTYCUREDPOISON,
+    [B_MSG_CURED_BURN] = STRINGID_PARTYCUREDBURN,
+    [B_MSG_CURED_SLEEP] = STRINGID_PARTYCUREDSLEEP,
+    [B_MSG_CURED_FREEZE] = STRINGID_PARTYCUREDFREEZE,
+    [B_MSG_CURED_FROSTBITE] = STRINGID_PARTYCUREDFROSTBITE,
     [B_MSG_CURED_CONFUSION] = STRINGID_SCRCUREDCONFUSION,
     [B_MSG_CURED_INFATUATION] = STRINGID_PKMNGOTOVERITSINFATUATION,
     [B_MSG_CURED_TAUNT] = STRINGID_PKMNSHOOKOFFTHETAUNT,
