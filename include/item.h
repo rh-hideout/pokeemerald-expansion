@@ -64,7 +64,7 @@ enum PACKED ItemSortType
 };
 
 typedef void (*ItemUseFunc)(u8);
-typedef bool32 (*ShopCriteriaFunc)(u32);
+typedef bool32 (*ShopCriteriaFunc)(enum Item);
 
 struct ItemInfo
 {
