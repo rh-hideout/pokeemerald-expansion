@@ -8,6 +8,8 @@
 #include "constants/characters.h"
 #include "constants/rgb.h"
 
+#define NUM_ALLOCS_BLUE_SCREEN 1
+
 struct BitUnPackArgs
 {
     u16 compressedSize;
@@ -220,7 +222,29 @@ static u32 CenterText(const char *str)
     return (len < 30) ? (30 - len) / 2 : 0;
 }
 
+struct Backup
+{
+    bool8 onHeap;
+    u8 ime;
+    u16 soundcnt_l;
+    u16 soundcnt_h;
+    u16 dispcnt;
+    u16 bg0cnt;
+    u16 bgPltt[2];
+    u8 vram[32 * 20 * sizeof(u16) + TILE_SIZE_4BPP + 4 * sizeof(sGlyphs1BPP)];
+};
+
 static const char PressStartContinue[] = "Press START to continue.";
+static void PrintTitle(u32 *x, u32 *y, const char *title)
+{
+    *x = CenterText(title);
+    *y = 0;
+    Puts(x, y, title);
+
+    *x = 0;
+    *y += 2;
+}
+
 static void PrintFooter(const char *footer)
 {
     u32 x = CenterText(footer);
@@ -288,6 +312,66 @@ static void Vprintf(const void *return1, const void *return0, const char *fmt, v
         return;
 }
 
+static void Vprintf_Heap(struct Backup *backup, u32 activeBytes)
+{
+    u32 x = 0;
+    u32 y = 0;
+
+    PrintTitle(&x, &y, "Heap Usage");
+    PrintFooter(PressStartContinue);
+
+    const struct MemBlock *backupBlock = (const struct MemBlock *)backup;
+    const struct MemBlock *block = HeapHead();
+    u32 totalAllocs = GetHeapTotalAllocations();
+    u32 totalFrees = GetHeapTotalFrees();
+
+    // Do not account for backupBlock allocation when on heap
+    if (backup->onHeap)
+    {
+        backupBlock -= NUM_ALLOCS_BLUE_SCREEN;
+        totalAllocs -= NUM_ALLOCS_BLUE_SCREEN;
+    }
+
+    do
+    {
+        if (block->allocated && block != backupBlock)
+        {
+            const char *location = MemBlockLocation(block);
+            if (!Puts(&x, &y, location ? location : "unknown"))
+                return;
+            if (!Puts(&x, &y, ": "))
+                return;
+            if (!Puti(&x, &y, block->size))
+                return;
+            if (!Putc(&x, &y, '\n'))
+                return;
+        }
+        block = block->next;
+    }
+    while (block != HeapHead());
+
+    if (!Putc(&x, &y, '\n'))
+        return;
+    if (!Puts(&x, &y, "Active: "))
+        return;
+    if (!Puti(&x, &y, activeBytes))
+        return;
+    if (!Puts(&x, &y, " bytes\n"))
+        return;
+
+    if (!DEBUG_HEAP_PRINT)
+        return;
+
+    if (!Puts(&x, &y, "Allocs: "))
+        return;
+    if (!Puti(&x, &y, totalAllocs))
+        return;
+    if (!Puts(&x, &y, "  Frees: "))
+        return;
+    if (!Puti(&x, &y, totalFrees))
+        return;
+}
+
 static void BusyWaitForVBlank(void)
 {
     // Interrupts are disabled so we have to busy loop to wait for
@@ -295,18 +379,6 @@ static void BusyWaitForVBlank(void)
     while (REG_VCOUNT < 160)
         ;
 }
-
-struct Backup
-{
-    bool8 onHeap;
-    u8 ime;
-    u16 soundcnt_l;
-    u16 soundcnt_h;
-    u16 dispcnt;
-    u16 bg0cnt;
-    u16 bgPltt[2];
-    u8 vram[32 * 20 * sizeof(u16) + TILE_SIZE_4BPP + 4 * sizeof(sGlyphs1BPP)];
-};
 
 /* Blue Screen of Death style screen that displays the error message and
  * hijacks the main loop until the start button is pressed. */
@@ -413,6 +485,7 @@ static void BlueScreenClose(struct Backup *backup)
         Free(backup);
 }
 
+// Assertf Screen
 void AssertfCrashScreen(const void *return1, const char *fmt, ...)
 {
     struct Backup *backup = NULL;
@@ -424,5 +497,31 @@ void AssertfCrashScreen(const void *return1, const char *fmt, ...)
     va_start(va, fmt);
     Vprintf(return1, __builtin_return_address(0), fmt, va);
     va_end(va);
+    BlueScreenClose(backup);
+}
+
+// Heap Screen
+bool32 HasHeapLeak(void)
+{
+    return GetHeapTotalAllocations() != GetHeapTotalFrees();
+}
+
+bool32 CheckHeapCrashScreen(void)
+{
+    if (!HasHeapLeak())
+        return FALSE;
+    HeapCrashScreen();
+    return TRUE;
+}
+
+void HeapCrashScreen(void)
+{
+    u32 activeBytes = GetHeapAllocatedBytes();
+    struct Backup *backup = NULL;
+    BlueScreenOpen(&backup);
+    if (backup == NULL)
+        return;
+
+    Vprintf_Heap(backup, activeBytes); 
     BlueScreenClose(backup);
 }

@@ -9,6 +9,15 @@ static u32 sHeapSize;
 
 ALIGNED(4) EWRAM_DATA u8 gHeap[HEAP_SIZE] = {0};
 
+#if DEBUG_HEAP_PRINT
+static EWRAM_DATA u32 sTotalAllocations = 0;
+static EWRAM_DATA u32 sTotalFrees = 0;
+static EWRAM_DATA u32 sCurrentAllocatedBytes = 0;
+#endif
+
+static void TryTrackAllocatedHeap(u32 size);
+static void TryTrackFreedHeap(u32 size);
+
 void PutMemBlockHeader(void *block, struct MemBlock *prev, struct MemBlock *next, u32 size)
 {
     struct MemBlock *header = (struct MemBlock *)block;
@@ -77,6 +86,7 @@ void *AllocInternal(void *heapStart, u32 size, const char *location)
                 pos->locationHi = ((uintptr_t)location) >> 14;
                 pos->locationLo = (uintptr_t)location;
 
+                TryTrackAllocatedHeap(size);
                 return pos->data;
             }
         }
@@ -118,6 +128,7 @@ void FreeInternal(void *heapStart, void *pointer)
         struct MemBlock *block = (struct MemBlock *)((u8 *)pointer - sizeof(struct MemBlock));
         AGB_ASSERT(block->magic == MALLOC_SYSTEM_ID);
         AGB_ASSERT(block->allocated == TRUE);
+        TryTrackFreedHeap(block->size);
         block->allocated = FALSE;
 
         // If the freed block isn't the last one, merge with the next block
@@ -246,4 +257,47 @@ const char *MemBlockLocation(const struct MemBlock *block)
         return NULL;
 
     return (const char *)(ROM_START | (block->locationHi << 14) | block->locationLo);
+}
+
+static void TryTrackAllocatedHeap(u32 size)
+{
+#if DEBUG_HEAP_PRINT
+    sTotalAllocations++;
+    sCurrentAllocatedBytes += size;
+#endif
+}
+
+static void TryTrackFreedHeap(u32 size)
+{
+#if DEBUG_HEAP_PRINT
+    sTotalFrees++;
+    sCurrentAllocatedBytes -= size;
+#endif
+}
+
+u32 GetHeapTotalAllocations(void)
+{
+#if DEBUG_HEAP_PRINT
+    return sTotalAllocations;
+#else
+    return 0;
+#endif
+}
+
+u32 GetHeapTotalFrees(void)
+{
+#if DEBUG_HEAP_PRINT
+    return sTotalFrees;
+#else
+    return 0;
+#endif
+}
+
+u32 GetHeapAllocatedBytes(void)
+{
+#if DEBUG_HEAP_PRINT
+    return sCurrentAllocatedBytes;
+#else
+    return 0;
+#endif
 }

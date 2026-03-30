@@ -78,4 +78,8 @@
 
 void AssertfCrashScreen(const void *return0, const char *fmt, ...);
 
+bool32 HasHeapLeak(void);
+bool32 CheckHeapCrashScreen(void);
+void HeapCrashScreen(void);
+
 #endif

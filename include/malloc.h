@@ -64,4 +64,8 @@ void InitHeap(void *heapStart, u32 heapSize);
 const struct MemBlock *HeapHead(void);
 const char *MemBlockLocation(const struct MemBlock *block);
 
+u32 GetHeapTotalAllocations(void);
+u32 GetHeapTotalFrees(void);
+u32 GetHeapAllocatedBytes(void);
+
 #endif // GUARD_ALLOC_H
