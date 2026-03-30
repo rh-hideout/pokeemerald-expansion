@@ -855,28 +855,19 @@ static void PlayerNotOnBikeTurningInPlace(enum Direction direction, u16 heldKeys
     PlayerTurnInPlace(direction);
 }
 
-static void PlayerNotOnBikeMoving(enum Direction direction, u16 heldKeys)
-{
+static void PlayerNotOnBikeMoving(enum Direction direction, u16 heldKeys) {
     enum Collision collision = CheckForPlayerAvatarCollision(direction);
 
-    if (collision)
-    {
-        if (collision == COLLISION_LEDGE_JUMP)
-        {
+    if (collision) {
+        if (collision == COLLISION_LEDGE_JUMP) {
             PlayerJumpLedge(direction);
             return;
-        }
-        else if (collision == COLLISION_OBJECT_EVENT && IsPlayerCollidingWithFarawayIslandMew(direction))
-        {
+        } else if (collision == COLLISION_OBJECT_EVENT && IsPlayerCollidingWithFarawayIslandMew(direction)) {
             PlayerNotOnBikeCollideWithFarawayIslandMew(direction);
             return;
-        }
-        else if (collision == COLLISION_STAIR_WARP)
-        {
+        } else if (collision == COLLISION_STAIR_WARP) {
             PlayerFaceDirection(direction);
-        }
-        else
-        {
+        } else {
             // Player collided with something. Certain collisions have special handling that precludes the normal collision effect.
             // COLLISION_STOP_SURFING and COLLISION_PUSHED_BOULDER's effects are started by CheckForObjectEventCollision.
             // COLLISION_LEDGE_JUMP's effect is handled further up in this function, so it will never reach this point.
@@ -887,13 +878,13 @@ static void PlayerNotOnBikeMoving(enum Direction direction, u16 heldKeys)
             // - Colliding with it by changing direction won't turn the player avatar, their walking animation will just speed up.
 #ifdef BUGFIX
             if (collision != COLLISION_STOP_SURFING
-             && collision != COLLISION_LEDGE_JUMP
-             && collision != COLLISION_PUSHED_BOULDER)
+                    && collision != COLLISION_LEDGE_JUMP
+                    && collision != COLLISION_PUSHED_BOULDER)
 #else
             if (collision != COLLISION_STOP_SURFING
-             && collision != COLLISION_LEDGE_JUMP
-             && collision != COLLISION_PUSHED_BOULDER
-             && collision != COLLISION_ROTATING_GATE)
+                    && collision != COLLISION_LEDGE_JUMP
+                    && collision != COLLISION_PUSHED_BOULDER
+                    && collision != COLLISION_ROTATING_GATE)
 #endif
             {
                 PlayerNotOnBikeCollide(direction);
@@ -904,32 +895,22 @@ static void PlayerNotOnBikeMoving(enum Direction direction, u16 heldKeys)
 
     ResetSpinTimer(); // Everything below will move the player a space, reset the timer.
     gPlayerAvatar.creeping = FALSE;
-    if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_SURFING)
-{
-    if (FlagGet(DN_FLAG_SEARCHING))
-    {
-        if (heldKeys & B_BUTTON)
-        {
-            PlayerWalkFaster(direction); // fastest
+    if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_SURFING) {
+        if (FlagGet(DN_FLAG_SEARCHING)) {
+            if (heldKeys & B_BUTTON) {
+                PlayerWalkFaster(direction); // fastest
+            } else if (heldKeys & A_BUTTON) {
+                gPlayerAvatar.creeping = TRUE;
+                PlayerWalkSlow(direction); // slow
+            } else {
+                PlayerWalkFast(direction); // normal
+            }
+        } else {
+            PlayerWalkFast(direction); // default when not searching
         }
-        else if (heldKeys & A_BUTTON)
-        {
-            gPlayerAvatar.creeping = TRUE;
-            PlayerWalkSlow(direction); // slow
-        }
-        else
-        {
-            PlayerWalkFast(direction); // normal
-        }
+        return;
     }
-    else
-    {
-        PlayerWalkFast(direction); // default when not searching
-    }
-    return;
 }
-}
-
     if (!(gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_UNDERWATER)
      && (gRunToggleBtnSet || FlagGet(FLAG_RUNNING_SHOES_TOGGLE) || (heldKeys & B_BUTTON))
      && FlagGet(FLAG_SYS_B_DASH)
