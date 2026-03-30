@@ -2704,13 +2704,16 @@
 	.2byte \duration
 	.endm
 
-	.macro tryspecialevo evoArg:req, canStopEvo=TRUE, tryMultiple=TRUE
+	.macro tryspecialevo evoArg:req, canStopEvo=TRUE, tryMultiple=FALSE
 	setvar VAR_0x8000, \canStopEvo
 	setvar VAR_0x8005, \evoArg
 	.if \tryMultiple
+		setvar VAR_RESULT, 0
+		setvar VAR_0x8006, 0
+		callnative Script_TriggerMultipleEvolutions
 	.else
 		pickpartymon SELECT_PC_MON_EVOLUTION
-		callnative Script_TriggerEvolution
+		callnative Script_TriggerUniqueEvolution
 	.endif
 	.endm
 

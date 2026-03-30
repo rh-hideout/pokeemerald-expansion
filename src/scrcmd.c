@@ -3273,11 +3273,44 @@ bool8 ScrCmd_fwdweekday(struct ScriptContext *ctx)
     return FALSE;
 }
 
-bool8 Script_TriggerEvolution(struct ScriptContext *ctx)
+static bool32 EventEvolution(u32 partyIndex)
 {
     bool32 canStopEvo = gSpecialVar_0x8000;
+    u32 targetSpecies = GetEvolutionTargetSpecies(&gPlayerParty[partyIndex], EVO_MODE_SCRIPT_TRIGGER, gSpecialVar_0x8005, NULL, &canStopEvo, CHECK_EVO);
+    if (targetSpecies == SPECIES_NONE)
+    {
+        gSpecialVar_Result = 1;
+        return FALSE;
+    }
+    gSpecialVar_Result = 3;
+    GetEvolutionTargetSpecies(&gPlayerParty[partyIndex], EVO_MODE_SCRIPT_TRIGGER, gSpecialVar_0x8005, NULL, &canStopEvo, DO_EVO);
+    BeginEvolutionScene(&gPlayerParty[partyIndex], targetSpecies, canStopEvo, partyIndex);
+    ScriptContext_Stop();
+    return TRUE;
+}
 
-    DebugPrintf("Script_TriggerEvolution %d", gSpecialVar_0x8004);
+void Script_TriggerMultipleEvolutions(void)
+{
+    if (gSpecialVar_Result == 3)
+        gSpecialVar_0x8006++;
+
+    gCB2_AfterEvolution = Script_TriggerMultipleEvolutions;
+    for (u32 i = 0; i < gPlayerPartyCount; i++)
+    {
+        if (!(gTriedEvolving & (1u << i)))
+        {
+            if (EventEvolution(i))
+                return;
+        }
+    }
+
+    gTriedEvolving = 0;
+    gSpecialVar_Result = gSpecialVar_0x8006;
+    SetMainCallback2(CB2_ReturnToFieldContinueScript);
+}
+
+bool8 Script_TriggerUniqueEvolution(struct ScriptContext *ctx)
+{
     if (gSpecialVar_0x8004 == PARTY_NOTHING_CHOSEN)
     {
         gSpecialVar_Result = 0;
@@ -3288,20 +3321,10 @@ bool8 Script_TriggerEvolution(struct ScriptContext *ctx)
         gSpecialVar_Result = 0;
         return FALSE;
     }
-    u32 targetSpecies = GetEvolutionTargetSpecies(&gPlayerParty[gSpecialVar_0x8004], EVO_MODE_SCRIPT_TRIGGER, gSpecialVar_0x8005, NULL, &canStopEvo, CHECK_EVO);
-    DebugPrintf("targetSpecies %d", targetSpecies);
-    if (targetSpecies == SPECIES_NONE)
-    {
-        gSpecialVar_Result = 1;
-        return FALSE;
-    }
-    gSpecialVar_Result = 3;
-    GetEvolutionTargetSpecies(&gPlayerParty[gSpecialVar_0x8004], EVO_MODE_SCRIPT_TRIGGER, gSpecialVar_0x8005, NULL, &canStopEvo, DO_EVO);
-    BeginEvolutionScene(&gPlayerParty[gSpecialVar_0x8004], targetSpecies, canStopEvo, gSpecialVar_0x8004);
     gCB2_AfterEvolution = CB2_ReturnToFieldContinueScript;
-    ScriptContext_Stop();
-    return TRUE;
-
+    if (EventEvolution(gSpecialVar_0x8004))
+        return TRUE;
+    return FALSE;
 }
 
 void Script_EndTrainerCanSeeIf(struct ScriptContext *ctx)
