@@ -3279,10 +3279,10 @@ static bool32 EventEvolution(u32 partyIndex)
     u32 targetSpecies = GetEvolutionTargetSpecies(&gPlayerParty[partyIndex], EVO_MODE_SCRIPT_TRIGGER, gSpecialVar_0x8005, NULL, &canStopEvo, CHECK_EVO);
     if (targetSpecies == SPECIES_NONE)
     {
-        gSpecialVar_Result = 1;
+        gSpecialVar_Result = EVO_EVENT_IMPOSSIBLE;
         return FALSE;
     }
-    gSpecialVar_Result = 3;
+    gSpecialVar_Result = EVO_EVENT_SUCCESSFUL;
     GetEvolutionTargetSpecies(&gPlayerParty[partyIndex], EVO_MODE_SCRIPT_TRIGGER, gSpecialVar_0x8005, NULL, &canStopEvo, DO_EVO);
     BeginEvolutionScene(&gPlayerParty[partyIndex], targetSpecies, canStopEvo, partyIndex);
     ScriptContext_Stop();
@@ -3291,7 +3291,7 @@ static bool32 EventEvolution(u32 partyIndex)
 
 void Script_TriggerMultipleEvolutions(void)
 {
-    if (gSpecialVar_Result == 3)
+    if (gSpecialVar_Result == EVO_EVENT_SUCCESSFUL)
         gSpecialVar_0x8006++;
 
     gCB2_AfterEvolution = Script_TriggerMultipleEvolutions;
@@ -3299,6 +3299,7 @@ void Script_TriggerMultipleEvolutions(void)
     {
         if (!(gTriedEvolving & (1u << i)))
         {
+            gTriedEvolving |= 1u << i;
             if (EventEvolution(i))
                 return;
         }
@@ -3313,12 +3314,12 @@ bool8 Script_TriggerUniqueEvolution(struct ScriptContext *ctx)
 {
     if (gSpecialVar_0x8004 == PARTY_NOTHING_CHOSEN)
     {
-        gSpecialVar_Result = 0;
+        gSpecialVar_Result = EVO_EVENT_IMPOSSIBLE;
         return FALSE;
     }
     assertf(gSpecialVar_0x8004 <= PARTY_SIZE, "TriggerEvolution script called with invalid partyIndex %d", gSpecialVar_0x8004)
     {
-        gSpecialVar_Result = 0;
+        gSpecialVar_Result = EVO_EVENT_IMPOSSIBLE;
         return FALSE;
     }
     gCB2_AfterEvolution = CB2_ReturnToFieldContinueScript;

@@ -662,7 +662,7 @@ static void Task_EvolutionScene(u8 taskId)
         && gTasks[taskId].tBits & TASK_BIT_CAN_STOP)
     {
         gTasks[taskId].tState = EVOSTATE_CANCEL;
-        gSpecialVar_Result = 2;
+        gSpecialVar_Result = EVO_EVENT_INTERRUPTED;
         gTasks[sEvoGraphicsTaskId].tEvoStopped = TRUE;
         StopBgAnimation();
         return;

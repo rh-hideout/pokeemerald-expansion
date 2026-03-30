@@ -90,6 +90,7 @@ static union PokemonSubstruct *GetSubstruct(struct BoxPokemon *boxMon, u32 perso
 static void EncryptBoxMon(struct BoxPokemon *boxMon);
 static void DecryptBoxMon(struct BoxPokemon *boxMon);
 static void Task_PlayMapChosenOrBattleBGM(u8 taskId);
+void TrySpecialOverworldEvo();
 
 EWRAM_DATA static u8 sLearningMoveTableID = 0;
 EWRAM_DATA u8 gPlayerPartyCount = 0;
@@ -5127,6 +5128,8 @@ enum Species GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode m
                 continue;
             if (evolutions[i].method != EVO_SCRIPT_TRIGGER)
                 continue;
+            if (evolutions[i].param != evolutionItem)
+                continue;
             if (DoesMonMeetAdditionalConditions(mon, evolutions[i].params, NULL, PARTY_SIZE, canStopEvo, evoState))
             {
                 // All checks passed, so stop checking the rest of the evolutions.
@@ -6925,6 +6928,33 @@ void RemoveIVIndexFromList(u8 *ivs, u8 selectedIv)
         if (temp[i] != 0xFF)
             ivs[j++] = temp[i];
     }
+}
+
+void TrySpecialOverworldEvo(void)
+{
+    u8 i;
+    bool32 canStopEvo = FALSE;
+
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        enum Species targetSpecies = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_OVERWORLD_SPECIAL, 0, NULL, &canStopEvo, CHECK_EVO);
+
+        if (targetSpecies != SPECIES_NONE && !(gTriedEvolving & (1u << i)))
+        {
+            GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_OVERWORLD_SPECIAL, 0, NULL, &canStopEvo, DO_EVO);
+            gTriedEvolving |= 1u << i;
+            if (gMain.callback2 == TrySpecialOverworldEvo) // This fixes small graphics glitches.
+                EvolutionScene(&gPlayerParty[i], targetSpecies, canStopEvo, i);
+            else
+                BeginEvolutionScene(&gPlayerParty[i], targetSpecies, canStopEvo, i);
+
+            gCB2_AfterEvolution = TrySpecialOverworldEvo;
+            return;
+        }
+    }
+
+    gTriedEvolving = 0;
+    SetMainCallback2(CB2_ReturnToField);
 }
 
 bool32 SpeciesHasGenderDifferences(enum Species species)
