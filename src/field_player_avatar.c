@@ -910,55 +910,47 @@ static void PlayerNotOnBikeMoving(enum Direction direction, u16 heldKeys) {
         }
         return;
     }
-}
+
     if (!(gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_UNDERWATER)
-     && (gRunToggleBtnSet || FlagGet(FLAG_RUNNING_SHOES_TOGGLE) || (heldKeys & B_BUTTON))
-     && FlagGet(FLAG_SYS_B_DASH)
-     && IsRunningDisallowed(gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior) == 0
-     && !FollowerNPCComingThroughDoor()
-     && (I_ORAS_DOWSING_FLAG == 0 || (I_ORAS_DOWSING_FLAG != 0 && !FlagGet(I_ORAS_DOWSING_FLAG))))
-    if (!(gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_UNDERWATER)
-    && (gRunToggleBtnSet || FlagGet(FLAG_RUNNING_SHOES_TOGGLE) || (heldKeys & B_BUTTON))
-    && FlagGet(FLAG_SYS_B_DASH)
-    && IsRunningDisallowed(gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior) == 0)
-{
-    // 🔁 Handle toggle press
-    if (gRunToggleBtnSet)
-    {
-        gRunToggleBtnSet = FALSE;
+            && (gRunToggleBtnSet || FlagGet(FLAG_RUNNING_SHOES_TOGGLE) || (heldKeys & B_BUTTON))
+            && FlagGet(FLAG_SYS_B_DASH)
+            && IsRunningDisallowed(gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior) == 0
+            && !FollowerNPCComingThroughDoor()
+            && (I_ORAS_DOWSING_FLAG == 0 || (I_ORAS_DOWSING_FLAG != 0 && !FlagGet(I_ORAS_DOWSING_FLAG))))
+        if (!(gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_UNDERWATER)
+                && (gRunToggleBtnSet || FlagGet(FLAG_RUNNING_SHOES_TOGGLE) || (heldKeys & B_BUTTON))
+                && FlagGet(FLAG_SYS_B_DASH)
+                && IsRunningDisallowed(gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior) == 0) {
+            // 🔁 Handle toggle press
+            if (gRunToggleBtnSet) {
+                gRunToggleBtnSet = FALSE;
 
-        if (!FlagGet(FLAG_RUNNING_SHOES_TOGGLE))
-        {
-            FlagSet(FLAG_RUNNING_SHOES_TOGGLE);
+                if (!FlagGet(FLAG_RUNNING_SHOES_TOGGLE)) {
+                    FlagSet(FLAG_RUNNING_SHOES_TOGGLE);
+                } else {
+                    FlagClear(FLAG_RUNNING_SHOES_TOGGLE);
+                }
+            }
+
+            // 🏃 Preserve ORIGINAL running behavior (stairs logic!)
+            if (ObjectMovingOnRockStairs(&gObjectEvents[gPlayerAvatar.objectEventId], direction))
+                PlayerRunSlow(direction);
+            else
+                PlayerRun(direction);
+
+            gPlayerAvatar.flags |= PLAYER_AVATAR_FLAG_DASH;
+            return;
+        } else if (FlagGet(DN_FLAG_SEARCHING) && (heldKeys & A_BUTTON)) {
+            gPlayerAvatar.creeping = TRUE;
+            PlayerWalkSlow(direction);
+        } else {
+            gRunToggleBtnSet = FALSE;
+
+            if (ObjectMovingOnRockStairs(&gObjectEvents[gPlayerAvatar.objectEventId], direction))
+                PlayerWalkSlowStairs(direction);
+            else
+                PlayerWalkNormal(direction);
         }
-        else
-        {
-            FlagClear(FLAG_RUNNING_SHOES_TOGGLE);
-        }
-    }
-
-    // 🏃 Preserve ORIGINAL running behavior (stairs logic!)
-    if (ObjectMovingOnRockStairs(&gObjectEvents[gPlayerAvatar.objectEventId], direction))
-        PlayerRunSlow(direction);
-    else
-        PlayerRun(direction);
-
-    gPlayerAvatar.flags |= PLAYER_AVATAR_FLAG_DASH;
-    return;
-}
-else if (FlagGet(DN_FLAG_SEARCHING) && (heldKeys & A_BUTTON))
-{
-    gPlayerAvatar.creeping = TRUE;
-    PlayerWalkSlow(direction);
-}
-else
-{
-    gRunToggleBtnSet = FALSE;
-
-    if (ObjectMovingOnRockStairs(&gObjectEvents[gPlayerAvatar.objectEventId], direction))
-        PlayerWalkSlowStairs(direction);
-    else
-        PlayerWalkNormal(direction);
 }
 
 static enum Collision CheckForPlayerAvatarCollision(enum Direction direction)
