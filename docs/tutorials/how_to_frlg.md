@@ -46,7 +46,7 @@ To migrate tilesets that have been previously created for pokefirered you can us
 Instructions are in the script.
 
 ## Creating a new tileset
-If you create a new tileset after the changes made above Porymap will define that tileset's metatle attributes as u32 like this
+If you create a new tileset after the changes made above Porymap will define that tileset's metatile attributes as u32 like this
 
 ```diff
 +const u16 gMetatiles_General_Platinum[] = INCBIN_U16("data/tilesets/primary/general_platinum/metatiles.bin");
@@ -136,7 +136,7 @@ python3 migration_scripts/add_region_hoenn_attribute_to_hoenn_maps.py
 Make sure to run `make clean` after running this script
 
 ## Make empty layout version defaults to frlg
-Also change your `tools/mapjson/mapjson.cpp` so the new maps you add without `frlg` as the layout  also work fine
+Also change your `tools/mapjson/mapjson.cpp` so the new maps you add without `frlg` as the layout also work fine
 
 ```diff
 string layout_version = json_to_string(layout, "layout_version", true);
