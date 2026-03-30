@@ -54,8 +54,8 @@
 #define FLAG_SYS_DEXNAV_SEARCHING            0x20 // DexNav Searching
 #define FLAG_SYS_DEXNAV_GET                  0x21 // DexNav Get
 #define FLAG_SYS_DEXNAV_DETECTOR_MODE        0x22 // DexNav Detector Mode
-#define FLAG_INSTANT_TEXT                    0x23 // Toggle Instant Text
-#define FLAG_UNUSED_0x024    0x24 // Unused Flag
+#define FLAG_INSTANT_TEXT                    0x23 // Instant Text
+#define FLAG_RUNNING_SHOES_TOGGLE            0x24 // Toggle Running shoes
 #define FLAG_UNUSED_0x025    0x25 // Unused Flag
 #define FLAG_UNUSED_0x026    0x26 // Unused Flag
 #define FLAG_UNUSED_0x027    0x27 // Unused Flag
