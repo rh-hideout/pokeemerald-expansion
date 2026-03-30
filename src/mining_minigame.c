@@ -2777,11 +2777,11 @@ static void InitMiningWindows(void)
     {
         DeactivateAllTextPrinters();
         ScheduleBgCopyTilemapToVram(0);
-#if FLAG_USE_DEFAULT_MESSAGE_BOX == FALSE
+#if MINING_FLAG_USE_DEFAULT_MESSAGE_BOX == FALSE
         LoadBgTiles(GetWindowAttribute(WIN_MSG, WINDOW_BG), gMiningMessageBoxGfx, 0x1C0, 20);
         LoadPalette(gMiningMessageBoxPal, BG_PLTT_ID(15), PLTT_SIZE_4BPP);
         LoadPalette(gMiningMessageBoxPal, BG_PLTT_ID(14), PLTT_SIZE_4BPP);
-#elif FLAG_USE_DEFAULT_MESSAGE_BOX == TRUE
+#elif MINING_FLAG_USE_DEFAULT_MESSAGE_BOX == TRUE
         LoadBgTiles(GetWindowAttribute(WIN_MSG, WINDOW_BG), gMessageBox_Gfx, 0x1C0, 20);
         LoadPalette(GetOverworldTextboxPalettePtr(), BG_PLTT_ID(15), PLTT_SIZE_4BPP);
         Menu_LoadStdPalAt(BG_PLTT_ID(14));

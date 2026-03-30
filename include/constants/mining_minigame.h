@@ -60,7 +60,7 @@ enum
 };
 
 /*********** FLAGS ************/
-#define FLAG_USE_DEFAULT_MESSAGE_BOX            FALSE
+#define MINING_FLAG_USE_DEFAULT_MESSAGE_BOX            FALSE
 
 /*********** DEBUG FLAGS ************/
 #define DEBUG_ENABLE_ITEM_GENERATION_OPTIONS    FALSE
