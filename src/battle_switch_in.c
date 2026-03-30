@@ -36,7 +36,7 @@ bool32 DoSwitchInEvents(void)
         gBattleStruct->switchInBattlerCounter = 0;
         gBattleStruct->eventState.battlerSwitchIn = 0;
         gBattleStruct->eventState.switchIn++;
-        break;
+        // fallthrough
     case SWITCH_IN_EVENTS_TERA_SHIFT:
         while (gBattleStruct->switchInBattlerCounter < gBattlersCount)
         {
@@ -250,7 +250,7 @@ static bool32 FirstEventBlockEvents(struct BattleCalcValues *calcValues)
             gBattleScripting.battler = gBattlerAbility = battler;
             gBattleStruct->battlerState[battler].forcedSwitch = FALSE;
             gBattleStruct->eventState.switchIn = 0;
-            BattleScriptCall(BattleScript_EmergencyExit);
+            BattleScriptCall(BattleScript_EmergencyExitRet);
             effect = TRUE;
         }
         else

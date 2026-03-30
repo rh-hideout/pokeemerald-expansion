@@ -125,3 +125,25 @@ SINGLE_BATTLE_TEST("Wind Rider absorbs Wind moves and raises Attack by one stage
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
     }
 }
+
+DOUBLE_BATTLE_TEST("Tailwind does not trigger Wind Rider on an absent ally battler")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
+        PLAYER(SPECIES_BRAMBLIN) { Ability(ABILITY_WIND_RIDER); HP(1); Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_WATER_GUN, target: playerRight); }
+        TURN { MOVE(playerLeft, MOVE_TAILWIND); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, opponentLeft);
+        HP_BAR(playerRight);
+        MESSAGE("Bramblin fainted!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TAILWIND, playerLeft);
+        NONE_OF {
+            ABILITY_POPUP(playerRight, ABILITY_WIND_RIDER);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+        }
+    }
+}

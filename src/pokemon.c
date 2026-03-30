@@ -498,10 +498,10 @@ static const enum NationalDexOrder sHoennToNationalOrder[HOENN_DEX_COUNT - 1] =
     HOENN_TO_NATIONAL(DODRIO),
 #if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
     HOENN_TO_NATIONAL(BUDEW),
+#endif
     HOENN_TO_NATIONAL(ROSELIA),
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
     HOENN_TO_NATIONAL(ROSERADE),
-#else
-    HOENN_TO_NATIONAL(ROSELIA),
 #endif
     HOENN_TO_NATIONAL(GULPIN),
     HOENN_TO_NATIONAL(SWALOT),
@@ -560,10 +560,10 @@ static const enum NationalDexOrder sHoennToNationalOrder[HOENN_DEX_COUNT - 1] =
     HOENN_TO_NATIONAL(DUSCLOPS),
 #if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
     HOENN_TO_NATIONAL(DUSKNOIR),
+#endif
     HOENN_TO_NATIONAL(TROPIUS),
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
     HOENN_TO_NATIONAL(CHINGLING),
-#else
-    HOENN_TO_NATIONAL(TROPIUS),
 #endif
     HOENN_TO_NATIONAL(CHIMECHO),
     HOENN_TO_NATIONAL(ABSOL),
@@ -1720,6 +1720,7 @@ static void CreateEventMon(struct Pokemon *mon, enum Species species, u8 level, 
 
     CreateMon(mon, species, level, personality, otId);
     SetMonData(mon, MON_DATA_MODERN_FATEFUL_ENCOUNTER, &isModernFatefulEncounter);
+    CalculateMonStats(mon);
 }
 
 enum TrainerPicID GetUnionRoomTrainerPic(void)
@@ -5506,7 +5507,6 @@ void AdjustFriendship(struct Pokemon *mon, u8 event)
     {
         u8 friendshipLevel = 0;
         s32 friendship = GetMonData(mon, MON_DATA_FRIENDSHIP, 0);
-        enum TrainerClassID opponentTrainerClass = GetTrainerClassFromId(TRAINER_BATTLE_PARAM.opponentA);
 
         if (friendship > 99)
             friendshipLevel++;
@@ -5524,6 +5524,11 @@ void AdjustFriendship(struct Pokemon *mon, u8 event)
             // Only if it's a trainer battle with league progression significance
             if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
                 return;
+
+            if (IsSpecialTrainer(TRAINER_BATTLE_PARAM.opponentA))
+                return;
+
+            enum TrainerClassID opponentTrainerClass = GetTrainerClassFromId(TRAINER_BATTLE_PARAM.opponentA);
             if (!(opponentTrainerClass == TRAINER_CLASS_LEADER
                 || opponentTrainerClass == TRAINER_CLASS_ELITE_FOUR
                 || opponentTrainerClass == TRAINER_CLASS_CHAMPION))
@@ -5542,9 +5547,9 @@ void AdjustFriendship(struct Pokemon *mon, u8 event)
     }
 }
 
-u8 CalculateFriendshipBonuses(struct Pokemon *mon, u32 modifier, enum HoldEffect itemHoldEffect)
+s32 CalculateFriendshipBonuses(struct Pokemon *mon, s32 modifier, enum HoldEffect itemHoldEffect)
 {
-    u32 bonus = 0;
+    s32 bonus = 0;
 
     if ((modifier > 0) && (itemHoldEffect == HOLD_EFFECT_FRIENDSHIP_UP))
         bonus += 150 * modifier / 100;

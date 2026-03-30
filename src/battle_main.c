@@ -3250,7 +3250,7 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
 
     gBattleStruct->moveResultFlags[battler] = 0;
     gBattleStruct->battlerState[battler].isFirstTurn = 2;
-    gBattleStruct->battlerState[battler].fainted = FALSE;
+    gBattleStruct->battlerState[battler].notOnField = FALSE;
     gBattleMons[battler].volatiles.truantSwitchInHack = volatilesCopy->truantSwitchInHack;
     gLastMoves[battler] = MOVE_NONE;
     gLastLandedMoves[battler] = MOVE_NONE;
@@ -3270,6 +3270,7 @@ void SwitchInClearSetData(enum BattlerId battler, struct Volatiles *volatilesCop
     gBattleStruct->battlerState[battler].canPickupItem = FALSE;
     gBattleStruct->battlerState[battler].wasAboveHalfHp = gBattleMons[battler].hp > gBattleMons[battler].maxHP / 2;
     gBattleStruct->hazardsCounter = 0;
+    gSpecialStatuses[battler].queuedSwitch = NO_QUEUED_SWITCH;
 
     ClearPursuitValuesIfSet(battler);
 
@@ -3320,10 +3321,8 @@ void FaintClearSetData(enum BattlerId battler)
     for (enum Stat i = 0; i < NUM_BATTLE_STATS; i++)
         gBattleMons[battler].statStages[i] = DEFAULT_STAT_STAGE;
 
-    bool32 keepGastroAcid = gBattleMons[battler].volatiles.gastroAcid;
     bool32 keepTransformed = gBattleMons[battler].volatiles.transformed;
     memset(&gBattleMons[battler].volatiles, 0, sizeof(struct Volatiles));
-    gBattleMons[battler].volatiles.gastroAcid = keepGastroAcid; // Edge case: Keep Gastro Acid if pokemon's ability can have effect after fainting, for example Innards Out.
     gBattleMons[battler].volatiles.transformed = keepTransformed; // Edge case: Keep Transformed status to prevent triggering FORM_CHANGE_FAINT on transformed mons.
 
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
@@ -3357,6 +3356,7 @@ void FaintClearSetData(enum BattlerId battler)
     gProtectStructs[battler].fleeType = 0;
     gProtectStructs[battler].statRaised = FALSE;
     gProtectStructs[battler].pranksterElevated = FALSE;
+    gSpecialStatuses[battler].queuedSwitch = NO_QUEUED_SWITCH;
 
     gBattleStruct->battlerState[battler].isFirstTurn = 2;
 
@@ -3385,11 +3385,14 @@ void FaintClearSetData(enum BattlerId battler)
         enum BattlerId partner = BATTLE_PARTNER(battler);
         // Clear commander state immediately so a replacement doesn't inherit it.
         gBattleStruct->battlerState[battler].commanderSpecies = SPECIES_NONE;
-        gBattleMons[partner].volatiles.semiInvulnerable = STATE_NONE;
-        if (IsBattlerAlive(partner))
+        if (gBattleMons[partner].volatiles.semiInvulnerable == STATE_COMMANDER)
         {
-            BtlController_EmitSpriteInvisibility(partner, B_COMM_TO_CONTROLLER, FALSE);
-            MarkBattlerForControllerExec(partner);
+            gBattleMons[partner].volatiles.semiInvulnerable = STATE_NONE;
+            if (IsBattlerAlive(partner))
+            {
+                BtlController_EmitSpriteInvisibility(partner, B_COMM_TO_CONTROLLER, FALSE);
+                MarkBattlerForControllerExec(partner);
+            }
         }
     }
 
@@ -3737,7 +3740,7 @@ static void DoBattleIntro(void)
             struct StartingStatuses statusesOpponentB = {0};
 
             // Try to set a status to start the battle with
-            if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+            if (gBattleTypeFlags & BATTLE_TYPE_TRAINER && !IsSpecialTrainer(TRAINER_BATTLE_PARAM.opponentA))
             {
                 statusesOpponentA = GetTrainerStartingStatusFromId(TRAINER_BATTLE_PARAM.opponentA);
                 if (TRAINER_BATTLE_PARAM.opponentB != 0xFFFF)
