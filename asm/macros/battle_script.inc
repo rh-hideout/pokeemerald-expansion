@@ -218,20 +218,6 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro movevaluescleanup
-	.byte B_SCR_OP_MOVEVALUESCLEANUP
-	.endm
-
-	.macro setmultihit value:req
-	.byte B_SCR_OP_SETMULTIHIT
-	.byte \value
-	.endm
-
-	.macro decrementmultihit loopInstr:req
-	.byte B_SCR_OP_DECREMENTMULTIHIT
-	.4byte \loopInstr
-	.endm
-
 	.macro goto instr:req
 	.byte B_SCR_OP_GOTO
 	.4byte \instr
@@ -757,10 +743,6 @@
 	.byte B_SCR_OP_NORMALISEBUFFS
 	.endm
 
-	.macro setbide
-	.byte B_SCR_OP_SETBIDE
-	.endm
-
 	.macro twoturnmoveschargestringandanimation
 	.byte B_SCR_OP_TWOTURNMOVESCHARGESTRINGANDANIMATION
 	.4byte 1f @animation then attack string
@@ -813,10 +795,6 @@
 	.byte B_SCR_OP_CHECKNONVOLATILETRIGGER
 	.2byte \nonVolatile
 	.4byte \failInstr
-	.endm
-
-	.macro copybidedmg
-	.byte B_SCR_OP_COPYBIDEDMG
 	.endm
 
 	.macro animatewildpokemonafterfailedpokeball battler:req
@@ -1212,6 +1190,15 @@
 	.macro tryoverwriteability failInstr:req
 	.byte B_SCR_OP_TRYOVERWRITEABILITY
 	.4byte \failInstr
+	.endm
+
+	.macro trysynchronize
+	.byte B_SCR_OP_TRY_SYNCHRONIZE
+	.endm
+
+	.macro tryconfusionafterskydrop battler:req
+	.byte B_SCR_OP_TRY_CONFUSION_AFTER_SKY_DROP
+    .byte \battler
 	.endm
 
 	.macro callnative func:req
@@ -2092,10 +2079,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro skydropyawn
-	callnative BS_SkyDropYawn
-	.endm
-
 	.macro jumpifpranksterblocked jumpInstr:req
 	callnative BS_JumpIfPranksterBlocked
 	.4byte \jumpInstr
@@ -2145,10 +2128,6 @@
 	.macro cutonethirdhpandraisestats failInstr:req
 	callnative BS_CutOneThirdHpAndRaiseStats
 	.4byte \failInstr
-	.endm
-
-	.macro setpoltergeistmessage
-	callnative BS_SetPoltergeistMessage
 	.endm
 
 	.macro tryresetnegativestatstages

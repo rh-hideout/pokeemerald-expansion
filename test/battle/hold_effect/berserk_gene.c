@@ -134,14 +134,14 @@ DOUBLE_BATTLE_TEST("Berserk Gene does not confuse a Pokemon with Own Tempo but s
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
-            MOVE((positionLeft != 0) ? playerLeft : playerRight, MOVE_SCRATCH, target: opponentLeft);
+            MOVE(positionLeft ? playerLeft : playerRight, MOVE_SCRATCH, target: opponentLeft);
         }
     } SCENE {
         if (item == ITEM_BERSERK_GENE)
         {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, (positionLeft != 0) ? playerLeft : playerRight);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, (positionLeft) ? playerLeft : playerRight);
             MESSAGE("Using Berserk Gene, the Attack of Slowbro sharply rose!");
-            ABILITY_POPUP((positionLeft != 0) ? playerLeft : playerRight, ABILITY_OWN_TEMPO);
+            ABILITY_POPUP(positionLeft ? playerLeft : playerRight, ABILITY_OWN_TEMPO);
             MESSAGE("Slowbro's Own Tempo prevents confusion!");
         }
         HP_BAR(opponentLeft, captureDamage: &results[i].damage);
@@ -149,7 +149,7 @@ DOUBLE_BATTLE_TEST("Berserk Gene does not confuse a Pokemon with Own Tempo but s
     } FINALLY {
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(2.0), results[1].damage);
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(2.0), results[2].damage);
-        EXPECT_EQ(((positionLeft != 0) ? playerLeft : playerRight)->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
+        EXPECT_EQ((positionLeft ? playerLeft : playerRight)->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
     }
 }
 

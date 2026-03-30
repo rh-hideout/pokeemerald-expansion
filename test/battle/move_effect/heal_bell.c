@@ -5,7 +5,7 @@ ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_HEAL_BELL) == EFFECT_HEAL_BELL);
     ASSUME(GetMoveEffect(MOVE_AROMATHERAPY) == EFFECT_HEAL_BELL);
-    ASSUME(MoveHasAdditionalEffect(MOVE_SPARKLY_SWIRL, MOVE_EFFECT_AROMATHERAPY));
+    ASSUME(MoveHasAdditionalEffectSelf(MOVE_SPARKLY_SWIRL, MOVE_EFFECT_AROMATHERAPY));
 }
 
 DOUBLE_BATTLE_TEST("Sparkly Swirl cures the entire party")
@@ -169,7 +169,8 @@ SINGLE_BATTLE_TEST("Heal Bell cures a Soundproof user (Gen5, Gen8+)")
 
 DOUBLE_BATTLE_TEST("Aromatherapy cure Soundproof battlers regardless of config")
 {
-    u32 ability, config;
+    enum Ability ability;
+    u32 config;
 
     PARAMETRIZE { ability = ABILITY_SOUNDPROOF; config = GEN_4; }
     PARAMETRIZE { ability = ABILITY_SOUNDPROOF; config = GEN_5; }

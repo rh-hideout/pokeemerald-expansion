@@ -70,6 +70,10 @@ static const u8* const sFrontierTrainerSlides[DIFFICULTY_COUNT][FRONTIER_TRAINER
     },
 };
 
+#define TRAINER_RED_TEST    1
+#define TRAINER_LEAF_TEST   2
+#define PARTNER_STEVEN_TEST 1
+
 static const u8* const sTestTrainerSlides[DIFFICULTY_COUNT][MAX_TRAINERS_COUNT_EMERALD + PARTNER_COUNT][TRAINER_SLIDE_COUNT] =
 {
 #include "../test/battle/trainer_slides.h"
@@ -106,7 +110,7 @@ static u32 GetPartyMonCount(u32 firstId, u32 lastId, enum BattleSide side, bool3
     {
         for (u32 i = firstId; i < lastId; i++)
         {
-            u32 species = GetMonData(&party[sMultiBattleOrder[i]], MON_DATA_SPECIES_OR_EGG);
+            enum Species species = GetMonData(&party[sMultiBattleOrder[i]], MON_DATA_SPECIES_OR_EGG);
             if (species != SPECIES_NONE
                     && species != SPECIES_EGG
                     && (!onlyAlive || GetMonData(&party[sMultiBattleOrder[i]], MON_DATA_HP)))
@@ -119,7 +123,7 @@ static u32 GetPartyMonCount(u32 firstId, u32 lastId, enum BattleSide side, bool3
     {
         for (u32 i = firstId; i < lastId; i++)
         {
-            u32 species = GetMonData(&party[i], MON_DATA_SPECIES_OR_EGG);
+            enum Species species = GetMonData(&party[i], MON_DATA_SPECIES_OR_EGG);
             if (species != SPECIES_NONE
                     && species != SPECIES_EGG
                     && (!onlyAlive || GetMonData(&party[i], MON_DATA_HP)))
@@ -262,28 +266,28 @@ static void SetTrainerSlideParameters(enum BattlerId battler, u32* firstId, u32*
             {
                 *firstId = MULTI_PARTY_SIZE;
                 *lastId = PARTY_SIZE;
-                *trainerId = SanitizeTrainerId(TRAINER_BATTLE_PARAM.opponentB);
+                *trainerId = TRAINER_BATTLE_PARAM.opponentB;
                 *retValue = TRAINER_SLIDE_TARGET_TRAINER_B;
             }
             else
             {
                 *firstId = 0;
                 *lastId = MULTI_PARTY_SIZE;
-                *trainerId = SanitizeTrainerId(TRAINER_BATTLE_PARAM.opponentA);
+                *trainerId = TRAINER_BATTLE_PARAM.opponentA;
             }
         }
         else
         {
             *firstId = 0;
             *lastId = PARTY_SIZE;
-            *trainerId = SanitizeTrainerId(TRAINER_BATTLE_PARAM.opponentA);
+            *trainerId = TRAINER_BATTLE_PARAM.opponentA;
         }
     }
     else if (GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
     {
         *firstId = MULTI_PARTY_SIZE;
         *lastId = PARTY_SIZE;
-        *trainerId = SanitizeTrainerId(gPartnerTrainerId);
+        *trainerId = gPartnerTrainerId;
         *retValue = TRAINER_SLIDE_TARGET_TRAINER_PARTNER;
     }
 }
@@ -302,8 +306,10 @@ enum TrainerSlideTargets ShouldDoTrainerSlide(enum BattlerId battler, enum Train
         return TRAINER_SLIDE_TARGET_NONE;
 
     SetTrainerSlideParameters(battler, &firstId, &lastId, &trainerId, &retValue);
-    enum DifficultyLevel difficulty = GetCurrentDifficultyLevel();
+    if (IsSpecialTrainer(trainerId))
+        return TRAINER_SLIDE_TARGET_NONE;
 
+    enum DifficultyLevel difficulty = GetCurrentDifficultyLevel();
     gBattleScripting.battler = battler;
 
     if (IsTrainerSlidePlayed(battler, slideId))

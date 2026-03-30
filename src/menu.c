@@ -1745,6 +1745,7 @@ void AddTextPrinterParameterized6(u8 windowId, u8 fontId, u8 left, u8 top, u8 le
     struct TextPrinterTemplate printer;
 
     printer.currentChar = str;
+    printer.type = WINDOW_TEXT_PRINTER;
     printer.windowId = windowId;
     printer.fontId = fontId;
     printer.x = left;
@@ -1844,12 +1845,12 @@ static void UNUSED UnusedBlitBitmapRect(const struct Bitmap *src, struct Bitmap 
     }
 }
 
-static void UNUSED LoadMonIconPalAtOffset(u8 palOffset, u16 speciesId)
+static void UNUSED LoadMonIconPalAtOffset(u8 palOffset, enum Species speciesId)
 {
     LoadPalette(GetValidMonIconPalettePtr(speciesId), palOffset, PLTT_SIZE_4BPP);
 }
 
-static void UNUSED DrawMonIconAtPos(u8 windowId, u16 speciesId, u32 personality, u16 x, u16 y)
+static void UNUSED DrawMonIconAtPos(u8 windowId, enum Species speciesId, u32 personality, u16 x, u16 y)
 {
     BlitBitmapToWindow(windowId, GetMonIconPtr(speciesId, personality), x, y, 32, 32);
 }
