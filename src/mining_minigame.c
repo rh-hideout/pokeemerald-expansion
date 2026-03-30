@@ -1643,8 +1643,6 @@ static void MiningUi_Shake(u8 taskId)
             break;
         case 15:
             MoveItemSprites(-1, -1);
-            //if (!IsStressLevelMax())
-            //  gSprites[sMiningUiState->cursorSpriteIndex].invisible = 0;
             sMiningUiState->shakeState++;
             break;
         case 16:
@@ -1661,10 +1659,14 @@ static void MiningUi_Shake(u8 taskId)
                 sMiningUiState->toggleShakeDuringAnimation = FALSE;
                 break;
             }
+            #if MINING_DEBUG_ENABLE == TRUE && MINING_DEBUG_INFINITE_HITS == TRUE
+            gSprites[sMiningUiState->cursorSpriteIndex].invisible = 0;
+            #else
             if (IsStressLevelMax())
                 WallCollapseAnimation();
             if (!IsStressLevelMax())
                 gSprites[sMiningUiState->cursorSpriteIndex].invisible = 0;
+            #endif
             sMiningUiState->shakeState = 0;
             sMiningUiState->shouldShake = FALSE;
             sMiningUiState->toggleShakeDuringAnimation = FALSE;
@@ -1973,6 +1975,7 @@ static void Task_MiningMainInput(u8 taskId)
         PlaySE(MINING_SE_TOOL_SWITCH);
     }
 
+    #if MINING_DEBUG_ENABLE == FALSE || MINING_DEBUG_INFINITE_HITS == FALSE
     if (AreAllItemsFound())
         EndMining(taskId);
 
@@ -1981,6 +1984,7 @@ static void Task_MiningMainInput(u8 taskId)
         EndMining(taskId);
         PlaySE(SE_M_EARTHQUAKE);
     }
+    #endif
 }
 
 static void StressLevel_Draw_0(u8 ofs, u8 ofs2, u16* ptr)
