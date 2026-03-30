@@ -1183,6 +1183,9 @@ static u8 Debug_CheckToggleFlags(u8 id)
         result = TRUE;
         for (u32 i = 0; i < ARRAY_COUNT(sLocationFlags); i++)
         {
+            if (sLocationFlags[i] == 0) // Location flags for Frlg are set to flag 0 in Emerald and vice versa
+                continue;
+
             if (!FlagGet(sLocationFlags[i]))
             {
                 result = FALSE;
@@ -2515,7 +2518,8 @@ static void DebugAction_FlagsVars_RunningShoes(u8 taskId)
 
 static void DebugAction_FlagsVars_ToggleFlyFlags(u8 taskId)
 {
-    if (FlagGet(sLocationFlags[ARRAY_COUNT(sLocationFlags) - 1]))
+    u32 checkedFlag = sLocationFlags[0] == 0 ? sLocationFlags[ARRAY_COUNT(sLocationFlags) - 1] : sLocationFlags[0];
+    if (FlagGet(checkedFlag))
     {
         PlaySE(SE_PC_OFF);
         for (u32 i = 0; i < ARRAY_COUNT(sLocationFlags); i++)

@@ -14,8 +14,8 @@ enum Obedience
 enum CancelerResult
 {
     CANCELER_RESULT_SUCCESS,
-    CANCELER_RESULT_BREAK, // Runs script. Increments state
-    CANCELER_RESULT_PAUSE, // Runs script. Does not increment state
+    CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT, // Runs script. Increments state
+    CANCELER_RESULT_RUN_SCRIPT, // Runs script. Does not increment state
     CANCELER_RESULT_FAILURE, // Move failed, jump to script that handles the failure
 };
 

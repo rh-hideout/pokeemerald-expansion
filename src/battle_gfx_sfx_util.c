@@ -627,21 +627,21 @@ void BattleLoadMonSpriteGfx(struct Pokemon *mon, enum BattlerId battler)
         return;
 
     isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
+    species = GetMonData(mon, MON_DATA_SPECIES);
+    personalityValue = GetMonData(mon, MON_DATA_PERSONALITY);
 
-    if (gBattleSpritesDataPtr->battlerData[battler].transformSpecies == SPECIES_NONE)
-    {
-        species = GetMonData(mon, MON_DATA_SPECIES);
-        personalityValue = GetMonData(mon, MON_DATA_PERSONALITY);
-    }
-    else
+    if (gBattleSpritesDataPtr->battlerData[battler].transformSpecies != SPECIES_NONE)
     {
         species = gBattleSpritesDataPtr->battlerData[battler].transformSpecies;
         // If battler has Gigantamax factor, try convert gfx to G-Max version
         if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX && GetMonData(mon, MON_DATA_GIGANTAMAX_FACTOR))
             gBattleSpritesDataPtr->battlerData[battler].transformSpecies = species = GetGMaxTargetSpecies(species);
 
-        personalityValue = gTransformedPersonalities[battler];
-        isShiny = gTransformedShininess[battler];
+        if (gBattleMons[battler].volatiles.transformed)
+        {
+            personalityValue = gTransformedPersonalities[battler];
+            isShiny = gTransformedShininess[battler];
+        }
     }
 
     position = GetBattlerPosition(battler);

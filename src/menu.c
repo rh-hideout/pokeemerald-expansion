@@ -1745,6 +1745,7 @@ void AddTextPrinterParameterized6(u8 windowId, u8 fontId, u8 left, u8 top, u8 le
     struct TextPrinterTemplate printer;
 
     printer.currentChar = str;
+    printer.type = WINDOW_TEXT_PRINTER;
     printer.windowId = windowId;
     printer.fontId = fontId;
     printer.x = left;

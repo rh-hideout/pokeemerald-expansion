@@ -4,6 +4,7 @@
 #include "decompress.h"
 #include "decompress_error_handler.h"
 #include "pokemon.h"
+#include "pokemon_spots.h"
 #include "pokemon_sprite_visualizer.h"
 #include "text.h"
 #include "menu.h"
@@ -1172,10 +1173,9 @@ void LoadSpecialPokePicIsEgg(void *dest, enum Species species, u32 personality, 
             DecompressDataWithHeaderWram(gSpeciesInfo[SPECIES_NONE].backPic, dest);
     }
 
-    if (species == SPECIES_SPINDA && isFrontPic)
+    if (ShouldDrawSpotsOnSpecies(species) && isFrontPic)
     {
-        DrawSpindaSpots(personality, dest, FALSE);
-        DrawSpindaSpots(personality, dest, TRUE);
+        DrawPokemonSpotsBothFrames(personality, species, dest);
     }
 }
 

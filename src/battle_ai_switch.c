@@ -495,7 +495,7 @@ static u32 FindMonWithMoveOfEffectiveness(enum BattlerId battler, enum BattlerId
     return FALSE; // There is not a single Pokémon in the party that has a move with this effectiveness threshold
 }
 
-static bool32 CanMoveAffectTarget(struct BattleContext *ctx, u32 moveIndex)
+static bool32 CanMoveAffectTarget(struct DamageContext *ctx, u32 moveIndex)
 {
     if (ctx->move != MOVE_NONE
         && gAiLogicData->effectiveness[ctx->battlerAtk][ctx->battlerDef][moveIndex] > UQ_4_12(0.0)
@@ -504,7 +504,7 @@ static bool32 CanMoveAffectTarget(struct BattleContext *ctx, u32 moveIndex)
     return FALSE;
 }
 
-static bool32 IsMoveBad(struct BattleContext *ctx, u32 moveIndex)
+static bool32 IsMoveBad(struct DamageContext *ctx, u32 moveIndex)
 {
     if (CanMoveAffectTarget(ctx, moveIndex))
         return FALSE;
@@ -516,7 +516,7 @@ static bool32 IsMoveBad(struct BattleContext *ctx, u32 moveIndex)
 static bool32 ShouldSwitchIfAllMovesBad(enum BattlerId battler, enum BattlerId battlerIn1, enum BattlerId battlerIn2)
 {
     enum BattlerId opposingBattler = GetOppositeBattler(battler);
-    struct BattleContext ctx = {0};
+    struct DamageContext ctx = {0};
     ctx.battlerAtk = battler;
     ctx.battlerDef = opposingBattler;
     ctx.abilityAtk = gAiLogicData->abilities[ctx.battlerAtk];
@@ -914,7 +914,7 @@ static bool32 GetHitEscapeTransformState(enum BattlerId battlerAtk, enum Move mo
      || (moveType == TYPE_FIRE && (AI_GetWeather() & B_WEATHER_RAIN_PRIMAL)))
         return FALSE;
 
-    struct BattleContext ctx = {0};
+    struct DamageContext ctx = {0};
     ctx.aiCalc = TRUE;
     ctx.battlerAtk = battlerAtk;
     ctx.move = ctx.chosenMove = move;
@@ -1304,7 +1304,7 @@ static bool32 ShouldSwitchIfBadChoiceLock(enum BattlerId battler)
     enum Move choicedMove = gBattleStruct->choicedMove[battler];
     enum BattlerId opposingBattler = GetOppositeBattler(battler);
 
-    struct BattleContext ctx = {0};
+    struct DamageContext ctx = {0};
     ctx.battlerAtk = battler;
     ctx.battlerDef = opposingBattler;
     ctx.move = ctx.chosenMove = choicedMove;
