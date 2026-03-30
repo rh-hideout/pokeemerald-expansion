@@ -18,7 +18,7 @@ SINGLE_BATTLE_TEST("Snatch steals stat-boosting moves from the opponent")
         TURN { MOVE(player, MOVE_SNATCH); MOVE(opponent, MOVE_SWORDS_DANCE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SNATCH, player);
-        MESSAGE("Wobbuffet waits for a target to make a move!");
+        MESSAGE("Wobbuffet is waiting for a target to make a move!");
         MESSAGE("Wobbuffet snatched the opposing Wynaut's move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
         MESSAGE("Wobbuffet's Attack rose sharply!");
@@ -38,7 +38,7 @@ SINGLE_BATTLE_TEST("Snatch does not steal non-snatchable moves")
         TURN { MOVE(player, MOVE_SNATCH); MOVE(opponent, MOVE_TACKLE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SNATCH, player);
-        MESSAGE("Wobbuffet waits for a target to make a move!");
+        MESSAGE("Wobbuffet is waiting for a target to make a move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
         HP_BAR(player);
     }
@@ -62,9 +62,9 @@ DOUBLE_BATTLE_TEST("Snatch does not steal a move that was already snatched this 
     } SCENE {
         // Both players use Snatch in turn order
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SNATCH, playerLeft);
-        MESSAGE("Wobbuffet waits for a target to make a move!");
+        MESSAGE("Wobbuffet is waiting for a target to make a move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SNATCH, playerRight);
-        MESSAGE("Wynaut waits for a target to make a move!");
+        MESSAGE("Wynaut is waiting for a target to make a move!");
         // Opponent uses Celebrate (not snatchable)
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentLeft);
         // Slowest opponent uses Swords Dance - only the first Snatch user should steal it
@@ -97,7 +97,7 @@ DOUBLE_BATTLE_TEST("Snatch steals from the correct target when multiple snatchab
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SNATCH, playerLeft);
-        MESSAGE("Wobbuffet waits for a target to make a move!");
+        MESSAGE("Wobbuffet is waiting for a target to make a move!");
         // First snatchable move is Swords Dance from opponentLeft
         MESSAGE("Wobbuffet snatched the opposing Abra's move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, playerLeft);

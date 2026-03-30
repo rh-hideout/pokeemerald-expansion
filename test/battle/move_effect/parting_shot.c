@@ -42,7 +42,7 @@ SINGLE_BATTLE_TEST("Parting Shot: Soundproof and Good as Gold block Parting Shot
     } SCENE {
         ABILITY_POPUP(opponent, ability);
         if (ability == ABILITY_SOUNDPROOF)
-            MESSAGE("The opposing Exploud's Soundproof blocks Parting Shot!");
+            MESSAGE("It doesn't affect the opposing Exploud…");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_PARTING_SHOT, player);
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE);

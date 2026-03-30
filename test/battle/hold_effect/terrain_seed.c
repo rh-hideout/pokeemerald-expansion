@@ -195,7 +195,7 @@ SINGLE_BATTLE_TEST("Electric Seed doesn't activate on existing Electric Terrain 
         SEND_IN_MESSAGE("Tapu Bulu");
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("Using Electric Seed, the Defense of Tapu Bulu rose!");
+            MESSAGE("The Electric Seed boosted Tapu Bulu's Defense!");
         }
         ABILITY_POPUP(player, ABILITY_GRASSY_SURGE);
     }

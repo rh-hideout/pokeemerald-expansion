@@ -19,7 +19,7 @@ SINGLE_BATTLE_TEST("Hyper Cutter prevents intimidate")
         ABILITY_POPUP(player, ABILITY_INTIMIDATE);
         NONE_OF { ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player); }
         ABILITY_POPUP(opponent, ABILITY_HYPER_CUTTER);
-        MESSAGE("The opposing Krabby's Hyper Cutter prevents Attack loss!");
+        MESSAGE("The opposing Krabby's Attack was not lowered!");
         HP_BAR(player, captureDamage: &turnTwoHit);
     } THEN {
         EXPECT_EQ(turnOneHit, turnTwoHit);
@@ -36,7 +36,7 @@ SINGLE_BATTLE_TEST("Hyper Cutter prevents Attack stage reduction from moves")
         TURN { MOVE(player, MOVE_GROWL); }
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_HYPER_CUTTER);
-        MESSAGE("The opposing Krabby's Hyper Cutter prevents Attack loss!");
+        MESSAGE("The opposing Krabby's Attack was not lowered!");
     }
 }
 
@@ -72,7 +72,7 @@ SINGLE_BATTLE_TEST("Hyper Cutter is ignored by Mold Breaker")
         MESSAGE("The opposing Krabby's Attack fell!");
         NONE_OF {
             ABILITY_POPUP(opponent, ABILITY_HYPER_CUTTER);
-            MESSAGE("The opposing Krabby's Hyper Cutter prevents Attack loss!");
+            MESSAGE("The opposing Krabby's Attack was not lowered!");
         }
     }
 }
