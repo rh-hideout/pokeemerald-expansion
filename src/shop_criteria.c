@@ -5,7 +5,6 @@
 #include "malloc.h"
 #include "shop_criteria.h"
 
-static EWRAM_DATA u16 *sDynamicShopItemsListPtr = NULL;
 static EWRAM_DATA const u16 *sDynamicShopItemListRef = NULL;
 
 // Remove the UNUSED if you'll use the functions!
@@ -16,8 +15,8 @@ static UNUSED bool32 ShopCriteriaByVar(u32 varId, u32 varValue);
 void TryBuildDynamicShopItemList(const u16 **ogItemList, u16 *resultingTotal)
 {
     sDynamicShopItemListRef = *ogItemList;
-    sDynamicShopItemsListPtr = AllocZeroed((*resultingTotal + 1) * sizeof(u16));
 
+    u16 *list = AllocZeroed((*resultingTotal + 1) * sizeof(u16));
     u32 overallIdx = 0, idx = 0;
 
     while (idx < *resultingTotal)
@@ -26,23 +25,22 @@ void TryBuildDynamicShopItemList(const u16 **ogItemList, u16 *resultingTotal)
 
         if (IsItemShopCriteriaFulfilled(item))
         {
-            sDynamicShopItemsListPtr[overallIdx] = item;
+            list[overallIdx] = item;
             overallIdx++;
         }
 
         idx++;
     }
 
-    sDynamicShopItemsListPtr[overallIdx] = ITEM_NONE;
-    overallIdx++;
+    list[overallIdx] = ITEM_NONE;
 
-    *ogItemList = sDynamicShopItemsListPtr;
+    *ogItemList = list;
     *resultingTotal = overallIdx;
 }
 
 void TryFreeDynamicShopItemList(const u16 **ogItemList)
 {
-    TRY_FREE_AND_SET_NULL(sDynamicShopItemsListPtr);
+    Free((u16 *)*ogItemList);
     *ogItemList = sDynamicShopItemListRef;
 }
 
