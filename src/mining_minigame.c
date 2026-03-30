@@ -160,6 +160,12 @@ struct MiningState
 #define TAG_HIT_HAMMER          10
 #define TAG_HIT_PICKAXE         11
 
+#if MINING_DEBUG_ENABLE == TRUE && MINING_DEBUG_ALL_SPRITES_VISIBLE == TRUE
+#define ITEM_STONE_SPRITE_PRIORITY  0
+#else
+#define ITEM_STONE_SPRITE_PRIORITY  3
+#endif
+
 enum
 {
     STATE_CLEAR_SCREEN = 0,
@@ -411,7 +417,7 @@ static const struct OamData gOamItem64x64 =
     .matrixNum = 0,
     .size = 3,
     .tileNum = 0,
-    .priority = 3,
+    .priority = ITEM_STONE_SPRITE_PRIORITY,
     .paletteNum = 0,
 };
 
