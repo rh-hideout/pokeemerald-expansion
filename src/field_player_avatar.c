@@ -94,6 +94,7 @@ static bool8 ForcedMovement_SpinLeft(void);
 static bool8 ForcedMovement_SpinUp(void);
 static bool8 ForcedMovement_SpinDown(void);
 static void PlaySpinSound(void);
+static bool8 gRunToggleBtnSet = FALSE;
 
 static void MovePlayerNotOnBike(enum Direction, u16);
 static u8 CheckMovementInputNotOnBike(enum Direction);
@@ -926,6 +927,7 @@ static void PlayerNotOnBikeMoving(enum Direction direction, u16 heldKeys)
         PlayerWalkFast(direction); // default when not searching
     }
     return;
+}
 }
 
     if (!(gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_UNDERWATER)
