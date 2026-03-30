@@ -65,6 +65,7 @@
 #include "battle.h"
 #include "constants/event_objects.h"
 #include "constants/map_types.h"
+#include "constants/party_menu.h"
 
 typedef u16 (*SpecialFunc)(void);
 typedef void (*NativeFunc)(struct ScriptContext *ctx);
@@ -3272,32 +3273,31 @@ bool8 ScrCmd_fwdweekday(struct ScriptContext *ctx)
     return FALSE;
 }
 
-bool8 ScrCmd_triggerevolution(struct ScriptContext *ctx)
+bool8 Script_TriggerEvolution(struct ScriptContext *ctx)
 {
-    u16 species = ScriptReadHalfword(ctx);
-    bool32 canStopEvo = ScriptReadByte(ctx);
-    u16 evoArg = ScriptReadByte(ctx);
+    bool32 canStopEvo = gSpecialVar_0x8000;
 
-    u32 partyCount = CalculatePlayerPartyCount();
-    u32 partyIndex;
-    for (partyIndex = 0; partyIndex < partyCount; partyIndex++)
-        if (GetMonData(&gPlayerParty[partyIndex], MON_DATA_SPECIES) == species)
-            break;
-
-    if (partyIndex == partyCount)
+    DebugPrintf("Script_TriggerEvolution %d", gSpecialVar_0x8004);
+    if (gSpecialVar_0x8004 == PARTY_NOTHING_CHOSEN)
     {
         gSpecialVar_Result = 0;
         return FALSE;
     }
-    u32 targetSpecies = GetEvolutionTargetSpecies(&gPlayerParty[partyIndex], EVO_MODE_OVERWORLD_SPECIAL, evoArg, NULL, &canStopEvo, CHECK_EVO);
+    assertf(gSpecialVar_0x8004 <= PARTY_SIZE, "TriggerEvolution script called with invalid partyIndex %d", gSpecialVar_0x8004)
+    {
+        gSpecialVar_Result = 0;
+        return FALSE;
+    }
+    u32 targetSpecies = GetEvolutionTargetSpecies(&gPlayerParty[gSpecialVar_0x8004], EVO_MODE_SCRIPT_TRIGGER, gSpecialVar_0x8005, NULL, &canStopEvo, CHECK_EVO);
+    DebugPrintf("targetSpecies %d", targetSpecies);
     if (targetSpecies == SPECIES_NONE)
     {
         gSpecialVar_Result = 1;
         return FALSE;
     }
     gSpecialVar_Result = 3;
-    GetEvolutionTargetSpecies(&gPlayerParty[partyIndex], EVO_MODE_OVERWORLD_SPECIAL, evoArg, NULL, &canStopEvo, DO_EVO);
-    BeginEvolutionScene(&gPlayerParty[partyIndex], targetSpecies, canStopEvo, partyIndex);
+    GetEvolutionTargetSpecies(&gPlayerParty[gSpecialVar_0x8004], EVO_MODE_SCRIPT_TRIGGER, gSpecialVar_0x8005, NULL, &canStopEvo, DO_EVO);
+    BeginEvolutionScene(&gPlayerParty[gSpecialVar_0x8004], targetSpecies, canStopEvo, gSpecialVar_0x8004);
     gCB2_AfterEvolution = CB2_ReturnToFieldContinueScript;
     ScriptContext_Stop();
     return TRUE;

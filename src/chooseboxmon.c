@@ -4,6 +4,7 @@
 #include "event_data.h"
 #include "event_scripts.h"
 #include "field_weather.h"
+#include "malloc.h"
 #include "menu.h"
 #include "move.h"
 #include "move_relearner.h"
@@ -27,8 +28,8 @@ struct PcMonSelection
     void      (*partyMonBackup)(void);
     u32       (*isMonInvalid)(struct BoxPokemon *);
     const u8* postSelectionScript;
-    u32 isStrict:1;
-    u32 padding:31; 
+    u32       isStrict:1;
+    u32       padding:31;
 };
 
 static EWRAM_DATA u8 sSelectionType = 0;
@@ -40,6 +41,7 @@ static u32 IsMatchingSpecies(struct BoxPokemon *boxmon);
 static u32 CanMonDeleteMove(struct BoxPokemon *boxmon);
 static u32 CanMonLearnMove(struct BoxPokemon *boxmon);
 static u32 CanRelearnMoves(struct BoxPokemon *boxmon);
+static u32 CanEvolve(struct BoxPokemon *boxmon);
 
 static const struct PcMonSelection sPcMonSelectionTypes[] =
 {
@@ -48,7 +50,8 @@ static const struct PcMonSelection sPcMonSelectionTypes[] =
     [SELECT_PC_MON_DAYCARE] = {ChooseSendDaycareMon, IsNotEgg, NULL, TRUE},
     [SELECT_PC_MON_MOVE_TUTOR] = {ChooseMonForMoveTutor, CanMonLearnMove, MoveTutor_AfterChooseBoxMon, FALSE},
     [SELECT_PC_MON_MOVE_DELETER] = {ChoosePartyMon, CanMonDeleteMove, NULL, FALSE},
-    [SELECT_PC_MON_MOVE_RELEARNER] = {ChooseMonForMoveRelearner, CanRelearnMoves, NULL, FALSE}
+    [SELECT_PC_MON_MOVE_RELEARNER] = {ChooseMonForMoveRelearner, CanRelearnMoves, NULL, FALSE},
+    [SELECT_PC_MON_EVOLUTION] = {ChoosePartyMon, CanEvolve, NULL, FALSE},
 };
 
 static u32 NoFilter(struct BoxPokemon *boxmon)
@@ -99,6 +102,29 @@ static u32 CanMonLearnMove(struct BoxPokemon *boxmon)
     return CANNOT_LEARN_MOVE;
 }
 
+//super hacky way to exclude PC mons until I handle evolution for pc mon in a different PR
+static bool32 IsFromPC(u32 adress)
+{
+    u32 pcMonStart = (u32)&gPokemonStoragePtr->boxes;
+    u32 pcMonEnd = pcMonStart + sizeof(struct BoxPokemon) * TOTAL_BOXES_COUNT * IN_BOX_COUNT;
+    return (pcMonStart <= adress && adress <= pcMonEnd);
+}
+static u32 CanEvolve(struct BoxPokemon *boxmon)
+{
+    struct Pokemon *mon = Alloc(sizeof(struct Pokemon));
+    u32 result;
+
+    if (IsFromPC((u32)boxmon))
+        return INVALID_MON;
+    BoxMonToMon(boxmon, mon);
+    if (GetEvolutionTargetSpecies(mon, EVO_MODE_SCRIPT_TRIGGER, gSpecialVar_0x8005, NULL, NULL, CHECK_EVO))
+        result = VALID_MON;
+    else
+        result = INVALID_MON;
+    Free(mon);
+    return result;
+}
+
 u32 IsBoxMonExcluded(struct BoxPokemon *boxmon)
 {
     return sPcMonSelectionTypes[sSelectionType].isMonInvalid(boxmon);
@@ -138,6 +164,20 @@ void ChooseBoxMon(struct ScriptContext *ctx)
         ctx->scriptPtr++;
         ScriptCall(ctx, sPcMonSelectionTypes[sSelectionType].postSelectionScript);
     }
+}
+
+void PickPartyMon(struct ScriptContext *ctx)
+{
+    sSelectionType = ScriptReadByte(ctx);
+    for (u32 i = 0; i < gPlayerPartyCount; i++)
+    {
+        if (!sPcMonSelectionTypes[sSelectionType].isMonInvalid(&gPlayerParty[i].box))
+        {
+            gSpecialVar_0x8004 = i;
+            return;
+        }
+    }
+    gSpecialVar_0x8004 = PARTY_NOTHING_CHOSEN;
 }
 
 enum LearnMoveState
