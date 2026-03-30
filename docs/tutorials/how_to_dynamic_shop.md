@@ -50,32 +50,7 @@ Adding a Criteria to an Item is simple enough, you'd just add the fields at the 
      },
 ```
 
-Below are Criteria functions that are shipped by default.
-
-## `ShopCriteriaByTheStart`
-This function only returns `TRUE`. As previously mentioned, all items are added regardless by default but this'll turn useful once you start adding Criterias to items as this function lets you always add the item regardless of any conditions.
-```diff
-     [ITEM_POKE_BALL] =
-     {
-         .name = ITEM_NAME("Poké Ball"),
-         .price = 200,
-         .description = COMPOUND_STRING(
-             "A tool used for\n"
-             "catching wild\n"
-             "Pokémon."),
-         .pocket = POCKET_POKE_BALLS,
-         .type = ITEM_USE_BAG_MENU,
-         .battleUsage = EFFECT_ITEM_THROW_BALL,
-         .secondaryId = BALL_POKE,
-         .iconPic = gItemIcon_PokeBall,
-         .iconPalette = gItemIconPalette_PokeBall,
-+        .shopCriteriaFunc = ShopCriteriaByTheStart,
-     },
-```
-
-In this example, Poke Balls now will always be available for purchase from dynamic shops that sells this item.
-
-Below are helper functions for the average usecases. They're not meant to be directly used as the Criteria function itself, only for the actual Criteria function you're making. Be sure to remove the `UNUSED` label from the function you're using after.
+Below are extra helper functions for the average usecases. They're not meant to be directly used as the Criteria function itself, only for the actual Criteria function you're making. Be sure to remove the `UNUSED` label from the function you're using after.
 
 ### `ShopCriteriaByBadgeCount`
 This function is what you'll probably be using the most. You must provide one argument containing a number of total badges the player must own.
@@ -109,10 +84,9 @@ bool32 ShopCriteriaBySpecificValueInSpecificVar(u32 itemId)
 
 ## Create a Custom Criteria
 
-First, add a new function for your criteria in [`src/shop_criteria.c`](/src/shop_criteria.c), preferably after `ShopCriteriaByTheStart`, like so:
+First, add a new function for your criteria in [`src/shop_criteria.c`](/src/shop_criteria.c), preferably after the `// Add new Criterias below!` comment, like so:
 ```diff
- }
-+
+ // Add new Criterias below!
 +bool32 ShopCriteriaByMyNeed(u32 itemId)
 +{
 +    // add your stuff here, be sure to handle both `TRUE`/`FALSE` return values!
@@ -121,7 +95,7 @@ First, add a new function for your criteria in [`src/shop_criteria.c`](/src/shop
 
 Then, you'll need to add a declaration for your custom function so that it can be used by your items.
 ```diff
- bool32 ShopCriteriaByTheStart(u32 itemId);
+ // Add new Criterias below!
 +bool32 ShopCriteriaByMyNeed(u32 itemId);
 
  #endif // GUARD_SHOP_CRITERIA_H
@@ -153,8 +127,7 @@ We want to allow the player to purchase the Light Ball, but only after they have
 
 #### [`src/shop_criteria.c`](/src/shop_criteria.c)
 ```diff
- }
- 
+ // Add new Criterias below!
 +bool32 ShopCriteriaHasPikachu(u32 itemId)
 +{
 +    if (FlagGet(TRAINER_FLAGS_START + WATTSON_5) == FALSE)
@@ -166,7 +139,7 @@ We want to allow the player to purchase the Light Ball, but only after they have
 
 #### [`include/shop_criteria.h`](/include/shop_criteria.h)
 ```diff
- bool32 ShopCriteriaByTheStart(u32 itemId);
+ // Add new Criterias below!
 +bool32 ShopCriteriaHasPikachu(u32 itemId);
 ```
 

@@ -341,6 +341,8 @@ static const u8 sShopBuyMenuTextColors[][3] =
     [COLORID_GRAY_CURSOR] = {0, 3, 2},
 };
 
+static const u16 sShopItemsListDummy[] = { ITEM_NONE };
+
 static u8 CreateShopMenu(u8 martType)
 {
     int numMenuItems;
@@ -386,9 +388,11 @@ static void SetShopItemsForSale(const u16 *items)
     sMartInfo.itemList = items;
     sMartInfo.itemCount = 0;
 
-    // When itemCount is set to 0, it won't try to iterate itemList.
-    if (items == NULL)
+    assertf(items != NULL, "Shop items list should never be set as NULL")
+    {
+        sMartInfo.itemList = sShopItemsListDummy;
         return;
+    }
 
     // Read items until ITEM_NONE / DECOR_NONE is reached
     while (sMartInfo.itemList[i])

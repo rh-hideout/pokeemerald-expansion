@@ -16,21 +16,25 @@ static UNUSED bool32 ShopCriteriaByVar(u32 varId, u32 varValue);
 void TryBuildDynamicShopItemList(const u16 **ogItemList, u16 *resultingTotal)
 {
     sDynamicShopItemListRef = *ogItemList;
-    sDynamicShopItemsListPtr = AllocZeroed(MAX_DYN_LIST_ITEMS * sizeof(u16));
+    sDynamicShopItemsListPtr = AllocZeroed((*resultingTotal + 1) * sizeof(u16));
 
-    u32 overallIdx = 0;
+    u32 overallIdx = 0, idx = 0;
 
-    for (u32 itemId = 0; itemId < ITEMS_COUNT; itemId++)
+    while (idx < *resultingTotal)
     {
-        if (IsItemShopCriteriaFulfilled(itemId))
+        enum Item item = sDynamicShopItemListRef[idx];
+
+        if (IsItemShopCriteriaFulfilled(item))
         {
-            sDynamicShopItemsListPtr[overallIdx] = itemId;
+            sDynamicShopItemsListPtr[overallIdx] = item;
             overallIdx++;
         }
 
-        if (overallIdx == MAX_DYN_LIST_ITEMS)
-            break;
+        idx++;
     }
+
+    sDynamicShopItemsListPtr[overallIdx] = ITEM_NONE;
+    overallIdx++;
 
     *ogItemList = sDynamicShopItemsListPtr;
     *resultingTotal = overallIdx;
@@ -42,10 +46,7 @@ void TryFreeDynamicShopItemList(const u16 **ogItemList)
     *ogItemList = sDynamicShopItemListRef;
 }
 
-bool32 ShopCriteriaByTheStart(u32 itemId)
-{
-    return TRUE;
-}
+// Add new Criterias below!
 
 static UNUSED bool32 ShopCriteriaByBadgeCount(u32 count)
 {
