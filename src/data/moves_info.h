@@ -9411,7 +9411,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .multiHit = TRUE,
-        .ballisticMove = B_UPDATED_MOVE_FLAGS >= GEN_6,
+        .ballisticMove = B_UPDATED_MOVE_FLAGS >= GEN_7,
         .contestEffect = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? CONTEST_EFFECT_QUALITY_DEPENDS_ON_TIMING : CONTEST_EFFECT_BETTER_IF_SAME_TYPE,
         .contestCategory = CONTEST_CATEGORY_TOUGH,
         .contestComboStarterId = 0,
