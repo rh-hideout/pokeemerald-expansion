@@ -6568,12 +6568,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .makesContact = TRUE,
         .bitingMove = TRUE,
-            .additionalEffects = ADDITIONAL_EFFECTS({
-        #if B_UPDATED_MOVE_DATA >= GEN_4
-            .moveEffect = MOVE_EFFECT_DEF_MINUS_1,
-        #else
-            .moveEffect = MOVE_EFFECT_SP_DEF_MINUS_1,
-        #endif
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = B_UPDATED_MOVE_DATA >= GEN_4 ? MOVE_EFFECT_DEF_MINUS_1 : MOVE_EFFECT_SP_DEF_MINUS_1,
             .chance = 20,
         }),
         .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_FRONT_MON,
