@@ -11,7 +11,7 @@ if not os.path.exists("Makefile"):
 with open("./src/data/decoration/icon.h", 'r') as file:
     source_content = file.read()
 
-## Extract party info from decoration/icon.h
+## Extract decoration info from decoration/icon.h
 source_pattern = re.compile(r'(\[DECOR_.*\])\s*=\s(\{.*\})*')
 source_data = {}
 for match in source_pattern.findall(source_content):
@@ -46,7 +46,7 @@ with open("./src/data/decoration/header.h", 'w') as file:
 with open("./src/data/decoration/description.h", 'r') as file:
     source_content = file.read()
 
-## Extract party info from decoration/icon.h
+## Extract decoration info from decoration/icon.h
 source_pattern = re.compile(r'(DecorDesc_.*)\[\]\s*=\s_\(\n\s*(".*"\n\s*".*"(\n\s*".*")?)')
 source_data = {}
 for match in source_pattern.findall(source_content):
