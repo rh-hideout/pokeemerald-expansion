@@ -791,7 +791,6 @@ TEST("Battle strings fit on the battle message window")
         break;
     // Buffer Status name to B_BUFF2
     case STRINGID_PKMNSITEMCUREDPROBLEM:
-    case STRINGID_PKMNSXCUREDYPROBLEM:
     case STRINGID_PKMNSXCUREDITSYPROBLEM:
         StringCopy(gBattleTextBuff1, gText_Confusion);
         break;
