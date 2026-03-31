@@ -1,6 +1,3 @@
-// TODO: Define iterator inside the for loop. FIX
-// TODO: Rewrite Debug System for Mining Minigame from scratch -> Outdated Debug Mode from PSF
-
 #include "mining_minigame.h"
 #include "gba/types.h"
 #include "gba/defines.h"
@@ -66,13 +63,17 @@ static void Mining_UpdateTerrain(void);
 static void Mining_DrawRandomTerrain(void);
 static void DoDrawRandomItem(u8 itemStateId, u8 itemId);
 static void DoDrawRandomStone(u8 itemId);
+#if MINING_DEBUG_ENABLE == FALSE || MINING_DEBUG_ENABLE_STONE_GENERATION_OPTIONS == FALSE
 static bool32 DoesStoneFitInItemMap(u8 itemId);
+#endif
 static bool32 CanStoneBePlacedAtXY(u32 x, u32 y, u32 itemId);
 static void Mining_CheckItemFound(void);
 static void PrintMessage(const u8 *string);
 static void InitMiningWindows(void);
 static bool32 IsStressLevelMax(void);
+#if MINING_DEBUG_ENABLE == FALSE || MINING_DEBUG_INFINITE_HITS == FALSE
 static void EndMining(u8 taskId);
+#endif
 static u32 ConvertLoadGameStateToItemIndex(void);
 static void GetItemOrPrintError(u8 taskId, u32 itemIndex, u32 itemId);
 static void CheckItemAndPrint(u8 taskId, u32 itemIndex, u32 itemId);
@@ -81,15 +82,21 @@ static void HandleGameFinish(u8 taskId);
 static void PrintItemSuccess(u32 buriedItemsIndex);
 static u32 GetTotalNumberOfBuriedItems(void);
 static void InitBuriedItems(void);
+#if MINING_DEBUG_ENABLE == FALSE || MINING_DEBUG_INFINITE_HITS == FALSE
 static bool32 AreAllItemsFound(void);
+#endif
 static void SetBuriedItemsId(u32 index, u32 itemId);
 static void SetBuriedItemStatus(u32 index, bool32 status);
 static u32 GetBuriedBagItemId(u32 index);
 static u32 GetBuriedMiningItemId(u32 index);
+#if MINING_DEBUG_ENABLE == FALSE || MINING_DEBUG_INFINITE_HITS == FALSE
 static u32 GetNumberOfFoundItems(void);
+#endif
 static bool32 GetBuriedItemStatus(u32 index);
 static void ExitMiningUI(u8 taskId);
+#if MINING_DEBUG_ENABLE == FALSE || MINING_DEBUG_INFINITE_HITS == FALSE
 static void WallCollapseAnimation();
+#endif
 
 struct BuriedItem
 {
@@ -116,7 +123,7 @@ struct MiningState
 
     // Items and Stones
     struct BuriedItem buriedItems[MINING_MAX_NUM_BURIED_ITEMS];
-    struct BuriedItem buriedStones[MINING_COUNT_MAX_NUMBER_STONES];
+    struct BuriedItem buriedStones[MINING_MAX_NUM_BURIED_STONES];
 
     // Tools
     bool32 tool;    // Hammer or Pickaxe
@@ -1390,6 +1397,20 @@ static void Mining_Init(MainCallback callback)
     sMiningUiState->buriedStones[1].isSelected = TRUE;
 
     // Generate Items
+    #if MINING_DEBUG_ENABLE == TRUE && MINING_DEBUG_ENABLE_ITEM_GENERATION_OPTIONS == TRUE
+    u32 amountItemsToSelect;
+
+    if (MINING_DEBUG_DESIRED_NUMBER_OF_ITEMS == 0)
+        amountItemsToSelect = 2;
+    else if (MINING_DEBUG_DESIRED_NUMBER_OF_ITEMS > 4)
+        amountItemsToSelect = 4;
+    else
+        amountItemsToSelect = MINING_DEBUG_DESIRED_NUMBER_OF_ITEMS;
+
+    for (u32 i = 0; i < amountItemsToSelect; i++)
+        sMiningUiState->buriedItems[i].isSelected = TRUE;
+
+    #else
     u32 amountItemsToSelect = random(3) + 2; // The `+ 2` says that the min. amount of items to be generated are 2.
 
     // Fisher-Yates shuffle implementation
@@ -1397,7 +1418,8 @@ static void Mining_Init(MainCallback callback)
     u32 zones[4] = {0,1,2,3};
 
     // Do the shuffle
-    for (u32 i = n - 1; i > 0; i--) {
+    for (u32 i = n - 1; i > 0; i--) 
+    {
         // Pick a random index from 0 to i (inclusive)
         u32 j = random(i + 1);
         // Swap the current element with the element at random index
@@ -1411,6 +1433,7 @@ static void Mining_Init(MainCallback callback)
     {
         sMiningUiState->buriedItems[zones[i]].isSelected = TRUE;
     }
+    #endif
 
     SetMainCallback2(Mining_SetupCB);
 }
@@ -1794,6 +1817,7 @@ static const u32 ItemRarityTable_Rare[] =
     MININGID_ARMOR_FOSSIL,
 };
 
+#if MINING_DEBUG_ENABLE == FALSE || MINING_DEBUG_ENABLE_ITEM_GENERATION_OPTIONS == FALSE
 static u8 GetRandomItemId()
 {
     u32 rarity;
@@ -1826,11 +1850,26 @@ static u8 GetRandomItemId()
 
     return itemId;
 }
+#endif
 
-static void InitItemsIfSelected(u32 item, u32 itemId) {
+static void InitItemsIfSelected(u32 item) {
+    u32 itemId = 0;
     if (sMiningUiState->buriedItems[item].isSelected)
     {
+        #if MINING_DEBUG_ENABLE == TRUE && MINING_DEBUG_ENABLE_ITEM_GENERATION_OPTIONS == TRUE
+        switch(item) {
+            case 0:
+                itemId = MINING_DEBUG_MININGID_ITEM1;
+            case 1:
+                itemId = MINING_DEBUG_MININGID_ITEM2;
+            case 2:
+                itemId = MINING_DEBUG_MININGID_ITEM3;
+            case 3:
+                itemId = MINING_DEBUG_MININGID_ITEM4;
+        }
+        #else
         itemId = GetRandomItemId();
+        #endif
         SetBuriedItemsId(item, itemId);
         DoDrawRandomItem(item+1, itemId);
     }
@@ -1838,12 +1877,6 @@ static void InitItemsIfSelected(u32 item, u32 itemId) {
 
 static void Mining_LoadSpriteGraphics(void)
 {
-    u32 i;
-    u32 itemId1 = 0;
-    u32 itemId2 = 0;
-    u32 itemId3 = 0;
-    u32 itemId4 = 0;
-    u32 stone = MININGID_NONE;
 
     LoadSpritePalette(sSpritePal_Cursor);
     LoadCompressedSpriteSheet(sSpriteSheet_Cursor);
@@ -1854,13 +1887,18 @@ static void Mining_LoadSpriteGraphics(void)
     ClearItemMap();
 
     // Items
-    InitItemsIfSelected(0, itemId1);
-    InitItemsIfSelected(1, itemId2);
-    InitItemsIfSelected(2, itemId3);
-    InitItemsIfSelected(3, itemId4);
+    InitItemsIfSelected(0);
+    InitItemsIfSelected(1);
+    InitItemsIfSelected(2);
+    InitItemsIfSelected(3);
 
     // Stones
-    for (i = 0; i < MINING_COUNT_MAX_NUMBER_STONES; i++)
+    #if MINING_DEBUG_ENABLE == TRUE && MINING_DEBUG_ENABLE_STONE_GENERATION_OPTIONS == TRUE
+    DoDrawRandomStone(MINING_DEBUG_MININGID_STONE1);
+    DoDrawRandomStone(MINING_DEBUG_MININGID_STONE2);
+    #else
+    u32 stone = MININGID_NONE;
+    for (u32 i = 0; i < MINING_MAX_NUM_BURIED_STONES; i++)
     {
         stone = MININGID_NONE;
         while (!DoesStoneFitInItemMap(stone))
@@ -1868,6 +1906,7 @@ static void Mining_LoadSpriteGraphics(void)
 
         DoDrawRandomStone(stone);
     }
+    #endif
 
     sMiningUiState->cursorSpriteIndex = CreateSprite(&gSpriteCursor, 8, 40, 0);
     sMiningUiState->cursorX = 0;
@@ -2456,6 +2495,8 @@ static bool32 CanStoneBePlacedAtXY(u32 x, u32 y, u32 itemId) // PSF magic
     return TRUE;
 }
 
+
+#if MINING_DEBUG_ENABLE == FALSE || MINING_DEBUG_ENABLE_STONE_GENERATION_OPTIONS == FALSE
 static bool32 DoesStoneFitInItemMap(u8 itemId)
 {
     u32 coordX, coordY;
@@ -2473,6 +2514,7 @@ static bool32 DoesStoneFitInItemMap(u8 itemId)
     }
     return FALSE;
 }
+#endif
 
 static void DoDrawRandomStone(u8 itemId)
 {
@@ -2822,11 +2864,13 @@ static bool32 IsStressLevelMax(void)
     return sMiningUiState->stressLevelPos == STRESS_LEVEL_POS_MAX;
 }
 
+#if MINING_DEBUG_ENABLE == FALSE || MINING_DEBUG_INFINITE_HITS == FALSE
 static void EndMining(u8 taskId)
 {
     sMiningUiState->loadGameState = STATE_GAME_FINISH;
     gTasks[taskId].func = Task_MiningPrintResult;
 }
+#endif
 
 static bool32 ClearWindowPlaySelectButtonPress(void)
 {
@@ -2979,6 +3023,7 @@ static void MakeCursorInvisible(void)
     gSprites[sMiningUiState->cursorSpriteIndex].invisible = 1;
 }
 
+#if MINING_DEBUG_ENABLE == FALSE || MINING_DEBUG_INFINITE_HITS == FALSE
 static void Task_WallCollapseDelay(u8 taskId)
 {
     u16* tilemapBuf = GetBgTilemapBuffer(1);
@@ -3023,7 +3068,10 @@ static void Task_WallCollapseDelay(u8 taskId)
             break;
     }
 }
+#endif
 
+
+#if MINING_DEBUG_ENABLE == FALSE || MINING_DEBUG_INFINITE_HITS == FALSE
 static void WallCollapseAnimation()
 {
     sMiningUiState->delayCounter = 0;
@@ -3031,6 +3079,7 @@ static void WallCollapseAnimation()
     ShowBg(1);
     CreateTask(Task_WallCollapseDelay, 0);
 }
+#endif
 
 static void HandleGameFinish(u8 taskId)
 {
@@ -3065,6 +3114,8 @@ static u32 GetTotalNumberOfBuriedItems(void)
     return count;
 }
 
+
+#if MINING_DEBUG_ENABLE == FALSE || MINING_DEBUG_INFINITE_HITS == FALSE
 static u32 GetNumberOfFoundItems(void)
 {
     u32 itemIndex = 0;
@@ -3076,11 +3127,15 @@ static u32 GetNumberOfFoundItems(void)
 
     return count;
 }
+#endif
 
+
+#if MINING_DEBUG_ENABLE == FALSE || MINING_DEBUG_INFINITE_HITS == FALSE
 static bool32 AreAllItemsFound(void)
 {
     return (GetTotalNumberOfBuriedItems() == GetNumberOfFoundItems());
 }
+#endif
 
 static void InitBuriedItems(void)
 {
