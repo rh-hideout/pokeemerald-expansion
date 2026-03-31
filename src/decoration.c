@@ -1467,8 +1467,11 @@ static void SetUpPlacingDecorationPlayerAvatar(u8 taskId, struct PlaceDecoration
 
 static void SetUpDecorationShape(u8 taskId)
 {
-    gTasks[taskId].tDecorWidth = sDecorShapes[gDecorations[gCurDecorationItems[gCurDecorationIndex]].shape].width;
-    gTasks[taskId].tDecorHeight = sDecorShapes[gDecorations[gCurDecorationItems[gCurDecorationIndex]].shape].height;
+    u8 currentDecorationShape = gDecorations[gCurDecorationItems[gCurDecorationIndex]].shape;
+    gTasks[taskId].tDecorWidth = sDecorShapes[currentDecorationShape].width;
+    gTasks[taskId].tDecorHeight = sDecorShapes[currentDecorationShape].height;
+    if (currentDecorationShape == DECORSHAPE_1x3)
+        gTasks[taskId].tCursorY++;
 }
 
 static void AttemptPlaceDecoration(u8 taskId)
