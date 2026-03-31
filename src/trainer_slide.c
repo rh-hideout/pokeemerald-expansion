@@ -265,7 +265,7 @@ static void SetTrainerSlideParameters(enum BattlerId battler, u32* lastId, u32* 
 
 enum TrainerSlideTargets ShouldDoTrainerSlide(enum BattlerId battler, enum TrainerSlideType slideId)
 {
-    u32 lastId = PARTY_SIZE, trainerId = SanitizeTrainerId(TRAINER_BATTLE_PARAM.opponentA);
+    u32 lastId = PARTY_SIZE, trainerId = TRAINER_BATTLE_PARAM.opponentA;
     u32 retValue = TRAINER_SLIDE_TARGET_TRAINER_A;
     bool32 shouldRun = FALSE;
 
