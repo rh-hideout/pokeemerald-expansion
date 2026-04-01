@@ -564,15 +564,14 @@ TEST("Type names fit on Pokedex Search Screen")
 TEST("Map names fit in popup")
 {
     ASSUME(OW_POPUP_GENERATION == GEN_3);
-    u32 i, j;
     const u32 fontId = FONT_NARROWER;
     u32 widthPx = 80;
     s8 mapGroup = 0;
     s8 mapNum = 0;
     u8 mapName[MAP_POPUP_STRING_BUFFER_LENGTH - MAP_POPUP_PREFIX_BUFFER_LENGTH];
-    for (i = 0; MAP_GROUP_COUNT[i] != 0; i++)
+    for (u32 i = 0; MAP_GROUP_COUNT[i] != 0; i++)
     {
-        for (j = 0; j < MAP_GROUP_COUNT[i]; j++)
+        for (u32 j = 0; j < MAP_GROUP_COUNT[i]; j++)
         {
             const struct MapHeader *mapHeader = Overworld_GetMapHeaderByGroupAndId(i, j);
             if (mapHeader->showMapName)

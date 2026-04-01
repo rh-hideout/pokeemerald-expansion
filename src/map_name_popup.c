@@ -554,7 +554,9 @@ static bool32 IsCeladonDeptStore(const struct MapHeader *mapHeader)
      && mapHeader->mapLayoutId != LAYOUT_CELADON_CITY_DEPARTMENT_STORE_5F
      && mapHeader->mapLayoutId != LAYOUT_CELADON_CITY_DEPARTMENT_STORE_ROOF
      && mapHeader->mapLayoutId != LAYOUT_CELADON_CITY_DEPARTMENT_STORE_ELEVATOR)
+    {
         return FALSE;
+    }
     return TRUE;
 }
 
@@ -564,10 +566,9 @@ u8 *GetPopUpMapName(u8 *dest, const struct MapHeader *mapHeader)
         StringCopy(dest, COMPOUND_STRING("CELADON DEPT."));
     else
         GetMapName(dest, mapHeader->regionMapSectionId, 0);
-    if (mapHeader->floorNumber != 0)
-    {
-        MapNamePopupAppendFloorNum(dest, mapHeader->floorNumber);
-    }
+    if (mapHeader->floorNumber == 0)
+        return dest;
+    MapNamePopupAppendFloorNum(dest, mapHeader->floorNumber);
     return dest;
 }
 
