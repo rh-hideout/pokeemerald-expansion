@@ -1904,7 +1904,7 @@ static enum CancelerResult CancelerNotFullyProtected(struct BattleCalcValues *cv
     return CANCELER_RESULT_SUCCESS;
 }
 
-static enum CancelerResult CancelerBouncingMove(struct BattleCalcValues *cv)
+static enum CancelerResult CancelerBouncedMove(struct BattleCalcValues *cv)
 {
     if (gBattleStruct->bouncedMoveIsUsed)
         return CANCELER_RESULT_SUCCESS;
@@ -2108,7 +2108,7 @@ static enum CancelerResult (*const sMoveSuccessOrderCancelers[])(struct BattleCa
     [CANCELER_TOOK_ATTACK] = CancelerTookAttack,
     [CANCELER_TARGET_FAILURE] = CancelerTargetFailure,
     [CANCELER_NOT_FULLY_PROTECTED] = CancelerNotFullyProtected,
-    [CANCELER_BOUNCING_MOVE] = CancelerBouncingMove,
+    [CANCELER_BOUNCED_MOVE] = CancelerBouncedMove,
     [CANCELER_MULTIHIT_MOVES] = CancelerMultihitMoves,
 };
 
@@ -2808,7 +2808,7 @@ static enum MoveEndResult MoveEndNextTarget(void)
         gBattlerAttacker = gBattleStruct->attackerBeforeBounce;
         gBattlerTarget = gBattleStruct->targetBeforeBounce;
         gBattleScripting.moveendState = 0;
-        gBattleStruct->eventState.atkCanceler = CANCELER_BOUNCING_MOVE;
+        gBattleStruct->eventState.atkCanceler = CANCELER_BOUNCED_MOVE;
         BattleScriptPush(GetMoveBattleScript(gCurrentMove));
         gBattlescriptCurrInstr = BattleScript_FlushMessageBox;
         return MOVEEND_RESULT_RUN_SCRIPT;
