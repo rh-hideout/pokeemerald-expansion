@@ -1860,12 +1860,16 @@ static void InitItemsIfSelected(u32 item) {
         switch(item) {
             case 0:
                 itemId = MINING_DEBUG_MININGID_ITEM1;
+                break;
             case 1:
                 itemId = MINING_DEBUG_MININGID_ITEM2;
+                break;
             case 2:
                 itemId = MINING_DEBUG_MININGID_ITEM3;
+                break;
             case 3:
                 itemId = MINING_DEBUG_MININGID_ITEM4;
+                break;
         }
         #else
         itemId = GetRandomItemId();
