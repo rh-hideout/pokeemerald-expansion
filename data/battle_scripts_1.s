@@ -3540,11 +3540,6 @@ BattleScript_FlatterTryConfuse::
 	seteffectprimary BS_ATTACKER, BS_TARGET, MOVE_EFFECT_CONFUSION
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectDarkVoid::
-.if B_DARK_VOID_FAIL >= GEN_7
-	jumpifspecies SPECIES_DARKRAI, BattleScript_EffectNonVolatileStatus
-	goto BattleScript_PokemonCantUseTheMove
-.endif
 BattleScript_EffectNonVolatileStatus::
 	attackcanceler
 	trynonvolatilestatus

@@ -1126,6 +1126,12 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
         if (!IS_BATTLER_OF_TYPE(cv->battlerAtk, GetMoveArgType(cv->move)))
             battleScript = BattleScript_ButItFailed;
         break;
+    case EFFECT_DARK_VOID:
+        if (gBattleStruct->bouncedMoveIsUsed)
+            break;
+        if (B_DARK_VOID_FAIL >= GEN_7 && gBattleMons[cv->battlerAtk].species != SPECIES_DARKRAI)
+            battleScript = BattleScript_PokemonCantUseTheMove;
+        break;
     case EFFECT_AURA_WHEEL:
         if (gBattleMons[cv->battlerAtk].species != SPECIES_MORPEKO_FULL_BELLY
          && gBattleMons[cv->battlerAtk].species != SPECIES_MORPEKO_HANGRY)

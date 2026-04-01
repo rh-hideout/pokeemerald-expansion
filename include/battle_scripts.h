@@ -786,7 +786,6 @@ extern const u8 BattleScript_EffectOctolock[];
 extern const u8 BattleScript_EffectClangorousSoul[];
 extern const u8 BattleScript_EffectCourtChange[];
 extern const u8 BattleScript_EffectExtremeEvoboost[];
-extern const u8 BattleScript_EffectDarkVoid[];
 extern const u8 BattleScript_EffectVictoryDance[];
 extern const u8 BattleScript_EffectTeatime[];
 extern const u8 BattleScript_EffectShellTrap[];
