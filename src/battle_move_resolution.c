@@ -1933,13 +1933,12 @@ static enum CancelerResult CancelerBouncingMove(struct BattleCalcValues *cv)
             gBattleStruct->battlerState[gBattlerAttacker].targetsDone[gBattlerTarget] = TRUE;
             gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_DOESNT_AFFECT_FOE; // for moves that target the opposing field
             gBattlerTarget = battler;
-            for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
-                gBattleStruct->savedMoveResultFlags[battler] = gBattleStruct->moveResultFlags[battler];
+            for (enum BattlerId i = 0; i < gBattlersCount; i++)
+                gBattleStruct->savedMoveResultFlags[i] = gBattleStruct->moveResultFlags[i];
             gBattleStruct->bouncedMoveIsUsed = TRUE;
             return CANCELER_RESULT_RUN_SCRIPT;
         }
     }
-
 
     return CANCELER_RESULT_SUCCESS;
 }
