@@ -592,6 +592,18 @@
 	createsprite gFlashingHitSplatSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \relative_to, \animation
 	.endm
 
+	.macro create_fist_sprite anim_battler:req, subpriority_offset:req, x:req, y:req, duration:req, unk:req
+	createsprite gFistFootSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \duration, \unk, 0
+	.endm
+
+	.macro create_wide_foot_sprite anim_battler:req, subpriority_offset:req, x:req, y:req, duration:req, unk:req
+	createsprite gFistFootSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \duration, \unk, 1
+	.endm
+
+	.macro create_tall_foot_sprite anim_battler:req, subpriority_offset:req, x:req, y:req, duration:req, unk:req
+	createsprite gFistFootSpriteTemplate, \anim_battler, \subpriority_offset, \x, \y, \duration, \unk, 2
+	.endm
+
 @ createvisualtask wrappers
 @ The arguments are based on the CMD_ARGS of the task.
 
