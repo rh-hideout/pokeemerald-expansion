@@ -718,6 +718,8 @@ void HandleInputChooseMove(enum BattlerId battler)
 
         if (isUserOrAlly)
             gMultiUsePlayerCursor = battler;
+        else if (moveTarget == TARGET_ALLY)
+            gMultiUsePlayerCursor = BATTLE_PARTNER(battler);
         else
             gMultiUsePlayerCursor = GetOpposingSideBattler(battler);
 
@@ -1208,7 +1210,7 @@ static void SetLinkBattleEndCallbacks(enum BattlerId battler)
 {
     if (gWirelessCommType == 0)
     {
-        if (gReceivedRemoteLinkPlayers == 0)
+        if (!gReceivedRemoteLinkPlayers)
         {
             m4aSongNumStop(SE_LOW_HEALTH);
             gMain.inBattle = FALSE;
@@ -1422,7 +1424,7 @@ static void Task_GiveExpToMon(u8 taskId)
     if (GetBattlerCoordsIndex(battler) == BATTLE_COORDS_DOUBLES || monId != gBattlerPartyIndexes[battler]) // Give exp without moving the expbar.
     {
         struct Pokemon *mon = &gPlayerParty[monId];
-        u16 species = GetMonData(mon, MON_DATA_SPECIES);
+        enum Species species = GetMonData(mon, MON_DATA_SPECIES);
         u8 level = GetMonData(mon, MON_DATA_LEVEL);
         u32 currExp = GetMonData(mon, MON_DATA_EXP);
         u32 nextLvlExp = gExperienceTables[gSpeciesInfo[species].growthRate][level + 1];
@@ -1469,7 +1471,7 @@ static void Task_PrepareToGiveExpWithExpBar(u8 taskId)
     enum BattlerId battler = gTasks[taskId].tExpTask_battler;
     struct Pokemon *mon = &gPlayerParty[monIndex];
     u8 level = GetMonData(mon, MON_DATA_LEVEL);
-    u16 species = GetMonData(mon, MON_DATA_SPECIES);
+    enum Species species = GetMonData(mon, MON_DATA_SPECIES);
     u32 exp = GetMonData(mon, MON_DATA_EXP);
     u32 currLvlExp = gExperienceTables[gSpeciesInfo[species].growthRate][level];
     u32 expToNextLvl;
@@ -1485,7 +1487,7 @@ static void Task_PrepareToGiveExpWithExpBar(u8 taskId)
 static void Task_GiveExpWithExpBar(u8 taskId)
 {
     u32 level, expAfterGain;
-    u16 species;
+    enum Species species;
     u32 oldMaxHP;
     s32 currExp, expOnNextLvl, newExpPoints;
 
@@ -1708,7 +1710,7 @@ static void MoveSelectionDisplayPpNumber(enum BattlerId battler)
 static void MoveSelectionDisplayMoveType(enum BattlerId battler)
 {
     u8 *txtPtr, *end;
-    u32 speciesId = gBattleMons[battler].species;
+    enum Species speciesId = gBattleMons[battler].species;
     struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
     txtPtr = StringCopy(gDisplayedStringBattle, gText_MoveInterfaceType);
     enum Move move = moveInfo->moves[gMoveSelectionCursor[battler]];
@@ -2001,8 +2003,6 @@ static void HandleChooseActionAfterDma3(enum BattlerId battler)
         gBattle_BG0_Y = DISPLAY_HEIGHT;
         if (gBattleStruct->aiDelayTimer != 0)
         {
-            gBattleStruct->aiDelayFrames = gMain.vblankCounter1 - gBattleStruct->aiDelayTimer;
-            gBattleStruct->aiDelayTimer = 0;
             if (DEBUG_AI_DELAY_TIMER)
             {
                 static const u8 sFramesText[] = _(" frames thinking\n");
@@ -2015,6 +2015,8 @@ static void HandleChooseActionAfterDma3(enum BattlerId battler)
                 StringAppend(gDisplayedStringBattle, sCyclesText);
                 BattlePutTextOnWindow(gDisplayedStringBattle, B_WIN_ACTION_PROMPT);
             }
+            gBattleStruct->aiDelayTimer = 0;
+            gBattleStruct->aiDelayFrames = 0;
         }
         gBattlerControllerFuncs[battler] = HandleInputChooseAction;
     }
@@ -2407,7 +2409,7 @@ static bool32 ShouldShowTypeEffectiveness(u32 targetId)
 static u32 CheckTypeEffectiveness(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battlerAtk][4]);
-    struct BattleContext ctx = {0};
+    struct DamageContext ctx = {0};
     ctx.battlerAtk = battlerAtk;
     ctx.battlerDef = battlerDef;
     ctx.move = moveInfo->moves[gMoveSelectionCursor[battlerAtk]];

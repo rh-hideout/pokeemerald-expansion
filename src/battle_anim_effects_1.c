@@ -3147,6 +3147,12 @@ void AnimTask_CreateSmallSolarBeamOrbs(u8 taskId)
 {
     if (--gTasks[taskId].data[0] == -1)
     {
+        if (!TryLoadSpriteAssets(&gSolarBeamSmallOrbSpriteTemplate))
+        {
+            DestroyAnimVisualTask(taskId);
+            return;
+        }
+
         gTasks[taskId].data[1]++;
         gTasks[taskId].data[0] = 6;
         gBattleAnimArgs[0] = 15;
@@ -3254,11 +3260,8 @@ static void AnimMoveSmallCloudAnimate(struct Sprite *sprite)
     sprite->x2 += sprite->data[0];
     sprite->y2 += sprite->data[1];
 
-    if(sprite->affineAnimEnded)
-    {
+    if (sprite->affineAnimEnded)
         DestroyAnimSprite(sprite);
-    }
-
 }
 #define ONE_IF_ZERO(x) ((x) > 0 ? (x) : 1)
 
@@ -3279,13 +3282,13 @@ static void AnimMoveSmallCloud(struct Sprite *sprite)
 
 static void AnimPluckParticle(struct Sprite *sprite)
 {
-    if(sprite->data[0] > 0)
+    if (sprite->data[0] > 0)
     {
         s16 yVelocity = sprite->data[5];
         s16 xVelocity = sprite->data[2];
         sprite->y -= yVelocity;
         sprite->x += xVelocity;
-        if((sprite->data[0] % 7) == 0)
+        if ((sprite->data[0] % 7) == 0)
         {
             sprite->data[5] = yVelocity-1;
         }
@@ -3318,10 +3321,10 @@ static void AnimPluck(struct Sprite *sprite)
 
 static void AnimMoveFeintSwipeStep(struct Sprite *sprite)
 {
-    switch(sprite->data[5])
+    switch (sprite->data[5])
     {
     case 0:
-        if(AnimTranslateLinear(sprite))
+        if (AnimTranslateLinear(sprite))
         {
             //Not the most elegant solution here, but it works without messing up the sprites coordinates
             sprite->x2 = 0;
@@ -3336,7 +3339,7 @@ static void AnimMoveFeintSwipeStep(struct Sprite *sprite)
         }
         break;
     case 1:
-        if(AnimTranslateLinear(sprite))
+        if (AnimTranslateLinear(sprite))
         {
             sprite->callback = DestroyAnimSprite;
         }
@@ -3372,7 +3375,7 @@ static void AnimMoveFeintZoom(struct Sprite *sprite)
 
 static void AnimMoveTrumpCardArc(struct Sprite *sprite)
 {
-    if(AnimTranslateLinear(sprite))
+    if (AnimTranslateLinear(sprite))
     {
         DestroyAnimSprite(sprite);
     }
@@ -3405,22 +3408,22 @@ static void AnimMoveTrumpCard(struct Sprite *sprite)
 
 static void AnimMoveTrumpCardParticleAlive(struct Sprite *sprite)
 {
-    if(sprite->data[0] > 0)
+    if (sprite->data[0] > 0)
     {
         s16 yVelocity = sprite->data[2];
         s16 xVelocity = sprite->data[1];
         sprite->y -= yVelocity;
         sprite->x += xVelocity;
-        if((sprite->data[0] % 2) == 0)
+        if ((sprite->data[0] % 2) == 0)
         {
-            if(xVelocity > 0)
+            if (xVelocity > 0)
                 xVelocity--;
-            else if(xVelocity < 0)
+            else if (xVelocity < 0)
                 xVelocity++;
 
-            if(yVelocity > 0)
+            if (yVelocity > 0)
                 yVelocity--;
-            else if(yVelocity < 0)
+            else if (yVelocity < 0)
                 yVelocity++;
             sprite->data[1] = xVelocity;
             sprite->data[2] = yVelocity;
@@ -3450,17 +3453,17 @@ static void AnimMoveTrumpCardParticle(struct Sprite *sprite)
 
 static void AnimMoveAccupressureTransition(struct Sprite *sprite)
 {
-    switch(sprite->data[5])
+    switch (sprite->data[5])
     {
     case 0:
-        if(AnimTranslateLinear(sprite))
+        if (AnimTranslateLinear(sprite))
         {
             StartSpriteAffineAnim(sprite, 1);
             sprite->data[5]++;
         }
         break;
     case 1:
-        if(sprite->affineAnimEnded)
+        if (sprite->affineAnimEnded)
         {
             DestroyAnimSprite(sprite);
         }
@@ -3485,9 +3488,9 @@ static void AnimMoveWringOutCircle(struct Sprite *sprite)
 {
     sprite->x2 = Cos(sprite->data[3], sprite->data[2]);
     sprite->y2 = Sin(sprite->data[3], sprite->data[2]);
-    if(sprite->data[1] > 0)
+    if (sprite->data[1] > 0)
     {
-        if(sprite->data[3] + sprite->data[0] >= 256)
+        if (sprite->data[3] + sprite->data[0] >= 256)
         {
             sprite->data[3] = (sprite->data[0] + sprite->data[3]) % 256;
             sprite->data[1]--;
@@ -3498,7 +3501,7 @@ static void AnimMoveWringOutCircle(struct Sprite *sprite)
         }
 
     }
-    else if(sprite->data[3] < 64)
+    else if (sprite->data[3] < 64)
     {
         //We need to go for an extra 90°
         sprite->data[3] += sprite->data[0];
@@ -3512,7 +3515,7 @@ static void AnimMoveWringOutCircle(struct Sprite *sprite)
 static void AnimMoveWringOut(struct Sprite *sprite)
 {
     InitSpritePosToAnimTarget(sprite, TRUE);
-    if(gBattleAnimArgs[5] == TRUE)
+    if (gBattleAnimArgs[5] == TRUE)
     {
         sprite->oam.objMode = ST_OAM_OBJ_BLEND;
     }
@@ -4549,6 +4552,12 @@ static void AnimTrickBag_Step3(struct Sprite *sprite)
 void AnimTask_LeafBlade(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
+
+    if (!TryLoadSpriteAssets(&gLeafBladeSpriteTemplate))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
 
     task->data[4] = GetBattlerSpriteSubpriority(gBattleAnimTarget) - 1;
     task->data[6] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
@@ -6586,24 +6595,6 @@ static void ReloadBattlerSprites(enum BattlerId battler, struct Pokemon *party)
     }
 }
 
-static void TrySwapSkyDropTargets(enum BattlerId battlerAtk, enum BattlerId battlerPartner)
-{
-    u32 temp;
-
-    // battlerAtk is using Ally Switch
-    // check if our partner is the target of sky drop
-    // If so, change that index to battlerAtk
-    for (enum BattlerId i = 0; i < gBattlersCount; i++) {
-        if (gBattleStruct->skyDropTargets[i] == battlerPartner) {
-            gBattleStruct->skyDropTargets[i] = battlerAtk;
-            break;
-        }
-    }
-
-    // Then swap our own sky drop targets with the partner in case our partner is mid-skydrop
-    SWAP(gBattleStruct->skyDropTargets[battlerAtk], gBattleStruct->skyDropTargets[battlerPartner], temp);
-}
-
 #define TRY_SIDE_TIMER_BATTLER_ID_SWAP(battlerAtk, battlerPartner, side, field)    \
     if (gSideTimers[side].field == battlerAtk)                      \
         gSideTimers[side].field = battlerPartner;                   \
@@ -6720,6 +6711,10 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
     SwapStructData(&gBattleStruct->illusion[battlerAtk], &gBattleStruct->illusion[battlerPartner], data, sizeof(struct Illusion));
     SwapStructData(&gBattleStruct->battlerState[battlerAtk], &gBattleStruct->battlerState[battlerPartner], data, sizeof(struct BattlerState));
 
+    // Swap those back since they aren't affected by ally switch
+    SWAP(gBattleStruct->battlerState[battlerAtk].storedHealingWish, gBattleStruct->battlerState[battlerPartner].storedHealingWish, temp);
+    SWAP(gBattleStruct->battlerState[battlerAtk].storedLunarDance, gBattleStruct->battlerState[battlerPartner].storedLunarDance, temp);
+
     SWAP(gBattleSpritesDataPtr->battlerData[battlerAtk].invisible, gBattleSpritesDataPtr->battlerData[battlerPartner].invisible, temp);
     SWAP(gTransformedPersonalities[battlerAtk], gTransformedPersonalities[battlerPartner], temp);
     SWAP(gTransformedShininess[battlerAtk], gTransformedShininess[battlerPartner], temp);
@@ -6747,7 +6742,6 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
     SwitchTwoBattlersInParty(battlerAtk, battlerPartner);
     SWAP(gBattlerPartyIndexes[battlerAtk], gBattlerPartyIndexes[battlerPartner], temp);
 
-    TrySwapSkyDropTargets(battlerAtk, battlerPartner);
     TrySwapStickyWebBattlerId(battlerAtk, battlerPartner);
     TrySwapWishBattlerIds(battlerAtk, battlerPartner);
     TrySwapAttractBattlerIds(battlerAtk, battlerPartner);
@@ -7373,6 +7367,12 @@ void AnimTask_CreateSmallSteelBeamOrbs(u8 taskId)
 {
     if (--gTasks[taskId].data[0] == -1)
     {
+        if (!TryLoadSpriteAssets(&gSteelBeamSmallOrbSpriteTemplate))
+        {
+            DestroyAnimVisualTask(taskId);
+            return;
+        }
+
         gTasks[taskId].data[1]++;
         gTasks[taskId].data[0] = 6;
         gBattleAnimArgs[0] = 15;

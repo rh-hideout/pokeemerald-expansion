@@ -26,7 +26,7 @@ static enum MaxPowerTier GetMaxPowerTier(enum Move move);
 
 struct GMaxMove
 {
-    u16 species;
+    enum Species species;
     enum Type moveType;
     u16 gmaxMove;
 };
@@ -72,7 +72,7 @@ static const struct GMaxMove sGMaxMoveTable[] =
 // Returns whether a battler can Dynamax.
 bool32 CanDynamax(enum BattlerId battler)
 {
-    u16 species = GetBattlerVisualSpecies(battler);
+    enum Species species = GetBattlerVisualSpecies(battler);
     enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
 
     // Prevents Zigzagoon from dynamaxing in vanilla.
@@ -131,8 +131,10 @@ bool32 IsGigantamaxed(enum BattlerId battler)
 // Applies the HP Multiplier for Dynamaxed Pokemon and Raid Bosses.
 void ApplyDynamaxHPMultiplier(struct Pokemon* mon)
 {
-    if (GetMonData(mon, MON_DATA_SPECIES) == SPECIES_SHEDINJA)
+    if (HasShedinjaHPHandling(GetMonData(mon, MON_DATA_SPECIES)))
+    {
         return;
+    }
     else
     {
         uq4_12_t multiplier = GetDynamaxLevelHPMultiplier(GetMonData(mon, MON_DATA_DYNAMAX_LEVEL), FALSE);
@@ -146,8 +148,10 @@ void ApplyDynamaxHPMultiplier(struct Pokemon* mon)
 // Returns the non-Dynamax HP of a Pokemon.
 u32 GetNonDynamaxHP(enum BattlerId battler)
 {
-    if (GetActiveGimmick(battler) != GIMMICK_DYNAMAX || gBattleMons[battler].species == SPECIES_SHEDINJA)
+    if (GetActiveGimmick(battler) != GIMMICK_DYNAMAX || HasShedinjaHPHandling(gBattleMons[battler].species))
+    {
         return gBattleMons[battler].hp;
+    }
     else
     {
         struct Pokemon *mon = GetBattlerMon(battler);
@@ -160,8 +164,10 @@ u32 GetNonDynamaxHP(enum BattlerId battler)
 // Returns the non-Dynamax Max HP of a Pokemon.
 u32 GetNonDynamaxMaxHP(enum BattlerId battler)
 {
-    if (GetActiveGimmick(battler) != GIMMICK_DYNAMAX || gBattleMons[battler].species == SPECIES_SHEDINJA)
+    if (GetActiveGimmick(battler) != GIMMICK_DYNAMAX || HasShedinjaHPHandling(gBattleMons[battler].species))
+    {
         return gBattleMons[battler].maxHP;
+    }
     else
     {
         struct Pokemon *mon = GetBattlerMon(battler);
@@ -219,18 +225,18 @@ bool32 IsMoveBlockedByMaxGuard(enum Move move)
 {
     switch (move)
     {
-        case MOVE_BLOCK:
-        case MOVE_FLOWER_SHIELD:
-        case MOVE_GEAR_UP:
-        case MOVE_MAGNETIC_FLUX:
-        case MOVE_PHANTOM_FORCE:
-        case MOVE_PSYCH_UP:
-        case MOVE_SHADOW_FORCE:
-        case MOVE_TEATIME:
-        case MOVE_TRANSFORM:
-            return TRUE;
-        default:
-            return FALSE;
+    case MOVE_BLOCK:
+    case MOVE_FLOWER_SHIELD:
+    case MOVE_GEAR_UP:
+    case MOVE_MAGNETIC_FLUX:
+    case MOVE_PHANTOM_FORCE:
+    case MOVE_PSYCH_UP:
+    case MOVE_SHADOW_FORCE:
+    case MOVE_TEATIME:
+    case MOVE_TRANSFORM:
+        return TRUE;
+    default:
+        return FALSE;
     }
 }
 
@@ -238,8 +244,8 @@ static enum Move GetTypeBasedMaxMove(enum BattlerId battler, enum Type type)
 {
     // Gigantamax check
     u32 i;
-    u32 species = gBattleMons[battler].species;
-    u32 targetSpecies = species;
+    enum Species species = gBattleMons[battler].species;
+    enum Species targetSpecies = species;
     enum Ability ability = GetBattlerAbility(battler);
 
     if (!gSpeciesInfo[species].isGigantamax)
@@ -311,11 +317,11 @@ u32 GetMaxMovePower(enum Move move)
     // Exceptions to all other rules below:
     switch (move)
     {
-        case MOVE_TRIPLE_KICK:   return 80;
-        case MOVE_GEAR_GRIND:    return 100;
-        case MOVE_DUAL_WINGBEAT: return 100;
-        case MOVE_TRIPLE_AXEL:   return 140;
-        default: break;
+    case MOVE_TRIPLE_KICK:   return 80;
+    case MOVE_GEAR_GRIND:    return 100;
+    case MOVE_DUAL_WINGBEAT: return 100;
+    case MOVE_TRIPLE_AXEL:   return 140;
+    default: break;
     }
 
     enum MaxPowerTier tier = GetMaxPowerTier(move);
@@ -326,30 +332,30 @@ u32 GetMaxMovePower(enum Move move)
     {
         switch (tier)
         {
-            default:
-            case MAX_POWER_TIER_1: return 70;
-            case MAX_POWER_TIER_2: return 75;
-            case MAX_POWER_TIER_3: return 80;
-            case MAX_POWER_TIER_4: return 85;
-            case MAX_POWER_TIER_5: return 90;
-            case MAX_POWER_TIER_6: return 95;
-            case MAX_POWER_TIER_7: return 100;
-            case MAX_POWER_TIER_8: return 100;
+        default:
+        case MAX_POWER_TIER_1: return 70;
+        case MAX_POWER_TIER_2: return 75;
+        case MAX_POWER_TIER_3: return 80;
+        case MAX_POWER_TIER_4: return 85;
+        case MAX_POWER_TIER_5: return 90;
+        case MAX_POWER_TIER_6: return 95;
+        case MAX_POWER_TIER_7: return 100;
+        case MAX_POWER_TIER_8: return 100;
         }
     }
     else
     {
         switch (tier)
         {
-            default:
-            case MAX_POWER_TIER_1: return 90;
-            case MAX_POWER_TIER_2: return 100;
-            case MAX_POWER_TIER_3: return 110;
-            case MAX_POWER_TIER_4: return 120;
-            case MAX_POWER_TIER_5: return 130;
-            case MAX_POWER_TIER_6: return 140;
-            case MAX_POWER_TIER_7: return 130;
-            case MAX_POWER_TIER_8: return 150;
+        default:
+        case MAX_POWER_TIER_1: return 90;
+        case MAX_POWER_TIER_2: return 100;
+        case MAX_POWER_TIER_3: return 110;
+        case MAX_POWER_TIER_4: return 120;
+        case MAX_POWER_TIER_5: return 130;
+        case MAX_POWER_TIER_6: return 140;
+        case MAX_POWER_TIER_7: return 130;
+        case MAX_POWER_TIER_8: return 150;
         }
     }
 }
@@ -359,76 +365,76 @@ static enum MaxPowerTier GetMaxPowerTier(enum Move move)
     u32 strikeCount = GetMoveStrikeCount(move);
     if (strikeCount >= 2 && strikeCount <= 5)
     {
-        switch(GetMovePower(move))
+        switch (GetMovePower(move))
         {
-            case 0 ... 25:  return MAX_POWER_TIER_2;
-            case 26 ... 30: return MAX_POWER_TIER_3;
-            case 31 ... 35: return MAX_POWER_TIER_4;
-            case 36 ... 50: return MAX_POWER_TIER_5;
-            default:
-            case 51 ... 60: return MAX_POWER_TIER_6;
+        case 0 ... 25:  return MAX_POWER_TIER_2;
+        case 26 ... 30: return MAX_POWER_TIER_3;
+        case 31 ... 35: return MAX_POWER_TIER_4;
+        case 36 ... 50: return MAX_POWER_TIER_5;
+        default:
+        case 51 ... 60: return MAX_POWER_TIER_6;
         }
     }
 
     if (IsMultiHitMove(move))
     {
-        switch(GetMovePower(move))
+        switch (GetMovePower(move))
         {
-            case 0 ... 15:    return MAX_POWER_TIER_1;
-            case 16 ... 18:   return MAX_POWER_TIER_2;
-            case 19 ... 20:   return MAX_POWER_TIER_4;
-            default:
-            case 21 ... 25:   return MAX_POWER_TIER_5;
+        case 0 ... 15:    return MAX_POWER_TIER_1;
+        case 16 ... 18:   return MAX_POWER_TIER_2;
+        case 19 ... 20:   return MAX_POWER_TIER_4;
+        default:
+        case 21 ... 25:   return MAX_POWER_TIER_5;
         }
     }
 
     switch (GetMoveEffect(move))
     {
-        case EFFECT_BIDE:
-        case EFFECT_FIXED_PERCENT_DAMAGE:
-        case EFFECT_LEVEL_DAMAGE:
-        case EFFECT_PSYWAVE:
-        case EFFECT_REFLECT_DAMAGE:
-        case EFFECT_PRESENT:
-        case EFFECT_BEAT_UP:
-        case EFFECT_WEATHER_BALL:
-        case EFFECT_FLING:
-        case EFFECT_ELECTRO_BALL:
-        case EFFECT_TERRAIN_PULSE:
-        case EFFECT_PUNISHMENT:
-        case EFFECT_TRUMP_CARD:
-        case EFFECT_FIXED_HP_DAMAGE:
-        case EFFECT_SPIT_UP:
-        case EFFECT_NATURAL_GIFT:
-        case EFFECT_FINAL_GAMBIT:
-            return MAX_POWER_TIER_2;
-        case EFFECT_OHKO:
-        case EFFECT_RETURN:
-        case EFFECT_FRUSTRATION:
-        case EFFECT_HEAT_CRASH:
-        case EFFECT_STORED_POWER:
-        case EFFECT_GYRO_BALL:
-            return MAX_POWER_TIER_5;
-        case EFFECT_MAGNITUDE:
-        case EFFECT_POWER_BASED_ON_TARGET_HP:
-            return MAX_POWER_TIER_6;
-        case EFFECT_FLAIL:
-        case EFFECT_LOW_KICK:
-            return MAX_POWER_TIER_7;
-        default:
-            break;
+    case EFFECT_BIDE:
+    case EFFECT_FIXED_PERCENT_DAMAGE:
+    case EFFECT_LEVEL_DAMAGE:
+    case EFFECT_PSYWAVE:
+    case EFFECT_REFLECT_DAMAGE:
+    case EFFECT_PRESENT:
+    case EFFECT_BEAT_UP:
+    case EFFECT_WEATHER_BALL:
+    case EFFECT_FLING:
+    case EFFECT_ELECTRO_BALL:
+    case EFFECT_TERRAIN_PULSE:
+    case EFFECT_PUNISHMENT:
+    case EFFECT_TRUMP_CARD:
+    case EFFECT_FIXED_HP_DAMAGE:
+    case EFFECT_SPIT_UP:
+    case EFFECT_NATURAL_GIFT:
+    case EFFECT_FINAL_GAMBIT:
+        return MAX_POWER_TIER_2;
+    case EFFECT_OHKO:
+    case EFFECT_RETURN:
+    case EFFECT_FRUSTRATION:
+    case EFFECT_HEAT_CRASH:
+    case EFFECT_STORED_POWER:
+    case EFFECT_GYRO_BALL:
+        return MAX_POWER_TIER_5;
+    case EFFECT_MAGNITUDE:
+    case EFFECT_POWER_BASED_ON_TARGET_HP:
+        return MAX_POWER_TIER_6;
+    case EFFECT_FLAIL:
+    case EFFECT_LOW_KICK:
+        return MAX_POWER_TIER_7;
+    default:
+        break;
     }
 
     switch (GetMovePower(move))
     {
-        case 0 ... 40:    return MAX_POWER_TIER_1;
-        case 45 ... 50:   return MAX_POWER_TIER_2;
-        case 55 ... 60:   return MAX_POWER_TIER_3;
-        case 65 ... 70:   return MAX_POWER_TIER_4;
-        case 75 ... 100:  return MAX_POWER_TIER_5;
-        case 110 ... 140: return MAX_POWER_TIER_6;
-        default:
-        case 150 ... 250: return MAX_POWER_TIER_8;
+    case 0 ... 40:    return MAX_POWER_TIER_1;
+    case 45 ... 50:   return MAX_POWER_TIER_2;
+    case 55 ... 60:   return MAX_POWER_TIER_3;
+    case 65 ... 70:   return MAX_POWER_TIER_4;
+    case 75 ... 100:  return MAX_POWER_TIER_5;
+    case 110 ... 140: return MAX_POWER_TIER_6;
+    default:
+    case 150 ... 250: return MAX_POWER_TIER_8;
     }
 }
 
@@ -443,19 +449,19 @@ void ChooseDamageNonTypesString(enum Type type)
 {
     switch (type)
     {
-        case TYPE_GRASS:
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TRAPPED_WITH_VINES;
-            break;
-        case TYPE_WATER:
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CAUGHT_IN_VORTEX;
-            break;
-        case TYPE_FIRE:
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SURROUNDED_BY_FIRE;
-            break;
-        case TYPE_ROCK:
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SURROUNDED_BY_ROCKS;
-            break;
-        default:
-            break;
+    case TYPE_GRASS:
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TRAPPED_WITH_VINES;
+        break;
+    case TYPE_WATER:
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CAUGHT_IN_VORTEX;
+        break;
+    case TYPE_FIRE:
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SURROUNDED_BY_FIRE;
+        break;
+    case TYPE_ROCK:
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SURROUNDED_BY_ROCKS;
+        break;
+    default:
+        break;
     }
 }

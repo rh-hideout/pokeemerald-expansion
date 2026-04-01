@@ -39,7 +39,7 @@ void STWI_init_all(struct RfuIntrStruct *interruptStruct, IntrFunc *interrupt, b
     gSTWIStatus->timerActive = 0;
     gSTWIStatus->error = 0;
     gSTWIStatus->recoveryCount = 0;
-    gSTWIStatus->sending = 0;
+    gSTWIStatus->sending = FALSE;
     REG_RCNT = 0x100; // TODO: mystery bit?
     REG_SIOCNT = SIO_INTR_ENABLE | SIO_32BIT_MODE | SIO_115200_BPS;
     STWI_init_Callback_M();
@@ -83,7 +83,7 @@ void AgbRFU_SoftReset(void)
     gSTWIStatus->error = 0;
     gSTWIStatus->msMode = AGB_CLK_MASTER;
     gSTWIStatus->recoveryCount = 0;
-    gSTWIStatus->sending = 0;
+    gSTWIStatus->sending = FALSE;
 }
 
 void STWI_set_MS_mode(u8 mode)
@@ -136,7 +136,7 @@ void STWI_set_Callback_ID(void (*func)(void)) // name in SDK, but is actually se
 
 u16 STWI_poll_CommandEnd(void)
 {
-    while (gSTWIStatus->sending == 1)
+    while (gSTWIStatus->sending)
         ;
     return gSTWIStatus->error;
 }
@@ -552,11 +552,11 @@ static u16 STWI_init(u8 request)
             gSTWIStatus->callbackM(request, gSTWIStatus->error);
         return TRUE;
     }
-    else if (gSTWIStatus->sending == 1)
+    else if (gSTWIStatus->sending)
     {
         // Already sending something. Cancel and error.
         gSTWIStatus->error = ERR_REQ_CMD_SENDING;
-        gSTWIStatus->sending = 0;
+        gSTWIStatus->sending = FALSE;
         if (gSTWIStatus->callbackM != NULL)
             gSTWIStatus->callbackM(request, gSTWIStatus->error);
         return TRUE;
@@ -572,7 +572,7 @@ static u16 STWI_init(u8 request)
     else
     {
         // Good to go, start sending
-        gSTWIStatus->sending = 1;
+        gSTWIStatus->sending = TRUE;
         gSTWIStatus->reqActiveCommand = request;
         gSTWIStatus->state = 0; // master send req
         gSTWIStatus->reqLength = 0;
@@ -621,14 +621,14 @@ static s32 STWI_restart_Command(void)
         if (gSTWIStatus->reqActiveCommand == ID_MS_CHANGE_REQ || gSTWIStatus->reqActiveCommand == ID_DATA_TX_AND_CHANGE_REQ || gSTWIStatus->reqActiveCommand == ID_UNK35_REQ || gSTWIStatus->reqActiveCommand == ID_RESUME_RETRANSMIT_AND_CHANGE_REQ)
         {
             gSTWIStatus->error = ERR_REQ_CMD_CLOCK_DRIFT;
-            gSTWIStatus->sending = 0;
+            gSTWIStatus->sending = FALSE;
             if (gSTWIStatus->callbackM != NULL)
                 gSTWIStatus->callbackM(gSTWIStatus->reqActiveCommand, gSTWIStatus->error);
         }
         else
         {
             gSTWIStatus->error = ERR_REQ_CMD_CLOCK_DRIFT;
-            gSTWIStatus->sending = 0;
+            gSTWIStatus->sending = FALSE;
             if (gSTWIStatus->callbackM != NULL)
                 gSTWIStatus->callbackM(gSTWIStatus->reqActiveCommand, gSTWIStatus->error);
             gSTWIStatus->state = 4; // error

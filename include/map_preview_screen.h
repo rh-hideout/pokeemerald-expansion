@@ -34,31 +34,36 @@ enum MapPreviewScreenId
     MPS_COUNT
 };
 
-#define MPS_TYPE_CAVE   0
-#define MPS_TYPE_FOREST 1
-#define MPS_TYPE_ANY    2
+#define MPS_TYPE_CAVE       0
+#define MPS_TYPE_FADE_IN    1
+#define MPS_TYPE_BASIC      2
+#define MPS_TYPE_ANY        3
+
+#define MPS_FLAG_NULL   0
 
 struct MapPreviewScreen
 {
     mapsec_u8_t mapsec;
     u8 type;
+    u8 usesAllPalettes;
     u16 flagId;
     const void *tilesptr;
     const void *tilemapptr;
     const void *palptr;
 };
 
+bool32 ShouldRunMapPreview(void);
 u16 MapPreview_CreateMapNameWindow(u8 id);
-void MapPreview_SetFlag(u16 a0);
 u16 MapPreview_GetDuration(u8 id);
-bool8 MapHasPreviewScreen(mapsec_u8_t mapsec, u8 type);
-bool32 ForestMapPreviewScreenIsRunning(void);
-const struct MapPreviewScreen * GetDungeonMapPreviewScreenInfo(mapsec_u8_t mapsec);
-bool32 MapHasPreviewScreen_HandleQLState2(mapsec_u8_t mapsec, u8 type);
+bool32 CurrentMapHasPreviewScreen(u8 type);
+bool32 FadeInMapPreviewScreenIsRunning(void);
 void MapPreview_InitBgs(void);
 void MapPreview_LoadGfx(mapsec_u8_t mapsec);
 bool32 MapPreview_IsGfxLoadFinished(void);
 void MapPreview_Unload(s32 windowId);
-void MapPreview_StartForestTransition(mapsec_u8_t mapsec);
+void RunMapPreviewScreenNonFade(u8 mapSecId);
+void RunMapPreviewScreenFadeIn(mapsec_u8_t mapsec);
+void Task_MapPreviewScreen_NonFade(u8 taskId);
+void MapPreview_SetFlag(u16 flagId);
 
 #endif //GUARD_MAP_PREVIEW_SCREEN_H

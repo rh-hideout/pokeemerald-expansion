@@ -268,7 +268,7 @@ static bool32 Fishing_CheckForBite(struct Task *task)
 
     firstMonHasSuctionOrSticky = Fishing_DoesFirstMonInPartyHaveSuctionCupsOrStickyHold();
 
-    if(firstMonHasSuctionOrSticky && I_FISHING_STICKY_BOOST < GEN_4)
+    if (firstMonHasSuctionOrSticky && I_FISHING_STICKY_BOOST < GEN_4)
         bite = RandomPercentage(RNG_FISHING_GEN3_STICKY, FISHING_GEN3_STICKY_CHANCE);
 
     if (!bite)
@@ -296,14 +296,14 @@ static bool32 Fishing_ChangeMinigame(struct Task *task)
 {
     switch (I_FISHING_MINIGAME)
     {
-        case GEN_1:
-        case GEN_2:
-            task->tStep = FISHING_A_PRESS_NO_MINIGAME;
-            break;
-        case GEN_3:
-        default:
-            task->tStep = FISHING_WAIT_FOR_A;
-            break;
+    case GEN_1:
+    case GEN_2:
+        task->tStep = FISHING_A_PRESS_NO_MINIGAME;
+        break;
+    case GEN_3:
+    default:
+        task->tStep = FISHING_WAIT_FOR_A;
+        break;
     }
     return TRUE;
 }
@@ -471,13 +471,13 @@ static bool32 Fishing_EndNoMon(struct Task *task)
 
 static bool32 DoesFishingMinigameAllowCancel(void)
 {
-    switch(I_FISHING_MINIGAME)
+    switch (I_FISHING_MINIGAME)
     {
-        case GEN_1:
-        case GEN_2:
-            return FALSE;
-        case GEN_3:
-        default:
+    case GEN_1:
+    case GEN_2:
+        return FALSE;
+    case GEN_3:
+    default:
             return TRUE;
     }
 }
@@ -518,7 +518,6 @@ static u32 CalculateFishingBiteOdds(u32 rod, bool32 isStickyHold)
         odds *= 2;
 
     odds = min(100, odds);
-    DebugPrintf("Fishing odds: %d", odds);
     return odds;
 }
 
@@ -646,7 +645,6 @@ u32 CalculateChainFishingShinyRolls(void)
     if (!I_FISHING_CHAIN || !gIsFishingEncounter)
         return 0;
     u32 a = 2 * min(gChainFishingDexNavStreak, FISHING_CHAIN_SHINY_STREAK_MAX);
-    DebugPrintf("Total Shiny Rolls %d", a);
     return a;
 }
 
