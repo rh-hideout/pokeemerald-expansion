@@ -4530,15 +4530,21 @@ s8 GetSetPokedexFlag(enum NationalDexOrder nationalDexNo, u8 caseID)
         retVal = ((gSaveBlock1Ptr->dexCaught[index] & gSaveBlock1Ptr->dexSeen[index] & mask) != 0);// seen AND caught must both be set.
         break;
     case FLAG_SET_SEEN:
-        gSaveBlock1Ptr->dexSeen[index] |= mask;
         gSaveBlock1Ptr->dexCaught[index] &= ~mask; // perform "bitwise and" on "not mask", so the value matching the mask is set to 0 while the rest is unchanged.
+// Here's an alternative proposal for a bitwise operation if you would like to avoid troubleshooting code changes, at the cost of efficiency:
+        // gSaveBlock1Ptr->dexCaught[index] &= (~mask | gSaveBlock1Ptr->dexSeen[index]) // perform bitwise and on "not mask", so the value matching the mask is set to 0 while the rest is unchanged. But if it's already seen, do nothing. 
+        gSaveBlock1Ptr->dexSeen[index] |= mask;
+        break;
+    case FLAG_SET_CAUGHT:
+        gSaveBlock1Ptr->dexCaught[index] |= mask; 
+// alternative bitwise operation if you would like to avoid doing code changes:
+        // gSaveBlock1Ptr->dexSeen[index] |= mask;  // Consider adding this so it sets both.
         break;
     case FLAG_GET_SILHOUETTE:
         retVal = (((gSaveBlock1Ptr->dexCaught[index] ^ gSaveBlock1Ptr->dexSeen[index]) & gSaveBlock1Ptr->dexCaught[index] & mask) != 0); // Seen and caught differ, and caught is set.
         break;
-    case FLAG_SET_CAUGHT:
     case FLAG_SET_SILHOUETTE:
-        gSaveBlock1Ptr->dexCaught[index] |= mask;
+        gSaveBlock1Ptr->dexCaught[index] |= mask; // Only sets caught. No need to clear seen.
         break;
     case FLAG_GET_NONE:
         retVal = (((gSaveBlock1Ptr->dexSeen[index] | gSaveBlock1Ptr->dexCaught[index]) & mask) == 0);
