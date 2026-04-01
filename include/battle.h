@@ -126,6 +126,8 @@ struct SpecialStatus
     u8 teraShellAbilityDone:1;
     u8 backUpTarget:3;
     // End of byte
+    u8 magicCoatPending:1;
+    u8 magicBouncePending:1;
     enum QueuedSwitch queuedSwitch;
 };
 
@@ -687,6 +689,7 @@ struct BattleStruct
     s16 passiveHpUpdate[MAX_BATTLERS_COUNT]; // non-move damage and healing
     s16 moveDamage[MAX_BATTLERS_COUNT];
     u16 moveResultFlags[MAX_BATTLERS_COUNT];
+    u16 savedMoveResultFlags[MAX_BATTLERS_COUNT];
     enum CalcDamageState noResultString[MAX_BATTLERS_COUNT];
     u8 doneDoublesSpreadHit:1;
     u8 calculatedDamageDone:1;
@@ -706,9 +709,8 @@ struct BattleStruct
     u8 echoedVoiceCounter:3;
     u8 attackAnimPlayed:1;
     u8 preAttackEffectHappened:1;
-    u8 magicCoatActive:1;
-    u8 magicBounceActive:1;
-    u8 moveBouncer;
+    u8 unused4:2;
+    u8 savedCancelerState;
     u8 dancerSavedAttacker:3;
     u8 dancerSavedTarget:3;
     u8 padding:2;

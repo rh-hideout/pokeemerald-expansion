@@ -5266,9 +5266,9 @@ BattleScript_MagicBounce::
 
 BattleScript_MagicCoat::
 	pause B_WAIT_TIME_SHORT
-	setmagiccoattarget
 	printstring STRINGID_PKMNMOVEBOUNCED
 	waitmessage B_WAIT_TIME_LONG
+	setmagiccoattarget
 	return
 
 BattleScript_MagicCoatPrankster::

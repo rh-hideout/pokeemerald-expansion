@@ -124,6 +124,36 @@ DOUBLE_BATTLE_TEST("Magic Bounce bounces back moves hitting both foes at two foe
     }
 }
 
+DOUBLE_BATTLE_TEST("Magic Bounce activates on all opposing mons")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_LEER) == EFFECT_DEFENSE_DOWN);
+        ASSUME(GetMoveTarget(MOVE_LEER) == TARGET_BOTH);
+        PLAYER(SPECIES_ABRA);
+        PLAYER(SPECIES_KADABRA);
+        OPPONENT(SPECIES_ESPEON) { Ability(ABILITY_MAGIC_BOUNCE); }
+        OPPONENT(SPECIES_NATU) { Ability(ABILITY_MAGIC_BOUNCE); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_LEER); }
+    } SCENE {
+        ABILITY_POPUP(opponentLeft, ABILITY_MAGIC_BOUNCE);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_LEER, playerLeft);
+        MESSAGE("Abra's Leer was bounced back by the opposing Espeon's Magic Bounce!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LEER, opponentLeft);
+        NOT MESSAGE("The opposing Espeon's Defense fell!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+        MESSAGE("Abra's Defense fell!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+        MESSAGE("Kadabra's Defense fell!");
+
+        NOT MESSAGE("The opposing Natu's Defense fell!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+        MESSAGE("Abra's Defense fell!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+        MESSAGE("Kadabra's Defense fell!");
+    }
+}
+
 DOUBLE_BATTLE_TEST("Magic Bounce bounces back moves hitting foes field")
 {
     u32 battlerOne, battlerTwo, abilityBattlerOne, abilityBattlerTwo;
