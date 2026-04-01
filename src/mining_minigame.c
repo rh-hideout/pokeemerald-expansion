@@ -61,10 +61,10 @@ static void Mining_FreeResources(void);
 static void Mining_UpdateStressLevel(void);
 static void Mining_UpdateTerrain(void);
 static void Mining_DrawRandomTerrain(void);
-static void DoDrawRandomItem(u8 itemStateId, u8 itemId);
-static void DoDrawRandomStone(u8 itemId);
+static void DoDrawRandomItem(u32 itemStateId, u32 itemId);
+static void DoDrawRandomStone(u32 itemId);
 #if MINING_DEBUG_ENABLE == FALSE || MINING_DEBUG_ENABLE_STONE_GENERATION_OPTIONS == FALSE
-static bool32 DoesStoneFitInItemMap(u8 itemId);
+static bool32 DoesStoneFitInItemMap(u32 itemId);
 #endif
 static bool32 CanStoneBePlacedAtXY(u32 x, u32 y, u32 itemId);
 static void Mining_CheckItemFound(void);
@@ -72,13 +72,13 @@ static void PrintMessage(const u8 *string);
 static void InitMiningWindows(void);
 static bool32 IsStressLevelMax(void);
 #if MINING_DEBUG_ENABLE == FALSE || MINING_DEBUG_INFINITE_HITS == FALSE
-static void EndMining(u8 taskId);
+static void EndMining(u32 taskId);
 #endif
 static u32 ConvertLoadGameStateToItemIndex(void);
-static void GetItemOrPrintError(u8 taskId, u32 itemIndex, u32 itemId);
-static void CheckItemAndPrint(u8 taskId, u32 itemIndex, u32 itemId);
+static void GetItemOrPrintError(u32 taskId, u32 itemIndex, u32 itemId);
+static void CheckItemAndPrint(u32 taskId, u32 itemIndex, u32 itemId);
 static void MakeCursorInvisible(void);
-static void HandleGameFinish(u8 taskId);
+static void HandleGameFinish(u32 taskId);
 static void PrintItemSuccess(u32 buriedItemsIndex);
 static u32 GetTotalNumberOfBuriedItems(void);
 static void InitBuriedItems(void);
@@ -93,7 +93,7 @@ static u32 GetBuriedMiningItemId(u32 index);
 static u32 GetNumberOfFoundItems(void);
 #endif
 static bool32 GetBuriedItemStatus(u32 index);
-static void ExitMiningUI(u8 taskId);
+static void ExitMiningUI(u32 taskId);
 #if MINING_DEBUG_ENABLE == FALSE || MINING_DEBUG_INFINITE_HITS == FALSE
 static void WallCollapseAnimation();
 #endif
@@ -108,12 +108,14 @@ struct BuriedItem
     u32 spriteId;
 };
 
+#define AMOUNT_WALL_TILES 96
+
 struct MiningState
 {
     MainCallback leavingCallback; // Callback to leave the Ui
     u32 loadGameState;
-    u32 layerMap[96];             // Array representing the screen. Determines virtual layers
-    u32 itemMap[96];              // Determines where items are on the screen
+    u32 layerMap[AMOUNT_WALL_TILES];             // Array representing the screen. Determines virtual layers
+    u32 itemMap[AMOUNT_WALL_TILES];              // Determines where items are on the :screen
     u32 cursorX;
     u32 cursorY;
 
@@ -141,7 +143,7 @@ struct MiningState
 
     // Stress Level
     u32 stressLevelCount;   // How many cracks in one 32x32 portion
-    u32 stressLevelPos;     // Which crack portion
+    u32 stressLevelPos;
 
     // Collapse Animation
     u32 delayCounter;
@@ -462,7 +464,7 @@ static const union AnimCmd gAnimCmdButton_BlueNotPressed[] =
 
 static const union AnimCmd gAnimCmdButton_BluePressed[] =
 {
-    ANIMCMD_FRAME(96, 30),
+    ANIMCMD_FRAME(AMOUNT_WALL_TILES, 30),
     ANIMCMD_JUMP(0),
 };
 
@@ -1309,9 +1311,8 @@ static u32 MiningUtil_GetTotalTileAmount(u32 itemId)
        if (sSpriteTileTable[itemId][i] == 1)
            result++;
     }
-    DebugPrintf("ItemID: %d, Tiles-Calculated: %d", itemId, result);
     if (result == 0)
-        return result+1;
+        return result + 1;
     else 
         return result;
 }
@@ -1325,14 +1326,13 @@ static u32 MiningUtil_GetLeftValue(u32 itemId)
     {
         for (y = 0; y < 4; y++)
         {
-            if (sSpriteTileTable[itemId][x+y*4] == 1)
+            if (sSpriteTileTable[itemId][x + y * 4] == 1)
             {
                 left++;
                 break;
             }
         }
     }
-    DebugPrintf("ItemID: %d, Left: %d", itemId, left-1);
     return left - 1;
 }
 
@@ -1345,14 +1345,13 @@ static u32 MiningUtil_GetTopValue(u32 itemId)
     {
         for (x = 0; x < 4; x++)
         {
-            if (sSpriteTileTable[itemId][x+y*4] == 1)
+            if (sSpriteTileTable[itemId][x + y * 4] == 1)
             {
                 top++;
                 break;
             }
         }
     }
-    DebugPrintf("ItemID: %d, Top: %d", itemId, top-1);
     return top - 1;
 }
 
@@ -1509,7 +1508,7 @@ static void Mining_SetupCB(void)
 
 static bool8 Mining_InitBgs(void)
 {
-    const u32 TILEMAP_BUFFER_SIZE = (1024 * 2);
+    const u32 TILEMAP_BUFFER_SIZE = 1024 * 2;
 
     ResetAllBgsCoordinates();
 
@@ -1563,11 +1562,9 @@ static void Mining_MainCB(void)
 
 static void MoveItemSprites(s16 dx, s16 dy)
 {
-    u32 i;
-
     if (sMiningUiState->toggleShakeDuringAnimation == FALSE)
     {
-        for (i = 0; i < MAX_SPRITES; i++)
+        for (u32 i = 0; i < MAX_SPRITES; i++)
         {
             gSprites[i].x += dx;
             gSprites[i].y += dy;
@@ -1721,14 +1718,13 @@ static void Mining_FadeAndBail(void)
 
 #define TILE_POS(x, y) (32 * (y) + (x))
 
-static void OverwriteTileDataInTilemapBuffer(u8 tile, u8 x, u8 y, u16* tilemapBuf, u8 pal)
+static void OverwriteTileDataInTilemapBuffer(u32 tile, u32 x, u32 y, u16* tilemapBuf, u32 pal)
 {
     tilemapBuf[TILE_POS(x, y)] = tile | (pal << 12);
 }
 
 static bool8 Mining_LoadBgGraphics(void)
 {
-    u32 i, j;
     u16 *tilemapBuf = GetBgTilemapBuffer(1);
     switch (sMiningUiState->loadGameState)
     {
@@ -1742,9 +1738,9 @@ static bool8 Mining_LoadBgGraphics(void)
         case 1:
             if (FreeTempTileDataBuffersIfPossible() != TRUE)
             {
-                for (i = 0; i < 32; i++)
+                for (u32 i = 0; i < 32; i++)
                 {
-                    for (j = 0; j < 32; j++)
+                    for (u32 j = 0; j < 32; j++)
                         OverwriteTileDataInTilemapBuffer(0, i, j, tilemapBuf, 2);
                 }
                 DecompressDataWithHeaderWram(gStressLevelAndTerrainTilemap, sMiningUiState->sBg2TilemapBuffer);
@@ -1769,9 +1765,7 @@ static bool8 Mining_LoadBgGraphics(void)
 
 static void ClearItemMap(void)
 {
-    u8 i;
-
-    for (i = 0; i < 96; i++)
+    for (u32 i = 0; i < AMOUNT_WALL_TILES; i++)
         sMiningUiState->itemMap[i] = MINING_ITEM_TILE_NONE;
 }
 
@@ -1818,11 +1812,9 @@ static const u32 ItemRarityTable_Rare[] =
 };
 
 #if MINING_DEBUG_ENABLE == FALSE || MINING_DEBUG_ENABLE_ITEM_GENERATION_OPTIONS == FALSE
-static u8 GetRandomItemId()
+static u32 GetRandomItemId(void)
 {
-    u32 rarity;
-    u32 index;
-    u32 itemId;
+    u32 rarity, index, itemId;
     u32 rnd = random(7);
 
     if (rnd < 4)
@@ -1877,7 +1869,6 @@ static void InitItemsIfSelected(u32 item) {
 
 static void Mining_LoadSpriteGraphics(void)
 {
-
     LoadSpritePalette(sSpritePal_Cursor);
     LoadCompressedSpriteSheet(sSpriteSheet_Cursor);
 
@@ -2026,7 +2017,7 @@ static void Task_MiningMainInput(u8 taskId)
     #endif
 }
 
-static void StressLevel_Draw_0(u8 ofs, u8 ofs2, u16* ptr)
+static void StressLevel_Draw_0(u32 ofs, u32 ofs2, u16* ptr)
 {
     OverwriteTileDataInTilemapBuffer(0x07, 21 - ofs * 4 + ofs2, 1, ptr, 0x01);
     OverwriteTileDataInTilemapBuffer(0x08, 22 - ofs * 4 + ofs2, 1, ptr, 0x01);
@@ -2036,7 +2027,7 @@ static void StressLevel_Draw_0(u8 ofs, u8 ofs2, u16* ptr)
     OverwriteTileDataInTilemapBuffer(0x14, 23 - ofs * 4 + ofs2, 3, ptr, 0x01);
 }
 
-static void StressLevel_Draw_1(u8 ofs, u8 ofs2, u16* ptr)
+static void StressLevel_Draw_1(u32 ofs, u32 ofs2, u16* ptr)
 {
     OverwriteTileDataInTilemapBuffer(0x17, 21 - ofs * 4 + ofs2, 0, ptr, 0x01);
     OverwriteTileDataInTilemapBuffer(0x18, 22 - ofs * 4 + ofs2, 0, ptr, 0x01);
@@ -2048,7 +2039,7 @@ static void StressLevel_Draw_1(u8 ofs, u8 ofs2, u16* ptr)
     OverwriteTileDataInTilemapBuffer(0x26, 23 - ofs * 4 + ofs2, 3, ptr, 0x01);
 }
 
-static void StressLevel_Draw_2(u8 ofs, u8 ofs2, u16* ptr)
+static void StressLevel_Draw_2(u32 ofs, u32 ofs2, u16* ptr)
 {
     OverwriteTileDataInTilemapBuffer(0x27, 20 - ofs * 4 + ofs2, 0, ptr, 0x01);
     OverwriteTileDataInTilemapBuffer(0x28, 21 - ofs * 4 + ofs2, 0, ptr, 0x01);
@@ -2063,7 +2054,7 @@ static void StressLevel_Draw_2(u8 ofs, u8 ofs2, u16* ptr)
     OverwriteTileDataInTilemapBuffer(0x26, 23 - ofs * 4 + ofs2, 3, ptr, 0x01);
 }
 
-static void StressLevel_Draw_3(u8 ofs, u8 ofs2, u16* ptr)
+static void StressLevel_Draw_3(u32 ofs, u32 ofs2, u16* ptr)
 {
     // Clean up 0x27, 0x28 and 0x29 from StressLevel_Draw_2
     OverwriteTileDataInTilemapBuffer(0x00, 20 - ofs * 4 + ofs2, 0, ptr, 0x01);
@@ -2082,7 +2073,7 @@ static void StressLevel_Draw_3(u8 ofs, u8 ofs2, u16* ptr)
     OverwriteTileDataInTilemapBuffer(0x26, 23 - ofs * 4 + ofs2, 3, ptr, 0x01);
 }
 
-static void StressLevel_Draw_4(u8 ofs, u8 ofs2, u16* ptr)
+static void StressLevel_Draw_4(u32 ofs, u32 ofs2, u16* ptr)
 {
     // The same clean up as StressLevel_Draw_3 but only used when the hammer is used
     OverwriteTileDataInTilemapBuffer(0x00, 20 - ofs * 4 + ofs2, 0, ptr, 0x01);
@@ -2105,7 +2096,7 @@ static void StressLevel_Draw_4(u8 ofs, u8 ofs2, u16* ptr)
     OverwriteTileDataInTilemapBuffer(0x26, 23 - ofs * 4 + ofs2, 3, ptr, 0x01);
 }
 
-static void StressLevel_Draw_5(u8 ofs, u8 ofs2, u16* ptr)
+static void StressLevel_Draw_5(u32 ofs, u32 ofs2, u16* ptr)
 {
     OverwriteTileDataInTilemapBuffer(0x43, 20 - ofs * 4 + ofs2, 1, ptr, 0x01);
     OverwriteTileDataInTilemapBuffer(0x44, 21 - ofs * 4 + ofs2, 1, ptr, 0x01);
@@ -2122,7 +2113,7 @@ static void StressLevel_Draw_5(u8 ofs, u8 ofs2, u16* ptr)
     OverwriteTileDataInTilemapBuffer(0x26, 23 - ofs * 4 + ofs2, 3, ptr, 0x01);
 }
 
-static void StressLevel_Draw_6(u8 ofs, u8 ofs2, u16* ptr)
+static void StressLevel_Draw_6(u32 ofs, u32 ofs2, u16* ptr)
 {
     // Clean up 0x48 and 0x49 from StressLevel_Draw_5
     OverwriteTileDataInTilemapBuffer(0x00, 19 - ofs * 4 + ofs2, 3, ptr, 0x01);
@@ -2145,7 +2136,7 @@ static void StressLevel_Draw_6(u8 ofs, u8 ofs2, u16* ptr)
 }
 
 // This function draws the individual frames of the stress level indicator
-static void StressLevel_UpdateRelativeToFramePos(u8 offsetIn8, u8 ofs2, u16* ptr)
+static void StressLevel_UpdateRelativeToFramePos(u32 offsetIn8, u32 ofs2, u16* ptr)
 {
     switch (sMiningUiState->stressLevelCount)
     {
@@ -2234,10 +2225,10 @@ static void Mining_UpdateStressLevel(void)
 }
 
 // Draws a tile layer to the screen.
-static void Terrain_DrawLayerTileToScreen(u8 x, u8 y, u8 layer, u16* ptr)
+static void Terrain_DrawLayerTileToScreen(u32 x, u32 y, u32 layer, u16* ptr)
 {
-    u8 tileX = x * 2;
-    u8 tileY = y * 2;
+    u32 tileX = x * 2;
+    u32 tileY = y * 2;
 
     switch(layer)
     {
@@ -2299,11 +2290,11 @@ static struct SpriteTemplate CreatePaletteAndReturnTemplate(u32 TileTag, u32 Pal
 #define POS_OFFS_32X32 16
 #define POS_OFFS_64X64 32
 
-static void DrawItemSprite(u8 x, u8 y, u8 itemId, u32 itemNumPalTag, u32 itemStateId)
+static void DrawItemSprite(u32 x, u32 y, u32 itemId, u32 itemNumPalTag, u32 itemStateId)
 {
     struct SpriteTemplate gSpriteTemplate;
-    u8 posX = x * 16;
-    u8 posY = y * 16 + 32;
+    u32 posX = x * 16;
+    u32 posY = y * 16 + 32;
 
     switch(itemId)
     {
@@ -2372,15 +2363,13 @@ static void SetItemState(u32 posX, u32 posY, u32 x, u32 y, u32 itemStateId)
     sMiningUiState->itemMap[posX + x + (posY + y) * 12] = itemStateId;
 }
 
-static void OverwriteItemMapData(u8 posX, u8 posY, u8 itemStateId, u8 itemId)
+static void OverwriteItemMapData(u32 posX, u32 posY, u32 itemStateId, u32 itemId)
 {
-    u32 x, y;
-
-    for (x = 0; x < 4; x++)
+    for (u32 x = 0; x < 4; x++)
     {
-        for (y = 0; y < 4; y++)
+        for (u32 y = 0; y < 4; y++)
         {
-            if (sSpriteTileTable[itemId][x+y*4] == 1)
+            if (sSpriteTileTable[itemId][x + y * 4] == 1)
                 SetItemState(posX, posY, x, y, itemStateId);
         }
     }
@@ -2391,11 +2380,9 @@ static void OverwriteItemMapData(u8 posX, u8 posY, u8 itemStateId, u8 itemId)
     posY + MiningUtil_GetTopValue(itemId) > yBorder
 #define IGNORE_COORDS 255
 
-static u8 CheckIfItemCanBePlaced(u8 itemId, u8 posX, u8 posY, u8 xBorder, u8 yBorder)
+static u32 CheckIfItemCanBePlaced(u32 itemId, u32 posX, u32 posY, u32 xBorder, u32 yBorder)
 {
-    u32 i;
-
-    for(i = 1; i <= 4; i++)
+    for (u32 i = 1; i <= 4; i++)
     {
         if (BORDERCHECK_COND(itemId)) {
             return 0;
@@ -2404,15 +2391,12 @@ static u8 CheckIfItemCanBePlaced(u8 itemId, u8 posX, u8 posY, u8 xBorder, u8 yBo
     return TRUE; // If it can be placed, return true
 }
 
-static void DoDrawRandomItem(u8 itemStateId, u8 itemId)
+static void DoDrawRandomItem(u32 itemStateId, u32 itemId)
 {
-    u32 y;
-    u32 x;
+    u32 x, y, xMax, yMax, xMin, yMin, paletteTag;
     bool32 isItemPlaced = FALSE;
-    u32 xMax, yMax, xMin, yMin;
-    u32 paletteTag;
 
-    switch(itemStateId)
+    switch (itemStateId)
     {
         default:
         case 1:
@@ -2474,7 +2458,6 @@ static void DoDrawRandomItem(u8 itemStateId, u8 itemId)
 
 static bool32 CanStoneBePlacedAtXY(u32 x, u32 y, u32 itemId) // PSF magic
 {
-    u32 dx, dy;
     u32 height = MiningUtil_GetTopValue(itemId) + 1;
     u32 width =  MiningUtil_GetLeftValue(itemId) + 1;
 
@@ -2484,9 +2467,9 @@ static bool32 CanStoneBePlacedAtXY(u32 x, u32 y, u32 itemId) // PSF magic
     if ((y + height) > MINING_ZONE_HEIGHT)
         return FALSE;
 
-    for (dx = 0; dx < width; dx++)
+    for (u32 dx = 0; dx < width; dx++)
     {
-        for (dy = 0; dy < height; dy++)
+        for (u32 dy = 0; dy < height; dy++)
         {
             if (sMiningUiState->itemMap[x + dx + (y + dy) * MINING_ZONE_WIDTH] != 0)
                 return FALSE;
@@ -2497,16 +2480,14 @@ static bool32 CanStoneBePlacedAtXY(u32 x, u32 y, u32 itemId) // PSF magic
 
 
 #if MINING_DEBUG_ENABLE == FALSE || MINING_DEBUG_ENABLE_STONE_GENERATION_OPTIONS == FALSE
-static bool32 DoesStoneFitInItemMap(u8 itemId)
+static bool32 DoesStoneFitInItemMap(u32 itemId)
 {
-    u32 coordX, coordY;
-
     if (itemId == MININGID_NONE)
         return FALSE;
 
-    for (coordX = 0; coordX < MINING_ZONE_WIDTH; coordX++)
+    for (u32 coordX = 0; coordX < MINING_ZONE_WIDTH; coordX++)
     {
-        for (coordY = 0; coordY < MINING_ZONE_HEIGHT; coordY++)
+        for (u32 coordY = 0; coordY < MINING_ZONE_HEIGHT; coordY++)
         {
             if (CanStoneBePlacedAtXY(coordX, coordY, itemId))
                 return TRUE;
@@ -2516,7 +2497,7 @@ static bool32 DoesStoneFitInItemMap(u8 itemId)
 }
 #endif
 
-static void DoDrawRandomStone(u8 itemId)
+static void DoDrawRandomStone(u32 itemId)
 {
     u32 x = Random() % MINING_ZONE_WIDTH;
     u32 y = Random() % MINING_ZONE_HEIGHT;
@@ -2532,13 +2513,12 @@ static void DoDrawRandomStone(u8 itemId)
 }
 
 static void HandleItemState(u32 itemId) {
-    u32 i;
     u32 full = MiningUtil_GetTotalTileAmount(GetBuriedMiningItemId(itemId));
     u32 stop = full + 1;
 
     if (sMiningUiState->buriedItems[itemId].buriedState < full && sMiningUiState->buriedItems[itemId].isSelected)
     {
-        for(i = 0; i < 96; i++)
+        for(u32 i = 0; i < AMOUNT_WALL_TILES; i++)
         {
             if(sMiningUiState->itemMap[i] == itemId+1 && sMiningUiState->layerMap[i] == 6)
             {
@@ -2562,7 +2542,7 @@ static void Mining_CheckItemFound(void)
     HandleItemState(2);
     HandleItemState(3);
 
-    for (u32 i = 0; i < 96; i++)
+    for (u32 i = 0; i < AMOUNT_WALL_TILES; i++)
     {
         if(sMiningUiState->itemMap[i] == 6 && sMiningUiState->layerMap[i] == 6)
             sMiningUiState->itemMap[i] = MINING_ITEM_TILE_DUG_UP;
@@ -2599,7 +2579,7 @@ static void Mining_DrawRandomTerrain(void)
     u16 *ptr = GetBgTilemapBuffer(2);
 
     // Start by placing blank layer 3 rocks
-    for (i = 0; i < 96; ++i)
+    for (i = 0; i < AMOUNT_WALL_TILES; ++i)
         sMiningUiState->layerMap[i] = 2;
 
     // Create patches of lighter dirt areas
@@ -2665,20 +2645,16 @@ static void Mining_DrawRandomTerrain(void)
     // Why 'y = 2'? Because we need to have a distance from the top of the screen, which is 32px -> 2 * 16
     for (y = 2; y < 8 +2; y++)
     {
-        for (x = 0; x < 12 && i < 96; x++, i++)
+        for (x = 0; x < 12 && i < AMOUNT_WALL_TILES; x++, i++)
             Terrain_DrawLayerTileToScreen(x, y, sMiningUiState->layerMap[i], ptr);
     }
 }
 
 static void Terrain_UpdateLayerTileOnScreen(u16* ptr, s8 ofsX, s8 ofsY)
 {
-    u8 i;
-    u8 tileX;
-    u8 tileY;
-
-    i = (sMiningUiState->cursorY - 2 + ofsY) * 12 + sMiningUiState->cursorX + ofsX; // It needs the `-2` because the cursorY value started at `2`
-    tileX = (sMiningUiState->cursorX + ofsX) * 2;
-    tileY = (sMiningUiState->cursorY + ofsY) * 2;
+    u32 i = (sMiningUiState->cursorY - 2 + ofsY) * 12 + sMiningUiState->cursorX + ofsX; // It needs the `-2` because the cursorY value started at `2`
+    u32 tileX = (sMiningUiState->cursorX + ofsX) * 2;
+    u32 tileY = (sMiningUiState->cursorY + ofsY) * 2;
     if (sMiningUiState->layerMap[i] < 6)
     {
         sMiningUiState->layerMap[i]++;
@@ -2725,9 +2701,9 @@ static void Terrain_UpdateLayerTileOnScreen(u16* ptr, s8 ofsX, s8 ofsY)
     }
 }
 
-static u8 Terrain_Pickaxe_OverwriteTiles(u16* ptr)
+static u32 Terrain_Pickaxe_OverwriteTiles(u16* ptr)
 {
-    u8 pos = sMiningUiState->cursorX + (sMiningUiState->cursorY-2)*12;
+    u32 pos = sMiningUiState->cursorX + (sMiningUiState->cursorY-2)*12;
 
     if (sMiningUiState->itemMap[pos] != MINING_ITEM_TILE_DUG_UP)
     {
@@ -2865,7 +2841,7 @@ static bool32 IsStressLevelMax(void)
 }
 
 #if MINING_DEBUG_ENABLE == FALSE || MINING_DEBUG_INFINITE_HITS == FALSE
-static void EndMining(u8 taskId)
+static void EndMining(u32 taskId)
 {
     sMiningUiState->loadGameState = STATE_GAME_FINISH;
     gTasks[taskId].func = Task_MiningPrintResult;
@@ -2990,7 +2966,7 @@ static u32 ConvertLoadGameStateToItemIndex(void)
     }
 }
 
-static void GetItemOrPrintError(u8 taskId, u32 itemIndex, u32 itemId)
+static void GetItemOrPrintError(u32 taskId, u32 itemIndex, u32 itemId)
 {
     sMiningUiState->loadGameState++;
 
@@ -3004,7 +2980,7 @@ static void GetItemOrPrintError(u8 taskId, u32 itemIndex, u32 itemId)
     gTasks[taskId].func = Task_WaitButtonPressOpening;
 }
 
-static void CheckItemAndPrint(u8 taskId, u32 itemIndex, u32 itemId)
+static void CheckItemAndPrint(u32 taskId, u32 itemIndex, u32 itemId)
 {
     sMiningUiState->loadGameState++;
 
@@ -3081,7 +3057,7 @@ static void WallCollapseAnimation()
 }
 #endif
 
-static void HandleGameFinish(u8 taskId)
+static void HandleGameFinish(u32 taskId)
 {
     MakeCursorInvisible();
 
@@ -3104,10 +3080,9 @@ static void PrintItemSuccess(u32 itemId)
 
 static u32 GetTotalNumberOfBuriedItems(void)
 {
-    u32 itemIndex = 0;
     u32 count = 0;
 
-    for (itemIndex = 0; itemIndex < MINING_MAX_NUM_BURIED_ITEMS; itemIndex++)
+    for (u32 itemIndex = 0; itemIndex < MINING_MAX_NUM_BURIED_ITEMS; itemIndex++)
         if (GetBuriedBagItemId(itemIndex))
             count++;
 
@@ -3118,10 +3093,9 @@ static u32 GetTotalNumberOfBuriedItems(void)
 #if MINING_DEBUG_ENABLE == FALSE || MINING_DEBUG_INFINITE_HITS == FALSE
 static u32 GetNumberOfFoundItems(void)
 {
-    u32 itemIndex = 0;
     u32 count = 0;
 
-    for (itemIndex = 0; itemIndex < MINING_MAX_NUM_BURIED_ITEMS; itemIndex++)
+    for (u32 itemIndex = 0; itemIndex < MINING_MAX_NUM_BURIED_ITEMS; itemIndex++)
         if (GetBuriedItemStatus(itemIndex))
             count++;
 
@@ -3139,8 +3113,7 @@ static bool32 AreAllItemsFound(void)
 
 static void InitBuriedItems(void)
 {
-    u32 index = 0;
-    for (index = 0; index < MINING_MAX_NUM_BURIED_ITEMS; index++)
+    for (u32 index = 0; index < MINING_MAX_NUM_BURIED_ITEMS; index++)
     {
         SetBuriedItemsId(index, MININGID_NONE);
         SetBuriedItemStatus(index, FALSE);
@@ -3173,7 +3146,7 @@ static bool32 GetBuriedItemStatus(u32 index)
     return sMiningUiState->buriedItems[index].isDugUp;
 }
 
-static void ExitMiningUI(u8 taskId)
+static void ExitMiningUI(u32 taskId)
 {
     PlaySE(SE_PC_OFF);
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
