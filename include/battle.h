@@ -652,7 +652,7 @@ struct BattleStruct
     struct LostItem itemLost[NUM_BATTLE_SIDES][PARTY_SIZE];  // Pokemon that had items consumed or stolen (two bytes per party member per side)
     u8 blunderPolicy:1; // should blunder policy activate
     u8 swapDamageCategory:1; // Photon Geyser, Shell Side Arm, Light That Burns the Sky
-    u8 bouncedMoveIsUsed:1;
+    u8 unused2:1;
     u8 snatchedMoveIsUsed:1;
     u8 descriptionSubmenu:1; // For Move Description window in move selection screen
     u8 ackBallUseBtn:1; // Used for the last used ball feature
@@ -662,11 +662,10 @@ struct BattleStruct
     u8 moveInfoSpriteId; // move info, window gfx
     // When using a move which hits multiple opponents which is then bounced by a target, we need to make sure, the move hits both opponents, the one with bounce, and the one without.
     enum Species beatUpSpecies[PARTY_SIZE]; // Species for Gen5+ Beat Up, otherwise party indexes
-    u8 attackerBeforeBounce:2;
     u8 beatUpSlot:3;
     u8 pledgeMove:1;
     u8 effectsBeforeUsingMoveDone:1; // Mega Evo and Focus Punch/Shell Trap effects.
-    u8 unused3:1;
+    u8 unused3:3;
     u16 flingItem:14;
     enum FlungItem flungItem:2;
     u8 itemPartyIndex[MAX_BATTLERS_COUNT];
@@ -710,7 +709,10 @@ struct BattleStruct
     u8 attackAnimPlayed:1;
     u8 preAttackEffectHappened:1;
     u8 unused4:2;
-    u8 savedCancelerState;
+    u8 attackerBeforeBounce:3;
+    u8 targetBeforeBounce:3;
+    u8 bouncedMoveIsUsed:1;
+    u8 unused5:1;
     u8 dancerSavedAttacker:3;
     u8 dancerSavedTarget:3;
     u8 padding:2;

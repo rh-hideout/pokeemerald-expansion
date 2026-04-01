@@ -1753,9 +1753,7 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
         gBattleStruct->eventState.atkCancelerBattler++;
 
         if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, cv->battlerDef, FALSE))
-        {
             continue;
-        }
 
         if (moveTarget == TARGET_OPPONENTS_FIELD)
         {
@@ -1917,30 +1915,31 @@ static enum CancelerResult CancelerBouncingMove(struct BattleCalcValues *cv)
         if (gSpecialStatuses[battler].magicBouncePending)
         {
             foundBouncer = TRUE;
-            gBattlerAbility = gBattlerTarget = battler;
+            gBattlerAbility = battler;
             gSpecialStatuses[battler].magicBouncePending = FALSE;
             BattleScriptCall(BattleScript_MagicBounce);
-            break;
         }
         else if (gSpecialStatuses[battler].magicCoatPending)
         {
             foundBouncer = TRUE;
-            gEffectBattler = gBattlerTarget = battler;
+            gEffectBattler = battler;
             gSpecialStatuses[battler].magicCoatPending = FALSE;
             BattleScriptCall(BattleScript_MagicCoat);
-            break;
         }
 
+        if (foundBouncer)
+        {
+            gBattleStruct->targetBeforeBounce = gBattlerTarget;
+            gBattleStruct->battlerState[gBattlerAttacker].targetsDone[gBattlerTarget] = TRUE;
+            gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_DOESNT_AFFECT_FOE; // for moves that target the opposing field
+            gBattlerTarget = battler;
+            for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+                gBattleStruct->savedMoveResultFlags[battler] = gBattleStruct->moveResultFlags[battler];
+            gBattleStruct->bouncedMoveIsUsed = TRUE;
+            return CANCELER_RESULT_RUN_SCRIPT;
+        }
     }
 
-    if (foundBouncer)
-    {
-        for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
-            gBattleStruct->savedMoveResultFlags[battler] = gBattleStruct->moveResultFlags[battler];
-        gBattleStruct->bouncedMoveIsUsed = TRUE;
-        gBattleStruct->savedCancelerState = gBattleStruct->eventState.atkCanceler;
-        return CANCELER_RESULT_RUN_SCRIPT;
-    }
 
     return CANCELER_RESULT_SUCCESS;
 }
@@ -2799,14 +2798,21 @@ static enum MoveEndResult MoveEndNextTarget(void)
         }
     }
 
+    // Not sure if this is the correct placement
+    // Maybe tested agaist something like Eject Pack in doubles while there is a possible foe left
+    // E.g. Leer into Magic Bounce and valid target. When does Eject Pack activate?
     if (gBattleStruct->bouncedMoveIsUsed)
     {
         for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
             gBattleStruct->moveResultFlags[battler] = gBattleStruct->savedMoveResultFlags[battler];
         gBattleStruct->bouncedMoveIsUsed = FALSE;
-        gBattleStruct->eventState.atkCanceler = gBattleStruct->savedCancelerState;
-        gBattleScripting.moveendState = 0;
         gBattlerAttacker = gBattleStruct->attackerBeforeBounce;
+        gBattlerTarget = gBattleStruct->targetBeforeBounce;
+        gBattleScripting.moveendState = 0;
+        gBattleStruct->eventState.atkCanceler = CANCELER_BOUNCING_MOVE;
+        BattleScriptPush(GetMoveBattleScript(gCurrentMove));
+        gBattlescriptCurrInstr = BattleScript_FlushMessageBox;
+        return MOVEEND_RESULT_RUN_SCRIPT;
     }
 
     RecordLastUsedMoveBy(gBattlerAttacker, gCurrentMove);
