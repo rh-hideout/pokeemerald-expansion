@@ -2422,10 +2422,6 @@ gBattleAnimMove_Discharge::
 	waitforvisualfinish
 	clearmonbg ANIM_ATTACKER
 	blendoff
-	call DischargeElectrify
-	waitforvisualfinish
-	end
-DischargeElectrify:
 	playsewithpan SE_M_THUNDERBOLT2, SOUND_PAN_TARGET
 	createsprite gElectricitySpriteTemplate, ANIM_TARGET, 2, 5, 0, 5, 0, ANIM_TARGET
 	createsprite gElectricitySpriteTemplate, ANIM_TARGET, 2, 5, 0, 5, 0, ANIM_DEF_PARTNER
@@ -2458,7 +2454,8 @@ DischargeElectrify:
 	createsprite gElectricitySpriteTemplate, ANIM_TARGET, 2, -20, 15, 5, 1, ANIM_TARGET
 	createsprite gElectricitySpriteTemplate, ANIM_TARGET, 2, -20, 15, 5, 1, ANIM_DEF_PARTNER
 	createsprite gElectricitySpriteTemplate, ANIM_TARGET, 2, -20, 15, 5, 1, ANIM_ATK_PARTNER
-	return
+	waitforvisualfinish
+	end
 
 gBattleAnimMove_LavaPlume::
 	loopsewithpan SE_M_TAKE_DOWN, SOUND_PAN_ATTACKER, 9, 2
