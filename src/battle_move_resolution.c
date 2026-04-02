@@ -2912,10 +2912,18 @@ static enum MoveEndResult MoveEndDefrost(void)
 
 static enum MoveEndResult MoveEndSheerForce(void)
 {
+    // Sheer Force should not remove recoil from moves like Flare Blitz.
     if (IsSheerForceAffected(gCurrentMove, GetBattlerAbility(gBattlerAttacker)))
-        gBattleScripting.moveendState = MOVEEND_ITEMS_EFFECTS_ALL;
+    {
+        if (GetMoveEffect(gCurrentMove) == EFFECT_RECOIL)
+            gBattleScripting.moveendState++;
+        else
+            gBattleScripting.moveendState = MOVEEND_ITEMS_EFFECTS_ALL;
+    }
     else
+    {
         gBattleScripting.moveendState++;
+    }
 
     return MOVEEND_RESULT_CONTINUE;
 }
