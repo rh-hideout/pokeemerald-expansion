@@ -678,8 +678,8 @@
 	.endm
 
 @ Common Steps
-	.macro create_powder_particles sprite:req
-	loopsewithpan SE_M_POISON_POWDER, SOUND_PAN_TARGET, 10, 6
+	.macro create_powder_particles sound_effect=SE_M_POISON_POWDER, sprite:req
+	loopsewithpan \sound_effect, SOUND_PAN_TARGET, 10, 6
 	\sprite ANIM_TARGET, 2, x=-30, y=-22, duration=117, y_velocity=80/256, wave_amplitude=5, wave_speed=1
 	\sprite ANIM_TARGET, 2, x=10, y=-22, duration=117, y_velocity=80/256, wave_amplitude=-5, wave_speed=1
 	\sprite ANIM_TARGET, 2, x=-25, y=-22, duration=117, y_velocity=112/256, wave_amplitude=5, wave_speed=3
