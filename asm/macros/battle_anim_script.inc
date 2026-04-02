@@ -676,3 +676,24 @@
 	.macro create_surf_wave priority=2, palette:req
 	createvisualtask AnimTask_CreateSurfWave, \priority, \palette
 	.endm
+
+@ Common Steps
+	.macro create_particle_ring sprite:req
+	createsprite \sprite, ANIM_ATTACKER, 2, 26, 0
+	createsprite \sprite, ANIM_ATTACKER, 2, 26, 42
+	createsprite \sprite, ANIM_ATTACKER, 2, 26, 84
+	createsprite \sprite, ANIM_ATTACKER, 2, 26, 126
+	createsprite \sprite, ANIM_ATTACKER, 2, 26, 168
+	createsprite \sprite, ANIM_ATTACKER, 2, 26, 210
+	.endm
+
+	.macro create_scattered_particle_ring sprite:req
+	createsprite \sprite, ANIM_TARGET, 2, 0
+	createsprite \sprite, ANIM_TARGET, 2, 32
+	createsprite \sprite, ANIM_TARGET, 2, 64
+	createsprite \sprite, ANIM_TARGET, 2, 96
+	createsprite \sprite, ANIM_TARGET, 2, 128
+	createsprite \sprite, ANIM_TARGET, 2, 160
+	createsprite \sprite, ANIM_TARGET, 2, 192
+	createsprite \sprite, ANIM_TARGET, 2, 224
+	.endm
