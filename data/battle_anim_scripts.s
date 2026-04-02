@@ -1612,24 +1612,12 @@ gBattleAnimMove_PowerGem:: @ Copy of Hidden Power with background blackened
 	delay 4
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
 	playsewithpan SE_M_REVERSAL, SOUND_PAN_ATTACKER
-	createsprite gPowerGemOrbSpriteTemplate, ANIM_ATTACKER, 2, 26, 0
-	createsprite gPowerGemOrbSpriteTemplate, ANIM_ATTACKER, 2, 26, 42
-	createsprite gPowerGemOrbSpriteTemplate, ANIM_ATTACKER, 2, 26, 84
-	createsprite gPowerGemOrbSpriteTemplate, ANIM_ATTACKER, 2, 26, 126
-	createsprite gPowerGemOrbSpriteTemplate, ANIM_ATTACKER, 2, 26, 168
-	createsprite gPowerGemOrbSpriteTemplate, ANIM_ATTACKER, 2, 26, 210
+	create_particle_ring sprite=gPowerGemOrbSpriteTemplate
 	delay 52
 	setarg 7, -1
 	playsewithpan SE_M_REFLECT, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
-	createsprite gPowerGemOrbScatterSpriteTemplate, ANIM_TARGET, 2, 0
-	createsprite gPowerGemOrbScatterSpriteTemplate, ANIM_TARGET, 2, 32
-	createsprite gPowerGemOrbScatterSpriteTemplate, ANIM_TARGET, 2, 64
-	createsprite gPowerGemOrbScatterSpriteTemplate, ANIM_TARGET, 2, 96
-	createsprite gPowerGemOrbScatterSpriteTemplate, ANIM_TARGET, 2, 128
-	createsprite gPowerGemOrbScatterSpriteTemplate, ANIM_TARGET, 2, 160
-	createsprite gPowerGemOrbScatterSpriteTemplate, ANIM_TARGET, 2, 192
-	createsprite gPowerGemOrbScatterSpriteTemplate, ANIM_TARGET, 2, 224
+	create_scattered_particle_ringsprite=gPowerGemOrbScatterSpriteTemplate
 	simple_palette_blend unused_subpriority_offset=5, selector=F_PAL_BG, delay=1, initial_blend_y=7, target_blend_y=0, color=RGB_BLACK
 	waitforvisualfinish
 	end
@@ -2769,24 +2757,12 @@ gBattleAnimMove_MagnetBomb::
 	delay 4
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
 	playsewithpan SE_M_REVERSAL, SOUND_PAN_ATTACKER
-	createsprite gHiddenPowerOrbSpriteTemplate, ANIM_ATTACKER, 2, 26, 0
-	createsprite gHiddenPowerOrbSpriteTemplate, ANIM_ATTACKER, 2, 26, 42
-	createsprite gHiddenPowerOrbSpriteTemplate, ANIM_ATTACKER, 2, 26, 84
-	createsprite gHiddenPowerOrbSpriteTemplate, ANIM_ATTACKER, 2, 26, 126
-	createsprite gHiddenPowerOrbSpriteTemplate, ANIM_ATTACKER, 2, 26, 168
-	createsprite gHiddenPowerOrbSpriteTemplate, ANIM_ATTACKER, 2, 26, 210
+	create_particle_ring sprite=gHiddenPowerOrbSpriteTemplate
 	delay 52
 	setarg 7, -1
 	playsewithpan SE_M_REFLECT, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
-	createsprite gHiddenPowerOrbScatterSpriteTemplate, ANIM_TARGET, 2, 0
-	createsprite gHiddenPowerOrbScatterSpriteTemplate, ANIM_TARGET, 2, 32
-	createsprite gHiddenPowerOrbScatterSpriteTemplate, ANIM_TARGET, 2, 64
-	createsprite gHiddenPowerOrbScatterSpriteTemplate, ANIM_TARGET, 2, 96
-	createsprite gHiddenPowerOrbScatterSpriteTemplate, ANIM_TARGET, 2, 128
-	createsprite gHiddenPowerOrbScatterSpriteTemplate, ANIM_TARGET, 2, 160
-	createsprite gHiddenPowerOrbScatterSpriteTemplate, ANIM_TARGET, 2, 192
-	createsprite gHiddenPowerOrbScatterSpriteTemplate, ANIM_TARGET, 2, 224
+	create_scattered_particle_ringsprite=gHiddenPowerOrbScatterSpriteTemplate
 	playsewithpan SE_M_SELF_DESTRUCT, SOUND_PAN_TARGET
 	createsprite gOctazookaSmokeSpriteTemplate, ANIM_TARGET, 2, 8, 8, 1, 0
 	delay 2
@@ -7509,25 +7485,13 @@ gBattleAnimMove_GrassyTerrain::
 	delay 4
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
 	playsewithpan SE_M_REVERSAL, SOUND_PAN_ATTACKER
-	createsprite gGrassyTerrainOrbsTemplate, ANIM_ATTACKER, 2, 26, 0
-	createsprite gGrassyTerrainOrbsTemplate, ANIM_ATTACKER, 2, 26, 42
-	createsprite gGrassyTerrainOrbsTemplate, ANIM_ATTACKER, 2, 26, 84
-	createsprite gGrassyTerrainOrbsTemplate, ANIM_ATTACKER, 2, 26, 126
-	createsprite gGrassyTerrainOrbsTemplate, ANIM_ATTACKER, 2, 26, 168
-	createsprite gGrassyTerrainOrbsTemplate, ANIM_ATTACKER, 2, 26, 210
+	create_particle_ring sprite=gGrassyTerrainOrbsTemplate
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 3, 0, 4, RGB(11, 26, 11)
 	delay 52
 	setarg 7, -1
 	playsewithpan SE_M_HEAL_BELL, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
-	createsprite gGrassyTerrainStarTemplate, ANIM_TARGET, 2, 0
-	createsprite gGrassyTerrainStarTemplate, ANIM_TARGET, 2, 32
-	createsprite gGrassyTerrainStarTemplate, ANIM_TARGET, 2, 64
-	createsprite gGrassyTerrainStarTemplate, ANIM_TARGET, 2, 96
-	createsprite gGrassyTerrainStarTemplate, ANIM_TARGET, 2, 128
-	createsprite gGrassyTerrainStarTemplate, ANIM_TARGET, 2, 160
-	createsprite gGrassyTerrainStarTemplate, ANIM_TARGET, 2, 192
-	createsprite gGrassyTerrainStarTemplate, ANIM_TARGET, 2, 224
+	create_scattered_particle_ringsprite=gGrassyTerrainStarTemplate
 	panse_adjustnone SE_M_PETAL_DANCE, SOUND_PAN_ATTACKER, SOUND_PAN_TARGET, +1, 0
 	waitforvisualfinish
 	delay 4
@@ -7544,12 +7508,7 @@ gBattleAnimMove_MistyTerrain::
 	delay 4
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
 	playsewithpan SE_M_REVERSAL, SOUND_PAN_ATTACKER
-	createsprite gMistyTerrainOrbsTemplate, ANIM_ATTACKER, 2, 26, 0
-	createsprite gMistyTerrainOrbsTemplate, ANIM_ATTACKER, 2, 26, 42
-	createsprite gMistyTerrainOrbsTemplate, ANIM_ATTACKER, 2, 26, 84
-	createsprite gMistyTerrainOrbsTemplate, ANIM_ATTACKER, 2, 26, 126
-	createsprite gMistyTerrainOrbsTemplate, ANIM_ATTACKER, 2, 26, 168
-	createsprite gMistyTerrainOrbsTemplate, ANIM_ATTACKER, 2, 26, 210
+	create_particle_ring sprite=gMistyTerrainOrbsTemplate
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 3, 0, 7, RGB(31, 24, 31)
 	delay 52
 	setarg 7, -1
@@ -8364,25 +8323,13 @@ gBattleAnimMove_ElectricTerrain::
 	delay 4
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
 	playsewithpan SE_M_REVERSAL, SOUND_PAN_ATTACKER
-	createsprite gElectricTerrainOrbsTemplate, ANIM_ATTACKER, 2, 26, 0
-	createsprite gElectricTerrainOrbsTemplate, ANIM_ATTACKER, 2, 26, 42
-	createsprite gElectricTerrainOrbsTemplate, ANIM_ATTACKER, 2, 26, 84
-	createsprite gElectricTerrainOrbsTemplate, ANIM_ATTACKER, 2, 26, 126
-	createsprite gElectricTerrainOrbsTemplate, ANIM_ATTACKER, 2, 26, 168
-	createsprite gElectricTerrainOrbsTemplate, ANIM_ATTACKER, 2, 26, 210
+	create_particle_ring sprite=gElectricTerrainOrbsTemplate
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 3, 0, 4, RGB(28, 28, 0)
 	delay 52
 	setarg 7, -1
 	playsewithpan SE_M_REFLECT, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
-	createsprite gElectricTerrainFlyingBallTemplate, ANIM_TARGET, 2, 0
-	createsprite gElectricTerrainFlyingBallTemplate, ANIM_TARGET, 2, 32
-	createsprite gElectricTerrainFlyingBallTemplate, ANIM_TARGET, 2, 64
-	createsprite gElectricTerrainFlyingBallTemplate, ANIM_TARGET, 2, 96
-	createsprite gElectricTerrainFlyingBallTemplate, ANIM_TARGET, 2, 128
-	createsprite gElectricTerrainFlyingBallTemplate, ANIM_TARGET, 2, 160
-	createsprite gElectricTerrainFlyingBallTemplate, ANIM_TARGET, 2, 192
-	createsprite gElectricTerrainFlyingBallTemplate, ANIM_TARGET, 2, 224
+	create_scattered_particle_ringsprite=gElectricTerrainFlyingBallTemplate
 	loopsewithpan SE_M_THUNDERBOLT2, SOUND_PAN_TARGET, 22, 3
 	waitforvisualfinish
 	delay 2
@@ -9900,25 +9847,13 @@ gBattleAnimMove_PsychicTerrain::
 	delay 4
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
 	playsewithpan SE_M_REVERSAL, SOUND_PAN_ATTACKER
-	createsprite gPsychicTerrainOrbsTemplate, ANIM_ATTACKER, 2, 26, 0
-	createsprite gPsychicTerrainOrbsTemplate, ANIM_ATTACKER, 2, 26, 42
-	createsprite gPsychicTerrainOrbsTemplate, ANIM_ATTACKER, 2, 26, 84
-	createsprite gPsychicTerrainOrbsTemplate, ANIM_ATTACKER, 2, 26, 126
-	createsprite gPsychicTerrainOrbsTemplate, ANIM_ATTACKER, 2, 26, 168
-	createsprite gPsychicTerrainOrbsTemplate, ANIM_ATTACKER, 2, 26, 210
+	create_particle_ring sprite=gPsychicTerrainOrbsTemplate
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 3, 0, 4, RGB(27, 0, 13)
 	delay 52
 	setarg 7, -1
 	playsewithpan SE_M_ATTRACT, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
-	createsprite gPsychicTerrainStarTemplate, ANIM_TARGET, 2, 0
-	createsprite gPsychicTerrainStarTemplate, ANIM_TARGET, 2, 32
-	createsprite gPsychicTerrainStarTemplate, ANIM_TARGET, 2, 64
-	createsprite gPsychicTerrainStarTemplate, ANIM_TARGET, 2, 96
-	createsprite gPsychicTerrainStarTemplate, ANIM_TARGET, 2, 128
-	createsprite gPsychicTerrainStarTemplate, ANIM_TARGET, 2, 160
-	createsprite gPsychicTerrainStarTemplate, ANIM_TARGET, 2, 192
-	createsprite gPsychicTerrainStarTemplate, ANIM_TARGET, 2, 224
+	create_scattered_particle_ringsprite=gPsychicTerrainStarTemplate
 	loopsewithpan SE_M_SUPERSONIC, SOUND_PAN_TARGET, 10, 3
 	waitforvisualfinish
 	delay 4
@@ -20196,24 +20131,12 @@ gBattleAnimMove_HiddenPower::
 	delay 4
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
 	playsewithpan SE_M_REVERSAL, SOUND_PAN_ATTACKER
-	createsprite gHiddenPowerOrbSpriteTemplate, ANIM_ATTACKER, 2, 26, 0
-	createsprite gHiddenPowerOrbSpriteTemplate, ANIM_ATTACKER, 2, 26, 42
-	createsprite gHiddenPowerOrbSpriteTemplate, ANIM_ATTACKER, 2, 26, 84
-	createsprite gHiddenPowerOrbSpriteTemplate, ANIM_ATTACKER, 2, 26, 126
-	createsprite gHiddenPowerOrbSpriteTemplate, ANIM_ATTACKER, 2, 26, 168
-	createsprite gHiddenPowerOrbSpriteTemplate, ANIM_ATTACKER, 2, 26, 210
+	create_particle_ring sprite=gHiddenPowerOrbSpriteTemplate
 	delay 52
 	setarg 7, -1
 	playsewithpan SE_M_REFLECT, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
-	createsprite gHiddenPowerOrbScatterSpriteTemplate, ANIM_TARGET, 2, 0
-	createsprite gHiddenPowerOrbScatterSpriteTemplate, ANIM_TARGET, 2, 32
-	createsprite gHiddenPowerOrbScatterSpriteTemplate, ANIM_TARGET, 2, 64
-	createsprite gHiddenPowerOrbScatterSpriteTemplate, ANIM_TARGET, 2, 96
-	createsprite gHiddenPowerOrbScatterSpriteTemplate, ANIM_TARGET, 2, 128
-	createsprite gHiddenPowerOrbScatterSpriteTemplate, ANIM_TARGET, 2, 160
-	createsprite gHiddenPowerOrbScatterSpriteTemplate, ANIM_TARGET, 2, 192
-	createsprite gHiddenPowerOrbScatterSpriteTemplate, ANIM_TARGET, 2, 224
+	create_scattered_particle_ringsprite=gHiddenPowerOrbScatterSpriteTemplate
 	end
 
 gBattleAnimMove_Reversal::
@@ -20224,12 +20147,7 @@ gBattleAnimMove_Reversal::
 	blend_color_cycle selector=(F_PAL_BG | F_PAL_BATTLERS), delay=3, num_blends=2, initial_blend_y=0, target_blend_y=10, color=RGB_WHITE
 	delay 10
 	playsewithpan SE_M_REVERSAL, SOUND_PAN_ATTACKER
-	createsprite gReversalOrbSpriteTemplate, ANIM_ATTACKER, 2, 26, 0
-	createsprite gReversalOrbSpriteTemplate, ANIM_ATTACKER, 2, 26, 42
-	createsprite gReversalOrbSpriteTemplate, ANIM_ATTACKER, 2, 26, 84
-	createsprite gReversalOrbSpriteTemplate, ANIM_ATTACKER, 2, 26, 126
-	createsprite gReversalOrbSpriteTemplate, ANIM_ATTACKER, 2, 26, 168
-	createsprite gReversalOrbSpriteTemplate, ANIM_ATTACKER, 2, 26, 210
+	create_particle_ring sprite=gReversalOrbSpriteTemplate
 	waitforvisualfinish
 	delay 20
 	createsprite gHorizontalLungeSpriteTemplate, ANIM_ATTACKER, 2, 6, 4
@@ -30196,12 +30114,7 @@ FinishAcidDownpour:
 	blendoff
 	delay 32
 	loopsewithpan SE_M_BUBBLE3, SOUND_PAN_TARGET, 13, 3
-	createsprite gAcidDownpourReversalSpriteTemplate, ANIM_ATTACKER, 2, 26, 0
-	createsprite gAcidDownpourReversalSpriteTemplate, ANIM_ATTACKER, 2, 26, 42
-	createsprite gAcidDownpourReversalSpriteTemplate, ANIM_ATTACKER, 2, 26, 84
-	createsprite gAcidDownpourReversalSpriteTemplate, ANIM_ATTACKER, 2, 26, 126
-	createsprite gAcidDownpourReversalSpriteTemplate, ANIM_ATTACKER, 2, 26, 168
-	createsprite gAcidDownpourReversalSpriteTemplate, ANIM_ATTACKER, 2, 26, 210
+	create_particle_ring sprite=gAcidDownpourReversalSpriteTemplate
 	delay 32
 	panse SE_M_WHIRLPOOL, SOUND_PAN_ATTACKER, SOUND_PAN_TARGET, 2, 0
 	create_surf_wave palette=ANIM_SURF_PAL_SLUDGE_WAVE
