@@ -14996,7 +14996,7 @@ void BS_TryWakeBattlersUproar(void)
         {
             TryDeactivateSleepClause(GetBattlerSide(battler), gBattlerPartyIndexes[battler]);
             gBattleMons[battler].status1 = 0;
-            gBattlerTarget = battler;
+            gEffectBattler = battler;
             BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[battler].status1), &gBattleMons[battler].status1);
             MarkBattlerForControllerExec(battler);
 
