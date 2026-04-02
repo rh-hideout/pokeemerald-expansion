@@ -1617,7 +1617,7 @@ gBattleAnimMove_PowerGem:: @ Copy of Hidden Power with background blackened
 	setarg 7, -1
 	playsewithpan SE_M_REFLECT, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
-	create_scattered_particle_ringsprite=gPowerGemOrbScatterSpriteTemplate
+	create_scattered_particle_ring sprite=gPowerGemOrbScatterSpriteTemplate
 	simple_palette_blend unused_subpriority_offset=5, selector=F_PAL_BG, delay=1, initial_blend_y=7, target_blend_y=0, color=RGB_BLACK
 	waitforvisualfinish
 	end
@@ -2759,7 +2759,7 @@ gBattleAnimMove_MagnetBomb::
 	setarg 7, -1
 	playsewithpan SE_M_REFLECT, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
-	create_scattered_particle_ringsprite=gHiddenPowerOrbScatterSpriteTemplate
+	create_scattered_particle_ring sprite=gHiddenPowerOrbScatterSpriteTemplate
 	playsewithpan SE_M_SELF_DESTRUCT, SOUND_PAN_TARGET
 	createsprite gOctazookaSmokeSpriteTemplate, ANIM_TARGET, 2, 8, 8, 1, 0
 	delay 2
@@ -7476,7 +7476,7 @@ gBattleAnimMove_GrassyTerrain::
 	setarg 7, -1
 	playsewithpan SE_M_HEAL_BELL, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
-	create_scattered_particle_ringsprite=gGrassyTerrainStarTemplate
+	create_scattered_particle_ring sprite=gGrassyTerrainStarTemplate
 	panse_adjustnone SE_M_PETAL_DANCE, SOUND_PAN_ATTACKER, SOUND_PAN_TARGET, +1, 0
 	waitforvisualfinish
 	delay 4
@@ -8314,7 +8314,7 @@ gBattleAnimMove_ElectricTerrain::
 	setarg 7, -1
 	playsewithpan SE_M_REFLECT, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
-	create_scattered_particle_ringsprite=gElectricTerrainFlyingBallTemplate
+	create_scattered_particle_ring sprite=gElectricTerrainFlyingBallTemplate
 	loopsewithpan SE_M_THUNDERBOLT2, SOUND_PAN_TARGET, 22, 3
 	waitforvisualfinish
 	delay 2
@@ -9838,7 +9838,7 @@ gBattleAnimMove_PsychicTerrain::
 	setarg 7, -1
 	playsewithpan SE_M_ATTRACT, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
-	create_scattered_particle_ringsprite=gPsychicTerrainStarTemplate
+	create_scattered_particle_ring sprite=gPsychicTerrainStarTemplate
 	loopsewithpan SE_M_SUPERSONIC, SOUND_PAN_TARGET, 10, 3
 	waitforvisualfinish
 	delay 4
@@ -20010,7 +20010,7 @@ gBattleAnimMove_HiddenPower::
 	setarg 7, -1
 	playsewithpan SE_M_REFLECT, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
-	create_scattered_particle_ringsprite=gHiddenPowerOrbScatterSpriteTemplate
+	create_scattered_particle_ring sprite=gHiddenPowerOrbScatterSpriteTemplate
 	end
 
 gBattleAnimMove_Reversal::
