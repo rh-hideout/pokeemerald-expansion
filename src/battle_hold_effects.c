@@ -147,7 +147,7 @@ static enum ItemEffect TryBerserkGene(enum BattlerId battler)
     return ITEM_STATS_CHANGE;
 }
 
-static enum ItemEffect RestoreWhiteHerbStats(enum BattlerId battler, ActivationTiming timing)
+static enum ItemEffect RestoreWhiteHerbStats(enum BattlerId battler)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -161,10 +161,7 @@ static enum ItemEffect RestoreWhiteHerbStats(enum BattlerId battler, ActivationT
     }
     if (effect != ITEM_NO_EFFECT)
     {
-        if (timing == IsWhiteHerbActivation || timing == IsOnFlingActivation)
-            BattleScriptCall(BattleScript_WhiteHerbRet);
-        else
-            BattleScriptExecute(BattleScript_WhiteHerbEnd2);
+        BattleScriptCall(BattleScript_WhiteHerbRet);
     }
 
     return effect;
@@ -1044,7 +1041,7 @@ enum ItemEffect ItemBattleEffects(enum BattlerId itemBattler, enum BattlerId bat
         effect = TryBoosterEnergy(itemBattler, GetBattlerAbility(itemBattler));
         break;
     case HOLD_EFFECT_WHITE_HERB:
-        effect = RestoreWhiteHerbStats(itemBattler, timing);
+        effect = RestoreWhiteHerbStats(itemBattler);
         break;
     case HOLD_EFFECT_MIRROR_HERB:
         effect = TryConsumeMirrorHerb(itemBattler);

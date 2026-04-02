@@ -14982,3 +14982,18 @@ void BS_UndoDynamax(void)
 
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
+
+void BS_EndTurnEvents(void)
+{
+    NATIVE_ARGS();
+
+    if (EndTurnEvents())
+        return;
+
+    if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
+        BattleScriptExecute(BattleScript_PalacePrintFlavorText);
+    else if (gBattleTypeFlags & BATTLE_TYPE_ARENA && gBattleStruct->eventState.arenaTurn == 0)
+        BattleScriptExecute(BattleScript_ArenaTurnBeginning);
+    else
+        gBattlescriptCurrInstr = cmd->nextInstr;
+}

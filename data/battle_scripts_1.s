@@ -4108,6 +4108,10 @@ BattleScript_FirstTurnSwitchInEvents::
 	switchinevents
 	end3
 
+BattleScript_EndTurnEvents::
+	endturnevents
+	end2
+
 BattleScript_LocalTrainerBattleWon::
 	jumpifbattletype BATTLE_TYPE_TWO_OPPONENTS, BattleScript_LocalTwoTrainersDefeated
 	printstring STRINGID_PLAYERDEFEATEDTRAINER1

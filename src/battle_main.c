@@ -3922,18 +3922,21 @@ static void HandleEndTurn_ContinueBattle(void)
 
 void BattleTurnPassed(void)
 {
-    s32 i;
+    BattleScriptExecute(BattleScript_EndTurnEvents);
+}
 
+bool32 EndTurnEvents(void)
+{
     gBattleStruct->speedTieBreaks = RandomUniform(RNG_SPEED_TIE, 0, Factorial(MAX_BATTLERS_COUNT) - 1);
 
     TurnValuesCleanUp(TRUE);
 
     if (gBattleOutcome == 0 && DoEndTurnEffects())
-        return;
+        return TRUE;
     if (BattleArenaTurnEnd())
-        return;
+        return TRUE;
     if (HandleFaintedMonActions())
-        return;
+        return TRUE;
 
     gBattleStruct->eventState.faintedAction = 0;
 
@@ -3943,14 +3946,14 @@ void BattleTurnPassed(void)
     gBattleScripting.animTargetsHit = 0;
     gBattleScripting.moveendState = 0;
 
-    for (i = 0; i < 5; i++)
+    for (u32 i = 0; i < 5; i++)
         gBattleCommunication[i] = 0;
 
     if (gBattleOutcome != 0)
     {
         gCurrentActionFuncId = B_ACTION_FINISHED;
         gBattleMainFunc = RunTurnActionsFunctions;
-        return;
+        return TRUE;
     }
 
     if (gBattleResults.battleTurnCounter < 0xFF)
@@ -3972,7 +3975,7 @@ void BattleTurnPassed(void)
             gBattleStruct->battlerState[battler].stompingTantrumTimer--;
     }
 
-    for (i = 0; i < NUM_BATTLE_SIDES; i++)
+    for (u32 i = 0; i < NUM_BATTLE_SIDES; i++)
     {
         if (gSideTimers[i].retaliateTimer > 0)
             gSideTimers[i].retaliateTimer--;
@@ -3984,12 +3987,13 @@ void BattleTurnPassed(void)
     AssignUsableGimmicks();
     SetShellSideArmCategory();
     SetAiLogicDataForTurn(gAiLogicData); // get assumed abilities, hold effects, etc of all battlers
-    gBattleMainFunc = HandleTurnActionSelectionState;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        BattleScriptExecute(BattleScript_PalacePrintFlavorText);
-    else if (gBattleTypeFlags & BATTLE_TYPE_ARENA && gBattleStruct->eventState.arenaTurn == 0)
-        BattleScriptExecute(BattleScript_ArenaTurnBeginning);
+    if (gBattleResources->battleCallbackStack->size != 0) // Change callback to next turn's action selection
+        gBattleResources->battleCallbackStack->function[gBattleResources->battleCallbackStack->size - 1] = HandleTurnActionSelectionState;
+    else
+        gBattleMainFunc = HandleTurnActionSelectionState;
+
+    return FALSE;
 }
 
 u8 IsRunningFromBattleImpossible(enum BattlerId battler)

@@ -2227,3 +2227,7 @@
 	.byte \battler
 	.byte \switchedItems
 	.endm
+
+	.macro endturnevents
+	callnative BS_EndTurnEvents
+	.endm
