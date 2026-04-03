@@ -14990,12 +14990,12 @@ void BS_EndTurnEvents(void)
     if (EndTurnEvents())
         return;
 
+    gBattlescriptCurrInstr = cmd->nextInstr;
+
     if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
-        BattleScriptExecute(BattleScript_PalacePrintFlavorText);
+        BattleScriptCall(BattleScript_PalacePrintFlavorTextRet);
     else if (gBattleTypeFlags & BATTLE_TYPE_ARENA && gBattleStruct->eventState.arenaTurn == 0)
-        BattleScriptExecute(BattleScript_ArenaTurnBeginning);
-    else
-        gBattlescriptCurrInstr = cmd->nextInstr;
+        BattleScriptCall(BattleScript_ArenaTurnBeginningRet);
 }
 
 void BS_TryWakeBattlersUproar(void)

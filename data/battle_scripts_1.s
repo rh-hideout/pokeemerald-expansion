@@ -7201,7 +7201,7 @@ BattleScript_FlushMessageBox::
 	flushtextbox
 	return
 
-BattleScript_PalacePrintFlavorText::
+BattleScript_PalacePrintFlavorTextRet::
 	setbyte gBattleCommunication + 1, 0
 BattleScript_PalaceTryBattlerFlavorText::
 	palaceflavortext
@@ -7213,9 +7213,13 @@ BattleScript_PalaceEndFlavorText::
 	jumpifbytenotequal gBattleCommunication + 1, gBattlersCount, BattleScript_PalaceTryBattlerFlavorText
 	setbyte gBattleCommunication, 0
 	setbyte gBattleCommunication + 1, 0
+	return
+
+BattleScript_PalacePrintFlavorText::
+	call BattleScript_PalacePrintFlavorTextRet
 	end2
 
-BattleScript_ArenaTurnBeginning::
+BattleScript_ArenaTurnBeginningRet::
 	waitcry
 	volumedown
 	playse SE_ARENA_TIMEUP1
@@ -7227,6 +7231,10 @@ BattleScript_ArenaTurnBeginning::
 	pause B_WAIT_TIME_LONG
 	erasearenareftextbox
 	volumeup
+	return
+
+BattleScript_ArenaTurnBeginning::
+	call BattleScript_ArenaTurnBeginningRet
 	end2
 
 BattleScript_ArenaDoJudgment::
