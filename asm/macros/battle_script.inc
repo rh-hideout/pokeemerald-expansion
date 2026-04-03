@@ -2230,7 +2230,7 @@
 
 	.macro endturnevents
 	callnative BS_EndTurnEvents
-  .endm
+	.endm
 
 	.macro trywakebattlersuproar
 	callnative BS_TryWakeBattlersUproar

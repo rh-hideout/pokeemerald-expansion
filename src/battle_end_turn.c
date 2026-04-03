@@ -197,7 +197,7 @@ static bool32 HandleEndTurnEmergencyExit(enum BattlerId battler)
         gBattlerAbility = battler;
         gLastUsedAbility = ability;
         gBattleScripting.battler = battler;
-        BattleScriptCall(BattleScript_EmergencyExit);
+        BattleScriptCall(BattleScript_EmergencyExitSendReplacement);
         effect = TRUE;
     }
 

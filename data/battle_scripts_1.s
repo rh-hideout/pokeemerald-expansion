@@ -6012,11 +6012,11 @@ BattleScript_SwitchOutEffects::
 	switchoutabilities BS_SCRIPTING
 	return
 
-BattleScript_EmergencyExitRet::
+BattleScript_EmergencyExitSendReplacement::
 	call BattleScript_EmergencyExit
-	jumpifnotbattletype BATTLE_TYPE_TRAINER, BattleScript_EmergencyExitRet_End
+	jumpifnotbattletype BATTLE_TYPE_TRAINER, BattleScript_EmergencyExitSendReplacement_End
 	call BattleScript_QueuedSwitchOpenPartyScreen
-BattleScript_EmergencyExitRet_End::
+BattleScript_EmergencyExitSendReplacement_End::
 	return
 
 BattleScript_QueuedSwitchOpenPartyScreen::
