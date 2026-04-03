@@ -1867,7 +1867,6 @@ static bool32 IsMoveParentalBondAffected(struct BattleContext *ctx)
      || GetMoveCategory(ctx->move) == DAMAGE_CATEGORY_STATUS
      || gBattleMoveEffects[effect].twoTurnEffect
      || effect == EFFECT_OHKO
-     || effect == EFFECT_UPROAR
      || GetActiveGimmick(ctx->battlerAtk) == GIMMICK_Z_MOVE
      || (effect == EFFECT_PRESENT && gBattleStruct->presentBasePower == 0)
      || ctx->move == MOVE_STRUGGLE)
