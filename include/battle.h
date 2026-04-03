@@ -126,8 +126,6 @@ struct SpecialStatus
     u8 teraShellAbilityDone:1;
     u8 backUpTarget:3;
     // End of byte
-    u8 magicCoatPending:1;
-    u8 magicBouncePending:1;
     enum QueuedSwitch queuedSwitch;
 };
 
@@ -704,18 +702,18 @@ struct BattleStruct
     enum SubmoveState submoveAnnouncement:2;
     u8 tryDestinyBond:1;
     u8 tryGrudge:1;
-    u8 incrementEchoedVoice:1;
-    u8 echoedVoiceCounter:3;
-    u8 attackAnimPlayed:1;
-    u8 preAttackEffectHappened:1;
-    u8 unused4:2;
-    u8 attackerBeforeBounce:3;
-    u8 targetBeforeBounce:3;
-    u8 bouncedMoveIsUsed:1;
-    u8 unused5:1;
-    u8 dancerSavedAttacker:3;
-    u8 dancerSavedTarget:3;
-    u8 padding:2;
+    u32 incrementEchoedVoice:1;
+    u32 echoedVoiceCounter:3;
+    u32 attackAnimPlayed:1;
+    u32 preAttackEffectHappened:1;
+    u32 magicCoatPending:6;
+    u32 magicBouncePending:6;
+    u32 attackerBeforeBounce:3;
+    u32 targetBeforeBounce:3;
+    u32 bouncedMoveIsUsed:1;
+    u32 dancerSavedAttacker:3;
+    u32 dancerSavedTarget:3;
+    u32 padding:1;
 };
 
 struct AiBattleData

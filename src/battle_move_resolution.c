@@ -1740,6 +1740,7 @@ static bool32 CanMoveBeBlockedByTargetHelper(struct BattleCalcValues *cv, s32 mo
 static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
 {
     bool32 targetAvoidedAttack = FALSE;
+    bool32 moveBouncedBack = FALSE; // for moves that target the opposing field
     enum MoveTarget moveTarget = GetBattlerMoveTargetType(cv->battlerAtk, cv->move);
     s32 movePriority = GetChosenMovePriority(cv->battlerAtk, cv->abilities[cv->battlerAtk]);
 
@@ -1758,7 +1759,10 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
         if (moveTarget == TARGET_OPPONENTS_FIELD)
         {
             if (!IsSemiInvulnerable(cv->battlerDef, CHECK_ALL) && CanBattlerBounceBackMove(cv))
+            {
                 gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_FAILED;
+                moveBouncedBack = TRUE;
+            }
         }
         else if (IsBattlerUnaffectedByMove(cv->battlerDef)) // immune but targeted
         {
@@ -1870,6 +1874,13 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
 
     cv->battlerDef = gBattlerTarget;
     gBattleStruct->eventState.atkCancelerBattler = 0;
+
+    if (moveBouncedBack)
+    {
+        gBattlescriptCurrInstr = BattleScript_MoveEnd;
+        return CANCELER_RESULT_FAILURE;
+    }
+
     return CANCELER_RESULT_SUCCESS;
 }
 
@@ -1901,45 +1912,6 @@ static enum CancelerResult CancelerNotFullyProtected(struct BattleCalcValues *cv
     }
 
     gBattleStruct->eventState.atkCancelerBattler = 0;
-    return CANCELER_RESULT_SUCCESS;
-}
-
-static enum CancelerResult CancelerBouncedMove(struct BattleCalcValues *cv)
-{
-    if (gBattleStruct->bouncedMoveIsUsed)
-        return CANCELER_RESULT_SUCCESS;
-
-    u32 foundBouncer = FALSE;
-    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
-    {
-        if (gSpecialStatuses[battler].magicBouncePending)
-        {
-            foundBouncer = TRUE;
-            gBattlerAbility = battler;
-            gSpecialStatuses[battler].magicBouncePending = FALSE;
-            BattleScriptCall(BattleScript_MagicBounce);
-        }
-        else if (gSpecialStatuses[battler].magicCoatPending)
-        {
-            foundBouncer = TRUE;
-            gEffectBattler = battler;
-            gSpecialStatuses[battler].magicCoatPending = FALSE;
-            BattleScriptCall(BattleScript_MagicCoat);
-        }
-
-        if (foundBouncer)
-        {
-            gBattleStruct->targetBeforeBounce = gBattlerTarget;
-            gBattleStruct->battlerState[gBattlerAttacker].targetsDone[gBattlerTarget] = TRUE;
-            gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_DOESNT_AFFECT_FOE; // for moves that target the opposing field
-            gBattlerTarget = battler;
-            for (enum BattlerId i = 0; i < gBattlersCount; i++)
-                gBattleStruct->savedMoveResultFlags[i] = gBattleStruct->moveResultFlags[i];
-            gBattleStruct->bouncedMoveIsUsed = TRUE;
-            return CANCELER_RESULT_RUN_SCRIPT;
-        }
-    }
-
     return CANCELER_RESULT_SUCCESS;
 }
 
@@ -2108,7 +2080,6 @@ static enum CancelerResult (*const sMoveSuccessOrderCancelers[])(struct BattleCa
     [CANCELER_TOOK_ATTACK] = CancelerTookAttack,
     [CANCELER_TARGET_FAILURE] = CancelerTargetFailure,
     [CANCELER_NOT_FULLY_PROTECTED] = CancelerNotFullyProtected,
-    [CANCELER_BOUNCED_MOVE] = CancelerBouncedMove,
     [CANCELER_MULTIHIT_MOVES] = CancelerMultihitMoves,
 };
 
@@ -2797,24 +2768,85 @@ static enum MoveEndResult MoveEndNextTarget(void)
         }
     }
 
-    // Not sure if this is the correct placement
-    // Maybe tested agaist something like Eject Pack in doubles while there is a possible foe left
-    // E.g. Leer into Magic Bounce and valid target. When does Eject Pack activate?
-    if (gBattleStruct->bouncedMoveIsUsed)
+    RecordLastUsedMoveBy(gBattlerAttacker, gCurrentMove);
+    gBattleScripting.moveendState++;
+    return MOVEEND_RESULT_CONTINUE;
+}
+
+static void SortBattlersByRawSpeed(u8 battlers[])
+{
+    for (u32 i = 0; i < gBattlersCount; i++)
     {
-        for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
-            gBattleStruct->moveResultFlags[battler] = gBattleStruct->savedMoveResultFlags[battler];
-        gBattleStruct->bouncedMoveIsUsed = FALSE;
-        gBattlerAttacker = gBattleStruct->attackerBeforeBounce;
-        gBattlerTarget = gBattleStruct->targetBeforeBounce;
-        gBattleScripting.moveendState = 0;
-        gBattleStruct->eventState.atkCanceler = CANCELER_BOUNCED_MOVE;
-        BattleScriptPush(GetMoveBattleScript(gCurrentMove));
-        gBattlescriptCurrInstr = BattleScript_FlushMessageBox;
-        return MOVEEND_RESULT_RUN_SCRIPT;
+        for (u32 j = 0; j < gBattlersCount; j++)
+        {
+            if (gBattleMons[battlers[i]].speed >= gBattleMons[battlers[j]].speed)
+            {
+                u32 temp = battlers[i];
+                battlers[i] = battlers[j];
+                battlers[j] = temp;
+            }
+        }
+    }
+}
+
+static enum MoveEndResult MoveEndBouncedMove(void)
+{
+    if (gBattleStruct->magicBouncePending || gBattleStruct->magicCoatPending)
+    {
+        u8 battlersByRawSpeed[MAX_BATTLERS_COUNT] = {0,1,2,3};
+        enum MoveTarget moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
+
+        if (moveTarget == TARGET_OPPONENTS_FIELD)
+            SortBattlersByRawSpeed(battlersByRawSpeed);
+
+        for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
+        {
+            u32 bounceBattler = battlersByRawSpeed[battler];
+
+            if (gBattleStruct->magicBouncePending & 1u << bounceBattler)
+            {
+                gBattlerAbility = bounceBattler;
+                BattleScriptCall(BattleScript_MagicBounce);
+            }
+            else if (gBattleStruct->magicCoatPending & 1u << bounceBattler)
+            {
+                gEffectBattler = bounceBattler;
+                BattleScriptCall(BattleScript_MagicCoat);
+            }
+            else
+            {
+                continue;
+            }
+
+            if (moveTarget == TARGET_OPPONENTS_FIELD)
+            {
+                gBattleStruct->magicBouncePending = 0;
+                gBattleStruct->magicCoatPending = 0;
+            }
+            else
+            {
+                gBattleStruct->magicBouncePending &= ~(1u << bounceBattler);
+                gBattleStruct->magicCoatPending &= ~(1u << bounceBattler);
+            }
+
+            gBattleStruct->targetBeforeBounce = bounceBattler; // This may become redundant in the future
+            gBattlerTarget = bounceBattler;
+            for (enum BattlerId i = B_BATTLER_0; i < gBattlersCount; i++)
+                gBattleStruct->savedMoveResultFlags[i] = gBattleStruct->moveResultFlags[i];
+            gBattleStruct->bouncedMoveIsUsed = TRUE;
+            return MOVEEND_RESULT_RUN_SCRIPT;
+        }
     }
 
-    RecordLastUsedMoveBy(gBattlerAttacker, gCurrentMove);
+    if (gBattleStruct->bouncedMoveIsUsed)
+    {
+        gBattleStruct->bouncedMoveIsUsed = FALSE;
+        for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+            gBattleStruct->moveResultFlags[battler] = gBattleStruct->savedMoveResultFlags[battler];
+        gBattlerAttacker = gBattleStruct->attackerBeforeBounce;
+        gBattlerTarget = gBattleStruct->targetBeforeBounce;
+    }
+
     gBattleScripting.moveendState++;
     return MOVEEND_RESULT_CONTINUE;
 }
@@ -3974,6 +4006,7 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(void) =
     [MOVEEND_UPDATE_LAST_MOVES] = MoveEndUpdateLastMoves,
     [MOVEEND_MIRROR_MOVE] = MoveEndMirrorMove,
     [MOVEEND_NEXT_TARGET] = MoveEndNextTarget,
+    [MOVEEND_BOUNCED_MOVE] = MoveEndBouncedMove,
     [MOVEEND_HP_THRESHOLD_ITEMS_TARGET] = MoveEndHpThresholdItemsTarget,
     [MOVEEND_MULTIHIT_MOVE] = MoveEndMultihitMove,
     [MOVEEND_DEFROST] = MoveEndDefrost,
@@ -4325,13 +4358,13 @@ static bool32 TryMagicBounce(struct BattleCalcValues *cv)
     if (cv->abilities[cv->battlerDef] != ABILITY_MAGIC_BOUNCE)
         return FALSE;
 
-    gSpecialStatuses[cv->battlerDef].magicBouncePending = TRUE;
+    gBattleStruct->magicBouncePending |= 1u << cv->battlerDef;
     return TRUE;
 }
 
 static bool32 TryMagicCoat(struct BattleCalcValues *cv)
 {
-    if (!MoveCanBeBouncedBack(cv->move) || gSpecialStatuses[cv->battlerDef].magicBouncePending)
+    if (!MoveCanBeBouncedBack(cv->move))
         return FALSE;
 
     if (gBattleStruct->bouncedMoveIsUsed)
@@ -4340,7 +4373,7 @@ static bool32 TryMagicCoat(struct BattleCalcValues *cv)
     if (!gProtectStructs[cv->battlerDef].bounceMove)
         return FALSE;
 
-    gSpecialStatuses[cv->battlerDef].magicCoatPending = TRUE;
+    gBattleStruct->magicCoatPending |= 1u << cv->battlerDef;
     return TRUE;
 }
 

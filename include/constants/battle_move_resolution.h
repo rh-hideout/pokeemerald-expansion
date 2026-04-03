@@ -65,7 +65,6 @@ enum CancelerState
     CANCELER_TOOK_ATTACK,
     CANCELER_TARGET_FAILURE,
     CANCELER_NOT_FULLY_PROTECTED,
-    CANCELER_BOUNCED_MOVE,
     CANCELER_MULTIHIT_MOVES,
     CANCELER_END,
 };
@@ -100,6 +99,7 @@ enum MoveEndState
     MOVEEND_UPDATE_LAST_MOVES,
     MOVEEND_MIRROR_MOVE,
     MOVEEND_NEXT_TARGET, // Everything up until here is handled for each strike of a spread move
+    MOVEEND_BOUNCED_MOVE,
     MOVEEND_HP_THRESHOLD_ITEMS_TARGET, // Activation only during a multi hit move / ability (Parental Bond)
     MOVEEND_MULTIHIT_MOVE,
     MOVEEND_DEFROST,
