@@ -119,7 +119,7 @@ EWRAM_DATA static u8 sAnimBackgroundFadeState = 0;
 EWRAM_DATA u16 gAnimMoveIndex = 0;
 EWRAM_DATA enum BattlerId gBattleAnimAttacker = 0;
 EWRAM_DATA enum BattlerId gBattleAnimTarget = 0;
-EWRAM_DATA u16 gAnimBattlerSpecies[MAX_BATTLERS_COUNT] = {0};
+EWRAM_DATA enum Species gAnimBattlerSpecies[MAX_BATTLERS_COUNT] = {SPECIES_NONE};
 EWRAM_DATA u8 gAnimCustomPanning = 0;
 EWRAM_DATA static bool8 sAnimHideHpBoxes = FALSE;
 
@@ -1000,15 +1000,6 @@ static void Cmd_waitforvisualfinish(void)
     {
         sBattleAnimScriptPtr++;
         sAnimFramesToWait = 0;
-
-        // Assets can be safely unloaded at the end of waitforvisualfinish
-        // since it's guaranteed that nothing is currently using the assets
-        // by definition here.
-        // Only palettes are unloaded since that's what's usually hitting limits
-        // and is very quick to load again if needed.
-        // Unloading tile allocation was tested, but that did measurably increase
-        // the time it took to run animation tests
-        UnloadAllSpritePalettes();
     }
     else
     {

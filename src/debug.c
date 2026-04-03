@@ -209,7 +209,7 @@ struct DebugMenuOption
 
 struct DebugMonData
 {
-    u16 species;
+    enum Species species;
     u8 level;
     bool8 isShiny:1;
     u8 nature:5;
@@ -1183,6 +1183,9 @@ static u8 Debug_CheckToggleFlags(u8 id)
         result = TRUE;
         for (u32 i = 0; i < ARRAY_COUNT(sLocationFlags); i++)
         {
+            if (sLocationFlags[i] == 0) // Location flags for Frlg are set to flag 0 in Emerald and vice versa
+                continue;
+
             if (!FlagGet(sLocationFlags[i]))
             {
                 result = FALSE;
@@ -2422,7 +2425,7 @@ static void DebugAction_FlagsVars_PokedexFlags_All(u8 taskId)
 static void DebugAction_FlagsVars_PokedexFlags_Reset(u8 taskId)
 {
     int boxId, boxPosition, partyId;
-    u16 species;
+    enum Species species;
 
     // Reset Pokedex to emtpy
     memset(&gSaveBlock1Ptr->dexCaught, 0, sizeof(gSaveBlock1Ptr->dexCaught));
@@ -2515,7 +2518,8 @@ static void DebugAction_FlagsVars_RunningShoes(u8 taskId)
 
 static void DebugAction_FlagsVars_ToggleFlyFlags(u8 taskId)
 {
-    if (FlagGet(sLocationFlags[ARRAY_COUNT(sLocationFlags) - 1]))
+    u32 checkedFlag = sLocationFlags[0] == 0 ? sLocationFlags[ARRAY_COUNT(sLocationFlags) - 1] : sLocationFlags[0];
+    if (FlagGet(checkedFlag))
     {
         PlaySE(SE_PC_OFF);
         for (u32 i = 0; i < ARRAY_COUNT(sLocationFlags); i++)
@@ -2784,7 +2788,7 @@ static void ResetMonDataStruct(struct DebugMonData *sDebugMonData)
 #define tIterator   data[7]
 #define tIsEgg      data[8]
 
-static void Debug_Display_SpeciesInfo(u32 species, u32 number, u32 digit, u8 windowId)
+static void Debug_Display_SpeciesInfo(enum Species species, u32 number, u32 digit, u8 windowId)
 {
     u8 *end;
     StringCopy(gStringVar2, gText_DigitIndicator[digit]);
@@ -2945,7 +2949,7 @@ static void DebugAction_Give_Pokemon_SelectId(u8 taskId)
     {
         PlaySE(SE_SELECT);
         Debug_HandleInput_Numeric(taskId, 1, NUM_SPECIES - 1, DEBUG_NUMBER_DIGITS_ITEMS);
-        u32 species = gTasks[taskId].tInput;
+        enum Species species = gTasks[taskId].tInput;
         if (!IsSpeciesEnabled(species))
             species = SPECIES_NONE;
         Debug_Display_SpeciesInfo(species, gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
@@ -3503,7 +3507,7 @@ static void DebugAction_Give_Pokemon_ComplexCreateMon(u8 taskId) //https://githu
     u8 iv_val;
     u8 EVs[NUM_STATS];
     u8 ev_val;
-    u16 species     = sDebugMonData->species;
+    enum Species species = sDebugMonData->species;
     u8 level        = sDebugMonData->level;
     bool8 isShiny   = sDebugMonData->isShiny;
     u8 nature       = sDebugMonData->nature;
@@ -3746,7 +3750,7 @@ static void DebugAction_PCBag_Fill_PCBoxes_Fast(u8 taskId) //Credit: Sierraffini
 {
     int boxId, boxPosition;
     struct BoxPokemon boxMon;
-    u16 species = SPECIES_BULBASAUR;
+    enum Species species = SPECIES_BULBASAUR;
     u8 speciesName[POKEMON_NAME_LENGTH + 1];
 
     CreateBoxMon(&boxMon, species, 100, Random32(), OTID_STRUCT_PLAYER_ID);
@@ -3777,7 +3781,7 @@ static void DebugAction_PCBag_Fill_PCBoxes_Slow(u8 taskId)
 {
     int boxId, boxPosition;
     struct BoxPokemon boxMon;
-    u32 species = SPECIES_BULBASAUR;
+    enum Species species = SPECIES_BULBASAUR;
     bool8 spaceAvailable = FALSE;
 
     for (boxId = 0; boxId < TOTAL_BOXES_COUNT; boxId++)
@@ -3853,8 +3857,9 @@ static void DebugAction_PCBag_Fill_PocketBerries(u8 taskId)
 {
     enum Item itemId;
 
-    for (itemId = FIRST_BERRY_INDEX; itemId < LAST_BERRY_INDEX; itemId++)
+    for (enum BerryId berryId = 1; berryId < NUM_BERRIES; berryId++)
     {
+        itemId = BerryTypeToItemId(berryId);
         if (CheckBagHasSpace(itemId, MAX_BAG_ITEM_CAPACITY))
             AddBagItem(itemId, MAX_BAG_ITEM_CAPACITY);
     }
@@ -4686,7 +4691,7 @@ static void DebugAction_Party_HealParty(u8 taskId)
 
 void DebugNative_GetAbilityNames(void)
 {
-    u32 species = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPECIES);
+    enum Species species = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPECIES);
     StringCopy(gStringVar1, gAbilitiesInfo[GetAbilityBySpecies(species, 0)].name);
     StringCopy(gStringVar2, gAbilitiesInfo[GetAbilityBySpecies(species, 1)].name);
     StringCopy(gStringVar3, gAbilitiesInfo[GetAbilityBySpecies(species, 2)].name);

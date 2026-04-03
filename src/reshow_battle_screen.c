@@ -136,7 +136,7 @@ static void CB2_ReshowBattleScreenAfterMenu(void)
     case 19:
         {
             enum BattlerId opponentBattler;
-            u16 species;
+            enum Species species;
 
             LoadAndCreateEnemyShadowSprites();
 
@@ -282,9 +282,9 @@ static bool8 LoadBattlerSpriteGfx(enum BattlerId battler)
                 BattleLoadSubstituteOrMonSpriteGfx(battler, FALSE);
         }
         else if (gBattleTypeFlags & BATTLE_TYPE_SAFARI && position == B_POSITION_PLAYER_LEFT)
-            DecompressTrainerBackPic((gSaveBlock2Ptr->playerGender == FEMALE) ? TRAINER_BACK_PIC_PLAYER_FEMALE : TRAINER_BACK_PIC_PLAYER_MALE, battler);
+            LoadSpritePalette(&gTrainerBacksprites[(gSaveBlock2Ptr->playerGender == FEMALE) ? TRAINER_BACK_PIC_PLAYER_FEMALE : TRAINER_BACK_PIC_PLAYER_MALE].palette);
         else if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL && position == B_POSITION_PLAYER_LEFT)
-            DecompressTrainerBackPic(CATCH_TUTORIAL_TRAINER_PIC_BACK, battler);
+            LoadSpritePalette(&gTrainerBacksprites[CATCH_TUTORIAL_TRAINER_PIC_BACK].palette);
         else if (!gBattleSpritesDataPtr->battlerData[battler].behindSubstitute)
             BattleLoadMonSpriteGfx(GetBattlerMon(battler), battler);
         else
@@ -314,9 +314,11 @@ void CreateBattlerSprite(enum BattlerId battler)
             struct Pokemon *mon = GetBattlerMon(battler);
             if (GetMonData(mon, MON_DATA_HP) == 0)
                 return;
+            if (gBattleStruct->battlerState[battler].notOnField) // Don't create sprite for a mon that has switched out
+                return;
             if (gBattleScripting.monCaught) // Don't create opponent sprite if it has been caught.
                 return;
-            u32 species = GetMonData(mon, MON_DATA_SPECIES);
+            enum Species species = GetMonData(mon, MON_DATA_SPECIES);
 
             SetMultiuseSpriteTemplateToPokemon(species, position);
             gBattlerSpriteIds[battler] = CreateSprite(&gMultiuseSpriteTemplate, GetBattlerSpriteCoord(battler, BATTLER_COORD_X_2), posY, GetBattlerSpriteSubpriority(battler));
@@ -353,7 +355,10 @@ void CreateBattlerSprite(enum BattlerId battler)
             struct Pokemon *mon = GetBattlerMon(battler);
             if (!IsValidForBattle(mon))
                 return;
-            u32 species = GetMonData(mon, MON_DATA_SPECIES);
+            if (gBattleStruct->battlerState[battler].notOnField) // Don't create sprite for a mon that has switched out
+                return;
+
+            enum Species species = GetMonData(mon, MON_DATA_SPECIES);
 
             SetMultiuseSpriteTemplateToPokemon(species, position);
             gBattlerSpriteIds[battler] = CreateSprite(&gMultiuseSpriteTemplate, GetBattlerSpriteCoord(battler, BATTLER_COORD_X_2), posY, GetBattlerSpriteSubpriority(battler));

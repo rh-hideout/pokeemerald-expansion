@@ -73,7 +73,8 @@
 
 /* Same as INVOKE_WITH but uses UNPACK_B to unpack arguments and only applies macro to args if there are any. */
 #define INVOKE_WITH_B(macro, args, ...) INVOKE_B(macro, UNPACK_B(args) __VA_OPT__(, __VA_ARGS__))
-#define INVOKE_B(macro, ...) __VA_OPT__(macro(__VA_ARGS__))
+#define INVOKE_B(macro, ...) INVOKE_B_(macro, __VA_ARGS__)
+#define INVOKE_B_(macro, ...) __VA_OPT__(macro(__VA_ARGS__))
 
 /* Recursive macros.
  * Based on https://www.scs.stanford.edu/~dm/blog/va-opt.html

@@ -652,13 +652,13 @@ void BattleTv_SetDataBasedOnAnimation(u8 animationId)
 
 void TryPutLinkBattleTvShowOnAir(void)
 {
-    u16 playerBestSpecies = 0, opponentBestSpecies = 0;
+    enum Species playerBestSpecies = 0, opponentBestSpecies = 0;
     s16 playerBestSum = 0, opponentBestSum = SHRT_MAX;
     u8 playerBestMonId = 0, opponentBestMonId = 0;
     struct BattleTvMovePoints *movePoints = NULL;
     u8 countPlayer = 0, countOpponent = 0;
     s16 sum = 0;
-    u16 species = SPECIES_NONE;
+    enum Species species = SPECIES_NONE;
     enum Move move = MOVE_NONE;
     s32 i, j;
     int zero = 0, one = 1; //needed for matching
@@ -870,6 +870,10 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
             case MOVE_EFFECT_RECHARGE:
                 if (additionalEffect->self == TRUE)
                     baseFromEffect += 4;
+                break;
+            case MOVE_EFFECT_UPROAR:
+                if (additionalEffect->self == TRUE)
+                    baseFromEffect += 3;
                 break;
             case MOVE_EFFECT_ATK_DEF_DOWN:
             case MOVE_EFFECT_ATK_MINUS_2:
@@ -1279,7 +1283,7 @@ static void TrySetBattleSeminarShow(void)
         powerOverride = 0;
         if (ShouldCalculateDamage(gCurrentMove, &dmgByMove[i], &powerOverride))
         {
-            struct BattleContext ctx = {0};
+            struct DamageContext ctx = {0};
             ctx.battlerAtk = gBattlerAttacker;
             ctx.battlerDef = gBattlerTarget;
             ctx.move = ctx.chosenMove = gCurrentMove;
@@ -1299,7 +1303,7 @@ static void TrySetBattleSeminarShow(void)
     {
         if (i != gMoveSelectionCursor[gBattlerAttacker] && dmgByMove[i] > dmgByMove[gMoveSelectionCursor[gBattlerAttacker]])
         {
-            u16 opponentSpecies, playerSpecies;
+            enum Species opponentSpecies, playerSpecies;
             s32 bestMoveId;
 
             if (gMoveSelectionCursor[gBattlerAttacker] != 0)

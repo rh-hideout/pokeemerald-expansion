@@ -25,6 +25,7 @@
         },
     },
 #line 9
+#line 17
     [DIFFICULTY_NORMAL][PARTNER_STEVEN_TEST] =
     {
 #line 10
@@ -45,21 +46,21 @@
         .party = (const struct TrainerMon[])
         {
             {
-#line 18
+#line 19
             .species = SPECIES_METANG,
             .gender = TRAINER_MON_RANDOM_GENDER,
-#line 22
+#line 23
             .ev = TRAINER_PARTY_EVS(0, 252, 252, 0, 6, 0),
-#line 21
+#line 22
             .iv = TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31),
-#line 20
+#line 21
             .lvl = 42,
             .ball = POKEBALL_COUNT,
-#line 19
+#line 20
             .nature = NATURE_BRAVE,
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             .moves = {
-#line 23
+#line 24
                 MOVE_LIGHT_SCREEN,
                 MOVE_PSYCHIC,
                 MOVE_REFLECT,
@@ -67,21 +68,21 @@
             },
             },
             {
-#line 28
+#line 29
             .species = SPECIES_SKARMORY,
             .gender = TRAINER_MON_RANDOM_GENDER,
-#line 32
+#line 33
             .ev = TRAINER_PARTY_EVS(252, 0, 0, 0, 6, 252),
-#line 31
+#line 32
             .iv = TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31),
-#line 30
+#line 31
             .lvl = 43,
             .ball = POKEBALL_COUNT,
-#line 29
+#line 30
             .nature = NATURE_IMPISH,
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             .moves = {
-#line 33
+#line 34
                 MOVE_TOXIC,
                 MOVE_AERIAL_ACE,
                 MOVE_PROTECT,
@@ -89,21 +90,21 @@
             },
             },
             {
-#line 38
+#line 39
             .species = SPECIES_AGGRON,
             .gender = TRAINER_MON_RANDOM_GENDER,
-#line 42
+#line 43
             .ev = TRAINER_PARTY_EVS(0, 252, 0, 0, 252, 6),
-#line 41
+#line 42
             .iv = TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31),
-#line 40
+#line 41
             .lvl = 44,
             .ball = POKEBALL_COUNT,
-#line 39
+#line 40
             .nature = NATURE_ADAMANT,
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
             .moves = {
-#line 43
+#line 44
                 MOVE_THUNDER,
                 MOVE_PROTECT,
                 MOVE_SOLAR_BEAM,
@@ -112,67 +113,34 @@
             },
         },
     },
-#line 48
-#line 55
-    [DIFFICULTY_NORMAL][2] =
-    {
 #line 49
-        .trainerName = _("Test2"),
-#line 50
-        .trainerClass = TRAINER_CLASS_RIVAL,
-#line 51
-        .trainerPic = TRAINER_PIC_FRONT_STEVEN,
-#line 52
-        .gender = TRAINER_GENDER_MALE,
-#line 53
-        .encounterMusic = TRAINER_ENCOUNTER_MUSIC_MALE,
-#line 54
-        .trainerBackPic = TRAINER_PIC_BACK_STEVEN,
-        .partySize = 1,
-        .party = (const struct TrainerMon[])
-        {
-            {
 #line 57
-            .species = SPECIES_MEWTWO,
-            .gender = TRAINER_MON_RANDOM_GENDER,
-#line 59
-            .iv = TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31),
-#line 58
-            .lvl = 50,
-            .ball = POKEBALL_COUNT,
-            .nature = NATURE_HARDY,
-            .dynamaxLevel = MAX_DYNAMAX_LEVEL,
-            },
-        },
-    },
-#line 60
-#line 68
-    [DIFFICULTY_EASY][2] =
+    [DIFFICULTY_EASY][PARTNER_STEVEN_TEST] =
     {
-#line 61
+#line 50
         .trainerName = _("Test2"),
-#line 62
+#line 51
         .trainerClass = TRAINER_CLASS_RIVAL,
-#line 63
+#line 52
         .trainerPic = TRAINER_PIC_FRONT_STEVEN,
-#line 64
+#line 53
         .gender = TRAINER_GENDER_MALE,
-#line 65
+#line 54
         .encounterMusic = TRAINER_ENCOUNTER_MUSIC_MALE,
-#line 67
+#line 56
         .battleType = TRAINER_BATTLE_TYPE_SINGLES,
-#line 66
+#line 55
         .trainerBackPic = TRAINER_PIC_BACK_STEVEN,
         .partySize = 1,
         .party = (const struct TrainerMon[])
         {
             {
-#line 70
+#line 59
             .species = SPECIES_METAPOD,
             .gender = TRAINER_MON_RANDOM_GENDER,
-#line 72
+#line 61
             .iv = TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31),
-#line 71
+#line 60
             .lvl = 1,
             .ball = POKEBALL_COUNT,
             .nature = NATURE_HARDY,
@@ -180,34 +148,34 @@
             },
         },
     },
-#line 73
-#line 81
-    [DIFFICULTY_HARD][2] =
+#line 62
+#line 70
+    [DIFFICULTY_HARD][PARTNER_STEVEN_TEST] =
     {
-#line 74
+#line 63
         .trainerName = _("Test2"),
-#line 75
+#line 64
         .trainerClass = TRAINER_CLASS_RIVAL,
-#line 76
+#line 65
         .trainerPic = TRAINER_PIC_FRONT_STEVEN,
-#line 77
+#line 66
         .gender = TRAINER_GENDER_MALE,
-#line 78
+#line 67
         .encounterMusic = TRAINER_ENCOUNTER_MUSIC_MALE,
-#line 80
+#line 69
         .battleType = TRAINER_BATTLE_TYPE_SINGLES,
-#line 79
+#line 68
         .trainerBackPic = TRAINER_PIC_BACK_STEVEN,
         .partySize = 1,
         .party = (const struct TrainerMon[])
         {
             {
-#line 83
+#line 72
             .species = SPECIES_ARCEUS,
             .gender = TRAINER_MON_RANDOM_GENDER,
-#line 85
+#line 74
             .iv = TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31),
-#line 84
+#line 73
             .lvl = 99,
             .ball = POKEBALL_COUNT,
             .nature = NATURE_HARDY,

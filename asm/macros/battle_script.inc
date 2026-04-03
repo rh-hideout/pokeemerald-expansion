@@ -738,10 +738,6 @@
 	.byte B_SCR_OP_NORMALISEBUFFS
 	.endm
 
-	.macro setbide
-	.byte B_SCR_OP_SETBIDE
-	.endm
-
 	.macro twoturnmoveschargestringandanimation
 	.byte B_SCR_OP_TWOTURNMOVESCHARGESTRINGANDANIMATION
 	.4byte 1f @animation then attack string
@@ -794,10 +790,6 @@
 	.byte B_SCR_OP_CHECKNONVOLATILETRIGGER
 	.2byte \nonVolatile
 	.4byte \failInstr
-	.endm
-
-	.macro copybidedmg
-	.byte B_SCR_OP_COPYBIDEDMG
 	.endm
 
 	.macro animatewildpokemonafterfailedpokeball battler:req
@@ -1198,26 +1190,26 @@
     .byte \battler
 	.endm
 
-	.macro tryanystatchange jumpInstr:req
-	.byte B_SCR_OP_TRYANYSTATCHANGE
-	.4byte \jumpInstr
-	.endm
+    .macro tryanystatchange jumpInstr:req
+    .byte B_SCR_OP_TRYANYSTATCHANGE
+    .4byte \jumpInstr
+    .endm
 
-	.macro trystatchange
-	.byte B_SCR_OP_TRYSTATCHANGE
-	.endm
+    .macro trystatchange
+    .byte B_SCR_OP_TRYSTATCHANGE
+    .endm
 
-	.macro trynonmovestatchange battler:req statChangeFlags:req
-	.byte B_SCR_OP_TRYNONMOVESTATCHANGE
+    .macro trynonmovestatchange battler:req statChangeFlags:req
+    .byte B_SCR_OP_TRYNONMOVESTATCHANGE
     .byte \battler
     .2byte \statChangeFlags
-	.endm
+    .endm
 
-	.macro trybattlerstatchange battler:req statChangeFlags:req
-	.byte B_SCR_OP_TRYBATTLERSTATCHANGE
+    .macro trybattlerstatchange battler:req statChangeFlags:req
+    .byte B_SCR_OP_TRYBATTLERSTATCHANGE
     .byte \battler
     .2byte \statChangeFlags
-	.endm
+    .endm
 
 	.macro callnative func:req
 	.byte B_SCR_OP_CALLNATIVE
@@ -2113,8 +2105,9 @@
 	callnative BS_SetAttackerToStickyWebUser
 	.endm
 
-	.macro setpoltergeistmessage
-	callnative BS_SetPoltergeistMessage
+	.macro cutonethirdhpandraisestats failInstr:req
+	callnative BS_CutOneThirdHpAndRaiseStats
+	.4byte \failInstr
 	.endm
 
 	.macro tryresetnegativestatstages
@@ -2213,4 +2206,8 @@
 	callnative BS_TryActivateAbilityWithAbilityShield
 	.byte \battler
 	.byte \switchedItems
+	.endm
+
+	.macro trywakebattlersuproar
+	callnative BS_TryWakeBattlersUproar
 	.endm

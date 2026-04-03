@@ -1,5 +1,5 @@
-#ifndef GUARD_CONSTANTS_GENERATIONAL_CHANGES_H
-#define GUARD_CONSTANTS_GENERATIONAL_CHANGES_H
+#ifndef GUARD_CONSTANTS_CONFIG_CHANGES_H
+#define GUARD_CONSTANTS_CONFIG_CHANGES_H
 
 /* Config definitions */
 #define BATTLE_CONFIG_DEFINITIONS(F) \
@@ -50,11 +50,11 @@
     /* Turn settings */ \
     F(B_BINDING_TURNS,             bindingTurns,            (u32, GEN_COUNT - 1)) \
     F(B_UPROAR_TURNS,              uproarTurns,             (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
-    F(B_UPROAR_IGNORE_SOUNDPROOF,  uproarIgnoreSoundproof,  (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_DISABLE_TURNS,             disableTurns,            (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_TAILWIND_TURNS,            tailwindTurns,           (u32, GEN_COUNT - 1)) \
     F(B_SLEEP_TURNS,               sleepTurns,              (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_TAUNT_TURNS,               tauntTurns,              (u32, GEN_COUNT - 1)) \
+    F(B_ENCORE_TURNS,              encoreTurns,             (u32, GEN_COUNT - 1)) \
     F(B_SPORT_TURNS,               sportTurns,              (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_MEGA_EVO_TURN_ORDER,       megaEvoTurnOrder,        (u32, GEN_COUNT - 1)) \
     F(B_RECALC_TURN_AFTER_ACTIONS, recalcTurnAfterActions,  (u32, GEN_COUNT - 1)) \
@@ -139,6 +139,10 @@
     F(B_RAGE_BUILDS,               rageBuilds,              (u32, GEN_COUNT - 1)) \
     F(B_CHECK_USER_FAILURE,        checkUserFailure,        (u32, GEN_COUNT - 1)) \
     F(B_ABSORB_MESSAGE,            absorbMessge,            (u32, GEN_COUNT - 1)) \
+    F(B_COUNTER_MIRROR_COAT_ALLY,  counterMirrorCoatAlly,   (u32, GEN_COUNT - 1)) \
+    F(B_COUNTER_TRY_HIT_PARTNER,   counterTryHitPartner,    (u32, GEN_COUNT - 1)) \
+    F(B_UPROAR,                    uproar,                  (u32, GEN_COUNT - 1)) \
+    F(B_UPROAR_IGNORE_SOUNDPROOF,  uproarIgnoreSoundproof,  (u32, GEN_COUNT - 1)) \
     /* Ability settings */ \
     F(B_GALE_WINGS,                galeWings,               (u32, GEN_COUNT - 1)) \
     F(B_STANCE_CHANGE_FAIL,        stanceChangeFail,        (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
@@ -218,8 +222,6 @@
     F(B_OBEDIENCE_MECHANICS,       obedienceMechanics,      (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_USE_FROSTBITE,             useFrostbite,            (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_SANDSTORM_SOLAR_BEAM,      standstormSolarBeam,     (u32, GEN_COUNT - 1)) \
-    F(B_COUNTER_MIRROR_COAT_ALLY,  counterMirrorCoatAlly,   (u32, GEN_COUNT - 1)) \
-    F(B_COUNTER_TRY_HIT_PARTNER,   counterTryHitPartner,    (u32, GEN_COUNT - 1)) \
 
 
 #define POKEMON_CONFIG_DEFINITIONS(F) \
@@ -232,6 +234,7 @@
     F(POKERUS_WEAK_VARIANT,      pokerusWeakVariant,      (u32, TRUE))          \
 
 #define AI_CONFIG_DEFINITIONS(F) \
+    F(AI_ROLL_ATTACKING,         aiRollAttacking,          (u32, AI_ROLL_TYPE_COUNT - 1)) \
 
 #define GET_CONFIG_MAXIMUM(_typeMaxValue, ...) INVOKE_WITH_B(GET_CONFIG_MAXIMUM_, _typeMaxValue)
 #define GET_CONFIG_MAXIMUM_(_type, ...) FIRST(__VA_OPT__(FIRST(__VA_ARGS__),) MAX_BITS((sizeof(_type) * 8)))
@@ -246,4 +249,4 @@ enum ConfigTag
     CONFIG_COUNT
 };
 
-#endif // GUARD_CONSTANTS_GENERATIONAL_CHANGES_H
+#endif // GUARD_CONSTANTS_CONFIG_CHANGES_H

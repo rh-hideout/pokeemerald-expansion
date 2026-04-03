@@ -24,7 +24,6 @@ For a given species, a move is considered teachable to that species if:
 from itertools import chain
 from textwrap import dedent
 
-import glob
 import json
 import pathlib
 import re
@@ -32,9 +31,9 @@ import sys
 import typing
 
 
-CONFIG_ENABLED_PAT = re.compile(r"#define P_LEARNSET_HELPER_TEACHABLE\s+(?P<cfg_val>[^ ]*)")
-ALPHABETICAL_ORDER_ENABLED_PAT = re.compile(r"#define HGSS_SORT_TMS_BY_NUM\s+(?P<cfg_val>[^ ]*)")
-TM_LITTERACY_PAT = re.compile(r"#define P_TM_LITERACY\s+GEN_(?P<cfg_val>[^ ]*)")
+CONFIG_ENABLED_PAT = re.compile(r"^#define P_LEARNSET_HELPER_TEACHABLE\s+(?P<cfg_val>[^ ]*)", flags=re.MULTILINE)
+ALPHABETICAL_ORDER_ENABLED_PAT = re.compile(r"^#define HGSS_SORT_TMS_BY_NUM\s+(?P<cfg_val>[^ ]*)", flags=re.MULTILINE)
+TM_LITERACY_PAT = re.compile(r"^#define P_TM_LITERACY\s+GEN_(?P<cfg_val>[^ ]*)", flags=re.MULTILINE)
 TMHM_MACRO_PAT = re.compile(r"F\((\w+)\)")
 SNAKIFY_PAT = re.compile(r"(?!^)([A-Z]+)")
 
@@ -64,7 +63,7 @@ def extract_tm_litteracy_config() -> bool:
     config = False
     with open("./include/config/pokemon.h", "r") as cfg_pokemon_fp:
         cfg_pokemon = cfg_pokemon_fp.read()
-        cfg_defined = TM_LITTERACY_PAT.search(cfg_pokemon)
+        cfg_defined = TM_LITERACY_PAT.search(cfg_pokemon)
         if cfg_defined:
             cfg_val = cfg_defined.group("cfg_val")
             if ((cfg_val == "LATEST") or (int(cfg_val) > 6)):
@@ -193,14 +192,13 @@ def main():
         print(__doc__, file=sys.stderr)
         quit(1)
 
-    if len(sys.argv) == 2:
-        SOURCE_DIR = pathlib.Path(sys.argv[1])
-    elif len(sys.argv) == 3:
+    if len(sys.argv) == 3:
         if sys.argv[1] != "--tutors":
             print("Unknown make_teachables mode", file=sys.stderr)
             quit(1)
         tutor_mode = True
-        SOURCE_DIR = pathlib.Path(sys.argv[2])
+
+    SOURCE_DIR = pathlib.Path(sys.argv[-1])
 
     with open("src/data/pokemon/special_movesets.json", "r") as file:
         special_movesets = json.load(file)
@@ -219,7 +217,6 @@ def main():
     assert SOURCE_TEACHING_TYPES_JSON.is_file(), f"{SOURCE_TEACHING_TYPES_JSON=} is not a file"
 
     repo_tms = list(extract_repo_tms())
-    order_alphabetically = False
 
     with open("./include/config/pokedex_plus_hgss.h", "r") as cfg_pokemon_fp:
         cfg_pokemon = cfg_pokemon_fp.read()

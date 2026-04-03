@@ -4,14 +4,14 @@ GAME_CODE    ?= BPEE
 BUILD_NAME   ?= emerald
 MAP_VERSION  ?= emerald
 
-ifeq (firered,$(MAKECMDGOALS))
+ifeq (firered, $(or $(BUILD), $(MAKECMDGOALS)))
   	GAME_VERSION 	:= FIRERED
 	TITLE       	:= POKEMON FIRE
 	GAME_CODE   	:= BPRE
 	BUILD_NAME  	:= firered
 	MAP_VERSION 	:= firered
 else
-ifeq (leafgreen,$(MAKECMDGOALS))
+ifeq (leafgreen, $(or $(BUILD), $(MAKECMDGOALS)))
 	GAME_VERSION 	:= LEAFGREEN
 	TITLE       	:= POKEMON LEAF
 	GAME_CODE   	:= BPGE
@@ -529,7 +529,7 @@ ifneq ($(NODEP),1)
 endif
 
 $(DATA_ASM_BUILDDIR)/%.o: $(DATA_ASM_SUBDIR)/%.s
-	$(PREPROC) $< charmap.txt | $(CPP) $(CPPFLAGS) $(INCLUDE_SCANINC_ARGS) - | $(PREPROC) -ie $< charmap.txt | $(AS) $(ASFLAGS) -o $@
+	$(PREPROC) -s $< charmap.txt | $(CPP) $(CPPFLAGS) $(INCLUDE_SCANINC_ARGS) - | $(PREPROC) -ie $< charmap.txt | $(AS) $(ASFLAGS) -o $@
 
 $(DATA_ASM_BUILDDIR)/%.d: $(DATA_ASM_SUBDIR)/%.s
 	$(SCANINC) -M $@ $(INCLUDE_SCANINC_ARGS) -I "" $<
