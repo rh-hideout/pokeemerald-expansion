@@ -6785,7 +6785,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "Causes an uproar for 2 to 5\n"
         #endif
             "turns and prevents sleep."),
-        .effect = EFFECT_UPROAR,
+        .effect = EFFECT_HIT,
         .power = B_UPDATED_MOVE_DATA >= GEN_5 ? 90 : 50,
         .type = TYPE_NORMAL,
         .accuracy = 100,
