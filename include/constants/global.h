@@ -25,6 +25,7 @@
 #include "config/follower_npc.h"
 #include "config/general.h"
 #include "config/item.h"
+#include "config/map_preview_screen.h"
 #include "config/overworld.h"
 #include "config/pokemon.h"
 #include "config/summary_screen.h"

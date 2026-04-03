@@ -318,6 +318,8 @@ void CreateBattlerSprite(enum BattlerId battler)
             struct Pokemon *mon = GetBattlerMon(battler);
             if (GetMonData(mon, MON_DATA_HP) == 0)
                 return;
+            if (gBattleStruct->battlerState[battler].notOnField) // Don't create sprite for a mon that has switched out
+                return;
             if (gBattleScripting.monCaught) // Don't create opponent sprite if it has been caught.
                 return;
             enum Species species = GetMonData(mon, MON_DATA_SPECIES);
@@ -357,6 +359,9 @@ void CreateBattlerSprite(enum BattlerId battler)
             struct Pokemon *mon = GetBattlerMon(battler);
             if (!IsValidForBattle(mon))
                 return;
+            if (gBattleStruct->battlerState[battler].notOnField) // Don't create sprite for a mon that has switched out
+                return;
+
             enum Species species = GetMonData(mon, MON_DATA_SPECIES);
 
             SetMultiuseSpriteTemplateToPokemon(species, position);

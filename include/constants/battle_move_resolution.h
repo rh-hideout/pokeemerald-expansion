@@ -14,8 +14,8 @@ enum Obedience
 enum CancelerResult
 {
     CANCELER_RESULT_SUCCESS,
-    CANCELER_RESULT_BREAK, // Runs script. Increments state
-    CANCELER_RESULT_PAUSE, // Runs script. Does not increment state
+    CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT, // Runs script. Increments state
+    CANCELER_RESULT_RUN_SCRIPT, // Runs script. Does not increment state
     CANCELER_RESULT_FAILURE, // Move failed, jump to script that handles the failure
 };
 
@@ -110,8 +110,8 @@ enum MoveEndState
     MOVEEND_COLOR_CHANGE, // Color Change / Berserk / Anger Shell
     MOVEEND_KEE_MARANGA_HP_THRESHOLD_ITEM_TARGET,
     MOVEEND_CARD_BUTTON, // Red Card / Eject Button
-    MOVEEND_LIFE_ORB_SHELL_BELL,
     MOVEEND_FORM_CHANGE,
+    MOVEEND_LIFE_ORB_SHELL_BELL,
     MOVEEND_EMERGENCY_EXIT,
     MOVEEND_HIT_ESCAPE,
     MOVEEND_PICKPOCKET,
@@ -122,7 +122,9 @@ enum MoveEndState
     MOVEEND_THIRD_MOVE_BLOCK,
     MOVEEND_RAMPAGE,
     MOVEEND_CONFUSION_AFTER_SKY_DROP, // If target was previously rampaging, it should be confused when dropped
+    MOVEEND_SPRAY_LEPPA_BLUNDER, // Throat Spray, Leppa Berry, Blunder Policy
     MOVEEND_EJECT_PACK,
+    MOVEEND_SEND_OUT_REPLACEMENTS, // For all non-forced switching effects
     MOVEEND_CLEAR_BITS,
     MOVEEND_DANCER,
     MOVEEND_PURSUIT_NEXT_ACTION,

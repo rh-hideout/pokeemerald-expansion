@@ -279,3 +279,21 @@ SINGLE_BATTLE_TEST("Emergency Exit will trigger due to Jump Kick recoil")
     }
 }
 
+SINGLE_BATTLE_TEST("Emergency Exit activates and attacker's Throat Spray activates before replacement enters")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_THROAT_SPRAY) == HOLD_EFFECT_THROAT_SPRAY);
+        ASSUME(IsSoundMove(MOVE_HYPER_VOICE));
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_THROAT_SPRAY); }
+        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); HP(251); MaxHP(500); }
+        OPPONENT(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_HYPER_VOICE); SEND_OUT(opponent, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, player);
+        HP_BAR(opponent);
+        ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
+    }
+}

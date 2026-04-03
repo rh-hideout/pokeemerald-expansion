@@ -686,17 +686,20 @@ DOUBLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mo
 {
     GIVEN {
         FLAG_SET(B_FLAG_SLEEP_CLAUSE);
+        WITH_CONFIG(B_UPROAR, GEN_5);
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
-        ASSUME(GetMoveEffect(MOVE_UPROAR) == EFFECT_UPROAR);
+        ASSUME(MoveHasAdditionalEffectSelf(MOVE_UPROAR, MOVE_EFFECT_UPROAR));
         PLAYER(SPECIES_ZIGZAGOON);
         PLAYER(SPECIES_ZIGZAGOON);
         PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_CELEBRATE); }
         OPPONENT(SPECIES_ZIGZAGOON);
         OPPONENT(SPECIES_ZIGZAGOON);
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_SPORE, target:opponentLeft); MOVE(playerRight, MOVE_UPROAR); MOVE(opponentRight, MOVE_ROAR, target:playerRight); }
-        TURN { MOVE(playerLeft, MOVE_SPORE, target:opponentLeft); }
+        TURN { MOVE(playerLeft, MOVE_SPORE, target: opponentLeft);
+               MOVE(playerRight, MOVE_UPROAR);
+               MOVE(opponentRight, MOVE_ROAR, target: playerRight); }
+        TURN { MOVE(playerLeft, MOVE_SPORE, target: opponentLeft); }
     } SCENE {
         MESSAGE("Zigzagoon used Spore!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, playerLeft);
@@ -706,7 +709,7 @@ DOUBLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mo
         MESSAGE("Zigzagoon used Uproar!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_UPROAR, playerRight);
         MESSAGE("Zigzagoon caused an uproar!");
-        MESSAGE("The uproar woke the opposing Zigzagoon!");
+        MESSAGE("The opposing Zigzagoon woke up!");
         STATUS_ICON(opponentLeft, sleep: FALSE);
         MESSAGE("The opposing Zigzagoon used Roar!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROAR, opponentRight);

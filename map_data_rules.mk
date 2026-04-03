@@ -43,7 +43,7 @@ $(INCLUDECONSTS_OUTDIR)/map_event_ids.h: $(MAP_JSONS)
 	@echo "$(MAPJSON) event_constants emerald <MAP_JSONS> $(INCLUDECONSTS_OUTDIR)/map_event_ids.h"
 
 .map_version : FORCE
-	(echo "$(MAP_VERSION)" | cmp $@ -) || echo "$(MAP_VERSION)" > .map_version
+	@(echo "$(MAP_VERSION)" | cmp $@ -) || echo "$(MAP_VERSION)" > .map_version
 
 FORCE:
 .PHONY : FORCE
