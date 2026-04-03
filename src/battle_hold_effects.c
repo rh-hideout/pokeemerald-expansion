@@ -419,7 +419,7 @@ static enum ItemEffect TryMentalHerb(enum BattlerId battler)
     if (gBattleMons[battler].volatiles.infatuation)
     {
         gBattleMons[battler].volatiles.infatuation = 0;
-        gBattleCommunication[MULTISTRING_CHOOSER] |= 1 << 0;
+        gBattleCommunication[MULTISTRING_CHOOSER] |= 1 << B_MSG_MENTALHERBCURE_INFATUATION;
         effect = ITEM_EFFECT_OTHER;
     }
     if (B_MENTAL_HERB >= GEN_5)
@@ -428,7 +428,7 @@ static enum ItemEffect TryMentalHerb(enum BattlerId battler)
         if (gBattleMons[battler].volatiles.torment == TRUE)
         {
             gBattleMons[battler].volatiles.torment = FALSE;
-            gBattleCommunication[MULTISTRING_CHOOSER] |= 1 << 1;
+            gBattleCommunication[MULTISTRING_CHOOSER] |= 1 << B_MSG_MENTALHERBCURE_TORMENT;
             effect = ITEM_EFFECT_OTHER;
         }
         // Check disable
@@ -436,14 +436,14 @@ static enum ItemEffect TryMentalHerb(enum BattlerId battler)
         {
             gBattleMons[battler].volatiles.disableTimer = 0;
             gBattleMons[battler].volatiles.disabledMove = 0;
-            gBattleCommunication[MULTISTRING_CHOOSER] |= 1 << 2;
+            gBattleCommunication[MULTISTRING_CHOOSER] |= 1 << B_MSG_MENTALHERBCURE_DISABLE;
             effect = ITEM_EFFECT_OTHER;
         }
         // Check heal block
         if (gBattleMons[battler].volatiles.healBlock)
         {
             gBattleMons[battler].volatiles.healBlock = FALSE;
-            gBattleCommunication[MULTISTRING_CHOOSER] |= 1 << 3;
+            gBattleCommunication[MULTISTRING_CHOOSER] |= 1 << B_MSG_MENTALHERBCURE_HEALBLOCK;
             effect = ITEM_EFFECT_OTHER;
         }
         // Check encore
@@ -451,20 +451,18 @@ static enum ItemEffect TryMentalHerb(enum BattlerId battler)
         {
             gBattleMons[battler].volatiles.encoredMove = 0;
             gBattleMons[battler].volatiles.encoreTimer = 0;
-            gBattleCommunication[MULTISTRING_CHOOSER] |= 1 << 4;
+            gBattleCommunication[MULTISTRING_CHOOSER] |= 1 << B_MSG_MENTALHERBCURE_ENCORE;
             effect = ITEM_EFFECT_OTHER;
         }
         // Check taunt
         if (gBattleMons[battler].volatiles.tauntTimer != 0)
         {
             gBattleMons[battler].volatiles.tauntTimer = 0;
-            gBattleCommunication[MULTISTRING_CHOOSER] |= 1 << 5;
+            gBattleCommunication[MULTISTRING_CHOOSER] |= 1 << B_MSG_MENTALHERBCURE_TAUNT;
             PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_TAUNT);
             effect = ITEM_EFFECT_OTHER;
         }
     }
-
-    DebugPrintf("%d", gBattleCommunication[MULTISTRING_CHOOSER]);
 
     if (effect)
         BattleScriptCall(BattleScript_MentalHerbCureRet);

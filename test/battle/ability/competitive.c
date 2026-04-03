@@ -21,14 +21,14 @@ DOUBLE_BATTLE_TEST("Competitive sharply raises player's Sp. Atk after Intimidate
         //1st mon Intimidate
         ABILITY_POPUP(opponentLeft, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
-        MESSAGE("The opposing Gyarados's Intimidate cuts Igglybuff's Attack!");
+        MESSAGE("Igglybuff's Attack fell!");
         if (abilityLeft == ABILITY_COMPETITIVE) {
             ABILITY_POPUP(playerLeft, ABILITY_COMPETITIVE);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
             MESSAGE("Igglybuff's Sp. Atk rose sharply!");
         }
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
-        MESSAGE("The opposing Gyarados's Intimidate cuts Jigglypuff's Attack!");
+        MESSAGE("Jigglypuff's Attack fell!");
         if (abilityRight == ABILITY_COMPETITIVE) {
             ABILITY_POPUP(playerRight, ABILITY_COMPETITIVE);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
@@ -38,14 +38,14 @@ DOUBLE_BATTLE_TEST("Competitive sharply raises player's Sp. Atk after Intimidate
         //2nd mon Intimidate
         ABILITY_POPUP(opponentRight, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
-        MESSAGE("The opposing Arbok's Intimidate cuts Igglybuff's Attack!");
+        MESSAGE("Igglybuff's Attack fell!");
         if (abilityLeft == ABILITY_COMPETITIVE) {
             ABILITY_POPUP(playerLeft, ABILITY_COMPETITIVE);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
             MESSAGE("Igglybuff's Sp. Atk rose sharply!");
         }
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
-        MESSAGE("The opposing Arbok's Intimidate cuts Jigglypuff's Attack!");
+        MESSAGE("Jigglypuff's Attack fell!");
         if (abilityRight == ABILITY_COMPETITIVE) {
             ABILITY_POPUP(playerRight, ABILITY_COMPETITIVE);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
@@ -78,14 +78,14 @@ DOUBLE_BATTLE_TEST("Competitive sharply raises opponent's Sp. Atk after Intimida
         //1st mon Intimidate
         ABILITY_POPUP(playerLeft, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-        MESSAGE("Gyarados's Intimidate cuts the opposing Igglybuff's Attack!");
+        MESSAGE("The opposing Igglybuff's Attack fell!");
         if (abilityLeft == ABILITY_COMPETITIVE) {
             ABILITY_POPUP(opponentLeft, ABILITY_COMPETITIVE);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
             MESSAGE("The opposing Igglybuff's Sp. Atk rose sharply!");
         }
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
-        MESSAGE("Gyarados's Intimidate cuts the opposing Jigglypuff's Attack!");
+        MESSAGE("The opposing Jigglypuff's Attack fell!");
         if (abilityRight == ABILITY_COMPETITIVE) {
             ABILITY_POPUP(opponentRight, ABILITY_COMPETITIVE);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
@@ -95,14 +95,14 @@ DOUBLE_BATTLE_TEST("Competitive sharply raises opponent's Sp. Atk after Intimida
         //2nd mon Intimidate
         ABILITY_POPUP(playerRight, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-        MESSAGE("Arbok's Intimidate cuts the opposing Igglybuff's Attack!");
+        MESSAGE("The opposing Igglybuff's Attack fell!");
         if (abilityLeft == ABILITY_COMPETITIVE) {
             ABILITY_POPUP(opponentLeft, ABILITY_COMPETITIVE);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
             MESSAGE("The opposing Igglybuff's Sp. Atk rose sharply!");
         }
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
-        MESSAGE("Arbok's Intimidate cuts the opposing Jigglypuff's Attack!");
+        MESSAGE("The opposing Jigglypuff's Attack fell!");
         if (abilityRight == ABILITY_COMPETITIVE) {
             ABILITY_POPUP(opponentRight, ABILITY_COMPETITIVE);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);

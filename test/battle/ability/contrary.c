@@ -23,7 +23,7 @@ SINGLE_BATTLE_TEST("Contrary raises Attack when Intimidated in a single battle",
             MESSAGE("The opposing Spinda's Attack rose!");
         } else {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("Mightyena's Intimidate cuts the opposing Spinda's Attack!");
+            MESSAGE("The opposing Spinda's Attack fell!");
         }
         HP_BAR(player, captureDamage: &results[i].damage);
     } THEN {
@@ -56,14 +56,14 @@ DOUBLE_BATTLE_TEST("Contrary raises Attack when Intimidated in a double battle",
             MESSAGE("The opposing Spinda's Attack rose!");
         } else {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-            MESSAGE("Mightyena's Intimidate cuts the opposing Spinda's Attack!");
+            MESSAGE("The opposing Spinda's Attack fell!");
         }
         if (abilityRight == ABILITY_CONTRARY) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
             MESSAGE("The opposing Spinda's Attack rose!");
         } else {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
-            MESSAGE("Mightyena's Intimidate cuts the opposing Spinda's Attack!");
+            MESSAGE("The opposing Spinda's Attack fell!");
         }
         HP_BAR(playerLeft, captureDamage: &results[i].damageLeft);
         HP_BAR(playerRight, captureDamage: &results[i].damageRight);

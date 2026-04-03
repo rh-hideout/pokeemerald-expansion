@@ -5697,7 +5697,7 @@ BattleScript_TryActivateSteadFast:
 	statbuffchange BS_ATTACKER, STAT_CHANGE_ALLOW_PTR, BattleScript_MoveUsedFlinchedEnd
 	setbyte gBattleCommunication, STAT_SPEED
 	stattextbuffer
-	printstring STRINGID_ATTACKERABILITYSTATRAISE
+	printstring STRINGID_ATTACKERSSTATROSE
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveUsedFlinchedEnd
 
@@ -6705,7 +6705,7 @@ BattleScript_BattlerAbilityStatRaiseOnSwitchIn::
 	call BattleScript_AbilityPopUpScripting
 	statbuffchange BS_SCRIPTING, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_CERTAIN, BattleScript_BattlerAbilityStatRaiseOnSwitchInRet
 	waitanimation
-	printstring STRINGID_SCRIPTINGABILITYSTATRAISE
+	printstring STRINGID_SCRIPTINGSTATROSE
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_BattlerAbilityStatRaiseOnSwitchInRet:
 	return
@@ -6716,7 +6716,7 @@ BattleScript_ScriptingAbilityStatRaise::
 	saveattacker
 	copybyte gBattlerAttacker, sBATTLER
 	statbuffchange BS_ATTACKER, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_CERTAIN, BattleScript_ScriptingAbilityStatRaiseRet
-	printstring STRINGID_ATTACKERABILITYSTATRAISE
+	printstring STRINGID_ATTACKERSSTATROSE
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_ScriptingAbilityStatRaiseRet:
 	restoreattacker
@@ -6771,7 +6771,7 @@ BattleScript_AttackerAbilityStatRaise::
 	statbuffchange BS_SCRIPTING, STAT_CHANGE_ALLOW_PTR | STAT_CHANGE_ONLY_CHECKING, BattleScript_AttackerAbilityStatRaise_End
 	call BattleScript_AbilityPopUpScripting
 	statbuffchange BS_SCRIPTING, STAT_CHANGE_ALLOW_PTR, BattleScript_AttackerAbilityStatRaise_End
-	printstring STRINGID_ATTACKERABILITYSTATRAISE
+	printstring STRINGID_ATTACKERSSTATROSE
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_AttackerAbilityStatRaise_End:
 	return

@@ -79,7 +79,7 @@ SINGLE_BATTLE_TEST("Oblivious doesn't prevent Intimidate (Gen3-7)")
             MESSAGE("Slowpoke's Attack was not lowered!");
         }
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("The opposing Ekans's Intimidate cuts Slowpoke's Attack!");
+        MESSAGE("Slowpoke's Attack fell!");
     }
 }
 

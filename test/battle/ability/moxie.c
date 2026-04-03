@@ -63,9 +63,9 @@ DOUBLE_BATTLE_TEST("Moxie/Chilling Neigh does not trigger if Pokemon faint to in
             NONE_OF {
                 ABILITY_POPUP(playerLeft, abilityPopUp);
                 ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
-                MESSAGE("Salamence's Moxie raised its Attack!");
-                MESSAGE("Glastrier's Chilling Neigh raised its Attack!");
-                MESSAGE("Calyrex's Chilling Neigh raised its Attack!");
+                MESSAGE("Salamence's Attack rose!");
+                MESSAGE("Glastrier's Attack rose!");
+                MESSAGE("Calyrex's Attack rose!");
             }
         }
     } THEN {
@@ -102,9 +102,9 @@ SINGLE_BATTLE_TEST("Moxie/Chilling Neigh does not trigger when already at maximu
         NONE_OF {
             ABILITY_POPUP(player, abilityPopUp);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("Salamence's Moxie raised its Attack!");
-            MESSAGE("Glastrier's Chilling Neigh raised its Attack!");
-            MESSAGE("Calyrex's Chilling Neigh raised its Attack!");
+            MESSAGE("Salamence's Attack rose!");
+            MESSAGE("Glastrier's Attack rose!");
+            MESSAGE("Calyrex's Attack rose!");
         }
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], MAX_STAT_STAGE);
