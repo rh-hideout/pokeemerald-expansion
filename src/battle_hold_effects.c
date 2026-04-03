@@ -577,7 +577,7 @@ static enum ItemEffect TryStickyBarbOnEndTurn(enum BattlerId battler, enum Item 
     {
         SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
         PREPARE_ITEM_BUFFER(gBattleTextBuff1, item);
-        BattleScriptExecute(BattleScript_ItemHurtEnd2);
+        BattleScriptCall(BattleScript_ItemHurtWithAnim);
         effect = ITEM_HP_CHANGE;
     }
 
@@ -592,7 +592,9 @@ static enum ItemEffect TryToxicOrb(enum BattlerId battler)
     if (CanBePoisoned(battler, battler, ability, ability)) // Can corrosion trigger toxic orb on itself?
     {
         gBattleMons[battler].status1 = STATUS1_TOXIC_POISON;
-        BattleScriptExecute(BattleScript_ToxicOrb);
+        gEffectBattler = battler;
+        gBattleCommunication[MULTISTRING_CHOOSER] = 0;
+        BattleScriptCall(BattleScript_MoveEffectPoison);
         effect = ITEM_STATUS_CHANGE;
     }
 
@@ -607,7 +609,9 @@ static enum ItemEffect TryFlameOrb(enum BattlerId battler)
     if (CanBeBurned(battler, battler, ability))
     {
         gBattleMons[battler].status1 = STATUS1_BURN;
-        BattleScriptExecute(BattleScript_FlameOrb);
+        gEffectBattler = battler;
+        gBattleCommunication[MULTISTRING_CHOOSER] = 0;
+        BattleScriptCall(BattleScript_MoveEffectBurn);
         effect = ITEM_STATUS_CHANGE;
     }
 
@@ -623,7 +627,7 @@ static enum ItemEffect TryLeftovers(enum BattlerId battler, enum HoldEffect hold
     {
         SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
         RecordItemEffectBattle(battler, holdEffect);
-        BattleScriptExecute(BattleScript_ItemHealHP_End2);
+        BattleScriptCall(BattleScript_ItemHealHP_Ret);
         effect = ITEM_HP_CHANGE;
     }
 
@@ -638,7 +642,7 @@ static enum ItemEffect TryBlackSludgeDamage(enum BattlerId battler, enum HoldEff
     {
         SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
         RecordItemEffectBattle(battler, holdEffect);
-        BattleScriptExecute(BattleScript_ItemHurtEnd2);
+        BattleScriptCall(BattleScript_ItemHurtWithAnim);
         effect = ITEM_HP_CHANGE;
     }
 

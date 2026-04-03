@@ -254,14 +254,14 @@ bool32 EndOrContinueWeather(void)
             ResetParadoxWeatherStat(battler);
         }
         gBattleCommunication[MULTISTRING_CHOOSER] = sBattleWeatherInfo[currBattleWeather].endMessage;
-        BattleScriptExecute(BattleScript_WeatherFaded);
+        BattleScriptCall(BattleScript_WeatherFaded);
         return TRUE;
     }
     else
     {
         gBattleCommunication[MULTISTRING_CHOOSER] = sBattleWeatherInfo[currBattleWeather].continuesMessage;
         gBattleScripting.animArg1 = sBattleWeatherInfo[currBattleWeather].animation;
-        BattleScriptExecute(BattleScript_WeatherContinues);
+        BattleScriptCall(BattleScript_WeatherContinues);
         return TRUE;
     }
 
@@ -1769,8 +1769,7 @@ bool32 BattleArenaTurnEnd(void)
         for (enum BattlerId battler = 0; battler < 2; battler++)
             CancelMultiTurnMoves(battler);
 
-        gBattlescriptCurrInstr = BattleScript_ArenaDoJudgment;
-        BattleScriptExecute(BattleScript_ArenaDoJudgment);
+        BattleScriptCall(BattleScript_ArenaDoJudgment);
         return TRUE;
     }
     return FALSE;

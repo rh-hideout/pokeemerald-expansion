@@ -3920,12 +3920,20 @@ static void HandleEndTurn_ContinueBattle(void)
     }
 }
 
+void SetCallback(void (*func)(void))
+{
+    if (gBattleResources->battleCallbackStack->size != 0)
+        gBattleResources->battleCallbackStack->function[gBattleResources->battleCallbackStack->size - 1] = func;
+    else
+        gBattleMainFunc = func;
+}
+
 void BattleTurnPassed(void)
 {
     BattleScriptExecute(BattleScript_EndTurnEvents);
 }
 
-bool32 EndTurnEvents(void)
+bool32 EndTurnEvents(void) // Called from Battle Script
 {
     gBattleStruct->speedTieBreaks = RandomUniform(RNG_SPEED_TIE, 0, Factorial(MAX_BATTLERS_COUNT) - 1);
 
@@ -3952,10 +3960,7 @@ bool32 EndTurnEvents(void)
     if (gBattleOutcome != 0)
     {
         gCurrentActionFuncId = B_ACTION_FINISHED;
-        if (gBattleResources->battleCallbackStack->size != 0) // Change callback to turn actions
-            gBattleResources->battleCallbackStack->function[gBattleResources->battleCallbackStack->size - 1] = RunTurnActionsFunctions;
-        else
-            gBattleMainFunc = RunTurnActionsFunctions;
+        SetCallback(RunTurnActionsFunctions);
         return FALSE;
     }
 
@@ -3990,11 +3995,7 @@ bool32 EndTurnEvents(void)
     AssignUsableGimmicks();
     SetShellSideArmCategory();
     SetAiLogicDataForTurn(gAiLogicData); // get assumed abilities, hold effects, etc of all battlers
-
-    if (gBattleResources->battleCallbackStack->size != 0) // Change callback to next turn's action selection
-        gBattleResources->battleCallbackStack->function[gBattleResources->battleCallbackStack->size - 1] = HandleTurnActionSelectionState;
-    else
-        gBattleMainFunc = HandleTurnActionSelectionState;
+    SetCallback(HandleTurnActionSelectionState);
 
     return FALSE;
 }

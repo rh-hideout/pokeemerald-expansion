@@ -4406,13 +4406,13 @@ BattleScript_WeatherContinues::
 	playanimation_var BS_ATTACKER, sB_ANIM_ARG1
 	setbyte gBattleCommunication, 0
 	call BattleScript_ActivateWeatherAbilities
-	end2
+	return
 
 BattleScript_WeatherFaded::
 	printfromtable gWeatherEndsStringIds
 	waitmessage B_WAIT_TIME_LONG
 	call BattleScript_ActivateWeatherAbilities
-	end2
+	return
 
 BattleScript_DamagingWeather::
 	printfromtable gSandStormHailDmgStringIds
@@ -5847,18 +5847,6 @@ BattleScript_BufferEndTurn::
 	waitmessage B_WAIT_TIME_LONG
 	end2
 
-BattleScript_ToxicOrb::
-	setbyte cMULTISTRING_CHOOSER, 0
-	copybyte gEffectBattler, gBattlerAttacker
-	call BattleScript_MoveEffectToxic
-	end2
-
-BattleScript_FlameOrb::
-	setbyte cMULTISTRING_CHOOSER, 0
-	copybyte gEffectBattler, gBattlerAttacker
-	call BattleScript_MoveEffectBurn
-	end2
-
 BattleScript_MoveEffectPoison::
 	statusanimation BS_EFFECT_BATTLER
 	printfromtable gGotPoisonedStringIds
@@ -7090,10 +7078,6 @@ BattleScript_BerryPPHeal_Anim:
 	removeitem BS_SCRIPTING
 	return
 
-BattleScript_ItemHealHP_End2::
-	call BattleScript_ItemHealHP_Ret
-	end2
-
 BattleScript_AirBalloonMsgInRet::
 	printstring STRINGID_AIRBALLOONFLOAT
 	waitmessage B_WAIT_TIME_LONG
@@ -7113,11 +7097,11 @@ BattleScript_ItemHurtRet::
 	tryfaintmon BS_ATTACKER
 	return
 
-BattleScript_ItemHurtEnd2::
+BattleScript_ItemHurtWithAnim::
 	playanimation BS_ATTACKER, B_ANIM_MON_HIT
 	waitanimation
 	call BattleScript_ItemHurtRet
-	end2
+	return
 
 BattleScript_ItemHealHP_Ret::
 	playanimation BS_ATTACKER, B_ANIM_HELD_ITEM_EFFECT
