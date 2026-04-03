@@ -22,7 +22,7 @@ SINGLE_BATTLE_TEST("Telekinesis makes the target unable to avoid any attacks mad
         MESSAGE("The opposing Wynaut used Minimize!");
         MESSAGE("Wobbuffet used Screech!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCREECH, player);
-        NOT MESSAGE("Wobbuffet's attack missed!");
+        NOT MESSAGE("The opposing Wynaut avoided the attack!");
     }
 }
 

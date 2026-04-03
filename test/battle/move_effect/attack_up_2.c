@@ -22,7 +22,7 @@ SINGLE_BATTLE_TEST("Swords Dance raises Attack by 2 stages", s16 damage)
         if (raiseAttack) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("Wobbuffet's Attack sharply rose!");
+            MESSAGE("Wobbuffet's Attack rose sharply!");
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         HP_BAR(opponent, captureDamage: &results[i].damage);

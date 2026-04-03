@@ -240,7 +240,7 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon are affected by Grudge")
         MESSAGE("The opposing Wobbuffet used Grudge!");
         MESSAGE("Wobbuffet used Max Strike!");
         MESSAGE("The opposing Wobbuffet fainted!");
-        MESSAGE("Wobbuffet's Scratch lost all its PP due to the grudge!");
+        MESSAGE("Wobbuffet lost all of Scratch's PP due to the grudge!");
     }
 }
 
@@ -1324,10 +1324,10 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Replenish recycles allies' berries 50\% of th
     } SCENE {
         // turn 1
 
-        MESSAGE("Using Apicot Berry, the Sp. Def of Snorlax rose!");
-        MESSAGE("Using Apicot Berry, the Sp. Def of Munchlax rose!");
-        MESSAGE("Using Apicot Berry, the Sp. Def of the opposing Wobbuffet rose!");
-        MESSAGE("Using Apicot Berry, the Sp. Def of the opposing Wobbuffet rose!");
+        MESSAGE("The Apicot Berry boosted Snorlax's Sp. Def!");
+        MESSAGE("The Apicot Berry boosted Munchlax's Sp. Def!");
+        MESSAGE("The Apicot Berry boosted the opposing Wobbuffet's Sp. Def!");
+        MESSAGE("The Apicot Berry boosted the opposing Wobbuffet's Sp. Def!");
         // turn 2
         MESSAGE("Snorlax used G-Max Replenish!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_G_MAX_REPLENISH, playerLeft);
@@ -1760,8 +1760,8 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Replenish recycles allies' berries 50\% of th
         TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft, gimmick: GIMMICK_DYNAMAX); SEND_OUT(opponentLeft, 2);}
     } SCENE {
         // turn 1
-        MESSAGE("Using Apicot Berry, the Sp. Def of Snorlax rose!");
-        MESSAGE("Using Apicot Berry, the Sp. Def of Munchlax rose!");
+        MESSAGE("The Apicot Berry boosted Snorlax's Sp. Def!");
+        MESSAGE("The Apicot Berry boosted Munchlax's Sp. Def!");
         // turn 2
         MESSAGE("Snorlax used G-Max Replenish!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_G_MAX_REPLENISH, playerLeft);

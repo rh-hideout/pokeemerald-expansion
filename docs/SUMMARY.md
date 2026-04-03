@@ -50,6 +50,7 @@
   - [How to use Map Previews](tutorials/how_to_map_preview_screen.md)
   - [Quickstart Documentation](tutorials/quickstart.md)
   - [How to use Generic Spots](tutorials/how_to_spots.md)
+  - [How to use Dynamic Shop](tutorials/how_to_dynamic_shop.md)
 - [Changelog](./CHANGELOG.md)
     - [1.15.x]()
         - [Version 1.15.0](changelogs/1.15.x/1.15.0.md)
