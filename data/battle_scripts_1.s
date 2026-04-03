@@ -6771,15 +6771,10 @@ BattleScript_FellStingerRaisesStat::
 BattleScript_FellStingerRaisesAtkEnd:
 	return
 
-BattleScript_AttackerAbilityStatRaiseEnd3::
+BattleScript_AttackerAbilityStatRaiseRestoreAttacker::
 	call BattleScript_AttackerAbilityStatRaise
 	restoreattacker
 	return
-
-BattleScript_AttackerAbilityStatRaiseEnd2::
-	call BattleScript_AttackerAbilityStatRaise
-	restoreattacker
-	end2
 
 BattleScript_SwitchInAbilityMsg::
 	call BattleScript_AbilityPopUp

@@ -3952,8 +3952,11 @@ bool32 EndTurnEvents(void)
     if (gBattleOutcome != 0)
     {
         gCurrentActionFuncId = B_ACTION_FINISHED;
-        gBattleMainFunc = RunTurnActionsFunctions;
-        return TRUE;
+        if (gBattleResources->battleCallbackStack->size != 0) // Change callback to turn actions
+            gBattleResources->battleCallbackStack->function[gBattleResources->battleCallbackStack->size - 1] = RunTurnActionsFunctions;
+        else
+            gBattleMainFunc = RunTurnActionsFunctions;
+        return FALSE;
     }
 
     if (gBattleResults.battleTurnCounter < 0xFF)
