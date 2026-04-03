@@ -2831,8 +2831,6 @@ static enum MoveEndResult MoveEndBouncedMove(void)
 
             gBattleStruct->targetBeforeBounce = bounceBattler; // This may become redundant in the future
             gBattlerTarget = bounceBattler;
-            for (enum BattlerId i = B_BATTLER_0; i < gBattlersCount; i++)
-                gBattleStruct->savedMoveResultFlags[i] = gBattleStruct->moveResultFlags[i];
             gBattleStruct->bouncedMoveIsUsed = TRUE;
             return MOVEEND_RESULT_RUN_SCRIPT;
         }
@@ -2841,8 +2839,6 @@ static enum MoveEndResult MoveEndBouncedMove(void)
     if (gBattleStruct->bouncedMoveIsUsed)
     {
         gBattleStruct->bouncedMoveIsUsed = FALSE;
-        for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
-            gBattleStruct->moveResultFlags[battler] = gBattleStruct->savedMoveResultFlags[battler];
         gBattlerAttacker = gBattleStruct->attackerBeforeBounce;
         gBattlerTarget = gBattleStruct->targetBeforeBounce;
     }
