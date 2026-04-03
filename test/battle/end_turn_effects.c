@@ -21,7 +21,7 @@ DOUBLE_BATTLE_TEST("End Turn Effects: First Event Block is executed correctly (d
         MESSAGE("The opposing Wynaut is healed by the grassy terrain!");
         MESSAGE("The opposing Wynaut restored a little HP using its Leftovers!");
         MESSAGE("Ekans is healed by the grassy terrain!");
-        MESSAGE("Ekans's Shed Skin cured its burn problem!");
+        MESSAGE("Ekans's burn was cured!");
         MESSAGE("Wynaut is healed by the grassy terrain!");
     } THEN {
         EXPECT_GT(0, healed);
@@ -74,7 +74,7 @@ MULTI_BATTLE_TEST("End Turn Effects: First Event Block is executed correctly (mu
         MESSAGE("The opposing Wynaut is healed by the grassy terrain!");
         MESSAGE("The opposing Wynaut restored a little HP using its Leftovers!");
         MESSAGE("Ekans is healed by the grassy terrain!");
-        MESSAGE("Ekans's Shed Skin cured its burn problem!");
+        MESSAGE("Ekans's burn was cured!");
         MESSAGE("Wynaut is healed by the grassy terrain!");
     } THEN {
         EXPECT_GT(0, healed);
@@ -103,7 +103,7 @@ TWO_VS_ONE_BATTLE_TEST("End Turn Effects: First Event Block is executed correctl
         MESSAGE("The opposing Wynaut is healed by the grassy terrain!");
         MESSAGE("The opposing Wynaut restored a little HP using its Leftovers!");
         MESSAGE("Ekans is healed by the grassy terrain!");
-        MESSAGE("Ekans's Shed Skin cured its burn problem!");
+        MESSAGE("Ekans's burn was cured!");
         MESSAGE("Wynaut is healed by the grassy terrain!");
     } THEN {
         EXPECT_GT(0, healed);
@@ -132,7 +132,7 @@ ONE_VS_TWO_BATTLE_TEST("End Turn Effects: First Event Block is executed correctl
         MESSAGE("The opposing Wynaut is healed by the grassy terrain!");
         MESSAGE("The opposing Wynaut restored a little HP using its Leftovers!");
         MESSAGE("Ekans is healed by the grassy terrain!");
-        MESSAGE("Ekans's Shed Skin cured its burn problem!");
+        MESSAGE("Ekans's burn was cured!");
         MESSAGE("Wynaut is healed by the grassy terrain!");
     } THEN {
         EXPECT_GT(0, healed);

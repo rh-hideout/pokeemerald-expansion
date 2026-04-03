@@ -26,6 +26,12 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent intimid
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         }
         ABILITY_POPUP(opponent, ability);
+        if (ability == ABILITY_FULL_METAL_BODY)
+            MESSAGE("The opposing Solgaleo's stats were not lowered!");
+        else if (ability == ABILITY_WHITE_SMOKE)
+            MESSAGE("The opposing Torkoal's stats were not lowered!");
+        else
+            MESSAGE("The opposing Metang's stats were not lowered!");
         HP_BAR(player, captureDamage: &turnTwoHit);
     } THEN {
         EXPECT_EQ(turnOneHit, turnTwoHit);
@@ -71,6 +77,12 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent stat st
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         }
         ABILITY_POPUP(opponent, ability);
+        if (ability == ABILITY_FULL_METAL_BODY)
+            MESSAGE("The opposing Solgaleo's stats were not lowered!");
+        else if (ability == ABILITY_WHITE_SMOKE)
+            MESSAGE("The opposing Torkoal's stats were not lowered!");
+        else
+            MESSAGE("The opposing Metang's stats were not lowered!");
     }
 }
 
@@ -94,6 +106,12 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent Sticky 
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         }
         ABILITY_POPUP(opponent, ability);
+        if (ability == ABILITY_FULL_METAL_BODY)
+            MESSAGE("The opposing Solgaleo's stats were not lowered!");
+        else if (ability == ABILITY_WHITE_SMOKE)
+            MESSAGE("The opposing Torkoal's stats were not lowered!");
+        else
+            MESSAGE("The opposing Metang's stats were not lowered!");
     }
 }
 
@@ -114,9 +132,9 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent s
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUPERPOWER, opponent);
         NONE_OF {
             ABILITY_POPUP(opponent, ability);
-            MESSAGE("The opposing Solgaleo's Full Metal Body prevents stat loss!");
-            MESSAGE("The opposing Torkoal's White Smoke prevents stat loss!");
-            MESSAGE("The opposing Metang's Clear Body prevents stat loss!");
+            MESSAGE("The opposing Solgaleo's stats were not lowered!");
+            MESSAGE("The opposing Torkoal's stats were not lowered!");
+            MESSAGE("The opposing Metang's stats were not lowered!");
         }
     }
 }
@@ -168,10 +186,15 @@ SINGLE_BATTLE_TEST("Mold Breaker, Teravolt, and Turboblaze ignore Clear Body and
         if (ability == ABILITY_FULL_METAL_BODY){ // Full Metal Body can't be ignored by breaker abilities
             NOT ANIMATION(ANIM_TYPE_MOVE, move, player);
             ABILITY_POPUP(opponent, ability);
-        }
-        else{
+            MESSAGE("The opposing Solgaleo's stats were not lowered!");
+        } else {
             ANIMATION(ANIM_TYPE_MOVE, move, player);
-            NOT ABILITY_POPUP(opponent, ability);
+            NONE_OF {
+                ABILITY_POPUP(opponent, ability);
+                MESSAGE("The opposing Solgaleo's stats were not lowered!");
+                MESSAGE("The opposing Torkoal's stats were not lowered!");
+                MESSAGE("The opposing Metang's stats were not lowered!");
+            }
         }
     }
 }

@@ -215,7 +215,6 @@ SINGLE_BATTLE_TEST("Gulp Missile: Transformed Cramorant Gulping lowers defense a
         } else {
             ABILITY_POPUP(opponent, ABILITY_CLEAR_BODY);
         }
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         HP_BAR(opponent);
     }
 }

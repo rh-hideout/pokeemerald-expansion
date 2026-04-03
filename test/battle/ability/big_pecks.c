@@ -11,6 +11,7 @@ SINGLE_BATTLE_TEST("Big Pecks prevents Defense stage reduction from moves")
         TURN { MOVE(player, MOVE_LEER); }
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_BIG_PECKS);
+        MESSAGE("The opposing Pidgey's Defense was not lowered!");
     }
 }
 
@@ -27,7 +28,10 @@ SINGLE_BATTLE_TEST("Big Pecks is ignored by Mold Breaker")
         MESSAGE("Pinsir breaks the mold!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LEER, player);
         MESSAGE("The opposing Pidgey's Defense fell!");
-        NOT ABILITY_POPUP(opponent, ABILITY_BIG_PECKS);
+        NONE_OF {
+            ABILITY_POPUP(opponent, ABILITY_BIG_PECKS);
+            MESSAGE("The opposing Pidgey's Defense was not lowered!");
+        }
     }
 }
 

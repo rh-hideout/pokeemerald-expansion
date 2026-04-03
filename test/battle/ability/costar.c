@@ -171,7 +171,7 @@ DOUBLE_BATTLE_TEST("Costar's message displays correctly after all battlers faint
     } SCENE {
         MESSAGE("The opposing Wobbuffet used Explosion!");
         ABILITY_POPUP(playerLeft, ABILITY_INTREPID_SWORD);
-        MESSAGE("Zacian's Intrepid Sword Attack rose!");
+        MESSAGE("Zacian's Attack rose!");
         ABILITY_POPUP(playerRight, ABILITY_COSTAR);
         MESSAGE("Flamigo copied Zacian's stat changes!");
     }

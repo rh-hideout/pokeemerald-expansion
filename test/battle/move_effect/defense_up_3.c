@@ -22,7 +22,7 @@ SINGLE_BATTLE_TEST("Cotton Guard raises Defense by 3 stages", s16 damage)
         if (raiseDefense) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_COTTON_GUARD, player);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("Wobbuffet's Defense drastically rose!");
+            MESSAGE("Wobbuffet's Defense rose drastically!");
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         HP_BAR(player, captureDamage: &results[i].damage);

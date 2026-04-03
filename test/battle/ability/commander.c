@@ -30,11 +30,11 @@ DOUBLE_BATTLE_TEST("Commander increases all stats by 2 stages once it is trigger
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
         MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
-        MESSAGE("Dondozo's Attack sharply rose!");
-        MESSAGE("Dondozo's Defense sharply rose!");
-        MESSAGE("Dondozo's Sp. Atk sharply rose!");
-        MESSAGE("Dondozo's Sp. Def sharply rose!");
-        MESSAGE("Dondozo's Speed sharply rose!");
+        MESSAGE("Dondozo's Attack rose sharply!");
+        MESSAGE("Dondozo's Defense rose sharply!");
+        MESSAGE("Dondozo's Sp. Atk rose sharply!");
+        MESSAGE("Dondozo's Sp. Def rose sharply!");
+        MESSAGE("Dondozo's Speed rose sharply!");
     }
 }
 
@@ -253,7 +253,7 @@ DOUBLE_BATTLE_TEST("Commander doesn't prevent Imposter from working on a Command
         ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
         MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
         ABILITY_POPUP(opponentLeft, ABILITY_IMPOSTER);
-        MESSAGE("The opposing Ditto transformed into Tatsugiri using Imposter!");
+        MESSAGE("The opposing Ditto transformed into Tatsugiri!");
     }
 }
 
