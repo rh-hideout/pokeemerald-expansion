@@ -347,33 +347,33 @@ static inline const u64 GetTrainerAIFlagsFromId(u16 trainerId)
     return GetTrainerStructFromId(trainerId)->aiFlags;
 }
 
-static inline enum TrainerPicID SanitizeTrainerPic(enum TrainerPicID trainerPicID)
+static inline enum TrainerPicID SanitizeTrainerPic(enum TrainerPicID trainerPicId)
 {
-    assertf(trainerPicID < TRAINER_PIC_COUNT, "trainerPicID %d out of range", trainerPicID)
+    assertf(trainerPicId < TRAINER_PIC_COUNT, "trainerPicId %d out of range", trainerPicId)
     {
         return TRAINER_PIC_NONE;
     };
-    return trainerPicID;
+    return trainerPicId;
 }
 
-static inline enum TrainerPicID SanitizeFrontTrainerPic(enum TrainerPicID trainerPicID)
+static inline enum TrainerPicID SanitizeFrontTrainerPic(enum TrainerPicID trainerPicId)
 {
-    trainerPicID = SanitizeTrainerPic(trainerPicID);
-    assertf(gTrainerPicInfo[trainerPicID].frontPic != NULL, "trainerPicID %d does not have a front pic defined", trainerPicID)
+    trainerPicId = SanitizeTrainerPic(trainerPicId);
+    assertf(gTrainerPicInfo[trainerPicId].frontPic != NULL, "trainerPicId %d does not have a front pic defined", trainerPicId)
     {
         return TRAINER_PIC_NONE;
     }
-    return trainerPicID;
+    return trainerPicId;
 }
 
-static inline enum TrainerPicID SanitizeBackTrainerPic(enum TrainerPicID trainerPicID)
+static inline enum TrainerPicID SanitizeBackTrainerPic(enum TrainerPicID trainerPicId)
 {
-    trainerPicID = SanitizeTrainerPic(trainerPicID);
-    assertf(gTrainerPicInfo[trainerPicID].backPic != NULL, "trainerPicID %d does not have a back pic defined", trainerPicID)
+    trainerPicId = SanitizeTrainerPic(trainerPicId);
+    assertf(gTrainerPicInfo[trainerPicId].backPic != NULL, "trainerPicId %d does not have a back pic defined", trainerPicId)
     {
         return TRAINER_PIC_NONE;
     }
-    return trainerPicID;
+    return trainerPicId;
 }
 
 static inline const u32 *GetTrainerFrontPicData(enum TrainerPicID trainerPic)
