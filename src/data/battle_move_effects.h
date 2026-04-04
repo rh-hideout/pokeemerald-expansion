@@ -596,7 +596,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_STAT_CHANGE_HALF_HP] =
     {
-        .battleScript = BattleScript_EffectStatChange,
+        .battleScript = BattleScript_EffectStatChangeHalfHp,
         .battleTvScore = 7,
         .battleFactoryStyle = FACTORY_STYLE_PREPARATION,
         .encourageEncore = TRUE,
@@ -752,7 +752,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_CHARGE] =
     {
-        .battleScript = BattleScript_EffectCharge,
+        .battleScript = BattleScript_EffectStatChange,
         .battleTvScore = 4,
         .battleFactoryStyle = FACTORY_STYLE_PREPARATION,
         .encourageEncore = TRUE,
@@ -1349,7 +1349,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_DEFOG] =
     {
-        .battleScript = BattleScript_EffectStatChange,
+        .battleScript = BattleScript_EffectDefog,
         .battleTvScore = 0, // TODO: Assign points
         .encourageEncore = TRUE,
     },
@@ -1426,7 +1426,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_ACUPRESSURE] =
     {
-        .battleScript = BattleScript_EffectAcupressure,
+        .battleScript = BattleScript_EffectStatChange,
         .battleTvScore = 0, // TODO: Assign points
     },
 
@@ -1707,7 +1707,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_TAKE_HEART] =
     {
-        .battleScript = BattleScript_EffectTakeHeart,
+        .battleScript = BattleScript_EffectStatChange,
         .battleTvScore = 0, // TODO: Assign points
     },
 

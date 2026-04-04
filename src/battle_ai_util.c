@@ -3041,6 +3041,7 @@ bool32 IsAttackBoostMoveEffect(enum BattleMoveEffects effect)
     switch (effect)
     {
     case EFFECT_STAT_CHANGE_HALF_HP:
+    case EFFECT_BELLY_DRUM:
     case EFFECT_GROWTH:
         return TRUE;
     default:
@@ -5186,6 +5187,7 @@ bool32 ShouldUseZMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
         switch (baseEffect)
         {
         case EFFECT_STAT_CHANGE_HALF_HP:
+        case EFFECT_BELLY_DRUM:
             if (isSlower)
                 return TRUE;
             isEager = TRUE;

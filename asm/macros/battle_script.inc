@@ -1190,9 +1190,8 @@
     .byte \battler
 	.endm
 
-    .macro tryanystatchange jumpInstr:req
+    .macro tryanystatchange
     .byte B_SCR_OP_TRYANYSTATCHANGE
-    .4byte \jumpInstr
     .endm
 
     .macro trystatchange
@@ -1239,11 +1238,6 @@
 	.macro tryallyswitch jumpInstr:req
 	callnative BS_TryAllySwitch
 	.4byte \jumpInstr
-	.endm
-
-	.macro dostockpilestatchangeswearoff, battler:req
-	callnative BS_DoStockpileStatChangesWearOff
-	.byte \battler
 	.endm
 
 	.macro jumpifmorethanhalfHP battler:req, jumpInstr:req
@@ -1600,6 +1594,10 @@
     .byte \battler
     .endm
 
+    .macro restorestatchangequeue
+    callnative BS_RestoreStatChangeQueue
+    .endm
+
 @ helpful macros
 	.macro setstatchanger stat:req, stages:req, down:req
 	setbyte sSTATCHANGER, \stat | \stages << 3 | \down << 7
@@ -1768,11 +1766,6 @@
 
 	.macro gravityonairbornemons
 	callnative BS_GravityOnAirborneMons
-	.endm
-
-	.macro tryacupressure failInstr:req
-	callnative BS_TryAcupressure
-	.4byte \failInstr
 	.endm
 
 	.macro cancelmultiturnmoves
@@ -2148,36 +2141,6 @@
 	jumpifability BS_ATTACKER, ABILITY_INFILTRATOR, 1f
 	jumpifsideaffecting BS_TARGET, SIDE_STATUS_SAFEGUARD, \jumpInstr
 	1:
-	.endm
-
-	@ Tries to increase or decrease a battler's stat's stat stage by a specified amount. If impossible, jumps to \script.
-	.macro modifybattlerstatstage battler:req, stat:req, mode:req, amount:req, script:req, animation:req, customString
-
-	@ \mode parameters
-	INCREASE = FALSE
-	DECREASE = TRUE
-
-	@ \animation parameters
-	ANIM_OFF = FALSE
-	ANIM_ON = TRUE
-
-	setstatchanger \stat, \amount, \mode
-	.if \animation == FALSE
-		setbyte sSTAT_ANIM_PLAYED, TRUE
-	.endif
-	statbuffchange BS_TARGET, 0, \script
-	.ifnb \customString
-		printstring \customString
-	.else
-		.if \mode == DECREASE
-			printfromtable gStatDownStringIds
-		.else
-		.if \mode == INCREASE
-			printfromtable gStatUpStringIds
-		.endif
-		.endif
-	.endif
-	waitmessage B_WAIT_TIME_LONG
 	.endm
 
 	.macro flushtextbox

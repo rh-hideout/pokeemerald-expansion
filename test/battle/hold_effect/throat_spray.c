@@ -180,7 +180,6 @@ SINGLE_BATTLE_TEST("Throat Spray does not activate if user flinches with status 
     }
 }
 
-
 SINGLE_BATTLE_TEST("Throat Spray is not blocked by Sheer Force")
 {
     GIVEN {

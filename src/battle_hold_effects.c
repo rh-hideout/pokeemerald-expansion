@@ -79,7 +79,7 @@ static enum ItemEffect TryRoomService(enum BattlerId battler)
     {
         gEffectBattler = gBattleScripting.battler = battler;
         gLastUsedItem = gBattleMons[battler].item;
-        SetStatChange(battler, STAT_SPEED, 1);
+        SetStatChange(battler, STAT_SPEED, -1);
         BattleScriptCall(BattleScript_ItemStatRaise);
         return ITEM_STATS_CHANGE;
     }
@@ -944,13 +944,13 @@ static enum ItemEffect StatRaiseBerry(enum BattlerId battler, enum Item itemId, 
         gEffectBattler = gBattleScripting.battler = battler;
         if (ability == ABILITY_RIPEN)
         {
-            BattleScriptCall(BattleScript_BerryStatRaiseRippen);
             SetStatChange(battler, statId, 2);
+            BattleScriptCall(BattleScript_BerryStatRaiseRippen);
         }
         else
         {
-            BattleScriptCall(BattleScript_ItemStatRaise);
             SetStatChange(battler, statId, 1);
+            BattleScriptCall(BattleScript_ItemStatRaise);
         }
         effect = ITEM_STATS_CHANGE;
     }

@@ -70,4 +70,6 @@ enum StatChangeResult TrySingleStatChange(struct BattleCalcValues *cv, struct St
 
 u32 GetStatStage(u32 stat, const struct AdditionalEffect *additionalEffect);
 
+enum MoveResult DoStatChangeResolution(struct BattleCalcValues *cv);
+
 #endif // GUARD_BATTLE_MOVE_STAT_CHANGE_H

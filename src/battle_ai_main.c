@@ -1626,6 +1626,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             ADJUST_SCORE(-10);
         break;
     case EFFECT_STAT_CHANGE_HALF_HP:
+    case EFFECT_BELLY_DRUM:
         if (aiData->hpPercents[battlerAtk] <= 60 && !IsConsideringZMove(battlerAtk, battlerDef, move))
             ADJUST_SCORE(-10);
         if (!AI_CanAnyStatChange(battlerAtk, battlerDef, move))
@@ -4278,6 +4279,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
         break;
 
     case EFFECT_STAT_CHANGE_HALF_HP: // CheckBadMove check for failure
+    case EFFECT_BELLY_DRUM:
         if (HasHPForDamagingSetup(battlerAtk, battlerDef, 50))
         {
             ADJUST_SCORE(GetStatChangeScore(battlerAtk, battlerDef, move));
@@ -6055,6 +6057,7 @@ static s32 AI_Risky(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum M
             ADJUST_SCORE(AVERAGE_RISKY_EFFECT);
         break;
     case EFFECT_STAT_CHANGE_HALF_HP:
+    case EFFECT_BELLY_DRUM:
         if (aiData->hpPercents[battlerAtk] >= 90)
             ADJUST_SCORE(AVERAGE_RISKY_EFFECT);
         break;
@@ -6259,6 +6262,7 @@ static s32 AI_HPAware(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
             case EFFECT_CONVERSION_2:
             case EFFECT_SAFEGUARD:
             case EFFECT_STAT_CHANGE_HALF_HP:
+            case EFFECT_BELLY_DRUM:
                 ADJUST_SCORE(-2);
                 break;
             default:
@@ -6284,6 +6288,7 @@ static s32 AI_HPAware(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
             case EFFECT_LOCK_ON:
             case EFFECT_SAFEGUARD:
             case EFFECT_STAT_CHANGE_HALF_HP:
+            case EFFECT_BELLY_DRUM:
             case EFFECT_PSYCH_UP:
             case EFFECT_REFLECT_DAMAGE:
             case EFFECT_WEATHER:

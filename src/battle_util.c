@@ -1147,8 +1147,19 @@ bool32 ShouldDefiantCompetitiveActivate(enum BattlerId battler, enum Ability abi
 {
     enum BattleSide side = GetBattlerSide(battler);
 
-    if (ability != ABILITY_DEFIANT && ability != ABILITY_COMPETITIVE)
+    switch (ability)
+    {
+    case ABILITY_DEFIANT:
+        if (CompareStat(battler, STAT_ATK, MAX_STAT_STAGE, CMP_EQUAL, ability))
+            return FALSE;
+        break;
+    case ABILITY_COMPETITIVE:
+        if (CompareStat(battler, STAT_SPATK, MAX_STAT_STAGE, CMP_EQUAL, ability))
+            return FALSE;
+        break;
+    default:
         return FALSE;
+    }
 
     if (gBattleStruct->selfStatDrop)
         return FALSE;
@@ -3653,8 +3664,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             case ABILITY_SPEED_BOOST:
                 if (CompareStat(battler, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN, gLastUsedAbility) && gBattleStruct->battlerState[battler].isFirstTurn != 2)
                 {
-
-                    DebugPrintf("what");
                     gBattlerAbility = battler;
                     SetStatChange(battler, STAT_SPEED, 1);
                     BattleScriptExecute(BattleScript_AbilityStatChangeEnd2);
@@ -4203,11 +4212,11 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             if (IsBattlerTurnDamaged(gBattlerTarget, EXCLUDING_SUBSTITUTES))
             {
                 gEffectBattler = gBattlerAbility = gBattlerTarget;
-                for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+                for (enum BattlerId i = 0; i < gBattlersCount; i++)
                 {
-                    if (gBattlerTarget == battler || !IsBattlerAlive(battler))
+                    if (battler == i || !IsBattlerAlive(i))
                         continue;
-                    SetStatChange(battler, STAT_SPEED, -1);
+                    SetStatChange(i, STAT_SPEED, -1);
                 }
                 BattleScriptCall(BattleScript_AbilityStatChange);
                 effect++;
@@ -4288,9 +4297,9 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 break;
             // fall through
         case ABILITY_ELECTROMORPHOSIS:
-            if (!gBattleStruct->unableToUseMove
-             && IsBattlerTurnDamaged(gBattlerTarget, EXCLUDING_SUBSTITUTES))
+            if (!gBattleStruct->unableToUseMove && IsBattlerTurnDamaged(battler, EXCLUDING_SUBSTITUTES))
             {
+                gBattlerAbility = battler;
                 BattleScriptCall(BattleScript_WindPowerActivates);
                 effect++;
             }

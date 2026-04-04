@@ -147,6 +147,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 101-200")
         case EFFECT_NIGHTMARE:
         case EFFECT_SKETCH:
         case EFFECT_STAT_CHANGE_HALF_HP:
+        case EFFECT_BELLY_DRUM:
         case EFFECT_DESTINY_BOND:
         case EFFECT_MIRROR_MOVE:
         case EFFECT_SUBSTITUTE:

@@ -86,8 +86,8 @@ enum __attribute__((packed)) BattleMoveEffects
     EFFECT_HIDDEN_POWER,
     EFFECT_WEATHER,
     EFFECT_FELL_STINGER,
-    EFFECT_STAT_CHANGE_HALF_HP,
-    EFFECT_BELLY_DRUM,
+    EFFECT_STAT_CHANGE_HALF_HP, // HP is reduced after stat change.
+    EFFECT_BELLY_DRUM, // HP is reduced before change and can still fail with contrary
     EFFECT_PSYCH_UP,
     EFFECT_EARTHQUAKE,
     EFFECT_FUTURE_SIGHT,

@@ -375,7 +375,7 @@ SINGLE_BATTLE_TEST("Defiant doesn't display ability popup when already at Maximu
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
             MESSAGE("Mankey's Attack rose sharply!");
         }
-        MESSAGE("Mankey's Attack won't go any higher!");
+        // MESSAGE("Mankey's Attack won't go any higher!"); // Does this get printed if defiant does not trigger?
 
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], MAX_STAT_STAGE);

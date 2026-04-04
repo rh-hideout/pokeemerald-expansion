@@ -1,6 +1,5 @@
 #include "global.h"
 #include "test/battle.h"
-#if 0
 SINGLE_BATTLE_TEST("Swords Dance test")
 {
     GIVEN {
@@ -16,6 +15,7 @@ SINGLE_BATTLE_TEST("Swords Dance test")
     }
 }
 
+#if 0
 DOUBLE_BATTLE_TEST("Stat Change test 1")
 {
     GIVEN {
