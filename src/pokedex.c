@@ -4408,7 +4408,7 @@ static u8* ConvertMonWeightToImperialString(u32 weight)
 {
     u8* weightString = Alloc(WEIGHT_HEIGHT_STR_MEM);
     bool32 output = FALSE;
-    u32 index = 0, lbs = (weight * 100000) / DECAGRAMS_IN_POUND;
+    u32 index = 0, lbs = (u32)(((u64)weight * 10000000) / DECAGRAMS_IN_POUND);
 
     if (lbs % 10u >= 5)
         lbs += 10;
