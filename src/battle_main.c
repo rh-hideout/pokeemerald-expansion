@@ -3920,7 +3920,7 @@ static void HandleEndTurn_ContinueBattle(void)
     }
 }
 
-void SetCallback(void (*func)(void))
+void SetBattleCallback(void (*func)(void))
 {
     if (gBattleResources->battleCallbackStack->size != 0)
         gBattleResources->battleCallbackStack->function[gBattleResources->battleCallbackStack->size - 1] = func;
@@ -3960,7 +3960,7 @@ bool32 EndTurnEvents(void) // Called from Battle Script
     if (gBattleOutcome != 0)
     {
         gCurrentActionFuncId = B_ACTION_FINISHED;
-        SetCallback(RunTurnActionsFunctions);
+        SetBattleCallback(RunTurnActionsFunctions);
         return FALSE;
     }
 
@@ -3995,7 +3995,7 @@ bool32 EndTurnEvents(void) // Called from Battle Script
     AssignUsableGimmicks();
     SetShellSideArmCategory();
     SetAiLogicDataForTurn(gAiLogicData); // get assumed abilities, hold effects, etc of all battlers
-    SetCallback(HandleTurnActionSelectionState);
+    SetBattleCallback(HandleTurnActionSelectionState);
 
     return FALSE;
 }

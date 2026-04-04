@@ -15044,6 +15044,9 @@ void BS_EndTurnEvents(void)
 
     gBattlescriptCurrInstr = cmd->nextInstr;
 
+    if (gBattleOutcome != 0)
+        return;
+
     if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
         BattleScriptCall(BattleScript_PalacePrintFlavorTextRet);
     else if (gBattleTypeFlags & BATTLE_TYPE_ARENA && gBattleStruct->eventState.arenaTurn == 0)
