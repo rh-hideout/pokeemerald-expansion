@@ -1,22 +1,13 @@
 #include "global.h"
 #include "test/battle.h"
 
-ASSUMPTIONS
-{
-    ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
-    ASSUME(GetMoveCategory(MOVE_ECHOED_VOICE) == DAMAGE_CATEGORY_SPECIAL);
-    ASSUME(GetMoveEffect(MOVE_BODY_PRESS) == EFFECT_BODY_PRESS);
-    ASSUME(GetMoveCategory(MOVE_BODY_PRESS) == DAMAGE_CATEGORY_PHYSICAL);
-    ASSUME(GetMoveEffect(MOVE_FOUL_PLAY) == EFFECT_FOUL_PLAY);
-    ASSUME(GetMoveCategory(MOVE_FOUL_PLAY) == DAMAGE_CATEGORY_PHYSICAL);
-}
-
 SINGLE_BATTLE_TEST("Slow Start halves physical damage during the first five turns", s16 damage)
 {
     enum Ability ability;
     PARAMETRIZE { ability = ABILITY_OVERCOAT; }
     PARAMETRIZE { ability = ABILITY_SLOW_START; }
     GIVEN {
+        ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_VAROOM) { Ability(ability); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -35,6 +26,7 @@ SINGLE_BATTLE_TEST("Slow Start does not reduce special damage", s16 damage)
     PARAMETRIZE { ability = ABILITY_OVERCOAT; }
     PARAMETRIZE { ability = ABILITY_SLOW_START; }
     GIVEN {
+        ASSUME(GetMoveCategory(MOVE_ECHOED_VOICE) == DAMAGE_CATEGORY_SPECIAL);
         PLAYER(SPECIES_VAROOM) { Ability(ability); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -54,6 +46,7 @@ SINGLE_BATTLE_TEST("Slow Start lasts five turns and resets after switching out",
     PARAMETRIZE { switchOut = FALSE; }
     PARAMETRIZE { switchOut = TRUE; }
     GIVEN {
+        ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_VAROOM) { Ability(ABILITY_SLOW_START); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -87,6 +80,8 @@ SINGLE_BATTLE_TEST("Slow Start halves Body Press damage", s16 damage)
     PARAMETRIZE { ability = ABILITY_OVERCOAT; }
     PARAMETRIZE { ability = ABILITY_SLOW_START; }
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BODY_PRESS) == EFFECT_BODY_PRESS);
+        ASSUME(GetMoveCategory(MOVE_BODY_PRESS) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_VAROOM) { Ability(ability); Defense(200); }
         OPPONENT(SPECIES_WOBBUFFET) { Defense(100); }
     } WHEN {
@@ -105,6 +100,8 @@ SINGLE_BATTLE_TEST("Slow Start halves Foul Play damage", s16 damage)
     PARAMETRIZE { ability = ABILITY_OVERCOAT; }
     PARAMETRIZE { ability = ABILITY_SLOW_START; }
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FOUL_PLAY) == EFFECT_FOUL_PLAY);
+        ASSUME(GetMoveCategory(MOVE_FOUL_PLAY) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_VAROOM) { Ability(ability); }
         OPPONENT(SPECIES_WOBBUFFET) { Attack(200); }
     } WHEN {
