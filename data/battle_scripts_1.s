@@ -5860,7 +5860,7 @@ BattleScript_TelekinesisEndTurn::
 BattleScript_HealBlockEndTurn::
 	printstring STRINGID_HEALBLOCKEDNOMORE
 	waitmessage B_WAIT_TIME_LONG
-	end2
+	return
 
 BattleScript_BufferEndTurn::
 	printstring STRINGID_BUFFERENDS
