@@ -2791,6 +2791,13 @@ static void SortBattlersByRawSpeed(u8 battlers[])
 
 static enum MoveEndResult MoveEndBouncedMove(void)
 {
+    if (gBattleStruct->bouncedMoveIsUsed)
+    {
+        RestoreAttacker();
+        RestoreTarget();
+        gBattleStruct->bouncedMoveIsUsed = FALSE;
+    }
+
     if (gBattleStruct->magicBouncePending || gBattleStruct->magicCoatPending)
     {
         u8 battlersByRawSpeed[MAX_BATTLERS_COUNT] = {0,1,2,3};
@@ -2830,6 +2837,8 @@ static enum MoveEndResult MoveEndBouncedMove(void)
                 gBattleStruct->magicCoatPending &= ~(1u << bounceBattler);
             }
 
+            SaveBattlerAttacker(gBattlerAttacker);
+            SaveBattlerTarget(gBattlerTarget);
             gBattlerTarget = gBattlerAttacker;
             gBattlerAttacker = bounceBattler;
             gBattleStruct->bouncedMoveIsUsed = TRUE;
@@ -2846,13 +2855,6 @@ static enum MoveEndResult MoveEndBouncedMove(void)
 
             return MOVEEND_RESULT_RUN_SCRIPT;
         }
-    }
-
-    if (gBattleStruct->bouncedMoveIsUsed)
-    {
-        gBattleStruct->bouncedMoveIsUsed = FALSE;
-        u32 temp;
-        SWAP(gBattlerAttacker, gBattlerTarget, temp);
     }
 
     gBattleScripting.moveendState++;
