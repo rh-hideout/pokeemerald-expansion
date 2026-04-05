@@ -27,7 +27,7 @@ Optional (but still recommended) fields for trainers:
                set to one of Purple, Green, Pink, Blue or Yellow)
     - Starting Status (see include/constants/battle.h for values)
     - Multi Party   (Half reduces two-trainer battle sides to 3 Pokemon each)
-                    (defaults to Full but requires B_MULTI_FULL_TEAMS)
+                    (defaults to Full but requires B_MULTI_HALF_TEAMS to be FALSE)
 
 Pokemon are then specified using the Showdown Export format.
 If a field is not specified, it will use it's default value.
