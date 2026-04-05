@@ -426,6 +426,7 @@ void PrintAgbTrack(std::vector<Event>& events)
     ResetTrackVars();
 
     bool foundVolBeforeNote = false;
+    bool skipFine = false;
 
     for (const Event& event : events)
     {
@@ -520,9 +521,16 @@ void PrintAgbTrack(std::vector<Event>& events)
             PrintWait(event.time);
             break;
         }
+        if (event.type == EventType::LoopEnd)
+        {
+            skipFine = true;
+            break;
+        }
+
     }
 
-    PrintByte("FINE");
+    if (!skipFine)
+        PrintByte("FINE");
 }
 
 void PrintAgbTrackLoop(std::vector<Event>& events, int trackLoops)
@@ -534,6 +542,7 @@ void PrintAgbTrackLoop(std::vector<Event>& events, int trackLoops)
     ResetTrackVars();
 
     bool foundVolBeforeNote = false;
+    bool skipFine = false;
 
     for (const Event& event : events)
     {
@@ -630,10 +639,16 @@ void PrintAgbTrackLoop(std::vector<Event>& events, int trackLoops)
                 PrintWait(event.time);
                 break;
             }
+            if (event.type == EventType::LoopEnd)
+            {
+                skipFine = true;
+                break;
+            }
         }
     }
 
-    PrintByte("FINE");
+    if (!skipFine)
+        PrintByte("FINE");
 }
 
 void PrintAgbFooter()
