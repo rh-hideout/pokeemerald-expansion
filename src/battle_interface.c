@@ -1229,12 +1229,10 @@ u8 CreatePartyStatusSummarySprites(enum BattlerId battler, struct HpAndStatus *p
         {
             isOpponent = TRUE;
 
-            if (!skipPlayer || GetBattlerCoordsIndex(battler) == BATTLE_COORDS_SINGLES)
+            if (GetBattlerCoordsIndex(battler) == BATTLE_COORDS_SINGLES)
             {
-                bar_X = 104, bar_Y = 40;
-                if (BattleSideHasTwoTrainers(B_SIDE_OPPONENT) && GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT)
-                    bar_Y = 24;
-                else
+                bar_X = 104, bar_Y = 24;
+                if (GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT)
                     bar_Y = 40;
             }
             else
@@ -1253,11 +1251,9 @@ u8 CreatePartyStatusSummarySprites(enum BattlerId battler, struct HpAndStatus *p
     else
     {
         isOpponent = TRUE;
-        bar_X = 104;
-        if (BattleSideHasTwoTrainers(B_SIDE_OPPONENT) && GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT)
+        bar_X = 104, bar_Y = 40;
+        if (GetBattlerCoordsIndex(battler) == BATTLE_COORDS_DOUBLES && GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT)
             bar_Y = 24;
-        else
-            bar_Y = 40;
         bar_pos2_X = -100;
         bar_data0 = 5;
     }
