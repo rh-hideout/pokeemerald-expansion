@@ -747,3 +747,47 @@
 	create_overheat_flame_sprite ANIM_ATTACKER, 66, speed=1, unk1=192, unk2=30, duration=25, y=\y
 	create_overheat_flame_sprite ANIM_ATTACKER, 66, speed=1, unk1=224, unk2=30, duration=25, y=\y
 	.endm
+
+	.macro create_syrup_bomb_projectile sprite:req
+	playsewithpan SE_M_BUBBLE3, SOUND_PAN_ATTACKER
+	createsprite \sprite, ANIM_TARGET, 2, 20, 0, 40, 0
+	delay 3
+	.endm
+
+	.macro create_syrup_bomb projectile_sprite:req, blend_color:req, particle_sprite:req
+	create_syrup_bomb_projectile sprite=\projectile_sprite
+	create_syrup_bomb_projectile sprite=\projectile_sprite
+	create_syrup_bomb_projectile sprite=\projectile_sprite
+	create_syrup_bomb_projectile sprite=\projectile_sprite
+	create_syrup_bomb_projectile sprite=\projectile_sprite
+	create_syrup_bomb_projectile sprite=\projectile_sprite
+	create_syrup_bomb_projectile sprite=\projectile_sprite
+	create_syrup_bomb_projectile sprite=\projectile_sprite
+	create_syrup_bomb_projectile sprite=\projectile_sprite
+	create_syrup_bomb_projectile sprite=\projectile_sprite
+	createvisualtask AnimTask_ShakeMon2, 5, ANIM_TARGET, 3, 0, 15, 1
+	blend_color_cycle selector=F_PAL_TARGET, delay=1, num_blends=2, initial_blend_y=0, target_blend_y=12, color=\blend_color
+	createsprite \particle_sprite, ANIM_TARGET, 2, 42, 27, 20
+	createsprite \particle_sprite, ANIM_TARGET, 2, -27, 44, 20
+	createsprite \particle_sprite, ANIM_TARGET, 2, 39, -28, 20
+	createsprite \particle_sprite, ANIM_TARGET, 2, -42, -42, 20
+	playsewithpan SE_M_DIG, SOUND_PAN_TARGET
+	delay 5
+	createsprite gSyrupBombYellowShellSpriteTemplate, ANIM_TARGET, 1, ANIM_TARGET, 100
+	createsprite \particle_sprite, ANIM_TARGET, 2, 0, 40, 20
+	createsprite \particle_sprite, ANIM_TARGET, 2, -8, -44, 20
+	createsprite \particle_sprite, ANIM_TARGET, 2, -46, -28, 20
+	createsprite \particle_sprite, ANIM_TARGET, 2, 46, 9, 20
+	playsewithpan SE_M_DIG, SOUND_PAN_TARGET
+	delay 5
+	waitsound
+	waitforvisualfinish
+	.endm
+
+	.macro create_syrup_bomb_speed_drop blend_color:req, sprite:req
+	loopsewithpan SE_M_TOXIC, SOUND_PAN_TARGET, 13, 6
+	createvisualtask AnimTask_ShakeMon2, 5, ANIM_TARGET, 3, 0, 15, 1
+	blend_color_cycle selector=F_PAL_TARGET, delay=1, num_blends=2, initial_blend_y=0, target_blend_y=12, color=\blend_color
+	createsprite \sprite, ANIM_TARGET, 1, ANIM_TARGET, 60
+	waitforvisualfinish
+	.endm
