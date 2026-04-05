@@ -498,10 +498,10 @@ static const enum NationalDexOrder sHoennToNationalOrder[HOENN_DEX_COUNT - 1] =
     HOENN_TO_NATIONAL(DODRIO),
 #if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
     HOENN_TO_NATIONAL(BUDEW),
+#endif
     HOENN_TO_NATIONAL(ROSELIA),
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
     HOENN_TO_NATIONAL(ROSERADE),
-#else
-    HOENN_TO_NATIONAL(ROSELIA),
 #endif
     HOENN_TO_NATIONAL(GULPIN),
     HOENN_TO_NATIONAL(SWALOT),
@@ -560,10 +560,10 @@ static const enum NationalDexOrder sHoennToNationalOrder[HOENN_DEX_COUNT - 1] =
     HOENN_TO_NATIONAL(DUSCLOPS),
 #if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
     HOENN_TO_NATIONAL(DUSKNOIR),
+#endif
     HOENN_TO_NATIONAL(TROPIUS),
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
     HOENN_TO_NATIONAL(CHINGLING),
-#else
-    HOENN_TO_NATIONAL(TROPIUS),
 #endif
     HOENN_TO_NATIONAL(CHIMECHO),
     HOENN_TO_NATIONAL(ABSOL),
@@ -1708,6 +1708,7 @@ static void CreateEventMon(struct Pokemon *mon, u16 species, u8 level, u32 perso
 
     CreateMon(mon, species, level, personality, otId);
     SetMonData(mon, MON_DATA_MODERN_FATEFUL_ENCOUNTER, &isModernFatefulEncounter);
+    CalculateMonStats(mon);
 }
 
 enum TrainerPicID GetUnionRoomTrainerPic(void)
@@ -5528,9 +5529,9 @@ void AdjustFriendship(struct Pokemon *mon, u8 event)
     }
 }
 
-u8 CalculateFriendshipBonuses(struct Pokemon *mon, u32 modifier, enum HoldEffect itemHoldEffect)
+s32 CalculateFriendshipBonuses(struct Pokemon *mon, s32 modifier, enum HoldEffect itemHoldEffect)
 {
-    u32 bonus = 0;
+    s32 bonus = 0;
 
     if ((modifier > 0) && (itemHoldEffect == HOLD_EFFECT_FRIENDSHIP_UP))
         bonus += 150 * modifier / 100;

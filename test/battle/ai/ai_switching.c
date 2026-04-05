@@ -2225,3 +2225,16 @@ AI_SINGLE_BATTLE_TEST("Rage Fist stacks are seen properly for switch logic")
         TURN { MOVE(player, MOVE_PSYCHIC); EXPECT_SEND_OUT(opponent, 1); }
     }
 }
+
+AI_SINGLE_BATTLE_TEST("Retaliate sees damage correctly for post ko switch in")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_GABITE) { Level(50); Speed(2);}
+        OPPONENT(SPECIES_ZIGZAGOON) { Level(1); Speed(3); HP(1); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_GROUDON) { Level(85); Speed(3); Moves(MOVE_PRECIPICE_BLADES); }
+        OPPONENT(SPECIES_STOUTLAND) { Level(50); Speed(3); Moves(MOVE_RETALIATE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TACKLE); EXPECT_SEND_OUT(opponent, 2); }
+    }
+}

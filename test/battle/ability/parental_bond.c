@@ -284,10 +284,10 @@ SINGLE_BATTLE_TEST("Parental Bond Snore strikes twice while asleep")
     s16 damage[2];
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SNORE) == EFFECT_SNORE);
-        PLAYER(SPECIES_KANGASKHAN_MEGA) { Status1(STATUS1_SLEEP); }
+        PLAYER(SPECIES_KANGASKHAN) { Item(ITEM_KANGASKHANITE); Status1(STATUS1_SLEEP); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(player, MOVE_SNORE); }
+        TURN { MOVE(player, MOVE_SNORE, gimmick: GIMMICK_MEGA); }
     } SCENE {
         MESSAGE("Kangaskhan is fast asleep.");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SNORE, player);
@@ -351,6 +351,40 @@ SINGLE_BATTLE_TEST("Parental Bond does not trigger on two turn attacks")
         TURN { MOVE(player, MOVE_RAZOR_WIND, gimmick: GIMMICK_MEGA); MOVE(opponent, MOVE_CELEBRATE); }
         TURN { SKIP_TURN(player); }
     } SCENE {
+        HP_BAR(opponent);
+        NOT HP_BAR(opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Parental Bond does not trigger on OHKO moves")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FISSURE) == EFFECT_OHKO);
+        ASSUME(GetItemHoldEffect(ITEM_FOCUS_SASH) == HOLD_EFFECT_FOCUS_SASH);
+        PLAYER(SPECIES_KANGASKHAN) { Item(ITEM_KANGASKHANITE); }
+        OPPONENT(SPECIES_MACHAMP) { Ability(ABILITY_NO_GUARD); Item(ITEM_FOCUS_SASH); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FISSURE, gimmick: GIMMICK_MEGA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FISSURE, player);
+        HP_BAR(opponent, hp: 1);
+        MESSAGE("The opposing Machamp hung on using its Focus Sash!");
+        NOT HP_BAR(opponent);
+    } THEN {
+        EXPECT_EQ(opponent->hp, 1);
+    }
+}
+
+SINGLE_BATTLE_TEST("Parental Bond does not trigger on Uproar")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_UPROAR) == EFFECT_UPROAR);
+        PLAYER(SPECIES_KANGASKHAN) { Item(ITEM_KANGASKHANITE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_UPROAR, gimmick: GIMMICK_MEGA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_UPROAR, player);
         HP_BAR(opponent);
         NOT HP_BAR(opponent);
     }
