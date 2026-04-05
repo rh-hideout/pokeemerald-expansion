@@ -514,26 +514,22 @@ static void UIEndTask(u8 taskId)
     {
         enum Item item = GetTMHMItemIdFromMoveId(gTasks[taskId].tMove);
         if (!GetItemImportance(item))
-        {
             RemoveBagItem(item, 1);
-            if (!CheckBagHasItem(item, 1))
-            {
-                CreateLearnableMovesList();
-                RedrawListMenu(sMoveRelearnerStruct->moveListMenuTask);
-            }
-        }
     }
     if (gRelearnMode == RELEARN_MODE_SCRIPT && gSpecialVar_Result == TRUE)
     {
         gTasks[taskId].func = Task_MoveRelearner_Quit;
         BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+        return;
     }
-    else
+    if (gSpecialVar_Result == TRUE)
     {
-        ShowTeachMoveText();
-        AddScrollArrows();
-        gTasks[taskId].func = Task_MoveRelearner_HandleInput;
+        CreateLearnableMovesList();
+        RedrawListMenu(sMoveRelearnerStruct->moveListMenuTask);
     }
+    ShowTeachMoveText();
+    AddScrollArrows();
+    gTasks[taskId].func = Task_MoveRelearner_HandleInput;
 }
 
 static const struct MoveLearnUI sMoveLearnUI =
