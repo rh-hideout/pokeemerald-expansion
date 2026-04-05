@@ -707,12 +707,10 @@ struct BattleStruct
     u32 preAttackEffectHappened:1;
     u32 magicCoatPending:6;
     u32 magicBouncePending:6;
-    u32 attackerBeforeBounce:3;
-    u32 targetBeforeBounce:3; // May become redundant
     u32 bouncedMoveIsUsed:1;
     u32 dancerSavedAttacker:3;
     u32 dancerSavedTarget:3;
-    u32 padding:1;
+    u32 padding:7;
 };
 
 struct AiBattleData

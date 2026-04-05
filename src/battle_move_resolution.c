@@ -2830,8 +2830,8 @@ static enum MoveEndResult MoveEndBouncedMove(void)
                 gBattleStruct->magicCoatPending &= ~(1u << bounceBattler);
             }
 
-            gBattleStruct->attackerBeforeBounce = gBattlerTarget = gBattlerAttacker;
-            gBattleStruct->targetBeforeBounce = gBattlerAttacker = bounceBattler;
+            gBattlerTarget = gBattlerAttacker;
+            gBattlerAttacker = bounceBattler;
             gBattleStruct->bouncedMoveIsUsed = TRUE;
 
             ClearDamageCalcResults();
@@ -2851,8 +2851,8 @@ static enum MoveEndResult MoveEndBouncedMove(void)
     if (gBattleStruct->bouncedMoveIsUsed)
     {
         gBattleStruct->bouncedMoveIsUsed = FALSE;
-        gBattlerAttacker = gBattleStruct->attackerBeforeBounce;
-        gBattlerTarget = gBattleStruct->targetBeforeBounce;
+        u32 temp;
+        SWAP(gBattlerAttacker, gBattlerTarget, temp);
     }
 
     gBattleScripting.moveendState++;
