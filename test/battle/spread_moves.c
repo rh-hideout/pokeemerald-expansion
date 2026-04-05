@@ -176,7 +176,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: AOE move vs Disguise, Volt Absorb (right) and 
         ASSUME(GetMoveTarget(MOVE_DISCHARGE) == TARGET_FOES_AND_ALLY);
         ASSUME(GetMoveType(MOVE_DISCHARGE) == TYPE_ELECTRIC);
         PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_MIMIKYU);
+        PLAYER(SPECIES_MIMIKYU) { Ability(ABILITY_DISGUISE); }
         OPPONENT(SPECIES_RAICHU) { Ability(ABILITY_LIGHTNING_ROD); }
         OPPONENT(SPECIES_LANTURN) { Ability(ABILITY_VOLT_ABSORB); HP(1); }
     } WHEN {
@@ -196,7 +196,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: AOE move vs Disguise, Volt Absorb (left) and L
         ASSUME(GetMoveTarget(MOVE_DISCHARGE) == TARGET_FOES_AND_ALLY);
         ASSUME(GetMoveType(MOVE_DISCHARGE) == TYPE_ELECTRIC);
         PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_MIMIKYU);
+        PLAYER(SPECIES_MIMIKYU) { Ability(ABILITY_DISGUISE); }
         OPPONENT(SPECIES_LANTURN) { Ability(ABILITY_VOLT_ABSORB); HP(1); }
         OPPONENT(SPECIES_RAICHU) { Ability(ABILITY_LIGHTNING_ROD); }
     } WHEN {
@@ -211,20 +211,32 @@ DOUBLE_BATTLE_TEST("Spread Moves: AOE move vs Disguise, Volt Absorb (left) and L
 
 DOUBLE_BATTLE_TEST("Spread Moves: AOE move vs Eiscue and Mimikyu (Based on vanilla games)")
 {
+    s16 disguiseDamage;
+
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
         ASSUME(GetMoveCategory(MOVE_EARTHQUAKE) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_EISCUE);
-        OPPONENT(SPECIES_MIMIKYU);
-        OPPONENT(SPECIES_EISCUE);
+        PLAYER(SPECIES_EISCUE) { Ability(ABILITY_ICE_FACE); }
+        OPPONENT(SPECIES_MIMIKYU) { Ability(ABILITY_DISGUISE); }
+        OPPONENT(SPECIES_EISCUE) { Ability(ABILITY_ICE_FACE); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_EARTHQUAKE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerLeft);
         ABILITY_POPUP(opponentLeft, ABILITY_DISGUISE);
+        HP_BAR(opponentLeft, captureDamage: &disguiseDamage);
         ABILITY_POPUP(playerRight, ABILITY_ICE_FACE);
         ABILITY_POPUP(opponentRight, ABILITY_ICE_FACE);
+        NONE_OF {
+            HP_BAR(playerRight);
+            HP_BAR(opponentRight);
+        }        
+    } THEN {
+        EXPECT_EQ(disguiseDamage, opponentLeft->maxHP / 8);
+        EXPECT_EQ(opponentLeft->species, SPECIES_MIMIKYU_BUSTED);
+        EXPECT_EQ(playerRight->species, SPECIES_EISCUE_NOICE);
+        EXPECT_EQ(opponentRight->species, SPECIES_EISCUE_NOICE);
     }
 }
 
@@ -276,8 +288,8 @@ DOUBLE_BATTLE_TEST("Spread Moves: Spread move vs Eiscue and Mimikyu with 1 Eject
         ASSUME(GetMoveCategory(MOVE_RAZOR_LEAF) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_WOBBUFFET) { Speed(40); }
         PLAYER(SPECIES_WYNAUT) { Speed(30); }
-        OPPONENT(SPECIES_MIMIKYU) { Speed(20); Item(ITEM_EJECT_BUTTON); }
-        OPPONENT(SPECIES_EISCUE) { Speed(10); }
+        OPPONENT(SPECIES_MIMIKYU) { Speed(20); Ability(ABILITY_DISGUISE); Item(ITEM_EJECT_BUTTON); }
+        OPPONENT(SPECIES_EISCUE) { Speed(10); Ability(ABILITY_ICE_FACE); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(100); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_RAZOR_LEAF); SEND_OUT(opponentLeft, 2); }
