@@ -282,14 +282,14 @@ void WallyBufferExecCompleted(enum BattlerId battler)
 
 static void WallyHandleDrawTrainerPic(enum BattlerId battler)
 {
-    BtlController_HandleDrawTrainerPic(battler, TRAINER_PIC_BACK_WALLY, FALSE,
-                                       80, 80 + 4 * (8 - gTrainerBacksprites[TRAINER_PIC_BACK_WALLY].coordinates.size),
+    BtlController_HandleDrawTrainerPic(battler, TRAINER_PIC_WALLY, FALSE,
+                                       80, 80 + 4 * (8 - GetTrainerBackPicCoords(TRAINER_PIC_WALLY)->size),
                                        30);
 }
 
 static void WallyHandleTrainerSlide(enum BattlerId battler)
 {
-    BtlController_HandleTrainerSlide(battler, TRAINER_PIC_BACK_WALLY);
+    BtlController_HandleTrainerSlide(battler, TRAINER_PIC_WALLY);
 }
 
 #undef sSpeedX
@@ -366,7 +366,7 @@ static void WallyHandleFaintingCry(enum BattlerId battler)
 
 static void WallyHandleIntroTrainerBallThrow(enum BattlerId battler)
 {
-    const u16 *trainerPal = gTrainerBacksprites[TRAINER_PIC_BACK_WALLY].palette.data;
+    const u16 *trainerPal = GetTrainerBackPicPalette(TRAINER_PIC_WALLY);
     BtlController_HandleIntroTrainerBallThrow(battler, 0xD6F8, trainerPal, 31, Intro_TryShinyAnimShowHealthbox);
 }
 
