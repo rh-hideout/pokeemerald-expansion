@@ -879,6 +879,10 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
                 if (additionalEffect->self == TRUE)
                     baseFromEffect += 4;
                 break;
+            case MOVE_EFFECT_UPROAR:
+                if (additionalEffect->self == TRUE)
+                    baseFromEffect += 3;
+                break;
             case MOVE_EFFECT_ATK_DEF_DOWN:
             case MOVE_EFFECT_ATK_MINUS_2:
             case MOVE_EFFECT_DEF_MINUS_2:

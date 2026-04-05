@@ -244,10 +244,10 @@ DOUBLE_BATTLE_TEST("Roost suppresses the user's not-yet-aquired Flying-type this
         MESSAGE("Kecleon's HP was restored.");
         MESSAGE("The opposing Pidgey used Gust!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GUST, opponentLeft);
-        MESSAGE("Kecleon's Color Change made it the Flying type!");
+        MESSAGE("Kecleon's type changed to Flying!");
         MESSAGE("The opposing Sandshrew used Earthquake!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponentRight);
-        MESSAGE("Kecleon's Color Change made it the Ground type!");
+        MESSAGE("Kecleon's type changed to Ground!");
     }
 }
 

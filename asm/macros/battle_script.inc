@@ -2223,3 +2223,7 @@
 	.byte \battler
 	.byte \switchedItems
 	.endm
+
+	.macro trywakebattlersuproar
+	callnative BS_TryWakeBattlersUproar
+	.endm

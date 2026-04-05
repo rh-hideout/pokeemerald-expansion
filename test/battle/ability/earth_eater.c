@@ -12,7 +12,7 @@ SINGLE_BATTLE_TEST("Earth Eater heals 25% when hit by ground type moves")
     } SCENE {
         ABILITY_POPUP(player, ABILITY_EARTH_EATER);
         HP_BAR(player, damage: -25);
-        MESSAGE("Orthworm restored HP using its Earth Eater!");
+        MESSAGE("Orthworm had its HP restored.");
     }
 }
 
@@ -27,7 +27,7 @@ SINGLE_BATTLE_TEST("Earth Eater does not activate if protected")
     } SCENE {
         NONE_OF {
             ABILITY_POPUP(player, ABILITY_EARTH_EATER); HP_BAR(player);
-            MESSAGE("Orthworm restored HP using its Earth Eater!");
+            MESSAGE("Orthworm had its HP restored.");
         }
     }
 }
@@ -44,6 +44,6 @@ SINGLE_BATTLE_TEST("Earth Eater activates on status moves")
     } SCENE {
         ABILITY_POPUP(player, ABILITY_EARTH_EATER);
         HP_BAR(player, damage: -25);
-        MESSAGE("Orthworm restored HP using its Earth Eater!");
+        MESSAGE("Orthworm had its HP restored.");
     }
 }
