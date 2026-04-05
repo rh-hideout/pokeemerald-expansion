@@ -141,14 +141,12 @@ DOUBLE_BATTLE_TEST("Magic Bounce activates on all opposing mons")
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_LEER, playerLeft);
         MESSAGE("Abra's Leer was bounced back by the opposing Espeon's Magic Bounce!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LEER, opponentLeft);
-        NOT MESSAGE("The opposing Espeon's Defense fell!");
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
         MESSAGE("Abra's Defense fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
         MESSAGE("Kadabra's Defense fell!");
-
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
-
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
         MESSAGE("Abra's Defense fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);

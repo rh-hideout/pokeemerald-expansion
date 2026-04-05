@@ -5256,14 +5256,12 @@ BattleScript_MagicBounce::
 	call BattleScript_AbilityPopUp
 	printstring STRINGID_PKMNMOVEBOUNCEDABILITY
 	waitmessage B_WAIT_TIME_LONG
-	setmagiccoattarget
 	return
 
 BattleScript_MagicCoat::
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_PKMNMOVEBOUNCED
 	waitmessage B_WAIT_TIME_LONG
-	setmagiccoattarget
 	return
 
 BattleScript_MagicCoatPrankster::

@@ -12791,28 +12791,6 @@ void BS_JumpIfBlockedBySoundproof(void)
     }
 }
 
-void BS_SetMagicCoatTarget(void)
-{
-    NATIVE_ARGS();
-
-    gBattleStruct->attackerBeforeBounce = gBattleScripting.battler = gBattlerAttacker;
-    gBattlerAttacker = gBattlerTarget;
-    gBattlerTarget = gBattleStruct->attackerBeforeBounce;
-    ClearDamageCalcResults();
-    gBattleStruct->eventState.atkCanceler = CANCELER_SET_TARGETS;
-    gBattleStruct->eventState.atkCancelerBattler = 0;
-
-    for (enum BattlerId i = 0; i < gBattlersCount; i++)
-        gBattleStruct->battlerState[gBattlerAttacker].targetsDone[i] = FALSE;
-
-    gBattleStruct->moveTarget[gBattlerAttacker] = gBattlerTarget;
-    gBattleScripting.moveendState = 0;
-    gBattleScripting.animTurn = 0;
-    gBattleScripting.animTargetsHit = 0;
-
-    gBattlescriptCurrInstr = GetMoveBattleScript(gCurrentMove);
-}
-
 void BS_JumpIfNoBerry(void)
 {
     NATIVE_ARGS(u8 battler, const u8 *jumpInstr);

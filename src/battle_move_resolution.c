@@ -2806,11 +2806,12 @@ static enum MoveEndResult MoveEndBouncedMove(void)
             if (gBattleStruct->magicBouncePending & 1u << bounceBattler)
             {
                 gBattlerAbility = bounceBattler;
+                gBattlescriptCurrInstr = GetMoveBattleScript(gCurrentMove);
                 BattleScriptCall(BattleScript_MagicBounce);
             }
             else if (gBattleStruct->magicCoatPending & 1u << bounceBattler)
             {
-                gEffectBattler = bounceBattler;
+                gBattlescriptCurrInstr = GetMoveBattleScript(gCurrentMove);
                 BattleScriptCall(BattleScript_MagicCoat);
             }
             else
@@ -2829,9 +2830,20 @@ static enum MoveEndResult MoveEndBouncedMove(void)
                 gBattleStruct->magicCoatPending &= ~(1u << bounceBattler);
             }
 
-            gBattleStruct->targetBeforeBounce = bounceBattler; // This may become redundant in the future
-            gBattlerTarget = bounceBattler;
+            gBattleStruct->attackerBeforeBounce = gBattlerTarget = gBattlerAttacker;
+            gBattleStruct->targetBeforeBounce = gBattlerAttacker = bounceBattler;
             gBattleStruct->bouncedMoveIsUsed = TRUE;
+
+            ClearDamageCalcResults();
+            gBattleStruct->eventState.atkCanceler = CANCELER_SET_TARGETS;
+            gBattleStruct->eventState.atkCancelerBattler = 0;
+            for (enum BattlerId i = B_BATTLER_0; i < gBattlersCount; i++)
+                gBattleStruct->battlerState[gBattlerAttacker].targetsDone[i] = FALSE;
+            gBattleStruct->moveTarget[gBattlerAttacker] = gBattlerTarget;
+            gBattleScripting.moveendState = 0;
+            gBattleScripting.animTurn = 0;
+            gBattleScripting.animTargetsHit = 0;
+
             return MOVEEND_RESULT_RUN_SCRIPT;
         }
     }
