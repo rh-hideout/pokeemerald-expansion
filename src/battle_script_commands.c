@@ -1034,22 +1034,6 @@ static void Cmd_attackcanceler(void)
         return;
     }
 
-    for (u32 i = 0; i < gCurrentTurnActionNumber; i++)
-    {
-        if (!gProtectStructs[gBattlerByTurnOrder[i]].stealMove
-         || !MoveCanBeSnatched(gCurrentMove))
-            continue;
-
-        if (B_SNATCH < GEN_5 || !gBattleStruct->snatchedMoveIsUsed)
-        {
-            gProtectStructs[gBattlerByTurnOrder[i]].stealMove = FALSE;
-            gBattleStruct->snatchedMoveIsUsed = TRUE;
-            gBattleScripting.battler = gBattlerByTurnOrder[i];
-            BattleScriptCall(BattleScript_SnatchedMove);
-            return;
-        }
-    }
-
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -10559,15 +10543,6 @@ static void Cmd_pursuitdoubles(void)
 static void Cmd_snatchsetbattlers(void)
 {
     CMD_ARGS();
-
-    gEffectBattler = gBattlerAttacker;
-
-    if (gBattlerAttacker == gBattlerTarget)
-        gBattlerAttacker = gBattlerTarget = gBattleScripting.battler;
-    else
-        gBattlerTarget = gBattleScripting.battler;
-
-    gBattleScripting.battler = gEffectBattler;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 

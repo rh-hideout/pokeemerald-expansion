@@ -5297,11 +5297,9 @@ BattleScript_MagicCoatPrankster::
 	goto BattleScript_MoveEnd
 
 BattleScript_SnatchedMove::
-	snatchsetbattlers
-	playanimation BS_TARGET, B_ANIM_SNATCH_MOVE
+	playanimation BS_ATTACKER, B_ANIM_SNATCH_MOVE
 	printstring STRINGID_PKMNSNATCHEDMOVE
 	waitmessage B_WAIT_TIME_LONG
-	swapattackerwithtarget
 	return
 
 BattleScript_EnduredMsg::
@@ -6496,15 +6494,6 @@ BattleScript_SturdyPreventsOHKO::
 	pause B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_DampStopsExplosion::
-	pause B_WAIT_TIME_SHORT
-	call BattleScript_AbilityPopUpScripting
-	printstring STRINGID_POKEMONCANNOTUSEMOVE
-	pause B_WAIT_TIME_LONG
-	moveendto MOVEEND_NEXT_TARGET
-	moveendcase MOVEEND_CLEAR_BITS
-	end
-
 BattleScript_MoveHPDrain::
 	pause B_WAIT_TIME_SHORT
 	call BattleScript_AbilityPopUp
@@ -6581,9 +6570,9 @@ BattleScript_IceFaceNullsDamage::
 	call BattleScript_TargetFormChangeWithString
 	return
 
-BattleScript_DazzlingProtected::
+BattleScript_PokemonCannotUseMove::
 	pause B_WAIT_TIME_SHORT
-	call BattleScript_AbilityPopUpScripting
+	call BattleScript_AbilityPopUp
 	printstring STRINGID_POKEMONCANNOTUSEMOVE
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd

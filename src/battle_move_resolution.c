@@ -315,6 +315,8 @@ static enum CancelerResult CancelerDisabled(struct BattleCalcValues *cv)
 
 static enum CancelerResult CancelerVolatileBlocked(struct BattleCalcValues *cv)
 {
+    enum CancelerResult result = CANCELER_RESULT_SUCCESS;
+
     if (GetActiveGimmick(cv->battlerAtk) != GIMMICK_Z_MOVE
      && gBattleMons[cv->battlerAtk].volatiles.healBlock
      && IsHealBlockPreventingMove(cv->battlerAtk, cv->move))
@@ -322,22 +324,26 @@ static enum CancelerResult CancelerVolatileBlocked(struct BattleCalcValues *cv)
         gBattleScripting.battler = cv->battlerAtk;
         CancelMultiTurnMoves(cv->battlerAtk);
         gBattlescriptCurrInstr = BattleScript_MoveUsedHealBlockPrevents;
-        return CANCELER_RESULT_FAILURE;
+        result = CANCELER_RESULT_FAILURE;
     }
     else if (gFieldStatuses & STATUS_FIELD_GRAVITY && IsGravityPreventingMove(cv->move))
     {
         gBattleScripting.battler = cv->battlerAtk;
         CancelMultiTurnMoves(cv->battlerAtk);
         gBattlescriptCurrInstr = BattleScript_MoveUsedGravityPrevents;
-        return CANCELER_RESULT_FAILURE;
+        result = CANCELER_RESULT_FAILURE;
     }
     else if (GetActiveGimmick(cv->battlerAtk) != GIMMICK_Z_MOVE && gBattleMons[cv->battlerAtk].volatiles.throatChopTimer > 0 && IsSoundMove(cv->move))
     {
         CancelMultiTurnMoves(cv->battlerAtk);
         gBattlescriptCurrInstr = BattleScript_MoveUsedIsThroatChopPrevented;
-        return CANCELER_RESULT_FAILURE;
+        result = CANCELER_RESULT_FAILURE;
     }
-    return CANCELER_RESULT_SUCCESS;
+
+    if (gBattleStruct->snatchedMoveIsUsed)
+        gBattleStruct->eventState.atkCanceler = CANCELER_SNATCH - 1; // -1 for gen4- behavior since state is incremented on success
+
+    return result;
 }
 
 static enum CancelerResult CancelerTaunted(struct BattleCalcValues *cv)
@@ -1440,7 +1446,7 @@ static enum CancelerResult CancelerPriorityBlock(struct BattleCalcValues *cv)
          && (!IsDoubleBattle() || ShouldSkipFailureCheckOnBattler(cv->battlerAtk, BATTLE_PARTNER(battler), TRUE))) // either battler or partner is affected
             continue;
 
-        ability = GetBattlerAbility(battler);
+        ability = cv->abilities[battler];
         if (IsDazzlingAbility(ability))
         {
             effect = TRUE;
@@ -1452,11 +1458,25 @@ static enum CancelerResult CancelerPriorityBlock(struct BattleCalcValues *cv)
     {
         gLastUsedAbility = ability;
         RecordAbilityBattle(battler, ability);
-        gBattleScripting.battler = gBattlerAbility = battler;
-        gBattlescriptCurrInstr = BattleScript_DazzlingProtected;
+        gBattlerAbility = battler;
+        gBattlescriptCurrInstr = BattleScript_PokemonCannotUseMove;
         return CANCELER_RESULT_FAILURE;
     }
 
+    return CANCELER_RESULT_SUCCESS;
+}
+
+static enum CancelerResult CancelerExplodingDamp(struct BattleCalcValues *cv)
+{
+    u32 dampBattler = IsAbilityOnField(ABILITY_DAMP);
+    if (dampBattler && IsMoveDampBanned(cv->move))
+    {
+        gBattlerAbility = dampBattler - 1;
+        gLastUsedAbility = ABILITY_DAMP;
+        RecordAbilityBattle(gBattlerAbility, ABILITY_DAMP);
+        gBattlescriptCurrInstr = BattleScript_PokemonCannotUseMove;
+        return CANCELER_RESULT_FAILURE;
+    }
     return CANCELER_RESULT_SUCCESS;
 }
 
@@ -1474,31 +1494,6 @@ static enum CancelerResult CancelerProtean(struct BattleCalcValues *cv)
         BattleScriptCall(BattleScript_ProteanActivates);
         return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
     }
-    return CANCELER_RESULT_SUCCESS;
-}
-
-static enum CancelerResult CancelerExplodingDamp(struct BattleCalcValues *cv)
-{
-    u32 dampBattler = IsAbilityOnField(ABILITY_DAMP);
-    if (dampBattler && IsMoveDampBanned(cv->move))
-    {
-        gBattleScripting.battler = dampBattler - 1;
-        gBattlescriptCurrInstr = BattleScript_DampStopsExplosion;
-        return CANCELER_RESULT_FAILURE;
-    }
-    return CANCELER_RESULT_SUCCESS;
-}
-
-static enum CancelerResult CancelerExplosion(struct BattleCalcValues *cv)
-{
-    // KO user of Explosion; for Final Gambit doesn't happen if target is immune or if it missed
-    if (IsExplosionMove(cv->move)
-     && (GetMoveEffect(cv->move) != EFFECT_FINAL_GAMBIT || IsAnyTargetAffected()))
-    {
-        BattleScriptCall(BattleScript_Explosion);
-        return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
-    }
-
     return CANCELER_RESULT_SUCCESS;
 }
 
@@ -1630,6 +1625,54 @@ static enum CancelerResult CancelerCharging(struct BattleCalcValues *cv)
     }
 
     return result;
+}
+
+static enum CancelerResult CancelerSnatch(struct BattleCalcValues *cv)
+{
+    for (u32 i = 0; i < gCurrentTurnActionNumber; i++)
+    {
+        if (!gProtectStructs[gBattlerByTurnOrder[i]].stealMove
+         || !MoveCanBeSnatched(cv->move))
+            continue;
+
+        if (B_SNATCH < GEN_5 || !gBattleStruct->snatchedMoveIsUsed)
+        {
+            u32 snatchBattler = gBattlerByTurnOrder[i];
+
+            gProtectStructs[snatchBattler].stealMove = FALSE;
+            gBattleStruct->snatchedMoveIsUsed = TRUE;
+
+            if (cv->battlerAtk == cv->battlerDef)
+            {
+                gBattleScripting.battler = gBattlerTarget;
+                gBattlerAttacker = gBattlerTarget = snatchBattler;
+            }
+            else
+            {
+                gBattlerTarget = gBattlerAttacker;
+                gBattlerAttacker = snatchBattler;
+            }
+
+            gBattleStruct->eventState.atkCanceler = CANCELER_VOLATILE_BLOCKED;
+            BattleScriptCall(BattleScript_SnatchedMove);
+            return CANCELER_RESULT_RUN_SCRIPT;
+        }
+    }
+
+    return CANCELER_RESULT_SUCCESS;
+}
+
+static enum CancelerResult CancelerExplosion(struct BattleCalcValues *cv)
+{
+    // KO user of Explosion; for Final Gambit doesn't happen if target is immune or if it missed
+    if (IsExplosionMove(cv->move)
+     && (GetMoveEffect(cv->move) != EFFECT_FINAL_GAMBIT || IsAnyTargetAffected()))
+    {
+        BattleScriptCall(BattleScript_Explosion);
+        return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
+    }
+
+    return CANCELER_RESULT_SUCCESS;
 }
 
 static enum CancelerResult CancelerMoveSpecificMessage(struct BattleCalcValues *cv)
@@ -2071,10 +2114,11 @@ static enum CancelerResult (*const sMoveSuccessOrderCancelers[])(struct BattleCa
     [CANCELER_MOVE_EFFECT_FAILURE_TARGET] = CancelerMoveEffectFailureTarget,
     [CANCELER_POWDER_STATUS] = CancelerPowderStatus,
     [CANCELER_PRIORITY_BLOCK] = CancelerPriorityBlock,
-    [CANCELER_PROTEAN] = CancelerProtean,
     [CANCELER_EXPLODING_DAMP] = CancelerExplodingDamp,
-    [CANCELER_EXPLOSION] = CancelerExplosion,
+    [CANCELER_PROTEAN] = CancelerProtean,
     [CANCELER_CHARGING] = CancelerCharging,
+    [CANCELER_SNATCH] = CancelerSnatch,
+    [CANCELER_EXPLOSION] = CancelerExplosion,
     [CANCELER_MOVE_SPECIFIC_MESSAGE] = CancelerMoveSpecificMessage,
     [CANCELER_NO_TARGET] = CancelerNoTarget,
     [CANCELER_TOOK_ATTACK] = CancelerTookAttack,
@@ -2657,6 +2701,7 @@ static enum MoveEndResult MoveEndUpdateLastMoves(void)
         UpdateStallMons();
 
     // After swapattackerwithtarget is used for snatch the correct battlers have to be restored so data is stored correctly
+    // This can lead to potential bugs that may or may not manifest
     if (gBattleStruct->snatchedMoveIsUsed)
     {
         u32 temp;

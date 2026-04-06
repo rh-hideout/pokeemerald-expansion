@@ -298,7 +298,7 @@ extern const u8 BattleScript_TrainerPartnerSlideMsgRet[];
 extern const u8 BattleScript_TrainerPartnerSlideMsgEnd2[];
 extern const u8 BattleScript_MoveEffectFeint[];
 extern const u8 BattleScript_ProteanActivates[];
-extern const u8 BattleScript_DazzlingProtected[];
+extern const u8 BattleScript_PokemonCannotUseMove[];
 extern const u8 BattleScript_MoveUsedPsychicTerrainPrevents[];
 extern const u8 BattleScript_MoveUsedPowder[];
 extern const u8 BattleScript_SelectingNotAllowedStuffCheeks[];
