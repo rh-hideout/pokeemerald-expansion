@@ -1436,7 +1436,7 @@ static bool32 HandleEndTurnTrainerPartnerSlides(enum BattlerId battler)
             return
  */
 
-static inline bool32 BattleArenaTurnEnd(void)
+static bool32 BattleArenaTurnEnd(void)
 {
     if ((gBattleTypeFlags & BATTLE_TYPE_ARENA)
      && gBattleStruct->eventState.arenaTurn == 2
@@ -1451,7 +1451,7 @@ static inline bool32 BattleArenaTurnEnd(void)
     return FALSE;
 }
 
-static bool32 HandleEndTurnArenaTurnEnd(enum BattlerId battler)
+static inline bool32 HandleEndTurnArenaTurnEnd(enum BattlerId battler)
 {
     gBattleStruct->eventState.endTurn++;
     if (BattleArenaTurnEnd())
