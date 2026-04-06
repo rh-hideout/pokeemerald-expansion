@@ -239,6 +239,25 @@ SINGLE_BATTLE_TEST("Semi-invulnerable moves don't need to charge with Power Herb
     }
 }
 
+SINGLE_BATTLE_TEST("Power Herb semi-invulnerable moves do not keep the user untargetable that turn")
+{
+    GIVEN {
+        PLAYER(SPECIES_BASCULEGION) { Item(ITEM_POWER_HERB); Speed(20); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_PHANTOM_FORCE); MOVE(opponent, MOVE_WATER_GUN); }
+    } SCENE {
+        NOT MESSAGE("Basculegion vanished instantly!");
+        MESSAGE("Basculegion used Phantom Force!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PHANTOM_FORCE, player);
+        MESSAGE("Basculegion became fully charged due to its Power Herb!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PHANTOM_FORCE, player);
+        HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, opponent);
+        HP_BAR(player);
+    }
+}
+
 // No way to apply this test with Shadow Force/Phantom Force
 SINGLE_BATTLE_TEST("Semi-invulnerable moves apply a status that won't block certain moves")
 {

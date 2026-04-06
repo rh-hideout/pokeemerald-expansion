@@ -1595,6 +1595,8 @@ static enum CancelerResult CancelerCharging(struct BattleContext *ctx)
             gBattleScripting.animTurn = 1;
             gBattleScripting.animTargetsHit = 0;
             gProtectStructs[ctx->battlerAtk].chargingTurn = FALSE;
+            if (gBattleMoveEffects[GetMoveEffect(ctx->move)].semiInvulnerableEffect)
+                gBattleMons[ctx->battlerAtk].volatiles.semiInvulnerable = STATE_NONE;
             gLastUsedItem = gBattleMons[ctx->battlerAtk].item;
             BattleScriptCall(BattleScript_PowerHerbActivation);
             result = CANCELER_RESULT_BREAK;
