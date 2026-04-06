@@ -1010,8 +1010,8 @@ static void Cmd_attackcanceler(void)
     CMD_ARGS();
     assertf(gBattlerAttacker < gBattlersCount, "invalid gBattlerAttacker: %d\nmove: %S", gBattlerAttacker, GetMoveName(gCurrentMove));
     assertf(gBattlerTarget < gBattlersCount, "invalid gBattlerTarget: %d\nmove: %S", gBattlerTarget, GetMoveName(gCurrentMove));
-    assertf(gCurrentMove < MOVES_COUNT, "invalid gCurrentMove");
-    assertf(gChosenMove < MOVES_COUNT, "invalid gChosenMove");
+    assertf(gCurrentMove < MOVES_COUNT_ALL , "invalid gCurrentMove");
+    assertf(gChosenMove < MOVES_COUNT_ALL , "invalid gChosenMove");
 
     if (gBattleStruct->battlerState[gBattlerAttacker].usedEjectItem)
     {
@@ -5161,8 +5161,8 @@ static void Cmd_moveend(void)
     CMD_ARGS(u8 endMode, u8 endState);
     assertf(gBattlerAttacker < gBattlersCount, "invalid gBattlerAttacker: %d\nmove: %S", gBattlerAttacker, GetMoveName(gCurrentMove));
     assertf(gBattlerTarget < gBattlersCount, "invalid gBattlerTarget: %d\nmove: %S", gBattlerTarget, GetMoveName(gCurrentMove));
-    assertf(gCurrentMove < MOVES_COUNT, "invalid gCurrentMove");
-    assertf(gChosenMove < MOVES_COUNT, "invalid gChosenMove");
+    assertf(gCurrentMove < MOVES_COUNT_ALL , "invalid gCurrentMove");
+    assertf(gChosenMove < MOVES_COUNT_ALL , "invalid gChosenMove");
 
     enum MoveEndResult result = DoMoveEnd(cmd->endMode, cmd->endState);
 
