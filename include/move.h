@@ -207,6 +207,7 @@ extern const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL];
 extern const u8 gNotDoneYetDescription[];
 extern const struct BattleMoveEffect gBattleMoveEffects[];
 
+// Used in places where a mutation could happen (canceler/moveend) or when an invalid mon is fetched from GetMonData
 static inline enum Move SanitizeMoveId(enum Move moveId)
 {
     assertf(moveId < MOVES_COUNT_ALL, "invalid move: %d", moveId)
