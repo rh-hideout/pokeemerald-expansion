@@ -1436,6 +1436,21 @@ static bool32 HandleEndTurnTrainerPartnerSlides(enum BattlerId battler)
             return
  */
 
+static inline bool32 BattleArenaTurnEnd(void)
+{
+    if ((gBattleTypeFlags & BATTLE_TYPE_ARENA)
+     && gBattleStruct->eventState.arenaTurn == 2
+     && IsBattlerAlive(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)) && IsBattlerAlive(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT)))
+    {
+        for (enum BattlerId battler = 0; battler < 2; battler++)
+            CancelMultiTurnMoves(battler);
+
+        BattleScriptCall(BattleScript_ArenaDoJudgment);
+        return TRUE;
+    }
+    return FALSE;
+}
+
 static bool32 HandleEndTurnArenaTurnEnd(enum BattlerId battler)
 {
     gBattleStruct->eventState.endTurn++;

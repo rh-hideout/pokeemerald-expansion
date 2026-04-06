@@ -335,7 +335,6 @@ bool32 CanBeConfused(enum BattlerId battlerAtk, enum BattlerId effectBattler);
 bool32 IsSafeguardProtected(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk);
 u32 GetBattlerAffectionHearts(enum BattlerId battler);
 void TryToRevertMimicryAndFlags(void);
-bool32 BattleArenaTurnEnd(void);
 u32 CountBattlerStatIncreases(enum BattlerId battler, bool32 countEvasionAcc);
 bool32 BattlerHasCopyableChanges(enum BattlerId battler);
 bool32 ChangeTypeBasedOnTerrain(enum BattlerId battler);

@@ -1760,21 +1760,6 @@ void TryToRevertMimicryAndFlags(void)
     }
 }
 
-bool32 BattleArenaTurnEnd(void)
-{
-    if ((gBattleTypeFlags & BATTLE_TYPE_ARENA)
-     && gBattleStruct->eventState.arenaTurn == 2
-     && IsBattlerAlive(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)) && IsBattlerAlive(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT)))
-    {
-        for (enum BattlerId battler = 0; battler < 2; battler++)
-            CancelMultiTurnMoves(battler);
-
-        BattleScriptCall(BattleScript_ArenaDoJudgment);
-        return TRUE;
-    }
-    return FALSE;
-}
-
 // Ingrain, Leech Seed, Strength Sap and Aqua Ring
 s32 GetDrainedBigRootHp(enum BattlerId battler, s32 hp)
 {
