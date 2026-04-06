@@ -120,10 +120,17 @@ static bool8 CheckFeebas(void)
     s16 x, y;
     u8 route119Section = 0;
     u16 spotId;
+    bool8 feebasCatchAllTiles = TRUE;
 
     if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_ROUTE119)
      && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_ROUTE119))
     {
+        if(feebasCatchAllTiles) {
+            if(Random() % 100 > 9)
+                return TRUE;
+            else
+                return FALSE;
+        }
         GetXYCoordsOneStepInFrontOfPlayer(&x, &y);
         x -= MAP_OFFSET;
         y -= MAP_OFFSET;
