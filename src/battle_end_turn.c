@@ -1436,8 +1436,10 @@ static bool32 HandleEndTurnTrainerPartnerSlides(enum BattlerId battler)
             return
  */
 
-static bool32 BattleArenaTurnEnd(void)
+static bool32 HandleEndTurnArenaTurnEnd(enum BattlerId battler)
 {
+    gBattleStruct->eventState.endTurn++;
+
     if ((gBattleTypeFlags & BATTLE_TYPE_ARENA)
      && gBattleStruct->eventState.arenaTurn == 2
      && IsBattlerAlive(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)) && IsBattlerAlive(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT)))
@@ -1448,14 +1450,6 @@ static bool32 BattleArenaTurnEnd(void)
         BattleScriptCall(BattleScript_ArenaDoJudgment);
         return TRUE;
     }
-    return FALSE;
-}
-
-static inline bool32 HandleEndTurnArenaTurnEnd(enum BattlerId battler)
-{
-    gBattleStruct->eventState.endTurn++;
-    if (BattleArenaTurnEnd())
-        return TRUE;
     return FALSE;
 }
 
