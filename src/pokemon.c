@@ -51,6 +51,7 @@
 #include "task.h"
 #include "test_runner.h"
 #include "text.h"
+#include "trainer.h"
 #include "trainer_hill.h"
 #include "util.h"
 #include "constants/abilities.h"
@@ -2335,12 +2336,12 @@ void SetMultiuseSpriteTemplateToPokemon(enum Species speciesTag, enum BattlerPos
 
 void SetMultiuseSpriteTemplateToTrainerBack(enum TrainerPicID trainerPicId, enum BattlerPosition battlerPosition)
 {
-    gMultiuseSpriteTemplate.paletteTag = trainerPicId;
+    gMultiuseSpriteTemplate.paletteTag = GetTrainerPicTag(trainerPicId, FALSE);
     if (battlerPosition == B_POSITION_PLAYER_LEFT || battlerPosition == B_POSITION_PLAYER_RIGHT)
     {
         gMultiuseSpriteTemplate = sTrainerBackSpriteTemplate;
-        gMultiuseSpriteTemplate.images = &gTrainerBacksprites[trainerPicId].backPic;
-        gMultiuseSpriteTemplate.anims = gTrainerBacksprites[trainerPicId].animation;
+        gMultiuseSpriteTemplate.images = GetTrainerBackPicImage(trainerPicId);
+        gMultiuseSpriteTemplate.anims = GetTrainerBackPicAnims(trainerPicId);
     }
     else
     {
@@ -2359,7 +2360,7 @@ void SetMultiuseSpriteTemplateToTrainerFront(enum TrainerPicID trainerPicId, enu
     else
         gMultiuseSpriteTemplate = gBattlerSpriteTemplates[battlerPosition];
 
-    gMultiuseSpriteTemplate.paletteTag = trainerPicId;
+    gMultiuseSpriteTemplate.paletteTag = GetTrainerPicTag(trainerPicId, TRUE);
     gMultiuseSpriteTemplate.anims = gAnims_Trainer;
 }
 

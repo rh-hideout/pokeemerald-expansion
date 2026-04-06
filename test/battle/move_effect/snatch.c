@@ -148,5 +148,95 @@ DOUBLE_BATTLE_TEST("Snatch fails when the only slower battler is a fainted ally"
     }
 }
 
-TO_DO_BATTLE_TEST("Snatch does not steal moves that cannot be snatched");
-TO_DO_BATTLE_TEST("Snatch can steal healing moves");
+SINGLE_BATTLE_TEST("Snatch does not steal moves that cannot be snatched")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(100); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(50); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SNATCH); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SNATCH, player);
+        MESSAGE("Wobbuffet is waiting for a target to make a move!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Snatch: If user is affected by Disable the snatched move can still be used")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_DISABLE) == EFFECT_DISABLE);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SNATCH, MOVE_SWORDS_DANCE); }
+        OPPONENT(SPECIES_WYNAUT) { Moves(MOVE_DISABLE, MOVE_SWORDS_DANCE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SWORDS_DANCE); MOVE(opponent, MOVE_DISABLE); }
+        TURN { MOVE(player, MOVE_SNATCH); MOVE(opponent, MOVE_SWORDS_DANCE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DISABLE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SNATCH, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Snatch: If user is affected by Imprison the snatched move can still be used")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_DISABLE) == EFFECT_DISABLE);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SNATCH, MOVE_SWORDS_DANCE); }
+        OPPONENT(SPECIES_WYNAUT) { Moves(MOVE_IMPRISON, MOVE_SWORDS_DANCE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SWORDS_DANCE); MOVE(opponent, MOVE_IMPRISON); }
+        TURN { MOVE(player, MOVE_SNATCH); MOVE(opponent, MOVE_SWORDS_DANCE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_IMPRISON, opponent);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SNATCH, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Snatch: If the snatched move would be blocked by Heal Block, the snatched move will fail")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_HEAL_BLOCK) == EFFECT_HEAL_BLOCK);
+        ASSUME(GetMoveEffect(MOVE_RECOVER) == EFFECT_RESTORE_HP);
+        ASSUME(MoveCanBeSnatched(MOVE_RECOVER));
+        PLAYER(SPECIES_WOBBUFFET) { HP(50); MaxHP(100); }
+        OPPONENT(SPECIES_WYNAUT) { HP(50); MaxHP(100); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_HEAL_BLOCK); }
+        TURN { MOVE(player, MOVE_SNATCH); MOVE(opponent, MOVE_RECOVER); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAL_BLOCK, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SNATCH, player);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_RECOVER, player);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_RECOVER, opponent);
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Snatch: If a sound move is snatched while under Throat Chop, the move can not be used")
+{
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_THROAT_CHOP, MOVE_EFFECT_THROAT_CHOP) == TRUE);
+        ASSUME(GetMoveEffect(MOVE_HEAL_BELL) == EFFECT_HEAL_BELL);
+        ASSUME(MoveCanBeSnatched(MOVE_HEAL_BELL));
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_BURN); }
+        OPPONENT(SPECIES_WYNAUT) { Status1(STATUS1_BURN); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_THROAT_CHOP); }
+        TURN { MOVE(player, MOVE_SNATCH); MOVE(opponent, MOVE_HEAL_BELL); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_THROAT_CHOP, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SNATCH, player);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAL_BELL, player);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAL_BELL, opponent);
+        }
+    }
+}

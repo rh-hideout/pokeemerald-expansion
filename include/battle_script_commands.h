@@ -68,6 +68,8 @@ bool32 ProteanTryChangeType(enum BattlerId battler, enum Ability ability, enum M
 u8 GetFirstFaintedPartyIndex(enum BattlerId battler);
 void SaveBattlerTarget(enum BattlerId battler);
 void SaveBattlerAttacker(enum BattlerId battler);
+void RestoreAttacker(void);
+void RestoreTarget(void);
 bool32 CanBurnHitThaw(enum Move move);
 bool32 CanMoveThawTarget(enum Ability abilityAtk, enum Move move);
 bool32 CanFireMoveThawTarget(enum Move move);

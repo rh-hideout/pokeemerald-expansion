@@ -255,14 +255,14 @@ bool32 EndOrContinueWeather(void)
             ResetParadoxWeatherStat(battler);
         }
         gBattleCommunication[MULTISTRING_CHOOSER] = sBattleWeatherInfo[currBattleWeather].endMessage;
-        BattleScriptExecute(BattleScript_WeatherFaded);
+        BattleScriptCall(BattleScript_WeatherFaded);
         return TRUE;
     }
     else
     {
         gBattleCommunication[MULTISTRING_CHOOSER] = sBattleWeatherInfo[currBattleWeather].continuesMessage;
         gBattleScripting.animArg1 = sBattleWeatherInfo[currBattleWeather].animation;
-        BattleScriptExecute(BattleScript_WeatherContinues);
+        BattleScriptCall(BattleScript_WeatherContinues);
         return TRUE;
     }
 
@@ -1742,22 +1742,6 @@ void TryToRevertMimicryAndFlags(void)
         if (IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MIMICRY))
             RESTORE_BATTLER_TYPE(battler);
     }
-}
-
-bool32 BattleArenaTurnEnd(void)
-{
-    if ((gBattleTypeFlags & BATTLE_TYPE_ARENA)
-     && gBattleStruct->eventState.arenaTurn == 2
-     && IsBattlerAlive(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)) && IsBattlerAlive(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT)))
-    {
-        for (enum BattlerId battler = 0; battler < 2; battler++)
-            CancelMultiTurnMoves(battler);
-
-        gBattlescriptCurrInstr = BattleScript_ArenaDoJudgment;
-        BattleScriptExecute(BattleScript_ArenaDoJudgment);
-        return TRUE;
-    }
-    return FALSE;
 }
 
 // Ingrain, Leech Seed, Strength Sap and Aqua Ring
@@ -3583,7 +3567,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 {
                     gBattlerTarget = RandomUniformExcept(RNG_PICKUP, 0, gBattlersCount - 1, CantPickupItem);
                     gLastUsedItem = GetBattlerPartyState(gBattlerTarget)->usedHeldItem;
-                    BattleScriptExecute(BattleScript_PickupActivates);
+                    BattleScriptCall(BattleScript_PickupActivates);
                     effect++;
                 }
                 break;
@@ -3593,7 +3577,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                  && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItem) == POCKET_BERRIES)
                 {
                     gLastUsedItem = GetBattlerPartyState(battler)->usedHeldItem;
-                    BattleScriptExecute(BattleScript_HarvestActivates);
+                    BattleScriptCall(BattleScript_HarvestActivates);
                     effect++;
                 }
                 break;
@@ -3604,7 +3588,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                  && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERWATER
                  && !gBattleMons[battler].volatiles.healBlock)
                 {
-                    BattleScriptExecute(BattleScript_IceBodyHeal);
+                    BattleScriptCall(BattleScript_IceBodyHeal);
                     SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
                     effect++;
                 }
@@ -3620,7 +3604,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 {
                     s32 healAmount = gLastUsedAbility == ABILITY_RAIN_DISH ? 16 : 8;
                     SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / healAmount);
-                    BattleScriptExecute(BattleScript_RainDishActivates);
+                    BattleScriptCall(BattleScript_AbilityHpHeal);
                     effect++;
                 }
                 break;
@@ -3655,7 +3639,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                     gBattleMons[battler].status1 = 0;
                     gBattleMons[battler].volatiles.nightmare = FALSE;
                     gBattleScripting.battler = battler;
-                    BattleScriptExecute(BattleScript_ShedSkinActivates);
+                    BattleScriptCall(BattleScript_ShedSkinActivates);
                     BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[battler].status1);
                     MarkBattlerForControllerExec(battler);
                     effect++;
@@ -3666,7 +3650,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 {
                     gBattlerAbility = battler;
                     SetStatChange(battler, STAT_SPEED, 1);
-                    BattleScriptExecute(BattleScript_AbilityStatChangeEnd2);
+                    BattleScriptCall(BattleScript_AbilityStatChange);
                     effect++;
                 }
                 break;
@@ -3697,7 +3681,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                         stat = RandomUniformExcept(RNG_MOODY_DECREASE, STAT_ATK, statsNum - 1, MoodyCantLowerStat);
                         SetStatChange(battler, stat, -1);
                     }
-                    BattleScriptExecute(BattleScript_AbilityStatChangeEnd2);
+                    BattleScriptCall(BattleScript_AbilityStatChange);
                     effect++;
                 }
                 break;
@@ -3707,12 +3691,12 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             case ABILITY_SLOW_START:
                 if (gBattleMons[battler].volatiles.slowStartTimer > 0 && --gBattleMons[battler].volatiles.slowStartTimer == 0)
                 {
-                    BattleScriptExecute(BattleScript_SlowStartEnds);
+                    BattleScriptCall(BattleScript_SlowStartEnds);
                     effect++;
                 }
                 break;
             case ABILITY_BAD_DREAMS:
-                BattleScriptExecute(BattleScript_BadDreamsActivates);
+                BattleScriptCall(BattleScript_BadDreamsActivates);
                 effect++;
                 break;
             case ABILITY_SOLAR_POWER:
@@ -3720,25 +3704,25 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 {
                 SOLAR_POWER_HP_DROP:
                     SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
-                    BattleScriptExecute(BattleScript_SolarPowerActivates);
+                    BattleScriptCall(BattleScript_SolarPowerActivates);
                     effect++;
                 }
                 break;
             case ABILITY_HEALER:
                 gBattleScripting.battler = BATTLE_PARTNER(battler);
                 if (IsBattlerAlive(gBattleScripting.battler)
-                    && gBattleMons[gBattleScripting.battler].status1 & STATUS1_ANY
-                    && RandomPercentage(RNG_HEALER, 30))
+                 && gBattleMons[gBattleScripting.battler].status1 & STATUS1_ANY
+                 && RandomPercentage(RNG_HEALER, 30))
                 {
-                    BattleScriptExecute(BattleScript_HealerActivates);
+                    BattleScriptCall(BattleScript_HealerActivates);
                     effect++;
                 }
                 break;
             case ABILITY_BALL_FETCH:
                 if (!(gBattleTypeFlags & BATTLE_TYPE_RAID)
-                    && gBattleMons[battler].item == ITEM_NONE
-                    && gBattleResults.catchAttempts[ItemIdToBallId(gLastUsedBall)] >= 1
-                    && !gHasFetchedBall)
+                 && gBattleMons[battler].item == ITEM_NONE
+                 && gBattleResults.catchAttempts[ItemIdToBallId(gLastUsedBall)] >= 1
+                 && !gHasFetchedBall)
                 {
                     gLastUsedItem = gLastUsedBall;
                     gBattleScripting.battler = battler;
@@ -3746,7 +3730,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                     BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, 2, &gLastUsedItem);
                     MarkBattlerForControllerExec(battler);
                     gHasFetchedBall = TRUE;
-                    BattleScriptExecute(BattleScript_BallFetch);
+                    BattleScriptCall(BattleScript_BallFetch);
                     effect++;
                 }
                 break;
@@ -3757,7 +3741,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                     gBattleMons[battler].volatiles.cudChew = FALSE;
                     gLastUsedItem = GetBattlerPartyState(battler)->usedHeldItem;
                     GetBattlerPartyState(battler)->usedHeldItem = ITEM_NONE;
-                    BattleScriptExecute(BattleScript_CudChewActivates);
+                    BattleScriptCall(BattleScript_CudChewActivates);
                     effect++;
                 }
                 else if (!gBattleMons[battler].volatiles.cudChew && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItem) == POCKET_BERRIES)
@@ -4273,7 +4257,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_SEED_SOWER:
             if (!gBattleStruct->unableToUseMove
              && IsBattlerTurnDamaged(gBattlerTarget, EXCLUDING_SUBSTITUTES)
-             && IsBattlerAlive(gBattlerTarget)
              && TryChangeBattleTerrain(gBattlerTarget, STATUS_FIELD_GRASSY_TERRAIN))
             {
                 BattleScriptCall(BattleScript_SeedSowerActivates);
@@ -5917,14 +5900,7 @@ u32 GetBattlerWeight(enum BattlerId battler)
     enum Ability ability = GetBattlerAbility(battler);
     enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
 
-    if (ability == ABILITY_HEAVY_METAL)
-        weight *= 2;
-    else if (ability == ABILITY_LIGHT_METAL)
-        weight /= 2;
-
-    if (holdEffect == HOLD_EFFECT_FLOAT_STONE)
-        weight /= 2;
-
+    // Autotomize's weight reduction is applied before other weight modifiers (e.g. Heavy Metal / Light Metal / Float Stone).
     for (i = 0; i < gBattleMons[battler].volatiles.autotomizeCount; i++)
     {
         if (weight > 1000)
@@ -5937,6 +5913,14 @@ u32 GetBattlerWeight(enum BattlerId battler)
             break;
         }
     }
+
+    if (ability == ABILITY_HEAVY_METAL)
+        weight *= 2;
+    else if (ability == ABILITY_LIGHT_METAL)
+        weight /= 2;
+
+    if (holdEffect == HOLD_EFFECT_FLOAT_STONE)
+        weight /= 2;
 
     if (weight == 0)
         weight = 1;
@@ -6804,7 +6788,7 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(2.0));
         break;
     case ABILITY_SLOW_START:
-        if (gBattleMons[battlerAtk].volatiles.slowStartTimer > 0)
+        if (gBattleMons[battlerAtk].volatiles.slowStartTimer > 0 && IsBattleMovePhysical(move))
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(0.5));
         break;
     case ABILITY_SOLAR_POWER:
@@ -9880,7 +9864,7 @@ bool32 TrySwitchInEjectPack(enum EjectPackTiming timing)
         gBattleScripting.battler = battler;
         gLastUsedItem = gBattleMons[battler].item;
         if (timing == END_TURN)
-            BattleScriptExecute(BattleScript_EjectPackActivate_End2);
+            BattleScriptCall(BattleScript_EjectPackActivate_NoQueuedSwitch);
         else
             BattleScriptCall(BattleScript_EjectPackActivate_Ret);
         gAiLogicData->ejectPackSwitch = TRUE;
@@ -10945,11 +10929,11 @@ bool32 TryDefogClear(enum BattlerId battlerAtk, bool32 clear)
         if (GetBattlerSide(battlerAtk) != i)
         {
             gBattlerAttacker = i; // For correct battle string. Ally's / Foe's
-            DEFOG_CLEAR(SIDE_STATUS_REFLECT, reflectTimer, BattleScript_SideStatusWoreOffReturn, MOVE_REFLECT);
-            DEFOG_CLEAR(SIDE_STATUS_LIGHTSCREEN, lightscreenTimer, BattleScript_SideStatusWoreOffReturn, MOVE_LIGHT_SCREEN);
-            DEFOG_CLEAR(SIDE_STATUS_MIST, mistTimer, BattleScript_SideStatusWoreOffReturn, MOVE_MIST);
-            DEFOG_CLEAR(SIDE_STATUS_AURORA_VEIL, auroraVeilTimer, BattleScript_SideStatusWoreOffReturn, MOVE_AURORA_VEIL);
-            DEFOG_CLEAR(SIDE_STATUS_SAFEGUARD, safeguardTimer, BattleScript_SideStatusWoreOffReturn, MOVE_SAFEGUARD);
+            DEFOG_CLEAR(SIDE_STATUS_REFLECT, reflectTimer, BattleScript_SideStatusWoreOff, MOVE_REFLECT);
+            DEFOG_CLEAR(SIDE_STATUS_LIGHTSCREEN, lightscreenTimer, BattleScript_SideStatusWoreOff, MOVE_LIGHT_SCREEN);
+            DEFOG_CLEAR(SIDE_STATUS_MIST, mistTimer, BattleScript_SideStatusWoreOff, MOVE_MIST);
+            DEFOG_CLEAR(SIDE_STATUS_AURORA_VEIL, auroraVeilTimer, BattleScript_SideStatusWoreOff, MOVE_AURORA_VEIL);
+            DEFOG_CLEAR(SIDE_STATUS_SAFEGUARD, safeguardTimer, BattleScript_SideStatusWoreOff, MOVE_SAFEGUARD);
         }
         if (GetConfig(B_DEFOG_EFFECT_CLEARING) >= GEN_6)
         {

@@ -126,6 +126,7 @@ AI_DOUBLE_BATTLE_TEST("AI will not try to switch for the same Pokémon for 2 spo
 
     PASSES_RANDOMLY(SHOULD_SWITCH_ALL_MOVES_BAD_PERCENTAGE, 100, RNG_AI_SWITCH_ALL_MOVES_BAD);
     GIVEN {
+        WITH_CONFIG(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE, 0);
         AI_FLAGS(flags);
         PLAYER(SPECIES_RATTATA);
         PLAYER(SPECIES_RATTATA);
@@ -140,6 +141,35 @@ AI_DOUBLE_BATTLE_TEST("AI will not try to switch for the same Pokémon for 2 spo
         MESSAGE(AI_TRAINER_NAME " sent out Raticate!");
         NONE_OF {
             MESSAGE(AI_TRAINER_NAME " withdrew Haunter!");
+            MESSAGE(AI_TRAINER_NAME " sent out Raticate!");
+        }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI will not try to switch for the same Pokémon for 2 spots in a double battle (all bad moves, reversed)")
+{
+    u32 flags;
+
+    PARAMETRIZE { flags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING; }
+    PARAMETRIZE { flags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT; }
+
+    PASSES_RANDOMLY(SHOULD_SWITCH_ALL_MOVES_BAD_PERCENTAGE, 100, RNG_AI_SWITCH_ALL_MOVES_BAD);
+    GIVEN {
+        WITH_CONFIG(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE, 100);
+        AI_FLAGS(flags);
+        PLAYER(SPECIES_RATTATA);
+        PLAYER(SPECIES_RATTATA);
+        // No moves to damage player.
+        OPPONENT(SPECIES_GENGAR) { Moves(MOVE_SHADOW_BALL); }
+        OPPONENT(SPECIES_HAUNTER) { Moves(MOVE_SHADOW_BALL); }
+        OPPONENT(SPECIES_RATICATE) { Moves(MOVE_HEADBUTT); }
+    } WHEN {
+        TURN { EXPECT_SWITCH(opponentRight, 2); }
+    } SCENE {
+        MESSAGE(AI_TRAINER_NAME " withdrew Haunter!");
+        MESSAGE(AI_TRAINER_NAME " sent out Raticate!");
+        NONE_OF {
+            MESSAGE(AI_TRAINER_NAME " withdrew Gengar!");
             MESSAGE(AI_TRAINER_NAME " sent out Raticate!");
         }
     }
@@ -338,6 +368,7 @@ AI_TWO_VS_ONE_BATTLE_TEST("AI will not try to switch for the same pokemon for 2 
 
     PASSES_RANDOMLY(SHOULD_SWITCH_ALL_MOVES_BAD_PERCENTAGE, 100, RNG_AI_SWITCH_ALL_MOVES_BAD);
     GIVEN {
+        WITH_CONFIG(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE, 0);
         AI_FLAGS(flags);
         MULTI_PLAYER(SPECIES_RATTATA);
         MULTI_PLAYER(SPECIES_RATTATA);
@@ -357,6 +388,41 @@ AI_TWO_VS_ONE_BATTLE_TEST("AI will not try to switch for the same pokemon for 2 
             MESSAGE(AI_TRAINER_NAME " withdrew Haunter!");
             MESSAGE(AI_TRAINER_NAME " sent out Gastly!");
         }
+        NONE_OF {
+            MESSAGE(AI_TRAINER_NAME " sent out Raticate!");
+        }
+    }
+}
+
+AI_TWO_VS_ONE_BATTLE_TEST("AI will not try to switch for the same pokemon for 2 spots in a 2v1 battle (all bad moves, reversed)")
+{
+    u32 flags;
+
+    PARAMETRIZE {flags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING; }
+    PARAMETRIZE {flags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT; }
+
+    // PASSES_RANDOMLY(SHOULD_SWITCH_ALL_MOVES_BAD_PERCENTAGE, 100, RNG_AI_SWITCH_ALL_MOVES_BAD);
+    GIVEN {
+        WITH_CONFIG(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE, 100);
+        AI_FLAGS(flags);
+        MULTI_PLAYER(SPECIES_RATTATA);
+        MULTI_PLAYER(SPECIES_RATTATA);
+        MULTI_PARTNER(SPECIES_KANGASKHAN);
+        // No moves to damage player.
+        MULTI_OPPONENT_A(SPECIES_GENGAR) { Moves(MOVE_SHADOW_BALL); }
+        MULTI_OPPONENT_A(SPECIES_HAUNTER) { Moves(MOVE_SHADOW_BALL); }
+        MULTI_OPPONENT_A(SPECIES_GASTLY) { Moves(MOVE_LICK); }
+        MULTI_OPPONENT_A(SPECIES_RATICATE) { Moves(MOVE_HEADBUTT); }
+    } WHEN {
+        TURN { EXPECT_SWITCH(opponentRight, 3); }
+    } SCENE {
+        if (flags & AI_FLAG_SMART_SWITCHING)
+        {
+            MESSAGE(AI_TRAINER_NAME " withdrew Gengar!");
+            MESSAGE(AI_TRAINER_NAME " sent out Gastly!");
+        }
+        MESSAGE(AI_TRAINER_NAME " withdrew Haunter!");
+        MESSAGE(AI_TRAINER_NAME " sent out Raticate!");
         NONE_OF {
             MESSAGE(AI_TRAINER_NAME " sent out Raticate!");
         }
@@ -456,6 +522,7 @@ AI_DOUBLE_BATTLE_TEST("AI will not try to switch for the same Pokémon for 2 spo
 {
     PASSES_RANDOMLY(SHOULD_SWITCH_ALL_MOVES_BAD_PERCENTAGE, 100, RNG_AI_SWITCH_ALL_MOVES_BAD);
     GIVEN {
+        WITH_CONFIG(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE, 0);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING);
         PLAYER(SPECIES_SHEDINJA);
         PLAYER(SPECIES_SHEDINJA);
@@ -471,6 +538,31 @@ AI_DOUBLE_BATTLE_TEST("AI will not try to switch for the same Pokémon for 2 spo
         MESSAGE(AI_TRAINER_NAME " sent out Gengar!");
         NONE_OF {
             MESSAGE(AI_TRAINER_NAME "sent out Linoone!");
+            MESSAGE(AI_TRAINER_NAME " sent out Gengar!");
+        }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI will not try to switch for the same Pokémon for 2 spots in a double battle (Wonder Guard, reversed)")
+{
+    PASSES_RANDOMLY(SHOULD_SWITCH_ALL_MOVES_BAD_PERCENTAGE, 100, RNG_AI_SWITCH_ALL_MOVES_BAD);
+    GIVEN {
+        WITH_CONFIG(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE, 100);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING);
+        PLAYER(SPECIES_SHEDINJA);
+        PLAYER(SPECIES_SHEDINJA);
+        // No moves to damage player.
+        OPPONENT(SPECIES_LINOONE) { Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_SENTRET) { Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_GENGAR) { Moves(MOVE_SHADOW_BALL); }
+    } WHEN {
+        TURN { EXPECT_SWITCH(opponentRight, 3); }
+    } SCENE {
+        MESSAGE(AI_TRAINER_NAME " withdrew Zigzagoon!");
+        MESSAGE(AI_TRAINER_NAME " sent out Gengar!");
+        NONE_OF {
+            MESSAGE(AI_TRAINER_NAME "sent out Zigzagoon!");
             MESSAGE(AI_TRAINER_NAME " sent out Gengar!");
         }
     }
@@ -2332,6 +2424,7 @@ AI_DOUBLE_BATTLE_TEST("AI can switch out both mons on the same turn in double ba
 {
     PASSES_RANDOMLY(SHOULD_SWITCH_ALL_MOVES_BAD_PERCENTAGE, 100, RNG_AI_SWITCH_ALL_MOVES_BAD);
     GIVEN {
+        WITH_CONFIG(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE, 0);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_RATTATA);
         PLAYER(SPECIES_RATTATA);
@@ -2411,5 +2504,39 @@ AI_SINGLE_BATTLE_TEST("Retaliate sees damage correctly for post ko switch in")
         OPPONENT(SPECIES_STOUTLAND) { Level(50); Speed(3); Moves(MOVE_RETALIATE); }
     } WHEN {
         TURN { MOVE(player, MOVE_TACKLE); EXPECT_SEND_OUT(opponent, 2); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI can switch out both mons on the same turn in double battles (reversed)")
+{
+    PASSES_RANDOMLY(SHOULD_SWITCH_ALL_MOVES_BAD_PERCENTAGE, 100, RNG_AI_SWITCH_ALL_MOVES_BAD);
+    GIVEN {
+        WITH_CONFIG(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE, 100);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_RATTATA);
+        PLAYER(SPECIES_RATTATA);
+        OPPONENT(SPECIES_GENGAR) { Moves(MOVE_SHADOW_BALL); }
+        OPPONENT(SPECIES_GASTLY) { Moves(MOVE_SHADOW_BALL); }
+        OPPONENT(SPECIES_RATTATA) { Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_SCRATCH);}
+    } WHEN {
+        TURN { EXPECT_SWITCH(opponentRight, 2); EXPECT_SWITCH(opponentLeft, 3); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI can switch out both mons in either order")
+{
+    PASSES_RANDOMLY(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE, 100, RNG_AI_REVERSE_BATTLER_LOGIC_ORDER);
+    GIVEN {
+        WITH_CONFIG(SHOULD_SWITCH_ALL_MOVES_BAD_PERCENTAGE, 100);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_RATTATA);
+        PLAYER(SPECIES_RATTATA);
+        OPPONENT(SPECIES_GENGAR) { Moves(MOVE_SHADOW_BALL); }
+        OPPONENT(SPECIES_GASTLY) { Moves(MOVE_SHADOW_BALL); }
+        OPPONENT(SPECIES_RATTATA) { Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_SCRATCH);}
+    } WHEN {
+        TURN { EXPECT_SWITCH(opponentRight, 2); EXPECT_SWITCH(opponentLeft, 3); }
     }
 }

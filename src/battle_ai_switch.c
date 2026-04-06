@@ -152,7 +152,7 @@ u32 GetSwitchChance(enum ShouldSwitchScenario shouldSwitchScenario)
     case SHOULD_SWITCH_TRUANT:
         return SHOULD_SWITCH_TRUANT_PERCENTAGE;
     case SHOULD_SWITCH_ALL_MOVES_BAD:
-        return SHOULD_SWITCH_ALL_MOVES_BAD_PERCENTAGE;
+        return GetConfig(SHOULD_SWITCH_ALL_MOVES_BAD_PERCENTAGE);
     case SHOULD_SWITCH_PERISH_SONG:
         return SHOULD_SWITCH_PERISH_SONG_PERCENTAGE;
     case SHOULD_SWITCH_YAWN:
