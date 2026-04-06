@@ -1588,6 +1588,8 @@ static enum CancelerResult CancelerCharging(struct BattleContext *ctx)
             gBattleScripting.animTurn = 1;
             gBattleScripting.animTargetsHit = 0;
             gProtectStructs[ctx->battlerAtk].chargingTurn = FALSE;
+            if (gBattleMoveEffects[GetMoveEffect(ctx->move)].semiInvulnerableEffect)
+                gBattleMons[ctx->battlerAtk].volatiles.semiInvulnerable = STATE_NONE;
             result = CANCELER_RESULT_SUCCESS;
         }
         else if (ctx->holdEffectAtk == HOLD_EFFECT_POWER_HERB)
