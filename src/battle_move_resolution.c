@@ -1468,8 +1468,11 @@ static enum CancelerResult CancelerPriorityBlock(struct BattleCalcValues *cv)
 
 static enum CancelerResult CancelerExplodingDamp(struct BattleCalcValues *cv)
 {
+    if (!IsMoveDampBanned(cv->move))
+        return CANCELER_RESULT_SUCCESS;
+
     u32 dampBattler = IsAbilityOnField(ABILITY_DAMP);
-    if (dampBattler && IsMoveDampBanned(cv->move))
+    if (dampBattler)
     {
         gBattlerAbility = dampBattler - 1;
         gLastUsedAbility = ABILITY_DAMP;
