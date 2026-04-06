@@ -252,7 +252,6 @@ DOUBLE_BATTLE_TEST("Spread Moves: Spread move, Gem Boosted, vs Resist Berries")
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_HYPER_VOICE) == TARGET_BOTH);
         ASSUME(gItemsInfo[ITEM_NORMAL_GEM].holdEffect == HOLD_EFFECT_GEMS);
-        ASSUME(gItemsInfo[ITEM_NORMAL_GEM].holdEffectParam == TYPE_NORMAL);
         ASSUME(gItemsInfo[ITEM_CHILAN_BERRY].holdEffect == HOLD_EFFECT_RESIST_BERRY);
         ASSUME(gItemsInfo[ITEM_CHILAN_BERRY].holdEffectParam == TYPE_NORMAL);
         PLAYER(SPECIES_WOBBUFFET) { Speed(40); Item(ITEM_NORMAL_GEM); }
@@ -276,7 +275,6 @@ DOUBLE_BATTLE_TEST("Spread Moves: Explosion, Gem Boosted, vs Resist Berries")
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_EXPLOSION) == TARGET_FOES_AND_ALLY);
         ASSUME(gItemsInfo[ITEM_NORMAL_GEM].holdEffect == HOLD_EFFECT_GEMS);
-        ASSUME(gItemsInfo[ITEM_NORMAL_GEM].holdEffectParam == TYPE_NORMAL);
         ASSUME(gItemsInfo[ITEM_CHILAN_BERRY].holdEffect == HOLD_EFFECT_RESIST_BERRY);
         ASSUME(gItemsInfo[ITEM_CHILAN_BERRY].holdEffectParam == TYPE_NORMAL);
         PLAYER(SPECIES_WOBBUFFET) { Speed(40); Item(ITEM_NORMAL_GEM); }
