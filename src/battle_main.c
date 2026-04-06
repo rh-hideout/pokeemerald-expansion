@@ -3939,11 +3939,7 @@ bool32 EndTurnEvents(void) // Called from Battle Script
 
     TurnValuesCleanUp(TRUE);
 
-    if (gBattleOutcome == 0 && DoEndTurnEffects())
-        return TRUE;
-    if (BattleArenaTurnEnd())
-        return TRUE;
-    if (HandleFaintedMonActions())
+    if (DoEndTurnEffects())
         return TRUE;
 
     gBattleStruct->eventState.faintedAction = 0;

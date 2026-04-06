@@ -1365,23 +1365,6 @@ static bool32 HandleEndTurnEjectPack(enum BattlerId battler)
     return TrySwitchInEjectPack(END_TURN);
 }
 
-static bool32 HandleEndTurnDynamax(enum BattlerId battler)
-{
-    bool32 effect = FALSE;
-
-    gBattleStruct->eventState.endTurnBattler++;
-
-    if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX && gBattleStruct->dynamax.dynamaxTurns[battler] > 0 && --gBattleStruct->dynamax.dynamaxTurns[battler] == 0)
-    {
-        gBattleScripting.battler = battler;
-        UndoDynamax(battler);
-        BattleScriptCall(BattleScript_DynamaxEnds);
-        effect = TRUE;
-    }
-
-    return effect;
-}
-
 static bool32 TryEndTurnTrainerSlide(enum BattlerId battler)
 {
     return ((ShouldDoTrainerSlide(battler, TRAINER_SLIDE_LAST_LOW_HP) != TRAINER_SLIDE_TARGET_NONE)
@@ -1452,6 +1435,46 @@ static bool32 HandleEndTurnTrainerPartnerSlides(enum BattlerId battler)
             some commands
             return
  */
+
+static bool32 HandleEndTurnArenaTurnEnd(enum BattlerId battler)
+{
+    gBattleStruct->eventState.endTurn++;
+    if (BattleArenaTurnEnd())
+        return TRUE;
+    return FALSE;
+}
+
+static bool32 HandleEndTurnFaintedMonActions(enum BattlerId battler)
+{
+    if (HandleFaintedMonActions())
+        return TRUE;
+    gBattleStruct->eventState.endTurn++;
+    return FALSE;
+}
+
+static bool32 HandleEndTurnDynamax(enum BattlerId battler)
+{
+    bool32 effect = FALSE;
+
+    gBattleStruct->eventState.endTurnBattler++;
+
+    if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX
+     && gBattleStruct->dynamax.dynamaxTurns[battler] > 0)
+    {
+        if (--gBattleStruct->dynamax.dynamaxTurns[battler] == 0
+         || (gBattleOutcome == B_OUTCOME_WON && IsOnPlayerSide(battler) && !(gBattleTypeFlags & BATTLE_TYPE_LINK)))
+        {
+            gBattleScripting.battler = battler;
+            gBattleStruct->dynamax.dynamaxTurns[battler] = 0;
+            UndoDynamax(battler);
+            BattleScriptCall(BattleScript_DynamaxEnds);
+            effect = TRUE;
+        }
+    }
+
+    return effect;
+}
+
 static bool32 (*const sEndTurnEffectHandlers[])(enum BattlerId battler) =
 {
     [ENDTURN_ORDER] = HandleEndTurnOrder,
@@ -1500,15 +1523,20 @@ static bool32 (*const sEndTurnEffectHandlers[])(enum BattlerId battler) =
     [ENDTURN_EMERGENCY_EXIT_4] = HandleEndTurnEmergencyExit,
     [ENDTURN_FORM_CHANGE] = HandleEndTurnFormChange,
     [ENDTURN_EJECT_PACK] = HandleEndTurnEjectPack,
-    [ENDTURN_DYNAMAX] = HandleEndTurnDynamax,
     [ENDTURN_TRAINER_A_SLIDES] = HandleEndTurnTrainerASlides,
     [ENDTURN_TRAINER_B_SLIDES] = HandleEndTurnTrainerBSlides,
     [ENDTURN_TRAINER_PARTNER_SLIDES] = HandleEndTurnTrainerPartnerSlides,
+    [ENDTURN_ARENA_TURN_END] = HandleEndTurnArenaTurnEnd,
+    [ENDTURN_FAINTED_MON_ACTIONS] = HandleEndTurnFaintedMonActions,
+    [ENDTURN_DYNAMAX] = HandleEndTurnDynamax,
 };
 
 bool32 DoEndTurnEffects(void)
 {
     enum BattlerId battler = MAX_BATTLERS_COUNT;
+
+    if (gBattleOutcome != 0 && gBattleStruct->eventState.endTurn < ENDTURN_TRAINER_A_SLIDES) // Skip most stuff if battle's outcome is determined
+        gBattleStruct->eventState.endTurn = ENDTURN_TRAINER_A_SLIDES;
 
     for (;;)
     {
