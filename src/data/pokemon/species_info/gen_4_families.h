@@ -4576,8 +4576,8 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         //.backAnimId = BACK_ANIM_NONE,
         //.palette = gMonPalette_CircledQuestionMark,
         //.shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        //.iconSprite = gMonIcon_QuestionMark,
-        //.iconPalIndex = 0,
+        .iconSprite = gMonIcon_GarchompMegaZ,
+        .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(Garchomp)
         //SHADOW(-1, 0, SHADOW_SIZE_M)
@@ -7007,8 +7007,8 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         //.backAnimId = BACK_ANIM_NONE,
         .palette = gMonPalette_HeatranMega,
         .shinyPalette = gMonShinyPalette_HeatranMega,
-        //.iconSprite = gMonIcon_QuestionMark,
-        //.iconPalIndex = 0,
+        .iconSprite = gMonIcon_HeatranMega,
+        .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(Heatran)
         SHADOW(2, 10, SHADOW_SIZE_XL_BATTLE_ONLY)

@@ -10590,8 +10590,8 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         //.backAnimId = BACK_ANIM_NONE,
         .palette = gMonPalette_AbsolMegaZ,
         .shinyPalette = gMonShinyPalette_AbsolMegaZ,
-        //.iconSprite = gMonIcon_QuestionMark,
-        //.iconPalIndex = 0,
+        .iconSprite = gMonIcon_AbsolMegaZ,
+        .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(Absol)
         SHADOW(-1, 7, SHADOW_SIZE_XL_BATTLE_ONLY)

@@ -5054,7 +5054,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .palette = gMonPalette_Alcremie ##sweet##cream,                                         \
         .shinyPalette = gMonShinyPalette_Alcremie ##sweet,                                      \
         .iconSprite = gMonIcon_AlcremieStrawberryVanillaCream, /*AlcremieStrawberry##cream##*/  \
-        .iconPalIndex = 1,                                                                      \
+        .iconPalIndex = 0,                                                                      \
         .pokemonJumpType = PKMN_JUMP_TYPE_SLOW,                                                 \
         SHADOW(0, 5, SHADOW_SIZE_S)                                                             \
         FOOTPRINT(Alcremie)                                                                     \
