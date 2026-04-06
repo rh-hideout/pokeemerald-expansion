@@ -98,7 +98,7 @@ DOUBLE_BATTLE_TEST("Magic Coat reflects hazards regardless of the user's positio
     }
 }
 
-DOUBLE_BATTLE_TEST("Magic Coat activates on the fastest opposing mon (raw speed)")
+DOUBLE_BATTLE_TEST("Magic Coat activates on the fastest opposing mon for hazard setting moves (raw speed)")
 {
     u32 speedPlayerLeft = 0;
     u32 speedPlayerRight = 0;

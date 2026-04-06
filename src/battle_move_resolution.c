@@ -2852,15 +2852,15 @@ static enum MoveEndResult MoveEndBouncedMove(void)
 
     if (gBattleStruct->magicBouncePending || gBattleStruct->magicCoatPending)
     {
-        u8 battlersByRawSpeed[MAX_BATTLERS_COUNT] = {0,1,2,3};
+        u8 battlers[MAX_BATTLERS_COUNT] = {0,1,2,3};
         enum MoveTarget moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
 
         if (moveTarget == TARGET_OPPONENTS_FIELD)
-            SortBattlersByRawSpeed(battlersByRawSpeed);
+            SortBattlersByRawSpeed(battlers);
 
         for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
         {
-            u32 bounceBattler = battlersByRawSpeed[battler];
+            u32 bounceBattler = battlers[battler];
 
             if (gBattleStruct->magicBouncePending & 1u << bounceBattler)
             {

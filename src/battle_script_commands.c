@@ -11721,15 +11721,7 @@ void BS_SaveTarget(void)
 void BS_RestoreTarget(void)
 {
     NATIVE_ARGS();
-    assertf(gBattleStruct->savedTargetCount > 0, "no savedBattlerTargets")
-    {
-        gBattlescriptCurrInstr = cmd->nextInstr;
-        return;
-    }
-
-    gBattleStruct->savedTargetCount--;
-    gBattlerTarget = gBattleStruct->savedBattlerTarget[gBattleStruct->savedTargetCount];
-
+    RestoreTarget();
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -11743,14 +11735,7 @@ void BS_SaveAttacker(void)
 void BS_RestoreAttacker(void)
 {
     NATIVE_ARGS();
-    assertf(gBattleStruct->savedAttackerCount > 0, "No savedBattlerAttackers")
-    {
-        gBattlescriptCurrInstr = cmd->nextInstr;
-        return;
-    }
-
-    gBattleStruct->savedAttackerCount--;
-    gBattlerAttacker = gBattleStruct->savedBattlerAttacker[gBattleStruct->savedAttackerCount];
+    RestoreAttacker();
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
