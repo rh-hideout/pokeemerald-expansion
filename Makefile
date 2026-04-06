@@ -402,7 +402,7 @@ tidycheck:
 	rm -rf $(OBJ_DIR_NAME_TEST)
 
 tidydebug:
-	rm -rf $(DEBUG_OBJ_DIR_NAME)
+	rm -rf $(OBJ_DIR_NAME_DEBUG)
 
 tidyrelease:
 ifeq ($(RELEASE),1)
