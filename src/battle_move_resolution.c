@@ -1642,6 +1642,12 @@ static enum CancelerResult CancelerSnatch(struct BattleCalcValues *cv)
         {
             u32 snatchBattler = gBattlerByTurnOrder[i];
 
+            if (!gBattleStruct->snatchedMoveIsUsed) // store only once
+            {
+                SaveBattlerAttacker(gBattlerAttacker);
+                SaveBattlerTarget(gBattlerTarget);
+            }
+
             gProtectStructs[snatchBattler].stealMove = FALSE;
             gBattleStruct->snatchedMoveIsUsed = TRUE;
 
@@ -2703,12 +2709,10 @@ static enum MoveEndResult MoveEndUpdateLastMoves(void)
     if (!IsOnPlayerSide(gBattlerAttacker))
         UpdateStallMons();
 
-    // After swapattackerwithtarget is used for snatch the correct battlers have to be restored so data is stored correctly
-    // This can lead to potential bugs that may or may not manifest
     if (gBattleStruct->snatchedMoveIsUsed)
     {
-        u32 temp;
-        SWAP(gBattlerAttacker, gBattlerTarget, temp);
+        RestoreAttacker();
+        RestoreTarget();
     }
 
     enum BattleMoveEffects originalEffect = GetMoveEffect(GetOriginallyUsedMove(gChosenMove));
