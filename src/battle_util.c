@@ -7990,18 +7990,6 @@ s32 CalculateMoveDamage(struct DamageContext *ctx)
 {
     s32 damage = 0;
 
-    enum BattlerId battlerAtkPartner = BATTLE_PARTNER(ctx->battlerAtk);
-    enum BattlerId battlerDefPartner = BATTLE_PARTNER(ctx->battlerDef);
-
-    ctx->abilities[ctx->battlerAtk] = GetBattlerAbility(ctx->battlerAtk);
-    ctx->abilities[battlerAtkPartner] = GetBattlerAbility(battlerAtkPartner);
-    ctx->abilities[ctx->battlerDef] = GetBattlerAbility(ctx->battlerDef);
-    ctx->abilities[battlerDefPartner] = GetBattlerAbility(battlerDefPartner);
-    ctx->holdEffects[ctx->battlerAtk] = GetBattlerHoldEffect(ctx->battlerAtk);
-    ctx->holdEffects[battlerAtkPartner] = GetBattlerHoldEffect(battlerAtkPartner);
-    ctx->holdEffects[ctx->battlerDef] = GetBattlerHoldEffect(ctx->battlerDef);
-    ctx->holdEffects[battlerDefPartner] = GetBattlerHoldEffect(battlerDefPartner);
-
     ctx->typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(ctx);
     ctx->isCrit = IsCriticalHit(ctx);
 
@@ -8084,7 +8072,7 @@ static inline void TryNoticeIllusionInTypeEffectiveness(enum Move move, enum Typ
     ctx.moveType = moveType;
     ctx.updateFlags = FALSE;
     ctx.abilities[ctx.battlerAtk] = GetBattlerAbility(battlerAtk);
-    ctx.abilities[ctx.battlerAtk] = ABILITY_ILLUSION;
+    ctx.abilities[ctx.battlerDef] = ABILITY_ILLUSION;
     ctx.holdEffects[ctx.battlerAtk] = GetBattlerHoldEffect(battlerAtk);
     ctx.holdEffects[ctx.battlerDef] = GetBattlerHoldEffect(battlerDef);
 
