@@ -7438,11 +7438,8 @@ static inline uq4_12_t GetDefenderPartnerAbilitiesModifier(struct DamageContext 
     switch (ctx->abilities[battlerDefPartner])
     {
     case ABILITY_FRIEND_GUARD:
-    {
-        if (ctx->battlerAtk != ctx->battlerDef) // Mixed signals from google, have asked thread; Smogon says "other Pokemon", bulba generalizes, etc.
-            return UQ_4_12(0.75);
+        return UQ_4_12(0.75);
         break;
-    }
     default:
         break;
     }
