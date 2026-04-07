@@ -530,7 +530,7 @@ bool32 Ai_IsPriorityBlocked(enum BattlerId battlerAtk, enum BattlerId battlerDef
 
 bool32 AI_CanMoveBeBlockedByTarget(struct DamageContext *ctx)
 {
-    return CanMoveBeBlockedByTarget(ctx, GetBattleMovePriority(ctx->battlerAtk, ctx->abilityAtk, ctx->move));
+    return CanMoveBeBlockedByTarget(ctx, GetBattleMovePriority(ctx->battlerAtk, ctx->abilities[ctx->battlerAtk], ctx->move));
 }
 
 // This function checks if all physical/special moves are either unusable or unreasonable to use.
@@ -545,10 +545,10 @@ bool32 MovesWithCategoryUnusable(u32 attacker, u32 target, enum DamageCategory c
     ctx.battlerAtk = attacker;
     ctx.battlerDef = target;
     ctx.updateFlags = FALSE;
-    ctx.abilityAtk = gAiLogicData->abilities[attacker];
-    ctx.abilityDef = gAiLogicData->abilities[target];
-    ctx.holdEffectAtk = gAiLogicData->holdEffects[attacker];
-    ctx.holdEffectDef = gAiLogicData->holdEffects[target];
+    ctx.abilities[ctx.battlerAtk] = gAiLogicData->abilities[attacker];
+    ctx.abilities[ctx.battlerDef] = gAiLogicData->abilities[target];
+    ctx.holdEffects[ctx.battlerAtk] = gAiLogicData->holdEffects[attacker];
+    ctx.holdEffects[ctx.battlerDef] = gAiLogicData->holdEffects[target];
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
@@ -625,14 +625,14 @@ bool32 IsDamageMoveUnusable(struct DamageContext *ctx)
         return TRUE;
 
     // aiData->abilities does not check for Mold Breaker since it happens during combat so it needs to be done manually
-    if (IsMoldBreakerTypeAbility(ctx->battlerAtk, ctx->abilityAtk) || MoveIgnoresTargetAbility(ctx->move))
+    if (IsMoldBreakerTypeAbility(ctx->battlerAtk, ctx->abilities[ctx->battlerAtk]) || MoveIgnoresTargetAbility(ctx->move))
     {
         battlerDefAbility = ABILITY_NONE;
         partnerDefAbility = ABILITY_NONE;
     }
     else
     {
-        battlerDefAbility = ctx->abilityDef;
+        battlerDefAbility = ctx->abilities[ctx->battlerDef];
         partnerDefAbility = aiData->abilities[BATTLE_PARTNER(ctx->battlerDef)];
     }
 
@@ -782,14 +782,14 @@ static inline void CalcDynamicMoveDamage(struct DamageContext *ctx, u16 *medianD
             maximum *= GetMoveSpeciesPowerOverride_NumOfHits(ctx->move);
             random *= GetMoveSpeciesPowerOverride_NumOfHits(ctx->move);
         }
-        else if (ctx->abilityAtk == ABILITY_SKILL_LINK)
+        else if (ctx->abilities[ctx->battlerAtk] == ABILITY_SKILL_LINK)
         {
             median *= 5;
             minimum *= 5;
             maximum *= 5;
             random *= 5;
         }
-        else if (ctx->holdEffectAtk == HOLD_EFFECT_LOADED_DICE)
+        else if (ctx->holdEffects[ctx->battlerAtk] == HOLD_EFFECT_LOADED_DICE)
         {
             median *= 9;
             median /= 2;
@@ -805,7 +805,7 @@ static inline void CalcDynamicMoveDamage(struct DamageContext *ctx, u16 *medianD
             random *= RandomUniform(RNG_AI_DMG_ROLL_RANDOM, 2, 5);
         }
     }
-    else if (ctx->abilityAtk == ABILITY_PARENTAL_BOND
+    else if (ctx->abilities[ctx->battlerAtk] == ABILITY_PARENTAL_BOND
           && strikeCount == 0
           && !AI_IsDoubleSpreadMove(ctx->battlerAtk, ctx->move))
     {
@@ -939,14 +939,14 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
     ctx.updateFlags = FALSE;
     ctx.weather = weather;
     ctx.fixedBasePower = 0;
-    ctx.holdEffectAtk = aiData->holdEffects[battlerAtk];
-    ctx.holdEffectAtkPartner = aiData->holdEffects[ctx.battlerAtkPartner];
-    ctx.holdEffectDef = aiData->holdEffects[battlerDef];
-    ctx.holdEffectDefPartner = aiData->holdEffects[ctx.battlerDefPartner];
-    ctx.abilityAtk = aiData->abilities[battlerAtk];
-    ctx.abilityAtkPartner = aiData->abilities[ctx.battlerAtkPartner];
-    ctx.abilityDef = AI_GetMoldBreakerSanitizedAbility(battlerAtk, ctx.abilityAtk, aiData->abilities[battlerDef], ctx.holdEffectDef, move);
-    ctx.abilityDefPartner = AI_GetMoldBreakerSanitizedAbility(battlerAtk, ctx.abilityAtk, aiData->abilities[ctx.battlerDefPartner], ctx.holdEffectDefPartner, move);
+    ctx.holdEffects[ctx.battlerAtk] = aiData->holdEffects[battlerAtk];
+    ctx.holdEffects[ctx.battlerAtkPartner] = aiData->holdEffects[ctx.battlerAtkPartner];
+    ctx.holdEffects[ctx.battlerDef] = aiData->holdEffects[battlerDef];
+    ctx.holdEffects[ctx.battlerDefPartner] = aiData->holdEffects[ctx.battlerDefPartner];
+    ctx.abilities[ctx.battlerAtk] = aiData->abilities[battlerAtk];
+    ctx.abilities[ctx.battlerAtkPartner] = aiData->abilities[ctx.battlerAtkPartner];
+    ctx.abilities[ctx.battlerDef] = AI_GetMoldBreakerSanitizedAbility(battlerAtk, ctx.abilities[ctx.battlerAtk], aiData->abilities[battlerDef], ctx.holdEffects[ctx.battlerDef], move);
+    ctx.abilities[ctx.battlerDefPartner] = AI_GetMoldBreakerSanitizedAbility(battlerAtk, ctx.abilities[ctx.battlerAtk], aiData->abilities[ctx.battlerDefPartner], ctx.holdEffects[ctx.battlerDefPartner], move);
     ctx.isCrit = ShouldCalcCritDamage(&ctx);
     ctx.typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(&ctx);
 
@@ -1442,10 +1442,10 @@ uq4_12_t AI_GetMoveEffectiveness(enum Move move, enum BattlerId battlerAtk, enum
     ctx.move = ctx.chosenMove = move;
     ctx.moveType = GetBattleMoveType(move);
     ctx.updateFlags = FALSE;
-    ctx.abilityAtk = gAiLogicData->abilities[battlerAtk];
-    ctx.abilityDef = gAiLogicData->abilities[battlerDef];
-    ctx.holdEffectAtk = gAiLogicData->holdEffects[battlerAtk];
-    ctx.holdEffectDef = gAiLogicData->holdEffects[battlerDef];
+    ctx.abilities[ctx.battlerAtk] = gAiLogicData->abilities[battlerAtk];
+    ctx.abilities[ctx.battlerDef] = gAiLogicData->abilities[battlerDef];
+    ctx.holdEffects[ctx.battlerAtk] = gAiLogicData->holdEffects[battlerAtk];
+    ctx.holdEffects[ctx.battlerDef] = gAiLogicData->holdEffects[battlerDef];
     typeEffectiveness = CalcTypeEffectivenessMultiplier(&ctx);
 
     RestoreBattlerData(battlerAtk);

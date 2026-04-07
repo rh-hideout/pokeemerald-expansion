@@ -1317,10 +1317,10 @@ static void Cmd_typecalc(void)
     ctx.chosenMove = gChosenMove;
     ctx.moveType = GetBattleMoveType(gCurrentMove);
     ctx.updateFlags = TRUE;
-    ctx.abilityAtk = GetBattlerAbility(gBattlerAttacker);
-    ctx.abilityDef = GetBattlerAbility(gBattlerTarget);
-    ctx.holdEffectAtk = GetBattlerHoldEffect(gBattlerAttacker);
-    ctx.holdEffectDef = GetBattlerHoldEffect(gBattlerTarget);
+    ctx.abilities[ctx.battlerAtk] = GetBattlerAbility(gBattlerAttacker);
+    ctx.abilities[ctx.battlerDef] = GetBattlerAbility(gBattlerTarget);
+    ctx.holdEffects[ctx.battlerAtk] = GetBattlerHoldEffect(gBattlerAttacker);
+    ctx.holdEffects[ctx.battlerDef] = GetBattlerHoldEffect(gBattlerTarget);
     CalcTypeEffectivenessMultiplier(&ctx);
 
     gBattlescriptCurrInstr = cmd->nextInstr;

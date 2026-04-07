@@ -1779,18 +1779,18 @@ static enum CancelerResult CancelerTookAttack(struct BattleCalcValues *cv)
 
 static bool32 CanMoveBeBlockedByTargetHelper(struct BattleCalcValues *cv, s32 movePriority)
 {
-    struct DamageContext ctx = {
-        .battlerAtk = cv->battlerAtk,
-        .battlerDef = cv->battlerDef,
-        .move = cv->move,
-        .moveType = GetBattleMoveType(cv->move),
-        .updateFlags = TRUE,
-        .runScript = TRUE,
-        .abilityAtk = cv->abilities[cv->battlerAtk],
-        .abilityDef = cv->abilities[cv->battlerDef],
-        .holdEffectAtk = cv->holdEffects[cv->battlerAtk],
-        .holdEffectDef = cv->holdEffects[cv->battlerDef],
-    };
+    struct DamageContext ctx = {0};
+
+    ctx.battlerAtk = cv->battlerAtk;
+    ctx.battlerDef = cv->battlerDef;
+    ctx.move = cv->move;
+    ctx.moveType = GetBattleMoveType(cv->move);
+    ctx.updateFlags = TRUE;
+    ctx.runScript = TRUE;
+    ctx.abilities[ctx.battlerAtk] = cv->abilities[cv->battlerAtk];
+    ctx.abilities[ctx.battlerDef] = cv->abilities[cv->battlerDef];
+    ctx.holdEffects[ctx.battlerAtk] = cv->holdEffects[cv->battlerAtk];
+    ctx.holdEffects[ctx.battlerDef] = cv->holdEffects[cv->battlerDef];
 
     return CanMoveBeBlockedByTarget(&ctx, movePriority);
 }
@@ -1879,18 +1879,17 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
         }
         else
         {
-            struct DamageContext ctx = {
-                .battlerAtk = cv->battlerAtk,
-                .battlerDef = cv->battlerDef,
-                .move = cv->move,
-                .moveType = GetBattleMoveType(cv->move),
-                .updateFlags = TRUE,
-                .runScript = TRUE,
-                .abilityAtk = cv->abilities[cv->battlerAtk],
-                .abilityDef = cv->abilities[cv->battlerDef],
-                .holdEffectAtk = cv->holdEffects[cv->battlerAtk],
-                .holdEffectDef = cv->holdEffects[cv->battlerDef],
-            };
+            struct DamageContext ctx = {0};
+            ctx.battlerAtk = cv->battlerAtk;
+            ctx.battlerDef = cv->battlerDef;
+            ctx.move = cv->move;
+            ctx.moveType = GetBattleMoveType(cv->move);
+            ctx.updateFlags = TRUE;
+            ctx.runScript = TRUE;
+            ctx.abilities[ctx.battlerAtk] = cv->abilities[cv->battlerAtk];
+            ctx.abilities[ctx.battlerDef] = cv->abilities[cv->battlerDef];
+            ctx.holdEffects[ctx.battlerAtk] = cv->holdEffects[cv->battlerAtk];
+            ctx.holdEffects[ctx.battlerDef] = cv->holdEffects[cv->battlerDef];
 
             if (CalcTypeEffectivenessMultiplier(&ctx) == UQ_4_12(0.0))
                 gSpecialStatuses[cv->battlerDef].updateStallMons = TRUE;

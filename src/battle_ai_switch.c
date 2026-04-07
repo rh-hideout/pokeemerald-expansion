@@ -519,10 +519,10 @@ static bool32 ShouldSwitchIfAllMovesBad(enum BattlerId battler, enum BattlerId b
     struct DamageContext ctx = {0};
     ctx.battlerAtk = battler;
     ctx.battlerDef = opposingBattler;
-    ctx.abilityAtk = gAiLogicData->abilities[ctx.battlerAtk];
-    ctx.abilityDef = gAiLogicData->abilities[ctx.battlerDef];
-    ctx.holdEffectAtk = gAiLogicData->holdEffects[ctx.battlerAtk];
-    ctx.holdEffectDef = gAiLogicData->holdEffects[ctx.battlerDef];
+    ctx.abilities[ctx.battlerAtk] = gAiLogicData->abilities[ctx.battlerAtk];
+    ctx.abilities[ctx.battlerDef] = gAiLogicData->abilities[ctx.battlerDef];
+    ctx.holdEffects[ctx.battlerAtk] = gAiLogicData->holdEffects[ctx.battlerAtk];
+    ctx.holdEffects[ctx.battlerDef] = gAiLogicData->holdEffects[ctx.battlerDef];
 
     // Switch if no moves affect opponents
     if (IsDoubleBattle())
@@ -541,8 +541,8 @@ static bool32 ShouldSwitchIfAllMovesBad(enum BattlerId battler, enum BattlerId b
             {
                 // Set partner data in ctx
                 ctx.battlerDef = opposingPartner;
-                ctx.abilityDef = gAiLogicData->abilities[ctx.battlerDef];
-                ctx.holdEffectDef = gAiLogicData->holdEffects[ctx.battlerDef];
+                ctx.abilities[ctx.battlerDef] = gAiLogicData->abilities[ctx.battlerDef];
+                ctx.holdEffects[ctx.battlerDef] = gAiLogicData->holdEffects[ctx.battlerDef];
                 if (!IsMoveBad(&ctx, moveIndex))
                     return FALSE;
             }
@@ -919,8 +919,8 @@ static bool32 GetHitEscapeTransformState(enum BattlerId battlerAtk, enum Move mo
     ctx.battlerAtk = battlerAtk;
     ctx.move = ctx.chosenMove = move;
     ctx.moveType = moveType;
-    ctx.holdEffectAtk = gAiLogicData->holdEffects[battlerAtk];
-    ctx.abilityAtk = gAiLogicData->abilities[battlerAtk];
+    ctx.holdEffects[ctx.battlerAtk] = gAiLogicData->holdEffects[battlerAtk];
+    ctx.abilities[ctx.battlerAtk] = gAiLogicData->abilities[battlerAtk];
 
 
     for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
@@ -937,8 +937,8 @@ static bool32 GetHitEscapeTransformState(enum BattlerId battlerAtk, enum Move mo
         );
 
         ctx.battlerDef = battlerDef;
-        ctx.holdEffectDef = gAiLogicData->holdEffects[battlerDef];
-        ctx.abilityDef = abilityDef;
+        ctx.holdEffects[ctx.battlerDef] = gAiLogicData->holdEffects[battlerDef];
+        ctx.abilities[ctx.battlerDef] = abilityDef;
 
         if (AI_CanMoveBeBlockedByTarget(&ctx))
         {
@@ -1309,10 +1309,10 @@ static bool32 ShouldSwitchIfBadChoiceLock(enum BattlerId battler)
     ctx.battlerDef = opposingBattler;
     ctx.move = ctx.chosenMove = choicedMove;
     ctx.moveType = GetBattleMoveType(choicedMove);
-    ctx.abilityAtk = gAiLogicData->abilities[ctx.battlerAtk];
-    ctx.abilityDef = gAiLogicData->abilities[ctx.battlerDef];
-    ctx.holdEffectAtk = gAiLogicData->holdEffects[ctx.battlerAtk];
-    ctx.holdEffectDef = gAiLogicData->holdEffects[ctx.battlerDef];
+    ctx.abilities[ctx.battlerAtk] = gAiLogicData->abilities[ctx.battlerAtk];
+    ctx.abilities[ctx.battlerDef] = gAiLogicData->abilities[ctx.battlerDef];
+    ctx.holdEffects[ctx.battlerAtk] = gAiLogicData->holdEffects[ctx.battlerAtk];
+    ctx.holdEffects[ctx.battlerDef] = gAiLogicData->holdEffects[ctx.battlerDef];
 
     // Not locked in to anything yet, or not choiced
     if (choicedMove == MOVE_NONE)
@@ -1323,20 +1323,20 @@ static bool32 ShouldSwitchIfBadChoiceLock(enum BattlerId battler)
     if (IsDoubleBattle())
     {
         enum BattlerId opposingPartner = BATTLE_PARTNER(opposingBattler);
-        if (IsHoldEffectChoice(ctx.holdEffectAtk) && IsBattlerItemEnabled(battler))
+        if (IsHoldEffectChoice(ctx.holdEffects[ctx.battlerAtk]) && IsBattlerItemEnabled(battler))
         {
             if (GetMoveCategory(choicedMove) == DAMAGE_CATEGORY_STATUS || !CanMoveAffectTarget(&ctx, moveIndex))
             {
                 // Set partner data in ctx
                 ctx.battlerDef = opposingPartner;
-                ctx.abilityDef = gAiLogicData->abilities[ctx.battlerDef];
-                ctx.holdEffectDef = gAiLogicData->holdEffects[ctx.battlerDef];
+                ctx.abilities[ctx.battlerDef] = gAiLogicData->abilities[ctx.battlerDef];
+                ctx.holdEffects[ctx.battlerDef] = gAiLogicData->holdEffects[ctx.battlerDef];
                 if (!CanMoveAffectTarget(&ctx, moveIndex) && RandomPercentage(RNG_AI_SWITCH_CHOICE_LOCKED, GetSwitchChance(SHOULD_SWITCH_CHOICE_LOCKED)))
                     return SetSwitchinAndSwitch(battler, PARTY_SIZE);
             }
         }
     }
-    else if (IsHoldEffectChoice(ctx.holdEffectAtk) && IsBattlerItemEnabled(battler))
+    else if (IsHoldEffectChoice(ctx.holdEffects[ctx.battlerAtk]) && IsBattlerItemEnabled(battler))
     {
         if ((GetMoveCategory(choicedMove) == DAMAGE_CATEGORY_STATUS || !CanMoveAffectTarget(&ctx, moveIndex)) && RandomPercentage(RNG_AI_SWITCH_CHOICE_LOCKED, GetSwitchChance(SHOULD_SWITCH_CHOICE_LOCKED)))
             return SetSwitchinAndSwitch(battler, PARTY_SIZE);

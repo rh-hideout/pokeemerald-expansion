@@ -811,7 +811,7 @@ static u32 PpStallReduction(enum Move move, enum BattlerId battlerAtk)
     struct BattlePokemon backupBattleMon;
     struct DamageContext ctx = {0};
     ctx.battlerAtk = battlerAtk;
-    ctx.abilityAtk = gAiLogicData->abilities[battlerAtk];
+    ctx.abilities[ctx.battlerAtk] = gAiLogicData->abilities[battlerAtk];
     ctx.move = ctx.chosenMove = move;
     ctx.moveType = GetBattleMoveType(move); //  Probably doesn't handle dynamic types right now
     memcpy(&backupBattleMon, &gBattleMons[tempBattleMonIndex], sizeof(struct BattlePokemon));
@@ -822,8 +822,8 @@ static u32 PpStallReduction(enum Move move, enum BattlerId battlerAtk)
             continue;
         PokemonToBattleMon(&gPlayerParty[partyIndex], &gBattleMons[tempBattleMonIndex]);
         ctx.battlerDef = tempBattleMonIndex;
-        ctx.abilityDef = AI_DecideKnownAbilityForTurn(ctx.battlerDef);
-        ctx.holdEffectDef = AI_DecideHoldEffectForTurn(ctx.battlerDef);
+        ctx.abilities[ctx.battlerDef] = AI_DecideKnownAbilityForTurn(ctx.battlerDef);
+        ctx.holdEffects[ctx.battlerDef] = AI_DecideHoldEffectForTurn(ctx.battlerDef);
         if (AI_CanMoveBeBlockedByTarget(&ctx)
          || CalcTypeEffectivenessMultiplier(&ctx) == UQ_4_12(0.0))
             totalStallValue += currentStallValue;
@@ -1301,10 +1301,10 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         ctx.battlerDef = battlerDef;
         ctx.move = ctx.chosenMove = move;
         ctx.moveType = moveType;
-        ctx.abilityAtk = abilityAtk;
-        ctx.abilityDef = abilityDef;
-        ctx.holdEffectAtk = aiData->holdEffects[battlerAtk];
-        ctx.holdEffectDef = aiData->holdEffects[battlerDef];
+        ctx.abilities[ctx.battlerAtk] = abilityAtk;
+        ctx.abilities[ctx.battlerDef] = abilityDef;
+        ctx.holdEffects[ctx.battlerAtk] = aiData->holdEffects[battlerAtk];
+        ctx.holdEffects[ctx.battlerDef] = aiData->holdEffects[battlerDef];
 
         if (AI_CanMoveBeBlockedByTarget(&ctx))
             RETURN_SCORE_MINUS(20);

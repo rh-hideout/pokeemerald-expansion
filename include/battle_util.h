@@ -108,14 +108,8 @@ struct DamageContext
     enum Type moveType:6;
 
     uq4_12_t typeEffectivenessModifier;
-    enum Ability abilityAtk;
-    enum Ability abilityAtkPartner;
-    enum Ability abilityDef;
-    enum Ability abilityDefPartner;
-    enum HoldEffect holdEffectAtk;
-    enum HoldEffect holdEffectAtkPartner;
-    enum HoldEffect holdEffectDef;
-    enum HoldEffect holdEffectDefPartner;
+    enum Ability abilities[MAX_BATTLERS_COUNT];
+    enum HoldEffect holdEffects[MAX_BATTLERS_COUNT];
 
     // Flags
     u32 isCrit:1;
