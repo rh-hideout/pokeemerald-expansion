@@ -2013,7 +2013,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_DARK_VOID] =
     {
-        .battleScript = BattleScript_EffectDarkVoid,
+        .battleScript = BattleScript_EffectNonVolatileStatus,
         .battleTvScore = 0, // TODO: Assign points
     },
 
