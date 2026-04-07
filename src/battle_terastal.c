@@ -60,13 +60,9 @@ void ApplyBattlerVisualsForTeraAnim(enum BattlerId battler)
 // Returns whether the Tera Orb is charged.
 bool32 IsTeraOrbCharged(void)
 {
-    if (B_TERA_ORB_ALWAYS_CHARGED)
+    if (FlagGet(B_FLAG_TERA_ORB_NO_COST) || B_TERA_ORB_ALWAYS_CHARGED)
         return TRUE;
-    if (FlagGet(B_FLAG_TERA_ORB_NO_COST))
-        return TRUE;
-    if (B_FLAG_TERA_ORB_CHARGED != 0)
-        return TRUE;
-    return FALSE;
+    return FlagGet(B_FLAG_TERA_ORB_CHARGED);
 }
 
 // Returns whether a battler can Terastallize.
