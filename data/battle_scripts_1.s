@@ -7661,7 +7661,6 @@ BattleScript_EjectItemActivates::
 	makeinvisible BS_SCRIPTING
 	returntoball BS_SCRIPTING, FALSE
 	switchoutabilities BS_SCRIPTING
-BattleScript_EjectButtonEnd:
 	return
 
 BattleScript_EjectPackActivates_SendReplacement::

@@ -1580,7 +1580,7 @@ bool32 DoEndTurnEffects(void)
             gBattleStruct->battlerState[battler].wasAboveHalfHp = gBattleMons[battler].hp > gBattleMons[battler].maxHP / 2;
 
             if (effect)
-                return;
+                return TRUE;
         }
         // If either turnEffectsBattlerId or turnSideTracker are at max count, reset values and go to the next state
         if (gBattleStruct->eventState.endTurnBattler == gBattlersCount || gBattleStruct->eventState.battlerSide == NUM_BATTLE_SIDES)
