@@ -1548,8 +1548,6 @@ static bool32 HandleEndTurnEmergencyExit(enum BattlerId battler)
     bool32 effect = FALSE;
     enum Ability ability = GetBattlerAbility(battler);
 
-    gBattleStruct->eventState.endTurnBattler++;
-
     if (EmergencyExitCanBeTriggered(battler))
     {
         gBattleScripting.battler = gBattlerAbility = battler;
