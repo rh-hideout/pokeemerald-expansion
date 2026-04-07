@@ -167,7 +167,7 @@ SINGLE_BATTLE_TEST("Transform returns the user to normal at the end of the battl
         TURN { MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(player, MOVE_TRANSFORM); }
         TURN { MOVE(opponent, MOVE_SCRATCH); SEND_OUT(player, 1); }
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_DITTO);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPECIES), SPECIES_DITTO);
     }
 }
 
