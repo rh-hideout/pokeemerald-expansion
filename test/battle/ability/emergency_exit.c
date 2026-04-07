@@ -133,12 +133,15 @@ SINGLE_BATTLE_TEST("Emergency Exit activates when healing from under 50% max-hp 
 SINGLE_BATTLE_TEST("Emergency Exit activates when taking residual damage and falling under 50% max-hp - Salt Cure")
 {
     GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_SALT_CURE, MOVE_EFFECT_SALT_CURE));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(160); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SALT_CURE); SEND_OUT(opponent, 1); }
     } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SALT_CURE, player);
+        HP_BAR(opponent);
         HP_BAR(opponent);
         ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
     }
@@ -151,6 +154,7 @@ DOUBLE_BATTLE_TEST("Emergency Exit activates when taking Sea of Fire damage and 
         ASSUME(GetMoveEffect(MOVE_GRASS_PLEDGE) == EFFECT_PLEDGE);
         ASSUME(GetMoveEffect(MOVE_GRASSY_TERRAIN) == EFFECT_GRASSY_TERRAIN);
         ASSUME(GetItemHoldEffect(ITEM_AIR_BALLOON) == HOLD_EFFECT_AIR_BALLOON);
+        // Air Balloon is ignored once the battler leaves the field
         PLAYER(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(132); Item(ITEM_AIR_BALLOON); }
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
@@ -165,6 +169,31 @@ DOUBLE_BATTLE_TEST("Emergency Exit activates when taking Sea of Fire damage and 
         HP_BAR(playerLeft);
         ABILITY_POPUP(playerLeft, ABILITY_EMERGENCY_EXIT);
         HP_BAR(playerLeft);
+        SEND_IN_MESSAGE("Wobbuffet");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Emergency Exit activates when taking residual damage and battler doesn't get affected by events until replacement switches in")
+{
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_SALT_CURE, MOVE_EFFECT_SALT_CURE));
+        ASSUME(GetMoveEffect(MOVE_LEECH_SEED) == EFFECT_LEECH_SEED);
+        PLAYER(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(160); Status1(STATUS1_POISON); }
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_SALT_CURE, target: playerLeft);
+               MOVE(opponentRight, MOVE_LEECH_SEED, target: playerLeft);
+               SEND_OUT(playerLeft, 2); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SALT_CURE, opponentLeft);
+        HP_BAR(playerLeft);
+
+        HP_BAR(playerLeft);
+        ABILITY_POPUP(playerLeft, ABILITY_EMERGENCY_EXIT);
+        NOT HP_BAR(playerLeft);
         SEND_IN_MESSAGE("Wobbuffet");
     }
 }
