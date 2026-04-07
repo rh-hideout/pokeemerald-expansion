@@ -300,7 +300,7 @@ static bool32 HandleEndTurnFirstEventBlock(enum BattlerId battler)
     bool32 effect = FALSE;
     enum BattleSide side;
 
-    if (!IsBattlerAlive(battler))
+    if (!IsBattlerAlive(battler) && gSpecialStatuses[battler].queuedSwitch == NO_QUEUED_SWITCH)
     {
         gBattleStruct->eventState.endTurnBlock = 0;
         gBattleStruct->eventState.endTurnBattler++;
