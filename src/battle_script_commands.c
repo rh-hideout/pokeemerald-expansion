@@ -6953,10 +6953,14 @@ static void RemoveAllWeather(void)
 {
     gBattleStruct->weatherDuration = 0;
 
-    if (gBattleWeather & B_WEATHER_RAIN)
+    if (gBattleWeather & B_WEATHER_RAIN_PRIMAL)
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WEATHER_END_HEAVY_RAIN;
+    else if (gBattleWeather & B_WEATHER_RAIN)
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WEATHER_END_RAIN;
     else if (gBattleWeather & B_WEATHER_SANDSTORM)
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WEATHER_END_SANDSTORM;
+    else if (gBattleWeather & B_WEATHER_SUN_PRIMAL)
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WEATHER_END_EXTREMELY_HARSH_SUNLIGHT;
     else if (gBattleWeather & B_WEATHER_SUN)
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WEATHER_END_SUN;
     else if (gBattleWeather & B_WEATHER_HAIL)
