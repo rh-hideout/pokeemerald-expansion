@@ -9905,10 +9905,15 @@ bool32 TrySwitchInEjectPack(enum EjectPackTiming timing)
 
         gBattleScripting.battler = battler;
         gLastUsedItem = gBattleMons[battler].item;
-        if (timing == END_TURN)
-            BattleScriptCall(BattleScript_EjectPackActivate_NoQueuedSwitch);
+        if (timing != END_TURN)
+        {
+            BattleScriptCall(BattleScript_EjectPackActivates_SendReplacement);
+        }
         else
-            BattleScriptCall(BattleScript_EjectPackActivate_Ret);
+        {
+            gSpecialStatuses[battler].queuedSwitch = QUEUED_SWITCH_OPEN_PARTY_SCREEN;
+            BattleScriptCall(BattleScript_EjectItemActivates);
+        }
         gAiLogicData->ejectPackSwitch = TRUE;
         return TRUE;
     }
