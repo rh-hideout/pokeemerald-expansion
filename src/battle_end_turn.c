@@ -1571,6 +1571,7 @@ bool32 DoEndTurnEffects(void)
 
     for (;;)
     {
+        // Activate the previous battler's Emergency Exit if possible (otherwise reset wasAboveHalfHp bit)
         if (gBattleStruct->eventState.endTurnBattler != 0)
         {
             enum BattlerId battler = gBattleStruct->eventState.endTurnBattler - 1;
