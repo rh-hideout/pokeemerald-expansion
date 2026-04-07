@@ -8029,9 +8029,7 @@ s32 CalculateMoveDamage(struct DamageContext *ctx)
     ctx->abilityDef = GetBattlerAbility(ctx->battlerDef);
     ctx->abilityDefPartner = GetBattlerAbility(ctx->battlerDefPartner);
     ctx->holdEffectAtk = GetBattlerHoldEffect(ctx->battlerAtk);
-    ctx->holdEffectAtkPartner = GetBattlerHoldEffect(ctx->battlerAtkPartner);
     ctx->holdEffectDef = GetBattlerHoldEffect(ctx->battlerDef);
-    ctx->holdEffectDefPartner = GetBattlerHoldEffect(ctx->battlerDefPartner);
 
     ctx->typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(ctx);
     ctx->isCrit = IsCriticalHit(ctx);
