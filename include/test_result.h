@@ -1,8 +1,6 @@
 #ifndef GUARD_TEST_RESULT_H
 #define GUARD_TEST_RESULT_H
 
-#include "constants/assert.h"
-
 enum TestResult
 {
     TEST_RESULT_FAIL,

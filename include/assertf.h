@@ -1,8 +1,6 @@
 #ifndef ASSERTF_H
 #define ASSERTF_H
 
-#include "constants/assert.h"
-
 /* Formatted assert.
  *
  * Asserts are a way to catch programmer errors at run-time. They should
@@ -44,9 +42,7 @@
  * recovery code does something that seems "reasonable", for example:
  * - CreateMonWithGenderNatureLetter should ignore an illegal gender or
  *   letter. */
-#define taggedAssertf(cond, tag, ...) CAT(_ASSERTF, FIRST(__VA_OPT__(_FMT,) _COND))(cond, tag __VA_OPT__(,) __VA_ARGS__)
-
-#define assertf(cond, ...) taggedAssertf(cond, ASSERT_TAG_NONE, __VA_ARGS__)
+#define assertf(cond, ...) CAT(_ASSERTF, FIRST(__VA_OPT__(_FMT,) _COND))(cond __VA_OPT__(,) __VA_ARGS__)
 
 /* errorf(fmt, ...);
  *
@@ -65,20 +61,19 @@
  *       return i;
  *   }
  *   errorf("member not found"); */
-#define taggedErrorf(fmt, tag, ...) _ASSERTF_HANDLE("%s:%d: " fmt, tag, __FILE__, __LINE__ __VA_OPT__(,) __VA_ARGS__)
-#define errorf(fmt, ...) taggedErrorf(fmt, ASSERT_TAG_NONE, __VA_ARGS__)
+#define errorf(fmt, ...) _ASSERTF_HANDLE("%s:%d: " fmt, __FILE__, __LINE__ __VA_OPT__(,) __VA_ARGS__)
 
-#define _ASSERTF_COND(cond, tag) for (bool32 _recover = !(cond); _recover && (_ASSERTF_HANDLE("%s:%d: %s", tag, __FILE__, __LINE__, STR(cond)), TRUE); _recover = FALSE)
+#define _ASSERTF_COND(cond) for (bool32 _recover = !(cond); _recover && (_ASSERTF_HANDLE("%s:%d: %s", __FILE__, __LINE__, STR(cond)), TRUE); _recover = FALSE)
 
-#define _ASSERTF_FMT(cond, tag, fmt, ...) for (bool32 _recover = !(cond); _recover && (_ASSERTF_HANDLE("%s:%d: " fmt, tag, __FILE__, __LINE__ __VA_OPT__(,) __VA_ARGS__), TRUE); _recover = FALSE)
+#define _ASSERTF_FMT(cond, fmt, ...) for (bool32 _recover = !(cond); _recover && (_ASSERTF_HANDLE("%s:%d: " fmt, __FILE__, __LINE__ __VA_OPT__(,) __VA_ARGS__), TRUE); _recover = FALSE)
 
 #if RELEASE
 #define _ASSERTF_HANDLE(...) (void)0
 #elif TESTING
 #include "test_result.h"
-#define _ASSERTF_HANDLE(fmt, tag, ...) Test_ExitWithResult(TEST_RESULT_ASSERT_FAIL, tag, fmt, __VA_ARGS__)
+#define _ASSERTF_HANDLE(fmt, ...) Test_ExitWithResult(TEST_RESULT_ASSERT_FAIL, 0, fmt, __VA_ARGS__)
 #else
-#define _ASSERTF_HANDLE(fmt, tag, ...) AssertfCrashScreen(__builtin_return_address(0), fmt, __VA_ARGS__)
+#define _ASSERTF_HANDLE(fmt, ...) AssertfCrashScreen(__builtin_return_address(0), fmt, __VA_ARGS__)
 #endif
 
 void AssertfCrashScreen(const void *return0, const char *fmt, ...);

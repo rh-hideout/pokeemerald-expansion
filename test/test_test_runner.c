@@ -188,7 +188,7 @@ SINGLE_BATTLE_TEST("USE_ITEM will add item to bag if GIVE_PLAYER_ITEM was not us
 
 SINGLE_BATTLE_TEST("USE_ITEM will add not item to bag if GIVE_PLAYER_ITEM was used")
 {
-    KNOWN_ASSERT_FALING(ASSERT_TAG_USE_MISSING_ITEM_IN_BATTLE);
+    Test_ExpectedResult(TEST_RESULT_ASSERT_FAIL);
     GIVEN {
         ASSUME(GetItemImportance(ITEM_POKE_FLUTE));
         PLAYER(SPECIES_WOBBUFFET) { Level(1); }

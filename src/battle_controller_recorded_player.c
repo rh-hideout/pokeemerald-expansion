@@ -381,7 +381,7 @@ static void RecordedPlayerHandleChooseItem(enum BattlerId battler)
 
     if (TESTING)
     {
-        taggedAssertf(CheckBagHasItem(gBattleStruct->chosenItem[battler], 1), ASSERT_TAG_USE_MISSING_ITEM_IN_BATTLE, "Tried to used an item not present in bag");
+        assertf(CheckBagHasItem(gBattleStruct->chosenItem[battler], 1), "Tried to used an item not present in bag");
         if (!GetItemImportance(gBattleStruct->chosenItem[battler]))
             RemoveBagItem(gBattleStruct->chosenItem[battler], 1);
     }
