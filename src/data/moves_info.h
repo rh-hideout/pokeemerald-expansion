@@ -8123,7 +8123,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .contestComboMoves = {0},
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = STAT_CHANGE_EFFECT_MINUS,
-            .attack = 1,
+            .attack = 2,
         }),
         .battleAnimScript = gBattleAnimMove_FeatherDance,
         .validApprenticeMove = TRUE,

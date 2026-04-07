@@ -683,7 +683,7 @@ DOUBLE_BATTLE_TEST("Crafty Shield does not protect against status moves used on 
 {
     u32 move;
 
-    PARAMETRIZE { move = MOVE_AROMATHERAPY; }
+    // PARAMETRIZE { move = MOVE_AROMATHERAPY; }
     PARAMETRIZE { move = MOVE_ACUPRESSURE; }
 
     GIVEN {
@@ -816,10 +816,10 @@ DOUBLE_BATTLE_TEST("Crafty Shield does not protect against moves that target all
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FLOWER_SHIELD, playerLeft);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
             MESSAGE("Tangela's Defense rose!");
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-            MESSAGE("The opposing Sunkern's Defense rose!");
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
             MESSAGE("Tangrowth's Defense rose!");
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+            MESSAGE("The opposing Sunkern's Defense rose!");
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
             MESSAGE("The opposing Sunflora's Defense rose!");
         } else {

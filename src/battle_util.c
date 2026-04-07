@@ -1161,7 +1161,7 @@ bool32 ShouldDefiantCompetitiveActivate(enum BattlerId battler, enum Ability abi
         return FALSE;
     }
 
-    if (gBattleStruct->selfStatDrop)
+    if (gBattleStruct->ignoreDefiant)
         return FALSE;
 
     if (GetConfig(B_DEFIANT_STICKY_WEB) >= GEN_9 || !gBattleScripting.stickyWebStatDrop)
@@ -1173,32 +1173,11 @@ bool32 ShouldDefiantCompetitiveActivate(enum BattlerId battler, enum Ability abi
 
 void PrepareStringBattle(enum StringID stringId, enum BattlerId battler)
 {
-    // Support for Contrary ability.
-    // If a move attempted to raise stat - print "won't increase".
-    // If a move attempted to lower stat - print "won't decrease".
     switch (stringId)
     {
-    case STRINGID_STATROSE:
-    case STRINGID_STATSWONTINCREASE:
-    case STRINGID_USINGITEMSTATOFPKMNROSE:
-        // stringId = gStatDownStringIds[gBattleCommunication[MULTISTRING_CHOOSER]];
-        break;
-    case STRINGID_STATFELL:
-    case STRINGID_STATSWONTDECREASE:
-    case STRINGID_USINGITEMSTATOFPKMNFELL:
-        // stringId = gStatUpStringIds[gBattleCommunication[MULTISTRING_CHOOSER]];
-        break;
-    case STRINGID_STATSWONTINCREASE2: // ????
-        // if (battlerAbility == ABILITY_CONTRARY)
-        //     stringId = STRINGID_STATSWONTDECREASE2;
-        break;
-    case STRINGID_STATSWONTDECREASE2: // ????
-        // if (battlerAbility == ABILITY_CONTRARY)
-        //     stringId = STRINGID_STATSWONTINCREASE2;
-        break;
     case STRINGID_ITDOESNTAFFECT:
     case STRINGID_PKMNUNAFFECTED:
-        TryInitializeTrainerSlideEnemyMonUnaffected(gBattlerTarget);
+        TryInitializeTrainerSlideEnemyMonUnaffected(gBattlerTarget); // Depending on the future changes that might lead to bugs
         break;
     default:
         break;
@@ -1852,15 +1831,6 @@ bool32 HandleFaintedMonActions(void)
         }
     } while (gBattleStruct->eventState.faintedAction != FAINTED_ACTIONS_MAX_CASE);
     return FALSE;
-}
-
-void TryClearRageAndFuryCutter(void)
-{
-    for (enum BattlerId i = 0; i < gBattlersCount; i++)
-    {
-        if (!MoveHasAdditionalEffect(gChosenMoveByBattler[i], MOVE_EFFECT_RAGE))
-            gBattleMons[i].volatiles.rage = FALSE;
-    }
 }
 
 bool32 HasNoMonsToSwitch(enum BattlerId battler, u8 partyIdBattlerOn1, u8 partyIdBattlerOn2)
@@ -3973,18 +3943,17 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
              && !gBattleStruct->unableToUseMove)
             {
                 struct BattleCalcValues cv = {
-                    .battlerAtk = gBattlerAttacker,
-                    .battlerDef = battler,
+                    .battlerAtk = gBattlerTarget,
+                    .battlerDef = gBattlerAttacker,
                     .move = MOVE_NONE,
                 };
 
-                cv.abilities[cv.battlerAtk] = GetBattlerAbility(gBattlerAttacker);
-                cv.abilities[cv.battlerDef] = ability;
-                cv.holdEffects[cv.battlerAtk] = GetBattlerHoldEffect(gBattlerAttacker);
-                cv.holdEffects[cv.battlerDef] = GetBattlerHoldEffect(gBattlerTarget);
+                cv.abilities[gBattlerAttacker] = GetBattlerAbility(gBattlerAttacker);
+                cv.abilities[gBattlerTarget] = ability;
+                cv.holdEffects[gBattlerAttacker] = GetBattlerHoldEffect(gBattlerAttacker);
+                cv.holdEffects[gBattlerTarget] = GetBattlerHoldEffect(gBattlerTarget);
 
                 struct StatChange st = {
-                    .battler = gBattlerAttacker,
                     .onlyChecking = TRUE,
                 };
 
@@ -3996,8 +3965,8 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 st.statStageQueue = &change;
                 st.statStageAmount = 1;
 
-                if ((TryStatChange(&cv, &st) == STAT_CHANGE_WORKED || cv.abilities[st.battler] == ABILITY_MIRROR_ARMOR)
-                 && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, cv.abilities[cv.battlerAtk], cv.holdEffects[cv.battlerAtk], move))
+                if ((TryStatChange(&cv, &st) == STAT_CHANGE_WORKED || cv.abilities[gBattlerTarget] == ABILITY_MIRROR_ARMOR)
+                 && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, cv.abilities[gBattlerAttacker], cv.holdEffects[gBattlerAttacker], move))
                 {
                     gEffectBattler = gBattlerAttacker;
                     SetStatChange(gBattlerAttacker, STAT_SPEED, -1);
@@ -10771,7 +10740,7 @@ void TryResetConsecutiveUseCounter(enum BattlerId battler)
 
 void SetOrClearRageVolatile(void)
 {
-    if (GetConfig(B_RAGE_BUILDS) <= GEN_3 && MoveHasAdditionalEffect(gCurrentMove, MOVE_EFFECT_RAGE))
+    if (GetConfig(B_RAGE_BUILDS) <= GEN_3 && MoveHasAdditionalEffectSelf(gCurrentMove, MOVE_EFFECT_RAGE))
         gBattleMons[gBattlerAttacker].volatiles.rage = TRUE;
     else
         gBattleMons[gBattlerAttacker].volatiles.rage = FALSE;

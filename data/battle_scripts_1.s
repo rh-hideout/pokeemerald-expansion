@@ -591,7 +591,7 @@ BattleScript_EffectOctolock::
 	goto BattleScript_MoveEnd
 
 BattleScript_EndTurnStatChange::
-	trybattlerstatchange BS_ATTACKER, STAT_CHANGE_NO_FLAGS
+	trybattlerstatchange BS_ATTACKER, STAT_CHANGE_IGNORE_MIRROR_ARMOR
 	return
 
 BattleScript_PoltergeistMessage::
@@ -1601,7 +1601,7 @@ BattleScript_StatUp::
 BattleScript_MirrorArmorReflect::
 	pause B_WAIT_TIME_SHORT
 	call BattleScript_AbilityPopUp
-	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_SECOND_QUEUE | STAT_CHANGE_MIRROR_ARMOR
+	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_SECOND_QUEUE | STAT_CHANGE_IGNORE_MIRROR_ARMOR
 	return
 
 BattleScript_StatDown::
@@ -2679,20 +2679,6 @@ BattleScript_EffectWaterSport::
 	attackanimation
 	waitanimation
 	printfromtable gSportsUsedStringIds
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
-BattleScript_CantLowerMultipleStats::
-	pause B_WAIT_TIME_SHORT
-	setmoveresultflags MOVE_RESULT_FAILED
-	printstring STRINGID_STATSWONTDECREASE2
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
-BattleScript_CantRaiseMultipleStats::
-	pause B_WAIT_TIME_SHORT
-	setmoveresultflags MOVE_RESULT_FAILED
-	printstring STRINGID_STATSWONTINCREASE2
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
@@ -6122,7 +6108,7 @@ BattleScript_EffectRaiseCritAlliesAnim::
 	copybyte gBattlerTarget, gEffectBattler
 BattleScript_RaiseCritAlliesLoop:
 	jumpifabsent BS_TARGET, BattleScript_RaiseCritAlliesIncrement
-    forceplaystatchangeanim BS_TARGET
+    raisecritstatchangeanim  BS_TARGET
 	printstring STRINGID_PKMNGETTINGPUMPED
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_RaiseCritAlliesIncrement:

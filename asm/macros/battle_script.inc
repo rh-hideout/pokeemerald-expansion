@@ -1585,8 +1585,8 @@
     callnative BS_TryDefiantRattled
     .endm
 
-    .macro forceplaystatchangeanim battler:req
-    callnative BS_ForcePlayStatChangeAnim
+    .macro raisecritstatchangeanim  battler:req
+    callnative BS_RaiseCritStatChangeAnim
     .byte \battler
     .endm
 

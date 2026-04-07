@@ -41,7 +41,7 @@ struct StatChange
 
     u32 silentFailure:1;
     u32 onlyChecking:1;
-    u32 mirrorArmored:1;
+    u32 ignoreMirrorArmored:1;
     u32 nextBattler:1;
     u32 forceAnim:1; // for stat change anim but what?
     u32 intimidate:1;

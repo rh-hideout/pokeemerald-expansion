@@ -674,15 +674,9 @@ static bool32 HandleEndTurnOctolock(enum BattlerId battler)
 
     if (gBattleMons[battler].volatiles.octolock)
     {
-        // WHY??? It's for the string. Needs to be redo
-        // gEffectBattler = gBattleMons[battler].volatiles.battlerPreventingEscape;
-        
-        // gBattlerTarget = battler;
-        // gBattlerAttacker = gBattleMons[battler].volatiles.battlerPreventingEscape;
-
         SetStatChange(battler, STAT_DEF, -1);
         SetStatChange(battler, STAT_SPDEF, -1);
-        BattleScriptExecute(BattleScript_EndTurnStatChange);
+        BattleScriptCall(BattleScript_EndTurnStatChange);
         effect = TRUE;
     }
 

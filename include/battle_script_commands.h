@@ -22,23 +22,6 @@ struct PickupItem
     u8 percentage[10];
 };
 
-union TRANSPARENT StatChangeFlags
-{
-    int raw;
-    u32 raw_u32;
-    u16 raw_u16;
-    u8 raw_u8;
-    struct {
-        bool32 allowPtr:1; // STAT_CHANGE_ALLOW_PTR
-        bool32 mirrorArmored:1; // STAT_CHANGE_MIRROR_ARMOR
-        bool32 onlyChecking:1; // STAT_CHANGE_ONLY_CHECKING
-        bool32 updateMoveEffect:1; // STAT_CHANGE_UPDATE_MOVE_EFFECT
-        bool32 statDropPrevention:1; // STAT_CHANGE_CHECK_PREVENTION
-        bool32 certain:1; // STAT_CHANGE_CERTAIN
-        bool32 padding:25;
-    };
-};
-
 bool32 HasBattlerActedThisTurn(enum BattlerId battler);
 u32 GetBattlerTurnOrderNum(enum BattlerId battler);
 bool32 NoAliveMonsForBattlerSide(enum BattlerId battler);
@@ -52,7 +35,7 @@ void BufferMoveToLearnIntoBattleTextBuff2(void);
 void HandleBattleWindow(u8 xStart, u8 yStart, u8 xEnd, u8 yEnd, u8 flags);
 bool8 UproarWakeUpCheck(enum BattlerId battler);
 bool32 DoesSubstituteBlockMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);
-bool32 DoesSubstituteBlockMoveInternal(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk, enum Move move);
+bool32 IsSubstituteProtected(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk, enum Move move);
 bool32 DoesDisguiseBlockMove(enum BattlerId battler, enum Move move);
 bool32 DoesIceFaceBlockMove(enum BattlerId battler, enum Move move);
 bool32 CanUseLastResort(enum BattlerId battlerId);

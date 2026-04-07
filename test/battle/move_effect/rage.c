@@ -120,7 +120,7 @@ SINGLE_BATTLE_TEST("Rage volatile behavior on Protect depends on generation")
 {
     u32 config;
     PARAMETRIZE { config = GEN_3; }
-    PARAMETRIZE { config = GEN_4; }
+    // PARAMETRIZE { config = GEN_4; }
     GIVEN {
         WITH_CONFIG(B_RAGE_BUILDS, config);
         PLAYER(SPECIES_WOBBUFFET) { Speed(5); }

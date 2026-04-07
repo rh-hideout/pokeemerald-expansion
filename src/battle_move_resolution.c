@@ -355,7 +355,7 @@ static enum CancelerResult CancelerVolatileBlocked(struct BattleCalcValues *cv)
     }
 
     if (gBattleStruct->snatchedMoveIsUsed)
-        gBattleStruct->eventState.atkCanceler = CANCELER_SNATCH - 1; // -1 for gen4- behavior since state is incremented on success
+        gBattleStruct->eventState.atkCanceler = CANCELER_SET_TARGETS - 1; // minus one since state is incremented on success by default
 
     return result;
 }
@@ -953,6 +953,7 @@ static enum CancelerResult CancelerPPDeduction(struct BattleCalcValues *cv)
     if (gBattleMons[cv->battlerAtk].volatiles.multipleTurns
      || gSpecialStatuses[cv->battlerAtk].dancerUsedMove
      || gBattleStruct->bouncedMoveIsUsed
+     || gBattleStruct->snatchedMoveIsUsed
      || gBattleMons[cv->battlerAtk].volatiles.bideTurns
      || cv->move == MOVE_STRUGGLE)
         return CANCELER_RESULT_SUCCESS;
@@ -3773,6 +3774,8 @@ static enum MoveEndResult MoveEndHitEscape(void)
     case EFFECT_PARTING_SHOT:
         if (CanPartingShotTrigger())
         {
+            for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+                gBattleMons[battler].volatiles.tryEjectPack = FALSE;
 
             result = MOVEEND_RESULT_RUN_SCRIPT;
             BattleScriptCall(BattleScript_PartingShotEscape);
@@ -4335,7 +4338,7 @@ static enum MoveResult StatChangeSubstitute(struct BattleCalcValues *cv)
          || cv->battlerAtk == battler)
             continue;
 
-        if (DoesSubstituteBlockMoveInternal(cv->battlerAtk, battler, cv->abilities[cv->battlerAtk], cv->move))
+        if (IsSubstituteProtected(cv->battlerAtk, battler, cv->abilities[cv->battlerAtk], cv->move))
             gBattleStruct->moveResultFlags[battler] = MOVE_RESULT_DOESNT_AFFECT_FOE;
     }
 
@@ -4356,25 +4359,25 @@ static enum MoveResult StatChangeCanAnyChange(struct BattleCalcValues *cv)
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
         if (IsDoubleBattle())
-            st.battler = GetTargetBySlot(cv->battlerAtk, battler);
+            cv->battlerDef = GetTargetBySlot(cv->battlerAtk, battler);
         else
-            st.battler = battler;
+            cv->battlerDef = battler;
 
-        if (ShouldSkipStatChangeOnBattler(cv->battlerAtk, st.battler))
+        if (ShouldSkipStatChangeOnBattler(cv->battlerAtk, cv->battlerDef))
             continue;
 
-        if (cv->battlerAtk != st.battler)
+        if (cv->battlerAtk != cv->battlerDef)
             st.checkAccuracy = TRUE;
 
-        st.certain = cv->battlerAtk == st.battler;
+        st.certain = cv->battlerAtk == cv->battlerDef;
 
         if (CanAnyStatChange(cv, &st))
-            gBattleStruct->moveResultFlags[st.battler] = MOVE_RESULT_ATTEMPT_STAT_CHANGE;
+            gBattleStruct->moveResultFlags[cv->battlerDef] = MOVE_RESULT_ATTEMPT_STAT_CHANGE;
         else
-            gBattleStruct->moveResultFlags[st.battler] = MOVE_RESULT_STAT_CHANGE_PREVENTED;
+            gBattleStruct->moveResultFlags[cv->battlerDef] = MOVE_RESULT_STAT_CHANGE_PREVENTED;
 
         if (st.additionalEffectTriggers)
-            gBattleStruct->moveResultFlags[st.battler] = MOVE_RESULT_ATTEMPT_STAT_CHANGE;
+            gBattleStruct->moveResultFlags[cv->battlerDef] = MOVE_RESULT_ATTEMPT_STAT_CHANGE;
     }
 
     gBattleStruct->additionalEffectsCounter = 0;
@@ -4455,6 +4458,8 @@ static enum MoveResult StatChangeBeforeChange(struct BattleCalcValues *cv)
             } while (!(bits & (1u << statId)));
 
             SetStatChange(cv->battlerDef, statId, 2);
+            BattleScriptCall(BattleScript_PlayMoveAnim);
+            return MOVE_RESULT_RUN_SCRIPT_INCREMENT;
         }
         else
         {
@@ -4654,11 +4659,11 @@ static enum MoveResult StatChangeTryChange(struct BattleCalcValues *cv)
     while (gBattleStruct->statChangeBattler < gBattlersCount)
     {
         if (IsDoubleBattle())
-            st.battler = GetTargetBySlot(cv->battlerAtk, gBattleStruct->statChangeBattler);
+            cv->battlerDef = GetTargetBySlot(cv->battlerAtk, gBattleStruct->statChangeBattler);
         else
-            st.battler = gBattleStruct->statChangeBattler;
+            cv->battlerDef = gBattleStruct->statChangeBattler;
 
-        if (gBattleStruct->moveResultFlags[st.battler] & MOVE_RESULT_MISSED)
+        if (gBattleStruct->moveResultFlags[cv->battlerDef] & MOVE_RESULT_MISSED)
         {
             gBattleStruct->statChangeBattler++;
             gBattleCommunication[MISS_TYPE] = B_MSG_MISSED;
@@ -4666,24 +4671,24 @@ static enum MoveResult StatChangeTryChange(struct BattleCalcValues *cv)
             return MOVE_RESULT_RUN_SCRIPT;
         }
 
-        if (ShouldSkipStatChangeOnBattler(cv->battlerAtk, st.battler))
+        if (ShouldSkipStatChangeOnBattler(cv->battlerAtk, cv->battlerDef))
         {
             gBattleStruct->statChangeBattler++;
             continue;
         }
 
-        if (cv->battlerAtk != st.battler)
+        if (cv->battlerAtk != cv->battlerDef)
         {
             st.checkAccuracy = TRUE;
-            cv->abilities[st.battler] = GetBattlerAbility(st.battler);
-            cv->holdEffects[st.battler] = GetBattlerHoldEffect(st.battler);
+            cv->abilities[cv->battlerDef] = GetBattlerAbility(cv->battlerDef);
+            cv->holdEffects[cv->battlerDef] = GetBattlerHoldEffect(cv->battlerDef);
         }
 
-        st.certain = cv->battlerAtk == st.battler;
+        st.certain = cv->battlerAtk == cv->battlerDef;
 
         bool32 runScript = FALSE;
-        st.statStageQueue = gSpecialStatuses[st.battler].statStageQueue;
-        st.statStageAmount = gSpecialStatuses[st.battler].statStageAmount;
+        st.statStageQueue = gSpecialStatuses[cv->battlerDef].statStageQueue;
+        st.statStageAmount = gSpecialStatuses[cv->battlerDef].statStageAmount;
 
         if (TryStatChange(cv, &st) != STAT_CHANGE_DIDNT_WORK)
             runScript = TRUE;

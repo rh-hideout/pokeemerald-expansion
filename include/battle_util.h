@@ -131,9 +131,8 @@ struct BattleCalcValues
 {
     enum BattlerId battlerAtk:3;
     enum BattlerId battlerDef:3;
-    enum BattlerId effectBattler:3;
     enum Move move:16;
-    u32 padding:7;
+    u32 padding:10;
     enum Ability abilities[MAX_BATTLERS_COUNT];
     enum HoldEffect holdEffects[MAX_BATTLERS_COUNT];
 };
@@ -199,7 +198,6 @@ u8 GetImprisonedMovesCount(enum BattlerId battler, enum Move move);
 s32 GetDrainedBigRootHp(enum BattlerId battler, s32 hp);
 bool32 IsAbilityAndRecord(enum BattlerId battler, enum Ability battlerAbility, enum Ability abilityToCheck);
 bool32 HandleFaintedMonActions(void);
-void TryClearRageAndFuryCutter(void);
 bool32 HasNoMonsToSwitch(enum BattlerId battler, u8 partyIdBattlerOn1, u8 partyIdBattlerOn2);
 bool32 TryChangeBattleWeather(enum BattlerId battler, u32 battleWeatherId, enum Ability ability);
 bool32 TryChangeBattleTerrain(enum BattlerId battler, u32 statusFlag);

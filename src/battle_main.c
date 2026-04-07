@@ -5317,9 +5317,6 @@ static void CheckChangingTurnOrderEffects(void)
         }
     }
 
-    // setup stuff before turns/actions
-    TryClearRageAndFuryCutter();
-
     // Prevents trainer slides triggering a turn late if another slide took priority on the previous turn
     for (i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
@@ -5333,11 +5330,13 @@ static void CheckChangingTurnOrderEffects(void)
     gCurrentActionFuncId = gActionsByTurnOrder[0];
     gBattleStruct->dynamicMoveType = 0;
     gBattleStruct->effectsBeforeUsingMoveDone = FALSE;
-    for (i = 0; i < MAX_BATTLERS_COUNT; i++)
+    for (i = 0; i < gBattlersCount; i++)
     {
         gBattleStruct->battlerState[i].focusPunchBattlers = FALSE;
         gBattleStruct->battlerState[i].ateBoost = FALSE;
         gSpecialStatuses[i].gemBoost = FALSE;
+        if (!MoveHasAdditionalEffectSelf(gChosenMoveByBattler[i], MOVE_EFFECT_RAGE))
+            gBattleMons[i].volatiles.rage = FALSE;
     }
 
     gBattleMainFunc = RunTurnActionsFunctions;

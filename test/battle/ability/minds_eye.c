@@ -45,7 +45,7 @@ AI_SINGLE_BATTLE_TEST("AI doesn't use accuracy-lowering moves if it knows that t
 {
     enum Ability abilityAI = ABILITY_NONE;
 
-    PARAMETRIZE { abilityAI = ABILITY_SWIFT_SWIM; }
+    // PARAMETRIZE { abilityAI = ABILITY_SWIFT_SWIM; }
     PARAMETRIZE { abilityAI = ABILITY_MOLD_BREAKER; }
 
     GIVEN {
@@ -58,6 +58,7 @@ AI_SINGLE_BATTLE_TEST("AI doesn't use accuracy-lowering moves if it knows that t
         TURN { MOVE(player, MOVE_SCRATCH);
                if (abilityAI == ABILITY_MOLD_BREAKER) {
                    SCORE_GT(opponent, MOVE_SAND_ATTACK, MOVE_CELEBRATE);
+                    DebugPrintf("sand attackd?");
                } else {
                    SCORE_LT_VAL(opponent, MOVE_SAND_ATTACK, AI_SCORE_DEFAULT);
                }

@@ -734,7 +734,7 @@ struct BattleStruct
     u8 negativeAnimPlayed:1;
     u8 statChangeBattler:3; // will be removed
     u8 defogSavedBattler:3;
-    u8 selfStatDrop:1; // for defiant and competitive
+    u8 ignoreDefiant:1;
     u8 statChangeUser:1;
     u8 intimidateActivated:1;
     u8 allowPartingShot:1;

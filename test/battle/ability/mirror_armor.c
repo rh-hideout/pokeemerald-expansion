@@ -250,3 +250,26 @@ SINGLE_BATTLE_TEST("Mirror Armor does not trigger if the user is behind a Substi
         }
     }
 }
+
+SINGLE_BATTLE_TEST("Octolock stat drops are not reflected by Mirror Armor")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_CORVIKNIGHT) { Ability(ABILITY_MIRROR_ARMOR); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_OCTOLOCK); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_OCTOLOCK, player);
+        MESSAGE("The opposing Corviknight can no longer escape because of Octolock!");
+        NOT ABILITY_POPUP(opponent, ABILITY_MIRROR_ARMOR);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        MESSAGE("The opposing Corviknight's Defense fell!");
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        MESSAGE("The opposing Corviknight's Sp. Def fell!");
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(player->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(opponent->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE - 1);
+    }
+}
