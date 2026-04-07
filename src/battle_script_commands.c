@@ -9343,6 +9343,7 @@ static void Cmd_rapidspinfree(void)
         {
             if (IsHazardOnSideAndClear(atkSide, hazardType))
             {
+                gBattleScripting.battler = gBattlerAttacker;
                 gBattleStruct->numHazards[atkSide]--;
                 gBattleCommunication[MULTISTRING_CHOOSER] = hazardType;
                 BattleScriptCall(BattleScript_RemoveHazards);
