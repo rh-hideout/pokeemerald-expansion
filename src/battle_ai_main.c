@@ -822,8 +822,8 @@ static u32 PpStallReduction(enum Move move, enum BattlerId battlerAtk)
             continue;
         PokemonToBattleMon(&gPlayerParty[partyIndex], &gBattleMons[tempBattleMonIndex]);
         ctx.battlerDef = tempBattleMonIndex;
-        ctx.abilityDef = GetBattlerAbility(ctx.battlerDef);
-        ctx.holdEffectDef = GetBattlerHoldEffect(ctx.battlerDef);
+        ctx.abilityDef = AI_DecideKnownAbilityForTurn(ctx.battlerDef);
+        ctx.holdEffectDef = AI_DecideHoldEffectForTurn(ctx.battlerDef);
         if (AI_CanMoveBeBlockedByTarget(&ctx)
          || CalcTypeEffectivenessMultiplier(&ctx) == UQ_4_12(0.0))
             totalStallValue += currentStallValue;

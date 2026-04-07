@@ -7429,16 +7429,19 @@ static inline uq4_12_t GetDefenderAbilitiesModifier(struct DamageContext *ctx)
     return modifier;
 }
 
-static inline uq4_12_t GetDefenderPartnerAbilitiesModifier(enum BattlerId battlerPartnerDef)
+static inline uq4_12_t GetDefenderPartnerAbilitiesModifier(struct DamageContext *ctx)
 {
-    if (!IsBattlerAlive(battlerPartnerDef))
+    if (!IsBattlerAlive(ctx->battlerDefPartner))
         return UQ_4_12(1.0);
 
-    switch (GetBattlerAbility(battlerPartnerDef))
+    switch (ctx->abilityDefPartner)
     {
     case ABILITY_FRIEND_GUARD:
-        return UQ_4_12(0.75);
+    {
+        if (ctx->battlerAtk != ctx->battlerDef) // Mixed signals from google, have asked thread; Smogon says "other Pokemon", bulba generalizes, etc.
+            return UQ_4_12(0.75);
         break;
+    }
     default:
         break;
     }
@@ -7506,7 +7509,6 @@ static inline uq4_12_t GetDefenderItemsModifier(struct DamageContext *ctx)
 static inline uq4_12_t GetOtherModifiers(struct DamageContext *ctx)
 {
     uq4_12_t finalModifier = UQ_4_12(1.0);
-    enum BattlerId battlerDefPartner = BATTLE_PARTNER(ctx->battlerDef);
     u32 unmodifiedAttackerSpeed = gBattleMons[ctx->battlerAtk].speed;
     u32 unmodifiedDefenderSpeed = gBattleMons[ctx->battlerDef].speed;
 
@@ -7522,14 +7524,14 @@ static inline uq4_12_t GetOtherModifiers(struct DamageContext *ctx)
     {
         DAMAGE_MULTIPLY_MODIFIER(GetAttackerAbilitiesModifier(ctx->battlerAtk, ctx->typeEffectivenessModifier, ctx->isCrit, ctx->abilityAtk));
         DAMAGE_MULTIPLY_MODIFIER(GetDefenderAbilitiesModifier(ctx));
-        DAMAGE_MULTIPLY_MODIFIER(GetDefenderPartnerAbilitiesModifier(battlerDefPartner));
+        DAMAGE_MULTIPLY_MODIFIER(GetDefenderPartnerAbilitiesModifier(ctx));
         DAMAGE_MULTIPLY_MODIFIER(GetAttackerItemsModifier(ctx->battlerAtk, ctx->typeEffectivenessModifier, ctx->holdEffectAtk));
         DAMAGE_MULTIPLY_MODIFIER(GetDefenderItemsModifier(ctx));
     }
     else
     {
         DAMAGE_MULTIPLY_MODIFIER(GetDefenderAbilitiesModifier(ctx));
-        DAMAGE_MULTIPLY_MODIFIER(GetDefenderPartnerAbilitiesModifier(battlerDefPartner));
+        DAMAGE_MULTIPLY_MODIFIER(GetDefenderPartnerAbilitiesModifier(ctx));
         DAMAGE_MULTIPLY_MODIFIER(GetAttackerAbilitiesModifier(ctx->battlerAtk, ctx->typeEffectivenessModifier, ctx->isCrit, ctx->abilityAtk));
         DAMAGE_MULTIPLY_MODIFIER(GetDefenderItemsModifier(ctx));
         DAMAGE_MULTIPLY_MODIFIER(GetAttackerItemsModifier(ctx->battlerAtk, ctx->typeEffectivenessModifier, ctx->holdEffectAtk));
@@ -8023,9 +8025,13 @@ s32 CalculateMoveDamage(struct DamageContext *ctx)
     s32 damage = 0;
 
     ctx->abilityAtk = GetBattlerAbility(ctx->battlerAtk);
+    ctx->abilityAtkPartner = GetBattlerAbility(ctx->battlerAtkPartner);
     ctx->abilityDef = GetBattlerAbility(ctx->battlerDef);
+    ctx->abilityDefPartner = GetBattlerAbility(ctx->battlerDefPartner);
     ctx->holdEffectAtk = GetBattlerHoldEffect(ctx->battlerAtk);
+    ctx->holdEffectAtkPartner = GetBattlerHoldEffect(ctx->battlerAtkPartner);
     ctx->holdEffectDef = GetBattlerHoldEffect(ctx->battlerDef);
+    ctx->holdEffectDefPartner = GetBattlerHoldEffect(ctx->battlerDefPartner);
 
     ctx->typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(ctx);
     ctx->isCrit = IsCriticalHit(ctx);

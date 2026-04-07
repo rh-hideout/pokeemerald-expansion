@@ -2213,7 +2213,7 @@ static inline bool32 IsFreeSwitch(enum SwitchType switchType, enum BattlerId bat
             return TRUE;
         if (gAiLogicData->ejectPackSwitch)
         {
-            enum Ability opposingAbility = GetBattlerAbilityIgnoreMoldBreaker(opposingBattler);
+            enum Ability opposingAbility = gAiLogicData->abilities[opposingBattler];
             // If faster, not a free switch; likely lowered own stats
             if (!movedSecond && opposingAbility != ABILITY_INTIMIDATE && opposingAbility != ABILITY_SUPERSWEET_SYRUP) // Intimidate triggers switches before turn starts
                 return FALSE;

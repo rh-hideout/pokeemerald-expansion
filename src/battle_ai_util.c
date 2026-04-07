@@ -929,7 +929,9 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
     ctx.aiCalc = TRUE;
     ctx.aiCheckBerryModifier = FALSE;
     ctx.battlerAtk = battlerAtk;
+    ctx.battlerAtkPartner = BATTLE_PARTNER(battlerAtk);
     ctx.battlerDef = battlerDef;
+    ctx.battlerDefPartner = BATTLE_PARTNER(battlerDef);
     ctx.move = ctx.chosenMove = move;
     ctx.moveType = GetBattleMoveType(move);
     ctx.fieldStatuses = fieldStatuses;
@@ -938,9 +940,13 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
     ctx.weather = weather;
     ctx.fixedBasePower = 0;
     ctx.holdEffectAtk = aiData->holdEffects[battlerAtk];
+    ctx.holdEffectAtkPartner = aiData->holdEffects[ctx.battlerAtkPartner];
     ctx.holdEffectDef = aiData->holdEffects[battlerDef];
+    ctx.holdEffectDefPartner = aiData->holdEffects[ctx.battlerDefPartner];
     ctx.abilityAtk = aiData->abilities[battlerAtk];
+    ctx.abilityAtkPartner = aiData->abilities[ctx.battlerAtkPartner];
     ctx.abilityDef = AI_GetMoldBreakerSanitizedAbility(battlerAtk, ctx.abilityAtk, aiData->abilities[battlerDef], ctx.holdEffectDef, move);
+    ctx.abilityDefPartner = AI_GetMoldBreakerSanitizedAbility(battlerAtk, ctx.abilityAtk, aiData->abilities[ctx.battlerDefPartner], ctx.holdEffectDefPartner, move);
     ctx.isCrit = ShouldCalcCritDamage(&ctx);
     ctx.typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(&ctx);
 
