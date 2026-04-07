@@ -925,13 +925,14 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
     gBattleStruct->magnitudeBasePower = 70;
     gBattleStruct->presentBasePower = 80;
 
+    enum BattlerId battlerAtkPartner = BATTLE_PARTNER(battlerAtk);
+    enum BattlerId battlerDefPartner = BATTLE_PARTNER(battlerDef);
+
     struct DamageContext ctx = {0};
     ctx.aiCalc = TRUE;
     ctx.aiCheckBerryModifier = FALSE;
     ctx.battlerAtk = battlerAtk;
-    ctx.battlerAtkPartner = BATTLE_PARTNER(battlerAtk);
     ctx.battlerDef = battlerDef;
-    ctx.battlerDefPartner = BATTLE_PARTNER(battlerDef);
     ctx.move = ctx.chosenMove = move;
     ctx.moveType = GetBattleMoveType(move);
     ctx.fieldStatuses = fieldStatuses;
@@ -940,13 +941,13 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
     ctx.weather = weather;
     ctx.fixedBasePower = 0;
     ctx.holdEffects[ctx.battlerAtk] = aiData->holdEffects[battlerAtk];
-    ctx.holdEffects[ctx.battlerAtkPartner] = aiData->holdEffects[ctx.battlerAtkPartner];
+    ctx.holdEffects[battlerAtkPartner] = aiData->holdEffects[battlerAtkPartner];
     ctx.holdEffects[ctx.battlerDef] = aiData->holdEffects[battlerDef];
-    ctx.holdEffects[ctx.battlerDefPartner] = aiData->holdEffects[ctx.battlerDefPartner];
+    ctx.holdEffects[battlerDefPartner] = aiData->holdEffects[battlerDefPartner];
     ctx.abilities[ctx.battlerAtk] = aiData->abilities[battlerAtk];
-    ctx.abilities[ctx.battlerAtkPartner] = aiData->abilities[ctx.battlerAtkPartner];
+    ctx.abilities[battlerAtkPartner] = aiData->abilities[battlerAtkPartner];
     ctx.abilities[ctx.battlerDef] = AI_GetMoldBreakerSanitizedAbility(battlerAtk, ctx.abilities[ctx.battlerAtk], aiData->abilities[battlerDef], ctx.holdEffects[ctx.battlerDef], move);
-    ctx.abilities[ctx.battlerDefPartner] = AI_GetMoldBreakerSanitizedAbility(battlerAtk, ctx.abilities[ctx.battlerAtk], aiData->abilities[ctx.battlerDefPartner], ctx.holdEffects[ctx.battlerDefPartner], move);
+    ctx.abilities[battlerDefPartner] = AI_GetMoldBreakerSanitizedAbility(battlerAtk, ctx.abilities[ctx.battlerAtk], aiData->abilities[battlerDefPartner], ctx.holdEffects[battlerDefPartner], move);
     ctx.isCrit = ShouldCalcCritDamage(&ctx);
     ctx.typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(&ctx);
 

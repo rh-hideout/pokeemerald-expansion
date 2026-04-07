@@ -1293,9 +1293,7 @@ static void TrySetBattleSeminarShow(void)
         {
             struct DamageContext ctx = {0};
             ctx.battlerAtk = gBattlerAttacker;
-            ctx.battlerAtkPartner = BATTLE_PARTNER(ctx.battlerAtk);
             ctx.battlerDef = gBattlerTarget;
-            ctx.battlerDefPartner = BATTLE_PARTNER(ctx.battlerDef);
             ctx.move = ctx.chosenMove = gCurrentMove;
             ctx.moveType = GetMoveType(gCurrentMove);
             ctx.isCrit = FALSE;

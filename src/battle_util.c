@@ -7431,10 +7431,11 @@ static inline uq4_12_t GetDefenderAbilitiesModifier(struct DamageContext *ctx)
 
 static inline uq4_12_t GetDefenderPartnerAbilitiesModifier(struct DamageContext *ctx)
 {
-    if (!IsBattlerAlive(ctx->battlerDefPartner))
+    enum BattlerId battlerDefPartner = BATTLE_PARTNER(ctx->battlerDef);
+    if (!IsBattlerAlive(battlerDefPartner))
         return UQ_4_12(1.0);
 
-    switch (ctx->abilities[ctx->battlerDefPartner])
+    switch (ctx->abilities[battlerDefPartner])
     {
     case ABILITY_FRIEND_GUARD:
     {
@@ -8024,14 +8025,17 @@ s32 CalculateMoveDamage(struct DamageContext *ctx)
 {
     s32 damage = 0;
 
+    enum BattlerId battlerAtkPartner = BATTLE_PARTNER(ctx->battlerAtk);
+    enum BattlerId battlerDefPartner = BATTLE_PARTNER(ctx->battlerDef);
+
     ctx->abilities[ctx->battlerAtk] = GetBattlerAbility(ctx->battlerAtk);
-    ctx->abilities[ctx->battlerAtkPartner] = GetBattlerAbility(ctx->battlerAtkPartner);
+    ctx->abilities[battlerAtkPartner] = GetBattlerAbility(battlerAtkPartner);
     ctx->abilities[ctx->battlerDef] = GetBattlerAbility(ctx->battlerDef);
-    ctx->abilities[ctx->battlerDefPartner] = GetBattlerAbility(ctx->battlerDefPartner);
+    ctx->abilities[battlerDefPartner] = GetBattlerAbility(battlerDefPartner);
     ctx->holdEffects[ctx->battlerAtk] = GetBattlerHoldEffect(ctx->battlerAtk);
-    ctx->holdEffects[ctx->battlerAtkPartner] = GetBattlerHoldEffect(ctx->battlerAtkPartner);
+    ctx->holdEffects[battlerAtkPartner] = GetBattlerHoldEffect(battlerAtkPartner);
     ctx->holdEffects[ctx->battlerDef] = GetBattlerHoldEffect(ctx->battlerDef);
-    ctx->holdEffects[ctx->battlerDefPartner] = GetBattlerHoldEffect(ctx->battlerDefPartner);
+    ctx->holdEffects[battlerDefPartner] = GetBattlerHoldEffect(battlerDefPartner);
 
     ctx->typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(ctx);
     ctx->isCrit = IsCriticalHit(ctx);

@@ -96,11 +96,9 @@ struct DamageContext
 {
     enum BattlerId battlerAtk:3;
     enum BattlerId battlerDef:3;
-    enum BattlerId battlerAtkPartner:3;
-    enum BattlerId battlerDefPartner:3;
     u32 fixedBasePower:8;
     u32 weather:16;
-    u32 unused:2; // Can't remember the math for what this would be changed to
+    u32 unused:2;
     u32 fieldStatuses;
 
     enum Move move:13;

@@ -202,7 +202,6 @@ static enum CancelerResult CancelerObedience(struct BattleCalcValues *cv)
             gBattlerTarget = cv->battlerAtk;
             struct DamageContext dmgCtx = {0};
             dmgCtx.battlerAtk = dmgCtx.battlerDef = cv->battlerAtk;
-            dmgCtx.battlerAtkPartner = dmgCtx.battlerDefPartner = BATTLE_PARTNER(dmgCtx.battlerAtk);
             dmgCtx.move = dmgCtx.chosenMove = MOVE_NONE;
             dmgCtx.moveType = TYPE_MYSTERY;
             dmgCtx.isCrit = FALSE;
@@ -387,7 +386,6 @@ static enum CancelerResult CancelerConfused(struct BattleCalcValues *cv)
                 gBattlerTarget = gBattlerAttacker;
                 struct DamageContext dmgCtx = {0};
                 dmgCtx.battlerAtk = dmgCtx.battlerDef = cv->battlerAtk;
-                dmgCtx.battlerAtkPartner = dmgCtx.battlerDefPartner = BATTLE_PARTNER(dmgCtx.battlerAtk);
                 dmgCtx.move = dmgCtx.chosenMove = MOVE_NONE;
                 dmgCtx.moveType = TYPE_MYSTERY;
                 dmgCtx.isCrit = FALSE;

@@ -1266,7 +1266,6 @@ static void Cmd_damagecalc(void)
 
     struct DamageContext ctx = {0};
     ctx.battlerAtk = gBattlerAttacker;
-    ctx.battlerAtkPartner = BATTLE_PARTNER(ctx.battlerAtk);
     ctx.move = gCurrentMove;
     ctx.chosenMove = gChosenMove;
     ctx.moveType = GetBattleMoveType(gCurrentMove);
@@ -1283,7 +1282,6 @@ static void Cmd_damagecalc(void)
                 continue;
 
             ctx.battlerDef = battlerDef;
-            ctx.battlerDefPartner = BATTLE_PARTNER(ctx.battlerDef);
             CalculateAndSetMoveDamage(&ctx);
         }
         gBattleStruct->calculatedDamageDone = TRUE;
@@ -1291,7 +1289,6 @@ static void Cmd_damagecalc(void)
     else
     {
         ctx.battlerDef = gBattlerTarget;
-        ctx.battlerDefPartner = BATTLE_PARTNER(ctx.battlerDef);
         CalculateAndSetMoveDamage(&ctx);
     }
 
