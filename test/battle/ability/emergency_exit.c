@@ -144,6 +144,31 @@ SINGLE_BATTLE_TEST("Emergency Exit activates when taking residual damage and fal
     }
 }
 
+DOUBLE_BATTLE_TEST("Emergency Exit activates when taking Sea of Fire damage and can be healed by Grassy Terrain after leaving the field")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FIRE_PLEDGE) == EFFECT_PLEDGE);
+        ASSUME(GetMoveEffect(MOVE_GRASS_PLEDGE) == EFFECT_PLEDGE);
+        ASSUME(GetMoveEffect(MOVE_GRASSY_TERRAIN) == EFFECT_GRASSY_TERRAIN);
+        ASSUME(GetItemHoldEffect(ITEM_AIR_BALLOON) == HOLD_EFFECT_AIR_BALLOON);
+        PLAYER(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(132); Item(ITEM_AIR_BALLOON); }
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_FIRE_PLEDGE, target: playerRight);
+               MOVE(opponentRight, MOVE_GRASS_PLEDGE, target: playerRight);
+               MOVE(playerRight, MOVE_GRASSY_TERRAIN);
+               SEND_OUT(playerLeft, 2); }
+    } SCENE {
+        HP_BAR(playerLeft);
+        ABILITY_POPUP(playerLeft, ABILITY_EMERGENCY_EXIT);
+        HP_BAR(playerLeft);
+        SEND_IN_MESSAGE("Wobbuffet");
+    }
+}
+
 WILD_BATTLE_TEST("Emergency Exit makes the pokemon flee during wild battle")
 {
     GIVEN {
