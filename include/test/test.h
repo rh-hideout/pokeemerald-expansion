@@ -107,6 +107,7 @@ void Test_ExpectedResult(enum TestResult);
 void Test_ExpectLeaks(bool32);
 void Test_ExpectCrash(bool32);
 void Test_ExpectFail(u32 failLine);
+void Test_ExpectAssertFail(enum AssertTag tag);
 u32 SourceLine(u32 sourceLineOffset);
 u32 SourceLineOffset(u32 sourceLine);
 void SetupRiggedRng(u32 sourceLine, enum RandomTag randomTag, u32 value);
@@ -254,6 +255,9 @@ static inline struct Benchmark BenchmarkStop(void)
 
 #define KNOWN_CRASHING \
     Test_ExpectCrash(TRUE)
+
+#define KNOWN_ASSERT_FALING(tag) \
+    Test_ExpectAssertFail(tag)
 
 #define EXPECT_FAIL for (u32 _expect_fail = (Test_ExpectFail(-1), 1); _expect_fail; Test_ExpectFail(__LINE__), _expect_fail = 0)
 

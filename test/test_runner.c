@@ -564,6 +564,12 @@ void Test_ExpectFail(u32 failLine)
     }
 }
 
+void Test_ExpectAssertFail(enum AssertTag tag)
+{
+    Test_ExpectedResult(TEST_RESULT_ASSERT_FAIL);
+    gTestRunnerState.expectedFailLine = tag;
+}
+
 static void FunctionTest_SetUp(void *data)
 {
     (void)data;
@@ -770,8 +776,12 @@ void Test_ExitWithResult_(enum TestResult result, u32 stopLine, const void *retu
          gTestRunnerState.expectedFailLine, stopLine);
     }
 
-    if (result == TEST_RESULT_ASSERT_FAIL && gTestRunnerState.expectedResult != result)
-        gTestRunnerState.result = TEST_RESULT_INVALID;
+    if (result == TEST_RESULT_ASSERT_FAIL)
+    {
+        gTestRunnerState.failedAssumptionsBlockLine = 0;
+        if (gTestRunnerState.expectedResult != result || gTestRunnerState.expectedFailLine != stopLine)
+            gTestRunnerState.result = TEST_RESULT_INVALID;
+    }
 
     ReinitCallbacks();
     if (gTestRunnerState.state == STATE_REPORT_RESULT
@@ -780,7 +790,7 @@ void Test_ExitWithResult_(enum TestResult result, u32 stopLine, const void *retu
         if (!gTestRunnerState.test->runner->handleExitWithResult
          || !gTestRunnerState.test->runner->handleExitWithResult(gTestRunnerState.test->data, result))
         {
-            if (result == TEST_RESULT_INVALID)
+            if (gTestRunnerState.result == TEST_RESULT_INVALID)
             {
                 const void *return0 = __builtin_return_address(0);
                 Test_MgbaPrintf("in %p\nin %p", return1, return0);
