@@ -299,9 +299,9 @@ s32 CountUsablePartyMons(enum BattlerId battlerId);
 bool32 IsPartyFullyHealedExceptBattler(enum BattlerId battler);
 bool32 PartyHasMoveCategory(enum BattlerId battlerId, enum DamageCategory category);
 bool32 SideHasMoveCategory(enum BattlerId battlerId, enum DamageCategory category);
-void GetAIPartyIndexes(enum BattlerId battlerId, s32 *firstId, s32 *lastId);
+s32 GetAILastPartyIndex(enum BattlerId battler);
 u32 GetActiveBattlerIds(enum BattlerId battler, enum BattlerId *battlerIn1, enum BattlerId *battlerIn2);
-bool32 IsPartyMonOnFieldOrChosenToSwitch(u32 partyIndex, enum BattlerId battlerIn1, enum BattlerId battlerIn2);
+bool32 IsPartyMonOnFieldOrChosenToSwitch(enum BattlerId battler, u32 partyIndex, enum BattlerId battlerIn1, enum BattlerId battlerIn2);
 bool32 IsPartyMonPlannedToBeSwitchedInByPartner(u32 partyIndex, enum BattlerId battler);
 
 // score increases

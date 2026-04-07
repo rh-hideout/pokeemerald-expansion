@@ -120,7 +120,7 @@ TEST("Trainer Class Balls apply to the entire party")
     u32 j;
     u32 currTrainer = 14;
     const struct Trainer *trainer = GetTrainerStructFromId(currTrainer);
-    CreateNPCTrainerPartyFromTrainer(testParty, trainer, TRUE, BATTLE_TYPE_TRAINER);
+    CreateNPCTrainerPartyFromTrainer(testParty, trainer, FALSE, BATTLE_TYPE_TRAINER);
     for(j = 0; j < 6; j++)
     {
         EXPECT(GetMonData(&testParty[j], MON_DATA_POKEBALL, 0) == gTrainerClasses[trainer->trainerClass].ball);

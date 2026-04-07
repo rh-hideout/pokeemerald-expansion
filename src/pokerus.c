@@ -42,7 +42,7 @@ void RandomlyGivePartyPokerus(void)
 
         for (u32 i = 0; i < PARTY_SIZE; i++)
         {
-            mon = &gPlayerParty[i];
+            mon = &gParties[B_TRAINER_0][i];
             if (!GetMonData(mon, MON_DATA_SPECIES))
                 continue;
             else if (!GetConfig(POKERUS_INFECT_EGG) && GetMonData(mon, MON_DATA_IS_EGG))
@@ -57,7 +57,7 @@ void RandomlyGivePartyPokerus(void)
             return;
 
         randomIndex = RandomUniform(RNG_POKERUS_PARTY_MEMBER, 0, validTargetsCount - 1);
-        mon = &gPlayerParty[validTargets[randomIndex]];
+        mon = &gParties[B_TRAINER_0][validTargets[randomIndex]];
 
         if (!CheckMonHasHadPokerus(mon))
         {
@@ -77,10 +77,10 @@ bool32 IsPokerusInParty(void)
 
     for (u32 i = 0; i < PARTY_SIZE; i++)
     {
-        if (!GetMonData(&gPlayerParty[i], MON_DATA_SPECIES))
+        if (!GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES))
             continue;
 
-        if (GetMonData(&gPlayerParty[i], MON_DATA_POKERUS_DAYS_LEFT))
+        if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_POKERUS_DAYS_LEFT))
             return TRUE;
     }
 
@@ -139,11 +139,11 @@ void UpdatePartyPokerusTime(u32 days)
 
     for (u32 i = 0; i < PARTY_SIZE; i++)
     {
-        if (!GetMonData(&gPlayerParty[i], MON_DATA_SPECIES))
+        if (!GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES))
             continue;
 
-        u32 strain = GetMonData(&gPlayerParty[i], MON_DATA_POKERUS_STRAIN);
-        u32 daysLeft = GetMonData(&gPlayerParty[i], MON_DATA_POKERUS_DAYS_LEFT);
+        u32 strain = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_POKERUS_STRAIN);
+        u32 daysLeft = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_POKERUS_DAYS_LEFT);
         if (daysLeft)
         {
             if (daysLeft < days)
@@ -156,10 +156,10 @@ void UpdatePartyPokerusTime(u32 days)
             if (daysLeft == 0 && strain == 0)
             {
                 strain = 1;
-                SetMonData(&gPlayerParty[i], MON_DATA_POKERUS_STRAIN, &strain);
+                SetMonData(&gParties[B_TRAINER_0][i], MON_DATA_POKERUS_STRAIN, &strain);
             }
 
-            SetMonData(&gPlayerParty[i], MON_DATA_POKERUS_DAYS_LEFT, &daysLeft);
+            SetMonData(&gParties[B_TRAINER_0][i], MON_DATA_POKERUS_DAYS_LEFT, &daysLeft);
         }
     }
 }
@@ -189,28 +189,28 @@ void PartySpreadPokerus(void)
 
     for (u32 i = 0; i < PARTY_SIZE; i++)
     {
-        if (!GetMonData(&gPlayerParty[i], MON_DATA_SPECIES))
+        if (!GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES))
             continue;
 
-        u32 strain = GetMonData(&gPlayerParty[i], MON_DATA_POKERUS_STRAIN);
-        u32 daysLeft = GetMonData(&gPlayerParty[i], MON_DATA_POKERUS_DAYS_LEFT);
+        u32 strain = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_POKERUS_STRAIN);
+        u32 daysLeft = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_POKERUS_DAYS_LEFT);
         if (daysLeft)
         {
             bool32 spreadUp = TRUE, spreadDown = TRUE;
             if (GetConfig(POKERUS_SPREAD_ADJACENCY) < GEN_3)
             {
-                if (i == (gPlayerPartyCount - 1))
+                if (i == (gPartiesCount[B_TRAINER_0] - 1))
                     spreadUp = FALSE;
                 else if (RandomUniform(RNG_POKERUS_SPREAD_SIDE, 0, 1))
                     spreadDown = FALSE;
                 else
                     spreadUp = FALSE;
             }
-            if (spreadDown && i != 0 && CanReceivePokerusFromSpread(&gPlayerParty[i - 1]))
-                SpreadPokerusToSpecificMon(&gPlayerParty[i - 1], strain, daysLeft);
-            if (spreadUp && i != (PARTY_SIZE - 1) && CanReceivePokerusFromSpread(&gPlayerParty[i + 1]))
+            if (spreadDown && i != 0 && CanReceivePokerusFromSpread(&gParties[B_TRAINER_0][i - 1]))
+                SpreadPokerusToSpecificMon(&gParties[B_TRAINER_0][i - 1], strain, daysLeft);
+            if (spreadUp && i != (PARTY_SIZE - 1) && CanReceivePokerusFromSpread(&gParties[B_TRAINER_0][i + 1]))
             {
-                SpreadPokerusToSpecificMon(&gPlayerParty[i + 1], strain, daysLeft);
+                SpreadPokerusToSpecificMon(&gParties[B_TRAINER_0][i + 1], strain, daysLeft);
                 i++;
             }
         }
