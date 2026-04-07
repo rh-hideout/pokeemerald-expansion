@@ -187,6 +187,8 @@ static bool32 HandleEndTurnWeatherDamage(enum BattlerId battler)
 
 static bool32 HandleEndTurnSendOutReplacements(enum BattlerId battler)
 {
+    gBattleStruct->eventState.endTurnBattler++;
+
     switch (gSpecialStatuses[battler].queuedSwitch)
     {
     case NO_QUEUED_SWITCH:
