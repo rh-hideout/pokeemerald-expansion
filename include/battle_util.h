@@ -113,7 +113,9 @@ struct DamageContext
     enum Ability abilityDef;
     enum Ability abilityDefPartner;
     enum HoldEffect holdEffectAtk;
+    enum HoldEffect holdEffectAtkPartner;
     enum HoldEffect holdEffectDef;
+    enum HoldEffect holdEffectDefPartner;
 
     // Flags
     u32 isCrit:1;

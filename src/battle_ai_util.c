@@ -940,7 +940,9 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
     ctx.weather = weather;
     ctx.fixedBasePower = 0;
     ctx.holdEffectAtk = aiData->holdEffects[battlerAtk];
+    ctx.holdEffectAtkPartner = aiData->holdEffects[ctx.battlerAtkPartner];
     ctx.holdEffectDef = aiData->holdEffects[battlerDef];
+    ctx.holdEffectDefPartner = aiData->holdEffects[ctx.battlerDefPartner];
     ctx.abilityAtk = aiData->abilities[battlerAtk];
     ctx.abilityAtkPartner = aiData->abilities[ctx.battlerAtkPartner];
     ctx.abilityDef = AI_GetMoldBreakerSanitizedAbility(battlerAtk, ctx.abilityAtk, aiData->abilities[battlerDef], ctx.holdEffectDef, move);
