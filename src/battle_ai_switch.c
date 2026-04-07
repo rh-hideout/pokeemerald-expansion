@@ -1163,6 +1163,8 @@ static bool32 ShouldSwitchIfWishPassing(enum BattlerId battler)
     u32 wishHealAmount = GetWishHealAmountForBattler(battler);
     u32 bestCandidateId = PARTY_SIZE;
     u32 bestTypeMatchup = typeMatchupCurrent; // Must be better than current mon
+    struct AiLogicData *savedAiLogicData = AllocSaveAiLogicData();
+    struct BattlePokemon *savedBattleMons = AllocSaveBattleMons();
 
     for (u32 monIndex = 0; monIndex < lastId; monIndex++)
     {
@@ -1215,6 +1217,10 @@ static bool32 ShouldSwitchIfWishPassing(enum BattlerId battler)
         bestTypeMatchup = typeMatchupCandidate;
         bestCandidateId = monIndex;
     }
+
+    FreeRestoreAiLogicData(savedAiLogicData);
+    FreeRestoreBattleMons(savedBattleMons);
+    SetBattlerAiData(battler, gAiLogicData);
 
     // Found a suitable candidate
     if (bestCandidateId != PARTY_SIZE)
