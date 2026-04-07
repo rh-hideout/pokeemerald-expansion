@@ -300,7 +300,7 @@ static bool32 HandleEndTurnFirstEventBlock(enum BattlerId battler)
     bool32 effect = FALSE;
     enum BattleSide side;
 
-    if (gSpecialStatuses[battler].queuedSwitch == NO_QUEUED_SWITCH)
+    if (gSpecialStatuses[battler].queuedSwitch != NO_QUEUED_SWITCH)
     {
         // Grassy Terrain still heals when Emergency Exit/Wimp Out activate
         if (gBattleStruct->eventState.endTurnBlock <= FIRST_EVENT_BLOCK_GRASSY_TERRAIN_HEAL)
