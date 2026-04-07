@@ -23,6 +23,7 @@
 #include "data.h"
 #include "palette.h"
 #include "contest.h"
+#include "trainer.h"
 #include "trainer_pokemon_sprites.h"
 #include "constants/songs.h"
 #include "constants/rgb.h"
@@ -627,21 +628,21 @@ void BattleLoadMonSpriteGfx(struct Pokemon *mon, enum BattlerId battler)
         return;
 
     isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
+    species = GetMonData(mon, MON_DATA_SPECIES);
+    personalityValue = GetMonData(mon, MON_DATA_PERSONALITY);
 
-    if (gBattleSpritesDataPtr->battlerData[battler].transformSpecies == SPECIES_NONE)
-    {
-        species = GetMonData(mon, MON_DATA_SPECIES);
-        personalityValue = GetMonData(mon, MON_DATA_PERSONALITY);
-    }
-    else
+    if (gBattleSpritesDataPtr->battlerData[battler].transformSpecies != SPECIES_NONE)
     {
         species = gBattleSpritesDataPtr->battlerData[battler].transformSpecies;
         // If battler has Gigantamax factor, try convert gfx to G-Max version
         if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX && GetMonData(mon, MON_DATA_GIGANTAMAX_FACTOR))
             gBattleSpritesDataPtr->battlerData[battler].transformSpecies = species = GetGMaxTargetSpecies(species);
 
-        personalityValue = gTransformedPersonalities[battler];
-        isShiny = gTransformedShininess[battler];
+        if (gBattleMons[battler].volatiles.transformed)
+        {
+            personalityValue = gTransformedPersonalities[battler];
+            isShiny = gTransformedShininess[battler];
+        }
     }
 
     position = GetBattlerPosition(battler);
@@ -689,17 +690,16 @@ void BattleGfxSfxDummy2(enum Species species)
 {
 }
 
-void DecompressTrainerFrontPic(u16 frontPicId, enum BattlerId battler)
+void DecompressTrainerFrontPic(enum TrainerPicID trainerPicId, enum BattlerId battler)
 {
     enum BattlerPosition position = GetBattlerPosition(battler);
-    DecompressPicFromTable(&gTrainerSprites[frontPicId].frontPic,
-                           gMonSpritesGfxPtr->spritesGfx[position]);
-    LoadSpritePalette(&gTrainerSprites[frontPicId].palette);
+    DecompressDataWithHeaderWram(GetTrainerFrontPicData(trainerPicId), gMonSpritesGfxPtr->spritesGfx[position]);
+    LoadSpritePaletteWithTag(GetTrainerFrontPicPalette(trainerPicId), GetTrainerPicTag(trainerPicId, TRUE));
 }
 
-void FreeTrainerFrontPicPalette(u16 frontPicId)
+void FreeTrainerFrontPicPalette(enum TrainerPicID trainerPicId)
 {
-    FreeSpritePaletteByTag(gTrainerSprites[frontPicId].palette.tag);
+    FreeSpritePaletteByTag(GetTrainerPicTag(trainerPicId, TRUE));
 }
 
 // Unused.

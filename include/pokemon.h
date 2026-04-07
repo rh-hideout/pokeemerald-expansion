@@ -369,6 +369,7 @@ struct BattlePokemon
     /*0x5D*/ u32 otId;
     /*0x61*/ u8 metLevel;
     /*0x62*/ bool8 isShiny;
+             u8 affectionHearts;
 };
 
 struct EvolutionParam
@@ -603,15 +604,6 @@ struct NatureInfo
     u8 battlePalaceFlavorText;
     u8 battlePalaceSmokescreen;
     const u8 *natureGirlMessage;
-};
-
-#define SPINDA_SPOT_WIDTH 16
-#define SPINDA_SPOT_HEIGHT 16
-
-struct SpindaSpot
-{
-    u8 x, y;
-    u16 image[SPINDA_SPOT_HEIGHT];
 };
 
 struct LevelUpMove
@@ -853,7 +845,6 @@ enum HoennDexOrder SpeciesToHoennPokedexNum(enum Species species);
 enum NationalDexOrder RegionalToNationalOrder(u32 regionNum);
 enum NationalDexOrder KantoToNationalOrder(enum KantoDexOrder kantoNum);
 enum NationalDexOrder HoennToNationalOrder(enum HoennDexOrder hoennNum);
-void DrawSpindaSpots(u32 personality, u8 *dest, bool32 isSecondFrame);
 void EvolutionRenameMon(struct Pokemon *mon, enum Species oldSpecies, enum Species newSpecies);
 u8 GetPlayerFlankId(void);
 u16 GetLinkTrainerFlankId(u8 linkPlayerId);
@@ -861,7 +852,7 @@ s32 GetBattlerMultiplayerId(u16 id);
 u8 GetTrainerEncounterMusicId(u16 trainerOpponentId);
 u16 ModifyStatByNature(u8 nature, u16 stat, enum Stat statIndex);
 void AdjustFriendship(struct Pokemon *mon, u8 event);
-u8 CalculateFriendshipBonuses(struct Pokemon *mon, u32 modifier, enum HoldEffect itemHoldEffect);
+s32 CalculateFriendshipBonuses(struct Pokemon *mon, s32 modifier, enum HoldEffect itemHoldEffect);
 void MonGainEVs(struct Pokemon *mon, enum Species defeatedSpecies);
 u16 GetMonEVCount(struct Pokemon *mon);
 bool8 TryIncrementMonLevel(struct Pokemon *mon);

@@ -91,7 +91,6 @@ enum Ability AI_GetMoldBreakerSanitizedAbility(enum BattlerId battlerAtk, enum A
 u32 AI_GetDamage(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveIndex, enum DamageCalcContext calcContext, struct AiLogicData *aiData);
 bool32 IsAiFlagPresent(u64 flag);
 bool32 IsAiBattlerAware(enum BattlerId battlerId);
-bool32 CanAiPredictMove(enum BattlerId battlerId);
 bool32 IsAiBattlerAssumingStab(enum BattlerId battlerId);
 bool32 IsAiBattlerAssumingStatusMoves(enum BattlerId battlerId);
 bool32 IsAiBattlerPredictingAbility(enum BattlerId battlerId);
@@ -167,7 +166,7 @@ u32 CountNegativeStatStages(enum BattlerId battlerId);
 
 // move checks
 bool32 Ai_IsPriorityBlocked(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, struct AiLogicData *aiData);
-bool32 AI_CanMoveBeBlockedByTarget(struct BattleContext *ctx);
+bool32 AI_CanMoveBeBlockedByTarget(struct DamageContext *ctx);
 bool32 MovesWithCategoryUnusable(u32 attacker, u32 target, enum DamageCategory category);
 enum MoveComparisonResult CompareMoveEffects(enum Move move1, enum Move move2, enum BattlerId battlerAtk, enum BattlerId battlerDef, s32 noOfHitsToKo);
 struct SimulatedDamage AI_CalcDamageSaveBattlers(enum Move move, enum BattlerId battlerAtk, enum BattlerId battlerDef, uq4_12_t *typeEffectiveness, enum AIConsiderGimmick considerGimmickAtk, enum AIConsiderGimmick considerGimmickDef);

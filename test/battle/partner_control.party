@@ -4,7 +4,6 @@ Class: Pkmn Trainer 1
 Pic: Brendan
 Gender: Male
 Music: Male
-Back Pic: Brendan
 
 === PARTNER_STEVEN_TEST ===
 Name: STEVEN
@@ -12,7 +11,6 @@ Class: Rival
 Pic: Steven
 Gender: Male
 Music: Male
-Back Pic: Steven
 AI: Basic Trainer
 Difficulty: Normal
 
@@ -52,7 +50,6 @@ Class: Rival
 Pic: Steven
 Gender: Male
 Music: Male
-Back Pic: Steven
 Battle Type: Singles
 Difficulty: Easy
 
@@ -65,7 +62,6 @@ Class: Rival
 Pic: Steven
 Gender: Male
 Music: Male
-Back Pic: Steven
 Battle Type: Singles
 Difficulty: Hard
 

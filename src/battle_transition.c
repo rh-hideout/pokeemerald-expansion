@@ -2583,18 +2583,20 @@ static void Mugshots_CreateTrainerPics(struct Task *task)
 {
     struct Sprite *opponentSpriteA, *opponentSpriteB=0, *playerSprite, *partnerSprite=0;
 
-    u8 trainerAPicId = GetTrainerPicFromId(TRAINER_BATTLE_PARAM.opponentA);
-    u8 trainerBPicId = GetTrainerPicFromId(TRAINER_BATTLE_PARAM.opponentB);
-    u8 partnerPicId = GetTrainerPicFromId(gPartnerTrainerId);
+    enum TrainerPicID trainerAPicId = GetTrainerPicFromId(TRAINER_BATTLE_PARAM.opponentA);
+    enum TrainerPicID trainerBPicId = GetTrainerPicFromId(TRAINER_BATTLE_PARAM.opponentB);
+    enum TrainerPicID partnerPicId = GetTrainerPicFromId(gPartnerTrainerId);
+    struct Coords16 mugshotCoordsA = GetTrainerFrontPicMugshotCoords(trainerAPicId);
     s16 opponentARotationScales = 0;
     s16 opponentBRotationScales = 0;
 
     gReservedSpritePaletteCount = 10;
     if (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE && gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
     {
+        struct Coords16 mugshotCoordsB = GetTrainerFrontPicMugshotCoords(trainerBPicId);
         task->tOpponentSpriteBId = CreateTrainerSprite(trainerBPicId,
-                                                    gTrainerSprites[trainerBPicId].mugshotCoords.x - 240,
-                                                    gTrainerSprites[trainerBPicId].mugshotCoords.y + 42,
+                                                    mugshotCoordsB.x - 240,
+                                                    mugshotCoordsB.y + 42,
                                                     0, NULL);
         opponentSpriteB = &gSprites[task->tOpponentSpriteBId];
         opponentSpriteB->callback = SpriteCB_MugshotTrainerPicPartner;
@@ -2603,13 +2605,13 @@ static void Mugshots_CreateTrainerPics(struct Task *task)
         opponentSpriteB->oam.shape = SPRITE_SHAPE(64x32);
         opponentSpriteB->oam.size = SPRITE_SIZE(64x32);
         CalcCenterToCornerVec(opponentSpriteB, SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), ST_OAM_AFFINE_DOUBLE);
-        opponentBRotationScales = gTrainerSprites[trainerBPicId].mugshotRotation;
+        opponentBRotationScales = GetTrainerFrontPicMugshotRotation(trainerBPicId);
         SetOamMatrixRotationScaling(opponentSpriteB->oam.matrixNum, opponentBRotationScales, opponentBRotationScales, 0);
     }
 
     task->tOpponentSpriteAId = CreateTrainerSprite(trainerAPicId,
-                                                  gTrainerSprites[trainerAPicId].mugshotCoords.x - 32,
-                                                  gTrainerSprites[trainerAPicId].mugshotCoords.y + 42,
+                                                  mugshotCoordsA.x - 32,
+                                                  mugshotCoordsA.y + 42,
                                                   0, NULL);
 
     gReservedSpritePaletteCount = 12;
@@ -2655,7 +2657,7 @@ static void Mugshots_CreateTrainerPics(struct Task *task)
     CalcCenterToCornerVec(opponentSpriteA, SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), ST_OAM_AFFINE_DOUBLE);
     CalcCenterToCornerVec(playerSprite, SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), ST_OAM_AFFINE_DOUBLE);
 
-    opponentARotationScales = gTrainerSprites[trainerAPicId].mugshotRotation;
+    opponentARotationScales = GetTrainerFrontPicMugshotRotation(trainerAPicId);
 
     SetOamMatrixRotationScaling(opponentSpriteA->oam.matrixNum, opponentARotationScales, opponentARotationScales, 0);
     SetOamMatrixRotationScaling(playerSprite->oam.matrixNum, -512, 512, 0);

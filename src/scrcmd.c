@@ -3288,31 +3288,6 @@ bool8 ScrCmd_setmoverelearnerstate(struct ScriptContext *ctx)
     return FALSE;
 }
 
-bool8 ScrCmd_getmoverelearnerstate(struct ScriptContext *ctx)
-{
-    u32 varId = ScriptReadHalfword(ctx);
-
-    Script_RequestEffects(SCREFF_V1);
-    Script_RequestWriteVar(varId);
-
-    u16 *varPointer = GetVarPointer(varId);
-    *varPointer = gMoveRelearnerState;
-    return FALSE;
-}
-
-bool8 ScrCmd_istmrelearneractive(struct ScriptContext *ctx)
-{
-    const u8 *ptr = (const u8 *)ScriptReadWord(ctx);
-
-    Script_RequestEffects(SCREFF_V1);
-
-    if ((P_TM_MOVES_RELEARNER || P_ENABLE_MOVE_RELEARNERS)
-     && (P_ENABLE_ALL_TM_MOVES || IsBagPocketNonEmpty(POCKET_TM_HM)))
-        ScriptCall(ctx, ptr);
-
-    return FALSE;
-}
-
 bool8 ScrCmd_setstartingstatus(struct ScriptContext *ctx)
 {
     enum StartingStatus status = ScriptReadByte(ctx);

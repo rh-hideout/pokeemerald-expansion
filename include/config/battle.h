@@ -157,7 +157,8 @@
 #define B_COUNTER_TRY_HIT_PARTNER   GEN_LATEST // In Gen5+, if the user of the last attack is not on the field, it will be redirected to the partner. In Gen4-, Counter/Mirror Coat/Metal Burst would fail.
 #define B_RAGE_BUILDS               GEN_LATEST // In Gen4+, Rage's effect only sets in when it successfully hits. In Gen3, Rage's effect sets in regardless of whether it hits, misses or fails.
 #define B_CHECK_USER_FAILURE        GEN_LATEST // In Gen5+, The user no longer checks it's own failure, e.g. Soundproof will not block it's own Perish Song
-#define B_ABSORB_MESSAGE            GEN_LATEST // In Gen5+, No absorb message is played if user is already at full hp.
+#define B_ABSORB_MESSAGE            GEN_LATEST // In Gen5+, no absorb message is played if user is already at full hp.
+#define B_UPROAR                    GEN_LATEST // In Gen5+, Uproar awakens all battlers on the first turn if successful. In Gens 3-4, Uproar allows every battler to awaken before their action or at the end of a turn.
 
 // Ability settings
 #define B_GALE_WINGS                GEN_LATEST // In Gen7+ requires full HP to trigger.
@@ -274,6 +275,7 @@
 #define NO_BAG_RESTRICTION       0
 #define NO_BAG_AGAINST_TRAINER   1
 #define NO_BAG_IN_BATTLE         2
+#define NO_BAG_INVALID_VALUE     3
 
 #define B_VAR_NO_BAG_USE         0     // If 1, the ability to use the bag in battle is disabled in trainer battles. If 2, it is also disabled in wild battles.
 

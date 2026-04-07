@@ -195,7 +195,7 @@ SINGLE_BATTLE_TEST("Fling - Item does not get blocked by Unnerve if it isn't a b
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TAUNT, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
         HP_BAR(opponent);
-        MESSAGE("The opposing Wobbuffet's Taunt wore off!");
+        MESSAGE("The opposing Wobbuffet shook off the taunt!");
     }
 }
 
@@ -459,23 +459,23 @@ SINGLE_BATTLE_TEST("Fling - thrown berry's effect activates for the target even 
         else if (statId != 0) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
             if (statId == STAT_ATK) {
-                MESSAGE("Using Liechi Berry, the Attack of the opposing Wobbuffet rose!");
+                MESSAGE("The Liechi Berry boosted the opposing Wobbuffet's Attack!");
             } else if (statId == STAT_DEF) {
                 if (item == ITEM_GANLON_BERRY) {
-                    MESSAGE("Using Ganlon Berry, the Defense of the opposing Wobbuffet rose!");
+                    MESSAGE("The Ganlon Berry boosted the opposing Wobbuffet's Defense!");
                 } else {
-                    MESSAGE("Using Kee Berry, the Defense of the opposing Wobbuffet rose!");
+                    MESSAGE("The Kee Berry boosted the opposing Wobbuffet's Defense!");
                 }
             } else if (statId == STAT_SPDEF) {
                 if (item == ITEM_APICOT_BERRY) {
-                    MESSAGE("Using Apicot Berry, the Sp. Def of the opposing Wobbuffet rose!");
+                    MESSAGE("The Apicot Berry boosted the opposing Wobbuffet's Sp. Def!");
                 } else {
-                    MESSAGE("Using Maranga Berry, the Sp. Def of the opposing Wobbuffet rose!");
+                    MESSAGE("The Maranga Berry boosted the opposing Wobbuffet's Sp. Def!");
                 }
             } else if (statId == STAT_SPEED) {
-                MESSAGE("Using Salac Berry, the Speed of the opposing Wobbuffet rose!");
+                MESSAGE("The Salac Berry boosted the opposing Wobbuffet's Speed!");
             } else if (statId == STAT_SPATK) {
-                MESSAGE("Using Petaya Berry, the Sp. Atk of the opposing Wobbuffet rose!");
+                MESSAGE("The Petaya Berry boosted the opposing Wobbuffet's Sp. Atk!");
             }
         }
     } THEN {

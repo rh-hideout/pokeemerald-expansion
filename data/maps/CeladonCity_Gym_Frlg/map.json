@@ -2,7 +2,7 @@
   "id": "MAP_CELADON_CITY_GYM",
   "name": "CeladonCity_Gym_Frlg",
   "layout": "LAYOUT_CELADON_CITY_GYM",
-  "music": "MUS_GYM",
+  "music": "MUS_RG_GYM",
   "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_CELADON_CITY",
   "requires_flash": false,

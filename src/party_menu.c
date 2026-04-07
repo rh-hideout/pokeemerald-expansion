@@ -1092,7 +1092,9 @@ static void DisplayPartyPokemonDataForContest(u8 slot)
 
 static void DisplayPartyPokemonDataForRelearner(u8 slot)
 {
-    bool32 hasMoves = CanBoxMonRelearnMoves(&gPlayerParty[slot].box, gMoveRelearnerState);
+    bool32 hasMoves = FALSE;
+    if (!GetBoxMonData(&gPlayerParty[slot].box, MON_DATA_IS_EGG) && HasMoveToRelearn(&gPlayerParty[slot].box, gMoveRelearnerState))
+        hasMoves = TRUE;
     u32 desc = (hasMoves ? PARTYBOX_DESC_ABLE_2 : PARTYBOX_DESC_NOT_ABLE_2);
     DisplayPartyPokemonDescriptionData(slot, desc);
 }

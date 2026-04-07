@@ -15,6 +15,7 @@
 #include "menu.h"
 #include "new_game.h"
 #include "palette.h"
+#include "quickstart.h"
 #include "random.h"
 #include "reset_rtc_screen.h"
 #include "save.h"
@@ -654,6 +655,8 @@ static void SetTitleScreenScene_Run(s16 *data)
     switch (tState)
     {
     case 0:
+        if (QUICKSTART && QUICKSTART_HUD)
+            CreateQuickstartHud();
         CreateTask(Task_TitleScreen_BlinkPressStart, 0);
 #if defined(FIRERED)
         CreateTask(Task_FlameSpawner, 5);
@@ -686,6 +689,10 @@ static void SetTitleScreenScene_Run(s16 *data)
         else if (JOY_NEW(A_BUTTON | START_BUTTON))
         {
             SetTitleScreenScene(data, TITLESCREENSCENE_CRY);
+        }
+        else if (QUICKSTART && JOY_NEW(SELECT_BUTTON))
+        {
+            Quickstart();
         }
         else if (!FuncIsActiveTask(Task_TitleScreenTimer))
         {

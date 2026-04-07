@@ -15,10 +15,10 @@ DOUBLE_BATTLE_TEST("Symbiosis transfers its item to an ally after it consumes an
         MESSAGE("The opposing Kirlia used Trick Room!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
-        MESSAGE("Using Room Service, the Speed of Wobbuffet fell!");
+        MESSAGE("The Room Service lowered Wobbuffet's Speed!");
         // symbiosis triggers
         ABILITY_POPUP(playerRight, ABILITY_SYMBIOSIS);
-        MESSAGE("Oranguru passed its Toxic Orb to Wobbuffet through Symbiosis!");
+        MESSAGE("Oranguru shared its Toxic Orb with Wobbuffet!");
         // end of turn, wobb gets poisoned
         MESSAGE("Wobbuffet was badly poisoned!");
         STATUS_ICON(playerLeft, STATUS1_TOXIC_POISON);
@@ -44,10 +44,10 @@ DOUBLE_BATTLE_TEST("Symbiosis triggers after partners berry eaten from bug bite"
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BUG_BITE, opponentLeft);
         HP_BAR(playerLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-        MESSAGE("Using Liechi Berry, the Attack of the opposing Staravia rose!");
+        MESSAGE("The Liechi Berry boosted the opposing Staravia's Attack!");
         // symbiosis triggers
         ABILITY_POPUP(playerRight, ABILITY_SYMBIOSIS);
-        MESSAGE("Oranguru passed its Toxic Orb to Wobbuffet through Symbiosis!");
+        MESSAGE("Oranguru shared its Toxic Orb with Wobbuffet!");
         // end of turn, wobb gets poisoned
         MESSAGE("Wobbuffet was badly poisoned!");
         STATUS_ICON(playerLeft, STATUS1_TOXIC_POISON);
@@ -72,7 +72,7 @@ DOUBLE_BATTLE_TEST("Symbiosis triggers after partner bestows its item")
         MESSAGE("The opposing Staravia received Flame Orb from Wobbuffet!");
         // symbiosis triggers
         ABILITY_POPUP(playerRight, ABILITY_SYMBIOSIS);
-        MESSAGE("Oranguru passed its Toxic Orb to Wobbuffet through Symbiosis!");
+        MESSAGE("Oranguru shared its Toxic Orb with Wobbuffet!");
         // end of turn, wobb gets poisoned
         MESSAGE("Wobbuffet was badly poisoned!");
         STATUS_ICON(playerLeft, STATUS1_TOXIC_POISON);
@@ -102,7 +102,7 @@ DOUBLE_BATTLE_TEST("Symbiosis triggers after partner flings its item")
         STATUS_ICON(opponentLeft, STATUS1_BURN);
         // symbiosis triggers
         ABILITY_POPUP(playerRight, ABILITY_SYMBIOSIS);
-        MESSAGE("Oranguru passed its Toxic Orb to Wobbuffet through Symbiosis!");
+        MESSAGE("Oranguru shared its Toxic Orb with Wobbuffet!");
         // end of turn, wobb gets poisoned
         MESSAGE("Wobbuffet was badly poisoned!");
         STATUS_ICON(playerLeft, STATUS1_TOXIC_POISON);

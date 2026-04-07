@@ -347,6 +347,7 @@ enum BattleScriptOpcode
 #define CMP_LESS_THAN           3
 #define CMP_COMMON_BITS         4
 #define CMP_NO_COMMON_BITS      5
+#define CMP_BITMASK             6
 
 // Cmd_manipulatedamage
 #define DMG_1_8_TARGET_HP       0 // Used by bad dreams

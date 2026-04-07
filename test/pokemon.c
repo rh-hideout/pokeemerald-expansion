@@ -558,6 +558,9 @@ TEST("CalculateMonStats")
 
 TEST("BoxPokemon encryption works")
 {
+    // This test exists to ensure that expansion has not broken anything with regards to how BoxPokemon encryption works.
+    // If users make changes to the definitions of BoxPokemon, Pokemon, or any of their members, it is expected that this test will fail. To avoid the failing test from blocking CI, users can uncomment the KNOWN_FAILING declaration.
+    // KNOWN_FAILING;
     u32 raw[20] =
     {
         990384375,
