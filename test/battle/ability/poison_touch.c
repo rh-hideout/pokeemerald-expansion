@@ -44,7 +44,6 @@ SINGLE_BATTLE_TEST("Poison Touch only applies when using contact moves")
             NONE_OF {
                 ABILITY_POPUP(player, ABILITY_POISON_TOUCH);
                 ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
-                MESSAGE("The opposing Wobbuffet was poisoned by Grimer's Poison Touch!");
                 STATUS_ICON(opponent, poison: TRUE);
             }
         }
@@ -104,7 +103,6 @@ SINGLE_BATTLE_TEST("Poison Touch activates when user has Protective Pads, but no
             NONE_OF {
                 ABILITY_POPUP(player, ABILITY_POISON_TOUCH);
                 ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
-                MESSAGE("The opposing Wobbuffet was poisoned by Grimer's Poison Touch!");
                 STATUS_ICON(opponent, poison: TRUE);
             }
         }
@@ -128,7 +126,6 @@ SINGLE_BATTLE_TEST("Poison Touch does not trigger if attack is blocked by Substi
         NONE_OF {
             ABILITY_POPUP(player, ABILITY_POISON_TOUCH);
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
-            MESSAGE("The opposing Wobbuffet was poisoned by Grimer's Poison Touch!");
             STATUS_ICON(opponent, poison: TRUE);
         }
     } THEN {
@@ -151,7 +148,6 @@ SINGLE_BATTLE_TEST("Poison Touch is blocked by Shield Dust")
         NONE_OF {
             ABILITY_POPUP(player, ABILITY_POISON_TOUCH);
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
-            MESSAGE("The opposing Vivillon was poisoned by Grimer's Poison Touch!");
             STATUS_ICON(opponent, poison: TRUE);
         }
     } THEN {
@@ -175,7 +171,6 @@ SINGLE_BATTLE_TEST("Poison Touch is blocked by Covert Cloak")
         NONE_OF {
             ABILITY_POPUP(player, ABILITY_POISON_TOUCH);
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
-            MESSAGE("The opposing Wobbuffet was poisoned by Grimer's Poison Touch!");
             STATUS_ICON(opponent, poison: TRUE);
         }
     } THEN {

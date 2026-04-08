@@ -127,7 +127,6 @@ SINGLE_BATTLE_TEST("Toxic Chain does not trigger if attack is blocked by Substit
         NONE_OF {
             ABILITY_POPUP(player, ABILITY_TOXIC_CHAIN);
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
-            MESSAGE("The opposing Wobbuffet was badly poisoned!");
             STATUS_ICON(opponent, badPoison: TRUE);
         }
     } THEN {
@@ -149,7 +148,6 @@ SINGLE_BATTLE_TEST("Toxic Chain is blocked by Shield Dust")
         NONE_OF {
             ABILITY_POPUP(player, ABILITY_TOXIC_CHAIN);
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
-            MESSAGE("The opposing Vivillon was badly poisoned!");
             STATUS_ICON(opponent, badPoison: TRUE);
         }
     } THEN {
@@ -172,7 +170,6 @@ SINGLE_BATTLE_TEST("Toxic Chain is blocked by Covert Cloak")
         NONE_OF {
             ABILITY_POPUP(player, ABILITY_TOXIC_CHAIN);
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
-            MESSAGE("The opposing Wobbuffet was badly poisoned!");
             STATUS_ICON(opponent, badPoison: TRUE);
         }
     } THEN {
