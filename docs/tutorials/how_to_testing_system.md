@@ -80,7 +80,7 @@ SINGLE_BATTLE_TEST("Stun Spore does not affect Grass-types")
     GIVEN {
         ASSUME(IsPowderMove(MOVE_STUN_SPORE));
         ASSUME(GetSpeciesType(SPECIES_ODDISH, 0) == TYPE_GRASS);
-        PLAYER(SPECIES_ODDISH); // 1.
+        PLAYER(SPECIES_WOBBUFFET); // 1.
         OPPONENT(SPECIES_ODDISH); // 2.
     } WHEN {
         TURN { MOVE(player, MOVE_STUN_SPORE); } // 3.
