@@ -112,6 +112,22 @@ SINGLE_BATTLE_TEST("Emergency Exit activates when taking residual damage and fal
     }
 }
 
+SINGLE_BATTLE_TEST("Emergency Exit doesn't activate when taking residual damage to under 50% max-hp then healing above 50% max-hp - Weather")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_SITRUS_BERRY) == HOLD_EFFECT_RESTORE_PCT_HP);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(134); Item(ITEM_SITRUS_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SANDSTORM); }
+    } SCENE {
+        HP_BAR(opponent);
+        HP_BAR(opponent);
+        NOT ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
+    }
+}
+
 SINGLE_BATTLE_TEST("Emergency Exit activates when healing from under 50% max-hp and taking residual damage to under 50% max-hp - Sticky Barb")
 {
     // Might fail if users set healing higher than sticky barb damage
@@ -168,6 +184,7 @@ DOUBLE_BATTLE_TEST("Emergency Exit activates when taking Sea of Fire damage and 
     } SCENE {
         HP_BAR(playerLeft);
         ABILITY_POPUP(playerLeft, ABILITY_EMERGENCY_EXIT);
+        MESSAGE("Golisopod is healed by the grassy terrain!");
         HP_BAR(playerLeft);
         SEND_IN_MESSAGE("Wobbuffet");
     }
