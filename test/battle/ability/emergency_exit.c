@@ -281,7 +281,7 @@ SINGLE_BATTLE_TEST("Emergency Exit will trigger due to recoil damage")
     }
 }
 
-SINGLE_BATTLE_TEST("Emergency Exit will trigger due to confusion damage")
+SINGLE_BATTLE_TEST("Emergency Exit will not trigger due to confusion damage")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_CONFUSE_RAY) == EFFECT_CONFUSE);
