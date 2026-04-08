@@ -463,8 +463,7 @@ static bool32 HandleEndTurnLeechSeed(enum BattlerId battler)
     gBattleStruct->eventState.endTurnBattler++;
 
     if (drainedBattler
-     && IsBattlerAlive(drainedBattler - 1)
-     && gSpecialStatuses[drainedBattler - 1].queuedSwitch == NO_QUEUED_SWITCH
+     && IsBattlerPresent(drainedBattler - 1)
      && IsBattlerPresent(battler)
      && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
     {
