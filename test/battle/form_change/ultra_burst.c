@@ -132,7 +132,7 @@ SINGLE_BATTLE_TEST("Necrozma returns its proper Form upon battle end after Ultra
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST); }
     } THEN {
         EXPECT_EQ(player->species, SPECIES_NECROZMA_ULTRA);
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), species);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SPECIES), species);
     }
 }
 

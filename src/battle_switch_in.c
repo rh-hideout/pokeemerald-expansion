@@ -250,7 +250,7 @@ static bool32 FirstEventBlockEvents(struct BattleCalcValues *calcValues)
             gBattleScripting.battler = gBattlerAbility = battler;
             gBattleStruct->battlerState[battler].forcedSwitch = FALSE;
             gBattleStruct->eventState.switchIn = 0;
-            BattleScriptCall(BattleScript_EmergencyExitRet);
+            BattleScriptCall(BattleScript_EmergencyExitSendReplacement);
             effect = TRUE;
         }
         else

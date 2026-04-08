@@ -53,6 +53,7 @@
   - [How to use Dynamic Shop](tutorials/how_to_dynamic_shop.md)
 - [Changelog](./CHANGELOG.md)
     - [1.15.x]()
+        - [Version 1.15.1](changelogs/1.15.x/1.15.1.md)
         - [Version 1.15.0](changelogs/1.15.x/1.15.0.md)
     - [1.14.x]()
         - [Version 1.14.4](changelogs/1.14.x/1.14.4.md)

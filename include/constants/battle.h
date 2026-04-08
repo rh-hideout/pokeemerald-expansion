@@ -19,10 +19,42 @@
  *   | Player's side             |
  *   |  Left   Right             |
  *   |   0       2               |
- *   ----------------------------+
+ *   +---------------------------+
  *   |                           |
  *   |                           |
  *   +---------------------------+
+ */
+
+/*
+ * BattleTrainer is the identifier used to reference one of the four 6-mon battle parties
+ * in gParties[MAX_BATTLE_TRAINERS]. gParties[B_TRAINER_0] is always the player's party.
+ * gParties[B_TRAINER_1] is always the first opponent trainer's party, or holds the first
+ * wild mon during an encounter. gParties[B_TRAINER_2] is only used in multibattles where 
+ * the player's side has a second trainer such as Mossdeep Space Center tag battle with
+ * trainer Steven. gParties[B_TRAINER_3] is only used in battles with two opponent trainers,
+ * or for the second wild mon in a doubles wild encounter. In a double battle where the
+ * battle side only has a single trainer, both battlers on that battle side will reside in
+ * the same party (gParties[B_TRAINER_0] for player side and gParties[B_TRAINER_1] for
+ * opponent side).
+ * Note in link multi battles, parties are set locally on each player's device, meaning
+ * even if a player is in the right position, on their device they will still occupy 
+ * gParties[B_TRAINER_0], with their link partner using gParties[B_TRAINER_2].
+ *
+ *          Regular battles              Link multi (player on left)         Link multi (player on right)
+ *   + ------------------------- +      + ------------------------- +       + ------------------------- +
+ *   |           Opponent's side |      |           Opponent's side |       |           Opponent's side |
+ *   |            Right    Left  |      |            Right    Left  |       |            Right    Left  |
+ *   | (1 trainer)  1       1    |      |              3       1    |       |              3       1    |
+ *   | (2 trainers) 3       1    |      |                           |       |                           |
+ *   |                           |      |                           |       |                           |
+ *   | Player's side             |      |                           |       |                           |
+ *   |  Left   Right             |      | Player's side             |       | Player's side             |
+ *   |   0       0 (double)      |      |  Left   Right             |       |  Left   Right             |
+ *   |   0       2 (multi)       |      |   0       2               |       |   2       0               |
+ *   +---------------------------+      +---------------------------+       +---------------------------+
+ *   |                           |      |                           |       |                           |
+ *   |                           |      |                           |       |                           |
+ *   +---------------------------+      +---------------------------+       +---------------------------+
  */
 
 enum BattlerPosition

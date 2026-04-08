@@ -15,8 +15,7 @@ SINGLE_BATTLE_TEST("Rapid Spin activates after Toxic Debris")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RAPID_SPIN, opponent);
         ABILITY_POPUP(player, ABILITY_TOXIC_DEBRIS);
-        MESSAGE("Poison spikes were scattered on the ground all around the opposing team!");
-        MESSAGE("The opposing Wobbuffet blew away Toxic Spikes!");
+        MESSAGE("The poison spikes disappeared from the ground around the opposing team!");
     }
 }
 
@@ -39,8 +38,8 @@ SINGLE_BATTLE_TEST("Rapid Spin blows away Wrap, hazards and raises Speed (Gen 8+
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Wobbuffet's Speed rose!");
     #endif
-        MESSAGE("Wobbuffet got free of the opposing Wobbuffet's Wrap!");
-        MESSAGE("Wobbuffet blew away Stealth Rock!");
+        MESSAGE("Wobbuffet was freed from Wrap!");
+        MESSAGE("The pointed stones disappeared from around your team!");
     }
 }
 
@@ -59,8 +58,8 @@ SINGLE_BATTLE_TEST("Rapid Spin: Mortal Spin blows away Wrap, hazards and poisons
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MORTAL_SPIN, player);
         MESSAGE("The opposing Wobbuffet was poisoned!");
         STATUS_ICON(opponent, poison: TRUE);
-        MESSAGE("Wobbuffet got free of the opposing Wobbuffet's Wrap!");
-        MESSAGE("Wobbuffet blew away Stealth Rock!");
+        MESSAGE("Wobbuffet was freed from Wrap!");
+        MESSAGE("The pointed stones disappeared from around your team!");
     }
 }
 
@@ -79,10 +78,10 @@ SINGLE_BATTLE_TEST("Rapid Spin blows away all hazards")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RAPID_SPIN, player);
 
-        MESSAGE("Wobbuffet blew away Spikes!");
-        MESSAGE("Wobbuffet blew away Sticky Web!");
-        MESSAGE("Wobbuffet blew away Toxic Spikes!");
-        MESSAGE("Wobbuffet blew away Stealth Rock!");
+        MESSAGE("The spikes disappeared from the ground around your team!");
+        MESSAGE("The sticky web has disappeared from the ground around you!");
+        MESSAGE("The poison spikes disappeared from the ground around your team!");
+        MESSAGE("The pointed stones disappeared from around your team!");
     } THEN {
         EXPECT_EQ(gBattleStruct->hazardsQueue[0][0], HAZARDS_NONE);
         EXPECT_EQ(gBattleStruct->hazardsQueue[0][1], HAZARDS_NONE);
@@ -115,8 +114,8 @@ SINGLE_BATTLE_TEST("Rapid Spin doesn't blow away Wrap, hazards or raise Speed wh
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
             MESSAGE("Tauros's Speed rose!");
         #endif
-            MESSAGE("Tauros got free of the opposing Wobbuffet's Wrap!");
-            MESSAGE("Tauros blew away Stealth Rock!");
+            MESSAGE("Tauros was freed from Wrap!");
+            MESSAGE("The pointed stones disappeared from around your team!");
         }
     }
 }
@@ -142,5 +141,24 @@ SINGLE_BATTLE_TEST("Rapid Spin and Mortal Spin will remove hazards if the target
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
         SUB_HIT(player);
         NOT HP_BAR(opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Rapid Spin and Mortal Spin remove Leech Seed")
+{
+    enum Move move;
+
+    PARAMETRIZE { move = MOVE_RAPID_SPIN; }
+    PARAMETRIZE { move = MOVE_MORTAL_SPIN; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_LEECH_SEED); MOVE(player, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LEECH_SEED, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        MESSAGE("Wobbuffet was freed from Leech Seed!");
     }
 }
