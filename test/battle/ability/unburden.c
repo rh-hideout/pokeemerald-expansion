@@ -149,7 +149,7 @@ SINGLE_BATTLE_TEST("Unburden speed boost is removed after regaining an item with
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FLING) == EFFECT_FLING);
         ASSUME(GetMoveEffect(MOVE_RECYCLE) == EFFECT_RECYCLE);
-        PLAYER(SPECIES_DRIFBLIM) { Ability(ABILITY_UNBURDEN); Item(ITEM_IRON_BALL); Speed(5); }
+        PLAYER(SPECIES_DRIFBLIM) { Ability(ABILITY_UNBURDEN); Item(ITEM_POTION); Speed(5); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(7); }
     } WHEN {
         TURN { MOVE(player, MOVE_FLING); }
@@ -163,8 +163,72 @@ SINGLE_BATTLE_TEST("Unburden speed boost is removed after regaining an item with
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
         // Turn 3
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RECYCLE, player);
-        // Turn 4, no speed increase after recovering item
+        // Turn 4, no speed increase
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Unburden speed boost is removed after regaining an item with Trick")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
+        ASSUME(GetMoveEffect(MOVE_TRICK) == EFFECT_TRICK);
+        PLAYER(SPECIES_DRIFBLIM) { Ability(ABILITY_UNBURDEN); Item(ITEM_POTION); Speed(5); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_POTION); Speed(7); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_KNOCK_OFF); }
+        TURN { MOVE(player, MOVE_TRICK); }
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF, player);
+        // Turn 2, doubled speed
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, player);
+        // Turn 3, no speed increase
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Unburden speed boost is removed after regaining an item with Thief")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
+        ASSUME(GetMoveEffect(MOVE_THIEF) == EFFECT_STEAL_ITEM);
+        PLAYER(SPECIES_DRIFBLIM) { Ability(ABILITY_UNBURDEN); Item(ITEM_POTION); Speed(5); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_POTION); Speed(7); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_KNOCK_OFF); }
+        TURN { MOVE(player, MOVE_THIEF); }
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF, player);
+        // Turn 2, doubled speed
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_THIEF, player);
+        // Turn 3, no speed increase
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Unburden speed boost is removed after regaining an item with Symbiosis")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FLING) == EFFECT_FLING);
+        PLAYER(SPECIES_DRIFBLIM) { Ability(ABILITY_UNBURDEN); Item(ITEM_POTION); Speed(5); }
+        PLAYER(SPECIES_ORANGURU) { Ability(ABILITY_SYMBIOSIS); Item(ITEM_ORAN_BERRY); Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(7); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_FLING, target: opponentLeft); }
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, playerLeft);
+        ABILITY_POPUP(playerRight, ABILITY_SYMBIOSIS);
+        // Turn 2, no speed increase
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerLeft);
     }
 }
