@@ -232,3 +232,36 @@ DOUBLE_BATTLE_TEST("Unburden speed boost is removed after regaining an item with
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerLeft);
     }
 }
+
+SINGLE_BATTLE_TEST("Unburden reactivates after consuming an item again")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FLING) == EFFECT_FLING);
+        ASSUME(GetMoveEffect(MOVE_RECYCLE) == EFFECT_RECYCLE);
+        PLAYER(SPECIES_DRIFBLIM) { Ability(ABILITY_UNBURDEN); Item(ITEM_POTION); Speed(5); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(7); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FLING); }
+        TURN {}
+        TURN { MOVE(player, MOVE_RECYCLE); }
+        TURN {}
+        TURN { MOVE(player, MOVE_FLING); }
+        TURN {}
+    } SCENE {
+        // Turn 1
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
+        // Turn 2, doubled speed
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        // Turn 3
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RECYCLE, player);
+        // Turn 4, no speed increase
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+        // Turn 5
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
+        // Turn 6, doubled speed again
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+    }
+}
