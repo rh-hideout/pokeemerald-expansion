@@ -216,7 +216,7 @@ DOUBLE_BATTLE_TEST("Emergency Exit activates when taking residual damage and bat
         NONE_OF {
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, playerLeft);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SALT_CURE_DAMAGE, playerLeft);
-            HP_BAR(playerLeft)
+            HP_BAR(playerLeft);
         }
         SEND_IN_MESSAGE("Wobbuffet");
     }
