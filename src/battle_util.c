@@ -9483,7 +9483,7 @@ bool32 PickupHasValidTarget(enum BattlerId battler)
     return FALSE;
 }
 
-bool32 IsBattlerWeatherAffected(enum BattlerId battler, u32 weatherFlags)
+u32 GetWeather(void)
 {
     if (gBattleWeather == B_WEATHER_NONE || !HasWeatherEffect())
         return B_WEATHER_NONE;
