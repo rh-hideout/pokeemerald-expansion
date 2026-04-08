@@ -99,3 +99,72 @@ SINGLE_BATTLE_TEST("Unburden doubling speed effect is ignored by Neutralizing Ga
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
     }
 }
+
+SINGLE_BATTLE_TEST("Unburden doesn't activate when item is removed in Magic Room")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_MAGIC_ROOM) == EFFECT_MAGIC_ROOM);
+        ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
+        PLAYER(SPECIES_DRIFBLIM) { Ability(ABILITY_UNBURDEN); Item(ITEM_POTION); Speed(5); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(7); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_MAGIC_ROOM); }
+        TURN { MOVE(opponent, MOVE_KNOCK_OFF); }
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGIC_ROOM, opponent);
+        // Turn 2
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF, player);
+        // Turn 3, no speed increase
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Unburden doesn't activate when item is removed in Embargo")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_EMBARGO) == EFFECT_EMBARGO);
+        ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
+        PLAYER(SPECIES_DRIFBLIM) { Ability(ABILITY_UNBURDEN); Item(ITEM_POTION); Speed(5); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(7); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_EMBARGO); }
+        TURN { MOVE(opponent, MOVE_KNOCK_OFF); }
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBARGO, opponent);
+        // Turn 2
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF, player);
+        // Turn 3, no speed increase
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Unburden speed boost is removed after regaining an item with Recycle")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FLING) == EFFECT_FLING);
+        ASSUME(GetMoveEffect(MOVE_RECYCLE) == EFFECT_RECYCLE);
+        PLAYER(SPECIES_DRIFBLIM) { Ability(ABILITY_UNBURDEN); Item(ITEM_IRON_BALL); Speed(5); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(7); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FLING); }
+        TURN {}
+        TURN { MOVE(player, MOVE_RECYCLE); }
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
+        // Turn 2, doubled speed
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        // Turn 3
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RECYCLE, player);
+        // Turn 4, no speed increase after recovering item
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+    }
+}
