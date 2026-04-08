@@ -103,19 +103,6 @@ AI_SINGLE_BATTLE_TEST("AI does not switch for Wish if current mon has good match
     }
 }
 
-AI_SINGLE_BATTLE_TEST("AI does not switch for Wish if current mon can win the 1v1")
-{
-    GIVEN {
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_OMNISCIENT);
-        PLAYER(SPECIES_MACHAMP) { Moves(MOVE_PROTECT, MOVE_CELEBRATE); }
-        OPPONENT(SPECIES_BLISSEY) { HP(400); MaxHP(400); Moves(MOVE_WISH, MOVE_TACKLE); }
-        OPPONENT(SPECIES_PIDGEOT) { HP(100); MaxHP(200); Moves(MOVE_AERIAL_ACE); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_WISH); }
-        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_TACKLE); }
-    }
-}
-
 AI_SINGLE_BATTLE_TEST("AI does not switch for Wish if ally would faint to hazards")
 {
     GIVEN {

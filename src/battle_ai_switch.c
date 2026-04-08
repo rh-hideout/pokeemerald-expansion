@@ -32,15 +32,6 @@ struct IncomingHealInfo
     u16 healEndOfTurn:1;
     u16 curesStatus:1;
 };
-struct CurrentBattler1v1Info
-{
-    enum Move bestPlayerMove;
-    enum Move bestPlayerPriorityMove;
-    enum Move expectedMove;
-    u32 minHitsToKOAI;
-    u32 minHitsToKOAIPriority;
-    bool32 canBattlerWin1v1;
-};
 static bool32 CanUseSuperEffectiveMoveAgainstOpponents(enum BattlerId battler);
 static bool32 FindMonWithFlagsAndSuperEffective(enum BattlerId battler, u16 flags, u32 moduloPercent);
 static u32 GetSwitchinHazardsDamage(enum BattlerId battler);
@@ -58,7 +49,6 @@ bool32 IsSwitchinTSpikesAffected(enum BattlerId battler);
 static bool32 IsOpponentPhysicalAttacker(enum BattlerId battler, enum BattlerId opposingBattler);
 static bool32 CanIntimidateLowerOpponentAtk(enum BattlerId battler, enum BattlerId opposingBattler);
 static bool32 ShouldSwitchIfIntimidateBenefit(enum BattlerId battler);
-static void GetCurrentBattler1v1Info(enum BattlerId battler, enum BattlerId opposingBattler, struct CurrentBattler1v1Info *info);
 static bool32 DoesMostSuitableSwitchinBenefitFromWish(enum BattlerId battler, enum BattlerId opposingBattler, u32 currentTypeMatchup);
 
 static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, u32 monIndex, struct Pokemon *mon)
@@ -325,62 +315,6 @@ static inline bool32 CanBattlerWin1v1(u32 hitsToKOAI, u32 hitsToKOPlayer, bool32
             return TRUE;
     }
     return FALSE;
-}
-
-static void GetCurrentBattler1v1Info(enum BattlerId battler, enum BattlerId opposingBattler, struct CurrentBattler1v1Info *info)
-{
-    enum Move *playerMoves = GetMovesArray(opposingBattler);
-
-    memset(info, 0, sizeof(*info));
-    info->bestPlayerMove = MOVE_NONE;
-    info->bestPlayerPriorityMove = MOVE_NONE;
-    info->expectedMove = MOVE_NONE;
-    info->minHitsToKOAI = gBattleMons[battler].hp;
-    info->minHitsToKOAIPriority = gBattleMons[battler].hp;
-
-    for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
-    {
-        enum Move playerMove = SMART_SWITCHING_OMNISCIENT ? gBattleMons[opposingBattler].moves[moveIndex] : playerMoves[moveIndex];
-        if (playerMove != MOVE_NONE && !IsBattleMoveStatus(playerMove) && GetMoveEffect(playerMove) != EFFECT_FOCUS_PUNCH && gBattleMons[opposingBattler].pp[moveIndex] > 0)
-        {
-            u32 hitsToKOAI = GetNoOfHitsToKOBattler(opposingBattler, battler, moveIndex, AI_DEFENDING, CONSIDER_ENDURE);
-            if (hitsToKOAI < info->minHitsToKOAI && !AI_DoesChoiceEffectBlockMove(opposingBattler, playerMove))
-            {
-                info->bestPlayerMove = playerMove;
-                info->minHitsToKOAI = hitsToKOAI;
-            }
-            if (GetBattleMovePriority(opposingBattler, gAiLogicData->abilities[opposingBattler], playerMove) > 0
-                && hitsToKOAI < info->minHitsToKOAIPriority
-                && !AI_DoesChoiceEffectBlockMove(opposingBattler, playerMove))
-            {
-                info->bestPlayerPriorityMove = playerMove;
-                info->minHitsToKOAIPriority = hitsToKOAI;
-            }
-        }
-    }
-
-    info->expectedMove = (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_PREDICT_MOVE)
-        ? GetIncomingMove(battler, opposingBattler, gAiLogicData)
-        : info->bestPlayerMove;
-
-    for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
-    {
-        enum Move aiMove = gBattleMons[battler].moves[moveIndex];
-        if (aiMove == MOVE_NONE || gBattleMons[battler].pp[moveIndex] == 0)
-            continue;
-
-        if (!IsBattleMoveStatus(aiMove) && !AI_DoesChoiceEffectBlockMove(battler, aiMove))
-        {
-            u32 hitsToKOPlayer = GetNoOfHitsToKOBattler(battler, opposingBattler, moveIndex, AI_SWITCHIN_ATTACKING, CONSIDER_ENDURE);
-            if (!info->canBattlerWin1v1)
-            {
-                bool32 isBattlerFirst = AI_IsFaster(battler, opposingBattler, aiMove, info->expectedMove, CONSIDER_PRIORITY);
-                bool32 isBattlerFirstPriority = AI_IsFaster(battler, opposingBattler, aiMove, info->bestPlayerPriorityMove, CONSIDER_PRIORITY);
-                info->canBattlerWin1v1 = CanBattlerWin1v1(info->minHitsToKOAI, hitsToKOPlayer, isBattlerFirst)
-                    && CanBattlerWin1v1(info->minHitsToKOAIPriority, hitsToKOPlayer, isBattlerFirstPriority);
-            }
-        }
-    }
 }
 
 static bool32 DoesMostSuitableSwitchinBenefitFromWish(enum BattlerId battler, enum BattlerId opposingBattler, u32 currentTypeMatchup)
@@ -1237,7 +1171,6 @@ static bool32 ShouldSwitchIfAbilityBenefit(enum BattlerId battler)
 // Consider switching to pass Wish to a teammate that benefits AND has better matchup
 static bool32 ShouldSwitchIfWishPassing(enum BattlerId battler)
 {
-    struct CurrentBattler1v1Info info;
     enum Move incomingMove;
 
     // Only use with smart switching flag
@@ -1264,10 +1197,6 @@ static bool32 ShouldSwitchIfWishPassing(enum BattlerId battler)
 
     // Current mon has good or neutral matchup - no need to switch for Wish
     if (typeMatchupCurrent <= UQ_4_12(2.0))
-        return FALSE;
-
-    GetCurrentBattler1v1Info(battler, opposingBattler, &info);
-    if (info.canBattlerWin1v1)
         return FALSE;
 
     if (!DoesMostSuitableSwitchinBenefitFromWish(battler, opposingBattler, typeMatchupCurrent))
