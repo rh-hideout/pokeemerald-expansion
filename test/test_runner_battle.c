@@ -1954,10 +1954,11 @@ void AIFlags_(u32 sourceLine, u64 flags)
     DATA.hasAI = TRUE;
 }
 
-void BattlerAIFlags_(u32 sourceLine, enum BattlerId battler, u64 flags)
+void BattlerAIFlags_(u32 sourceLine, struct BattlePokemon *battler, u64 flags)
 {
     INVALID_IF(!IsAITest(), "AI_FLAGS is usable only in AI_SINGLE_BATTLE_TEST, AI_DOUBLE_BATTLE_TEST, AI_MULTI_BATTLE_TEST, and AI_TWO_VS_ONE_TEST");
-    DATA.recordedBattle.AI_scripts[battler] |= flags;
+    enum BattlerId battlerId = battler - gBattleMons;
+    DATA.recordedBattle.AI_scripts[battlerId] |= flags;
     DATA.hasAI = TRUE;
 }
 
