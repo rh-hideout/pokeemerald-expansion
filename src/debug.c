@@ -982,6 +982,34 @@ static void Debug_HandleInput_Numeric(u8 taskId, s32 min, s32 max, u32 digits)
     }
 }
 
+enum SongType { SONG_SE, SONG_MUS };
+enum FindSongMode { SONG_FIRST_GE, SONG_FIRST_GT, SONG_LAST_LT };
+u32 FindSong(enum SongType, enum FindSongMode, u32 fromSongId);
+
+static void Debug_HandleInput_SongId(u8 taskId, enum SongType type, u32 digits)
+{
+    if (JOY_NEW(DPAD_UP))
+    {
+        for (u32 i = 0; i < sPowersOfTen[gTasks[taskId].tDigit]; i++)
+            gTasks[taskId].tInput = FindSong(type, SONG_FIRST_GT, gTasks[taskId].tInput);
+    }
+    if (JOY_NEW(DPAD_DOWN))
+    {
+        for (u32 i = 0; i < sPowersOfTen[gTasks[taskId].tDigit]; i++)
+            gTasks[taskId].tInput = FindSong(type, SONG_LAST_LT, gTasks[taskId].tInput);
+    }
+    if (JOY_NEW(DPAD_LEFT))
+    {
+        if (gTasks[taskId].tDigit > 0)
+            gTasks[taskId].tDigit -= 1;
+    }
+    if (JOY_NEW(DPAD_RIGHT))
+    {
+        if (gTasks[taskId].tDigit < digits - 1)
+            gTasks[taskId].tDigit += 1;
+    }
+}
+
 static void DebugAction_Cancel(u8 taskId)
 {
     Debug_DestroyMenu_Full(taskId);
@@ -2441,9 +2469,9 @@ static void DebugAction_FlagsVars_PokedexFlags_Reset(u8 taskId)
     // Add party Pokemon to Pokedex
     for (partyId = 0; partyId < PARTY_SIZE; partyId++)
     {
-        if (GetMonData(&gPlayerParty[partyId], MON_DATA_SANITY_HAS_SPECIES))
+        if (GetMonData(&gParties[B_TRAINER_0][partyId], MON_DATA_SANITY_HAS_SPECIES))
         {
-            species = GetMonData(&gPlayerParty[partyId], MON_DATA_SPECIES);
+            species = GetMonData(&gParties[B_TRAINER_0][partyId], MON_DATA_SPECIES);
             GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_SET_CAUGHT);
             GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_SET_SEEN);
         }
@@ -3898,8 +3926,7 @@ static void DebugAction_PCBag_ClearBoxes(u8 taskId)
 
 // *******************************
 // Actions Sound
-static const u8 *const sBGMNames[END_MUS - START_MUS + 1];
-static const u8 *const sSENames[END_SE + 1];
+static const u8 *const sSongNames[];
 
 #define tCurrentSong  data[5]
 
@@ -3917,31 +3944,30 @@ static void DebugAction_Sound_SE(u8 taskId)
 
     CopyWindowToVram(windowId, COPYWIN_FULL);
 
-    // Display initial sound effect
-    StringCopy(gStringVar2, gText_DigitIndicator[0]);
-    ConvertIntToDecimalStringN(gStringVar3, 1, STR_CONV_MODE_LEADING_ZEROS, DEBUG_NUMBER_DIGITS_ITEMS);
-    StringCopyPadded(gStringVar1, sSENames[0], CHAR_SPACE, 35);
-    StringExpandPlaceholders(gStringVar4, sDebugText_Sound_SFX_ID);
-    AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
-
     StopMapMusic(); //Stop map music to better hear sounds
 
     gTasks[taskId].func = DebugAction_Sound_SE_SelectId;
     gTasks[taskId].tSubWindowId = windowId;
-    gTasks[taskId].tInput = 1;
+    gTasks[taskId].tInput = FindSong(SONG_SE, SONG_FIRST_GE, MUS_DUMMY);
     gTasks[taskId].tDigit = 0;
     gTasks[taskId].tCurrentSong = gTasks[taskId].tInput;
+
+    // Display initial sound effect
+    StringCopy(gStringVar2, gText_DigitIndicator[0]);
+    ConvertIntToDecimalStringN(gStringVar3, gTasks[taskId].tInput, STR_CONV_MODE_LEADING_ZEROS, DEBUG_NUMBER_DIGITS_ITEMS);
+    StringCopyPadded(gStringVar1, sSongNames[gTasks[taskId].tInput], CHAR_SPACE, 35);
+    StringExpandPlaceholders(gStringVar4, sDebugText_Sound_SFX_ID);
+    AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
 }
 
 static void DebugAction_Sound_SE_SelectId(u8 taskId)
 {
     if (JOY_NEW(DPAD_ANY))
     {
-        const u8 *seName;
-        Debug_HandleInput_Numeric(taskId, 1, END_SE, DEBUG_NUMBER_DIGITS_ITEMS);
+        Debug_HandleInput_SongId(taskId, SONG_SE, DEBUG_NUMBER_DIGITS_ITEMS);
 
         StringCopy(gStringVar2, gText_DigitIndicator[gTasks[taskId].tDigit]);
-        seName = sSENames[gTasks[taskId].tInput - 1];
+        const u8 *seName = sSongNames[gTasks[taskId].tInput];
         if (seName == NULL)
             seName = sDebugText_Dashes;
         StringCopyPadded(gStringVar1, seName, CHAR_SPACE, 35);
@@ -3982,31 +4008,30 @@ static void DebugAction_Sound_MUS(u8 taskId)
 
     CopyWindowToVram(windowId, COPYWIN_FULL);
 
-    // Display initial song
-    StringCopy(gStringVar2, gText_DigitIndicator[0]);
-    ConvertIntToDecimalStringN(gStringVar3, START_MUS, STR_CONV_MODE_LEADING_ZEROS, DEBUG_NUMBER_DIGITS_ITEMS);
-    StringCopyPadded(gStringVar1, sBGMNames[0], CHAR_SPACE, 35);
-    StringExpandPlaceholders(gStringVar4, sDebugText_Sound_Music_ID);
-    AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
-
     StopMapMusic(); //Stop map music to better hear new music
 
     gTasks[taskId].func = DebugAction_Sound_MUS_SelectId;
     gTasks[taskId].tSubWindowId = windowId;
-    gTasks[taskId].tInput = START_MUS;
+    gTasks[taskId].tInput = FindSong(SONG_MUS, SONG_FIRST_GE, MUS_DUMMY);
     gTasks[taskId].tDigit = 0;
     gTasks[taskId].tCurrentSong = gTasks[taskId].tInput;
+
+    // Display initial song
+    StringCopy(gStringVar2, gText_DigitIndicator[0]);
+    ConvertIntToDecimalStringN(gStringVar3, gTasks[taskId].tInput, STR_CONV_MODE_LEADING_ZEROS, DEBUG_NUMBER_DIGITS_ITEMS);
+    StringCopyPadded(gStringVar1, sSongNames[gTasks[taskId].tInput], CHAR_SPACE, 35);
+    StringExpandPlaceholders(gStringVar4, sDebugText_Sound_Music_ID);
+    AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
 }
 
 static void DebugAction_Sound_MUS_SelectId(u8 taskId)
 {
     if (JOY_NEW(DPAD_ANY))
     {
-        const u8 *bgmName;
-        Debug_HandleInput_Numeric(taskId, START_MUS, END_MUS, DEBUG_NUMBER_DIGITS_ITEMS);
+        Debug_HandleInput_SongId(taskId, SONG_MUS, DEBUG_NUMBER_DIGITS_ITEMS);
 
         StringCopy(gStringVar2, gText_DigitIndicator[gTasks[taskId].tDigit]);
-        bgmName = sBGMNames[gTasks[taskId].tInput - START_MUS];
+        const u8 *bgmName = sSongNames[gTasks[taskId].tInput];
         if (bgmName == NULL)
             bgmName = sDebugText_Dashes;
         StringCopyPadded(gStringVar1, bgmName, CHAR_SPACE, 35);
@@ -4556,29 +4581,82 @@ static void DebugAction_DestroyFollowerNPC(u8 taskId)
     X(SE_PIKE_CURTAIN_OPEN)         \
     X(SE_SUDOWOODO_SHAKE)
 
-// Create BGM list
-#define X(songId) static const u8 sBGMName_##songId[] = _(#songId);
-SOUND_LIST_BGM
-#undef X
-
-#define X(songId) [songId - START_MUS] = sBGMName_##songId,
-static const u8 *const sBGMNames[END_MUS - START_MUS + 1] =
+// Create song list
+#define X(songId) [songId] = COMPOUND_STRING(#songId),
+static const u8 *const sSongNames[] =
 {
 SOUND_LIST_BGM
-};
-#undef X
-
-// Create SE list
-#define X(songId) static const u8 sSEName_##songId[] = _(#songId);
-SOUND_LIST_SE
-#undef X
-
-#define X(songId) [songId - 1] = sSEName_##songId,
-static const u8 *const sSENames[END_SE + 1] =
-{
 SOUND_LIST_SE
 };
 #undef X
+
+u32 FindSong(enum SongType type, enum FindSongMode mode, u32 fromSongId)
+{
+    static const u8 sSEPrefix[] = _("SE_");
+    static const u8 sMUSPrefix[] = _("MUS_");
+    const u8 *prefix;
+    u32 prefixLength;
+    switch (type)
+    {
+    case SONG_SE:
+        prefix = sSEPrefix;
+        prefixLength = ARRAY_COUNT(sSEPrefix);
+        break;
+    case SONG_MUS:
+        prefix = sMUSPrefix;
+        prefixLength = ARRAY_COUNT(sMUSPrefix);
+        break;
+    default:
+        errorf("unknown song type: %d", type);
+        return MUS_DUMMY;
+    }
+
+    s32 direction;
+    u32 stopAfter;
+    u32 songId;
+    switch (mode)
+    {
+    case SONG_FIRST_GE:
+        direction = 1;
+        stopAfter = ARRAY_COUNT(sSongNames) - 1;
+        assertf(fromSongId <= stopAfter, "song ID not in sSongNames: %d", fromSongId)
+        {
+            return MUS_DUMMY;
+        }
+        songId = fromSongId;
+        break;
+    case SONG_FIRST_GT:
+        direction = 1;
+        stopAfter = ARRAY_COUNT(sSongNames) - 1;
+        if (fromSongId == stopAfter)
+            return fromSongId;
+        songId = fromSongId + 1;
+        break;
+    case SONG_LAST_LT:
+        direction = -1;
+        stopAfter = 0;
+        if (fromSongId == 0)
+            return fromSongId;
+        songId = fromSongId - 1;
+        break;
+    default:
+        errorf("unknown song search mode: %d", mode);
+        return MUS_DUMMY;
+    }
+
+    while (TRUE)
+    {
+        // Found a match.
+        if (sSongNames[songId] != NULL && StringCompareN(sSongNames[songId], prefix, prefixLength - 1) == 0)
+            return songId;
+
+        // No match in table.
+        if (songId == stopAfter)
+            return fromSongId;
+
+        songId += direction;
+    }
+}
 
 // *******************************
 // Actions BerryFunctions
@@ -4698,7 +4776,7 @@ static void DebugAction_Party_HealParty(u8 taskId)
 
 void DebugNative_GetAbilityNames(void)
 {
-    enum Species species = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPECIES);
+    enum Species species = GetMonData(&gParties[B_TRAINER_0][gSpecialVar_0x8004], MON_DATA_SPECIES);
     StringCopy(gStringVar1, gAbilitiesInfo[GetAbilityBySpecies(species, 0)].name);
     StringCopy(gStringVar2, gAbilitiesInfo[GetAbilityBySpecies(species, 1)].name);
     StringCopy(gStringVar3, gAbilitiesInfo[GetAbilityBySpecies(species, 2)].name);
@@ -4722,7 +4800,7 @@ static void DebugNativeStep_Party_SetFriendshipSelect(u8 taskId)
     {
         PlaySE(SE_SELECT);
         gTasks[taskId].tFriendship = gTasks[taskId].tInput;
-        SetMonData(&gPlayerParty[gTasks[taskId].tPartyId], MON_DATA_FRIENDSHIP, &gTasks[taskId].tInput);
+        SetMonData(&gParties[B_TRAINER_0][gTasks[taskId].tPartyId], MON_DATA_FRIENDSHIP, &gTasks[taskId].tInput);
     }
     else if (JOY_NEW(B_BUTTON))
     {
@@ -4740,7 +4818,7 @@ static void DebugNativeStep_Party_SetFriendshipSelect(u8 taskId)
 static void DebugNativeStep_Party_SetFriendshipMain(u8 taskId)
 {
     u8 windowId = DebugNativeStep_CreateDebugWindow();
-    u32 friendship = GetMonData(&gPlayerParty[gTasks[taskId].tPartyId], MON_DATA_FRIENDSHIP);
+    u32 friendship = GetMonData(&gParties[B_TRAINER_0][gTasks[taskId].tPartyId], MON_DATA_FRIENDSHIP);
 
     // Display initial flag
     Debug_Display_FriendshipInfo(friendship, friendship, 0, windowId);
@@ -4786,7 +4864,7 @@ static void DebugNativeStep_Party_SetPokerusDaysLeftSelect(u8 taskId)
     if (JOY_NEW(A_BUTTON))
     {
         PlaySE(SE_SELECT);
-        SetMonData(&gPlayerParty[gTasks[taskId].tPartyId], MON_DATA_POKERUS_DAYS_LEFT, &gTasks[taskId].tInput);
+        SetMonData(&gParties[B_TRAINER_0][gTasks[taskId].tPartyId], MON_DATA_POKERUS_DAYS_LEFT, &gTasks[taskId].tInput);
         DebugNativeStep_CloseDebugWindow(taskId);
         return;
     }
@@ -4817,8 +4895,8 @@ static void DebugNativeStep_Party_SetPokerusStrainSelect(u8 taskId)
     {
         PlaySE(SE_SELECT);
         gTasks[taskId].tStrain = gTasks[taskId].tInput;
-        SetMonData(&gPlayerParty[gTasks[taskId].tPartyId], MON_DATA_POKERUS_STRAIN, &gTasks[taskId].tInput);
-        gTasks[taskId].tInput = GetMonData(&gPlayerParty[gTasks[taskId].tPartyId], MON_DATA_POKERUS_DAYS_LEFT);
+        SetMonData(&gParties[B_TRAINER_0][gTasks[taskId].tPartyId], MON_DATA_POKERUS_STRAIN, &gTasks[taskId].tInput);
+        gTasks[taskId].tInput = GetMonData(&gParties[B_TRAINER_0][gTasks[taskId].tPartyId], MON_DATA_POKERUS_DAYS_LEFT);
         Debug_Display_PokerusDaysLeftInfo(gTasks[taskId].tInput, gTasks[taskId].tStrain, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
         gTasks[taskId].func = DebugNativeStep_Party_SetPokerusDaysLeftSelect;
         return;
@@ -4839,7 +4917,7 @@ static void DebugNativeStep_Party_SetPokerusStrainSelect(u8 taskId)
 static void DebugNativeStep_Party_SetPokerusMain(u8 taskId)
 {
     u8 windowId = DebugNativeStep_CreateDebugWindow();
-    u32 strain = GetMonData(&gPlayerParty[gTasks[taskId].tPartyId], MON_DATA_POKERUS_STRAIN);
+    u32 strain = GetMonData(&gParties[B_TRAINER_0][gTasks[taskId].tPartyId], MON_DATA_POKERUS_STRAIN);
 
     // Display initial flag
     Debug_Display_PokerusStrainInfo(strain, 0, windowId);
@@ -4874,10 +4952,10 @@ static void DebugAction_Party_ClearPokerus(u8 taskId)
 {
     for (u32 i = 0; i < PARTY_SIZE; i++)
     {
-        if (!GetMonData(&gPlayerParty[i], MON_DATA_SPECIES))
+        if (!GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES))
             continue;
         u32 data = 0;
-        SetMonData(&gPlayerParty[i], MON_DATA_POKERUS, &data);
+        SetMonData(&gParties[B_TRAINER_0][i], MON_DATA_POKERUS, &data);
     }
     ScriptContext_Enable();
     Debug_DestroyMenu_Full(taskId);
@@ -4910,7 +4988,7 @@ const struct Trainer* GetDebugAiTrainer(void)
 static void DebugAction_Party_SetParty(u8 taskId)
 {
     ZeroPlayerPartyMons();
-    CreateNPCTrainerPartyFromTrainer(gPlayerParty, &sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_PLAYER], TRUE, BATTLE_TYPE_TRAINER);
+    CreateNPCTrainerPartyFromTrainer(gParties[B_TRAINER_0], &sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_PLAYER], TRUE, BATTLE_TYPE_TRAINER);
     ScriptContext_Enable();
     Debug_DestroyMenu_Full(taskId);
 }
@@ -4919,8 +4997,8 @@ static void DebugAction_Party_BattleSingle(u8 taskId)
 {
     ZeroPlayerPartyMons();
     ZeroEnemyPartyMons();
-    CreateNPCTrainerPartyFromTrainer(gPlayerParty, &sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_PLAYER], TRUE, BATTLE_TYPE_TRAINER);
-    CreateNPCTrainerPartyFromTrainer(gEnemyParty, GetDebugAiTrainer(), FALSE, BATTLE_TYPE_TRAINER);
+    CreateNPCTrainerPartyFromTrainer(gParties[B_TRAINER_0], &sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_PLAYER], TRUE, BATTLE_TYPE_TRAINER);
+    CreateNPCTrainerPartyFromTrainer(gParties[B_TRAINER_1], GetDebugAiTrainer(), FALSE, BATTLE_TYPE_TRAINER);
 
     gBattleTypeFlags = BATTLE_TYPE_TRAINER;
     if (sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_AI].battleType == TRAINER_BATTLE_TYPE_DOUBLES)

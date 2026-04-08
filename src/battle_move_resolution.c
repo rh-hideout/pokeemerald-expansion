@@ -4493,7 +4493,7 @@ static enum MoveResult StatChangeBeforeChange(struct BattleCalcValues *cv)
         }
         break;
     case EFFECT_TIDY_UP:
-        if (TryTidyUpClear(gBattlerAttacker, FALSE))
+        if (TryTidyUpClear(FALSE))
         {
             BattleScriptCall(BattleScript_PlayTidyUp);
             return MOVE_RESULT_RUN_SCRIPT_INCREMENT;

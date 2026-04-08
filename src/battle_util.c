@@ -32,6 +32,7 @@
 #include "window.h"
 #include "battle_message.h"
 #include "battle_ai_record.h"
+#include "battle_ai_util.h"
 #include "event_data.h"
 #include "link.h"
 #include "malloc.h"
@@ -497,7 +498,8 @@ void HandleAction_Switch(void)
     // if switching to a mon that is already on field, cancel switch
     if (!(gAbsentBattlerFlags & (1u << BATTLE_PARTNER(gBattlerAttacker)))
      && IsBattlerAlive(BATTLE_PARTNER(gBattlerAttacker))
-     && gBattlerPartyIndexes[BATTLE_PARTNER(gBattlerAttacker)] == gBattleStruct->monToSwitchIntoId[gBattlerAttacker])
+     && gBattlerPartyIndexes[BATTLE_PARTNER(gBattlerAttacker)] == gBattleStruct->monToSwitchIntoId[gBattlerAttacker]
+     && BattlersShareParty(gBattlerAttacker, BATTLE_PARTNER(gBattlerAttacker)))
     {
         gCurrentActionFuncId = B_ACTION_FINISHED;
         return;
@@ -705,7 +707,7 @@ void HandleAction_WatchesCarefully(void)
             gBattleStruct->safariRockThrowCounter--;
             if (gBattleStruct->safariRockThrowCounter == 0)
             {
-                gBattleStruct->safariCatchFactor = gSpeciesInfo[GetMonData(gEnemyParty, MON_DATA_SPECIES)].catchRate * 100 / 1275;
+                gBattleStruct->safariCatchFactor = gSpeciesInfo[GetMonData(gParties[B_TRAINER_1], MON_DATA_SPECIES)].catchRate * 100 / 1275;
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MON_WATCHING;
             }
             else
@@ -1683,12 +1685,9 @@ u8 GetImprisonedMovesCount(enum BattlerId battler, enum Move move)
 
 u32 GetBattlerAffectionHearts(enum BattlerId battler)
 {
-    struct Pokemon *mon = GetBattlerMon(battler);
-    enum Species species = GetMonData(mon, MON_DATA_SPECIES);
-
     if (!IsOnPlayerSide(battler) || gBattleStruct->battlerState[battler].notOnField)
         return AFFECTION_NO_HEARTS;
-    else if (gSpeciesInfo[species].isMegaEvolution
+    else if (gSpeciesInfo[gBattleMons[battler].species].isMegaEvolution
           || (gBattleTypeFlags & (BATTLE_TYPE_EREADER_TRAINER
                                 | BATTLE_TYPE_FRONTIER
                                 | BATTLE_TYPE_LINK
@@ -1696,7 +1695,7 @@ u32 GetBattlerAffectionHearts(enum BattlerId battler)
                                 | BATTLE_TYPE_SECRET_BASE)))
         return AFFECTION_NO_HEARTS;
 
-    return GetMonAffectionHearts(mon);
+    return gBattleMons[battler].affectionHearts;
 }
 
 // gBattlerAttacker is the battler that's trying to raise their stats and due to limitations of RandomUniformExcept, cannot be an argument
@@ -1836,18 +1835,19 @@ bool32 HandleFaintedMonActions(void)
 bool32 HasNoMonsToSwitch(enum BattlerId battler, u8 partyIdBattlerOn1, u8 partyIdBattlerOn2)
 {
     u32 i, playerId, flankId;
-    struct Pokemon *party;
+    s32 lastId = GetAILastPartyIndex(battler); // + 1
+    struct Pokemon *party = GetBattlerParty(battler);
+
 
     if (!IsDoubleBattle())
         return FALSE;
 
-    bool32 isPlayerside = IsOnPlayerSide(battler);
+    bool32 isPlayerSide = IsOnPlayerSide(battler);
 
-    if (BATTLE_TWO_VS_ONE_OPPONENT && !isPlayerside)
+    if (BATTLE_TWO_VS_ONE_OPPONENT && !isPlayerSide)
     {
         flankId = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
         playerId = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
-        party = gEnemyParty;
 
         // Edge case: If both opposing Pokemon were knocked out on the same turn,
         // make sure opponent only sends out the final Pokemon once.
@@ -1856,7 +1856,7 @@ bool32 HasNoMonsToSwitch(enum BattlerId battler, u8 partyIdBattlerOn1, u8 partyI
          && (gHitMarker & HITMARKER_FAINTED(playerId)))
         {
             u8 count = 0;
-            for (i = 0; i < PARTY_SIZE; i++)
+            for (i = 0; i < lastId; i++)
                 if (IsValidForBattle(&party[i]))
                     count++;
 
@@ -1869,19 +1869,18 @@ bool32 HasNoMonsToSwitch(enum BattlerId battler, u8 partyIdBattlerOn1, u8 partyI
         if (partyIdBattlerOn2 == PARTY_SIZE)
             partyIdBattlerOn2 = gBattlerPartyIndexes[playerId];
 
-        for (i = 0; i < PARTY_SIZE; i++)
+        for (i = 0; i < lastId; i++)
         {
             if (IsValidForBattle(&party[i])
              && i != partyIdBattlerOn1 && i != partyIdBattlerOn2
              && i != gBattleStruct->monToSwitchIntoId[flankId] && i != playerId[gBattleStruct->monToSwitchIntoId])
                 break;
         }
-        return (i == PARTY_SIZE);
+        return (i == lastId);
     }
     else if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
     {
-        party = GetBattlerParty(battler);
-        if (!isPlayerside && WILD_DOUBLE_BATTLE)
+        if (!isPlayerSide && WILD_DOUBLE_BATTLE)
         {
             flankId = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
             playerId = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
@@ -1891,88 +1890,54 @@ bool32 HasNoMonsToSwitch(enum BattlerId battler, u8 partyIdBattlerOn1, u8 partyI
             if (partyIdBattlerOn2 == PARTY_SIZE)
                 partyIdBattlerOn2 = gBattlerPartyIndexes[playerId];
 
-            for (i = 0; i < PARTY_SIZE; i++)
+            for (i = 0; i < lastId; i++)
             {
                 if (IsValidForBattle(&party[i])
                  && i != partyIdBattlerOn1 && i != partyIdBattlerOn2
                  && i != gBattleStruct->monToSwitchIntoId[flankId] && i != playerId[gBattleStruct->monToSwitchIntoId])
                     break;
             }
-            return (i == PARTY_SIZE);
+            return (i == lastId);
         }
         else
         {
-            playerId = ((battler & BIT_FLANK) / 2);
-            for (i = playerId * MULTI_PARTY_SIZE; i < playerId * MULTI_PARTY_SIZE + MULTI_PARTY_SIZE; i++)
+            for (i = 0; i < lastId; i++)
             {
                 if (IsValidForBattle(&party[i]))
                     break;
             }
-            return (i == playerId * MULTI_PARTY_SIZE + MULTI_PARTY_SIZE);
+            return (i == lastId);
         }
     }
     else if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
     {
-        if (gBattleTypeFlags & BATTLE_TYPE_TOWER_LINK_MULTI)
-        {
-            if (isPlayerside)
-            {
-                party = gPlayerParty;
-                flankId = GetBattlerMultiplayerId(battler);
-                playerId = GetLinkTrainerFlankId(flankId);
-            }
-            else
-            {
-                party = gEnemyParty;
-                if (battler == 1)
-                    playerId = 0;
-                else
-                    playerId = 1;
-            }
-        }
-        else
-        {
-            flankId = GetBattlerMultiplayerId(battler);
-            party = GetBattlerParty(battler);
-            playerId = GetLinkTrainerFlankId(flankId);
-        }
-
-        for (i = playerId * MULTI_PARTY_SIZE; i < playerId * MULTI_PARTY_SIZE + MULTI_PARTY_SIZE; i++)
+        for (i = 0; i < lastId; i++)
         {
             if (IsValidForBattle(&party[i]))
                 break;
         }
-        return (i == playerId * MULTI_PARTY_SIZE + MULTI_PARTY_SIZE);
+        return (i == lastId);
     }
-    else if ((gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS) && !isPlayerside)
+    else if ((gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS) && !isPlayerSide)
     {
-        party = gEnemyParty;
-
-        if (battler == 1)
-            playerId = 0;
-        else
-            playerId = MULTI_PARTY_SIZE;
-
-        for (i = playerId; i < playerId + MULTI_PARTY_SIZE; i++)
+        for (i = 0; i < lastId; i++)
         {
             if (IsValidForBattle(&party[i]))
                 break;
         }
-        return (i == playerId + 3);
+        return (i == lastId);
     }
     else
     {
-        if (!isPlayerside)
+        if (!isPlayerSide)
         {
             flankId = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
             playerId = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
-            party = gEnemyParty;
         }
         else
         {
             flankId = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
             playerId = GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT);
-            party = gPlayerParty;
         }
 
         if (partyIdBattlerOn1 == PARTY_SIZE)
@@ -1980,14 +1945,14 @@ bool32 HasNoMonsToSwitch(enum BattlerId battler, u8 partyIdBattlerOn1, u8 partyI
         if (partyIdBattlerOn2 == PARTY_SIZE)
             partyIdBattlerOn2 = gBattlerPartyIndexes[playerId];
 
-        for (i = 0; i < PARTY_SIZE; i++)
+        for (i = 0; i < lastId; i++)
         {
             if (IsValidForBattle(&party[i])
              && i != partyIdBattlerOn1 && i != partyIdBattlerOn2
              && i != gBattleStruct->monToSwitchIntoId[flankId] && i != playerId[gBattleStruct->monToSwitchIntoId])
                 break;
         }
-        return (i == PARTY_SIZE);
+        return (i == lastId);
     }
 }
 
@@ -8589,11 +8554,11 @@ bool32 TryRevertPartyMonFormChange(u32 partyIndex)
      bool32 changedForm = FALSE;
 
     // Appeared in battle and didn't faint
-    if (gBattleStruct->partyState[B_SIDE_PLAYER][partyIndex].sentOut && GetMonData(&gPlayerParty[partyIndex], MON_DATA_HP) != 0)
-        changedForm = TryFormChange(&gPlayerParty[partyIndex], FORM_CHANGE_END_BATTLE_ENVIRONMENT);
+    if (gBattleStruct->partyState[B_SIDE_PLAYER][partyIndex].sentOut && GetMonData(&gParties[B_TRAINER_0][partyIndex], MON_DATA_HP) != 0)
+        changedForm = TryFormChange(&gParties[B_TRAINER_0][partyIndex], FORM_CHANGE_END_BATTLE_ENVIRONMENT, B_TRAINER_0);
 
     if (!changedForm)
-        changedForm = TryFormChange(&gPlayerParty[partyIndex], FORM_CHANGE_END_BATTLE);
+        changedForm = TryFormChange(&gParties[B_TRAINER_0][partyIndex], FORM_CHANGE_END_BATTLE, B_TRAINER_0);
 
     // Clear original species field
     gBattleStruct->partyState[B_SIDE_PLAYER][partyIndex].changedSpecies = SPECIES_NONE;
@@ -9111,12 +9076,12 @@ void TryRestoreHeldItems(void)
             u16 lostItem = gBattleStruct->itemLost[B_SIDE_PLAYER][i].originalItem;
 
             // Check if the lost item is a berry and the mon is not holding it
-            if (GetItemPocket(lostItem) == POCKET_BERRIES && GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM) != lostItem)
+            if (GetItemPocket(lostItem) == POCKET_BERRIES && GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_HELD_ITEM) != lostItem)
                 lostItem = ITEM_NONE;
 
             // Check if the lost item should be restored
             if ((lostItem != ITEM_NONE || returnNPCItems) && GetItemPocket(lostItem) != POCKET_BERRIES)
-                SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM, &lostItem);
+                SetMonData(&gParties[B_TRAINER_0][i], MON_DATA_HELD_ITEM, &lostItem);
         }
     }
 }
@@ -9680,6 +9645,24 @@ bool32 IsSleepClauseEnabled(void)
     if (FlagGet(B_FLAG_SLEEP_CLAUSE))
         return TRUE;
     return FALSE;
+}
+
+bool32 AreMultiPartiesFullTeams(void)
+{
+    enum DifficultyLevel difficulty = GetCurrentDifficultyLevel();
+
+    if (B_MULTI_HALF_TEAMS
+     || TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT
+     || gBattleTypeFlags & BATTLE_TYPE_TOWER_LINK_MULTI
+     || (gTrainers[difficulty][TRAINER_BATTLE_PARAM.opponentA].multiTeamSize == MULTI_TEAM_SIZE_HALF)
+     || (gTrainers[difficulty][TRAINER_BATTLE_PARAM.opponentB].multiTeamSize == MULTI_TEAM_SIZE_HALF))
+    {
+        gSpecialVar_Result = FALSE;
+        return FALSE;
+    }
+
+    gSpecialVar_Result = TRUE;
+    return TRUE;
 }
 
 void ClearDamageCalcResults(void)
@@ -10850,15 +10833,11 @@ static void RemoveAllTerrains(void)
             sideTimer->structField = 0;                     \
             BattleScriptCall(battlescript);                 \
         }                                                   \
-        else                                                \
-        {                                                   \
-            gBattlerAttacker = saveBattler;                 \
-        }                                                   \
         return TRUE;                                        \
     }                                                       \
 }
 
-static bool32 DefogClearHazards(u32 saveBattler, enum BattleSide side, bool32 clear)
+static bool32 DefogClearHazards(enum BattleSide side, bool32 clear)
 {
     if (!AreAnyHazardsOnSide(side))
         return FALSE;
@@ -10874,30 +10853,24 @@ static bool32 DefogClearHazards(u32 saveBattler, enum BattleSide side, bool32 cl
                 gBattleCommunication[MULTISTRING_CHOOSER] = hazardType;
                 BattleScriptCall(BattleScript_RemoveHazards);
             }
-            else
-            {
-                gBattlerAttacker = saveBattler;
-            }
             return TRUE;
         }
     }
-    gBattlerAttacker = saveBattler;
     return FALSE;
 }
 
 bool32 TryDefogClear(enum BattlerId battlerAtk, bool32 clear)
 {
     s32 i;
-    u8 saveBattler = gBattlerAttacker;
 
     for (i = 0; i < NUM_BATTLE_SIDES; i++)
     {
         struct SideTimer *sideTimer = &gSideTimers[i];
         u32 *sideStatuses = &gSideStatuses[i];
+        gBattleScripting.battler = i;
 
         if (GetBattlerSide(battlerAtk) != i)
         {
-            gBattlerAttacker = i; // For correct battle string. Ally's / Foe's
             DEFOG_CLEAR(SIDE_STATUS_REFLECT, reflectTimer, BattleScript_SideStatusWoreOff, MOVE_REFLECT);
             DEFOG_CLEAR(SIDE_STATUS_LIGHTSCREEN, lightscreenTimer, BattleScript_SideStatusWoreOff, MOVE_LIGHT_SCREEN);
             DEFOG_CLEAR(SIDE_STATUS_MIST, mistTimer, BattleScript_SideStatusWoreOff, MOVE_MIST);
@@ -10906,8 +10879,7 @@ bool32 TryDefogClear(enum BattlerId battlerAtk, bool32 clear)
         }
         if (GetConfig(B_DEFOG_EFFECT_CLEARING) >= GEN_6)
         {
-            gBattlerAttacker = i; // For correct battle string. Ally's / Foe's
-            if (DefogClearHazards(saveBattler, i, clear))
+            if (DefogClearHazards(i, clear))
                 return TRUE;
         }
         if (gBattleWeather & B_WEATHER_FOG)
@@ -10915,11 +10887,7 @@ bool32 TryDefogClear(enum BattlerId battlerAtk, bool32 clear)
             if (clear)
             {
                 gBattleWeather &= ~B_WEATHER_FOG;
-                BattleScriptCall(BattleScript_FogEnded_Ret);
-            }
-            else
-            {
-                gBattlerAttacker = saveBattler;
+                BattleScriptCall(BattleScript_FogEnded);
             }
             return TRUE;
         }
@@ -10928,31 +10896,24 @@ bool32 TryDefogClear(enum BattlerId battlerAtk, bool32 clear)
             if (clear)
             {
                 RemoveAllTerrains();
-                BattleScriptCall(BattleScript_TerrainEnds_Ret);
-            }
-            else
-            {
-                gBattlerAttacker = saveBattler;
+                BattleScriptCall(BattleScript_TerrainEnds);
             }
             return TRUE;
         }
     }
 
-    gBattlerAttacker = saveBattler;
-
     return FALSE;
 }
 
-bool32 TryTidyUpClear(enum BattlerId battlerAtk, bool32 clear)
+bool32 TryTidyUpClear(bool32 clear)
 {
     u32 i;
-    u32 saveBattler = gBattlerAttacker;
     u32 clearFound = FALSE;
 
     for (i = 0; i < NUM_BATTLE_SIDES; i++)
     {
-        gBattlerAttacker = i; // For correct battle string. Ally's / Foe's
-        if (DefogClearHazards(saveBattler, i, clear))
+        gBattleScripting.battler = i;
+        if (DefogClearHazards(i, clear))
         {
             clearFound = TRUE;
             break;
@@ -10968,7 +10929,7 @@ bool32 TryTidyUpClear(enum BattlerId battlerAtk, bool32 clear)
         {
             if (clear)
             {
-                gBattlerTarget = i;
+                gBattleScripting.battler = i;
                 gBattleMons[i].volatiles.substituteHP = 0;
                 gBattleMons[i].volatiles.substitute = FALSE;
                 BattleScriptCall(BattleScript_SubstituteFade);
@@ -10978,7 +10939,6 @@ bool32 TryTidyUpClear(enum BattlerId battlerAtk, bool32 clear)
         }
     }
 
-    gBattlerAttacker = saveBattler;
     return clearFound;
 }
 

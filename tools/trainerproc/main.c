@@ -45,6 +45,12 @@ enum BattleType
     BATTLE_TYPE_DOUBLE,
 };
 
+enum MultiParty
+{
+    MULTI_PARTY_FULL,
+    MULTI_PARTY_HALF,
+};
+
 // TODO: Support Hidden Power.
 struct Pokemon
 {
@@ -157,6 +163,9 @@ struct Trainer
 
     struct String macro;
     int macro_line;
+
+    enum MultiParty multi_team;
+    int multi_team_line;
 };
 
 static bool is_empty_string(struct String s)
@@ -889,6 +898,24 @@ static bool token_battle_type(struct Parser *p, const struct Token *t, enum Batt
     }
 }
 
+static bool token_multi_team_type(struct Parser *p, const struct Token *t, enum MultiParty *g)
+{
+    if (is_literal_token(t, "Full"))
+    {
+        *g = MULTI_PARTY_FULL;
+        return true;
+    }
+    else if (is_literal_token(t, "Half"))
+    {
+        *g = MULTI_PARTY_HALF;
+        return true;
+    }
+    else
+    {
+        return set_parse_error(p, t->location, "invalid multi party type");
+    }
+}
+
 static bool token_stats(struct Parser *p, const struct Token *t, struct Stats *stats, bool require_all)
 {
     struct Source source = {
@@ -1302,9 +1329,17 @@ static bool parse_trainer(struct Parser *p, const struct Parsed *parsed, struct 
             trainer->macro_line = value.location.line;
             trainer->macro = token_string(&value);
         }
+        else if (is_literal_token(&key, "Multi Party"))
+        {
+            if (trainer->multi_team_line)
+                any_error = !set_show_parse_error(p, key.location, "duplicate 'Multi Party'");
+            trainer->multi_team_line = value.location.line;
+            if (!token_multi_team_type(p, &value, &trainer->multi_team))
+                any_error = !show_parse_error(p);
+        }
         else
         {
-            any_error = !set_show_parse_error(p, key.location, "expected one of 'Name', 'Class', 'Pic', 'Gender', 'Music', 'Items', 'Battle Type', 'Difficulty', 'Party Size', 'Pool Rules', 'Pool Pick Functions', 'Pool Prune' or 'AI'");
+            any_error = !set_show_parse_error(p, key.location, "expected one of 'Name', 'Class', 'Pic', 'Back Pic', 'Gender', 'Music', 'Items', 'Battle Type', 'Difficulty', 'Party Size', 'Multi Party', 'Pool Rules', 'Pool Pick Functions', 'Pool Prune' or 'AI'");
         }
     }
     if (!trainer->pic_line && !trainer->macro_line)
@@ -1917,6 +1952,21 @@ static void fprint_trainers(const char *output_path, FILE *f, struct Parsed *par
             fprintf(f, "        .overrideTrainer = ");
             fprint_string(f, trainer->copy_pool);
             fprintf(f, ",\n");
+        }
+
+        if (trainer->multi_team_line)
+        {
+            fprintf(f, "#line %d\n", trainer->multi_team_line);
+            fprintf(f, "        .multiTeamSize = ");
+            if (trainer->multi_team == MULTI_PARTY_HALF)
+                fprintf(f, "MULTI_TEAM_SIZE_HALF,\n");
+            else
+                fprintf(f, "MULTI_TEAM_SIZE_FULL,\n");
+        }
+        else // default to full parties
+        {
+            fprintf(f, "#line %d\n", trainer->multi_team_line);
+            fprintf(f, "        .multiTeamSize = MULTI_TEAM_SIZE_FULL,\n");
         }
 
         if (trainer->macro_line)

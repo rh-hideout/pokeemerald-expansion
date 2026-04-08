@@ -756,7 +756,7 @@ static inline void CalcDynamicMoveDamage(struct DamageContext *ctx, u16 *medianD
 
     if (effect == EFFECT_BEAT_UP && GetConfig(B_BEAT_UP) >= GEN_5)
     {
-        u32 partyCount = CalculatePartyCount(GetBattlerParty(ctx->battlerAtk));
+        u32 partyCount = CalculatePartyCount(GetBattlerTrainer(ctx->battlerAtk));
         u32 i;
         gBattleStruct->beatUpSlot = 0;
         ctx->isCrit = FALSE;
@@ -4455,12 +4455,11 @@ bool32 PartnerMoveActivatesSleepClause(enum Move partnerMove)
 
 bool32 ShouldUseWishAromatherapy(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
 {
-    s32 firstId, lastId;
+    s32 lastId = GetAILastPartyIndex(battlerAtk); // + 1
     struct Pokemon *party;
     bool32 hasStatus = AnyPartyMemberStatused(battlerAtk, IsSoundMove(move));
     bool32 needHealing = FALSE;
 
-    GetAIPartyIndexes(battlerAtk, &firstId, &lastId);
     party = GetBattlerParty(battlerAtk);
 
     if (CountUsablePartyMons(battlerAtk) == 0
@@ -4475,7 +4474,7 @@ bool32 ShouldUseWishAromatherapy(enum BattlerId battlerAtk, enum BattlerId battl
         if (!GetMonData(&party[monIndex], MON_DATA_IS_EGG) && currHp > 0)
         {
             if ((currHp * 100) / maxHp < 65 // Less than 65% health remaining
-              && monIndex >= firstId && monIndex < lastId) // Can only switch to mon on your team
+              && monIndex >= 0 && monIndex < lastId) // Can only switch to mon on your team
             {
                 needHealing = TRUE;
             }
@@ -4565,9 +4564,8 @@ s32 CountUsablePartyMons(enum BattlerId battlerId)
     }
 
     ret = 0;
-    s32 firstId, lastId;
-    GetAIPartyIndexes(battlerId, &firstId, &lastId);
-    for (u32 monIndex = firstId; monIndex < lastId; monIndex++)
+    s32 lastId = GetAILastPartyIndex(battlerId); // + 1
+    for (u32 monIndex = 0; monIndex < lastId; monIndex++)
     {
         if (monIndex != battlerOnField1 && monIndex != battlerOnField2
          && GetMonData(&party[monIndex], MON_DATA_HP) != 0
@@ -6266,23 +6264,9 @@ bool32 AI_OpponentCanFaintAiWithMod(enum BattlerId battler, u32 healAmount)
     return FALSE;
 }
 
-void GetAIPartyIndexes(enum BattlerId battler, s32 *firstId, s32 *lastId)
+s32 GetAILastPartyIndex(enum BattlerId battler)
 {
-    if (BATTLE_TWO_VS_ONE_OPPONENT && (battler & BIT_SIDE) == B_SIDE_OPPONENT)
-    {
-        *firstId = 0, *lastId = PARTY_SIZE;
-    }
-    else if (gBattleTypeFlags & (BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_TOWER_LINK_MULTI))
-    {
-        if ((battler & BIT_FLANK) == B_FLANK_LEFT)
-            *firstId = 0, *lastId = PARTY_SIZE / 2;
-        else
-            *firstId = PARTY_SIZE / 2, *lastId = PARTY_SIZE;
-    }
-    else
-    {
-        *firstId = 0, *lastId = PARTY_SIZE;
-    }
+    return (BattleSideHasTwoTrainers(battler & BIT_SIDE) && !AreMultiPartiesFullTeams()) ? PARTY_SIZE / 2 : PARTY_SIZE;
 }
 
 bool32 ShouldInstructPartner(enum BattlerId partner, enum Move move)
@@ -6355,13 +6339,13 @@ u32 GetActiveBattlerIds(enum BattlerId battler, enum BattlerId *battlerIn1, enum
     return opposingBattler;
 }
 
-bool32 IsPartyMonOnFieldOrChosenToSwitch(u32 partyIndex, enum BattlerId battlerIn1, enum BattlerId battlerIn2)
+bool32 IsPartyMonOnFieldOrChosenToSwitch(enum BattlerId battler, u32 partyIndex, enum BattlerId battlerIn1, enum BattlerId battlerIn2)
 {
-    if (partyIndex == gBattlerPartyIndexes[battlerIn1]
-            || partyIndex == gBattlerPartyIndexes[battlerIn2])
+    if ((partyIndex == gBattlerPartyIndexes[battlerIn1] && BattlersShareParty(battler, battlerIn1))
+            || (partyIndex == gBattlerPartyIndexes[battlerIn2] && BattlersShareParty(battler, battlerIn2)))
         return TRUE;
-    if (partyIndex == gBattleStruct->monToSwitchIntoId[battlerIn1]
-            || partyIndex == gBattleStruct->monToSwitchIntoId[battlerIn2])
+    if ((partyIndex == gBattleStruct->monToSwitchIntoId[battlerIn1] && BattlersShareParty(battler, battlerIn1))
+            || (partyIndex == gBattleStruct->monToSwitchIntoId[battlerIn2] && BattlersShareParty(battler, battlerIn2)))
         return TRUE;
     return FALSE;
 }
@@ -6369,7 +6353,7 @@ bool32 IsPartyMonOnFieldOrChosenToSwitch(u32 partyIndex, enum BattlerId battlerI
 bool32 IsPartyMonPlannedToBeSwitchedInByPartner(u32 partyIndex, enum BattlerId battler)
 {
     enum BattlerId battlerPartner = BATTLE_PARTNER(battler);
-    if (partyIndex == gAiLogicData->mostSuitableMonId[battlerPartner] && (gAiLogicData->shouldSwitch & (1u << battlerPartner)))
+    if (partyIndex == gAiLogicData->mostSuitableMonId[battlerPartner] && (gAiLogicData->shouldSwitch & (1u << battlerPartner)) && BattlersShareParty(battler, battlerPartner))
         return TRUE;
     return FALSE;
 }

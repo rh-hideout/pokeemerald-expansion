@@ -17,6 +17,8 @@
         .gender = TRAINER_GENDER_MALE,
 #line 6
         .encounterMusic = TRAINER_ENCOUNTER_MUSIC_MALE,
+#line 0
+        .multiTeamSize = MULTI_TEAM_SIZE_FULL,
         .partySize = 0,
         .party = (const struct TrainerMon[])
         {
@@ -38,6 +40,8 @@
         .encounterMusic = TRAINER_ENCOUNTER_MUSIC_MALE,
 #line 14
         .aiFlags = AI_FLAG_BASIC_TRAINER,
+#line 0
+        .multiTeamSize = MULTI_TEAM_SIZE_FULL,
         .partySize = 3,
         .party = (const struct TrainerMon[])
         {
@@ -125,6 +129,8 @@
         .encounterMusic = TRAINER_ENCOUNTER_MUSIC_MALE,
 #line 53
         .battleType = TRAINER_BATTLE_TYPE_SINGLES,
+#line 0
+        .multiTeamSize = MULTI_TEAM_SIZE_FULL,
         .partySize = 1,
         .party = (const struct TrainerMon[])
         {
@@ -158,6 +164,8 @@
         .encounterMusic = TRAINER_ENCOUNTER_MUSIC_MALE,
 #line 65
         .battleType = TRAINER_BATTLE_TYPE_SINGLES,
+#line 0
+        .multiTeamSize = MULTI_TEAM_SIZE_FULL,
         .partySize = 1,
         .party = (const struct TrainerMon[])
         {
