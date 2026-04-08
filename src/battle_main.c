@@ -620,7 +620,7 @@ static void CB2_InitBattleInternal(void)
     {
         TryFormChange(&gParties[B_TRAINER_1][0], FORM_CHANGE_BEGIN_WILD_ENCOUNTER, B_TRAINER_1);
         if (IsDoubleBattle())
-            TryFormChange(&gParties[B_TRAINER_3][0], FORM_CHANGE_BEGIN_WILD_ENCOUNTER, B_TRAINER_3);
+            TryFormChange(&gParties[B_TRAINER_1][1], FORM_CHANGE_BEGIN_WILD_ENCOUNTER, B_TRAINER_1);
     }
 
     #if TESTING
