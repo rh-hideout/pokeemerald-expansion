@@ -175,6 +175,7 @@ DOUBLE_BATTLE_TEST("Emergency Exit activates when taking Sea of Fire damage and 
 
 DOUBLE_BATTLE_TEST("Emergency Exit activates when taking residual damage and battler doesn't get affected by events until replacement switches in")
 {
+    // Leech Seed damage occurs first, then Poison and Salt Cure damage
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_SALT_CURE, MOVE_EFFECT_SALT_CURE));
         ASSUME(GetMoveEffect(MOVE_LEECH_SEED) == EFFECT_LEECH_SEED);
@@ -191,9 +192,17 @@ DOUBLE_BATTLE_TEST("Emergency Exit activates when taking residual damage and bat
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SALT_CURE, opponentLeft);
         HP_BAR(playerLeft);
 
+        // Leech Seed damage and healing
         HP_BAR(playerLeft);
+        HP_BAR(opponentRight);
+        MESSAGE("Golisopod's health is sapped by Leech Seed!");
         ABILITY_POPUP(playerLeft, ABILITY_EMERGENCY_EXIT);
-        NOT HP_BAR(playerLeft);
+        NONE_OF {
+            MESSAGE("Golisopod was hurt by its poisoning!");
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, playerLeft);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SALT_CURE_DAMAGE, playerLeft);
+            MESSAGE("Golisopod is hurt by Salt Cure!");
+        }
         SEND_IN_MESSAGE("Wobbuffet");
     }
 }

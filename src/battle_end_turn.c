@@ -113,7 +113,7 @@ static bool32 HandleEndTurnWeatherDamage(enum BattlerId battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (!IsBattlerAlive(battler) || !HasWeatherEffect())
+    if (!IsBattlerAlive(battler) || gSpecialStatuses[battler].queuedSwitch != NO_QUEUED_SWITCH || !HasWeatherEffect())
         return effect;
 
 
@@ -239,7 +239,7 @@ static bool32 HandleEndTurnFutureSight(enum BattlerId battler)
     if (gBattleStruct->futureSight[battler].counter > 0
      && --gBattleStruct->futureSight[battler].counter == 0)
     {
-        if (!IsBattlerAlive(battler))
+        if (!IsBattlerAlive(battler) || gSpecialStatuses[battler].queuedSwitch != NO_QUEUED_SWITCH)
             return effect;
 
         if (gBattleStruct->futureSight[battler].move == MOVE_FUTURE_SIGHT)
@@ -270,7 +270,10 @@ static bool32 HandleEndTurnWish(enum BattlerId battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (gBattleStruct->wish[battler].counter > 0 && --gBattleStruct->wish[battler].counter == 0 && IsBattlerAlive(battler))
+    if (gBattleStruct->wish[battler].counter > 0
+     && --gBattleStruct->wish[battler].counter == 0
+     && IsBattlerAlive(battler)
+     && gSpecialStatuses[battler].queuedSwitch == NO_QUEUED_SWITCH)
     {
         s32 wishHeal = 0;
         gBattlerTarget = battler;
@@ -424,7 +427,8 @@ static bool32 HandleEndTurnAquaRing(enum BattlerId battler)
     if (gBattleMons[battler].volatiles.aquaRing
      && !gBattleMons[battler].volatiles.healBlock
      && !IsBattlerAtMaxHp(battler)
-     && IsBattlerAlive(battler))
+     && IsBattlerAlive(battler)
+     && gSpecialStatuses[battler].queuedSwitch == NO_QUEUED_SWITCH)
     {
         SetHealAmount(battler, GetDrainedBigRootHp(battler, GetNonDynamaxMaxHP(battler) / 16));
         BattleScriptCall(BattleScript_AquaRingHeal);
@@ -443,7 +447,8 @@ static bool32 HandleEndTurnIngrain(enum BattlerId battler)
     if (gBattleMons[battler].volatiles.root
      && !gBattleMons[battler].volatiles.healBlock
      && !IsBattlerAtMaxHp(battler)
-     && IsBattlerAlive(battler))
+     && IsBattlerAlive(battler)
+     && gSpecialStatuses[battler].queuedSwitch == NO_QUEUED_SWITCH)
     {
         SetHealAmount(battler, GetDrainedBigRootHp(battler, GetNonDynamaxMaxHP(battler) / 16));
         BattleScriptCall(BattleScript_IngrainTurnHeal);
@@ -456,15 +461,18 @@ static bool32 HandleEndTurnIngrain(enum BattlerId battler)
 static bool32 HandleEndTurnLeechSeed(enum BattlerId battler)
 {
     bool32 effect = FALSE;
+    enum BattlerId drainedBattler = gBattleMons[battler].volatiles.leechSeed;
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (gBattleMons[battler].volatiles.leechSeed
-     && IsBattlerAlive(gBattleMons[battler].volatiles.leechSeed - 1)
+    if (drainedBattler
+     && IsBattlerAlive(drainedBattler - 1)
+     && gSpecialStatuses[drainedBattler - 1].queuedSwitch == NO_QUEUED_SWITCH
      && IsBattlerAlive(battler)
+     && gSpecialStatuses[battler].queuedSwitch == NO_QUEUED_SWITCH
      && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
     {
-        gBattlerTarget = gBattleMons[battler].volatiles.leechSeed - 1; // leech seed receiver
+        gBattlerTarget = drainedBattler - 1; // leech seed receiver
         gBattleScripting.animArg1 = gBattlerTarget;
         gBattleScripting.animArg2 = gBattlerAttacker;
         s32 drainAmount = GetNonDynamaxMaxHP(gBattlerAttacker) / 8;
@@ -503,6 +511,7 @@ static bool32 HandleEndTurnPoison(enum BattlerId battler)
 
     if ((gBattleMons[battler].status1 & STATUS1_POISON || gBattleMons[battler].status1 & STATUS1_TOXIC_POISON)
      && IsBattlerAlive(battler)
+     && gSpecialStatuses[battler].queuedSwitch == NO_QUEUED_SWITCH
      && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
     {
         if (ability == ABILITY_POISON_HEAL)
@@ -544,6 +553,7 @@ static bool32 HandleEndTurnBurn(enum BattlerId battler)
 
     if (gBattleMons[battler].status1 & STATUS1_BURN
      && IsBattlerAlive(battler)
+     && gSpecialStatuses[battler].queuedSwitch == NO_QUEUED_SWITCH
      && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
     {
         s32 burnDamage = GetNonDynamaxMaxHP(battler) / ((GetConfig(B_BURN_DAMAGE) >= GEN_7 || GetConfig(B_BURN_DAMAGE) == GEN_1) ? 16 : 8);
@@ -569,6 +579,7 @@ static bool32 HandleEndTurnFrostbite(enum BattlerId battler)
 
     if (gBattleMons[battler].status1 & STATUS1_FROSTBITE
      && IsBattlerAlive(battler)
+     && gSpecialStatuses[battler].queuedSwitch == NO_QUEUED_SWITCH
      && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
     {
         SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / ((GetConfig(B_BURN_DAMAGE) >= GEN_7 || GetConfig(B_BURN_DAMAGE) == GEN_1) ? 16 : 8));
@@ -587,6 +598,7 @@ static bool32 HandleEndTurnNightmare(enum BattlerId battler)
 
     if (gBattleMons[battler].volatiles.nightmare
      && IsBattlerAlive(battler)
+     && gSpecialStatuses[battler].queuedSwitch == NO_QUEUED_SWITCH
      && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
     {
         if (gBattleMons[battler].status1 & STATUS1_SLEEP || GetBattlerAbility(battler) == ABILITY_COMATOSE)
@@ -612,6 +624,7 @@ static bool32 HandleEndTurnCurse(enum BattlerId battler)
 
     if (gBattleMons[battler].volatiles.cursed
      && IsBattlerAlive(battler)
+     && gSpecialStatuses[battler].queuedSwitch == NO_QUEUED_SWITCH
      && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
     {
         SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 4);
@@ -628,7 +641,9 @@ static bool32 HandleEndTurnWrap(enum BattlerId battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (gBattleMons[battler].volatiles.wrapped && IsBattlerAlive(battler))
+    if (gBattleMons[battler].volatiles.wrapped
+     && IsBattlerAlive(battler)
+     && gSpecialStatuses[battler].queuedSwitch == NO_QUEUED_SWITCH)
     {
         if (gBattleMons[battler].volatiles.wrapTurns != 0)
         {
@@ -667,6 +682,7 @@ static bool32 HandleEndTurnSaltCure(enum BattlerId battler)
 
     if (gBattleMons[battler].volatiles.saltCure
      && IsBattlerAlive(battler)
+     && gSpecialStatuses[battler].queuedSwitch == NO_QUEUED_SWITCH
      && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
     {
         s32 saltCureDamage = 0;
@@ -706,7 +722,9 @@ static bool32 HandleEndTurnSyrupBomb(enum BattlerId battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (gBattleMons[battler].volatiles.syrupBomb && IsBattlerAlive(battler))
+    if (gBattleMons[battler].volatiles.syrupBomb
+     && IsBattlerAlive(battler)
+     && gSpecialStatuses[battler].queuedSwitch == NO_QUEUED_SWITCH)
     {
         if (gBattleMons[battler].volatiles.syrupBombTimer > 0 && --gBattleMons[battler].volatiles.syrupBombTimer == 0)
             gBattleMons[battler].volatiles.syrupBomb = FALSE;
@@ -946,7 +964,9 @@ static bool32 HandleEndTurnPerishSong(enum BattlerId battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (IsBattlerAlive(battler) && gBattleMons[battler].volatiles.perishSong)
+    if (gBattleMons[battler].volatiles.perishSong
+     && IsBattlerAlive(battler)
+     && gSpecialStatuses[battler].queuedSwitch == NO_QUEUED_SWITCH)
     {
         PREPARE_BYTE_NUMBER_BUFFER(gBattleTextBuff1, 1, gBattleMons[battler].volatiles.perishSongTimer);
         if (gBattleMons[battler].volatiles.perishSongTimer == 0)
@@ -1231,7 +1251,7 @@ static bool32 HandleEndTurnThirdEventBlock(enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
-    if (!IsBattlerAlive(battler))
+    if (!IsBattlerAlive(battler) || gSpecialStatuses[battler].queuedSwitch != NO_QUEUED_SWITCH)
     {
         gBattleStruct->eventState.endTurnBattler++;
         return effect;
