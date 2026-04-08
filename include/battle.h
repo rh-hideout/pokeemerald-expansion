@@ -1072,6 +1072,16 @@ static inline bool32 IsBattlerAlive(enum BattlerId battler)
         return TRUE;
 }
 
+static inline bool32 IsBattlerPresent(enum BattlerId battler)
+{
+    if (!IsBattlerAlive(battler))
+        return FALSE;
+    else if (gBattleStruct->battlerState[battler].notOnField)
+        return FALSE;
+    else
+        return TRUE;
+}
+
 static inline bool32 IsBattlerTurnDamaged(enum BattlerId battler, enum SubCheck subCheck)
 {
     return gSpecialStatuses[battler].damagedByAttack || ((subCheck == INCLUDING_SUBSTITUTES) && gBattleStruct->moveDamage[battler] > 0);

@@ -9929,7 +9929,6 @@ bool32 EmergencyExitCanBeTriggered(enum BattlerId battler)
         return FALSE;
 
     if (IsBattlerAlive(battler)
-     && gSpecialStatuses[battler].queuedSwitch == NO_QUEUED_SWITCH
      && HadMoreThanHalfHpNowDoesnt(battler)
      && (CanBattlerSwitch(battler) || !(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
      && !(gBattleTypeFlags & BATTLE_TYPE_ARENA)

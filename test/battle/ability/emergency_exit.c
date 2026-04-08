@@ -195,13 +195,11 @@ DOUBLE_BATTLE_TEST("Emergency Exit activates when taking residual damage and bat
         // Leech Seed damage and healing
         HP_BAR(playerLeft);
         HP_BAR(opponentRight);
-        MESSAGE("Golisopod's health is sapped by Leech Seed!");
         ABILITY_POPUP(playerLeft, ABILITY_EMERGENCY_EXIT);
         NONE_OF {
-            MESSAGE("Golisopod was hurt by its poisoning!");
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, playerLeft);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SALT_CURE_DAMAGE, playerLeft);
-            MESSAGE("Golisopod is hurt by Salt Cure!");
+            HP_BAR(playerLeft)
         }
         SEND_IN_MESSAGE("Wobbuffet");
     }
