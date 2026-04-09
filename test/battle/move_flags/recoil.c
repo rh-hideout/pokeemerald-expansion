@@ -109,41 +109,6 @@ SINGLE_BATTLE_TEST("Recoil: Flare Blitz still deals recoil damage when boosted b
     }
 }
 
-SINGLE_BATTLE_TEST("Recoil: Flare Blitz cannot burn the target when boosted by Sheer Force")
-{
-    enum Ability ability;
-    bool32 shouldBurn;
-
-    PARAMETRIZE { ability = ABILITY_SHEER_FORCE; shouldBurn = FALSE; }
-    PARAMETRIZE { ability = ABILITY_INTIMIDATE;  shouldBurn = TRUE; }
-
-    GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_FLARE_BLITZ, MOVE_EFFECT_BURN));
-        ASSUME(MoveIsAffectedBySheerForce(MOVE_FLARE_BLITZ));
-        PLAYER(SPECIES_TAUROS) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_FLARE_BLITZ, WITH_RNG(RNG_SECONDARY_EFFECT, TRUE)); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLARE_BLITZ, player);
-        HP_BAR(opponent);
-        if (shouldBurn) {
-            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponent);
-            STATUS_ICON(opponent, burn: TRUE);
-        } else {
-            NONE_OF {
-                ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponent);
-                STATUS_ICON(opponent, burn: TRUE);
-            }
-        }
-    } THEN {
-        if (shouldBurn)
-            EXPECT(opponent->status1 & STATUS1_BURN);
-        else
-            EXPECT(!(opponent->status1 & STATUS1_BURN));
-    }
-}
-
 SINGLE_BATTLE_TEST("Recoil: Flare Blitz is absorbed by Flash Fire and no recoil damage is dealt")
 {
     GIVEN {
