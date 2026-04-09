@@ -2414,7 +2414,6 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .cantBeTraced = TRUE,
     },
 
-
     [ABILITY_PIERCING_DRILL] =
     {
         .name = _("Piercing Drill"),
