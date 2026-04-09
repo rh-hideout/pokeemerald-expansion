@@ -2413,4 +2413,52 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .cantBeSwapped = TRUE,
         .cantBeTraced = TRUE,
     },
+
+    [ABILITY_PIERCING_DRILL] =
+    {
+        .name = _("Piercing Drill"),
+        .description = COMPOUND_STRING("Unimplemented."),
+    },
+
+    [ABILITY_DRAGONIZE] =
+    {
+        .name = _("Dragonize"),
+        .description = COMPOUND_STRING("Unimplemented."),
+    },
+
+    [ABILITY_313] =
+    {
+        .name = _("-------"),
+        .description = COMPOUND_STRING("No special ability."),
+    },
+
+    [ABILITY_314] =
+    {
+        .name = _("-------"),
+        .description = COMPOUND_STRING("No special ability."),
+    },
+
+    [ABILITY_MEGA_SOL] =
+    {
+        .name = _("Mega Sol"),
+        .description = COMPOUND_STRING("Unimplemented."),
+    },
+
+    [ABILITY_316] =
+    {
+        .name = _("-------"),
+        .description = COMPOUND_STRING("No special ability."),
+    },
+
+    [ABILITY_317] =
+    {
+        .name = _("-------"),
+        .description = COMPOUND_STRING("No special ability."),
+    },
+
+    [ABILITY_SPICY_SPRAY] =
+    {
+        .name = _("Spicy Spray"),
+        .description = COMPOUND_STRING("Unimplemented."),
+    },
 };

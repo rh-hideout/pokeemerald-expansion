@@ -15,6 +15,7 @@
 #include "battle_pyramid.h"
 #include "battle_pyramid_bag.h"
 #include "graphics.h"
+#include "shop_criteria.h"
 #include "constants/battle.h"
 #include "constants/items.h"
 #include "constants/moves.h"
@@ -950,4 +951,19 @@ bool32 IsHoldEffectChoice(enum HoldEffect holdEffect)
     return holdEffect == HOLD_EFFECT_CHOICE_BAND
         || holdEffect == HOLD_EFFECT_CHOICE_SCARF
         || holdEffect == HOLD_EFFECT_CHOICE_SPECS;
+}
+
+ShopCriteriaFunc GetItemShopCriteriaFunc(u32 itemId)
+{
+    return gItemsInfo[SanitizeItemId(itemId)].shopCriteriaFunc;
+}
+
+bool32 IsItemShopCriteriaFulfilled(u32 itemId)
+{
+    ShopCriteriaFunc func = GetItemShopCriteriaFunc(itemId);
+
+    if (!func)
+        return TRUE;
+
+    return func(SanitizeItemId(itemId));
 }

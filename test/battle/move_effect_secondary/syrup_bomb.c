@@ -63,7 +63,7 @@ SINGLE_BATTLE_TEST("Syrup Bomb is prevented by Bulletproof")
         TURN { MOVE(player, MOVE_SYRUP_BOMB); }
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_BULLETPROOF);
-        MESSAGE("The opposing Chespin's Bulletproof blocks Syrup Bomb!");
+        MESSAGE("It doesn't affect the opposing Chespin…");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SYRUP_BOMB, player);
             HP_BAR(opponent);
@@ -95,7 +95,7 @@ SINGLE_BATTLE_TEST("Sticky Syrup speed reduction is prevented by Clear Body, Whi
             MESSAGE("The opposing Beldum got covered in sticky candy syrup!");
             ABILITY_POPUP(opponent, ABILITY_CLEAR_BODY);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
-            MESSAGE("The opposing Beldum's Clear Body prevents stat loss!");
+            MESSAGE("The opposing Beldum's stats were not lowered!");
             NONE_OF {
                 MESSAGE("The opposing Beldum's Speed fell!");
             }
@@ -105,7 +105,7 @@ SINGLE_BATTLE_TEST("Sticky Syrup speed reduction is prevented by Clear Body, Whi
             MESSAGE("The opposing Torkoal got covered in sticky candy syrup!");
             ABILITY_POPUP(opponent, ABILITY_WHITE_SMOKE);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
-            MESSAGE("The opposing Torkoal's White Smoke prevents stat loss!");
+            MESSAGE("The opposing Torkoal's stats were not lowered!");
             NONE_OF {
                 MESSAGE("The opposing Torkoal's Speed fell!");
             }
@@ -115,7 +115,7 @@ SINGLE_BATTLE_TEST("Sticky Syrup speed reduction is prevented by Clear Body, Whi
             MESSAGE("The opposing Solgaleo got covered in sticky candy syrup!");
             ABILITY_POPUP(opponent, ABILITY_FULL_METAL_BODY);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
-            MESSAGE("The opposing Solgaleo's Full Metal Body prevents stat loss!");
+            MESSAGE("The opposing Solgaleo's stats were not lowered!");
             NONE_OF {
                 MESSAGE("The opposing Solgaleo's Speed fell!");
             }
