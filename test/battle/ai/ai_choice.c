@@ -262,7 +262,7 @@ AI_DOUBLE_BATTLE_TEST("Choiced Pokémon won't switch out if they can still affec
     u32 defendingSpecies = SPECIES_NONE;
     enum Ability defendingAbility = ABILITY_NONE;
     PARAMETRIZE { defendingSpecies = SPECIES_VAPOREON; defendingAbility = ABILITY_WATER_ABSORB; }
-    PARAMETRIZE { defendingSpecies = SPECIES_ZIGZAGOON; defendingAbility = SPECIES_ZIGZAGOON; }
+    PARAMETRIZE { defendingSpecies = SPECIES_ZIGZAGOON; defendingAbility = ABILITY_GLUTTONY; }
 
     PASSES_RANDOMLY(SHOULD_SWITCH_CHOICE_LOCKED_PERCENTAGE, 100, RNG_AI_SWITCH_CHOICE_LOCKED);
 
