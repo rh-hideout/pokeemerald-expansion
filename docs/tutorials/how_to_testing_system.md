@@ -67,7 +67,7 @@ The test runner rigs the RNG so that unless otherwise specified, moves always hi
 ### Example 2
 As a second example, to manually test that Stun Spore does not effect Grass-types you might:
 1. Put a Wobbuffet that knows Stun Spore in your party.
-2. Battle a wild Oddish.
+2. Battle an opponent with Oddish.
 3. Use Stun Spore.
 4. Check that the move animation does not play.
 5. Check that a "It doesn't affect Foe Oddish…" message is shown.
