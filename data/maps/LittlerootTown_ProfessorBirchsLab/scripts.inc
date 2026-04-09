@@ -111,14 +111,22 @@ LittlerootTown_ProfessorBirchsLab_EventScript_GiveStarterEvent::
 	waitmessage
 	playfanfare MUS_OBTAIN_ITEM
 	waitfanfare
-	msgbox LittlerootTown_ProfessorBirchsLab_Text_WhyNotGiveNicknameToMon, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, YES, LittlerootTown_ProfessorBirchsLab_EventScript_NicknameStarter
-	goto_if_eq VAR_RESULT, NO, LittlerootTown_ProfessorBirchsLab_EventScript_GoSeeRival
+	msgbox LittlerootTown_ProfessorBirchsLab_Text_ReceivedJohtoStarter, MSGBOX_DEFAULT
+	waitmessage
+	multichoice 0, 0, MULTI_NICKNAME_CHOICE, 0
+	copyvar VAR_TEMP_0, VAR_RESULT
+	goto_if_eq VAR_TEMP_0, 0, LittlerootTown_ProfessorBirchsLab_EventScript_NicknameStarter
+	goto_if_eq VAR_TEMP_0, 1, LittlerootTown_ProfessorBirchsLab_EventScript_SetMalakNickname
 	end
 
 LittlerootTown_ProfessorBirchsLab_EventScript_NicknameStarter::
 	setvar VAR_0x8004, 0
 	call Common_EventScript_NameReceivedPartyMon
+	goto LittlerootTown_ProfessorBirchsLab_EventScript_GoSeeRival
+	end
+
+LittlerootTown_ProfessorBirchsLab_EventScript_SetMalakNickname::
+	setmonnickname 0, LittlerootTown_ProfessorBirchsLab_Text_Malak
 	goto LittlerootTown_ProfessorBirchsLab_EventScript_GoSeeRival
 	end
 
@@ -508,13 +516,35 @@ LittlerootTown_ProfessorBirchsLab_EventScript_GivePokedex::
 	call LittlerootTown_ProfessorBirchsLab_EventScript_ReceivePokedex
 	msgbox LittlerootTown_ProfessorBirchsLab_Text_ExplainPokedex, MSGBOX_DEFAULT
 	closemessage
+	msgbox LittlerootTown_ProfessorBirchsLab_Text_CambiarNombre, MSGBOX_DEFAULT
+	multichoice 0, 0, MULTI_NICKNAME_CHOICE, 0
+	copyvar VAR_TEMP_0, VAR_RESULT
+	goto_if_eq VAR_TEMP_0, 0, LittlerootTown_ProfessorBirchsLab_EventScript_ChangePlayerName
+	goto_if_eq VAR_TEMP_0, 1, LittlerootTown_ProfessorBirchsLab_EventScript_SetPlayerMalak
+	goto LittlerootTown_ProfessorBirchsLab_EventScript_GivePokeballs
+	end
+
+LittlerootTown_ProfessorBirchsLab_EventScript_ChangePlayerName::
+	fadescreen FADE_TO_BLACK
+	special ChangePlayerName
+	waitstate
+	goto LittlerootTown_ProfessorBirchsLab_EventScript_GivePokeballs
+	end
+
+LittlerootTown_ProfessorBirchsLab_EventScript_SetPlayerMalak::
+	setplayername LittlerootTown_ProfessorBirchsLab_Text_Malak
+	goto LittlerootTown_ProfessorBirchsLab_EventScript_GivePokeballs
+	end
+
+LittlerootTown_ProfessorBirchsLab_EventScript_GivePokeballs::
+	msgbox LittlerootTown_ProfessorBirchsLab_Text_AsiQueEres, MSGBOX_DEFAULT
+	msgbox LittlerootTown_ProfessorBirchsLab_Text_EstasListo, MSGBOX_DEFAULT
+	closemessage
 	applymovement LOCALID_BIRCHS_LAB_RIVAL, LittlerootTown_ProfessorBirchsLab_Movement_RivalApproachPlayer
 	waitmovement 0
 	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterRight
 	waitmovement 0
-	checkplayergender
-	call_if_eq VAR_RESULT, MALE, LittlerootTown_ProfessorBirchsLab_EventScript_MayGivePokeBalls
-	call_if_eq VAR_RESULT, FEMALE, LittlerootTown_ProfessorBirchsLab_EventScript_BrendanGivePokeBalls
+	giveitem ITEM_POKE_BALL, 5
 	setvar VAR_BIRCH_LAB_STATE, 5
 	setflag FLAG_ADVENTURE_STARTED
 	setvar VAR_OLDALE_TOWN_STATE, 1
@@ -522,22 +552,6 @@ LittlerootTown_ProfessorBirchsLab_EventScript_GivePokedex::
 	setvar VAR_LITTLEROOT_TOWN_STATE, 3
 	releaseall
 	end
-
-LittlerootTown_ProfessorBirchsLab_EventScript_MayGivePokeBalls::
-	msgbox LittlerootTown_ProfessorBirchsLab_Text_MayGotPokedexTooTakeThese, MSGBOX_DEFAULT
-	giveitem ITEM_POKE_BALL, 5
-	call_if_eq VAR_RESULT, FALSE, LittlerootTown_ProfessorBirchsLab_EventScript_MayNoRoomForPokeBalls
-	msgbox LittlerootTown_ProfessorBirchsLab_Text_CatchCutePokemonWithPokeBalls, MSGBOX_DEFAULT
-	setvar VAR_RESULT, 0
-	return
-
-LittlerootTown_ProfessorBirchsLab_EventScript_BrendanGivePokeBalls::
-	msgbox LittlerootTown_ProfessorBirchsLab_Text_BrendanGotPokedexTooTakeThese, MSGBOX_DEFAULT
-	giveitem ITEM_POKE_BALL, 5
-	call_if_eq VAR_RESULT, FALSE, LittlerootTown_ProfessorBirchsLab_EventScript_BrendanNoRoomForPokeBalls
-	msgbox LittlerootTown_ProfessorBirchsLab_Text_CatchCoolPokemonWithPokeBalls, MSGBOX_DEFAULT
-	setvar VAR_RESULT, 1
-	return
 
 LittlerootTown_ProfessorBirchsLab_EventScript_ReceivePokedex::
 	playfanfare MUS_OBTAIN_ITEM
@@ -728,26 +742,61 @@ LittlerootTown_ProfessorBirchsLab_Text_BirchRivalGoneHome:
 	.string "you should get some rest at home.$"
 
 LittlerootTown_ProfessorBirchsLab_Text_HeardYouBeatRivalTakePokedex:
-	.string "PROF. BIRCH: Oh, hi, {PLAYER}{KUN}!\p"
-	.string "I heard you beat {RIVAL} on\n"
-	.string "your first try. That's excellent!\p"
-	.string "{RIVAL}'s been helping with my research\n"
-	.string "for a long time.\p"
-	.string "{RIVAL} has an extensive history as\n"
-	.string "a TRAINER already.\p"
-	.string "Here, {PLAYER}{KUN}, I ordered this for my\n"
-	.string "research, but I think you should have\l"
-	.string "this POKéDEX.$"
+	.string "¡Qué onda! Perdón por la demora,\n"
+	.string "pero ya estamos aquí.\p"
+	.string "Soy MALAK, y te doy la bienvenida\n"
+	.string "oficial al mundo de LEYENDA REGIONAL.\p"
+	.string "Muchos ya me conocen por los videos\n"
+	.string "en TikTok y YouTube como Malak Legends.\p"
+	.string "Como Creador y ROM Hacker, le he echado\n"
+	.string "todas las ganas para armar este\l"
+	.string "proyecto tan ambicioso que hoy arranca.\p"
+	.string "Lo que empezó en nuestra serie de\n"
+	.string "Pokémon Cristal Retodex, hoy se convierte\l"
+	.string "en una experiencia de otro nivel.\p"
+	.string "Estamos rompiendo las fronteras para\n"
+	.string "conectar regiones que antes estaban\l"
+	.string "separadas por puro código.\p"
+	.string "Prepárate para viajar entre tierras\n"
+	.string "lejanas, descubrir secretos bien ocultos\l"
+	.string "y enfrentarte a puros desafíos de leyenda.\p"
+	.string "En Malak Legends, cada ruta que pises\n"
+	.string "y cada POKéMON que captures forman\l"
+	.string "parte de una historia mucho más grande.\p"
+	.string "Estamos construyendo este universo\n"
+	.string "paso a paso, juntos como comunidad.\p"
+	.string "Dime... ¿Tienes el valor suficiente\n"
+	.string "para entrarle a este nuevo horizonte?\p"
+	.string "¡Órale, es hora de que comience\n"
+	.string "tu propia LEYENDA REGIONAL!\p$"
 
-LittlerootTown_ProfessorBirchsLab_Text_ReceivedPokedex:
-	.string "{PLAYER} received the POKéDEX!$"
+LittlerootTown_ProfessorBirchsLab_Text_CambiarNombre:
+	.string "Y ahora lo más importante...\p"
+	.string "¿Quieres llevar mi nombre como tributo\n"
+	.string "o prefieres escribir tu propia historia?$"
+
+LittlerootTown_ProfessorBirchsLab_Text_AsiQueEres:
+	.string "¿Así que eres {PLAYER}?$"
+
+LittlerootTown_ProfessorBirchsLab_Text_EstasListo:
+	.string "¡Perfecto! Ya está todo listo.\n"
+	.string "Las regiones te esperan y el destino\p"
+	.string "de Malak Legends está en tus manos.\n"
+	.string "¿Estás listo para esta gran aventura?\p$"
 
 LittlerootTown_ProfessorBirchsLab_Text_ExplainPokedex:
-	.string "PROF. BIRCH: The POKéDEX is a high-tech\n"
-	.string "tool that automatically makes a record\l"
-	.string "of any POKéMON you meet or catch.\p"
-	.string "My kid, {RIVAL}, goes everywhere\n"
-	.string "with it.\p"
+	.string "Pero ojo, no te vayas a confiar.\p"
+	.string "Aquí las cosas no van a ser fáciles.\n"
+	.string "Como buen ROM Hacker, me encargué de\l"
+	.string "que cada batalla se sienta real.\p"
+	.string "Vas a tener que demostrar que de\n"
+	.string "verdad le sabes a los POKéMON.\p"
+	.string "Trátalos con respeto, entrénalos con\n"
+	.string "ganas, ¡y ellos te harán invencible!\p"
+	.string "Recuerda que esta es nuestra historia\n"
+	.string "y tú eres quien tiene el control.\p"
+	.string "¡Demuéstrale al mundo de qué está\n"
+	.string "hecho un verdadero MALAK LEGEND!\p$"
 	.string "Whenever my kid catches a rare POKéMON\n"
 	.string "and records its data in the POKéDEX,\l"
 	.string "why, {RIVAL} looks for me while I'm out\l"
@@ -928,6 +977,9 @@ LittlerootTown_ProfessorBirchsLab_Text_PickedFinePokemon:
 LittlerootTown_ProfessorBirchsLab_Text_ReceivedJohtoStarter:
 	.string "{PLAYER} received the {STR_VAR_1}\n"
 	.string "from PROF. BIRCH!$"
+
+LittlerootTown_ProfessorBirchsLab_Text_Malak:
+	.string "Malak$"
 
 @ Unused
 LittlerootTown_ProfessorBirchsLab_Text_NicknameJohtoStarter:

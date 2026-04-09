@@ -304,6 +304,13 @@ static const u16 ALIGNED(4) sRegionMapKanto_Pal[] = INCBIN_U16("graphics/pokenav
 static const u32 sRegionMapKanto_Gfx[] = INCBIN_U32("graphics/pokenav/region_map/map_kanto.8bpp.smol");
 static const u32 sRegionMapKanto_Tilemap[] = INCBIN_U32("graphics/pokenav/region_map/map_kanto.bin.smolTM");
 
+static const u16 ALIGNED(4) sPokedexAreaMapJohto_Pal[] = INCBIN_U16("graphics/pokedex/region_map_johto.gbapal");
+static const u32 sPokedexAreaMapJohto_Gfx[] = INCBIN_U32("graphics/pokedex/region_map_johto.8bpp.smol");
+static const u32 sPokedexAreaMapJohto_Tilemap[] = INCBIN_U32("graphics/pokedex/region_map_johto.bin.smolTM");
+static const u16 ALIGNED(4) sRegionMapJohto_Pal[] = INCBIN_U16("graphics/pokenav/region_map/map_johto.gbapal");
+static const u32 sRegionMapJohto_Gfx[] = INCBIN_U32("graphics/pokenav/region_map/map_johto.8bpp.smol");
+static const u32 sRegionMapJohto_Tilemap[] = INCBIN_U32("graphics/pokenav/region_map/map_johto.bin.smolTM");
+
 static const u16 ALIGNED(4) sPokedexAreaMapSevii123_Pal[] = INCBIN_U16("graphics/pokedex/region_map_sevii123.gbapal");
 static const u32 sPokedexAreaMapSevii123_Gfx[] = INCBIN_U32("graphics/pokedex/region_map_sevii123.8bpp.smol");
 static const u32 sPokedexAreaMapSevii123_Tilemap[] = INCBIN_U32("graphics/pokedex/region_map_sevii123.bin.smolTM");
@@ -346,6 +353,16 @@ const struct RegionMapInfo gRegionMapInfos[] =
         .regionMapPalette = sRegionMapKanto_Pal,
         .regionMapGfx = sRegionMapKanto_Gfx,
         .regionMapTilemap = sRegionMapKanto_Tilemap,
+    },
+    [REGION_MAP_JOHTO]    =
+    {
+        .dexMapPalette = sPokedexAreaMapJohto_Pal,
+        .dexMapGfx = sPokedexAreaMapJohto_Gfx,
+        .dexMapTilemap = sPokedexAreaMapJohto_Tilemap,
+        .dexMapPaletteSize = sizeof(sPokedexAreaMapJohto_Pal),
+        .regionMapPalette = sRegionMapJohto_Pal,
+        .regionMapGfx = sRegionMapJohto_Gfx,
+        .regionMapTilemap = sRegionMapJohto_Tilemap,
     },
     [REGION_MAP_SEVII123] =
     {
@@ -1177,6 +1194,8 @@ enum RegionMapType GetRegionMapType(u32 mapSecId)
         default:
             return REGION_MAP_KANTO;
         }
+    case REGION_JOHTO:
+        return REGION_MAP_JOHTO;
     case REGION_HOENN:
     default:
         return REGION_MAP_HOENN;

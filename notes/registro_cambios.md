@@ -21,3 +21,10 @@ Este archivo registra todos los cambios realizados en el proyecto, para facilita
 - **Motivo**: Incluir las Eeveeluciones adicionales según la información principal.
 - **Resultado**: Eeveeluciones disponibles en el juego.
 
+### 2026-04-09 11:00 - Inicio de Adición de Mapas de Región para Kanto y Johto
+- **Tipo**: Sistema de Mapas
+- **Descripción**: Agregado soporte para mapas de región de Johto en el sistema de region_map. Incluye enum REGION_MAP_JOHTO, constantes de MAPSEC para Johto, actualización de funciones GetRegionMapType y GetRegionForSectionId, y preparación de includes para gráficos (archivos de gráficos pendientes).
+- **Archivos Afectados**: include/region_map.h, src/region_map.c, include/constants/region_map_sections.h, include/regions.h
+- **Motivo**: Implementar mapas de región para Kanto y Johto como parte del mundo semiabierto.
+- **Resultado**: Código base listo; faltan archivos de gráficos y layout de mapa para Johto.
+

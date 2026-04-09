@@ -168,6 +168,7 @@
 #define MULTI_EGGS_VICTORIES_QUIT                        157
 #define MULTI_HOF_EGGS_VICTORIES_QUIT                    158
 #define MULTI_REGION_SELECT                             159
+#define MULTI_NICKNAME_CHOICE                           160
 
 #define MULTI_NONE 255
 

@@ -1094,6 +1094,11 @@ static const struct MenuAction MultichoiceList_RegionSelect[] = {
     { COMPOUND_STRING("Hoenn") },
 };
 
+static const struct MenuAction MultichoiceList_NicknameChoice[] = {
+    { COMPOUND_STRING("Otro") },
+    { COMPOUND_STRING("Malak") },
+};
+
 static const struct MenuAction MultichoiceList_Exit[] =
 {
     {gText_Exit},
@@ -1267,6 +1272,7 @@ static const struct MultichoiceListStruct sMultichoiceLists[] =
     [MULTI_EGGS_VICTORIES_QUIT]                        = MULTICHOICE(sMultichoiceList_Eggs_Victories_Quit),
     [MULTI_HOF_EGGS_VICTORIES_QUIT]                    = MULTICHOICE(sMultichoiceList_HOF_Eggs_Victories_Quit),
     [MULTI_REGION_SELECT]                              = MULTICHOICE(MultichoiceList_RegionSelect),
+    [MULTI_NICKNAME_CHOICE]                            = MULTICHOICE(MultichoiceList_NicknameChoice),
 };
 
 const u8 *const gStdStrings[] =
