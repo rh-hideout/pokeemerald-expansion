@@ -23,7 +23,7 @@ SINGLE_BATTLE_TEST("Mega Sol multiplies the power of Fire-type moves by 1.5x", s
     }
 }
 
-SINGLE_BATTLE_TEST("Mega Sol halves the power of Water-type moves", s16 damage)
+SINGLE_BATTLE_TEST("Mega Sol halves the power of the user's Water-type moves", s16 damage)
 {
     enum Ability ability;
     PARAMETRIZE { ability = ABILITY_FLAME_BODY;}
