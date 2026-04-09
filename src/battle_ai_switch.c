@@ -50,7 +50,7 @@ bool32 IsSwitchinTSpikesAffected(enum BattlerId battler);
 static bool32 IsOpponentPhysicalAttacker(enum BattlerId battler, enum BattlerId opposingBattler);
 static bool32 CanIntimidateLowerOpponentAtk(enum BattlerId battler, enum BattlerId opposingBattler);
 static bool32 ShouldSwitchIfIntimidateBenefit(enum BattlerId battler);
-static bool32 DoesMostSuitableSwitchinBenefitFromWish(enum BattlerId battler, enum BattlerId opposingBattler, u32 currentTypeMatchup);
+static bool32 DoesMostSuitableSwitchinBenefitFromWish(enum BattlerId battler);
 
 static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, u32 monIndex, struct Pokemon *mon)
 {
@@ -318,36 +318,24 @@ static inline bool32 CanBattlerWin1v1(u32 hitsToKOAI, u32 hitsToKOPlayer, bool32
     return FALSE;
 }
 
-static bool32 DoesMostSuitableSwitchinBenefitFromWish(enum BattlerId battler, enum BattlerId opposingBattler, u32 currentTypeMatchup)
+static bool32 DoesMostSuitableSwitchinBenefitFromWish(enum BattlerId battler)
 {
     struct Pokemon *party = GetBattlerParty(battler);
-    struct Pokemon *switchinMon;
-    struct BattlePokemon switchinCandidate;
     u32 wishHealAmount = GetWishHealAmountForBattler(battler);
     u32 currentHp;
     u32 maxHp;
-    u32 typeMatchupCandidate;
     s32 possibleHeal = wishHealAmount;
 
     if (gAiLogicData->mostSuitableMonId[battler] == PARTY_SIZE)
         return FALSE;
 
-    switchinMon = &party[gAiLogicData->mostSuitableMonId[battler]];
-    maxHp = GetMonData(switchinMon, MON_DATA_MAX_HP);
-    currentHp = GetMonData(switchinMon, MON_DATA_HP);
-    PokemonToBattleMon(switchinMon, &switchinCandidate);
-    typeMatchupCandidate = GetTypeMatchupAgainstTypes(opposingBattler, switchinCandidate.types[0], switchinCandidate.types[1]);
+    maxHp = GetMonData(&party[gAiLogicData->mostSuitableMonId[battler]], MON_DATA_MAX_HP);
+    currentHp = GetMonData(&party[gAiLogicData->mostSuitableMonId[battler]], MON_DATA_HP);
 
     if (possibleHeal > (s32)(maxHp - currentHp))
         possibleHeal = (s32)(maxHp - currentHp);
 
-    if (possibleHeal > (s32)(maxHp / AI_WISH_HEAL_THRESHOLD)
-        && typeMatchupCandidate < currentTypeMatchup)
-    {
-        return TRUE;
-    }
-
-    return FALSE;
+    return possibleHeal > (s32)(maxHp / AI_WISH_HEAL_THRESHOLD);
 }
 
 // Note that as many return statements as possible are INTENTIONALLY put after all of the loops;
@@ -1161,7 +1149,7 @@ static bool32 ShouldSwitchIfAbilityBenefit(enum BattlerId battler)
     return SetSwitchinAndSwitch(battler, PARTY_SIZE);
 }
 
-// Consider switching to pass Wish to a teammate that benefits AND has better matchup
+// Consider switching to pass Wish to a teammate that benefits from the heal
 static bool32 ShouldSwitchIfWishPassing(enum BattlerId battler)
 {
     // Only use with smart switching flag
@@ -1189,7 +1177,7 @@ static bool32 ShouldSwitchIfWishPassing(enum BattlerId battler)
         return FALSE;
 
     // TODO: Revisit active-mon 1v1 stay-in check after the ShouldSwitch refactor.
-    if (!DoesMostSuitableSwitchinBenefitFromWish(battler, opposingBattler, typeMatchupCurrent))
+    if (!DoesMostSuitableSwitchinBenefitFromWish(battler))
         return FALSE;
 
     if (RandomPercentage(RNG_AI_SWITCH_WISH_PASSING, GetSwitchChance(SHOULD_SWITCH_WISH_PASSING)))
