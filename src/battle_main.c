@@ -3340,6 +3340,7 @@ void FaintClearSetData(enum BattlerId battler)
     gBattleStruct->palaceFlags &= ~(1u << battler);
     if (battler == gBattlerAttacker)
         gBattleStruct->moldBreakerActive = FALSE;
+        gBattleStruct->megaSolActive = FALSE;
 
     ClearPursuitValuesIfSet(battler);
 
@@ -5821,7 +5822,7 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId
             return TYPE_FIRE;
         if (state == MON_IN_BATTLE)
         {
-	    if (ability == ABILITY_MEGA_SOL)
+	    if (gBattleStruct->megaSolActive)
                 return TYPE_FIRE;
             else if (HasWeatherEffect())
             {
