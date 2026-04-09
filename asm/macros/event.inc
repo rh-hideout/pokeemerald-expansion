@@ -2682,6 +2682,7 @@
 	.byte \selectionType
 	.endm
 
+	@ picks the first mon in party matching the given selectionType (enum PcMonSelectionType)
 	.macro pickpartymon selectionType:req
 	callnative PickPartyMon
 	.byte \selectionType
