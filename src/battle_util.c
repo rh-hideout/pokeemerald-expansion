@@ -7207,16 +7207,9 @@ static inline uq4_12_t GetSameTypeAttackBonusModifier(struct DamageContext *ctx)
 // Utility Umbrella holders take normal damage from what would be rain- and sun-weakened attacks.
 static uq4_12_t GetWeatherDamageModifier(struct DamageContext *ctx)
 {
-    if (gBattleStruct->megaSolActive)
-    {
-        if (ctx->moveType != TYPE_FIRE && ctx->moveType != TYPE_WATER)
-            return UQ_4_12(1.0);
-        return (ctx->moveType == TYPE_WATER) ? UQ_4_12(0.5) : UQ_4_12(1.5);
-    }
-
     if (ctx->weather == B_WEATHER_NONE)
         return UQ_4_12(1.0);
-    if (GetMoveEffect(ctx->move) == EFFECT_HYDRO_STEAM && (ctx->weather & B_WEATHER_SUN) && ctx->holdEffectAtk != HOLD_EFFECT_UTILITY_UMBRELLA)
+    if (GetMoveEffect(ctx->move) == EFFECT_HYDRO_STEAM && (ctx->weather & B_WEATHER_SUN) && (ctx->holdEffectAtk != HOLD_EFFECT_UTILITY_UMBRELLA || gBattleStruct->megaSolActive))// It is assumed that umbrella doesn't block its wielder from benefitting from mega sol. This will need to be reviewed later, once it's in champions!
         return UQ_4_12(1.5);
     if (ctx->holdEffectDef == HOLD_EFFECT_UTILITY_UMBRELLA)
         return UQ_4_12(1.0);
