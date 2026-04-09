@@ -3,7 +3,7 @@
 
 SINGLE_BATTLE_TEST("Shaymin-Sky reverts to Shaymin-Land when frozen or frostbitten")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_POWDER_SNOW; }
     PARAMETRIZE { move = MOVE_EMBER; }

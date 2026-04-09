@@ -113,7 +113,7 @@ DOUBLE_BATTLE_TEST("Sleep Talk calls move and that move may be redirected by Lig
 {
     PASSES_RANDOMLY(1, 2, RNG_RANDOM_TARGET);
     GIVEN {
-        WITH_CONFIG(CONFIG_REDIRECT_ABILITY_IMMUNITY, GEN_5);
+        WITH_CONFIG(B_REDIRECT_ABILITY_IMMUNITY, GEN_5);
         ASSUME(GetMoveType(MOVE_SPARK) == TYPE_ELECTRIC);
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); Moves(MOVE_SLEEP_TALK, MOVE_SPARK, MOVE_FLY, MOVE_DIG); }
         PLAYER(SPECIES_WOBBUFFET);
@@ -133,7 +133,7 @@ DOUBLE_BATTLE_TEST("Sleep Talk calls move and that move may be redirected by Sto
 {
     PASSES_RANDOMLY(1, 2, RNG_RANDOM_TARGET);
     GIVEN {
-        WITH_CONFIG(CONFIG_REDIRECT_ABILITY_IMMUNITY, GEN_5);
+        WITH_CONFIG(B_REDIRECT_ABILITY_IMMUNITY, GEN_5);
         ASSUME(GetMoveType(MOVE_WATER_GUN) == TYPE_WATER);
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); Moves(MOVE_SLEEP_TALK, MOVE_WATER_GUN, MOVE_FLY, MOVE_DIG); }
         PLAYER(SPECIES_WOBBUFFET);
@@ -185,5 +185,22 @@ SINGLE_BATTLE_TEST("Sleep Talk deducts power points from itself, not the called 
     } THEN {
         EXPECT_EQ(player->pp[0], 9);
         EXPECT_EQ(player->pp[1], 35);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Sleep Talk called move target will be random")
+{
+    PASSES_RANDOMLY(1, 2, RNG_RANDOM_TARGET);
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); Moves(MOVE_SLEEP_TALK, MOVE_POUND, MOVE_FLY, MOVE_DIG); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_SLEEP_TALK); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SLEEP_TALK, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, playerLeft);
+        HP_BAR(opponentRight);
     }
 }

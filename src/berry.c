@@ -15,11 +15,12 @@
 #include "constants/event_object_movement.h"
 #include "constants/items.h"
 
-static u16 BerryTypeToItemId(u16 berry);
+static enum Item BerryTypeToItemId(u16 berry);
 static u8 BerryTreeGetNumStagesWatered(struct BerryTree *tree);
 static u8 GetNumStagesWateredByBerryTreeId(u8 id);
 static u8 CalcBerryYieldInternal(u16 max, u16 min, u8 water);
 static u8 CalcBerryYield(struct BerryTree *tree);
+static u32 GetBerryTreeAge(u8 id, u8 stage);
 static u8 GetBerryCountByBerryTreeId(u8 id);
 static u16 GetStageDurationByBerryType(u8);
 static u8 GetDrainRateByBerryType(u8);
@@ -46,6 +47,10 @@ static void AddTreeBonus(struct BerryTree *tree, u8 bonus);
 
 #if OW_BERRY_MOISTURE && OW_BERRY_DRAIN_RATE != GEN_4 && OW_BERRY_DRAIN_RATE != GEN_6_XY && OW_BERRY_DRAIN_RATE != GEN_6_ORAS
 #error "OW_BERRY_DRAIN_RATE must be GEN_5, GEN_6_XY or GEN_6_ORAS!"
+#endif
+
+#if OW_BERRY_COLORS != GEN_6_XY && OW_BERRY_COLORS != GEN_6_ORAS 
+#error "OW_BERRY_COLORS must be GEN_6_XY or GEN_6_ORAS!"
 #endif
 
 #define GROWTH_DURATION(g3, g4, g5, xy, oras, g7) OW_BERRY_GROWTH_RATE == GEN_3 ? g3 : OW_BERRY_GROWTH_RATE == GEN_4 ? g4 : OW_BERRY_GROWTH_RATE == GEN_5 ? g5 : OW_BERRY_GROWTH_RATE == GEN_6_XY ? xy : OW_BERRY_GROWTH_RATE == GEN_6_ORAS ? oras : g7
@@ -80,7 +85,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Chesto"),
         .firmness = BERRY_FIRMNESS_SUPER_HARD,
-        .color = BERRY_COLOR_PURPLE,
+        .color = OW_BERRY_COLORS == GEN_6_XY ? BERRY_COLOR_PURPLE : BERRY_COLOR_BLUE,
         .size = 80,
         .maxYield = YIELD_RATE(3, 5, 15, 20),
         .minYield = YIELD_RATE(2, 2, 4, 4),
@@ -310,7 +315,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Wiki"),
         .firmness = BERRY_FIRMNESS_HARD,
-        .color = BERRY_COLOR_PURPLE,
+        .color = OW_BERRY_COLORS == GEN_6_XY ? BERRY_COLOR_PURPLE : BERRY_COLOR_BLUE,
         .size = 115,
         .maxYield = YIELD_RATE(3, 5, 15, 15),
         .minYield = YIELD_RATE(2, 1, 3, 3),
@@ -425,7 +430,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Bluk"),
         .firmness = BERRY_FIRMNESS_SOFT,
-        .color = BERRY_COLOR_PURPLE,
+        .color = OW_BERRY_COLORS == GEN_6_XY ? BERRY_COLOR_PURPLE : BERRY_COLOR_BLUE,
         .size = 108,
         .maxYield = YIELD_RATE(6, 10, 15, 20),
         .minYield = YIELD_RATE(3, 2, 3, 4),
@@ -563,7 +568,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Qualot"),
         .firmness = BERRY_FIRMNESS_HARD,
-        .color = BERRY_COLOR_YELLOW,
+        .color = OW_BERRY_COLORS == GEN_6_XY ? BERRY_COLOR_YELLOW : BERRY_COLOR_PINK,
         .size = 110,
         .maxYield = YIELD_RATE(6, 5, 20, 26),
         .minYield = YIELD_RATE(2, 1, 1, 2),
@@ -655,7 +660,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Cornn"),
         .firmness = BERRY_FIRMNESS_HARD,
-        .color = BERRY_COLOR_PURPLE,
+        .color = OW_BERRY_COLORS == GEN_6_XY ? BERRY_COLOR_PURPLE : BERRY_COLOR_BLUE,
         .size = 75,
         .maxYield = YIELD_RATE(4, 10, 15, 15),
         .minYield = YIELD_RATE(2, 2, 3, 3),
@@ -747,7 +752,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Spelon"),
         .firmness = BERRY_FIRMNESS_SOFT,
-        .color = BERRY_COLOR_RED,
+        .color = OW_BERRY_COLORS == GEN_6_XY ? BERRY_COLOR_RED : BERRY_COLOR_PINK,
         .size = 133,
         .maxYield = YIELD_RATE(2, 15, 15, 15),
         .minYield = YIELD_RATE(1, 2, 3, 3),
@@ -770,7 +775,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Pamtre"),
         .firmness = BERRY_FIRMNESS_VERY_SOFT,
-        .color = BERRY_COLOR_PURPLE,
+        .color = OW_BERRY_COLORS == GEN_6_XY ? BERRY_COLOR_PURPLE : BERRY_COLOR_BLUE,
         .size = 244,
         .maxYield = YIELD_RATE(2, 15, 15, 15),
         .minYield = YIELD_RATE(1, 3, 3, 3),
@@ -793,7 +798,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Watmel"),
         .firmness = BERRY_FIRMNESS_SOFT,
-        .color = BERRY_COLOR_PINK,
+        .color = OW_BERRY_COLORS == GEN_6_XY ? BERRY_COLOR_PINK : BERRY_COLOR_GREEN,
         .size = 250,
         .maxYield = YIELD_RATE(2, 15, 15, 15),
         .minYield = YIELD_RATE(1, 2, 3, 3),
@@ -839,7 +844,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Belue"),
         .firmness = BERRY_FIRMNESS_VERY_SOFT,
-        .color = BERRY_COLOR_PURPLE,
+        .color = OW_BERRY_COLORS == GEN_6_XY ? BERRY_COLOR_PURPLE : BERRY_COLOR_BLUE,
         .size = 300,
         .maxYield = YIELD_RATE(2, 15, 15, 15),
         .minYield = YIELD_RATE(1, 2, 3, 3),
@@ -1092,7 +1097,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Payapa"),
         .firmness = BERRY_FIRMNESS_SOFT,
-        .color = BERRY_COLOR_PURPLE,
+        .color = OW_BERRY_COLORS == GEN_6_XY ? BERRY_COLOR_PURPLE : BERRY_COLOR_RED,
         .size = 252,
         .maxYield = YIELD_RATE(5, 5, 20, 10),
         .minYield = YIELD_RATE(2, 1, 3, 2),
@@ -1161,7 +1166,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Kasib"),
         .firmness = BERRY_FIRMNESS_HARD,
-        .color = BERRY_COLOR_PURPLE,
+        .color = OW_BERRY_COLORS == GEN_6_XY ? BERRY_COLOR_PURPLE : BERRY_COLOR_PINK,
         .size = 144,
         .maxYield = YIELD_RATE(5, 5, 20, 10),
         .minYield = YIELD_RATE(2, 1, 3, 2),
@@ -1207,7 +1212,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Colbur"),
         .firmness = BERRY_FIRMNESS_SUPER_HARD,
-        .color = BERRY_COLOR_PURPLE,
+        .color = OW_BERRY_COLORS == GEN_6_XY ? BERRY_COLOR_PURPLE : BERRY_COLOR_PINK,
         .size = 39,
         .maxYield = YIELD_RATE(5, 5, 20, 10),
         .minYield = YIELD_RATE(2, 1, 3, 2),
@@ -1253,7 +1258,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Roseli"),
         .firmness = BERRY_FIRMNESS_HARD,
-        .color = BERRY_COLOR_PINK,
+        .color = OW_BERRY_COLORS == GEN_6_XY ? BERRY_COLOR_PINK : BERRY_COLOR_RED,
         .size = 35,
         .maxYield = YIELD_RATE(5, 5, 20, 10),
         .minYield = YIELD_RATE(2, 1, 3, 2),
@@ -1276,7 +1281,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Liechi"),
         .firmness = BERRY_FIRMNESS_VERY_HARD,
-        .color = BERRY_COLOR_RED,
+        .color = OW_BERRY_COLORS == GEN_6_XY ? BERRY_COLOR_RED : BERRY_COLOR_YELLOW,
         .size = 111,
         .maxYield = YIELD_RATE(2, 5, 10, 13),
         .minYield = YIELD_RATE(1, 1, 1, 2),
@@ -1299,7 +1304,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Ganlon"),
         .firmness = BERRY_FIRMNESS_VERY_HARD,
-        .color = BERRY_COLOR_PURPLE,
+        .color = OW_BERRY_COLORS == GEN_6_XY ? BERRY_COLOR_PURPLE : BERRY_COLOR_BLUE,
         .size = 33,
         .maxYield = YIELD_RATE(2, 5, 10, 13),
         .minYield = YIELD_RATE(1, 1, 1, 2),
@@ -1391,7 +1396,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Lansat"),
         .firmness = BERRY_FIRMNESS_SOFT,
-        .color = BERRY_COLOR_RED,
+        .color = OW_BERRY_COLORS == GEN_6_XY ? BERRY_COLOR_RED : BERRY_COLOR_PINK,
         .size = 97,
         .maxYield = YIELD_RATE(2, 5, 5, 7),
         .minYield = YIELD_RATE(1, 1, 1, 1),
@@ -1437,7 +1442,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Enigma"),
         .firmness = BERRY_FIRMNESS_HARD,
-        .color = BERRY_COLOR_PURPLE,
+        .color = OW_BERRY_COLORS == GEN_6_XY ? BERRY_COLOR_PURPLE : BERRY_COLOR_YELLOW,
         .size = 155,
         .maxYield = YIELD_RATE(2, 5, 5, 13),
         .minYield = YIELD_RATE(1, 1, 1, 1),
@@ -1552,7 +1557,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Kee"),
         .firmness = BERRY_FIRMNESS_UNKNOWN,
-        .color = BERRY_COLOR_YELLOW,
+        .color = OW_BERRY_COLORS == GEN_6_XY ? BERRY_COLOR_YELLOW : BERRY_COLOR_PINK,
         .size = 0,
         .maxYield = YIELD_RATE(2, 5, 10, 13),
         .minYield = YIELD_RATE(1, 1, 1, 2),
@@ -1575,7 +1580,7 @@ const struct Berry gBerries[] =
     {
         .name = _("Marnga"), // "Maranga" is too long
         .firmness = BERRY_FIRMNESS_UNKNOWN,
-        .color = BERRY_COLOR_BLUE,
+        .color = OW_BERRY_COLORS == GEN_6_XY ? BERRY_COLOR_BLUE : BERRY_COLOR_YELLOW,
         .size = 0,
         .maxYield = YIELD_RATE(2, 5, 10, 13),
         .minYield = YIELD_RATE(1, 1, 1, 2),
@@ -1961,8 +1966,15 @@ void PlantBerryTree(u8 id, u8 berry, u8 stage, bool8 allowGrowth)
     tree->stage = stage;
     tree->moistureLevel = 100;
     if (OW_BERRY_ALWAYS_WATERABLE)
-        tree->berryYield = GetBerryInfo(berry)->maxYield;
-    if (stage == BERRY_STAGE_BERRIES)
+    {
+        // We simulate a tree having grown without water
+        u32 berryTreeAge = GetBerryTreeAge(id, stage);
+        if (GetBerryInfo(berry)->maxYield - berryTreeAge * GetBerryInfo(berry)->maxYield / 5 < GetBerryInfo(berry)->minYield)
+            tree->berryYield = GetBerryInfo(berry)->minYield;
+        else
+            tree->berryYield = GetBerryInfo(berry)->maxYield - berryTreeAge * GetBerryInfo(berry)->maxYield / 5;
+    }
+    else if (stage == BERRY_STAGE_BERRIES)
     {
         tree->berryYield = CalcBerryYield(tree);
         tree->minutesUntilNextStage *= ((tree->mulch == ITEM_TO_MULCH(ITEM_STABLE_MULCH)) ? 6 : 4);
@@ -1996,7 +2008,7 @@ u8 GetMulchByBerryTreeId(u8 id)
     return gSaveBlock1Ptr->berryTrees[id].mulch;
 }
 
-u8 ItemIdToBerryType(u16 item)
+u8 ItemIdToBerryType(enum Item item)
 {
     u16 berry = item - FIRST_BERRY_INDEX;
 
@@ -2006,9 +2018,9 @@ u8 ItemIdToBerryType(u16 item)
         return ITEM_TO_BERRY(item);
 }
 
-static u16 BerryTypeToItemId(u16 berry)
+static enum Item BerryTypeToItemId(u16 berry)
 {
-    u16 item = berry - 1;
+    enum Item item = berry - 1;
 
     if (item > LAST_BERRY_INDEX - FIRST_BERRY_INDEX)
         return FIRST_BERRY_INDEX;
@@ -2092,6 +2104,17 @@ static u8 CalcBerryYield(struct BerryTree *tree)
         result = CalcBerryYieldInternal(max, min, BerryTreeGetNumStagesWatered(tree));
 
     return result;
+}
+
+static u32 GetBerryTreeAge(u8 id, u8 stage)
+{
+    if (stage == BERRY_STAGE_TRUNK)
+        stage = 5;
+    else if (stage == BERRY_STAGE_BUDDING)
+        stage = 6;
+    else if (stage > 0)
+        stage -= 1;
+    return GetBerryInfo(id)->growthDuration * stage / (OW_BERRY_SIX_STAGES ? 6 : 4);
 }
 
 static u8 GetBerryCountByBerryTreeId(u8 id)
@@ -2331,7 +2354,6 @@ static const u8 sBerryMutations[][3] = {
     {ITEM_TO_BERRY(ITEM_IAPAPA_BERRY), ITEM_TO_BERRY(ITEM_MAGO_BERRY),   ITEM_TO_BERRY(ITEM_POMEG_BERRY)},
     {ITEM_TO_BERRY(ITEM_CHESTO_BERRY), ITEM_TO_BERRY(ITEM_PERSIM_BERRY), ITEM_TO_BERRY(ITEM_KELPSY_BERRY)},
     {ITEM_TO_BERRY(ITEM_ORAN_BERRY),   ITEM_TO_BERRY(ITEM_PECHA_BERRY),  ITEM_TO_BERRY(ITEM_QUALOT_BERRY)},
-    {ITEM_TO_BERRY(ITEM_CHESTO_BERRY), ITEM_TO_BERRY(ITEM_PERSIM_BERRY), ITEM_TO_BERRY(ITEM_KELPSY_BERRY)},
     {ITEM_TO_BERRY(ITEM_ASPEAR_BERRY), ITEM_TO_BERRY(ITEM_LEPPA_BERRY),  ITEM_TO_BERRY(ITEM_HONDEW_BERRY)},
     {ITEM_TO_BERRY(ITEM_AGUAV_BERRY),  ITEM_TO_BERRY(ITEM_FIGY_BERRY),   ITEM_TO_BERRY(ITEM_GREPA_BERRY)},
     {ITEM_TO_BERRY(ITEM_LUM_BERRY),    ITEM_TO_BERRY(ITEM_SITRUS_BERRY), ITEM_TO_BERRY(ITEM_TAMATO_BERRY)},
@@ -2348,7 +2370,7 @@ static const u8 sBerryMutations[][3] = {
 static u8 GetMutationOutcome(u8 berry1, u8 berry2)
 {
     u8 i;
-    for(i = 0; i < ARRAY_COUNT(sBerryMutations); i++)
+    for (i = 0; i < ARRAY_COUNT(sBerryMutations); i++)
     {
         if ((sBerryMutations[i][0] == berry1 && sBerryMutations[i][1] == berry2)
           ||(sBerryMutations[i][0] == berry2 && sBerryMutations[i][1] == berry1))
@@ -2383,7 +2405,12 @@ static u8 TryForMutation(u8 berryTreeId, u8 berry)
         {
             x2 = gObjectEvents[j].currentCoords.x;
             y2 = gObjectEvents[j].currentCoords.y;
-            if (Random() % 100 < (OW_BERRY_MUTATION_CHANCE * (mulch == ITEM_TO_MULCH(ITEM_SURPRISE_MULCH) || mulch == ITEM_TO_MULCH(ITEM_AMAZE_MULCH))) && (
+            u32 rate = OW_BERRY_MUTATION_CHANCE;
+
+            if (mulch == ITEM_TO_MULCH(ITEM_SURPRISE_MULCH) || mulch == ITEM_TO_MULCH(ITEM_AMAZE_MULCH))
+                rate *= 2;
+
+            if (Random() % 100 < rate && (
                 (x1 == x2 && y1 == y2 - 1) ||
                 (x1 == x2 && y1 == y2 + 1) ||
                 (x1 == x2 - 1 && y1 == y2) ||
@@ -2440,26 +2467,26 @@ static u16 GetBerryPestSpecies(u8 berryId)
 {
 #if OW_BERRY_PESTS == TRUE
     const struct Berry *berry = GetBerryInfo(berryId);
-    switch(berry->color)
+    switch (berry->color)
     {
-        case BERRY_COLOR_RED:
-            return P_FAMILY_LEDYBA ? SPECIES_LEDYBA : SPECIES_NONE;
-            break;
-        case BERRY_COLOR_BLUE:
-            return P_FAMILY_VOLBEAT_ILLUMISE ? SPECIES_VOLBEAT : SPECIES_NONE;
-            break;
-        case BERRY_COLOR_PURPLE:
-            return P_FAMILY_VOLBEAT_ILLUMISE ? SPECIES_ILLUMISE : SPECIES_NONE;
-            break;
-        case BERRY_COLOR_GREEN:
-            return P_FAMILY_BURMY ? SPECIES_BURMY_PLANT : SPECIES_NONE;
-            break;
-        case BERRY_COLOR_YELLOW:
-            return P_FAMILY_COMBEE ? SPECIES_COMBEE : SPECIES_NONE;
-            break;
-        case BERRY_COLOR_PINK:
-            return P_FAMILY_SCATTERBUG ? SPECIES_SPEWPA : SPECIES_NONE;
-            break;
+    case BERRY_COLOR_RED:
+        return P_FAMILY_LEDYBA ? SPECIES_LEDYBA : SPECIES_NONE;
+        break;
+    case BERRY_COLOR_BLUE:
+        return P_FAMILY_VOLBEAT_ILLUMISE ? SPECIES_VOLBEAT : SPECIES_NONE;
+        break;
+    case BERRY_COLOR_PURPLE:
+        return P_FAMILY_VOLBEAT_ILLUMISE ? SPECIES_ILLUMISE : SPECIES_NONE;
+        break;
+    case BERRY_COLOR_GREEN:
+        return P_FAMILY_BURMY ? SPECIES_BURMY_PLANT : SPECIES_NONE;
+        break;
+    case BERRY_COLOR_YELLOW:
+        return P_FAMILY_COMBEE ? SPECIES_COMBEE : SPECIES_NONE;
+        break;
+    case BERRY_COLOR_PINK:
+        return P_FAMILY_SCATTERBUG ? SPECIES_SPEWPA : SPECIES_NONE;
+        break;
     }
 #endif
     return SPECIES_NONE;

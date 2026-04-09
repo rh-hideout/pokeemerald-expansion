@@ -24,6 +24,20 @@ SINGLE_BATTLE_TEST("Air Balloon prevents the holder from taking damage from grou
     }
 }
 
+SINGLE_BATTLE_TEST("Air Balloon only displays entry message when user switches in")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_AIR_BALLOON); };
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { SWITCH(opponent, 1); }
+    } SCENE {
+        MESSAGE("Wobbuffet floats in the air with its Air Balloon!");
+        NOT MESSAGE("Wobbuffet floats in the air with its Air Balloon!");
+    }
+}
+
 SINGLE_BATTLE_TEST("Air Balloon pops when the holder is hit by a move that is not ground type")
 {
     GIVEN {

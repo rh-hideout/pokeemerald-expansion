@@ -124,3 +124,21 @@ DOUBLE_BATTLE_TEST("Unnerve stops applying on death but applies on revive")
     }
 
 }
+
+SINGLE_BATTLE_TEST("Unnerve activates before other switch in abilities regardless of Speed")
+{
+    u32 speed = 0;
+
+    PARAMETRIZE { speed = 50; }
+    PARAMETRIZE { speed = 150; }
+
+    GIVEN {
+        PLAYER(SPECIES_PINSIR) { Speed(100); Ability(ABILITY_MOLD_BREAKER); }
+        OPPONENT(SPECIES_JOLTIK) { Speed(speed); Ability(ABILITY_UNNERVE); }
+    } WHEN {
+        TURN {}
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_UNNERVE);
+        ABILITY_POPUP(player, ABILITY_MOLD_BREAKER);
+    }
+}

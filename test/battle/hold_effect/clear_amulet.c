@@ -31,7 +31,7 @@ SINGLE_BATTLE_TEST("Clear Amulet prevents Intimidate")
 
 SINGLE_BATTLE_TEST("Clear Amulet prevents stat reducing effects")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_GROWL; }
     PARAMETRIZE { move = MOVE_LEER; }
@@ -61,7 +61,7 @@ SINGLE_BATTLE_TEST("Clear Amulet prevents stat reducing effects")
 
 SINGLE_BATTLE_TEST("Clear Amulet prevents secondary effects that reduce stats")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_AURORA_BEAM; }
     PARAMETRIZE { move = MOVE_ROCK_SMASH; }
@@ -91,7 +91,7 @@ SINGLE_BATTLE_TEST("Clear Amulet prevents secondary effects that reduce stats")
 
 SINGLE_BATTLE_TEST("Clear Amulet protects from Protect's secondary effects")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_SPIKY_SHIELD; }
     PARAMETRIZE { move = MOVE_BANEFUL_BUNKER; }

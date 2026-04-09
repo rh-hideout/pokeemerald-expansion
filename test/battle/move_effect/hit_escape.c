@@ -106,7 +106,7 @@ SINGLE_BATTLE_TEST("Hit Escape: U-turn switches the user out after Ice Face acti
         TURN { MOVE(player, MOVE_U_TURN); SEND_OUT(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, player);
-        HP_BAR(opponent);
+        NOT HP_BAR(opponent);
         ABILITY_POPUP(opponent, ABILITY_ICE_FACE);
         MESSAGE("The opposing Eiscue transformed!");
         SEND_IN_MESSAGE("Wynaut");
@@ -205,5 +205,19 @@ SINGLE_BATTLE_TEST("Hit Escape: U-turn will fail to switch if the user faints")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, player);
         HP_BAR(opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Hit Escape: U-turn will switch if the target is behind a Substitute")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_U_TURN); SEND_OUT(opponent, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, opponent);
     }
 }

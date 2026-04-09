@@ -61,7 +61,7 @@ struct ListMenuTemplate
 {
     const struct ListMenuItem *items;
     void (*moveCursorFunc)(s32 itemIndex, bool8 onInit, struct ListMenu *list);
-    void (*itemPrintFunc)(u8 windowId, u32 itemId, u8 y);
+    void (*itemPrintFunc)(u8 windowId, u32 instanceId, u8 y);
     u32 totalItems:12;
     u32 maxShowed:12;
     u32 textNarrowWidth:8;

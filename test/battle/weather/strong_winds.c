@@ -3,7 +3,7 @@
 
 DOUBLE_BATTLE_TEST("Strong winds remove Flying-type weaknesses of all battlers") // Electric, Ice, Rock
 {
-    u16 move;
+    enum Move move;
     bool32 targetPlayer;
 
     PARAMETRIZE { move = MOVE_THUNDER_SHOCK; targetPlayer = TRUE; }
@@ -53,7 +53,7 @@ DOUBLE_BATTLE_TEST("Strong winds remove Flying-type weaknesses of all battlers")
 
 DOUBLE_BATTLE_TEST("Strong winds remove Flying-type weaknesses of all battlers - Inverse Battle", s16 damagePlayer, s16 damageOpponent) // Bug, Fighting, Grass
 {
-    u16 move;
+    enum Move move;
     bool32 strongWinds;
 
     PARAMETRIZE { move = MOVE_BUG_BITE; strongWinds = FALSE; }
@@ -171,7 +171,7 @@ SINGLE_BATTLE_TEST("Strong winds don't affect Stealth Rock's damage")
 
 SINGLE_BATTLE_TEST("Strong winds block weather-setting moves")
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_SUNNY_DAY; }
     PARAMETRIZE { move = MOVE_RAIN_DANCE; }
     PARAMETRIZE { move = MOVE_SANDSTORM; }
@@ -179,11 +179,12 @@ SINGLE_BATTLE_TEST("Strong winds block weather-setting moves")
     PARAMETRIZE { move = MOVE_SNOWSCAPE; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SUNNY_DAY) == EFFECT_SUNNY_DAY);
-        ASSUME(GetMoveEffect(MOVE_RAIN_DANCE) == EFFECT_RAIN_DANCE);
-        ASSUME(GetMoveEffect(MOVE_SANDSTORM) == EFFECT_SANDSTORM);
-        ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_HAIL);
-        ASSUME(GetMoveEffect(MOVE_SNOWSCAPE) == EFFECT_SNOWSCAPE);
+        ASSUME(GetMoveEffect(move) == EFFECT_WEATHER);
+        ASSUME(GetMoveWeatherType(MOVE_SUNNY_DAY) == BATTLE_WEATHER_SUN);
+        ASSUME(GetMoveWeatherType(MOVE_RAIN_DANCE) == BATTLE_WEATHER_RAIN);
+        ASSUME(GetMoveWeatherType(MOVE_SANDSTORM) == BATTLE_WEATHER_SANDSTORM);
+        ASSUME(GetMoveWeatherType(MOVE_HAIL) == BATTLE_WEATHER_HAIL);
+        ASSUME(GetMoveWeatherType(MOVE_SNOWSCAPE) == BATTLE_WEATHER_SNOW);
         PLAYER(SPECIES_RAYQUAZA) { Ability(ABILITY_DELTA_STREAM); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

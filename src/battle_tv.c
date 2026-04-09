@@ -15,8 +15,8 @@ static bool8 IsNotSpecialBattleString(enum StringID stringId);
 static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3);
 static void TrySetBattleSeminarShow(void);
 static void AddPointsOnFainting(void);
-static void AddPointsBasedOnWeather(u16 weatherFlags, u16 move, u8 moveSlot);
-static bool8 ShouldCalculateDamage(u16 move, s32 *dmg, u16 *powerOverride);
+static void AddPointsBasedOnWeather(u16 weatherFlags, enum Move move, u8 moveSlot);
+static bool8 ShouldCalculateDamage(enum Move move, s32 *dmg, u16 *powerOverride);
 
 #define TABLE_END ((u16)-1)
 
@@ -192,7 +192,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
     case STRINGID_NOTVERYEFFECTIVE:
     case STRINGID_NOTVERYEFFECTIVETWOFOES:
         AddMovePoints(PTS_EFFECTIVENESS, moveSlot, 1, 0);
-        if (!(gBattleTypeFlags & BATTLE_TYPE_LINK) && GetMonData(defMon, MON_DATA_HP, NULL) != 0)
+        if (!(gBattleTypeFlags & BATTLE_TYPE_LINK) && GetMonData(defMon, MON_DATA_HP) != 0)
             TrySetBattleSeminarShow();
         break;
     case STRINGID_SUPEREFFECTIVE:
@@ -315,7 +315,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
         tvPtr->pos[defSide][defFlank].curseMoveSlot = moveSlot;
         break;
     case STRINGID_PKMNAFFLICTEDBYCURSE:
-        if (GetMonData(atkMon, MON_DATA_HP, NULL)
+        if (GetMonData(atkMon, MON_DATA_HP)
             && tvPtr->pos[atkSide][atkFlank].curseMonId != 0)
         {
             AddMovePoints(PTS_STATUS_DMG, 0, tvPtr->pos[atkSide][atkFlank].curseMonId - 1, tvPtr->pos[atkSide][atkFlank].curseMoveSlot);
@@ -340,7 +340,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
         tvPtr->pos[defSide][defFlank].nightmareMoveSlot = moveSlot;
         break;
     case STRINGID_PKMNLOCKEDINNIGHTMARE:
-        if (GetMonData(atkMon, MON_DATA_HP, NULL) != 0
+        if (GetMonData(atkMon, MON_DATA_HP) != 0
             && tvPtr->pos[atkSide][atkFlank].nightmareMonId != 0)
         {
             AddMovePoints(PTS_STATUS_DMG, 5, tvPtr->pos[atkSide][atkFlank].nightmareMonId - 1, tvPtr->pos[atkSide][atkFlank].nightmareMoveSlot);
@@ -357,7 +357,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
         tvPtr->pos[defSide][defFlank].wrapMoveSlot = moveSlot;
         break;
     case STRINGID_PKMNHURTBY:
-        if (GetMonData(atkMon, MON_DATA_HP, NULL) != 0
+        if (GetMonData(atkMon, MON_DATA_HP) != 0
             && tvPtr->pos[atkSide][atkFlank].wrapMonId != 0)
         {
             AddMovePoints(PTS_STATUS_DMG, 6, tvPtr->pos[atkSide][atkFlank].wrapMonId - 1, tvPtr->pos[atkSide][atkFlank].wrapMoveSlot);
@@ -370,7 +370,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
         tvPtr->mon[effSide][gBattlerPartyIndexes[gEffectBattler]].brnMoveSlot = moveSlot;
         break;
     case STRINGID_PKMNHURTBYBURN:
-        if (GetMonData(atkMon, MON_DATA_HP, NULL) != 0)
+        if (GetMonData(atkMon, MON_DATA_HP) != 0)
         {
             if (tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].brnMonId != 0)
                 AddMovePoints(PTS_STATUS_DMG, 4, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].brnMonId - 1, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].brnMoveSlot);
@@ -387,7 +387,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
         tvPtr->mon[effSide][gBattlerPartyIndexes[gEffectBattler]].badPsnMoveSlot = moveSlot;
         break;
     case STRINGID_PKMNHURTBYPOISON:
-        if (GetMonData(atkMon, MON_DATA_HP, NULL) != 0)
+        if (GetMonData(atkMon, MON_DATA_HP) != 0)
         {
             if (tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].psnMonId != 0)
                 AddMovePoints(PTS_STATUS_DMG, 2, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].psnMonId - 1, tvPtr->mon[atkSide][gBattlerPartyIndexes[gBattlerAttacker]].psnMoveSlot);
@@ -577,7 +577,7 @@ static bool8 IsNotSpecialBattleString(enum StringID stringId)
         return FALSE;
 }
 
-void BattleTv_SetDataBasedOnMove(u16 move, u16 weatherFlags, struct DisableStruct *disableStructPtr)
+void BattleTv_SetDataBasedOnMove(enum Move move, u16 weatherFlags)
 {
     struct BattleTv *tvPtr;
     u32 atkSide, defSide;
@@ -611,8 +611,8 @@ void BattleTv_SetDataBasedOnMove(u16 move, u16 weatherFlags, struct DisableStruc
         tvPtr->side[atkSide].wishMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
         tvPtr->side[atkSide].wishMoveSlot = moveSlot;
     }
-    enum BattleMoveEffects effect = GetMoveEffect(move);
-    if (effect == EFFECT_EXPLOSION || effect == EFFECT_MISTY_EXPLOSION)
+
+    if (IsExplosionMove(move))
     {
         tvPtr->side[atkSide ^ BIT_SIDE].explosionMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
         tvPtr->side[atkSide ^ BIT_SIDE].explosionMoveSlot = moveSlot;
@@ -666,8 +666,8 @@ void TryPutLinkBattleTvShowOnAir(void)
     struct BattleTvMovePoints *movePoints = NULL;
     u8 countPlayer = 0, countOpponent = 0;
     s16 sum = 0;
-    u16 species = 0;
-    u16 move = MOVE_NONE;
+    u16 species = SPECIES_NONE;
+    enum Move move = MOVE_NONE;
     s32 i, j;
     int zero = 0, one = 1; //needed for matching
 
@@ -677,9 +677,9 @@ void TryPutLinkBattleTvShowOnAir(void)
     movePoints = &gBattleStruct->tvMovePoints;
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL) != SPECIES_NONE)
+        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) != SPECIES_NONE)
             countPlayer++;
-        if (GetMonData(&gEnemyParty[i], MON_DATA_SPECIES, NULL) != SPECIES_NONE)
+        if (GetMonData(&gEnemyParty[i], MON_DATA_SPECIES) != SPECIES_NONE)
             countOpponent++;
     }
 
@@ -688,8 +688,8 @@ void TryPutLinkBattleTvShowOnAir(void)
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL);
-        if (species != SPECIES_NONE && !GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG, NULL))
+        species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES);
+        if (species != SPECIES_NONE && !GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG))
         {
             for (sum = 0, j = 0; j < MAX_MON_MOVES; j++)
                 sum += movePoints->points[zero][i * 4 + j];
@@ -702,15 +702,15 @@ void TryPutLinkBattleTvShowOnAir(void)
             }
         }
 
-        species = GetMonData(&gEnemyParty[i], MON_DATA_SPECIES, NULL);
-        if (species != SPECIES_NONE && !GetMonData(&gEnemyParty[i], MON_DATA_IS_EGG, NULL))
+        species = GetMonData(&gEnemyParty[i], MON_DATA_SPECIES);
+        if (species != SPECIES_NONE && !GetMonData(&gEnemyParty[i], MON_DATA_IS_EGG))
         {
             for (sum = 0, j = 0; j < MAX_MON_MOVES; j++)
                 sum += movePoints->points[one][i * 4 + j];
 
             if (opponentBestSum == sum)
             {
-                if (GetMonData(&gEnemyParty[i], MON_DATA_EXP, NULL) > GetMonData(&gEnemyParty[opponentBestMonId], MON_DATA_EXP, NULL))
+                if (GetMonData(&gEnemyParty[i], MON_DATA_EXP) > GetMonData(&gEnemyParty[opponentBestMonId], MON_DATA_EXP))
                 {
                     opponentBestMonId = i;
                     opponentBestSum = sum;
@@ -735,7 +735,7 @@ void TryPutLinkBattleTvShowOnAir(void)
         }
     }
 
-    move = GetMonData(&gPlayerParty[playerBestMonId], MON_DATA_MOVE1 + i, NULL);
+    move = GetMonData(&gPlayerParty[playerBestMonId], MON_DATA_MOVE1 + i);
     if (playerBestSum == 0 || move == MOVE_NONE)
         return;
 
@@ -816,13 +816,23 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
                 baseFromEffect += 3;
             break;
         case EFFECT_CONFUSE:
-            if (GetMoveTarget(move) == MOVE_TARGET_FOES_AND_ALLY)
+            if (GetBattlerMoveTargetType(gBattlerAttacker, move) == TARGET_FOES_AND_ALLY)
                 baseFromEffect += 2;
+            break;
+        case EFFECT_REFLECT_DAMAGE: // 5 for Counter, 6 for Mirror Coat
+            if (GetMoveReflectDamage_DamageCategories(move) == 1u << DAMAGE_CATEGORY_SPECIAL) // Mirror Coat
+                baseFromEffect++;
+            break;
+        case EFFECT_RECOIL:
+            if (GetMoveRecoil(move) > 0)
+                baseFromEffect++;
             break;
         default:
             break;
         }
-        switch(GetMoveNonVolatileStatus(arg2))
+
+        // Non-volatile statuses
+        switch (GetMoveNonVolatileStatus(arg2))
         {
         case MOVE_EFFECT_SLEEP:
             baseFromEffect++;
@@ -837,14 +847,16 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
         case MOVE_EFFECT_TOXIC:
             baseFromEffect += 5;
             break;
+        default:
+            break;
         }
 
         // Guaranteed hit but without negative priority
         if (GetMoveAccuracy(move) == 0 && GetMovePriority(move) >= 0)
             baseFromEffect++;
-        // User recoil damage
-        if (GetMoveRecoil(move) > 0)
-            baseFromEffect++;
+        // // Explosion moves get 0 points in vanilla, so we deduct here from EFFECT_HIT's score of 1
+        if (IsExplosionMove(move) && baseFromEffect > 0)
+            baseFromEffect--;
 
         // Additional move effects in any move
         for (i = 0; i < GetMoveAdditionalEffectCount(move); i++)
@@ -852,6 +864,9 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
             const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(move, i);
             switch (additionalEffect->moveEffect)
             {
+            case MOVE_EFFECT_BREAK_SCREEN:
+                baseFromEffect += 1;
+                break;
             case MOVE_EFFECT_THRASH:
                 if (additionalEffect->self == TRUE)
                     baseFromEffect += 3;
@@ -1272,7 +1287,7 @@ static void TrySetBattleSeminarShow(void)
         powerOverride = 0;
         if (ShouldCalculateDamage(gCurrentMove, &dmgByMove[i], &powerOverride))
         {
-            struct DamageContext ctx = {0};
+            struct BattleContext ctx = {0};
             ctx.battlerAtk = gBattlerAttacker;
             ctx.battlerDef = gBattlerTarget;
             ctx.move = ctx.chosenMove = gCurrentMove;
@@ -1283,7 +1298,7 @@ static void TrySetBattleSeminarShow(void)
             ctx.isSelfInflicted = FALSE;
             ctx.fixedBasePower = powerOverride;
             dmgByMove[i] = CalculateMoveDamage(&ctx);
-            if (dmgByMove[i] == 0 && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
+            if (dmgByMove[i] == 0 && !IsBattlerUnaffectedByMove(gBattlerTarget))
                 dmgByMove[i] = 1;
         }
     }
@@ -1306,8 +1321,8 @@ static void TrySetBattleSeminarShow(void)
                     bestMoveId = i;
             }
 
-            opponentSpecies = GetMonData(GetBattlerMon(gBattlerTarget),   MON_DATA_SPECIES, NULL);
-            playerSpecies   = GetMonData(GetBattlerMon(gBattlerAttacker), MON_DATA_SPECIES, NULL);
+            opponentSpecies = GetMonData(GetBattlerMon(gBattlerTarget),   MON_DATA_SPECIES);
+            playerSpecies   = GetMonData(GetBattlerMon(gBattlerAttacker), MON_DATA_SPECIES);
             TryPutBattleSeminarOnAir(opponentSpecies, playerSpecies, gMoveSelectionCursor[gBattlerAttacker], gBattleMons[gBattlerAttacker].moves, gBattleMons[gBattlerAttacker].moves[bestMoveId]);
             break;
         }
@@ -1317,7 +1332,7 @@ static void TrySetBattleSeminarShow(void)
     gBattleStruct->moveResultFlags[gBattlerTarget] = storedMoveResultFlags;
 }
 
-static bool8 ShouldCalculateDamage(u16 move, s32 *dmg, u16 *powerOverride)
+static bool8 ShouldCalculateDamage(enum Move move, s32 *dmg, u16 *powerOverride)
 {
     if (IsBattleMoveStatus(move))
     {
@@ -1380,7 +1395,7 @@ void BattleTv_ClearExplosionFaintCause(void)
     }
 }
 
-u8 GetBattlerMoveSlotId(u8 battler, u16 move)
+u8 GetBattlerMoveSlotId(enum BattlerId battler, enum Move move)
 {
     s32 i;
     struct Pokemon *mon = GetBattlerMon(battler);
@@ -1390,7 +1405,7 @@ u8 GetBattlerMoveSlotId(u8 battler, u16 move)
     {
         if (i >= MAX_MON_MOVES)
             break;
-        if (GetMonData(mon, MON_DATA_MOVE1 + i, NULL) == move)
+        if (GetMonData(mon, MON_DATA_MOVE1 + i) == move)
             break;
         i++;
     }
@@ -1398,7 +1413,7 @@ u8 GetBattlerMoveSlotId(u8 battler, u16 move)
     return i;
 }
 
-static void AddPointsBasedOnWeather(u16 weatherFlags, u16 move, u8 moveSlot)
+static void AddPointsBasedOnWeather(u16 weatherFlags, enum Move move, u8 moveSlot)
 {
     if (weatherFlags & B_WEATHER_RAIN)
         AddMovePoints(PTS_RAIN, move, moveSlot, 0);
@@ -1406,6 +1421,6 @@ static void AddPointsBasedOnWeather(u16 weatherFlags, u16 move, u8 moveSlot)
         AddMovePoints(PTS_SUN, move, moveSlot, 0);
     else if (weatherFlags & B_WEATHER_SANDSTORM)
         AddMovePoints(PTS_SANDSTORM, move, moveSlot, 0);
-    else if (weatherFlags & (B_WEATHER_HAIL | B_WEATHER_SNOW))
+    else if (weatherFlags & B_WEATHER_ICY_ANY)
         AddMovePoints(PTS_HAIL_SNOW, move, moveSlot, 0);
 }

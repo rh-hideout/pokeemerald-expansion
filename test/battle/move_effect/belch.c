@@ -27,7 +27,7 @@ AI_SINGLE_BATTLE_TEST("AI: Belch has nonzero score after eating a berry")
 
 SINGLE_BATTLE_TEST("Belch cannot be used if the user has not eaten a berry")
 {
-    u16 item = 0;
+    enum Item item = ITEM_NONE;
     PARAMETRIZE { item = ITEM_NONE; }
     PARAMETRIZE { item = ITEM_ORAN_BERRY; }
     GIVEN {

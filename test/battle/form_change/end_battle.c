@@ -125,7 +125,7 @@ SINGLE_BATTLE_TEST("Meloetta returns to Aria form upon battle end after using Re
 SINGLE_BATTLE_TEST("Battle Bond Greninja returns to base form upon battle end after knocking out an opponent")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_BATTLE_BOND, GEN_8);
+        WITH_CONFIG(B_BATTLE_BOND, GEN_8);
         PLAYER(SPECIES_GRENINJA_BATTLE_BOND);
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -194,7 +194,7 @@ SINGLE_BATTLE_TEST("Mimikyu Busted reverts to Disguised form upon battle end aft
     PARAMETRIZE { species = SPECIES_MIMIKYU_DISGUISED; }
     PARAMETRIZE { species = SPECIES_MIMIKYU_TOTEM_DISGUISED; }
     GIVEN {
-        WITH_CONFIG(CONFIG_DISGUISE_HP_LOSS, GEN_7);
+        WITH_CONFIG(B_DISGUISE_HP_LOSS, GEN_7);
         PLAYER(species) { Ability(ABILITY_DISGUISE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -202,7 +202,7 @@ SINGLE_BATTLE_TEST("Mimikyu Busted reverts to Disguised form upon battle end aft
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_AERIAL_ACE, opponent);
         ABILITY_POPUP(player, ABILITY_DISGUISE);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE_DISGUISE, player);
     } THEN {
         EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), species);
     }
@@ -217,8 +217,8 @@ SINGLE_BATTLE_TEST("Cramorant reverts to base Form upon battle end after using S
         TURN { MOVE(player, MOVE_SURF); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE_INSTANT, player);
         HP_BAR(opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
     } THEN {
         EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_CRAMORANT);
     }
@@ -259,13 +259,13 @@ SINGLE_BATTLE_TEST("Morpeko Hangry reverts to Full Belly Form upon battle end af
 
 SINGLE_BATTLE_TEST("Ogerpon reverts to the correct form upon battle end after terastallizing")
 {
-    u32 species;
-    PARAMETRIZE { species = SPECIES_OGERPON_TEAL; }
-    PARAMETRIZE { species = SPECIES_OGERPON_WELLSPRING; }
-    PARAMETRIZE { species = SPECIES_OGERPON_HEARTHFLAME; }
-    PARAMETRIZE { species = SPECIES_OGERPON_CORNERSTONE; }
+    u32 species, item;
+    PARAMETRIZE { species = SPECIES_OGERPON_TEAL;        item = ITEM_NONE; }
+    PARAMETRIZE { species = SPECIES_OGERPON_WELLSPRING;  item = ITEM_WELLSPRING_MASK; }
+    PARAMETRIZE { species = SPECIES_OGERPON_HEARTHFLAME; item = ITEM_HEARTHFLAME_MASK; }
+    PARAMETRIZE { species = SPECIES_OGERPON_CORNERSTONE; item = ITEM_CORNERSTONE_MASK; }
     GIVEN {
-        PLAYER(species);
+        PLAYER(species) { Item(item); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
@@ -283,5 +283,30 @@ SINGLE_BATTLE_TEST("Terapagos reverts to the correct form upon battle end after 
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
     } THEN {
         EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_TERAPAGOS_NORMAL);
+    }
+}
+
+SINGLE_BATTLE_TEST("Power Construct Zygarde reverts to its original form upon battle end")
+{
+    u16 baseSpecies;
+    PARAMETRIZE { baseSpecies = SPECIES_ZYGARDE_10_POWER_CONSTRUCT; }
+    PARAMETRIZE { baseSpecies = SPECIES_ZYGARDE_50_POWER_CONSTRUCT; }
+
+    GIVEN {
+        PLAYER(baseSpecies)
+        {
+            Ability(ABILITY_POWER_CONSTRUCT);
+            HP((GetMonData(&PLAYER_PARTY[0], MON_DATA_MAX_HP) / 2) + 1);
+        }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        MESSAGE("You sense the presence of many!");
+        ABILITY_POPUP(player, ABILITY_POWER_CONSTRUCT);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_POWER_CONSTRUCT, player);
+
+    } THEN {
+        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), baseSpecies);
     }
 }
