@@ -102,7 +102,6 @@ SINGLE_BATTLE_TEST("Solar Beam does not need a charging turn if user has Mega So
     }
 }
 
-
 SINGLE_BATTLE_TEST("Mega Sol ignores Sandstorm's solarbeam power reduction, and its rock defense boost", s16 damage)
 {
     enum Ability ability;
