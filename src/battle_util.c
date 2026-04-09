@@ -4759,13 +4759,7 @@ bool32 IsMegaSol(enum BattlerId battler, enum Ability ability)
 {
     if (gBattleMons[battler].volatiles.gastroAcid)
         return FALSE;
-
-    if (ability == ABILITY_MEGA_SOL)
-    {
-        RecordAbilityBattle(battler, ability);
-        return TRUE;
-    }
-    return FALSE;
+    return IsAbilityAndRecord(battler, ability, ABILITY_MEGA_SOL);
 }
 
 bool32 IsMoldBreakerTypeAbility(enum BattlerId battler, enum Ability ability)
