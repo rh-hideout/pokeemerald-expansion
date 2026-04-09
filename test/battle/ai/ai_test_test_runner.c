@@ -217,3 +217,20 @@ AI_DOUBLE_BATTLE_TEST("TIE_BREAK_TARGET with TARGET_TIE_RANDOM randomizes AI tar
         MESSAGE("Wobbuffet fainted!");
     }
 }
+
+AI_MULTI_BATTLE_TEST("Celebrate does not need to be explicitly set in an AI test")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PARTNER(SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { Speed(3); }
+        OPPONENT_B(SPECIES_WOBBUFFET) { Speed(1); }
+    } WHEN {
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STRUGGLE, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STRUGGLE, opponentRight);
+    }
+}

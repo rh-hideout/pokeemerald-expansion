@@ -831,6 +831,7 @@ bool32 CanTriggerSpinEvolution()
     }
     if (gSpecialVar_0x8000 != EVO_NONE)
         return TRUE;
+
     return FALSE;
 }
 
@@ -1624,9 +1625,9 @@ bool8 PartyHasMonWithSurf(void)
     {
         for (i = 0; i < PARTY_SIZE; i++)
         {
-            if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) == SPECIES_NONE)
+            if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES) == SPECIES_NONE)
                 break;
-            if (MonKnowsMove(&gPlayerParty[i], MOVE_SURF))
+            if (MonKnowsMove(&gParties[B_TRAINER_0][i], MOVE_SURF))
                 return TRUE;
         }
     }
