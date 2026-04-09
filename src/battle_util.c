@@ -7990,6 +7990,12 @@ s32 CalculateMoveDamage(struct DamageContext *ctx)
 {
     s32 damage = 0;
 
+    for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
+    {
+        ctx->abilities[battler] = GetBattlerAbility(battler);
+        ctx->holdEffects[battler] = GetBattlerHoldEffect(battler);
+    }
+
     ctx->typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(ctx);
     ctx->isCrit = IsCriticalHit(ctx);
 
