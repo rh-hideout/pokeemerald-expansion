@@ -3,6 +3,8 @@
 
 SINGLE_BATTLE_TEST("Mega Sol multiplies the power of Fire-type moves by 1.5x", s16 damage)
 {
+    ASSUME(GetMoveType(MOVE_EMBER) == TYPE_FIRE);
+
     enum Ability ability;
     PARAMETRIZE { ability = ABILITY_FLAME_BODY;}
     PARAMETRIZE { ability = ABILITY_MEGA_SOL;}
@@ -21,11 +23,13 @@ SINGLE_BATTLE_TEST("Mega Sol multiplies the power of Fire-type moves by 1.5x", s
 
 SINGLE_BATTLE_TEST("Mega Sol halves the power of the user's Water-type moves", s16 damage)
 {
+
     enum Ability ability;
     PARAMETRIZE { ability = ABILITY_FLAME_BODY;}
     PARAMETRIZE { ability = ABILITY_MEGA_SOL;}
 
     GIVEN {
+        ASSUME(GetMoveType(MOVE_WATER_GUN) == TYPE_WATER);
         PLAYER(SPECIES_MEGANIUM) { Ability(ability);}
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -40,11 +44,13 @@ SINGLE_BATTLE_TEST("Mega Sol halves the power of the user's Water-type moves", s
 
 SINGLE_BATTLE_TEST("Weather Ball doubles its power and turns to a Fire-type move if user has Mega Sol", s16 damage)
 {
+
     enum Ability ability;
     PARAMETRIZE { ability = ABILITY_FLAME_BODY;}
     PARAMETRIZE { ability = ABILITY_MEGA_SOL;}
 
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_WEATHER_BALL) == EFFECT_WEATHER_BALL);
         PLAYER(SPECIES_DARUMAKA_GALAR) { Ability(ability);}
         OPPONENT(SPECIES_PINSIR);
     } WHEN {
@@ -59,6 +65,7 @@ SINGLE_BATTLE_TEST("Weather Ball doubles its power and turns to a Fire-type move
 SINGLE_BATTLE_TEST("Synthesis recovers 2/3 of the user's max HP if user has Mega Sol (Gen3+)")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SYNTHESIS) == EFFECT_SYNTHESIS);
         WITH_CONFIG(B_TIME_OF_DAY_HEALING_MOVES, GEN_3);
         PLAYER(SPECIES_MEGANIUM) { HP(1); MaxHP(300); Ability(ABILITY_MEGA_SOL);  }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -77,6 +84,8 @@ SINGLE_BATTLE_TEST("Solar Beam does not need a charging turn if user has Mega So
     PARAMETRIZE { ability = ABILITY_FLAME_BODY; }
 
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SOLARBEAM) == EFFECT_SOLARBEAM);
+        ASSUME(GetMoveType(MOVE_SOLARBEAM) == TYPE_GRASS);
         PLAYER(SPECIES_MEGANIUM) { Ability(ability); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -102,6 +111,8 @@ SINGLE_BATTLE_TEST("Mega Sol ignores Sandstorm's solarbeam power reduction, and 
     PARAMETRIZE { ability = ABILITY_MEGA_SOL;}
 
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SOLARBEAM) == EFFECT_SOLARBEAM);
+        ASSUME(GetMoveType(MOVE_SOLARBEAM) == TYPE_GRASS);
         PLAYER(SPECIES_SUNKERN) { Ability(ability);}
         OPPONENT(SPECIES_BASTIODON) { Ability(ABILITY_SAND_STREAM);}
     } WHEN {
