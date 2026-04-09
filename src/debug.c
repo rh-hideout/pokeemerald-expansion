@@ -1584,6 +1584,7 @@ static void DebugAction_Util_Warp_SelectWarp(u8 taskId)
         DoWarp();
         ResetInitialPlayerAvatarState();
         DebugAction_DestroyExtraWindow(taskId);
+        ScriptContext_Stop();
     }
     else if (JOY_NEW(B_BUTTON))
     {

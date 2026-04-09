@@ -685,9 +685,6 @@ void Task_WarpAndLoadMap(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
 
-    //if a scripts ends while the warp is happening, control gets released but we want to keep the user locked
-    if (!ArePlayerFieldControlsLocked())
-        LockPlayerFieldControls();
     switch (task->tState)
     {
     case 0:
