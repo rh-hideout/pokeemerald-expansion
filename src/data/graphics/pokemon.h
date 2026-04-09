@@ -1160,10 +1160,10 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS && OW_BATTLE_ONLY_FORMS
 
-//    const u32 gMonFrontPic_RaichuMegaY[] = INCBIN_U32("graphics/pokemon/raichu/mega_y/front.4bpp.smol");
-//    const u16 gMonPalette_RaichuMegaY[] = INCBIN_U16("graphics/pokemon/raichu/mega_y/normal.gbapal");
-//    const u32 gMonBackPic_RaichuMegaY[] = INCBIN_U32("graphics/pokemon/raichu/mega_y/back.4bpp.smol");
-//    const u16 gMonShinyPalette_RaichuMegaY[] = INCBIN_U16("graphics/pokemon/raichu/mega_y/shiny.gbapal");
+    const u32 gMonFrontPic_RaichuMegaY[] = INCBIN_U32("graphics/pokemon/raichu/mega_y/front.4bpp.smol");
+    const u16 gMonPalette_RaichuMegaY[] = INCBIN_U16("graphics/pokemon/raichu/mega_y/normal.gbapal");
+    const u32 gMonBackPic_RaichuMegaY[] = INCBIN_U32("graphics/pokemon/raichu/mega_y/back.4bpp.smol");
+    const u16 gMonShinyPalette_RaichuMegaY[] = INCBIN_U16("graphics/pokemon/raichu/mega_y/shiny.gbapal");
     const u8 gMonIcon_RaichuMegaY[] = INCBIN_U8("graphics/pokemon/raichu/mega_y/icon.4bpp");
 #if OW_POKEMON_OBJECT_EVENTS && OW_BATTLE_ONLY_FORMS
 //    const u32 gObjectEventPic_RaichuMegaY[] = INCBIN_COMP("graphics/pokemon/raichu/mega_y/overworld.4bpp");
@@ -16313,10 +16313,10 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //OW_POKEMON_OBJECT_EVENTS
 
 #if P_GEN_9_MEGA_EVOLUTIONS
-//    const u32 gMonFrontPic_EmboarMega[] = INCBIN_U32("graphics/pokemon/emboar/mega/front.4bpp.smol");
-//    const u16 gMonPalette_EmboarMega[] = INCBIN_U16("graphics/pokemon/emboar/mega/normal.gbapal");
-//    const u32 gMonBackPic_EmboarMega[] = INCBIN_U32("graphics/pokemon/emboar/mega/back.4bpp.smol");
-//    const u16 gMonShinyPalette_EmboarMega[] = INCBIN_U16("graphics/pokemon/emboar/mega/shiny.gbapal");
+    const u32 gMonFrontPic_EmboarMega[] = INCBIN_U32("graphics/pokemon/emboar/mega/front.4bpp.smol");
+    const u16 gMonPalette_EmboarMega[] = INCBIN_U16("graphics/pokemon/emboar/mega/normal.gbapal");
+    const u32 gMonBackPic_EmboarMega[] = INCBIN_U32("graphics/pokemon/emboar/mega/back.4bpp.smol");
+    const u16 gMonShinyPalette_EmboarMega[] = INCBIN_U16("graphics/pokemon/emboar/mega/shiny.gbapal");
     const u8 gMonIcon_EmboarMega[] = INCBIN_U8("graphics/pokemon/emboar/mega/icon.4bpp");
 #if OW_POKEMON_OBJECT_EVENTS && OW_BATTLE_ONLY_FORMS
 //    const u32 gObjectEventPic_EmboarMega[] = INCBIN_COMP("graphics/pokemon/emboar/mega/overworld.4bpp");
@@ -18456,10 +18456,10 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //OW_POKEMON_OBJECT_EVENTS
 
 #if P_GEN_9_MEGA_EVOLUTIONS
-//    const u32 gMonFrontPic_EelektrossMega[] = INCBIN_U32("graphics/pokemon/eelektross/mega/front.4bpp.smol");
-//    const u16 gMonPalette_EelektrossMega[] = INCBIN_U16("graphics/pokemon/eelektross/mega/normal.gbapal");
-//    const u32 gMonBackPic_EelektrossMega[] = INCBIN_U32("graphics/pokemon/eelektross/mega/back.4bpp.smol");
-//    const u16 gMonShinyPalette_EelektrossMega[] = INCBIN_U16("graphics/pokemon/eelektross/mega/shiny.gbapal");
+    const u32 gMonFrontPic_EelektrossMega[] = INCBIN_U32("graphics/pokemon/eelektross/mega/front.4bpp.smol");
+    const u16 gMonPalette_EelektrossMega[] = INCBIN_U16("graphics/pokemon/eelektross/mega/normal.gbapal");
+    const u32 gMonBackPic_EelektrossMega[] = INCBIN_U32("graphics/pokemon/eelektross/mega/back.4bpp.smol");
+    const u16 gMonShinyPalette_EelektrossMega[] = INCBIN_U16("graphics/pokemon/eelektross/mega/shiny.gbapal");
     const u8 gMonIcon_EelektrossMega[] = INCBIN_U8("graphics/pokemon/eelektross/mega/icon.4bpp");
 #if OW_POKEMON_OBJECT_EVENTS && OW_BATTLE_ONLY_FORMS
 //    const u32 gObjectEventPic_EelektrossMega[] = INCBIN_COMP("graphics/pokemon/eelektross/mega/overworld.4bpp");
@@ -18825,10 +18825,10 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //OW_POKEMON_OBJECT_EVENTS
 
 #if P_GEN_9_MEGA_EVOLUTIONS
-//    const u32 gMonFrontPic_GolurkMega[] = INCBIN_U32("graphics/pokemon/Golurk/mega/front.4bpp.smol");
-//    const u16 gMonPalette_GolurkMega[] = INCBIN_U16("graphics/pokemon/golurk/mega/normal.gbapal");
-//    const u32 gMonBackPic_GolurkMega[] = INCBIN_U32("graphics/pokemon/golurk/mega/back.4bpp.smol");
-//    const u16 gMonShinyPalette_GolurkMega[] = INCBIN_U16("graphics/pokemon/golurk/mega/shiny.gbapal");
+    const u32 gMonFrontPic_GolurkMega[] = INCBIN_U32("graphics/pokemon/golurk/mega/front.4bpp.smol");
+    const u16 gMonPalette_GolurkMega[] = INCBIN_U16("graphics/pokemon/golurk/mega/normal.gbapal");
+    const u32 gMonBackPic_GolurkMega[] = INCBIN_U32("graphics/pokemon/golurk/mega/back.4bpp.smol");
+    const u16 gMonShinyPalette_GolurkMega[] = INCBIN_U16("graphics/pokemon/golurk/mega/shiny.gbapal");
     const u8 gMonIcon_GolurkMega[] = INCBIN_U8("graphics/pokemon/golurk/mega/icon.4bpp");
 #if OW_POKEMON_OBJECT_EVENTS && OW_BATTLE_ONLY_FORMS
 //    const u32 gObjectEventPic_GolurkMega[] = INCBIN_COMP("graphics/pokemon/golurk/mega/overworld.4bpp");
@@ -21717,10 +21717,10 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //OW_POKEMON_OBJECT_EVENTS
 
 #if P_GEN_9_MEGA_EVOLUTIONS
-//    const u32 gMonFrontPic_CrabominableMega[] = INCBIN_U32("graphics/pokemon/crabominable/mega/front.4bpp.smol");
-//    const u16 gMonPalette_CrabominableMega[] = INCBIN_U16("graphics/pokemon/crabominable/mega/normal.gbapal");
-//    const u32 gMonBackPic_CrabominableMega[] = INCBIN_U32("graphics/pokemon/crabominable/mega/back.4bpp.smol");
-//    const u16 gMonShinyPalette_CrabominableMega[] = INCBIN_U16("graphics/pokemon/crabominable/mega/shiny.gbapal");
+    const u32 gMonFrontPic_CrabominableMega[] = INCBIN_U32("graphics/pokemon/crabominable/mega/front.4bpp.smol");
+    const u16 gMonPalette_CrabominableMega[] = INCBIN_U16("graphics/pokemon/crabominable/mega/normal.gbapal");
+    const u32 gMonBackPic_CrabominableMega[] = INCBIN_U32("graphics/pokemon/crabominable/mega/back.4bpp.smol");
+    const u16 gMonShinyPalette_CrabominableMega[] = INCBIN_U16("graphics/pokemon/crabominable/mega/shiny.gbapal");
     const u8 gMonIcon_CrabominableMega[] = INCBIN_U8("graphics/pokemon/crabominable/mega/icon.4bpp");
 #if OW_POKEMON_OBJECT_EVENTS && OW_BATTLE_ONLY_FORMS
 //    const u32 gObjectEventPic_CrabominableMega[] = INCBIN_COMP("graphics/pokemon/crabominable/mega/overworld.4bpp");
@@ -23047,10 +23047,10 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //OW_POKEMON_OBJECT_EVENTS
 
 #if P_GEN_9_MEGA_EVOLUTIONS
-//    const u32 gMonFrontPic_MagearnaMega[] = INCBIN_U32("graphics/pokemon/magearna/mega/front.4bpp.smol");
-//    const u16 gMonPalette_MagearnaMega[] = INCBIN_U16("graphics/pokemon/magearna/mega/normal.gbapal");
-//    const u32 gMonBackPic_MagearnaMega[] = INCBIN_U32("graphics/pokemon/magearna/mega/back.4bpp.smol");
-//    const u16 gMonShinyPalette_MagearnaMega[] = INCBIN_U16("graphics/pokemon/magearna/mega/shiny.gbapal");
+    const u32 gMonFrontPic_MagearnaMega[] = INCBIN_U32("graphics/pokemon/magearna/mega/front.4bpp.smol");
+    const u16 gMonPalette_MagearnaMega[] = INCBIN_U16("graphics/pokemon/magearna/mega/normal.gbapal");
+    const u32 gMonBackPic_MagearnaMega[] = INCBIN_U32("graphics/pokemon/magearna/mega/back.4bpp.smol");
+    const u16 gMonShinyPalette_MagearnaMega[] = INCBIN_U16("graphics/pokemon/magearna/mega/shiny.gbapal");
     const u8 gMonIcon_MagearnaMega[] = INCBIN_U8("graphics/pokemon/magearna/mega/icon.4bpp");
 #if OW_POKEMON_OBJECT_EVENTS && OW_BATTLE_ONLY_FORMS
 //    const u32 gObjectEventPic_MagearnaMega[] = INCBIN_COMP("graphics/pokemon/magearna/mega/overworld.4bpp");
@@ -23060,10 +23060,10 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS && OW_BATTLE_ONLY_FORMS
 
-//    const u32 gMonFrontPic_MagearnaOriginalMega[] = INCBIN_U32("graphics/pokemon/magearna/original_color/mega/front.4bpp.smol");
-//    const u16 gMonPalette_MagearnaOriginalMega[] = INCBIN_U16("graphics/pokemon/magearna/original_color/mega/normal.gbapal");
-//    const u32 gMonBackPic_MagearnaOriginalMega[] = INCBIN_U32("graphics/pokemon/magearna/original_color/mega/back.4bpp.smol");
-//    const u16 gMonShinyPalette_MagearnaOriginalMega[] = INCBIN_U16("graphics/pokemon/magearna/original_color/mega/shiny.gbapal");
+    const u32 gMonFrontPic_MagearnaOriginalMega[] = INCBIN_U32("graphics/pokemon/magearna/original_color/mega/front.4bpp.smol");
+    const u16 gMonPalette_MagearnaOriginalMega[] = INCBIN_U16("graphics/pokemon/magearna/original_color/mega/normal.gbapal");
+    const u32 gMonBackPic_MagearnaOriginalMega[] = INCBIN_U32("graphics/pokemon/magearna/original_color/mega/back.4bpp.smol");
+    const u16 gMonShinyPalette_MagearnaOriginalMega[] = INCBIN_U16("graphics/pokemon/magearna/original_color/mega/shiny.gbapal");
     const u8 gMonIcon_MagearnaOriginalMega[] = INCBIN_U8("graphics/pokemon/magearna/original_color/mega/icon.4bpp");
 #if OW_POKEMON_OBJECT_EVENTS && OW_BATTLE_ONLY_FORMS
 //    const u32 gObjectEventPic_MagearnaOriginalMega[] = INCBIN_COMP("graphics/pokemon/magearna/original_color/mega/overworld.4bpp");
@@ -26646,10 +26646,11 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //OW_POKEMON_OBJECT_EVENTS
 
 #if P_GEN_9_MEGA_EVOLUTIONS
-//    const u32 gMonFrontPic_TatsugiriCurlyMega[] = INCBIN_U32("graphics/pokemon/tatsugiri/mega/front.4bpp.smol");
-//    const u16 gMonPalette_TatsugiriCurlyMega[] = INCBIN_U16("graphics/pokemon/tatsugiri/mega/normal.gbapal");
-//    const u32 gMonBackPic_TatsugiriCurlyMega[] = INCBIN_U32("graphics/pokemon/tatsugiri/mega/back.4bpp.smol");
-//    const u16 gMonShinyPalette_TatsugiriCurlyMega[] = INCBIN_U16("graphics/pokemon/tatsugiri/mega/shiny.gbapal");
+    const u16 gMonPalette_TatsugiriMega[] = INCBIN_U16("graphics/pokemon/tatsugiri/mega/normal.gbapal");
+    const u16 gMonShinyPalette_TatsugiriMega[] = INCBIN_U16("graphics/pokemon/tatsugiri/mega/shiny.gbapal");
+
+    const u32 gMonFrontPic_TatsugiriCurlyMega[] = INCBIN_U32("graphics/pokemon/tatsugiri/mega/front.4bpp.smol");
+    const u32 gMonBackPic_TatsugiriCurlyMega[] = INCBIN_U32("graphics/pokemon/tatsugiri/mega/back.4bpp.smol");
     const u8 gMonIcon_TatsugiriCurlyMega[] = INCBIN_U8("graphics/pokemon/tatsugiri/mega/icon.4bpp");
 #if OW_POKEMON_OBJECT_EVENTS && OW_BATTLE_ONLY_FORMS
 //    const u32 gObjectEventPic_TatsugiriCurlyMega[] = INCBIN_COMP("graphics/pokemon/tatsugiri/mega/overworld.4bpp");
@@ -26659,10 +26660,8 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS && OW_BATTLE_ONLY_FORMS
 
-//    const u32 gMonFrontPic_TatsugiriDroopyMega[] = INCBIN_U32("graphics/pokemon/tatsugiri/droopy/mega/front.4bpp.smol");
-//    const u16 gMonPalette_TatsugiriDroopyMega[] = INCBIN_U16("graphics/pokemon/tatsugiri/droopy/mega/normal.gbapal");
-//    const u32 gMonBackPic_TatsugiriDroopyMega[] = INCBIN_U32("graphics/pokemon/tatsugiri/droopy/mega/back.4bpp.smol");
-//    const u16 gMonShinyPalette_TatsugiriDroopyMega[] = INCBIN_U16("graphics/pokemon/tatsugiri/droopy/mega/shiny.gbapal");
+    const u32 gMonFrontPic_TatsugiriDroopyMega[] = INCBIN_U32("graphics/pokemon/tatsugiri/droopy/mega/front.4bpp.smol");
+    const u32 gMonBackPic_TatsugiriDroopyMega[] = INCBIN_U32("graphics/pokemon/tatsugiri/droopy/mega/back.4bpp.smol");
     const u8 gMonIcon_TatsugiriDroopyMega[] = INCBIN_U8("graphics/pokemon/tatsugiri/droopy/mega/icon.4bpp");
 #if OW_POKEMON_OBJECT_EVENTS && OW_BATTLE_ONLY_FORMS
 //    const u32 gObjectEventPic_TatsugiriDroopyMega[] = INCBIN_COMP("graphics/pokemon/tatsugiri/droopy/mega/overworld.4bpp");
@@ -26672,10 +26671,8 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS && OW_BATTLE_ONLY_FORMS
 
-//    const u32 gMonFrontPic_TatsugiriStretchyMega[] = INCBIN_U32("graphics/pokemon/tatsugiri/stretchy/mega/front.4bpp.smol");
-//    const u16 gMonPalette_TatsugiriStretchyMega[] = INCBIN_U16("graphics/pokemon/tatsugiri/stretchy/mega/normal.gbapal");
-//    const u32 gMonBackPic_TatsugiriStretchyMega[] = INCBIN_U32("graphics/pokemon/tatsugiri/stretchy/mega/back.4bpp.smol");
-//    const u16 gMonShinyPalette_TatsugiriStretchyMega[] = INCBIN_U16("graphics/pokemon/tatsugiri/stretchy/mega/shiny.gbapal");
+    const u32 gMonFrontPic_TatsugiriStretchyMega[] = INCBIN_U32("graphics/pokemon/tatsugiri/stretchy/mega/front.4bpp.smol");
+    const u32 gMonBackPic_TatsugiriStretchyMega[] = INCBIN_U32("graphics/pokemon/tatsugiri/stretchy/mega/back.4bpp.smol");
     const u8 gMonIcon_TatsugiriStretchyMega[] = INCBIN_U8("graphics/pokemon/tatsugiri/stretchy/mega/icon.4bpp");
 #if OW_POKEMON_OBJECT_EVENTS && OW_BATTLE_ONLY_FORMS
 //    const u32 gObjectEventPic_TatsugiriStretchyMega[] = INCBIN_COMP("graphics/pokemon/tatsugiri/stretchy/mega/overworld.4bpp");
