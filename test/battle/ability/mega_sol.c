@@ -11,7 +11,7 @@ SINGLE_BATTLE_TEST("Mega Sol multiplies the power of Fire-type moves by 1.5x", s
     PARAMETRIZE { ability = ABILITY_FLAME_BODY;}
     PARAMETRIZE { ability = ABILITY_MEGA_SOL;}
     GIVEN {
-        PLAYER(SPECIES_LARVESTA) { Ability(ability);}
+        PLAYER(SPECIES_MEGANIUM) { Ability(ability);}
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_EMBER); }
@@ -30,7 +30,7 @@ SINGLE_BATTLE_TEST("Mega Sol multiplies the power of Water-type moves by 0.5x", 
     PARAMETRIZE { ability = ABILITY_MEGA_SOL;}
 
     GIVEN {
-        PLAYER(SPECIES_LARVESTA) { Ability(ability);}
+        PLAYER(SPECIES_MEGANIUM) { Ability(ability);}
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_WATER_GUN); }
@@ -83,7 +83,7 @@ SINGLE_BATTLE_TEST("Solar Beam does not need a charging turn if user has Mega So
     PARAMETRIZE { ability = ABILITY_FLAME_BODY; }
 
     GIVEN {
-        PLAYER(SPECIES_LARVESTA) { Ability(ability); }
+        PLAYER(SPECIES_MEGANIUM) { Ability(ability); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SOLAR_BEAM); }
@@ -92,11 +92,11 @@ SINGLE_BATTLE_TEST("Solar Beam does not need a charging turn if user has Mega So
         }
     } SCENE {
         if (ability == ABILITY_NONE) {
-            MESSAGE("Larvesta used Solar Beam!");
-            MESSAGE("Larvesta absorbed light!");
+            MESSAGE("Meganium used Solar Beam!");
+	    NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SOLAR_BEAM, player);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
         }
-        MESSAGE("Larvesta used Solar Beam!");
+        MESSAGE("Meganium used Solar Beam!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SOLAR_BEAM, player);
     }
 }
