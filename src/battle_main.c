@@ -3339,9 +3339,10 @@ void FaintClearSetData(enum BattlerId battler)
     gBattleStruct->lastTakenMoveFrom[battler][3] = 0;
     gBattleStruct->palaceFlags &= ~(1u << battler);
     if (battler == gBattlerAttacker)
+	{
         gBattleStruct->moldBreakerActive = FALSE;
         gBattleStruct->megaSolActive = FALSE;
-
+	}
     ClearPursuitValuesIfSet(battler);
 
     if (gBattleStruct->battlerState[battler].commanderSpecies != SPECIES_NONE)
