@@ -10,6 +10,8 @@
 #include "constants/battle_z_move_effects.h"
 #include "constants/moves.h"
 
+#define STAT_CHANGE_FORCE_MAX 7 // Used for belly drum as a way to show that stats are maxed
+
 // For defining EFFECT_HIT etc. with battle TV scores and flags etc.
 struct __attribute__((packed, aligned(2))) BattleMoveEffect
 {
@@ -34,7 +36,7 @@ struct AdditionalEffect
     u8 onChargeTurnOnly:1;
     u8 sheerForceOverride:1; // Handles edge cases for Sheer Force - if TRUE, boosts when it shouldn't, or doesn't boost when it should
     u8 preAttackEffect:1;
-    u8 onSide:1; // works only for stat changes
+    u8 onSide:1; // Refers to moves that have an effect on both opposing targets on a single target (see dmax stat drops moves). Works on stat drop moves only
     u8 padding:2;
 
     union PACKED {
@@ -89,7 +91,7 @@ struct MoveInfo
 {
     const u8 *name;
     const u8 *description;
-    enum BattleMoveEffects effect;
+    enum BattleMoveEffects effect:16;
     enum Type type:5;     // Up to 32
     enum DamageCategory category:2;
     u16 power:9;    // up to 511

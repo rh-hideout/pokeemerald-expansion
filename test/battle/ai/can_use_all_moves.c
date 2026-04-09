@@ -73,7 +73,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 1-100")
         effect = GetMoveEffect(j);
 
         // Stat raising effects are not meant to be used when you have only Splash.
-        if (IsStatRaisingEffect(effect))
+        if (IsStatRaisingMove(j))
             continue;
 
         switch (effect)
@@ -135,7 +135,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 101-200")
         effect = GetMoveEffect(j);
 
         // Stat raising effects are not meant to be used when you have only Splash.
-        if (IsStatRaisingEffect(effect))
+        if (IsStatRaisingMove(j))
             continue;
 
         switch (effect)
@@ -212,7 +212,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 201-300")
         effect = GetMoveEffect(j);
 
         // Stat raising effects are not meant to be used when you have only Splash.
-        if (IsStatRaisingEffect(effect))
+        if (IsStatRaisingMove(j))
             continue;
 
         switch (effect)
@@ -294,7 +294,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 301-400")
         effect = GetMoveEffect(j);
 
         // Stat raising effects are not meant to be used when you have only Splash.
-        if (IsStatRaisingEffect(effect))
+        if (IsStatRaisingMove(j))
             continue;
 
         switch (effect)
@@ -370,7 +370,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 401-500")
         effect = GetMoveEffect(j);
 
         // Stat raising effects are not meant to be used when you have only Splash.
-        if (IsStatRaisingEffect(effect))
+        if (IsStatRaisingMove(j))
             continue;
 
         switch (effect)
@@ -438,7 +438,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 501-600")
         effect = GetMoveEffect(j);
 
         // Stat raising effects are not meant to be used when you have only Splash.
-        if (IsStatRaisingEffect(effect))
+        if (IsStatRaisingMove(j))
             continue;
 
         switch (effect)
@@ -511,7 +511,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 601-700")
         effect = GetMoveEffect(j);
 
         // Stat raising effects are not meant to be used when you have only Splash.
-        if (IsStatRaisingEffect(effect))
+        if (IsStatRaisingMove(j))
             continue;
 
         switch (effect)
@@ -582,7 +582,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 701-800")
         effect = GetMoveEffect(j);
 
         // Stat raising effects are not meant to be used when you have only Splash.
-        if (IsStatRaisingEffect(effect))
+        if (IsStatRaisingMove(j))
             continue;
 
         switch (effect)
@@ -649,7 +649,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 801-900")
         effect = GetMoveEffect(j);
 
         // Stat raising effects are not meant to be used when you have only Splash.
-        if (IsStatRaisingEffect(effect))
+        if (IsStatRaisingMove(j))
             continue;
 
         switch (effect)

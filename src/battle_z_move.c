@@ -437,7 +437,7 @@ static void ZMoveSelectionDisplayMoveType(enum Move zMove, enum BattlerId battle
 void SetZEffect(const u8 *nextInstr)
 {
     u32 i;
-    u32 stat = STAT_ATK;
+    s32 stage = 0;
     enum ZEffect effect = GetMoveZEffect(gChosenMove);
 
     if (effect == Z_EFFECT_CURSE)
@@ -448,7 +448,7 @@ void SetZEffect(const u8 *nextInstr)
             effect = Z_EFFECT_ATK_UP_1;
     }
 
-    gBattleScripting.battler = gBattlerAttacker;
+    gBattleScripting.battler = gBattlerAttacker; // I forgot what this was for. Might be not needed. Will check later
 
     switch (effect)
     {
@@ -529,21 +529,60 @@ void SetZEffect(const u8 *nextInstr)
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_Z_HP_TRAP;
         gBattlescriptCurrInstr = BattleScript_ZEffectPrintString;
         break;
-    case Z_EFFECT_ATK_UP_1 ... Z_EFFECT_EVSN_UP_1:
-        stat = effect - Z_EFFECT_ATK_UP_1 + 1;
-        SetStatChange(gBattlerAttacker, stat, 1);
+    case Z_EFFECT_ATK_UP_1:
+    case Z_EFFECT_ATK_UP_2:
+    case Z_EFFECT_ATK_UP_3:
+        stage = effect - Z_EFFECT_ATK_UP_1 + 1;
+        SetStatChange(gBattlerAttacker, STAT_ATK, stage);
         BattleScriptPush(nextInstr);
         gBattlescriptCurrInstr = BattleScript_MoveEffectStatChange;
         break;
-    case Z_EFFECT_ATK_UP_2 ... Z_EFFECT_EVSN_UP_2:
-        stat = effect - Z_EFFECT_ATK_UP_2 + 1;
-        SetStatChange(gBattlerAttacker, stat, 2);
+    case Z_EFFECT_DEF_UP_1:
+    case Z_EFFECT_DEF_UP_2:
+    case Z_EFFECT_DEF_UP_3:
+        stage = effect - Z_EFFECT_DEF_UP_1 + 1;
+        SetStatChange(gBattlerAttacker, STAT_DEF, stage);
         BattleScriptPush(nextInstr);
         gBattlescriptCurrInstr = BattleScript_MoveEffectStatChange;
         break;
-    case Z_EFFECT_ATK_UP_3 ... Z_EFFECT_EVSN_UP_3:
-        stat = effect - Z_EFFECT_ATK_UP_3 + 1;
-        SetStatChange(gBattlerAttacker, stat, 3);
+    case Z_EFFECT_SPD_UP_1:
+    case Z_EFFECT_SPD_UP_2:
+    case Z_EFFECT_SPD_UP_3:
+        stage = effect - Z_EFFECT_SPD_UP_1 + 1;
+        SetStatChange(gBattlerAttacker, STAT_SPEED, stage);
+        BattleScriptPush(nextInstr);
+        gBattlescriptCurrInstr = BattleScript_MoveEffectStatChange;
+        break;
+    case Z_EFFECT_SPATK_UP_1:
+    case Z_EFFECT_SPATK_UP_2:
+    case Z_EFFECT_SPATK_UP_3:
+        stage = effect - Z_EFFECT_SPATK_UP_1 + 1;
+        SetStatChange(gBattlerAttacker, STAT_SPATK, stage);
+        BattleScriptPush(nextInstr);
+        gBattlescriptCurrInstr = BattleScript_MoveEffectStatChange;
+        break;
+    case Z_EFFECT_SPDEF_UP_1:
+    case Z_EFFECT_SPDEF_UP_2:
+    case Z_EFFECT_SPDEF_UP_3:
+        stage = effect - Z_EFFECT_SPDEF_UP_1 + 1;
+        SetStatChange(gBattlerAttacker, STAT_SPDEF, stage);
+        BattleScriptPush(nextInstr);
+        gBattlescriptCurrInstr = BattleScript_MoveEffectStatChange;
+        break;
+
+    case Z_EFFECT_ACC_UP_1:
+    case Z_EFFECT_ACC_UP_2:
+    case Z_EFFECT_ACC_UP_3:
+        stage = effect - Z_EFFECT_ACC_UP_1 + 1;
+        SetStatChange(gBattlerAttacker, STAT_ACC, stage);
+        BattleScriptPush(nextInstr);
+        gBattlescriptCurrInstr = BattleScript_MoveEffectStatChange;
+        break;
+    case Z_EFFECT_EVSN_UP_1:
+    case Z_EFFECT_EVSN_UP_2:
+    case Z_EFFECT_EVSN_UP_3:
+        stage = effect - Z_EFFECT_EVSN_UP_1 + 1;
+        SetStatChange(gBattlerAttacker, STAT_EVASION, stage);
         BattleScriptPush(nextInstr);
         gBattlescriptCurrInstr = BattleScript_MoveEffectStatChange;
         break;

@@ -3453,33 +3453,105 @@ void AssumeStatChange_(u32 sourceLine, u32 moveId, struct StatChangeAssumption a
     u32 numAdditionalEffects = GetMoveAdditionalEffectCount(moveId);
 
     if (asc.attack < 0 || asc.defense < 0 || asc.spAtk < 0 || asc.spDef < 0 || asc.speed < 0 || asc.accuracy < 0 || asc.evasion < 0)
-        ASSUME(MoveHasAdditionalEffect(MOVE_SPICY_EXTRACT, STAT_CHANGE_EFFECT_MINUS));
+        ASSUME(MoveHasAdditionalEffect(moveId, STAT_CHANGE_EFFECT_MINUS));
 
     if (asc.attack > 0 || asc.defense > 0 || asc.spAtk > 0 || asc.spDef > 0 || asc.speed > 0 || asc.accuracy > 0 || asc.evasion > 0)
-        ASSUME(MoveHasAdditionalEffect(MOVE_SPICY_EXTRACT, STAT_CHANGE_EFFECT_PLUS));
+        ASSUME(MoveHasAdditionalEffect(moveId, STAT_CHANGE_EFFECT_PLUS));
 
     for (u32 i = 0; i < numAdditionalEffects; i++)
     {
         const struct AdditionalEffect *effect = GetMoveAdditionalEffectById(moveId, i);
         if (effect->moveEffect == STAT_CHANGE_EFFECT_MINUS)
         {
-            ASSUME(asc.attack == (-1 * effect->attack));
-            ASSUME(asc.defense == (-1 * effect->defense));
-            ASSUME(asc.spAtk == (-1 * effect->spAtk));
-            ASSUME(asc.spDef == (-1 * effect->spDef));
-            ASSUME(asc.speed == (-1 * effect->speed));
-            ASSUME(asc.accuracy == (-1 * effect->accuracy));
-            ASSUME(asc.evasion == (-1 * effect->evasion));
+            if (asc.attack < 0)
+                ASSUME(asc.attack == (-1 * effect->attack));
+            if (asc.defense < 0)
+                ASSUME(asc.defense == (-1 * effect->defense));
+            if (asc.spAtk < 0)
+                ASSUME(asc.spAtk == (-1 * effect->spAtk));
+            if (asc.spDef < 0)
+                ASSUME(asc.spDef == (-1 * effect->spDef));
+            if (asc.speed < 0)
+                ASSUME(asc.speed == (-1 * effect->speed));
+            if (asc.accuracy < 0)
+                ASSUME(asc.accuracy == (-1 * effect->accuracy));
+            if (asc.evasion < 0)
+                ASSUME(asc.evasion == (-1 * effect->evasion));
         }
         else if (effect->moveEffect == STAT_CHANGE_EFFECT_PLUS)
         {
-            ASSUME(asc.attack == effect->attack);
-            ASSUME(asc.defense == effect->defense);
-            ASSUME(asc.spAtk == effect->spAtk);
-            ASSUME(asc.spDef == effect->spDef);
-            ASSUME(asc.speed == effect->speed);
-            ASSUME(asc.accuracy == effect->accuracy);
-            ASSUME(asc.evasion == effect->evasion);
+            if (asc.attack > 0)
+                ASSUME(asc.attack == effect->attack);
+            if (asc.defense > 0)
+                ASSUME(asc.defense == effect->defense);
+            if (asc.spAtk > 0)
+                ASSUME(asc.spAtk == effect->spAtk);
+            if (asc.spDef > 0)
+                ASSUME(asc.spDef == effect->spDef);
+            if (asc.speed > 0)
+                ASSUME(asc.speed == effect->speed);
+            if (asc.accuracy > 0)
+                ASSUME(asc.accuracy == effect->accuracy);
+            if (asc.evasion > 0)
+                ASSUME(asc.evasion == effect->evasion);
         }
     }
+}
+
+void AssumeMoveEffectStatChange_(u32 sourceLine, u32 moveId, struct StatChangeAssumption asc)
+{
+    u32 numAdditionalEffects = GetMoveAdditionalEffectCount(moveId);
+
+    // if (asc.attack < 0 || asc.defense < 0 || asc.spAtk < 0 || asc.spDef < 0 || asc.speed < 0 || asc.accuracy < 0 || asc.evasion < 0)
+    //     ASSUME(MoveHasAdditionalEffect(moveId, MOVE_EFFECT_STAT_MINUS));
+    //
+    // if (asc.attack > 0 || asc.defense > 0 || asc.spAtk > 0 || asc.spDef > 0 || asc.speed > 0 || asc.accuracy > 0 || asc.evasion > 0)
+    //     ASSUME(MoveHasAdditionalEffect(moveId, MOVE_EFFECT_STAT_PLUS));
+
+    u32 hasEffect = FALSE;
+    for (u32 i = 0; i < numAdditionalEffects; i++)
+    {
+        const struct AdditionalEffect *effect = GetMoveAdditionalEffectById(moveId, i);
+        if (effect->moveEffect == MOVE_EFFECT_STAT_MINUS)
+        {
+            hasEffect = TRUE;
+            if (asc.attack < 0)
+                ASSUME(asc.attack == (-1 * effect->attack));
+            if (asc.defense < 0)
+                ASSUME(asc.defense == (-1 * effect->defense));
+            if (asc.spAtk < 0)
+                ASSUME(asc.spAtk == (-1 * effect->spAtk));
+            if (asc.spDef < 0)
+                ASSUME(asc.spDef == (-1 * effect->spDef));
+            if (asc.speed < 0)
+                ASSUME(asc.speed == (-1 * effect->speed));
+            if (asc.accuracy < 0)
+                ASSUME(asc.accuracy == (-1 * effect->accuracy));
+            if (asc.evasion < 0)
+                ASSUME(asc.evasion == (-1 * effect->evasion));
+
+            ASSUME(asc.self == effect->self);
+        }
+        else if (effect->moveEffect == MOVE_EFFECT_STAT_PLUS)
+        {
+            hasEffect = TRUE;
+            if (asc.attack > 0)
+                ASSUME(asc.attack == effect->attack);
+            if (asc.defense > 0)
+                ASSUME(asc.defense == effect->defense);
+            if (asc.spAtk > 0)
+                ASSUME(asc.spAtk == effect->spAtk);
+            if (asc.spDef > 0)
+                ASSUME(asc.spDef == effect->spDef);
+            if (asc.speed > 0)
+                ASSUME(asc.speed == effect->speed);
+            if (asc.accuracy > 0)
+                ASSUME(asc.accuracy == effect->accuracy);
+            if (asc.evasion > 0)
+                ASSUME(asc.evasion == effect->evasion);
+
+            ASSUME(asc.self > 0 && asc.self == effect->self);
+        }
+    }
+    ASSUME(hasEffect == TRUE);
 }

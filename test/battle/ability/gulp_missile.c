@@ -8,7 +8,7 @@ SINGLE_BATTLE_TEST("Gulp Missile: Cramorant cannot change between Gorging and Gu
     PARAMETRIZE { species = SPECIES_CRAMORANT_GULPING; hp = 240; move = MOVE_BELLY_DRUM; }
     PARAMETRIZE { species = SPECIES_CRAMORANT_GORGING; hp = 120; move = MOVE_RECOVER; }
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_BELLY_DRUM) == EFFECT_STAT_CHANGE_HALF_HP);
+        ASSUME(GetMoveEffect(MOVE_BELLY_DRUM) == EFFECT_BELLY_DRUM);
         PLAYER(SPECIES_CRAMORANT) { HP(hp); MaxHP(250); Ability(ABILITY_GULP_MISSILE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

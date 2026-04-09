@@ -5,6 +5,8 @@
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_STOCKPILE) == EFFECT_STOCKPILE);
+    ASSUME_STAT_CHANGE(MOVE_STOCKPILE, defense: +1);
+    ASSUME_STAT_CHANGE(MOVE_STOCKPILE, spDef: +1);
     ASSUME(GetMoveEffect(MOVE_SWALLOW) == EFFECT_SWALLOW);
     ASSUME(GetMoveEffect(MOVE_SPIT_UP) == EFFECT_SPIT_UP);
 }
@@ -307,6 +309,26 @@ SINGLE_BATTLE_TEST("Spit Up's Stockpile's are romoved if hit into Protect")
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIT_UP, player);
     } THEN {
         EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(player->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Stockpile: When stats are moved, only the one's gained by stockpile will be removed")
+{
+    GIVEN {
+        ASSUME_STAT_CHANGE(MOVE_HARDEN, defense: +1);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_HARDEN); }
+        TURN { MOVE(player, MOVE_STOCKPILE); }
+        TURN { MOVE(player, MOVE_SPIT_UP); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HARDEN, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STOCKPILE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIT_UP, player);
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 1);
         EXPECT_EQ(player->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE);
     }
 }

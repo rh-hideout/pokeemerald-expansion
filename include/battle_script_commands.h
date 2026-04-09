@@ -39,6 +39,8 @@ bool32 IsSubstituteProtected(enum BattlerId battlerAtk, enum BattlerId battlerDe
 bool32 DoesDisguiseBlockMove(enum BattlerId battler, enum Move move);
 bool32 DoesIceFaceBlockMove(enum BattlerId battler, enum Move move);
 bool32 CanUseLastResort(enum BattlerId battlerId);
+bool32 TryDefogClear(enum BattlerId battlerAtk, bool32 clear);
+bool32 TryTidyUpClear(bool32 clear);
 u32 IsFlowerVeilProtected(enum BattlerId battler);
 u32 IsLeafGuardProtected(enum BattlerId battler, enum Ability ability);
 bool32 IsShieldsDownProtected(enum BattlerId battler, enum Ability ability);

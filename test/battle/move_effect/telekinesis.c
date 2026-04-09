@@ -9,7 +9,11 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Telekinesis makes the target unable to avoid any attacks made against it")
 {
     GIVEN {
-        ASSUME_STAT_CHANGE(MOVE_MINIMIZE, evasion: +1); // Raises evs by 2
+        #if B_MINIMIZE_EVASION >= GEN_5
+        ASSUME_STAT_CHANGE(MOVE_MINIMIZE, evasion: +2);
+        #else
+        ASSUME_STAT_CHANGE(MOVE_MINIMIZE, evasion: +1);
+        #endif
         ASSUME(GetMoveAccuracy(MOVE_SCREECH) < 100);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);

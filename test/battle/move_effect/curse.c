@@ -53,7 +53,7 @@ SINGLE_BATTLE_TEST("Curse applies to the user if used with Protean/Libero")
         ABILITY_POPUP(player, ability);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CURSE, player);
         HP_BAR(player, damage: playerMaxHP / 2);
-        // HP_BAR(player, damage: playerMaxHP / 4); // ?????
+        HP_BAR(player, damage: playerMaxHP / 4);
     }
 }
 

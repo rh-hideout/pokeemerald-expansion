@@ -31,6 +31,45 @@ SINGLE_BATTLE_TEST("Defense Curl raises Defense by 1 stage", s16 damage)
     }
 }
 
+SINGLE_BATTLE_TEST("Defense Curl doubles the power of Rollout even if stat couldn't be changed", s16 damage)
+{
+    bool32 acidArmor = FALSE;
+
+    PARAMETRIZE { acidArmor = TRUE; }
+    PARAMETRIZE { acidArmor = FALSE; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        if (acidArmor) {
+            TURN { MOVE(player, MOVE_ACID_ARMOR); }
+            TURN { MOVE(player, MOVE_ACID_ARMOR); }
+            TURN { MOVE(player, MOVE_ACID_ARMOR); }
+        }
+        TURN { MOVE(player, MOVE_DEFENSE_CURL); }
+        TURN { MOVE(player, MOVE_ROLLOUT); }
+    } SCENE {
+        if (acidArmor) {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_ACID_ARMOR, player);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_ACID_ARMOR, player);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_ACID_ARMOR, player);
+        }
+
+        if (acidArmor) {
+            NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_DEFENSE_CURL, player);
+        } else {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_DEFENSE_CURL, player);
+        }
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROLLOUT, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
+    }
+}
+
 TO_DO_BATTLE_TEST("Defense Curl doubles the power of Rollout and Ice Ball");
 TO_DO_BATTLE_TEST("Defense Curl's effect cannot be stacked");
 TO_DO_BATTLE_TEST("Defense Curl's effect is removed when switching out");

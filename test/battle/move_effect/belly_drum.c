@@ -19,7 +19,7 @@ SINGLE_BATTLE_TEST("Belly Drum cuts the user's HP in half")
     }
 }
 
-SINGLE_BATTLE_TEST("1 Belly Drum maximizes the user's Attack stat", s16 damage)
+SINGLE_BATTLE_TEST("Belly Drum maximizes the user's Attack stat", s16 damage)
 {
     bool32 raiseAttack;
     PARAMETRIZE { raiseAttack = FALSE; }
@@ -207,8 +207,6 @@ SINGLE_BATTLE_TEST("Belly Drum deducts HP if the user has Contrary and is at -6"
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Serperior's Attack harshly fell!");
-
-        // NOT MESSAGE("But it failed!");
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BELLY_DRUM, player);
         s32 maxHP = GetMonData(&PLAYER_PARTY[0], MON_DATA_MAX_HP);

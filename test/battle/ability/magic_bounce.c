@@ -128,7 +128,7 @@ DOUBLE_BATTLE_TEST("Magic Bounce bounces back moves hitting both foes at two foe
 DOUBLE_BATTLE_TEST("Magic Bounce activates on all opposing mons")
 {
     GIVEN {
-        ASSUME_STAT_CHANGE(MOVE_WORK_UP, defense: -1);
+        ASSUME_STAT_CHANGE(MOVE_WORK_UP, attack: 1, spAtk: 1);
         ASSUME(GetMoveTarget(MOVE_LEER) == TARGET_BOTH);
         PLAYER(SPECIES_ABRA);
         PLAYER(SPECIES_KADABRA);
@@ -226,7 +226,7 @@ SINGLE_BATTLE_TEST("Magic Bounce can't reflect back Stealth Rock from a semi-inv
 SINGLE_BATTLE_TEST("Magic Bounce bounces back status moves before Magic Coat")
 {
     GIVEN {
-        ASSUME_STAT_CHANGE(MOVE_WORK_UP, defense: -1);
+        ASSUME_STAT_CHANGE(MOVE_WORK_UP, attack: 1, spAtk: 1);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_ESPEON) { Ability(ABILITY_MAGIC_BOUNCE); }
     } WHEN {
@@ -242,7 +242,7 @@ DOUBLE_BATTLE_TEST("Magic Bounce will trigger after all valid targets have been 
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_EJECT_PACK].holdEffect == HOLD_EFFECT_EJECT_PACK);
-        ASSUME_STAT_CHANGE(MOVE_WORK_UP, defense: -1);
+        ASSUME_STAT_CHANGE(MOVE_WORK_UP, attack: 1, spAtk: 1);
         ASSUME(GetMoveTarget(MOVE_LEER) == TARGET_BOTH);
         PLAYER(SPECIES_ABRA);
         PLAYER(SPECIES_KADABRA) { Item(ITEM_EJECT_PACK); }

@@ -706,8 +706,6 @@ struct BattleStruct
     u8 printedStrongWindsWeakenedAttack:1;
     u8 numSpreadTargets:3;
     u8 moldBreakerActive:1;
-    u8 numPossibleTargets:3;
-    u8 unused4:5;
     struct MessageStatus slideMessageStatus;
     u8 trainerSlideSpriteIds[MAX_BATTLERS_COUNT];
     u8 hazardsQueue[NUM_BATTLE_SIDES][HAZARDS_MAX_COUNT];
@@ -735,10 +733,8 @@ struct BattleStruct
     u8 statChangeBattler:3; // will be removed
     u8 defogSavedBattler:3;
     u8 ignoreDefiant:1;
-    u8 statChangeUser:1;
     u8 intimidateActivated:1;
     u8 allowPartingShot:1;
-    u8 statChangePrevented:1;
 
 };
 

@@ -223,10 +223,8 @@ bool32 IsFlinchGuaranteed(enum BattlerId battlerAtk, enum BattlerId battlerDef, 
 bool32 HasChoiceEffect(enum BattlerId battler);
 bool32 HasThawingMove(enum BattlerId battler);
 bool32 HasMoveUsableWhileAsleep(enum BattlerId battler);
-bool32 IsStatRaisingEffect(enum BattleMoveEffects effect);
-bool32 IsStatLoweringEffect(enum BattleMoveEffects effect);
-bool32 IsSelfStatLoweringEffect(enum MoveEffect effect);
-bool32 IsSelfStatRaisingEffect(enum MoveEffect effect);
+bool32 IsStatRaisingMove(enum Move move);
+bool32 IsStatLoweringMove(enum Move move);
 bool32 IsSwitchOutEffect(enum BattleMoveEffects effect);
 bool32 IsChaseEffect(enum BattleMoveEffects effect);
 bool32 IsAttackBoostMoveEffect(enum BattleMoveEffects effect);

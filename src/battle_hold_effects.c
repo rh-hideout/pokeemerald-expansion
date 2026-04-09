@@ -134,10 +134,12 @@ static bool32 CanBeInfinitelyConfused(enum BattlerId battler)
 
 static enum ItemEffect TryBerserkGene(enum BattlerId battler)
 {
+    if (CompareStat(battler, STAT_ATK, MAX_STAT_STAGE, CMP_EQUAL, GetBattlerAbility(battler)))
+        return ITEM_NO_EFFECT;
+
     if (CanBeInfinitelyConfused(battler))
         gBattleMons[battler].volatiles.infiniteConfusion = TRUE;
 
-    // Does Berserk activate if stat can't be increased?
     SetStatChange(battler, STAT_ATK, 2);
     BattleScriptCall(BattleScript_BerserkGeneRet);
     return ITEM_STATS_CHANGE;
@@ -505,7 +507,7 @@ static enum ItemEffect DamagedStatBoostBerryEffect(enum BattlerId battlerDef, en
         if (GetBattlerAbility(battlerDef) == ABILITY_RIPEN)
         {
             SetStatChange(battlerDef, statId, 2);
-            BattleScriptCall(BattleScript_BerryStatRaiseRippen);
+            BattleScriptCall(BattleScript_BerryStatRaiseRipen);
         }
         else
         {
@@ -946,7 +948,7 @@ static enum ItemEffect StatRaiseBerry(enum BattlerId battler, enum Item itemId, 
         if (ability == ABILITY_RIPEN)
         {
             SetStatChange(battler, statId, 2);
-            BattleScriptCall(BattleScript_BerryStatRaiseRippen);
+            BattleScriptCall(BattleScript_BerryStatRaiseRipen);
         }
         else
         {
@@ -995,15 +997,12 @@ static enum ItemEffect RandomStatRaiseBerry(enum BattlerId battler, enum Item it
         u32 savedAttacker = gBattlerAttacker;
         // MoodyCantRaiseStat requires that the battler is set to gBattlerAttacker
         gBattlerAttacker = gBattleScripting.battler = battler;
-        if (ability != ABILITY_CONTRARY)
-            stat = RandomUniformExcept(RNG_RANDOM_STAT_UP, STAT_ATK, NUM_STATS - 1, MoodyCantRaiseStat);
-        else
-            stat = RandomUniformExcept(RNG_RANDOM_STAT_UP, STAT_ATK, NUM_STATS - 1, MoodyCantLowerStat);
+        stat = RandomUniformExcept(RNG_RANDOM_STAT_UP, STAT_ATK, NUM_STATS - 1, MoodyCantRaiseStat);
         gBattlerAttacker = savedAttacker;
 
         if (ability == ABILITY_RIPEN)
         {
-            BattleScriptCall(BattleScript_BerryStatRaiseRippen);
+            BattleScriptCall(BattleScript_BerryStatRaiseRipen);
             SetStatChange(battler, stat, 4);
         }
         else

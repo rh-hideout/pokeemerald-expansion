@@ -132,7 +132,7 @@ struct BattleCalcValues
     enum BattlerId battlerAtk:3;
     enum BattlerId battlerDef:3;
     enum Move move:16;
-    u32 padding:10;
+    enum BattleMoveEffects moveEffect:10;
     enum Ability abilities[MAX_BATTLERS_COUNT];
     enum HoldEffect holdEffects[MAX_BATTLERS_COUNT];
 };
@@ -305,6 +305,7 @@ void CopyMonAbilityAndTypesToBattleMon(enum BattlerId battler, struct Pokemon *m
 void RecalcBattlerStats(enum BattlerId battler, struct Pokemon *mon, bool32 isDynamaxing);
 bool32 IsGen6ExpShareEnabled(void);
 bool32 MoveHasAdditionalEffect(enum Move move, enum MoveEffect moveEffect);
+bool32 MoveHasAdditionalOnSideEffect(enum Move move);
 bool32 MoveHasAdditionalEffectWithChance(enum Move move, enum MoveEffect moveEffect, u32 chance);
 bool32 MoveHasAdditionalEffectSelf(enum Move move, enum MoveEffect moveEffect);
 bool32 IsMoveEffectRemoveSpeciesType(enum Move move, enum MoveEffect moveEffect, u32 argument);
@@ -410,7 +411,5 @@ void SetOrClearRageVolatile(void);
 enum BattlerId GetTargetBySlot(enum BattlerId battlerAtk, enum BattlerId battlerDef);
 bool32 IsNaturalEnemy(enum Species speciesAttacker, enum Species speciesTarget);
 enum Stat GetDownloadStat(enum BattlerId battler);
-bool32 TryDefogClear(enum BattlerId battlerAtk, bool32 clear);
-bool32 TryTidyUpClear(bool32 clear);
 
 #endif // GUARD_BATTLE_UTIL_H

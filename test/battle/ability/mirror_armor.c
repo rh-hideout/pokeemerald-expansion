@@ -230,6 +230,7 @@ SINGLE_BATTLE_TEST("Mirror Armor reflects Obstruct defense drop")
     }
 }
 
+// Is there really an ability pop up?
 SINGLE_BATTLE_TEST("Mirror Armor does not trigger if the user is behind a Substitute")
 {
     GIVEN {

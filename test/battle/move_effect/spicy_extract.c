@@ -1,11 +1,11 @@
 #include "global.h"
 #include "test/battle.h"
 
-// ASSUMPTIONS
-// {
-//     ASSUME_STAT_CHANGE(MOVE_SPICY_EXTRACT, attack: +2, defense: -2);
-// }
-//
+ASSUMPTIONS
+{
+    ASSUME_STAT_CHANGE(MOVE_SPICY_EXTRACT, attack: +2, defense: -2);
+}
+
 SINGLE_BATTLE_TEST("Spicy Extract raises target's Attack by 2 stages and lowers target's Defense by 2 stages")
 {
     GIVEN {
@@ -206,26 +206,3 @@ AI_DOUBLE_BATTLE_TEST("Spicy Extract user will not choose the move if it does no
         }
     }
 }
-
-SINGLE_BATTLE_TEST("T Spicy Extract")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_SPICY_EXTRACT); }
-    } SCENE {
-    }
-}
-
-SINGLE_BATTLE_TEST("T Shell Smash")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_SHELL_SMASH); }
-    } SCENE {
-    }
-}
-

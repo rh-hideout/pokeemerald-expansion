@@ -2282,18 +2282,18 @@ bool32 CanAbilityAbsorbMove(struct DamageContext *ctx)
         break;
     case ABILITY_SOUNDPROOF:
         if (IsSoundMove(ctx->move))
-            battleScript = BattleScript_SoundproofProtected;
+            battleScript = BattleScript_AbilityProtectedTarget;
         break;
     case ABILITY_BULLETPROOF:
         if (IsBallisticMove(ctx->move))
-            battleScript = BattleScript_SoundproofProtected;
+            battleScript = BattleScript_AbilityProtectedTarget;
         break;
     case ABILITY_GOOD_AS_GOLD:
         if (IsBattleMoveStatus(ctx->move))
         {
             enum MoveTarget target = GetBattlerMoveTargetType(ctx->battlerAtk, ctx->move);
             if (target != TARGET_OPPONENTS_FIELD && target != TARGET_ALL_BATTLERS)
-                battleScript = BattleScript_GoodAsGoldActivates;
+                battleScript = BattleScript_AbilityProtectedTarget;
         }
         break;
     default:
@@ -2317,7 +2317,7 @@ const u8 *AbsorbedByDrainHpAbility(enum BattlerId battlerDef)
 {
     if (IsBattlerAtMaxHp(battlerDef) || (B_HEAL_BLOCKING >= GEN_5 && gBattleMons[battlerDef].volatiles.healBlock))
     {
-        return BattleScript_MonMadeMoveUseless;
+        return BattleScript_AbilityProtectedTarget;
     }
     else
     {
@@ -2330,7 +2330,7 @@ const u8 *AbsorbedByStatIncreaseAbility(enum BattlerId battlerDef, enum Ability 
 {
     if (!CompareStat(battlerDef, statId, MAX_STAT_STAGE, CMP_LESS_THAN, abilityDef))
     {
-        return BattleScript_MonMadeMoveUseless;
+        return BattleScript_AbilityProtectedTarget;
     }
     else
     {
@@ -3282,7 +3282,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_INTIMIDATE:
             if (shouldAbilityTrigger && !IsOpposingSideEmpty(battler))
             {
-                gBattlerAttacker = gEffectBattler = battler;
+                gEffectBattler = battler;
                 gBattleStruct->intimidateActivated = TRUE;
                 for (enum BattlerId i = 0; i < gBattlersCount; i++)
                 {
@@ -3299,7 +3299,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
              && !GetBattlerPartyState(battler)->supersweetSyrup
              && !IsOpposingSideEmpty(battler))
             {
-                gBattlerAttacker = gEffectBattler = battler;
+                gEffectBattler = battler;
                 GetBattlerPartyState(battler)->supersweetSyrup = TRUE;
                 for (enum BattlerId i = 0; i < gBattlersCount; i++)
                 {
@@ -3583,7 +3583,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             case ABILITY_SPEED_BOOST:
                 if (CompareStat(battler, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN, gLastUsedAbility) && gBattleStruct->battlerState[battler].isFirstTurn != 2)
                 {
-                    gBattlerAbility = battler;
+                    gEffectBattler = gBattlerAbility = battler;
                     SetStatChange(battler, STAT_SPEED, 1);
                     BattleScriptCall(BattleScript_AbilityStatChange);
                     effect++;
@@ -3616,6 +3616,8 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                         stat = RandomUniformExcept(RNG_MOODY_DECREASE, STAT_ATK, statsNum - 1, MoodyCantLowerStat);
                         SetStatChange(battler, stat, -1);
                     }
+
+                    gEffectBattler = gBattlerAbility = battler;
                     BattleScriptCall(BattleScript_AbilityStatChange);
                     effect++;
                 }
@@ -3721,6 +3723,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             if (IsBattlerTurnDamaged(battler, EXCLUDING_SUBSTITUTES)
              && HadMoreThanHalfHpNowDoesnt(battler))
             {
+                gEffectBattler = gBattlerAbility = battler;
                 if (CompareStat(battler, STAT_DEF, MIN_STAT_STAGE, CMP_GREATER_THAN, ABILITY_NONE))
                     SetStatChange(battler, STAT_DEF, -1);
 
@@ -3737,14 +3740,10 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                     SetStatChange(battler, STAT_SPEED, 1);
 
                 if (gSpecialStatuses[battler].statStageAmount > 0)
-                {
-                    gEffectBattler = gBattlerAbility = battler;
                     BattleScriptCall(BattleScript_AbilityStatChange);
-                }
                 else // Not sure if there is an actual ability popup in this case
-                {
                     BattleScriptCall(BattleScript_AbilityPopUp);
-                }
+
                 effect++;
             }
             break;
@@ -3930,12 +3929,15 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 st.statStageQueue = &change;
                 st.statStageAmount = 1;
 
-                if ((TryStatChange(&cv, &st) == STAT_CHANGE_WORKED || cv.abilities[gBattlerTarget] == ABILITY_MIRROR_ARMOR)
-                 && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, cv.abilities[gBattlerAttacker], cv.holdEffects[gBattlerAttacker], move))
+                if (CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, cv.abilities[gBattlerAttacker], cv.holdEffects[gBattlerAttacker], move))
+                    break;
+
+                if (TryStatChange(&cv, &st) == STAT_CHANGE_WORKED || cv.abilities[gBattlerAttacker] == ABILITY_MIRROR_ARMOR)
                 {
                     gEffectBattler = gBattlerAttacker;
+                    gBattlerAbility = gBattlerTarget;
                     SetStatChange(gBattlerAttacker, STAT_SPEED, -1);
-                    BattleScriptCall(BattleScript_GooeyActivates);
+                    BattleScriptCall(BattleScript_AbilityStatChangeTarget);
                     effect++;
                 }
             }
@@ -4146,7 +4148,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
              && CompareStat(battler, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN, gLastUsedAbility)
              && (moveType == TYPE_FIRE || moveType == TYPE_WATER))
             {
-                gEffectBattler = gBattlerAbility = battler;
+                gEffectBattler = gBattlerAbility = gBattlerTarget;
                 SetStatChange(battler, STAT_SPEED, 6);
                 BattleScriptCall(BattleScript_AbilityStatChange);
                 effect++;
@@ -9402,6 +9404,19 @@ bool32 MoveHasAdditionalEffect(enum Move move, enum MoveEffect moveEffect)
     return FALSE;
 }
 
+bool32 MoveHasAdditionalOnSideEffect(enum Move move)
+{
+    u32 i;
+    u32 numAdditionalEffects = GetMoveAdditionalEffectCount(move);
+    for (i = 0; i < numAdditionalEffects; i++)
+    {
+        const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(move, i);
+        if (additionalEffect->onSide)
+            return TRUE;
+    }
+    return FALSE;
+}
+
 bool32 MoveHasAdditionalEffectWithChance(enum Move move, enum MoveEffect moveEffect, u32 chance)
 {
     u32 i;
@@ -9681,7 +9696,6 @@ void ClearDamageCalcResults(void)
     gBattleStruct->calculatedSpreadMoveAccuracy = FALSE;
     gBattleStruct->printedStrongWindsWeakenedAttack = FALSE;
     gBattleStruct->numSpreadTargets = 0;
-    gBattleStruct->numPossibleTargets = 0;
     gBattleStruct->unableToUseMove = FALSE;
     gBattleStruct->attackAnimPlayed = FALSE;
     gBattleStruct->preAttackEffectHappened = FALSE;
@@ -10796,149 +10810,3 @@ enum Stat GetDownloadStat(enum BattlerId battler)
     else
         return STAT_SPATK;
 }
-
-static void RemoveAllTerrains(void)
-{
-    switch (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
-    {
-    case STATUS_FIELD_MISTY_TERRAIN:
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_END_MISTY;
-        break;
-    case STATUS_FIELD_GRASSY_TERRAIN:
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_END_GRASSY;
-        break;
-    case STATUS_FIELD_ELECTRIC_TERRAIN:
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_END_ELECTRIC;
-        break;
-    case STATUS_FIELD_PSYCHIC_TERRAIN:
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_END_PSYCHIC;
-        break;
-    default:
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_COUNT;  // failsafe
-        break;
-    }
-    gFieldStatuses &= ~STATUS_FIELD_TERRAIN_ANY;    // remove the terrain
-    TryToRevertMimicryAndFlags();
-}
-
-#define DEFOG_CLEAR(status, structField, battlescript, move)\
-{                                                           \
-    if (*sideStatuses & status)                             \
-    {                                                       \
-        if (clear)                                          \
-        {                                                   \
-            if (move)                                       \
-                PREPARE_MOVE_BUFFER(gBattleTextBuff1, move);\
-            *sideStatuses &= ~status;                       \
-            sideTimer->structField = 0;                     \
-            BattleScriptCall(battlescript);                 \
-        }                                                   \
-        return TRUE;                                        \
-    }                                                       \
-}
-
-static bool32 DefogClearHazards(enum BattleSide side, bool32 clear)
-{
-    if (!AreAnyHazardsOnSide(side))
-        return FALSE;
-
-    for (u32 hazardType = HAZARDS_NONE + 1; hazardType < HAZARDS_MAX_COUNT; hazardType++)
-    {
-        bool32 checkOrClear = clear ? IsHazardOnSideAndClear(side, hazardType) : IsHazardOnSide(side, hazardType);
-        if (checkOrClear)
-        {
-            if (clear)
-            {
-                gBattleStruct->numHazards[side]--;
-                gBattleCommunication[MULTISTRING_CHOOSER] = hazardType;
-                BattleScriptCall(BattleScript_RemoveHazards);
-            }
-            return TRUE;
-        }
-    }
-    return FALSE;
-}
-
-bool32 TryDefogClear(enum BattlerId battlerAtk, bool32 clear)
-{
-    s32 i;
-
-    for (i = 0; i < NUM_BATTLE_SIDES; i++)
-    {
-        struct SideTimer *sideTimer = &gSideTimers[i];
-        u32 *sideStatuses = &gSideStatuses[i];
-        gBattleScripting.battler = i;
-
-        if (GetBattlerSide(battlerAtk) != i)
-        {
-            DEFOG_CLEAR(SIDE_STATUS_REFLECT, reflectTimer, BattleScript_SideStatusWoreOff, MOVE_REFLECT);
-            DEFOG_CLEAR(SIDE_STATUS_LIGHTSCREEN, lightscreenTimer, BattleScript_SideStatusWoreOff, MOVE_LIGHT_SCREEN);
-            DEFOG_CLEAR(SIDE_STATUS_MIST, mistTimer, BattleScript_SideStatusWoreOff, MOVE_MIST);
-            DEFOG_CLEAR(SIDE_STATUS_AURORA_VEIL, auroraVeilTimer, BattleScript_SideStatusWoreOff, MOVE_AURORA_VEIL);
-            DEFOG_CLEAR(SIDE_STATUS_SAFEGUARD, safeguardTimer, BattleScript_SideStatusWoreOff, MOVE_SAFEGUARD);
-        }
-        if (GetConfig(B_DEFOG_EFFECT_CLEARING) >= GEN_6)
-        {
-            if (DefogClearHazards(i, clear))
-                return TRUE;
-        }
-        if (gBattleWeather & B_WEATHER_FOG)
-        {
-            if (clear)
-            {
-                gBattleWeather &= ~B_WEATHER_FOG;
-                BattleScriptCall(BattleScript_FogEnded);
-            }
-            return TRUE;
-        }
-        if (GetConfig(B_DEFOG_EFFECT_CLEARING) >= GEN_8 && (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY))
-        {
-            if (clear)
-            {
-                RemoveAllTerrains();
-                BattleScriptCall(BattleScript_TerrainEnds);
-            }
-            return TRUE;
-        }
-    }
-
-    return FALSE;
-}
-
-bool32 TryTidyUpClear(bool32 clear)
-{
-    u32 i;
-    u32 clearFound = FALSE;
-
-    for (i = 0; i < NUM_BATTLE_SIDES; i++)
-    {
-        gBattleScripting.battler = i;
-        if (DefogClearHazards(i, clear))
-        {
-            clearFound = TRUE;
-            break;
-        }
-    }
-
-    if (clearFound)
-        return TRUE;
-
-    for (i = 0; i < MAX_BATTLERS_COUNT; i++)
-    {
-        if (gBattleMons[i].volatiles.substitute)
-        {
-            if (clear)
-            {
-                gBattleScripting.battler = i;
-                gBattleMons[i].volatiles.substituteHP = 0;
-                gBattleMons[i].volatiles.substitute = FALSE;
-                BattleScriptCall(BattleScript_SubstituteFade);
-            }
-            clearFound = TRUE;
-            break;
-        }
-    }
-
-    return clearFound;
-}
-

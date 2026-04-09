@@ -656,7 +656,11 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Splintered Stormshards removes terrain when the tar
 SINGLE_BATTLE_TEST("(Z-MOVE) Clangorous Soulblaze boosts all the user's stats by one stage")
 {
     GIVEN {
-        ASSUME(GetMoveAdditionalEffectById(MOVE_CLANGOROUS_SOULBLAZE, 0)->moveEffect == MOVE_EFFECT_ALL_STATS_UP);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(
+            MOVE_CLANGOROUS_SOULBLAZE, self: TRUE,
+            attack: 1, defense: 1,
+            spAtk: 1, spDef: 1, speed: 1
+        );
         PLAYER(SPECIES_KOMMO_O) { Item(ITEM_KOMMONIUM_Z); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

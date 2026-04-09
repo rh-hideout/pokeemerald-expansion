@@ -45,7 +45,7 @@ AI_SINGLE_BATTLE_TEST("AI doesn't use accuracy-lowering moves if it knows that t
 {
     enum Ability abilityAI = ABILITY_NONE;
 
-    // PARAMETRIZE { abilityAI = ABILITY_SWIFT_SWIM; }
+    PARAMETRIZE { abilityAI = ABILITY_SWIFT_SWIM; }
     PARAMETRIZE { abilityAI = ABILITY_MOLD_BREAKER; }
 
     GIVEN {

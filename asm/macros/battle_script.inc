@@ -713,14 +713,6 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro stockpile
-	.byte B_SCR_OP_STOCKPILE
-	.endm
-
-	.macro stockpiletobasedamage
-	.byte B_SCR_OP_STOCKPILETOBASEDAMAGE
-	.endm
-
 	.macro stockpiletohpheal failInstr:req
 	.byte B_SCR_OP_STOCKPILETOHPHEAL
 	.4byte \failInstr
@@ -926,10 +918,6 @@
 	.byte B_SCR_OP_TRYACTIVATEITEM
 	.byte \battler
 	.byte \flag
-	.endm
-
-	.macro halvehp
-	.byte B_SCR_OP_HALVEHP
 	.endm
 
 	.macro copyfoestats

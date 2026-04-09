@@ -38,7 +38,7 @@ SINGLE_BATTLE_TEST("Big Pecks is ignored by Mold Breaker")
 SINGLE_BATTLE_TEST("Big Pecks doesn't prevent Defense stage reduction from moves used by the user")
 {
     GIVEN {
-        ASSUME(MoveHasAdditionalEffectSelf(MOVE_SUPERPOWER, MOVE_EFFECT_ATK_DEF_DOWN) == TRUE);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_SUPERPOWER, self: TRUE, attack: -1, defense: -1);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PIDGEY) { Ability(ABILITY_BIG_PECKS); }
     } WHEN {

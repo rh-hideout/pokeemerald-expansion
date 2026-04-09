@@ -321,10 +321,10 @@ SINGLE_BATTLE_TEST("Defiant doesn't activate if the Pokémon lowers it's own sta
     PARAMETRIZE { move = MOVE_SPIN_OUT; }
 
     GIVEN {
-        ASSUME(MoveHasAdditionalEffectSelf(MOVE_SUPERPOWER, MOVE_EFFECT_ATK_DEF_DOWN));
-        ASSUME(MoveHasAdditionalEffectSelf(MOVE_CLOSE_COMBAT, MOVE_EFFECT_DEF_SPDEF_DOWN));
-        ASSUME(MoveHasAdditionalEffectSelf(MOVE_MAKE_IT_RAIN, MOVE_EFFECT_SP_ATK_MINUS_1));
-        ASSUME(MoveHasAdditionalEffectSelf(MOVE_SPIN_OUT, MOVE_EFFECT_SPD_MINUS_2));
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_SUPERPOWER, self: TRUE, attack: -1, defense: -1);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_CLOSE_COMBAT, self: TRUE, defense: -1, spDef: -1);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAKE_IT_RAIN, self: TRUE, spAtk: -1);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_SPIN_OUT, self: TRUE, speed: -2);
         PLAYER(SPECIES_MANKEY) { Ability(ABILITY_DEFIANT); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -350,7 +350,7 @@ SINGLE_BATTLE_TEST("Defiant doesn't display ability popup when already at Maximu
 {
     GIVEN {
         ASSUME_STAT_CHANGE(MOVE_TICKLE, attack: -1, defense: -1);
-        ASSUME(GetMoveEffect(MOVE_BELLY_DRUM) == EFFECT_STAT_CHANGE_HALF_HP);
+        ASSUME(GetMoveEffect(MOVE_BELLY_DRUM) == EFFECT_BELLY_DRUM);
         PLAYER(SPECIES_MANKEY) { Ability(ABILITY_DEFIANT); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -372,8 +372,6 @@ SINGLE_BATTLE_TEST("Defiant doesn't display ability popup when already at Maximu
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
             MESSAGE("Mankey's Attack rose sharply!");
         }
-        // MESSAGE("Mankey's Attack won't go any higher!"); // Does this get printed if defiant does not trigger?
-
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], MAX_STAT_STAGE);
     }

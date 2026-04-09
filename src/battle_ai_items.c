@@ -103,10 +103,10 @@ bool32 ShouldUseItem(enum BattlerId battler)
 
                 stat = stat + itemEffects[1] - STAT_ATK;
 
-                if (IsBattlerAlive(LEFT_FOE(battler)) && IncreaseStatUpScore(battler, LEFT_FOE(battler), stat, 2) > NO_INCREASE)
+                if (IsBattlerAlive(LEFT_FOE(battler)) && IncreaseStatUpScore(battler, LEFT_FOE(battler), stat, stage) > NO_INCREASE)
                     shouldUse = TRUE;
 
-                if (IsBattlerAlive(RIGHT_FOE(battler)) && IncreaseStatUpScore(battler, RIGHT_FOE(battler), stat, 2) > NO_INCREASE)
+                if (IsBattlerAlive(RIGHT_FOE(battler)) && IncreaseStatUpScore(battler, RIGHT_FOE(battler), stat, stage) > NO_INCREASE)
                     shouldUse = TRUE;
 
                 break;

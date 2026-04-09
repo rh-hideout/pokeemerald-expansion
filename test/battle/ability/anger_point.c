@@ -24,7 +24,7 @@ SINGLE_BATTLE_TEST("Anger Point does not trigger when already at maximum Attack 
 {
     GIVEN {
         ASSUME(MoveAlwaysCrits(MOVE_FROST_BREATH));
-        ASSUME(GetMoveEffect(MOVE_BELLY_DRUM) == EFFECT_STAT_CHANGE_HALF_HP);
+        ASSUME(GetMoveEffect(MOVE_BELLY_DRUM) == EFFECT_BELLY_DRUM);
         PLAYER(SPECIES_PRIMEAPE) { Ability(ABILITY_ANGER_POINT); Speed(2); }
         OPPONENT(SPECIES_SNORUNT) { Speed(1); }
     } WHEN {

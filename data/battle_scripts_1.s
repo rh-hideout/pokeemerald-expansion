@@ -1797,7 +1797,7 @@ BattleScript_PrintReflectLightScreenSafeguardString::
 
 BattleScript_VoltAbsorbHeal:
 	copybyte gBattlerAbility, gBattlerTarget
-	tryhealquarterhealth BS_TARGET, BattleScript_MonMadeMoveUseless @ Check if max hp
+	tryhealquarterhealth BS_TARGET, BattleScript_AbilityProtectedTarget @ Check if max hp
 	goto BattleScript_MoveHPDrain
 
 BattleScript_AlreadyParalyzed::
@@ -2037,11 +2037,11 @@ BattleScript_EffectHealBell::
 	goto BattleScript_PartyHealEnd
 BattleScript_HealBellSoundproof::
 	jumpifbyte CMP_NO_COMMON_BITS, cMULTISTRING_CHOOSER, B_MSG_BELL_SOUNDPROOF_ATTACKER, BattleScript_CheckHealBellMon2Unaffected
-	printstring STRINGID_SCR_ITDOESNTAFFECT
+	printstring STRINGID_ITDOESNTAFFECTSCR
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_CheckHealBellMon2Unaffected::
 	jumpifbyte CMP_NO_COMMON_BITS, cMULTISTRING_CHOOSER, B_MSG_BELL_SOUNDPROOF_PARTNER, BattleScript_PartyHealEnd
-	printstring STRINGID_SCR_ITDOESNTAFFECT
+	printstring STRINGID_ITDOESNTAFFECTSCR
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_PartyHealEnd::
 	updatestatusicon BS_ATTACKER_WITH_PARTNER
@@ -3512,8 +3512,12 @@ BattleScript_AbilityStatChangeEnd2::
 
 BattleScript_AbilityStatChange::
 	call BattleScript_AbilityPopUp
-    copybyte sSAVED_BATTLER, gBattlerAbility
 	trynonmovestatchange BS_EFFECT_BATTLER, STAT_CHANGE_NO_FLAGS
+	return
+
+BattleScript_AbilityStatChangeTarget:: @ Uses target as the inpput, e.g. for Tangling Hair
+	call BattleScript_AbilityPopUp
+	trynonmovestatchange BS_TARGET, STAT_CHANGE_NO_FLAGS
 	return
 
 BattleScript_DefiantActivates::
@@ -3522,7 +3526,6 @@ BattleScript_DefiantActivates::
 	return
 
 BattleScript_MoveEffectStatChange::
-    copybyte sSAVED_BATTLER, gBattlerAttacker
 	trynonmovestatchange BS_ATTACKER, STAT_CHANGE_SILENT_FAILURE | STAT_CHANGE_IGNORE_SELF
 	return
 
@@ -4088,7 +4091,7 @@ BattleScript_DampPreventsAftermath::
 	pause 40
 	copybyte gBattlerAbility, sBATTLER
 	call BattleScript_AbilityPopUp
-	printstring STRINGID_SCR_ITDOESNTAFFECT
+	printstring STRINGID_ITDOESNTAFFECTSCR
 	waitmessage B_WAIT_TIME_LONG
 	return
 
@@ -4185,7 +4188,7 @@ BattleScript_PowderMoveNoEffect::
 BattleScript_PowderMoveNoEffectOvercoat:
 	call BattleScript_AbilityPopUp
 BattleScript_PowderMoveNoEffectPrint:
-	printstring STRINGID_SCR_ITDOESNTAFFECT
+	printstring STRINGID_ITDOESNTAFFECTSCR
 BattleScript_PowderMoveNoEffectWaitMsg:
 	waitmessage B_WAIT_TIME_LONG
 	return
@@ -4638,8 +4641,7 @@ BattleScript_TryIntimidateHoldEffectsRet:
 
 BattleScript_IntimidateActivates::
 	call BattleScript_AbilityPopUp
-    copybyte sSAVED_BATTLER, gBattlerAbility
-	trynonmovestatchange BS_ABILITY_BATTLER, STAT_CHANGE_INTIMIDATE
+	trynonmovestatchange BS_EFFECT_BATTLER, STAT_CHANGE_INTIMIDATE
 	destroyabilitypopup
 	return
 
@@ -4853,10 +4855,10 @@ BattleScript_MoveStatDrain::
 	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_NO_FLAGS
 	return
 
-BattleScript_MonMadeMoveUseless::
+BattleScript_AbilityProtectedTarget::
 	pause B_WAIT_TIME_SHORT
 	call BattleScript_AbilityPopUp
-	printstring STRINGID_SCR_ITDOESNTAFFECT
+	printstring STRINGID_ITDOESNTAFFECTSCR
 	waitmessage B_WAIT_TIME_LONG
 	return
 
@@ -4907,13 +4909,6 @@ BattleScript_OwnTempoPreventsRet::
 	call BattleScript_AbilityPopUp
 	copybyte sBATTLER, gBattlerTarget
 	printstring STRINGID_PKMNPREVENTSCONFUSIONWITH
-	waitmessage B_WAIT_TIME_LONG
-	return
-
-BattleScript_SoundproofProtected::
-	pause B_WAIT_TIME_SHORT
-	call BattleScript_AbilityPopUp
-	printstring STRINGID_SCR_ITDOESNTAFFECT
 	waitmessage B_WAIT_TIME_LONG
 	return
 
@@ -5098,7 +5093,7 @@ BattleScript_SpikyShieldRet::
 	return
 
 BattleScript_KingsShieldEffect::
-	trybattlerstatchange BS_EFFECT_BATTLER, STAT_CHANGE_NO_FLAGS
+	trynonmovestatchange BS_TARGET, STAT_CHANGE_NO_FLAGS
 	return
 
 BattleScript_BanefulBunkerEffect::
@@ -5113,12 +5108,6 @@ BattleScript_CuteCharmActivates::
 	printstring STRINGID_PKMNSXINFATUATEDY
 	waitmessage B_WAIT_TIME_LONG
 	call BattleScript_TryDestinyKnotTarget
-	return
-
-BattleScript_GooeyActivates::
-	call BattleScript_AbilityPopUp
-	trybattlerstatchange BS_EFFECT_BATTLER, STAT_CHANGE_NO_FLAGS
-BattleScript_GooeyActivatesRet:
 	return
 
 BattleScript_AbilityStatusEffect::
@@ -5428,7 +5417,7 @@ BattleScript_BerryConfuseHealRet_Anim:
 	removeitem BS_SCRIPTING
 	return
 
-BattleScript_BerryStatRaiseRippen::
+BattleScript_BerryStatRaiseRipen::
 	call BattleScript_AbilityPopUp
 	call BattleScript_ItemStatRaise
 	return
@@ -5845,19 +5834,10 @@ BattleScript_DoesntAffectTargetAtkString::
 	setmoveresultflags MOVE_RESULT_NO_EFFECT
 	goto BattleScript_MoveEnd
 
-BattleScript_NoEffectivenessAbility::
-	call BattleScript_AbilityPopUp
 BattleScript_DoesntAffectScripting::
 	pause B_WAIT_TIME_SHORT
-	printstring STRINGID_SCR_ITDOESNTAFFECT
+	printstring STRINGID_ITDOESNTAFFECTSCR
 	waitmessage B_WAIT_TIME_LONG
-	return
-
-BattleScript_GoodAsGoldActivates::
-	call BattleScript_AbilityPopUp
-	pause B_WAIT_TIME_SHORT
-	printstring STRINGID_SCR_ITDOESNTAFFECT
-	waitmessage B_WAIT_TIME_MED
 	return
 
 BattleScript_PastelVeilActivates::

@@ -1307,7 +1307,7 @@ static void CB2_HandleStartMultiPartnerBattle(void)
             ResetBlockReceivedFlags();
             if (GetMultiplayerId() != 0)
                 memcpy(&gParties[B_TRAINER_3][4], gBlockRecvBuffer[0], sizeof(struct Pokemon) * 2);
-            
+
             for (enum BattleTrainer trainer = B_TRAINER_0; trainer < MAX_BATTLE_TRAINERS; trainer++)
             {
                 for (u32 i = 0; i < PARTY_SIZE; i++)
@@ -3541,7 +3541,7 @@ static void DoBattleIntro(void)
                 BtlController_EmitDrawPartyStatusSummary(battler, B_COMM_TO_CONTROLLER, hpStatus[GetBattlerTrainer(battler)], PARTY_SUMM_SKIP_DRAW_DELAY);
                 MarkBattlerForControllerExec(battler);
             }
-            
+
             gBattleStruct->eventState.battleIntro++;
         }
         break;
@@ -3777,9 +3777,6 @@ static void TryDoEventsBeforeFirstTurn(void)
             if (gQueuedStatBoosts[battler].stats == 0)
                 continue;
 
-            // This is vanilla and a regression from expansion behavior
-            // In vanilla, just one string and the anim are shown
-            // If needed the old behavior can be restored
             for (enum Stat stat = STAT_ATK; stat < gBattlersCount; stat++)
             {
                 if (gQueuedStatBoosts[battler].stats & (1 << stat))
