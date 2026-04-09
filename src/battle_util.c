@@ -4673,7 +4673,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         }
         case ABILITY_PROTOSYNTHESIS:
             if (!gBattleMons[battler].volatiles.weatherAbilityDone
-             && (GetWeather() & B_WEATHER_SUN)
+             && (ctx->weather & B_WEATHER_SUN)
              && !gBattleMons[battler].volatiles.transformed
              && !gBattleMons[battler].volatiles.boosterEnergyActivated)
             {
@@ -6126,8 +6126,6 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
     case EFFECT_WEATHER_BALL:
         if (ctx->weather & B_WEATHER_ANY)
             basePower *= 2;
-        else if (gBattleStruct->megaSolActive)
-            basePower *= 2;
         break;
     case EFFECT_PURSUIT:
         if (gBattleStruct->battlerState[battlerDef].pursuitTarget)
@@ -6358,8 +6356,8 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
         break;
     }
     case EFFECT_SOLAR_BEAM:
-        if ((GetConfig(B_SANDSTORM_SOLAR_BEAM) >= GEN_3 && IsBattlerWeatherAffected(ctx->holdEffectAtk, GetWeather(), B_WEATHER_LOW_LIGHT))
-            || IsBattlerWeatherAffected(ctx->holdEffectAtk, GetWeather(), (B_WEATHER_RAIN | B_WEATHER_ICY_ANY | B_WEATHER_FOG))) // Excludes Sandstorm
+        if ((GetConfig(B_SANDSTORM_SOLAR_BEAM) >= GEN_3 && IsBattlerWeatherAffected(ctx->holdEffectAtk, ctx->weather, B_WEATHER_LOW_LIGHT))
+            || IsBattlerWeatherAffected(ctx->holdEffectAtk, ctx->weather, (B_WEATHER_RAIN | B_WEATHER_ICY_ANY | B_WEATHER_FOG))) // Excludes Sandstorm
             modifier = uq4_12_multiply(modifier, UQ_4_12(0.5));
         break;
     case EFFECT_STOMPING_TANTRUM:
@@ -6914,7 +6912,7 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
         switch (GetBattlerAbility(BATTLE_PARTNER(battlerAtk)))
         {
         case ABILITY_FLOWER_GIFT:
-            if (gBattleMons[BATTLE_PARTNER(battlerAtk)].species == SPECIES_CHERRIM_SUNSHINE && IsBattlerWeatherAffected(GetBattlerHoldEffect(BATTLE_PARTNER(battlerAtk)), GetWeather(), B_WEATHER_SUN) && IsBattleMovePhysical(move))
+            if (gBattleMons[BATTLE_PARTNER(battlerAtk)].species == SPECIES_CHERRIM_SUNSHINE && IsBattlerWeatherAffected(GetBattlerHoldEffect(BATTLE_PARTNER(battlerAtk)), ctx->weather, B_WEATHER_SUN) && IsBattleMovePhysical(move))
                 modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
             break;
         default:
@@ -7156,13 +7154,12 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
     // sandstorm sp.def boost for rock types
     if (GetConfig(B_SANDSTORM_SPDEF_BOOST) >= GEN_4 
 	 && IS_BATTLER_OF_TYPE(battlerDef, TYPE_ROCK) 
-	 && IsBattlerWeatherAffected(ctx->holdEffectDef, GetWeather(), B_WEATHER_SANDSTORM)
+	 && IsBattlerWeatherAffected(ctx->holdEffectDef, ctx->weather, B_WEATHER_SANDSTORM)
 	 && !usesDefStat)
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
     // snow def boost for ice types
     if (IS_BATTLER_OF_TYPE(battlerDef, TYPE_ICE)
-	 && IsBattlerWeatherAffected(ctx->holdEffectDef, GetWeather(), B_WEATHER_SNOW)
-	 && ctx->abilityAtk != ABILITY_MEGA_SOL
+	 && IsBattlerWeatherAffected(ctx->holdEffectDef, ctx->weather, B_WEATHER_SNOW)
 	 && usesDefStat)
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
 
@@ -9317,7 +9314,7 @@ bool32 PickupHasValidTarget(enum BattlerId battler)
 u32 GetWeather(void)
 {
     if (gBattleStruct->megaSolActive)
-	return B_WEATHER_SUN;
+        return B_WEATHER_SUN;
     if (gBattleWeather == B_WEATHER_NONE || !HasWeatherEffect())
         return B_WEATHER_NONE;
     return gBattleWeather;
