@@ -153,12 +153,215 @@ const struct SpeciesInfo gSpeciesInfo[] =
     #include "species_info/gen_1_families.h"
     #include "species_info/gen_2_families.h"
     #include "species_info/gen_3_families.h"
-    #include "species_info/gen_4_families.h"
-    #include "species_info/gen_5_families.h"
-    #include "species_info/gen_6_families.h"
-    #include "species_info/gen_7_families.h"
-    #include "species_info/gen_8_families.h"
-    #include "species_info/gen_9_families.h"
+    //#include "species_info/gen_4_families.h"
+    //#include "species_info/gen_6_families.h"
+    //#include "species_info/gen_5_families.h"
+    //#include "species_info/gen_7_families.h"
+    //#include "species_info/gen_8_families.h"
+    //#include "species_info/gen_9_families.h"
+
+    // Eeveelutions adicionales
+    [SPECIES_LEAFEON] =
+    {
+        .baseHP        = 65,
+        .baseAttack    = 110,
+        .baseDefense   = 130,
+        .baseSpeed     = 95,
+        .baseSpAttack  = 60,
+        .baseSpDefense = 65,
+        .types = MON_TYPES(TYPE_GRASS),
+        .catchRate = 45,
+        .expYield = 184,
+        .evYield_Defense = 2,
+        .genderRatio = PERCENT_FEMALE(12.5),
+        .eggCycles = 35,
+        .friendship = 35,
+        .growthRate = GROWTH_MEDIUM_FAST,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
+        .abilities = { ABILITY_LEAF_GUARD, ABILITY_NONE, ABILITY_CHLOROPHYLL },
+        .bodyColor = BODY_COLOR_GREEN,
+        .speciesName = _("Leafeon"),
+        .cryId = CRY_LEAFEON,
+        .natDexNum = NATIONAL_DEX_LEAFEON,
+        .categoryName = _("Verdant"),
+        .height = 10,
+        .weight = 255,
+        .description = COMPOUND_STRING(
+            "Its cellular composition is closer to\n"
+            "that of a plant than an animal. It uses\n"
+            "photosynthesis to produce its energy\n"
+            "supply without eating food."),
+        .pokemonScale = 305,
+        .pokemonOffset = 8,
+        .trainerScale = 257,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_Leafeon,
+        .frontPicSize = MON_COORDS_SIZE(56, 48),
+        .frontPicYOffset = 9,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(0, 10),
+            ANIMCMD_FRAME(1, 20),
+            ANIMCMD_FRAME(0, 5),
+        ),
+        .frontAnimId = ANIM_SHRINK_GROW,
+        .backPic = gMonBackPic_Leafeon,
+        .backPicSize = MON_COORDS_SIZE(48, 64),
+        .backPicYOffset = 0,
+        .backAnimId = BACK_ANIM_SHRINK_GROW_VIBRATE,
+        .palette = gMonPalette_Leafeon,
+        .shinyPalette = gMonShinyPalette_Leafeon,
+        .iconSprite = gMonIcon_Leafeon,
+        .iconPalIndex = 1,
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+        SHADOW(0, 4, SHADOW_SIZE_M)
+        FOOTPRINT(Leafeon)
+        OVERWORLD(
+            sPicTable_Leafeon,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following,
+            gOverworldPalette_Leafeon,
+            gShinyOverworldPalette_Leafeon
+        )
+        .levelUpLearnset = sLeafeonLevelUpLearnset,
+        .teachableLearnset = sLeafeonTeachableLearnset,
+    },
+
+    [SPECIES_GLACEON] =
+    {
+        .baseHP        = 65,
+        .baseAttack    = 60,
+        .baseDefense   = 110,
+        .baseSpeed     = 65,
+        .baseSpAttack  = 130,
+        .baseSpDefense = 95,
+        .types = MON_TYPES(TYPE_ICE),
+        .catchRate = 45,
+        .expYield = 184,
+        .evYield_SpAttack = 2,
+        .genderRatio = PERCENT_FEMALE(12.5),
+        .eggCycles = 35,
+        .friendship = 35,
+        .growthRate = GROWTH_MEDIUM_FAST,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
+        .abilities = { ABILITY_SNOW_CLOAK, ABILITY_NONE, ABILITY_ICE_BODY },
+        .bodyColor = BODY_COLOR_BLUE,
+        .speciesName = _("Glaceon"),
+        .cryId = CRY_GLACEON,
+        .natDexNum = NATIONAL_DEX_GLACEON,
+        .categoryName = _("Fresh Snow"),
+        .height = 8,
+        .weight = 259,
+        .description = COMPOUND_STRING(
+            "It can control its body temperature\n"
+            "at will. This enables it to freeze the\n"
+            "moisture in the atmosphere, creating\n"
+            "flurries of diamond dust."),
+        .pokemonScale = 366,
+        .pokemonOffset = 10,
+        .trainerScale = 257,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_Glaceon,
+        .frontPicSize = MON_COORDS_SIZE(64, 56),
+        .frontPicYOffset = 10,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(0, 1),
+            ANIMCMD_FRAME(1, 36),
+            ANIMCMD_FRAME(0, 10),
+        ),
+        .frontAnimId = ANIM_V_STRETCH,
+        .backPic = gMonBackPic_Glaceon,
+        .backPicSize = MON_COORDS_SIZE(56, 64),
+        .backPicYOffset = 6,
+        .backAnimId = BACK_ANIM_SHRINK_GROW_VIBRATE,
+        .palette = gMonPalette_Glaceon,
+        .shinyPalette = gMonShinyPalette_Glaceon,
+        .iconSprite = gMonIcon_Glaceon,
+        .iconPalIndex = 0,
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+        SHADOW(0, 3, SHADOW_SIZE_M)
+        FOOTPRINT(Glaceon)
+        OVERWORLD(
+            sPicTable_Glaceon,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following,
+            gOverworldPalette_Glaceon,
+            gShinyOverworldPalette_Glaceon
+        )
+        .levelUpLearnset = sGlaceonLevelUpLearnset,
+        .teachableLearnset = sGlaceonTeachableLearnset,
+    },
+
+    [SPECIES_SYLVEON] =
+    {
+        .baseHP        = 95,
+        .baseAttack    = 65,
+        .baseDefense   = 65,
+        .baseSpeed     = 60,
+        .baseSpAttack  = 110,
+        .baseSpDefense = 130,
+        .types = MON_TYPES(TYPE_FAIRY),
+        .catchRate = 45,
+        .expYield = 184,
+        .evYield_SpDefense = 2,
+        .genderRatio = PERCENT_FEMALE(12.5),
+        .eggCycles = 35,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_MEDIUM_FAST,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
+        .abilities = { ABILITY_CUTE_CHARM, ABILITY_NONE, ABILITY_PIXILATE },
+        .bodyColor = BODY_COLOR_PINK,
+        .noFlip = TRUE,
+        .speciesName = _("Sylveon"),
+        .cryId = CRY_SYLVEON,
+        .natDexNum = NATIONAL_DEX_SYLVEON,
+        .categoryName = _("Intertwine"),
+        .height = 10,
+        .weight = 235,
+        .description = COMPOUND_STRING(
+            "Its ribbonlike feelers give off an aura\n"
+            "that weakens hostility in its prey, causing\n"
+            "them to let down their guard. A moment\n"
+            "later, it pounces."),
+        .pokemonScale = 305,
+        .pokemonOffset = 7,
+        .trainerScale = 257,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_Sylveon,
+        .frontPicSize = MON_COORDS_SIZE(48, 56),
+        .frontPicYOffset = 4,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(0, 10),
+            ANIMCMD_FRAME(1, 20),
+            ANIMCMD_FRAME(0, 5),
+        ),
+        .frontAnimId = ANIM_SHRINK_GROW,
+        .backPic = gMonBackPic_Sylveon,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 4,
+        .backAnimId = BACK_ANIM_SHRINK_GROW_VIBRATE,
+        .palette = gMonPalette_Sylveon,
+        .shinyPalette = gMonShinyPalette_Sylveon,
+        .iconSprite = gMonIcon_Sylveon,
+        .iconPalIndex = 0,
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+        SHADOW(2, 9, SHADOW_SIZE_M)
+        FOOTPRINT(Sylveon)
+        OVERWORLD(
+            sPicTable_Sylveon,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following,
+            gOverworldPalette_Sylveon,
+            gShinyOverworldPalette_Sylveon
+        )
+        .levelUpLearnset = sSylveonLevelUpLearnset,
+        .teachableLearnset = sSylveonTeachableLearnset,
+    },
 
     [SPECIES_EGG] =
     {

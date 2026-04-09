@@ -253,6 +253,27 @@ Route101_EventScript_HideBrendanInBedroom::
 	setflag FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_RIVAL_BEDROOM
 	return
 
+Route101_EventScript_RegionSelect::
+	lockall
+	msgbox Route101_Text_ChooseRegion, MSGBOX_DEFAULT
+	multichoice 0, 0, MULTI_REGION_SELECT, 0
+	copyvar VAR_TEMP_0, VAR_RESULT
+	closemessage
+	warp MAP_REGION_FERRY, 0, 0
+	end
+
+Route101_Text_ChooseRegion:
+	.string "¿A qué región quieres ir?$"
+
+Route101_Text_GoToKanto:
+	.string "Vamos a Kanto.\nDonde empezó esta historia Pokémon.$"
+
+Route101_Text_GoToJohto:
+	.string "Vamos a Johto.\nLa región de los nuevos desafíos.$"
+
+Route101_Text_GoToHoenn:
+	.string "Vamos a Hoenn.\nLa región de la aventura.$"
+
 Route101_Movement_BirchApproachPlayer:
 	walk_right
 	step_end

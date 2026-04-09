@@ -9,6 +9,7 @@
 #include "overworld.h"
 #include "palette.h"
 #include "script.h"
+#include "script.h"
 #include "script_movement.h"
 #include "sound.h"
 #include "sprite.h"
@@ -207,7 +208,6 @@ static void Task_HandleTruckSequence(u8 taskId)
         tTimer++;
         if (tTimer == 150)
         {
-            FadeInFromBlack();
             tTimer = 0;
             tState = 2;
         }
@@ -245,13 +245,20 @@ static void Task_HandleTruckSequence(u8 taskId)
         tTimer++;
         if (tTimer == 120)
         {
-            MapGridSetMetatileIdAt(4 + MAP_OFFSET, 1 + MAP_OFFSET, METATILE_InsideOfTruck_ExitLight_Top);
-            MapGridSetMetatileIdAt(4 + MAP_OFFSET, 2 + MAP_OFFSET, METATILE_InsideOfTruck_ExitLight_Mid);
-            MapGridSetMetatileIdAt(4 + MAP_OFFSET, 3 + MAP_OFFSET, METATILE_InsideOfTruck_ExitLight_Bottom);
-            DrawWholeMapView();
-            PlaySE(SE_TRUCK_DOOR);
+            switch (VarGet(VAR_TEMP_0))
+            {
+            case 0:
+                SetWarpDestination(37, 0, WARP_ID_NONE, 5, 8);
+                break;
+            case 1:
+                SetWarpDestination(0, 10, WARP_ID_NONE, 5, 8);
+                break;
+            case 2:
+                SetWarpDestination(0, 9, WARP_ID_NONE, 5, 8);
+                break;
+            }
+            WarpIntoMap();
             DestroyTask(taskId);
-            UnlockPlayerFieldControls();
         }
         break;
     }
