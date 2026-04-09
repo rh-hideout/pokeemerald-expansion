@@ -23,7 +23,7 @@ SINGLE_BATTLE_TEST("Mega Sol multiplies the power of Fire-type moves by 1.5x", s
     }
 }
 
-SINGLE_BATTLE_TEST("Mega Sol multiplies the power of Water-type moves by 0.5x", s16 damage)
+SINGLE_BATTLE_TEST("Mega Sol halves the power of Water-type moves", s16 damage)
 {
     enum Ability ability;
     PARAMETRIZE { ability = ABILITY_FLAME_BODY;}
@@ -41,6 +41,7 @@ SINGLE_BATTLE_TEST("Mega Sol multiplies the power of Water-type moves by 0.5x", 
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(0.5), results[1].damage);
     }
 }
+
 
 
 SINGLE_BATTLE_TEST("Weather Ball doubles its power and turns to a Fire-type move if user has Mega Sol", s16 damage)
@@ -98,5 +99,30 @@ SINGLE_BATTLE_TEST("Solar Beam does not need a charging turn if user has Mega So
         }
         MESSAGE("Meganium used Solar Beam!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SOLAR_BEAM, player);
+    }
+}
+
+
+SINGLE_BATTLE_TEST("Mega Sol ignores Sandstorm's solarbeam power reduction, and its rock defense boost", s16 damage)
+{
+    enum Ability ability;
+    PARAMETRIZE { ability = ABILITY_NONE;}
+    PARAMETRIZE { ability = ABILITY_MEGA_SOL;}
+
+    GIVEN {
+        PLAYER(SPECIES_SUNKERN) { Ability(ability);}
+        OPPONENT(SPECIES_BASTIODON) { Ability(ABILITY_SAND_STREAM);}
+    } WHEN {
+        TURN {}
+        TURN { MOVE(player, MOVE_SOLAR_BEAM); }
+        if (ability == ABILITY_NONE) {
+            TURN { SKIP_TURN(player); }
+        }
+    } SCENE {
+        HP_BAR(player); // checking sandstorm occurred
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SOLAR_BEAM, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(3), results[1].damage);
     }
 }
