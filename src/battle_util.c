@@ -9791,9 +9791,11 @@ void ClearDamageCalcResults(void)
     gBattleScripting.savedDmg = 0;
     if (gCurrentMove != MOVE_NONE)
     {
-        gBattleStruct->moldBreakerActive = IsMoldBreakerTypeAbility(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker)) || MoveIgnoresTargetAbility(gCurrentMove);
-        gBattleStruct->megaSolActive = IsMegaSol(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker));
+        enum Ability ability = GetBattlerAbility(gBattlerAttacker);
+        gBattleStruct->megaSolActive = IsAbilityAndRecord(gBattlerAttacker, ability, ABILITY_MEGA_SOL);
+        gBattleStruct->moldBreakerActive = IsMoldBreakerTypeAbility(gBattlerAttacker, ability) || MoveIgnoresTargetAbility(gCurrentMove);
     }
+
     else
     {
         gBattleStruct->moldBreakerActive = FALSE;

@@ -1,10 +1,6 @@
 #include "global.h"
 #include "test/battle.h"
 
-#include "global.h"
-#include "test/battle.h"
-
-
 SINGLE_BATTLE_TEST("Mega Sol multiplies the power of Fire-type moves by 1.5x", s16 damage)
 {
     enum Ability ability;
@@ -42,8 +38,6 @@ SINGLE_BATTLE_TEST("Mega Sol halves the power of the user's Water-type moves", s
     }
 }
 
-
-
 SINGLE_BATTLE_TEST("Weather Ball doubles its power and turns to a Fire-type move if user has Mega Sol", s16 damage)
 {
     enum Ability ability;
@@ -61,7 +55,6 @@ SINGLE_BATTLE_TEST("Weather Ball doubles its power and turns to a Fire-type move
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(6.0), results[1].damage); // double base power + type effectiveness + sun 50% boost
     }
 }
-
 
 SINGLE_BATTLE_TEST("Synthesis recovers 2/3 of the user's max HP if user has Mega Sol (Gen3+)")
 {
