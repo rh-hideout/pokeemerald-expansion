@@ -5732,7 +5732,7 @@ bool32 IsBattlerProtected(struct BattleCalcValues *cv)
     {
         if (IsZMove(cv->move) || IsMaxMove(cv->move))
             return FALSE; // Z-Moves and Max Moves bypass protection (except Max Guard).
-        if (cv->abilities[cv->battlerAtk] == ABILITY_UNSEEN_FIST
+        if ((cv->abilities[cv->battlerAtk] == ABILITY_UNSEEN_FIST || cv->abilities[cv->battlerAtk] == ABILITY_PIERCING_DRILL)
          && IsMoveMakingContact(cv->battlerAtk, cv->battlerDef, cv->abilities[cv->battlerAtk], cv->holdEffects[cv->battlerAtk], cv->move))
             return FALSE;
     }

@@ -2417,7 +2417,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_PIERCING_DRILL] =
     {
         .name = _("Piercing Drill"),
-        .description = COMPOUND_STRING("Unimplemented."),
+        .description = COMPOUND_STRING("Contact evades protection."),
     },
 
     [ABILITY_DRAGONIZE] =

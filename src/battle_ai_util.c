@@ -5232,7 +5232,7 @@ bool32 IsUnseenFistContactMove(enum BattlerId battlerAtk, enum BattlerId battler
 {
     if (move == MOVE_NONE || move == MOVE_UNAVAILABLE)
         return FALSE;
-    if (gAiLogicData->abilities[battlerAtk] != ABILITY_UNSEEN_FIST)
+    if (gAiLogicData->abilities[battlerAtk] != ABILITY_UNSEEN_FIST || gAiLogicData->abilities[battlerAtk] == ABILITY_PIERCING_DRILL)
         return FALSE;
     if (GetMoveEffect(move) == EFFECT_SHELL_SIDE_ARM)
     {
