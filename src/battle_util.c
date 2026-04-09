@@ -4673,7 +4673,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         }
         case ABILITY_PROTOSYNTHESIS:
             if (!gBattleMons[battler].volatiles.weatherAbilityDone
-             && (ctx->weather & B_WEATHER_SUN)
+             && (GetWeather() & B_WEATHER_SUN)
              && !gBattleMons[battler].volatiles.transformed
              && !gBattleMons[battler].volatiles.boosterEnergyActivated)
             {

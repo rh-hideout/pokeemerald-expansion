@@ -3339,10 +3339,10 @@ void FaintClearSetData(enum BattlerId battler)
     gBattleStruct->lastTakenMoveFrom[battler][3] = 0;
     gBattleStruct->palaceFlags &= ~(1u << battler);
     if (battler == gBattlerAttacker)
-	{
+    {
         gBattleStruct->moldBreakerActive = FALSE;
         gBattleStruct->megaSolActive = FALSE;
-	}
+    }
     ClearPursuitValuesIfSet(battler);
 
     if (gBattleStruct->battlerState[battler].commanderSpecies != SPECIES_NONE)
@@ -5819,28 +5819,25 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId
     switch (moveEffect)
     {
     case EFFECT_WEATHER_BALL:
-	if (ability == ABILITY_MEGA_SOL)
-            return TYPE_FIRE;
         if (state == MON_IN_BATTLE)
         {
-	    if (gBattleStruct->megaSolActive)
+            if ((GetWeather() & B_WEATHER_SUN && holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA) || ability == ABILITY_MEGA_SOL)
                 return TYPE_FIRE;
-            else if (HasWeatherEffect())
-            {
-                if (gBattleWeather & B_WEATHER_RAIN && holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA)
-                    return TYPE_WATER;
-                else if (gBattleWeather & B_WEATHER_SANDSTORM)
-                    return TYPE_ROCK;
-                else if (gBattleWeather & B_WEATHER_SUN && holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA)
-                    return TYPE_FIRE;
-                else if (gBattleWeather & B_WEATHER_ICY_ANY)
-                    return TYPE_ICE;
-                else
-                    return moveType;
-            }
+            if (GetWeather() & B_WEATHER_RAIN && holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA)
+                return TYPE_WATER;
+            else if (GetWeather() & B_WEATHER_SANDSTORM)
+                return TYPE_ROCK;
+            else if (((GetWeather() & B_WEATHER_SUN) && holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA)|| gBattleStruct->megaSolActive)
+                return TYPE_FIRE;
+            else if (GetWeather() & B_WEATHER_ICY_ANY)
+                return TYPE_ICE;
+            else
+                return moveType;
         }
         else
         {
+	    if (ability == ABILITY_MEGA_SOL)
+                return TYPE_FIRE;
             switch (gWeatherPtr->currWeather)
             {
             case WEATHER_DROUGHT:

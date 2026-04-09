@@ -84,7 +84,7 @@ SINGLE_BATTLE_TEST("Solar Beam does not need a charging turn if user has Mega So
     PARAMETRIZE { ability = ABILITY_FLAME_BODY; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SOLARBEAM) == EFFECT_SOLARBEAM);
+        ASSUME(GetMoveEffect(MOVE_SOLARBEAM) == EFFECT_SOLAR_BEAM);
         ASSUME(GetMoveType(MOVE_SOLARBEAM) == TYPE_GRASS);
         PLAYER(SPECIES_MEGANIUM) { Ability(ability); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -111,7 +111,7 @@ SINGLE_BATTLE_TEST("Mega Sol ignores Sandstorm's solarbeam power reduction, and 
     PARAMETRIZE { ability = ABILITY_MEGA_SOL;}
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SOLARBEAM) == EFFECT_SOLARBEAM);
+        ASSUME(GetMoveEffect(MOVE_SOLARBEAM) == EFFECT_SOLAR_BEAM);
         ASSUME(GetMoveType(MOVE_SOLARBEAM) == TYPE_GRASS);
         PLAYER(SPECIES_SUNKERN) { Ability(ability);}
         OPPONENT(SPECIES_BASTIODON) { Ability(ABILITY_SAND_STREAM);}
