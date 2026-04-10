@@ -129,3 +129,32 @@ SINGLE_BATTLE_TEST("Mega Sol ignores Sandstorm's solarbeam power reduction, and 
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(3), results[1].damage);
     }
 }
+
+SINGLE_BATTLE_TEST("Mega Sol isn't affected by Leaf Guard", s16 damage)
+{
+    enum Move move;
+    PARAMETRIZE { move = MOVE_CELEBRATE;}
+    PARAMETRIZE { move = MOVE_SUNNY_DAY;}
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_WILL_O_WISP) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_WILL_O_WISP) == MOVE_EFFECT_BURN);
+        PLAYER(SPECIES_SUNKERN) { Ability(ABILITY_MEGA_SOL);}
+        OPPONENT(SPECIES_LEAFEON) { Ability(ABILITY_LEAF_GUARD);}
+    } WHEN {
+        TURN { MOVE(player, move); }
+        TURN { MOVE(player, MOVE_WILL_O_WISP); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        if (move == MOVE_CELEBRATE) {
+	    ANIMATION(ANIM_TYPE_MOVE, MOVE_WILL_O_WISP, player);
+            STATUS_ICON(opponent, STATUS1_BURN);
+        }
+        else {
+	    NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_WILL_O_WISP, player);
+            ABILITY_POPUP(player, ABILITY_LEAF_GUARD);
+            MESSAGE("It doesn't affect Leafeon…");
+            NOT STATUS_ICON(opponent, STATUS1_BURN);
+        }
+    }
+}

@@ -9369,7 +9369,7 @@ static void Cmd_recoverbasedonsunlight(void)
     if (gBattleMons[gBattlerAttacker].hp != gBattleMons[gBattlerAttacker].maxHP)
     {
         s32 recoverAmount = 0;
-        u32 weather = GetWeather()
+        u32 weather = GetWeather();
         if (GetMoveEffect(gCurrentMove) == EFFECT_SHORE_UP)
         {
             if (weather & B_WEATHER_SANDSTORM)
