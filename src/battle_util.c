@@ -4754,14 +4754,6 @@ bool32 IsNeutralizingGasOnField(void)
     return FALSE;
 }
 
-
-bool32 IsMegaSol(enum BattlerId battler, enum Ability ability)
-{
-    if (gBattleMons[battler].volatiles.gastroAcid)
-        return FALSE;
-    return IsAbilityAndRecord(battler, ability, ABILITY_MEGA_SOL);
-}
-
 bool32 IsMoldBreakerTypeAbility(enum BattlerId battler, enum Ability ability)
 {
     if (gBattleMons[battler].volatiles.gastroAcid)
@@ -7209,7 +7201,7 @@ static uq4_12_t GetWeatherDamageModifier(struct DamageContext *ctx)
 {
     if (ctx->weather == B_WEATHER_NONE)
         return UQ_4_12(1.0);
-    if (GetMoveEffect(ctx->move) == EFFECT_HYDRO_STEAM && (ctx->weather & B_WEATHER_SUN) && (ctx->holdEffectAtk != HOLD_EFFECT_UTILITY_UMBRELLA || gBattleStruct->megaSolActive))// It is assumed that umbrella doesn't block its wielder from benefitting from mega sol. This will need to be reviewed later, once it's in champions!
+    if (GetMoveEffect(ctx->move) == EFFECT_HYDRO_STEAM && (ctx->weather & B_WEATHER_SUN) && (ctx->holdEffectAtk != HOLD_EFFECT_UTILITY_UMBRELLA))// It is assumed that umbrella blocks its wielder from benefitting from mega sol. This will need to be reviewed later, once umbrella is in champions!
         return UQ_4_12(1.5);
     if (ctx->holdEffectDef == HOLD_EFFECT_UTILITY_UMBRELLA)
         return UQ_4_12(1.0);
