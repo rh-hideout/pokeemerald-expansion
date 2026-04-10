@@ -130,7 +130,7 @@ SINGLE_BATTLE_TEST("Mega Sol ignores Sandstorm's solarbeam power reduction, and 
     }
 }
 
-SINGLE_BATTLE_TEST("Mega Sol isn't affected by Leaf Guard", s16 damage)
+SINGLE_BATTLE_TEST("Mega Sol doesn't trigger the foe's Leaf Guard", s16 damage)
 {
     enum Move move;
     PARAMETRIZE { move = MOVE_CELEBRATE;}
@@ -156,5 +156,26 @@ SINGLE_BATTLE_TEST("Mega Sol isn't affected by Leaf Guard", s16 damage)
             MESSAGE("It doesn't affect Leafeon…");
             NOT STATUS_ICON(opponent, STATUS1_BURN);
         }
+    }
+}
+
+
+SINGLE_BATTLE_TEST("Mega Sol ignores Cloud Nine", s16 damage)
+{
+    ASSUME(GetMoveType(MOVE_EMBER) == TYPE_FIRE);
+
+    enum Ability ability;
+    PARAMETRIZE { ability = ABILITY_FLAME_BODY;}
+    PARAMETRIZE { ability = ABILITY_MEGA_SOL;}
+    GIVEN {
+        PLAYER(SPECIES_MEGANIUM) { Ability(ability);}
+        OPPONENT(SPECIES_WOBBUFFET)  { Ability(ABILITY_CLOUD_NINE);}
+    } WHEN {
+        TURN { MOVE(player, MOVE_EMBER); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.5), results[1].damage);
     }
 }
