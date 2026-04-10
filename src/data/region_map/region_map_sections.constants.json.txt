@@ -2,13 +2,13 @@
 #ifndef GUARD_CONSTANTS_REGION_MAP_SECTIONS_H
 #define GUARD_CONSTANTS_REGION_MAP_SECTIONS_H
 
-enum {
+## set counter = 0
 ## for map_section in map_sections
-    {{ map_section.id }},
+#define {{ map_section.id }} {{ counter }}
+## set counter = counter + 1
 ## endfor
-    MAPSEC_NONE,
-    MAPSEC_COUNT
-};
+#define MAPSEC_NONE {{ counter }}
+#define MAPSEC_COUNT {{ counter + 1 }}
 
 // Special location IDs that use the same value space as MAPSECs.
 #define METLOC_SPECIAL_EGG         0xFD

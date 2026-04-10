@@ -13,7 +13,7 @@ Aquí registra los avances del proyecto.
 
 ### Pendiente
 - ✅ Agregar Eeveeluciones: Sylveon, Leafeon, Glaceon.
-- ☐ Agregar mapas de región para Kanto y Johto (código base implementado, faltan gráficos y layout).
+- ☐ Agregar mapas de región para Kanto y Johto (soporte de Johto integrado, se agregó layout placeholder y assets temporales).
 - ☐ Implementar sistema de escalado de niveles.
 - ☐ Sistema de seguimiento de Pokémon.
 - ☐ Bloqueo/desobediencia al cambiar de región.

@@ -4,7 +4,7 @@
 
 const struct RegionMapLocation gRegionMapEntries[] = {
 ## for map_section in map_sections
-    [{{ map_section.id }}] = {
+    {
 {% if existsIn(map_section, "x") %}
         .x = {{ map_section.x }},
 {% else %}

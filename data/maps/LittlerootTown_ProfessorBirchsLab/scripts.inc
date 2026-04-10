@@ -126,7 +126,10 @@ LittlerootTown_ProfessorBirchsLab_EventScript_NicknameStarter::
 	end
 
 LittlerootTown_ProfessorBirchsLab_EventScript_SetMalakNickname::
-	setmonnickname 0, LittlerootTown_ProfessorBirchsLab_Text_Malak
+	call Common_EventScript_GetGiftMonPartySlot
+	bufferstring STR_VAR_2, LittlerootTown_ProfessorBirchsLab_Text_Malak
+	special SetMonNickname
+	waitstate
 	goto LittlerootTown_ProfessorBirchsLab_EventScript_GoSeeRival
 	end
 
@@ -532,7 +535,9 @@ LittlerootTown_ProfessorBirchsLab_EventScript_ChangePlayerName::
 	end
 
 LittlerootTown_ProfessorBirchsLab_EventScript_SetPlayerMalak::
-	setplayername LittlerootTown_ProfessorBirchsLab_Text_Malak
+	bufferstring STR_VAR_2, LittlerootTown_ProfessorBirchsLab_Text_Malak
+	special SetPlayerName
+	waitstate
 	goto LittlerootTown_ProfessorBirchsLab_EventScript_GivePokeballs
 	end
 
@@ -797,10 +802,6 @@ LittlerootTown_ProfessorBirchsLab_Text_ExplainPokedex:
 	.string "y tú eres quien tiene el control.\p"
 	.string "¡Demuéstrale al mundo de qué está\n"
 	.string "hecho un verdadero MALAK LEGEND!\p$"
-	.string "Whenever my kid catches a rare POKéMON\n"
-	.string "and records its data in the POKéDEX,\l"
-	.string "why, {RIVAL} looks for me while I'm out\l"
-	.string "doing fieldwork, and shows me.$"
 
 LittlerootTown_ProfessorBirchsLab_Text_CountlessPokemonAwait:
 	.string "PROF. BIRCH: Countless POKéMON\n"
@@ -1027,6 +1028,10 @@ LittlerootTown_ProfessorBirchsLab_Text_BrendanHaveYouGoneToBattleFrontier:
 	.string "BRENDAN: Hey, {PLAYER}!\n"
 	.string "Have you gone out to that place,\l"
 	.string "the BATTLE FRONTIER?$"
+
+LittlerootTown_ProfessorBirchsLab_Text_ReceivedPokedex:
+        .string "{PLAYER} received the POKéDEX\n"
+        .string "from PROF. BIRCH!$"
 
 LittlerootTown_ProfessorBirchsLab_Text_ScottAboardSSTidalCall:
 	.string "… … … … … …\n"

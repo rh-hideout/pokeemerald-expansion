@@ -102,6 +102,7 @@ gSpecials::
 	def_special BufferContestTrainerAndMonNames
 	def_special GetContestMonConditionRanking
 	def_special SetContestTrainerGfxIds
+	def_special Special_ExecuteTruckSequence
 	def_special TryEnterContestMon
 	def_special GetContestantNamesAtRank
 	def_special SetLinkContestPlayerGfx
@@ -177,6 +178,9 @@ gSpecials::
 	def_special ChooseStarter
 	def_special StartWallyTutorialBattle
 	def_special ChangePokemonNickname
+	def_special SetPlayerName
+	def_special SetMonNickname
+	def_special ChangePlayerName
 	def_special ChoosePartyMon
 	def_special GetFirstFreePokeblockSlot
 	def_special DoBerryBlending

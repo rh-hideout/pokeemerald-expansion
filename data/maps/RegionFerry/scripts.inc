@@ -4,9 +4,9 @@ RegionFerry_MapScripts::
 
 RegionFerry_OnTransition:
 	switch VAR_TEMP_0
-	case 0, goto RegionFerry_EventScript_ChooseKanto
-	case 1, goto RegionFerry_EventScript_ChooseJohto
-	case 2, goto RegionFerry_EventScript_ChooseHoenn
+	case 0, RegionFerry_EventScript_ChooseKanto
+	case 1, RegionFerry_EventScript_ChooseJohto
+	case 2, RegionFerry_EventScript_ChooseHoenn
 	end
 
 RegionFerry_EventScript_ChooseKanto:
