@@ -14,6 +14,34 @@ Este archivo registra todos los cambios realizados en el proyecto, para facilita
 
 ## Registros
 
+### 2026-04-09 - Diagnóstico del error de enlace final por disco lleno
+- **Tipo**: Build / entorno
+- **Descripción**: El build avanzó hasta el enlace de `pokeemerald.elf`, pero `arm-none-eabi-ld` falló con `Input/output error`. Se verificó con `df -h /mnt/c` que la unidad `C:` estaba al `100%` de uso (`0` espacio disponible).
+- **Archivos Afectados**: salida del build, `notes/errores.md`
+- **Motivo**: Aislar la causa real del fallo final del enlace.
+- **Resultado**: Quedó confirmado que el siguiente paso es compilar desde el sistema de archivos de Ubuntu/WSL o liberar espacio en `C:`.
+
+### 2026-04-09 - Corrección del build en `region_map.c` por assets Johto faltantes
+- **Tipo**: Build / gráficos
+- **Descripción**: La compilación fallaba en `src/region_map.c` al intentar cargar assets de Johto. Se detectó que faltaban `graphics/pokedex/region_map_johto.bin.smolTM` y `graphics/pokenav/region_map/map_johto.bin.smolTM`.
+- **Archivos Afectados**: `graphics/pokedex/region_map/region_map_johto.bin.smolTM`, `graphics/pokenav/region_map/map_johto.bin.smolTM`
+- **Motivo**: Desbloquear `build/emerald/src/region_map.o` y permitir que el build avance al siguiente error real.
+- **Resultado**: `region_map.o` volvió a generarse correctamente tras restaurar placeholders temporales.
+
+### 2026-04-09 - Toolchain ARM instalado y validado en WSL
+- **Tipo**: Build / entorno
+- **Descripción**: Se verificó que `arm-none-eabi-gcc` ya está disponible en WSL (`/usr/bin/arm-none-eabi-gcc`, versión `13.2.1 20231009`). También se validó con `mapjson` que los mapas nuevos `RegionFerry`, `KantoPort`, `JohtoPort` y `HoennPort` son correctos.
+- **Archivos Afectados**: `notes/registro_cambios.md`, `notes/errores.md`
+- **Motivo**: Continuar el proceso de compilación y aislar el siguiente bloqueo real del proyecto.
+- **Resultado**: El bloqueo dejó de ser la falta del compilador; el cuello de botella actual es la lentitud del build al trabajar en WSL2 sobre `/mnt/c`.
+
+### 2026-04-09 - Diagnóstico del entorno de compilación en Windows/WSL
+- **Tipo**: Build / entorno
+- **Descripción**: Se verificó que el proyecto no debe compilarse con `make.exe` de Windows, porque falla con errores de `uname` y rutas. Desde WSL, el build sí arranca y genera dependencias, pero el siguiente bloqueo real es que falta `arm-none-eabi-gcc`.
+- **Archivos Afectados**: `notes/errores.md`, `docs/install/windows/WSL.md`
+- **Motivo**: Identificar el primer error real antes de seguir corrigiendo el proyecto.
+- **Resultado**: Quedó confirmado que el siguiente paso necesario es instalar el toolchain de GBA en WSL.
+
 ### 2026-04-09 10:25 - Implementación de Eeveeluciones
 - **Tipo**: Adición de Pokémon
 - **Descripción**: Agregadas las especies de Leafeon, Glaceon y Sylveon manualmente en species_info.h.
