@@ -163,6 +163,7 @@ SINGLE_BATTLE_TEST("Emergency Exit activates when taking residual damage and fal
     }
 }
 
+// This is a real interaction according to jpwiki, despite Golisopod not being on the field anymore
 DOUBLE_BATTLE_TEST("Emergency Exit activates when taking Sea of Fire damage and can be healed by Grassy Terrain after leaving the field")
 {
     GIVEN {

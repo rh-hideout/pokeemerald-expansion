@@ -1072,6 +1072,8 @@ static inline bool32 IsBattlerAlive(enum BattlerId battler)
         return TRUE;
 }
 
+// Some effects, like most end of turn effects only activate on active battlers (on the field)
+// IsBattlerAlive doesn't check for queued switches, so IsBattlerPresent is used in these cases
 static inline bool32 IsBattlerPresent(enum BattlerId battler)
 {
     if (!IsBattlerAlive(battler))
