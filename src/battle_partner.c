@@ -42,9 +42,9 @@ void FillPartnerParty(u16 trainerId)
         MakePartnerGenerator(partnerGen, partner);
         if (trainerId == TRAINER_PARTNER(PARTNER_STEVEN))
             partnerGen->otID = OTID_STRUCT_PRESET(STEVEN_OTID);
-        for (i = 0; i < 3 && i < partner->partySize; i++)
+        for (i = 0; i < lastIndex && i < partner->partySize; i++)
         {
-            GenerateMonFromTrainerMon(&gParties[B_TRAINER_2][i + 3], &partner->party[i], partnerGen);
+            GenerateMonFromTrainerMon(&gParties[B_TRAINER_2][i], &partner->party[i], partnerGen);
         }
         Free(partnerGen);
     }

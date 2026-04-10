@@ -95,7 +95,7 @@ static void RegisterTrainerInMatchCall(void);
 static void HandleRematchVarsOnBattleEnd(void);
 static const u8 *GetIntroSpeechOfApproachingTrainer(void);
 static const u8 *GetTrainerCantBattleSpeech(void);
-static void CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum, bool8 firstTrainer);
+static void CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum);
 static void DoTrainerBattle(void);
 
 EWRAM_DATA TrainerBattleParameter gTrainerBattleParameter = {0};
@@ -488,9 +488,9 @@ static void DoBattlePikeWildBattle(void)
 
 static void DoTrainerBattle(void)
 {
-    CreateNPCTrainerParty(&gEnemyParty[0], TRAINER_BATTLE_PARAM.opponentA, TRUE);
+    CreateNPCTrainerParty(&gParties[B_TRAINER_1][0], TRAINER_BATTLE_PARAM.opponentA);
     if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && !BATTLE_TWO_VS_ONE_OPPONENT)
-        CreateNPCTrainerParty(&gEnemyParty[PARTY_SIZE / 2], TRAINER_BATTLE_PARAM.opponentB, FALSE);
+        CreateNPCTrainerParty(&gParties[B_TRAINER_3][0], TRAINER_BATTLE_PARAM.opponentB);
     CreateBattleStartTask(GetTrainerBattleTransition(), 0);
     IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
     IncrementGameStat(GAME_STAT_TRAINER_BATTLES);
@@ -2178,18 +2178,19 @@ void SetMultiTrainerBattle(struct ScriptContext *ctx)
     gPartnerTrainerId = TRAINER_PARTNER(ScriptReadHalfword(ctx));
 };
 
-void CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer)
+void CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer)
 {
     s32 i;
     u8 monsCount;
 
-    if (firstTrainer == TRUE)
-        ZeroEnemyPartyMons();
+    ZeroPartyMons(party);
 
-    if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && trainer->partySize > PARTY_SIZE / 2)
-        monsCount = PARTY_SIZE / 2;
-    else
-        monsCount = trainer->partySize;
+    monsCount = trainer->partySize;
+    if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && (B_MULTI_HALF_TEAMS || trainer->multiTeamSize == MULTI_TEAM_SIZE_HALF))
+    {
+        if (monsCount > PARTY_SIZE / 2)
+            monsCount = PARTY_SIZE / 2;
+    }
 
     u32 monIndices[monsCount];
     struct TrainerGenerator *trainerGen = AllocZeroed(sizeof(struct TrainerGenerator));
@@ -2204,10 +2205,10 @@ void CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Traine
     Free(trainerGen);
 }
 
-static void CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum, bool8 firstTrainer)
+static void CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum)
 {
     if (!GetTrainerStructFromId(trainerNum)->overrideTrainer) {
-        CreateNPCTrainerPartyFromTrainer(party, GetTrainerStructFromId(trainerNum), firstTrainer);
+        CreateNPCTrainerPartyFromTrainer(party, GetTrainerStructFromId(trainerNum));
         return;
     }
 
@@ -2220,14 +2221,13 @@ static void CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum, bool8 f
     tempTrainer.poolSize = origTrainer->poolSize;
     if (tempTrainer.partySize == 0)
         tempTrainer.partySize = origTrainer->partySize;
-    CreateNPCTrainerPartyFromTrainer(party, (const struct Trainer *)(&tempTrainer), firstTrainer);
+    CreateNPCTrainerPartyFromTrainer(party, (const struct Trainer *)(&tempTrainer));
 }
 
 void CreateTrainerPartyForPlayer(void)
 {
     Script_RequestEffects(SCREFF_V1);
 
-    ZeroPlayerPartyMons();
     gPartnerTrainerId = gSpecialVar_0x8004;
-    CreateNPCTrainerPartyFromTrainer(gPlayerParty, GetTrainerStructFromId(gSpecialVar_0x8004), TRUE);
+    CreateNPCTrainerPartyFromTrainer(gPlayerParty, GetTrainerStructFromId(gSpecialVar_0x8004));
 }

@@ -119,6 +119,6 @@ s32 FirstBattleTrainerIdToRematchTableId(const struct RematchTrainer *table, u16
 u16 GetRematchTrainerIdFromTable(const struct RematchTrainer *table, u16 firstBattleTrainerId);
 u8 GetRivalBattleFlags(void);
 
-void CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer);
+void CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer);
 
 #endif // GUARD_BATTLE_SETUP_H
