@@ -234,7 +234,9 @@
     F(POKERUS_WEAK_VARIANT,      pokerusWeakVariant,      (u32, TRUE))          \
 
 #define AI_CONFIG_DEFINITIONS(F) \
-    F(AI_ROLL_ATTACKING,         aiRollAttacking,          (u32, AI_ROLL_TYPE_COUNT - 1)) \
+    F(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE,    reverseBattlerLogicChance,  (u32, 100)) \
+    F(SHOULD_SWITCH_ALL_MOVES_BAD_PERCENTAGE,   switchAllBadMovesChance,    (u32, 100)) \
+    F(AI_ROLL_ATTACKING,                        aiRollAttacking,            (u32, AI_ROLL_TYPE_COUNT - 1)) \
 
 #define GET_CONFIG_MAXIMUM(_typeMaxValue, ...) INVOKE_WITH_B(GET_CONFIG_MAXIMUM_, _typeMaxValue)
 #define GET_CONFIG_MAXIMUM_(_type, ...) FIRST(__VA_OPT__(FIRST(__VA_ARGS__),) MAX_BITS((sizeof(_type) * 8)))
