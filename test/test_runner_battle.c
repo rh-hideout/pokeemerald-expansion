@@ -69,10 +69,10 @@ STATIC_ASSERT(sizeof(struct BattleTestRunnerState) <= sizeof(sBackupMapData), sB
 
 static void CB2_BattleTest_NextParameter(void);
 static void CB2_BattleTest_NextTrial(void);
-static void PushBattlerAction(u32 sourceLine, s32 battlerId, u32 actionType, u32 byte);
+static void PushBattlerAction(u32 sourceLine, enum BattlerId battlerId, u32 actionType, u32 byte);
 static void PrintAiMoveLog(enum BattlerId battlerId, u32 moveSlot, enum Move moveId, s32 totalScore);
 static void ClearAiLog(enum BattlerId battlerId);
-static const char *BattlerIdentifier(s32 battlerId);
+static const char *BattlerIdentifier(enum BattlerId battlerId);
 
 NAKED static void InvokeSingleTestFunctionWithStack(void *results, u32 i, struct BattlePokemon *player, struct BattlePokemon *opponent, SingleBattleTestFunction function, void *stack)
 {
@@ -1959,10 +1959,11 @@ void AIFlags_(u32 sourceLine, u64 flags)
     DATA.hasAI = TRUE;
 }
 
-void BattlerAIFlags_(u32 sourceLine, enum BattlerId battler, u64 flags)
+void BattlerAIFlags_(u32 sourceLine, struct BattlePokemon *battler, u64 flags)
 {
     INVALID_IF(!IsAITest(), "AI_FLAGS is usable only in AI_SINGLE_BATTLE_TEST, AI_DOUBLE_BATTLE_TEST, AI_MULTI_BATTLE_TEST, and AI_TWO_VS_ONE_TEST");
-    DATA.recordedBattle.AI_scripts[battler] |= flags;
+    enum BattlerId battlerId = battler - gBattleMons;
+    DATA.recordedBattle.AI_scripts[battlerId] |= flags;
     DATA.hasAI = TRUE;
 }
 
@@ -2058,6 +2059,7 @@ void OpenPokemon(u32 sourceLine, enum BattleTrainer trainer, u32 species)
     }
     INVALID_IF(*partySize >= PARTY_SIZE, "Too many Pokemon in party");
     DATA.battleTrainer = trainer;
+    DATA.partyTrainers[trainer & BIT_SIDE][*partySize] = trainer;
     DATA.currentPartyIndex = *partySize;
     DATA.currentMon = &party[DATA.currentPartyIndex];
     DATA.gender = 0xFF; // Male
@@ -2175,15 +2177,15 @@ void ClosePokemon(u32 sourceLine)
     DATA.currentMon = NULL;
 }
 
-static void SetGimmick(u32 sourceLine, enum BattlerId battler, u32 partyIndex, enum Gimmick gimmick)
+static void SetGimmick(u32 sourceLine, enum BattleTrainer trainer, u32 partyIndex, enum Gimmick gimmick)
 {
-    enum Gimmick currentGimmick = DATA.chosenGimmick[GetBattlerTrainer(battler)][partyIndex];
+    enum Gimmick currentGimmick = DATA.chosenGimmick[trainer][partyIndex];
     if (!((currentGimmick == GIMMICK_ULTRA_BURST && gimmick == GIMMICK_Z_MOVE)
        || (currentGimmick == GIMMICK_Z_MOVE && gimmick == GIMMICK_ULTRA_BURST)))
     {
         INVALID_IF(currentGimmick != GIMMICK_NONE && currentGimmick != gimmick, "Cannot set %s because %s already set", sGimmickIdentifiers[gimmick], sGimmickIdentifiers[currentGimmick]);
     }
-    DATA.chosenGimmick[GetBattlerTrainer(battler)][partyIndex] = gimmick;
+    DATA.chosenGimmick[trainer][partyIndex] = gimmick;
 }
 
 void Gender_(u32 sourceLine, u32 gender)
@@ -2480,7 +2482,7 @@ static const char *const sBattlerIdentifiersDoubles[] =
     "opponentRight",
 };
 
-static const char *BattlerIdentifier(s32 battlerId)
+static const char *BattlerIdentifier(enum BattlerId battlerId)
 {
     const struct BattleTest *test = GetBattleTest();
     switch (test->type)
@@ -2502,7 +2504,7 @@ static const char *BattlerIdentifier(s32 battlerId)
     return "<unknown>";
 }
 
-static void PushBattlerAction(u32 sourceLine, s32 battlerId, u32 actionType, u32 byte)
+static void PushBattlerAction(u32 sourceLine, enum BattlerId battlerId, u32 actionType, u32 byte)
 {
     u32 recordIndex = DATA.recordIndexes[battlerId]++;
     if (recordIndex >= BATTLER_RECORD_SIZE)
@@ -2600,7 +2602,7 @@ void OpenTurn(u32 sourceLine)
     DATA.moveBattlers = 0x00;
 }
 
-static void SetSlowerThan(s32 battlerId)
+static void SetSlowerThan(enum BattlerId battlerId)
 {
     s32 i, slowerThan;
     slowerThan = 0;
@@ -2619,7 +2621,7 @@ static void SetSlowerThan(s32 battlerId)
     DATA.slowerThan[battlerId & BIT_SIDE][DATA.currentMonIndexes[battlerId]] |= slowerThan;
 }
 
-static void SetAiActionToPass(u32 sourceLine, s32 battlerId)
+static void SetAiActionToPass(u32 sourceLine, enum BattlerId battlerId)
 {
     DATA.expectedAiActions[battlerId][DATA.expectedAiActionIndex[battlerId]].actionSet = TRUE;
     DATA.expectedAiActions[battlerId][DATA.expectedAiActionIndex[battlerId]].sourceLine = sourceLine;
@@ -2648,7 +2650,7 @@ void CloseTurn(u32 sourceLine)
     DATA.turns++;
 }
 
-static struct Pokemon *CurrentMon(s32 battlerId)
+static struct Pokemon *CurrentMon(enum BattlerId battlerId)
 {
     struct Pokemon *party;
     if ((battlerId & BIT_SIDE) == B_SIDE_PLAYER)
@@ -2658,7 +2660,12 @@ static struct Pokemon *CurrentMon(s32 battlerId)
     return &party[DATA.currentMonIndexes[battlerId]];
 }
 
-s32 MoveGetTarget(s32 battlerId, enum Move moveId, struct MoveContext *ctx, u32 sourceLine)
+static enum BattleTrainer CurrentTrainer(enum BattlerId battlerId)
+{
+    return DATA.partyTrainers[battlerId & BIT_SIDE][DATA.currentMonIndexes[battlerId]];
+}
+
+s32 MoveGetTarget(enum BattlerId battlerId, enum Move moveId, struct MoveContext *ctx, u32 sourceLine)
 {
     s32 target = battlerId;
     if (ctx->explicitTarget)
@@ -2709,7 +2716,7 @@ s32 MoveGetTarget(s32 battlerId, enum Move moveId, struct MoveContext *ctx, u32 
     return target;
 }
 
-void MoveGetIdAndSlot(s32 battlerId, struct MoveContext *ctx, u32 *moveId, u32 *moveSlot, u32 sourceLine)
+void MoveGetIdAndSlot(enum BattlerId battlerId, struct MoveContext *ctx, u32 *moveId, u32 *moveSlot, u32 sourceLine)
 {
     u32 i;
     struct Pokemon *mon = CurrentMon(battlerId);
@@ -2767,12 +2774,12 @@ void MoveGetIdAndSlot(s32 battlerId, struct MoveContext *ctx, u32 *moveId, u32 *
         INVALID_IF(ctx->gimmick != GIMMICK_Z_MOVE && ctx->gimmick != GIMMICK_ULTRA_BURST && holdEffect == HOLD_EFFECT_Z_CRYSTAL, "Cannot use another gimmick while holding a Z-Crystal");
 
         // Check multiple gimmick use.
-        SetGimmick(sourceLine, battlerId, DATA.currentMonIndexes[battlerId], ctx->gimmick);
+        SetGimmick(sourceLine, CurrentTrainer(battlerId), DATA.currentMonIndexes[battlerId], ctx->gimmick);
         *moveSlot |= RET_GIMMICK;
     }
 }
 
-u32 MoveGetFirstFainted(s32 battlerId)
+u32 MoveGetFirstFainted(enum BattlerId battlerId)
 {
     u32 i, partySize;
     struct Pokemon *party;
@@ -2806,7 +2813,7 @@ u32 MoveGetFirstFainted(s32 battlerId)
 
 void Move(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext ctx)
 {
-    s32 battlerId = battler - gBattleMons;
+    enum BattlerId battlerId = battler - gBattleMons;
     u32 moveId;
     u32 moveSlot;
     s32 target;
@@ -2872,7 +2879,7 @@ void Move(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext ctx)
 
 void ForcedMove(u32 sourceLine, struct BattlePokemon *battler)
 {
-    s32 battlerId = battler - gBattleMons;
+    enum BattlerId battlerId = battler - gBattleMons;
     INVALID_IF(DATA.turnState == TURN_CLOSED, "SKIP_TURN outside TURN");
     PushBattlerAction(sourceLine, battlerId, RECORDED_ACTION_TYPE, B_ACTION_USE_MOVE);
     if (DATA.turnState == TURN_OPEN)
@@ -2887,7 +2894,7 @@ void ForcedMove(u32 sourceLine, struct BattlePokemon *battler)
 
 static void TryMarkExpectMove(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext *ctx)
 {
-    s32 battlerId = battler - gBattleMons;
+    enum BattlerId battlerId = battler - gBattleMons;
     u32 moveId;
     u32 moveSlot, id;
     s32 target;
@@ -2917,7 +2924,7 @@ static void TryMarkExpectMove(u32 sourceLine, struct BattlePokemon *battler, str
 
 void ExpectMove(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext ctx)
 {
-    s32 battlerId = battler - gBattleMons;
+    enum BattlerId battlerId = battler - gBattleMons;
     TryMarkExpectMove(sourceLine, battler, &ctx);
     DATA.expectedAiActionIndex[battlerId]++;
 }
@@ -2925,7 +2932,7 @@ void ExpectMove(u32 sourceLine, struct BattlePokemon *battler, struct MoveContex
 void ExpectSendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
 {
     s32 i, id;
-    s32 battlerId = battler - gBattleMons;
+    enum BattlerId battlerId = battler - gBattleMons;
     INVALID_IF(DATA.turnState == TURN_CLOSED, "EXPECT_SEND_OUT outside TURN");
     INVALID_IF(!IsAITest(), "EXPECT_SEND_OUT is usable only in AI_SINGLE_BATTLE_TEST, AI_DOUBLE_BATTLE_TEST, AI_MULTI_BATTLE_TEST, AI_TWO_VS_ONE_TEST, and AI_ONE_VS_TWO_TEST");
     INVALID_IF(partyIndex >= ((battlerId & BIT_SIDE) == B_SIDE_PLAYER ? DATA.playerPartySize : DATA.opponentPartySize), "EXPECT_SEND_OUT to invalid party index");
@@ -2980,7 +2987,7 @@ void Score(u32 sourceLine, struct BattlePokemon *battler, u32 cmp, bool32 toValu
     u32 moveSlot1, moveSlot2;
     s32 i, target;
     struct MoveContext moveCtx = {0};
-    s32 battlerId = battler - gBattleMons;
+    enum BattlerId battlerId = battler - gBattleMons;
     s32 turn = DATA.turns;
 
     INVALID_IF(!IsAITest(), "SCORE_%s%s is usable only in AI_SINGLE_BATTLE_TEST, AI_DOUBLE_BATTLE_TEST, AI_MULTI_BATTLE_TEST, & AI_TWO_VS_ONE_TEST", sCmpToStringTable[cmp], (toValue == TRUE) ? "_VAL" : "");
@@ -3023,7 +3030,7 @@ void Score(u32 sourceLine, struct BattlePokemon *battler, u32 cmp, bool32 toValu
 
 void ExpectMoves(u32 sourceLine, struct BattlePokemon *battler, bool32 notExpected, struct FourMoves moves)
 {
-    s32 battlerId = battler - gBattleMons;
+    enum BattlerId battlerId = battler - gBattleMons;
     u32 i;
 
     for (i = 0; i < MAX_MON_MOVES; i++)
@@ -3043,7 +3050,7 @@ void ExpectMoves(u32 sourceLine, struct BattlePokemon *battler, bool32 notExpect
 void Switch(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
 {
     s32 i;
-    s32 battlerId = battler - gBattleMons;
+    enum BattlerId battlerId = battler - gBattleMons;
     INVALID_IF(DATA.turnState == TURN_CLOSED, "SWITCH outside TURN");
     INVALID_IF(DATA.actionBattlers & (1 << battlerId), "Multiple battler actions");
     INVALID_IF(partyIndex >= ((battlerId & BIT_SIDE) == B_SIDE_PLAYER ? DATA.playerPartySize : DATA.opponentPartySize), "SWITCH to invalid party index");
@@ -3065,7 +3072,7 @@ void Switch(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
 void ExpectSwitch(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
 {
     s32 i, id;
-    s32 battlerId = battler - gBattleMons;
+    enum BattlerId battlerId = battler - gBattleMons;
     INVALID_IF(DATA.turnState == TURN_CLOSED, "EXPECT_SWITCH outside TURN");
     INVALID_IF(!IsAITest(), "EXPECT_SWITCH is usable only in AI_SINGLE_BATTLE_TEST, AI_DOUBLE_BATTLE_TEST, AI_MULTI_BATTLE_TEST, AI_TWO_VS_ONE_TEST, and AI_ONE_VS_TWO_TEST");
     INVALID_IF(DATA.actionBattlers & (1 << battlerId), "Multiple battler actions");
@@ -3093,7 +3100,7 @@ void ExpectSwitch(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
 
 void SkipTurn(u32 sourceLine, struct BattlePokemon *battler)
 {
-    s32 battlerId = battler - gBattleMons;
+    enum BattlerId battlerId = battler - gBattleMons;
     INVALID_IF(DATA.turnState == TURN_CLOSED, "SKIP_TURN outside TURN");
     DATA.actionBattlers |= 1 << battlerId;
 }
@@ -3101,7 +3108,7 @@ void SkipTurn(u32 sourceLine, struct BattlePokemon *battler)
 void SendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
 {
     s32 i;
-    s32 battlerId = battler - gBattleMons;
+    enum BattlerId battlerId = battler - gBattleMons;
     INVALID_IF(DATA.turnState == TURN_CLOSED, "SEND_OUT outside TURN");
     INVALID_IF(partyIndex >= ((battlerId & BIT_SIDE) == B_SIDE_PLAYER ? DATA.playerPartySize : DATA.opponentPartySize), "SEND_OUT of invalid party index");
     INVALID_IF(IsAITest() && (battlerId & BIT_SIDE) == B_SIDE_OPPONENT, "SEND_OUT is not allowed for opponent in AI tests. Use EXPECT_SEND_OUT instead");
@@ -3119,7 +3126,7 @@ void SendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
 void UseItem(u32 sourceLine, struct BattlePokemon *battler, struct ItemContext ctx)
 {
     s32 i;
-    s32 battlerId = battler - gBattleMons;
+    enum BattlerId battlerId = battler - gBattleMons;
     enum ItemType ctxItemType = GetItemType(ctx.itemId);
     bool32 requirePartyIndex = ctxItemType == ITEM_USE_PARTY_MENU
                             || ctxItemType == ITEM_USE_PARTY_MENU_MOVES
@@ -3255,7 +3262,7 @@ void QueueAnimation(u32 sourceLine, u32 type, u32 id, struct AnimationEventConte
 
 void QueueHP(u32 sourceLine, struct BattlePokemon *battler, struct HPEventContext ctx)
 {
-    s32 battlerId = battler - gBattleMons;
+    enum BattlerId battlerId = battler - gBattleMons;
     u32 type;
     uintptr_t address;
 
@@ -3311,7 +3318,7 @@ void QueueHP(u32 sourceLine, struct BattlePokemon *battler, struct HPEventContex
 
 void QueueSubHit(u32 sourceLine, struct BattlePokemon *battler, struct SubHitEventContext ctx)
 {
-    s32 battlerId = battler - gBattleMons;
+    enum BattlerId battlerId = battler - gBattleMons;
     bool32 breakSub = FALSE;
     bool32 checkBreak = FALSE;
     uintptr_t address;
@@ -3354,7 +3361,7 @@ void QueueSubHit(u32 sourceLine, struct BattlePokemon *battler, struct SubHitEve
 
 void QueueExp(u32 sourceLine, struct BattlePokemon *battler, struct ExpEventContext ctx)
 {
-    s32 battlerId = battler - gBattleMons;
+    enum BattlerId battlerId = battler - gBattleMons;
     u32 type;
     uintptr_t address;
 
@@ -3417,7 +3424,7 @@ void QueueMessage(u32 sourceLine, const u8 *pattern)
 
 void QueueStatus(u32 sourceLine, struct BattlePokemon *battler, struct StatusEventContext ctx)
 {
-    s32 battlerId = battler - gBattleMons;
+    enum BattlerId battlerId = battler - gBattleMons;
     u32 mask;
 
     if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)

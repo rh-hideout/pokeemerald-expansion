@@ -8,14 +8,15 @@ AI_MULTI_BATTLE_TEST("AI will only explode and kill everything on the field with
     ASSUME(IsExplosionMove(MOVE_EXPLOSION));
 
     u32 aiFlags;
-    enum BattlerId battler;
+    struct BattlePokemon *battler = NULL;
+    struct BattlePokemon *partner = NULL;
 
-    PARAMETRIZE { aiFlags = 0; battler = 1; }
-    PARAMETRIZE { aiFlags = 0; battler = 3; }
-    PARAMETRIZE { aiFlags = AI_FLAG_RISKY; battler = 1; }
-    PARAMETRIZE { aiFlags = AI_FLAG_RISKY; battler = 3; }
-    PARAMETRIZE { aiFlags = AI_FLAG_WILL_SUICIDE; battler = 1; }
-    PARAMETRIZE { aiFlags = AI_FLAG_WILL_SUICIDE; battler = 3; }
+    PARAMETRIZE { aiFlags = 0; battler = opponentLeft; partner = opponentRight; }
+    PARAMETRIZE { aiFlags = 0; battler = opponentRight; partner = opponentLeft; }
+    PARAMETRIZE { aiFlags = AI_FLAG_RISKY; battler = opponentLeft; partner = opponentRight; }
+    PARAMETRIZE { aiFlags = AI_FLAG_RISKY; battler = opponentRight; partner = opponentLeft; }
+    PARAMETRIZE { aiFlags = AI_FLAG_WILL_SUICIDE; battler = opponentLeft; partner = opponentRight; }
+    PARAMETRIZE { aiFlags = AI_FLAG_WILL_SUICIDE; battler = opponentRight; partner = opponentLeft; }
 
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
@@ -28,7 +29,7 @@ AI_MULTI_BATTLE_TEST("AI will only explode and kill everything on the field with
         if (aiFlags == 0)
             TURN { EXPECT_MOVE(opponentLeft, MOVE_ELECTRO_BALL, target: playerLeft); EXPECT_MOVE(opponentRight, MOVE_ELECTRO_BALL, target: playerLeft); }
         else
-            TURN { EXPECT_MOVE(&gBattleMons[BATTLE_PARTNER(battler)], MOVE_ELECTRO_BALL, target: playerLeft); EXPECT_MOVE(&gBattleMons[battler], MOVE_EXPLOSION); }
+            TURN { EXPECT_MOVE(partner, MOVE_ELECTRO_BALL, target: playerLeft); EXPECT_MOVE(battler, MOVE_EXPLOSION); }
     }
 }
 
@@ -38,14 +39,15 @@ AI_ONE_VS_TWO_BATTLE_TEST("AI will only explode and kill everything on the field
     ASSUME(IsExplosionMove(MOVE_EXPLOSION));
 
     u32 aiFlags;
-    enum BattlerId battler;
+    struct BattlePokemon *battler = NULL;
+    struct BattlePokemon *partner = NULL;
 
-    PARAMETRIZE { aiFlags = 0; battler = 1; }
-    PARAMETRIZE { aiFlags = 0; battler = 3; }
-    PARAMETRIZE { aiFlags = AI_FLAG_RISKY; battler = 3; }
-    PARAMETRIZE { aiFlags = AI_FLAG_RISKY; battler = 1; }
-    PARAMETRIZE { aiFlags = AI_FLAG_WILL_SUICIDE; battler = 1; }
-    PARAMETRIZE { aiFlags = AI_FLAG_WILL_SUICIDE; battler = 3; }
+    PARAMETRIZE { aiFlags = 0; battler = opponentLeft; partner = opponentRight; }
+    PARAMETRIZE { aiFlags = 0; battler = opponentRight; partner = opponentLeft; }
+    PARAMETRIZE { aiFlags = AI_FLAG_RISKY; battler = opponentRight; partner = opponentLeft; }
+    PARAMETRIZE { aiFlags = AI_FLAG_RISKY; battler = opponentLeft; partner = opponentRight; }
+    PARAMETRIZE { aiFlags = AI_FLAG_WILL_SUICIDE; battler = opponentLeft; partner = opponentRight; }
+    PARAMETRIZE { aiFlags = AI_FLAG_WILL_SUICIDE; battler = opponentRight; partner = opponentLeft; }
 
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
@@ -58,7 +60,7 @@ AI_ONE_VS_TWO_BATTLE_TEST("AI will only explode and kill everything on the field
         if (aiFlags == 0)
             TURN { EXPECT_MOVE(opponentLeft, MOVE_ELECTRO_BALL, target: playerLeft); EXPECT_MOVE(opponentRight, MOVE_ELECTRO_BALL, target: playerLeft); }
         else
-            TURN { EXPECT_MOVE(&gBattleMons[BATTLE_PARTNER(battler)], MOVE_ELECTRO_BALL, target: playerLeft); EXPECT_MOVE(&gBattleMons[battler], MOVE_EXPLOSION); }
+            TURN { EXPECT_MOVE(partner, MOVE_ELECTRO_BALL, target: playerLeft); EXPECT_MOVE(battler, MOVE_EXPLOSION); }
     }
 }
 
@@ -102,14 +104,14 @@ AI_TWO_VS_ONE_BATTLE_TEST("Battler 3 has Battler 1 AI flags set correctly (2v1)"
     ASSUME(IsExplosionMove(MOVE_EXPLOSION));
 
     u32 aiFlags;
-    enum BattlerId battler;
+    struct BattlePokemon *battler = NULL;
 
-    PARAMETRIZE { aiFlags = 0; battler = 1; }
-    PARAMETRIZE { aiFlags = 0; battler = 3; }
-    PARAMETRIZE { aiFlags = AI_FLAG_RISKY; battler = 1; }
-    PARAMETRIZE { aiFlags = AI_FLAG_RISKY; battler = 3; }
-    PARAMETRIZE { aiFlags = AI_FLAG_WILL_SUICIDE; battler = 1; }
-    PARAMETRIZE { aiFlags = AI_FLAG_WILL_SUICIDE; battler = 3; }
+    PARAMETRIZE { aiFlags = 0; battler = opponentLeft; }
+    PARAMETRIZE { aiFlags = 0; battler = opponentRight; }
+    PARAMETRIZE { aiFlags = AI_FLAG_RISKY; battler = opponentLeft; }
+    PARAMETRIZE { aiFlags = AI_FLAG_RISKY; battler = opponentRight; }
+    PARAMETRIZE { aiFlags = AI_FLAG_WILL_SUICIDE; battler = opponentLeft; }
+    PARAMETRIZE { aiFlags = AI_FLAG_WILL_SUICIDE; battler = opponentRight; }
 
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
@@ -119,7 +121,7 @@ AI_TWO_VS_ONE_BATTLE_TEST("Battler 3 has Battler 1 AI flags set correctly (2v1)"
         MULTI_OPPONENT_A(SPECIES_VOLTORB) { Moves(MOVE_EXPLOSION, MOVE_ELECTRO_BALL); HP(1); }
         MULTI_OPPONENT_A(SPECIES_ELECTRODE) { Moves(MOVE_EXPLOSION, MOVE_ELECTRO_BALL); HP(1); }
     } WHEN {
-        if (aiFlags == 0 || battler == 3)
+        if (aiFlags == 0 || battler == opponentRight)
             TURN { EXPECT_MOVE(opponentLeft, MOVE_ELECTRO_BALL, target: playerLeft); EXPECT_MOVE(opponentRight, MOVE_ELECTRO_BALL, target: playerLeft); }
         else
             TURN { EXPECT_MOVE(opponentLeft, MOVE_EXPLOSION, target: playerLeft); EXPECT_MOVE(opponentRight, MOVE_EXPLOSION); }
@@ -150,7 +152,7 @@ AI_MULTI_BATTLE_TEST("Partner will not steal your pokemon to delay using their a
 
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        BATTLER_AI_FLAGS(B_POSITION_PLAYER_RIGHT, AI_FLAG_ACE_POKEMON);
+        BATTLER_AI_FLAGS(playerRight, AI_FLAG_ACE_POKEMON);
         MULTI_PLAYER(SPECIES_WOBBUFFET) { }
         MULTI_PLAYER(SPECIES_WOBBUFFET) { }
         MULTI_PLAYER(SPECIES_WOBBUFFET) { }
@@ -171,7 +173,7 @@ AI_MULTI_BATTLE_TEST("AI opponents do not steal their partner pokemon in multi b
 
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        BATTLER_AI_FLAGS(B_POSITION_OPPONENT_LEFT, AI_FLAG_ACE_POKEMON);
+        BATTLER_AI_FLAGS(opponentLeft, AI_FLAG_ACE_POKEMON);
         MULTI_PLAYER(SPECIES_WOBBUFFET) { }
         MULTI_PARTNER(SPECIES_WOBBUFFET) { }
         MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); HP(1); }
@@ -194,7 +196,7 @@ AI_MULTI_BATTLE_TEST("AI opponents do not steal their partner pokemon in multi b
     PARAMETRIZE { item = ITEM_NONE; move = MOVE_ROAR; }
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        BATTLER_AI_FLAGS(B_POSITION_OPPONENT_LEFT, AI_FLAG_ACE_POKEMON);
+        BATTLER_AI_FLAGS(opponentLeft, AI_FLAG_ACE_POKEMON);
         MULTI_PLAYER(SPECIES_WOBBUFFET) { }
         MULTI_PARTNER(SPECIES_WOBBUFFET) { }
         MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); Item(item); }
@@ -211,7 +213,7 @@ AI_MULTI_BATTLE_TEST("AI opponents do not steal their partner pokemon in multi b
 {
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        BATTLER_AI_FLAGS(B_POSITION_OPPONENT_LEFT, AI_FLAG_ACE_POKEMON);
+        BATTLER_AI_FLAGS(opponentLeft, AI_FLAG_ACE_POKEMON);
         MULTI_PLAYER(SPECIES_WOBBUFFET) { }
         MULTI_PARTNER(SPECIES_WOBBUFFET) { }
         MULTI_OPPONENT_A(SPECIES_GOLISOPOD) { Moves(MOVE_CELEBRATE); HP(101); MaxHP(200); Ability(ABILITY_EMERGENCY_EXIT); }
