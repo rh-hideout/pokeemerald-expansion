@@ -5836,7 +5836,7 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId
         }
         else
         {
-	    if (ability == ABILITY_MEGA_SOL)
+            if (ability == ABILITY_MEGA_SOL)
                 return TYPE_FIRE;
             switch (gWeatherPtr->currWeather)
             {
