@@ -36,7 +36,7 @@ bool32 DoSwitchInEvents(void)
         gBattleStruct->switchInBattlerCounter = 0;
         gBattleStruct->eventState.battlerSwitchIn = 0;
         gBattleStruct->eventState.switchIn++;
-        break;
+        // fallthrough
     case SWITCH_IN_EVENTS_TERA_SHIFT:
         while (gBattleStruct->switchInBattlerCounter < gBattlersCount)
         {

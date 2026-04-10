@@ -660,6 +660,43 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "luuma",
+      "name": "luuma",
+      "avatar_url": "https://avatars.githubusercontent.com/u/31407427?v=4",
+      "profile": "https://github.com/luuma",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "DragonScaledEmma",
+      "name": "Emma",
+      "avatar_url": "https://avatars.githubusercontent.com/u/220702264?v=4",
+      "profile": "https://github.com/DragonScaledEmma",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "gammel2013",
+      "name": "gammel2013",
+      "avatar_url": "https://avatars.githubusercontent.com/u/160730477?v=4",
+      "profile": "https://github.com/Gammel2013",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "blusunrize",
+      "name": "blusunrize",
+      "avatar_url": "https://avatars.githubusercontent.com/u/4106382?v=4",
+      "profile": "https://github.com/BluSunrize",
+      "contributions": [
+        "bug",
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,

@@ -168,7 +168,7 @@ enum {
 };
 #define MENU_WALLPAPER_SETS_START MENU_SCENERY_1
 #define MENU_WALLPAPERS_START MENU_FOREST
-#define GENDER_MASK 0x7FFF
+#define SPECIES_MASK 0x3FFF
 
 // Return IDs for input handlers
 enum {
@@ -5113,6 +5113,10 @@ static u16 TryLoadMonIconTiles(u16 species, u32 personality, bool32 isEgg)
         species |= (1 << 15);
 #endif
 
+    // Treat eggs as a seperate species as they might have unique sprites
+    if (isEgg)
+        species |= (1 << 14);
+
     // Search icon list for this species
     for (i = 0; i < MAX_MON_ICONS; i++)
     {
@@ -5139,7 +5143,7 @@ static u16 TryLoadMonIconTiles(u16 species, u32 personality, bool32 isEgg)
     sStorage->iconSpeciesList[i] = species;
     sStorage->numIconsPerSpecies[i]++;
     offset = 16 * i;
-    species &= GENDER_MASK;
+    species &= SPECIES_MASK;
     CpuCopy32(GetMonIconTilesIsEgg(species, personality, isEgg), (void *)(OBJ_VRAM0) + offset * TILE_SIZE_4BPP, 0x200);
 
     return offset;
@@ -6982,16 +6986,15 @@ static void SetDisplayMonData(void *pokemon, u8 mode)
     {
         struct BoxPokemon *boxMon = (struct BoxPokemon *)pokemon;
 
-        sStorage->displayMonSpecies = GetBoxMonData(pokemon, MON_DATA_SPECIES_OR_EGG);
+        sStorage->displayMonSpecies = GetBoxMonData(pokemon, MON_DATA_SPECIES);
         if (sStorage->displayMonSpecies != SPECIES_NONE)
         {
-            bool8 isShiny = GetBoxMonData(boxMon, MON_DATA_IS_SHINY);
+            bool32 isShiny = GetBoxMonData(boxMon, MON_DATA_IS_SHINY);
             sanityIsBadEgg = GetBoxMonData(boxMon, MON_DATA_SANITY_IS_BAD_EGG);
             if (sanityIsBadEgg)
                 sStorage->displayMonIsEgg = TRUE;
             else
                 sStorage->displayMonIsEgg = GetBoxMonData(boxMon, MON_DATA_IS_EGG);
-
 
             GetBoxMonData(boxMon, MON_DATA_NICKNAME, sStorage->displayMonName);
             StringGet_Nickname(sStorage->displayMonName);
