@@ -393,6 +393,8 @@ static enum CancelerResult CancelerConfused(struct BattleCalcValues *cv)
                 dmgCtx.updateFlags = TRUE;
                 dmgCtx.isSelfInflicted = TRUE;
                 dmgCtx.fixedBasePower = 40;
+                dmgCtx.abilities[gBattlerAttacker] = cv->abilities[gBattlerAttacker];
+                dmgCtx.holdEffects[gBattlerAttacker] = cv->holdEffects[gBattlerAttacker];
                 gBattleStruct->passiveHpUpdate[cv->battlerAtk] = CalculateMoveDamage(&dmgCtx);
                 gBattlescriptCurrInstr = BattleScript_MoveUsedIsConfused;
                 return CANCELER_RESULT_FAILURE;

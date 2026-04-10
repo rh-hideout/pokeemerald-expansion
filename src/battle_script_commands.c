@@ -1274,6 +1274,12 @@ static void Cmd_damagecalc(void)
     ctx.randomFactor = TRUE;
     ctx.updateFlags = TRUE;
 
+    for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
+    {
+        ctx.abilities[battler] = GetBattlerAbility(battler);
+        ctx.holdEffects[battler] = GetBattlerHoldEffect(battler);
+    }
+
     if (IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove)))
     {
         for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
@@ -5246,7 +5252,7 @@ static bool32 IsValidSwitchIn(enum BattleTrainer trainer, u32 index)
     if (index >= PARTY_SIZE)
         return FALSE;
 
-    struct Pokemon *party = GetTrainerParty(trainer); 
+    struct Pokemon *party = GetTrainerParty(trainer);
     if (!IsValidForBattle(&party[index]))
         return FALSE;
 
@@ -5395,14 +5401,14 @@ bool32 CanBattlerSwitch(enum BattlerId battler)
     bool32 ret = FALSE;
     struct Pokemon *party = GetBattlerParty(battler);
 
-    if (BattleSideHasTwoTrainers(GetBattlerSide(battler)) && !AreMultiPartiesFullTeams()) 
+    if (BattleSideHasTwoTrainers(GetBattlerSide(battler)) && !AreMultiPartiesFullTeams())
         lastMonId = MULTI_PARTY_SIZE;
     else
         lastMonId = PARTY_SIZE;
 
     battlerIn1 = GetBattlerAtPosition(GetBattlerPosition(battler));
     battlerIn2 = HasPartnerIgnoreFlags(battlerIn1) ? BATTLE_PARTNER(battlerIn1) : battlerIn1;
-    
+
     for (i = 0; i < lastMonId; i++)
     {
         if (GetMonData(&party[i], MON_DATA_HP) != 0

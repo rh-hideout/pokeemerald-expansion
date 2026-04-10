@@ -1883,7 +1883,7 @@ bool32 HasNoMonsToSwitch(enum BattlerId battler, u8 partyIdBattlerOn1, u8 partyI
     u32 i, playerId, flankId;
     s32 lastId = GetAILastPartyIndex(battler); // + 1
     struct Pokemon *party = GetBattlerParty(battler);
-    
+
 
     if (!IsDoubleBattle())
         return FALSE;
@@ -7989,12 +7989,6 @@ s32 GetAdjustedDamage(struct DamageContext *ctx, s32 damage)
 s32 CalculateMoveDamage(struct DamageContext *ctx)
 {
     s32 damage = 0;
-
-    for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
-    {
-        ctx->abilities[battler] = GetBattlerAbility(battler);
-        ctx->holdEffects[battler] = GetBattlerHoldEffect(battler);
-    }
 
     ctx->typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(ctx);
     ctx->isCrit = IsCriticalHit(ctx);

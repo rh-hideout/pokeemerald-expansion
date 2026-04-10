@@ -1334,6 +1334,10 @@ static void TrySetBattleSeminarShow(void)
             ctx.updateFlags = FALSE;
             ctx.isSelfInflicted = FALSE;
             ctx.fixedBasePower = powerOverride;
+            ctx.abilities[gBattlerAttacker] = GetBattlerAbility(gBattlerAttacker);
+            ctx.abilities[gBattlerTarget] = GetBattlerAbility(gBattlerTarget);
+            ctx.holdEffects[gBattlerAttacker] = GetBattlerHoldEffect(gBattlerAttacker);
+            ctx.holdEffects[gBattlerTarget] = GetBattlerHoldEffect(gBattlerTarget);
             dmgByMove[i] = CalculateMoveDamage(&ctx);
             if (dmgByMove[i] == 0 && !IsBattlerUnaffectedByMove(gBattlerTarget))
                 dmgByMove[i] = 1;
