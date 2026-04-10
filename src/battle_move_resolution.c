@@ -2919,8 +2919,9 @@ static enum MoveEndResult MoveEndDefrost(void)
 static enum MoveEndResult MoveEndMoveBlockRecoil(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
+    enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
 
-    switch (GetMoveEffect(gCurrentMove))
+    switch (moveEffect)
     {
     case EFFECT_RECOIL_IF_MISS:
         if (IsBattlerAlive(gBattlerAttacker)
@@ -2957,19 +2958,9 @@ static enum MoveEndResult MoveEndMoveBlockRecoil(void)
         }
         break;
     case EFFECT_RECOIL:
-        if (IsBattlerTurnDamaged(gBattlerTarget, INCLUDING_SUBSTITUTES) && IsBattlerAlive(gBattlerAttacker) && gBattleStruct->moveDamage[gBattlerTarget] > 0)
-        {
-            enum Ability ability = GetBattlerAbility(gBattlerAttacker);
-            if (IsAbilityAndRecord(gBattlerAttacker, ability, ABILITY_ROCK_HEAD)
-             || IsAbilityAndRecord(gBattlerAttacker, ability, ABILITY_MAGIC_GUARD))
-                break;
-
-            SetPassiveDamageAmount(gBattlerAttacker, gBattleScripting.savedDmg * max(1, GetMoveRecoil(gCurrentMove)) / 100);
-            TryUpdateEvolutionTracker(IF_RECOIL_DAMAGE_GE, gBattleStruct->passiveHpUpdate[gBattlerAttacker], MOVE_NONE);
-            BattleScriptCall(BattleScript_MoveEffectRecoil);
-            result = MOVEEND_RESULT_RUN_SCRIPT;
-        }
-        break;
+        if (gBattleStruct->moveDamage[gBattlerTarget] == 0)
+            break;
+        // fallthrough
     case EFFECT_CHLOROBLAST:
         if (IsBattlerTurnDamaged(gBattlerTarget, INCLUDING_SUBSTITUTES) && IsBattlerAlive(gBattlerAttacker))
         {
@@ -2978,8 +2969,15 @@ static enum MoveEndResult MoveEndMoveBlockRecoil(void)
              || IsAbilityAndRecord(gBattlerAttacker, ability, ABILITY_MAGIC_GUARD))
                 break;
 
-            s32 recoil = (GetNonDynamaxMaxHP(gBattlerAttacker) + 1) / 2; // Half of Max HP Rounded UP
-            SetPassiveDamageAmount(gBattlerAttacker, recoil);
+            if (moveEffect == EFFECT_CHLOROBLAST)
+            {
+                s32 recoil = (GetNonDynamaxMaxHP(gBattlerAttacker) + 1) / 2; // Half of Max HP Rounded UP
+                SetPassiveDamageAmount(gBattlerAttacker, recoil);
+            }
+            else
+            {
+                SetPassiveDamageAmount(gBattlerAttacker, gBattleScripting.savedDmg * max(1, GetMoveRecoil(gCurrentMove)) / 100);
+            }
             TryUpdateEvolutionTracker(IF_RECOIL_DAMAGE_GE, gBattleStruct->passiveHpUpdate[gBattlerAttacker], MOVE_NONE);
             BattleScriptCall(BattleScript_MoveEffectRecoil);
             result = MOVEEND_RESULT_RUN_SCRIPT;
