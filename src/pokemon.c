@@ -1276,6 +1276,7 @@ void ZeroPlayerPartyMons(void)
 {
     for (s32 i = 0; i < PARTY_SIZE; i++)
         ZeroMonData(&gParties[B_TRAINER_0][i]);
+    gPlayerPartyCount = 0;
 }
 
 void ZeroEnemyPartyMons(void)
@@ -1285,6 +1286,8 @@ void ZeroEnemyPartyMons(void)
         ZeroMonData(&gParties[B_TRAINER_1][i]);
         ZeroMonData(&gParties[B_TRAINER_3][i]);
     }
+    gPartiesCount[B_TRAINER_1] = 0;
+    gPartiesCount[B_TRAINER_3] = 0;
 }
 
 void CreateRandomMon(struct Pokemon *mon, enum Species species, u8 level)
@@ -7302,6 +7305,7 @@ u32 GiveScriptedMonToPlayer(struct Pokemon *mon, u8 slot)
         HandleSetPokedexFlagFromMon(mon, FLAG_SET_SEEN);
         HandleSetPokedexFlagFromMon(mon, FLAG_SET_CAUGHT);
     }
+    CalculatePlayerPartyCount();
     return sentToPc;
 }
 

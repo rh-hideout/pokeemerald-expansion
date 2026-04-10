@@ -3289,12 +3289,12 @@ static bool32 EventEvolution(u32 partyIndex)
     return TRUE;
 }
 
-void Script_TriggerMultipleEvolutions(void)
+static void TriggerMultipleEvolutions_Repeatable(void)
 {
     if (gSpecialVar_Result == EVO_EVENT_SUCCESSFUL)
         gSpecialVar_0x8006++;
 
-    gCB2_AfterEvolution = Script_TriggerMultipleEvolutions;
+    gCB2_AfterEvolution = TriggerMultipleEvolutions_Repeatable;
     for (u32 i = 0; i < gPlayerPartyCount; i++)
     {
         if (!(gTriedEvolving & (1u << i)))
@@ -3310,22 +3310,27 @@ void Script_TriggerMultipleEvolutions(void)
     SetMainCallback2(CB2_ReturnToFieldContinueScript);
 }
 
-bool8 Script_TriggerUniqueEvolution(struct ScriptContext *ctx)
+void Script_TriggerMultipleEvolutions(struct ScriptContext *ctx)
 {
+    ctx->waitAfterCallNative = TRUE;
+    TriggerMultipleEvolutions_Repeatable();
+}
+
+void Script_TriggerUniqueEvolution(struct ScriptContext *ctx)
+{
+    ctx->waitAfterCallNative = TRUE;
     if (gSpecialVar_0x8004 == PARTY_NOTHING_CHOSEN)
     {
         gSpecialVar_Result = EVO_EVENT_IMPOSSIBLE;
-        return FALSE;
+        return;
     }
     assertf(gSpecialVar_0x8004 <= PARTY_SIZE, "TriggerEvolution script called with invalid partyIndex %d", gSpecialVar_0x8004)
     {
         gSpecialVar_Result = EVO_EVENT_IMPOSSIBLE;
-        return FALSE;
+        return;
     }
     gCB2_AfterEvolution = CB2_ReturnToFieldContinueScript;
-    if (EventEvolution(gSpecialVar_0x8004))
-        return TRUE;
-    return FALSE;
+    EventEvolution(gSpecialVar_0x8004);
 }
 
 void Script_EndTrainerCanSeeIf(struct ScriptContext *ctx)
