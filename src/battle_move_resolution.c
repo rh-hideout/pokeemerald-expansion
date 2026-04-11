@@ -413,7 +413,7 @@ static enum CancelerResult CancelerConfused(struct BattleCalcValues *cv)
     return CANCELER_RESULT_SUCCESS;
 }
 
-static enum CancelerResult CancelerGhost(struct BattleCalcValues *cv) // GHOST in pokemon tower
+static enum CancelerResult CancelerGhost(struct BattleCalcValues *cv) // GHOST in Pokémon Tower
 {
     if (IsGhostBattleWithoutScope())
     {

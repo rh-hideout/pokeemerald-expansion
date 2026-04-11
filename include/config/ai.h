@@ -116,7 +116,7 @@
 #define PREDICT_MOVE_CHANCE                                     100
 
 // AI Terastalization chances
-#define AI_CONSERVE_TERA_CHANCE_PER_MON                         10 // Chance for AI with smart tera flag to decide not to tera before considering defensive benefit is this*(X-1), where X is the number of alive pokemon that could tera
+#define AI_CONSERVE_TERA_CHANCE_PER_MON                         10 // Chance for AI with smart tera flag to decide not to tera before considering defensive benefit is this*(X-1), where X is the number of alive Pokémon that could tera
 #define AI_TERA_PREDICT_CHANCE                                  40 // Chance for AI with smart tera flag to tera in the situation where tera would save it from a KO, but could be punished by a KO from a different move.
 
 // AI_FLAG_PP_STALL_PREVENTION settings
@@ -129,9 +129,9 @@
 // AI_FLAG_ASSUME_STATUS_MOVES settings
 #define ASSUME_STATUS_MOVES_HAS_TUNING                  TRUE // Flag has varying rates for different kinds of status move.
                                                              // Setting to false also means it will not alert on Fake Out or Super Fang.
-#define ASSUME_STATUS_HIGH_ODDS                         90 // Chance for AI to see extremely likely moves for a pokemon to have, like Spore
-#define ASSUME_STATUS_MEDIUM_ODDS                       70 // Chance for AI to see moderately likely moves for a pokemon to have, like Protect
-#define ASSUME_STATUS_LOW_ODDS                          40 // Chance for AI to see niche moves a pokemon may have but probably won't, like Entrainment
+#define ASSUME_STATUS_HIGH_ODDS                         90 // Chance for AI to see extremely likely moves for a Pokémon to have, like Spore
+#define ASSUME_STATUS_MEDIUM_ODDS                       70 // Chance for AI to see moderately likely moves for a Pokémon to have, like Protect
+#define ASSUME_STATUS_LOW_ODDS                          40 // Chance for AI to see niche moves a Pokémon may have but probably won't, like Entrainment
 #define ASSUME_ALL_STATUS_ODDS                          25 // Chance for the AI to see any kind of status move.
 
 // AI_FLAG_SMART_SWITCHING settings
@@ -145,7 +145,7 @@
 #define FRIENDLY_FIRE_NORMAL_THRESHOLD            3 // typical acceptable number of hits to KO the partner via friendly fire
 #define FRIENDLY_FIRE_CONSERVATIVE_THRESHOLD      4 // AI_FLAG_CONSERVATIVE acceptable number of hits to KO the partner via friendly fire
 // Counterplay on the assumption of opponents Protecting.
-#define DOUBLE_TRICK_ROOM_ON_LAST_TURN_CHANCE    35 // both pokemon use Trick Room on turn Trick Room expires in the hopes both opponents used Protect to stall, getting a free refresh on the timer
+#define DOUBLE_TRICK_ROOM_ON_LAST_TURN_CHANCE    35 // both Pokémon use Trick Room on turn Trick Room expires in the hopes both opponents used Protect to stall, getting a free refresh on the timer
 #define TAILWIND_IN_TRICK_ROOM_CHANCE            35 // use Tailwind on turn Trick Room expires in the hopes both opponents used Protect to stall
 
 #define AI_FLAG_ATTACKS_PARTNER_FOCUSES_PARTNER  FALSE  // if TRUE, AI_FLAG_ATTACKS_PARTNER prefers attacking the partner over the ally.

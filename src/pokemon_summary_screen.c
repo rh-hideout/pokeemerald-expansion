@@ -79,7 +79,7 @@
 #define PSS_LABEL_WINDOW_MOVES_APPEAL_JAM 15
 #define PSS_LABEL_WINDOW_PROMPT_RELEARN 16
 
-// Above/below the pokemon's portrait (left)
+// Above/below the Pokémon's portrait (left)
 #define PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER 17
 #define PSS_LABEL_WINDOW_PORTRAIT_NICKNAME 18 // The upper name
 #define PSS_LABEL_WINDOW_PORTRAIT_SPECIES 19 // The lower name

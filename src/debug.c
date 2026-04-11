@@ -3734,7 +3734,7 @@ static void DebugAction_Give_DayCareEgg(u8 taskId)
         Debug_DestroyMenu_Full_Script(taskId, DebugScript_OneDaycareMons);
     else if (GetDaycareCompatibilityScore(&gSaveBlock1Ptr->daycare) == PARENTS_INCOMPATIBLE) // not compatible parents
         Debug_DestroyMenu_Full_Script(taskId, DebugScript_DaycareMonsNotCompatible);
-    else // 2 pokemon which can have a pokemon baby together
+    else // 2 Pokémon which can have a Pokémon baby together
         TriggerPendingDaycareEgg();
 }
 

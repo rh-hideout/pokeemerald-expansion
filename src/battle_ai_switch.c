@@ -1560,7 +1560,7 @@ bool32 ShouldSwitch(enum BattlerId battler)
         return FALSE;
 
     // Default Function
-    // Can prompt switch if AI has a pokemon in party that resists current opponent & has super effective move
+    // Can prompt switch if AI has a Pokémon in party that resists current opponent & has super effective move
     if (FindMonWithFlagsAndSuperEffective(battler, MOVE_RESULT_DOESNT_AFFECT_FOE, 50)
         || FindMonWithFlagsAndSuperEffective(battler, MOVE_RESULT_NOT_VERY_EFFECTIVE, 33))
         return TRUE;
@@ -1692,9 +1692,9 @@ static u32 GetSwitchinSingleUseItemHealing(enum BattlerId battler, enum BattlerI
     enum Item aiItem = gAiLogicData->items[battler];
     u32 maxHP = gBattleMons[battler].maxHP;
     s32 itemHeal = 0;
-    
+
     // Check if we're at a single use healing item threshold
-    if (currentHP <= 0 
+    if (currentHP <= 0
      || gAiLogicData->abilities[battler] == ABILITY_KLUTZ
      || (gAiLogicData->abilities[opposingBattler] == ABILITY_UNNERVE && GetItemPocket(aiItem) == POCKET_BERRIES))
         return itemHeal;
@@ -2844,7 +2844,7 @@ static void SetBattlerStatusForSwitchin(enum BattlerId battler)
             gBattleMons[battler].status1 = STATUS1_TOXIC_POISON;
             gBattleMons[battler].status1 += STATUS1_TOXIC_TURN(1);
         }
-    } 
+    }
 }
 
 static void SetBattlerStatStagesForSwitchin(enum BattlerId battler, enum BattlerId opposingBattler, u32 fieldStatus)

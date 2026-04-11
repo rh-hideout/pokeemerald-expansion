@@ -593,7 +593,7 @@ static const union TextColor sHealthBoxTextColor =
 #define hBar_Data6                  data[6]
 
 // This function is here to cover a specific case - one player's mon in a 2 vs 1 double battle. In this scenario - display singles layout.
-// The same goes for a 2 vs 1 where opponent has only one pokemon.
+// The same goes for a 2 vs 1 where opponent has only one Pokémon.
 enum BattleCoordTypes GetBattlerCoordsIndex(enum BattlerId battler)
 {
     if (GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT && gPartiesCount[B_TRAINER_0] == 1 && !(gBattleTypeFlags & BATTLE_TYPE_MULTI))
