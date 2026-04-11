@@ -419,7 +419,7 @@ static u32 FindMonWithMoveOfEffectiveness(struct SwitchContext *switchContext, u
     // Find a Pokémon in the party that has a super effective move.
     for (u32 monIndex = 0; monIndex < switchContext->lastId; monIndex++)
     {
-        if(!switchContext->canConsiderPartyMon[monIndex])
+        if(!(switchContext->eligiblePartyMons & (1u << monIndex)))
             continue;
 
         for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
@@ -636,7 +636,7 @@ static bool32 FindMonThatAbsorbsOpponentsMove(struct SwitchContext *switchContex
     // Check party for mon with ability that absorbs move
     for (u32 monIndex = 0; monIndex < switchContext->lastId; monIndex++)
     {
-        if (!switchContext->canConsiderPartyMon[monIndex])
+        if (!(switchContext->eligiblePartyMons & (1u << monIndex)))
             continue;
 
         partyMonAbility = GetMonAbility(&switchContext->party[monIndex]);
@@ -689,7 +689,7 @@ static bool32 ShouldSwitchIfTrapperInParty(struct SwitchContext *switchContext)
 
     for (u32 monIndex = 0; monIndex < switchContext->lastId; monIndex++)
     {
-        if (!switchContext->canConsiderPartyMon[monIndex])
+        if (!(switchContext->eligiblePartyMons & (1u << monIndex)))
             continue;
 
         partyMonAbility = GetMonAbility(&switchContext->party[monIndex]);
@@ -1117,7 +1117,7 @@ static bool32 CanMonSurviveHazardSwitchin(struct SwitchContext *switchContext)
     {
         for (u32 monIndex = 0; monIndex < switchContext->lastId; monIndex++)
         {
-            if (!switchContext->canConsiderPartyMon[monIndex])
+            if (!(switchContext->eligiblePartyMons & (1u << monIndex)))
                 continue;
 
             for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
@@ -1327,8 +1327,7 @@ void GetShouldSwitchMoveData(struct SwitchContext *switchContext)
             || nonVolatileStatus == MOVE_EFFECT_PARALYSIS
             || nonVolatileStatus == MOVE_EFFECT_BURN
             || aiMoveEffect == EFFECT_YAWN
-            || aiMoveEffect == EFFECT_TRICK || aiMoveEffect == EFFECT_TRICK_ROOM || aiMoveEffect== EFFECT_WONDER_ROOM || aiMoveEffect ==  EFFECT_PSYCHO_SHIFT || aiMoveEffect == EFFECT_FIRST_TURN_ONLY
-            )
+            || aiMoveEffect == EFFECT_TRICK || aiMoveEffect == EFFECT_TRICK_ROOM || aiMoveEffect== EFFECT_WONDER_ROOM || aiMoveEffect ==  EFFECT_PSYCHO_SHIFT || aiMoveEffect == EFFECT_FIRST_TURN_ONLY)
             {
                 switchContext->hasImportantStatusMove = TRUE;
             }
@@ -1353,19 +1352,34 @@ void GetShouldSwitchMoveData(struct SwitchContext *switchContext)
     }
 }
 
+void GetShouldSwitchPartyMonEligibility(struct SwitchContext *switchContext)
+{
+    for (u32 monIndex = 0; monIndex < switchContext->lastId; monIndex++)
+    {
+        if (!IsValidForBattle(&switchContext->party[monIndex]))
+            continue;
+        if (IsPartyMonOnFieldOrChosenToSwitch(switchContext->battler, monIndex, switchContext->battlerIn1, switchContext->battlerIn2))
+            continue;
+        if (IsPartyMonPlannedToBeSwitchedInByPartner(monIndex, switchContext->battler))
+            continue;
+        if (IsAceMon(switchContext->battler, monIndex))
+            continue;
+        switchContext->eligiblePartyMons |= (1u << monIndex);
+    }
+}
+
 bool32 ShouldSwitch(enum BattlerId battler)
 {
     struct SwitchContext switchContext = {0};
     switchContext.battler = battler;
     switchContext.opposingBattler = GetOppositeBattler(switchContext.battler);
     switchContext.party = GetBattlerParty(switchContext.battler);
-    switchContext.lastId = GetAILastPartyIndex(switchContext.battler); // + 1
-    GetActiveBattlerIds(switchContext.battler, &switchContext.battlerIn1, &switchContext.battlerIn2);
+    switchContext.lastId = GetAILastPartyIndex(switchContext.battler);
     switchContext.incomingMove = GetPredictedMoveSpeedCheck(switchContext.battler, switchContext.opposingBattler, gAiLogicData);
     switchContext.hasStatRaised = AnyUsefulStatIsRaised(switchContext.battler);
+    GetActiveBattlerIds(switchContext.battler, &switchContext.battlerIn1, &switchContext.battlerIn2);
     GetShouldSwitchMoveData(&switchContext);
-
-    s32 availableToSwitch;
+    GetShouldSwitchPartyMonEligibility(&switchContext);
 
     if (!CanBattlerConsiderSwitch(switchContext.battler))
         return FALSE;
@@ -1374,36 +1388,7 @@ bool32 ShouldSwitch(enum BattlerId battler)
     if (gAiThinkingStruct->aiFlags[switchContext.battler] & AI_FLAG_SEQUENCE_SWITCHING)
         return FALSE;
 
-    availableToSwitch = 0;
-
-    for (u32 monIndex = 0; monIndex < switchContext.lastId; monIndex++)
-    {
-        if (!IsValidForBattle(&switchContext.party[monIndex]))
-        {
-            switchContext.canConsiderPartyMon[monIndex] = FALSE;
-            continue;
-        }
-        if (IsPartyMonOnFieldOrChosenToSwitch(switchContext.battler, monIndex, switchContext.battlerIn1, switchContext.battlerIn2))
-        {
-            switchContext.canConsiderPartyMon[monIndex] = FALSE;
-            continue;
-        }
-        if (IsPartyMonPlannedToBeSwitchedInByPartner(monIndex, switchContext.battler))
-        {
-            switchContext.canConsiderPartyMon[monIndex] = FALSE;
-            continue;
-        }
-        if (IsAceMon(switchContext.battler, monIndex))
-        {
-            switchContext.canConsiderPartyMon[monIndex] = FALSE;
-            continue;
-        }
-        switchContext.canConsiderPartyMon[monIndex] = TRUE;
-        
-        availableToSwitch++;
-    }
-
-    if (availableToSwitch == 0)
+    if (switchContext.eligiblePartyMons == 0)
         return FALSE;
 
     // custom switching logic

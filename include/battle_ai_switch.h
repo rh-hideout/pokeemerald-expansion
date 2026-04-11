@@ -55,15 +55,18 @@ struct SwitchContext
     enum BattlerId battlerIn1;
     enum BattlerId battlerIn2;
     struct Pokemon *party;
-    bool32 canConsiderPartyMon[PARTY_SIZE];
 
     enum Move incomingMove;
-    bool32 hasStatRaised;
 
-    bool32 canBattlerWin1v1;
-    bool32 hasEffectiveMove;
-    bool32 hasImportantStatusMove;
-    bool32 battlerGetsOHKOd;
+    // Flags
+    u32 canBattlerWin1v1;
+    u32 hasEffectiveMove;
+    u32 hasImportantStatusMove;
+    u32 battlerGetsOHKOd;
+    u32 hasStatRaised;
+
+    // Party mon flags
+    u32 eligiblePartyMons;
 };
 
 u32 GetMostSuitableMonToSwitchInto(enum BattlerId battler, enum SwitchType switchType);
