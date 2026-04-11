@@ -46,6 +46,21 @@ enum SwitchType
     SWITCH_MID_BATTLE_OPTIONAL,
 };
 
+struct SwitchContext
+{
+    enum BattlerId battler;
+    enum BattlerId opposingBattler;
+
+    s32 lastId;
+    enum BattlerId battlerIn1;
+    enum BattlerId battlerIn2;
+    struct Pokemon *party;
+    bool32 canConsiderPartyMon[PARTY_SIZE];
+
+    enum Move incomingMove;
+    bool32 hasStatRaised;
+};
+
 u32 GetMostSuitableMonToSwitchInto(enum BattlerId battler, enum SwitchType switchType);
 bool32 ShouldSwitch(enum BattlerId battler);
 void ModifySwitchAfterMoveScoring(enum BattlerId battler);

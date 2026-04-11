@@ -256,6 +256,18 @@ enum Move GetIncomingMoveSpeedCheck(enum BattlerId battler, enum BattlerId oppos
     return MOVE_NONE;
 }
 
+enum Move GetPredictedMoveSpeedCheck(enum BattlerId battler, enum BattlerId opposingBattler, struct AiLogicData *aiData)
+{
+    if (aiData->predictingMove)
+    {
+        // Ignore moves that don't do damage or only have priority one time
+        if (GetMovePower(aiData->predictedMove[opposingBattler]) != 0 && GetMoveEffect(aiData->predictedMove[opposingBattler]) != EFFECT_FIRST_TURN_ONLY)
+            return aiData->predictedMove[opposingBattler];
+    }
+
+    return aiData->lastUsedMove[opposingBattler];
+}
+
 void SaveBattlerData(enum BattlerId battlerId)
 {
     if (!BattlerHasAi(battlerId) && !gAiThinkingStruct->saved[battlerId].saved)
