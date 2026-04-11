@@ -1502,11 +1502,10 @@ static enum CancelerResult CancelerProtean(struct BattleCalcValues *cv)
 
 static bool32 CanTwoTurnMoveFireThisTurn(struct BattleCalcValues *cv)
 {
-    if (GetMoveTwoTurnAttackWeather(cv->move) & B_WEATHER_SUN && cv->abilities[cv->battlerAtk] == ABILITY_MEGA_SOL)
-        return TRUE;
     if (gBattleMoveEffects[GetMoveEffect(cv->move)].semiInvulnerableEffect
      || GetMoveEffect(cv->move) == EFFECT_GEOMANCY
-     || !IsBattlerWeatherAffected(cv->holdEffects[cv->battlerAtk], GetWeather(), GetMoveTwoTurnAttackWeather(cv->move)))
+     || (!IsBattlerWeatherAffected(cv->holdEffects[cv->battlerAtk], GetWeather(), GetMoveTwoTurnAttackWeather(cv->move)) 
+      && !(GetMoveTwoTurnAttackWeather(cv->move) & B_WEATHER_SUN && cv->abilities[cv->battlerAtk] == ABILITY_MEGA_SOL)))
         return FALSE;
     return TRUE;
 }
