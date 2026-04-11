@@ -48,7 +48,7 @@ static void SetBattlerVolatilesForSwitchin(enum BattlerId battler, u32 weather, 
 bool32 IsSwitchinTSpikesAffected(enum BattlerId battler);
 static bool32 IsOpponentPhysicalAttacker(enum BattlerId battler, enum BattlerId opposingBattler);
 static bool32 CanIntimidateLowerOpponentAtk(enum BattlerId battler, enum BattlerId opposingBattler);
-static bool32 ShouldSwitchIfIntimidateBenefit(enum BattlerId battler);
+static bool32 ShouldSwitchIfIntimidateBenefit(struct SwitchContext *switchContext);
 static bool32 DoesMostSuitableSwitchinBenefitFromWish(enum BattlerId battler);
 
 static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, u32 monIndex, struct Pokemon *mon)
@@ -938,35 +938,34 @@ static bool32 CanIntimidateLowerOpponentAtk(enum BattlerId battler, enum Battler
     return TRUE;
 }
 
-static bool32 ShouldSwitchIfIntimidateBenefit(enum BattlerId battler)
+static bool32 ShouldSwitchIfIntimidateBenefit(struct SwitchContext *switchContext)
 {
     // Keep Intimidate cycling behavior restricted to smart-switching AI
-    if (!(gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_SWITCHING))
+    if (!(gAiThinkingStruct->aiFlags[switchContext->battler] & AI_FLAG_SMART_SWITCHING))
         return FALSE;
 
-    enum BattlerId opposingBattler = GetOppositeBattler(battler);
-    enum BattlerId opposingPartner = BATTLE_PARTNER(opposingBattler);
+    enum BattlerId opposingPartner = BATTLE_PARTNER(switchContext->opposingBattler);
     bool32 hasValidTarget = FALSE;
 
-    if (IsBattlerAlive(opposingBattler))
+    if (IsBattlerAlive(switchContext->opposingBattler))
     {
-        enum Ability abilityDef = gAiLogicData->abilities[opposingBattler];
-        bool32 canLowerAtk = CanIntimidateLowerOpponentAtk(battler, opposingBattler);
+        enum Ability abilityDef = gAiLogicData->abilities[switchContext->opposingBattler];
+        bool32 canLowerAtk = CanIntimidateLowerOpponentAtk(switchContext->battler, switchContext->opposingBattler);
 
         if (canLowerAtk && (DoesIntimidateRaiseStats(abilityDef) || abilityDef == ABILITY_MIRROR_ARMOR))
             return FALSE;
-        if (canLowerAtk && IsOpponentPhysicalAttacker(battler, opposingBattler))
+        if (canLowerAtk && IsOpponentPhysicalAttacker(switchContext->battler, switchContext->opposingBattler))
             hasValidTarget = TRUE;
     }
 
     if (IsDoubleBattle() && IsBattlerAlive(opposingPartner))
     {
         enum Ability abilityDef = gAiLogicData->abilities[opposingPartner];
-        bool32 canLowerAtk = CanIntimidateLowerOpponentAtk(battler, opposingPartner);
+        bool32 canLowerAtk = CanIntimidateLowerOpponentAtk(switchContext->battler, opposingPartner);
 
         if (canLowerAtk && (DoesIntimidateRaiseStats(abilityDef) || abilityDef == ABILITY_MIRROR_ARMOR))
             return FALSE;
-        if (canLowerAtk && IsOpponentPhysicalAttacker(battler, opposingPartner))
+        if (canLowerAtk && IsOpponentPhysicalAttacker(switchContext->battler, opposingPartner))
             hasValidTarget = TRUE;
     }
 
@@ -1010,7 +1009,7 @@ static bool32 ShouldSwitchIfAbilityBenefit(struct SwitchContext *switchContext)
 
     case ABILITY_INTIMIDATE:
         // TODO: In ShouldSwitch cleanup, gate Intimidate cycling behind "stay in instead if the current mon wins the 1v1" to avoid duplicating Bad Odds logic here.
-        if (ShouldSwitchIfIntimidateBenefit(switchContext->battler)
+        if (ShouldSwitchIfIntimidateBenefit(switchContext)
             && gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_SIZE
             && (switchContext->hasStatRaised ? RandomPercentage(RNG_AI_SWITCH_INTIMIDATE, GetSwitchChance(SHOULD_SWITCH_INTIMIDATE_STATS_RAISED)) : RandomPercentage(RNG_AI_SWITCH_INTIMIDATE, GetSwitchChance(SHOULD_SWITCH_INTIMIDATE))))
             break;
@@ -1368,11 +1367,11 @@ bool32 ShouldSwitch(enum BattlerId battler)
 
     s32 availableToSwitch;
 
-    if (!CanBattlerConsiderSwitch(battler))
+    if (!CanBattlerConsiderSwitch(switchContext.battler))
         return FALSE;
 
     // Sequence Switching AI never switches mid-battle
-    if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SEQUENCE_SWITCHING)
+    if (gAiThinkingStruct->aiFlags[switchContext.battler] & AI_FLAG_SEQUENCE_SWITCHING)
         return FALSE;
 
     availableToSwitch = 0;
@@ -1384,17 +1383,17 @@ bool32 ShouldSwitch(enum BattlerId battler)
             switchContext.canConsiderPartyMon[monIndex] = FALSE;
             continue;
         }
-        if (IsPartyMonOnFieldOrChosenToSwitch(battler, monIndex, switchContext.battlerIn1, switchContext.battlerIn2))
+        if (IsPartyMonOnFieldOrChosenToSwitch(switchContext.battler, monIndex, switchContext.battlerIn1, switchContext.battlerIn2))
         {
             switchContext.canConsiderPartyMon[monIndex] = FALSE;
             continue;
         }
-        if (IsPartyMonPlannedToBeSwitchedInByPartner(monIndex, battler))
+        if (IsPartyMonPlannedToBeSwitchedInByPartner(monIndex, switchContext.battler))
         {
             switchContext.canConsiderPartyMon[monIndex] = FALSE;
             continue;
         }
-        if (IsAceMon(battler, monIndex))
+        if (IsAceMon(switchContext.battler, monIndex))
         {
             switchContext.canConsiderPartyMon[monIndex] = FALSE;
             continue;
@@ -1409,7 +1408,7 @@ bool32 ShouldSwitch(enum BattlerId battler)
 
     // custom switching logic
     // NOTE: needs to always end with `return SetSwitchinAndSwitch` or `return FALSE`
-    if (gDynamicAiSwitchFunc != NULL && gDynamicAiSwitchFunc(battler)) // Create custom AI functions for specific battles via "setdynamicswitchaifunc" cmd
+    if (gDynamicAiSwitchFunc != NULL && gDynamicAiSwitchFunc(switchContext.battler)) // Create custom AI functions for specific battles via "setdynamicswitchaifunc" cmd
         return TRUE;
 
     // NOTE: The sequence of the below functions matter! Do not change unless you have carefully considered the outcome.
@@ -1417,10 +1416,9 @@ bool32 ShouldSwitch(enum BattlerId battler)
 
     // FindMon functions can prompt a switch to specific party members that override GetMostSuitableMonToSwitchInto
     // The rest can prompt a switch to party member returned by GetMostSuitableMonToSwitchInto
-
     if (ShouldSwitchIfWonderGuard(&switchContext))
         return TRUE;
-    if ((gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_SWITCHING) && (CanMonSurviveHazardSwitchin(&switchContext) == FALSE))
+    if ((gAiThinkingStruct->aiFlags[switchContext.battler] & AI_FLAG_SMART_SWITCHING) && (CanMonSurviveHazardSwitchin(&switchContext) == FALSE))
         return FALSE;
     if (ShouldSwitchIfTrapperInParty(&switchContext))
         return TRUE;
@@ -1446,7 +1444,6 @@ bool32 ShouldSwitch(enum BattlerId battler)
         return TRUE;
     if (ShouldSwitchIfAttackingStatsLowered(&switchContext))
         return TRUE;
-
     return FALSE;
 }
 
