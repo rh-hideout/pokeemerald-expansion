@@ -94,3 +94,49 @@ SINGLE_BATTLE_TEST("Synchronize does not inflict status on a target with status 
         }
     }
 }
+
+SINGLE_BATTLE_TEST("Synchronize does not trigger from Toxic Spikes")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TOXIC_SPIKES) == EFFECT_TOXIC_SPIKES);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_ABRA) { Ability(ABILITY_SYNCHRONIZE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_TOXIC_SPIKES); }
+        TURN { SWITCH(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC_SPIKES, opponent);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
+        STATUS_ICON(player, poison: TRUE);
+        NONE_OF {
+            ABILITY_POPUP(player, ABILITY_SYNCHRONIZE);
+            STATUS_ICON(opponent, poison: TRUE);
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Synchronize does not trigger from Toxic Orb or Flame Orb")
+{
+    enum Item item;
+    u32 status1 = STATUS1_NONE;
+
+    PARAMETRIZE { item = ITEM_TOXIC_ORB; status1 = STATUS1_TOXIC_POISON; }
+    PARAMETRIZE { item = ITEM_FLAME_ORB; status1 = STATUS1_BURN; }
+
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_TOXIC_ORB].holdEffect == HOLD_EFFECT_TOXIC_ORB);
+        ASSUME(gItemsInfo[ITEM_FLAME_ORB].holdEffect == HOLD_EFFECT_FLAME_ORB);
+        PLAYER(SPECIES_ABRA) { Ability(ABILITY_SYNCHRONIZE); Item(item); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {}
+    } SCENE {
+        STATUS_ICON(player, status1);
+        NONE_OF {
+            ABILITY_POPUP(player, ABILITY_SYNCHRONIZE);
+            STATUS_ICON(opponent, poison: TRUE);
+            STATUS_ICON(opponent, burn: TRUE);
+        }
+    }
+}
