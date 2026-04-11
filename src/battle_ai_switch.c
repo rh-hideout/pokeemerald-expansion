@@ -33,7 +33,6 @@ struct IncomingHealInfo
     u16 curesStatus:1;
 };
 static bool32 CanUseSuperEffectiveMoveAgainstOpponents(enum BattlerId battler);
-static bool32 FindMonWithFlagsAndSuperEffective(enum BattlerId battler, u16 flags, u32 moduloPercent);
 static u32 GetSwitchinHazardsDamage(enum BattlerId battler);
 static u32 GetSwitchinSingleUseItemHealing(enum BattlerId battler, enum BattlerId opposingBattler, s32 currentHP);
 static bool32 AI_CanSwitchinAbilityTrapOpponent(enum Ability ability, enum BattlerId opposingBattler);
@@ -1179,68 +1178,6 @@ static bool32 CanUseSuperEffectiveMoveAgainstOpponents(enum BattlerId battler)
     return FALSE;
 }
 
-static bool32 FindMonWithFlagsAndSuperEffective(enum BattlerId battler, u16 flags, u32 percentChance)
-{
-    enum BattlerId battlerIn1, battlerIn2;
-    s32 lastId = GetAILastPartyIndex(battler); // + 1
-    struct Pokemon *party;
-    enum Move move;
-
-    // Similar functionality handled more thoroughly by ShouldSwitchIfHasBadOdds
-    if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_SWITCHING)
-        return FALSE;
-
-    if (gLastLandedMoves[battler] == MOVE_NONE)
-        return FALSE;
-    if (gLastLandedMoves[battler] == MOVE_UNAVAILABLE)
-        return FALSE;
-    if (gLastHitBy[battler] == 0xFF)
-        return FALSE;
-    if (IsBattleMoveStatus(gLastLandedMoves[battler]))
-        return FALSE;
-
-    GetActiveBattlerIds(battler, &battlerIn1, &battlerIn2);
-    party = GetBattlerParty(battler);
-
-    for (u32 monIndex = 0; monIndex < lastId; monIndex++)
-    {
-        enum Species species;
-        enum Ability monAbility;
-        uq4_12_t typeMultiplier;
-        u16 moveFlags = 0;
-
-        if (!IsValidForBattle(&party[monIndex]))
-            continue;
-        if (IsPartyMonOnFieldOrChosenToSwitch(battler, monIndex, battlerIn1, battlerIn2))
-            continue;
-        if (IsPartyMonPlannedToBeSwitchedInByPartner(monIndex, battler))
-            continue;
-        if (IsAceMon(battler, monIndex))
-            continue;
-
-        species = GetMonData(&party[monIndex], MON_DATA_SPECIES_OR_EGG);
-        monAbility = GetMonAbility(&party[monIndex]);
-        typeMultiplier = CalcPartyMonTypeEffectivenessMultiplier(gLastLandedMoves[battler], species, monAbility);
-        UpdateMoveResultFlags(typeMultiplier, &moveFlags);
-        if (moveFlags & flags)
-        {
-            battlerIn1 = gLastHitBy[battler];
-
-            for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
-            {
-                move = GetMonData(&party[monIndex], MON_DATA_MOVE1 + moveIndex);
-                if (move == MOVE_NONE)
-                    continue;
-
-                if (AI_GetMoveEffectiveness(move, battler, battlerIn1) >= UQ_4_12(2.0) && (RandomPercentage(RNG_AI_SWITCH_SE_DEFENSIVE, percentChance) || gAiLogicData->aiPredictionInProgress))
-                    return SetSwitchinAndSwitch(battler, monIndex);
-            }
-        }
-    }
-
-    return FALSE;
-}
-
 static bool32 CanMonSurviveHazardSwitchin(struct SwitchContext *switchContext)
 {
     u32 hazardDamage = 0, battlerHp = gBattleMons[switchContext->battler].hp;
@@ -1510,22 +1447,6 @@ bool32 ShouldSwitch(enum BattlerId battler)
     if (ShouldSwitchIfBadChoiceLock(&switchContext))
         return TRUE;
     if (ShouldSwitchIfAttackingStatsLowered(&switchContext))
-        return TRUE;
-
-    // Removing switch capabilites under specific conditions
-    // These Functions prevent the "FindMonWithFlagsAndSuperEffective" from getting out of hand.
-    // We don't use FindMonWithFlagsAndSuperEffective with AI_FLAG_SMART_SWITCHING, so we can bail early.
-    if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_SWITCHING)
-        return FALSE;
-    if (CanUseSuperEffectiveMoveAgainstOpponents(battler))
-        return FALSE;
-    if (AreStatsRaised(battler))
-        return FALSE;
-
-    // Default Function
-    // Can prompt switch if AI has a pokemon in party that resists current opponent & has super effective move
-    if (FindMonWithFlagsAndSuperEffective(battler, MOVE_RESULT_DOESNT_AFFECT_FOE, 50)
-        || FindMonWithFlagsAndSuperEffective(battler, MOVE_RESULT_NOT_VERY_EFFECTIVE, 33))
         return TRUE;
 
     return FALSE;
