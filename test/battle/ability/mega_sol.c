@@ -109,7 +109,7 @@ SINGLE_BATTLE_TEST("Mega Sol doesn't trigger the foe's Leaf Guard", s16 damage)
     PARAMETRIZE { move = MOVE_SUNNY_DAY;}
 
     GIVEN {
-	ASSUME(GetConfig(B_SANDSTORM_SOLAR_BEAM) >= GEN_3);
+        WITH_CONFIG(B_SANDSTORM_SOLAR_BEAM, GEN_3);
         ASSUME(GetMoveEffect(MOVE_WILL_O_WISP) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_WILL_O_WISP) == MOVE_EFFECT_BURN);
         PLAYER(SPECIES_SUNKERN) { Ability(ABILITY_MEGA_SOL);}
@@ -182,5 +182,23 @@ SINGLE_BATTLE_TEST("Solar Beam does not need a charging turn if user has Mega So
             HP_BAR(opponent);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
         }
+    }
+}
+
+SINGLE_BATTLE_TEST("Growth increases Attack and Sp. Atk by 2 stages under Mega Sol (Gen 5+)")
+{
+    GIVEN {
+        WITH_CONFIG(B_GROWTH_STAT_RAISE, GEN_1);
+        ASSUME(GetMoveEffect(MOVE_GROWTH) == EFFECT_GROWTH);
+        PLAYER(SPECIES_SUNKERN) { Ability(ABILITY_MEGA_SOL);}
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_GROWTH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GROWTH, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 2);
+        EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
     }
 }

@@ -1272,10 +1272,7 @@ static void Cmd_damagecalc(void)
     ctx.fieldStatuses = gFieldStatuses;
     ctx.randomFactor = TRUE;
     ctx.updateFlags = TRUE;
-    if (GetBattlerAbility(ctx.battlerAtk) == ABILITY_MEGA_SOL)
-        ctx.weather = B_WEATHER_SUN;
-    else
-	ctx.weather = GetWeather();
+    ctx.weather = GetAttackerWeather(GetBattlerHoldEffect(ctx.battlerAtk), GetBattlerAbility(ctx.battlerAtk), GetWeather());
     if (IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove)))
     {
         for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
@@ -9371,9 +9368,7 @@ static void Cmd_recoverbasedonsunlight(void)
     if (gBattleMons[gBattlerAttacker].hp != gBattleMons[gBattlerAttacker].maxHP)
     {
         s32 recoverAmount = 0;
-        u32 weather = GetWeather();
-        if (GetBattlerAbility(gBattlerAttacker) == ABILITY_MEGA_SOL)
-            weather = B_WEATHER_SUN;
+        u32 weather = GetAttackerWeather(GetBattlerHoldEffect(gBattlerAttacker), GetBattlerAbility(gBattlerAttacker), GetWeather());
         if (GetMoveEffect(gCurrentMove) == EFFECT_SHORE_UP)
         {
             if (weather & B_WEATHER_SANDSTORM)
@@ -14715,7 +14710,7 @@ void BS_JumpIfWeatherAffected(void)
 {
     NATIVE_ARGS(u16 flags, const u8 *jumpInstr);
     u32 weather = cmd->flags;
-    if (IsBattlerWeatherAffected(GetBattlerHoldEffect(gBattlerAttacker), GetWeather(), weather))
+    if (GetAttackerWeather(GetBattlerHoldEffect(gBattlerAttacker), GetBattlerAbility(gBattlerAttacker), GetWeather()) & weather)
         gBattlescriptCurrInstr = cmd->jumpInstr;
     else
         gBattlescriptCurrInstr = cmd->nextInstr;
