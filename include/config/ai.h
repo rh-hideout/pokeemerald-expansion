@@ -7,7 +7,7 @@
 #define AI_FRAME_CEILING_DOUBLES_NO_FLAGS                       22
 #define AI_FRAME_CEILING_DOUBLES_SMART_TRAINER                  38
 #define AI_FRAME_CEILING_STEVEN_MULTI                           27
-#define AI_FRAME_CEILING_STEVEN_MULTI_SMART_TRAINER             31
+#define AI_FRAME_CEILING_STEVEN_MULTI_SMART_TRAINER             32
 
 // For the details on what specific factors the switching functions are considering, go read the corresponding function inside ShouldSwitch in src/battle_ai_switch_items.c
 // These configuration options control how likely the AI is to switch if it determines that a switch meets all of its criteria
