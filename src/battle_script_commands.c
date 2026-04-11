@@ -7981,7 +7981,7 @@ static u32 ChangeStatBuffs(enum BattlerId battler, s8 statValue, enum Stat statI
     if (gBattleMons[battler].statStages[statId] > MAX_STAT_STAGE)
         gBattleMons[battler].statStages[statId] = MAX_STAT_STAGE;
 
-    if (ShouldDefiantCompetitiveActivate(battler, battlerAbility))
+    if (statValue <= -1 && ShouldDefiantCompetitiveActivate(battler, battlerAbility))
         stats = 0; // use single stat animations when Defiant/Competitive activate
     else
         stats &= ~(1u << statId);
