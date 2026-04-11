@@ -1269,10 +1269,10 @@ static void Cmd_damagecalc(void)
     ctx.move = gCurrentMove;
     ctx.chosenMove = gChosenMove;
     ctx.moveType = GetBattleMoveType(gCurrentMove);
+    ctx.weather = GetWeather();
     ctx.fieldStatuses = gFieldStatuses;
     ctx.randomFactor = TRUE;
     ctx.updateFlags = TRUE;
-    ctx.weather = GetWeather();
     if (IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove)))
     {
         for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
