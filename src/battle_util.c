@@ -4668,7 +4668,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                     gBattlerAttacker,
                     gBattlerTarget,
                     gLastUsedAbility,
-                    GetBattlerAbility(gBattlerAttacker),
+                    GetBattlerAbility(gBattlerTarget),
                     gBattleStruct->synchronizeMoveEffect,
                     CHECK_TRIGGER))
             {

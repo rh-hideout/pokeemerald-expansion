@@ -73,3 +73,24 @@ SINGLE_BATTLE_TEST("Synchronize will mirror back static activation")
         STATUS_ICON(player, paralysis: TRUE);
     }
 }
+
+SINGLE_BATTLE_TEST("Synchronize does not inflict status on a target with status immunity ability")
+{
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_SCRATCH));
+        ASSUME(GetMoveEffect(MOVE_BANEFUL_BUNKER) == EFFECT_PROTECT);
+        PLAYER(SPECIES_ABRA) { Ability(ABILITY_SYNCHRONIZE); }
+        OPPONENT(SPECIES_SNORLAX) { Ability(ABILITY_IMMUNITY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_BANEFUL_BUNKER); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BANEFUL_BUNKER, opponent);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
+        STATUS_ICON(player, poison: TRUE);
+        ABILITY_POPUP(player, ABILITY_SYNCHRONIZE);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+            STATUS_ICON(opponent, poison: TRUE);
+        }
+    }
+}
