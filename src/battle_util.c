@@ -9312,7 +9312,7 @@ u32 GetAttackerWeather(enum HoldEffect holdEffect, enum Ability ability, u32 wea
         return B_WEATHER_SUN;
 
     if (holdEffect == HOLD_EFFECT_UTILITY_UMBRELLA)
-        return weather & !(B_WEATHER_SUN | B_WEATHER_RAIN); // This was assumed not to block mega sol, like cloud nine doesn't.
+        return weather & ~(B_WEATHER_SUN | B_WEATHER_RAIN); // This was assumed not to block mega sol, like cloud nine doesn't.
 
     return weather;
 }
