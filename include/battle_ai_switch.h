@@ -59,6 +59,11 @@ struct SwitchContext
 
     enum Move incomingMove;
     bool32 hasStatRaised;
+
+    bool32 canBattlerWin1v1;
+    bool32 hasEffectiveMove;
+    bool32 hasImportantStatusMove;
+    bool32 battlerGetsOHKOd;
 };
 
 u32 GetMostSuitableMonToSwitchInto(enum BattlerId battler, enum SwitchType switchType);
