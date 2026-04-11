@@ -6059,6 +6059,7 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
     u32 basePower = GetMovePower(move);
     u32 moveEffect = GetMoveEffect(move);
     u32 weight, hpFraction, speed;
+    u32 attackerWeather = GetAttackerWeather(ctx->holdEffectAtk, ctx->abilityAtk, ctx->weather);
 
     if (GetActiveGimmick(battlerAtk) == GIMMICK_Z_MOVE)
         return GetZMovePower(gCurrentMove);
@@ -6116,7 +6117,7 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
             basePower *= 2;
         break;
     case EFFECT_WEATHER_BALL:
-        if (ctx->weather & B_WEATHER_ANY)
+        if (attackerWeather & B_WEATHER_ANY)
             basePower *= 2;
         break;
     case EFFECT_PURSUIT:
@@ -6978,7 +6979,7 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
     enum BattlerId battlerDef = ctx->battlerDef;
     enum Move move = ctx->move;
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
-
+    u32 attackerWeather = GetAttackerWeather(ctx->holdEffectAtk, ctx->abilityAtk, ctx->weather);
     def = gBattleMons[battlerDef].defense;
     spDef = gBattleMons[battlerDef].spDefense;
 
@@ -7147,12 +7148,12 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
     // sandstorm sp.def boost for rock types
     if (GetConfig(B_SANDSTORM_SPDEF_BOOST) >= GEN_4 
 	 && IS_BATTLER_OF_TYPE(battlerDef, TYPE_ROCK) 
-	 && GetAttackerWeather(ctx->holdEffectAtk, ctx->abilityAtk, ctx->weather) & B_WEATHER_SANDSTORM
+	 && attackerWeather & B_WEATHER_SANDSTORM
 	 && !usesDefStat)
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
     // snow def boost for ice types
     if (IS_BATTLER_OF_TYPE(battlerDef, TYPE_ICE)
-	 && GetAttackerWeather(ctx->holdEffectAtk, ctx->abilityAtk, ctx->weather) & B_WEATHER_SNOW
+	 && attackerWeather & B_WEATHER_SNOW
 	 && usesDefStat)
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
 
@@ -7200,19 +7201,20 @@ static inline uq4_12_t GetSameTypeAttackBonusModifier(struct DamageContext *ctx)
 // Utility Umbrella holders take normal damage from what would be rain- and sun-weakened attacks.
 static uq4_12_t GetWeatherDamageModifier(struct DamageContext *ctx)
 {
-    if (GetMoveEffect(ctx->move) == EFFECT_HYDRO_STEAM && (ctx->weather & B_WEATHER_SUN))
+    u32 attackerWeather = GetAttackerWeather(ctx->holdEffectAtk, ctx->abilityAtk, ctx->weather);
+    if (GetMoveEffect(ctx->move) == EFFECT_HYDRO_STEAM && (attackerWeather & B_WEATHER_SUN))
         return UQ_4_12(1.5);
     if (ctx->holdEffectDef == HOLD_EFFECT_UTILITY_UMBRELLA)
         return UQ_4_12(1.0);
 
-    if (ctx->weather & B_WEATHER_SUN || GetWeather() & B_WEATHER_SUN) // GetWeather is called because utility umbrella is only active on the defender for this calc.
+    if (ctx->weather & B_WEATHER_SUN || attackerWeather & B_WEATHER_SUN) // called because utility umbrella is only active on the defender for this calc.
     {
         if (ctx->moveType != TYPE_FIRE && ctx->moveType != TYPE_WATER)
             return UQ_4_12(1.0);
         return (ctx->moveType == TYPE_WATER) ? UQ_4_12(0.5) : UQ_4_12(1.5);
     }
 
-    if (ctx->weather & B_WEATHER_RAIN || GetWeather() & B_WEATHER_RAIN)
+    if (ctx->weather & B_WEATHER_RAIN || attackerWeather & B_WEATHER_RAIN)
     {
         if (ctx->moveType != TYPE_FIRE && ctx->moveType != TYPE_WATER)
             return UQ_4_12(1.0);

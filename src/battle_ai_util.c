@@ -942,7 +942,7 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
     ctx.abilityDef = AI_GetMoldBreakerSanitizedAbility(battlerAtk, ctx.abilityAtk, aiData->abilities[battlerDef], ctx.holdEffectDef, move);
     ctx.isCrit = ShouldCalcCritDamage(&ctx);
     ctx.typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(&ctx);
-    ctx.weather = GetAttackerWeather(ctx.holdEffectAtk, ctx.abilityAtk, weather);
+    ctx.weather = weather;
 
 
     u32 movePower = GetMovePower(move);

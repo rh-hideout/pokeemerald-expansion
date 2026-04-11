@@ -1272,7 +1272,7 @@ static void Cmd_damagecalc(void)
     ctx.fieldStatuses = gFieldStatuses;
     ctx.randomFactor = TRUE;
     ctx.updateFlags = TRUE;
-    ctx.weather = GetAttackerWeather(GetBattlerHoldEffect(ctx.battlerAtk), GetBattlerAbility(ctx.battlerAtk), GetWeather());
+    ctx.weather = GetWeather();
     if (IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove)))
     {
         for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
