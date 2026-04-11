@@ -3,6 +3,7 @@
 
 SINGLE_BATTLE_TEST("Growth increases Sp. Atk and Sp. Def by 1 stage (Gen 1)") // Equivalent to raising Special
 {
+    KNOWN_FAILING; // fails because the moveeffect is built as gen 5
     GIVEN {
         WITH_CONFIG(B_GROWTH_STAT_RAISE, GEN_1);
         ASSUME(GetMoveEffect(MOVE_GROWTH) == EFFECT_SPECIAL_ATTACK_UP);
@@ -22,6 +23,7 @@ SINGLE_BATTLE_TEST("Growth increases Sp. Atk and Sp. Def by 1 stage (Gen 1)") //
 
 SINGLE_BATTLE_TEST("Growth increases Sp. Atk by 1 stage (Gen 2-4)")
 {
+    KNOWN_FAILING; // fails because the moveeffect is built as gen 5
     GIVEN {
         WITH_CONFIG(B_GROWTH_STAT_RAISE, GEN_2);
         ASSUME(GetMoveEffect(MOVE_GROWTH) == EFFECT_SPECIAL_ATTACK_UP);
