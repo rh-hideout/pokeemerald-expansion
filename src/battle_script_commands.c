@@ -1269,11 +1269,13 @@ static void Cmd_damagecalc(void)
     ctx.move = gCurrentMove;
     ctx.chosenMove = gChosenMove;
     ctx.moveType = GetBattleMoveType(gCurrentMove);
-    ctx.weather = GetWeather();
     ctx.fieldStatuses = gFieldStatuses;
     ctx.randomFactor = TRUE;
     ctx.updateFlags = TRUE;
-
+    if (GetBattlerAbility(ctx.battlerAtk) == ABILITY_MEGA_SOL)
+        ctx.weather = B_WEATHER_SUN;
+    else
+	ctx.weather = GetWeather();
     if (IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove)))
     {
         for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
@@ -7121,7 +7123,7 @@ u32 IsFlowerVeilProtected(enum BattlerId battler)
 
 u32 IsLeafGuardProtected(enum BattlerId battler, enum Ability ability)
 {
-    if (IsBattlerWeatherAffected(GetBattlerHoldEffect(battler), GetBattlerAbility(battler), GetWeather(), B_WEATHER_SUN))
+    if (IsBattlerWeatherAffected(GetBattlerHoldEffect(battler), GetWeather(), B_WEATHER_SUN))
         return ability == ABILITY_LEAF_GUARD;
     else
         return 0;
@@ -9370,6 +9372,8 @@ static void Cmd_recoverbasedonsunlight(void)
     {
         s32 recoverAmount = 0;
         u32 weather = GetWeather();
+        if (GetBattlerAbility(gBattlerAttacker) == ABILITY_MEGA_SOL)
+            weather = B_WEATHER_SUN;
         if (GetMoveEffect(gCurrentMove) == EFFECT_SHORE_UP)
         {
             if (weather & B_WEATHER_SANDSTORM)
@@ -9379,7 +9383,7 @@ static void Cmd_recoverbasedonsunlight(void)
         }
         else if (GetConfig(B_TIME_OF_DAY_HEALING_MOVES) != GEN_2)
         {
-            if (weather & B_WEATHER_SUN || GetBattlerAbility(gBattlerAttacker) == ABILITY_MEGA_SOL)
+            if (weather & B_WEATHER_SUN)
                 recoverAmount = 20 * GetNonDynamaxMaxHP(gBattlerAttacker) / 30;
             else if (!(gBattleWeather & B_WEATHER_ANY) || !HasWeatherEffect() || GetBattlerHoldEffect(gBattlerAttacker) == HOLD_EFFECT_UTILITY_UMBRELLA)
                 recoverAmount = GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
@@ -9410,7 +9414,7 @@ static void Cmd_recoverbasedonsunlight(void)
                 healingModifier = 1;
                 break;
             }
-            if (weather & B_WEATHER_SUN || GetBattlerAbility(gBattlerAttacker) == ABILITY_MEGA_SOL)
+            if (weather & B_WEATHER_SUN)
                 recoverAmount = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
             else if (!(gBattleWeather & B_WEATHER_ANY) || !HasWeatherEffect() || GetBattlerHoldEffect(gBattlerAttacker) == HOLD_EFFECT_UTILITY_UMBRELLA)
                 recoverAmount = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
@@ -14711,7 +14715,7 @@ void BS_JumpIfWeatherAffected(void)
 {
     NATIVE_ARGS(u16 flags, const u8 *jumpInstr);
     u32 weather = cmd->flags;
-    if (IsBattlerWeatherAffected(GetBattlerHoldEffect(gBattlerAttacker), GetBattlerAbility(gBattlerAttacker), GetWeather(), weather))
+    if (IsBattlerWeatherAffected(GetBattlerHoldEffect(gBattlerAttacker), GetWeather(), weather))
         gBattlescriptCurrInstr = cmd->jumpInstr;
     else
         gBattlescriptCurrInstr = cmd->nextInstr;

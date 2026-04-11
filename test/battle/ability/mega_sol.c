@@ -76,34 +76,6 @@ SINGLE_BATTLE_TEST("Synthesis recovers 2/3 of the user's max HP if user has Mega
     }
 }
 
-SINGLE_BATTLE_TEST("Solar Beam does not need a charging turn if user has Mega Sol")
-{
-    enum Ability ability;
-
-    PARAMETRIZE { ability = ABILITY_MEGA_SOL; }
-    PARAMETRIZE { ability = ABILITY_FLAME_BODY; }
-
-    GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SOLARBEAM) == EFFECT_SOLAR_BEAM);
-        ASSUME(GetMoveType(MOVE_SOLARBEAM) == TYPE_GRASS);
-        PLAYER(SPECIES_MEGANIUM) { Ability(ability); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_SOLAR_BEAM); }
-        if (ability == ABILITY_NONE) {
-            TURN { SKIP_TURN(player); }
-        }
-    } SCENE {
-        if (ability == ABILITY_NONE) {
-            MESSAGE("Meganium used Solar Beam!");
-	    NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SOLAR_BEAM, player);
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
-        }
-        MESSAGE("Meganium used Solar Beam!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SOLAR_BEAM, player);
-    }
-}
-
 SINGLE_BATTLE_TEST("Mega Sol ignores Sandstorm's solarbeam power reduction, and its rock defense boost", s16 damage)
 {
     enum Ability ability;
@@ -137,6 +109,7 @@ SINGLE_BATTLE_TEST("Mega Sol doesn't trigger the foe's Leaf Guard", s16 damage)
     PARAMETRIZE { move = MOVE_SUNNY_DAY;}
 
     GIVEN {
+	ASSUME(GetConfig(B_SANDSTORM_SOLAR_BEAM) >= GEN_3);
         ASSUME(GetMoveEffect(MOVE_WILL_O_WISP) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_WILL_O_WISP) == MOVE_EFFECT_BURN);
         PLAYER(SPECIES_SUNKERN) { Ability(ABILITY_MEGA_SOL);}
@@ -152,8 +125,8 @@ SINGLE_BATTLE_TEST("Mega Sol doesn't trigger the foe's Leaf Guard", s16 damage)
         }
         else {
 	    NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_WILL_O_WISP, player);
-            ABILITY_POPUP(player, ABILITY_LEAF_GUARD);
-            MESSAGE("It doesn't affect Leafeon…");
+            ABILITY_POPUP(opponent, ABILITY_LEAF_GUARD);
+            MESSAGE("It doesn't affect the opposing Leafeon…");
             NOT STATUS_ICON(opponent, STATUS1_BURN);
         }
     }
@@ -177,5 +150,37 @@ SINGLE_BATTLE_TEST("Mega Sol ignores Cloud Nine", s16 damage)
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.5), results[1].damage);
+    }
+}
+
+SINGLE_BATTLE_TEST("Solar Beam does not need a charging turn if user has Mega Sol")
+{
+    enum Ability ability;
+
+    PARAMETRIZE { ability = ABILITY_MEGA_SOL; }
+    PARAMETRIZE { ability = ABILITY_LEAF_GUARD; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SOLARBEAM) == EFFECT_SOLAR_BEAM);
+        ASSUME(GetMoveType(MOVE_SOLARBEAM) == TYPE_GRASS);
+        PLAYER(SPECIES_MEGANIUM) { Ability(ability); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SOLAR_BEAM); }
+        if (ability == ABILITY_LEAF_GUARD) {
+            TURN { SKIP_TURN(player); }
+        }
+    } SCENE {
+        if (ability == ABILITY_LEAF_GUARD) {
+            MESSAGE("Meganium used Solar Beam!");
+	    NOT HP_BAR(opponent);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        }
+	else  {
+            MESSAGE("Meganium used Solar Beam!");
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SOLAR_BEAM, player);
+            HP_BAR(opponent);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        }
     }
 }
