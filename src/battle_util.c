@@ -10225,7 +10225,8 @@ u32 GetTotalAccuracy(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
     s8 buff, accStage, evasionStage;
     u32 atkParam = GetBattlerHoldEffectParam(battlerAtk);
     u32 defParam = GetBattlerHoldEffectParam(battlerDef);
-
+    u32 weather = GetWeather();
+    u32 attackerWeather = GetAttackerWeather(atkHoldEffect, atkAbility, weather);
     gPotentialItemEffectBattler = battlerDef;
     accStage = gBattleMons[battlerAtk].statStages[STAT_ACC];
     evasionStage = gBattleMons[battlerDef].statStages[STAT_EVASION];
@@ -10249,7 +10250,7 @@ u32 GetTotalAccuracy(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
 
     moveAcc = GetMoveAccuracy(move);
     // Check Thunder and Hurricane on sunny weather.
-    if (IsBattlerWeatherAffected(defHoldEffect, GetWeather(), B_WEATHER_SUN) && MoveHas50AccuracyInSun(move))
+    if (IsBattlerWeatherAffected(defHoldEffect, weather, B_WEATHER_SUN) && MoveHas50AccuracyInSun(move))// Unclear on what the correct 
         moveAcc = 50;
     // Check Wonder Skin.
     if (defAbility == ABILITY_WONDER_SKIN && IsBattleMoveStatus(move) && moveAcc > 50)
@@ -10279,11 +10280,11 @@ u32 GetTotalAccuracy(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
     switch (defAbility)
     {
     case ABILITY_SAND_VEIL:
-        if (gBattleWeather & B_WEATHER_SANDSTORM && HasWeatherEffect())
+        if (attackerWeather & B_WEATHER_SANDSTORM)
             calc = (calc * 80) / 100; // 1.2 sand veil loss
         break;
     case ABILITY_SNOW_CLOAK:
-        if ((gBattleWeather & B_WEATHER_ICY_ANY) && HasWeatherEffect())
+        if (attackerWeather & B_WEATHER_ICY_ANY)
             calc = (calc * 80) / 100; // 1.2 snow cloak loss
         break;
     case ABILITY_TANGLED_FEET:

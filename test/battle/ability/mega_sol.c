@@ -201,3 +201,33 @@ SINGLE_BATTLE_TEST("Growth increases Attack and Sp. Atk by 2 stages under Mega S
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
     }
 }
+
+SINGLE_BATTLE_TEST("Mega Sol ignores Sand Veil")
+{
+    PASSES_RANDOMLY(5, 5, RNG_ACCURACY);
+    GIVEN {
+        ASSUME(GetMoveAccuracy(MOVE_POUND) == 100);
+        PLAYER(SPECIES_SANDSHREW) { Ability(ABILITY_SAND_VEIL); }
+        OPPONENT(SPECIES_MEGANIUM_MEGA) { Ability(ABILITY_MEGA_SOL); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SANDSTORM); }
+        TURN { MOVE(opponent, MOVE_POUND); }
+    } SCENE {
+        HP_BAR(player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Mega Sol ignores Snow Cloak")
+{
+    PASSES_RANDOMLY(5, 5, RNG_ACCURACY);
+    GIVEN {
+        ASSUME(GetMoveAccuracy(MOVE_POUND) == 100);
+        PLAYER(SPECIES_GLACEON) { Ability(ABILITY_SNOW_CLOAK); }
+        OPPONENT(SPECIES_MEGANIUM_MEGA) { Ability(ABILITY_MEGA_SOL); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_HAIL); }
+        TURN {  MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        HP_BAR(player);
+    }
+}
