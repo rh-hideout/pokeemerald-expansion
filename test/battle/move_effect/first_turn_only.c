@@ -36,7 +36,6 @@ SINGLE_BATTLE_TEST("Fake Out fails if it's called via Instruct")
     } SCENE {
         MESSAGE("Wobbuffet used Fake Out!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, player);
-        ABILITY_POPUP(opponent, ABILITY_INNER_FOCUS);
         NONE_OF { MESSAGE("The opposing Oranguru flinched and couldn't move!"); }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_INSTRUCT, opponent);
         MESSAGE("Wobbuffet used Fake Out!");
@@ -49,12 +48,38 @@ AI_DOUBLE_BATTLE_TEST("AI will Fake Out either opponent if one has a slower Fake
     PASSES_RANDOMLY(50, 100, RNG_AI_SCORE_TIE_DOUBLES_TARGET);
 
     GIVEN {
+        WITH_CONFIG(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE, 0);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_DOUBLE_BATTLE | AI_FLAG_OMNISCIENT);
         TIE_BREAK_TARGET(TARGET_TIE_RANDOM, 0);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); Moves(MOVE_CELEBRATE); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(1); Moves(MOVE_SEISMIC_TOSS, MOVE_FAKE_OUT, MOVE_CELEBRATE); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_SEISMIC_TOSS, MOVE_FAKE_OUT); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_CELEBRATE); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE);
+            EXPECT_MOVE(opponentLeft, MOVE_FAKE_OUT, target:playerRight);
+            SCORE_EQ_VAL(opponentLeft, MOVE_FAKE_OUT, AI_SCORE_DEFAULT + FAST_KILL + 2, target:playerLeft);
+            SCORE_EQ_VAL(opponentLeft, MOVE_FAKE_OUT, AI_SCORE_DEFAULT + FAST_KILL + 2, target:playerRight);
+            SCORE_EQ_VAL(opponentLeft, MOVE_SEISMIC_TOSS, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE, target:playerLeft);
+            SCORE_EQ_VAL(opponentLeft, MOVE_SEISMIC_TOSS, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE, target:playerRight);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, opponentLeft);
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI will Fake Out either opponent if one has a slower Fake Out (reversed)")
+{
+    PASSES_RANDOMLY(50, 100, RNG_AI_SCORE_TIE_DOUBLES_TARGET);
+
+    GIVEN {
+        WITH_CONFIG(AI_REVERSE_BATTLER_LOGIC_ORDER_CHANCE, 100);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_DOUBLE_BATTLE | AI_FLAG_OMNISCIENT);
+        TIE_BREAK_TARGET(TARGET_TIE_RANDOM, 0);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); Moves(MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); Moves(MOVE_SEISMIC_TOSS, MOVE_FAKE_OUT, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_SEISMIC_TOSS, MOVE_FAKE_OUT); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_CELEBRATE); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE);
             EXPECT_MOVE(opponentLeft, MOVE_FAKE_OUT, target:playerRight);

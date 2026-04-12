@@ -91,14 +91,14 @@ BattleScript_ItemCureStatus::
 	call BattleScript_UseItemMessage
 BattleScript_ItemCureStatusAfterItemMsg:
 	itemcurestatus BattleScript_ItemCureStatusEnd, BattleScript_CureStatus_Battler
-	printstring STRINGID_ITEMCUREDSPECIESSTATUS
+	printfromtable gPartyCureStatusStringIds
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_ItemCureStatusEnd:
 	end
 
 BattleScript_CureStatus_Battler::
 	updatestatusicon BS_SCRIPTING
-	printstring STRINGID_ITEMCUREDSPECIESSTATUS
+	printfromtable gCureStatusStringIds
 	waitmessage B_WAIT_TIME_LONG
 	end
 

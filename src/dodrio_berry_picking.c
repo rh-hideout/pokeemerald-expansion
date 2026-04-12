@@ -592,40 +592,40 @@ ALIGNED(4)
 static const u8 sPrizeBerryIds[][10] =
 {
     { // Possible prizes with 3 players
-        ITEM_TO_BERRY(ITEM_RAZZ_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_BLUK_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_NANAB_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_WEPEAR_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_PINAP_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_PINAP_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_WEPEAR_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_NANAB_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_BLUK_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_RAZZ_BERRY) - 1
+        BERRY_ID_RAZZ,
+        BERRY_ID_BLUK,
+        BERRY_ID_NANAB,
+        BERRY_ID_WEPEAR,
+        BERRY_ID_PINAP,
+        BERRY_ID_PINAP,
+        BERRY_ID_WEPEAR,
+        BERRY_ID_NANAB,
+        BERRY_ID_BLUK,
+        BERRY_ID_RAZZ
     },
     { // Possible prizes with 4 players
-        ITEM_TO_BERRY(ITEM_POMEG_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_KELPSY_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_QUALOT_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_HONDEW_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_GREPA_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_TAMATO_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_CORNN_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_MAGOST_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_RABUTA_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_NOMEL_BERRY) - 1
+        BERRY_ID_POMEG,
+        BERRY_ID_KELPSY,
+        BERRY_ID_QUALOT,
+        BERRY_ID_HONDEW,
+        BERRY_ID_GREPA,
+        BERRY_ID_TAMATO,
+        BERRY_ID_CORNN,
+        BERRY_ID_MAGOST,
+        BERRY_ID_RABUTA,
+        BERRY_ID_NOMEL
     },
     { // Possible prizes with 5 players
-        ITEM_TO_BERRY(ITEM_SPELON_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_PAMTRE_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_WATMEL_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_DURIN_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_BELUE_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_BELUE_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_DURIN_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_WATMEL_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_PAMTRE_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_SPELON_BERRY) - 1
+        BERRY_ID_SPELON,
+        BERRY_ID_PAMTRE,
+        BERRY_ID_WATMEL,
+        BERRY_ID_DURIN,
+        BERRY_ID_BELUE,
+        BERRY_ID_BELUE,
+        BERRY_ID_DURIN,
+        BERRY_ID_WATMEL,
+        BERRY_ID_PAMTRE,
+        BERRY_ID_SPELON
     },
 };
 
@@ -672,7 +672,7 @@ void StartDodrioBerryPicking(u16 partyId, MainCallback exitCallback)
         sGame->exitCallback = exitCallback;
         sGame->multiplayerId = GetMultiplayerId();
         sGame->player = sGame->players[sGame->multiplayerId];
-        InitMonInfo(&sGame->monInfo[sGame->multiplayerId], &gPlayerParty[partyId]);
+        InitMonInfo(&sGame->monInfo[sGame->multiplayerId], &gParties[B_TRAINER_0][partyId]);
         CreateTask(Task_StartDodrioGame, 1);
         SetMainCallback2(CB2_DodrioGame);
         SetRandomPrize();
@@ -2695,7 +2695,7 @@ static void ResetPickState(void)
 
 static u16 GetPrizeItemId(void)
 {
-    return sGame->berryResults[sGame->multiplayerId][BERRY_PRIZE] + FIRST_BERRY_INDEX;
+    return BerryTypeToItemId(sGame->berryResults[sGame->multiplayerId][BERRY_PRIZE]);
 }
 
 static u8 GetNumPlayers(void)
@@ -2911,8 +2911,8 @@ void IsDodrioInParty(void)
     int i;
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        if (GetMonData(&gPlayerParty[i], MON_DATA_SANITY_HAS_SPECIES)
-            && GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG) == SPECIES_DODRIO)
+        if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SANITY_HAS_SPECIES)
+            && GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES_OR_EGG) == SPECIES_DODRIO)
         {
             gSpecialVar_Result = TRUE;
             return;

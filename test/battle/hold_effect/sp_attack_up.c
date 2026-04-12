@@ -25,11 +25,11 @@ SINGLE_BATTLE_TEST("Petaya Berry raises the holder's Sp. Atk by one stage when H
         if (move == MOVE_SCRATCH) {
             NONE_OF {
                 ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-                MESSAGE("Using Petaya Berry, the Sp. Atk of Wobbuffet rose!");
+                MESSAGE("The Petaya Berry boosted Wobbuffet's Sp. Atk!");
             }
         } else {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-            MESSAGE("Using Petaya Berry, the Sp. Atk of Wobbuffet rose!");
+            MESSAGE("The Petaya Berry boosted Wobbuffet's Sp. Atk!");
         }
     } THEN {
         if (move == MOVE_DRAGON_RAGE)
@@ -47,7 +47,7 @@ SINGLE_BATTLE_TEST("Petaya Berry raises Sp. Atk by one stage when HP drops to 1/
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_RAGE, opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("Using Petaya Berry, the Sp. Atk of Bellsprout rose!");
+        MESSAGE("The Petaya Berry boosted Bellsprout's Sp. Atk!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 1);
     }
@@ -63,7 +63,7 @@ SINGLE_BATTLE_TEST("Petaya Berry raises Sp. Atk by one stage when HP drops to 1/
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_RAGE, opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("Using Petaya Berry, the Sp. Atk of Applin sharply rose!");
+        MESSAGE("The Petaya Berry sharply boosted Applin's Sp. Atk!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 2);
     }

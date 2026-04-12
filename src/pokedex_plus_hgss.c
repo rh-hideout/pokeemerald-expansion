@@ -287,6 +287,9 @@ static const u32 sPokedexPlusHGSS_ScreenSearchNational_Tilemap[] = INCBIN_U32("g
 #define MON_PAGE_X 48
 #define MON_PAGE_Y 56
 
+// Width of pixels one line of text in the species box can be
+#define STATS_PAGE_SPECIES_MAX_WIDTH 55
+
 static EWRAM_DATA struct PokedexView *sPokedexView = NULL;
 static EWRAM_DATA u16 sLastSelectedPokemon = 0;
 static EWRAM_DATA u8 sPokeBallRotation = 0;
@@ -599,6 +602,10 @@ u32 GetSpeciesNameFontId(u32 nameWidth);
 u32 GetSpeciesNameWidthInChars(const u8 *speciesName);
 bool32 IsSpeciesAlcremie(enum Species targetSpecies);
 bool32 IsItemSweet(enum Item item);
+static void TryLoadDarkModeArrowPalette(void);
+
+//Cry screen
+static void FillCryMeterWindowTilemapWithBg(void);
 
 //Stat bars by DizzyEgg
 #define TAG_STAT_BAR 4097
@@ -1142,6 +1149,7 @@ static const struct CompressedSpriteSheet sInterfaceSpriteSheet[] =
 static const struct SpritePalette sInterfaceSpritePalette[] =
 {
     {sPokedexPlusHGSS_Default_Pal, TAG_DEX_INTERFACE},
+    {sPokedexPlusHGSS_Default_dark_Pal, TAG_DEX_INTERFACE},
     {0}
 };
 
@@ -2379,7 +2387,7 @@ static bool8 LoadPokedexListPage(u8 page)
         FreeAllSpritePalettes();
         gReservedSpritePaletteCount = 8;
         LoadCompressedSpriteSheet(&sInterfaceSpriteSheet[HGSS_DECAPPED]);
-        LoadSpritePalettes(sInterfaceSpritePalette);
+        LoadSpritePalette(&sInterfaceSpritePalette[HGSS_DARK_MODE]);
         LoadSpritePalettes(sStatBarSpritePal);
         CreateInterfaceSprites(page);
         gMain.state++;
@@ -3657,7 +3665,7 @@ static void CreateStatBarsBg(void) //stat bars background text
     LoadSpriteSheet(&sheetStatBarsBg);
     sPokedexView->statBarsBgSpriteId = CreateSprite(&sStatBarBgSpriteTemplate, 36+offset_x, 107+offset_y, 0);
 }
-// Hack to destroy sprites when a pokemon data is being loaded in
+// Hack to destroy sprites when a Pokémon data is being loaded in
 static bool32 IsMonInfoBeingLoaded(void)
 {
     return (gSprites[sPokedexView->selectedMonSpriteId].callback == SpriteCB_MoveMonForInfoScreen);
@@ -4300,6 +4308,15 @@ static void PrintInfoScreenTextSmall(const u8* str, u8 fontId, u8 left, u8 top)
 
     AddTextPrinterParameterized4(0, fontId, left, top, 0, 0, color, 0, str);
 }
+static void PrintStatsScreenTextSmallNarrower(u8 windowId, const u8* str, u8 left, u8 top)
+{
+    u8 color[3];
+    color[0] = TEXT_COLOR_TRANSPARENT;
+    color[1] = TEXT_DYNAMIC_COLOR_6;
+    color[2] = TEXT_COLOR_LIGHT_GRAY;
+
+    AddTextPrinterParameterized4(windowId, FONT_SMALL_NARROWER, left, top, 0, 0, color, 0, str);
+}
 static void UNUSED PrintInfoScreenTextSmallWhite(const u8* str, u8 left, u8 top)
 {
     u8 color[3];
@@ -4877,7 +4894,7 @@ static void Task_LoadStatsScreen(u8 taskId)
             u32 personality = GetPokedexMonPersonality(species);
             FreeMonIconPalettes(); //Free space for new pallete
             LoadMonIconPalettePersonality(species, personality); //Loads pallete for current mon
-            gTasks[taskId].data[6] = CreateMonIcon(species, SpriteCB_MonIcon, 18, 31, 4, personality); //Create pokemon sprite
+            gTasks[taskId].data[6] = CreateMonIcon(species, SpriteCB_MonIcon, 18, 31, 4, personality); //Create Pokémon sprite
             gSprites[gTasks[taskId].data[4]].oam.priority = 0;
         }
         gMain.state++;
@@ -5305,7 +5322,11 @@ static void PrintStatsScreen_NameGender(u8 taskId, u32 num, u32 value)
     u8 gender_x, gender_y;
 
     //Name
-    PrintStatsScreenTextSmall(WIN_STATS_NAME_GENDER, GetSpeciesName(species), base_x, base_y);
+    const u8 *name = GetSpeciesName(species);
+    if (GetStringWidth(FONT_SMALL, name, 0) <= STATS_PAGE_SPECIES_MAX_WIDTH)
+        PrintStatsScreenTextSmall(WIN_STATS_NAME_GENDER, name, base_x, base_y);
+    else
+        PrintStatsScreenTextSmallNarrower(WIN_STATS_NAME_GENDER, name, base_x, base_y);
 
     //Number
     if (value == 0)
@@ -5838,8 +5859,8 @@ static void Task_SwitchScreensFromStatsScreen(u8 taskId)
         FreeSpritePaletteByTag(ITEM_TAG);                       //Destroy item icon
         FreeSpriteOamMatrix(&gSprites[gTasks[taskId].data[3]]); //Destroy item icon
         DestroySprite(&gSprites[gTasks[taskId].data[3]]);       //Destroy item icon
-        FreeMonIconPalettes();                                          //Destroy pokemon icon sprite
-        FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4]]); //Destroy pokemon icon sprite
+        FreeMonIconPalettes();                                          //Destroy Pokémon icon sprite
+        FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4]]); //Destroy Pokémon icon sprite
 
         FreeAndDestroyMonPicSprite(gTasks[taskId].tMonSpriteId);
         switch (sPokedexView->screenSwitchState)
@@ -5872,8 +5893,8 @@ static void Task_ExitStatsScreen(u8 taskId)
         FreeSpritePaletteByTag(ITEM_TAG);                       //Destroy item icon
         FreeSpriteOamMatrix(&gSprites[gTasks[taskId].data[3]]); //Destroy item icon
         DestroySprite(&gSprites[gTasks[taskId].data[3]]);       //Destroy item icon
-        FreeMonIconPalettes();                                          //Destroy pokemon icon sprite
-        FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4]]); //Destroy pokemon icon sprite
+        FreeMonIconPalettes();                                          //Destroy Pokémon icon sprite
+        FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4]]); //Destroy Pokémon icon sprite
 
         FreeAndDestroyMonPicSprite(gTasks[taskId].tMonSpriteId);
         FreeInfoScreenWindowAndBgBuffers();
@@ -6006,7 +6027,7 @@ static void Task_LoadEvolutionScreen(u8 taskId)
             FreeMonIconPalettes(); //Free space for new pallete
             LoadMonIconPalettePersonality(species, personality); //Loads pallete for current mon
             PrintPreEvolutions(taskId, species);
-            gTasks[taskId].data[4] = CreateMonIcon(species, SpriteCB_MonIcon, 18 + 32*sPokedexView->numPreEvolutions, 31, 4, personality); //Create pokemon sprite
+            gTasks[taskId].data[4] = CreateMonIcon(species, SpriteCB_MonIcon, 18 + 32*sPokedexView->numPreEvolutions, 31, 4, personality); //Create Pokémon sprite
             EvoFormsPage_PrintNavigationButtons(); // Navigation buttons
             gSprites[gTasks[taskId].data[4]].oam.priority = 0;
         }
@@ -6021,6 +6042,7 @@ static void Task_LoadEvolutionScreen(u8 taskId)
         gTasks[taskId].data[3] = 0;
         PrintEvolutionTargetSpeciesAndMethod(taskId, NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum), 0, &depth, alreadyPrintedIcons, &iconDepth, 0);
         LoadSpritePalette(&gSpritePalette_Arrow);
+        TryLoadDarkModeArrowPalette();
         GetSeenFlagTargetSpecies();
         if (sPokedexView->sEvoScreenData.numAllEvolutions > 0 && sPokedexView->sEvoScreenData.numSeen > 0)
         {
@@ -6237,7 +6259,7 @@ static void HandlePreEvolutionSpeciesPrint(u8 taskId, enum Species preSpecies, e
     {
         u32 personality = GetPokedexMonPersonality(preSpecies);
         LoadMonIconPalettePersonality(preSpecies, personality); //Loads pallete for current mon
-        gTasks[taskId].data[4+base_i] = CreateMonIcon(preSpecies, SpriteCB_MonIcon, 18 + 32*base_i, 31, 4, personality); //Create pokemon sprite
+        gTasks[taskId].data[4+base_i] = CreateMonIcon(preSpecies, SpriteCB_MonIcon, 18 + 32*base_i, 31, 4, personality); //Create Pokémon sprite
         gSprites[gTasks[taskId].data[4+base_i]].oam.priority = 0;
     }
 }
@@ -6481,10 +6503,10 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, enum Species species
 
         bool32 isAlcremie = IsSpeciesAlcremie(targetSpecies);
 
-        enum Species speciesNameWidthInChars = GetSpeciesNameWidthInChars(GetSpeciesName(targetSpecies));
-        enum Species speciesNameCharWidth = GetFontAttribute(GetSpeciesNameFontId(speciesNameWidthInChars), FONTATTR_MAX_LETTER_WIDTH);
+        u32 speciesNameWidthInChars = GetSpeciesNameWidthInChars(GetSpeciesName(targetSpecies));
+        u32 speciesNameCharWidth = GetFontAttribute(GetSpeciesNameFontId(speciesNameWidthInChars), FONTATTR_MAX_LETTER_WIDTH);
 
-        enum Species speciesNameWidth = (speciesNameWidthInChars * speciesNameCharWidth);
+        u32 speciesNameWidth = (speciesNameWidthInChars * speciesNameCharWidth);
         u32 base_x_offset = speciesNameWidth + base_x + depth_offset; // for evo method info
         u32 maxScreenWidth = 230 - base_x_offset;
 
@@ -6825,11 +6847,11 @@ static void Task_SwitchScreensFromEvolutionScreen(u8 taskId)
     u8 i;
     if (!gPaletteFade.active)
     {
-        FreeMonIconPalettes();                                          //Destroy pokemon icon sprite
-        FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4]]); //Destroy pokemon icon sprite
+        FreeMonIconPalettes();                                          //Destroy Pokémon icon sprite
+        FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4]]); //Destroy Pokémon icon sprite
         for (i = 1; i <= gTasks[taskId].data[3]; i++)
         {
-            FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4+i]]); //Destroy pokemon icon sprite
+            FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4+i]]); //Destroy Pokémon icon sprite
         }
         FreeAndDestroyMonPicSprite(gTasks[taskId].tMonSpriteId);
 
@@ -6856,11 +6878,11 @@ static void Task_ExitEvolutionScreen(u8 taskId)
     u8 i;
     if (!gPaletteFade.active)
     {
-        FreeMonIconPalettes();                                          //Destroy pokemon icon sprite
-        FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4]]); //Destroy pokemon icon sprite
+        FreeMonIconPalettes();                                          //Destroy Pokémon icon sprite
+        FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4]]); //Destroy Pokémon icon sprite
         for (i = 1; i <= gTasks[taskId].data[3]; i++)
         {
-            FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4+i]]); //Destroy pokemon icon sprite
+            FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4+i]]); //Destroy Pokémon icon sprite
         }
         FreeAndDestroyMonPicSprite(gTasks[taskId].tMonSpriteId);
 
@@ -6924,7 +6946,7 @@ static void Task_LoadFormsScreen(u8 taskId)
             u32 personality = GetPokedexMonPersonality(species);
             FreeMonIconPalettes(); //Free space for new pallete
             LoadMonIconPalettePersonality(species, personality); //Loads pallete for current mon
-            gTasks[taskId].data[4] = CreateMonIcon(species, SpriteCB_MonIcon, 18, 31, 4, personality); //Create pokemon sprite
+            gTasks[taskId].data[4] = CreateMonIcon(species, SpriteCB_MonIcon, 18, 31, 4, personality); //Create Pokémon sprite
             gSprites[gTasks[taskId].data[4]].oam.priority = 0;
         }
         EvoFormsPage_PrintNavigationButtons(); // Navigation buttons
@@ -6936,6 +6958,7 @@ static void Task_LoadFormsScreen(u8 taskId)
         gTasks[taskId].data[3] = 0;
         PrintForms(taskId, NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum));
         LoadSpritePalette(&gSpritePalette_Arrow);
+        TryLoadDarkModeArrowPalette();
         gMain.state++;
         break;
     case 5:
@@ -7111,9 +7134,9 @@ static void PrintForms(u8 taskId, enum Species species)
             times += 1;
             LoadMonIconPalettePersonality(speciesForm, personality); //Loads pallete for current mon
             if (times < 7)
-                gTasks[taskId].data[4+times] = CreateMonIcon(speciesForm, SpriteCB_MonIcon, 52 + 34*(times-1), 31, 4, personality); //Create pokemon sprite
+                gTasks[taskId].data[4+times] = CreateMonIcon(speciesForm, SpriteCB_MonIcon, 52 + 34*(times-1), 31, 4, personality); //Create Pokémon sprite
             else if (times < 14)
-                gTasks[taskId].data[4+times] = CreateMonIcon(speciesForm, SpriteCB_MonIcon, 18 + 34*(times-7), 70 - y_offset_icons, 4, personality); //Create pokemon sprite
+                gTasks[taskId].data[4+times] = CreateMonIcon(speciesForm, SpriteCB_MonIcon, 18 + 34*(times-7), 70 - y_offset_icons, 4, personality); //Create Pokémon sprite
             gSprites[gTasks[taskId].data[4+times]].oam.priority = 0;
         }
     }
@@ -7133,11 +7156,11 @@ static void Task_SwitchScreensFromFormsScreen(u8 taskId)
     u8 i;
     if (!gPaletteFade.active)
     {
-        FreeMonIconPalettes();                                          //Destroy pokemon icon sprite
-        FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4]]); //Destroy pokemon icon sprite
+        FreeMonIconPalettes();                                          //Destroy Pokémon icon sprite
+        FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4]]); //Destroy Pokémon icon sprite
         for (i = 1; i <= gTasks[taskId].data[3]; i++)
         {
-            FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4+i]]); //Destroy pokemon icon sprite
+            FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4+i]]); //Destroy Pokémon icon sprite
         }
         FreeAndDestroyMonPicSprite(gTasks[taskId].tMonSpriteId);
 
@@ -7158,11 +7181,11 @@ static void Task_ExitFormsScreen(u8 taskId)
     u8 i;
     if (!gPaletteFade.active)
     {
-        FreeMonIconPalettes();                                          //Destroy pokemon icon sprite
-        FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4]]); //Destroy pokemon icon sprite
+        FreeMonIconPalettes();                                          //Destroy Pokémon icon sprite
+        FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4]]); //Destroy Pokémon icon sprite
         for (i = 1; i <= gTasks[taskId].data[3]; i++)
         {
-            FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4+i]]); //Destroy pokemon icon sprite
+            FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4+i]]); //Destroy Pokémon icon sprite
         }
         FreeAndDestroyMonPicSprite(gTasks[taskId].tMonSpriteId);
 
@@ -7256,6 +7279,7 @@ static void Task_LoadCryScreen(u8 taskId)
             cryMeter.yPos = 3;
             if (LoadCryMeter(&cryMeter, 3))
                 gMain.state++;
+            FillCryMeterWindowTilemapWithBg();
             CopyWindowToVram(WIN_VU_METER, COPYWIN_GFX);
             CopyWindowToVram(WIN_INFO, COPYWIN_FULL);
             CopyBgTilemapBufferToVram(0);
@@ -7472,11 +7496,21 @@ static void LoadPlayArrowPalette(bool8 cryPlaying)
 {
     u16 color;
 
-    if (cryPlaying)
-        color = RGB(18, 28, 0);
+    if (!HGSS_DARK_MODE)
+    {
+        if (cryPlaying)
+            color = RGB(29, 9, 4);
+        else
+            color = RGB(18, 2, 4);
+    }
     else
-        color = RGB(15, 21, 0);
-    LoadPalette(&color, BG_PLTT_ID(5) + 13, PLTT_SIZEOF(1));
+    {
+        if (cryPlaying)
+            color = RGB(9, 9, 9);
+        else
+            color = RGB(3, 3, 3);
+    }
+    LoadPalette(&color, BG_PLTT_ID(0) + 11, PLTT_SIZEOF(1));
 }
 
 static void Task_HandleSizeScreenInput(u8 taskId)
@@ -7890,6 +7924,13 @@ static u8 LoadSearchMenu(void)
     return CreateTask(Task_LoadSearchMenu, 0);
 }
 
+static void PrintSearchTextToFit(const u8 *str, u32 x, u32 y, u32 width)
+{
+    static const u8 color[3] = { TEXT_COLOR_TRANSPARENT, TEXT_DYNAMIC_COLOR_6, TEXT_COLOR_DARK_GRAY };
+    u32 fontId = GetFontIdToFit(str, FONT_NORMAL, 0, width);
+    AddTextPrinterParameterized4(0, fontId, x, y, 0, 0, color, TEXT_SKIP_DRAW, str);
+}
+
 static void PrintSearchText(const u8 *str, u32 x, u32 y)
 {
     u8 color[3];
@@ -7961,7 +8002,7 @@ static void Task_LoadSearchMenu(u8 taskId)
         break;
     case 1:
         LoadCompressedSpriteSheet(&sInterfaceSpriteSheet[HGSS_DECAPPED]);
-        LoadSpritePalettes(sInterfaceSpritePalette);
+        LoadSpritePalette(&sInterfaceSpritePalette[HGSS_DARK_MODE]);
         LoadSpritePalettes(sStatBarSpritePal);
         CreateSearchParameterScrollArrows(taskId);
         for (i = 0; i < NUM_TASK_DATA; i++)
@@ -8525,10 +8566,10 @@ static void PrintSelectedSearchParameters(u8 taskId)
     PrintSearchText(sDexSearchColorOptions[searchParamId].title, 0x2D, 0x21);
 
     searchParamId = gTasks[taskId].tCursorPos_TypeLeft + gTasks[taskId].tScrollOffset_TypeLeft;
-    PrintSearchText(sDexSearchTypeOptions[searchParamId].title, 0x2D, 0x31);
+    PrintSearchTextToFit(sDexSearchTypeOptions[searchParamId].title, 0x2D, 0x31, 38);
 
     searchParamId = gTasks[taskId].tCursorPos_TypeRight + gTasks[taskId].tScrollOffset_TypeRight;
-    PrintSearchText(sDexSearchTypeOptions[searchParamId].title, 0x5D, 0x31);
+    PrintSearchTextToFit(sDexSearchTypeOptions[searchParamId].title, 0x5D, 0x31, 38);
 
     searchParamId = gTasks[taskId].tCursorPos_Order + gTasks[taskId].tScrollOffset_Order;
     PrintSearchText(sDexOrderOptions[searchParamId].title, 0x2D, 0x41);
@@ -8761,4 +8802,34 @@ static void PrintSearchParameterTitle(u32 y, const u8 *str)
 static void ClearSearchParameterBoxText(void)
 {
     ClearSearchMenuRect(144, 8, 96, 96);
+}
+
+static void TryLoadDarkModeArrowPalette(void)
+{
+    if (!HGSS_DARK_MODE)
+        return;
+
+    u32 index = IndexOfSpritePaletteTag(gSpritePalette_Arrow.tag);
+    u32 colorArrow = RGB2GBA(72, 72, 72);
+    u32 colorOutline = RGB2GBA(24, 24, 24);
+
+    LoadPalette(&colorArrow, OBJ_PLTT_ID(index) + 1, sizeof(colorArrow));
+    LoadPalette(&colorOutline, OBJ_PLTT_ID(index) + 2, sizeof(colorOutline));
+}
+
+static void FillCryMeterWindowTilemapWithBg(void)
+{
+    // This fills the window behind the 'VU' text on the cry meter.
+    // It is filled with blank tiles, showing as black.
+
+    struct Window windowLocal = gWindows[WIN_VU_METER];
+
+    FillBgTilemapBufferRect(
+        3,
+        0,
+        windowLocal.window.tilemapLeft,
+        windowLocal.window.tilemapTop,
+        windowLocal.window.width,
+        windowLocal.window.height,
+        windowLocal.window.paletteNum);
 }

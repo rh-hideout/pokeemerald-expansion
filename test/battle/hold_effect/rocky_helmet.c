@@ -17,7 +17,6 @@ SINGLE_BATTLE_TEST("Rocky Helmet damages attacker even if damage is blocked by D
         TURN { MOVE(opponent, MOVE_SHADOW_SNEAK); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SHADOW_SNEAK, opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         HP_BAR(opponent);
     }
 }

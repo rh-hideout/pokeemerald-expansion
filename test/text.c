@@ -586,8 +586,8 @@ TEST("Battle strings fit on the battle message window")
         givemon SPECIES_WOBBUFFET, 100;
         createmon 1, 0, SPECIES_WOBBUFFET, 100;
     );
-    SetMonData(&gPlayerParty[0], MON_DATA_NICKNAME, nickname);
-    SetMonData(&gEnemyParty[0], MON_DATA_NICKNAME, nickname);
+    SetMonData(&gParties[B_TRAINER_0][0], MON_DATA_NICKNAME, nickname);
+    SetMonData(&gParties[B_TRAINER_1][0], MON_DATA_NICKNAME, nickname);
 
     for (i = start; i <= end; i++)
     {
@@ -774,7 +774,7 @@ TEST("Battle strings fit on the battle message window")
         PREPARE_MON_NICK_WITH_PREFIX_LOWER_BUFFER(gBattleTextBuff1, 1, 0);
         PREPARE_ABILITY_BUFFER(gBattleTextBuff2, longAbilityID);
         break;
-    // Buffer Stat name to B_BUFF1, "drastically rose" to B_BUFF2
+    // Buffer Stat name to B_BUFF1, "rose drastically" to B_BUFF2
     case STRINGID_ATTACKERSSTATROSE:
     case STRINGID_DEFENDERSSTATROSE:
     case STRINGID_USINGITEMSTATOFPKMNROSE:
@@ -791,7 +791,6 @@ TEST("Battle strings fit on the battle message window")
         break;
     // Buffer Status name to B_BUFF2
     case STRINGID_PKMNSITEMCUREDPROBLEM:
-    case STRINGID_PKMNSXCUREDYPROBLEM:
     case STRINGID_PKMNSXCUREDITSYPROBLEM:
         StringCopy(gBattleTextBuff1, gText_Confusion);
         break;
