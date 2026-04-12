@@ -2533,7 +2533,7 @@ bool32 TryFindHiddenPokemon(void)
             }
             else
             {
-                // not surfing -> cant find hidden water mons
+                // not surfing -> can't find hidden water mons
                 return FALSE;
             }
             break;

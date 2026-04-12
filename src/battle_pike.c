@@ -1015,7 +1015,7 @@ static bool8 AtLeastOneHealthyMon(void)
 
 static u8 GetNextRoomType(void)
 {
-    bool8 roomTypesDisabled[NUM_PIKE_ROOM_TYPES - 1]; // excludes Brain room, which cant be disabled
+    bool8 roomTypesDisabled[NUM_PIKE_ROOM_TYPES - 1]; // excludes Brain room, which can't be disabled
     u8 i;
     u8 nextRoomType;
     u8 roomHint;

@@ -6414,7 +6414,7 @@ enum Collision GetSidewaysStairsCollision(struct ObjectEvent *objectEvent, enum 
     if ((dir == DIR_SOUTH || dir == DIR_NORTH) && collision != COLLISION_NONE)
         return collision;
 
-    // cant descend stairs into water
+    // can't descend stairs into water
     if (MetatileBehavior_IsSurfableFishableWater(nextBehavior))
         return collision;
 
