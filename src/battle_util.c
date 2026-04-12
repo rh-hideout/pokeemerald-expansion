@@ -10277,11 +10277,11 @@ u32 GetTotalAccuracy(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
     switch (defAbility)
     {
     case ABILITY_SAND_VEIL:
-        if (GetAttackerWeather(atkHoldEffect, atkAbility, gBattleWeather) & B_WEATHER_SANDSTORM)
+        if (GetAttackerWeather(atkHoldEffect, atkAbility, GetWeather()) & B_WEATHER_SANDSTORM)
             calc = (calc * 80) / 100; // 1.2 sand veil loss
         break;
     case ABILITY_SNOW_CLOAK:
-        if (GetAttackerWeather(atkHoldEffect, atkAbility, gBattleWeather) & B_WEATHER_ICY_ANY)
+        if (GetAttackerWeather(atkHoldEffect, atkAbility, GetWeather()) & B_WEATHER_ICY_ANY)
             calc = (calc * 80) / 100; // 1.2 snow cloak loss
         break;
     case ABILITY_TANGLED_FEET:
