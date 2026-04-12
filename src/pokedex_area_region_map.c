@@ -4,6 +4,7 @@
 #include "bg.h"
 #include "malloc.h"
 #include "palette.h"
+#include "regions.h"
 #include "pokedex_area_region_map.h"
 #include "regions.h"
 #include "region_map.h"

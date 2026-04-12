@@ -120,9 +120,6 @@ static void CB_ExitFlyMap(void);
 static const u16 sRegionMapCursorPal[] = INCBIN_U16("graphics/pokenav/region_map/cursor.gbapal");
 static const u32 sRegionMapCursorSmallGfxLZ[] = INCBIN_U32("graphics/pokenav/region_map/cursor_small.4bpp.smol");
 static const u32 sRegionMapCursorLargeGfxLZ[] = INCBIN_U32("graphics/pokenav/region_map/cursor_large.4bpp.smol");
-static const u16 sRegionMapBg_Pal[] = INCBIN_U16("graphics/pokenav/region_map/map.gbapal");
-static const u32 sRegionMapBg_GfxLZ[] = INCBIN_U32("graphics/pokenav/region_map/map.8bpp.smol");
-static const u32 sRegionMapBg_TilemapLZ[] = INCBIN_U32("graphics/pokenav/region_map/map.bin.smolTM");
 static const u16 sRegionMapPlayerIcon_BrendanPal[] = INCBIN_U16("graphics/pokenav/region_map/brendan_icon.gbapal");
 static const u8 sRegionMapPlayerIcon_BrendanGfx[] = INCBIN_U8("graphics/pokenav/region_map/brendan_icon.4bpp");
 static const u16 sRegionMapPlayerIcon_MayPal[] = INCBIN_U16("graphics/pokenav/region_map/may_icon.gbapal");
@@ -132,12 +129,12 @@ static const u8 sRegionMapPlayerIcon_RedGfx[] = INCBIN_U8("graphics/pokenav/regi
 static const u16 sRegionMapPlayerIcon_LeafPal[] = INCBIN_U16("graphics/pokenav/region_map/leaf_icon.gbapal");
 static const u8 sRegionMapPlayerIcon_LeafGfx[] = INCBIN_U8("graphics/pokenav/region_map/leaf_icon.4bpp");
 
-#include "data/region_map/region_map_layout.h"
 #include "data/region_map/region_map_layout_kanto.h"
 #include "data/region_map/region_map_layout_sevii123.h"
 #include "data/region_map/region_map_layout_sevii45.h"
 #include "data/region_map/region_map_layout_sevii67.h"
 #include "data/region_map/region_map_entries.h"
+#include "data/region_map/region_map_layout_hoenn.h"
 
 static const mapsec_u16_t sRegionMap_SpecialPlaceLocations[][2] =
 {
@@ -296,6 +293,9 @@ static const u32 sFlyTargetIcons_Gfx[] = INCBIN_U32("graphics/pokenav/region_map
 static const u16 ALIGNED(4) sPokedexAreaMap_Pal[] = INCBIN_U16("graphics/pokedex/region_map.gbapal");
 static const u32 sPokedexAreaMap_Gfx[] = INCBIN_U32("graphics/pokedex/region_map.8bpp.smol");
 static const u32 sPokedexAreaMap_Tilemap[] = INCBIN_U32("graphics/pokedex/region_map.bin.smolTM");
+static const u16 sRegionMapBgHoenn_Pal[] = INCBIN_U16("graphics/pokenav/region_map/map.gbapal");
+static const u32 sRegionMapBgHoenn_Gfx[] = INCBIN_U32("graphics/pokenav/region_map/map.8bpp.smol");
+static const u32 sRegionMapBgHoenn_Tilemap[] = INCBIN_U32("graphics/pokenav/region_map/map.bin.smolTM");
 
 static const u16 ALIGNED(4) sPokedexAreaMapKanto_Pal[] = INCBIN_U16("graphics/pokedex/region_map_kanto.gbapal");
 static const u32 sPokedexAreaMapKanto_Gfx[] = INCBIN_U32("graphics/pokedex/region_map_kanto.8bpp.smol");
@@ -333,9 +333,9 @@ const struct RegionMapInfo gRegionMapInfos[] =
         .dexMapGfx = sPokedexAreaMap_Gfx,
         .dexMapTilemap = sPokedexAreaMap_Tilemap,
         .dexMapPaletteSize = sizeof(sPokedexAreaMap_Pal),
-        .regionMapPalette = sRegionMapBg_Pal,
-        .regionMapGfx = sRegionMapBg_GfxLZ,
-        .regionMapTilemap = sRegionMapBg_TilemapLZ,
+        .regionMapPalette = sRegionMapBgHoenn_Pal,
+        .regionMapGfx = sRegionMapBgHoenn_Gfx,
+        .regionMapTilemap = sRegionMapBgHoenn_Tilemap,
     },
     [REGION_MAP_KANTO]    =
     {
@@ -1209,7 +1209,7 @@ static mapsec_u16_t GetMapSecIdAt(u16 x, u16 y)
         }
     case REGION_HOENN:
     default:
-            return sRegionMap_MapSectionLayout[y][x];
+            return sRegionMap_MapSectionLayout_Hoenn[y][x];
     }
 }
 

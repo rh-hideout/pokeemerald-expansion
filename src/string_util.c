@@ -1,6 +1,7 @@
 #include "global.h"
 #include "string_util.h"
 #include "text.h"
+#include "regions.h"
 #include "strings.h"
 #include "union_room_chat.h"
 
