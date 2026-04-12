@@ -94,3 +94,22 @@ SINGLE_BATTLE_TEST("Spicy Spray burns the attacker even if the attacker has Shee
         STATUS_ICON(player, burn: TRUE);
     }
 }
+
+SINGLE_BATTLE_TEST("Spicy Spray burns the attacker even if the defender faints")
+{
+    enum Move move;
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_SCOVILLAIN) { Item(ITEM_SCOVILLAINITE); HP(1); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        MESSAGE("The opposing Scovillain's Scovillainite is reacting to 2's Mega Ring!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponent);
+        MESSAGE("The opposing Scovillain has Mega Evolved into Mega Scovillain!");
+        ABILITY_POPUP(opponent, ABILITY_SPICY_SPRAY);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, player);
+        MESSAGE("Wobbuffet was burned!");
+        STATUS_ICON(player, burn: TRUE);
+    }
+}
