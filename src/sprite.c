@@ -435,10 +435,34 @@ u32 CreateSprite(const struct SpriteTemplate *template, s16 x, s16 y, u32 subpri
         if (!gSprites[i].inUse)
             return CreateSpriteAt(i, template, x, y, subpriority);
 
+    errorf("Out of sprite slots");
+    return MAX_SPRITES;
+}
+
+u32 CreateSpriteUnsafe(const struct SpriteTemplate *template, s16 x, s16 y, u32 subpriority)
+{
+    u32 i;
+
+    for (i = 0; i < MAX_SPRITES; i++)
+        if (!gSprites[i].inUse)
+            return CreateSpriteAt(i, template, x, y, subpriority);
+
     return MAX_SPRITES;
 }
 
 u32 CreateSpriteAtEnd(const struct SpriteTemplate *template, s16 x, s16 y, u32 subpriority)
+{
+    s32 i;
+
+    for (i = MAX_SPRITES - 1; i > -1; i--)
+        if (!gSprites[i].inUse)
+            return CreateSpriteAt(i, template, x, y, subpriority);
+
+    errorf("Out of sprite slots");
+    return MAX_SPRITES;
+}
+
+u32 CreateSpriteAtEndUnsafe(const struct SpriteTemplate *template, s16 x, s16 y, u32 subpriority)
 {
     s32 i;
 
