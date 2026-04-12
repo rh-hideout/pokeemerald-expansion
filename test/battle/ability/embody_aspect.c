@@ -58,3 +58,27 @@ SINGLE_BATTLE_TEST("Embody Aspect activates when it's no longer effected by Neut
         MESSAGE("The opposing Ogerpon's Embody Aspect raised its Speed!");
     }
 }
+
+SINGLE_BATTLE_TEST("Embody Aspect does not reactivate after Neutralizing Gas ends if it already activated this switch-in")
+{
+    GIVEN {
+        PLAYER(SPECIES_OGERPON_TEAL_TERA) { Ability(ABILITY_EMBODY_ASPECT_TEAL_MASK); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
+    } WHEN {
+        TURN { SWITCH(opponent, 1); }
+        TURN { SWITCH(opponent, 0); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_EMBODY_ASPECT_TEAL_MASK);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        MESSAGE("Ogerpon's Embody Aspect raised its Speed!");
+
+        ABILITY_POPUP(opponent, ABILITY_NEUTRALIZING_GAS);
+        MESSAGE("Neutralizing gas filled the area!");
+
+        MESSAGE("The effects of the neutralizing gas wore off!");
+        NOT ABILITY_POPUP(player, ABILITY_EMBODY_ASPECT_TEAL_MASK);
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 1);
+    }
+}
