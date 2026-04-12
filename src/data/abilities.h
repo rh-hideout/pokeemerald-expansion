@@ -2459,6 +2459,6 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     [ABILITY_SPICY_SPRAY] =
     {
         .name = _("Spicy Spray"),
-        .description = COMPOUND_STRING("Unimplemented."),
+        .description = COMPOUND_STRING("Burns the foe when damaged."),
     },
 };
