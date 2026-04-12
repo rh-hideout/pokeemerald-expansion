@@ -14,6 +14,7 @@
 #include "party_menu.h"
 #include "random.h"
 #include "test/battle.h"
+#include "trainer_pools.h"
 #include "window.h"
 #include "constants/characters.h"
 #include "constants/trainers.h"
@@ -23,6 +24,7 @@
 #undef TestRunner_Battle_RecordAbilityPopUp
 #undef TestRunner_Battle_RecordAnimation
 #undef TestRunner_Battle_RecordHP
+#undef TestRunner_Battle_RecordSubHit
 #undef TestRunner_Battle_RecordMessage
 #undef TestRunner_Battle_RecordStatus1
 #undef TestRunner_Battle_AfterLastTurn
@@ -47,16 +49,30 @@ static inline bool32 RngSeedNotDefault(const rng_value_t *seed)
 #undef Q_4_12
 #define Q_4_12(n) (s32)((n) * 4096)
 
+#define TRAINER_RED_TEST    1
+#define TRAINER_LEAF_TEST   2
+#define PARTNER_STEVEN_TEST 1
+
+const struct Trainer gTrainers[DIFFICULTY_COUNT][TRAINERS_COUNT] =
+{
+    #include "battle/trainer_control.h"
+};
+
+const struct Trainer gBattlePartners[DIFFICULTY_COUNT][PARTNER_COUNT] =
+{
+    #include "battle/partner_control.h"
+};
+
 // Alias sBackupMapData to avoid using heap.
 struct BattleTestRunnerState *const gBattleTestRunnerState = (void *)sBackupMapData;
 STATIC_ASSERT(sizeof(struct BattleTestRunnerState) <= sizeof(sBackupMapData), sBackupMapDataSpace);
 
 static void CB2_BattleTest_NextParameter(void);
 static void CB2_BattleTest_NextTrial(void);
-static void PushBattlerAction(u32 sourceLine, s32 battlerId, u32 actionType, u32 byte);
-static void PrintAiMoveLog(u32 battlerId, u32 moveSlot, u32 moveId, s32 totalScore);
-static void ClearAiLog(u32 battlerId);
-static const char *BattlerIdentifier(s32 battlerId);
+static void PushBattlerAction(u32 sourceLine, enum BattlerId battlerId, u32 actionType, u32 byte);
+static void PrintAiMoveLog(enum BattlerId battlerId, u32 moveSlot, enum Move moveId, s32 totalScore);
+static void ClearAiLog(enum BattlerId battlerId);
+static const char *BattlerIdentifier(enum BattlerId battlerId);
 
 NAKED static void InvokeSingleTestFunctionWithStack(void *results, u32 i, struct BattlePokemon *player, struct BattlePokemon *opponent, SingleBattleTestFunction function, void *stack)
 {
@@ -183,6 +199,8 @@ NAKED static void InvokeOneVsTwoTestFunctionWithStack(void *results, u32 i, stru
 static void InvokeTestFunction(const struct BattleTest *test)
 {
     STATE->parametersCount = 0;
+    // 2 bits per battler; battler0/1 are always trainer0/1, respectively
+    DATA.battlerTrainers = B_TRAINER_1 << 2;
     switch (test->type)
     {
     case BATTLE_TEST_SINGLES:
@@ -192,18 +210,22 @@ static void InvokeTestFunction(const struct BattleTest *test)
         break;
     case BATTLE_TEST_DOUBLES:
     case BATTLE_TEST_AI_DOUBLES:
+        DATA.battlerTrainers |= B_TRAINER_1 << 6;
         InvokeDoubleTestFunctionWithStack(STATE->results, STATE->runParameter, &gBattleMons[B_POSITION_PLAYER_LEFT], &gBattleMons[B_POSITION_OPPONENT_LEFT], &gBattleMons[B_POSITION_PLAYER_RIGHT], &gBattleMons[B_POSITION_OPPONENT_RIGHT], test->function.doubles, &DATA.stack[BATTLE_TEST_STACK_SIZE]);
         break;
     case BATTLE_TEST_MULTI:
     case BATTLE_TEST_AI_MULTI:
+        DATA.battlerTrainers |= (B_TRAINER_2 << 4 | B_TRAINER_3 << 6);
         InvokeMultiTestFunctionWithStack(STATE->results, STATE->runParameter, &gBattleMons[B_POSITION_PLAYER_LEFT], &gBattleMons[B_POSITION_OPPONENT_LEFT], &gBattleMons[B_POSITION_PLAYER_RIGHT], &gBattleMons[B_POSITION_OPPONENT_RIGHT], test->function.multi, &DATA.stack[BATTLE_TEST_STACK_SIZE]);
         break;
     case BATTLE_TEST_TWO_VS_ONE:
     case BATTLE_TEST_AI_TWO_VS_ONE:
+        DATA.battlerTrainers |= (B_TRAINER_2 << 4 | B_TRAINER_1 << 6);
         InvokeTwoVsOneTestFunctionWithStack(STATE->results, STATE->runParameter, &gBattleMons[B_POSITION_PLAYER_LEFT], &gBattleMons[B_POSITION_OPPONENT_LEFT], &gBattleMons[B_POSITION_PLAYER_RIGHT], &gBattleMons[B_POSITION_OPPONENT_RIGHT], test->function.two_vs_one, &DATA.stack[BATTLE_TEST_STACK_SIZE]);
         break;
     case BATTLE_TEST_ONE_VS_TWO:
     case BATTLE_TEST_AI_ONE_VS_TWO:
+        DATA.battlerTrainers |= B_TRAINER_3 << 6;
         InvokeOneVsTwoTestFunctionWithStack(STATE->results, STATE->runParameter, &gBattleMons[B_POSITION_PLAYER_LEFT], &gBattleMons[B_POSITION_OPPONENT_LEFT], &gBattleMons[B_POSITION_PLAYER_RIGHT], &gBattleMons[B_POSITION_OPPONENT_RIGHT], test->function.one_vs_two, &DATA.stack[BATTLE_TEST_STACK_SIZE]);
         break;
     }
@@ -229,12 +251,23 @@ static bool32 IsAITest(void)
     return FALSE;
 }
 
+static bool32 IsAIDoublesTest(void)
+{
+    return (IsAITest() && (GetBattleTest()->type != BATTLE_TEST_AI_SINGLES));
+}
+
+static enum BattleTrainer Test_GetBattlerTrainer(enum BattlerId battlerId)
+{
+    return (gBattleTestRunnerState->data.battlerTrainers >> (2 * battlerId)) & 0x3;
+}
+
 static u32 BattleTest_EstimateCost(void *data)
 {
     u32 cost;
     const struct BattleTest *test = data;
     memset(STATE, 0, sizeof(*STATE));
     STATE->runRandomly = TRUE;
+    ResetStartingStatuses();
     InvokeTestFunction(test);
     cost = 1;
     if (STATE->parametersCount != 0)
@@ -309,31 +342,23 @@ static void SetImplicitSpeeds(void)
     s32 i;
     u32 speed = 12;
     u32 hasSpeeds = 0;
-    u32 allSpeeds = ((1 << DATA.playerPartySize) - 1) | (((1 << DATA.opponentPartySize) - 1) << 6);
+    u32 allSpeeds = ((1 << DATA.partySizes[B_TRAINER_0]) - 1) | (((1 << DATA.partySizes[B_TRAINER_1]) - 1) << 6) | (((1 << DATA.partySizes[B_TRAINER_2]) - 1) << 12) | (((1 << DATA.partySizes[B_TRAINER_3]) - 1) << 18);
     bool32 madeProgress;
     while (hasSpeeds != allSpeeds)
     {
         madeProgress = FALSE;
-        for (i = 0; i < DATA.playerPartySize; i++)
+        for (enum BattleTrainer trainer = B_TRAINER_0; trainer < MAX_BATTLE_TRAINERS; trainer++)
         {
-            if (!(hasSpeeds & (1 << i))
-             && !(DATA.slowerThan[B_SIDE_PLAYER][i] & ~hasSpeeds))
+            for (i = 0; i < DATA.partySizes[trainer]; i++)
             {
-                SetMonData(&DATA.recordedBattle.playerParty[i], MON_DATA_SPEED, &speed);
-                speed--;
-                hasSpeeds |= 1 << i;
-                madeProgress = TRUE;
-            }
-        }
-        for (i = 0; i < DATA.opponentPartySize; i++)
-        {
-            if (!(hasSpeeds & ((1 << 6) << i))
-             && !(DATA.slowerThan[B_SIDE_OPPONENT][i] & ~hasSpeeds))
-            {
-                SetMonData(&DATA.recordedBattle.opponentParty[i], MON_DATA_SPEED, &speed);
-                speed--;
-                hasSpeeds |= (1 << 6) << i;
-                madeProgress = TRUE;
+                if (!(hasSpeeds & ((1 << (6 * trainer)) << i))
+                 && !(DATA.slowerThan[trainer][i] & ~hasSpeeds))
+                {
+                    SetMonData(&DATA.recordedBattle.parties[trainer][i], MON_DATA_SPEED, &speed);
+                    speed--;
+                    hasSpeeds |= ((1 << (6 * trainer)) << i);
+                    madeProgress = TRUE;
+                }
             }
         }
         if (!madeProgress)
@@ -344,8 +369,7 @@ static void SetImplicitSpeeds(void)
 static void BattleTest_Run(void *data)
 {
     s32 i;
-    u32 requiredPlayerPartySize;
-    u32 requiredOpponentPartySize;
+    u32 requiredPartySizes[MAX_BATTLE_TRAINERS] = {0};
     const rng_value_t defaultSeed = RNG_SEED_DEFAULT;
     const struct BattleTest *test = data;
 
@@ -363,49 +387,49 @@ static void BattleTest_Run(void *data)
         break;
     case BATTLE_TEST_AI_SINGLES:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER;
-        DATA.recordedBattle.opponentA = TRAINER_LEAF;
+        DATA.recordedBattle.opponentA = TRAINER_LEAF_TEST;
         DATA.hasAI = TRUE;
         for (i = 0; i < STATE->battlersCount; i++)
             DATA.currentMonIndexes[i] = i / 2;
         break;
     case BATTLE_TEST_AI_DOUBLES:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE;
-        DATA.recordedBattle.opponentA = TRAINER_LEAF;
+        DATA.recordedBattle.opponentA = TRAINER_LEAF_TEST;
         DATA.recordedBattle.opponentB = TRAINER_NONE;
         DATA.hasAI = TRUE;
         for (i = 0; i < STATE->battlersCount; i++)
             DATA.currentMonIndexes[i] = i / 2;
         break;
     case BATTLE_TEST_AI_MULTI:
-        DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS;
-        DATA.recordedBattle.partnerId = TRAINER_PARTNER(PARTNER_STEVEN);
-        DATA.recordedBattle.opponentA = TRAINER_LEAF;
-        DATA.recordedBattle.opponentB = TRAINER_RED;
+        DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS;
+        DATA.recordedBattle.partnerId = TRAINER_PARTNER(PARTNER_STEVEN_TEST);
+        DATA.recordedBattle.opponentA = TRAINER_LEAF_TEST;
+        DATA.recordedBattle.opponentB = TRAINER_RED_TEST;
         DATA.hasAI = TRUE;
         DATA.currentMonIndexes[0] = 0; // Player first mon
         DATA.currentMonIndexes[1] = 0; // Opponent A first mon
-        DATA.currentMonIndexes[2] = 3; // Player partner first mon
-        DATA.currentMonIndexes[3] = 3; // Opponent B first mon
+        DATA.currentMonIndexes[2] = 0; // Player partner first mon
+        DATA.currentMonIndexes[3] = 0; // Opponent B first mon
         break;
     case BATTLE_TEST_AI_TWO_VS_ONE:
-        DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_MULTI;
-        DATA.recordedBattle.partnerId = TRAINER_PARTNER(PARTNER_STEVEN);
-        DATA.recordedBattle.opponentA = TRAINER_LEAF;
+        DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_MULTI;
+        DATA.recordedBattle.partnerId = TRAINER_PARTNER(PARTNER_STEVEN_TEST);
+        DATA.recordedBattle.opponentA = TRAINER_LEAF_TEST;
         DATA.recordedBattle.opponentB = 0xFFFF;
         DATA.currentMonIndexes[0] = 0; // Player first mon
         DATA.currentMonIndexes[1] = 0; // Opponent first mon
-        DATA.currentMonIndexes[2] = 3; // Player partner first mon
+        DATA.currentMonIndexes[2] = 0; // Player partner first mon
         DATA.currentMonIndexes[3] = 1; // Opponent second mon
         DATA.hasAI = TRUE;
         break;
     case BATTLE_TEST_AI_ONE_VS_TWO:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_TWO_OPPONENTS;
-        DATA.recordedBattle.opponentA = TRAINER_LEAF;
-        DATA.recordedBattle.opponentB = TRAINER_RED;
+        DATA.recordedBattle.opponentA = TRAINER_LEAF_TEST;
+        DATA.recordedBattle.opponentB = TRAINER_RED_TEST;
         DATA.currentMonIndexes[0] = 0; // Player first mon
         DATA.currentMonIndexes[1] = 0; // Opponent A first mon
         DATA.currentMonIndexes[2] = 1; // Player second mon
-        DATA.currentMonIndexes[3] = 3; // Opponent B first mon
+        DATA.currentMonIndexes[3] = 0; // Opponent B first mon
         DATA.hasAI = TRUE;
         break;
     case BATTLE_TEST_SINGLES:
@@ -422,23 +446,23 @@ static void BattleTest_Run(void *data)
             DATA.currentMonIndexes[i] = i / 2;
         break;
     case BATTLE_TEST_MULTI:
-        DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_RECORDED_IS_MASTER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TRAINER | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS;
-        DATA.recordedBattle.partnerId = TRAINER_PARTNER(PARTNER_STEVEN);
+        DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_RECORDED_IS_MASTER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS;
+        DATA.recordedBattle.partnerId = TRAINER_PARTNER(PARTNER_STEVEN_TEST);
         DATA.recordedBattle.opponentA = TRAINER_LINK_OPPONENT;
         DATA.recordedBattle.opponentB = TRAINER_LINK_OPPONENT;
         DATA.currentMonIndexes[0] = 0; // Player first mon
         DATA.currentMonIndexes[1] = 0; // Opponent A first mon
-        DATA.currentMonIndexes[2] = 3; // Player partner first mon
-        DATA.currentMonIndexes[3] = 3; // Opponent B first mon
+        DATA.currentMonIndexes[2] = 0; // Player partner first mon
+        DATA.currentMonIndexes[3] = 0; // Opponent B first mon
         break;
     case BATTLE_TEST_TWO_VS_ONE:
-        DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_RECORDED_IS_MASTER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TRAINER | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_MULTI;
-        DATA.recordedBattle.partnerId = TRAINER_PARTNER(PARTNER_STEVEN);
+        DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_RECORDED_IS_MASTER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_MULTI;
+        DATA.recordedBattle.partnerId = TRAINER_PARTNER(PARTNER_STEVEN_TEST);
         DATA.recordedBattle.opponentA = TRAINER_LINK_OPPONENT;
         DATA.recordedBattle.opponentB = 0xFFFF;
         DATA.currentMonIndexes[0] = 0; // Player first mon
         DATA.currentMonIndexes[1] = 0; // Opponent first mon
-        DATA.currentMonIndexes[2] = 3; // Player partner first mon
+        DATA.currentMonIndexes[2] = 0; // Player partner first mon
         DATA.currentMonIndexes[3] = 1; // Opponent second mon
         break;
     case BATTLE_TEST_ONE_VS_TWO:
@@ -448,16 +472,18 @@ static void BattleTest_Run(void *data)
         DATA.currentMonIndexes[0] = 0; // Player first mon
         DATA.currentMonIndexes[1] = 0; // Opponent A first mon
         DATA.currentMonIndexes[2] = 1; // Player second mon
-        DATA.currentMonIndexes[3] = 3; // Opponent B first mon
+        DATA.currentMonIndexes[3] = 0; // Opponent B first mon
         break;
     }
+
+    gBattleTypeFlags = DATA.recordedBattle.battleFlags;
 
     for (i = 0; i < MAX_LINK_PLAYERS; i++)
     {
         DATA.recordedBattle.playersName[i][0] = CHAR_1 + i;
         DATA.recordedBattle.playersName[i][1] = EOS;
         DATA.recordedBattle.playersLanguage[i] = GAME_LANGUAGE;
-        DATA.recordedBattle.playersBattlers[i] = i;
+        DATA.recordedBattle.playersBattlers |= (i << (2 * (i >> 1) + 4 * (i & BIT_SIDE))); // Trainer0/1 second mon occupies same bits as trainer2/3 mon
     }
 
     STATE->runRandomly = TRUE;
@@ -470,67 +496,55 @@ static void BattleTest_Run(void *data)
     STATE->runWhen = FALSE;
     STATE->runScene = FALSE;
 
-    requiredPlayerPartySize = 0;
-    requiredOpponentPartySize = 0;
     for (i = 0; i < STATE->battlersCount; i++)
     {
-        if ((i & BIT_SIDE) == B_SIDE_PLAYER)
-            requiredPlayerPartySize = DATA.currentMonIndexes[i] + 1;
-        else
-            requiredOpponentPartySize = DATA.currentMonIndexes[i] + 1;
+        requiredPartySizes[Test_GetBattlerTrainer(i)] = DATA.currentMonIndexes[i] + 1;
     }
-    if (DATA.playerPartySize < requiredPlayerPartySize)
-        Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":L%d PLAYER Pokemon required", requiredPlayerPartySize);
-    if (DATA.opponentPartySize < requiredOpponentPartySize)
-        Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":L%d OPPONENT Pokemon required", requiredOpponentPartySize);
+    for (enum BattleTrainer trainer = B_TRAINER_0; trainer < MAX_BATTLE_TRAINERS; trainer++)
+    {
+        if (DATA.partySizes[trainer] < requiredPartySizes[trainer])
+        {
+            switch (trainer)
+            {
+            case B_TRAINER_0:
+                Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":L%d PLAYER Pokemon required", requiredPartySizes[trainer]);
+                break;
+            case B_TRAINER_1:
+                if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+                    Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":L%d OPPONENT_A Pokemon required", requiredPartySizes[trainer]);
+                else
+                    Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":L%d OPPONENT Pokemon required", requiredPartySizes[trainer]);
+                break;
+            case B_TRAINER_2:
+                Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":L%d PARTNER Pokemon required", requiredPartySizes[trainer]);
+                break;
+            case B_TRAINER_3:
+                Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":L%d OPPONENT_B Pokemon required", requiredPartySizes[trainer]);
+                break;
+            default:
+                Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":L%d TRAINER %d Pokemon required", requiredPartySizes[trainer], trainer);
+                break;
+            }
+        }
+    }
 
     for (i = 0; i < STATE->battlersCount; i++)
         PushBattlerAction(0, i, RECORDED_BYTE, 0xFF);
 
     if (DATA.hasExplicitSpeeds)
     {
-        u8 revisedPlayerExplicitSpeeds = 0;
-        u8 revisedPartnerExplicitSpeeds = 0;
-        u8 revisedOpponentAExplicitSpeeds = 0;
-        u8 revisedOpponentBExplicitSpeeds = 0;
+        u8 requiredExplicitSpeeds[MAX_BATTLE_TRAINERS] = {0};
 
-        for (i = 0; i < 3; i++)
+        for (enum BattleTrainer trainer = B_TRAINER_0; trainer < MAX_BATTLE_TRAINERS; trainer++)
         {
-            if(GetMonData(&DATA.recordedBattle.playerParty[i], MON_DATA_SPECIES, NULL) != SPECIES_NONE)
-                revisedPlayerExplicitSpeeds |= 1 << i;
-        }
-        for (i = 3; i < PARTY_SIZE; i++)
-        {
-            if(GetMonData(&DATA.recordedBattle.playerParty[i], MON_DATA_SPECIES, NULL) != SPECIES_NONE)
+            for (i = 0; i < PARTY_SIZE; i++)
             {
-                if(DATA.currentPosition == B_POSITION_PLAYER_LEFT)
-                    revisedPlayerExplicitSpeeds |= 1 << i;
-                else
-                    revisedPartnerExplicitSpeeds |= 1 << i;
+                if(GetMonData(&DATA.recordedBattle.parties[trainer][i], MON_DATA_SPECIES) != SPECIES_NONE)
+                    requiredExplicitSpeeds[trainer] |= 1 << i;
             }
-        }
 
-        for (i = 0; i < 3; i++)
-        {
-            if(GetMonData(&DATA.recordedBattle.opponentParty[i], MON_DATA_SPECIES, NULL) != SPECIES_NONE)
-                revisedOpponentAExplicitSpeeds |= 1 << i;
-        }
-        for (i = 3; i < PARTY_SIZE; i++)
-        {
-            if(GetMonData(&DATA.recordedBattle.opponentParty[i], MON_DATA_SPECIES, NULL) != SPECIES_NONE)
-            {
-                if(DATA.currentPosition == B_POSITION_OPPONENT_LEFT)
-                    revisedOpponentAExplicitSpeeds |= 1 << i;
-                else
-                    revisedOpponentBExplicitSpeeds |= 1 << i;
-            }
-        }
-
-        if (((DATA.explicitSpeeds[B_POSITION_PLAYER_LEFT] + DATA.explicitSpeeds[B_POSITION_PLAYER_RIGHT]) != (revisedPlayerExplicitSpeeds + revisedPartnerExplicitSpeeds)
-         || (DATA.explicitSpeeds[B_POSITION_OPPONENT_LEFT] + DATA.explicitSpeeds[B_POSITION_OPPONENT_RIGHT]) != (revisedOpponentAExplicitSpeeds + revisedOpponentBExplicitSpeeds)))
-         
-        {
-            Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":LSpeed required for all PLAYERs and OPPONENTs");
+            if (DATA.explicitSpeeds[trainer] != requiredExplicitSpeeds[trainer])
+                Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":LSpeed required for all PLAYERs and OPPONENTs");
         }
     }
     else
@@ -554,6 +568,33 @@ static void BattleTest_Run(void *data)
     PrintTestName();
 }
 
+static bool32 IsTieBreakTag(enum RandomTag tag)
+{
+    switch (tag)
+    {
+    case RNG_AI_SCORE_TIE_SINGLES:
+    case RNG_AI_SCORE_TIE_DOUBLES_MOVE:
+    case RNG_AI_SCORE_TIE_DOUBLES_TARGET:
+        return TRUE;
+    default:
+        break;
+    }
+    return FALSE;
+}
+
+static void SanitizeTieCounts(void)
+{
+    if (DATA.trial.scoreTieCount < 1)
+        DATA.trial.scoreTieCount = 1;
+    if (DATA.trial.scoreTieCount > MAX_MON_MOVES)
+        DATA.trial.scoreTieCount = MAX_MON_MOVES;
+
+    if (DATA.trial.targetTieCount < 1)
+        DATA.trial.targetTieCount = 1;
+    if (DATA.trial.targetTieCount >= gBattlersCount)
+        DATA.trial.targetTieCount = (gBattlersCount - 1);
+}
+
 u32 RandomUniformTrials(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32), void *caller)
 {
     STATE->didRunRandomly = TRUE;
@@ -575,7 +616,7 @@ u32 RandomUniformTrials(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32
 
     if (!reject)
     {
-        if (STATE->trials != (hi - lo + 1))
+        if ((STATE->trials != (hi - lo + 1)) && !(IsTieBreakTag(tag)))
             Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomUniform called from %p with tag %d and inconsistent trials %d and %d", caller, tag, STATE->trials, hi - lo + 1);
         return STATE->runTrial + lo;
     }
@@ -591,7 +632,7 @@ u32 RandomUniformTrials(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32
 
 }
 
-u32 RandomWeightedArrayTrials(enum RandomTag tag, u32 sum, u32 n, const u8 *weights, void *caller)
+u32 RandomWeightedArrayTrials(enum RandomTag tag, u32 sum, u32 n, const u16 *weights, void *caller)
 {
     //Detect inconsistent sum
     u32 weightSum = 0;
@@ -640,7 +681,7 @@ static u32 BattleTest_RandomUniform(enum RandomTag tag, u32 lo, u32 hi, bool32 (
     const struct BattlerTurn *turn = NULL;
     if (gCurrentTurnActionNumber < gBattlersCount)
     {
-        u32 battlerId = gBattlerByTurnOrder[gCurrentTurnActionNumber];
+        enum BattlerId battlerId = gBattlerByTurnOrder[gCurrentTurnActionNumber];
         turn = &DATA.battleRecordTurns[gBattleResults.battleTurnCounter][battlerId];
         if (turn && turn->rng.tag == tag)
         {
@@ -649,28 +690,67 @@ static u32 BattleTest_RandomUniform(enum RandomTag tag, u32 lo, u32 hi, bool32 (
             return turn->rng.value;
         }
     }
+
+    if (IsTieBreakTag(tag))
+        SanitizeTieCounts();
+
     //trials
-    if (tag == STATE->rngTag)
+    switch (tag)
+    {
+    case RNG_AI_SCORE_TIE_SINGLES:
+    case RNG_AI_SCORE_TIE_DOUBLES_MOVE:
+        switch (DATA.scoreTieResolution)
+        {
+        case SCORE_TIE_HI:
+            return (DATA.trial.scoreTieCount - 1);
+        case SCORE_TIE_RANDOM:
+            return RandomUniformTrials(tag, lo, hi, reject, caller);
+        case SCORE_TIE_CHOSEN:
+            if (DATA.scoreTieOverride >= DATA.trial.scoreTieCount)
+                return (DATA.trial.scoreTieCount - 1);
+            else
+                return DATA.scoreTieOverride;
+        default:
+            return 0;
+        }
+    case RNG_AI_SCORE_TIE_DOUBLES_TARGET:
+        switch (DATA.targetTieResolution)
+        {
+        case TARGET_TIE_HI:
+            return (DATA.trial.targetTieCount - 1);
+        case TARGET_TIE_RANDOM:
+            return RandomUniformTrials(tag, lo, hi, reject, caller);
+        case TARGET_TIE_CHOSEN:
+            if (DATA.targetTieOverride >= DATA.trial.targetTieCount)
+                return (DATA.trial.targetTieCount - 1);
+            else
+                return DATA.targetTieOverride;
+        default:
+            return 0;
+        }
+    default:
+    if (tag && tag == STATE->rngTag)
         return RandomUniformTrials(tag, lo, hi, reject, caller);
+    }
 
     //default
     return RandomUniformDefaultValue(tag, lo, hi, reject, caller);
 }
 
-static u32 BattleTest_RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, const u8 *weights, void *caller)
+static u32 BattleTest_RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, const u16 *weights, void *caller)
 {
     //rigged
     const struct BattlerTurn *turn = NULL;
     if (gCurrentTurnActionNumber < gBattlersCount || tag == RNG_SHELL_SIDE_ARM)
     {
-        u32 battlerId = gBattlerByTurnOrder[gCurrentTurnActionNumber];
+        enum BattlerId battlerId = gBattlerByTurnOrder[gCurrentTurnActionNumber];
         turn = &DATA.battleRecordTurns[gBattleResults.battleTurnCounter][battlerId];
         if (turn && turn->rng.tag == tag)
             return turn->rng.value;
     }
 
     //trials
-    if (tag == STATE->rngTag)
+    if (tag && tag == STATE->rngTag)
         return RandomWeightedArrayTrials(tag, sum, n, weights, caller);
 
     //default
@@ -708,7 +788,7 @@ static const void *BattleTest_RandomElementArray(enum RandomTag tag, const void 
     const struct BattlerTurn *turn = NULL;
     if (gCurrentTurnActionNumber < gBattlersCount)
     {
-        u32 battlerId = gBattlerByTurnOrder[gCurrentTurnActionNumber];
+        enum BattlerId battlerId = gBattlerByTurnOrder[gCurrentTurnActionNumber];
         turn = &DATA.battleRecordTurns[gBattleResults.battleTurnCounter][battlerId];
         if (turn && turn->rng.tag == tag)
         {
@@ -725,14 +805,14 @@ static const void *BattleTest_RandomElementArray(enum RandomTag tag, const void 
 
 
     //trials
-    if (tag == STATE->rngTag)
+    if (tag && tag == STATE->rngTag)
         return RandomElementArrayTrials(tag, array, size, count, caller);
 
     //default
     return RandomElementArrayDefaultValue(tag, array, size, count, caller);
 }
 
-static s32 TryAbilityPopUp(s32 i, s32 n, u32 battlerId, enum Ability ability)
+static s32 TryAbilityPopUp(s32 i, s32 n, enum BattlerId battlerId, enum Ability ability)
 {
     struct QueuedAbilityEvent *event;
     s32 iMax = i + n;
@@ -750,7 +830,7 @@ static s32 TryAbilityPopUp(s32 i, s32 n, u32 battlerId, enum Ability ability)
     return -1;
 }
 
-void TestRunner_Battle_RecordAbilityPopUp(u32 battlerId, enum Ability ability)
+void TestRunner_Battle_RecordAbilityPopUp(enum BattlerId battlerId, enum Ability ability)
 {
     s32 queuedEvent;
     s32 match;
@@ -775,6 +855,8 @@ void TestRunner_Battle_RecordAbilityPopUp(u32 battlerId, enum Ability ability)
             {
                 const char *filename = gTestRunnerState.test->filename;
                 u32 line = SourceLine(DATA.queuedEvents[match].sourceLineOffset);
+                if (gTestRunnerState.expectedFailState == EXPECT_FAIL_SCENE_OPEN)
+                    gTestRunnerState.expectedFailState = EXPECT_FAIL_SUCCESS;
                 Test_ExitWithResult(TEST_RESULT_FAIL, line, ":L%s:%d: Matched ABILITY_POPUP", filename, line);
             }
 
@@ -838,6 +920,8 @@ void TestRunner_Battle_RecordAnimation(u32 animType, u32 animId)
             {
                 const char *filename = gTestRunnerState.test->filename;
                 u32 line = SourceLine(DATA.queuedEvents[match].sourceLineOffset);
+                if (gTestRunnerState.expectedFailState == EXPECT_FAIL_SCENE_OPEN)
+                    gTestRunnerState.expectedFailState = EXPECT_FAIL_SUCCESS;
                 Test_ExitWithResult(TEST_RESULT_FAIL, line, ":L%s:%d: Matched ANIMATION", filename, line);
             }
 
@@ -856,7 +940,7 @@ void TestRunner_Battle_RecordAnimation(u32 animType, u32 animId)
     }
 }
 
-static s32 TryHP(s32 i, s32 n, u32 battlerId, u32 oldHP, u32 newHP)
+static s32 TryHP(s32 i, s32 n, enum BattlerId battlerId, u32 oldHP, u32 newHP)
 {
     struct QueuedHPEvent *event;
     s32 iMax = i + n;
@@ -903,7 +987,7 @@ static s32 TryHP(s32 i, s32 n, u32 battlerId, u32 oldHP, u32 newHP)
     return -1;
 }
 
-void TestRunner_Battle_RecordHP(u32 battlerId, u32 oldHP, u32 newHP)
+void TestRunner_Battle_RecordHP(enum BattlerId battlerId, u32 oldHP, u32 newHP)
 {
     s32 queuedEvent;
     s32 match;
@@ -928,6 +1012,8 @@ void TestRunner_Battle_RecordHP(u32 battlerId, u32 oldHP, u32 newHP)
             {
                 const char *filename = gTestRunnerState.test->filename;
                 u32 line = SourceLine(DATA.queuedEvents[match].sourceLineOffset);
+                if (gTestRunnerState.expectedFailState == EXPECT_FAIL_SCENE_OPEN)
+                    gTestRunnerState.expectedFailState = EXPECT_FAIL_SUCCESS;
                 Test_ExitWithResult(TEST_RESULT_FAIL, line, ":L%s:%d: Matched HP_BAR", filename, line);
             }
 
@@ -940,6 +1026,87 @@ void TestRunner_Battle_RecordHP(u32 battlerId, u32 oldHP, u32 newHP)
                 continue;
 
             if (TryHP(queuedEvent, event->groupSize, battlerId, oldHP, newHP) != -1)
+                DATA.trial.queuedEvent = queuedEvent + event->groupSize;
+        } while (FALSE);
+        break;
+    }
+}
+
+static s32 TrySubHit(s32 i, s32 n, enum BattlerId battlerId, u32 damage, bool32 broke)
+{
+    struct QueuedSubHitEvent *event;
+    s32 iMax = i + n;
+    for (; i < iMax; i++)
+    {
+        if (DATA.queuedEvents[i].type != QUEUED_SUB_HIT_EVENT)
+            continue;
+
+        event = &DATA.queuedEvents[i].as.subHit;
+
+        if (event->battlerId == battlerId)
+        {
+            if (event->checkBreak)
+            {
+                if (event->breakSub && !broke)
+                    return -1;
+                else if (!event->breakSub && broke)
+                    return -1;
+            }
+
+            if (event->address <= 0xFFFF)
+            {
+                event->address = damage;
+                return i;
+            }
+            else
+            {
+                *(u16 *)(u32)(event->address) = damage;
+                return i;
+            }
+        }
+    }
+    return -1;
+}
+
+void TestRunner_Battle_RecordSubHit(enum BattlerId battlerId, u32 damage, bool32 broke)
+{
+    s32 queuedEvent;
+    s32 match;
+    struct QueuedEvent *event;
+
+    if (DATA.trial.queuedEvent == DATA.queuedEventsCount)
+        return;
+
+    event = &DATA.queuedEvents[DATA.trial.queuedEvent];
+    switch (event->groupType)
+    {
+    case QUEUE_GROUP_NONE:
+    case QUEUE_GROUP_ONE_OF:
+        if (TrySubHit(DATA.trial.queuedEvent, event->groupSize, battlerId, damage, broke) != -1)
+            DATA.trial.queuedEvent += event->groupSize;
+        break;
+    case QUEUE_GROUP_NONE_OF:
+        queuedEvent = DATA.trial.queuedEvent;
+        do
+        {
+            if ((match = TrySubHit(queuedEvent, event->groupSize, battlerId, damage, broke)) != -1)
+            {
+                const char *filename = gTestRunnerState.test->filename;
+                u32 line = SourceLine(DATA.queuedEvents[match].sourceLineOffset);
+                if (gTestRunnerState.expectedFailState == EXPECT_FAIL_SCENE_OPEN)
+                    gTestRunnerState.expectedFailState = EXPECT_FAIL_SUCCESS;
+                Test_ExitWithResult(TEST_RESULT_FAIL, line, ":L%s:%d: Matched SUB_HIT", filename, line);
+            }
+
+            queuedEvent += event->groupSize;
+            if (queuedEvent == DATA.queuedEventsCount)
+                break;
+
+            event = &DATA.queuedEvents[queuedEvent];
+            if (event->groupType == QUEUE_GROUP_NONE_OF)
+                continue;
+
+            if (TrySubHit(queuedEvent, event->groupSize, battlerId, damage, broke) != -1)
                 DATA.trial.queuedEvent = queuedEvent + event->groupSize;
         } while (FALSE);
         break;
@@ -963,7 +1130,7 @@ static const char *const sGimmickIdentifiers[GIMMICKS_COUNT] =
     [GIMMICK_TERA] = "Terastallize",
 };
 
-static u32 CountAiExpectMoves(struct ExpectedAIAction *expectedAction, u32 battlerId, bool32 printLog)
+static u32 CountAiExpectMoves(struct ExpectedAIAction *expectedAction, enum BattlerId battlerId, bool32 printLog)
 {
     u32 i, countExpected = 0;
     for (i = 0; i < MAX_MON_MOVES; i++)
@@ -978,7 +1145,7 @@ static u32 CountAiExpectMoves(struct ExpectedAIAction *expectedAction, u32 battl
     return countExpected;
 }
 
-void TestRunner_Battle_CheckChosenMove(u32 battlerId, u32 moveId, u32 target, enum Gimmick gimmick)
+void TestRunner_Battle_CheckChosenMove(enum BattlerId battlerId, enum Move moveId, u32 target, enum Gimmick gimmick)
 {
     const char *filename = gTestRunnerState.test->filename;
     u32 id = DATA.trial.aiActionsPlayed[battlerId];
@@ -999,6 +1166,9 @@ void TestRunner_Battle_CheckChosenMove(u32 battlerId, u32 moveId, u32 target, en
 
         if (expectedAction->explicitTarget && expectedAction->target != target)
             Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), ":L%s:%d: Expected target %s, got %s", filename, expectedAction->sourceLine, BattlerIdentifier(expectedAction->target), BattlerIdentifier(target));
+
+        if ((DATA.targetTieOverride >= DATA.trial.targetTieCount) && (DATA.targetTieResolution == TARGET_TIE_CHOSEN))
+            Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":L%s:%d: TIE_BREAK_TARGET override %d, greater than count %d of targets with tied best score", filename, expectedAction->sourceLine, DATA.targetTieOverride, DATA.trial.targetTieCount);
 
         if (expectedAction->gimmick != GIMMICKS_COUNT && expectedAction->gimmick != gimmick)
             Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), ":L%s:%d: Expected gimmick %s, got %s", filename, expectedAction->sourceLine, sGimmickIdentifiers[expectedAction->gimmick], sGimmickIdentifiers[gimmick]);
@@ -1052,7 +1222,7 @@ void TestRunner_Battle_CheckChosenMove(u32 battlerId, u32 moveId, u32 target, en
     DATA.trial.aiActionsPlayed[battlerId]++;
 }
 
-void TestRunner_Battle_CheckSwitch(u32 battlerId, u32 partyIndex)
+void TestRunner_Battle_CheckSwitch(enum BattlerId battlerId, u32 partyIndex)
 {
     const char *filename = gTestRunnerState.test->filename;
     u32 id = DATA.trial.aiActionsPlayed[battlerId];
@@ -1072,12 +1242,6 @@ void TestRunner_Battle_CheckSwitch(u32 battlerId, u32 partyIndex)
             Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), ":L%s:%d: Expected partyIndex %d, got %d", filename, expectedAction->sourceLine, expectedAction->target, partyIndex);
     }
     DATA.trial.aiActionsPlayed[battlerId]++;
-}
-
-void TestRunner_Battle_InvalidNoHPMon(u32 battlerId, u32 partyIndex)
-{
-    Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":L%s: INVALID: %s trying to send out a mon(id: %d) with 0 HP.",
-                        gTestRunnerState.test->filename, BattlerIdentifier(battlerId), gBattlerPartyIndexes[battlerId]);
 }
 
 static bool32 CheckComparision(s32 val1, s32 val2, u32 cmp)
@@ -1104,7 +1268,7 @@ static const char *const sCmpToStringTable[] =
     [CMP_GREATER_THAN] = "GT",
 };
 
-static void CheckIfMaxScoreEqualExpectMove(u32 battlerId, s32 target, struct ExpectedAIAction *aiAction, const char *filename)
+static void CheckIfMaxScoreEqualExpectMove(enum BattlerId battlerId, s32 target, struct ExpectedAIAction *aiAction, const char *filename)
 {
     u32 i;
     s32 *scores = gAiBattleData->finalScore[battlerId][target];
@@ -1124,24 +1288,26 @@ static void CheckIfMaxScoreEqualExpectMove(u32 battlerId, s32 target, struct Exp
         if (scores[i] == scores[bestScoreId]
             && !aiAction->notMove
             && (aiAction->moveSlots & (1u << i))
-            && !(aiAction->moveSlots & (1u << bestScoreId)))
+            && !(aiAction->moveSlots & (1u << bestScoreId))
+            && (DATA.scoreTieResolution == SCORE_TIE_NONE))
         {
-            Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), ":L%s:%d: EXPECT_MOVE %S has the same best score(%d) as not expected MOVE %S", filename,
+            Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), ":L%s:%d: EXPECT_MOVE %S has the same best score(%d) as not expected MOVE %S. Consider using TIE_BREAK_SCORE.", filename,
                                 aiAction->sourceLine, GetMoveName(moves[i]), scores[i], GetMoveName(moves[bestScoreId]));
         }
         // We DO NOT expect move 'i', but it has the same best score as another move.
         if (scores[i] == scores[bestScoreId]
             && aiAction->notMove
             && (aiAction->moveSlots & (1u << i))
-            && !(aiAction->moveSlots & (1u << bestScoreId)))
+            && !(aiAction->moveSlots & (1u << bestScoreId))
+            && (DATA.scoreTieResolution == SCORE_TIE_NONE))
         {
-            Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), ":L%s:%d: NOT_EXPECT_MOVE %S has the same best score(%d) as MOVE %S", filename,
+            Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), ":L%s:%d: NOT_EXPECT_MOVE %S has the same best score(%d) as MOVE %S. Consider using TIE_BREAK_SCORE.", filename,
                                 aiAction->sourceLine, GetMoveName(moves[i]), scores[i], GetMoveName(moves[bestScoreId]));
         }
     }
 }
 
-static void PrintAiMoveLog(u32 battlerId, u32 moveSlot, u32 moveId, s32 totalScore)
+static void PrintAiMoveLog(enum BattlerId battlerId, u32 moveSlot, enum Move moveId, s32 totalScore)
 {
     s32 i, scoreFromLogs = 0;
 
@@ -1183,7 +1349,7 @@ static void PrintAiMoveLog(u32 battlerId, u32 moveSlot, u32 moveId, s32 totalSco
     Test_MgbaPrintf("Total: %d\n", totalScore);
 }
 
-static void ClearAiLog(u32 battlerId)
+static void ClearAiLog(enum BattlerId battlerId)
 {
     u32 i, j;
     for (i = 0; i < MAX_MON_MOVES; i++)
@@ -1195,7 +1361,7 @@ static void ClearAiLog(u32 battlerId)
     DATA.aiLogPrintedForMove[battlerId] = 0;
 }
 
-void TestRunner_Battle_CheckAiMoveScores(u32 battlerId)
+void TestRunner_Battle_CheckAiMoveScores(enum BattlerId battlerId)
 {
     s32 i;
     struct ExpectedAIAction *aiAction;
@@ -1207,7 +1373,7 @@ void TestRunner_Battle_CheckAiMoveScores(u32 battlerId)
         struct ExpectedAiScore *scoreCtx = &DATA.expectedAiScores[battlerId][turn][i];
         if (scoreCtx->set)
         {
-            u32 moveId1 = gBattleMons[battlerId].moves[scoreCtx->moveSlot1];
+            enum Move moveId1 = gBattleMons[battlerId].moves[scoreCtx->moveSlot1];
             s32 target = scoreCtx->target;
             s32 *scores = gAiBattleData->finalScore[battlerId][target];
 
@@ -1222,7 +1388,7 @@ void TestRunner_Battle_CheckAiMoveScores(u32 battlerId)
             }
             else
             {
-                u32 moveId2 = gBattleMons[battlerId].moves[scoreCtx->moveSlot2];
+                enum Move moveId2 = gBattleMons[battlerId].moves[scoreCtx->moveSlot2];
                 PrintAiMoveLog(battlerId, scoreCtx->moveSlot1, moveId1, scores[scoreCtx->moveSlot1]);
                 PrintAiMoveLog(battlerId, scoreCtx->moveSlot2, moveId2, scores[scoreCtx->moveSlot2]);
                 if (!CheckComparision(scores[scoreCtx->moveSlot1], scores[scoreCtx->moveSlot2], scoreCtx->cmp))
@@ -1255,7 +1421,7 @@ void TestRunner_Battle_CheckAiMoveScores(u32 battlerId)
     }
 }
 
-static s32 TryExp(s32 i, s32 n, u32 battlerId, u32 oldExp, u32 newExp)
+static s32 TryExp(s32 i, s32 n, enum BattlerId battlerId, u32 oldExp, u32 newExp)
 {
     struct QueuedExpEvent *event;
     s32 iMax = i + n;
@@ -1302,7 +1468,7 @@ static s32 TryExp(s32 i, s32 n, u32 battlerId, u32 oldExp, u32 newExp)
     return -1;
 }
 
-void TestRunner_Battle_RecordExp(u32 battlerId, u32 oldExp, u32 newExp)
+void TestRunner_Battle_RecordExp(enum BattlerId battlerId, u32 oldExp, u32 newExp)
 {
     s32 queuedEvent;
     s32 match;
@@ -1327,6 +1493,8 @@ void TestRunner_Battle_RecordExp(u32 battlerId, u32 oldExp, u32 newExp)
             {
                 const char *filename = gTestRunnerState.test->filename;
                 u32 line = SourceLine(DATA.queuedEvents[match].sourceLineOffset);
+                if (gTestRunnerState.expectedFailState == EXPECT_FAIL_SCENE_OPEN)
+                    gTestRunnerState.expectedFailState = EXPECT_FAIL_SUCCESS;
                 Test_ExitWithResult(TEST_RESULT_FAIL, line, ":L%s:%d: Matched EXPERIENCE_BAR", filename, line);
             }
 
@@ -1417,6 +1585,8 @@ void TestRunner_Battle_RecordMessage(const u8 *string)
             {
                 const char *filename = gTestRunnerState.test->filename;
                 u32 line = SourceLine(DATA.queuedEvents[match].sourceLineOffset);
+                if (gTestRunnerState.expectedFailState == EXPECT_FAIL_SCENE_OPEN)
+                    gTestRunnerState.expectedFailState = EXPECT_FAIL_SUCCESS;
                 Test_ExitWithResult(TEST_RESULT_FAIL, line, ":L%s:%d: Matched MESSAGE", filename, line);
             }
 
@@ -1435,7 +1605,7 @@ void TestRunner_Battle_RecordMessage(const u8 *string)
     }
 }
 
-static s32 TryStatus(s32 i, s32 n, u32 battlerId, u32 status1)
+static s32 TryStatus(s32 i, s32 n, enum BattlerId battlerId, u32 status1)
 {
     struct QueuedStatusEvent *event;
     s32 iMax = i + n;
@@ -1457,7 +1627,7 @@ static s32 TryStatus(s32 i, s32 n, u32 battlerId, u32 status1)
     return -1;
 }
 
-void TestRunner_Battle_RecordStatus1(u32 battlerId, u32 status1)
+void TestRunner_Battle_RecordStatus1(enum BattlerId battlerId, u32 status1)
 {
     s32 queuedEvent;
     s32 match;
@@ -1482,6 +1652,8 @@ void TestRunner_Battle_RecordStatus1(u32 battlerId, u32 status1)
             {
                 const char *filename = gTestRunnerState.test->filename;
                 u32 line = SourceLine(DATA.queuedEvents[match].sourceLineOffset);
+                if (gTestRunnerState.expectedFailState == EXPECT_FAIL_SCENE_OPEN)
+                    gTestRunnerState.expectedFailState = EXPECT_FAIL_SUCCESS;
                 Test_ExitWithResult(TEST_RESULT_FAIL, line, ":L%s:%d: Matched STATUS_ICON", filename, line);
             }
 
@@ -1500,14 +1672,75 @@ void TestRunner_Battle_RecordStatus1(u32 battlerId, u32 status1)
     }
 }
 
+static s32 TryCatchChance(s32 i, s32 n, u32 catchChance)
+{
+    struct QueuedCaptureEvent *event;
+    s32 iMax = i + n;
+    for (; i < iMax; i++)
+    {
+        if (DATA.queuedEvents[i].type != QUEUED_CATCH_CHANCE_EVENT)
+            continue;
+
+        event = &DATA.queuedEvents[i].as.capture;
+        *(u32 *)(u32)(event->address) = catchChance;
+        return i;
+    }
+    return -1;
+}
+
+void TestRunner_Battle_RecordCatchChance(u32 catchChance)
+{
+    s32 queuedEvent;
+    s32 match;
+    struct QueuedEvent *event;
+
+    if (DATA.trial.queuedEvent == DATA.queuedEventsCount)
+        return;
+
+    event = &DATA.queuedEvents[DATA.trial.queuedEvent];
+    switch (event->groupType)
+    {
+    case QUEUE_GROUP_NONE:
+    case QUEUE_GROUP_ONE_OF:
+        if (TryCatchChance(DATA.trial.queuedEvent, event->groupSize, catchChance) != -1)
+            DATA.trial.queuedEvent += event->groupSize;
+        break;
+    case QUEUE_GROUP_NONE_OF:
+        queuedEvent = DATA.trial.queuedEvent;
+        do
+        {
+            if ((match = TryCatchChance(DATA.trial.queuedEvent, event->groupSize, catchChance)) != -1)
+            {
+                const char *filename = gTestRunnerState.test->filename;
+                u32 line = SourceLine(DATA.queuedEvents[match].sourceLineOffset);
+                Test_ExitWithResult(TEST_RESULT_FAIL, line, ":L%s:%d: Matched CATCH CHANCE", filename, line);
+            }
+
+            queuedEvent += event->groupSize;
+            if (queuedEvent == DATA.queuedEventsCount)
+                break;
+
+            event = &DATA.queuedEvents[queuedEvent];
+            if (event->groupType == QUEUE_GROUP_NONE_OF)
+                continue;
+
+            if (TryCatchChance(DATA.trial.queuedEvent, event->groupSize, catchChance) != -1)
+                DATA.trial.queuedEvent = queuedEvent + event->groupSize;
+        } while (FALSE);
+        break;
+    }
+}
+
 static const char *const sEventTypeMacros[] =
 {
     [QUEUED_ABILITY_POPUP_EVENT] = "ABILITY_POPUP",
     [QUEUED_ANIMATION_EVENT] = "ANIMATION",
     [QUEUED_HP_EVENT] = "HP_BAR",
+    [QUEUED_SUB_HIT_EVENT] = "SUB_HIT",
     [QUEUED_EXP_EVENT] = "EXPERIENCE_BAR",
     [QUEUED_MESSAGE_EVENT] = "MESSAGE",
     [QUEUED_STATUS_EVENT] = "STATUS_ICON",
+    [QUEUED_CATCH_CHANCE_EVENT] = "CATCH_CHANCE",
 };
 
 void TestRunner_Battle_AfterLastTurn(void)
@@ -1530,6 +1763,8 @@ void TestRunner_Battle_AfterLastTurn(void)
         const char *filename = gTestRunnerState.test->filename;
         u32 line = SourceLine(DATA.queuedEvents[DATA.trial.queuedEvent].sourceLineOffset);
         const char *macro = sEventTypeMacros[DATA.queuedEvents[DATA.trial.queuedEvent].type];
+        if (gTestRunnerState.expectedFailState == EXPECT_FAIL_SCENE_OPEN)
+            gTestRunnerState.expectedFailState = EXPECT_FAIL_SUCCESS;
         Test_ExitWithResult(TEST_RESULT_FAIL, line, ":L%s:%d: Unmatched %s", filename, line, macro);
     }
 
@@ -1543,14 +1778,21 @@ void TestRunner_Battle_AfterLastTurn(void)
 static void TearDownBattle(void)
 {
     // Zero out the parties, data in them could potentially carry over
-    ZeroPlayerPartyMons();
-    ZeroEnemyPartyMons();
+    for (enum BattleTrainer trainer = B_TRAINER_0; trainer < MAX_BATTLE_TRAINERS; trainer++)
+        ZeroPartyMons(gParties[trainer]);
     SetCurrentDifficultyLevel(DIFFICULTY_NORMAL);
+
+    // Set Battle Controllers to BATTLE_CONTROLLER_NONE
+    for (u32 i = 0; i < MAX_BATTLERS_COUNT; i++)
+    {
+        gBattlerBattleController[i] = BATTLE_CONTROLLER_NONE;
+    }
 
     FreeMonSpritesGfx();
     FreeBattleSpritesData();
     FreeBattleResources();
     FreeAllWindowBuffers();
+    gMain.inBattle = FALSE; // Necessary else some tests report incorrect results when running in same thread as an EXPECT_FAIL test
 }
 
 static void CB2_BattleTest_NextParameter(void)
@@ -1560,6 +1802,7 @@ static void CB2_BattleTest_NextParameter(void)
     {
         SetMainCallback2(CB2_TestRunner);
         ClearFlagAfterTest();
+        ClearVarAfterTest();
     }
     else
     {
@@ -1626,6 +1869,7 @@ static void BattleTest_TearDown(void *data)
     // Free resources that aren't cleaned up when the battle was
     // aborted unexpectedly.
     ClearFlagAfterTest();
+    ClearVarAfterTest();
     TestFreeConfigData();
     if (!STATE->hasTornDownBattle)
     {
@@ -1697,7 +1941,7 @@ void RNGSeed_(u32 sourceLine, rng_value_t seed)
 
 void AIFlags_(u32 sourceLine, u64 flags)
 {
-    INVALID_IF(!IsAITest(), "AI_FLAGS is usable only in AI_SINGLE_BATTLE_TEST, AI_DOUBLE_BATTLE_TEST, AI_MULTI_BATTLE_TEST, and AI_TWO_VS_ONE_TEST");
+    INVALID_IF(!IsAITest(), "AI_FLAGS is usable only in AI_SINGLE_BATTLE_TEST, AI_DOUBLE_BATTLE_TEST, AI_MULTI_BATTLE_TEST, AI_TWELVES_BATTLE_TEST, and AI_TWO_VS_ONE_TEST");
     for (u32 i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
         DATA.recordedBattle.AI_scripts[i] = flags;
@@ -1705,16 +1949,17 @@ void AIFlags_(u32 sourceLine, u64 flags)
     DATA.hasAI = TRUE;
 }
 
-void BattlerAIFlags_(u32 sourceLine, u32 battler, u64 flags)
+void BattlerAIFlags_(u32 sourceLine, struct BattlePokemon *battler, u64 flags)
 {
-    INVALID_IF(!IsAITest(), "AI_FLAGS is usable only in AI_SINGLE_BATTLE_TEST, AI_DOUBLE_BATTLE_TEST, AI_MULTI_BATTLE_TEST, and AI_TWO_VS_ONE_TEST");
-    DATA.recordedBattle.AI_scripts[battler] |= flags;
+    INVALID_IF(!IsAITest(), "AI_FLAGS is usable only in AI_SINGLE_BATTLE_TEST, AI_DOUBLE_BATTLE_TEST, AI_MULTI_BATTLE_TEST, AI_TWELVES_BATTLE_TEST, and AI_TWO_VS_ONE_TEST");
+    enum BattlerId battlerId = battler - gBattleMons;
+    DATA.recordedBattle.AI_scripts[battlerId] |= flags;
     DATA.hasAI = TRUE;
 }
 
 void AILogScores(u32 sourceLine)
 {
-    INVALID_IF(!IsAITest(), "AI_LOG is usable only in AI_SINGLE_BATTLE_TEST, AI_DOUBLE_BATTLE_TEST, AI_MULTI_BATTLE_TEST, and AI_TWO_VS_ONE_TEST");
+    INVALID_IF(!IsAITest(), "AI_LOG is usable only in AI_SINGLE_BATTLE_TEST, AI_DOUBLE_BATTLE_TEST, AI_MULTI_BATTLE_TEST, AI_TWELVES_BATTLE_TEST, and AI_TWO_VS_ONE_TEST");
     DATA.logAI = TRUE;
 }
 
@@ -1738,10 +1983,33 @@ void SetFlagForTest(u32 sourceLine, u16 flagId)
     FlagSet(flagId);
 }
 
-void TestSetConfig(u32 sourceLine, enum GenConfigTag configTag, u32 value)
+void SetVarForTest(u32 sourceLine, u16 varId, u16 value)
+{
+    INVALID_IF(DATA.varId != 0, "VAR can only be set once per test");
+    DATA.varId = varId;
+    VarSet(varId, value);
+}
+
+void TestSetConfig(u32 sourceLine, enum ConfigTag configTag, u32 value)
 {
     INVALID_IF(!STATE->runGiven, "WITH_CONFIG outside of GIVEN");
-    SetGenConfig(configTag, value);
+    SetConfig(configTag, value);
+}
+
+void TieBreakScore(u32 sourceLine, enum RandomTag rngTag, enum ScoreTieResolution scoreTieRes, u32 value)
+{
+    INVALID_IF((rngTag != RNG_AI_SCORE_TIE_DOUBLES_MOVE && rngTag != RNG_AI_SCORE_TIE_SINGLES), "TIE_BREAK_SCORE requires RNG_AI_SCORE_TIE_SINGLES or RNG_AI_SCORE_TIE_DOUBLES_MOVE");
+    DATA.scoreTieResolution = scoreTieRes;
+    DATA.scoreTieTag = rngTag;
+    if (scoreTieRes == SCORE_TIE_CHOSEN)
+        DATA.scoreTieOverride = value;
+}
+
+void TieBreakTarget(u32 sourceLine, enum TargetTieResolution targetTieRes, u32 value)
+{
+    DATA.targetTieResolution = targetTieRes;
+    if (targetTieRes == TARGET_TIE_CHOSEN)
+        DATA.targetTieOverride = value;
 }
 
 void ClearFlagAfterTest(void)
@@ -1753,87 +2021,35 @@ void ClearFlagAfterTest(void)
     }
 }
 
-void OpenPokemon(u32 sourceLine, enum BattlerPosition position, u32 species)
+void ClearVarAfterTest(void)
 {
-    s32 i, data;
-    u8 *partySize;
-    struct Pokemon *party;
-    INVALID_IF(species >= SPECIES_EGG, "Invalid species: %d", species);
-    ASSUMPTION_FAIL_IF(!IsSpeciesEnabled(species), "Species disabled: %d", species);
-    if ((position & BIT_SIDE) == B_SIDE_PLAYER)
+    if (DATA.varId != 0)
     {
-        partySize = &DATA.playerPartySize;
-        party = DATA.recordedBattle.playerParty;
-    }
-    else
-    {
-        partySize = &DATA.opponentPartySize;
-        party = DATA.recordedBattle.opponentParty;
-    }
-    INVALID_IF(*partySize >= PARTY_SIZE, "Too many Pokemon in party");
-    DATA.currentPosition = position;
-    DATA.currentPartyIndex = *partySize;
-    DATA.currentMon = &party[DATA.currentPartyIndex];
-    DATA.gender = 0xFF; // Male
-    DATA.nature = NATURE_HARDY;
-    (*partySize)++;
-
-    CreateMon(DATA.currentMon, species, 100, 0, TRUE, 0, OT_ID_PRESET, 0);
-    data = MOVE_NONE;
-    for (i = 0; i < MAX_MON_MOVES; i++)
-        SetMonData(DATA.currentMon, MON_DATA_MOVE1 + i, &data);
-    data = 0;
-    if (B_FRIENDSHIP_BOOST)
-    {
-        // This way, we avoid the boost affecting tests unless explicitly stated.
-        SetMonData(DATA.currentMon, MON_DATA_FRIENDSHIP, &data);
-        CalculateMonStats(DATA.currentMon);
+        VarSet(DATA.varId, 0);
+        DATA.varId = 0;
     }
 }
 
-void OpenPokemonMulti(u32 sourceLine, enum BattlerPosition position, u32 species)
+void OpenPokemon(u32 sourceLine, enum BattleTrainer trainer, enum Species species)
 {
-
     s32 i, data;
     u8 *partySize;
     struct Pokemon *party;
     INVALID_IF(species >= SPECIES_EGG, "Invalid species: %d", species);
     ASSUMPTION_FAIL_IF(!IsSpeciesEnabled(species), "Species disabled: %d", species);
-    if (position == B_POSITION_PLAYER_LEFT) // MULTI_PLAYER
-    {
-        partySize = &DATA.playerPartySize;
-        party = DATA.recordedBattle.playerParty;
-    }
-    else if (position == B_POSITION_PLAYER_RIGHT) // MULTI_PARTNER
-    {
-        partySize = &DATA.playerPartySize;
-        if ((*partySize == 0) || (*partySize == 1) || (*partySize == 2))
-            *partySize = 3;
-        party = DATA.recordedBattle.playerParty;
-    } 
-    else if (position == B_POSITION_OPPONENT_LEFT) // MULTI_OPPONENT_A
-    {
-        partySize = &DATA.opponentPartySize;
-        party = DATA.recordedBattle.opponentParty;
-    } 
-    else // MULTI_OPPONENT_B
-    {
-        partySize = &DATA.opponentPartySize;
-        if ((*partySize == 0) || (*partySize == 1) || (*partySize == 2))
-            *partySize = 3;
-        party = DATA.recordedBattle.opponentParty;
-    } 
+
+    partySize = &DATA.partySizes[trainer];
+    party = DATA.recordedBattle.parties[trainer];
+
     INVALID_IF(*partySize >= PARTY_SIZE, "Too many Pokemon in party");
-    DATA.currentPosition = position;
+    DATA.battlerParty = trainer;
     DATA.currentPartyIndex = *partySize;
     DATA.currentMon = &party[DATA.currentPartyIndex];
     DATA.gender = 0xFF; // Male
     DATA.nature = NATURE_HARDY;
-    DATA.isShiny = FALSE;
     (*partySize)++;
 
-    CreateMon(DATA.currentMon, species, 100, 0, TRUE, 0, OT_ID_PRESET, 0);
-    // Reset move IDs, but force PP to be non-zero. This is a safeguard against test species that only learn 1 move having test moves with 0 PP
+    CreateMon(DATA.currentMon, species, 100, 0, OTID_STRUCT_PRESET(0));
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         data = MOVE_NONE;
@@ -1842,12 +2058,9 @@ void OpenPokemonMulti(u32 sourceLine, enum BattlerPosition position, u32 species
         SetMonData(DATA.currentMon, MON_DATA_PP1 + i, &data);
     }
     data = 0;
-    if (B_FRIENDSHIP_BOOST)
-    {
-        // This way, we avoid the boost affecting tests unless explicitly stated.
+    if (B_FRIENDSHIP_BOOST) // This way, we avoid the boost affecting tests unless explicitly stated.
         SetMonData(DATA.currentMon, MON_DATA_FRIENDSHIP, &data);
-        CalculateMonStats(DATA.currentMon);
-    }
+    CalculateMonStats(DATA.currentMon);
 }
 
 // (sNaturePersonalities[i] % NUM_NATURES) == i
@@ -1875,10 +2088,10 @@ void ClosePokemon(u32 sourceLine)
 {
     s32 i;
     u32 data;
-    INVALID_IF(DATA.hasExplicitSpeeds && !(DATA.explicitSpeeds[DATA.currentPosition] & (1 << DATA.currentPartyIndex)), "Speed required");
+    INVALID_IF(DATA.hasExplicitSpeeds && !(DATA.explicitSpeeds[DATA.battlerParty] & (1 << DATA.currentPartyIndex)), "Speed required");
     for (i = 0; i < STATE->battlersCount; i++)
     {
-        if (i == DATA.currentPosition
+        if (i == DATA.battlerParty
          && DATA.currentMonIndexes[i] == DATA.currentPartyIndex)
         {
             INVALID_IF(GetMonData(DATA.currentMon, MON_DATA_HP) == 0, "Battlers cannot be fainted");
@@ -1890,15 +2103,15 @@ void ClosePokemon(u32 sourceLine)
     DATA.currentMon = NULL;
 }
 
-static void SetGimmick(u32 sourceLine, u32 side, u32 partyIndex, enum Gimmick gimmick)
+static void SetGimmick(u32 sourceLine, enum BattleTrainer trainer, u32 partyIndex, enum Gimmick gimmick)
 {
-    enum Gimmick currentGimmick = DATA.chosenGimmick[side][partyIndex];
+    enum Gimmick currentGimmick = DATA.chosenGimmick[trainer][partyIndex];
     if (!((currentGimmick == GIMMICK_ULTRA_BURST && gimmick == GIMMICK_Z_MOVE)
        || (currentGimmick == GIMMICK_Z_MOVE && gimmick == GIMMICK_ULTRA_BURST)))
     {
         INVALID_IF(currentGimmick != GIMMICK_NONE && currentGimmick != gimmick, "Cannot set %s because %s already set", sGimmickIdentifiers[gimmick], sGimmickIdentifiers[currentGimmick]);
     }
-    DATA.chosenGimmick[side][partyIndex] = gimmick;
+    DATA.chosenGimmick[trainer][partyIndex] = gimmick;
 }
 
 void Gender_(u32 sourceLine, u32 gender)
@@ -1949,7 +2162,7 @@ void Ability_(u32 sourceLine, enum Ability ability)
     // Store forced ability to be set when the battle starts if invalid.
     if (i == NUM_ABILITY_SLOTS)
     {
-        DATA.forcedAbilities[DATA.currentPosition][DATA.currentPartyIndex] = ability;
+        DATA.forcedAbilities[DATA.battlerParty][DATA.currentPartyIndex] = ability;
     }
 }
 
@@ -2027,7 +2240,7 @@ void Speed_(u32 sourceLine, u32 speed)
     bool32 hyperTrainingFlag = TRUE;
     SetMonData(DATA.currentMon, MON_DATA_HYPER_TRAINED_SPEED, &hyperTrainingFlag);
     DATA.hasExplicitSpeeds = TRUE;
-    DATA.explicitSpeeds[DATA.currentPosition] |= 1 << DATA.currentPartyIndex;
+    DATA.explicitSpeeds[DATA.battlerParty] |= 1 << DATA.currentPartyIndex;
 }
 
 void HPIV_(u32 sourceLine, u32 hpIV)
@@ -2080,10 +2293,10 @@ void Item_(u32 sourceLine, u32 item)
     switch (GetItemHoldEffect(item))
     {
     case HOLD_EFFECT_MEGA_STONE:
-        SetGimmick(sourceLine, DATA.currentPosition, DATA.currentPartyIndex, GIMMICK_MEGA);
+        SetGimmick(sourceLine, DATA.battlerParty, DATA.currentPartyIndex, GIMMICK_MEGA);
         break;
     case HOLD_EFFECT_Z_CRYSTAL:
-        SetGimmick(sourceLine, DATA.currentPosition, DATA.currentPartyIndex, GIMMICK_Z_MOVE);
+        SetGimmick(sourceLine, DATA.battlerParty, DATA.currentPartyIndex, GIMMICK_Z_MOVE);
         break;
     default:
         break;
@@ -2103,7 +2316,7 @@ void Moves_(u32 sourceLine, u16 moves[MAX_MON_MOVES])
         u32 pp = GetMovePP(moves[i]);
         SetMonData(DATA.currentMon, MON_DATA_PP1 + i, &pp);
     }
-    DATA.explicitMoves[DATA.currentPosition] |= 1 << DATA.currentPartyIndex;
+    DATA.explicitMoves[DATA.battlerParty] |= 1 << DATA.currentPartyIndex;
 }
 
 void MovesWithPP_(u32 sourceLine, struct moveWithPP moveWithPP[MAX_MON_MOVES])
@@ -2118,7 +2331,7 @@ void MovesWithPP_(u32 sourceLine, struct moveWithPP moveWithPP[MAX_MON_MOVES])
         SetMonData(DATA.currentMon, MON_DATA_MOVE1 + i, &moveWithPP[i].moveId);
         SetMonData(DATA.currentMon, MON_DATA_PP1 + i, &moveWithPP[i].pp);
     }
-    DATA.explicitMoves[DATA.currentPosition] |= 1 << DATA.currentPartyIndex;
+    DATA.explicitMoves[DATA.battlerParty] |= 1 << DATA.currentPartyIndex;
 }
 
 void Friendship_(u32 sourceLine, u32 friendship)
@@ -2140,25 +2353,26 @@ void OTName_(u32 sourceLine, const u8 *otName)
     SetMonData(DATA.currentMon, MON_DATA_OT_NAME, &otName);
 }
 
-void DynamaxLevel_(u32 sourceLine, u32 dynamaxLevel)
+void DynamaxLevel_(u32 sourceLine, s16 dynamaxLevel)
 {
     INVALID_IF(!DATA.currentMon, "DynamaxLevel outside of PLAYER/OPPONENT");
     SetMonData(DATA.currentMon, MON_DATA_DYNAMAX_LEVEL, &dynamaxLevel);
-    SetGimmick(sourceLine, DATA.currentPosition, DATA.currentPartyIndex, GIMMICK_DYNAMAX);
+    if (dynamaxLevel >= 0)
+        SetGimmick(sourceLine, DATA.battlerParty, DATA.currentPartyIndex, GIMMICK_DYNAMAX);
 }
 
 void GigantamaxFactor_(u32 sourceLine, bool32 gigantamaxFactor)
 {
     INVALID_IF(!DATA.currentMon, "GigantamaxFactor outside of PLAYER/OPPONENT");
     SetMonData(DATA.currentMon, MON_DATA_GIGANTAMAX_FACTOR, &gigantamaxFactor);
-    SetGimmick(sourceLine, DATA.currentPosition, DATA.currentPartyIndex, GIMMICK_DYNAMAX);
+    SetGimmick(sourceLine, DATA.battlerParty, DATA.currentPartyIndex, GIMMICK_DYNAMAX);
 }
 
 void TeraType_(u32 sourceLine, enum Type teraType)
 {
     INVALID_IF(!DATA.currentMon, "TeraType outside of PLAYER/OPPONENT");
     SetMonData(DATA.currentMon, MON_DATA_TERA_TYPE, &teraType);
-    SetGimmick(sourceLine, DATA.currentPosition, DATA.currentPartyIndex, GIMMICK_TERA);
+    SetGimmick(sourceLine, DATA.battlerParty, DATA.currentPartyIndex, GIMMICK_TERA);
 }
 
 void Shadow_(u32 sourceLine, bool32 isShadow)
@@ -2194,7 +2408,7 @@ static const char *const sBattlerIdentifiersDoubles[] =
     "opponentRight",
 };
 
-static const char *BattlerIdentifier(s32 battlerId)
+static const char *BattlerIdentifier(enum BattlerId battlerId)
 {
     const struct BattleTest *test = GetBattleTest();
     switch (test->type)
@@ -2211,12 +2425,12 @@ static const char *BattlerIdentifier(s32 battlerId)
     case BATTLE_TEST_AI_TWO_VS_ONE:
     case BATTLE_TEST_ONE_VS_TWO:
     case BATTLE_TEST_AI_ONE_VS_TWO:
-        return sBattlerIdentifiersDoubles[battlerId]; 
+        return sBattlerIdentifiersDoubles[battlerId];
     }
     return "<unknown>";
 }
 
-static void PushBattlerAction(u32 sourceLine, s32 battlerId, u32 actionType, u32 byte)
+static void PushBattlerAction(u32 sourceLine, enum BattlerId battlerId, u32 actionType, u32 byte)
 {
     u32 recordIndex = DATA.recordIndexes[battlerId]++;
     if (recordIndex >= BATTLER_RECORD_SIZE)
@@ -2227,7 +2441,7 @@ static void PushBattlerAction(u32 sourceLine, s32 battlerId, u32 actionType, u32
     DATA.recordedBattle.battleRecord[battlerId][recordIndex] = byte;
 }
 
-void TestRunner_Battle_CheckBattleRecordActionType(u32 battlerId, u32 recordIndex, u32 actionType)
+void TestRunner_Battle_CheckBattleRecordActionType(enum BattlerId battlerId, u32 recordIndex, u32 actionType)
 {
     // An illegal move choice will cause the battle to request a new
     // move slot and target. This detects the move slot.
@@ -2314,26 +2528,25 @@ void OpenTurn(u32 sourceLine)
     DATA.moveBattlers = 0x00;
 }
 
-static void SetSlowerThan(s32 battlerId)
+static void SetSlowerThan(enum BattlerId battlerId)
 {
-    s32 i, slowerThan;
-    slowerThan = 0;
+    s32 i;
+    u32 slowerThan = 0;
+    enum BattleTrainer trainer;
     for (i = 0; i < STATE->battlersCount; i++)
     {
         if (i == battlerId)
             continue;
         if (DATA.moveBattlers & (1 << i))
         {
-            if ((i & BIT_SIDE) == B_SIDE_PLAYER)
-                slowerThan |= 1 << DATA.currentMonIndexes[i];
-            else
-                slowerThan |= (1 << 6) << DATA.currentMonIndexes[i];
+            trainer = Test_GetBattlerTrainer(i);
+            slowerThan |= (1u << ((6 * trainer) + DATA.currentMonIndexes[i]));
         }
     }
-    DATA.slowerThan[battlerId & BIT_SIDE][DATA.currentMonIndexes[battlerId]] |= slowerThan;
+    DATA.slowerThan[Test_GetBattlerTrainer(battlerId)][DATA.currentMonIndexes[battlerId]] |= slowerThan;
 }
 
-static void SetAiActionToPass(u32 sourceLine, s32 battlerId)
+static void SetAiActionToPass(u32 sourceLine, enum BattlerId battlerId)
 {
     DATA.expectedAiActions[battlerId][DATA.expectedAiActionIndex[battlerId]].actionSet = TRUE;
     DATA.expectedAiActions[battlerId][DATA.expectedAiActionIndex[battlerId]].sourceLine = sourceLine;
@@ -2351,7 +2564,7 @@ void CloseTurn(u32 sourceLine)
     for (i = 0; i < STATE->battlersCount; i++)
     {
         if (!(DATA.actionBattlers & (1 << i)))
-        { // Multi test partner trainers want setting to RecordedPartner controller if no move set in this case.
+        { // Multi test partner trainers want setting to RecordedPartner controller if no move set in this case; EXPECT_XXXX will set to PlayerPartner.
             if (IsAITest() && (i & BIT_SIDE) == B_SIDE_OPPONENT) // If Move was not specified, allow any move used.
                 SetAiActionToPass(sourceLine, i);
             else
@@ -2362,17 +2575,15 @@ void CloseTurn(u32 sourceLine)
     DATA.turns++;
 }
 
-static struct Pokemon *CurrentMon(s32 battlerId)
+static struct Pokemon *CurrentMon(enum BattlerId battlerId)
 {
-    struct Pokemon *party;
-    if (battlerId == B_POSITION_PLAYER_LEFT || battlerId == B_POSITION_PLAYER_RIGHT)
-        party = DATA.recordedBattle.playerParty;
-    else
-        party = DATA.recordedBattle.opponentParty;
+    enum BattleTrainer trainer = Test_GetBattlerTrainer(battlerId);
+    struct Pokemon *party = DATA.recordedBattle.parties[trainer];
+
     return &party[DATA.currentMonIndexes[battlerId]];
 }
 
-s32 MoveGetTarget(s32 battlerId, u32 moveId, struct MoveContext *ctx, u32 sourceLine)
+s32 MoveGetTarget(enum BattlerId battlerId, enum Move moveId, struct MoveContext *ctx, u32 sourceLine)
 {
     s32 target = battlerId;
     if (ctx->explicitTarget)
@@ -2381,37 +2592,40 @@ s32 MoveGetTarget(s32 battlerId, u32 moveId, struct MoveContext *ctx, u32 source
     }
     else
     {
-        u32 moveTarget = GetMoveTarget(moveId);
-        if (moveTarget == MOVE_TARGET_RANDOM
-         || moveTarget == MOVE_TARGET_BOTH
-         || moveTarget == MOVE_TARGET_DEPENDS
-         || moveTarget == MOVE_TARGET_FOES_AND_ALLY
-         || moveTarget == MOVE_TARGET_OPPONENTS_FIELD)
+        enum MoveTarget moveTarget = GetMoveTarget(moveId);
+        if (moveTarget == TARGET_RANDOM
+         || moveTarget == TARGET_BOTH
+         || moveTarget == TARGET_DEPENDS
+         || moveTarget == TARGET_FOES_AND_ALLY
+         || moveTarget == TARGET_OPPONENTS_FIELD)
         {
             target = BATTLE_OPPOSITE(battlerId);
         }
-        else if (moveTarget == MOVE_TARGET_SELECTED || moveTarget == MOVE_TARGET_OPPONENT)
+        else if (moveTarget == TARGET_SELECTED || moveTarget == TARGET_SMART || moveTarget == TARGET_OPPONENT)
         {
             // In AI Doubles not specified target allows any target for EXPECT_MOVE.
-            if (GetBattleTest()->type != BATTLE_TEST_AI_DOUBLES)
+            if (!IsAIDoublesTest())
             {
                 INVALID_IF(STATE->battlersCount > 2, "%S requires explicit target", GetMoveName(moveId));
             }
 
             target = BATTLE_OPPOSITE(battlerId);
         }
-        else if (moveTarget == MOVE_TARGET_USER || moveTarget == MOVE_TARGET_ALL_BATTLERS)
+        else if (moveTarget == TARGET_USER
+              || moveTarget == TARGET_ALL_BATTLERS
+              || moveTarget == TARGET_FIELD
+              || moveTarget == TARGET_USER_AND_ALLY)
         {
             target = battlerId;
         }
-        else if (moveTarget == MOVE_TARGET_ALLY)
+        else if (moveTarget == TARGET_ALLY)
         {
             target = BATTLE_PARTNER(battlerId);
         }
         else
         {
             // In AI Doubles not specified target allows any target for EXPECT_MOVE.
-            if (GetBattleTest()->type != BATTLE_TEST_AI_DOUBLES)
+            if (!IsAIDoublesTest())
             {
                 INVALID("%S requires explicit target", GetMoveName(moveId));
             }
@@ -2420,7 +2634,7 @@ s32 MoveGetTarget(s32 battlerId, u32 moveId, struct MoveContext *ctx, u32 source
     return target;
 }
 
-void MoveGetIdAndSlot(s32 battlerId, struct MoveContext *ctx, u32 *moveId, u32 *moveSlot, u32 sourceLine)
+void MoveGetIdAndSlot(enum BattlerId battlerId, struct MoveContext *ctx, u32 *moveId, u32 *moveSlot, u32 sourceLine)
 {
     u32 i;
     struct Pokemon *mon = CurrentMon(battlerId);
@@ -2438,10 +2652,13 @@ void MoveGetIdAndSlot(s32 battlerId, struct MoveContext *ctx, u32 *moveId, u32 *
             }
             else if (*moveId == MOVE_NONE)
             {
-                INVALID_IF(DATA.explicitMoves[battlerId & BIT_SIDE] & (1 << DATA.currentMonIndexes[battlerId]), "Missing explicit %S", GetMoveName(ctx->move));
+                // TURN {} defaults to Celebrate; allow it even when a mon has explicit moves set.
+                INVALID_IF(ctx->move != MOVE_CELEBRATE
+                           && (DATA.explicitMoves[Test_GetBattlerTrainer(battlerId)] & (1 << DATA.currentMonIndexes[battlerId])),
+                           "Missing explicit %S", GetMoveName(ctx->move));
                 SetMonData(mon, MON_DATA_MOVE1 + i, &ctx->move);
                 u32 pp = GetMovePP(ctx->move);
-                SetMonData(DATA.currentMon, MON_DATA_PP1 + i, &pp);
+                SetMonData(mon, MON_DATA_PP1 + i, &pp);
                 *moveSlot = i;
                 *moveId = ctx->move;
                 INVALID_IF(GetMovePP(ctx->move) == 0, "%S has 0 PP!", GetMoveName(ctx->move));
@@ -2463,10 +2680,9 @@ void MoveGetIdAndSlot(s32 battlerId, struct MoveContext *ctx, u32 *moveId, u32 *
 
     if (ctx->explicitGimmick && ctx->gimmick != GIMMICK_NONE)
     {
-        u32 item = GetMonData(mon, MON_DATA_HELD_ITEM);
+        enum Item item = GetMonData(mon, MON_DATA_HELD_ITEM);
         enum HoldEffect holdEffect = GetItemHoldEffect(item);
         u32 species = GetMonData(mon, MON_DATA_SPECIES);
-        u32 side = battlerId & BIT_SIDE;
 
         // Check invalid item usage.
         INVALID_IF(ctx->gimmick == GIMMICK_MEGA && holdEffect != HOLD_EFFECT_MEGA_STONE && species != SPECIES_RAYQUAZA, "Cannot Mega Evolve without a Mega Stone");
@@ -2479,26 +2695,17 @@ void MoveGetIdAndSlot(s32 battlerId, struct MoveContext *ctx, u32 *moveId, u32 *
         INVALID_IF(ctx->gimmick != GIMMICK_Z_MOVE && ctx->gimmick != GIMMICK_ULTRA_BURST && holdEffect == HOLD_EFFECT_Z_CRYSTAL, "Cannot use another gimmick while holding a Z-Crystal");
 
         // Check multiple gimmick use.
-        SetGimmick(sourceLine, side, DATA.currentMonIndexes[battlerId], ctx->gimmick);
+        SetGimmick(sourceLine, Test_GetBattlerTrainer(battlerId), DATA.currentMonIndexes[battlerId], ctx->gimmick);
         *moveSlot |= RET_GIMMICK;
     }
 }
 
-u32 MoveGetFirstFainted(s32 battlerId)
+u32 MoveGetFirstFainted(enum BattlerId battlerId)
 {
-    u32 i, partySize;
-    struct Pokemon *party;
-
-    if ((battlerId & BIT_SIDE) == B_SIDE_PLAYER)
-    {
-        partySize = DATA.playerPartySize;
-        party = DATA.recordedBattle.playerParty;
-    }
-    else
-    {
-        partySize = DATA.opponentPartySize;
-        party = DATA.recordedBattle.opponentParty;
-    }
+    u32 i;
+    enum BattleTrainer trainer = Test_GetBattlerTrainer(battlerId);
+    struct Pokemon *party = DATA.recordedBattle.parties[trainer];
+    u32 partySize = DATA.partySizes[trainer];
 
     // Loop through to find fainted battler.
     for (i = 0; i < partySize; ++i)
@@ -2518,8 +2725,9 @@ u32 MoveGetFirstFainted(s32 battlerId)
 
 void Move(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext ctx)
 {
-    s32 battlerId = battler - gBattleMons;
-    u32 moveId, moveSlot;
+    enum BattlerId battlerId = battler - gBattleMons;
+    u32 moveId;
+    u32 moveSlot;
     s32 target;
     bool32 requirePartyIndex = FALSE;
 
@@ -2534,7 +2742,7 @@ void Move(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext ctx)
 
     // Check party menu moves.
     INVALID_IF(requirePartyIndex && !ctx.explicitPartyIndex, "%S requires explicit party index", GetMoveName(moveId));
-    INVALID_IF(requirePartyIndex && ctx.partyIndex >= ((battlerId & BIT_SIDE) == B_SIDE_PLAYER ? DATA.playerPartySize : DATA.opponentPartySize), \
+    INVALID_IF(requirePartyIndex && ctx.partyIndex >= DATA.partySizes[Test_GetBattlerTrainer(battlerId)], \
                 "MOVE to invalid party index");
 
     if (ctx.explicitHit)
@@ -2583,7 +2791,7 @@ void Move(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext ctx)
 
 void ForcedMove(u32 sourceLine, struct BattlePokemon *battler)
 {
-    s32 battlerId = battler - gBattleMons;
+    enum BattlerId battlerId = battler - gBattleMons;
     INVALID_IF(DATA.turnState == TURN_CLOSED, "SKIP_TURN outside TURN");
     PushBattlerAction(sourceLine, battlerId, RECORDED_ACTION_TYPE, B_ACTION_USE_MOVE);
     if (DATA.turnState == TURN_OPEN)
@@ -2598,8 +2806,9 @@ void ForcedMove(u32 sourceLine, struct BattlePokemon *battler)
 
 static void TryMarkExpectMove(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext *ctx)
 {
-    s32 battlerId = battler - gBattleMons;
-    u32 moveId, moveSlot, id;
+    enum BattlerId battlerId = battler - gBattleMons;
+    u32 moveId;
+    u32 moveSlot, id;
     s32 target;
 
     INVALID_IF(DATA.turnState == TURN_CLOSED, "EXPECT_MOVE outside TURN");
@@ -2620,11 +2829,14 @@ static void TryMarkExpectMove(u32 sourceLine, struct BattlePokemon *battler, str
 
     DATA.actionBattlers |= 1 << battlerId;
     DATA.moveBattlers |= 1 << battlerId;
+
+    if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
+        gTestRunnerState.expectedFailState = EXPECT_FAIL_TURN_OPEN;
 }
 
 void ExpectMove(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext ctx)
 {
-    s32 battlerId = battler - gBattleMons;
+    enum BattlerId battlerId = battler - gBattleMons;
     TryMarkExpectMove(sourceLine, battler, &ctx);
     DATA.expectedAiActionIndex[battlerId]++;
 }
@@ -2632,22 +2844,26 @@ void ExpectMove(u32 sourceLine, struct BattlePokemon *battler, struct MoveContex
 void ExpectSendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
 {
     s32 i, id;
-    s32 battlerId = battler - gBattleMons;
+    enum BattlerId battlerId = battler - gBattleMons;
     INVALID_IF(DATA.turnState == TURN_CLOSED, "EXPECT_SEND_OUT outside TURN");
     INVALID_IF(!IsAITest(), "EXPECT_SEND_OUT is usable only in AI_SINGLE_BATTLE_TEST, AI_DOUBLE_BATTLE_TEST, AI_MULTI_BATTLE_TEST, AI_TWO_VS_ONE_TEST, and AI_ONE_VS_TWO_TEST");
-    INVALID_IF(partyIndex >= ((battlerId & BIT_SIDE) == B_SIDE_PLAYER ? DATA.playerPartySize : DATA.opponentPartySize), "EXPECT_SEND_OUT to invalid party index");
+    INVALID_IF(partyIndex >= DATA.partySizes[Test_GetBattlerTrainer(battlerId)], "EXPECT_SEND_OUT to invalid party index");
     for (i = 0; i < STATE->battlersCount; i++)
     {
         if (battlerId != i && (battlerId & BIT_SIDE) == (i & BIT_SIDE))
-            INVALID_IF(DATA.currentMonIndexes[i] == partyIndex, "EXPECT_SEND_OUT to battler");
+            INVALID_IF((DATA.currentMonIndexes[i] == partyIndex) && BattlersShareParty(battlerId, i), "EXPECT_SEND_OUT to battler");
     }
     if (!(DATA.actionBattlers & (1 << battlerId)))
     { // Multi test partner trainers want setting to PlayerPartner controller even if no move set in this case.
         if (IsAITest() && (((battlerId & BIT_SIDE) == B_SIDE_OPPONENT) // If Move was not specified, allow any move used.
-         || (IsMultibattleTest() && battlerId == B_POSITION_PLAYER_RIGHT)))
+         || ((gBattleTypeFlags & BATTLE_TYPE_MULTI) && Test_GetBattlerTrainer(battlerId) == B_TRAINER_2)))
+        {
             SetAiActionToPass(sourceLine, battlerId);
+        }
         else
+        {
             Move(sourceLine, battler, (struct MoveContext) { move: MOVE_CELEBRATE, explicitMove: TRUE });
+        }
     }
 
     DATA.currentMonIndexes[battlerId] = partyIndex;
@@ -2659,9 +2875,12 @@ void ExpectSendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex
     DATA.expectedAiActions[battlerId][id].sourceLine = sourceLine;
     DATA.expectedAiActions[battlerId][id].actionSet = TRUE;
     DATA.expectedAiActionIndex[battlerId]++;
+
+    if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
+        gTestRunnerState.expectedFailState = EXPECT_FAIL_TURN_OPEN;
 }
 
-s32 GetAiMoveTargetForScoreCompare(u32 battlerId, u32 moveId, struct MoveContext *ctx, u32 sourceLine)
+s32 GetAiMoveTargetForScoreCompare(enum BattlerId battlerId, enum Move moveId, struct MoveContext *ctx, u32 sourceLine)
 {
     s32 target;
 
@@ -2684,7 +2903,7 @@ void Score(u32 sourceLine, struct BattlePokemon *battler, u32 cmp, bool32 toValu
     u32 moveSlot1, moveSlot2;
     s32 i, target;
     struct MoveContext moveCtx = {0};
-    s32 battlerId = battler - gBattleMons;
+    enum BattlerId battlerId = battler - gBattleMons;
     s32 turn = DATA.turns;
 
     INVALID_IF(!IsAITest(), "SCORE_%s%s is usable only in AI_SINGLE_BATTLE_TEST, AI_DOUBLE_BATTLE_TEST, AI_MULTI_BATTLE_TEST, & AI_TWO_VS_ONE_TEST", sCmpToStringTable[cmp], (toValue == TRUE) ? "_VAL" : "");
@@ -2727,7 +2946,7 @@ void Score(u32 sourceLine, struct BattlePokemon *battler, u32 cmp, bool32 toValu
 
 void ExpectMoves(u32 sourceLine, struct BattlePokemon *battler, bool32 notExpected, struct FourMoves moves)
 {
-    s32 battlerId = battler - gBattleMons;
+    enum BattlerId battlerId = battler - gBattleMons;
     u32 i;
 
     for (i = 0; i < MAX_MON_MOVES; i++)
@@ -2747,16 +2966,16 @@ void ExpectMoves(u32 sourceLine, struct BattlePokemon *battler, bool32 notExpect
 void Switch(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
 {
     s32 i;
-    s32 battlerId = battler - gBattleMons;
+    enum BattlerId battlerId = battler - gBattleMons;
     INVALID_IF(DATA.turnState == TURN_CLOSED, "SWITCH outside TURN");
     INVALID_IF(DATA.actionBattlers & (1 << battlerId), "Multiple battler actions");
-    INVALID_IF(partyIndex >= ((battlerId & BIT_SIDE) == B_SIDE_PLAYER ? DATA.playerPartySize : DATA.opponentPartySize), "SWITCH to invalid party index");
+    INVALID_IF(partyIndex >= DATA.partySizes[Test_GetBattlerTrainer(battlerId)], "SWITCH to invalid party index");
     INVALID_IF(IsAITest() && (battlerId & BIT_SIDE) == B_SIDE_OPPONENT, "SWITCH is not allowed for opponent in AI tests. Use EXPECT_SWITCH instead");
 
     for (i = 0; i < STATE->battlersCount; i++)
     {
         if (battlerId != i && (battlerId & BIT_SIDE) == (i & BIT_SIDE))
-            INVALID_IF(DATA.currentMonIndexes[i] == partyIndex, "SWITCH to battler");
+            INVALID_IF((DATA.currentMonIndexes[i] == partyIndex) && BattlersShareParty(battlerId, i), "SWITCH to battler");
     }
 
     PushBattlerAction(sourceLine, battlerId, RECORDED_ACTION_TYPE, B_ACTION_SWITCH);
@@ -2769,16 +2988,16 @@ void Switch(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
 void ExpectSwitch(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
 {
     s32 i, id;
-    s32 battlerId = battler - gBattleMons;
+    enum BattlerId battlerId = battler - gBattleMons;
     INVALID_IF(DATA.turnState == TURN_CLOSED, "EXPECT_SWITCH outside TURN");
     INVALID_IF(!IsAITest(), "EXPECT_SWITCH is usable only in AI_SINGLE_BATTLE_TEST, AI_DOUBLE_BATTLE_TEST, AI_MULTI_BATTLE_TEST, AI_TWO_VS_ONE_TEST, and AI_ONE_VS_TWO_TEST");
     INVALID_IF(DATA.actionBattlers & (1 << battlerId), "Multiple battler actions");
-    INVALID_IF(partyIndex >= ((battlerId & BIT_SIDE) == B_SIDE_PLAYER ? DATA.playerPartySize : DATA.opponentPartySize), "EXPECT_SWITCH to invalid party index");
+    INVALID_IF(partyIndex >= DATA.partySizes[Test_GetBattlerTrainer(battlerId)], "EXPECT_SWITCH to invalid party index");
 
     for (i = 0; i < STATE->battlersCount; i++)
     {
         if (battlerId != i && (battlerId & BIT_SIDE) == (i & BIT_SIDE))
-            INVALID_IF(DATA.currentMonIndexes[i] == partyIndex, "EXPECT_SWITCH to battler");
+            INVALID_IF((DATA.currentMonIndexes[i] == partyIndex) && BattlersShareParty(battlerId, i), "EXPECT_SWITCH to battler");
     }
 
     DATA.currentMonIndexes[battlerId] = partyIndex;
@@ -2790,11 +3009,14 @@ void ExpectSwitch(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
     DATA.expectedAiActions[battlerId][id].sourceLine = sourceLine;
     DATA.expectedAiActions[battlerId][id].actionSet = TRUE;
     DATA.expectedAiActionIndex[battlerId]++;
+
+    if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
+        gTestRunnerState.expectedFailState = EXPECT_FAIL_TURN_OPEN;
 }
 
 void SkipTurn(u32 sourceLine, struct BattlePokemon *battler)
 {
-    s32 battlerId = battler - gBattleMons;
+    enum BattlerId battlerId = battler - gBattleMons;
     INVALID_IF(DATA.turnState == TURN_CLOSED, "SKIP_TURN outside TURN");
     DATA.actionBattlers |= 1 << battlerId;
 }
@@ -2802,14 +3024,14 @@ void SkipTurn(u32 sourceLine, struct BattlePokemon *battler)
 void SendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
 {
     s32 i;
-    s32 battlerId = battler - gBattleMons;
+    enum BattlerId battlerId = battler - gBattleMons;
     INVALID_IF(DATA.turnState == TURN_CLOSED, "SEND_OUT outside TURN");
-    INVALID_IF(partyIndex >= ((battlerId & BIT_SIDE) == B_SIDE_PLAYER ? DATA.playerPartySize : DATA.opponentPartySize), "SEND_OUT of invalid party index");
+    INVALID_IF(partyIndex >= DATA.partySizes[Test_GetBattlerTrainer(battlerId)], "SEND_OUT of invalid party index");
     INVALID_IF(IsAITest() && (battlerId & BIT_SIDE) == B_SIDE_OPPONENT, "SEND_OUT is not allowed for opponent in AI tests. Use EXPECT_SEND_OUT instead");
     for (i = 0; i < STATE->battlersCount; i++)
     {
         if (battlerId != i && (battlerId & BIT_SIDE) == (i & BIT_SIDE))
-            INVALID_IF(DATA.currentMonIndexes[i] == partyIndex, "SEND_OUT to battler");
+            INVALID_IF((DATA.currentMonIndexes[i] == partyIndex) && BattlersShareParty(battlerId, i), "SEND_OUT to battler");
     }
     if (!(DATA.actionBattlers & (1 << battlerId)))
         Move(sourceLine, battler, (struct MoveContext) { move: MOVE_CELEBRATE, explicitMove: TRUE });
@@ -2820,23 +3042,28 @@ void SendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
 void UseItem(u32 sourceLine, struct BattlePokemon *battler, struct ItemContext ctx)
 {
     s32 i;
-    s32 battlerId = battler - gBattleMons;
-    bool32 requirePartyIndex = GetItemType(ctx.itemId) == ITEM_USE_PARTY_MENU || GetItemType(ctx.itemId) == ITEM_USE_PARTY_MENU_MOVES;
+    enum BattlerId battlerId = battler - gBattleMons;
+    enum ItemType ctxItemType = GetItemType(ctx.itemId);
+    bool32 requirePartyIndex = ctxItemType == ITEM_USE_PARTY_MENU
+                            || ctxItemType == ITEM_USE_PARTY_MENU_MOVES
+                            || (ctxItemType == ITEM_USE_BATTLER
+                                 && !IsAIDoublesTest()
+                                 && STATE->battlersCount > 2);
     // Check general bad use.
     INVALID_IF(DATA.turnState == TURN_CLOSED, "USE_ITEM outside TURN");
     INVALID_IF(DATA.actionBattlers & (1 << battlerId), "Multiple battler actions");
     INVALID_IF(ctx.itemId >= ITEMS_COUNT, "Illegal item: %d", ctx.itemId);
     // Check party menu items.
     INVALID_IF(requirePartyIndex && !ctx.explicitPartyIndex, "%S requires explicit party index", GetItemName(ctx.itemId));
-    INVALID_IF(requirePartyIndex && ctx.partyIndex >= ((battlerId & BIT_SIDE) == B_SIDE_PLAYER ? DATA.playerPartySize : DATA.opponentPartySize), \
+    INVALID_IF(requirePartyIndex && ctx.partyIndex >= DATA.partySizes[Test_GetBattlerTrainer(battlerId)], \
                 "USE_ITEM to invalid party index");
     // Check move slot items.
-    if (GetItemType(ctx.itemId) == ITEM_USE_PARTY_MENU_MOVES)
+    if (ctxItemType == ITEM_USE_PARTY_MENU_MOVES)
     {
         INVALID_IF(!ctx.explicitMove, "%S requires an explicit move", GetItemName(ctx.itemId));
         for (i = 0; i < MAX_MON_MOVES; i++)
         {
-            if (GetMonData(CurrentMon(battlerId), MON_DATA_MOVE1 + i, NULL) == ctx.move)
+            if (GetMonData(CurrentMon(battlerId), MON_DATA_MOVE1 + i) == ctx.move)
                 break;
         }
         INVALID_IF(i == MAX_MON_MOVES, "USE_ITEM on invalid move: %d", ctx.move);
@@ -2893,7 +3120,11 @@ void CloseQueueGroup(u32 sourceLine)
 
 void QueueAbility(u32 sourceLine, struct BattlePokemon *battler, struct AbilityEventContext ctx)
 {
-    s32 battlerId = battler - gBattleMons;
+    enum BattlerId battlerId = battler - gBattleMons;
+
+    if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
+        gTestRunnerState.expectedFailState = EXPECT_FAIL_SCENE_OPEN;
+
     INVALID_IF(!STATE->runScene, "ABILITY_POPUP outside of SCENE");
     if (DATA.queuedEventsCount == MAX_QUEUED_EVENTS)
         Test_ExitWithResult(TEST_RESULT_ERROR, sourceLine, ":L%s:%d: ABILITY exceeds MAX_QUEUED_EVENTS", gTestRunnerState.test->filename, sourceLine);
@@ -2912,6 +3143,9 @@ void QueueAbility(u32 sourceLine, struct BattlePokemon *battler, struct AbilityE
 void QueueAnimation(u32 sourceLine, u32 type, u32 id, struct AnimationEventContext ctx)
 {
     s32 attackerId, targetId;
+
+    if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
+        gTestRunnerState.expectedFailState = EXPECT_FAIL_SCENE_OPEN;
 
     INVALID_IF(!STATE->runScene, "ANIMATION outside of SCENE");
     if (DATA.queuedEventsCount == MAX_QUEUED_EVENTS)
@@ -2944,9 +3178,12 @@ void QueueAnimation(u32 sourceLine, u32 type, u32 id, struct AnimationEventConte
 
 void QueueHP(u32 sourceLine, struct BattlePokemon *battler, struct HPEventContext ctx)
 {
-    s32 battlerId = battler - gBattleMons;
+    enum BattlerId battlerId = battler - gBattleMons;
     u32 type;
     uintptr_t address;
+
+    if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
+        gTestRunnerState.expectedFailState = EXPECT_FAIL_SCENE_OPEN;
 
     INVALID_IF(!STATE->runScene, "HP_BAR outside of SCENE");
     if (DATA.queuedEventsCount == MAX_QUEUED_EVENTS)
@@ -2995,11 +3232,57 @@ void QueueHP(u32 sourceLine, struct BattlePokemon *battler, struct HPEventContex
     };
 }
 
+void QueueSubHit(u32 sourceLine, struct BattlePokemon *battler, struct SubHitEventContext ctx)
+{
+    enum BattlerId battlerId = battler - gBattleMons;
+    bool32 breakSub = FALSE;
+    bool32 checkBreak = FALSE;
+    uintptr_t address;
+
+    if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
+        gTestRunnerState.expectedFailState = EXPECT_FAIL_SCENE_OPEN;
+
+    INVALID_IF(!STATE->runScene, "SUB_HIT outside of SCENE");
+    if (DATA.queuedEventsCount == MAX_QUEUED_EVENTS)
+        Test_ExitWithResult(TEST_RESULT_ERROR, sourceLine, ":L%s:%d: SUB_HIT exceeds MAX_QUEUED_EVENTS", gTestRunnerState.test->filename, sourceLine);
+
+    address = 0;
+    if (ctx.explicitCaptureDamage)
+    {
+        INVALID_IF(ctx.captureDamage == NULL, "captureDamage is NULL");
+        *ctx.captureDamage = 0;
+        address = (uintptr_t)ctx.captureDamage;
+    }
+
+    if (ctx.explicitSubBreak)
+    {
+        checkBreak = TRUE;
+        if (ctx.subBreak)
+            breakSub = TRUE;
+    }
+
+    DATA.queuedEvents[DATA.queuedEventsCount++] = (struct QueuedEvent) {
+        .type = QUEUED_SUB_HIT_EVENT,
+        .sourceLineOffset = SourceLineOffset(sourceLine),
+        .groupType = QUEUE_GROUP_NONE,
+        .groupSize = 1,
+        .as = { .subHit = {
+            .battlerId = battlerId,
+            .checkBreak = checkBreak,
+            .breakSub = breakSub,
+            .address = address,
+        }},
+    };
+}
+
 void QueueExp(u32 sourceLine, struct BattlePokemon *battler, struct ExpEventContext ctx)
 {
-    s32 battlerId = battler - gBattleMons;
+    enum BattlerId battlerId = battler - gBattleMons;
     u32 type;
     uintptr_t address;
+
+    if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
+        gTestRunnerState.expectedFailState = EXPECT_FAIL_SCENE_OPEN;
 
     INVALID_IF(!STATE->runScene, "EXPERIENCE_BAR outside of SCENE");
     if (DATA.queuedEventsCount == MAX_QUEUED_EVENTS)
@@ -3038,6 +3321,9 @@ void QueueExp(u32 sourceLine, struct BattlePokemon *battler, struct ExpEventCont
 
 void QueueMessage(u32 sourceLine, const u8 *pattern)
 {
+    if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
+        gTestRunnerState.expectedFailState = EXPECT_FAIL_SCENE_OPEN;
+
     INVALID_IF(!STATE->runScene, "MESSAGE outside of SCENE");
     if (DATA.queuedEventsCount == MAX_QUEUED_EVENTS)
         Test_ExitWithResult(TEST_RESULT_ERROR, sourceLine, ":L%s:%d: MESSAGE exceeds MAX_QUEUED_EVENTS", gTestRunnerState.test->filename, sourceLine);
@@ -3054,8 +3340,11 @@ void QueueMessage(u32 sourceLine, const u8 *pattern)
 
 void QueueStatus(u32 sourceLine, struct BattlePokemon *battler, struct StatusEventContext ctx)
 {
-    s32 battlerId = battler - gBattleMons;
+    enum BattlerId battlerId = battler - gBattleMons;
     u32 mask;
+
+    if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
+        gTestRunnerState.expectedFailState = EXPECT_FAIL_SCENE_OPEN;
 
     INVALID_IF(!STATE->runScene, "STATUS_ICON outside of SCENE");
     if (DATA.queuedEventsCount == MAX_QUEUED_EVENTS)
@@ -3092,15 +3381,32 @@ void QueueStatus(u32 sourceLine, struct BattlePokemon *battler, struct StatusEve
     };
 }
 
+void QueueCatchingChance(u32 sourceLine, u32 *captureAddress)
+{
+    INVALID_IF(!STATE->runScene, "CAPTURE outside of SCENE");
+    if (DATA.queuedEventsCount == MAX_QUEUED_EVENTS)
+        Test_ExitWithResult(TEST_RESULT_ERROR, sourceLine, ":L%s:%d: CAPTURE exceeds MAX_QUEUED_EVENTS", gTestRunnerState.test->filename, sourceLine);
+    u32 address = (u32)captureAddress;
+    DATA.queuedEvents[DATA.queuedEventsCount++] = (struct QueuedEvent) {
+        .type = QUEUED_CATCH_CHANCE_EVENT,
+        .sourceLineOffset = SourceLineOffset(sourceLine),
+        .groupType = QUEUE_GROUP_NONE,
+        .groupSize = 1,
+        .as = { .capture = {
+            .address = address,
+        }},
+    };
+}
+
 void ValidateFinally(u32 sourceLine)
 {
     // Defer this error until after estimating the cost.
     INVALID_IF(STATE->parametersCount == 0, "FINALLY without PARAMETRIZE");
 }
 
-u32 TestRunner_Battle_GetForcedAbility(u32 side, u32 partyIndex)
+u32 TestRunner_Battle_GetForcedAbility(enum BattleTrainer trainer, u32 partyIndex)
 {
-    return DATA.forcedAbilities[side][partyIndex];
+    return DATA.forcedAbilities[trainer][partyIndex];
 }
 
 u32 TestRunner_Battle_GetForcedEnvironment(void)
@@ -3108,14 +3414,14 @@ u32 TestRunner_Battle_GetForcedEnvironment(void)
     return DATA.forcedEnvironment;
 }
 
-u32 TestRunner_Battle_GetChosenGimmick(u32 side, u32 partyIndex)
+u32 TestRunner_Battle_GetChosenGimmick(enum BattleTrainer trainer, u32 partyIndex)
 {
-    return DATA.chosenGimmick[side][partyIndex];
+    return DATA.chosenGimmick[trainer][partyIndex];
 }
 
 // TODO: Consider storing the last successful i and searching from i+1
 // to improve performance.
-struct AILogLine *GetLogLine(u32 battlerId, u32 moveIndex)
+struct AILogLine *GetLogLine(enum BattlerId battlerId, u32 moveIndex)
 {
     s32 i;
 
@@ -3132,7 +3438,7 @@ struct AILogLine *GetLogLine(u32 battlerId, u32 moveIndex)
     return NULL;
 }
 
-void TestRunner_Battle_AILogScore(const char *file, u32 line, u32 battlerId, u32 moveIndex, s32 score, bool32 setScore)
+void TestRunner_Battle_AILogScore(const char *file, u32 line, enum BattlerId battlerId, u32 moveIndex, s32 score, bool32 setScore)
 {
     struct AILogLine *log;
 
@@ -3145,12 +3451,12 @@ void TestRunner_Battle_AILogScore(const char *file, u32 line, u32 battlerId, u32
     log->set = setScore;
 }
 
-void TestRunner_Battle_AISetScore(const char *file, u32 line, u32 battlerId, u32 moveIndex, s32 score)
+void TestRunner_Battle_AISetScore(const char *file, u32 line, enum BattlerId battlerId, u32 moveIndex, s32 score)
 {
     TestRunner_Battle_AILogScore(file, line, battlerId, moveIndex, score, TRUE);
 }
 
-void TestRunner_Battle_AIAdjustScore(const char *file, u32 line, u32 battlerId, u32 moveIndex, s32 score)
+void TestRunner_Battle_AIAdjustScore(const char *file, u32 line, enum BattlerId battlerId, u32 moveIndex, s32 score)
 {
     TestRunner_Battle_AILogScore(file, line, battlerId, moveIndex, score, FALSE);
 }

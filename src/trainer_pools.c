@@ -6,6 +6,7 @@
 #include "random.h"
 #include "trainer_pools.h"
 #include "constants/battle.h"
+#include "constants/battle_ai.h"
 #include "constants/items.h"
 
 #include "data/battle_pool_rules.h"
@@ -167,9 +168,13 @@ static u32 PickMonFromPool(const struct Trainer *trainer, u8 *poolIndexArray, u3
     //  If no mon has been found yet continue looking
     if (monIndex == POOL_SLOT_DISABLED)
         monIndex = pickFunctions.OtherFunction(trainer, poolIndexArray, partyIndex, monsCount, battleTypeFlags, rules);
+    //  If a mon still hasn't been found, return POOL_SLOT_DISABLED which makes party generation default to regular party generation
+    if (monIndex == POOL_SLOT_DISABLED)
+        return monIndex;
+
     u32 chosenTags = trainer->party[monIndex].tags;
-    u16 chosenSpecies = trainer->party[monIndex].species;
-    u16 chosenItem = trainer->party[monIndex].heldItem;
+    enum Species chosenSpecies = trainer->party[monIndex].species;
+    enum Item chosenItem = trainer->party[monIndex].heldItem;
     enum NationalDexOrder chosenNatDex = gSpeciesInfo[chosenSpecies].natDexNum;
     //  If tag was required, change pool rule to account for the required tag already being picked
     u32 tagsToEliminate = 0;
@@ -196,8 +201,8 @@ static u32 PickMonFromPool(const struct Trainer *trainer, u8 *poolIndexArray, u3
         if (poolIndexArray[currIndex] != POOL_SLOT_DISABLED)
         {
             u32 currentTags = trainer->party[poolIndexArray[currIndex]].tags;
-            u16 currentSpecies = trainer->party[poolIndexArray[currIndex]].species;
-            u16 currentItem = trainer->party[poolIndexArray[currIndex]].heldItem;
+            enum Species currentSpecies = trainer->party[poolIndexArray[currIndex]].species;
+            enum Item currentItem = trainer->party[poolIndexArray[currIndex]].heldItem;
             enum NationalDexOrder currentNatDex = gSpeciesInfo[currentSpecies].natDexNum;
             if (currentTags & tagsToEliminate)
             {
@@ -243,7 +248,7 @@ static u32 GetPoolSeed(const struct Trainer *trainer)
     if (B_POOL_SETTING_USE_FIXED_SEED)
         seed = B_POOL_SETTING_FIXED_SEED;
     else
-        seed = gSaveBlock2Ptr->playerTrainerId[0] + (gSaveBlock2Ptr->playerTrainerId[1] << 8) + (gSaveBlock2Ptr->playerTrainerId[2] << 16) + (gSaveBlock2Ptr->playerTrainerId[3] << 24);
+        seed = READ_OTID_FROM_SAVE;
     seed ^= (u32)trainer;
     return seed;
 }
@@ -309,21 +314,21 @@ static struct PickFunctions GetPickFunctions(const struct Trainer *trainer)
     switch (trainer->poolPickIndex)
     {
         //  Repeats, but better to have the safety
-        case POOL_PICK_DEFAULT:
-            pickFunctions.LeadFunction = &DefaultLeadPickFunction;
-            pickFunctions.AceFunction = &DefaultAcePickFunction;
-            pickFunctions.OtherFunction = &DefaultOtherPickFunction;
-            break;
-        case POOL_PICK_LOWEST:
-            pickFunctions.LeadFunction = &PickLowest;
-            pickFunctions.AceFunction = &PickLowest;
-            pickFunctions.OtherFunction = &PickLowest;
-            break;
-        default:
-            pickFunctions.LeadFunction = &DefaultLeadPickFunction;
-            pickFunctions.AceFunction = &DefaultAcePickFunction;
-            pickFunctions.OtherFunction = &DefaultOtherPickFunction;
-            break;
+    case POOL_PICK_DEFAULT:
+        pickFunctions.LeadFunction = &DefaultLeadPickFunction;
+        pickFunctions.AceFunction = &DefaultAcePickFunction;
+        pickFunctions.OtherFunction = &DefaultOtherPickFunction;
+        break;
+    case POOL_PICK_LOWEST:
+        pickFunctions.LeadFunction = &PickLowest;
+        pickFunctions.AceFunction = &PickLowest;
+        pickFunctions.OtherFunction = &PickLowest;
+        break;
+    default:
+        pickFunctions.LeadFunction = &DefaultLeadPickFunction;
+        pickFunctions.AceFunction = &DefaultAcePickFunction;
+        pickFunctions.OtherFunction = &DefaultOtherPickFunction;
+        break;
     }
     return pickFunctions;
 }
@@ -349,16 +354,16 @@ static void PrunePool(const struct Trainer *trainer, u8 *poolIndexArray, const s
     //  Use defined pruning functions go here
     switch (trainer->poolPruneIndex)
     {
-        case POOL_PRUNE_NONE:
-            break;
-        case POOL_PRUNE_TEST:
-            TestPrune(trainer, poolIndexArray, rules);
-            break;
-        case POOL_PRUNE_RANDOM_TAG:
-            RandomTagPrune(trainer, poolIndexArray, rules);
-            break;
-        default:
-            break;
+    case POOL_PRUNE_NONE:
+        break;
+    case POOL_PRUNE_TEST:
+        TestPrune(trainer, poolIndexArray, rules);
+        break;
+    case POOL_PRUNE_RANDOM_TAG:
+        RandomTagPrune(trainer, poolIndexArray, rules);
+        break;
+    default:
+        break;
     }
 }
 
@@ -366,6 +371,14 @@ void DoTrainerPartyPool(const struct Trainer *trainer, u32 *monIndices, u8 monsC
 {
         bool32 usingPool = FALSE;
         struct PoolRules rules = defaultPoolRules;
+        struct Trainer tempTrainer;
+        if (trainer->poolSize == 0 && (trainer->aiFlags & AI_FLAG_RANDOMIZE_PARTY_INDICES))
+        {
+            tempTrainer = *trainer;
+            tempTrainer.poolSize = tempTrainer.partySize;
+            trainer = &tempTrainer;
+        }
+
         if (trainer->poolSize != 0)
         {
             usingPool = TRUE;

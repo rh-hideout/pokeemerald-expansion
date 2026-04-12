@@ -47,7 +47,7 @@ SINGLE_BATTLE_TEST("Belly Drum maximizes the user's Attack stat", s16 damage)
 SINGLE_BATTLE_TEST("Belly Drum fails if user's current HP is half or less than half its maximum")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(50);}
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(50); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BELLY_DRUM); }
@@ -74,13 +74,13 @@ SINGLE_BATTLE_TEST("Belly Drum fails if the user's Attack is already at +6")
         TURN { MOVE(player, MOVE_BELLY_DRUM); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Wobbuffet's Attack sharply rose!");
+        MESSAGE("Wobbuffet's Attack rose sharply!");
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Wobbuffet's Attack sharply rose!");
+        MESSAGE("Wobbuffet's Attack rose sharply!");
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Wobbuffet's Attack sharply rose!");
+        MESSAGE("Wobbuffet's Attack rose sharply!");
 
         MESSAGE("But it failed!");
         NONE_OF {
@@ -170,13 +170,13 @@ SINGLE_BATTLE_TEST("Belly Drum fails if the user's Attack is already at +6, even
         TURN { MOVE(player, MOVE_BELLY_DRUM); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Serperior's Attack sharply rose!");
+        MESSAGE("Serperior's Attack rose sharply!");
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Serperior's Attack sharply rose!");
+        MESSAGE("Serperior's Attack rose sharply!");
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Serperior's Attack sharply rose!");
+        MESSAGE("Serperior's Attack rose sharply!");
 
         MESSAGE("But it failed!");
         NONE_OF {

@@ -47,7 +47,11 @@ EventScript_AccessSomeonesPC::
 	return
 
 EventScript_AccessLanettesPC::
+#if IS_FRLG
+	msgbox gText_AccessedBillsPC, MSGBOX_DEFAULT
+#else
 	msgbox gText_AccessedLanettesPC, MSGBOX_DEFAULT
+#endif
 	return
 
 EventScript_TurnOffPC::

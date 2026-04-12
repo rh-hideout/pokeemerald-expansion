@@ -814,9 +814,6 @@ static const struct SpriteTemplate sSpriteTemplate_CrusherBase =
     .paletteTag = TAG_CRUSHER_BASE,
     .oam = &gOamData_AffineOff_ObjNormal_64x64,
     .anims = sAnims_CrusherBase,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_Impact =
@@ -825,8 +822,6 @@ static const struct SpriteTemplate sSpriteTemplate_Impact =
     .paletteTag = PALTAG_EFFECT,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = sAnims_Impact,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Impact
 };
 
@@ -836,9 +831,6 @@ static const struct SpriteTemplate sSpriteTemplate_Sparkle =
     .paletteTag = PALTAG_EFFECT,
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
     .anims = sAnims_Sparkle,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_Timer =
@@ -847,9 +839,6 @@ static const struct SpriteTemplate sSpriteTemplate_Timer =
     .paletteTag = TAG_TIMER_DIGITS,
     .oam = &gOamData_AffineOff_ObjNormal_8x16,
     .anims = sAnims_Timer,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_PlayerBerry =
@@ -858,9 +847,7 @@ static const struct SpriteTemplate sSpriteTemplate_PlayerBerry =
     .paletteTag = TAG_PLAYER1_BERRY,
     .oam = &gOamData_AffineDouble_ObjNormal_32x32,
     .anims = sAnims_PlayerBerry,
-    .images = NULL,
     .affineAnims = sAffineAnims_PlayerBerry,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct DigitObjUtilTemplate sDigitObjTemplates[] =
@@ -1037,12 +1024,18 @@ void StartBerryCrush(MainCallback exitCallback)
 
 static void GetBerryFromBag(void)
 {
-    if (gSpecialVar_ItemId < FIRST_BERRY_INDEX || gSpecialVar_ItemId > LAST_BERRY_INDEX + 1)
-        gSpecialVar_ItemId = FIRST_BERRY_INDEX;
+    enum BerryId berryId = ItemIdToBerryType(gSpecialVar_ItemId);
+    if (!berryId)
+    {
+        berryId = 1;
+        gSpecialVar_ItemId = BerryTypeToItemId(1);
+    }
     else
+    {
         RemoveBagItem(gSpecialVar_ItemId, 1);
+    }
 
-    sGame->players[sGame->localId].berryId = gSpecialVar_ItemId - FIRST_BERRY_INDEX;
+    sGame->players[sGame->localId].berryId = berryId;
     sGame->nextCmd = CMD_FADE;
     sGame->afterPalFadeCmd = CMD_WAIT_BERRIES;
     SetPaletteFadeArgs(sGame->commandArgs, FALSE, PALETTES_ALL, 0, 16, 0, RGB_BLACK);
@@ -1371,7 +1364,7 @@ static void CreateBerrySprites(struct BerryCrushGame *game, struct BerryCrushGam
             &sSpriteTemplate_PlayerBerry,
             sPlayerBerrySpriteTags[i],
             sPlayerBerrySpriteTags[i],
-            game->players[i].berryId + FIRST_BERRY_INDEX);
+            BerryTypeToItemId(game->players[i].berryId));
         gfx->berrySprites[i] = &gSprites[spriteId];
         gfx->berrySprites[i]->oam.priority = 3;
         gfx->berrySprites[i]->affineAnimPaused = TRUE;
@@ -1630,9 +1623,9 @@ static void PrintResultsText(struct BerryCrushGame *game, u8 page, u8 sp14, u8 b
             playerId = i;
             ranking = i;
             j = game->players[i].berryId;
-            if (j >= LAST_BERRY_INDEX - FIRST_BERRY_INDEX + 2)
-                j = 0;
-            StringCopy(gStringVar1, gBerries[j].name);
+            if (j > NUM_BERRIES)
+                j = 1;
+            StringCopy(gStringVar1, GetBerryInfo(j)->name);
             StringExpandPlaceholders(gStringVar4, sResultsTexts[page]);
             break;
         }
@@ -2203,7 +2196,7 @@ static u32 Cmd_WaitPaletteFade(struct BerryCrushGame *game, u8 *args)
     case 0:
         if (UpdatePaletteFade())
             return 0;
-        if(args[0] != 0)
+        if (args[0] != 0)
             game->cmdState++;
         else
             game->cmdState = 3;
@@ -2251,7 +2244,7 @@ static u32 Cmd_PrintMessage(struct BerryCrushGame *game, u8 *args)
         CopyWindowToVram(0, COPYWIN_FULL);
         break;
     case 1:
-        if (!IsTextPrinterActive(0))
+        if (!IsTextPrinterActiveOnWindow(0))
         {
             // If no wait keys are given, skip
             // waiting state below
@@ -2376,10 +2369,10 @@ static u32 Cmd_WaitForOthersToPickBerries(struct BerryCrushGame *game, u8 *args)
         for (i = 0; i < game->playerCount; i++)
         {
             game->players[i].berryId = gBlockRecvBuffer[i][0];
-            if (game->players[i].berryId > LAST_BERRY_INDEX + 1)
-                game->players[i].berryId = 0;
-            game->targetAPresses += gBerryCrush_BerryData[game->players[i].berryId].difficulty;
-            game->powder += gBerryCrush_BerryData[game->players[i].berryId].powder;
+            if (game->players[i].berryId > NUM_BERRIES)
+                game->players[i].berryId = 1;
+            game->targetAPresses += gBerries[game->players[i].berryId].berryCrushDifficulty;
+            game->powder += gBerries[game->players[i].berryId].berryCrushPowder;
         }
         game->cmdTimer = 0;
         ResetBlockReceivedFlags();
@@ -3381,7 +3374,7 @@ static u32 Cmd_StopGame(struct BerryCrushGame *game, u8 *args)
         CopyWindowToVram(0, COPYWIN_FULL);
         break;
     case 1:
-        if (IsTextPrinterActive(0))
+        if (IsTextPrinterActiveOnWindow(0))
             return 0;
         game->gfx.counter = 120;
         break;
@@ -3459,7 +3452,7 @@ static void ResetGame(struct BerryCrushGame *game)
     game->sparkleCounter = 0;
     for (i = 0; i < MAX_RFU_PLAYERS; i++)
     {
-        game->players[i].berryId = -1;
+        game->players[i].berryId = 0;
         game->players[i].inputTime = 0;
         game->players[i].neatInputStreak = 0;
         game->players[i].timeSincePrevInput = 1;

@@ -22,6 +22,24 @@ DOUBLE_BATTLE_TEST("Aroma Veil protects the Pokémon's side from Taunt")
     }
 }
 
+DOUBLE_BATTLE_TEST("Aroma Veil protects the Pokémon's side from ally Taunt")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TAUNT) == EFFECT_TAUNT);
+        ASSUME(GetMoveCategory(MOVE_HARDEN) == DAMAGE_CATEGORY_STATUS);
+        PLAYER(SPECIES_AROMATISSE) { Ability(ABILITY_AROMA_VEIL); Speed(1); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(3); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(4); }
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_TAUNT, target: playerLeft); MOVE(playerLeft, MOVE_HARDEN); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_TAUNT, playerRight);
+        ABILITY_POPUP(playerLeft, ABILITY_AROMA_VEIL);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HARDEN, playerLeft);
+    }
+}
+
 DOUBLE_BATTLE_TEST("Aroma Veil protects the Pokémon's side from Torment")
 {
     struct BattlePokemon *moveTarget = NULL;
@@ -159,7 +177,7 @@ DOUBLE_BATTLE_TEST("Aroma Veil does not protect the Pokémon's side from Impriso
         ASSUME(GetMoveEffect(MOVE_IMPRISON) == EFFECT_IMPRISON);
         PLAYER(SPECIES_AROMATISSE) { Ability(ABILITY_AROMA_VEIL); }
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) {Moves(MOVE_IMPRISON, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_IMPRISON, MOVE_CELEBRATE); }
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_IMPRISON); MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); MOVE(opponentRight, MOVE_SPLASH); }

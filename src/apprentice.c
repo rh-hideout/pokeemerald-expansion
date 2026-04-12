@@ -5,6 +5,7 @@
 #include "data.h"
 #include "event_data.h"
 #include "event_object_movement.h"
+#include "frontier_util.h"
 #include "field_player_avatar.h"
 #include "international_string_util.h"
 #include "item.h"
@@ -81,7 +82,7 @@ COMMON_DATA void (*gApprenticeFunc)(void) = NULL;
 
 // This file's functions.
 static u16 GetRandomAlternateMove(u8 monId);
-static bool8 TrySetMove(u8 monId, u16 move);
+static bool8 TrySetMove(u8 monId, enum Move move);
 static void CreateChooseAnswerTask(bool8 noBButton, u8 itemsCount, u8 windowId);
 static u8 CreateAndShowWindow(u8 left, u8 top, u8 width, u8 height);
 static void RemoveAndHideWindow(u8 windowId);
@@ -313,10 +314,10 @@ static u16 GetRandomAlternateMove(u8 monId)
     u8 i, j;
     u8 id;
     u8 numLearnsetMoves;
-    u16 species;
+    enum Species species;
     const struct LevelUpMove *learnset;
     bool32 needTMs = FALSE;
-    u16 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
     bool32 shouldUseMove;
     u8 level;
 
@@ -419,7 +420,7 @@ static u16 GetRandomAlternateMove(u8 monId)
     return move;
 }
 
-static bool8 TrySetMove(u8 monId, u16 move)
+static bool8 TrySetMove(u8 monId, enum Move move)
 {
     u8 i;
 
@@ -433,7 +434,7 @@ static bool8 TrySetMove(u8 monId, u16 move)
     return TRUE;
 }
 
-static void GetLatestLearnedMoves(u16 species, u16 *moves)
+static void GetLatestLearnedMoves(enum Species species, u16 *moves)
 {
     u8 i, j;
     u8 level, numLearnsetMoves;
@@ -461,9 +462,9 @@ static void GetLatestLearnedMoves(u16 species, u16 *moves)
 
 // Get the level up move or previously suggested move to be the first move choice
 // Compare to GetRandomAlternateMove, which gets the move that will be the second choice
-static u16 GetDefaultMove(u8 monId, u8 speciesArrayId, u8 moveSlot)
+static enum Move GetDefaultMove(u8 monId, u8 speciesArrayId, u8 moveSlot)
 {
-    u16 moves[MAX_MON_MOVES];
+    enum Move moves[MAX_MON_MOVES];
     u8 i, numQuestions;
 
     if (PLAYER_APPRENTICE.questionsAnswered < NUM_WHICH_MON_QUESTIONS)
@@ -563,7 +564,7 @@ static void CreateApprenticeMenu(u8 menu)
         top = 6;
         for (i = 0; i < MULTI_PARTY_SIZE; i++)
         {
-            u16 species;
+            enum Species species;
             u32 speciesTableId;
 
             speciesTableId = APPRENTICE_SPECIES_ID(i);
@@ -1182,20 +1183,20 @@ static void SetSavedApprenticeTrainerGfxId(void)
     u8 objectEventGfxId;
     u8 class = gApprentices[gSaveBlock2Ptr->apprentices[0].id].facilityClass;
 
-    for (i = 0; i < ARRAY_COUNT(gTowerMaleFacilityClasses) && gTowerMaleFacilityClasses[i] != class; i++)
+    for (i = 0; i < ARRAY_COUNT(gTowerMaleFacilityClasses) && gTowerMaleFacilityClasses[i].class != class; i++)
         ;
     if (i != ARRAY_COUNT(gTowerMaleFacilityClasses))
     {
-        objectEventGfxId = gTowerMaleTrainerGfxIds[i];
+        objectEventGfxId = gTowerMaleFacilityClasses[i].gfxId;
         VarSet(VAR_OBJ_GFX_ID_0, objectEventGfxId);
         return;
     }
 
-    for (i = 0; i < ARRAY_COUNT(gTowerFemaleFacilityClasses) && gTowerFemaleFacilityClasses[i] != class; i++)
+    for (i = 0; i < ARRAY_COUNT(gTowerFemaleFacilityClasses) && gTowerFemaleFacilityClasses[i].class != class; i++)
         ;
     if (i != ARRAY_COUNT(gTowerFemaleFacilityClasses))
     {
-        objectEventGfxId = gTowerFemaleTrainerGfxIds[i];
+        objectEventGfxId = gTowerFemaleFacilityClasses[i].gfxId;
         VarSet(VAR_OBJ_GFX_ID_0, objectEventGfxId);
     }
 }
@@ -1206,20 +1207,20 @@ static void SetPlayerApprenticeTrainerGfxId(void)
     u8 objectEventGfxId;
     u8 class = gApprentices[PLAYER_APPRENTICE.id].facilityClass;
 
-    for (i = 0; i < ARRAY_COUNT(gTowerMaleFacilityClasses) && gTowerMaleFacilityClasses[i] != class; i++)
+    for (i = 0; i < ARRAY_COUNT(gTowerMaleFacilityClasses) && gTowerMaleFacilityClasses[i].class != class; i++)
         ;
     if (i != ARRAY_COUNT(gTowerMaleFacilityClasses))
     {
-        objectEventGfxId = gTowerMaleTrainerGfxIds[i];
+        objectEventGfxId = gTowerMaleFacilityClasses[i].gfxId;
         VarSet(VAR_OBJ_GFX_ID_0, objectEventGfxId);
         return;
     }
 
-    for (i = 0; i < ARRAY_COUNT(gTowerFemaleFacilityClasses) && gTowerFemaleFacilityClasses[i] != class; i++)
+    for (i = 0; i < ARRAY_COUNT(gTowerFemaleFacilityClasses) && gTowerFemaleFacilityClasses[i].class != class; i++)
         ;
     if (i != ARRAY_COUNT(gTowerFemaleFacilityClasses))
     {
-        objectEventGfxId = gTowerFemaleTrainerGfxIds[i];
+        objectEventGfxId = gTowerFemaleFacilityClasses[i].gfxId;
         VarSet(VAR_OBJ_GFX_ID_0, objectEventGfxId);
     }
 }
@@ -1236,7 +1237,7 @@ static void GetShouldApprenticeLeave(void)
     gSpecialVar_0x8004 = TRUE;
 }
 
-const u8 *GetApprenticeNameInLanguage(u32 apprenticeId, s32 language)
+const u8 *GetApprenticeNameInLanguage(u32 apprenticeId, enum Language language)
 {
     const struct ApprenticeTrainer *apprentice = &gApprentices[apprenticeId];
 

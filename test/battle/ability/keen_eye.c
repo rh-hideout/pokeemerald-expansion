@@ -18,7 +18,7 @@ SINGLE_BATTLE_TEST("Keen Eye, Gen9+ Illuminate & Minds Eye prevent accuracy stag
 
     PASSES_RANDOMLY(100, 100, RNG_ACCURACY);
     GIVEN {
-        WITH_CONFIG(GEN_ILLUMINATE_EFFECT, GEN_9);
+        WITH_CONFIG(B_ILLUMINATE_EFFECT, GEN_9);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(species) { Ability(ability); }
     } WHEN {
@@ -27,11 +27,11 @@ SINGLE_BATTLE_TEST("Keen Eye, Gen9+ Illuminate & Minds Eye prevent accuracy stag
         ABILITY_POPUP(opponent, ability);
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         if (species == SPECIES_HITMONCHAN)
-            MESSAGE("The opposing Hitmonchan's Keen Eye prevents accuracy loss!");
+            MESSAGE("The opposing Hitmonchan's accuracy was not lowered!");
         else if (species == SPECIES_STARYU)
-            MESSAGE("The opposing Staryu's Illuminate prevents accuracy loss!");
+            MESSAGE("The opposing Staryu's accuracy was not lowered!");
         else
-            MESSAGE("The opposing Ursaluna's Mind's Eye prevents accuracy loss!");
+            MESSAGE("The opposing Ursaluna's accuracy was not lowered!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
     }
 }
@@ -47,7 +47,7 @@ SINGLE_BATTLE_TEST("Keen Eye, Gen9+ Illuminate & Minds Eye ignore target's evasi
 
     PASSES_RANDOMLY(100, 100, RNG_ACCURACY);
     GIVEN {
-        WITH_CONFIG(GEN_ILLUMINATE_EFFECT, GEN_9);
+        WITH_CONFIG(B_ILLUMINATE_EFFECT, GEN_9);
         ASSUME(GetMoveEffect(MOVE_DOUBLE_TEAM) == EFFECT_EVASION_UP);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(species) { Ability(ability); }
@@ -81,7 +81,7 @@ SINGLE_BATTLE_TEST("Keen Eye, Gen9+ Illuminate & Minds Eye are ignored by Mold B
 
     PASSES_RANDOMLY(GetMoveAccuracy(MOVE_SCRATCH) * 3 / 4, 100, RNG_ACCURACY);
     GIVEN {
-        WITH_CONFIG(GEN_ILLUMINATE_EFFECT, GEN_9);
+        WITH_CONFIG(B_ILLUMINATE_EFFECT, GEN_9);
         PLAYER(speciesPlayer) { Ability(abilityPlayer); }
         OPPONENT(speciesOpponent) { Ability(abilityOpponent); }
     } WHEN {
@@ -104,7 +104,7 @@ SINGLE_BATTLE_TEST("Keen Eye, Gen9+ Illuminate & Minds Eye don't prevent Topsy-T
     PARAMETRIZE { species = SPECIES_URSALUNA_BLOODMOON; ability = ABILITY_MINDS_EYE; }
 
     GIVEN {
-        WITH_CONFIG(GEN_ILLUMINATE_EFFECT, GEN_9);
+        WITH_CONFIG(B_ILLUMINATE_EFFECT, GEN_9);
         ASSUME(GetMoveEffect(MOVE_HONE_CLAWS) == EFFECT_ATTACK_ACCURACY_UP);
         ASSUME(GetMoveEffect(MOVE_TOPSY_TURVY) == EFFECT_TOPSY_TURVY);
         PLAYER(SPECIES_WOBBUFFET);
@@ -144,7 +144,7 @@ SINGLE_BATTLE_TEST("Keen Eye, Gen9+ Illuminate & Minds Eye don't prevent receivi
     PARAMETRIZE { species = SPECIES_URSALUNA_BLOODMOON; ability = ABILITY_MINDS_EYE; }
 
     GIVEN {
-        WITH_CONFIG(GEN_ILLUMINATE_EFFECT, GEN_9);
+        WITH_CONFIG(B_ILLUMINATE_EFFECT, GEN_9);
         ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -177,9 +177,9 @@ SINGLE_BATTLE_TEST("Keen Eye & Gen9+ Illuminate don't prevent Spectral Thief fro
     PARAMETRIZE { species = SPECIES_STARYU; ability = ABILITY_ILLUMINATE; }
 
     GIVEN {
-        WITH_CONFIG(GEN_ILLUMINATE_EFFECT, GEN_9);
+        WITH_CONFIG(B_ILLUMINATE_EFFECT, GEN_9);
         ASSUME(GetMoveEffect(MOVE_HONE_CLAWS) == EFFECT_ATTACK_ACCURACY_UP);
-        ASSUME(GetMoveEffect(MOVE_SPECTRAL_THIEF) == EFFECT_SPECTRAL_THIEF);
+        ASSUME(MoveHasAdditionalEffect(MOVE_SPECTRAL_THIEF, MOVE_EFFECT_STEAL_STATS));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(species) { Ability(ability); }
     } WHEN {

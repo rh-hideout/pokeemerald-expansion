@@ -6,9 +6,16 @@
 #include "constants/regions.h"
 #include "constants/region_map_sections.h"
 
+static inline enum Region GetRegionForSectionId(u32 sectionId)
+{
+    if (sectionId >= KANTO_MAPSEC_START && sectionId < MAPSEC_SPECIAL_AREA)
+        return REGION_KANTO;
+    return REGION_HOENN;
+}
+
 static inline enum Region GetCurrentRegion(void)
 {
-    return gMapHeader.region;
+    return GetRegionForSectionId(gMapHeader.regionMapSectionId);
 }
 
 static inline const u8 *GetCurrentRegionName(void)
@@ -41,5 +48,7 @@ static inline const u8 *GetCurrentRegionName(void)
     }
     return gText_Hoenn;
 }
+
+enum KantoSubRegion GetKantoSubregion(u32 mapSecId);
 
 #endif // GUARD_REGIONS_H

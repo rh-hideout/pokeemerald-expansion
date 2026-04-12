@@ -10,7 +10,7 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Jaboca Berry causes the attacker to lose 1/8 of its max HP if a physical move was used")
 {
     s16 damage;
-    u16 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_SWIFT; }
     PARAMETRIZE { move = MOVE_SCRATCH; }
@@ -58,7 +58,7 @@ SINGLE_BATTLE_TEST("Jaboca Berry triggers before Bug Bite can steal it")
     }
 }
 
-SINGLE_BATTLE_TEST("Jaboca Berry is triggered even if berry user dies")
+SINGLE_BATTLE_TEST("Jaboca Berry is triggered even if berry user faints")
 {
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SWIFT) == DAMAGE_CATEGORY_SPECIAL);

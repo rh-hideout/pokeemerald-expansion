@@ -139,7 +139,7 @@ The `HP_BAR` command's `captureDamage` causes the change in HP to be stored in a
 You might notice that all the tests check the outputs the player could see rather than the internal battle state. e.g. the Meditate test could have used `gBattleMons[B_POSITION_OPPONENT_LEFT].hp` instead of using `HP_BAR` to capture the damage. This is a deliberate choice, by checking what the player can observe the tests are more robust to refactoring, e.g. if `gBattleMons` got moved into `gBattleStruct` then any test that used it would need to be updated.
 
 ### Note on Overworld Tests
-The overworld is not available, so it is only possible to test commands which don't affect the overworld itself, e.g. `givemon` can be tested because it only alters `gPlayerParty`, but `addobject` cannot because it affects object events (which aren't loaded).
+The overworld is not available, so it is only possible to test commands which don't affect the overworld itself, e.g. `givemon` can be tested because it only alters `gParties[B_TRAINER_0]`, but `addobject` cannot because it affects object events (which aren't loaded).
 
 ## REFERENCE
 
@@ -285,16 +285,13 @@ For example to create a level 42 Wobbuffet that is poisoned:
 **Note if Speed is specified for any Pokémon then it must be specified for all Pokémon.**
 **Note if Moves is specified then MOVE will not automatically add moves to the moveset.**
 
-### `MULTI_PLAYER`, `MULTI_PARTNER`, `MULTI_OPPONENT_A`, and `MULTI_OPPONENT_B`
-For tests using `MULTI_BATTLE_TEST`, `AI_MULTI_BATTLE_TEST`, `TWO_VS_ONE_BATTLE_TEST`, `AI_TWO_VS_ONE_BATTLE_TEST`, `ONE_VS_TWO_BATTLE_TEST`, and `AI_ONE_VS_TWO_BATTLE_TEST`, the below must be used instead of `PLAYER(species)` and `OPPONENT(species)`.
-`MULTI_PLAYER(species)`, `MULTI_PARTNER(species)`, `MULTI_OPPONENT_A(species)`, and `MULTI_OPPONENT_B(species)`
-Adds the species to the player's, player partner's, opponent A's, or opponent B's party, respectively.
+### `PARTNER`, `OPPONENT_A`, and `OPPONENT_B`
+For tests using `MULTI_BATTLE_TEST`, `AI_MULTI_BATTLE_TEST`, `TWO_VS_ONE_BATTLE_TEST`, `AI_TWO_VS_ONE_BATTLE_TEST`, `ONE_VS_TWO_BATTLE_TEST`, and `AI_ONE_VS_TWO_BATTLE_TEST`, the below must be used.
+`PLAYER(species)`, `PARTNER(species)`, `OPPONENT_A(species)`, and `OPPONENT_B(species)`
+Adds the species to the player's (`B_TRAINER_0`), player partner's (`B_TRAINER_2`), opponent A's (`B_TRAINER_1`), or opponent B's (`B_TRAINER_3`), party, respectively.
 Pokemon can be customised as per the guidance for `PLAYER(species)` and `OPPONENT(species)`.
 The functions assign the Pokémon to the party of the trainer at `B_POSITION_PLAYER_LEFT`, `B_POSITION_PLAYER_RIGHT`, `B_POSITION_OPPONENT_LEFT`, and `B_POSITION_OPPONENT_RIGHT`, respectively.
-`MULTI_PLAYER(species)` and `MULTI_OPPONENT_A(species)` set Pokémon starting at party index 0, while `MULTI_PARTNER(species)` and `MULTI_OPPONENT_B(species)` set Pokémon starting at party index 3.
-For `ONE_VS_TWO` tests, `MULTI_PLAYER(species)` must be used for all player-side Pokémon, and for `TWO_VS_ONE` tests, `MULTI_OPPONENT_A(species)` must be used for all opponent-side Pokémon. 
-All `MULTI_PLAYER(species)` Pokémon must be set before any `MULTI_PARTNER(species)` Pokémon, and all `MULTI_OPPONENT_A(species)` must be set before any `MULTI_OPPONENT_B(species)` Pokémon, else Pokémon will be set in the incorrect parties in the test.
-**Note where a side in a test has two trainers, the test setup manages the assigning of correct multi-party orders, therefore when using functions such as SEND_OUT, Player and Opponent A Pokémon may be referenced using indexes 0, 1, and 2, and Player's Partner and Opponent B Pokémon may be referenced using indexes 3, 4, and 5.**
+For `ONE_VS_TWO` tests, `PLAYER(species)` must be used for all player-side Pokémon, and for `TWO_VS_ONE` tests, `OPPONENT_A(species)` must be used for all opponent-side Pokémon.
 
 ### `AI_FLAGS`
 `AI_FLAGS(flags)`
@@ -464,6 +461,28 @@ If the expected status icon is parametrized the corresponding `STATUS1` constant
      STATUS_ICON(player, status1);
 ```
 
+### `SUB_HIT`
+`SUB_HIT(battler, captureDamage: | subBreak:)`
+Causes the test to fail the test to fail if a Substitute for the specified battler doesn't take damage.
+If `captureDamage` is used, the damage the substitute takes is written to the supplied pointer.
+```
+u16 damage;
+...
+SUB_HIT(player, captureDamage: &damage);
+```
+If `subBreak` is set to `TRUE`, the test will fail unless the substitute breaks. And if set to `FALSE`, the test will fail unless the substitute survives.
+```
+SUB_HIT(player, subBreak: TRUE);
+```
+
+### `CATCHING_CHANCE`
+`CATCHING_CHANCE(address)`
+Causes the test to fail if no catching attempt is made and then writes the computed catch chance in the `address` pointer.
+```
+    u32 recordedCatchChance;
+    CATCHING_CHANCE(&recordedCatchChance);
+```
+
 ### `NOT`
 `NOT sceneCommand`
 Causes the test to fail if the `SCENE` command succeeds before the following command succeeds.
@@ -483,10 +502,10 @@ Causes the test to fail if the `SCENE` command succeeds before the following com
 ```
 Causes the test to fail unless one of the `SCENE` commands succeeds.
 ```
-     ONE_OF {
-         MESSAGE("Wobbuffet used Celebrate!");
-         MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
-     }
+    ONE_OF {
+        MESSAGE("Wobbuffet used Celebrate!");
+        MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
+    }
 ```
 
 ### `NONE_OF`
@@ -497,12 +516,12 @@ Causes the test to fail unless one of the `SCENE` commands succeeds.
 ```
 Causes the test to fail if one of the `SCENE` commands succeeds before the command after the `NONE_OF` succeeds.
 ```
-     // Our Wobbuffet does not move before the foe's.
-     NONE_OF {
-         MESSAGE("Wobbuffet used Celebrate!");
-         MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
-     }
-     MESSAGE("The opposing Wobbuffet used Celebrate!");
+    // Our Wobbuffet does not move before the foe's.
+    NONE_OF {
+        MESSAGE("Wobbuffet used Celebrate!");
+        MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
+    }
+    MESSAGE("The opposing Wobbuffet used Celebrate!");
 ```
 
 ### `PLAYER_PARTY`

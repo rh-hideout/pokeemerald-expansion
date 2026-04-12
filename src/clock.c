@@ -5,14 +5,16 @@
 #include "event_data.h"
 #include "field_specials.h"
 #include "field_weather.h"
-#include "main.h"
 #include "lottery_corner.h"
+#include "main.h"
 #include "overworld.h"
+#include "pokerus.h"
 #include "rtc.h"
 #include "time_events.h"
 #include "tv.h"
 #include "wallclock.h"
 #include "constants/form_change_types.h"
+#include "apricorn_tree.h"
 
 static void UpdatePerDay(struct Time *localTime);
 static void UpdatePerMinute(struct Time *localTime);
@@ -55,6 +57,7 @@ static void UpdatePerDay(struct Time *localTime)
         SetShoalItemFlag(daysSince);
         SetRandomLotteryNumber(daysSince);
         UpdateDaysPassedSinceFormChange(daysSince);
+        DailyResetApricornTrees();
         *days = localTime->days;
     }
 }
@@ -81,15 +84,7 @@ void FormChangeTimeUpdate()
     s32 i;
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        struct Pokemon *mon = &gPlayerParty[i];
-        u32 targetSpecies = GetFormChangeTargetSpecies(mon, FORM_CHANGE_TIME_OF_DAY, 0);
-        u32 currentSpecies = GetMonData(mon, MON_DATA_SPECIES);
-
-        if (targetSpecies != currentSpecies)
-        {
-            SetMonData(mon, MON_DATA_SPECIES, &targetSpecies);
-            CalculateMonStats(mon);
-        }
+        TryFormChange(&gParties[B_TRAINER_0][i], FORM_CHANGE_TIME_OF_DAY, B_TRAINER_0);
     }
 }
 
