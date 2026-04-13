@@ -485,7 +485,7 @@ static void SetBattlePartyIds(void)
                 {
                     if (gBattlerPartyIndexes[i - 2] == j && BattlersShareParty(i - 2, i))
                     {
-                        // Exclude already assigned pokemon;
+                        // Exclude already assigned Pokémon;
                     }
                     else if (IsValidForBattle(&GetBattlerParty(i)[j]))
                     {
@@ -2264,7 +2264,7 @@ void BattleControllerDummy(enum BattlerId battler)
 // Handlers of the controller commands
 void BtlController_HandleGetMonData(enum BattlerId battler)
 {
-    u8 monData[sizeof(struct Pokemon) * 2 + 56]; // this allows to get full data of two pokemon, trying to get more will result in overwriting data
+    u8 monData[sizeof(struct Pokemon) * 2 + 56]; // this allows to get full data of two Pokémon, trying to get more will result in overwriting data
     struct Pokemon *party = GetBattlerParty(battler);
     u32 size = 0;
     u8 monToCheck;
@@ -2827,12 +2827,12 @@ void BtlController_HandleSpriteInvisibility(enum BattlerId battler)
     BtlController_Complete(battler);
 }
 
-bool32 TwoPlayerIntroMons(enum BattlerId battler) // Double battle with both player pokemon active.
+bool32 TwoPlayerIntroMons(enum BattlerId battler) // Double battle with both player Pokémon active.
 {
     return (IsDoubleBattle() && IsValidForBattle(GetBattlerMon(battler ^ BIT_FLANK)));
 }
 
-bool32 TwoOpponentIntroMons(enum BattlerId battler) // Double battle with both opponent pokemon active.
+bool32 TwoOpponentIntroMons(enum BattlerId battler) // Double battle with both opponent Pokémon active.
 {
     return (IsDoubleBattle()
             && IsValidForBattle(GetBattlerMon(battler))
@@ -3296,9 +3296,6 @@ void FreeShinyStars(void)
 
 enum BattleTrainer GetBattlerTrainer(enum BattlerId battler)
 {
-#if TESTING
-    return (gBattleTestRunnerState->data.battlerTrainers >> (2 * battler)) & 0x3;
-#else
     if (gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_MULTI)
     {
         switch (gBattlerBattleController[battler])
@@ -3319,7 +3316,6 @@ enum BattleTrainer GetBattlerTrainer(enum BattlerId battler)
     }
 
     return (enum BattleTrainer)(BattleSideHasTwoTrainers(battler & BIT_SIDE) ? battler : battler & BIT_SIDE);
-#endif
 }
 
 enum BattleTrainer GetTrainerFromBattlePosition(enum BattlerPosition position)

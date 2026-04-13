@@ -1008,8 +1008,8 @@ static bool32 ShouldSkipToMoveEnd(void)
 static void Cmd_attackcanceler(void)
 {
     CMD_ARGS();
-    assertf(gBattlerAttacker < gBattlersCount, "invalid gBattlerAttacker: %d\nmove: %S", gBattlerAttacker, GetMoveName(gCurrentMove));
-    assertf(gBattlerTarget < gBattlersCount, "invalid gBattlerTarget: %d\nmove: %S", gBattlerTarget, GetMoveName(gCurrentMove));
+    assertf(gBattlerAttacker < MAX_BATTLERS_COUNT, "invalid gBattlerAttacker: %d\nmove: %S", gBattlerAttacker, GetMoveName(gCurrentMove));
+    assertf(gBattlerTarget < MAX_BATTLERS_COUNT, "invalid gBattlerTarget: %d\nmove: %S", gBattlerTarget, GetMoveName(gCurrentMove));
 
     if (gBattleStruct->battlerState[gBattlerAttacker].usedEjectItem)
     {
@@ -1279,7 +1279,7 @@ static void Cmd_damagecalc(void)
         ctx.abilities[battler] = GetBattlerAbility(battler);
         ctx.holdEffects[battler] = GetBattlerHoldEffect(battler);
     }
-
+    
     if (IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove)))
     {
         for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
@@ -1515,7 +1515,7 @@ static void Cmd_attackanimation(void)
         && effect != EFFECT_TRANSFORM
         && effect != EFFECT_SUBSTITUTE
         && effect != EFFECT_ALLY_SWITCH
-        // In a wild double battle gotta use the teleport animation if two wild pokemon are alive.
+        // In a wild double battle gotta use the teleport animation if two wild Pokémon are alive.
         && !(GetMoveEffect(gCurrentMove) == EFFECT_TELEPORT && WILD_DOUBLE_BATTLE && !IsOnPlayerSide(gBattlerAttacker) && IsBattlerAlive(BATTLE_PARTNER(gBattlerAttacker))))
     {
         BattleScriptPush(cmd->nextInstr);
@@ -1733,6 +1733,7 @@ static void MoveDamageDataHpUpdate(enum BattlerId battler, u32 scriptBattler, co
         if (gBattleMons[battler].volatiles.substituteHP == 0)
         {
             gBattlescriptCurrInstr = nextInstr;
+            gBattleScripting.battler = battler;
             BattleScriptCall(BattleScript_SubstituteFade);
         }
         else
@@ -4268,7 +4269,7 @@ static void Cmd_getexp(void)
             }
             else
             {
-                // Music change in a wild battle after fainting opposing pokemon.
+                // Music change in a wild battle after fainting opposing Pokémon.
                 if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER)
                     && (gBattleMons[0].hp || (IsDoubleBattle() && gBattleMons[2].hp))
                     && !IsBattlerAlive(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT))
@@ -4600,7 +4601,7 @@ static void Cmd_checkteamslost(void)
     if (NoAliveMonsForOpponent())
         gBattleOutcome |= B_OUTCOME_WON;
 
-    // Fair switching - everyone has to switch in most at the same time, without knowing which pokemon the other trainer selected.
+    // Fair switching - everyone has to switch in most at the same time, without knowing which Pokémon the other trainer selected.
     // In vanilla Emerald this was only used for link battles, in expansion it's also used for regular trainer battles.
     // For battles that haven't ended, count number of empty battler spots
     // In multi battles, jump to pointer if more than 1 spot empty
@@ -5207,8 +5208,8 @@ static inline bool32 IsProtectivePadsProtected(enum BattlerId battler, enum Hold
 static void Cmd_moveend(void)
 {
     CMD_ARGS(u8 endMode, u8 endState);
-    assertf(gBattlerAttacker < gBattlersCount, "invalid gBattlerAttacker: %d\nmove: %S", gBattlerAttacker, GetMoveName(gCurrentMove));
-    assertf(gBattlerTarget < gBattlersCount, "invalid gBattlerTarget: %d\nmove: %S", gBattlerTarget, GetMoveName(gCurrentMove));
+    assertf(gBattlerAttacker < MAX_BATTLERS_COUNT, "invalid gBattlerAttacker: %d\nmove: %S", gBattlerAttacker, GetMoveName(gCurrentMove));
+    assertf(gBattlerTarget < MAX_BATTLERS_COUNT, "invalid gBattlerTarget: %d\nmove: %S", gBattlerTarget, GetMoveName(gCurrentMove));
 
     enum MoveEndResult result = DoMoveEnd(cmd->endMode, cmd->endState);
 
@@ -7018,15 +7019,11 @@ static void RemoveAllTerrains(void)
             sideTimer->structField = 0;                     \
             BattleScriptCall(battlescript);                 \
         }                                                   \
-        else                                                \
-        {                                                   \
-            gBattlerAttacker = saveBattler;                 \
-        }                                                   \
         return TRUE;                                        \
     }                                                       \
 }
 
-static bool32 DefogClearHazards(u32 saveBattler, enum BattleSide side, bool32 clear)
+static bool32 DefogClearHazards(enum BattleSide side, bool32 clear)
 {
     if (!AreAnyHazardsOnSide(side))
         return FALSE;
@@ -7042,10 +7039,7 @@ static bool32 DefogClearHazards(u32 saveBattler, enum BattleSide side, bool32 cl
                 gBattleCommunication[MULTISTRING_CHOOSER] = hazardType;
                 BattleScriptCall(BattleScript_RemoveHazards);
             }
-            else
-            {
-                gBattlerAttacker = saveBattler;
-            }
+
             return TRUE;
         }
     }
@@ -7054,17 +7048,14 @@ static bool32 DefogClearHazards(u32 saveBattler, enum BattleSide side, bool32 cl
 
 static bool32 TryDefogClear(enum BattlerId battlerAtk, bool32 clear)
 {
-    s32 i;
-    u8 saveBattler = gBattlerAttacker;
-
-    for (i = 0; i < NUM_BATTLE_SIDES; i++)
+    for (u32 i = 0; i < NUM_BATTLE_SIDES; i++)
     {
         struct SideTimer *sideTimer = &gSideTimers[i];
         u32 *sideStatuses = &gSideStatuses[i];
+        gBattleScripting.battler = i;
 
         if (GetBattlerSide(battlerAtk) != i)
         {
-            gBattlerAttacker = i; // For correct battle string. Ally's / Foe's
             DEFOG_CLEAR(SIDE_STATUS_REFLECT, reflectTimer, BattleScript_SideStatusWoreOff, MOVE_REFLECT);
             DEFOG_CLEAR(SIDE_STATUS_LIGHTSCREEN, lightscreenTimer, BattleScript_SideStatusWoreOff, MOVE_LIGHT_SCREEN);
             DEFOG_CLEAR(SIDE_STATUS_MIST, mistTimer, BattleScript_SideStatusWoreOff, MOVE_MIST);
@@ -7073,8 +7064,7 @@ static bool32 TryDefogClear(enum BattlerId battlerAtk, bool32 clear)
         }
         if (GetConfig(B_DEFOG_EFFECT_CLEARING) >= GEN_6)
         {
-            gBattlerAttacker = i; // For correct battle string. Ally's / Foe's
-            if (DefogClearHazards(saveBattler, i, clear))
+            if (DefogClearHazards(i, clear))
                 return TRUE;
         }
         if (gBattleWeather & B_WEATHER_FOG)
@@ -7091,46 +7081,39 @@ static bool32 TryDefogClear(enum BattlerId battlerAtk, bool32 clear)
             if (clear)
             {
                 RemoveAllTerrains();
-                BattleScriptCall(BattleScript_TerrainEnds_Ret);
+                BattleScriptCall(BattleScript_TerrainEnds);
             }
             return TRUE;
         }
     }
-
-    gBattlerAttacker = saveBattler;
 
     return FALSE;
 }
 
 static bool32 TryTidyUpClear(enum BattlerId battlerAtk, bool32 clear)
 {
-    u32 i;
-    u32 saveBattler = gBattlerAttacker;
-
-    for (i = 0; i < NUM_BATTLE_SIDES; i++)
+    for (u32 i = 0; i < NUM_BATTLE_SIDES; i++)
     {
-        gBattlerAttacker = i; // For correct battle string. Ally's / Foe's
-        if (DefogClearHazards(saveBattler, i, clear))
+        gBattleScripting.battler = i;
+        if (DefogClearHazards(i, clear))
             return TRUE;
     }
 
-    for (i = 0; i < MAX_BATTLERS_COUNT; i++)
+    for (u32 i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
         if (gBattleMons[i].volatiles.substitute)
         {
             if (clear)
             {
-                gBattlerTarget = i;
+                gBattleScripting.battler = i;
                 gBattleMons[i].volatiles.substituteHP = 0;
                 gBattleMons[i].volatiles.substitute = FALSE;
                 BattleScriptCall(BattleScript_SubstituteFade);
             }
-            gBattlerAttacker = saveBattler;
             return TRUE;
         }
     }
 
-    gBattlerAttacker = saveBattler;
     return FALSE;
 }
 
@@ -8056,7 +8039,7 @@ static void Cmd_forcerandomswitch(void)
 
     bool32 redCardForcedSwitch = FALSE;
 
-    // Red card checks against wild pokemon. If we have reached here, the player has a mon to switch into
+    // Red card checks against wild Pokémon. If we have reached here, the player has a mon to switch into
     // Red card swaps attacker with target to get the animation correct, so here we check attacker which is really the target. Thanks GF...
     if (gBattleScripting.switchCase == B_SWITCH_RED_CARD
       && !(gBattleTypeFlags & BATTLE_TYPE_TRAINER)
@@ -8084,10 +8067,10 @@ static void Cmd_forcerandomswitch(void)
         }
     }
 
-    // Swapping pokemon happens in:
+    // Swapping Pokémon happens in:
     // trainer battles
-    // wild double battles when an opposing pokemon uses it against one of the two alive player mons
-    // wild double battle when a player pokemon uses it against its partner
+    // wild double battles when an opposing Pokémon uses it against one of the two alive player mons
+    // wild double battle when a player Pokémon uses it against its partner
     if ((gBattleTypeFlags & BATTLE_TYPE_TRAINER)
         || (WILD_DOUBLE_BATTLE
             && !IsOnPlayerSide(gBattlerAttacker)
@@ -9370,6 +9353,7 @@ static void Cmd_rapidspinfree(void)
         {
             if (IsHazardOnSideAndClear(atkSide, hazardType))
             {
+                gBattleScripting.battler = gBattlerAttacker;
                 gBattleStruct->numHazards[atkSide]--;
                 gBattleCommunication[MULTISTRING_CHOOSER] = hazardType;
                 BattleScriptCall(BattleScript_RemoveHazards);
@@ -9391,19 +9375,20 @@ static void Cmd_recoverbasedonsunlight(void)
     if (gBattleMons[gBattlerAttacker].hp != gBattleMons[gBattlerAttacker].maxHP)
     {
         s32 recoverAmount = 0;
+        u32 weather = GetAttackerWeather(GetBattlerHoldEffect(gBattlerAttacker), GetBattlerAbility(gBattlerAttacker), GetWeather());
         if (GetMoveEffect(gCurrentMove) == EFFECT_SHORE_UP)
         {
-            if (HasWeatherEffect() && gBattleWeather & B_WEATHER_SANDSTORM)
+            if (weather & B_WEATHER_SANDSTORM)
                 recoverAmount = 20 * GetNonDynamaxMaxHP(gBattlerAttacker) / 30;
             else
                 recoverAmount = GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
         }
         else if (GetConfig(B_TIME_OF_DAY_HEALING_MOVES) != GEN_2)
         {
-            if (!(gBattleWeather & B_WEATHER_ANY) || !HasWeatherEffect() || GetBattlerHoldEffect(gBattlerAttacker) == HOLD_EFFECT_UTILITY_UMBRELLA)
-                recoverAmount = GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
-            else if (gBattleWeather & B_WEATHER_SUN)
+            if (weather & B_WEATHER_SUN)
                 recoverAmount = 20 * GetNonDynamaxMaxHP(gBattlerAttacker) / 30;
+            else if (!(gBattleWeather & B_WEATHER_ANY) || !HasWeatherEffect() || GetBattlerHoldEffect(gBattlerAttacker) == HOLD_EFFECT_UTILITY_UMBRELLA)
+                recoverAmount = GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
             else // not sunny weather
                 recoverAmount = GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
         }
@@ -9431,11 +9416,10 @@ static void Cmd_recoverbasedonsunlight(void)
                 healingModifier = 1;
                 break;
             }
-
-            if (!(gBattleWeather & B_WEATHER_ANY) || !HasWeatherEffect() || GetBattlerHoldEffect(gBattlerAttacker) == HOLD_EFFECT_UTILITY_UMBRELLA)
-                recoverAmount = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
-            else if (gBattleWeather & B_WEATHER_SUN)
+            if (weather & B_WEATHER_SUN)
                 recoverAmount = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
+            else if (!(gBattleWeather & B_WEATHER_ANY) || !HasWeatherEffect() || GetBattlerHoldEffect(gBattlerAttacker) == HOLD_EFFECT_UTILITY_UMBRELLA)
+                recoverAmount = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
             else // not sunny weather
                 recoverAmount = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 8;
 
@@ -9668,8 +9652,7 @@ static void Cmd_trysethelpinghand(void)
 
     gBattlerTarget = GetBattlerAtPosition(BATTLE_PARTNER(GetBattlerPosition(gBattlerAttacker)));
 
-    if (!(gAbsentBattlerFlags & (1u << gBattlerTarget))
-     && !HasBattlerActedThisTurn(gBattlerTarget))
+    if (IsBattlerAlive(gBattlerTarget) && !HasBattlerActedThisTurn(gBattlerTarget))
     {
         gProtectStructs[gBattlerTarget].helpingHand++;
         gBattlescriptCurrInstr = cmd->nextInstr;
@@ -10387,6 +10370,7 @@ static void Cmd_tryrecycleitem(void)
         gLastUsedItem = *usedHeldItem;
         *usedHeldItem = ITEM_NONE;
         gBattleMons[gBattlerAttacker].item = gLastUsedItem;
+        gBattleMons[gBattlerAttacker].volatiles.unburdenActive = FALSE;
 
         BtlController_EmitSetMonData(gBattlerAttacker, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[gBattlerAttacker].item), &gBattleMons[gBattlerAttacker].item);
         MarkBattlerForControllerExec(gBattlerAttacker);
@@ -11904,7 +11888,7 @@ void ApplyExperienceMultipliers(s32 *expAmount, u8 expGetterMonId, u8 faintedBat
 
     if (B_SCALED_EXP >= GEN_5 && B_SCALED_EXP != GEN_6)
     {
-        // Note: There is an edge case where if a pokemon receives a large amount of exp, it wouldn't be properly calculated
+        // Note: There is an edge case where if a Pokémon receives a large amount of exp, it wouldn't be properly calculated
         //       because of multiplying by scaling factor(the value would simply be larger than an u32 can hold). Hence u64 is needed.
         u64 value = *expAmount;
         u8 faintedLevel = gBattleMons[faintedBattler].level;
@@ -12492,7 +12476,7 @@ void BS_TryDefog(void)
 
     if (cmd->clear)
     {
-        if (TryDefogClear(gEffectBattler, TRUE))
+        if (TryDefogClear(gBattlerAttacker, TRUE))
             return;
         else
             gBattlescriptCurrInstr = cmd->nextInstr;
@@ -13206,6 +13190,7 @@ void BS_TryRecycleBerry(void)
         gLastUsedItem = *usedHeldItem;
         *usedHeldItem = ITEM_NONE;
         gBattleMons[gBattlerTarget].item = gLastUsedItem;
+        gBattleMons[gBattlerTarget].volatiles.unburdenActive = FALSE;
 
         BtlController_EmitSetMonData(gBattlerTarget, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[gBattlerTarget].item), &gBattleMons[gBattlerTarget].item);
         MarkBattlerForControllerExec(gBattlerTarget);
@@ -14733,7 +14718,7 @@ void BS_JumpIfWeatherAffected(void)
 {
     NATIVE_ARGS(u16 flags, const u8 *jumpInstr);
     u32 weather = cmd->flags;
-    if (IsBattlerWeatherAffected(GetBattlerHoldEffect(gBattlerAttacker), GetWeather(), weather))
+    if (GetAttackerWeather(GetBattlerHoldEffect(gBattlerAttacker), GetBattlerAbility(gBattlerAttacker), GetWeather()) & weather)
         gBattlescriptCurrInstr = cmd->jumpInstr;
     else
         gBattlescriptCurrInstr = cmd->nextInstr;

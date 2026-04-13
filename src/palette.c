@@ -755,6 +755,7 @@ static bool32 IsSoftwarePaletteFadeFinishing(void)
             gPaletteFade.active = FALSE;
             gPaletteFade.softwareFadeFinishing = FALSE;
             gPaletteFade.softwareFadeFinishingCounter = 0;
+            gPaletteFade.objPaletteToggle = 0;
         }
         else
         {

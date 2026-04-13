@@ -154,13 +154,13 @@ void CreateScriptedDoubleWildMon(enum Species species1, u8 level1, enum Item ite
         GetSynchronizedGender(STATIC_WILDMON_ORIGIN, species2),
         GetSynchronizedNature(STATIC_WILDMON_ORIGIN, species2),
         RANDOM_UNOWN_LETTER);
-    CreateMonWithIVs(&gParties[B_TRAINER_3][0], species2, level2, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
-    GiveMonInitialMoveset(&gParties[B_TRAINER_3][0]);
+    CreateMonWithIVs(&gParties[B_TRAINER_1][1], species2, level2, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
+    GiveMonInitialMoveset(&gParties[B_TRAINER_1][1]);
     if (item2)
     {
         heldItem2[0] = item2;
         heldItem2[1] = item2 >> 8;
-        SetMonData(&gParties[B_TRAINER_3][0], MON_DATA_HELD_ITEM, heldItem2);
+        SetMonData(&gParties[B_TRAINER_1][1], MON_DATA_HELD_ITEM, heldItem2);
     }
 }
 

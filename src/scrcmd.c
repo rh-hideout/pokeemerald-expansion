@@ -19,6 +19,7 @@
 #include "event_object_lock.h"
 #include "event_object_movement.h"
 #include "event_scripts.h"
+#include "evolution_scene.h"
 #include "fake_rtc.h"
 #include "field_message_box.h"
 #include "field_player_avatar.h"
@@ -64,6 +65,7 @@
 #include "battle.h"
 #include "constants/event_objects.h"
 #include "constants/map_types.h"
+#include "constants/party_menu.h"
 
 typedef u16 (*SpecialFunc)(void);
 typedef void (*NativeFunc)(struct ScriptContext *ctx);
@@ -3269,6 +3271,66 @@ bool8 ScrCmd_fwdweekday(struct ScriptContext *ctx)
 
     FakeRtc_AdvanceTimeBy(daysToAdd, 0, 0, 0);
     return FALSE;
+}
+
+static bool32 EventEvolution(u32 partyIndex)
+{
+    bool32 canStopEvo = gSpecialVar_0x8000;
+    u32 targetSpecies = GetEvolutionTargetSpecies(&gPlayerParty[partyIndex], EVO_MODE_SCRIPT_TRIGGER, gSpecialVar_0x8005, NULL, &canStopEvo, CHECK_EVO);
+    if (targetSpecies == SPECIES_NONE)
+    {
+        gSpecialVar_Result = EVO_EVENT_IMPOSSIBLE;
+        return FALSE;
+    }
+    gSpecialVar_Result = EVO_EVENT_SUCCESSFUL;
+    GetEvolutionTargetSpecies(&gPlayerParty[partyIndex], EVO_MODE_SCRIPT_TRIGGER, gSpecialVar_0x8005, NULL, &canStopEvo, DO_EVO);
+    BeginEvolutionScene(&gPlayerParty[partyIndex], targetSpecies, canStopEvo, partyIndex);
+    ScriptContext_Stop();
+    return TRUE;
+}
+
+static void TriggerMultipleEvolutions_Repeatable(void)
+{
+    if (gSpecialVar_Result == EVO_EVENT_SUCCESSFUL)
+        gSpecialVar_0x8006++;
+
+    gCB2_AfterEvolution = TriggerMultipleEvolutions_Repeatable;
+    for (u32 i = 0; i < gPlayerPartyCount; i++)
+    {
+        if (!(gTriedEvolving & (1u << i)))
+        {
+            gTriedEvolving |= 1u << i;
+            if (EventEvolution(i))
+                return;
+        }
+    }
+
+    gTriedEvolving = 0;
+    gSpecialVar_Result = gSpecialVar_0x8006;
+    SetMainCallback2(CB2_ReturnToFieldContinueScript);
+}
+
+void Script_TriggerMultipleEvolutions(struct ScriptContext *ctx)
+{
+    ctx->waitAfterCallNative = TRUE;
+    TriggerMultipleEvolutions_Repeatable();
+}
+
+void Script_TriggerUniqueEvolution(struct ScriptContext *ctx)
+{
+    ctx->waitAfterCallNative = TRUE;
+    if (gSpecialVar_0x8004 == PARTY_NOTHING_CHOSEN)
+    {
+        gSpecialVar_Result = EVO_EVENT_IMPOSSIBLE;
+        return;
+    }
+    assertf(gSpecialVar_0x8004 <= PARTY_SIZE, "TriggerEvolution script called with invalid partyIndex %d", gSpecialVar_0x8004)
+    {
+        gSpecialVar_Result = EVO_EVENT_IMPOSSIBLE;
+        return;
+    }
+    gCB2_AfterEvolution = CB2_ReturnToFieldContinueScript;
+    EventEvolution(gSpecialVar_0x8004);
 }
 
 void Script_EndTrainerCanSeeIf(struct ScriptContext *ctx)

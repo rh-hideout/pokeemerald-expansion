@@ -1576,7 +1576,7 @@ static u8 CheckValidityOfTradeMons(u8 *aliveMons, u8 playerPartyCount, u8 player
     if (gSpeciesInfo[partnerSpecies].cannotBeTraded)
         return PARTNER_MON_INVALID;
 
-    // Partner cant trade Egg or non-Hoenn mon if player doesn't have National Dex
+    // Partner can't trade Egg or non-Hoenn mon if player doesn't have National Dex
     if (!IsNationalPokedexEnabled())
     {
         if (sTradeMenu->isEgg[TRADE_PARTNER][partnerMonIdx] || !IsSpeciesInRegionalDex(partnerSpecies))
@@ -1904,7 +1904,7 @@ static void DrawSelectedMonScreen(u8 whichParty)
             PrintTradePartnerPartyNicknames();
         break;
     case 2:
-        // Wait for the selected pokemon's sprite to move to the correct position
+        // Wait for the selected Pokémon's sprite to move to the correct position
         if (gSprites[sTradeMenu->partySpriteIds[selectedMonParty][partyIdx]].callback == SpriteCB_MonIcon)
             sTradeMenu->drawSelectedMonState[whichParty] = 3;
         break;
@@ -1913,14 +1913,14 @@ static void DrawSelectedMonScreen(u8 whichParty)
         CopyToBgTilemapBufferRect_ChangePalette(1, sTradeMovesBoxTilemap, selectedMonParty * 15, 0, 15, 17, 0);
         CopyBgTilemapBufferToVram(1);
 
-        // Finalize the selected pokemon's position
+        // Finalize the selected Pokémon's position
         gSprites[sTradeMenu->partySpriteIds[selectedMonParty][partyIdx]].x = (sTradeMonSpriteCoords[selectedMonParty * PARTY_SIZE][0]
                                                                             + sTradeMonSpriteCoords[selectedMonParty * PARTY_SIZE + 1][0]) / 2 * 8 + 14;
         gSprites[sTradeMenu->partySpriteIds[selectedMonParty][partyIdx]].y = (sTradeMonSpriteCoords[selectedMonParty * PARTY_SIZE][1] * 8) - 12;
         gSprites[sTradeMenu->partySpriteIds[selectedMonParty][partyIdx]].x2 = 0;
         gSprites[sTradeMenu->partySpriteIds[selectedMonParty][partyIdx]].y2 = 0;
 
-        // Print selected pokemon's name and moves
+        // Print selected Pokémon's name and moves
         nameStringWidth = GetMonNicknameWidth(nickname, selectedMonParty, partyIdx);
         AddTextPrinterParameterized3((whichParty * 2) + 14, FONT_SMALL, (80 - nameStringWidth) / 2, 4, sTradeTextColors, 0, nickname);
         BufferMovesString(movesString, selectedMonParty, partyIdx);

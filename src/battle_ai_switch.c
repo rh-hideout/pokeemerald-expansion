@@ -37,6 +37,7 @@ static bool32 FindMonWithFlagsAndSuperEffective(enum BattlerId battler, u16 flag
 static u32 GetSwitchinHazardsDamage(enum BattlerId battler);
 static u32 GetSwitchinSingleUseItemHealing(enum BattlerId battler, enum BattlerId opposingBattler, s32 currentHP);
 static bool32 AI_CanSwitchinAbilityTrapOpponent(enum Ability ability, enum BattlerId opposingBattler);
+static u32 GetTypeMatchupAgainstTypes(enum BattlerId opposingBattler, enum Type defType1, enum Type defType2);
 static u32 GetBattlerTypeMatchup(enum BattlerId opposingBattler, enum BattlerId battler);
 static u32 GetSwitchinHitsToKO(s32 damageTaken, enum BattlerId battler, const struct IncomingHealInfo *healInfo, u32 originalHp);
 static void GetIncomingHealInfo(enum BattlerId battler, struct IncomingHealInfo *healInfo);
@@ -49,6 +50,7 @@ bool32 IsSwitchinTSpikesAffected(enum BattlerId battler);
 static bool32 IsOpponentPhysicalAttacker(enum BattlerId battler, enum BattlerId opposingBattler);
 static bool32 CanIntimidateLowerOpponentAtk(enum BattlerId battler, enum BattlerId opposingBattler);
 static bool32 ShouldSwitchIfIntimidateBenefit(enum BattlerId battler);
+static bool32 DoesMostSuitableSwitchinBenefitFromWish(enum BattlerId battler);
 
 static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, u32 monIndex, struct Pokemon *mon)
 {
@@ -204,6 +206,8 @@ u32 GetSwitchChance(enum ShouldSwitchScenario shouldSwitchScenario)
         return SHOULD_SWITCH_ALL_SCORES_BAD_PERCENTAGE;
     case SHOULD_SWITCH_DYN_FUNC:
         return SHOULD_SWITCH_DYN_FUNC_PERCENTAGE;
+    case SHOULD_SWITCH_WISH_PASSING:
+        return SHOULD_SWITCH_WISH_PASSING_PERCENTAGE;
     default:
         return 100;
     }
@@ -312,6 +316,26 @@ static inline bool32 CanBattlerWin1v1(u32 hitsToKOAI, u32 hitsToKOPlayer, bool32
             return TRUE;
     }
     return FALSE;
+}
+
+static bool32 DoesMostSuitableSwitchinBenefitFromWish(enum BattlerId battler)
+{
+    struct Pokemon *party = GetBattlerParty(battler);
+    u32 wishHealAmount = GetWishHealAmountForBattler(battler);
+    u32 currentHp;
+    u32 maxHp;
+    s32 possibleHeal = wishHealAmount;
+
+    if (gAiLogicData->mostSuitableMonId[battler] == PARTY_SIZE)
+        return FALSE;
+
+    maxHp = GetMonData(&party[gAiLogicData->mostSuitableMonId[battler]], MON_DATA_MAX_HP);
+    currentHp = GetMonData(&party[gAiLogicData->mostSuitableMonId[battler]], MON_DATA_HP);
+
+    if (possibleHeal > (s32)(maxHp - currentHp))
+        possibleHeal = (s32)(maxHp - currentHp);
+
+    return possibleHeal > (s32)(maxHp / AI_WISH_HEAL_THRESHOLD);
 }
 
 // Note that as many return statements as possible are INTENTIONALLY put after all of the loops;
@@ -1125,6 +1149,43 @@ static bool32 ShouldSwitchIfAbilityBenefit(enum BattlerId battler)
     return SetSwitchinAndSwitch(battler, PARTY_SIZE);
 }
 
+// Consider switching to pass Wish to a teammate that benefits from the heal
+static bool32 ShouldSwitchIfWishPassing(enum BattlerId battler)
+{
+    // Only use with smart switching flag
+    if (!(gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_SWITCHING))
+        return FALSE;
+
+    // Only singles for now (consistent with ShouldSwitchIfHasBadOdds)
+    if (IsDoubleBattle())
+        return FALSE;
+
+    // Check if Wish is active for this battler's position
+    if (gBattleStruct->wish[battler].counter == 0)
+        return FALSE;
+
+    enum BattlerId opposingBattler = GetOppositeBattler(battler);
+    enum Move incomingMove = GetIncomingMove(battler, opposingBattler, gAiLogicData);
+    if (incomingMove != MOVE_NONE && GetMoveEffect(incomingMove) == EFFECT_HEAL_BLOCK)
+        return FALSE;
+
+    // Get current mon's type matchup (lower is better - means we resist opponent)
+    u32 typeMatchupCurrent = GetBattlerTypeMatchup(opposingBattler, battler);
+
+    // Current mon has good or neutral matchup - no need to switch for Wish
+    if (typeMatchupCurrent <= UQ_4_12(2.0))
+        return FALSE;
+
+    // TODO: Revisit active-mon 1v1 stay-in check after the ShouldSwitch refactor.
+    if (!DoesMostSuitableSwitchinBenefitFromWish(battler))
+        return FALSE;
+
+    if (RandomPercentage(RNG_AI_SWITCH_WISH_PASSING, GetSwitchChance(SHOULD_SWITCH_WISH_PASSING)))
+        return SetSwitchinAndSwitch(battler, PARTY_SIZE);
+
+    return FALSE;
+}
+
 static bool32 CanUseSuperEffectiveMoveAgainstOpponent(enum BattlerId battler, enum BattlerId opposingBattler)
 {
     enum Move move;
@@ -1477,6 +1538,8 @@ bool32 ShouldSwitch(enum BattlerId battler)
         return TRUE;
     if (ShouldSwitchIfAbilityBenefit(battler))
         return TRUE;
+    if (ShouldSwitchIfWishPassing(battler))
+        return TRUE;
     if (ShouldSwitchIfHasBadOdds(battler))
         return TRUE;
     if (ShouldSwitchIfEncored(battler))
@@ -1497,7 +1560,7 @@ bool32 ShouldSwitch(enum BattlerId battler)
         return FALSE;
 
     // Default Function
-    // Can prompt switch if AI has a pokemon in party that resists current opponent & has super effective move
+    // Can prompt switch if AI has a Pokémon in party that resists current opponent & has super effective move
     if (FindMonWithFlagsAndSuperEffective(battler, MOVE_RESULT_DOESNT_AFFECT_FOE, 50)
         || FindMonWithFlagsAndSuperEffective(battler, MOVE_RESULT_NOT_VERY_EFFECTIVE, 33))
         return TRUE;
@@ -1629,9 +1692,9 @@ static u32 GetSwitchinSingleUseItemHealing(enum BattlerId battler, enum BattlerI
     enum Item aiItem = gAiLogicData->items[battler];
     u32 maxHP = gBattleMons[battler].maxHP;
     s32 itemHeal = 0;
-    
+
     // Check if we're at a single use healing item threshold
-    if (currentHP <= 0 
+    if (currentHP <= 0
      || gAiLogicData->abilities[battler] == ABILITY_KLUTZ
      || (gAiLogicData->abilities[opposingBattler] == ABILITY_UNNERVE && GetItemPocket(aiItem) == POCKET_BERRIES))
         return itemHeal;
@@ -1741,7 +1804,7 @@ static s32 GetSwitchinWeatherImpact(enum BattlerId battler)
         if (holdEffect != HOLD_EFFECT_SAFETY_GOGGLES && ability != ABILITY_MAGIC_GUARD && ability != ABILITY_OVERCOAT)
         {
             if ((gBattleWeather & B_WEATHER_HAIL)
-             && IS_BATTLER_OF_TYPE(battler, TYPE_ICE)
+             && !IS_BATTLER_OF_TYPE(battler, TYPE_ICE)
              && ability != ABILITY_SNOW_CLOAK && ability != ABILITY_ICE_BODY)
             {
                 weatherImpact = maxHP / 16;
@@ -1749,7 +1812,7 @@ static s32 GetSwitchinWeatherImpact(enum BattlerId battler)
                     weatherImpact = 1;
             }
             else if ((gBattleWeather & B_WEATHER_SANDSTORM)
-                && IS_BATTLER_ANY_TYPE(battler, TYPE_ROCK, TYPE_GROUND, TYPE_STEEL)
+                && !IS_BATTLER_ANY_TYPE(battler, TYPE_ROCK, TYPE_GROUND, TYPE_STEEL)
                 && ability != ABILITY_SAND_VEIL && ability != ABILITY_SAND_RUSH && ability != ABILITY_SAND_FORCE)
             {
                 weatherImpact = maxHP / 16;
@@ -2030,12 +2093,11 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, enum BattlerId battler, const st
     return hitsToKO;
 }
 
-static u32 GetBattlerTypeMatchup(enum BattlerId opposingBattler, enum BattlerId battler)
+static u32 GetTypeMatchupAgainstTypes(enum BattlerId opposingBattler, enum Type defType1, enum Type defType2)
 {
     // Check type matchup
     uq4_12_t typeEffectiveness1 = UQ_4_12(1.0), typeEffectiveness2 = UQ_4_12(1.0);
     enum Type atkType1 = gBattleMons[opposingBattler].types[0], atkType2 = gBattleMons[opposingBattler].types[1];
-    enum Type defType1 = gBattleMons[battler].types[0], defType2 = gBattleMons[battler].types[1];
 
     // Add each independent defensive type matchup together
     typeEffectiveness1 = uq4_12_multiply(typeEffectiveness1, (GetTypeModifier(atkType1, defType1)));
@@ -2058,6 +2120,11 @@ static u32 GetBattlerTypeMatchup(enum BattlerId opposingBattler, enum BattlerId 
     }
 
     return typeEffectiveness1 + typeEffectiveness2;
+}
+
+static u32 GetBattlerTypeMatchup(enum BattlerId opposingBattler, enum BattlerId battler)
+{
+    return GetTypeMatchupAgainstTypes(opposingBattler, gBattleMons[battler].types[0], gBattleMons[battler].types[1]);
 }
 
 static u32 GetSwitchinCandidate(u32 switchinCategory, enum BattlerId battler, int lastId, enum SwitchType switchType)
@@ -2468,7 +2535,6 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int lastId, enum BattlerI
     gBattleStruct->battlerState[battler].notOnField = savedNotOnField;
     FreeRestoreAiLogicData(savedAiLogicData);
     FreeRestoreBattleMons(savedBattleMons);
-    SetBattlerAiData(battler, gAiLogicData);
 
     // GetSwitchinCandidate returns either the *last* party mon that met a threshold (without AI_FLAG_RANDOMIZE_SWITCHIN), or a random one that met a threshold
     // If we aren't using AI_FLAG_RANDOMIZE_SWITCHIN there are cases where we don't want the *last* mon, we want the *best* mon
@@ -2777,7 +2843,7 @@ static void SetBattlerStatusForSwitchin(enum BattlerId battler)
             gBattleMons[battler].status1 = STATUS1_TOXIC_POISON;
             gBattleMons[battler].status1 += STATUS1_TOXIC_TURN(1);
         }
-    } 
+    }
 }
 
 static void SetBattlerStatStagesForSwitchin(enum BattlerId battler, enum BattlerId opposingBattler, u32 fieldStatus)

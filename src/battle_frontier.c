@@ -32,7 +32,7 @@ COMMON_DATA u16 gFrontierTempParty[MAX_FRONTIER_PARTY_SIZE] = {0};
 static void HandleFacilityTrainerBattleEnd(void)
 {
     u8 facility = gBattleScripting.specialTrainerBattleType;
-    switch (facility) 
+    switch (facility)
     {
     case FACILITY_BATTLE_TOWER:
     case FACILITY_BATTLE_DOME:
@@ -74,7 +74,7 @@ static void Task_StartBattleAfterTransition(u8 taskId)
 static void DoFacilityTrainerBattleInternal(u8 facility)
 {
     gBattleScripting.specialTrainerBattleType = facility;
-    
+
     switch (facility)
     {
     case FACILITY_BATTLE_TOWER:
@@ -334,7 +334,7 @@ void CreateFacilityMon(const struct TrainerMon *fmon, u16 level, u8 fixedIV, u32
 
         SetMonMoveSlot(dst, move, j);
         if (GetMoveEffect(move) == EFFECT_FRUSTRATION)
-            friendship = 0;  // Frustration is more powerful the lower the pokemon's friendship is.
+            friendship = 0;  // Frustration is more powerful the lower the Pokémon's friendship is.
     }
 
     SetMonData(dst, MON_DATA_FRIENDSHIP, &friendship);

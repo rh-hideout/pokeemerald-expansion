@@ -141,7 +141,7 @@ static u8 GetMatchingDigits(u16 winNumber, u16 otId)
     return matchingDigits;
 }
 
-// lottery numbers go from 0 to 99999, not 65535 (0xFFFF). interestingly enough, the function that calls GetLotteryNumber shifts to u16, so it cant be anything above 65535 anyway.
+// lottery numbers go from 0 to 99999, not 65535 (0xFFFF). Interestingly enough, the function that calls GetLotteryNumber shifts to u16, so it can't be anything above 65535 anyway.
 void SetLotteryNumber(u32 lotteryNum)
 {
     u16 lowNum = lotteryNum >> 16;

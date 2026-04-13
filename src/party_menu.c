@@ -566,7 +566,7 @@ static void InitPartyMenu(enum PartyMenuType menuType, enum PartyMenuLayout layo
         {
             gPartyMenu.slotId = 0;
         }
-        else if (gPartyMenu.slotId > PARTY_SIZE - 1 
+        else if (gPartyMenu.slotId > PARTY_SIZE - 1
          || GetMonData(GetPartyMonFromPartyMenuId(gPartyMenu.slotId), MON_DATA_SPECIES) == SPECIES_NONE)
         {
             gPartyMenu.slotId = 0;
@@ -1168,7 +1168,7 @@ static void DisplayPartyPokemonDataForBattlePyramidHeldItem(u8 slot)
         DisplayPartyPokemonDescriptionData(slot, PARTYBOX_DESC_DONT_HAVE);
 }
 
-// Returns TRUE if teaching move or cant evolve with item (i.e. description data is shown), FALSE otherwise
+// Returns TRUE if teaching move or can't evolve with item (i.e. description data is shown), FALSE otherwise
 static bool8 DisplayPartyPokemonDataForMoveTutorOrEvolutionItem(u8 slot)
 {
     struct Pokemon *currentPokemon = &gParties[B_TRAINER_0][slot];
@@ -1222,7 +1222,7 @@ static void DisplayPartyPokemonDataForMultiBattle(u8 slot)
 {
     struct PartyMenuBox *menuBox = &sPartyMenuBoxes[slot];
     u8 actualSlot = slot - MULTI_PARTY_SIZE;
-    
+
     if (gPartyMenu.layout == PARTY_LAYOUT_MULTI_FULL_SHOWCASE_PARTNER)
         actualSlot = slot;
 
@@ -1998,7 +1998,7 @@ static s8 GetNewSlotDoubleLayout(s8 slotId, s8 movementDir)
     while (TRUE)
     {
         slotId += movementDir;
-        
+
         if ((u8)slotId >= PARTY_SIZE)
             return -1;
         if (GetMonData(GetPartyMonFromPartyMenuId(slotId), MON_DATA_SPECIES) != SPECIES_NONE)
@@ -4232,7 +4232,7 @@ bool8 FieldCallback_PrepareFadeInFromMenu(void)
     return TRUE;
 }
 
-// Same as above, but removes follower pokemon
+// Same as above, but removes follower Pokémon
 bool8 FieldCallback_PrepareFadeInForTeleport(void)
 {
     RemoveFollowingPokemon();
@@ -7505,7 +7505,7 @@ static u8 GetPartyLayoutFromBattleType(void)
         return PARTY_LAYOUT_MULTI;
     if (IsMultiBattle() == TRUE && AreMultiPartiesFullTeams())
         return PARTY_LAYOUT_MULTI_FULL;
-    if (!IsDoubleBattle() || gPartiesCount[B_TRAINER_0] == 1) // Draw the single layout in a double battle where the player has only one pokemon.
+    if (!IsDoubleBattle() || gPartiesCount[B_TRAINER_0] == 1) // Draw the single layout in a double battle where the player has only one Pokémon.
         return PARTY_LAYOUT_SINGLE;
     return PARTY_LAYOUT_DOUBLE;
 }
@@ -7892,7 +7892,7 @@ static void UpdatePartyToFieldOrder(void)
     u8 i;
 
     const u8 *multiBattlePartyIdToMenuId = sMultiBattlePartyIdToMenuId_Left;
-    
+
     if ((gBattleTypeFlags & BATTLE_TYPE_LINK)
      && ((gBattlerInMenuId & BIT_FLANK) != B_FLANK_LEFT))
     {

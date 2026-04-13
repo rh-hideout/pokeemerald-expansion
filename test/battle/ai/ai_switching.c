@@ -76,6 +76,60 @@ AI_SINGLE_BATTLE_TEST("AI revives the best fainted ally with Revival Blessing") 
     }
 }
 
+AI_SINGLE_BATTLE_TEST("AI switches to pass Wish when matchup is bad and ally benefits")
+{
+    PASSES_RANDOMLY(SHOULD_SWITCH_WISH_PASSING_PERCENTAGE, 100, RNG_AI_SWITCH_WISH_PASSING);
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_MACHAMP) { Moves(MOVE_CROSS_CHOP, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_BLISSEY) { HP(400); MaxHP(400); Moves(MOVE_WISH, MOVE_SOFT_BOILED); }
+        OPPONENT(SPECIES_CROBAT) { HP(100); MaxHP(200); Moves(MOVE_BRAVE_BIRD); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_WISH); }
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_SWITCH(opponent, 1); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI does not switch for Wish if current mon has good matchup")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_COUNTER, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_BLISSEY) { HP(400); MaxHP(400); Moves(MOVE_WISH, MOVE_TACKLE); }
+        OPPONENT(SPECIES_PIDGEOT) { HP(100); MaxHP(200); Moves(MOVE_AERIAL_ACE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_WISH); }
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_TACKLE); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI does not switch for Wish if ally would faint to hazards")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_MACHAMP) { Moves(MOVE_CROSS_CHOP, MOVE_STEALTH_ROCK, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_BLISSEY) { HP(400); MaxHP(400); Moves(MOVE_WISH, MOVE_TACKLE); }
+        OPPONENT(SPECIES_CHARIZARD) { HP(1); MaxHP(200); Moves(MOVE_FLAMETHROWER); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_STEALTH_ROCK); EXPECT_MOVE(opponent, MOVE_WISH); }
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_TACKLE); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI does not switch for Wish if it predicts Heal Block")
+{
+    PASSES_RANDOMLY(PREDICT_MOVE_CHANCE, 100, RNG_AI_PREDICT_MOVE);
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_OMNISCIENT | AI_FLAG_PREDICT_MOVE);
+        PLAYER(SPECIES_MACHAMP) { Moves(MOVE_CROSS_CHOP, MOVE_HEAL_BLOCK, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_BLISSEY) { HP(100); MaxHP(400); Moves(MOVE_WISH, MOVE_TACKLE); }
+        OPPONENT(SPECIES_PIDGEOT) { HP(100); MaxHP(200); Moves(MOVE_AERIAL_ACE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_WISH); }
+        TURN { MOVE(player, MOVE_HEAL_BLOCK); EXPECT_MOVE(opponent, MOVE_TACKLE); }
+    }
+}
+
 // General switching behaviour
 AI_SINGLE_BATTLE_TEST("AI switches if Perish Song is about to kill")
 {
@@ -2010,7 +2064,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI sees Echoed Voice damage co
 
 AI_SINGLE_BATTLE_TEST("AI_SMART_MON_CHOICES: AI sees its own weather setting ability when considering switchin candidates")
 {
-    enum Ability ability = ABILITY_NONE;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_WATER_ABSORB; }
     PARAMETRIZE { ability = ABILITY_DRIZZLE; }
     GIVEN {

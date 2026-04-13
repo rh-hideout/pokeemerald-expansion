@@ -241,7 +241,6 @@ EWRAM_DATA u16 gLastThrownBall = 0;
 EWRAM_DATA u16 gBallToDisplay = 0;
 EWRAM_DATA bool8 gLastUsedBallMenuPresent = FALSE;
 EWRAM_DATA u8 gPartyCriticalHits[PARTY_SIZE] = {0};
-EWRAM_DATA static u8 sTriedEvolving = 0;
 EWRAM_DATA u8 gCategoryIconSpriteId = 0;
 
 COMMON_DATA MainCallback gPreBattleCallback1 = NULL;
@@ -620,7 +619,7 @@ static void CB2_InitBattleInternal(void)
     {
         TryFormChange(&gParties[B_TRAINER_1][0], FORM_CHANGE_BEGIN_WILD_ENCOUNTER, B_TRAINER_1);
         if (IsDoubleBattle())
-            TryFormChange(&gParties[B_TRAINER_3][0], FORM_CHANGE_BEGIN_WILD_ENCOUNTER, B_TRAINER_3);
+            TryFormChange(&gParties[B_TRAINER_1][1], FORM_CHANGE_BEGIN_WILD_ENCOUNTER, B_TRAINER_1);
     }
 
     #if TESTING
@@ -1306,7 +1305,7 @@ static void CB2_HandleStartMultiPartnerBattle(void)
             ResetBlockReceivedFlags();
             if (GetMultiplayerId() != 0)
                 memcpy(&gParties[B_TRAINER_3][4], gBlockRecvBuffer[0], sizeof(struct Pokemon) * 2);
-            
+
             for (enum BattleTrainer trainer = B_TRAINER_0; trainer < MAX_BATTLE_TRAINERS; trainer++)
             {
                 for (u32 i = 0; i < PARTY_SIZE; i++)
@@ -3340,7 +3339,6 @@ void FaintClearSetData(enum BattlerId battler)
     gBattleStruct->palaceFlags &= ~(1u << battler);
     if (battler == gBattlerAttacker)
         gBattleStruct->moldBreakerActive = FALSE;
-
     ClearPursuitValuesIfSet(battler);
 
     if (gBattleStruct->battlerState[battler].commanderSpecies != SPECIES_NONE)
@@ -3540,7 +3538,7 @@ static void DoBattleIntro(void)
                 BtlController_EmitDrawPartyStatusSummary(battler, B_COMM_TO_CONTROLLER, hpStatus[GetBattlerTrainer(battler)], PARTY_SUMM_SKIP_DRAW_DELAY);
                 MarkBattlerForControllerExec(battler);
             }
-            
+
             gBattleStruct->eventState.battleIntro++;
         }
         break;
@@ -3721,7 +3719,7 @@ static void TryDoEventsBeforeFirstTurn(void)
     {
     case FIRST_TURN_EVENTS_START:
         LoadIndicatorSpritesGfx();
-        // Set invalid mons as absent(for example when starting a double battle with only one pokemon).
+        // Set invalid mons as absent(for example when starting a double battle with only one Pokémon).
         if (!(gBattleTypeFlags & BATTLE_TYPE_SAFARI))
         {
             for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
@@ -3940,7 +3938,7 @@ bool32 EndTurnEvents(void) // Called from Battle Script
     {
         if (gSideTimers[i].retaliateTimer > 0)
             gSideTimers[i].retaliateTimer--;
-    }    
+    }
 
     gFieldStatuses &= ~STATUS_FIELD_ION_DELUGE;
 
@@ -3977,7 +3975,7 @@ u8 IsRunningFromBattleImpossible(enum BattlerId battler)
         return BATTLE_RUN_FORBIDDEN;
     }
     if (GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT && WILD_DOUBLE_BATTLE
-        && IsBattlerAlive(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT))) // The second pokemon cannot run from a double wild battle, unless it's the only alive mon.
+        && IsBattlerAlive(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT))) // The second Pokémon cannot run from a double wild battle, unless it's the only alive mon.
     {
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CANT_ESCAPE;
         return BATTLE_RUN_FORBIDDEN;
@@ -5155,7 +5153,7 @@ static bool32 TryDoMoveEffectsBeforeMoves(void)
     return FALSE;
 }
 
-// In gen7, priority and speed are recalculated during the turn in which a pokemon mega evolves
+// In gen7, priority and speed are recalculated during the turn in which a Pokémon mega evolves
 static void TryChangeTurnOrder(void)
 {
     enum BattlerId i, j;
@@ -5637,13 +5635,14 @@ static void TryEvolvePokemon(void)
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        if (!(sTriedEvolving & (1u << i)))
+        if (!(gTriedEvolving & (1u << i)))
         {
             bool32 canStopEvo = TRUE;
             enum EvolutionMode mode = EVO_MODE_BATTLE_SPECIAL;
             u32 evolutionItemArg = i;
+
             enum Species species = GetEvolutionTargetSpecies(&gParties[B_TRAINER_0][i], mode, evolutionItemArg, NULL, &canStopEvo, CHECK_EVO);
-            sTriedEvolving |= 1u << i;
+            gTriedEvolving |= 1u << i;
 
             if (species == SPECIES_NONE && (gLeveledUpInBattle & (1u << i)))
             {
@@ -5663,7 +5662,7 @@ static void TryEvolvePokemon(void)
             }
         }
     }
-    sTriedEvolving = 0;
+    gTriedEvolving = 0;
     gLeveledUpInBattle = 0;
     gBattleMainFunc = ReturnFromBattleToOverworld;
 }
@@ -5767,6 +5766,9 @@ enum Type TrySetAteType(enum Move move, enum BattlerId battlerAtk, enum Ability 
     case ABILITY_GALVANIZE:
         ateType = TYPE_ELECTRIC;
         break;
+    case ABILITY_DRAGONIZE:
+        ateType = TYPE_DRAGON;
+        break;
     default:
         ateType = TYPE_NONE;
         break;
@@ -5816,22 +5818,22 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId
     case EFFECT_WEATHER_BALL:
         if (state == MON_IN_BATTLE)
         {
-            if (HasWeatherEffect())
-            {
-                if (gBattleWeather & B_WEATHER_RAIN && holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA)
-                    return TYPE_WATER;
-                else if (gBattleWeather & B_WEATHER_SANDSTORM)
-                    return TYPE_ROCK;
-                else if (gBattleWeather & B_WEATHER_SUN && holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA)
-                    return TYPE_FIRE;
-                else if (gBattleWeather & B_WEATHER_ICY_ANY)
-                    return TYPE_ICE;
-                else
-                    return moveType;
-            }
+            u32 weather =  GetAttackerWeather(holdEffect, ability, GetWeather());
+            if (weather & B_WEATHER_SUN)
+                return TYPE_FIRE;
+            else if (weather & B_WEATHER_RAIN)
+                return TYPE_WATER;
+            else if (weather & B_WEATHER_SANDSTORM)
+                return TYPE_ROCK;
+            else if (weather & B_WEATHER_ICY_ANY)
+                return TYPE_ICE;
+            else
+                return moveType;
         }
         else
         {
+            if (ability == ABILITY_MEGA_SOL)
+                return TYPE_FIRE;
             switch (gWeatherPtr->currWeather)
             {
             case WEATHER_DROUGHT:

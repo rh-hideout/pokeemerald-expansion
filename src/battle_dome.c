@@ -3763,7 +3763,7 @@ static u8 Task_GetInfoCardInput(u8 taskId)
     if (JOY_NEW(A_BUTTON | B_BUTTON))
         input = INFOCARD_INPUT_AB;
 
-    // Next opponent card cant scroll
+    // Next opponent card can't scroll
     if (gTasks[taskId].data[3] == INFOCARD_NEXT_OPPONENT)
         return input;
 

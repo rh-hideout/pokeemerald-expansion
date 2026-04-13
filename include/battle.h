@@ -145,7 +145,7 @@ struct SideTimer
     // Timers below this point are not swapped by Court Change
     u8 followmeTimer:4;
     u8 followmeTarget:3;
-    u8 followmePowder:1; // Rage powder, does not affect grass type pokemon.
+    u8 followmePowder:1; // Rage powder, does not affect grass type Pokémon.
     u8 retaliateTimer;
     u16 damageNonTypesTimer;
     enum Type damageNonTypesType;
@@ -522,7 +522,7 @@ struct PartyState
     u32 transformZeroToHero:1;
     u32 supersweetSyrup:1;
     u32 timesGotHit:5;
-    u32 changedSpecies:11; // For forms when multiple mons can change into the same pokemon.
+    u32 changedSpecies:11; // For forms when multiple mons can change into the same Pokémon.
     u32 sentOut:1;
     u32 isKnockedOff:1;
     u32 padding:8;
@@ -565,7 +565,7 @@ struct BattleStruct
     u8 expOrderId:3;
     u8 expGetterBattlerId:2;
     u8 teamGotExpMsgPrinted:1; // The 'Rest of your team got msg' has been printed.
-    u8 givenExpMons; // Bits for enemy party's pokemon that gave exp to player's party.
+    u8 givenExpMons; // Bits for enemy party's Pokémon that gave exp to player's party.
     u8 expSentInMons; // As bits for player party mons - not including exp share mons.
     u8 wildVictorySong;
     enum Type dynamicMoveType;
@@ -591,7 +591,7 @@ struct BattleStruct
     u8 prevSelectedPartySlot;
     u8 stringMoveType;
     u8 palaceFlags; // First 4 bits are "is <= 50% HP and not asleep" for each battler, last 4 bits are selected moves to pass to AI
-    u8 field_93; // related to choosing pokemon?
+    u8 field_93; // related to choosing Pokémon?
     u8 wallyBattleState;
     u8 wallyMovesState;
     u8 wallyWaitFrames;
@@ -676,7 +676,7 @@ struct BattleStruct
     u8 speedTieBreaks; // MAX_BATTLERS_COUNT! values.
     enum DamageCategory categoryOverride:8; // for Z-Moves and Max Moves
     u32 stellarBoostFlags[NUM_BATTLE_SIDES]; // stored as a bitfield of flags for all types for each side
-    u8 monCausingSleepClause[NUM_BATTLE_SIDES]; // Stores which pokemon on a given side is causing Sleep Clause to be active as the mon's index in the party
+    u8 monCausingSleepClause[NUM_BATTLE_SIDES]; // Stores which Pokémon on a given side is causing Sleep Clause to be active as the mon's index in the party
     u16 opponentMonCanTera:6;
     u16 opponentMonCanDynamax:6;
     u16 additionalEffectsCounter:4; // A counter for the additionalEffects applied by the current move in Cmd_setadditionaleffects
@@ -811,7 +811,7 @@ struct BattleScripting
     u16 savedStringId;
     u8 moveendState;
     u8 savedStatChanger; // For further use, if attempting to change stat two times(ex. Moody)
-    u8 shiftSwitched; // When the game tells you the next enemy's pokemon and you switch. Option for noobs but oh well.
+    u8 shiftSwitched; // When the game tells you the next enemy's Pokémon and you switch. Option for noobs but oh well.
     enum BattlerId battler;
     u8 animTurn;
     u8 animTargetsHit;
@@ -1070,6 +1070,18 @@ static inline bool32 IsBattlerAlive(enum BattlerId battler)
     else if (gBattleMons[battler].hp == 0)
         return FALSE;
     else if (gAbsentBattlerFlags & (1u << battler))
+        return FALSE;
+    else
+        return TRUE;
+}
+
+// Some effects, like most end of turn effects only activate on active battlers (on the field)
+// IsBattlerAlive doesn't check for queued switches, so IsBattlerPresent is used in these cases
+static inline bool32 IsBattlerPresent(enum BattlerId battler)
+{
+    if (!IsBattlerAlive(battler))
+        return FALSE;
+    else if (gBattleStruct->battlerState[battler].notOnField)
         return FALSE;
     else
         return TRUE;

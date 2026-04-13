@@ -534,7 +534,7 @@ bool32 AI_CanMoveBeBlockedByTarget(struct DamageContext *ctx)
 }
 
 // This function checks if all physical/special moves are either unusable or unreasonable to use.
-// Consider a pokemon boosting their attack against a ghost pokemon having only normal-type physical attacks.
+// Consider a Pokémon boosting their attack against a ghost Pokémon having only normal-type physical attacks.
 bool32 MovesWithCategoryUnusable(u32 attacker, u32 target, enum DamageCategory category)
 {
     u32 usable = 0;
@@ -653,13 +653,10 @@ bool32 IsDamageMoveUnusable(struct DamageContext *ctx)
             return TRUE;
     }
 
-    if (HasWeatherEffect())
-    {
-        if (ctx->weather & B_WEATHER_SUN_PRIMAL && ctx->moveType == TYPE_WATER)
-            return TRUE;
-        if (ctx->weather & B_WEATHER_RAIN_PRIMAL && ctx->moveType == TYPE_FIRE)
-            return TRUE;
-    }
+    if (ctx->weather & B_WEATHER_SUN_PRIMAL && ctx->moveType == TYPE_WATER)
+        return TRUE;
+    if (ctx->weather & B_WEATHER_RAIN_PRIMAL && ctx->moveType == TYPE_FIRE)
+        return TRUE;
 
     if (IsMoveDampBanned(ctx->move) && (battlerDefAbility == ABILITY_DAMP || partnerDefAbility == ABILITY_DAMP))
         return TRUE;
@@ -950,6 +947,7 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
     ctx.abilities[battlerDefPartner] = AI_GetMoldBreakerSanitizedAbility(battlerAtk, ctx.abilities[ctx.battlerAtk], aiData->abilities[battlerDefPartner], ctx.holdEffects[battlerDefPartner], move);
     ctx.isCrit = ShouldCalcCritDamage(&ctx);
     ctx.typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(&ctx);
+
 
     u32 movePower = GetMovePower(move);
 
@@ -5239,7 +5237,7 @@ bool32 IsUnseenFistContactMove(enum BattlerId battlerAtk, enum BattlerId battler
 {
     if (move == MOVE_NONE || move == MOVE_UNAVAILABLE)
         return FALSE;
-    if (gAiLogicData->abilities[battlerAtk] != ABILITY_UNSEEN_FIST)
+    if (gAiLogicData->abilities[battlerAtk] != ABILITY_UNSEEN_FIST || gAiLogicData->abilities[battlerAtk] == ABILITY_PIERCING_DRILL)
         return FALSE;
     if (GetMoveEffect(move) == EFFECT_SHELL_SIDE_ARM)
     {
@@ -5542,7 +5540,7 @@ enum AIConsiderGimmick ShouldTeraFromCalcs(enum BattlerId battler, enum BattlerI
 {
     struct Pokemon *party = GetBattlerParty(battler);
 
-    // Check how many pokemon we have that could tera
+    // Check how many Pokémon we have that could tera
     int numPossibleTera = 0;
     for (u32 monIndex = 0; monIndex < PARTY_SIZE; monIndex++)
     {
