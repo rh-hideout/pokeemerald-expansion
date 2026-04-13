@@ -2119,16 +2119,16 @@ u32 GetBoxMonData3(struct BoxPokemon *boxMon, s32 field, u8 *data)
             retVal = GetSubstruct0(boxMon)->friendship;
             break;
         case MON_DATA_MOVE1:
-            retVal = GetSubstruct1(boxMon)->move1;
+            retVal = SanitizeMoveId(GetSubstruct1(boxMon)->move1);
             break;
         case MON_DATA_MOVE2:
-            retVal = GetSubstruct1(boxMon)->move2;
+            retVal = SanitizeMoveId(GetSubstruct1(boxMon)->move2);
             break;
         case MON_DATA_MOVE3:
-            retVal = GetSubstruct1(boxMon)->move3;
+            retVal = SanitizeMoveId(GetSubstruct1(boxMon)->move3);
             break;
         case MON_DATA_MOVE4:
-            retVal = GetSubstruct1(boxMon)->move4;
+            retVal = SanitizeMoveId(GetSubstruct1(boxMon)->move4);
             break;
         case MON_DATA_PP1:
             retVal = GetSubstruct1(boxMon)->pp1;

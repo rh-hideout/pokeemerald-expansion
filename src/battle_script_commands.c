@@ -1010,6 +1010,8 @@ static void Cmd_attackcanceler(void)
     CMD_ARGS();
     assertf(gBattlerAttacker < MAX_BATTLERS_COUNT, "invalid gBattlerAttacker: %d\nmove: %S", gBattlerAttacker, GetMoveName(gCurrentMove));
     assertf(gBattlerTarget < MAX_BATTLERS_COUNT, "invalid gBattlerTarget: %d\nmove: %S", gBattlerTarget, GetMoveName(gCurrentMove));
+    assertf(gCurrentMove < MOVES_COUNT_ALL , "invalid gCurrentMove");
+    assertf(gChosenMove < MOVES_COUNT_ALL , "invalid gChosenMove");
 
     if (gBattleStruct->battlerState[gBattlerAttacker].usedEjectItem)
     {
@@ -1279,7 +1281,7 @@ static void Cmd_damagecalc(void)
         ctx.abilities[battler] = GetBattlerAbility(battler);
         ctx.holdEffects[battler] = GetBattlerHoldEffect(battler);
     }
-    
+
     if (IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove)))
     {
         for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
@@ -5210,6 +5212,8 @@ static void Cmd_moveend(void)
     CMD_ARGS(u8 endMode, u8 endState);
     assertf(gBattlerAttacker < MAX_BATTLERS_COUNT, "invalid gBattlerAttacker: %d\nmove: %S", gBattlerAttacker, GetMoveName(gCurrentMove));
     assertf(gBattlerTarget < MAX_BATTLERS_COUNT, "invalid gBattlerTarget: %d\nmove: %S", gBattlerTarget, GetMoveName(gCurrentMove));
+    assertf(gCurrentMove < MOVES_COUNT_ALL , "invalid gCurrentMove");
+    assertf(gChosenMove < MOVES_COUNT_ALL , "invalid gChosenMove");
 
     enum MoveEndResult result = DoMoveEnd(cmd->endMode, cmd->endState);
 
@@ -8489,7 +8493,7 @@ static void Cmd_transformdataexecution(void)
 {
     CMD_ARGS();
 
-    gChosenMove = MOVE_UNAVAILABLE;
+    gChosenMove = MOVE_NONE;
     gBattlescriptCurrInstr = cmd->nextInstr;
     if ((GetConfig(B_TRANSFORM_SEMI_INV_FAIL) >= GEN_2 && IsSemiInvulnerable(gBattlerTarget, EXCLUDE_COMMANDER))
         || (GetConfig(B_TRANSFORM_TARGET_FAIL) >= GEN_2 && gBattleMons[gBattlerTarget].volatiles.transformed)
@@ -8608,7 +8612,7 @@ static void Cmd_mimicattackcopy(void)
 
         if (i == MAX_MON_MOVES)
         {
-            gChosenMove = 0xFFFF;
+            gChosenMove = MOVE_NONE;
             gBattleMons[gBattlerAttacker].moves[gCurrMovePos] = gLastMoves[gBattlerTarget];
             u32 pp = GetMovePP(gLastMoves[gBattlerTarget]);
             if (pp < 5)
@@ -8847,7 +8851,7 @@ static void Cmd_copymovepermanently(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
-    gChosenMove = MOVE_UNAVAILABLE;
+    gChosenMove = MOVE_NONE;
 
     if (!(gBattleMons[gBattlerAttacker].volatiles.transformed)
         && gLastPrintedMoves[gBattlerTarget] != MOVE_UNAVAILABLE
