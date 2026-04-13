@@ -3,10 +3,10 @@
 
 // Frame count references used by testing system
 #define AI_FRAME_CEILING_SINGLES_NO_FLAGS                       3
-#define AI_FRAME_CEILING_SINGLES_SMART_TRAINER                  8
-#define AI_FRAME_CEILING_DOUBLES_NO_FLAGS                       22
-#define AI_FRAME_CEILING_DOUBLES_SMART_TRAINER                  38
-#define AI_FRAME_CEILING_STEVEN_MULTI                           27
+#define AI_FRAME_CEILING_SINGLES_SMART_TRAINER                  7
+#define AI_FRAME_CEILING_DOUBLES_NO_FLAGS                       21
+#define AI_FRAME_CEILING_DOUBLES_SMART_TRAINER                  36
+#define AI_FRAME_CEILING_STEVEN_MULTI                           26
 #define AI_FRAME_CEILING_STEVEN_MULTI_SMART_TRAINER             30
 
 // For the details on what specific factors the switching functions are considering, go read the corresponding function inside ShouldSwitch in src/battle_ai_switch_items.c
