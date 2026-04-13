@@ -1920,6 +1920,9 @@ static void DexNavLoadEncounterData(void)
     u32 headerId = GetCurrentMapWildMonHeaderId();
     enum TimeOfDay timeOfDay;
 
+    if (headerId == HEADER_NONE)
+        return;
+
     timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
     const struct WildPokemonInfo *landMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo;
     timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_WATER);
@@ -1931,9 +1934,6 @@ static void DexNavLoadEncounterData(void)
     memset(sDexNavUiDataPtr->landSpecies, 0, sizeof(sDexNavUiDataPtr->landSpecies));
     memset(sDexNavUiDataPtr->waterSpecies, 0, sizeof(sDexNavUiDataPtr->waterSpecies));
     memset(sDexNavUiDataPtr->hiddenSpecies, 0, sizeof(sDexNavUiDataPtr->hiddenSpecies));
-
-    if (headerId == HEADER_NONE)
-        return;
 
     // land mons
     if (landMonsInfo != NULL && landMonsInfo->encounterRate != 0)
@@ -2506,14 +2506,17 @@ bool32 TryFindHiddenPokemon(void)
         u8 index;
         u16 species;
         enum EncounterType environment;
-        enum TimeOfDay timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_HIDDEN);
 
+        if (headerId == HEADER_NONE)
+            return FALSE;
+
+        enum TimeOfDay timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_HIDDEN);
         const struct WildPokemonInfo *hiddenMonsInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].hiddenMonsInfo;
         bool8 isHiddenMon = FALSE;
 
         // while you can still technically find hidden pokemon if there are not hidden-only pokemon on a map,
         // this prevents any potential lagging on maps you dont want hidden pokemon to appear on
-        if (headerId == HEADER_NONE || hiddenMonsInfo == NULL)
+        if (hiddenMonsInfo == NULL)
             return FALSE;
 
         // encounter rate signifies surfing (1) or land mons (0)!
