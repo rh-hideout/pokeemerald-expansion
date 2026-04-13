@@ -6113,7 +6113,7 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
             basePower *= 2;
         break;
     case EFFECT_WEATHER_BALL:
-        if (GetAttackerWeather(ctx->holdEffectAtk, ctx->abilityAtk, ctx->weather) & B_WEATHER_ANY)
+        if (GetAttackerWeather(ctx->holdEffects[ctx->battlerAtk], ctx->abilities[ctx->battlerAtk], ctx->weather) & B_WEATHER_ANY)
             basePower *= 2;
         break;
     case EFFECT_PURSUIT:
@@ -7058,7 +7058,7 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
         }
         break;
     case ABILITY_FLOWER_GIFT:
-        if (gBattleMons[battlerDef].species == SPECIES_CHERRIM_SUNSHINE && IsBattlerWeatherAffected(ctx->holdEffectDef, ctx->weather, B_WEATHER_SUN) && !usesDefStat)
+        if (gBattleMons[battlerDef].species == SPECIES_CHERRIM_SUNSHINE && IsBattlerWeatherAffected(ctx->holdEffects[ctx->battlerDef], ctx->weather, B_WEATHER_SUN) && !usesDefStat)
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
         break;
     case ABILITY_PROTOSYNTHESIS:
