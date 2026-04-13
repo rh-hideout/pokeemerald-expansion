@@ -27,7 +27,7 @@ AI_SINGLE_BATTLE_TEST("AI thinking time doesn't explode (singles, no flags)")
     } WHEN {
         TURN { }
     } THEN {
-        EXPECT_LE(gBattleStruct->aiDelayFrames, AI_FRAME_CHECK ? 0 : AI_FRAME_CEILING_SINGLES_NO_FLAGS);
+        EXPECT_LE(gBattleStruct->aiDelayFrames, AI_FRAME_CEILING_CHECK ? 0 : AI_FRAME_CEILING_SINGLES_NO_FLAGS);
     }
 }
 
@@ -50,7 +50,7 @@ AI_SINGLE_BATTLE_TEST("AI thinking time doesn't explode (singles, smart)")
     } WHEN {
         TURN { }
     } THEN {
-        EXPECT_LE(gBattleStruct->aiDelayFrames, AI_FRAME_CHECK ? 0 : AI_FRAME_CEILING_SINGLES_SMART_TRAINER);
+        EXPECT_LE(gBattleStruct->aiDelayFrames, AI_FRAME_CEILING_CHECK ? 0 : AI_FRAME_CEILING_SINGLES_SMART_TRAINER);
     }
 }
 
@@ -72,7 +72,7 @@ AI_DOUBLE_BATTLE_TEST("AI thinking time doesn't explode (doubles, no flags)")
     } WHEN {
         TURN { }
     } THEN {
-        EXPECT_LE(gBattleStruct->aiDelayFrames, AI_FRAME_CHECK ? 0 : AI_FRAME_CEILING_DOUBLES_NO_FLAGS);
+        EXPECT_LE(gBattleStruct->aiDelayFrames, AI_FRAME_CEILING_CHECK ? 0 : AI_FRAME_CEILING_DOUBLES_NO_FLAGS);
     }
 }
 
@@ -95,7 +95,7 @@ AI_DOUBLE_BATTLE_TEST("AI thinking time doesn't explode (doubles, smart)")
     } WHEN {
         TURN { }
     } THEN {
-        EXPECT_LE(gBattleStruct->aiDelayFrames, AI_FRAME_CHECK ? 0 : AI_FRAME_CEILING_DOUBLES_SMART_TRAINER);
+        EXPECT_LE(gBattleStruct->aiDelayFrames, AI_FRAME_CEILING_CHECK ? 0 : AI_FRAME_CEILING_DOUBLES_SMART_TRAINER);
     }
 }
 
@@ -119,7 +119,7 @@ AI_MULTI_BATTLE_TEST("AI thinking time doesn't explode (Steven multi)")
     } WHEN {
         TURN { EXPECT_MOVE(playerRight, MOVE_REFLECT); }
     } THEN {
-        EXPECT_LE(gBattleStruct->aiDelayFrames, AI_FRAME_CHECK ? 0 : AI_FRAME_CEILING_STEVEN_MULTI);
+        EXPECT_LE(gBattleStruct->aiDelayFrames, AI_FRAME_CEILING_CHECK ? 0 : AI_FRAME_CEILING_STEVEN_MULTI);
     }
 }
 
@@ -143,6 +143,6 @@ AI_MULTI_BATTLE_TEST("AI thinking time doesn't explode (Steven multi, smart)")
     } WHEN {
         TURN { EXPECT_MOVE(playerRight, MOVE_REFLECT); }
     } THEN {
-        EXPECT_LE(gBattleStruct->aiDelayFrames, AI_FRAME_CHECK ? 0 : AI_FRAME_CEILING_STEVEN_MULTI_SMART_TRAINER);
+        EXPECT_LE(gBattleStruct->aiDelayFrames, AI_FRAME_CEILING_CHECK ? 0 : AI_FRAME_CEILING_STEVEN_MULTI_SMART_TRAINER);
     }
 }
