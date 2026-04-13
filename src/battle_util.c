@@ -5960,7 +5960,20 @@ enum IronBallCheck
     IGNORE_IRON_BALL
 };
 
-static bool32 IsBattlerGroundedWithoutFlyingType(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, bool32 isAnticipation)
+static bool32 IsBattlerUngroundedByAbilityItemOrEffect(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect)
+{
+    if (gBattleMons[battler].volatiles.telekinesis)
+        return TRUE;
+    if (gBattleMons[battler].volatiles.magnetRise)
+        return TRUE;
+    if (holdEffect == HOLD_EFFECT_AIR_BALLOON)
+        return TRUE;
+    if (ability == ABILITY_LEVITATE)
+        return TRUE;
+    return FALSE;
+}
+
+static bool32 IsBattlerGroundedInverseCheck(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, enum InverseBattleCheck checkInverse, bool32 isAnticipation)
 {
     if (holdEffect == HOLD_EFFECT_IRON_BALL)
         return TRUE;
@@ -5970,20 +5983,7 @@ static bool32 IsBattlerGroundedWithoutFlyingType(enum BattlerId battler, enum Ab
         return TRUE;
     if (gBattleMons[battler].volatiles.smackDown)
         return TRUE;
-    if (gBattleMons[battler].volatiles.telekinesis)
-        return FALSE;
-    if (gBattleMons[battler].volatiles.magnetRise)
-        return FALSE;
-    if (holdEffect == HOLD_EFFECT_AIR_BALLOON)
-        return FALSE;
-    if (ability == ABILITY_LEVITATE)
-        return FALSE;
-    return TRUE;
-}
-
-static bool32 IsBattlerGroundedInverseCheck(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, enum InverseBattleCheck checkInverse, bool32 isAnticipation)
-{
-    if (!IsBattlerGroundedWithoutFlyingType(battler, ability, holdEffect, isAnticipation))
+    if (IsBattlerUngroundedByAbilityItemOrEffect(battler, ability, holdEffect))
         return FALSE;
     if (IS_BATTLER_OF_TYPE(battler, TYPE_FLYING) && (checkInverse != INVERSE_BATTLE || !FlagGet(B_FLAG_INVERSE_BATTLE)))
         return FALSE;
@@ -8335,7 +8335,7 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct BattleCont
     else if (ctx->moveType == TYPE_GROUND
         && !IsBattlerGroundedInverseCheck(ctx->battlerDef, ctx->abilityDef, ctx->holdEffectDef, INVERSE_BATTLE, ctx->isAnticipation)
         && !(MoveIgnoresTypeIfFlyingAndUngrounded(ctx->move))
-        && !(ctx->holdEffectDef == HOLD_EFFECT_RING_TARGET && IS_BATTLER_OF_TYPE(ctx->battlerDef, TYPE_FLYING) && IsBattlerGroundedWithoutFlyingType(ctx->battlerDef, ctx->abilityDef, ctx->holdEffectDef, ctx->isAnticipation)))
+        && !(ctx->holdEffectDef == HOLD_EFFECT_RING_TARGET && IS_BATTLER_OF_TYPE(ctx->battlerDef, TYPE_FLYING) && !IsBattlerUngroundedByAbilityItemOrEffect(ctx->battlerDef, ctx->abilityDef, ctx->holdEffectDef)))
     {
         modifier = UQ_4_12(0.0);
         if (ctx->updateFlags && ctx->abilityDef == ABILITY_LEVITATE)
