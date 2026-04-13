@@ -413,7 +413,7 @@ static enum CancelerResult CancelerConfused(struct BattleCalcValues *cv)
     return CANCELER_RESULT_SUCCESS;
 }
 
-static enum CancelerResult CancelerGhost(struct BattleCalcValues *cv) // GHOST in pokemon tower
+static enum CancelerResult CancelerGhost(struct BattleCalcValues *cv) // GHOST in Pokémon Tower
 {
     if (IsGhostBattleWithoutScope())
     {
@@ -3450,7 +3450,7 @@ static bool32 TryEjectButton(enum BattlerId battlerAtk, u32 ejectButtonBattler)
     gLastUsedItem = gBattleMons[ejectButtonBattler].item;
     gBattleStruct->battlerState[ejectButtonBattler].usedEjectItem = TRUE;
     gSpecialStatuses[ejectButtonBattler].queuedSwitch = QUEUED_SWITCH_OPEN_PARTY_SCREEN;
-    BattleScriptCall(BattleScript_EjectButtonActivates);
+    BattleScriptCall(BattleScript_EjectItemActivates);
     gAiLogicData->ejectButtonSwitch = TRUE;
     return TRUE;
 }
@@ -3819,7 +3819,7 @@ static enum MoveEndResult MoveEndEjectPack(void)
         gLastUsedItem = gBattleMons[battler].item;
         gBattleStruct->battlerState[battler].usedEjectItem = TRUE;
         gSpecialStatuses[battler].queuedSwitch = QUEUED_SWITCH_OPEN_PARTY_SCREEN;
-        BattleScriptCall(BattleScript_EjectPackActivates);
+        BattleScriptCall(BattleScript_EjectItemActivates);
         gAiLogicData->ejectPackSwitch = TRUE;
         result = MOVEEND_RESULT_RUN_SCRIPT;
         break; // Only the fastest Eject item activates

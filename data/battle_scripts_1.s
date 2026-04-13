@@ -7638,7 +7638,7 @@ BattleScript_RedCardEnd:
 	restoreattacker
 	return
 
-BattleScript_EjectButtonActivates::
+BattleScript_EjectItemActivates::
 	makevisible BS_ATTACKER
 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT
 	printstring STRINGID_EJECTBUTTONACTIVATE
@@ -7648,20 +7648,11 @@ BattleScript_EjectButtonActivates::
 	makeinvisible BS_SCRIPTING
 	returntoball BS_SCRIPTING, FALSE
 	switchoutabilities BS_SCRIPTING
-BattleScript_EjectButtonEnd:
 	return
 
-BattleScript_EjectPackActivate_Ret::
-	call BattleScript_EjectButtonActivates
+BattleScript_EjectPackActivates_SendReplacement::
+	call BattleScript_EjectItemActivates
 	goto BattleScript_QueuedSwitchOpenPartyScreen
-
-BattleScript_EjectPackActivate_NoQueuedSwitch::
-	call BattleScript_EjectPackActivate_Ret
-	return
-
-BattleScript_EjectPackActivates::
-	jumpifcantswitch BS_SCRIPTING, BattleScript_EjectButtonEnd
-	goto BattleScript_EjectButtonActivates
 
 BattleScript_DoesntAffectTargetAtkString::
 	pause B_WAIT_TIME_SHORT
