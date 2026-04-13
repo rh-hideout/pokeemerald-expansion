@@ -13,7 +13,6 @@
 #include "constants/battle_move_resolution.h"
 
 static void ValidateBattlers(void);
-static enum Move GetOriginallyUsedMove(enum Move chosenMove);
 static void SetSameMoveTurnValues(enum BattleMoveEffects moveEffect);
 static void TryClearChargeVolatile(enum Type moveType);
 static inline bool32 IsBattlerUsingBeakBlast(enum BattlerId battler);
@@ -1506,7 +1505,7 @@ static bool32 CanTwoTurnMoveFireThisTurn(struct BattleCalcValues *cv)
 {
     if (gBattleMoveEffects[GetMoveEffect(cv->move)].semiInvulnerableEffect
      || GetMoveEffect(cv->move) == EFFECT_GEOMANCY
-     || !(GetAttackerWeather(cv->holdEffects[cv->battlerAtk], cv->abilities[cv->battlerAtk], GetWeather()) & GetMoveTwoTurnAttackWeather(cv->move))) 
+     || !(GetAttackerWeather(cv->holdEffects[cv->battlerAtk], cv->abilities[cv->battlerAtk], GetWeather()) & GetMoveTwoTurnAttackWeather(cv->move)))
         return FALSE;
     return TRUE;
 }
@@ -2727,7 +2726,7 @@ static enum MoveEndResult MoveEndUpdateLastMoves(void)
         RestoreTarget();
     }
 
-    enum BattleMoveEffects originalEffect = GetMoveEffect(GetOriginallyUsedMove(gChosenMove));
+    enum BattleMoveEffects originalEffect = GetMoveEffect(gChosenMove);
     if (IsBattlerAlive(gBattlerAttacker) // Why do we need to check if user fainted? We just want to set with what move the target got hit
      && originalEffect != EFFECT_BATON_PASS
      && originalEffect != EFFECT_HEALING_WISH
@@ -2756,7 +2755,7 @@ static enum MoveEndResult MoveEndUpdateLastMoves(void)
          && !IsBattlerUnaffectedByMove(gBattlerTarget)
          && IsBattlerAlive(gBattlerTarget))
         {
-            if (gChosenMove == MOVE_UNAVAILABLE)
+            if (gChosenMove == MOVE_NONE)
             {
                 gLastLandedMoves[gBattlerTarget] = gChosenMove;
             }
@@ -2789,7 +2788,7 @@ static enum MoveEndResult MoveEndMirrorMove(void)
      && gBattlerAttacker != gBattlerTarget
      && IsBattlerAlive(gBattlerAttacker)
      && IsBattlerAlive(gBattlerTarget)
-     && !IsMoveMirrorMoveBanned(GetOriginallyUsedMove(gChosenMove)))
+     && !IsMoveMirrorMoveBanned(gChosenMove))
     {
         gBattleStruct->lastTakenMove[gBattlerTarget] = gChosenMove;
         gBattleStruct->lastTakenMoveFrom[gBattlerTarget][gBattlerAttacker] = gChosenMove;
@@ -3952,7 +3951,6 @@ static enum MoveEndResult MoveEndClearBits(void)
 {
     ValidateBattlers();
 
-    enum Move originallyUsedMove = GetOriginallyUsedMove(gChosenMove);
     enum Type moveType = GetBattleMoveType(gCurrentMove);
     enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
 
@@ -3963,8 +3961,8 @@ static enum MoveEndResult MoveEndClearBits(void)
         gBattleStruct->moveTarget[gBattlerAttacker] = gSpecialStatuses[gBattlerAttacker].backUpTarget - 1;
 
     // If the Pokémon needs to keep track of move usage for its evolutions, do it
-    if (originallyUsedMove != MOVE_NONE)
-        TryUpdateEvolutionTracker(IF_USED_MOVE_X_TIMES, 1, originallyUsedMove);
+    if (gChosenMove != MOVE_NONE)
+        TryUpdateEvolutionTracker(IF_USED_MOVE_X_TIMES, 1, gChosenMove);
 
     SetSameMoveTurnValues(moveEffect);
     TryClearChargeVolatile(moveType);
@@ -4145,11 +4143,6 @@ static void ValidateBattlers(void)
 
     // More calls to SaveBattlerTarget than RestoreBattlerTarget.
     assertf(gBattleStruct->savedTargetCount == 0, "savedTargetCount is greater than 0");
-}
-
-static enum Move GetOriginallyUsedMove(enum Move chosenMove)
-{
-    return (gChosenMove == MOVE_UNAVAILABLE) ? MOVE_NONE : gChosenMove;
 }
 
 static void SetSameMoveTurnValues(enum BattleMoveEffects moveEffect)
