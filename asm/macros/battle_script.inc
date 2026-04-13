@@ -2231,3 +2231,7 @@
 	.macro trywakebattlersuproar
 	callnative BS_TryWakeBattlersUproar
 	.endm
+
+	.macro showitempopup
+	callnative BS_ShowItemPopup
+	.endm

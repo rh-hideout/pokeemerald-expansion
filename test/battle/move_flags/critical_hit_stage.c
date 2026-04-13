@@ -22,3 +22,22 @@ SINGLE_BATTLE_TEST("criticalHitStage set to 1 increases critical hits occur at a
         MESSAGE("A critical hit!");
     }
 }
+
+DOUBLE_BATTLE_TEST("Critical hits mention each affected target")
+{
+    u32 j, genConfig = 0, passes = 0, trials = 0;
+
+    GIVEN {
+        WITH_CONFIG(B_CRIT_CHANCE, GEN_9);
+        ASSUME(GetMoveCriticalHitStage(MOVE_SLASH) == 1);
+        ASSUME(GetSpeciesBaseSpeed(SPECIES_WOBBUFFET) == 33);
+        PLAYER(SPECIES_DRAGONITE) { Item(ITEM_SCOPE_LENS); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_DRAGON_CHEER); MOVE(playerLeft, MOVE_SURF); }
+    } SCENE {
+        MESSAGE("A critical hit on the opposing Wobbuffet!");
+    }
+}

@@ -265,6 +265,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
         gBattleStruct->anyMonHasTransformed = TRUE;
         break;
     case STRINGID_CRITICALHIT:
+    case STRINGID_CRITICALHITONDEF:
         AddMovePoints(PTS_CRITICAL_HIT, moveSlot, 0, 0);
         break;
     case STRINGID_ATTACKERSSTATROSE:

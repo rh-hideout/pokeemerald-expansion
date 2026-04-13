@@ -1835,7 +1835,10 @@ static void Cmd_critmessage(void)
     {
         if (gSpecialStatuses[gBattlerTarget].criticalHit && !IsBattlerUnaffectedByMove(gBattlerTarget))
         {
-            PrepareStringBattle(STRINGID_CRITICALHIT, gBattlerAttacker);
+            if (IsDoubleSpreadMove())
+                PrepareStringBattle(STRINGID_CRITICALHITONDEF, gBattlerTarget);
+            else
+                PrepareStringBattle(STRINGID_CRITICALHIT, gBattlerAttacker);
 
             TryInitializeTrainerSlideEnemyLandsFirstCriticalHit(gBattlerTarget);
             TryInitializeTrainerSlidePlayerLandsFirstCriticalHit(gBattlerTarget);
@@ -1966,7 +1969,7 @@ static void Cmd_resultmessage(void)
                 else if (ShouldRelyOnTwoFoesMessage(MOVE_RESULT_EXTREMELY_EFFECTIVE))
                     stringId = 0; // Was handled or will be handled as a double string
                 else
-                    stringId = STRINGID_EXTREMELYEFFECTIVE;
+                    stringId = STRINGID_EXTREMELYEFFECTIVEONDEF;
             }
             else if (!gMultiHitCounter)  // Don't print effectiveness on each hit in a multi hit attack
             {
@@ -1985,7 +1988,7 @@ static void Cmd_resultmessage(void)
                 else if (ShouldRelyOnTwoFoesMessage(MOVE_RESULT_SUPER_EFFECTIVE))
                     stringId = 0; // Was handled or will be handled as a double string
                 else
-                    stringId = STRINGID_SUPEREFFECTIVE;
+                    stringId = STRINGID_SUPEREFFECTIVEONDEF;
             }
             else if (!gMultiHitCounter)  // Don't print effectiveness on each hit in a multi hit attack
             {
@@ -2004,7 +2007,7 @@ static void Cmd_resultmessage(void)
                 else if (ShouldRelyOnTwoFoesMessage(MOVE_RESULT_MOSTLY_INEFFECTIVE))
                     stringId = 0; // Was handled or will be handled as a double string
                 else
-                    stringId = STRINGID_MOSTLYINEFFECTIVE; // Needs a string
+                    stringId = STRINGID_MOSTLYINEFFECTIVEONDEF; // Needs a string
             }
             else if (!gMultiHitCounter)
             {
@@ -2019,7 +2022,7 @@ static void Cmd_resultmessage(void)
                 else if (ShouldRelyOnTwoFoesMessage(MOVE_RESULT_NOT_VERY_EFFECTIVE))
                     stringId = 0; // Was handled or will be handled as a double string
                 else
-                    stringId = STRINGID_NOTVERYEFFECTIVE; // Needs a string
+                    stringId = STRINGID_NOTVERYEFFECTIVEONDEF; // Needs a string
             }
             else if (!gMultiHitCounter)
             {
@@ -14972,5 +14975,12 @@ void BS_TryWakeBattlersUproar(void)
     }
 
     gBattleScripting.battler = 0;
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_ShowItemPopup(void)
+{
+    NATIVE_ARGS();
+    CreateItemPopUp(gBattlerAbility, gBattleMons[gBattlerAbility].item, (IsDoubleBattle()) != 0);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
