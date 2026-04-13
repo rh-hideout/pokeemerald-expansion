@@ -115,7 +115,7 @@ In this section we will go through some of the most common functions.
 
 > NOTE: None of the functions described here allocate memory for the Pokemon struct, they all expect a pointer they will fill the data with.
 
-It means they are usually called with `&gPlayerParty[index]` or `&gEnemyParty[index]` because these are places in memory reserved for Pokemon struct.
+It means they are usually called with `&gParties[B_TRAINER_0][index]` or `&gParties[B_TRAINER_1][index]` because these are places in memory reserved for Pokemon struct.
 
 ### The Basics
 

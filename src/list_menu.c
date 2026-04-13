@@ -472,6 +472,7 @@ void RedrawListMenu(u8 listTaskId)
     FillWindowPixelBuffer(list->template.windowId, PIXEL_FILL(list->template.fillValue));
     ListMenuPrintEntries(list, list->scrollOffset, 0, list->template.maxShowed);
     ListMenuDrawCursor(list);
+    ListMenuCallSelectionChangedCallback(list, TRUE);
     CopyWindowToVram(list->template.windowId, COPYWIN_GFX);
 }
 

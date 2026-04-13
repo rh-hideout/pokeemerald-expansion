@@ -273,7 +273,7 @@ void UpdateCryWaveformWindow(u8 windowId)
     DrawWaveformWindow(windowId);
     AdvancePlayhead(windowId);
 
-    // Cry cant be replayed until this counter is done
+    // Cry can't be replayed until this counter is done
     if (sDexCryScreen->cryRepeatDelay)
         sDexCryScreen->cryRepeatDelay--;
 

@@ -341,7 +341,7 @@ static void SafariHandleChoosePokemon(enum BattlerId battler)
 }
 
 // All of the other controllers(except Wally's) use CRY_MODE_FAINT.
-// Player is not a pokemon, so it can't really faint in the Safari anyway.
+// Player is not a Pokémon, so it can't really faint in the Safari anyway.
 static void SafariHandleFaintingCry(enum BattlerId battler)
 {
     enum Species species = GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES);

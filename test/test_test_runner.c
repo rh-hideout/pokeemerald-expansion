@@ -13,15 +13,15 @@ TEST("Tests resume after CRASH")
 MULTI_BATTLE_TEST("Forced Abilities are set correctly in multi battle tests")
 {
     GIVEN {
-        MULTI_PLAYER(SPECIES_WOBBUFFET);
-        MULTI_PARTNER(SPECIES_WOBBUFFET);
-        MULTI_PARTNER(SPECIES_NINETALES_ALOLA) { Ability(ABILITY_DRIZZLE); }
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET);
-        MULTI_OPPONENT_A(SPECIES_NINETALES_ALOLA) { Ability(ABILITY_SAND_STREAM); }
-        MULTI_OPPONENT_B(SPECIES_WYNAUT);
-        MULTI_OPPONENT_B(SPECIES_NINETALES_ALOLA) { Ability(ABILITY_DROUGHT); }
+        PLAYER(SPECIES_WOBBUFFET);
+        PARTNER(SPECIES_WOBBUFFET);
+        PARTNER(SPECIES_NINETALES_ALOLA) { Ability(ABILITY_DRIZZLE); }
+        OPPONENT_A(SPECIES_WOBBUFFET);
+        OPPONENT_A(SPECIES_NINETALES_ALOLA) { Ability(ABILITY_SAND_STREAM); }
+        OPPONENT_B(SPECIES_WYNAUT);
+        OPPONENT_B(SPECIES_NINETALES_ALOLA) { Ability(ABILITY_DROUGHT); }
     } WHEN {
-        TURN { SWITCH(opponentLeft, 1); SWITCH(playerRight, 4); SWITCH(opponentRight, 4); }
+        TURN { SWITCH(opponentLeft, 1); SWITCH(playerRight, 1); SWITCH(opponentRight, 1); }
     } SCENE {
         ABILITY_POPUP(opponentLeft, ABILITY_SAND_STREAM);
         ABILITY_POPUP(playerRight, ABILITY_DRIZZLE);
@@ -170,5 +170,22 @@ SINGLE_BATTLE_TEST("EXPECT_FAIL: Incorrect use of SUB_HIT results in test failur
         SCENE {
             SUB_HIT(player, subBreak: FALSE);
         }
+    }
+}
+
+MULTI_BATTLE_TEST("Celebrate does not need to be explicitly set in a non-AI test")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PARTNER(SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { Speed(3); }
+        OPPONENT_B(SPECIES_WOBBUFFET) { Speed(1); }
+    } WHEN {
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
     }
 }

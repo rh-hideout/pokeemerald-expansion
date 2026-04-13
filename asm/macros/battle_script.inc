@@ -2224,6 +2224,10 @@
 	.byte \switchedItems
 	.endm
 
+	.macro endturnevents
+	callnative BS_EndTurnEvents
+	.endm
+
 	.macro trywakebattlersuproar
 	callnative BS_TryWakeBattlersUproar
 	.endm

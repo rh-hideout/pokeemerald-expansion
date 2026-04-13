@@ -13,11 +13,13 @@
 #include "region_map.h"
 #include "rtc.h"
 #include "start_menu.h"
+#include "strings.h"
 #include "string_util.h"
 #include "task.h"
 #include "text.h"
 #include "constants/battle_frontier.h"
 #include "constants/layouts.h"
+#include "constants/map_types.h"
 #include "constants/region_map_sections.h"
 #include "constants/weather.h"
 #include "config/general.h"
@@ -518,9 +520,61 @@ static void UpdateSecondaryPopUpWindow(u8 secondaryPopUpWindowId)
     CopyWindowToVram(secondaryPopUpWindowId, COPYWIN_FULL);
 }
 
+static void MapNamePopupAppendFloorNum(u8 *map_name, s8 floorNum)
+{
+    if (floorNum == 0)
+        return;
+    u8 *dest = map_name;
+    while (*dest != EOS)
+        dest++;
+    *dest++ = CHAR_SPACE;
+    if (floorNum == FLOOR_ROOFTOP)
+    {
+        StringCopy(dest, gText_Rooftop);
+        return;
+    }
+    if (floorNum < 0)
+    {
+        *dest++ = CHAR_B;
+        floorNum *= -1;
+    }
+    dest = ConvertIntToDecimalStringN(dest, floorNum, STR_CONV_MODE_LEFT_ALIGN, 2);
+    *dest++ = CHAR_F;
+    *dest = EOS;
+}
+
+static bool32 IsCeladonDeptStore(const struct MapHeader *mapHeader)
+{
+    if (mapHeader->regionMapSectionId != MAPSEC_CELADON_CITY)
+        return FALSE;
+    if (mapHeader->mapLayoutId != LAYOUT_CELADON_CITY_DEPARTMENT_STORE_1F
+     && mapHeader->mapLayoutId != LAYOUT_CELADON_CITY_DEPARTMENT_STORE_2F
+     && mapHeader->mapLayoutId != LAYOUT_CELADON_CITY_DEPARTMENT_STORE_3F
+     && mapHeader->mapLayoutId != LAYOUT_CELADON_CITY_DEPARTMENT_STORE_4F
+     && mapHeader->mapLayoutId != LAYOUT_CELADON_CITY_DEPARTMENT_STORE_5F
+     && mapHeader->mapLayoutId != LAYOUT_CELADON_CITY_DEPARTMENT_STORE_ROOF
+     && mapHeader->mapLayoutId != LAYOUT_CELADON_CITY_DEPARTMENT_STORE_ELEVATOR)
+    {
+        return FALSE;
+    }
+    return TRUE;
+}
+
+u8 *GetPopUpMapName(u8 *dest, const struct MapHeader *mapHeader)
+{
+    if (IsCeladonDeptStore(mapHeader))
+        StringCopy(dest, COMPOUND_STRING("CELADON DEPT."));
+    else
+        GetMapName(dest, mapHeader->regionMapSectionId, 0);
+    if (mapHeader->floorNumber == 0)
+        return dest;
+    MapNamePopupAppendFloorNum(dest, mapHeader->floorNumber);
+    return dest;
+}
+
 static void ShowMapNamePopUpWindow(void)
 {
-    u8 mapDisplayHeader[27];
+    u8 mapDisplayHeader[MAP_POPUP_STRING_BUFFER_LENGTH];
     u8 *withoutPrefixPtr;
     u8 x;
     const u8 *mapDisplayHeaderSource;
@@ -530,20 +584,20 @@ static void ShowMapNamePopUpWindow(void)
     {
         if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_TOP)
         {
-            withoutPrefixPtr = &(mapDisplayHeader[6]);
+            withoutPrefixPtr = &(mapDisplayHeader[MAP_POPUP_PREFIX_BUFFER_LENGTH]);
             mapDisplayHeaderSource = sBattlePyramid_MapHeaderStrings[FRONTIER_STAGES_PER_CHALLENGE];
         }
         else
         {
-            withoutPrefixPtr = &(mapDisplayHeader[6]);
+            withoutPrefixPtr = &(mapDisplayHeader[MAP_POPUP_PREFIX_BUFFER_LENGTH]);
             mapDisplayHeaderSource = sBattlePyramid_MapHeaderStrings[gSaveBlock2Ptr->frontier.curChallengeBattleNum];
         }
         StringCopy(withoutPrefixPtr, mapDisplayHeaderSource);
     }
     else
     {
-        withoutPrefixPtr = &(mapDisplayHeader[6]);
-        GetMapName(withoutPrefixPtr, gMapHeader.regionMapSectionId, 0);
+        withoutPrefixPtr = &(mapDisplayHeader[MAP_POPUP_PREFIX_BUFFER_LENGTH]);
+        GetPopUpMapName(withoutPrefixPtr, &gMapHeader);
     }
 
     if (OW_POPUP_GENERATION == GEN_5)
@@ -576,8 +630,9 @@ static void ShowMapNamePopUpWindow(void)
     }
     else
     {
-        x = GetStringCenterAlignXOffset(FONT_NARROW, withoutPrefixPtr, 80);
-        AddTextPrinterParameterized(GetMapNamePopUpWindowId(), FONT_NARROW, mapDisplayHeader, x, 3, TEXT_SKIP_DRAW, NULL);
+        u32 fontId = GetFontIdToFit(withoutPrefixPtr, FONT_NORMAL, -1, 80);
+        x = GetStringCenterAlignXOffset(fontId, withoutPrefixPtr, 80);
+        AddTextPrinterParameterized(GetMapNamePopUpWindowId(), fontId, mapDisplayHeader, x, 3, TEXT_SKIP_DRAW, NULL);
         CopyWindowToVram(GetMapNamePopUpWindowId(), COPYWIN_FULL);
     }
 }

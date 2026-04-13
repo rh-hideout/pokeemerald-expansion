@@ -112,6 +112,22 @@ SINGLE_BATTLE_TEST("Emergency Exit activates when taking residual damage and fal
     }
 }
 
+SINGLE_BATTLE_TEST("Emergency Exit doesn't activate when taking residual damage to under 50% max-hp then healing above 50% max-hp - Weather")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_SITRUS_BERRY) == HOLD_EFFECT_RESTORE_PCT_HP);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(134); Item(ITEM_SITRUS_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SANDSTORM); }
+    } SCENE {
+        HP_BAR(opponent);
+        HP_BAR(opponent);
+        NOT ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
+    }
+}
+
 SINGLE_BATTLE_TEST("Emergency Exit activates when healing from under 50% max-hp and taking residual damage to under 50% max-hp - Sticky Barb")
 {
     // Might fail if users set healing higher than sticky barb damage
@@ -133,14 +149,77 @@ SINGLE_BATTLE_TEST("Emergency Exit activates when healing from under 50% max-hp 
 SINGLE_BATTLE_TEST("Emergency Exit activates when taking residual damage and falling under 50% max-hp - Salt Cure")
 {
     GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_SALT_CURE, MOVE_EFFECT_SALT_CURE));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(160); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SALT_CURE); SEND_OUT(opponent, 1); }
     } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SALT_CURE, player);
+        HP_BAR(opponent);
         HP_BAR(opponent);
         ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
+    }
+}
+
+// This is a real interaction according to jpwiki, despite Golisopod not being on the field anymore
+DOUBLE_BATTLE_TEST("Emergency Exit activates when taking Sea of Fire damage and can be healed by Grassy Terrain after leaving the field")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FIRE_PLEDGE) == EFFECT_PLEDGE);
+        ASSUME(GetMoveEffect(MOVE_GRASS_PLEDGE) == EFFECT_PLEDGE);
+        ASSUME(GetMoveEffect(MOVE_GRASSY_TERRAIN) == EFFECT_GRASSY_TERRAIN);
+        ASSUME(GetItemHoldEffect(ITEM_AIR_BALLOON) == HOLD_EFFECT_AIR_BALLOON);
+        // Air Balloon is ignored once the battler leaves the field
+        PLAYER(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(132); Item(ITEM_AIR_BALLOON); }
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_FIRE_PLEDGE, target: playerRight);
+               MOVE(opponentRight, MOVE_GRASS_PLEDGE, target: playerRight);
+               MOVE(playerRight, MOVE_GRASSY_TERRAIN);
+               SEND_OUT(playerLeft, 2); }
+    } SCENE {
+        HP_BAR(playerLeft);
+        ABILITY_POPUP(playerLeft, ABILITY_EMERGENCY_EXIT);
+        MESSAGE("Golisopod is healed by the grassy terrain!");
+        HP_BAR(playerLeft);
+        SEND_IN_MESSAGE("Wobbuffet");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Emergency Exit activates when taking residual damage and battler doesn't get affected by events until replacement switches in")
+{
+    // Leech Seed damage occurs first, then Poison and Salt Cure damage
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_SALT_CURE, MOVE_EFFECT_SALT_CURE));
+        ASSUME(GetMoveEffect(MOVE_LEECH_SEED) == EFFECT_LEECH_SEED);
+        PLAYER(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(160); Status1(STATUS1_POISON); }
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_SALT_CURE, target: playerLeft);
+               MOVE(opponentRight, MOVE_LEECH_SEED, target: playerLeft);
+               SEND_OUT(playerLeft, 2); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SALT_CURE, opponentLeft);
+        HP_BAR(playerLeft);
+
+        // Leech Seed damage and healing
+        HP_BAR(playerLeft);
+        HP_BAR(opponentRight);
+        ABILITY_POPUP(playerLeft, ABILITY_EMERGENCY_EXIT);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, playerLeft);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SALT_CURE_DAMAGE, playerLeft);
+            HP_BAR(playerLeft);
+        }
+        SEND_IN_MESSAGE("Wobbuffet");
     }
 }
 
@@ -227,7 +306,7 @@ SINGLE_BATTLE_TEST("Emergency Exit will trigger due to recoil damage")
     }
 }
 
-SINGLE_BATTLE_TEST("Emergency Exit will trigger due to confusion damage")
+SINGLE_BATTLE_TEST("Emergency Exit will not trigger due to confusion damage")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_CONFUSE_RAY) == EFFECT_CONFUSE);
