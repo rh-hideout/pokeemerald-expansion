@@ -1488,6 +1488,9 @@ static u8 GetEncounterLevelFromMapData(u16 species, enum EncounterType environme
     u8 max = 0;
     u8 i;
 
+    if (headerId == HEADER_NONE)
+        return MON_LEVEL_NONEXISTENT;
+
     switch (environment)
     {
     case ENCOUNTER_TYPE_LAND:    // grass
@@ -1801,6 +1804,8 @@ static bool8 CapturedAllHiddenMons(u32 headerId)
 static void DexNavLoadCapturedAllSymbols(void)
 {
     u32 headerId = GetCurrentMapWildMonHeaderId();
+    if (headerId == HEADER_NONE)
+        return;
 
     LoadCompressedSpriteSheetUsingHeap(&sCapturedAllPokemonSpriteSheet);
 
@@ -1926,6 +1931,9 @@ static void DexNavLoadEncounterData(void)
     memset(sDexNavUiDataPtr->landSpecies, 0, sizeof(sDexNavUiDataPtr->landSpecies));
     memset(sDexNavUiDataPtr->waterSpecies, 0, sizeof(sDexNavUiDataPtr->waterSpecies));
     memset(sDexNavUiDataPtr->hiddenSpecies, 0, sizeof(sDexNavUiDataPtr->hiddenSpecies));
+
+    if (headerId == HEADER_NONE)
+        return;
 
     // land mons
     if (landMonsInfo != NULL && landMonsInfo->encounterRate != 0)
@@ -2505,7 +2513,7 @@ bool32 TryFindHiddenPokemon(void)
 
         // while you can still technically find hidden pokemon if there are not hidden-only pokemon on a map,
         // this prevents any potential lagging on maps you dont want hidden pokemon to appear on
-        if (hiddenMonsInfo == NULL)
+        if (headerId == HEADER_NONE || hiddenMonsInfo == NULL)
             return FALSE;
 
         // encounter rate signifies surfing (1) or land mons (0)!
