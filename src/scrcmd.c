@@ -2778,7 +2778,7 @@ void NativeFunc_SetMetatileInRange(struct ScriptContext *ctx)
 
     // try set impassable
     if (hasCollision)
-        tileId |= MAPGRID_COLLISION_MASK;
+        metatileId |= MAPGRID_COLLISION_MASK;
 
     // set elevation
     if (elevation < 15)
