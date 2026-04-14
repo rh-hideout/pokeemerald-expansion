@@ -10,7 +10,7 @@
 
 #define POKEDEX_AREA_MAP_BG 3
 
-void LoadPokedexAreaMapGfx()
+void LoadPokedexAreaMapGfx(void)
 {
     enum RegionMapType regionMapType = GetRegionMapType(gMapHeader.regionMapSectionId);
 
