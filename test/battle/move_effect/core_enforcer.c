@@ -52,3 +52,19 @@ SINGLE_BATTLE_TEST("Core Enforcer suppresses the ability of targets that have al
         SUB_HIT(opponent);
     }
 }
+
+SINGLE_BATTLE_TEST("Core Enforcer does not suppress the ability of a target that switched in this turn")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_LEVITATE); }
+    } WHEN {
+        TURN { SWITCH(opponent, 1); MOVE(player, MOVE_CORE_ENFORCER); }
+        TURN { MOVE(player, MOVE_EARTHQUAKE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CORE_ENFORCER, player);
+        ABILITY_POPUP(opponent, ABILITY_LEVITATE);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, player);
+    }
+}
