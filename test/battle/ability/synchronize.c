@@ -82,9 +82,9 @@ SINGLE_BATTLE_TEST("Synchronize does not inflict status on a target with status 
         PLAYER(SPECIES_ABRA) { Ability(ABILITY_SYNCHRONIZE); }
         OPPONENT(SPECIES_SNORLAX) { Ability(ABILITY_IMMUNITY); }
     } WHEN {
-        TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_BANEFUL_BUNKER); }
+        TURN { MOVE(opponent, MOVE_POISON_GAS); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_BANEFUL_BUNKER, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POISON_GAS, opponent);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
         STATUS_ICON(player, poison: TRUE);
         ABILITY_POPUP(player, ABILITY_SYNCHRONIZE);
