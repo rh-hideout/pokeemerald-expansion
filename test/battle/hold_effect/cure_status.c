@@ -342,7 +342,7 @@ SINGLE_BATTLE_TEST("Lum Berry properly cures a battler affected by only confusio
         TURN { MOVE(opponent, MOVE_CONFUSE_RAY); MOVE(player, MOVE_CELEBRATE, WITH_RNG(RNG_FROZEN, 0)); }
         TURN { MOVE(opponent, MOVE_SWITCHEROO); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         MESSAGE("Wobbuffet's Lum Berry snapped it out of its confusion!");
     } THEN {
         EXPECT_EQ(player->status1, STATUS1_NONE);
