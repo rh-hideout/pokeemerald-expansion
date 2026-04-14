@@ -1,6 +1,13 @@
 #include "global.h"
 #include "test/battle.h"
 
+ASSUMPTIONS
+{
+    ASSUME(MoveHasAdditionalEffect(MOVE_CORE_ENFORCER, MOVE_EFFECT_CORE_ENFORCER));
+    ASSUME(GetMoveEffect(MOVE_EARTHQUAKE) == EFFECT_EARTHQUAKE);
+    ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
+}
+
 SINGLE_BATTLE_TEST("Core Enforcer suppresses the ability of targets that have already acted")
 {
     GIVEN {
