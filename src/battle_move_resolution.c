@@ -393,6 +393,8 @@ static enum CancelerResult CancelerConfused(struct BattleCalcValues *cv)
                 dmgCtx.updateFlags = TRUE;
                 dmgCtx.isSelfInflicted = TRUE;
                 dmgCtx.fixedBasePower = 40;
+                dmgCtx.abilities[gBattlerAttacker] = cv->abilities[gBattlerAttacker];
+                dmgCtx.holdEffects[gBattlerAttacker] = cv->holdEffects[gBattlerAttacker];
                 gBattleStruct->passiveHpUpdate[cv->battlerAtk] = CalculateMoveDamage(&dmgCtx);
                 gBattlescriptCurrInstr = BattleScript_MoveUsedIsConfused;
                 return CANCELER_RESULT_FAILURE;
@@ -1777,18 +1779,18 @@ static enum CancelerResult CancelerTookAttack(struct BattleCalcValues *cv)
 
 static bool32 CanMoveBeBlockedByTargetHelper(struct BattleCalcValues *cv, s32 movePriority)
 {
-    struct DamageContext ctx = {
-        .battlerAtk = cv->battlerAtk,
-        .battlerDef = cv->battlerDef,
-        .move = cv->move,
-        .moveType = GetBattleMoveType(cv->move),
-        .updateFlags = TRUE,
-        .runScript = TRUE,
-        .abilityAtk = cv->abilities[cv->battlerAtk],
-        .abilityDef = cv->abilities[cv->battlerDef],
-        .holdEffectAtk = cv->holdEffects[cv->battlerAtk],
-        .holdEffectDef = cv->holdEffects[cv->battlerDef],
-    };
+    struct DamageContext ctx = {0};
+
+    ctx.battlerAtk = cv->battlerAtk;
+    ctx.battlerDef = cv->battlerDef;
+    ctx.move = cv->move;
+    ctx.moveType = GetBattleMoveType(cv->move);
+    ctx.updateFlags = TRUE;
+    ctx.runScript = TRUE;
+    ctx.abilities[ctx.battlerAtk] = cv->abilities[cv->battlerAtk];
+    ctx.abilities[ctx.battlerDef] = cv->abilities[cv->battlerDef];
+    ctx.holdEffects[ctx.battlerAtk] = cv->holdEffects[cv->battlerAtk];
+    ctx.holdEffects[ctx.battlerDef] = cv->holdEffects[cv->battlerDef];
 
     return CanMoveBeBlockedByTarget(&ctx, movePriority);
 }
@@ -1877,18 +1879,17 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
         }
         else
         {
-            struct DamageContext ctx = {
-                .battlerAtk = cv->battlerAtk,
-                .battlerDef = cv->battlerDef,
-                .move = cv->move,
-                .moveType = GetBattleMoveType(cv->move),
-                .updateFlags = TRUE,
-                .runScript = TRUE,
-                .abilityAtk = cv->abilities[cv->battlerAtk],
-                .abilityDef = cv->abilities[cv->battlerDef],
-                .holdEffectAtk = cv->holdEffects[cv->battlerAtk],
-                .holdEffectDef = cv->holdEffects[cv->battlerDef],
-            };
+            struct DamageContext ctx = {0};
+            ctx.battlerAtk = cv->battlerAtk;
+            ctx.battlerDef = cv->battlerDef;
+            ctx.move = cv->move;
+            ctx.moveType = GetBattleMoveType(cv->move);
+            ctx.updateFlags = TRUE;
+            ctx.runScript = TRUE;
+            ctx.abilities[ctx.battlerAtk] = cv->abilities[cv->battlerAtk];
+            ctx.abilities[ctx.battlerDef] = cv->abilities[cv->battlerDef];
+            ctx.holdEffects[ctx.battlerAtk] = cv->holdEffects[cv->battlerAtk];
+            ctx.holdEffects[ctx.battlerDef] = cv->holdEffects[cv->battlerDef];
 
             if (CalcTypeEffectivenessMultiplier(&ctx) == UQ_4_12(0.0))
                 gSpecialStatuses[cv->battlerDef].updateStallMons = TRUE;
@@ -3456,7 +3457,7 @@ static bool32 TryEjectButton(enum BattlerId battlerAtk, u32 ejectButtonBattler)
     gLastUsedItem = gBattleMons[ejectButtonBattler].item;
     gBattleStruct->battlerState[ejectButtonBattler].usedEjectItem = TRUE;
     gSpecialStatuses[ejectButtonBattler].queuedSwitch = QUEUED_SWITCH_OPEN_PARTY_SCREEN;
-    BattleScriptCall(BattleScript_EjectButtonActivates);
+    BattleScriptCall(BattleScript_EjectItemActivates);
     gAiLogicData->ejectButtonSwitch = TRUE;
     return TRUE;
 }
@@ -3724,7 +3725,7 @@ static inline bool32 TryEjectPack(enum BattlerId battlerAtk, enum BattlerId ejec
     gLastUsedItem = gBattleMons[ejectPackBattler].item;
     gBattleStruct->battlerState[ejectPackBattler].usedEjectItem = TRUE;
     gSpecialStatuses[ejectPackBattler].queuedSwitch = QUEUED_SWITCH_OPEN_PARTY_SCREEN;
-    BattleScriptCall(BattleScript_EjectPackActivates);
+    BattleScriptCall(BattleScript_EjectItemActivates);
     gAiLogicData->ejectPackSwitch = TRUE;
     return TRUE;
 }
