@@ -574,7 +574,7 @@ SINGLE_BATTLE_TEST("Fling doesn't fail when holding a Booster Energy and the tar
     }
 }
 
-SINGLE_BATTLE_TEST("414 Fling - Mental Herb effect should not remove the target's held item")
+SINGLE_BATTLE_TEST("Fling - Mental Herb effect should not remove the target's held item")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TAUNT) == EFFECT_TAUNT);
@@ -593,7 +593,7 @@ SINGLE_BATTLE_TEST("414 Fling - Mental Herb effect should not remove the target'
     }
 }
 
-SINGLE_BATTLE_TEST("414 Fling - White Herb effect should not remove the target's held item")
+SINGLE_BATTLE_TEST("Fling - White Herb effect should not remove the target's held item")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_GROWL) == EFFECT_ATTACK_DOWN);
