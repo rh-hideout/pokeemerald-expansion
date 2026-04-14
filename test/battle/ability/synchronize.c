@@ -77,8 +77,8 @@ SINGLE_BATTLE_TEST("Synchronize will mirror back static activation")
 SINGLE_BATTLE_TEST("Synchronize does not inflict status on a target with status immunity ability")
 {
     GIVEN {
-        ASSUME(MoveMakesContact(MOVE_SCRATCH));
-        ASSUME(GetMoveEffect(MOVE_BANEFUL_BUNKER) == EFFECT_PROTECT);
+        ASSUME(GetMoveEffect(MOVE_POISON_GAS) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_POISON_GAS) == MOVE_EFFECT_POISON);
         PLAYER(SPECIES_ABRA) { Ability(ABILITY_SYNCHRONIZE); }
         OPPONENT(SPECIES_SNORLAX) { Ability(ABILITY_IMMUNITY); }
     } WHEN {
