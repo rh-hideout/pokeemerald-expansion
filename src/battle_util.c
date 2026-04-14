@@ -10911,4 +10911,3 @@ bool32 IsBattlersFirstTurn(enum BattlerId battler)
     return gBattleStruct->battlerState[battler].isFirstTurn == 1
         || gBattleStruct->battlerState[battler].isFirstTurn == 2;
 }
-

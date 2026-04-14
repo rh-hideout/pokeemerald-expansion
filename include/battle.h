@@ -509,7 +509,7 @@ struct BattlerState
     u16 switchIn:1;
     u16 notOnField:1;
     u16 redCardSwitched:1;
-    u16 isFirstTurn:2;
+    u16 isFirstTurn:2; // Starts at 2 on switch in and counts down during end turn
     u16 padding:11;
 };
 
