@@ -1504,7 +1504,7 @@ static bool32 CanTwoTurnMoveFireThisTurn(struct BattleCalcValues *cv)
 {
     if (gBattleMoveEffects[GetMoveEffect(cv->move)].semiInvulnerableEffect
      || GetMoveEffect(cv->move) == EFFECT_GEOMANCY
-     || !(GetAttackerWeather(cv->holdEffects[cv->battlerAtk], cv->abilities[cv->battlerAtk], GetWeather()) & GetMoveTwoTurnAttackWeather(cv->move))) 
+     || !(GetAttackerWeather(cv->holdEffects[cv->battlerAtk], cv->abilities[cv->battlerAtk], GetWeather()) & GetMoveTwoTurnAttackWeather(cv->move)))
         return FALSE;
     return TRUE;
 }
@@ -2923,6 +2923,9 @@ static enum MoveEndResult MoveEndBouncedMove(void)
         }
     }
 
+    for (u32 i = 0; i < gBattlersCount; i++)
+        gMoveResolutionBattlersBySpeed[i] = i;
+    SortBattlersBySpeed(gMoveResolutionBattlersBySpeed, FALSE);
     gBattleScripting.moveendState++;
     return MOVEEND_RESULT_CONTINUE;
 }
@@ -3399,6 +3402,7 @@ static enum MoveEndResult MoveEndKeeMarangaHpThresholdItemTarget(void)
             return MOVEEND_RESULT_RUN_SCRIPT;
     }
 
+    gBattleStruct->eventState.moveEndBattler = 0;
     gBattleScripting.moveendState++;
     return MOVEEND_RESULT_CONTINUE;
 }
@@ -3416,11 +3420,14 @@ static bool32 HasAnyBattlerQueuedSwitch(void)
 static bool32 TryRedCard(enum BattlerId battlerAtk, enum BattlerId redCardBattler, enum Move move)
 {
     if (!IsBattlerAlive(redCardBattler)
+     || gBattleStruct->redCardActivated
      || !IsBattlerTurnDamaged(redCardBattler, EXCLUDING_SUBSTITUTES)
      || DoesSubstituteBlockMove(battlerAtk, redCardBattler, move)
+     || (GetBattlerHoldEffect(redCardBattler) != HOLD_EFFECT_RED_CARD)
      || !CanBattlerSwitch(battlerAtk))
         return FALSE;
 
+    gBattleStruct->redCardActivated = TRUE;
     gLastUsedItem = gBattleMons[redCardBattler].item;
     SaveBattlerTarget(redCardBattler); // save battler with red card
     SaveBattlerAttacker(battlerAtk);
@@ -3439,12 +3446,11 @@ static bool32 TryRedCard(enum BattlerId battlerAtk, enum BattlerId redCardBattle
 static bool32 TryEjectButton(enum BattlerId battlerAtk, u32 ejectButtonBattler)
 {
     if (!IsBattlerTurnDamaged(ejectButtonBattler, EXCLUDING_SUBSTITUTES)
+     || HasAnyBattlerQueuedSwitch()
      || !IsBattlerAlive(ejectButtonBattler)
+     || GetBattlerHoldEffect(ejectButtonBattler) != HOLD_EFFECT_EJECT_BUTTON
      || !CanBattlerSwitch(ejectButtonBattler))
         return FALSE;
-
-    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
-        gBattleMons[battler].volatiles.tryEjectPack = FALSE;
 
     gBattleScripting.battler = ejectButtonBattler;
     gLastUsedItem = gBattleMons[ejectButtonBattler].item;
@@ -3457,49 +3463,21 @@ static bool32 TryEjectButton(enum BattlerId battlerAtk, u32 ejectButtonBattler)
 
 static enum MoveEndResult MoveEndCardButton(void)
 {
-    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
-    u32 redCardBattlers = 0;
-    u32 ejectButtonBattlers = 0;
-
-    // Because sorting the battlers by speed takes lots of cycles, it's better to just check if any of the battlers has the Eject items.
-    for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
+    while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
     {
-        if (gBattlerAttacker == battlerDef)
-            continue;
+        enum BattlerId battler = gMoveResolutionBattlersBySpeed[gBattleStruct->eventState.moveEndBattler++];
 
-        if (GetBattlerHoldEffect(battlerDef) == HOLD_EFFECT_EJECT_BUTTON)
-            ejectButtonBattlers |= 1u << battlerDef;
+        if (TryRedCard(gBattlerAttacker, battler, gCurrentMove))
+            return MOVEEND_RESULT_RUN_SCRIPT;
 
-        if (GetBattlerHoldEffect(battlerDef) == HOLD_EFFECT_RED_CARD)
-            redCardBattlers |= 1u << battlerDef;
+        if (TryEjectButton(gBattlerAttacker, battler))
+            return MOVEEND_RESULT_RUN_SCRIPT;
     }
 
-    if (!redCardBattlers && !ejectButtonBattlers)
-    {
-        gBattleScripting.moveendState++;
-        return MOVEEND_RESULT_CONTINUE;
-    }
-
-    enum BattlerId battlers[MAX_BATTLERS_COUNT] = {0, 1, 2, 3};
-    SortBattlersBySpeed(battlers, FALSE);
-
-    for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
-    {
-        enum BattlerId battler = battlers[battlerDef];
-
-        // Only fastest red card or eject button activates
-        if (redCardBattlers & 1u << battler && TryRedCard(gBattlerAttacker, battler, gCurrentMove))
-            result = MOVEEND_RESULT_RUN_SCRIPT;
-        else if (ejectButtonBattlers & 1u << battler && TryEjectButton(gBattlerAttacker, battler))
-            result = MOVEEND_RESULT_RUN_SCRIPT;
-        else
-            continue;
-
-        break;
-    }
-
+    gBattleStruct->redCardActivated = FALSE;
+    gBattleStruct->eventState.moveEndBattler = 0;
     gBattleScripting.moveendState++;
-    return result;
+    return MOVEEND_RESULT_CONTINUE;
 }
 
 static enum MoveEndResult MoveEndFormChange(void)
@@ -3662,21 +3640,6 @@ static enum MoveEndResult MoveEndItemsEffectsAll(void)
     return MOVEEND_RESULT_CONTINUE;
 }
 
-static enum MoveEndResult MoveEndWhiteHerb(void)
-{
-    while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
-    {
-        enum BattlerId battler = gBattleStruct->eventState.moveEndBattler++;
-
-        if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsWhiteHerbActivation))
-            return MOVEEND_RESULT_RUN_SCRIPT;
-    }
-
-    gBattleStruct->eventState.moveEndBattler = 0;
-    gBattleScripting.moveendState++;
-    return MOVEEND_RESULT_CONTINUE;
-}
-
 static enum MoveEndResult MoveEndOpportunist(void)
 {
     while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
@@ -3684,21 +3647,6 @@ static enum MoveEndResult MoveEndOpportunist(void)
         enum BattlerId battler = gBattleStruct->eventState.moveEndBattler++;
 
         if (AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, battler, GetBattlerAbility(battler), 0, TRUE))
-            return MOVEEND_RESULT_RUN_SCRIPT;
-    }
-
-    gBattleStruct->eventState.moveEndBattler = 0;
-    gBattleScripting.moveendState++;
-    return MOVEEND_RESULT_CONTINUE;
-}
-
-static enum MoveEndResult MoveEndMirrorHerb(void)
-{
-    while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
-    {
-        enum BattlerId battler = gBattleStruct->eventState.moveEndBattler++;
-
-        if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsMirrorHerbActivation))
             return MOVEEND_RESULT_RUN_SCRIPT;
     }
 
@@ -3761,72 +3709,55 @@ static enum MoveEndResult MoveEndThirdMoveBlock(void)
     return result;
 }
 
-static inline bool32 CanEjectPackTrigger(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum BattleMoveEffects moveEffect)
+static inline bool32 TryEjectPack(enum BattlerId battlerAtk, enum BattlerId ejectPackBattler)
 {
-    if (gBattleMons[battlerDef].volatiles.tryEjectPack
-     && GetBattlerHoldEffect(battlerDef) == HOLD_EFFECT_EJECT_PACK
-     && IsBattlerAlive(battlerDef)
-     && CanBattlerSwitch(battlerDef)
-     && !gProtectStructs[battlerDef].disableEjectPack
-     && !(moveEffect == EFFECT_PARTING_SHOT && CanBattlerSwitch(battlerAtk)))
-        return TRUE;
-    return FALSE;
+    if (!gBattleMons[ejectPackBattler].volatiles.tryEjectPack
+     || HasAnyBattlerQueuedSwitch()
+     || GetBattlerHoldEffect(ejectPackBattler) != HOLD_EFFECT_EJECT_PACK
+     || !IsBattlerAlive(ejectPackBattler)
+     || !CanBattlerSwitch(ejectPackBattler)
+     || gProtectStructs[ejectPackBattler].disableEjectPack
+     || (GetMoveEffect(gCurrentMove) == EFFECT_PARTING_SHOT && CanBattlerSwitch(battlerAtk)))
+        return FALSE;
+
+    gBattleScripting.battler = ejectPackBattler;
+    gLastUsedItem = gBattleMons[ejectPackBattler].item;
+    gBattleStruct->battlerState[ejectPackBattler].usedEjectItem = TRUE;
+    gSpecialStatuses[ejectPackBattler].queuedSwitch = QUEUED_SWITCH_OPEN_PARTY_SCREEN;
+    BattleScriptCall(BattleScript_EjectPackActivates);
+    gAiLogicData->ejectPackSwitch = TRUE;
+    return TRUE;
 }
 
-static enum MoveEndResult MoveEndEjectPack(void)
+static enum MoveEndResult MoveEndItemOnStatChange(void)
 {
-    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
-    u32 ejectPackBattlers = 0;
-    u32 numEjectPackBattlers = 0;
-
-    if (HasAnyBattlerQueuedSwitch())
+    while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
     {
-        gBattleScripting.moveendState++;
-        return result;
-    }
+        enum BattlerId battler = gMoveResolutionBattlersBySpeed[gBattleStruct->eventState.moveEndBattler++];
+        enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
 
-    // Because sorting the battlers by speed takes lots of cycles, it's better to just check if any of the battlers has the Eject items.
-    for (enum BattlerId i = 0; i < gBattlersCount; i++)
-    {
-        if (CanEjectPackTrigger(gBattlerAttacker, i, GetMoveEffect(gCurrentMove)))
+        switch (holdEffect)
         {
-            ejectPackBattlers |= 1u << i;
-            numEjectPackBattlers++;
+        case HOLD_EFFECT_WHITE_HERB:
+            if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsWhiteHerbActivation))
+                return MOVEEND_RESULT_RUN_SCRIPT;
+        case HOLD_EFFECT_EJECT_PACK:
+            if (TryEjectPack(gBattlerAttacker, battler))
+                return MOVEEND_RESULT_RUN_SCRIPT;
+        case HOLD_EFFECT_MIRROR_HERB:
+            if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsMirrorHerbActivation))
+                return MOVEEND_RESULT_RUN_SCRIPT;
+        default:
+            break;
         }
     }
-
-    if (numEjectPackBattlers == 0)
-    {
-        gBattleScripting.moveendState++;
-        return result;
-    }
-
-    enum BattlerId battlers[MAX_BATTLERS_COUNT] = {0, 1, 2, 3};
-    if (numEjectPackBattlers > 1)
-        SortBattlersBySpeed(battlers, FALSE);
 
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
         gBattleMons[i].volatiles.tryEjectPack = FALSE;
 
-    for (u32 i = 0; i < gBattlersCount; i++)
-    {
-        enum BattlerId battler = battlers[i];
-
-        if (!(ejectPackBattlers & 1u << battler))
-            continue;
-
-        gBattleScripting.battler = battler;
-        gLastUsedItem = gBattleMons[battler].item;
-        gBattleStruct->battlerState[battler].usedEjectItem = TRUE;
-        gSpecialStatuses[battler].queuedSwitch = QUEUED_SWITCH_OPEN_PARTY_SCREEN;
-        BattleScriptCall(BattleScript_EjectPackActivates);
-        gAiLogicData->ejectPackSwitch = TRUE;
-        result = MOVEEND_RESULT_RUN_SCRIPT;
-        break; // Only the fastest Eject item activates
-    }
-
+    gBattleStruct->eventState.moveEndBattler = 0;
     gBattleScripting.moveendState++;
-    return result;
+    return MOVEEND_RESULT_CONTINUE;
 }
 
 static enum MoveEndResult MoveEndSendOutReplacements(void)
@@ -4100,14 +4031,12 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(void) =
     [MOVEEND_HIT_ESCAPE] = MoveEndHitEscape,
     [MOVEEND_PICKPOCKET] = MoveEndPickpocket,
     [MOVEEND_ITEMS_EFFECTS_ALL] = MoveEndItemsEffectsAll,
-    [MOVEEND_WHITE_HERB] = MoveEndWhiteHerb,
     [MOVEEND_OPPORTUNIST] = MoveEndOpportunist,
-    [MOVEEND_MIRROR_HERB] = MoveEndMirrorHerb,
     [MOVEEND_THIRD_MOVE_BLOCK] = MoveEndThirdMoveBlock,
     [MOVEEND_RAMPAGE] = MoveEndRampage,
     [MOVEEND_CONFUSION_AFTER_SKY_DROP] = MoveEndConfusionAfterSkyDrop,
     [MOVEEND_SPRAY_LEPPA_BLUNDER] = MoveEndSprayLeppaBlunder,
-    [MOVEEND_EJECT_PACK] = MoveEndEjectPack,
+    [MOVEEND_ITEM_ON_STAT_CHANGE] = MoveEndItemOnStatChange,
     [MOVEEND_SEND_OUT_REPLACEMENTS] = MoveEndSendOutReplacements,
     [MOVEEND_CLEAR_BITS] = MoveEndClearBits,
     [MOVEEND_DANCER] = MoveEndDancer,

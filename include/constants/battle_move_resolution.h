@@ -118,14 +118,12 @@ enum MoveEndState
     MOVEEND_HIT_ESCAPE,
     MOVEEND_PICKPOCKET,
     MOVEEND_ITEMS_EFFECTS_ALL,
-    MOVEEND_WHITE_HERB,
     MOVEEND_OPPORTUNIST,
-    MOVEEND_MIRROR_HERB,
     MOVEEND_THIRD_MOVE_BLOCK,
     MOVEEND_RAMPAGE,
     MOVEEND_CONFUSION_AFTER_SKY_DROP, // If target was previously rampaging, it should be confused when dropped
     MOVEEND_SPRAY_LEPPA_BLUNDER, // Throat Spray, Leppa Berry, Blunder Policy
-    MOVEEND_EJECT_PACK,
+    MOVEEND_ITEM_ON_STAT_CHANGE,
     MOVEEND_SEND_OUT_REPLACEMENTS, // For all non-forced switching effects
     MOVEEND_CLEAR_BITS,
     MOVEEND_DANCER,
