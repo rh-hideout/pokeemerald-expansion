@@ -602,8 +602,8 @@ SINGLE_BATTLE_TEST("Fling - White Herb effect should not remove the target's hel
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_WHITE_HERB); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RAZOR_CLAW); }
     } WHEN {
-        TURN { MOVE(player, MOVE_GROWL); MOVE(opponent, MOVE_SCRATCH); }
-        TURN { MOVE(player, MOVE_FLING); MOVE(opponent, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_GROWL); }
+        TURN { MOVE(player, MOVE_FLING); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GROWL, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
