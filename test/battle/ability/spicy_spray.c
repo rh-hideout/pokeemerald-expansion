@@ -14,12 +14,9 @@ SINGLE_BATTLE_TEST("Spicy Spray burns the attacker")
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(player, move); }
     } SCENE {
-        MESSAGE("The opposing Scovillain's Scovillainite is reacting to 2's Mega Ring!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponent);
-        MESSAGE("The opposing Scovillain has Mega Evolved into Mega Scovillain!");
         ABILITY_POPUP(opponent, ABILITY_SPICY_SPRAY);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, player);
-        MESSAGE("Wobbuffet was burned!");
         STATUS_ICON(player, burn: TRUE);
     }
 }
@@ -38,11 +35,8 @@ SINGLE_BATTLE_TEST("Spicy Spray burns the attacker even if the attacker is behin
         TURN { MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(player, MOVE_SUBSTITUTE); }
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, move); }
     } SCENE {
-        MESSAGE("The opposing Scovillain's Scovillainite is reacting to 2's Mega Ring!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponent);
-        MESSAGE("The opposing Scovillain has Mega Evolved into Mega Scovillain!");
         ABILITY_POPUP(opponent, ABILITY_SPICY_SPRAY);
-        MESSAGE("Wobbuffet was burned!");
         STATUS_ICON(player, burn: TRUE);
     }
 }
@@ -60,13 +54,10 @@ SINGLE_BATTLE_TEST("Spicy Spray does not burn the attacker if the defender is be
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUBSTITUTE, gimmick: GIMMICK_MEGA); MOVE(player, move); }
     } SCENE {
-        MESSAGE("The opposing Scovillain's Scovillainite is reacting to 2's Mega Ring!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponent);
-        MESSAGE("The opposing Scovillain has Mega Evolved into Mega Scovillain!");
         NONE_OF {
             ABILITY_POPUP(opponent, ABILITY_SPICY_SPRAY);
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, player);
-            MESSAGE("Wobbuffet was burned!");
             STATUS_ICON(player, burn: TRUE);
         }
     }
@@ -85,12 +76,9 @@ SINGLE_BATTLE_TEST("Spicy Spray burns the attacker even if the attacker has Shee
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(player, move); }
     } SCENE {
-        MESSAGE("The opposing Scovillain's Scovillainite is reacting to 2's Mega Ring!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponent);
-        MESSAGE("The opposing Scovillain has Mega Evolved into Mega Scovillain!");
         ABILITY_POPUP(opponent, ABILITY_SPICY_SPRAY);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, player);
-        MESSAGE("Feraligatr was burned!");
         STATUS_ICON(player, burn: TRUE);
     }
 }
@@ -103,12 +91,9 @@ SINGLE_BATTLE_TEST("Spicy Spray burns the attacker even if the defender faints")
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(player, MOVE_SCRATCH); }
     } SCENE {
-        MESSAGE("The opposing Scovillain's Scovillainite is reacting to 2's Mega Ring!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponent);
-        MESSAGE("The opposing Scovillain has Mega Evolved into Mega Scovillain!");
         ABILITY_POPUP(opponent, ABILITY_SPICY_SPRAY);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, player);
-        MESSAGE("Wobbuffet was burned!");
         STATUS_ICON(player, burn: TRUE);
     }
 }
@@ -122,11 +107,8 @@ SINGLE_BATTLE_TEST("Spicy Spray burns the attacker even if the defender behind a
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUBSTITUTE, gimmick: GIMMICK_MEGA); MOVE(player, MOVE_HYPER_VOICE); }
     } SCENE {
-        MESSAGE("The opposing Scovillain's Scovillainite is reacting to 2's Mega Ring!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponent);
-        MESSAGE("The opposing Scovillain has Mega Evolved into Mega Scovillain!");
         ABILITY_POPUP(opponent, ABILITY_SPICY_SPRAY);
-        MESSAGE("Wobbuffet was burned!");
         STATUS_ICON(player, burn: TRUE);
     }
 }
