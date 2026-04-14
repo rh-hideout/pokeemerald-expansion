@@ -16,7 +16,7 @@ SSAnne_Exterior_ExitSSAnne::
 	getplayerxy VAR_0x8004, VAR_0x8005
 	call_if_le VAR_0x8005, 6, SSAnne_Exterior_WalkDown
 	call_if_ge VAR_0x8005, 7, SSAnne_Exterior_WalkInPlaceDown
-	fadenewbgm MUS_SURF
+	fadenewbgm MUS_RG_SURF
 	delay 50
 	special DoSSAnneDepartureCutscene
 	waitstate

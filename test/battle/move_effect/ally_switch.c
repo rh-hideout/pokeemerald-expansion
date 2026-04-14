@@ -322,7 +322,7 @@ DOUBLE_BATTLE_TEST("Ally Switch swaps Illusion data")
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_ALLY_SWITCH); }
     } THEN {
-        EXPECT(&gPlayerParty[2] == gBattleStruct->illusion[0].mon);
+        EXPECT(&gParties[B_TRAINER_0][2] == gBattleStruct->illusion[0].mon);
     }
 }
 
@@ -448,7 +448,7 @@ DOUBLE_BATTLE_TEST("Ally Switch does not update Wish recovery position")
 
 DOUBLE_BATTLE_TEST("Ally Switch does not update Healing Wish/Lunar Dance recovery position")
 {
-    u16 move = MOVE_NONE;
+    enum Move move = MOVE_NONE;
     struct BattlePokemon *switchTarget = NULL;
 
     PARAMETRIZE { move = MOVE_HEALING_WISH; switchTarget = playerLeft; }
@@ -506,7 +506,7 @@ DOUBLE_BATTLE_TEST("Ally Switch updates attract battler")
         HP_BAR(opponentLeft);
         ABILITY_POPUP(opponentLeft, ABILITY_CUTE_CHARM);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_INFATUATION, playerLeft);
-        MESSAGE("The opposing Clefairy's Cute Charm infatuated Wobbuffet!");
+        MESSAGE("Wobbuffet fell in love!");
         // turn 2
         MESSAGE("The opposing Ralts used Ally Switch!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, opponentRight);

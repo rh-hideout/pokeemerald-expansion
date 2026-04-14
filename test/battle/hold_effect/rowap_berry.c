@@ -58,7 +58,7 @@ SINGLE_BATTLE_TEST("Rowap Berry is not triggered by a physical move")
     }
 }
 
-SINGLE_BATTLE_TEST("Rowap Berry is triggered even if berry user dies")
+SINGLE_BATTLE_TEST("Rowap Berry is triggered even if berry user faints")
 {
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_TACKLE) == DAMAGE_CATEGORY_PHYSICAL);

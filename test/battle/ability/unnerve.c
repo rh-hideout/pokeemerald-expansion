@@ -103,7 +103,7 @@ SINGLE_BATTLE_TEST("Unnerve activates only once per switch-in")
 DOUBLE_BATTLE_TEST("Unnerve stops applying on death but applies on revive")
 {
     u16 mon;
-    u16 ability;
+    enum Ability ability;
     PARAMETRIZE { mon = SPECIES_JOLTIK, ability = ABILITY_UNNERVE; }
     PARAMETRIZE { mon = SPECIES_CALYREX_ICE, ability = ABILITY_AS_ONE_ICE_RIDER; }
     GIVEN {

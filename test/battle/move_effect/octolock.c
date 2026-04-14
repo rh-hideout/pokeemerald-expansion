@@ -39,7 +39,7 @@ SINGLE_BATTLE_TEST("Octolock reduction is prevented by Clear Body, White Smoke a
         {
             MESSAGE("The opposing Beldum can no longer escape because of Octolock!");
             ABILITY_POPUP(opponent, ABILITY_CLEAR_BODY);
-            MESSAGE("The opposing Beldum's Clear Body prevents stat loss!");
+            MESSAGE("The opposing Beldum's stats were not lowered!");
             NONE_OF {
                 MESSAGE("The opposing Beldum's Defense fell!");
                 MESSAGE("The opposing Beldum's Sp. Def fell!");
@@ -49,7 +49,7 @@ SINGLE_BATTLE_TEST("Octolock reduction is prevented by Clear Body, White Smoke a
         {
             MESSAGE("The opposing Torkoal can no longer escape because of Octolock!");
             ABILITY_POPUP(opponent, ABILITY_WHITE_SMOKE);
-            MESSAGE("The opposing Torkoal's White Smoke prevents stat loss!");
+            MESSAGE("The opposing Torkoal's stats were not lowered!");
             NONE_OF {
                 MESSAGE("The opposing Torkoal's Defense fell!");
                 MESSAGE("The opposing Torkoal's Sp. Def fell!");
@@ -59,7 +59,7 @@ SINGLE_BATTLE_TEST("Octolock reduction is prevented by Clear Body, White Smoke a
         {
             MESSAGE("The opposing Solgaleo can no longer escape because of Octolock!");
             ABILITY_POPUP(opponent, ABILITY_FULL_METAL_BODY);
-            MESSAGE("The opposing Solgaleo's Full Metal Body prevents stat loss!");
+            MESSAGE("The opposing Solgaleo's stats were not lowered!");
             NONE_OF {
                 MESSAGE("The opposing Solgaleo's Defense fell!");
                 MESSAGE("The opposing Solgaleo's Sp. Def fell!");
@@ -80,7 +80,7 @@ SINGLE_BATTLE_TEST("Octolock Defense reduction is prevented by Big Pecks")
         MESSAGE("The opposing Pidgey can no longer escape because of Octolock!");
         NOT MESSAGE("The opposing Pidgey's Defense fell!");
         ABILITY_POPUP(opponent, ABILITY_BIG_PECKS);
-        MESSAGE("The opposing Pidgey's Big Pecks prevents Defense loss!");
+        MESSAGE("The opposing Pidgey's Defense was not lowered!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         MESSAGE("The opposing Pidgey's Sp. Def fell!");
     }
@@ -146,12 +146,12 @@ SINGLE_BATTLE_TEST("Octolock triggers Defiant for both stat reductions")
         MESSAGE("The opposing Bisharp's Defense fell!");
         ABILITY_POPUP(opponent, ABILITY_DEFIANT);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Bisharp's Attack sharply rose!");
+        MESSAGE("The opposing Bisharp's Attack rose sharply!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         MESSAGE("The opposing Bisharp's Sp. Def fell!");
         ABILITY_POPUP(opponent, ABILITY_DEFIANT);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Bisharp's Attack sharply rose!");
+        MESSAGE("The opposing Bisharp's Attack rose sharply!");
     }
 }
 

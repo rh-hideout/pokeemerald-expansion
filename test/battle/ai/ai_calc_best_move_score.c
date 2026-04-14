@@ -285,3 +285,24 @@ AI_SINGLE_BATTLE_TEST("Fillet Away AI handling")
         TURN { MOVE(player, move); EXPECT_MOVE(opponent, move == MOVE_SCALD ? MOVE_FILLET_AWAY : MOVE_AQUA_CUTTER); }
     }
 }
+
+AI_SINGLE_BATTLE_TEST("Retaliate sees damage correctly on the field")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Level(50); HP(100); Nature(NATURE_QUIRKY); Ability(ABILITY_TELEPATHY); Speed(58); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_RATTATA){ Level(1); HP(1); Nature(NATURE_QUIRKY); Speed(1); Moves(MOVE_TACKLE);}
+        OPPONENT(SPECIES_KANGASKHAN) { Level(50); Nature(NATURE_QUIRKY); Ability(ABILITY_INNER_FOCUS); Speed(251); Moves(MOVE_RETALIATE, MOVE_SLASH); }
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_TACKLE);
+            EXPECT_MOVE(opponent, MOVE_TACKLE);
+            EXPECT_SEND_OUT(opponent, 1);
+        }
+        TURN {
+            MOVE(player, MOVE_TACKLE);
+            SCORE_EQ_VAL(opponent, MOVE_RETALIATE,      (AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + FAST_KILL));
+            SCORE_EQ_VAL(opponent, MOVE_SLASH,      (AI_SCORE_DEFAULT));
+        }
+    }
+}

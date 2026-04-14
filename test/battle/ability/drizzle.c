@@ -15,7 +15,7 @@ SINGLE_BATTLE_TEST("Drizzle summons rain", s16 damage)
     } SCENE {
         if (ability == ABILITY_DRIZZLE) {
             ABILITY_POPUP(player, ABILITY_DRIZZLE);
-            MESSAGE("Politoed's Drizzle made it rain!");
+            MESSAGE("It started to rain!");
         }
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {

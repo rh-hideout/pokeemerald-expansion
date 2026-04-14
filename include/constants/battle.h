@@ -19,10 +19,42 @@
  *   | Player's side             |
  *   |  Left   Right             |
  *   |   0       2               |
- *   ----------------------------+
+ *   +---------------------------+
  *   |                           |
  *   |                           |
  *   +---------------------------+
+ */
+
+/*
+ * BattleTrainer is the identifier used to reference one of the four 6-mon battle parties
+ * in gParties[MAX_BATTLE_TRAINERS]. gParties[B_TRAINER_0] is always the player's party.
+ * gParties[B_TRAINER_1] is always the first opponent trainer's party, or holds the first
+ * wild mon during an encounter. gParties[B_TRAINER_2] is only used in multibattles where 
+ * the player's side has a second trainer such as Mossdeep Space Center tag battle with
+ * trainer Steven. gParties[B_TRAINER_3] is only used in battles with two opponent trainers,
+ * or for the second wild mon in a doubles wild encounter. In a double battle where the
+ * battle side only has a single trainer, both battlers on that battle side will reside in
+ * the same party (gParties[B_TRAINER_0] for player side and gParties[B_TRAINER_1] for
+ * opponent side).
+ * Note in link multi battles, parties are set locally on each player's device, meaning
+ * even if a player is in the right position, on their device they will still occupy 
+ * gParties[B_TRAINER_0], with their link partner using gParties[B_TRAINER_2].
+ *
+ *          Regular battles              Link multi (player on left)         Link multi (player on right)
+ *   + ------------------------- +      + ------------------------- +       + ------------------------- +
+ *   |           Opponent's side |      |           Opponent's side |       |           Opponent's side |
+ *   |            Right    Left  |      |            Right    Left  |       |            Right    Left  |
+ *   | (1 trainer)  1       1    |      |              3       1    |       |              3       1    |
+ *   | (2 trainers) 3       1    |      |                           |       |                           |
+ *   |                           |      |                           |       |                           |
+ *   | Player's side             |      |                           |       |                           |
+ *   |  Left   Right             |      | Player's side             |       | Player's side             |
+ *   |   0       0 (double)      |      |  Left   Right             |       |  Left   Right             |
+ *   |   0       2 (multi)       |      |   0       2               |       |   2       0               |
+ *   +---------------------------+      +---------------------------+       +---------------------------+
+ *   |                           |      |                           |       |                           |
+ *   |                           |      |                           |       |                           |
+ *   +---------------------------+      +---------------------------+       +---------------------------+
  */
 
 enum BattlerPosition
@@ -183,6 +215,8 @@ enum VolatileFlags
     F(VOLATILE_BIDE,                        bideTurns,                     (u32, 3)) \
     F(VOLATILE_RAMPAGE_TURNS,               rampageTurns,                  (u32, B_RAMPAGE_TURNS + 1)) \
     F(VOLATILE_MULTIPLETURNS,               multipleTurns,                 (u32, 1)) \
+    F(VOLATILE_SKY_DROP_TARGET,             skyDropTarget,                 (enum BattlerId, MAX_BATTLERS_COUNT)) \
+    F(VOLATILE_CONFUSE_AFTER_DROP,          confuseAfterDrop,              (u32, 1)) \
     F(VOLATILE_WRAPPED,                     wrapped,                       (u32, 1)) \
     F(VOLATILE_WRAPPED_BY,                  wrappedBy,                     (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
     F(VOLATILE_WRAPPED_MOVE,                wrappedMove,                   (u32, MOVES_COUNT_ALL - 1)) \
@@ -211,7 +245,7 @@ enum VolatileFlags
     F(VOLATILE_STICKY_SYRUPED_BY,           stickySyrupedBy,               (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
     F(VOLATILE_GLAIVE_RUSH,                 glaiveRush,                    (u32, 1)) \
     F(VOLATILE_LEECH_SEED,                  leechSeed,                     (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT)), V_BATON_PASSABLE) \
-    F(VOLATILE_LOCK_ON,                     lockOn,                        (u32, 2), V_BATON_PASSABLE) \
+    F(VOLATILE_LOCK_ON,                     lockOn,                        (u32, 2)) \
     F(VOLATILE_PERISH_SONG,                 perishSong,                    (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_MINIMIZE,                    minimize,                      (u32, 1)) \
     F(VOLATILE_CHARGE_TIMER,                chargeTimer,                   (u32, 3)) \
@@ -254,7 +288,7 @@ enum VolatileFlags
     F(VOLATILE_FURY_CUTTER_COUNTER,         furyCutterCounter,             (u32, UINT8_MAX)) \
     F(VOLATILE_METRONOME_ITEM_COUNTER,      metronomeItemCounter,          (u32, UINT8_MAX)) \
     F(VOLATILE_BATTLER_PREVENTING_ESCAPE,   battlerPreventingEscape,       (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
-    F(VOLATILE_BATTLER_WITH_SURE_HIT,       battlerWithSureHit,            (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
+    F(VOLATILE_BATTLER_WITH_SURE_HIT,       battlerWithSureHit,            (enum BattlerId, MAX_BATTLERS_COUNT)) \
     F(VOLATILE_MIMICKED_MOVES,              mimickedMoves,                 (u32, MAX_BITS(MAX_MON_MOVES))) \
     F(VOLATILE_RECHARGE_TIMER,              rechargeTimer,                 (u32, 2)) \
     F(VOLATILE_AUTOTOMIZE_COUNT,            autotomizeCount,               (u32, UINT8_MAX)) \
@@ -318,7 +352,8 @@ enum SemiInvulnerableState
     STATE_UNDERWATER,
     STATE_ON_AIR,
     STATE_PHANTOM_FORCE,
-    STATE_SKY_DROP,
+    STATE_SKY_DROP_ATTACKER,
+    STATE_SKY_DROP_TARGET,
     STATE_COMMANDER,
     SEMI_INVULNERABLE_COUNT
 };
@@ -327,6 +362,13 @@ enum SemiInvulnerableExclusion
 {
     CHECK_ALL,
     EXCLUDE_COMMANDER,
+};
+
+enum QueuedSwitch
+{
+    NO_QUEUED_SWITCH,
+    QUEUED_SWITCH_SEND_REPLACEMENT,
+    QUEUED_SWITCH_OPEN_PARTY_SCREEN,
 };
 
 #define HITMARKER_NO_ANIMATIONS         (1 << 7)   // set from battleSceneOff. Never changed during battle
@@ -597,7 +639,8 @@ enum __attribute__((packed)) MoveEffect
     // Move effects that happen before the move hits. Set in SetPreAttackMoveEffect
     MOVE_EFFECT_BREAK_SCREEN,
     MOVE_EFFECT_STEAL_STATS,
-    MOVE_EFFECT_BEAT_UP_MESSAGE, // Handles the message printing for gen2,3 and 4
+    MOVE_EFFECT_BEAT_UP_MESSAGE, // Handles the message printing for gen2, 3 and 4
+    MOVE_EFFECT_ITEM_MESSAGE, // Handles the flung item and attacked by its item messages (Fling, Poltergeist)
 
     NUM_MOVE_EFFECTS
 };

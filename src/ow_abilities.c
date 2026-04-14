@@ -4,13 +4,13 @@
 #include "random.h"
 #include "constants/pokemon.h"
 
-static UNUSED bool32 HasHalfChance(u32 species);
-static UNUSED bool32 HasTwoThirdsChance(u32 species);
-static UNUSED bool32 IsFalse(u32 species);
-static UNUSED bool32 IsTrue(u32 species);
-static UNUSED bool32 IsTrueIfUndiscoveredEggGroup(u32 species);
+static UNUSED bool32 HasHalfChance(enum Species species);
+static UNUSED bool32 HasTwoThirdsChance(enum Species species);
+static UNUSED bool32 IsFalse(enum Species species);
+static UNUSED bool32 IsTrue(enum Species species);
+static UNUSED bool32 IsTrueIfUndiscoveredEggGroup(enum Species species);
 
-const static bool32 (*sSynchronizeModes[]) (u32) = 
+const static bool32 (*sSynchronizeModes[])(enum Species) = 
 {
 #if OW_SYNCHRONIZE_NATURE == GEN_3
     [WILDMON_ORIGIN] = HasHalfChance,
@@ -45,7 +45,7 @@ const static bool32 (*sSynchronizeModes[]) (u32) =
 #endif
 };
 
-const static bool32 (*sCuteCharmModes[]) (u32) = 
+const static bool32 (*sCuteCharmModes[])(enum Species) = 
 {
     [WILDMON_ORIGIN] = HasTwoThirdsChance,
     [STATIC_WILDMON_ORIGIN] = HasTwoThirdsChance,
@@ -53,59 +53,59 @@ const static bool32 (*sCuteCharmModes[]) (u32) =
     [GIFTMON_ORIGIN] = IsFalse,
 };
 
-static UNUSED bool32 HasHalfChance(u32 species)
+static UNUSED bool32 HasHalfChance(enum Species species)
 {
     return Random() % 2;
 }
 
-static UNUSED bool32 HasTwoThirdsChance(u32 species)
+static UNUSED bool32 HasTwoThirdsChance(enum Species species)
 {
     return Random() % 3;
 }
 
-static UNUSED bool32 IsFalse(u32 species)
+static UNUSED bool32 IsFalse(enum Species species)
 {
     return FALSE;
 }
 
-static UNUSED bool32 IsTrue(u32 species)
+static UNUSED bool32 IsTrue(enum Species species)
 {
     return TRUE;
 }
 
-static UNUSED bool32 IsTrueIfUndiscoveredEggGroup(u32 species)
+static UNUSED bool32 IsTrueIfUndiscoveredEggGroup(enum Species species)
 {
     return (gSpeciesInfo[species].eggGroups[0] == EGG_GROUP_NO_EGGS_DISCOVERED);
 }
 
 static bool32 IsSynchronizeActive(void)
 {
-    return ((!GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG)
-        && GetMonAbility(&gPlayerParty[0]) == ABILITY_SYNCHRONIZE));
+    return ((!GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SANITY_IS_EGG)
+        && GetMonAbility(&gParties[B_TRAINER_0][0]) == ABILITY_SYNCHRONIZE));
 }
 
 static bool32 IsCuteCharmActive(void)
 {
-     return ((!GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG)
-        && GetMonAbility(&gPlayerParty[0]) == ABILITY_CUTE_CHARM));
+     return ((!GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SANITY_IS_EGG)
+        && GetMonAbility(&gParties[B_TRAINER_0][0]) == ABILITY_CUTE_CHARM));
 }
 
-u32 GetSynchronizedNature(enum GeneratedMonOrigin origin, u32 species)
+u32 GetSynchronizedNature(enum GeneratedMonOrigin origin, enum Species species)
 {
     if (!IsSynchronizeActive())
         return NATURE_RANDOM;
     if (!(sSynchronizeModes[origin](species)))
         return NATURE_RANDOM;
-    return GetMonData(&gPlayerParty[0], MON_DATA_PERSONALITY) % NUM_NATURES;
+    return GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_PERSONALITY) % NUM_NATURES;
 }
 
-u32 GetSynchronizedGender(enum GeneratedMonOrigin origin, u32 species)
+u32 GetSynchronizedGender(enum GeneratedMonOrigin origin, enum Species species)
 {
     if (!IsCuteCharmActive())
         return MON_GENDER_RANDOM;
     if (!(sCuteCharmModes[origin](species)))
         return MON_GENDER_RANDOM;
-    u8 leadingMonGender = GetMonGender(&gPlayerParty[0]);
+    u8 leadingMonGender = GetMonGender(&gParties[B_TRAINER_0][0]);
     // misses mon is genderless check, although no genderless mon can have cute charm as ability
     if (leadingMonGender == MON_FEMALE)
         return MON_MALE;

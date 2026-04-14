@@ -14942,12 +14942,12 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 
 #if OW_POKEMON_OBJECT_EVENTS
     const u32 gObjectEventPic_CherrimOvercast[] = INCBIN_COMP("graphics/pokemon/cherrim/overworld.4bpp");
-    // const u32 gObjectEventPic_CherrimSunshine[] = INCBIN_COMP("graphics/pokemon/cherrim/sunshine/overworld.4bpp");
+    const u32 gObjectEventPic_CherrimSunshine[] = INCBIN_COMP("graphics/pokemon/cherrim/sunshine/overworld.4bpp");
 #if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
     const u16 gOverworldPalette_CherrimOvercast[] = INCBIN_U16("graphics/pokemon/cherrim/overworld_normal.gbapal");
-    // const u16 gOverworldPalette_CherrimSunshine[] = INCBIN_U16("graphics/pokemon/cherrim/sunshine/overworld_normal.gbapal");
+    const u16 gOverworldPalette_CherrimSunshine[] = INCBIN_U16("graphics/pokemon/cherrim/sunshine/overworld_normal.gbapal");
     const u16 gShinyOverworldPalette_CherrimOvercast[] = INCBIN_U16("graphics/pokemon/cherrim/overworld_shiny.gbapal");
-    // const u16 gShinyOverworldPalette_CherrimSunshine[] = INCBIN_U16("graphics/pokemon/cherrim/sunshine/overworld_shiny.gbapal");
+    const u16 gShinyOverworldPalette_CherrimSunshine[] = INCBIN_U16("graphics/pokemon/cherrim/sunshine/overworld_shiny.gbapal");
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS
 #endif //P_FAMILY_CHERUBI

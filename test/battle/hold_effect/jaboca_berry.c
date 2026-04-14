@@ -58,7 +58,7 @@ SINGLE_BATTLE_TEST("Jaboca Berry triggers before Bug Bite can steal it")
     }
 }
 
-SINGLE_BATTLE_TEST("Jaboca Berry is triggered even if berry user dies")
+SINGLE_BATTLE_TEST("Jaboca Berry is triggered even if berry user faints")
 {
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SWIFT) == DAMAGE_CATEGORY_SPECIAL);
