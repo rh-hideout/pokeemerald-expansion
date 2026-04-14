@@ -693,7 +693,7 @@ bool32 IsDamageMoveUnusable(struct DamageContext *ctx)
             return TRUE;
         break;
     case EFFECT_FIRST_TURN_ONLY:
-        if (!gBattleStruct->battlerState[ctx->battlerAtk].isFirstTurn)
+        if (!IsBattlersFirstTurn(ctx->battlerAtk))
             return TRUE;
         break;
     default:
