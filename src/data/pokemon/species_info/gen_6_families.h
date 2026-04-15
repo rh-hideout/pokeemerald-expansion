@@ -6930,7 +6930,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             SIZE_32x32,
             SHADOW_SIZE_M,
             TRACKS_FOOT,
-            sAnimTable_Following,
+            sAnimTable_Following_Asym,
             gOverworldPalette_Zygarde10,
             gShinyOverworldPalette_Zygarde10
         )
@@ -6995,7 +6995,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             SIZE_32x32,
             SHADOW_SIZE_M,
             TRACKS_FOOT,
-            sAnimTable_Following,
+            sAnimTable_Following_Asym,
             gOverworldPalette_Zygarde10,
             gShinyOverworldPalette_Zygarde10
         )
@@ -7064,11 +7064,11 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         SHADOW(-3, 13, SHADOW_SIZE_XL_BATTLE_ONLY)
         FOOTPRINT(Zygarde)
         OVERWORLD(
-            sPicTable_ZygardeComplete,
-            SIZE_32x32,
+            sPicTable_ZygardeComplete, 
+            SIZE_32x32, //TODO: 64x64 overworld sprite!
             SHADOW_SIZE_M,
             TRACKS_FOOT,
-            sAnimTable_Following,
+            sAnimTable_Following_Asym,
             gOverworldPalette_ZygardeComplete,
             gShinyOverworldPalette_ZygardeComplete
         )

@@ -6906,7 +6906,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
             SIZE_32x32, //TODO: 64x64 overworld sprite!
             SHADOW_SIZE_M,
             TRACKS_FOOT,
-            sAnimTable_Following,
+            sAnimTable_Following_Asym,
             gOverworldPalette_NecrozmaDuskMane,
             gShinyOverworldPalette_NecrozmaDuskMane
         )
@@ -6977,7 +6977,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
             SIZE_32x32, //TODO: 64x64 overworld sprite!
             SHADOW_SIZE_M,
             TRACKS_FOOT,
-            sAnimTable_Following,
+            sAnimTable_Following_Asym,
             gOverworldPalette_NecrozmaDawnWings,
             gShinyOverworldPalette_NecrozmaDawnWings
         )
@@ -7052,7 +7052,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
             SIZE_32x32, //TODO: 64x64 overworld sprite!
             SHADOW_SIZE_M,
             TRACKS_FOOT,
-            sAnimTable_Following,
+            sAnimTable_Following_Asym,
             gOverworldPalette_NecrozmaUltra,
             gShinyOverworldPalette_NecrozmaUltra
         )
@@ -7661,7 +7661,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
             SIZE_32x32,
             SHADOW_SIZE_M,
             TRACKS_FOOT,
-            sAnimTable_Following,
+            sAnimTable_Following_Asym,
             gOverworldPalette_Blacephalon,
             gShinyOverworldPalette_Blacephalon
         )
