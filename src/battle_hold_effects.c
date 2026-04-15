@@ -159,10 +159,9 @@ static enum ItemEffect RestoreWhiteHerbStats(enum BattlerId battler)
             effect = ITEM_STATS_CHANGE;
         }
     }
+
     if (effect != ITEM_NO_EFFECT)
-    {
         BattleScriptCall(BattleScript_WhiteHerbRet);
-    }
 
     return effect;
 }
@@ -407,7 +406,7 @@ static enum ItemEffect TryBlunderPolicy(enum BattlerId battlerAtk)
     return effect;
 }
 
-static enum ItemEffect TryMentalHerb(enum BattlerId battler)
+static enum ItemEffect TryMentalHerb(enum BattlerId battler, ActivationTiming timing)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     gBattleCommunication[MULTISTRING_CHOOSER] = 0;
@@ -1097,7 +1096,7 @@ enum ItemEffect ItemBattleEffects(enum BattlerId itemBattler, enum BattlerId bat
         effect = TryBlunderPolicy(itemBattler);
         break;
     case HOLD_EFFECT_MENTAL_HERB:
-        effect = TryMentalHerb(itemBattler);
+        effect = TryMentalHerb(itemBattler, timing);
         break;
     case HOLD_EFFECT_THROAT_SPRAY:
         effect = TryThroatSpray(itemBattler);

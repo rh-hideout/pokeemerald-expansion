@@ -203,6 +203,7 @@ extern const u8 BattleScript_BerryCureStatusRet[];
 extern const u8 BattleScript_BerryCureStatusAndConfusionRet[];
 extern const u8 BattleScript_BerryCureConfusionRet[];
 extern const u8 BattleScript_WhiteHerbRet[];
+extern const u8 BattleScript_WhiteHerbFling[];
 extern const u8 BattleScript_ItemHealHP_RemoveItem[];
 extern const u8 BattleScript_ItemHealHP_RemoveBerry[];
 extern const u8 BattleScript_BerryPPHeal[];
