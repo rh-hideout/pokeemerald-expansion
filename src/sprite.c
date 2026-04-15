@@ -429,9 +429,15 @@ static void SortSprites(u32 *spritePriorities, s32 n)
 
 u32 CreateSprite(const struct SpriteTemplate *template, s16 x, s16 y, u32 subpriority)
 {
-    u32 i;
+    u32 spriteId = CreateSpriteUnchecked(template, x, y, subpriority);
 
-    for (i = 0; i < MAX_SPRITES; i++)
+    assertf(spriteId < MAX_SPRITES, "Out of sprite slots");
+    return spriteId;
+}
+
+u32 CreateSpriteUnchecked(const struct SpriteTemplate *template, s16 x, s16 y, u32 subpriority)
+{
+    for (u32 i = 0; i < MAX_SPRITES; i++)
         if (!gSprites[i].inUse)
             return CreateSpriteAt(i, template, x, y, subpriority);
 
@@ -440,9 +446,15 @@ u32 CreateSprite(const struct SpriteTemplate *template, s16 x, s16 y, u32 subpri
 
 u32 CreateSpriteAtEnd(const struct SpriteTemplate *template, s16 x, s16 y, u32 subpriority)
 {
-    s32 i;
+    u32 spriteId = CreateSpriteAtEndUnchecked(template, x, y, subpriority);
 
-    for (i = MAX_SPRITES - 1; i > -1; i--)
+    assertf(spriteId < MAX_SPRITES, "Out of sprite slots");
+    return spriteId;
+}
+
+u32 CreateSpriteAtEndUnchecked(const struct SpriteTemplate *template, s16 x, s16 y, u32 subpriority)
+{
+    for (s32 i = MAX_SPRITES - 1; i > -1; i--)
         if (!gSprites[i].inUse)
             return CreateSpriteAt(i, template, x, y, subpriority);
 
