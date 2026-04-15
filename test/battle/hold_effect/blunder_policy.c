@@ -66,7 +66,7 @@ SINGLE_BATTLE_TEST("Blunder Policy will never trigger if the move fails due to P
     }
 }
 
-SINGLE_BATTLE_TEST("Blunder Policy does not activate when an OHKO move fails")
+SINGLE_BATTLE_TEST("Blunder Policy will never trigger if an OHKO move fails")
 {
     PASSES_RANDOMLY(7, 10, RNG_ACCURACY);
     GIVEN {
@@ -79,6 +79,26 @@ SINGLE_BATTLE_TEST("Blunder Policy does not activate when an OHKO move fails")
     } SCENE {
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FISSURE, player);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        }
+    } THEN {
+        EXPECT(player->item == ITEM_BLUNDER_POLICY);
+        EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Blunder Policy will never trigger if the move misses due to semi-invulnerability")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FLY) == EFFECT_SEMI_INVULNERABLE);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_BLUNDER_POLICY); Speed(5); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_FLY); MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLY, opponent);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         }
     } THEN {
