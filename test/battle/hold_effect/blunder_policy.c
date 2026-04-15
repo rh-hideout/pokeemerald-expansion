@@ -65,3 +65,54 @@ SINGLE_BATTLE_TEST("Blunder Policy will never trigger if the move fails due to P
         EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
     }
 }
+
+SINGLE_BATTLE_TEST("415 Blunder Policy does not activate when an OHKO move fails")
+{
+    PASSES_RANDOMLY(7, 10, RNG_ACCURACY);
+    GIVEN {
+        ASSUME(GetMoveAccuracy(MOVE_FISSURE) == 30);
+        ASSUME(GetMoveEffect(MOVE_FISSURE) == EFFECT_OHKO);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_BLUNDER_POLICY); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FISSURE); }
+    } SCENE {
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_FISSURE, player);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        }
+    } THEN {
+        EXPECT(player->item == ITEM_BLUNDER_POLICY);
+        EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
+    }
+}
+
+SINGLE_BATTLE_TEST("415 Blunder Policy state is cleared between actions if it could not activate")
+{
+    PASSES_RANDOMLY(3, 10, RNG_ACCURACY);
+    GIVEN {
+        ASSUME(GetMoveAccuracy(MOVE_FOCUS_BLAST) == 70);
+        ASSUME(GetMoveEffect(MOVE_AGILITY) == EFFECT_SPEED_UP_2);
+        ASSUME(GetMoveEffect(MOVE_CURSE) == EFFECT_CURSE);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_BLUNDER_POLICY); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_AGILITY); }
+        TURN { MOVE(player, MOVE_AGILITY); }
+        TURN { MOVE(player, MOVE_AGILITY); }
+        TURN { MOVE(player, MOVE_FOCUS_BLAST); }
+        TURN { MOVE(player, MOVE_CURSE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_AGILITY, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_AGILITY, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_AGILITY, player);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_BLAST, player);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        }
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CURSE, player);
+    } THEN {
+        EXPECT(player->item == ITEM_BLUNDER_POLICY);
+        EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 5);
+    }
+}
