@@ -222,3 +222,37 @@ SINGLE_BATTLE_TEST("Blunder Policy does not activate if Population Bomb misses a
         EXPECT_EQ(player->ability, ABILITY_LINGERING_AROMA);
     }
 }
+
+DOUBLE_BATTLE_TEST("Blunder Policy activates for Dragon Darts if one target misses for accuracy but the other target is hit twice")
+{
+    struct BattlePokemon *chosenTarget = NULL;
+    struct BattlePokemon *finalTarget = NULL;
+    enum Item itemLeft, itemRight;
+    PARAMETRIZE { chosenTarget = opponentLeft;  finalTarget = opponentRight; itemLeft = ITEM_BRIGHT_POWDER;  itemRight = ITEM_NONE; }
+    PARAMETRIZE { chosenTarget = opponentRight; finalTarget = opponentLeft;  itemLeft = ITEM_NONE;           itemRight = ITEM_BRIGHT_POWDER; }
+
+    GIVEN {
+        ASSUME(GetMoveAccuracy(MOVE_DRAGON_DARTS) == 100);
+        ASSUME(GetMoveTarget(MOVE_DRAGON_DARTS) == TARGET_SMART);
+        ASSUME(GetItemHoldEffect(ITEM_BRIGHT_POWDER) == HOLD_EFFECT_EVASION_UP);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_BLUNDER_POLICY); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(itemLeft); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(itemRight); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_DRAGON_DARTS, target: chosenTarget, hit: FALSE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
+        HP_BAR(finalTarget);
+
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
+        HP_BAR(finalTarget);
+    } THEN {
+        EXPECT(playerLeft->item == ITEM_NONE);
+        EXPECT_EQ(playerLeft->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 2);
+        EXPECT_EQ(chosenTarget->hp, chosenTarget->maxHP);
+        EXPECT_LT(finalTarget->hp, finalTarget->maxHP);
+    }
+}
