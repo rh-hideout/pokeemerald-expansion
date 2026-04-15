@@ -1171,8 +1171,10 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
             gBattleCommunication[MISS_TYPE] = B_MSG_MISSED;
             numMisses++;
 
+            enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
             if (holdEffectAtk == HOLD_EFFECT_BLUNDER_POLICY
-             && GetMoveEffect(gCurrentMove) != EFFECT_OHKO)
+             && moveEffect != EFFECT_OHKO
+             && !(gSpecialStatuses[gBattlerAttacker].multiHitOn && (moveEffect == EFFECT_TRIPLE_KICK || moveEffect == EFFECT_POPULATION_BOMB)))
                 gBattleStruct->blunderPolicy = TRUE;    // Only activates from missing through acc/evasion checks
 
             if (moveTarget == TARGET_SMART

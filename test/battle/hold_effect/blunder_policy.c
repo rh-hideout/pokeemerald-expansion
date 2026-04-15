@@ -116,3 +116,89 @@ SINGLE_BATTLE_TEST("Blunder Policy state is cleared between actions if it could 
         EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 5);
     }
 }
+
+SINGLE_BATTLE_TEST("Blunder Policy activates if the first strike of Triple Kick misses")
+{
+    PASSES_RANDOMLY(1, 10, RNG_ACCURACY);
+    GIVEN {
+        ASSUME(GetMoveAccuracy(MOVE_TRIPLE_KICK) == 90);
+        ASSUME(GetMoveEffect(MOVE_TRIPLE_KICK) == EFFECT_TRIPLE_KICK);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_BLUNDER_POLICY); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_TRIPLE_KICK); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_TRIPLE_KICK, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+    } THEN {
+        EXPECT(player->item == ITEM_NONE);
+        EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 2);
+    }
+}
+
+SINGLE_BATTLE_TEST("Blunder Policy does not activate if Triple Kick misses after the first strike")
+{
+    GIVEN {
+        ASSUME(GetMoveAccuracy(MOVE_TRIPLE_KICK) == 90);
+        ASSUME(GetMoveEffect(MOVE_TRIPLE_KICK) == EFFECT_TRIPLE_KICK);
+        ASSUME(MoveMakesContact(MOVE_TRIPLE_KICK));
+        PLAYER(SPECIES_MACHAMP) { Ability(ABILITY_NO_GUARD); Item(ITEM_BLUNDER_POLICY); }
+        OPPONENT(SPECIES_OINKOLOGNE) { Ability(ABILITY_LINGERING_AROMA); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TRIPLE_KICK, WITH_RNG(RNG_ACCURACY, FALSE)); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRIPLE_KICK, player);
+        ABILITY_POPUP(opponent, ABILITY_LINGERING_AROMA);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_TRIPLE_KICK, player);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        }
+    } THEN {
+        EXPECT(player->item == ITEM_BLUNDER_POLICY);
+        EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(player->ability, ABILITY_LINGERING_AROMA);
+    }
+}
+
+SINGLE_BATTLE_TEST("Blunder Policy activates if the first strike of Population Bomb misses")
+{
+    PASSES_RANDOMLY(1, 10, RNG_ACCURACY);
+    GIVEN {
+        ASSUME(GetMoveAccuracy(MOVE_POPULATION_BOMB) == 90);
+        ASSUME(GetMoveEffect(MOVE_POPULATION_BOMB) == EFFECT_POPULATION_BOMB);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_BLUNDER_POLICY); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_POPULATION_BOMB); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+    } THEN {
+        EXPECT(player->item == ITEM_NONE);
+        EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 2);
+    }
+}
+
+SINGLE_BATTLE_TEST("Blunder Policy does not activate if Population Bomb misses after the first strike")
+{
+    GIVEN {
+        ASSUME(GetMoveAccuracy(MOVE_POPULATION_BOMB) == 90);
+        ASSUME(GetMoveEffect(MOVE_POPULATION_BOMB) == EFFECT_POPULATION_BOMB);
+        ASSUME(MoveMakesContact(MOVE_POPULATION_BOMB));
+        PLAYER(SPECIES_MACHAMP) { Ability(ABILITY_NO_GUARD); Item(ITEM_BLUNDER_POLICY); }
+        OPPONENT(SPECIES_OINKOLOGNE) { Ability(ABILITY_LINGERING_AROMA); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_POPULATION_BOMB, WITH_RNG(RNG_ACCURACY, FALSE)); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ABILITY_POPUP(opponent, ABILITY_LINGERING_AROMA);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        }
+    } THEN {
+        EXPECT(player->item == ITEM_BLUNDER_POLICY);
+        EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(player->ability, ABILITY_LINGERING_AROMA);
+    }
+}
