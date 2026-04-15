@@ -446,6 +446,7 @@ extern const u8 BattleScript_HealingWishActivates[];
 extern const u8 BattleScript_LunarDanceActivates[];
 extern const u8 BattleScript_ShellTrapSetUp[];
 extern const u8 BattleScript_MoveEffectStealthRock[];
+extern const u8 BattleScript_UnseenFist[];
 extern const u8 BattleScript_CouldntFullyProtect[];
 extern const u8 BattleScript_TargetAvoidsAttack[];
 extern const u8 BattleScript_TargetAvoidsAttackConsumeFlingItem[];

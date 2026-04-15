@@ -2204,6 +2204,7 @@ static enum MoveEndResult MoveEndProtectLikeEffect(void)
      && (abilityAtk == ABILITY_UNSEEN_FIST || abilityAtk == ABILITY_PIERCING_DRILL)
      && IsMoveMakingContact(gBattlerAttacker, gBattlerTarget, abilityAtk, holdEffectAtk, gCurrentMove))
     {
+        BattleScriptCall(BattleScript_UnseenFist);
         gBattleScripting.moveendState++;
         return result;
     }

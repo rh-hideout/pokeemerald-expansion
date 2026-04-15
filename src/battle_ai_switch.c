@@ -1562,7 +1562,8 @@ bool32 ShouldSwitch(enum BattlerId battler)
     // Default Function
     // Can prompt switch if AI has a Pokémon in party that resists current opponent & has super effective move
     if (FindMonWithFlagsAndSuperEffective(battler, MOVE_RESULT_DOESNT_AFFECT_FOE, 50)
-        || FindMonWithFlagsAndSuperEffective(battler, MOVE_RESULT_NOT_VERY_EFFECTIVE, 33))
+        || FindMonWithFlagsAndSuperEffective(battler, MOVE_RESULT_NOT_VERY_EFFECTIVE, 33)
+        || FindMonWithFlagsAndSuperEffective(battler, MOVE_RESULT_MOSTLY_INEFFECTIVE, 33))
         return TRUE;
 
     return FALSE;
