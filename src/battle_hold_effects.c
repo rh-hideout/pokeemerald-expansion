@@ -405,12 +405,12 @@ static enum ItemEffect TryBlunderPolicy(enum BattlerId battlerAtk)
      && IsBattlerAlive(battlerAtk)
      && CompareStat(battlerAtk, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(battlerAtk)))
     {
-        gBattleStruct->blunderPolicy = FALSE;
         SET_STATCHANGER(STAT_SPEED, 2, FALSE);
         BattleScriptCall(BattleScript_AttackerItemStatRaise);
         effect = ITEM_STATS_CHANGE;
     }
 
+    gBattleStruct->blunderPolicy = FALSE;
     return effect;
 }
 

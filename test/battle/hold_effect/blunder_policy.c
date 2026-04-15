@@ -66,7 +66,7 @@ SINGLE_BATTLE_TEST("Blunder Policy will never trigger if the move fails due to P
     }
 }
 
-SINGLE_BATTLE_TEST("415 Blunder Policy does not activate when an OHKO move fails")
+SINGLE_BATTLE_TEST("Blunder Policy does not activate when an OHKO move fails")
 {
     PASSES_RANDOMLY(7, 10, RNG_ACCURACY);
     GIVEN {
@@ -87,7 +87,7 @@ SINGLE_BATTLE_TEST("415 Blunder Policy does not activate when an OHKO move fails
     }
 }
 
-SINGLE_BATTLE_TEST("415 Blunder Policy state is cleared between actions if it could not activate")
+SINGLE_BATTLE_TEST("Blunder Policy state is cleared between actions if it could not activate")
 {
     PASSES_RANDOMLY(3, 10, RNG_ACCURACY);
     GIVEN {
