@@ -1145,7 +1145,7 @@ static inline enum BattlerId GetOpposingSideBattler(enum BattlerId battler)
 
 static inline struct PartyState *GetBattlerPartyState(enum BattlerId battler)
 {
-    return &gBattleStruct->partyState[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]];
+    return &gBattleStruct->partyState[GetBattlerTrainer(battler)][gBattlerPartyIndexes[battler]];
 }
 
 static inline bool32 IsDoubleBattle(void)
