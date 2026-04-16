@@ -916,7 +916,9 @@ static s32 MgbaVPrintf_(const char *fmt, va_list va)
                         if (++n == 2)
                         {
                             u *= 10;
-                            i = MgbaPutchar_(i, '0' + ((u + UQ_4_12_ROUND) >> 12));
+                            // TODO: 'min' is a hack, we should have
+                            // rounded up the previous number.
+                            i = MgbaPutchar_(i, min('0' + ((u + UQ_4_12_ROUND) >> 12), '9'));
                             break;
                         }
                     }
