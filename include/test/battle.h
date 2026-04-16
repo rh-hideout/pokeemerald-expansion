@@ -471,7 +471,7 @@
  *     MESSAGE("Wobbuffet used Dream Eater!");
  *     MESSAGE("It doesn't affect the opposing Wobbuffet…");
  *
- * STATUS_ICON(battler, status1 | none: | sleep: | poison: | burn: | freeze: | paralysis:, badPoison:)
+ * STATUS_ICON(battler, status1 | none: | sleep: | poison: | burn: | freeze: | paralysis: | badPoison: | frostbite:)
  * Causes the test to fail if the battler's status is not changed to the
  * specified status.
  *     STATUS_ICON(player, badPoison: TRUE);
