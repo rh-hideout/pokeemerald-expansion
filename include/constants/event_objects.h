@@ -462,7 +462,7 @@ enum
 #define OW_SHINY(x) ((x)->graphicsId & OBJ_EVENT_MON_SHINY)
 #define OW_FEMALE(x) ((x)->graphicsId & OBJ_EVENT_MON_FEMALE)
 
-// Whether Object Event is an OW pokemon
+// Whether Object Event is an OW Pokémon
 #define IS_OW_MON_OBJ(obj) ((obj)->graphicsId & OBJ_EVENT_MON)
 
 #define SHADOW_SIZE_S       0

@@ -2113,7 +2113,7 @@ struct Pokemon *GetFirstLiveMon(void)
     u32 i;
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        struct Pokemon *mon = &gPlayerParty[i];
+        struct Pokemon *mon = &gParties[B_TRAINER_0][i];
         enum Species species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
         if (species == SPECIES_NONE)
             continue;
@@ -2123,8 +2123,8 @@ struct Pokemon *GetFirstLiveMon(void)
          || (OW_FOLLOWERS_ALLOWED_MET_LOC && GetMonData(mon, MON_DATA_MET_LOCATION) != VarGet(OW_FOLLOWERS_ALLOWED_MET_LOC)))
             continue;
 
-        if (gPlayerParty[i].hp > 0 && !(gPlayerParty[i].box.isEgg || gPlayerParty[i].box.isBadEgg))
-            return &gPlayerParty[i];
+        if (gParties[B_TRAINER_0][i].hp > 0 && !(gParties[B_TRAINER_0][i].box.isEgg || gParties[B_TRAINER_0][i].box.isBadEgg))
+            return &gParties[B_TRAINER_0][i];
     }
     return NULL;
 }
@@ -2141,7 +2141,7 @@ struct ObjectEvent *GetFollowerObject(void)
     return NULL;
 }
 
-// Return graphicsInfo for a pokemon species & form
+// Return graphicsInfo for a Pokémon species & form
 const struct ObjectEventGraphicsInfo *SpeciesToGraphicsInfo(enum Species species, bool32 shiny, bool32 female)
 {
     const struct ObjectEventGraphicsInfo *graphicsInfo = NULL;
@@ -2176,7 +2176,7 @@ const struct ObjectEventGraphicsInfo *SpeciesToGraphicsInfo(enum Species species
     return graphicsInfo;
 }
 
-// Find, or load, the palette for the specified pokemon info
+// Find, or load, the palette for the specified Pokémon info
 static u32 LoadDynamicFollowerPalette(enum Species species, bool32 shiny, bool32 female)
 {
     u32 paletteNum;
@@ -2217,7 +2217,7 @@ static u32 LoadDynamicFollowerPalette(enum Species species, bool32 shiny, bool32
     else
 #endif //OW_POKEMON_OBJECT_EVENTS == TRUE && OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
     {
-        // Note that the shiny palette tag is `species + SPECIES_SHINY_TAG`, which must be increased with more pokemon
+        // Note that the shiny palette tag is `species + SPECIES_SHINY_TAG`, which must be increased with more Pokémon
         // so that palette tags do not overlap
         const u16 *palette = GetMonSpritePalFromSpecies(species, shiny, female); //ETODO
         // palette already loaded
@@ -2341,13 +2341,13 @@ static bool8 GetMonInfo(struct Pokemon *mon, u32 *species, bool32 *shiny, bool32
     return TRUE;
 }
 
-// Retrieve graphic information about the following pokemon, if any
+// Retrieve graphic information about the following Pokémon, if any
 bool8 GetFollowerInfo(u32 *species, bool32 *shiny, bool32 *female)
 {
     return GetMonInfo(GetFirstLiveMon(), species, shiny, female);
 }
 
-// Update following pokemon if any
+// Update following Pokémon if any
 void UpdateFollowingPokemon(void)
 {
     struct ObjectEvent *objEvent = GetFollowerObject();
@@ -6364,7 +6364,7 @@ void GetDirectionToFaceScript(struct ScriptContext *ctx)
                                   gObjectEvents[targetId].currentCoords.y);
 }
 
-// Whether following pokemon is also the user of the field move
+// Whether following Pokémon is also the user of the field move
 // Intended to be called before the field effect itself
 void IsFollowerFieldMoveUser(struct ScriptContext *ctx)
 {
@@ -6382,7 +6382,7 @@ void IsFollowerFieldMoveUser(struct ScriptContext *ctx)
     *var = FALSE;
     if (follower && obj && !obj->invisible)
     {
-        u16 followIndex = ((u32)follower - (u32)gPlayerParty) / sizeof(struct Pokemon);
+        u16 followIndex = ((u32)follower - (u32)gParties[B_TRAINER_0]) / sizeof(struct Pokemon);
         *var = userIndex == followIndex;
     }
 }
@@ -6414,7 +6414,7 @@ enum Collision GetSidewaysStairsCollision(struct ObjectEvent *objectEvent, enum 
     if ((dir == DIR_SOUTH || dir == DIR_NORTH) && collision != COLLISION_NONE)
         return collision;
 
-    // cant descend stairs into water
+    // can't descend stairs into water
     if (MetatileBehavior_IsSurfableFishableWater(nextBehavior))
         return collision;
 
@@ -7775,7 +7775,7 @@ bool8 MovementAction_ExitPokeball_Step0(struct ObjectEvent *objectEvent, struct 
     objectEvent->invisible = FALSE;
     if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH))
     {
-        // If player is dashing, the pokemon must come out faster
+        // If player is dashing, the Pokémon must come out faster
         StartSpriteAnimInDirection(objectEvent, sprite, direction, GetJumpSpecialDirectionAnimNum(direction));
         sprite->sDuration = 8;
         sprite->sSpeedFlip = 0; // fast speed
@@ -11418,7 +11418,7 @@ bool8 PlayerIsUnderWaterfall(struct ObjectEvent *objectEvent)
     return FALSE;
 }
 
-// Get gfx data from daycare pokemon and store it in vars
+// Get gfx data from daycare Pokémon and store it in vars
 void GetDaycareGraphics(struct ScriptContext *ctx)
 {
     u16 varGfx[] = {ScriptReadHalfword(ctx), ScriptReadHalfword(ctx)};
