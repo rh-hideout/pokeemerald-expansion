@@ -457,6 +457,9 @@ top:
             case TEST_RESULT_CRASH:
                 result = "CRASH";
                 break;
+            case TEST_RESULT_FLAKY:
+                result = "FLAKY";
+                break;
             default:
                 result = "UNKNOWN";
                 break;

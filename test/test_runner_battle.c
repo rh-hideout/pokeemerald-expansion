@@ -363,6 +363,26 @@ static void SetImplicitSpeeds(void)
     }
 }
 
+static void StartBattle(void)
+{
+    memset(&DATA.trial, 0, sizeof(DATA.trial));
+
+    SetVariablesForRecordedBattle(&DATA.recordedBattle);
+    if (STATE->trials)
+        gMain.savedCallback = CB2_BattleTest_NextTrial;
+    else if (STATE->parameters)
+        gMain.savedCallback = CB2_BattleTest_NextParameter;
+    else
+        gMain.savedCallback = CB2_TestRunner;
+    SetMainCallback2(CB2_InitBattle);
+
+    STATE->checkProgressParameter = 0;
+    STATE->checkProgressTrial = 0;
+    STATE->checkProgressTurn = 0;
+
+    PrintTestName();
+}
+
 static void BattleTest_Run(void *data)
 {
     s32 i;
@@ -372,6 +392,7 @@ static void BattleTest_Run(void *data)
     const struct BattleTest *test = data;
 
     memset(&DATA, 0, sizeof(DATA));
+    DATA.queuedEventsFailIndex = MAX_QUEUED_EVENTS;
 
     DATA.recordedBattle.rngSeed = defaultSeed;
     DATA.recordedBattle.textSpeed = OPTIONS_TEXT_SPEED_FAST;
@@ -562,20 +583,7 @@ static void BattleTest_Run(void *data)
         SetImplicitSpeeds();
     }
 
-    SetVariablesForRecordedBattle(&DATA.recordedBattle);
-    if (STATE->trials)
-        gMain.savedCallback = CB2_BattleTest_NextTrial;
-    else if (STATE->parameters)
-        gMain.savedCallback = CB2_BattleTest_NextParameter;
-    else
-        gMain.savedCallback = CB2_TestRunner;
-    SetMainCallback2(CB2_InitBattle);
-
-    STATE->checkProgressParameter = 0;
-    STATE->checkProgressTrial = 0;
-    STATE->checkProgressTurn = 0;
-
-    PrintTestName();
+    StartBattle();
 }
 
 static bool32 IsTieBreakTag(enum RandomTag tag)
@@ -855,7 +863,19 @@ void TestRunner_Battle_RecordAbilityPopUp(enum BattlerId battlerId, enum Ability
     case QUEUE_GROUP_NONE:
     case QUEUE_GROUP_ONE_OF:
         if (TryAbilityPopUp(DATA.trial.queuedEvent, event->groupSize, battlerId, ability) != -1)
+        {
             DATA.trial.queuedEvent += event->groupSize;
+        }
+        else if (DATA.trial.queuedEvent == DATA.queuedEventsFailIndex
+              && DATA.queuedEvents[DATA.queuedEventsFailIndex].type == QUEUED_ABILITY_POPUP_EVENT)
+        {
+            const char *filename = gTestRunnerState.test->filename;
+            u32 line = SourceLine(DATA.queuedEvents[DATA.queuedEventsFailIndex].sourceLineOffset);
+            if (DATA.queuedEvents[DATA.queuedEventsFailIndex].as.ability.ability == ABILITY_NONE)
+                Test_MgbaPrintf("%s:%d: Did you mean: ABILITY_POPUP(%s)", filename, line, BattlerIdentifier(battlerId));
+            else
+                Test_MgbaPrintf("%s:%d: Did you mean: ABILITY_POPUP(%s, ABILITY_%C)", filename, line, BattlerIdentifier(battlerId), gAbilitiesInfo[ability].name);
+        }
         break;
     case QUEUE_GROUP_NONE_OF:
         queuedEvent = DATA.trial.queuedEvent;
@@ -905,6 +925,14 @@ static s32 TryAnimation(s32 i, s32 n, u32 animType, u32 animId)
     return -1;
 }
 
+static const char *const sAnimTypeNames[] =
+{
+    [ANIM_TYPE_GENERAL] = "ANIM_TYPE_GENERAL",
+    [ANIM_TYPE_MOVE] = "ANIM_TYPE_MOVE",
+    [ANIM_TYPE_STATUS] = "ANIM_TYPE_STATUS",
+    [ANIM_TYPE_SPECIAL] = "ANIM_TYPE_SPECIAL",
+};
+
 void TestRunner_Battle_RecordAnimation(u32 animType, u32 animId)
 {
     s32 queuedEvent;
@@ -920,7 +948,47 @@ void TestRunner_Battle_RecordAnimation(u32 animType, u32 animId)
     case QUEUE_GROUP_NONE:
     case QUEUE_GROUP_ONE_OF:
         if (TryAnimation(DATA.trial.queuedEvent, event->groupSize, animType, animId) != -1)
+        {
             DATA.trial.queuedEvent += event->groupSize;
+        }
+        else if (DATA.trial.queuedEvent == DATA.queuedEventsFailIndex
+              && DATA.queuedEvents[DATA.queuedEventsFailIndex].type == QUEUED_ANIMATION_EVENT
+              && DATA.queuedEvents[DATA.queuedEventsFailIndex].as.animation.type == animType)
+        {
+            const char *filename = gTestRunnerState.test->filename;
+            u32 line = SourceLine(DATA.queuedEvents[DATA.queuedEventsFailIndex].sourceLineOffset);
+            bool32 checkAttacker = DATA.queuedEvents[DATA.queuedEventsFailIndex].as.animation.attacker != 0xF;
+            bool32 checkTarget = DATA.queuedEvents[DATA.queuedEventsFailIndex].as.animation.target != 0xF;
+            if (animType == ANIM_TYPE_MOVE && animId < MOVES_COUNT_ALL)
+            {
+                if (animId == MOVE_CELEBRATE)
+                    ; // TODO: Only if implicit. Difficult to know if it's an action or, e.g. Mirror Move.
+                else if (checkAttacker && checkTarget)
+                    Test_MgbaPrintf("%s:%d: Did you mean: ANIMATION(%s, MOVE_%C, %s, target: %s)", filename, line, sAnimTypeNames[animType], gMovesInfo[animId].name, BattlerIdentifier(gBattleAnimAttacker), BattlerIdentifier(gBattleAnimTarget));
+                else if (checkAttacker)
+                    Test_MgbaPrintf("%s:%d: Did you mean: ANIMATION(%s, MOVE_%C, %s)", filename, line, sAnimTypeNames[animType], gMovesInfo[animId].name, BattlerIdentifier(gBattleAnimAttacker));
+                else
+                    Test_MgbaPrintf("%s:%d: Did you mean: ANIMATION(%s, MOVE_%C)", filename, line, sAnimTypeNames[animType], gMovesInfo[animId].name);
+            }
+            else if (animType < ARRAY_COUNT(sAnimTypeNames))
+            {
+                if (checkAttacker && checkTarget)
+                    Test_MgbaPrintf("%s:%d: Did you mean: ANIMATION(%s, %d, %s, target: %s)", filename, line, sAnimTypeNames[animType], animId, BattlerIdentifier(gBattleAnimAttacker), BattlerIdentifier(gBattleAnimTarget));
+                else if (checkAttacker)
+                    Test_MgbaPrintf("%s:%d: Did you mean: ANIMATION(%s, %d, %s)", filename, line, sAnimTypeNames[animType], animId, BattlerIdentifier(gBattleAnimAttacker));
+                else
+                    Test_MgbaPrintf("%s:%d: Did you mean: ANIMATION(%s, %d)", filename, line, sAnimTypeNames[animType], animId);
+            }
+            else
+            {
+                if (checkAttacker && checkTarget)
+                    Test_MgbaPrintf("%s:%d: Did you mean: ANIMATION(%d, %d, %s, target: %s)", filename, line, animType, animId, BattlerIdentifier(gBattleAnimAttacker), BattlerIdentifier(gBattleAnimTarget));
+                else if (checkAttacker)
+                    Test_MgbaPrintf("%s:%d: Did you mean: ANIMATION(%d, %d, %s)", filename, line, animType, animId, BattlerIdentifier(gBattleAnimAttacker));
+                else
+                    Test_MgbaPrintf("%s:%d: Did you mean: ANIMATION(%d, %d)", filename, line, animType, animId);
+            }
+        }
         break;
     case QUEUE_GROUP_NONE_OF:
         queuedEvent = DATA.trial.queuedEvent;
@@ -1012,7 +1080,27 @@ void TestRunner_Battle_RecordHP(enum BattlerId battlerId, u32 oldHP, u32 newHP)
     case QUEUE_GROUP_NONE:
     case QUEUE_GROUP_ONE_OF:
         if (TryHP(DATA.trial.queuedEvent, event->groupSize, battlerId, oldHP, newHP) != -1)
+        {
             DATA.trial.queuedEvent += event->groupSize;
+        }
+        else if (DATA.trial.queuedEvent == DATA.queuedEventsFailIndex
+              && DATA.queuedEvents[DATA.queuedEventsFailIndex].type == QUEUED_HP_EVENT)
+        {
+            const char *filename = gTestRunnerState.test->filename;
+            u32 line = SourceLine(DATA.queuedEvents[DATA.queuedEventsFailIndex].sourceLineOffset);
+            switch (DATA.queuedEvents[DATA.queuedEventsFailIndex].as.hp.type)
+            {
+            case HP_EVENT_NEW_HP:
+                Test_MgbaPrintf("%s:%d: Did you mean: HP_BAR(%s, hp: %d)", filename, line, BattlerIdentifier(battlerId), newHP);
+                break;
+            case HP_EVENT_DELTA_HP:
+                if (DATA.queuedEvents[DATA.queuedEventsFailIndex].as.hp.address == 0)
+                    Test_MgbaPrintf("%s:%d: Did you mean: HP_BAR(%s)", filename, line, BattlerIdentifier(battlerId));
+                else
+                    Test_MgbaPrintf("%s:%d: Did you mean: HP_BAR(%s, damage: %d)", filename, line, BattlerIdentifier(battlerId), oldHP - newHP);
+                break;
+            }
+        }
         break;
     case QUEUE_GROUP_NONE_OF:
         queuedEvent = DATA.trial.queuedEvent;
@@ -1078,6 +1166,8 @@ static s32 TrySubHit(s32 i, s32 n, enum BattlerId battlerId, u32 damage, bool32 
     return -1;
 }
 
+static const char *const sBoolNames[] = { [FALSE] = "FALSE", [TRUE] = "TRUE" };
+
 void TestRunner_Battle_RecordSubHit(enum BattlerId battlerId, u32 damage, bool32 broke)
 {
     s32 queuedEvent;
@@ -1093,7 +1183,25 @@ void TestRunner_Battle_RecordSubHit(enum BattlerId battlerId, u32 damage, bool32
     case QUEUE_GROUP_NONE:
     case QUEUE_GROUP_ONE_OF:
         if (TrySubHit(DATA.trial.queuedEvent, event->groupSize, battlerId, damage, broke) != -1)
+        {
             DATA.trial.queuedEvent += event->groupSize;
+        }
+        else if (DATA.trial.queuedEvent == DATA.queuedEventsFailIndex
+              && DATA.queuedEvents[DATA.queuedEventsFailIndex].type == QUEUED_SUB_HIT_EVENT)
+        {
+            const char *filename = gTestRunnerState.test->filename;
+            u32 line = SourceLine(event->sourceLineOffset);
+            bool32 checkBreak = DATA.queuedEvents[DATA.queuedEventsFailIndex].as.subHit.checkBreak;
+            bool32 checkDamage = DATA.queuedEvents[DATA.queuedEventsFailIndex].as.subHit.address == 0;
+            if (checkBreak && checkDamage)
+                Test_MgbaPrintf("%s:%d: Did you mean: SUB_HIT(%s, subBreak: %s, damage: %d)", filename, line, BattlerIdentifier(battlerId), sBoolNames[broke], damage);
+            else if (checkBreak)
+                Test_MgbaPrintf("%s:%d: Did you mean: SUB_HIT(%s, subBreak: %s)", filename, line, BattlerIdentifier(battlerId), sBoolNames[broke]);
+            else if (checkDamage)
+                Test_MgbaPrintf("%s:%d: Did you mean: SUB_HIT(%s, damage: %d)", filename, line, BattlerIdentifier(battlerId), damage);
+            else
+                Test_MgbaPrintf("%s:%d: Did you mean: SUB_HIT(%s)", filename, line, BattlerIdentifier(battlerId));
+        }
         break;
     case QUEUE_GROUP_NONE_OF:
         queuedEvent = DATA.trial.queuedEvent;
@@ -1493,7 +1601,27 @@ void TestRunner_Battle_RecordExp(enum BattlerId battlerId, u32 oldExp, u32 newEx
     case QUEUE_GROUP_NONE:
     case QUEUE_GROUP_ONE_OF:
         if (TryExp(DATA.trial.queuedEvent, event->groupSize, battlerId, oldExp, newExp) != -1)
+        {
             DATA.trial.queuedEvent += event->groupSize;
+        }
+        else if (DATA.trial.queuedEvent == DATA.queuedEventsFailIndex
+              && DATA.queuedEvents[DATA.queuedEventsFailIndex].type == QUEUED_EXP_EVENT)
+        {
+            const char *filename = gTestRunnerState.test->filename;
+            u32 line = SourceLine(event->sourceLineOffset);
+            switch (DATA.queuedEvents[DATA.queuedEventsFailIndex].as.exp.type)
+            {
+            case EXP_EVENT_NEW_EXP:
+                Test_MgbaPrintf("%s:%d: Did you mean: EXPERIENCE_BAR(%s, exp: %d)", filename, line, BattlerIdentifier(battlerId), newExp);
+                break;
+            case EXP_EVENT_DELTA_EXP:
+                if (DATA.queuedEvents[DATA.queuedEventsFailIndex].as.exp.address == 0)
+                    Test_MgbaPrintf("%s:%d: Did you mean: EXPERIENCE_BAR(%s)", filename, line, BattlerIdentifier(battlerId));
+                else
+                    Test_MgbaPrintf("%s:%d: Did you mean: EXPERIENCE_BAR(%s, captureGainedExp: %d)", filename, line, BattlerIdentifier(battlerId), oldExp - newExp);
+                break;
+            }
+        }
         break;
     case QUEUE_GROUP_NONE_OF:
         queuedEvent = DATA.trial.queuedEvent;
@@ -1585,7 +1713,60 @@ void TestRunner_Battle_RecordMessage(const u8 *string)
     case QUEUE_GROUP_NONE:
     case QUEUE_GROUP_ONE_OF:
         if (TryMessage(DATA.trial.queuedEvent, event->groupSize, string) != -1)
+        {
             DATA.trial.queuedEvent += event->groupSize;
+        }
+        else if (DATA.trial.queuedEvent == DATA.queuedEventsFailIndex
+              && DATA.queuedEvents[DATA.queuedEventsFailIndex].type == QUEUED_MESSAGE_EVENT)
+        {
+            // Print "similar" messages as comptued by the Dice-Sorensen
+            // coefficient, letter-wise. Bigrams would likely be more
+            // accurate, but more complex to compute.
+            // TODO: Compute (and cache) the pattern's counts when the test
+            // is re-run, rather than on each message.
+            const u8 *pattern = DATA.queuedEvents[DATA.queuedEventsFailIndex].as.message.pattern;
+            u32 expectedLength = 0;
+            u8 expectedCount[256] = { 0 };
+            for (u32 i = 0; pattern[i] != EOS; i++)
+            {
+                expectedLength++;
+                expectedCount[pattern[i]]++;
+            }
+
+            u32 gotLength = 0;
+            u8 gotCount[256] = { 0 };
+            for (u32 i = 0; string[i] != EOS; i++)
+            {
+                switch (string[i])
+                {
+                case CHAR_SPACE:
+                case CHAR_NBSP:
+                case CHAR_PROMPT_SCROLL:
+                case CHAR_PROMPT_CLEAR:
+                case CHAR_NEWLINE:
+                    break;
+                default:
+                    gotLength++;
+                    gotCount[string[i]]++;
+                    break;
+                }
+            }
+
+            u32 intersection = 0;
+            for (u32 i = 0; i < 256; i++)
+                intersection += min(expectedCount[i], gotCount[i]);
+
+            uq4_12_t dsc = UQ_4_12(2 * intersection) / (expectedLength + gotLength);
+
+            // NOTE: 0.7 is a totally arbitrary threshold.
+            if (dsc > UQ_4_12(0.7))
+            {
+                const char *filename = gTestRunnerState.test->filename;
+                u32 line = SourceLine(DATA.queuedEvents[DATA.queuedEventsFailIndex].sourceLineOffset);
+
+                Test_MgbaPrintf("%s:%d: Did you mean: MESSAGE(\"%S\")", filename, line, string);
+            }
+        }
         break;
     case QUEUE_GROUP_NONE_OF:
         queuedEvent = DATA.trial.queuedEvent;
@@ -1652,7 +1833,33 @@ void TestRunner_Battle_RecordStatus1(enum BattlerId battlerId, u32 status1)
     case QUEUE_GROUP_NONE:
     case QUEUE_GROUP_ONE_OF:
         if (TryStatus(DATA.trial.queuedEvent, event->groupSize, battlerId, status1) != -1)
+        {
             DATA.trial.queuedEvent += event->groupSize;
+        }
+        else if (DATA.trial.queuedEvent == DATA.queuedEventsFailIndex
+              && DATA.queuedEvents[DATA.queuedEventsFailIndex].type == QUEUED_STATUS_EVENT)
+        {
+            const char *filename = gTestRunnerState.test->filename;
+            u32 line = SourceLine(DATA.queuedEvents[DATA.queuedEventsFailIndex].sourceLineOffset);
+            if (status1 == STATUS1_NONE)
+                Test_MgbaPrintf("%s:%d: Did you mean: STATUS_ICON(%s, none: TRUE)", filename, line, BattlerIdentifier(battlerId));
+            else if (status1 & STATUS1_SLEEP)
+                Test_MgbaPrintf("%s:%d: Did you mean: STATUS_ICON(%s, sleep: TRUE)", filename, line, BattlerIdentifier(battlerId));
+            else if (status1 & STATUS1_POISON)
+                Test_MgbaPrintf("%s:%d: Did you mean: STATUS_ICON(%s, poison: TRUE)", filename, line, BattlerIdentifier(battlerId));
+            else if (status1 & STATUS1_BURN)
+                Test_MgbaPrintf("%s:%d: Did you mean: STATUS_ICON(%s, burn: TRUE)", filename, line, BattlerIdentifier(battlerId));
+            else if (status1 & STATUS1_FREEZE)
+                Test_MgbaPrintf("%s:%d: Did you mean: STATUS_ICON(%s, freeze: TRUE)", filename, line, BattlerIdentifier(battlerId));
+            else if (status1 & STATUS1_PARALYSIS)
+                Test_MgbaPrintf("%s:%d: Did you mean: STATUS_ICON(%s, paralysis: TRUE)", filename, line, BattlerIdentifier(battlerId));
+            else if (status1 & STATUS1_TOXIC_POISON)
+                Test_MgbaPrintf("%s:%d: Did you mean: STATUS_ICON(%s, badPoison: TRUE)", filename, line, BattlerIdentifier(battlerId));
+            else if (status1 & STATUS1_FROSTBITE)
+                Test_MgbaPrintf("%s:%d: Did you mean: STATUS_ICON(%s, frostbite: TRUE)", filename, line, BattlerIdentifier(battlerId));
+            else
+                Test_MgbaPrintf("%s:%d: Did you mean: STATUS_ICON(%s, status1: %d)", filename, line, BattlerIdentifier(battlerId), status1);
+        }
         break;
     case QUEUE_GROUP_NONE_OF:
         queuedEvent = DATA.trial.queuedEvent;
@@ -1753,38 +1960,6 @@ static const char *const sEventTypeMacros[] =
     [QUEUED_CATCH_CHANCE_EVENT] = "CATCH_CHANCE",
 };
 
-void TestRunner_Battle_AfterLastTurn(void)
-{
-    const struct BattleTest *test = GetBattleTest();
-
-    if (DATA.turns - 1 != DATA.trial.lastActionTurn)
-    {
-        const char *filename = gTestRunnerState.test->filename;
-        Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), ":L%s:%d: %d TURNs specified, but %d ran", filename, SourceLine(0), DATA.turns, DATA.trial.lastActionTurn + 1);
-    }
-
-    while (DATA.trial.queuedEvent < DATA.queuedEventsCount
-        && DATA.queuedEvents[DATA.trial.queuedEvent].groupType == QUEUE_GROUP_NONE_OF)
-    {
-        DATA.trial.queuedEvent += DATA.queuedEvents[DATA.trial.queuedEvent].groupSize;
-    }
-    if (DATA.trial.queuedEvent != DATA.queuedEventsCount)
-    {
-        const char *filename = gTestRunnerState.test->filename;
-        u32 line = SourceLine(DATA.queuedEvents[DATA.trial.queuedEvent].sourceLineOffset);
-        const char *macro = sEventTypeMacros[DATA.queuedEvents[DATA.trial.queuedEvent].type];
-        if (gTestRunnerState.expectedFailState == EXPECT_FAIL_SCENE_OPEN)
-            gTestRunnerState.expectedFailState = EXPECT_FAIL_SUCCESS;
-        Test_ExitWithResult(TEST_RESULT_FAIL, line, ":L%s:%d: Unmatched %s", filename, line, macro);
-    }
-
-    STATE->runThen = TRUE;
-    STATE->runFinally = STATE->runParameter + 1 == STATE->parameters && STATE->runTrial + 1 >= STATE->trials;
-    InvokeTestFunction(test);
-    STATE->runThen = FALSE;
-    STATE->runFinally = FALSE;
-}
-
 static void TearDownBattle(void)
 {
     // Zero out the parties, data in them could potentially carry over
@@ -1803,6 +1978,71 @@ static void TearDownBattle(void)
     FreeBattleResources();
     FreeAllWindowBuffers();
     gMain.inBattle = FALSE; // Necessary else some tests report incorrect results when running in same thread as an EXPECT_FAIL test
+}
+
+void TestRunner_Battle_AfterLastTurn(void)
+{
+    const struct BattleTest *test = GetBattleTest();
+
+    if (DATA.turns - 1 != DATA.trial.lastActionTurn)
+    {
+        const char *filename = gTestRunnerState.test->filename;
+        Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), "%s:%d: %d TURNs specified, but %d ran", filename, SourceLine(0), DATA.turns, DATA.trial.lastActionTurn + 1);
+    }
+
+    while (DATA.trial.queuedEvent < DATA.queuedEventsCount
+        && DATA.queuedEvents[DATA.trial.queuedEvent].groupType == QUEUE_GROUP_NONE_OF)
+    {
+        DATA.trial.queuedEvent += DATA.queuedEvents[DATA.trial.queuedEvent].groupSize;
+    }
+    if (DATA.trial.queuedEvent != DATA.queuedEventsCount)
+    {
+        bool32 mayRerun = gTestRunnerHeadless && !STATE->trials;
+        if (mayRerun && DATA.queuedEventsFailIndex == MAX_QUEUED_EVENTS)
+        {
+            // First failure, re-run with logging enabled.
+            // TODO: Track total battle tests and total re-runs, and
+            // disable re-runs if they're too common (to fail faster).
+            DATA.queuedEventsFailIndex = DATA.trial.queuedEvent;
+            gMain.savedCallback = StartBattle; // Re-run once battle exits.
+            return;
+        }
+        else if (!mayRerun || DATA.queuedEventsFailIndex == DATA.trial.queuedEvent)
+        {
+            const char *filename = gTestRunnerState.test->filename;
+            const struct QueuedEvent *event = &DATA.queuedEvents[DATA.trial.queuedEvent];
+            u32 line = SourceLine(event->sourceLineOffset);
+            if (gTestRunnerState.expectedFailState == EXPECT_FAIL_SCENE_OPEN)
+                gTestRunnerState.expectedFailState = EXPECT_FAIL_SUCCESS;
+            DATA.queuedEventsFailIndex = MAX_QUEUED_EVENTS; // For 'handleExitWithResult'.
+            const char *macro = sEventTypeMacros[event->type];
+            switch (event->type)
+            {
+            case QUEUED_MESSAGE_EVENT:
+                Test_ExitWithResult(TEST_RESULT_FAIL, line, "%s:%d: Unmatched MESSAGE(\"%S\")", filename, line, event->as.message.pattern);
+            // TODO: Handle all queued event types explicitly.
+            default:
+                Test_ExitWithResult(TEST_RESULT_FAIL, line, "%s:%d: Unmatched %s", filename, line, macro);
+            }
+        }
+    }
+    if (DATA.queuedEventsFailIndex != MAX_QUEUED_EVENTS
+     && DATA.queuedEventsFailIndex != DATA.trial.queuedEvent)
+    {
+        const char *filename = gTestRunnerState.test->filename;
+        u32 expectedLine = SourceLine(DATA.queuedEvents[DATA.queuedEventsFailIndex].sourceLineOffset);
+        const char *expectedMacro = sEventTypeMacros[DATA.queuedEvents[DATA.queuedEventsFailIndex].type];
+        u32 gotLine = SourceLine(DATA.queuedEvents[DATA.trial.queuedEvent].sourceLineOffset);
+        const char *gotMacro = sEventTypeMacros[DATA.queuedEvents[DATA.trial.queuedEvent].type];
+        DATA.queuedEventsFailIndex = MAX_QUEUED_EVENTS; // For 'handleExitWithResult'.
+        Test_ExitWithResult(TEST_RESULT_FLAKY, expectedLine, "%s:%d: Expected unmatched %s, but got %s at %s:%d", filename, expectedLine, expectedMacro, gotMacro, filename, gotLine);
+    }
+
+    STATE->runThen = TRUE;
+    STATE->runFinally = STATE->runParameter + 1 == STATE->parameters && STATE->runTrial + 1 >= STATE->trials;
+    InvokeTestFunction(test);
+    STATE->runThen = FALSE;
+    STATE->runFinally = FALSE;
 }
 
 static void CB2_BattleTest_NextParameter(void)
@@ -1906,10 +2146,20 @@ static bool32 BattleTest_HandleExitWithResult(void *data, enum TestResult result
      && result != TEST_RESULT_INVALID
      && result != TEST_RESULT_ERROR
      && result != TEST_RESULT_TIMEOUT
+     && result != TEST_RESULT_FLAKY
      && STATE->runTrial < STATE->trials)
     {
         SetMainCallback2(CB2_BattleTest_NextTrial);
         return TRUE;
+    }
+    else if (DATA.queuedEventsFailIndex != MAX_QUEUED_EVENTS)
+    {
+        const char *filename = gTestRunnerState.test->filename;
+        u32 expectedLine = SourceLine(DATA.queuedEvents[DATA.queuedEventsFailIndex].sourceLineOffset);
+        const char *expectedMacro = sEventTypeMacros[DATA.queuedEvents[DATA.queuedEventsFailIndex].type];
+        Test_MgbaPrintf("%s:%d: Expected unmatched %s, but got...", filename, expectedLine, expectedMacro);
+        gTestRunnerState.result = TEST_RESULT_FLAKY;
+        return FALSE;
     }
     else
     {
