@@ -767,8 +767,6 @@ struct BattleTrialData
     u8 targetTieCount;
 };
 
-extern struct BattleTrialData gBattleTrialData;
-
 struct BattleTestData
 {
     u8 stack[BATTLE_TEST_STACK_SIZE];
