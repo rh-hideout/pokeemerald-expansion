@@ -805,6 +805,7 @@ struct BattleTestData
     struct BattlerTurn battleRecordTurns[MAX_TURNS][MAX_BATTLERS_COUNT];
 
     u8 queuedEventsCount;
+    u8 queuedEventsFailIndex;
     u8 queueGroupType;
     u8 queueGroupStart;
     struct QueuedEvent queuedEvents[MAX_QUEUED_EVENTS];
