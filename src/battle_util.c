@@ -3729,35 +3729,34 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 }
                 break;
             case ABILITY_MOODY:
-                if (gBattleStruct->battlerState[battler].isFirstTurn != 2)
+            {
+                u32 validToRaise = 0, validToLower = 0;
+                u32 statsNum = GetConfig(B_MOODY_ACC_EVASION) >= GEN_8 ? NUM_STATS : NUM_BATTLE_STATS;
+
+                for (i = STAT_ATK; i < statsNum; i++)
                 {
-                    u32 validToRaise = 0, validToLower = 0;
-                    u32 statsNum = GetConfig(B_MOODY_ACC_EVASION) >= GEN_8 ? NUM_STATS : NUM_BATTLE_STATS;
-
-                    for (i = STAT_ATK; i < statsNum; i++)
-                    {
-                        if (CompareStat(battler, i, MIN_STAT_STAGE, CMP_GREATER_THAN, gLastUsedAbility))
-                            validToLower |= 1u << i;
-                        if (CompareStat(battler, i, MAX_STAT_STAGE, CMP_LESS_THAN, gLastUsedAbility))
-                            validToRaise |= 1u << i;
-                    }
-
-                    gBattleScripting.statChanger = gBattleScripting.savedStatChanger = 0; // for raising and lowering stat respectively
-                    if (validToRaise) // Find stat to raise
-                    {
-                        i = RandomUniformExcept(RNG_MOODY_INCREASE, STAT_ATK, statsNum - 1, MoodyCantRaiseStat);
-                        SET_STATCHANGER(i, 2, FALSE);
-                        validToLower &= ~(1u << i); // Can't lower the same stat as raising.
-                    }
-                    if (validToLower) // Find stat to lower
-                    {
-                        // MoodyCantLowerStat already checks that both stats are different
-                        i = RandomUniformExcept(RNG_MOODY_DECREASE, STAT_ATK, statsNum - 1, MoodyCantLowerStat);
-                        SET_STATCHANGER2(gBattleScripting.savedStatChanger, i, 1, TRUE);
-                    }
-                    BattleScriptExecute(BattleScript_MoodyActivates);
-                    effect++;
+                    if (CompareStat(battler, i, MIN_STAT_STAGE, CMP_GREATER_THAN, gLastUsedAbility))
+                        validToLower |= 1u << i;
+                    if (CompareStat(battler, i, MAX_STAT_STAGE, CMP_LESS_THAN, gLastUsedAbility))
+                        validToRaise |= 1u << i;
                 }
+
+                gBattleScripting.statChanger = gBattleScripting.savedStatChanger = 0; // for raising and lowering stat respectively
+                if (validToRaise) // Find stat to raise
+                {
+                    i = RandomUniformExcept(RNG_MOODY_INCREASE, STAT_ATK, statsNum - 1, MoodyCantRaiseStat);
+                    SET_STATCHANGER(i, 2, FALSE);
+                    validToLower &= ~(1u << i); // Can't lower the same stat as raising.
+                }
+                if (validToLower) // Find stat to lower
+                {
+                    // MoodyCantLowerStat already checks that both stats are different
+                    i = RandomUniformExcept(RNG_MOODY_DECREASE, STAT_ATK, statsNum - 1, MoodyCantLowerStat);
+                    SET_STATCHANGER2(gBattleScripting.savedStatChanger, i, 1, TRUE);
+                }
+                BattleScriptExecute(BattleScript_MoodyActivates);
+                effect++;
+            }
                 break;
             case ABILITY_TRUANT:
                 gBattleMons[gBattlerAttacker].volatiles.truantCounter ^= 1;
