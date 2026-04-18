@@ -3421,14 +3421,13 @@ static bool32 HasAnyBattlerQueuedSwitch(void)
 static bool32 TryRedCard(enum BattlerId battlerAtk, enum BattlerId redCardBattler, enum Move move)
 {
     if (!IsBattlerAlive(redCardBattler)
-     || gBattleStruct->redCardActivated
+     || gBattleStruct->battlerState[battlerAtk].redCardSwitched
      || !IsBattlerTurnDamaged(redCardBattler, EXCLUDING_SUBSTITUTES)
      || DoesSubstituteBlockMove(battlerAtk, redCardBattler, move)
      || (GetBattlerHoldEffect(redCardBattler) != HOLD_EFFECT_RED_CARD)
      || !CanBattlerSwitch(battlerAtk))
         return FALSE;
 
-    gBattleStruct->redCardActivated = TRUE;
     gLastUsedItem = gBattleMons[redCardBattler].item;
     SaveBattlerTarget(redCardBattler); // save battler with red card
     SaveBattlerAttacker(battlerAtk);
@@ -3478,7 +3477,6 @@ static enum MoveEndResult MoveEndCardButton(void)
             return MOVEEND_RESULT_RUN_SCRIPT;
     }
 
-    gBattleStruct->redCardActivated = FALSE;
     gBattleStruct->eventState.moveEndBattler = 0;
     gBattleScripting.moveendState++;
     return MOVEEND_RESULT_CONTINUE;
@@ -3717,10 +3715,8 @@ static inline bool32 TryEjectPack(enum BattlerId battlerAtk, enum BattlerId ejec
 {
     if (!gBattleMons[ejectPackBattler].volatiles.tryEjectPack
      || HasAnyBattlerQueuedSwitch()
-     || GetBattlerHoldEffect(ejectPackBattler) != HOLD_EFFECT_EJECT_PACK
      || !IsBattlerAlive(ejectPackBattler)
      || !CanBattlerSwitch(ejectPackBattler)
-     || gProtectStructs[ejectPackBattler].disableEjectPack
      || (GetMoveEffect(gCurrentMove) == EFFECT_PARTING_SHOT && CanBattlerSwitch(battlerAtk)))
         return FALSE;
 
@@ -3743,14 +3739,17 @@ static enum MoveEndResult MoveEndItemOnStatChange(void)
         switch (holdEffect)
         {
         case HOLD_EFFECT_WHITE_HERB:
-            if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsWhiteHerbActivation))
+            if (ItemBattleEffects(battler, 0, holdEffect, IsWhiteHerbActivation))
                 return MOVEEND_RESULT_RUN_SCRIPT;
+            break;
         case HOLD_EFFECT_EJECT_PACK:
             if (TryEjectPack(gBattlerAttacker, battler))
                 return MOVEEND_RESULT_RUN_SCRIPT;
+            break;
         case HOLD_EFFECT_MIRROR_HERB:
-            if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsMirrorHerbActivation))
+            if (ItemBattleEffects(battler, 0, holdEffect, IsMirrorHerbActivation))
                 return MOVEEND_RESULT_RUN_SCRIPT;
+            break;
         default:
             break;
         }

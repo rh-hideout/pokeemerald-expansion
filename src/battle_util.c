@@ -3867,9 +3867,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
              && (CompareStat(battler, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN, gLastUsedAbility) // Don't activate if both Speed and Defense cannot be raised.
                || CompareStat(battler, STAT_DEF, MIN_STAT_STAGE, CMP_GREATER_THAN, gLastUsedAbility)))
             {
-                if (GetMoveEffect(gCurrentMove) == EFFECT_HIT_ESCAPE && CanBattlerSwitch(gBattlerAttacker))
-                    gProtectStructs[battler].disableEjectPack = TRUE;  // Set flag for target
-
                 BattleScriptCall(BattleScript_WeakArmorActivates);
                 effect++;
             }
@@ -7141,8 +7138,8 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
     }
 
     // sandstorm sp.def boost for rock types
-    if (GetConfig(B_SANDSTORM_SPDEF_BOOST) >= GEN_4 
-	 && IS_BATTLER_OF_TYPE(battlerDef, TYPE_ROCK) 
+    if (GetConfig(B_SANDSTORM_SPDEF_BOOST) >= GEN_4
+	 && IS_BATTLER_OF_TYPE(battlerDef, TYPE_ROCK)
 	 && GetAttackerWeather(ctx->holdEffects[ctx->battlerAtk], ctx->abilities[ctx->battlerAtk], ctx->weather) & B_WEATHER_SANDSTORM
 	 && !usesDefStat)
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
@@ -9299,7 +9296,7 @@ u32 GetWeather(void)
     return gBattleWeather;
 }
 
-u32 GetAttackerWeather(enum HoldEffect holdEffect, enum Ability ability, u32 weather) 
+u32 GetAttackerWeather(enum HoldEffect holdEffect, enum Ability ability, u32 weather)
 {
     if (ability == ABILITY_MEGA_SOL)
         return B_WEATHER_SUN;
@@ -10245,9 +10242,9 @@ u32 GetTotalAccuracy(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
         buff = MAX_STAT_STAGE;
 
     moveAcc = GetMoveAccuracy(move);
-    
+
     // Check Thunder and Hurricane on sunny weather.
-    if (IsBattlerWeatherAffected(defHoldEffect, GetWeather(), B_WEATHER_SUN) && MoveHas50AccuracyInSun(move)) 
+    if (IsBattlerWeatherAffected(defHoldEffect, GetWeather(), B_WEATHER_SUN) && MoveHas50AccuracyInSun(move))
         moveAcc = 50;
     // Check Wonder Skin.
     if (defAbility == ABILITY_WONDER_SKIN && IsBattleMoveStatus(move) && moveAcc > 50)
