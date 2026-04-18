@@ -334,8 +334,9 @@ SINGLE_BATTLE_TEST("Corrosion does not make Toxic Spikes poison a Corrosion user
         TURN { MOVE(player, MOVE_TOXIC_SPIKES); MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
         TURN { SWITCH(opponent, 1); }
         TURN { SWITCH(opponent, 0); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC_SPIKES, player);
     } THEN {
-        EXPECT(IsHazardOnSide(B_SIDE_OPPONENT, HAZARDS_TOXIC_SPIKES));
         EXPECT_EQ(opponent->status1, STATUS1_NONE);
     }
 }
