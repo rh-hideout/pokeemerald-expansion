@@ -3468,6 +3468,9 @@ static enum MoveEndResult MoveEndCardButton(void)
     {
         enum BattlerId battler = gMoveResolutionBattlersBySpeed[gBattleStruct->eventState.moveEndBattler++];
 
+        if (battler == gBattlerAttacker)
+           continue;
+
         if (TryRedCard(gBattlerAttacker, battler, gCurrentMove))
             return MOVEEND_RESULT_RUN_SCRIPT;
 
