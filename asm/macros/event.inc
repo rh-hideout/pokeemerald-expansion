@@ -2663,6 +2663,7 @@
 	special CreateInGameTradePokemon
 	special DoInGameTradeScene
 	waitstate
+	bufferspeciesname STR_VAR_1, VAR_0x8009
 	msgbox \tradeCompleteMsg, MSGBOX_DEFAULT
 	.endm
 
