@@ -53,3 +53,22 @@ DOUBLE_BATTLE_TEST("Magician steal the item from the fastest possible target")
             EXPECT(playerLeft->item == ITEM_ULTRA_BALL);
     }
 }
+
+SINGLE_BATTLE_TEST("Magician does not activate with Future Sight or Doom Desire")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
+        PLAYER(SPECIES_DELPHOX) { Ability(ABILITY_MAGICIAN); }
+        OPPONENT(SPECIES_BLISSEY) { Item(ITEM_POKE_BALL); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_DOOM_DESIRE); }
+        TURN {}
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DOOM_DESIRE, player);
+        NOT ABILITY_POPUP(player, ABILITY_MAGICIAN);
+    } THEN {
+        EXPECT_EQ(player->item, ITEM_NONE);
+        EXPECT_EQ(opponent->item, ITEM_POKE_BALL);
+    }
+}
