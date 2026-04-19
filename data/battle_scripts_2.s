@@ -26,7 +26,7 @@ gBattlescriptsForUsingItem::
 	.4byte BattleScript_BallThrow                    @ EFFECT_ITEM_THROW_BALL
 	.4byte BattleScript_ItemRestoreHP                @ EFFECT_ITEM_REVIVE
 	.4byte BattleScript_ItemRestorePP                @ EFFECT_ITEM_RESTORE_PP
-	.4byte BattleScript_ItemIncreaseAllStats         @ EFFECT_ITEM_INCREASE_ALL_STATS
+	.4byte BattleScript_ItemIncreaseStat             @ EFFECT_ITEM_INCREASE_ALL_STATS
 	.4byte BattleScript_UsePokeFlute                 @ EFFECT_ITEM_USE_POKE_FLUTE
 
 	.align 2
@@ -166,12 +166,6 @@ BattleScript_ItemRestorePP::
 	itemrestorepp
 	printstring STRINGID_ITEMRESTOREDSPECIESPP
 	waitmessage B_WAIT_TIME_LONG
-	end
-
-BattleScript_ItemIncreaseAllStats::
-	call BattleScript_UseItemMessage
-	itemincreasestat
-	trybattlerstatchange BS_ATTACKER, STAT_CHANGE_NO_FLAGS
 	end
 
 BattleScript_BallThrow::

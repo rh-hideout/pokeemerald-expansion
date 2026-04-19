@@ -1255,7 +1255,6 @@ static bool32 SelectedMonHasVolatile(enum Item itemId)
 // Returns whether an item can be used in battle and sets the fail text.
 bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon)
 {
-    DebugPrintf("???");
     u16 battleUsage = GetItemBattleUsage(itemId);
     bool8 cannotUse = FALSE;
     const u8* failStr = NULL;

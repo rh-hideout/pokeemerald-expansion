@@ -203,7 +203,10 @@ Debug_EventScript_Text_DefensiveIVs:
 	.string "HP IVs: {STR_VAR_1}, DEF IVs: {STR_VAR_2}, SPDEF IVs: {STR_VAR_3}$"
 
 Debug_EventScript_Script_1::
-	release
+	settotemboost battler=1, atk=1, def=1, spatk=1, spdef=1, speed=1
+	setwildbattle SPECIES_ESPATHRA, 70
+	dowildbattle
+	releaseall
 	end
 
 Debug_EventScript_Script_2::

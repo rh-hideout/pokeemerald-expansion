@@ -1441,12 +1441,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro copyfoesstatincrease battler:req, failInstr:req
-	callnative BS_CopyFoesStatIncrease
-	.byte \battler
-	.4byte \failInstr
-	.endm
-
 	.macro removeweather
 	callnative BS_RemoveWeather
 	.endm
@@ -1573,7 +1567,11 @@
     callnative BS_TryDefiantRattled
     .endm
 
-    .macro raisecritstatchangeanim  battler:req
+    .macro tryadrenalineorb
+    callnative BS_TryAdrenalineOrb
+    .endm
+
+    .macro raisecritstatchangeanim battler:req
     callnative BS_RaiseCritStatChangeAnim
     .byte \battler
     .endm
@@ -1583,10 +1581,6 @@
     .endm
 
 @ helpful macros
-	.macro setstatchanger stat:req, stages:req, down:req
-	setbyte sSTATCHANGER, \stat | \stages << 3 | \down << 7
-	.endm
-
 	.macro setmoveeffect effect:req
 	sethword sMOVE_EFFECT, \effect
 	.endm
@@ -2076,10 +2070,6 @@
 	callnative BS_JumpIfAbilityPreventsRest
 	.byte \battler
 	.4byte \jumpInstr
-	.endm
-
-	.macro setattackertostickywebuser
-	callnative BS_SetAttackerToStickyWebUser
 	.endm
 
 	.macro cutonethirdhpandraisestats failInstr:req

@@ -175,7 +175,6 @@ EWRAM_DATA enum BattlerId gBattlerAttacker = 0;
 EWRAM_DATA enum BattlerId gBattlerTarget = 0;
 EWRAM_DATA enum BattlerId gBattlerFainted = 0;
 EWRAM_DATA enum BattlerId gEffectBattler = 0;
-EWRAM_DATA enum BattlerId gStatChangeBattler = 0;
 EWRAM_DATA enum BattlerId gPotentialItemEffectBattler = 0;
 EWRAM_DATA u8 gAbsentBattlerFlags = 0;
 EWRAM_DATA u8 gMultiHitCounter = 0;
@@ -3777,7 +3776,7 @@ static void TryDoEventsBeforeFirstTurn(void)
             if (gQueuedStatBoosts[battler].stats == 0)
                 continue;
 
-            for (enum Stat stat = STAT_ATK; stat < gBattlersCount; stat++)
+            for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
             {
                 if (gQueuedStatBoosts[battler].stats & (1 << stat))
                 {
@@ -6077,7 +6076,7 @@ void ScriptSetTotemBoost(struct ScriptContext *ctx)
 
     Script_RequestEffects(SCREFF_V1);
 
-    for (enum Stat stat = 0; stat < NUM_BATTLE_STATS; stat++)
+    for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
     {
         u32 stage = VarGet(ScriptReadHalfword(ctx));
         if (stage)

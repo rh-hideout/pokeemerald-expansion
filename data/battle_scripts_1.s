@@ -95,16 +95,14 @@ BattleScript_StatChangeFailed::
 	goto BattleScript_MoveEnd
 
 BattleScript_PlayMoveAnimAndChangeHP::
-    playmoveanimation MOVE_NONE
-	waitanimation
+	call BattleScript_PlayMoveAnim
 	healthbarupdate BS_ATTACKER, PASSIVE_HP_UPDATE
 	datahpupdate BS_ATTACKER, PASSIVE_HP_UPDATE
     return
 
 BattleScript_PlayTidyUp::
-    playmoveanimation MOVE_NONE
-	waitanimation
-	trytidyup  TRUE, NULL
+	call BattleScript_PlayMoveAnim
+	trytidyup TRUE, NULL
 	printstring STRINGID_TIDYINGUPCOMPLETE
 	waitmessage B_WAIT_TIME_LONG
     return
@@ -162,15 +160,37 @@ BattleScript_TarShotMessage::
     tryanystatchange
 	goto BattleScript_MoveEnd
 
+BattleScript_AbilityStatChange::
+	call BattleScript_AbilityPopUp
+	trynonmovestatchange BS_EFFECT_BATTLER, STAT_CHANGE_NO_FLAGS
+	return
+
+BattleScript_DefiantActivates::
+	call BattleScript_AbilityPopUp
+	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_SECOND_QUEUE
+	return
+
+BattleScript_AdrenalineOrbActivates::
+	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT
+	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_SECOND_QUEUE
+	removeitem BS_SCRIPTING
+	return
+
+BattleScript_MoveEffectStatChange::
+	trynonmovestatchange BS_ATTACKER, STAT_CHANGE_SILENT_FAILURE | STAT_CHANGE_IGNORE_SELF
+	return
+
 BattleScript_IncreaseStatChangeMessage::
 	printfromtable gStatUpStringIds
 	waitmessage B_WAIT_TIME_LONG
+	tryadrenalineorb
 	return
 
 BattleScript_DecreaseStatChangeMessage::
 	printfromtable gStatDownStringIds
 	waitmessage B_WAIT_TIME_LONG
 	trydefiantrattled
+	tryadrenalineorb
 	return
 
 BattleScript_IncreaseStatChangeMessagePause::
@@ -3506,29 +3526,6 @@ BattleScript_SeedSowerActivates::
 	call BattleScript_ActivateTerrainEffects
 	return
 
-BattleScript_AbilityStatChangeEnd2::
-	call BattleScript_AbilityStatChange
-	end2
-
-BattleScript_AbilityStatChange::
-	call BattleScript_AbilityPopUp
-	trynonmovestatchange BS_EFFECT_BATTLER, STAT_CHANGE_NO_FLAGS
-	return
-
-BattleScript_AbilityStatChangeTarget:: @ Uses target as the inpput, e.g. for Tangling Hair
-	call BattleScript_AbilityPopUp
-	trynonmovestatchange BS_TARGET, STAT_CHANGE_NO_FLAGS
-	return
-
-BattleScript_DefiantActivates::
-	call BattleScript_AbilityPopUp
-	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_SECOND_QUEUE
-	return
-
-BattleScript_MoveEffectStatChange::
-	trynonmovestatchange BS_ATTACKER, STAT_CHANGE_SILENT_FAILURE | STAT_CHANGE_IGNORE_SELF
-	return
-
 BattleScript_WindPowerActivates::
 	call BattleScript_AbilityPopUp
 	setvolatile BS_ABILITY_BATTLER, VOLATILE_CHARGE_TIMER, 1
@@ -4625,20 +4622,6 @@ BattleScript_ActivateWeatherAbilities_Loop:
 	restoretarget
 	return
 
-BattleScript_TryIntimidateHoldEffects:
-	jumpifnoholdeffect BS_TARGET, HOLD_EFFECT_ADRENALINE_ORB, BattleScript_TryIntimidateHoldEffectsRet
-	jumpifstat BS_TARGET, CMP_EQUAL, STAT_SPEED, MAX_STAT_STAGE, BattleScript_TryIntimidateHoldEffectsRet
-	setstatchanger STAT_SPEED, 1, FALSE
-	playanimation BS_TARGET, B_ANIM_HELD_ITEM_EFFECT
-	@statbuffchange BS_TARGET, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_CERTAIN | STAT_CHANGE_ALLOW_PTR, BattleScript_TryIntimidateHoldEffectsRet
-	copybyte sBATTLER, gBattlerTarget
-	setlastuseditem BS_TARGET
-	printstring STRINGID_USINGITEMSTATOFPKMNROSE
-	waitmessage B_WAIT_TIME_LONG
-	removeitem BS_TARGET
-BattleScript_TryIntimidateHoldEffectsRet:
-	return
-
 BattleScript_IntimidateActivates::
 	call BattleScript_AbilityPopUp
 	trynonmovestatchange BS_EFFECT_BATTLER, STAT_CHANGE_INTIMIDATE
@@ -5703,12 +5686,9 @@ BattleScript_ZMoveActivateDamaging::
 BattleScript_ZMoveActivateStatus::
 	flushtextbox
 	trytrainerslidezmovemsg
-	savetarget
 	printstring STRINGID_ZPOWERSURROUNDS
 	playanimation BS_ATTACKER, B_ANIM_ZMOVE_ACTIVATE, NULL
 	setzeffect
-	restoretarget
-	copybyte sSTATCHANGER, sSAVED_STAT_CHANGER
 	return
 
 BattleScript_ZEffectPrintString::

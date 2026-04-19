@@ -355,7 +355,7 @@ static void CompleteWhenChoseItem(enum BattlerId battler)
 static void Intro_TryShinyAnimShowHealthbox(enum BattlerId battler)
 {
     struct Pokemon *party = GetBattlerParty(battler);
-    
+
     if (!gBattleSpritesDataPtr->healthBoxesData[battler].triedShinyMonAnim
      && !gBattleSpritesDataPtr->healthBoxesData[battler].ballAnimActive)
         TryShinyAnimation(battler, &party[gBattlerPartyIndexes[battler]]);
@@ -726,7 +726,7 @@ static void OakOldManHandlePrintString(enum BattlerId battler)
             switch (*stringId)
             {
             case STRINGID_STATFELL:
-                if (gBattlerTarget == gStatChangeBattler && IS_FRLG && !BtlCtrl_OakOldMan_TestState2Flag(FIRST_BATTLE_MSG_FLAG_STAT_CHG))
+                if (gBattlerTarget == battler && IS_FRLG && !BtlCtrl_OakOldMan_TestState2Flag(FIRST_BATTLE_MSG_FLAG_STAT_CHG))
                 {
                     BtlCtrl_OakOldMan_SetState2Flag(FIRST_BATTLE_MSG_FLAG_STAT_CHG);
                     gBattlerControllerFuncs[battler] = PrintOakText_LoweringStats;

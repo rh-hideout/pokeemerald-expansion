@@ -341,7 +341,7 @@ static enum StatChangeResult DecreaseStat(struct BattleCalcValues *cv, struct St
         if (st->onlyChecking)
             return STAT_CHANGE_DIDNT_WORK;
 
-        if (cv->move == MOVE_BELLY_DRUM)
+        if (cv->moveEffect == EFFECT_BELLY_DRUM)
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STAT_CHANGED_BELLY_DRUM;
         else
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STAT_WONT_CHANGE;
@@ -354,7 +354,6 @@ static enum StatChangeResult DecreaseStat(struct BattleCalcValues *cv, struct St
     {
         gBattleMons[cv->battlerDef].volatiles.tryEjectPack = TRUE;
         gProtectStructs[cv->battlerDef].lashOutAffected = TRUE;
-        gBattleScripting.statChanger |= STAT_BUFF_NEGATIVE;
     }
 
     if (!st->onlyChecking)
@@ -731,12 +730,10 @@ static bool32 IsMirrorArmorReflected(struct BattleCalcValues *cv, struct StatCha
         }
         else
         {
-            // if (cv->move == MOVE_NONE)
-            //     gBattleScripting.battler = cv->battlerAtk;
-            if (gBattlerAttacker == cv->battlerDef)
-                gBattleScripting.battler = gBattlerTarget;
+            if (cv->battlerAtk == cv->battlerDef)
+                gBattleScripting.battler = cv->battlerDef;
             else
-                gBattleScripting.battler = gBattlerAttacker;
+                gBattleScripting.battler = cv->battlerAtk;
 
             gBattleStruct->allowPartingShot = TRUE;
         }
@@ -875,7 +872,7 @@ void ClearStatChangeValues(void)
         memset(gSpecialStatuses[battler].statStageQueue, 0, sizeof(gSpecialStatuses[battler].statStageQueue));
         gSpecialStatuses[battler].statStageAmount = 0;
     }
-    gBattleStruct->ignoreDefiant= FALSE;
+    gBattleStruct->ignoreDefiant = FALSE;
     gBattleStruct->negativeAnimPlayed = 0;
     gBattleStruct->positiveAnimPlayed = 0;
     gBattleStruct->statChangeBattler  = 0;
@@ -885,7 +882,7 @@ void ClearOtherStatChangeValues(enum BattlerId battler)
 {
     memset(gSpecialStatuses[battler].statStageQueue2, 0, sizeof(gSpecialStatuses[battler].statStageQueue2));
     gSpecialStatuses[battler].statStageAmount2 = 0;
-    gBattleStruct->ignoreDefiant= FALSE;
+    gBattleStruct->ignoreDefiant = FALSE;
     gBattleStruct->negativeAnimPlayed = 0;
     gBattleStruct->positiveAnimPlayed = 0;
 }
@@ -948,8 +945,9 @@ static void SetAdditionalEffectsOnStatChange(struct BattleCalcValues *cv, struct
     case EFFECT_DEFENSE_CURL:
         gBattleMons[cv->battlerDef].volatiles.defenseCurl = TRUE;
         break;
-    case EFFECT_MINIMIZE:
-        gBattleMons[cv->battlerDef].volatiles.minimize = TRUE;
+    case EFFECT_MINIMIZE: // Write a tests that fails on max stat
+        if (gBattleStruct->moveResultFlags[cv->battlerDef] & MOVE_RESULT_STAT_CHANGED)
+            gBattleMons[cv->battlerDef].volatiles.minimize = TRUE;
         break;
     case EFFECT_NO_RETREAT:
         if (!gBattleMons[cv->battlerDef].volatiles.escapePrevention)

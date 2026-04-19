@@ -1592,9 +1592,8 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             ADJUST_SCORE(-10);
         break;
     case EFFECT_TOXIC_THREAD:
-        if (!AI_CanAnyStatChange(battlerAtk, battlerDef, move))
-            ADJUST_SCORE(-10);
-        else if (!AI_CanPoison(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, aiData->partnerMove))
+        if (!AI_CanAnyStatChange(battlerAtk, battlerDef, move)
+         && !AI_CanPoison(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, aiData->partnerMove))
             ADJUST_SCORE(-10);
         break;
     case EFFECT_CURSE:
@@ -5569,61 +5568,58 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
         // Consider move effects that target self
         if (additionalEffect->self)
         {
-            if (aiData->abilities[battlerAtk] != ABILITY_CONTRARY)
+            switch (additionalEffect->moveEffect)
             {
-                switch (additionalEffect->moveEffect)
+            case MOVE_EFFECT_STAT_PLUS:
+            case MOVE_EFFECT_STAT_MINUS:
+                for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
                 {
-                case MOVE_EFFECT_STAT_PLUS:
-                case MOVE_EFFECT_STAT_MINUS:
-                    for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
-                    {
-                        enum Stat stat = sAccurateStatOrder[i];
-                        s32 stage = GetStatStage(stat, additionalEffect);
+                    enum Stat stat = sAccurateStatOrder[i];
+                    s32 stage = GetStatStage(stat, additionalEffect);
 
-                        if (stage == 0)
-                            continue;
+                    if (stage == 0)
+                        continue;
 
-                        if (additionalEffect->moveEffect == MOVE_EFFECT_STAT_MINUS)
-                            stage = -1 * stage;
+                    if (additionalEffect->moveEffect == MOVE_EFFECT_STAT_MINUS)
+                        stage = -1 * stage;
 
-                        if (aiData->abilities[battlerAtk] == ABILITY_CONTRARY)
-                            stage = -1 * stage;
+                    if (aiData->abilities[battlerAtk] == ABILITY_CONTRARY)
+                        stage = -1 * stage;
 
-                        if (stage < 0)
-                            continue;
+                    if (stage < 0)
+                        continue;
 
-                        if (gBattleMons[battlerAtk].statStages[stat] < MAX_STAT_STAGE)
-                            ADJUST_SCORE(WEAK_EFFECT);
-                    }
-                    break;
-                case MOVE_EFFECT_ORDER_UP:
-                {
-                    enum Stat stat = STAT_ATK;
-                    bool32 commanderAffected = TRUE;
-
-                    switch (gBattleStruct->battlerState[battlerAtk].commanderSpecies)
-                    {
-                    case SPECIES_TATSUGIRI_CURLY:
-                        stat = STAT_ATK;
-                        break;
-                    case SPECIES_TATSUGIRI_DROOPY:
-                        stat = STAT_DEF;
-                        break;
-                    case SPECIES_TATSUGIRI_STRETCHY:
-                        stat = STAT_SPEED;
-                        break;
-                    default:
-                        commanderAffected = FALSE;
-                        break;
-                    }
-
-                    if (commanderAffected)
-                        ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, stat, 1));
-                    break;
+                    if (gBattleMons[battlerAtk].statStages[stat] < MAX_STAT_STAGE)
+                        ADJUST_SCORE(GOOD_EFFECT);
                 }
+                break;
+            case MOVE_EFFECT_ORDER_UP:
+            {
+                enum Stat stat = STAT_ATK;
+                bool32 commanderAffected = TRUE;
+
+                switch (gBattleStruct->battlerState[battlerAtk].commanderSpecies)
+                {
+                case SPECIES_TATSUGIRI_CURLY:
+                    stat = STAT_ATK;
+                    break;
+                case SPECIES_TATSUGIRI_DROOPY:
+                    stat = STAT_DEF;
+                    break;
+                case SPECIES_TATSUGIRI_STRETCHY:
+                    stat = STAT_SPEED;
+                    break;
                 default:
+                    commanderAffected = FALSE;
                     break;
                 }
+
+                if (commanderAffected)
+                    ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, stat, 1));
+                break;
+            }
+            default:
+                break;
             }
         }
         else // consider move effects that hinder the target
@@ -5633,15 +5629,10 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
 
             switch (additionalEffect->moveEffect)
             {
-            case MOVE_EFFECT_FLINCH:
-                if (ShouldTryToFlinch(battlerAtk, battlerDef, aiData->abilities[battlerAtk], aiData->abilities[battlerDef], move))
-                    score += 2;
-                break;
             case MOVE_EFFECT_STAT_PLUS:
             case MOVE_EFFECT_STAT_MINUS:
-                for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
+                for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
                 {
-                    enum Stat stat = sAccurateStatOrder[i];
                     s32 stage = GetStatStage(stat, additionalEffect);
 
                     if (stage == 0)
@@ -5656,9 +5647,13 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
                     if (stage > 0)
                         continue;
 
-                    if (gBattleMons[battlerAtk].statStages[stat] > MIN_STAT_STAGE)
-                        ADJUST_SCORE(WEAK_EFFECT);
+                    if (gBattleMons[battlerDef].statStages[stat] > MIN_STAT_STAGE)
+                        ADJUST_SCORE(GOOD_EFFECT);
                 }
+                break;
+            case MOVE_EFFECT_FLINCH:
+                if (ShouldTryToFlinch(battlerAtk, battlerDef, aiData->abilities[battlerAtk], aiData->abilities[battlerDef], move))
+                    score += 2;
                 break;
             case MOVE_EFFECT_POISON:
                 IncreasePoisonScore(battlerAtk, battlerDef, move, &score);

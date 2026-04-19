@@ -2630,7 +2630,7 @@ void MoveGetIdAndSlot(s32 battlerId, struct MoveContext *ctx, u32 *moveId, u32 *
 
     if (ctx->explicitMove)
     {
-        // INVALID_IF(ctx->move == MOVE_NONE || ctx->move >= MOVES_COUNT, "Illegal move: %d", ctx->move);
+        INVALID_IF(ctx->move == MOVE_NONE || ctx->move >= MOVES_COUNT, "Illegal move: %d", ctx->move);
         for (i = 0; i < MAX_MON_MOVES; i++)
         {
             *moveId = GetMonData(mon, MON_DATA_MOVE1 + i);

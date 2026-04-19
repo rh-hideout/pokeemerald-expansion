@@ -2842,6 +2842,7 @@ static enum MoveEndResult MoveEndMirrorMove(void)
     return MOVEEND_RESULT_CONTINUE;
 }
 
+// Used for non damaging (status) stat change moves
 bool32 IsStatChangeMove(enum Move move)
 {
     u32 additionalEffectCount = GetMoveAdditionalEffectCount(move);

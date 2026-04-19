@@ -3934,10 +3934,9 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
 
                 if (TryStatChange(&cv, &st) == STAT_CHANGE_WORKED || cv.abilities[gBattlerAttacker] == ABILITY_MIRROR_ARMOR)
                 {
-                    gEffectBattler = gBattlerAttacker;
-                    gBattlerAbility = gBattlerTarget;
+                    gEffectBattler = gBattlerAbility = gBattlerTarget;
                     SetStatChange(gBattlerAttacker, STAT_SPEED, -1);
-                    BattleScriptCall(BattleScript_AbilityStatChangeTarget);
+                    BattleScriptCall(BattleScript_AbilityStatChange);
                     effect++;
                 }
             }

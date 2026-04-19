@@ -448,8 +448,6 @@ void SetZEffect(const u8 *nextInstr)
             effect = Z_EFFECT_ATK_UP_1;
     }
 
-    gBattleScripting.battler = gBattlerAttacker; // I forgot what this was for. Might be not needed. Will check later
-
     switch (effect)
     {
     case Z_EFFECT_RESET_STATS:

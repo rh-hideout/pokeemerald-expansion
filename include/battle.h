@@ -723,19 +723,16 @@ struct BattleStruct
     u32 bouncedMoveIsUsed:1;
     u32 dancerSavedAttacker:3;
     u32 dancerSavedTarget:3;
-    u32 padding:7;
-
-
+    u32 statChangeBattler:3;
+    u32 padding:4;
     u8 statChangeMoveAnim:1;
     u8 tidyUpActivates:1;
     u8 positiveAnimPlayed:1;
     u8 negativeAnimPlayed:1;
-    u8 statChangeBattler:3; // will be removed
-    u8 defogSavedBattler:3;
     u8 ignoreDefiant:1;
     u8 intimidateActivated:1;
     u8 allowPartingShot:1;
-
+    u8 adrenalineOrbActivated:1; // prevents looping after an adrenaline stat changed
 };
 
 struct AiBattleData
@@ -812,22 +809,12 @@ static inline bool32 IsBattleMoveStatus(enum Move move)
     gBattleMons[battler].types[2] = TYPE_MYSTERY;                                    \
 }
 
-#define GET_STAT_BUFF_ID(n) ((n & 7))              // first three bits 0x1, 0x2, 0x4
-#define GET_STAT_BUFF_VALUE_WITH_SIGN(n) ((n & 0xF8))
-#define GET_STAT_BUFF_VALUE(n) (((n >> 3) & 0xF))      // 0x8, 0x10, 0x20, 0x40
-#define STAT_BUFF_NEGATIVE 0x80                     // 0x80, the sign bit
-
-#define SET_STAT_BUFF_VALUE(n) ((((n) << 3) & 0xF8))
-
-#define SET_STATCHANGER(statId, stage, goesDown) (gBattleScripting.statChanger = (statId) + ((stage) << 3) + (goesDown << 7))
-#define SET_STATCHANGER2(dst, statId, stage, goesDown)(dst = (statId) + ((stage) << 3) + (goesDown << 7))
-
 // NOTE: The members of this struct have hard-coded offsets
 //       in include/constants/battle_script_commands.h
 struct BattleScripting
 {
-    s32 unused1;
-    s32 bideDmg;
+    s32 unused_0x00;
+    s32 unused_0x04;
     u8 multihitString[6];
     bool8 expOnCatch;
     u8 unused2;
@@ -835,13 +822,13 @@ struct BattleScripting
     u8 animArg2;
     u16 savedStringId;
     u8 moveendState;
-    u8 savedStatChanger; // For further use, if attempting to change stat two times(ex. Moody)
+    u8 unused_0x15;
     u8 shiftSwitched; // When the game tells you the next enemy's pokemon and you switch. Option for noobs but oh well.
     enum BattlerId battler;
     u8 animTurn;
     u8 animTargetsHit;
-    u8 statChanger;
-    bool8 statAnimPlayed;
+    u8 unused_0x1a;
+    u8 unused_0x1b;
     u8 getexpState;
     u8 battleStyle;
     u8 drawlvlupboxState;
@@ -1010,7 +997,6 @@ extern enum BattlerId gBattlerAttacker;
 extern enum BattlerId gBattlerTarget;
 extern enum BattlerId gBattlerFainted;
 extern enum BattlerId gEffectBattler;
-extern enum BattlerId gStatChangeBattler;
 extern enum BattlerId gPotentialItemEffectBattler;
 extern u8 gAbsentBattlerFlags;
 extern u8 gMultiHitCounter;

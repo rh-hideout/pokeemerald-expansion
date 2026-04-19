@@ -221,7 +221,6 @@ enum BattleScriptOpcode
     B_SCR_OP_TRY_SYNCHRONIZE,
     B_SCR_OP_TRY_CONFUSION_AFTER_SKY_DROP,
     B_SCR_OP_TRYANYSTATCHANGE,
-    B_SCR_OP_TRYSTATCHANGE,
     B_SCR_OP_TRYNONMOVESTATCHANGE,
     B_SCR_OP_TRYBATTLERSTATCHANGE,
 
@@ -250,12 +249,18 @@ enum BattleScriptOpcode
     B_SCR_OP_UNUSED_20,
     B_SCR_OP_UNUSED_21,
     B_SCR_OP_UNUSED_22,
-    // B_SCR_OP_UNUSED_23,
-    // B_SCR_OP_UNUSED_24,
-    // B_SCR_OP_UNUSED_25,
-    // B_SCR_OP_UNUSED_26,
-    // B_SCR_OP_UNUSED_27,
-    // B_SCR_OP_UNUSED_28,
+    B_SCR_OP_UNUSED_23,
+    B_SCR_OP_UNUSED_24,
+    B_SCR_OP_UNUSED_25,
+    B_SCR_OP_UNUSED_26,
+    B_SCR_OP_UNUSED_27,
+    B_SCR_OP_UNUSED_28,
+    B_SCR_OP_UNUSED_29,
+    B_SCR_OP_UNUSED_30,
+    B_SCR_OP_UNUSED_31,
+    B_SCR_OP_UNUSED_32,
+    B_SCR_OP_UNUSED_33,
+    B_SCR_OP_UNUSED_34,
     B_SCR_OP_CALLNATIVE,
 };
 
@@ -269,13 +274,13 @@ enum BattleScriptOpcode
 #define sB_ANIM_ARG2                 (gBattleScripting + 0x11) // animArg2
 #define sSAVED_STRINID               (gBattleScripting + 0x12) // savedStringId
 #define sMOVEEND_STATE               (gBattleScripting + 0x14) // moveendState
-#define sSAVED_STAT_CHANGER          (gBattleScripting + 0x15) // savedStatChanger
+#define sUNUSED_0x15                 (gBattleScripting + 0x15) // unused_0x15
 #define sSHIFT_SWITCHED              (gBattleScripting + 0x16) // shiftSwitched
 #define sBATTLER                     (gBattleScripting + 0x17) // battler
 #define sB_ANIM_TURN                 (gBattleScripting + 0x18) // animTurn
 #define sB_ANIM_TARGETS_HIT          (gBattleScripting + 0x19) // animTargetsHit
-#define sSTATCHANGER                 (gBattleScripting + 0x1A) // statChanger
-#define sSTAT_ANIM_PLAYED            (gBattleScripting + 0x1B) // statAnimPlayed
+#define sUNUSED_0x1A                 (gBattleScripting + 0x1A) // unused_0x1a
+#define sUNUSED_0x1B                 (gBattleScripting + 0x1B) // unused_0x1b
 #define sGIVEEXP_STATE               (gBattleScripting + 0x1C) // getexpState
 #define sBATTLE_STYLE                (gBattleScripting + 0x1D) // battleStyle
 #define sLVLBOX_STATE                (gBattleScripting + 0x1E) // drawlvlupboxState

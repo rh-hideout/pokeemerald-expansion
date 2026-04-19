@@ -1146,13 +1146,13 @@ static bool32 AI_IsMoveEffectInPlus(enum BattlerId battlerAtk, enum BattlerId ba
                     if (additionalEffect->moveEffect == MOVE_EFFECT_STAT_MINUS)
                         stage = -1 * stage;
 
-                    if (abilityAtk == ABILITY_CONTRARY)
+                    if (abilityDef == ABILITY_CONTRARY && !DoesBattlerIgnoreAbilityChecks(battlerAtk, abilityAtk, move))
                         stage = -1 * stage;
 
                     if (stage > 0)
                         continue;
 
-                    if (gBattleMons[battlerAtk].statStages[stat] > MIN_STAT_STAGE)
+                    if (gBattleMons[battlerDef].statStages[stat] > MIN_STAT_STAGE && noOfHitsToKo > 1)
                         return TRUE;
                 }
                 break;
@@ -1223,30 +1223,35 @@ static bool32 AI_IsMoveEffectInMinus(enum BattlerId battlerAtk, enum BattlerId b
                 {
                     enum Stat stat = sAccurateStatOrder[i];
                     s32 stage = GetStatStage(stat, additionalEffect);
+                    enum Ability ability = ABILITY_NONE;
 
                     if (stage == 0)
                         continue;
 
+                    if (additionalEffect->self)
+                        ability = abilityAtk;
+                    else if (!DoesBattlerIgnoreAbilityChecks(battlerAtk, abilityAtk, move))
+                        ability = abilityDef;
+
                     if (additionalEffect->moveEffect == MOVE_EFFECT_STAT_MINUS)
                         stage = -1 * stage;
 
-                    if (abilityAtk == ABILITY_CONTRARY)
+                    if (ability == ABILITY_CONTRARY)
                         stage = -1 * stage;
 
                     if (additionalEffect->self)
                     {
                         if (stage < 0)
                             return TRUE;
+                        continue;
                     }
-                    else
-                    {
-                        if (noOfHitsToKo > 1
-                         && stage > 0
-                         && !DoesBattlerIgnoreAbilityChecks(battlerAtk, abilityAtk, move))
-                            return TRUE;
-                    }
+
+                    if (noOfHitsToKo > 1 && stage > 0) // hinders foe
+                        return TRUE;
                 }
                 break;
+            case MOVE_EFFECT_RECHARGE:
+                return additionalEffect->self;
             default:
                 break;
             }
@@ -1254,6 +1259,7 @@ static bool32 AI_IsMoveEffectInMinus(enum BattlerId battlerAtk, enum BattlerId b
         break;
     }
     }
+
     return FALSE;
 }
 
@@ -4559,7 +4565,7 @@ bool32 IsRecycleEncouragedItem(enum Item item)
     return FALSE;
 }
 
-static bool32 HasMoveThatChangesKOThreshold(enum BattlerId battlerId, u32 noOfHitsToFaint, bool32 aiIsFaster)
+static bool32 HasMoveThatChangesKOThreshold(enum BattlerId battlerId, u32 noOfHitsToFaint)
 {
     enum Move *moves = GetMovesArray(battlerId);
 
@@ -4580,8 +4586,7 @@ static bool32 HasMoveThatChangesKOThreshold(enum BattlerId battlerId, u32 noOfHi
                 {
                 case MOVE_EFFECT_STAT_MINUS:
                 {
-                    if ((additionalEffect->defense || additionalEffect->spDef)
-                     && (aiIsFaster && !additionalEffect->self))
+                    if (additionalEffect->speed && !additionalEffect->self)
                         return TRUE;
                 }
                 default:
@@ -4602,6 +4607,7 @@ static enum AIScore IncreaseStatUpScoreInternal(enum BattlerId battlerAtk, enum 
     bool32 aiIsFaster = AI_IsFaster(battlerAtk, battlerDef, MOVE_NONE, predictedMoveSpeedCheck, DONT_CONSIDER_PRIORITY); // Don't care about the priority of our setup move, care about outspeeding otherwise
     bool32 shouldSetUp = ((noOfHitsToFaint >= 2 && aiIsFaster) || (noOfHitsToFaint >= 3 && !aiIsFaster) || noOfHitsToFaint == UNKNOWN_NO_OF_HITS);
 
+    // This should be now redundant
     if (considerContrary && gAiLogicData->abilities[battlerAtk] == ABILITY_CONTRARY)
         return NO_INCREASE;
 
@@ -4613,7 +4619,7 @@ static enum AIScore IncreaseStatUpScoreInternal(enum BattlerId battlerAtk, enum 
         return NO_INCREASE;
 
     // Don't increase stats if player has a move that can change the KO threshold
-    if (HasMoveThatChangesKOThreshold(battlerDef, noOfHitsToFaint, aiIsFaster))
+    if (aiIsFaster && HasMoveThatChangesKOThreshold(battlerDef, noOfHitsToFaint))
         return NO_INCREASE;
 
     // Don't increase stat if AI is at +4
