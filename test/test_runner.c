@@ -822,8 +822,6 @@ static s32 MgbaPutchar_(s32 i, s32 c)
     return i;
 }
 
-extern const u8 gWireless_RSEtoASCIITable[];
-
 static const u8 sRSEtoConstantTable[256] =
 {
     [CHAR_SPACE] = '_',
@@ -1076,13 +1074,9 @@ static s32 MgbaVPrintf_(const char *fmt, va_list va)
                 }
                 else
                 {
+                    extern char mini_pchar_decode(u8);
                     while ((c = *pokeS++) != EOS)
-                    {
-                        if ((c = gWireless_RSEtoASCIITable[c]) != '\0')
-                            i = MgbaPutchar_(i, c);
-                        else
-                            i = MgbaPutchar_(i, '?');
-                    }
+                        i = MgbaPutchar_(i, mini_pchar_decode(c));
                 }
                 break;
             }
