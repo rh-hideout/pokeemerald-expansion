@@ -6,51 +6,134 @@ SINGLE_BATTLE_TEST("Magician gets self-damage recoil after stealing Life Orb")
     GIVEN {
         ASSUME(gItemsInfo[ITEM_LIFE_ORB].holdEffect == HOLD_EFFECT_LIFE_ORB);
         ASSUME(GetMoveCategory(MOVE_SCRATCH) != DAMAGE_CATEGORY_STATUS);
-        PLAYER(SPECIES_DELPHOX) { Ability(ABILITY_MAGICIAN); Item(ITEM_NONE); }
+        PLAYER(SPECIES_DELPHOX) { Ability(ABILITY_MAGICIAN); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LIFE_ORB); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
         // 1st turn
-        MESSAGE("Delphox used Scratch!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ABILITY_POPUP(player, ABILITY_MAGICIAN);
         MESSAGE("Delphox stole the opposing Wobbuffet's Life Orb!");
         HP_BAR(player);
         MESSAGE("Delphox was hurt by the Life Orb!");
         // 2nd turn - Life Orb recoil happens now
-        MESSAGE("Delphox used Scratch!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         HP_BAR(player);
         MESSAGE("Delphox was hurt by the Life Orb!");
+    } THEN {
+        EXPECT_EQ(player->item, ITEM_LIFE_ORB);
+        EXPECT_EQ(opponent->item, ITEM_NONE);
     }
 }
 
-DOUBLE_BATTLE_TEST("Magician steal the item from the fastest possible target")
+DOUBLE_BATTLE_TEST("Magician prioritizes opponents over allies among valid targets by speed")
 {
     u32 playerRightSpeed = 0;
     u32 opponentLeftSpeed = 0;
     u32 opponentRightSpeed = 0;
+    u32 expectedItem = ITEM_NONE;
 
-    PARAMETRIZE { playerRightSpeed = 4; opponentLeftSpeed = 2; opponentRightSpeed = 3; }
-    PARAMETRIZE { playerRightSpeed = 3; opponentLeftSpeed = 4; opponentRightSpeed = 2; }
-    PARAMETRIZE { playerRightSpeed = 2; opponentLeftSpeed = 3; opponentRightSpeed = 4; }
+    PARAMETRIZE { playerRightSpeed = 4; opponentLeftSpeed = 2; opponentRightSpeed = 3; expectedItem = ITEM_ULTRA_BALL; }
+    PARAMETRIZE { playerRightSpeed = 3; opponentLeftSpeed = 4; opponentRightSpeed = 2; expectedItem = ITEM_GREAT_BALL; }
+    PARAMETRIZE { playerRightSpeed = 2; opponentLeftSpeed = 3; opponentRightSpeed = 4; expectedItem = ITEM_ULTRA_BALL; }
 
     GIVEN {
-        PLAYER(SPECIES_DELPHOX) { Speed(1); Ability(ABILITY_MAGICIAN); Item(ITEM_NONE); }
+        ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
+        PLAYER(SPECIES_DELPHOX) { Speed(1); Ability(ABILITY_MAGICIAN); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(playerRightSpeed); Item(ITEM_POKE_BALL); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(opponentLeftSpeed); Item(ITEM_GREAT_BALL); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(opponentRightSpeed); Item(ITEM_ULTRA_BALL); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SURF); }
     } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, playerLeft);
         ABILITY_POPUP(playerLeft, ABILITY_MAGICIAN);
     } THEN {
-        if (playerRightSpeed == 4)
-            EXPECT(playerLeft->item == ITEM_POKE_BALL);
-        else if (opponentLeftSpeed == 4)
-            EXPECT(playerLeft->item == ITEM_GREAT_BALL);
-        else if (playerRightSpeed == 4)
-            EXPECT(playerLeft->item == ITEM_ULTRA_BALL);
+        EXPECT_EQ(playerLeft->item, expectedItem);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Magician can steal from ally if no opponent is a valid target")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
+        PLAYER(SPECIES_DELPHOX) { Speed(1); Ability(ABILITY_MAGICIAN); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(2); Item(ITEM_POKE_BALL); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(3); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(4); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_SURF); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, playerLeft);
+        ABILITY_POPUP(playerLeft, ABILITY_MAGICIAN);
+    } THEN {
+        EXPECT_EQ(playerLeft->item, ITEM_POKE_BALL);
+        EXPECT_EQ(playerRight->item, ITEM_NONE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Magician is blocked by Sticky Hold unless the target faints")
+{
+    bool32 stickyHoldTargetFaints = FALSE;
+
+    PARAMETRIZE { stickyHoldTargetFaints = FALSE; }
+    PARAMETRIZE { stickyHoldTargetFaints = TRUE; }
+
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
+        PLAYER(SPECIES_DELPHOX) { Speed(1); Ability(ABILITY_MAGICIAN); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(2); Item(ITEM_POKE_BALL); }
+        OPPONENT(SPECIES_MUK) { Speed(4); HP(stickyHoldTargetFaints ? 1 : 600); Ability(ABILITY_STICKY_HOLD); Item(ITEM_GREAT_BALL); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(3); Item(ITEM_ULTRA_BALL); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_SURF); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, playerLeft);
+        if (stickyHoldTargetFaints)
+            ABILITY_POPUP(playerLeft, ABILITY_MAGICIAN);
+        else
+            NOT ABILITY_POPUP(playerLeft, ABILITY_MAGICIAN);
+    } THEN {
+        EXPECT_EQ(playerLeft->item, stickyHoldTargetFaints ? ITEM_GREAT_BALL : ITEM_NONE);
+        EXPECT_EQ(playerRight->item, ITEM_POKE_BALL);
+        EXPECT_EQ(opponentLeft->item, stickyHoldTargetFaints ? ITEM_NONE : ITEM_GREAT_BALL);
+        EXPECT_EQ(opponentRight->item, ITEM_ULTRA_BALL);
+    }
+}
+
+SINGLE_BATTLE_TEST("Magician does not activate with Fling")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FLING) == EFFECT_FLING);
+        PLAYER(SPECIES_DELPHOX) { Ability(ABILITY_MAGICIAN); Item(ITEM_PECHA_BERRY); }
+        OPPONENT(SPECIES_BLISSEY) { Item(ITEM_POKE_BALL); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FLING); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
+        NOT ABILITY_POPUP(player, ABILITY_MAGICIAN);
+    } THEN {
+        EXPECT_EQ(player->item, ITEM_NONE);
+        EXPECT_EQ(opponent->item, ITEM_POKE_BALL);
+    }
+}
+
+SINGLE_BATTLE_TEST("Magician does not activate with Natural Gift")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
+        PLAYER(SPECIES_DELPHOX) { Ability(ABILITY_MAGICIAN); Item(ITEM_PECHA_BERRY); }
+        OPPONENT(SPECIES_BLISSEY) { Item(ITEM_POKE_BALL); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_NATURAL_GIFT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_NATURAL_GIFT, player);
+        NOT ABILITY_POPUP(player, ABILITY_MAGICIAN);
+    } THEN {
+        EXPECT_EQ(player->item, ITEM_NONE);
+        EXPECT_EQ(opponent->item, ITEM_POKE_BALL);
     }
 }
 
@@ -61,11 +144,11 @@ SINGLE_BATTLE_TEST("Magician does not activate with Future Sight or Doom Desire"
         PLAYER(SPECIES_DELPHOX) { Ability(ABILITY_MAGICIAN); }
         OPPONENT(SPECIES_BLISSEY) { Item(ITEM_POKE_BALL); }
     } WHEN {
-        TURN { MOVE(player, MOVE_DOOM_DESIRE); }
+        TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
         TURN {}
         TURN {}
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DOOM_DESIRE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
         NOT ABILITY_POPUP(player, ABILITY_MAGICIAN);
     } THEN {
         EXPECT_EQ(player->item, ITEM_NONE);
