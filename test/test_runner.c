@@ -823,8 +823,6 @@ static s32 MgbaPutchar_(s32 i, s32 c)
     return i;
 }
 
-extern const u8 gWireless_RSEtoASCIITable[];
-
 // Bare-bones, only supports plain %s, %S, and %d.
 static s32 MgbaVPrintf_(const char *fmt, va_list va)
 {
@@ -943,13 +941,9 @@ static s32 MgbaVPrintf_(const char *fmt, va_list va)
                 }
                 else
                 {
+                    extern char mini_pchar_decode(u8);
                     while ((c = *pokeS++) != EOS)
-                    {
-                        if ((c = gWireless_RSEtoASCIITable[c]) != '\0')
-                            i = MgbaPutchar_(i, c);
-                        else
-                            i = MgbaPutchar_(i, '?');
-                    }
+                        i = MgbaPutchar_(i, mini_pchar_decode(c));
                 }
                 break;
             }
