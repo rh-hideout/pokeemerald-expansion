@@ -86,15 +86,14 @@ SINGLE_BATTLE_TEST("Stall and Lagging Tail action order depends on reversed Spee
         TURN { MOVE(player, MOVE_TRICK_ROOM); }
         TURN {}
     } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK_ROOM, player);
         if (speed < 100)
         {
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK_ROOM, player);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
         }
         else
         {
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK_ROOM, player);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
         }
