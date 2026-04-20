@@ -55,6 +55,28 @@ DOUBLE_BATTLE_TEST("Magician prioritizes opponents over allies among valid targe
     }
 }
 
+DOUBLE_BATTLE_TEST("Magician follows Trick Room order when choosing between foe targets")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveEffect(MOVE_TRICK_ROOM) == EFFECT_TRICK_ROOM);
+        PLAYER(SPECIES_DELPHOX) { Speed(3); Ability(ABILITY_MAGICIAN); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(4); Item(ITEM_GREAT_BALL); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); Item(ITEM_ULTRA_BALL); }
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_TRICK_ROOM); }
+        TURN { MOVE(playerLeft, MOVE_SURF); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK_ROOM, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, playerLeft);
+        ABILITY_POPUP(playerLeft, ABILITY_MAGICIAN);
+    } THEN {
+        // Under Trick Room, the slower foe should be chosen first.
+        EXPECT_EQ(playerLeft->item, ITEM_ULTRA_BALL);
+    }
+}
+
 DOUBLE_BATTLE_TEST("Magician can steal from ally if no opponent is a valid target")
 {
     GIVEN {
