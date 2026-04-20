@@ -14,7 +14,7 @@ SINGLE_BATTLE_TEST("Stall causes the user to move last in its priority bracket")
     }
 }
 
-SINGLE_BATTLE_TEST("Stall still moves last in its priority bracket under Trick Room")
+SINGLE_BATTLE_TEST("Stall causes the user to move last in its priority bracket (Trick Room)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TRICK_ROOM) == EFFECT_TRICK_ROOM);
@@ -43,7 +43,7 @@ SINGLE_BATTLE_TEST("Stall respects Speed when both battlers have Stall")
     }
 }
 
-SINGLE_BATTLE_TEST("Stall vs Lagging Tail action order depends on Speed")
+SINGLE_BATTLE_TEST("Stall and Lagging Tail action order depends on Speed")
 {
     u32 speed;
 
@@ -70,7 +70,7 @@ SINGLE_BATTLE_TEST("Stall vs Lagging Tail action order depends on Speed")
     }
 }
 
-SINGLE_BATTLE_TEST("Stall and Lagging Tail action order depends on reversed Speed under Trick Room")
+SINGLE_BATTLE_TEST("Stall and Lagging Tail action order depends on Speed (Trick Room)")
 {
     u32 speed;
 
