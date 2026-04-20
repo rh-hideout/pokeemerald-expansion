@@ -8093,7 +8093,7 @@ static bool32 IsCriticalHit(struct BattleContext *ctx)
         return FALSE;
     if (ctx->isSelfInflicted)
         return FALSE;
-    if (gSideStatuses[ctx->battlerDef] & SIDE_STATUS_LUCKY_CHANT)
+    if (gSideStatuses[GetBattlerSide(ctx->battlerDef)] & SIDE_STATUS_LUCKY_CHANT)
         return FALSE;
 
     bool32 isCrit = FALSE;
