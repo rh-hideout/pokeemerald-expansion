@@ -1893,7 +1893,7 @@ static void FillSpriteRect(u32 spriteId, u32 left, u32 top, u32 width, u32 heigh
     // since all posible values for the sprite
     // width and height in the GBA are a power of two
     u32 widthMask = spriteWidth - 1;
-    u32 heigthMask = spriteHeight - 1;
+    u32 heightMask = spriteHeight - 1;
 
     u32 *src = NULL;
 
@@ -1965,7 +1965,7 @@ static void FillSpriteRect(u32 spriteId, u32 left, u32 top, u32 width, u32 heigh
             for (u32 row = 0; row < height; row++)
             {
                 u32 spriteX = (currStart - (currStart % PIXELS_PER_TILE)) & widthMask;
-                u32 spriteY = (top + row) & heigthMask;
+                u32 spriteY = (top + row) & heightMask;
                 if (isColor)
                     tiles[CURRENT_SPRITE_POS] = color;
                 else
@@ -1978,7 +1978,7 @@ static void FillSpriteRect(u32 spriteId, u32 left, u32 top, u32 width, u32 heigh
                     if (!isColor)
                         src = GetSrcPtrFromSprite(&gSprites[currSpriteId]);
                 }
-                else if (((top + row) & heigthMask) == heightMask)
+                else if (((top + row) & heightMask) == heightMask)
                 {
                     //  Switch sprite along Y-axis
                     currSpriteId = gSprites[currSpriteId].nextY;
@@ -1994,7 +1994,7 @@ static void FillSpriteRect(u32 spriteId, u32 left, u32 top, u32 width, u32 heigh
             for (u32 row = 0; row < height; row++)
             {
                 u32 spriteX = (currStart - (currStart % PIXELS_PER_TILE)) & widthMask;
-                u32 spriteY = (top + row) & heigthMask;
+                u32 spriteY = (top + row) & heightMask;
                 u32 orig = tiles[CURRENT_SPRITE_POS] & dstMask;
                 u32 new;
                 if (isColor)
@@ -2010,7 +2010,7 @@ static void FillSpriteRect(u32 spriteId, u32 left, u32 top, u32 width, u32 heigh
                     if (!isColor)
                         src = GetSrcPtrFromSprite(&gSprites[currSpriteId]);
                 }
-                else if (((top + row) & heigthMask) == heightMask)
+                else if (((top + row) & heightMask) == heightMask)
                 {
                     //  Switch sprite along Y-axis
                     currSpriteId = gSprites[currSpriteId].nextY;
