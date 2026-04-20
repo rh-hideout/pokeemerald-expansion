@@ -108,7 +108,7 @@ SINGLE_BATTLE_TEST("Magician does not activate with Fling")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FLING) == EFFECT_FLING);
         PLAYER(SPECIES_DELPHOX) { Ability(ABILITY_MAGICIAN); Item(ITEM_PECHA_BERRY); }
-        OPPONENT(SPECIES_BLISSEY) { Item(ITEM_POKE_BALL); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_POKE_BALL); }
     } WHEN {
         TURN { MOVE(player, MOVE_FLING); }
     } SCENE {
@@ -125,7 +125,7 @@ SINGLE_BATTLE_TEST("Magician does not activate with Natural Gift")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
         PLAYER(SPECIES_DELPHOX) { Ability(ABILITY_MAGICIAN); Item(ITEM_PECHA_BERRY); }
-        OPPONENT(SPECIES_BLISSEY) { Item(ITEM_POKE_BALL); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_POKE_BALL); }
     } WHEN {
         TURN { MOVE(player, MOVE_NATURAL_GIFT); }
     } SCENE {
@@ -142,7 +142,7 @@ SINGLE_BATTLE_TEST("Magician does not activate with Future Sight or Doom Desire"
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
         PLAYER(SPECIES_DELPHOX) { Ability(ABILITY_MAGICIAN); }
-        OPPONENT(SPECIES_BLISSEY) { Item(ITEM_POKE_BALL); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_POKE_BALL); }
     } WHEN {
         TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
         TURN {}
@@ -153,5 +153,62 @@ SINGLE_BATTLE_TEST("Magician does not activate with Future Sight or Doom Desire"
     } THEN {
         EXPECT_EQ(player->item, ITEM_NONE);
         EXPECT_EQ(opponent->item, ITEM_POKE_BALL);
+    }
+}
+
+SINGLE_BATTLE_TEST("Magician activates after the last hit of a multi-hit move")
+{
+    GIVEN {
+        ASSUME(GetMoveStrikeCount(MOVE_DOUBLE_KICK) == 2);
+        PLAYER(SPECIES_DELPHOX) { Ability(ABILITY_MAGICIAN); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_POKE_BALL); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_DOUBLE_KICK); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DOUBLE_KICK, player);
+        HP_BAR(opponent);
+        HP_BAR(opponent);
+        ABILITY_POPUP(player, ABILITY_MAGICIAN);
+    } THEN {
+        EXPECT_EQ(player->item, ITEM_POKE_BALL);
+        EXPECT_EQ(opponent->item, ITEM_NONE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Magician steals before switching with U-turn")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);
+        PLAYER(SPECIES_DELPHOX) { Ability(ABILITY_MAGICIAN); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_POKE_BALL); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_U_TURN); SEND_OUT(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, player);
+        HP_BAR(opponent);
+        ABILITY_POPUP(player, ABILITY_MAGICIAN);
+        SEND_IN_MESSAGE("Wynaut");
+    } THEN {
+        EXPECT_EQ(opponent->item, ITEM_NONE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Magician does not activate if user faints from Rocky Helmet recoil")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_ROCKY_HELMET].holdEffect == HOLD_EFFECT_ROCKY_HELMET);
+        PLAYER(SPECIES_DELPHOX) { HP(1); Ability(ABILITY_MAGICIAN); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ROCKY_HELMET); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        HP_BAR(opponent);
+        HP_BAR(player);
+        NOT ABILITY_POPUP(player, ABILITY_MAGICIAN);
+    } THEN {
+        EXPECT_EQ(player->item, ITEM_NONE);
+        EXPECT_EQ(opponent->item, ITEM_ROCKY_HELMET);
     }
 }
