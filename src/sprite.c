@@ -1978,7 +1978,7 @@ static void FillSpriteRect(u32 spriteId, u32 left, u32 top, u32 width, u32 heigh
                     if (!isColor)
                         src = GetSrcPtrFromSprite(&gSprites[currSpriteId]);
                 }
-                else if (((top + row) & heigthMask) == spriteHeight - 1)
+                else if (((top + row) & heigthMask) == heightMask)
                 {
                     //  Switch sprite along Y-axis
                     currSpriteId = gSprites[currSpriteId].nextY;
@@ -2010,7 +2010,7 @@ static void FillSpriteRect(u32 spriteId, u32 left, u32 top, u32 width, u32 heigh
                     if (!isColor)
                         src = GetSrcPtrFromSprite(&gSprites[currSpriteId]);
                 }
-                else if (((top + row) & heigthMask) == spriteHeight - 1)
+                else if (((top + row) & heigthMask) == heightMask)
                 {
                     //  Switch sprite along Y-axis
                     currSpriteId = gSprites[currSpriteId].nextY;
