@@ -3421,13 +3421,14 @@ static bool32 HasAnyBattlerQueuedSwitch(void)
 static bool32 TryRedCard(enum BattlerId battlerAtk, enum BattlerId redCardBattler, enum Move move)
 {
     if (!IsBattlerAlive(redCardBattler)
-     || gBattleStruct->battlerState[battlerAtk].redCardSwitched
+     || gBattleStruct->redCardActivated
      || !IsBattlerTurnDamaged(redCardBattler, EXCLUDING_SUBSTITUTES)
      || DoesSubstituteBlockMove(battlerAtk, redCardBattler, move)
      || (GetBattlerHoldEffect(redCardBattler) != HOLD_EFFECT_RED_CARD)
      || !CanBattlerSwitch(battlerAtk))
         return FALSE;
 
+    gBattleStruct->redCardActivated = TRUE;
     gLastUsedItem = gBattleMons[redCardBattler].item;
     SaveBattlerTarget(redCardBattler); // save battler with red card
     SaveBattlerAttacker(battlerAtk);
@@ -3477,6 +3478,7 @@ static enum MoveEndResult MoveEndCardButton(void)
             return MOVEEND_RESULT_RUN_SCRIPT;
     }
 
+    gBattleStruct->redCardActivated = FALSE;
     gBattleStruct->eventState.moveEndBattler = 0;
     gBattleScripting.moveendState++;
     return MOVEEND_RESULT_CONTINUE;
