@@ -149,6 +149,17 @@ SECTIONS
         test/*.o(.rodata*);
     } > ROM =0
 
+    /* Empty section: mgba-rom-test-hydra can look up all symbols. */
+    .postlink.gba :
+    ALIGN(4)
+    {
+        __postlink_symbols_start = .;
+        __postlink_symbols_end = .;
+
+        __postlink_enums_start = .;
+        __postlink_enums_end = .;
+    } > ROM = 0
+
     __rom_end = .;
 
     dacs 0x9FFC000 :

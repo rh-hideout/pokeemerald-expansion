@@ -1,5 +1,6 @@
 #include "global.h"
 #include "malloc.h"
+#include "postlink.h"
 #if TESTING
 #include "test/test.h"
 #endif
@@ -14,10 +15,10 @@ void PutMemBlockHeader(void *block, struct MemBlock *prev, struct MemBlock *next
     struct MemBlock *header = (struct MemBlock *)block;
 
     header->allocated = FALSE;
-    header->locationHi = 0;
+    header->callerHi = 0;
     header->magic = MALLOC_SYSTEM_ID;
     header->size = size;
-    header->locationLo = 0;
+    header->callerLo = 0;
     header->prev = prev;
     header->next = next;
 }
@@ -27,7 +28,7 @@ void PutFirstMemBlockHeader(void *block, u32 size)
     PutMemBlockHeader(block, (struct MemBlock *)block, (struct MemBlock *)block, size - sizeof(struct MemBlock));
 }
 
-static void *AllocInternal(void *heapStart, u32 size, const char *location)
+static void *AllocInternal(void *heapStart, u32 size, const char *caller)
 {
     struct MemBlock *pos = (struct MemBlock *)heapStart;
     struct MemBlock *head = pos;
@@ -74,8 +75,8 @@ static void *AllocInternal(void *heapStart, u32 size, const char *location)
                         splitBlock->next->prev = splitBlock;
                 }
 
-                pos->locationHi = ((uintptr_t)location) >> 14;
-                pos->locationLo = (uintptr_t)location;
+                pos->callerHi = ((uintptr_t)caller) >> 14;
+                pos->callerLo = (uintptr_t)caller;
 
                 return pos->data;
             }
@@ -132,9 +133,9 @@ static void FreeInternal(void *heapStart, void *pointer)
     }
 }
 
-static void *AllocZeroedInternal(void *heapStart, u32 size, const char *location)
+static void *AllocZeroedInternal(void *heapStart, u32 size, const char *caller)
 {
-    void *mem = AllocInternal(heapStart, size, location);
+    void *mem = AllocInternal(heapStart, size, caller);
 
     if (mem != NULL)
     {
@@ -187,50 +188,48 @@ void PrintHeap(void)
     do
     {
         if (block->allocated)
-        {
-            const char *location = MemBlockLocation(block);
-            if (location)
-                DebugPrintf("%s: %d bytes allocated", location, block->size);
-            else
-                DebugPrintf("<unknown>: %d bytes allocated", block->size);
-        }
+            DebugPrintf("%p: %d bytes allocated", MemBlockCaller(block), block->size);
         block = block->next;
     }
     while (block != head);
 }
 
-void *Alloc_(u32 size, const char *location)
+void *Alloc(u32 size)
 {
-    void *p = AllocInternal(sHeapStart, size, location);
+    const void *caller = PostlinkReturnAddress(2);
+    void *p = AllocInternal(sHeapStart, size, caller);
     if (!p)
     {
         if (TESTING)
             PrintHeap();
-        fatalf("%s: out of memory trying to allocate %d bytes", location, size);
+        fatalf("%p: out of memory trying to allocate %d bytes", caller, size);
     }
     return p;
 }
 
-void *AllocUnchecked_(u32 size, const char *location)
+void *AllocUnchecked(u32 size)
 {
-    return AllocInternal(sHeapStart, size, location);
+    const void *caller = __builtin_return_address(0);
+    return AllocInternal(sHeapStart, size, caller);
 }
 
-void *AllocZeroed_(u32 size, const char *location)
+void *AllocZeroed(u32 size)
 {
-    void *p = AllocZeroedInternal(sHeapStart, size, location);
+    const void *caller = __builtin_return_address(0);
+    void *p = AllocZeroedInternal(sHeapStart, size, caller);
     if (!p)
     {
         if (TESTING)
             PrintHeap();
-        fatalf("%s: out of memory trying to allocate %d bytes", location, size);
+        fatalf("%p: out of memory trying to allocate %d bytes", caller, size);
     }
     return p;
 }
 
-void *AllocZeroedUnchecked_(u32 size, const char *location)
+void *AllocZeroedUnchecked(u32 size)
 {
-    return AllocZeroedInternal(sHeapStart, size, location);
+    const void *caller = __builtin_return_address(0);
+    return AllocZeroedInternal(sHeapStart, size, caller);
 }
 
 void Free(void *pointer)
@@ -261,10 +260,10 @@ const struct MemBlock *HeapHead(void)
     return (const struct MemBlock *)sHeapStart;
 }
 
-const char *MemBlockLocation(const struct MemBlock *block)
+const void *MemBlockCaller(const struct MemBlock *block)
 {
     if (!block->allocated)
         return NULL;
 
-    return (const char *)(ROM_START | (block->locationHi << 14) | block->locationLo);
+    return (const void *)(ROM_START | (block->callerHi << 14) | block->callerLo);
 }
