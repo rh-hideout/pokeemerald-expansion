@@ -10250,19 +10250,19 @@ u32 GetTotalAccuracy(struct BattleCalcValues *cv, u32 weather)
     enum BattlerId battlerDef = cv->battlerDef;
     enum Move move = cv->move;
 
-    u32 calc, moveAcc;
-    s32 buff, accStage, evasionStage;
+    u32 calc = 0;
+    s32 buff = 0;
 
     u32 atkParam = GetBattlerHoldEffectParam(battlerAtk);
     u32 defParam = GetBattlerHoldEffectParam(battlerDef);
 
-    accStage = gBattleMons[battlerAtk].statStages[STAT_ACC];
-    evasionStage = gBattleMons[battlerDef].statStages[STAT_EVASION];
+    s32 accStage = gBattleMons[battlerAtk].statStages[STAT_ACC];
+    s32 evasionStage = gBattleMons[battlerDef].statStages[STAT_EVASION];
 
     if (cv->abilities[battlerAtk] == ABILITY_UNAWARE
      || cv->abilities[battlerAtk] == ABILITY_KEEN_EYE
      || cv->abilities[battlerAtk] == ABILITY_MINDS_EYE
-     || (cv->abilities[battlerAtk] && GetConfig(B_ILLUMINATE_EFFECT) >= GEN_9))
+     || (cv->abilities[battlerAtk] == ABILITY_ILLUMINATE && GetConfig(B_ILLUMINATE_EFFECT) >= GEN_9))
         evasionStage = DEFAULT_STAT_STAGE;
 
     if (MoveIgnoresDefenseEvasionStages(move))
@@ -10281,7 +10281,7 @@ u32 GetTotalAccuracy(struct BattleCalcValues *cv, u32 weather)
     if (buff > MAX_STAT_STAGE)
         buff = MAX_STAT_STAGE;
 
-    moveAcc = GetMoveAccuracy(move);
+    u32 moveAcc = GetMoveAccuracy(move);
 
     // Check Thunder and Hurricane on sunny weather.
     if (MoveHas50AccuracyInSun(move) && IsBattlerWeatherAffected(cv->holdEffects[battlerDef], weather, B_WEATHER_SUN))
