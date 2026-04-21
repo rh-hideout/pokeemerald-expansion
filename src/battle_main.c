@@ -4655,7 +4655,7 @@ void SwapTurnOrder(u8 id1, u8 id2)
 }
 
 // For AI, so it doesn't 'cheat' by knowing player's ability
-u32 GetBattlerTotalSpeedStat(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect)
+u32 GetBattlerTotalSpeedStat(enum BattlerId battler, enum Ability ability, enum HoldEffect holdEffect, u32 weather)
 {
     u32 speed = gBattleMons[battler].speed;
 
@@ -4664,7 +4664,7 @@ u32 GetBattlerTotalSpeedStat(enum BattlerId battler, enum Ability ability, enum 
     speed /= gStatStageRatios[gBattleMons[battler].statStages[STAT_SPEED]][1];
 
     // weather abilities
-    if (HasWeatherEffect())
+    if (weather != B_WEATHER_NONE)
     {
         if (ability == ABILITY_SWIFT_SWIM       && holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA && gBattleWeather & B_WEATHER_RAIN)
             speed *= 2;
@@ -4841,9 +4841,10 @@ s32 GetWhichBattlerFasterArgs(struct BattleCalcValues *calcValues, bool32 ignore
 
 s32 GetWhichBattlerFasterOrTies(struct BattleCalcValues *calcValues, bool32 ignoreChosenMoves)
 {
+    u32 weather = GetWeather();
     s32 priority1 = 0, priority2 = 0;
-    u32 speedBattler1 = GetBattlerTotalSpeedStat(calcValues->battlerAtk, calcValues->abilities[calcValues->battlerAtk], calcValues->holdEffects[calcValues->battlerAtk]);
-    u32 speedBattler2 = GetBattlerTotalSpeedStat(calcValues->battlerDef, calcValues->abilities[calcValues->battlerDef], calcValues->holdEffects[calcValues->battlerDef]);
+    u32 speedBattler1 = GetBattlerTotalSpeedStat(calcValues->battlerAtk, calcValues->abilities[calcValues->battlerAtk], calcValues->holdEffects[calcValues->battlerAtk], weather);
+    u32 speedBattler2 = GetBattlerTotalSpeedStat(calcValues->battlerDef, calcValues->abilities[calcValues->battlerDef], calcValues->holdEffects[calcValues->battlerDef], weather);
 
     if (!ignoreChosenMoves)
     {

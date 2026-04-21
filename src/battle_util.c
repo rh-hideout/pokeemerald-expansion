@@ -6200,21 +6200,22 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
         basePower += (CountBattlerStatIncreases(battlerAtk, TRUE) * 20);
         break;
     case EFFECT_ELECTRO_BALL:
-        speed = GetBattlerTotalSpeedStat(battlerAtk, ctx->abilities[battlerAtk], ctx->holdEffects[battlerAtk]) / GetBattlerTotalSpeedStat(battlerDef, ctx->abilities[battlerDef], ctx->holdEffects[battlerDef]);
+        speed = GetBattlerTotalSpeedStat(battlerAtk, ctx->abilities[battlerAtk], ctx->holdEffects[battlerAtk], ctx->weather);
+        speed = speed / GetBattlerTotalSpeedStat(battlerDef, ctx->abilities[battlerDef], ctx->holdEffects[battlerDef], ctx->weather);
         if (speed >= ARRAY_COUNT(sSpeedDiffPowerTable))
             speed = ARRAY_COUNT(sSpeedDiffPowerTable) - 1;
         basePower = sSpeedDiffPowerTable[speed];
         break;
     case EFFECT_GYRO_BALL:
         {
-            u32 attackerSpeed = GetBattlerTotalSpeedStat(battlerAtk, ctx->abilities[battlerAtk], ctx->holdEffects[battlerAtk]);
+            u32 attackerSpeed = GetBattlerTotalSpeedStat(battlerAtk, ctx->abilities[battlerAtk], ctx->holdEffects[battlerAtk], ctx->weather);
             if (attackerSpeed == 0)
             {
                 basePower = 1;
             }
             else
             {
-                basePower = ((25 * GetBattlerTotalSpeedStat(battlerDef, ctx->abilities[ctx->battlerDef], ctx->holdEffects[ctx->battlerDef])) / attackerSpeed) + 1;
+                basePower = ((25 * GetBattlerTotalSpeedStat(battlerDef, ctx->abilities[ctx->battlerDef], ctx->holdEffects[ctx->battlerDef], ctx->weather)) / attackerSpeed) + 1;
                 if (basePower > 150)
                     basePower = 150;
             }
@@ -7084,7 +7085,7 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
     case ABILITY_PROTOSYNTHESIS:
         {
             enum Stat defHighestStat = GetParadoxBoostedStatId(battlerDef);
-            if (((ctx->weather & B_WEATHER_SUN && HasWeatherEffect()) || gBattleMons[battlerDef].volatiles.boosterEnergyActivated)
+            if ((ctx->weather & B_WEATHER_SUN || gBattleMons[battlerDef].volatiles.boosterEnergyActivated)
              && ((IsBattleMovePhysical(move) && defHighestStat == STAT_DEF) || (IsBattleMoveSpecial(move) && defHighestStat == STAT_SPDEF))
              && !(gBattleMons[battlerDef].volatiles.transformed))
                 modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
@@ -9085,7 +9086,7 @@ void SortBattlersBySpeed(enum BattlerId *battlers, bool32 slowToFast)
     for (i = 0; i < gBattlersCount; i++)
     {
         enum BattlerId battler = battlers[i];
-        speeds[i] = GetBattlerTotalSpeedStat(battler, GetBattlerAbility(battler), GetBattlerHoldEffect(battler));
+        speeds[i] = GetBattlerTotalSpeedStat(battler, GetBattlerAbility(battler), GetBattlerHoldEffect(battler), GetWeather());
     }
 
     for (i = 1; i < gBattlersCount; i++)
