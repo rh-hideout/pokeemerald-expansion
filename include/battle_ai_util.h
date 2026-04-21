@@ -80,12 +80,12 @@ struct AiCalcValues
     enum Move move:16;
     u32 considerGimmickAtk:1;
     u32 considerGimmickDef:1;
-    u32 padding:8;
+    u32 moveIndex:2;
+    u32 padding:6;
     // some padding
 
     u16 weather;
     u16 fieldStatuses;
-    uq4_12_t effectiveness;
 };
 
 static inline bool32 IsMoveUnusable(u32 moveIndex, enum Move move, u32 moveLimitations)

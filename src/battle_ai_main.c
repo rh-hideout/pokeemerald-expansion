@@ -730,7 +730,6 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
     SetBattlerTurnOrder(aiData->turnOrder);
 
     struct AiCalcValues  aiCalc = {
-        .effectiveness = Q_4_12(0.0),
         .weather = AI_GetWeather(),
         .fieldStatuses = gFieldStatuses,
         .considerGimmickAtk = TRUE,
@@ -1073,7 +1072,6 @@ void BattleAI_DoAIProcessing_PredictedSwitchin(struct AiThinkingStruct *aiThink,
     struct AiCalcValues  aiCalc = {
         .battlerAtk = battlerAtk,
         .battlerDef = battlerDef,
-        .effectiveness = Q_4_12(0.0),
         .weather = AI_GetWeather(),
         .fieldStatuses = gFieldStatuses,
         .considerGimmickAtk = TRUE,

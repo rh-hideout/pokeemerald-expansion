@@ -64,7 +64,6 @@ static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, u32 monI
     gAiLogicData->switchInCalc = TRUE;
 
     struct AiCalcValues aiCalc = {
-        .effectiveness = Q_4_12(0.0),
         .weather = AI_GetSwitchinWeather(switchinBattler),
         .fieldStatuses = AI_GetSwitchinFieldStatus(switchinBattler),
         .considerGimmickAtk = TRUE,

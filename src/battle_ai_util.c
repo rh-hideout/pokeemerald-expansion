@@ -25,7 +25,7 @@
 
 static u32 GetAIEffectGroup(enum BattleMoveEffects effect);
 static u32 GetAIEffectGroupFromMove(enum BattlerId battler, enum Move move);
-static u32 Ai_SetMoveAccuracy(struct AiLogicData *aiData, enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);
+static u32 Ai_SetMoveAccuracy(struct DamageContext *ctx);
 
 // Functions
 void CalcBattlerAiMovesData(struct AiLogicData *aiData, struct AiCalcValues *aiCalc)
@@ -42,26 +42,39 @@ void CalcBattlerAiMovesData(struct AiLogicData *aiData, struct AiCalcValues *aiC
         if (IsMoveUnusable(moveIndex, aiCalc->move, moveLimitations))
             continue;
 
-        // Also get effectiveness of status moves
-        aiData->moveAccuracy[battlerAtk][battlerDef][moveIndex] = Ai_SetMoveAccuracy(aiData, battlerAtk, battlerDef, aiCalc->move);
+        aiCalc->moveIndex = moveIndex;
         aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex] = AI_CalcDamage(aiCalc);
-        aiData->effectiveness[battlerAtk][battlerDef][moveIndex] = aiCalc->effectiveness;
     }
 }
 
 #define BYPASSES_ACCURACY_CALC 101 // 101 indicates for ai that the move will always hit
-static u32 Ai_SetMoveAccuracy(struct AiLogicData *aiData, enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
+static u32 Ai_SetMoveAccuracy(struct DamageContext *ctx)
 {
     u32 accuracy;
-    enum Ability abilityAtk = aiData->abilities[battlerAtk];
-    enum Ability abilityDef = aiData->abilities[battlerDef];
-    if (CanMoveSkipAccuracyCalc(battlerAtk, battlerDef, abilityAtk, abilityDef, move, AI_CHECK))
+    enum Ability abilityAtk = ctx->abilities[ctx->battlerAtk];
+    enum Ability abilityDef = ctx->abilities[ctx->battlerDef];
+
+    if (CanMoveSkipAccuracyCalc(ctx->battlerAtk, ctx->battlerDef, abilityAtk, abilityDef, ctx->move, AI_CHECK))
     {
         accuracy = BYPASSES_ACCURACY_CALC;
     }
     else
     {
-        accuracy = GetTotalAccuracy(battlerAtk, battlerDef, move, abilityAtk, abilityDef, aiData->holdEffects[battlerAtk], aiData->holdEffects[battlerDef]);
+
+        struct BattleCalcValues cv = {
+            .battlerAtk = ctx->battlerAtk,
+            .battlerDef = ctx->battlerDef,
+            .move = ctx->move,
+        };
+
+        for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+        {
+            cv.abilities[battler] = ctx->abilities[battler];
+            cv.holdEffects[battler] = ctx->holdEffects[battler];
+        }
+
+        accuracy = GetTotalAccuracy(&cv, ctx->weather);
+
         // Cap normal accuracy at 100 for ai calcs.
         // Done for comparison with moves that bypass accuracy checks (will be seen as 101 for ai calcs))
         accuracy = (accuracy > 100) ? 100 : accuracy;
@@ -937,7 +950,6 @@ struct SimulatedDamage AI_CalcDamage(struct AiCalcValues *aiCalc)
     bool32 toggledGimmickAtk = FALSE;
     bool32 toggledGimmickDef = FALSE;
 
-    struct AiLogicData *aiData = gAiLogicData;
     gAiLogicData->aiCalcInProgress = TRUE;
 
     if (moveEffect == EFFECT_HIT_ENEMY_HEAL_ALLY && battlerDef == BATTLE_PARTNER(battlerAtk))
@@ -973,6 +985,7 @@ struct SimulatedDamage AI_CalcDamage(struct AiCalcValues *aiCalc)
     ctx.weather = aiCalc->weather;
     ctx.fixedBasePower = 0;
 
+    struct AiLogicData *aiData = gAiLogicData;
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
         ctx.holdEffects[battler] = aiData->holdEffects[battler];
@@ -990,7 +1003,7 @@ struct SimulatedDamage AI_CalcDamage(struct AiCalcValues *aiCalc)
     {
         enum Type types[3];
         AI_StoreBattlerTypes(battlerAtk, types);
-        ProteanTryChangeType(battlerAtk, aiData->abilities[battlerAtk], ctx.move, ctx.moveType);
+        ProteanTryChangeType(battlerAtk, ctx.abilities[battlerAtk], ctx.move, ctx.moveType);
 
         s32 fixedDamage = DoFixedDamageMoveCalc(&ctx);
         if (fixedDamage != INT32_MAX)
@@ -999,10 +1012,10 @@ struct SimulatedDamage AI_CalcDamage(struct AiCalcValues *aiCalc)
         }
         else if (moveEffect == EFFECT_TRIPLE_KICK)
         {
-            for (gMultiHitCounter = GetMoveStrikeCount(ctx.move); gMultiHitCounter > 0; gMultiHitCounter--) // The global is used to simulate actual damage done
+            u32 strikeCount = GetMoveStrikeCount(ctx.move);
+            for (gMultiHitCounter = strikeCount; gMultiHitCounter > 0; gMultiHitCounter--) // The global is used to simulate actual damage done
             {
                 s32 damageByRollType = 0;
-
                 s32 oneTripleKickHit = CalculateMoveDamageVars(&ctx);
 
                 damageByRollType = GetDamageByRollType(oneTripleKickHit, DMG_ROLL_LOWEST);
@@ -1048,8 +1061,8 @@ struct SimulatedDamage AI_CalcDamage(struct AiCalcValues *aiCalc)
         simDamage.random = 0;
     }
 
-    // convert multiper to AI_EFFECTIVENESS_xX
-    aiCalc->effectiveness = ctx.typeEffectivenessModifier;
+    aiData->moveAccuracy[battlerAtk][battlerDef][aiCalc->moveIndex] = Ai_SetMoveAccuracy(&ctx);
+    aiData->effectiveness[battlerAtk][battlerDef][aiCalc->moveIndex] = ctx.typeEffectivenessModifier;
 
     // Undo temporary settings
     gBattleStruct->dynamicMoveType = 0;
@@ -5555,7 +5568,7 @@ void DecideTerastal(enum BattlerId battler)
         if (!IsMoveUnusable(moveIndex, oppMoves[moveIndex], gAiLogicData->moveLimitations[opposingBattler]) && !IsBattleMoveStatus(oppMoves[moveIndex]))
         {
             altCalcs.takenWithTera[moveIndex] =  AI_CalcDamage(&aiCalc);
-            effectivenessTakenWithTera[moveIndex] = aiCalc.effectiveness;
+            effectivenessTakenWithTera[moveIndex] = gAiLogicData->effectiveness[aiCalc.battlerAtk][aiCalc.battlerDef][moveIndex];
         }
         else
         {
