@@ -3,9 +3,9 @@
 
 #define AI_FRAME_CEILING_SINGLES_NO_FLAGS                       2
 #define AI_FRAME_CEILING_SINGLES_SMART_TRAINER                  7
-#define AI_FRAME_CEILING_DOUBLES_NO_FLAGS                       18
+#define AI_FRAME_CEILING_DOUBLES_NO_FLAGS                       19
 #define AI_FRAME_CEILING_DOUBLES_SMART_TRAINER                  34
-#define AI_FRAME_CEILING_STEVEN_MULTI                           23
+#define AI_FRAME_CEILING_STEVEN_MULTI                           24
 #define AI_FRAME_CEILING_STEVEN_MULTI_SMART_TRAINER             28
 #define AI_FRAME_CEILING_CHECK                                  FALSE // If TRUE, forces all thinking time tests to fail. Useful for printing all actual frame times to console by running the tests
 
