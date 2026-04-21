@@ -57,5 +57,32 @@ SINGLE_BATTLE_TEST("Gastro Acid immediately ends Neutralizing Gas and reactivate
     }
 }
 
-TO_DO_BATTLE_TEST("Baton Pass passes Gastro Acid's effect");
-TO_DO_BATTLE_TEST("Baton Pass removes Gastro Acid if its ability cannot be surpressed");
+SINGLE_BATTLE_TEST("421 Baton Pass passes Gastro Acid's effect")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_GASTRO_ACID); }
+        TURN { MOVE(player, MOVE_BATON_PASS); SEND_OUT(player, 1); }
+    } THEN {
+        EXPECT(player->volatiles.gastroAcid);
+    }
+}
+
+SINGLE_BATTLE_TEST("421 Baton Pass removes Gastro Acid if its ability cannot be surpressed")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_MIMIKYU) { Ability(ABILITY_DISGUISE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_GASTRO_ACID); }
+        TURN { MOVE(player, MOVE_BATON_PASS); SEND_OUT(player, 1); }
+    } THEN {
+        EXPECT(!player->volatiles.gastroAcid);
+    }
+}
