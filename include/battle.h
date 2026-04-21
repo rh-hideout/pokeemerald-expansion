@@ -968,7 +968,7 @@ extern u8 gBattlerPositions[MAX_BATTLERS_COUNT];
 extern u8 gActionsByTurnOrder[MAX_BATTLERS_COUNT];
 extern enum BattlerId gBattlerByTurnOrder[MAX_BATTLERS_COUNT];
 extern enum BattlerId gBattlersBySpeed[MAX_BATTLERS_COUNT];
-extern enum BattlerId gMoveResolutionBattlersBySpeed[MAX_BATTLERS_COUNT];
+extern enum BattlerId gBattlersByRawSpeed[MAX_BATTLERS_COUNT];
 extern u8 gCurrentTurnActionNumber;
 extern u8 gCurrentActionFuncId;
 extern struct BattlePokemon gBattleMons[MAX_BATTLERS_COUNT];

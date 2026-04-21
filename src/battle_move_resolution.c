@@ -2799,6 +2799,25 @@ static enum MoveEndResult MoveEndMirrorMove(void)
     return MOVEEND_RESULT_CONTINUE;
 }
 
+static void SortBattlersByRawSpeed(u8 battlers[])
+{
+    for (u32 i = 0; i < gBattlersCount; i++)
+        battlers[i] = i;
+
+    for (u32 i = 0; i < gBattlersCount; i++)
+    {
+        for (u32 j = 0; j < gBattlersCount; j++)
+        {
+            if (gBattleMons[battlers[i]].speed >= gBattleMons[battlers[j]].speed)
+            {
+                u32 temp = battlers[i];
+                battlers[i] = battlers[j];
+                battlers[j] = temp;
+            }
+        }
+    }
+}
+
 static enum MoveEndResult MoveEndNextTarget(void)
 {
     enum MoveTarget moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
@@ -2836,24 +2855,9 @@ static enum MoveEndResult MoveEndNextTarget(void)
     }
 
     RecordLastUsedMoveBy(gBattlerAttacker, gCurrentMove);
+    SortBattlersByRawSpeed(gBattlersByRawSpeed);
     gBattleScripting.moveendState++;
     return MOVEEND_RESULT_CONTINUE;
-}
-
-static void SortBattlersByRawSpeed(u8 battlers[])
-{
-    for (u32 i = 0; i < gBattlersCount; i++)
-    {
-        for (u32 j = 0; j < gBattlersCount; j++)
-        {
-            if (gBattleMons[battlers[i]].speed >= gBattleMons[battlers[j]].speed)
-            {
-                u32 temp = battlers[i];
-                battlers[i] = battlers[j];
-                battlers[j] = temp;
-            }
-        }
-    }
 }
 
 static enum MoveEndResult MoveEndBouncedMove(void)
@@ -2867,15 +2871,11 @@ static enum MoveEndResult MoveEndBouncedMove(void)
 
     if (gBattleStruct->magicBouncePending || gBattleStruct->magicCoatPending)
     {
-        u8 battlers[MAX_BATTLERS_COUNT] = {0,1,2,3};
         enum MoveTarget moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
-
-        if (moveTarget == TARGET_OPPONENTS_FIELD)
-            SortBattlersByRawSpeed(battlers);
 
         for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
         {
-            u32 bounceBattler = battlers[battler];
+            u32 bounceBattler = gBattlersByRawSpeed[battler];
 
             if (gBattleStruct->magicBouncePending & 1u << bounceBattler)
             {
@@ -2924,9 +2924,6 @@ static enum MoveEndResult MoveEndBouncedMove(void)
         }
     }
 
-    for (u32 i = 0; i < gBattlersCount; i++)
-        gMoveResolutionBattlersBySpeed[i] = i;
-    SortBattlersBySpeed(gMoveResolutionBattlersBySpeed, FALSE);
     gBattleScripting.moveendState++;
     return MOVEEND_RESULT_CONTINUE;
 }
@@ -3423,7 +3420,6 @@ static bool32 TryRedCard(enum BattlerId battlerAtk, enum BattlerId redCardBattle
     if (!IsBattlerAlive(redCardBattler)
      || gBattleStruct->redCardActivated
      || !IsBattlerTurnDamaged(redCardBattler, EXCLUDING_SUBSTITUTES)
-     || DoesSubstituteBlockMove(battlerAtk, redCardBattler, move)
      || (GetBattlerHoldEffect(redCardBattler) != HOLD_EFFECT_RED_CARD)
      || !CanBattlerSwitch(battlerAtk))
         return FALSE;
@@ -3466,10 +3462,10 @@ static enum MoveEndResult MoveEndCardButton(void)
 {
     while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
     {
-        enum BattlerId battler = gMoveResolutionBattlersBySpeed[gBattleStruct->eventState.moveEndBattler++];
+        enum BattlerId battler = gBattlersByRawSpeed[gBattleStruct->eventState.moveEndBattler++];
 
         if (battler == gBattlerAttacker)
-           continue;
+            continue;
 
         if (TryRedCard(gBattlerAttacker, battler, gCurrentMove))
             return MOVEEND_RESULT_RUN_SCRIPT;
@@ -3735,7 +3731,7 @@ static enum MoveEndResult MoveEndItemOnStatChange(void)
 {
     while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
     {
-        enum BattlerId battler = gMoveResolutionBattlersBySpeed[gBattleStruct->eventState.moveEndBattler++];
+        enum BattlerId battler = gBattlersByRawSpeed[gBattleStruct->eventState.moveEndBattler++];
         enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
 
         switch (holdEffect)
