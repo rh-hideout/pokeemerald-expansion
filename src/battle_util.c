@@ -10173,11 +10173,15 @@ static bool32 IsSkyDropInvolved(enum BattlerId battlerDef, enum BattleMoveEffect
         || gBattleMons[battlerDef].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET;
 }
 
-bool32 CanMoveSkipAccuracyCalc(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum Move move, enum ResultOption option)
+bool32 CanMoveSkipAccuracyCalc(struct BattleCalcValues *cv, u32 weather, enum ResultOption option)
 {
     bool32 effect = FALSE;
-    enum Ability ability = ABILITY_NONE;
+
+    enum BattlerId battlerAtk = cv->battlerAtk;
+    enum BattlerId battlerDef = cv->battlerDef;
+    enum Move move = cv->move;
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
+    enum Ability ability = ABILITY_NONE;
 
     if (gBattleMons[battlerAtk].volatiles.battlerWithSureHit == battlerDef + 1
      || CanMoveSkipAccuracyCheck(battlerAtk, move)
@@ -10185,14 +10189,14 @@ bool32 CanMoveSkipAccuracyCalc(enum BattlerId battlerAtk, enum BattlerId battler
     {
         effect = TRUE;
     }
-    else if (abilityAtk == ABILITY_NO_GUARD
+    else if (cv->abilities[battlerAtk] == ABILITY_NO_GUARD
           && gBattleMons[battlerDef].volatiles.semiInvulnerable != STATE_COMMANDER
           && !IsSkyDropInvolved(battlerDef, moveEffect))
     {
         effect = TRUE;
         ability = ABILITY_NO_GUARD;
     }
-    else if (abilityDef == ABILITY_NO_GUARD && !IsSkyDropInvolved(battlerDef, moveEffect))
+    else if (cv->abilities[battlerDef] == ABILITY_NO_GUARD && !IsSkyDropInvolved(battlerDef, moveEffect))
     {
         effect = TRUE;
         ability = ABILITY_NO_GUARD;
@@ -10223,11 +10227,11 @@ bool32 CanMoveSkipAccuracyCalc(enum BattlerId battlerAtk, enum BattlerId battler
         effect = TRUE;
     }
 
-    if (!effect && HasWeatherEffect())
+    if (!effect && weather != B_WEATHER_NONE)
     {
-        if (MoveAlwaysHitsInRain(move) && IsBattlerWeatherAffected(GetBattlerHoldEffect(battlerDef), gBattleWeather, B_WEATHER_RAIN))// Check mega sol interaction then update to GetAttackerWeather.
+        if (MoveAlwaysHitsInRain(move) && IsBattlerWeatherAffected(cv->holdEffects[battlerDef], weather, B_WEATHER_RAIN)) // Check mega sol interaction then update to GetAttackerWeather.
             effect = TRUE;
-        else if ((gBattleWeather & B_WEATHER_ICY_ANY) && MoveAlwaysHitsInHailSnow(move))
+        else if ((weather & B_WEATHER_ICY_ANY) && MoveAlwaysHitsInHailSnow(move))
             effect = TRUE;
 
         if (effect)
@@ -10441,10 +10445,12 @@ bool32 DoesMoveMissTarget(struct BattleCalcValues *cv)
     if (GetMoveEffect(cv->move) == EFFECT_OHKO)
         return DoesOHKOMoveMissTarget(cv);
 
-    if (CanMoveSkipAccuracyCalc(cv->battlerAtk, cv->battlerDef, cv->abilities[cv->battlerAtk], cv->abilities[cv->battlerDef], cv->move, RUN_SCRIPT))
+    u32 weather = GetWeather();
+
+    if (CanMoveSkipAccuracyCalc(cv, weather, RUN_SCRIPT))
         return FALSE;
 
-    return !RandomPercentage(RNG_ACCURACY, GetTotalAccuracy(cv, GetWeather()));
+    return !RandomPercentage(RNG_ACCURACY, GetTotalAccuracy(cv, weather));
 }
 
 bool32 IsSemiInvulnerable(enum BattlerId battler, enum SemiInvulnerableExclusion excludeCommander)

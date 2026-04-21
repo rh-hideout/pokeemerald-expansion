@@ -51,27 +51,25 @@ void CalcBattlerAiMovesData(struct AiLogicData *aiData, struct AiCalcValues *aiC
 static u32 Ai_SetMoveAccuracy(struct DamageContext *ctx)
 {
     u32 accuracy;
-    enum Ability abilityAtk = ctx->abilities[ctx->battlerAtk];
-    enum Ability abilityDef = ctx->abilities[ctx->battlerDef];
 
-    if (CanMoveSkipAccuracyCalc(ctx->battlerAtk, ctx->battlerDef, abilityAtk, abilityDef, ctx->move, AI_CHECK))
+    struct BattleCalcValues cv = {
+        .battlerAtk = ctx->battlerAtk,
+        .battlerDef = ctx->battlerDef,
+        .move = ctx->move,
+    };
+
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+    {
+        cv.abilities[battler] = ctx->abilities[battler];
+        cv.holdEffects[battler] = ctx->holdEffects[battler];
+    }
+
+    if (CanMoveSkipAccuracyCalc(&cv, ctx->weather, AI_CHECK))
     {
         accuracy = BYPASSES_ACCURACY_CALC;
     }
     else
     {
-
-        struct BattleCalcValues cv = {
-            .battlerAtk = ctx->battlerAtk,
-            .battlerDef = ctx->battlerDef,
-            .move = ctx->move,
-        };
-
-        for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
-        {
-            cv.abilities[battler] = ctx->abilities[battler];
-            cv.holdEffects[battler] = ctx->holdEffects[battler];
-        }
 
         accuracy = GetTotalAccuracy(&cv, ctx->weather);
 
