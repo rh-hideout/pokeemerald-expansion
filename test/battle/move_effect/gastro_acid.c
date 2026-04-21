@@ -41,5 +41,21 @@ SINGLE_BATTLE_TEST("Gastro Acid fails if target has a banned ability")
     }
 }
 
+SINGLE_BATTLE_TEST("Gastro Acid immediately ends Neutralizing Gas and reactivates suppressed abilities")
+{
+    GIVEN {
+        PLAYER(SPECIES_TORKOAL) { Ability(ABILITY_DROUGHT); }
+        OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_GASTRO_ACID); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_NEUTRALIZING_GAS);
+        MESSAGE("Neutralizing gas filled the area!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GASTRO_ACID, player);
+        MESSAGE("The effects of the neutralizing gas wore off!");
+        ABILITY_POPUP(player, ABILITY_DROUGHT);
+    }
+}
+
 TO_DO_BATTLE_TEST("Baton Pass passes Gastro Acid's effect");
 TO_DO_BATTLE_TEST("Baton Pass removes Gastro Acid if its ability cannot be surpressed");

@@ -74,3 +74,20 @@ SINGLE_BATTLE_TEST("Core Enforcer does not suppress the ability of a target that
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, player);
     }
 }
+
+SINGLE_BATTLE_TEST("Core Enforcer immediately ends Neutralizing Gas and reactivates suppressed abilities")
+{
+    GIVEN {
+        PLAYER(SPECIES_TORKOAL) { Ability(ABILITY_DROUGHT); Speed(1); }
+        OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); Speed(2);}
+    } WHEN {
+        TURN { MOVE(player, MOVE_CORE_ENFORCER); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_NEUTRALIZING_GAS);
+        MESSAGE("Neutralizing gas filled the area!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CORE_ENFORCER, player);
+        MESSAGE("The effects of the neutralizing gas wore off!");
+        ABILITY_POPUP(player, ABILITY_DROUGHT);
+    }
+}
