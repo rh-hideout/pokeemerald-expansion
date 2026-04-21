@@ -73,6 +73,21 @@ enum ConsiderPriority
     CONSIDER_PRIORITY,
 };
 
+struct AiCalcValues
+{
+    enum BattlerId battlerAtk:3;
+    enum BattlerId battlerDef:3;
+    enum Move move:16;
+    u32 considerGimmickAtk:1;
+    u32 considerGimmickDef:1;
+    u32 padding:8;
+    // some padding
+
+    u16 weather;
+    u16 fieldStatuses;
+    uq4_12_t effectiveness;
+};
+
 static inline bool32 IsMoveUnusable(u32 moveIndex, enum Move move, u32 moveLimitations)
 {
     return move == MOVE_NONE
@@ -82,12 +97,13 @@ static inline bool32 IsMoveUnusable(u32 moveIndex, enum Move move, u32 moveLimit
 
 typedef bool32 (*MoveFlag)(enum Move move);
 
+void CalcBattlerAiMovesData(struct AiLogicData *aiData, struct AiCalcValues *aiCalc);
+enum Ability AI_GetMoldBreakerSanitizedAbility(struct DamageContext *ctx, enum BattlerId battlerDef);
 bool32 AI_IsFaster(enum BattlerId battlerAi, enum BattlerId battlerDef, enum Move aiMove, enum Move playerMove, enum ConsiderPriority considerPriority);
 bool32 AI_IsSlower(enum BattlerId battlerAi, enum BattlerId battlerDef, enum Move aiMove, enum Move playerMove, enum ConsiderPriority considerPriority);
 bool32 AI_RandLessThan(u32 val);
 bool32 AI_IsBattlerGrounded(enum BattlerId battler);
 enum MoveTarget AI_GetBattlerMoveTargetType(enum BattlerId battler, enum Move move);
-enum Ability AI_GetMoldBreakerSanitizedAbility(enum BattlerId battlerAtk, enum Ability abilityAtk, enum Ability abilityDef, enum HoldEffect holdEffectDef, enum Move move);
 u32 AI_GetDamage(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveIndex, enum DamageCalcContext calcContext, struct AiLogicData *aiData);
 bool32 IsAiFlagPresent(u64 flag);
 bool32 IsAiBattlerAware(enum BattlerId battlerId);
@@ -169,9 +185,8 @@ bool32 Ai_IsPriorityBlocked(enum BattlerId battlerAtk, enum BattlerId battlerDef
 bool32 AI_CanMoveBeBlockedByTarget(struct DamageContext *ctx);
 bool32 MovesWithCategoryUnusable(u32 attacker, u32 target, enum DamageCategory category);
 enum MoveComparisonResult CompareMoveEffects(enum Move move1, enum Move move2, enum BattlerId battlerAtk, enum BattlerId battlerDef, s32 noOfHitsToKo);
-struct SimulatedDamage AI_CalcDamageSaveBattlers(enum Move move, enum BattlerId battlerAtk, enum BattlerId battlerDef, uq4_12_t *typeEffectiveness, enum AIConsiderGimmick considerGimmickAtk, enum AIConsiderGimmick considerGimmickDef);
 bool32 IsAdditionalEffectBlocked(enum BattlerId battlerAtk, u32 abilityAtk, enum BattlerId battlerDef, enum Ability abilityDef);
-struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, enum BattlerId battlerDef, uq4_12_t *typeEffectiveness, enum AIConsiderGimmick considerGimmickAtk, enum AIConsiderGimmick considerGimmickDef, u32 weather, u32 fieldStatuses);
+struct SimulatedDamage AI_CalcDamage(struct AiCalcValues *aiCalc);
 bool32 AI_IsDamagedByRecoil(enum BattlerId battler);
 u32 GetNoOfHitsToKO(u32 dmg, s32 hp);
 u32 GetNoOfHitsToKOBattlerDmg(u32 dmg, enum BattlerId battlerDef);
