@@ -6166,7 +6166,7 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
     case EFFECT_ACROBATICS:
         if (gBattleMons[battlerAtk].item == ITEM_NONE
             // Edge case, because removal of items happens after damage calculation.
-            || (gSpecialStatuses[battlerAtk].gemBoost && GetBattlerHoldEffect(battlerAtk) == HOLD_EFFECT_GEMS))
+            || (gSpecialStatuses[battlerAtk].gemBoost && ctx->holdEffects[battlerAtk] == HOLD_EFFECT_GEMS))
             basePower *= 2;
         break;
     case EFFECT_LOW_KICK:
