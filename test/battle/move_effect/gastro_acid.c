@@ -57,7 +57,7 @@ SINGLE_BATTLE_TEST("Gastro Acid immediately ends Neutralizing Gas and reactivate
     }
 }
 
-SINGLE_BATTLE_TEST("421 Baton Pass passes Gastro Acid's effect")
+SINGLE_BATTLE_TEST("Baton Pass passes Gastro Acid's effect")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
@@ -72,7 +72,7 @@ SINGLE_BATTLE_TEST("421 Baton Pass passes Gastro Acid's effect")
     }
 }
 
-SINGLE_BATTLE_TEST("421 Baton Pass removes Gastro Acid if its ability cannot be surpressed")
+SINGLE_BATTLE_TEST("Baton Pass removes Gastro Acid if its ability cannot be surpressed")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
