@@ -191,7 +191,7 @@ ifeq ($(DEPRECATED_ERROR),0)
 endif
 
 ifeq ($(GITHUB_REPOSITORY_OWNER),rh-hideout)
-  override CFLAGS += -Werror=free-labels
+  override CFLAGS += -Werror=c11-c2x-compat
 endif
 
 LIBPATH := -L "$(dir $(shell $(PATH_ARMCC) -mthumb -print-file-name=libgcc.a))" -L "$(dir $(shell $(PATH_ARMCC) -mthumb -print-file-name=libnosys.a))" -L "$(dir $(shell $(PATH_ARMCC) -mthumb -print-file-name=libc.a))"
