@@ -4626,7 +4626,9 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             return effect;
         break;
     case ABILITYEFFECT_SYNCHRONIZE:
-        if (gLastUsedAbility == ABILITY_SYNCHRONIZE && gBattleStruct->synchronizeMoveEffect != MOVE_EFFECT_NONE)
+        if (gLastUsedAbility == ABILITY_SYNCHRONIZE
+         && gBattleStruct->synchronizeMoveEffect != MOVE_EFFECT_NONE
+         && gEffectBattler == gBattlerTarget)
         {
             gBattleScripting.battler = gBattlerAbility = gBattlerTarget;
             RecordAbilityBattle(gBattlerTarget, ABILITY_SYNCHRONIZE);
@@ -4656,7 +4658,9 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         }
         break;
     case ABILITYEFFECT_ATK_SYNCHRONIZE:
-        if (gLastUsedAbility == ABILITY_SYNCHRONIZE && gBattleStruct->synchronizeMoveEffect != MOVE_EFFECT_NONE)
+        if (gLastUsedAbility == ABILITY_SYNCHRONIZE
+         && gBattleStruct->synchronizeMoveEffect != MOVE_EFFECT_NONE
+         && gEffectBattler == gBattlerAttacker)
         {
             gBattleScripting.battler = gBattlerAbility = gBattlerAttacker;
             RecordAbilityBattle(gBattlerAttacker, ABILITY_SYNCHRONIZE);
