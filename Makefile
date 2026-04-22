@@ -190,6 +190,10 @@ ifeq ($(DEPRECATED_ERROR),0)
   endif
 endif
 
+ifeq ($(GITHUB_REPOSITORY_OWNER),rh-hideout)
+  override CFLAGS += -Werror=free-labels
+endif
+
 LIBPATH := -L "$(dir $(shell $(PATH_ARMCC) -mthumb -print-file-name=libgcc.a))" -L "$(dir $(shell $(PATH_ARMCC) -mthumb -print-file-name=libnosys.a))" -L "$(dir $(shell $(PATH_ARMCC) -mthumb -print-file-name=libc.a))"
 LIB := $(LIBPATH) -lc -lnosys -lgcc -L../../libagbsyscall -lagbsyscall
 # Enable debug info if set
