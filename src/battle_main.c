@@ -5581,7 +5581,7 @@ static void FreeResetData_ReturnToOvOrDoEvolutions(void)
 {
     if (!gPaletteFade.active)
     {
-        if (gIsFishingEncounter && IsMonShiny(&gEnemyParty[0]))
+        if (gIsFishingEncounter && IsMonShiny(&gParties[B_TRAINER_1][0]))
             gChainFishingDexNavStreak = 0;
         gIsFishingEncounter = FALSE;
         gIsSurfingEncounter = FALSE;
