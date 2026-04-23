@@ -972,9 +972,9 @@ bool32 IsAITest(void);
         .data = (void *)&(const struct BattleTest) \
         { \
             .type = _type, \
-            .frontierMode = FRONTIER_MODE_SINGLES; \
-            .frontierFacility = CAT("FACILITY_BATTLE_",_facility); \
-            .frontierLevel = CAT("FRONTIER_LVL_",_levelMode); \
+            .frontierMode = FRONTIER_MODE_SINGLES, \
+            .frontierFacility = CAT(FACILITY_BATTLE_,_facility), \
+            .frontierLevel = CAT(FRONTIER_LVL_,_levelMode), \
             .function = { .singles = (SingleBattleTestFunction)CAT(Test, __LINE__) }, \
             .resultsSize = sizeof(struct CAT(Result, __LINE__)), \
         }, \
@@ -993,9 +993,9 @@ bool32 IsAITest(void);
         .data = (void *)&(const struct BattleTest) \
         { \
             .type = _type, \
-            .frontierMode = CAT("FRONTIER_MODE_",_facilityMode); \
-            .frontierFacility = CAT("FACILITY_BATTLE_",_facility); \
-            .frontierLevel = CAT("FRONTIER_LVL_",_levelMode); \
+            .frontierMode = CAT(FRONTIER_MODE_,_facilityMode), \
+            .frontierFacility = CAT(FACILITY_BATTLE_,_facility), \
+            .frontierLevel = CAT(FRONTIER_LVL_,_levelMode), \
             .function = { .doubles = (DoubleBattleTestFunction)CAT(Test, __LINE__) }, \
             .resultsSize = sizeof(struct CAT(Result, __LINE__)), \
         }, \
@@ -1019,11 +1019,11 @@ bool32 IsAITest(void);
 #define ONE_VS_TWO_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_ONE_VS_TWO(_name, BATTLE_TEST_ONE_VS_TWO, __VA_ARGS__)
 #define AI_ONE_VS_TWO_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_ONE_VS_TWO(_name, BATTLE_TEST_AI_ONE_VS_TWO, __VA_ARGS__)
 
-#define FRONTIER_SINGLE_BATTLE_TEST(_facility, _levelMode, _name, ...) BATTLE_TEST_ARGS_FRONTIER(_facility, _levelMode, _name, BATTLE_TEST_FRONTIER_SINGLES, __VA_ARGS__)
-#define AI_FRONTIER_SINGLE_BATTLE_TEST(_facility, _levelMode, _name, ...) BATTLE_TEST_ARGS_FRONTIER(_facility, _levelMode, _name, BATTLE_TEST_FRONTIER_AI_SINGLES, __VA_ARGS__)
+#define FRONTIER_SINGLE_BATTLE_TEST(_facility, _levelMode, _name, ...) BATTLE_TEST_ARGS_FRONTIER_SINGLE(_facility, _levelMode, _name, BATTLE_TEST_FRONTIER_SINGLES, __VA_ARGS__)
+#define AI_FRONTIER_SINGLE_BATTLE_TEST(_facility, _levelMode, _name, ...) BATTLE_TEST_ARGS_FRONTIER_SINGLE(_facility, _levelMode, _name, BATTLE_TEST_FRONTIER_AI_SINGLES, __VA_ARGS__)
 
-#define FRONTIER_DOUBLE_BATTLE_TEST(_facility, _levelMode, _facilityMode, _name, ...) BATTLE_TEST_ARGS_FRONTIER(_facility, _levelMode, _facilityMode, _name, BATTLE_TEST_FRONTIER_DOUBLES, __VA_ARGS__)
-#define AI_FRONTIER_DOUBLE_BATTLE_TEST(_facility, _levelMode, _facilityMode, _name, ...) BATTLE_TEST_ARGS_FRONTIER(_facility, _levelMode, _facilityMode, _name, BATTLE_TEST_FRONTIER_AI_DOUBLES, __VA_ARGS__)
+#define FRONTIER_DOUBLE_BATTLE_TEST(_facility, _levelMode, _facilityMode, _name, ...) BATTLE_TEST_ARGS_FRONTIER_DOUBLE(_facility, _levelMode, _facilityMode, _name, BATTLE_TEST_FRONTIER_DOUBLES, __VA_ARGS__)
+#define AI_FRONTIER_DOUBLE_BATTLE_TEST(_facility, _levelMode, _facilityMode, _name, ...) BATTLE_TEST_ARGS_FRONTIER_DOUBLE(_facility, _levelMode, _facilityMode, _name, BATTLE_TEST_FRONTIER_AI_DOUBLES, __VA_ARGS__)
 
 /* Parametrize */
 
