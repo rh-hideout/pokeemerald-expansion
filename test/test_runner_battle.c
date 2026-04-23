@@ -3,6 +3,7 @@
 #include "battle_ai_util.h"
 #include "battle_anim.h"
 #include "battle_controllers.h"
+#include "battle_frontier.h"
 #include "battle_setup.h"
 #include "battle_gimmick.h"
 #include "battle_z_move.h"
@@ -206,6 +207,8 @@ static void InvokeTestFunction(const struct BattleTest *test)
     case BATTLE_TEST_SINGLES:
     case BATTLE_TEST_WILD:
     case BATTLE_TEST_AI_SINGLES:
+    case BATTLE_TEST_FRONTIER_SINGLES:
+    case BATTLE_TEST_FRONTIER_AI_SINGLES:
         InvokeSingleTestFunctionWithStack(STATE->results, STATE->runParameter, &gBattleMons[B_POSITION_PLAYER_LEFT], &gBattleMons[B_POSITION_OPPONENT_LEFT], test->function.singles, &DATA.stack[BATTLE_TEST_STACK_SIZE]);
         break;
     case BATTLE_TEST_DOUBLES:
@@ -228,10 +231,23 @@ static void InvokeTestFunction(const struct BattleTest *test)
         DATA.battlerTrainers |= B_TRAINER_3 << 6;
         InvokeOneVsTwoTestFunctionWithStack(STATE->results, STATE->runParameter, &gBattleMons[B_POSITION_PLAYER_LEFT], &gBattleMons[B_POSITION_OPPONENT_LEFT], &gBattleMons[B_POSITION_PLAYER_RIGHT], &gBattleMons[B_POSITION_OPPONENT_RIGHT], test->function.one_vs_two, &DATA.stack[BATTLE_TEST_STACK_SIZE]);
         break;
+    case BATTLE_TEST_FRONTIER_DOUBLES:
+    case BATTLE_TEST_FRONTIER_AI_DOUBLES:
+        switch (test->frontierMode)
+        {
+        case FRONTIER_MODE_MULTIS:
+        case FRONTIER_MODE_LINK_MULTIS:
+            DATA.battlerTrainers |= (B_TRAINER_2 << 4 | B_TRAINER_3 << 6);
+            break;
+        default:
+            DATA.battlerTrainers |= B_TRAINER_1 << 6;
+            break;
+        }
+        InvokeDoubleTestFunctionWithStack(STATE->results, STATE->runParameter, &gBattleMons[B_POSITION_PLAYER_LEFT], &gBattleMons[B_POSITION_OPPONENT_LEFT], &gBattleMons[B_POSITION_PLAYER_RIGHT], &gBattleMons[B_POSITION_OPPONENT_RIGHT], test->function.doubles, &DATA.stack[BATTLE_TEST_STACK_SIZE]);
     }
 }
 
-static const struct BattleTest *GetBattleTest(void)
+const struct BattleTest *GetBattleTest(void)
 {
     const struct BattleTest *test = gTestRunnerState.test->data;
     return test;
@@ -246,6 +262,8 @@ bool32 IsAITest(void)
     case BATTLE_TEST_AI_MULTI:
     case BATTLE_TEST_AI_TWO_VS_ONE:
     case BATTLE_TEST_AI_ONE_VS_TWO:
+    case BATTLE_TEST_FRONTIER_AI_SINGLES:
+    case BATTLE_TEST_FRONTIER_AI_DOUBLES:
         return TRUE;
     }
     return FALSE;
@@ -253,7 +271,7 @@ bool32 IsAITest(void)
 
 static bool32 IsAIDoublesTest(void)
 {
-    return (IsAITest() && (GetBattleTest()->type != BATTLE_TEST_AI_SINGLES));
+    return (IsAITest() && (GetBattleTest()->type != BATTLE_TEST_AI_SINGLES) && (GetBattleTest()->type != BATTLE_TEST_FRONTIER_AI_SINGLES));
 }
 
 static enum BattleTrainer Test_GetBattlerTrainer(enum BattlerId battlerId)
@@ -302,6 +320,8 @@ static void BattleTest_SetUp(void *data)
     case BATTLE_TEST_SINGLES:
     case BATTLE_TEST_WILD:
     case BATTLE_TEST_AI_SINGLES:
+    case BATTLE_TEST_FRONTIER_SINGLES:
+    case BATTLE_TEST_FRONTIER_AI_SINGLES:
         STATE->battlersCount = 2;
         break;
     case BATTLE_TEST_DOUBLES:
@@ -312,6 +332,8 @@ static void BattleTest_SetUp(void *data)
     case BATTLE_TEST_AI_TWO_VS_ONE:
     case BATTLE_TEST_ONE_VS_TWO:
     case BATTLE_TEST_AI_ONE_VS_TWO:
+    case BATTLE_TEST_FRONTIER_DOUBLES:
+    case BATTLE_TEST_FRONTIER_AI_DOUBLES:
         STATE->battlersCount = 4;
         break;
     }
@@ -437,6 +459,37 @@ static void BattleTest_Run(void *data)
         DATA.currentMonIndexes[3] = 0; // Opponent B first mon
         DATA.hasAI = TRUE;
         break;
+    case BATTLE_TEST_FRONTIER_AI_SINGLES:
+        DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER;
+        DATA.recordedBattle.opponentA = TRAINER_LEAF_TEST;
+        DATA.recordedBattle.opponentB = TRAINER_NONE;
+        for (i = 0; i < STATE->battlersCount; i++)
+            DATA.currentMonIndexes[i] = i / 2;
+        DATA.recordedBattle.battleFlags |= SetFrontierBattleFlags(test->frontierFacility);
+        DATA.hasAI = TRUE;
+        break;
+    case BATTLE_TEST_FRONTIER_AI_DOUBLES:
+        DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE;
+        DATA.recordedBattle.opponentA = TRAINER_LEAF_TEST;
+        DATA.currentMonIndexes[0] = 0; // Player first mon
+        DATA.currentMonIndexes[1] = 0; // Opponent A first mon
+        if (test->frontierMode == FRONTIER_MODE_MULTIS || test->frontierMode == FRONTIER_MODE_LINK_MULTIS)
+        {
+            DATA.recordedBattle.partnerId = TRAINER_PARTNER(PARTNER_STEVEN_TEST);
+            DATA.recordedBattle.opponentB = TRAINER_RED_TEST;
+            DATA.currentMonIndexes[2] = 0;
+            DATA.currentMonIndexes[3] = 0;
+        }
+        else
+        {
+            DATA.recordedBattle.partnerId = TRAINER_NONE;
+            DATA.recordedBattle.opponentB = TRAINER_NONE;
+            DATA.currentMonIndexes[2] = 1;
+            DATA.currentMonIndexes[3] = 1;
+        }
+        DATA.recordedBattle.battleFlags |= SetFrontierBattleFlags(test->frontierFacility);
+        DATA.hasAI = TRUE;
+        break;
     case BATTLE_TEST_SINGLES:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_RECORDED_IS_MASTER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TRAINER;
         DATA.recordedBattle.opponentA = TRAINER_LINK_OPPONENT;
@@ -478,6 +531,35 @@ static void BattleTest_Run(void *data)
         DATA.currentMonIndexes[1] = 0; // Opponent A first mon
         DATA.currentMonIndexes[2] = 1; // Player second mon
         DATA.currentMonIndexes[3] = 0; // Opponent B first mon
+        break;
+    case BATTLE_TEST_FRONTIER_SINGLES:
+        DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_RECORDED_IS_MASTER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TRAINER;
+        DATA.recordedBattle.opponentA = TRAINER_LINK_OPPONENT;
+        DATA.recordedBattle.opponentB = TRAINER_NONE;
+        for (i = 0; i < STATE->battlersCount; i++)
+            DATA.currentMonIndexes[i] = i / 2;
+        DATA.recordedBattle.battleFlags |= SetFrontierBattleFlags(test->frontierFacility);
+        break;
+    case BATTLE_TEST_FRONTIER_DOUBLES:
+        DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_RECORDED_IS_MASTER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE;
+        DATA.recordedBattle.opponentA = TRAINER_LINK_OPPONENT;
+        DATA.currentMonIndexes[0] = 0; // Player first mon
+        DATA.currentMonIndexes[1] = 0; // Opponent A first mon FRONTIER_MODE_LINK_MULTIS
+        if (test->frontierMode == FRONTIER_MODE_MULTIS || test->frontierMode == FRONTIER_MODE_LINK_MULTIS)
+        {
+            DATA.recordedBattle.partnerId = TRAINER_PARTNER(PARTNER_STEVEN_TEST);
+            DATA.recordedBattle.opponentB = TRAINER_LINK_OPPONENT;
+            DATA.currentMonIndexes[2] = 0;
+            DATA.currentMonIndexes[3] = 0;
+        }
+        else
+        {
+            DATA.recordedBattle.partnerId = TRAINER_NONE;
+            DATA.recordedBattle.opponentB = TRAINER_NONE;
+            DATA.currentMonIndexes[2] = 1;
+            DATA.currentMonIndexes[3] = 1;
+        }
+        DATA.recordedBattle.battleFlags |= SetFrontierBattleFlags(test->frontierFacility);
         break;
     }
 
@@ -2419,8 +2501,10 @@ static const char *BattlerIdentifier(enum BattlerId battlerId)
     switch (test->type)
     {
     case BATTLE_TEST_SINGLES:
+    case BATTLE_TEST_FRONTIER_SINGLES:
     case BATTLE_TEST_WILD:
     case BATTLE_TEST_AI_SINGLES:
+    case BATTLE_TEST_FRONTIER_AI_SINGLES:
         return sBattlerIdentifiersSingles[battlerId];
     case BATTLE_TEST_DOUBLES:
     case BATTLE_TEST_AI_DOUBLES:
@@ -2430,6 +2514,8 @@ static const char *BattlerIdentifier(enum BattlerId battlerId)
     case BATTLE_TEST_AI_TWO_VS_ONE:
     case BATTLE_TEST_ONE_VS_TWO:
     case BATTLE_TEST_AI_ONE_VS_TWO:
+    case BATTLE_TEST_FRONTIER_DOUBLES:
+    case BATTLE_TEST_FRONTIER_AI_DOUBLES:
         return sBattlerIdentifiersDoubles[battlerId];
     }
     return "<unknown>";
