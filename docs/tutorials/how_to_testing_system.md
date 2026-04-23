@@ -70,7 +70,7 @@ As a second example, to manually test that Stun Spore does not effect Grass-type
 2. Battle an opponent with Oddish.
 3. Use Stun Spore.
 4. Check that the move animation does not play.
-5. Check that a "It doesn't affect Foe Oddish…" message is shown.
+5. Check that a "It doesn't affect the opposing Oddish…" message is shown.
 
 This can again be translated as follows:
 
