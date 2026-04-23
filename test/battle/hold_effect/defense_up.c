@@ -24,11 +24,11 @@ SINGLE_BATTLE_TEST("Ganlon Berry raises the holder's Defense by one stage when H
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
         if (move == MOVE_SCRATCH) {
             NONE_OF {
-                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
                 MESSAGE("The Ganlon Berry boosted Wobbuffet's Defense!");
             }
         } else {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
             MESSAGE("The Ganlon Berry boosted Wobbuffet's Defense!");
         }
     } THEN {
@@ -46,7 +46,7 @@ SINGLE_BATTLE_TEST("Ganlon Berry raises Defense by one stage when HP drops to 1/
         TURN { MOVE(opponent, MOVE_DRAGON_RAGE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_RAGE, opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         MESSAGE("The Ganlon Berry boosted Bellsprout's Defense!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 1);
@@ -62,7 +62,7 @@ SINGLE_BATTLE_TEST("Ganlon Berry raises Defense by one stage when HP drops to 1/
         TURN { MOVE(opponent, MOVE_DRAGON_RAGE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_RAGE, opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         MESSAGE("The Ganlon Berry sharply boosted Applin's Defense!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 2);

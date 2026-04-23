@@ -55,7 +55,6 @@ static u32 ReturnAnimIdForBattler(bool32 isPlayerSide, u32 specificBattler);
 static void LaunchKOAnimation(enum BattlerId battlerId, u16 animId, bool32 isFront);
 static void AnimateMonAfterKnockout(enum BattlerId battler);
 
-
 bool32 IsAiVsAiBattle(void)
 {
     return (B_FLAG_AI_VS_AI_BATTLE && FlagGet(B_FLAG_AI_VS_AI_BATTLE));

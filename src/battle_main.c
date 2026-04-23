@@ -159,6 +159,7 @@ EWRAM_DATA u8 gBattlerPositions[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u8 gActionsByTurnOrder[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA enum BattlerId gBattlerByTurnOrder[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA enum BattlerId gBattlersBySpeed[MAX_BATTLERS_COUNT] = {0};
+EWRAM_DATA enum BattlerId gBattlersByRawSpeed[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u8 gCurrentTurnActionNumber = 0;
 EWRAM_DATA u8 gCurrentActionFuncId = 0;
 EWRAM_DATA struct BattlePokemon gBattleMons[MAX_BATTLERS_COUNT] = {0};

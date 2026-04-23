@@ -71,7 +71,6 @@ struct ProtectStruct
     u32 palaceUnableToUseMove:1;
     u32 statRaised:1;
     u32 usedCustapBerry:1;    // also quick claw
-    u32 disableEjectPack:1;
     u32 pranksterElevated:1;
     u32 quickDraw:1;
     u32 quash:1;
@@ -84,7 +83,7 @@ struct ProtectStruct
     u32 forcedSwitch:1;
     u32 myceliumMight:1;
     u32 survivedOHKO:1; // Used to keep track of effects that allow focus punch when surviving moves like Fissure
-    u32 padding1:1;
+    u32 padding1:2;
     // End of 32-bit bitfield
     u16 helpingHand:3;
     u16 revengeDoubled:4;
@@ -509,7 +508,7 @@ struct BattlerState
     u16 switchIn:1;
     u16 notOnField:1;
     u16 redCardSwitched:1;
-    u16 isFirstTurn:2;
+    u16 isFirstTurn:2; // Starts at 2 on switch in and counts down during end turn
     u16 padding:11;
 };
 
@@ -650,7 +649,7 @@ struct BattleStruct
     struct LostItem itemLost[MAX_BATTLE_TRAINERS][PARTY_SIZE];  // Pokemon that had items consumed or stolen (two bytes per party member per side)
     u8 blunderPolicy:1; // should blunder policy activate
     u8 swapDamageCategory:1; // Photon Geyser, Shell Side Arm, Light That Burns the Sky
-    u8 unused2:1;
+    u8 redCardActivated :1;
     u8 snatchedMoveIsUsed:1;
     u8 descriptionSubmenu:1; // For Move Description window in move selection screen
     u8 ackBallUseBtn:1; // Used for the last used ball feature
@@ -969,6 +968,7 @@ extern u8 gBattlerPositions[MAX_BATTLERS_COUNT];
 extern u8 gActionsByTurnOrder[MAX_BATTLERS_COUNT];
 extern enum BattlerId gBattlerByTurnOrder[MAX_BATTLERS_COUNT];
 extern enum BattlerId gBattlersBySpeed[MAX_BATTLERS_COUNT];
+extern enum BattlerId gBattlersByRawSpeed[MAX_BATTLERS_COUNT];
 extern u8 gCurrentTurnActionNumber;
 extern u8 gCurrentActionFuncId;
 extern struct BattlePokemon gBattleMons[MAX_BATTLERS_COUNT];
@@ -1075,6 +1075,18 @@ static inline bool32 IsBattlerAlive(enum BattlerId battler)
         return TRUE;
 }
 
+// Some effects, like most end of turn effects only activate on active battlers (on the field)
+// IsBattlerAlive doesn't check for queued switches, so IsBattlerPresent is used in these cases
+static inline bool32 IsBattlerPresent(enum BattlerId battler)
+{
+    if (!IsBattlerAlive(battler))
+        return FALSE;
+    else if (gBattleStruct->battlerState[battler].notOnField)
+        return FALSE;
+    else
+        return TRUE;
+}
+
 static inline bool32 IsBattlerTurnDamaged(enum BattlerId battler, enum SubCheck subCheck)
 {
     return gSpecialStatuses[battler].damagedByAttack || ((subCheck == INCLUDING_SUBSTITUTES) && gBattleStruct->moveDamage[battler] > 0);
@@ -1101,17 +1113,17 @@ static inline enum BattlerId GetBattlerAtPosition(enum BattlerPosition position)
     return battler;
 }
 
-static inline u32 GetPartnerBattler(enum BattlerId battler)
+static inline enum BattlerId GetPartnerBattler(enum BattlerId battler)
 {
     return GetBattlerAtPosition(BATTLE_PARTNER(GetBattlerPosition(battler)));
 }
 
-static inline u32 GetOppositeBattler(enum BattlerId battler)
+static inline enum BattlerId GetOppositeBattler(enum BattlerId battler)
 {
     return GetBattlerAtPosition(BATTLE_OPPOSITE(GetBattlerPosition(battler)));
 }
 
-static inline u32 GetBattlerSide(enum BattlerId battler)
+static inline enum BattleSide GetBattlerSide(enum BattlerId battler)
 {
     return GetBattlerPosition(battler) & BIT_SIDE;
 }
@@ -1126,14 +1138,9 @@ static inline bool32 IsBattlerAlly(enum BattlerId battlerAtk, enum BattlerId bat
     return GetBattlerSide(battlerAtk) == GetBattlerSide(battlerDef);
 }
 
-static inline u32 GetOpposingSideBattler(enum BattlerId battler)
+static inline enum BattlerId GetOpposingSideBattler(enum BattlerId battler)
 {
     return GetBattlerAtPosition(BATTLE_OPPOSITE(GetBattlerSide(battler)));
-}
-
-static inline struct PartyState *GetBattlerPartyState(enum BattlerId battler)
-{
-    return &gBattleStruct->partyState[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]];
 }
 
 static inline bool32 IsDoubleBattle(void)
@@ -1148,7 +1155,7 @@ static inline bool32 IsSpreadMove(enum MoveTarget moveTarget)
     return moveTarget == TARGET_BOTH || moveTarget == TARGET_FOES_AND_ALLY;
 }
 
-static inline u32 GetBattlerChosenMove(enum BattlerId battler)
+static inline enum Move GetBattlerChosenMove(enum BattlerId battler)
 {
     return gBattleMons[battler].moves[gBattleStruct->chosenMovePositions[battler]];
 }

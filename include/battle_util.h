@@ -106,10 +106,8 @@ struct DamageContext
     enum Type moveType:6;
 
     uq4_12_t typeEffectivenessModifier;
-    enum Ability abilityAtk;
-    enum Ability abilityDef;
-    enum HoldEffect holdEffectAtk;
-    enum HoldEffect holdEffectDef;
+    enum Ability abilities[MAX_BATTLERS_COUNT];
+    enum HoldEffect holdEffects[MAX_BATTLERS_COUNT];
 
     // Flags
     u32 isCrit:1;
@@ -412,5 +410,8 @@ void SetOrClearRageVolatile(void);
 enum BattlerId GetTargetBySlot(enum BattlerId battlerAtk, enum BattlerId battlerDef);
 bool32 IsNaturalEnemy(enum Species speciesAttacker, enum Species speciesTarget);
 enum Stat GetDownloadStat(enum BattlerId battler);
+bool32 BattlerJustSwitchedIn(enum BattlerId battler);
+bool32 IsBattlersFirstTurn(enum BattlerId battler);
+struct PartyState *GetBattlerPartyState(enum BattlerId battler);
 
 #endif // GUARD_BATTLE_UTIL_H
