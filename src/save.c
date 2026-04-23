@@ -16,7 +16,7 @@
 static u16 CalculateChecksum(void *, u16);
 static bool8 ReadFlashSector(u8, struct SaveSector *);
 static u8 GetSaveValidStatus(const struct SaveSectorLocation *);
-static u8 CopySaveSlotData(u16, struct SaveSectorLocation *);
+static u8 LoadSaveSlot(struct SaveSectorLocation *);
 static u8 TryWriteSector(u8, u8 *);
 static u8 HandleWriteSector(u16, const struct SaveSectorLocation *);
 static u8 HandleReplaceSector(u16, const struct SaveSectorLocation *);
@@ -136,40 +136,35 @@ static bool32 SetDamagedSectorBits(u8 op, u8 sectorId)
     return retVal;
 }
 
-static u8 WriteSaveSectorOrSlot(u16 sectorId, const struct SaveSectorLocation *locations)
+static u8 WriteSaveSlot(const struct SaveSectorLocation *locations)
 {
     u32 status;
     u16 i;
 
+    EncryptSave();
+
     gReadWriteSector = &gSaveDataBuffer;
 
-    if (sectorId != FULL_SAVE_SLOT)
-    {
-        // A sector was specified, just write that sector.
-        // This is never reached, FULL_SAVE_SLOT is always used instead.
-        status = HandleWriteSector(sectorId, locations);
-    }
-    else
-    {
-        // No sector was specified, write full save slot.
-        gLastKnownGoodSector = gLastWrittenSector; // backup the current written sector before attempting to write.
-        gLastSaveCounter = gSaveCounter;
-        gLastWrittenSector++;
-        gLastWrittenSector = gLastWrittenSector % NUM_SECTORS_PER_SLOT;
-        gSaveCounter++;
-        status = SAVE_STATUS_OK;
+    // No sector was specified, write full save slot.
+    gLastKnownGoodSector = gLastWrittenSector; // backup the current written sector before attempting to write.
+    gLastSaveCounter = gSaveCounter;
+    gLastWrittenSector++;
+    gLastWrittenSector = gLastWrittenSector % NUM_SECTORS_PER_SLOT;
+    gSaveCounter++;
+    status = SAVE_STATUS_OK;
 
-        for (i = 0; i < NUM_SECTORS_PER_SLOT; i++)
-            HandleWriteSector(i, locations);
+    for (i = 0; i < NUM_SECTORS_PER_SLOT; i++)
+        HandleWriteSector(i, locations);
 
-        if (gDamagedSaveSectors)
-        {
-            // At least one sector save failed
-            status = SAVE_STATUS_ERROR;
-            gLastWrittenSector = gLastKnownGoodSector;
-            gSaveCounter = gLastSaveCounter;
-        }
+    if (gDamagedSaveSectors)
+    {
+        // At least one sector save failed
+        status = SAVE_STATUS_ERROR;
+        gLastWrittenSector = gLastKnownGoodSector;
+        gSaveCounter = gLastSaveCounter;
     }
+
+    DecryptSave();
 
     return status;
 }
@@ -480,14 +475,14 @@ static u8 TryLoadSaveSlot(u16 sectorId, struct SaveSectorLocation *locations)
     else
     {
         status = GetSaveValidStatus(locations);
-        CopySaveSlotData(FULL_SAVE_SLOT, locations);
+        LoadSaveSlot(locations);
+        DecryptSave();
     }
 
     return status;
 }
 
-// sectorId arg is ignored, this always reads the full save slot
-static u8 CopySaveSlotData(u16 sectorId, struct SaveSectorLocation *locations)
+static u8 LoadSaveSlot(struct SaveSectorLocation *locations)
 {
     u16 i;
     u16 checksum;
@@ -731,7 +726,7 @@ u8 HandleSavingData(u8 saveType)
 
         // Write the full save slot first
         CopyPartyAndObjectsToSave();
-        WriteSaveSectorOrSlot(FULL_SAVE_SLOT, gRamSaveSectorLocations);
+        WriteSaveSlot(gRamSaveSectorLocations);
 
         // Save the Hall of Fame
         if (gHoFSaveBuffer != NULL)
@@ -744,17 +739,19 @@ u8 HandleSavingData(u8 saveType)
     case SAVE_NORMAL:
     default:
         CopyPartyAndObjectsToSave();
-        WriteSaveSectorOrSlot(FULL_SAVE_SLOT, gRamSaveSectorLocations);
+        WriteSaveSlot(gRamSaveSectorLocations);
         break;
     case SAVE_LINK:
     case SAVE_EREADER: // Dummied, now duplicate of SAVE_LINK
         // Used by link / Battle Frontier
         // Write only SaveBlocks 1 and 2 (skips the PC)
         CopyPartyAndObjectsToSave();
+        EncryptSave(); // TODO: Skip Pokemon storage.
         for (i = SECTOR_ID_SAVEBLOCK2; i <= SECTOR_ID_SAVEBLOCK1_END; i++)
             HandleReplaceSector(i, gRamSaveSectorLocations);
         for (i = SECTOR_ID_SAVEBLOCK2; i <= SECTOR_ID_SAVEBLOCK1_END; i++)
             WriteSectorSignatureByte_NoOffset(i, gRamSaveSectorLocations);
+        DecryptSave(); // TODO: Skip Pokemon storage.
         break;
     case SAVE_OVERWRITE_DIFFERENT_FILE:
         // Erase Hall of Fame
@@ -763,7 +760,7 @@ u8 HandleSavingData(u8 saveType)
 
         // Overwrite save slot
         CopyPartyAndObjectsToSave();
-        WriteSaveSectorOrSlot(FULL_SAVE_SLOT, gRamSaveSectorLocations);
+        WriteSaveSlot(gRamSaveSectorLocations);
         break;
     }
     gTrainerHillVBlankCounter = backupVar;

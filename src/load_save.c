@@ -20,8 +20,6 @@
 #include "event_data.h"
 #include "constants/event_objects.h"
 
-static void ApplyNewEncryptionKeyToAllEncryptedData(u32 encryptionKey);
-
 #define SAVEBLOCK_MOVE_RANGE    128
 
 struct LoadedSaveData
@@ -37,7 +35,6 @@ EWRAM_DATA struct SaveBlock1 gSaveBlock1 = {0};
 EWRAM_DATA struct PokemonStorage gPokemonStorage = {0};
 
 EWRAM_DATA struct LoadedSaveData gLoadedSaveData = {0};
-EWRAM_DATA u32 gLastEncryptionKey = 0;
 
 // IWRAM common
 COMMON_DATA bool32 gFlashMemoryPresent = 0;
@@ -75,28 +72,6 @@ void ClearSav1(void)
 void SetSaveBlocksPointers(void)
 {
     SetDecorationInventoriesPointers();
-}
-
-void RotateEncryptionKey_ResetHeap(void)
-{
-    // save interrupt functions and turn them off
-    void *vblankCB = gMain.vblankCallback;
-    void *hblankCB = gMain.hblankCallback;
-    gMain.vblankCallback = NULL;
-    gMain.hblankCallback = NULL;
-    gTrainerHillVBlankCounter = NULL;
-
-    // heap was destroyed in the copying process, so reset it
-    InitHeap(gHeap, HEAP_SIZE);
-
-    // restore interrupt functions
-    gMain.hblankCallback = hblankCB;
-    gMain.vblankCallback = vblankCB;
-
-    // create a new encryption key
-    u32 encryptionKey = Random32();
-    ApplyNewEncryptionKeyToAllEncryptedData(encryptionKey);
-    gSaveBlock2Ptr->encryptionKey = encryptionKey;
 }
 
 u32 UseContinueGameWarp(void)
@@ -213,34 +188,14 @@ void CopyPartyAndObjectsFromSave(void)
 
 void LoadPlayerBag(void)
 {
-    int i;
-
-    // load player bag.
     memcpy(&gLoadedSaveData.bag, &gSaveBlock1Ptr->bag, sizeof(struct Bag));
-
-    // load mail.
-    for (i = 0; i < MAIL_COUNT; i++)
-        gLoadedSaveData.mail[i] = gSaveBlock1Ptr->mail[i];
-
-    gLastEncryptionKey = gSaveBlock2Ptr->encryptionKey;
+    memcpy(gLoadedSaveData.mail, gSaveBlock1Ptr->mail, sizeof(gLoadedSaveData.mail));
 }
 
 void SavePlayerBag(void)
 {
-    int i;
-    u32 encryptionKeyBackup;
-
-    // save player bag.
     memcpy(&gSaveBlock1Ptr->bag, &gLoadedSaveData.bag, sizeof(struct Bag));
-
-    // save mail.
-    for (i = 0; i < MAIL_COUNT; i++)
-        gSaveBlock1Ptr->mail[i] = gLoadedSaveData.mail[i];
-
-    encryptionKeyBackup = gSaveBlock2Ptr->encryptionKey;
-    gSaveBlock2Ptr->encryptionKey = gLastEncryptionKey;
-    ApplyNewEncryptionKeyToBagItems(encryptionKeyBackup);
-    gSaveBlock2Ptr->encryptionKey = encryptionKeyBackup; // updated twice?
+    memcpy(gSaveBlock1Ptr->mail, gLoadedSaveData.mail, sizeof(gSaveBlock1Ptr->mail));
 }
 
 void ApplyNewEncryptionKeyToHword(u16 *hWord, u32 newKey)
@@ -255,11 +210,53 @@ void ApplyNewEncryptionKeyToWord(u32 *word, u32 newKey)
     *word ^= newKey;
 }
 
-static void ApplyNewEncryptionKeyToAllEncryptedData(u32 encryptionKey)
+void EncryptSave(void)
 {
-    ApplyNewEncryptionKeyToGameStats(encryptionKey);
-    ApplyNewEncryptionKeyToBagItems(encryptionKey);
-    ApplyNewEncryptionKeyToBerryPowder(encryptionKey);
-    ApplyNewEncryptionKeyToWord(&gSaveBlock1Ptr->money, encryptionKey);
-    ApplyNewEncryptionKeyToHword(&gSaveBlock1Ptr->coins, encryptionKey);
+    for (u32 i = 0; i < ARRAY_COUNT(gSaveBlock1Ptr->playerParty); i++)
+        EncryptMon(&gSaveBlock1Ptr->playerParty[i]);
+    for (u32 i = 0; i < ARRAY_COUNT(gSaveBlock1Ptr->daycare.mons); i++)
+        EncryptBoxMon(&gSaveBlock1Ptr->daycare.mons[i].mon);
+    #if IS_FRLG
+    EncryptBoxMon(&gSaveBlock1Ptr->route5DayCareMon.mon);
+    #endif
+
+    for (u32 i = 0; i < TOTAL_BOXES_COUNT; i++)
+    {
+        for (u32 j = 0; j < IN_BOX_COUNT; j++)
+            EncryptBoxMon(&gPokemonStoragePtr->boxes[i][j]);
+    }
+    for (u32 i = 0; i < ARRAY_COUNT(gPokemonStoragePtr->fusions); i++)
+        EncryptMon(&gPokemonStoragePtr->fusions[i]);
+}
+
+void DecryptSave(void)
+{
+    // HINT: Setting the encyptionKey to 0 means that encrypting would
+    // be a no-op, allowing us to skip decrypting them in the future.
+    if (gSaveBlock2Ptr->encryptionKey != 0)
+    {
+        ApplyNewEncryptionKeyToGameStats(0);
+        ApplyNewEncryptionKeyToBagItems(0);
+        ApplyNewEncryptionKeyToBerryPowder(0);
+        ApplyNewEncryptionKeyToWord(&gSaveBlock1Ptr->money, 0);
+        ApplyNewEncryptionKeyToHword(&gSaveBlock1Ptr->coins, 0);
+
+        gSaveBlock2Ptr->encryptionKey = 0;
+    }
+
+    for (u32 i = 0; i < ARRAY_COUNT(gSaveBlock1Ptr->playerParty); i++)
+        EncryptMon(&gSaveBlock1Ptr->playerParty[i]);
+    for (u32 i = 0; i < ARRAY_COUNT(gSaveBlock1Ptr->daycare.mons); i++)
+        EncryptBoxMon(&gSaveBlock1Ptr->daycare.mons[i].mon);
+    #if IS_FRLG
+    EncryptBoxMon(&gSaveBlock1Ptr->route5DayCareMon.mon);
+    #endif
+
+    for (u32 i = 0; i < TOTAL_BOXES_COUNT; i++)
+    {
+        for (u32 j = 0; j < IN_BOX_COUNT; j++)
+            DecryptBoxMon(&gPokemonStoragePtr->boxes[i][j]);
+    }
+    for (u32 i = 0; i < ARRAY_COUNT(gPokemonStoragePtr->fusions); i++)
+        DecryptMon(&gPokemonStoragePtr->fusions[i]);
 }

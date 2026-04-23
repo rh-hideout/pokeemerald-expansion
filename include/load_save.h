@@ -21,7 +21,6 @@ void ClearSav3(void);
 void ClearSav2(void);
 void ClearSav1(void);
 void SetSaveBlocksPointers();
-void RotateEncryptionKey_ResetHeap(void);
 u32 UseContinueGameWarp(void);
 void ClearContinueGameWarpStatus(void);
 void SetContinueGameWarpStatus(void);
@@ -37,5 +36,7 @@ void LoadPlayerBag(void);
 void SavePlayerBag(void);
 void ApplyNewEncryptionKeyToHword(u16 *hWord, u32 newKey);
 void ApplyNewEncryptionKeyToWord(u32 *word, u32 newKey);
+void EncryptSave(void);
+void DecryptSave(void);
 
 #endif // GUARD_LOAD_SAVE_H

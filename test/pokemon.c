@@ -660,8 +660,9 @@ TEST("BoxPokemon encryption works")
         2870614922
     };
 
+    DecryptBoxMon((struct BoxPokemon *)raw);
     struct Pokemon mon;
-    BoxMonToMon((struct BoxPokemon *)&raw, &mon);
+    BoxMonToMon((struct BoxPokemon *)raw, &mon);
 
     EXPECT_EQ(GetMonData(&mon, MON_DATA_SANITY_IS_BAD_EGG), 0);
     EXPECT_EQ(GetMonData(&mon, MON_DATA_SPECIES), SPECIES_TORCHIC);
@@ -729,4 +730,39 @@ TEST("BoxPokemon encryption works")
     EXPECT_EQ(GetMonData(&mon, MON_DATA_HYPER_TRAINED_SPDEF), 1);
     EXPECT_EQ(GetMonData(&mon, MON_DATA_DYNAMAX_LEVEL), 3);
     EXPECT_EQ(GetMonData(&mon, MON_DATA_OT_GENDER), 0);
+}
+
+TEST("EncryptBoxMon is the inverse of DecryptBoxMon")
+{
+    u32 raw[20] =
+    {
+        990384375,
+        2948624514,
+        3907508686,
+        14410461,
+        35316705,
+        3907508686,
+        64742109,
+        718729,
+        3102307966,
+        2160206402,
+        49956971,
+        2495766612,
+        1424318580,
+        273408756,
+        2371630199,
+        2708871082,
+        3059937332,
+        2529190026,
+        2290634828,
+        2870614922
+    };
+
+    struct BoxPokemon boxMon;
+    memcpy(&boxMon, raw, sizeof(boxMon));
+    DecryptBoxMon(&boxMon);
+    EncryptBoxMon(&boxMon);
+
+    for (u32 i = 0; i < ARRAY_COUNT(raw); i++)
+        EXPECT_EQ(raw[i], ((u32 *)&boxMon)[i]);
 }
