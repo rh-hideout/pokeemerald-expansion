@@ -175,6 +175,13 @@ static bool32 CheckMemBlockInternal(void *heapStart, void *pointer)
 
 void InitHeap(void *heapStart, u32 heapSize)
 {
+    // The heap already exists, report any leaks.
+    if (REPORT_MEMORY_LEAKS && sHeapStart != NULL)
+    {
+        DebugPrintf("Memory leaks:");
+        PrintHeap();
+    }
+
     sHeapStart = heapStart;
     sHeapSize = heapSize;
     PutFirstMemBlockHeader(heapStart, heapSize);

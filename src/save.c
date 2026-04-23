@@ -914,31 +914,6 @@ u8 LoadGameSave(u8 saveType)
     return status;
 }
 
-u16 GetSaveBlocksPointersBaseOffset(void)
-{
-    u16 i, slotOffset;
-    struct SaveSector *sector;
-
-    sector = gReadWriteSector = &gSaveDataBuffer;
-    if (gFlashMemoryPresent != TRUE)
-        return 0;
-    UpdateSaveAddresses();
-    GetSaveValidStatus(gRamSaveSectorLocations);
-    slotOffset = NUM_SECTORS_PER_SLOT * (gSaveCounter % NUM_SAVE_SLOTS);
-    for (i = 0; i < NUM_SECTORS_PER_SLOT; i++)
-    {
-        ReadFlashSector(i + slotOffset, gReadWriteSector);
-
-        // Base offset for SaveBlock2 is calculated using the trainer id
-        if (gReadWriteSector->id == SECTOR_ID_SAVEBLOCK2)
-            return sector->data[offsetof(struct SaveBlock2, playerTrainerId[0])] +
-                   sector->data[offsetof(struct SaveBlock2, playerTrainerId[1])] +
-                   sector->data[offsetof(struct SaveBlock2, playerTrainerId[2])] +
-                   sector->data[offsetof(struct SaveBlock2, playerTrainerId[3])];
-    }
-    return 0;
-}
-
 u32 TryReadSpecialSaveSector(u8 sector, u8 *dst)
 {
     s32 i;
@@ -1071,17 +1046,17 @@ static u32 SaveBlock3Size(u32 sectorId)
 {
     s32 begin = sectorId * SAVE_BLOCK_3_CHUNK_SIZE;
     s32 end = (sectorId + 1) * SAVE_BLOCK_3_CHUNK_SIZE;
-    return max(0, min(end, (s32)sizeof(gSaveblock3)) - begin);
+    return max(0, min(end, (s32)sizeof(*gSaveBlock3Ptr)) - begin);
 }
 
 static void CopyToSaveBlock3(u32 sectorId, struct SaveSector *sector)
 {
     u32 size = SaveBlock3Size(sectorId);
-    memcpy((u8 *)&gSaveblock3 + (sectorId * SAVE_BLOCK_3_CHUNK_SIZE), sector->saveBlock3Chunk, size);
+    memcpy((u8 *)gSaveBlock3Ptr + (sectorId * SAVE_BLOCK_3_CHUNK_SIZE), sector->saveBlock3Chunk, size);
 }
 
 static void CopyFromSaveBlock3(u32 sectorId, struct SaveSector *sector)
 {
     u32 size = SaveBlock3Size(sectorId);
-    memcpy(sector->saveBlock3Chunk, (u8 *)&gSaveblock3 + (sectorId * SAVE_BLOCK_3_CHUNK_SIZE), size);
+    memcpy(sector->saveBlock3Chunk, (u8 *)gSaveBlock3Ptr + (sectorId * SAVE_BLOCK_3_CHUNK_SIZE), size);
 }

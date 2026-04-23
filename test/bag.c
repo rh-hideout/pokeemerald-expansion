@@ -8,7 +8,7 @@
 
 TEST("TMs and HMs are sorted correctly in the bag")
 {
-    struct BagPocket *pocket = &gBagPockets[POCKET_TM_HM];
+    const struct BagPocket *pocket = &gBagPockets[POCKET_TM_HM];
 
     ASSUME(GetItemPocket(ITEM_HM07) == POCKET_TM_HM);
     ASSUME(GetItemPocket(ITEM_TM25) == POCKET_TM_HM);
@@ -50,7 +50,7 @@ TEST("TMs and HMs are sorted correctly in the bag")
 
 TEST("Berries are sorted correctly in the bag")
 {
-    struct BagPocket *pocket = &gBagPockets[POCKET_BERRIES];
+    const struct BagPocket *pocket = &gBagPockets[POCKET_BERRIES];
 
     ASSUME(GetItemPocket(ITEM_POMEG_BERRY) == POCKET_BERRIES);
     ASSUME(GetItemPocket(ITEM_MAGOST_BERRY) == POCKET_BERRIES);
@@ -99,7 +99,7 @@ TEST("Berries are sorted correctly in the bag")
 
 TEST("Items are correctly sorted and compacted in the bag")
 {
-    struct BagPocket *pocket = &gBagPockets[POCKET_ITEMS];
+    const struct BagPocket *pocket = &gBagPockets[POCKET_ITEMS];
     memset(pocket->itemSlots, 0, sizeof(gSaveBlock1Ptr->bag.items));
 
     ASSUME(GetItemPocket(ITEM_NUGGET) == POCKET_ITEMS);

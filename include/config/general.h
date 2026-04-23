@@ -50,6 +50,9 @@
 #endif
 #endif
 
+// Change to TRUE to print memory leaks on InitHeap.
+#define REPORT_MEMORY_LEAKS FALSE
+
 // Compatibility definition for other projects to detect pokeemerald-expansion
 #define RHH_EXPANSION
 
