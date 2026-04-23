@@ -1325,17 +1325,25 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     [MOVE_DISABLE] =
     {
         .name = COMPOUND_STRING("Disable"),
+        #if B_DISABLE_TURNS == GEN_1
         .description = COMPOUND_STRING(
             "Prevents the foe from using\n"
-        #if B_DISABLE_TURNS == GEN_1
             "a random move for 0-7 turns."),
         #elif B_DISABLE_TURNS == GEN_2
+        .description = COMPOUND_STRING(
+            "Prevents the foe from using\n"
             "its last move for 1-7 turns."),
         #elif B_DISABLE_TURNS == GEN_3
+        .description = COMPOUND_STRING(
+            "Prevents the foe from using\n"
             "its last move for 2-5 turns."),
         #elif B_DISABLE_TURNS == GEN_4
+        .description = COMPOUND_STRING(
+            "Prevents the foe from using\n"
             "its last move for 4-7 turns."),
         #else
+        .description = COMPOUND_STRING(
+            "Prevents the foe from using\n"
             "its last move for 4 turns."),
         #endif
         #if B_UPDATED_MOVE_DATA >= GEN_5
