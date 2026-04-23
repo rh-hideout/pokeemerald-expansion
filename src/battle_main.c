@@ -477,7 +477,7 @@ const u8 *const gStatusConditionStringsTable[][2] =
 void CB2_InitBattle(void)
 {
     if (!gTestRunnerEnabled)
-        MoveSaveBlocks_ResetHeap();
+        RotateEncryptionKey_ResetHeap();
     AllocateBattleResources();
     AllocateBattleSpritesData();
     AllocateMonSpritesGfx();

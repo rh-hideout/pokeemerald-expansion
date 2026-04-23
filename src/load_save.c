@@ -30,20 +30,16 @@ struct LoadedSaveData
 };
 
 // EWRAM DATA
-EWRAM_DATA struct SaveBlock3 gSaveblock3 = {};
-EWRAM_DATA struct SaveBlock2ASLR gSaveblock2 = {0};
-EWRAM_DATA struct SaveBlock1ASLR gSaveblock1 = {0};
-EWRAM_DATA struct PokemonStorageASLR gPokemonStorage = {0};
+EWRAM_DATA struct SaveBlock3 gSaveBlock3 = {};
+EWRAM_DATA struct SaveBlock2 gSaveBlock2 = {0};
+EWRAM_DATA struct SaveBlock1 gSaveBlock1 = {0};
+EWRAM_DATA struct PokemonStorage gPokemonStorage = {0};
 
 EWRAM_DATA struct LoadedSaveData gLoadedSaveData = {0};
 EWRAM_DATA u32 gLastEncryptionKey = 0;
 
 // IWRAM common
 COMMON_DATA bool32 gFlashMemoryPresent = 0;
-COMMON_DATA struct SaveBlock1 *gSaveBlock1Ptr = NULL;
-COMMON_DATA struct SaveBlock2 *gSaveBlock2Ptr = NULL;
-IWRAM_INIT struct SaveBlock3 *gSaveBlock3Ptr = &gSaveblock3;
-COMMON_DATA struct PokemonStorage *gPokemonStoragePtr = NULL;
 
 // code
 void CheckForFlashMemory(void)
@@ -61,71 +57,35 @@ void CheckForFlashMemory(void)
 
 void ClearSav3(void)
 {
-    CpuFill16(0, &gSaveblock3, sizeof(struct SaveBlock3));
+    CpuFill16(0, &gSaveBlock3, sizeof(gSaveBlock3));
     FakeRtc_Reset();
 }
 
 void ClearSav2(void)
 {
-    CpuFill16(0, &gSaveblock2, sizeof(struct SaveBlock2ASLR));
+    CpuFill16(0, &gSaveBlock2, sizeof(gSaveBlock2));
 }
 
 void ClearSav1(void)
 {
-    CpuFill16(0, &gSaveblock1, sizeof(struct SaveBlock1ASLR));
+    CpuFill16(0, &gSaveBlock1, sizeof(gSaveBlock1));
 }
 
 // Offset is the sum of the trainer id bytes
 void SetSaveBlocksPointers(u16 offset)
 {
-    struct SaveBlock1 **sav1_LocalVar = &gSaveBlock1Ptr;
-
-    offset = (offset + Random()) & (SAVEBLOCK_MOVE_RANGE - 4);
-
-    gSaveBlock2Ptr = (void *)(&gSaveblock2) + offset;
-    *sav1_LocalVar = (void *)(&gSaveblock1) + offset;
-    gPokemonStoragePtr = (void *)(&gPokemonStorage) + offset;
-
     SetBagItemsPointers();
     SetDecorationInventoriesPointers();
 }
 
-void MoveSaveBlocks_ResetHeap(void)
+void RotateEncryptionKey_ResetHeap(void)
 {
-    void *vblankCB, *hblankCB;
-    u32 encryptionKey;
-    struct SaveBlock2 *saveBlock2Copy;
-    struct SaveBlock1 *saveBlock1Copy;
-    struct PokemonStorage *pokemonStorageCopy;
-
     // save interrupt functions and turn them off
-    vblankCB = gMain.vblankCallback;
-    hblankCB = gMain.hblankCallback;
+    void *vblankCB = gMain.vblankCallback;
+    void *hblankCB = gMain.hblankCallback;
     gMain.vblankCallback = NULL;
     gMain.hblankCallback = NULL;
     gTrainerHillVBlankCounter = NULL;
-
-    saveBlock2Copy = (struct SaveBlock2 *)(gHeap);
-    saveBlock1Copy = (struct SaveBlock1 *)(gHeap + sizeof(struct SaveBlock2));
-    pokemonStorageCopy = (struct PokemonStorage *)(gHeap + sizeof(struct SaveBlock2) + sizeof(struct SaveBlock1));
-
-    // backup the saves.
-    *saveBlock2Copy = *gSaveBlock2Ptr;
-    *saveBlock1Copy = *gSaveBlock1Ptr;
-    *pokemonStorageCopy = *gPokemonStoragePtr;
-
-    // change saveblocks' pointers
-    // argument is a sum of the individual trainerId bytes
-    SetSaveBlocksPointers(
-      saveBlock2Copy->playerTrainerId[0] +
-      saveBlock2Copy->playerTrainerId[1] +
-      saveBlock2Copy->playerTrainerId[2] +
-      saveBlock2Copy->playerTrainerId[3]);
-
-    // restore saveblock data since the pointers changed
-    *gSaveBlock2Ptr = *saveBlock2Copy;
-    *gSaveBlock1Ptr = *saveBlock1Copy;
-    *gPokemonStoragePtr = *pokemonStorageCopy;
 
     // heap was destroyed in the copying process, so reset it
     InitHeap(gHeap, HEAP_SIZE);
@@ -135,7 +95,7 @@ void MoveSaveBlocks_ResetHeap(void)
     gMain.vblankCallback = vblankCB;
 
     // create a new encryption key
-    encryptionKey = Random32();
+    u32 encryptionKey = Random32();
     ApplyNewEncryptionKeyToAllEncryptedData(encryptionKey);
     gSaveBlock2Ptr->encryptionKey = encryptionKey;
 }

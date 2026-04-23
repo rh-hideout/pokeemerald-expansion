@@ -1071,17 +1071,17 @@ static u32 SaveBlock3Size(u32 sectorId)
 {
     s32 begin = sectorId * SAVE_BLOCK_3_CHUNK_SIZE;
     s32 end = (sectorId + 1) * SAVE_BLOCK_3_CHUNK_SIZE;
-    return max(0, min(end, (s32)sizeof(gSaveblock3)) - begin);
+    return max(0, min(end, (s32)sizeof(*gSaveBlock3Ptr)) - begin);
 }
 
 static void CopyToSaveBlock3(u32 sectorId, struct SaveSector *sector)
 {
     u32 size = SaveBlock3Size(sectorId);
-    memcpy((u8 *)&gSaveblock3 + (sectorId * SAVE_BLOCK_3_CHUNK_SIZE), sector->saveBlock3Chunk, size);
+    memcpy((u8 *)gSaveBlock3Ptr + (sectorId * SAVE_BLOCK_3_CHUNK_SIZE), sector->saveBlock3Chunk, size);
 }
 
 static void CopyFromSaveBlock3(u32 sectorId, struct SaveSector *sector)
 {
     u32 size = SaveBlock3Size(sectorId);
-    memcpy(sector->saveBlock3Chunk, (u8 *)&gSaveblock3 + (sectorId * SAVE_BLOCK_3_CHUNK_SIZE), size);
+    memcpy(sector->saveBlock3Chunk, (u8 *)gSaveBlock3Ptr + (sectorId * SAVE_BLOCK_3_CHUNK_SIZE), size);
 }
