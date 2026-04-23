@@ -1,65 +1,69 @@
-import subprocess
+import argparse
+import collections
 import os
+import subprocess
 import sys
 
-numArgs = len(sys.argv)
+def address(string):
+    if string.startswith("0x"):
+        return int(string, base=0)
+    else:
+        return int(string, base=16)
 
-if not numArgs == 3:
-    print("Command requires passing 2 arguments, a .elf file and an address")
-    quit()
+parser = argparse.ArgumentParser(
+    prog="find_func",
+    description="Looks up a symbol in an ELF file by address",
+)
 
-if not os.path.exists(sys.argv[1]):
-    errorStr = "Input file (" + str(sys.argv[1]) + ") doesn't exist"
-    print(errorStr)
-    quit()
+parser.add_argument("filename")
+parser.add_argument("address", type=address)
 
-with open(str(sys.argv[1]), 'rb') as file:
-    matches = True
-    if not file.read(1) == b'\x7f':
-        matches = False
-    if not file.read(1) == b'E':
-        matches = False
-    if not file.read(1) == b'L':
-        matches = False
-    if not file.read(1) == b'F':
-        matches = False
+args = parser.parse_args()
 
-    if not matches:
-        errorStr = "Input file ("+ sys.argv[1] + ") isn't a .elf file"
-        print(errorStr)
-        quit()
+try:
+    f = open(args.filename, 'rb')
+except FileNotFoundError:
+    print("file not found: '{}'".format(args.filename))
+    quit(2)
 
-target = int(sys.argv[2], 16)
+with f as file:
+    if file.read(4) != b'\x7fELF':
+        print("file not an ELF: '{}'".format(args.filename))
+        quit(2)
 
-result = subprocess.run(['arm-none-eabi-objdump', '-t', sys.argv[1]], stdout=subprocess.PIPE)
-resultString = result.stdout.decode('utf-8')
+result = subprocess.run(['arm-none-eabi-objdump', '-t', args.filename], stdout=subprocess.PIPE)
 
-allStarts = list()
-allNames = list()
+Symbol = collections.namedtuple('Symbol', 'name address_start address_end')
 
-for line in resultString.splitlines():
-    splitStr = line.split()
-    size = len(splitStr)
-    if size == 6:
-        allStarts.append(int(splitStr[0], 16))
-        allNames.append(splitStr[5])
-    elif size == 5:
-        allStarts.append(int(splitStr[0], 16))
-        allNames.append(splitStr[4])
+symbols = []
 
-it = 0
-total = len(allStarts)
-closestName = ""
-closestDistance = -1
-while it < total:
-    if target >= allStarts[it]:
-        distance = target - allStarts[it]
-        if closestDistance == -1:
-            closestDistance = distance
-            closestName = allNames[it]
-        elif distance < closestDistance:
-            closestDistance = distance
-            closestName = allNames[it]
-    it += 1
+for line in result.stdout.decode('utf-8').splitlines():
+    columns = line.split()
+    if len(columns) in {5, 6} and "*ABS*" not in line:
+        address_start = int(columns[0], base=16)
+        size = int(columns[-2], base=16)
+        name = columns[-1]
+        symbols.append(Symbol(name=name, address_start=address_start, address_end=address_start + size))
 
-print(closestName)
+found = False
+closest_before = None
+closest_after = None
+for symbol in symbols:
+    if symbol.address_start <= args.address < symbol.address_end:
+        print("{} (offset {})".format(symbol.name, hex(args.address - symbol.address_start)))
+        found = True
+    elif not found:
+        if args.address > symbol.address_end and (not closest_before or symbol.address_end > closest_before.address_end):
+            closest_before = symbol
+        if args.address < symbol.address_start and (not closest_after or symbol.address_start < closest_after.address_start):
+            closest_after = symbol
+
+if not found:
+    print("no symbol found at address {}".format(hex(args.address)))
+    if closest_before or closest_after:
+        print("closest symbols:")
+        if closest_before:
+            print("{} at address [{}..{})".format(closest_before.name, hex(closest_before.address_start), hex(closest_before.address_end)))
+        if closest_after:
+            print("{} at address [{}..{})".format(closest_after.name, hex(closest_after.address_start), hex(closest_after.address_end)))
+    quit(1)
