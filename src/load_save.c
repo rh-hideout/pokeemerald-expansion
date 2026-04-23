@@ -71,10 +71,8 @@ void ClearSav1(void)
     CpuFill16(0, &gSaveBlock1, sizeof(gSaveBlock1));
 }
 
-// Offset is the sum of the trainer id bytes
-void SetSaveBlocksPointers(u16 offset)
+void SetSaveBlocksPointers(void)
 {
-    SetBagItemsPointers();
     SetDecorationInventoriesPointers();
 }
 

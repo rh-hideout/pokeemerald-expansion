@@ -229,7 +229,7 @@ static void ItemMenu_SortByAmount(u8 taskId);
 static void ItemMenu_SortByIndex(u8 taskId);
 static void SortBagItems(u8 taskId);
 static void Task_SortFinish(u8 taskId);
-static void MergeSort(struct BagPocket *pocket, s32 (*comparator)(enum Pocket, struct ItemSlot, struct ItemSlot));
+static void MergeSort(const struct BagPocket *pocket, s32 (*comparator)(enum Pocket, struct ItemSlot, struct ItemSlot));
 static s32 CompareItemsAlphabetically(enum Pocket pocketId, struct ItemSlot item1, struct ItemSlot item2);
 static s32 CompareItemsByMost(enum Pocket pocketId, struct ItemSlot item1, struct ItemSlot item2);
 static s32 CompareItemsByType(enum Pocket pocketId, struct ItemSlot item1, struct ItemSlot item2);
@@ -1151,7 +1151,7 @@ void UpdatePocketItemList(enum Pocket pocketId)
     if (pocketId >= POCKETS_COUNT)
         return; // shouldn't even get here
 
-    struct BagPocket *pocket = &gBagPockets[pocketId];
+    const struct BagPocket *pocket = &gBagPockets[pocketId];
     switch (pocketId)
     {
     case POCKET_TM_HM:
@@ -2873,7 +2873,7 @@ static void Task_SortFinish(u8 taskId)
     }
 }
 
-void SortItemsInBag(struct BagPocket *pocket, enum BagSortOptions type)
+void SortItemsInBag(const struct BagPocket *pocket, enum BagSortOptions type)
 {
     switch (type)
     {
@@ -2892,7 +2892,7 @@ void SortItemsInBag(struct BagPocket *pocket, enum BagSortOptions type)
     }
 }
 
-static inline __attribute__((always_inline)) void Merge(struct BagPocket *pocket, u32 iLeft, u32 iRight, u32 iEnd, struct ItemSlot *dummySlots, s32 (*comparator)(enum Pocket, struct ItemSlot, struct ItemSlot))
+static inline __attribute__((always_inline)) void Merge(const struct BagPocket *pocket, u32 iLeft, u32 iRight, u32 iEnd, struct ItemSlot *dummySlots, s32 (*comparator)(enum Pocket, struct ItemSlot, struct ItemSlot))
 {
     struct ItemSlot item_i, item_j;
     u32 i = iLeft, j = iRight;
@@ -2914,7 +2914,7 @@ static inline __attribute__((always_inline)) void Merge(struct BagPocket *pocket
 }
 
 // Source: https://en.wikipedia.org/wiki/Merge_sort#Bottom-up_implementation
-static void MergeSort(struct BagPocket *pocket, s32 (*comparator)(enum Pocket, struct ItemSlot, struct ItemSlot))
+static void MergeSort(const struct BagPocket *pocket, s32 (*comparator)(enum Pocket, struct ItemSlot, struct ItemSlot))
 {
     struct ItemSlot *dummySlots = AllocZeroed(sizeof(struct ItemSlot) * pocket->capacity);
 

@@ -33,9 +33,41 @@ static bool32 CheckPyramidBagHasItem(enum Item itemId, u16 count);
 static bool32 CheckPyramidBagHasSpace(enum Item itemId, u16 count);
 static const u8 *GetItemPluralName(enum Item);
 static bool32 DoesItemHavePluralName(enum Item);
-static void NONNULL BagPocket_CompactItems(struct BagPocket *pocket);
+static void NONNULL BagPocket_CompactItems(const struct BagPocket *pocket);
 
-EWRAM_DATA struct BagPocket gBagPockets[POCKETS_COUNT] = {0};
+const struct BagPocket gBagPockets[POCKETS_COUNT] =
+{
+    [POCKET_ITEMS] =
+    {
+        .id = POCKET_ITEMS,
+        .capacity = BAG_ITEMS_COUNT,
+        .itemSlots = gSaveBlock1.bag.items,
+    },
+    [POCKET_KEY_ITEMS] =
+    {
+        .id = POCKET_KEY_ITEMS,
+        .capacity = BAG_KEYITEMS_COUNT,
+        .itemSlots = gSaveBlock1.bag.keyItems,
+    },
+    [POCKET_POKE_BALLS] =
+    {
+        .id = POCKET_POKE_BALLS,
+        .capacity = BAG_POKEBALLS_COUNT,
+        .itemSlots = gSaveBlock1.bag.pokeBalls,
+    },
+    [POCKET_TM_HM] =
+    {
+        .id = POCKET_TM_HM,
+        .capacity = BAG_TMHM_COUNT,
+        .itemSlots = gSaveBlock1.bag.TMsHMs,
+    },
+    [POCKET_BERRIES] =
+    {
+        .id = POCKET_BERRIES,
+        .capacity = BAG_BERRIES_COUNT,
+        .itemSlots = gSaveBlock1.bag.berries,
+    },
+};
 
 #include "data/pokemon/item_effects.h"
 #include "data/items.h"
@@ -61,7 +93,7 @@ const struct TmHmIndexKey gTMHMItemMoveIds[NUM_ALL_MACHINES + 1] =
 #undef UNPACK_TM_ITEM_ID
 #undef UNPACK_HM_ITEM_ID
 
-static inline struct ItemSlot NONNULL BagPocket_GetSlotDataGeneric(struct BagPocket *pocket, u32 pocketPos)
+static inline struct ItemSlot NONNULL BagPocket_GetSlotDataGeneric(const struct BagPocket *pocket, u32 pocketPos)
 {
     return (struct ItemSlot) {
         .itemId = pocket->itemSlots[pocketPos].itemId,
@@ -69,7 +101,7 @@ static inline struct ItemSlot NONNULL BagPocket_GetSlotDataGeneric(struct BagPoc
     };
 }
 
-static inline struct ItemSlot NONNULL BagPocket_GetSlotDataPC(struct BagPocket *pocket, u32 pocketPos)
+static inline struct ItemSlot NONNULL BagPocket_GetSlotDataPC(const struct BagPocket *pocket, u32 pocketPos)
 {
     return (struct ItemSlot) {
         .itemId = pocket->itemSlots[pocketPos].itemId,
@@ -77,19 +109,19 @@ static inline struct ItemSlot NONNULL BagPocket_GetSlotDataPC(struct BagPocket *
     };
 }
 
-static inline void NONNULL BagPocket_SetSlotDataGeneric(struct BagPocket *pocket, u32 pocketPos, struct ItemSlot newSlot)
+static inline void NONNULL BagPocket_SetSlotDataGeneric(const struct BagPocket *pocket, u32 pocketPos, struct ItemSlot newSlot)
 {
     pocket->itemSlots[pocketPos].itemId = newSlot.itemId;
     pocket->itemSlots[pocketPos].quantity = newSlot.quantity ^ gSaveBlock2Ptr->encryptionKey;
 }
 
-static inline void NONNULL BagPocket_SetSlotDataPC(struct BagPocket *pocket, u32 pocketPos, struct ItemSlot newSlot)
+static inline void NONNULL BagPocket_SetSlotDataPC(const struct BagPocket *pocket, u32 pocketPos, struct ItemSlot newSlot)
 {
     pocket->itemSlots[pocketPos].itemId = newSlot.itemId;
     pocket->itemSlots[pocketPos].quantity = newSlot.quantity;
 }
 
-struct ItemSlot NONNULL BagPocket_GetSlotData(struct BagPocket *pocket, u32 pocketPos)
+struct ItemSlot NONNULL BagPocket_GetSlotData(const struct BagPocket *pocket, u32 pocketPos)
 {
     switch (pocket->id)
     {
@@ -106,7 +138,7 @@ struct ItemSlot NONNULL BagPocket_GetSlotData(struct BagPocket *pocket, u32 pock
     return (struct ItemSlot) {0}; // Because compiler complains
 }
 
-void NONNULL BagPocket_SetSlotData(struct BagPocket *pocket, u32 pocketPos, struct ItemSlot newSlot)
+void NONNULL BagPocket_SetSlotData(const struct BagPocket *pocket, u32 pocketPos, struct ItemSlot newSlot)
 {
     if (newSlot.itemId == ITEM_NONE || newSlot.quantity == 0) // Sets to zero if quantity or itemId is zero
     {
@@ -138,29 +170,6 @@ void ApplyNewEncryptionKeyToBagItems(u32 newKey)
         for (item = ITEM_NONE; item < gBagPockets[pocketId].capacity; item++)
             ApplyNewEncryptionKeyToHword(&(gBagPockets[pocketId].itemSlots[item].quantity), newKey);
     }
-}
-
-void SetBagItemsPointers(void)
-{
-    gBagPockets[POCKET_ITEMS].itemSlots = gSaveBlock1Ptr->bag.items;
-    gBagPockets[POCKET_ITEMS].capacity = BAG_ITEMS_COUNT;
-    gBagPockets[POCKET_ITEMS].id = POCKET_ITEMS;
-
-    gBagPockets[POCKET_KEY_ITEMS].itemSlots = gSaveBlock1Ptr->bag.keyItems;
-    gBagPockets[POCKET_KEY_ITEMS].capacity = BAG_KEYITEMS_COUNT;
-    gBagPockets[POCKET_KEY_ITEMS].id = POCKET_KEY_ITEMS;
-
-    gBagPockets[POCKET_POKE_BALLS].itemSlots = gSaveBlock1Ptr->bag.pokeBalls;
-    gBagPockets[POCKET_POKE_BALLS].capacity = BAG_POKEBALLS_COUNT;
-    gBagPockets[POCKET_POKE_BALLS].id = POCKET_POKE_BALLS;
-
-    gBagPockets[POCKET_TM_HM].itemSlots = gSaveBlock1Ptr->bag.TMsHMs;
-    gBagPockets[POCKET_TM_HM].capacity = BAG_TMHM_COUNT;
-    gBagPockets[POCKET_TM_HM].id = POCKET_TM_HM;
-
-    gBagPockets[POCKET_BERRIES].itemSlots = gSaveBlock1Ptr->bag.berries;
-    gBagPockets[POCKET_BERRIES].capacity = BAG_BERRIES_COUNT;
-    gBagPockets[POCKET_BERRIES].id = POCKET_BERRIES;
 }
 
 u8 *CopyItemName(enum Item itemId, u8 *dst)
@@ -199,7 +208,7 @@ bool32 IsBagPocketNonEmpty(enum Pocket pocketId)
     return FALSE;
 }
 
-static bool32 NONNULL BagPocket_CheckHasItem(struct BagPocket *pocket, enum Item itemId, u16 count)
+static bool32 NONNULL BagPocket_CheckHasItem(const struct BagPocket *pocket, enum Item itemId, u16 count)
 {
     struct ItemSlot tempItem;
 
@@ -256,7 +265,7 @@ bool32 CheckBagHasSpace(enum Item itemId, u16 count)
     return GetFreeSpaceForItemInBag(itemId) >= count;
 }
 
-static u32 NONNULL BagPocket_GetFreeSpaceForItem(struct BagPocket *pocket, enum Item itemId)
+static u32 NONNULL BagPocket_GetFreeSpaceForItem(const struct BagPocket *pocket, enum Item itemId)
 {
     u32 spaceForItem = 0;
     struct ItemSlot tempItem;
@@ -280,7 +289,7 @@ u32 GetFreeSpaceForItemInBag(enum Item itemId)
     return BagPocket_GetFreeSpaceForItem(&gBagPockets[GetItemPocket(itemId)], itemId);
 }
 
-static inline bool32 NONNULL CheckSlotAndUpdateCount(struct BagPocket *pocket, enum Item itemId, u32 pocketPos, u32 *nextPocketPos, u16 *count, u16 *tempPocketSlotQuantities)
+static inline bool32 NONNULL CheckSlotAndUpdateCount(const struct BagPocket *pocket, enum Item itemId, u32 pocketPos, u32 *nextPocketPos, u16 *count, u16 *tempPocketSlotQuantities)
 {
     struct ItemSlot tempItem = BagPocket_GetSlotData(pocket, pocketPos);
     if (tempItem.itemId == ITEM_NONE || tempItem.itemId == itemId)
@@ -303,7 +312,7 @@ static inline bool32 NONNULL CheckSlotAndUpdateCount(struct BagPocket *pocket, e
     return FALSE;
 }
 
-static bool32 NONNULL BagPocket_AddItem(struct BagPocket *pocket, enum Item itemId, u16 count)
+static bool32 NONNULL BagPocket_AddItem(const struct BagPocket *pocket, enum Item itemId, u16 count)
 {
     u32 itemLookupIndex, itemAddIndex = 0;
 
@@ -357,7 +366,7 @@ bool32 AddBagItem(enum Item itemId, u16 count)
     return BagPocket_AddItem(&gBagPockets[GetItemPocket(itemId)], itemId, count);
 }
 
-static bool32 NONNULL BagPocket_RemoveItem(struct BagPocket *pocket, enum Item itemId, u16 count)
+static bool32 NONNULL BagPocket_RemoveItem(const struct BagPocket *pocket, enum Item itemId, u16 count)
 {
     u32 itemLookupIndex, itemRemoveIndex = 0, totalQuantity = 0;
     struct ItemSlot tempItem;
@@ -414,13 +423,13 @@ bool32 RemoveBagItem(enum Item itemId, u16 count)
 }
 
 // Unsafe function: Only use with functions that already check the slot and count are valid
-void RemoveBagItemFromSlot(struct BagPocket *pocket, u16 slotId, u16 count)
+void RemoveBagItemFromSlot(const struct BagPocket *pocket, u16 slotId, u16 count)
 {
     struct ItemSlot itemSlot = BagPocket_GetSlotData(pocket, slotId);
     BagPocket_SetSlotItemIdAndCount(pocket, slotId, itemSlot.itemId, itemSlot.quantity - count);
 }
 
-static u8 NONNULL BagPocket_CountUsedItemSlots(struct BagPocket *pocket)
+static u8 NONNULL BagPocket_CountUsedItemSlots(const struct BagPocket *pocket)
 {
     u8 usedSlots = 0;
 
@@ -438,7 +447,7 @@ u8 CountUsedPCItemSlots(void)
     return BagPocket_CountUsedItemSlots(&dummyPocket);
 }
 
-static bool32 NONNULL BagPocket_CheckPocketForItemCount(struct BagPocket *pocket, enum Item itemId, u16 count)
+static bool32 NONNULL BagPocket_CheckPocketForItemCount(const struct BagPocket *pocket, enum Item itemId, u16 count)
 {
     struct ItemSlot tempItem;
 
@@ -463,7 +472,7 @@ bool32 AddPCItem(enum Item itemId, u16 count)
     return BagPocket_AddItem(&dummyPocket, itemId, count);
 }
 
-static void NONNULL BagPocket_CompactItems(struct BagPocket *pocket)
+static void NONNULL BagPocket_CompactItems(const struct BagPocket *pocket)
 {
     struct ItemSlot tempItem;
     u32 slotCursor = 0;
@@ -522,7 +531,7 @@ void CompactItemsInBagPocket(enum Pocket pocketId)
     BagPocket_CompactItems(&gBagPockets[pocketId]);
 }
 
-static inline void NONNULL BagPocket_MoveItemSlot(struct BagPocket *pocket, u32 from, u32 to)
+static inline void NONNULL BagPocket_MoveItemSlot(const struct BagPocket *pocket, u32 from, u32 to)
 {
     if (from != to)
     {
@@ -558,7 +567,7 @@ void ClearBag(void)
     CpuFastFill(0, &gSaveBlock1Ptr->bag, sizeof(struct Bag));
 }
 
-static inline u16 NONNULL BagPocket_CountTotalItemQuantity(struct BagPocket *pocket, enum Item itemId)
+static inline u16 NONNULL BagPocket_CountTotalItemQuantity(const struct BagPocket *pocket, enum Item itemId)
 {
     u32 ownedCount = 0;
     struct ItemSlot tempItem;

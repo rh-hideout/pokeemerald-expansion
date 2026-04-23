@@ -20,7 +20,7 @@ void CheckForFlashMemory(void);
 void ClearSav3(void);
 void ClearSav2(void);
 void ClearSav1(void);
-void SetSaveBlocksPointers(u16 offset);
+void SetSaveBlocksPointers();
 void RotateEncryptionKey_ResetHeap(void);
 u32 UseContinueGameWarp(void);
 void ClearContinueGameWarpStatus(void);
