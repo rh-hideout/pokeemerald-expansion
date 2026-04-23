@@ -272,7 +272,7 @@ DOUBLE_BATTLE_TEST("Red Card activates but fails if the attacker is rooted")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
         MESSAGE("Wobbuffet held up its Red Card against the opposing Wobbuffet!");
-        MESSAGE("The opposing Wobbuffet anchored itself with its roots!");
+        MESSAGE("The opposing Wobbuffet is anchored in place with its roots!");
         NOT MESSAGE("The opposing Unown was dragged out!");
 
         // Red Card already consumed so cannot activate.
@@ -301,7 +301,7 @@ DOUBLE_BATTLE_TEST("Red Card activates but fails if the attacker has Suction Cup
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
         MESSAGE("Wobbuffet held up its Red Card against the opposing Octillery!");
-        MESSAGE("The opposing Octillery anchors itself with Suction Cups!");
+        MESSAGE("The opposing Octillery is anchored in place with its suction cups!");
         NOT MESSAGE("The opposing Unown was dragged out!");
 
         // Red Card already consumed so cannot activate.

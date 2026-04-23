@@ -1038,7 +1038,7 @@ static void AnimShakeMonOrBattlePlatforms_UpdateCoordOffsetEnabled(void)
 #define tTimer       data[3]
 #define tShakeDelay  data[8]
 
-// Can shake battle platforms back and forth on the X or down and back to original pos on Y (cant shake up from orig pos)
+// Can shake battle platforms back and forth on the X or down and back to original pos on Y (can't shake up from orig pos)
 void AnimTask_ShakeBattlePlatforms(u8 taskId)
 {
     CMD_ARGS(xOffset, yOffset, shakes, delay);

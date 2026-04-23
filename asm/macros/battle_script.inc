@@ -1526,10 +1526,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro setmagiccoattarget
-	callnative BS_SetMagicCoatTarget
-	.endm
-
 	.macro jumpifcommanderactive jumpInstr:req
 	callnative BS_JumpIfCommanderActive
 	.4byte \jumpInstr
@@ -1763,12 +1759,6 @@
 
 	.macro updatenick
 	callnative BS_UpdateNick
-	.endm
-
-	.macro jumpifnotberry battler:req, jumpInstr:req
-	callnative BS_JumpIfNotBerry
-	.byte \battler
-	.4byte \jumpInstr
 	.endm
 
 	.macro gravityonairbornemons
@@ -2226,4 +2216,12 @@
 	callnative BS_TryActivateAbilityWithAbilityShield
 	.byte \battler
 	.byte \switchedItems
+	.endm
+
+	.macro endturnevents
+	callnative BS_EndTurnEvents
+	.endm
+
+	.macro trywakebattlersuproar
+	callnative BS_TryWakeBattlersUproar
 	.endm

@@ -179,8 +179,8 @@ static void DrawPokemonSpots(u32 personality, const struct MonSpotTemplate* spot
         u8 pidLowerNibble = pidByteForSpot & NIBBLE_LOWER;
         u8 pidUpperNibble = (pidByteForSpot & NIBBLE_UPPER) >> 4;
 
-        u8 x = spot->x + pidLowerNibble * (spotTemplate->scale / 2);
-        u8 y = spot->y + pidUpperNibble * (spotTemplate->scale / 2);
+        s32 x = spot->x + pidLowerNibble * (spotTemplate->scale / 2);
+        s32 y = spot->y + pidUpperNibble * (spotTemplate->scale / 2);
 
         switch (spotAnimFrame)
         {
@@ -202,7 +202,7 @@ static void DrawPokemonSpots(u32 personality, const struct MonSpotTemplate* spot
         for (u32 i = 0; i < size; i++)
         {
             u32 spotPixelRow = GetSpotRow(spot->image, i, spotTemplate->scale);
-            u32 row = y + i;
+            s32 row = y + i;
 
             //INFO: This loop draws one row
             for (u32 j = 0; j < size; j++)
@@ -210,7 +210,11 @@ static void DrawPokemonSpots(u32 personality, const struct MonSpotTemplate* spot
                 u32 bit = (spotPixelRow >> j) & 1;
                 if (bit)
                 {
-                    u32 col = x + j;
+                    s32 col = x + j;
+                    if (col < 0 || col >= MON_PIC_WIDTH
+                     || row < 0 || row >= MON_PIC_HEIGHT * MAX_MON_PIC_FRAMES)
+                        continue;
+
                     u8* destPixels = dest + CoordToByteOffset(col, row);
 
                     u8 shift = (col & 1) ? ODD_PIXEL_SHIFT : EVEN_PIXEL_SHIFT;

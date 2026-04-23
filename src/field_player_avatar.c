@@ -804,7 +804,6 @@ static void WindUpSpinTimer(enum Direction direction)
 bool32 CanTriggerSpinEvolution()
 {
     gSpecialVar_0x8000 = EVO_NONE;
-    bool32 canStopEvo = TRUE;
     if (gPlayerSpinData.triggerEvo)
     {
         u32 seconds = gPlayerSpinData.VBlanksSpinning / 60;
@@ -828,22 +827,10 @@ bool32 CanTriggerSpinEvolution()
             else if (direction == SPIN_DIRECTION_COUNTER_CLOCKWISE)
                 gSpecialVar_0x8000 = SPIN_CCW_SHORT;
         }
-        gSpecialVar_0x8001 = FALSE; //canStopEvo
-        canStopEvo = FALSE;
-        gSpecialVar_0x8002 = TRUE; //tryMultiple
         gPlayerSpinData.triggerEvo = FALSE;
     }
     if (gSpecialVar_0x8000 != EVO_NONE)
-    {
-        for (u32 i = 0; i < PARTY_SIZE; i++)
-        {
-            enum Species species = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_OVERWORLD_SPECIAL, 0, NULL, &canStopEvo, CHECK_EVO);
-            if (species != SPECIES_NONE)
-            {
-                return TRUE;
-            }
-        }
-    }
+        return TRUE;
 
     return FALSE;
 }
@@ -1638,9 +1625,9 @@ bool8 PartyHasMonWithSurf(void)
     {
         for (i = 0; i < PARTY_SIZE; i++)
         {
-            if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) == SPECIES_NONE)
+            if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES) == SPECIES_NONE)
                 break;
-            if (MonKnowsMove(&gPlayerParty[i], MOVE_SURF))
+            if (MonKnowsMove(&gParties[B_TRAINER_0][i], MOVE_SURF))
                 return TRUE;
         }
     }

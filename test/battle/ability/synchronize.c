@@ -116,10 +116,10 @@ SINGLE_BATTLE_TEST("Synchronize can trigger again during the same attack if user
 
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
         STATUS_ICON(player, poison: TRUE);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         STATUS_ICON(player, poison: FALSE);
 
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         STATUS_ICON(opponent, poison: FALSE);
 
         ABILITY_POPUP(player, ABILITY_POISON_TOUCH);

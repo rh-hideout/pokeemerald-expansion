@@ -195,7 +195,7 @@ SINGLE_BATTLE_TEST("Fling - Item does not get blocked by Unnerve if it isn't a b
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TAUNT, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
         HP_BAR(opponent);
-        MESSAGE("The opposing Wobbuffet's Taunt wore off!");
+        MESSAGE("The opposing Wobbuffet shook off the taunt!");
     }
 }
 
@@ -459,23 +459,23 @@ SINGLE_BATTLE_TEST("Fling - thrown berry's effect activates for the target even 
         else if (statId != 0) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
             if (statId == STAT_ATK) {
-                MESSAGE("Using Liechi Berry, the Attack of the opposing Wobbuffet rose!");
+                MESSAGE("The Liechi Berry boosted the opposing Wobbuffet's Attack!");
             } else if (statId == STAT_DEF) {
                 if (item == ITEM_GANLON_BERRY) {
-                    MESSAGE("Using Ganlon Berry, the Defense of the opposing Wobbuffet rose!");
+                    MESSAGE("The Ganlon Berry boosted the opposing Wobbuffet's Defense!");
                 } else {
-                    MESSAGE("Using Kee Berry, the Defense of the opposing Wobbuffet rose!");
+                    MESSAGE("The Kee Berry boosted the opposing Wobbuffet's Defense!");
                 }
             } else if (statId == STAT_SPDEF) {
                 if (item == ITEM_APICOT_BERRY) {
-                    MESSAGE("Using Apicot Berry, the Sp. Def of the opposing Wobbuffet rose!");
+                    MESSAGE("The Apicot Berry boosted the opposing Wobbuffet's Sp. Def!");
                 } else {
-                    MESSAGE("Using Maranga Berry, the Sp. Def of the opposing Wobbuffet rose!");
+                    MESSAGE("The Maranga Berry boosted the opposing Wobbuffet's Sp. Def!");
                 }
             } else if (statId == STAT_SPEED) {
-                MESSAGE("Using Salac Berry, the Speed of the opposing Wobbuffet rose!");
+                MESSAGE("The Salac Berry boosted the opposing Wobbuffet's Speed!");
             } else if (statId == STAT_SPATK) {
-                MESSAGE("Using Petaya Berry, the Sp. Atk of the opposing Wobbuffet rose!");
+                MESSAGE("The Petaya Berry boosted the opposing Wobbuffet's Sp. Atk!");
             }
         }
     } THEN {
@@ -622,5 +622,44 @@ SINGLE_BATTLE_TEST("Fling doesn't reveal the user's item if it missed")
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, opponent);
             HP_BAR(player);
         };
+    }
+}
+
+SINGLE_BATTLE_TEST("Fling - Mental Herb effect should not remove the target's held item")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TAUNT) == EFFECT_TAUNT);
+        ASSUME(GetItemHoldEffect(ITEM_MENTAL_HERB) == HOLD_EFFECT_MENTAL_HERB);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_MENTAL_HERB); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RAZOR_CLAW); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TAUNT); MOVE(opponent, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_FLING); MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TAUNT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
+        HP_BAR(opponent);
+    } THEN {
+        EXPECT_EQ(opponent->item, ITEM_RAZOR_CLAW);
+    }
+}
+
+SINGLE_BATTLE_TEST("Fling - White Herb effect should not remove the target's held item")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_GROWL) == EFFECT_ATTACK_DOWN);
+        ASSUME(GetItemHoldEffect(ITEM_WHITE_HERB) == HOLD_EFFECT_WHITE_HERB);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_WHITE_HERB); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RAZOR_CLAW); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_GROWL); }
+        TURN { MOVE(player, MOVE_FLING); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GROWL, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
+        HP_BAR(opponent);
+    } THEN {
+        EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponent->item, ITEM_RAZOR_CLAW);
     }
 }

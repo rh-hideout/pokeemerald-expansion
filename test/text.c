@@ -5,9 +5,11 @@
 #include "battle_message.h"
 #include "battle_setup.h"
 #include "item.h"
-#include "malloc.h"
-#include "party_menu.h"
 #include "main_menu.h"
+#include "malloc.h"
+#include "map_name_popup.h"
+#include "overworld.h"
+#include "party_menu.h"
 #include "string_util.h"
 #include "text.h"
 #include "constants/abilities.h"
@@ -15,6 +17,7 @@
 #include "constants/battle_string_ids.h"
 #include "constants/items.h"
 #include "constants/moves.h"
+#include "../src/data/map_group_count.h"
 #include "test/overworld_script.h"
 
 TEST("Move names fit on Pokemon Summary Screen")
@@ -557,6 +560,27 @@ TEST("Type names fit on Pokedex Search Screen")
     EXPECT_LE(GetStringWidth(fontId, gTypesInfo[type].name, 0), widthPx);
 }
 
+
+TEST("Map names fit in popup")
+{
+    ASSUME(OW_POPUP_GENERATION == GEN_3);
+    const u32 fontId = FONT_NARROWER;
+    u32 widthPx = 80;
+    s8 mapGroup = 0;
+    s8 mapNum = 0;
+    u8 mapName[MAP_POPUP_STRING_BUFFER_LENGTH - MAP_POPUP_PREFIX_BUFFER_LENGTH];
+    for (u32 i = 0; MAP_GROUP_COUNT[i] != 0; i++)
+    {
+        for (u32 j = 0; j < MAP_GROUP_COUNT[i]; j++)
+        {
+            const struct MapHeader *mapHeader = Overworld_GetMapHeaderByGroupAndId(i, j);
+            if (mapHeader->showMapName)
+                PARAMETRIZE_LABEL("%S", GetPopUpMapName(mapName, mapHeader)) { mapGroup = i; mapNum = j;}
+        }
+    }
+    EXPECT_LE(GetStringWidth(fontId, GetPopUpMapName(mapName, Overworld_GetMapHeaderByGroupAndId(mapGroup, mapNum)), 0), widthPx);
+}
+
 extern u16 sBattlerAbilities[MAX_BATTLERS_COUNT];
 //*
 #define BATTLE_STRING_BUFFER_SIZE 1000
@@ -586,8 +610,8 @@ TEST("Battle strings fit on the battle message window")
         givemon SPECIES_WOBBUFFET, 100;
         createmon 1, 0, SPECIES_WOBBUFFET, 100;
     );
-    SetMonData(&gPlayerParty[0], MON_DATA_NICKNAME, nickname);
-    SetMonData(&gEnemyParty[0], MON_DATA_NICKNAME, nickname);
+    SetMonData(&gParties[B_TRAINER_0][0], MON_DATA_NICKNAME, nickname);
+    SetMonData(&gParties[B_TRAINER_1][0], MON_DATA_NICKNAME, nickname);
 
     for (i = start; i <= end; i++)
     {
@@ -774,7 +798,7 @@ TEST("Battle strings fit on the battle message window")
         PREPARE_MON_NICK_WITH_PREFIX_LOWER_BUFFER(gBattleTextBuff1, 1, 0);
         PREPARE_ABILITY_BUFFER(gBattleTextBuff2, longAbilityID);
         break;
-    // Buffer Stat name to B_BUFF1, "drastically rose" to B_BUFF2
+    // Buffer Stat name to B_BUFF1, "rose drastically" to B_BUFF2
     case STRINGID_ATTACKERSSTATROSE:
     case STRINGID_DEFENDERSSTATROSE:
     case STRINGID_USINGITEMSTATOFPKMNROSE:

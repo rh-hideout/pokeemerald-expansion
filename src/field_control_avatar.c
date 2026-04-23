@@ -592,7 +592,7 @@ static const u8 *GetInteractedMetatileScript(struct MapPosition *position, u8 me
         SetMsgSignPostAndVarFacing(direction);
         return Common_EventScript_ShowPokemonCenterSign;
     }
-    if (MetatileBehavior_IsRockClimbable(metatileBehavior) == TRUE && !IsRockClimbActive())
+    if (IsFieldMoveUnlocked(FIELD_MOVE_ROCK_CLIMB) && MetatileBehavior_IsRockClimbable(metatileBehavior) == TRUE && !IsRockClimbActive())
         return EventScript_UseRockClimb;
 
     elevation = position->elevation;
@@ -833,7 +833,7 @@ static void UpdateFriendshipStepCounter(void)
     (*ptr) %= 128;
     if (*ptr == 0)
     {
-        struct Pokemon *mon = gPlayerParty;
+        struct Pokemon *mon = gParties[B_TRAINER_0];
         for (i = 0; i < PARTY_SIZE; i++)
         {
             AdjustFriendship(mon, FRIENDSHIP_EVENT_WALKING);
@@ -844,7 +844,7 @@ static void UpdateFriendshipStepCounter(void)
 
 static void UpdateFollowerStepCounter(void)
 {
-    if (gPlayerPartyCount > 0 && gFollowerSteps < (u16)-1)
+    if (gPartiesCount[B_TRAINER_0] > 0 && gFollowerSteps < (u16)-1)
         gFollowerSteps++;
 }
 
