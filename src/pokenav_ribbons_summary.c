@@ -249,9 +249,23 @@ static u32 RibbonsSummaryHandleInput(struct Pokenav_RibbonsSummaryList *list)
     return RIBBONS_SUMMARY_FUNC_NONE;
 }
 
+static u32 GetRibbonId(void)
+{
+    struct Pokenav_RibbonsSummaryList *list = GetSubstructPtr(POKENAV_SUBSTRUCT_RIBBONS_SUMMARY_LIST);
+    int ribbonPos = list->selectedPos;
+    if (ribbonPos < FIRST_GIFT_RIBBON)
+        return list->ribbonIds[ribbonPos];
+    else
+        return list->giftRibbonIds[ribbonPos - GIFT_RIBBON_START_POS];
+}
+
 // Handles input when a ribbon is selected
 static u32 HandleExpandedRibbonInput(struct Pokenav_RibbonsSummaryList *list)
 {
+    u32 ribbonId = GetRibbonId();
+    struct PokenavMonList *mons = list->monList;
+    struct PokenavMonListItem *monInfo = &mons->monData[mons->currIndex];
+
     // Handle movement while a ribbon is selected
     if (JOY_REPEAT(DPAD_UP) && TrySelectRibbonUp(list))
         return RIBBONS_SUMMARY_FUNC_EXPANDED_CURSOR_MOVE;
@@ -261,6 +275,23 @@ static u32 HandleExpandedRibbonInput(struct Pokenav_RibbonsSummaryList *list)
         return RIBBONS_SUMMARY_FUNC_EXPANDED_CURSOR_MOVE;
     if (JOY_REPEAT(DPAD_RIGHT) && TrySelectRibbonRight(list))
         return RIBBONS_SUMMARY_FUNC_EXPANDED_CURSOR_MOVE;
+
+    // Select a Ribbon to have "assigned"
+    if (JOY_NEW(A_BUTTON))
+    {
+        // Mon Data
+        struct Pokemon *mon = &gPlayerParty[monInfo->monId];
+        // Deselect the Ribbon if you Press A on the currently selected Ribbon
+        ribbonId++; // 0 is Champion Ribbon so let's add 1, can subtract later
+        if (GetMonData(mon, MON_DATA_ASSIGNED_RIBBON) == ribbonId) {
+            PlaySE(SE_PC_OFF);
+            ribbonId = 0;
+        }
+        else
+            PlaySE(SE_PC_LOGIN);
+        
+        SetMonData(mon, MON_DATA_ASSIGNED_RIBBON, &ribbonId);
+    }
 
     if (JOY_NEW(B_BUTTON))
     {
@@ -502,16 +533,6 @@ static u16 GetSelectedPosition(void)
 {
     struct Pokenav_RibbonsSummaryList *list = GetSubstructPtr(POKENAV_SUBSTRUCT_RIBBONS_SUMMARY_LIST);
     return list->selectedPos;
-}
-
-static u32 GetRibbonId(void)
-{
-    struct Pokenav_RibbonsSummaryList *list = GetSubstructPtr(POKENAV_SUBSTRUCT_RIBBONS_SUMMARY_LIST);
-    int ribbonPos = list->selectedPos;
-    if (ribbonPos < FIRST_GIFT_RIBBON)
-        return list->ribbonIds[ribbonPos];
-    else
-        return list->giftRibbonIds[ribbonPos - GIFT_RIBBON_START_POS];
 }
 
 bool32 OpenRibbonsSummaryMenu(void)
