@@ -61,14 +61,19 @@ SINGLE_BATTLE_TEST("Baton Pass passes Gastro Acid's effect")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
+        ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
         PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_CHIMECHO) { Ability(ABILITY_LEVITATE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_GASTRO_ACID); }
         TURN { MOVE(player, MOVE_BATON_PASS); SEND_OUT(player, 1); }
-    } THEN {
-        EXPECT(player->volatiles.gastroAcid);
+        TURN { MOVE(opponent, MOVE_EARTHQUAKE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GASTRO_ACID, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponent);
+        HP_BAR(player);
     }
 }
 
@@ -82,7 +87,11 @@ SINGLE_BATTLE_TEST("Baton Pass removes Gastro Acid if its ability cannot be surp
     } WHEN {
         TURN { MOVE(opponent, MOVE_GASTRO_ACID); }
         TURN { MOVE(player, MOVE_BATON_PASS); SEND_OUT(player, 1); }
-    } THEN {
-        EXPECT(!player->volatiles.gastroAcid);
+        TURN { MOVE(opponent, MOVE_WATER_GUN); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GASTRO_ACID, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, opponent);
+        ABILITY_POPUP(player, ABILITY_DISGUISE);
     }
 }
