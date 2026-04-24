@@ -94,10 +94,10 @@ u64 SetFrontierBattleFlags(u8 facility)
         gBattleTypeFlags |= BATTLE_TYPE_FACTORY;
         break;
     case FACILITY_BATTLE_PIKE_SINGLE:
-        gBattleTypeFlags |= BATTLE_TYPE_BATTLE_TOWER;
+        gBattleTypeFlags |= BATTLE_TYPE_PIKE;
         break;
     case FACILITY_BATTLE_PIKE_DOUBLE:
-        gBattleTypeFlags |= BATTLE_TYPE_BATTLE_TOWER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_TWO_OPPONENTS;
+        gBattleTypeFlags |= BATTLE_TYPE_PIKE | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_TWO_OPPONENTS;
         break;
     case FACILITY_BATTLE_PYRAMID:
         gBattleTypeFlags |= BATTLE_TYPE_PYRAMID;
@@ -108,7 +108,7 @@ u64 SetFrontierBattleFlags(u8 facility)
     }
 
 #if TESTING
-    switch (GetBattleTest()->frontierFacility)
+    switch (GetBattleTest()->frontierMode)
     {
     case FRONTIER_MODE_DOUBLES:
         gBattleTypeFlags |= BATTLE_TYPE_DOUBLE;
