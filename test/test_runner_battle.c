@@ -274,6 +274,43 @@ static bool32 IsAIDoublesTest(void)
     return (IsAITest() && (GetBattleTest()->type != BATTLE_TEST_AI_SINGLES) && (GetBattleTest()->type != BATTLE_TEST_FRONTIER_AI_SINGLES));
 }
 
+static bool32 IsFrontierTest(void)
+{
+    switch (GetBattleTest()->type)
+    {
+    case BATTLE_TEST_FRONTIER_SINGLES:
+    case BATTLE_TEST_FRONTIER_AI_SINGLES:
+    case BATTLE_TEST_FRONTIER_DOUBLES:
+    case BATTLE_TEST_FRONTIER_AI_DOUBLES:
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static bool32 IsFrontierMon(void)
+{
+    return IsFrontierTest() && DATA.battlerParty != B_TRAINER_0;
+}
+
+static s32 Test_GetHighestLevelInPlayerParty(void)
+{
+    s32 highestLevel = 0;
+    struct Pokemon *party = DATA.recordedBattle.parties[B_TRAINER_0];
+
+    for (s32 i = 0; i < PARTY_SIZE; i++)
+    {
+        if (GetMonData(&party[i], MON_DATA_SPECIES)
+            && GetMonData(&party[i], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG)
+        {
+            s32 level = GetMonData(&party[i], MON_DATA_LEVEL);
+            if (level > highestLevel)
+                highestLevel = level;
+        }
+    }
+
+    return highestLevel;
+}
+
 static enum BattleTrainer Test_GetBattlerTrainer(enum BattlerId battlerId)
 {
     return (gBattleTestRunnerState->data.battlerTrainers >> (2 * battlerId)) & 0x3;
@@ -2117,13 +2154,19 @@ void ClearVarAfterTest(void)
     }
 }
 
+static struct TrainerMon sTestFrontierMon;
+
 void OpenPokemon(u32 sourceLine, enum BattleTrainer trainer, enum Species species)
 {
-    s32 i, data;
+    s32 data;
     u8 *partySize;
     struct Pokemon *party;
+    memset(&sTestFrontierMon, 0, sizeof(sTestFrontierMon));
     INVALID_IF(species >= SPECIES_EGG, "Invalid species: %d", species);
     ASSUMPTION_FAIL_IF(!IsSpeciesEnabled(species), "Species disabled: %d", species);
+    INVALID_IF(IsFrontierTest() && trainer == B_TRAINER_0
+     && ((DATA.partySizes[B_TRAINER_1] + DATA.partySizes[B_TRAINER_2] + DATA.partySizes[B_TRAINER_3]) != 0),
+     "%d: Frontier tests require all PLAYER Pokemon to be added before PARTNER/OPPONENTs", sourceLine);
 
     partySize = &DATA.partySizes[trainer];
     party = DATA.recordedBattle.parties[trainer];
@@ -2136,18 +2179,35 @@ void OpenPokemon(u32 sourceLine, enum BattleTrainer trainer, enum Species specie
     DATA.nature = NATURE_HARDY;
     (*partySize)++;
 
-    CreateMon(DATA.currentMon, species, 100, 0, OTID_STRUCT_PRESET(0));
-    for (i = 0; i < MAX_MON_MOVES; i++)
+    if (IsFrontierMon())
     {
-        data = MOVE_NONE;
-        SetMonData(DATA.currentMon, MON_DATA_MOVE1 + i, &data);
-        data = 0x7F; // Max PP possible
-        SetMonData(DATA.currentMon, MON_DATA_PP1 + i, &data);
+        sTestFrontierMon.species = species;
+        sTestFrontierMon.iv = 0;
+        if (GetBattleTest()->frontierLevel == FRONTIER_LVL_50)
+            sTestFrontierMon.lvl = 50;
+        else
+            sTestFrontierMon.lvl = Test_GetHighestLevelInPlayerParty();
+        for (s32 i = 0; i < MAX_MON_MOVES; i++)
+        {
+            sTestFrontierMon.moves[i] = MOVE_NONE;
+        }
+        sTestFrontierMon.friendship = 0;
     }
-    data = 0;
-    if (B_FRIENDSHIP_BOOST) // This way, we avoid the boost affecting tests unless explicitly stated.
-        SetMonData(DATA.currentMon, MON_DATA_FRIENDSHIP, &data);
-    CalculateMonStats(DATA.currentMon);
+    else
+    {
+        CreateMon(DATA.currentMon, species, 100, 0, OTID_STRUCT_PRESET(0));
+        for (s32 i = 0; i < MAX_MON_MOVES; i++)
+        {
+            data = MOVE_NONE;
+            SetMonData(DATA.currentMon, MON_DATA_MOVE1 + i, &data);
+            data = 0x7F; // Max PP possible
+            SetMonData(DATA.currentMon, MON_DATA_PP1 + i, &data);
+        }
+        data = 0;
+        if (B_FRIENDSHIP_BOOST) // This way, we avoid the boost affecting tests unless explicitly stated.
+            SetMonData(DATA.currentMon, MON_DATA_FRIENDSHIP, &data);
+        CalculateMonStats(DATA.currentMon);
+    }
 }
 
 // (sNaturePersonalities[i] % NUM_NATURES) == i
@@ -2176,6 +2236,16 @@ void ClosePokemon(u32 sourceLine)
     s32 i;
     u32 data;
     INVALID_IF(DATA.hasExplicitSpeeds && !(DATA.explicitSpeeds[DATA.battlerParty] & (1 << DATA.currentPartyIndex)), "Speed required");
+    if (IsFrontierMon())
+    {
+        u32 flags = (GetBattleTest()->frontierFacility == FACILITY_BATTLE_FACTORY) ? FLAG_FRONTIER_MON_FACTORY : 0;
+        CreateFacilityMon(&sTestFrontierMon,
+         sTestFrontierMon.lvl,
+         sTestFrontierMon.iv,
+         0,
+         flags,
+         &DATA.recordedBattle.parties[DATA.battlerParty][DATA.currentPartyIndex]);
+    }
     for (i = 0; i < STATE->battlersCount; i++)
     {
         if (i == DATA.battlerParty
