@@ -2245,6 +2245,11 @@ void ClosePokemon(u32 sourceLine)
          0,
          flags,
          &DATA.recordedBattle.parties[DATA.battlerParty][DATA.currentPartyIndex]);
+        
+        if (DATA.frontierMonHp)
+            SetMonData(DATA.currentMon, MON_DATA_HP, &DATA.frontierMonHp);
+        if (DATA.frontierMonSpeed)
+            SetMonData(DATA.currentMon, MON_DATA_SPEED, &DATA.frontierMonSpeed);
     }
     for (i = 0; i < STATE->battlersCount; i++)
     {
@@ -2274,8 +2279,11 @@ static void SetGimmick(u32 sourceLine, enum BattleTrainer trainer, u32 partyInde
 void Gender_(u32 sourceLine, u32 gender)
 {
     const struct SpeciesInfo *info;
-    INVALID_IF(!DATA.currentMon, "Gender outside of PLAYER/OPPONENT");
+    INVALID_IF(!DATA.currentMon, "Gender outside of PLAYER/PARTNER/OPPONENT");
     info = &gSpeciesInfo[GetMonData(DATA.currentMon, MON_DATA_SPECIES)];
+    if (IsFrontierMon())
+        sTestFrontierMon.gender = gender;
+
     switch (gender)
     {
     case MON_MALE:
@@ -2294,8 +2302,10 @@ void Gender_(u32 sourceLine, u32 gender)
 
 void Nature_(u32 sourceLine, u32 nature)
 {
-    INVALID_IF(!DATA.currentMon, "Nature outside of PLAYER/OPPONENT");
+    INVALID_IF(!DATA.currentMon, "Nature outside of PLAYER/PARTNER/OPPONENT");
     INVALID_IF(nature >= NUM_NATURES, "Illegal nature: %d", nature);
+    if (IsFrontierMon())
+        sTestFrontierMon.nature = nature;
     DATA.nature = nature;
 }
 
@@ -2304,7 +2314,7 @@ void Ability_(u32 sourceLine, enum Ability ability)
     s32 i;
     u32 species;
     const struct SpeciesInfo *info;
-    INVALID_IF(!DATA.currentMon, "Ability outside of PLAYER/OPPONENT");
+    INVALID_IF(!DATA.currentMon, "Ability outside of PLAYER/PARTNER/OPPONENT");
     INVALID_IF(ability >= ABILITIES_COUNT, "Illegal ability id: %d", ability);
     species = GetMonData(DATA.currentMon, MON_DATA_SPECIES);
     info = &gSpeciesInfo[species];
@@ -2321,14 +2331,17 @@ void Ability_(u32 sourceLine, enum Ability ability)
     {
         DATA.forcedAbilities[DATA.battlerParty][DATA.currentPartyIndex] = ability;
     }
+    if (IsFrontierMon())
+        sTestFrontierMon.ability = ability;
 }
 
 void Level_(u32 sourceLine, u32 level)
 {
     // TODO: Preserve any explicitly-set stats.
     u32 species = GetMonData(DATA.currentMon, MON_DATA_SPECIES);
-    INVALID_IF(!DATA.currentMon, "Level outside of PLAYER/OPPONENT");
+    INVALID_IF(!DATA.currentMon, "Level outside of PLAYER/PARTNER/OPPONENT");
     INVALID_IF(level == 0 || level > MAX_LEVEL, "Illegal level: %d", level);
+    INVALID_IF(IsFrontierMon(), "%d: Level cannot be used in Frontier tests for PARTNER/OPPONENTs", sourceLine);
     SetMonData(DATA.currentMon, MON_DATA_LEVEL, &level);
     SetMonData(DATA.currentMon, MON_DATA_EXP, &gExperienceTables[gSpeciesInfo[species].growthRate][level]);
     gMain.inBattle = TRUE;
@@ -2338,8 +2351,9 @@ void Level_(u32 sourceLine, u32 level)
 
 void MaxHP_(u32 sourceLine, u32 maxHP)
 {
-    INVALID_IF(!DATA.currentMon, "MaxHP outside of PLAYER/OPPONENT");
+    INVALID_IF(!DATA.currentMon, "MaxHP outside of PLAYER/PARTNER/OPPONENT");
     INVALID_IF(maxHP == 0, "Illegal max HP: %d", maxHP);
+    INVALID_IF(IsFrontierMon(), "%d: MaxHP cannot be used in Frontier tests for PARTNER/OPPONENTs", sourceLine);
     SetMonData(DATA.currentMon, MON_DATA_MAX_HP, &maxHP);
     bool32 hyperTrainingFlag = TRUE;
     SetMonData(DATA.currentMon, MON_DATA_HYPER_TRAINED_HP, &hyperTrainingFlag);
@@ -2347,16 +2361,24 @@ void MaxHP_(u32 sourceLine, u32 maxHP)
 
 void HP_(u32 sourceLine, u32 hp)
 {
-    INVALID_IF(!DATA.currentMon, "HP outside of PLAYER/OPPONENT");
-    if (hp > GetMonData(DATA.currentMon, MON_DATA_MAX_HP))
-        SetMonData(DATA.currentMon, MON_DATA_MAX_HP, &hp);
-    SetMonData(DATA.currentMon, MON_DATA_HP, &hp);
+    INVALID_IF(!DATA.currentMon, "HP outside of PLAYER/PARTNER/OPPONENT");
+    if (IsFrontierMon())
+    {
+        DATA.frontierMonHp = hp;
+    }
+    else
+    {
+        if (hp > GetMonData(DATA.currentMon, MON_DATA_MAX_HP))
+            SetMonData(DATA.currentMon, MON_DATA_MAX_HP, &hp);
+        SetMonData(DATA.currentMon, MON_DATA_HP, &hp);
+    }
 }
 
 void Attack_(u32 sourceLine, u32 attack)
 {
-    INVALID_IF(!DATA.currentMon, "Attack outside of PLAYER/OPPONENT");
+    INVALID_IF(!DATA.currentMon, "Attack outside of PLAYER/PARTNER/OPPONENT");
     INVALID_IF(attack == 0, "Illegal attack: %d", attack);
+    INVALID_IF(IsFrontierMon(), "%d: Attack cannot be used in Frontier tests for PARTNER/OPPONENTs", sourceLine);
     SetMonData(DATA.currentMon, MON_DATA_ATK, &attack);
     bool32 hyperTrainingFlag = TRUE;
     SetMonData(DATA.currentMon, MON_DATA_HYPER_TRAINED_ATK, &hyperTrainingFlag);
@@ -2364,8 +2386,9 @@ void Attack_(u32 sourceLine, u32 attack)
 
 void Defense_(u32 sourceLine, u32 defense)
 {
-    INVALID_IF(!DATA.currentMon, "Defense outside of PLAYER/OPPONENT");
+    INVALID_IF(!DATA.currentMon, "Defense outside of PLAYER/PARTNER/OPPONENT");
     INVALID_IF(defense == 0, "Illegal defense: %d", defense);
+    INVALID_IF(IsFrontierMon(), "%d: Defense cannot be used in Frontier tests for PARTNER/OPPONENTs", sourceLine);
     SetMonData(DATA.currentMon, MON_DATA_DEF, &defense);
     bool32 hyperTrainingFlag = TRUE;
     SetMonData(DATA.currentMon, MON_DATA_HYPER_TRAINED_DEF, &hyperTrainingFlag);
@@ -2373,8 +2396,9 @@ void Defense_(u32 sourceLine, u32 defense)
 
 void SpAttack_(u32 sourceLine, u32 spAttack)
 {
-    INVALID_IF(!DATA.currentMon, "SpAttack outside of PLAYER/OPPONENT");
+    INVALID_IF(!DATA.currentMon, "SpAttack outside of PLAYER/PARTNER/OPPONENT");
     INVALID_IF(spAttack == 0, "Illegal special attack: %d", spAttack);
+    INVALID_IF(IsFrontierMon(), "%d: SpAttack cannot be used in Frontier tests for PARTNER/OPPONENTs", sourceLine);
     SetMonData(DATA.currentMon, MON_DATA_SPATK, &spAttack);
     bool32 hyperTrainingFlag = TRUE;
     SetMonData(DATA.currentMon, MON_DATA_HYPER_TRAINED_SPATK, &hyperTrainingFlag);
@@ -2382,8 +2406,9 @@ void SpAttack_(u32 sourceLine, u32 spAttack)
 
 void SpDefense_(u32 sourceLine, u32 spDefense)
 {
-    INVALID_IF(!DATA.currentMon, "SpDefense outside of PLAYER/OPPONENT");
+    INVALID_IF(!DATA.currentMon, "SpDefense outside of PLAYER/PARTNER/OPPONENT");
     INVALID_IF(spDefense == 0, "Illegal special defense: %d", spDefense);
+    INVALID_IF(IsFrontierMon(), "%d: SpDefense cannot be used in Frontier tests for PARTNER/OPPONENTs", sourceLine);
     SetMonData(DATA.currentMon, MON_DATA_SPDEF, &spDefense);
     bool32 hyperTrainingFlag = TRUE;
     SetMonData(DATA.currentMon, MON_DATA_HYPER_TRAINED_SPDEF, &hyperTrainingFlag);
@@ -2391,62 +2416,95 @@ void SpDefense_(u32 sourceLine, u32 spDefense)
 
 void Speed_(u32 sourceLine, u32 speed)
 {
-    INVALID_IF(!DATA.currentMon, "Speed outside of PLAYER/OPPONENT");
+    INVALID_IF(!DATA.currentMon, "Speed outside of PLAYER/PARTNER/OPPONENT");
     INVALID_IF(speed == 0, "Illegal speed: %d", speed);
-    SetMonData(DATA.currentMon, MON_DATA_SPEED, &speed);
-    bool32 hyperTrainingFlag = TRUE;
-    SetMonData(DATA.currentMon, MON_DATA_HYPER_TRAINED_SPEED, &hyperTrainingFlag);
-    DATA.hasExplicitSpeeds = TRUE;
-    DATA.explicitSpeeds[DATA.battlerParty] |= 1 << DATA.currentPartyIndex;
+    if (IsFrontierMon())
+    {
+        DATA.frontierMonSpeed = speed;
+    }
+    else
+    {
+        SetMonData(DATA.currentMon, MON_DATA_SPEED, &speed);
+        bool32 hyperTrainingFlag = TRUE;
+        SetMonData(DATA.currentMon, MON_DATA_HYPER_TRAINED_SPEED, &hyperTrainingFlag);
+        DATA.hasExplicitSpeeds = TRUE;
+        DATA.explicitSpeeds[DATA.battlerParty] |= 1 << DATA.currentPartyIndex;
+    }
 }
 
 void HPIV_(u32 sourceLine, u32 hpIV)
 {
-    INVALID_IF(!DATA.currentMon, "HP IV outside of PLAYER/OPPONENT");
+    INVALID_IF(!DATA.currentMon, "HP IV outside of PLAYER/PARTNER/OPPONENT");
     INVALID_IF(hpIV > MAX_PER_STAT_IVS, "Illegal HP IV: %d", hpIV);
+    INVALID_IF(IsFrontierMon(), "%d: Individual IVs cannot be used in Frontier tests for PARTNER/OPPONENTs. Use 'IVs' instead.", sourceLine);
     SetMonData(DATA.currentMon, MON_DATA_HP_IV, &hpIV);
 }
 
 void AttackIV_(u32 sourceLine, u32 attackIV)
 {
-    INVALID_IF(!DATA.currentMon, "Attack IV outside of PLAYER/OPPONENT");
+    INVALID_IF(!DATA.currentMon, "Attack IV outside of PLAYER/PARTNER/OPPONENT");
     INVALID_IF(attackIV > MAX_PER_STAT_IVS, "Illegal attack IV: %d", attackIV);
+    INVALID_IF(IsFrontierMon(), "%d: Individual IVs cannot be used in Frontier tests for PARTNER/OPPONENTs. Use 'IVs' instead.", sourceLine);
     SetMonData(DATA.currentMon, MON_DATA_ATK_IV, &attackIV);
 }
 
 void DefenseIV_(u32 sourceLine, u32 defenseIV)
 {
-    INVALID_IF(!DATA.currentMon, "Defense IV outside of PLAYER/OPPONENT");
+    INVALID_IF(!DATA.currentMon, "Defense IV outside of PLAYER/PARTNER/OPPONENT");
     INVALID_IF(defenseIV > MAX_PER_STAT_IVS, "Illegal defense IV: %d", defenseIV);
     SetMonData(DATA.currentMon, MON_DATA_DEF_IV, &defenseIV);
 }
 
 void SpAttackIV_(u32 sourceLine, u32 spAttackIV)
 {
-    INVALID_IF(!DATA.currentMon, "SpAttack IV outside of PLAYER/OPPONENT");
+    INVALID_IF(!DATA.currentMon, "SpAttack IV outside of PLAYER/PARTNER/OPPONENT");
     INVALID_IF(spAttackIV > MAX_PER_STAT_IVS, "Illegal special attack IV: %d", spAttackIV);
+    INVALID_IF(IsFrontierMon(), "%d: Individual IVs cannot be used in Frontier tests for PARTNER/OPPONENTs. Use 'IVs' instead.", sourceLine);
     SetMonData(DATA.currentMon, MON_DATA_SPATK_IV, &spAttackIV);
 }
 
 void SpDefenseIV_(u32 sourceLine, u32 spDefenseIV)
 {
-    INVALID_IF(!DATA.currentMon, "SpDefense IV outside of PLAYER/OPPONENT");
+    INVALID_IF(!DATA.currentMon, "SpDefense IV outside of PLAYER/PARTNER/OPPONENT");
     INVALID_IF(spDefenseIV > MAX_PER_STAT_IVS, "Illegal special defense IV: %d", spDefenseIV);
+    INVALID_IF(IsFrontierMon(), "%d: Individual IVs cannot be used in Frontier tests for PARTNER/OPPONENTs. Use 'IVs' instead.", sourceLine);
     SetMonData(DATA.currentMon, MON_DATA_SPDEF_IV, &spDefenseIV);
 }
 
 void SpeedIV_(u32 sourceLine, u32 speedIV)
 {
-    INVALID_IF(!DATA.currentMon, "Speed IV outside of PLAYER/OPPONENT");
+    INVALID_IF(!DATA.currentMon, "Speed IV outside of PLAYER/PARTNER/OPPONENT");
     INVALID_IF(speedIV > MAX_PER_STAT_IVS, "Illegal speed IV: %d", speedIV);
+    INVALID_IF(IsFrontierMon(), "%d: Individual IVs cannot be used in Frontier tests for PARTNER/OPPONENTs. Use 'IVs' instead.", sourceLine);
     SetMonData(DATA.currentMon, MON_DATA_SPEED_IV, &speedIV);
+}
+
+void IVs_(u32 sourceLine, u32 iv)
+{
+    INVALID_IF(!DATA.currentMon, "IVs outside of PLAYER/PARTNER/OPPONENT");
+    INVALID_IF(iv > MAX_PER_STAT_IVS, "Illegal IVs: %d", iv);
+    if (IsFrontierMon())
+    {
+        sTestFrontierMon.iv = iv;
+    }
+    else
+    {
+        for (enum Stat stat = STAT_HP; stat < NUM_STATS; stat++)
+        {
+            SetMonData(DATA.currentMon, MON_DATA_HP_IV + stat, &iv);
+        }
+    }
+
 }
 
 void Item_(u32 sourceLine, u32 item)
 {
-    INVALID_IF(!DATA.currentMon, "Item outside of PLAYER/OPPONENT");
+    INVALID_IF(!DATA.currentMon, "Item outside of PLAYER/PARTNER/OPPONENT");
     INVALID_IF(item >= ITEMS_COUNT, "Illegal item: %d", item);
-    SetMonData(DATA.currentMon, MON_DATA_HELD_ITEM, &item);
+    if (IsFrontierMon())
+        sTestFrontierMon.heldItem = item;
+    else
+        SetMonData(DATA.currentMon, MON_DATA_HELD_ITEM, &item);
     switch (GetItemHoldEffect(item))
     {
     case HOLD_EFFECT_MEGA_STONE:
@@ -2463,15 +2521,22 @@ void Item_(u32 sourceLine, u32 item)
 void Moves_(u32 sourceLine, u16 moves[MAX_MON_MOVES])
 {
     s32 i;
-    INVALID_IF(!DATA.currentMon, "Moves outside of PLAYER/OPPONENT");
+    INVALID_IF(!DATA.currentMon, "Moves outside of PLAYER/PARTNER/OPPONENT");
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         if (moves[i] == MOVE_NONE)
             break;
         INVALID_IF(moves[i] >= MOVES_COUNT, "Illegal move: %d", moves[i]);
-        SetMonData(DATA.currentMon, MON_DATA_MOVE1 + i, &moves[i]);
-        u32 pp = GetMovePP(moves[i]);
-        SetMonData(DATA.currentMon, MON_DATA_PP1 + i, &pp);
+        if (IsFrontierMon())
+        {
+            sTestFrontierMon.moves[i] = moves[i];
+        }
+        else
+        {
+            SetMonData(DATA.currentMon, MON_DATA_MOVE1 + i, &moves[i]);
+            u32 pp = GetMovePP(moves[i]);
+            SetMonData(DATA.currentMon, MON_DATA_PP1 + i, &pp);
+        }
     }
     DATA.explicitMoves[DATA.battlerParty] |= 1 << DATA.currentPartyIndex;
 }
@@ -2479,7 +2544,8 @@ void Moves_(u32 sourceLine, u16 moves[MAX_MON_MOVES])
 void MovesWithPP_(u32 sourceLine, struct moveWithPP moveWithPP[MAX_MON_MOVES])
 {
     s32 i;
-    INVALID_IF(!DATA.currentMon, "Moves outside of PLAYER/OPPONENT");
+    INVALID_IF(!DATA.currentMon, "Moves outside of PLAYER/PARTNER/OPPONENT");
+    INVALID_IF(IsFrontierMon(), "%d: MovesWithPP cannot be used in Frontier tests for PARTNER/OPPONENTs", sourceLine);
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         if (moveWithPP[i].moveId == MOVE_NONE)
@@ -2493,26 +2559,32 @@ void MovesWithPP_(u32 sourceLine, struct moveWithPP moveWithPP[MAX_MON_MOVES])
 
 void Friendship_(u32 sourceLine, u32 friendship)
 {
-    INVALID_IF(!DATA.currentMon, "Friendship outside of PLAYER/OPPONENT");
-    SetMonData(DATA.currentMon, MON_DATA_FRIENDSHIP, &friendship);
+    INVALID_IF(!DATA.currentMon, "Friendship outside of PLAYER/PARTNER/OPPONENT");
+    if (IsFrontierMon())
+        sTestFrontierMon.friendship = friendship;
+    else
+        SetMonData(DATA.currentMon, MON_DATA_FRIENDSHIP, &friendship);
 }
 
 void Status1_(u32 sourceLine, u32 status1)
 {
-    INVALID_IF(!DATA.currentMon, "Status1 outside of PLAYER/OPPONENT");
+    INVALID_IF(!DATA.currentMon, "Status1 outside of PLAYER/PARTNER/OPPONENT");
     INVALID_IF(status1 & STATUS1_TOXIC_COUNTER, "Illegal status1: has TOXIC_TURN");
+    INVALID_IF(IsFrontierMon(), "%d: Status1 cannot be used in Frontier tests for PARTNER/OPPONENTs", sourceLine);
     SetMonData(DATA.currentMon, MON_DATA_STATUS, &status1);
 }
 
 void OTName_(u32 sourceLine, const u8 *otName)
 {
-    INVALID_IF(!DATA.currentMon, "OTName outside of PLAYER/OPPONENT");
+    INVALID_IF(!DATA.currentMon, "OTName outside of PLAYER/PARTNER/OPPONENT");
+    INVALID_IF(IsFrontierMon(), "%d: OTName cannot be used in Frontier tests for PARTNER/OPPONENTs", sourceLine);
     SetMonData(DATA.currentMon, MON_DATA_OT_NAME, &otName);
 }
 
 void DynamaxLevel_(u32 sourceLine, s16 dynamaxLevel)
 {
-    INVALID_IF(!DATA.currentMon, "DynamaxLevel outside of PLAYER/OPPONENT");
+    INVALID_IF(!DATA.currentMon, "DynamaxLevel outside of PLAYER/PARTNER/OPPONENT");
+    INVALID_IF(IsFrontierMon(), "%d: DynamaxLevel cannot be used in Frontier tests for PARTNER/OPPONENTs", sourceLine);
     SetMonData(DATA.currentMon, MON_DATA_DYNAMAX_LEVEL, &dynamaxLevel);
     if (dynamaxLevel >= 0)
         SetGimmick(sourceLine, DATA.battlerParty, DATA.currentPartyIndex, GIMMICK_DYNAMAX);
@@ -2520,28 +2592,34 @@ void DynamaxLevel_(u32 sourceLine, s16 dynamaxLevel)
 
 void GigantamaxFactor_(u32 sourceLine, bool32 gigantamaxFactor)
 {
-    INVALID_IF(!DATA.currentMon, "GigantamaxFactor outside of PLAYER/OPPONENT");
+    INVALID_IF(!DATA.currentMon, "GigantamaxFactor outside of PLAYER/PARTNER/OPPONENT");
+    INVALID_IF(IsFrontierMon(), "%d: GigantamaxFactor cannot be used in Frontier tests for PARTNER/OPPONENTs", sourceLine);
     SetMonData(DATA.currentMon, MON_DATA_GIGANTAMAX_FACTOR, &gigantamaxFactor);
     SetGimmick(sourceLine, DATA.battlerParty, DATA.currentPartyIndex, GIMMICK_DYNAMAX);
 }
 
 void TeraType_(u32 sourceLine, enum Type teraType)
 {
-    INVALID_IF(!DATA.currentMon, "TeraType outside of PLAYER/OPPONENT");
+    INVALID_IF(!DATA.currentMon, "TeraType outside of PLAYER/PARTNER/OPPONENT");
+    INVALID_IF(IsFrontierMon(), "%d: TeraType cannot be used in Frontier tests for PARTNER/OPPONENTs", sourceLine);
     SetMonData(DATA.currentMon, MON_DATA_TERA_TYPE, &teraType);
     SetGimmick(sourceLine, DATA.battlerParty, DATA.currentPartyIndex, GIMMICK_TERA);
 }
 
 void Shadow_(u32 sourceLine, bool32 isShadow)
 {
-    INVALID_IF(!DATA.currentMon, "Shadow outside of PLAYER/OPPONENT");
+    INVALID_IF(!DATA.currentMon, "Shadow outside of PLAYER/PARTNER/OPPONENT");
+    INVALID_IF(IsFrontierMon(), "%d: Shadow cannot be used in Frontier tests for PARTNER/OPPONENTs", sourceLine);
     SetMonData(DATA.currentMon, MON_DATA_IS_SHADOW, &isShadow);
 }
 
 void Shiny_(u32 sourceLine, bool32 isShiny)
 {
-    INVALID_IF(!DATA.currentMon, "Shiny outside of PLAYER/OPPONENT");
-    DATA.isShiny = isShiny;
+    INVALID_IF(!DATA.currentMon, "Shiny outside of PLAYER/PARTNER/OPPONENT");
+    if (IsFrontierMon())
+        sTestFrontierMon.isShiny = isShiny;
+    else
+        DATA.isShiny = isShiny;
 }
 
 void Environment_(u32 sourceLine, u32 environment)

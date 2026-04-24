@@ -785,6 +785,8 @@ struct BattleTestData
     enum Ability forcedAbilities[MAX_BATTLE_TRAINERS][PARTY_SIZE];
     u8 chosenGimmick[MAX_BATTLE_TRAINERS][PARTY_SIZE];
     u8 forcedEnvironment;
+    u32 frontierMonHp;
+    u32 frontierMonSpeed;
 
     u8 currentMonIndexes[MAX_BATTLERS_COUNT];
     u8 turnState;
@@ -1083,6 +1085,7 @@ struct moveWithPP {
 #define SpAttackIV(spAttackIV) SpAttackIV_(__LINE__, spAttackIV)
 #define SpDefenseIV(spDefenseIV) SpDefenseIV_(__LINE__, spDefenseIV)
 #define SpeedIV(speedIV) SpeedIV_(__LINE__, speedIV)
+#define IVs(iv) IVs_(__LINE__, iv)
 #define Item(item) Item_(__LINE__, item)
 #define Moves(move1, ...) do { u16 moves_[MAX_MON_MOVES] = {move1, __VA_ARGS__}; Moves_(__LINE__, moves_); } while (0)
 #define MovesWithPP(movewithpp1, ...) MovesWithPP_(__LINE__, (struct moveWithPP[MAX_MON_MOVES]) {movewithpp1, __VA_ARGS__})
@@ -1128,6 +1131,7 @@ void DefenseIV_(u32 sourceLine, u32 defenseIV);
 void SpAttackIV_(u32 sourceLine, u32 spAttackIV);
 void SpDefenseIV_(u32 sourceLine, u32 spDefenseIV);
 void SpeedIV_(u32 sourceLine, u32 speedIV);
+void IVs_(u32 sourceLine, u32 iv);
 void Item_(u32 sourceLine, u32 item);
 void Moves_(u32 sourceLine, u16 moves[MAX_MON_MOVES]);
 void MovesWithPP_(u32 sourceLine, struct moveWithPP moveWithPP[MAX_MON_MOVES]);
