@@ -2179,10 +2179,16 @@ static void FreeWindowAndBgBuffers(void)
 
 static bool32 ShouldSkipPokedexListEntry(enum NationalDexOrder dexNum)
 {
-    if (!P_SKIP_POKEDEX_GAPS)
+    if (P_SKIP_POKEDEX_GAPS == DONT_SKIP_GAPS)
         return FALSE;
 
-    return !GetSetPokedexFlag(dexNum, FLAG_GET_SEEN);
+    if (GetSetPokedexFlag(dexNum, FLAG_GET_SEEN))
+        return FALSE;
+
+    if (P_SKIP_POKEDEX_GAPS == SKIP_GAPS_OTHER_THAN_ONE)
+        return !GetSetPokedexFlag(dexNum - 1, FLAG_GET_SEEN);
+
+    return TRUE; 
 }
 
 static void CreatePokedexList(u8 dexMode, u8 order)
@@ -2447,6 +2453,10 @@ static void CreateMonDexNum(u16 entryNum, u8 left, u8 top, u16 unused)
     text[offset++] = CHAR_0 + ((dexNum % 1000) % 100) / 10;
     text[offset++] = CHAR_0 + ((dexNum % 1000) % 100) % 10;
     text[offset++] = EOS;
+
+    if (!sPokedexView->pokedexList[entryNum].seen)
+        StringCopy(text, COMPOUND_STRING("------"));
+
     PrintMonDexNum(0, FONT_NARROW, text, left, top);
 }
 

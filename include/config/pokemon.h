@@ -82,6 +82,9 @@
 #define P_MODIFIED_MEGA_CRY_MODE         CRY_MODE_HIGH_PITCH
 
 // Pokédex
-#define P_SKIP_POKEDEX_GAPS              FALSE  // If TRUE, unseen Pokémon in the Pokédex will have their entries skipped as in S/V.
+#define DONT_SKIP_GAPS                   0              // Does not skip any gaps in the Pokédex.
+#define SKIP_GAPS_OTHER_THAN_ONE         1              // Skips all gaps in the Pokédex other than one blank entry in between.
+#define SKIP_ALL_GAPS                    2              // Skips all gaps in the Pokédex.
+#define P_SKIP_POKEDEX_GAPS              DONT_SKIP_GAPS // Pokémon SV skip large gaps in the Pokédex.
 
 #endif // GUARD_CONFIG_POKEMON_H
