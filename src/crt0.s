@@ -7,12 +7,14 @@
 	.align 2, 0
 Init::
 @ Set up location for IRQ stack
-	mov r0, #PSR_IRQ_MODE
-	msr cpsr_cf, r0
+	msr cpsr_c, #PSR_IRQ_MODE
 	ldr sp, sp_irq
-@ Set up location for system stack
-	mov r0, #PSR_SYS_MODE
-	msr cpsr_cf, r0
+@ Set up location for FIQ stack, and set its spsr to return to SYS in Thumb
+	msr cpsr_c, #PSR_FIQ_MODE
+	msr spsr_c, #(PSR_SYS_MODE | PSR_T_BIT)
+	ldr sp, sp_irq
+@ Set up location for SYS stack
+	msr cpsr_cf, #PSR_SYS_MODE
 	ldr sp, sp_sys
 @ Dispatch memory reset request to hardware
 	mov r0, #255 @ RESET_ALL

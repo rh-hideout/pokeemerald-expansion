@@ -29,6 +29,29 @@ TEST("PokemonStorage is backwards compatible")
     EXPECT_EQ(sizeof(struct PokemonStorage), T_POKEMONSTORAGE_SIZE);
 }
 
+// TODO: It would be nice to target 2 frames for this.
+TEST("Encrypting and decrypting the save costs less than 3 frames")
+{
+    // Performance is affected by 'PID % 24' so assign them.
+    u32 personality = 0;
+    for (u32 i = 0; i < TOTAL_BOXES_COUNT; i++)
+    {
+        for (u32 j = 0; j < IN_BOX_COUNT; j++)
+        {
+            gPokemonStoragePtr->boxes[i][j].personality = personality++;
+            gPokemonStoragePtr->boxes[i][j].hasSpecies = TRUE;
+        }
+    }
+
+    struct Benchmark encDec;
+    BENCHMARK(&encDec)
+    {
+        EncryptSave();
+        DecryptSave();
+    }
+    EXPECT_LE(encDec.ticks, 3 * FRAME_TICKS);
+}
+
 #undef T_SAVEBLOCK1_SIZE
 #undef T_SAVEBLOCK2_SIZE
 #undef T_SAVEBLOCK3_SIZE

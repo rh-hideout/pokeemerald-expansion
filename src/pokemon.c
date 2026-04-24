@@ -84,7 +84,6 @@ struct SpeciesItem
     enum Item item;
 };
 
-static union PokemonSubstruct *GetSubstruct(struct BoxPokemon *boxMon, u32 personality, enum SubstructType substructType);
 static void Task_PlayMapChosenOrBattleBGM(u8 taskId);
 void TrySpecialOverworldEvo();
 
@@ -1325,43 +1324,41 @@ void CreateEnemyEventMon(void)
     }
 }
 
-struct SubstructOrder
-{
-    u8 encrypt[4];
-    u8 decrypt[4];
+static const u8 sSubstructOrders[24][4] = {
+    [0]  = { 0, 1, 2, 3 },
+    [1]  = { 0, 1, 3, 2 },
+    [2]  = { 0, 2, 1, 3 },
+    [3]  = { 0, 3, 1, 2 },
+    [4]  = { 0, 2, 3, 1 },
+    [5]  = { 0, 3, 2, 1 },
+    [6]  = { 1, 0, 2, 3 },
+    [7]  = { 1, 0, 3, 2 },
+    [8]  = { 2, 0, 1, 3 },
+    [9]  = { 3, 0, 1, 2 },
+    [10] = { 2, 0, 3, 1 },
+    [11] = { 3, 0, 2, 1 },
+    [12] = { 1, 2, 0, 3 },
+    [13] = { 1, 3, 0, 2 },
+    [14] = { 2, 1, 0, 3 },
+    [15] = { 3, 1, 0, 2 },
+    [16] = { 2, 3, 0, 1 },
+    [17] = { 3, 2, 0, 1 },
+    [18] = { 1, 2, 3, 0 },
+    [19] = { 1, 3, 2, 0 },
+    [20] = { 2, 1, 3, 0 },
+    [21] = { 3, 1, 2, 0 },
+    [22] = { 2, 3, 1, 0 },
+    [23] = { 3, 2, 1, 0 },
 };
 
-static const struct SubstructOrder sSubstructOrders[24] = {
-    [0]  = { .encrypt = { 0, 1, 2, 3 }, .decrypt = { 0, 1, 2, 3 } },
-    [1]  = { .encrypt = { 0, 1, 3, 2 }, .decrypt = { 0, 1, 3, 2 } },
-    [2]  = { .encrypt = { 0, 2, 1, 3 }, .decrypt = { 0, 2, 1, 3 } },
-    [3]  = { .encrypt = { 0, 2, 3, 1 }, .decrypt = { 0, 3, 1, 2 } },
-    [4]  = { .encrypt = { 0, 3, 1, 2 }, .decrypt = { 0, 2, 3, 1 } },
-    [5]  = { .encrypt = { 0, 3, 2, 1 }, .decrypt = { 0, 3, 2, 1 } },
-    [6]  = { .encrypt = { 1, 0, 2, 3 }, .decrypt = { 1, 0, 2, 3 } },
-    [7]  = { .encrypt = { 1, 0, 3, 2 }, .decrypt = { 1, 0, 3, 2 } },
-    [8]  = { .encrypt = { 1, 2, 0, 3 }, .decrypt = { 2, 0, 1, 3 } },
-    [9]  = { .encrypt = { 1, 2, 3, 0 }, .decrypt = { 3, 0, 1, 2 } },
-    [10] = { .encrypt = { 1, 3, 0, 2 }, .decrypt = { 2, 0, 3, 1 } },
-    [11] = { .encrypt = { 1, 3, 2, 0 }, .decrypt = { 3, 0, 2, 1 } },
-    [12] = { .encrypt = { 2, 0, 1, 3 }, .decrypt = { 1, 2, 0, 3 } },
-    [13] = { .encrypt = { 2, 0, 3, 1 }, .decrypt = { 1, 3, 0, 2 } },
-    [14] = { .encrypt = { 2, 1, 0, 3 }, .decrypt = { 2, 1, 0, 3 } },
-    [15] = { .encrypt = { 2, 1, 3, 0 }, .decrypt = { 3, 1, 0, 2 } },
-    [16] = { .encrypt = { 2, 3, 0, 1 }, .decrypt = { 2, 3, 0, 1 } },
-    [17] = { .encrypt = { 2, 3, 1, 0 }, .decrypt = { 3, 2, 0, 1 } },
-    [18] = { .encrypt = { 3, 0, 1, 2 }, .decrypt = { 1, 2, 3, 0 } },
-    [19] = { .encrypt = { 3, 0, 2, 1 }, .decrypt = { 1, 3, 2, 0 } },
-    [20] = { .encrypt = { 3, 1, 0, 2 }, .decrypt = { 2, 1, 3, 0 } },
-    [21] = { .encrypt = { 3, 1, 2, 0 }, .decrypt = { 3, 1, 2, 0 } },
-    [22] = { .encrypt = { 3, 2, 0, 1 }, .decrypt = { 2, 3, 1, 0 } },
-    [23] = { .encrypt = { 3, 2, 1, 0 }, .decrypt = { 3, 2, 1, 0 } },
-};
-
-ARM_FUNC NOINLINE static const struct SubstructOrder *SubstructOrder(u32 personality)
+ARM_FUNC NOINLINE static const u8 *SubstructOrder(u32 personality)
 {
-    return &sSubstructOrders[personality % ARRAY_COUNT(sSubstructOrders)];
+    return sSubstructOrders[personality % ARRAY_COUNT(sSubstructOrders)];
 }
+
+// WARNING: Must be called from Thumb and stomps on FIQ registers.
+enum FastShuffleSubstructsMode { SHUFFLE_ENCRYPT, SHUFFLE_DECRYPT };
+extern void FastShuffleSubstructs(struct BoxPokemon *, enum FastShuffleSubstructsMode);
 
 void EncryptMon(struct Pokemon *mon)
 {
@@ -1370,13 +1367,29 @@ void EncryptMon(struct Pokemon *mon)
 
 void EncryptBoxMon(struct BoxPokemon *boxMon)
 {
-    union PokemonSubstruct decrypted[4];
-    memcpy(decrypted, boxMon->secure.substructs, sizeof(decrypted));
-    const struct SubstructOrder *substructOrder = SubstructOrder(boxMon->personality);
-    boxMon->secure.substructs[0] = decrypted[substructOrder->encrypt[0]];
-    boxMon->secure.substructs[1] = decrypted[substructOrder->encrypt[1]];
-    boxMon->secure.substructs[2] = decrypted[substructOrder->encrypt[2]];
-    boxMon->secure.substructs[3] = decrypted[substructOrder->encrypt[3]];
+    if (!boxMon->hasSpecies)
+        return;
+
+    if (offsetof(struct BoxPokemon, personality) == 0
+     && sizeof(boxMon->personality) == 4
+     && offsetof(struct BoxPokemon, secure) == 32
+     && sizeof(union BoxPokemonSecure) == 3 * 12
+     && sizeof(union PokemonSubstruct) == 12)
+    {
+        FastShuffleSubstructs(boxMon, SHUFFLE_ENCRYPT);
+    }
+    else
+    {
+        union BoxPokemonSecure decrypted = boxMon->secure;
+        const u8 *substructOrder = SubstructOrder(boxMon->personality);
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+        boxMon->secure.substructs[substructOrder[0]].type0 = decrypted.substruct0;
+        boxMon->secure.substructs[substructOrder[1]].type1 = decrypted.substruct1;
+        boxMon->secure.substructs[substructOrder[2]].type2 = decrypted.substruct2;
+        boxMon->secure.substructs[substructOrder[3]].type3 = decrypted.substruct3;
+        #pragma GCC diagnostic pop
+    }
 
     u32 checksum = 0;
 
@@ -1396,13 +1409,8 @@ void DecryptMon(struct Pokemon *mon)
 
 void DecryptBoxMon(struct BoxPokemon *boxMon)
 {
-    union PokemonSubstruct encrypted[4];
-    memcpy(encrypted, boxMon->secure.substructs, sizeof(encrypted));
-    const struct SubstructOrder *substructOrder = SubstructOrder(boxMon->personality);
-    boxMon->secure.substructs[0] = encrypted[substructOrder->decrypt[0]];
-    boxMon->secure.substructs[1] = encrypted[substructOrder->decrypt[1]];
-    boxMon->secure.substructs[2] = encrypted[substructOrder->decrypt[2]];
-    boxMon->secure.substructs[3] = encrypted[substructOrder->decrypt[3]];
+    if (!boxMon->hasSpecies)
+        return;
 
     u32 checksum = 0;
 
@@ -1414,11 +1422,32 @@ void DecryptBoxMon(struct BoxPokemon *boxMon)
 
     checksum = checksum & 0xFFFF;
 
+    if (offsetof(struct BoxPokemon, personality) == 0
+     && sizeof(boxMon->personality) == 4
+     && offsetof(struct BoxPokemon, secure) == 32
+     && sizeof(union BoxPokemonSecure) == 3 * 12
+     && sizeof(union PokemonSubstruct) == 12)
+    {
+        FastShuffleSubstructs(boxMon, SHUFFLE_DECRYPT);
+    }
+    else
+    {
+        union BoxPokemonSecure encrypted = boxMon->secure;
+        const u8 *substructOrder = SubstructOrder(boxMon->personality);
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+        boxMon->secure.substruct0 = encrypted.substructs[substructOrder[0]].type0;
+        boxMon->secure.substruct1 = encrypted.substructs[substructOrder[1]].type1;
+        boxMon->secure.substruct2 = encrypted.substructs[substructOrder[2]].type2;
+        boxMon->secure.substruct3 = encrypted.substructs[substructOrder[3]].type3;
+        #pragma GCC diagnostic pop
+    }
+
     if (checksum != boxMon->checksum)
     {
         boxMon->isBadEgg = TRUE;
         boxMon->isEgg = TRUE;
-        GetSubstruct(boxMon, boxMon->personality, SUBSTRUCT_TYPE_3)->type3.isEgg = TRUE;
+        boxMon->secure.substruct3.isEgg = TRUE;
     }
 }
 
@@ -1984,10 +2013,6 @@ void SetMultiuseSpriteTemplateToTrainerFront(enum TrainerPicID trainerPicId, enu
     gMultiuseSpriteTemplate.anims = gAnims_Trainer;
 }
 
-static union PokemonSubstruct *GetSubstruct(struct BoxPokemon *boxMon, u32 personality, enum SubstructType substructType)
-{
-    return &boxMon->secure.substructs[substructType];
-}
 
 /* GameFreak called GetMonData with either 2 or 3 arguments, for type
  * safety we have a GetMonData macro (in include/pokemon.h) which
@@ -2053,22 +2078,22 @@ union EvolutionTracker
 
 static ALWAYS_INLINE struct PokemonSubstruct0 *GetSubstruct0(struct BoxPokemon *boxMon)
 {
-    return &(GetSubstruct(boxMon, boxMon->personality, SUBSTRUCT_TYPE_0)->type0);
+    return &boxMon->secure.substruct0;
 }
 
 static ALWAYS_INLINE struct PokemonSubstruct1 *GetSubstruct1(struct BoxPokemon *boxMon)
 {
-    return &(GetSubstruct(boxMon, boxMon->personality, SUBSTRUCT_TYPE_1)->type1);
+    return &boxMon->secure.substruct1;
 }
 
 static ALWAYS_INLINE struct PokemonSubstruct2 *GetSubstruct2(struct BoxPokemon *boxMon)
 {
-    return &(GetSubstruct(boxMon, boxMon->personality, SUBSTRUCT_TYPE_2)->type2);
+    return &boxMon->secure.substruct2;
 }
 
 static ALWAYS_INLINE struct PokemonSubstruct3 *GetSubstruct3(struct BoxPokemon *boxMon)
 {
-    return &(GetSubstruct(boxMon, boxMon->personality, SUBSTRUCT_TYPE_3)->type3);
+    return &boxMon->secure.substruct3;
 }
 
 static bool32 IsBadEgg(struct BoxPokemon *boxMon)
