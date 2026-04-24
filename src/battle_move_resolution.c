@@ -2385,11 +2385,8 @@ static enum MoveEndResult MoveEndRage(void)
 static enum MoveEndResult MoveEndAbilities(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
-    enum Ability targetAbility = GetBattlerAbility(gBattlerTarget);
 
-    if (AbilityBattleEffects(ABILITYEFFECT_MOVE_END, gBattlerTarget, targetAbility, 0, TRUE))
-        result = MOVEEND_RESULT_RUN_SCRIPT;
-    else if (TryClearIllusion(gBattlerTarget, targetAbility))
+    if (AbilityBattleEffects(ABILITYEFFECT_MOVE_END, gBattlerTarget, GetBattlerAbility(gBattlerTarget), 0, TRUE))
         result = MOVEEND_RESULT_RUN_SCRIPT;
 
     gBattleScripting.moveendState++;

@@ -3558,6 +3558,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             }
             break;
         default:
+            effect = TryClearIllusion(battler, ability);
             break;
         }
         break;
@@ -4269,6 +4270,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             }
             break;
         default:
+            effect = TryClearIllusion(battler, ability);
             break;
         }
         break;

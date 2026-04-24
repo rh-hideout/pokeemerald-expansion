@@ -269,8 +269,7 @@ static bool32 FirstEventBlockEvents(struct BattleCalcValues *calcValues)
         break;
     case FIRST_EVENT_BLOCK_GENERAL_ABILITIES:
         if (TryPrimalReversion(battler)
-         || AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN, battler, calcValues->abilities[battler], MOVE_NONE, gBattleStruct->battlerState[battler].switchIn)
-         || TryClearIllusion(battler, calcValues->abilities[battler]))
+         || AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN, battler, calcValues->abilities[battler], MOVE_NONE, gBattleStruct->battlerState[battler].switchIn))
             effect = TRUE;
         gBattleStruct->eventState.battlerSwitchIn++;
         break;
