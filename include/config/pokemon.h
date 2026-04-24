@@ -83,8 +83,9 @@
 
 // Pokédex
 #define DONT_SKIP_GAPS                   0              // Does not skip any gaps in the Pokédex.
-#define SKIP_GAPS_OTHER_THAN_ONE         1              // Skips all gaps in the Pokédex other than one blank entry in between.
-#define SKIP_ALL_GAPS                    2              // Skips all gaps in the Pokédex.
+#define SKIP_GAPS_EXCEPT_ONE             1              // Skips all gaps in the Pokédex other than one blank entry in between seen entries.
+#define SKIP_GAPS_EXCEPT_BEFORE_AFTER    2              // Skips all gaps in the Pokédex other than one before and after seen entries. Most similar to whats seen in Pokémon SV.
+#define SKIP_ALL_GAPS                    3              // Skips all gaps in the Pokédex.
 #define P_SKIP_POKEDEX_GAPS              DONT_SKIP_GAPS // Pokémon SV skip large gaps in the Pokédex.
 
 #endif // GUARD_CONFIG_POKEMON_H

@@ -2185,8 +2185,14 @@ static bool32 ShouldSkipPokedexListEntry(enum NationalDexOrder dexNum)
     if (GetSetPokedexFlag(dexNum, FLAG_GET_SEEN))
         return FALSE;
 
-    if (P_SKIP_POKEDEX_GAPS == SKIP_GAPS_OTHER_THAN_ONE)
-        return !GetSetPokedexFlag(dexNum - 1, FLAG_GET_SEEN);
+    enum NationalDexOrder dexNumBefore = max(dexNum - 1, NATIONAL_DEX_NONE + 1);
+    enum NationalDexOrder dexNumAfter = min(dexNum + 1, NATIONAL_DEX_COUNT);
+    if (P_SKIP_POKEDEX_GAPS == SKIP_GAPS_EXCEPT_ONE)
+        return !GetSetPokedexFlag(dexNumBefore, FLAG_GET_SEEN);
+
+    if (P_SKIP_POKEDEX_GAPS == SKIP_GAPS_EXCEPT_BEFORE_AFTER)
+        return !GetSetPokedexFlag(dexNumBefore, FLAG_GET_SEEN)
+         && !GetSetPokedexFlag(dexNumAfter, FLAG_GET_SEEN);
 
     return TRUE; 
 }
@@ -2454,7 +2460,7 @@ static void CreateMonDexNum(u16 entryNum, u8 left, u8 top, u16 unused)
     text[offset++] = CHAR_0 + ((dexNum % 1000) % 100) % 10;
     text[offset++] = EOS;
 
-    if (!sPokedexView->pokedexList[entryNum].seen)
+    if (!sPokedexView->pokedexList[entryNum].seen && P_SKIP_POKEDEX_GAPS == SKIP_GAPS_EXCEPT_ONE)
         StringCopy(text, COMPOUND_STRING("------"));
 
     PrintMonDexNum(0, FONT_NARROW, text, left, top);
