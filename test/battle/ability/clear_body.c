@@ -65,7 +65,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent stat st
         ASSUME_STAT_CHANGE(MOVE_CONFIDE, spAtk: -1);
         ASSUME_STAT_CHANGE(MOVE_FAKE_TEARS, spDef: -2);
         ASSUME_STAT_CHANGE(MOVE_SCARY_FACE, speed: -2);
-        ASSUME(GetMoveEffect(MOVE_SWEET_SCENT) == (B_UPDATED_MOVE_DATA >= GEN_6 ? EFFECT_STAT_CHANGE : EFFECT_STAT_CHANGE));
+        ASSUME_STAT_CHANGE(MOVE_SWEET_SCENT, evasion: B_UPDATED_MOVE_DATA >= GEN_6 ? -2 : -1);
         ASSUME_STAT_CHANGE(MOVE_SAND_ATTACK, accuracy: -1);
         PLAYER(SPECIES_WOBBUFFET)
         OPPONENT(species) { Ability(ability); }
@@ -176,7 +176,7 @@ SINGLE_BATTLE_TEST("Mold Breaker, Teravolt, and Turboblaze ignore Clear Body and
         ASSUME_STAT_CHANGE(MOVE_CONFIDE, spAtk: -1);
         ASSUME_STAT_CHANGE(MOVE_FAKE_TEARS, spDef: -2);
         ASSUME_STAT_CHANGE(MOVE_SCARY_FACE, speed: -2);
-        ASSUME(GetMoveEffect(MOVE_SWEET_SCENT) == (B_UPDATED_MOVE_DATA >= GEN_6 ? EFFECT_STAT_CHANGE : EFFECT_STAT_CHANGE));
+        ASSUME_STAT_CHANGE(MOVE_SWEET_SCENT, evasion: B_UPDATED_MOVE_DATA >= GEN_6 ? -2 : -1);
         ASSUME_STAT_CHANGE(MOVE_SAND_ATTACK, accuracy: -1);
         PLAYER(SPECIES_WOBBUFFET) { Ability(breakerAbility); }
         OPPONENT(species) { Ability(ability); }

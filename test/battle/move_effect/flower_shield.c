@@ -3,7 +3,8 @@
 
 ASSUMPTIONS
 {
-    // ASSUME(GetMoveEffect(MOVE_FLOWER_SHIELD) == EFFECT_FLOWER_SHIELD);
+    ASSUME(GetMoveEffect(MOVE_FLOWER_SHIELD) == EFFECT_ROTOTILLER);
+    ASSUME_STAT_CHANGE(MOVE_FLOWER_SHIELD, defense: +1);
 }
 
 DOUBLE_BATTLE_TEST("Flower Shield raises the defense of all Grass-type Pokémon")

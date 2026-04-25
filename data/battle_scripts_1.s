@@ -3513,7 +3513,7 @@ BattleScript_GulpMissileGulping::
 	tryfaintmon BS_ATTACKER
 	jumpiffainted BS_ATTACKER, TRUE, BattleScript_GulpMissileNoSecondEffectGulping
 BattleScript_GulpMissileNoDmgGulping:
-	trybattlerstatchange BS_ATTACKER, STAT_CHANGE_NO_FLAGS
+	trynonmovestatchange  BS_TARGET, STAT_CHANGE_NO_FLAGS
 BattleScript_GulpMissileNoSecondEffectGulping:
 	return
 

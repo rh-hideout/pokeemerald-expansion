@@ -3,10 +3,6 @@
 
 #include "constants/battle_stat_change.h"
 
-// TESTS
-// 1. test mirror armor aginst syrup bomb
-// 2. test syrup bomb blocked by mist
-
 struct StatChange
 {
     const u8 *script;

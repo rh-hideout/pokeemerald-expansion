@@ -4,6 +4,7 @@
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_ROTOTILLER) == EFFECT_ROTOTILLER);
+    ASSUME_STAT_CHANGE(MOVE_ROTOTILLER, attack: +1, spAtk: +1);
 }
 
 DOUBLE_BATTLE_TEST("Rototiller boosts Attack and Special Attack of all Grass types on the field")

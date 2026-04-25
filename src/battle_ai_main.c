@@ -1645,7 +1645,9 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         else
         {
             if (!AI_CanAnyStatChange(battlerAtk, battlerDef, move))
+            {
                 ADJUST_SCORE(-10);
+            }
         }
         break;
     case EFFECT_ACUPRESSURE:
@@ -3574,7 +3576,10 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                 case TARGET_USER_OR_ALLY:
                 case TARGET_ALLY:
                 case TARGET_SELECTED:
-                    ADJUST_SCORE(GetAllyStatChangeScore(battlerAtk, battlerAtkPartner, move));
+                    if (AI_CanAnyStatChange(battlerAtk, battlerAtkPartner, move))
+                    {
+                        ADJUST_SCORE(GetAllyStatChangeScore(battlerAtk, battlerAtkPartner, move));
+                    }
                     break;
                 default:
                     break;

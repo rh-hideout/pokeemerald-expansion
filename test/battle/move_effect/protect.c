@@ -683,7 +683,7 @@ DOUBLE_BATTLE_TEST("Crafty Shield does not protect against status moves used on 
 {
     u32 move;
 
-    // PARAMETRIZE { move = MOVE_AROMATHERAPY; }
+    PARAMETRIZE { move = MOVE_AROMATHERAPY; }
     PARAMETRIZE { move = MOVE_ACUPRESSURE; }
 
     GIVEN {

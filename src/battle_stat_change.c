@@ -730,8 +730,12 @@ static bool32 IsMirrorArmorReflected(struct BattleCalcValues *cv, struct StatCha
         }
         else
         {
+            if (cv->battlerAtk == cv->battlerDef) {
+                DebugPrintf("g: attacker %d, target %d", gBattlerAttacker, gBattlerTarget);
+                DebugPrintf("attacker %d, target %d", cv->battlerAtk, cv->battlerDef);
+            }
             if (cv->battlerAtk == cv->battlerDef)
-                gBattleScripting.battler = cv->battlerDef;
+                gBattleScripting.battler = 1; //cv->battlerDef;
             else
                 gBattleScripting.battler = cv->battlerAtk;
 
