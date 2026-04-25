@@ -984,6 +984,8 @@ static void Task_InitUpdateMonBg(u8 taskId)
         gTasks[updateTaskId].t2_BgY = gBattle_BG2_Y;
     }
 
+    assertf(sMonAnimTaskIdArray[tIsPartner] == TASK_NONE, "Duplicate monbg without clearmonbg");
+
     gTasks[updateTaskId].t2_InBg2 = tInBg2;
     gTasks[updateTaskId].t2_BattlerId = tBattlerId;
     sMonAnimTaskIdArray[tIsPartner] = updateTaskId;
