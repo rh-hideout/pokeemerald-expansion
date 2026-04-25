@@ -229,6 +229,8 @@ u32 GetSwitchChance(enum ShouldSwitchScenario shouldSwitchScenario)
         return SHOULD_SWITCH_DYN_FUNC_PERCENTAGE;
     case SHOULD_SWITCH_WISH_PASSING:
         return SHOULD_SWITCH_WISH_PASSING_PERCENTAGE;
+    case SHOULD_SWITCH_LOSES_1V1:
+        return SHOULD_SWITCH_LOSES_1V1_PERCENTAGE;
     default:
         return 100;
     }
@@ -579,26 +581,8 @@ static bool32 FindMonThatAbsorbsOpponentsMove(struct SwitchContext *switchContex
         return FALSE;
     if (IsMoldBreakerTypeAbility(switchContext->opposingBattler, gAiLogicData->abilities[switchContext->opposingBattler]))
         return FALSE;
-
-
-    /////////////////////////////
-    // REPLACE WITH DON'T SWITCH IF CAN WIN 1V1
-    // DO THAT GENERALLY ACROSS THE BOARD?
-
-    // Don't switch if mon could OHKO
-    for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
-    {
-        aiMove = gBattleMons[switchContext->battler].moves[moveIndex];
-        if (aiMove != MOVE_NONE)
-        {
-            // Only check damage if it's a damaging move
-            if (!IsBattleMoveStatus(aiMove))
-            {
-                if (!AI_DoesChoiceEffectBlockMove(switchContext->battler, aiMove) && AI_GetDamage(switchContext->battler, switchContext->opposingBattler, moveIndex, AI_SWITCHIN_ATTACKING, gAiLogicData) > gBattleMons[switchContext->opposingBattler].hp)
-                    return FALSE;
-            }
-        }
-    }
+    if (switchContext->canBattlerWin1v1)
+        return FALSE;
 
     // Create an array of possible absorb abilities so the AI considers all of them
     if (incomingType == TYPE_FIRE)
@@ -664,7 +648,7 @@ static bool32 FindMonThatAbsorbsOpponentsMove(struct SwitchContext *switchContex
         if (!(switchContext->eligiblePartyMons & (1u << monIndex)))
             continue;
 
-        partyMonAbility = GetPartyMonAbilityForSwitchCalc(&switchContext->battler, monIndex, &switchContext->party[monIndex]);
+        partyMonAbility = GetPartyMonAbilityForSwitchCalc(switchContext->battler, monIndex, &switchContext->party[monIndex]);
 
         for (u32 absorbingAbilityIndex = 0; absorbingAbilityIndex < numAbsorbingAbilities; absorbingAbilityIndex++)
         {
@@ -676,6 +660,7 @@ static bool32 FindMonThatAbsorbsOpponentsMove(struct SwitchContext *switchContex
     return FALSE;
 }
 
+// Ideally this is replaced with predicted moves being factored into switchin 1v1 calcs instead, and this can be seen as a "free" switch there; future work :)
 static bool32 ShouldSwitchIfOpponentChargingOrInvulnerable(struct SwitchContext *switchContext)
 {
     enum BattleMoveEffects effect = GetMoveEffect(switchContext->incomingMove);
@@ -693,7 +678,9 @@ static bool32 ShouldSwitchIfOpponentChargingOrInvulnerable(struct SwitchContext 
         return FALSE;
     }
 
-    // In a world with a unified ShouldSwitch function, also want to check whether we already win 1v1 and if we do don't switch; not worth doubling the HasBadOdds computation for now
+    if (switchContext->canBattlerWin1v1)
+        return FALSE;
+
     if (gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_SIZE && RandomPercentage(RNG_AI_SWITCH_FREE_TURN, GetSwitchChance(SHOULD_SWITCH_FREE_TURN)))
         return SetSwitchinAndSwitch(switchContext->battler, PARTY_SIZE);
 
@@ -1085,8 +1072,11 @@ static bool32 ShouldSwitchIfWishPassing(struct SwitchContext *switchContext)
     // Current mon has good or neutral matchup - no need to switch for Wish
     if (typeMatchupCurrent <= UQ_4_12(2.0))
         return FALSE;
+    
+    // Current mon wins 1v1 - no need to switch for Wish
+    if (switchContext->canBattlerWin1v1)
+        return FALSE;
 
-    // TODO: Revisit active-mon 1v1 stay-in check after the ShouldSwitch refactor.
     if (!DoesMostSuitableSwitchinBenefitFromWish(switchContext->battler))
         return FALSE;
 
@@ -1273,6 +1263,19 @@ static bool32 ShouldSwitchIfAttackingStatsLowered(struct SwitchContext *switchCo
     return FALSE;
 }
 
+bool32 ShouldSwitchIfLoses1v1(struct SwitchContext *switchContext)
+{
+    if (IsDoubleBattle())
+        return FALSE;
+    if (!(gAiThinkingStruct->aiFlags[switchContext->battler] & AI_FLAG_SMART_SWITCHING))
+        return FALSE;
+    if (gAiLogicData->mostSuitableMonId[switchContext->battler] == PARTY_SIZE)
+        return FALSE;
+    if (!switchContext->canBattlerWin1v1 && RandomPercentage(RNG_AI_SWITCH_LOSES_1V1, GetSwitchChance(SHOULD_SWITCH_LOSES_1V1)))
+        return SetSwitchinAndSwitch(switchContext->battler, PARTY_SIZE);
+    return FALSE;
+}
+
 bool32 ShouldSwitchDynFuncExample(struct SwitchContext *switchContext)
 {
     // Chance to switch if trainer class is Guitarist, perhaps thematic for Jugglers
@@ -1450,6 +1453,8 @@ bool32 ShouldSwitch(enum BattlerId battler)
     if (ShouldSwitchIfBadChoiceLock(&switchContext))
         return TRUE;
     if (ShouldSwitchIfAttackingStatsLowered(&switchContext))
+        return TRUE;
+    if (ShouldSwitchIfLoses1v1(&switchContext))
         return TRUE;
     return FALSE;
 }

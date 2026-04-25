@@ -1339,7 +1339,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if player's m
     }
 }
 
-AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if it has an absorber")
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if it has an absorber and current mon loses the 1v1")
 {
     u32 aiMon;
     enum Move move;
@@ -1364,8 +1364,8 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if it has an 
     GIVEN {
         WITH_CONFIG(B_REDIRECT_ABILITY_IMMUNITY, GEN_5);
         WITH_CONFIG(B_POWDER_OVERCOAT, GEN_6);
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING);
-        PLAYER(SPECIES_ZIGZAGOON) { Moves(move); }
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZIGZAGOON) { Moves(move, MOVE_STRENGTH); }
         OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_SCRATCH); }
         OPPONENT(aiMon) { Moves(MOVE_SCRATCH); Ability(absorbingAbility); }
     } WHEN {

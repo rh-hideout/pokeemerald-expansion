@@ -37,6 +37,7 @@ enum ShouldSwitchScenario
     SHOULD_SWITCH_ALL_SCORES_BAD,
     SHOULD_SWITCH_DYN_FUNC,
     SHOULD_SWITCH_WISH_PASSING,
+    SHOULD_SWITCH_LOSES_1V1,
 };
 
 enum SwitchType
