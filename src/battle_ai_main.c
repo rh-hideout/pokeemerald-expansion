@@ -369,6 +369,7 @@ void SetupAIPredictionData(enum BattlerId battler, enum SwitchType switchType)
     // Switch prediction
     if (IsAiFlagPresent(AI_FLAG_PREDICT_SWITCH))
     {
+        enum SwitchType switchType = (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_RISKY) ? SWITCH_AFTER_KO : SWITCH_MID_BATTLE_OPTIONAL; // Risky AI switches aggressively even mid battle
         gAiLogicData->mostSuitableMonId[battler] = GetMostSuitableMonToSwitchInto(battler, switchType);
         if (ShouldSwitch(battler))
             gAiLogicData->shouldSwitch |= (1u << battler);
@@ -388,9 +389,6 @@ void SetupAIPredictionData(enum BattlerId battler, enum SwitchType switchType)
 
 void ComputeAiBattlerDecisions(enum BattlerId battler)
 {
-    // Risky AI switches aggressively even mid battle
-    enum SwitchType switchType = (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_RISKY) ? SWITCH_AFTER_KO : SWITCH_MID_BATTLE_OPTIONAL;
-
     gAiLogicData->aiCalcInProgress = TRUE;
 
         AIDebugTimerStart();
@@ -404,6 +402,7 @@ void ComputeAiBattlerDecisions(enum BattlerId battler)
     gAiLogicData->predictingMove = (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_PREDICT_MOVE) ? RandomPercentage(RNG_AI_PREDICT_MOVE, PREDICT_MOVE_CHANCE) : FALSE;
 
     // AI's switching data
+    enum SwitchType switchType = (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_RISKY) ? SWITCH_AFTER_KO : SWITCH_MID_BATTLE_OPTIONAL; // Risky AI switches aggressively even mid battle
     gAiLogicData->mostSuitableMonId[battler] = GetMostSuitableMonToSwitchInto(battler, switchType);
     if (ShouldSwitch(battler))
         gAiLogicData->shouldSwitch |= (1u << battler);

@@ -33,6 +33,7 @@ struct IncomingHealInfo
     u16 curesStatus:1;
 };
 static bool32 CanUseSuperEffectiveMoveAgainstOpponents(enum BattlerId battler, enum BattlerId opposingBattler);
+static bool32 CanUseSuperEffectiveMoveAgainstOpponent(enum BattlerId battler, enum BattlerId opposingBattler);
 static u32 GetSwitchinHazardsDamage(enum BattlerId battler);
 static u32 GetSwitchinSingleUseItemHealing(enum BattlerId battler, enum BattlerId opposingBattler, s32 currentHP);
 static bool32 AI_CanSwitchinAbilityTrapOpponent(enum Ability ability, enum BattlerId opposingBattler);
@@ -50,6 +51,7 @@ static bool32 IsOpponentPhysicalAttacker(enum BattlerId battler, enum BattlerId 
 static bool32 CanIntimidateLowerOpponentAtk(enum BattlerId battler, enum BattlerId opposingBattler);
 static bool32 ShouldSwitchIfIntimidateBenefit(struct SwitchContext *switchContext);
 static bool32 DoesMostSuitableSwitchinBenefitFromWish(enum BattlerId battler);
+static u32 GetSwitchinCandidate(u32 switchinCategory, enum BattlerId battler, int lastId, enum SwitchType switchType);
 
 static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, u32 monIndex, struct Pokemon *mon)
 {
@@ -415,6 +417,7 @@ static bool32 ShouldSwitchIfTruant(struct SwitchContext *switchContext)
 static u32 FindMonWithMoveOfEffectiveness(struct SwitchContext *switchContext, uq4_12_t effectiveness)
 {
     enum Move move;
+    u32 superEffectiveIds = 0;
 
     // Find a Pokémon in the party that has a super effective move.
     for (u32 monIndex = 0; monIndex < switchContext->lastId; monIndex++)
@@ -426,9 +429,14 @@ static u32 FindMonWithMoveOfEffectiveness(struct SwitchContext *switchContext, u
         {
             move = GetMonData(&switchContext->party[monIndex], MON_DATA_MOVE1 + moveIndex);
             if (move != MOVE_NONE && AI_GetMoveEffectiveness(move, switchContext->battler, switchContext->opposingBattler) >= effectiveness && GetMovePower(move) != 0)
-                return SetSwitchinAndSwitch(switchContext->battler, monIndex);
+            {
+                superEffectiveIds |= (1u << monIndex);
+            }
         }
     }
+
+    if (superEffectiveIds != 0)
+        return SetSwitchinAndSwitch(switchContext->battler, GetSwitchinCandidate(superEffectiveIds, switchContext->battler, switchContext->lastId, SWITCH_MID_BATTLE_OPTIONAL));
 
     return FALSE; // There is not a single Pokémon in the party that has a move with this effectiveness threshold
 }
@@ -517,11 +525,8 @@ static bool32 ShouldSwitchIfWonderGuard(struct SwitchContext *switchContext)
         return FALSE;
 
     // Check if Pokémon has a super effective move.
-    for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
-    {
-        if (gBattleMons[switchContext->battler].moves[moveIndex] != MOVE_NONE && gAiLogicData->effectiveness[switchContext->battler][switchContext->opposingBattler][moveIndex] >= UQ_4_12(2.0))
-            return FALSE;
-    }
+    if (CanUseSuperEffectiveMoveAgainstOpponent(switchContext->battler, switchContext->opposingBattler))
+        return FALSE;
 
     if (RandomPercentage(RNG_AI_SWITCH_WONDER_GUARD, GetSwitchChance(SHOULD_SWITCH_WONDER_GUARD)))
     {
@@ -1074,9 +1079,6 @@ static bool32 ShouldSwitchIfWishPassing(struct SwitchContext *switchContext)
 static bool32 CanUseSuperEffectiveMoveAgainstOpponent(enum BattlerId battler, enum BattlerId opposingBattler)
 {
     enum Move move;
-
-    if (!IsBattlerAlive(opposingBattler))
-        return FALSE;
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
