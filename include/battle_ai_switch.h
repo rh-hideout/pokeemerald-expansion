@@ -69,6 +69,10 @@ struct SwitchContext
     u32 eligiblePartyMons;
 };
 
+// Dynamic switch function
+typedef bool32 (*AiSwitchFunc)(struct SwitchContext*);
+extern AiSwitchFunc gDynamicAiSwitchFunc;
+
 u32 GetMostSuitableMonToSwitchInto(enum BattlerId battler, enum SwitchType switchType);
 bool32 ShouldSwitch(enum BattlerId battler);
 void ModifySwitchAfterMoveScoring(enum BattlerId battler);

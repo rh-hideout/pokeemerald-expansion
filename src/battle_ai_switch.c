@@ -1253,13 +1253,13 @@ static bool32 ShouldSwitchIfAttackingStatsLowered(struct SwitchContext *switchCo
     return FALSE;
 }
 
-bool32 ShouldSwitchDynFuncExample(enum BattlerId battler)
+bool32 ShouldSwitchDynFuncExample(struct SwitchContext *switchContext)
 {
     // Chance to switch if trainer class is Guitarist, perhaps thematic for Jugglers
     if (GetTrainerClassFromId(TRAINER_BATTLE_PARAM.opponentA) == TRAINER_CLASS_GUITARIST
         && RandomPercentage(RNG_AI_SWITCH_DYN_FUNC, GetSwitchChance(SHOULD_SWITCH_DYN_FUNC)))
     {
-        return SetSwitchinAndSwitch(battler, PARTY_SIZE);
+        return SetSwitchinAndSwitch(switchContext->battler, PARTY_SIZE);
     }
     return FALSE;
 }
@@ -1395,7 +1395,7 @@ bool32 ShouldSwitch(enum BattlerId battler)
 
     // custom switching logic
     // NOTE: needs to always end with `return SetSwitchinAndSwitch` or `return FALSE`
-    if (gDynamicAiSwitchFunc != NULL && gDynamicAiSwitchFunc(switchContext.battler)) // Create custom AI functions for specific battles via "setdynamicswitchaifunc" cmd
+    if (gDynamicAiSwitchFunc != NULL && gDynamicAiSwitchFunc(&switchContext)) // Create custom AI functions for specific battles via "setdynamicswitchaifunc" cmd
         return TRUE;
 
     // NOTE: The sequence of the below functions matter! Do not change unless you have carefully considered the outcome.
