@@ -49,12 +49,13 @@ enum SwitchType
 
 struct SwitchAiContext
 {
-    enum BattlerId battler;
-    enum BattlerId opposingBattler;
+    enum BattlerId battler:3;
+    enum BattlerId opposingBattler:3;
+    enum Move incomingMove:16;
+    u32 padding1:10;
+
     enum BattlerId battlerIn1;
     enum BattlerId battlerIn2;
-    enum Move incomingMove;
-
     struct Pokemon *party;
     s32 lastId;
     u32 typeMatchup;
