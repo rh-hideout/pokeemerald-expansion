@@ -36,6 +36,7 @@ static void SetInitialEggData(struct Pokemon *mon, enum Species species, struct 
 static void DaycarePrintMonInfo(u8 windowId, u32 daycareSlotId, u8 y);
 static u8 ModifyBreedingScoreForOvalCharm(u8 score);
 static enum Species GetEggSpecies(enum Species species);
+static bool32 IsEggPending(struct DayCare *daycare);
 
 // RAM buffers used to assist with BuildEggMoveset()
 EWRAM_DATA static u16 sHatchedEggLevelUpMoves[EGG_LVL_UP_MOVES_ARRAY_COUNT] = {0};
@@ -444,12 +445,6 @@ void GetDaycareCost(void)
     gSpecialVar_0x8005 = GetDaycareCostForMon(&gSaveBlock1Ptr->daycare, gSpecialVar_0x8004);
 }
 
-static void UNUSED Debug_AddDaycareSteps(u16 numSteps)
-{
-    gSaveBlock1Ptr->daycare.mons[0].steps += numSteps;
-    gSaveBlock1Ptr->daycare.mons[1].steps += numSteps;
-}
-
 u8 GetNumLevelsGainedFromDaycare(void)
 {
     if (GetBoxMonData(&gSaveBlock1Ptr->daycare.mons[gSpecialVar_0x8004].mon, MON_DATA_SPECIES) != 0)
@@ -468,24 +463,6 @@ static void ClearDaycareMonMail(struct DaycareMail *mail)
         mail->monName[i] = 0;
 
     ClearMail(&mail->message);
-}
-
-static void ClearDaycareMon(struct DaycareMon *daycareMon)
-{
-    ZeroBoxMonData(&daycareMon->mon);
-    daycareMon->steps = 0;
-    ClearDaycareMonMail(&daycareMon->mail);
-}
-
-static void UNUSED ClearAllDaycareData(struct DayCare *daycare)
-{
-    u8 i;
-
-    for (i = 0; i < DAYCARE_MON_COUNT; i++)
-        ClearDaycareMon(&daycare->mons[i]);
-
-    daycare->offspringPersonality = 0;
-    daycare->stepCounter = 0;
 }
 
 // Determines what the species of an Egg would be based on the given species.
@@ -529,81 +506,43 @@ static enum Species GetEggSpecies(enum Species species)
     return species;
 }
 
-static s32 GetParentToInheritNature(struct DayCare *daycare)
+static u32 GetChildNature(struct DayCare *daycare)
 {
-    u32 i;
-    u8 numWithEverstone = 0;
-    s32 slot = -1;
+    u32 parent = 0;
+    u32 numWithEverstone = 0;
 
-    for (i = 0; i < DAYCARE_MON_COUNT; i++)
+    if (P_NATURE_INHERITANCE < GEN_3)
+        return NATURE_RANDOM;
+
+    for (u32 i = 0; i < DAYCARE_MON_COUNT; i++)
     {
-        if (GetItemHoldEffect(GetBoxMonData(&daycare->mons[i].mon, MON_DATA_HELD_ITEM)) == HOLD_EFFECT_PREVENT_EVOLVE
-            && (P_NATURE_INHERITANCE != GEN_3 || GetBoxMonGender(&daycare->mons[i].mon) == MON_FEMALE || IS_DITTO(GetBoxMonData(&daycare->mons[i].mon, MON_DATA_SPECIES))))
+        if (GetItemHoldEffect(GetBoxMonData(&daycare->mons[i].mon, MON_DATA_HELD_ITEM)) != HOLD_EFFECT_PREVENT_EVOLVE)
+            continue;
+
+        if (P_NATURE_INHERITANCE > GEN_3 || GetBoxMonGender(&daycare->mons[i].mon) == MON_FEMALE || IS_DITTO(GetBoxMonData(&daycare->mons[i].mon, MON_DATA_SPECIES)))
         {
-            slot = i;
+            parent = i;
             numWithEverstone++;
         }
     }
 
     if (numWithEverstone >= DAYCARE_MON_COUNT)
-        return Random() & 1;
+        parent = RandomUniform(RNG_DAYCARE_TWO_EVERSTONE, 0, 1);
 
-    if (P_NATURE_INHERITANCE > GEN_4)
-        return slot;
+    if (P_NATURE_INHERITANCE > GEN_4 || RandomUniform(RNG_DAYCARE_NATURE_INHERITANCE, 0, 1))
+        return GetNatureFromPersonality(GetBoxMonData(&daycare->mons[parent].mon, MON_DATA_PERSONALITY));
 
-    return Random() & 1 ? slot : -1;
+    return NATURE_RANDOM;
 }
 
 static void _TriggerPendingDaycareEgg(struct DayCare *daycare)
 {
-    s32 parent;
-    s32 natureTries = 0;
-    rng_value_t personalityRand;
-
-    personalityRand = LocalRandomSeed(gMain.vblankCounter2);
-    parent = GetParentToInheritNature(daycare);
-
-    // don't inherit nature
-    if (parent < 0)
-    {
-        daycare->offspringPersonality = (LocalRandom(&personalityRand) << 16) | ((Random() % 0xfffe) + 1);
-    }
-    // inherit nature
-    else
-    {
-        u8 wantedNature = GetNatureFromPersonality(GetBoxMonData(&daycare->mons[parent].mon, MON_DATA_PERSONALITY));
-        u32 personality;
-
-        do
-        {
-            personality = (LocalRandom(&personalityRand) << 16) | (Random());
-            if (wantedNature == GetNatureFromPersonality(personality) && personality != 0)
-                break; // found a personality with the same nature
-
-            natureTries++;
-        } while (natureTries <= 2400);
-
-        daycare->offspringPersonality = personality;
-    }
-
-    FlagSet(FLAG_PENDING_DAYCARE_EGG);
-}
-
-// Functionally unused
-static void _TriggerPendingDaycareMaleEgg(struct DayCare *daycare)
-{
-    daycare->offspringPersonality = (Random()) | (EGG_GENDER_MALE);
     FlagSet(FLAG_PENDING_DAYCARE_EGG);
 }
 
 void TriggerPendingDaycareEgg(void)
 {
     _TriggerPendingDaycareEgg(&gSaveBlock1Ptr->daycare);
-}
-
-static void UNUSED TriggerPendingDaycareMaleEgg(void)
-{
-    _TriggerPendingDaycareMaleEgg(&gSaveBlock1Ptr->daycare);
 }
 
 static void InheritIVs(struct Pokemon *egg, struct DayCare *daycare)
@@ -805,20 +744,6 @@ u8 GetEggMovesBySpecies(enum Species species, u16 *eggMoves)
     return numEggMoves;
 }
 
-bool8 SpeciesCanLearnEggMove(enum Species species, enum Move move) //Move search PokedexPlus HGSS_Ui
-{
-    u32 i;
-    const u16 *eggMoveLearnset = GetSpeciesEggMoves(species);
-
-    for (i = 0; eggMoveLearnset[i] != MOVE_UNAVAILABLE; i++)
-    {
-        if (eggMoveLearnset[i] == move)
-            return TRUE;
-    }
-
-    return FALSE;
-}
-
 static void BuildEggMoveset(struct Pokemon *egg, struct BoxPokemon *father, struct BoxPokemon *mother)
 {
     u16 numSharedParentMoves;
@@ -937,7 +862,7 @@ static void BuildEggMoveset(struct Pokemon *egg, struct BoxPokemon *father, stru
 
 static void RemoveEggFromDayCare(struct DayCare *daycare)
 {
-    daycare->offspringPersonality = 0;
+    FlagClear(FLAG_PENDING_DAYCARE_EGG);
     daycare->stepCounter = 0;
 }
 
@@ -1137,7 +1062,7 @@ static void SetInitialEggData(struct Pokemon *mon, enum Species species, struct 
     u8 metLevel;
     u8 language;
 
-    personality = daycare->offspringPersonality;
+    personality = GetMonPersonality(species, MON_GENDER_RANDOM, GetChildNature(daycare), RANDOM_UNOWN_LETTER);
     CreateMonWithIVs(mon, species, EGG_HATCH_LEVEL, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
     metLevel = 0;
     ball = BALL_POKE;
@@ -1154,76 +1079,103 @@ void GiveEggFromDaycare(void)
     _GiveEggFromDaycare(&gSaveBlock1Ptr->daycare);
 }
 
-static bool8 TryProduceOrHatchEgg(struct DayCare *daycare)
+static void _IncrementDaycareSteps(struct DayCare *daycare)
 {
-    u32 i, validEggs = 0;
-
-    for (i = 0; i < DAYCARE_MON_COUNT; i++)
+    u32 validEggs = 0;
+    for (u32 i = 0; i < DAYCARE_MON_COUNT; i++)
     {
         if (GetBoxMonData(&daycare->mons[i].mon, MON_DATA_SANITY_HAS_SPECIES))
-            daycare->mons[i].steps++, validEggs++;
-    }
-
-    // Check if an egg should be produced
-    if (daycare->offspringPersonality == 0 && validEggs == DAYCARE_MON_COUNT && (daycare->mons[1].steps & 0xFF) == 0xFF)
-    {
-        u8 compatibility = ModifyBreedingScoreForOvalCharm(GetDaycareCompatibilityScore(daycare));
-        if (compatibility > (Random() * 100u) / USHRT_MAX)
-            TriggerPendingDaycareEgg();
-    }
-
-    // Try to hatch Egg
-    daycare->stepCounter++;
-    if (((P_EGG_CYCLE_LENGTH <= GEN_3 || P_EGG_CYCLE_LENGTH == GEN_7) && daycare->stepCounter >= 256)
-     || (P_EGG_CYCLE_LENGTH == GEN_4 && daycare->stepCounter >= 255)
-     || ((P_EGG_CYCLE_LENGTH == GEN_5 || P_EGG_CYCLE_LENGTH == GEN_6) && daycare->stepCounter >= 257)
-     || (P_EGG_CYCLE_LENGTH >= GEN_8 && daycare->stepCounter >= 128))
-    {
-        u32 eggCycles;
-        u8 toSub = GetEggCyclesToSubtract();
-
-        daycare->stepCounter = 0;
-
-        for (i = 0; i < gPartiesCount[B_TRAINER_0]; i++)
         {
-            if (!GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_IS_EGG))
-                continue;
-            if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SANITY_IS_BAD_EGG))
-                continue;
-
-            eggCycles = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_FRIENDSHIP);
-            if (eggCycles != 0)
-            {
-                if (eggCycles >= toSub)
-                    eggCycles -= toSub;
-                else
-                    eggCycles -= 1;
-
-                SetMonData(&gParties[B_TRAINER_0][i], MON_DATA_FRIENDSHIP, &eggCycles);
-            }
-            else
-            {
-                gSpecialVar_0x8004 = i;
-                return TRUE;
-            }
+            daycare->mons[i].steps++;
+            validEggs++;
         }
     }
 
-    return FALSE;
+    if (validEggs != DAYCARE_MON_COUNT || IsEggPending(daycare))
+        return;
+
+    if ((daycare->mons[1].steps & 0xFF) == 0xFF)
+    {
+        u8 compatibility = ModifyBreedingScoreForOvalCharm(GetDaycareCompatibilityScore(daycare));
+        if (RandomPercentage(RNG_DAYCARE_MAKE_EGG, compatibility))
+            _TriggerPendingDaycareEgg(daycare);
+    }
 }
 
-bool8 ShouldEggHatch(void)
+void IncrementDaycareSteps(void)
 {
 #if IS_FRLG
     if (GetBoxMonData(&gSaveBlock1Ptr->route5DayCareMon.mon, MON_DATA_SANITY_HAS_SPECIES))
         gSaveBlock1Ptr->route5DayCareMon.steps++;
 #endif
-    return TryProduceOrHatchEgg(&gSaveBlock1Ptr->daycare);
+
+    _IncrementDaycareSteps(&gSaveBlock1Ptr->daycare);
 }
 
-static bool8 IsEggPending(struct DayCare *daycare)
+static inline u32 GetEggCycleLength(void)
 {
-    return (daycare->offspringPersonality != 0);
+    switch (P_EGG_CYCLE_LENGTH)
+    {
+    case GEN_1:
+    case GEN_2:
+    case GEN_3:
+    case GEN_7:
+        return 256;
+    case GEN_4:
+        return 255;
+    case GEN_5:
+    case GEN_6:
+        return 257;
+    case GEN_8:
+    default:
+        return 128;
+    }
+}
+
+static bool32 TryToHatchEgg(struct DayCare *daycare)
+{
+    daycare->stepCounter++;
+    if (daycare->stepCounter < GetEggCycleLength())
+        return FALSE;
+    daycare->stepCounter = 0;
+
+    u32 eggCycles;
+    u8 toSub = GetEggCyclesToSubtract();
+
+    for (u32 i = 0; i < gPartiesCount[B_TRAINER_0]; i++)
+    {
+        if (!GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_IS_EGG))
+            continue;
+        if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SANITY_IS_BAD_EGG))
+            continue;
+
+        eggCycles = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_FRIENDSHIP);
+        if (eggCycles != 0)
+        {
+            if (eggCycles >= toSub)
+                eggCycles -= toSub;
+            else
+                eggCycles -= 1;
+
+            SetMonData(&gParties[B_TRAINER_0][i], MON_DATA_FRIENDSHIP, &eggCycles);
+        }
+        else
+        {
+            gSpecialVar_0x8004 = i;
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+bool8 ShouldEggHatch(void)
+{
+    return TryToHatchEgg(&gSaveBlock1Ptr->daycare);
+}
+
+static bool32 IsEggPending(struct DayCare *daycare)
+{
+    return (FlagGet(FLAG_PENDING_DAYCARE_EGG));
 }
 
 // gStringVar1 = first mon's nickname
@@ -1272,15 +1224,6 @@ u8 GetDaycareState(void)
     }
 
     return DAYCARE_NO_MONS;
-}
-
-static u8 UNUSED GetDaycarePokemonCount(void)
-{
-    u8 ret = CountPokemonInDaycare(&gSaveBlock1Ptr->daycare);
-    if (ret)
-        return ret;
-
-    return 0;
 }
 
 // Determine if the two given egg group lists contain any of the
@@ -1430,42 +1373,6 @@ static u8 *AppendGenderSymbol(u8 *name, u8 gender)
 static u8 *AppendMonGenderSymbol(u8 *name, struct BoxPokemon *boxMon)
 {
     return AppendGenderSymbol(name, GetBoxMonGender(boxMon));
-}
-
-static void UNUSED GetDaycareLevelMenuText(struct DayCare *daycare, u8 *dest)
-{
-    u8 monNames[DAYCARE_MON_COUNT][POKEMON_NAME_BUFFER_SIZE];
-    u8 i;
-
-    *dest = EOS;
-    for (i = 0; i < DAYCARE_MON_COUNT; i++)
-    {
-        GetBoxMonNickname(&daycare->mons[i].mon, monNames[i]);
-        AppendMonGenderSymbol(monNames[i], &daycare->mons[i].mon);
-    }
-
-    StringCopy(dest, monNames[0]);
-    StringAppend(dest, gText_NewLine2);
-    StringAppend(dest, monNames[1]);
-    StringAppend(dest, gText_NewLine2);
-    StringAppend(dest, gText_Exit4);
-}
-
-static void UNUSED GetDaycareLevelMenuLevelText(struct DayCare *daycare, u8 *dest)
-{
-    u8 i;
-    u8 level;
-    u8 text[20];
-
-    *dest = EOS;
-    for (i = 0; i < DAYCARE_MON_COUNT; i++)
-    {
-        StringAppend(dest, gText_Lv);
-        level = GetLevelAfterDaycareSteps(&daycare->mons[i].mon, daycare->mons[i].steps);
-        ConvertIntToDecimalStringN(text, level, STR_CONV_MODE_LEFT_ALIGN, 3);
-        StringAppend(dest, text);
-        StringAppend(dest, gText_NewLine2);
-    }
 }
 
 static void DaycareAddTextPrinter(u8 windowId, const u8 *text, u32 x, u32 y)

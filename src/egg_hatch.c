@@ -305,65 +305,16 @@ static const s16 sEggShardVelocities[][2] =
     {Q_8_8(2.5),        Q_8_8(-7.5)},
 };
 
-static void CreateHatchedMon(struct Pokemon *egg, struct Pokemon *temp)
-{
-    enum Species species;
-    u32 personality, pokerus;
-    enum PokeBall ball;
-    u8 i, friendship, language, gameMet, markings, isModernFatefulEncounter;
-    enum Move moves[MAX_MON_MOVES];
-    u32 ivs[NUM_STATS];
-
-    species = GetMonData(egg, MON_DATA_SPECIES);
-
-    for (i = 0; i < MAX_MON_MOVES; i++)
-        moves[i] = GetMonData(egg, MON_DATA_MOVE1 + i);
-
-    personality = GetMonData(egg, MON_DATA_PERSONALITY);
-
-    for (i = 0; i < NUM_STATS; i++)
-        ivs[i] = GetMonData(egg, MON_DATA_HP_IV + i);
-
-    // The language is initially read from the Egg but is later overwritten below
-    language = GetMonData(egg, MON_DATA_LANGUAGE);
-    gameMet = GetMonData(egg, MON_DATA_MET_GAME);
-    markings = GetMonData(egg, MON_DATA_MARKINGS);
-    pokerus = GetMonData(egg, MON_DATA_POKERUS);
-    isModernFatefulEncounter = GetMonData(egg, MON_DATA_MODERN_FATEFUL_ENCOUNTER);
-    ball = GetMonData(egg, MON_DATA_POKEBALL);
-
-    CreateMonWithIVs(temp, species, EGG_HATCH_LEVEL, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
-    for (i = 0; i < MAX_MON_MOVES; i++)
-        SetMonData(temp, MON_DATA_MOVE1 + i,  &moves[i]);
-
-    for (i = 0; i < NUM_STATS; i++)
-        SetMonData(temp, MON_DATA_HP_IV + i,  &ivs[i]);
-
-    language = GAME_LANGUAGE;
-    SetMonData(temp, MON_DATA_LANGUAGE, &language);
-    SetMonData(temp, MON_DATA_MET_GAME, &gameMet);
-    SetMonData(temp, MON_DATA_MARKINGS, &markings);
-
-    friendship = 120;
-    SetMonData(temp, MON_DATA_FRIENDSHIP, &friendship);
-    SetMonData(temp, MON_DATA_POKERUS, &pokerus);
-    SetMonData(temp, MON_DATA_MODERN_FATEFUL_ENCOUNTER, &isModernFatefulEncounter);
-    SetMonData(temp, MON_DATA_POKEBALL, &ball);
-
-    *egg = *temp;
-}
-
 static void AddHatchedMonToParty(u8 id)
 {
-    u8 isEgg = 0x46; // ?
     enum Species species;
     enum NationalDexOrder nationalDexNum;
     u8 name[POKEMON_NAME_LENGTH + 1];
-    u16 metLevel;
+    u32 metLevel, friendship, language;
     metloc_u8_t metLocation;
     struct Pokemon *mon = &gParties[B_TRAINER_0][id];
 
-    CreateHatchedMon(mon, &gParties[B_TRAINER_1][0]);
+    bool32 isEgg = FALSE;
     SetMonData(mon, MON_DATA_IS_EGG, &isEgg);
 
     species = GetMonData(mon, MON_DATA_SPECIES);
@@ -375,6 +326,12 @@ static void AddHatchedMonToParty(u8 id)
     GetSetPokedexFlag(nationalDexNum, FLAG_SET_CAUGHT);
 
     GetMonNickname(mon, gStringVar1);
+
+    language = GAME_LANGUAGE;
+    SetMonData(mon, MON_DATA_LANGUAGE, &language);
+
+    friendship = 120;
+    SetMonData(mon, MON_DATA_FRIENDSHIP, &friendship);
 
     // A met level of 0 is interpreted on the summary screen as "hatched at"
     metLevel = 0;
