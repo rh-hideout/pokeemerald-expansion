@@ -47,31 +47,33 @@ enum SwitchType
     SWITCH_MID_BATTLE_OPTIONAL,
 };
 
-struct SwitchContext
+struct SwitchAiContext
 {
-    enum BattlerId battler;
-    enum BattlerId opposingBattler;
+    enum BattlerId battler:3;
+    enum BattlerId opposingBattler:3;
+    enum BattlerId battlerIn1:3;
+    enum BattlerId battlerIn2:3;
+    enum Move incomingMove:16;
+    u32 padding1:4;
 
-    s32 lastId;
-    enum BattlerId battlerIn1;
-    enum BattlerId battlerIn2;
     struct Pokemon *party;
-
-    enum Move incomingMove;
+    s32 lastId;
+    u32 typeMatchup;
 
     // Flags
-    u32 canBattlerWin1v1;
-    u32 hasEffectiveMove;
-    u32 hasImportantStatusMove;
-    u32 battlerGetsOHKOd;
-    u32 hasStatRaised;
+    u32 canBattlerWin1v1:1;
+    u32 hasEffectiveMove:1;
+    u32 hasImportantStatusMove:1;
+    u32 battlerGetsOHKOd:1;
+    u32 hasStatRaised:1;
+    u32 padding2:27;
 
     // Party mon flags
     u32 eligiblePartyMons;
 };
 
 // Dynamic switch function
-typedef bool32 (*AiSwitchFunc)(struct SwitchContext*);
+typedef bool32 (*AiSwitchFunc)(struct SwitchAiContext*);
 extern AiSwitchFunc gDynamicAiSwitchFunc;
 
 u32 GetMostSuitableMonToSwitchInto(enum BattlerId battler, enum SwitchType switchType);

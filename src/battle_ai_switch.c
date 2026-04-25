@@ -50,7 +50,7 @@ static void SetBattlerVolatilesForSwitchin(enum BattlerId battler, u32 weather, 
 bool32 IsSwitchinTSpikesAffected(enum BattlerId battler);
 static bool32 IsOpponentPhysicalAttacker(enum BattlerId battler, enum BattlerId opposingBattler);
 static bool32 CanIntimidateLowerOpponentAtk(enum BattlerId battler, enum BattlerId opposingBattler);
-static bool32 ShouldSwitchIfIntimidateBenefit(struct SwitchContext *switchContext);
+static bool32 ShouldSwitchIfIntimidateBenefit(struct SwitchAiContext *switchContext);
 static bool32 DoesMostSuitableSwitchinBenefitFromWish(enum BattlerId battler);
 static u32 GetSwitchinCandidate(u32 switchinCategory, enum BattlerId battler, int lastId, enum SwitchType switchType);
 
@@ -364,7 +364,7 @@ static bool32 DoesMostSuitableSwitchinBenefitFromWish(enum BattlerId battler)
 // Note that as many return statements as possible are INTENTIONALLY put after all of the loops;
 // the function can take a max of about 0.06s to run, and this prevents the player from identifying
 // whether the mon will switch or not by seeing how long the delay is before they select a move
-static bool32 ShouldSwitchIfHasBadOdds(struct SwitchContext *switchContext)
+static bool32 ShouldSwitchIfHasBadOdds(struct SwitchAiContext *switchContext)
 {
     // Only use this if AI_FLAG_SMART_SWITCHING is set for the trainer
     if (!(gAiThinkingStruct->aiFlags[switchContext->battler] & AI_FLAG_SMART_SWITCHING))
@@ -373,9 +373,6 @@ static bool32 ShouldSwitchIfHasBadOdds(struct SwitchContext *switchContext)
     // Double Battles aren't included in AI_FLAG_SMART_MON_CHOICE. Defaults to regular switch in logic
     if (IsDoubleBattle())
         return FALSE;
-
-    // Calculate type advantage
-    u32 typeMatchup = GetBattlerTypeMatchup(switchContext->opposingBattler, switchContext->battler);
 
     // Check if current mon can 1v1 in spite of bad matchup, and don't switch out if it can
     if (switchContext->canBattlerWin1v1)
@@ -399,7 +396,7 @@ static bool32 ShouldSwitchIfHasBadOdds(struct SwitchContext *switchContext)
     }
 
     // General bad type matchups have more wiggle room
-    if (typeMatchup > UQ_4_12(2.0)) // If the player has favourable offensive matchup (2.0 is neutral, this must be worse)
+    if (switchContext->typeMatchup > UQ_4_12(2.0)) // If the player has favourable offensive matchup (2.0 is neutral, this must be worse)
     {
         if (!switchContext->hasEffectiveMove // If the AI doesn't have a super effective move
         && (gBattleMons[switchContext->battler].hp >= gBattleMons[switchContext->battler].maxHP / 2 // And the current mon has at least 1/2 their HP, or 1/4 HP and Regenerator
@@ -421,7 +418,7 @@ static bool32 ShouldSwitchIfHasBadOdds(struct SwitchContext *switchContext)
     return FALSE;
 }
 
-static bool32 ShouldSwitchIfTruant(struct SwitchContext *switchContext)
+static bool32 ShouldSwitchIfTruant(struct SwitchAiContext *switchContext)
 {
     // Switch if mon with truant is bodied by Protect or invulnerability spam
     if (gAiLogicData->abilities[switchContext->battler] == ABILITY_TRUANT
@@ -436,7 +433,7 @@ static bool32 ShouldSwitchIfTruant(struct SwitchContext *switchContext)
     return FALSE;
 }
 
-static u32 FindMonWithMoveOfEffectiveness(struct SwitchContext *switchContext, uq4_12_t effectiveness)
+static u32 FindMonWithMoveOfEffectiveness(struct SwitchAiContext *switchContext, uq4_12_t effectiveness)
 {
     enum Move move;
     u32 superEffectiveIds = 0;
@@ -481,7 +478,7 @@ static bool32 IsMoveBad(struct DamageContext *ctx, u32 moveIndex)
     return FALSE;
 }
 
-static bool32 ShouldSwitchIfAllMovesBad(struct SwitchContext *switchContext)
+static bool32 ShouldSwitchIfAllMovesBad(struct SwitchAiContext *switchContext)
 {
     struct DamageContext ctx = {0};
     ctx.battlerAtk = switchContext->battler;
@@ -538,7 +535,7 @@ static bool32 ShouldSwitchIfAllMovesBad(struct SwitchContext *switchContext)
     return FALSE;
 }
 
-static bool32 ShouldSwitchIfWonderGuard(struct SwitchContext *switchContext)
+static bool32 ShouldSwitchIfWonderGuard(struct SwitchAiContext *switchContext)
 {
     if (IsDoubleBattle())
         return FALSE;
@@ -561,7 +558,7 @@ static bool32 ShouldSwitchIfWonderGuard(struct SwitchContext *switchContext)
     return FALSE;
 }
 
-static bool32 FindMonThatAbsorbsOpponentsMove(struct SwitchContext *switchContext)
+static bool32 FindMonThatAbsorbsOpponentsMove(struct SwitchAiContext *switchContext)
 {
     u8 numAbsorbingAbilities = 0;
     enum Ability absorbingTypeAbilities[8]; // Max needed for type + move property absorbers
@@ -660,7 +657,7 @@ static bool32 FindMonThatAbsorbsOpponentsMove(struct SwitchContext *switchContex
 }
 
 // Ideally this is replaced with predicted moves being factored into switchin 1v1 calcs instead, and this can be seen as a "free" switch there; future work :)
-static bool32 ShouldSwitchIfOpponentChargingOrInvulnerable(struct SwitchContext *switchContext)
+static bool32 ShouldSwitchIfOpponentChargingOrInvulnerable(struct SwitchAiContext *switchContext)
 {
     enum BattleMoveEffects effect = GetMoveEffect(switchContext->incomingMove);
 
@@ -686,7 +683,7 @@ static bool32 ShouldSwitchIfOpponentChargingOrInvulnerable(struct SwitchContext 
     return FALSE;
 }
 
-static bool32 ShouldSwitchIfTrapperInParty(struct SwitchContext *switchContext)
+static bool32 ShouldSwitchIfTrapperInParty(struct SwitchAiContext *switchContext)
 {
     enum Ability partyMonAbility;
 
@@ -715,7 +712,7 @@ static bool32 ShouldSwitchIfTrapperInParty(struct SwitchContext *switchContext)
     return FALSE;
 }
 
-static bool32 ShouldSwitchIfBadlyStatused(struct SwitchContext *switchContext)
+static bool32 ShouldSwitchIfBadlyStatused(struct SwitchAiContext *switchContext)
 {
     bool32 switchMon = FALSE;
     enum Ability monAbility = gAiLogicData->abilities[switchContext->battler];
@@ -949,7 +946,7 @@ static bool32 CanIntimidateLowerOpponentAtk(enum BattlerId battler, enum Battler
     return TRUE;
 }
 
-static bool32 ShouldSwitchIfIntimidateBenefit(struct SwitchContext *switchContext)
+static bool32 ShouldSwitchIfIntimidateBenefit(struct SwitchAiContext *switchContext)
 {
     // Keep Intimidate cycling behavior restricted to smart-switching AI
     if (!(gAiThinkingStruct->aiFlags[switchContext->battler] & AI_FLAG_SMART_SWITCHING))
@@ -983,7 +980,7 @@ static bool32 ShouldSwitchIfIntimidateBenefit(struct SwitchContext *switchContex
     return hasValidTarget;
 }
 
-static bool32 ShouldSwitchIfAbilityBenefit(struct SwitchContext *switchContext)
+static bool32 ShouldSwitchIfAbilityBenefit(struct SwitchAiContext *switchContext)
 {
     //Check if ability is blocked
     if (gBattleMons[switchContext->battler].volatiles.gastroAcid
@@ -1048,7 +1045,7 @@ static bool32 ShouldSwitchIfAbilityBenefit(struct SwitchContext *switchContext)
 }
 
 // Consider switching to pass Wish to a teammate that benefits from the heal
-static bool32 ShouldSwitchIfWishPassing(struct SwitchContext *switchContext)
+static bool32 ShouldSwitchIfWishPassing(struct SwitchAiContext *switchContext)
 {
     // Only use with smart switching flag
     if (!(gAiThinkingStruct->aiFlags[switchContext->battler] & AI_FLAG_SMART_SWITCHING))
@@ -1065,11 +1062,8 @@ static bool32 ShouldSwitchIfWishPassing(struct SwitchContext *switchContext)
     if (switchContext->incomingMove != MOVE_NONE && GetMoveEffect(switchContext->incomingMove) == EFFECT_HEAL_BLOCK)
         return FALSE;
 
-    // Get current mon's type matchup (lower is better - means we resist opponent)
-    u32 typeMatchupCurrent = GetBattlerTypeMatchup(switchContext->opposingBattler, switchContext->battler);
-
     // Current mon has good or neutral matchup - no need to switch for Wish
-    if (typeMatchupCurrent <= UQ_4_12(2.0))
+    if (switchContext->typeMatchup <= UQ_4_12(2.0))
         return FALSE;
     
     // Current mon wins 1v1 - no need to switch for Wish
@@ -1112,7 +1106,7 @@ static bool32 CanUseSuperEffectiveMoveAgainstOpponents(enum BattlerId battler, e
     return FALSE;
 }
 
-static bool32 CanMonSurviveHazardSwitchin(struct SwitchContext *switchContext)
+static bool32 CanMonSurviveHazardSwitchin(struct SwitchAiContext *switchContext)
 {
     u32 hazardDamage = 0, battlerHp = gBattleMons[switchContext->battler].hp;
     enum Ability ability = gAiLogicData->abilities[switchContext->battler];
@@ -1144,7 +1138,7 @@ static bool32 CanMonSurviveHazardSwitchin(struct SwitchContext *switchContext)
     return TRUE;
 }
 
-static bool32 ShouldSwitchIfEncored(struct SwitchContext *switchContext)
+static bool32 ShouldSwitchIfEncored(struct SwitchAiContext *switchContext)
 {
     enum Move encoredMove = gBattleMons[switchContext->battler].volatiles.encoredMove;
 
@@ -1171,7 +1165,7 @@ static bool32 ShouldSwitchIfEncored(struct SwitchContext *switchContext)
     return FALSE;
 }
 
-static bool32 ShouldSwitchIfBadChoiceLock(struct SwitchContext *switchContext)
+static bool32 ShouldSwitchIfBadChoiceLock(struct SwitchAiContext *switchContext)
 {
     enum Move choicedMove = gBattleStruct->choicedMove[switchContext->battler];
 
@@ -1217,7 +1211,7 @@ static bool32 ShouldSwitchIfBadChoiceLock(struct SwitchContext *switchContext)
 }
 
 // AI should switch if it's become setup fodder and has something better to switch to
-static bool32 ShouldSwitchIfAttackingStatsLowered(struct SwitchContext *switchContext)
+static bool32 ShouldSwitchIfAttackingStatsLowered(struct SwitchAiContext *switchContext)
 {
     s8 attackingStage = gBattleMons[switchContext->battler].statStages[STAT_ATK];
     s8 spAttackingStage = gBattleMons[switchContext->battler].statStages[STAT_SPATK];
@@ -1262,7 +1256,7 @@ static bool32 ShouldSwitchIfAttackingStatsLowered(struct SwitchContext *switchCo
     return FALSE;
 }
 
-bool32 ShouldSwitchIfLoses1v1(struct SwitchContext *switchContext)
+bool32 ShouldSwitchIfLoses1v1(struct SwitchAiContext *switchContext)
 {
     if (IsDoubleBattle())
         return FALSE;
@@ -1275,7 +1269,7 @@ bool32 ShouldSwitchIfLoses1v1(struct SwitchContext *switchContext)
     return FALSE;
 }
 
-bool32 ShouldSwitchDynFuncExample(struct SwitchContext *switchContext)
+bool32 ShouldSwitchDynFuncExample(struct SwitchAiContext *switchContext)
 {
     // Chance to switch if trainer class is Guitarist, perhaps thematic for Jugglers
     if (GetTrainerClassFromId(TRAINER_BATTLE_PARAM.opponentA) == TRAINER_CLASS_GUITARIST
@@ -1303,7 +1297,7 @@ static bool32 CanBattlerConsiderSwitch(enum BattlerId battler)
     return TRUE;
 }
 
-void GetShouldSwitchMoveData(struct SwitchContext *switchContext)
+void GetShouldSwitchMoveData(struct SwitchAiContext *switchContext)
 {
     //Variable initialization
     enum Move *playerMoves = GetMovesArray(switchContext->opposingBattler);
@@ -1376,7 +1370,7 @@ void GetShouldSwitchMoveData(struct SwitchContext *switchContext)
     }
 }
 
-void GetShouldSwitchPartyMonEligibility(struct SwitchContext *switchContext)
+void GetShouldSwitchPartyMonEligibility(struct SwitchAiContext *switchContext)
 {
     for (u32 monIndex = 0; monIndex < switchContext->lastId; monIndex++)
     {
@@ -1394,13 +1388,14 @@ void GetShouldSwitchPartyMonEligibility(struct SwitchContext *switchContext)
 
 bool32 ShouldSwitch(enum BattlerId battler)
 {
-    struct SwitchContext switchContext = {0};
+    struct SwitchAiContext switchContext = {0};
     switchContext.battler = battler;
     switchContext.opposingBattler = GetOppositeBattler(switchContext.battler);
     switchContext.party = GetBattlerParty(switchContext.battler);
     switchContext.lastId = GetAILastPartyIndex(switchContext.battler);
     switchContext.incomingMove = GetPredictedMoveSpeedCheck(switchContext.battler, switchContext.opposingBattler, gAiLogicData);
     switchContext.hasStatRaised = AnyUsefulStatIsRaised(switchContext.battler);
+    switchContext.typeMatchup = GetBattlerTypeMatchup(switchContext->opposingBattler, switchContext->battler);
     GetActiveBattlerIds(switchContext.battler, &switchContext.battlerIn1, &switchContext.battlerIn2);
     GetShouldSwitchMoveData(&switchContext);
     GetShouldSwitchPartyMonEligibility(&switchContext);
