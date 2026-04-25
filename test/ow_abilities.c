@@ -33,7 +33,7 @@ TEST("DoesLeadingMonHaveAbilityEffect returns FALSE if the first mon in party is
     EXPECT_EQ(DoesLeadingMonHaveAbilityEffect(abilityArray), FALSE);
 }
 
-TEST("DoesLeadingMonHaveAbilityEffect returns FALSE if the first mon in party does not have one of the ability present in the given array")
+TEST("DoesLeadingMonHaveAbilityEffect returns FALSE if the first mon in party does not have one of the abilities present in the given array")
 {
     const enum Ability abilityArray[] = {ABILITY_DRIZZLE, ABILITY_HYDRATION, ABILITY_NONE};
     const enum Ability abilityArray2[] = {ABILITY_STENCH, ABILITY_SPEED_BOOST, ABILITY_NONE};
@@ -76,7 +76,7 @@ TEST("DoesPartyMemberHaveAbilityEffect returns FALSE if the ability is owned by 
     EXPECT_EQ(DoesPartyMemberHaveAbilityEffect(abilityArray), FALSE);
 }
 
-TEST("DoesPartyMemberHaveAbilityEffect returns FALSE if none of the mons in party does not have one of the ability present in the given array")
+TEST("DoesPartyMemberHaveAbilityEffect returns FALSE if none of the mons in party have one of the abilities present in the given array")
 {
     const enum Ability abilityArray[] = {ABILITY_DRIZZLE, ABILITY_HYDRATION, ABILITY_NONE};
     const enum Ability abilityArray2[] = {ABILITY_STENCH, ABILITY_SPEED_BOOST, ABILITY_NONE};
