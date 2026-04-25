@@ -77,7 +77,7 @@ FRONTIER_BATTLE_TEST(TOWER, MULTI, OPEN, "Frontier Battle Tower: FRONTIER_LVL_OP
     }
 }
 
-// TODO partner mon coming in at L40
+// TODO partner mon coming in at L40; opponentB not sending out a mon
 FRONTIER_BATTLE_TEST(TOWER, MULTI, 50, "Frontier Battle Tower: FRONTIER_LVL_50 sets opponent team level to 50 regardless of player level (Multi)")
 {
     GIVEN {
