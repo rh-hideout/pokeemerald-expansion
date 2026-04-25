@@ -1,7 +1,7 @@
 #include "global.h"
 #include "test/battle.h"
 
-FRONTIER_SINGLE_BATTLE_TEST(TOWER, OPEN, "Battle Tower: FRONTIER_MODE_OPEN sets opponent team level to match highest player level (singles)")
+FRONTIER_BATTLE_TEST(SINGLE, TOWER, OPEN, "Battle Tower: FRONTIER_MODE_OPEN sets opponent team level to match highest player level (singles)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Level(55); }

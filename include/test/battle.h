@@ -1021,11 +1021,17 @@ bool32 IsAITest(void);
 #define ONE_VS_TWO_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_ONE_VS_TWO(_name, BATTLE_TEST_ONE_VS_TWO, __VA_ARGS__)
 #define AI_ONE_VS_TWO_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_ONE_VS_TWO(_name, BATTLE_TEST_AI_ONE_VS_TWO, __VA_ARGS__)
 
-#define FRONTIER_SINGLE_BATTLE_TEST(_facility, _levelMode, _name, ...) BATTLE_TEST_ARGS_FRONTIER_SINGLE(_facility, _levelMode, _name, BATTLE_TEST_FRONTIER_SINGLES, __VA_ARGS__)
-#define AI_FRONTIER_SINGLE_BATTLE_TEST(_facility, _levelMode, _name, ...) BATTLE_TEST_ARGS_FRONTIER_SINGLE(_facility, _levelMode, _name, BATTLE_TEST_FRONTIER_AI_SINGLES, __VA_ARGS__)
+#define FRONTIER_BATTLE_TEST(_battleType, _facility, _levelMode, _name, ...) CAT(CAT(FRONTIER_, _battleType), _BATTLE_TEST) (_facility, _levelMode, CAT(CAT(FRONTIER_MODE_,_battleType),S), _name, __VA_ARGS__)
+#define AI_FRONTIER_BATTLE_TEST(_battleType, _facility, _levelMode, _name, ...) CAT(CAT(AI_FRONTIER_, _battleType), _BATTLE_TEST) (_facility, _levelMode, CAT(CAT(FRONTIER_MODE_,_battleType),S), _name, __VA_ARGS__)
+
+#define FRONTIER_SINGLE_BATTLE_TEST(_facility, _levelMode, _facilityMode, _name, ...) BATTLE_TEST_ARGS_FRONTIER_SINGLE(_facility, _levelMode, _name, BATTLE_TEST_FRONTIER_SINGLES, __VA_ARGS__)
+#define AI_FRONTIER_SINGLE_BATTLE_TEST(_facility, _levelMode, _facilityMode, _name, ...) BATTLE_TEST_ARGS_FRONTIER_SINGLE(_facility, _levelMode, _name, BATTLE_TEST_FRONTIER_AI_SINGLES, __VA_ARGS__)
 
 #define FRONTIER_DOUBLE_BATTLE_TEST(_facility, _levelMode, _facilityMode, _name, ...) BATTLE_TEST_ARGS_FRONTIER_DOUBLE(_facility, _levelMode, _facilityMode, _name, BATTLE_TEST_FRONTIER_DOUBLES, __VA_ARGS__)
 #define AI_FRONTIER_DOUBLE_BATTLE_TEST(_facility, _levelMode, _facilityMode, _name, ...) BATTLE_TEST_ARGS_FRONTIER_DOUBLE(_facility, _levelMode, _facilityMode, _name, BATTLE_TEST_FRONTIER_AI_DOUBLES, __VA_ARGS__)
+
+#define FRONTIER_MULTI_BATTLE_TEST FRONTIER_DOUBLE_BATTLE_TEST
+#define AI_FRONTIER_MULTI_BATTLE_TEST AI_FRONTIER_DOUBLE_BATTLE_TEST
 
 /* Parametrize */
 
