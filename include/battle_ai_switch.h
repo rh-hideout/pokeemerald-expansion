@@ -57,7 +57,7 @@ struct SwitchAiContext
     enum BattlerId battlerIn1;
     enum BattlerId battlerIn2;
     struct Pokemon *party;
-    s32 lastId;
+    u32 lastId;
     u32 typeMatchup;
 
     // Flags
