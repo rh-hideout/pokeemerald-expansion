@@ -52,13 +52,13 @@ struct SwitchAiContext
     enum BattlerId battler:3;
     enum BattlerId opposingBattler:3;
     enum Move incomingMove:16;
-    u32 padding1:10;
+    u32 lastId:6;
+    u32 padding1:4;
 
     enum BattlerId battlerIn1;
     enum BattlerId battlerIn2;
     struct Pokemon *party;
-    u32 lastId;
-    u32 typeMatchup;
+    uq4_12_t typeMatchup;
 
     // Flags
     u32 canBattlerWin1v1:1;
