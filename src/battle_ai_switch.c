@@ -1691,14 +1691,18 @@ bool32 IsSwitchinValid(enum BattlerId battler)
         enum BattlerId partner = BATTLE_PARTNER(battler);
         if (gBattleStruct->AI_monToSwitchIntoId[battler] == PARTY_SIZE) // Generic switch
         {
-            if ((gAiLogicData->shouldSwitch & (1u << partner)) && gAiLogicData->monToSwitchInId[partner] == gAiLogicData->mostSuitableMonId[battler])
+            if ((gAiLogicData->shouldSwitch & (1u << partner))
+             && gAiLogicData->monToSwitchInId[partner] == gAiLogicData->mostSuitableMonId[battler]
+             && BattlersShareParty(battler, partner))
             {
                 return FALSE;
             }
         }
         else // Override switch
         {
-            if ((gAiLogicData->shouldSwitch & (1u << partner)) && gAiLogicData->monToSwitchInId[partner] == gBattleStruct->AI_monToSwitchIntoId[battler])
+            if ((gAiLogicData->shouldSwitch & (1u << partner))
+             && gAiLogicData->monToSwitchInId[partner] == gAiLogicData->mostSuitableMonId[battler]
+             && BattlersShareParty(battler, partner))
             {
                 return FALSE;
             }

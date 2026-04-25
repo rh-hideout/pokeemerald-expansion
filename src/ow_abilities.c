@@ -1,8 +1,11 @@
 #include "global.h"
-#include "ow_synchronize.h"
+#include "ow_abilities.h"
 #include "pokemon.h"
 #include "random.h"
 #include "constants/pokemon.h"
+
+const static enum Ability sForceNatureAbilities[] = {ABILITY_SYNCHRONIZE, ABILITY_NONE};
+const static enum Ability sForceOppositeGenderAbilities[] = {ABILITY_CUTE_CHARM, ABILITY_NONE};
 
 static UNUSED bool32 HasHalfChance(enum Species species);
 static UNUSED bool32 HasTwoThirdsChance(enum Species species);
@@ -78,21 +81,38 @@ static UNUSED bool32 IsTrueIfUndiscoveredEggGroup(enum Species species)
     return (gSpeciesInfo[species].eggGroups[0] == EGG_GROUP_NO_EGGS_DISCOVERED);
 }
 
-static bool32 IsSynchronizeActive(void)
+bool32 DoesLeadingMonHaveAbilityEffect(const enum Ability *abilityArray)
 {
-    return ((!GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SANITY_IS_EGG)
-        && GetMonAbility(&gParties[B_TRAINER_0][0]) == ABILITY_SYNCHRONIZE));
+    if (GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SANITY_IS_EGG))
+        return FALSE;
+    enum Ability leadingMonAbility = GetMonAbility(&gParties[B_TRAINER_0][0]);
+    for (u32 i = 0; abilityArray[i] != ABILITY_NONE; i++)
+    {
+        if (leadingMonAbility == abilityArray[i])
+            return TRUE;
+    }
+    return FALSE;
 }
 
-static bool32 IsCuteCharmActive(void)
+UNUSED bool32 DoesPartyMemberHaveAbilityEffect(const enum Ability *abilityArray)
 {
-     return ((!GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SANITY_IS_EGG)
-        && GetMonAbility(&gParties[B_TRAINER_0][0]) == ABILITY_CUTE_CHARM));
+    for (u32 j = 0; j < gPartiesCount[B_TRAINER_0]; j++)
+    {
+        if (GetMonData(&gParties[B_TRAINER_0][j], MON_DATA_SANITY_IS_EGG))
+            continue;
+        enum Ability monAbility = GetMonAbility(&gParties[B_TRAINER_0][j]);
+        for (u32 i = 0; abilityArray[i] != ABILITY_NONE; i++)
+        {
+            if (monAbility == abilityArray[i])
+                return TRUE;
+        }
+    }
+    return FALSE;
 }
 
 u32 GetSynchronizedNature(enum GeneratedMonOrigin origin, enum Species species)
 {
-    if (!IsSynchronizeActive())
+    if (!DoesLeadingMonHaveAbilityEffect(sForceNatureAbilities))
         return NATURE_RANDOM;
     if (!(sSynchronizeModes[origin](species)))
         return NATURE_RANDOM;
@@ -101,7 +121,7 @@ u32 GetSynchronizedNature(enum GeneratedMonOrigin origin, enum Species species)
 
 u32 GetSynchronizedGender(enum GeneratedMonOrigin origin, enum Species species)
 {
-    if (!IsCuteCharmActive())
+    if (!DoesLeadingMonHaveAbilityEffect(sForceOppositeGenderAbilities))
         return MON_GENDER_RANDOM;
     if (!(sCuteCharmModes[origin](species)))
         return MON_GENDER_RANDOM;
