@@ -69,7 +69,8 @@ struct SwitchAiContext
     u32 padding2:27;
 
     // Party mon flags
-    u32 eligiblePartyMons;
+    u32 eligiblePartyMons:6;
+    u32 padding3:26;
 };
 
 // Dynamic switch function
