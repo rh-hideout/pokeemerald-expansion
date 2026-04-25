@@ -66,11 +66,11 @@ struct SwitchAiContext
     u32 hasImportantStatusMove:1;
     u32 battlerGetsOHKOd:1;
     u32 hasStatRaised:1;
-    u32 padding2:27;
 
     // Party mon flags
     u32 eligiblePartyMons:6;
-    u32 padding3:26;
+
+    u32 padding2:21;
 };
 
 // Dynamic switch function
