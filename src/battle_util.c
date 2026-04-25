@@ -8127,21 +8127,14 @@ s32 GetAdjustedDamage(struct BattleContext *ctx, s32 damage)
     u32 rand = Random() % 100;
     u32 affectionScore = GetBattlerAffectionHearts(ctx->battlerDef);
 
-    if (GetMoveEffect(ctx->move) == EFFECT_FALSE_SWIPE)
-    {
-        enduredHit = TRUE;
-    }
-    else if (gBattleMons[ctx->battlerDef].volatiles.endured)
+    if (gBattleMons[ctx->battlerDef].volatiles.endured)
     {
         enduredHit = TRUE;
         gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_FOE_ENDURED;
     }
-    else if (ctx->holdEffectDef == HOLD_EFFECT_FOCUS_BAND && rand < GetBattlerHoldEffectParam(ctx->battlerDef))
+    else if (GetMoveEffect(ctx->move) == EFFECT_FALSE_SWIPE)
     {
         enduredHit = TRUE;
-        RecordItemEffectBattle(ctx->battlerDef, ctx->holdEffectDef);
-        gLastUsedItem = gBattleMons[ctx->battlerDef].item;
-        gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_FOE_HUNG_ON;
     }
     else if (GetConfig(B_STURDY) >= GEN_5 && ctx->abilityDef == ABILITY_STURDY && IsBattlerAtMaxHp(ctx->battlerDef))
     {
@@ -8149,6 +8142,13 @@ s32 GetAdjustedDamage(struct BattleContext *ctx, s32 damage)
         RecordAbilityBattle(ctx->battlerDef, ABILITY_STURDY);
         gLastUsedAbility = ABILITY_STURDY;
         gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_STURDIED;
+    }
+    else if (ctx->holdEffectDef == HOLD_EFFECT_FOCUS_BAND && rand < GetBattlerHoldEffectParam(ctx->battlerDef))
+    {
+        enduredHit = TRUE;
+        RecordItemEffectBattle(ctx->battlerDef, ctx->holdEffectDef);
+        gLastUsedItem = gBattleMons[ctx->battlerDef].item;
+        gBattleStruct->moveResultFlags[ctx->battlerDef] |= MOVE_RESULT_FOE_HUNG_ON;
     }
     else if (ctx->holdEffectDef == HOLD_EFFECT_FOCUS_SASH && IsBattlerAtMaxHp(ctx->battlerDef))
     {
