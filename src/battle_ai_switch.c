@@ -1395,7 +1395,7 @@ bool32 ShouldSwitch(enum BattlerId battler)
     switchContext.lastId = GetAILastPartyIndex(switchContext.battler);
     switchContext.incomingMove = GetPredictedMoveSpeedCheck(switchContext.battler, switchContext.opposingBattler, gAiLogicData);
     switchContext.hasStatRaised = AnyUsefulStatIsRaised(switchContext.battler);
-    switchContext.typeMatchup = GetBattlerTypeMatchup(switchContext->opposingBattler, switchContext->battler);
+    switchContext.typeMatchup = GetBattlerTypeMatchup(switchContext.opposingBattler, switchContext.battler);
     GetActiveBattlerIds(switchContext.battler, &switchContext.battlerIn1, &switchContext.battlerIn2);
     GetShouldSwitchMoveData(&switchContext);
     GetShouldSwitchPartyMonEligibility(&switchContext);
@@ -1453,54 +1453,53 @@ bool32 ShouldSwitch(enum BattlerId battler)
     return FALSE;
 }
 
-bool32 ShouldSwitchIfAllScoresBad(enum BattlerId battler)
+bool32 ShouldSwitchIfAllScoresBad(struct SwitchAiContext *switchContext)
 {
-    u32 score, opposingBattler = GetOppositeBattler(battler);
-    if (!(gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_SWITCHING))
+    u32 score;
+    if (!(gAiThinkingStruct->aiFlags[switchContext->battler] & AI_FLAG_SMART_SWITCHING))
         return FALSE;
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
         if (IsDoubleBattle())
         {
-            u32 score1 = gAiBattleData->finalScore[battler][opposingBattler][moveIndex];
-            u32 score2 = gAiBattleData->finalScore[battler][BATTLE_PARTNER(opposingBattler)][moveIndex];
+            u32 score1 = gAiBattleData->finalScore[switchContext->battler][switchContext->opposingBattler][moveIndex];
+            u32 score2 = gAiBattleData->finalScore[switchContext->battler][BATTLE_PARTNER(switchContext->opposingBattler)][moveIndex];
             if (score1 > AI_BAD_SCORE_THRESHOLD || score2 > AI_BAD_SCORE_THRESHOLD)
                 return FALSE;
         }
         else
         {
-            score = gAiBattleData->finalScore[battler][opposingBattler][moveIndex];
+            score = gAiBattleData->finalScore[switchContext->battler][switchContext->opposingBattler][moveIndex];
             if (score > AI_BAD_SCORE_THRESHOLD)
                 return FALSE;
         }
     }
     if (RandomPercentage(RNG_AI_SWITCH_ALL_SCORES_BAD, GetSwitchChance(SHOULD_SWITCH_ALL_SCORES_BAD))
-        && (gAiLogicData->mostSuitableMonId[battler] != PARTY_SIZE || !ALL_SCORES_BAD_NEEDS_GOOD_SWITCHIN))
+        && (gAiLogicData->mostSuitableMonId[switchContext->battler] != PARTY_SIZE || !ALL_SCORES_BAD_NEEDS_GOOD_SWITCHIN))
         return TRUE;
     return FALSE;
 }
 
-bool32 ShouldStayInToUseMove(enum BattlerId battler)
+bool32 ShouldStayInToUseMove(struct SwitchAiContext *switchContext)
 {
     enum Move aiMove;
-    u32 opposingBattler = GetOppositeBattler(battler);
     enum BattleMoveEffects aiMoveEffect;
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
-        aiMove = gBattleMons[battler].moves[moveIndex];
+        aiMove = gBattleMons[switchContext->battler].moves[moveIndex];
         aiMoveEffect = GetMoveEffect(aiMove);
         if (aiMoveEffect == EFFECT_REVIVAL_BLESSING || IsSwitchOutEffect(aiMoveEffect))
         {
             // Palafin should not stay in for a hit escape move if it can't use it effectively (slower or no target)
-            if (gBattleMons[battler].species == SPECIES_PALAFIN_ZERO
-             && gAiLogicData->abilities[battler] == ABILITY_ZERO_TO_HERO
+            if (gBattleMons[switchContext->battler].species == SPECIES_PALAFIN_ZERO
+             && gAiLogicData->abilities[switchContext->battler] == ABILITY_ZERO_TO_HERO
              && aiMoveEffect == EFFECT_HIT_ESCAPE
-             && !GetHitEscapeTransformState(battler, aiMove))
+             && !GetHitEscapeTransformState(switchContext->battler, aiMove))
                 continue;
 
-            if (gAiBattleData->finalScore[battler][opposingBattler][moveIndex] > AI_GOOD_SCORE_THRESHOLD
-                || (IsDoubleBattle() && gAiBattleData->finalScore[battler][BATTLE_PARTNER(opposingBattler)][moveIndex] > AI_GOOD_SCORE_THRESHOLD))
+            if (gAiBattleData->finalScore[switchContext->battler][switchContext->opposingBattler][moveIndex] > AI_GOOD_SCORE_THRESHOLD
+                || (IsDoubleBattle() && gAiBattleData->finalScore[switchContext->battler][BATTLE_PARTNER(switchContext->opposingBattler)][moveIndex] > AI_GOOD_SCORE_THRESHOLD))
                 return TRUE;
         }
     }
@@ -1509,10 +1508,13 @@ bool32 ShouldStayInToUseMove(enum BattlerId battler)
 
 void ModifySwitchAfterMoveScoring(enum BattlerId battler)
 {
-    enum BattlerId battlerIn1, battlerIn2;
-    s32 lastId = GetAILastPartyIndex(battler); // + 1
-    struct Pokemon *party;
-    s32 availableToSwitch;
+    struct SwitchAiContext switchContext = {0};
+    switchContext.battler = battler;
+    switchContext.opposingBattler = GetOppositeBattler(switchContext.battler);
+    switchContext.party = GetBattlerParty(switchContext.battler);
+    switchContext.lastId = GetAILastPartyIndex(switchContext.battler);
+    GetActiveBattlerIds(switchContext.battler, &switchContext.battlerIn1, &switchContext.battlerIn2);
+    GetShouldSwitchPartyMonEligibility(&switchContext);
 
     if (!CanBattlerConsiderSwitch(battler))
         return;
@@ -1521,30 +1523,12 @@ void ModifySwitchAfterMoveScoring(enum BattlerId battler)
     if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SEQUENCE_SWITCHING)
         return;
 
-    availableToSwitch = 0;
-
-    GetActiveBattlerIds(battler, &battlerIn1, &battlerIn2);
-    party = GetBattlerParty(battler);
-
-    for (u32 monIndex = 0; monIndex < lastId; monIndex++)
-    {
-        if (!IsValidForBattle(&party[monIndex]))
-            continue;
-        if (IsPartyMonOnFieldOrChosenToSwitch(battler, monIndex, battlerIn1, battlerIn2))
-            continue;
-        if (IsPartyMonPlannedToBeSwitchedInByPartner(monIndex, battler))
-            continue;
-        if (IsAceMon(battler, monIndex))
-            continue;
-        availableToSwitch++;
-    }
-
-    if (availableToSwitch == 0)
+    if (switchContext.eligiblePartyMons == 0)
         return;
 
-    if (ShouldSwitchIfAllScoresBad(battler))
+    if (ShouldSwitchIfAllScoresBad(&switchContext))
         gAiLogicData->shouldSwitch |= (1u << battler);
-    else if (ShouldStayInToUseMove(battler))
+    else if (ShouldStayInToUseMove(&switchContext))
         gAiLogicData->shouldSwitch &= ~(1u << battler);
 }
 
