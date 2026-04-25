@@ -208,7 +208,7 @@ static void InvokeTestFunction(const struct BattleTest *test)
     case BATTLE_TEST_WILD:
     case BATTLE_TEST_AI_SINGLES:
     case BATTLE_TEST_FRONTIER_SINGLES:
-    case BATTLE_TEST_FRONTIER_AI_SINGLES:
+    case BATTLE_TEST_AI_FRONTIER_SINGLES:
         InvokeSingleTestFunctionWithStack(STATE->results, STATE->runParameter, &gBattleMons[B_POSITION_PLAYER_LEFT], &gBattleMons[B_POSITION_OPPONENT_LEFT], test->function.singles, &DATA.stack[BATTLE_TEST_STACK_SIZE]);
         break;
     case BATTLE_TEST_DOUBLES:
@@ -232,7 +232,7 @@ static void InvokeTestFunction(const struct BattleTest *test)
         InvokeOneVsTwoTestFunctionWithStack(STATE->results, STATE->runParameter, &gBattleMons[B_POSITION_PLAYER_LEFT], &gBattleMons[B_POSITION_OPPONENT_LEFT], &gBattleMons[B_POSITION_PLAYER_RIGHT], &gBattleMons[B_POSITION_OPPONENT_RIGHT], test->function.one_vs_two, &DATA.stack[BATTLE_TEST_STACK_SIZE]);
         break;
     case BATTLE_TEST_FRONTIER_DOUBLES:
-    case BATTLE_TEST_FRONTIER_AI_DOUBLES:
+    case BATTLE_TEST_AI_FRONTIER_DOUBLES:
         switch (test->frontierMode)
         {
         case FRONTIER_MODE_MULTIS:
@@ -262,8 +262,8 @@ bool32 IsAITest(void)
     case BATTLE_TEST_AI_MULTI:
     case BATTLE_TEST_AI_TWO_VS_ONE:
     case BATTLE_TEST_AI_ONE_VS_TWO:
-    case BATTLE_TEST_FRONTIER_AI_SINGLES:
-    case BATTLE_TEST_FRONTIER_AI_DOUBLES:
+    case BATTLE_TEST_AI_FRONTIER_SINGLES:
+    case BATTLE_TEST_AI_FRONTIER_DOUBLES:
         return TRUE;
     }
     return FALSE;
@@ -271,7 +271,7 @@ bool32 IsAITest(void)
 
 static bool32 IsAIDoublesTest(void)
 {
-    return (IsAITest() && (GetBattleTest()->type != BATTLE_TEST_AI_SINGLES) && (GetBattleTest()->type != BATTLE_TEST_FRONTIER_AI_SINGLES));
+    return (IsAITest() && (GetBattleTest()->type != BATTLE_TEST_AI_SINGLES) && (GetBattleTest()->type != BATTLE_TEST_AI_FRONTIER_SINGLES));
 }
 
 static bool32 IsFrontierTest(void)
@@ -279,9 +279,9 @@ static bool32 IsFrontierTest(void)
     switch (GetBattleTest()->type)
     {
     case BATTLE_TEST_FRONTIER_SINGLES:
-    case BATTLE_TEST_FRONTIER_AI_SINGLES:
+    case BATTLE_TEST_AI_FRONTIER_SINGLES:
     case BATTLE_TEST_FRONTIER_DOUBLES:
-    case BATTLE_TEST_FRONTIER_AI_DOUBLES:
+    case BATTLE_TEST_AI_FRONTIER_DOUBLES:
         return TRUE;
     }
     return FALSE;
@@ -358,7 +358,7 @@ static void BattleTest_SetUp(void *data)
     case BATTLE_TEST_WILD:
     case BATTLE_TEST_AI_SINGLES:
     case BATTLE_TEST_FRONTIER_SINGLES:
-    case BATTLE_TEST_FRONTIER_AI_SINGLES:
+    case BATTLE_TEST_AI_FRONTIER_SINGLES:
         STATE->battlersCount = 2;
         break;
     case BATTLE_TEST_DOUBLES:
@@ -370,7 +370,7 @@ static void BattleTest_SetUp(void *data)
     case BATTLE_TEST_ONE_VS_TWO:
     case BATTLE_TEST_AI_ONE_VS_TWO:
     case BATTLE_TEST_FRONTIER_DOUBLES:
-    case BATTLE_TEST_FRONTIER_AI_DOUBLES:
+    case BATTLE_TEST_AI_FRONTIER_DOUBLES:
         STATE->battlersCount = 4;
         break;
     }
@@ -496,8 +496,9 @@ static void BattleTest_Run(void *data)
         DATA.currentMonIndexes[3] = 0; // Opponent B first mon
         DATA.hasAI = TRUE;
         break;
-    case BATTLE_TEST_FRONTIER_AI_SINGLES:
+    case BATTLE_TEST_AI_FRONTIER_SINGLES:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER;
+        DATA.recordedBattle.partnerId = TRAINER_NONE;
         DATA.recordedBattle.opponentA = TRAINER_LEAF_TEST;
         DATA.recordedBattle.opponentB = TRAINER_NONE;
         for (i = 0; i < STATE->battlersCount; i++)
@@ -505,7 +506,7 @@ static void BattleTest_Run(void *data)
         DATA.recordedBattle.battleFlags |= SetFrontierBattleFlags(test->frontierFacility);
         DATA.hasAI = TRUE;
         break;
-    case BATTLE_TEST_FRONTIER_AI_DOUBLES:
+    case BATTLE_TEST_AI_FRONTIER_DOUBLES:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE;
         DATA.recordedBattle.opponentA = TRAINER_LEAF_TEST;
         DATA.currentMonIndexes[0] = 0; // Player first mon
@@ -520,9 +521,17 @@ static void BattleTest_Run(void *data)
         else
         {
             DATA.recordedBattle.partnerId = TRAINER_NONE;
-            DATA.recordedBattle.opponentB = TRAINER_NONE;
+            if (test->frontierFacility == FACILITY_BATTLE_PIKE_DOUBLE)
+            {
+                DATA.recordedBattle.opponentB = TRAINER_RED_TEST;
+                DATA.currentMonIndexes[3] = 0;
+            }
+            else
+            {
+                DATA.recordedBattle.opponentB = TRAINER_NONE;
+                DATA.currentMonIndexes[3] = 1;
+            }
             DATA.currentMonIndexes[2] = 1;
-            DATA.currentMonIndexes[3] = 1;
         }
         DATA.recordedBattle.battleFlags |= SetFrontierBattleFlags(test->frontierFacility);
         DATA.hasAI = TRUE;
@@ -571,6 +580,7 @@ static void BattleTest_Run(void *data)
         break;
     case BATTLE_TEST_FRONTIER_SINGLES:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_RECORDED_IS_MASTER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TRAINER;
+        DATA.recordedBattle.partnerId = TRAINER_NONE;
         DATA.recordedBattle.opponentA = TRAINER_LINK_OPPONENT;
         DATA.recordedBattle.opponentB = TRAINER_NONE;
         for (i = 0; i < STATE->battlersCount; i++)
@@ -592,9 +602,17 @@ static void BattleTest_Run(void *data)
         else
         {
             DATA.recordedBattle.partnerId = TRAINER_NONE;
-            DATA.recordedBattle.opponentB = TRAINER_NONE;
+            if (test->frontierFacility == FACILITY_BATTLE_PIKE_DOUBLE)
+            {
+                DATA.recordedBattle.opponentB = TRAINER_LINK_OPPONENT;
+                DATA.currentMonIndexes[3] = 0;
+            }
+            else
+            {
+                DATA.recordedBattle.opponentB = TRAINER_NONE;
+                DATA.currentMonIndexes[3] = 1;
+            }
             DATA.currentMonIndexes[2] = 1;
-            DATA.currentMonIndexes[3] = 1;
         }
         DATA.recordedBattle.battleFlags |= SetFrontierBattleFlags(test->frontierFacility);
         break;
@@ -2154,6 +2172,65 @@ void ClearVarAfterTest(void)
     }
 }
 
+static bool32 TrainerInvalidForTest(enum BattleTrainer trainer)
+{
+    const struct BattleTest *test = GetBattleTest();
+
+    switch (trainer)
+    {
+    case B_TRAINER_2:
+        switch (test->type)
+        {
+        case BATTLE_TEST_WILD:
+        case BATTLE_TEST_SINGLES:
+        case BATTLE_TEST_AI_SINGLES:
+        case BATTLE_TEST_DOUBLES:
+        case BATTLE_TEST_AI_DOUBLES:
+        case BATTLE_TEST_ONE_VS_TWO:
+        case BATTLE_TEST_AI_ONE_VS_TWO:
+        case BATTLE_TEST_FRONTIER_SINGLES:
+        case BATTLE_TEST_AI_FRONTIER_SINGLES:
+            return TRUE;
+            break;
+        case BATTLE_TEST_FRONTIER_DOUBLES:
+        case BATTLE_TEST_AI_FRONTIER_DOUBLES:
+            if (test->frontierMode == FRONTIER_MODE_DOUBLES)
+                return TRUE;
+            break;
+        default:
+            break;
+        }
+        break;
+    case B_TRAINER_3:
+        switch (test->type)
+        {
+        case BATTLE_TEST_WILD:
+        case BATTLE_TEST_SINGLES:
+        case BATTLE_TEST_AI_SINGLES:
+        case BATTLE_TEST_DOUBLES:
+        case BATTLE_TEST_AI_DOUBLES:
+        case BATTLE_TEST_TWO_VS_ONE:
+        case BATTLE_TEST_AI_TWO_VS_ONE:
+        case BATTLE_TEST_FRONTIER_SINGLES:
+        case BATTLE_TEST_AI_FRONTIER_SINGLES:
+            return TRUE;
+            break;
+        case BATTLE_TEST_FRONTIER_DOUBLES:
+        case BATTLE_TEST_AI_FRONTIER_DOUBLES:
+            if (test->frontierMode == FRONTIER_MODE_DOUBLES
+             && test->frontierFacility != FACILITY_BATTLE_PIKE_DOUBLE)
+                return TRUE;
+            break;
+        default:
+            break;
+        }
+        break;
+    default:
+        break;
+    }
+    return FALSE;
+}
+
 static struct TrainerMon sTestFrontierMon;
 
 void OpenPokemon(u32 sourceLine, enum BattleTrainer trainer, enum Species species)
@@ -2161,12 +2238,12 @@ void OpenPokemon(u32 sourceLine, enum BattleTrainer trainer, enum Species specie
     s32 data;
     u8 *partySize;
     struct Pokemon *party;
-    memset(&sTestFrontierMon, 0, sizeof(sTestFrontierMon));
+    INVALID_IF(TrainerInvalidForTest(trainer), "%s invalid for test type", trainer == B_TRAINER_2 ? "PARTNER" : "OPPONENT_B");
     INVALID_IF(species >= SPECIES_EGG, "Invalid species: %d", species);
     ASSUMPTION_FAIL_IF(!IsSpeciesEnabled(species), "Species disabled: %d", species);
     INVALID_IF(IsFrontierTest() && trainer == B_TRAINER_0
      && ((DATA.partySizes[B_TRAINER_1] + DATA.partySizes[B_TRAINER_2] + DATA.partySizes[B_TRAINER_3]) != 0),
-     "%d: Frontier tests require all PLAYER Pokemon to be added before PARTNER/OPPONENTs", sourceLine);
+     "Frontier tests require all PLAYER Pokemon to be added before PARTNER/OPPONENTs");
 
     partySize = &DATA.partySizes[trainer];
     party = DATA.recordedBattle.parties[trainer];
@@ -2181,6 +2258,7 @@ void OpenPokemon(u32 sourceLine, enum BattleTrainer trainer, enum Species specie
 
     if (IsFrontierMon())
     {
+        memset(&sTestFrontierMon, 0, sizeof(sTestFrontierMon));
         sTestFrontierMon.species = species;
         sTestFrontierMon.iv = 0;
         if (GetBattleTest()->frontierLevel == FRONTIER_LVL_50)
@@ -2341,7 +2419,7 @@ void Level_(u32 sourceLine, u32 level)
     u32 species = GetMonData(DATA.currentMon, MON_DATA_SPECIES);
     INVALID_IF(!DATA.currentMon, "Level outside of PLAYER/PARTNER/OPPONENT");
     INVALID_IF(level == 0 || level > MAX_LEVEL, "Illegal level: %d", level);
-    INVALID_IF(IsFrontierMon(), "%d: Level cannot be used in Frontier tests for PARTNER/OPPONENTs", sourceLine);
+    INVALID_IF(IsFrontierMon(), "Level cannot be used in Frontier tests for PARTNER/OPPONENTs");
     SetMonData(DATA.currentMon, MON_DATA_LEVEL, &level);
     SetMonData(DATA.currentMon, MON_DATA_EXP, &gExperienceTables[gSpeciesInfo[species].growthRate][level]);
     gMain.inBattle = TRUE;
@@ -2353,7 +2431,7 @@ void MaxHP_(u32 sourceLine, u32 maxHP)
 {
     INVALID_IF(!DATA.currentMon, "MaxHP outside of PLAYER/PARTNER/OPPONENT");
     INVALID_IF(maxHP == 0, "Illegal max HP: %d", maxHP);
-    INVALID_IF(IsFrontierMon(), "%d: MaxHP cannot be used in Frontier tests for PARTNER/OPPONENTs", sourceLine);
+    INVALID_IF(IsFrontierMon(), "MaxHP cannot be used in Frontier tests for PARTNER/OPPONENTs");
     SetMonData(DATA.currentMon, MON_DATA_MAX_HP, &maxHP);
     bool32 hyperTrainingFlag = TRUE;
     SetMonData(DATA.currentMon, MON_DATA_HYPER_TRAINED_HP, &hyperTrainingFlag);
@@ -2378,7 +2456,7 @@ void Attack_(u32 sourceLine, u32 attack)
 {
     INVALID_IF(!DATA.currentMon, "Attack outside of PLAYER/PARTNER/OPPONENT");
     INVALID_IF(attack == 0, "Illegal attack: %d", attack);
-    INVALID_IF(IsFrontierMon(), "%d: Attack cannot be used in Frontier tests for PARTNER/OPPONENTs", sourceLine);
+    INVALID_IF(IsFrontierMon(), "Attack cannot be used in Frontier tests for PARTNER/OPPONENTs");
     SetMonData(DATA.currentMon, MON_DATA_ATK, &attack);
     bool32 hyperTrainingFlag = TRUE;
     SetMonData(DATA.currentMon, MON_DATA_HYPER_TRAINED_ATK, &hyperTrainingFlag);
@@ -2388,7 +2466,7 @@ void Defense_(u32 sourceLine, u32 defense)
 {
     INVALID_IF(!DATA.currentMon, "Defense outside of PLAYER/PARTNER/OPPONENT");
     INVALID_IF(defense == 0, "Illegal defense: %d", defense);
-    INVALID_IF(IsFrontierMon(), "%d: Defense cannot be used in Frontier tests for PARTNER/OPPONENTs", sourceLine);
+    INVALID_IF(IsFrontierMon(), "Defense cannot be used in Frontier tests for PARTNER/OPPONENTs");
     SetMonData(DATA.currentMon, MON_DATA_DEF, &defense);
     bool32 hyperTrainingFlag = TRUE;
     SetMonData(DATA.currentMon, MON_DATA_HYPER_TRAINED_DEF, &hyperTrainingFlag);
@@ -2398,7 +2476,7 @@ void SpAttack_(u32 sourceLine, u32 spAttack)
 {
     INVALID_IF(!DATA.currentMon, "SpAttack outside of PLAYER/PARTNER/OPPONENT");
     INVALID_IF(spAttack == 0, "Illegal special attack: %d", spAttack);
-    INVALID_IF(IsFrontierMon(), "%d: SpAttack cannot be used in Frontier tests for PARTNER/OPPONENTs", sourceLine);
+    INVALID_IF(IsFrontierMon(), "SpAttack cannot be used in Frontier tests for PARTNER/OPPONENTs");
     SetMonData(DATA.currentMon, MON_DATA_SPATK, &spAttack);
     bool32 hyperTrainingFlag = TRUE;
     SetMonData(DATA.currentMon, MON_DATA_HYPER_TRAINED_SPATK, &hyperTrainingFlag);
@@ -2408,7 +2486,7 @@ void SpDefense_(u32 sourceLine, u32 spDefense)
 {
     INVALID_IF(!DATA.currentMon, "SpDefense outside of PLAYER/PARTNER/OPPONENT");
     INVALID_IF(spDefense == 0, "Illegal special defense: %d", spDefense);
-    INVALID_IF(IsFrontierMon(), "%d: SpDefense cannot be used in Frontier tests for PARTNER/OPPONENTs", sourceLine);
+    INVALID_IF(IsFrontierMon(), "SpDefense cannot be used in Frontier tests for PARTNER/OPPONENTs");
     SetMonData(DATA.currentMon, MON_DATA_SPDEF, &spDefense);
     bool32 hyperTrainingFlag = TRUE;
     SetMonData(DATA.currentMon, MON_DATA_HYPER_TRAINED_SPDEF, &hyperTrainingFlag);
@@ -2436,7 +2514,7 @@ void HPIV_(u32 sourceLine, u32 hpIV)
 {
     INVALID_IF(!DATA.currentMon, "HP IV outside of PLAYER/PARTNER/OPPONENT");
     INVALID_IF(hpIV > MAX_PER_STAT_IVS, "Illegal HP IV: %d", hpIV);
-    INVALID_IF(IsFrontierMon(), "%d: Individual IVs cannot be used in Frontier tests for PARTNER/OPPONENTs. Use 'IVs' instead.", sourceLine);
+    INVALID_IF(IsFrontierMon(), "Individual IVs cannot be used in Frontier tests for PARTNER/OPPONENTs. Use 'IVs' instead.");
     SetMonData(DATA.currentMon, MON_DATA_HP_IV, &hpIV);
 }
 
@@ -2444,7 +2522,7 @@ void AttackIV_(u32 sourceLine, u32 attackIV)
 {
     INVALID_IF(!DATA.currentMon, "Attack IV outside of PLAYER/PARTNER/OPPONENT");
     INVALID_IF(attackIV > MAX_PER_STAT_IVS, "Illegal attack IV: %d", attackIV);
-    INVALID_IF(IsFrontierMon(), "%d: Individual IVs cannot be used in Frontier tests for PARTNER/OPPONENTs. Use 'IVs' instead.", sourceLine);
+    INVALID_IF(IsFrontierMon(), "Individual IVs cannot be used in Frontier tests for PARTNER/OPPONENTs. Use 'IVs' instead.");
     SetMonData(DATA.currentMon, MON_DATA_ATK_IV, &attackIV);
 }
 
@@ -2452,6 +2530,7 @@ void DefenseIV_(u32 sourceLine, u32 defenseIV)
 {
     INVALID_IF(!DATA.currentMon, "Defense IV outside of PLAYER/PARTNER/OPPONENT");
     INVALID_IF(defenseIV > MAX_PER_STAT_IVS, "Illegal defense IV: %d", defenseIV);
+    INVALID_IF(IsFrontierMon(), "Individual IVs cannot be used in Frontier tests for PARTNER/OPPONENTs. Use 'IVs' instead.");
     SetMonData(DATA.currentMon, MON_DATA_DEF_IV, &defenseIV);
 }
 
@@ -2459,7 +2538,7 @@ void SpAttackIV_(u32 sourceLine, u32 spAttackIV)
 {
     INVALID_IF(!DATA.currentMon, "SpAttack IV outside of PLAYER/PARTNER/OPPONENT");
     INVALID_IF(spAttackIV > MAX_PER_STAT_IVS, "Illegal special attack IV: %d", spAttackIV);
-    INVALID_IF(IsFrontierMon(), "%d: Individual IVs cannot be used in Frontier tests for PARTNER/OPPONENTs. Use 'IVs' instead.", sourceLine);
+    INVALID_IF(IsFrontierMon(), "Individual IVs cannot be used in Frontier tests for PARTNER/OPPONENTs. Use 'IVs' instead.");
     SetMonData(DATA.currentMon, MON_DATA_SPATK_IV, &spAttackIV);
 }
 
@@ -2467,7 +2546,7 @@ void SpDefenseIV_(u32 sourceLine, u32 spDefenseIV)
 {
     INVALID_IF(!DATA.currentMon, "SpDefense IV outside of PLAYER/PARTNER/OPPONENT");
     INVALID_IF(spDefenseIV > MAX_PER_STAT_IVS, "Illegal special defense IV: %d", spDefenseIV);
-    INVALID_IF(IsFrontierMon(), "%d: Individual IVs cannot be used in Frontier tests for PARTNER/OPPONENTs. Use 'IVs' instead.", sourceLine);
+    INVALID_IF(IsFrontierMon(), "Individual IVs cannot be used in Frontier tests for PARTNER/OPPONENTs. Use 'IVs' instead.");
     SetMonData(DATA.currentMon, MON_DATA_SPDEF_IV, &spDefenseIV);
 }
 
@@ -2475,7 +2554,7 @@ void SpeedIV_(u32 sourceLine, u32 speedIV)
 {
     INVALID_IF(!DATA.currentMon, "Speed IV outside of PLAYER/PARTNER/OPPONENT");
     INVALID_IF(speedIV > MAX_PER_STAT_IVS, "Illegal speed IV: %d", speedIV);
-    INVALID_IF(IsFrontierMon(), "%d: Individual IVs cannot be used in Frontier tests for PARTNER/OPPONENTs. Use 'IVs' instead.", sourceLine);
+    INVALID_IF(IsFrontierMon(), "Individual IVs cannot be used in Frontier tests for PARTNER/OPPONENTs. Use 'IVs' instead.");
     SetMonData(DATA.currentMon, MON_DATA_SPEED_IV, &speedIV);
 }
 
@@ -2545,7 +2624,7 @@ void MovesWithPP_(u32 sourceLine, struct moveWithPP moveWithPP[MAX_MON_MOVES])
 {
     s32 i;
     INVALID_IF(!DATA.currentMon, "Moves outside of PLAYER/PARTNER/OPPONENT");
-    INVALID_IF(IsFrontierMon(), "%d: MovesWithPP cannot be used in Frontier tests for PARTNER/OPPONENTs", sourceLine);
+    INVALID_IF(IsFrontierMon(), "MovesWithPP cannot be used in Frontier tests for PARTNER/OPPONENTs");
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         if (moveWithPP[i].moveId == MOVE_NONE)
@@ -2570,21 +2649,21 @@ void Status1_(u32 sourceLine, u32 status1)
 {
     INVALID_IF(!DATA.currentMon, "Status1 outside of PLAYER/PARTNER/OPPONENT");
     INVALID_IF(status1 & STATUS1_TOXIC_COUNTER, "Illegal status1: has TOXIC_TURN");
-    INVALID_IF(IsFrontierMon(), "%d: Status1 cannot be used in Frontier tests for PARTNER/OPPONENTs", sourceLine);
+    INVALID_IF(IsFrontierMon(), "Status1 cannot be used in Frontier tests for PARTNER/OPPONENTs");
     SetMonData(DATA.currentMon, MON_DATA_STATUS, &status1);
 }
 
 void OTName_(u32 sourceLine, const u8 *otName)
 {
     INVALID_IF(!DATA.currentMon, "OTName outside of PLAYER/PARTNER/OPPONENT");
-    INVALID_IF(IsFrontierMon(), "%d: OTName cannot be used in Frontier tests for PARTNER/OPPONENTs", sourceLine);
+    INVALID_IF(IsFrontierMon(), "OTName cannot be used in Frontier tests for PARTNER/OPPONENTs");
     SetMonData(DATA.currentMon, MON_DATA_OT_NAME, &otName);
 }
 
 void DynamaxLevel_(u32 sourceLine, s16 dynamaxLevel)
 {
     INVALID_IF(!DATA.currentMon, "DynamaxLevel outside of PLAYER/PARTNER/OPPONENT");
-    INVALID_IF(IsFrontierMon(), "%d: DynamaxLevel cannot be used in Frontier tests for PARTNER/OPPONENTs", sourceLine);
+    INVALID_IF(IsFrontierMon(), "DynamaxLevel cannot be used in Frontier tests for PARTNER/OPPONENTs");
     SetMonData(DATA.currentMon, MON_DATA_DYNAMAX_LEVEL, &dynamaxLevel);
     if (dynamaxLevel >= 0)
         SetGimmick(sourceLine, DATA.battlerParty, DATA.currentPartyIndex, GIMMICK_DYNAMAX);
@@ -2593,7 +2672,7 @@ void DynamaxLevel_(u32 sourceLine, s16 dynamaxLevel)
 void GigantamaxFactor_(u32 sourceLine, bool32 gigantamaxFactor)
 {
     INVALID_IF(!DATA.currentMon, "GigantamaxFactor outside of PLAYER/PARTNER/OPPONENT");
-    INVALID_IF(IsFrontierMon(), "%d: GigantamaxFactor cannot be used in Frontier tests for PARTNER/OPPONENTs", sourceLine);
+    INVALID_IF(IsFrontierMon(), "GigantamaxFactor cannot be used in Frontier tests for PARTNER/OPPONENTs");
     SetMonData(DATA.currentMon, MON_DATA_GIGANTAMAX_FACTOR, &gigantamaxFactor);
     SetGimmick(sourceLine, DATA.battlerParty, DATA.currentPartyIndex, GIMMICK_DYNAMAX);
 }
@@ -2601,7 +2680,7 @@ void GigantamaxFactor_(u32 sourceLine, bool32 gigantamaxFactor)
 void TeraType_(u32 sourceLine, enum Type teraType)
 {
     INVALID_IF(!DATA.currentMon, "TeraType outside of PLAYER/PARTNER/OPPONENT");
-    INVALID_IF(IsFrontierMon(), "%d: TeraType cannot be used in Frontier tests for PARTNER/OPPONENTs", sourceLine);
+    INVALID_IF(IsFrontierMon(), "TeraType cannot be used in Frontier tests for PARTNER/OPPONENTs");
     SetMonData(DATA.currentMon, MON_DATA_TERA_TYPE, &teraType);
     SetGimmick(sourceLine, DATA.battlerParty, DATA.currentPartyIndex, GIMMICK_TERA);
 }
@@ -2609,7 +2688,7 @@ void TeraType_(u32 sourceLine, enum Type teraType)
 void Shadow_(u32 sourceLine, bool32 isShadow)
 {
     INVALID_IF(!DATA.currentMon, "Shadow outside of PLAYER/PARTNER/OPPONENT");
-    INVALID_IF(IsFrontierMon(), "%d: Shadow cannot be used in Frontier tests for PARTNER/OPPONENTs", sourceLine);
+    INVALID_IF(IsFrontierMon(), "Shadow cannot be used in Frontier tests for PARTNER/OPPONENTs");
     SetMonData(DATA.currentMon, MON_DATA_IS_SHADOW, &isShadow);
 }
 
@@ -2652,7 +2731,7 @@ static const char *BattlerIdentifier(enum BattlerId battlerId)
     case BATTLE_TEST_FRONTIER_SINGLES:
     case BATTLE_TEST_WILD:
     case BATTLE_TEST_AI_SINGLES:
-    case BATTLE_TEST_FRONTIER_AI_SINGLES:
+    case BATTLE_TEST_AI_FRONTIER_SINGLES:
         return sBattlerIdentifiersSingles[battlerId];
     case BATTLE_TEST_DOUBLES:
     case BATTLE_TEST_AI_DOUBLES:
@@ -2663,7 +2742,7 @@ static const char *BattlerIdentifier(enum BattlerId battlerId)
     case BATTLE_TEST_ONE_VS_TWO:
     case BATTLE_TEST_AI_ONE_VS_TWO:
     case BATTLE_TEST_FRONTIER_DOUBLES:
-    case BATTLE_TEST_FRONTIER_AI_DOUBLES:
+    case BATTLE_TEST_AI_FRONTIER_DOUBLES:
         return sBattlerIdentifiersDoubles[battlerId];
     }
     return "<unknown>";

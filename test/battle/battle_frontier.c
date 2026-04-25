@@ -77,7 +77,6 @@ FRONTIER_BATTLE_TEST(TOWER, MULTI, OPEN, "Frontier Battle Tower: FRONTIER_LVL_OP
     }
 }
 
-// TODO partner mon coming in at L40; opponentB not sending out a mon
 FRONTIER_BATTLE_TEST(TOWER, MULTI, 50, "Frontier Battle Tower: FRONTIER_LVL_50 sets opponent team level to 50 regardless of player level (Multi)")
 {
     GIVEN {
@@ -187,6 +186,7 @@ FRONTIER_BATTLE_TEST(ARENA, SINGLE, 50, "Frontier Battle Arena: FRONTIER_LVL_50 
 }
 
 // TODO pretty sure having levels other than 50 and 100 in Battle Factory is not possible
+// TODO add IsFrontierMon handling for creation of player mons in Factory
 FRONTIER_BATTLE_TEST(FACTORY, SINGLE, OPEN, "Frontier Battle Factory: FRONTIER_LVL_OPEN sets opponent team level to match highest player level (Singles)")
 {
     GIVEN {
@@ -252,13 +252,13 @@ FRONTIER_BATTLE_TEST(PIKE_DOUBLE, DOUBLE, OPEN, "Frontier Battle Pike: FRONTIER_
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Level(55); }
         PLAYER(SPECIES_WYNAUT) { Level(60); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT_A(SPECIES_WOBBUFFET);
+        OPPONENT_B(SPECIES_WYNAUT);
     } WHEN {
         TURN {}
     } THEN {
         EXPECT_EQ(GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_LEVEL), 60);
-        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_1][1], MON_DATA_LEVEL), 60);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_3][0], MON_DATA_LEVEL), 60);
     }
 }
 
@@ -267,13 +267,13 @@ FRONTIER_BATTLE_TEST(PIKE_DOUBLE, DOUBLE, 50, "Frontier Battle Pike: FRONTIER_LV
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Level(35); }
         PLAYER(SPECIES_WYNAUT) { Level(40); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT_A(SPECIES_WOBBUFFET);
+        OPPONENT_B(SPECIES_WYNAUT);
     } WHEN {
         TURN {}
     } THEN {
         EXPECT_EQ(GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_LEVEL), 50);
-        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_1][1], MON_DATA_LEVEL), 50);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_3][0], MON_DATA_LEVEL), 50);
     }
 }
 

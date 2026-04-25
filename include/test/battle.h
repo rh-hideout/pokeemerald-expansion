@@ -578,8 +578,8 @@ enum {
     BATTLE_TEST_AI_MULTI,
     BATTLE_TEST_AI_TWO_VS_ONE,
     BATTLE_TEST_AI_ONE_VS_TWO,
-    BATTLE_TEST_FRONTIER_AI_SINGLES,
-    BATTLE_TEST_FRONTIER_AI_DOUBLES
+    BATTLE_TEST_AI_FRONTIER_SINGLES,
+    BATTLE_TEST_AI_FRONTIER_DOUBLES
 };
 
 typedef void (*SingleBattleTestFunction)(void *, const u32, struct BattlePokemon *, struct BattlePokemon *);
@@ -1025,10 +1025,10 @@ bool32 IsAITest(void);
 #define AI_FRONTIER_BATTLE_TEST(_facility, _battleType, _levelMode, _name, ...) CAT(CAT(AI_FRONTIER_, _battleType), _BATTLE_TEST) (_facility, _levelMode, CAT(_battleType, S), _name, __VA_ARGS__)
 
 #define FRONTIER_SINGLE_BATTLE_TEST(_facility, _levelMode, _facilityMode, _name, ...) BATTLE_TEST_ARGS_FRONTIER_SINGLE(_facility, _levelMode, _name, BATTLE_TEST_FRONTIER_SINGLES, __VA_ARGS__)
-#define AI_FRONTIER_SINGLE_BATTLE_TEST(_facility, _levelMode, _facilityMode, _name, ...) BATTLE_TEST_ARGS_FRONTIER_SINGLE(_facility, _levelMode, _name, BATTLE_TEST_FRONTIER_AI_SINGLES, __VA_ARGS__)
+#define AI_FRONTIER_SINGLE_BATTLE_TEST(_facility, _levelMode, _facilityMode, _name, ...) BATTLE_TEST_ARGS_FRONTIER_SINGLE(_facility, _levelMode, _name, BATTLE_TEST_AI_FRONTIER_SINGLES, __VA_ARGS__)
 
 #define FRONTIER_DOUBLE_BATTLE_TEST(_facility, _levelMode, _facilityMode, _name, ...) BATTLE_TEST_ARGS_FRONTIER_DOUBLE(_facility, _levelMode, _facilityMode, _name, BATTLE_TEST_FRONTIER_DOUBLES, __VA_ARGS__)
-#define AI_FRONTIER_DOUBLE_BATTLE_TEST(_facility, _levelMode, _facilityMode, _name, ...) BATTLE_TEST_ARGS_FRONTIER_DOUBLE(_facility, _levelMode, _facilityMode, _name, BATTLE_TEST_FRONTIER_AI_DOUBLES, __VA_ARGS__)
+#define AI_FRONTIER_DOUBLE_BATTLE_TEST(_facility, _levelMode, _facilityMode, _name, ...) BATTLE_TEST_ARGS_FRONTIER_DOUBLE(_facility, _levelMode, _facilityMode, _name, BATTLE_TEST_AI_FRONTIER_DOUBLES, __VA_ARGS__)
 
 #define FRONTIER_MULTI_BATTLE_TEST FRONTIER_DOUBLE_BATTLE_TEST
 #define AI_FRONTIER_MULTI_BATTLE_TEST AI_FRONTIER_DOUBLE_BATTLE_TEST
