@@ -1,5 +1,5 @@
 #include "global.h"
-#include "ow_synchronize.h"
+#include "ow_abilities.h"
 #include "pokemon.h"
 #include "random.h"
 #include "constants/pokemon.h"
