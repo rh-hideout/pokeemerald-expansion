@@ -5,9 +5,11 @@
 #include "battle_message.h"
 #include "battle_setup.h"
 #include "item.h"
-#include "malloc.h"
-#include "party_menu.h"
 #include "main_menu.h"
+#include "malloc.h"
+#include "map_name_popup.h"
+#include "overworld.h"
+#include "party_menu.h"
 #include "string_util.h"
 #include "text.h"
 #include "constants/abilities.h"
@@ -15,6 +17,7 @@
 #include "constants/battle_string_ids.h"
 #include "constants/items.h"
 #include "constants/moves.h"
+#include "../src/data/map_group_count.h"
 #include "test/overworld_script.h"
 
 TEST("Move names fit on Pokemon Summary Screen")
@@ -555,6 +558,27 @@ TEST("Type names fit on Pokedex Search Screen")
         PARAMETRIZE_LABEL("%S", gTypesInfo[i].name) { type = i; }
     }
     EXPECT_LE(GetStringWidth(fontId, gTypesInfo[type].name, 0), widthPx);
+}
+
+
+TEST("Map names fit in popup")
+{
+    ASSUME(OW_POPUP_GENERATION == GEN_3);
+    const u32 fontId = FONT_NARROWER;
+    u32 widthPx = 80;
+    s8 mapGroup = 0;
+    s8 mapNum = 0;
+    u8 mapName[MAP_POPUP_STRING_BUFFER_LENGTH - MAP_POPUP_PREFIX_BUFFER_LENGTH];
+    for (u32 i = 0; MAP_GROUP_COUNT[i] != 0; i++)
+    {
+        for (u32 j = 0; j < MAP_GROUP_COUNT[i]; j++)
+        {
+            const struct MapHeader *mapHeader = Overworld_GetMapHeaderByGroupAndId(i, j);
+            if (mapHeader->showMapName)
+                PARAMETRIZE_LABEL("%S", GetPopUpMapName(mapName, mapHeader)) { mapGroup = i; mapNum = j;}
+        }
+    }
+    EXPECT_LE(GetStringWidth(fontId, GetPopUpMapName(mapName, Overworld_GetMapHeaderByGroupAndId(mapGroup, mapNum)), 0), widthPx);
 }
 
 extern u16 sBattlerAbilities[MAX_BATTLERS_COUNT];

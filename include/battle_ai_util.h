@@ -268,16 +268,16 @@ enum AIScore BattlerBenefitsFromAbilityScore(enum BattlerId battler, enum Abilit
 
 // partner logic
 bool32 IsTargetingPartner(enum BattlerId battlerAtk, enum BattlerId battlerDef);
-// IsTargetingPartner includes a check to make sure the adjacent pokemon is truly a partner.
+// IsTargetingPartner includes a check to make sure the adjacent Pokémon is truly a partner.
 enum Move GetAllyChosenMove(enum BattlerId battlerId);
 bool32 IsBattle1v1(void);
 // IsBattle1v1 is distinct from !IsDoubleBattle. If the player is fighting Maxie and Tabitha, with Steven as their partner, and both Tabitha and Steven have run out of Pokemon, the battle is 1v1, even though mechanically it is a Double Battle for how battlers and flags are set.
 // Most AI checks should be using IsBattle1v1; most engine checks should be using !IsDoubleBattle
 bool32 HasTwoOpponents(enum BattlerId battler);
-// HasTwoOpponents checks if the opposing side has two pokemon. Partner state is irrelevant. e.g., Dragon Darts hits one time with two opponents and twice with one opponent.
+// HasTwoOpponents checks if the opposing side has two Pokémon. Partner state is irrelevant. e.g., Dragon Darts hits one time with two opponents and twice with one opponent.
 bool32 HasPartner(enum BattlerId battler);
 bool32 HasPartnerIgnoreFlags(enum BattlerId battler);
-// HasPartner respects the Attacks Partner AI flag; HasPartnerIgnoreFlags checks only if a live pokemon is adjacent.
+// HasPartner respects the Attacks Partner AI flag; HasPartnerIgnoreFlags checks only if a live Pokémon is adjacent.
 bool32 AreMovesEquivalent(enum BattlerId battlerAtk, enum BattlerId battlerAtkPartner, enum Move move, enum Move partnerMove);
 bool32 DoesPartnerHaveSameMoveEffect(enum BattlerId battlerAtkPartner, enum BattlerId battlerDef, enum Move move, enum Move partnerMove);
 bool32 PartnerMoveEffectIsStatusSameTarget(enum BattlerId battlerAtkPartner, enum BattlerId battlerDef, enum Move partnerMove);

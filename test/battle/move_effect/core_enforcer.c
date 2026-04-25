@@ -1,6 +1,12 @@
 #include "global.h"
 #include "test/battle.h"
 
+ASSUMPTIONS
+{
+    ASSUME(MoveHasAdditionalEffect(MOVE_CORE_ENFORCER, MOVE_EFFECT_CORE_ENFORCER));
+    ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
+}
+
 SINGLE_BATTLE_TEST("Core Enforcer suppresses the ability of targets that have already acted")
 {
     GIVEN {
@@ -50,5 +56,21 @@ SINGLE_BATTLE_TEST("Core Enforcer suppresses the ability of targets that have al
         SUB_HIT(opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, player);
         SUB_HIT(opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Core Enforcer does not suppress the ability of a target that switched in this turn")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_LEVITATE); }
+    } WHEN {
+        TURN { SWITCH(opponent, 1); MOVE(player, MOVE_CORE_ENFORCER); }
+        TURN { MOVE(player, MOVE_EARTHQUAKE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CORE_ENFORCER, player);
+        ABILITY_POPUP(opponent, ABILITY_LEVITATE);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, player);
     }
 }
