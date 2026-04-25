@@ -241,7 +241,7 @@ AI_SINGLE_BATTLE_TEST("Choiced Pokémon will only see choiced moves when conside
 
 AI_SINGLE_BATTLE_TEST("Choiced Pokémon will only see choiced moves when considering switching with FindMonThatAbsorbsMove")
 {
-    // PASSES_RANDOMLY(SHOULD_SWITCH_ABSORBS_MOVE_PERCENTAGE, 100, RNG_AI_SWITCH_ABSORBING);
+    PASSES_RANDOMLY(SHOULD_SWITCH_ABSORBS_MOVE_PERCENTAGE, 100, RNG_AI_SWITCH_ABSORBING);
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_SANDSHREW, 0) == TYPE_GROUND);
         ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
@@ -254,8 +254,8 @@ AI_SINGLE_BATTLE_TEST("Choiced Pokémon will only see choiced moves when conside
         OPPONENT(SPECIES_WOOPER) { Ability(ABILITY_WATER_ABSORB); Moves(MOVE_SCRATCH); }
     } WHEN {
         TURN { SWITCH(player, 1); EXPECT_MOVE(opponent, MOVE_SCRATCH); }
-        TURN { MOVE(player, MOVE_WATER_GUN); EXPECT_MOVE(opponent, MOVE_SCRATCH); }
-        TURN { MOVE(player, MOVE_WATER_GUN); EXPECT_SWITCH(opponent, 1); }
+        TURN { MOVE(player, MOVE_SURF); EXPECT_MOVE(opponent, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_SURF); EXPECT_SWITCH(opponent, 1); }
     }
 }
 
