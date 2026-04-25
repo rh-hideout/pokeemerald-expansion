@@ -31,7 +31,7 @@ static bool32 HasLightSensitiveMove(enum BattlerId battler);
 // BenefitsFrom functions all return FIELD_EFFECT_POSITIVE if the weather or field effect is good to have in place from the perspective of the battler, FIELD_EFFECT_NEUTRAL if it is neither good nor bad, and FIELD_EFFECT_NEGATIVE if it is bad.
 // The purpose of WeatherChecker and FieldStatusChecker is to cleanly homogenize the logic that's the same with all of them, and to more easily apply single battle logic to double battles.
 // ShouldSetWeather and ShouldClearWeather are looking for a positive or negative result respectively, and check the entire side.
-// If one pokemon has a positive result and the other has a negative result, it defaults to the opinion of the battler that may change the weather or field status.
+// If one Pokémon has a positive result and the other has a negative result, it defaults to the opinion of the battler that may change the weather or field status.
 static enum FieldEffectOutcome BenefitsFromSun(enum BattlerId battler);
 static enum FieldEffectOutcome BenefitsFromSandstorm(enum BattlerId battler);
 static enum FieldEffectOutcome BenefitsFromHailOrSnow(enum BattlerId battler, u32 weather);
@@ -131,7 +131,7 @@ bool32 FieldStatusChecker(enum BattlerId battler, u32 fieldStatus, enum FieldEff
 
         if (result != FIELD_EFFECT_NEUTRAL)
         {
-            // Trick room wants both pokemon to agree, not just one
+            // Trick room wants both Pokémon to agree, not just one
             if (fieldStatus & STATUS_FIELD_TRICK_ROOM && battlerIndex == 0 && battlersOnSide == 2)
                 firstResult = result;
         }
@@ -157,9 +157,8 @@ static bool32 DoesAbilityBenefitFromWeather(enum Ability ability, u32 weather)
     case ABILITY_ICE_BODY:
     case ABILITY_ICE_FACE:
     case ABILITY_SNOW_CLOAK:
-        return (weather & B_WEATHER_ICY_ANY);
     case ABILITY_SLUSH_RUSH:
-        return (weather & B_WEATHER_SNOW);
+        return (weather & B_WEATHER_ICY_ANY);
     case ABILITY_DRY_SKIN:
     case ABILITY_HYDRATION:
     case ABILITY_RAIN_DISH:
@@ -243,9 +242,10 @@ static enum FieldEffectOutcome BenefitsFromSun(enum BattlerId battler)
     }
 
     if (DoesAbilityBenefitFromWeather(ability, B_WEATHER_SUN)
-    || HasLightSensitiveMove(battler)
-    || HasDamagingMoveOfType(battler, TYPE_FIRE)
-    || HasMoveWithEffect(battler, EFFECT_HYDRO_STEAM))
+     || HasLightSensitiveMove(battler)
+     || HasDamagingMoveOfType(battler, TYPE_FIRE)
+     || HasMoveWithEffect(battler, EFFECT_WEATHER_BALL)
+     || HasMoveWithEffect(battler, EFFECT_HYDRO_STEAM))
         return FIELD_EFFECT_POSITIVE;
 
     if (HasMoveWithFlag(battler, MoveHas50AccuracyInSun) || HasDamagingMoveOfType(battler, TYPE_WATER) || gAiLogicData->abilities[battler] == ABILITY_DRY_SKIN)
@@ -258,14 +258,15 @@ static enum FieldEffectOutcome BenefitsFromSun(enum BattlerId battler)
 static enum FieldEffectOutcome BenefitsFromSandstorm(enum BattlerId battler)
 {
     if (DoesAbilityBenefitFromWeather(gAiLogicData->abilities[battler], B_WEATHER_SANDSTORM)
-     || IS_BATTLER_OF_TYPE(battler, TYPE_ROCK))
+     || IS_BATTLER_OF_TYPE(battler, TYPE_ROCK)
+     || HasMoveWithEffect(battler, EFFECT_WEATHER_BALL))
         return FIELD_EFFECT_POSITIVE;
 
     if (gAiLogicData->holdEffects[battler] == HOLD_EFFECT_SAFETY_GOGGLES || IS_BATTLER_ANY_TYPE(battler, TYPE_ROCK, TYPE_GROUND, TYPE_STEEL))
     {
-        if (!(IS_BATTLER_ANY_TYPE(LEFT_FOE(battler), TYPE_ROCK, TYPE_GROUND, TYPE_STEEL))
-         || gAiLogicData->holdEffects[LEFT_FOE(battler)] == HOLD_EFFECT_SAFETY_GOGGLES
-         || DoesAbilityBenefitFromWeather(gAiLogicData->abilities[LEFT_FOE(battler)], B_WEATHER_SANDSTORM))
+        if (!IS_BATTLER_ANY_TYPE(LEFT_FOE(battler), TYPE_ROCK, TYPE_GROUND, TYPE_STEEL)
+         && gAiLogicData->holdEffects[LEFT_FOE(battler)] != HOLD_EFFECT_SAFETY_GOGGLES
+         && !DoesAbilityBenefitFromWeather(gAiLogicData->abilities[LEFT_FOE(battler)], B_WEATHER_SANDSTORM))
             return FIELD_EFFECT_POSITIVE;
         else
             return FIELD_EFFECT_NEUTRAL;
@@ -279,6 +280,7 @@ static enum FieldEffectOutcome BenefitsFromHailOrSnow(enum BattlerId battler, u3
 {
     if (DoesAbilityBenefitFromWeather(gAiLogicData->abilities[battler], weather)
      || IS_BATTLER_OF_TYPE(battler, TYPE_ICE)
+     || HasMoveWithEffect(battler, EFFECT_WEATHER_BALL)
      || HasMoveWithFlag(battler, MoveAlwaysHitsInHailSnow)
      || HasBattlerSideMoveWithEffect(battler, EFFECT_AURORA_VEIL))
         return FIELD_EFFECT_POSITIVE;
@@ -303,7 +305,9 @@ static enum FieldEffectOutcome BenefitsFromRain(enum BattlerId battler)
 
     if (DoesAbilityBenefitFromWeather(gAiLogicData->abilities[battler], B_WEATHER_RAIN)
       || HasMoveWithFlag(battler, MoveAlwaysHitsInRain)
-      || HasDamagingMoveOfType(battler, TYPE_WATER))
+      || HasDamagingMoveOfType(battler, TYPE_WATER)
+      || HasMoveWithEffect(battler, EFFECT_WEATHER_BALL)
+      || HasMove(battler, MOVE_ELECTRO_SHOT))
         return FIELD_EFFECT_POSITIVE;
 
     if (HasLightSensitiveMove(battler) || HasDamagingMoveOfType(battler, TYPE_FIRE))
@@ -488,7 +492,7 @@ static enum FieldEffectOutcome BenefitsFromTrickRoom(enum BattlerId battler)
             return FIELD_EFFECT_NEGATIVE;
     }
 
-    // First checking if we have enough priority for one pokemon to disregard Trick Room entirely.
+    // First checking if we have enough priority for one Pokémon to disregard Trick Room entirely.
     if (!(gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN))
     {
         enum Move *aiMoves = GetMovesArray(battler);

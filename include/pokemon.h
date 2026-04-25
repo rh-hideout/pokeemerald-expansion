@@ -705,6 +705,7 @@ extern u16 gFollowerSteps;
 extern bool32 consumeItem;
 extern u32 removeBagItem;
 extern u32 removeBagItemCount;
+extern u8 gTriedEvolving;
 
 extern const u16 gFacilityClassToPicIndex[];
 extern const enum TrainerClassID gFacilityClassToTrainerClass[];

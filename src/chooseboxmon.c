@@ -4,6 +4,7 @@
 #include "event_data.h"
 #include "event_scripts.h"
 #include "field_weather.h"
+#include "malloc.h"
 #include "menu.h"
 #include "move.h"
 #include "move_relearner.h"
@@ -27,43 +28,45 @@ struct PcMonSelection
     void      (*partyMonBackup)(void);
     u32       (*isMonInvalid)(struct BoxPokemon *);
     const u8* postSelectionScript;
-    u32 isStrict:1;
-    u32 padding:31; 
+    u32       isStrict:1;
+    u32       padding:31;
 };
 
 static EWRAM_DATA u8 sSelectionType = 0;
 
 // All these filter functions return 0 when a mon is a valid or a number corresponding to the type of error
-static u32 NoFilter(struct BoxPokemon *boxmon);
-static u32 IsNotEgg(struct BoxPokemon *boxmon);
-static u32 IsMatchingSpecies(struct BoxPokemon *boxmon);
-static u32 CanMonDeleteMove(struct BoxPokemon *boxmon);
-static u32 CanMonLearnSpecialVarMove(struct BoxPokemon *boxmon);
-static u32 CanRelearnMoves(struct BoxPokemon *boxmon);
+static u32 ChooseBoxMon_NoFilter(struct BoxPokemon *boxmon);
+static u32 ChooseBoxMon_IsNotEgg(struct BoxPokemon *boxmon);
+static u32 ChooseBoxMon_IsMatchingSpecies(struct BoxPokemon *boxmon);
+static u32 ChooseBoxMon_CanMonDeleteMove(struct BoxPokemon *boxmon);
+static u32 ChooseBoxMon_CanMonLearnSpecialVarMove(struct BoxPokemon *boxmon);
+static u32 ChooseBoxMon_CanRelearnMoves(struct BoxPokemon *boxmon);
+static u32 ChooseBoxMon_CanEvolve(struct BoxPokemon *boxmon);
 
 static const struct PcMonSelection sPcMonSelectionTypes[] =
 {
-    [SELECT_PC_MON_NORMAL] = {ChoosePartyMon, NoFilter, NULL, FALSE},
-    [SELECT_PC_MON_TRADE] = {ChoosePartyMon, IsMatchingSpecies, NULL, FALSE},
-    [SELECT_PC_MON_DAYCARE] = {ChooseSendDaycareMon, IsNotEgg, NULL, TRUE},
-    [SELECT_PC_MON_MOVE_TUTOR] = {ChooseMonForMoveTutor, CanMonLearnSpecialVarMove, MoveTutor_AfterChooseBoxMon, FALSE},
-    [SELECT_PC_MON_MOVE_DELETER] = {ChoosePartyMon, CanMonDeleteMove, NULL, FALSE},
-    [SELECT_PC_MON_MOVE_RELEARNER] = {ChooseMonForMoveRelearner, CanRelearnMoves, NULL, FALSE}
+    [SELECT_PC_MON_NORMAL] = {ChoosePartyMon, ChooseBoxMon_NoFilter, NULL, FALSE},
+    [SELECT_PC_MON_TRADE] = {ChoosePartyMon, ChooseBoxMon_IsMatchingSpecies, NULL, FALSE},
+    [SELECT_PC_MON_DAYCARE] = {ChooseSendDaycareMon, ChooseBoxMon_IsNotEgg, NULL, TRUE},
+    [SELECT_PC_MON_MOVE_TUTOR] = {ChooseMonForMoveTutor, ChooseBoxMon_CanMonLearnSpecialVarMove, MoveTutor_AfterChooseBoxMon, FALSE},
+    [SELECT_PC_MON_MOVE_DELETER] = {ChoosePartyMon, ChooseBoxMon_CanMonDeleteMove, NULL, FALSE},
+    [SELECT_PC_MON_MOVE_RELEARNER] = {ChooseMonForMoveRelearner, ChooseBoxMon_CanRelearnMoves, NULL, FALSE},
+    [SELECT_PC_MON_EVOLUTION] = {ChoosePartyMon, ChooseBoxMon_CanEvolve, NULL, FALSE},
 };
 
-static u32 NoFilter(struct BoxPokemon *boxmon)
+static u32 ChooseBoxMon_NoFilter(struct BoxPokemon *boxmon)
 {
     return VALID_MON;
 }
 
-static u32 IsNotEgg(struct BoxPokemon *boxmon)
+static u32 ChooseBoxMon_IsNotEgg(struct BoxPokemon *boxmon)
 {
     if (GetBoxMonData(boxmon, MON_DATA_IS_EGG))
         return INVALID_MON;
     return VALID_MON;
 }
 
-static u32 CanRelearnMoves(struct BoxPokemon *boxmon)
+static u32 ChooseBoxMon_CanRelearnMoves(struct BoxPokemon *boxmon)
 {
     gRelearnMode = RELEARN_MODE_SCRIPT;
     if (GetBoxMonData(boxmon, MON_DATA_IS_EGG))
@@ -73,14 +76,14 @@ static u32 CanRelearnMoves(struct BoxPokemon *boxmon)
     return INVALID_MON;
 }
 
-static u32 IsMatchingSpecies(struct BoxPokemon *boxmon)
+static u32 ChooseBoxMon_IsMatchingSpecies(struct BoxPokemon *boxmon)
 {
     if (GetBoxMonData(boxmon, MON_DATA_SPECIES_OR_EGG) == gSpecialVar_0x8009)
         return VALID_MON;
     return INVALID_MON;
 }
 
-static u32 CanMonDeleteMove(struct BoxPokemon *boxmon)
+static u32 ChooseBoxMon_CanMonDeleteMove(struct BoxPokemon *boxmon)
 {
     if (GetBoxMonData(boxmon, MON_DATA_IS_EGG))
         return INVALID_MON;
@@ -89,7 +92,7 @@ static u32 CanMonDeleteMove(struct BoxPokemon *boxmon)
     return VALID_MON;
 }
 
-static u32 CanMonLearnMove(struct BoxPokemon *boxmon, enum Move move)
+static u32 ChooseBoxMon_CanMonLearnMove(struct BoxPokemon *boxmon, enum Move move)
 {
     if (GetBoxMonData(boxmon, MON_DATA_IS_EGG))
         return CANNOT_LEARN_MOVE_IS_EGG;
@@ -100,9 +103,32 @@ static u32 CanMonLearnMove(struct BoxPokemon *boxmon, enum Move move)
     return CANNOT_LEARN_MOVE;
 }
 
-static u32 CanMonLearnSpecialVarMove(struct BoxPokemon *boxmon)
+//super hacky way to exclude PC mons until I handle evolution for pc mon in a different PR
+static bool32 IsFromPC(u32 adress)
 {
-     return CanMonLearnMove(boxmon, gSpecialVar_0x8005);
+    u32 pcMonStart = (u32)&gPokemonStoragePtr->boxes;
+    u32 pcMonEnd = pcMonStart + sizeof(struct BoxPokemon) * TOTAL_BOXES_COUNT * IN_BOX_COUNT;
+    return (pcMonStart <= adress && adress <= pcMonEnd);
+}
+static u32 ChooseBoxMon_CanEvolve(struct BoxPokemon *boxmon)
+{
+    struct Pokemon *mon = Alloc(sizeof(struct Pokemon));
+    u32 result;
+
+    if (IsFromPC((u32)boxmon))
+        return INVALID_MON;
+    BoxMonToMon(boxmon, mon);
+    if (GetEvolutionTargetSpecies(mon, EVO_MODE_SCRIPT_TRIGGER, gSpecialVar_0x8005, NULL, NULL, CHECK_EVO))
+        result = VALID_MON;
+    else
+        result = INVALID_MON;
+    Free(mon);
+    return result;
+}
+
+static u32 ChooseBoxMon_CanMonLearnSpecialVarMove(struct BoxPokemon *boxmon)
+{
+     return ChooseBoxMon_CanMonLearnMove(boxmon, gSpecialVar_0x8005);
 }
 
 u32 IsBoxMonExcluded(struct BoxPokemon *boxmon)
@@ -144,6 +170,20 @@ void ChooseBoxMon(struct ScriptContext *ctx)
         ctx->scriptPtr++;
         ScriptCall(ctx, sPcMonSelectionTypes[sSelectionType].postSelectionScript);
     }
+}
+
+void PickPartyMon(struct ScriptContext *ctx)
+{
+    sSelectionType = ScriptReadByte(ctx);
+    for (u32 i = 0; i < gPlayerPartyCount; i++)
+    {
+        if (!sPcMonSelectionTypes[sSelectionType].isMonInvalid(&gPlayerParty[i].box))
+        {
+            gSpecialVar_0x8004 = i;
+            return;
+        }
+    }
+    gSpecialVar_0x8004 = PARTY_NOTHING_CHOSEN;
 }
 
 enum LearnMoveState
@@ -217,7 +257,7 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
         GetBoxMonNickname(boxmon, gStringVar1);
         StringCopy(gStringVar2, GetMoveName(move));
         gSpecialVar_Result = FALSE;
-        switch(CanMonLearnMove(boxmon, move))
+        switch(ChooseBoxMon_CanMonLearnMove(boxmon, move))
         {
         case VALID_MON:
             return LEARN_MOVE;

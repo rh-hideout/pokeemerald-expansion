@@ -104,7 +104,8 @@ enum MoveEndState
     MOVEEND_HP_THRESHOLD_ITEMS_TARGET, // Activation only during a multi hit move / ability (Parental Bond)
     MOVEEND_MULTIHIT_MOVE,
     MOVEEND_DEFROST,
-    MOVEEND_SHEER_FORCE, // If move is Sheer Force affected, skip to Hit Escape + One
+    MOVEEND_MOVE_BLOCK_RECOIL, // Recoil effects should still happen even if Sheer Force applies
+    MOVEEND_SHEER_FORCE, // If move is Sheer Force affected, jump to effects that are not suppressed
     MOVEEND_MOVE_BLOCK,
     MOVEEND_ITEM_EFFECTS_ATTACKER_2,
     MOVEEND_ABILITY_EFFECT_FOES_FAINTED, // Moxie-like abilities / Battle Bond / Magician
@@ -118,14 +119,12 @@ enum MoveEndState
     MOVEEND_HIT_ESCAPE,
     MOVEEND_PICKPOCKET,
     MOVEEND_ITEMS_EFFECTS_ALL,
-    MOVEEND_WHITE_HERB,
     MOVEEND_OPPORTUNIST,
-    MOVEEND_MIRROR_HERB,
     MOVEEND_THIRD_MOVE_BLOCK,
     MOVEEND_RAMPAGE,
     MOVEEND_CONFUSION_AFTER_SKY_DROP, // If target was previously rampaging, it should be confused when dropped
     MOVEEND_SPRAY_LEPPA_BLUNDER, // Throat Spray, Leppa Berry, Blunder Policy
-    MOVEEND_EJECT_PACK,
+    MOVEEND_ITEM_ON_STAT_CHANGE,
     MOVEEND_SEND_OUT_REPLACEMENTS, // For all non-forced switching effects
     MOVEEND_CLEAR_BITS,
     MOVEEND_DANCER,

@@ -1031,9 +1031,9 @@ static bool32 CreateFlameSprite(s32 x, s32 y, s32 xspeed, s32 yspeed, bool32 cre
 {
     u8 spriteId;
     if (createFlame)
-        spriteId = CreateSprite(&sSpriteTemplate_FlameOrLeaf, x, y, 0);
+        spriteId = CreateSpriteUnchecked(&sSpriteTemplate_FlameOrLeaf, x, y, 0);
     else
-        spriteId = CreateSprite(&sSpriteTemplate_BlankFlame, x, y, 0);
+        spriteId = CreateSpriteUnchecked(&sSpriteTemplate_BlankFlame, x, y, 0);
 
     if (spriteId != MAX_SPRITES)
     {

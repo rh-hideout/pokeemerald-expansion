@@ -355,8 +355,8 @@
  * BATTLER_AI_FLAGS
  * Specifies additional AI flags to be applied to specific battlers (battler 0/1/2/3). Has use only for AI tests.
  * Must be used strictly after AI_FLAGS(flags), which overwrites all existing flags.
- * Example: BATTLER_AI_FLAGS(3, AI_FLAG_RISKY) used after AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT)
- * will set AI_FLAG_RISKY to only battler3 (Opponent B), in addition to the flags set by AI_FLAGS.
+ * Example: BATTLER_AI_FLAGS(opponentRight, AI_FLAG_RISKY) used after AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT)
+ * will set AI_FLAG_RISKY to only the right opponent, in addition to the flags set by AI_FLAGS.
  *
  * WHEN
  * Contains the choices that battlers make during the battle.
@@ -845,6 +845,7 @@ struct BattleTestRunnerState
 
 extern const struct TestRunner gBattleTestRunner;
 extern struct BattleTestRunnerState *const gBattleTestRunnerState;
+bool32 IsAITest(void);
 
 #define APPEND_COMMA_TRUE(a) , a, TRUE
 #define R_APPEND_TRUE(...) __VA_OPT__(FIRST(__VA_ARGS__), TRUE RECURSIVELY(R_FOR_EACH(APPEND_COMMA_TRUE, EXCEPT_1(__VA_ARGS__))))
@@ -1051,7 +1052,7 @@ void ClosePokemon(u32 sourceLine);
 
 void RNGSeed_(u32 sourceLine, rng_value_t seed);
 void AIFlags_(u32 sourceLine, u64 flags);
-void BattlerAIFlags_(u32 sourceLine, enum BattlerId battler, u64 flags);
+void BattlerAIFlags_(u32 sourceLine, struct BattlePokemon *, u64 flags);
 void AILogScores(u32 sourceLine);
 void Gender_(u32 sourceLine, u32 gender);
 void Nature_(u32 sourceLine, u32 nature);

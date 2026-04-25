@@ -226,7 +226,7 @@ static u64 GetWildAiFlags(void)
     u64 flags = 0;
 
     if (IsDoubleBattle())
-        avgLevel = (GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_LEVEL) + GetMonData(&gParties[B_TRAINER_3][0], MON_DATA_LEVEL)) / 2;
+        avgLevel = (GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_LEVEL) + GetMonData(&gParties[B_TRAINER_1][1], MON_DATA_LEVEL)) / 2;
 
     flags |= AI_FLAG_CHECK_BAD_MOVE;
     if (avgLevel >= 20)
@@ -313,7 +313,7 @@ void BattleAI_SetupFlags(void)
         if (B_WILD_NATURAL_ENEMIES && IsDoubleBattle())
         {
             enum Species speciesLeft = GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_SPECIES);
-            enum Species speciesRight = GetMonData(&gParties[B_TRAINER_3][0], MON_DATA_SPECIES);
+            enum Species speciesRight = GetMonData(&gParties[B_TRAINER_1][1], MON_DATA_SPECIES);
             if (IsNaturalEnemy(speciesLeft, speciesRight))
                 gAiThinkingStruct->aiFlags[B_BATTLER_1] |= AI_FLAG_ATTACKS_PARTNER;
             if (IsNaturalEnemy(speciesRight, speciesLeft))
@@ -817,7 +817,7 @@ static u32 PpStallReduction(enum Move move, enum BattlerId battlerAtk, enum Batt
     struct BattlePokemon backupBattleMon;
     struct DamageContext ctx = {0};
     ctx.battlerAtk = battlerAtk;
-    ctx.abilityAtk = gAiLogicData->abilities[battlerAtk];
+    ctx.abilities[ctx.battlerAtk] = gAiLogicData->abilities[battlerAtk];
     ctx.move = ctx.chosenMove = move;
     ctx.moveType = GetBattleMoveType(move); //  Probably doesn't handle dynamic types right now
     memcpy(&backupBattleMon, &gBattleMons[tempBattleMonIndex], sizeof(struct BattlePokemon));
@@ -828,8 +828,8 @@ static u32 PpStallReduction(enum Move move, enum BattlerId battlerAtk, enum Batt
             continue;
         PokemonToBattleMon(&party[partyIndex], &gBattleMons[tempBattleMonIndex]);
         ctx.battlerDef = tempBattleMonIndex;
-        ctx.abilityDef = GetBattlerAbility(ctx.battlerDef);
-        ctx.holdEffectDef = GetBattlerHoldEffect(ctx.battlerDef);
+        ctx.abilities[ctx.battlerDef] = AI_DecideKnownAbilityForTurn(ctx.battlerDef);
+        ctx.holdEffects[ctx.battlerDef] = AI_DecideHoldEffectForTurn(ctx.battlerDef);
         if (AI_CanMoveBeBlockedByTarget(&ctx)
          || CalcTypeEffectivenessMultiplier(&ctx) == UQ_4_12(0.0))
             totalStallValue += currentStallValue;
@@ -1288,7 +1288,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     if (DoesBattlerIgnoreAbilityChecks(battlerAtk, abilityAtk, move))
         abilityDef = ABILITY_NONE;
 
-    // If a pokemon can be guaranteed flinched, don't target the pokemon that can't be flinched.
+    // If a Pokémon can be guaranteed flinched, don't target the Pokémon that can't be flinched.
     if (hasTwoOpponents
      && !IsFlinchGuaranteed(battlerAtk, battlerDef, move) && IsFlinchGuaranteed(battlerAtk, BATTLE_PARTNER(battlerDef), move)
      && aiData->effectiveness[battlerAtk][BATTLE_PARTNER(battlerDef)][gAiThinkingStruct->movesetIndex] != UQ_4_12(0.0))
@@ -1307,10 +1307,10 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         ctx.battlerDef = battlerDef;
         ctx.move = ctx.chosenMove = move;
         ctx.moveType = moveType;
-        ctx.abilityAtk = abilityAtk;
-        ctx.abilityDef = abilityDef;
-        ctx.holdEffectAtk = aiData->holdEffects[battlerAtk];
-        ctx.holdEffectDef = aiData->holdEffects[battlerDef];
+        ctx.abilities[ctx.battlerAtk] = abilityAtk;
+        ctx.abilities[ctx.battlerDef] = abilityDef;
+        ctx.holdEffects[ctx.battlerAtk] = aiData->holdEffects[battlerAtk];
+        ctx.holdEffects[ctx.battlerDef] = aiData->holdEffects[battlerDef];
 
         if (AI_CanMoveBeBlockedByTarget(&ctx))
             RETURN_SCORE_MINUS(20);
@@ -1977,7 +1977,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         ADJUST_SCORE(-10);
         break;
     case EFFECT_FIRST_TURN_ONLY:
-        if (!gBattleStruct->battlerState[battlerAtk].isFirstTurn)
+        if (!IsBattlersFirstTurn(battlerAtk))
             ADJUST_SCORE(-10);
         if (HasChoiceEffect(battlerAtk))
             ADJUST_SCORE(-5);
@@ -2111,7 +2111,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         break;
     case EFFECT_HIT_SWITCH_TARGET:
         if (DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
-            ADJUST_SCORE(-10); // don't scare away pokemon twice
+            ADJUST_SCORE(-10); // don't scare away Pokémon twice
         else if (aiData->hpPercents[battlerDef] < 10 && GetBattlerSecondaryDamage(battlerDef))
             ADJUST_SCORE(-10);    // don't blow away mon that will faint soon
         else if (gBattleMons[battlerDef].volatiles.perishSong)
@@ -2265,7 +2265,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                 }
                 break;
             case PROTECT_MAT_BLOCK:
-                if (!gBattleStruct->battlerState[battlerAtk].isFirstTurn)
+                if (!IsBattlersFirstTurn(battlerAtk))
                 {
                     ADJUST_SCORE(-10);
                     decreased = TRUE;
@@ -4643,7 +4643,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
             break;
 
         case PROTECT_MAT_BLOCK:
-            if (gBattleStruct->battlerState[battlerAtk].isFirstTurn && predictedMove != MOVE_NONE
+            if (IsBattlersFirstTurn(battlerAtk) && predictedMove != MOVE_NONE
               && !IsBattleMoveStatus(predictedMove) && AI_GetBattlerMoveTargetType(battlerDef, predictedMove) != TARGET_USER)
                 ADJUST_SCORE(ProtectChecks(battlerAtk, battlerDef, move, predictedMove));
             break;
@@ -4680,7 +4680,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
     case EFFECT_TOXIC_SPIKES:
         if (AI_ShouldSetUpHazards(battlerAtk, battlerDef, move, aiData))
         {
-            if (gBattleStruct->battlerState[battlerAtk].isFirstTurn)
+            if (IsBattlersFirstTurn(battlerAtk))
                 ADJUST_SCORE(BEST_EFFECT);
             else
                 ADJUST_SCORE(DECENT_EFFECT);
@@ -4731,7 +4731,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
         }
         break;
     case EFFECT_FIRST_TURN_ONLY:
-        if (gBattleStruct->battlerState[battlerAtk].isFirstTurn && !IsTargetingPartner(battlerAtk, battlerDef))
+        if (IsBattlersFirstTurn(battlerAtk) && !IsTargetingPartner(battlerAtk, battlerDef))
         {
             // Fake Out in doubles
             if (IsDoubleBattle() && IsFlinchGuaranteed(battlerAtk, battlerDef, move))
@@ -4746,9 +4746,9 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
                  && (defPartnerKoAtkPartner && AI_WhoStrikesFirst(battlerAtkPartner, battlerDefPartner, gBattleMons[battlerAtkPartner].moves[gAiBattleData->chosenMoveIndex[battlerAtkPartner]], MOVE_SCRATCH, CONSIDER_PRIORITY) == AI_IS_SLOWER);
 
                 // If either opponent has Fake Out, it's their first turn but user is faster - incentivise Fake Out on both
-                if ((HasMove(battlerDef, MOVE_FAKE_OUT) && gBattleStruct->battlerState[battlerDef].isFirstTurn
+                if ((HasMove(battlerDef, MOVE_FAKE_OUT) && IsBattlersFirstTurn(battlerDef)
                  && AI_WhoStrikesFirst(battlerAtk, battlerDef, MOVE_FAKE_OUT, MOVE_FAKE_OUT, CONSIDER_PRIORITY) == AI_IS_FASTER)
-                 || (HasMove(battlerDefPartner, MOVE_FAKE_OUT) && gBattleStruct->battlerState[battlerDefPartner].isFirstTurn
+                 || (HasMove(battlerDefPartner, MOVE_FAKE_OUT) && IsBattlersFirstTurn(battlerDefPartner)
                  && AI_WhoStrikesFirst(battlerAtk, battlerDefPartner, MOVE_FAKE_OUT, MOVE_FAKE_OUT, CONSIDER_PRIORITY) == AI_IS_FASTER))
                 {
                     ADJUST_SCORE(FAST_KILL + 2);
@@ -5008,7 +5008,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
             else if (ShouldRestoreHpBerry(battlerAtk, item) && !CanAIFaintTarget(battlerAtk, battlerDef, 0)
               && ((AI_GetWhichBattlerFasterOrTies(battlerAtk, battlerDef, TRUE) == 1 && CanTargetFaintAiWithMod(battlerDef, battlerAtk, 0, 0))
                || !CanTargetFaintAiWithMod(battlerDef, battlerAtk, toHeal, 0)))
-                ADJUST_SCORE(WEAK_EFFECT);    // Recycle healing berry if we can't otherwise faint the target and the target wont kill us after we activate the berry
+                ADJUST_SCORE(WEAK_EFFECT);    // Recycle healing berry if we can't otherwise faint the target and the target won't kill us after we activate the berry
         }
         break;
     case EFFECT_DOODLE:
@@ -5022,7 +5022,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
     case EFFECT_IMPRISON:
         if (predictedMove != MOVE_NONE && HasMove(battlerAtk, predictedMove))
             ADJUST_SCORE(DECENT_EFFECT);
-        else if (gBattleStruct->battlerState[battlerAtk].isFirstTurn == 0)
+        else if (!IsBattlersFirstTurn(battlerAtk))
             ADJUST_SCORE(WEAK_EFFECT);
         break;
     case EFFECT_REFRESH:
@@ -5216,7 +5216,7 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
         {
             if (!(gFieldStatuses & STATUS_FIELD_TRICK_ROOM) && ShouldSetFieldStatus(battlerAtk, STATUS_FIELD_TRICK_ROOM))
                 ADJUST_SCORE(GOOD_EFFECT);
-            // Set it for next pokemon in singles.
+            // Set it for next Pokémon in singles.
             else if (!(gFieldStatuses & STATUS_FIELD_TRICK_ROOM) && !hasPartner && (CountUsablePartyMons(battlerAtk) != 0))
                 ADJUST_SCORE(DECENT_EFFECT);
             // Don't unset it on last turn.
@@ -5687,7 +5687,7 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
             case MOVE_EFFECT_STEALTH_ROCK:
                 if (AI_ShouldSetUpHazards(battlerAtk, battlerDef, move, aiData))
                 {
-                    if (gBattleStruct->battlerState[battlerAtk].isFirstTurn)
+                    if (IsBattlersFirstTurn(battlerAtk))
                         ADJUST_SCORE(BEST_EFFECT);
                     else
                         ADJUST_SCORE(DECENT_EFFECT);
@@ -6541,7 +6541,7 @@ static void AI_Watch(void)
     gAiThinkingStruct->aiAction |= (AI_ACTION_DONE | AI_ACTION_WATCH | AI_ACTION_DO_NOT_ATTACK);
 }
 
-// Roaming pokemon logic
+// Roaming Pokémon logic
 static s32 AI_Roaming(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, s32 score)
 {
     bool32 roamerCanFlee = FALSE;
@@ -6560,7 +6560,7 @@ static s32 AI_Roaming(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
     return score;
 }
 
-// Safari pokemon logic
+// Safari Pokémon logic
 static s32 AI_Safari(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, s32 score)
 {
     u32 safariFleeRate = gBattleStruct->safariEscapeFactor * 5; // Safari flee rate, from 0-20.
