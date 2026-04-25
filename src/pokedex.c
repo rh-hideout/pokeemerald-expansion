@@ -2177,7 +2177,7 @@ static void FreeWindowAndBgBuffers(void)
         Free(tilemapBuffer);
 }
 
-static bool32 ShouldSkipPokedexListEntry(enum NationalDexOrder dexNum)
+bool32 ShouldSkipPokedexListEntry(enum NationalDexOrder dexNum)
 {
     if (P_SKIP_POKEDEX_GAPS == DONT_SKIP_GAPS)
         return FALSE;
