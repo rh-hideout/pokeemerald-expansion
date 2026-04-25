@@ -2576,3 +2576,16 @@ AI_DOUBLE_BATTLE_TEST("AI can switch out both mons in either order")
         TURN { EXPECT_SWITCH(opponentRight, 2); EXPECT_SWITCH(opponentLeft, 3); }
     }
 }
+
+AI_SINGLE_BATTLE_TEST("AI can switch out if it loses the 1v1")
+{
+    PASSES_RANDOMLY(100, 100, RNG_AI_SWITCH_LOSES_1V1);
+    GIVEN {
+        WITH_CONFIG(SHOULD_SWITCH_LOSES_1V1_PERCENTAGE, 100);
+        PLAYER(SPECIES_LINOONE);
+        OPPONENT(SPECIES_ZIGZAGOON);
+        OPPONENT(SPECIES_AGGRON);
+    } WHEN {
+        TURN { EXPECT_SWITCH(opponent, 1); }
+    }
+}

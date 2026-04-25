@@ -230,7 +230,7 @@ u32 GetSwitchChance(enum ShouldSwitchScenario shouldSwitchScenario)
     case SHOULD_SWITCH_WISH_PASSING:
         return SHOULD_SWITCH_WISH_PASSING_PERCENTAGE;
     case SHOULD_SWITCH_LOSES_1V1:
-        return SHOULD_SWITCH_LOSES_1V1_PERCENTAGE;
+        return GetConfig(SHOULD_SWITCH_LOSES_1V1_PERCENTAGE);
     default:
         return 100;
     }
@@ -566,7 +566,6 @@ static bool32 FindMonThatAbsorbsOpponentsMove(struct SwitchContext *switchContex
     u8 numAbsorbingAbilities = 0;
     enum Ability absorbingTypeAbilities[8]; // Max needed for type + move property absorbers
     enum Ability partyMonAbility;
-    enum Move aiMove;
     enum Type incomingType = CheckDynamicMoveType(GetBattlerMon(switchContext->opposingBattler), switchContext->incomingMove, switchContext->opposingBattler, MON_IN_BATTLE);
 
     if (!(gAiThinkingStruct->aiFlags[switchContext->battler] & AI_FLAG_SMART_SWITCHING))
