@@ -1504,11 +1504,14 @@ static enum CancelerResult CancelerProtean(struct BattleCalcValues *cv)
 
 static bool32 CanTwoTurnMoveFireThisTurn(struct BattleCalcValues *cv)
 {
-    if (gBattleMoveEffects[GetMoveEffect(cv->move)].semiInvulnerableEffect
-     || GetMoveEffect(cv->move) == EFFECT_GEOMANCY
-     || !(GetAttackerWeather(cv->holdEffects[cv->battlerAtk], cv->abilities[cv->battlerAtk], GetWeather()) & GetMoveTwoTurnAttackWeather(cv->move)))
+    if (GetMoveEffect(cv->move) == EFFECT_GEOMANCY || gBattleMoveEffects[GetMoveEffect(cv->move)].semiInvulnerableEffect)
         return FALSE;
-    return TRUE;
+
+    u32 weather = GetWeather();
+    u32 attackerWeather = GetAttackerWeather(cv->holdEffects[cv->battlerAtk], cv->abilities[cv->battlerAtk], weather);
+    u32 isMoveWeatherAffected = GetMoveTwoTurnAttackWeather(cv->move);
+
+    return (attackerWeather & isMoveWeatherAffected) || (weather & isMoveWeatherAffected);
 }
 
 static enum CancelerResult HandleSkyDropResult(struct BattleCalcValues *cv)

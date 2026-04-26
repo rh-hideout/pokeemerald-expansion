@@ -228,7 +228,6 @@ SINGLE_BATTLE_TEST("Mega Sol ignores Snow Cloak")
 // Not clear if this is a bug or not
 SINGLE_BATTLE_TEST("Mega Sol doesn't prevent other weather based activations (Electro Shot)")
 {
-    KNOWN_FAILING;
     GIVEN {
         ASSUME(GetMoveTwoTurnAttackWeather(MOVE_ELECTRO_SHOT) == B_WEATHER_RAIN);
         ASSUME(GetMoveEffect(MOVE_ELECTRO_SHOT) == EFFECT_TWO_TURNS_ATTACK);
@@ -237,8 +236,8 @@ SINGLE_BATTLE_TEST("Mega Sol doesn't prevent other weather based activations (El
     } WHEN {
         TURN { MOVE(opponent, MOVE_ELECTRO_SHOT, gimmick: GIMMICK_MEGA); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRO_SHOT, player);
-        HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRO_SHOT, opponent);
+        HP_BAR(player);
     }
 }
 
@@ -252,6 +251,6 @@ SINGLE_BATTLE_TEST("Mega Sol doesn't prevent other weather based activations (Au
     } WHEN {
         TURN { MOVE(opponent, MOVE_AURORA_VEIL, gimmick: GIMMICK_MEGA); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_AURORA_VEIL, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_AURORA_VEIL, opponent);
     }
 }
