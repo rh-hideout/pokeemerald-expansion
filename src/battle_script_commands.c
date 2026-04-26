@@ -2488,7 +2488,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
           && !(moveEffect == MOVE_EFFECT_ORDER_UP && gBattleStruct->battlerState[gBattlerAttacker].commanderSpecies != SPECIES_NONE))
         moveEffect = MOVE_EFFECT_NONE;
     else if (!IsBattlerAlive(gEffectBattler)
-          && moveEffect != MOVE_EFFECT_CORE_ENFORCER
+          && !(moveEffect == MOVE_EFFECT_CORE_ENFORCER && gBattleMons[gEffectBattler].ability == ABILITY_INNARDS_OUT)
           && !IgnoreTargetingForMoveEffect(moveEffect))
         moveEffect = MOVE_EFFECT_NONE;
     else if (DoesSubstituteBlockMoveEffectOnTarget(gBattlerAttacker, gEffectBattler, moveEffect))
