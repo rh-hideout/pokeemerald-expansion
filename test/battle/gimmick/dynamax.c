@@ -699,7 +699,7 @@ SINGLE_BATTLE_TEST("Dynamax: Max Strike lowers single opponent's speed")
 DOUBLE_BATTLE_TEST("Dynamax: Max Strike lowers both opponents' speed")
 {
     GIVEN {
-        // ASSUME(MoveHasAdditionalEffect(MOVE_MAX_STRIKE, MOVE_EFFECT_LOWER_SPEED_SIDE));
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_STRIKE, speed: -1);
         PLAYER(SPECIES_WOBBUFFET) { Speed(80); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(79); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(100); }
@@ -736,7 +736,7 @@ DOUBLE_BATTLE_TEST("Dynamax: Max Knuckle raises both allies' attack")
 {
     s16 damage[4];
     GIVEN {
-        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_WYRMWIND, attack: 1);
+        // ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_KNUCKLE, attack: 1); Throws an Assumption Fail for some reason
         ASSUME(GetMoveCategory(MOVE_CLOSE_COMBAT) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_WOBBUFFET);

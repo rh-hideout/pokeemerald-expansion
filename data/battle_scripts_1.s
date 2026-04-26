@@ -180,6 +180,39 @@ BattleScript_MoveEffectStatChange::
 	trynonmovestatchange BS_ATTACKER, STAT_CHANGE_SILENT_FAILURE | STAT_CHANGE_IGNORE_SELF
 	return
 
+BattleScript_ItemStatChange::
+	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT
+	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_ITEM
+	removeitem BS_SCRIPTING
+	return
+
+BattleScript_ConsumableBerryStatRaise::
+ 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_BERRY
+	call BattleScript_ConsumableItemStatRaise
+	return
+
+BattleScript_ConsumableBerryStatRaiseRipen::
+	call BattleScript_AbilityPopUp
+ 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_BERRY
+	call BattleScript_ConsumableItemStatRaise
+	return
+
+BattleScript_ConsumableItemStatRaise::
+	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT
+	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_ITEM
+	removeitem BS_SCRIPTING
+	return
+
+BattleScript_MirrorArmorReflect::
+	pause B_WAIT_TIME_SHORT
+	call BattleScript_AbilityPopUp
+	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_SECOND_QUEUE | STAT_CHANGE_IGNORE_MIRROR_ARMOR
+	return
+
+BattleScript_EndTurnStatChange::
+	trybattlerstatchange BS_ATTACKER, STAT_CHANGE_IGNORE_MIRROR_ARMOR
+	return
+
 BattleScript_IncreaseStatChangeMessage::
 	printfromtable gStatUpStringIds
 	waitmessage B_WAIT_TIME_LONG
@@ -193,17 +226,10 @@ BattleScript_DecreaseStatChangeMessage::
 	tryadrenalineorb
 	return
 
-BattleScript_IncreaseStatChangeMessagePause::
+BattleScript_StatDidntChangeMessagePause::
 	pause B_WAIT_TIME_SHORT
 	printfromtable gStatUpStringIds
 	waitmessage B_WAIT_TIME_LONG
-	return
-
-BattleScript_DecreaseStatChangeMessagePause::
-	pause B_WAIT_TIME_SHORT
-	printfromtable gStatDownStringIds
-	waitmessage B_WAIT_TIME_LONG
-	trydefiantrattled
 	return
 
 BattleScript_MissedTarget::
@@ -276,7 +302,7 @@ BattleScript_SyrupBombActivates::
 BattleScript_SyrupBombEndTurn::
 	flushtextbox
 	playanimation BS_ATTACKER, B_ANIM_SYRUP_BOMB_SPEED_DROP
-	trybattlerstatchange BS_ATTACKER, STAT_CHANGE_NO_FLAGS
+	trybattlerstatchange BS_ATTACKER, STAT_CHANGE_IGNORE_MIRROR_ARMOR
 	return
 
 BattleScript_MoveSwitchPursuitEnd:
@@ -602,10 +628,6 @@ BattleScript_EffectOctolock::
 	printstring STRINGID_CANTESCAPEBECAUSEOFCURRENTMOVE
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
-
-BattleScript_EndTurnStatChange::
-	trybattlerstatchange BS_ATTACKER, STAT_CHANGE_IGNORE_MIRROR_ARMOR
-	return
 
 BattleScript_PoltergeistMessage::
 	printstring STRINGID_ABOUTTOUSEPOLTERGEIST
@@ -1607,12 +1629,6 @@ BattleScript_StatUp::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_MirrorArmorReflect::
-	pause B_WAIT_TIME_SHORT
-	call BattleScript_AbilityPopUp
-	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_SECOND_QUEUE | STAT_CHANGE_IGNORE_MIRROR_ARMOR
-	return
-
 BattleScript_StatDown::
 	printfromtable gStatDownStringIds
 	waitmessage B_WAIT_TIME_LONG
@@ -2580,7 +2596,6 @@ BattleScript_BreakAuroraVeil:
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_BreakScreensRetFinish
 
-
 BattleScript_StealStats::
 	playmoveanimation MOVE_SPECTRAL_THIEF
 	waitanimation
@@ -3357,12 +3372,6 @@ BattleScript_RoarSuccessRet_Ret:
 	returntoball BS_TARGET, FALSE
 	waitstate
 	switchoutabilities BS_TARGET
-	return
-
-BattleScript_ItemStatChange::
-	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT
-	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_ITEM
-	removeitem BS_SCRIPTING
 	return
 
 BattleScript_MistProtected::
@@ -5408,23 +5417,6 @@ BattleScript_BerryConfuseHealRet_Anim:
 	healthbarupdate BS_SCRIPTING, PASSIVE_HP_UPDATE
 	datahpupdate BS_SCRIPTING, PASSIVE_HP_UPDATE
 	seteffectprimary BS_SCRIPTING, BS_SCRIPTING, MOVE_EFFECT_CONFUSION
-	removeitem BS_SCRIPTING
-	return
-
-BattleScript_ConsumableBerryStatRaise::
- 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_BERRY
-	call BattleScript_ConsumableItemStatRaise
-	return
-
-BattleScript_ConsumableBerryStatRaiseRipen::
-	call BattleScript_AbilityPopUp
- 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_BERRY
-	call BattleScript_ConsumableItemStatRaise
-	return
-
-BattleScript_ConsumableItemStatRaise::
-	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT
-	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_ITEM
 	removeitem BS_SCRIPTING
 	return
 

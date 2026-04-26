@@ -42,9 +42,6 @@
 #define BUILDING_CAMOUFLAGE_BLEND    RGB_WHITE
 #define BUILDING_BATTLE_INTRO_SLIDE  BattleIntroSlide3
 
-// Used only by Secret Power
-// Should probably refactor because it might cause problmes for users
-
 // Plain values. USED for BATTLE_ENVIRONMENT_PLAIN as well as BATTLE_ENVIRONMENT_RAYQUAZA
 // (BATTLE_ENVIRONMENT_SKY_PILLAR wasn't introduced until Gen6, so Sky Pillar's roof counts as a Route which uses Plain)
 #if B_NATURE_POWER_MOVES >= GEN_6

@@ -229,11 +229,12 @@ SINGLE_BATTLE_TEST("Sticky Syrup is not reflected by Mirror Armor")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SYRUP_BOMB, player);
         HP_BAR(opponent);
         MESSAGE("The opposing Corviknight got covered in sticky candy syrup!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
         NONE_OF {
             ABILITY_POPUP(opponent, ABILITY_MIRROR_ARMOR);
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, player);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         }
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
     } THEN {
         EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
         EXPECT_EQ(opponent->statStages[STAT_SPEED], DEFAULT_STAT_STAGE - 1);
@@ -244,7 +245,7 @@ SINGLE_BATTLE_TEST("Sticky Syrup stat drop is prevented by Mist")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_MIST, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_MIST); }
         TURN { MOVE(player, MOVE_SYRUP_BOMB); }
@@ -253,7 +254,8 @@ SINGLE_BATTLE_TEST("Sticky Syrup stat drop is prevented by Mist")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SYRUP_BOMB, player);
         HP_BAR(opponent);
         MESSAGE("The opposing Wobbuffet got covered in sticky candy syrup!");
-        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
     }

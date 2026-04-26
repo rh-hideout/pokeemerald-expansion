@@ -17,7 +17,6 @@ struct StatChange
     u32 passiveStatChange:1;
     u32 certain:1;
     u32 setFailureFlags:1;
-    u32 nonMoveStatChange:1;
     u32 silentFailure:1;
     u32 onlyChecking:1;
     u32 ignoreMirrorArmored:1;
@@ -28,7 +27,7 @@ struct StatChange
     u32 targetMissed:1;
     u32 stickyWeb:1;
     u32 ignoreCertainFailure:1; // for mirror armor and substitute
-    u32 padding:18;
+    u32 padding:19;
 };
 
 extern u32 const sAccurateStatOrder[NUM_BATTLE_STATS];
@@ -51,5 +50,6 @@ bool32 IsStatChangeStatusMove(enum Move move, bool32 (*isStatChange)(const struc
 bool32 IsAtkStatUpMove(const struct AdditionalEffect *effect);
 bool32 IsAtkSpAtkStatUpMove(const struct AdditionalEffect *effect);
 bool32 IsDefSpDefStatUpMove(const struct AdditionalEffect *effect);
+bool32 IsAccDownEvasionUpStatChangeMove(const struct AdditionalEffect *effect);
 
 #endif // GUARD_BATTLE_MOVE_STAT_CHANGE_H

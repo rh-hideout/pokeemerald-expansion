@@ -3911,7 +3911,11 @@ static bool32 IsDomeDefensiveMoveEffect(enum Move move)
         break;
     }
 
-    return IsStatChangeStatusMove(move, IsDefSpDefStatUpMove);
+    if (IsStatChangeStatusMove(move, IsAccDownEvasionUpStatChangeMove)
+     || IsStatChangeStatusMove(move, IsDefSpDefStatUpMove))
+        return TRUE;
+
+    return FALSE;
 }
 
 static bool32 IsDomeRiskyMoveEffect(enum BattleMoveEffects effect)
@@ -4070,9 +4074,6 @@ static bool32 IsDomeComboMove(enum Move move)
     case EFFECT_REST:
     case EFFECT_SLEEP_TALK:
     case EFFECT_SNORE:
-    // Anything that ups offensive stats by more than one
-    case EFFECT_STAT_CHANGE:
-    case EFFECT_CHARGE:
     // Others
     case EFFECT_FOCUS_ENERGY:
     case EFFECT_LOCK_ON:
@@ -4102,7 +4103,7 @@ static bool32 IsDomeComboMove(enum Move move)
         return FALSE;
     }
 
-    return FALSE;
+    return IsStatChangeStatusMove(move, IsAtkSpAtkStatUpMove);
 }
 
 // allocatedArray below needs to be large enough to hold stat totals for each mon, or totals of each type of move points

@@ -10891,9 +10891,7 @@ static void Cmd_trynonmovestatchange(void)
         .move = MOVE_NONE,
     };
 
-    struct StatChange st = {
-        .nonMoveStatChange = TRUE,
-    };
+    struct StatChange st = {0};
 
     SetStatChangeFlags(&st, cmd->statChangeFlags);
     gBattleStruct->ignoreDefiant = FALSE;
@@ -10962,15 +10960,10 @@ static void Cmd_trybattlerstatchange(void)
     if (gBattleControllerExecFlags)
         return;
 
-    struct BattleCalcValues cv = {
-        .battlerAtk = gBattlerAttacker,
-        .battlerDef = GetBattlerForBattleScript(cmd->battler),
-        .move = MOVE_NONE,
-    };
+    struct BattleCalcValues cv = {0};
+    cv.battlerAtk = cv.battlerDef = GetBattlerForBattleScript(cmd->battler);
 
-    struct StatChange st = {
-        .nonMoveStatChange = TRUE,
-    };
+    struct StatChange st = {0};
 
     u32 flags = cmd->statChangeFlags;
     SetStatChangeFlags(&st, flags);

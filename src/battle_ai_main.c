@@ -3570,7 +3570,7 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                 return score;
             case EFFECT_STAT_CHANGE:
             case EFFECT_STAT_CHANGE_MAGNETIC:
-                if (moveTarget)
+                switch (moveTarget)
                 {
                 case TARGET_USER_AND_ALLY:
                 case TARGET_USER_OR_ALLY:
@@ -3720,6 +3720,8 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
                     ADJUST_AND_RETURN_SCORE(GOOD_EFFECT);
 
                 ADJUST_SCORE(WORST_EFFECT);
+                break;
+            default:
                 break;
             }
             } // attacker move effects
@@ -5594,8 +5596,9 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
                     if (stage < 0)
                         continue;
 
-                    if (gBattleMons[battlerAtk].statStages[stat] < MAX_STAT_STAGE)
-                        ADJUST_SCORE(GOOD_EFFECT);
+                    if (IncreaseStatUpScore(battlerAtk, battlerDef, stat, stage) > WEAK_EFFECT)
+                    // if (gBattleMons[battlerAtk].statStages[stat] < MAX_STAT_STAGE)
+                        ADJUST_SCORE(DECENT_EFFECT);
                 }
                 break;
             case MOVE_EFFECT_ORDER_UP:
@@ -5652,8 +5655,9 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
                     if (stage > 0)
                         continue;
 
-                    if (gBattleMons[battlerDef].statStages[stat] > MIN_STAT_STAGE)
-                        ADJUST_SCORE(GOOD_EFFECT);
+                    if (IncreaseStatDownScore(battlerAtk, battlerDef, stat) > WEAK_EFFECT)
+                    // if (gBattleMons[battlerDef].statStages[stat] > MIN_STAT_STAGE)
+                        ADJUST_SCORE(DECENT_EFFECT);
                 }
                 break;
             case MOVE_EFFECT_FLINCH:

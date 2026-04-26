@@ -200,3 +200,21 @@ SINGLE_BATTLE_TEST("Octolock stat drops are not reflected by Mirror Armor")
         EXPECT_EQ(opponent->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE - 1);
     }
 }
+
+SINGLE_BATTLE_TEST("Octolock stat drop is prevented by Mist")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_MIST); }
+        TURN { MOVE(player, MOVE_OCTOLOCK); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MIST, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_OCTOLOCK, player);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+    } THEN {
+        EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponent->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE);
+    }
+}

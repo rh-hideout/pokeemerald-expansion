@@ -1251,7 +1251,7 @@ static bool32 AI_IsMoveEffectInMinus(enum BattlerId battlerAtk, enum BattlerId b
                         continue;
                     }
 
-                    if (noOfHitsToKo > 1 && stage > 0) // hinders foe
+                    if (noOfHitsToKo > 1 && stage > 0)
                         return TRUE;
                 }
                 break;

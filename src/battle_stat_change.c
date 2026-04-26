@@ -403,7 +403,7 @@ static enum StatChangeResult IncreaseStat(struct BattleCalcValues *cv, struct St
             return STAT_CHANGE_DIDNT_WORK;
 
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STAT_WONT_CHANGE;
-        st->script = BattleScript_IncreaseStatChangeMessagePause;
+        st->script = BattleScript_StatDidntChangeMessagePause;
         gBattleScripting.battler = cv->battlerDef;
         return STAT_CHANGE_WORKED; // Handle failure
     }
@@ -589,7 +589,7 @@ static bool32 IsMistProtected(struct BattleCalcValues *cv, struct StatChange *st
 
 static bool32 IsFlowerVeilBlocked(struct BattleCalcValues *cv, struct StatChange *st)
 {
-    if (st->certain)
+    if (st->certain || cv->battlerAtk == cv->battlerDef)
         return FALSE;
 
     u32 flowerVeilBattler = IsFlowerVeilProtected(cv->battlerDef);
@@ -730,12 +730,8 @@ static bool32 IsMirrorArmorReflected(struct BattleCalcValues *cv, struct StatCha
         }
         else
         {
-            if (cv->battlerAtk == cv->battlerDef) {
-                DebugPrintf("g: attacker %d, target %d", gBattlerAttacker, gBattlerTarget);
-                DebugPrintf("attacker %d, target %d", cv->battlerAtk, cv->battlerDef);
-            }
             if (cv->battlerAtk == cv->battlerDef)
-                gBattleScripting.battler = 1; //cv->battlerDef;
+                gBattleScripting.battler = cv->battlerDef;
             else
                 gBattleScripting.battler = cv->battlerAtk;
 
@@ -761,7 +757,7 @@ static bool32 IsMirrorArmorReflected(struct BattleCalcValues *cv, struct StatCha
 
 static void AdjustStatStage(struct BattleCalcValues *cv, struct StatChange *st)
 {
-    if (cv->moveEffect == EFFECT_GROWTH && IsBattlerWeatherAffected(cv->holdEffects[cv->battlerDef], GetWeather(), B_WEATHER_SUN))
+    if (cv->moveEffect == EFFECT_GROWTH && GetAttackerWeather(cv->holdEffects[cv->battlerDef], cv->abilities[cv->battlerDef], GetWeather()) & B_WEATHER_SUN)
         st->stage = 2;
 
     if (st->stage == STAT_CHANGE_FORCE_MAX)
@@ -1042,8 +1038,7 @@ bool32 IsAtkSpAtkStatUpMove(const struct AdditionalEffect *effect)
     if (effect->moveEffect != STAT_CHANGE_EFFECT_PLUS)
         return FALSE;
 
-    return effect->attack
-        || effect->spAtk;
+    return effect->attack || effect->spAtk;
 }
 
 bool32 IsDefSpDefStatUpMove(const struct AdditionalEffect *effect)
@@ -1051,6 +1046,20 @@ bool32 IsDefSpDefStatUpMove(const struct AdditionalEffect *effect)
     if (effect->moveEffect != STAT_CHANGE_EFFECT_PLUS)
         return FALSE;
 
-    return effect->defense
-        || effect->spDef;
+    return effect->defense || effect->spDef;
+}
+
+bool32 IsAccDownEvasionUpStatChangeMove(const struct AdditionalEffect *effect)
+{
+    switch (effect->moveEffect)
+    {
+    case STAT_CHANGE_EFFECT_PLUS:
+        return effect->evasion;
+    case STAT_CHANGE_EFFECT_MINUS:
+        return effect->accuracy;
+    default:
+        break;
+    }
+
+    return FALSE;
 }

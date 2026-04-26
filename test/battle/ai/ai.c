@@ -315,7 +315,7 @@ AI_SINGLE_BATTLE_TEST("AI scores KOs with two turn moves correctly, considering 
         PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_CELEBRATE); HP(5); }
         OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_FOCUS_BLAST, MOVE_SKULL_BASH, MOVE_FIERY_DANCE, MOVE_CRABHAMMER); Item(aiItem); }
     } WHEN {
-        TURN { aiItem == ITEM_POWER_HERB ? EXPECT_MOVE(opponent, MOVE_SKULL_BASH) : SCORE_EQ(opponent, MOVE_FIERY_DANCE, MOVE_SKULL_BASH); }
+        TURN { aiItem == ITEM_POWER_HERB ? EXPECT_MOVE(opponent, MOVE_SKULL_BASH) : SCORE_EQ(opponent, MOVE_FIERY_DANCE); }
     }
 }
 

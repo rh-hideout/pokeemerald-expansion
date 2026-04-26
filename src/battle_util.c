@@ -1147,6 +1147,9 @@ bool32 ShouldDefiantCompetitiveActivate(enum BattlerId battler, enum Ability abi
 {
     enum BattleSide side = GetBattlerSide(battler);
 
+    if (gBattleStruct->ignoreDefiant)
+        return FALSE;
+
     switch (ability)
     {
     case ABILITY_DEFIANT:
@@ -1160,9 +1163,6 @@ bool32 ShouldDefiantCompetitiveActivate(enum BattlerId battler, enum Ability abi
     default:
         return FALSE;
     }
-
-    if (gBattleStruct->ignoreDefiant)
-        return FALSE;
 
     if (GetConfig(B_DEFIANT_STICKY_WEB) >= GEN_9 || !gBattleScripting.stickyWebStatDrop)
         return TRUE;

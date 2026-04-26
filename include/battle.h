@@ -103,7 +103,6 @@ struct StatStages
     u8 stat:7;
     u8 done:1;
     s8 stage;
-    u16 padding;
 };
 
 // Cleared at the start of HandleAction_ActionFinished

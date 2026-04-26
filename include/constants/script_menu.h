@@ -11,14 +11,14 @@
 enum
 {
     MULTI_BRINEY_ON_DEWFORD,
-    MULTI_PC,                           // Exit only, populated by
+    MULTI_PC,                           // Exit only, populated by CreatePCMultichoice
     MULTI_ENTERINFO,
     MULTI_CONTEST_INFO,
     MULTI_CONTEST_TYPE,
     MULTI_BASE_PC_NO_REGISTRY,
     MULTI_BASE_PC_WITH_REGISTRY,
     MULTI_REGISTER_MENU,
-    MULTI_SSTIDAL_LILYCOVE,             // Exit only, populated by
+    MULTI_SSTIDAL_LILYCOVE,             // Exit only, populated by CreateLilycoveSSTidalMultichoice
     MULTI_UNUSED_9,
     MULTI_UNUSED_10,
     MULTI_FRONTIER_PASS_INFO,
@@ -57,7 +57,7 @@ enum
     MULTI_ACRO_BIKE_INFO,
     MULTI_SATISFACTION,
     MULTI_STERN_DEEPSEA,
-    MULTI_UNUSED_ASH_VENDOR,            // Replaced by scrollable
+    MULTI_UNUSED_ASH_VENDOR,            // Replaced by scrollable multichoice
     MULTI_GAME_CORNER_DOLLS,
     MULTI_GAME_CORNER_COINS,
     MULTI_HOWS_FISHING,
@@ -99,7 +99,7 @@ enum
     MULTI_FORCED_START_MENU,
     MULTI_FRONTIER_GAMBLER_BET,
     MULTI_TENT,
-    MULTI_UNUSED_SSTIDAL_1,             // These 4 were replaced by
+    MULTI_UNUSED_SSTIDAL_1,             // These 4 were replaced by CreateLilycoveSSTidalMultichoice
     MULTI_UNUSED_SSTIDAL_2,
     MULTI_UNUSED_SSTIDAL_3,
     MULTI_UNUSED_SSTIDAL_4,
