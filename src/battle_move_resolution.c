@@ -788,10 +788,9 @@ bool32 IsAffectedByFollowMe(enum BattlerId battlerAtk, enum BattleSide defSide, 
 static bool32 HandleMoveTargetRedirection(struct BattleCalcValues *cv, enum MoveTarget moveTarget)
 {
     u32 redirectorOrderNum = MAX_BATTLERS_COUNT;
-    enum BattleMoveEffects moveEffect = cv->moveEffect;
     enum BattleSide side = BATTLE_OPPOSITE(GetBattlerSide(cv->battlerAtk));
 
-    if (moveEffect == EFFECT_REFLECT_DAMAGE)
+    if (cv->moveEffect == EFFECT_REFLECT_DAMAGE)
     {
         enum DamageCategory reflectCategory = GetReflectDamageMoveDamageCategory(cv->battlerAtk, cv->move);
 
@@ -802,7 +801,7 @@ static bool32 HandleMoveTargetRedirection(struct BattleCalcValues *cv, enum Move
     }
 
     if (IsAffectedByFollowMe(cv->battlerAtk, side, cv->move)
-     && (moveTarget == TARGET_SELECTED || moveTarget == TARGET_SMART || moveEffect == EFFECT_REFLECT_DAMAGE)
+     && (moveTarget == TARGET_SELECTED || moveTarget == TARGET_SMART || cv->moveEffect == EFFECT_REFLECT_DAMAGE)
      && !IsBattlerAlly(cv->battlerAtk, gSideTimers[side].followmeTarget))
     {
         gBattleStruct->moveTarget[cv->battlerAtk] = cv->battlerDef = gSideTimers[side].followmeTarget; // follow me moxie fix
@@ -820,9 +819,9 @@ static bool32 HandleMoveTargetRedirection(struct BattleCalcValues *cv, enum Move
      && moveTarget != TARGET_USER
      && moveTarget != TARGET_ALL_BATTLERS
      && moveTarget != TARGET_FIELD
-     && moveEffect != EFFECT_TEATIME
-     && moveEffect != EFFECT_SNIPE_SHOT
-     && moveEffect != EFFECT_PLEDGE)
+     && cv->moveEffect != EFFECT_TEATIME
+     && cv->moveEffect != EFFECT_SNIPE_SHOT
+     && cv->moveEffect != EFFECT_PLEDGE)
     {
         // Find first battler that redirects the move (in turn order)
         enum Ability abilityAtk = cv->abilities[cv->battlerAtk];
@@ -3083,26 +3082,26 @@ static enum MoveEndResult MoveEndMoveBlockRecoil(struct BattleCalcValues *cv)
         }
         break;
     case EFFECT_RECOIL:
-        if (gBattleStruct->moveDamage[gBattlerTarget] == 0)
+        if (gBattleStruct->moveDamage[cv->battlerDef] == 0)
             break;
         // fallthrough
     case EFFECT_CHLOROBLAST:
-        if (IsBattlerTurnDamaged(gBattlerTarget, INCLUDING_SUBSTITUTES) && IsBattlerAlive(gBattlerAttacker))
+        if (IsBattlerTurnDamaged(cv->battlerDef, INCLUDING_SUBSTITUTES) && IsBattlerAlive(cv->battlerAtk))
         {
-            if (IsAbilityAndRecord(gBattlerAttacker, cv->abilities[cv->battlerAtk], ABILITY_ROCK_HEAD)
-             || IsAbilityAndRecord(gBattlerAttacker, cv->abilities[cv->battlerAtk], ABILITY_MAGIC_GUARD))
+            if (IsAbilityAndRecord(cv->battlerAtk, cv->abilities[cv->battlerAtk], ABILITY_ROCK_HEAD)
+             || IsAbilityAndRecord(cv->battlerAtk, cv->abilities[cv->battlerAtk], ABILITY_MAGIC_GUARD))
                 break;
 
             if (cv->moveEffect == EFFECT_CHLOROBLAST)
             {
-                s32 recoil = (GetNonDynamaxMaxHP(gBattlerAttacker) + 1) / 2; // Half of Max HP Rounded UP
-                SetPassiveDamageAmount(gBattlerAttacker, recoil);
+                s32 recoil = (GetNonDynamaxMaxHP(cv->battlerAtk) + 1) / 2; // Half of Max HP Rounded UP
+                SetPassiveDamageAmount(cv->battlerAtk, recoil);
             }
             else
             {
-                SetPassiveDamageAmount(gBattlerAttacker, gBattleScripting.savedDmg * max(1, GetMoveRecoil(gCurrentMove)) / 100);
+                SetPassiveDamageAmount(cv->battlerAtk, gBattleScripting.savedDmg * max(1, GetMoveRecoil(cv->move)) / 100);
             }
-            TryUpdateEvolutionTracker(IF_RECOIL_DAMAGE_GE, gBattleStruct->passiveHpUpdate[gBattlerAttacker], MOVE_NONE);
+            TryUpdateEvolutionTracker(IF_RECOIL_DAMAGE_GE, gBattleStruct->passiveHpUpdate[cv->battlerAtk], MOVE_NONE);
             BattleScriptCall(BattleScript_MoveEffectRecoil);
             result = MOVEEND_RESULT_RUN_SCRIPT;
         }
@@ -3127,7 +3126,7 @@ static enum MoveEndResult MoveEndSheerForce(struct BattleCalcValues *cv)
 
 static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
 {
-enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
     enum BattleSide side = GetBattlerSide(cv->battlerDef);
 
     switch (cv->moveEffect)
