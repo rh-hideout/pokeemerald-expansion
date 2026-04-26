@@ -1794,6 +1794,13 @@ static void MoveDamageDataHpUpdate(enum BattlerId battler, u32 scriptBattler, co
     }
     else
     {
+        if (gMultiHitCounter != 0
+         && gBattleStruct->moveDamage[battler] > 0
+         && gBattleStruct->innardsOutStartHp[battler] == 0)
+        {
+            gBattleStruct->innardsOutStartHp[battler] = gBattleMons[battler].hp;
+        }
+
         if (gBattleStruct->moveDamage[battler] < 0)
         {
             // Negative damage is HP gain
@@ -2480,7 +2487,9 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
           && IsSheerForceAffected(gCurrentMove, abilities[battlerAtk])
           && !(moveEffect == MOVE_EFFECT_ORDER_UP && gBattleStruct->battlerState[gBattlerAttacker].commanderSpecies != SPECIES_NONE))
         moveEffect = MOVE_EFFECT_NONE;
-    else if (!IsBattlerAlive(gEffectBattler) && !IgnoreTargetingForMoveEffect(moveEffect))
+    else if (!IsBattlerAlive(gEffectBattler)
+          && moveEffect != MOVE_EFFECT_CORE_ENFORCER
+          && !IgnoreTargetingForMoveEffect(moveEffect))
         moveEffect = MOVE_EFFECT_NONE;
     else if (DoesSubstituteBlockMoveEffectOnTarget(gBattlerAttacker, gEffectBattler, moveEffect))
         moveEffect = MOVE_EFFECT_NONE;
