@@ -252,6 +252,7 @@ enum RandomTag
     RNG_DAYCARE_MAKE_EGG,
     RNG_DAYCARE_TWO_EVERSTONE,
     RNG_DAYCARE_NATURE_INHERITANCE,
+    RNG_DEXNAV_RANDOM_EGG_MOVE,
 };
 
 #define RandomWeighted(tag, ...) \

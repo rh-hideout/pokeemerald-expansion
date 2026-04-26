@@ -29,7 +29,6 @@
 #include "overworld.h"
 #include "scanline_effect.h"
 #include "field_weather.h"
-#include "international_string_util.h"
 #include "naming_screen.h"
 #include "pokemon_storage_system.h"
 #include "field_screen_effect.h"
@@ -347,29 +346,6 @@ static void AddHatchedMonToParty(u8 id)
 void ScriptHatchMon(void)
 {
     AddHatchedMonToParty(gSpecialVar_0x8004);
-}
-
-static bool8 _CheckDaycareMonReceivedMail(struct DayCare *daycare, u8 daycareId)
-{
-    u8 nickname[max(32, POKEMON_NAME_BUFFER_SIZE)];
-    struct DaycareMon *daycareMon = &daycare->mons[daycareId];
-
-    GetBoxMonNickname(&daycareMon->mon, nickname);
-    if (daycareMon->mail.message.itemId != ITEM_NONE
-        && (StringCompareWithoutExtCtrlCodes(nickname, daycareMon->mail.monName) != 0
-         || StringCompareWithoutExtCtrlCodes(gSaveBlock2Ptr->playerName, daycareMon->mail.otName) != 0))
-    {
-        StringCopy(gStringVar1, nickname);
-        TVShowConvertInternationalString(gStringVar2, daycareMon->mail.otName, daycareMon->mail.gameLanguage);
-        TVShowConvertInternationalString(gStringVar3, daycareMon->mail.monName, daycareMon->mail.monLanguage);
-        return TRUE;
-    }
-    return FALSE;
-}
-
-bool8 CheckDaycareMonReceivedMail(void)
-{
-    return _CheckDaycareMonReceivedMail(&gSaveBlock1Ptr->daycare, gSpecialVar_0x8004);
 }
 
 static u8 EggHatchCreateMonSprite(u8 useAlt, u8 state, u8 partyId, u16 *speciesLoc)
@@ -906,23 +882,6 @@ static void EggHatchPrintMessage(u8 windowId, u8 *string, u8 x, u8 y, u8 speed)
     sEggHatchData->textColor[1] = 5;
     sEggHatchData->textColor[2] = 6;
     AddTextPrinterParameterized4(windowId, FONT_NORMAL, x, y, 0, 0, sEggHatchData->textColor, speed, string);
-}
-
-u8 GetEggCyclesToSubtract(void)
-{
-    u8 count, i;
-    for (count = CalculatePlayerPartyCount(), i = 0; i < count; i++)
-    {
-        if (!GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SANITY_IS_EGG))
-        {
-            enum Ability ability = GetMonAbility(&gParties[B_TRAINER_0][i]);
-            if (ability == ABILITY_MAGMA_ARMOR
-             || ability == ABILITY_FLAME_BODY
-             || ability == ABILITY_STEAM_ENGINE)
-                return 2;
-        }
-    }
-    return 1;
 }
 
 u16 CountPartyAliveNonEggMons(void)

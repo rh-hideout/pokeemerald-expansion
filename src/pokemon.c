@@ -5132,18 +5132,6 @@ u8 CanLearnTeachableMove(enum Species species, enum Move move)
     return FALSE;
 }
 
-u8 GetLevelUpMovesBySpecies(enum Species species, u16 *moves)
-{
-    u8 numMoves = 0;
-    int i;
-    const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(species);
-
-    for (i = 0; i < MAX_LEVEL_UP_MOVES && learnset[i].move != LEVEL_UP_MOVE_END; i++)
-         moves[numMoves++] = learnset[i].move;
-
-     return numMoves;
-}
-
 u16 SpeciesToPokedexNum(enum Species species)
 {
     if (IsNationalPokedexEnabled())
