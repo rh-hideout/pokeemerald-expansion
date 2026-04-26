@@ -2355,6 +2355,10 @@ enum AIScore IncreaseStatDownScore(enum BattlerId battlerAtk, enum BattlerId bat
     if (DoesAbilityRaiseStatsWhenLowered(gAiLogicData->abilities[battlerDef]))
         return NO_INCREASE;
 
+    // Don't increase score if AI can just KO
+    if (GetNoOfHitsToKOBattlerDmg(GetBestDmgFromBattler(battlerAtk, battlerDef, AI_ATTACKING), battlerDef) == 1)
+        return NO_INCREASE;
+
     // TODO: Avoid decreasing stat if
     // player can kill ai in 2 hits with decreased attack / sp atk stages
     // ai can kill target in 2 hits without decreasing defense / sp def stages

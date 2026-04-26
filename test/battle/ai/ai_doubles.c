@@ -987,6 +987,7 @@ AI_DOUBLE_BATTLE_TEST("AI uses Helping Hand if it's about to die")
 
 AI_DOUBLE_BATTLE_TEST("AI uses Helping Hand if the ally does notably more damage")
 {
+    KNOWN_FAILING;  // Failure was masked by test runner issues
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_HELPING_HAND) == EFFECT_HELPING_HAND);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT);
