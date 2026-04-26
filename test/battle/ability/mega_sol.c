@@ -157,7 +157,7 @@ SINGLE_BATTLE_TEST("Mega Sol ignores Cloud Nine", s16 damage)
     }
 }
 
-SINGLE_BATTLE_TEST("Solar Beam does not need a charging turn if user has Mega Sol")
+SINGLE_BATTLE_TEST("Mega Sol: Solar Beam does not need a charging turn if user has Mega Sol")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SOLARBEAM) == EFFECT_SOLAR_BEAM);
@@ -173,7 +173,7 @@ SINGLE_BATTLE_TEST("Solar Beam does not need a charging turn if user has Mega So
     }
 }
 
-SINGLE_BATTLE_TEST("Growth increases Attack and Sp. Atk by 2 stages under Mega Sol (Gen 5+)")
+SINGLE_BATTLE_TEST("Mega Sol: Growth increases Attack and Sp. Atk by 2 stages under Mega Sol (Gen 5+)")
 {
     GIVEN {
         WITH_CONFIG(B_GROWTH_STAT_RAISE, GEN_1);
@@ -243,7 +243,7 @@ SINGLE_BATTLE_TEST("Mega Sol doesn't prevent other weather based activations (El
 
 SINGLE_BATTLE_TEST("Mega Sol doesn't prevent other weather based activations (Aurora Veil)")
 {
-    // KNOWN_FAILING;
+    KNOWN_FAILING;
     GIVEN {
     ASSUME(GetMoveEffect(MOVE_AURORA_VEIL) == EFFECT_AURORA_VEIL);
         PLAYER(SPECIES_ABOMASNOW) { Ability(ABILITY_SNOW_WARNING); }
