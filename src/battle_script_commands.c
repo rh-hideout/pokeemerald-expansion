@@ -2431,6 +2431,7 @@ static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect) //
     case MOVE_EFFECT_INFATUATE_SIDE:
     case MOVE_EFFECT_CONFUSE_SIDE:
     case MOVE_EFFECT_TORMENT_SIDE:
+    case MOVE_EFFECT_CORE_ENFORCER:
         return TRUE;
     default:
         return FALSE;
@@ -2487,9 +2488,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
           && IsSheerForceAffected(gCurrentMove, abilities[battlerAtk])
           && !(moveEffect == MOVE_EFFECT_ORDER_UP && gBattleStruct->battlerState[gBattlerAttacker].commanderSpecies != SPECIES_NONE))
         moveEffect = MOVE_EFFECT_NONE;
-    else if (!IsBattlerAlive(gEffectBattler)
-          && !(moveEffect == MOVE_EFFECT_CORE_ENFORCER && gBattleMons[gEffectBattler].ability == ABILITY_INNARDS_OUT)
-          && !IgnoreTargetingForMoveEffect(moveEffect))
+    else if (!IsBattlerAlive(gEffectBattler) && !IgnoreTargetingForMoveEffect(moveEffect))
         moveEffect = MOVE_EFFECT_NONE;
     else if (DoesSubstituteBlockMoveEffectOnTarget(gBattlerAttacker, gEffectBattler, moveEffect))
         moveEffect = MOVE_EFFECT_NONE;
