@@ -178,7 +178,7 @@ SINGLE_BATTLE_TEST("Growth increases Attack and Sp. Atk by 2 stages under Mega S
     GIVEN {
         WITH_CONFIG(B_GROWTH_STAT_RAISE, GEN_1);
         ASSUME(GetMoveEffect(MOVE_GROWTH) == EFFECT_GROWTH);
-        OPPONENT(SPECIES_MEGANIUM) { Item(ITEM_MEGANIUMITE); }
+        PLAYER(SPECIES_MEGANIUM) { Item(ITEM_MEGANIUMITE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_GROWTH, gimmick: GIMMICK_MEGA); }
