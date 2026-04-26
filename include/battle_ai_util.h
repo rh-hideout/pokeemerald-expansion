@@ -82,7 +82,6 @@ struct AiCalcValues
     u32 considerGimmickDef:1;
     u32 moveIndex:2;
     u32 padding:6;
-    // some padding
 
     u16 weather;
     u16 fieldStatuses;
