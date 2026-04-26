@@ -410,12 +410,12 @@ static void CreateHealthboxSprite(enum BattlerId battler)
 
         if (!IsOnPlayerSide(battler))
         {
-            if (GetMonData(GetBattlerMon(battler), MON_DATA_HP) == 0)
+            if (GetMonData(GetBattlerMon(battler), MON_DATA_HP) == 0 || gBattleStruct->battlerState[battler].notOnField)
                 SetHealthboxSpriteInvisible(healthboxSpriteId);
         }
         else if (!(gBattleTypeFlags & BATTLE_TYPE_SAFARI))
         {
-            if (!IsValidForBattle(GetBattlerMon(battler)))
+            if (!IsValidForBattle(GetBattlerMon(battler)) || gBattleStruct->battlerState[battler].notOnField)
                 SetHealthboxSpriteInvisible(healthboxSpriteId);
         }
     }
