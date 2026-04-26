@@ -245,8 +245,11 @@ static u64 GetAiFlags(u16 trainerId, enum BattlerId battler)
 {
     u64 flags = 0;
 
-    if (!(gBattleTypeFlags & BATTLE_TYPE_HAS_AI) && !IsWildMonSmart())
+    if ((!(gBattleTypeFlags & BATTLE_TYPE_HAS_AI) && !IsWildMonSmart())
+     || IsSpecialTrainer(TRAINER_BATTLE_PARAM.opponentA)) // Don't set flags for link battle unless Battle Tower link multi mode
+    {
         return 0;
+    }
     if (trainerId == 0xFFFF)
     {
         flags = GetWildAiFlags();
@@ -369,6 +372,7 @@ void SetupAIPredictionData(enum BattlerId battler, enum SwitchType switchType)
     // Switch prediction
     if (IsAiFlagPresent(AI_FLAG_PREDICT_SWITCH))
     {
+        enum SwitchType switchType = (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_RISKY) ? SWITCH_AFTER_KO : SWITCH_MID_BATTLE_OPTIONAL; // Risky AI switches aggressively even mid battle
         gAiLogicData->mostSuitableMonId[battler] = GetMostSuitableMonToSwitchInto(battler, switchType);
         if (ShouldSwitch(battler))
             gAiLogicData->shouldSwitch |= (1u << battler);
@@ -388,9 +392,6 @@ void SetupAIPredictionData(enum BattlerId battler, enum SwitchType switchType)
 
 void ComputeAiBattlerDecisions(enum BattlerId battler)
 {
-    // Risky AI switches aggressively even mid battle
-    enum SwitchType switchType = (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_RISKY) ? SWITCH_AFTER_KO : SWITCH_MID_BATTLE_OPTIONAL;
-
     gAiLogicData->aiCalcInProgress = TRUE;
 
         AIDebugTimerStart();
@@ -404,6 +405,7 @@ void ComputeAiBattlerDecisions(enum BattlerId battler)
     gAiLogicData->predictingMove = (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_PREDICT_MOVE) ? RandomPercentage(RNG_AI_PREDICT_MOVE, PREDICT_MOVE_CHANCE) : FALSE;
 
     // AI's switching data
+    enum SwitchType switchType = (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_RISKY) ? SWITCH_AFTER_KO : SWITCH_MID_BATTLE_OPTIONAL; // Risky AI switches aggressively even mid battle
     gAiLogicData->mostSuitableMonId[battler] = GetMostSuitableMonToSwitchInto(battler, switchType);
     if (ShouldSwitch(battler))
         gAiLogicData->shouldSwitch |= (1u << battler);

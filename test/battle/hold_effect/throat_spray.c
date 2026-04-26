@@ -194,3 +194,19 @@ SINGLE_BATTLE_TEST("Throat Spray is not blocked by Sheer Force")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
     }
 }
+
+SINGLE_BATTLE_TEST("Throat Spray will not activate if the mon just switched in")
+{
+    GIVEN {
+        ASSUME(IsSoundMove(MOVE_HYPER_VOICE) == TRUE);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_THROAT_SPRAY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_HYPER_VOICE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent); // red card
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player); // throat spray
+    }
+}

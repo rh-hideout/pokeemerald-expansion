@@ -71,7 +71,6 @@ struct ProtectStruct
     u32 palaceUnableToUseMove:1;
     u32 statRaised:1;
     u32 usedCustapBerry:1;    // also quick claw
-    u32 disableEjectPack:1;
     u32 pranksterElevated:1;
     u32 quickDraw:1;
     u32 quash:1;
@@ -84,7 +83,7 @@ struct ProtectStruct
     u32 forcedSwitch:1;
     u32 myceliumMight:1;
     u32 survivedOHKO:1; // Used to keep track of effects that allow focus punch when surviving moves like Fissure
-    u32 padding1:1;
+    u32 padding1:2;
     // End of 32-bit bitfield
     u16 helpingHand:3;
     u16 revengeDoubled:4;
@@ -650,7 +649,7 @@ struct BattleStruct
     struct LostItem itemLost[MAX_BATTLE_TRAINERS][PARTY_SIZE];  // Pokemon that had items consumed or stolen (two bytes per party member per side)
     u8 blunderPolicy:1; // should blunder policy activate
     u8 swapDamageCategory:1; // Photon Geyser, Shell Side Arm, Light That Burns the Sky
-    u8 unused2:1;
+    u8 redCardActivated :1;
     u8 snatchedMoveIsUsed:1;
     u8 descriptionSubmenu:1; // For Move Description window in move selection screen
     u8 ackBallUseBtn:1; // Used for the last used ball feature
@@ -969,6 +968,7 @@ extern u8 gBattlerPositions[MAX_BATTLERS_COUNT];
 extern u8 gActionsByTurnOrder[MAX_BATTLERS_COUNT];
 extern enum BattlerId gBattlerByTurnOrder[MAX_BATTLERS_COUNT];
 extern enum BattlerId gBattlersBySpeed[MAX_BATTLERS_COUNT];
+extern enum BattlerId gBattlersByRawSpeed[MAX_BATTLERS_COUNT];
 extern u8 gCurrentTurnActionNumber;
 extern u8 gCurrentActionFuncId;
 extern struct BattlePokemon gBattleMons[MAX_BATTLERS_COUNT];

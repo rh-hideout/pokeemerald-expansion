@@ -25,6 +25,7 @@
 #define SHOULD_SWITCH_ATTACKING_STAT_MINUS_THREE_PLUS_PERCENTAGE    100
 #define SHOULD_SWITCH_ALL_SCORES_BAD_PERCENTAGE                     100
 #define SHOULD_SWITCH_DYN_FUNC_PERCENTAGE                           50 // Dynamic switching function switch chance
+#define SHOULD_SWITCH_LOSES_1V1_PERCENTAGE                          0 // Keeping this disabled by default makes evaluating and testing switching behaviour when developing much easier
 
 // AI smart switching chances for bad statuses
 #define SHOULD_SWITCH_PERISH_SONG_PERCENTAGE                    100

@@ -237,7 +237,7 @@ static const struct BattleTest *GetBattleTest(void)
     return test;
 }
 
-static bool32 IsAITest(void)
+bool32 IsAITest(void)
 {
     switch (GetBattleTest()->type)
     {
@@ -259,6 +259,11 @@ static bool32 IsAIDoublesTest(void)
 static enum BattleTrainer Test_GetBattlerTrainer(enum BattlerId battlerId)
 {
     return (gBattleTestRunnerState->data.battlerTrainers >> (2 * battlerId)) & 0x3;
+}
+
+static bool32 Test_BattlersShareParty(enum BattlerId battlerId1, enum BattlerId battlerId2)
+{
+    return Test_GetBattlerTrainer(battlerId1) == Test_GetBattlerTrainer(battlerId2);
 }
 
 static u32 BattleTest_EstimateCost(void *data)
@@ -2851,7 +2856,7 @@ void ExpectSendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex
     for (i = 0; i < STATE->battlersCount; i++)
     {
         if (battlerId != i && (battlerId & BIT_SIDE) == (i & BIT_SIDE))
-            INVALID_IF((DATA.currentMonIndexes[i] == partyIndex) && BattlersShareParty(battlerId, i), "EXPECT_SEND_OUT to battler");
+            INVALID_IF((DATA.currentMonIndexes[i] == partyIndex) && Test_BattlersShareParty(battlerId, i), "EXPECT_SEND_OUT to battler");
     }
     if (!(DATA.actionBattlers & (1 << battlerId)))
     { // Multi test partner trainers want setting to PlayerPartner controller even if no move set in this case.
@@ -2975,7 +2980,7 @@ void Switch(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
     for (i = 0; i < STATE->battlersCount; i++)
     {
         if (battlerId != i && (battlerId & BIT_SIDE) == (i & BIT_SIDE))
-            INVALID_IF((DATA.currentMonIndexes[i] == partyIndex) && BattlersShareParty(battlerId, i), "SWITCH to battler");
+            INVALID_IF((DATA.currentMonIndexes[i] == partyIndex) && Test_BattlersShareParty(battlerId, i), "SWITCH to battler");
     }
 
     PushBattlerAction(sourceLine, battlerId, RECORDED_ACTION_TYPE, B_ACTION_SWITCH);
@@ -2997,7 +3002,7 @@ void ExpectSwitch(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
     for (i = 0; i < STATE->battlersCount; i++)
     {
         if (battlerId != i && (battlerId & BIT_SIDE) == (i & BIT_SIDE))
-            INVALID_IF((DATA.currentMonIndexes[i] == partyIndex) && BattlersShareParty(battlerId, i), "EXPECT_SWITCH to battler");
+            INVALID_IF((DATA.currentMonIndexes[i] == partyIndex) && Test_BattlersShareParty(battlerId, i), "EXPECT_SWITCH to battler");
     }
 
     DATA.currentMonIndexes[battlerId] = partyIndex;
@@ -3031,7 +3036,7 @@ void SendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
     for (i = 0; i < STATE->battlersCount; i++)
     {
         if (battlerId != i && (battlerId & BIT_SIDE) == (i & BIT_SIDE))
-            INVALID_IF((DATA.currentMonIndexes[i] == partyIndex) && BattlersShareParty(battlerId, i), "SEND_OUT to battler");
+            INVALID_IF((DATA.currentMonIndexes[i] == partyIndex) && Test_BattlersShareParty(battlerId, i), "SEND_OUT to battler");
     }
     if (!(DATA.actionBattlers & (1 << battlerId)))
         Move(sourceLine, battler, (struct MoveContext) { move: MOVE_CELEBRATE, explicitMove: TRUE });

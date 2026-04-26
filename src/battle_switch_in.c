@@ -344,7 +344,7 @@ static bool32 TryHazardsOnSwitchIn(enum BattlerId battler, enum Ability ability,
             effect = TRUE;
         }
         else if (IsBattlerAffectedByHazards(battler, holdEffect, TRUE)
-              && CanBePoisoned(battler, battler, ability, ability))
+              && CanBePoisoned(battler, battler, ABILITY_NONE, ability))
         {
             gBattleScripting.battler = battler;
             BattleScriptPushCursor();

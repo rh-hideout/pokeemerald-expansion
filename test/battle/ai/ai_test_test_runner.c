@@ -2,6 +2,44 @@
 #include "test/battle.h"
 #include "battle_ai_util.h"
 
+// Intentionally uses an illegal forced ability so the regression exercises the
+// test-runner override path instead of depending on species ability data.
+AI_SINGLE_BATTLE_TEST("TESTING: forced illegal bench abilities are honored during AI switch evaluation")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_HERACROSS) {
+            Level(76);
+            Moves(MOVE_BULLET_SEED);
+            Ability(ABILITY_GUTS);
+            Item(ITEM_HERACRONITE);
+            Nature(NATURE_ADAMANT);
+            Speed(157);
+        }
+        PLAYER(SPECIES_WOBBUFFET) {
+            Level(1);
+            Speed(1);
+        }
+        OPPONENT(SPECIES_SWAMPERT) {
+            Level(74);
+            Moves(MOVE_KNOCK_OFF, MOVE_PROTECT, MOVE_LIQUIDATION);
+            Nature(NATURE_CAREFUL);
+            Item(ITEM_RINDO_BERRY);
+            Speed(116);
+        }
+        OPPONENT(SPECIES_CHANDELURE) {
+            Level(74);
+            Moves(MOVE_FLAMETHROWER, MOVE_ENERGY_BALL);
+            Nature(NATURE_TIMID);
+            Item(ITEM_CHOICE_SPECS);
+            Ability(ABILITY_SHADOW_TAG);
+            Speed(160);
+        }
+    } WHEN {
+        TURN { MOVE(player, MOVE_BULLET_SEED); EXPECT_SWITCH(opponent, 1); }
+    }
+}
+
 AI_SINGLE_BATTLE_TEST("TIE_BREAK_SCORE with SCORE_TIE_CHOSEN can control AI move selection when scores are tied (Singles)")
 {
     u32 tiedMove;

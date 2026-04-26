@@ -55,7 +55,6 @@ static u32 ReturnAnimIdForBattler(bool32 isPlayerSide, u32 specificBattler);
 static void LaunchKOAnimation(enum BattlerId battlerId, u16 animId, bool32 isFront);
 static void AnimateMonAfterKnockout(enum BattlerId battler);
 
-
 bool32 IsAiVsAiBattle(void)
 {
     return (B_FLAG_AI_VS_AI_BATTLE && FlagGet(B_FLAG_AI_VS_AI_BATTLE));
@@ -3328,7 +3327,7 @@ bool32 BattleSideHasTwoTrainers(enum BattleSide side)
     if (side == B_SIDE_PLAYER)
         return gBattleTypeFlags & BATTLE_TYPE_MULTI;
     else
-        return (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS || (gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_MULTI));
+        return ((gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && TRAINER_BATTLE_PARAM.opponentB != 0xFFFF) || (gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_MULTI));
 }
 
 bool32 BattlersShareParty(enum BattlerId battler1, enum BattlerId battler2)

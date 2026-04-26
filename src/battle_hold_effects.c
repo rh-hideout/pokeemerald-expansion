@@ -397,12 +397,12 @@ static enum ItemEffect TryBlunderPolicy(enum BattlerId battlerAtk)
      && !gBattleStruct->battlerState[battlerAtk].redCardSwitched
      && CompareStat(battlerAtk, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(battlerAtk)))
     {
-        gBattleStruct->blunderPolicy = FALSE;
         SET_STATCHANGER(STAT_SPEED, 2, FALSE);
         BattleScriptCall(BattleScript_AttackerItemStatRaise);
         effect = ITEM_STATS_CHANGE;
     }
 
+    gBattleStruct->blunderPolicy = FALSE;
     return effect;
 }
 
@@ -519,7 +519,6 @@ static enum ItemEffect TryShellBell(enum BattlerId battlerAtk)
      && !gBattleStruct->unableToUseMove
      && !gBattleStruct->battlerState[battlerAtk].redCardSwitched
      && !IsBattlerAtMaxHp(battlerAtk)
-     && GetMoveEffect(gCurrentMove) != EFFECT_PAIN_SPLIT
      && !IsFutureSightAttackerInParty(battlerAtk, gBattlerTarget, gCurrentMove)
      && !(B_HEAL_BLOCKING >= GEN_5 && gBattleMons[battlerAtk].volatiles.healBlock))
     {
@@ -539,7 +538,6 @@ static enum ItemEffect TryLifeOrb(enum BattlerId battlerAtk)
      && !gBattleStruct->battlerState[battlerAtk].redCardSwitched
      && (IsAnyTargetTurnDamaged(battlerAtk, INCLUDING_SUBSTITUTES) || gBattleScripting.savedDmg > 0)
      && !IsAbilityAndRecord(battlerAtk, GetBattlerAbility(battlerAtk), ABILITY_MAGIC_GUARD)
-     && GetMoveEffect(gCurrentMove) != EFFECT_PAIN_SPLIT
      && !IsFutureSightAttackerInParty(battlerAtk, gBattlerTarget, gCurrentMove))
     {
         SetPassiveDamageAmount(battlerAtk, GetNonDynamaxMaxHP(battlerAtk) / 10);

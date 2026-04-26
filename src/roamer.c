@@ -1,6 +1,6 @@
 #include "global.h"
 #include "event_data.h"
-#include "ow_synchronize.h"
+#include "ow_abilities.h"
 #include "pokemon.h"
 #include "random.h"
 #include "roamer.h"

@@ -44,7 +44,6 @@ SINGLE_BATTLE_TEST("Poison Touch only applies when using contact moves")
             NONE_OF {
                 ABILITY_POPUP(player, ABILITY_POISON_TOUCH);
                 ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
-                MESSAGE("The opposing Wobbuffet was poisoned!");
                 STATUS_ICON(opponent, poison: TRUE);
             }
         }
@@ -104,9 +103,77 @@ SINGLE_BATTLE_TEST("Poison Touch activates when user has Protective Pads, but no
             NONE_OF {
                 ABILITY_POPUP(player, ABILITY_POISON_TOUCH);
                 ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
-                MESSAGE("The opposing Wobbuffet was poisoned!");
                 STATUS_ICON(opponent, poison: TRUE);
             }
         }
+    }
+}
+
+SINGLE_BATTLE_TEST("Poison Touch does not trigger if attack is blocked by Substitute")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SUBSTITUTE) == EFFECT_SUBSTITUTE);
+        ASSUME(GetMoveCategory(MOVE_SCRATCH) != DAMAGE_CATEGORY_STATUS);
+        ASSUME(MoveMakesContact(MOVE_SCRATCH));
+        PLAYER(SPECIES_GRIMER) { Ability(ABILITY_POISON_TOUCH); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUBSTITUTE); }
+        TURN { MOVE(player, MOVE_SCRATCH, WITH_RNG(RNG_POISON_TOUCH, TRUE)); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        NONE_OF {
+            ABILITY_POPUP(player, ABILITY_POISON_TOUCH);
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+            STATUS_ICON(opponent, poison: TRUE);
+        }
+    } THEN {
+        EXPECT(opponent->status1 == 0);
+    }
+}
+
+SINGLE_BATTLE_TEST("Poison Touch is blocked by Shield Dust")
+{
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_SCRATCH) != DAMAGE_CATEGORY_STATUS);
+        ASSUME(MoveMakesContact(MOVE_SCRATCH));
+        PLAYER(SPECIES_GRIMER) { Ability(ABILITY_POISON_TOUCH); }
+        OPPONENT(SPECIES_VIVILLON) { Ability(ABILITY_SHIELD_DUST); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH, WITH_RNG(RNG_POISON_TOUCH, TRUE)); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        HP_BAR(opponent);
+        NONE_OF {
+            ABILITY_POPUP(player, ABILITY_POISON_TOUCH);
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+            STATUS_ICON(opponent, poison: TRUE);
+        }
+    } THEN {
+        EXPECT(opponent->status1 == 0);
+    }
+}
+
+SINGLE_BATTLE_TEST("Poison Touch is blocked by Covert Cloak")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_COVERT_CLOAK].holdEffect == HOLD_EFFECT_COVERT_CLOAK);
+        ASSUME(GetMoveCategory(MOVE_SCRATCH) != DAMAGE_CATEGORY_STATUS);
+        ASSUME(MoveMakesContact(MOVE_SCRATCH));
+        PLAYER(SPECIES_GRIMER) { Ability(ABILITY_POISON_TOUCH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_COVERT_CLOAK); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH, WITH_RNG(RNG_POISON_TOUCH, TRUE)); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        HP_BAR(opponent);
+        NONE_OF {
+            ABILITY_POPUP(player, ABILITY_POISON_TOUCH);
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+            STATUS_ICON(opponent, poison: TRUE);
+        }
+    } THEN {
+        EXPECT(opponent->status1 == 0);
     }
 }
