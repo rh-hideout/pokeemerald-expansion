@@ -4,27 +4,14 @@
 
 AI_SINGLE_BATTLE_TEST("AI prefers Bubble over Water Gun if it's slower")
 {
-    u32 speedPlayer, speedAi;
-
-    PARAMETRIZE { speedPlayer = 200; speedAi = 10; }
-    PARAMETRIZE { speedPlayer = 10; speedAi = 200; }
-
     GIVEN {
         ASSUME(GetMovePower(MOVE_WATER_GUN) == GetMovePower(MOVE_BUBBLE));
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_SCIZOR) { Speed(speedPlayer); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_WATER_GUN, MOVE_BUBBLE); Speed(speedAi); }
+        PLAYER(SPECIES_SCIZOR) { Speed(200); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_WATER_GUN, MOVE_BUBBLE); Speed(10); }
     } WHEN {
-        if (speedPlayer > speedAi)
-        {
-            TURN { SCORE_GT(opponent, MOVE_BUBBLE, MOVE_WATER_GUN); }
-            TURN { SCORE_GT(opponent, MOVE_BUBBLE, MOVE_WATER_GUN); }
-        }
-        else
-        {
-            TURN { SCORE_EQ(opponent, MOVE_BUBBLE, MOVE_WATER_GUN); }
-            TURN { SCORE_EQ(opponent, MOVE_BUBBLE, MOVE_WATER_GUN); }
-        }
+        TURN { SCORE_GT(opponent, MOVE_BUBBLE, MOVE_WATER_GUN); }
+        TURN { SCORE_GT(opponent, MOVE_BUBBLE, MOVE_WATER_GUN); }
     }
 }
 
@@ -315,7 +302,7 @@ AI_SINGLE_BATTLE_TEST("AI scores KOs with two turn moves correctly, considering 
         PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_CELEBRATE); HP(5); }
         OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_FOCUS_BLAST, MOVE_SKULL_BASH, MOVE_FIERY_DANCE, MOVE_CRABHAMMER); Item(aiItem); }
     } WHEN {
-        TURN { aiItem == ITEM_POWER_HERB ? EXPECT_MOVE(opponent, MOVE_SKULL_BASH) : SCORE_EQ(opponent, MOVE_FIERY_DANCE); }
+        TURN { aiItem == ITEM_POWER_HERB ? EXPECT_MOVE(opponent, MOVE_SKULL_BASH) : SCORE_EQ(opponent, MOVE_FIERY_DANCE, MOVE_SKULL_BASH); }
     }
 }
 

@@ -5578,7 +5578,6 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
             switch (additionalEffect->moveEffect)
             {
             case MOVE_EFFECT_STAT_PLUS:
-            case MOVE_EFFECT_STAT_MINUS:
                 for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
                 {
                     enum Stat stat = sAccurateStatOrder[i];
@@ -5587,8 +5586,23 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
                     if (stage == 0)
                         continue;
 
-                    if (additionalEffect->moveEffect == MOVE_EFFECT_STAT_MINUS)
+                    if (aiData->abilities[battlerAtk] == ABILITY_CONTRARY)
                         stage = -1 * stage;
+
+                    if (stage < 0)
+                        continue;
+
+                    ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, stat, stage));
+                }
+                break;
+            case MOVE_EFFECT_STAT_MINUS:
+                for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
+                {
+                    enum Stat stat = sAccurateStatOrder[i];
+                    s32 stage = -1 * GetStatStage(stat, additionalEffect);
+
+                    if (stage == 0)
+                        continue;
 
                     if (aiData->abilities[battlerAtk] == ABILITY_CONTRARY)
                         stage = -1 * stage;
@@ -5596,9 +5610,7 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
                     if (stage < 0)
                         continue;
 
-                    if (IncreaseStatUpScore(battlerAtk, battlerDef, stat, stage) > WEAK_EFFECT)
-                    // if (gBattleMons[battlerAtk].statStages[stat] < MAX_STAT_STAGE)
-                        ADJUST_SCORE(DECENT_EFFECT);
+                    ADJUST_SCORE(IncreaseStatDownScore(battlerAtk, battlerDef, stat));
                 }
                 break;
             case MOVE_EFFECT_ORDER_UP:
@@ -5638,7 +5650,6 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
             switch (additionalEffect->moveEffect)
             {
             case MOVE_EFFECT_STAT_PLUS:
-            case MOVE_EFFECT_STAT_MINUS:
                 for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
                 {
                     s32 stage = GetStatStage(stat, additionalEffect);
@@ -5646,8 +5657,21 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
                     if (stage == 0)
                         continue;
 
-                    if (additionalEffect->moveEffect == MOVE_EFFECT_STAT_MINUS)
+                    if (aiData->abilities[battlerDef] == ABILITY_CONTRARY)
                         stage = -1 * stage;
+
+                    if (stage > 0)
+                        continue;
+
+                    ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, stat, stage));
+                }
+            case MOVE_EFFECT_STAT_MINUS:
+                for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
+                {
+                    s32 stage = -1 * GetStatStage(stat, additionalEffect);
+
+                    if (stage == 0)
+                        continue;
 
                     if (aiData->abilities[battlerDef] == ABILITY_CONTRARY)
                         stage = -1 * stage;
@@ -5655,9 +5679,7 @@ static s32 AI_CalcAdditionalEffectScore(enum BattlerId battlerAtk, enum BattlerI
                     if (stage > 0)
                         continue;
 
-                    if (IncreaseStatDownScore(battlerAtk, battlerDef, stat) > WEAK_EFFECT)
-                    // if (gBattleMons[battlerDef].statStages[stat] > MIN_STAT_STAGE)
-                        ADJUST_SCORE(DECENT_EFFECT);
+                    ADJUST_SCORE(IncreaseStatDownScore(battlerAtk, battlerDef, stat));
                 }
                 break;
             case MOVE_EFFECT_FLINCH:
