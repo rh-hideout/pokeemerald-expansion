@@ -162,10 +162,10 @@ SINGLE_BATTLE_TEST("Solar Beam does not need a charging turn if user has Mega So
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SOLARBEAM) == EFFECT_SOLAR_BEAM);
         ASSUME(GetMoveType(MOVE_SOLARBEAM) == TYPE_GRASS);
-        OPPONENT(SPECIES_MEGANIUM) { Item(ITEM_MEGANIUMITE); }
+        PLAYER(SPECIES_MEGANIUM) { Item(ITEM_MEGANIUMITE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(player, MOVE_SOLAR_BEAM); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_SOLAR_BEAM, gimmick: GIMMICK_MEGA); MOVE(opponent, MOVE_CELEBRATE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SOLAR_BEAM, player);
         HP_BAR(opponent);
@@ -243,7 +243,7 @@ SINGLE_BATTLE_TEST("Mega Sol doesn't prevent other weather based activations (El
 
 SINGLE_BATTLE_TEST("Mega Sol doesn't prevent other weather based activations (Aurora Veil)")
 {
-    KNOWN_FAILING;
+    // KNOWN_FAILING;
     GIVEN {
     ASSUME(GetMoveEffect(MOVE_AURORA_VEIL) == EFFECT_AURORA_VEIL);
         PLAYER(SPECIES_ABOMASNOW) { Ability(ABILITY_SNOW_WARNING); }
