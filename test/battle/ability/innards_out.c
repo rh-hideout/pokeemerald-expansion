@@ -50,6 +50,30 @@ SINGLE_BATTLE_TEST("Innards Out counters accumulated multihit damage after all s
     }
 }
 
+SINGLE_BATTLE_TEST("Innards Out counters accumulated multihit damage for Parental Bond strikes even if fainting on first hit")
+{
+    s16 captured;
+
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_SCRATCH) != DAMAGE_CATEGORY_STATUS);
+        ASSUME(gItemsInfo[ITEM_FOCUS_SASH].holdEffect == HOLD_EFFECT_FOCUS_SASH);
+        PLAYER(SPECIES_PYUKUMUKU) { HP(2); MaxHP(2); Ability(ABILITY_INNARDS_OUT); Item(ITEM_FOCUS_SASH); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_KANGASKHAN) { Item(ITEM_KANGASKHANITE); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SCRATCH, gimmick: GIMMICK_MEGA); SEND_OUT(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        HP_BAR(player);
+        HP_BAR(player);
+        ABILITY_POPUP(player, ABILITY_INNARDS_OUT);
+        HP_BAR(opponent, captureDamage: &captured);
+    } THEN {
+        EXPECT_EQ(captured, 2);
+    }
+}
+
 SINGLE_BATTLE_TEST("Innards Out does not trigger when Core Enforcer suppresses it after target has acted")
 {
     GIVEN {
