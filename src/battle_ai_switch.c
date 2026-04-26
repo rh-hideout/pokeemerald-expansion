@@ -870,10 +870,10 @@ static bool32 GetHitEscapeTransformState(enum BattlerId battlerAtk, enum Move mo
 
         if (gAiLogicData->effectiveness[battlerAtk][battlerDef][moveIndex] > UQ_4_12(0.0))
         {
-            enum Move predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
+            enum Move predictedMove = GetPredictedMove(battlerAtk, battlerDef, gAiLogicData);
 
             hasValidTarget = TRUE;
-            if (!AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY))
+            if (!AI_IsFaster(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY))
                 isFasterThanAll = FALSE;
         }
     }
@@ -1393,7 +1393,7 @@ bool32 ShouldSwitch(enum BattlerId battler)
     switchContext.opposingBattler = GetOppositeBattler(switchContext.battler);
     switchContext.party = GetBattlerParty(switchContext.battler);
     switchContext.lastId = GetAILastPartyIndex(switchContext.battler);
-    switchContext.incomingMove = GetPredictedMoveSpeedCheck(switchContext.battler, switchContext.opposingBattler, gAiLogicData);
+    switchContext.incomingMove = GetIncomingMove(switchContext.battler, switchContext.opposingBattler, gAiLogicData);
     switchContext.hasStatRaised = AnyUsefulStatIsRaised(switchContext.battler);
     switchContext.typeMatchup = GetBattlerTypeMatchup(switchContext.opposingBattler, switchContext.battler);
     GetActiveBattlerIds(switchContext.battler, &switchContext.battlerIn1, &switchContext.battlerIn2);
