@@ -4469,7 +4469,7 @@ static void SetMonTypeIcons(void)
     }
 }
 
-static enum Type SummaryScreen_GetDynamicType(struct Pokemon *mon, enum Move move, enum Type type)
+static enum Type SummaryScreen_GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum Type type)
 {
     if (!P_SHOW_DYNAMIC_TYPES)
         return type;
@@ -4477,6 +4477,7 @@ static enum Type SummaryScreen_GetDynamicType(struct Pokemon *mon, enum Move mov
     enum BattlerId battler;
     enum MonState state = gMain.inBattle ? MON_IN_BATTLE : MON_OUTSIDE_BATTLE;
 
+    // check if mon on field
     for (battler = B_BATTLER_0; battler < gBattlersCount; battler++)
     {
         if (state == MON_OUTSIDE_BATTLE)
@@ -4489,8 +4490,19 @@ static enum Type SummaryScreen_GetDynamicType(struct Pokemon *mon, enum Move mov
             break;
     }
 
-    if (battler >= gBattlersCount)
-        return type;
+    if (IsDoubleBattle())
+    {
+        if (sMonSummaryScreen->curMonIndex > 1)
+        {
+            battler = 0;
+            state = MON_OUTSIDE_BATTLE;
+        }
+    }
+    else
+    {
+        battler = 0;
+        state = MON_OUTSIDE_BATTLE;
+    }
 
     type = CheckDynamicMoveType(mon, move, battler, state);
 
@@ -4509,7 +4521,7 @@ static void SetMoveTypeIcons(void)
         if (summary->moves[i] != MOVE_NONE)
         {
             type = GetMoveType(summary->moves[i]);
-            type = SummaryScreen_GetDynamicType(mon, summary->moves[i], type);
+            type = SummaryScreen_GetDynamicMoveType(mon, summary->moves[i], type);
             SetTypeSpritePosAndPal(type, 85, 32 + (i * 16), i + SPRITE_ARR_ID_TYPE);
         }
         else
@@ -4536,7 +4548,7 @@ static void SetNewMoveTypeIcon(void)
 {
     struct Pokemon *mon = &sMonSummaryScreen->currentMon;
     enum Type type = GetMoveType(sMonSummaryScreen->newMove);
-    type = SummaryScreen_GetDynamicType(mon, sMonSummaryScreen->newMove, type);
+    type = SummaryScreen_GetDynamicMoveType(mon, sMonSummaryScreen->newMove, type);
 
     if (sMonSummaryScreen->newMove == MOVE_NONE)
     {
