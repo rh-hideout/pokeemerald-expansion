@@ -278,7 +278,7 @@ bool32 IsSwitchinTSpikesAffected(enum BattlerId battler)
         return FALSE;
     if (IS_BATTLER_ANY_TYPE(battler, TYPE_POISON, TYPE_STEEL))
         return FALSE;
-    if (ability == ABILITY_IMMUNITY || IsAbilityOnSide(battler, ABILITY_PASTEL_VEIL))
+    if (ability == ABILITY_IMMUNITY || AI_IsAbilityOnSide(battler, ABILITY_PASTEL_VEIL))
         return FALSE;
     if ((heldItemEffect == HOLD_EFFECT_HEAVY_DUTY_BOOTS || heldItemEffect == HOLD_EFFECT_CURE_PSN || heldItemEffect == HOLD_EFFECT_CURE_STATUS) && !ignoreItem)
         return FALSE;
@@ -2884,7 +2884,7 @@ static void SetBattlerVolatilesForSwitchin(enum BattlerId battler, u32 weather, 
             gBattleMons[battler].volatiles.boosterEnergyActivated = TRUE;
         break;
     case ABILITY_PROTOSYNTHESIS:
-        if (((weather & B_WEATHER_SUN) && HasWeatherEffect()) || GetItemHoldEffect(aiItem) == HOLD_EFFECT_BOOSTER_ENERGY)
+        if ((weather & B_WEATHER_SUN) || GetItemHoldEffect(aiItem) == HOLD_EFFECT_BOOSTER_ENERGY)
             gBattleMons[battler].volatiles.boosterEnergyActivated = TRUE;
         break;
     case ABILITY_WIND_POWER:

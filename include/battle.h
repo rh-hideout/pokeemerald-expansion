@@ -226,7 +226,6 @@ struct AiLogicData
     u8 turnOrder[MAX_BATTLERS_COUNT];
 
     // Flags
-    u32 weatherHasEffect:1; // The same as HasWeatherEffect(). Stored here, so it's called only once.
     u32 ejectButtonSwitch:1; // Tracks whether current switch out was from Eject Button
     u32 ejectPackSwitch:1; // Tracks whether current switch out was from Eject Pack
     u32 predictingSwitch:1; // Determines whether AI will use switch predictions this turn or not
@@ -237,7 +236,7 @@ struct AiLogicData
     u32 shouldSwitch:4; // Stores result of ShouldSwitch, which decides whether a mon should be switched out
     u32 shouldConsiderFinalGambit:1; // Determines whether AI should consider Final Gambit this turn
     u32 switchInCalc:1; // Indicates if we're doing switch in calcs, this is purely for Retaliate damage calcs
-    u32 padding2:18;
+    u32 padding2:19;
 };
 
 struct AiThinkingStruct

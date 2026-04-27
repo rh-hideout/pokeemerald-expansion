@@ -1922,7 +1922,19 @@ static inline bool32 AI_WeatherHasEffect(void)
      || gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_RIGHT] & AI_FLAG_NEGATE_UNAWARE)
         return TRUE;   // AI doesn't understand weather supression (handicap)
 
-    return gAiLogicData->weatherHasEffect;  // weather damping abilities are announced
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+    {
+        switch (gAiLogicData->abilities[battler])
+        {
+        case ABILITY_CLOUD_NINE:
+        case ABILITY_AIR_LOCK:
+            return FALSE;
+        default:
+            break;
+        }
+    }
+
+    return TRUE;
 }
 
 u32 AI_GetWeather(void)

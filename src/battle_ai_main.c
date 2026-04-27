@@ -241,12 +241,19 @@ static u64 GetWildAiFlags(void)
     return flags;
 }
 
+static bool32 IsSmartBattle(void)
+{
+    if (IsSpecialTrainer(TRAINER_BATTLE_PARAM.opponentA))
+        return FALSE; // Don't set flags for link battle unless Battle Tower link multi mode
+
+    return gBattleTypeFlags & BATTLE_TYPE_HAS_AI || IsWildMonSmart();
+}
+
 static u64 GetAiFlags(u16 trainerId, enum BattlerId battler)
 {
     u64 flags = 0;
 
-    if ((!(gBattleTypeFlags & BATTLE_TYPE_HAS_AI) && !IsWildMonSmart())
-     || IsSpecialTrainer(TRAINER_BATTLE_PARAM.opponentA)) // Don't set flags for link battle unless Battle Tower link multi mode
+    if (!IsSmartBattle())
     {
         return 0;
     }
@@ -751,15 +758,12 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
 {
     memset(aiData, 0, sizeof(struct AiLogicData));
     gAiBattleData->aiUsingGimmick = 0;
-    if (!(gBattleTypeFlags & BATTLE_TYPE_HAS_AI) && !IsWildMonSmart())
+
+    if (!IsSmartBattle())
         return;
 
-       gAiLogicData->aiCalcInProgress = TRUE;
-
+    gAiLogicData->aiCalcInProgress = TRUE;
     AIDebugTimerStart();
-
-    aiData->weatherHasEffect = HasWeatherEffect();
-    u32 weather = AI_GetWeather();
 
     // get/assume all battler data and simulate AI damage
     u32 battlersCount = gBattlersCount;
@@ -775,6 +779,8 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
     for (enum BattlerId battler = 0; battler < battlersCount; battler++)
         aiData->turnOrder[battler] = battler;
     SetBattlerTurnOrder(aiData->turnOrder);
+
+    u32 weather = AI_GetWeather(); // Needs SetBattlerAiData
 
     for (enum BattlerId battler = 0; battler < battlersCount; battler++)
     {
@@ -795,7 +801,6 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
     }
 
     AIDebugTimerEnd();
-
     gAiLogicData->aiCalcInProgress = FALSE;
 }
 
