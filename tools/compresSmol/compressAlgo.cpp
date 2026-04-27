@@ -1278,13 +1278,13 @@ bool processImageData(std::vector<unsigned char> *pInput, CompressedImage *pImag
                 continue;
             if (!fillCompressVec(&loVec, &symVec, mode, pInput->size(), fileName, &currImg))
             {
-                fprintf(stderr, "WARNING: Couldn't fill compression vectors for mode %zu for minCodeLength %zu\n", mode, minCodeLength);
+                fprintf(stderr, "WARNING: Couldn't fill compression vectors for mode %u for minCodeLength %zu\n", mode, minCodeLength);
                 continue;
             }
 
             if (!verifyCompressionShort(&currImg, &usBase))
             {
-                fprintf(stderr, "WARNING: Couldn't verify compression for mode %zu for minCodeLength %zu\n", mode, minCodeLength);
+                fprintf(stderr, "WARNING: Couldn't verify compression for mode %u for minCodeLength %zu\n", mode, minCodeLength);
                 continue;
             }
             std::vector<unsigned int> uiVec;
@@ -1293,7 +1293,7 @@ bool processImageData(std::vector<unsigned char> *pInput, CompressedImage *pImag
             readRawDataVecs(&uiVec, &decodedImage);
             if (!compareVectorsShort(&decodedImage, &usBase))
             {
-                fprintf(stderr, "WARNING: Couldn't verify compression for mode %zu for minCodeLength %zu\n", mode, minCodeLength);
+                fprintf(stderr, "WARNING: Couldn't verify compression for mode %u for minCodeLength %zu\n", mode, minCodeLength);
                 continue;
             }
             foundAnyMode = true;
