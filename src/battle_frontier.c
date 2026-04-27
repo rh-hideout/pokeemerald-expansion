@@ -16,6 +16,7 @@
 #include "string_util.h"
 #include "task.h"
 #include "text.h"
+#include "trainer_util.h"
 #include "constants/abilities.h"
 #include "constants/battle_frontier.h"
 #include "constants/battle_frontier_mons.h"
