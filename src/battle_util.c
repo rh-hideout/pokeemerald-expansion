@@ -4079,9 +4079,8 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 if (IsFutureSightAttackerInParty(gBattlerAttacker, gBattlerTarget, gCurrentMove))
                     break;
 
-                // On multihit moves, use HP before the first strike taken this move.
-                if (gBattleStruct->innardsOutStartHp[gBattlerTarget] != 0)
-                    damage = gBattleStruct->innardsOutStartHp[gBattlerTarget];
+                if (gBattleStruct->innardsOutHpLost[gBattlerTarget] != 0)
+                    damage = gBattleStruct->innardsOutHpLost[gBattlerTarget];
 
                 gBattleScripting.battler = gBattlerTarget;
                 SetPassiveDamageAmount(gBattlerAttacker, damage);
@@ -9946,7 +9945,7 @@ void ClearDamageCalcResults(void)
     for (enum BattlerId battler = 0; battler < MAX_BATTLERS_COUNT; battler++)
     {
         gBattleStruct->moveDamage[battler] = 0;
-        gBattleStruct->innardsOutStartHp[battler] = 0;
+        gBattleStruct->innardsOutHpLost[battler] = 0;
         gBattleStruct->moveResultFlags[battler] = 0;
         gBattleStruct->passiveHpUpdate[battler] = 0;
         gSpecialStatuses[battler].criticalHit = FALSE;

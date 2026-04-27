@@ -74,6 +74,57 @@ SINGLE_BATTLE_TEST("Innards Out counters accumulated multihit damage for Parenta
     }
 }
 
+SINGLE_BATTLE_TEST("Innards Out includes mid-move Sitrus Berry recovery in accumulated multihit total")
+{
+    s16 captured;
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SEISMIC_TOSS) == EFFECT_LEVEL_DAMAGE);
+        ASSUME(gItemsInfo[ITEM_SITRUS_BERRY].holdEffect == HOLD_EFFECT_RESTORE_PCT_HP);
+        PLAYER(SPECIES_PYUKUMUKU) { HP(30); MaxHP(40); Ability(ABILITY_INNARDS_OUT); Item(ITEM_SITRUS_BERRY); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_KANGASKHAN) { Level(20); Item(ITEM_KANGASKHANITE); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SEISMIC_TOSS, gimmick: GIMMICK_MEGA); SEND_OUT(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SEISMIC_TOSS, opponent);
+        HP_BAR(player);
+        HP_BAR(player);
+        HP_BAR(player);
+        ABILITY_POPUP(player, ABILITY_INNARDS_OUT);
+        HP_BAR(opponent, captureDamage: &captured);
+    } THEN {
+        EXPECT_EQ(captured, 40);
+    }
+}
+
+SINGLE_BATTLE_TEST("Innards Out should not include Substitute damage in accumulated multihit total")
+{
+    s16 captured;
+
+    GIVEN {
+        ASSUME(GetMoveStrikeCount(MOVE_DOUBLE_KICK) == 2);
+        ASSUME(GetMoveCategory(MOVE_DOUBLE_KICK) != DAMAGE_CATEGORY_STATUS);
+        PLAYER(SPECIES_PYUKUMUKU) { HP(4); MaxHP(4); Ability(ABILITY_INNARDS_OUT); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUBSTITUTE); }
+        TURN { MOVE(opponent, MOVE_DOUBLE_KICK); SEND_OUT(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DOUBLE_KICK, opponent);
+        SUB_HIT(player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DOUBLE_KICK, opponent);
+        HP_BAR(player);
+        ABILITY_POPUP(player, ABILITY_INNARDS_OUT);
+        HP_BAR(opponent, captureDamage: &captured);
+    } THEN {
+        EXPECT_EQ(captured, 3);
+    }
+}
+
 SINGLE_BATTLE_TEST("Innards Out does not trigger when Core Enforcer suppresses it after target has acted")
 {
     GIVEN {
