@@ -305,7 +305,7 @@ void AssertfCrashScreen(const void *return1, const char *fmt, ...)
     // Allocate on heap if possible.
     if (!backup)
     {
-        backup = Alloc(sizeof(*backup));
+        backup = AllocUnchecked(sizeof(*backup));
         if (backup)
             backup->onHeap = TRUE;
     }

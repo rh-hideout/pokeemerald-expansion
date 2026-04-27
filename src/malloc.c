@@ -81,30 +81,8 @@ void *AllocInternal(void *heapStart, u32 size, const char *location)
             }
         }
 
-#if TESTING
         if (pos->next == head)
-        {
-            const struct MemBlock *head = HeapHead();
-            const struct MemBlock *block = head;
-            do
-            {
-                if (block->allocated)
-                {
-                    const char *location = MemBlockLocation(block);
-                    if (location)
-                        Test_MgbaPrintf("%s: %d bytes allocated", location, block->size);
-                    else
-                        Test_MgbaPrintf("<unknown>: %d bytes allocated", block->size);
-                }
-                block = block->next;
-            }
-            while (block != head);
-        }
-#endif
-        assertf(pos->next != head, "%s: out of memory trying to allocate %d bytes", location, size)
-        {
             return NULL;
-        }
 
         pos = pos->next;
     }
@@ -202,12 +180,55 @@ void InitHeap(void *heapStart, u32 heapSize)
     PutFirstMemBlockHeader(heapStart, heapSize);
 }
 
+void PrintHeap(void)
+{
+    const struct MemBlock *head = HeapHead();
+    const struct MemBlock *block = head;
+    do
+    {
+        if (block->allocated)
+        {
+            const char *location = MemBlockLocation(block);
+            if (location)
+                DebugPrintf("%s: %d bytes allocated", location, block->size);
+            else
+                DebugPrintf("<unknown>: %d bytes allocated", block->size);
+        }
+        block = block->next;
+    }
+    while (block != head);
+}
+
 void *Alloc_(u32 size, const char *location)
+{
+    void *p = AllocInternal(sHeapStart, size, location);
+    if (!p)
+    {
+        if (TESTING)
+            PrintHeap();
+        errorf("%s: out of memory trying to allocate %d bytes", location, size);
+    }
+    return p;
+}
+
+void *AllocUnchecked_(u32 size, const char *location)
 {
     return AllocInternal(sHeapStart, size, location);
 }
 
 void *AllocZeroed_(u32 size, const char *location)
+{
+    void *p = AllocZeroedInternal(sHeapStart, size, location);
+    if (!p)
+    {
+        if (TESTING)
+            PrintHeap();
+        errorf("%s: out of memory trying to allocate %d bytes", location, size);
+    }
+    return p;
+}
+
+void *AllocZeroedUnchecked_(u32 size, const char *location)
 {
     return AllocZeroedInternal(sHeapStart, size, location);
 }
