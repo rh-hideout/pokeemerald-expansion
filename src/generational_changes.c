@@ -111,12 +111,13 @@ void SetConfig(enum ConfigTag _genConfig, u32 _value)
 #if TESTING
 void TestInitConfigData(void)
 {
+    Free(gConfigChangesTestOverride);
     gConfigChangesTestOverride = Alloc(sizeof(sConfigChanges));
     memcpy(gConfigChangesTestOverride, &sConfigChanges, sizeof(sConfigChanges));
 }
 
 void TestFreeConfigData(void)
 {
-    TRY_FREE_AND_SET_NULL(gConfigChangesTestOverride)
+    FREE_AND_SET_NULL(gConfigChangesTestOverride);
 }
 #endif
