@@ -3,10 +3,10 @@
 
 
 #define FREE_AND_SET_NULL(ptr)          \
-{                                       \
+do {                                    \
     Free(ptr);                          \
     ptr = NULL;                         \
-}
+} while (0)
 
 #define TRY_FREE_AND_SET_NULL(ptr) if (ptr != NULL) FREE_AND_SET_NULL(ptr)
 
