@@ -329,10 +329,8 @@ top:
         SeedRng(0);
         SeedRng2(0);
         if (gTestRunnerState.test->runner->setUp)
-        {
             gTestRunnerState.test->runner->setUp(gTestRunnerState.test->data);
-            gTestRunnerState.tearDown = TRUE;
-        }
+        gTestRunnerState.tearDown = TRUE;
         // NOTE: Assumes that the compiler interns __FILE__.
         if (gTestRunnerState.skipFilename == gTestRunnerState.test->filename) // Assumption fails for tests in this file.
         {
@@ -352,10 +350,8 @@ top:
         gTestRunnerState.state = STATE_NEXT_TEST;
 
         if (gTestRunnerState.tearDown && gTestRunnerState.test->runner->tearDown)
-        {
             gTestRunnerState.test->runner->tearDown(gTestRunnerState.test->data);
-            gTestRunnerState.tearDown = FALSE;
-        }
+        gTestRunnerState.tearDown = FALSE;
 
         TestRunner_CheckMemory();
 
