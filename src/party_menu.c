@@ -3122,7 +3122,9 @@ static void CB2_ShowPokemonSummaryScreen(void)
 {
     if (gPartyMenu.menuType == PARTY_MENU_TYPE_IN_BATTLE)
     {
-        LoadBattlePartyCurrentOrderForLayout();
+        if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+            LoadBattlePartyCurrentOrderForLayout();
+
         UpdatePartyToBattleOrder();
 
         if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
