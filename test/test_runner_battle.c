@@ -3470,17 +3470,20 @@ void AssumeStatChange_(u32 sourceLine, u32 moveId, struct StatChangeAssumption a
 {
     u32 numAdditionalEffects = GetMoveAdditionalEffectCount(moveId);
 
-    if (asc.attack < 0 || asc.defense < 0 || asc.spAtk < 0 || asc.spDef < 0 || asc.speed < 0 || asc.accuracy < 0 || asc.evasion < 0)
-        ASSUME(MoveHasAdditionalEffect(moveId, STAT_CHANGE_EFFECT_MINUS));
+    bool32 hasEffect = FALSE;
+    bool32 expectPlus = asc.attack > 0 || asc.defense > 0 || asc.spAtk > 0 || asc.spDef > 0 || asc.speed > 0 || asc.accuracy > 0 || asc.evasion > 0;
+    bool32 expectMinus = asc.attack < 0 || asc.defense < 0 || asc.spAtk < 0 || asc.spDef < 0 || asc.speed < 0 || asc.accuracy < 0 || asc.evasion < 0;
 
-    if (asc.attack > 0 || asc.defense > 0 || asc.spAtk > 0 || asc.spDef > 0 || asc.speed > 0 || asc.accuracy > 0 || asc.evasion > 0)
-        ASSUME(MoveHasAdditionalEffect(moveId, STAT_CHANGE_EFFECT_PLUS));
 
     for (u32 i = 0; i < numAdditionalEffects; i++)
     {
         const struct AdditionalEffect *effect = GetMoveAdditionalEffectById(moveId, i);
         if (effect->moveEffect == STAT_CHANGE_EFFECT_MINUS)
         {
+            if (!expectMinus)
+              continue;
+
+            hasEffect = TRUE;
             if (asc.attack < 0)
                 ASSUME(asc.attack == (-1 * effect->attack));
             if (asc.defense < 0)
@@ -3498,6 +3501,10 @@ void AssumeStatChange_(u32 sourceLine, u32 moveId, struct StatChangeAssumption a
         }
         else if (effect->moveEffect == STAT_CHANGE_EFFECT_PLUS)
         {
+            if (!expectPlus)
+              continue;
+
+            hasEffect = TRUE;
             if (asc.attack > 0)
                 ASSUME(asc.attack == effect->attack);
             if (asc.defense > 0)
@@ -3514,24 +3521,28 @@ void AssumeStatChange_(u32 sourceLine, u32 moveId, struct StatChangeAssumption a
                 ASSUME(asc.evasion == effect->evasion);
         }
     }
+
+    ASSUME(hasEffect == TRUE);
 }
 
 void AssumeMoveEffectStatChange_(u32 sourceLine, u32 moveId, struct StatChangeAssumption asc)
 {
+Test_MgbaPrintf("attack %d from %p", asc.attack, __builtin_return_address(0));
+// DebugPrintf("attack %d", asc.attack);
+
     u32 numAdditionalEffects = GetMoveAdditionalEffectCount(moveId);
+    bool32 hasEffect = FALSE;
+    bool32 expectPlus = asc.attack > 0 || asc.defense > 0 || asc.spAtk > 0 || asc.spDef > 0 || asc.speed > 0 || asc.accuracy > 0 || asc.evasion > 0;
+    bool32 expectMinus = asc.attack < 0 || asc.defense < 0 || asc.spAtk < 0 || asc.spDef < 0 || asc.speed < 0 || asc.accuracy < 0 || asc.evasion < 0;
 
-    // if (asc.attack < 0 || asc.defense < 0 || asc.spAtk < 0 || asc.spDef < 0 || asc.speed < 0 || asc.accuracy < 0 || asc.evasion < 0)
-    //     ASSUME(MoveHasAdditionalEffect(moveId, MOVE_EFFECT_STAT_MINUS));
-    //
-    // if (asc.attack > 0 || asc.defense > 0 || asc.spAtk > 0 || asc.spDef > 0 || asc.speed > 0 || asc.accuracy > 0 || asc.evasion > 0)
-    //     ASSUME(MoveHasAdditionalEffect(moveId, MOVE_EFFECT_STAT_PLUS));
-
-    u32 hasEffect = FALSE;
     for (u32 i = 0; i < numAdditionalEffects; i++)
     {
         const struct AdditionalEffect *effect = GetMoveAdditionalEffectById(moveId, i);
         if (effect->moveEffect == MOVE_EFFECT_STAT_MINUS)
         {
+            if (!expectMinus)
+              continue;
+
             hasEffect = TRUE;
             if (asc.attack < 0)
                 ASSUME(asc.attack == (-1 * effect->attack));
@@ -3548,10 +3559,13 @@ void AssumeMoveEffectStatChange_(u32 sourceLine, u32 moveId, struct StatChangeAs
             if (asc.evasion < 0)
                 ASSUME(asc.evasion == (-1 * effect->evasion));
 
-            ASSUME(asc.self == effect->self);
+            ASSUME(asc.self && effect->self);
         }
         else if (effect->moveEffect == MOVE_EFFECT_STAT_PLUS)
         {
+            if (!expectPlus)
+              continue;
+
             hasEffect = TRUE;
             if (asc.attack > 0)
                 ASSUME(asc.attack == effect->attack);
@@ -3568,8 +3582,9 @@ void AssumeMoveEffectStatChange_(u32 sourceLine, u32 moveId, struct StatChangeAs
             if (asc.evasion > 0)
                 ASSUME(asc.evasion == effect->evasion);
 
-            ASSUME(asc.self > 0 && asc.self == effect->self);
+            ASSUME(asc.self && effect->self);
         }
     }
+
     ASSUME(hasEffect == TRUE);
 }
