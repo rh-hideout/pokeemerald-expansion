@@ -49,7 +49,7 @@
 // Overworld Pokémon
 #define OW_POKEMON_OBJECT_EVENTS       TRUE       // Adds Object Event fields for every species. Can be used for NPCs using the OBJ_EVENT_GFX_SPECIES macro (eg. OBJ_EVENT_GFX_SPECIES(BULBASAUR))
 #define OW_SUBSTITUTE_PLACEHOLDER      TRUE       // Use a substitute OW for Pokémon that are missing overworld sprites
-#define OW_LARGE_OW_SUPPORT            TRUE       // If true, adds a small amount of overhead to OW code so that large (48x48, 64x64) OWs will display correctly under bridges, etc.
+#define OW_LARGE_OW_SUPPORT            TRUE       // If TRUE, adds a small amount of overhead to OW code so that large (48x48, 64x64) OWs will display correctly under bridges, etc.
 #define OW_PKMN_OBJECTS_SHARE_PALETTES FALSE      // [WIP!! NOT ALL PALETTES HAVE BEEN ADJUSTED FOR THIS!!] If TRUE, follower palettes are taken from battle sprites.
 #define OW_GFX_COMPRESS                TRUE       // Adds support for compressed OW graphics, (Also compresses Pokémon follower graphics).
                                                   // IMPORTANT: Gfx are loaded into VRAM to avoid continous decompression. If you require more VRAM or want to use a lot of overworld Pokémon at once, you should disable this config.
@@ -147,5 +147,16 @@
 
 // Trainer Rematches
 #define OW_REMATCH_BADGE_COUNT      5 // Number of badges necessary before the match call or vs seeker features allow rematches
+
+// Ambient Cries
+// Constants
+#define OW_AMBIENT_CRIES_NONE           0   // Do not play ambient cries.
+#define OW_AMBIENT_CRIES_VANILLA        1   // Play ambient cries taken from encounter tables, as in vanilla.
+#define OW_AMBIENT_CRIES_OWE_PRIORITY   2   // Play ambient cries based on active Overworld Wild Encounters, reverting to vanilla cries if none are present.
+#define OW_AMBIENT_CRIES_OWE_ONLY       3   // Play ambient cries based on active Overworld Wild Encounters only.
+                                            // Overworld Wild Encounters will play ambient cries based on their location relative to the player.
+
+// Configuration
+#define OW_AMBIENT_CRIES                OW_AMBIENT_CRIES_VANILLA // Selects how ambient cries are played, if at all. As in vanilla, no matter what is chosen, cries will not play if the player is not on a map with Land or Water encounter tables.
 
 #endif // GUARD_CONFIG_OVERWORLD_H

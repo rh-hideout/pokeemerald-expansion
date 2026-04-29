@@ -590,6 +590,7 @@ BattleScript_EffectFlingConsumeBerry::
 	consumeberry BS_TARGET, FALSE
 	setbyte sBERRY_OVERRIDE, 0
 BattleScript_FlingEnd:
+	removeitem BS_ATTACKER @ fallback if a beryy could not be consumed
 	trysymbiosis BS_ATTACKER
 	return
 
@@ -813,6 +814,7 @@ BattleScript_MoveEffectCoreEnforcer::
 	trytoclearprimalweather
 	call BattleScript_TryRevertWeatherform
 	flushtextbox
+	tryendneutralizinggas
 BattleScript_CoreEnforcerRet:
 	restoretarget
 	return
@@ -5054,7 +5056,6 @@ BattleScript_HurtAttacker:
 	healthbarupdate BS_ATTACKER, PASSIVE_HP_UPDATE
 	datahpupdate BS_ATTACKER, PASSIVE_HP_UPDATE
 	printfromtable gHurtByStringIds
-	printstring STRINGID_AFTERMATHDMG
 	waitmessage B_WAIT_TIME_LONG
 	tryfaintmon BS_ATTACKER
 	return
