@@ -675,7 +675,7 @@ SINGLE_BATTLE_TEST("Dynamax: Max Strike lowers single opponent's speed")
 {
     GIVEN {
         // Fails?: ASSUME(GetMaxMove(B_POSITION_PLAYER_LEFT, MOVE_SCRATCH) == MOVE_MAX_STRIKE);
-        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_STRIKE, speed: 1);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_STRIKE, speed: -1);
         OPPONENT(SPECIES_WOBBUFFET) { Speed(100); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(80); }
     } WHEN {
@@ -736,7 +736,7 @@ DOUBLE_BATTLE_TEST("Dynamax: Max Knuckle raises both allies' attack")
 {
     s16 damage[4];
     GIVEN {
-        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_KNUCKLE, attack: 1); // Throws an Assumption Fail for some reason
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_KNUCKLE, self: TRUE, attack: 1); // Throws an Assumption Fail for some reason
         ASSUME(GetMoveCategory(MOVE_CLOSE_COMBAT) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_WOBBUFFET);
@@ -1665,15 +1665,15 @@ DOUBLE_BATTLE_TEST("Dynamax stat lowering moves don't make stat-changing abiliti
         PARAMETRIZE { move = MOVE_CRUNCH; stat = STAT_SPDEF; ability = abilityList[j]; }
     }
     GIVEN {
-        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_WYRMWIND, attack: 1);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_WYRMWIND, attack: -1);
         ASSUME(MoveHasAdditionalOnSideEffect(MOVE_MAX_WYRMWIND));
-        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_PHANTASM, defense: 1);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_PHANTASM, defense: -1);
         ASSUME(MoveHasAdditionalOnSideEffect(MOVE_MAX_PHANTASM));
-        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_FLUTTERBY, spAtk: 1);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_FLUTTERBY, spAtk: -1);
         ASSUME(MoveHasAdditionalOnSideEffect(MOVE_MAX_FLUTTERBY));
-        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_DARKNESS, spDef: 1);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_DARKNESS, spDef: -1);
         ASSUME(MoveHasAdditionalOnSideEffect(MOVE_MAX_DARKNESS));
-        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_STRIKE, speed: 1);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_STRIKE, speed: -1);
         ASSUME(MoveHasAdditionalOnSideEffect(MOVE_MAX_STRIKE));
 
         PLAYER(SPECIES_WOBBUFFET) { }

@@ -3527,10 +3527,8 @@ void AssumeStatChange_(u32 sourceLine, u32 moveId, struct StatChangeAssumption a
 
 void AssumeMoveEffectStatChange_(u32 sourceLine, u32 moveId, struct StatChangeAssumption asc)
 {
-Test_MgbaPrintf("attack %d from %p", asc.attack, __builtin_return_address(0));
-// DebugPrintf("attack %d", asc.attack);
-
     u32 numAdditionalEffects = GetMoveAdditionalEffectCount(moveId);
+
     bool32 hasEffect = FALSE;
     bool32 expectPlus = asc.attack > 0 || asc.defense > 0 || asc.spAtk > 0 || asc.spDef > 0 || asc.speed > 0 || asc.accuracy > 0 || asc.evasion > 0;
     bool32 expectMinus = asc.attack < 0 || asc.defense < 0 || asc.spAtk < 0 || asc.spDef < 0 || asc.speed < 0 || asc.accuracy < 0 || asc.evasion < 0;
@@ -3559,7 +3557,7 @@ Test_MgbaPrintf("attack %d from %p", asc.attack, __builtin_return_address(0));
             if (asc.evasion < 0)
                 ASSUME(asc.evasion == (-1 * effect->evasion));
 
-            ASSUME(asc.self && effect->self);
+            ASSUME(asc.self == effect->self);
         }
         else if (effect->moveEffect == MOVE_EFFECT_STAT_PLUS)
         {
@@ -3582,7 +3580,7 @@ Test_MgbaPrintf("attack %d from %p", asc.attack, __builtin_return_address(0));
             if (asc.evasion > 0)
                 ASSUME(asc.evasion == effect->evasion);
 
-            ASSUME(asc.self && effect->self);
+            ASSUME(asc.self == effect->self);
         }
     }
 
