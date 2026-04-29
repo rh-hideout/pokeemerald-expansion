@@ -189,3 +189,31 @@ DOUBLE_BATTLE_TEST("Beads of Ruin's Sp. Def reduction is ignored by Gastro Acid"
         EXPECT_LT(results[0].damage, results[1].damage);
     }
 }
+
+SINGLE_BATTLE_TEST("Beads of Ruin reduces Sp. Def if opposing mon's ability doesn't match (Neutralizing switches in and out)")
+{
+    s16 damage[2];
+
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_WATER_GUN) == DAMAGE_CATEGORY_SPECIAL);
+        PLAYER(SPECIES_CHI_YU) { Ability(ABILITY_BEADS_OF_RUIN); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_WATER_GUN); }
+        TURN { SWITCH(opponent, 1); MOVE(player, MOVE_CELEBRATE); }
+        TURN { SWITCH(opponent, 0); MOVE(player, MOVE_WATER_GUN); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_BEADS_OF_RUIN);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, player);
+        HP_BAR(opponent, captureDamage: &damage[0]);
+
+        ABILITY_POPUP(opponent, ABILITY_NEUTRALIZING_GAS);
+        ABILITY_POPUP(player, ABILITY_BEADS_OF_RUIN);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, player);
+        HP_BAR(opponent, captureDamage: &damage[1]);
+    } THEN {
+        EXPECT_EQ(damage[1], damage[0]);
+    }
+}
