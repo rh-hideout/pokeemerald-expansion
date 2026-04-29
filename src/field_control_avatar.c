@@ -893,7 +893,7 @@ void RestartWildEncounterImmunitySteps(void)
 
 static bool32 ShouldDisableRandomEncounters(void)
 {
-    if (FlagGet(OW_FLAG_NO_ENCOUNTER))
+    if (FlagGet(WE_FLAG_NO_ENCOUNTER))
         return TRUE;
 
     if (!WE_VANILLA_RANDOM && WE_OW_ENCOUNTERS)

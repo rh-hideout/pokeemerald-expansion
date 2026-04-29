@@ -544,7 +544,7 @@ bool32 TryRunFromBattle(enum BattlerId battler)
     u8 speedVar;
 
     // If this flag is set, running will never be successful under any circumstances.
-    if (FlagGet(B_FLAG_NO_RUNNING))
+    if (FlagGet(WE_FLAG_NO_RUNNING))
         return effect;
 
     if (gBattleMons[battler].item == ITEM_ENIGMA_BERRY_E_READER)
@@ -10923,7 +10923,7 @@ enum BattlerId GetTargetBySlot(enum BattlerId battlerAtk, enum BattlerId battler
 
 bool32 IsNaturalEnemy(enum Species speciesAttacker, enum Species speciesTarget)
 {
-    if (B_WILD_NATURAL_ENEMIES != TRUE)
+    if (WE_WILD_NATURAL_ENEMIES != TRUE)
         return FALSE;
 
     switch (speciesAttacker)
