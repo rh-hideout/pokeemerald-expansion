@@ -339,6 +339,13 @@ static void AddHatchedMonToParty(u8 id)
     metLocation = GetCurrentRegionMapSectionId();
     SetMonData(mon, MON_DATA_MET_LOCATION, &metLocation);
 
+    SetMonData(mon, MON_DATA_MET_GAME, &gGameVersion);
+
+    u32 otId = READ_OTID_FROM_SAVE;
+    SetMonData(mon, MON_DATA_OT_ID, &otId);
+    SetMonData(mon, MON_DATA_OT_NAME, gSaveBlock2Ptr->playerName);
+    SetMonData(mon, MON_DATA_OT_GENDER, &gSaveBlock2Ptr->playerGender);
+
     MonRestorePP(mon);
     CalculateMonStats(mon);
 }

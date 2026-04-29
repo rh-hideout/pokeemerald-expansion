@@ -37,6 +37,8 @@ void StorePokemonInDaycare(struct Pokemon *mon, struct DaycareMon *daycareMon);
 void IncrementDaycareSteps(void);
 bool8 CheckDaycareMonReceivedMail(void);
 enum Species GetEggSpecies(enum Species species);
-
+u32 GetChildNature(struct DayCare *daycare);
+void InheritIVs(struct Pokemon *egg, struct DayCare *daycare);
+void InheritAbility(struct Pokemon *egg, struct DayCare *daycare);
 
 #endif // GUARD_DAYCARE_H
