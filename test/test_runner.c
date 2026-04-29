@@ -280,11 +280,21 @@ top:
                 gTestRunnerState.state = STATE_EXIT;
                 return;
             }
-            if (gTestRunnerState.test->runner != &gAssumptionsRunner)
+            if (gTestRunnerState.filterMode == TEST_FILTER_MODE_FILENAME_EXACT
+             && !ExactMatch(gTestRunnerArgv, gTestRunnerState.test->filename))
+            {
+                ++gTestRunnerState.test;
+                continue;
+            }
+            // Run all assumption blocks when filtering on test name
+            // because it's possible that a test in this file could
+            // match.
+            // TODO: Delay running the assumptions block until we find a
+            // test name that matches.
+            else if (gTestRunnerState.test->runner != &gAssumptionsRunner)
             {
                 if ((gTestRunnerState.filterMode == TEST_FILTER_MODE_TEST_NAME_PREFIX && !PrefixMatch(gTestRunnerArgv, gTestRunnerState.test->name))
-                 || (gTestRunnerState.filterMode == TEST_FILTER_MODE_TEST_NAME_INFIX && !InfixMatch(gTestRunnerArgv, gTestRunnerState.test->name))
-                 || (gTestRunnerState.filterMode == TEST_FILTER_MODE_FILENAME_EXACT && !ExactMatch(gTestRunnerArgv, gTestRunnerState.test->filename)))
+                 || (gTestRunnerState.filterMode == TEST_FILTER_MODE_TEST_NAME_INFIX && !InfixMatch(gTestRunnerArgv, gTestRunnerState.test->name)))
                 {
                     ++gTestRunnerState.test;
                     continue;
