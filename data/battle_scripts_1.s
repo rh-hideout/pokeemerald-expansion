@@ -162,7 +162,7 @@ BattleScript_TarShotMessage::
 
 BattleScript_AbilityStatChange::
 	call BattleScript_AbilityPopUp
-	trynonmovestatchange BS_EFFECT_BATTLER, STAT_CHANGE_NO_FLAGS
+	trynonmovestatchange BS_EFFECT_BATTLER, STAT_CHANGE_IGNORE_SELF
 	return
 
 BattleScript_DefiantActivates::
