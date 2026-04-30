@@ -490,70 +490,249 @@
 #define MUS_RG_TRAINER_TOWER        556 // MUS_RG_T_TOWER
 #define MUS_RG_SLOW_PALLET          557 // MUS_RG_SLOWMASARA
 #define MUS_RG_TEACHY_TV_MENU       558 // MUS_RG_TVNOIZE
-#define END_MUS                     MUS_RG_TEACHY_TV_MENU
+// HGSS Music
+#define HG_MUSIC_START               (MUS_RG_TEACHY_TV_MENU + 1)
 
-// These PH_* constants are phoneme sounds used by the "bard" NPC (see src/bard_music.c and src/mauville_old_man.c).
-// Each comes in a triplet of PH_*_BLEND, PH_*_HELD, and PH_*_SOLO, and the name of each triplet incorporates the English phonetic sound it represents.
-#define PH_TRAP_BLEND               559
-#define PH_TRAP_HELD                560
-#define PH_TRAP_SOLO                561
-#define PH_FACE_BLEND               562
-#define PH_FACE_HELD                563
-#define PH_FACE_SOLO                564
-#define PH_CLOTH_BLEND              565
-#define PH_CLOTH_HELD               566
-#define PH_CLOTH_SOLO               567
-#define PH_DRESS_BLEND              568
-#define PH_DRESS_HELD               569
-#define PH_DRESS_SOLO               570
-#define PH_FLEECE_BLEND             571
-#define PH_FLEECE_HELD              572
-#define PH_FLEECE_SOLO              573
-#define PH_KIT_BLEND                574
-#define PH_KIT_HELD                 575
-#define PH_KIT_SOLO                 576
-#define PH_PRICE_BLEND              577
-#define PH_PRICE_HELD               578
-#define PH_PRICE_SOLO               579
-#define PH_LOT_BLEND                580
-#define PH_LOT_HELD                 581
-#define PH_LOT_SOLO                 582
-#define PH_GOAT_BLEND               583
-#define PH_GOAT_HELD                584
-#define PH_GOAT_SOLO                585
-#define PH_THOUGHT_BLEND            586
-#define PH_THOUGHT_HELD             587
-#define PH_THOUGHT_SOLO             588
-#define PH_CHOICE_BLEND             589
-#define PH_CHOICE_HELD              590
-#define PH_CHOICE_SOLO              591
-#define PH_MOUTH_BLEND              592
-#define PH_MOUTH_HELD               593
-#define PH_MOUTH_SOLO               594
-#define PH_FOOT_BLEND               595
-#define PH_FOOT_HELD                596
-#define PH_FOOT_SOLO                597
-#define PH_GOOSE_BLEND              598
-#define PH_GOOSE_HELD               599
-#define PH_GOOSE_SOLO               600
-#define PH_STRUT_BLEND              601
-#define PH_STRUT_HELD               602
-#define PH_STRUT_SOLO               603
-#define PH_CURE_BLEND               604
-#define PH_CURE_HELD                605
-#define PH_CURE_SOLO                606
-#define PH_NURSE_BLEND              607
-#define PH_NURSE_HELD               608
-#define PH_NURSE_SOLO               609
+#define MUS_HG_INTRO                 (HG_MUSIC_START + 0x00)  // Opening Movie
+#define MUS_HG_TITLE                 (HG_MUSIC_START + 0x01)  // Title Screen
+#define MUS_HG_NEW_GAME              (HG_MUSIC_START + 0x02)  // An Adventure Begins!
+#define MUS_HG_EVOLUTION             (HG_MUSIC_START + 0x03)  // Evolution
+#define MUS_HG_EVOLUTION_NO_INTRO    (HG_MUSIC_START + 0x04)  // Evolution (No intro)
+#define MUS_HG_CYCLING               (HG_MUSIC_START + 0x05)  // Bicycle
+#define MUS_HG_SURF                  (HG_MUSIC_START + 0x06)  // Surf
+#define MUS_HG_HALL_OF_FAME          (HG_MUSIC_START + 0x07)  // The Hall of Fame
+#define MUS_HG_CREDITS               (HG_MUSIC_START + 0x08)  // Ending Theme
+#define MUS_HG_END                   (HG_MUSIC_START + 0x09)  // The End
+#define MUS_HG_NEW_BARK              (HG_MUSIC_START + 0x0A)  // New Bark Town
+#define MUS_HG_CHERRYGROVE           (HG_MUSIC_START + 0x0B)  // Cherrygrove City
+#define MUS_HG_VIOLET                (HG_MUSIC_START + 0x0C)  // Violet City
+#define MUS_HG_AZALEA                (HG_MUSIC_START + 0x0D)  // Azalea Town
+#define MUS_HG_GOLDENROD             (HG_MUSIC_START + 0x0E)  // Goldenrod City
+#define MUS_HG_ECRUTEAK              (HG_MUSIC_START + 0x0F)  // Ecruteak City
+#define MUS_HG_CIANWOOD              (HG_MUSIC_START + 0x10)  // Cianwood City
+#define MUS_HG_ROUTE29               (HG_MUSIC_START + 0x11)  // Route 29
+#define MUS_HG_ROUTE30               (HG_MUSIC_START + 0x12)  // Route 30
+#define MUS_HG_ROUTE34               (HG_MUSIC_START + 0x13)  // Route 34
+#define MUS_HG_ROUTE38               (HG_MUSIC_START + 0x14)  // Route 38
+#define MUS_HG_ROUTE42               (HG_MUSIC_START + 0x15)  // Route 42
+#define MUS_HG_VERMILION             (HG_MUSIC_START + 0x16)  // Vermilion City
+#define MUS_HG_PEWTER                (HG_MUSIC_START + 0x17)  // Pewter City
+#define MUS_HG_CERULEAN              (HG_MUSIC_START + 0x18)  // Cerulean City
+#define MUS_HG_LAVENDER              (HG_MUSIC_START + 0x19)  // Lavender Town
+#define MUS_HG_CELADON               (HG_MUSIC_START + 0x1A)  // Celadon City
+#define MUS_HG_PALLET                (HG_MUSIC_START + 0x1B)  // Pallet Town
+#define MUS_HG_CINNABAR              (HG_MUSIC_START + 0x1C)  // Cinnabar Island
+#define MUS_HG_ROUTE1                (HG_MUSIC_START + 0x1D)  // Route 1
+#define MUS_HG_ROUTE3                (HG_MUSIC_START + 0x1E)  // Route 3
+#define MUS_HG_ROUTE11               (HG_MUSIC_START + 0x1F)  // Route 11
+#define MUS_HG_ROUTE24               (HG_MUSIC_START + 0x20)  // Route 24
+#define MUS_HG_ROUTE26               (HG_MUSIC_START + 0x21)  // Route 26
+#define MUS_HG_POKE_CENTER           (HG_MUSIC_START + 0x22)  // Pokémon Center
+#define MUS_HG_POKE_MART             (HG_MUSIC_START + 0x23)  // Poké Mart
+#define MUS_HG_GYM                   (HG_MUSIC_START + 0x24)  // Pokémon Gym
+#define MUS_HG_ELM_LAB               (HG_MUSIC_START + 0x25)  // Elm Pokémon Lab
+#define MUS_HG_OAK                   (HG_MUSIC_START + 0x26)  // Professor Oak
+#define MUS_HG_DANCE_THEATER         (HG_MUSIC_START + 0x27)  // Ecruteak Dance Theater
+#define MUS_HG_GAME_CORNER           (HG_MUSIC_START + 0x28)  // Goldenrod Game Corner
+#define MUS_HG_B_TOWER               (HG_MUSIC_START + 0x29)  // Battle Tower (Johto)
+#define MUS_HG_B_TOWER_RECEPTION     (HG_MUSIC_START + 0x2A)  // Battle Tower Reception Desk
+#define MUS_HG_SPROUT_TOWER          (HG_MUSIC_START + 0x2B)  // Sprout Tower
+#define MUS_HG_UNION_CAVE            (HG_MUSIC_START + 0x2C)  // Union Cave
+#define MUS_HG_RUINS_OF_ALPH         (HG_MUSIC_START + 0x2D)  // Ruins of Alph
+#define MUS_HG_NATIONAL_PARK         (HG_MUSIC_START + 0x2E)  // National Park
+#define MUS_HG_BURNED_TOWER          (HG_MUSIC_START + 0x2F)  // Burned Tower
+#define MUS_HG_BELL_TOWER            (HG_MUSIC_START + 0x30)  // Bell Tower
+#define MUS_HG_LIGHTHOUSE            (HG_MUSIC_START + 0x31)  // Olivine Lighthouse
+#define MUS_HG_TEAM_ROCKET_HQ        (HG_MUSIC_START + 0x32)  // Team Rocket HQ
+#define MUS_HG_ICE_PATH              (HG_MUSIC_START + 0x33)  // Ice Path
+#define MUS_HG_DRAGONS_DEN           (HG_MUSIC_START + 0x34)  // Dragon's Den
+#define MUS_HG_ROCK_TUNNEL           (HG_MUSIC_START + 0x35)  // Rock Tunnel
+#define MUS_HG_VIRIDIAN_FOREST       (HG_MUSIC_START + 0x36)  // Viridian Forest
+#define MUS_HG_VICTORY_ROAD          (HG_MUSIC_START + 0x37)  // Victory Road
+#define MUS_HG_POKEMON_LEAGUE        (HG_MUSIC_START + 0x38)  // The Pokémon League
+#define MUS_HG_FOLLOW_ME_1           (HG_MUSIC_START + 0x39)  // Hurry Along
+#define MUS_HG_FOLLOW_ME_2           (HG_MUSIC_START + 0x3A)  // Hurry Along 2
+#define MUS_HG_ENCOUNTER_RIVAL       (HG_MUSIC_START + 0x3B)  // A Rival Appears!
+#define MUS_HG_RIVAL_EXIT            (HG_MUSIC_START + 0x3C)  // A Rival Appears! (Version 2)
+#define MUS_HG_BUG_CONTEST_PREP      (HG_MUSIC_START + 0x3D)  // The Bug-Catching Contest Begins!
+#define MUS_HG_BUG_CATCHING_CONTEST  (HG_MUSIC_START + 0x3E)  // The Bug-Catching Contest
+#define MUS_HG_RADIO_ROCKET          (HG_MUSIC_START + 0x3F)  // Radio Transmission
+#define MUS_HG_ROCKET_TAKEOVER       (HG_MUSIC_START + 0x40)  // Radio Tower Occupied!
+#define MUS_HG_MAGNET_TRAIN          (HG_MUSIC_START + 0x41)  // Magnet Train
+#define MUS_HG_SS_AQUA               (HG_MUSIC_START + 0x42)  // S.S. Aqua
+#define MUS_HG_MT_MOON_SQUARE        (HG_MUSIC_START + 0x43)  // Mt. Moon
+#define MUS_HG_RADIO_JINGLE          (HG_MUSIC_START + 0x44)  // Pokégear Radio: Pokémon Channel
+#define MUS_HG_RADIO_LULLABY         (HG_MUSIC_START + 0x45)  // Pokégear Radio: Pokémon Lullaby
+#define MUS_HG_RADIO_MARCH           (HG_MUSIC_START + 0x46)  // Pokégear Radio: Pokémon March
+#define MUS_HG_RADIO_UNOWN           (HG_MUSIC_START + 0x47)  // Pokégear Radio: Unown
+#define MUS_HG_RADIO_POKE_FLUTE      (HG_MUSIC_START + 0x48)  // Pokégear Radio: Poké Flute
+#define MUS_HG_RADIO_OAK             (HG_MUSIC_START + 0x49)  // Pokégear Radio: Professor Oak's Pokémon Talk
+#define MUS_HG_RADIO_BUENA           (HG_MUSIC_START + 0x4A)  // Pokégear Radio: Buena's Password
+#define MUS_HG_EUSINE                (HG_MUSIC_START + 0x4B)  // Eusine
+#define MUS_HG_CLAIR                 (HG_MUSIC_START + 0x4C)  // Clair
+#define MUS_HG_ENCOUNTER_GIRL_1      (HG_MUSIC_START + 0x4D)  // Trainers' Eyes Meet (Girl 1)
+#define MUS_HG_ENCOUNTER_BOY_1       (HG_MUSIC_START + 0x4E)  // Trainers' Eyes Meet (Boy 1)
+#define MUS_HG_ENCOUNTER_SUSPICIOUS_1 (HG_MUSIC_START + 0x4F) // Trainers' Eyes Meet (Suspicious Figure 1)
+#define MUS_HG_ENCOUNTER_SAGE        (HG_MUSIC_START + 0x50)  // Trainers' Eyes Meet (Sage)
+#define MUS_HG_ENCOUNTER_KIMONO_GIRL (HG_MUSIC_START + 0x51)  // Trainers' Eyes Meet (Kimono Girl)
+#define MUS_HG_ENCOUNTER_ROCKET      (HG_MUSIC_START + 0x52)  // Trainers' Eyes Meet (Team Rocket)
+#define MUS_HG_ENCOUNTER_GIRL_2      (HG_MUSIC_START + 0x53)  // Trainers' Eyes Meet (Girl 2)
+#define MUS_HG_ENCOUNTER_BOY_2       (HG_MUSIC_START + 0x54)  // Trainers' Eyes Meet (Boy 2)
+#define MUS_HG_ENCOUNTER_SUSPICIOUS_2 (HG_MUSIC_START + 0x55) // Trainers' Eyes Meet (Suspicious Figure 2)
+#define MUS_HG_VS_WILD               (HG_MUSIC_START + 0x56)  // Battle! (Wild Pokémon - Johto Version)
+#define MUS_HG_VS_TRAINER            (HG_MUSIC_START + 0x57)  // Battle! (Trainer Battle - Johto Version)
+#define MUS_HG_VS_GYM_LEADER         (HG_MUSIC_START + 0x58)  // Battle! (Gym Leader - Johto Version)
+#define MUS_HG_VS_RIVAL              (HG_MUSIC_START + 0x59)  // Battle! (Rival)
+#define MUS_HG_VS_ROCKET             (HG_MUSIC_START + 0x5A)  // Battle! (Team Rocket)
+#define MUS_HG_VS_SUICUNE            (HG_MUSIC_START + 0x5B)  // Battle! (Suicune)
+#define MUS_HG_VS_ENTEI              (HG_MUSIC_START + 0x5C)  // Battle! (Entei)
+#define MUS_HG_VS_RAIKOU             (HG_MUSIC_START + 0x5D)  // Battle! (Raikou)
+#define MUS_HG_VS_CHAMPION           (HG_MUSIC_START + 0x5E)  // Battle! (Champion)
+#define MUS_HG_VS_WILD_KANTO         (HG_MUSIC_START + 0x5F)  // Battle! (Wild Pokémon - Kanto Version)
+#define MUS_HG_VS_TRAINER_KANTO      (HG_MUSIC_START + 0x60)  // Battle! (Trainer Battle - Kanto Version)
+#define MUS_HG_VS_GYM_LEADER_KANTO   (HG_MUSIC_START + 0x61)  // Battle! (Gym Leader - Kanto Version)
+#define MUS_HG_VICTORY_TRAINER       (HG_MUSIC_START + 0x62)  // Victory! (Trainer Battle)
+#define MUS_HG_VICTORY_WILD          (HG_MUSIC_START + 0x63)  // Victory! (Wild Pokémon)
+#define MUS_HG_CAUGHT                (HG_MUSIC_START + 0x64)  // Victory! (Wild Pokémon) (No intro)
+#define MUS_HG_VICTORY_GYM_LEADER    (HG_MUSIC_START + 0x65)  // Victory! (Gym Leader)
+#define MUS_HG_VS_HO_OH              (HG_MUSIC_START + 0x66)  // Battle! (Ho-Oh)
+#define MUS_HG_VS_LUGIA              (HG_MUSIC_START + 0x67)  // Battle! (Lugia)
+#define MUS_HG_POKEATHLON_LOBBY      (HG_MUSIC_START + 0x68)  // Pokéathlon: In the Pokéathlon Dome
+#define MUS_HG_POKEATHLON_START      (HG_MUSIC_START + 0x69)  // Pokéathlon: Opening Ceremony
+#define MUS_HG_POKEATHLON_BEFORE     (HG_MUSIC_START + 0x6A)  // Pokéathlon: An Event Begins!
+#define MUS_HG_POKEATHLON_EVENT      (HG_MUSIC_START + 0x6B)  // Pokéathlon: Event Time!
+#define MUS_HG_POKEATHLON_FINALS     (HG_MUSIC_START + 0x6C)  // Pokéathlon: Finals!
+#define MUS_HG_POKEATHLON_RESULTS    (HG_MUSIC_START + 0x6D)  // Pokéathlon: Results Announcement!
+#define MUS_HG_POKEATHLON_END        (HG_MUSIC_START + 0x6E)  // Pokéathlon: Medal Ceremony
+#define MUS_HG_POKEATHLON_WINNER     (HG_MUSIC_START + 0x6F)  // Pokéathlon: Winner!
+#define MUS_HG_B_FACTORY             (HG_MUSIC_START + 0x70)  // Battle Factory
+#define MUS_HG_B_HALL                (HG_MUSIC_START + 0x71)  // Battle Hall
+#define MUS_HG_B_ARCADE              (HG_MUSIC_START + 0x72)  // Battle Arcade
+#define MUS_HG_B_CASTLE              (HG_MUSIC_START + 0x73)  // Battle Castle
+#define MUS_HG_VS_FRONTIER_BRAIN     (HG_MUSIC_START + 0x74)  // Battle! (Frontier Brain)
+#define MUS_HG_VICTORY_FRONTIER_BRAIN (HG_MUSIC_START + 0x75) // Victory! (Frontier Brain)
+#define MUS_HG_WFC                   (HG_MUSIC_START + 0x76)  // Nintendo Wi-Fi Connection
+#define MUS_HG_MYSTERY_GIFT          (HG_MUSIC_START + 0x77)  // Mystery Gift
+#define MUS_HG_WIFI_PLAZA            (HG_MUSIC_START + 0x78)  // Wi-Fi Plaza
+#define MUS_HG_WIFI_MINIGAMES        (HG_MUSIC_START + 0x79)  // Wi-Fi Plaza: Plaza Games
+#define MUS_HG_WIFI_PARADE           (HG_MUSIC_START + 0x7A)  // Wi-Fi Plaza: Parade
+#define MUS_HG_GLOBAL_TERMINAL       (HG_MUSIC_START + 0x7B)  // Global Terminal
+#define MUS_HG_SPIN_TRADE            (HG_MUSIC_START + 0x7C)  // Spin Trade
+#define MUS_HG_GTS                   (HG_MUSIC_START + 0x7D)  // GTS
+#define MUS_HG_ROUTE47               (HG_MUSIC_START + 0x7E)  // Route 47
+#define MUS_HG_SAFARI_ZONE_GATE      (HG_MUSIC_START + 0x7F)  // Safari Zone Gate
+#define MUS_HG_SAFARI_ZONE           (HG_MUSIC_START + 0x80)  // Safari Zone
+#define MUS_HG_ETHAN                 (HG_MUSIC_START + 0x81)  // Ethan
+#define MUS_HG_LYRA                  (HG_MUSIC_START + 0x82)  // Lyra
+#define MUS_HG_GAME_CORNER_WIN       (HG_MUSIC_START + 0x83)  // You're a Winner!
+#define MUS_HG_KIMONO_GIRL_DANCE     (HG_MUSIC_START + 0x84)  // The Dance of Ecruteak
+#define MUS_HG_KIMONO_GIRL           (HG_MUSIC_START + 0x85)  // Kimono Girl
+#define MUS_HG_HO_OH_APPEARS         (HG_MUSIC_START + 0x86)  // Ho-Oh Appears!
+#define MUS_HG_LUGIA_APPEARS         (HG_MUSIC_START + 0x87)  // Lugia Appears!
+#define MUS_HG_SPIKY_EARED_PICHU     (HG_MUSIC_START + 0x88)  // Spiky-Eared Pichu Appears!
+#define MUS_HG_SINJOU_RUINS          (HG_MUSIC_START + 0x89)  // Sinjoh Ruins
+#define MUS_HG_RADIO_ROUTE101        (HG_MUSIC_START + 0x8A)  // Pokégear Radio: Route 101
+#define MUS_HG_RADIO_ROUTE201        (HG_MUSIC_START + 0x8B)  // Pokégear Radio: Route 201
+#define MUS_HG_RADIO_TRAINER         (HG_MUSIC_START + 0x8C)  // Pokégear Radio: Trainer Channel
+#define MUS_HG_RADIO_VARIETY         (HG_MUSIC_START + 0x8D)  // Pokégear Radio: Variety Channel
+#define MUS_HG_VS_KYOGRE_GROUDON     (HG_MUSIC_START + 0x8E)  // Battle! (Super-Ancient Pokémon)
+#define MUS_HG_POKEWALKER            (HG_MUSIC_START + 0x8F)  // Pokéwalker
+#define MUS_HG_VS_ARCEUS             (HG_MUSIC_START + 0x90)  // Arceus
+#define MUS_HG_HEAL                  (HG_MUSIC_START + 0x91)  // Pokémon Healed
+#define MUS_HG_LEVEL_UP              (HG_MUSIC_START + 0x92)  // Level Up!
+#define MUS_HG_OBTAIN_ITEM           (HG_MUSIC_START + 0x93)  // Picked Up an Item!
+#define MUS_HG_OBTAIN_KEY_ITEM       (HG_MUSIC_START + 0x94)  // Obtained a Key Item!
+#define MUS_HG_EVOLVED               (HG_MUSIC_START + 0x95)  // Congratulations! Your Pokémon Evolved!
+#define MUS_HG_OBTAIN_BADGE          (HG_MUSIC_START + 0x96)  // Received a Gym Badge!
+#define MUS_HG_OBTAIN_TMHM           (HG_MUSIC_START + 0x97)  // Received a TM!
+#define MUS_HG_OBTAIN_ACCESSORY      (HG_MUSIC_START + 0x98)  // Obtained an Accessory
+#define MUS_HG_MOVE_DELETED          (HG_MUSIC_START + 0x99)  // Move Deleted
+#define MUS_HG_OBTAIN_BERRY          (HG_MUSIC_START + 0x9A)  // Obtained a Berry!
+#define MUS_HG_DEX_RATING_1          (HG_MUSIC_START + 0x9B)  // Pokédex Evaluation... No Good!
+#define MUS_HG_DEX_RATING_2          (HG_MUSIC_START + 0x9C)  // Pokédex Evaluation... You're on Your Way!
+#define MUS_HG_DEX_RATING_3          (HG_MUSIC_START + 0x9D)  // Pokédex Evaluation... Keep at It!
+#define MUS_HG_DEX_RATING_4          (HG_MUSIC_START + 0x9E)  // Pokédex Evaluation... Not Bad!
+#define MUS_HG_DEX_RATING_5          (HG_MUSIC_START + 0x9F)  // Pokédex Evaluation... Just a Little More!
+#define MUS_HG_DEX_RATING_6          (HG_MUSIC_START + 0xA0)  // Pokédex Evaluation... Complete!
+#define MUS_HG_OBTAIN_EGG            (HG_MUSIC_START + 0xA1)  // Received a Pokémon Egg!
+#define MUS_HG_BUG_CONTEST_1ST_PLACE (HG_MUSIC_START + 0xA2)  // Bug-Catching Contest: Winner
+#define MUS_HG_BUG_CONTEST_2ND_PLACE (HG_MUSIC_START + 0xA3)  // Bug-Catching Contest: Second Place
+#define MUS_HG_BUG_CONTEST_3RD_PLACE (HG_MUSIC_START + 0xA4)  // Bug-Catching Contest: Third Place
+#define MUS_HG_CARD_FLIP             (HG_MUSIC_START + 0xA5)  // Voltorb Flip: Is this what you're expecting?!
+#define MUS_HG_CARD_FLIP_GAME_OVER   (HG_MUSIC_START + 0xA6)  // Voltorb Flip: Game Over
+#define MUS_HG_POKEGEAR_REGISTERED   (HG_MUSIC_START + 0xA7)  // Registered in the Pokégear!
+#define MUS_HG_LETS_GO_TOGETHER      (HG_MUSIC_START + 0xA8)  // Let's Go Together
+#define MUS_HG_POKEATHLON_READY      (HG_MUSIC_START + 0xA9)  // Pokéathlon: Getting Changed
+#define MUS_HG_POKEATHLON_1ST_PLACE  (HG_MUSIC_START + 0xAA)  // Pokéathlon: In First Place!
+#define MUS_HG_RECEIVE_POKEMON       (HG_MUSIC_START + 0xAB)  // Received a Pokémon!
+#define MUS_HG_OBTAIN_ARCADE_POINTS  (HG_MUSIC_START + 0xAC)  // Received Battle Points in the Battle Arcade!
+#define MUS_HG_OBTAIN_CASTLE_POINTS  (HG_MUSIC_START + 0xAD)  // Received Castle Points!
+#define MUS_HG_OBTAIN_B_POINTS       (HG_MUSIC_START + 0xAE)  // Received Battle Points!
+#define MUS_HG_WIN_MINIGAME          (HG_MUSIC_START + 0xAF)  // Cleared Wobbuffet Pop!
 
-#define MUS_ROUTE118                0x7FFF  // Map is split into 2 music sections. controlled by GetCurrLocationDefaultMusic().
+#define HG_MUSIC_END                 MUS_HG_WIN_MINIGAME
+#define END_MUS                      HG_MUSIC_END
 
-#define MUS_NONE                    0xFFFF
+// Phoneme sounds used by the "bard" NPC (see src/bard_music.c and src/mauville_old_man.c).
+// Each comes in a triplet of PH_*_BLEND, PH_*_HELD, and PH_*_SOLO.
+#define FIRST_PHONEME_SONG           (END_MUS + 1)
+#define PH_TRAP_BLEND                (FIRST_PHONEME_SONG + 0)
+#define PH_TRAP_HELD                 (FIRST_PHONEME_SONG + 1)
+#define PH_TRAP_SOLO                 (FIRST_PHONEME_SONG + 2)
+#define PH_FACE_BLEND                (FIRST_PHONEME_SONG + 3)
+#define PH_FACE_HELD                 (FIRST_PHONEME_SONG + 4)
+#define PH_FACE_SOLO                 (FIRST_PHONEME_SONG + 5)
+#define PH_CLOTH_BLEND               (FIRST_PHONEME_SONG + 6)
+#define PH_CLOTH_HELD                (FIRST_PHONEME_SONG + 7)
+#define PH_CLOTH_SOLO                (FIRST_PHONEME_SONG + 8)
+#define PH_DRESS_BLEND               (FIRST_PHONEME_SONG + 9)
+#define PH_DRESS_HELD                (FIRST_PHONEME_SONG + 10)
+#define PH_DRESS_SOLO                (FIRST_PHONEME_SONG + 11)
+#define PH_FLEECE_BLEND              (FIRST_PHONEME_SONG + 12)
+#define PH_FLEECE_HELD               (FIRST_PHONEME_SONG + 13)
+#define PH_FLEECE_SOLO               (FIRST_PHONEME_SONG + 14)
+#define PH_KIT_BLEND                 (FIRST_PHONEME_SONG + 15)
+#define PH_KIT_HELD                  (FIRST_PHONEME_SONG + 16)
+#define PH_KIT_SOLO                  (FIRST_PHONEME_SONG + 17)
+#define PH_PRICE_BLEND               (FIRST_PHONEME_SONG + 18)
+#define PH_PRICE_HELD                (FIRST_PHONEME_SONG + 19)
+#define PH_PRICE_SOLO                (FIRST_PHONEME_SONG + 20)
+#define PH_LOT_BLEND                 (FIRST_PHONEME_SONG + 21)
+#define PH_LOT_HELD                  (FIRST_PHONEME_SONG + 22)
+#define PH_LOT_SOLO                  (FIRST_PHONEME_SONG + 23)
+#define PH_GOAT_BLEND                (FIRST_PHONEME_SONG + 24)
+#define PH_GOAT_HELD                 (FIRST_PHONEME_SONG + 25)
+#define PH_GOAT_SOLO                 (FIRST_PHONEME_SONG + 26)
+#define PH_THOUGHT_BLEND             (FIRST_PHONEME_SONG + 27)
+#define PH_THOUGHT_HELD              (FIRST_PHONEME_SONG + 28)
+#define PH_THOUGHT_SOLO              (FIRST_PHONEME_SONG + 29)
+#define PH_CHOICE_BLEND              (FIRST_PHONEME_SONG + 30)
+#define PH_CHOICE_HELD               (FIRST_PHONEME_SONG + 31)
+#define PH_CHOICE_SOLO               (FIRST_PHONEME_SONG + 32)
+#define PH_MOUTH_BLEND               (FIRST_PHONEME_SONG + 33)
+#define PH_MOUTH_HELD                (FIRST_PHONEME_SONG + 34)
+#define PH_MOUTH_SOLO                (FIRST_PHONEME_SONG + 35)
+#define PH_FOOT_BLEND                (FIRST_PHONEME_SONG + 36)
+#define PH_FOOT_HELD                 (FIRST_PHONEME_SONG + 37)
+#define PH_FOOT_SOLO                 (FIRST_PHONEME_SONG + 38)
+#define PH_GOOSE_BLEND               (FIRST_PHONEME_SONG + 39)
+#define PH_GOOSE_HELD                (FIRST_PHONEME_SONG + 40)
+#define PH_GOOSE_SOLO                (FIRST_PHONEME_SONG + 41)
+#define PH_STRUT_BLEND               (FIRST_PHONEME_SONG + 42)
+#define PH_STRUT_HELD                (FIRST_PHONEME_SONG + 43)
+#define PH_STRUT_SOLO                (FIRST_PHONEME_SONG + 44)
+#define PH_CURE_BLEND                (FIRST_PHONEME_SONG + 45)
+#define PH_CURE_HELD                 (FIRST_PHONEME_SONG + 46)
+#define PH_CURE_SOLO                 (FIRST_PHONEME_SONG + 47)
+#define PH_NURSE_BLEND               (FIRST_PHONEME_SONG + 48)
+#define PH_NURSE_HELD                (FIRST_PHONEME_SONG + 49)
+#define PH_NURSE_SOLO                (FIRST_PHONEME_SONG + 50)
+#define LAST_PHONEME_SONG            PH_NURSE_SOLO
+#define NUM_PHONEME_SONGS            (LAST_PHONEME_SONG - FIRST_PHONEME_SONG + 1)
+#define PHONEME_ID(song)             ((song) - FIRST_PHONEME_SONG)
+#define PHONEME_ID_NONE              0xFF
 
-#define FIRST_PHONEME_SONG          PH_TRAP_BLEND
-#define LAST_PHONEME_SONG           PH_NURSE_SOLO
-#define NUM_PHONEME_SONGS           (LAST_PHONEME_SONG - FIRST_PHONEME_SONG + 1)
-#define PHONEME_ID(song)            ((song) - FIRST_PHONEME_SONG)
-#define PHONEME_ID_NONE             0xFF
+#define MUS_ROUTE118                 0x7FFF  // Map is split into 2 music sections. controlled by GetCurrLocationDefaultMusic().
+#define MUS_NONE                     0xFFFF
 
 #endif  // GUARD_CONSTANTS_SONGS_H
