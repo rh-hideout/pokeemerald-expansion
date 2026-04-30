@@ -517,7 +517,8 @@ static u32 GetEligibleParentToPassNatureVanilla(struct DayCare *daycare)
 
     for (i = 0; i < DAYCARE_MON_COUNT; i++)
     {
-        if (GetBoxMonData(&daycare->mons[i].mon, MON_DATA_SPECIES) == SPECIES_DITTO)
+        u32 species = GetBoxMonData(&daycare->mons[i].mon, MON_DATA_SPECIES);
+        if (IS_DITTO(species))
         {
             slot = i;
             dittoCount++;
@@ -677,7 +678,8 @@ static void InheritPokeball(struct Pokemon *egg, struct DayCare *daycare)
         {
             if (GetBoxMonGender(&daycare->mons[i].mon) == MON_FEMALE)
                 ballSlot = i;
-            if (ballSlot < 0 && GetBoxMonData(&daycare->mons[i].mon, MON_DATA_SPECIES) != SPECIES_DITTO)
+            u32 species = GetBoxMonData(&daycare->mons[i].mon, MON_DATA_SPECIES);
+            if (ballSlot < 0 && !IS_DITTO(species))
                 ballSlot = i;
         }
         u32 species0 = GetBoxMonData(&daycare->mons[0].mon, MON_DATA_SPECIES);
@@ -723,7 +725,8 @@ void InheritAbility(struct Pokemon *egg, struct DayCare *daycare)
         {
             if (GetBoxMonGender(&daycare->mons[i].mon) == MON_FEMALE)
                 abilitySlot = i;
-            if (abilitySlot < 0 && (GetBoxMonData(&daycare->mons[i].mon, MON_DATA_SPECIES) != SPECIES_DITTO))
+            u32 species = GetBoxMonData(&daycare->mons[i].mon, MON_DATA_SPECIES);
+            if (abilitySlot < 0 && !IS_DITTO(species))
             {
                 abilitySlot = i;
             }
@@ -917,7 +920,7 @@ static enum Species DetermineEggSpeciesAndParentSlots(struct DayCare *daycare, u
     for (i = 0; i < DAYCARE_MON_COUNT; i++)
     {
         species[i] = GetBoxMonData(&daycare->mons[i].mon, MON_DATA_SPECIES);
-        if (species[i] == SPECIES_DITTO)
+        if (IS_DITTO(species[i]))
         {
             parentSlots[0] = i ^ 1;
             parentSlots[1] = i;
@@ -972,7 +975,7 @@ static enum Species DetermineEggSpeciesAndParentSlots(struct DayCare *daycare, u
         eggSpecies = SPECIES_TOGEDEMARU;
 
     // Make Ditto the "mother" slot if the other daycare mon is male.
-    if (species[parentSlots[1]] == SPECIES_DITTO && GetBoxMonGender(&daycare->mons[parentSlots[0]].mon) != MON_FEMALE)
+    if (IS_DITTO(species[parentSlots[1]]) && GetBoxMonGender(&daycare->mons[parentSlots[0]].mon) != MON_FEMALE)
     {
         u8 ditto = parentSlots[1];
         parentSlots[1] = parentSlots[0];
