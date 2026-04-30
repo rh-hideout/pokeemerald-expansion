@@ -12,7 +12,7 @@
 #line 4
         .trainerName = _("SAWYER"),
 #line 5
-        .trainerClass = TRAINER_CLASS_HIKER,
+        .trainerClass = TRAINER_CLASS_HIKER_HNS,
 #line 6
         .trainerPic = TRAINER_PIC_FRONT_HIKER,
 #line 7
@@ -48,7 +48,7 @@
 #line 18
         .trainerName = _("ROSS"),
 #line 19
-        .trainerClass = TRAINER_CLASS_COLLECTOR,
+        .trainerClass = TRAINER_CLASS_COLLECTOR_HNS,
 #line 20
         .trainerPic = TRAINER_PIC_FRONT_COLLECTOR,
 #line 21
@@ -96,7 +96,7 @@
 #line 36
         .trainerName = _("MITCH"),
 #line 37
-        .trainerClass = TRAINER_CLASS_COLLECTOR,
+        .trainerClass = TRAINER_CLASS_COLLECTOR_HNS,
 #line 38
         .trainerPic = TRAINER_PIC_FRONT_COLLECTOR,
 #line 39
@@ -132,7 +132,7 @@
 #line 50
         .trainerName = _("JED"),
 #line 51
-        .trainerClass = TRAINER_CLASS_COLLECTOR,
+        .trainerClass = TRAINER_CLASS_COLLECTOR_HNS,
 #line 52
         .trainerPic = TRAINER_PIC_FRONT_COLLECTOR,
 #line 53
@@ -180,7 +180,7 @@
 #line 68
         .trainerName = _("MARC"),
 #line 69
-        .trainerClass = TRAINER_CLASS_COLLECTOR,
+        .trainerClass = TRAINER_CLASS_COLLECTOR_HNS,
 #line 70
         .trainerPic = TRAINER_PIC_FRONT_COLLECTOR,
 #line 71
@@ -216,7 +216,7 @@
 #line 82
         .trainerName = _("RICH"),
 #line 83
-        .trainerClass = TRAINER_CLASS_COLLECTOR,
+        .trainerClass = TRAINER_CLASS_COLLECTOR_HNS,
 #line 84
         .trainerPic = TRAINER_PIC_FRONT_COLLECTOR,
 #line 85
@@ -252,7 +252,7 @@
 #line 96
         .trainerName = _("JOEY"),
 #line 97
-        .trainerClass = TRAINER_CLASS_YOUNGSTER,
+        .trainerClass = TRAINER_CLASS_YOUNGSTER_HNS,
 #line 98
         .trainerPic = TRAINER_PIC_FRONT_YOUNGSTER_HNS,
 #line 99
@@ -288,7 +288,7 @@
 #line 110
         .trainerName = _("MIKEY"),
 #line 111
-        .trainerClass = TRAINER_CLASS_YOUNGSTER,
+        .trainerClass = TRAINER_CLASS_YOUNGSTER_HNS,
 #line 112
         .trainerPic = TRAINER_PIC_FRONT_YOUNGSTER_HNS,
 #line 113
@@ -336,7 +336,7 @@
 #line 128
         .trainerName = _("ALBERT"),
 #line 129
-        .trainerClass = TRAINER_CLASS_YOUNGSTER,
+        .trainerClass = TRAINER_CLASS_YOUNGSTER_HNS,
 #line 130
         .trainerPic = TRAINER_PIC_FRONT_YOUNGSTER_HNS,
 #line 131
@@ -384,7 +384,7 @@
 #line 146
         .trainerName = _("GORDON"),
 #line 147
-        .trainerClass = TRAINER_CLASS_YOUNGSTER,
+        .trainerClass = TRAINER_CLASS_YOUNGSTER_HNS,
 #line 148
         .trainerPic = TRAINER_PIC_FRONT_YOUNGSTER_HNS,
 #line 149
@@ -420,7 +420,7 @@
 #line 160
         .trainerName = _("SAMUEL"),
 #line 161
-        .trainerClass = TRAINER_CLASS_YOUNGSTER,
+        .trainerClass = TRAINER_CLASS_YOUNGSTER_HNS,
 #line 162
         .trainerPic = TRAINER_PIC_FRONT_YOUNGSTER_HNS,
 #line 163
@@ -480,7 +480,7 @@
 #line 182
         .trainerName = _("IAN"),
 #line 183
-        .trainerClass = TRAINER_CLASS_YOUNGSTER,
+        .trainerClass = TRAINER_CLASS_YOUNGSTER_HNS,
 #line 184
         .trainerPic = TRAINER_PIC_FRONT_YOUNGSTER_HNS,
 #line 185
@@ -528,7 +528,7 @@
 #line 200
         .trainerName = _("WARREN"),
 #line 201
-        .trainerClass = TRAINER_CLASS_YOUNGSTER,
+        .trainerClass = TRAINER_CLASS_YOUNGSTER_HNS,
 #line 202
         .trainerPic = TRAINER_PIC_FRONT_YOUNGSTER_HNS,
 #line 203
@@ -564,7 +564,7 @@
 #line 214
         .trainerName = _("JIMMY"),
 #line 215
-        .trainerClass = TRAINER_CLASS_YOUNGSTER,
+        .trainerClass = TRAINER_CLASS_YOUNGSTER_HNS,
 #line 216
         .trainerPic = TRAINER_PIC_FRONT_YOUNGSTER_HNS,
 #line 217
@@ -612,7 +612,7 @@
 #line 232
         .trainerName = _("OWEN"),
 #line 233
-        .trainerClass = TRAINER_CLASS_YOUNGSTER,
+        .trainerClass = TRAINER_CLASS_YOUNGSTER_HNS,
 #line 234
         .trainerPic = TRAINER_PIC_FRONT_YOUNGSTER_HNS,
 #line 235
@@ -648,7 +648,7 @@
 #line 246
         .trainerName = _("JASON"),
 #line 247
-        .trainerClass = TRAINER_CLASS_YOUNGSTER,
+        .trainerClass = TRAINER_CLASS_YOUNGSTER_HNS,
 #line 248
         .trainerPic = TRAINER_PIC_FRONT_YOUNGSTER_HNS,
 #line 249
@@ -696,7 +696,7 @@
 #line 264
         .trainerName = _("JACK"),
 #line 265
-        .trainerClass = TRAINER_CLASS_SCHOOL_KID,
+        .trainerClass = TRAINER_CLASS_SCHOOL_KID_HNS,
 #line 266
         .trainerPic = TRAINER_PIC_FRONT_SCHOOL_KID_M,
 #line 267
@@ -744,7 +744,7 @@
 #line 282
         .trainerName = _("KIPP"),
 #line 283
-        .trainerClass = TRAINER_CLASS_SCHOOL_KID,
+        .trainerClass = TRAINER_CLASS_SCHOOL_KID_HNS,
 #line 284
         .trainerPic = TRAINER_PIC_FRONT_SCHOOL_KID_M,
 #line 285
@@ -792,7 +792,7 @@
 #line 300
         .trainerName = _("ALAN"),
 #line 301
-        .trainerClass = TRAINER_CLASS_SCHOOL_KID,
+        .trainerClass = TRAINER_CLASS_SCHOOL_KID_HNS,
 #line 302
         .trainerPic = TRAINER_PIC_FRONT_SCHOOL_KID_M,
 #line 303
@@ -840,7 +840,7 @@
 #line 318
         .trainerName = _("JOHNNY"),
 #line 319
-        .trainerClass = TRAINER_CLASS_SCHOOL_KID,
+        .trainerClass = TRAINER_CLASS_SCHOOL_KID_HNS,
 #line 320
         .trainerPic = TRAINER_PIC_FRONT_SCHOOL_KID_M,
 #line 321
@@ -888,7 +888,7 @@
 #line 336
         .trainerName = _("DANNY"),
 #line 337
-        .trainerClass = TRAINER_CLASS_SCHOOL_KID,
+        .trainerClass = TRAINER_CLASS_SCHOOL_KID_HNS,
 #line 338
         .trainerPic = TRAINER_PIC_FRONT_SCHOOL_KID_M,
 #line 339
@@ -948,7 +948,7 @@
 #line 358
         .trainerName = _("TOMMY"),
 #line 359
-        .trainerClass = TRAINER_CLASS_SCHOOL_KID,
+        .trainerClass = TRAINER_CLASS_SCHOOL_KID_HNS,
 #line 360
         .trainerPic = TRAINER_PIC_FRONT_SCHOOL_KID_M,
 #line 361
@@ -996,7 +996,7 @@
 #line 376
         .trainerName = _("DUDLEY"),
 #line 377
-        .trainerClass = TRAINER_CLASS_SCHOOL_KID,
+        .trainerClass = TRAINER_CLASS_SCHOOL_KID_HNS,
 #line 378
         .trainerPic = TRAINER_PIC_FRONT_SCHOOL_KID_M,
 #line 379
@@ -1032,7 +1032,7 @@
 #line 390
         .trainerName = _("JOE"),
 #line 391
-        .trainerClass = TRAINER_CLASS_SCHOOL_KID,
+        .trainerClass = TRAINER_CLASS_SCHOOL_KID_HNS,
 #line 392
         .trainerPic = TRAINER_PIC_FRONT_SCHOOL_KID_M,
 #line 393
@@ -1080,7 +1080,7 @@
 #line 408
         .trainerName = _("BILLY"),
 #line 409
-        .trainerClass = TRAINER_CLASS_SCHOOL_KID,
+        .trainerClass = TRAINER_CLASS_SCHOOL_KID_HNS,
 #line 410
         .trainerPic = TRAINER_PIC_FRONT_SCHOOL_KID_M,
 #line 411
@@ -1140,7 +1140,7 @@
 #line 430
         .trainerName = _("CHAD"),
 #line 431
-        .trainerClass = TRAINER_CLASS_SCHOOL_KID,
+        .trainerClass = TRAINER_CLASS_SCHOOL_KID_HNS,
 #line 432
         .trainerPic = TRAINER_PIC_FRONT_SCHOOL_KID_M,
 #line 433
@@ -1188,7 +1188,7 @@
 #line 448
         .trainerName = _("NATE"),
 #line 449
-        .trainerClass = TRAINER_CLASS_SCHOOL_KID,
+        .trainerClass = TRAINER_CLASS_SCHOOL_KID_HNS,
 #line 450
         .trainerPic = TRAINER_PIC_FRONT_SCHOOL_KID_M,
 #line 451
@@ -1236,7 +1236,7 @@
 #line 466
         .trainerName = _("RICKY"),
 #line 467
-        .trainerClass = TRAINER_CLASS_SCHOOL_KID,
+        .trainerClass = TRAINER_CLASS_SCHOOL_KID_HNS,
 #line 468
         .trainerPic = TRAINER_PIC_FRONT_SCHOOL_KID_M,
 #line 469
@@ -1284,7 +1284,7 @@
 #line 484
         .trainerName = _("ROD"),
 #line 485
-        .trainerClass = TRAINER_CLASS_BIRD_KEEPER,
+        .trainerClass = TRAINER_CLASS_BIRD_KEEPER_HNS,
 #line 486
         .trainerPic = TRAINER_PIC_FRONT_BIRD_KEEPER,
 #line 487
@@ -1332,7 +1332,7 @@
 #line 502
         .trainerName = _("ABE"),
 #line 503
-        .trainerClass = TRAINER_CLASS_BIRD_KEEPER,
+        .trainerClass = TRAINER_CLASS_BIRD_KEEPER_HNS,
 #line 504
         .trainerPic = TRAINER_PIC_FRONT_BIRD_KEEPER,
 #line 505
@@ -1368,7 +1368,7 @@
 #line 516
         .trainerName = _("BRYAN"),
 #line 517
-        .trainerClass = TRAINER_CLASS_BIRD_KEEPER,
+        .trainerClass = TRAINER_CLASS_BIRD_KEEPER_HNS,
 #line 518
         .trainerPic = TRAINER_PIC_FRONT_BIRD_KEEPER,
 #line 519
@@ -1428,7 +1428,7 @@
 #line 538
         .trainerName = _("THEO"),
 #line 539
-        .trainerClass = TRAINER_CLASS_BIRD_KEEPER,
+        .trainerClass = TRAINER_CLASS_BIRD_KEEPER_HNS,
 #line 540
         .trainerPic = TRAINER_PIC_FRONT_BIRD_KEEPER,
 #line 541
@@ -1464,7 +1464,7 @@
 #line 552
         .trainerName = _("TOBY"),
 #line 553
-        .trainerClass = TRAINER_CLASS_BIRD_KEEPER,
+        .trainerClass = TRAINER_CLASS_BIRD_KEEPER_HNS,
 #line 554
         .trainerPic = TRAINER_PIC_FRONT_BIRD_KEEPER,
 #line 555
@@ -1512,7 +1512,7 @@
 #line 570
         .trainerName = _("DENIS"),
 #line 571
-        .trainerClass = TRAINER_CLASS_BIRD_KEEPER,
+        .trainerClass = TRAINER_CLASS_BIRD_KEEPER_HNS,
 #line 572
         .trainerPic = TRAINER_PIC_FRONT_BIRD_KEEPER,
 #line 573
@@ -1560,7 +1560,7 @@
 #line 588
         .trainerName = _("VANCE"),
 #line 589
-        .trainerClass = TRAINER_CLASS_BIRD_KEEPER,
+        .trainerClass = TRAINER_CLASS_BIRD_KEEPER_HNS,
 #line 590
         .trainerPic = TRAINER_PIC_FRONT_BIRD_KEEPER,
 #line 591
@@ -1632,7 +1632,7 @@
 #line 614
         .trainerName = _("HANK"),
 #line 615
-        .trainerClass = TRAINER_CLASS_BIRD_KEEPER,
+        .trainerClass = TRAINER_CLASS_BIRD_KEEPER_HNS,
 #line 616
         .trainerPic = TRAINER_PIC_FRONT_BIRD_KEEPER,
 #line 617
@@ -1728,7 +1728,7 @@
 #line 650
         .trainerName = _("BORIS"),
 #line 651
-        .trainerClass = TRAINER_CLASS_BIRD_KEEPER,
+        .trainerClass = TRAINER_CLASS_BIRD_KEEPER_HNS,
 #line 652
         .trainerPic = TRAINER_PIC_FRONT_BIRD_KEEPER,
 #line 653
@@ -1788,7 +1788,7 @@
 #line 672
         .trainerName = _("BOB"),
 #line 673
-        .trainerClass = TRAINER_CLASS_BIRD_KEEPER,
+        .trainerClass = TRAINER_CLASS_BIRD_KEEPER_HNS,
 #line 674
         .trainerPic = TRAINER_PIC_FRONT_BIRD_KEEPER,
 #line 675
@@ -1824,7 +1824,7 @@
 #line 686
         .trainerName = _("JOSE"),
 #line 687
-        .trainerClass = TRAINER_CLASS_BIRD_KEEPER,
+        .trainerClass = TRAINER_CLASS_BIRD_KEEPER_HNS,
 #line 688
         .trainerPic = TRAINER_PIC_FRONT_BIRD_KEEPER,
 #line 689
@@ -1896,7 +1896,7 @@
 #line 712
         .trainerName = _("PETER"),
 #line 713
-        .trainerClass = TRAINER_CLASS_BIRD_KEEPER,
+        .trainerClass = TRAINER_CLASS_BIRD_KEEPER_HNS,
 #line 714
         .trainerPic = TRAINER_PIC_FRONT_BIRD_KEEPER,
 #line 715
@@ -1944,7 +1944,7 @@
 #line 730
         .trainerName = _("PERRY"),
 #line 731
-        .trainerClass = TRAINER_CLASS_BIRD_KEEPER,
+        .trainerClass = TRAINER_CLASS_BIRD_KEEPER_HNS,
 #line 732
         .trainerPic = TRAINER_PIC_FRONT_BIRD_KEEPER,
 #line 733
@@ -2028,7 +2028,7 @@
 #line 762
         .trainerName = _("CARRIE"),
 #line 763
-        .trainerClass = TRAINER_CLASS_LASS,
+        .trainerClass = TRAINER_CLASS_LASS_HNS,
 #line 764
         .trainerPic = TRAINER_PIC_FRONT_LASS,
 #line 765
@@ -2064,7 +2064,7 @@
 #line 776
         .trainerName = _("BRIDGET"),
 #line 777
-        .trainerClass = TRAINER_CLASS_LASS,
+        .trainerClass = TRAINER_CLASS_LASS_HNS,
 #line 778
         .trainerPic = TRAINER_PIC_FRONT_LASS,
 #line 779
@@ -2112,7 +2112,7 @@
 #line 794
         .trainerName = _("ALICE"),
 #line 795
-        .trainerClass = TRAINER_CLASS_LASS,
+        .trainerClass = TRAINER_CLASS_LASS_HNS,
 #line 796
         .trainerPic = TRAINER_PIC_FRONT_LASS,
 #line 797
@@ -2172,7 +2172,7 @@
 #line 816
         .trainerName = _("KRISE"),
 #line 817
-        .trainerClass = TRAINER_CLASS_LASS,
+        .trainerClass = TRAINER_CLASS_LASS_HNS,
 #line 818
         .trainerPic = TRAINER_PIC_FRONT_LASS,
 #line 819
@@ -2220,7 +2220,7 @@
 #line 834
         .trainerName = _("CONNIE"),
 #line 835
-        .trainerClass = TRAINER_CLASS_LASS,
+        .trainerClass = TRAINER_CLASS_LASS_HNS,
 #line 836
         .trainerPic = TRAINER_PIC_FRONT_LASS,
 #line 837
@@ -2268,7 +2268,7 @@
 #line 852
         .trainerName = _("LINDA"),
 #line 853
-        .trainerClass = TRAINER_CLASS_LASS,
+        .trainerClass = TRAINER_CLASS_LASS_HNS,
 #line 854
         .trainerPic = TRAINER_PIC_FRONT_LASS,
 #line 855
@@ -2328,7 +2328,7 @@
 #line 874
         .trainerName = _("LAURA"),
 #line 875
-        .trainerClass = TRAINER_CLASS_LASS,
+        .trainerClass = TRAINER_CLASS_LASS_HNS,
 #line 876
         .trainerPic = TRAINER_PIC_FRONT_LASS,
 #line 877
@@ -2388,7 +2388,7 @@
 #line 896
         .trainerName = _("SHANNON"),
 #line 897
-        .trainerClass = TRAINER_CLASS_LASS,
+        .trainerClass = TRAINER_CLASS_LASS_HNS,
 #line 898
         .trainerPic = TRAINER_PIC_FRONT_LASS,
 #line 899
@@ -2448,7 +2448,7 @@
 #line 918
         .trainerName = _("MICHELLE"),
 #line 919
-        .trainerClass = TRAINER_CLASS_LASS,
+        .trainerClass = TRAINER_CLASS_LASS_HNS,
 #line 920
         .trainerPic = TRAINER_PIC_FRONT_LASS,
 #line 921
@@ -2508,7 +2508,7 @@
 #line 940
         .trainerName = _("DANA"),
 #line 941
-        .trainerClass = TRAINER_CLASS_LASS,
+        .trainerClass = TRAINER_CLASS_LASS_HNS,
 #line 942
         .trainerPic = TRAINER_PIC_FRONT_LASS,
 #line 943
@@ -2556,7 +2556,7 @@
 #line 958
         .trainerName = _("ELLEN"),
 #line 959
-        .trainerClass = TRAINER_CLASS_LASS,
+        .trainerClass = TRAINER_CLASS_LASS_HNS,
 #line 960
         .trainerPic = TRAINER_PIC_FRONT_LASS,
 #line 961
@@ -2604,7 +2604,7 @@
 #line 976
         .trainerName = _("NICK"),
 #line 977
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 978
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_M,
 #line 979
@@ -2664,7 +2664,7 @@
 #line 998
         .trainerName = _("AARON"),
 #line 999
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 1000
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_M,
 #line 1001
@@ -2724,7 +2724,7 @@
 #line 1020
         .trainerName = _("PAUL"),
 #line 1021
-        .trainerClass = TRAINER_CLASS_DRAGON_TAMER,
+        .trainerClass = TRAINER_CLASS_DRAGON_TAMER_HNS,
 #line 1022
         .trainerPic = TRAINER_PIC_FRONT_DRAGON_TAMER,
 #line 1023
@@ -2796,7 +2796,7 @@
 #line 1046
         .trainerName = _("CODY"),
 #line 1047
-        .trainerClass = TRAINER_CLASS_DRAGON_TAMER,
+        .trainerClass = TRAINER_CLASS_DRAGON_TAMER_HNS,
 #line 1048
         .trainerPic = TRAINER_PIC_FRONT_DRAGON_TAMER,
 #line 1049
@@ -2868,7 +2868,7 @@
 #line 1072
         .trainerName = _("MIKE"),
 #line 1073
-        .trainerClass = TRAINER_CLASS_DRAGON_TAMER,
+        .trainerClass = TRAINER_CLASS_DRAGON_TAMER_HNS,
 #line 1074
         .trainerPic = TRAINER_PIC_FRONT_DRAGON_TAMER,
 #line 1075
@@ -2928,7 +2928,7 @@
 #line 1094
         .trainerName = _("GAVEN"),
 #line 1095
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 1096
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_M,
 #line 1097
@@ -3012,7 +3012,7 @@
 #line 1124
         .trainerName = _("RYAN"),
 #line 1125
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 1126
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_M,
 #line 1127
@@ -3072,7 +3072,7 @@
 #line 1146
         .trainerName = _("JAKE"),
 #line 1147
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 1148
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_M,
 #line 1149
@@ -3156,7 +3156,7 @@
 #line 1176
         .trainerName = _("BLAKE"),
 #line 1177
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 1178
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_M,
 #line 1179
@@ -3228,7 +3228,7 @@
 #line 1202
         .trainerName = _("BRIAN"),
 #line 1203
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 1204
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_M,
 #line 1205
@@ -3300,7 +3300,7 @@
 #line 1228
         .trainerName = _("ERICK"),
 #line 1229
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 1230
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_M,
 #line 1231
@@ -3360,7 +3360,7 @@
 #line 1250
         .trainerName = _("ANDY"),
 #line 1251
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 1252
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_M,
 #line 1253
@@ -3420,7 +3420,7 @@
 #line 1272
         .trainerName = _("TYLER"),
 #line 1273
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 1274
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_M,
 #line 1275
@@ -3480,7 +3480,7 @@
 #line 1294
         .trainerName = _("SEAN"),
 #line 1295
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 1296
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_M,
 #line 1297
@@ -3540,7 +3540,7 @@
 #line 1316
         .trainerName = _("KEVIN"),
 #line 1317
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 1318
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_M,
 #line 1319
@@ -3612,7 +3612,7 @@
 #line 1342
         .trainerName = _("STEVE"),
 #line 1343
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 1344
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_M,
 #line 1345
@@ -3672,7 +3672,7 @@
 #line 1364
         .trainerName = _("ALLEN"),
 #line 1365
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 1366
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_M,
 #line 1367
@@ -3720,7 +3720,7 @@
 #line 1382
         .trainerName = _("DARIN"),
 #line 1383
-        .trainerClass = TRAINER_CLASS_DRAGON_TAMER,
+        .trainerClass = TRAINER_CLASS_DRAGON_TAMER_HNS,
 #line 1384
         .trainerPic = TRAINER_PIC_FRONT_DRAGON_TAMER,
 #line 1385
@@ -3792,7 +3792,7 @@
 #line 1408
         .trainerName = _("GWEN"),
 #line 1409
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 1410
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_F,
 #line 1411
@@ -3864,7 +3864,7 @@
 #line 1434
         .trainerName = _("LOIS"),
 #line 1435
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 1436
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_F,
 #line 1437
@@ -3912,7 +3912,7 @@
 #line 1452
         .trainerName = _("FRAN"),
 #line 1453
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 1454
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_F,
 #line 1455
@@ -3972,7 +3972,7 @@
 #line 1474
         .trainerName = _("LOLA"),
 #line 1475
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 1476
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_F,
 #line 1477
@@ -4044,7 +4044,7 @@
 #line 1500
         .trainerName = _("KATE"),
 #line 1501
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 1502
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_F,
 #line 1503
@@ -4092,7 +4092,7 @@
 #line 1518
         .trainerName = _("IRENE"),
 #line 1519
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 1520
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_F,
 #line 1521
@@ -4140,7 +4140,7 @@
 #line 1536
         .trainerName = _("KELLY"),
 #line 1537
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 1538
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_F,
 #line 1539
@@ -4212,7 +4212,7 @@
 #line 1562
         .trainerName = _("JOYCE"),
 #line 1563
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 1564
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_F,
 #line 1565
@@ -4296,7 +4296,7 @@
 #line 1592
         .trainerName = _("BETH"),
 #line 1593
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 1594
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_F,
 #line 1595
@@ -4380,7 +4380,7 @@
 #line 1622
         .trainerName = _("REENA"),
 #line 1623
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 1624
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_F,
 #line 1625
@@ -4464,7 +4464,7 @@
 #line 1652
         .trainerName = _("MEGAN"),
 #line 1653
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 1654
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_F,
 #line 1655
@@ -4536,7 +4536,7 @@
 #line 1678
         .trainerName = _("CAROL"),
 #line 1679
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 1680
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_F,
 #line 1681
@@ -4596,7 +4596,7 @@
 #line 1700
         .trainerName = _("QUINN"),
 #line 1701
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 1702
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_F,
 #line 1703
@@ -4644,7 +4644,7 @@
 #line 1718
         .trainerName = _("EMMA"),
 #line 1719
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 1720
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_F,
 #line 1721
@@ -4680,7 +4680,7 @@
 #line 1732
         .trainerName = _("CYBIL"),
 #line 1733
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 1734
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_F,
 #line 1735
@@ -4740,7 +4740,7 @@
 #line 1754
         .trainerName = _("JENN"),
 #line 1755
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 1756
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_F,
 #line 1757
@@ -4788,7 +4788,7 @@
 #line 1772
         .trainerName = _("CARA"),
 #line 1773
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 1774
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_F,
 #line 1775
@@ -4848,7 +4848,7 @@
 #line 1794
         .trainerName = _("VICTORIA"),
 #line 1795
-        .trainerClass = TRAINER_CLASS_BEAUTY,
+        .trainerClass = TRAINER_CLASS_BEAUTY_HNS,
 #line 1796
         .trainerPic = TRAINER_PIC_FRONT_BEAUTY,
 #line 1797
@@ -4896,7 +4896,7 @@
 #line 1812
         .trainerName = _("SAMANTHA"),
 #line 1813
-        .trainerClass = TRAINER_CLASS_BEAUTY,
+        .trainerClass = TRAINER_CLASS_BEAUTY_HNS,
 #line 1814
         .trainerPic = TRAINER_PIC_FRONT_BEAUTY,
 #line 1815
@@ -4932,7 +4932,7 @@
 #line 1826
         .trainerName = _("JULIE"),
 #line 1827
-        .trainerClass = TRAINER_CLASS_BEAUTY,
+        .trainerClass = TRAINER_CLASS_BEAUTY_HNS,
 #line 1828
         .trainerPic = TRAINER_PIC_FRONT_BEAUTY,
 #line 1829
@@ -4968,7 +4968,7 @@
 #line 1840
         .trainerName = _("JACLYN"),
 #line 1841
-        .trainerClass = TRAINER_CLASS_BEAUTY,
+        .trainerClass = TRAINER_CLASS_BEAUTY_HNS,
 #line 1842
         .trainerPic = TRAINER_PIC_FRONT_BEAUTY,
 #line 1843
@@ -5004,7 +5004,7 @@
 #line 1854
         .trainerName = _("BRENDA"),
 #line 1855
-        .trainerClass = TRAINER_CLASS_BEAUTY,
+        .trainerClass = TRAINER_CLASS_BEAUTY_HNS,
 #line 1856
         .trainerPic = TRAINER_PIC_FRONT_BEAUTY,
 #line 1857
@@ -5040,7 +5040,7 @@
 #line 1868
         .trainerName = _("CASSIE"),
 #line 1869
-        .trainerClass = TRAINER_CLASS_BEAUTY,
+        .trainerClass = TRAINER_CLASS_BEAUTY_HNS,
 #line 1870
         .trainerPic = TRAINER_PIC_FRONT_BEAUTY,
 #line 1871
@@ -5088,7 +5088,7 @@
 #line 1886
         .trainerName = _("CAROLINE"),
 #line 1887
-        .trainerClass = TRAINER_CLASS_BEAUTY,
+        .trainerClass = TRAINER_CLASS_BEAUTY_HNS,
 #line 1888
         .trainerPic = TRAINER_PIC_FRONT_BEAUTY,
 #line 1889
@@ -5148,7 +5148,7 @@
 #line 1908
         .trainerName = _("CARLENE"),
 #line 1909
-        .trainerClass = TRAINER_CLASS_BEAUTY,
+        .trainerClass = TRAINER_CLASS_BEAUTY_HNS,
 #line 1910
         .trainerPic = TRAINER_PIC_FRONT_BEAUTY,
 #line 1911
@@ -5184,7 +5184,7 @@
 #line 1922
         .trainerName = _("JESSICA"),
 #line 1923
-        .trainerClass = TRAINER_CLASS_BEAUTY,
+        .trainerClass = TRAINER_CLASS_BEAUTY_HNS,
 #line 1924
         .trainerPic = TRAINER_PIC_FRONT_BEAUTY,
 #line 1925
@@ -5220,7 +5220,7 @@
 #line 1936
         .trainerName = _("RACHAEL"),
 #line 1937
-        .trainerClass = TRAINER_CLASS_BEAUTY,
+        .trainerClass = TRAINER_CLASS_BEAUTY_HNS,
 #line 1938
         .trainerPic = TRAINER_PIC_FRONT_BEAUTY,
 #line 1939
@@ -5256,7 +5256,7 @@
 #line 1950
         .trainerName = _("ANGELICA"),
 #line 1951
-        .trainerClass = TRAINER_CLASS_BEAUTY,
+        .trainerClass = TRAINER_CLASS_BEAUTY_HNS,
 #line 1952
         .trainerPic = TRAINER_PIC_FRONT_BEAUTY,
 #line 1953
@@ -5292,7 +5292,7 @@
 #line 1964
         .trainerName = _("KENDRA"),
 #line 1965
-        .trainerClass = TRAINER_CLASS_BEAUTY,
+        .trainerClass = TRAINER_CLASS_BEAUTY_HNS,
 #line 1966
         .trainerPic = TRAINER_PIC_FRONT_BEAUTY,
 #line 1967
@@ -5328,7 +5328,7 @@
 #line 1978
         .trainerName = _("VERONICA"),
 #line 1979
-        .trainerClass = TRAINER_CLASS_BEAUTY,
+        .trainerClass = TRAINER_CLASS_BEAUTY_HNS,
 #line 1980
         .trainerPic = TRAINER_PIC_FRONT_BEAUTY,
 #line 1981
@@ -5364,7 +5364,7 @@
 #line 1992
         .trainerName = _("JULIA"),
 #line 1993
-        .trainerClass = TRAINER_CLASS_BEAUTY,
+        .trainerClass = TRAINER_CLASS_BEAUTY_HNS,
 #line 1994
         .trainerPic = TRAINER_PIC_FRONT_BEAUTY,
 #line 1995
@@ -5424,7 +5424,7 @@
 #line 2014
         .trainerName = _("THERESA"),
 #line 2015
-        .trainerClass = TRAINER_CLASS_BEAUTY,
+        .trainerClass = TRAINER_CLASS_BEAUTY_HNS,
 #line 2016
         .trainerPic = TRAINER_PIC_FRONT_BEAUTY,
 #line 2017
@@ -5460,7 +5460,7 @@
 #line 2028
         .trainerName = _("VALERIE"),
 #line 2029
-        .trainerClass = TRAINER_CLASS_BEAUTY,
+        .trainerClass = TRAINER_CLASS_BEAUTY_HNS,
 #line 2030
         .trainerPic = TRAINER_PIC_FRONT_BEAUTY,
 #line 2031
@@ -5508,7 +5508,7 @@
 #line 2046
         .trainerName = _("OLIVIA"),
 #line 2047
-        .trainerClass = TRAINER_CLASS_BEAUTY,
+        .trainerClass = TRAINER_CLASS_BEAUTY_HNS,
 #line 2048
         .trainerPic = TRAINER_PIC_FRONT_BEAUTY,
 #line 2049
@@ -5544,7 +5544,7 @@
 #line 2060
         .trainerName = _("LARRY"),
 #line 2061
-        .trainerClass = TRAINER_CLASS_POKEMANIAC,
+        .trainerClass = TRAINER_CLASS_POKEMANIAC_HNS,
 #line 2062
         .trainerPic = TRAINER_PIC_FRONT_POKEMANIAC,
 #line 2063
@@ -5580,7 +5580,7 @@
 #line 2074
         .trainerName = _("ANDREW"),
 #line 2075
-        .trainerClass = TRAINER_CLASS_POKEMANIAC,
+        .trainerClass = TRAINER_CLASS_POKEMANIAC_HNS,
 #line 2076
         .trainerPic = TRAINER_PIC_FRONT_POKEMANIAC,
 #line 2077
@@ -5628,7 +5628,7 @@
 #line 2092
         .trainerName = _("CALVIN"),
 #line 2093
-        .trainerClass = TRAINER_CLASS_POKEMANIAC,
+        .trainerClass = TRAINER_CLASS_POKEMANIAC_HNS,
 #line 2094
         .trainerPic = TRAINER_PIC_FRONT_POKEMANIAC,
 #line 2095
@@ -5664,7 +5664,7 @@
 #line 2106
         .trainerName = _("SHANE"),
 #line 2107
-        .trainerClass = TRAINER_CLASS_POKEMANIAC,
+        .trainerClass = TRAINER_CLASS_POKEMANIAC_HNS,
 #line 2108
         .trainerPic = TRAINER_PIC_FRONT_POKEMANIAC,
 #line 2109
@@ -5712,7 +5712,7 @@
 #line 2124
         .trainerName = _("BEN"),
 #line 2125
-        .trainerClass = TRAINER_CLASS_POKEMANIAC,
+        .trainerClass = TRAINER_CLASS_POKEMANIAC_HNS,
 #line 2126
         .trainerPic = TRAINER_PIC_FRONT_POKEMANIAC,
 #line 2127
@@ -5760,7 +5760,7 @@
 #line 2142
         .trainerName = _("BRENT"),
 #line 2143
-        .trainerClass = TRAINER_CLASS_POKEMANIAC,
+        .trainerClass = TRAINER_CLASS_POKEMANIAC_HNS,
 #line 2144
         .trainerPic = TRAINER_PIC_FRONT_POKEMANIAC,
 #line 2145
@@ -5808,7 +5808,7 @@
 #line 2160
         .trainerName = _("RON"),
 #line 2161
-        .trainerClass = TRAINER_CLASS_POKEMANIAC,
+        .trainerClass = TRAINER_CLASS_POKEMANIAC_HNS,
 #line 2162
         .trainerPic = TRAINER_PIC_FRONT_POKEMANIAC,
 #line 2163
@@ -5856,7 +5856,7 @@
 #line 2178
         .trainerName = _("ETHAN"),
 #line 2179
-        .trainerClass = TRAINER_CLASS_POKEMANIAC,
+        .trainerClass = TRAINER_CLASS_POKEMANIAC_HNS,
 #line 2180
         .trainerPic = TRAINER_PIC_FRONT_POKEMANIAC,
 #line 2181
@@ -5904,7 +5904,7 @@
 #line 2196
         .trainerName = _("ISSAC"),
 #line 2197
-        .trainerClass = TRAINER_CLASS_POKEMANIAC,
+        .trainerClass = TRAINER_CLASS_POKEMANIAC_HNS,
 #line 2198
         .trainerPic = TRAINER_PIC_FRONT_POKEMANIAC,
 #line 2199
@@ -5940,7 +5940,7 @@
 #line 2210
         .trainerName = _("DONALD"),
 #line 2211
-        .trainerClass = TRAINER_CLASS_POKEMANIAC,
+        .trainerClass = TRAINER_CLASS_POKEMANIAC_HNS,
 #line 2212
         .trainerPic = TRAINER_PIC_FRONT_POKEMANIAC,
 #line 2213
@@ -5988,7 +5988,7 @@
 #line 2228
         .trainerName = _("ZACH"),
 #line 2229
-        .trainerClass = TRAINER_CLASS_POKEMANIAC,
+        .trainerClass = TRAINER_CLASS_POKEMANIAC_HNS,
 #line 2230
         .trainerPic = TRAINER_PIC_FRONT_POKEMANIAC,
 #line 2231
@@ -6048,7 +6048,7 @@
 #line 2250
         .trainerName = _("MILLER"),
 #line 2251
-        .trainerClass = TRAINER_CLASS_POKEMANIAC,
+        .trainerClass = TRAINER_CLASS_POKEMANIAC_HNS,
 #line 2252
         .trainerPic = TRAINER_PIC_FRONT_POKEMANIAC,
 #line 2253
@@ -8000,7 +8000,7 @@
 #line 2976
         .trainerName = _("PRESTON"),
 #line 2977
-        .trainerClass = TRAINER_CLASS_GENTLEMAN,
+        .trainerClass = TRAINER_CLASS_GENTLEMAN_HNS,
 #line 2978
         .trainerPic = TRAINER_PIC_FRONT_GENTLEMAN,
 #line 2979
@@ -8048,7 +8048,7 @@
 #line 2994
         .trainerName = _("EDWARD"),
 #line 2995
-        .trainerClass = TRAINER_CLASS_GENTLEMAN,
+        .trainerClass = TRAINER_CLASS_GENTLEMAN_HNS,
 #line 2996
         .trainerPic = TRAINER_PIC_FRONT_GENTLEMAN,
 #line 2997
@@ -8084,7 +8084,7 @@
 #line 3008
         .trainerName = _("GREGORY"),
 #line 3009
-        .trainerClass = TRAINER_CLASS_GENTLEMAN,
+        .trainerClass = TRAINER_CLASS_GENTLEMAN_HNS,
 #line 3010
         .trainerPic = TRAINER_PIC_FRONT_GENTLEMAN,
 #line 3011
@@ -8132,7 +8132,7 @@
 #line 3026
         .trainerName = _("VIRGIL"),
 #line 3027
-        .trainerClass = TRAINER_CLASS_GENTLEMAN,
+        .trainerClass = TRAINER_CLASS_GENTLEMAN_HNS,
 #line 3028
         .trainerPic = TRAINER_PIC_FRONT_GENTLEMAN,
 #line 3029
@@ -8168,7 +8168,7 @@
 #line 3040
         .trainerName = _("ALFRED"),
 #line 3041
-        .trainerClass = TRAINER_CLASS_GENTLEMAN,
+        .trainerClass = TRAINER_CLASS_GENTLEMAN_HNS,
 #line 3042
         .trainerPic = TRAINER_PIC_FRONT_GENTLEMAN,
 #line 3043
@@ -8204,7 +8204,7 @@
 #line 3054
         .trainerName = _("ROXANNE"),
 #line 3055
-        .trainerClass = TRAINER_CLASS_EXPERT,
+        .trainerClass = TRAINER_CLASS_EXPERT_HNS,
 #line 3056
         .trainerPic = TRAINER_PIC_FRONT_EXPERT_F,
 #line 3057
@@ -8240,7 +8240,7 @@
 #line 3068
         .trainerName = _("CLARISSA"),
 #line 3069
-        .trainerClass = TRAINER_CLASS_EXPERT,
+        .trainerClass = TRAINER_CLASS_EXPERT_HNS,
 #line 3070
         .trainerPic = TRAINER_PIC_FRONT_EXPERT_F,
 #line 3071
@@ -8276,7 +8276,7 @@
 #line 3082
         .trainerName = _("COLETTE"),
 #line 3083
-        .trainerClass = TRAINER_CLASS_EXPERT,
+        .trainerClass = TRAINER_CLASS_EXPERT_HNS,
 #line 3084
         .trainerPic = TRAINER_PIC_FRONT_EXPERT_F,
 #line 3085
@@ -8312,7 +8312,7 @@
 #line 3096
         .trainerName = _("HILLARY"),
 #line 3097
-        .trainerClass = TRAINER_CLASS_EXPERT,
+        .trainerClass = TRAINER_CLASS_EXPERT_HNS,
 #line 3098
         .trainerPic = TRAINER_PIC_FRONT_EXPERT_F,
 #line 3099
@@ -8360,7 +8360,7 @@
 #line 3114
         .trainerName = _("SHIRLEY"),
 #line 3115
-        .trainerClass = TRAINER_CLASS_EXPERT,
+        .trainerClass = TRAINER_CLASS_EXPERT_HNS,
 #line 3116
         .trainerPic = TRAINER_PIC_FRONT_EXPERT_F,
 #line 3117
@@ -8408,7 +8408,7 @@
 #line 3132
         .trainerName = _("DON"),
 #line 3133
-        .trainerClass = TRAINER_CLASS_BUG_CATCHER,
+        .trainerClass = TRAINER_CLASS_BUG_CATCHER_HNS,
 #line 3134
         .trainerPic = TRAINER_PIC_FRONT_BUG_CATCHER,
 #line 3135
@@ -8456,7 +8456,7 @@
 #line 3150
         .trainerName = _("ROB"),
 #line 3151
-        .trainerClass = TRAINER_CLASS_BUG_CATCHER,
+        .trainerClass = TRAINER_CLASS_BUG_CATCHER_HNS,
 #line 3152
         .trainerPic = TRAINER_PIC_FRONT_BUG_CATCHER,
 #line 3153
@@ -8504,7 +8504,7 @@
 #line 3168
         .trainerName = _("ED"),
 #line 3169
-        .trainerClass = TRAINER_CLASS_BUG_CATCHER,
+        .trainerClass = TRAINER_CLASS_BUG_CATCHER_HNS,
 #line 3170
         .trainerPic = TRAINER_PIC_FRONT_BUG_CATCHER,
 #line 3171
@@ -8564,7 +8564,7 @@
 #line 3190
         .trainerName = _("WADE"),
 #line 3191
-        .trainerClass = TRAINER_CLASS_BUG_CATCHER,
+        .trainerClass = TRAINER_CLASS_BUG_CATCHER_HNS,
 #line 3192
         .trainerPic = TRAINER_PIC_FRONT_BUG_CATCHER,
 #line 3193
@@ -8612,7 +8612,7 @@
 #line 3208
         .trainerName = _("BENNY"),
 #line 3209
-        .trainerClass = TRAINER_CLASS_BUG_CATCHER,
+        .trainerClass = TRAINER_CLASS_BUG_CATCHER_HNS,
 #line 3210
         .trainerPic = TRAINER_PIC_FRONT_BUG_CATCHER,
 #line 3211
@@ -8660,7 +8660,7 @@
 #line 3226
         .trainerName = _("AL"),
 #line 3227
-        .trainerClass = TRAINER_CLASS_BUG_CATCHER,
+        .trainerClass = TRAINER_CLASS_BUG_CATCHER_HNS,
 #line 3228
         .trainerPic = TRAINER_PIC_FRONT_BUG_CATCHER,
 #line 3229
@@ -8708,7 +8708,7 @@
 #line 3244
         .trainerName = _("JOSH"),
 #line 3245
-        .trainerClass = TRAINER_CLASS_BUG_CATCHER,
+        .trainerClass = TRAINER_CLASS_BUG_CATCHER_HNS,
 #line 3246
         .trainerPic = TRAINER_PIC_FRONT_BUG_CATCHER,
 #line 3247
@@ -8744,7 +8744,7 @@
 #line 3258
         .trainerName = _("ARNIE"),
 #line 3259
-        .trainerClass = TRAINER_CLASS_BUG_CATCHER,
+        .trainerClass = TRAINER_CLASS_BUG_CATCHER_HNS,
 #line 3260
         .trainerPic = TRAINER_PIC_FRONT_BUG_CATCHER,
 #line 3261
@@ -8792,7 +8792,7 @@
 #line 3276
         .trainerName = _("KEN"),
 #line 3277
-        .trainerClass = TRAINER_CLASS_BUG_CATCHER,
+        .trainerClass = TRAINER_CLASS_BUG_CATCHER_HNS,
 #line 3278
         .trainerPic = TRAINER_PIC_FRONT_BUG_CATCHER,
 #line 3279
@@ -8840,7 +8840,7 @@
 #line 3294
         .trainerName = _("DOUG"),
 #line 3295
-        .trainerClass = TRAINER_CLASS_BUG_CATCHER,
+        .trainerClass = TRAINER_CLASS_BUG_CATCHER_HNS,
 #line 3296
         .trainerPic = TRAINER_PIC_FRONT_BUG_CATCHER,
 #line 3297
@@ -8876,7 +8876,7 @@
 #line 3308
         .trainerName = _("WAYNE"),
 #line 3309
-        .trainerClass = TRAINER_CLASS_BUG_CATCHER,
+        .trainerClass = TRAINER_CLASS_BUG_CATCHER_HNS,
 #line 3310
         .trainerPic = TRAINER_PIC_FRONT_BUG_CATCHER,
 #line 3311
@@ -8924,7 +8924,7 @@
 #line 3326
         .trainerName = _("JUSTIN"),
 #line 3327
-        .trainerClass = TRAINER_CLASS_FISHERMAN,
+        .trainerClass = TRAINER_CLASS_FISHERMAN_HNS,
 #line 3328
         .trainerPic = TRAINER_PIC_FRONT_FISHERMAN,
 #line 3329
@@ -8960,7 +8960,7 @@
 #line 3340
         .trainerName = _("RALPH"),
 #line 3341
-        .trainerClass = TRAINER_CLASS_FISHERMAN,
+        .trainerClass = TRAINER_CLASS_FISHERMAN_HNS,
 #line 3342
         .trainerPic = TRAINER_PIC_FRONT_FISHERMAN,
 #line 3343
@@ -8996,7 +8996,7 @@
 #line 3354
         .trainerName = _("ARNOLD"),
 #line 3355
-        .trainerClass = TRAINER_CLASS_FISHERMAN,
+        .trainerClass = TRAINER_CLASS_FISHERMAN_HNS,
 #line 3356
         .trainerPic = TRAINER_PIC_FRONT_FISHERMAN,
 #line 3357
@@ -9044,7 +9044,7 @@
 #line 3372
         .trainerName = _("KYLE"),
 #line 3373
-        .trainerClass = TRAINER_CLASS_FISHERMAN,
+        .trainerClass = TRAINER_CLASS_FISHERMAN_HNS,
 #line 3374
         .trainerPic = TRAINER_PIC_FRONT_FISHERMAN,
 #line 3375
@@ -9104,7 +9104,7 @@
 #line 3394
         .trainerName = _("HENRY"),
 #line 3395
-        .trainerClass = TRAINER_CLASS_FISHERMAN,
+        .trainerClass = TRAINER_CLASS_FISHERMAN_HNS,
 #line 3396
         .trainerPic = TRAINER_PIC_FRONT_FISHERMAN,
 #line 3397
@@ -9152,7 +9152,7 @@
 #line 3412
         .trainerName = _("MARVIN"),
 #line 3413
-        .trainerClass = TRAINER_CLASS_FISHERMAN,
+        .trainerClass = TRAINER_CLASS_FISHERMAN_HNS,
 #line 3414
         .trainerPic = TRAINER_PIC_FRONT_FISHERMAN,
 #line 3415
@@ -9200,7 +9200,7 @@
 #line 3430
         .trainerName = _("TULLY"),
 #line 3431
-        .trainerClass = TRAINER_CLASS_FISHERMAN,
+        .trainerClass = TRAINER_CLASS_FISHERMAN_HNS,
 #line 3432
         .trainerPic = TRAINER_PIC_FRONT_FISHERMAN,
 #line 3433
@@ -9236,7 +9236,7 @@
 #line 3444
         .trainerName = _("ANDRE"),
 #line 3445
-        .trainerClass = TRAINER_CLASS_FISHERMAN,
+        .trainerClass = TRAINER_CLASS_FISHERMAN_HNS,
 #line 3446
         .trainerPic = TRAINER_PIC_FRONT_FISHERMAN,
 #line 3447
@@ -9272,7 +9272,7 @@
 #line 3458
         .trainerName = _("RAYMOND"),
 #line 3459
-        .trainerClass = TRAINER_CLASS_FISHERMAN,
+        .trainerClass = TRAINER_CLASS_FISHERMAN_HNS,
 #line 3460
         .trainerPic = TRAINER_PIC_FRONT_FISHERMAN,
 #line 3461
@@ -9308,7 +9308,7 @@
 #line 3472
         .trainerName = _("WILTON"),
 #line 3473
-        .trainerClass = TRAINER_CLASS_FISHERMAN,
+        .trainerClass = TRAINER_CLASS_FISHERMAN_HNS,
 #line 3474
         .trainerPic = TRAINER_PIC_FRONT_FISHERMAN,
 #line 3475
@@ -9368,7 +9368,7 @@
 #line 3494
         .trainerName = _("EDGAR"),
 #line 3495
-        .trainerClass = TRAINER_CLASS_FISHERMAN,
+        .trainerClass = TRAINER_CLASS_FISHERMAN_HNS,
 #line 3496
         .trainerPic = TRAINER_PIC_FRONT_FISHERMAN,
 #line 3497
@@ -9428,7 +9428,7 @@
 #line 3516
         .trainerName = _("JONAH"),
 #line 3517
-        .trainerClass = TRAINER_CLASS_FISHERMAN,
+        .trainerClass = TRAINER_CLASS_FISHERMAN_HNS,
 #line 3518
         .trainerPic = TRAINER_PIC_FRONT_FISHERMAN,
 #line 3519
@@ -9500,7 +9500,7 @@
 #line 3542
         .trainerName = _("MARTIN"),
 #line 3543
-        .trainerClass = TRAINER_CLASS_FISHERMAN,
+        .trainerClass = TRAINER_CLASS_FISHERMAN_HNS,
 #line 3544
         .trainerPic = TRAINER_PIC_FRONT_FISHERMAN,
 #line 3545
@@ -9548,7 +9548,7 @@
 #line 3560
         .trainerName = _("STEPHEN"),
 #line 3561
-        .trainerClass = TRAINER_CLASS_FISHERMAN,
+        .trainerClass = TRAINER_CLASS_FISHERMAN_HNS,
 #line 3562
         .trainerPic = TRAINER_PIC_FRONT_FISHERMAN,
 #line 3563
@@ -9620,7 +9620,7 @@
 #line 3586
         .trainerName = _("BARNEY"),
 #line 3587
-        .trainerClass = TRAINER_CLASS_FISHERMAN,
+        .trainerClass = TRAINER_CLASS_FISHERMAN_HNS,
 #line 3588
         .trainerPic = TRAINER_PIC_FRONT_FISHERMAN,
 #line 3589
@@ -9680,7 +9680,7 @@
 #line 3608
         .trainerName = _("SCOTT"),
 #line 3609
-        .trainerClass = TRAINER_CLASS_FISHERMAN,
+        .trainerClass = TRAINER_CLASS_FISHERMAN_HNS,
 #line 3610
         .trainerPic = TRAINER_PIC_FRONT_FISHERMAN,
 #line 3611
@@ -9752,7 +9752,7 @@
 #line 3634
         .trainerName = _("HAROLD"),
 #line 3635
-        .trainerClass = TRAINER_CLASS_SWIMMER_M,
+        .trainerClass = TRAINER_CLASS_SWIMMER_M_HNS,
 #line 3636
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_M,
 #line 3637
@@ -9800,7 +9800,7 @@
 #line 3652
         .trainerName = _("SIMON"),
 #line 3653
-        .trainerClass = TRAINER_CLASS_SWIMMER_M,
+        .trainerClass = TRAINER_CLASS_SWIMMER_M_HNS,
 #line 3654
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_M,
 #line 3655
@@ -9848,7 +9848,7 @@
 #line 3670
         .trainerName = _("RANDALL"),
 #line 3671
-        .trainerClass = TRAINER_CLASS_SWIMMER_M,
+        .trainerClass = TRAINER_CLASS_SWIMMER_M_HNS,
 #line 3672
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_M,
 #line 3673
@@ -9896,7 +9896,7 @@
 #line 3688
         .trainerName = _("CHARLIE"),
 #line 3689
-        .trainerClass = TRAINER_CLASS_SWIMMER_M,
+        .trainerClass = TRAINER_CLASS_SWIMMER_M_HNS,
 #line 3690
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_M,
 #line 3691
@@ -9944,7 +9944,7 @@
 #line 3706
         .trainerName = _("GEORGE"),
 #line 3707
-        .trainerClass = TRAINER_CLASS_SWIMMER_M,
+        .trainerClass = TRAINER_CLASS_SWIMMER_M_HNS,
 #line 3708
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_M,
 #line 3709
@@ -10004,7 +10004,7 @@
 #line 3728
         .trainerName = _("BERKE"),
 #line 3729
-        .trainerClass = TRAINER_CLASS_SWIMMER_M,
+        .trainerClass = TRAINER_CLASS_SWIMMER_M_HNS,
 #line 3730
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_M,
 #line 3731
@@ -10040,7 +10040,7 @@
 #line 3742
         .trainerName = _("KIRK"),
 #line 3743
-        .trainerClass = TRAINER_CLASS_SWIMMER_M,
+        .trainerClass = TRAINER_CLASS_SWIMMER_M_HNS,
 #line 3744
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_M,
 #line 3745
@@ -10088,7 +10088,7 @@
 #line 3760
         .trainerName = _("MATHEW"),
 #line 3761
-        .trainerClass = TRAINER_CLASS_SWIMMER_M,
+        .trainerClass = TRAINER_CLASS_SWIMMER_M_HNS,
 #line 3762
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_M,
 #line 3763
@@ -10136,7 +10136,7 @@
 #line 3778
         .trainerName = _("HAL"),
 #line 3779
-        .trainerClass = TRAINER_CLASS_SWIMMER_M,
+        .trainerClass = TRAINER_CLASS_SWIMMER_M_HNS,
 #line 3780
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_M,
 #line 3781
@@ -10196,7 +10196,7 @@
 #line 3800
         .trainerName = _("PATON"),
 #line 3801
-        .trainerClass = TRAINER_CLASS_SWIMMER_M,
+        .trainerClass = TRAINER_CLASS_SWIMMER_M_HNS,
 #line 3802
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_M,
 #line 3803
@@ -10244,7 +10244,7 @@
 #line 3818
         .trainerName = _("DARYL"),
 #line 3819
-        .trainerClass = TRAINER_CLASS_SWIMMER_M,
+        .trainerClass = TRAINER_CLASS_SWIMMER_M_HNS,
 #line 3820
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_M,
 #line 3821
@@ -10304,7 +10304,7 @@
 #line 3840
         .trainerName = _("WALTER"),
 #line 3841
-        .trainerClass = TRAINER_CLASS_SWIMMER_M,
+        .trainerClass = TRAINER_CLASS_SWIMMER_M_HNS,
 #line 3842
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_M,
 #line 3843
@@ -10364,7 +10364,7 @@
 #line 3862
         .trainerName = _("TONY"),
 #line 3863
-        .trainerClass = TRAINER_CLASS_SWIMMER_M,
+        .trainerClass = TRAINER_CLASS_SWIMMER_M_HNS,
 #line 3864
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_M,
 #line 3865
@@ -10424,7 +10424,7 @@
 #line 3884
         .trainerName = _("JEROME"),
 #line 3885
-        .trainerClass = TRAINER_CLASS_SWIMMER_M,
+        .trainerClass = TRAINER_CLASS_SWIMMER_M_HNS,
 #line 3886
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_M,
 #line 3887
@@ -10484,7 +10484,7 @@
 #line 3906
         .trainerName = _("TUCKER"),
 #line 3907
-        .trainerClass = TRAINER_CLASS_SWIMMER_M,
+        .trainerClass = TRAINER_CLASS_SWIMMER_M_HNS,
 #line 3908
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_M,
 #line 3909
@@ -10532,7 +10532,7 @@
 #line 3924
         .trainerName = _("RICK"),
 #line 3925
-        .trainerClass = TRAINER_CLASS_SWIMMER_M,
+        .trainerClass = TRAINER_CLASS_SWIMMER_M_HNS,
 #line 3926
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_M,
 #line 3927
@@ -10592,7 +10592,7 @@
 #line 3946
         .trainerName = _("CAMERON"),
 #line 3947
-        .trainerClass = TRAINER_CLASS_SWIMMER_M,
+        .trainerClass = TRAINER_CLASS_SWIMMER_M_HNS,
 #line 3948
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_M,
 #line 3949
@@ -10628,7 +10628,7 @@
 #line 3960
         .trainerName = _("SETH"),
 #line 3961
-        .trainerClass = TRAINER_CLASS_SWIMMER_M,
+        .trainerClass = TRAINER_CLASS_SWIMMER_M_HNS,
 #line 3962
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_M,
 #line 3963
@@ -10688,7 +10688,7 @@
 #line 3982
         .trainerName = _("JAMES"),
 #line 3983
-        .trainerClass = TRAINER_CLASS_SWIMMER_M,
+        .trainerClass = TRAINER_CLASS_SWIMMER_M_HNS,
 #line 3984
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_M,
 #line 3985
@@ -10748,7 +10748,7 @@
 #line 4004
         .trainerName = _("LEWIS"),
 #line 4005
-        .trainerClass = TRAINER_CLASS_SWIMMER_M,
+        .trainerClass = TRAINER_CLASS_SWIMMER_M_HNS,
 #line 4006
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_M,
 #line 4007
@@ -10808,7 +10808,7 @@
 #line 4026
         .trainerName = _("PARKER"),
 #line 4027
-        .trainerClass = TRAINER_CLASS_SWIMMER_M,
+        .trainerClass = TRAINER_CLASS_SWIMMER_M_HNS,
 #line 4028
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_M,
 #line 4029
@@ -10868,7 +10868,7 @@
 #line 4048
         .trainerName = _("ELAINE"),
 #line 4049
-        .trainerClass = TRAINER_CLASS_SWIMMER_F,
+        .trainerClass = TRAINER_CLASS_SWIMMER_F_HNS,
 #line 4050
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_F,
 #line 4051
@@ -10904,7 +10904,7 @@
 #line 4062
         .trainerName = _("PAULA"),
 #line 4063
-        .trainerClass = TRAINER_CLASS_SWIMMER_F,
+        .trainerClass = TRAINER_CLASS_SWIMMER_F_HNS,
 #line 4064
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_F,
 #line 4065
@@ -10952,7 +10952,7 @@
 #line 4080
         .trainerName = _("KAYLEE"),
 #line 4081
-        .trainerClass = TRAINER_CLASS_SWIMMER_F,
+        .trainerClass = TRAINER_CLASS_SWIMMER_F_HNS,
 #line 4082
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_F,
 #line 4083
@@ -11012,7 +11012,7 @@
 #line 4102
         .trainerName = _("SUSIE"),
 #line 4103
-        .trainerClass = TRAINER_CLASS_SWIMMER_F,
+        .trainerClass = TRAINER_CLASS_SWIMMER_F_HNS,
 #line 4104
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_F,
 #line 4105
@@ -11060,7 +11060,7 @@
 #line 4120
         .trainerName = _("DENISE"),
 #line 4121
-        .trainerClass = TRAINER_CLASS_SWIMMER_F,
+        .trainerClass = TRAINER_CLASS_SWIMMER_F_HNS,
 #line 4122
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_F,
 #line 4123
@@ -11096,7 +11096,7 @@
 #line 4134
         .trainerName = _("KARA"),
 #line 4135
-        .trainerClass = TRAINER_CLASS_SWIMMER_F,
+        .trainerClass = TRAINER_CLASS_SWIMMER_F_HNS,
 #line 4136
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_F,
 #line 4137
@@ -11144,7 +11144,7 @@
 #line 4152
         .trainerName = _("WENDY"),
 #line 4153
-        .trainerClass = TRAINER_CLASS_SWIMMER_F,
+        .trainerClass = TRAINER_CLASS_SWIMMER_F_HNS,
 #line 4154
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_F,
 #line 4155
@@ -11192,7 +11192,7 @@
 #line 4170
         .trainerName = _("LISA"),
 #line 4171
-        .trainerClass = TRAINER_CLASS_SWIMMER_F,
+        .trainerClass = TRAINER_CLASS_SWIMMER_F_HNS,
 #line 4172
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_F,
 #line 4173
@@ -11228,7 +11228,7 @@
 #line 4184
         .trainerName = _("JILL"),
 #line 4185
-        .trainerClass = TRAINER_CLASS_SWIMMER_F,
+        .trainerClass = TRAINER_CLASS_SWIMMER_F_HNS,
 #line 4186
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_F,
 #line 4187
@@ -11264,7 +11264,7 @@
 #line 4198
         .trainerName = _("MARY"),
 #line 4199
-        .trainerClass = TRAINER_CLASS_SWIMMER_F,
+        .trainerClass = TRAINER_CLASS_SWIMMER_F_HNS,
 #line 4200
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_F,
 #line 4201
@@ -11300,7 +11300,7 @@
 #line 4212
         .trainerName = _("KATIE"),
 #line 4213
-        .trainerClass = TRAINER_CLASS_SWIMMER_F,
+        .trainerClass = TRAINER_CLASS_SWIMMER_F_HNS,
 #line 4214
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_F,
 #line 4215
@@ -11336,7 +11336,7 @@
 #line 4226
         .trainerName = _("DAWN"),
 #line 4227
-        .trainerClass = TRAINER_CLASS_SWIMMER_F,
+        .trainerClass = TRAINER_CLASS_SWIMMER_F_HNS,
 #line 4228
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_F,
 #line 4229
@@ -11372,7 +11372,7 @@
 #line 4240
         .trainerName = _("TARA"),
 #line 4241
-        .trainerClass = TRAINER_CLASS_SWIMMER_F,
+        .trainerClass = TRAINER_CLASS_SWIMMER_F_HNS,
 #line 4242
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_F,
 #line 4243
@@ -11408,7 +11408,7 @@
 #line 4254
         .trainerName = _("NICOLE"),
 #line 4255
-        .trainerClass = TRAINER_CLASS_SWIMMER_F,
+        .trainerClass = TRAINER_CLASS_SWIMMER_F_HNS,
 #line 4256
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_F,
 #line 4257
@@ -11456,7 +11456,7 @@
 #line 4272
         .trainerName = _("LORI"),
 #line 4273
-        .trainerClass = TRAINER_CLASS_SWIMMER_F,
+        .trainerClass = TRAINER_CLASS_SWIMMER_F_HNS,
 #line 4274
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_F,
 #line 4275
@@ -11504,7 +11504,7 @@
 #line 4290
         .trainerName = _("JODY"),
 #line 4291
-        .trainerClass = TRAINER_CLASS_SWIMMER_F,
+        .trainerClass = TRAINER_CLASS_SWIMMER_F_HNS,
 #line 4292
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_F,
 #line 4293
@@ -11540,7 +11540,7 @@
 #line 4304
         .trainerName = _("NIKKI"),
 #line 4305
-        .trainerClass = TRAINER_CLASS_SWIMMER_F,
+        .trainerClass = TRAINER_CLASS_SWIMMER_F_HNS,
 #line 4306
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_F,
 #line 4307
@@ -11600,7 +11600,7 @@
 #line 4326
         .trainerName = _("DIANA"),
 #line 4327
-        .trainerClass = TRAINER_CLASS_SWIMMER_F,
+        .trainerClass = TRAINER_CLASS_SWIMMER_F_HNS,
 #line 4328
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_F,
 #line 4329
@@ -11660,7 +11660,7 @@
 #line 4348
         .trainerName = _("BRIANA"),
 #line 4349
-        .trainerClass = TRAINER_CLASS_SWIMMER_F,
+        .trainerClass = TRAINER_CLASS_SWIMMER_F_HNS,
 #line 4350
         .trainerPic = TRAINER_PIC_FRONT_SWIMMER_F,
 #line 4351
@@ -11720,7 +11720,7 @@
 #line 4370
         .trainerName = _("EUGENE"),
 #line 4371
-        .trainerClass = TRAINER_CLASS_SAILOR,
+        .trainerClass = TRAINER_CLASS_SAILOR_HNS,
 #line 4372
         .trainerPic = TRAINER_PIC_FRONT_SAILOR,
 #line 4373
@@ -11768,7 +11768,7 @@
 #line 4388
         .trainerName = _("HUEY"),
 #line 4389
-        .trainerClass = TRAINER_CLASS_SAILOR,
+        .trainerClass = TRAINER_CLASS_SAILOR_HNS,
 #line 4390
         .trainerPic = TRAINER_PIC_FRONT_SAILOR,
 #line 4391
@@ -11816,7 +11816,7 @@
 #line 4406
         .trainerName = _("TERRELL"),
 #line 4407
-        .trainerClass = TRAINER_CLASS_SAILOR,
+        .trainerClass = TRAINER_CLASS_SAILOR_HNS,
 #line 4408
         .trainerPic = TRAINER_PIC_FRONT_SAILOR,
 #line 4409
@@ -11852,7 +11852,7 @@
 #line 4420
         .trainerName = _("KENT"),
 #line 4421
-        .trainerClass = TRAINER_CLASS_SAILOR,
+        .trainerClass = TRAINER_CLASS_SAILOR_HNS,
 #line 4422
         .trainerPic = TRAINER_PIC_FRONT_SAILOR,
 #line 4423
@@ -11900,7 +11900,7 @@
 #line 4438
         .trainerName = _("ERNEST"),
 #line 4439
-        .trainerClass = TRAINER_CLASS_SAILOR,
+        .trainerClass = TRAINER_CLASS_SAILOR_HNS,
 #line 4440
         .trainerPic = TRAINER_PIC_FRONT_SAILOR,
 #line 4441
@@ -11960,7 +11960,7 @@
 #line 4460
         .trainerName = _("JEFF"),
 #line 4461
-        .trainerClass = TRAINER_CLASS_SAILOR,
+        .trainerClass = TRAINER_CLASS_SAILOR_HNS,
 #line 4462
         .trainerPic = TRAINER_PIC_FRONT_SAILOR,
 #line 4463
@@ -12008,7 +12008,7 @@
 #line 4478
         .trainerName = _("GARRETT"),
 #line 4479
-        .trainerClass = TRAINER_CLASS_SAILOR,
+        .trainerClass = TRAINER_CLASS_SAILOR_HNS,
 #line 4480
         .trainerPic = TRAINER_PIC_FRONT_SAILOR,
 #line 4481
@@ -12044,7 +12044,7 @@
 #line 4492
         .trainerName = _("KENNETH"),
 #line 4493
-        .trainerClass = TRAINER_CLASS_SAILOR,
+        .trainerClass = TRAINER_CLASS_SAILOR_HNS,
 #line 4494
         .trainerPic = TRAINER_PIC_FRONT_SAILOR,
 #line 4495
@@ -12116,7 +12116,7 @@
 #line 4518
         .trainerName = _("STANLY"),
 #line 4519
-        .trainerClass = TRAINER_CLASS_SAILOR,
+        .trainerClass = TRAINER_CLASS_SAILOR_HNS,
 #line 4520
         .trainerPic = TRAINER_PIC_FRONT_SAILOR,
 #line 4521
@@ -12176,7 +12176,7 @@
 #line 4540
         .trainerName = _("HARRY"),
 #line 4541
-        .trainerClass = TRAINER_CLASS_SAILOR,
+        .trainerClass = TRAINER_CLASS_SAILOR_HNS,
 #line 4542
         .trainerPic = TRAINER_PIC_FRONT_SAILOR,
 #line 4543
@@ -12884,7 +12884,7 @@
 #line 4806
         .trainerName = _("CLYDE"),
 #line 4807
-        .trainerClass = TRAINER_CLASS_GUITARIST,
+        .trainerClass = TRAINER_CLASS_GUITARIST_HNS,
 #line 4808
         .trainerPic = TRAINER_PIC_FRONT_GUITARIST,
 #line 4809
@@ -12920,7 +12920,7 @@
 #line 4820
         .trainerName = _("VINCENT"),
 #line 4821
-        .trainerClass = TRAINER_CLASS_GUITARIST,
+        .trainerClass = TRAINER_CLASS_GUITARIST_HNS,
 #line 4822
         .trainerPic = TRAINER_PIC_FRONT_GUITARIST,
 #line 4823
@@ -12992,7 +12992,7 @@
 #line 4846
         .trainerName = _("ANTHONY"),
 #line 4847
-        .trainerClass = TRAINER_CLASS_HIKER,
+        .trainerClass = TRAINER_CLASS_HIKER_HNS,
 #line 4848
         .trainerPic = TRAINER_PIC_FRONT_HIKER,
 #line 4849
@@ -13040,7 +13040,7 @@
 #line 4864
         .trainerName = _("RUSSELL"),
 #line 4865
-        .trainerClass = TRAINER_CLASS_HIKER,
+        .trainerClass = TRAINER_CLASS_HIKER_HNS,
 #line 4866
         .trainerPic = TRAINER_PIC_FRONT_HIKER,
 #line 4867
@@ -13088,7 +13088,7 @@
 #line 4882
         .trainerName = _("PHILLIP"),
 #line 4883
-        .trainerClass = TRAINER_CLASS_HIKER,
+        .trainerClass = TRAINER_CLASS_HIKER_HNS,
 #line 4884
         .trainerPic = TRAINER_PIC_FRONT_HIKER,
 #line 4885
@@ -13148,7 +13148,7 @@
 #line 4904
         .trainerName = _("LEONARD"),
 #line 4905
-        .trainerClass = TRAINER_CLASS_HIKER,
+        .trainerClass = TRAINER_CLASS_HIKER_HNS,
 #line 4906
         .trainerPic = TRAINER_PIC_FRONT_HIKER,
 #line 4907
@@ -13196,7 +13196,7 @@
 #line 4922
         .trainerName = _("BENJAMIN"),
 #line 4923
-        .trainerClass = TRAINER_CLASS_HIKER,
+        .trainerClass = TRAINER_CLASS_HIKER_HNS,
 #line 4924
         .trainerPic = TRAINER_PIC_FRONT_HIKER,
 #line 4925
@@ -13244,7 +13244,7 @@
 #line 4940
         .trainerName = _("ERIK"),
 #line 4941
-        .trainerClass = TRAINER_CLASS_HIKER,
+        .trainerClass = TRAINER_CLASS_HIKER_HNS,
 #line 4942
         .trainerPic = TRAINER_PIC_FRONT_HIKER,
 #line 4943
@@ -13304,7 +13304,7 @@
 #line 4962
         .trainerName = _("MICHAEL"),
 #line 4963
-        .trainerClass = TRAINER_CLASS_HIKER,
+        .trainerClass = TRAINER_CLASS_HIKER_HNS,
 #line 4964
         .trainerPic = TRAINER_PIC_FRONT_HIKER,
 #line 4965
@@ -13364,7 +13364,7 @@
 #line 4984
         .trainerName = _("PARRY"),
 #line 4985
-        .trainerClass = TRAINER_CLASS_HIKER,
+        .trainerClass = TRAINER_CLASS_HIKER_HNS,
 #line 4986
         .trainerPic = TRAINER_PIC_FRONT_HIKER,
 #line 4987
@@ -13424,7 +13424,7 @@
 #line 5006
         .trainerName = _("TIMOTHY"),
 #line 5007
-        .trainerClass = TRAINER_CLASS_HIKER,
+        .trainerClass = TRAINER_CLASS_HIKER_HNS,
 #line 5008
         .trainerPic = TRAINER_PIC_FRONT_HIKER,
 #line 5009
@@ -13496,7 +13496,7 @@
 #line 5032
         .trainerName = _("BAILEY"),
 #line 5033
-        .trainerClass = TRAINER_CLASS_HIKER,
+        .trainerClass = TRAINER_CLASS_HIKER_HNS,
 #line 5034
         .trainerPic = TRAINER_PIC_FRONT_HIKER,
 #line 5035
@@ -13580,7 +13580,7 @@
 #line 5062
         .trainerName = _("TIM"),
 #line 5063
-        .trainerClass = TRAINER_CLASS_HIKER,
+        .trainerClass = TRAINER_CLASS_HIKER_HNS,
 #line 5064
         .trainerPic = TRAINER_PIC_FRONT_HIKER,
 #line 5065
@@ -13640,7 +13640,7 @@
 #line 5084
         .trainerName = _("NOLAND"),
 #line 5085
-        .trainerClass = TRAINER_CLASS_HIKER,
+        .trainerClass = TRAINER_CLASS_HIKER_HNS,
 #line 5086
         .trainerPic = TRAINER_PIC_FRONT_HIKER,
 #line 5087
@@ -13688,7 +13688,7 @@
 #line 5102
         .trainerName = _("SIDNEY"),
 #line 5103
-        .trainerClass = TRAINER_CLASS_HIKER,
+        .trainerClass = TRAINER_CLASS_HIKER_HNS,
 #line 5104
         .trainerPic = TRAINER_PIC_FRONT_HIKER,
 #line 5105
@@ -13736,7 +13736,7 @@
 #line 5120
         .trainerName = _("KENNY"),
 #line 5121
-        .trainerClass = TRAINER_CLASS_HIKER,
+        .trainerClass = TRAINER_CLASS_HIKER_HNS,
 #line 5122
         .trainerPic = TRAINER_PIC_FRONT_HIKER,
 #line 5123
@@ -13808,7 +13808,7 @@
 #line 5146
         .trainerName = _("JIM"),
 #line 5147
-        .trainerClass = TRAINER_CLASS_HIKER,
+        .trainerClass = TRAINER_CLASS_HIKER_HNS,
 #line 5148
         .trainerPic = TRAINER_PIC_FRONT_HIKER,
 #line 5149
@@ -13844,7 +13844,7 @@
 #line 5160
         .trainerName = _("DEVIN"),
 #line 5161
-        .trainerClass = TRAINER_CLASS_HIKER,
+        .trainerClass = TRAINER_CLASS_HIKER_HNS,
 #line 5162
         .trainerPic = TRAINER_PIC_FRONT_HIKER,
 #line 5163
@@ -13904,7 +13904,7 @@
 #line 5182
         .trainerName = _("DANIEL"),
 #line 5183
-        .trainerClass = TRAINER_CLASS_HIKER,
+        .trainerClass = TRAINER_CLASS_HIKER_HNS,
 #line 5184
         .trainerPic = TRAINER_PIC_FRONT_HIKER,
 #line 5185
@@ -15188,7 +15188,7 @@
 #line 5660
         .trainerName = _("KENJI"),
 #line 5661
-        .trainerClass = TRAINER_CLASS_BLACK_BELT,
+        .trainerClass = TRAINER_CLASS_BLACK_BELT_HNS,
 #line 5662
         .trainerPic = TRAINER_PIC_FRONT_BLACK_BELT,
 #line 5663
@@ -15260,7 +15260,7 @@
 #line 5686
         .trainerName = _("YOSHI"),
 #line 5687
-        .trainerClass = TRAINER_CLASS_BLACK_BELT,
+        .trainerClass = TRAINER_CLASS_BLACK_BELT_HNS,
 #line 5688
         .trainerPic = TRAINER_PIC_FRONT_BLACK_BELT,
 #line 5689
@@ -15296,7 +15296,7 @@
 #line 5700
         .trainerName = _("LAO"),
 #line 5701
-        .trainerClass = TRAINER_CLASS_BLACK_BELT,
+        .trainerClass = TRAINER_CLASS_BLACK_BELT_HNS,
 #line 5702
         .trainerPic = TRAINER_PIC_FRONT_BLACK_BELT,
 #line 5703
@@ -15332,7 +15332,7 @@
 #line 5714
         .trainerName = _("NOB"),
 #line 5715
-        .trainerClass = TRAINER_CLASS_BLACK_BELT,
+        .trainerClass = TRAINER_CLASS_BLACK_BELT_HNS,
 #line 5716
         .trainerPic = TRAINER_PIC_FRONT_BLACK_BELT,
 #line 5717
@@ -15380,7 +15380,7 @@
 #line 5732
         .trainerName = _("KIYO"),
 #line 5733
-        .trainerClass = TRAINER_CLASS_BLACK_BELT,
+        .trainerClass = TRAINER_CLASS_BLACK_BELT_HNS,
 #line 5734
         .trainerPic = TRAINER_PIC_FRONT_BLACK_BELT,
 #line 5735
@@ -15428,7 +15428,7 @@
 #line 5750
         .trainerName = _("LUNG"),
 #line 5751
-        .trainerClass = TRAINER_CLASS_BLACK_BELT,
+        .trainerClass = TRAINER_CLASS_BLACK_BELT_HNS,
 #line 5752
         .trainerPic = TRAINER_PIC_FRONT_BLACK_BELT,
 #line 5753
@@ -15488,7 +15488,7 @@
 #line 5772
         .trainerName = _("WAI"),
 #line 5773
-        .trainerClass = TRAINER_CLASS_BLACK_BELT,
+        .trainerClass = TRAINER_CLASS_BLACK_BELT_HNS,
 #line 5774
         .trainerPic = TRAINER_PIC_FRONT_BLACK_BELT,
 #line 5775
@@ -16148,7 +16148,7 @@
 #line 6018
         .trainerName = _("LIZ"),
 #line 6019
-        .trainerClass = TRAINER_CLASS_PICNICKER,
+        .trainerClass = TRAINER_CLASS_PICNICKER_HNS,
 #line 6020
         .trainerPic = TRAINER_PIC_FRONT_PICNICKER,
 #line 6021
@@ -16184,7 +16184,7 @@
 #line 6032
         .trainerName = _("GINA"),
 #line 6033
-        .trainerClass = TRAINER_CLASS_PICNICKER,
+        .trainerClass = TRAINER_CLASS_PICNICKER_HNS,
 #line 6034
         .trainerPic = TRAINER_PIC_FRONT_PICNICKER,
 #line 6035
@@ -16232,7 +16232,7 @@
 #line 6050
         .trainerName = _("BROOKE"),
 #line 6051
-        .trainerClass = TRAINER_CLASS_PICNICKER,
+        .trainerClass = TRAINER_CLASS_PICNICKER_HNS,
 #line 6052
         .trainerPic = TRAINER_PIC_FRONT_PICNICKER,
 #line 6053
@@ -16268,7 +16268,7 @@
 #line 6064
         .trainerName = _("KIM"),
 #line 6065
-        .trainerClass = TRAINER_CLASS_PICNICKER,
+        .trainerClass = TRAINER_CLASS_PICNICKER_HNS,
 #line 6066
         .trainerPic = TRAINER_PIC_FRONT_PICNICKER,
 #line 6067
@@ -16304,7 +16304,7 @@
 #line 6078
         .trainerName = _("CINDY"),
 #line 6079
-        .trainerClass = TRAINER_CLASS_PICNICKER,
+        .trainerClass = TRAINER_CLASS_PICNICKER_HNS,
 #line 6080
         .trainerPic = TRAINER_PIC_FRONT_PICNICKER,
 #line 6081
@@ -16352,7 +16352,7 @@
 #line 6096
         .trainerName = _("HOPE"),
 #line 6097
-        .trainerClass = TRAINER_CLASS_PICNICKER,
+        .trainerClass = TRAINER_CLASS_PICNICKER_HNS,
 #line 6098
         .trainerPic = TRAINER_PIC_FRONT_PICNICKER,
 #line 6099
@@ -16388,7 +16388,7 @@
 #line 6110
         .trainerName = _("SHARON"),
 #line 6111
-        .trainerClass = TRAINER_CLASS_PICNICKER,
+        .trainerClass = TRAINER_CLASS_PICNICKER_HNS,
 #line 6112
         .trainerPic = TRAINER_PIC_FRONT_PICNICKER,
 #line 6113
@@ -16436,7 +16436,7 @@
 #line 6128
         .trainerName = _("DEBRA"),
 #line 6129
-        .trainerClass = TRAINER_CLASS_PICNICKER,
+        .trainerClass = TRAINER_CLASS_PICNICKER_HNS,
 #line 6130
         .trainerPic = TRAINER_PIC_FRONT_PICNICKER,
 #line 6131
@@ -16472,7 +16472,7 @@
 #line 6142
         .trainerName = _("ERIN"),
 #line 6143
-        .trainerClass = TRAINER_CLASS_PICNICKER,
+        .trainerClass = TRAINER_CLASS_PICNICKER_HNS,
 #line 6144
         .trainerPic = TRAINER_PIC_FRONT_PICNICKER,
 #line 6145
@@ -16544,7 +16544,7 @@
 #line 6168
         .trainerName = _("HEIDI"),
 #line 6169
-        .trainerClass = TRAINER_CLASS_PICNICKER,
+        .trainerClass = TRAINER_CLASS_PICNICKER_HNS,
 #line 6170
         .trainerPic = TRAINER_PIC_FRONT_PICNICKER,
 #line 6171
@@ -16592,7 +16592,7 @@
 #line 6186
         .trainerName = _("EDNA"),
 #line 6187
-        .trainerClass = TRAINER_CLASS_PICNICKER,
+        .trainerClass = TRAINER_CLASS_PICNICKER_HNS,
 #line 6188
         .trainerPic = TRAINER_PIC_FRONT_PICNICKER,
 #line 6189
@@ -16640,7 +16640,7 @@
 #line 6204
         .trainerName = _("TIFFANY"),
 #line 6205
-        .trainerClass = TRAINER_CLASS_PICNICKER,
+        .trainerClass = TRAINER_CLASS_PICNICKER_HNS,
 #line 6206
         .trainerPic = TRAINER_PIC_FRONT_PICNICKER,
 #line 6207
@@ -16688,7 +16688,7 @@
 #line 6222
         .trainerName = _("TANYA"),
 #line 6223
-        .trainerClass = TRAINER_CLASS_PICNICKER,
+        .trainerClass = TRAINER_CLASS_PICNICKER_HNS,
 #line 6224
         .trainerPic = TRAINER_PIC_FRONT_PICNICKER,
 #line 6225
@@ -16748,7 +16748,7 @@
 #line 6244
         .trainerName = _("ROLAND"),
 #line 6245
-        .trainerClass = TRAINER_CLASS_CAMPER,
+        .trainerClass = TRAINER_CLASS_CAMPER_HNS,
 #line 6246
         .trainerPic = TRAINER_PIC_FRONT_CAMPER,
 #line 6247
@@ -16784,7 +16784,7 @@
 #line 6258
         .trainerName = _("TODD"),
 #line 6259
-        .trainerClass = TRAINER_CLASS_CAMPER,
+        .trainerClass = TRAINER_CLASS_CAMPER_HNS,
 #line 6260
         .trainerPic = TRAINER_PIC_FRONT_CAMPER,
 #line 6261
@@ -16820,7 +16820,7 @@
 #line 6272
         .trainerName = _("IVAN"),
 #line 6273
-        .trainerClass = TRAINER_CLASS_CAMPER,
+        .trainerClass = TRAINER_CLASS_CAMPER_HNS,
 #line 6274
         .trainerPic = TRAINER_PIC_FRONT_CAMPER,
 #line 6275
@@ -16868,7 +16868,7 @@
 #line 6290
         .trainerName = _("ELLIOT"),
 #line 6291
-        .trainerClass = TRAINER_CLASS_CAMPER,
+        .trainerClass = TRAINER_CLASS_CAMPER_HNS,
 #line 6292
         .trainerPic = TRAINER_PIC_FRONT_CAMPER,
 #line 6293
@@ -16916,7 +16916,7 @@
 #line 6308
         .trainerName = _("BARRY"),
 #line 6309
-        .trainerClass = TRAINER_CLASS_CAMPER,
+        .trainerClass = TRAINER_CLASS_CAMPER_HNS,
 #line 6310
         .trainerPic = TRAINER_PIC_FRONT_CAMPER,
 #line 6311
@@ -16964,7 +16964,7 @@
 #line 6326
         .trainerName = _("LLOYD"),
 #line 6327
-        .trainerClass = TRAINER_CLASS_CAMPER,
+        .trainerClass = TRAINER_CLASS_CAMPER_HNS,
 #line 6328
         .trainerPic = TRAINER_PIC_FRONT_CAMPER,
 #line 6329
@@ -17000,7 +17000,7 @@
 #line 6340
         .trainerName = _("DEAN"),
 #line 6341
-        .trainerClass = TRAINER_CLASS_CAMPER,
+        .trainerClass = TRAINER_CLASS_CAMPER_HNS,
 #line 6342
         .trainerPic = TRAINER_PIC_FRONT_CAMPER,
 #line 6343
@@ -17048,7 +17048,7 @@
 #line 6358
         .trainerName = _("SID"),
 #line 6359
-        .trainerClass = TRAINER_CLASS_CAMPER,
+        .trainerClass = TRAINER_CLASS_CAMPER_HNS,
 #line 6360
         .trainerPic = TRAINER_PIC_FRONT_CAMPER,
 #line 6361
@@ -17108,7 +17108,7 @@
 #line 6380
         .trainerName = _("HARVEY"),
 #line 6381
-        .trainerClass = TRAINER_CLASS_CAMPER,
+        .trainerClass = TRAINER_CLASS_CAMPER_HNS,
 #line 6382
         .trainerPic = TRAINER_PIC_FRONT_CAMPER,
 #line 6383
@@ -17144,7 +17144,7 @@
 #line 6394
         .trainerName = _("DALE"),
 #line 6395
-        .trainerClass = TRAINER_CLASS_CAMPER,
+        .trainerClass = TRAINER_CLASS_CAMPER_HNS,
 #line 6396
         .trainerPic = TRAINER_PIC_FRONT_CAMPER,
 #line 6397
@@ -17180,7 +17180,7 @@
 #line 6408
         .trainerName = _("TED"),
 #line 6409
-        .trainerClass = TRAINER_CLASS_CAMPER,
+        .trainerClass = TRAINER_CLASS_CAMPER_HNS,
 #line 6410
         .trainerPic = TRAINER_PIC_FRONT_CAMPER,
 #line 6411
@@ -17240,7 +17240,7 @@
 #line 6430
         .trainerName = _("THOMAS"),
 #line 6431
-        .trainerClass = TRAINER_CLASS_CAMPER,
+        .trainerClass = TRAINER_CLASS_CAMPER_HNS,
 #line 6432
         .trainerPic = TRAINER_PIC_FRONT_CAMPER,
 #line 6433
@@ -17312,7 +17312,7 @@
 #line 6456
         .trainerName = _("LEROY"),
 #line 6457
-        .trainerClass = TRAINER_CLASS_CAMPER,
+        .trainerClass = TRAINER_CLASS_CAMPER_HNS,
 #line 6458
         .trainerPic = TRAINER_PIC_FRONT_CAMPER,
 #line 6459
@@ -17384,7 +17384,7 @@
 #line 6482
         .trainerName = _("DAVID"),
 #line 6483
-        .trainerClass = TRAINER_CLASS_CAMPER,
+        .trainerClass = TRAINER_CLASS_CAMPER_HNS,
 #line 6484
         .trainerPic = TRAINER_PIC_FRONT_CAMPER,
 #line 6485
@@ -17456,7 +17456,7 @@
 #line 6508
         .trainerName = _("JOHN"),
 #line 6509
-        .trainerClass = TRAINER_CLASS_CAMPER,
+        .trainerClass = TRAINER_CLASS_CAMPER_HNS,
 #line 6510
         .trainerPic = TRAINER_PIC_FRONT_CAMPER,
 #line 6511
@@ -17528,7 +17528,7 @@
 #line 6534
         .trainerName = _("JERRY"),
 #line 6535
-        .trainerClass = TRAINER_CLASS_CAMPER,
+        .trainerClass = TRAINER_CLASS_CAMPER_HNS,
 #line 6536
         .trainerPic = TRAINER_PIC_FRONT_CAMPER,
 #line 6537
@@ -17588,7 +17588,7 @@
 #line 6556
         .trainerName = _("GRANT"),
 #line 6557
-        .trainerClass = TRAINER_CLASS_CAMPER,
+        .trainerClass = TRAINER_CLASS_CAMPER_HNS,
 #line 6558
         .trainerPic = TRAINER_PIC_FRONT_CAMPER,
 #line 6559
@@ -17636,7 +17636,7 @@
 #line 6574
         .trainerName = _("SPENCER"),
 #line 6575
-        .trainerClass = TRAINER_CLASS_CAMPER,
+        .trainerClass = TRAINER_CLASS_CAMPER_HNS,
 #line 6576
         .trainerPic = TRAINER_PIC_FRONT_CAMPER,
 #line 6577
@@ -17684,7 +17684,7 @@
 #line 6592
         .trainerName = _("QUENTIN"),
 #line 6593
-        .trainerClass = TRAINER_CLASS_CAMPER,
+        .trainerClass = TRAINER_CLASS_CAMPER_HNS,
 #line 6594
         .trainerPic = TRAINER_PIC_FRONT_CAMPER,
 #line 6595
@@ -18332,7 +18332,7 @@
 #line 6832
         .trainerName = _("KOJI"),
 #line 6833
-        .trainerClass = TRAINER_CLASS_HEX_MANIAC,
+        .trainerClass = TRAINER_CLASS_HEX_MANIAC_HNS,
 #line 6834
         .trainerPic = TRAINER_PIC_FRONT_HEX_MANIAC,
 #line 6835
@@ -18392,7 +18392,7 @@
 #line 6854
         .trainerName = _("MARTHA"),
 #line 6855
-        .trainerClass = TRAINER_CLASS_HEX_MANIAC,
+        .trainerClass = TRAINER_CLASS_HEX_MANIAC_HNS,
 #line 6856
         .trainerPic = TRAINER_PIC_FRONT_HEX_MANIAC,
 #line 6857
@@ -18440,7 +18440,7 @@
 #line 6872
         .trainerName = _("GRACE"),
 #line 6873
-        .trainerClass = TRAINER_CLASS_HEX_MANIAC,
+        .trainerClass = TRAINER_CLASS_HEX_MANIAC_HNS,
 #line 6874
         .trainerPic = TRAINER_PIC_FRONT_HEX_MANIAC,
 #line 6875
@@ -18488,7 +18488,7 @@
 #line 6890
         .trainerName = _("BETHANY"),
 #line 6891
-        .trainerClass = TRAINER_CLASS_HEX_MANIAC,
+        .trainerClass = TRAINER_CLASS_HEX_MANIAC_HNS,
 #line 6892
         .trainerPic = TRAINER_PIC_FRONT_HEX_MANIAC,
 #line 6893
@@ -18524,7 +18524,7 @@
 #line 6904
         .trainerName = _("MARGRET"),
 #line 6905
-        .trainerClass = TRAINER_CLASS_HEX_MANIAC,
+        .trainerClass = TRAINER_CLASS_HEX_MANIAC_HNS,
 #line 6906
         .trainerPic = TRAINER_PIC_FRONT_HEX_MANIAC,
 #line 6907
@@ -18560,7 +18560,7 @@
 #line 6918
         .trainerName = _("ETHEL"),
 #line 6919
-        .trainerClass = TRAINER_CLASS_HEX_MANIAC,
+        .trainerClass = TRAINER_CLASS_HEX_MANIAC_HNS,
 #line 6920
         .trainerPic = TRAINER_PIC_FRONT_HEX_MANIAC,
 #line 6921
@@ -18596,7 +18596,7 @@
 #line 6932
         .trainerName = _("REBECCA"),
 #line 6933
-        .trainerClass = TRAINER_CLASS_HEX_MANIAC,
+        .trainerClass = TRAINER_CLASS_HEX_MANIAC_HNS,
 #line 6934
         .trainerPic = TRAINER_PIC_FRONT_HEX_MANIAC,
 #line 6935
@@ -18656,7 +18656,7 @@
 #line 6954
         .trainerName = _("DORIS"),
 #line 6955
-        .trainerClass = TRAINER_CLASS_PSYCHIC,
+        .trainerClass = TRAINER_CLASS_PSYCHIC_HNS,
 #line 6956
         .trainerPic = TRAINER_PIC_FRONT_PSYCHIC_F,
 #line 6957
@@ -18716,7 +18716,7 @@
 #line 6976
         .trainerName = _("RONALD"),
 #line 6977
-        .trainerClass = TRAINER_CLASS_EXPERT,
+        .trainerClass = TRAINER_CLASS_EXPERT_HNS,
 #line 6978
         .trainerPic = TRAINER_PIC_FRONT_EXPERT_M,
 #line 6979
@@ -18764,7 +18764,7 @@
 #line 6994
         .trainerName = _("BRAD"),
 #line 6995
-        .trainerClass = TRAINER_CLASS_EXPERT,
+        .trainerClass = TRAINER_CLASS_EXPERT_HNS,
 #line 6996
         .trainerPic = TRAINER_PIC_FRONT_EXPERT_M,
 #line 6997
@@ -18812,7 +18812,7 @@
 #line 7012
         .trainerName = _("DOUGLAS"),
 #line 7013
-        .trainerClass = TRAINER_CLASS_EXPERT,
+        .trainerClass = TRAINER_CLASS_EXPERT_HNS,
 #line 7014
         .trainerPic = TRAINER_PIC_FRONT_EXPERT_M,
 #line 7015
@@ -18872,7 +18872,7 @@
 #line 7034
         .trainerName = _("WILLIAM"),
 #line 7035
-        .trainerClass = TRAINER_CLASS_POKEFAN,
+        .trainerClass = TRAINER_CLASS_POKEFAN_HNS,
 #line 7036
         .trainerPic = TRAINER_PIC_FRONT_POKEFAN_M,
 #line 7037
@@ -18908,7 +18908,7 @@
 #line 7048
         .trainerName = _("DEREK"),
 #line 7049
-        .trainerClass = TRAINER_CLASS_POKEFAN,
+        .trainerClass = TRAINER_CLASS_POKEFAN_HNS,
 #line 7050
         .trainerPic = TRAINER_PIC_FRONT_POKEFAN_M,
 #line 7051
@@ -18956,7 +18956,7 @@
 #line 7066
         .trainerName = _("ROBERT"),
 #line 7067
-        .trainerClass = TRAINER_CLASS_POKEFAN,
+        .trainerClass = TRAINER_CLASS_POKEFAN_HNS,
 #line 7068
         .trainerPic = TRAINER_PIC_FRONT_POKEFAN_M,
 #line 7069
@@ -18992,7 +18992,7 @@
 #line 7080
         .trainerName = _("JOSHUA"),
 #line 7081
-        .trainerClass = TRAINER_CLASS_POKEFAN,
+        .trainerClass = TRAINER_CLASS_POKEFAN_HNS,
 #line 7082
         .trainerPic = TRAINER_PIC_FRONT_POKEFAN_M,
 #line 7083
@@ -19052,7 +19052,7 @@
 #line 7102
         .trainerName = _("CARTER"),
 #line 7103
-        .trainerClass = TRAINER_CLASS_POKEFAN,
+        .trainerClass = TRAINER_CLASS_POKEFAN_HNS,
 #line 7104
         .trainerPic = TRAINER_PIC_FRONT_POKEFAN_M,
 #line 7105
@@ -19148,7 +19148,7 @@
 #line 7138
         .trainerName = _("BRANDON"),
 #line 7139
-        .trainerClass = TRAINER_CLASS_POKEFAN,
+        .trainerClass = TRAINER_CLASS_POKEFAN_HNS,
 #line 7140
         .trainerPic = TRAINER_PIC_FRONT_POKEFAN_M,
 #line 7141
@@ -19184,7 +19184,7 @@
 #line 7152
         .trainerName = _("JEREMY"),
 #line 7153
-        .trainerClass = TRAINER_CLASS_POKEFAN,
+        .trainerClass = TRAINER_CLASS_POKEFAN_HNS,
 #line 7154
         .trainerPic = TRAINER_PIC_FRONT_POKEFAN_M,
 #line 7155
@@ -19244,7 +19244,7 @@
 #line 7174
         .trainerName = _("COLIN"),
 #line 7175
-        .trainerClass = TRAINER_CLASS_POKEFAN,
+        .trainerClass = TRAINER_CLASS_POKEFAN_HNS,
 #line 7176
         .trainerPic = TRAINER_PIC_FRONT_POKEFAN_M,
 #line 7177
@@ -19280,7 +19280,7 @@
 #line 7188
         .trainerName = _("ALEX"),
 #line 7189
-        .trainerClass = TRAINER_CLASS_BATTLE_GIRL,
+        .trainerClass = TRAINER_CLASS_BATTLE_GIRL_HNS,
 #line 7190
         .trainerPic = TRAINER_PIC_FRONT_BATTLE_GIRL,
 #line 7191
@@ -19340,7 +19340,7 @@
 #line 7210
         .trainerName = _("REX"),
 #line 7211
-        .trainerClass = TRAINER_CLASS_POKEFAN,
+        .trainerClass = TRAINER_CLASS_POKEFAN_HNS,
 #line 7212
         .trainerPic = TRAINER_PIC_FRONT_POKEFAN_M,
 #line 7213
@@ -19376,7 +19376,7 @@
 #line 7224
         .trainerName = _("ALLAN"),
 #line 7225
-        .trainerClass = TRAINER_CLASS_POKEFAN,
+        .trainerClass = TRAINER_CLASS_POKEFAN_HNS,
 #line 7226
         .trainerPic = TRAINER_PIC_FRONT_POKEFAN_M,
 #line 7227
@@ -19627,7 +19627,7 @@
 #line 7322
         .trainerName = _("AMY&MAY"),
 #line 7323
-        .trainerClass = TRAINER_CLASS_TWINS,
+        .trainerClass = TRAINER_CLASS_TWINS_HNS,
 #line 7324
         .trainerPic = TRAINER_PIC_FRONT_TWINS_HNS,
 #line 7325
@@ -19675,7 +19675,7 @@
 #line 7340
         .trainerName = _("ANN&ANNE"),
 #line 7341
-        .trainerClass = TRAINER_CLASS_TWINS,
+        .trainerClass = TRAINER_CLASS_TWINS_HNS,
 #line 7342
         .trainerPic = TRAINER_PIC_FRONT_TWINS_HNS,
 #line 7343
@@ -19723,7 +19723,7 @@
 #line 7358
         .trainerName = _("JO&ZOE"),
 #line 7359
-        .trainerClass = TRAINER_CLASS_TWINS,
+        .trainerClass = TRAINER_CLASS_TWINS_HNS,
 #line 7360
         .trainerPic = TRAINER_PIC_FRONT_TWINS_HNS,
 #line 7361
@@ -19771,7 +19771,7 @@
 #line 7376
         .trainerName = _("MEG&PEG"),
 #line 7377
-        .trainerClass = TRAINER_CLASS_TWINS,
+        .trainerClass = TRAINER_CLASS_TWINS_HNS,
 #line 7378
         .trainerPic = TRAINER_PIC_FRONT_TWINS_HNS,
 #line 7379
@@ -19819,7 +19819,7 @@
 #line 7394
         .trainerName = _("LEA&PIA"),
 #line 7395
-        .trainerClass = TRAINER_CLASS_TWINS,
+        .trainerClass = TRAINER_CLASS_TWINS_HNS,
 #line 7396
         .trainerPic = TRAINER_PIC_FRONT_TWINS_HNS,
 #line 7397
@@ -19891,7 +19891,7 @@
 #line 7420
         .trainerName = _("BEVERLY"),
 #line 7421
-        .trainerClass = TRAINER_CLASS_PARASOL_LADY,
+        .trainerClass = TRAINER_CLASS_PARASOL_LADY_HNS,
 #line 7422
         .trainerPic = TRAINER_PIC_FRONT_PARASOL_LADY,
 #line 7423
@@ -19927,7 +19927,7 @@
 #line 7434
         .trainerName = _("RUTH"),
 #line 7435
-        .trainerClass = TRAINER_CLASS_PARASOL_LADY,
+        .trainerClass = TRAINER_CLASS_PARASOL_LADY_HNS,
 #line 7436
         .trainerPic = TRAINER_PIC_FRONT_PARASOL_LADY,
 #line 7437
@@ -19963,7 +19963,7 @@
 #line 7448
         .trainerName = _("GEORGIA"),
 #line 7449
-        .trainerClass = TRAINER_CLASS_PARASOL_LADY,
+        .trainerClass = TRAINER_CLASS_PARASOL_LADY_HNS,
 #line 7450
         .trainerPic = TRAINER_PIC_FRONT_PARASOL_LADY,
 #line 7451
@@ -20047,7 +20047,7 @@
 #line 7478
         .trainerName = _("JAIME"),
 #line 7479
-        .trainerClass = TRAINER_CLASS_PARASOL_LADY,
+        .trainerClass = TRAINER_CLASS_PARASOL_LADY_HNS,
 #line 7480
         .trainerPic = TRAINER_PIC_FRONT_PARASOL_LADY,
 #line 7481
@@ -20167,7 +20167,7 @@
 #line 7524
         .trainerName = _("THOM & KAE"),
 #line 7525
-        .trainerClass = TRAINER_CLASS_YOUNG_COUPLE,
+        .trainerClass = TRAINER_CLASS_YOUNG_COUPLE_HNS,
 #line 7526
         .trainerPic = TRAINER_PIC_FRONT_YOUNG_COUPLE,
 #line 7527
@@ -20215,7 +20215,7 @@
 #line 7542
         .trainerName = _("DUFF & EDA"),
 #line 7543
-        .trainerClass = TRAINER_CLASS_YOUNG_COUPLE,
+        .trainerClass = TRAINER_CLASS_YOUNG_COUPLE_HNS,
 #line 7544
         .trainerPic = TRAINER_PIC_FRONT_YOUNG_COUPLE,
 #line 7545
@@ -20263,7 +20263,7 @@
 #line 7560
         .trainerName = _("FALKNER"),
 #line 7561
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 7562
         .trainerPic = TRAINER_PIC_FRONT_LEADER_FALKNER_HNS,
 #line 7563
@@ -20326,7 +20326,7 @@
 #line 7585
         .trainerName = _("FALKNER"),
 #line 7586
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 7587
         .trainerPic = TRAINER_PIC_FRONT_LEADER_FALKNER_HNS,
 #line 7588
@@ -20470,7 +20470,7 @@
 #line 7644
         .trainerName = _("BUGSY"),
 #line 7645
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 7646
         .trainerPic = TRAINER_PIC_FRONT_LEADER_BUGSY_HNS,
 #line 7647
@@ -20555,7 +20555,7 @@
 #line 7679
         .trainerName = _("BUGSY"),
 #line 7680
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 7681
         .trainerPic = TRAINER_PIC_FRONT_LEADER_BUGSY_HNS,
 #line 7682
@@ -20701,7 +20701,7 @@
 #line 7738
         .trainerName = _("WHITNEY"),
 #line 7739
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 7740
         .trainerPic = TRAINER_PIC_FRONT_LEADER_WHITNEY_HNS,
 #line 7741
@@ -20786,7 +20786,7 @@
 #line 7773
         .trainerName = _("WHITNEY"),
 #line 7774
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 7775
         .trainerPic = TRAINER_PIC_FRONT_LEADER_WHITNEY_HNS,
 #line 7776
@@ -20932,7 +20932,7 @@
 #line 7832
         .trainerName = _("MORTY"),
 #line 7833
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 7834
         .trainerPic = TRAINER_PIC_FRONT_LEADER_MORTY_HNS,
 #line 7835
@@ -21036,7 +21036,7 @@
 #line 7875
         .trainerName = _("MORTY"),
 #line 7876
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 7877
         .trainerPic = TRAINER_PIC_FRONT_LEADER_MORTY_HNS,
 #line 7878
@@ -21182,7 +21182,7 @@
 #line 7934
         .trainerName = _("PRYCE"),
 #line 7935
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 7936
         .trainerPic = TRAINER_PIC_FRONT_LEADER_PRYCE_HNS,
 #line 7937
@@ -21286,7 +21286,7 @@
 #line 7977
         .trainerName = _("PRYCE"),
 #line 7978
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 7979
         .trainerPic = TRAINER_PIC_FRONT_LEADER_PRYCE_HNS,
 #line 7980
@@ -21430,7 +21430,7 @@
 #line 8036
         .trainerName = _("PRYCE"),
 #line 8037
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 8038
         .trainerPic = TRAINER_PIC_FRONT_LEADER_PRYCE_HNS,
 #line 8039
@@ -21553,7 +21553,7 @@
 #line 8087
         .trainerName = _("PRYCE"),
 #line 8088
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 8089
         .trainerPic = TRAINER_PIC_FRONT_LEADER_PRYCE_HNS,
 #line 8090
@@ -21676,7 +21676,7 @@
 #line 8138
         .trainerName = _("JASMINE"),
 #line 8139
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 8140
         .trainerPic = TRAINER_PIC_FRONT_LEADER_JASMINE_HNS,
 #line 8141
@@ -21801,7 +21801,7 @@
 #line 8189
         .trainerName = _("JASMINE"),
 #line 8190
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 8191
         .trainerPic = TRAINER_PIC_FRONT_LEADER_JASMINE_HNS,
 #line 8192
@@ -21945,7 +21945,7 @@
 #line 8248
         .trainerName = _("JASMINE"),
 #line 8249
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 8250
         .trainerPic = TRAINER_PIC_FRONT_LEADER_JASMINE_HNS,
 #line 8251
@@ -22070,7 +22070,7 @@
 #line 8299
         .trainerName = _("JASMINE"),
 #line 8300
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 8301
         .trainerPic = TRAINER_PIC_FRONT_LEADER_JASMINE_HNS,
 #line 8302
@@ -22195,7 +22195,7 @@
 #line 8350
         .trainerName = _("CHUCK"),
 #line 8351
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 8352
         .trainerPic = TRAINER_PIC_FRONT_LEADER_CHUCK_HNS,
 #line 8353
@@ -22299,7 +22299,7 @@
 #line 8393
         .trainerName = _("CHUCK"),
 #line 8394
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 8395
         .trainerPic = TRAINER_PIC_FRONT_LEADER_CHUCK_HNS,
 #line 8396
@@ -22443,7 +22443,7 @@
 #line 8452
         .trainerName = _("CHUCK"),
 #line 8453
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 8454
         .trainerPic = TRAINER_PIC_FRONT_LEADER_CHUCK_HNS,
 #line 8455
@@ -22566,7 +22566,7 @@
 #line 8503
         .trainerName = _("CHUCK"),
 #line 8504
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 8505
         .trainerPic = TRAINER_PIC_FRONT_LEADER_CHUCK_HNS,
 #line 8506
@@ -22689,7 +22689,7 @@
 #line 8554
         .trainerName = _("CLAIR"),
 #line 8555
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 8556
         .trainerPic = TRAINER_PIC_FRONT_LEADER_CLAIR_HNS,
 #line 8557
@@ -22818,7 +22818,7 @@
 #line 8605
         .trainerName = _("CLAIR"),
 #line 8606
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 8607
         .trainerPic = TRAINER_PIC_FRONT_LEADER_CLAIR_HNS,
 #line 8608
@@ -22966,7 +22966,7 @@
 #line 8664
         .trainerName = _("BROCK"),
 #line 8665
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 8666
         .trainerPic = TRAINER_PIC_FRONT_LEADER_BROCK_HNS,
 #line 8667
@@ -23118,7 +23118,7 @@
 #line 8723
         .trainerName = _("MISTY"),
 #line 8724
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 8725
         .trainerPic = TRAINER_PIC_FRONT_LEADER_MISTY_HNS,
 #line 8726
@@ -23266,7 +23266,7 @@
 #line 8782
         .trainerName = _("LTSURGE"),
 #line 8783
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 8784
         .trainerPic = TRAINER_PIC_FRONT_LEADER_SURGE_HNS,
 #line 8785
@@ -23414,7 +23414,7 @@
 #line 8841
         .trainerName = _("ERIKA"),
 #line 8842
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 8843
         .trainerPic = TRAINER_PIC_FRONT_LEADER_ERIKA_HNS,
 #line 8844
@@ -23562,7 +23562,7 @@
 #line 8900
         .trainerName = _("SABRINA"),
 #line 8901
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 8902
         .trainerPic = TRAINER_PIC_FRONT_LEADER_SABRINA_HNS,
 #line 8903
@@ -23710,7 +23710,7 @@
 #line 8959
         .trainerName = _("JANINE"),
 #line 8960
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 8961
         .trainerPic = TRAINER_PIC_FRONT_LEADER_JANINE_HNS,
 #line 8962
@@ -23856,7 +23856,7 @@
 #line 9018
         .trainerName = _("BLAINE"),
 #line 9019
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 9020
         .trainerPic = TRAINER_PIC_FRONT_LEADER_BLAINE_HNS,
 #line 9021
@@ -24008,7 +24008,7 @@
 #line 9077
         .trainerName = _("BLUE"),
 #line 9078
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 9079
         .trainerPic = TRAINER_PIC_FRONT_LEADER_BLUE_HNS,
 #line 9080
@@ -24160,7 +24160,7 @@
 #line 9136
         .trainerName = _("BLUE"),
 #line 9137
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 9138
         .trainerPic = TRAINER_PIC_FRONT_LEADER_BLUE_HNS,
 #line 9139
@@ -24312,7 +24312,7 @@
 #line 9195
         .trainerName = _("WILL"),
 #line 9196
-        .trainerClass = TRAINER_CLASS_ELITE_FOUR,
+        .trainerClass = TRAINER_CLASS_ELITE_FOUR_HNS,
 #line 9197
         .trainerPic = TRAINER_PIC_FRONT_ELITE_FOUR_WILL_HNS,
 #line 9198
@@ -24437,7 +24437,7 @@
 #line 9241
         .trainerName = _("WILL"),
 #line 9242
-        .trainerClass = TRAINER_CLASS_ELITE_FOUR,
+        .trainerClass = TRAINER_CLASS_ELITE_FOUR_HNS,
 #line 9243
         .trainerPic = TRAINER_PIC_FRONT_ELITE_FOUR_WILL_HNS,
 #line 9244
@@ -24583,7 +24583,7 @@
 #line 9294
         .trainerName = _("BRUNO"),
 #line 9295
-        .trainerClass = TRAINER_CLASS_ELITE_FOUR,
+        .trainerClass = TRAINER_CLASS_ELITE_FOUR_HNS,
 #line 9296
         .trainerPic = TRAINER_PIC_FRONT_ELITE_FOUR_BRUNO_HNS,
 #line 9297
@@ -24710,7 +24710,7 @@
 #line 9340
         .trainerName = _("BRUNO"),
 #line 9341
-        .trainerClass = TRAINER_CLASS_ELITE_FOUR,
+        .trainerClass = TRAINER_CLASS_ELITE_FOUR_HNS,
 #line 9342
         .trainerPic = TRAINER_PIC_FRONT_ELITE_FOUR_BRUNO_HNS,
 #line 9343
@@ -24860,7 +24860,7 @@
 #line 9393
         .trainerName = _("KAREN"),
 #line 9394
-        .trainerClass = TRAINER_CLASS_ELITE_FOUR,
+        .trainerClass = TRAINER_CLASS_ELITE_FOUR_HNS,
 #line 9395
         .trainerPic = TRAINER_PIC_FRONT_ELITE_FOUR_KAREN_HNS,
 #line 9396
@@ -24989,7 +24989,7 @@
 #line 9439
         .trainerName = _("KAREN"),
 #line 9440
-        .trainerClass = TRAINER_CLASS_ELITE_FOUR,
+        .trainerClass = TRAINER_CLASS_ELITE_FOUR_HNS,
 #line 9441
         .trainerPic = TRAINER_PIC_FRONT_ELITE_FOUR_KAREN_HNS,
 #line 9442
@@ -25139,7 +25139,7 @@
 #line 9492
         .trainerName = _("KOGA"),
 #line 9493
-        .trainerClass = TRAINER_CLASS_ELITE_FOUR,
+        .trainerClass = TRAINER_CLASS_ELITE_FOUR_HNS,
 #line 9494
         .trainerPic = TRAINER_PIC_FRONT_ELITE_FOUR_KOGA_HNS,
 #line 9495
@@ -25266,7 +25266,7 @@
 #line 9538
         .trainerName = _("KOGA"),
 #line 9539
-        .trainerClass = TRAINER_CLASS_ELITE_FOUR,
+        .trainerClass = TRAINER_CLASS_ELITE_FOUR_HNS,
 #line 9540
         .trainerPic = TRAINER_PIC_FRONT_ELITE_FOUR_KOGA_HNS,
 #line 9541
@@ -25416,7 +25416,7 @@
 #line 9591
         .trainerName = _("LANCE"),
 #line 9592
-        .trainerClass = TRAINER_CLASS_CHAMPION,
+        .trainerClass = TRAINER_CLASS_CHAMPION_HNS,
 #line 9593
         .trainerPic = TRAINER_PIC_FRONT_CHAMPION_LANCE_HNS,
 #line 9594
@@ -25566,7 +25566,7 @@
 #line 9644
         .trainerName = _("LANCE"),
 #line 9645
-        .trainerClass = TRAINER_CLASS_CHAMPION,
+        .trainerClass = TRAINER_CLASS_CHAMPION_HNS,
 #line 9646
         .trainerPic = TRAINER_PIC_FRONT_CHAMPION_LANCE_HNS,
 #line 9647
@@ -25716,7 +25716,7 @@
 #line 9697
         .trainerName = _("LANCE"),
 #line 9698
-        .trainerClass = TRAINER_CLASS_CHAMPION,
+        .trainerClass = TRAINER_CLASS_CHAMPION_HNS,
 #line 9699
         .trainerPic = TRAINER_PIC_FRONT_CHAMPION_LANCE_HNS,
 #line 9700
@@ -25805,7 +25805,7 @@
 #line 9728
         .trainerName = _("CLAIR"),
 #line 9729
-        .trainerClass = TRAINER_CLASS_LEADER,
+        .trainerClass = TRAINER_CLASS_LEADER_HNS,
 #line 9730
         .trainerPic = TRAINER_PIC_FRONT_LEADER_CLAIR_HNS,
 #line 9731
@@ -25892,7 +25892,7 @@
 #line 9759
         .trainerName = _("???"),
 #line 9760
-        .trainerClass = TRAINER_CLASS_RIVAL,
+        .trainerClass = TRAINER_CLASS_RIVAL_HNS,
 #line 9761
         .trainerPic = TRAINER_PIC_FRONT_SILVER_HNS,
 #line 9762
@@ -25928,7 +25928,7 @@
 #line 9773
         .trainerName = _("{B_RIVAL_NAME}"),
 #line 9774
-        .trainerClass = TRAINER_CLASS_RIVAL,
+        .trainerClass = TRAINER_CLASS_RIVAL_HNS,
 #line 9775
         .trainerPic = TRAINER_PIC_FRONT_SILVER_HNS,
 #line 9776
@@ -26011,7 +26011,7 @@
 #line 9808
         .trainerName = _("{B_RIVAL_NAME}"),
 #line 9809
-        .trainerClass = TRAINER_CLASS_RIVAL,
+        .trainerClass = TRAINER_CLASS_RIVAL_HNS,
 #line 9810
         .trainerPic = TRAINER_PIC_FRONT_SILVER_HNS,
 #line 9811
@@ -26113,7 +26113,7 @@
 #line 9851
         .trainerName = _("{B_RIVAL_NAME}"),
 #line 9852
-        .trainerClass = TRAINER_CLASS_RIVAL,
+        .trainerClass = TRAINER_CLASS_RIVAL_HNS,
 #line 9853
         .trainerPic = TRAINER_PIC_FRONT_SILVER_HNS,
 #line 9854
@@ -26233,7 +26233,7 @@
 #line 9901
         .trainerName = _("{B_RIVAL_NAME}"),
 #line 9902
-        .trainerClass = TRAINER_CLASS_RIVAL,
+        .trainerClass = TRAINER_CLASS_RIVAL_HNS,
 #line 9903
         .trainerPic = TRAINER_PIC_FRONT_SILVER_HNS,
 #line 9904
@@ -26379,7 +26379,7 @@
 #line 9960
         .trainerName = _("{B_RIVAL_NAME}"),
 #line 9961
-        .trainerClass = TRAINER_CLASS_RIVAL,
+        .trainerClass = TRAINER_CLASS_RIVAL_HNS,
 #line 9962
         .trainerPic = TRAINER_PIC_FRONT_SILVER_HNS,
 #line 9963
@@ -26531,7 +26531,7 @@
 #line 10013
         .trainerName = _("{B_RIVAL_NAME}"),
 #line 10014
-        .trainerClass = TRAINER_CLASS_RIVAL,
+        .trainerClass = TRAINER_CLASS_RIVAL_HNS,
 #line 10015
         .trainerPic = TRAINER_PIC_FRONT_SILVER_HNS,
 #line 10016
@@ -26683,7 +26683,7 @@
 #line 10066
         .trainerName = _("???"),
 #line 10067
-        .trainerClass = TRAINER_CLASS_RIVAL,
+        .trainerClass = TRAINER_CLASS_RIVAL_HNS,
 #line 10068
         .trainerPic = TRAINER_PIC_FRONT_SILVER_HNS,
 #line 10069
@@ -26719,7 +26719,7 @@
 #line 10080
         .trainerName = _("{B_RIVAL_NAME}"),
 #line 10081
-        .trainerClass = TRAINER_CLASS_RIVAL,
+        .trainerClass = TRAINER_CLASS_RIVAL_HNS,
 #line 10082
         .trainerPic = TRAINER_PIC_FRONT_SILVER_HNS,
 #line 10083
@@ -26802,7 +26802,7 @@
 #line 10115
         .trainerName = _("{B_RIVAL_NAME}"),
 #line 10116
-        .trainerClass = TRAINER_CLASS_RIVAL,
+        .trainerClass = TRAINER_CLASS_RIVAL_HNS,
 #line 10117
         .trainerPic = TRAINER_PIC_FRONT_SILVER_HNS,
 #line 10118
@@ -26904,7 +26904,7 @@
 #line 10158
         .trainerName = _("{B_RIVAL_NAME}"),
 #line 10159
-        .trainerClass = TRAINER_CLASS_RIVAL,
+        .trainerClass = TRAINER_CLASS_RIVAL_HNS,
 #line 10160
         .trainerPic = TRAINER_PIC_FRONT_SILVER_HNS,
 #line 10161
@@ -27024,7 +27024,7 @@
 #line 10208
         .trainerName = _("{B_RIVAL_NAME}"),
 #line 10209
-        .trainerClass = TRAINER_CLASS_RIVAL,
+        .trainerClass = TRAINER_CLASS_RIVAL_HNS,
 #line 10210
         .trainerPic = TRAINER_PIC_FRONT_SILVER_HNS,
 #line 10211
@@ -27170,7 +27170,7 @@
 #line 10267
         .trainerName = _("{B_RIVAL_NAME}"),
 #line 10268
-        .trainerClass = TRAINER_CLASS_RIVAL,
+        .trainerClass = TRAINER_CLASS_RIVAL_HNS,
 #line 10269
         .trainerPic = TRAINER_PIC_FRONT_SILVER_HNS,
 #line 10270
@@ -27322,7 +27322,7 @@
 #line 10320
         .trainerName = _("{B_RIVAL_NAME}"),
 #line 10321
-        .trainerClass = TRAINER_CLASS_RIVAL,
+        .trainerClass = TRAINER_CLASS_RIVAL_HNS,
 #line 10322
         .trainerPic = TRAINER_PIC_FRONT_SILVER_HNS,
 #line 10323
@@ -27474,7 +27474,7 @@
 #line 10373
         .trainerName = _("???"),
 #line 10374
-        .trainerClass = TRAINER_CLASS_RIVAL,
+        .trainerClass = TRAINER_CLASS_RIVAL_HNS,
 #line 10375
         .trainerPic = TRAINER_PIC_FRONT_SILVER_HNS,
 #line 10376
@@ -27510,7 +27510,7 @@
 #line 10387
         .trainerName = _("{B_RIVAL_NAME}"),
 #line 10388
-        .trainerClass = TRAINER_CLASS_RIVAL,
+        .trainerClass = TRAINER_CLASS_RIVAL_HNS,
 #line 10389
         .trainerPic = TRAINER_PIC_FRONT_SILVER_HNS,
 #line 10390
@@ -27593,7 +27593,7 @@
 #line 10422
         .trainerName = _("{B_RIVAL_NAME}"),
 #line 10423
-        .trainerClass = TRAINER_CLASS_RIVAL,
+        .trainerClass = TRAINER_CLASS_RIVAL_HNS,
 #line 10424
         .trainerPic = TRAINER_PIC_FRONT_SILVER_HNS,
 #line 10425
@@ -27695,7 +27695,7 @@
 #line 10465
         .trainerName = _("{B_RIVAL_NAME}"),
 #line 10466
-        .trainerClass = TRAINER_CLASS_RIVAL,
+        .trainerClass = TRAINER_CLASS_RIVAL_HNS,
 #line 10467
         .trainerPic = TRAINER_PIC_FRONT_SILVER_HNS,
 #line 10468
@@ -27816,7 +27816,7 @@
 #line 10516
         .trainerName = _("{B_RIVAL_NAME}"),
 #line 10517
-        .trainerClass = TRAINER_CLASS_RIVAL,
+        .trainerClass = TRAINER_CLASS_RIVAL_HNS,
 #line 10518
         .trainerPic = TRAINER_PIC_FRONT_SILVER_HNS,
 #line 10519
@@ -27962,7 +27962,7 @@
 #line 10575
         .trainerName = _("{B_RIVAL_NAME}"),
 #line 10576
-        .trainerClass = TRAINER_CLASS_RIVAL,
+        .trainerClass = TRAINER_CLASS_RIVAL_HNS,
 #line 10577
         .trainerPic = TRAINER_PIC_FRONT_SILVER_HNS,
 #line 10578
@@ -28114,7 +28114,7 @@
 #line 10628
         .trainerName = _("{B_RIVAL_NAME}"),
 #line 10629
-        .trainerClass = TRAINER_CLASS_RIVAL,
+        .trainerClass = TRAINER_CLASS_RIVAL_HNS,
 #line 10630
         .trainerPic = TRAINER_PIC_FRONT_SILVER_HNS,
 #line 10631
@@ -28266,7 +28266,7 @@
 #line 10681
         .trainerName = _("RED"),
 #line 10682
-        .trainerClass = TRAINER_CLASS_PKMN_TRAINER_1,
+        .trainerClass = TRAINER_CLASS_PKMN_TRAINER_1_HNS,
 #line 10683
         .trainerPic = TRAINER_PIC_FRONT_RED_HNS,
 #line 10684
@@ -29676,7 +29676,7 @@
 #line 11216
         .trainerName = _("ANABEL"),
 #line 11217
-        .trainerClass = TRAINER_CLASS_SALON_MAIDEN,
+        .trainerClass = TRAINER_CLASS_SALON_MAIDEN_HNS,
 #line 11218
         .trainerPic = TRAINER_PIC_FRONT_SALON_MAIDEN_ANABEL,
 #line 11219
@@ -29712,7 +29712,7 @@
 #line 11230
         .trainerName = _("TUCKER"),
 #line 11231
-        .trainerClass = TRAINER_CLASS_DOME_ACE,
+        .trainerClass = TRAINER_CLASS_DOME_ACE_HNS,
 #line 11232
         .trainerPic = TRAINER_PIC_FRONT_DOME_ACE_TUCKER,
 #line 11233
@@ -29760,7 +29760,7 @@
 #line 11248
         .trainerName = _("SPENSER"),
 #line 11249
-        .trainerClass = TRAINER_CLASS_PALACE_MAVEN,
+        .trainerClass = TRAINER_CLASS_PALACE_MAVEN_HNS,
 #line 11250
         .trainerPic = TRAINER_PIC_FRONT_PALACE_MAVEN_SPENSER,
 #line 11251
@@ -29796,7 +29796,7 @@
 #line 11262
         .trainerName = _("GRETA"),
 #line 11263
-        .trainerClass = TRAINER_CLASS_ARENA_TYCOON,
+        .trainerClass = TRAINER_CLASS_ARENA_TYCOON_HNS,
 #line 11264
         .trainerPic = TRAINER_PIC_FRONT_ARENA_TYCOON_GRETA,
 #line 11265
@@ -29832,7 +29832,7 @@
 #line 11276
         .trainerName = _("NOLAND"),
 #line 11277
-        .trainerClass = TRAINER_CLASS_FACTORY_HEAD,
+        .trainerClass = TRAINER_CLASS_FACTORY_HEAD_HNS,
 #line 11278
         .trainerPic = TRAINER_PIC_FRONT_FACTORY_HEAD_NOLAND,
 #line 11279
@@ -29880,7 +29880,7 @@
 #line 11294
         .trainerName = _("LUCY"),
 #line 11295
-        .trainerClass = TRAINER_CLASS_PIKE_QUEEN,
+        .trainerClass = TRAINER_CLASS_PIKE_QUEEN_HNS,
 #line 11296
         .trainerPic = TRAINER_PIC_FRONT_PIKE_QUEEN_LUCY,
 #line 11297
@@ -29916,7 +29916,7 @@
 #line 11307
         .trainerName = _("JOEY"),
 #line 11308
-        .trainerClass = TRAINER_CLASS_YOUNGSTER,
+        .trainerClass = TRAINER_CLASS_YOUNGSTER_HNS,
 #line 11309
         .trainerPic = TRAINER_PIC_FRONT_YOUNGSTER_HNS,
 #line 11310
@@ -29961,7 +29961,7 @@
 #line 11323
         .trainerName = _("JOEY"),
 #line 11324
-        .trainerClass = TRAINER_CLASS_YOUNGSTER,
+        .trainerClass = TRAINER_CLASS_YOUNGSTER_HNS,
 #line 11325
         .trainerPic = TRAINER_PIC_FRONT_YOUNGSTER_HNS,
 #line 11326
@@ -30006,7 +30006,7 @@
 #line 11339
         .trainerName = _("JOEY"),
 #line 11340
-        .trainerClass = TRAINER_CLASS_YOUNGSTER,
+        .trainerClass = TRAINER_CLASS_YOUNGSTER_HNS,
 #line 11341
         .trainerPic = TRAINER_PIC_FRONT_YOUNGSTER_HNS,
 #line 11342
@@ -30051,7 +30051,7 @@
 #line 11355
         .trainerName = _("JOEY"),
 #line 11356
-        .trainerClass = TRAINER_CLASS_YOUNGSTER,
+        .trainerClass = TRAINER_CLASS_YOUNGSTER_HNS,
 #line 11357
         .trainerPic = TRAINER_PIC_FRONT_YOUNGSTER_HNS,
 #line 11358
@@ -30096,7 +30096,7 @@
 #line 11371
         .trainerName = _("WADE"),
 #line 11372
-        .trainerClass = TRAINER_CLASS_BUG_CATCHER,
+        .trainerClass = TRAINER_CLASS_BUG_CATCHER_HNS,
 #line 11373
         .trainerPic = TRAINER_PIC_FRONT_BUG_CATCHER,
 #line 11374
@@ -30144,7 +30144,7 @@
 #line 11386
         .trainerName = _("WADE"),
 #line 11387
-        .trainerClass = TRAINER_CLASS_BUG_CATCHER,
+        .trainerClass = TRAINER_CLASS_BUG_CATCHER_HNS,
 #line 11388
         .trainerPic = TRAINER_PIC_FRONT_BUG_CATCHER,
 #line 11389
@@ -30204,7 +30204,7 @@
 #line 11404
         .trainerName = _("WADE"),
 #line 11405
-        .trainerClass = TRAINER_CLASS_BUG_CATCHER,
+        .trainerClass = TRAINER_CLASS_BUG_CATCHER_HNS,
 #line 11406
         .trainerPic = TRAINER_PIC_FRONT_BUG_CATCHER,
 #line 11407
@@ -30276,7 +30276,7 @@
 #line 11425
         .trainerName = _("WADE"),
 #line 11426
-        .trainerClass = TRAINER_CLASS_BUG_CATCHER,
+        .trainerClass = TRAINER_CLASS_BUG_CATCHER_HNS,
 #line 11427
         .trainerPic = TRAINER_PIC_FRONT_BUG_CATCHER,
 #line 11428
@@ -30360,7 +30360,7 @@
 #line 11449
         .trainerName = _("RALPH"),
 #line 11450
-        .trainerClass = TRAINER_CLASS_FISHERMAN,
+        .trainerClass = TRAINER_CLASS_FISHERMAN_HNS,
 #line 11451
         .trainerPic = TRAINER_PIC_FRONT_FISHERMAN,
 #line 11452
@@ -30396,7 +30396,7 @@
 #line 11461
         .trainerName = _("RALPH"),
 #line 11462
-        .trainerClass = TRAINER_CLASS_FISHERMAN,
+        .trainerClass = TRAINER_CLASS_FISHERMAN_HNS,
 #line 11463
         .trainerPic = TRAINER_PIC_FRONT_FISHERMAN,
 #line 11464
@@ -30444,7 +30444,7 @@
 #line 11476
         .trainerName = _("RALPH"),
 #line 11477
-        .trainerClass = TRAINER_CLASS_FISHERMAN,
+        .trainerClass = TRAINER_CLASS_FISHERMAN_HNS,
 #line 11478
         .trainerPic = TRAINER_PIC_FRONT_FISHERMAN,
 #line 11479
@@ -30525,7 +30525,7 @@
 #line 11506
         .trainerName = _("RALPH"),
 #line 11507
-        .trainerClass = TRAINER_CLASS_FISHERMAN,
+        .trainerClass = TRAINER_CLASS_FISHERMAN_HNS,
 #line 11508
         .trainerPic = TRAINER_PIC_FRONT_FISHERMAN,
 #line 11509
@@ -30606,7 +30606,7 @@
 #line 11536
         .trainerName = _("LIZ"),
 #line 11537
-        .trainerClass = TRAINER_CLASS_PICNICKER,
+        .trainerClass = TRAINER_CLASS_PICNICKER_HNS,
 #line 11538
         .trainerPic = TRAINER_PIC_FRONT_PICNICKER,
 #line 11539
@@ -30654,7 +30654,7 @@
 #line 11551
         .trainerName = _("LIZ"),
 #line 11552
-        .trainerClass = TRAINER_CLASS_PICNICKER,
+        .trainerClass = TRAINER_CLASS_PICNICKER_HNS,
 #line 11553
         .trainerPic = TRAINER_PIC_FRONT_PICNICKER,
 #line 11554
@@ -30714,7 +30714,7 @@
 #line 11569
         .trainerName = _("LIZ"),
 #line 11570
-        .trainerClass = TRAINER_CLASS_PICNICKER,
+        .trainerClass = TRAINER_CLASS_PICNICKER_HNS,
 #line 11571
         .trainerPic = TRAINER_PIC_FRONT_PICNICKER,
 #line 11572
@@ -30774,7 +30774,7 @@
 #line 11587
         .trainerName = _("LIZ"),
 #line 11588
-        .trainerClass = TRAINER_CLASS_PICNICKER,
+        .trainerClass = TRAINER_CLASS_PICNICKER_HNS,
 #line 11589
         .trainerPic = TRAINER_PIC_FRONT_PICNICKER,
 #line 11590
@@ -30855,7 +30855,7 @@
 #line 11617
         .trainerName = _("ANTHONY"),
 #line 11618
-        .trainerClass = TRAINER_CLASS_HIKER,
+        .trainerClass = TRAINER_CLASS_HIKER_HNS,
 #line 11619
         .trainerPic = TRAINER_PIC_FRONT_HIKER,
 #line 11620
@@ -30903,7 +30903,7 @@
 #line 11632
         .trainerName = _("ANTHONY"),
 #line 11633
-        .trainerClass = TRAINER_CLASS_HIKER,
+        .trainerClass = TRAINER_CLASS_HIKER_HNS,
 #line 11634
         .trainerPic = TRAINER_PIC_FRONT_HIKER,
 #line 11635
@@ -30963,7 +30963,7 @@
 #line 11650
         .trainerName = _("ANTHONY"),
 #line 11651
-        .trainerClass = TRAINER_CLASS_HIKER,
+        .trainerClass = TRAINER_CLASS_HIKER_HNS,
 #line 11652
         .trainerPic = TRAINER_PIC_FRONT_HIKER,
 #line 11653
@@ -31023,7 +31023,7 @@
 #line 11668
         .trainerName = _("ANTHONY"),
 #line 11669
-        .trainerClass = TRAINER_CLASS_HIKER,
+        .trainerClass = TRAINER_CLASS_HIKER_HNS,
 #line 11670
         .trainerPic = TRAINER_PIC_FRONT_HIKER,
 #line 11671
@@ -31104,7 +31104,7 @@
 #line 11698
         .trainerName = _("TODD"),
 #line 11699
-        .trainerClass = TRAINER_CLASS_CAMPER,
+        .trainerClass = TRAINER_CLASS_CAMPER_HNS,
 #line 11700
         .trainerPic = TRAINER_PIC_FRONT_CAMPER,
 #line 11701
@@ -31164,7 +31164,7 @@
 #line 11716
         .trainerName = _("TODD"),
 #line 11717
-        .trainerClass = TRAINER_CLASS_CAMPER,
+        .trainerClass = TRAINER_CLASS_CAMPER_HNS,
 #line 11718
         .trainerPic = TRAINER_PIC_FRONT_CAMPER,
 #line 11719
@@ -31224,7 +31224,7 @@
 #line 11734
         .trainerName = _("TODD"),
 #line 11735
-        .trainerClass = TRAINER_CLASS_CAMPER,
+        .trainerClass = TRAINER_CLASS_CAMPER_HNS,
 #line 11736
         .trainerPic = TRAINER_PIC_FRONT_CAMPER,
 #line 11737
@@ -31296,7 +31296,7 @@
 #line 11755
         .trainerName = _("TODD"),
 #line 11756
-        .trainerClass = TRAINER_CLASS_CAMPER,
+        .trainerClass = TRAINER_CLASS_CAMPER_HNS,
 #line 11757
         .trainerPic = TRAINER_PIC_FRONT_CAMPER,
 #line 11758
@@ -31368,7 +31368,7 @@
 #line 11776
         .trainerName = _("GINA"),
 #line 11777
-        .trainerClass = TRAINER_CLASS_PICNICKER,
+        .trainerClass = TRAINER_CLASS_PICNICKER_HNS,
 #line 11778
         .trainerPic = TRAINER_PIC_FRONT_PICNICKER,
 #line 11779
@@ -31428,7 +31428,7 @@
 #line 11794
         .trainerName = _("GINA"),
 #line 11795
-        .trainerClass = TRAINER_CLASS_PICNICKER,
+        .trainerClass = TRAINER_CLASS_PICNICKER_HNS,
 #line 11796
         .trainerPic = TRAINER_PIC_FRONT_PICNICKER,
 #line 11797
@@ -31488,7 +31488,7 @@
 #line 11812
         .trainerName = _("GINA"),
 #line 11813
-        .trainerClass = TRAINER_CLASS_PICNICKER,
+        .trainerClass = TRAINER_CLASS_PICNICKER_HNS,
 #line 11814
         .trainerPic = TRAINER_PIC_FRONT_PICNICKER,
 #line 11815
@@ -31548,7 +31548,7 @@
 #line 11830
         .trainerName = _("GINA"),
 #line 11831
-        .trainerClass = TRAINER_CLASS_PICNICKER,
+        .trainerClass = TRAINER_CLASS_PICNICKER_HNS,
 #line 11832
         .trainerPic = TRAINER_PIC_FRONT_PICNICKER,
 #line 11833
@@ -31629,7 +31629,7 @@
 #line 11860
         .trainerName = _("ARNIE"),
 #line 11861
-        .trainerClass = TRAINER_CLASS_BUG_CATCHER,
+        .trainerClass = TRAINER_CLASS_BUG_CATCHER_HNS,
 #line 11862
         .trainerPic = TRAINER_PIC_FRONT_BUG_CATCHER,
 #line 11863
@@ -31677,7 +31677,7 @@
 #line 11875
         .trainerName = _("ARNIE"),
 #line 11876
-        .trainerClass = TRAINER_CLASS_BUG_CATCHER,
+        .trainerClass = TRAINER_CLASS_BUG_CATCHER_HNS,
 #line 11877
         .trainerPic = TRAINER_PIC_FRONT_BUG_CATCHER,
 #line 11878
@@ -31737,7 +31737,7 @@
 #line 11893
         .trainerName = _("ARNIE"),
 #line 11894
-        .trainerClass = TRAINER_CLASS_BUG_CATCHER,
+        .trainerClass = TRAINER_CLASS_BUG_CATCHER_HNS,
 #line 11895
         .trainerPic = TRAINER_PIC_FRONT_BUG_CATCHER,
 #line 11896
@@ -31809,7 +31809,7 @@
 #line 11914
         .trainerName = _("ARNIE"),
 #line 11915
-        .trainerClass = TRAINER_CLASS_BUG_CATCHER,
+        .trainerClass = TRAINER_CLASS_BUG_CATCHER_HNS,
 #line 11916
         .trainerPic = TRAINER_PIC_FRONT_BUG_CATCHER,
 #line 11917
@@ -31881,7 +31881,7 @@
 #line 11935
         .trainerName = _("ALAN"),
 #line 11936
-        .trainerClass = TRAINER_CLASS_SCHOOL_KID,
+        .trainerClass = TRAINER_CLASS_SCHOOL_KID_HNS,
 #line 11937
         .trainerPic = TRAINER_PIC_FRONT_SCHOOL_KID_M,
 #line 11938
@@ -31929,7 +31929,7 @@
 #line 11950
         .trainerName = _("ALAN"),
 #line 11951
-        .trainerClass = TRAINER_CLASS_SCHOOL_KID,
+        .trainerClass = TRAINER_CLASS_SCHOOL_KID_HNS,
 #line 11952
         .trainerPic = TRAINER_PIC_FRONT_SCHOOL_KID_M,
 #line 11953
@@ -32001,7 +32001,7 @@
 #line 11971
         .trainerName = _("ALAN"),
 #line 11972
-        .trainerClass = TRAINER_CLASS_SCHOOL_KID,
+        .trainerClass = TRAINER_CLASS_SCHOOL_KID_HNS,
 #line 11973
         .trainerPic = TRAINER_PIC_FRONT_SCHOOL_KID_M,
 #line 11974
@@ -32073,7 +32073,7 @@
 #line 11992
         .trainerName = _("ALAN"),
 #line 11993
-        .trainerClass = TRAINER_CLASS_SCHOOL_KID,
+        .trainerClass = TRAINER_CLASS_SCHOOL_KID_HNS,
 #line 11994
         .trainerPic = TRAINER_PIC_FRONT_SCHOOL_KID_M,
 #line 11995
@@ -32145,7 +32145,7 @@
 #line 12013
         .trainerName = _("DANA"),
 #line 12014
-        .trainerClass = TRAINER_CLASS_LASS,
+        .trainerClass = TRAINER_CLASS_LASS_HNS,
 #line 12015
         .trainerPic = TRAINER_PIC_FRONT_LASS,
 #line 12016
@@ -32207,7 +32207,7 @@
 #line 12036
         .trainerName = _("DANA"),
 #line 12037
-        .trainerClass = TRAINER_CLASS_LASS,
+        .trainerClass = TRAINER_CLASS_LASS_HNS,
 #line 12038
         .trainerPic = TRAINER_PIC_FRONT_LASS,
 #line 12039
@@ -32269,7 +32269,7 @@
 #line 12059
         .trainerName = _("DANA"),
 #line 12060
-        .trainerClass = TRAINER_CLASS_LASS,
+        .trainerClass = TRAINER_CLASS_LASS_HNS,
 #line 12061
         .trainerPic = TRAINER_PIC_FRONT_LASS,
 #line 12062
@@ -32331,7 +32331,7 @@
 #line 12082
         .trainerName = _("DANA"),
 #line 12083
-        .trainerClass = TRAINER_CLASS_LASS,
+        .trainerClass = TRAINER_CLASS_LASS_HNS,
 #line 12084
         .trainerPic = TRAINER_PIC_FRONT_LASS,
 #line 12085
@@ -32393,7 +32393,7 @@
 #line 12105
         .trainerName = _("CHAD"),
 #line 12106
-        .trainerClass = TRAINER_CLASS_SCHOOL_KID,
+        .trainerClass = TRAINER_CLASS_SCHOOL_KID_HNS,
 #line 12107
         .trainerPic = TRAINER_PIC_FRONT_SCHOOL_KID_M,
 #line 12108
@@ -32441,7 +32441,7 @@
 #line 12120
         .trainerName = _("CHAD"),
 #line 12121
-        .trainerClass = TRAINER_CLASS_SCHOOL_KID,
+        .trainerClass = TRAINER_CLASS_SCHOOL_KID_HNS,
 #line 12122
         .trainerPic = TRAINER_PIC_FRONT_SCHOOL_KID_M,
 #line 12123
@@ -32489,7 +32489,7 @@
 #line 12135
         .trainerName = _("CHAD"),
 #line 12136
-        .trainerClass = TRAINER_CLASS_SCHOOL_KID,
+        .trainerClass = TRAINER_CLASS_SCHOOL_KID_HNS,
 #line 12137
         .trainerPic = TRAINER_PIC_FRONT_SCHOOL_KID_M,
 #line 12138
@@ -32537,7 +32537,7 @@
 #line 12150
         .trainerName = _("CHAD"),
 #line 12151
-        .trainerClass = TRAINER_CLASS_SCHOOL_KID,
+        .trainerClass = TRAINER_CLASS_SCHOOL_KID_HNS,
 #line 12152
         .trainerPic = TRAINER_PIC_FRONT_SCHOOL_KID_M,
 #line 12153
@@ -32599,7 +32599,7 @@
 #line 12173
         .trainerName = _("TULLY"),
 #line 12174
-        .trainerClass = TRAINER_CLASS_FISHERMAN,
+        .trainerClass = TRAINER_CLASS_FISHERMAN_HNS,
 #line 12175
         .trainerPic = TRAINER_PIC_FRONT_FISHERMAN,
 #line 12176
@@ -32635,7 +32635,7 @@
 #line 12185
         .trainerName = _("TULLY"),
 #line 12186
-        .trainerClass = TRAINER_CLASS_FISHERMAN,
+        .trainerClass = TRAINER_CLASS_FISHERMAN_HNS,
 #line 12187
         .trainerPic = TRAINER_PIC_FRONT_FISHERMAN,
 #line 12188
@@ -32695,7 +32695,7 @@
 #line 12203
         .trainerName = _("TULLY"),
 #line 12204
-        .trainerClass = TRAINER_CLASS_FISHERMAN,
+        .trainerClass = TRAINER_CLASS_FISHERMAN_HNS,
 #line 12205
         .trainerPic = TRAINER_PIC_FRONT_FISHERMAN,
 #line 12206
@@ -32755,7 +32755,7 @@
 #line 12221
         .trainerName = _("BRENT"),
 #line 12222
-        .trainerClass = TRAINER_CLASS_POKEMANIAC,
+        .trainerClass = TRAINER_CLASS_POKEMANIAC_HNS,
 #line 12223
         .trainerPic = TRAINER_PIC_FRONT_POKEMANIAC,
 #line 12224
@@ -32791,7 +32791,7 @@
 #line 12233
         .trainerName = _("BRENT"),
 #line 12234
-        .trainerClass = TRAINER_CLASS_POKEMANIAC,
+        .trainerClass = TRAINER_CLASS_POKEMANIAC_HNS,
 #line 12235
         .trainerPic = TRAINER_PIC_FRONT_POKEMANIAC,
 #line 12236
@@ -32834,7 +32834,7 @@
 #line 12249
         .trainerName = _("BRENT"),
 #line 12250
-        .trainerClass = TRAINER_CLASS_POKEMANIAC,
+        .trainerClass = TRAINER_CLASS_POKEMANIAC_HNS,
 #line 12251
         .trainerPic = TRAINER_PIC_FRONT_POKEMANIAC,
 #line 12252
@@ -32877,7 +32877,7 @@
 #line 12265
         .trainerName = _("TIFFANY"),
 #line 12266
-        .trainerClass = TRAINER_CLASS_PICNICKER,
+        .trainerClass = TRAINER_CLASS_PICNICKER_HNS,
 #line 12267
         .trainerPic = TRAINER_PIC_FRONT_PICNICKER,
 #line 12268
@@ -32920,7 +32920,7 @@
 #line 12281
         .trainerName = _("TIFFANY"),
 #line 12282
-        .trainerClass = TRAINER_CLASS_PICNICKER,
+        .trainerClass = TRAINER_CLASS_PICNICKER_HNS,
 #line 12283
         .trainerPic = TRAINER_PIC_FRONT_PICNICKER,
 #line 12284
@@ -32963,7 +32963,7 @@
 #line 12297
         .trainerName = _("TIFFANY"),
 #line 12298
-        .trainerClass = TRAINER_CLASS_PICNICKER,
+        .trainerClass = TRAINER_CLASS_PICNICKER_HNS,
 #line 12299
         .trainerPic = TRAINER_PIC_FRONT_PICNICKER,
 #line 12300
@@ -33025,7 +33025,7 @@
 #line 12320
         .trainerName = _("VANCE"),
 #line 12321
-        .trainerClass = TRAINER_CLASS_BIRD_KEEPER,
+        .trainerClass = TRAINER_CLASS_BIRD_KEEPER_HNS,
 #line 12322
         .trainerPic = TRAINER_PIC_FRONT_BIRD_KEEPER,
 #line 12323
@@ -33097,7 +33097,7 @@
 #line 12341
         .trainerName = _("VANCE"),
 #line 12342
-        .trainerClass = TRAINER_CLASS_BIRD_KEEPER,
+        .trainerClass = TRAINER_CLASS_BIRD_KEEPER_HNS,
 #line 12343
         .trainerPic = TRAINER_PIC_FRONT_BIRD_KEEPER,
 #line 12344
@@ -33169,7 +33169,7 @@
 #line 12362
         .trainerName = _("WILTON"),
 #line 12363
-        .trainerClass = TRAINER_CLASS_FISHERMAN,
+        .trainerClass = TRAINER_CLASS_FISHERMAN_HNS,
 #line 12364
         .trainerPic = TRAINER_PIC_FRONT_FISHERMAN,
 #line 12365
@@ -33229,7 +33229,7 @@
 #line 12380
         .trainerName = _("WILTON"),
 #line 12381
-        .trainerClass = TRAINER_CLASS_FISHERMAN,
+        .trainerClass = TRAINER_CLASS_FISHERMAN_HNS,
 #line 12382
         .trainerPic = TRAINER_PIC_FRONT_FISHERMAN,
 #line 12383
@@ -33289,7 +33289,7 @@
 #line 12398
         .trainerName = _("KENJI"),
 #line 12399
-        .trainerClass = TRAINER_CLASS_BLACK_BELT,
+        .trainerClass = TRAINER_CLASS_BLACK_BELT_HNS,
 #line 12400
         .trainerPic = TRAINER_PIC_FRONT_BLACK_BELT,
 #line 12401
@@ -33389,7 +33389,7 @@
 #line 12435
         .trainerName = _("PARRY"),
 #line 12436
-        .trainerClass = TRAINER_CLASS_HIKER,
+        .trainerClass = TRAINER_CLASS_HIKER_HNS,
 #line 12437
         .trainerPic = TRAINER_PIC_FRONT_HIKER,
 #line 12438
@@ -33470,7 +33470,7 @@
 #line 12465
         .trainerName = _("PARRY"),
 #line 12466
-        .trainerClass = TRAINER_CLASS_HIKER,
+        .trainerClass = TRAINER_CLASS_HIKER_HNS,
 #line 12467
         .trainerPic = TRAINER_PIC_FRONT_HIKER,
 #line 12468
@@ -33530,7 +33530,7 @@
 #line 12483
         .trainerName = _("ERIN"),
 #line 12484
-        .trainerClass = TRAINER_CLASS_PICNICKER,
+        .trainerClass = TRAINER_CLASS_PICNICKER_HNS,
 #line 12485
         .trainerPic = TRAINER_PIC_FRONT_PICNICKER,
 #line 12486
@@ -33602,7 +33602,7 @@
 #line 12504
         .trainerName = _("ERIN"),
 #line 12505
-        .trainerClass = TRAINER_CLASS_PICNICKER,
+        .trainerClass = TRAINER_CLASS_PICNICKER_HNS,
 #line 12506
         .trainerPic = TRAINER_PIC_FRONT_PICNICKER,
 #line 12507
@@ -33702,7 +33702,7 @@
 #line 12541
         .trainerName = _("JACK"),
 #line 12542
-        .trainerClass = TRAINER_CLASS_SCHOOL_KID,
+        .trainerClass = TRAINER_CLASS_SCHOOL_KID_HNS,
 #line 12543
         .trainerPic = TRAINER_PIC_FRONT_SCHOOL_KID_M,
 #line 12544
@@ -33750,7 +33750,7 @@
 #line 12556
         .trainerName = _("JACK"),
 #line 12557
-        .trainerClass = TRAINER_CLASS_SCHOOL_KID,
+        .trainerClass = TRAINER_CLASS_SCHOOL_KID_HNS,
 #line 12558
         .trainerPic = TRAINER_PIC_FRONT_SCHOOL_KID_M,
 #line 12559
@@ -33798,7 +33798,7 @@
 #line 12571
         .trainerName = _("JACK"),
 #line 12572
-        .trainerClass = TRAINER_CLASS_SCHOOL_KID,
+        .trainerClass = TRAINER_CLASS_SCHOOL_KID_HNS,
 #line 12573
         .trainerPic = TRAINER_PIC_FRONT_SCHOOL_KID_M,
 #line 12574
@@ -33858,7 +33858,7 @@
 #line 12589
         .trainerName = _("JACK"),
 #line 12590
-        .trainerClass = TRAINER_CLASS_SCHOOL_KID,
+        .trainerClass = TRAINER_CLASS_SCHOOL_KID_HNS,
 #line 12591
         .trainerPic = TRAINER_PIC_FRONT_SCHOOL_KID_M,
 #line 12592
@@ -33939,7 +33939,7 @@
 #line 12619
         .trainerName = _("HUEY"),
 #line 12620
-        .trainerClass = TRAINER_CLASS_SAILOR,
+        .trainerClass = TRAINER_CLASS_SAILOR_HNS,
 #line 12621
         .trainerPic = TRAINER_PIC_FRONT_SAILOR,
 #line 12622
@@ -33987,7 +33987,7 @@
 #line 12634
         .trainerName = _("HUEY"),
 #line 12635
-        .trainerClass = TRAINER_CLASS_SAILOR,
+        .trainerClass = TRAINER_CLASS_SAILOR_HNS,
 #line 12636
         .trainerPic = TRAINER_PIC_FRONT_SAILOR,
 #line 12637
@@ -34035,7 +34035,7 @@
 #line 12649
         .trainerName = _("HUEY"),
 #line 12650
-        .trainerClass = TRAINER_CLASS_SAILOR,
+        .trainerClass = TRAINER_CLASS_SAILOR_HNS,
 #line 12651
         .trainerPic = TRAINER_PIC_FRONT_SAILOR,
 #line 12652
@@ -34097,7 +34097,7 @@
 #line 12672
         .trainerName = _("GAVEN"),
 #line 12673
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 12674
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_M,
 #line 12675
@@ -34216,7 +34216,7 @@
 #line 12716
         .trainerName = _("GAVEN"),
 #line 12717
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 12718
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_M,
 #line 12719
@@ -34335,7 +34335,7 @@
 #line 12760
         .trainerName = _("BETH"),
 #line 12761
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 12762
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_F,
 #line 12763
@@ -34453,7 +34453,7 @@
 #line 12803
         .trainerName = _("BETH"),
 #line 12804
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 12805
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_F,
 #line 12806
@@ -34571,7 +34571,7 @@
 #line 12846
         .trainerName = _("JOSE"),
 #line 12847
-        .trainerClass = TRAINER_CLASS_BIRD_KEEPER,
+        .trainerClass = TRAINER_CLASS_BIRD_KEEPER_HNS,
 #line 12848
         .trainerPic = TRAINER_PIC_FRONT_BIRD_KEEPER,
 #line 12849
@@ -34643,7 +34643,7 @@
 #line 12867
         .trainerName = _("JOSE"),
 #line 12868
-        .trainerClass = TRAINER_CLASS_BIRD_KEEPER,
+        .trainerClass = TRAINER_CLASS_BIRD_KEEPER_HNS,
 #line 12869
         .trainerPic = TRAINER_PIC_FRONT_BIRD_KEEPER,
 #line 12870
@@ -34727,7 +34727,7 @@
 #line 12891
         .trainerName = _("REENA"),
 #line 12892
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 12893
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_F,
 #line 12894
@@ -34811,7 +34811,7 @@
 #line 12915
         .trainerName = _("REENA"),
 #line 12916
-        .trainerClass = TRAINER_CLASS_COOLTRAINER,
+        .trainerClass = TRAINER_CLASS_COOLTRAINER_HNS,
 #line 12917
         .trainerPic = TRAINER_PIC_FRONT_COOLTRAINER_F,
 #line 12918
