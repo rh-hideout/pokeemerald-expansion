@@ -445,6 +445,7 @@ void LaunchBattleAnimation(u32 animType, u32 animId)
         sBattleAnimScriptPtr = sBattleAnims_Special[animId];
         break;
     }
+    sBattleAnimScriptRetAddr = NULL;
     gAnimScriptActive = TRUE;
     sAnimFramesToWait = 0;
     gAnimScriptCallback = RunAnimScriptCommand;
@@ -1462,6 +1463,7 @@ static void Cmd_blendoff(void)
 
 static void Cmd_call(void)
 {
+    assertf(sBattleAnimScriptRetAddr == NULL);
     sBattleAnimScriptPtr++;
     sBattleAnimScriptRetAddr = sBattleAnimScriptPtr + 4;
     sBattleAnimScriptPtr = T2_READ_PTR(sBattleAnimScriptPtr);
@@ -1469,7 +1471,9 @@ static void Cmd_call(void)
 
 static void Cmd_return(void)
 {
+    assertf(sBattleAnimScriptRetAddr != NULL);
     sBattleAnimScriptPtr = sBattleAnimScriptRetAddr;
+    sBattleAnimScriptRetAddr = NULL;
 }
 
 static void Cmd_setarg(void)
