@@ -9,6 +9,7 @@ enum
     CARD_TYPE_FRLG,
     CARD_TYPE_RS,
     CARD_TYPE_EMERALD,
+    CARD_TYPE_HNS,
 };
 
 enum

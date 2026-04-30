@@ -315,7 +315,12 @@ static const u8 sTrainerPicFacilityClass[][GENDER_COUNT] =
     {
         [MALE]   = FACILITY_CLASS_BRENDAN,
         [FEMALE] = FACILITY_CLASS_MAY
-    }
+    },
+    [CARD_TYPE_HNS] =
+    {
+        [MALE]   = FACILITY_CLASS_GOLD_HNS,
+        [FEMALE] = FACILITY_CLASS_KRIS_HNS
+    },
 };
 
 static bool8 (*const sTrainerCardFlipTasks[])(struct Task *) =
@@ -1844,15 +1849,23 @@ static u8 GetSetCardType(void)
 {
     if (sData == NULL)
     {
+#if IS_HNS
+        return CARD_TYPE_HNS;
+#else
         if (gGameVersion == VERSION_FIRE_RED || gGameVersion == VERSION_LEAF_GREEN)
             return CARD_TYPE_FRLG;
         else if (gGameVersion == VERSION_EMERALD)
             return CARD_TYPE_EMERALD;
         else
             return CARD_TYPE_RS;
+#endif
     }
     else
     {
+#if IS_HNS
+        sData->isHoenn = TRUE;
+        return CARD_TYPE_HNS;
+#else
         if (sData->trainerCard.version == VERSION_FIRE_RED || sData->trainerCard.version == VERSION_LEAF_GREEN)
         {
             sData->isHoenn = FALSE;
@@ -1868,6 +1881,7 @@ static u8 GetSetCardType(void)
             sData->isHoenn = TRUE;
             return CARD_TYPE_RS;
         }
+#endif
     }
 }
 

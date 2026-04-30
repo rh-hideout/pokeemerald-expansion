@@ -367,8 +367,10 @@ enum __attribute__((packed)) TrainerPicID
 #define FACILITY_CLASS_SCIENTIST_FRLG        0x74
 #define FACILITY_CLASS_BEAUTY_FRLG           0x75
 #define FACILITY_CLASS_LASS_FRLG             0x76
+#define FACILITY_CLASS_GOLD_HNS              0x77
+#define FACILITY_CLASS_KRIS_HNS              0x78
 
-#define FACILITY_CLASSES_COUNT               0x77
+#define FACILITY_CLASSES_COUNT               0x79
 
 
 
