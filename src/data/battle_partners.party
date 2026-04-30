@@ -45,6 +45,144 @@ EVs: 252 Atk / 252 SpA / 6 SpD
 - Solar Beam
 - Dragon Claw
 
+=== PARTNER_LANCE_HNS ===
+Name: LANCE
+Class: Champion Hns
+Pic: Champion Lance Hns
+Gender: Male
+Music: Hg Champion
+Back Pic: Lance Hns
+AI: Basic Trainer
+
+Dragonite
+Adamant Nature
+Level: 42
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 252 Def / 0 SpA / 6 SpD / 0 Spe
+- Hyper Beam
+- Thunder
+- Safeguard
+- Outrage
+
+Dragonair
+Adamant Nature
+Level: 35
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 252 HP / 0 Atk / 0 Def / 0 SpA / 6 SpD / 252 Spe
+- Blizzard
+- Thunder Wave
+- Flamethrower
+- Quick Attack
+
+Charizard
+Adamant Nature
+Level: 36
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+EVs: 0 HP / 252 Atk / 0 Def / 0 SpA / 252 SpD / 6 Spe
+- Flamethrower
+- Wing Attack
+- Double Team
+- Steel Wing
+
+=== PARTNER_SILVER_MEGANIUM_HNS ===
+Name: {B_RIVAL_NAME}
+Class: Rival Hns
+Pic: Silver Hns
+Gender: Male
+Music: Silver
+Back Pic: Silver Hns
+AI: Basic Trainer
+
+Meganium @ Miracle Seed
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Reflect
+- Giga Drain
+- Solar Beam
+- Body Slam
+
+Crobat @ Leftovers
+Level: 58
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Toxic
+- Double Team
+- Confuse Ray
+- Wing Attack
+
+Gengar
+Level: 56
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Shadow Ball
+- Sludge Bomb
+- Thunderbolt
+- Hypnosis
+
+=== PARTNER_SILVER_TYPHLOSION_HNS ===
+Name: {B_RIVAL_NAME}
+Class: Rival Hns
+Pic: Silver Hns
+Gender: Male
+Music: Silver
+Back Pic: Silver Hns
+AI: Basic Trainer
+
+Typhlosion @ Charcoal
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Fire Blast
+- Earthquake
+- Iron Tail
+- Thunder Punch
+
+Crobat @ Leftovers
+Level: 58
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Toxic
+- Double Team
+- Confuse Ray
+- Wing Attack
+
+Gengar
+Level: 56
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Shadow Ball
+- Sludge Bomb
+- Thunderbolt
+- Hypnosis
+
+=== PARTNER_SILVER_FERALIGATR_HNS ===
+Name: {B_RIVAL_NAME}
+Class: Rival Hns
+Pic: Silver Hns
+Gender: Male
+Music: Silver
+Back Pic: Silver Hns
+AI: Basic Trainer
+
+Feraligatr @ Scope Lens
+Level: 60
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Ice Beam
+- Surf
+- Slash
+- Earthquake
+
+Crobat @ Leftovers
+Level: 58
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Toxic
+- Double Team
+- Confuse Ray
+- Wing Attack
+
+Gengar
+Level: 56
+IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
+- Shadow Ball
+- Sludge Bomb
+- Thunderbolt
+- Hypnosis
+
 === PARTNER_DUMMY ===
 Name:
 Class: Pkmn Trainer 1

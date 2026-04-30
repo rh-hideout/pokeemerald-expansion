@@ -203,10 +203,12 @@ Debug_EventScript_Text_DefensiveIVs:
 	.string "HP IVs: {STR_VAR_1}, DEF IVs: {STR_VAR_2}, SPDEF IVs: {STR_VAR_3}$"
 
 Debug_EventScript_Script_1::
+	goto Debug_EventScript_Lance_Multi
 	release
 	end
 
 Debug_EventScript_Script_2::
+	goto Debug_EventScript_Silver_Multi
 	release
 	end
 
@@ -233,6 +235,88 @@ Debug_EventScript_Script_7::
 Debug_EventScript_Script_8::
 	release
 	end
+
+Debug_EventScript_Lance_Multi::
+	special SavePlayerParty
+	fadescreen FADE_TO_BLACK
+	special ChooseHalfPartyForBattle
+	waitstate
+	goto_if_ne VAR_RESULT, 0, Debug_EventScript_DoLanceMultiBattle
+	special LoadPlayerParty
+	release
+	end
+
+Debug_EventScript_DoLanceMultiBattle::
+	multi_2_vs_2 TRAINER_ARIANA_1_HNS, Debug_Text_ArianaDefeat, TRAINER_GRUNT_23_HNS, Debug_Text_Grunt23Defeat, PARTNER_LANCE_HNS
+	switch VAR_RESULT
+	case 1, Debug_EventScript_LanceMultiWin
+	fadescreen FADE_TO_BLACK
+	special SetCB2WhiteOut
+	waitstate
+
+Debug_EventScript_LanceMultiWin::
+	msgbox Debug_Text_LanceMultiVictory, MSGBOX_DEFAULT
+	release
+	end
+
+Debug_Text_ArianaDefeat:
+	.string "You haven't seen the last of me!$"
+
+Debug_Text_Grunt23Defeat:
+	.string "I won't accept this!$"
+
+Debug_Text_LanceMultiVictory:
+	.string "Lance multi battle complete!$"
+
+Debug_EventScript_Silver_Multi::
+	special SavePlayerParty
+	fadescreen FADE_TO_BLACK
+	special ChooseHalfPartyForBattle
+	waitstate
+	goto_if_ne VAR_RESULT, 0, Debug_EventScript_PickSilverPartner
+	special LoadPlayerParty
+	release
+	end
+
+Debug_EventScript_PickSilverPartner::
+	switch VAR_STARTER_MON
+	case 0, Debug_EventScript_DoSilverMulti_Typhlosion
+	case 1, Debug_EventScript_DoSilverMulti_Feraligatr
+	case 2, Debug_EventScript_DoSilverMulti_Meganium
+	goto Debug_EventScript_DoSilverMulti_Typhlosion
+
+Debug_EventScript_DoSilverMulti_Typhlosion::
+	multi_2_vs_2 TRAINER_LANCE_3_HNS, Debug_Text_Lance3Defeat, TRAINER_CLAIR_3_HNS, Debug_Text_Clair3Defeat, PARTNER_SILVER_TYPHLOSION_HNS
+	goto Debug_EventScript_SilverMultiResult
+
+Debug_EventScript_DoSilverMulti_Feraligatr::
+	multi_2_vs_2 TRAINER_LANCE_3_HNS, Debug_Text_Lance3Defeat, TRAINER_CLAIR_3_HNS, Debug_Text_Clair3Defeat, PARTNER_SILVER_FERALIGATR_HNS
+	goto Debug_EventScript_SilverMultiResult
+
+Debug_EventScript_DoSilverMulti_Meganium::
+	multi_2_vs_2 TRAINER_LANCE_3_HNS, Debug_Text_Lance3Defeat, TRAINER_CLAIR_3_HNS, Debug_Text_Clair3Defeat, PARTNER_SILVER_MEGANIUM_HNS
+	goto Debug_EventScript_SilverMultiResult
+
+Debug_EventScript_SilverMultiResult::
+	switch VAR_RESULT
+	case 1, Debug_EventScript_SilverMultiWin
+	fadescreen FADE_TO_BLACK
+	special SetCB2WhiteOut
+	waitstate
+
+Debug_EventScript_SilverMultiWin::
+	msgbox Debug_Text_SilverMultiVictory, MSGBOX_DEFAULT
+	release
+	end
+
+Debug_Text_SilverMultiVictory:
+	.string "Silver multi battle complete!$"
+
+Debug_Text_Lance3Defeat:
+	.string "You haven't seen the last of me!$"
+
+Debug_Text_Clair3Defeat:
+	.string "I won't accept this!$"
 
 Debug_CheckSaveBlock::
 	callnative CheckSaveBlock1Size

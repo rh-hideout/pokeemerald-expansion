@@ -278,7 +278,7 @@ static void RecordedPlayerHandleDrawTrainerPic(enum BattlerId battler)
     // Sets Multibattle test player sprites to not be Hiker
     if (IsMultibattleTest())
     {
-        trainerPicId = TRAINER_PIC_BACK_BRENDAN;
+        trainerPicId = TRAINER_BACK_PIC_PLAYER_MALE;
         if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
             xPos = 32;
         else
