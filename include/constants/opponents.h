@@ -3,6 +3,7 @@
 
 #include "constants/battle_partner.h"
 #include "constants/opponents_frlg.h"
+#include "constants/opponents_hns.h"
 
 #define TRAINER_NONE                          0
 #define TRAINER_SAWYER_1                      1
@@ -870,6 +871,9 @@
 #if IS_FRLG
 #define TRAINERS_COUNT                      TRAINERS_COUNT_FRLG
 #define MAX_TRAINERS_COUNT                  MAX_TRAINERS_COUNT_FRLG
+#elif IS_HNS
+#define TRAINERS_COUNT                      TRAINERS_COUNT_HNS
+#define MAX_TRAINERS_COUNT                  MAX_TRAINERS_COUNT_HNS
 #else
 #define TRAINERS_COUNT                      TRAINERS_COUNT_EMERALD
 #define MAX_TRAINERS_COUNT                  MAX_TRAINERS_COUNT_EMERALD
