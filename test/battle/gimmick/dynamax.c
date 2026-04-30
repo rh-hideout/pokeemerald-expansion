@@ -736,7 +736,7 @@ DOUBLE_BATTLE_TEST("Dynamax: Max Knuckle raises both allies' attack")
 {
     s16 damage[4];
     GIVEN {
-        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_KNUCKLE, self: TRUE, attack: 1); // Throws an Assumption Fail for some reason
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_KNUCKLE, self: TRUE, attack: 1);
         ASSUME(GetMoveCategory(MOVE_CLOSE_COMBAT) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_WOBBUFFET);

@@ -260,3 +260,24 @@ SINGLE_BATTLE_TEST("Sticky Syrup stat drop is prevented by Mist")
         EXPECT_EQ(opponent->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
     }
 }
+
+DOUBLE_BATTLE_TEST("Sticky Syrup stat drop is prevented by Flower Veil")
+{
+    GIVEN {
+        ASSUME(GetSpeciesType(SPECIES_CHIKORITA, 0) == TYPE_GRASS || GetSpeciesType(SPECIES_CHIKORITA, 1) == TYPE_GRASS);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_COMFEY) { Ability(ABILITY_FLOWER_VEIL); }
+        OPPONENT(SPECIES_CHIKORITA);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_SYRUP_BOMB, target: opponentRight); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SYRUP_BOMB, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponentRight);
+        ABILITY_POPUP(opponentLeft, ABILITY_FLOWER_VEIL);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
+    } THEN {
+        EXPECT_EQ(opponentRight->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
+    }
+}
+

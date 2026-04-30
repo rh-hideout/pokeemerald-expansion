@@ -589,7 +589,7 @@ static bool32 IsMistProtected(struct BattleCalcValues *cv, struct StatChange *st
 
 static bool32 IsFlowerVeilBlocked(struct BattleCalcValues *cv, struct StatChange *st)
 {
-    if (st->certain || cv->battlerAtk == cv->battlerDef)
+    if (st->certain)
         return FALSE;
 
     u32 flowerVeilBattler = IsFlowerVeilProtected(cv->battlerDef);
