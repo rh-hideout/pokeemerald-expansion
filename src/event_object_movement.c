@@ -3683,8 +3683,6 @@ void SetObjectEventDirection(struct ObjectEvent *objectEvent, enum Direction dir
 
 static const u8 *GetObjectEventScriptPointerByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup)
 {
-    if (localId == OBJ_EVENT_ID_FOLLOWER)
-        return EventScript_Follower;
     return GetObjectEventTemplateByLocalIdAndMap(localId, mapNum, mapGroup)->script;
 }
 
