@@ -482,6 +482,9 @@ static const u8 *ExpandPlaceholder_RivalName(void)
 #if IS_FRLG
     if (gSaveBlock1Ptr->rivalName[0] != EOS)
         return gSaveBlock1Ptr->rivalName;
+#elif IS_HNS
+    if (gSaveBlock2Ptr->rivalName[0] != EOS)
+        return gSaveBlock2Ptr->rivalName;
 #endif
 
     if (gSaveBlock2Ptr->playerGender == MALE)

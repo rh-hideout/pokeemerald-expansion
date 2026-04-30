@@ -2142,6 +2142,12 @@ static void UNUSED Debug_NamingScreenNickname(void)
     DoNamingScreen(NAMING_SCREEN_NICKNAME, gSaveBlock2Ptr->playerName, gSaveBlock2Ptr->playerGender, 0, 0, CB2_ReturnToFieldWithOpenMenu);
 }
 
+void NameRival(void)
+{
+    StringCopy(gSaveBlock2Ptr->rivalName, gText_ExpandedPlaceholder_Silver);
+    DoNamingScreen(NAMING_SCREEN_RIVAL, gSaveBlock2Ptr->rivalName, 0, 0, 0, CB2_ReturnToFieldContinueScript);
+}
+
 //--------------------------------------------------
 // Forward-declared variables
 //--------------------------------------------------

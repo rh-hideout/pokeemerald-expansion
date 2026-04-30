@@ -41,6 +41,7 @@
 #include "decoration_inventory.h"
 #include "secret_base.h"
 #include "string_util.h"
+#include "strings.h"
 #include "player_pc.h"
 #include "field_specials.h"
 #include "berry_powder.h"
@@ -232,6 +233,10 @@ void NewGameInitData(void)
     ResetItemFlags();
     ResetDexNav();
     ClearFollowerNPCData();
+
+#if IS_HNS
+    StringCopy(gSaveBlock2Ptr->rivalName, gText_ExpandedPlaceholder_Silver);
+#endif
 }
 
 static void ResetMiniGamesRecords(void)

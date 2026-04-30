@@ -3529,6 +3529,9 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
             case B_TXT_PARTNER_NAME:
                 toCpy = BattleStringGetPlayerName(text, GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT));
                 break;
+            case B_TXT_RIVAL_NAME:
+                toCpy = gSaveBlock2Ptr->rivalName;
+                break;
             case B_TXT_PARTNER_NAME_WITH_CLASS:
                 toCpy = textStart;
                 classString = gTrainerClasses[GetFrontierOpponentClass(gPartnerTrainerId)].name;

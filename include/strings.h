@@ -18,6 +18,7 @@ extern const u8 gText_ExpandedPlaceholder_Brendan[];
 extern const u8 gText_ExpandedPlaceholder_May[];
 extern const u8 gText_ExpandedPlaceholder_Red[];
 extern const u8 gText_ExpandedPlaceholder_Green[];
+extern const u8 gText_ExpandedPlaceholder_Silver[];
 
 extern const u8 gText_Lv50[];
 extern const u8 gText_OpenLevel[];
