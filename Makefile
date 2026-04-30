@@ -17,6 +17,14 @@ ifeq (leafgreen, $(or $(BUILD), $(MAKECMDGOALS)))
 	GAME_CODE   	:= BPGE
 	BUILD_NAME  	:= leafgreen
 	MAP_VERSION 	:= firered
+else
+ifeq (hns, $(or $(BUILD), $(MAKECMDGOALS)))
+	GAME_VERSION 	:= POKEMON_HNS
+	TITLE       	:= POKEMON HNS
+	GAME_CODE   	:= BPEE
+	BUILD_NAME  	:= hns
+	MAP_VERSION 	:= emerald
+endif
 endif
 endif
 
@@ -590,6 +598,7 @@ $(ROM): $(ELF)
 emerald: all
 firered: all
 leafgreen: all
+hns: all
 # Symbol file (`make syms`)
 $(SYM): $(ELF)
 	$(OBJDUMP) -t $< | sort -u | grep -E "^0[2389]" | $(PERL) -p -e 's/^(\w{8}) (\w).{6} \S+\t(\w{8}) (\S+)$$/\1 \2 \3 \4/g' > $@
