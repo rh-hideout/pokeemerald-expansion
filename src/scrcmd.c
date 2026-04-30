@@ -3161,15 +3161,17 @@ bool8 Scrcmd_getsetpokedexflag(struct ScriptContext *ctx)
     enum NationalDexOrder speciesId = SpeciesToNationalPokedexNum(VarGet(ScriptReadHalfword(ctx)));
     u32 desiredFlag = VarGet(ScriptReadHalfword(ctx));
 
-    if (desiredFlag == FLAG_SET_CAUGHT || desiredFlag == FLAG_SET_SEEN)
+    if (desiredFlag == FLAG_SET_CAUGHT || desiredFlag == FLAG_SET_SEEN || desiredFlag == FLAG_SET_SILHOUETTE)
         Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
     else
         Script_RequestEffects(SCREFF_V1);
 
-    gSpecialVar_Result = GetSetPokedexFlag(speciesId, desiredFlag);
-
+    if ((desiredFlag == FLAG_SET_SEEN) && GetSetPokedexFlag(speciesId, FLAG_GET_SEEN))
+	return TRUE; // this avoids us inadvertantly clearing a mon that is already both seen and caught
     if (desiredFlag == FLAG_SET_CAUGHT)
         GetSetPokedexFlag(speciesId, FLAG_SET_SEEN);
+
+    gSpecialVar_Result = GetSetPokedexFlag(speciesId, desiredFlag);
 
     return FALSE;
 }

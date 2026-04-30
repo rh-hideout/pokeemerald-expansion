@@ -2505,7 +2505,7 @@
 	.2byte FLAG_GET_CAUGHT
 	.endm
 
-	@ Sets the Pokedex Seen Flag for the Pokemon with speciesId
+	@ If the seen flag is unset, sets the Pokedex Seen Flag for the Pokemon with speciesId and clears the caught flag. If the seen flag is set, returns true.
 	.macro setseenmon species:req
 	callnative Scrcmd_getsetpokedexflag, requests_effects=1
 	.2byte \species

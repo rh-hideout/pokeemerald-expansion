@@ -5783,7 +5783,7 @@ enum TrainerPicID PlayerGenderToFrontTrainerPicId(enum Gender playerGender)
 void HandleSetPokedexFlag(enum NationalDexOrder nationalNum, u8 caseId, u32 personality)
 {
     u8 getFlagCaseId = (caseId == FLAG_SET_SEEN) ? FLAG_GET_SEEN : FLAG_GET_CAUGHT;
-    if (!GetSetPokedexFlag(nationalNum, getFlagCaseId)) // don't set if it's already set
+    if (!GetSetPokedexFlag(nationalNum, getFlagCaseId)) // don't set if it's already set. When running flag_get_caught, you must always first do flag_get_seen.
     {
         GetSetPokedexFlag(nationalNum, caseId);
         if (NationalPokedexNumToSpecies(nationalNum) == SPECIES_UNOWN)

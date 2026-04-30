@@ -28,8 +28,9 @@
 #include "overworld.h"
 #include "palette.h"
 #include "party_menu.h"
-#include "pokemon.h"
 #include "pokeball.h"
+#include "pokedex.h"
+#include "pokemon.h"
 #include "random.h"
 #include "region_map.h"
 #include "rtc.h"
@@ -1864,6 +1865,7 @@ static u8 TrySetupObjectEventSprite(const struct ObjectEventTemplate *objectEven
 {
     u8 spriteId;
     u8 objectEventId;
+
     struct Sprite *sprite;
     struct ObjectEvent *objectEvent;
     const struct ObjectEventGraphicsInfo *graphicsInfo;
@@ -1883,8 +1885,11 @@ static u8 TrySetupObjectEventSprite(const struct ObjectEventTemplate *objectEven
     if (OW_GFX_COMPRESS)
         spriteTemplate->tileTag = LoadSheetGraphicsInfo(graphicsInfo, objectEvent->graphicsId, NULL);
 
-    if (objectEvent->graphicsId & OBJ_EVENT_MON && objectEvent->graphicsId & OBJ_EVENT_MON_SHINY)
-        objectEvent->shiny = TRUE;
+    if (objectEvent->graphicsId & OBJ_EVENT_MON)
+        if (GetSetPokedexFlag(objectEvent->graphicsId & OBJ_EVENT_MON_SPECIES_MASK, FLAG_GET_NONE))
+            GetSetPokedexFlag(objectEvent->graphicsId & OBJ_EVENT_MON_SPECIES_MASK, FLAG_SET_SILHOUETTE);
+        if (objectEvent->graphicsId & OBJ_EVENT_MON_SHINY)
+            objectEvent->shiny = TRUE;
 
     spriteId = CreateSprite(spriteTemplate, 0, 0, 0);
     if (spriteId == MAX_SPRITES)
