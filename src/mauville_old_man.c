@@ -531,7 +531,7 @@ static void BardSing(struct Task *task, struct BardSong *song)
                 // This means the actual song files for any phoneme other than PH_*_HELD won't be played here, and the only difference
                 // when specifying a PH_*_BLEND or PH_*_SOLO in the songId will be the length of the sound, determined by 'sPhonemeLengths'.
                 u8 phonemeTripletId = template->songId / 3;
-                m4aSongNumStart((FIRST_PHONEME_SONG + 1) + phonemeTripletId * 3);
+                m4aSongNumStart((FIRST_PHONEME_SONG + 1) + phonemeTripletId * 3, FlagGet(FLAG_SYS_GBS_ENABLED));
             }
             song->state = SOUND_STATE_SET_BASE;
             song->timer--;

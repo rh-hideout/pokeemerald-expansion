@@ -1699,7 +1699,7 @@ static void HandleSound_Leader(void)
     {
         if (!sGame->playingPickSound)
         {
-            m4aSongNumStop(SE_SUCCESS);
+            m4aSongNumStop(SE_SUCCESS, FlagGet(FLAG_SYS_GBS_ENABLED));
             PlaySE(SE_SUCCESS);
             sGame->playingPickSound = TRUE;
         }
@@ -1743,7 +1743,7 @@ static void HandleSound_Member(void)
     {
         if (!sGame->playingPickSound)
         {
-            m4aSongNumStop(SE_SUCCESS);
+            m4aSongNumStop(SE_SUCCESS, FlagGet(FLAG_SYS_GBS_ENABLED));
             PlaySE(SE_SUCCESS);
             sGame->playingPickSound = TRUE;
         }

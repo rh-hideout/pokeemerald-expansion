@@ -7241,6 +7241,23 @@ const struct ItemInfo gItemsInfo[] =
         .iconPalette = gItemIconPalette_Glimmoranite,
     },
 
+// GB Player
+    [ITEM_GB_PLAYER] =
+    {
+        .name = ITEM_NAME("GB Player"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "A device that plays\n"
+            "music from the old\n"
+            "Pokémon games."),
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_GBPlayer,
+        .importance = 1,
+        .iconPic = gItemIcon_PokeBall,
+        .iconPalette = gItemIconPalette_PokeBall,
+    },
+
 // Gems
     #if I_PRICE >= GEN_9
         #define GEM_PRICE 15000

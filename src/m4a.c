@@ -17,6 +17,8 @@ COMMON_DATA struct MusicPlayerInfo gMPlayInfo_SE2 = {0};
 COMMON_DATA struct MusicPlayerTrack gPokemonCryTracks[MAX_POKEMON_CRIES * 2] = {0};
 COMMON_DATA struct PokemonCrySong gPokemonCrySong = {0};
 COMMON_DATA u8 gMPlayMemAccArea[0x10] = {0};
+COMMON_DATA u8 gUsedCGBChannels = 0;
+COMMON_DATA u8 gGBSSFXActiveMask = 0;
 COMMON_DATA struct MusicPlayerInfo gMPlayInfo_SE3 = {0};
 
 BSS_CODE ALIGNED(4) char SoundMainRAM_Buffer[0xB40] = {0};
@@ -106,21 +108,33 @@ void m4aSoundMain(void)
     SoundMain();
 }
 
-void m4aSongNumStart(u16 n)
+const struct Song *GetSong(int songID, bool32 gbsEnabled)
+{
+    if (gbsEnabled)
+    {
+        int i;
+        for (i = 0; gGBSSongTable[i].songID != 0xFFFFFFFF; i++)
+        {
+            if (gGBSSongTable[i].songID == songID)
+                return &gGBSSongTable[i].song;
+        }
+    }
+    return &gSongTable[songID];
+}
+
+void m4aSongNumStart(u16 n, bool32 gbsEnabled)
 {
     const struct MusicPlayer *mplayTable = gMPlayTable;
-    const struct Song *songTable = gSongTable;
-    const struct Song *song = &songTable[n];
+    const struct Song *song = GetSong(n, gbsEnabled);
     const struct MusicPlayer *mplay = &mplayTable[song->ms];
 
     MPlayStart(mplay->info, song->header);
 }
 
-void m4aSongNumStartOrChange(u16 n)
+void m4aSongNumStartOrChange(u16 n, bool32 gbsEnabled)
 {
     const struct MusicPlayer *mplayTable = gMPlayTable;
-    const struct Song *songTable = gSongTable;
-    const struct Song *song = &songTable[n];
+    const struct Song *song = GetSong(n, gbsEnabled);
     const struct MusicPlayer *mplay = &mplayTable[song->ms];
 
     if (mplay->info->songHeader != song->header)
@@ -137,11 +151,10 @@ void m4aSongNumStartOrChange(u16 n)
     }
 }
 
-static void UNUSED m4aSongNumStartOrContinue(u16 n)
+static void UNUSED m4aSongNumStartOrContinue(u16 n, bool32 gbsEnabled)
 {
     const struct MusicPlayer *mplayTable = gMPlayTable;
-    const struct Song *songTable = gSongTable;
-    const struct Song *song = &songTable[n];
+    const struct Song *song = GetSong(n, gbsEnabled);
     const struct MusicPlayer *mplay = &mplayTable[song->ms];
 
     if (mplay->info->songHeader != song->header)
@@ -152,22 +165,20 @@ static void UNUSED m4aSongNumStartOrContinue(u16 n)
         MPlayContinue(mplay->info);
 }
 
-void m4aSongNumStop(u16 n)
+void m4aSongNumStop(u16 n, bool32 gbsEnabled)
 {
     const struct MusicPlayer *mplayTable = gMPlayTable;
-    const struct Song *songTable = gSongTable;
-    const struct Song *song = &songTable[n];
+    const struct Song *song = GetSong(n, gbsEnabled);
     const struct MusicPlayer *mplay = &mplayTable[song->ms];
 
     if (mplay->info->songHeader == song->header)
         m4aMPlayStop(mplay->info);
 }
 
-static void UNUSED m4aSongNumContinue(u16 n)
+static void UNUSED m4aSongNumContinue(u16 n, bool32 gbsEnabled)
 {
     const struct MusicPlayer *mplayTable = gMPlayTable;
-    const struct Song *songTable = gSongTable;
-    const struct Song *song = &songTable[n];
+    const struct Song *song = GetSong(n, gbsEnabled);
     const struct MusicPlayer *mplay = &mplayTable[song->ms];
 
     if (mplay->info->songHeader == song->header)
@@ -286,6 +297,7 @@ void MPlayExtender(struct CgbChannel *cgbChans)
     soundInfo->ident++;
 
 #if __STDC_VERSION__ < 202311L
+    gMPlayJumpTable[5] = (MPlayFunc)ply_gbs_switch;
     gMPlayJumpTable[8] = ply_memacc;
     gMPlayJumpTable[17] = ply_lfos;
     gMPlayJumpTable[19] = ply_mod;
@@ -296,6 +308,7 @@ void MPlayExtender(struct CgbChannel *cgbChans)
     gMPlayJumpTable[32] = FadeOutBody;
     gMPlayJumpTable[33] = TrkVolPitSet;
 #else
+    gMPlayJumpTable[5] = (void (*)(...))ply_gbs_switch;
     gMPlayJumpTable[8] = (void (*)(...))ply_memacc;
     gMPlayJumpTable[17] = (void (*)(...))ply_lfos;
     gMPlayJumpTable[19] = (void (*)(...))ply_mod;

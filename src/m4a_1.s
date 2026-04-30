@@ -1911,6 +1911,11 @@ _081DD92E:
 	ldrb r0, [r1]
 	strb r0, [r5, o_MusicPlayerTrack_wait]
 _081DD938:
+	@ Check if this is a GBS track (upper nibble of patternLevel = gbsIdentifier != 0)
+	ldrb r0, [r5, o_MusicPlayerTrack_patternLevel]
+	lsrs r0, 4
+	bne GBSUpdate
+	@ Normal M4A track:
 	ldrb r0, [r5, o_MusicPlayerTrack_wait]
 	cmp r0, 0
 	beq _081DD8E0
@@ -1962,6 +1967,17 @@ _081DD98E:
 _081DD990:
 	orrs r0, r1
 	strb r0, [r5, o_MusicPlayerTrack_flags]
+	b _081DD994
+GBSUpdate:
+	adds r0, r7, 0		@ mplayInfo
+	adds r1, r5, 0		@ track
+	bl GBSMain
+	cmp r0, 0
+	bne _081DD994		@ track still alive
+	adds r0, r7, 0		@ track ended: clean up
+	adds r1, r5, 0
+	bl ply_fine
+	b _081DD994
 _081DD994:
 	mov r3, r10
 	mov r4, r11
@@ -2107,6 +2123,21 @@ TrackStop:
 	movs r0, MPT_FLG_EXIST
 	tst r0, r1
 	beq TrackStop_Done
+	@ Check if GBS track (upper nibble of patternLevel != 0)
+	ldrb r0, [r5, o_MusicPlayerTrack_patternLevel]
+	lsrs r0, 4
+	beq TrackStop_NormalM4A
+	adds r0, r5, 0
+	bl GBSTrack_Stop
+	@ Preserve the upper nibble (channelID/gbsIdentifier) so the M4A main loop
+	@ can still dispatch to GBSMain after m4aMPlayContinue resumes this player.
+	@ Only clear the lower nibble (patternLevel / subroutine depth).
+	ldrb r0, [r5, o_MusicPlayerTrack_patternLevel]
+	movs r1, 0x0F
+	bics r0, r1
+	strb r0, [r5, o_MusicPlayerTrack_patternLevel]
+	b TrackStop_Done
+TrackStop_NormalM4A:
 	ldr r4, [r5, o_MusicPlayerTrack_chan]
 	cmp r4, 0
 	beq TrackStop_3

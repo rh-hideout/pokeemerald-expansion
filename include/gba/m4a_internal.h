@@ -273,7 +273,8 @@ struct MusicPlayerTrack
 {
     u8 flags;
     u8 wait;
-    u8 patternLevel;
+    u8 patternLevel:4;
+    u8 gbsIdentifier:4;
     u8 repN;
     u8 gateTime;
     u8 key;
@@ -342,6 +343,7 @@ struct MusicPlayerInfo
     u16 fadeOI;
     u16 fadeOC;
     u16 fadeOV;
+    u16 gbsTempo;
     struct MusicPlayerTrack *tracks;
     struct ToneData *tone;
     u32 ident;
@@ -364,8 +366,15 @@ struct Song
     u16 me;
 };
 
+struct GBSSongItem
+{
+    u32 songID;
+    struct Song song;
+};
+
 extern const struct MusicPlayer gMPlayTable[];
 extern const struct Song gSongTable[];
+extern const struct GBSSongItem gGBSSongTable[];
 
 
 
@@ -421,6 +430,7 @@ void MPlayStart(struct MusicPlayerInfo *mplayInfo, struct SongHeader *songHeader
 void m4aMPlayStop(struct MusicPlayerInfo *mplayInfo);
 void FadeOutBody(struct MusicPlayerInfo *mplayInfo);
 void TrkVolPitSet(struct MusicPlayerInfo *mplayInfo, struct MusicPlayerTrack *track);
+void ply_gbs_switch(struct MusicPlayerInfo *mplayInfo, struct MusicPlayerTrack *track);
 void MPlayFadeOut(struct MusicPlayerInfo *mplayInfo, u16 speed);
 void ClearChain(void *x);
 void Clear64byte(void *addr);

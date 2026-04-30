@@ -19,6 +19,7 @@
 #include "sound.h"
 #include "party_menu.h"
 #include "m4a.h"
+#include "event_data.h"
 #include "decompress.h"
 #include "data.h"
 #include "palette.h"
@@ -1083,12 +1084,12 @@ void HandleLowHpMusicChange(struct Pokemon *mon, enum BattlerId battler)
         gBattleSpritesDataPtr->battlerData[battler].lowHpSong = 0;
         if (!IsDoubleBattle())
         {
-            m4aSongNumStop(SE_LOW_HEALTH);
+            m4aSongNumStop(SE_LOW_HEALTH, FlagGet(FLAG_SYS_GBS_ENABLED));
             return;
         }
         if (IsDoubleBattle() && !gBattleSpritesDataPtr->battlerData[BATTLE_PARTNER(battler)].lowHpSong)
         {
-            m4aSongNumStop(SE_LOW_HEALTH);
+            m4aSongNumStop(SE_LOW_HEALTH, FlagGet(FLAG_SYS_GBS_ENABLED));
             return;
         }
     }
@@ -1102,7 +1103,7 @@ void BattleStopLowHpSound(void)
     if (IsDoubleBattle())
         gBattleSpritesDataPtr->battlerData[BATTLE_PARTNER(playerBattler)].lowHpSong = 0;
 
-    m4aSongNumStop(SE_LOW_HEALTH);
+    m4aSongNumStop(SE_LOW_HEALTH, FlagGet(FLAG_SYS_GBS_ENABLED));
 }
 
 u8 GetMonHPBarLevel(struct Pokemon *mon)

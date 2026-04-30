@@ -1735,7 +1735,7 @@ static void UpdateCurrentPartySelection(s8 *slotPtr, s8 movementDir)
 
     if (*slotPtr != newSlotId)
     {
-        PlaySE(SE_SELECT);
+        PlaySECursorMove(SE_SELECT);
         AnimatePartySlot(newSlotId, 0);
         AnimatePartySlot(*slotPtr, 1);
     }

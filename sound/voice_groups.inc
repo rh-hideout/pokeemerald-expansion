@@ -1,5 +1,10 @@
 .include "sound/voicegroups/dummy.inc"
 
+@ GBS songs reference voicegroup000 in their headers as a placeholder.
+@ Alias it to the dummy voicegroup so the linker resolves it.
+	.global voicegroup000
+	.set voicegroup000, voicegroup_dummy
+
 @ drumsets
 .include "sound/voicegroups/drumsets/rs.inc"
 .include "sound/voicegroups/drumsets/frlg.inc"

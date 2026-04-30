@@ -1788,12 +1788,12 @@ static u8 HandleChooseBoxMenuInput(void)
     }
     if (JOY_NEW(DPAD_LEFT))
     {
-        PlaySE(SE_SELECT);
+        PlaySECursorMove(SE_SELECT);
         ChooseBoxMenu_MoveLeft();
     }
     else if (JOY_NEW(DPAD_RIGHT))
     {
-        PlaySE(SE_SELECT);
+        PlaySECursorMove(SE_SELECT);
         ChooseBoxMenu_MoveRight();
     }
     return BOXID_NONE_CHOSEN;
@@ -2253,7 +2253,7 @@ static void Task_PokeStorageMain(u8 taskId)
         switch (HandleInput())
         {
         case INPUT_MOVE_CURSOR:
-            PlaySE(SE_SELECT);
+            PlaySECursorMove(SE_SELECT);
             sStorage->state = MSTATE_MOVE_CURSOR;
             break;
         case INPUT_SHOW_PARTY:
@@ -8149,12 +8149,12 @@ static s16 HandleMenuInput(void)
 
         if (JOY_NEW(DPAD_UP))
         {
-            PlaySE(SE_SELECT);
+            PlaySECursorMove(SE_SELECT);
             Menu_MoveCursor(-1);
         }
         else if (JOY_NEW(DPAD_DOWN))
         {
-            PlaySE(SE_SELECT);
+            PlaySECursorMove(SE_SELECT);
             Menu_MoveCursor(1);
         }
     } while (0);

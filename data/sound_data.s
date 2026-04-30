@@ -2,6 +2,7 @@
 
 	.include "asm/macros.inc"
 	.include "constants/constants.inc"
+	.include "include/constants/songs.h"
 
 	.include "asm/macros/m4a.inc"
 	.include "asm/macros/music_voice.inc"

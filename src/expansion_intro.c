@@ -11,6 +11,7 @@
 #include "intro.h"
 #include "intro_frlg.h"
 #include "m4a.h"
+#include "event_data.h"
 #include "expansion_intro.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
@@ -261,8 +262,8 @@ void Task_HandleExpansionIntro(u8 taskId)
             CpuFill16(0, gPlttBufferFaded, sizeof(gPlttBufferFaded));
             if (IsCryPlaying())
                 StopCry();
-            m4aSongNumStop(SE_BIKE_HOP);
-            m4aSongNumStop(SE_M_DOUBLE_SLAP);
+            m4aSongNumStop(SE_BIKE_HOP, FlagGet(FLAG_SYS_GBS_ENABLED));
+            m4aSongNumStop(SE_M_DOUBLE_SLAP, FlagGet(FLAG_SYS_GBS_ENABLED));
             tState++;
         }
         else

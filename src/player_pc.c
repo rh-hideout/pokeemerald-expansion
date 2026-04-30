@@ -1015,7 +1015,7 @@ void CopyItemName_PlayerPC(u8 *string, enum Item itemId)
 static void ItemStorage_MoveCursor(s32 id, bool8 onInit, struct ListMenu *list)
 {
     if (onInit != TRUE)
-        PlaySE(SE_SELECT);
+        PlaySECursorMove(SE_SELECT);
     if (sItemStorageMenu->toSwapPos == NOT_SWAPPING)
     {
         ItemStorage_EraseItemIcon();

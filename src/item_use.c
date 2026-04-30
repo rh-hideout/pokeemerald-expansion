@@ -1507,6 +1507,42 @@ void ItemUseOutOfBattle_CannotUse(u8 taskId)
     DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
 }
 
+static void Task_UseGBPlayer(u8 taskId)
+{
+    const u8 *text = NULL;
+
+    if (!IsSEPlaying())
+    {
+        if (FlagGet(FLAG_SYS_GBS_ENABLED))
+        {
+            FlagClear(FLAG_SYS_GBS_ENABLED);
+            text = gText_GBPlayerOff;
+        }
+        else
+        {
+            FlagSet(FLAG_SYS_GBS_ENABLED);
+            text = gText_GBPlayerOn;
+        }
+
+        PlayNewMapMusic(MUS_DUMMY);
+        Overworld_PlaySpecialMapMusic();
+
+        if (!gTasks[taskId].tUsingRegisteredKeyItem)
+        {
+            DisplayItemMessage(taskId, FONT_NORMAL, text, CloseItemMessage);
+        }
+        else
+        {
+            DisplayItemMessageOnField(taskId, text, Task_CloseCantUseKeyItemMessage);
+        }
+    }
+}
+
+void ItemUseOutOfBattle_GBPlayer(u8 taskId)
+{
+    gTasks[taskId].func = Task_UseGBPlayer;
+}
+
 static bool32 IsValidLocationForVsSeeker(void)
 {
     u16 mapGroup = gSaveBlock1Ptr->location.mapGroup;

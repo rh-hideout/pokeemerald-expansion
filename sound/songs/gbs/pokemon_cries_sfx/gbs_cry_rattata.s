@@ -1,0 +1,44 @@
+	.include "asm/macros.inc"
+
+	.section .rodata
+	.align 1
+
+gbs_cry_rattata_Ch5:
+	gbs_switch 4
+	duty_cycle_pattern 0, 1, 0, 1
+	square_note 2, 3, -5, 897
+	square_note 7, 15, 5, 1537
+	square_note 1, 12, 2, 1153
+	square_note 8, 9, 1, 897
+	sound_ret
+
+gbs_cry_rattata_Ch6:
+	gbs_switch 5
+	duty_cycle_pattern 3, 2, 3, 2
+	square_note 2, 3, -6, 1456
+	square_note 7, 13, 5, 1885
+	square_note 1, 11, 2, 1712
+	square_note 8, 6, 1, 1456
+	sound_ret
+
+gbs_cry_rattata_Ch8:
+	gbs_switch 7
+	noise_note 2, 9, 2, 73
+	noise_note 7, 11, 5, 41
+	noise_note 1, 10, 2, 57
+	noise_note 8, 9, 1, 73
+	sound_ret
+
+	.align 4
+	.global gbs_cry_rattata_Header
+gbs_cry_rattata_Header:
+	.byte 3	@ NumTrks
+	.byte 0	@ NumBlks
+	.byte 0	@ Priority
+	.byte 0	@ Reverb
+
+	.int voicegroup000
+
+	.int gbs_cry_rattata_Ch5
+	.int gbs_cry_rattata_Ch6
+	.int gbs_cry_rattata_Ch8

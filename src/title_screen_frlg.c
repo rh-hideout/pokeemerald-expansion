@@ -424,7 +424,7 @@ void CB2_InitTitleScreenFrlg(void)
             sTitleScreenTimerTaskId = CreateTask(Task_TitleScreenTimer, 2);
             SetVBlankCallback(VBlankCB);
             SetMainCallback2(CB2_TitleScreenRun);
-            m4aSongNumStart(MUS_TITLE);
+            m4aSongNumStart(MUS_TITLE, FlagGet(FLAG_SYS_GBS_ENABLED));
         }
         return;
     }

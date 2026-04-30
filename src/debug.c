@@ -3951,19 +3951,19 @@ static void DebugAction_Sound_SE_SelectId(u8 taskId)
 
     if (JOY_NEW(A_BUTTON))
     {
-        m4aSongNumStop(gTasks[taskId].tCurrentSong);
+        m4aSongNumStop(gTasks[taskId].tCurrentSong, FlagGet(FLAG_SYS_GBS_ENABLED));
         gTasks[taskId].tCurrentSong = gTasks[taskId].tInput;
-        m4aSongNumStart(gTasks[taskId].tInput);
+        m4aSongNumStart(gTasks[taskId].tInput, FlagGet(FLAG_SYS_GBS_ENABLED));
     }
     else if (JOY_NEW(B_BUTTON))
     {
         PlaySE(SE_SELECT);
-        m4aSongNumStop(gTasks[taskId].tCurrentSong);
+        m4aSongNumStop(gTasks[taskId].tCurrentSong, FlagGet(FLAG_SYS_GBS_ENABLED));
         DebugAction_DestroyExtraWindow(taskId);
     }
     else if (JOY_NEW(START_BUTTON))
     {
-        m4aSongNumStop(gTasks[taskId].tCurrentSong);
+        m4aSongNumStop(gTasks[taskId].tCurrentSong, FlagGet(FLAG_SYS_GBS_ENABLED));
     }
 }
 
@@ -4016,19 +4016,19 @@ static void DebugAction_Sound_MUS_SelectId(u8 taskId)
 
     if (JOY_NEW(A_BUTTON))
     {
-        m4aSongNumStop(gTasks[taskId].tCurrentSong);
+        m4aSongNumStop(gTasks[taskId].tCurrentSong, FlagGet(FLAG_SYS_GBS_ENABLED));
         gTasks[taskId].tCurrentSong = gTasks[taskId].tInput;
-        m4aSongNumStart(gTasks[taskId].tInput);
+        m4aSongNumStart(gTasks[taskId].tInput, FlagGet(FLAG_SYS_GBS_ENABLED));
     }
     else if (JOY_NEW(B_BUTTON))
     {
         PlaySE(SE_SELECT);
-        // m4aSongNumStop(gTasks[taskId].tCurrentSong);   //Uncomment if music should stop after leaving menu
+        // m4aSongNumStop(gTasks[taskId].tCurrentSong, FlagGet(FLAG_SYS_GBS_ENABLED));   //Uncomment if music should stop after leaving menu
         DebugAction_DestroyExtraWindow(taskId);
     }
     else if (JOY_NEW(START_BUTTON))
     {
-        m4aSongNumStop(gTasks[taskId].tCurrentSong);
+        m4aSongNumStop(gTasks[taskId].tCurrentSong, FlagGet(FLAG_SYS_GBS_ENABLED));
     }
 }
 

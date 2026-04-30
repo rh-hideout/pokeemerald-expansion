@@ -595,7 +595,7 @@ static void BuyMenuPrintItemDescriptionAndShowItemIcon(s32 item, bool8 onInit, s
 {
     const u8 *description;
     if (onInit != TRUE)
-        PlaySE(SE_SELECT);
+        PlaySECursorMove(SE_SELECT);
 
     if (item != LIST_CANCEL)
         BuyMenuAddItemIcon(item, sShopData->iconSlot);

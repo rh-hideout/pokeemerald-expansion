@@ -7,6 +7,7 @@
 #include "link.h"
 #include "load_save.h"
 #include "m4a.h"
+#include "event_data.h"
 #include "main.h"
 #include "intro_frlg.h"
 #include "malloc.h"
@@ -1319,7 +1320,7 @@ static void IntroCB_Scene1(struct IntroSequenceData * this)
     case 3:
         if (!gPaletteFade.active)
         {
-            m4aSongNumStart(MUS_RG_INTRO_FIGHT);
+            m4aSongNumStart(MUS_RG_INTRO_FIGHT, FlagGet(FLAG_SYS_GBS_ENABLED));
             this->timer = 0;
             this->state++;
         }

@@ -2203,4 +2203,7 @@ extern const u8 gText_Boy[];
 extern const u8 gText_Girl[];
 
 
+extern const u8 gText_GBPlayerOn[];
+extern const u8 gText_GBPlayerOff[];
+
 #endif // GUARD_STRINGS_H

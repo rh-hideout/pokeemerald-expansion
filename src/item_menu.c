@@ -968,7 +968,7 @@ static void BagMenu_MoveCursorCallback(s32 itemIndex, bool8 onInit, struct ListM
 {
     if (onInit != TRUE)
     {
-        PlaySE(SE_SELECT);
+        PlaySECursorMove(SE_SELECT);
         ShakeBagSprite();
     }
     if (gBagMenu->toSwapPos == NOT_SWAPPING)
@@ -1367,12 +1367,12 @@ static u8 GetSwitchBagPocketDirection(void)
     LRKeys = GetLRKeysPressed();
     if (JOY_NEW(DPAD_LEFT) || LRKeys == MENU_L_PRESSED)
     {
-        PlaySE(SE_SELECT);
+        PlaySECursorMove(SE_SELECT);
         return SWITCH_POCKET_LEFT;
     }
     if (JOY_NEW(DPAD_RIGHT) || LRKeys == MENU_R_PRESSED)
     {
-        PlaySE(SE_SELECT);
+        PlaySECursorMove(SE_SELECT);
         return SWITCH_POCKET_RIGHT;
     }
     return SWITCH_POCKET_NONE;
@@ -1798,7 +1798,7 @@ static void Task_ItemContext_MultipleRows(u8 taskId)
         {
             if (cursorPos > 0 && IsValidContextMenuPos(cursorPos - 2))
             {
-                PlaySE(SE_SELECT);
+                PlaySECursorMove(SE_SELECT);
                 ChangeMenuGridCursorPosition(MENU_CURSOR_DELTA_NONE, MENU_CURSOR_DELTA_UP);
             }
         }
@@ -1806,7 +1806,7 @@ static void Task_ItemContext_MultipleRows(u8 taskId)
         {
             if (cursorPos < (gBagMenu->contextMenuNumItems - 2) && IsValidContextMenuPos(cursorPos + 2))
             {
-                PlaySE(SE_SELECT);
+                PlaySECursorMove(SE_SELECT);
                 ChangeMenuGridCursorPosition(MENU_CURSOR_DELTA_NONE, MENU_CURSOR_DELTA_DOWN);
             }
         }
@@ -1814,7 +1814,7 @@ static void Task_ItemContext_MultipleRows(u8 taskId)
         {
             if ((cursorPos & 1) && IsValidContextMenuPos(cursorPos - 1))
             {
-                PlaySE(SE_SELECT);
+                PlaySECursorMove(SE_SELECT);
                 ChangeMenuGridCursorPosition(MENU_CURSOR_DELTA_LEFT, MENU_CURSOR_DELTA_NONE);
             }
         }
@@ -1822,7 +1822,7 @@ static void Task_ItemContext_MultipleRows(u8 taskId)
         {
             if (!(cursorPos & 1) && IsValidContextMenuPos(cursorPos + 1))
             {
-                PlaySE(SE_SELECT);
+                PlaySECursorMove(SE_SELECT);
                 ChangeMenuGridCursorPosition(MENU_CURSOR_DELTA_RIGHT, MENU_CURSOR_DELTA_NONE);
             }
         }

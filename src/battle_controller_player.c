@@ -17,6 +17,7 @@
 #include "link.h"
 #include "main.h"
 #include "m4a.h"
+#include "event_data.h"
 #include "palette.h"
 #include "party_menu.h"
 #include "pokeball.h"
@@ -267,7 +268,7 @@ static void HandleInputChooseAction(enum BattlerId battler)
                 else
                     gBallToDisplay = nextBall;
                 SwapBallToDisplay(sameBall);
-                PlaySE(SE_SELECT);
+                PlaySECursorMove(SE_SELECT);
             }
             else if (JOY_HELD(B_LAST_USED_BALL_BUTTON) && (JOY_NEW(DPAD_UP) || JOY_NEW(DPAD_LEFT)))
             {
@@ -279,7 +280,7 @@ static void HandleInputChooseAction(enum BattlerId battler)
                 else
                     gBallToDisplay = prevBall;
                 SwapBallToDisplay(sameBall);
-                PlaySE(SE_SELECT);
+                PlaySECursorMove(SE_SELECT);
             }
             else if (JOY_NEW(B_BUTTON) || (!JOY_HELD(B_LAST_USED_BALL_BUTTON) && gBattleStruct->ballSwapped))
             {
@@ -326,7 +327,7 @@ static void HandleInputChooseAction(enum BattlerId battler)
     {
         if (gActionSelectionCursor[battler] & 1) // if is B_ACTION_USE_ITEM or B_ACTION_RUN
         {
-            PlaySE(SE_SELECT);
+            PlaySECursorMove(SE_SELECT);
             ActionSelectionDestroyCursorAt(gActionSelectionCursor[battler]);
             gActionSelectionCursor[battler] ^= 1;
             ActionSelectionCreateCursorAt(gActionSelectionCursor[battler], 0);
@@ -336,7 +337,7 @@ static void HandleInputChooseAction(enum BattlerId battler)
     {
         if (!(gActionSelectionCursor[battler] & 1)) // if is B_ACTION_USE_MOVE or B_ACTION_SWITCH
         {
-            PlaySE(SE_SELECT);
+            PlaySECursorMove(SE_SELECT);
             ActionSelectionDestroyCursorAt(gActionSelectionCursor[battler]);
             gActionSelectionCursor[battler] ^= 1;
             ActionSelectionCreateCursorAt(gActionSelectionCursor[battler], 0);
@@ -346,7 +347,7 @@ static void HandleInputChooseAction(enum BattlerId battler)
     {
         if (gActionSelectionCursor[battler] & 2) // if is B_ACTION_SWITCH or B_ACTION_RUN
         {
-            PlaySE(SE_SELECT);
+            PlaySECursorMove(SE_SELECT);
             ActionSelectionDestroyCursorAt(gActionSelectionCursor[battler]);
             gActionSelectionCursor[battler] ^= 2;
             ActionSelectionCreateCursorAt(gActionSelectionCursor[battler], 0);
@@ -356,7 +357,7 @@ static void HandleInputChooseAction(enum BattlerId battler)
     {
         if (!(gActionSelectionCursor[battler] & 2)) // if is B_ACTION_USE_MOVE or B_ACTION_USE_ITEM
         {
-            PlaySE(SE_SELECT);
+            PlaySECursorMove(SE_SELECT);
             ActionSelectionDestroyCursorAt(gActionSelectionCursor[battler]);
             gActionSelectionCursor[battler] ^= 2;
             ActionSelectionCreateCursorAt(gActionSelectionCursor[battler], 0);
@@ -464,7 +465,7 @@ void HandleInputChooseTarget(enum BattlerId battler)
     }
     else if (JOY_NEW(DPAD_LEFT | DPAD_UP))
     {
-        PlaySE(SE_SELECT);
+        PlaySECursorMove(SE_SELECT);
         gSprites[gBattlerSpriteIds[gMultiUsePlayerCursor]].callback = SpriteCB_HideAsMoveTarget;
 
         if (moveTarget == TARGET_USER_OR_ALLY)
@@ -521,7 +522,7 @@ void HandleInputChooseTarget(enum BattlerId battler)
     }
     else if (JOY_NEW(DPAD_RIGHT | DPAD_DOWN))
     {
-        PlaySE(SE_SELECT);
+        PlaySECursorMove(SE_SELECT);
         gSprites[gBattlerSpriteIds[gMultiUsePlayerCursor]].callback = SpriteCB_HideAsMoveTarget;
 
         if (moveTarget == TARGET_USER_OR_ALLY)
@@ -818,7 +819,7 @@ void HandleInputChooseMove(enum BattlerId battler)
         {
             MoveSelectionDestroyCursorAt(gMoveSelectionCursor[battler]);
             gMoveSelectionCursor[battler] ^= 1;
-            PlaySE(SE_SELECT);
+            PlaySECursorMove(SE_SELECT);
             MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
             if (B_SHOW_EFFECTIVENESS)
                 MoveSelectionDisplayMoveEffectiveness(CheckTargetTypeEffectiveness(battler), battler);
@@ -835,7 +836,7 @@ void HandleInputChooseMove(enum BattlerId battler)
         {
             MoveSelectionDestroyCursorAt(gMoveSelectionCursor[battler]);
             gMoveSelectionCursor[battler] ^= 1;
-            PlaySE(SE_SELECT);
+            PlaySECursorMove(SE_SELECT);
             MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
             if (B_SHOW_EFFECTIVENESS)
                 MoveSelectionDisplayMoveEffectiveness(CheckTargetTypeEffectiveness(battler), battler);
@@ -851,7 +852,7 @@ void HandleInputChooseMove(enum BattlerId battler)
         {
             MoveSelectionDestroyCursorAt(gMoveSelectionCursor[battler]);
             gMoveSelectionCursor[battler] ^= 2;
-            PlaySE(SE_SELECT);
+            PlaySECursorMove(SE_SELECT);
             MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
             if (B_SHOW_EFFECTIVENESS)
                 MoveSelectionDisplayMoveEffectiveness(CheckTargetTypeEffectiveness(battler), battler);
@@ -868,7 +869,7 @@ void HandleInputChooseMove(enum BattlerId battler)
         {
             MoveSelectionDestroyCursorAt(gMoveSelectionCursor[battler]);
             gMoveSelectionCursor[battler] ^= 2;
-            PlaySE(SE_SELECT);
+            PlaySECursorMove(SE_SELECT);
             MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
             if (B_SHOW_EFFECTIVENESS)
                 MoveSelectionDisplayMoveEffectiveness(CheckTargetTypeEffectiveness(battler), battler);
@@ -976,7 +977,7 @@ static u32 UNUSED HandleMoveInputUnused(enum BattlerId battler)
     {
         MoveSelectionDestroyCursorAt(gMoveSelectionCursor[battler]);
         gMoveSelectionCursor[battler] ^= 1;
-        PlaySE(SE_SELECT);
+        PlaySECursorMove(SE_SELECT);
         MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
     }
     if (JOY_NEW(DPAD_RIGHT) && !(gMoveSelectionCursor[battler] & 1)
@@ -984,14 +985,14 @@ static u32 UNUSED HandleMoveInputUnused(enum BattlerId battler)
     {
         MoveSelectionDestroyCursorAt(gMoveSelectionCursor[battler]);
         gMoveSelectionCursor[battler] ^= 1;
-        PlaySE(SE_SELECT);
+        PlaySECursorMove(SE_SELECT);
         MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
     }
     if (JOY_NEW(DPAD_UP) && gMoveSelectionCursor[battler] & 2)
     {
         MoveSelectionDestroyCursorAt(gMoveSelectionCursor[battler]);
         gMoveSelectionCursor[battler] ^= 2;
-        PlaySE(SE_SELECT);
+        PlaySECursorMove(SE_SELECT);
         MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
     }
     if (JOY_NEW(DPAD_DOWN) && !(gMoveSelectionCursor[battler] & 2)
@@ -999,7 +1000,7 @@ static u32 UNUSED HandleMoveInputUnused(enum BattlerId battler)
     {
         MoveSelectionDestroyCursorAt(gMoveSelectionCursor[battler]);
         gMoveSelectionCursor[battler] ^= 2;
-        PlaySE(SE_SELECT);
+        PlaySECursorMove(SE_SELECT);
         MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
     }
 
@@ -1212,7 +1213,7 @@ static void SetLinkBattleEndCallbacks(enum BattlerId battler)
     {
         if (gReceivedRemoteLinkPlayers == 0)
         {
-            m4aSongNumStop(SE_LOW_HEALTH);
+            m4aSongNumStop(SE_LOW_HEALTH, FlagGet(FLAG_SYS_GBS_ENABLED));
             gMain.inBattle = FALSE;
             gMain.callback1 = gPreBattleCallback1;
             SetMainCallback2(CB2_InitEndLinkBattle);
@@ -1225,7 +1226,7 @@ static void SetLinkBattleEndCallbacks(enum BattlerId battler)
     {
         if (IsLinkTaskFinished())
         {
-            m4aSongNumStop(SE_LOW_HEALTH);
+            m4aSongNumStop(SE_LOW_HEALTH, FlagGet(FLAG_SYS_GBS_ENABLED));
             gMain.inBattle = FALSE;
             gMain.callback1 = gPreBattleCallback1;
             SetMainCallback2(CB2_InitEndLinkBattle);
@@ -1255,7 +1256,7 @@ void SetBattleEndCallbacks(enum BattlerId battler)
         }
         else
         {
-            m4aSongNumStop(SE_LOW_HEALTH);
+            m4aSongNumStop(SE_LOW_HEALTH, FlagGet(FLAG_SYS_GBS_ENABLED));
             gMain.inBattle = FALSE;
             gMain.callback1 = gPreBattleCallback1;
             SetMainCallback2(gMain.savedCallback);
@@ -1506,7 +1507,7 @@ static void Task_GiveExpWithExpBar(u8 taskId)
         SetHealthboxSpriteVisible(gHealthboxSpriteIds[battler]);
         if (newExpPoints == -1) // The bar has been filled with given exp points.
         {
-            m4aSongNumStop(SE_EXP);
+            m4aSongNumStop(SE_EXP, FlagGet(FLAG_SYS_GBS_ENABLED));
             level = GetMonData(mon, MON_DATA_LEVEL);
             currExp = GetMonData(mon, MON_DATA_EXP);
             species = GetMonData(mon, MON_DATA_SPECIES);
