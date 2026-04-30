@@ -633,11 +633,21 @@ const u8 gTrainerBackPic_Wally[] = INCBIN_U8("graphics/trainers/back_pics/wally.
 const u8 gTrainerBackPic_Steven[] = INCBIN_U8("graphics/trainers/back_pics/steven.4bpp");
 const u8 gTrainerBackPic_Pokedude[] = INCBIN_U8("graphics/trainers/back_pics/pokedude.4bpp");
 const u8 gTrainerBackPic_OldMan[] = INCBIN_U8("graphics/trainers/back_pics/old_man.4bpp");
+// HnS Trainer Back Pics
+const u8 gTrainerBackPic_GoldHns[] = INCBIN_U8("graphics/trainers/back_pics/gold_hns.4bpp");
+const u8 gTrainerBackPic_KrisHns[] = INCBIN_U8("graphics/trainers/back_pics/kris_hns.4bpp");
+const u8 gTrainerBackPic_LanceHns[] = INCBIN_U8("graphics/trainers/back_pics/lance_hns.4bpp");
+const u8 gTrainerBackPic_SilverHns[] = INCBIN_U8("graphics/trainers/back_pics/silver_hns.4bpp");
 
 const u16 gTrainerBackPicPalette_Red[] = INCBIN_U16("graphics/trainers/back_pics/red.gbapal");
 const u16 gTrainerBackPicPalette_Leaf[] = INCBIN_U16("graphics/trainers/back_pics/leaf.gbapal");
 const u16 gTrainerBackPicPalette_Pokedude[] = INCBIN_U16("graphics/trainers/back_pics/pokedude.gbapal");
 const u16 gTrainerBackPicPalette_OldMan[] = INCBIN_U16("graphics/trainers/back_pics/old_man.gbapal");
+// HnS Trainer Back Pic Palettes
+const u16 gTrainerBackPicPalette_GoldHns[] = INCBIN_U16("graphics/trainers/back_pics/gold_hns.gbapal");
+const u16 gTrainerBackPicPalette_KrisHns[] = INCBIN_U16("graphics/trainers/back_pics/kris_hns.gbapal");
+const u16 gTrainerBackPicPalette_LanceHns[] = INCBIN_U16("graphics/trainers/back_pics/lance_hns.gbapal");
+const u16 gTrainerBackPicPalette_SilverHns[] = INCBIN_U16("graphics/trainers/back_pics/silver_hns.gbapal");
 
 // The first two parameters invoke a front pic and palette by
 // calling a "TRAINER_PIC" constant (e.g. TRAINER_PIC_FRONT_HIKER), and
@@ -954,5 +964,10 @@ const struct TrainerBacksprite gTrainerBacksprites[] =
     TRAINER_BACK_SPRITE(TRAINER_PIC_BACK_STEVEN, 4, gTrainerBackPic_Steven, gTrainerPalette_Steven, sBackAnims_Hoenn),
     TRAINER_BACK_SPRITE(TRAINER_PIC_BACK_POKEDUDE, 4, gTrainerBackPic_Pokedude, gTrainerBackPicPalette_Pokedude, sBackAnims_OldManPokedude),
     TRAINER_BACK_SPRITE(TRAINER_PIC_BACK_OLD_MAN, 4, gTrainerBackPic_OldMan, gTrainerBackPicPalette_OldMan, sBackAnims_OldManPokedude),
+    // HnS Trainer Back Sprites
+    TRAINER_BACK_SPRITE(TRAINER_PIC_BACK_GOLD_HNS, 4, gTrainerBackPic_GoldHns, gTrainerBackPicPalette_GoldHns, sBackAnims_Hoenn),
+    TRAINER_BACK_SPRITE(TRAINER_PIC_BACK_KRIS_HNS, 4, gTrainerBackPic_KrisHns, gTrainerBackPicPalette_KrisHns, sBackAnims_Hoenn),
+    TRAINER_BACK_SPRITE(TRAINER_PIC_BACK_LANCE_HNS, 4, gTrainerBackPic_LanceHns, gTrainerBackPicPalette_LanceHns, sBackAnims_Hoenn),
+    TRAINER_BACK_SPRITE(TRAINER_PIC_BACK_SILVER_HNS, 4, gTrainerBackPic_SilverHns, gTrainerBackPicPalette_SilverHns, sBackAnims_Hoenn),
 
 };
