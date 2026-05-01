@@ -10650,23 +10650,34 @@ bool32 IsAnyTargetTurnDamaged(enum BattlerId battlerAtk, enum SubCheck subCheck)
 
 bool32 IsAnyTargetAffected(void)
 {
-    bool32 isSpreadMove = IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove));
+    enum MoveTarget moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
+    bool32 isSpreadMove = IsSpreadMove(moveTarget);
+
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
-        if (isSpreadMove)
+        if (moveTarget != TARGET_ALL_BATTLERS)
         {
-            if (battler == gBattlerAttacker)
-                continue;
-        }
-        else
-        {
-            if (battler != gBattlerTarget)
-                continue;
+            if (isSpreadMove)
+            {
+                if (battler == gBattlerAttacker)
+                    continue;
+            }
+            else if (moveTarget == TARGET_USER_AND_ALLY)
+            {
+                if (!IsBattlerAlly(gBattlerAttacker, battler))
+                    continue;
+            }
+            else
+            {
+                if (battler != gBattlerTarget)
+                    continue;
+            }
         }
 
         if (!IsBattlerUnaffectedByMove(battler))
             return TRUE;
     }
+
     return FALSE;
 }
 
