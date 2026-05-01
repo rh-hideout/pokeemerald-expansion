@@ -29,10 +29,55 @@
 #include "constants/abilities.h"
 #include "constants/items.h"
 #include "constants/battle_frontier.h"
+#include "constants/hold_effects.h"
+#include "constants/pokedex.h"
+#include "constants/pokeball.h"
+
+enum RandomMonDexMode
+{
+    RANDOM_MON_DEX_NATIONAL,
+    RANDOM_MON_DEX_HOENN,
+};
+
+struct RandomMonGeneratorOptions
+{
+    enum RandomMonDexMode dexMode;
+    const enum Species *speciesPool;
+    u16 speciesPoolCount;
+    const enum Species *bannedSpecies;
+    u16 bannedSpeciesCount;
+    const enum Item *heldItemPool;
+    u16 heldItemPoolCount;
+    const enum HoldEffect *bannedHoldEffects;
+    u16 bannedHoldEffectsCount;
+    bool8 allowLegendary;
+    bool8 allowMythical;
+    bool8 allowSubLegendary;
+    bool8 allowUltraBeast;
+    bool8 allowParadox;
+    bool8 randomizeForms;
+    u8 randomTeachableMoveCount;
+    bool8 randomizeAbility;
+    bool8 randomizeHeldItem;
+    bool8 randomizeBall;
+    enum ShinyMode shinyMode;
+    u16 bstStandard;
+    u16 bstLeniency;
+};
+
+#include "data/random_mon_generator.h"
 
 static void CB2_ReturnFromChooseHalfParty(void);
 static void CB2_ReturnFromChooseBattleFrontierParty(void);
 static void HealPlayerBoxes(void);
+static bool32 TryGetRandomMonOptions(enum Species species, const struct RandomMonGeneratorOptions **options);
+static enum Species GetRandomMonSpecies(const struct RandomMonGeneratorOptions *options);
+static enum Species GetRandomMonFormSpecies(enum Species species);
+static enum Item GetRandomMonHeldItem(const struct RandomMonGeneratorOptions *options);
+static enum PokeBall GetRandomMonBall(void);
+static u8 GetRandomMonAbilityNum(enum Species species);
+static void FillRandomMonIVs(enum Species species, u16 *ivs);
+static void GetRandomMonMoves(enum Species species, u8 level, u8 randomTeachableMoveCount, enum Move *moves);
 
 void HealPlayerParty(void)
 {
@@ -354,6 +399,370 @@ void SetTeraType(struct ScriptContext *ctx)
         SetMonData(&gParties[B_TRAINER_0][partyIndex], MON_DATA_TERA_TYPE, &type);
 }
 
+static bool32 TryGetRandomMonOptions(enum Species species, const struct RandomMonGeneratorOptions **options)
+{
+    u32 optionId;
+
+    if (species < SPECIES_RANDOM_MON_OPTION_0)
+        return FALSE;
+
+    optionId = species - SPECIES_RANDOM_MON_OPTION_0;
+    if (optionId >= ARRAY_COUNT(sRandomMonGeneratorOptions))
+        return FALSE;
+
+    *options = &sRandomMonGeneratorOptions[optionId];
+    return TRUE;
+}
+
+static u16 GetSpeciesBaseStatTotal(enum Species species)
+{
+    const struct SpeciesInfo *speciesInfo = &gSpeciesInfo[species];
+
+    return speciesInfo->baseHP
+         + speciesInfo->baseAttack
+         + speciesInfo->baseDefense
+         + speciesInfo->baseSpeed
+         + speciesInfo->baseSpAttack
+         + speciesInfo->baseSpDefense;
+}
+
+static bool32 IsSpeciesBannedByRandomMonOptions(enum Species species, const struct RandomMonGeneratorOptions *options)
+{
+    u32 i;
+    enum Species baseSpecies = GET_BASE_SPECIES_ID(species);
+    const struct SpeciesInfo *speciesInfo = &gSpeciesInfo[baseSpecies];
+
+    for (i = 0; i < options->bannedSpeciesCount; i++)
+    {
+        if (baseSpecies == GET_BASE_SPECIES_ID(options->bannedSpecies[i]))
+            return TRUE;
+    }
+
+    if (!options->allowLegendary && speciesInfo->isRestrictedLegendary)
+        return TRUE;
+    if (!options->allowMythical && speciesInfo->isMythical)
+        return TRUE;
+    if (!options->allowSubLegendary && speciesInfo->isSubLegendary)
+        return TRUE;
+    if (!options->allowUltraBeast && speciesInfo->isUltraBeast)
+        return TRUE;
+    if (!options->allowParadox && speciesInfo->isParadox)
+        return TRUE;
+
+    if (options->bstStandard != 0 || options->bstLeniency != 0)
+    {
+        u16 bst = GetSpeciesBaseStatTotal(baseSpecies);
+        u16 minBst = (options->bstStandard > options->bstLeniency) ? options->bstStandard - options->bstLeniency : 0;
+        u16 maxBst = options->bstStandard + options->bstLeniency;
+
+        if (bst < minBst || bst > maxBst)
+            return TRUE;
+    }
+
+    return FALSE;
+}
+
+static enum Species GetRandomMonBaseSpeciesFromDex(const struct RandomMonGeneratorOptions *options)
+{
+    if (options->dexMode == RANDOM_MON_DEX_HOENN)
+    {
+        enum HoennDexOrder hoennNum = RandomUniform(RNG_RANDOM_MON_GEN, 1, HOENN_DEX_COUNT - 1);
+        return NationalPokedexNumToSpecies(HoennToNationalOrder(hoennNum));
+    }
+    else
+    {
+        enum NationalDexOrder nationalNum = RandomUniform(RNG_RANDOM_MON_GEN, 1, NATIONAL_DEX_COUNT);
+        return NationalPokedexNumToSpecies(nationalNum);
+    }
+}
+
+static enum Species GetRandomMonCandidateSpecies(const struct RandomMonGeneratorOptions *options)
+{
+    if (options->speciesPool != NULL && options->speciesPoolCount != 0)
+        return GET_BASE_SPECIES_ID(options->speciesPool[RandomUniform(RNG_RANDOM_MON_GEN, 0, options->speciesPoolCount - 1)]);
+
+    return GetRandomMonBaseSpeciesFromDex(options);
+}
+
+static enum Species GetFirstValidRandomMonSpecies(const struct RandomMonGeneratorOptions *options)
+{
+    u32 i;
+
+    if (options->speciesPool != NULL && options->speciesPoolCount != 0)
+    {
+        for (i = 0; i < options->speciesPoolCount; i++)
+        {
+            enum Species species = GET_BASE_SPECIES_ID(options->speciesPool[i]);
+            if (species != SPECIES_NONE && species < NUM_SPECIES && !IsSpeciesBannedByRandomMonOptions(species, options))
+                return species;
+        }
+    }
+    else
+    {
+        u32 maxDex = (options->dexMode == RANDOM_MON_DEX_HOENN) ? HOENN_DEX_COUNT - 1 : NATIONAL_DEX_COUNT;
+        for (i = 1; i <= maxDex; i++)
+        {
+            enum Species species = (options->dexMode == RANDOM_MON_DEX_HOENN)
+                ? NationalPokedexNumToSpecies(HoennToNationalOrder(i))
+                : NationalPokedexNumToSpecies(i);
+
+            if (species != SPECIES_NONE && species < NUM_SPECIES && !IsSpeciesBannedByRandomMonOptions(species, options))
+                return species;
+        }
+    }
+
+    return SPECIES_BULBASAUR;
+}
+
+static bool32 AreBaseSpeciesFormsExcluded(enum Species species)
+{
+        
+    switch (GET_BASE_SPECIES_ID(species))
+    {
+    case SPECIES_ARCEUS:
+    case SPECIES_GENESECT:
+    case SPECIES_SILVALLY:
+    case SPECIES_OGERPON:
+        return TRUE;
+    default:
+        return FALSE;
+    }
+}
+
+static bool32 IsRandomMonFormAllowed(enum Species species)
+{
+    const struct SpeciesInfo *speciesInfo;
+
+    if (species == SPECIES_NONE || species >= NUM_SPECIES)
+        return FALSE;
+
+    speciesInfo = &gSpeciesInfo[species];
+    
+    return !speciesInfo->isMegaEvolution
+        && !speciesInfo->isGigantamax
+        && !speciesInfo->isTotem
+        && !speciesInfo->isUltraBurst
+        && !speciesInfo->cannotBeTraded
+        && !speciesInfo->isTeraForm
+        && !speciesInfo->isPrimalReversion;
+}
+
+static enum Species GetRandomMonFormSpecies(enum Species species)
+{
+    u32 i;
+    u32 eligibleFormCount = 0;
+    enum Species eligibleForms[NUM_SPECIES];
+    const u16 *formTable;
+
+    formTable = GetSpeciesFormTable(species);
+
+    if (formTable == NULL)
+        return species;
+
+    if (AreBaseSpeciesFormsExcluded(species))
+        return species;
+
+    for (i = 0; formTable[i] != FORM_SPECIES_END; i++)
+    {
+        if (IsRandomMonFormAllowed(formTable[i]))
+        {
+            eligibleForms[eligibleFormCount] = formTable[i];
+            eligibleFormCount++;
+        }
+    }
+
+    if (eligibleFormCount == 0)
+        return species;
+
+    return eligibleForms[RandomUniform(RNG_RANDOM_MON_GEN, 0, eligibleFormCount - 1)];
+}
+
+static enum Species GetRandomMonSpecies(const struct RandomMonGeneratorOptions *options)
+{
+    u32 i;
+
+    for (i = 0; i < 512; i++)
+    {
+        enum Species species = GetRandomMonCandidateSpecies(options);
+        if (species != SPECIES_NONE && species < NUM_SPECIES && !IsSpeciesBannedByRandomMonOptions(species, options))
+        {
+            if (options->randomizeForms)
+                species = GetRandomMonFormSpecies(species);
+            return species;
+        }
+    }
+
+    {
+        enum Species species = GetFirstValidRandomMonSpecies(options);
+        if (options->randomizeForms)
+            species = GetRandomMonFormSpecies(species);
+        return species;
+    }
+}
+
+static bool32 IsRandomItemBannedHoldEffect(const struct RandomMonGeneratorOptions *options, enum HoldEffect holdEffect)
+{
+    u32 i;
+
+    for (i = 0; i < options->bannedHoldEffectsCount; i++)
+    {
+        if (options->bannedHoldEffects[i] == holdEffect)
+            return TRUE;
+    }
+
+    return FALSE;
+}
+
+static bool32 IsRandomMonHeldItemAllowed(const struct RandomMonGeneratorOptions *options, enum Item item)
+{
+    return item != ITEM_NONE
+        && item < ITEMS_COUNT
+        && !IsRandomItemBannedHoldEffect(options, GetItemHoldEffect(item));
+}
+
+static enum Item GetRandomMonHeldItemCandidate(const struct RandomMonGeneratorOptions *options)
+{
+    if (options->heldItemPool != NULL && options->heldItemPoolCount != 0)
+        return options->heldItemPool[RandomUniform(RNG_RANDOM_MON_GEN, 0, options->heldItemPoolCount - 1)];
+
+    return RandomUniform(RNG_RANDOM_MON_GEN, 1, ITEMS_COUNT - 1);
+}
+
+static enum Item GetRandomMonHeldItem(const struct RandomMonGeneratorOptions *options)
+{
+    u32 i;
+
+    for (i = 0; i < 512; i++)
+    {
+        enum Item item = GetRandomMonHeldItemCandidate(options);
+        if (IsRandomMonHeldItemAllowed(options, item))
+            return item;
+    }
+
+    if (options->heldItemPool != NULL && options->heldItemPoolCount != 0) //Fall back to first possible option
+    {
+        for (i = 0; i < options->heldItemPoolCount; i++)
+        {
+            if (IsRandomMonHeldItemAllowed(options, options->heldItemPool[i]))
+                return options->heldItemPool[i];
+        }
+    }
+    else
+    {
+        for (i = 1; i < ITEMS_COUNT; i++)
+        {
+            if (IsRandomMonHeldItemAllowed(options, i))
+                return i;
+        }
+    }
+
+    return ITEM_NONE;
+}
+
+static enum PokeBall GetRandomMonBall(void)
+{
+    return RandomUniform(RNG_RANDOM_MON_GEN, BALL_STRANGE, POKEBALL_COUNT - 1);
+}
+
+static u8 GetRandomMonAbilityNum(enum Species species)
+{
+    u32 i;
+    u8 abilityNum;
+
+    for (i = 0; i < 16; i++) // Technically we don't need 16 tries, but there may be some hacks that expand these slots so...
+    {
+        abilityNum = RandomUniform(RNG_RANDOM_MON_GEN, 0, NUM_ABILITY_SLOTS - 1);
+        if (GetAbilityBySpecies(species, abilityNum) != ABILITY_NONE)
+            return abilityNum;
+    }
+
+    for (abilityNum = 0; abilityNum < NUM_ABILITY_SLOTS; abilityNum++)
+    {
+        if (GetAbilityBySpecies(species, abilityNum) != ABILITY_NONE)
+            return abilityNum;
+    }
+
+    return 0;
+}
+
+static void FillRandomMonIVs(enum Species species, u16 *ivs)
+{
+    u32 i;
+    u32 nonFixedIvCount = 0;
+    enum Stat availableIVs[NUM_STATS];
+    enum Stat selectedIvs[NUM_STATS];
+
+    for (i = 0; i < NUM_STATS; i++)
+    {
+        availableIVs[nonFixedIvCount] = i;
+        ivs[i] = RandomUniform(RNG_RANDOM_MON_GEN, 0, MAX_PER_STAT_IVS);
+        nonFixedIvCount++;
+    }
+
+    for (i = 0; i < nonFixedIvCount && i < gSpeciesInfo[species].perfectIVCount; i++)
+    {
+        u8 index = RandomUniform(RNG_RANDOM_MON_GEN, 0, nonFixedIvCount - i - 1);
+        selectedIvs[i] = availableIVs[index];
+        RemoveIVIndexFromList(availableIVs, index);
+    }
+
+    for (i = 0; i < nonFixedIvCount && i < gSpeciesInfo[species].perfectIVCount; i++)
+        ivs[selectedIvs[i]] = MAX_PER_STAT_IVS;
+}
+
+static bool32 IsMoveInRandomMonMoves(enum Move move, enum Move *moves, u32 count)
+{
+    u32 i;
+
+    for (i = 0; i < count; i++)
+    {
+        if (moves[i] == move)
+            return TRUE;
+    }
+
+    return FALSE;
+}
+
+static void AddRandomMonTeachableMove(enum Move move, enum Move *moves, u32 *moveCount)
+{
+    if (move != MOVE_NONE && move != MOVE_UNAVAILABLE && !IsMoveInRandomMonMoves(move, moves, *moveCount))
+    {
+        moves[*moveCount] = move;
+        (*moveCount)++;
+    }
+}
+
+static void GetRandomMonMoves(enum Species species, u8 level, u8 randomTeachableMoveCount, enum Move *moves)
+{
+    u32 i;
+    u32 teachableCount = 0;
+    u32 moveCount = 0;
+    const u16 *teachableLearnset = GetSpeciesTeachableLearnset(species);
+
+    for (i = 0; i < MAX_MON_MOVES; i++)
+        moves[i] = MOVE_DEFAULT;
+
+    if (randomTeachableMoveCount > MAX_MON_MOVES)
+        randomTeachableMoveCount = MAX_MON_MOVES;
+
+    while (teachableLearnset[teachableCount] != MOVE_UNAVAILABLE)
+        teachableCount++;
+
+    for (i = 0; i < 64 && moveCount < randomTeachableMoveCount && teachableCount != 0; i++)
+    {
+        enum Move move = teachableLearnset[RandomUniform(RNG_RANDOM_MON_GEN, 0, teachableCount - 1)];
+        AddRandomMonTeachableMove(move, moves, &moveCount);
+    }
+
+    for (i = 0; i < teachableCount && moveCount < randomTeachableMoveCount; i++)
+        AddRandomMonTeachableMove(teachableLearnset[i], moves, &moveCount);
+
+    for (i = moveCount; i < MAX_MON_MOVES; i++)
+        moves[i] = MOVE_DEFAULT;
+
+    (void)level;
+}
+
 /* Creates a Pokemon via script
  * if side/slot are assigned, it will create the mon at the assigned party location
  * if slot == PARTY_SIZE, it will give the mon to first available party or storage slot
@@ -477,16 +886,39 @@ u32 ScriptGiveMon(enum Species species, u8 level, enum Item item)
 {
     struct Pokemon mon;
     u8 heldItem[2];
+    const struct RandomMonGeneratorOptions *randomMonOptions;
 
-    CreateRandomMon(&mon, species, level);
-    if (item)
+    if (TryGetRandomMonOptions(species, &randomMonOptions))
     {
-        heldItem[0] = item;
-        heldItem[1] = item >> 8;
-        SetMonData(&mon, MON_DATA_HELD_ITEM, heldItem);
-    }
+        u16 evs[NUM_STATS] = {0};
+        u16 ivs[NUM_STATS];
+        enum Move moves[MAX_MON_MOVES];
+        enum PokeBall ball = randomMonOptions->randomizeBall ? GetRandomMonBall() : BALL_POKE;
+        enum ShinyMode shinyMode = randomMonOptions->shinyMode;
+        u8 abilityNum;
 
-    return GiveScriptedMonToPlayer(&mon, PARTY_SIZE);
+        species = GetRandomMonSpecies(randomMonOptions);
+        abilityNum = randomMonOptions->randomizeAbility ? GetRandomMonAbilityNum(species) : NUM_ABILITY_PERSONALITY;
+
+        FillRandomMonIVs(species, ivs);
+        GetRandomMonMoves(species, level, randomMonOptions->randomTeachableMoveCount, moves);
+
+        item = randomMonOptions->randomizeHeldItem ? GetRandomMonHeldItem(randomMonOptions) : ITEM_NONE;
+
+        return ScriptGiveMonParameterized(B_SIDE_PLAYER, PARTY_SIZE, species, level, item, ball, NATURE_RANDOM, abilityNum, MON_GENDER_RANDOM, evs, ivs, moves, shinyMode, FALSE, NUMBER_OF_MON_TYPES, 0);
+    }
+    else
+    {
+        CreateRandomMon(&mon, species, level);
+        if (item)
+        {
+            heldItem[0] = item;
+            heldItem[1] = item >> 8;
+            SetMonData(&mon, MON_DATA_HELD_ITEM, heldItem);
+        }
+
+        return GiveScriptedMonToPlayer(&mon, PARTY_SIZE);
+    }
 }
 
 #define PARSE_FLAG(n, default_) (flags & (1 << (n))) ? VarGet(ScriptReadHalfword(ctx)) : (default_)
@@ -515,6 +947,8 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
     u8 slot            = ScriptReadByte(ctx);
     enum Species species = VarGet(ScriptReadHalfword(ctx));
     u8 level           = VarGet(ScriptReadHalfword(ctx));
+    const struct RandomMonGeneratorOptions *randomMonOptions = NULL;
+    bool32 useRandomMonOptions = TryGetRandomMonOptions(species, &randomMonOptions);
 
     u32 flags          = ScriptReadWord(ctx);
     enum Item item     = PARSE_FLAG(0, ITEM_NONE);
@@ -552,6 +986,9 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
             nonFixedIvCount++;
         }
     }
+
+    if (useRandomMonOptions)
+        species = GetRandomMonSpecies(randomMonOptions);
 
     // Perfect IV calculation
     if (gSpeciesInfo[species].perfectIVCount != 0)
@@ -592,6 +1029,18 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
     ADD_MOVE_IF_DEFAULT(i, move2)
     ADD_MOVE_IF_DEFAULT(i, move3)
     ADD_MOVE_IF_DEFAULT(i, move4)
+
+    if (useRandomMonOptions)
+    {
+        if (randomMonOptions->randomizeHeldItem)
+            item = GetRandomMonHeldItem(randomMonOptions);
+        if (randomMonOptions->randomizeBall)
+            ball = GetRandomMonBall();
+        if (randomMonOptions->randomizeAbility)
+            abilityNum = GetRandomMonAbilityNum(species);
+        shinyMode = randomMonOptions->shinyMode;
+        GetRandomMonMoves(species, level, randomMonOptions->randomTeachableMoveCount, moves);
+    }
 
     enum GeneratedMonOrigin origin;
     if (side == 0)
