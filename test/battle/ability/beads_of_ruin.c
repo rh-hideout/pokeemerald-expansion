@@ -286,3 +286,40 @@ DOUBLE_BATTLE_TEST("Beads of Ruin will not be deactivated with Ability Shield")
         EXPECT_EQ(damage[1], damage[0]);
     }
 }
+
+SINGLE_BATTLE_TEST("Beads of Ruin does not apply any damage reduction on an opposing Beads of Ruin user even if it is deactivated")
+{
+    s16 damage[2];
+
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_WATER_GUN) == DAMAGE_CATEGORY_SPECIAL);
+        ASSUME(GetMoveEffect(MOVE_DRAGON_TAIL) == EFFECT_HIT_SWITCH_TARGET);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_CHI_YU) { Ability(ABILITY_BEADS_OF_RUIN); Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_EXCADRILL) { Ability(ABILITY_MOLD_BREAKER); }
+        OPPONENT(SPECIES_CHI_YU) { Ability(ABILITY_BEADS_OF_RUIN); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_DRAGON_TAIL); }
+        TURN { SWITCH(opponent, 1); MOVE(player, MOVE_CELEBRATE); }
+        TURN { MOVE(opponent, MOVE_WATER_GUN); }
+        TURN { SWITCH(player, 0); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_WATER_GUN); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, opponent);
+        NOT ABILITY_POPUP(player, ABILITY_BEADS_OF_RUIN); // Move use on deactivated Beads of Ruin
+
+        ABILITY_POPUP(opponent, ABILITY_BEADS_OF_RUIN);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, opponent);
+        HP_BAR(player, captureDamage: &damage[0]);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+
+        ABILITY_POPUP(player, ABILITY_BEADS_OF_RUIN); // Move use on activated Beads of Ruin
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, opponent);
+        HP_BAR(player, captureDamage: &damage[1]);
+    } THEN {
+        EXPECT_EQ(damage[1], damage[0]);
+    }
+}
