@@ -1357,7 +1357,7 @@ static void DebugTask_HandleMenuInput_General(u8 taskId)
     }
 }
 
-static void DebugAction_OpenSubMenuWithListId(u8 taskId, const struct DebugMenuOption *items, enum DebugMenuTypes menuType)
+static void DebugAction_OpenSubMenuWithType(u8 taskId, const struct DebugMenuOption *items, enum DebugMenuTypes menuType)
 {
     sDebugMenuListData->menuType = menuType;
     Debug_DestroyMenu(taskId);
@@ -1367,17 +1367,17 @@ static void DebugAction_OpenSubMenuWithListId(u8 taskId, const struct DebugMenuO
 static void DebugAction_OpenSubMenuTrainers(u8 taskId, const struct DebugMenuOption *items)
 {
     sDebugMenuListData->data[0] = TRAINER_NONE;
-    DebugAction_OpenSubMenuWithListId(taskId, items, DEBUG_TRAINERS_MENU);
+    DebugAction_OpenSubMenuWithType(taskId, items, DEBUG_TRAINERS_MENU);
 }
 
 static void DebugAction_OpenSubMenuFlagsVars(u8 taskId, const struct DebugMenuOption *items)
 {
-    DebugAction_OpenSubMenuWithListId(taskId, items, DEBUG_FLAGS_MENU);
+    DebugAction_OpenSubMenuWithType(taskId, items, DEBUG_FLAGS_MENU);
 }
 
 static void DebugAction_OpenSubMenu(u8 taskId, const struct DebugMenuOption *items)
 {
-    DebugAction_OpenSubMenuWithListId(taskId, items, DEBUG_BASIC_MENU);
+    DebugAction_OpenSubMenuWithType(taskId, items, DEBUG_BASIC_MENU);
 }
 
 static void DebugAction_OpenSubMenuFakeRTC(u8 taskId, const struct DebugMenuOption *items)
@@ -1385,7 +1385,7 @@ static void DebugAction_OpenSubMenuFakeRTC(u8 taskId, const struct DebugMenuOpti
     if (!OW_USE_FAKE_RTC)
         Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_FakeRTCNotEnabled);
     else
-        DebugAction_OpenSubMenuWithListId(taskId, items, DEBUG_BASIC_MENU);
+        DebugAction_OpenSubMenuWithType(taskId, items, DEBUG_BASIC_MENU);
 }
 
 static void DebugAction_ExecuteScript(u8 taskId, void *script)
@@ -1403,7 +1403,7 @@ static void DebugAction_ToggleFlag(u8 taskId, void *flagToggleFunc)
 static void DebugAction_OpenSubMenuCreateFollowerNPC(u8 taskId, const struct DebugMenuOption *items)
 {
     if (FNPC_ENABLE_NPC_FOLLOWERS)
-        DebugAction_OpenSubMenuWithListId(taskId, items, DEBUG_BASIC_MENU);
+        DebugAction_OpenSubMenuWithType(taskId, items, DEBUG_BASIC_MENU);
     else
         Debug_DestroyMenu_Full_Script(taskId, Debug_Follower_NPC_Not_Enabled);
 }
