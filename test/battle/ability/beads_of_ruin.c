@@ -231,9 +231,10 @@ DOUBLE_BATTLE_TEST("Beads of Ruin will not reactivate after Sunsteel Strike fain
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_WATER_GUN, target: opponentRight);
-               MOVE(playerRight, MOVE_SUNSTEEL_STRIKE, target: opponentLeft);
-               SEND_OUT(opponentLeft, 2);
+        TURN {
+           MOVE(playerLeft, MOVE_WATER_GUN, target: opponentRight);
+           MOVE(playerRight, MOVE_SUNSTEEL_STRIKE, target: opponentLeft);
+           SEND_OUT(opponentLeft, 2);
         }
         TURN { MOVE(playerLeft, MOVE_WATER_GUN, target: opponentRight); }
     } SCENE {
