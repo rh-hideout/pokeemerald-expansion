@@ -7775,23 +7775,19 @@ BattleScript_PastelVeilEnd:
 	return
 
 BattleScript_NeutralizingGasExits::
-	saveattacker
 	savetarget
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_NEUTRALIZINGGASOVER
 	waitmessage B_WAIT_TIME_LONG
-	setbyte gBattlerAttacker, 0
+	setbyte gBattlerTarget, 0
 	sortbattlers
 BattleScript_NeutralizingGasExitsLoop:
-	copyarraywithindex gBattlerTarget, gBattlersBySpeed, gBattlerAttacker, 1
-	jumpifabilitycantbereactivated BS_TARGET, BattleScript_NeutralizingGasExitsLoopIncrement
-	saveattacker
-	switchinabilities BS_TARGET
-	restoreattacker
+	copyarraywithindex gEffectBattler, gBattlersBySpeed, gBattlerTarget, 1
+	jumpifabilitycantbereactivated BS_EFFECT_BATTLER, BattleScript_NeutralizingGasExitsLoopIncrement
+	switchinabilities BS_EFFECT_BATTLER
 BattleScript_NeutralizingGasExitsLoopIncrement:
-	addbyte gBattlerAttacker, 1
-	jumpifbytenotequal gBattlerAttacker, gBattlersCount, BattleScript_NeutralizingGasExitsLoop
-	restoreattacker
+	addbyte gBattlerTarget, 1
+	jumpifbytenotequal gBattlerTarget, gBattlersCount, BattleScript_NeutralizingGasExitsLoop
 	restoretarget
 	return
 
