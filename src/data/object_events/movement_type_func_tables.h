@@ -194,6 +194,16 @@ u8 (*const gMovementTypeFuncs_RotateClockwise[])(struct ObjectEvent *, struct Sp
 
 const enum Direction gClockwiseDirections[] = {DIR_SOUTH, DIR_WEST, DIR_EAST, DIR_NORTH, DIR_SOUTH};
 
+//HnS tower beam
+u8 (*const gMovementTypeFuncs_TowerBeam[])(struct ObjectEvent *, struct Sprite *) = {
+    MovementType_TowerBeam_Step0,
+    MovementType_TowerBeam_Step1,
+    MovementType_TowerBeam_Step2,
+    MovementType_TowerBeam_Step3,
+    MovementType_TowerBeam_Step4,
+};
+
+
 u8 (*const gMovementTypeFuncs_WalkBackAndForth[])(struct ObjectEvent *, struct Sprite *) = {
     MovementType_WalkBackAndForth_Step0,
     MovementType_WalkBackAndForth_Step1,

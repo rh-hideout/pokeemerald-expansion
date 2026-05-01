@@ -413,6 +413,153 @@
 #define OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG         386
 #define OBJ_EVENT_GFX_BREAKABLE_ROCK_FRLG        387
 
+// HnS objects
+#define OBJ_EVENT_GFX_WALKING_HNS                388
+#define OBJ_EVENT_GFX_RUNNING_HNS                389
+#define OBJ_EVENT_GFX_MACH_BIKE_HNS              390
+#define OBJ_EVENT_GFX_ACRO_BIKE_HNS              391
+#define OBJ_EVENT_GFX_SURFING_HNS                392
+#define OBJ_EVENT_GFX_FIELD_MOVE_HNS             393
+#define OBJ_EVENT_GFX_FISHING_HNS                394
+#define OBJ_EVENT_GFX_WATERING_HNS               395
+#define OBJ_EVENT_GFX_UNDERWATER_HNS             396
+#define OBJ_EVENT_GFX_DECORATING_HNS             397
+#define OBJ_EVENT_GFX_ATTENDANT_F_HNS            398
+#define OBJ_EVENT_GFX_ATTENDANT_M_HNS            399
+#define OBJ_EVENT_GFX_BALDING_MAN_HNS            400
+#define OBJ_EVENT_GFX_BATTLE_GIRL_HNS            401
+#define OBJ_EVENT_GFX_BATTLE_TOWER_TRAINER_DUDE_HNS 402
+#define OBJ_EVENT_GFX_BEAUTY_HNS                 403
+#define OBJ_EVENT_GFX_BIKER_HNS                  404
+#define OBJ_EVENT_GFX_BLACK_BELT_HNS             405
+#define OBJ_EVENT_GFX_BOY_2_HNS                  406
+#define OBJ_EVENT_GFX_BUG_CATCHER_HNS            407
+#define OBJ_EVENT_GFX_BURGLAR_HNS                408
+#define OBJ_EVENT_GFX_CAMPER_HNS                 409
+#define OBJ_EVENT_GFX_CAPTAIN_HNS                410
+#define OBJ_EVENT_GFX_CHANNELER_HNS              411
+#define OBJ_EVENT_GFX_COOK_HNS                   412
+#define OBJ_EVENT_GFX_COOLTRAINER_F_HNS          413
+#define OBJ_EVENT_GFX_COOLTRAINER_M_HNS          414
+#define OBJ_EVENT_GFX_ENGINEER_HNS               415
+#define OBJ_EVENT_GFX_FAT_MAN_HNS                416
+#define OBJ_EVENT_GFX_FIREBREATHER_HNS           417
+#define OBJ_EVENT_GFX_FISHERMAN_HNS              418
+#define OBJ_EVENT_GFX_GAMEBOY_KID_HNS            419
+#define OBJ_EVENT_GFX_GENTLEMAN_HNS              420
+#define OBJ_EVENT_GFX_GIRL_1_HNS                 421
+#define OBJ_EVENT_GFX_GYM_GUY_HNS               422
+#define OBJ_EVENT_GFX_HIKER_HNS                  423
+#define OBJ_EVENT_GFX_JUGGLER_HNS                424
+#define OBJ_EVENT_GFX_LASS_HNS                   425
+#define OBJ_EVENT_GFX_LINK_RECEPTIONIST_HNS      426
+#define OBJ_EVENT_GFX_LITTLE_BOY_HNS             427
+#define OBJ_EVENT_GFX_LITTLE_GIRL_HNS            428
+#define OBJ_EVENT_GFX_MAN_HNS                    429
+#define OBJ_EVENT_GFX_MART_EMPLOYEE_HNS          430
+#define OBJ_EVENT_GFX_MOM_HNS                    431
+#define OBJ_EVENT_GFX_MYSTERY_EVENT_DELIVERYMAN_HNS 432
+#define OBJ_EVENT_GFX_NURSE_HNS                  433
+#define OBJ_EVENT_GFX_OFFICER_HNS                434
+#define OBJ_EVENT_GFX_OLD_MAN_HNS                435
+#define OBJ_EVENT_GFX_OLD_MAN_2_HNS              436
+#define OBJ_EVENT_GFX_OLD_WOMAN_HNS              437
+#define OBJ_EVENT_GFX_PICNICKER_HNS              438
+#define OBJ_EVENT_GFX_PSYCHIC_M_HNS              439
+#define OBJ_EVENT_GFX_ROCKER_HNS                 440
+#define OBJ_EVENT_GFX_SAGE_HNS                   441
+#define OBJ_EVENT_GFX_SAGE_ELDER_HNS             442
+#define OBJ_EVENT_GFX_SAILOR_HNS                 443
+#define OBJ_EVENT_GFX_SCIENTIST_F_HNS            444
+#define OBJ_EVENT_GFX_SCIENTIST_M_HNS            445
+#define OBJ_EVENT_GFX_SCOTT_HNS                  446
+#define OBJ_EVENT_GFX_STEVEN_HNS                 447
+#define OBJ_EVENT_GFX_SUPER_NERD_HNS             448
+#define OBJ_EVENT_GFX_SWIMMER_F_HNS              449
+#define OBJ_EVENT_GFX_SWIMMER_F_LAND_HNS         450
+#define OBJ_EVENT_GFX_SWIMMER_M_HNS              451
+#define OBJ_EVENT_GFX_TUBER_F_HNS                452
+#define OBJ_EVENT_GFX_TUBER_M_HNS                453
+#define OBJ_EVENT_GFX_TUBER_M_SWIMMING_HNS       454
+#define OBJ_EVENT_GFX_TWIN_HNS                   455
+#define OBJ_EVENT_GFX_WOMAN_1_HNS                456
+#define OBJ_EVENT_GFX_WOMAN_2_HNS                457
+#define OBJ_EVENT_GFX_WOMAN_3_HNS                458
+#define OBJ_EVENT_GFX_WORKER_F_HNS               459
+#define OBJ_EVENT_GFX_WORKER_M_HNS               460
+#define OBJ_EVENT_GFX_YOUNGSTER_HNS              461
+// HnS gym leaders
+#define OBJ_EVENT_GFX_BLAINE_HNS                 462
+#define OBJ_EVENT_GFX_BLUE_HNS                   463
+#define OBJ_EVENT_GFX_BROCK_HNS                  464
+#define OBJ_EVENT_GFX_BUGSY_HNS                  465
+#define OBJ_EVENT_GFX_CHUCK_HNS                  466
+#define OBJ_EVENT_GFX_CLAIR_HNS                  467
+#define OBJ_EVENT_GFX_ERIKA_HNS                  468
+#define OBJ_EVENT_GFX_FALKNER_HNS                469
+#define OBJ_EVENT_GFX_JANINE_HNS                 470
+#define OBJ_EVENT_GFX_JASMINE_HNS                471
+#define OBJ_EVENT_GFX_MISTY_HNS                  472
+#define OBJ_EVENT_GFX_MORTY_HNS                  473
+#define OBJ_EVENT_GFX_PRYCE_HNS                  474
+#define OBJ_EVENT_GFX_SABRINA_HNS                475
+#define OBJ_EVENT_GFX_SURGE_HNS                  476
+#define OBJ_EVENT_GFX_WHITNEY_HNS                477
+// HnS elite four
+#define OBJ_EVENT_GFX_BRUNO_HNS                  478
+#define OBJ_EVENT_GFX_KAREN_HNS                  479
+#define OBJ_EVENT_GFX_KOGA_HNS                   480
+#define OBJ_EVENT_GFX_LANCE_HNS                  481
+#define OBJ_EVENT_GFX_WILL_HNS                   482
+// HnS rockets
+#define OBJ_EVENT_GFX_ARCHER_HNS                 483
+#define OBJ_EVENT_GFX_ARIANA_HNS                 484
+#define OBJ_EVENT_GFX_GIOVANNI_HNS               485
+#define OBJ_EVENT_GFX_PETREL_HNS                 486
+#define OBJ_EVENT_GFX_PROTON_HNS                 487
+#define OBJ_EVENT_GFX_ROCKET_F_HNS               488
+#define OBJ_EVENT_GFX_ROCKET_M_HNS               489
+// HnS frontier brains
+#define OBJ_EVENT_GFX_ANABEL_HNS                 490
+#define OBJ_EVENT_GFX_BRANDON_HNS                491
+#define OBJ_EVENT_GFX_GRETA_HNS                  492
+#define OBJ_EVENT_GFX_LUCY_HNS                   493
+#define OBJ_EVENT_GFX_NOLAND_HNS                 494
+#define OBJ_EVENT_GFX_SPENSER_HNS                495
+#define OBJ_EVENT_GFX_TUCKER_HNS                 496
+// HnS special characters
+#define OBJ_EVENT_GFX_BILL_HNS                   497
+#define OBJ_EVENT_GFX_ELM_HNS                    498
+#define OBJ_EVENT_GFX_EUSINE_HNS                 499
+#define OBJ_EVENT_GFX_KIMONO_HNS                 500
+#define OBJ_EVENT_GFX_KURT_HNS                   501
+#define OBJ_EVENT_GFX_KURT_LYING_DOWN_HNS        502
+#define OBJ_EVENT_GFX_PROF_OAK_HNS               503
+#define OBJ_EVENT_GFX_RED_NORMAL_HNS             504
+#define OBJ_EVENT_GFX_SILVER_HNS                 505
+// HnS misc objects
+#define OBJ_EVENT_GFX_BIRTH_ISLAND_STONE_HNS     506
+#define OBJ_EVENT_GFX_BREAKABLE_ROCK_HNS         507
+#define OBJ_EVENT_GFX_CUTTABLE_TREE_HNS          508
+#define OBJ_EVENT_GFX_FOSSIL_HNS                 509
+#define OBJ_EVENT_GFX_ITEM_BALL_HNS              510
+#define OBJ_EVENT_GFX_LEGENDARY_SHADOW_HNS       511
+#define OBJ_EVENT_GFX_NO_TAIL_SLOWPOKE_HNS       512
+#define OBJ_EVENT_GFX_PUSHABLE_BOULDER_HNS       513
+#define OBJ_EVENT_GFX_SHINY_GYARADOS_HNS         514
+#define OBJ_EVENT_GFX_SLEEPING_SNORLAX_HNS       515
+#define OBJ_EVENT_GFX_SS_AQUA_HNS                516
+#define OBJ_EVENT_GFX_SWIMMING_LAPRAS_HNS        517
+#define OBJ_EVENT_GFX_TOWER_BEAM_HNS             518
+#define OBJ_EVENT_GFX_TRAIN_EAST_HNS             519
+#define OBJ_EVENT_GFX_TRAIN_WEST_HNS             520
+#define OBJ_EVENT_GFX_WHIRLPOOL_HNS              521
+// HnS lights
+#define OBJ_EVENT_GFX_LIGHT_HNS                  522
+#define OBJ_EVENT_GFX_MART_LIGHT_HNS             523
+#define OBJ_EVENT_GFX_POKE_CENTER_LIGHT_HNS      524
+#define OBJ_EVENT_GFX_SMALL_LIGHT_HNS            525
+
 // FRLG equivalents
 
 // #define OBJ_EVENT_GFX_MEW OBJ_EVENT_GFX_NINJA_BOY
@@ -423,7 +570,9 @@
 // NOTE: The maximum amount of object events has been expanded from 255 to 65535.
 // Since dynamic graphics ids still require at least 16 free values, the actual limit
 // is 65519, but even considering follower Pokémon, this should be more than enough :)
-#define NUM_OBJ_EVENT_GFX                        388
+#define OBJ_EVENT_GFX_NURSE_CHANSEY_HNS          526
+
+#define NUM_OBJ_EVENT_GFX                        527
 
 
 // These are dynamic object gfx ids.
@@ -568,6 +717,48 @@
 #define OBJ_EVENT_PAL_TAG_METEORITE               0x1131
 #define OBJ_EVENT_PAL_TAG_SEAGALLOP               0x1132
 #define OBJ_EVENT_PAL_TAG_SS_ANNE                 0x1133
+
+// HnS palette tags
+#define OBJ_EVENT_PAL_TAG_NPC_1_HNS               0x1170
+#define OBJ_EVENT_PAL_TAG_NPC_2_HNS               0x1171
+#define OBJ_EVENT_PAL_TAG_NPC_3_HNS               0x1172
+#define OBJ_EVENT_PAL_TAG_NPC_4_HNS               0x1173
+#define OBJ_EVENT_PAL_TAG_BIRTH_ISLAND_STONE_HNS  0x1174
+#define OBJ_EVENT_PAL_TAG_BUGSY_HNS               0x1175
+#define OBJ_EVENT_PAL_TAG_CHUCK_HNS               0x1176
+#define OBJ_EVENT_PAL_TAG_CLAIR_HNS               0x1177
+#define OBJ_EVENT_PAL_TAG_ELM_HNS                 0x1178
+#define OBJ_EVENT_PAL_TAG_EUSINE_HNS              0x1179
+#define OBJ_EVENT_PAL_TAG_FALKNER_HNS             0x117A
+#define OBJ_EVENT_PAL_TAG_JANINE_HNS              0x117B
+#define OBJ_EVENT_PAL_TAG_JASMINE_HNS             0x117C
+#define OBJ_EVENT_PAL_TAG_KAREN_HNS               0x117D
+#define OBJ_EVENT_PAL_TAG_KIMONO_HNS              0x117E
+#define OBJ_EVENT_PAL_TAG_LANCE_HNS               0x117F
+#define OBJ_EVENT_PAL_TAG_LAPRAS_HNS              0x1180
+#define OBJ_EVENT_PAL_TAG_LEGENDARY_SHADOW_HNS    0x1181
+#define OBJ_EVENT_PAL_TAG_LIGHT_HNS               0x1182
+#define OBJ_EVENT_PAL_TAG_LIGHT_2_HNS             0x1183
+#define OBJ_EVENT_PAL_TAG_MORTY_HNS               0x1184
+#define OBJ_EVENT_PAL_TAG_PRYCE_HNS               0x1185
+#define OBJ_EVENT_PAL_TAG_RED_HNS                 0x1186
+#define OBJ_EVENT_PAL_TAG_ROCKET_1_HNS            0x1187
+#define OBJ_EVENT_PAL_TAG_ROCKET_2_HNS            0x1188
+#define OBJ_EVENT_PAL_TAG_ROCKET_3_HNS            0x1189
+#define OBJ_EVENT_PAL_TAG_ROCKET_4_HNS            0x118A
+#define OBJ_EVENT_PAL_TAG_SAGE_HNS                0x118B
+#define OBJ_EVENT_PAL_TAG_SCIENTIST_F_HNS         0x118C
+#define OBJ_EVENT_PAL_TAG_SHINY_GYARADOS_HNS      0x118D
+#define OBJ_EVENT_PAL_TAG_SILVER_HNS              0x118E
+#define OBJ_EVENT_PAL_TAG_SLOWPOKE_HNS            0x118F
+#define OBJ_EVENT_PAL_TAG_SNORLAX_HNS             0x1190
+#define OBJ_EVENT_PAL_TAG_SSAQUA_HNS              0x1191
+#define OBJ_EVENT_PAL_TAG_STEVEN_HNS              0x1192
+#define OBJ_EVENT_PAL_TAG_TOWER_BEAM_HNS          0x1193
+#define OBJ_EVENT_PAL_TAG_TRAIN_HNS               0x1194
+#define OBJ_EVENT_PAL_TAG_WHIRLPOOL_HNS           0x1195
+#define OBJ_EVENT_PAL_TAG_WHITNEY_HNS             0x1196
+#define OBJ_EVENT_PAL_TAG_WILL_HNS                0x1197
 
 #if OW_FOLLOWERS_POKEBALLS
 // Vanilla

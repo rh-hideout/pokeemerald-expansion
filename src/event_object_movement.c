@@ -345,6 +345,7 @@ static void (*const sMovementTypeCallbacks[])(struct Sprite *) =
     [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_UP] = MovementType_WalkSlowlyInPlace,
     [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_LEFT] = MovementType_WalkSlowlyInPlace,
     [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_RIGHT] = MovementType_WalkSlowlyInPlace,
+    [MOVEMENT_TYPE_TOWER_BEAM] = MovementType_TowerBeam,
     [MOVEMENT_TYPE_FOLLOW_PLAYER] = MovementType_FollowPlayer,
 };
 
@@ -539,6 +540,46 @@ static const struct SpritePalette sObjectEventSpritePalettes[] = {
     {gObjectEventPal_SSAnne,                OBJ_EVENT_PAL_TAG_SS_ANNE},
     {gObjectEventPal_Seagallop,             OBJ_EVENT_PAL_TAG_SEAGALLOP},
 #endif // IS_FRLG
+#if IS_HNS
+    {gObjectEventPal_BirthIslandStone_hns, OBJ_EVENT_PAL_TAG_BIRTH_ISLAND_STONE_HNS},
+    {gObjectEventPal_Bugsy_hns, OBJ_EVENT_PAL_TAG_BUGSY_HNS},
+    {gObjectEventPal_Train_hns, OBJ_EVENT_PAL_TAG_TRAIN_HNS},
+    {gObjectEventPal_Chuck_hns, OBJ_EVENT_PAL_TAG_CHUCK_HNS},
+    {gObjectEventPal_Clair_hns, OBJ_EVENT_PAL_TAG_CLAIR_HNS},
+    {gObjectEventPal_Elm_hns, OBJ_EVENT_PAL_TAG_ELM_HNS},
+    {gObjectEventPal_Eusine_hns, OBJ_EVENT_PAL_TAG_EUSINE_HNS},
+    {gObjectEventPal_Falkner_hns, OBJ_EVENT_PAL_TAG_FALKNER_HNS},
+    {gObjectEventPal_Janine_hns, OBJ_EVENT_PAL_TAG_JANINE_HNS},
+    {gObjectEventPal_Jasmine_hns, OBJ_EVENT_PAL_TAG_JASMINE_HNS},
+    {gObjectEventPal_Karen_hns, OBJ_EVENT_PAL_TAG_KAREN_HNS},
+    {gObjectEventPal_Kimono_hns, OBJ_EVENT_PAL_TAG_KIMONO_HNS},
+    {gObjectEventPal_Lance_hns, OBJ_EVENT_PAL_TAG_LANCE_HNS},
+    {gObjectEventPal_Lapras_hns, OBJ_EVENT_PAL_TAG_LAPRAS_HNS},
+    {gObjectEventPal_Morty_hns, OBJ_EVENT_PAL_TAG_MORTY_HNS},
+    {gObjectEventPal_Npc1_hns, OBJ_EVENT_PAL_TAG_NPC_1_HNS},
+    {gObjectEventPal_Npc2_hns, OBJ_EVENT_PAL_TAG_NPC_2_HNS},
+    {gObjectEventPal_Npc3_hns, OBJ_EVENT_PAL_TAG_NPC_3_HNS},
+    {gObjectEventPal_Npc4_hns, OBJ_EVENT_PAL_TAG_NPC_4_HNS},
+    {gObjectEventPal_Pryce_hns, OBJ_EVENT_PAL_TAG_PRYCE_HNS},
+    {gObjectEventPal_Red_hns, OBJ_EVENT_PAL_TAG_RED_HNS},
+    {gObjectEventPal_Rocket1_hns, OBJ_EVENT_PAL_TAG_ROCKET_1_HNS},
+    {gObjectEventPal_Rocket2_hns, OBJ_EVENT_PAL_TAG_ROCKET_2_HNS},
+    {gObjectEventPal_Rocket3_hns, OBJ_EVENT_PAL_TAG_ROCKET_3_HNS},
+    {gObjectEventPal_Rocket4_hns, OBJ_EVENT_PAL_TAG_ROCKET_4_HNS},
+    {gObjectEventPal_Sage_hns, OBJ_EVENT_PAL_TAG_SAGE_HNS},
+    {gObjectEventPal_ScientistF_hns, OBJ_EVENT_PAL_TAG_SCIENTIST_F_HNS},
+    {gObjectEventPal_ShinyGyarados_hns, OBJ_EVENT_PAL_TAG_SHINY_GYARADOS_HNS},
+    {gObjectEventPal_Silver_hns, OBJ_EVENT_PAL_TAG_SILVER_HNS},
+    {gObjectEventPal_Slowpoke_hns, OBJ_EVENT_PAL_TAG_SLOWPOKE_HNS},
+    {gObjectEventPal_Snorlax_hns, OBJ_EVENT_PAL_TAG_SNORLAX_HNS},
+    {gObjectEventPal_SSAqua_hns, OBJ_EVENT_PAL_TAG_SSAQUA_HNS},
+    {gObjectEventPal_Steven_hns, OBJ_EVENT_PAL_TAG_STEVEN_HNS},
+    {gObjectEventPal_LegendaryShadow_hns, OBJ_EVENT_PAL_TAG_LEGENDARY_SHADOW_HNS},
+    {gObjectEventPal_TowerBeam_hns, OBJ_EVENT_PAL_TAG_TOWER_BEAM_HNS},
+    {gObjectEventPal_Whirlpool_hns, OBJ_EVENT_PAL_TAG_WHIRLPOOL_HNS},
+    {gObjectEventPal_Whitney_hns, OBJ_EVENT_PAL_TAG_WHITNEY_HNS},
+    {gObjectEventPal_Will_hns, OBJ_EVENT_PAL_TAG_WILL_HNS},
+#endif // IS_HNS
 #if OW_FOLLOWERS_POKEBALLS
     {gObjectEventPal_MasterBall,            OBJ_EVENT_PAL_TAG_BALL_MASTER},
     {gObjectEventPal_UltraBall,             OBJ_EVENT_PAL_TAG_BALL_ULTRA},
@@ -5057,6 +5098,66 @@ bool8 MovementType_RotateClockwise_Step3(struct ObjectEvent *objectEvent, struct
     sprite->sTypeFuncId = 0;
     return TRUE;
 }
+
+
+//HnS tower beam movement 
+#define TOWER_BEAM_ANIM_COUNT 4
+
+movement_type_def(MovementType_TowerBeam, gMovementTypeFuncs_TowerBeam)
+
+static const u8 sTowerBeamAnimActions[TOWER_BEAM_ANIM_COUNT] = {
+    MOVEMENT_ACTION_WALK_IN_PLACE_FAST_LEFT,
+    MOVEMENT_ACTION_WALK_IN_PLACE_FAST_LEFT,
+    MOVEMENT_ACTION_WALK_IN_PLACE_FAST_RIGHT,
+    MOVEMENT_ACTION_WALK_IN_PLACE_FAST_DOWN,
+};
+bool8 MovementType_TowerBeam_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    ClearObjectEventMovement(objectEvent, sprite);
+    ObjectEventSetSingleMovement(objectEvent, sprite, MOVEMENT_ACTION_WALK_IN_PLACE_FAST_LEFT);
+    sprite->sTypeFuncId = 1;
+    return TRUE;
+}
+
+bool8 MovementType_TowerBeam_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (ObjectEventExecSingleMovementAction(objectEvent, sprite))
+    {
+        ObjectEventSetSingleMovement(objectEvent, sprite, MOVEMENT_ACTION_WALK_IN_PLACE_NORMAL_LEFT);
+        sprite->sTypeFuncId = 2;
+    }
+    return FALSE;
+}
+
+bool8 MovementType_TowerBeam_Step2(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (ObjectEventExecSingleMovementAction(objectEvent, sprite))
+    {
+        ObjectEventSetSingleMovement(objectEvent, sprite, MOVEMENT_ACTION_WALK_IN_PLACE_NORMAL_RIGHT);
+        sprite->sTypeFuncId = 3;
+    }
+    return FALSE;
+}
+
+bool8 MovementType_TowerBeam_Step3(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (ObjectEventExecSingleMovementAction(objectEvent, sprite))
+    {
+        ObjectEventSetSingleMovement(objectEvent, sprite, MOVEMENT_ACTION_WALK_IN_PLACE_NORMAL_DOWN);
+        sprite->sTypeFuncId = 4;
+    }
+    return FALSE;
+}
+
+bool8 MovementType_TowerBeam_Step4(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (ObjectEventExecSingleMovementAction(objectEvent, sprite))
+    {
+        sprite->sTypeFuncId = 0; // Loop back to beginning
+    }
+    return FALSE;
+}
+
 
 movement_type_def(MovementType_WalkBackAndForth, gMovementTypeFuncs_WalkBackAndForth)
 
