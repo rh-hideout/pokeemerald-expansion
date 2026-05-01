@@ -44,15 +44,19 @@
 #define FLAG_TEMP_1F     (TEMP_FLAGS_START + 0x1F)
 #define TEMP_FLAGS_END   FLAG_TEMP_1F
 #define NUM_TEMP_FLAGS   (TEMP_FLAGS_END - TEMP_FLAGS_START + 1)
+#define FLAG_SYS_GBS_ENABLED    0x20 // GBS Flag
+#define FLAG_ITEM_PLAYER_ROOM_GB_PLAYER 0x21 //GBS Flag 2
 
 #if IS_FRLG
 
 #include "constants/flags_frlg.h"
 
+#elif IS_HNS
+
+#include "constants/flags_hns.h"
+
 #else
 
-#define FLAG_UNUSED_0x020    0x20 // Unused Flag
-#define FLAG_UNUSED_0x021    0x21 // Unused Flag
 #define FLAG_UNUSED_0x022    0x22 // Unused Flag
 #define FLAG_UNUSED_0x023    0x23 // Unused Flag
 #define FLAG_UNUSED_0x024    0x24 // Unused Flag
@@ -718,8 +722,8 @@
 #define FLAG_UNUSED_0x297  0x297 // Unused Flag
 #define FLAG_UNUSED_0x298  0x298 // Unused Flag
 #define FLAG_UNUSED_0x299  0x299 // Unused Flag
-#define FLAG_SYS_GBS_ENABLED  0x29A
-#define FLAG_ITEM_PLAYER_ROOM_GB_PLAYER  0x29B
+#define FLAG_UNUSED_0x29A  0x29A // Unused Flag
+#define FLAG_UNUSED_0x29B  0x29B // Unused Flag
 #define FLAG_UNUSED_0x29C  0x29C // Unused Flag
 #define FLAG_UNUSED_0x29D  0x29D // Unused Flag
 #define FLAG_UNUSED_0x29E  0x29E // Unused Flag
