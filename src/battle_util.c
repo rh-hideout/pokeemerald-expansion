@@ -1605,7 +1605,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
     return limitations;
 }
 
-u32 CheckMoveLimitations(enum BattlerId battler, u8 unusableMoves, u16 check)
+u32 CheckMoveLimitations(enum BattlerId battler, u8 unusableMoves)
 {
     enum Move move;
     enum BattleMoveEffects moveEffect;
@@ -1620,67 +1620,67 @@ u32 CheckMoveLimitations(enum BattlerId battler, u8 unusableMoves, u16 check)
         move = gBattleMons[battler].moves[i];
         moveEffect = GetMoveEffect(move);
         // No move
-        if (check & MOVE_LIMITATION_ZEROMOVE && move == MOVE_NONE)
+        if (move == MOVE_NONE)
             unusableMoves |= 1u << i;
         // No PP
-        else if (check & MOVE_LIMITATION_PP && gBattleMons[battler].pp[i] == 0)
+        else if (gBattleMons[battler].pp[i] == 0)
             unusableMoves |= 1u << i;
         // Placeholder
-        else if (check & MOVE_LIMITATION_PLACEHOLDER && moveEffect == EFFECT_PLACEHOLDER)
+        else if (moveEffect == EFFECT_PLACEHOLDER)
             unusableMoves |= 1u << i;
         // Disable
-        else if (check & MOVE_LIMITATION_DISABLED && move == gBattleMons[battler].volatiles.disabledMove)
+        else if (move == gBattleMons[battler].volatiles.disabledMove)
             unusableMoves |= 1u << i;
         // Torment
-        else if (check & MOVE_LIMITATION_TORMENTED && move == gLastMoves[battler] && gBattleMons[battler].volatiles.torment == TRUE)
+        else if (move == gLastMoves[battler] && gBattleMons[battler].volatiles.torment == TRUE)
             unusableMoves |= 1u << i;
         // Taunt
-        else if (check & MOVE_LIMITATION_TAUNT
-              && gBattleMons[battler].volatiles.tauntTimer
+        else if (gBattleMons[battler].volatiles.tauntTimer
               && IsBattleMoveStatus(move)
               && (GetConfig(B_TAUNT_ME_FIRST) < GEN_5 || moveEffect != EFFECT_ME_FIRST))
             unusableMoves |= 1u << i;
         // Imprison
-        else if (check & MOVE_LIMITATION_IMPRISON && GetImprisonedMovesCount(battler, move))
+        else if (GetImprisonedMovesCount(battler, move))
             unusableMoves |= 1u << i;
         // Encore
-        else if (check & MOVE_LIMITATION_ENCORE && gBattleMons[battler].volatiles.encoreTimer && gBattleMons[battler].volatiles.encoredMove != move)
+        else if (gBattleMons[battler].volatiles.encoreTimer && gBattleMons[battler].volatiles.encoredMove != move)
             unusableMoves |= 1u << i;
         // Choice Items
-        else if (check & MOVE_LIMITATION_CHOICE_ITEM && IsHoldEffectChoice(holdEffect) && *choicedMove != MOVE_NONE && *choicedMove != MOVE_UNAVAILABLE && *choicedMove != move)
+        else if (IsHoldEffectChoice(holdEffect) && *choicedMove != MOVE_NONE && *choicedMove != MOVE_UNAVAILABLE && *choicedMove != move)
             unusableMoves |= 1u << i;
         // Assault Vest
-        else if (check & MOVE_LIMITATION_ASSAULT_VEST && holdEffect == HOLD_EFFECT_ASSAULT_VEST && IsBattleMoveStatus(move) && moveEffect != EFFECT_ME_FIRST)
+        else if (holdEffect == HOLD_EFFECT_ASSAULT_VEST && IsBattleMoveStatus(move) && moveEffect != EFFECT_ME_FIRST)
             unusableMoves |= 1u << i;
         // Gravity
-        else if (check & MOVE_LIMITATION_GRAVITY && IsGravityPreventingMove(move))
+        else if (IsGravityPreventingMove(move))
             unusableMoves |= 1u << i;
         // Heal Block
-        else if (check & MOVE_LIMITATION_HEAL_BLOCK && IsHealBlockPreventingMove(battler, move))
+        else if (IsHealBlockPreventingMove(battler, move))
             unusableMoves |= 1u << i;
         // Belch
-        else if (check & MOVE_LIMITATION_BELCH && IsBelchPreventingMove(battler, move))
+        else if (IsBelchPreventingMove(battler, move))
             unusableMoves |= 1u << i;
         // Throat Chop
-        else if (check & MOVE_LIMITATION_THROAT_CHOP && gBattleMons[battler].volatiles.throatChopTimer > 0 && IsSoundMove(move))
+        else if (gBattleMons[battler].volatiles.throatChopTimer > 0 && IsSoundMove(move))
             unusableMoves |= 1u << i;
         // Stuff Cheeks
-        else if (check & MOVE_LIMITATION_STUFF_CHEEKS && moveEffect == EFFECT_STUFF_CHEEKS && GetItemPocket(gBattleMons[battler].item) != POCKET_BERRIES)
+        else if (moveEffect == EFFECT_STUFF_CHEEKS && GetItemPocket(gBattleMons[battler].item) != POCKET_BERRIES)
             unusableMoves |= 1u << i;
         // Gorilla Tactics
-        else if (check & MOVE_LIMITATION_CHOICE_ITEM && GetBattlerAbility(battler) == ABILITY_GORILLA_TACTICS && *choicedMove != MOVE_NONE && *choicedMove != MOVE_UNAVAILABLE && *choicedMove != move)
+        else if (GetBattlerAbility(battler) == ABILITY_GORILLA_TACTICS && *choicedMove != MOVE_NONE && *choicedMove != MOVE_UNAVAILABLE && *choicedMove != move)
             unusableMoves |= 1u << i;
         // Can't Use Twice flag
-        else if (check & MOVE_LIMITATION_CANT_USE_TWICE && MoveCantBeUsedTwice(move) && move == gLastResultingMoves[battler])
+        else if (MoveCantBeUsedTwice(move) && move == gLastResultingMoves[battler])
             unusableMoves |= 1u << i;
     }
+
     return unusableMoves;
 }
 
 #define ALL_MOVES_MASK ((1 << MAX_MON_MOVES) - 1)
 bool32 AreAllMovesUnusable(enum BattlerId battler)
 {
-    u32 unusable = CheckMoveLimitations(battler, 0, MOVE_LIMITATIONS_ALL);
+    u32 unusable = CheckMoveLimitations(battler, 0);
 
     if (unusable == ALL_MOVES_MASK) // All moves are unusable.
     {
@@ -5613,7 +5613,7 @@ enum Obedience GetAttackerObedienceForAction(void)
     calc = (levelReferenced + obedienceLevel) * ((rnd >> 8) & 255) >> 8;
     if (calc < obedienceLevel)
     {
-        calc = CheckMoveLimitations(gBattlerAttacker, 1u << gCurrMovePos, MOVE_LIMITATIONS_ALL);
+        calc = CheckMoveLimitations(gBattlerAttacker, 1u << gCurrMovePos);
         if (calc == ALL_MOVES_MASK) // all moves cannot be used
             return DISOBEYS_LOAFS;
         else // use a random move

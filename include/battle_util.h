@@ -5,25 +5,6 @@
 #include "constants/battle_string_ids.h"
 #include "constants/hold_effects.h"
 
-#define MOVE_LIMITATION_ZEROMOVE                (1 << 0)
-#define MOVE_LIMITATION_PP                      (1 << 1)
-#define MOVE_LIMITATION_DISABLED                (1 << 2)
-#define MOVE_LIMITATION_TORMENTED               (1 << 3)
-#define MOVE_LIMITATION_TAUNT                   (1 << 4)
-#define MOVE_LIMITATION_IMPRISON                (1 << 5)
-#define MOVE_LIMITATION_ENCORE                  (1 << 6)
-#define MOVE_LIMITATION_CHOICE_ITEM             (1 << 7)
-#define MOVE_LIMITATION_ASSAULT_VEST            (1 << 8)
-#define MOVE_LIMITATION_GRAVITY                 (1 << 9)
-#define MOVE_LIMITATION_HEAL_BLOCK              (1 << 10)
-#define MOVE_LIMITATION_BELCH                   (1 << 11)
-#define MOVE_LIMITATION_THROAT_CHOP             (1 << 12)
-#define MOVE_LIMITATION_STUFF_CHEEKS            (1 << 13)
-#define MOVE_LIMITATION_CANT_USE_TWICE          (1 << 14)
-
-#define MOVE_LIMITATION_PLACEHOLDER             (1 << 15)
-#define MOVE_LIMITATIONS_ALL                    0xFFFF
-
 // Switches between simulated battle calc and actual battle combat
 enum ResultOption
 {
@@ -189,7 +170,7 @@ void BattleScriptPushCursor(void);
 void BattleScriptCall(const u8 *bsPtr);
 void BattleScriptPop(void);
 u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler);
-u32 CheckMoveLimitations(enum BattlerId battler, u8 unusableMoves, u16 check);
+u32 CheckMoveLimitations(enum BattlerId battler, u8 unusableMoves);
 bool32 AreAllMovesUnusable(enum BattlerId battler);
 u8 GetImprisonedMovesCount(enum BattlerId battler, enum Move move);
 s32 GetDrainedBigRootHp(enum BattlerId battler, s32 hp);
