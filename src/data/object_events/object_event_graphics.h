@@ -803,4 +803,27 @@ const u16 gObjectEventPal_Whirlpool_hns[] = INCBIN_U16("graphics/object_events/p
 const u16 gObjectEventPal_Whitney_hns[] = INCBIN_U16("graphics/object_events/palettes/whitney_hns.gbapal");
 const u16 gObjectEventPal_Will_hns[] = INCBIN_U16("graphics/object_events/palettes/will_hns.gbapal");
 const u32 gObjectEventPic_NurseChansey_hns[] = INCBIN_U32("graphics/object_events/pics/misc/nurse_chansey_hns.4bpp");
+// HnS protagonist sprite data
+const u32 gObjectEventPic_GoldNormalRunning_hns[] = INCBIN_U32("graphics/object_events/pics/people/gold/walking_hns.4bpp", "graphics/object_events/pics/people/gold/running_hns.4bpp");
+const u16 gObjectEventPal_Gold_hns[] = INCBIN_U16("graphics/object_events/palettes/gold_hns.gbapal");
+const u16 gObjectEventPal_GoldReflection_hns[] = INCBIN_U16("graphics/object_events/palettes/gold_reflection_hns.gbapal");
+const u32 gObjectEventPic_GoldFieldMove_hns[] = INCBIN_U32("graphics/object_events/pics/people/gold/field_move_hns.4bpp");
+const u32 gObjectEventPic_GoldSurfing_hns[] = INCBIN_U32("graphics/object_events/pics/people/gold/surfing_hns.4bpp");
+const u32 gObjectEventPic_GoldMachBike_hns[] = INCBIN_U32("graphics/object_events/pics/people/gold/mach_bike_hns.4bpp");
+const u32 gObjectEventPic_GoldAcroBike_hns[] = INCBIN_U32("graphics/object_events/pics/people/gold/acro_bike_hns.4bpp");
+const u32 gObjectEventPic_GoldFishing_hns[] = INCBIN_U32("graphics/object_events/pics/people/gold/fishing_hns.4bpp");
+const u32 gObjectEventPic_GoldWatering_hns[] = INCBIN_U32("graphics/object_events/pics/people/gold/watering_hns.4bpp");
+const u32 gObjectEventPic_GoldDecorating_hns[] = INCBIN_U32("graphics/object_events/pics/people/gold/decorating_hns.4bpp");
+const u32 gObjectEventPic_GoldUnderwater_hns[] = INCBIN_U32("graphics/object_events/pics/people/gold/underwater_hns.4bpp");
+const u32 gObjectEventPic_KrisNormalRunning_hns[] = INCBIN_U32("graphics/object_events/pics/people/kris/walking_hns.4bpp", "graphics/object_events/pics/people/kris/running_hns.4bpp");
+const u16 gObjectEventPal_Kris_hns[] = INCBIN_U16("graphics/object_events/palettes/kris_hns.gbapal");
+const u16 gObjectEventPal_KrisReflection_hns[] = INCBIN_U16("graphics/object_events/palettes/kris_reflection_hns.gbapal");
+const u32 gObjectEventPic_KrisFieldMove_hns[] = INCBIN_U32("graphics/object_events/pics/people/kris/field_move_hns.4bpp");
+const u32 gObjectEventPic_KrisSurfing_hns[] = INCBIN_U32("graphics/object_events/pics/people/kris/surfing_hns.4bpp");
+const u32 gObjectEventPic_KrisMachBike_hns[] = INCBIN_U32("graphics/object_events/pics/people/kris/mach_bike_hns.4bpp");
+const u32 gObjectEventPic_KrisAcroBike_hns[] = INCBIN_U32("graphics/object_events/pics/people/kris/acro_bike_hns.4bpp");
+const u32 gObjectEventPic_KrisFishing_hns[] = INCBIN_U32("graphics/object_events/pics/people/kris/fishing_hns.4bpp");
+const u32 gObjectEventPic_KrisWatering_hns[] = INCBIN_U32("graphics/object_events/pics/people/kris/watering_hns.4bpp");
+const u32 gObjectEventPic_KrisDecorating_hns[] = INCBIN_U32("graphics/object_events/pics/people/kris/decorating_hns.4bpp");
+const u32 gObjectEventPic_KrisUnderwater_hns[] = INCBIN_U32("graphics/object_events/pics/people/kris/underwater_hns.4bpp");
 #endif // IS_HNS

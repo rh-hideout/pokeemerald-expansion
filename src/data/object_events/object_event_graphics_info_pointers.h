@@ -526,6 +526,25 @@ extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Woman3_hns;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_WorkerF_hns;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_WorkerM_hns;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Youngster_hns;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_NurseChansey_hns;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_GoldNormal_hns;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_GoldMachBike_hns;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_GoldAcroBike_hns;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_GoldSurfing_hns;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_GoldUnderwater_hns;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_GoldFieldMove_hns;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_GoldFishing_hns;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_GoldWatering_hns;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_GoldDecorating_hns;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_KrisNormal_hns;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_KrisMachBike_hns;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_KrisAcroBike_hns;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_KrisSurfing_hns;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_KrisUnderwater_hns;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_KrisFieldMove_hns;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_KrisFishing_hns;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_KrisWatering_hns;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_KrisDecorating_hns;
 
 const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM_OBJ_EVENT_GFX] = {
     [OBJ_EVENT_GFX_BRENDAN_NORMAL] =           &gObjectEventGraphicsInfo_BrendanNormal,
@@ -1043,6 +1062,25 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_TRAIN_WEST_HNS] = &gObjectEventGraphicsInfo_TrainWest_hns,
     [OBJ_EVENT_GFX_WHIRLPOOL_HNS] = &gObjectEventGraphicsInfo_Whirlpool_hns,
     [OBJ_EVENT_GFX_NURSE_CHANSEY_HNS] = &gObjectEventGraphicsInfo_NurseChansey_hns,
+    // HnS protagonists
+    [OBJ_EVENT_GFX_GOLD_NORMAL_HNS] =       &gObjectEventGraphicsInfo_GoldNormal_hns,
+    [OBJ_EVENT_GFX_GOLD_MACH_BIKE_HNS] =    &gObjectEventGraphicsInfo_GoldMachBike_hns,
+    [OBJ_EVENT_GFX_GOLD_ACRO_BIKE_HNS] =    &gObjectEventGraphicsInfo_GoldAcroBike_hns,
+    [OBJ_EVENT_GFX_GOLD_SURFING_HNS] =      &gObjectEventGraphicsInfo_GoldSurfing_hns,
+    [OBJ_EVENT_GFX_GOLD_UNDERWATER_HNS] =   &gObjectEventGraphicsInfo_GoldUnderwater_hns,
+    [OBJ_EVENT_GFX_GOLD_FIELD_MOVE_HNS] =   &gObjectEventGraphicsInfo_GoldFieldMove_hns,
+    [OBJ_EVENT_GFX_GOLD_FISHING_HNS] =      &gObjectEventGraphicsInfo_GoldFishing_hns,
+    [OBJ_EVENT_GFX_GOLD_WATERING_HNS] =     &gObjectEventGraphicsInfo_GoldWatering_hns,
+    [OBJ_EVENT_GFX_GOLD_DECORATING_HNS] =   &gObjectEventGraphicsInfo_GoldDecorating_hns,
+    [OBJ_EVENT_GFX_KRIS_NORMAL_HNS] =       &gObjectEventGraphicsInfo_KrisNormal_hns,
+    [OBJ_EVENT_GFX_KRIS_MACH_BIKE_HNS] =    &gObjectEventGraphicsInfo_KrisMachBike_hns,
+    [OBJ_EVENT_GFX_KRIS_ACRO_BIKE_HNS] =    &gObjectEventGraphicsInfo_KrisAcroBike_hns,
+    [OBJ_EVENT_GFX_KRIS_SURFING_HNS] =      &gObjectEventGraphicsInfo_KrisSurfing_hns,
+    [OBJ_EVENT_GFX_KRIS_UNDERWATER_HNS] =   &gObjectEventGraphicsInfo_KrisUnderwater_hns,
+    [OBJ_EVENT_GFX_KRIS_FIELD_MOVE_HNS] =   &gObjectEventGraphicsInfo_KrisFieldMove_hns,
+    [OBJ_EVENT_GFX_KRIS_FISHING_HNS] =      &gObjectEventGraphicsInfo_KrisFishing_hns,
+    [OBJ_EVENT_GFX_KRIS_WATERING_HNS] =     &gObjectEventGraphicsInfo_KrisWatering_hns,
+    [OBJ_EVENT_GFX_KRIS_DECORATING_HNS] =   &gObjectEventGraphicsInfo_KrisDecorating_hns,
 #endif // IS_HNS
 };
 

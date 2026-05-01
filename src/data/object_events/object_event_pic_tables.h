@@ -4436,5 +4436,132 @@ static const struct SpriteFrameImage sPicTable_NurseChansey_hns[] = {
     overworld_frame(gObjectEventPic_NurseChansey_hns, 2, 4, 8),
 };
 
+// HnS protagonist pic tables
+static const struct SpriteFrameImage sPicTable_GoldNormal_hns[] = {
+    overworld_ascending_frames(gObjectEventPic_GoldNormalRunning_hns, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_GoldMachBike_hns[] = {
+    overworld_ascending_frames(gObjectEventPic_GoldMachBike_hns, 4, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_GoldAcroBike_hns[] = {
+    overworld_ascending_frames(gObjectEventPic_GoldAcroBike_hns, 4, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_GoldSurfing_hns[] = {
+    overworld_frame(gObjectEventPic_GoldSurfing_hns, 4, 4, 0),
+    overworld_frame(gObjectEventPic_GoldSurfing_hns, 4, 4, 2),
+    overworld_frame(gObjectEventPic_GoldSurfing_hns, 4, 4, 4),
+    overworld_frame(gObjectEventPic_GoldSurfing_hns, 4, 4, 0),
+    overworld_frame(gObjectEventPic_GoldSurfing_hns, 4, 4, 0),
+    overworld_frame(gObjectEventPic_GoldSurfing_hns, 4, 4, 2),
+    overworld_frame(gObjectEventPic_GoldSurfing_hns, 4, 4, 2),
+    overworld_frame(gObjectEventPic_GoldSurfing_hns, 4, 4, 4),
+    overworld_frame(gObjectEventPic_GoldSurfing_hns, 4, 4, 4),
+    overworld_frame(gObjectEventPic_GoldSurfing_hns, 4, 4, 1),
+    overworld_frame(gObjectEventPic_GoldSurfing_hns, 4, 4, 3),
+    overworld_frame(gObjectEventPic_GoldSurfing_hns, 4, 4, 5),
+};
+
+static const struct SpriteFrameImage sPicTable_GoldUnderwater_hns[] = {
+    overworld_frame(gObjectEventPic_GoldUnderwater_hns, 4, 4, 0),
+    overworld_frame(gObjectEventPic_GoldUnderwater_hns, 4, 4, 1),
+    overworld_frame(gObjectEventPic_GoldUnderwater_hns, 4, 4, 2),
+    overworld_frame(gObjectEventPic_GoldUnderwater_hns, 4, 4, 0),
+    overworld_frame(gObjectEventPic_GoldUnderwater_hns, 4, 4, 0),
+    overworld_frame(gObjectEventPic_GoldUnderwater_hns, 4, 4, 1),
+    overworld_frame(gObjectEventPic_GoldUnderwater_hns, 4, 4, 1),
+    overworld_frame(gObjectEventPic_GoldUnderwater_hns, 4, 4, 2),
+    overworld_frame(gObjectEventPic_GoldUnderwater_hns, 4, 4, 2),
+};
+
+static const struct SpriteFrameImage sPicTable_GoldFieldMove_hns[] = {
+    overworld_ascending_frames(gObjectEventPic_GoldFieldMove_hns, 4, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_GoldFishing_hns[] = {
+    overworld_ascending_frames(gObjectEventPic_GoldFishing_hns, 4, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_GoldWatering_hns[] = {
+    overworld_frame(gObjectEventPic_GoldWatering_hns, 4, 4, 0),
+    overworld_frame(gObjectEventPic_GoldWatering_hns, 4, 4, 2),
+    overworld_frame(gObjectEventPic_GoldWatering_hns, 4, 4, 4),
+    overworld_frame(gObjectEventPic_GoldWatering_hns, 4, 4, 1),
+    overworld_frame(gObjectEventPic_GoldWatering_hns, 4, 4, 1),
+    overworld_frame(gObjectEventPic_GoldWatering_hns, 4, 4, 3),
+    overworld_frame(gObjectEventPic_GoldWatering_hns, 4, 4, 3),
+    overworld_frame(gObjectEventPic_GoldWatering_hns, 4, 4, 5),
+    overworld_frame(gObjectEventPic_GoldWatering_hns, 4, 4, 5),
+};
+
+static const struct SpriteFrameImage sPicTable_GoldDecorating_hns[] = {
+    obj_frame_tiles(gObjectEventPic_GoldDecorating_hns),
+};
+
+static const struct SpriteFrameImage sPicTable_KrisNormal_hns[] = {
+    overworld_ascending_frames(gObjectEventPic_KrisNormalRunning_hns, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_KrisMachBike_hns[] = {
+    overworld_ascending_frames(gObjectEventPic_KrisMachBike_hns, 4, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_KrisAcroBike_hns[] = {
+    overworld_ascending_frames(gObjectEventPic_KrisAcroBike_hns, 4, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_KrisSurfing_hns[] = {
+    overworld_frame(gObjectEventPic_KrisSurfing_hns, 4, 4, 0),
+    overworld_frame(gObjectEventPic_KrisSurfing_hns, 4, 4, 2),
+    overworld_frame(gObjectEventPic_KrisSurfing_hns, 4, 4, 4),
+    overworld_frame(gObjectEventPic_KrisSurfing_hns, 4, 4, 0),
+    overworld_frame(gObjectEventPic_KrisSurfing_hns, 4, 4, 0),
+    overworld_frame(gObjectEventPic_KrisSurfing_hns, 4, 4, 2),
+    overworld_frame(gObjectEventPic_KrisSurfing_hns, 4, 4, 2),
+    overworld_frame(gObjectEventPic_KrisSurfing_hns, 4, 4, 4),
+    overworld_frame(gObjectEventPic_KrisSurfing_hns, 4, 4, 4),
+    overworld_frame(gObjectEventPic_KrisSurfing_hns, 4, 4, 1),
+    overworld_frame(gObjectEventPic_KrisSurfing_hns, 4, 4, 3),
+    overworld_frame(gObjectEventPic_KrisSurfing_hns, 4, 4, 5),
+};
+
+static const struct SpriteFrameImage sPicTable_KrisUnderwater_hns[] = {
+    overworld_frame(gObjectEventPic_KrisUnderwater_hns, 4, 4, 0),
+    overworld_frame(gObjectEventPic_KrisUnderwater_hns, 4, 4, 1),
+    overworld_frame(gObjectEventPic_KrisUnderwater_hns, 4, 4, 2),
+    overworld_frame(gObjectEventPic_KrisUnderwater_hns, 4, 4, 0),
+    overworld_frame(gObjectEventPic_KrisUnderwater_hns, 4, 4, 0),
+    overworld_frame(gObjectEventPic_KrisUnderwater_hns, 4, 4, 1),
+    overworld_frame(gObjectEventPic_KrisUnderwater_hns, 4, 4, 1),
+    overworld_frame(gObjectEventPic_KrisUnderwater_hns, 4, 4, 2),
+    overworld_frame(gObjectEventPic_KrisUnderwater_hns, 4, 4, 2),
+};
+
+static const struct SpriteFrameImage sPicTable_KrisFieldMove_hns[] = {
+    overworld_ascending_frames(gObjectEventPic_KrisFieldMove_hns, 4, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_KrisFishing_hns[] = {
+    overworld_ascending_frames(gObjectEventPic_KrisFishing_hns, 4, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_KrisWatering_hns[] = {
+    overworld_frame(gObjectEventPic_KrisWatering_hns, 4, 4, 0),
+    overworld_frame(gObjectEventPic_KrisWatering_hns, 4, 4, 2),
+    overworld_frame(gObjectEventPic_KrisWatering_hns, 4, 4, 4),
+    overworld_frame(gObjectEventPic_KrisWatering_hns, 4, 4, 1),
+    overworld_frame(gObjectEventPic_KrisWatering_hns, 4, 4, 1),
+    overworld_frame(gObjectEventPic_KrisWatering_hns, 4, 4, 3),
+    overworld_frame(gObjectEventPic_KrisWatering_hns, 4, 4, 3),
+    overworld_frame(gObjectEventPic_KrisWatering_hns, 4, 4, 5),
+    overworld_frame(gObjectEventPic_KrisWatering_hns, 4, 4, 5),
+};
+
+static const struct SpriteFrameImage sPicTable_KrisDecorating_hns[] = {
+    obj_frame_tiles(gObjectEventPic_KrisDecorating_hns),
+};
+
 #endif // IS_HNS
 

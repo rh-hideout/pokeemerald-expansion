@@ -579,6 +579,10 @@ static const struct SpritePalette sObjectEventSpritePalettes[] = {
     {gObjectEventPal_Whirlpool_hns, OBJ_EVENT_PAL_TAG_WHIRLPOOL_HNS},
     {gObjectEventPal_Whitney_hns, OBJ_EVENT_PAL_TAG_WHITNEY_HNS},
     {gObjectEventPal_Will_hns, OBJ_EVENT_PAL_TAG_WILL_HNS},
+    {gObjectEventPal_Gold_hns, OBJ_EVENT_PAL_TAG_GOLD_HNS},
+    {gObjectEventPal_GoldReflection_hns, OBJ_EVENT_PAL_TAG_GOLD_REFLECTION_HNS},
+    {gObjectEventPal_Kris_hns, OBJ_EVENT_PAL_TAG_KRIS_HNS},
+    {gObjectEventPal_KrisReflection_hns, OBJ_EVENT_PAL_TAG_KRIS_REFLECTION_HNS},
 #endif // IS_HNS
 #if OW_FOLLOWERS_POKEBALLS
     {gObjectEventPal_MasterBall,            OBJ_EVENT_PAL_TAG_BALL_MASTER},
@@ -646,10 +650,26 @@ static const u16 sReflectionPaletteTags_PlayerUnderwater[] = {
     OBJ_EVENT_PAL_TAG_PLAYER_UNDERWATER,
 };
 
+static const u16 sReflectionPaletteTags_Gold_hns[] = {
+    OBJ_EVENT_PAL_TAG_GOLD_REFLECTION_HNS,
+    OBJ_EVENT_PAL_TAG_GOLD_REFLECTION_HNS,
+    OBJ_EVENT_PAL_TAG_GOLD_REFLECTION_HNS,
+    OBJ_EVENT_PAL_TAG_GOLD_REFLECTION_HNS,
+};
+
+static const u16 sReflectionPaletteTags_Kris_hns[] = {
+    OBJ_EVENT_PAL_TAG_KRIS_REFLECTION_HNS,
+    OBJ_EVENT_PAL_TAG_KRIS_REFLECTION_HNS,
+    OBJ_EVENT_PAL_TAG_KRIS_REFLECTION_HNS,
+    OBJ_EVENT_PAL_TAG_KRIS_REFLECTION_HNS,
+};
+
 static const struct PairedPalettes sPlayerReflectionPaletteSets[] = {
     {OBJ_EVENT_PAL_TAG_BRENDAN,           sReflectionPaletteTags_Brendan},
     {OBJ_EVENT_PAL_TAG_MAY,               sReflectionPaletteTags_May},
     {OBJ_EVENT_PAL_TAG_PLAYER_UNDERWATER, sReflectionPaletteTags_PlayerUnderwater},
+    {OBJ_EVENT_PAL_TAG_GOLD_HNS,         sReflectionPaletteTags_Gold_hns},
+    {OBJ_EVENT_PAL_TAG_KRIS_HNS,         sReflectionPaletteTags_Kris_hns},
     {OBJ_EVENT_PAL_TAG_NONE,              NULL},
 };
 
@@ -744,6 +764,8 @@ static const struct PairedPalettes sSpecialObjectReflectionPaletteSets[] = {
     {OBJ_EVENT_PAL_TAG_NPC_3,            sReflectionPaletteTags_Npc3},
     {OBJ_EVENT_PAL_TAG_SUBMARINE_SHADOW, sReflectionPaletteTags_SubmarineShadow},
     {OBJ_EVENT_PAL_TAG_RED_LEAF,         sReflectionPaletteTags_RedLeaf},
+    {OBJ_EVENT_PAL_TAG_GOLD_HNS,        sReflectionPaletteTags_Gold_hns},
+    {OBJ_EVENT_PAL_TAG_KRIS_HNS,        sReflectionPaletteTags_Kris_hns},
     {OBJ_EVENT_PAL_TAG_NONE,             NULL},
 };
 
@@ -3368,10 +3390,22 @@ u8 LoadPlayerObjectEventPalette(enum Gender gender)
     {
     default:
     case MALE:
+#if IS_HNS
+        paletteTag = OBJ_EVENT_PAL_TAG_GOLD_HNS;
+#elif IS_FRLG
+        paletteTag = OBJ_EVENT_PAL_TAG_PLAYER_RED;
+#else
         paletteTag = OBJ_EVENT_PAL_TAG_BRENDAN;
+#endif
         break;
     case FEMALE:
+#if IS_HNS
+        paletteTag = OBJ_EVENT_PAL_TAG_KRIS_HNS;
+#elif IS_FRLG
+        paletteTag = OBJ_EVENT_PAL_TAG_PLAYER_GREEN;
+#else
         paletteTag = OBJ_EVENT_PAL_TAG_MAY;
+#endif
         break;
     }
     return LoadObjectEventPalette(paletteTag);
