@@ -161,6 +161,13 @@ enum DebugTrainerSelection
     TRAINERS_DEBUG_SELECTION_PARTNER,
 };
 
+enum DebugMenuTypes
+{
+    DEBUG_BASIC_MENU,
+    DEBUG_FLAGS_MENU,
+    DEBUG_TRAINERS_MENU,
+};
+
 // *******************************
 // Constants
 #define DEBUG_MENU_FONT FONT_NORMAL
@@ -198,7 +205,7 @@ enum DebugTrainerSelection
 struct DebugMenuOption;
 
 typedef void (*DebugFunc)(u8 taskId);
-typedef void (*DebugSubmenuFunc)(u8 taskId, const struct DebugMenuOption *items);
+typedef void (*DebugFuncWithParams)(u8 taskId, const void *params);
 
 struct DebugMenuOption
 {
@@ -240,12 +247,12 @@ EWRAM_DATA u64 gDebugAIFlags = 0;
 // *******************************
 // Define functions
 static void Debug_ShowMenu(DebugFunc HandleInput, const struct DebugMenuOption *items);
-static u8  Debug_GenerateListTrainerMenu(void);
-static u8 Debug_GenerateListMenuNames(void);
+static u32 Debug_GenerateListBasicMenu(const struct DebugMenuOption *items);
+static u32 Debug_GenerateListTrainerMenu(const struct DebugMenuOption *items);
+static u32 Debug_GenerateListFlagsMenu(const struct DebugMenuOption *items);
 static void Debug_DestroyMenu(u8 taskId);
 static void DebugAction_Cancel(u8 taskId);
 static void DebugAction_DestroyExtraWindow(u8 taskId);
-static void Debug_RefreshListMenu(u8 taskId);
 static u8 DebugNativeStep_CreateDebugWindow(void);
 static void DebugNativeStep_CloseDebugWindow(u8 taskId);
 
@@ -254,8 +261,8 @@ static void DebugAction_OpenSubMenuTrainers(u8 taskId, const struct DebugMenuOpt
 static void DebugAction_OpenSubMenuFlagsVars(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_OpenSubMenuFakeRTC(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_OpenSubMenuCreateFollowerNPC(u8 taskId, const struct DebugMenuOption *items);
-static void DebugAction_ExecuteScript(u8 taskId, const u8 *script);
-static void DebugAction_ToggleFlag(u8 taskId);
+static void DebugAction_ExecuteScript(u8 taskId, void *script);
+static void DebugAction_ToggleFlag(u8 taskId, void *flagToggleFunc);
 
 static void DebugTask_HandleMenuInput_General(u8 taskId);
 
@@ -293,7 +300,7 @@ static void DebugAction_Party_SetParty(u8 taskId);
 static void DebugAction_Party_BattleSingle(u8 taskId);
 
 static void DebugAction_Trainers_ChooseFromMap(u8 taskId);
-static void DebugAction_Trainers_ChooseTrainer(u8 taskId, u32 selection);
+static void DebugAction_Trainers_ChooseTrainer(u8 taskId, void *selection);
 static void DebugAction_Trainers_SwitchDoublesFlag(u8 taskId);
 static void DebugAction_Trainers_SetRematch(u8 taskId);
 static void DebugAction_Trainers_SetRematchReadiness(u8 taskId);
@@ -496,6 +503,13 @@ static const s32 sPowersOfTen[] =
       10000000,
      100000000,
     1000000000,
+};
+
+static const u32 (*generateListFunctions[])(const struct DebugMenuOption *) =
+{
+    [DEBUG_BASIC_MENU] = Debug_GenerateListBasicMenu,
+    [DEBUG_FLAGS_MENU] = Debug_GenerateListFlagsMenu,
+    [DEBUG_TRAINERS_MENU] = Debug_GenerateListTrainerMenu
 };
 
 // *******************************
@@ -852,6 +866,22 @@ static bool32 IsSubMenuAction(const void *action)
         || action == DebugAction_OpenSubMenuTrainers;
 }
 
+static u32 Debug_GenerateListBasicMenu(const struct DebugMenuOption *items)
+{
+    u32 totalItems = 0;
+    for (u32 i = 0; items[i].text != NULL; i++)
+    {
+        sDebugMenuListData->listItems[i].id = i;
+        StringExpandPlaceholders(gStringVar4, items[i].text);
+        if (IsSubMenuAction(items[i].action))
+            StringAppend(gStringVar4, sDebugText_Arrow);
+        StringCopy(&sDebugMenuListData->itemNames[i][0], gStringVar4);
+        sDebugMenuListData->listItems[i].name = &sDebugMenuListData->itemNames[i][0];
+        totalItems++;
+    }
+    return totalItems;
+}
+
 static void Debug_ShowMenu(DebugFunc HandleInput, const struct DebugMenuOption *items)
 {
     struct ListMenuTemplate menuTemplate = {0};
@@ -870,29 +900,7 @@ static void Debug_ShowMenu(DebugFunc HandleInput, const struct DebugMenuOption *
     windowId = AddWindow(&sDebugMenuWindowTemplateMain);
     DrawStdWindowFrame(windowId, FALSE);
 
-    u32 totalItems = 0;
-
-    if (sDebugMenuListData->listId == 2)
-    {
-        totalItems = Debug_GenerateListTrainerMenu();
-    }
-    else if (sDebugMenuListData->listId == 1)
-    {
-        totalItems = Debug_GenerateListMenuNames();
-    }
-    else
-    {
-        for (u32 i = 0; items[i].text != NULL; i++)
-        {
-            sDebugMenuListData->listItems[i].id = i;
-            StringExpandPlaceholders(gStringVar4, items[i].text);
-            if (IsSubMenuAction(items[i].action))
-                StringAppend(gStringVar4, sDebugText_Arrow);
-            StringCopy(&sDebugMenuListData->itemNames[i][0], gStringVar4);
-            sDebugMenuListData->listItems[i].name = &sDebugMenuListData->itemNames[i][0];
-            totalItems++;
-        }
-    }
+    u32 totalItems = generateListFunctions[sDebugMenuListData->listId](items);
 
     // create list menu
     menuTemplate.items = sDebugMenuListData->listItems;
@@ -919,8 +927,6 @@ static void Debug_ShowMenu(DebugFunc HandleInput, const struct DebugMenuOption *
     gTasks[inputTaskId].tMenuTaskId = menuTaskId;
     gTasks[inputTaskId].tWindowId = windowId;
     gTasks[inputTaskId].tSubWindowId = 0;
-
-    Debug_RefreshListMenu(inputTaskId);
 
     // draw everything
     CopyWindowToVram(windowId, COPYWIN_FULL);
@@ -1054,7 +1060,7 @@ static void DebugNativeStep_CloseDebugWindow(u8 taskId)
     UnlockPlayerFieldControls();
 }
 
-static u8 Debug_GenerateListTrainerMenu(void)
+static u32 Debug_GenerateListTrainerMenu(const struct DebugMenuOption *items)
 {
     u32 trainer1Id = sDebugMenuListData->data[0];
     u32 trainer2Id = sDebugMenuListData->data[2];
@@ -1272,29 +1278,23 @@ static u32 Debug_CheckToggleFlags(u8 id)
     return result;
 }
 
-static u8 Debug_GenerateListMenuNames(void)
+static u32 Debug_GenerateListFlagsMenu(const struct DebugMenuOption *items)
 {
     const u8 sColor_Red[] = _("{COLOR RED}");
     const u8 sColor_Green[] = _("{COLOR GREEN}");
     u32 i, flagResult = 0;
     u8 const *name = NULL;
 
-    u8 totalItems = 0;
-    if (sDebugMenuListData->listId == 1)
-        // Failsafe to prevent memory corruption
-        totalItems = min(ARRAY_COUNT(sDebugMenu_Actions_Flags) - 1, DEBUG_MAX_MENU_ITEMS);
+    u8 totalItems = min(ARRAY_COUNT(sDebugMenu_Actions_Flags) - 1, DEBUG_MAX_MENU_ITEMS);
 
     // Copy item names for all entries but the last (which is Cancel)
     for (i = 0; i < totalItems; i++)
     {
-        if (sDebugMenuListData->listId == 1)
-        {
-            flagResult = Debug_CheckToggleFlags(i);
-            if (i == DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BAG_USE)
-                name = sDebugMenu_Actions_BagUse_Options[flagResult];
-            else
-                name = sDebugMenu_Actions_Flags[i].text;
-        }
+        flagResult = Debug_CheckToggleFlags(i);
+        if (i == DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BAG_USE)
+            name = sDebugMenu_Actions_BagUse_Options[flagResult];
+        else
+            name = sDebugMenu_Actions_Flags[i].text;
 
         if (i == DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BAG_USE && flagResult == NO_BAG_INVALID_VALUE)
             flagResult = FALSE;
@@ -1322,29 +1322,6 @@ static u8 Debug_GenerateListMenuNames(void)
     return totalItems;
 }
 
-static void Debug_RefreshListMenu(u8 taskId)
-{
-    u8 totalItems = Debug_GenerateListMenuNames();
-
-    // Set list menu data
-    gMultiuseListMenuTemplate.items = sDebugMenuListData->listItems;
-    gMultiuseListMenuTemplate.totalItems = totalItems;
-    gMultiuseListMenuTemplate.maxShowed = DEBUG_MENU_HEIGHT_MAIN;
-    gMultiuseListMenuTemplate.windowId = gTasks[taskId].tWindowId;
-    gMultiuseListMenuTemplate.header_X = 0;
-    gMultiuseListMenuTemplate.item_X = 8;
-    gMultiuseListMenuTemplate.cursor_X = 0;
-    gMultiuseListMenuTemplate.upText_Y = 1;
-    gMultiuseListMenuTemplate.cursorPal = 2;
-    gMultiuseListMenuTemplate.fillValue = 1;
-    gMultiuseListMenuTemplate.cursorShadowPal = 3;
-    gMultiuseListMenuTemplate.lettersSpacing = 1;
-    gMultiuseListMenuTemplate.itemVerticalPadding = 0;
-    gMultiuseListMenuTemplate.scrollMultiple = LIST_NO_MULTIPLE_SCROLL;
-    gMultiuseListMenuTemplate.fontId = 1;
-    gMultiuseListMenuTemplate.cursorKind = 0;
-}
-
 static void DebugTask_HandleMenuInput_General(u8 taskId)
 {
     const struct DebugMenuOption *options = Debug_GetCurrentCallbackMenu();
@@ -1356,27 +1333,10 @@ static void DebugTask_HandleMenuInput_General(u8 taskId)
         PlaySE(SE_SELECT);
         if (option.action != NULL)
         {
-            if (IsSubMenuAction(option.action))
-            {
-                ((DebugSubmenuFunc)option.action)(taskId, option.actionParams);
-            }
-            else if (option.action == DebugAction_ExecuteScript)
-            {
-                Debug_DestroyMenu_Full_Script(taskId, (const u8 *)option.actionParams);
-            }
-            else if (option.action == DebugAction_ToggleFlag)
-            {
-                ((DebugFunc)option.actionParams)(taskId);
-                DebugAction_ToggleFlag(taskId);
-            }
-            else if (option.action == DebugAction_Trainers_ChooseTrainer)
-            {
-                DebugAction_Trainers_ChooseTrainer(taskId, (u32)option.actionParams);
-            }
+            if (option.actionParams  != NULL)
+                 ((DebugFuncWithParams)option.action)(taskId, option.actionParams);
             else
-            {
                 ((DebugFunc)option.action)(taskId);
-            }
         }
     }
     else if (JOY_NEW(B_BUTTON))
@@ -1432,18 +1392,15 @@ static void DebugAction_OpenSubMenuFakeRTC(u8 taskId, const struct DebugMenuOpti
     }
 }
 
-static void DebugAction_ExecuteScript(u8 taskId, const u8 *script)
+static void DebugAction_ExecuteScript(u8 taskId, void *script)
 {
-    Debug_DestroyMenu_Full_Script(taskId, script);
+    Debug_DestroyMenu_Full_Script(taskId, (const u8 *)script);
 }
 
-static void DebugAction_ToggleFlag(u8 taskId)
+static void DebugAction_ToggleFlag(u8 taskId, void *flagToggleFunc)
 {
-    if (sDebugMenuListData->listId == 2)
-        Debug_GenerateListTrainerMenu();
-    else
-        Debug_GenerateListMenuNames();
-
+    ((DebugFunc)flagToggleFunc)(taskId);
+    generateListFunctions[sDebugMenuListData->listId](NULL);
     RedrawListMenu(gTasks[taskId].tMenuTaskId);
 }
 
@@ -2098,7 +2055,7 @@ static void DebugAction_ChooseTrainerID_Select(u8 taskId)
     }
 }
 
-static void DebugAction_Trainers_ChooseTrainer(u8 taskId, u32 selection)
+static void DebugAction_Trainers_ChooseTrainer(u8 taskId, void *selection)
 {
     ClearStdWindowAndFrame(gTasks[taskId].tWindowId, TRUE);
     RemoveWindow(gTasks[taskId].tWindowId);
