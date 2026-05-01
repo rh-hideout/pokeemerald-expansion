@@ -823,10 +823,17 @@ static s32 MgbaPutchar_(s32 i, s32 c)
     return i;
 }
 
-// Bare-bones, only supports plain %s, %S, and %d.
+// Bare-bones, supports:
+// - %s, %.*s: print an ASCII string.
+// - %S, %.*S: print a GF-encoded string.
+// - %d: print a signed integer.
+// - %q: print a Q20.12 fixed-point number.
+// - %p: print a pointer (which mgba-rom-test-hydra will convert into a
+//   symbol, if possible).
 static s32 MgbaVPrintf_(const char *fmt, va_list va)
 {
     s32 i = 0;
+    s32 n;
     s32 c, d;
     u32 p;
     const char *s;
@@ -836,6 +843,16 @@ static s32 MgbaVPrintf_(const char *fmt, va_list va)
         switch ((c = *fmt++))
         {
         case '%':
+            if (fmt[0] == '.' && fmt[1] == '*')
+            {
+                fmt += 2;
+                n = va_arg(va, int);
+            }
+            else
+            {
+                n = INT_MAX;
+            }
+
             switch (*fmt++)
             {
             case '%':
@@ -927,7 +944,7 @@ static s32 MgbaVPrintf_(const char *fmt, va_list va)
                 break;
             case 's':
                 s = va_arg(va, const char *);
-                while ((c = *s++) != '\0')
+                while ((c = *s++) != '\0' && n-- > 0)
                     i = MgbaPutchar_(i, c);
                 break;
             case 'S':
@@ -942,7 +959,7 @@ static s32 MgbaVPrintf_(const char *fmt, va_list va)
                 else
                 {
                     extern char mini_pchar_decode(u8);
-                    while ((c = *pokeS++) != EOS)
+                    while ((c = *pokeS++) != EOS && n-- > 0)
                         i = MgbaPutchar_(i, mini_pchar_decode(c));
                 }
                 break;
