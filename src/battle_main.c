@@ -5835,7 +5835,7 @@ enum Type TrySetAteType(enum Move move, enum BattlerId battlerAtk, enum Ability 
     }
 
     switch (attackerAbility)
-    {
+{
     case ABILITY_PIXILATE:
         ateType = TYPE_FAIRY;
         break;
@@ -5848,10 +5848,49 @@ enum Type TrySetAteType(enum Move move, enum BattlerId battlerAtk, enum Ability 
     case ABILITY_GALVANIZE:
         ateType = TYPE_ELECTRIC;
         break;
+    case ABILITY_DRAGONIZE:
+        ateType = TYPE_DRAGON;
+        break;
+    case ABILITY_RUFFIAN:
+        ateType = TYPE_DARK;
+        break;
+    case ABILITY_PSYLATE:
+        ateType = TYPE_PSYCHIC;
+        break;
+    case ABILITY_LIQUIDATE:
+        ateType = TYPE_WATER;
+        break;
+    case ABILITY_IMMOLATE:
+        ateType = TYPE_FIRE;
+        break;
+    case ABILITY_CHLORATE:
+        ateType = TYPE_GRASS;
+        break;
+    case ABILITY_FOSSILIZE:
+        ateType = TYPE_ROCK;
+        break;
+    case ABILITY_TERRAMORPH:
+        ateType = TYPE_GROUND;
+        break;
+    case ABILITY_CORRODE:
+        ateType = TYPE_POISON;
+        break;
+    case ABILITY_ENTOMIZE:
+        ateType = TYPE_BUG;
+        break;
+    case ABILITY_METALLIZE:
+        ateType = TYPE_STEEL;
+        break;
+    case ABILITY_SPIRITIZE:
+        ateType = TYPE_GHOST;
+        break;
+    case ABILITY_PUMMELATE:
+        ateType = TYPE_FIGHTING;
+        break;
     default:
         ateType = TYPE_NONE;
         break;
-    }
+}
 
     return ateType;
 }

@@ -2432,4 +2432,82 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .cantBeSwapped = TRUE,
         .cantBeTraced = TRUE,
     },
+    [ABILITY_DRAGONIZE] = 
+    {
+        .name = _("Dragonize"),
+        .description = COMPOUND_STRING("Normal moves become Dragon."),
+        .aiRating = 8,
+    },
+    [ABILITY_RUFFIAN] = 
+    {
+        .name = _("Ruffian"),
+        .description = COMPOUND_STRING("Normal moves become Dark."),
+        .aiRating = 8,
+    },
+    [ABILITY_PSYLATE] = 
+    {
+        .name = _("Psylate"),
+        .description = COMPOUND_STRING("Normal moves become Psychic."),
+        .aiRating = 8,
+    },
+    [ABILITY_LIQUIDATE] = 
+    {
+        .name = _("Liquidate"),
+        .description = COMPOUND_STRING("Normal moves become Water."),
+        .aiRating = 8,
+    },
+    [ABILITY_IMMOLATE] = 
+    {
+        .name = _("Immolate"),
+        .description = COMPOUND_STRING("Normal moves become Fire."),
+        .aiRating = 8,
+    },
+    [ABILITY_CHLORATE] = 
+    {
+        .name = _("Chlorate"),
+        .description = COMPOUND_STRING("Normal moves become Grass."),
+        .aiRating = 8,
+    },
+    [ABILITY_FOSSILIZE] = 
+    {
+        .name = _("Fossilize"),
+        .description = COMPOUND_STRING("Normal moves become Rock."),
+        .aiRating = 8,
+    },
+    [ABILITY_TERRAMORPH] = 
+    {
+        .name = _("Terramorph"),
+        .description = COMPOUND_STRING("Normal moves become Ground."),
+        .aiRating = 8,
+    },
+    [ABILITY_CORRODE] = 
+    {
+        .name = _("Corrode"),
+        .description = COMPOUND_STRING("Normal moves become Poison."),
+        .aiRating = 8,
+    },
+    [ABILITY_ENTOMIZE] = 
+    {
+        .name = _("Entomize"),
+        .description = COMPOUND_STRING("Normal moves become Bug."),
+        .aiRating = 8,
+    },
+    [ABILITY_METALLIZE] = 
+    {
+        .name = _("Metallize"),
+        .description = COMPOUND_STRING("Normal moves become Steel."),
+        .aiRating = 8,
+    },
+    [ABILITY_SPIRITIZE] = 
+    {
+        .name = _("Spiritize"),
+        .description = COMPOUND_STRING("Normal moves become Ghost."),
+        .aiRating = 8,
+    },
+    [ABILITY_PUMMELATE] = 
+    {
+        .name = _("Pummelate"),
+        .description = COMPOUND_STRING("Normal moves become Fighting."),
+        .aiRating = 8,
+    },
 };
