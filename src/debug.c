@@ -234,7 +234,7 @@ struct DebugMenuListData
     const struct DebugMenuOption *subMenuItems[DEBUG_MAX_SUB_MENU_LEVELS];
     struct ListMenuItem listItems[DEBUG_MAX_MENU_ITEMS + 1];
     u8 itemNames[DEBUG_MAX_MENU_ITEMS + 1][26];
-    u8 listId;
+    enum DebugMenuTypes menuType;
     s16 data[8];
 };
 
@@ -803,7 +803,7 @@ static bool32 Debug_SaveCallbackMenu(struct DebugMenuOption *callbackItems);
 void Debug_ShowMainMenu(void)
 {
     sDebugMenuListData = AllocZeroed(sizeof(*sDebugMenuListData));
-    sDebugMenuListData->listId = 0;
+    sDebugMenuListData->menuType = DEBUG_BASIC_MENU;
     Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_Main);
 }
 
@@ -900,7 +900,7 @@ static void Debug_ShowMenu(DebugFunc HandleInput, const struct DebugMenuOption *
     windowId = AddWindow(&sDebugMenuWindowTemplateMain);
     DrawStdWindowFrame(windowId, FALSE);
 
-    u32 totalItems = generateListFunctions[sDebugMenuListData->listId](items);
+    u32 totalItems = generateListFunctions[sDebugMenuListData->menuType](items);
 
     // create list menu
     menuTemplate.items = sDebugMenuListData->listItems;
@@ -1345,8 +1345,8 @@ static void DebugTask_HandleMenuInput_General(u8 taskId)
         if (Debug_GetCurrentCallbackMenu() != NULL && Debug_RemoveCallbackMenu() != 0)
         {
             Debug_DestroyMenu(taskId);
-            if (sDebugMenuListData->listId != 0)
-                sDebugMenuListData->listId = 0;
+            if (sDebugMenuListData->menuType != DEBUG_BASIC_MENU)
+                sDebugMenuListData->menuType = DEBUG_BASIC_MENU;
             Debug_ShowMenu(DebugTask_HandleMenuInput_General, NULL);
         }
         else
@@ -1357,39 +1357,35 @@ static void DebugTask_HandleMenuInput_General(u8 taskId)
     }
 }
 
+static void DebugAction_OpenSubMenuWithListId(u8 taskId, const struct DebugMenuOption *items, enum DebugMenuTypes menuType)
+{
+    sDebugMenuListData->menuType = menuType;
+    Debug_DestroyMenu(taskId);
+    Debug_ShowMenu(DebugTask_HandleMenuInput_General, items);
+}
+
 static void DebugAction_OpenSubMenuTrainers(u8 taskId, const struct DebugMenuOption *items)
 {
-    Debug_DestroyMenu(taskId);
-    sDebugMenuListData->listId = 2;
     sDebugMenuListData->data[0] = TRAINER_NONE;
-    Debug_ShowMenu(DebugTask_HandleMenuInput_General, items);
+    DebugAction_OpenSubMenuWithListId(taskId, items, DEBUG_TRAINERS_MENU);
 }
 
 static void DebugAction_OpenSubMenuFlagsVars(u8 taskId, const struct DebugMenuOption *items)
 {
-    Debug_DestroyMenu(taskId);
-    sDebugMenuListData->listId = 1;
-    Debug_ShowMenu(DebugTask_HandleMenuInput_General, items);
+    DebugAction_OpenSubMenuWithListId(taskId, items, DEBUG_FLAGS_MENU);
 }
 
 static void DebugAction_OpenSubMenu(u8 taskId, const struct DebugMenuOption *items)
 {
-    Debug_DestroyMenu(taskId);
-    sDebugMenuListData->listId = 0;
-    Debug_ShowMenu(DebugTask_HandleMenuInput_General, items);
+    DebugAction_OpenSubMenuWithListId(taskId, items, DEBUG_BASIC_MENU);
 }
 
 static void DebugAction_OpenSubMenuFakeRTC(u8 taskId, const struct DebugMenuOption *items)
 {
     if (!OW_USE_FAKE_RTC)
-    {
         Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_FakeRTCNotEnabled);
-    }
     else
-    {
-        Debug_DestroyMenu(taskId);
-        Debug_ShowMenu(DebugTask_HandleMenuInput_General, items);
-    }
+        DebugAction_OpenSubMenuWithListId(taskId, items, DEBUG_BASIC_MENU);
 }
 
 static void DebugAction_ExecuteScript(u8 taskId, void *script)
@@ -1400,21 +1396,16 @@ static void DebugAction_ExecuteScript(u8 taskId, void *script)
 static void DebugAction_ToggleFlag(u8 taskId, void *flagToggleFunc)
 {
     ((DebugFunc)flagToggleFunc)(taskId);
-    generateListFunctions[sDebugMenuListData->listId](NULL);
+    generateListFunctions[sDebugMenuListData->menuType](NULL);
     RedrawListMenu(gTasks[taskId].tMenuTaskId);
 }
 
 static void DebugAction_OpenSubMenuCreateFollowerNPC(u8 taskId, const struct DebugMenuOption *items)
 {
     if (FNPC_ENABLE_NPC_FOLLOWERS)
-    {
-        Debug_DestroyMenu(taskId);
-        Debug_ShowMenu(DebugTask_HandleMenuInput_General, items);
-    }
+        DebugAction_OpenSubMenuWithListId(taskId, items, DEBUG_BASIC_MENU);
     else
-    {
         Debug_DestroyMenu_Full_Script(taskId, Debug_Follower_NPC_Not_Enabled);
-    }
 }
 
 // *******************************
@@ -1940,7 +1931,7 @@ static void DebugAction_ChooseFromMap_Select(u8 taskId)
         DestroyTask(taskId);
 
         PlaySE(SE_SELECT);
-        sDebugMenuListData->listId = 2;
+        sDebugMenuListData->menuType = DEBUG_TRAINERS_MENU;
         Debug_RemoveCallbackMenu();
         Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_Trainers);
     }
@@ -2049,7 +2040,7 @@ static void DebugAction_ChooseTrainerID_Select(u8 taskId)
         RemoveWindow(gTasks[taskId].tSubWindowId);
         DestroyListMenuTask(gTasks[taskId].tMenuTaskId, NULL, NULL);
         DestroyTask(taskId);
-        sDebugMenuListData->listId = 2;
+        sDebugMenuListData->menuType = DEBUG_TRAINERS_MENU;
         Debug_RemoveCallbackMenu();
         Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_Trainers);
     }
