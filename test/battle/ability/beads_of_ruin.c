@@ -287,7 +287,7 @@ DOUBLE_BATTLE_TEST("Beads of Ruin will not be deactivated with Ability Shield")
     }
 }
 
-DOUBLE_BATTLE_TEST("Beads of Ruin will still be active after Ability Shield is removed")
+DOUBLE_BATTLE_TEST("Beads of Ruin will still be active while suppressed after Ability Shield is removed")
 {
     s16 damage[2];
 
