@@ -1179,7 +1179,7 @@ bool8 TryDoDoubleWildBattle(void)
         return TRUE;
     else if (FlagGet(WE_FLAG_FORCE_DOUBLE_WILD))
         return TRUE;
-    else if (WE_DOUBLE_WILD_CHANCE != 0 && ((Random() % 100) + 1 <= WE_DOUBLE_WILD_CHANCE))
+    else if (RandomPercentage(RNG_NONE, WE_DOUBLE_WILD_CHANCE))
         return TRUE;
     return FALSE;
 }
