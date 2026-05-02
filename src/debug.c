@@ -194,7 +194,7 @@ enum DebugTrainerSelection
 #define DEBUG_MAX_MENU_ITEMS 20
 #define DEBUG_MAX_SUB_MENU_LEVELS 4
 
-#define DEBUG_FLAG_CANT_BE_TOGGLED 0xFF
+#define DEBUG_OPTION_CANT_BE_TOGGLED 0xFF
 
 // *******************************
 struct DebugMenuOption;
@@ -1242,16 +1242,16 @@ static u32 Debug_CheckToggleFlags(u8 id)
         result = FlagGet(FLAG_SYS_FRONTIER_PASS);
         break;
     case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_COLLISION:
-        result = OW_FLAG_NO_COLLISION ? FlagGet(OW_FLAG_NO_COLLISION) : DEBUG_FLAG_CANT_BE_TOGGLED;
+        result = OW_FLAG_NO_COLLISION ? FlagGet(OW_FLAG_NO_COLLISION) : DEBUG_OPTION_CANT_BE_TOGGLED;
         break;
     case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_ENCOUNTER:
-        result = WE_FLAG_NO_ENCOUNTER ? FlagGet(WE_FLAG_NO_ENCOUNTER) : DEBUG_FLAG_CANT_BE_TOGGLED;
+        result = WE_FLAG_NO_ENCOUNTER ? FlagGet(WE_FLAG_NO_ENCOUNTER) : DEBUG_OPTION_CANT_BE_TOGGLED;
         break;
     case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_TRAINER_SEE:
-        result = OW_FLAG_NO_TRAINER_SEE ? FlagGet(OW_FLAG_NO_TRAINER_SEE) : DEBUG_FLAG_CANT_BE_TOGGLED;
+        result = OW_FLAG_NO_TRAINER_SEE ? FlagGet(OW_FLAG_NO_TRAINER_SEE) : DEBUG_OPTION_CANT_BE_TOGGLED;
         break;
     case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_CATCHING:
-        result = WE_FLAG_NO_CATCHING ? FlagGet(WE_FLAG_NO_CATCHING) : DEBUG_FLAG_CANT_BE_TOGGLED;
+        result = WE_FLAG_NO_CATCHING ? FlagGet(WE_FLAG_NO_CATCHING) : DEBUG_OPTION_CANT_BE_TOGGLED;
         break;
     case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BAG_USE:
         result = VarGet(B_VAR_NO_BAG_USE);
@@ -1259,7 +1259,7 @@ static u32 Debug_CheckToggleFlags(u8 id)
             result = NO_BAG_INVALID_VALUE;
         break;
     default:
-        result = DEBUG_FLAG_CANT_BE_TOGGLED;
+        result = DEBUG_OPTION_CANT_BE_TOGGLED;
         break;
     }
 
@@ -1293,7 +1293,7 @@ static u8 Debug_GenerateListMenuNames(void)
         if (i == DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BAG_USE && flagResult == NO_BAG_INVALID_VALUE)
             flagResult = FALSE;
 
-        if (flagResult == 0xFF)
+        if (flagResult == DEBUG_OPTION_CANT_BE_TOGGLED)
         {
             StringCopy(&sDebugMenuListData->itemNames[i][0], name);
         }
