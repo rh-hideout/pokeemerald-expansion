@@ -58,6 +58,8 @@
 	STD_FIND_ITEM = 1
 	STD_OBTAIN_DECORATION = 7
 	STD_REGISTER_MATCH_CALL = 8
+	STD_PUT_ITEM_AWAY = 11
+	STD_RECEIVED_ITEM = 12
 
 	@ Calls the script in gStdScripts at index function.
 	.macro callstd function:req
@@ -730,7 +732,7 @@
 	OBJ_ID_NONE = 0
 
 	@ Configures the arguments for a trainer battle, then jumps to the appropriate script in scripts/trainer_battle.inc
-	.macro trainerbattle type:req localIdA:req, trainer_a:req, intro_text_a:req, lose_text_a:req, event_script_a:req, localIdB:req, trainer_b:req, intro_text_b:req, lose_text_b:req, event_script_b:req, victory_text:req, cannot_battle:req, isDouble:req, playMusicA:req, playMusicB:req, isRematch:req
+	.macro trainerbattle type:req localIdA:req, trainer_a:req, intro_text_a:req, lose_text_a:req, event_script_a:req, localIdB:req, trainer_b:req, intro_text_b:req, lose_text_b:req, event_script_b:req, victory_text:req, cannot_battle:req, isDouble:req, playMusicA:req, playMusicB:req, isRematch:req, rival_battle_flags=0
 	.byte SCR_OP_TRAINERBATTLE
 	.set trainerbattle_flags, 0
 	.ifgt \isDouble; .set trainerbattle_flags, trainerbattle_flags | (1 << 0); .endif
@@ -751,6 +753,7 @@
 	.4byte \event_script_b      @ retAddrB
 	.4byte \victory_text        @ victoryText
 	.4byte \cannot_battle       @ cannotBattle
+	.byte \rival_battle_flags	@ rivalBattleFlags
 	.endm
 
 	NO_MUSIC = FALSE
@@ -798,6 +801,11 @@
 	@ Takes two trainers and defeat text for each
 	.macro trainerbattle_two_trainers trainer_a:req, lose_text_a:req, trainer_b:req, lose_text_b:req
 	trainerbattle TRAINER_BATTLE_TWO_TRAINERS_NO_INTRO, OBJ_ID_NONE, \trainer_a, NULL, \lose_text_a, NULL, OBJ_ID_NONE, \trainer_b, NULL, \lose_text_b, NULL, NULL, NULL, FALSE, TRUE, FALSE, FALSE
+	.endm
+
+	@ Starts a trainer battle with victory text if the player loses. If flags is nonzero, the player will be healed after battle (and its assumed to be the tutorial battle)
+	.macro trainerbattle_earlyrival trainer:req, flags:req, lose_text:req, victory_text:req
+	trainerbattle TRAINER_BATTLE_EARLY_RIVAL, OBJ_ID_NONE, \trainer, NULL, \lose_text, NULL, OBJ_ID_NONE, TRAINER_NONE, NULL, NULL, NULL, \victory_text, NULL, FALSE, TRUE, FALSE, FALSE, \flags
 	.endm
 
 	@ Starts a trainer battle using the battle information stored in RAM (usually by the scripts in trainer_battle.inc, which
@@ -1239,7 +1247,7 @@
 
 	@ Opens the Pokemart system, offering the specified products for sale.
 	@ Products should be a list of .2byte item values preceded by an .align 2
-	.macro pokemart products:req
+	.macro pokemart products=Pokemart_DefaultItemList
 	.byte SCR_OP_POKEMART
 	.4byte \products
 	.endm
@@ -1271,11 +1279,14 @@
 	.endm
 
 	@ Sets a berry tree's berry and growth stage. treeId is any BERRY_TREE_* constant (an index into berryTrees in SaveBlock1),
-	@ berry is any ITEM_TO_BERRY(ITEM_BERRY_NAME) value, and growthStage is any BERRY_STAGE_* constant.
-	.macro setberrytree treeId:req, berry:req, growthStage:req
+	@ berryId is any BERRY_ID_X value, and growthStage is any BERRY_STAGE_* constant.
+	.macro setberrytree treeId:req, berryId:req, growthStage:req
+	.if \berryId == 0 || \berryId > NUM_BERRIES
+		.error "setberrytree must use a valid berry index"
+	.endif
 	.byte SCR_OP_SETBERRYTREE
 	.byte \treeId
-	.byte \berry
+	.byte \berryId
 	.byte \growthStage
 	.endm
 
@@ -1438,6 +1449,18 @@
 	.2byte \y
 	.2byte \metatileId
 	.2byte \impassable
+	.endm
+
+	@ Set a metatile at all tiles within the bounds [xmin,ymin] to [xmax,ymax] inclusive with desired elevation
+	.macro setmetatileinrange xmin:req, ymin:req, xmax:req, ymax:req, metatileId:req, collision=FALSE, elevation=0xFF
+	callnative NativeFunc_SetMetatileInRange
+	.byte \xmin
+	.byte \ymin
+	.byte \xmax
+	.byte \ymax
+	.2byte \metatileId
+	.byte \collision
+	.byte \elevation
 	.endm
 
 	@ Queues a weather change to the default weather for the map.
@@ -1910,6 +1933,12 @@
 	.2byte \id
 	.endm
 
+	@ Gets the width of the specified message in the Braille font and sets the result to VAR_0x8004.
+	.macro getbraillestringwidth msg:req
+	.byte SCR_OP_GETBRAILLESTRINGWIDTH
+	.4byte \msg
+	.endm
+
 	.macro dynmultistack left:req, top:req, ignoreBPress:req, maxBeforeScroll:req, shouldSort:req, initialSelected:req, callbacks:req
 	_dynmultichoice \left, \top, \ignoreBPress, \maxBeforeScroll, \shouldSort, \initialSelected, \callbacks, NULL
 	.endm
@@ -2087,6 +2116,13 @@
 	callstd STD_FIND_ITEM
 	.endm
 
+	@ Prints the message "{PLAYER} put the {ITEM} in the {POCKET}." The item name is pluralized, if applicable.
+	.macro putitemaway item:req, amount=1
+	setorcopyvar VAR_0x8000, \item
+	setorcopyvar VAR_0x8001, \amount
+	callstd STD_PUT_ITEM_AWAY
+	.endm
+
 	@ Equivalent to giveitem but for a single decoration.
 	.macro givedecoration decoration:req
 	setorcopyvar VAR_0x8000, \decoration
@@ -2193,18 +2229,6 @@
 	.endm
 	.macro totemboost_evas2 battler:req
 	settotemboost \battler, 0, 0, 0, 0, 0, 0, 2
-	.endm
-
-	@ Attempts to trigger a special evolution method in the overworld.
-	@ There may be other conditions required which are coded for in GetEvolutionTargetSpecies.
-	@ EX: tryspecialevo EVO_WATER_SCROLL, FALSE, FALSE triggers Kubfu's EVO_WATER_SCROLL evolution
-	@ 	  method, cannot be cancelled in the evolution scene, and will only evolve one Kubfu if there
-	@	  are multiple in the player's party.
-	.macro tryspecialevo evoMethod:req, canStopEvo=TRUE, tryMultiple=TRUE
-	setvar VAR_0x8000, \evoMethod
-	setvar VAR_0x8001, \canStopEvo
-	setvar VAR_0x8002, \tryMultiple
-	special TrySpecialScriptEvolution
 	.endm
 
 	.macro ai_vs_ai_battle trainer1:req, trainer2:req
@@ -2317,9 +2341,9 @@
 	.endm
 
 	@ Buffers the nickname of the first alive party member.
-	.macro bufferlivemonnickname out:req
+	.macro bufferlivemonnickname stringVarId:req
 	callnative BufferFirstLiveMonNickname, requests_effects=1
-	.byte \out
+	stringvar \stringVarId
 	.endm
 
 	@ Executes Follower actions
@@ -2628,7 +2652,7 @@
 	callnative DoFacilityTrainerBattle
 	.byte \facility
 	.endm
-	
+
 	.macro ingame_trade tradeId:req wantTradeMsg:req, declineTradeJump:req, wrongMonJump:req, tradeCompleteMsg:req
 	setvar VAR_0x8005, \tradeId
 	specialvar VAR_0x8009, GetInGameTradeSpeciesInfo
@@ -2642,6 +2666,7 @@
 	special CreateInGameTradePokemon
 	special DoInGameTradeScene
 	waitstate
+	bufferspeciesname STR_VAR_1, VAR_0x8009
 	msgbox \tradeCompleteMsg, MSGBOX_DEFAULT
 	.endm
 
@@ -2670,6 +2695,30 @@
 	.byte \selectionType
 	.endm
 
+	@ picks the first mon in party matching the given selectionType (enum PcMonSelectionType)
+	.macro pickpartymon selectionType:req
+	callnative PickPartyMon
+	.byte \selectionType
+	.endm
+
+	.macro mappreview duration:req
+	callnative MapPreviewScript
+	.2byte \duration
+	.endm
+
+	.macro tryspecialevo evoArg:req, canStopEvo=TRUE, tryMultiple=FALSE
+	setvar VAR_0x8000, \canStopEvo
+	setvar VAR_0x8005, \evoArg
+	.if \tryMultiple
+		setvar VAR_RESULT, 0
+		setvar VAR_0x8006, 0
+		callnative Script_TriggerMultipleEvolutions
+	.else
+		pickpartymon SELECT_PC_MON_EVOLUTION
+		callnative Script_TriggerUniqueEvolution
+	.endif
+	.endm
+
 @ Follower NPCs
 
 	@ Sets an existing NPC up to follow the player.
@@ -2694,7 +2743,7 @@
 		.2byte \battlePartner
 		.4byte \script
 		updatefollowingmon
-        1:
+		1:
 	.else
 		.error "setfollowernpc unavailable with FNPC_ENABLE_NPC_FOLLOWERS defined as FALSE"
 	.endif
@@ -2764,6 +2813,20 @@
 	.4byte \name
 	.endm
 
+	@ Gives a random berry between the index ranges
+	.macro giverandomberry loBerry:req, hiBerry:req
+	.if \loBerry == 0 || \loBerry > NUM_BERRIES
+		.error "giverandomberry must use a valid berry index for first argument"
+	.endif
+	.if \hiBerry == 0 || \hiBerry > NUM_BERRIES
+		.error "giverandomberry must use a valid berry index for second argument"
+	.endif
+	callnative Script_GiveRandomBerry
+	.byte \loBerry
+	.byte \hiBerry
+	giveitem VAR_RESULT
+	.endm
+
 @ VS Seeker
 	.macro vsseeker_rematchid rematchId:req
 	callnative NativeVsSeekerRematchId, requests_effects=1
@@ -2776,20 +2839,74 @@
 	.2byte \state
 	.endm
 
-	@ Retrieves the move relearner state and stores it in the specified var
-	.macro getmoverelearnerstate varId:req
-	callnative ScrCmd_getmoverelearnerstate, requests_effects=1
-	.4byte \varId
-	.endm
-
-	@ Execute script if bag has TMs and/or HMs
-	.macro istmrelearneractive destination:req
-	callnative ScrCmd_istmrelearneractive, requests_effects=1
-	.4byte \destination
-	.endm
-
 	@ Sets a starting status for the next battle. Can be stacked.
 	.macro setstartingstatus status:req
 	callnative ScrCmd_setstartingstatus
 	.byte \status
+	.endm
+
+	@ Makes the player and specified (localId) object face one another.
+	.macro facetogether localIdOne=LOCALID_PLAYER, localIdTwo=VAR_LAST_TALKED
+	callnative ScriptFaceEachOther, requests_effects=1
+	.2byte \localIdOne
+	.2byte \localIdTwo
+	.endm
+
+	@ Saves the species of a specified (localId) object, or SPECIES_NONE if one is not found. 
+	.macro getoverworldwildencounterspecies var:req, localId=VAR_LAST_TALKED
+	callnative SetOverworldObjectSpecies, requests_effects=1
+	.2byte \var
+	.2byte \localId
+	.endm
+
+	@ Starts an Overworld Wild Encounter with a specified (localId) object, if possible.
+	.macro tryoverworldwildencounter localId=VAR_LAST_TALKED
+	callnative StartWildBattleWithOWE, requests_effects=1
+	.2byte \localId
+	.endm
+
+	@ Start a scripted approach for a specified (localId) overworld wild encounter towards the player.
+	.macro overworldwildencounterapproach localId=VAR_LAST_TALKED
+	callnative OWEApproachForBattle, requests_effects=1
+	.2byte \localId
+	.endm
+
+@ FRLG
+
+
+	@ Prints the provided message after playing the fanfare music (can only be MUS_LEVEL_UP or MUS_RG_OBTAIN_KEY_ITEM).
+	@ It then prints the message shown by using putitemaway.
+	.macro msgreceiveditem msg:req, item:req, amount=1, fanfare=MUS_LEVEL_UP
+	loadword 0, \msg
+	setorcopyvar VAR_0x8000, \item
+	setorcopyvar VAR_0x8001, \amount
+	setorcopyvar VAR_0x8002, \fanfare
+	callstd STD_RECEIVED_ITEM
+	.endm
+
+	@ Adds the specified item to the bag, then prints a message with fanfare. See description of msgreceiveditem.
+	.macro giveitem_msg msg:req, item:req, amount=1, fanfare=MUS_LEVEL_UP
+	additem \item, \amount
+	msgreceiveditem \msg, \item, \amount, \fanfare
+	.endm
+
+	@ Depends on the provided function. With the default argument, unlocks the specified entry in the Fame Checker.
+	.macro famechecker person:req, index:req, function=SetFlavorTextFlagFromSpecialVars
+	setvar VAR_0x8004, \person
+	setvar VAR_0x8005, \index
+	special \function
+	.endm
+
+	@ Sets the 'defeated' flag for all trainers in the specified gym.
+	.macro set_gym_trainers_frlg gym:req
+	setvar VAR_0x8008, \gym
+	call Common_EventScript_SetGymTrainers_Frlg
+	.endm
+
+	@ Prints a braille message, then waits for users input.
+	.macro braillemessage_wait text:req
+	setvar VAR_0x8006, 0
+	braillemessage \text
+	getbraillestringwidth \text
+	call EventScript_BrailleCursorWaitButton
 	.endm

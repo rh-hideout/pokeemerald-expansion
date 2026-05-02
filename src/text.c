@@ -51,10 +51,10 @@ static u32 GetGlyphWidth_Narrower(u16, bool32);
 static u32 GetGlyphWidth_SmallNarrower(u16, bool32);
 static u32 GetGlyphWidth_ShortNarrow(u16, bool32);
 static u32 GetGlyphWidth_ShortNarrower(u16, bool32);
-
 static struct TextPrinter *AllocateTextPrinter(void);
 static u32 GetNumTextPrinters(void);
 static void FreeFinishedTextPrinters(void);
+static void SpriteCB_TextCursor(struct Sprite *sprite);
 
 static EWRAM_DATA struct TextPrinter *sFirstTextPrinter = NULL;
 
@@ -66,10 +66,10 @@ EWRAM_DATA bool8 gDisableTextPrinters = 0;
 EWRAM_DATA TextFlags gTextFlags = {0};
 IWRAM_DATA struct TextGlyph gCurGlyph = {0};
 
-static const u8 sDownArrowTiles[] = INCBIN_U8("graphics/fonts/down_arrow.4bpp");
-static const u8 sDarkDownArrowTiles[] = INCBIN_U8("graphics/fonts/down_arrow_alt.4bpp");
-static const u8 sUnusedFRLGBlankedDownArrow[] = INCBIN_U8("graphics/fonts/unused_frlg_blanked_down_arrow.4bpp");
-static const u8 sUnusedFRLGDownArrow[] = INCBIN_U8("graphics/fonts/unused_frlg_down_arrow.4bpp");
+static const u8 sDownArrowTiles[] = INCGFX_U8("graphics/fonts/down_arrow.png", ".4bpp");
+static const u8 sDarkDownArrowTiles[] = INCGFX_U8("graphics/fonts/down_arrow_alt.png", ".4bpp");
+static const u8 sUnusedFRLGBlankedDownArrow[] = INCGFX_U8("graphics/fonts/unused_frlg_blanked_down_arrow.png", ".4bpp");
+static const u8 sUnusedFRLGDownArrow[] = INCGFX_U8("graphics/fonts/unused_frlg_down_arrow.png", ".4bpp");
 static const u8 sDownArrowYCoords[] = { 0, 1, 2, 1 };
 
 static const struct GlyphWidthFunc sGlyphWidthFuncs[] =
@@ -111,7 +111,7 @@ struct
     [CHAR_DPAD_NONE]      = { 0x22,  8, 12 }
 };
 
-static const u8 sKeypadIconTiles[] = INCBIN_U8("graphics/fonts/keypad_icons.4bpp");
+static const u8 sKeypadIconTiles[] = INCGFX_U8("graphics/fonts/keypad_icons.png", ".4bpp");
 
 static const struct FontInfo sFontInfos[] =
 {
@@ -314,7 +314,7 @@ static const u8 sTextScrollSpeeds[] =
     [OPTIONS_TEXT_SPEED_INSTANT] = 6,
 };
 
-static const u16 sFontBoldJapaneseGlyphs[] = INCBIN_U16("graphics/fonts/bold.hwjpnfont");
+static const u16 sFontBoldJapaneseGlyphs[] = INCGFX_U16("graphics/fonts/japanese_bold.png", ".hwjpnfont");
 
 static void SetFontsPointer(const struct FontInfo *fonts)
 {
@@ -480,7 +480,10 @@ bool32 AddTextPrinter(struct TextPrinterTemplate *printerTemplate, u8 speed, voi
     sTempTextPrinter.textSpeed = speed;
 
     if (printerTemplate->type == SPRITE_TEXT_PRINTER)
-        printerTemplate->firstSprite = printerTemplate->spriteId;
+    {
+        sTempTextPrinter.printerTemplate.firstSprite = printerTemplate->spriteId;
+        sTempTextPrinter.printerTemplate.firstSpriteInRow = printerTemplate->spriteId;
+    }
 
 
     GenerateFontHalfRowLookupTable(printerTemplate->color);
@@ -545,7 +548,7 @@ void RunTextPrinters(void)
         {
             if (currentPrinter->active)
             {
-                for (u32 repeat = 0; repeat < textRepeats; repeat++)
+                for (u32 repeat = 0; repeat < textRepeats || isInstantText; repeat++)
                 {
                     u32 renderState = RenderFont(currentPrinter);
                     switch (renderState)
@@ -1300,7 +1303,7 @@ void DrawDownArrow(u8 windowId, u16 x, u16 y, u8 bgColor, bool32 drawArrow, u8 *
     else
     {
         FillWindowPixelRect(windowId, (bgColor << 4) | bgColor, x, y, 0x8, 0x10);
-        if (drawArrow == 0)
+        if (!drawArrow)
         {
             switch (gTextFlags.useAlternateDownArrow)
             {
@@ -2168,30 +2171,30 @@ u8 GetFontAttribute(u8 fontId, u8 attributeId)
     int result = 0;
     switch (attributeId)
     {
-        case FONTATTR_MAX_LETTER_WIDTH:
-            result = sFontInfos[fontId].maxLetterWidth;
-            break;
-        case FONTATTR_MAX_LETTER_HEIGHT:
-            result = sFontInfos[fontId].maxLetterHeight;
-            break;
-        case FONTATTR_LETTER_SPACING:
-            result = sFontInfos[fontId].letterSpacing;
-            break;
-        case FONTATTR_LINE_SPACING:
-            result = sFontInfos[fontId].lineSpacing;
-            break;
-        case FONTATTR_COLOR_ACCENT:
-            result = sFontInfos[fontId].color.accent;
-            break;
-        case FONTATTR_COLOR_FOREGROUND:
-            result = sFontInfos[fontId].color.foreground;
-            break;
-        case FONTATTR_COLOR_BACKGROUND:
-            result = sFontInfos[fontId].color.background;
-            break;
-        case FONTATTR_COLOR_SHADOW:
-            result = sFontInfos[fontId].color.shadow;
-            break;
+    case FONTATTR_MAX_LETTER_WIDTH:
+        result = sFontInfos[fontId].maxLetterWidth;
+        break;
+    case FONTATTR_MAX_LETTER_HEIGHT:
+        result = sFontInfos[fontId].maxLetterHeight;
+        break;
+    case FONTATTR_LETTER_SPACING:
+        result = sFontInfos[fontId].letterSpacing;
+        break;
+    case FONTATTR_LINE_SPACING:
+        result = sFontInfos[fontId].lineSpacing;
+        break;
+    case FONTATTR_COLOR_ACCENT:
+        result = sFontInfos[fontId].color.accent;
+        break;
+    case FONTATTR_COLOR_FOREGROUND:
+        result = sFontInfos[fontId].color.foreground;
+        break;
+    case FONTATTR_COLOR_BACKGROUND:
+        result = sFontInfos[fontId].color.background;
+        break;
+    case FONTATTR_COLOR_SHADOW:
+        result = sFontInfos[fontId].color.shadow;
+        break;
     }
     return result;
 }
@@ -2205,7 +2208,7 @@ static void DecompressGlyph_Small(u16 glyphId, bool32 isJapanese)
 {
     const u16 *glyphs;
 
-    if (isJapanese == 1)
+    if (isJapanese)
     {
         glyphs = gFontSmallJapaneseGlyphs + (0x100 * (glyphId >> 0x4)) + (0x8 * (glyphId & 0xF));
         DecompressGlyphTile(glyphs, gCurGlyph.gfxBufferTop);
@@ -2743,6 +2746,95 @@ static void FreeFinishedTextPrinters(void)
         }
     }
 }
+
+// FRLG
+
+#define TAG_CURSOR 0x8000
+
+extern const struct OamData gOamData_AffineOff_ObjNormal_16x16;
+
+static const u8 sDoubleArrowTiles1[]       = INCGFX_U8("graphics/fonts/down_arrow_3.png", ".4bpp");
+static const u8 sDoubleArrowTiles2[]       = INCGFX_U8("graphics/fonts/down_arrow_4.png", ".4bpp");
+
+static const struct SpriteSheet sSpriteSheets_TextCursor[] =
+{
+    {sDoubleArrowTiles1, sizeof(sDoubleArrowTiles1), TAG_CURSOR},
+    {sDoubleArrowTiles2, sizeof(sDoubleArrowTiles2), TAG_CURSOR},
+    {NULL}
+};
+
+static const struct SpritePalette sSpritePalettes_TextCursor[] =
+{
+    {gStandardMenuPalette, TAG_CURSOR},
+    {NULL}
+};
+
+static const struct SpriteTemplate sSpriteTemplate_TextCursor =
+{
+    .tileTag = TAG_CURSOR,
+    .paletteTag = TAG_CURSOR,
+    .oam = &gOamData_AffineOff_ObjNormal_16x16,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCB_TextCursor,
+};
+
+#define sDelay data[0]
+#define sState data[1]
+
+static void SpriteCB_TextCursor(struct Sprite *sprite)
+{
+    if (sprite->sDelay)
+    {
+        sprite->sDelay--;
+    }
+    else
+    {
+        sprite->sDelay = 8;
+        switch (sprite->sState)
+        {
+        case 0:
+            sprite->y2 = 0;
+            break;
+        case 1:
+            sprite->y2 = 1;
+            break;
+        case 2:
+            sprite->y2 = 2;
+            break;
+        case 3:
+            sprite->y2 = 1;
+            sprite->sState = 0;
+            return;
+        }
+        sprite->sState++;
+    }
+}
+
+u8 CreateTextCursorSprite(u8 sheetId, u16 x, u16 y, u8 priority, u8 subpriority)
+{
+    u8 spriteId;
+    LoadSpriteSheet(&sSpriteSheets_TextCursor[sheetId & 1]);
+    LoadSpritePalette(&sSpritePalettes_TextCursor[0]);
+    spriteId = CreateSprite(&sSpriteTemplate_TextCursor, x + 3, y + 4, subpriority);
+    gSprites[spriteId].oam.priority = (priority & 3);
+    gSprites[spriteId].oam.matrixNum = 0;
+    gSprites[spriteId].sDelay = 8;
+    return spriteId;
+}
+
+void DestroyTextCursorSprite(u8 spriteId)
+{
+    DestroySprite(&gSprites[spriteId]);
+    FreeSpriteTilesByTag(TAG_CURSOR);
+    FreeSpritePaletteByTag(TAG_CURSOR);
+}
+
+#undef sDelay
+#undef sState
+
+// End FRLG
 
 void DeactivateSingleTextPrinter(u32 id, enum TextPrinterType type)
 {

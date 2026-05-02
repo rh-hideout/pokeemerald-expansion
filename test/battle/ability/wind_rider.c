@@ -75,7 +75,7 @@ SINGLE_BATTLE_TEST("Wind Rider raises Attack by one stage if switched into Tailw
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TAILWIND, opponent);
         ABILITY_POPUP(opponent, ABILITY_WIND_RIDER);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Bramblin's Wind Rider raised its Attack!");
+        MESSAGE("The opposing Bramblin's Attack rose!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
@@ -99,7 +99,7 @@ SINGLE_BATTLE_TEST("Wind Rider activates when it's no longer effected by Neutral
         MESSAGE("The effects of the neutralizing gas wore off!");
         ABILITY_POPUP(opponent, ABILITY_WIND_RIDER);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Bramblin's Wind Rider raised its Attack!");
+        MESSAGE("The opposing Bramblin's Attack rose!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
     }
@@ -123,5 +123,27 @@ SINGLE_BATTLE_TEST("Wind Rider absorbs Wind moves and raises Attack by one stage
         MESSAGE("The opposing Bramblin's Attack rose!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Tailwind does not trigger Wind Rider on an absent ally battler")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
+        PLAYER(SPECIES_BRAMBLIN) { Ability(ABILITY_WIND_RIDER); HP(1); Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_WATER_GUN, target: playerRight); }
+        TURN { MOVE(playerLeft, MOVE_TAILWIND); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, opponentLeft);
+        HP_BAR(playerRight);
+        MESSAGE("Bramblin fainted!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TAILWIND, playerLeft);
+        NONE_OF {
+            ABILITY_POPUP(playerRight, ABILITY_WIND_RIDER);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+        }
     }
 }

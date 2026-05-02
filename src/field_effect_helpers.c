@@ -11,6 +11,7 @@
 #include "sound.h"
 #include "sprite.h"
 #include "trig.h"
+#include "wild_encounter_ow.h"
 #include "constants/event_objects.h"
 #include "constants/field_effects.h"
 #include "constants/rgb.h"
@@ -64,6 +65,9 @@ void SetUpShadow(struct ObjectEvent *objectEvent)
 
 void SetUpReflection(struct ObjectEvent *objectEvent, struct Sprite *sprite, bool8 stillReflection)
 {
+    if (IsOverworldWildEncounter(objectEvent, OWE_GENERATED))
+        return;
+    
     struct Sprite *reflectionSprite;
 
     reflectionSprite = &gSprites[CreateCopySpriteAt(sprite, sprite->x, sprite->y, 152)];
@@ -1289,7 +1293,7 @@ void SynchronizeSurfPosition(struct ObjectEvent *playerObj, struct Sprite *sprit
         for (i = DIR_SOUTH; i <= DIR_EAST; i++, x = sprite->sPrevX, y = sprite->sPrevY)
         {
             MoveCoords(i, &x, &y);
-            if (MapGridGetElevationAt(x, y) == 3)
+            if (MapGridGetElevationAt(x, y) == ELEVATION_DEFAULT)
             {
                 // While dismounting the surf blob bobs at a slower rate
                 sprite->sIntervalIdx++;
@@ -1726,106 +1730,106 @@ void UpdateRayquazaSpotlightEffect(struct Sprite *sprite)
 
     switch (sprite->sState)
     {
-        case 0:
-            SetGpuReg(REG_OFFSET_BG0VOFS, DISPLAY_WIDTH / 2 - (sprite->sTimer / 3));
-            if (sprite->sTimer == 96)
-            {
-                for (i = 0; i < 3; i++)
-                {
-                    for (j = 12; j < 18; j++)
-                    {
-                        ((u16 *)(BG_SCREEN_ADDR(31)))[i * 32 + j] = 0xBFF4 + i * 6 + j + 1;
-                    }
-                }
-            }
-            if (sprite->sTimer > 311)
-            {
-                sprite->sState = 1;
-                sprite->sTimer = 0;
-            }
-            break;
-        case 1:
-            sprite->y = (gSineTable[sprite->sTimer / 3] >> 2) + sprite->sStartY;
-            if (sprite->sTimer == 189)
-            {
-                sprite->sState = 2;
-                sprite->sCounter = 0;
-                sprite->sTimer = 0;
-            }
-            break;
-        case 2:
-            if (sprite->sTimer == 60)
-            {
-                sprite->sCounter++;
-                sprite->sTimer = 0;
-            }
-            if (sprite->sCounter == 7)
-            {
-                sprite->sCounter = 0;
-                sprite->sState = 3;
-            }
-            break;
-        case 3:
-            if (sprite->y2 == 0)
-            {
-                sprite->sTimer = 0;
-                sprite->sState++;
-            }
-            if (sprite->sTimer == 5)
-            {
-                sprite->sTimer = 0;
-                if (sprite->y2 > 0)
-                    sprite->y2--;
-                else
-                    sprite->y2++;
-            }
-            break;
-        case 4:
-            if (sprite->sTimer == 60)
-            {
-                sprite->sState = 5;
-                sprite->sTimer = 0;
-                sprite->sCounter = 0;
-            }
-            break;
-        case 5:
-            InitRayquazaForFigure8Anim(sprite);
-            sprite->sState = 6;
-            sprite->sTimer = 0;
-            break;
-        case 6:
-            if (AnimateRayquazaInFigure8(sprite))
-            {
-                sprite->sTimer = 0;
-                if (++sprite->sCounter <= 2)
-                {
-                    InitRayquazaForFigure8Anim(sprite);
-                }
-                else
-                {
-                    sprite->sCounter = 0;
-                    sprite->sState = 7;
-                }
-            }
-            break;
-        case 7:
-            if (sprite->sTimer == 30)
-            {
-                sprite->sState = 8;
-                sprite->sTimer = 0;
-            }
-            break;
-        case 8:
-            for (i = 0; i < 15; i++)
+    case 0:
+        SetGpuReg(REG_OFFSET_BG0VOFS, DISPLAY_WIDTH / 2 - (sprite->sTimer / 3));
+        if (sprite->sTimer == 96)
+        {
+            for (i = 0; i < 3; i++)
             {
                 for (j = 12; j < 18; j++)
                 {
-                    ((u16 *)(BG_SCREEN_ADDR(31)))[i * 32 + j] = 0;
+                    ((u16 *)(BG_SCREEN_ADDR(31)))[i * 32 + j] = 0xBFF4 + i * 6 + j + 1;
                 }
             }
-            SetGpuReg(REG_OFFSET_BG0VOFS, 0);
-            FieldEffectStop(sprite, FLDEFF_RAYQUAZA_SPOTLIGHT);
-            break;
+        }
+        if (sprite->sTimer > 311)
+        {
+            sprite->sState = 1;
+            sprite->sTimer = 0;
+        }
+        break;
+    case 1:
+        sprite->y = (gSineTable[sprite->sTimer / 3] >> 2) + sprite->sStartY;
+        if (sprite->sTimer == 189)
+        {
+            sprite->sState = 2;
+            sprite->sCounter = 0;
+            sprite->sTimer = 0;
+        }
+        break;
+    case 2:
+        if (sprite->sTimer == 60)
+        {
+            sprite->sCounter++;
+            sprite->sTimer = 0;
+        }
+        if (sprite->sCounter == 7)
+        {
+            sprite->sCounter = 0;
+            sprite->sState = 3;
+        }
+        break;
+    case 3:
+        if (sprite->y2 == 0)
+        {
+            sprite->sTimer = 0;
+            sprite->sState++;
+        }
+        if (sprite->sTimer == 5)
+        {
+            sprite->sTimer = 0;
+            if (sprite->y2 > 0)
+                sprite->y2--;
+            else
+                sprite->y2++;
+        }
+        break;
+    case 4:
+        if (sprite->sTimer == 60)
+        {
+            sprite->sState = 5;
+            sprite->sTimer = 0;
+            sprite->sCounter = 0;
+        }
+        break;
+    case 5:
+        InitRayquazaForFigure8Anim(sprite);
+        sprite->sState = 6;
+        sprite->sTimer = 0;
+        break;
+    case 6:
+        if (AnimateRayquazaInFigure8(sprite))
+        {
+            sprite->sTimer = 0;
+            if (++sprite->sCounter <= 2)
+            {
+                InitRayquazaForFigure8Anim(sprite);
+            }
+            else
+            {
+                sprite->sCounter = 0;
+                sprite->sState = 7;
+            }
+        }
+        break;
+    case 7:
+        if (sprite->sTimer == 30)
+        {
+            sprite->sState = 8;
+            sprite->sTimer = 0;
+        }
+        break;
+    case 8:
+        for (i = 0; i < 15; i++)
+        {
+            for (j = 12; j < 18; j++)
+            {
+                ((u16 *)(BG_SCREEN_ADDR(31)))[i * 32 + j] = 0;
+            }
+        }
+        SetGpuReg(REG_OFFSET_BG0VOFS, 0);
+        FieldEffectStop(sprite, FLDEFF_RAYQUAZA_SPOTLIGHT);
+        break;
     }
 
     if (sprite->sState == 1)
@@ -1902,4 +1906,25 @@ static void UpdateGrassFieldEffectSubpriority(struct Sprite *sprite, u8 elevatio
             }
         }
     }
+}
+
+u32 FldEff_OWE_SpawnAnim(void)
+{
+    u8 spriteId;
+    enum SpawnDespawnTypeOWE spawnAnim = gFieldEffectArguments[2];
+    u32 visual = gOverworldWildEncounterFieldEffectInfo[spawnAnim].visual;
+    s16 xOffset = gOverworldWildEncounterFieldEffectInfo[spawnAnim].xOffset;
+    s16 yOffset = gOverworldWildEncounterFieldEffectInfo[spawnAnim].yOffset;
+    struct SpritePalette palette = GetOWESpawnDespawnAnimFldEffPalette(spawnAnim);
+
+    FieldEffect_LoadFadedPalette(&palette, COLOR_MAP_DARK_CONTRAST);
+    SetSpritePosToOffsetMapCoords((s16 *)&gFieldEffectArguments[0], (s16 *)&gFieldEffectArguments[1], 8, 0);
+    spriteId = CreateSpriteAtEnd(gFieldEffectObjectTemplatePointers[visual], gFieldEffectArguments[0] + xOffset, gFieldEffectArguments[1] + yOffset, 0);
+    if (spriteId != MAX_SPRITES)
+    {
+        struct Sprite *sprite = &gSprites[spriteId];
+        sprite->coordOffsetEnabled = TRUE;
+        sprite->oam.priority = 2;
+    }
+    return spriteId;
 }

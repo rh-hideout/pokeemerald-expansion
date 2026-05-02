@@ -36,30 +36,23 @@ SINGLE_BATTLE_TEST("Upper Hand fails if the target is using a status move")
         TURN { MOVE(opponent, MOVE_BABY_DOLL_EYES); MOVE(player, MOVE_UPPER_HAND); }
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_UPPER_HAND, player);
-        MESSAGE("Mienshao used Upper Hand!");
-        MESSAGE("But it failed!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BABY_DOLL_EYES, opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Mienshao's Attack fell!");
     }
 }
 
 SINGLE_BATTLE_TEST("Upper Hand fails if the target is not using a priority move")
 {
     GIVEN {
-        ASSUME(GetMoveCategory(MOVE_DRAINING_KISS) == DAMAGE_CATEGORY_SPECIAL);
-        ASSUME(GetMovePriority(MOVE_DRAINING_KISS) == 0);
+        ASSUME(GetMoveCategory(MOVE_WATER_GUN) == DAMAGE_CATEGORY_SPECIAL);
+        ASSUME(GetMovePriority(MOVE_WATER_GUN) == 0);
         PLAYER(SPECIES_MIENSHAO);
         OPPONENT(SPECIES_COMFEY) { Ability(ABILITY_FLOWER_VEIL); }
     } WHEN {
-        TURN { MOVE(opponent, MOVE_DRAINING_KISS); MOVE(player, MOVE_UPPER_HAND); }
+        TURN { MOVE(opponent, MOVE_WATER_GUN); MOVE(player, MOVE_UPPER_HAND); }
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_UPPER_HAND, player);
-        MESSAGE("Mienshao used Upper Hand!");
-        MESSAGE("But it failed!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAINING_KISS, opponent);
-        HP_BAR(player);
-        HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, opponent);
     }
 }
 
@@ -75,8 +68,6 @@ SINGLE_BATTLE_TEST("Upper Hand succeeds if the target's move is boosted in prior
         TURN { MOVE(opponent, MOVE_DRAINING_KISS); MOVE(player, MOVE_UPPER_HAND); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_UPPER_HAND, player);
-        HP_BAR(opponent);
-        MESSAGE("The opposing Comfey flinched and couldn't move!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAINING_KISS, opponent);
     }
 }
@@ -93,11 +84,7 @@ SINGLE_BATTLE_TEST("Upper Hand fails if the target moves first")
         TURN { MOVE(opponent, MOVE_DRAINING_KISS); MOVE(player, MOVE_UPPER_HAND); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAINING_KISS, opponent);
-        HP_BAR(player);
-        HP_BAR(opponent);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_UPPER_HAND, player);
-        MESSAGE("Mienshao used Upper Hand!");
-        MESSAGE("But it failed!");
     }
 }
 
@@ -160,7 +147,7 @@ DOUBLE_BATTLE_TEST("Upper Hand fails if the target has attempted to act even if 
 SINGLE_BATTLE_TEST("Upper Hand failing will prevent Protean activation")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_PROTEAN_LIBERO, GEN_6);
+        WITH_CONFIG(B_PROTEAN_LIBERO, GEN_6);
         PLAYER(SPECIES_REGIROCK);
         OPPONENT(SPECIES_KECLEON) { Ability(ABILITY_PROTEAN); }
         OPPONENT(SPECIES_WOBBUFFET);

@@ -21,6 +21,7 @@
 #include "constants/pokemon.h"
 #include "constants/easy_chat.h"
 #include "constants/trainer_hill.h"
+#include "constants/trainer_tower.h"
 #include "constants/items.h"
 #include "constants/moves.h"
 #include "config/save.h"
@@ -41,14 +42,17 @@
 // We define these when using certain IDEs to fool preproc
 #define _(x)        {x}
 #define __(x)       {x}
+#define COMPOUND_STRING(x) 0
 #define INCBIN(...) {0}
 #define INCBIN_U8   INCBIN
 #define INCBIN_U16  INCBIN
 #define INCBIN_U32  INCBIN
-#define INCBIN_S8   INCBIN
-#define INCBIN_S16  INCBIN
-#define INCBIN_S32  INCBIN
 #define INCBIN_COMP INCBIN
+#define INCGFX(...) {0}
+#define INCGFX_U8   INCGFX
+#define INCGFX_U16  INCGFX
+#define INCGFX_U32  INCGFX
+#define INCGFX_COMP INCGFX
 #endif // IDE support
 
 #define ARRAY_COUNT(array) (size_t)(sizeof(array) / sizeof((array)[0]))
@@ -130,7 +134,7 @@
 ({                           \
     s16 v = (val);           \
     float f = (float)v;      \
-    if(v < 0) f += 65536.0f; \
+    if (v < 0) f += 65536.0f;\
     f;                       \
 })
 
@@ -329,7 +333,7 @@ struct BerryCrush
 
 struct ApprenticeMon
 {
-    u16 species;
+    enum Species species;
     enum Move moves[MAX_MON_MOVES];
     enum Item item;
 };
@@ -354,8 +358,8 @@ struct Apprentice
 
 struct BattleTowerPokemon
 {
-    u16 species;
-    u16 heldItem;
+    enum Species species;
+    enum Item heldItem;
     enum Move moves[MAX_MON_MOVES];
     u8 level;
     u8 ppBonuses;
@@ -397,8 +401,8 @@ struct EmeraldBattleTowerRecord
 
 struct BattleTowerInterview
 {
-    u16 playerSpecies;
-    u16 opponentSpecies;
+    enum Species playerSpecies;
+    enum Species opponentSpecies;
     u8 opponentName[PLAYER_NAME_LENGTH + 1];
     u8 opponentMonNickname[VANILLA_POKEMON_NAME_LENGTH + 1];
     u8 opponentLanguage;
@@ -628,8 +632,8 @@ struct SecretBaseParty
 {
     u32 personality[PARTY_SIZE];
     enum Move moves[PARTY_SIZE * MAX_MON_MOVES];
-    u16 species[PARTY_SIZE];
-    u16 heldItems[PARTY_SIZE];
+    enum Species species[PARTY_SIZE];
+    enum Item heldItems[PARTY_SIZE];
     u8 levels[PARTY_SIZE];
     u8 EVs[PARTY_SIZE];
 };
@@ -689,7 +693,7 @@ struct Roamer
 {
     /*0x00*/ u32 ivs;
     /*0x04*/ u32 personality;
-    /*0x08*/ u16 species;
+    /*0x08*/ enum Species species;
     /*0x0A*/ u16 hp;
     /*0x0C*/ u8 level;
     /*0x0D*/ u8 statusA;
@@ -836,7 +840,7 @@ struct ContestWinner
 {
     u32 personality;
     u32 trainerId;
-    u16 species;
+    enum Species species;
     u8 contestCategory;
     u8 monName[VANILLA_POKEMON_NAME_LENGTH + 1];
     u8 trainerName[PLAYER_NAME_LENGTH + 1];
@@ -850,7 +854,7 @@ struct Mail
     /*0x00*/ u16 words[MAIL_WORDS_COUNT];
     /*0x12*/ u8 playerName[PLAYER_NAME_LENGTH + 1];
     /*0x1A*/ u8 trainerId[TRAINER_ID_LENGTH];
-    /*0x1E*/ u16 species;
+    /*0x1E*/ enum Species species;
     /*0x20*/ enum Item itemId;
 };
 
@@ -961,6 +965,20 @@ struct TrainerHillSave
                //u16 padding:8;
 };
 
+struct TrainerTower
+{
+    u32 timer;
+    u32 bestTime;
+    u8 floorsCleared;
+    u8 unk9;
+    bool8 receivedPrize:1;
+    bool8 checkedFinalTime:1;
+    bool8 spokeToOwner:1;
+    bool8 hasLost:1;
+    bool8 unkA_4:1;
+    bool8 validated:1;
+};
+
 struct WonderNewsMetadata
 {
     u8 newsType:2;
@@ -982,7 +1000,7 @@ struct WonderNews
 struct WonderCard
 {
     u16 flagId; // Event flag (sReceivedGiftFlags) + WONDER_CARD_FLAG_OFFSET
-    u16 iconSpecies;
+    enum Species iconSpecies;
     u32 idNumber;
     u8 type:2; // CARD_TYPE_*
     u8 bgType:4;
@@ -1001,7 +1019,7 @@ struct WonderCardMetadata
     u16 battlesWon;
     u16 battlesLost;
     u16 numTrades;
-    u16 iconSpecies;
+    enum Species iconSpecies;
     u16 stampData[2][MAX_STAMP_CARD_STAMPS]; // First element is STAMP_SPECIES, second is STAMP_ID
 };
 
@@ -1128,7 +1146,7 @@ struct SaveBlock1
     /*0x27CC*/ TVShow tvShows[TV_SHOWS_COUNT];
     /*0x27CA*/ //u8 padding4[2];
     /*0x2B50*/ PokeNews pokeNews[POKE_NEWS_COUNT];
-    /*0x2B90*/ u16 outbreakPokemonSpecies;
+    /*0x2B90*/ enum Species outbreakPokemonSpecies;
     /*0x2B92*/ u8 outbreakLocationMapNum;
     /*0x2B93*/ u8 outbreakLocationMapGroup;
     /*0x2B94*/ u8 outbreakPokemonLevel;
@@ -1153,7 +1171,8 @@ struct SaveBlock1
 #if FREE_LINK_BATTLE_RECORDS == FALSE
     /*0x3150*/ struct LinkBattleRecords linkBattleRecords;
 #endif //FREE_LINK_BATTLE_RECORDS
-    /*0x31A8*/ u8 giftRibbons[GIFT_RIBBONS_COUNT];
+    /*0x31A8*/ u8 giftRibbons[NUM_GIFT_RIBBONS];
+               u8 padding[4];
     /*0x31B3*/ struct ExternalEventData externalEventData;
     /*0x31C7*/ struct ExternalEventFlags externalEventFlags;
     /*0x31DC*/ struct Roamer roamer[ROAMER_COUNT];
@@ -1181,6 +1200,14 @@ struct SaveBlock1
     /*0x3???*/ struct TrainerHillSave trainerHill;
 #endif //FREE_TRAINER_HILL
     /*0x3???*/ struct WaldaPhrase waldaPhrase;
+#if FREE_TRAINER_TOWER == FALSE && IS_FRLG
+    u32 towerChallengeId;
+    struct TrainerTower trainerTower[NUM_TOWER_CHALLENGE_TYPES];
+#endif //FREE_TRAINER_TOWER
+#if IS_FRLG
+    u8 rivalName[PLAYER_NAME_LENGTH + 1];
+    struct DaycareMon route5DayCareMon;
+#endif
     // sizeof: 0x3???
 };
 
@@ -1193,10 +1220,10 @@ struct MapPosition
     s8 elevation;
 };
 
-#if T_SHOULD_RUN_MOVE_ANIM
+#if TESTING
 extern bool32 gLoadFail;
 extern bool32 gCountAllocs;
 extern s32 gSpriteAllocs;
-#endif // T_SHOULD_RUN_MOVE_ANIM
+#endif // TESTING
 
 #endif // GUARD_GLOBAL_H

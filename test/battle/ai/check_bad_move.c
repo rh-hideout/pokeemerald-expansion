@@ -17,7 +17,7 @@ AI_SINGLE_BATTLE_TEST("AI will not try to lower opposing stats if target is prot
     PARAMETRIZE { ability = ABILITY_CLEAR_BODY;   species = SPECIES_BELDUM;  move = MOVE_NOBLE_ROAR; }
 
     GIVEN {
-        WITH_CONFIG(CONFIG_ILLUMINATE_EFFECT, GEN_9);
+        WITH_CONFIG(B_ILLUMINATE_EFFECT, GEN_9);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_OMNISCIENT);
         PLAYER(species) { Ability(ability); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE, move); }
@@ -25,7 +25,6 @@ AI_SINGLE_BATTLE_TEST("AI will not try to lower opposing stats if target is prot
         TURN { SCORE_LT_VAL(opponent, move, AI_SCORE_DEFAULT); }
     }
 }
-
 
 AI_DOUBLE_BATTLE_TEST("AI will not try to lower opposing stats if target is protected by Flower Veil")
 {
@@ -60,6 +59,30 @@ AI_SINGLE_BATTLE_TEST("AI sees No Guard affects semi-invulnerable moves")
         OPPONENT(SPECIES_SMEARGLE) { Moves(MOVE_PHANTOM_FORCE, MOVE_SPECTRAL_THIEF); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_SPECTRAL_THIEF); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI predicts semi-invulnerable entry and chooses a move that can still hit")
+{
+    enum Move playerMove, expectedMove = MOVE_NONE;
+
+    PARAMETRIZE { playerMove = MOVE_WATER_GUN; expectedMove = MOVE_THUNDERBOLT; }
+    PARAMETRIZE { playerMove = MOVE_DIVE;      expectedMove = MOVE_SURF; } // Faster Dive should make AI avoid moves that miss underwater
+
+    PASSES_RANDOMLY(PREDICT_MOVE_CHANCE, 100, RNG_AI_PREDICT_MOVE);
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_DIVE) == EFFECT_SEMI_INVULNERABLE);
+        ASSUME(GetMoveTwoTurnAttackStatus(MOVE_DIVE) == STATE_UNDERWATER);
+        ASSUME(!MoveDamagesUnderWater(MOVE_THUNDERBOLT));
+        ASSUME(MoveDamagesUnderWater(MOVE_SURF));
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT | AI_FLAG_PREDICT_MOVE);
+        PLAYER(SPECIES_MAGIKARP) { Speed(2); Moves(playerMove); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); Moves(MOVE_THUNDERBOLT, MOVE_SURF); }
+    } WHEN {
+        TURN {
+            MOVE(player, playerMove);
+            EXPECT_MOVE(opponent, expectedMove);
+        }
     }
 }
 
@@ -228,6 +251,32 @@ AI_DOUBLE_BATTLE_TEST("Protect: AI avoids Protect vs moves that ignore protectio
                 SCORE_GT(opponentLeft, MOVE_PROTECT, MOVE_SCRATCH, target: playerLeft);
             else
                 SCORE_LT(opponentLeft, MOVE_PROTECT, MOVE_SCRATCH, target: playerLeft);
+        }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI penalizes Yawn when target can self-status with Flame/Toxic Orb")
+{
+    u32 heldItem = ITEM_NONE;
+    bool32 shouldYawn = FALSE;
+
+    PARAMETRIZE { heldItem = ITEM_NONE;      shouldYawn = TRUE; }
+    PARAMETRIZE { heldItem = ITEM_FLAME_ORB; shouldYawn = FALSE; }
+    PARAMETRIZE { heldItem = ITEM_TOXIC_ORB; shouldYawn = FALSE; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_YAWN) == EFFECT_YAWN);
+        ASSUME(gItemsInfo[ITEM_FLAME_ORB].holdEffect == HOLD_EFFECT_FLAME_ORB);
+        ASSUME(gItemsInfo[ITEM_TOXIC_ORB].holdEffect == HOLD_EFFECT_TOXIC_ORB);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Item(heldItem); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_YAWN, MOVE_SCRATCH); }
+    } WHEN {
+        TURN {
+            if (shouldYawn)
+                SCORE_GT(opponent, MOVE_YAWN, MOVE_SCRATCH);
+            else
+                SCORE_LT(opponent, MOVE_YAWN, MOVE_SCRATCH);
         }
     }
 }

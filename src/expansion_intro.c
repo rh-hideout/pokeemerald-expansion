@@ -9,6 +9,7 @@
 #include "trig.h"
 #include "main.h"
 #include "intro.h"
+#include "intro_frlg.h"
 #include "m4a.h"
 #include "expansion_intro.h"
 #include "constants/rgb.h"
@@ -52,16 +53,16 @@ enum
     ANIM_DIZZY_DIZZY
 };
 
-static const u32 sBgTiles_PoweredBy[] = INCBIN_U32("graphics/expansion_intro/powered_by.4bpp.smol");
-static const u32 sBgTiles_RhhCredits[] = INCBIN_U32("graphics/expansion_intro/rhh_credits.8bpp.smol");
+static const u32 sBgTiles_PoweredBy[] = INCGFX_U32("graphics/expansion_intro/powered_by.png", ".4bpp.smol");
+static const u32 sBgTiles_RhhCredits[] = INCGFX_U32("graphics/expansion_intro/rhh_credits.png", ".8bpp.smol");
 static const u32 sBgMap_PoweredBy[] = INCBIN_U32("graphics/expansion_intro/powered_by.bin.smolTM");
 static const u32 sBgMap_RhhCredits[] = INCBIN_U32("graphics/expansion_intro/rhh_credits.bin.smolTM");
-static const u16 sBgPal_Credits[] = INCBIN_U16("graphics/expansion_intro/credits.gbapal");
-static const u32 sSpriteTiles_DizzyEgg[] = INCBIN_U32("graphics/expansion_intro/sprites/dizzy_egg.4bpp.smol");
-static const u32 sSpriteTiles_Porygon[] = INCBIN_U32("graphics/expansion_intro/sprites/porygon.4bpp.smol");
-static const u16 sSpritePal_DizzyEgg[] = INCBIN_U16("graphics/expansion_intro/sprites/dizzy_egg.gbapal");
-static const u16 sSpritePal_Porygon[] = INCBIN_U16("graphics/expansion_intro/sprites/porygon.gbapal");
-static const u16 sSpritePal_PorygonShiny[] = INCBIN_U16("graphics/expansion_intro/sprites/shiny.gbapal");
+static const u16 sBgPal_Credits[] = INCGFX_U16("graphics/expansion_intro/credits.pal", ".gbapal");
+static const u32 sSpriteTiles_DizzyEgg[] = INCGFX_U32("graphics/expansion_intro/sprites/dizzy_egg.png", ".4bpp.smol");
+static const u32 sSpriteTiles_Porygon[] = INCGFX_U32("graphics/expansion_intro/sprites/porygon.png", ".4bpp.smol");
+static const u16 sSpritePal_DizzyEgg[] = INCGFX_U16("graphics/expansion_intro/sprites/dizzy_egg.png", ".gbapal");
+static const u16 sSpritePal_Porygon[] = INCGFX_U16("graphics/expansion_intro/sprites/porygon.png", ".gbapal");
+static const u16 sSpritePal_PorygonShiny[] = INCGFX_U16("graphics/expansion_intro/sprites/shiny.pal", ".gbapal");
 
 static void SpriteCallback_DizzyWalking(struct Sprite* sprite);
 static void SpriteCallback_PorygonFlying(struct Sprite* sprite);
@@ -275,8 +276,15 @@ void Task_HandleExpansionIntro(u8 taskId)
             ResetSpriteData();
             FreeAllSpritePalettes();
             DestroyTask(taskId);
-            CreateTask(Task_Scene1_Load, 0);
-            SetMainCallback2(MainCB2_Intro);
+            if (IS_FRLG)
+            {
+                SetMainCallback2(CB2_SetUpIntroFrlg);
+            }
+            else
+            {
+                CreateTask(Task_Scene1_Load, 0);
+                SetMainCallback2(MainCB2_Intro);
+            }
         }
         break;
     }

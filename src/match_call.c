@@ -1057,7 +1057,7 @@ static bool32 UpdateMatchCallMinutesCounter(void)
 static bool32 CheckMatchCallChance(void)
 {
     int callChance = 1;
-    if (!GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG) && GetMonAbility(&gPlayerParty[0]) == ABILITY_LIGHTNING_ROD)
+    if (!GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SANITY_IS_EGG) && GetMonAbility(&gParties[B_TRAINER_0][0]) == ABILITY_LIGHTNING_ROD)
         callChance = 2;
 
     if (Random() % 10 < callChance * 3)
@@ -1196,10 +1196,10 @@ static void StartMatchCall(void)
     CreateTask(ExecuteMatchCall, 1);
 }
 
-static const u16 sMatchCallWindow_Pal[] = INCBIN_U16("graphics/pokenav/match_call/window.gbapal");
-static const u8 sMatchCallWindow_Gfx[] = INCBIN_U8("graphics/pokenav/match_call/window.4bpp");
-static const u16 sPokenavIcon_Pal[] = INCBIN_U16("graphics/pokenav/match_call/nav_icon.gbapal");
-static const u32 sPokenavIcon_Gfx[] = INCBIN_U32("graphics/pokenav/match_call/nav_icon.4bpp.smol");
+static const u16 sMatchCallWindow_Pal[] = INCGFX_U16("graphics/pokenav/match_call/window.png", ".gbapal");
+static const u8 sMatchCallWindow_Gfx[] = INCGFX_U8("graphics/pokenav/match_call/window.png", ".4bpp");
+static const u16 sPokenavIcon_Pal[] = INCGFX_U16("graphics/pokenav/match_call/nav_icon.png", ".gbapal");
+static const u32 sPokenavIcon_Gfx[] = INCGFX_U32("graphics/pokenav/match_call/nav_icon.png", ".4bpp.smol");
 
 static const u8 sText_PokenavCallEllipsis[] = _("………………\p");
 
@@ -1777,7 +1777,7 @@ static u8 GetWaterEncounterSlot(void)
 
 static void PopulateSpeciesFromTrainerLocation(int matchCallId, u8 *destStr)
 {
-    u16 species[2];
+    enum Species species[2];
     int numSpecies;
     u8 slot;
     int i = 0;
@@ -2006,8 +2006,8 @@ void BufferPokedexRatingForMatchCall(u8 *destStr)
         return;
     }
 
-    numSeen = GetHoennPokedexCount(FLAG_GET_SEEN);
-    numCaught = GetHoennPokedexCount(FLAG_GET_CAUGHT);
+    numSeen = GetRegionalPokedexCount(FLAG_GET_SEEN);
+    numCaught = GetRegionalPokedexCount(FLAG_GET_CAUGHT);
     ConvertIntToDecimalStringN(gStringVar1, numSeen, STR_CONV_MODE_LEFT_ALIGN, 3);
     ConvertIntToDecimalStringN(gStringVar2, numCaught, STR_CONV_MODE_LEFT_ALIGN, 3);
     str = StringCopy(buffer, gBirchDexRatingText_AreYouCurious);
@@ -2040,4 +2040,36 @@ void LoadMatchCallWindowGfx(u32 windowId, u32 destOffset, u32 paletteId)
 void DrawMatchCallTextBoxBorder(u32 windowId, u32 tileOffset, u32 paletteId)
 {
     DrawMatchCallTextBoxBorder_Internal(windowId, tileOffset, paletteId);
+}
+
+u32 GetTrainerRematchStepCounter(void)
+{
+#if FREE_MATCH_CALL == FALSE
+    return gSaveBlock1Ptr->trainerRematchStepCounter;
+#else
+    return 0;
+#endif
+}
+
+void SetTrainerRematchStepCounter(u32 value)
+{
+#if FREE_MATCH_CALL == FALSE
+    gSaveBlock1Ptr->trainerRematchStepCounter = value;
+#endif
+}
+
+u32 GetActiveTrainerRematches(u32 matchCallId)
+{
+#if FREE_MATCH_CALL == FALSE
+    return gSaveBlock1Ptr->trainerRematches[matchCallId];
+#else
+    return 0;
+#endif
+}
+
+void SetActiveTrainerRematches(u32 matchCallId, u32 value)
+{
+#if FREE_MATCH_CALL == FALSE
+    gSaveBlock1Ptr->trainerRematches[matchCallId] = value;
+#endif
 }

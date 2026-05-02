@@ -1,8 +1,10 @@
 #include "global.h"
 #include "script.h"
 #include "event_data.h"
+#include "field_screen_effect.h"
 #include "mystery_gift.h"
 #include "random.h"
+#include "task.h"
 #include "trainer_see.h"
 #include "util.h"
 #include "constants/event_objects.h"
@@ -75,6 +77,7 @@ void SetupNativeScript(struct ScriptContext *ctx, bool8 (*ptr)(void))
 
 void StopScript(struct ScriptContext *ctx)
 {
+    assertf(!FuncIsActiveTask(Task_WarpAndLoadMap), "Leaving script while a warp is in progress: try adding a waitstate");
     ctx->mode = SCRIPT_MODE_STOPPED;
     ctx->scriptPtr = NULL;
 }
@@ -676,4 +679,16 @@ bool32 Script_MatchesSpecial(const u8 *script, void *funcPtr)
     if ((u32)specialFunc == ((u32)funcPtr))
         return TRUE;
     return FALSE;
+}
+
+// FRLG
+void DisableMsgBoxWalkaway(void)
+{
+    // sMsgBoxWalkawayDisabled = TRUE;
+}
+
+void SetWalkingIntoSignVars(void)
+{
+    // gWalkAwayFromSignInhibitTimer = 6;
+    // sMsgBoxIsCancelable = TRUE;
 }

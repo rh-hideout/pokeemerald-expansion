@@ -5,6 +5,7 @@
 #include "malloc.h"
 #include "pokemon.h"
 #include "trainer_hill.h"
+#include "trainer_tower.h"
 #include "party_menu.h"
 #include "event_data.h"
 #include "constants/abilities.h"
@@ -14,7 +15,9 @@
 
 void AllocateBattleResources(void)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
+    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_TOWER && gMapHeader.regionMapSectionId == MAPSEC_TRAINER_TOWER_2)
+        InitTrainerTowerBattleStruct();
+    else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
         InitTrainerHillBattleStruct();
 
     gBattleStruct = AllocZeroed(sizeof(*gBattleStruct));
@@ -49,7 +52,9 @@ void AllocateBattleResources(void)
 
 void FreeBattleResources(void)
 {
-    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
+    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_TOWER && gMapHeader.regionMapSectionId == MAPSEC_TRAINER_TOWER_2)
+        FreeTrainerTowerBattleStruct();
+    else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
         FreeTrainerHillBattleStruct();
 
     gFieldStatuses = 0;
@@ -76,13 +81,13 @@ void FreeBattleResources(void)
     }
 }
 
-void AdjustFriendshipOnBattleFaint(u8 battler)
+void AdjustFriendshipOnBattleFaint(enum BattlerId battler)
 {
-    u8 opposingBattlerId;
+    enum BattlerId opposingBattlerId;
 
     if (IsDoubleBattle())
     {
-        u8 opposingBattlerId2;
+        enum BattlerId opposingBattlerId2;
 
         opposingBattlerId = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
         opposingBattlerId2 = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
@@ -101,24 +106,48 @@ void AdjustFriendshipOnBattleFaint(u8 battler)
         AdjustFriendship(GetBattlerMon(battler), FRIENDSHIP_EVENT_FAINT_SMALL);
 }
 
-void SwitchPartyOrderInGameMulti(u8 battler, u8 arg1)
+void SwitchPartyOrderInGameMulti(enum BattlerId battler, u8 arg1)
 {
     if (IsOnPlayerSide(battler))
     {
         s32 i;
-        for (i = 0; i < (int)ARRAY_COUNT(gBattlePartyCurrentOrder); i++)
-            gBattlePartyCurrentOrder[i] = *(i + (u8 *)(gBattleStruct->battlerPartyOrders));
+        u8 battlerPartyId = gBattlerPartyIndexes[battler];
+        u8 switchInPartyId = arg1;
+        enum BattleTrainer trainer = GetBattlerTrainer(battler);
 
-        SwitchPartyMonSlots(GetPartyIdFromBattlePartyId(gBattlerPartyIndexes[battler]), GetPartyIdFromBattlePartyId(arg1));
+        // In 6v6 multis, the partner party is stored in gParties[B_TRAINER_2]
+        // and uses indexes 0-2, but we still use the combined party order.
+        if (IsMultiBattle() == TRUE && !AreMultiPartiesFullTeams() && trainer == B_TRAINER_2)
+        {
+            battlerPartyId += MULTI_PARTY_SIZE;
+            switchInPartyId += MULTI_PARTY_SIZE;
+        }
 
-        for (i = 0; i < (int)ARRAY_COUNT(gBattlePartyCurrentOrder); i++)
-            *(i + (u8 *)(gBattleStruct->battlerPartyOrders)) = gBattlePartyCurrentOrder[i];
+        for (enum BattlerId battlerId = 0; battlerId < gBattlersCount; battlerId++)
+        {
+            if (!IsOnPlayerSide(battlerId))
+                continue;
+
+            // Don't update battler's orders for party menu if the switching battler and updating battler
+            // don't share a party, unless it's a 6v6 multi where player and partner party are temporarily
+            // merged for party menu and summary screen viewing
+            if (!(IsMultiBattle() == TRUE && !AreMultiPartiesFullTeams()) && !BattlersShareParty(battler, battlerId))
+                continue;
+
+            for (i = 0; i < (int)ARRAY_COUNT(gBattlePartyCurrentOrder); i++)
+                gBattlePartyCurrentOrder[i] = gBattleStruct->battlerPartyOrders[battlerId][i];
+
+            SwitchPartyMonSlots(GetPartyIdFromBattlePartyId(battlerPartyId), GetPartyIdFromBattlePartyId(switchInPartyId));
+
+            for (i = 0; i < (int)ARRAY_COUNT(gBattlePartyCurrentOrder); i++)
+                gBattleStruct->battlerPartyOrders[battlerId][i] = gBattlePartyCurrentOrder[i];
+        }
     }
 }
 
 // Called when a Pokémon is unable to attack during a Battle Palace battle.
 // Check if it was because they are frozen/asleep, and if so try to cure the status.
-u32 BattlePalace_TryEscapeStatus(u8 battler)
+u32 BattlePalace_TryEscapeStatus(enum BattlerId battler)
 {
     u32 effect = 0;
 
@@ -184,7 +213,8 @@ u32 BattlePalace_TryEscapeStatus(u8 battler)
                 {
                     // Unfreeze
                     gBattleMons[battler].status1 &= ~(STATUS1_FREEZE);
-                    BattleScriptCall(BattleScript_MoveUsedUnfroze);
+                    gBattleScripting.battler = battler;
+                    BattleScriptCall(BattleScript_BattlerDefrosted);
                     gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_DEFROSTED;
                 }
                 effect = 2;
@@ -204,4 +234,21 @@ u32 BattlePalace_TryEscapeStatus(u8 battler)
     }
 
     return effect;
+}
+
+struct Pokemon *GetBattlerParty(enum BattlerId battler)
+{
+    return gParties[GetBattlerTrainer(battler)];
+}
+
+struct Pokemon *GetTrainerParty(enum BattleTrainer trainer)
+{
+    return gParties[trainer];
+}
+
+struct Pokemon* GetBattlerMon(enum BattlerId battler)
+{
+    u32 index = gBattlerPartyIndexes[battler];
+
+    return &GetBattlerParty(battler)[index];
 }

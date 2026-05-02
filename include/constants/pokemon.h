@@ -198,6 +198,7 @@ enum OtIdMethod
 #define FRIENDSHIP_EVENT_FAINT_SMALL      6
 #define FRIENDSHIP_EVENT_FAINT_FIELD_PSN  7
 #define FRIENDSHIP_EVENT_FAINT_LARGE      8 // If opponent was >= 30 levels higher. See AdjustFriendshipOnBattleFaint
+#define FRIENDSHIP_EVENT_MASSAGE          9
 
 // Constants for GetLeadMonFriendshipScore
 #define FRIENDSHIP_NONE        0
@@ -339,6 +340,18 @@ enum EvolutionMode {
     EVO_MODE_OVERWORLD_SPECIAL,
     EVO_MODE_SCRIPT_TRIGGER,
     EVO_MODE_BATTLE_ONLY,        // This mode is only used in battles to support Tandemaus' unique requirement
+};
+
+enum EvoTriggerVersion {
+    EVO_TRIGGER_TABLET_CURSE,
+    EVO_TRIGGER_DARK_SCROLL,
+    EVO_TRIGGER_WATER_SCROLL,
+};
+
+enum EvolutionEventResult {
+    EVO_EVENT_IMPOSSIBLE,
+    EVO_EVENT_INTERRUPTED,
+    EVO_EVENT_SUCCESSFUL,
 };
 
 // used to determine whether an evolution is happening or not, so we know if items should be removed

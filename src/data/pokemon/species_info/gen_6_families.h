@@ -232,7 +232,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
-        .abilities = { ABILITY_OVERGROW, ABILITY_NONE, ABILITY_BULLETPROOF },
+        .abilities = { ABILITY_BULLETPROOF, ABILITY_BULLETPROOF, ABILITY_BULLETPROOF },
         .bodyColor = BODY_COLOR_GREEN,
         .speciesName = _("Chesnaught"),
     #if P_MODIFIED_MEGA_CRIES
@@ -248,22 +248,22 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             "It has fortified armor and a\n"
             "will to defend at all costs.\n"
             "Both are absurdly strong."),
-        //.frontPic = gMonFrontPic_CircledQuestionMark,
-        //.frontPicSize = MON_COORDS_SIZE(40, 40),
-        //.frontPicYOffset = 12,
-        //.frontAnimFrames = sAnims_TwoFramePlaceHolder,
+        .frontPic = gMonFrontPic_ChesnaughtMega,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
         //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        //.backPic = gMonBackPic_CircledQuestionMark,
-        //.backPicSize = MON_COORDS_SIZE(40, 40),
-        //.backPicYOffset = 12,
+        .backPic = gMonBackPic_ChesnaughtMega,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 10,
         //.backAnimId = BACK_ANIM_NONE,
-        //.palette = gMonPalette_CircledQuestionMark,
-        //.shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        //.iconSprite = gMonIcon_QuestionMark,
-        //.iconPalIndex = 0,
+        .palette = gMonPalette_ChesnaughtMega,
+        .shinyPalette = gMonShinyPalette_ChesnaughtMega,
+        .iconSprite = gMonIcon_ChesnaughtMega,
+        .iconPalIndex = 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(Chesnaught)
-        //SHADOW(-1, 0, SHADOW_SIZE_M)
+        SHADOW(0, 14, SHADOW_SIZE_XL_BATTLE_ONLY)
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sChesnaughtLevelUpLearnset,
         .teachableLearnset = sChesnaughtTeachableLearnset,
@@ -506,7 +506,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
-        .abilities = { ABILITY_BLAZE, ABILITY_NONE, ABILITY_MAGICIAN },
+        .abilities = { ABILITY_LEVITATE, ABILITY_LEVITATE, ABILITY_LEVITATE },
         .bodyColor = BODY_COLOR_RED,
         .speciesName = _("Delphox"),
     #if P_MODIFIED_MEGA_CRIES
@@ -523,22 +523,23 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             "dazzle its opponents before\n"
             "incinerating them with a\n"
             "huge fireball."),
-        //.frontPic = gMonFrontPic_CircledQuestionMark,
-        //.frontPicSize = MON_COORDS_SIZE(40, 40),
-        //.frontPicYOffset = 12,
-        //.frontAnimFrames = sAnims_TwoFramePlaceHolder,
+        .frontPic = gMonFrontPic_DelphoxMega,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
         //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        //.backPic = gMonBackPic_CircledQuestionMark,
-        //.backPicSize = MON_COORDS_SIZE(40, 40),
-        //.backPicYOffset = 12,
+        .enemyMonElevation = 6,
+        .backPic = gMonBackPic_DelphoxMega,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 3,
         //.backAnimId = BACK_ANIM_NONE,
-        //.palette = gMonPalette_CircledQuestionMark,
-        //.shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        //.iconSprite = gMonIcon_QuestionMark,
-        //.iconPalIndex = 0,
+        .palette = gMonPalette_DelphoxMega,
+        .shinyPalette = gMonShinyPalette_DelphoxMega,
+        .iconSprite = gMonIcon_DelphoxMega,
+        .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(Delphox)
-        //SHADOW(-1, 0, SHADOW_SIZE_M)
+        SHADOW(-1, 18, SHADOW_SIZE_L)
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sDelphoxLevelUpLearnset,
         .teachableLearnset = sDelphoxTeachableLearnset,
@@ -741,7 +742,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             SIZE_32x32,
             SHADOW_SIZE_M,
             TRACKS_FOOT,
-            sAnimTable_Following,
+            sAnimTable_Following_Asym,
             gOverworldPalette_Greninja,
             gShinyOverworldPalette_Greninja
         )
@@ -803,7 +804,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             SIZE_32x32,
             SHADOW_SIZE_M,
             TRACKS_FOOT,
-            sAnimTable_Following,
+            sAnimTable_Following_Asym,
             gOverworldPalette_Greninja,
             gShinyOverworldPalette_Greninja
         )
@@ -901,7 +902,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_WATER_1),
-        .abilities = { ABILITY_TORRENT, ABILITY_NONE, ABILITY_PROTEAN },
+        .abilities = { ABILITY_PROTEAN, ABILITY_PROTEAN, ABILITY_PROTEAN },
         .bodyColor = BODY_COLOR_BLUE,
         .noFlip = TRUE,
         .speciesName = _("Greninja"),
@@ -919,22 +920,23 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             "shuriken at high speed to make it\n"
             "float, then clings to it upside\n"
             "down to catch opponents unawares."),
-        //.frontPic = gMonFrontPic_CircledQuestionMark,
-        //.frontPicSize = MON_COORDS_SIZE(40, 40),
-        //.frontPicYOffset = 12,
-        //.frontAnimFrames = sAnims_TwoFramePlaceHolder,
+        .frontPic = gMonFrontPic_GreninjaMega,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
         //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        //.backPic = gMonBackPic_CircledQuestionMark,
-        //.backPicSize = MON_COORDS_SIZE(40, 40),
-        //.backPicYOffset = 12,
+        .enemyMonElevation = 6,
+        .backPic = gMonBackPic_GreninjaMega,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 11,
         //.backAnimId = BACK_ANIM_NONE,
-        //.palette = gMonPalette_CircledQuestionMark,
-        //.shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        //.iconSprite = gMonIcon_QuestionMark,
-        //.iconPalIndex = 0,
+        .palette = gMonPalette_GreninjaMega,
+        .shinyPalette = gMonShinyPalette_GreninjaMega,
+        .iconSprite = gMonIcon_GreninjaMega,
+        .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(Greninja)
-        //SHADOW(-1, 0, SHADOW_SIZE_M)
+        SHADOW(-1, 18, SHADOW_SIZE_L)
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sGreninjaLevelUpLearnset,
         .teachableLearnset = sGreninjaTeachableLearnset,
@@ -1913,22 +1915,22 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             "than 18,000 degrees Fahrenheit.\n"
             "It swings around its grand, blazing\n"
             "mane as it protects its allies."),
-        //.frontPic = gMonFrontPic_CircledQuestionMark,
-        //.frontPicSize = MON_COORDS_SIZE(40, 40),
-        //.frontPicYOffset = 12,
-        //.frontAnimFrames = sAnims_TwoFramePlaceHolder,
+        .frontPic = gMonFrontPic_PyroarMega,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
         //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        //.backPic = gMonBackPic_CircledQuestionMark,
-        //.backPicSize = MON_COORDS_SIZE(40, 40),
-        //.backPicYOffset = 12,
+        .backPic = gMonBackPic_PyroarMega,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 6,
         //.backAnimId = BACK_ANIM_NONE,
-        //.palette = gMonPalette_CircledQuestionMark,
-        //.shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        //.iconSprite = gMonIcon_QuestionMark,
-        //.iconPalIndex = 0,
+        .palette = gMonPalette_PyroarMega,
+        .shinyPalette = gMonShinyPalette_PyroarMega,
+        .iconSprite = gMonIcon_PyroarMega,
+        .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(Pyroar)
-        //SHADOW(-1, 0, SHADOW_SIZE_M)
+        SHADOW(-1, 12, SHADOW_SIZE_L)
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sPyroarLevelUpLearnset,
         .teachableLearnset = sPyroarTeachableLearnset,
@@ -2075,7 +2077,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .shinyPalette = gMonShinyPalette_Floette ##form,                        \
         .iconSprite = gMonIcon_Floette##form,                                   \
         .iconPalIndex = iconPal,                                                \
-        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,                                      \
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,                                 \
         SHADOW(-3, 12, SHADOW_SIZE_S)                                           \
         FOOTPRINT(Floette)                                                      \
         OVERWORLD(                                                              \
@@ -2083,7 +2085,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             SIZE_32x32,                                                         \
             SHADOW_SIZE_M,                                                      \
             TRACKS_FOOT,                                                        \
-            sAnimTable_Following,                                               \
+            sAnimTable_Following_Asym,                                          \
             gOverworldPalette_Floette ##form,                                   \
             gShinyOverworldPalette_Floette ##form                               \
         )                                                                       \
@@ -2314,7 +2316,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED),
-        .abilities = { ABILITY_FLOWER_VEIL, ABILITY_NONE, ABILITY_SYMBIOSIS },
+        .abilities = { ABILITY_FAIRY_AURA, ABILITY_FAIRY_AURA, ABILITY_FAIRY_AURA },
         .bodyColor = BODY_COLOR_WHITE,
         .speciesName = _("Floette"),
     #if P_MODIFIED_MEGA_CRIES
@@ -2331,22 +2333,22 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             "all the energy from Mega\n"
             "Evolution. The flower now attacks\n"
             "enemies on its own."),
-        //.frontPic = gMonFrontPic_CircledQuestionMark,
-        //.frontPicSize = MON_COORDS_SIZE(40, 40),
-        //.frontPicYOffset = 12,
-        //.frontAnimFrames = sAnims_TwoFramePlaceHolder,
+        .frontPic = gMonFrontPic_FloetteMega,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
         //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        //.backPic = gMonBackPic_CircledQuestionMark,
-        //.backPicSize = MON_COORDS_SIZE(40, 40),
-        //.backPicYOffset = 12,
+        .backPic = gMonBackPic_FloetteMega,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 6,
         //.backAnimId = BACK_ANIM_NONE,
-        //.palette = gMonPalette_CircledQuestionMark,
-        //.shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        //.iconSprite = gMonIcon_QuestionMark,
-        //.iconPalIndex = 0,
+        .palette = gMonPalette_FloetteMega,
+        .shinyPalette = gMonShinyPalette_FloetteMega,
+        .iconSprite = gMonIcon_FloetteMega,
+        .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(Floette)
-        //SHADOW(-1, 0, SHADOW_SIZE_M)
+        SHADOW(10, 10, SHADOW_SIZE_S)
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sFloetteEternalLevelUpLearnset,
         .teachableLearnset = sFloetteEternalTeachableLearnset,
@@ -2640,79 +2642,79 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
 #endif //P_FAMILY_PANCHAM
 
 #if P_FAMILY_FURFROU
-#define FURFROU_MISC_INFO(_form, _noFlip, frontWidth, frontYOffset, backWidth, backYOffset, _iconIdx)   \
-    {                                                                                                   \
-        .baseHP        = 75,                                                                            \
-        .baseAttack    = 80,                                                                            \
-        .baseDefense   = 60,                                                                            \
-        .baseSpeed     = 102,                                                                           \
-        .baseSpAttack  = 65,                                                                            \
-        .baseSpDefense = 90,                                                                            \
-        .types = MON_TYPES(TYPE_NORMAL),                                                                \
-        .catchRate = 160,                                                                               \
-        .expYield = 165,                                                                                \
-        .evYield_Speed = 1,                                                                             \
-        .genderRatio = PERCENT_FEMALE(50),                                                              \
-        .eggCycles = 20,                                                                                \
-        .friendship = STANDARD_FRIENDSHIP,                                                              \
-        .growthRate = GROWTH_MEDIUM_FAST,                                                               \
-        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),                                                   \
-        .abilities = { ABILITY_FUR_COAT, ABILITY_NONE, ABILITY_NONE },                                  \
-        .bodyColor = BODY_COLOR_WHITE,                                                                  \
-        .noFlip = _noFlip,                                                                              \
-        .speciesName = _("Furfrou"),                                                                    \
-        .cryId = CRY_FURFROU,                                                                           \
-        .natDexNum = NATIONAL_DEX_FURFROU,                                                              \
-        .categoryName = _("Poodle"),                                                                    \
-        .height = 12,                                                                                   \
-        .weight = 280,                                                                                  \
-        .description = gFurfrouPokedexText,                                                             \
-        .pokemonScale = 282,                                                                            \
-        .pokemonOffset = 4,                                                                             \
-        .trainerScale = 256,                                                                            \
-        .trainerOffset = 0,                                                                             \
-        .frontPic = gMonFrontPic_Furfrou##_form,                                                        \
-        .frontPicSize = MON_COORDS_SIZE(frontWidth, 64),                                                \
-        .frontPicYOffset = frontYOffset,                                                                \
-        .frontAnimFrames = sAnims_Furfrou,                                                              \
-        .frontAnimId = ANIM_H_SLIDE,                                                                    \
-        .backPic = gMonBackPic_Furfrou##_form,                                                          \
-        .backPicSize = MON_COORDS_SIZE(backWidth, 64),                                                  \
-        .backPicYOffset = backYOffset,                                                                  \
-        .backAnimId = BACK_ANIM_V_STRETCH,                                                              \
-        .palette = gMonPalette_Furfrou##_form,                                                          \
-        .shinyPalette = gMonShinyPalette_Furfrou##_form,                                                \
-        .iconSprite = gMonIcon_Furfrou##_form,                                                          \
-        .iconPalIndex = _iconIdx,                                                                       \
-        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,                                                         \
-        SHADOW(3, 10, SHADOW_SIZE_XL_BATTLE_ONLY)                                                       \
-        FOOTPRINT(Furfrou)                                                                              \
-        OVERWORLD(                                                                                      \
-            sPicTable_Furfrou##_form,                                                                   \
-            SIZE_32x32,                                                                                 \
-            SHADOW_SIZE_M,                                                                              \
-            TRACKS_FOOT,                                                                                \
-            sAnimTable_Following,                                                                       \
-            gOverworldPalette_Furfrou##_form,                                                           \
-            gShinyOverworldPalette_Furfrou##_form                                                       \
-        )                                                                                               \
-        .levelUpLearnset = sFurfrouLevelUpLearnset,                                                     \
-        .teachableLearnset = sFurfrouTeachableLearnset,                                                 \
-        .eggMoveLearnset = sFurfrouEggMoveLearnset,                                                     \
-        .formSpeciesIdTable = sFurfrouFormSpeciesIdTable,                                               \
-        .formChangeTable = sFurfrouFormChangeTable,                                                     \
+#define FURFROU_MISC_INFO(_form, _noFlip, frontWidth, frontYOffset, backWidth, backYOffset, _iconIdx, _overworldAnim)   \
+    {                                                                                                                   \
+        .baseHP        = 75,                                                                                            \
+        .baseAttack    = 80,                                                                                            \
+        .baseDefense   = 60,                                                                                            \
+        .baseSpeed     = 102,                                                                                           \
+        .baseSpAttack  = 65,                                                                                            \
+        .baseSpDefense = 90,                                                                                            \
+        .types = MON_TYPES(TYPE_NORMAL),                                                                                \
+        .catchRate = 160,                                                                                               \
+        .expYield = 165,                                                                                                \
+        .evYield_Speed = 1,                                                                                             \
+        .genderRatio = PERCENT_FEMALE(50),                                                                              \
+        .eggCycles = 20,                                                                                                \
+        .friendship = STANDARD_FRIENDSHIP,                                                                              \
+        .growthRate = GROWTH_MEDIUM_FAST,                                                                               \
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),                                                                   \
+        .abilities = { ABILITY_FUR_COAT, ABILITY_NONE, ABILITY_NONE },                                                  \
+        .bodyColor = BODY_COLOR_WHITE,                                                                                  \
+        .noFlip = _noFlip,                                                                                              \
+        .speciesName = _("Furfrou"),                                                                                    \
+        .cryId = CRY_FURFROU,                                                                                           \
+        .natDexNum = NATIONAL_DEX_FURFROU,                                                                              \
+        .categoryName = _("Poodle"),                                                                                    \
+        .height = 12,                                                                                                   \
+        .weight = 280,                                                                                                  \
+        .description = gFurfrouPokedexText,                                                                             \
+        .pokemonScale = 282,                                                                                            \
+        .pokemonOffset = 4,                                                                                             \
+        .trainerScale = 256,                                                                                            \
+        .trainerOffset = 0,                                                                                             \
+        .frontPic = gMonFrontPic_Furfrou##_form,                                                                        \
+        .frontPicSize = MON_COORDS_SIZE(frontWidth, 64),                                                                \
+        .frontPicYOffset = frontYOffset,                                                                                \
+        .frontAnimFrames = sAnims_Furfrou,                                                                              \
+        .frontAnimId = ANIM_H_SLIDE,                                                                                    \
+        .backPic = gMonBackPic_Furfrou##_form,                                                                          \
+        .backPicSize = MON_COORDS_SIZE(backWidth, 64),                                                                  \
+        .backPicYOffset = backYOffset,                                                                                  \
+        .backAnimId = BACK_ANIM_V_STRETCH,                                                                              \
+        .palette = gMonPalette_Furfrou##_form,                                                                          \
+        .shinyPalette = gMonShinyPalette_Furfrou##_form,                                                                \
+        .iconSprite = gMonIcon_Furfrou##_form,                                                                          \
+        .iconPalIndex = _iconIdx,                                                                                       \
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,                                                                         \
+        SHADOW(3, 10, SHADOW_SIZE_XL_BATTLE_ONLY)                                                                       \
+        FOOTPRINT(Furfrou)                                                                                              \
+        OVERWORLD(                                                                                                      \
+            sPicTable_Furfrou##_form,                                                                                   \
+            SIZE_32x32,                                                                                                 \
+            SHADOW_SIZE_M,                                                                                              \
+            TRACKS_FOOT,                                                                                                \
+            _overworldAnim,                                                                                       \
+            gOverworldPalette_Furfrou##_form,                                                                           \
+            gShinyOverworldPalette_Furfrou##_form                                                                       \
+        )                                                                                                               \
+        .levelUpLearnset = sFurfrouLevelUpLearnset,                                                                     \
+        .teachableLearnset = sFurfrouTeachableLearnset,                                                                 \
+        .eggMoveLearnset = sFurfrouEggMoveLearnset,                                                                     \
+        .formSpeciesIdTable = sFurfrouFormSpeciesIdTable,                                                               \
+        .formChangeTable = sFurfrouFormChangeTable,                                                                     \
     }
 
-    [SPECIES_FURFROU_NATURAL]   = FURFROU_MISC_INFO(Natural,   FALSE, 48, 3, 56, 0, 0),
-    [SPECIES_FURFROU_HEART]     = FURFROU_MISC_INFO(Heart,     FALSE, 56, 2, 56, 1, 0),
-    [SPECIES_FURFROU_STAR]      = FURFROU_MISC_INFO(Star,      FALSE, 56, 2, 64, 1, 0),
-    [SPECIES_FURFROU_DIAMOND]   = FURFROU_MISC_INFO(Diamond,   FALSE, 48, 2, 56, 1, 0),
-    [SPECIES_FURFROU_DEBUTANTE] = FURFROU_MISC_INFO(Debutante, TRUE,  48, 2, 56, 1, 2),
-    [SPECIES_FURFROU_MATRON]    = FURFROU_MISC_INFO(Matron,    FALSE, 48, 2, 56, 1, 2),
-    [SPECIES_FURFROU_DANDY]     = FURFROU_MISC_INFO(Dandy,     FALSE, 48, 2, 56, 1, 1),
-    [SPECIES_FURFROU_LA_REINE]  = FURFROU_MISC_INFO(LaReine,   FALSE, 48, 2, 56, 1, 0),
-    [SPECIES_FURFROU_KABUKI]    = FURFROU_MISC_INFO(Kabuki,    FALSE, 56, 2, 56, 1, 0),
-    [SPECIES_FURFROU_PHARAOH]   = FURFROU_MISC_INFO(Pharaoh,   FALSE, 48, 2, 56, 1, 0),
+    [SPECIES_FURFROU_NATURAL]   = FURFROU_MISC_INFO(Natural,   FALSE, 48, 3, 56, 0, 0, sAnimTable_Following),
+    [SPECIES_FURFROU_HEART]     = FURFROU_MISC_INFO(Heart,     FALSE, 56, 2, 56, 1, 0, sAnimTable_Following),
+    [SPECIES_FURFROU_STAR]      = FURFROU_MISC_INFO(Star,      FALSE, 56, 2, 64, 1, 0, sAnimTable_Following),
+    [SPECIES_FURFROU_DIAMOND]   = FURFROU_MISC_INFO(Diamond,   FALSE, 48, 2, 56, 1, 0, sAnimTable_Following),
+    [SPECIES_FURFROU_DEBUTANTE] = FURFROU_MISC_INFO(Debutante, TRUE,  48, 2, 56, 1, 2, sAnimTable_Following_Asym),
+    [SPECIES_FURFROU_MATRON]    = FURFROU_MISC_INFO(Matron,    FALSE, 48, 2, 56, 1, 2, sAnimTable_Following),
+    [SPECIES_FURFROU_DANDY]     = FURFROU_MISC_INFO(Dandy,     FALSE, 48, 2, 56, 1, 1, sAnimTable_Following),
+    [SPECIES_FURFROU_LA_REINE]  = FURFROU_MISC_INFO(LaReine,   FALSE, 48, 2, 56, 1, 0, sAnimTable_Following),
+    [SPECIES_FURFROU_KABUKI]    = FURFROU_MISC_INFO(Kabuki,    FALSE, 56, 2, 56, 1, 0, sAnimTable_Following),
+    [SPECIES_FURFROU_PHARAOH]   = FURFROU_MISC_INFO(Pharaoh,   FALSE, 48, 2, 56, 1, 0, sAnimTable_Following),
 #endif //P_FAMILY_FURFROU
 
 #if P_FAMILY_ESPURR
@@ -2938,7 +2940,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
-        .abilities = { ABILITY_KEEN_EYE, ABILITY_INFILTRATOR, ABILITY_PRANKSTER },
+        .abilities = { ABILITY_TRACE, ABILITY_TRACE, ABILITY_TRACE },
         .bodyColor = BODY_COLOR_BLUE,
         .speciesName = _("Meowstic"),
     #if P_MODIFIED_MEGA_CRIES
@@ -2955,22 +2957,23 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             "to compress or expand anything. It\n"
             "overwhelms foes by contorting space\n"
             "itself."),
-        .frontPic = gMonBackPic_CircledQuestionMark,
-        .frontPicSize = MON_COORDS_SIZE(40, 40),
-        .frontPicYOffset = 12,
-        .frontAnimFrames = sAnims_TwoFramePlaceHolder,
-        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        .backPic = gMonBackPic_CircledQuestionMark,
-        .backPicSize = MON_COORDS_SIZE(40, 40),
-        .backPicYOffset = 12,
-        .backAnimId = BACK_ANIM_NONE,
-        .palette = gMonPalette_CircledQuestionMark,
-        .shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        .iconSprite = gMonIcon_QuestionMark,
+        .frontPic = gMonFrontPic_MeowsticMega,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .enemyMonElevation = 6,
+        .backPic = gMonBackPic_MeowsticMega,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 3,
+        //.backAnimId = BACK_ANIM_NONE,
+        .palette = gMonPalette_MeowsticMega,
+        .shinyPalette = gMonShinyPalette_MeowsticMega,
+        .iconSprite = gMonIcon_MeowsticMega,
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(Meowstic)
-        SHADOW(-1, 0, SHADOW_SIZE_M)
+        SHADOW(-3, 18, SHADOW_SIZE_S)
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sMeowsticMLevelUpLearnset,
         .teachableLearnset = sMeowsticMTeachableLearnset,
@@ -2995,7 +2998,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
-        .abilities = { ABILITY_KEEN_EYE, ABILITY_INFILTRATOR, ABILITY_COMPETITIVE },
+        .abilities = { ABILITY_TRACE, ABILITY_TRACE, ABILITY_TRACE },
         .bodyColor = BODY_COLOR_WHITE,
         .speciesName = _("Meowstic"),
     #if P_MODIFIED_MEGA_CRIES
@@ -3012,22 +3015,23 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             "to compress or expand anything. It\n"
             "overwhelms foes by contorting space\n"
             "itself."),
-        .frontPic = gMonBackPic_CircledQuestionMark,
-        .frontPicSize = MON_COORDS_SIZE(40, 40),
-        .frontPicYOffset = 12,
-        .frontAnimFrames = sAnims_TwoFramePlaceHolder,
-        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        .backPic = gMonBackPic_CircledQuestionMark,
-        .backPicSize = MON_COORDS_SIZE(40, 40),
-        .backPicYOffset = 12,
-        .backAnimId = BACK_ANIM_NONE,
-        .palette = gMonPalette_CircledQuestionMark,
-        .shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        .iconSprite = gMonIcon_QuestionMark,
+        .frontPic = gMonFrontPic_MeowsticMega,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .enemyMonElevation = 6,
+        .backPic = gMonBackPic_MeowsticMega,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 3,
+        //.backAnimId = BACK_ANIM_NONE,
+        .palette = gMonPalette_MeowsticMega,
+        .shinyPalette = gMonShinyPalette_MeowsticMega,
+        .iconSprite = gMonIcon_MeowsticMega,
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(Meowstic)
-        SHADOW(-1, 0, SHADOW_SIZE_M)
+        SHADOW(-3, 18, SHADOW_SIZE_S)
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sMeowsticFLevelUpLearnset,
         .teachableLearnset = sMeowsticFTeachableLearnset,
@@ -3098,7 +3102,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             SIZE_32x32,
             SHADOW_SIZE_M,
             TRACKS_FOOT,
-            sAnimTable_Following,
+            sAnimTable_Following_Asym,
             gOverworldPalette_Honedge,
             gShinyOverworldPalette_Honedge
         )
@@ -3244,7 +3248,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             SIZE_32x32,
             SHADOW_SIZE_M,
             TRACKS_FOOT,
-            sAnimTable_Following,
+            sAnimTable_Following_Asym,
             gOverworldPalette_AegislashShield,
             gShinyOverworldPalette_AegislashShield
         )
@@ -3530,7 +3534,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             SIZE_32x32,
             SHADOW_SIZE_M,
             TRACKS_FOOT,
-            sAnimTable_Following,
+            sAnimTable_Following_Asym,
             gOverworldPalette_Swirlix,
             gShinyOverworldPalette_Swirlix
         )
@@ -3788,22 +3792,22 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             "overwrite the personality and\n"
             "memories of others-and to\n"
             "control them."),
-        //.frontPic = gMonFrontPic_CircledQuestionMark,
-        //.frontPicSize = MON_COORDS_SIZE(40, 40),
-        //.frontPicYOffset = 12,
-        //.frontAnimFrames = sAnims_TwoFramePlaceHolder,
+        .frontPic = gMonFrontPic_MalamarMega,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
         //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        //.backPic = gMonBackPic_CircledQuestionMark,
-        //.backPicSize = MON_COORDS_SIZE(40, 40),
-        //.backPicYOffset = 12,
+        .backPic = gMonBackPic_MalamarMega,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 8,
         //.backAnimId = BACK_ANIM_NONE,
-        //.palette = gMonPalette_CircledQuestionMark,
-        //.shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        //.iconSprite = gMonIcon_QuestionMark,
-        //.iconPalIndex = 0,
+        .palette = gMonPalette_MalamarMega,
+        .shinyPalette = gMonShinyPalette_MalamarMega,
+        .iconSprite = gMonIcon_MalamarMega,
+        .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(Malamar)
-        //SHADOW(-1, 0, SHADOW_SIZE_M)
+        SHADOW(15, 15, SHADOW_SIZE_M)
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sMalamarLevelUpLearnset,
         .teachableLearnset = sMalamarTeachableLearnset,
@@ -3990,22 +3994,22 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             "It uses its many arms to toy\n"
             "with its opponents. This\n"
             "keeps the head extremely busy."),
-        //.frontPic = gMonFrontPic_CircledQuestionMark,
-        //.frontPicSize = MON_COORDS_SIZE(40, 40),
-        //.frontPicYOffset = 12,
-        //.frontAnimFrames = sAnims_TwoFramePlaceHolder,
+        .frontPic = gMonFrontPic_BarbaracleMega,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
         //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        //.backPic = gMonBackPic_CircledQuestionMark,
-        //.backPicSize = MON_COORDS_SIZE(40, 40),
-        //.backPicYOffset = 12,
+        .backPic = gMonBackPic_BarbaracleMega,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 0,
         //.backAnimId = BACK_ANIM_NONE,
-        //.palette = gMonPalette_CircledQuestionMark,
-        //.shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        //.iconSprite = gMonIcon_QuestionMark,
-        //.iconPalIndex = 0,
+        .palette = gMonPalette_BarbaracleMega,
+        .shinyPalette = gMonShinyPalette_BarbaracleMega,
+        .iconSprite = gMonIcon_BarbaracleMega,
+        .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(Barbaracle)
-        //SHADOW(-1, 0, SHADOW_SIZE_M)
+        SHADOW(-1, 14, SHADOW_SIZE_M)
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sBarbaracleLevelUpLearnset,
         .teachableLearnset = sBarbaracleTeachableLearnset,
@@ -4195,22 +4199,22 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             "regenerative power of cells to run\n"
             "wild. The liquid is deadly poison\n"
             "to everything other than itself."),
-        //.frontPic = gMonFrontPic_CircledQuestionMark,
-        //.frontPicSize = MON_COORDS_SIZE(40, 40),
-        //.frontPicYOffset = 12,
-        //.frontAnimFrames = sAnims_TwoFramePlaceHolder,
+        .frontPic = gMonFrontPic_DragalgeMega,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
         //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        //.backPic = gMonBackPic_CircledQuestionMark,
-        //.backPicSize = MON_COORDS_SIZE(40, 40),
-        //.backPicYOffset = 12,
+        .backPic = gMonBackPic_DragalgeMega,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 0,
         //.backAnimId = BACK_ANIM_NONE,
-        //.palette = gMonPalette_CircledQuestionMark,
-        //.shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        //.iconSprite = gMonIcon_QuestionMark,
-        //.iconPalIndex = 0,
+        .palette = gMonPalette_DragalgeMega,
+        .shinyPalette = gMonShinyPalette_DragalgeMega,
+        .iconSprite = gMonIcon_DragalgeMega,
+        .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(Dragalge)
-        //SHADOW(-1, 0, SHADOW_SIZE_M)
+        SHADOW(3, 16, SHADOW_SIZE_L)
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sDragalgeLevelUpLearnset,
         .teachableLearnset = sDragalgeTeachableLearnset,
@@ -4283,7 +4287,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             SIZE_32x32,
             SHADOW_SIZE_M,
             TRACKS_FOOT,
-            sAnimTable_Following,
+            sAnimTable_Following_Asym,
             gOverworldPalette_Clauncher,
             gShinyOverworldPalette_Clauncher
         )
@@ -4358,7 +4362,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             SIZE_32x32,
             SHADOW_SIZE_M,
             TRACKS_FOOT,
-            sAnimTable_Following,
+            sAnimTable_Following_Asym,
             gOverworldPalette_Clawitzer,
             gShinyOverworldPalette_Clawitzer
         )
@@ -4884,7 +4888,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FLYING, EGG_GROUP_HUMAN_LIKE),
-        .abilities = { ABILITY_LIMBER, ABILITY_UNBURDEN, ABILITY_MOLD_BREAKER },
+        .abilities = { ABILITY_NO_GUARD, ABILITY_NO_GUARD, ABILITY_NO_GUARD },
         .bodyColor = BODY_COLOR_GREEN,
         .speciesName = _("Hawlucha"),
     #if P_MODIFIED_MEGA_CRIES
@@ -4900,22 +4904,22 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             "Mega Evolution has pumped up all\n"
             "its muscles. Hawlucha flexes to\n"
             "show off its strength."),
-        //.frontPic = gMonFrontPic_CircledQuestionMark,
-        //.frontPicSize = MON_COORDS_SIZE(40, 40),
-        //.frontPicYOffset = 12,
-        //.frontAnimFrames = sAnims_TwoFramePlaceHolder,
+        .frontPic = gMonFrontPic_HawluchaMega,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 2,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
         //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        //.backPic = gMonBackPic_CircledQuestionMark,
-        //.backPicSize = MON_COORDS_SIZE(40, 40),
-        //.backPicYOffset = 12,
+        .backPic = gMonBackPic_HawluchaMega,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 4,
         //.backAnimId = BACK_ANIM_NONE,
-        //.palette = gMonPalette_CircledQuestionMark,
-        //.shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        //.iconSprite = gMonIcon_QuestionMark,
-        //.iconPalIndex = 0,
+        .palette = gMonPalette_HawluchaMega,
+        .shinyPalette = gMonShinyPalette_HawluchaMega,
+        .iconSprite = gMonIcon_HawluchaMega,
+        .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(Hawlucha)
-        //SHADOW(-1, 0, SHADOW_SIZE_M)
+        SHADOW(-2, 13, SHADOW_SIZE_M)
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sHawluchaLevelUpLearnset,
         .teachableLearnset = sHawluchaTeachableLearnset,
@@ -5140,8 +5144,11 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .levelUpLearnset = sGoomyLevelUpLearnset,
         .teachableLearnset = sGoomyTeachableLearnset,
         .eggMoveLearnset = sGoomyEggMoveLearnset,
-        .evolutions = EVOLUTION({EVO_LEVEL, 40, SPECIES_SLIGGOO, CONDITIONS({IF_NOT_REGION, REGION_HISUI})},
-                                {EVO_LEVEL, 40, SPECIES_SLIGGOO_HISUI, CONDITIONS({IF_REGION, REGION_HISUI})}),
+        .evolutions = EVOLUTION({EVO_LEVEL, 40, SPECIES_SLIGGOO, CONDITIONS({IF_NOT_REGION, REGION_HISUI})}
+                            #if P_HISUIAN_FORMS
+                                ,{EVO_LEVEL, 40, SPECIES_SLIGGOO_HISUI, CONDITIONS({IF_REGION, REGION_HISUI})}
+                            #endif
+                            ),
     },
 
     [SPECIES_SLIGGOO] =
@@ -6095,7 +6102,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             SIZE_32x32,
             SHADOW_SIZE_M,
             TRACKS_FOOT,
-            sAnimTable_Following,
+            sAnimTable_Following_Asym,
             gOverworldPalette_Gourgeist,
             gShinyOverworldPalette_Gourgeist
         )
@@ -6246,8 +6253,11 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .levelUpLearnset = sBergmiteLevelUpLearnset,
         .teachableLearnset = sBergmiteTeachableLearnset,
         .eggMoveLearnset = sBergmiteEggMoveLearnset,
-        .evolutions = EVOLUTION({EVO_LEVEL, 37, SPECIES_AVALUGG, CONDITIONS({IF_NOT_REGION, REGION_HISUI})},
-                                {EVO_LEVEL, 37, SPECIES_AVALUGG_HISUI, CONDITIONS({IF_REGION, REGION_HISUI})}),
+        .evolutions = EVOLUTION({EVO_LEVEL, 37, SPECIES_AVALUGG, CONDITIONS({IF_NOT_REGION, REGION_HISUI})}
+                            #if P_HISUIAN_FORMS
+                                ,{EVO_LEVEL, 37, SPECIES_AVALUGG_HISUI, CONDITIONS({IF_REGION, REGION_HISUI})}
+                            #endif
+                            ),
     },
 
     [SPECIES_AVALUGG] =
@@ -6365,7 +6375,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .palette = gMonPalette_AvaluggHisui,
         .shinyPalette = gMonShinyPalette_AvaluggHisui,
         .iconSprite = gMonIcon_AvaluggHisui,
-        .iconPalIndex = 5,
+        .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(2, -2, SHADOW_SIZE_L)
         FOOTPRINT(Avalugg)
@@ -6922,7 +6932,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             SIZE_32x32,
             SHADOW_SIZE_M,
             TRACKS_FOOT,
-            sAnimTable_Following,
+            sAnimTable_Following_Asym,
             gOverworldPalette_Zygarde10,
             gShinyOverworldPalette_Zygarde10
         )
@@ -6987,7 +6997,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             SIZE_32x32,
             SHADOW_SIZE_M,
             TRACKS_FOOT,
-            sAnimTable_Following,
+            sAnimTable_Following_Asym,
             gOverworldPalette_Zygarde10,
             gShinyOverworldPalette_Zygarde10
         )
@@ -7056,11 +7066,11 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         SHADOW(-3, 13, SHADOW_SIZE_XL_BATTLE_ONLY)
         FOOTPRINT(Zygarde)
         OVERWORLD(
-            sPicTable_ZygardeComplete,
-            SIZE_32x32,
+            sPicTable_ZygardeComplete, 
+            SIZE_32x32, //TODO: 64x64 overworld sprite!
             SHADOW_SIZE_M,
             TRACKS_FOOT,
-            sAnimTable_Following,
+            sAnimTable_Following_Asym,
             gOverworldPalette_ZygardeComplete,
             gShinyOverworldPalette_ZygardeComplete
         )
@@ -7109,22 +7119,23 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             "during an unprecedented crisis,\n"
             "Zygarde Mega Evolves and calms the\n"
             "situation with its unmatched power."),
-        //.frontPic = gMonFrontPic_CircledQuestionMark,
-        //.frontPicSize = MON_COORDS_SIZE(40, 40),
-        //.frontPicYOffset = 12,
-        //.frontAnimFrames = sAnims_TwoFramePlaceHolder,
+        .frontPic = gMonFrontPic_ZygardeMega,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
         //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        //.backPic = gMonBackPic_CircledQuestionMark,
-        //.backPicSize = MON_COORDS_SIZE(40, 40),
-        //.backPicYOffset = 12,
+        .enemyMonElevation = 8,
+        .backPic = gMonBackPic_ZygardeMega,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 15,
         //.backAnimId = BACK_ANIM_NONE,
-        //.palette = gMonPalette_CircledQuestionMark,
-        //.shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        //.iconSprite = gMonIcon_QuestionMark,
-        //.iconPalIndex = 0,
+        .palette = gMonPalette_ZygardeMega,
+        .shinyPalette = gMonShinyPalette_ZygardeMega,
+        .iconSprite = gMonIcon_ZygardeMega,
+        .iconPalIndex = 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(Zygarde)
-        //SHADOW(-1, 0, SHADOW_SIZE_M)
+        SHADOW(8, 20, SHADOW_SIZE_M)
         .isMegaEvolution = TRUE,
         .isRestrictedLegendary = TRUE,
         .levelUpLearnset = sZygardeLevelUpLearnset,

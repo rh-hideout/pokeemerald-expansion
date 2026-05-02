@@ -22,7 +22,7 @@ SINGLE_BATTLE_TEST("Final Gambit faints the user, and the target receives damage
         HP_BAR(opponent);
         HP_BAR(player);
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HP), 0);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_HP), 0);
         EXPECT_EQ(opponent->hp, 400 - hp);
     }
 }
@@ -41,8 +41,8 @@ SINGLE_BATTLE_TEST("Final Gambit faints user and target")
         HP_BAR(opponent);
         HP_BAR(player);
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HP), 0);
-        EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_HP), 0);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_HP), 0);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_HP), 0);
     }
 }
 
@@ -57,8 +57,8 @@ SINGLE_BATTLE_TEST("Final Gambit does not faint user if target protects")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, opponent);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FINAL_GAMBIT, player);
     } THEN {
-        EXPECT_NE(GetMonData(&gPlayerParty[0], MON_DATA_HP), 0);
-        EXPECT_NE(GetMonData(&gEnemyParty[0], MON_DATA_HP), 0);
+        EXPECT_NE(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_HP), 0);
+        EXPECT_NE(GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_HP), 0);
     }
 }
 
@@ -74,8 +74,8 @@ SINGLE_BATTLE_TEST("Final Gambit does not faint user if attacker fails to attack
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, opponent);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FINAL_GAMBIT, player);
     } THEN {
-        EXPECT_NE(GetMonData(&gPlayerParty[0], MON_DATA_HP), 0);
-        EXPECT_NE(GetMonData(&gEnemyParty[0], MON_DATA_HP), 0);
+        EXPECT_NE(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_HP), 0);
+        EXPECT_NE(GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_HP), 0);
     }
 }
 
@@ -89,8 +89,8 @@ SINGLE_BATTLE_TEST("Final Gambit does not faint user if target is immune")
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FINAL_GAMBIT, player);
     } THEN {
-        EXPECT_NE(GetMonData(&gPlayerParty[0], MON_DATA_HP), 0);
-        EXPECT_NE(GetMonData(&gEnemyParty[0], MON_DATA_HP), 0);
+        EXPECT_NE(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_HP), 0);
+        EXPECT_NE(GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_HP), 0);
     }
 }
 
@@ -99,7 +99,7 @@ SINGLE_BATTLE_TEST("Final Gambit does not faint user if target is immune")
 // SINGLE_BATTLE_TEST("Final Gambit faints the user before abilities can activate (Gen 5)")
 // {
 //     GIVEN {
-//         WITH_CONFIG(CONFIG_UPDATED_MOVE_FLAGS, GEN_5);
+//         WITH_CONFIG(B_UPDATED_MOVE_FLAGS, GEN_5);
 //         PLAYER(SPECIES_WOBBUFFET);
 //         OPPONENT(SPECIES_PYUKUMUKU) { Ability(ABILITY_INNARDS_OUT); HP(1); }
 //     } WHEN {
@@ -114,7 +114,7 @@ SINGLE_BATTLE_TEST("Final Gambit does not faint user if target is immune")
 // SINGLE_BATTLE_TEST("Final Gambit faints the user after abilities can activate (Gen 6+)")
 // {
 //     GIVEN {
-//         WITH_CONFIG(CONFIG_UPDATED_MOVE_FLAGS, GEN_6);
+//         WITH_CONFIG(B_UPDATED_MOVE_FLAGS, GEN_6);
 //         PLAYER(SPECIES_WOBBUFFET);
 //         OPPONENT(SPECIES_PYUKUMUKU) { Ability(ABILITY_INNARDS_OUT); HP(1); }
 //     } WHEN {

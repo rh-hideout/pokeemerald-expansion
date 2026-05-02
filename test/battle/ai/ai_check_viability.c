@@ -18,7 +18,7 @@ AI_SINGLE_BATTLE_TEST("AI sees increased base power of Facade")
     PARAMETRIZE { status1 = STATUS1_BURN; expectedMove = MOVE_FACADE; }
 
     GIVEN {
-        WITH_CONFIG(CONFIG_BURN_FACADE_DMG, GEN_6);
+        WITH_CONFIG(B_BURN_FACADE_DMG, GEN_6);
         ASSUME(GetMoveEffect(MOVE_FACADE) == EFFECT_FACADE);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET) { HP(60); }
@@ -116,6 +116,37 @@ AI_SINGLE_BATTLE_TEST("AI sees increased base power of Flail")
     }
 }
 
+AI_SINGLE_BATTLE_TEST("AI sees increased base power of Body Press after Defense is boosted")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BODY_PRESS) == EFFECT_BODY_PRESS);
+        ASSUME(GetMoveEffect(MOVE_IRON_DEFENSE) == EFFECT_DEFENSE_UP_2);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_ZAMAZENTA) { Moves(MOVE_BODY_PRESS, MOVE_IRON_HEAD, MOVE_IRON_DEFENSE); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponent, MOVE_IRON_DEFENSE); }
+        TURN { EXPECT_MOVE(opponent, MOVE_IRON_DEFENSE); }
+        TURN { EXPECT_MOVE(opponent, MOVE_BODY_PRESS); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI sees increased base power of Body Press after Special Defense is boosted (Wonder Room)")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_BODY_PRESS) == EFFECT_BODY_PRESS);
+        ASSUME(GetMoveEffect(MOVE_AMNESIA) == EFFECT_SPECIAL_DEFENSE_UP_2);
+        ASSUME(GetMoveEffect(MOVE_WONDER_ROOM) == EFFECT_WONDER_ROOM);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_WONDER_ROOM, MOVE_CELEBRATE); Speed(20); }
+        OPPONENT(SPECIES_ZAMAZENTA) { Moves(MOVE_BODY_PRESS, MOVE_IRON_HEAD, MOVE_AMNESIA); Speed(10); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_WONDER_ROOM); EXPECT_MOVE(opponent, MOVE_AMNESIA); }
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_AMNESIA); }
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_BODY_PRESS); }
+    }
+}
+
 AI_SINGLE_BATTLE_TEST("AI will only use Dream Eater if target is asleep")
 {
     u16 status1, expectedMove;
@@ -132,6 +163,42 @@ AI_SINGLE_BATTLE_TEST("AI will only use Dream Eater if target is asleep")
     } SCENE {
         if (expectedMove == MOVE_DREAM_EATER)
             MESSAGE("Meganium fainted!");
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI chooses Sleep Talk only when it will not wake up with Early Bird")
+{
+    enum Ability ability;
+
+    PARAMETRIZE { ability = ABILITY_RUN_AWAY; }
+    PARAMETRIZE { ability = ABILITY_EARLY_BIRD; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_DODRIO) { Ability(ability); Status1(STATUS1_SLEEP_TURN(2)); Moves(MOVE_SLEEP_TALK, MOVE_TACKLE); }
+    } WHEN {
+        if (ability == ABILITY_EARLY_BIRD)
+            TURN { EXPECT_MOVE(opponent, MOVE_TACKLE); }
+        else
+            TURN { EXPECT_MOVE(opponent, MOVE_SLEEP_TALK); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI uses Snore or Sleep Talk after using Rest")
+{
+    enum Move sleepMove;
+
+    PARAMETRIZE { sleepMove = MOVE_SNORE; }
+    PARAMETRIZE { sleepMove = MOVE_SLEEP_TALK; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); HP(1); MaxHP(100); Moves(MOVE_REST, sleepMove, MOVE_TACKLE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_REST); }
+        TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, sleepMove); }
     }
 }
 
@@ -220,7 +287,7 @@ AI_DOUBLE_BATTLE_TEST("AI chooses moves that cure self or partner")
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_HEAL_BELL) == EFFECT_HEAL_BELL);
-        WITH_CONFIG(CONFIG_HEAL_BELL_SOUNDPROOF, GEN_8);
+        WITH_CONFIG(B_HEAL_BELL_SOUNDPROOF, GEN_8);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
@@ -269,7 +336,7 @@ AI_SINGLE_BATTLE_TEST("AI chooses moves that cure inactive party members")
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_HEAL_BELL) == EFFECT_HEAL_BELL);
-        WITH_CONFIG(CONFIG_HEAL_BELL_SOUNDPROOF, config);
+        WITH_CONFIG(B_HEAL_BELL_SOUNDPROOF, config);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_REGIROCK) { Moves(MOVE_BODY_PRESS, MOVE_HEAL_BELL); }
@@ -515,7 +582,7 @@ AI_DOUBLE_BATTLE_TEST("AI sees type-changing moves as the correct type")
 
 AI_SINGLE_BATTLE_TEST("AI uses Sparkling Aria to cure an enemy with Guts")
 {
-    u32 ability;
+    enum Ability ability;
 
     PARAMETRIZE { ability = ABILITY_GUTS; }
     PARAMETRIZE { ability = ABILITY_BULLETPROOF; }
@@ -529,5 +596,32 @@ AI_SINGLE_BATTLE_TEST("AI uses Sparkling Aria to cure an enemy with Guts")
             TURN { EXPECT_MOVE(opponent, MOVE_SPARKLING_ARIA); }
         else
             TURN { EXPECT_MOVE(opponent, MOVE_SCALD); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI scores Order Up's stat boost only with Commander")
+{
+    u32 species = SPECIES_NONE;
+    enum Ability ability = ABILITY_NONE;
+    bool32 expectBoost = FALSE;
+
+    PARAMETRIZE { species = SPECIES_TATSUGIRI_CURLY;    ability = ABILITY_COMMANDER;   expectBoost = TRUE; }
+    PARAMETRIZE { species = SPECIES_TATSUGIRI_DROOPY;   ability = ABILITY_COMMANDER;   expectBoost = TRUE; }
+    PARAMETRIZE { species = SPECIES_TATSUGIRI_STRETCHY; ability = ABILITY_COMMANDER;   expectBoost = TRUE; }
+    PARAMETRIZE { species = SPECIES_TATSUGIRI_STRETCHY; ability = ABILITY_STORM_DRAIN; expectBoost = FALSE; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
+        OPPONENT(species) { Ability(ability); }
+        OPPONENT(SPECIES_DONDOZO) { Moves(MOVE_ORDER_UP, MOVE_DRAGON_CLAW); }
+    } WHEN {
+        TURN {
+            if (expectBoost)
+                SCORE_GT(opponentRight, MOVE_ORDER_UP, MOVE_DRAGON_CLAW, target: playerLeft);
+            else
+                SCORE_EQ(opponentRight, MOVE_ORDER_UP, MOVE_DRAGON_CLAW, target: playerLeft);
+        }
     }
 }

@@ -3,7 +3,6 @@
 
 
 typedef s32 (*AiScoreFunc)(u32, u32, u32, s32);
-typedef bool32 (*AiSwitchFunc)(u32);
 
 #define UNKNOWN_NO_OF_HITS UINT32_MAX
 
@@ -124,19 +123,19 @@ enum MoveComparisonResult
     return score;                   \
 }
 
+void BattleAI_SetupAIData(u8 defaultScoreMoves, enum BattlerId battler);
 void BattleAI_SetupItems(void);
 void BattleAI_SetupFlags(void);
-void BattleAI_SetupAIData(u8 defaultScoreMoves, u32 battler);
-void ComputeBattlerDecisions(u32 battler);
-u32 BattleAI_ChooseMoveIndex(u32 battler);
+void ComputeAiBattlerDecisions(enum BattlerId battler);
+u32 BattleAI_ChooseMoveIndex(enum BattlerId battler);
 void Ai_InitPartyStruct(void);
-void Ai_UpdateSwitchInData(u32 battler);
-void Ai_UpdateFaintData(u32 battler);
+void Ai_UpdateSwitchInData(enum BattlerId battler);
+void Ai_UpdateFaintData(enum BattlerId battler);
 void SetAiLogicDataForTurn(struct AiLogicData *aiData);
 void ResetDynamicAiFunctions(void);
-void AI_TrySwitchOrUseItem(u32 battler);
-void CalcBattlerAiMovesData(struct AiLogicData *aiData, u32 battlerAtk, u32 battlerDef, u32 weather, u32 fieldStatus);
-
-extern AiSwitchFunc gDynamicAiSwitchFunc;
+void AI_TrySwitchOrUseItem(enum BattlerId battler);
+void CalcBattlerAiMovesData(struct AiLogicData *aiData, enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 weather, u32 fieldStatus);
+void AIDebugTimerStart(void);
+void AIDebugTimerEnd(void);
 
 #endif // GUARD_BATTLE_AI_MAIN_H

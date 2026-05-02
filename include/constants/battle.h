@@ -19,10 +19,42 @@
  *   | Player's side             |
  *   |  Left   Right             |
  *   |   0       2               |
- *   ----------------------------+
+ *   +---------------------------+
  *   |                           |
  *   |                           |
  *   +---------------------------+
+ */
+
+/*
+ * BattleTrainer is the identifier used to reference one of the four 6-mon battle parties
+ * in gParties[MAX_BATTLE_TRAINERS]. gParties[B_TRAINER_0] is always the player's party.
+ * gParties[B_TRAINER_1] is always the first opponent trainer's party, or holds the first
+ * wild mon during an encounter. gParties[B_TRAINER_2] is only used in multibattles where 
+ * the player's side has a second trainer such as Mossdeep Space Center tag battle with
+ * trainer Steven. gParties[B_TRAINER_3] is only used in battles with two opponent trainers,
+ * or for the second wild mon in a doubles wild encounter. In a double battle where the
+ * battle side only has a single trainer, both battlers on that battle side will reside in
+ * the same party (gParties[B_TRAINER_0] for player side and gParties[B_TRAINER_1] for
+ * opponent side).
+ * Note in link multi battles, parties are set locally on each player's device, meaning
+ * even if a player is in the right position, on their device they will still occupy 
+ * gParties[B_TRAINER_0], with their link partner using gParties[B_TRAINER_2].
+ *
+ *          Regular battles              Link multi (player on left)         Link multi (player on right)
+ *   + ------------------------- +      + ------------------------- +       + ------------------------- +
+ *   |           Opponent's side |      |           Opponent's side |       |           Opponent's side |
+ *   |            Right    Left  |      |            Right    Left  |       |            Right    Left  |
+ *   | (1 trainer)  1       1    |      |              3       1    |       |              3       1    |
+ *   | (2 trainers) 3       1    |      |                           |       |                           |
+ *   |                           |      |                           |       |                           |
+ *   | Player's side             |      |                           |       |                           |
+ *   |  Left   Right             |      | Player's side             |       | Player's side             |
+ *   |   0       0 (double)      |      |  Left   Right             |       |  Left   Right             |
+ *   |   0       2 (multi)       |      |   0       2               |       |   2       0               |
+ *   +---------------------------+      +---------------------------+       +---------------------------+
+ *   |                           |      |                           |       |                           |
+ *   |                           |      |                           |       |                           |
+ *   +---------------------------+      +---------------------------+       +---------------------------+
  */
 
 enum BattlerPosition
@@ -35,7 +67,7 @@ enum BattlerPosition
     B_POSITION_ABSENT = 0xFF,
 };
 
-enum BattlerId
+enum __attribute__((packed)) BattlerId
 {
     B_BATTLER_0,
     B_BATTLER_1,
@@ -85,17 +117,17 @@ enum BattleSide
 #define BATTLE_TYPE_MULTI              (1 << 6)
 #define BATTLE_TYPE_SAFARI             (1 << 7)
 #define BATTLE_TYPE_BATTLE_TOWER       (1 << 8)
-#define BATTLE_TYPE_WALLY_TUTORIAL     (1 << 9) // Used in pokefirered as BATTLE_TYPE_OLD_MAN_TUTORIAL.
+#define BATTLE_TYPE_CATCH_TUTORIAL     (1 << 9)
 #define BATTLE_TYPE_ROAMER             (1 << 10)
 #define BATTLE_TYPE_EREADER_TRAINER    (1 << 11)
 #define BATTLE_TYPE_RAID               (1 << 12)
 #define BATTLE_TYPE_LEGENDARY          (1 << 13)
 #define BATTLE_TYPE_14                 (1 << 14)
-#define BATTLE_TYPE_TWO_OPPONENTS      (1 << 15) // Used in pokefirered as BATTLE_TYPE_GHOST.
-#define BATTLE_TYPE_DOME               (1 << 16) // Used in pokefirered as BATTLE_TYPE_POKEDUDE.
-#define BATTLE_TYPE_PALACE             (1 << 17) // Used in pokefirered as BATTLE_TYPE_WILD_SCRIPTED.
-#define BATTLE_TYPE_ARENA              (1 << 18) // Used in pokefirered as BATTLE_TYPE_LEGENDARY_FRLG.
-#define BATTLE_TYPE_FACTORY            (1 << 19) // Used in pokefirered as BATTLE_TYPE_TRAINER_TOWER.
+#define BATTLE_TYPE_TWO_OPPONENTS      (1 << 15)
+#define BATTLE_TYPE_DOME               (1 << 16)
+#define BATTLE_TYPE_PALACE             (1 << 17)
+#define BATTLE_TYPE_ARENA              (1 << 18)
+#define BATTLE_TYPE_FACTORY            (1 << 19)
 #define BATTLE_TYPE_PIKE               (1 << 20)
 #define BATTLE_TYPE_PYRAMID            (1 << 21)
 #define BATTLE_TYPE_INGAME_PARTNER     (1 << 22)
@@ -103,15 +135,16 @@ enum BattleSide
 #define BATTLE_TYPE_RECORDED           (1 << 24)
 #define BATTLE_TYPE_RECORDED_LINK      (1 << 25)
 #define BATTLE_TYPE_TRAINER_HILL       (1 << 26)
+#define BATTLE_TYPE_TRAINER_TOWER      BATTLE_TYPE_TRAINER_HILL
 #define BATTLE_TYPE_SECRET_BASE        (1 << 27)
-#define BATTLE_TYPE_28                 (1 << 28)
-#define BATTLE_TYPE_29                 (1 << 29)
+#define BATTLE_TYPE_GHOST              (1 << 28)
+#define BATTLE_TYPE_POKEDUDE           (1 << 29)
 #define BATTLE_TYPE_30                 (1 << 30)
 #define BATTLE_TYPE_RECORDED_IS_MASTER (1 << 31)
 #define BATTLE_TYPE_FRONTIER                (BATTLE_TYPE_BATTLE_TOWER | BATTLE_TYPE_DOME | BATTLE_TYPE_PALACE | BATTLE_TYPE_ARENA | BATTLE_TYPE_FACTORY | BATTLE_TYPE_PIKE | BATTLE_TYPE_PYRAMID)
 #define BATTLE_TYPE_FRONTIER_NO_PYRAMID     (BATTLE_TYPE_BATTLE_TOWER | BATTLE_TYPE_DOME | BATTLE_TYPE_PALACE | BATTLE_TYPE_ARENA | BATTLE_TYPE_FACTORY | BATTLE_TYPE_PIKE)
 #define BATTLE_TYPE_RECORDED_INVALID        ((BATTLE_TYPE_LINK | BATTLE_TYPE_SAFARI | BATTLE_TYPE_FIRST_BATTLE                  \
-                                             | BATTLE_TYPE_WALLY_TUTORIAL | BATTLE_TYPE_ROAMER | BATTLE_TYPE_EREADER_TRAINER    \
+                                             | BATTLE_TYPE_CATCH_TUTORIAL | BATTLE_TYPE_ROAMER | BATTLE_TYPE_EREADER_TRAINER    \
                                              | BATTLE_TYPE_LEGENDARY                                                            \
                                              | BATTLE_TYPE_RECORDED | BATTLE_TYPE_TRAINER_HILL | BATTLE_TYPE_SECRET_BASE))
 
@@ -125,6 +158,9 @@ enum BattleSide
 // Multibattle test composite flags
 #define BATTLE_MULTI_TEST                   (BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS)
 #define BATTLE_TWO_VS_ONE_TEST              (BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_MULTI)
+
+#define RIVAL_BATTLE_HEAL_AFTER  1
+#define RIVAL_BATTLE_TUTORIAL    3
 
 // Battle Outcome defines
 #define B_OUTCOME_WON                  1
@@ -179,6 +215,8 @@ enum VolatileFlags
     F(VOLATILE_BIDE,                        bideTurns,                     (u32, 3)) \
     F(VOLATILE_RAMPAGE_TURNS,               rampageTurns,                  (u32, B_RAMPAGE_TURNS + 1)) \
     F(VOLATILE_MULTIPLETURNS,               multipleTurns,                 (u32, 1)) \
+    F(VOLATILE_SKY_DROP_TARGET,             skyDropTarget,                 (enum BattlerId, MAX_BATTLERS_COUNT)) \
+    F(VOLATILE_CONFUSE_AFTER_DROP,          confuseAfterDrop,              (u32, 1)) \
     F(VOLATILE_WRAPPED,                     wrapped,                       (u32, 1)) \
     F(VOLATILE_WRAPPED_BY,                  wrappedBy,                     (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
     F(VOLATILE_WRAPPED_MOVE,                wrappedMove,                   (u32, MOVES_COUNT_ALL - 1)) \
@@ -207,7 +245,7 @@ enum VolatileFlags
     F(VOLATILE_STICKY_SYRUPED_BY,           stickySyrupedBy,               (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
     F(VOLATILE_GLAIVE_RUSH,                 glaiveRush,                    (u32, 1)) \
     F(VOLATILE_LEECH_SEED,                  leechSeed,                     (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT)), V_BATON_PASSABLE) \
-    F(VOLATILE_LOCK_ON,                     lockOn,                        (u32, 2), V_BATON_PASSABLE) \
+    F(VOLATILE_LOCK_ON,                     lockOn,                        (u32, 2)) \
     F(VOLATILE_PERISH_SONG,                 perishSong,                    (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_MINIMIZE,                    minimize,                      (u32, 1)) \
     F(VOLATILE_CHARGE_TIMER,                chargeTimer,                   (u32, 3)) \
@@ -232,6 +270,7 @@ enum VolatileFlags
     F(VOLATILE_BEADS_OF_RUIN,               beadsOfRuin,                   (u32, 1)) \
     F(VOLATILE_IS_TRANSFORMED_MON_SHINY,    isTransformedMonShiny,         (u32, 1)) \
     F(VOLATILE_TRANSFORMED_MON_PID,         transformedMonPID,             (u32, UINT32_MAX)) \
+    F(VOLATILE_TRANSFORMED_MON_SPECIES,     transformedMonSpecies,         (u32, NUM_SPECIES)) \
     F(VOLATILE_DISABLED_MOVE,               disabledMove,                  (u32, MOVES_COUNT_ALL)) \
     F(VOLATILE_ENCORED_MOVE,                encoredMove,                   (u32, MOVES_COUNT_ALL)) \
     F(VOLATILE_PROTECT_USES,                consecutiveMoveUses,           (u32, UINT8_MAX)) \
@@ -249,7 +288,7 @@ enum VolatileFlags
     F(VOLATILE_FURY_CUTTER_COUNTER,         furyCutterCounter,             (u32, UINT8_MAX)) \
     F(VOLATILE_METRONOME_ITEM_COUNTER,      metronomeItemCounter,          (u32, UINT8_MAX)) \
     F(VOLATILE_BATTLER_PREVENTING_ESCAPE,   battlerPreventingEscape,       (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
-    F(VOLATILE_BATTLER_WITH_SURE_HIT,       battlerWithSureHit,            (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
+    F(VOLATILE_BATTLER_WITH_SURE_HIT,       battlerWithSureHit,            (enum BattlerId, MAX_BATTLERS_COUNT)) \
     F(VOLATILE_MIMICKED_MOVES,              mimickedMoves,                 (u32, MAX_BITS(MAX_MON_MOVES))) \
     F(VOLATILE_RECHARGE_TIMER,              rechargeTimer,                 (u32, 2)) \
     F(VOLATILE_AUTOTOMIZE_COUNT,            autotomizeCount,               (u32, UINT8_MAX)) \
@@ -274,19 +313,20 @@ enum VolatileFlags
     F(VOLATILE_TERRAIN_ABILITY_DONE,        terrainAbilityDone,            (u32, 1)) \
     F(VOLATILE_SYRUP_BOMB_IS_SHINY,         syrupBombIsShiny,              (u32, 1)) \
     F(VOLATILE_USED_PROTEAN_LIBERO,         usedProteanLibero,             (u32, 1)) \
+    F(VOLATILE_EMBODY_ASPECT_ACTIVATED,     embodyAspectActivated,         (u32, 1)) \
     F(VOLATILE_FLASH_FIRE_BOOSTED,          flashFireBoosted,              (u32, 1)) \
     F(VOLATILE_BOOSTER_ENERGY_ACTIVATED,    boosterEnergyActivated,        (u32, 1)) \
     F(VOLATILE_OVERWRITTEN_ABILITY,         overwrittenAbility,            (enum Ability, ABILITIES_COUNT)) \
     F(VOLATILE_ROOST_ACTIVE,                roostActive,                   (u32, 1)) \
     F(VOLATILE_UNBURDEN_ACTIVE,             unburdenActive,                (u32, 1)) \
     F(VOLATILE_NEUTRALIZING_GAS,            neutralizingGas,               (u32, 1)) \
-    F(VOLATILE_TRIGGER_ICE_FACE,            triggerIceFace,                (u32, 1)) \
     F(VOLATILE_UNNERVE_ACTIVATED,           unnerveActivated,              (u32, 1)) \
     F(VOLATILE_ENDURED,                     endured,                       (u32, 1)) \
     F(VOLATILE_TRY_EJECT_PACK,              tryEjectPack,                  (u32, 1)) \
     F(VOLATILE_OCTOLOCKED_BY,               octolockedBy,                  (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
     F(VOLATILE_PARADOX_BOOSTED_STAT,        paradoxBoostedStat,            (enum Stat, NUM_STATS - 1)) \
-    F(VOLATILE_UNABLE_TO_USE_MOVE,          unableToUseMove,               (u32, 1))
+    F(VOLATILE_UNABLE_TO_USE_MOVE,          unableToUseMove,               (u32, 1)) \
+    F(VOLATILE_ACTIVATE_DANCER,             activateDancer,                (u32, 1))
 
 
 /* Use within a macro to get the maximum allowed value for a volatile. Requires _typeMaxValue as input. */
@@ -313,7 +353,8 @@ enum SemiInvulnerableState
     STATE_UNDERWATER,
     STATE_ON_AIR,
     STATE_PHANTOM_FORCE,
-    STATE_SKY_DROP,
+    STATE_SKY_DROP_ATTACKER,
+    STATE_SKY_DROP_TARGET,
     STATE_COMMANDER,
     SEMI_INVULNERABLE_COUNT
 };
@@ -322,6 +363,13 @@ enum SemiInvulnerableExclusion
 {
     CHECK_ALL,
     EXCLUDE_COMMANDER,
+};
+
+enum QueuedSwitch
+{
+    NO_QUEUED_SWITCH,
+    QUEUED_SWITCH_SEND_REPLACEMENT,
+    QUEUED_SWITCH_OPEN_PARTY_SCREEN,
 };
 
 #define HITMARKER_NO_ANIMATIONS         (1 << 7)   // set from battleSceneOff. Never changed during battle
@@ -506,7 +554,6 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_SP_DEF_MINUS_2,
     MOVE_EFFECT_ACC_MINUS_2,
     MOVE_EFFECT_EVS_MINUS_2,
-    MOVE_EFFECT_SCALE_SHOT,
     MOVE_EFFECT_THRASH,
     MOVE_EFFECT_DEF_SPDEF_DOWN,
     MOVE_EFFECT_CLEAR_SMOG,
@@ -535,6 +582,7 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_LIGHT_SCREEN,
     MOVE_EFFECT_SALT_CURE,
     MOVE_EFFECT_EERIE_SPELL,
+    MOVE_EFFECT_FLING, // If used without EFFECT_FLING, the move will be a regular damage move with fling as an additional effect without the failure and dmg modifier parts
 
     // Max move effects happen earlier in the execution chain.
     // For example stealth rock from G-Max Stonesurge is set up before abilities but from Stone Axe after.
@@ -592,6 +640,8 @@ enum __attribute__((packed)) MoveEffect
     // Move effects that happen before the move hits. Set in SetPreAttackMoveEffect
     MOVE_EFFECT_BREAK_SCREEN,
     MOVE_EFFECT_STEAL_STATS,
+    MOVE_EFFECT_BEAT_UP_MESSAGE, // Handles the message printing for gen2, 3 and 4
+    MOVE_EFFECT_ITEM_MESSAGE, // Handles the flung item and attacked by its item messages (Fling, Poltergeist)
 
     NUM_MOVE_EFFECTS
 };
@@ -657,8 +707,9 @@ enum BattleEnvironments
 #define BATTLE_RUN_FORBIDDEN      1
 #define BATTLE_RUN_FAILURE        2
 
-#define B_WIN_TYPE_NORMAL 0
-#define B_WIN_TYPE_ARENA  1
+#define B_WIN_TYPE_NORMAL         0
+#define B_WIN_TYPE_ARENA          1
+#define B_WIN_TYPE_KANTO_TUTORIAL 2
 
 // Window Ids for sStandardBattleWindowTemplates / sBattleArenaWindowTemplates
 #define B_WIN_MSG                 0
@@ -686,7 +737,8 @@ enum BattleEnvironments
 #define B_WIN_VS_OUTCOME_LEFT    22
 #define B_WIN_VS_OUTCOME_RIGHT   23
 #define B_WIN_MOVE_DESCRIPTION   24
-#define B_CATCH_OR_NOT           25
+#define B_WIN_OAK_OLD_MAN        25
+#define B_CATCH_OR_NOT           26
 
 // The following are duplicate id values for windows that Battle Arena uses differently.
 #define ARENA_WIN_PLAYER_NAME      15
@@ -727,11 +779,6 @@ enum MoveTarget
 #define PARENTAL_BOND_1ST_HIT 2
 #define PARENTAL_BOND_2ND_HIT 1
 #define PARENTAL_BOND_OFF     0
-
-// Constants for if HandleScriptMegaPrimalBurst should handle Mega Evolution, Primal Reversion, or Ultra Burst.
-#define HANDLE_TYPE_MEGA_EVOLUTION 0
-#define HANDLE_TYPE_PRIMAL_REVERSION 1
-#define HANDLE_TYPE_ULTRA_BURST 2
 
 // Constants for Torment
 #define PERMANENT_TORMENT   0xF

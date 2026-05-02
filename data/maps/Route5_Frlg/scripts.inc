@@ -1,4 +1,4 @@
-Route5_MapScripts::
+Route5_Frlg_MapScripts::
 	.byte 0
 
 Route5_EventScript_UndergroundPathSign::
@@ -6,6 +6,6 @@ Route5_EventScript_UndergroundPathSign::
 	end
 
 Route5_Text_UndergroundPathSign::
-    .string "UNDERGROUND PATH\n"
-    .string "CERULEAN CITY - VERMILION CITY$"
+	.string "UNDERGROUND PATH\n"
+	.string "CERULEAN CITY - VERMILION CITY$"
 

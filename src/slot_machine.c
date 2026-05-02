@@ -1044,60 +1044,60 @@ static void CB2_SlotMachineSetup(void)
 {
     switch (gMain.state)
     {
-        case 0:
-            SlotMachineSetup_InitBgsWindows();
-            InitSlotMachine();
-            gMain.state++;
-            break;
-        case 1:
-            SlotMachineSetup_InitVRAM();
-            gMain.state++;
-            break;
-        case 2:
-            SlotMachineSetup_InitOAM();
-            SlotMachineSetup_InitGpuRegs();
-            gMain.state++;
-            break;
-        case 3:
-            SlotMachineSetup_InitPalsSpritesTasks();
-            gMain.state++;
-            break;
-        case 4:
-            SlotMachineSetup_InitTilemaps();
-            gMain.state++;
-            break;
-        case 5:
-            SlotMachineSetup_LoadGfxAndTilemaps();
-            gMain.state++;
-            break;
-        case 6:
-            SlotMachineSetup_InitVBlank();
-            gMain.state++;
-            break;
-        case 7:
-            BeginNormalPaletteFade(-1, 0, 0x10, 0, RGB_BLACK);
-            ShowBg(0);
-            ShowBg(1);
-            ShowBg(2);
-            ShowBg(3);
-            gMain.state++;
-            break;
-        case 8:
-            AllocDigitalDisplayGfx();
-            gMain.state++;
-            break;
-        case 9:
-            SetDigitalDisplayImagePtrs();
-            gMain.state++;
-            break;
-        case 10:
-            CreateSlotMachineSprites();
-            CreateGameplayTasks();
-            gMain.state++;
-            break;
-        case 11:
-            SetMainCallback2(CB2_SlotMachine);
-            break;
+    case 0:
+        SlotMachineSetup_InitBgsWindows();
+        InitSlotMachine();
+        gMain.state++;
+        break;
+    case 1:
+        SlotMachineSetup_InitVRAM();
+        gMain.state++;
+        break;
+    case 2:
+        SlotMachineSetup_InitOAM();
+        SlotMachineSetup_InitGpuRegs();
+        gMain.state++;
+        break;
+    case 3:
+        SlotMachineSetup_InitPalsSpritesTasks();
+        gMain.state++;
+        break;
+    case 4:
+        SlotMachineSetup_InitTilemaps();
+        gMain.state++;
+        break;
+    case 5:
+        SlotMachineSetup_LoadGfxAndTilemaps();
+        gMain.state++;
+        break;
+    case 6:
+        SlotMachineSetup_InitVBlank();
+        gMain.state++;
+        break;
+    case 7:
+        BeginNormalPaletteFade(-1, 0, 0x10, 0, RGB_BLACK);
+        ShowBg(0);
+        ShowBg(1);
+        ShowBg(2);
+        ShowBg(3);
+        gMain.state++;
+        break;
+    case 8:
+        AllocDigitalDisplayGfx();
+        gMain.state++;
+        break;
+    case 9:
+        SetDigitalDisplayImagePtrs();
+        gMain.state++;
+        break;
+    case 10:
+        CreateSlotMachineSprites();
+        CreateGameplayTasks();
+        gMain.state++;
+        break;
+    case 11:
+        SetMainCallback2(CB2_SlotMachine);
+        break;
     }
 }
 
@@ -3728,7 +3728,7 @@ static void ReelTime_PikachuReact(struct Task *task)
         DestroyReelTimeBoltSprites();
         DestroyReelTimePikachuAuraSprites();
         task->tState++; // RT_TASK_WAIT_CLEAR_POWER
-        if(sSlotMachine->reelTimeDraw == 0)
+        if (sSlotMachine->reelTimeDraw == 0)
         {
             task->tTimer2 = 0xa0;
             StartSpriteAnimIfDifferent(&gSprites[sSlotMachine->reelTimePikachuSpriteId], 5);
@@ -4948,53 +4948,53 @@ static void SpriteCB_DigitalDisplay_AButtonStart(struct Sprite *sprite)
 {
     switch (sprite->sState)
     {
-        case 0:
-            sSlotMachine->winIn = WININ_WIN0_BG_ALL | WININ_WIN0_CLR;
-            sSlotMachine->winOut = WINOUT_WIN01_BG_ALL | WINOUT_WIN01_OBJ | WINOUT_WIN01_CLR;
-            sSlotMachine->win0v = WIN_RANGE(32, 136);
-            sprite->invisible = TRUE;
+    case 0:
+        sSlotMachine->winIn = WININ_WIN0_BG_ALL | WININ_WIN0_CLR;
+        sSlotMachine->winOut = WINOUT_WIN01_BG_ALL | WINOUT_WIN01_OBJ | WINOUT_WIN01_CLR;
+        sSlotMachine->win0v = WIN_RANGE(32, 136);
+        sprite->invisible = TRUE;
+        sprite->sState++;
+        // fallthrough
+    case 1:
+        sprite->sCounter += 2;
+        sprite->data[2] = sprite->sCounter + 176;
+        sprite->data[3] = DISPLAY_WIDTH - sprite->sCounter;
+        if (sprite->data[2] > 208)
+            sprite->data[2] = 208;
+        if (sprite->data[3] < 208)
+            sprite->data[3] = 208;
+        sSlotMachine->win0h = (sprite->data[2] << 8) | sprite->data[3];
+        if (sprite->sCounter > 51)
+        {
             sprite->sState++;
-            // fallthrough
-        case 1:
-            sprite->sCounter += 2;
-            sprite->data[2] = sprite->sCounter + 176;
-            sprite->data[3] = DISPLAY_WIDTH - sprite->sCounter;
-            if (sprite->data[2] > 208)
-                sprite->data[2] = 208;
-            if (sprite->data[3] < 208)
-                sprite->data[3] = 208;
-            sSlotMachine->win0h = (sprite->data[2] << 8) | sprite->data[3];
-            if (sprite->sCounter > 51)
-            {
-                sprite->sState++;
-                sSlotMachine->winIn = WININ_WIN0_BG_ALL | WININ_WIN0_OBJ | WININ_WIN0_CLR;
-            }
+            sSlotMachine->winIn = WININ_WIN0_BG_ALL | WININ_WIN0_OBJ | WININ_WIN0_CLR;
+        }
+        break;
+    case 2:
+        if (sSlotMachine->bet == 0)
             break;
-        case 2:
-            if (sSlotMachine->bet == 0)
-                break;
-            AddDigitalDisplaySprite(DIG_SPRITE_A_BUTTON, SpriteCallbackDummy, 208, 116, 0);
-            sSlotMachine->win0h = WIN_RANGE(192, 224);
-            sSlotMachine->win0v = WIN_RANGE(104, 128);
-            sSlotMachine->winIn = WININ_WIN0_BG_ALL | WININ_WIN0_CLR;
+        AddDigitalDisplaySprite(DIG_SPRITE_A_BUTTON, SpriteCallbackDummy, 208, 116, 0);
+        sSlotMachine->win0h = WIN_RANGE(192, 224);
+        sSlotMachine->win0v = WIN_RANGE(104, 128);
+        sSlotMachine->winIn = WININ_WIN0_BG_ALL | WININ_WIN0_CLR;
+        sprite->sState++;
+        sprite->sCounter = 0;
+        // fallthrough
+    case 3:
+        sprite->sCounter += 2;
+        sprite->data[2] = sprite->sCounter + 192;
+        sprite->data[3] = DISPLAY_WIDTH - 16 - sprite->sCounter;
+        if (sprite->data[2] > 208)
+            sprite->data[2] = 208;
+        if (sprite->data[3] < 208)
+            sprite->data[3] = 208;
+        sSlotMachine->win0h = (sprite->data[2] << 8) | sprite->data[3];
+        if (sprite->sCounter > 15)
+        {
             sprite->sState++;
-            sprite->sCounter = 0;
-            // fallthrough
-        case 3:
-            sprite->sCounter += 2;
-            sprite->data[2] = sprite->sCounter + 192;
-            sprite->data[3] = DISPLAY_WIDTH - 16 - sprite->sCounter;
-            if (sprite->data[2] > 208)
-                sprite->data[2] = 208;
-            if (sprite->data[3] < 208)
-                sprite->data[3] = 208;
-            sSlotMachine->win0h = (sprite->data[2] << 8) | sprite->data[3];
-            if (sprite->sCounter > 15)
-            {
-                sprite->sState++;
-                sSlotMachine->winIn = WININ_WIN0_BG_ALL | WININ_WIN0_OBJ | WININ_WIN0_CLR;
-            }
-            break;
+            sSlotMachine->winIn = WININ_WIN0_BG_ALL | WININ_WIN0_OBJ | WININ_WIN0_CLR;
+        }
+        break;
     }
 }
 
@@ -7845,9 +7845,9 @@ static const u8 sBetToMatchLineIds[MAX_BET][2] =
 static const u8 sMatchLinesPerBet[MAX_BET] = { 1, 2, 2 };
 
 // Flashing lights at top of slot machine, brightest point inside light goes from toward center of machine, to middle, to toward edges
-static const u16 sFlashingLightsInside_Pal[] = INCBIN_U16("graphics/slot_machine/flashing_lights_inside.gbapal");
-static const u16 sFlashingLightsMiddle_Pal[] = INCBIN_U16("graphics/slot_machine/flashing_lights_middle.gbapal");
-static const u16 sFlashingLightsOutside_Pal[] = INCBIN_U16("graphics/slot_machine/flashing_lights_outside.gbapal");
+static const u16 sFlashingLightsInside_Pal[] = INCGFX_U16("graphics/slot_machine/flashing_lights_inside.pal", ".gbapal");
+static const u16 sFlashingLightsMiddle_Pal[] = INCGFX_U16("graphics/slot_machine/flashing_lights_middle.pal", ".gbapal");
+static const u16 sFlashingLightsOutside_Pal[] = INCGFX_U16("graphics/slot_machine/flashing_lights_outside.pal", ".gbapal");
 static const u16 *const sFlashingLightsPalTable[] =
 {
     sFlashingLightsInside_Pal,
@@ -7857,9 +7857,9 @@ static const u16 *const sFlashingLightsPalTable[] =
 
 static const u16 *const sSlotMachineMenu_Pal = {gSlotMachineMenu_Pal + 16};
 
-static const u16 sPokeballShining0_Pal[] = INCBIN_U16("graphics/slot_machine/pokeball_shining_0.gbapal");
-static const u16 sPokeballShining1_Pal[] = INCBIN_U16("graphics/slot_machine/pokeball_shining_1.gbapal");
-static const u16 sPokeballShining2_Pal[] = INCBIN_U16("graphics/slot_machine/pokeball_shining_2.gbapal");
+static const u16 sPokeballShining0_Pal[] = INCGFX_U16("graphics/slot_machine/pokeball_shining_0.pal", ".gbapal");
+static const u16 sPokeballShining1_Pal[] = INCGFX_U16("graphics/slot_machine/pokeball_shining_1.pal", ".gbapal");
+static const u16 sPokeballShining2_Pal[] = INCGFX_U16("graphics/slot_machine/pokeball_shining_2.pal", ".gbapal");
 static const u16 *const sPokeballShiningPalTable[] =
 {
     sPokeballShining0_Pal,          // Streak on left side of ball
@@ -7887,6 +7887,6 @@ static const struct SpritePalette sSlotMachineSpritePalettes[] =
     {}
 };
 
-static const u32 sReelTimeGfx[] = INCBIN_U32("graphics/slot_machine/reel_time_gfx.4bpp.smol"); // reel_time_machine and reel_time_pikachu
+static const u32 sReelTimeGfx[] = INCGFX_U32("graphics/slot_machine/reel_time_gfx.4bpp", ".smol"); // reel_time_machine and reel_time_pikachu
 static const u16 sReelTimeWindow_Tilemap[] = INCBIN_U16("graphics/slot_machine/reel_time_window.bin");
 static const u16 sEmptyTilemap[] =  {0};

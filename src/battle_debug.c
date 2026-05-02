@@ -20,7 +20,6 @@
 #include "text_window.h"
 #include "international_string_util.h"
 #include "strings.h"
-#include "battle_ai_main.h"
 #include "battle_ai_util.h"
 #include "list_menu.h"
 #include "decompress.h"
@@ -54,8 +53,8 @@ struct BattleDebugModifyArrows
 
 struct BattleDebugMenu
 {
-    u8 battlerId:2;
-    u8 aiBattlerId:2;
+    enum BattlerId battlerId:3;
+    enum BattlerId aiBattlerId:3;
 
     u8 battlerWindowId;
 
@@ -602,7 +601,7 @@ static const u16 sBgColor[] = {RGB_WHITE};
 static void Task_DebugMenuFadeOut(u8 taskId);
 static void Task_DebugMenuProcessInput(u8 taskId);
 static void Task_DebugMenuFadeIn(u8 taskId);
-static void PrintOnBattlerWindow(u8 windowId, u8 battlerId);
+static void PrintOnBattlerWindow(u8 windowId, enum BattlerId battler);
 static void UpdateWindowsOnChangedBattler(struct BattleDebugMenu *data);
 static void CreateSecondaryListMenu(struct BattleDebugMenu *data);
 static void PrintSecondaryEntries(struct BattleDebugMenu *data);
@@ -915,14 +914,14 @@ static void PutAiInfoText(struct BattleDebugMenu *data)
     }
 
     // items info
-    for (i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
-        if (IsOnPlayerSide(i) && IsBattlerAlive(i))
+        if (IsOnPlayerSide(battler) && IsBattlerAlive(battler))
         {
-            enum Ability ability = gAiLogicData->abilities[i];
-            enum HoldEffect holdEffect = gAiLogicData->holdEffects[i];
-            enum Item item = gAiLogicData->items[i];
-            u8 x = (i == B_POSITION_PLAYER_LEFT) ? 83 + (i) * 75 : 83 + (i-1) * 75;
+            enum Ability ability = gAiLogicData->abilities[battler];
+            enum HoldEffect holdEffect = gAiLogicData->holdEffects[battler];
+            enum Item item = gAiLogicData->items[battler];
+            u8 x = (GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT) ? 83 + battler * 75 : 83 + (battler - 1) * 75;
             AddTextPrinterParameterized(data->aiMovesWindowId, FONT_SMALL, gAbilitiesInfo[ability].name, x, 0, 0, NULL);
             AddTextPrinterParameterized(data->aiMovesWindowId, FONT_SMALL, GetItemName(item), x, 15, 0, NULL);
             AddTextPrinterParameterized(data->aiMovesWindowId, FONT_SMALL, GetHoldEffectName(holdEffect), x, 30, 0, NULL);
@@ -1069,7 +1068,7 @@ static void Task_ShowAiParty(u8 taskId)
         aiMons = gAiPartyData->mons[GetBattlerSide(data->aiBattlerId)];
         for (i = 0; i < gAiPartyData->count[GetBattlerSide(data->aiBattlerId)]; i++)
         {
-            u16 species = SPECIES_NONE; // Question mark
+            enum Species species = SPECIES_NONE; // Question mark
             if (aiMons[i].wasSentInBattle && aiMons[i].species)
                 species = aiMons[i].species;
             data->spriteIds.aiPartyIcons[i] = CreateMonIcon(species, SpriteCallbackDummy, (i * 41) + 15, 7, 1, 0);
@@ -1311,15 +1310,15 @@ static void Task_DebugMenuFadeOut(u8 taskId)
     }
 }
 
-static void PrintOnBattlerWindow(u8 windowId, u8 battlerId)
+static void PrintOnBattlerWindow(u8 windowId, enum BattlerId battler)
 {
     u8 text[POKEMON_NAME_LENGTH + 10];
 
-    text[0] = CHAR_0 + battlerId;
+    text[0] = CHAR_0 + battler;
     text[1] = CHAR_SPACE;
     text[2] = CHAR_HYPHEN;
     text[3] = CHAR_SPACE;
-    StringCopy(&text[4], gBattleMons[battlerId].nickname);
+    StringCopy(&text[4], gBattleMons[battler].nickname);
 
     FillWindowPixelBuffer(windowId, 0x11);
     AddTextPrinterParameterized(windowId, FONT_NORMAL, text, 0, 0, 0, NULL);
@@ -2013,18 +2012,18 @@ static void SetUpModifyArrows(struct BattleDebugMenu *data)
 #define UNPACK_VOLATILE_MAX_SIZE(_enum, _fieldName, _typeMaxValue, ...) case _enum: data->modifyArrows.maxValue = min(MAX_u16, GET_VOLATILE_MAXIMUM(_typeMaxValue)); break;
         switch (data->currentSecondaryListItemId)
         {
-            VOLATILE_DEFINITIONS(UNPACK_VOLATILE_MAX_SIZE)
-            /* Expands to the following:
-             * case VOLATILE_CONFUSION:
-                  data->modifyArrows.maxValue = MAX_BITS(3); // Max value 7
-                  break;
-             * case VOLATILE_FLINCHED:
-                  data->modifyArrows.maxValue = MAX_BITS(1); // Max value 1
-                  break;
-             * ...etc.
-             */
-            default:
-                data->modifyArrows.maxValue = 0;
+        VOLATILE_DEFINITIONS(UNPACK_VOLATILE_MAX_SIZE)
+        /* Expands to the following:
+            * case VOLATILE_CONFUSION:
+                data->modifyArrows.maxValue = MAX_BITS(3); // Max value 7
+                break;
+            * case VOLATILE_FLINCHED:
+                data->modifyArrows.maxValue = MAX_BITS(1); // Max value 1
+                break;
+            * ...etc.
+            */
+        default:
+            data->modifyArrows.maxValue = 0;
         }
         data->modifyArrows.maxDigits = MAX_DIGITS(data->modifyArrows.maxValue);
         break;
