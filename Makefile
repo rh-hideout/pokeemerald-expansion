@@ -194,6 +194,10 @@ ifeq ($(UNUSED_ERROR),0)
   endif
 endif
 
+ifeq ($(GAME_VERSION),POKEMON_HNS)
+  override CFLAGS += -Wno-error=override-init
+endif
+
 ifeq ($(DEPRECATED_ERROR),0)
   ifneq ($(GITHUB_REPOSITORY_OWNER),rh-hideout)
     override CFLAGS += -Wno-error=deprecated-declarations

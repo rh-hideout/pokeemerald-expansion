@@ -2,6 +2,42 @@
 #ifndef GUARD_DATA_REGION_MAP_REGION_MAP_ENTRIES_H
 #define GUARD_DATA_REGION_MAP_REGION_MAP_ENTRIES_H
 
+#if IS_HNS
+
+const struct RegionMapLocation gRegionMapEntries[] = {
+## for map_section in hns_map_sections
+    [{{ map_section.id }}] = {
+{% if existsIn(map_section, "x") %}
+        .x = {{ map_section.x }},
+{% else %}
+        .x = 0,
+{% endif %}
+{% if existsIn(map_section, "y") %}
+        .y = {{ map_section.y }},
+{% else %}
+        .y = 0,
+{% endif %}
+{% if existsIn(map_section, "width") %}
+        .width = {{ map_section.width }},
+{% else %}
+        .width = 1,
+{% endif %}
+{% if existsIn(map_section, "height") %}
+        .height = {{ map_section.height }},
+{% else %}
+        .height = 1,
+{% endif %}
+{% if existsIn(map_section, "name") %}
+        .name = COMPOUND_STRING("{{ map_section.name }}"),
+{% else %}
+        .name = (const u8[])_(""),
+{% endif %}
+    },
+## endfor
+};
+
+#else
+
 const struct RegionMapLocation gRegionMapEntries[] = {
 ## for map_section in map_sections
     [{{ map_section.id }}] = {
@@ -33,5 +69,7 @@ const struct RegionMapLocation gRegionMapEntries[] = {
     },
 ## endfor
 };
+
+#endif // IS_HNS
 
 #endif // GUARD_DATA_REGION_MAP_REGION_MAP_ENTRIES_H

@@ -5525,6 +5525,7 @@ static void DoTVShowTodaysRivalTrainer(void)
         default:
             sTVShowState = 7;
             break;
+#if !IS_HNS
         case MAPSEC_SECRET_BASE:
             sTVShowState = 8;
             break;
@@ -5541,6 +5542,7 @@ static void DoTVShowTodaysRivalTrainer(void)
                 break;
             }
             break;
+#endif
         }
         break;
     case 7:
