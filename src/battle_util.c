@@ -10655,23 +10655,26 @@ bool32 IsAnyTargetAffected(void)
 
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
-        if (moveTarget != TARGET_ALL_BATTLERS)
+        switch (moveTarget)
         {
-            if (isSpreadMove)
+        case TARGET_ALL_BATTLERS: // check all battlers
+            break;
+        case TARGET_USER_AND_ALLY: // only check allied battlers
+            if (!IsBattlerAlly(gBattlerAttacker, battler))
+                continue;
+            break;
+        default:
+            if (isSpreadMove) // check all battlers except attacker (flags are set for non-targeted battlers)
             {
                 if (battler == gBattlerAttacker)
                     continue;
             }
-            else if (moveTarget == TARGET_USER_AND_ALLY)
-            {
-                if (!IsBattlerAlly(gBattlerAttacker, battler))
-                    continue;
-            }
-            else
+            else // check a single target
             {
                 if (battler != gBattlerTarget)
                     continue;
             }
+            break;
         }
 
         if (!IsBattlerUnaffectedByMove(battler))
