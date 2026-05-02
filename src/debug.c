@@ -194,6 +194,8 @@ enum DebugTrainerSelection
 #define DEBUG_MAX_MENU_ITEMS 20
 #define DEBUG_MAX_SUB_MENU_LEVELS 4
 
+#define DEBUG_FLAG_CANT_BE_TOGGLED 0xFF
+
 // *******************************
 struct DebugMenuOption;
 
@@ -1239,33 +1241,25 @@ static u32 Debug_CheckToggleFlags(u8 id)
     case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_FRONTIER_PASS:
         result = FlagGet(FLAG_SYS_FRONTIER_PASS);
         break;
-    #if OW_FLAG_NO_COLLISION != 0
     case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_COLLISION:
-        result = FlagGet(OW_FLAG_NO_COLLISION);
+        result = OW_FLAG_NO_COLLISION ? FlagGet(OW_FLAG_NO_COLLISION) : DEBUG_FLAG_CANT_BE_TOGGLED;
         break;
-    #endif
-    #if WE_FLAG_NO_ENCOUNTER != 0
     case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_ENCOUNTER:
-        result = FlagGet(WE_FLAG_NO_ENCOUNTER);
+        result = WE_FLAG_NO_ENCOUNTER ? FlagGet(WE_FLAG_NO_ENCOUNTER) : DEBUG_FLAG_CANT_BE_TOGGLED;
         break;
-    #endif
-    #if OW_FLAG_NO_TRAINER_SEE != 0
     case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_TRAINER_SEE:
-        result = FlagGet(OW_FLAG_NO_TRAINER_SEE);
+        result = OW_FLAG_NO_TRAINER_SEE ? FlagGet(OW_FLAG_NO_TRAINER_SEE) : DEBUG_FLAG_CANT_BE_TOGGLED;
         break;
-    #endif
-    #if WE_FLAG_NO_CATCHING != 0
     case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_CATCHING:
-        result = FlagGet(WE_FLAG_NO_CATCHING);
+        result = WE_FLAG_NO_CATCHING ? FlagGet(WE_FLAG_NO_CATCHING) : DEBUG_FLAG_CANT_BE_TOGGLED;
         break;
-    #endif
     case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BAG_USE:
         result = VarGet(B_VAR_NO_BAG_USE);
         if (result >= NO_BAG_INVALID_VALUE)
             result = NO_BAG_INVALID_VALUE;
         break;
     default:
-        result = 0xFF;
+        result = DEBUG_FLAG_CANT_BE_TOGGLED;
         break;
     }
 
