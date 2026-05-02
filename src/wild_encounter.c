@@ -1172,12 +1172,12 @@ static void ApplyCleanseTagEncounterRateMod(u32 *encRate)
 bool8 TryDoDoubleWildBattle(void)
 {
     if (GetSafariZoneFlag()
-      || (WE_DOUBLE_WILD_REQUIRE_2_MONS == TRUE && GetMonsStateToDoubles() != PLAYER_HAS_TWO_USABLE_MONS))
+      || (WE_DOUBLE_WILD_REQUIRE_2_MONS && GetMonsStateToDoubles() != PLAYER_HAS_TWO_USABLE_MONS))
         return FALSE;
     if (FollowerNPCIsBattlePartner() && FNPC_FLAG_PARTNER_WILD_BATTLES != 0
      && (FNPC_FLAG_PARTNER_WILD_BATTLES == FNPC_ALWAYS || FlagGet(FNPC_FLAG_PARTNER_WILD_BATTLES)) && FNPC_NPC_FOLLOWER_WILD_BATTLE_VS_2 == TRUE)
         return TRUE;
-    else if (WE_FLAG_FORCE_DOUBLE_WILD != 0 && FlagGet(WE_FLAG_FORCE_DOUBLE_WILD))
+    else if (FlagGet(WE_FLAG_FORCE_DOUBLE_WILD))
         return TRUE;
     else if (WE_DOUBLE_WILD_CHANCE != 0 && ((Random() % 100) + 1 <= WE_DOUBLE_WILD_CHANCE))
         return TRUE;
