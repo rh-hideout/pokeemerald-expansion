@@ -26,7 +26,7 @@ static void ParametrizeMovesAndSpecies(u32 j, u32 *pMove, u32 *pSpecies, u32 var
         *pMove = j;
         *pSpecies = SPECIES_MORPEKO_FULL_BELLY;
     }
-    else if (effect == EFFECT_ROTOTILLER) // User needs to be Grass-type
+    else if (effect == EFFECT_ROTOTILLER || effect == EFFECT_FLOWER_SHIELD) // User needs to be Grass-type
     {
         *pMove = j;
         *pSpecies = SPECIES_TANGELA;

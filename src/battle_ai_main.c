@@ -1512,6 +1512,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         }
         break;
     case EFFECT_ROTOTILLER:
+    case EFFECT_FLOWER_SHIELD:
     {
         bool32 decreaseScore = TRUE;
         for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
@@ -1519,7 +1520,10 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             if (!IsBattlerAlly(battlerAtk, battler) || !IsBattlerAlive(battler))
                 continue; // ignore foes for score decrease
 
-            if (!IS_BATTLER_OF_TYPE(battler, TYPE_GRASS) || !AI_IsBattlerGrounded(battler))
+            if (moveEffect == EFFECT_ROTOTILLER && !AI_IsBattlerGrounded(battler))
+                continue;
+
+            if (!IS_BATTLER_OF_TYPE(battler, TYPE_GRASS))
                 continue;
 
             if (AI_CanAnyStatChange(battlerAtk, battlerDef, move))
@@ -4286,11 +4290,15 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
         ADJUST_SCORE(GetStatChangeScore(battlerAtk, battlerDef, move));
         break;
     case EFFECT_ROTOTILLER:
+    case EFFECT_FLOWER_SHIELD:
     {
         s32 totalScore = 0;
         for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
         {
-            if (!IS_BATTLER_OF_TYPE(battler, TYPE_GRASS) || !AI_IsBattlerGrounded(battler))
+            if (moveEffect == EFFECT_ROTOTILLER && !AI_IsBattlerGrounded(battler))
+                continue;
+
+            if (!IS_BATTLER_OF_TYPE(battler, TYPE_GRASS))
                 continue;
 
             if (battler == battlerAtk || battler == BATTLE_PARTNER(battlerAtk))

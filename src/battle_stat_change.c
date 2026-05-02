@@ -124,6 +124,17 @@ static bool32 CheckSpecificMoveCondition(struct BattleCalcValues *cv, struct Sta
             return TRUE;
         }
         break;
+    case EFFECT_FLOWER_SHIELD:
+        if (!IS_BATTLER_OF_TYPE(cv->battlerDef, TYPE_GRASS))
+        {
+            if (!st->onlyChecking)
+            {
+                st->script = BattleScript_ItDoesntAffectScrTarget;
+                gBattleScripting.battler = cv->battlerDef;
+            }
+            return TRUE;
+        }
+        break;
     case EFFECT_TOXIC_THREAD:
         if (CanBePoisoned(cv->battlerAtk, cv->battlerDef, cv->abilities[cv->battlerAtk], cv->abilities[cv->battlerDef]))
         {

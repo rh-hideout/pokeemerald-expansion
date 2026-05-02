@@ -1993,7 +1993,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     {
         .name = COMPOUND_STRING("Growth"),
         .description = COMPOUND_STRING(
-        #if B_GROWTH_STAT_RAISE >= GEN_5
+        #if B_UPDATED_MOVE_DATA >= GEN_5
             "Forces the body to grow,\n"
             "raising Attack and Sp. Atk."),
         #else
@@ -15345,7 +15345,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Raises the Defense of\n"
             "Grass-type Pokémon."),
-        .effect = EFFECT_ROTOTILLER,
+        .effect = EFFECT_FLOWER_SHIELD,
         .power = 0,
         .type = TYPE_FAIRY,
         .argument = { .type = TYPE_GRASS },

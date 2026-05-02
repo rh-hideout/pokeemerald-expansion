@@ -1407,6 +1407,12 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 0, // TODO: Assign points
     },
 
+    [EFFECT_FLOWER_SHIELD] =
+    {
+        .battleScript = BattleScript_EffectStatChange,
+        .battleTvScore = 0, // TODO: Assign points
+    },
+
     [EFFECT_SPEED_SWAP] =
     {
         .battleScript = BattleScript_EffectSpeedSwap,
