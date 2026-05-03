@@ -10022,8 +10022,12 @@ static void Cmd_tryswapabilities(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
-    if (gAbilitiesInfo[gBattleMons[gBattlerAttacker].ability].cantBeSwapped
-      || gAbilitiesInfo[gBattleMons[gBattlerTarget].ability].cantBeSwapped)
+    if (gAbilitiesInfo[gBattleMons[gBattlerAttacker].ability].cantBeSwapped)
+    {
+        RecordAbilityBattle(gBattlerAttacker, gBattleMons[gBattlerAttacker].ability);
+        gBattlescriptCurrInstr = cmd->failInstr;
+    }
+    else if (gAbilitiesInfo[gBattleMons[gBattlerTarget].ability].cantBeSwapped)
     {
         RecordAbilityBattle(gBattlerTarget, gBattleMons[gBattlerTarget].ability);
         gBattlescriptCurrInstr = cmd->failInstr;
@@ -14082,8 +14086,12 @@ void BS_SetLuckyChant(void)
 void BS_TryEntrainment(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
-    if (gAbilitiesInfo[gBattleMons[gBattlerAttacker].ability].cantBeCopied
-        || gAbilitiesInfo[gBattleMons[gBattlerTarget].ability].cantBeOverwritten)
+    if (gAbilitiesInfo[gBattleMons[gBattlerAttacker].ability].cantBeCopied)
+    {
+        RecordAbilityBattle(gBattlerAttacker, gBattleMons[gBattlerAttacker].ability);
+        gBattlescriptCurrInstr = cmd->failInstr;
+    }
+    else if (gAbilitiesInfo[gBattleMons[gBattlerTarget].ability].cantBeOverwritten)
     {
         RecordAbilityBattle(gBattlerTarget, gBattleMons[gBattlerTarget].ability);
         gBattlescriptCurrInstr = cmd->failInstr;

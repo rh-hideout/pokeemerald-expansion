@@ -10355,6 +10355,7 @@ bool32 CanMoveSkipAccuracyCalc(enum BattlerId battlerAtk, enum BattlerId battler
 {
     bool32 effect = FALSE;
     enum Ability ability = ABILITY_NONE;
+    enum BattlerId abilityBattler = battlerAtk;
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
 
     if (gBattleMons[battlerAtk].volatiles.battlerWithSureHit == battlerDef + 1
@@ -10370,6 +10371,7 @@ bool32 CanMoveSkipAccuracyCalc(enum BattlerId battlerAtk, enum BattlerId battler
     {
         effect = TRUE;
         ability = ABILITY_NO_GUARD;
+        abilityBattler = battlerAtk;
     }
     // If the target has the ability No Guard and they aren't involved in a Sky Drop or the current move isn't Sky Drop, move hits.
     else if (abilityDef == ABILITY_NO_GUARD
@@ -10377,6 +10379,7 @@ bool32 CanMoveSkipAccuracyCalc(enum BattlerId battlerAtk, enum BattlerId battler
     {
         effect = TRUE;
         ability = ABILITY_NO_GUARD;
+        abilityBattler = battlerDef;
     }
     // If the target is under the effects of Telekinesis, and the move isn't a OH-KO move, move hits.
     else if (gBattleMons[battlerDef].volatiles.telekinesis
@@ -10416,7 +10419,7 @@ bool32 CanMoveSkipAccuracyCalc(enum BattlerId battlerAtk, enum BattlerId battler
     }
 
     if (ability != ABILITY_NONE && option == RUN_SCRIPT)
-        RecordAbilityBattle(battlerAtk, ABILITY_NO_GUARD);
+        RecordAbilityBattle(abilityBattler, ability);
 
     return effect;
 }
