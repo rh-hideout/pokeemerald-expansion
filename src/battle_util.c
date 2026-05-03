@@ -3199,6 +3199,20 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_FRISK:
             if (shouldAbilityTrigger)
             {
+                enum BattlerId battlerDef = B_BATTLER_0;
+
+                for (battlerDef = B_BATTLER_0; battlerDef < gBattlersCount; battlerDef++)
+                {
+                    if (IsBattlerAlly(battler, battlerDef) || !IsBattlerAlive(battlerDef))
+                        continue;
+                    if (gBattleMons[battlerDef].item != ITEM_NONE)
+                        break;
+                }
+
+                if (battlerDef == gBattlersCount)
+                    break; // no item found
+
+                gBattlerAbility = gEffectBattler = battler;
                 BattleScriptCall(BattleScript_FriskActivates);
                 effect++;
             }

@@ -6742,21 +6742,16 @@ BattleScript_ActivateAsOne::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_FriskMsgWithPopup::
-	copybyte gBattlerAbility, gBattlerAttacker
-	call BattleScript_AbilityPopUp
 BattleScript_FriskMsg::
 	printstring STRINGID_FRISKACTIVATES
 	waitmessage B_WAIT_TIME_LONG
+	addbyte sBATTLER, 1
 	return
 
 BattleScript_FriskActivates::
-	saveattacker
-	savetarget
-	copybyte gBattlerAttacker, sBATTLER
+	call BattleScript_AbilityPopUp
+	setbyte sBATTLER, 0
 	tryfriskmessage
-	restoreattacker
-	restoretarget
 	return
 
 BattleScript_ImposterActivates::
@@ -6881,12 +6876,6 @@ BattleScript_SynchronizeActivates::
 	waitstate
 	call BattleScript_AbilityPopUp
 	setnonvolatilestatus TRIGGER_ON_ABILITY
-	return
-
-BattleScript_NoItemSteal::
-	call BattleScript_AbilityPopUpTarget
-	printstring STRINGID_PKMNSXMADEYINEFFECTIVE
-	waitmessage B_WAIT_TIME_LONG
 	return
 
 BattleScript_AbilityCuredStatus::

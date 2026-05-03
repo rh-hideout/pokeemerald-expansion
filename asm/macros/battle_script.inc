@@ -17,11 +17,6 @@
 	.4byte \ptr
 	.endm
 
-	.macro critcalc
-	.warning "critcalc macro has been deprecated, please remove from scripts"
-	.byte B_SCR_OP_CRITCALC
-	.endm
-
 	.macro damagecalc
 	.byte B_SCR_OP_DAMAGECALC
 	.endm
@@ -1107,11 +1102,6 @@
 
 	.macro settypetoenvironment failInstr:req
 	.byte B_SCR_OP_SETTYPETOENVIRONMENT
-	.4byte \failInstr
-	.endm
-
-	.macro pursuitdoubles failInstr:req
-	.byte B_SCR_OP_PURSUITDOUBLES
 	.4byte \failInstr
 	.endm
 

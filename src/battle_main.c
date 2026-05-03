@@ -5023,7 +5023,7 @@ static void SetActionsAndBattlersTurnOrder(void)
         }
     }
     gBattleMainFunc = CheckChangingTurnOrderEffects;
-    gBattleStruct->quickClawBattlerId = 0;
+    gBattleScripting.battler = 0;
 }
 
 static void TurnValuesCleanUp(bool8 var0)
@@ -5219,10 +5219,10 @@ static void CheckChangingTurnOrderEffects(void)
 
     if (!(gHitMarker & HITMARKER_RUN))
     {
-        while (gBattleStruct->quickClawBattlerId < gBattlersCount)
+        while (gBattleScripting.battler < gBattlersCount)
         {
-            battler = gBattlerAttacker = gBattleStruct->quickClawBattlerId;
-            gBattleStruct->quickClawBattlerId++;
+            battler = gBattlerAttacker = gBattleScripting.battler++;
+
             if (gChosenActionByBattler[battler] == B_ACTION_USE_MOVE
              && GetMoveEffect(gChosenMoveByBattler[battler]) != EFFECT_FOCUS_PUNCH   // quick claw message doesn't need to activate here
              && (gProtectStructs[battler].usedCustapBerry || gProtectStructs[battler].quickDraw)
@@ -5310,7 +5310,6 @@ static void RunTurnActionsFunctions(void)
         }
     }
 
-    gBattleStruct->savedTurnActionNumber = gCurrentTurnActionNumber;
     sTurnActionsFuncsTable[gCurrentActionFuncId]();
 
     if (gCurrentTurnActionNumber >= gBattlersCount) // everyone did their actions, turn finished
