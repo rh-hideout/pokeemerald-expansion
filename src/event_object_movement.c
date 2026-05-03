@@ -1672,20 +1672,27 @@ u8 Unref_TryInitLocalObjectEvent(u8 localId)
 
 static u32 GetAvailableObjectEventId(u16 localId, u8 mapNum, u8 mapGroup)
 // Looks for an empty slot.
-// Returns the location of the available slot
+// Returns the location of the first available slot
 // If no slots are available, or if the object is already
 // loaded, returns TRUE.
 {
     u32 availableId = OBJECT_EVENTS_COUNT;
 
-    for (u32 i = 0; i < OBJECT_EVENTS_COUNT; i++)
+    // This function returns the first available id in vanilla Emerald
+    // If you are certain the function can return any available/inactive with no consequence, feel free to have the loop go in order
+    for (u32 i = OBJECT_EVENTS_COUNT - 1; i >= 0; i--)
     {
         // check if object is already loaded
-        if (gObjectEvents[i].active && gObjectEvents[i].localId == localId && gObjectEvents[i].mapNum == mapNum && gObjectEvents[i].mapGroup == mapGroup)
-            return OBJECT_EVENTS_COUNT;
-        //gets first available Id
-        if (availableId == OBJECT_EVENTS_COUNT && !gObjectEvents[i].active)
+        if (gObjectEvents[i].active)
+        {
+            if (gObjectEvents[i].localId == localId && gObjectEvents[i].mapNum == mapNum && gObjectEvents[i].mapGroup == mapGroup)
+                return OBJECT_EVENTS_COUNT;
+        }
+        else
+        {
+            //gets first available/inactive id (we loop in reverse so the loop will end on the first one)
             availableId = i;
+        }
     }
     if (availableId == OBJECT_EVENTS_COUNT && !IS_LOCALID_GENERATED_OWE(localId))
          return TryAndDespawnOldestGeneratedOWE_ToFreeObject();
