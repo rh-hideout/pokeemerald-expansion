@@ -2403,6 +2403,9 @@ static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect) //
     case MOVE_EFFECT_CONFUSE_SIDE:
     case MOVE_EFFECT_TORMENT_SIDE:
     case MOVE_EFFECT_CORE_ENFORCER:
+    case MOVE_EFFECT_RAINBOW:
+    case MOVE_EFFECT_SEA_OF_FIRE:
+    case MOVE_EFFECT_SWAMP:
         return TRUE;
     default:
         return FALSE;
@@ -3221,6 +3224,39 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
             }
         }
         break;
+    case MOVE_EFFECT_RAINBOW:
+        i = GetBattlerSide(effectBattler);
+        if (gSideStatuses[i] & SIDE_STATUS_RAINBOW)
+            break;
+
+        gSideStatuses[i] |= SIDE_STATUS_RAINBOW;
+        gSideTimers[i].rainbowTimer = 4;
+        BattleScriptPush(battleScript);
+        gBattlescriptCurrInstr = BattleScript_TheRainbowActivates;
+        gBattleStruct->pledgeMove = FALSE;
+        break;
+    case MOVE_EFFECT_SEA_OF_FIRE:
+        i = GetBattlerSide(effectBattler);
+        if (gSideStatuses[i] & SIDE_STATUS_SEA_OF_FIRE)
+            break;
+
+        gSideStatuses[i] |= SIDE_STATUS_SEA_OF_FIRE;
+        gSideTimers[GetBattlerSide(effectBattler)].seaOfFireTimer = 4;
+        BattleScriptPush(battleScript);
+        gBattlescriptCurrInstr = BattleScript_SeaOfFireActivates;
+        gBattleStruct->pledgeMove = FALSE;
+        break;
+    case MOVE_EFFECT_SWAMP:
+        i = GetBattlerSide(effectBattler);
+        if (gSideStatuses[i] & SIDE_STATUS_SWAMP)
+            break;
+
+        gSideStatuses[i] |= SIDE_STATUS_SWAMP;
+        gSideTimers[GetBattlerSide(effectBattler)].swampTimer = 4;
+        BattleScriptPush(battleScript);
+        gBattlescriptCurrInstr = BattleScript_TheSwampActivates;
+        gBattleStruct->pledgeMove = FALSE;
+        break;
     case MOVE_EFFECT_RAISE_TEAM_ATTACK:
         if (!NoAliveMonsForEitherParty())
         {
@@ -3756,6 +3792,9 @@ static void Cmd_setpreattackadditionaleffect(void)
 static bool32 CanApplyAdditionalEffect(const struct AdditionalEffect *additionalEffect)
 {
     if (additionalEffect->preAttackEffect)
+        return FALSE;
+
+    if (additionalEffect->pledgeCombo && !gBattleStruct->pledgeMove)
         return FALSE;
 
     // If Toxic Chain will activate it blocks all other non volatile effects
@@ -12276,34 +12315,23 @@ void BS_SetPledge(void)
 
     if (gBattleStruct->pledgeMove && !gBattleStruct->unableToUseMove)
     {
-        if ((gCurrentMove == MOVE_GRASS_PLEDGE && partnerMove == MOVE_WATER_PLEDGE)
-         || (gCurrentMove == MOVE_WATER_PLEDGE && partnerMove == MOVE_GRASS_PLEDGE))
-        {
-            gCurrentMove = MOVE_GRASS_PLEDGE;
-            gBattlescriptCurrInstr = BattleScript_EffectCombinedPledge_Grass;
-        }
-        else if ((gCurrentMove == MOVE_FIRE_PLEDGE && partnerMove == MOVE_GRASS_PLEDGE)
-              || (gCurrentMove == MOVE_GRASS_PLEDGE && partnerMove == MOVE_FIRE_PLEDGE))
-        {
-            gCurrentMove = MOVE_FIRE_PLEDGE;
-            gBattlescriptCurrInstr = BattleScript_EffectCombinedPledge_Fire;
-        }
-        else if ((gCurrentMove == MOVE_WATER_PLEDGE && partnerMove == MOVE_FIRE_PLEDGE)
-              || (gCurrentMove == MOVE_FIRE_PLEDGE && partnerMove == MOVE_WATER_PLEDGE))
-        {
-            gCurrentMove = MOVE_WATER_PLEDGE;
-            gBattlescriptCurrInstr = BattleScript_EffectCombinedPledge_Water;
-        }
+        if (GetPledgeComboMove(gCurrentMove) == partnerMove)
+            gCurrentMove = GetPledgeResultMove(gCurrentMove);
+        else
+            gCurrentMove = GetPledgeResultMove(partnerMove);
 
+        gBattlescriptCurrInstr = BattleScript_EffectHitCombinedPledge;
         gBattleCommunication[MSG_DISPLAY] = 0;
     }
     else if ((gChosenActionByBattler[partner] == B_ACTION_USE_MOVE)
           && IsDoubleBattle()
           && IsBattlerAlive(partner)
+          && GetMoveEffect(gCurrentMove) == EFFECT_PLEDGE
+          && GetMoveEffect(partnerMove) == EFFECT_PLEDGE
           && !HasBattlerActedThisTurn(partner)
           && !gBattleStruct->unableToUseMove
           && gCurrentMove != partnerMove
-          && GetMoveEffect(partnerMove) == EFFECT_PLEDGE)
+          && (GetPledgeComboMove(gCurrentMove) == partnerMove || GetPledgeComboMove(partnerMove) == gCurrentMove))
     {
         u32 currPledgeUser = 0;
         u32 newTurnOrder[] = {0xFF, 0xFF};
@@ -12343,36 +12371,6 @@ void BS_SetPledge(void)
         gBattleStruct->pledgeMove = FALSE;
         gBattlescriptCurrInstr = cmd->jumpInstr;
     }
-}
-
-void BS_SetPledgeStatus(void)
-{
-    NATIVE_ARGS(u8 battler, u32 sideStatus);
-
-    enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
-    enum BattleSide side = GetBattlerSide(battler);
-
-    gBattleStruct->pledgeMove = FALSE;
-    if (!(gSideStatuses[side] & cmd->sideStatus))
-    {
-        gSideStatuses[side] |= cmd->sideStatus;
-
-        switch (cmd->sideStatus)
-        {
-        case SIDE_STATUS_RAINBOW:
-            gSideTimers[side].rainbowTimer = 4;
-            break;
-        case SIDE_STATUS_SEA_OF_FIRE:
-            gSideTimers[side].seaOfFireTimer = 4;
-            break;
-        case SIDE_STATUS_SWAMP:
-            gSideTimers[side].swampTimer = 4;
-        }
-
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-    else
-        gBattlescriptCurrInstr = BattleScript_MoveEnd;
 }
 
 void BS_TryTrainerSlideZMoveMsg(void)

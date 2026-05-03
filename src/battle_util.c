@@ -6120,7 +6120,7 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
     {
     case EFFECT_PLEDGE:
         if (gBattleStruct->pledgeMove)
-            basePower = 150;
+            basePower = GetPledgeMoveBasePower(ctx->move);
         break;
     case EFFECT_FLING:
         basePower = GetFlingPowerFromItemId(gBattleMons[battlerAtk].item);

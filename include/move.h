@@ -34,7 +34,8 @@ struct AdditionalEffect
     u8 onChargeTurnOnly:1;
     u8 sheerForceOverride:1; // Handles edge cases for Sheer Force - if TRUE, boosts when it shouldn't, or doesn't boost when it should
     u8 preAttackEffect:1;
-    u8 padding:3;
+    u8 pledgeCombo:1; // If set the move effect only applies during a pledge combo attack
+    u8 padding:2;
     union PACKED {
         enum WrappedStringID wrapped;
     } multistring;
@@ -178,6 +179,11 @@ struct MoveInfo
             enum TerrainGroundCheck groundCheck:2;
             u16 hitsBothFoes:1;
         } terrainBoost;
+        struct {
+            u32 comboMove:12;
+            u32 resultMove:12;
+            u32 basePower:8;
+        } pledge;
         u32 protectMethod;
         u32 status;
         u32 moveProperty;
@@ -650,6 +656,27 @@ static inline bool32 GetMoveTerrainBoost_HitsBothFoes(enum Move moveId)
     moveId = SanitizeMoveId(moveId);
     assertf(gMovesInfo[moveId].effect == EFFECT_TERRAIN_BOOST, "not a terrain boosted move: %S", GetMoveName(moveId));
     return gMovesInfo[moveId].argument.terrainBoost.hitsBothFoes;
+}
+
+static inline u32 GetPledgeComboMove(enum Move moveId)
+{
+    moveId = SanitizeMoveId(moveId);
+    assertf(gMovesInfo[moveId].effect == EFFECT_PLEDGE, "not a pledge move: %S", GetMoveName(moveId));
+    return gMovesInfo[moveId].argument.pledge.comboMove;
+}
+
+static inline u32 GetPledgeResultMove(enum Move moveId)
+{
+    moveId = SanitizeMoveId(moveId);
+    assertf(gMovesInfo[moveId].effect == EFFECT_PLEDGE, "not a pledge move: %S", GetMoveName(moveId));
+    return gMovesInfo[moveId].argument.pledge.resultMove;
+}
+
+static inline u32 GetPledgeMoveBasePower(enum Move moveId)
+{
+    moveId = SanitizeMoveId(moveId);
+    assertf(gMovesInfo[moveId].effect == EFFECT_PLEDGE, "not a pledge move: %S", GetMoveName(moveId));
+    return gMovesInfo[moveId].argument.pledge.basePower;
 }
 
 static inline enum ProtectMethod GetMoveProtectMethod(enum Move moveId)
