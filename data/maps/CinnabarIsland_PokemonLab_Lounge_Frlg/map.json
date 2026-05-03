@@ -1,6 +1,7 @@
 {
   "id": "MAP_CINNABAR_ISLAND_POKEMON_LAB_LOUNGE",
   "name": "CinnabarIsland_PokemonLab_Lounge_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_CINNABAR_ISLAND_POKEMON_LAB_LOUNGE",
   "music": "MUS_RG_CINNABAR",
   "region": "REGION_KANTO",

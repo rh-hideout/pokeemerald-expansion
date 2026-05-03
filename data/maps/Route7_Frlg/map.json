@@ -1,6 +1,7 @@
 {
   "id": "MAP_ROUTE7",
   "name": "Route7_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_ROUTE7",
   "music": "MUS_RG_ROUTE3",
   "region": "REGION_KANTO",

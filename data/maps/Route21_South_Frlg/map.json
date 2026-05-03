@@ -1,6 +1,7 @@
 {
   "id": "MAP_ROUTE21_SOUTH",
   "name": "Route21_South_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_ROUTE21_SOUTH",
   "music": "MUS_RG_ROUTE3",
   "region": "REGION_KANTO",

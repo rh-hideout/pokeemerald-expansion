@@ -1,6 +1,7 @@
 {
   "id": "MAP_MT_PYRE_EXTERIOR",
   "name": "MtPyre_Exterior",
+  "game_version": "emerald",
   "layout": "LAYOUT_MT_PYRE_EXTERIOR",
   "music": "MUS_MT_PYRE_EXTERIOR",
   "region_map_section": "MAPSEC_MT_PYRE",

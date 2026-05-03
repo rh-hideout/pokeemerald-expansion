@@ -1,6 +1,7 @@
 {
   "id": "MAP_ROUTE23_UNUSED_HOUSE",
   "name": "Route23_UnusedHouse",
+  "game_version": "frlg",
   "layout": "LAYOUT_HOUSE2_FRLG",
   "music": "MUS_RG_VICTORY_ROAD",
   "region": "REGION_KANTO",

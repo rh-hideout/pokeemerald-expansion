@@ -1,6 +1,7 @@
 {
   "id": "MAP_FOUR_ISLAND_ICEFALL_CAVE_BACK",
   "name": "FourIsland_IcefallCave_Back_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_FOUR_ISLAND_ICEFALL_CAVE_BACK",
   "music": "MUS_RG_SEVII_CAVE",
   "region": "REGION_KANTO",

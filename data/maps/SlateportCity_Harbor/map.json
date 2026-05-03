@@ -1,6 +1,7 @@
 {
   "id": "MAP_SLATEPORT_CITY_HARBOR",
   "name": "SlateportCity_Harbor",
+  "game_version": "emerald",
   "layout": "LAYOUT_HARBOR",
   "music": "MUS_SLATEPORT",
   "region_map_section": "MAPSEC_SLATEPORT_CITY",

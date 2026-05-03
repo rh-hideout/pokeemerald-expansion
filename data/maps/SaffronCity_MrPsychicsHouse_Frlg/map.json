@@ -1,6 +1,7 @@
 {
   "id": "MAP_SAFFRON_CITY_MR_PSYCHICS_HOUSE",
   "name": "SaffronCity_MrPsychicsHouse_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_HOUSE5_FRLG",
   "music": "MUS_RG_PEWTER",
   "region": "REGION_KANTO",

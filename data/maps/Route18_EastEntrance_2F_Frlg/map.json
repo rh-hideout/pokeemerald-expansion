@@ -1,6 +1,7 @@
 {
   "id": "MAP_ROUTE18_EAST_ENTRANCE_2F",
   "name": "Route18_EastEntrance_2F_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_ENTRANCE_2F",
   "music": "MUS_RG_PEWTER",
   "region": "REGION_KANTO",

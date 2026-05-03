@@ -1,6 +1,7 @@
 {
   "id": "MAP_VERMILION_CITY_MART",
   "name": "VermilionCity_Mart_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_MART_FRLG",
   "music": "MUS_RG_POKE_CENTER",
   "region": "REGION_KANTO",

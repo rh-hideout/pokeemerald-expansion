@@ -1,6 +1,7 @@
 {
   "id": "MAP_BATTLE_FRONTIER_RANKING_HALL",
   "name": "BattleFrontier_RankingHall",
+  "game_version": "emerald",
   "layout": "LAYOUT_BATTLE_FRONTIER_RANKING_HALL",
   "music": "MUS_LILYCOVE_MUSEUM",
   "region_map_section": "MAPSEC_BATTLE_FRONTIER",

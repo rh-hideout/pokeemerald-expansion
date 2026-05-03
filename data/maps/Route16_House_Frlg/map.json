@@ -1,6 +1,7 @@
 {
   "id": "MAP_ROUTE16_HOUSE",
   "name": "Route16_House_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_HOUSE1_FRLG",
   "music": "MUS_RG_CELADON",
   "region": "REGION_KANTO",

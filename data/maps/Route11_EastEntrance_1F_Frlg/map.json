@@ -1,6 +1,7 @@
 {
   "id": "MAP_ROUTE11_EAST_ENTRANCE_1F",
   "name": "Route11_EastEntrance_1F_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_ENTRANCE_1F",
   "music": "MUS_RG_VERMILLION",
   "region": "REGION_KANTO",

@@ -1,6 +1,7 @@
 {
   "id": "MAP_ROUTE104_PRETTY_PETAL_FLOWER_SHOP",
   "name": "Route104_PrettyPetalFlowerShop",
+  "game_version": "emerald",
   "layout": "LAYOUT_ROUTE104_PRETTY_PETAL_FLOWER_SHOP",
   "music": "MUS_PETALBURG",
   "region_map_section": "MAPSEC_ROUTE_104",

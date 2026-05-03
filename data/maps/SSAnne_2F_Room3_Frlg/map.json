@@ -1,6 +1,7 @@
 {
   "id": "MAP_SSANNE_2F_ROOM3",
   "name": "SSAnne_2F_Room3_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_SSANNE_ROOM2",
   "music": "MUS_RG_SS_ANNE",
   "region": "REGION_KANTO",

@@ -1,6 +1,7 @@
 {
   "id": "MAP_PALLET_TOWN_RIVALS_HOUSE",
   "name": "PalletTown_RivalsHouse_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_PALLET_TOWN_RIVALS_HOUSE",
   "music": "MUS_RG_PALLET",
   "region": "REGION_KANTO",

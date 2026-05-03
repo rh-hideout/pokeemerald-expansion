@@ -1,6 +1,7 @@
 {
   "id": "MAP_TRAINER_HILL_4F",
   "name": "TrainerHill_4F",
+  "game_version": "emerald",
   "layout": "LAYOUT_TRAINER_HILL_4F",
   "music": "MUS_B_TOWER_RS",
   "region_map_section": "MAPSEC_TRAINER_HILL",

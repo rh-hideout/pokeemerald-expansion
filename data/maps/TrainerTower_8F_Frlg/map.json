@@ -1,6 +1,7 @@
 {
   "id": "MAP_TRAINER_TOWER_8F",
   "name": "TrainerTower_8F_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_TRAINER_TOWER_8F",
   "music": "MUS_RG_TRAINER_TOWER",
   "region": "REGION_KANTO",

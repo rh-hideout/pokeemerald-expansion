@@ -1,6 +1,7 @@
 {
   "id": "MAP_CELADON_CITY_DEPARTMENT_STORE_3F",
   "name": "CeladonCity_DepartmentStore_3F_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_CELADON_CITY_DEPARTMENT_STORE_3F",
   "music": "MUS_RG_POKE_CENTER",
   "region": "REGION_KANTO",

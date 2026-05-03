@@ -1,6 +1,7 @@
 {
   "id": "MAP_ROUTE123_BERRY_MASTERS_HOUSE",
   "name": "Route123_BerryMastersHouse",
+  "game_version": "emerald",
   "layout": "LAYOUT_HOUSE2",
   "music": "MUS_RUSTBORO",
   "region_map_section": "MAPSEC_ROUTE_123",

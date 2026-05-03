@@ -1,6 +1,7 @@
 {
   "id": "MAP_PALLET_TOWN",
   "name": "PalletTown_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_PALLET_TOWN",
   "music": "MUS_RG_PALLET",
   "region": "REGION_KANTO",

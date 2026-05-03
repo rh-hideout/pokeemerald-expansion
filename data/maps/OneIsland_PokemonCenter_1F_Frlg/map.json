@@ -1,6 +1,7 @@
 {
   "id": "MAP_ONE_ISLAND_POKEMON_CENTER_1F",
   "name": "OneIsland_PokemonCenter_1F_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_ONE_ISLAND_POKEMON_CENTER_1F",
   "music": "MUS_RG_NET_CENTER",
   "region": "REGION_KANTO",

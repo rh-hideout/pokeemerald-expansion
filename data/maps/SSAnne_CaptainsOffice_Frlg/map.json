@@ -1,6 +1,7 @@
 {
   "id": "MAP_SSANNE_CAPTAINS_OFFICE",
   "name": "SSAnne_CaptainsOffice_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_SSANNE_CAPTAINS_OFFICE",
   "music": "MUS_RG_SS_ANNE",
   "region": "REGION_KANTO",
@@ -41,9 +42,7 @@
       "dest_warp_id": "2"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",

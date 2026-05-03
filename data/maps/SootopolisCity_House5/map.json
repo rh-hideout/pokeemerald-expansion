@@ -1,6 +1,7 @@
 {
   "id": "MAP_SOOTOPOLIS_CITY_HOUSE5",
   "name": "SootopolisCity_House5",
+  "game_version": "emerald",
   "layout": "LAYOUT_SOOTOPOLIS_CITY_HOUSE2",
   "music": "MUS_SOOTOPOLIS",
   "region_map_section": "MAPSEC_SOOTOPOLIS_CITY",

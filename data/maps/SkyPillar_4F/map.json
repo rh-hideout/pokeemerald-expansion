@@ -1,6 +1,7 @@
 {
   "id": "MAP_SKY_PILLAR_4F",
   "name": "SkyPillar_4F",
+  "game_version": "emerald",
   "layout": "LAYOUT_SKY_PILLAR_4F",
   "music": "MUS_MT_CHIMNEY",
   "region_map_section": "MAPSEC_SKY_PILLAR",

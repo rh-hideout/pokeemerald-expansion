@@ -1,6 +1,7 @@
 {
   "id": "MAP_MOSSDEEP_CITY_STEVENS_HOUSE",
   "name": "MossdeepCity_StevensHouse",
+  "game_version": "emerald",
   "layout": "LAYOUT_MOSSDEEP_CITY_STEVENS_HOUSE",
   "music": "MUS_RUSTBORO",
   "region_map_section": "MAPSEC_MOSSDEEP_CITY",

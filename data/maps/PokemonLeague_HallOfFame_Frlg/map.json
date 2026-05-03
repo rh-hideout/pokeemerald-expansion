@@ -1,6 +1,7 @@
 {
   "id": "MAP_POKEMON_LEAGUE_HALL_OF_FAME",
   "name": "PokemonLeague_HallOfFame_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_POKEMON_LEAGUE_HALL_OF_FAME",
   "music": "MUS_RG_SLOW_PALLET",
   "region": "REGION_KANTO",

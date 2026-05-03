@@ -1,6 +1,7 @@
 {
   "id": "MAP_FIVE_ISLAND_RESORT_GORGEOUS",
   "name": "FiveIsland_ResortGorgeous_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_FIVE_ISLAND_RESORT_GORGEOUS",
   "music": "MUS_RG_SEVII_ROUTE",
   "region": "REGION_KANTO",
@@ -152,9 +153,7 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "hidden_item",

@@ -1,6 +1,7 @@
 {
   "id": "MAP_CERULEAN_CAVE_2F",
   "name": "CeruleanCave_2F_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_CERULEAN_CAVE_2F",
   "music": "MUS_RG_ROCKET_HIDEOUT",
   "region": "REGION_KANTO",

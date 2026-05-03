@@ -1,6 +1,7 @@
 {
   "id": "MAP_POKEMON_LEAGUE_LORELEIS_ROOM",
   "name": "PokemonLeague_LoreleisRoom_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_POKEMON_LEAGUE_LORELEIS_ROOM",
   "music": "MUS_RG_GYM",
   "region": "REGION_KANTO",
@@ -47,10 +48,6 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [
-
-  ],
-  "bg_events": [
-
-  ]
+  "coord_events": [],
+  "bg_events": []
 }

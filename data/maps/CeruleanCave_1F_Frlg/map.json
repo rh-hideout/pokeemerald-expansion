@@ -1,6 +1,7 @@
 {
   "id": "MAP_CERULEAN_CAVE_1F",
   "name": "CeruleanCave_1F_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_CERULEAN_CAVE_1F",
   "music": "MUS_RG_ROCKET_HIDEOUT",
   "region": "REGION_KANTO",
@@ -201,9 +202,7 @@
       "dest_warp_id": "5"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "hidden_item",

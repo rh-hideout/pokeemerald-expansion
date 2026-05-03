@@ -1,6 +1,7 @@
 {
   "id": "MAP_SEVEN_ISLAND_TANOBY_RUINS_VIAPOIS_CHAMBER",
   "name": "SevenIsland_TanobyRuins_ViapoisChamber_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_SEVEN_ISLAND_TANOBY_RUINS_VIAPOIS_CHAMBER",
   "music": "MUS_RG_SEVII_DUNGEON",
   "region": "REGION_KANTO",

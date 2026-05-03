@@ -1,6 +1,7 @@
 {
   "id": "MAP_MT_EMBER_RUBY_PATH_B2F",
   "name": "MtEmber_RubyPath_B2F_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_MT_EMBER_RUBY_PATH_B2F",
   "music": "MUS_RG_SEVII_CAVE",
   "region": "REGION_KANTO",

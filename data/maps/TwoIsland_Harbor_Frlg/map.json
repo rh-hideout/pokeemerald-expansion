@@ -1,6 +1,7 @@
 {
   "id": "MAP_TWO_ISLAND_HARBOR",
   "name": "TwoIsland_Harbor_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_ISLAND_HARBOR_FRLG",
   "music": "MUS_RG_SEVII_123",
   "region": "REGION_KANTO",

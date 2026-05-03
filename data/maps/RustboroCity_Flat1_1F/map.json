@@ -1,6 +1,7 @@
 {
   "id": "MAP_RUSTBORO_CITY_FLAT1_1F",
   "name": "RustboroCity_Flat1_1F",
+  "game_version": "emerald",
   "layout": "LAYOUT_RUSTBORO_CITY_FLAT1_1F",
   "music": "MUS_RUSTBORO",
   "region_map_section": "MAPSEC_RUSTBORO_CITY",

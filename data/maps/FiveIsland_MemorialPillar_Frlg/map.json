@@ -1,6 +1,7 @@
 {
   "id": "MAP_FIVE_ISLAND_MEMORIAL_PILLAR",
   "name": "FiveIsland_MemorialPillar_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_FIVE_ISLAND_MEMORIAL_PILLAR",
   "music": "MUS_RG_SEVII_ROUTE",
   "region": "REGION_KANTO",
@@ -94,12 +95,8 @@
       "flag": "FLAG_HIDE_FIVE_ISLAND_MEMORIAL_PILLAR_METAL_COAT"
     }
   ],
-  "warp_events": [
-
-  ],
-  "coord_events": [
-
-  ],
+  "warp_events": [],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",

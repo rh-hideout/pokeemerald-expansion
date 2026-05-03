@@ -1,6 +1,7 @@
 {
   "id": "MAP_DESERT_RUINS",
   "name": "DesertRuins",
+  "game_version": "emerald",
   "layout": "LAYOUT_DESERT_RUINS",
   "music": "MUS_SEALED_CHAMBER",
   "region_map_section": "MAPSEC_DESERT_RUINS",

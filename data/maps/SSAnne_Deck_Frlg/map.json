@@ -1,6 +1,7 @@
 {
   "id": "MAP_SSANNE_DECK",
   "name": "SSAnne_Deck_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_SSANNE_DECK",
   "music": "MUS_RG_SS_ANNE",
   "region": "REGION_KANTO",

@@ -1,6 +1,7 @@
 {
   "id": "MAP_MT_EMBER_SUMMIT",
   "name": "MtEmber_Summit_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_MT_EMBER_SUMMIT",
   "music": "MUS_RG_SEVII_CAVE",
   "region": "REGION_KANTO",
@@ -96,10 +97,6 @@
       "dest_warp_id": "4"
     }
   ],
-  "coord_events": [
-
-  ],
-  "bg_events": [
-
-  ]
+  "coord_events": [],
+  "bg_events": []
 }

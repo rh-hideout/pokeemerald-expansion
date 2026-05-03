@@ -1,6 +1,7 @@
 {
   "id": "MAP_RUSTBORO_CITY_POKEMON_SCHOOL",
   "name": "RustboroCity_PokemonSchool",
+  "game_version": "emerald",
   "layout": "LAYOUT_RUSTBORO_CITY_POKEMON_SCHOOL",
   "music": "MUS_SCHOOL",
   "region_map_section": "MAPSEC_RUSTBORO_CITY",

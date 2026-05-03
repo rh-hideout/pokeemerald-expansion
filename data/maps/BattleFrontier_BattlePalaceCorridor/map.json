@@ -1,6 +1,7 @@
 {
   "id": "MAP_BATTLE_FRONTIER_BATTLE_PALACE_CORRIDOR",
   "name": "BattleFrontier_BattlePalaceCorridor",
+  "game_version": "emerald",
   "layout": "LAYOUT_BATTLE_FRONTIER_BATTLE_PALACE_CORRIDOR",
   "music": "MUS_B_PALACE",
   "region_map_section": "MAPSEC_BATTLE_FRONTIER",

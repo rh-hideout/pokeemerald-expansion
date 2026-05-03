@@ -23,7 +23,7 @@ ifeq (hns, $(or $(BUILD), $(MAKECMDGOALS)))
 	TITLE       	:= POKEMON HNS
 	GAME_CODE   	:= BPEE
 	BUILD_NAME  	:= hns
-	MAP_VERSION 	:= emerald
+	MAP_VERSION 	:= hns
 endif
 endif
 endif

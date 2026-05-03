@@ -45,7 +45,7 @@
 #define TAG_ITEM_ICON_BASE 9110 // immune to time blending
 
 #define MAX_ITEMS_SHOWN 8
-#define SHOP_MENU_PALETTE_ID (gMapHeader.mapLayout->isFrlg ? 11 : 12)
+#define SHOP_MENU_PALETTE_ID (gMapHeader.mapLayout->layoutVersion == LAYOUT_VERSION_FRLG ? 11 : 12)
 
 enum {
     WIN_BUY_SELL_QUIT,

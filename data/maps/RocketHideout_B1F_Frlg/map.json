@@ -1,6 +1,7 @@
 {
   "id": "MAP_ROCKET_HIDEOUT_B1F",
   "name": "RocketHideout_B1F_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_ROCKET_HIDEOUT_B1F",
   "music": "MUS_RG_ROCKET_HIDEOUT",
   "region": "REGION_KANTO",
@@ -159,9 +160,7 @@
       "dest_warp_id": "1"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "hidden_item",

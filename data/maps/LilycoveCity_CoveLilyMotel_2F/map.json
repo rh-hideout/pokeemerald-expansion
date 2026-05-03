@@ -1,6 +1,7 @@
 {
   "id": "MAP_LILYCOVE_CITY_COVE_LILY_MOTEL_2F",
   "name": "LilycoveCity_CoveLilyMotel_2F",
+  "game_version": "emerald",
   "layout": "LAYOUT_LILYCOVE_CITY_COVE_LILY_MOTEL_2F",
   "music": "MUS_LILYCOVE",
   "region_map_section": "MAPSEC_LILYCOVE_CITY",

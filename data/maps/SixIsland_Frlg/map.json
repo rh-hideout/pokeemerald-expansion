@@ -1,6 +1,7 @@
 {
   "id": "MAP_SIX_ISLAND",
   "name": "SixIsland_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_SIX_ISLAND",
   "music": "MUS_RG_SEVII_67",
   "region": "REGION_KANTO",
@@ -81,9 +82,7 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",

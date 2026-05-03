@@ -1,6 +1,7 @@
 {
   "id": "MAP_ROUTE21_NORTH",
   "name": "Route21_North_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_ROUTE21_NORTH",
   "music": "MUS_RG_ROUTE3",
   "region": "REGION_KANTO",
@@ -106,12 +107,8 @@
       "target_map": "MAP_PALLET_TOWN"
     }
   ],
-  "warp_events": [
-
-  ],
-  "coord_events": [
-
-  ],
+  "warp_events": [],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "hidden_item",

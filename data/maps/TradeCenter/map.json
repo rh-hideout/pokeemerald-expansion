@@ -1,6 +1,7 @@
 {
   "id": "MAP_TRADE_CENTER",
   "name": "TradeCenter",
+  "game_version": "emerald",
   "layout": "LAYOUT_TRADE_CENTER",
   "music": "MUS_EVER_GRANDE",
   "region_map_section": "MAPSEC_DYNAMIC",

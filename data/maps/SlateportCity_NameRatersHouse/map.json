@@ -1,6 +1,7 @@
 {
   "id": "MAP_SLATEPORT_CITY_NAME_RATERS_HOUSE",
   "name": "SlateportCity_NameRatersHouse",
+  "game_version": "emerald",
   "layout": "LAYOUT_HOUSE_WITH_BED",
   "music": "MUS_SLATEPORT",
   "region_map_section": "MAPSEC_SLATEPORT_CITY",

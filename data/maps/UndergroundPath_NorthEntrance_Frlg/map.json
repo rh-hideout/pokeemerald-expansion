@@ -1,6 +1,7 @@
 {
   "id": "MAP_UNDERGROUND_PATH_NORTH_ENTRANCE",
   "name": "UndergroundPath_NorthEntrance_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_UNDERGROUND_PATH_ENTRANCE",
   "music": "MUS_RG_PEWTER",
   "region": "REGION_KANTO",

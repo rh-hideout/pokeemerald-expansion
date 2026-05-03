@@ -1,6 +1,7 @@
 {
   "id": "MAP_ROUTE8_WEST_ENTRANCE",
   "name": "Route8_WestEntrance_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_SAFFRON_CITY_EAST_WEST_ENTRANCE",
   "music": "MUS_RG_PEWTER",
   "region": "REGION_KANTO",

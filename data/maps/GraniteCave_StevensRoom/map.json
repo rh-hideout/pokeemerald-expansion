@@ -1,6 +1,7 @@
 {
   "id": "MAP_GRANITE_CAVE_STEVENS_ROOM",
   "name": "GraniteCave_StevensRoom",
+  "game_version": "emerald",
   "layout": "LAYOUT_GRANITE_CAVE_STEVENS_ROOM",
   "music": "MUS_PETALBURG_WOODS",
   "region_map_section": "MAPSEC_GRANITE_CAVE",

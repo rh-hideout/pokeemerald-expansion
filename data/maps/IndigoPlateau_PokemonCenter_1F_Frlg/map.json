@@ -1,6 +1,7 @@
 {
   "id": "MAP_INDIGO_PLATEAU_POKEMON_CENTER_1F",
   "name": "IndigoPlateau_PokemonCenter_1F_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_INDIGO_PLATEAU_POKEMON_CENTER_1F",
   "music": "MUS_RG_GYM",
   "region": "REGION_KANTO",

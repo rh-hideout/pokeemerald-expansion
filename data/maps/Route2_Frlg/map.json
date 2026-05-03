@@ -1,6 +1,7 @@
 {
   "id": "MAP_ROUTE2",
   "name": "Route2_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_ROUTE2",
   "music": "MUS_RG_ROUTE1",
   "region": "REGION_KANTO",
@@ -192,9 +193,7 @@
       "dest_warp_id": "1"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",

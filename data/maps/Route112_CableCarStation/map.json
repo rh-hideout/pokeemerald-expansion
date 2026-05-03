@@ -1,6 +1,7 @@
 {
   "id": "MAP_ROUTE112_CABLE_CAR_STATION",
   "name": "Route112_CableCarStation",
+  "game_version": "emerald",
   "layout": "LAYOUT_CABLE_CAR_STATION",
   "music": "MUS_ROUTE110",
   "region_map_section": "MAPSEC_ROUTE_112",

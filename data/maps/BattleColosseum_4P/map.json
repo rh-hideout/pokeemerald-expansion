@@ -1,6 +1,7 @@
 {
   "id": "MAP_BATTLE_COLOSSEUM_4P",
   "name": "BattleColosseum_4P",
+  "game_version": "emerald",
   "layout": "LAYOUT_BATTLE_COLOSSEUM_4P",
   "music": "MUS_EVER_GRANDE",
   "region_map_section": "MAPSEC_DYNAMIC",

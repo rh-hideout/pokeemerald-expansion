@@ -1,6 +1,7 @@
 {
   "id": "MAP_BATTLE_FRONTIER_BATTLE_TOWER_ELEVATOR",
   "name": "BattleFrontier_BattleTowerElevator",
+  "game_version": "emerald",
   "layout": "LAYOUT_BATTLE_ELEVATOR",
   "music": "MUS_B_TOWER",
   "region_map_section": "MAPSEC_BATTLE_FRONTIER",

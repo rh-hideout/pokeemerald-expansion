@@ -1,6 +1,7 @@
 {
   "id": "MAP_FIVE_ISLAND_MEADOW",
   "name": "FiveIsland_Meadow_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_FIVE_ISLAND_MEADOW",
   "music": "MUS_RG_SEVII_ROUTE",
   "region": "REGION_KANTO",
@@ -136,9 +137,7 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",

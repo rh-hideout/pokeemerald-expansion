@@ -1,6 +1,7 @@
 {
   "id": "MAP_METEOR_FALLS_STEVENS_CAVE",
   "name": "MeteorFalls_StevensCave",
+  "game_version": "emerald",
   "layout": "LAYOUT_METEOR_FALLS_STEVENS_CAVE",
   "music": "MUS_CAVE_OF_ORIGIN",
   "region_map_section": "MAPSEC_METEOR_FALLS",

@@ -1,6 +1,7 @@
 {
   "id": "MAP_RUSTBORO_CITY_CUTTERS_HOUSE",
   "name": "RustboroCity_CuttersHouse",
+  "game_version": "emerald",
   "layout": "LAYOUT_RUSTBORO_CITY_CUTTERS_HOUSE",
   "music": "MUS_RUSTBORO",
   "region_map_section": "MAPSEC_RUSTBORO_CITY",

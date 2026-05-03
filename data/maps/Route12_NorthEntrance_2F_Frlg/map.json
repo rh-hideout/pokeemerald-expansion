@@ -1,6 +1,7 @@
 {
   "id": "MAP_ROUTE12_NORTH_ENTRANCE_2F",
   "name": "Route12_NorthEntrance_2F_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_ENTRANCE_2F",
   "music": "MUS_RG_PEWTER",
   "region": "REGION_KANTO",

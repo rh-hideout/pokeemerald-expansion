@@ -1,6 +1,7 @@
 {
   "id": "MAP_THREE_ISLAND_BOND_BRIDGE",
   "name": "ThreeIsland_BondBridge_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_THREE_ISLAND_BOND_BRIDGE",
   "music": "MUS_RG_ROUTE3",
   "region": "REGION_KANTO",
@@ -165,9 +166,7 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",

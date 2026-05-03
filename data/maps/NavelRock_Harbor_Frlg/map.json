@@ -1,6 +1,7 @@
 {
   "id": "MAP_NAVEL_ROCK_HARBOR_FRLG",
   "name": "NavelRock_Harbor_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_ISLAND_HARBOR_FRLG",
   "music": "MUS_RG_SEVII_ROUTE",
   "region": "REGION_KANTO",
@@ -54,10 +55,6 @@
       "dest_warp_id": "1"
     }
   ],
-  "coord_events": [
-
-  ],
-  "bg_events": [
-
-  ]
+  "coord_events": [],
+  "bg_events": []
 }

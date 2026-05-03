@@ -1,6 +1,7 @@
 {
   "id": "MAP_RUSTBORO_CITY_MART",
   "name": "RustboroCity_Mart",
+  "game_version": "emerald",
   "layout": "LAYOUT_MART",
   "music": "MUS_POKE_MART",
   "region_map_section": "MAPSEC_RUSTBORO_CITY",

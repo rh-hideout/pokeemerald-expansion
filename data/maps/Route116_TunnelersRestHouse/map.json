@@ -1,6 +1,7 @@
 {
   "id": "MAP_ROUTE116_TUNNELERS_REST_HOUSE",
   "name": "Route116_TunnelersRestHouse",
+  "game_version": "emerald",
   "layout": "LAYOUT_ROUTE116_TUNNELERS_REST_HOUSE",
   "music": "MUS_RUSTBORO",
   "region_map_section": "MAPSEC_ROUTE_116",

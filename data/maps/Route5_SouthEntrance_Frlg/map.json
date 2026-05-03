@@ -1,6 +1,7 @@
 {
   "id": "MAP_ROUTE5_SOUTH_ENTRANCE",
   "name": "Route5_SouthEntrance_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_SAFFRON_CITY_NORTH_SOUTH_ENTRANCE",
   "music": "MUS_RG_PEWTER",
   "region": "REGION_KANTO",

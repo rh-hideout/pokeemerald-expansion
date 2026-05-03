@@ -1,6 +1,7 @@
 {
   "id": "MAP_MT_EMBER_SUMMIT_PATH_1F",
   "name": "MtEmber_SummitPath_1F_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_MT_EMBER_SUMMIT_PATH_1F",
   "music": "MUS_RG_SEVII_CAVE",
   "region": "REGION_KANTO",

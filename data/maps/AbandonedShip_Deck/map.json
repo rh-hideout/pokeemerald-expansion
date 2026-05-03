@@ -1,6 +1,7 @@
 {
   "id": "MAP_ABANDONED_SHIP_DECK",
   "name": "AbandonedShip_Deck",
+  "game_version": "emerald",
   "layout": "LAYOUT_ABANDONED_SHIP_DECK",
   "music": "MUS_ABANDONED_SHIP",
   "region_map_section": "MAPSEC_ABANDONED_SHIP",

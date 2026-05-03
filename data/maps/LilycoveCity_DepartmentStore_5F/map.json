@@ -1,6 +1,7 @@
 {
   "id": "MAP_LILYCOVE_CITY_DEPARTMENT_STORE_5F",
   "name": "LilycoveCity_DepartmentStore_5F",
+  "game_version": "emerald",
   "layout": "LAYOUT_LILYCOVE_CITY_DEPARTMENT_STORE_5F",
   "music": "MUS_POKE_MART",
   "region_map_section": "MAPSEC_LILYCOVE_CITY",

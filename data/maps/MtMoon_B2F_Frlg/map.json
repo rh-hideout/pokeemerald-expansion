@@ -1,6 +1,7 @@
 {
   "id": "MAP_MT_MOON_B2F",
   "name": "MtMoon_B2F_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_MT_MOON_B2F",
   "music": "MUS_RG_MT_MOON",
   "region": "REGION_KANTO",

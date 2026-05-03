@@ -1,6 +1,7 @@
 {
   "id": "MAP_FIVE_ISLAND_ROCKET_WAREHOUSE",
   "name": "FiveIsland_RocketWarehouse_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_FIVE_ISLAND_ROCKET_WAREHOUSE",
   "music": "MUS_RG_ROCKET_HIDEOUT",
   "region": "REGION_KANTO",

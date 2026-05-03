@@ -56,6 +56,14 @@ enum {
     METATILE_LAYER_TYPE_SPLIT,   // Metatile uses bottom and top bg layers
 };
 
+enum {
+    LAYOUT_VERSION_EMERALD,
+    LAYOUT_VERSION_FRLG,
+    LAYOUT_VERSION_HNS,
+};
+
+#define LAYOUT_USES_FRLG_DOORS(ver) ((ver) == LAYOUT_VERSION_FRLG || (ver) == LAYOUT_VERSION_HNS)
+
 #define METATILE_ID(tileset, name) (METATILE_##tileset##_##name)
 
 enum
@@ -116,7 +124,7 @@ struct MapLayout
     /*0x0C*/ const u16 *map;
     /*0x10*/ const struct Tileset *primaryTileset;
     /*0x14*/ const struct Tileset *secondaryTileset;
-    bool8 isFrlg;
+    u8 layoutVersion;
     u8 borderWidth;
     u8 borderHeight;
     u8 padding;

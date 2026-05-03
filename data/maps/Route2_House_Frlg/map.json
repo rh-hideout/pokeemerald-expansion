@@ -1,6 +1,7 @@
 {
   "id": "MAP_ROUTE2_HOUSE",
   "name": "Route2_House_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_HOUSE2_FRLG",
   "music": "MUS_RG_PEWTER",
   "region": "REGION_KANTO",
@@ -68,10 +69,6 @@
       "dest_warp_id": "4"
     }
   ],
-  "coord_events": [
-
-  ],
-  "bg_events": [
-
-  ]
+  "coord_events": [],
+  "bg_events": []
 }

@@ -1,6 +1,7 @@
 {
   "id": "MAP_SEVEN_ISLAND_HOUSE_ROOM1",
   "name": "SevenIsland_House_Room1_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_SEVEN_ISLAND_HOUSE_ROOM1",
   "music": "MUS_RG_SEVII_67",
   "region": "REGION_KANTO",

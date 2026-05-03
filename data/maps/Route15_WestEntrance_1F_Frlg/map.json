@@ -1,6 +1,7 @@
 {
   "id": "MAP_ROUTE15_WEST_ENTRANCE_1F",
   "name": "Route15_WestEntrance_1F_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_ENTRANCE_1F",
   "music": "MUS_RG_PEWTER",
   "region": "REGION_KANTO",

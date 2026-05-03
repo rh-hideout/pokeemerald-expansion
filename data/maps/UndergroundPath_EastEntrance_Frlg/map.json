@@ -1,6 +1,7 @@
 {
   "id": "MAP_UNDERGROUND_PATH_EAST_ENTRANCE",
   "name": "UndergroundPath_EastEntrance_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_UNDERGROUND_PATH_ENTRANCE",
   "music": "MUS_RG_PEWTER",
   "region": "REGION_KANTO",

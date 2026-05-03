@@ -1,6 +1,7 @@
 {
   "id": "MAP_SIX_ISLAND_WATER_PATH",
   "name": "SixIsland_WaterPath_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_SIX_ISLAND_WATER_PATH",
   "music": "MUS_RG_SEVII_ROUTE",
   "region": "REGION_KANTO",
@@ -175,9 +176,7 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",

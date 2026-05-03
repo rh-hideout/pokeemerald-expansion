@@ -1,6 +1,7 @@
 {
   "id": "MAP_ANCIENT_TOMB",
   "name": "AncientTomb",
+  "game_version": "emerald",
   "layout": "LAYOUT_ANCIENT_TOMB",
   "music": "MUS_SEALED_CHAMBER",
   "region_map_section": "MAPSEC_ANCIENT_TOMB",

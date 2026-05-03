@@ -1,6 +1,7 @@
 {
   "id": "MAP_CERULEAN_CITY_GYM",
   "name": "CeruleanCity_Gym_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_CERULEAN_CITY_GYM",
   "music": "MUS_RG_GYM",
   "region": "REGION_KANTO",

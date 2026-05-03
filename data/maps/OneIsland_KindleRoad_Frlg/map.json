@@ -1,6 +1,7 @@
 {
   "id": "MAP_ONE_ISLAND_KINDLE_ROAD",
   "name": "OneIsland_KindleRoad_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_ONE_ISLAND_KINDLE_ROAD",
   "music": "MUS_RG_ROUTE3",
   "region": "REGION_KANTO",
@@ -452,9 +453,7 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",

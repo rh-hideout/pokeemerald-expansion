@@ -1,6 +1,7 @@
 {
   "id": "MAP_DESERT_UNDERPASS",
   "name": "DesertUnderpass",
+  "game_version": "emerald",
   "layout": "LAYOUT_DESERT_UNDERPASS",
   "music": "MUS_MT_CHIMNEY",
   "region_map_section": "MAPSEC_DESERT_UNDERPASS",

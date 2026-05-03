@@ -1,6 +1,7 @@
 {
   "id": "MAP_UNDERGROUND_PATH_SOUTH_ENTRANCE",
   "name": "UndergroundPath_SouthEntrance_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_UNDERGROUND_PATH_ENTRANCE",
   "music": "MUS_RG_PEWTER",
   "region": "REGION_KANTO",
@@ -61,10 +62,6 @@
       "dest_warp_id": "1"
     }
   ],
-  "coord_events": [
-
-  ],
-  "bg_events": [
-
-  ]
+  "coord_events": [],
+  "bg_events": []
 }

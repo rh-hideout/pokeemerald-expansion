@@ -1,6 +1,7 @@
 {
   "id": "MAP_ROUTE126",
   "name": "Route126",
+  "game_version": "emerald",
   "layout": "LAYOUT_ROUTE126",
   "music": "MUS_ROUTE120",
   "region_map_section": "MAPSEC_ROUTE_126",

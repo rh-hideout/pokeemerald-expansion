@@ -1,6 +1,7 @@
 {
   "id": "MAP_SSANNE_2F_ROOM6",
   "name": "SSAnne_2F_Room6_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_SSANNE_ROOM2",
   "music": "MUS_RG_SS_ANNE",
   "region_map_section": "MAPSEC_S_S_ANNE",

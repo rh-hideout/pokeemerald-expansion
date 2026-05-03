@@ -1,6 +1,7 @@
 {
   "id": "MAP_ROUTE114_FOSSIL_MANIACS_HOUSE",
   "name": "Route114_FossilManiacsHouse",
+  "game_version": "emerald",
   "layout": "LAYOUT_ROUTE114_FOSSIL_MANIACS_HOUSE",
   "music": "MUS_FALLARBOR",
   "region_map_section": "MAPSEC_ROUTE_114",

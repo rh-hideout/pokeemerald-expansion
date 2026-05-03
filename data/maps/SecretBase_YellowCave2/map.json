@@ -1,6 +1,7 @@
 {
   "id": "MAP_SECRET_BASE_YELLOW_CAVE2",
   "name": "SecretBase_YellowCave2",
+  "game_version": "emerald",
   "shared_scripts_map": "SecretBase",
   "layout": "LAYOUT_SECRET_BASE_YELLOW_CAVE2",
   "music": "MUS_FORTREE",

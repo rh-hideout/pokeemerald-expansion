@@ -1,6 +1,7 @@
 {
   "id": "MAP_LILYCOVE_CITY_POKEMON_CENTER_2F",
   "name": "LilycoveCity_PokemonCenter_2F",
+  "game_version": "emerald",
   "layout": "LAYOUT_POKEMON_CENTER_2F",
   "music": "MUS_POKE_CENTER",
   "region_map_section": "MAPSEC_LILYCOVE_CITY",

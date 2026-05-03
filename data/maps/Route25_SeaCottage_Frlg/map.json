@@ -1,6 +1,7 @@
 {
   "id": "MAP_ROUTE25_SEA_COTTAGE",
   "name": "Route25_SeaCottage_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_ROUTE25_SEA_COTTAGE",
   "music": "MUS_RG_FUCHSIA",
   "region": "REGION_KANTO",

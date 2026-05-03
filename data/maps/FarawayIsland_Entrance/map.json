@@ -1,6 +1,7 @@
 {
   "id": "MAP_FARAWAY_ISLAND_ENTRANCE",
   "name": "FarawayIsland_Entrance",
+  "game_version": "emerald",
   "layout": "LAYOUT_FARAWAY_ISLAND_ENTRANCE",
   "music": "MUS_ABANDONED_SHIP",
   "region_map_section": "MAPSEC_FARAWAY_ISLAND",

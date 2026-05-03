@@ -1,6 +1,7 @@
 {
   "id": "MAP_SIX_ISLAND_DOTTED_HOLE_B3F",
   "name": "SixIsland_DottedHole_B3F_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_SIX_ISLAND_DOTTED_HOLE_B3F",
   "music": "MUS_RG_SEVII_DUNGEON",
   "region": "REGION_KANTO",

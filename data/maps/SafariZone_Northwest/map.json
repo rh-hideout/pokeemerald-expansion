@@ -1,6 +1,7 @@
 {
   "id": "MAP_SAFARI_ZONE_NORTHWEST",
   "name": "SafariZone_Northwest",
+  "game_version": "emerald",
   "layout": "LAYOUT_SAFARI_ZONE_NORTHWEST",
   "music": "MUS_SAFARI_ZONE",
   "region_map_section": "MAPSEC_SAFARI_ZONE",

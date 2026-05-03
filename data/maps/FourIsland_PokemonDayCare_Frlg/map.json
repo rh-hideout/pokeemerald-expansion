@@ -1,6 +1,7 @@
 {
   "id": "MAP_FOUR_ISLAND_POKEMON_DAY_CARE",
   "name": "FourIsland_PokemonDayCare_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_FOUR_ISLAND_POKEMON_DAY_CARE",
   "music": "MUS_RG_SEVII_45",
   "region": "REGION_KANTO",

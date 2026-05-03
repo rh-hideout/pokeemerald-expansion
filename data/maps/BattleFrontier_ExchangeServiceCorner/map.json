@@ -1,6 +1,7 @@
 {
   "id": "MAP_BATTLE_FRONTIER_EXCHANGE_SERVICE_CORNER",
   "name": "BattleFrontier_ExchangeServiceCorner",
+  "game_version": "emerald",
   "layout": "LAYOUT_BATTLE_FRONTIER_EXCHANGE_SERVICE_CORNER",
   "music": "MUS_B_TOWER_RS",
   "region_map_section": "MAPSEC_BATTLE_FRONTIER",

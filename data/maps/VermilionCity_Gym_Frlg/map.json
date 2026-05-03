@@ -1,6 +1,7 @@
 {
   "id": "MAP_VERMILION_CITY_GYM",
   "name": "VermilionCity_Gym_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_VERMILION_CITY_GYM",
   "music": "MUS_RG_GYM",
   "region": "REGION_KANTO",

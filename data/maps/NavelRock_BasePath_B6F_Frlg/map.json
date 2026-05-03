@@ -1,6 +1,7 @@
 {
   "id": "MAP_NAVEL_ROCK_BASE_PATH_B6F",
   "name": "NavelRock_BasePath_B6F_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_NAVEL_ROCK_BASE_PATH_B6F",
   "music": "MUS_RG_SEVII_CAVE",
   "region": "REGION_KANTO",

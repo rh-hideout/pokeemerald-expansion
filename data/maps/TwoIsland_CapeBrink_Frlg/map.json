@@ -1,6 +1,7 @@
 {
   "id": "MAP_TWO_ISLAND_CAPE_BRINK",
   "name": "TwoIsland_CapeBrink_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_TWO_ISLAND_CAPE_BRINK",
   "music": "MUS_RG_ROUTE3",
   "region": "REGION_KANTO",
@@ -21,9 +22,7 @@
       "direction": "down"
     }
   ],
-  "object_events": [
-
-  ],
+  "object_events": [],
   "warp_events": [
     {
       "x": 12,
@@ -33,9 +32,7 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "hidden_item",

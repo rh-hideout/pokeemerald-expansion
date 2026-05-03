@@ -1,6 +1,7 @@
 {
   "id": "MAP_ROUTE3",
   "name": "Route3_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_ROUTE3",
   "music": "MUS_RG_ROUTE3",
   "region": "REGION_KANTO",
@@ -154,12 +155,8 @@
       "flag": "0"
     }
   ],
-  "warp_events": [
-
-  ],
-  "coord_events": [
-
-  ],
+  "warp_events": [],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",

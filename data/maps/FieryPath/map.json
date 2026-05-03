@@ -1,6 +1,7 @@
 {
   "id": "MAP_FIERY_PATH",
   "name": "FieryPath",
+  "game_version": "emerald",
   "layout": "LAYOUT_FIERY_PATH",
   "music": "MUS_PETALBURG_WOODS",
   "region_map_section": "MAPSEC_FIERY_PATH",

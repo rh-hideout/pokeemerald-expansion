@@ -1,6 +1,7 @@
 {
   "id": "MAP_TERRA_CAVE_END",
   "name": "TerraCave_End",
+  "game_version": "emerald",
   "layout": "LAYOUT_TERRA_CAVE_END",
   "music": "MUS_PETALBURG_WOODS",
   "region_map_section": "MAPSEC_TERRA_CAVE",

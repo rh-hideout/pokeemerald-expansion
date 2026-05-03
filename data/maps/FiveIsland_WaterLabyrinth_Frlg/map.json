@@ -1,6 +1,7 @@
 {
   "id": "MAP_FIVE_ISLAND_WATER_LABYRINTH",
   "name": "FiveIsland_WaterLabyrinth_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_FIVE_ISLAND_WATER_LABYRINTH",
   "music": "MUS_RG_SEVII_ROUTE",
   "region": "REGION_KANTO",
@@ -56,13 +57,7 @@
       "flag": "0"
     }
   ],
-  "warp_events": [
-
-  ],
-  "coord_events": [
-
-  ],
-  "bg_events": [
-
-  ]
+  "warp_events": [],
+  "coord_events": [],
+  "bg_events": []
 }

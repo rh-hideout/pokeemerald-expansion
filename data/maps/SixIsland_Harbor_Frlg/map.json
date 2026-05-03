@@ -1,6 +1,7 @@
 {
   "id": "MAP_SIX_ISLAND_HARBOR",
   "name": "SixIsland_Harbor_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_ISLAND_HARBOR_FRLG",
   "music": "MUS_RG_SEVII_67",
   "region": "REGION_KANTO",

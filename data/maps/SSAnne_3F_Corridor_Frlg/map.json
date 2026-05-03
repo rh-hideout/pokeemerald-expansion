@@ -1,6 +1,7 @@
 {
   "id": "MAP_SSANNE_3F_CORRIDOR",
   "name": "SSAnne_3F_Corridor_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_SSANNE_3F_CORRIDOR",
   "music": "MUS_RG_SS_ANNE",
   "region": "REGION_KANTO",

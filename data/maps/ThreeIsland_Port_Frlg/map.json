@@ -1,6 +1,7 @@
 {
   "id": "MAP_THREE_ISLAND_PORT",
   "name": "ThreeIsland_Port_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_THREE_ISLAND_PORT",
   "music": "MUS_RG_ROUTE3",
   "region": "REGION_KANTO",
@@ -88,10 +89,6 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [
-
-  ],
-  "bg_events": [
-
-  ]
+  "coord_events": [],
+  "bg_events": []
 }

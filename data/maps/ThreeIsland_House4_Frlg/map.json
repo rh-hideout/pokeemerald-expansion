@@ -1,6 +1,7 @@
 {
   "id": "MAP_THREE_ISLAND_HOUSE4",
   "name": "ThreeIsland_House4_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_HOUSE3_FRLG",
   "music": "MUS_RG_SEVII_123",
   "region": "REGION_KANTO",

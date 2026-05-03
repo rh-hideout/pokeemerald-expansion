@@ -1,6 +1,7 @@
 {
   "id": "MAP_TRADE_CENTER_FRLG",
   "name": "TradeCenter_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_TRADE_CENTER_FRLG",
   "music": "MUS_RG_POKE_CENTER",
   "region": "REGION_KANTO",

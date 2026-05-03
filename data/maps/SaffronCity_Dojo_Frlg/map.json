@@ -1,6 +1,7 @@
 {
   "id": "MAP_SAFFRON_CITY_DOJO",
   "name": "SaffronCity_Dojo_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_SAFFRON_CITY_DOJO",
   "music": "MUS_RG_PEWTER",
   "region": "REGION_KANTO",

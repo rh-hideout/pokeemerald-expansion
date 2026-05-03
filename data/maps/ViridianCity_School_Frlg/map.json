@@ -1,6 +1,7 @@
 {
   "id": "MAP_VIRIDIAN_CITY_SCHOOL",
   "name": "ViridianCity_School_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_VIRIDIAN_CITY_SCHOOL",
   "music": "MUS_RG_PEWTER",
   "region": "REGION_KANTO",

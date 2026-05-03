@@ -1,6 +1,7 @@
 {
   "id": "MAP_BATTLE_FRONTIER_POKEMON_CENTER_1F",
   "name": "BattleFrontier_PokemonCenter_1F",
+  "game_version": "emerald",
   "layout": "LAYOUT_POKEMON_CENTER_1F",
   "music": "MUS_POKE_CENTER",
   "region_map_section": "MAPSEC_BATTLE_FRONTIER",

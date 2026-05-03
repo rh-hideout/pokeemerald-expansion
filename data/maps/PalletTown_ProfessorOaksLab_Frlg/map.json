@@ -1,6 +1,7 @@
 {
   "id": "MAP_PALLET_TOWN_PROFESSOR_OAKS_LAB",
   "name": "PalletTown_ProfessorOaksLab_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_PALLET_TOWN_PROFESSOR_OAKS_LAB",
   "music": "MUS_RG_OAK_LAB",
   "region": "REGION_KANTO",

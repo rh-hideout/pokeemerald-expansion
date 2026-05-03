@@ -1,6 +1,7 @@
 {
   "id": "MAP_LAVENDER_TOWN_MART",
   "name": "LavenderTown_Mart_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_MART_FRLG",
   "music": "MUS_RG_POKE_CENTER",
   "region": "REGION_KANTO",

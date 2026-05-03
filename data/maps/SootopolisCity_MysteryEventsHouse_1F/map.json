@@ -1,6 +1,7 @@
 {
   "id": "MAP_SOOTOPOLIS_CITY_MYSTERY_EVENTS_HOUSE_1F",
   "name": "SootopolisCity_MysteryEventsHouse_1F",
+  "game_version": "emerald",
   "layout": "LAYOUT_SOOTOPOLIS_CITY_MYSTERY_EVENTS_HOUSE_1F",
   "music": "MUS_SOOTOPOLIS",
   "region_map_section": "MAPSEC_SOOTOPOLIS_CITY",

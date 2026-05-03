@@ -1,6 +1,7 @@
 {
   "id": "MAP_RECORD_CORNER_FRLG",
   "name": "RecordCorner_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_RECORD_CORNER_FRLG",
   "music": "MUS_RG_POKE_CENTER",
   "region": "REGION_KANTO",

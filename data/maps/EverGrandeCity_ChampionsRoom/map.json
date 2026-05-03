@@ -1,6 +1,7 @@
 {
   "id": "MAP_EVER_GRANDE_CITY_CHAMPIONS_ROOM",
   "name": "EverGrandeCity_ChampionsRoom",
+  "game_version": "emerald",
   "layout": "LAYOUT_EVER_GRANDE_CITY_CHAMPIONS_ROOM",
   "music": "MUS_VICTORY_ROAD",
   "region_map_section": "MAPSEC_EVER_GRANDE_CITY",

@@ -1,6 +1,7 @@
 {
   "id": "MAP_SAFFRON_CITY_POKEMON_TRAINER_FAN_CLUB",
   "name": "SaffronCity_PokemonTrainerFanClub_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_SAFFRON_CITY_POKEMON_TRAINER_FAN_CLUB",
   "music": "MUS_RG_PEWTER",
   "region": "REGION_KANTO",

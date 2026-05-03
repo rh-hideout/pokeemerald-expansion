@@ -1,6 +1,7 @@
 {
   "id": "MAP_VERDANTURF_TOWN_BATTLE_TENT_LOBBY",
   "name": "VerdanturfTown_BattleTentLobby",
+  "game_version": "emerald",
   "layout": "LAYOUT_BATTLE_TENT_LOBBY",
   "music": "MUS_B_TOWER_RS",
   "region_map_section": "MAPSEC_VERDANTURF_TOWN",

@@ -1,6 +1,7 @@
 {
   "id": "MAP_UNDERWATER_ROUTE105",
   "name": "Underwater_Route105",
+  "game_version": "emerald",
   "layout": "LAYOUT_UNDERWATER_ROUTE105",
   "music": "MUS_UNDERWATER",
   "region_map_section": "MAPSEC_UNDERWATER_105",

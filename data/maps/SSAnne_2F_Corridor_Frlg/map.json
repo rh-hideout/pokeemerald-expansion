@@ -1,6 +1,7 @@
 {
   "id": "MAP_SSANNE_2F_CORRIDOR",
   "name": "SSAnne_2F_Corridor_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_SSANNE_2F_CORRIDOR",
   "music": "MUS_RG_SS_ANNE",
   "region": "REGION_KANTO",
@@ -140,7 +141,5 @@
       "script": "SSAnne_2F_Corridor_EventScript_RivalTriggerRight"
     }
   ],
-  "bg_events": [
-
-  ]
+  "bg_events": []
 }

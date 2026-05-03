@@ -1,6 +1,7 @@
 {
   "id": "MAP_UNDERWATER_MARINE_CAVE",
   "name": "Underwater_MarineCave",
+  "game_version": "emerald",
   "layout": "LAYOUT_UNDERWATER_MARINE_CAVE",
   "music": "MUS_PETALBURG_WOODS",
   "region_map_section": "MAPSEC_UNDERWATER_MARINE_CAVE",

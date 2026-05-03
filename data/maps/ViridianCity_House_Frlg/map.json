@@ -1,6 +1,7 @@
 {
   "id": "MAP_VIRIDIAN_CITY_HOUSE",
   "name": "ViridianCity_House_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_VIRIDIAN_CITY_HOUSE",
   "music": "MUS_RG_PEWTER",
   "region": "REGION_KANTO",

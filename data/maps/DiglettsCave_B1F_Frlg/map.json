@@ -1,6 +1,7 @@
 {
   "id": "MAP_DIGLETTS_CAVE_B1F",
   "name": "DiglettsCave_B1F_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_DIGLETTS_CAVE_B1F",
   "music": "MUS_RG_VIRIDIAN_FOREST",
   "region": "REGION_KANTO",

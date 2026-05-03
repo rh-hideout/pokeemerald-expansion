@@ -1,6 +1,7 @@
 {
   "id": "MAP_SIX_ISLAND_HOUSE",
   "name": "SixIsland_House_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_HOUSE3_FRLG",
   "music": "MUS_RG_SEVII_67",
   "region": "REGION_KANTO",

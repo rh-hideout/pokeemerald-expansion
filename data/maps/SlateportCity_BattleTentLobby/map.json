@@ -1,6 +1,7 @@
 {
   "id": "MAP_SLATEPORT_CITY_BATTLE_TENT_LOBBY",
   "name": "SlateportCity_BattleTentLobby",
+  "game_version": "emerald",
   "layout": "LAYOUT_BATTLE_TENT_LOBBY",
   "music": "MUS_B_TOWER_RS",
   "region_map_section": "MAPSEC_SLATEPORT_CITY",

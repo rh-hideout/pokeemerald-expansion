@@ -1,6 +1,7 @@
 {
   "id": "MAP_FOUR_ISLAND_LORELEIS_HOUSE",
   "name": "FourIsland_LoreleisHouse_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_FOUR_ISLAND_LORELEIS_HOUSE",
   "music": "MUS_RG_SEVII_45",
   "region": "REGION_KANTO",

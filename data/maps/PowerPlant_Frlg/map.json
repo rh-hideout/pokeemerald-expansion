@@ -1,6 +1,7 @@
 {
   "id": "MAP_POWER_PLANT",
   "name": "PowerPlant_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_POWER_PLANT",
   "music": "MUS_RG_POKE_MANSION",
   "region": "REGION_KANTO",
@@ -166,9 +167,7 @@
       "dest_warp_id": "2"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "hidden_item",

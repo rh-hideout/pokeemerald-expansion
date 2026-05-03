@@ -1,6 +1,7 @@
 {
   "id": "MAP_POKEMON_LEAGUE_AGATHAS_ROOM",
   "name": "PokemonLeague_AgathasRoom_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_POKEMON_LEAGUE_AGATHAS_ROOM",
   "music": "MUS_RG_POKE_TOWER",
   "region": "REGION_KANTO",

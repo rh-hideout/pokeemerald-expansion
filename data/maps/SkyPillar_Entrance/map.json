@@ -1,6 +1,7 @@
 {
   "id": "MAP_SKY_PILLAR_ENTRANCE",
   "name": "SkyPillar_Entrance",
+  "game_version": "emerald",
   "layout": "LAYOUT_SKY_PILLAR_ENTRANCE",
   "music": "MUS_MT_CHIMNEY",
   "region_map_section": "MAPSEC_SKY_PILLAR",

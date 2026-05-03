@@ -1,6 +1,7 @@
 {
   "id": "MAP_ROUTE2_EAST_BUILDING",
   "name": "Route2_EastBuilding_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_ROUTE2_ENTRANCE",
   "music": "MUS_RG_PEWTER",
   "region": "REGION_KANTO",

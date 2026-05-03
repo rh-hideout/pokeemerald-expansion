@@ -1,6 +1,7 @@
 {
   "id": "MAP_FALLARBOR_TOWN",
   "name": "FallarborTown",
+  "game_version": "emerald",
   "layout": "LAYOUT_FALLARBOR_TOWN",
   "music": "MUS_FALLARBOR",
   "region_map_section": "MAPSEC_FALLARBOR_TOWN",

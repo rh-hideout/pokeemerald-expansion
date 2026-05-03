@@ -1,6 +1,7 @@
 {
   "id": "MAP_CINNABAR_ISLAND",
   "name": "CinnabarIsland_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_CINNABAR_ISLAND",
   "music": "MUS_RG_CINNABAR",
   "region": "REGION_KANTO",

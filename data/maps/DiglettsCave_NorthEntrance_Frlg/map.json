@@ -1,6 +1,7 @@
 {
   "id": "MAP_DIGLETTS_CAVE_NORTH_ENTRANCE",
   "name": "DiglettsCave_NorthEntrance_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_DIGLETTS_CAVE_NORTH_ENTRANCE",
   "music": "MUS_RG_VIRIDIAN_FOREST",
   "region": "REGION_KANTO",

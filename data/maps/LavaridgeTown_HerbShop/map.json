@@ -1,6 +1,7 @@
 {
   "id": "MAP_LAVARIDGE_TOWN_HERB_SHOP",
   "name": "LavaridgeTown_HerbShop",
+  "game_version": "emerald",
   "layout": "LAYOUT_LAVARIDGE_TOWN_HERB_SHOP",
   "music": "MUS_OLDALE",
   "region_map_section": "MAPSEC_LAVARIDGE_TOWN",

@@ -1,6 +1,7 @@
 {
   "id": "MAP_SEVEN_ISLAND_SEVAULT_CANYON_TANOBY_KEY",
   "name": "SevenIsland_SevaultCanyon_TanobyKey_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_SEVEN_ISLAND_SEVAULT_CANYON_TANOBY_KEY",
   "music": "MUS_RG_SEVII_DUNGEON",
   "region": "REGION_KANTO",
@@ -196,7 +197,5 @@
       "script": "SevenIsland_SevaultCanyon_TanobyKey_EventScript_Switch2"
     }
   ],
-  "bg_events": [
-
-  ]
+  "bg_events": []
 }

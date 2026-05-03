@@ -1,6 +1,7 @@
 {
   "id": "MAP_FOUR_ISLAND",
   "name": "FourIsland_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_FOUR_ISLAND",
   "music": "MUS_RG_SEVII_45",
   "region": "REGION_KANTO",
@@ -245,9 +246,7 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",

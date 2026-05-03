@@ -1,6 +1,7 @@
 {
   "id": "MAP_SIX_ISLAND_GREEN_PATH",
   "name": "SixIsland_GreenPath_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_SIX_ISLAND_GREEN_PATH",
   "music": "MUS_RG_SEVII_ROUTE",
   "region": "REGION_KANTO",
@@ -72,9 +73,7 @@
       "dest_warp_id": "4"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",

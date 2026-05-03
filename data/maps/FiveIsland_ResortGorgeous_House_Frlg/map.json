@@ -1,6 +1,7 @@
 {
   "id": "MAP_FIVE_ISLAND_RESORT_GORGEOUS_HOUSE",
   "name": "FiveIsland_ResortGorgeous_House_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_FIVE_ISLAND_RESORT_GORGEOUS_HOUSE",
   "music": "MUS_RG_SEVII_45",
   "region": "REGION_KANTO",

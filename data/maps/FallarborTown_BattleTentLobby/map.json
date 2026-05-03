@@ -1,6 +1,7 @@
 {
   "id": "MAP_FALLARBOR_TOWN_BATTLE_TENT_LOBBY",
   "name": "FallarborTown_BattleTentLobby",
+  "game_version": "emerald",
   "layout": "LAYOUT_BATTLE_TENT_LOBBY",
   "music": "MUS_B_TOWER_RS",
   "region_map_section": "MAPSEC_FALLARBOR_TOWN",

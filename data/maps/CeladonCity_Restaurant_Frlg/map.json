@@ -1,6 +1,7 @@
 {
   "id": "MAP_CELADON_CITY_RESTAURANT",
   "name": "CeladonCity_Restaurant_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_CELADON_CITY_RESTAURANT",
   "music": "MUS_RG_CELADON",
   "region": "REGION_KANTO",

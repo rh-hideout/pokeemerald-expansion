@@ -1,6 +1,7 @@
 {
   "id": "MAP_RUSTBORO_CITY_HOUSE3",
   "name": "RustboroCity_House3",
+  "game_version": "emerald",
   "layout": "LAYOUT_RUSTBORO_CITY_HOUSE",
   "music": "MUS_RUSTBORO",
   "region_map_section": "MAPSEC_RUSTBORO_CITY",

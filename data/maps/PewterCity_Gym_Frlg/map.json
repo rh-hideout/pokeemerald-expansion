@@ -1,6 +1,7 @@
 {
   "id": "MAP_PEWTER_CITY_GYM",
   "name": "PewterCity_Gym_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_PEWTER_CITY_GYM",
   "music": "MUS_RG_GYM",
   "region": "REGION_KANTO",

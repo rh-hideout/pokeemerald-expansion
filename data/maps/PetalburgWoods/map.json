@@ -1,6 +1,7 @@
 {
   "id": "MAP_PETALBURG_WOODS",
   "name": "PetalburgWoods",
+  "game_version": "emerald",
   "layout": "LAYOUT_PETALBURG_WOODS",
   "music": "MUS_PETALBURG_WOODS",
   "region_map_section": "MAPSEC_PETALBURG_WOODS",

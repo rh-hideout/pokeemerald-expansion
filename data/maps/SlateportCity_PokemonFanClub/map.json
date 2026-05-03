@@ -1,6 +1,7 @@
 {
   "id": "MAP_SLATEPORT_CITY_POKEMON_FAN_CLUB",
   "name": "SlateportCity_PokemonFanClub",
+  "game_version": "emerald",
   "layout": "LAYOUT_SLATEPORT_CITY_POKEMON_FAN_CLUB",
   "music": "MUS_SLATEPORT",
   "region_map_section": "MAPSEC_SLATEPORT_CITY",

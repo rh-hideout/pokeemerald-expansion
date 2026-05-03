@@ -1,6 +1,7 @@
 {
   "id": "MAP_FOUR_ISLAND_HARBOR",
   "name": "FourIsland_Harbor_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_ISLAND_HARBOR_FRLG",
   "music": "MUS_RG_SEVII_45",
   "region": "REGION_KANTO",

@@ -1,6 +1,7 @@
 {
   "id": "MAP_CELADON_CITY_GAME_CORNER",
   "name": "CeladonCity_GameCorner_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_CELADON_CITY_GAME_CORNER",
   "music": "MUS_RG_GAME_CORNER",
   "region": "REGION_KANTO",

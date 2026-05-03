@@ -1,6 +1,7 @@
 {
   "id": "MAP_FUCHSIA_CITY_HOUSE2",
   "name": "FuchsiaCity_House2_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_FUCHSIA_CITY_HOUSE2",
   "music": "MUS_RG_FUCHSIA",
   "region": "REGION_KANTO",

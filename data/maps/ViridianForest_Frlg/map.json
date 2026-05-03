@@ -1,6 +1,7 @@
 {
   "id": "MAP_VIRIDIAN_FOREST",
   "name": "ViridianForest_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_VIRIDIAN_FOREST",
   "music": "MUS_RG_VIRIDIAN_FOREST",
   "region": "REGION_KANTO",
@@ -215,9 +216,7 @@
       "dest_warp_id": "1"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",

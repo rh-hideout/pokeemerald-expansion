@@ -1,6 +1,7 @@
 {
   "id": "MAP_PEWTER_CITY_POKEMON_CENTER_1F",
   "name": "PewterCity_PokemonCenter_1F_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_POKEMON_CENTER_1F_FRLG",
   "music": "MUS_RG_POKE_CENTER",
   "region": "REGION_KANTO",

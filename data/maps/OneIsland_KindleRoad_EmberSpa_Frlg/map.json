@@ -1,6 +1,7 @@
 {
   "id": "MAP_ONE_ISLAND_KINDLE_ROAD_EMBER_SPA",
   "name": "OneIsland_KindleRoad_EmberSpa_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_ONE_ISLAND_KINDLE_ROAD_EMBER_SPA",
   "music": "MUS_RG_FUCHSIA",
   "region": "REGION_KANTO",
@@ -121,7 +122,5 @@
       "script": "OneIsland_KindleRoad_EmberSpa_EventScript_SpaHeal"
     }
   ],
-  "bg_events": [
-
-  ]
+  "bg_events": []
 }

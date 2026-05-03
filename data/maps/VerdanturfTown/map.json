@@ -1,6 +1,7 @@
 {
   "id": "MAP_VERDANTURF_TOWN",
   "name": "VerdanturfTown",
+  "game_version": "emerald",
   "layout": "LAYOUT_VERDANTURF_TOWN",
   "music": "MUS_VERDANTURF",
   "region_map_section": "MAPSEC_VERDANTURF_TOWN",

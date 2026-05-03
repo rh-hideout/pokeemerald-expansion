@@ -1,6 +1,7 @@
 {
   "id": "MAP_ROUTE23",
   "name": "Route23_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_ROUTE23",
   "music": "MUS_RG_VICTORY_ROAD",
   "region": "REGION_KANTO",

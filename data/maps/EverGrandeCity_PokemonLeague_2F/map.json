@@ -1,6 +1,7 @@
 {
   "id": "MAP_EVER_GRANDE_CITY_POKEMON_LEAGUE_2F",
   "name": "EverGrandeCity_PokemonLeague_2F",
+  "game_version": "emerald",
   "layout": "LAYOUT_POKEMON_CENTER_2F",
   "music": "MUS_POKE_CENTER",
   "region_map_section": "MAPSEC_EVER_GRANDE_CITY",

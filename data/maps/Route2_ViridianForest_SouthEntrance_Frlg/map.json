@@ -1,6 +1,7 @@
 {
   "id": "MAP_ROUTE2_VIRIDIAN_FOREST_SOUTH_ENTRANCE",
   "name": "Route2_ViridianForest_SouthEntrance_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_ROUTE2_ENTRANCE",
   "music": "MUS_RG_PEWTER",
   "region": "REGION_KANTO",

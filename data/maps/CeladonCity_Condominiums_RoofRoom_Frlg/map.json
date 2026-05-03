@@ -1,6 +1,7 @@
 {
   "id": "MAP_CELADON_CITY_CONDOMINIUMS_ROOF_ROOM",
   "name": "CeladonCity_Condominiums_RoofRoom_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_CELADON_CITY_CONDOMINIUMS_ROOF_ROOM",
   "music": "MUS_RG_CELADON",
   "region": "REGION_KANTO",

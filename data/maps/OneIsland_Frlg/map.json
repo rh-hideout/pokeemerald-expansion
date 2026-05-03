@@ -1,6 +1,7 @@
 {
   "id": "MAP_ONE_ISLAND",
   "name": "OneIsland_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_ONE_ISLAND",
   "music": "MUS_RG_SEVII_123",
   "region": "REGION_KANTO",
@@ -101,9 +102,7 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",

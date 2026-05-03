@@ -1,6 +1,7 @@
 {
   "id": "MAP_SHOAL_CAVE_LOW_TIDE_LOWER_ROOM",
   "name": "ShoalCave_LowTideLowerRoom",
+  "game_version": "emerald",
   "layout": "LAYOUT_SHOAL_CAVE_LOW_TIDE_LOWER_ROOM",
   "music": "MUS_MT_PYRE",
   "region_map_section": "MAPSEC_SHOAL_CAVE",

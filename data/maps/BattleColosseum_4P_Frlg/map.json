@@ -1,6 +1,7 @@
 {
   "id": "MAP_BATTLE_COLOSSEUM_4P_FRLG",
   "name": "BattleColosseum_4P_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_BATTLE_COLOSSEUM_4P_FRLG",
   "music": "MUS_RG_POKE_CENTER",
   "region": "REGION_KANTO",

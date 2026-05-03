@@ -1,6 +1,7 @@
 {
   "id": "MAP_SAFARI_ZONE_CENTER",
   "name": "SafariZone_Center_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_SAFARI_ZONE_CENTER",
   "music": "MUS_EVOLUTION",
   "region": "REGION_KANTO",
@@ -124,9 +125,7 @@
       "dest_warp_id": "1"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",

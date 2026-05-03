@@ -1,6 +1,7 @@
 {
   "id": "MAP_UNDERGROUND_PATH_NORTH_SOUTH_TUNNEL",
   "name": "UndergroundPath_NorthSouthTunnel_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_UNDERGROUND_PATH_NORTH_SOUTH_TUNNEL",
   "music": "MUS_RG_ROUTE1",
   "region": "REGION_KANTO",

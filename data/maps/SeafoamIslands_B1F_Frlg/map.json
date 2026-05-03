@@ -1,6 +1,7 @@
 {
   "id": "MAP_SEAFOAM_ISLANDS_B1F",
   "name": "SeafoamIslands_B1F_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_SEAFOAM_ISLANDS_B1F",
   "music": "MUS_RG_VIRIDIAN_FOREST",
   "region": "REGION_KANTO",

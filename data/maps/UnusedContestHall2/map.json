@@ -1,6 +1,7 @@
 {
   "id": "MAP_UNUSED_CONTEST_HALL2",
   "name": "UnusedContestHall2",
+  "game_version": "emerald",
   "layout": "LAYOUT_UNUSED_CONTEST_HALL2",
   "music": "MUS_GSC_PEWTER",
   "region_map_section": "MAPSEC_DYNAMIC",

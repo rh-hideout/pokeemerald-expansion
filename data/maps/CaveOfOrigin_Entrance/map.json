@@ -1,6 +1,7 @@
 {
   "id": "MAP_CAVE_OF_ORIGIN_ENTRANCE",
   "name": "CaveOfOrigin_Entrance",
+  "game_version": "emerald",
   "layout": "LAYOUT_CAVE_OF_ORIGIN_ENTRANCE",
   "music": "MUS_CAVE_OF_ORIGIN",
   "region_map_section": "MAPSEC_CAVE_OF_ORIGIN",

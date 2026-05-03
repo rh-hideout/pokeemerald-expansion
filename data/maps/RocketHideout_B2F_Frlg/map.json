@@ -1,6 +1,7 @@
 {
   "id": "MAP_ROCKET_HIDEOUT_B2F",
   "name": "RocketHideout_B2F_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_ROCKET_HIDEOUT_B2F",
   "music": "MUS_RG_ROCKET_HIDEOUT",
   "region": "REGION_KANTO",

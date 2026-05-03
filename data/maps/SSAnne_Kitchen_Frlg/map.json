@@ -1,6 +1,7 @@
 {
   "id": "MAP_SSANNE_KITCHEN",
   "name": "SSAnne_Kitchen_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_SSANNE_KITCHEN",
   "music": "MUS_RG_SS_ANNE",
   "region": "REGION_KANTO",
@@ -138,9 +139,7 @@
       "dest_warp_id": "1"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "hidden_item",

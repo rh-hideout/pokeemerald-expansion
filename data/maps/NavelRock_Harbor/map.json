@@ -1,6 +1,7 @@
 {
   "id": "MAP_NAVEL_ROCK_HARBOR",
   "name": "NavelRock_Harbor",
+  "game_version": "emerald",
   "layout": "LAYOUT_ISLAND_HARBOR",
   "music": "MUS_RG_SEVII_ROUTE",
   "region_map_section": "MAPSEC_NAVEL_ROCK",

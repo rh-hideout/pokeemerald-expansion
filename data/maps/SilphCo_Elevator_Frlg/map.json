@@ -1,6 +1,7 @@
 {
   "id": "MAP_SILPH_CO_ELEVATOR",
   "name": "SilphCo_Elevator_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_SILPH_CO_ELEVATOR",
   "music": "MUS_RG_SILPH",
   "region": "REGION_KANTO",

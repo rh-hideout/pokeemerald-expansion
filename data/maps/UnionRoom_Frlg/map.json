@@ -1,6 +1,7 @@
 {
   "id": "MAP_UNION_ROOM_FRLG",
   "name": "UnionRoom_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_UNION_ROOM_FRLG",
   "music": "MUS_RG_UNION_ROOM",
   "region": "REGION_KANTO",

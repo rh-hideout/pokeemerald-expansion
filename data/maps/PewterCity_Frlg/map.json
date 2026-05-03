@@ -1,6 +1,7 @@
 {
   "id": "MAP_PEWTER_CITY",
   "name": "PewterCity_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_PEWTER_CITY",
   "music": "MUS_RG_PEWTER",
   "region": "REGION_KANTO",

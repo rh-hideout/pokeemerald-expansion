@@ -1,6 +1,7 @@
 {
   "id": "MAP_LAVENDER_TOWN_VOLUNTEER_POKEMON_HOUSE",
   "name": "LavenderTown_VolunteerPokemonHouse_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_LAVENDER_TOWN_VOLUNTEER_POKEMON_HOUSE",
   "music": "MUS_RG_LAVENDER",
   "region": "REGION_KANTO",

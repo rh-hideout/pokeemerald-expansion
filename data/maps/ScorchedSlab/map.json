@@ -1,6 +1,7 @@
 {
   "id": "MAP_SCORCHED_SLAB",
   "name": "ScorchedSlab",
+  "game_version": "emerald",
   "layout": "LAYOUT_SCORCHED_SLAB",
   "music": "MUS_PETALBURG_WOODS",
   "region_map_section": "MAPSEC_SCORCHED_SLAB",

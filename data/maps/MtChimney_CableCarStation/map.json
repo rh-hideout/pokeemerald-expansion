@@ -1,6 +1,7 @@
 {
   "id": "MAP_MT_CHIMNEY_CABLE_CAR_STATION",
   "name": "MtChimney_CableCarStation",
+  "game_version": "emerald",
   "layout": "LAYOUT_CABLE_CAR_STATION",
   "music": "MUS_ROUTE110",
   "region_map_section": "MAPSEC_MT_CHIMNEY",

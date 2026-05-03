@@ -1,6 +1,7 @@
 {
   "id": "MAP_ROCKET_HIDEOUT_ELEVATOR",
   "name": "RocketHideout_Elevator_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_ROCKET_HIDEOUT_ELEVATOR",
   "music": "MUS_RG_ROCKET_HIDEOUT",
   "region": "REGION_KANTO",

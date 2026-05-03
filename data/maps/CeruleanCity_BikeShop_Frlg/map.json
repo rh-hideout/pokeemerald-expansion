@@ -1,6 +1,7 @@
 {
   "id": "MAP_CERULEAN_CITY_BIKE_SHOP",
   "name": "CeruleanCity_BikeShop_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_CERULEAN_CITY_BIKE_SHOP",
   "music": "MUS_RG_FUCHSIA",
   "region": "REGION_KANTO",

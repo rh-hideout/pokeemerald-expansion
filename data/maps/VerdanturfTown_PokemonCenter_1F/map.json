@@ -1,6 +1,7 @@
 {
   "id": "MAP_VERDANTURF_TOWN_POKEMON_CENTER_1F",
   "name": "VerdanturfTown_PokemonCenter_1F",
+  "game_version": "emerald",
   "layout": "LAYOUT_POKEMON_CENTER_1F",
   "music": "MUS_POKE_CENTER",
   "region_map_section": "MAPSEC_VERDANTURF_TOWN",

@@ -1,6 +1,7 @@
 {
   "id": "MAP_BIRTH_ISLAND_HARBOR_FRLG",
   "name": "BirthIsland_Harbor_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_ISLAND_HARBOR_FRLG",
   "music": "MUS_NONE",
   "region": "REGION_KANTO",
@@ -54,10 +55,6 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [
-
-  ],
-  "bg_events": [
-
-  ]
+  "coord_events": [],
+  "bg_events": []
 }

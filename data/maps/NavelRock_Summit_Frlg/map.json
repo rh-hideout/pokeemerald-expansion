@@ -1,6 +1,7 @@
 {
   "id": "MAP_NAVEL_ROCK_SUMMIT",
   "name": "NavelRock_Summit_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_NAVEL_ROCK_SUMMIT",
   "music": "MUS_RG_SEVII_CAVE",
   "region": "REGION_KANTO",

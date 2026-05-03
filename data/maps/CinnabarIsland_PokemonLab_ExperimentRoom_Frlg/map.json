@@ -1,6 +1,7 @@
 {
   "id": "MAP_CINNABAR_ISLAND_POKEMON_LAB_EXPERIMENT_ROOM",
   "name": "CinnabarIsland_PokemonLab_ExperimentRoom_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_CINNABAR_ISLAND_POKEMON_LAB_EXPERIMENT_ROOM",
   "music": "MUS_RG_CINNABAR",
   "region": "REGION_KANTO",

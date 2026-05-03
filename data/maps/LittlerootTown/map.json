@@ -1,6 +1,7 @@
 {
   "id": "MAP_LITTLEROOT_TOWN",
   "name": "LittlerootTown",
+  "game_version": "emerald",
   "layout": "LAYOUT_LITTLEROOT_TOWN",
   "music": "MUS_LITTLEROOT",
   "region_map_section": "MAPSEC_LITTLEROOT_TOWN",

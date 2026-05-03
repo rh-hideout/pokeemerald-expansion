@@ -1,6 +1,7 @@
 {
   "id": "MAP_SIX_ISLAND_DOTTED_HOLE_SAPPHIRE_ROOM",
   "name": "SixIsland_DottedHole_SapphireRoom_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_SIX_ISLAND_DOTTED_HOLE_SAPPHIRE_ROOM",
   "music": "MUS_RG_SEVII_DUNGEON",
   "region": "REGION_KANTO",
@@ -63,9 +64,7 @@
       "dest_warp_id": "3"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",

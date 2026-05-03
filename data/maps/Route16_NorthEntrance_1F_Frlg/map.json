@@ -1,6 +1,7 @@
 {
   "id": "MAP_ROUTE16_NORTH_ENTRANCE_1F",
   "name": "Route16_NorthEntrance_1F_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_ROUTE16_NORTH_ENTRANCE_1F",
   "music": "MUS_RG_PEWTER",
   "region": "REGION_KANTO",

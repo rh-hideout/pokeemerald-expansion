@@ -1,6 +1,7 @@
 {
   "id": "MAP_ROUTE9",
   "name": "Route9_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_ROUTE9",
   "music": "MUS_RG_ROUTE3",
   "region": "REGION_KANTO",
@@ -197,12 +198,8 @@
       "flag": "FLAG_HIDE_ROUTE9_BURN_HEAL"
     }
   ],
-  "warp_events": [
-
-  ],
-  "coord_events": [
-
-  ],
+  "warp_events": [],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",

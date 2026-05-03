@@ -1,6 +1,7 @@
 {
   "id": "MAP_SILPH_CO_5F",
   "name": "SilphCo_5F_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_SILPH_CO_5F",
   "music": "MUS_RG_SILPH",
   "region": "REGION_KANTO",

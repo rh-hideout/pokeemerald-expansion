@@ -1,6 +1,7 @@
 {
   "id": "MAP_CERULEAN_CITY_HOUSE4",
   "name": "CeruleanCity_House4_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_HOUSE1_FRLG",
   "music": "MUS_RG_FUCHSIA",
   "region": "REGION_KANTO",

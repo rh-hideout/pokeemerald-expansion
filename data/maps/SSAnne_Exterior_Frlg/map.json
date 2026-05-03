@@ -1,6 +1,7 @@
 {
   "id": "MAP_SSANNE_EXTERIOR",
   "name": "SSAnne_Exterior_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_SSANNE_EXTERIOR",
   "music": "MUS_RG_SS_ANNE",
   "region": "REGION_KANTO",
@@ -69,9 +70,7 @@
       "dest_warp_id": "2"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "hidden_item",

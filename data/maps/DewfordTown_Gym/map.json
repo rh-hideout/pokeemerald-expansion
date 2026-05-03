@@ -1,6 +1,7 @@
 {
   "id": "MAP_DEWFORD_TOWN_GYM",
   "name": "DewfordTown_Gym",
+  "game_version": "emerald",
   "layout": "LAYOUT_DEWFORD_TOWN_GYM",
   "music": "MUS_GYM",
   "region_map_section": "MAPSEC_DEWFORD_TOWN",

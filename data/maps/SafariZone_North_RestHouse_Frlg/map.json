@@ -1,6 +1,7 @@
 {
   "id": "MAP_SAFARI_ZONE_NORTH_REST_HOUSE",
   "name": "SafariZone_North_RestHouse_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_SAFARI_ZONE_REST_HOUSE_FRLG",
   "music": "MUS_EVOLUTION",
   "region": "REGION_KANTO",

@@ -1,6 +1,7 @@
 {
   "id": "MAP_SEVEN_ISLAND_SEVAULT_CANYON_HOUSE",
   "name": "SevenIsland_SevaultCanyon_House_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_HOUSE3_FRLG",
   "music": "MUS_RG_SEVII_67",
   "region": "REGION_KANTO",

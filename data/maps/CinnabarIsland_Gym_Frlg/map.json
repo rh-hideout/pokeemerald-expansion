@@ -1,6 +1,7 @@
 {
   "id": "MAP_CINNABAR_ISLAND_GYM",
   "name": "CinnabarIsland_Gym_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_CINNABAR_ISLAND_GYM",
   "music": "MUS_RG_GYM",
   "region": "REGION_KANTO",

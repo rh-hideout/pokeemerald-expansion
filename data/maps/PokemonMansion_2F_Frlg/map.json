@@ -1,6 +1,7 @@
 {
   "id": "MAP_POKEMON_MANSION_2F",
   "name": "PokemonMansion_2F_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_POKEMON_MANSION_2F",
   "music": "MUS_RG_POKE_MANSION",
   "region": "REGION_KANTO",
@@ -110,9 +111,7 @@
       "dest_warp_id": "5"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",

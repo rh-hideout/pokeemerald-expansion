@@ -1,6 +1,7 @@
 {
   "id": "MAP_FUCHSIA_CITY_WARDENS_HOUSE",
   "name": "FuchsiaCity_WardensHouse_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_FUCHSIA_CITY_WARDENS_HOUSE",
   "music": "MUS_RG_FUCHSIA",
   "region": "REGION_KANTO",

@@ -1,6 +1,7 @@
 {
   "id": "MAP_ROUTE124_DIVING_TREASURE_HUNTERS_HOUSE",
   "name": "Route124_DivingTreasureHuntersHouse",
+  "game_version": "emerald",
   "layout": "LAYOUT_ROUTE124_DIVING_TREASURE_HUNTERS_HOUSE",
   "music": "MUS_LILYCOVE",
   "region_map_section": "MAPSEC_ROUTE_124",

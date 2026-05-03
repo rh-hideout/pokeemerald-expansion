@@ -1,6 +1,7 @@
 {
   "id": "MAP_SIX_ISLAND_RUIN_VALLEY",
   "name": "SixIsland_RuinValley_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_SIX_ISLAND_RUIN_VALLEY",
   "music": "MUS_RG_SEVII_ROUTE",
   "region": "REGION_KANTO",
@@ -271,9 +272,7 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",

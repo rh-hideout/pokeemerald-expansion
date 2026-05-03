@@ -1,6 +1,7 @@
 {
   "id": "MAP_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE",
   "name": "FuchsiaCity_SafariZone_Entrance_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE",
   "music": "MUS_RG_FUCHSIA",
   "region": "REGION_KANTO",

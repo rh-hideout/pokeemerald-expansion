@@ -1,6 +1,7 @@
 {
   "id": "MAP_SAFFRON_CITY_COPYCATS_HOUSE_2F",
   "name": "SaffronCity_CopycatsHouse_2F_Frlg",
+  "game_version": "frlg",
   "layout": "LAYOUT_SAFFRON_CITY_COPYCATS_HOUSE_2F",
   "music": "MUS_RG_PEWTER",
   "region": "REGION_KANTO",

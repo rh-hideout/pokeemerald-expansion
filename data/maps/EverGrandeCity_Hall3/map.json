@@ -1,6 +1,7 @@
 {
   "id": "MAP_EVER_GRANDE_CITY_HALL3",
   "name": "EverGrandeCity_Hall3",
+  "game_version": "emerald",
   "layout": "LAYOUT_EVER_GRANDE_CITY_SHORT_HALL",
   "music": "MUS_VICTORY_ROAD",
   "region_map_section": "MAPSEC_EVER_GRANDE_CITY",

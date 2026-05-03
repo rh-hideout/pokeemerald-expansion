@@ -1,6 +1,7 @@
 {
   "id": "MAP_SEALED_CHAMBER_OUTER_ROOM",
   "name": "SealedChamber_OuterRoom",
+  "game_version": "emerald",
   "layout": "LAYOUT_SEALED_CHAMBER_OUTER_ROOM",
   "music": "MUS_SEALED_CHAMBER",
   "region_map_section": "MAPSEC_SEALED_CHAMBER",
