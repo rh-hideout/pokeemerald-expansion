@@ -6119,7 +6119,7 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
     switch (moveEffect)
     {
     case EFFECT_PLEDGE:
-        if (gBattleStruct->pledgeMove)
+        if (gBattleStruct->pledgeMove && GetPledgeMoveBasePower(ctx->move) > 0)
             basePower = GetPledgeMoveBasePower(ctx->move);
         break;
     case EFFECT_FLING:

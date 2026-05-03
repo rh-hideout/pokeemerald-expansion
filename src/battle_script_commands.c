@@ -3233,7 +3233,6 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         gSideTimers[i].rainbowTimer = 4;
         BattleScriptPush(battleScript);
         gBattlescriptCurrInstr = BattleScript_TheRainbowActivates;
-        gBattleStruct->pledgeMove = FALSE;
         break;
     case MOVE_EFFECT_SEA_OF_FIRE:
         i = GetBattlerSide(effectBattler);
@@ -3241,10 +3240,9 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
             break;
 
         gSideStatuses[i] |= SIDE_STATUS_SEA_OF_FIRE;
-        gSideTimers[GetBattlerSide(effectBattler)].seaOfFireTimer = 4;
+        gSideTimers[i].seaOfFireTimer = 4;
         BattleScriptPush(battleScript);
         gBattlescriptCurrInstr = BattleScript_SeaOfFireActivates;
-        gBattleStruct->pledgeMove = FALSE;
         break;
     case MOVE_EFFECT_SWAMP:
         i = GetBattlerSide(effectBattler);
@@ -3252,10 +3250,9 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
             break;
 
         gSideStatuses[i] |= SIDE_STATUS_SWAMP;
-        gSideTimers[GetBattlerSide(effectBattler)].swampTimer = 4;
+        gSideTimers[i].swampTimer = 4;
         BattleScriptPush(battleScript);
         gBattlescriptCurrInstr = BattleScript_TheSwampActivates;
-        gBattleStruct->pledgeMove = FALSE;
         break;
     case MOVE_EFFECT_RAISE_TEAM_ATTACK:
         if (!NoAliveMonsForEitherParty())
@@ -3873,6 +3870,7 @@ static void Cmd_setadditionaleffects(void)
         }
     }
 
+    gBattleStruct->pledgeMove = FALSE;
     gBattleStruct->additionalEffectsCounter = 0;
     gBattleScripting.moveEffect = 0;
     gBattlescriptCurrInstr = cmd->nextInstr;
@@ -12324,13 +12322,13 @@ void BS_SetPledge(void)
         gBattleCommunication[MSG_DISPLAY] = 0;
     }
     else if ((gChosenActionByBattler[partner] == B_ACTION_USE_MOVE)
+          && !gBattleStruct->unableToUseMove
           && IsDoubleBattle()
           && IsBattlerAlive(partner)
+          && gCurrentMove != partnerMove
           && GetMoveEffect(gCurrentMove) == EFFECT_PLEDGE
           && GetMoveEffect(partnerMove) == EFFECT_PLEDGE
           && !HasBattlerActedThisTurn(partner)
-          && !gBattleStruct->unableToUseMove
-          && gCurrentMove != partnerMove
           && (GetPledgeComboMove(gCurrentMove) == partnerMove || GetPledgeComboMove(partnerMove) == gCurrentMove))
     {
         u32 currPledgeUser = 0;
