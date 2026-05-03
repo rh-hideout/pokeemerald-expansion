@@ -3653,7 +3653,7 @@ static enum MoveEndResult MoveEndOpportunist(struct BattleCalcValues *cv)
 {
     while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
     {
-        enum BattlerId battler = gBattleStruct->eventState.moveEndBattler++;
+        enum BattlerId battler = gBattlersByRawSpeed[gBattleStruct->eventState.moveEndBattler++];
 
         if (AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, battler, cv->abilities[battler], 0, TRUE))
             return MOVEEND_RESULT_RUN_SCRIPT;

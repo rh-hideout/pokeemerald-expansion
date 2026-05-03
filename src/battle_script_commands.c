@@ -1765,10 +1765,14 @@ static void MoveDamageDataHpUpdate(enum BattlerId battler, u32 scriptBattler, co
         }
         else
         {
+            u16 hpBefore;
+            u16 hpLost;
+
             gBideDmg[battler] += gBattleStruct->moveDamage[battler];
             gBideTarget[battler] = gBattlerAttacker;
 
             // Deal damage to the battler
+            hpBefore = gBattleMons[battler].hp;
             if (gBattleMons[battler].hp > gBattleStruct->moveDamage[battler])
             {
                 if (GetMoveEffect(gCurrentMove) == EFFECT_OHKO && gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_FOE_HUNG_ON)
@@ -1782,6 +1786,11 @@ static void MoveDamageDataHpUpdate(enum BattlerId battler, u32 scriptBattler, co
                 gBattleStruct->moveDamage[battler] = gBattleMons[battler].hp;
                 gBattleMons[battler].hp = 0;
             }
+
+            hpLost = hpBefore - gBattleMons[battler].hp;
+            if (hpLost != 0)
+                gBattleStruct->innardsOutHpLost[battler] += hpLost;
+
             gProtectStructs[battler].assuranceDoubled = TRUE;
             gProtectStructs[battler].revengeDoubled |= 1u << gBattlerAttacker;
 
@@ -2393,6 +2402,7 @@ static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect) //
     case MOVE_EFFECT_INFATUATE_SIDE:
     case MOVE_EFFECT_CONFUSE_SIDE:
     case MOVE_EFFECT_TORMENT_SIDE:
+    case MOVE_EFFECT_CORE_ENFORCER:
         return TRUE;
     default:
         return FALSE;
@@ -5966,7 +5976,7 @@ static void Cmd_yesnoboxlearnmove(void)
     case 2:
         if (!gPaletteFade.active)
         {
-            FreeAllWindowBuffers();
+            CloseMainBattleScreen();
             ShowSelectMovePokemonSummaryScreen(gParties[B_TRAINER_0], gBattleStruct->expGetterMonId, ReshowBattleScreenAfterMenu, gMoveToLearn);
             gBattleScripting.learnMoveState++;
         }
@@ -9878,6 +9888,7 @@ static void Cmd_setgastroacid(void)
         if (gBattleMons[gBattlerTarget].volatiles.neutralizingGas)
             gSpecialStatuses[gBattlerTarget].neutralizingGasRemoved = TRUE;
 
+        RemoveRuinAbilityFlags(gBattlerTarget);
         gBattleMons[gBattlerTarget].volatiles.gastroAcid = TRUE;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
@@ -11115,7 +11126,7 @@ static void Cmd_displaydexinfo(void)
     case 1:
         if (!gPaletteFade.active)
         {
-            FreeAllWindowBuffers();
+            CloseMainBattleScreen();
             gBattleCommunication[TASK_ID] = DisplayCaughtMonDexPage(species,
                                                                     GetMonData(mon, MON_DATA_IS_SHINY),
                                                                     GetMonData(mon, MON_DATA_PERSONALITY));
@@ -11273,7 +11284,7 @@ static void Cmd_trygivecaughtmonnick(void)
         {
             struct Pokemon *caughtMon = GetBattlerMon(gBattlerTarget);
             GetMonData(caughtMon, MON_DATA_NICKNAME, gBattleStruct->caughtMonNick);
-            FreeAllWindowBuffers();
+            CloseMainBattleScreen();
             MainCallback callback = CalculatePlayerPartyCount() == PARTY_SIZE ? ReshowBlankBattleScreenAfterMenu : BattleMainCB2;
 
             DoNamingScreen(NAMING_SCREEN_CAUGHT_MON, gBattleStruct->caughtMonNick,
@@ -13376,7 +13387,7 @@ void BS_JumpIfRoarFails(void)
              && !IsOnPlayerSide(gBattlerAttacker)
              && !IsOnPlayerSide(gBattlerTarget))
         gBattlescriptCurrInstr = cmd->jumpInstr;
-    else if (FlagGet(B_FLAG_NO_RUNNING))
+    else if (FlagGet(WE_FLAG_NO_RUNNING))
         gBattlescriptCurrInstr = cmd->jumpInstr;
     else
         gBattlescriptCurrInstr = cmd->nextInstr;

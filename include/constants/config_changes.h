@@ -217,7 +217,7 @@
     F(B_MISSING_BADGE_CATCH_MALUS, missingBadgeCatchMalue,  (u32, GEN_COUNT - 1)) \
     F(B_CRITICAL_CAPTURE_IF_OWNED, criticalCaptureIfOwned,  (u32, GEN_COUNT - 1)) \
     /* Other settings */ \
-    F(B_WILD_NATURAL_ENEMIES,      wildNaturalEnemies,      (u32, TRUE))          /* TODO: use in tests */ \
+    F(WE_WILD_NATURAL_ENEMIES,     wildNaturalEnemies,      (u32, TRUE))          /* TODO: use in tests */ \
     F(B_AFFECTION_MECHANICS,       affectionMechanics,      (u32, TRUE))          /* TODO: use in tests */ \
     F(B_OBEDIENCE_MECHANICS,       obedienceMechanics,      (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_USE_FROSTBITE,             useFrostbite,            (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \

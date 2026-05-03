@@ -194,6 +194,8 @@ enum DebugTrainerSelection
 #define DEBUG_MAX_MENU_ITEMS 20
 #define DEBUG_MAX_SUB_MENU_LEVELS 4
 
+#define DEBUG_OPTION_CANT_BE_TOGGLED 0xFF
+
 // *******************************
 struct DebugMenuOption;
 
@@ -869,6 +871,7 @@ static void Debug_ShowMenu(DebugFunc HandleInput, const struct DebugMenuOption *
     LoadMessageBoxAndBorderGfx();
     windowId = AddWindow(&sDebugMenuWindowTemplateMain);
     DrawStdWindowFrame(windowId, FALSE);
+    CopyWindowToVram(windowId, COPYWIN_GFX);
 
     u32 totalItems = 0;
 
@@ -1239,33 +1242,25 @@ static u32 Debug_CheckToggleFlags(u8 id)
     case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_FRONTIER_PASS:
         result = FlagGet(FLAG_SYS_FRONTIER_PASS);
         break;
-    #if OW_FLAG_NO_COLLISION != 0
     case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_COLLISION:
-        result = FlagGet(OW_FLAG_NO_COLLISION);
+        result = OW_FLAG_NO_COLLISION ? FlagGet(OW_FLAG_NO_COLLISION) : DEBUG_OPTION_CANT_BE_TOGGLED;
         break;
-    #endif
-    #if OW_FLAG_NO_ENCOUNTER != 0
     case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_ENCOUNTER:
-        result = FlagGet(OW_FLAG_NO_ENCOUNTER);
+        result = WE_FLAG_NO_ENCOUNTER ? FlagGet(WE_FLAG_NO_ENCOUNTER) : DEBUG_OPTION_CANT_BE_TOGGLED;
         break;
-    #endif
-    #if OW_FLAG_NO_TRAINER_SEE != 0
     case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_TRAINER_SEE:
-        result = FlagGet(OW_FLAG_NO_TRAINER_SEE);
+        result = OW_FLAG_NO_TRAINER_SEE ? FlagGet(OW_FLAG_NO_TRAINER_SEE) : DEBUG_OPTION_CANT_BE_TOGGLED;
         break;
-    #endif
-    #if B_FLAG_NO_CATCHING != 0
     case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_CATCHING:
-        result = FlagGet(B_FLAG_NO_CATCHING);
+        result = WE_FLAG_NO_CATCHING ? FlagGet(WE_FLAG_NO_CATCHING) : DEBUG_OPTION_CANT_BE_TOGGLED;
         break;
-    #endif
     case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BAG_USE:
         result = VarGet(B_VAR_NO_BAG_USE);
         if (result >= NO_BAG_INVALID_VALUE)
             result = NO_BAG_INVALID_VALUE;
         break;
     default:
-        result = 0xFF;
+        result = DEBUG_OPTION_CANT_BE_TOGGLED;
         break;
     }
 
@@ -1299,7 +1294,7 @@ static u8 Debug_GenerateListMenuNames(void)
         if (i == DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BAG_USE && flagResult == NO_BAG_INVALID_VALUE)
             flagResult = FALSE;
 
-        if (flagResult == 0xFF)
+        if (flagResult == DEBUG_OPTION_CANT_BE_TOGGLED)
         {
             StringCopy(&sDebugMenuListData->itemNames[i][0], name);
         }
@@ -2619,14 +2614,14 @@ static void DebugAction_FlagsVars_CollisionOnOff(u8 taskId)
 
 static void DebugAction_FlagsVars_EncounterOnOff(u8 taskId)
 {
-#if OW_FLAG_NO_ENCOUNTER == 0
+#if WE_FLAG_NO_ENCOUNTER == 0
     Debug_DestroyMenu_Full_Script(taskId, Debug_FlagsNotSetOverworldConfigMessage);
 #else
-    if (FlagGet(OW_FLAG_NO_ENCOUNTER))
+    if (FlagGet(WE_FLAG_NO_ENCOUNTER))
         PlaySE(SE_PC_OFF);
     else
         PlaySE(SE_PC_LOGIN);
-    FlagToggle(OW_FLAG_NO_ENCOUNTER);
+    FlagToggle(WE_FLAG_NO_ENCOUNTER);
 #endif
 }
 
@@ -2655,14 +2650,14 @@ static void DebugAction_FlagsVars_BagUseOnOff(u8 taskId)
 
 static void DebugAction_FlagsVars_CatchingOnOff(u8 taskId)
 {
-#if B_FLAG_NO_CATCHING == 0
+#if WE_FLAG_NO_CATCHING == 0
     Debug_DestroyMenu_Full_Script(taskId, Debug_FlagsNotSetBattleConfigMessage);
 #else
-    if (FlagGet(B_FLAG_NO_CATCHING))
+    if (FlagGet(WE_FLAG_NO_CATCHING))
         PlaySE(SE_PC_OFF);
     else
         PlaySE(SE_PC_LOGIN);
-    FlagToggle(B_FLAG_NO_CATCHING);
+    FlagToggle(WE_FLAG_NO_CATCHING);
 #endif
 }
 

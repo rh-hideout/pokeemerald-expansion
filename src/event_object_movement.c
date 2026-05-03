@@ -1645,31 +1645,6 @@ static u8 InitObjectEventStateFromTemplate(const struct ObjectEventTemplate *tem
     return objectEventId;
 }
 
-u8 Unref_TryInitLocalObjectEvent(u8 localId)
-{
-    u8 i;
-    u8 objectEventCount;
-    struct ObjectEventTemplate *template;
-
-    if (gMapHeader.events != NULL)
-    {
-        if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
-            objectEventCount = GetNumBattlePyramidObjectEvents();
-        else if (InTrainerHill())
-            objectEventCount = HILL_TRAINERS_PER_FLOOR;
-        else
-            objectEventCount = gMapHeader.events->objectEventCount;
-
-        for (i = 0; i < objectEventCount; i++)
-        {
-            template = &gSaveBlock1Ptr->objectEventTemplates[i];
-            if (template->localId == localId && !FlagGet(template->flagId))
-                return InitObjectEventStateFromTemplate(template, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
-        }
-    }
-    return OBJECT_EVENTS_COUNT;
-}
-
 static u32 GetAvailableObjectEventId(u16 localId, u8 mapNum, u8 mapGroup)
 // Looks for an empty slot.
 // Returns the location of the first available slot
@@ -3514,19 +3489,6 @@ void ShiftStillObjectEventCoords(struct ObjectEvent *objectEvent)
     ShiftObjectEventCoords(objectEvent, objectEvent->currentCoords.x, objectEvent->currentCoords.y);
 }
 
-void UpdateObjectEventCoords(struct ObjectEvent *objectEvent, s16 dx, s16 dy)
-{
-    if (objectEvent->active)
-    {
-        objectEvent->initialCoords.x -= dx;
-        objectEvent->initialCoords.y -= dy;
-        objectEvent->currentCoords.x -= dx;
-        objectEvent->currentCoords.y -= dy;
-        objectEvent->previousCoords.x -= dx;
-        objectEvent->previousCoords.y -= dy;
-    }
-}
-
 void UpdateObjectEventCoordsForCameraUpdate(void)
 {
     u8 i;
@@ -3735,8 +3697,6 @@ void SetObjectEventDirection(struct ObjectEvent *objectEvent, enum Direction dir
 
 static const u8 *GetObjectEventScriptPointerByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup)
 {
-    if (localId == OBJ_EVENT_ID_FOLLOWER)
-        return EventScript_Follower;
     return GetObjectEventTemplateByLocalIdAndMap(localId, mapNum, mapGroup)->script;
 }
 
