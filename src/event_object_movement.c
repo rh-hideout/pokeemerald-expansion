@@ -175,7 +175,7 @@ static bool8 MovementType_Disguise_Callback(struct ObjectEvent *, struct Sprite 
 static bool8 MovementType_Buried_Callback(struct ObjectEvent *, struct Sprite *);
 static void CreateReflectionEffectSprites(void);
 static u8 GetObjectEventIdByLocalIdAndMapInternal(u8, u8, u8);
-static bool8 GetAvailableObjectEventId(u16, u8, u8, u8 *);
+static u32 GetAvailableObjectEventId(u16, u8, u8);
 static void SetObjectEventDynamicGraphicsId(struct ObjectEvent *);
 static void RemoveObjectEventInternal(struct ObjectEvent *);
 static u16 GetObjectEventFlagIdByObjectEventId(u8);
@@ -1587,7 +1587,8 @@ static u8 InitObjectEventStateFromTemplate(const struct ObjectEventTemplate *tem
         template = &(mapHeader->events->objectEvents[localId - 1]);
     }
 
-    if (GetAvailableObjectEventId(template->localId, mapNum, mapGroup, &objectEventId))
+    objectEventId = GetAvailableObjectEventId(template->localId, mapNum, mapGroup);
+    if (objectEventId == OBJECT_EVENTS_COUNT)
         return OBJECT_EVENTS_COUNT;
 
     if (!ShouldInitObjectEventStateFromTemplate(template, isClone, x3, y3))
@@ -1669,29 +1670,26 @@ u8 Unref_TryInitLocalObjectEvent(u8 localId)
     return OBJECT_EVENTS_COUNT;
 }
 
-static bool8 GetAvailableObjectEventId(u16 localId, u8 mapNum, u8 mapGroup, u8 *objectEventId)
+static u32 GetAvailableObjectEventId(u16 localId, u8 mapNum, u8 mapGroup)
 // Looks for an empty slot.
-// Returns FALSE and the location of the available slot
-// in *objectEventId.
+// Returns the location of the available slot
 // If no slots are available, or if the object is already
 // loaded, returns TRUE.
 {
-    u8 i = 0;
+    u32 availableId = OBJECT_EVENTS_COUNT;
 
-    for (i = 0; i < OBJECT_EVENTS_COUNT && gObjectEvents[i].active; i++)
+    for (u32 i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
-        if (gObjectEvents[i].localId == localId && gObjectEvents[i].mapNum == mapNum && gObjectEvents[i].mapGroup == mapGroup)
-            return TRUE;
-    }
-    if (i >= OBJECT_EVENTS_COUNT && !IS_LOCALID_GENERATED_OWE(localId))
-        return TryAndDespawnOldestGeneratedOWE_ToFreeObject(objectEventId);
-    *objectEventId = i;
-    for (; i < OBJECT_EVENTS_COUNT; i++)
-    {
+        // check if object is already loaded
         if (gObjectEvents[i].active && gObjectEvents[i].localId == localId && gObjectEvents[i].mapNum == mapNum && gObjectEvents[i].mapGroup == mapGroup)
-            return TRUE;
+            return OBJECT_EVENTS_COUNT;
+        //gets first available Id
+        if (availableId == OBJECT_EVENTS_COUNT && !gObjectEvents[i].active)
+            availableId = i;
     }
-    return FALSE;
+    if (availableId == OBJECT_EVENTS_COUNT && !IS_LOCALID_GENERATED_OWE(localId))
+         return TryAndDespawnOldestGeneratedOWE_ToFreeObject();
+    return availableId;
 }
 
 void RemoveObjectEvent(struct ObjectEvent *objectEvent)

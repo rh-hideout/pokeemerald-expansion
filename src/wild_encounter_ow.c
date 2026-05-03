@@ -1476,16 +1476,12 @@ void DespawnAllOverworldWildEncounters(enum TypeOWE oweType, u32 flags)
     }
 }
 
-bool32 TryAndDespawnOldestGeneratedOWE_ToFreeObject(u8 *objectEventId)
+u32 TryAndDespawnOldestGeneratedOWE_ToFreeObject(void)
 {
     if (!WE_OW_ENCOUNTERS)
-        return FALSE;
-    
-    *objectEventId = RemoveOldestGeneratedOWE();
-    if (*objectEventId == OBJECT_EVENTS_COUNT)
-        return TRUE;
-    
-    return FALSE;
+        return OBJECT_EVENTS_COUNT;
+
+    return RemoveOldestGeneratedOWE();
 }
 
 void DespawnOWEOnBattleStart(void)
