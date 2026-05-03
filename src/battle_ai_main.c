@@ -312,7 +312,7 @@ void BattleAI_SetupFlags(void)
         gAiThinkingStruct->aiFlags[B_BATTLER_3] = GetAiFlags(0xFFFF, B_BATTLER_3);
 
         // The check is here because wild natural enemies are not symmetrical.
-        if (B_WILD_NATURAL_ENEMIES && IsDoubleBattle())
+        if (WE_WILD_NATURAL_ENEMIES && IsDoubleBattle())
         {
             enum Species speciesLeft = GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_SPECIES);
             enum Species speciesRight = GetMonData(&gParties[B_TRAINER_1][1], MON_DATA_SPECIES);

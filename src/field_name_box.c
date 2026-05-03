@@ -23,19 +23,21 @@ EWRAM_DATA const u8 *gSpeakerName = NULL;
 static const u32 sNameBoxDefaultGfx[] = INCGFX_U32("graphics/text_window/name_box.png", ".4bpp");
 static const u32 sNameBoxPokenavGfx[] = INCGFX_U32("graphics/pokenav/name_box.png", ".4bpp");
 
+static void DestroyNameboxFrame(void);
 static void WindowFunc_DrawNamebox(u32, u32, u32, u32, u32, u32, u32);
 static void WindowFunc_ClearNamebox(u8, u8, u8, u8, u8, u8);
 
-void TrySpawnNamebox(u32 tileNum)
+void PrepareNamebox(u32 tileNum)
 {
     u8 *strbuf = AllocZeroed(32 * sizeof(u8));
-    if ((OW_FLAG_SUPPRESS_NAME_BOX != 0 && FlagGet(OW_FLAG_SUPPRESS_NAME_BOX)) || gSpeakerName == NULL || !strbuf)
+    if (FlagGet(OW_FLAG_SUPPRESS_NAME_BOX) || !gSpeakerName || !strbuf)
     {
         // Re-check again in case anything but !strbuf is TRUE.
         if (strbuf)
             Free(strbuf);
 
         DestroyNamebox();
+        RedrawDialogueFrame();
         return;
     }
 
@@ -53,7 +55,7 @@ void TrySpawnNamebox(u32 tileNum)
 
     if (sNameboxWindowId != WINDOW_NONE)
     {
-        DestroyNamebox();
+        DestroyNameboxFrame();
         RedrawDialogueFrame();
     }
 
@@ -82,9 +84,8 @@ void TrySpawnNamebox(u32 tileNum)
     }
 
     union TextColor savedTextColors = SaveTextColors();
-    AddTextPrinterParameterized3(sNameboxWindowId, fontId, strX, 0, colors, 0, strbuf);
+    AddTextPrinterParameterized3(sNameboxWindowId, fontId, strX, 0, colors, TEXT_SKIP_DRAW, strbuf);
     RestoreTextColors(savedTextColors);
-    PutWindowTilemap(sNameboxWindowId);
     Free(strbuf);
 }
 
@@ -99,16 +100,20 @@ void ResetNameboxData(void)
     gSpeakerName = NULL;
 }
 
+static void DestroyNameboxFrame(void)
+{
+    ClearNamebox(sNameboxWindowId, FALSE);
+    ClearWindowTilemap(sNameboxWindowId);
+    RemoveWindow(sNameboxWindowId);
+}
+
 void DestroyNamebox(void)
 {
     if (sNameboxWindowId == WINDOW_NONE)
         return;
 
-    ClearNamebox(sNameboxWindowId, TRUE);
-    ClearWindowTilemap(sNameboxWindowId);
-    RemoveWindow(sNameboxWindowId);
-    sNameboxWindowId = WINDOW_NONE;
-    gSpeakerName = NULL;
+    DestroyNameboxFrame();
+    ResetNameboxData();
 }
 
 u32 GetNameboxWidth(void)
@@ -192,9 +197,30 @@ void SetSpeaker(struct ScriptContext *ctx)
 void TrySpawnAndShowNamebox(const u8 *speaker, u32 tileNum)
 {
     gSpeakerName = speaker;
-    TrySpawnNamebox(tileNum);
-    if (sNameboxWindowId != WINDOW_NONE)
-        DrawNamebox(sNameboxWindowId, tileNum - NAME_BOX_BASE_TILES_TOTAL, TRUE);
-    else // either NULL or SP_NAME_NONE
+    if (sNameboxWindowId != WINDOW_NONE && gSpeakerName == NULL)
+    {
+        ClearNamebox(sNameboxWindowId, TRUE);
+        DestroyNamebox();
         RedrawDialogueFrame();
+        return;
+    }
+
+    PrepareNamebox(tileNum);
+    DrawNamebox(sNameboxWindowId, tileNum - NAME_BOX_BASE_TILES_TOTAL, TRUE);
+}
+
+bool32 IsSpeakerBuffered(const u8 *str)
+{
+    if (str[0] == EXT_CTRL_CODE_BEGIN
+     && str[1] == EXT_CTRL_CODE_SPEAKER
+     && str[2] >= SP_NAME_NONE)
+    {
+        gSpeakerName = gSpeakerNamesTable[str[2]];
+    }
+
+    u32 res = FALSE;
+    if (gSpeakerName)
+        res = TRUE;
+
+    return res;
 }
