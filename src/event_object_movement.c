@@ -1680,7 +1680,7 @@ static u32 GetAvailableObjectEventId(u16 localId, u8 mapNum, u8 mapGroup)
 
     // This function returns the first available id in vanilla Emerald
     // If you are certain the function can return any available/inactive with no consequence, feel free to have the loop go in order
-    for (u32 i = OBJECT_EVENTS_COUNT - 1; i >= 0; i--)
+    for (s32 i = OBJECT_EVENTS_COUNT - 1; i >= 0; i--)
     {
         // check if object is already loaded
         if (gObjectEvents[i].active)
