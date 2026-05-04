@@ -631,6 +631,13 @@
 		.endif
 	.endm
 
+	@ Like applymovement, but does not hide the follower Pokemon.
+	.macro applymovement2 localId:req, movements:req
+		.byte SCR_OP_APPLYMOVEMENTNOFOLLOWER
+		.2byte \localId
+		.4byte \movements
+	.endm
+
 	@ Blocks script execution until the movements being applied to the specified (localId) object finish.
 	@ If localId is LOCALID_NONE (0), then the id of the last-moved object will be used instead.
 	@ If the specified object is not currently being manipulated with applymovement, then this command does nothing.
