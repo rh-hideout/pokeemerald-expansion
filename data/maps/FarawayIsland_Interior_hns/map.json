@@ -34,14 +34,14 @@
       "x": 12,
       "y": 19,
       "elevation": 0,
-      "dest_map": "MAP_FARAWAY_ISLAND_ENTRANCE",
+      "dest_map": "MAP_FARAWAY_ISLAND_ENTRANCE_HNS",
       "dest_warp_id": "0"
     },
     {
       "x": 13,
       "y": 19,
       "elevation": 0,
-      "dest_map": "MAP_FARAWAY_ISLAND_ENTRANCE",
+      "dest_map": "MAP_FARAWAY_ISLAND_ENTRANCE_HNS",
       "dest_warp_id": "1"
     }
   ],

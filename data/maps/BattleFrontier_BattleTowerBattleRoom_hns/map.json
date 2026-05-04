@@ -60,14 +60,14 @@
       "x": 5,
       "y": 8,
       "elevation": 0,
-      "dest_map": "MAP_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY",
+      "dest_map": "MAP_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY_HNS",
       "dest_warp_id": "2"
     },
     {
       "x": 6,
       "y": 8,
       "elevation": 0,
-      "dest_map": "MAP_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY",
+      "dest_map": "MAP_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY_HNS",
       "dest_warp_id": "2"
     }
   ],

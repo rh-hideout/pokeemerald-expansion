@@ -34,14 +34,14 @@
       "x": 2,
       "y": 6,
       "elevation": 3,
-      "dest_map": "MAP_TRAINER_HILL_ROOF",
+      "dest_map": "MAP_TRAINER_HILL_ROOF_HNS",
       "dest_warp_id": "1"
     },
     {
       "x": 3,
       "y": 6,
       "elevation": 3,
-      "dest_map": "MAP_TRAINER_HILL_ROOF",
+      "dest_map": "MAP_TRAINER_HILL_ROOF_HNS",
       "dest_warp_id": "1"
     }
   ],

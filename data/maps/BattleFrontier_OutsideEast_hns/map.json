@@ -15,7 +15,7 @@
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": [
     {
-      "map": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST",
+      "map": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST_HNS",
       "offset": 0,
       "direction": "left"
     }
@@ -560,77 +560,77 @@
       "x": 16,
       "y": 14,
       "elevation": 0,
-      "dest_map": "MAP_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY",
+      "dest_map": "MAP_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY_HNS",
       "dest_warp_id": "0"
     },
     {
       "x": 39,
       "y": 29,
       "elevation": 0,
-      "dest_map": "MAP_BATTLE_FRONTIER_BATTLE_ARENA_LOBBY",
+      "dest_map": "MAP_BATTLE_FRONTIER_BATTLE_ARENA_LOBBY_HNS",
       "dest_warp_id": "0"
     },
     {
       "x": 45,
       "y": 56,
       "elevation": 0,
-      "dest_map": "MAP_BATTLE_FRONTIER_BATTLE_PALACE_LOBBY",
+      "dest_map": "MAP_BATTLE_FRONTIER_BATTLE_PALACE_LOBBY_HNS",
       "dest_warp_id": "0"
     },
     {
       "x": 58,
       "y": 14,
       "elevation": 0,
-      "dest_map": "MAP_BATTLE_FRONTIER_BATTLE_PYRAMID_LOBBY",
+      "dest_map": "MAP_BATTLE_FRONTIER_BATTLE_PYRAMID_LOBBY_HNS",
       "dest_warp_id": "0"
     },
     {
       "x": 35,
       "y": 12,
       "elevation": 3,
-      "dest_map": "MAP_BATTLE_FRONTIER_RANKING_HALL",
+      "dest_map": "MAP_BATTLE_FRONTIER_RANKING_HALL_HNS",
       "dest_warp_id": "0"
     },
     {
       "x": 10,
       "y": 28,
       "elevation": 0,
-      "dest_map": "MAP_BATTLE_FRONTIER_EXCHANGE_SERVICE_CORNER",
+      "dest_map": "MAP_BATTLE_FRONTIER_EXCHANGE_SERVICE_CORNER_HNS",
       "dest_warp_id": "0"
     },
     {
       "x": 22,
       "y": 51,
       "elevation": 0,
-      "dest_map": "MAP_BATTLE_FRONTIER_LOUNGE5",
+      "dest_map": "MAP_BATTLE_FRONTIER_LOUNGE5_HNS",
       "dest_warp_id": "0"
     },
     {
       "x": 5,
       "y": 8,
       "elevation": 0,
-      "dest_map": "MAP_BATTLE_FRONTIER_LOUNGE6",
+      "dest_map": "MAP_BATTLE_FRONTIER_LOUNGE6_HNS",
       "dest_warp_id": "0"
     },
     {
       "x": 65,
       "y": 31,
       "elevation": 0,
-      "dest_map": "MAP_BATTLE_FRONTIER_LOUNGE3",
+      "dest_map": "MAP_BATTLE_FRONTIER_LOUNGE3_HNS",
       "dest_warp_id": "0"
     },
     {
       "x": 14,
       "y": 51,
       "elevation": 0,
-      "dest_map": "MAP_BATTLE_FRONTIER_LOUNGE8",
+      "dest_map": "MAP_BATTLE_FRONTIER_LOUNGE8_HNS",
       "dest_warp_id": "0"
     },
     {
       "x": 12,
       "y": 45,
       "elevation": 0,
-      "dest_map": "MAP_BATTLE_FRONTIER_POKEMON_CENTER_1F",
+      "dest_map": "MAP_BATTLE_FRONTIER_POKEMON_CENTER_1F_HNS",
       "dest_warp_id": "0"
     },
     {
@@ -644,21 +644,21 @@
       "x": 19,
       "y": 45,
       "elevation": 0,
-      "dest_map": "MAP_BATTLE_FRONTIER_MART",
+      "dest_map": "MAP_BATTLE_FRONTIER_MART_HNS",
       "dest_warp_id": "0"
     },
     {
       "x": 7,
       "y": 46,
       "elevation": 0,
-      "dest_map": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST",
+      "dest_map": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST_HNS",
       "dest_warp_id": "11"
     },
     {
       "x": 0,
       "y": 7,
       "elevation": 0,
-      "dest_map": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST",
+      "dest_map": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST_HNS",
       "dest_warp_id": "12"
     }
   ],

@@ -20,14 +20,14 @@
       "x": 2,
       "y": 1,
       "elevation": 3,
-      "dest_map": "MAP_TRAINER_HILL_2F",
+      "dest_map": "MAP_TRAINER_HILL_2F_HNS",
       "dest_warp_id": "1"
     },
     {
       "x": 12,
       "y": 1,
       "elevation": 3,
-      "dest_map": "MAP_TRAINER_HILL_4F",
+      "dest_map": "MAP_TRAINER_HILL_4F_HNS",
       "dest_warp_id": "0"
     }
   ],

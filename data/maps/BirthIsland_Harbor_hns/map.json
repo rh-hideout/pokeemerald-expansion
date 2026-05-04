@@ -47,7 +47,7 @@
       "x": 8,
       "y": 2,
       "elevation": 0,
-      "dest_map": "MAP_BIRTH_ISLAND_EXTERIOR",
+      "dest_map": "MAP_BIRTH_ISLAND_EXTERIOR_HNS",
       "dest_warp_id": "0"
     }
   ],

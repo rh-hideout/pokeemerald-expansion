@@ -86,14 +86,14 @@
       "x": 1,
       "y": 6,
       "elevation": 4,
-      "dest_map": "MAP_BATTLE_FRONTIER_POKEMON_CENTER_1F",
+      "dest_map": "MAP_BATTLE_FRONTIER_POKEMON_CENTER_1F_HNS",
       "dest_warp_id": "2"
     },
     {
       "x": 5,
       "y": 1,
       "elevation": 3,
-      "dest_map": "MAP_UNION_ROOM",
+      "dest_map": "MAP_UNION_ROOM_HNS",
       "dest_warp_id": "0"
     },
     {

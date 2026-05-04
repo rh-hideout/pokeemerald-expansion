@@ -73,7 +73,7 @@
       "x": 8,
       "y": 19,
       "elevation": 0,
-      "dest_map": "MAP_BIRTH_ISLAND_HARBOR",
+      "dest_map": "MAP_BIRTH_ISLAND_HARBOR_HNS",
       "dest_warp_id": "0"
     }
   ],

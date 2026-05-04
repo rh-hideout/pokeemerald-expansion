@@ -73,14 +73,14 @@
       "x": 1,
       "y": 7,
       "elevation": 0,
-      "dest_map": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST",
+      "dest_map": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST_HNS",
       "dest_warp_id": "6"
     },
     {
       "x": 2,
       "y": 7,
       "elevation": 0,
-      "dest_map": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST",
+      "dest_map": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST_HNS",
       "dest_warp_id": "6"
     }
   ],
