@@ -9329,8 +9329,8 @@
       "name": "TestMap2_hns_Layout",
       "width": 80,
       "height": 30,
-      "primary_tileset": "gTileset_Johto_General",
-      "secondary_tileset": "gTileset_NationalPark",
+      "primary_tileset": "gTileset_Johto_Building",
+      "secondary_tileset": "gTileset_BlackthornGym",
       "border_filepath": "data/layouts/TestMap2_hns/border.bin",
       "blockdata_filepath": "data/layouts/TestMap2_hns/map.bin",
       "layout_version": "hns"
@@ -9341,7 +9341,7 @@
       "width": 80,
       "height": 30,
       "primary_tileset": "gTileset_Johto_General",
-      "secondary_tileset": "gTileset_NationalPark",
+      "secondary_tileset": "gTileset_Ecruteak_City",
       "border_filepath": "data/layouts/TestMap1_hns/border.bin",
       "blockdata_filepath": "data/layouts/TestMap1_hns/map.bin",
       "layout_version": "hns"
