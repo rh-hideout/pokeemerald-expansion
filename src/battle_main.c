@@ -128,7 +128,6 @@ static void HandleEndTurn_BattleLost(void);
 static void HandleEndTurn_RanFromBattle(void);
 static void HandleEndTurn_MonFled(void);
 static void HandleEndTurn_FinishBattle(void);
-static u32 Crc32B (const u8 *data, u32 size);
 static u32 GeneratePartyHash(const struct Trainer *trainer, u32 i);
 
 EWRAM_DATA u16 gBattle_BG0_X = 0;
@@ -1803,26 +1802,6 @@ void CB2_QuitRecordedBattle(void)
         FreeAllWindowBuffers();
         SetMainCallback2(gMain.savedCallback);
     }
-}
-
-static u32 Crc32B (const u8 *data, u32 size)
-{
-   s32 i, j;
-   u32 byte, crc, mask;
-
-   i = 0;
-   crc = 0xFFFFFFFF;
-   for (i = 0; i < size; ++i)
-   {
-        byte = data[i];
-        crc = crc ^ byte;
-        for (j = 7; j >= 0; --j)
-        {
-            mask = -(crc & 1);
-            crc = (crc >> 1) ^ (0xEDB88320 & mask);
-        }
-   }
-   return ~crc;
 }
 
 static u32 GeneratePartyHash(const struct Trainer *trainer, u32 i)

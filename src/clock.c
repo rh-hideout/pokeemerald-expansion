@@ -37,6 +37,13 @@ void DoTimeBasedEvents(void)
     }
 }
 
+static void UpdateDailySeed(void)
+{
+    #if OW_USE_DAILY_SEED
+    gSaveBlock3Ptr->dailySeed = Random32();
+    #endif
+}
+
 static void UpdatePerDay(struct Time *localTime)
 {
     u16 *days = GetVarPointer(VAR_DAYS);
@@ -46,6 +53,7 @@ static void UpdatePerDay(struct Time *localTime)
     {
         daysSince = localTime->days - *days;
         ClearDailyFlags();
+        UpdateDailySeed();
         UpdateDewfordTrendPerDay(daysSince);
         UpdateTVShowsPerDay(daysSince);
         UpdateWeatherPerDay(daysSince);

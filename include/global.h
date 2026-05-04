@@ -255,6 +255,9 @@ struct NPCFollower
 
 struct SaveBlock3
 {
+#if OW_USE_DAILY_SEED
+    u32 dailySeed;
+#endif
 #if OW_USE_FAKE_RTC
     struct SiiRtcInfo fakeRTC;
 #endif
