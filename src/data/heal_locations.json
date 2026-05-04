@@ -349,6 +349,232 @@
       "y": 12,
       "respawn_map": "MAP_SIX_ISLAND_POKEMON_CENTER_1F",
       "respawn_npc": "LOCALID_SIX_ISLAND_NURSE"
+    },
+    {
+      "id": "HEAL_LOCATION_NEW_BARK_TOWN_HNS",
+      "map": "MAP_NEW_BARK_TOWN",
+      "x": 20,
+      "y": 12,
+      "respawn_map": "MAP_NEW_BARK_TOWN_LAB",
+      "respawn_npc": "LOCALID_NONE"
+    },
+    {
+      "id": "HEAL_LOCATION_CHERRYGROVE_CITY_HNS",
+      "map": "MAP_CHERRYGROVE_CITY",
+      "x": 47,
+      "y": 8,
+      "respawn_map": "MAP_CHERRYGROVE_CITY_POKEMON_CENTER",
+      "respawn_npc": "LOCALID_NONE"
+    },
+    {
+      "id": "HEAL_LOCATION_VIOLET_CITY_HNS",
+      "map": "MAP_VIOLET_CITY",
+      "x": 39,
+      "y": 46,
+      "respawn_map": "MAP_VIOLET_CITY_POKEMON_CENTER",
+      "respawn_npc": "LOCALID_NONE"
+    },
+    {
+      "id": "HEAL_LOCATION_AZALEA_TOWN_HNS",
+      "map": "MAP_AZALEA_TOWN",
+      "x": 31,
+      "y": 16,
+      "respawn_map": "MAP_AZALEA_TOWN_POKEMON_CENTER",
+      "respawn_npc": "LOCALID_NONE"
+    },
+    {
+      "id": "HEAL_LOCATION_GOLDENROD_CITY_HNS",
+      "map": "MAP_GOLDENROD_CITY",
+      "x": 28,
+      "y": 37,
+      "respawn_map": "MAP_GOLDENROD_CITY_POKEMON_CENTER",
+      "respawn_npc": "LOCALID_NONE"
+    },
+    {
+      "id": "HEAL_LOCATION_ECRUTEAK_CITY_HNS",
+      "map": "MAP_ECRUTEAK_CITY",
+      "x": 39,
+      "y": 48,
+      "respawn_map": "MAP_ECRUTEAK_CITY_POKEMON_CENTER",
+      "respawn_npc": "LOCALID_NONE"
+    },
+    {
+      "id": "HEAL_LOCATION_OLIVINE_CITY_HNS",
+      "map": "MAP_OLIVINE_CITY",
+      "x": 15,
+      "y": 44,
+      "respawn_map": "MAP_OLIVINE_CITY_POKEMON_CENTER",
+      "respawn_npc": "LOCALID_NONE"
+    },
+    {
+      "id": "HEAL_LOCATION_CIANWOOD_CITY_HNS",
+      "map": "MAP_CIANWOOD_CITY",
+      "x": 31,
+      "y": 46,
+      "respawn_map": "MAP_CIANWOOD_POKECENTER",
+      "respawn_npc": "LOCALID_NONE"
+    },
+    {
+      "id": "HEAL_LOCATION_MAHOGANY_TOWN_HNS",
+      "map": "MAP_MAHOGANY_TOWN",
+      "x": 21,
+      "y": 20,
+      "respawn_map": "MAP_MAHOGANY_TOWN_POKEMON_CENTER",
+      "respawn_npc": "LOCALID_NONE"
+    },
+    {
+      "id": "HEAL_LOCATION_BLACKTHORN_CITY_HNS",
+      "map": "MAP_BLACKTHORN_CITY",
+      "x": 27,
+      "y": 49,
+      "respawn_map": "MAP_BLACKTHORN_CITY_POKEMON_CENTER",
+      "respawn_npc": "LOCALID_NONE"
+    },
+    {
+      "id": "HEAL_LOCATION_PALLET_TOWN_HNS",
+      "map": "MAP_PALLET_TOWN",
+      "x": 11,
+      "y": 9,
+      "respawn_map": "MAP_PALLET_TOWN_REDS_HOUSE_1F",
+      "respawn_npc": "LOCALID_NONE"
+    },
+    {
+      "id": "HEAL_LOCATION_VIRIDIAN_CITY_HNS",
+      "map": "MAP_VIRIDIAN_CITY",
+      "x": 26,
+      "y": 27,
+      "respawn_map": "MAP_VIRIDIAN_CITY_POKEMON_CENTER",
+      "respawn_npc": "LOCALID_NONE"
+    },
+    {
+      "id": "HEAL_LOCATION_PEWTER_CITY_HNS",
+      "map": "MAP_PEWTER_CITY",
+      "x": 19,
+      "y": 30,
+      "respawn_map": "MAP_PEWTER_CITY_POKEMON_CENTER",
+      "respawn_npc": "LOCALID_NONE"
+    },
+    {
+      "id": "HEAL_LOCATION_CERULEAN_CITY_HNS",
+      "map": "MAP_CERULEAN_CITY",
+      "x": 30,
+      "y": 20,
+      "respawn_map": "MAP_CERULEAN_CITY_POKEMON_CENTER",
+      "respawn_npc": "LOCALID_NONE"
+    },
+    {
+      "id": "HEAL_LOCATION_VERMILION_CITY_HNS",
+      "map": "MAP_VERMILION_CITY",
+      "x": 22,
+      "y": 5,
+      "respawn_map": "MAP_VERMILION_CITY_POKEMON_CENTER",
+      "respawn_npc": "LOCALID_NONE"
+    },
+    {
+      "id": "HEAL_LOCATION_LAVENDER_TOWN_HNS",
+      "map": "MAP_LAVENDER_TOWN",
+      "x": 10,
+      "y": 6,
+      "respawn_map": "MAP_LAVENDER_TOWN_POKEMON_CENTER",
+      "respawn_npc": "LOCALID_NONE"
+    },
+    {
+      "id": "HEAL_LOCATION_CELADON_CITY_HNS",
+      "map": "MAP_CELADON_CITY",
+      "x": 48,
+      "y": 12,
+      "respawn_map": "MAP_CELADON_CITY_POKEMON_CENTER",
+      "respawn_npc": "LOCALID_NONE"
+    },
+    {
+      "id": "HEAL_LOCATION_SAFFRON_CITY_HNS",
+      "map": "MAP_SAFFRON_CITY",
+      "x": 16,
+      "y": 39,
+      "respawn_map": "MAP_SAFFRON_CITY_POKEMON_CENTER",
+      "respawn_npc": "LOCALID_NONE"
+    },
+    {
+      "id": "HEAL_LOCATION_FUCHSIA_CITY_HNS",
+      "map": "MAP_FUCHSIA_CITY",
+      "x": 25,
+      "y": 32,
+      "respawn_map": "MAP_FUCHSIA_CITY_POKEMON_CENTER",
+      "respawn_npc": "LOCALID_NONE"
+    },
+    {
+      "id": "HEAL_LOCATION_CINNABAR_ISLAND_HNS",
+      "map": "MAP_CINNABAR_ISLAND",
+      "x": 45,
+      "y": 30,
+      "respawn_map": "MAP_CINNABAR_ISLAND_POKEMON_CENTER",
+      "respawn_npc": "LOCALID_NONE"
+    },
+    {
+      "id": "HEAL_LOCATION_MT_SILVER_HNS",
+      "map": "MAP_MT_SILVER_OUTSIDE",
+      "x": 25,
+      "y": 15
+    },
+    {
+      "id": "HEAL_LOCATION_LAKE_OF_RAGE_HNS",
+      "map": "MAP_LAKE_OF_RAGE",
+      "x": 31,
+      "y": 43
+    },
+    {
+      "id": "HEAL_LOCATION_INDIGO_PLATEAU_HNS",
+      "map": "MAP_INDIGO_PLATEAU",
+      "x": 11,
+      "y": 7,
+      "respawn_map": "MAP_INDIGO_PLATEAU_POKEMON_CENTER",
+      "respawn_npc": "LOCALID_NONE"
+    },
+    {
+      "id": "HEAL_LOCATION_SAFARI_ZONE_GATE_HNS",
+      "map": "MAP_SAFARI_ZONE_GATE",
+      "x": 11,
+      "y": 16
+    },
+    {
+      "id": "HEAL_LOCATION_NEW_MAP1_HNS",
+      "map": "MAP_NEW_MAP1",
+      "x": 22,
+      "y": 18
+    },
+    {
+      "id": "HEAL_LOCATION_NEW_BARK_TOWN_PLAYERS_HOUSE_2F_HNS",
+      "map": "MAP_NEW_BARK_TOWN_PLAYERS_HOUSE_2F",
+      "x": 4,
+      "y": 4,
+      "respawn_map": "MAP_NEW_BARK_TOWN_PLAYERS_HOUSE_1F",
+      "respawn_npc": "LOCALID_NONE"
+    },
+    {
+      "id": "HEAL_LOCATION_ROUTE_32_HNS",
+      "map": "MAP_ROUTE32",
+      "x": 25,
+      "y": 85
+    },
+    {
+      "id": "HEAL_LOCATION_ROUTE26NORTH_HNS",
+      "map": "MAP_ROUTE26NORTH",
+      "x": 12,
+      "y": 6
+    },
+    {
+      "id": "HEAL_LOCATION_BATTLE_FRONTIER_OUTSIDE_EAST_HNS",
+      "map": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST_HNS",
+      "x": 3,
+      "y": 52,
+      "respawn_map": "MAP_BATTLE_FRONTIER_POKEMON_CENTER_1F_HNS",
+      "respawn_npc": "LOCALID_NONE"
+    },
+    {
+      "id": "HEAL_LOCATION_SOUTHERN_ISLAND_EXTERIOR_HNS",
+      "map": "MAP_SOUTHERN_ISLAND_EXTERIOR_HNS",
+      "x": 15,
+      "y": 20
     }
   ]
 }
