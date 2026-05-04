@@ -1457,7 +1457,6 @@ static void TilesetAnim_SilphCo_Hns(u16);
 static void QueueAnimTiles_SilphCo_Hns_Fountain(u16);
 static void TilesetAnim_BlackthornGym(u16);
 static void QueueAnimTiles_BlackthornGym_Lava(u16);
-static void QueueAnimTiles_BlackthornGym_Steam(u8);
 
 // Johto General primary tileset frame data
 
@@ -1802,8 +1801,6 @@ void InitTilesetAnim_BlackthornGym(void)
 
 static void TilesetAnim_BlackthornGym(u16 timer)
 {
-    if (timer % 16 == 0)
-        QueueAnimTiles_BlackthornGym_Steam(timer / 16);
     if (timer % 16 == 1)
         QueueAnimTiles_BlackthornGym_Lava(timer / 16);
 }
@@ -1811,16 +1808,7 @@ static void TilesetAnim_BlackthornGym(u16 timer)
 static void QueueAnimTiles_BlackthornGym_Lava(u16 timer)
 {
     u16 i = timer % ARRAY_COUNT(gTilesetAnims_Lavaridge_Cave_Lava);
-    AppendTilesetAnimToBuffer(gTilesetAnims_Lavaridge_Cave_Lava[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(NUM_TILES_IN_PRIMARY + 305)), 4 * TILE_SIZE_4BPP);
-}
-
-static void QueueAnimTiles_BlackthornGym_Steam(u8 timer)
-{
-    u8 i = timer % ARRAY_COUNT(gTilesetAnims_Lavaridge_Steam);
-    AppendTilesetAnimToBuffer(gTilesetAnims_Lavaridge_Steam[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(NUM_TILES_IN_PRIMARY + 320)), 4 * TILE_SIZE_4BPP);
-
-    i = (timer + 2) % (int)ARRAY_COUNT(gTilesetAnims_Lavaridge_Steam);
-    AppendTilesetAnimToBuffer(gTilesetAnims_Lavaridge_Steam[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(NUM_TILES_IN_PRIMARY + 336)), 4 * TILE_SIZE_4BPP);
+    AppendTilesetAnimToBuffer(gTilesetAnims_Lavaridge_Cave_Lava[i], (u16 *)(BG_VRAM + TILE_OFFSET_4BPP(NUM_TILES_IN_PRIMARY + 321)), 4 * TILE_SIZE_4BPP);
 }
 
 #endif // IS_HNS
