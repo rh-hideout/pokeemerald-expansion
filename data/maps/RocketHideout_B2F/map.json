@@ -433,7 +433,7 @@
       "script": "RocketHideout_B2F_Trigger_Electrode"
     }
   ],
-  "bg_events": [
-
-  ]
+  "bg_events": [],
+  "game_version": "hns",
+  "region": "REGION_JOHTO"
 }

@@ -117,9 +117,7 @@
       "flag": "0"
     }
   ],
-  "warp_events": [
-
-  ],
+  "warp_events": [],
   "coord_events": [
     {
       "type": "trigger",
@@ -149,7 +147,7 @@
       "script": "Route24_Trigger_GruntScene"
     }
   ],
-  "bg_events": [
-
-  ]
+  "bg_events": [],
+  "game_version": "hns",
+  "region": "REGION_KANTO"
 }

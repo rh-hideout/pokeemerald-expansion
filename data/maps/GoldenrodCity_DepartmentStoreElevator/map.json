@@ -13,9 +13,7 @@
   "show_map_name": false,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": 0,
-  "object_events": [
-
-  ],
+  "object_events": [],
   "warp_events": [
     {
       "x": 2,
@@ -25,9 +23,7 @@
       "dest_warp_id": "WARP_ID_DYNAMIC"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",
@@ -37,5 +33,7 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "NULL"
     }
-  ]
+  ],
+  "game_version": "hns",
+  "region": "REGION_JOHTO"
 }

@@ -765,5 +765,6 @@
   "warp_events": [],
   "coord_events": [],
   "bg_events": [],
-  "game_version": "hns"
+  "game_version": "hns",
+  "region": "REGION_JOHTO"
 }

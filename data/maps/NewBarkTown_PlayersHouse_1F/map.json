@@ -77,7 +77,7 @@
       "script": "NewBarkTown_PlayersHouse_1F_EventScript_MomsIntroTrigger1"
     }
   ],
-  "bg_events": [
-
-  ]
+  "bg_events": [],
+  "game_version": "hns",
+  "region": "REGION_JOHTO"
 }

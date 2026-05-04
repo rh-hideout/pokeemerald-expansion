@@ -724,5 +724,7 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "VermilionCity_EventScript_DiglettsCaveSign"
     }
-  ]
+  ],
+  "game_version": "hns",
+  "region": "REGION_KANTO"
 }

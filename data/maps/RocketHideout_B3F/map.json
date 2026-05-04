@@ -374,5 +374,7 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "RocketHideout_B3F_EventScript_Door"
     }
-  ]
+  ],
+  "game_version": "hns",
+  "region": "REGION_JOHTO"
 }

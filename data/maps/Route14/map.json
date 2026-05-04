@@ -143,9 +143,7 @@
       "flag": "0"
     }
   ],
-  "warp_events": [
-
-  ],
+  "warp_events": [],
   "coord_events": [
     {
       "type": "trigger",
@@ -193,7 +191,7 @@
       "script": "Route14_TriggerSuicune_1"
     }
   ],
-  "bg_events": [
-
-  ]
+  "bg_events": [],
+  "game_version": "hns",
+  "region": "REGION_KANTO"
 }

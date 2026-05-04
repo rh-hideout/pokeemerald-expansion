@@ -83,9 +83,7 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",
@@ -151,5 +149,7 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "RuinsOfAlph_PuzzleAndRewardChambers_MapScript_StatueDescription"
     }
-  ]
+  ],
+  "game_version": "hns",
+  "region": "REGION_JOHTO"
 }

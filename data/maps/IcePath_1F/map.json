@@ -199,7 +199,7 @@
       "script": "IcePath_1F_Trigger_KimonoGirl"
     }
   ],
-  "bg_events": [
-
-  ]
+  "bg_events": [],
+  "game_version": "hns",
+  "region": "REGION_JOHTO"
 }

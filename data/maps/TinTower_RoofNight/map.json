@@ -139,7 +139,7 @@
       "script": "TinTower_RoofDay_EventScript_TalkToKimono"
     }
   ],
-  "bg_events": [
-
-  ]
+  "bg_events": [],
+  "game_version": "hns",
+  "region": "REGION_JOHTO"
 }

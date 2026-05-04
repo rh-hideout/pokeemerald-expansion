@@ -204,7 +204,7 @@
       "script": "GoldenrodDeptElevator_EventScript_Elevator"
     }
   ],
-  "bg_events": [
-
-  ]
+  "bg_events": [],
+  "game_version": "hns",
+  "region": "REGION_JOHTO"
 }

@@ -230,10 +230,8 @@
       "dest_warp_id": "3"
     }
   ],
-  "coord_events": [
-
-  ],
-  "bg_events": [
-
-  ]
+  "coord_events": [],
+  "bg_events": [],
+  "game_version": "hns",
+  "region": "REGION_JOHTO"
 }

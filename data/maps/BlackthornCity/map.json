@@ -453,5 +453,7 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "BlackthornCity_EventScript_CitySign"
     }
-  ]
+  ],
+  "game_version": "hns",
+  "region": "REGION_JOHTO"
 }

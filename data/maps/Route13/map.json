@@ -174,12 +174,8 @@
       "flag": "0"
     }
   ],
-  "warp_events": [
-
-  ],
-  "coord_events": [
-
-  ],
+  "warp_events": [],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",
@@ -213,5 +209,7 @@
       "item": "ITEM_CALCIUM",
       "flag": "FLAG_ITEM_ROUTE13_CALCIUM"
     }
-  ]
+  ],
+  "game_version": "hns",
+  "region": "REGION_KANTO"
 }

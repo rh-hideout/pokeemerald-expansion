@@ -102,9 +102,7 @@
       "dest_warp_id": "12"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",
@@ -130,5 +128,7 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "EventScript_BookShelf"
     }
-  ]
+  ],
+  "game_version": "hns",
+  "region": "REGION_KANTO"
 }

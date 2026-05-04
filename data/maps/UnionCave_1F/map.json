@@ -381,7 +381,7 @@
       "script": "UnionCave_1F_Trigger_Monview"
     }
   ],
-  "bg_events": [
-
-  ]
+  "bg_events": [],
+  "game_version": "hns",
+  "region": "REGION_JOHTO"
 }
