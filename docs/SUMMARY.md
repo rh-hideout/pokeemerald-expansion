@@ -49,6 +49,7 @@
   - [How to delete vanilla maps](tutorials/how_to_delete_vanilla_maps.md)
 - [Changelog](./CHANGELOG.md)
     - [1.15.x]()
+        - [Version 1.15.2](changelogs/1.15.x/1.15.2.md)
         - [Version 1.15.1](changelogs/1.15.x/1.15.1.md)
         - [Version 1.15.0](changelogs/1.15.x/1.15.0.md)
     - [1.14.x]()

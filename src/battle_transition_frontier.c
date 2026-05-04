@@ -45,10 +45,10 @@ static bool8 CirclesSymmetricSpiralInSeq_End(struct Task *task);
 
 #define PALTAG_LOGO_CIRCLES 0x2E90
 
-static const u32 sLogoCenter_Gfx[] = INCBIN_U32("graphics/battle_transitions/frontier_logo_center.4bpp.smol");
+static const u32 sLogoCenter_Gfx[] = INCGFX_U32("graphics/battle_transitions/frontier_logo_center.png", ".4bpp.smol", "-num_tiles 43 -Wnum_tiles");
 static const u32 sLogoCenter_Tilemap[] = INCBIN_U32("graphics/battle_transitions/frontier_logo_center.bin.smolTM");
-static const u32 sLogoCircles_Gfx[] = INCBIN_U32("graphics/battle_transitions/frontier_logo_circles.4bpp.smol");
-static const u16 sLogo_Pal[] = INCBIN_U16("graphics/battle_transitions/frontier_logo_circles.gbapal");
+static const u32 sLogoCircles_Gfx[] = INCGFX_U32("graphics/battle_transitions/frontier_logo_circles.png", ".4bpp.smol");
+static const u16 sLogo_Pal[] = INCGFX_U16("graphics/battle_transitions/frontier_logo_circles.png", ".gbapal");
 
 static const struct OamData sOamData_LogoCircles =
 {

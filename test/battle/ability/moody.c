@@ -74,3 +74,18 @@ SINGLE_BATTLE_TEST("Moody randomly raises the holder's Attack, Defense, Sp. Atk,
             EXPECT_NE(player->statStages[stat], DEFAULT_STAT_STAGE + 1); // Both raised and lowered
     }
 }
+
+SINGLE_BATTLE_TEST("Moody activates at the end of the turn when switched in")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_OCTILLERY) { Ability(ABILITY_MOODY); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { SWITCH(player, 1); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_MOODY);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+    }
+}

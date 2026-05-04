@@ -95,6 +95,26 @@ SINGLE_BATTLE_TEST("Synchronize does not inflict status on a target with status 
     }
 }
 
+SINGLE_BATTLE_TEST("Synchronize does not trigger when holder inflicts status with its own move")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_THUNDER_WAVE) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_THUNDER_WAVE) == MOVE_EFFECT_PARALYSIS);
+        PLAYER(SPECIES_ABRA) { Ability(ABILITY_SYNCHRONIZE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_THUNDER_WAVE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER_WAVE, player);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, opponent);
+        STATUS_ICON(opponent, paralysis: TRUE);
+        NONE_OF {
+            ABILITY_POPUP(player, ABILITY_SYNCHRONIZE);
+            STATUS_ICON(player, paralysis: TRUE);
+        }
+    }
+}
+
 SINGLE_BATTLE_TEST("Synchronize does not trigger from Toxic Spikes")
 {
     GIVEN {

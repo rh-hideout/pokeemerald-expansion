@@ -1138,6 +1138,7 @@ static void SetInitialEggData(struct Pokemon *mon, u16 species, struct DayCare *
 
     personality = daycare->offspringPersonality;
     CreateMonWithIVs(mon, species, EGG_HATCH_LEVEL, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
+    GiveMonInitialMoveset(mon);
     metLevel = 0;
     ball = BALL_POKE;
     language = LANGUAGE_JAPANESE;
