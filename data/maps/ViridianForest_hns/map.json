@@ -12,7 +12,7 @@
   "allow_running": true,
   "show_map_name": true,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
-  "connections": 0,
+  "connections": null,
   "object_events": [
     {
       "graphics_id": "OBJ_EVENT_GFX_BUG_CATCHER_HNS",
@@ -210,6 +210,7 @@
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_VIRIDIAN_BUGSY",
       "graphics_id": "OBJ_EVENT_GFX_BUGSY_HNS",
       "x": 33,
       "y": 41,
@@ -220,8 +221,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "ViridianForest_EventScript_Bugsy",
-      "flag": "FLAG_HIDE_VIRIDIAN_BUGSY",
-      "local_id": "LOCALID_VIRIDIAN_BUGSY"
+      "flag": "FLAG_HIDE_VIRIDIAN_BUGSY"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_WEEDLE",

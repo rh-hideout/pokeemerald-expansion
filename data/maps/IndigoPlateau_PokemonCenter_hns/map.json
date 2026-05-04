@@ -12,9 +12,10 @@
   "allow_running": true,
   "show_map_name": false,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
-  "connections": 0,
+  "connections": null,
   "object_events": [
     {
+      "local_id": "LOCALID_NURSE",
       "graphics_id": "OBJ_EVENT_GFX_NURSE_HNS",
       "x": 19,
       "y": 10,
@@ -25,8 +26,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "OldaleTown_PokemonCenter_1F_EventScript_Nurse",
-      "flag": "0",
-      "local_id": "LOCALID_NURSE"
+      "flag": "0"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_NURSE_CHANSEY_HNS",
@@ -81,6 +81,7 @@
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_INDIGOPLATEAU_ABRA",
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_ABRA",
       "x": 28,
       "y": 15,
@@ -91,8 +92,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "IndigoPlateau_EventScript_Abra",
-      "flag": "0",
-      "local_id": "LOCALID_INDIGOPLATEAU_ABRA"
+      "flag": "0"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_SILVER_HNS",

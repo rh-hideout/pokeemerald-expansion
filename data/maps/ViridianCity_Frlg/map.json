@@ -1,10 +1,8 @@
 {
   "id": "MAP_VIRIDIAN_CITY",
   "name": "ViridianCity_Frlg",
-  "game_version": "frlg",
   "layout": "LAYOUT_VIRIDIAN_CITY",
   "music": "MUS_RG_PEWTER",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_VIRIDIAN_CITY",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -13,7 +11,6 @@
   "allow_escaping": false,
   "allow_running": true,
   "show_map_name": true,
-  "floor_number": 0,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": [
     {
@@ -34,7 +31,6 @@
   ],
   "object_events": [
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_FAT_MAN_FRLG",
       "x": 8,
       "y": 26,
@@ -48,7 +44,6 @@
       "flag": "0"
     },
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG",
       "x": 11,
       "y": 24,
@@ -63,7 +58,6 @@
     },
     {
       "local_id": "LOCALID_VIRIDIAN_OLD_MAN",
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_OLD_MAN_1",
       "x": 34,
       "y": 11,
@@ -78,7 +72,6 @@
     },
     {
       "local_id": "LOCALID_TUTORIAL_MAN",
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_VAR_0",
       "x": 21,
       "y": 6,
@@ -93,7 +86,6 @@
     },
     {
       "local_id": "LOCALID_VIRIDIAN_WOMAN",
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_WOMAN_3_FRLG",
       "x": 20,
       "y": 12,
@@ -107,7 +99,6 @@
       "flag": "0"
     },
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER_FRLG",
       "x": 33,
       "y": 26,
@@ -121,7 +112,6 @@
       "flag": "0"
     },
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_BOY",
       "x": 16,
       "y": 22,
@@ -136,7 +126,6 @@
     },
     {
       "local_id": "LOCALID_VIRIDIAN_BORDER_TREE",
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG",
       "x": 18,
       "y": 5,
@@ -150,7 +139,6 @@
       "flag": "FLAG_TEMP_12"
     },
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
       "x": 17,
       "y": 5,
@@ -280,5 +268,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "ViridianCity_EventScript_GymDoor"
     }
-  ]
+  ],
+  "floor_number": 0,
+  "game_version": "frlg",
+  "region": "REGION_KANTO"
 }

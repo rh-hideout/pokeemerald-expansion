@@ -12,9 +12,10 @@
   "allow_running": true,
   "show_map_name": true,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
-  "connections": 0,
+  "connections": null,
   "object_events": [
     {
+      "local_id": "LOCALID_BURNED_TOWER_EUSINE",
       "graphics_id": "OBJ_EVENT_GFX_EUSINE_HNS",
       "x": 15,
       "y": 19,
@@ -25,8 +26,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "BurnedTower_1F_EventScript_Eusine",
-      "flag": "FLAG_HIDE_BURNED_TOWER_NPCS",
-      "local_id": "LOCALID_BURNED_TOWER_EUSINE"
+      "flag": "FLAG_HIDE_BURNED_TOWER_NPCS"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MORTY_HNS",
@@ -42,6 +42,7 @@
       "flag": "FLAG_HIDE_BURNED_TOWER_NPCS"
     },
     {
+      "local_id": "LOCALID_BURNED_TOWER_SILVER",
       "graphics_id": "OBJ_EVENT_GFX_SILVER_HNS",
       "x": 18,
       "y": 12,
@@ -52,8 +53,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_BURNED_TOWER_NPCS",
-      "local_id": "LOCALID_BURNED_TOWER_SILVER"
+      "flag": "FLAG_HIDE_BURNED_TOWER_NPCS"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_FIREBREATHER_HNS",

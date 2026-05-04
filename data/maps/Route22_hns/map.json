@@ -91,6 +91,7 @@
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_ROUTE22_GIOVANNI",
       "graphics_id": "OBJ_EVENT_GFX_GIOVANNI_HNS",
       "x": 12,
       "y": 17,
@@ -101,10 +102,10 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_ROUTE22_GIOVANNI_SILVER",
-      "local_id": "LOCALID_ROUTE22_GIOVANNI"
+      "flag": "FLAG_HIDE_ROUTE22_GIOVANNI_SILVER"
     },
     {
+      "local_id": "LOCALID_ROUTE22_SILVER",
       "graphics_id": "OBJ_EVENT_GFX_SILVER_HNS",
       "x": 15,
       "y": 17,
@@ -115,8 +116,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_ROUTE22_GIOVANNI_SILVER",
-      "local_id": "LOCALID_ROUTE22_SILVER"
+      "flag": "FLAG_HIDE_ROUTE22_GIOVANNI_SILVER"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",

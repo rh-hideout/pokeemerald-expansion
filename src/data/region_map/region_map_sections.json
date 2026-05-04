@@ -1678,6 +1678,21 @@
       "width": 1,
       "height": 1,
       "in_hns": true
+    },
+    {
+      "id": "MAPSEC_BURNED_TOWER"
+    },
+    {
+      "id": "MAPSEC_CHERRYGROVE_CITY"
+    },
+    {
+      "id": "MAPSEC_ROUTE_26"
+    },
+    {
+      "id": "MAPSEC_ROUTE_30"
+    },
+    {
+      "id": "MAPSEC_ROUTE_29"
     }
   ],
   "hns_map_sections": [

@@ -91,6 +91,7 @@
       "flag": "FLAG_TEMP_1"
     },
     {
+      "local_id": "LOCALID_ROUTE_30_JOEY",
       "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER_HNS",
       "x": 23,
       "y": 25,
@@ -101,8 +102,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "Route30_EventScript_Youngster_Joey_Fighting",
-      "flag": "FLAG_MOM_VISITED",
-      "local_id": "LOCALID_ROUTE_30_JOEY"
+      "flag": "FLAG_MOM_VISITED"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER_HNS",

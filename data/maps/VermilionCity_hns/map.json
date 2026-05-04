@@ -36,6 +36,7 @@
   ],
   "object_events": [
     {
+      "local_id": "LOCALID_VERMILION_SNORLAX",
       "graphics_id": "OBJ_EVENT_GFX_SLEEPING_SNORLAX_HNS",
       "x": 61,
       "y": 13,
@@ -46,8 +47,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "VermilionCity_EventScript_Snorlax",
-      "flag": "FLAG_HIDE_VERMILION_SNORLAX",
-      "local_id": "LOCALID_VERMILION_SNORLAX"
+      "flag": "FLAG_HIDE_VERMILION_SNORLAX"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_HIKER_HNS",
@@ -323,6 +323,7 @@
       "flag": "FLAG_ITEM_VERMILION_OLD_SEA_MAP"
     },
     {
+      "local_id": "LOCALID_VERMILION_SUICUNE",
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_SUICUNE",
       "x": 55,
       "y": 28,
@@ -333,10 +334,10 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_VERMILION_EUSINE_SUICUNE",
-      "local_id": "LOCALID_VERMILION_SUICUNE"
+      "flag": "FLAG_HIDE_VERMILION_EUSINE_SUICUNE"
     },
     {
+      "local_id": "LOCALID_VERMILION_EUSINE",
       "graphics_id": "OBJ_EVENT_GFX_EUSINE_HNS",
       "x": 50,
       "y": 22,
@@ -347,8 +348,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_VERMILION_EUSINE_SUICUNE",
-      "local_id": "LOCALID_VERMILION_EUSINE"
+      "flag": "FLAG_HIDE_VERMILION_EUSINE_SUICUNE"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",

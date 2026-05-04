@@ -12,9 +12,10 @@
   "allow_running": false,
   "show_map_name": false,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
-  "connections": 0,
+  "connections": null,
   "object_events": [
     {
+      "local_id": "LOCALID_BURNEDTOWER_ENTEI",
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_ENTEI",
       "x": 18,
       "y": 8,
@@ -25,10 +26,10 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_BURNED_TOWER_BEASTS",
-      "local_id": "LOCALID_BURNEDTOWER_ENTEI"
+      "flag": "FLAG_HIDE_BURNED_TOWER_BEASTS"
     },
     {
+      "local_id": "LOCALID_BURNEDTOWER_RAIKOU",
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_RAIKOU",
       "x": 14,
       "y": 8,
@@ -39,10 +40,10 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_BURNED_TOWER_BEASTS",
-      "local_id": "LOCALID_BURNEDTOWER_RAIKOU"
+      "flag": "FLAG_HIDE_BURNED_TOWER_BEASTS"
     },
     {
+      "local_id": "LOCALID_BURNEDTOWER_SUICUNE",
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_SUICUNE",
       "x": 16,
       "y": 9,
@@ -53,8 +54,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_BURNED_TOWER_BEASTS",
-      "local_id": "LOCALID_BURNEDTOWER_SUICUNE"
+      "flag": "FLAG_HIDE_BURNED_TOWER_BEASTS"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_POKE_BALL",
@@ -148,6 +148,7 @@
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_BURNEDTOWER2_EUSINE",
       "graphics_id": "OBJ_EVENT_GFX_EUSINE_HNS",
       "x": 25,
       "y": 9,
@@ -158,8 +159,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_BURNED_TOWER_B1F_EUSINE",
-      "local_id": "LOCALID_BURNEDTOWER2_EUSINE"
+      "flag": "FLAG_HIDE_BURNED_TOWER_B1F_EUSINE"
     }
   ],
   "warp_events": [

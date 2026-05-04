@@ -26,6 +26,7 @@
   ],
   "object_events": [
     {
+      "local_id": "LOCALID_GUIDE_GENT",
       "graphics_id": "OBJ_EVENT_GFX_OLD_MAN_HNS",
       "x": 57,
       "y": 8,
@@ -36,8 +37,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "CherryGroveCity_EventScript_TriggerGent_Top",
-      "flag": "FLAG_HIDE_GUIDE_GENT_CHERRYGROVE",
-      "local_id": "LOCALID_GUIDE_GENT"
+      "flag": "FLAG_HIDE_GUIDE_GENT_CHERRYGROVE"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_FISHERMAN_HNS",
@@ -196,6 +196,7 @@
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_CHERRYGROVE_SILVER",
       "graphics_id": "OBJ_EVENT_GFX_SILVER_HNS",
       "x": 65,
       "y": 10,
@@ -206,8 +207,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_SILVER_CHERRYGROVE",
-      "local_id": "LOCALID_CHERRYGROVE_SILVER"
+      "flag": "FLAG_HIDE_SILVER_CHERRYGROVE"
     }
   ],
   "warp_events": [

@@ -12,7 +12,7 @@
   "allow_running": true,
   "show_map_name": true,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
-  "connections": 0,
+  "connections": null,
   "object_events": [
     {
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL_HNS",
@@ -171,6 +171,7 @@
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_VICTORYROAD_SILVER",
       "graphics_id": "OBJ_EVENT_GFX_SILVER_HNS",
       "x": 19,
       "y": 11,
@@ -181,8 +182,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_VICTORY_ROAD_SILVER",
-      "local_id": "LOCALID_VICTORYROAD_SILVER"
+      "flag": "FLAG_HIDE_VICTORY_ROAD_SILVER"
     }
   ],
   "warp_events": [

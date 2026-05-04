@@ -1,10 +1,8 @@
 {
   "id": "MAP_ROUTE23",
   "name": "Route23_Frlg",
-  "game_version": "frlg",
   "layout": "LAYOUT_ROUTE23",
   "music": "MUS_RG_VICTORY_ROAD",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_ROUTE_23",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -13,7 +11,6 @@
   "allow_escaping": false,
   "allow_running": true,
   "show_map_name": true,
-  "floor_number": 0,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": [
     {
@@ -30,7 +27,6 @@
   "object_events": [
     {
       "local_id": "LOCALID_CASCADE_BADGE_GUARD",
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_POLICEMAN",
       "x": 15,
       "y": 149,
@@ -45,7 +41,6 @@
     },
     {
       "local_id": "LOCALID_THUNDER_BADGE_GUARD",
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_POLICEMAN",
       "x": 8,
       "y": 140,
@@ -60,7 +55,6 @@
     },
     {
       "local_id": "LOCALID_RAINBOW_BADGE_GUARD",
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_POLICEMAN",
       "x": 14,
       "y": 123,
@@ -75,7 +69,6 @@
     },
     {
       "local_id": "LOCALID_SOUL_BADGE_GUARD",
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_POLICEMAN",
       "x": 16,
       "y": 112,
@@ -90,7 +83,6 @@
     },
     {
       "local_id": "LOCALID_MARSH_BADGE_GUARD",
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_POLICEMAN",
       "x": 10,
       "y": 94,
@@ -105,7 +97,6 @@
     },
     {
       "local_id": "LOCALID_VOLCANO_BADGE_GUARD",
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_POLICEMAN",
       "x": 14,
       "y": 61,
@@ -120,7 +111,6 @@
     },
     {
       "local_id": "LOCALID_EARTH_BADGE_GUARD",
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_POLICEMAN",
       "x": 6,
       "y": 35,
@@ -633,5 +623,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Route23_EventScript_VictoryRoadGateSign"
     }
-  ]
+  ],
+  "floor_number": 0,
+  "game_version": "frlg",
+  "region": "REGION_KANTO"
 }
