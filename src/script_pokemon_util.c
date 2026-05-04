@@ -30,7 +30,6 @@
 #include "constants/abilities.h"
 #include "constants/items.h"
 #include "constants/battle_frontier.h"
-#include "constants/pokeball.h"
 
 static void CB2_ReturnFromChooseHalfParty(void);
 static void CB2_ReturnFromChooseBattleFrontierParty(void);
@@ -365,18 +364,11 @@ static u32 ScriptGiveMonParameterized(u8 side, u8 slot, enum Species species, u8
     struct Pokemon mon;
     u32 i;
     bool32 isShiny;
-    enum GeneratedMonOrigin origin = (side == B_SIDE_PLAYER) ? GIFTMON_ORIGIN : STATIC_WILDMON_ORIGIN;
 
     ResolveRandomMonGeneration(&species, &item, &ball, moves);
 
-    if (gender == MON_GENDER_MAY_CUTE_CHARM)
-        gender = GetSynchronizedGender(origin, species);
-    if (nature == NATURE_MAY_SYNCHRONIZE)
-        nature = GetSynchronizedNature(origin, species);
-
     u32 personality = GetMonPersonality(species, gender, nature, RANDOM_UNOWN_LETTER);
     CreateMon(&mon, species, level, personality, OTID_STRUCT_PLAYER_ID);
-    SetBoxMonIVs(&mon.box, USE_RANDOM_IVS);
 
     // shininess
     if (shinyMode == SHINY_MODE_ALWAYS || (P_FLAG_FORCE_SHINY != 0 && FlagGet(P_FLAG_FORCE_SHINY)))
@@ -546,12 +538,37 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
     }
 
     u16 ivs[NUM_STATS];
+    u32 nonFixedIvCount = 0;
+    enum Stat availableIVs[NUM_STATS];
+    enum Stat selectedIvs[NUM_STATS];
     for (i = 0; i < NUM_STATS; i++)
     {
         ivs[i] = PARSE_FLAG(11 + i, USE_RANDOM_IVS);
         assertf(ivs[i] <= USE_RANDOM_IVS, "invalid iv value of %d above maximum of %d", ivs[i], MAX_PER_STAT_IVS)
         {
             ivs[i] = MAX_PER_STAT_IVS;
+        }
+        if (ivs[i] == USE_RANDOM_IVS)
+        {
+            availableIVs[nonFixedIvCount] = i;
+            ivs[i] = Random() % (MAX_PER_STAT_IVS + 1);
+            nonFixedIvCount++;
+        }
+    }
+
+    // Perfect IV calculation
+    if (gSpeciesInfo[species].perfectIVCount != 0)
+    {
+        // Select the IVs that will be perfected.
+        for (i = 0; i < nonFixedIvCount && i < gSpeciesInfo[species].perfectIVCount; i++)
+        {
+            u8 index = Random() % (nonFixedIvCount - i);
+            selectedIvs[i] = availableIVs[index];
+            RemoveIVIndexFromList(availableIVs, index);
+        }
+        for (i = 0; i < nonFixedIvCount && i < gSpeciesInfo[species].perfectIVCount; i++)
+        {
+            ivs[selectedIvs[i]] = MAX_PER_STAT_IVS;
         }
     }
 
@@ -579,10 +596,22 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
     ADD_MOVE_IF_DEFAULT(i, move3)
     ADD_MOVE_IF_DEFAULT(i, move4)
 
+    enum GeneratedMonOrigin origin;
     if (side == 0)
+    {
         Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
+        origin = GIFTMON_ORIGIN;
+    }
     else
+    {
         Script_RequestEffects(SCREFF_V1);
+        origin = STATIC_WILDMON_ORIGIN;
+    }
+
+    if (gender == MON_GENDER_MAY_CUTE_CHARM)
+        gender = GetSynchronizedGender(origin, species);
+    if (nature == NATURE_MAY_SYNCHRONIZE)
+        nature = GetSynchronizedNature(origin, species);
 
     gSpecialVar_Result = ScriptGiveMonParameterized(side, slot, species, level, item, ball, nature, abilityNum, gender, evs, ivs, moves, shinyMode, gmaxFactor, teraType, dmaxLevel);
 }
