@@ -2221,3 +2221,13 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/maps/TrainerHill_4F_hns/scripts.inc"
 	.include "data/maps/TrainerHill_Roof_hns/scripts.inc"
 	.include "data/maps/TrainerHill_Elevator_hns/scripts.inc"
+
+	.include "data/maps/FallarborTown_BattleTentLobby_hns/scripts.inc"
+	.include "data/maps/FallarborTown_BattleTentCorridor_hns/scripts.inc"
+	.include "data/maps/FallarborTown_BattleTentBattleRoom_hns/scripts.inc"
+	.include "data/maps/VerdanturfTown_BattleTentLobby_hns/scripts.inc"
+	.include "data/maps/VerdanturfTown_BattleTentCorridor_hns/scripts.inc"
+	.include "data/maps/VerdanturfTown_BattleTentBattleRoom_hns/scripts.inc"
+	.include "data/maps/SlateportCity_BattleTentLobby_hns/scripts.inc"
+	.include "data/maps/SlateportCity_BattleTentCorridor_hns/scripts.inc"
+	.include "data/maps/SlateportCity_BattleTentBattleRoom_hns/scripts.inc"

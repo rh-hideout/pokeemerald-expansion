@@ -410,21 +410,21 @@
       "x": 27,
       "y": 19,
       "elevation": 0,
-      "dest_map": "MAP_FALLARBOR_TOWN_BATTLE_TENT_LOBBY",
+      "dest_map": "MAP_FALLARBOR_TOWN_BATTLE_TENT_LOBBY_HNS",
       "dest_warp_id": "0"
     },
     {
       "x": 20,
       "y": 28,
       "elevation": 0,
-      "dest_map": "MAP_VERDANTURF_TOWN_BATTLE_TENT_LOBBY",
+      "dest_map": "MAP_VERDANTURF_TOWN_BATTLE_TENT_LOBBY_HNS",
       "dest_warp_id": "0"
     },
     {
       "x": 34,
       "y": 28,
       "elevation": 0,
-      "dest_map": "MAP_SLATEPORT_CITY_BATTLE_TENT_LOBBY",
+      "dest_map": "MAP_SLATEPORT_CITY_BATTLE_TENT_LOBBY_HNS",
       "dest_warp_id": "0"
     }
   ],

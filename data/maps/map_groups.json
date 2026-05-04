@@ -1741,6 +1741,15 @@
     "TrainerHill_3F_hns",
     "TrainerHill_4F_hns",
     "TrainerHill_Roof_hns",
-    "TrainerHill_Elevator_hns"
+    "TrainerHill_Elevator_hns",
+    "FallarborTown_BattleTentLobby_hns",
+    "FallarborTown_BattleTentCorridor_hns",
+    "FallarborTown_BattleTentBattleRoom_hns",
+    "VerdanturfTown_BattleTentLobby_hns",
+    "VerdanturfTown_BattleTentCorridor_hns",
+    "VerdanturfTown_BattleTentBattleRoom_hns",
+    "SlateportCity_BattleTentLobby_hns",
+    "SlateportCity_BattleTentCorridor_hns",
+    "SlateportCity_BattleTentBattleRoom_hns"
   ]
 }
