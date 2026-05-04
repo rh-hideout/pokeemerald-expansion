@@ -25,7 +25,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "GoldenrodCity_RadioTower_5F_EventScript_Petrel",
-      "flag": "FLAG_HIDE_GOLDENROD_RADIOTOWER_DIRECTOR"
+      "flag": "FLAG_HIDE_GOLDENROD_RADIOTOWER_DIRECTOR",
+      "local_id": "LOCALID_DIRECTOR_OFFICE"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ARCHER_HNS",
@@ -38,7 +39,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "GoldenrodCity_RadioTower_5F_EventScript_Archer",
-      "flag": "FLAG_HIDE_GOLDENROD_ROCKETS"
+      "flag": "FLAG_HIDE_GOLDENROD_ROCKETS",
+      "local_id": "LOCALID_GOLDENROD_ARCHER"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ARIANA_HNS",
@@ -51,7 +53,8 @@
       "trainer_type": "TRAINER_TYPE_NORMAL",
       "trainer_sight_or_berry_tree_id": "4",
       "script": "GoldenrodRaidoTower4_EventScript_ARIANA",
-      "flag": "FLAG_HIDE_GOLDENROD_ROCKETS"
+      "flag": "FLAG_HIDE_GOLDENROD_ROCKETS",
+      "local_id": "LOCALID_GOLDENROD_ARIANA"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_PETREL_HNS",
@@ -64,7 +67,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "GoldenrodCity_RadioTower_5F_EventScript_Petrel2",
-      "flag": "FLAG_HIDE_GOLDENROD_RADIOTOWER_PETREL"
+      "flag": "FLAG_HIDE_GOLDENROD_RADIOTOWER_PETREL",
+      "local_id": "LOCALID_PETREL_OFFICE"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_GENTLEMAN_HNS",
@@ -77,7 +81,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_GOLDENROD_RADIOTOWER_DIRECTOR_2"
+      "flag": "FLAG_HIDE_GOLDENROD_RADIOTOWER_DIRECTOR_2",
+      "local_id": "LOCALID_DIRECTOR_STUDIO"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_WORKER_M_HNS",

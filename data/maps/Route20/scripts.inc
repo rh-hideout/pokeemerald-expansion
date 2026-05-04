@@ -1,6 +1,3 @@
-.set LOCALID_ROUTE20_DENNIS, 17
-.set LOCALID_ROUTE20_HEADLOCKER, 16
-
 Route20_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, Route20_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, SetTimeEncounters

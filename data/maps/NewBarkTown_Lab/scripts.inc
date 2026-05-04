@@ -1,7 +1,3 @@
-.set LOCALID_ELM, 2
-.set LOCALID_AIDE1, 1
-.set LOCALID_AIDE2, 3
-.set LOCALID_COP, 7
 .set PLAYER_STARTER_SPECIES,  VAR_TEMP_2
 
 NewBarkTown_Lab_MapScripts::

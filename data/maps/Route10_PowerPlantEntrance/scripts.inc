@@ -1,6 +1,3 @@
-.set LOCALID_POWERPLANT_COP, 1
-.set LOCALID_POWERPLANT_ENGINEER, 2
-
 Route10_PowerPlantEntrance_MapScripts::
 	.byte 0
 

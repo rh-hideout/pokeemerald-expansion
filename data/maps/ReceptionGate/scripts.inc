@@ -1,6 +1,3 @@
-.set LOCALID_INDIGOJUNCTION_POLICEMAN, 1
-.set LOCALID_INDIGOJUNCTION_JANINE, 4
-
 ReceptionGate_MapScripts::
 	.byte 0
 

@@ -1,6 +1,3 @@
-.set LOCALID_ROUTE42_EUSINE, 19
-.set LOCALID_ROUTE42_SUICUNE, 17
-
 Route42_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, Route42_MapScript_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, SetTimeEncounters

@@ -25,7 +25,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "DragonsDen_Shrine_EventScript_Elder",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_DRAGONSDEN3_ELDER"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_SAGE_HNS",
@@ -64,7 +65,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_DRAGONS_DEN_SHRINE_CLAIR"
+      "flag": "FLAG_HIDE_DRAGONS_DEN_SHRINE_CLAIR",
+      "local_id": "LOCALID_DRAGONSDEN3_CLAIR"
     }
   ],
   "warp_events": [

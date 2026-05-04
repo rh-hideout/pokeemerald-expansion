@@ -1,6 +1,3 @@
-.set LOCALID_ATTENDANT, 1
-.set LOCALID_BRANDON, 2
-
 BattleFrontier_BattlePyramidTop_MapScripts::
 	map_script MAP_SCRIPT_ON_RESUME, BattleFrontier_BattlePyramidTop_OnResume
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, BattleFrontier_BattlePyramidTop_OnFrame

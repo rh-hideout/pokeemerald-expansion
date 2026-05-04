@@ -1,5 +1,3 @@
-.set LOCALID_CELADON_FALKNER, 5
-
 CeladonCity_DepartmentStore_5F_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, CeladonDeptElevator_OnFrame
 	.byte 0

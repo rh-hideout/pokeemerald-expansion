@@ -25,7 +25,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "AzaleaTown_KurtsHouse_EventScript_KurtBefore",
-      "flag": "FLAG_HIDE_KURT_1"
+      "flag": "FLAG_HIDE_KURT_1",
+      "local_id": "LOCALID_AZALEA_TOWN_KURT_BEFORE"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_WOMAN_1_HNS",
@@ -51,7 +52,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "AzaleaTown_KurtsHouse_EventScript_Kurt",
-      "flag": "FLAG_HIDE_KURT_2"
+      "flag": "FLAG_HIDE_KURT_2",
+      "local_id": "LOCALID_AZALEA_TOWN_KURT"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_SLOWPOKE",

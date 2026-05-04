@@ -1,7 +1,3 @@
-.set LOCALID_ROUTE24_WOMAN, 4
-.set LOCALID_ROUTE24_MAN, 3
-.set LOCALID_ROUTE24_GRUNT, 1
-
 Route24_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, Route24_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, SetTimeEncounters

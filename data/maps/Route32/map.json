@@ -41,7 +41,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "Route32_EventScript_BaldingMan",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_ROUTE32_BALDINGMAN"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_FAT_MAN_HNS",
@@ -210,7 +211,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "Route32_EventScript_SlowpokeTail",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_SLOWPOKETAIL_MAN"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_POKE_BALL",

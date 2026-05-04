@@ -1,6 +1,3 @@
-.set LOCALID_SSAQUA_1F_DOORSAILOR, 4
-.set LOCALID_SSAQUA_1F_GRANDPA, 2
-
 SSAqua_1F_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, SSAqua_1F_OnFrame
 	.byte 0

@@ -1,6 +1,3 @@
-.set LOCALID_MOM, 1
-.set LOCALID_MOMS_FRIEND, 2
-
 NewBarkTown_PlayersHouse_1F_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, NewBarkTown_PlayersHouse_1F_OnTransition
 	.byte 0

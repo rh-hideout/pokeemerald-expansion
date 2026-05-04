@@ -1,5 +1,3 @@
-.set LOCALID_OLIVINE_SILVER, 4
-
 OlivineCity_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, OlivineCity_MapScript_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, SetTimeEncounters

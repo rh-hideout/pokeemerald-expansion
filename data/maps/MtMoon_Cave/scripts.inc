@@ -1,5 +1,3 @@
-.set LOCALID_MTMOON_SILVER, 1
-
 MtMoon_Cave_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, MtMoon_Cave_MapScript_OnFrame
 	map_script MAP_SCRIPT_ON_TRANSITION, MtMoon_Cave_OnTransition

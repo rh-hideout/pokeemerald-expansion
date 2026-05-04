@@ -38,7 +38,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "SaffronCity_SilphCo_EventScript_Steven",
-      "flag": "FLAG_GOT_HOENN_STARTER"
+      "flag": "FLAG_GOT_HOENN_STARTER",
+      "local_id": "LOCALID_SILPHCO_STEVEN"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_BEAUTY_HNS",

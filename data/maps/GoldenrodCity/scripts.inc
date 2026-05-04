@@ -1,5 +1,3 @@
-.set LOCALID_GOLDENROD_ROCKET_SCOUT, 11
-
 GoldenrodCity_MapScripts::
 	.byte 0
 

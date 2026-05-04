@@ -1,9 +1,3 @@
-.set LOCALID_DIRECTOR_OFFICE, 1
-.set LOCALID_GOLDENROD_ARCHER, 2
-.set LOCALID_GOLDENROD_ARIANA, 3
-.set LOCALID_PETREL_OFFICE, 4
-.set LOCALID_DIRECTOR_STUDIO, 5
-
 GoldenrodCity_RadioTower_5F_MapScripts::
 	map_script MAP_SCRIPT_ON_LOAD, GoldenrodCity_RadioTower_5F_OnLoad
 	.byte 0

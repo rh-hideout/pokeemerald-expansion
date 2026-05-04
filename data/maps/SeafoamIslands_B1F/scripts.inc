@@ -1,5 +1,3 @@
-.set LOCALID_SEAFOAM_ARTICUNO, 1
-
 SeafoamIslands_B1F_MapScripts::
 	.byte 0
 

@@ -1,5 +1,3 @@
-.set LOCALID_ROUTE34_DAYCAREMAN, 12
-
 Route34_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, Route34_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, SetTimeEncounters

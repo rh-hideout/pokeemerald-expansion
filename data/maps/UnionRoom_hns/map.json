@@ -39,7 +39,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "UnionRoom_EventScript_Player4",
-      "flag": "FLAG_HIDE_UNION_ROOM_PLAYER_4"
+      "flag": "FLAG_HIDE_UNION_ROOM_PLAYER_4",
+      "local_id": "LOCALID_UNION_ROOM_PLAYER_4"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_VAR_7",
@@ -52,7 +53,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "UnionRoom_EventScript_Player8",
-      "flag": "FLAG_HIDE_UNION_ROOM_PLAYER_8"
+      "flag": "FLAG_HIDE_UNION_ROOM_PLAYER_8",
+      "local_id": "LOCALID_UNION_ROOM_PLAYER_8"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_VAR_6",
@@ -65,7 +67,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "UnionRoom_EventScript_Player7",
-      "flag": "FLAG_HIDE_UNION_ROOM_PLAYER_7"
+      "flag": "FLAG_HIDE_UNION_ROOM_PLAYER_7",
+      "local_id": "LOCALID_UNION_ROOM_PLAYER_7"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_VAR_5",
@@ -78,7 +81,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "UnionRoom_EventScript_Player6",
-      "flag": "FLAG_HIDE_UNION_ROOM_PLAYER_6"
+      "flag": "FLAG_HIDE_UNION_ROOM_PLAYER_6",
+      "local_id": "LOCALID_UNION_ROOM_PLAYER_6"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_VAR_4",
@@ -91,7 +95,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "UnionRoom_EventScript_Player5",
-      "flag": "FLAG_HIDE_UNION_ROOM_PLAYER_5"
+      "flag": "FLAG_HIDE_UNION_ROOM_PLAYER_5",
+      "local_id": "LOCALID_UNION_ROOM_PLAYER_5"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_VAR_2",
@@ -104,7 +109,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "UnionRoom_EventScript_Player3",
-      "flag": "FLAG_HIDE_UNION_ROOM_PLAYER_3"
+      "flag": "FLAG_HIDE_UNION_ROOM_PLAYER_3",
+      "local_id": "LOCALID_UNION_ROOM_PLAYER_3"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_VAR_1",
@@ -117,7 +123,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "UnionRoom_EventScript_Player2",
-      "flag": "FLAG_HIDE_UNION_ROOM_PLAYER_2"
+      "flag": "FLAG_HIDE_UNION_ROOM_PLAYER_2",
+      "local_id": "LOCALID_UNION_ROOM_PLAYER_2"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_VAR_0",
@@ -130,7 +137,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "UnionRoom_EventScript_Player1",
-      "flag": "FLAG_HIDE_UNION_ROOM_PLAYER_1"
+      "flag": "FLAG_HIDE_UNION_ROOM_PLAYER_1",
+      "local_id": "LOCALID_UNION_ROOM_PLAYER_1"
     }
   ],
   "warp_events": [

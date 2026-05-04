@@ -25,7 +25,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "MrPokemonHouse_EventScript_MrPokemon",
-      "flag": "FLAG_HIDE_MRPOKEMON"
+      "flag": "FLAG_HIDE_MRPOKEMON",
+      "local_id": "LOCALID_MRPOKEMON2"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_GENTLEMAN_HNS",
@@ -38,7 +39,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "MrPokemonHouse_EventScript_MrPokemon",
-      "flag": "FLAG_DELIVERED_EGG"
+      "flag": "FLAG_DELIVERED_EGG",
+      "local_id": "LOCALID_MRPOKEMON"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_PROF_OAK_HNS",
@@ -51,7 +53,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_DELIVERED_EGG"
+      "flag": "FLAG_DELIVERED_EGG",
+      "local_id": "LOCALID_ROUTE30_OAK"
     }
   ],
   "warp_events": [

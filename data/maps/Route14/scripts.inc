@@ -1,7 +1,3 @@
-.set LOCALID_ROUTE14_SUICUNE, 5
-.set LOCALID_ROUTE14_EUSINE, 6
-.set LOCALID_ROUTE14_PIDGEOTTO, 9
-
 Route14_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, Route14_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, SetTimeEncounters

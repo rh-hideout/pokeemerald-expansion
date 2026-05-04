@@ -1,5 +1,3 @@
-.set LOCALID_ROUTE_30_JOEY, 6
-
 Route30_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, Route30_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, SetTimeEncounters

@@ -1,6 +1,3 @@
-.set LOCALID_ROUTE22_GIOVANNI, 6
-.set LOCALID_ROUTE22_SILVER, 7
-
 Route22_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, Route22_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, SetTimeEncounters

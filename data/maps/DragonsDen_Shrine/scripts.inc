@@ -1,6 +1,3 @@
-.set LOCALID_DRAGONSDEN3_CLAIR, 4
-.set LOCALID_DRAGONSDEN3_ELDER, 1
-
 DragonsDen_Shrine_MapScripts::
 	@map_script MAP_SCRIPT_ON_FRAME_TABLE, DragonsDen_Shrine_OnFrame
 	.byte 0

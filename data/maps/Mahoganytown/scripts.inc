@@ -1,5 +1,3 @@
-.set LOCALID_MAHOGANY_MERCHANT, 3
-
 Mahoganytown_MapScripts::
 	map_script MAP_SCRIPT_ON_LOAD, Mahoganytown_OnLoad
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, Mahoganytown_OnFrame

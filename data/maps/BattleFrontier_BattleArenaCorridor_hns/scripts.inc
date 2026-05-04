@@ -1,5 +1,3 @@
-.set LOCALID_ATTENDANT, 1
-
 BattleFrontier_BattleArenaCorridor_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, BattleFrontier_BattleArenaCorridor_OnFrame
 	.byte 0

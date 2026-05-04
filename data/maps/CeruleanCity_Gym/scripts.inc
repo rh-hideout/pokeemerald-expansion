@@ -1,5 +1,3 @@
-.set LOCALID_CERULEAN_GYM_ROCKET, 5
-
 CeruleanCity_Gym_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, CeruleanCity_Gym_OnFrame
 	.byte 0

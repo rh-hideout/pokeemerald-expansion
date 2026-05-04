@@ -244,7 +244,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_ROUTE42_SUICUNE"
+      "flag": "FLAG_HIDE_ROUTE42_SUICUNE",
+      "local_id": "LOCALID_ROUTE42_SUICUNE"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_POKE_BALL",
@@ -270,7 +271,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_ROUTE42_EUSINE"
+      "flag": "FLAG_HIDE_ROUTE42_EUSINE",
+      "local_id": "LOCALID_ROUTE42_EUSINE"
     }
   ],
   "warp_events": [

@@ -1,5 +1,3 @@
-.set LOCALID_CELADON_ERIKA, 15
-
 CeladonCity_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, CeladonCity_EventScript_CityEnter
 	.byte 0

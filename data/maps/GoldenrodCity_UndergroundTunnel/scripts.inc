@@ -1,5 +1,3 @@
-.set LOCALID_GOLDENROD_UNDERGROUND_KIMONO, 12
-
 GoldenrodCity_UndergroundTunnel_MapScripts::
 	map_script MAP_SCRIPT_ON_LOAD, GoldenrodCity_UndergroundTunnel_OnLoad
 	.byte 0

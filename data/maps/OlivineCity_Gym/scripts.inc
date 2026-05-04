@@ -1,6 +1,3 @@
-.set LOCALID_OLIVINE_CITY_GYM_NPC1, 3
-.set LOCALID_OLIVINE_CITY_GYM_NPC2, 2
-
 OlivineCity_Gym_MapScripts::
 	.byte 0
 

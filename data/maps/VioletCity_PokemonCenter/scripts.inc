@@ -1,5 +1,3 @@
-.set LOCALID_NURSE, 1
-
 VioletCity_PokemonCenter_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, VioletCity_Pokecenter_OnTransition
 	.byte 0

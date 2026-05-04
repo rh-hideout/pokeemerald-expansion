@@ -1,6 +1,3 @@
-.set LOCALID_ROUTE36_SUDOWOODO, 6
-.set LOCALID_ROUTE36_ROCKSMASHGUY, 3
-
 Route36_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, Route36_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, SetTimeEncounters

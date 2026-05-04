@@ -1,5 +1,3 @@
-.set LOCALID_NURSE, 1
-
 CianwoodPokecenter_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, CianwoodPokecenter_OnTransition
 	.byte 0

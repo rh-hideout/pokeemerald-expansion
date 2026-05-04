@@ -116,7 +116,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "CeruleanCave3_EventScript_MewtwoNew",
-      "flag": "FLAG_HIDE_MEWTWO"
+      "flag": "FLAG_HIDE_MEWTWO",
+      "local_id": "LOCALID_CERULEANCAVE_MEWTWO"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_ANNIHILAPE",

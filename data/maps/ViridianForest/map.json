@@ -220,7 +220,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "ViridianForest_EventScript_Bugsy",
-      "flag": "FLAG_HIDE_VIRIDIAN_BUGSY"
+      "flag": "FLAG_HIDE_VIRIDIAN_BUGSY",
+      "local_id": "LOCALID_VIRIDIAN_BUGSY"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_WEEDLE",

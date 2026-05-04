@@ -1,6 +1,3 @@
-.set LOCALID_VERMILIONMARINA_SAILOR, 1
-.set LOCALID_VERMILIONMARINA_BOAT, 2
-
 VermilionCity_PortInside_MapScripts::
 	.byte 0
 

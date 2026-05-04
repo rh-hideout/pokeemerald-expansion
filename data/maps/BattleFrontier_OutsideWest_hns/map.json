@@ -45,7 +45,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_SS_TIDAL"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_SAILOR_HNS",
@@ -58,7 +59,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "BattleFrontier_OutsideWest_EventScript_Sailor",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_FERRY_ATTENDANT"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_OLD_MAN_HNS",
@@ -136,7 +138,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "BattleFrontier_OutsideWest_EventScript_Maniac1",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_MANIAC_1"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_SUPER_NERD_HNS",
@@ -149,7 +152,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "BattleFrontier_OutsideWest_EventScript_Maniac2",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_MANIAC_2"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ROCKER_HNS",
@@ -175,7 +179,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "BattleFrontier_OutsideWest_EventScript_Girl",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_FRONTIER_GIRL"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_COOLTRAINER_F_HNS",
@@ -201,7 +206,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "BattleFrontier_OutsideWest_EventScript_Camper",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_CAMPER"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_PSYCHIC_M_HNS",
@@ -253,7 +259,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "BattleFrontier_OutsideWest_EventScript_Fisherman2",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_FISHERMAN_2"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_FAT_MAN_HNS",
@@ -318,7 +325,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "BattleFrontier_OutsideWest_EventScript_Man4",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_MAN_4"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_WORKER_M_HNS",

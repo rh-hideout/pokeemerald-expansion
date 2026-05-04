@@ -1,7 +1,3 @@
-.set LOCALID_MAHOGANYSHOP_LANCE, 3
-.set LOCALID_MAHOGANYSHOP_DRAGONITE,4
-.set LOCALID_MAHOGANYSHOP_ROCKET, 2
-
 MahoganyTown_Shop_MapScripts::
 	map_script MAP_SCRIPT_ON_LOAD, MahoganyTown_Shop_OnLoad
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, MahoganyTown_Shop_OnFrame

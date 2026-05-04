@@ -1,6 +1,3 @@
-.set LOCALID_AZALEA_TOWN_KURT_GS, 18
-.set LOCALID_AZALEA_TOWN_SILVER, 6
-
 AzaleaTown_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, AzaleaTown_OnTransition
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, AzaleaTown_OnFrame

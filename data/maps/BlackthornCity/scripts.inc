@@ -1,6 +1,3 @@
-.set LOCALID_BLACKTHORN_SAGE, 7
-.set LOCALID_BLACKTHORN_BOY, 2
-
 BlackthornCity_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, BlackthornCity_OnFrame
 	map_script MAP_SCRIPT_ON_LOAD, BlackthornCity_OnLoad

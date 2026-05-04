@@ -1,5 +1,3 @@
-.set LOCALID_NURSE, 1
-
 CeruleanCity_PokemonCenter_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, CeruleanCity_PokemonCenter_OnTransition
 	.byte 0

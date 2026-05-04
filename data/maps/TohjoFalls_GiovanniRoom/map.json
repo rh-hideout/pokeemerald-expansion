@@ -25,7 +25,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_TOHJO_GIOVANNI"
+      "flag": "FLAG_HIDE_TOHJO_GIOVANNI",
+      "local_id": "LOCALID_TOHJOFALLS_GIOVANNI"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK_HNS",

@@ -1,5 +1,3 @@
-.set LOCALID_MTSILVER_RED, 1
-
 MtSilver_SummitDay_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, MtSilver_SummitDay_OnTransition
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, MtSilver_SummitDay_OnFrame

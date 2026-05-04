@@ -1,6 +1,3 @@
-.set LOCALID_R39_SHADOW, 17
-.set LOCALID_R39_BAOBA, 2
-
 Route39_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, Route39_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, SetTimeEncounters

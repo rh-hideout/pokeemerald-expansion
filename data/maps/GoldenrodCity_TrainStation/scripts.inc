@@ -1,6 +1,3 @@
-.set LOCALID_GOLDENROD_CITY_TRAIN_STATION_ATTENDANT, 1
-.set LOCALID_GOLDENROD_CITY_TRAIN_STATION_TRAIN, 7
-
 GoldenrodCity_TrainStation_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, GoldenrodCity_TrainStation_OnFrame
 	.byte 0

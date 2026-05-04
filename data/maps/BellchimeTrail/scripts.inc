@@ -1,5 +1,3 @@
-.set LOCALID_BELLCHIME_MORTY, 52
-
 BellchimeTrail_MapScripts::
 	.byte 0
 

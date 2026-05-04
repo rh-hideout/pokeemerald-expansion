@@ -38,7 +38,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "RadioTower1F_EventScript_Lass",
-      "flag": "FLAG_HIDE_GOLDENROD_NPCS"
+      "flag": "FLAG_HIDE_GOLDENROD_NPCS",
+      "local_id": "LOCALID_LOTTERY_CLERK"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ROCKET_M_HNS",
@@ -51,7 +52,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "RadioTower1F_EventScript_Grunt",
-      "flag": "FLAG_HIDE_ROCKET_GOLDENROD_RADIOTOWER_1"
+      "flag": "FLAG_HIDE_ROCKET_GOLDENROD_RADIOTOWER_1",
+      "local_id": "LOCALID_GOLDENROD_RADIOTOWER_GRUNT"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ATTENDANT_M_HNS",
@@ -90,7 +92,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "RadioTower1F_EventScript_Whitney",
-      "flag": "FLAG_ENABLE_RADIO"
+      "flag": "FLAG_ENABLE_RADIO",
+      "local_id": "LOCALID_GOLDENROD_RADIOTOWER_WHITNEY"
     }
   ],
   "warp_events": [

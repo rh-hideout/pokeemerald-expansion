@@ -25,7 +25,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "SaffronCity_CopyCatsHouse_2F_EventScript_Copycat",
-      "flag": "FLAG_TEMP_1"
+      "flag": "FLAG_TEMP_1",
+      "local_id": "LOCALID_COPYCAT"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_DITTO_DOLL",
@@ -64,7 +65,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "SaffronCity_CopyCatsHouse_2F_EventScript_Dolls",
-      "flag": "FLAG_HIDE_COPYCAT_CLEFAIRY_DOLL"
+      "flag": "FLAG_HIDE_COPYCAT_CLEFAIRY_DOLL",
+      "local_id": "LOCALID_COPYCAT_CLEFAIRY"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_DODRIO",
@@ -90,7 +92,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_TEMP_2"
+      "flag": "FLAG_TEMP_2",
+      "local_id": "LOCALID_KRIS"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_BRENDAN_NORMAL",
@@ -103,7 +106,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_TEMP_3"
+      "flag": "FLAG_TEMP_3",
+      "local_id": "LOCALID_GOLD"
     }
   ],
   "warp_events": [

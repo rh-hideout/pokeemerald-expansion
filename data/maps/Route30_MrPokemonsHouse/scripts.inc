@@ -1,7 +1,3 @@
-.set LOCALID_MRPOKEMON, 2
-.set LOCALID_ROUTE30_OAK, 3
-.set LOCALID_MRPOKEMON2, 1
-
 Route30_MrPokemonsHouse_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, MrPokemonHouse_OnFrame
 	.byte 0

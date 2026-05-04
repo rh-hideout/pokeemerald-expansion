@@ -88,7 +88,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_SAFARIATTENDANT_1"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_VIBRAVA",
@@ -101,7 +102,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_SAFARIATTENDANT_3"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_CACNEA",
@@ -114,7 +116,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_SAFARIATTENDANT_4"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ATTENDANT_M_HNS",
@@ -127,7 +130,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "SafariZoneFuchsia_EventScript_Attendant2",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_SAFARIATTENDANT_2"
     }
   ],
   "warp_events": [

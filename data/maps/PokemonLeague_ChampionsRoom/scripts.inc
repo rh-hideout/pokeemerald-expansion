@@ -1,7 +1,3 @@
-.set LOCALID_LEAGUE_LANCE, 1
-.set LOCALID_LEAGUE_MARY, 2
-.set LOCALID_LEAGUE_OAK, 3
-
 PokemonLeague_ChampionsRoom_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, ChampionRoom_OnFrame
 	map_script MAP_SCRIPT_ON_RESUME, PokemonLeague_ChampionsRoom_OnResume

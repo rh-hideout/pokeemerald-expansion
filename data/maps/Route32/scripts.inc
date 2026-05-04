@@ -1,7 +1,3 @@
-.set LOCALID_ROUTE32_BALDINGMAN, 1
-.set LOCALID_SLOWPOKETAIL_MAN, 14
-
-
 Route32_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, Route32_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, SetTimeEncounters

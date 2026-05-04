@@ -1,6 +1,3 @@
-.set LOCALID_LIGHTHOUSE_JASMINE, 12
-.set LOCALID_LIGHTHOUSE_AMPHAROS, 13
-
 OlivineCity_Lighthouse_MapScripts::
 	.byte 0
 

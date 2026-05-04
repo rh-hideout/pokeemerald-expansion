@@ -25,7 +25,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "OlivinePort_EventScript_Sailor",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_OLIVINEPORT_SAILOR"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER_HNS",
@@ -90,7 +91,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_OLIVINEPORT_BOAT"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_PROF_OAK_HNS",
@@ -103,7 +105,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "OlivineCity_PortInside_EventScript_Oak",
-      "flag": "FLAG_HIDE_OLIVINE_PORT_OAK"
+      "flag": "FLAG_HIDE_OLIVINE_PORT_OAK",
+      "local_id": "LOCALID_OLIVINEPORT_OAK"
     }
   ],
   "warp_events": [

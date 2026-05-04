@@ -1,5 +1,3 @@
-.set LOCALID_STORE_WHITNEY, 4
-
 GoldenrodCity_DepartmentStore_6F_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, GoldenrodDeptElevator_OnFrame
 	.byte 0

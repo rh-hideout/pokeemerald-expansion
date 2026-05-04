@@ -231,7 +231,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "Route20_EventScript_Headlocker",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_ROUTE20_HEADLOCKER"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_MAGIKARP+SPECIES_SHINY_TAG",
@@ -244,7 +245,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "Route20_EventScript_Dennis",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_ROUTE20_DENNIS"
     }
   ],
   "warp_events": [

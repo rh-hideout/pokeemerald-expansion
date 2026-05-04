@@ -201,7 +201,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "BattleFrontier_OutsideEast_EventScript_Sudowoodo",
-      "flag": "FLAG_HIDE_BATTLE_FRONTIER_SUDOWOODO"
+      "flag": "FLAG_HIDE_BATTLE_FRONTIER_SUDOWOODO",
+      "local_id": "LOCALID_SUDOWOODO"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_SUPER_NERD_HNS",

@@ -39,7 +39,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "FLAG_GARBAGEFLAG"
+      "flag": "FLAG_GARBAGEFLAG",
+      "local_id": "LOCALID_LATI"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_LATIOS",
@@ -52,7 +53,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "SouthernIsland_Interior_EventScript_Latios",
-      "flag": "FLAG_HIDE_LATIOS"
+      "flag": "FLAG_HIDE_LATIOS",
+      "local_id": "LOCALID_SOUTHERNISLAND_LATIOS"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_LATIAS",
@@ -65,7 +67,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "SouthernIsland_Interior_EventScript_Latias",
-      "flag": "FLAG_HIDE_LATIAS"
+      "flag": "FLAG_HIDE_LATIAS",
+      "local_id": "LOCALID_SOUTHERNISLAND_LATIAS"
     }
   ],
   "warp_events": [

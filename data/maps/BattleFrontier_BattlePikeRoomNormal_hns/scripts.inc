@@ -1,7 +1,5 @@
 @ Objects in this room are set dynamically with OBJ_EVENT_GFX_VAR_0 and OBJ_EVENT_GFX_VAR_1
 @ Note: LOCALIDs shared with data/scripts/battle_pike.inc
-.equ LOCALID_OBJ_0, 1
-.equ LOCALID_OBJ_1, 2
 
 BattleFrontier_BattlePikeRoomNormal_MapScripts::
 	map_script MAP_SCRIPT_ON_RESUME, BattleFrontier_BattlePikeRoom_OnResume

@@ -1,5 +1,3 @@
-.set LOCALID_GOLDENROD_UNDERGROUND_SILVER, 7
-
 GoldenrodCity_UndergroundSwitches_MapScripts::
 	map_script MAP_SCRIPT_ON_LOAD, GoldenrodUnderground1_OnLoad
 	.byte 0

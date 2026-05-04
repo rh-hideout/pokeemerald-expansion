@@ -1,7 +1,3 @@
-.set LOCALID_EMBEDDEDRAYQUAZA, 1
-.set LOCALID_EMBEDDEDGROUDON, 1
-.set LOCALID_EMBEDDEDKYOGRE, 1
-
 EmbeddedTower_MapScripts::
 	.byte 0
 

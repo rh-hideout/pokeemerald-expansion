@@ -26,7 +26,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "BattleFrontier_BattleTowerLobby_EventScript_SinglesAttendant",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_ATTENDANT_SINGLES"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_COOLTRAINER_M_HNS",
@@ -78,7 +79,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "BattleFrontier_BattleTowerLobby_EventScript_Reporter",
-      "flag": "FLAG_HIDE_BATTLE_TOWER_REPORTER"
+      "flag": "FLAG_HIDE_BATTLE_TOWER_REPORTER",
+      "local_id": "LOCALID_BATTLE_TOWER_LOBBY_REPORTER"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_VAR_0",
@@ -104,7 +106,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "BattleFrontier_BattleTowerLobby_EventScript_DoublesAttendant",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_ATTENDANT_DOUBLES_TOWER"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_WORKER_F_HNS",
@@ -117,7 +120,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "BattleFrontier_BattleTowerLobby_EventScript_MultisAttendant",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_ATTENDANT_MULTIS"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_WORKER_F_HNS",
@@ -130,7 +134,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "BattleFrontier_BattleTowerLobby_EventScript_LinkMultisAttendantNotAvailable",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_ATTENDANT_LINK_MULTIS"
     }
   ],
   "warp_events": [

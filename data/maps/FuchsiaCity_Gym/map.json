@@ -25,7 +25,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "FuchsiaCity_Gym_EventScript_Alice_J",
-      "flag": "FLAG_TEMP_2"
+      "flag": "FLAG_TEMP_2",
+      "local_id": "LOCALID_FUCHSIAGYM_ALICE_J"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_JANINE_HNS",
@@ -38,7 +39,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "FuchsiaCity_Gym_EventScript_Linda_J",
-      "flag": "FLAG_TEMP_4"
+      "flag": "FLAG_TEMP_4",
+      "local_id": "LOCALID_FUCHSIAGYM_LINDA_J"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_JANINE_HNS",
@@ -51,7 +53,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "FuchsiaCity_Gym_EventScript_Cindy_J",
-      "flag": "FLAG_TEMP_6"
+      "flag": "FLAG_TEMP_6",
+      "local_id": "LOCALID_FUCHSIAGYM_CINDY_J"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_JANINE_HNS",
@@ -64,7 +67,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "FuchsiaCity_Gym_EventScript_Barry_J",
-      "flag": "FLAG_TEMP_8"
+      "flag": "FLAG_TEMP_8",
+      "local_id": "LOCALID_FUCHSIAGYM_BARRY_J"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_JANINE_HNS",
@@ -77,7 +81,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "FuchsiaCity_Gym_EventScript_Janine",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_FUCHSIAGYM_JANINE"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_GYM_GUY_HNS",
@@ -103,7 +108,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "FuchsiaCity_Gym_EventScript_Alice",
-      "flag": "FLAG_TEMP_1"
+      "flag": "FLAG_TEMP_1",
+      "local_id": "LOCALID_FUCHSIAGYM_ALICE"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_LASS_HNS",
@@ -116,7 +122,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "FuchsiaCity_Gym_EventScript_Linda",
-      "flag": "FLAG_TEMP_3"
+      "flag": "FLAG_TEMP_3",
+      "local_id": "LOCALID_FUCHSIAGYM_LINDA"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_PICNICKER_HNS",
@@ -129,7 +136,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "FuchsiaCity_Gym_EventScript_Cindy",
-      "flag": "FLAG_TEMP_5"
+      "flag": "FLAG_TEMP_5",
+      "local_id": "LOCALID_FUCHSIAGYM_CINDY"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_CAMPER_HNS",
@@ -142,7 +150,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "FuchsiaCity_Gym_EventScript_Barry",
-      "flag": "FLAG_TEMP_7"
+      "flag": "FLAG_TEMP_7",
+      "local_id": "LOCALID_FUCHSIAGYM_BARRY"
     }
   ],
   "warp_events": [

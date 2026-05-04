@@ -1,7 +1,3 @@
-.set LOCALID_GREETER, 1
-.set LOCALID_GUIDE, 2
-.set LOCALID_SCOTT, 4
-
 BattleFrontier_ReceptionGate_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, BattleFrontier_ReceptionGate_OnFrame
 	map_script MAP_SCRIPT_ON_TRANSITION, BattleFrontier_ReceptionGate_OnTransition
@@ -56,13 +52,13 @@ BattleFrontier_ReceptionGate_EventScript_ScottScene::
 	applymovement LOCALID_GREETER, BattleFrontier_ReceptionGate_Movement_GreeterFaceScott
 	applymovement LOCALID_GUIDE, BattleFrontier_ReceptionGate_Movement_FacilityGuideFaceScott
 	applymovement OBJ_EVENT_ID_PLAYER, BattleFrontier_ReceptionGate_Movement_PlayerFaceScott
-	applymovement LOCALID_SCOTT, BattleFrontier_ReceptionGate_Movement_ScottEnter
+	applymovement LOCALID_FRONTIER_RECEPTION_SCOTT, BattleFrontier_ReceptionGate_Movement_ScottEnter
 	waitmovement 0
 	msgbox BattleFrontier_ReceptionGate_Text_ScottGreatToSeeYouHere, MSGBOX_DEFAULT
 	closemessage
-	applymovement LOCALID_SCOTT, BattleFrontier_ReceptionGate_Movement_ScottExit
+	applymovement LOCALID_FRONTIER_RECEPTION_SCOTT, BattleFrontier_ReceptionGate_Movement_ScottExit
 	waitmovement 0
-	removeobject LOCALID_SCOTT
+	removeobject LOCALID_FRONTIER_RECEPTION_SCOTT
 	releaseall
 	end
 

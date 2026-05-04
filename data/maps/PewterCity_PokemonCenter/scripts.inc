@@ -1,5 +1,3 @@
-.set LOCALID_NURSE, 1
-
 PewterCity_PokemonCenter_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, PewterCity_PokemonCenter_OnTransition
 	.byte 0

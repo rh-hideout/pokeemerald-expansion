@@ -1,5 +1,3 @@
-.set LOCALID_MTMOON_JIRACHI, 9
-
 MtMoon_Outside_MapScripts::
 	.byte 0
 

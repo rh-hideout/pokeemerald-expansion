@@ -88,7 +88,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_ROUTE14_SUICUNE"
+      "flag": "FLAG_HIDE_ROUTE14_SUICUNE",
+      "local_id": "LOCALID_ROUTE14_SUICUNE"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_EUSINE_HNS",
@@ -101,7 +102,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_ROUTE14_EUSINE"
+      "flag": "FLAG_HIDE_ROUTE14_EUSINE",
+      "local_id": "LOCALID_ROUTE14_EUSINE"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_SHROOMISH",
@@ -140,7 +142,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "Route14_EventScript_Pidgeotto",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_ROUTE14_PIDGEOTTO"
     }
   ],
   "warp_events": [],

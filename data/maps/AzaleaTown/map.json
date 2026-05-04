@@ -96,7 +96,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_AZALEA_TOWN_SILVER"
+      "flag": "FLAG_HIDE_AZALEA_TOWN_SILVER",
+      "local_id": "LOCALID_AZALEA_TOWN_SILVER"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_EKANS",
@@ -252,7 +253,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_AZALEA_TOWN_KURT"
+      "flag": "FLAG_HIDE_AZALEA_TOWN_KURT",
+      "local_id": "LOCALID_AZALEA_TOWN_KURT_GS"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_HERACROSS",

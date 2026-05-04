@@ -1,5 +1,3 @@
-.set LOCALID_UNION_CAVE_LAPRAS, 6
-
 UnionCave_B2F_MapScripts::
 	.byte 0
 

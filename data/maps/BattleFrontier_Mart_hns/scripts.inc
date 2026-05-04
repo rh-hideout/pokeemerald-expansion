@@ -1,7 +1,3 @@
-.set LOCALID_OLD_WOMAN, 2
-.set LOCALID_SECOND_CLERK, 5
-.set LOCALID_TM_CLERK, 6
-
 BattleFrontier_Mart_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, BattleFrontier_Mart_OnTransition
 	.byte 0

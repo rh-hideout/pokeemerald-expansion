@@ -1,5 +1,3 @@
-.set LOCALID_SSAQUA_SLEEPYSAILOR, 1
-
 SSAqua_RoomNW_MapScripts::
     map_script MAP_SCRIPT_ON_TRANSITION, SSAqua_RoomNW_OnTransition
 	.byte 0

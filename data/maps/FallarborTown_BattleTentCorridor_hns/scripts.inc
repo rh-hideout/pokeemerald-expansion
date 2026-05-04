@@ -1,5 +1,3 @@
-.set LOCALID_ATTENDANT, 1
-
 FallarborTown_BattleTentCorridor_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, FallarborTown_BattleTentCorridor_OnFrame
 	.byte 0

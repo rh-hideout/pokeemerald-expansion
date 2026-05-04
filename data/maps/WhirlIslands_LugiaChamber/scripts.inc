@@ -1,10 +1,3 @@
-.set LOCALID_LUGIA, 1
-.set LOCALID_KIMONO_MID, 4
-.set LOCALID_KIMONO_1, 3
-.set LOCALID_KIMONO_2, 2
-.set LOCALID_KIMONO_3, 6
-.set LOCALID_KIMONO_4, 5
-
 WhirlIslands_LugiaChamber_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, WhirlIslands_LugiaChamber_OnTransition
 	.byte 0

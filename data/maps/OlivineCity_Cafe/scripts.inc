@@ -1,5 +1,3 @@
-.set LOCALID_CAFE_JASMINE, 4
-
 OlivineCity_Cafe_MapScripts::
 	.byte 0
 

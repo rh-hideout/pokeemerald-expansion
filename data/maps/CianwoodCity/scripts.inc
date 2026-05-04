@@ -1,7 +1,3 @@
-.set LOCALID_CIANWOOD_SUICUNE, 1
-.set LOCALID_CIANWOOD_EUSINE, 2
-.set LOCALID_CIANWOOD_CHUCKSWIFE, 6
-
 CianwoodCity_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, CianwoodCity_EventScript_CityEnter
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, CianwoodCity_OnFrame

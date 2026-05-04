@@ -90,7 +90,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "UnionCave_B2F_EventScript_Lapras",
-      "flag": "FLAG_HIDE_UNION_CAVE_LAPRAS"
+      "flag": "FLAG_HIDE_UNION_CAVE_LAPRAS",
+      "local_id": "LOCALID_UNION_CAVE_LAPRAS"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_RATICATE",

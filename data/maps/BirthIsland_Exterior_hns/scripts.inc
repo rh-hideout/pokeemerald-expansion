@@ -1,7 +1,3 @@
-.set LOCALID_DEOXYS, 2
-
-@ Note: LOCALID_BIRTH_ISLAND_EXTERIOR_ROCK is a local id for this map used elsewhere. It's defined in event_objects.h
-
 BirthIsland_Exterior_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, BirthIsland_Exterior_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, BirthIsland_Exterior_OnResume

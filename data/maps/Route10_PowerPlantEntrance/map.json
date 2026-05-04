@@ -25,7 +25,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "Route10_PowerPlantEntrance_EventScript_Cop",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_POWERPLANT_COP"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ENGINEER_HNS",
@@ -38,7 +39,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "Route10_PowerPlantEntrance_EventScript_Engineer1",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_POWERPLANT_ENGINEER"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ENGINEER_HNS",

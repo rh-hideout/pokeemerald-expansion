@@ -1,7 +1,3 @@
-.set LOCALID_NURSE, 1
-.set LOCALID_FUCHSIAPOKECENTER_WOMAN, 6
-.set LOCALID_FUCHSIAPOKECENTER_JASMINE, 4
-
 FuchsiaCity_PokemonCenter_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, FuchsiaCity_PokemonCenter_OnTransition
 	.byte 0

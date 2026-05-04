@@ -1,7 +1,3 @@
-.set LOCALID_LATI, 2
-.set LOCALID_SOUTHERNISLAND_LATIOS, 3
-.set LOCALID_SOUTHERNISLAND_LATIAS, 4
-
 SouthernIsland_Interior_MapScripts::
 	map_script MAP_SCRIPT_ON_RESUME, SouthernIsland_Interior_OnResume
 	map_script MAP_SCRIPT_ON_TRANSITION, SouthernIsland_Interior_OnTransition

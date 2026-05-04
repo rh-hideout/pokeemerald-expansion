@@ -1,6 +1,3 @@
-.set LOCALID_DRAGONSDEN2_CLAIR, 5
-.set LOCALID_DEN_CLAIR, 35
-
 DragonsDen_Cavern_MapScripts::
 	@map_script MAP_SCRIPT_ON_FRAME_TABLE, DragonsDen_Cavern_OnFrame
 	.byte 0

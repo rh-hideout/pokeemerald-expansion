@@ -1,5 +1,3 @@
-.set LOCALID_GOLDENROD_ROOF_NERD, 1
-
 GoldenrodCity_DepartmentStore_7F_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, GoldenrodCity_DepartmentStore_7F_OnTransition
 	.byte 0

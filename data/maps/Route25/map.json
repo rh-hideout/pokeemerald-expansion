@@ -148,7 +148,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_ROUTE25_MISTY"
+      "flag": "FLAG_HIDE_ROUTE25_MISTY",
+      "local_id": "LOCALID_ROUTE25_MISTY"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_BOY_2_HNS",
@@ -161,7 +162,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_ROUTE25_MISTY"
+      "flag": "FLAG_HIDE_ROUTE25_MISTY",
+      "local_id": "LOCALID_ROUTE25_MAN"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_SWABLU",
@@ -213,7 +215,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "Route25_EventScript_Eusine",
-      "flag": "FLAG_HIDE_ROUTE25_EUSINE"
+      "flag": "FLAG_HIDE_ROUTE25_EUSINE",
+      "local_id": "LOCALID_ROUTE25_EUSINE"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_SUICUNE",
@@ -226,7 +229,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "Route25_EventScript_Suicune",
-      "flag": "FLAG_HIDE_ROUTE25_SUICUNE"
+      "flag": "FLAG_HIDE_ROUTE25_SUICUNE",
+      "local_id": "LOCALID_ROUTE25_SUICUNE"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_LUVDISC",
@@ -278,7 +282,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "Route25_EventScript_MistyRematch",
-      "flag": "FLAG_HIDE_CAPE_MISTY"
+      "flag": "FLAG_HIDE_CAPE_MISTY",
+      "local_id": "LOCALID_CAPE_MISTY"
     }
   ],
   "warp_events": [

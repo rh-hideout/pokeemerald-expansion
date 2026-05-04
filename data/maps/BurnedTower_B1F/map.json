@@ -25,7 +25,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_BURNED_TOWER_BEASTS"
+      "flag": "FLAG_HIDE_BURNED_TOWER_BEASTS",
+      "local_id": "LOCALID_BURNEDTOWER_ENTEI"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_RAIKOU",
@@ -38,7 +39,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_BURNED_TOWER_BEASTS"
+      "flag": "FLAG_HIDE_BURNED_TOWER_BEASTS",
+      "local_id": "LOCALID_BURNEDTOWER_RAIKOU"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_SUICUNE",
@@ -51,7 +53,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_BURNED_TOWER_BEASTS"
+      "flag": "FLAG_HIDE_BURNED_TOWER_BEASTS",
+      "local_id": "LOCALID_BURNEDTOWER_SUICUNE"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_POKE_BALL",
@@ -155,7 +158,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_BURNED_TOWER_B1F_EUSINE"
+      "flag": "FLAG_HIDE_BURNED_TOWER_B1F_EUSINE",
+      "local_id": "LOCALID_BURNEDTOWER2_EUSINE"
     }
   ],
   "warp_events": [

@@ -218,7 +218,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "CeladonCity_EventScript_Erika",
-      "flag": "FLAG_HIDE_FOUNTAIN_ERIKA"
+      "flag": "FLAG_HIDE_FOUNTAIN_ERIKA",
+      "local_id": "LOCALID_CELADON_ERIKA"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",

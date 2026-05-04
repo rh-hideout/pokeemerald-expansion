@@ -1,6 +1,3 @@
-.set LOCALID_CINNABAR_BLUE, 1
-.set LOCALID_CINNABAR_BLAINE, 12
-
 CinnabarIsland_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, CinnabarIsland_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, SetTimeEncounters

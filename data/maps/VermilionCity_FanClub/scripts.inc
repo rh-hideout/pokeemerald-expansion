@@ -1,5 +1,3 @@
-.set LOCALID_FAN_CLUB_CLEFAIRY_DOLL, 5
-
 VermilionCity_FanClub_MapScripts::
 	.byte 0
 

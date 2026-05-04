@@ -1,5 +1,3 @@
-.set LOCALID_SAGEOFFICE_SAGE, 3
-
 EcruteakCity_SageOffice1_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, EcruteakCity_SageOffice1_OnTransition
 	.byte 0

@@ -26,7 +26,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_TOWER_MULTI_CORRIDOR_PLAYER"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_WORKER_F_HNS",
@@ -39,7 +40,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_ATTENDANT_1"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_WORKER_F_HNS",
@@ -52,7 +54,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_ATTENDANT_2"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_VAR_E",
@@ -65,7 +68,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_TOWER_MULTI_CORRIDOR_PARTNER"
     }
   ],
   "warp_events": [],

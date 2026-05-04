@@ -1,5 +1,3 @@
-.set LOCALID_OLIVINE_SABRINA, 3
-
 OlivineCity_PortOutside_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, OlivineCity_MapScript_OnTransition
 	.byte 0

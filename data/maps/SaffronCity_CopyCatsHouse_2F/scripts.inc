@@ -1,8 +1,3 @@
-.set LOCALID_COPYCAT, 1
-.set LOCALID_COPYCAT_CLEFAIRY, 4
-.set LOCALID_GOLD, 7
-.set LOCALID_KRIS, 6
-
 SaffronCity_CopyCatsHouse_2F_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, SaffronCity_CopyCatsHouse_2F_OnTransition
 	.byte 0

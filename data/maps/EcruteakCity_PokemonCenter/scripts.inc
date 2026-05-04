@@ -1,6 +1,3 @@
-.set LOCALID_NURSE, 1
-.set LOCALID_ECRUTEAK_BILL, 6
-
 EcruteakCity_PokemonCenter_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, EcruteakCity_PokemonCenter_OnTransition
 	.byte 0

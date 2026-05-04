@@ -26,7 +26,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "TrainerHill_Entrance_EventScript_Attendant",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_ATTENDANT"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_NURSE_HNS",
@@ -39,7 +40,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "TrainerHill_Entrance_EventScript_Nurse",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_TRAINERHILL_NURSE"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MART_EMPLOYEE_HNS",
@@ -65,7 +67,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "TrainerHill_Entrance_EventScript_Girl",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_GIRL"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_WORKER_M_HNS",
@@ -78,7 +81,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "TrainerHill_Entrance_EventScript_Man",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_MAN"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MART_EMPLOYEE_HNS",

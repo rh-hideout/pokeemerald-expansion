@@ -1,6 +1,3 @@
-.set LOCALID_SAILOR, 1
-.set LOCALID_SS_TIDAL, 2
-
 FarawayIsland_Entrance_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, FarawayIsland_Entrance_OnTransition
 	.byte 0

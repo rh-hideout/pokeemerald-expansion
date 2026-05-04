@@ -1,7 +1,3 @@
-.set LOCALID_OLIVINEPORT_SAILOR, 1
-.set LOCALID_OLIVINEPORT_BOAT, 6
-.set LOCALID_OLIVINEPORT_OAK, 7
-
 OlivineCity_PortInside_MapScripts::
 	.byte 0
 

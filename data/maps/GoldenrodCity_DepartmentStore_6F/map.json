@@ -64,7 +64,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "GoldenrodDeptStore6_EventScript_Whitney",
-      "flag": "FLAG_HIDE_DEPTSTORE_WHITNEY"
+      "flag": "FLAG_HIDE_DEPTSTORE_WHITNEY",
+      "local_id": "LOCALID_STORE_WHITNEY"
     }
   ],
   "warp_events": [

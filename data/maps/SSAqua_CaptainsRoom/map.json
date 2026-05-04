@@ -25,7 +25,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "SSAqua_CaptainsRoom_EventScript_Captain",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_SSAQUA_CAPTAINS_ROOM_CAPTAIN"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_TWIN_HNS",
@@ -38,7 +39,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "SSAqua_CaptainsRoom_EventScript_Granddaughter",
-      "flag": "FLAG_HIDE_SSAQUA_CAPTAINS_ROOM_GRANDDAUGHTER"
+      "flag": "FLAG_HIDE_SSAQUA_CAPTAINS_ROOM_GRANDDAUGHTER",
+      "local_id": "LOCALID_SSAQUA_CAPTAINS_ROOM_GRANDDAUGHTER"
     }
   ],
   "warp_events": [

@@ -1,11 +1,3 @@
-.set LOCALID_GOLDENROD_MACHOKE1, 11
-.set LOCALID_GOLDENROD_MACHOKE2, 12
-.set LOCALID_GOLDENROD_MACHOKE3, 13
-
-.set LOCALID_GOLDENROD_BOULDER1, 1
-.set LOCALID_GOLDENROD_BOULDER2, 2
-.set LOCALID_GOLDENROD_BOULDER3, 3
-
 GoldenrodCity_DepartmentStoreBasement_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, GoldenrodDeptElevator_OnFrame
 	map_script MAP_SCRIPT_ON_LOAD, GoldenrodCity_DepartmentStoreBasement_OnLoad

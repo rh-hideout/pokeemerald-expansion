@@ -26,7 +26,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "BirthIsland_Exterior_EventScript_Triangle",
-      "flag": "FLAG_HIDE_BIRTH_ISLAND_DEOXYS_TRIANGLE"
+      "flag": "FLAG_HIDE_BIRTH_ISLAND_DEOXYS_TRIANGLE",
+      "local_id": "LOCALID_BIRTH_ISLAND_EXTERIOR_ROCK"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_DEOXYS",
@@ -39,7 +40,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "FLAG_HIDE_DEOXYS"
+      "flag": "FLAG_HIDE_DEOXYS",
+      "local_id": "LOCALID_DEOXYS"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_SS_AQUA_HNS",

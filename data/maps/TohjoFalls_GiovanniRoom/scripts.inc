@@ -1,5 +1,3 @@
-.set LOCALID_TOHJOFALLS_GIOVANNI, 1
-
 TohjoFalls_GiovanniRoom_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, TohjoFalls_GiovanniRoom_OnTransition
 	.byte 0

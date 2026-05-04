@@ -1,5 +1,3 @@
-.set LOCALID_WELL_SLOWKING, 1
-
 SlowpokeWell_B2F_MapScripts::
 	.byte 0
 

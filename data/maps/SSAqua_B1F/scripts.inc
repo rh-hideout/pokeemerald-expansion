@@ -1,5 +1,3 @@
-.set LOCALID_SSAQUA_B1F_SAILORLOOKING, 10
-
 SSAqua_B1F_MapScripts::
 	.byte 0
 

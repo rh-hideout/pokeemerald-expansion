@@ -1,9 +1,3 @@
-.set LOCALID_ROUTE25_MISTY, 10
-.set LOCALID_ROUTE25_MAN, 11
-.set LOCALID_ROUTE25_SUICUNE, 16
-.set LOCALID_ROUTE25_EUSINE, 15
-.set LOCALID_CAPE_MISTY, 20
-
 Route25_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, Route25_MapScript_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, SetTimeEncounters

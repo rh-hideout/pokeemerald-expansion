@@ -25,7 +25,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "EmbeddedTower_EventScript_Rayquaza",
-      "flag": "FLAG_HIDE_RAYQUAZA"
+      "flag": "FLAG_HIDE_RAYQUAZA",
+      "local_id": "LOCALID_EMBEDDEDRAYQUAZA"
     }
   ],
   "warp_events": [

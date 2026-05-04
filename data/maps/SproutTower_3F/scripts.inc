@@ -1,5 +1,3 @@
-.set LOCALID_SPROUT_TOWER_SILVER, 5
-
 SproutTower_3F_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, SproutTower_3F_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, SetTimeEncounters

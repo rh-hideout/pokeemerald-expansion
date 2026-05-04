@@ -1,6 +1,3 @@
-.set LOCALID_CERULEAN_WOMAN, 2
-.set LOCALID_CERULEAN_SLOWBRO, 3
-
 CeruleanCity_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, CeruleanCity_EventScript_CityEnter
 	.byte 0
@@ -71,16 +68,16 @@ CeruleanCity_Text_Slowbro:
 
 CeruleanCity_EventScript_SlowbroWoman::
 	msgbox CeruleanCity_Text_CooltrainerF1, MSGBOX_NPC
-	turnobject LOCALID_CERULEAN_WOMAN, DIR_EAST
+	turnobject LOCALID_CERULEAN_CITY_WOMAN, DIR_EAST
 	msgbox CeruleanCity_Text_CooltrainerF2, MSGBOX_DEFAULT
 	delay 20
 	playmoncry SPECIES_SLOWBRO, CRY_MODE_NORMAL
-	applymovement2 LOCALID_CERULEAN_SLOWBRO, Common_Movement_QuestionMark
-	turnobject LOCALID_CERULEAN_SLOWBRO DIR_WEST
+	applymovement2 LOCALID_CERULEAN_CITY_SLOWBRO, Common_Movement_QuestionMark
+	turnobject LOCALID_CERULEAN_CITY_SLOWBRO DIR_WEST
 	delay 30
-	turnobject LOCALID_CERULEAN_SLOWBRO, DIR_EAST
+	turnobject LOCALID_CERULEAN_CITY_SLOWBRO, DIR_EAST
 	delay 30
-	turnobject LOCALID_CERULEAN_SLOWBRO, DIR_SOUTH
+	turnobject LOCALID_CERULEAN_CITY_SLOWBRO, DIR_SOUTH
 	delay 70
 	msgbox CeruleanCity_Text_CooltrainerF3, MSGBOX_NPC
 	end

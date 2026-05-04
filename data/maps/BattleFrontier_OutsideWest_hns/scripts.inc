@@ -1,12 +1,3 @@
-.set LOCALID_SS_TIDAL, 2
-.set LOCALID_FERRY_ATTENDANT, 3
-.set LOCALID_MANIAC_1, 9
-.set LOCALID_MANIAC_2, 10
-.set LOCALID_GIRL, 12
-.set LOCALID_CAMPER, 14
-.set LOCALID_FISHERMAN_2, 18
-.set LOCALID_MAN_4, 23
-
 BattleFrontier_OutsideWest_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, BattleFrontier_OutsideWest_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, SetTimeEncounters
@@ -226,22 +217,22 @@ BattleFrontier_OutsideWest_EventScript_Girl::
 	end
 
 BattleFrontier_OutsideWest_EventScript_GirlShudderNorth::
-	applymovement LOCALID_GIRL, BattleFrontier_OutsideWest_Movement_GirlShudderNorth
+	applymovement LOCALID_FRONTIER_GIRL, BattleFrontier_OutsideWest_Movement_GirlShudderNorth
 	waitmovement 0
 	return
 
 BattleFrontier_OutsideWest_EventScript_GirlShudderSouth::
-	applymovement LOCALID_GIRL, BattleFrontier_OutsideWest_Movement_GirlShudderSouth
+	applymovement LOCALID_FRONTIER_GIRL, BattleFrontier_OutsideWest_Movement_GirlShudderSouth
 	waitmovement 0
 	return
 
 BattleFrontier_OutsideWest_EventScript_GirlShudderWest::
-	applymovement LOCALID_GIRL, BattleFrontier_OutsideWest_Movement_GirlShudderWest
+	applymovement LOCALID_FRONTIER_GIRL, BattleFrontier_OutsideWest_Movement_GirlShudderWest
 	waitmovement 0
 	return
 
 BattleFrontier_OutsideWest_EventScript_GirlShudderEast::
-	applymovement LOCALID_GIRL, BattleFrontier_OutsideWest_Movement_GirlShudderEast
+	applymovement LOCALID_FRONTIER_GIRL, BattleFrontier_OutsideWest_Movement_GirlShudderEast
 	waitmovement 0
 	return
 

@@ -25,7 +25,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_GOLDENROD_BOULDER1"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_PUSHABLE_BOULDER_HNS",
@@ -38,7 +39,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_GOLDENROD_BOULDER2"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_PUSHABLE_BOULDER_HNS",
@@ -51,7 +53,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_GOLDENROD_BOULDER3"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_POKE_BALL",
@@ -155,7 +158,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "GoldenrodCity_DepartmentStoreBasement_EventScript_Machoke",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_GOLDENROD_MACHOKE1"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_MACHOKE",
@@ -168,7 +172,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "GoldenrodCity_DepartmentStoreBasement_EventScript_Machoke",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_GOLDENROD_MACHOKE2"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_MACHOKE",
@@ -181,7 +186,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "GoldenrodCity_DepartmentStoreBasement_EventScript_Machoke",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_GOLDENROD_MACHOKE3"
     }
   ],
   "warp_events": [

@@ -26,7 +26,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_BLACK_BELT_1"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_BLACK_BELT_HNS",
@@ -39,7 +40,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_BLACK_BELT_2"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_BLACK_BELT_HNS",
@@ -52,7 +54,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_BLACK_BELT_3"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_BLACK_BELT_HNS",
@@ -65,7 +68,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_BLACK_BELT_4"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_BLACK_BELT_HNS",
@@ -78,7 +82,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_ATTENDANT_ARENA"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_BLACK_BELT_HNS",
@@ -104,7 +109,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_ARENA_BATTLE_OPPONENT"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_VAR_1",
@@ -117,7 +123,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_ARENA_BATTLE_PLAYER"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_BLACK_BELT_HNS",
@@ -130,7 +137,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_ANNOUNCER_ARENA"
     }
   ],
   "warp_events": [],

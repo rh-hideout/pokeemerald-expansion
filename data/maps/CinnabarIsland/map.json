@@ -36,7 +36,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "CinnabarIsland_EventScript_Blue",
-      "flag": "FLAG_HIDE_CINNABAR_BLUE"
+      "flag": "FLAG_HIDE_CINNABAR_BLUE",
+      "local_id": "LOCALID_CINNABAR_BLUE"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_MAGCARGO",
@@ -179,7 +180,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "CinnabarIsland_EventScript_Blaine",
-      "flag": "FLAG_HIDE_CINNABAR_BLAINE"
+      "flag": "FLAG_HIDE_CINNABAR_BLAINE",
+      "local_id": "LOCALID_CINNABAR_BLAINE"
     }
   ],
   "warp_events": [

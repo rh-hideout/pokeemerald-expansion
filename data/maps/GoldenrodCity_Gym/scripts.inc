@@ -1,5 +1,3 @@
-.set LOCALID_GOLDENROD_CITY_GYM_BRIDGET, 6
-
 GoldenrodCity_Gym_MapScripts::
 	.byte 0
 @Carrie, Bridget, Victoria, Samantha, gym guy

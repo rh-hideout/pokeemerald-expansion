@@ -54,7 +54,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "Route10_EventScript_Zapdos",
-      "flag": "FLAG_HIDE_ZAPDOS"
+      "flag": "FLAG_HIDE_ZAPDOS",
+      "local_id": "LOCALID_ROUTE10_ZAPDOS"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_HIKER_HNS",
@@ -132,7 +133,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "Route10_EventScript_Surge",
-      "flag": "FLAG_HIDE_PLANT_SURGE"
+      "flag": "FLAG_HIDE_PLANT_SURGE",
+      "local_id": "LOCALID_ROUTE10_SURGE"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE_HNS",

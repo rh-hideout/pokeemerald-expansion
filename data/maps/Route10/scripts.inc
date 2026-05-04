@@ -1,6 +1,3 @@
-.set LOCALID_ROUTE10_SURGE, 8
-.set LOCALID_ROUTE10_ZAPDOS, 2
-
 Route10_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, Route10_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, SetTimeEncounters

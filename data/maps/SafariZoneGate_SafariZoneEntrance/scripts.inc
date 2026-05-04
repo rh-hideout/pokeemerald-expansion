@@ -1,5 +1,3 @@
-.set LOCALID_SAFARIZONEGATE_BAOBA, 1
-
 SafariZoneGate_SafariZoneEntrance_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, SafariZoneGate_SafariZoneEntrance_OnFrame
 	.byte 0

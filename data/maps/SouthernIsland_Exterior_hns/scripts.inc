@@ -1,6 +1,3 @@
-.set LOCALID_SAILOR, 1
-.set LOCALID_SS_TIDAL, 2
-
 SouthernIsland_Exterior_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, SouthernIsland_Exterior_OnTransition
 	.byte 0

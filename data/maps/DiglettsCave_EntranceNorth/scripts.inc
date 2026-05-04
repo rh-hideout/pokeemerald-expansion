@@ -1,5 +1,3 @@
-.set LOCALID_DIGLETT_BROCK, 1
-
 DiglettsCave_EntranceNorth_MapScripts::
 	.byte 0
 

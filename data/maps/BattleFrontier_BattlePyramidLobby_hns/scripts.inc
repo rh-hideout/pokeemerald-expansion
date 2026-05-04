@@ -1,6 +1,3 @@
-.set LOCALID_ATTENDANT, 1
-.set LOCALID_HINT_GIVER, 2
-
 BattleFrontier_BattlePyramidLobby_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, BattleFrontier_BattlePyramidLobby_OnFrame
 	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, BattleFrontier_BattleDomeLobby_OnWarp

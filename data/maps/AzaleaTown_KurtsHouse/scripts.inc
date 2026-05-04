@@ -1,6 +1,3 @@
-.set LOCALID_AZALEA_TOWN_KURT_BEFORE, 1
-.set LOCALID_AZALEA_TOWN_KURT, 3
-
 AzaleaTown_KurtsHouse_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, AzaleaTown_KurtsHouse_OnFrame
 	map_script MAP_SCRIPT_ON_TRANSITION, AzaleaTown_KurtsHouse_OnTransition

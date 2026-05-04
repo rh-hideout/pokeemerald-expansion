@@ -1,5 +1,3 @@
-.set LOCALID_VICTORYROAD_SILVER, 13
-
 VictoryRoadKanto_1F_MapScripts::
 	.byte 0
 

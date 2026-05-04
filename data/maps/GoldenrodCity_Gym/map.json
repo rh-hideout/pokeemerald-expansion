@@ -90,7 +90,8 @@
       "trainer_type": "TRAINER_TYPE_NORMAL",
       "trainer_sight_or_berry_tree_id": "1",
       "script": "GoldenrodCity_Gym_EventScript_Bridget",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_GOLDENROD_CITY_GYM_BRIDGET"
     }
   ],
   "warp_events": [

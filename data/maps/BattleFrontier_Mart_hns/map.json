@@ -39,7 +39,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "BattleFrontier_Mart_EventScript_OldWoman",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_OLD_WOMAN"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_OLD_MAN_2_HNS",
@@ -78,7 +79,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "BattleFrontier_Mart_EventScript_Clerk2",
-      "flag": "FLAG_FRONTIER_SECOND_CLERK"
+      "flag": "FLAG_FRONTIER_SECOND_CLERK",
+      "local_id": "LOCALID_SECOND_CLERK"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MART_EMPLOYEE_HNS",
@@ -91,7 +93,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "BattleFrontier_Mart_EventScript_ClerkTMs",
-      "flag": "FLAG_FINITE_TMS_CLERK"
+      "flag": "FLAG_FINITE_TMS_CLERK",
+      "local_id": "LOCALID_TM_CLERK"
     }
   ],
   "warp_events": [

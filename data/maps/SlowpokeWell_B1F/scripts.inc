@@ -1,5 +1,3 @@
-.set LOCALID_WELL_KURT, 19
-
 SlowpokeWell_B1F_MapScripts::
 	.byte 0
 

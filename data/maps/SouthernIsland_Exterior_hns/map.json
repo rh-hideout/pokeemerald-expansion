@@ -26,7 +26,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "SouthernIsland_Exterior_EventScript_Sailor",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_SAILOR"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_SS_AQUA_HNS",
@@ -39,7 +40,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_SS_TIDAL"
     }
   ],
   "warp_events": [

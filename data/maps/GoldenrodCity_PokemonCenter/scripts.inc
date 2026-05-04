@@ -1,5 +1,3 @@
-.set LOCALID_NURSE, 1
-
 GoldenrodCity_PokemonCenter_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, GoldenrodCity_PokemonCenter_OnTransition
 	.byte 0

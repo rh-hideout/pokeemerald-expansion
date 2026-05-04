@@ -57,7 +57,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "IlexForest_EventScript_Farfetchd_1A",
-      "flag": "FLAG_HIDE_ILEX_FOREST_FARFETCHD_1"
+      "flag": "FLAG_HIDE_ILEX_FOREST_FARFETCHD_1",
+      "local_id": "LOCALID_ILEX_FOREST_FARFETCHD_1"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE_HNS",
@@ -109,7 +110,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_CELEBI"
+      "flag": "FLAG_HIDE_CELEBI",
+      "local_id": "LOCALID_ILEX_FOREST_CELEBI"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_BUG_CATCHER_HNS",
@@ -421,7 +423,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "IlexForest_EventScript_Farfetchd_2A",
-      "flag": "FLAG_HIDE_ILEX_FOREST_FARFETCHD_2"
+      "flag": "FLAG_HIDE_ILEX_FOREST_FARFETCHD_2",
+      "local_id": "LOCALID_ILEX_FOREST_FARFETCHD_2"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_FARFETCHD",
@@ -434,7 +437,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "IlexForest_EventScript_Farfetchd_4A",
-      "flag": "FLAG_HIDE_ILEX_FOREST_FARFETCHD_4"
+      "flag": "FLAG_HIDE_ILEX_FOREST_FARFETCHD_4",
+      "local_id": "LOCALID_ILEX_FOREST_FARFETCHD_4"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_FARFETCHD",
@@ -447,7 +451,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "IlexForest_EventScript_Farfetchd_3A",
-      "flag": "FLAG_HIDE_ILEX_FOREST_FARFETCHD_3"
+      "flag": "FLAG_HIDE_ILEX_FOREST_FARFETCHD_3",
+      "local_id": "LOCALID_ILEX_FOREST_FARFETCHD_3"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_KURT_HNS",
@@ -460,7 +465,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_CELEBI"
+      "flag": "FLAG_HIDE_CELEBI",
+      "local_id": "LOCALID_ILEX_FOREST_KURT"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_BUTTERFREE",
@@ -486,7 +492,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_ILEX_FOREST_KIMONO"
+      "flag": "FLAG_HIDE_ILEX_FOREST_KIMONO",
+      "local_id": "LOCALID_ILEX_FOREST_KIMONO"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_LITTLE_BOY_HNS",
@@ -499,7 +506,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "VerdanturfTown_PokemonCenter_1F_EventScript_FuryCutterTutor",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_ILEX_FOREST_BUTTERFREE"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_CELEBI",
@@ -512,7 +520,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "IlexForest_EventScript_SecondCelebi",
-      "flag": "FLAG_HIDE_ILEX_FOREST_SECOND_CELEBI"
+      "flag": "FLAG_HIDE_ILEX_FOREST_SECOND_CELEBI",
+      "local_id": "LOCALID_ILEX_FOREST_SECOND_CELEBI"
     }
   ],
   "warp_events": [

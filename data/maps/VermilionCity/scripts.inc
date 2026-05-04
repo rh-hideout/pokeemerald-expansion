@@ -1,7 +1,3 @@
-.set LOCALID_VERMILION_EUSINE, 24
-.set LOCALID_VERMILION_SUICUNE, 23
-.set LOCALID_VERMILION_SNORLAX, 1
-
 VermilionCity_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, VermilionCity_MapScript_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, SetTimeEncounters

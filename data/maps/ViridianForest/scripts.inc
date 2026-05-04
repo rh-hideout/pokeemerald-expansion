@@ -1,5 +1,3 @@
-.set LOCALID_VIRIDIAN_BUGSY, 16
-
 ViridianForest_MapScripts::
 	.byte 0
 

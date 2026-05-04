@@ -116,7 +116,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_AZALEA_ARIADOS_LEFT"
+      "flag": "FLAG_HIDE_AZALEA_ARIADOS_LEFT",
+      "local_id": "LOCALID_AZALEA_ARIADOS_LEFT1"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_ARIADOS",
@@ -129,7 +130,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_AZALEA_ARIADOS_MID"
+      "flag": "FLAG_HIDE_AZALEA_ARIADOS_MID",
+      "local_id": "LOCALID_AZALEA_ARIADOS_MID1"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_ARIADOS",
@@ -142,7 +144,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_AZALEA_ARIADOS_RIGHT"
+      "flag": "FLAG_HIDE_AZALEA_ARIADOS_RIGHT",
+      "local_id": "LOCALID_AZALEA_ARIADOS_RIGHT1"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_ARIADOS",
@@ -155,7 +158,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_AZALEA_ARIADOS_LEFT"
+      "flag": "FLAG_HIDE_AZALEA_ARIADOS_LEFT",
+      "local_id": "LOCALID_AZALEA_ARIADOS_LEFT2"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_ARIADOS",
@@ -168,7 +172,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_AZALEA_ARIADOS_MID"
+      "flag": "FLAG_HIDE_AZALEA_ARIADOS_MID",
+      "local_id": "LOCALID_AZALEA_ARIADOS_MID2"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_ARIADOS",
@@ -181,7 +186,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_AZALEA_ARIADOS_RIGHT"
+      "flag": "FLAG_HIDE_AZALEA_ARIADOS_RIGHT",
+      "local_id": "LOCALID_AZALEA_ARIADOS_RIGHT2"
     }
   ],
   "warp_events": [

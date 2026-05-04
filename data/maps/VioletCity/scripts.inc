@@ -1,6 +1,3 @@
-.set LOCALID_VIOLETCITY_EARL, 4
-.set LOCALID_VIOLET_KIMONO, 31
-
 VioletCity_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, VioletCity_OnFrame
 	map_script MAP_SCRIPT_ON_TRANSITION, VioletCity_OnTransition

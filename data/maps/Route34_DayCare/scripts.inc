@@ -1,5 +1,3 @@
-.set LOCALID_DAYCARE_LADY, 1
-
 Route34_DayCare_MapScripts::
 	.byte 0
 

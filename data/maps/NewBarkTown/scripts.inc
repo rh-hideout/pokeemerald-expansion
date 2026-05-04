@@ -1,6 +1,3 @@
-.set LOCALID_LASS, 2
-.set LOCALID_SILVER, 3
-
 NewBarkTown_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, NewBarkTown_OnTransition
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, NewBarkTown_OnFrame

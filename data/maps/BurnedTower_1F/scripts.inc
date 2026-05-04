@@ -1,6 +1,3 @@
-.set LOCALID_BURNED_TOWER_SILVER, 3
-.set LOCALID_BURNED_TOWER_EUSINE, 1
-
 BurnedTower_1F_MapScripts::
 	map_script MAP_SCRIPT_ON_LOAD, BurnedTower_1F_OnLoad
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, BurnedTower_1F_OnFrame

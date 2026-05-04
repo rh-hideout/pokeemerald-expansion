@@ -1,5 +1,3 @@
-.set LOCALID_NURSE, 1
-
 CherrygroveCity_PokemonCenter_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, CherryGrove_Pokecenter_OnTransition
 	.byte 0

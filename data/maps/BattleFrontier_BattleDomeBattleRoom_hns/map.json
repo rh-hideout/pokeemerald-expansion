@@ -26,7 +26,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_ANNOUNCER_DOME"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_TWIN_HNS",
@@ -39,7 +40,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_AUDIENCE_TWIN"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_OLD_MAN_2_HNS",
@@ -91,7 +93,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_AUDIENCE_WALKING"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_OLD_MAN_HNS",
@@ -130,7 +133,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_REFEREE"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_FAT_MAN_HNS",
@@ -182,7 +186,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_DOME_PLAYER"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_COOLTRAINER_F_HNS",
@@ -208,7 +213,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "0"
+      "flag": "0",
+      "local_id": "LOCALID_DOME_OPPONENT"
     }
   ],
   "warp_events": [],

@@ -1,7 +1,3 @@
-.set LOCALID_OPPONENT, 1
-.set LOCALID_ATTENDANT_1, 2
-.set LOCALID_ATTENDANT_2, 3
-
 BattleFrontier_BattleTowerBattleRoom_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, BattleFrontier_BattleTowerBattleRoom_OnFrame
 	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, BattleFrontier_BattleTowerBattleRoom_OnWarp
@@ -36,8 +32,8 @@ BattleFrontier_BattleTowerBattleRoom_EventScript_EnterRoom::
 
 BattleFrontier_BattleTowerBattleRoom_EventScript_OpponentEnter::
 	tower_setopponent
-	addobject LOCALID_OPPONENT
-	applymovement LOCALID_OPPONENT, BattleFrontier_BattleTowerBattleRoom_Movement_OpponentEnter
+	addobject LOCALID_TOWER_BATTLE_OPPONENT
+	applymovement LOCALID_TOWER_BATTLE_OPPONENT, BattleFrontier_BattleTowerBattleRoom_Movement_OpponentEnter
 	waitmovement 0
 	tower_getopponentintro 0
 	msgbox gStringVar4, MSGBOX_DEFAULT
@@ -57,9 +53,9 @@ BattleFrontier_BattleTowerBattleRoom_EventScript_DefeatedOpponent::
 	tower_setbattlewon
 	switch VAR_RESULT
 	case 7, BattleFrontier_BattleTowerBattleRoom_EventScript_WarpToLobbyWon
-	applymovement LOCALID_OPPONENT, BattleFrontier_BattleTowerBattleRoom_Movement_OpponentExit
+	applymovement LOCALID_TOWER_BATTLE_OPPONENT, BattleFrontier_BattleTowerBattleRoom_Movement_OpponentExit
 	waitmovement 0
-	removeobject LOCALID_OPPONENT
+	removeobject LOCALID_TOWER_BATTLE_OPPONENT
 	frontier_getbrainstatus
 	call_if_ne VAR_RESULT, FRONTIER_BRAIN_NOT_READY, BattleFrontier_BattleTowerBattleRoom_EventScript_SecondAttendantEnter
 	applymovement LOCALID_ATTENDANT_1, BattleFrontier_BattleTowerBattleRoom_Movement_AttendantApproachPlayer
@@ -241,8 +237,8 @@ BattleFrontier_BattleTowerBattleRoom_EventScript_BattleAnabel::
 	waitmovement 0
 	applymovement LOCALID_ATTENDANT_1, BattleFrontier_BattleTowerBattleRoom_Movement_AttendantReturnToPos
 	waitmovement 0
-	addobject LOCALID_OPPONENT
-	applymovement LOCALID_OPPONENT, BattleFrontier_BattleTowerBattleRoom_Movement_AnabelEnter
+	addobject LOCALID_TOWER_BATTLE_OPPONENT
+	applymovement LOCALID_TOWER_BATTLE_OPPONENT, BattleFrontier_BattleTowerBattleRoom_Movement_AnabelEnter
 	waitmovement 0
 	switch VAR_TEMP_F
 	case FRONTIER_BRAIN_GOLD, BattleFrontier_BattleTowerBattleRoom_EventScript_AnabelGoldIntro

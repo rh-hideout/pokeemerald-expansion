@@ -1,6 +1,3 @@
-.set LOCALID_NURSE, 1
-.set LOCALID_INDIGOPLATEAU_ABRA, 6
-
 IndigoPlateau_PokemonCenter_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, IndigoPlateau_PokemonCenter_OnFrame 
 	map_script MAP_SCRIPT_ON_TRANSITION, IndigoPlateau_Pokecenter_OnTransition

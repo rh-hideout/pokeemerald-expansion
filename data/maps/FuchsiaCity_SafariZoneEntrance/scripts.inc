@@ -1,5 +1,3 @@
-.set LOCALID_SAFARIZONEFUCHSIA_STEVEN, 2
-
 FuchsiaCity_SafariZoneEntrance_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, FuchsiaCity_SafariZoneEntrance_OnFrame
 	map_script MAP_SCRIPT_ON_TRANSITION, FuchsiaCity_SafariZoneEntrance_OnTransition

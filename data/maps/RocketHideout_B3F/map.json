@@ -38,7 +38,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_ROCKETHIDEOUT3_LANCE_DRAGONITE"
+      "flag": "FLAG_HIDE_ROCKETHIDEOUT3_LANCE_DRAGONITE",
+      "local_id": "LOCALID_ROCKETHIDEOUT3_DRAGONITE"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_LANCE_HNS",
@@ -51,7 +52,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_ROCKETHIDEOUT3_LANCE_DRAGONITE"
+      "flag": "FLAG_HIDE_ROCKETHIDEOUT3_LANCE_DRAGONITE",
+      "local_id": "LOCALID_ROCKETHIDEOUT3_LANCE"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ROCKET_M_HNS",
@@ -77,7 +79,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_ROCKETHIDEOUT3_SILVER"
+      "flag": "FLAG_HIDE_ROCKETHIDEOUT3_SILVER",
+      "local_id": "LOCALID_ROCKETHIDEOUT3_SILVER"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL_HNS",
@@ -194,7 +197,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "RocketHideout_B3F_EventScript_Murkrow",
-      "flag": "FLAG_HIDE_ROCKETHIDEOUT3_MURKROW"
+      "flag": "FLAG_HIDE_ROCKETHIDEOUT3_MURKROW",
+      "local_id": "LOCALID_ROCKETHIDEOUT3_MURKROW"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_PETREL_HNS",
@@ -207,7 +211,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_ROCKETHIDEOUT3_PETREL"
+      "flag": "FLAG_HIDE_ROCKETHIDEOUT3_PETREL",
+      "local_id": "LOCALID_ROCKETHIDEOUT3_PETREL"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_GIOVANNI_HNS",
@@ -220,7 +225,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "RocketHideout_B3F_EventScript_Giovanni",
-      "flag": "FLAG_HIDE_ROCKETHIDEOUT3_GIOVANNI"
+      "flag": "FLAG_HIDE_ROCKETHIDEOUT3_GIOVANNI",
+      "local_id": "LOCALID_ROCKETHIDEOUT3_GIOVANNI"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_MURKROW",
@@ -233,7 +239,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "RocketHideout_B3F_EventScript_Murkrow",
-      "flag": "FLAG_HIDE_ROCKETHIDEOUT3_MURKROWSTAIRS"
+      "flag": "FLAG_HIDE_ROCKETHIDEOUT3_MURKROWSTAIRS",
+      "local_id": "LOCALID_ROCKETHIDEOUT3_MURKROWSTAIRS"
     }
   ],
   "warp_events": [

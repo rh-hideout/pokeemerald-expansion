@@ -1,5 +1,3 @@
-.set LOCALID_CERULEANCAVE_MEWTWO, 8
-
 CeruleanCave_B2F_MapScripts::
 	.byte 0
 

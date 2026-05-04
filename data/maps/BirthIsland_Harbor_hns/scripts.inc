@@ -1,6 +1,3 @@
-.set LOCALID_SAILOR, 1
-.set LOCALID_SS_TIDAL, 2
-
 BirthIsland_Harbor_MapScripts::
 	.byte 0
 
