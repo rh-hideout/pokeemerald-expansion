@@ -4469,44 +4469,42 @@ static void SetMonTypeIcons(void)
     }
 }
 
+static enum BattlerId GetCurrentBattlerFromSumIndex(u32 sumIndex)
+{
+    for (u32 battler = B_BATTLER_0; battler < gBattlersCount; battler++)
+    {
+        if (!IsOnPlayerSide(battler))
+            continue;
+
+        if (gBattlerPartyIndexes[battler] == sumIndex)
+            return battler;
+    }
+
+    return B_BATTLER_0;
+}
+
 static enum Type SummaryScreen_GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum Type type)
 {
     if (!P_SHOW_DYNAMIC_TYPES)
         return type;
 
-    enum BattlerId battler;
-    enum MonState state = gMain.inBattle ? MON_IN_BATTLE : MON_OUTSIDE_BATTLE;
-
-    // check if mon on field
-    for (battler = B_BATTLER_0; battler < gBattlersCount; battler++)
+    if (!gMain.inBattle)
     {
-        if (state == MON_OUTSIDE_BATTLE)
-            break;
-
-        if (!IsOnPlayerSide(battler))
-            continue;
-
-        if (gBattlerPartyIndexes[battler] == sMonSummaryScreen->curMonIndex)
-            break;
+        return CheckDynamicMoveType(mon, move, 0, MON_OUTSIDE_BATTLE);
+    }
+    else if (IsDoubleBattle())
+    {
+        if (sMonSummaryScreen->curMonIndex > 1) // not on the field
+            return CheckDynamicMoveType(mon, move, 0, MON_OUTSIDE_BATTLE);
+        else
+            return CheckDynamicMoveType(mon, move, GetCurrentBattlerFromSumIndex(sMonSummaryScreen->curMonIndex), MON_IN_BATTLE);
+    }
+    else if (sMonSummaryScreen->curMonIndex > 0) // not on the field
+    {
+        return CheckDynamicMoveType(mon, move, 0, MON_OUTSIDE_BATTLE);
     }
 
-    if (IsDoubleBattle())
-    {
-        if (sMonSummaryScreen->curMonIndex > 1)
-        {
-            battler = 0;
-            state = MON_OUTSIDE_BATTLE;
-        }
-    }
-    else
-    {
-        battler = 0;
-        state = MON_OUTSIDE_BATTLE;
-    }
-
-    type = CheckDynamicMoveType(mon, move, battler, state);
-
-    return type;
+    return CheckDynamicMoveType(mon, move, GetCurrentBattlerFromSumIndex(sMonSummaryScreen->curMonIndex), MON_IN_BATTLE);
 }
 
 static void SetMoveTypeIcons(void)
