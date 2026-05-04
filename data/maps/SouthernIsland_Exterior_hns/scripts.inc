@@ -1,16 +1,16 @@
-SouthernIsland_Exterior_MapScripts::
-	map_script MAP_SCRIPT_ON_TRANSITION, SouthernIsland_Exterior_OnTransition
+SouthernIsland_Exterior_hns_MapScripts::
+	map_script MAP_SCRIPT_ON_TRANSITION, SouthernIsland_Exterior_hns_OnTransition
 	.byte 0
 
-SouthernIsland_Exterior_OnTransition:
+SouthernIsland_Exterior_hns_OnTransition:
 	setflag FLAG_VISITED_CERULEAN_CITY
 	end
 
-SouthernIsland_Exterior_EventScript_Sailor::
+SouthernIsland_Exterior_hns_EventScript_Sailor::
 	lock
 	faceplayer
 	msgbox EventTicket_Text_SouthernIslandSailBack, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, NO, SouthernIsland_Exterior_EventScript_AsYouLike
+	goto_if_eq VAR_RESULT, NO, SouthernIsland_Exterior_hns_EventScript_AsYouLike
 	msgbox EventTicket_Text_SailHome, MSGBOX_DEFAULT
 	closemessage
 	applymovement VAR_LAST_TALKED, Common_Movement_WalkInPlaceFasterDown
@@ -24,7 +24,7 @@ SouthernIsland_Exterior_EventScript_Sailor::
 	release
 	end
 
-SouthernIsland_Exterior_EventScript_AsYouLike::
+SouthernIsland_Exterior_hns_EventScript_AsYouLike::
 	msgbox EventTicket_Text_AsYouLike, MSGBOX_DEFAULT
 	release
 	end
@@ -48,7 +48,7 @@ Ferry_Movement_DepartIslandBoardWest:
 	walk_in_place_faster_down
 	step_end
 
-SouthernIsland_Exterior_EventScript_Sign::
+SouthernIsland_Exterior_hns_EventScript_Sign::
 	msgbox SouthernIsland_Exterior_Text_Sign, MSGBOX_SIGN
 	end
 

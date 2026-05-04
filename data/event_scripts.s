@@ -1738,7 +1738,6 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/scripts/battle_frontier.inc"
 	.include "data/scripts/apricorn_tree.inc"
 
-.if POKEMON_HNS
 @ HnS scripts
 	.include "data/maps/TestMap2_hns/scripts.inc"
 
@@ -2233,4 +2232,3 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/maps/SlateportCity_BattleTentLobby_hns/scripts.inc"
 	.include "data/maps/SlateportCity_BattleTentCorridor_hns/scripts.inc"
 	.include "data/maps/SlateportCity_BattleTentBattleRoom_hns/scripts.inc"
-.endif

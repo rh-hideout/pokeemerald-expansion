@@ -1,2 +1,2 @@
-BattlePyramidSquare01_MapScripts::
+BattlePyramidSquare01_hns_MapScripts::
 	.byte 0

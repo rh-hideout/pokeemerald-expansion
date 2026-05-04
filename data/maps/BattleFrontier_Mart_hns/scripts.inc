@@ -1,40 +1,40 @@
-BattleFrontier_Mart_MapScripts::
-	map_script MAP_SCRIPT_ON_TRANSITION, BattleFrontier_Mart_OnTransition
+BattleFrontier_Mart_hns_MapScripts::
+	map_script MAP_SCRIPT_ON_TRANSITION, BattleFrontier_Mart_hns_OnTransition
 	.byte 0
 
-BattleFrontier_Mart_OnTransition::
-	call_if_set FLAG_FINITE_TMS, BattleFrontier_Mart_TMClerkCheck
-	call_if_unset FLAG_FINITE_TMS, BattleFrontier_Mart_HideTMClerk
-	call_if_unset FLAG_DEFEATED_RED, BattleFrontier_Mart_HideSecondClerk
-	call_if_set FLAG_DEFEATED_RED, BattleFrontier_Mart_ShowSecondClerk
+BattleFrontier_Mart_hns_OnTransition::
+	call_if_set FLAG_FINITE_TMS, BattleFrontier_Mart_hns_TMClerkCheck
+	call_if_unset FLAG_FINITE_TMS, BattleFrontier_Mart_hns_HideTMClerk
+	call_if_unset FLAG_DEFEATED_RED, BattleFrontier_Mart_hns_HideSecondClerk
+	call_if_set FLAG_DEFEATED_RED, BattleFrontier_Mart_hns_ShowSecondClerk
 	end
 
-BattleFrontier_Mart_TMClerkCheck::
-	call_if_unset FLAG_DEFEATED_RED, BattleFrontier_Mart_HideTMClerk
-	call_if_set FLAG_DEFEATED_RED, BattleFrontier_Mart_ShowTMClerk
+BattleFrontier_Mart_hns_TMClerkCheck::
+	call_if_unset FLAG_DEFEATED_RED, BattleFrontier_Mart_hns_HideTMClerk
+	call_if_set FLAG_DEFEATED_RED, BattleFrontier_Mart_hns_ShowTMClerk
 	end
 
-BattleFrontier_Mart_HideTMClerk::
+BattleFrontier_Mart_hns_HideTMClerk::
 	setflag FLAG_FINITE_TMS_CLERK
 	removeobject LOCALID_TM_CLERK
 	return
 
-BattleFrontier_Mart_ShowTMClerk::
+BattleFrontier_Mart_hns_ShowTMClerk::
 	clearflag FLAG_FINITE_TMS_CLERK
 	addobject LOCALID_TM_CLERK
 	return
 
-BattleFrontier_Mart_HideSecondClerk::
+BattleFrontier_Mart_hns_HideSecondClerk::
 	setflag FLAG_FRONTIER_SECOND_CLERK
 	removeobject LOCALID_SECOND_CLERK
 	return
 
-BattleFrontier_Mart_ShowSecondClerk::
+BattleFrontier_Mart_hns_ShowSecondClerk::
 	clearflag FLAG_FRONTIER_SECOND_CLERK
 	addobject LOCALID_SECOND_CLERK
 	return
 
-BattleFrontier_Mart_EventScript_Clerk::
+BattleFrontier_Mart_hns_EventScript_Clerk::
 	lock
 	faceplayer
 	message gText_HowMayIServeYou
@@ -44,18 +44,18 @@ BattleFrontier_Mart_EventScript_Clerk::
 	release
 	end
 
-BattleFrontier_Mart_EventScript_Clerk2::
+BattleFrontier_Mart_hns_EventScript_Clerk2::
 	lock
 	faceplayer
 	message gText_HowMayIServeYou
 	waitmessage
-	pokemart BattleFrontier_Mart_Pokemart
+	pokemart BattleFrontier_Mart_hns_Pokemart
 	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
 	release
 	end
 
 	.align 2
-BattleFrontier_Mart_Pokemart:
+BattleFrontier_Mart_hns_Pokemart:
 	.2byte ITEM_SAFARI_BALL
 	.2byte ITEM_MAX_REVIVE
 	.2byte ITEM_PP_UP
@@ -67,18 +67,18 @@ BattleFrontier_Mart_Pokemart:
 	release
 	end
 
-BattleFrontier_Mart_EventScript_ClerkTMs::
+BattleFrontier_Mart_hns_EventScript_ClerkTMs::
 	lock
 	faceplayer
 	message gText_HowMayIServeYou
 	waitmessage
-	pokemart BattleFrontier_Mart_PokemartTMs
+	pokemart BattleFrontier_Mart_hns_PokemartTMs
 	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
 	release
 	end
 
 	.align 2
-BattleFrontier_Mart_PokemartTMs:
+BattleFrontier_Mart_hns_PokemartTMs:
 	.2byte ITEM_TM01
 	.2byte ITEM_TM02
 	.2byte ITEM_TM03
@@ -117,35 +117,35 @@ BattleFrontier_Mart_PokemartTMs:
 	release
 	end
 
-BattleFrontier_Mart_EventScript_OldMan::
-	msgbox BattleFrontier_Mart_Text_ChaperonGrandson, MSGBOX_NPC
+BattleFrontier_Mart_hns_EventScript_OldMan::
+	msgbox BattleFrontier_Mart_hns_Text_ChaperonGrandson, MSGBOX_NPC
 	end
 
-BattleFrontier_Mart_EventScript_OldWoman::
+BattleFrontier_Mart_hns_EventScript_OldWoman::
 	lock
 	applymovement LOCALID_OLD_WOMAN, Common_Movement_FaceDown
 	waitmovement 0
-	msgbox BattleFrontier_Mart_Text_ProteinMakeNiceGift, MSGBOX_DEFAULT
+	msgbox BattleFrontier_Mart_hns_Text_ProteinMakeNiceGift, MSGBOX_DEFAULT
 	release
 	end
 
-BattleFrontier_Mart_EventScript_Boy::
-	msgbox BattleFrontier_Mart_Text_FacilitiesDontAllowItems, MSGBOX_NPC
+BattleFrontier_Mart_hns_EventScript_Boy::
+	msgbox BattleFrontier_Mart_hns_Text_FacilitiesDontAllowItems, MSGBOX_NPC
 	end
 
-BattleFrontier_Mart_Text_ChaperonGrandson:
+BattleFrontier_Mart_hns_Text_ChaperonGrandson:
 	.string "We came here to chaperon our\n"
 	.string "grandson.\p"
 	.string "But since we're here, we thought\n"
 	.string "we should get some souvenirs.$"
 
-BattleFrontier_Mart_Text_ProteinMakeNiceGift:
+BattleFrontier_Mart_hns_Text_ProteinMakeNiceGift:
 	.string "Dear, what do you think of this?\n"
 	.string "Wouldn't this make a nice gift?\p"
 	.string "It's…PRO…TE…IN?\n"
 	.string "It sounds delicious, doesn't it?$"
 
-BattleFrontier_Mart_Text_FacilitiesDontAllowItems:
+BattleFrontier_Mart_hns_Text_FacilitiesDontAllowItems:
 	.string "A lot of the BATTLE FRONTIER's\n"
 	.string "facilities don't allow the use of items\l"
 	.string "during battles.\p"

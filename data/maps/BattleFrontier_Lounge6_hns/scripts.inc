@@ -1,12 +1,12 @@
-BattleFrontier_Lounge6_MapScripts::
+BattleFrontier_Lounge6_hns_MapScripts::
 	.byte 0
 
-BattleFrontier_Lounge6_EventScript_Trader::
-	msgbox BattleFrontier_Lounge6_Text_WouldYouLikeToTrade, MSGBOX_DEFAULT
+BattleFrontier_Lounge6_hns_EventScript_Trader::
+	msgbox BattleFrontier_Lounge6_hns_Text_WouldYouLikeToTrade, MSGBOX_DEFAULT
 	closemessage
 	end
 
-BattleFrontier_Lounge6_Text_WouldYouLikeToTrade:
+BattleFrontier_Lounge6_hns_Text_WouldYouLikeToTrade:
 	.string "My POKéMON is a SKITTY.\n"
 	.string "Do you know it?\l"
 	.string "It's quite cute and rather nice.\p"
@@ -21,7 +21,7 @@ BattleFrontier_Lounge6_Text_WouldYouLikeToTrade:
 @	copyvar VAR_0x8004, VAR_0x8008
 @	specialvar VAR_RESULT, GetInGameTradeSpeciesInfo
 @	copyvar VAR_0x8009, VAR_RESULT
-@	msgbox BattleFrontier_Lounge6_Text_WouldYouLikeToTrade, MSGBOX_YESNO
+@	msgbox BattleFrontier_Lounge6_hns_Text_WouldYouLikeToTrade, MSGBOX_YESNO
 @	goto_if_eq VAR_RESULT, NO, BattleFrontier_Lounge6_EventScript_DeclineTrade
 @	special ChoosePartyMon
 @	waitstate

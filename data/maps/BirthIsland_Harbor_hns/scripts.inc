@@ -1,11 +1,11 @@
-BirthIsland_Harbor_MapScripts::
+BirthIsland_Harbor_hns_MapScripts::
 	.byte 0
 
-BirthIsland_Harbor_EventScript_Sailor::
+BirthIsland_Harbor_hns_EventScript_Sailor::
 	lock
 	faceplayer
 	msgbox BirthIsland_Harbor_Text_SailorReturn, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, NO, BirthIsland_Harbor_EventScript_AsYouLike
+	goto_if_eq VAR_RESULT, NO, BirthIsland_Harbor_hns_EventScript_AsYouLike
 	msgbox EventTicket_Text_SailHome, MSGBOX_DEFAULT
 	closemessage
 	applymovement VAR_LAST_TALKED, Common_Movement_WalkInPlaceFasterDown
@@ -19,7 +19,7 @@ BirthIsland_Harbor_EventScript_Sailor::
 	release
 	end
 
-BirthIsland_Harbor_EventScript_AsYouLike::
+BirthIsland_Harbor_hns_EventScript_AsYouLike::
 	msgbox EventTicket_Text_AsYouLike, MSGBOX_DEFAULT
 	release
 	end

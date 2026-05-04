@@ -1,49 +1,49 @@
-BattleFrontier_Lounge9_MapScripts::
+BattleFrontier_Lounge9_hns_MapScripts::
 	.byte 0
 
-BattleFrontier_Lounge9_Heal::
+BattleFrontier_Lounge9_hns_Heal::
 	specialvar VAR_RESULT, IsPokecenterChallengeActivated
 	goto_if_eq VAR_RESULT, TRUE, SSTidalRooms_EventScript_Bed_PokecenterChallenge
-	msgbox BattleFrontier_Lounge9_Heal_TEXT, MSGBOX_NPC
+	msgbox BattleFrontier_Lounge9_hns_Heal_TEXT, MSGBOX_NPC
 	waitmessage
 	fadescreen 0x1
 	playfanfare MUS_HEAL
 	waitfanfare
 	special HealPlayerParty
 	fadescreen 0x0
-	msgbox BattleFrontier_Lounge9_Heal_TEXT2, MSGBOX_NPC
+	msgbox BattleFrontier_Lounge9_hns_Heal_TEXT2, MSGBOX_NPC
 	waitmessage
 	release
 	end
 
-BattleFrontier_Lounge9_Heal_TEXT:
+BattleFrontier_Lounge9_hns_Heal_TEXT:
 	.string "Hi! Welcome to the TRAINING DOJO!\n"
 	.string "I will heal your POKéMON.$"
 
-BattleFrontier_Lounge9_Heal_TEXT2:
+BattleFrontier_Lounge9_hns_Heal_TEXT2:
 	.string "We hope to see you again!$"
 
-BattleFrontier_Lounge9_EV_No:
-	msgbox BattleFrontier_Lounge9_EV_No_TEXT, MSGBOX_DEFAULT
+BattleFrontier_Lounge9_hns_EV_No:
+	msgbox BattleFrontier_Lounge9_hns_EV_No_TEXT, MSGBOX_DEFAULT
 	waitmessage
 	release
 	end
 
 @EV Gym
 
-BattleFrontier_Lounge9_EV_HP::
+BattleFrontier_Lounge9_hns_EV_HP::
 	lock
 	faceplayer
-	msgbox BattleFrontier_Lounge9_EV_HP_TEXT, MSGBOX_YESNO
+	msgbox BattleFrontier_Lounge9_hns_EV_HP_TEXT, MSGBOX_YESNO
 	waitmessage
 	compare VAR_RESULT, YES
-	goto_if_eq BattleFrontier_Lounge9_EV_HP_Yes
+	goto_if_eq BattleFrontier_Lounge9_hns_EV_HP_Yes
 	compare VAR_RESULT, NO
-	goto_if_eq BattleFrontier_Lounge9_EV_No
+	goto_if_eq BattleFrontier_Lounge9_hns_EV_No
 	end
 
-BattleFrontier_Lounge9_EV_HP_Yes::
-	msgbox BattleFrontier_Lounge9_EV_HP_TEXT2, MSGBOX_DEFAULT
+BattleFrontier_Lounge9_hns_EV_HP_Yes::
+	msgbox BattleFrontier_Lounge9_hns_EV_HP_TEXT2, MSGBOX_DEFAULT
 	waitmessage
 	setflag FLAG_SYS_NO_CATCHING
 	setflag FLAG_NO_SHINY
@@ -54,19 +54,19 @@ BattleFrontier_Lounge9_EV_HP_Yes::
 	release
 	end
 	
-BattleFrontier_Lounge9_EV_ATK::
+BattleFrontier_Lounge9_hns_EV_ATK::
 	lock
 	faceplayer
-	msgbox BattleFrontier_Lounge9_EV_ATK_TEXT, MSGBOX_YESNO
+	msgbox BattleFrontier_Lounge9_hns_EV_ATK_TEXT, MSGBOX_YESNO
 	waitmessage
 	compare VAR_RESULT, YES
-	goto_if_eq BattleFrontier_Lounge9_EV_ATK_Yes
+	goto_if_eq BattleFrontier_Lounge9_hns_EV_ATK_Yes
 	compare VAR_RESULT, NO
-	goto_if_eq BattleFrontier_Lounge9_EV_No
+	goto_if_eq BattleFrontier_Lounge9_hns_EV_No
 	end
 
-BattleFrontier_Lounge9_EV_ATK_Yes::
-	msgbox BattleFrontier_Lounge9_EV_ATK_TEXT2, MSGBOX_DEFAULT
+BattleFrontier_Lounge9_hns_EV_ATK_Yes::
+	msgbox BattleFrontier_Lounge9_hns_EV_ATK_TEXT2, MSGBOX_DEFAULT
 	waitmessage
 	setflag FLAG_SYS_NO_CATCHING
 	setflag FLAG_NO_SHINY
@@ -77,19 +77,19 @@ BattleFrontier_Lounge9_EV_ATK_Yes::
 	release
 	end
 
-BattleFrontier_Lounge9_EV_SATK::
+BattleFrontier_Lounge9_hns_EV_SATK::
 	lock
 	faceplayer
-	msgbox BattleFrontier_Lounge9_EV_SATK_TEXT, MSGBOX_YESNO
+	msgbox BattleFrontier_Lounge9_hns_EV_SATK_TEXT, MSGBOX_YESNO
 	waitmessage
 	compare VAR_RESULT, YES
-	goto_if_eq BattleFrontier_Lounge9_EV_SATK_Yes
+	goto_if_eq BattleFrontier_Lounge9_hns_EV_SATK_Yes
 	compare VAR_RESULT, NO
-	goto_if_eq BattleFrontier_Lounge9_EV_No
+	goto_if_eq BattleFrontier_Lounge9_hns_EV_No
 	end
 
-BattleFrontier_Lounge9_EV_SATK_Yes::
-	msgbox BattleFrontier_Lounge9_EV_SATK_TEXT2, MSGBOX_DEFAULT
+BattleFrontier_Lounge9_hns_EV_SATK_Yes::
+	msgbox BattleFrontier_Lounge9_hns_EV_SATK_TEXT2, MSGBOX_DEFAULT
 	waitmessage
 	setflag FLAG_SYS_NO_CATCHING
 	setflag FLAG_NO_SHINY
@@ -100,19 +100,19 @@ BattleFrontier_Lounge9_EV_SATK_Yes::
 	release
 	end
 
-BattleFrontier_Lounge9_EV_DEF::
+BattleFrontier_Lounge9_hns_EV_DEF::
 	lock
 	faceplayer
-	msgbox BattleFrontier_Lounge9_EV_DEF_TEXT, MSGBOX_YESNO
+	msgbox BattleFrontier_Lounge9_hns_EV_DEF_TEXT, MSGBOX_YESNO
 	waitmessage
 	compare VAR_RESULT, YES
-	goto_if_eq BattleFrontier_Lounge9_EV_DEF_Yes
+	goto_if_eq BattleFrontier_Lounge9_hns_EV_DEF_Yes
 	compare VAR_RESULT, NO
-	goto_if_eq BattleFrontier_Lounge9_EV_No
+	goto_if_eq BattleFrontier_Lounge9_hns_EV_No
 	end
 
-BattleFrontier_Lounge9_EV_DEF_Yes::
-	msgbox BattleFrontier_Lounge9_EV_DEF_TEXT2, MSGBOX_DEFAULT
+BattleFrontier_Lounge9_hns_EV_DEF_Yes::
+	msgbox BattleFrontier_Lounge9_hns_EV_DEF_TEXT2, MSGBOX_DEFAULT
 	waitmessage
 	setflag FLAG_SYS_NO_CATCHING
 	setflag FLAG_NO_SHINY
@@ -123,19 +123,19 @@ BattleFrontier_Lounge9_EV_DEF_Yes::
 	release
 	end
 
-BattleFrontier_Lounge9_EV_SDEF::
+BattleFrontier_Lounge9_hns_EV_SDEF::
 	lock
 	faceplayer
-	msgbox BattleFrontier_Lounge9_EV_SDEF_TEXT, MSGBOX_YESNO
+	msgbox BattleFrontier_Lounge9_hns_EV_SDEF_TEXT, MSGBOX_YESNO
 	waitmessage
 	compare VAR_RESULT, YES
-	goto_if_eq BattleFrontier_Lounge9_EV_SDEF_Yes
+	goto_if_eq BattleFrontier_Lounge9_hns_EV_SDEF_Yes
 	compare VAR_RESULT, NO
-	goto_if_eq BattleFrontier_Lounge9_EV_No
+	goto_if_eq BattleFrontier_Lounge9_hns_EV_No
 	end
 
-BattleFrontier_Lounge9_EV_SDEF_Yes::
-	msgbox BattleFrontier_Lounge9_EV_SDEF_TEXT2, MSGBOX_DEFAULT
+BattleFrontier_Lounge9_hns_EV_SDEF_Yes::
+	msgbox BattleFrontier_Lounge9_hns_EV_SDEF_TEXT2, MSGBOX_DEFAULT
 	waitmessage
 	setflag FLAG_SYS_NO_CATCHING
 	setflag FLAG_NO_SHINY
@@ -146,19 +146,19 @@ BattleFrontier_Lounge9_EV_SDEF_Yes::
 	release
 	end
 
-BattleFrontier_Lounge9_EV_SPD::
+BattleFrontier_Lounge9_hns_EV_SPD::
 	lock
 	faceplayer
-	msgbox BattleFrontier_Lounge9_EV_SPD_TEXT, MSGBOX_YESNO
+	msgbox BattleFrontier_Lounge9_hns_EV_SPD_TEXT, MSGBOX_YESNO
 	waitmessage
 	compare VAR_RESULT, YES
-	goto_if_eq BattleFrontier_Lounge9_EV_SPD_Yes
+	goto_if_eq BattleFrontier_Lounge9_hns_EV_SPD_Yes
 	compare VAR_RESULT, NO
-	goto_if_eq BattleFrontier_Lounge9_EV_No
+	goto_if_eq BattleFrontier_Lounge9_hns_EV_No
 	end
 
-BattleFrontier_Lounge9_EV_SPD_Yes::
-	msgbox BattleFrontier_Lounge9_EV_SPD_TEXT2, MSGBOX_DEFAULT
+BattleFrontier_Lounge9_hns_EV_SPD_Yes::
+	msgbox BattleFrontier_Lounge9_hns_EV_SPD_TEXT2, MSGBOX_DEFAULT
 	waitmessage
 	setflag FLAG_SYS_NO_CATCHING
 	setflag FLAG_NO_SHINY
@@ -169,64 +169,64 @@ BattleFrontier_Lounge9_EV_SPD_Yes::
 	release
 	end
 
-BattleFrontier_Lounge9_EV_HP_TEXT:
+BattleFrontier_Lounge9_hns_EV_HP_TEXT:
 	.string "Hi ya buddy! I can train your\n"
 	.string "POKéMON in HEALTH POINTS.\p"
 	.string "Are you ready?$"
 
-BattleFrontier_Lounge9_EV_HP_TEXT2:
+BattleFrontier_Lounge9_hns_EV_HP_TEXT2:
 	.string "Go WAILORD!$"
 
-BattleFrontier_Lounge9_EV_ATK_TEXT:
+BattleFrontier_Lounge9_hns_EV_ATK_TEXT:
 	.string "OSHA! I can train your POKéMON\n"
 	.string "in ATTACK.\p"
 	.string "Are you ready?$"
 
-BattleFrontier_Lounge9_EV_ATK_TEXT2:
+BattleFrontier_Lounge9_hns_EV_ATK_TEXT2:
 	.string "Go GALLADE!$"
 
-BattleFrontier_Lounge9_EV_SATK_TEXT:
+BattleFrontier_Lounge9_hns_EV_SATK_TEXT:
 	.string "Bonjour! I can train your POKéMON\n"
 	.string "in SPECIAL ATTACK.\p"
 	.string "Are you ready?$"
 
-BattleFrontier_Lounge9_EV_SATK_TEXT2:
+BattleFrontier_Lounge9_hns_EV_SATK_TEXT2:
 	.string "Go GARDEVOIR!$"
 	
-BattleFrontier_Lounge9_EV_DEF_TEXT:
+BattleFrontier_Lounge9_hns_EV_DEF_TEXT:
 	.string "Sup' kid! I can train your\n"
 	.string "POKéMON in DEFENSE.\p"
 	.string "Are you ready?$"
 
-BattleFrontier_Lounge9_EV_DEF_TEXT2:
+BattleFrontier_Lounge9_hns_EV_DEF_TEXT2:
 	.string "Go AGGRON!$"
 
-BattleFrontier_Lounge9_EV_SDEF_TEXT:
+BattleFrontier_Lounge9_hns_EV_SDEF_TEXT:
 	.string "Bonjour mon trainer! I can train your\n"
 	.string "POKéMON in SPECIAL DEFENSE.\p"
 	.string "Are you ready?$"
 
-BattleFrontier_Lounge9_EV_SDEF_TEXT2:
+BattleFrontier_Lounge9_hns_EV_SDEF_TEXT2:
 	.string "Go LUDICOLO!$"
 
-BattleFrontier_Lounge9_EV_SPD_TEXT:
+BattleFrontier_Lounge9_hns_EV_SPD_TEXT:
 	.string "Hmph… I can train your\n"
 	.string "POKéMON in SPEED.\p"
 	.string "Are you ready?$"
 
-BattleFrontier_Lounge9_EV_SPD_TEXT2:
+BattleFrontier_Lounge9_hns_EV_SPD_TEXT2:
 	.string "Go SCEPTILE!$"
 
-BattleFrontier_Lounge9_EV_No_TEXT:
+BattleFrontier_Lounge9_hns_EV_No_TEXT:
 	.string "No? Okay.$"
 
 @Columns text
 
-BattleFrontier_Lounge9_EV_Column::
-	msgbox BattleFrontier_Lounge9_EV_Column_Text, MSGBOX_SIGN
+BattleFrontier_Lounge9_hns_EV_Column::
+	msgbox BattleFrontier_Lounge9_hns_EV_Column_Text, MSGBOX_SIGN
 	end
 
-BattleFrontier_Lounge9_EV_Column_Text:
+BattleFrontier_Lounge9_hns_EV_Column_Text:
     .string "Welcome to the TRAINING DOJO!\p"
     .string "Here, you will find various types of\n"
     .string "training to improve POKéMON STATS.\p"
@@ -255,84 +255,84 @@ BattleFrontier_Lounge9_EV_Column_Text:
 
 @EV RESET
 
-BattleFrontier_Lounge9_EV_SetZero::
+BattleFrontier_Lounge9_hns_EV_SetZero::
 	lockall
 	faceplayer
-	goto_if_unset FLAG_EV_MAN_FIRSTIME, BattleFrontier_Lounge9_EV_SetZeroIntro
-	msgbox BattleFrontier_Lounge9_EV_SetZeroTextNoIntro, MSGBOX_YESNO
+	goto_if_unset FLAG_EV_MAN_FIRSTIME, BattleFrontier_Lounge9_hns_EV_SetZeroIntro
+	msgbox BattleFrontier_Lounge9_hns_EV_SetZeroTextNoIntro, MSGBOX_YESNO
 	waitmessage
 	compare VAR_RESULT, YES
-	goto_if_eq BattleFrontier_Lounge9_EV_SetZeroMoney
+	goto_if_eq BattleFrontier_Lounge9_hns_EV_SetZeroMoney
 	compare VAR_RESULT, NO
-	goto_if_eq BattleFrontier_Lounge9_EV_SetZeroNo
+	goto_if_eq BattleFrontier_Lounge9_hns_EV_SetZeroNo
 	end
 
-BattleFrontier_Lounge9_EV_SetZeroIntro::
+BattleFrontier_Lounge9_hns_EV_SetZeroIntro::
 	setflag FLAG_EV_MAN_FIRSTIME
-	msgbox BattleFrontier_Lounge9_EV_SetZeroText, MSGBOX_NPC
+	msgbox BattleFrontier_Lounge9_hns_EV_SetZeroText, MSGBOX_NPC
 	waitmessage
 	end
 
-BattleFrontier_Lounge9_EV_SetZeroMoney::
-	msgbox BattleFrontier_Lounge9_EV_SetZeroMoneyText, MSGBOX_YESNO
+BattleFrontier_Lounge9_hns_EV_SetZeroMoney::
+	msgbox BattleFrontier_Lounge9_hns_EV_SetZeroMoneyText, MSGBOX_YESNO
 	waitmessage
 	compare VAR_RESULT, YES
-	goto_if_eq BattleFrontier_Lounge9_EV_SetZeroCheckMoney
+	goto_if_eq BattleFrontier_Lounge9_hns_EV_SetZeroCheckMoney
 	compare VAR_RESULT, NO
-	goto_if_eq BattleFrontier_Lounge9_EV_SetZeroNo
+	goto_if_eq BattleFrontier_Lounge9_hns_EV_SetZeroNo
 	end
 
-BattleFrontier_Lounge9_EV_SetZeroCheckMoney::
+BattleFrontier_Lounge9_hns_EV_SetZeroCheckMoney::
 	checkmoney 20000, 0
 	compare VAR_RESULT, TRUE
-	goto_if_eq BattleFrontier_Lounge9_EV_SetZeroYes
+	goto_if_eq BattleFrontier_Lounge9_hns_EV_SetZeroYes
 	compare VAR_RESULT, FALSE
-	goto_if_eq BattleFrontier_Lounge9_EV_SetZeroNoMoney
+	goto_if_eq BattleFrontier_Lounge9_hns_EV_SetZeroNoMoney
 	end
 
-BattleFrontier_Lounge9_EV_SetZeroYes::
-	msgbox BattleFrontier_Lounge9_EV_SetZeroText2, MSGBOX_DEFAULT
+BattleFrontier_Lounge9_hns_EV_SetZeroYes::
+	msgbox BattleFrontier_Lounge9_hns_EV_SetZeroText2, MSGBOX_DEFAULT
 	waitmessage
 	closemessage
 	special ChoosePartyMon
 	waitstate
 	compare VAR_0x8004, PARTY_SIZE
-	goto_if_ge BattleFrontier_Lounge9_EV_SetZeroNo
+	goto_if_ge BattleFrontier_Lounge9_hns_EV_SetZeroNo
 	specialvar VAR_RESULT, ScriptGetPartyMonSpecies
 	compare VAR_RESULT, SPECIES_EGG
-	goto_if_eq BattleFrontier_Lounge9_EV_SetZeroEgg
-	goto BattleFrontier_Lounge9_EV_SetZeroSure
+	goto_if_eq BattleFrontier_Lounge9_hns_EV_SetZeroEgg
+	goto BattleFrontier_Lounge9_hns_EV_SetZeroSure
 	end
 
-BattleFrontier_Lounge9_EV_SetZeroNo::
-	msgbox BattleFrontier_Lounge9_EV_SetZeroTextNo, MSGBOX_DEFAULT
+BattleFrontier_Lounge9_hns_EV_SetZeroNo::
+	msgbox BattleFrontier_Lounge9_hns_EV_SetZeroTextNo, MSGBOX_DEFAULT
 	waitmessage
 	releaseall
 	end
 
-BattleFrontier_Lounge9_EV_SetZeroNoMoney::
-	msgbox BattleFrontier_Lounge9_EV_SetZeroTextNoMoney, MSGBOX_DEFAULT
+BattleFrontier_Lounge9_hns_EV_SetZeroNoMoney::
+	msgbox BattleFrontier_Lounge9_hns_EV_SetZeroTextNoMoney, MSGBOX_DEFAULT
 	waitmessage
 	releaseall
 	end
 
-BattleFrontier_Lounge9_EV_SetZeroEgg::
-	msgbox BattleFrontier_Lounge9_EV_SetZeroTextEgg, MSGBOX_DEFAULT
+BattleFrontier_Lounge9_hns_EV_SetZeroEgg::
+	msgbox BattleFrontier_Lounge9_hns_EV_SetZeroTextEgg, MSGBOX_DEFAULT
 	waitmessage
 	releaseall
 	end
 
-BattleFrontier_Lounge9_EV_SetZeroSure::
+BattleFrontier_Lounge9_hns_EV_SetZeroSure::
 	faceplayer
-	msgbox BattleFrontier_Lounge9_EV_SetZeroTextSure, MSGBOX_YESNO
+	msgbox BattleFrontier_Lounge9_hns_EV_SetZeroTextSure, MSGBOX_YESNO
 	waitmessage
 	compare VAR_RESULT, YES
-	goto_if_eq BattleFrontier_Lounge9_EV_SetZeroProceed
+	goto_if_eq BattleFrontier_Lounge9_hns_EV_SetZeroProceed
 	compare VAR_RESULT, NO
-	goto_if_eq BattleFrontier_Lounge9_EV_SetZeroNo
+	goto_if_eq BattleFrontier_Lounge9_hns_EV_SetZeroNo
 	end
 
-BattleFrontier_Lounge9_EV_SetZeroProceed::
+BattleFrontier_Lounge9_hns_EV_SetZeroProceed::
 	faceplayer
 	fadescreen 0x1
 	delay 30
@@ -350,12 +350,12 @@ BattleFrontier_Lounge9_EV_SetZeroProceed::
 	special SetSpdEvs
 	special SetSpAtkEvs
 	special SetSpDefEvs
-	msgbox BattleFrontier_Lounge9_EV_SetZeroText3, MSGBOX_DEFAULT
+	msgbox BattleFrontier_Lounge9_hns_EV_SetZeroText3, MSGBOX_DEFAULT
 	closemessage
 	releaseall
 	end
 
-BattleFrontier_Lounge9_EV_SetZeroText:
+BattleFrontier_Lounge9_hns_EV_SetZeroText:
     .string "Greetings, trainer. My name is EVAN,\n"
     .string "though I am commonly referred to as\n"
     .string "EV-MAN.\p"
@@ -365,119 +365,119 @@ BattleFrontier_Lounge9_EV_SetZeroText:
     .string "Should you wish to reset a POKéMON's\n"
     .string "EVs entirely, please speak to me.$"
 
-BattleFrontier_Lounge9_EV_SetZeroTextNoIntro:
+BattleFrontier_Lounge9_hns_EV_SetZeroTextNoIntro:
     .string "EV-MAN: Welcome back.\n"
     .string "Would you like me to reset all your\l"
     .string "POKéMON's EFFORT VALUES?$"
 
-BattleFrontier_Lounge9_EV_SetZeroText2:
+BattleFrontier_Lounge9_hns_EV_SetZeroText2:
 	.string "Which POKéMON EVs should I reset\n"
 	.string "to zero?$"
 
-BattleFrontier_Lounge9_EV_SetZeroText3:
+BattleFrontier_Lounge9_hns_EV_SetZeroText3:
     .string "Phew! That was tough, but I made it!\n"
     .string "All of its EVs have been reset to zero!$"
 
-BattleFrontier_Lounge9_EV_SetZeroTextEgg:
+BattleFrontier_Lounge9_hns_EV_SetZeroTextEgg:
 	.string "Sorry, that will not work.$"
 
-BattleFrontier_Lounge9_EV_SetZeroTextNo:
+BattleFrontier_Lounge9_hns_EV_SetZeroTextNo:
 	.string "Come back if you need to!$"
 
-BattleFrontier_Lounge9_EV_SetZeroMoneyText:
+BattleFrontier_Lounge9_hns_EV_SetZeroMoneyText:
     .string "This process is rather difficult.\n"
     .string "It will cost 20,000¥.\l"
     .string "Would you like to proceed?$"
 
-BattleFrontier_Lounge9_EV_SetZeroTextNoMoney:
+BattleFrontier_Lounge9_hns_EV_SetZeroTextNoMoney:
     .string "You don't have enough money.\p"
     .string "Come back when you do.$"
 
-BattleFrontier_Lounge9_EV_SetZeroTextSure:
+BattleFrontier_Lounge9_hns_EV_SetZeroTextSure:
     .string "Are you sure you want to reset this\n"
     .string "POKéMON's EVs?\p"
     .string "This process cannot be undone.$"
 
 @IV setter to 31 (all of them) &&&& HIDDEN POWER Type selector
 
-BattleFrontier_Lounge9_IV_Man::
+BattleFrontier_Lounge9_hns_IV_Man::
 	checkflag FLAG_IV_SETTER
 	lockall
 	faceplayer
-	goto_if_unset FLAG_SYS_GAME_CLEAR, BattleFrontier_Lounge9_IV_ManNoChampion
-	call_if_unset FLAG_IV_SETTER, BattleFrontier_Lounge9_IV_First_Time
-	msgbox BattleFrontier_Lounge9_IV_Text1, MSGBOX_YESNO
+	goto_if_unset FLAG_SYS_GAME_CLEAR, BattleFrontier_Lounge9_hns_IV_ManNoChampion
+	call_if_unset FLAG_IV_SETTER, BattleFrontier_Lounge9_hns_IV_First_Time
+	msgbox BattleFrontier_Lounge9_hns_IV_Text1, MSGBOX_YESNO
 	waitmessage
 	compare VAR_RESULT, YES
-	goto_if_eq BattleFrontier_Lounge9_IV_CheckMoney
+	goto_if_eq BattleFrontier_Lounge9_hns_IV_CheckMoney
 	compare VAR_RESULT, NO
-	goto_if_eq BattleFrontier_Lounge9_IV_No
+	goto_if_eq BattleFrontier_Lounge9_hns_IV_No
 	end
 
-BattleFrontier_Lounge9_IV_ManNoChampion::
-	msgbox BattleFrontier_Lounge9_IV_TextNoChampion, MSGBOX_NPC
+BattleFrontier_Lounge9_hns_IV_ManNoChampion::
+	msgbox BattleFrontier_Lounge9_hns_IV_TextNoChampion, MSGBOX_NPC
 	releaseall
 	end
 
-BattleFrontier_Lounge9_IV_First_Time::
-	msgbox BattleFrontier_Lounge9_IV_TextFirstTime, MSGBOX_NPC
+BattleFrontier_Lounge9_hns_IV_First_Time::
+	msgbox BattleFrontier_Lounge9_hns_IV_TextFirstTime, MSGBOX_NPC
 	setflag FLAG_IV_SETTER
 	releaseall
 	end
 
-BattleFrontier_Lounge9_IV_No::
-	msgbox BattleFrontier_Lounge9_IV_Text_No, MSGBOX_DEFAULT
+BattleFrontier_Lounge9_hns_IV_No::
+	msgbox BattleFrontier_Lounge9_hns_IV_Text_No, MSGBOX_DEFAULT
 	waitmessage
 	releaseall
 	end
 
-BattleFrontier_Lounge9_IV_NoLevel::
-	msgbox BattleFrontier_Lounge9_IV_Text_NoLevel, MSGBOX_DEFAULT
+BattleFrontier_Lounge9_hns_IV_NoLevel::
+	msgbox BattleFrontier_Lounge9_hns_IV_Text_NoLevel, MSGBOX_DEFAULT
 	waitmessage
 	releaseall
 	end
 
-BattleFrontier_Lounge9_IV_CheckMoney::
+BattleFrontier_Lounge9_hns_IV_CheckMoney::
 	checkmoney 100000, 0
 	compare VAR_RESULT, TRUE
-	goto_if_eq BattleFrontier_Lounge9_IV_ChoosePkm
+	goto_if_eq BattleFrontier_Lounge9_hns_IV_ChoosePkm
 	compare VAR_RESULT, FALSE
-	goto_if_eq BattleFrontier_Lounge9_EV_SetZeroNoMoney
+	goto_if_eq BattleFrontier_Lounge9_hns_EV_SetZeroNoMoney
 	end
 
-BattleFrontier_Lounge9_IV_ChoosePkm::
+BattleFrontier_Lounge9_hns_IV_ChoosePkm::
 	faceplayer
 	closemessage
 	special ChoosePartyMon
 	waitstate
 	compare VAR_0x8004, PARTY_SIZE
-	goto_if_ge BattleFrontier_Lounge9_IV_No
+	goto_if_ge BattleFrontier_Lounge9_hns_IV_No
 	specialvar VAR_RESULT, ScriptGetPartyMonSpecies
 	compare VAR_RESULT, SPECIES_EGG
-	goto_if_eq BattleFrontier_Lounge9_EV_SetZeroEgg
-	goto BattleFrontier_Lounge9_IV_CheckIfLvlMax
+	goto_if_eq BattleFrontier_Lounge9_hns_EV_SetZeroEgg
+	goto BattleFrontier_Lounge9_hns_IV_CheckIfLvlMax
 	end
 
-BattleFrontier_Lounge9_IV_CheckIfLvlMax::
+BattleFrontier_Lounge9_hns_IV_CheckIfLvlMax::
 	faceplayer
 	waitmessage
 	checkpartymonlevel 100
 	compare VAR_RESULT, TRUE
-	goto_if_eq BattleFrontier_Lounge9_IV_Continue_Question_CustomOrMax
+	goto_if_eq BattleFrontier_Lounge9_hns_IV_Continue_Question_CustomOrMax
 	compare VAR_RESULT, FALSE
-	goto_if_eq BattleFrontier_Lounge9_IV_NoLevel
+	goto_if_eq BattleFrontier_Lounge9_hns_IV_NoLevel
 	releaseall
 	end
 
-BattleFrontier_Lounge9_IV_Continue_Question_CustomOrMax::
+BattleFrontier_Lounge9_hns_IV_Continue_Question_CustomOrMax::
 	faceplayer
-	msgbox BattleFrontier_Lounge9_IV_Text_CustomizeIVs, MSGBOX_DEFAULT
+	msgbox BattleFrontier_Lounge9_hns_IV_Text_CustomizeIVs, MSGBOX_DEFAULT
 	waitmessage
 	dynmultichoice 20, 8, FALSE, 2, 0, DYN_MULTICHOICE_CB_NONE, EventScript_IVSetter_Text_CustomizeIVs, EventScript_IVSetter_Text_SetMax
 	switch VAR_RESULT
-	case 0, BattleFrontier_Lounge9_IV_CustomizeIVs_SelectType
-	case 1, BattleFrontier_Lounge9_IV_SetMax
-	case MULTI_B_PRESSED, BattleFrontier_Lounge9_IV_No
+	case 0, BattleFrontier_Lounge9_hns_IV_CustomizeIVs_SelectType
+	case 1, BattleFrontier_Lounge9_hns_IV_SetMax
+	case MULTI_B_PRESSED, BattleFrontier_Lounge9_hns_IV_No
 	closemessage
 	release
 	end
@@ -488,7 +488,7 @@ EventScript_IVSetter_Text_CustomizeIVs:
 EventScript_IVSetter_Text_SetMax:
 	.string "SET to MAX$"
 
-BattleFrontier_Lounge9_IV_SetMax::
+BattleFrontier_Lounge9_hns_IV_SetMax::
 	faceplayer
 	fadescreen 0x1
 	delay 100
@@ -507,37 +507,37 @@ BattleFrontier_Lounge9_IV_SetMax::
 	special SetSpdIvs
 	special SetSpAtkIvs
 	special SetSpDefIvs
-	msgbox BattleFrontier_Lounge9_IV_Finish, MSGBOX_DEFAULT
+	msgbox BattleFrontier_Lounge9_hns_IV_Finish, MSGBOX_DEFAULT
 	closemessage
 	releaseall
 	end
 
-BattleFrontier_Lounge9_IV_CustomizeIVs_SelectType:
-	msgbox BattleFrontier_Lounge9_IV_Text_CustomizeIVs_SetType, MSGBOX_DEFAULT
+BattleFrontier_Lounge9_hns_IV_CustomizeIVs_SelectType:
+	msgbox BattleFrontier_Lounge9_hns_IV_Text_CustomizeIVs_SetType, MSGBOX_DEFAULT
 	dynmultichoice 0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE, EventScript_IVSetter_Type_Fighting, EventScript_IVSetter_Type_Flying, EventScript_IVSetter_Type_Poison, EventScript_IVSetter_Type_Ground, EventScript_IVSetter_Type_Rock, EventScript_IVSetter_Type_Bug, EventScript_IVSetter_Type_Ghost, EventScript_IVSetter_Type_Steel, EventScript_IVSetter_Type_Fairy, EventScript_IVSetter_Type_Fire, EventScript_IVSetter_Type_Water, EventScript_IVSetter_Type_Grass, EventScript_IVSetter_Type_Electric, EventScript_IVSetter_Type_Psychic, EventScript_IVSetter_Type_Ice, EventScript_IVSetter_Type_Dragon, EventScript_IVSetter_Type_Dark 
 	switch VAR_RESULT
-	case 0, BattleFrontier_Lounge9_MultichoiceIVs_SetType_Fighting
-	case 1, BattleFrontier_Lounge9_MultichoiceIVs_SetType_Flying
-	case 2, BattleFrontier_Lounge9_MultichoiceIVs_SetType_Poison
-	case 3, BattleFrontier_Lounge9_MultichoiceIVs_SetType_Ground
-	case 4, BattleFrontier_Lounge9_MultichoiceIVs_SetType_Rock
-	case 5, BattleFrontier_Lounge9_MultichoiceIVs_SetType_Bug
-	case 6, BattleFrontier_Lounge9_MultichoiceIVs_SetType_Ghost
-	case 7, BattleFrontier_Lounge9_MultichoiceIVs_SetType_Steel
-	case 8, BattleFrontier_Lounge9_MultichoiceIVs_SetType_Fairy
-	case 9, BattleFrontier_Lounge9_MultichoiceIVs_SetType_Fire
-	case 10, BattleFrontier_Lounge9_MultichoiceIVs_SetType_Water
-	case 11, BattleFrontier_Lounge9_MultichoiceIVs_SetType_Grass
-	case 12, BattleFrontier_Lounge9_MultichoiceIVs_SetType_Electric
-	case 13, BattleFrontier_Lounge9_MultichoiceIVs_SetType_Psychic
-	case 14, BattleFrontier_Lounge9_MultichoiceIVs_SetType_Ice
-	case 15, BattleFrontier_Lounge9_MultichoiceIVs_SetType_Dragon
-	case 16, BattleFrontier_Lounge9_MultichoiceIVs_SetType_Dark
+	case 0, BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Fighting
+	case 1, BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Flying
+	case 2, BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Poison
+	case 3, BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Ground
+	case 4, BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Rock
+	case 5, BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Bug
+	case 6, BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Ghost
+	case 7, BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Steel
+	case 8, BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Fairy
+	case 9, BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Fire
+	case 10, BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Water
+	case 11, BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Grass
+	case 12, BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Electric
+	case 13, BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Psychic
+	case 14, BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Ice
+	case 15, BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Dragon
+	case 16, BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Dark
 	closemessage
 	release
 	end
 
-BattleFrontier_Lounge9_MultichoiceIVs_SetType_Fighting::
+BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Fighting::
 	faceplayer
 	fadescreen 0x1
 	delay 100
@@ -556,12 +556,12 @@ BattleFrontier_Lounge9_MultichoiceIVs_SetType_Fighting::
 	special SetSpAtkIvs
 	special SetSpDefIvs
 	special SetSpdIvs
-	msgbox BattleFrontier_Lounge9_IV_Finish, MSGBOX_DEFAULT
+	msgbox BattleFrontier_Lounge9_hns_IV_Finish, MSGBOX_DEFAULT
 	closemessage
 	releaseall
 	end
 
-BattleFrontier_Lounge9_MultichoiceIVs_SetType_Flying::
+BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Flying::
 	faceplayer
 	fadescreen 0x1
 	delay 100
@@ -580,12 +580,12 @@ BattleFrontier_Lounge9_MultichoiceIVs_SetType_Flying::
 	special SetSpAtkIvs
 	special SetSpDefIvs
 	special SetSpdIvs
-	msgbox BattleFrontier_Lounge9_IV_Finish, MSGBOX_DEFAULT
+	msgbox BattleFrontier_Lounge9_hns_IV_Finish, MSGBOX_DEFAULT
 	closemessage
 	releaseall
 	end
 
-BattleFrontier_Lounge9_MultichoiceIVs_SetType_Poison::
+BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Poison::
 	faceplayer
 	fadescreen 0x1
 	delay 100
@@ -604,12 +604,12 @@ BattleFrontier_Lounge9_MultichoiceIVs_SetType_Poison::
 	special SetSpAtkIvs
 	special SetSpDefIvs
 	special SetSpdIvs
-	msgbox BattleFrontier_Lounge9_IV_Finish, MSGBOX_DEFAULT
+	msgbox BattleFrontier_Lounge9_hns_IV_Finish, MSGBOX_DEFAULT
 	closemessage
 	releaseall
 	end
 
-BattleFrontier_Lounge9_MultichoiceIVs_SetType_Ground::
+BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Ground::
 	faceplayer
 	fadescreen 0x1
 	delay 100
@@ -628,12 +628,12 @@ BattleFrontier_Lounge9_MultichoiceIVs_SetType_Ground::
 	special SetSpAtkIvs
 	special SetSpDefIvs
 	special SetSpdIvs
-	msgbox BattleFrontier_Lounge9_IV_Finish, MSGBOX_DEFAULT
+	msgbox BattleFrontier_Lounge9_hns_IV_Finish, MSGBOX_DEFAULT
 	closemessage
 	releaseall
 	end
 
-BattleFrontier_Lounge9_MultichoiceIVs_SetType_Rock::
+BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Rock::
 	faceplayer
 	fadescreen 0x1
 	delay 100
@@ -652,12 +652,12 @@ BattleFrontier_Lounge9_MultichoiceIVs_SetType_Rock::
 	special SetSpAtkIvs
 	special SetSpDefIvs
 	special SetSpdIvs
-	msgbox BattleFrontier_Lounge9_IV_Finish, MSGBOX_DEFAULT
+	msgbox BattleFrontier_Lounge9_hns_IV_Finish, MSGBOX_DEFAULT
 	closemessage
 	releaseall
 	end
 
-BattleFrontier_Lounge9_MultichoiceIVs_SetType_Bug::
+BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Bug::
 	faceplayer
 	fadescreen 0x1
 	delay 100
@@ -676,12 +676,12 @@ BattleFrontier_Lounge9_MultichoiceIVs_SetType_Bug::
 	special SetSpAtkIvs
 	special SetSpDefIvs
 	special SetSpdIvs
-	msgbox BattleFrontier_Lounge9_IV_Finish, MSGBOX_DEFAULT
+	msgbox BattleFrontier_Lounge9_hns_IV_Finish, MSGBOX_DEFAULT
 	closemessage
 	releaseall
 	end
 
-BattleFrontier_Lounge9_MultichoiceIVs_SetType_Ghost::
+BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Ghost::
 	faceplayer
 	fadescreen 0x1
 	delay 100
@@ -700,12 +700,12 @@ BattleFrontier_Lounge9_MultichoiceIVs_SetType_Ghost::
 	special SetSpAtkIvs
 	special SetSpDefIvs
 	special SetSpdIvs
-	msgbox BattleFrontier_Lounge9_IV_Finish, MSGBOX_DEFAULT
+	msgbox BattleFrontier_Lounge9_hns_IV_Finish, MSGBOX_DEFAULT
 	closemessage
 	releaseall
 	end
 
-BattleFrontier_Lounge9_MultichoiceIVs_SetType_Steel::
+BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Steel::
 	faceplayer
 	fadescreen 0x1
 	delay 100
@@ -724,12 +724,12 @@ BattleFrontier_Lounge9_MultichoiceIVs_SetType_Steel::
 	special SetSpAtkIvs
 	special SetSpDefIvs
 	special SetSpdIvs
-	msgbox BattleFrontier_Lounge9_IV_Finish, MSGBOX_DEFAULT
+	msgbox BattleFrontier_Lounge9_hns_IV_Finish, MSGBOX_DEFAULT
 	closemessage
 	releaseall
 	end
 
-BattleFrontier_Lounge9_MultichoiceIVs_SetType_Fairy::
+BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Fairy::
 	faceplayer
 	fadescreen 0x1
 	delay 100
@@ -748,12 +748,12 @@ BattleFrontier_Lounge9_MultichoiceIVs_SetType_Fairy::
 	special SetSpAtkIvs
 	special SetSpDefIvs
 	special SetSpdIvs
-	msgbox BattleFrontier_Lounge9_IV_Finish, MSGBOX_DEFAULT
+	msgbox BattleFrontier_Lounge9_hns_IV_Finish, MSGBOX_DEFAULT
 	closemessage
 	releaseall
 	end
 
-BattleFrontier_Lounge9_MultichoiceIVs_SetType_Fire::
+BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Fire::
 	faceplayer
 	fadescreen 0x1
 	delay 100
@@ -772,12 +772,12 @@ BattleFrontier_Lounge9_MultichoiceIVs_SetType_Fire::
 	special SetSpAtkIvs
 	special SetSpDefIvs
 	special SetSpdIvs
-	msgbox BattleFrontier_Lounge9_IV_Finish, MSGBOX_DEFAULT
+	msgbox BattleFrontier_Lounge9_hns_IV_Finish, MSGBOX_DEFAULT
 	closemessage
 	releaseall
 	end
 
-BattleFrontier_Lounge9_MultichoiceIVs_SetType_Water::
+BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Water::
 	faceplayer
 	fadescreen 0x1
 	delay 100
@@ -796,12 +796,12 @@ BattleFrontier_Lounge9_MultichoiceIVs_SetType_Water::
 	special SetSpAtkIvs
 	special SetSpDefIvs
 	special SetSpdIvs
-	msgbox BattleFrontier_Lounge9_IV_Finish, MSGBOX_DEFAULT
+	msgbox BattleFrontier_Lounge9_hns_IV_Finish, MSGBOX_DEFAULT
 	closemessage
 	releaseall
 	end
 
-BattleFrontier_Lounge9_MultichoiceIVs_SetType_Grass::
+BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Grass::
 	faceplayer
 	fadescreen 0x1
 	delay 100
@@ -820,12 +820,12 @@ BattleFrontier_Lounge9_MultichoiceIVs_SetType_Grass::
 	special SetSpAtkIvs
 	special SetSpDefIvs
 	special SetSpdIvs
-	msgbox BattleFrontier_Lounge9_IV_Finish, MSGBOX_DEFAULT
+	msgbox BattleFrontier_Lounge9_hns_IV_Finish, MSGBOX_DEFAULT
 	closemessage
 	releaseall
 	end
 
-BattleFrontier_Lounge9_MultichoiceIVs_SetType_Electric::
+BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Electric::
 	faceplayer
 	fadescreen 0x1
 	delay 100
@@ -844,12 +844,12 @@ BattleFrontier_Lounge9_MultichoiceIVs_SetType_Electric::
 	special SetSpAtkIvs
 	special SetSpDefIvs
 	special SetSpdIvs
-	msgbox BattleFrontier_Lounge9_IV_Finish, MSGBOX_DEFAULT
+	msgbox BattleFrontier_Lounge9_hns_IV_Finish, MSGBOX_DEFAULT
 	closemessage
 	releaseall
 	end
 
-BattleFrontier_Lounge9_MultichoiceIVs_SetType_Psychic::
+BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Psychic::
 	faceplayer
 	fadescreen 0x1
 	delay 100
@@ -868,12 +868,12 @@ BattleFrontier_Lounge9_MultichoiceIVs_SetType_Psychic::
 	special SetSpAtkIvs
 	special SetSpDefIvs
 	special SetSpdIvs
-	msgbox BattleFrontier_Lounge9_IV_Finish, MSGBOX_DEFAULT
+	msgbox BattleFrontier_Lounge9_hns_IV_Finish, MSGBOX_DEFAULT
 	closemessage
 	releaseall
 	end
 
-BattleFrontier_Lounge9_MultichoiceIVs_SetType_Ice::
+BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Ice::
 	faceplayer
 	fadescreen 0x1
 	delay 100
@@ -892,12 +892,12 @@ BattleFrontier_Lounge9_MultichoiceIVs_SetType_Ice::
 	special SetSpAtkIvs
 	special SetSpDefIvs
 	special SetSpdIvs
-	msgbox BattleFrontier_Lounge9_IV_Finish, MSGBOX_DEFAULT
+	msgbox BattleFrontier_Lounge9_hns_IV_Finish, MSGBOX_DEFAULT
 	closemessage
 	releaseall
 	end
 
-BattleFrontier_Lounge9_MultichoiceIVs_SetType_Dragon::
+BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Dragon::
 	faceplayer
 	fadescreen 0x1
 	delay 100
@@ -916,12 +916,12 @@ BattleFrontier_Lounge9_MultichoiceIVs_SetType_Dragon::
 	special SetSpAtkIvs
 	special SetSpDefIvs
 	special SetSpdIvs
-	msgbox BattleFrontier_Lounge9_IV_Finish, MSGBOX_DEFAULT
+	msgbox BattleFrontier_Lounge9_hns_IV_Finish, MSGBOX_DEFAULT
 	closemessage
 	releaseall
 	end
 
-BattleFrontier_Lounge9_MultichoiceIVs_SetType_Dark::
+BattleFrontier_Lounge9_hns_MultichoiceIVs_SetType_Dark::
 	faceplayer
 	fadescreen 0x1
 	delay 100
@@ -940,12 +940,12 @@ BattleFrontier_Lounge9_MultichoiceIVs_SetType_Dark::
 	special SetSpAtkIvs
 	special SetSpDefIvs
 	special SetSpdIvs
-	msgbox BattleFrontier_Lounge9_IV_Finish, MSGBOX_DEFAULT
+	msgbox BattleFrontier_Lounge9_hns_IV_Finish, MSGBOX_DEFAULT
 	closemessage
 	releaseall
 	end
 
-BattleFrontier_Lounge9_IV_TextNoChampion:
+BattleFrontier_Lounge9_hns_IV_TextNoChampion:
 	.string "Hmm? What?\p"
 	.string "Oh, you're a trainer. But not one I\n"
 	.string "would call strong…\p"
@@ -954,13 +954,13 @@ BattleFrontier_Lounge9_IV_TextNoChampion:
 	.string "I will show you the strongest\n"
 	.string "training routine of the region!$"
 
-BattleFrontier_Lounge9_IV_Text_CustomizeIVs:
+BattleFrontier_Lounge9_hns_IV_Text_CustomizeIVs:
 	.string "Would you like to set the IVs to\n"
 	.string "a certain value to allow different\l"
 	.string "HIDDEN POWER types?\p"
 	.string "Or should I set all IVs to 31?$"
 
-BattleFrontier_Lounge9_IV_Text_CustomizeIVs_SetType:
+BattleFrontier_Lounge9_hns_IV_Text_CustomizeIVs_SetType:
 	.string "Which type of HIDDEN POWER are you\n"
 	.string "looking for?$"
 
@@ -1015,11 +1015,11 @@ EventScript_IVSetter_Type_Dragon:
 EventScript_IVSetter_Type_Dark:
 	.string "DARK TYPE$"
 
-BattleFrontier_Lounge9_IV_Text_SetMaxQuestion:
+BattleFrontier_Lounge9_hns_IV_Text_SetMaxQuestion:
 	.string "Then, I will set all IVs to the maximum\n"
 	.string "value, which is 31. Should I continue?$"
 
-BattleFrontier_Lounge9_IV_TextFirstTime:
+BattleFrontier_Lounge9_hns_IV_TextFirstTime:
     .string "Hey! It's you! Great to\n"
     .string "see you around here!\p"
     .string "Wait… You don't know me?\p"
@@ -1052,20 +1052,20 @@ BattleFrontier_Lounge9_IV_TextFirstTime:
     .string "so I need 100,000¥ to set it up.\p"
     .string "Just tell me when you're ready!$"
 
-BattleFrontier_Lounge9_IV_Text1:
+BattleFrontier_Lounge9_hns_IV_Text1:
 	.string "IV-MAN: Hi! Are you here for the ultimate\n"
 	.string "training routine in all of HOENN?\p"
 	.string "It costs 100.000¥, but it's worth it!\n"
 	.string "Shall we begin?$"
 
-BattleFrontier_Lounge9_IV_Text_No:
+BattleFrontier_Lounge9_hns_IV_Text_No:
 	.string "Oh… Well, see you another time.$"
 
-BattleFrontier_Lounge9_IV_Text_NoLevel:
+BattleFrontier_Lounge9_hns_IV_Text_NoLevel:
 	.string "I don't think your POKéMON has reached\n"
 	.string "its maximum LEVEL…$"
 
-BattleFrontier_Lounge9_IV_Finish:
+BattleFrontier_Lounge9_hns_IV_Finish:
 	.string "Phew… I'm exhausted…\n"
 	.string "What about your POKéMON?\p"
 	.string "You should rest a bit before going.\p"
@@ -1073,134 +1073,134 @@ BattleFrontier_Lounge9_IV_Finish:
 
 @Chansey training
 
-BattleFrontier_Lounge9_Nurse::
+BattleFrontier_Lounge9_hns_Nurse::
 	faceplayer
-	goto_if_unset FLAG_SYS_GAME_CLEAR, BattleFrontier_Lounge9_NurseChampion
-	msgbox BattleFrontier_Lounge9_NurseRepeat2, MSGBOX_YESNO
+	goto_if_unset FLAG_SYS_GAME_CLEAR, BattleFrontier_Lounge9_hns_NurseChampion
+	msgbox BattleFrontier_Lounge9_hns_NurseRepeat2, MSGBOX_YESNO
 	switch VAR_RESULT
-	case NO, BattleFrontier_Lounge9_Chansey1End
-	case YES, BattleFrontier_Lounge9_NurseBattle
-	case MULTI_B_PRESSED, BattleFrontier_Lounge9_Chansey1End
+	case NO, BattleFrontier_Lounge9_hns_Chansey1End
+	case YES, BattleFrontier_Lounge9_hns_NurseBattle
+	case MULTI_B_PRESSED, BattleFrontier_Lounge9_hns_Chansey1End
 
-BattleFrontier_Lounge9_NurseBattle::
-	trainerbattle TRAINER_BATTLE_CONTINUE_SCRIPT, TRAINER_JOEY, 0, BattleFrontier_Lounge9_NurseIntro, BattleFrontier_Lounge9_NurseDefeat, BattleFrontier_Lounge9_ChanseyBattleAgain
+BattleFrontier_Lounge9_hns_NurseBattle::
+	trainerbattle TRAINER_BATTLE_CONTINUE_SCRIPT, TRAINER_JOEY, 0, BattleFrontier_Lounge9_hns_NurseIntro, BattleFrontier_Lounge9_hns_NurseDefeat, BattleFrontier_Lounge9_hns_ChanseyBattleAgain
 	end
 
-BattleFrontier_Lounge9_Chansey1End::
+BattleFrontier_Lounge9_hns_Chansey1End::
 	closemessage
 	end
 
-BattleFrontier_Lounge9_ChanseyBattleAgain::
+BattleFrontier_Lounge9_hns_ChanseyBattleAgain::
 	faceplayer
-	msgbox BattleFrontier_Lounge9_NurseRepeat, MSGBOX_AUTOCLOSE
+	msgbox BattleFrontier_Lounge9_hns_NurseRepeat, MSGBOX_AUTOCLOSE
 	clearflag 0x85B
 	end
 
-BattleFrontier_Lounge9_NurseChampion:
+BattleFrontier_Lounge9_hns_NurseChampion:
 	faceplayer
-	msgbox BattleFrontier_Lounge9_NurseChampionText, MSGBOX_DEFAULT
+	msgbox BattleFrontier_Lounge9_hns_NurseChampionText, MSGBOX_DEFAULT
 	release
 	end
 
-BattleFrontier_Lounge9_NurseChampionText:
+BattleFrontier_Lounge9_hns_NurseChampionText:
 	.string "I'm the EXPERIENCE NURSE!\n"
 	.string "Unfortunately, I can't battle you\l"
 	.string "unless you become the CHAMPION.$"
 
-BattleFrontier_Lounge9_NurseIntro:
+BattleFrontier_Lounge9_hns_NurseIntro:
 	.string "Let's go, BLISSEY!$"
 
-BattleFrontier_Lounge9_NurseDefeat:
+BattleFrontier_Lounge9_hns_NurseDefeat:
 	.string "Oh no… BLISSEY, use SOFT-BOILED!$"
 
-BattleFrontier_Lounge9_NurseRepeat:
+BattleFrontier_Lounge9_hns_NurseRepeat:
 	.string "If you want, we can battle again!$"
 
-BattleFrontier_Lounge9_NurseRepeat2:
+BattleFrontier_Lounge9_hns_NurseRepeat2:
 	.string "Ready for a battle?$"
 
 @Ability swapper
 
-BattleFrontier_Lounge9_Ability_Man::
+BattleFrontier_Lounge9_hns_Ability_Man::
 	lockall
 	faceplayer
-	goto_if_unset FLAG_SYS_GAME_CLEAR, BattleFrontier_Lounge9_Ability_ManNoChampion
-	msgbox BattleFrontier_Lounge9_Ability_Text1, MSGBOX_YESNO
+	goto_if_unset FLAG_SYS_GAME_CLEAR, BattleFrontier_Lounge9_hns_Ability_ManNoChampion
+	msgbox BattleFrontier_Lounge9_hns_Ability_Text1, MSGBOX_YESNO
 	waitmessage
 	compare VAR_RESULT, YES
-	goto_if_eq BattleFrontier_Lounge9_Ability_CheckMoney
+	goto_if_eq BattleFrontier_Lounge9_hns_Ability_CheckMoney
 	compare VAR_RESULT, NO
-	goto_if_eq BattleFrontier_Lounge9_Ability_No
+	goto_if_eq BattleFrontier_Lounge9_hns_Ability_No
 	end
 
-BattleFrontier_Lounge9_Ability_ManNoChampion::
-	msgbox BattleFrontier_Lounge9_Ability_Text_NoChampion, MSGBOX_DEFAULT
+BattleFrontier_Lounge9_hns_Ability_ManNoChampion::
+	msgbox BattleFrontier_Lounge9_hns_Ability_Text_NoChampion, MSGBOX_DEFAULT
 	waitmessage
 	releaseall
 	end
 
-BattleFrontier_Lounge9_Ability_No:
-	msgbox BattleFrontier_Lounge9_Ability_Text_No, MSGBOX_DEFAULT
+BattleFrontier_Lounge9_hns_Ability_No:
+	msgbox BattleFrontier_Lounge9_hns_Ability_Text_No, MSGBOX_DEFAULT
 	waitmessage
 	releaseall
 	end
 
-BattleFrontier_Lounge9_Ability_CheckMoney:
+BattleFrontier_Lounge9_hns_Ability_CheckMoney:
 	checkmoney 25000, 0
 	compare VAR_RESULT, TRUE
-	goto_if_eq BattleFrontier_Lounge9_Ability_Continue
+	goto_if_eq BattleFrontier_Lounge9_hns_Ability_Continue
 	compare VAR_RESULT, FALSE
-	goto_if_eq BattleFrontier_Lounge9_EV_SetZeroNoMoney
+	goto_if_eq BattleFrontier_Lounge9_hns_EV_SetZeroNoMoney
 	end
 
-BattleFrontier_Lounge9_Ability_Continue:
+BattleFrontier_Lounge9_hns_Ability_Continue:
 	closemessage
 	special ChoosePartyMon
 	waitstate
 	special SwitchMonAbility
 	compare VAR_RESULT, TRUE
-	goto_if_eq BattleFrontier_Lounge9_Ability_Finish
+	goto_if_eq BattleFrontier_Lounge9_hns_Ability_Finish
 	compare VAR_RESULT, FALSE
-	goto_if_eq BattleFrontier_Lounge9_Ability_Cant
+	goto_if_eq BattleFrontier_Lounge9_hns_Ability_Cant
 	end
 
-BattleFrontier_Lounge9_Ability_Cant:
-	msgbox BattleFrontier_Lounge9_Ability_Text_Cant, MSGBOX_DEFAULT
+BattleFrontier_Lounge9_hns_Ability_Cant:
+	msgbox BattleFrontier_Lounge9_hns_Ability_Text_Cant, MSGBOX_DEFAULT
 	waitmessage
 	releaseall
 	end
 
-BattleFrontier_Lounge9_Ability_Finish:
+BattleFrontier_Lounge9_hns_Ability_Finish:
 	fadescreen 0x1
 	delay 100
 	fadescreen 0x0
 	faceplayer
 	waitse
 	playse SE_EXP_MAX
-	msgbox BattleFrontier_Lounge9_Ability_Finish_Text, MSGBOX_DEFAULT
+	msgbox BattleFrontier_Lounge9_hns_Ability_Finish_Text, MSGBOX_DEFAULT
 	removemoney 25000, 0
 	closemessage
 	releaseall
 	end
 
-BattleFrontier_Lounge9_Ability_Finish_Text:
+BattleFrontier_Lounge9_hns_Ability_Finish_Text:
 	.string "That's it! You're welcome!$"
 
-BattleFrontier_Lounge9_Ability_Text1:
+BattleFrontier_Lounge9_hns_Ability_Text1:
 	.string "Welcome! I'm the ABILITY EXPERT!\p"
 	.string "I can swap POKéMON's abilities in\n"
 	.string "a heartbeat, only for 25.000¥!\p"
 	.string "Would you like me to swap any\n"
 	.string "POKéMON's ability?$"
 
-BattleFrontier_Lounge9_Ability_Text_No:
+BattleFrontier_Lounge9_hns_Ability_Text_No:
 	.string "Sure. I'll be here if you need me.$"
 
-BattleFrontier_Lounge9_Ability_Text_Cant:
+BattleFrontier_Lounge9_hns_Ability_Text_Cant:
 	.string "I cannot do that. This POKéMON\n"
 	.string "does not have a second ABILITY!$"
 
-BattleFrontier_Lounge9_Ability_Text_NoChampion:
+BattleFrontier_Lounge9_hns_Ability_Text_NoChampion:
 	.string "Welcome! I'm the ABILITY EXPERT!\p"
 	.string "I can swap POKéMON's abilities\n"
 	.string "in a heartbeat.\p"

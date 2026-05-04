@@ -1,16 +1,16 @@
-BattleFrontier_BattlePyramidFloor_MapScripts::
-	map_script MAP_SCRIPT_ON_RESUME, BattleFrontier_BattlePyramidFloor_OnResume
-	map_script MAP_SCRIPT_ON_FRAME_TABLE, BattleFrontier_BattlePyramidFloor_OnFrame
-	map_script MAP_SCRIPT_ON_TRANSITION, BattleFrontier_BattlePyramidFloor_OnTransition
+BattleFrontier_BattlePyramidFloor_hns_MapScripts::
+	map_script MAP_SCRIPT_ON_RESUME, BattleFrontier_BattlePyramidFloor_hns_OnResume
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, BattleFrontier_BattlePyramidFloor_hns_OnFrame
+	map_script MAP_SCRIPT_ON_TRANSITION, BattleFrontier_BattlePyramidFloor_hns_OnTransition
 	.byte 0
 
-BattleFrontier_BattlePyramidFloor_OnFrame:
-	map_script_2 VAR_TEMP_D, 1, BattleFrontier_BattlePyramidFloor_EventScript_UpdateLight
-	map_script_2 VAR_TEMP_PLAYING_PYRAMID_MUSIC, 0, BattleFrontier_BattlePyramidFloor_EventScript_PlayPyramidMusic
-	map_script_2 VAR_TEMP_F, 1, BattleFrontier_BattlePyramidFloor_EventScript_ShowMapName
+BattleFrontier_BattlePyramidFloor_hns_OnFrame:
+	map_script_2 VAR_TEMP_D, 1, BattleFrontier_BattlePyramidFloor_hns_EventScript_UpdateLight
+	map_script_2 VAR_TEMP_PLAYING_PYRAMID_MUSIC, 0, BattleFrontier_BattlePyramidFloor_hns_EventScript_PlayPyramidMusic
+	map_script_2 VAR_TEMP_F, 1, BattleFrontier_BattlePyramidFloor_hns_EventScript_ShowMapName
 	.2byte 0
 
-BattleFrontier_BattlePyramidFloor_EventScript_UpdateLight::
+BattleFrontier_BattlePyramidFloor_hns_EventScript_UpdateLight::
 	lockall
 	@ pyramid_updatelight, cant use macro because it straddles the loop
 	setvar VAR_0x8004, BATTLE_PYRAMID_FUNC_UPDATE_LIGHT
@@ -18,41 +18,41 @@ BattleFrontier_BattlePyramidFloor_EventScript_UpdateLight::
 	setvar VAR_0x8006, PYRAMID_LIGHT_INCR_RADIUS
 	setvar VAR_0x8007, SE_SAVE
 	setvar VAR_RESULT, 0
-BattleFrontier_BattlePyramidFloor_EventScript_UpdateLightLoop::
+BattleFrontier_BattlePyramidFloor_hns_EventScript_UpdateLightLoop::
 	special CallBattlePyramidFunction
 	delay 2
-	goto_if_ne VAR_RESULT, 2, BattleFrontier_BattlePyramidFloor_EventScript_UpdateLightLoop
+	goto_if_ne VAR_RESULT, 2, BattleFrontier_BattlePyramidFloor_hns_EventScript_UpdateLightLoop
 	setvar VAR_TEMP_D, 0
 	releaseall
 	end
 
-BattleFrontier_BattlePyramidFloor_EventScript_ShowMapName::
+BattleFrontier_BattlePyramidFloor_hns_EventScript_ShowMapName::
 	special ShowMapNamePopup
 	setvar VAR_TEMP_F, 0
 	end
 
-BattleFrontier_BattlePyramidFloor_EventScript_PlayPyramidMusic::
+BattleFrontier_BattlePyramidFloor_hns_EventScript_PlayPyramidMusic::
 	playbgm MUS_B_PYRAMID, FALSE
 	setvar VAR_TEMP_PLAYING_PYRAMID_MUSIC, 1
 	end
 
-BattleFrontier_BattlePyramidFloor_OnResume:
+BattleFrontier_BattlePyramidFloor_hns_OnResume:
 	pyramid_setfloorpal
 	frontier_getstatus
 	switch VAR_TEMP_CHALLENGE_STATUS
-	case 0, BattleFrontier_BattlePyramidFloor_EventScript_ReadyChallenge
+	case 0, BattleFrontier_BattlePyramidFloor_hns_EventScript_ReadyChallenge
 	case CHALLENGE_STATUS_SAVING, BattleFrontier_BattlePyramid_EventScript_WarpToLobby
-	case CHALLENGE_STATUS_PAUSED, BattleFrontier_BattlePyramidFloor_EventScript_ReadyChallenge
+	case CHALLENGE_STATUS_PAUSED, BattleFrontier_BattlePyramidFloor_hns_EventScript_ReadyChallenge
 	frontier_get FRONTIER_DATA_BATTLE_OUTCOME
-	goto_if_eq VAR_RESULT, B_OUTCOME_RAN, BattleFrontier_BattlePyramidFloor_EventScript_ResetParty
-	goto_if_eq VAR_RESULT, B_OUTCOME_PLAYER_TELEPORTED, BattleFrontier_BattlePyramidFloor_EventScript_ResetParty
-	goto_if_eq VAR_RESULT, 0, BattleFrontier_BattlePyramidFloor_EventScript_ResetParty
+	goto_if_eq VAR_RESULT, B_OUTCOME_RAN, BattleFrontier_BattlePyramidFloor_hns_EventScript_ResetParty
+	goto_if_eq VAR_RESULT, B_OUTCOME_PLAYER_TELEPORTED, BattleFrontier_BattlePyramidFloor_hns_EventScript_ResetParty
+	goto_if_eq VAR_RESULT, 0, BattleFrontier_BattlePyramidFloor_hns_EventScript_ResetParty
 	goto_if_eq VAR_RESULT, B_OUTCOME_LOST, BattleFrontier_BattlePyramid_EventScript_WarpToLobbyLost
 	goto_if_eq VAR_RESULT, B_OUTCOME_DREW, BattleFrontier_BattlePyramid_EventScript_WarpToLobbyLost
 	goto_if_eq VAR_RESULT, B_OUTCOME_FORFEITED, BattleFrontier_BattlePyramid_EventScript_WarpToLobbyLost
 	frontier_isbattletype BATTLE_TYPE_TRAINER  @ VAR_RESULT seems to be ignored here
 	setvar VAR_TEMP_D, 1
-BattleFrontier_BattlePyramidFloor_EventScript_ResetParty::
+BattleFrontier_BattlePyramidFloor_hns_EventScript_ResetParty::
 	pyramid_resetparty
 	end
 
@@ -67,7 +67,7 @@ BattleFrontier_BattlePyramid_EventScript_WarpToLobby::
 	waitstate
 	end
 
-BattleFrontier_BattlePyramidFloor_EventScript_ReadyChallenge::
+BattleFrontier_BattlePyramidFloor_hns_EventScript_ReadyChallenge::
 	pyramid_save CHALLENGE_STATUS_SAVING
 	special SavePlayerParty
 	frontier_set FRONTIER_DATA_CHALLENGE_STATUS, 0
@@ -76,12 +76,12 @@ BattleFrontier_BattlePyramidFloor_EventScript_ReadyChallenge::
 	setvar VAR_TEMP_F, 1
 	end
 
-BattleFrontier_BattlePyramidFloor_OnTransition:
-	call BattleFrontier_BattlePyramidFloor_EventScript_SetLightRadius
+BattleFrontier_BattlePyramidFloor_hns_OnTransition:
+	call BattleFrontier_BattlePyramidFloor_hns_EventScript_SetLightRadius
 	setvar VAR_TEMP_F, 1
 	end
 
-BattleFrontier_BattlePyramidFloor_EventScript_SetLightRadius::
+BattleFrontier_BattlePyramidFloor_hns_EventScript_SetLightRadius::
 	pyramid_updatelight 32, PYRAMID_LIGHT_SET_RADIUS
 	return
 
