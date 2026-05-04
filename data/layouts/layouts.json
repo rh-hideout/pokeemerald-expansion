@@ -12097,17 +12097,6 @@
       "layout_version": "hns"
     },
     {
-      "id": "LAYOUT_NEW_MAP1_HNS",
-      "name": "NewMap1_hns_Layout",
-      "width": 44,
-      "height": 36,
-      "primary_tileset": "gTileset_Johto_General_Hns",
-      "secondary_tileset": "gTileset_PewterCity_Hns",
-      "border_filepath": "data/layouts/NewMap1_hns/border.bin",
-      "blockdata_filepath": "data/layouts/NewMap1_hns/map.bin",
-      "layout_version": "hns"
-    },
-    {
       "id": "LAYOUT_OLIVINE_CITY_HNS",
       "name": "OlivineCity_hns_Layout",
       "width": 52,

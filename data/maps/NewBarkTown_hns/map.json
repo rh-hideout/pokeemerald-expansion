@@ -178,7 +178,7 @@
       "x": 16,
       "y": 7,
       "elevation": 0,
-      "dest_map": "MAP_WORLD_HUB",
+      "dest_map": "MAP_TEST_MAP1_HNS",
       "dest_warp_id": "0"
     },
     {
@@ -199,7 +199,7 @@
       "x": 3,
       "y": 7,
       "elevation": 0,
-      "dest_map": "MAP_WORLD_HUB",
+      "dest_map": "MAP_TEST_MAP1_HNS",
       "dest_warp_id": "0"
     }
   ],

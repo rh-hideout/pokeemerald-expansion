@@ -4752,9 +4752,9 @@ const u16 gTilesetPalettes_ShopRooftop_Hns[][16] =
     INCBIN_U16("data/tilesets/secondary/shop_rooftop_hns/palettes/15.gbapal"),
 };
 
-const u32 gTilesetTiles_SilphCo[] = INCBIN_U32("data/tilesets/secondary/silph_co_hns/tiles.4bpp.fastSmol");
+const u32 gTilesetTiles_SilphCo_Hns[] = INCBIN_U32("data/tilesets/secondary/silph_co_hns/tiles.4bpp.fastSmol");
 
-const u16 gTilesetPalettes_SilphCo[][16] =
+const u16 gTilesetPalettes_SilphCo_Hns[][16] =
 {
     INCBIN_U16("data/tilesets/secondary/silph_co_hns/palettes/00.gbapal"),
     INCBIN_U16("data/tilesets/secondary/silph_co_hns/palettes/01.gbapal"),
