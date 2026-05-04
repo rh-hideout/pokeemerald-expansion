@@ -15,7 +15,7 @@
   "connections": 0,
   "object_events": [
     {
-      "graphics_id": "OBJ_EVENT_GFX_MISTY",
+      "graphics_id": "OBJ_EVENT_GFX_MISTY_HNS",
       "x": 33,
       "y": 36,
       "elevation": 0,
@@ -28,7 +28,7 @@
       "flag": "FLAG_HIDE_DOJO_MISTY"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BROCK",
+      "graphics_id": "OBJ_EVENT_GFX_BROCK_HNS",
       "x": 41,
       "y": 24,
       "elevation": 0,
@@ -41,7 +41,7 @@
       "flag": "FLAG_HIDE_DOJO_BROCK"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_SURGE",
+      "graphics_id": "OBJ_EVENT_GFX_SURGE_HNS",
       "x": 18,
       "y": 18,
       "elevation": 0,
@@ -54,7 +54,7 @@
       "flag": "FLAG_HIDE_DOJO_SURGE"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ERIKA",
+      "graphics_id": "OBJ_EVENT_GFX_ERIKA_HNS",
       "x": 34,
       "y": 36,
       "elevation": 0,
@@ -67,7 +67,7 @@
       "flag": "FLAG_HIDE_DOJO_ERIKA"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_JANINE",
+      "graphics_id": "OBJ_EVENT_GFX_JANINE_HNS",
       "x": 6,
       "y": 36,
       "elevation": 0,
@@ -80,7 +80,7 @@
       "flag": "FLAG_HIDE_DOJO_JANINE"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_SABRINA",
+      "graphics_id": "OBJ_EVENT_GFX_SABRINA_HNS",
       "x": 5,
       "y": 37,
       "elevation": 0,
@@ -93,7 +93,7 @@
       "flag": "FLAG_HIDE_DOJO_SABRINA"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BLAINE",
+      "graphics_id": "OBJ_EVENT_GFX_BLAINE_HNS",
       "x": 41,
       "y": 17,
       "elevation": 0,
@@ -106,7 +106,7 @@
       "flag": "FLAG_HIDE_DOJO_BLAINE"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BLUE",
+      "graphics_id": "OBJ_EVENT_GFX_BLUE_HNS",
       "x": 18,
       "y": 20,
       "elevation": 0,
@@ -119,7 +119,7 @@
       "flag": "FLAG_HIDE_DOJO_BLUE"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_WHITNEY",
+      "graphics_id": "OBJ_EVENT_GFX_WHITNEY_HNS",
       "x": 41,
       "y": 25,
       "elevation": 0,
@@ -132,7 +132,7 @@
       "flag": "FLAG_HIDE_DOJO_WHITNEY"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_FALKNER",
+      "graphics_id": "OBJ_EVENT_GFX_FALKNER_HNS",
       "x": 1,
       "y": 20,
       "elevation": 0,
@@ -145,7 +145,7 @@
       "flag": "FLAG_HIDE_DOJO_FALKNER"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BUGSY",
+      "graphics_id": "OBJ_EVENT_GFX_BUGSY_HNS",
       "x": 24,
       "y": 33,
       "elevation": 0,
@@ -158,7 +158,7 @@
       "flag": "FLAG_HIDE_DOJO_BUGSY"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_MORTY",
+      "graphics_id": "OBJ_EVENT_GFX_MORTY_HNS",
       "x": 1,
       "y": 18,
       "elevation": 0,
@@ -171,7 +171,7 @@
       "flag": "FLAG_HIDE_DOJO_MORTY"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_JASMINE",
+      "graphics_id": "OBJ_EVENT_GFX_JASMINE_HNS",
       "x": 20,
       "y": 33,
       "elevation": 0,
@@ -184,7 +184,7 @@
       "flag": "FLAG_HIDE_DOJO_JASMINE"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_CHUCK",
+      "graphics_id": "OBJ_EVENT_GFX_CHUCK_HNS",
       "x": 26,
       "y": 20,
       "elevation": 0,
@@ -197,7 +197,7 @@
       "flag": "FLAG_HIDE_DOJO_CHUCK"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_CLAIR",
+      "graphics_id": "OBJ_EVENT_GFX_CLAIR_HNS",
       "x": 26,
       "y": 18,
       "elevation": 0,
@@ -210,7 +210,7 @@
       "flag": "FLAG_HIDE_DOJO_CLAIR"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_PRYCE",
+      "graphics_id": "OBJ_EVENT_GFX_PRYCE_HNS",
       "x": 41,
       "y": 16,
       "elevation": 0,
@@ -405,7 +405,7 @@
       "flag": "FLAG_HIDE_DOJO_JANINE"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_CLERK",
+      "graphics_id": "OBJ_EVENT_GFX_MART_EMPLOYEE_HNS",
       "x": 43,
       "y": 28,
       "elevation": 0,
@@ -418,7 +418,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_NURSE",
+      "graphics_id": "OBJ_EVENT_GFX_NURSE_HNS",
       "x": 22,
       "y": 5,
       "elevation": 0,
@@ -431,7 +431,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_CLERK",
+      "graphics_id": "OBJ_EVENT_GFX_MART_EMPLOYEE_HNS",
       "x": 38,
       "y": 11,
       "elevation": 0,
@@ -470,7 +470,7 @@
       "flag": "FLAG_HIDE_DOJO_PRYCE"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_OLD_WOMAN",
+      "graphics_id": "OBJ_EVENT_GFX_OLD_WOMAN_HNS",
       "x": 5,
       "y": 9,
       "elevation": 0,
@@ -483,7 +483,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_OLD_MAN_1",
+      "graphics_id": "OBJ_EVENT_GFX_OLD_MAN_HNS",
       "x": 4,
       "y": 10,
       "elevation": 0,
@@ -496,7 +496,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_OLD_WOMAN",
+      "graphics_id": "OBJ_EVENT_GFX_OLD_WOMAN_HNS",
       "x": 4,
       "y": 11,
       "elevation": 0,
@@ -509,7 +509,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ATTENDANT",
+      "graphics_id": "OBJ_EVENT_GFX_ATTENDANT_F_HNS",
       "x": 8,
       "y": 5,
       "elevation": 0,
@@ -522,7 +522,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ATTENDANT_M",
+      "graphics_id": "OBJ_EVENT_GFX_ATTENDANT_M_HNS",
       "x": 32,
       "y": 5,
       "elevation": 0,

@@ -67,7 +67,7 @@
       "flag": "FLAG_HIDE_WHIRL_ISLANDS_TENTACRUEL"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 43,
       "y": 84,
       "elevation": 0,
@@ -80,7 +80,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 26,
       "y": 85,
       "elevation": 0,
@@ -93,7 +93,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 21,
       "y": 87,
       "elevation": 0,
@@ -106,7 +106,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 8,
       "y": 88,
       "elevation": 0,
@@ -119,7 +119,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 30,
       "y": 75,
       "elevation": 0,
@@ -132,7 +132,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 40,
       "y": 76,
       "elevation": 0,
@@ -145,7 +145,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 54,
       "y": 85,
       "elevation": 0,
@@ -158,7 +158,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 63,
       "y": 87,
       "elevation": 0,
@@ -171,7 +171,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 14,
       "y": 87,
       "elevation": 0,
@@ -184,7 +184,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 30,
       "y": 65,
       "elevation": 0,
@@ -197,7 +197,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 42,
       "y": 64,
       "elevation": 0,
@@ -210,7 +210,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 28,
       "y": 49,
       "elevation": 0,
@@ -223,7 +223,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 37,
       "y": 42,
       "elevation": 0,
@@ -236,7 +236,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 36,
       "y": 38,
       "elevation": 0,
@@ -249,7 +249,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 47,
       "y": 43,
       "elevation": 0,
@@ -262,7 +262,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 39,
       "y": 22,
       "elevation": 0,
@@ -275,7 +275,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 40,
       "y": 26,
       "elevation": 0,
@@ -288,7 +288,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 22,
       "y": 24,
       "elevation": 0,
@@ -301,7 +301,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 17,
       "y": 7,
       "elevation": 0,
@@ -314,7 +314,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 23,
       "y": 6,
       "elevation": 0,
@@ -327,7 +327,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 34,
       "y": 3,
       "elevation": 0,
@@ -340,7 +340,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 41,
       "y": 2,
       "elevation": 0,

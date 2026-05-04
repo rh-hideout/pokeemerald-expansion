@@ -21,7 +21,7 @@
   ],
   "object_events": [
     {
-      "graphics_id": "OBJ_EVENT_GFX_ROCKET_M",
+      "graphics_id": "OBJ_EVENT_GFX_ROCKET_M_HNS",
       "x": 52,
       "y": 9,
       "elevation": 0,
@@ -34,7 +34,7 @@
       "flag": "FLAG_HIDE_AZALEA_TOWN_WELL_ROCKET"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_OLD_MAN_1",
+      "graphics_id": "OBJ_EVENT_GFX_OLD_MAN_HNS",
       "x": 44,
       "y": 14,
       "elevation": 0,
@@ -47,7 +47,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ROCKET_M",
+      "graphics_id": "OBJ_EVENT_GFX_ROCKET_M_HNS",
       "x": 23,
       "y": 25,
       "elevation": 0,
@@ -60,7 +60,7 @@
       "flag": "FLAG_HIDE_AZALEA_TOWN_ROCKETS"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER",
+      "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER_HNS",
       "x": 16,
       "y": 23,
       "elevation": 0,
@@ -73,7 +73,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LASS",
+      "graphics_id": "OBJ_EVENT_GFX_LASS_HNS",
       "x": 27,
       "y": 18,
       "elevation": 0,
@@ -86,7 +86,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_SILVER",
+      "graphics_id": "OBJ_EVENT_GFX_SILVER_HNS",
       "x": 19,
       "y": 16,
       "elevation": 0,
@@ -125,7 +125,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_SLOWPOKE_NO_TAIL",
+      "graphics_id": "OBJ_EVENT_GFX_NO_TAIL_SLOWPOKE_HNS",
       "x": 34,
       "y": 14,
       "elevation": 0,
@@ -138,7 +138,7 @@
       "flag": "FLAG_HIDE_AZALEA_TOWN_SLOWPOKE"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_SLOWPOKE_NO_TAIL",
+      "graphics_id": "OBJ_EVENT_GFX_NO_TAIL_SLOWPOKE_HNS",
       "x": 23,
       "y": 14,
       "elevation": 0,
@@ -151,7 +151,7 @@
       "flag": "FLAG_HIDE_AZALEA_TOWN_SLOWPOKE"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_SLOWPOKE_NO_TAIL",
+      "graphics_id": "OBJ_EVENT_GFX_NO_TAIL_SLOWPOKE_HNS",
       "x": 28,
       "y": 24,
       "elevation": 0,
@@ -164,7 +164,7 @@
       "flag": "FLAG_HIDE_AZALEA_TOWN_SLOWPOKE"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_SLOWPOKE_NO_TAIL",
+      "graphics_id": "OBJ_EVENT_GFX_NO_TAIL_SLOWPOKE_HNS",
       "x": 48,
       "y": 5,
       "elevation": 0,
@@ -216,7 +216,7 @@
       "flag": "FLAG_NIGHT_POKEMON"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_SLOWPOKE_NO_TAIL",
+      "graphics_id": "OBJ_EVENT_GFX_NO_TAIL_SLOWPOKE_HNS",
       "x": 45,
       "y": 14,
       "elevation": 0,
@@ -242,7 +242,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_KURT",
+      "graphics_id": "OBJ_EVENT_GFX_KURT_HNS",
       "x": 19,
       "y": 11,
       "elevation": 0,

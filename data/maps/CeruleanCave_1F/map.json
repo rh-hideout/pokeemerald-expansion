@@ -15,7 +15,7 @@
   "connections": 0,
   "object_events": [
     {
-      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
+      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL_HNS",
       "x": 12,
       "y": 22,
       "elevation": 0,
@@ -28,7 +28,7 @@
       "flag": "FLAG_ITEM_CERULEANCAVE1_RARE_CANDY"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
+      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL_HNS",
       "x": 35,
       "y": 11,
       "elevation": 0,
@@ -41,7 +41,7 @@
       "flag": "FLAG_ITEM_CERULEANCAVE1_MAX_ELIXIR"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
+      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL_HNS",
       "x": 7,
       "y": 8,
       "elevation": 0,
@@ -54,7 +54,7 @@
       "flag": "FLAG_ITEM_CERULEANCAVE1_PP_UP"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK",
+      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK_HNS",
       "x": 16,
       "y": 21,
       "elevation": 0,
@@ -67,7 +67,7 @@
       "flag": "FLAG_TEMP_6"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK",
+      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK_HNS",
       "x": 16,
       "y": 22,
       "elevation": 0,
@@ -80,7 +80,7 @@
       "flag": "FLAG_TEMP_5"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK",
+      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK_HNS",
       "x": 16,
       "y": 23,
       "elevation": 0,
@@ -93,7 +93,7 @@
       "flag": "FLAG_TEMP_4"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK",
+      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK_HNS",
       "x": 15,
       "y": 23,
       "elevation": 0,
@@ -106,7 +106,7 @@
       "flag": "FLAG_TEMP_3"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK",
+      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK_HNS",
       "x": 7,
       "y": 21,
       "elevation": 0,
@@ -119,7 +119,7 @@
       "flag": "FLAG_TEMP_2"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK",
+      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK_HNS",
       "x": 21,
       "y": 14,
       "elevation": 0,
@@ -132,7 +132,7 @@
       "flag": "FLAG_TEMP_1"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK",
+      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK_HNS",
       "x": 34,
       "y": 17,
       "elevation": 0,
@@ -145,7 +145,7 @@
       "flag": "FLAG_TEMP_7"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK",
+      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK_HNS",
       "x": 35,
       "y": 18,
       "elevation": 0,
@@ -158,7 +158,7 @@
       "flag": "FLAG_TEMP_8"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK",
+      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK_HNS",
       "x": 36,
       "y": 18,
       "elevation": 0,

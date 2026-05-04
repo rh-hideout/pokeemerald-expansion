@@ -21,7 +21,7 @@
   ],
   "object_events": [
     {
-      "graphics_id": "OBJ_EVENT_GFX_WOMAN_3",
+      "graphics_id": "OBJ_EVENT_GFX_WOMAN_3_HNS",
       "x": 20,
       "y": 15,
       "elevation": 0,
@@ -34,7 +34,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_WOMAN_2",
+      "graphics_id": "OBJ_EVENT_GFX_WOMAN_2_HNS",
       "x": 11,
       "y": 21,
       "elevation": 0,
@@ -60,7 +60,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_OLD_MAN_2",
+      "graphics_id": "OBJ_EVENT_GFX_OLD_MAN_2_HNS",
       "x": 20,
       "y": 21,
       "elevation": 0,
@@ -73,7 +73,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BEAUTY",
+      "graphics_id": "OBJ_EVENT_GFX_BEAUTY_HNS",
       "x": 21,
       "y": 23,
       "elevation": 0,
@@ -99,7 +99,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_WORKER_M",
+      "graphics_id": "OBJ_EVENT_GFX_WORKER_M_HNS",
       "x": 12,
       "y": 23,
       "elevation": 0,
@@ -112,7 +112,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_TWIN",
+      "graphics_id": "OBJ_EVENT_GFX_TWIN_HNS",
       "x": 18,
       "y": 17,
       "elevation": 0,
@@ -138,7 +138,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ENGINEER",
+      "graphics_id": "OBJ_EVENT_GFX_ENGINEER_HNS",
       "x": 22,
       "y": 11,
       "elevation": 0,
@@ -164,7 +164,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 14,
       "y": 9,
       "elevation": 0,
@@ -177,7 +177,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 18,
       "y": 9,
       "elevation": 0,
@@ -190,7 +190,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 14,
       "y": 15,
       "elevation": 0,
@@ -203,7 +203,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 18,
       "y": 15,
       "elevation": 0,
@@ -216,7 +216,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 13,
       "y": 21,
       "elevation": 0,
@@ -229,7 +229,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 18,
       "y": 21,
       "elevation": 0,

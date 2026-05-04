@@ -26,7 +26,7 @@
   ],
   "object_events": [
     {
-      "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE",
+      "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE_HNS",
       "x": -3,
       "y": 28,
       "elevation": 0,
@@ -39,7 +39,7 @@
       "flag": "FLAG_TEMP_3"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BALDING_MAN",
+      "graphics_id": "OBJ_EVENT_GFX_BALDING_MAN_HNS",
       "x": 7,
       "y": 9,
       "elevation": 0,
@@ -52,7 +52,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE",
+      "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE_HNS",
       "x": 7,
       "y": 26,
       "elevation": 0,
@@ -65,7 +65,7 @@
       "flag": "FLAG_TEMP_2"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BIKER",
+      "graphics_id": "OBJ_EVENT_GFX_BIKER_HNS",
       "x": 15,
       "y": 31,
       "elevation": 0,
@@ -91,7 +91,7 @@
       "flag": "FLAG_HIDE_ROUTE14_SUICUNE"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_EUSINE",
+      "graphics_id": "OBJ_EVENT_GFX_EUSINE_HNS",
       "x": 16,
       "y": 49,
       "elevation": 0,
@@ -117,7 +117,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_JUGGLER",
+      "graphics_id": "OBJ_EVENT_GFX_JUGGLER_HNS",
       "x": 7,
       "y": 5,
       "elevation": 0,

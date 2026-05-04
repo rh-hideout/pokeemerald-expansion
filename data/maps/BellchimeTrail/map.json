@@ -632,7 +632,7 @@
       "flag": "FLAG_NIGHT_POKEMON"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_MORTY",
+      "graphics_id": "OBJ_EVENT_GFX_MORTY_HNS",
       "x": 54,
       "y": 59,
       "elevation": 0,
@@ -645,7 +645,7 @@
       "flag": "FLAG_HIDE_BELLCHIME_MORTY"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 23,
       "y": 13,
       "elevation": 0,
@@ -658,7 +658,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 9,
       "y": 35,
       "elevation": 0,
@@ -671,7 +671,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 9,
       "y": 39,
       "elevation": 0,
@@ -684,7 +684,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 16,
       "y": 39,
       "elevation": 0,
@@ -697,7 +697,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 16,
       "y": 35,
       "elevation": 0,
@@ -710,7 +710,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 23,
       "y": 35,
       "elevation": 0,
@@ -723,7 +723,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 23,
       "y": 39,
       "elevation": 0,
@@ -736,7 +736,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 29,
       "y": 38,
       "elevation": 0,
@@ -749,7 +749,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 26,
       "y": 45,
       "elevation": 0,
@@ -762,7 +762,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 33,
       "y": 42,
       "elevation": 0,
@@ -775,7 +775,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 37,
       "y": 42,
       "elevation": 0,
@@ -788,7 +788,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 40,
       "y": 41,
       "elevation": 0,
@@ -801,7 +801,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 40,
       "y": 45,
       "elevation": 0,
@@ -814,7 +814,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 52,
       "y": 58,
       "elevation": 0,
@@ -827,7 +827,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 14,
       "y": 57,
       "elevation": 0,
@@ -840,7 +840,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 10,
       "y": 55,
       "elevation": 0,

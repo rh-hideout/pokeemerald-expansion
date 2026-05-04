@@ -36,7 +36,7 @@
   ],
   "object_events": [
     {
-      "graphics_id": "OBJ_EVENT_GFX_BIG_SNORLAX",
+      "graphics_id": "OBJ_EVENT_GFX_SLEEPING_SNORLAX_HNS",
       "x": 61,
       "y": 13,
       "elevation": 0,
@@ -49,7 +49,7 @@
       "flag": "FLAG_HIDE_VERMILION_SNORLAX"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_HIKER",
+      "graphics_id": "OBJ_EVENT_GFX_HIKER_HNS",
       "x": 46,
       "y": 16,
       "elevation": 0,
@@ -62,7 +62,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_OLD_MAN_1",
+      "graphics_id": "OBJ_EVENT_GFX_OLD_MAN_HNS",
       "x": 43,
       "y": 9,
       "elevation": 0,
@@ -88,7 +88,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BATTLE_GIRL",
+      "graphics_id": "OBJ_EVENT_GFX_BATTLE_GIRL_HNS",
       "x": 31,
       "y": 10,
       "elevation": 0,
@@ -101,7 +101,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BOY",
+      "graphics_id": "OBJ_EVENT_GFX_BOY_2_HNS",
       "x": 29,
       "y": 20,
       "elevation": 0,
@@ -127,7 +127,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ARCHER",
+      "graphics_id": "OBJ_EVENT_GFX_ARCHER_HNS",
       "x": 62,
       "y": 13,
       "elevation": 0,
@@ -140,7 +140,7 @@
       "flag": "FLAG_HIDE_VERMILION_SNORLAX"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ARCHER",
+      "graphics_id": "OBJ_EVENT_GFX_ARCHER_HNS",
       "x": 60,
       "y": 13,
       "elevation": 0,
@@ -153,7 +153,7 @@
       "flag": "FLAG_HIDE_VERMILION_SNORLAX"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ARCHER",
+      "graphics_id": "OBJ_EVENT_GFX_ARCHER_HNS",
       "x": 60,
       "y": 12,
       "elevation": 0,
@@ -166,7 +166,7 @@
       "flag": "FLAG_HIDE_VERMILION_SNORLAX"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ARCHER",
+      "graphics_id": "OBJ_EVENT_GFX_ARCHER_HNS",
       "x": 62,
       "y": 12,
       "elevation": 0,
@@ -179,7 +179,7 @@
       "flag": "FLAG_HIDE_VERMILION_SNORLAX"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK",
+      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK_HNS",
       "x": 50,
       "y": 12,
       "elevation": 0,
@@ -192,7 +192,7 @@
       "flag": "FLAG_TEMP_7"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK",
+      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK_HNS",
       "x": 50,
       "y": 6,
       "elevation": 0,
@@ -205,7 +205,7 @@
       "flag": "FLAG_TEMP_4"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK",
+      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK_HNS",
       "x": 49,
       "y": 4,
       "elevation": 0,
@@ -218,7 +218,7 @@
       "flag": "FLAG_TEMP_3"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK",
+      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK_HNS",
       "x": 51,
       "y": 6,
       "elevation": 0,
@@ -231,7 +231,7 @@
       "flag": "FLAG_TEMP_5"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK",
+      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK_HNS",
       "x": 51,
       "y": 7,
       "elevation": 0,
@@ -244,7 +244,7 @@
       "flag": "FLAG_TEMP_6"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK",
+      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK_HNS",
       "x": 49,
       "y": 13,
       "elevation": 0,
@@ -257,7 +257,7 @@
       "flag": "FLAG_TEMP_8"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK",
+      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK_HNS",
       "x": 43,
       "y": 4,
       "elevation": 0,
@@ -270,7 +270,7 @@
       "flag": "FLAG_TEMP_1"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK",
+      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK_HNS",
       "x": 46,
       "y": 4,
       "elevation": 0,
@@ -283,7 +283,7 @@
       "flag": "FLAG_TEMP_2"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE",
+      "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE_HNS",
       "x": 26,
       "y": 22,
       "elevation": 0,
@@ -309,7 +309,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
+      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL_HNS",
       "x": 61,
       "y": 46,
       "elevation": 0,
@@ -335,7 +335,7 @@
       "flag": "FLAG_HIDE_VERMILION_EUSINE_SUICUNE"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_EUSINE",
+      "graphics_id": "OBJ_EVENT_GFX_EUSINE_HNS",
       "x": 50,
       "y": 22,
       "elevation": 0,
@@ -348,7 +348,7 @@
       "flag": "FLAG_HIDE_VERMILION_EUSINE_SUICUNE"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 13,
       "y": 4,
       "elevation": 0,
@@ -361,7 +361,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 13,
       "y": 7,
       "elevation": 0,
@@ -374,7 +374,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 30,
       "y": 9,
       "elevation": 0,
@@ -387,7 +387,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 36,
       "y": 9,
       "elevation": 0,
@@ -400,7 +400,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 35,
       "y": 15,
       "elevation": 0,
@@ -413,7 +413,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 30,
       "y": 15,
       "elevation": 0,
@@ -426,7 +426,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 16,
       "y": 16,
       "elevation": 0,
@@ -439,7 +439,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 16,
       "y": 20,
       "elevation": 0,
@@ -452,7 +452,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 30,
       "y": 20,
       "elevation": 0,
@@ -465,7 +465,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 37,
       "y": 28,
       "elevation": 0,
@@ -478,7 +478,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 42,
       "y": 32,
       "elevation": 0,
@@ -491,7 +491,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 46,
       "y": 28,
       "elevation": 0,
@@ -504,7 +504,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 50,
       "y": 32,
       "elevation": 0,
@@ -517,7 +517,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 48,
       "y": 23,
       "elevation": 0,
@@ -530,7 +530,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 52,
       "y": 23,
       "elevation": 0,
@@ -543,7 +543,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 50,
       "y": 15,
       "elevation": 0,
@@ -556,7 +556,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LIGHT_SPRITE",
+      "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
       "x": 44,
       "y": 15,
       "elevation": 0,

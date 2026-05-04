@@ -15,7 +15,7 @@
   "connections": 0,
   "object_events": [
     {
-      "graphics_id": "OBJ_EVENT_GFX_COOLTRAINER_M",
+      "graphics_id": "OBJ_EVENT_GFX_COOLTRAINER_M_HNS",
       "x": 36,
       "y": 13,
       "elevation": 0,
@@ -28,7 +28,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_TWIN",
+      "graphics_id": "OBJ_EVENT_GFX_TWIN_HNS",
       "x": 7,
       "y": 32,
       "elevation": 0,
@@ -41,7 +41,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_TWIN",
+      "graphics_id": "OBJ_EVENT_GFX_TWIN_HNS",
       "x": 7,
       "y": 31,
       "elevation": 0,
@@ -54,7 +54,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_COOLTRAINER_F",
+      "graphics_id": "OBJ_EVENT_GFX_COOLTRAINER_F_HNS",
       "x": 13,
       "y": 19,
       "elevation": 0,
@@ -67,7 +67,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_CLAIR",
+      "graphics_id": "OBJ_EVENT_GFX_CLAIR_HNS",
       "x": 29,
       "y": 14,
       "elevation": 0,
@@ -301,7 +301,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_WHIRLPOOL",
+      "graphics_id": "OBJ_EVENT_GFX_WHIRLPOOL_HNS",
       "x": 24,
       "y": 22,
       "elevation": 0,
@@ -314,7 +314,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_WHIRLPOOL",
+      "graphics_id": "OBJ_EVENT_GFX_WHIRLPOOL_HNS",
       "x": 15,
       "y": 39,
       "elevation": 0,
@@ -327,7 +327,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ARCHER",
+      "graphics_id": "OBJ_EVENT_GFX_ARCHER_HNS",
       "x": 15,
       "y": 38,
       "elevation": 0,
@@ -340,7 +340,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ARCHER",
+      "graphics_id": "OBJ_EVENT_GFX_ARCHER_HNS",
       "x": 16,
       "y": 39,
       "elevation": 0,
@@ -353,7 +353,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ARCHER",
+      "graphics_id": "OBJ_EVENT_GFX_ARCHER_HNS",
       "x": 15,
       "y": 39,
       "elevation": 0,
@@ -366,7 +366,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ARCHER",
+      "graphics_id": "OBJ_EVENT_GFX_ARCHER_HNS",
       "x": 16,
       "y": 38,
       "elevation": 0,
@@ -379,7 +379,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ARCHER",
+      "graphics_id": "OBJ_EVENT_GFX_ARCHER_HNS",
       "x": 25,
       "y": 22,
       "elevation": 0,
@@ -392,7 +392,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ARCHER",
+      "graphics_id": "OBJ_EVENT_GFX_ARCHER_HNS",
       "x": 24,
       "y": 22,
       "elevation": 0,
@@ -405,7 +405,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ARCHER",
+      "graphics_id": "OBJ_EVENT_GFX_ARCHER_HNS",
       "x": 24,
       "y": 21,
       "elevation": 0,
@@ -418,7 +418,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ARCHER",
+      "graphics_id": "OBJ_EVENT_GFX_ARCHER_HNS",
       "x": 25,
       "y": 21,
       "elevation": 0,
@@ -431,7 +431,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_SILVER",
+      "graphics_id": "OBJ_EVENT_GFX_SILVER_HNS",
       "x": 26,
       "y": 40,
       "elevation": 0,
@@ -444,7 +444,7 @@
       "flag": "FLAG_HIDE_DRAGONS_DEN_CAVERN_SILVER"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_LANCE",
+      "graphics_id": "OBJ_EVENT_GFX_LANCE_HNS",
       "x": 31,
       "y": 34,
       "elevation": 0,
@@ -457,7 +457,7 @@
       "flag": "FLAG_HIDE_DRAGONS_DEN_CAVERN_LANCE"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_CLAIR",
+      "graphics_id": "OBJ_EVENT_GFX_CLAIR_HNS",
       "x": 31,
       "y": 19,
       "elevation": 0,

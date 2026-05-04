@@ -31,7 +31,7 @@
   ],
   "object_events": [
     {
-      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
+      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL_HNS",
       "x": 62,
       "y": 3,
       "elevation": 0,
@@ -44,7 +44,7 @@
       "flag": "FLAG_ITEM_ROUTE4_HPUP"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_PICNICKER",
+      "graphics_id": "OBJ_EVENT_GFX_PICNICKER_HNS",
       "x": 67,
       "y": 4,
       "elevation": 0,
@@ -57,7 +57,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ROCKER",
+      "graphics_id": "OBJ_EVENT_GFX_ROCKER_HNS",
       "x": 57,
       "y": 8,
       "elevation": 0,
@@ -70,7 +70,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_PICNICKER",
+      "graphics_id": "OBJ_EVENT_GFX_PICNICKER_HNS",
       "x": 61,
       "y": 17,
       "elevation": 0,
@@ -148,7 +148,7 @@
       "flag": "FLAG_DAY_POKEMON"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
+      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL_HNS",
       "x": 4,
       "y": 4,
       "elevation": 0,
@@ -161,7 +161,7 @@
       "flag": "FLAG_ITEM_ROUTE4_ULTRABALL"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BLACK_BELT",
+      "graphics_id": "OBJ_EVENT_GFX_BLACK_BELT_HNS",
       "x": 50,
       "y": 3,
       "elevation": 3,

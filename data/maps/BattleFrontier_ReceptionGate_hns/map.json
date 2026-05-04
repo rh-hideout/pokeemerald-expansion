@@ -16,7 +16,7 @@
   "connections": null,
   "object_events": [
     {
-      "graphics_id": "OBJ_EVENT_GFX_ATTENDANT",
+      "graphics_id": "OBJ_EVENT_GFX_ATTENDANT_F_HNS",
       "x": 0,
       "y": 11,
       "elevation": 0,
@@ -29,7 +29,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ATTENDANT",
+      "graphics_id": "OBJ_EVENT_GFX_ATTENDANT_F_HNS",
       "x": 8,
       "y": 11,
       "elevation": 0,
@@ -42,7 +42,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_WORKER_F",
+      "graphics_id": "OBJ_EVENT_GFX_WORKER_F_HNS",
       "x": 8,
       "y": 4,
       "elevation": 0,
@@ -55,7 +55,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_SCOTT",
+      "graphics_id": "OBJ_EVENT_GFX_SCOTT_HNS",
       "x": 4,
       "y": 5,
       "elevation": 3,
@@ -68,7 +68,7 @@
       "flag": "FLAG_HIDE_BATTLE_FRONTIER_RECEPTION_GATE_SCOTT"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_WORKER_F",
+      "graphics_id": "OBJ_EVENT_GFX_WORKER_F_HNS",
       "x": 0,
       "y": 4,
       "elevation": 0,

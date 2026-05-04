@@ -16,7 +16,7 @@
   "connections": null,
   "object_events": [
     {
-      "graphics_id": "OBJ_EVENT_GFX_LINK_RECEPTIONIST",
+      "graphics_id": "OBJ_EVENT_GFX_LINK_RECEPTIONIST_HNS",
       "x": 6,
       "y": 6,
       "elevation": 3,

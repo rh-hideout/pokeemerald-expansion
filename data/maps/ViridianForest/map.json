@@ -15,7 +15,7 @@
   "connections": 0,
   "object_events": [
     {
-      "graphics_id": "OBJ_EVENT_GFX_BUG_CATCHER",
+      "graphics_id": "OBJ_EVENT_GFX_BUG_CATCHER_HNS",
       "x": 13,
       "y": 23,
       "elevation": 0,
@@ -28,7 +28,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BUG_CATCHER",
+      "graphics_id": "OBJ_EVENT_GFX_BUG_CATCHER_HNS",
       "x": 22,
       "y": 5,
       "elevation": 0,
@@ -41,7 +41,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
+      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL_HNS",
       "x": 41,
       "y": 8,
       "elevation": 0,
@@ -54,7 +54,7 @@
       "flag": "FLAG_ITEM_VIRIDIANFOREST_REVIVE"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
+      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL_HNS",
       "x": 13,
       "y": 42,
       "elevation": 0,
@@ -67,7 +67,7 @@
       "flag": "FLAG_ITEM_VIRIDIANFOREST_MAX_ETHER"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
+      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL_HNS",
       "x": 32,
       "y": 34,
       "elevation": 0,
@@ -80,7 +80,7 @@
       "flag": "FLAG_ITEM_VIRIDIANFOREST_ELIXIR"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
+      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL_HNS",
       "x": 39,
       "y": 44,
       "elevation": 0,
@@ -93,7 +93,7 @@
       "flag": "FLAG_ITEM_VIRIDIANFOREST_MAX_POTION"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
+      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL_HNS",
       "x": 59,
       "y": 26,
       "elevation": 0,
@@ -106,7 +106,7 @@
       "flag": "FLAG_ITEM_VIRIDIANFOREST_DIRE_HIT"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BUG_CATCHER",
+      "graphics_id": "OBJ_EVENT_GFX_BUG_CATCHER_HNS",
       "x": 31,
       "y": 55,
       "elevation": 0,
@@ -210,7 +210,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BUGSY",
+      "graphics_id": "OBJ_EVENT_GFX_BUGSY_HNS",
       "x": 33,
       "y": 41,
       "elevation": 0,
@@ -236,7 +236,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
+      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL_HNS",
       "x": 28,
       "y": 41,
       "elevation": 0,
@@ -249,7 +249,7 @@
       "flag": "FLAG_ITEM_VIRIDIANFOREST_FULL_RESTORE"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
+      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL_HNS",
       "x": 14,
       "y": 59,
       "elevation": 0,

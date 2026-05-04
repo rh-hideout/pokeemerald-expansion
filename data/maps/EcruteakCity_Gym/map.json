@@ -15,7 +15,7 @@
   "connections": 0,
   "object_events": [
     {
-      "graphics_id": "OBJ_EVENT_GFX_GYM_GUY",
+      "graphics_id": "OBJ_EVENT_GFX_GYM_GUY_HNS",
       "x": 12,
       "y": 44,
       "elevation": 0,
@@ -54,7 +54,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_SAGE",
+      "graphics_id": "OBJ_EVENT_GFX_SAGE_HNS",
       "x": 13,
       "y": 33,
       "elevation": 0,
@@ -67,7 +67,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_CHANNELER",
+      "graphics_id": "OBJ_EVENT_GFX_CHANNELER_HNS",
       "x": 13,
       "y": 25,
       "elevation": 0,
@@ -80,7 +80,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_SAGE",
+      "graphics_id": "OBJ_EVENT_GFX_SAGE_HNS",
       "x": 7,
       "y": 25,
       "elevation": 0,
@@ -93,7 +93,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_CHANNELER",
+      "graphics_id": "OBJ_EVENT_GFX_CHANNELER_HNS",
       "x": 5,
       "y": 14,
       "elevation": 0,
@@ -106,7 +106,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_MORTY",
+      "graphics_id": "OBJ_EVENT_GFX_MORTY_HNS",
       "x": 4,
       "y": 4,
       "elevation": 0,

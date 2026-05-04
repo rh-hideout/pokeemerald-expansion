@@ -54,7 +54,7 @@
       "flag": "FLAG_ITEM_GOLDENROD_UNDERGROUND_TM_CALM_MIND"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ROCKET_M",
+      "graphics_id": "OBJ_EVENT_GFX_ROCKET_M_HNS",
       "x": 11,
       "y": 16,
       "elevation": 0,
@@ -67,7 +67,7 @@
       "flag": "FLAG_HIDE_GOLDENROD_ROCKETS"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ROCKET_M",
+      "graphics_id": "OBJ_EVENT_GFX_ROCKET_M_HNS",
       "x": 11,
       "y": 13,
       "elevation": 0,
@@ -80,7 +80,7 @@
       "flag": "FLAG_HIDE_GOLDENROD_ROCKETS"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ROCKET_M",
+      "graphics_id": "OBJ_EVENT_GFX_ROCKET_M_HNS",
       "x": 11,
       "y": 7,
       "elevation": 0,
@@ -93,7 +93,7 @@
       "flag": "FLAG_HIDE_GOLDENROD_ROCKETS"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_GENTLEMAN",
+      "graphics_id": "OBJ_EVENT_GFX_GENTLEMAN_HNS",
       "x": 13,
       "y": 8,
       "elevation": 0,
