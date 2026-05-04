@@ -1034,7 +1034,7 @@ static bool32 IsBuildingPCTileFrlg(u32 tileId)
 
 static bool32 IsPlayerHousePCTile(u32 tileId)
 {
-    if (IS_FRLG)
+    if (IS_FRLG || IS_HNS)
         return FALSE;
 
     return gMapHeader.mapLayout->secondaryTileset == &gTileset_BrendansMaysHouse

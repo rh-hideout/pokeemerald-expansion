@@ -1,7 +1,6 @@
 {
   "id": "MAP_ROUTE104",
   "name": "Route104",
-  "game_version": "emerald",
   "layout": "LAYOUT_ROUTE104",
   "music": "MUS_ROUTE104",
   "region_map_section": "MAPSEC_ROUTE_104",
@@ -627,5 +626,6 @@
       "item": "ITEM_HEART_SCALE",
       "flag": "FLAG_HIDDEN_ITEM_ROUTE_104_HEART_SCALE"
     }
-  ]
+  ],
+  "game_version": "emerald"
 }

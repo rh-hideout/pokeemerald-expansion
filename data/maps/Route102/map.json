@@ -1,7 +1,6 @@
 {
   "id": "MAP_ROUTE102",
   "name": "Route102",
-  "game_version": "emerald",
   "layout": "LAYOUT_ROUTE102",
   "music": "MUS_ROUTE101",
   "region_map_section": "MAPSEC_ROUTE_102",
@@ -163,5 +162,6 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Route102_EventScript_RouteSignOldale"
     }
-  ]
+  ],
+  "game_version": "emerald"
 }
