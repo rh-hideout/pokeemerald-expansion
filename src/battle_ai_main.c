@@ -657,7 +657,7 @@ void SetBattlerAiData(enum BattlerId battler, struct AiLogicData *aiData)
     aiData->lastUsedMove[battler] = (gLastMoves[battler] == MOVE_UNAVAILABLE) ? MOVE_NONE : gLastMoves[battler];
     aiData->hpPercents[battler] = GetHealthPercentage(battler);
     aiData->moveLimitations[battler] = CheckMoveLimitations(battler, 0, MOVE_LIMITATIONS_ALL);
-    aiData->speedStats[battler] = GetBattlerTotalSpeedStat(battler, ability, holdEffect);
+    aiData->speedStats[battler] = GetBattlerTotalSpeedStat(battler, ability, holdEffect, AI_GetWeather());
 
     if (IsAiBattlerAssumingStab(battler))
         RecordMovesBasedOnStab(battler);
@@ -665,28 +665,6 @@ void SetBattlerAiData(enum BattlerId battler, struct AiLogicData *aiData)
     if (IsAiBattlerAssumingStatusMoves(battler))
         RecordStatusMoves(battler);
 }
-
-#define BYPASSES_ACCURACY_CALC 101 // 101 indicates for ai that the move will always hit
-static u32 Ai_SetMoveAccuracy(struct AiLogicData *aiData, enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
-{
-    u32 accuracy;
-    enum Ability abilityAtk = aiData->abilities[battlerAtk];
-    enum Ability abilityDef = aiData->abilities[battlerDef];
-    if (CanMoveSkipAccuracyCalc(battlerAtk, battlerDef, abilityAtk, abilityDef, move, AI_CHECK))
-    {
-        accuracy = BYPASSES_ACCURACY_CALC;
-    }
-    else
-    {
-        accuracy = GetTotalAccuracy(battlerAtk, battlerDef, move, abilityAtk, abilityDef, aiData->holdEffects[battlerAtk], aiData->holdEffects[battlerDef]);
-        // Cap normal accuracy at 100 for ai calcs.
-        // Done for comparison with moves that bypass accuracy checks (will be seen as 101 for ai calcs))
-        accuracy = (accuracy > 100) ? 100 : accuracy;
-    }
-
-    return accuracy;
-}
-#undef BYPASSES_ACCURACY_CALC
 
 static void SetBattlerTurnOrder(u8 *aiTurnOrder)
 {
@@ -704,44 +682,24 @@ static void SetBattlerTurnOrder(u8 *aiTurnOrder)
     }
 }
 
-void CalcBattlerAiMovesData(struct AiLogicData *aiData, enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 weather, u32 fieldStatus)
+static void SetBattlerAiMovesData(struct AiLogicData *aiData, struct AiCalcValues  *aiCalc, u32 battlersCount)
 {
-    enum Move move;
-    enum Move *moves = GetMovesArray(battlerAtk);
-    u32 moveLimitations = aiData->moveLimitations[battlerAtk];
-
-    for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
-    {
-        struct SimulatedDamage dmg = {0};
-        uq4_12_t effectiveness = Q_4_12(0.0);
-        move = moves[moveIndex];
-
-        if (IsMoveUnusable(moveIndex, move, moveLimitations))
-            continue;
-
-        // Also get effectiveness of status moves
-        dmg = AI_CalcDamage(move, battlerAtk, battlerDef, &effectiveness, USE_GIMMICK, NO_GIMMICK, weather, fieldStatus);
-        aiData->moveAccuracy[battlerAtk][battlerDef][moveIndex] = Ai_SetMoveAccuracy(aiData, battlerAtk, battlerDef, move);
-
-        aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex] = dmg;
-        aiData->effectiveness[battlerAtk][battlerDef][moveIndex] = effectiveness;
-    }
-}
-
-static void SetBattlerAiMovesData(struct AiLogicData *aiData, enum BattlerId battlerAtk, u32 battlersCount, u32 weather)
-{
+    enum BattlerId battlerAtk = aiCalc->battlerAtk;
     SaveBattlerData(battlerAtk);
     SetBattlerData(battlerAtk);
 
     // Simulate dmg for both ai controlled mons and for player controlled mons.
     for (enum BattlerId battlerDef = 0; battlerDef < battlersCount; battlerDef++)
     {
-        if (battlerAtk == battlerDef || !IsBattlerAlive(battlerDef))
+        if (aiCalc->battlerAtk == battlerDef || !IsBattlerAlive(battlerDef))
             continue;
 
         SaveBattlerData(battlerDef);
         SetBattlerData(battlerDef);
-        CalcBattlerAiMovesData(aiData, battlerAtk, battlerDef, weather, gFieldStatuses);
+
+        aiCalc->battlerDef = battlerDef;
+        CalcBattlerAiMovesData(aiData, aiCalc);
+
         RestoreBattlerData(battlerDef);
     }
     RestoreBattlerData(battlerAtk);
@@ -759,29 +717,34 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
     AIDebugTimerStart();
 
     aiData->weatherHasEffect = HasWeatherEffect();
-    u32 weather = AI_GetWeather();
-
-    // get/assume all battler data and simulate AI damage
     u32 battlersCount = gBattlersCount;
 
     for (enum BattlerId battler = 0; battler < battlersCount; battler++)
     {
+        aiData->turnOrder[battler] = battler;
+
         if (!IsBattlerAlive(battler))
             continue;
 
         SetBattlerAiData(battler, aiData);
     }
 
-    for (enum BattlerId battler = 0; battler < battlersCount; battler++)
-        aiData->turnOrder[battler] = battler;
     SetBattlerTurnOrder(aiData->turnOrder);
 
-    for (enum BattlerId battler = 0; battler < battlersCount; battler++)
+    struct AiCalcValues  aiCalc = {
+        .weather = AI_GetWeather(),
+        .fieldStatuses = gFieldStatuses,
+        .considerGimmickAtk = TRUE,
+        .considerGimmickDef = FALSE,
+    };
+
+    for (enum BattlerId battlerAtk = 0; battlerAtk < battlersCount; battlerAtk++)
     {
-        if (!IsBattlerAlive(battler))
+        if (!IsBattlerAlive(battlerAtk))
             continue;
 
-        SetBattlerAiMovesData(aiData, battler, battlersCount, weather);
+        aiCalc.battlerAtk = battlerAtk;
+        SetBattlerAiMovesData(aiData, &aiCalc, battlersCount);
     }
 
     for (enum BattlerId battler = 0; battler < battlersCount; battler++)
@@ -1107,7 +1070,17 @@ void BattleAI_DoAIProcessing_PredictedSwitchin(struct AiThinkingStruct *aiThink,
     gBattleMons[battlerDef] = switchinCandidate;
     gAiThinkingStruct->saved[battlerDef].saved = TRUE;
     SetBattlerAiData(battlerDef, aiData);
-    CalcBattlerAiMovesData(aiData, battlerAtk, battlerDef, AI_GetWeather(), gFieldStatuses);
+
+    struct AiCalcValues  aiCalc = {
+        .battlerAtk = battlerAtk,
+        .battlerDef = battlerDef,
+        .weather = AI_GetWeather(),
+        .fieldStatuses = gFieldStatuses,
+        .considerGimmickAtk = TRUE,
+        .considerGimmickDef = FALSE,
+    };
+
+    CalcBattlerAiMovesData(aiData, &aiCalc);
     gAiThinkingStruct->saved[battlerDef].saved = FALSE;
 
     // Regular processing with new battler
@@ -4411,11 +4384,10 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
      && HasBattlerSideMoveWithEffect(battlerDef, EFFECT_ENCORE)
      && (B_MENTAL_HERB < GEN_5 || aiData->holdEffects[battlerAtk] != HOLD_EFFECT_MENTAL_HERB))
      {
+        // Missing moves that break the mold
         if (!AI_IsAbilityOnSide(battlerAtk, ABILITY_AROMA_VEIL)
-         || IsMoldBreakerTypeAbility(battlerDef, aiData->abilities[battlerDef])
-         || aiData->abilities[battlerDef] == ABILITY_MYCELIUM_MIGHT
-         || IsMoldBreakerTypeAbility(BATTLE_PARTNER(battlerDef), aiData->abilities[BATTLE_PARTNER(battlerDef)])
-         || aiData->abilities[BATTLE_PARTNER(battlerDef)] == ABILITY_MYCELIUM_MIGHT)
+         || IsMoldBreakerTypeAbility(battlerDef, aiData->abilities[battlerDef], MOVE_NONE)
+         || IsMoldBreakerTypeAbility(BATTLE_PARTNER(battlerDef), aiData->abilities[BATTLE_PARTNER(battlerDef)], MOVE_NONE))
             return score;
      }
 

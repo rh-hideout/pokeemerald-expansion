@@ -1104,6 +1104,25 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
     enum MoveTarget moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
     bool32 calcSpreadMove = IsSpreadMove(moveTarget);
 
+    struct BattleCalcValues cv = {
+        .battlerAtk = gBattlerAttacker,
+        .move = gCurrentMove,
+    };
+
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+    {
+        if (gBattlerAttacker == battler)
+        {
+            cv.abilities[battler] = abilityAtk;
+            cv.holdEffects[battler] = holdEffectAtk;
+        }
+        else
+        {
+            cv.abilities[battler] = GetBattlerAbility(battler);
+            cv.holdEffects[battler] = GetBattlerHoldEffect(battler);
+        }
+    }
+
     for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
         if (gBattleStruct->calculatedSpreadMoveAccuracy)
@@ -1116,15 +1135,7 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
             continue;
 
         numTargets++;
-
-        struct BattleCalcValues cv = {0};
-        cv.move = gCurrentMove;
-        cv.battlerAtk = gBattlerAttacker;
         cv.battlerDef = battlerDef;
-        cv.abilities[gBattlerAttacker] = abilityAtk;
-        cv.abilities[battlerDef] = GetBattlerAbility(battlerDef);
-        cv.holdEffects[gBattlerAttacker] = holdEffectAtk;
-        cv.holdEffects[battlerDef] = GetBattlerHoldEffect(battlerDef);
 
         if (DoesMoveMissTarget(&cv))
         {

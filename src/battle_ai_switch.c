@@ -80,21 +80,33 @@ static void InitializeSwitchinCandidate(enum BattlerId switchinBattler, u32 monI
     // Setup switchin battler data
     gAiThinkingStruct->saved[switchinBattler].saved = TRUE;
     SetBattlerAiData(switchinBattler, gAiLogicData);
-    u32 switchinWeather = AI_GetSwitchinWeather(switchinBattler);
-    u32 switchinFieldStatus = AI_GetSwitchinFieldStatus(switchinBattler);
-    SetBattlerVolatilesForSwitchin(switchinBattler, switchinWeather, switchinFieldStatus);
     SetBattlerStatusForSwitchin(switchinBattler);
     gBattlerPartyIndexes[switchinBattler] = monIndex;
     gAiLogicData->switchInCalc = TRUE;
 
-    for (enum BattlerId battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
+    struct AiCalcValues aiCalc = {
+        .weather = AI_GetSwitchinWeather(switchinBattler),
+        .fieldStatuses = AI_GetSwitchinFieldStatus(switchinBattler),
+        .considerGimmickAtk = TRUE,
+        .considerGimmickDef = FALSE,
+    };
+
+    SetBattlerVolatilesForSwitchin(switchinBattler, aiCalc.weather, aiCalc.fieldStatuses);
+    for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
-        if (switchinBattler == battlerIndex || !IsBattlerAlive(battlerIndex))
+        if (switchinBattler == battlerDef || !IsBattlerAlive(battlerDef))
             continue;
-        SetBattlerStatStagesForSwitchin(switchinBattler, battlerIndex, switchinFieldStatus);
-        SetBattlerHPChangeForSwitch(switchinBattler, battlerIndex);
-        CalcBattlerAiMovesData(gAiLogicData, switchinBattler, battlerIndex, switchinWeather, switchinFieldStatus);
-        CalcBattlerAiMovesData(gAiLogicData, battlerIndex, switchinBattler, switchinWeather, switchinFieldStatus);
+
+        SetBattlerStatStagesForSwitchin(switchinBattler, battlerDef, aiCalc.fieldStatuses);
+        SetBattlerHPChangeForSwitch(switchinBattler, battlerDef);
+
+        aiCalc.battlerAtk = switchinBattler;
+        aiCalc.battlerDef = battlerDef;
+        CalcBattlerAiMovesData(gAiLogicData, &aiCalc);
+
+        aiCalc.battlerAtk = battlerDef;
+        aiCalc.battlerDef = switchinBattler;
+        CalcBattlerAiMovesData(gAiLogicData, &aiCalc);
     }
 
     gAiLogicData->switchInCalc = FALSE;
@@ -575,7 +587,7 @@ static bool32 FindMonThatAbsorbsOpponentsMove(struct SwitchAiContext *switchCont
         return FALSE;
     if (AreStatsRaised(switchContext->battler))
         return FALSE;
-    if (IsMoldBreakerTypeAbility(switchContext->opposingBattler, gAiLogicData->abilities[switchContext->opposingBattler]))
+    if (IsMoldBreakerTypeAbility(switchContext->opposingBattler, gAiLogicData->abilities[switchContext->opposingBattler], MOVE_NONE))
         return FALSE;
     if (switchContext->canBattlerWin1v1)
         return FALSE;
@@ -847,16 +859,9 @@ static bool32 GetHitEscapeTransformState(enum BattlerId battlerAtk, enum Move mo
         if (!IsBattlerAlive(battlerDef) || IsBattlerAlly(battlerDef, battlerAtk))
             continue;
 
-        enum Ability abilityDef = AI_GetMoldBreakerSanitizedAbility(
-            battlerAtk,
-            gAiLogicData->abilities[battlerAtk],
-            gAiLogicData->abilities[battlerDef],
-            gAiLogicData->holdEffects[battlerDef],
-            move
-        );
-
         ctx.battlerDef = battlerDef;
         ctx.holdEffects[ctx.battlerDef] = gAiLogicData->holdEffects[battlerDef];
+        enum Ability abilityDef = AI_GetMoldBreakerSanitizedAbility(&ctx, battlerDef);
         ctx.abilities[ctx.battlerDef] = abilityDef;
 
         if (AI_CanMoveBeBlockedByTarget(&ctx))
@@ -1890,7 +1895,7 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, enum BattlerId battler, const st
     u8 weatherDuration = gBattleStruct->weatherDuration;
     enum BattlerId opposingBattler = GetOppositeBattler(battler);
     enum Ability opposingAbility = gAiLogicData->abilities[opposingBattler], ability = gAiLogicData->abilities[battler];
-    bool32 usedSingleUseHealingItem = FALSE, opponentCanBreakMold = IsMoldBreakerTypeAbility(opposingBattler, opposingAbility);
+    bool32 usedSingleUseHealingItem = FALSE, opponentCanBreakMold = IsMoldBreakerTypeAbility(opposingBattler, opposingAbility, MOVE_NONE); // not a regression but needs to be investigated
     s32 currentHP = startingHP, singleUseItemHeal = 0;
     bool32 applyWishNow = healInfo->healEndOfTurn && healInfo->wishCounter == 1;
 

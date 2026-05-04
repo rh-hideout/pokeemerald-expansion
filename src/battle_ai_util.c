@@ -25,17 +25,72 @@
 
 static u32 GetAIEffectGroup(enum BattleMoveEffects effect);
 static u32 GetAIEffectGroupFromMove(enum BattlerId battler, enum Move move);
+static u32 Ai_SetMoveAccuracy(struct DamageContext *ctx);
 
 // Functions
-enum Ability AI_GetMoldBreakerSanitizedAbility(enum BattlerId battlerAtk, enum Ability abilityAtk, enum Ability abilityDef, enum HoldEffect holdEffectDef, enum Move move)
+void CalcBattlerAiMovesData(struct AiLogicData *aiData, struct AiCalcValues *aiCalc)
 {
-    if (MoveIgnoresTargetAbility(move))
+    enum BattlerId battlerAtk = aiCalc->battlerAtk;
+    enum BattlerId battlerDef = aiCalc->battlerDef;
+    enum Move *moves = GetMovesArray(battlerAtk);
+    u32 moveLimitations = aiData->moveLimitations[battlerAtk];
+
+    for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+    {
+        aiCalc->move = moves[moveIndex];
+
+        if (IsMoveUnusable(moveIndex, aiCalc->move, moveLimitations))
+            continue;
+
+        aiCalc->moveIndex = moveIndex;
+        aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex] = AI_CalcDamage(aiCalc);
+    }
+}
+
+#define BYPASSES_ACCURACY_CALC 101 // 101 indicates for ai that the move will always hit
+static u32 Ai_SetMoveAccuracy(struct DamageContext *ctx)
+{
+    u32 accuracy;
+
+    struct BattleCalcValues cv = {
+        .battlerAtk = ctx->battlerAtk,
+        .battlerDef = ctx->battlerDef,
+        .move = ctx->move,
+    };
+
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+    {
+        cv.abilities[battler] = ctx->abilities[battler];
+        cv.holdEffects[battler] = ctx->holdEffects[battler];
+    }
+
+    if (CanMoveSkipAccuracyCalc(&cv, ctx->weather, AI_CHECK))
+    {
+        accuracy = BYPASSES_ACCURACY_CALC;
+    }
+    else
+    {
+
+        accuracy = GetTotalAccuracy(&cv, ctx->weather);
+
+        // Cap normal accuracy at 100 for ai calcs.
+        // Done for comparison with moves that bypass accuracy checks (will be seen as 101 for ai calcs))
+        accuracy = (accuracy > 100) ? 100 : accuracy;
+    }
+
+    return accuracy;
+}
+#undef BYPASSES_ACCURACY_CALC
+
+enum Ability AI_GetMoldBreakerSanitizedAbility(struct DamageContext *ctx, enum BattlerId battlerDef)
+{
+    if (MoveIgnoresTargetAbility(ctx->move))
         return ABILITY_NONE;
 
-    if (holdEffectDef != HOLD_EFFECT_ABILITY_SHIELD && IsMoldBreakerTypeAbility(battlerAtk, abilityAtk))
+    if (ctx->holdEffects[battlerDef] != HOLD_EFFECT_ABILITY_SHIELD && IsMoldBreakerTypeAbility(ctx->battlerAtk, ctx->abilities[ctx->battlerAtk], ctx->move))
         return ABILITY_NONE;
 
-    return abilityDef;
+    return gAiLogicData->abilities[battlerDef]; // return the ai logic ability so that we can assign the correct one to the ability damage struct field
 }
 
 static bool32 AI_IsDoubleSpreadMove(enum BattlerId battlerAtk, enum Move move)
@@ -528,7 +583,7 @@ bool32 Ai_IsPriorityBlocked(enum BattlerId battlerAtk, enum BattlerId battlerDef
     if (atkPriority <= 0 || IsBattlerAlly(battlerAtk, battlerDef))
         return FALSE;
 
-    if (IsMoldBreakerTypeAbility(battlerAtk, aiData->abilities[battlerAtk]) || MoveIgnoresTargetAbility(move))
+    if (IsMoldBreakerTypeAbility(battlerAtk, aiData->abilities[battlerAtk], move) || MoveIgnoresTargetAbility(move))
         return FALSE;
 
     if (IsDazzlingAbility(aiData->abilities[battlerDef]))
@@ -582,17 +637,17 @@ bool32 MovesWithCategoryUnusable(u32 attacker, u32 target, enum DamageCategory c
 }
 
 // To save computation time this function has 2 variants. One saves, sets and restores battlers, while the other doesn't.
-struct SimulatedDamage AI_CalcDamageSaveBattlers(enum Move move, enum BattlerId battlerAtk, enum BattlerId battlerDef, uq4_12_t *typeEffectiveness, enum AIConsiderGimmick considerGimmickAtk, enum AIConsiderGimmick considerGimmickDef)
+static struct SimulatedDamage AI_CalcDamageSaveBattlers(struct AiCalcValues *aiCalc)
 {
     struct SimulatedDamage dmg;
 
-    SaveBattlerData(battlerAtk);
-    SaveBattlerData(battlerDef);
-    SetBattlerData(battlerAtk);
-    SetBattlerData(battlerDef);
-    dmg = AI_CalcDamage(move, battlerAtk, battlerDef, typeEffectiveness, considerGimmickAtk, considerGimmickDef, AI_GetWeather(), gFieldStatuses);
-    RestoreBattlerData(battlerAtk);
-    RestoreBattlerData(battlerDef);
+    SaveBattlerData(aiCalc->battlerAtk);
+    SaveBattlerData(aiCalc->battlerDef);
+    SetBattlerData(aiCalc->battlerAtk);
+    SetBattlerData(aiCalc->battlerDef);
+    dmg = AI_CalcDamage(aiCalc);
+    RestoreBattlerData(aiCalc->battlerAtk);
+    RestoreBattlerData(aiCalc->battlerDef);
     return dmg;
 }
 
@@ -627,32 +682,20 @@ static __attribute__((noinline)) ARM_FUNC s32 RandomRollDmg(s32 dmg)
 
 bool32 IsDamageMoveUnusable(struct DamageContext *ctx)
 {
-    enum Ability battlerDefAbility;
-    enum Ability partnerDefAbility;
-    struct AiLogicData *aiData = gAiLogicData;
-
     if (ctx->typeEffectivenessModifier == UQ_4_12(0.0))
         return TRUE;
+
     if (gBattleStruct->battlerState[ctx->battlerDef].commandingDondozo)
         return TRUE;
 
-    // aiData->abilities does not check for Mold Breaker since it happens during combat so it needs to be done manually
-    if (IsMoldBreakerTypeAbility(ctx->battlerAtk, ctx->abilities[ctx->battlerAtk]) || MoveIgnoresTargetAbility(ctx->move))
-    {
-        battlerDefAbility = ABILITY_NONE;
-        partnerDefAbility = ABILITY_NONE;
-    }
-    else
-    {
-        battlerDefAbility = ctx->abilities[ctx->battlerDef];
-        partnerDefAbility = aiData->abilities[BATTLE_PARTNER(ctx->battlerDef)];
-    }
-
-    if (Ai_IsPriorityBlocked(ctx->battlerAtk, ctx->battlerDef, ctx->move, aiData))
+    if (Ai_IsPriorityBlocked(ctx->battlerAtk, ctx->battlerDef, ctx->move, gAiLogicData))
         return TRUE;
 
     if (AI_CanMoveBeBlockedByTarget(ctx))
         return TRUE;
+
+    enum Ability battlerDefAbility = ctx->abilities[ctx->battlerDef];
+    enum Ability partnerDefAbility = ctx->abilities[BATTLE_PARTNER(ctx->battlerDef)];
 
     // Limited to Lighning Rod and Storm Drain because otherwise the AI would consider Water Absorb, etc...
     if (partnerDefAbility == ABILITY_LIGHTNING_ROD || partnerDefAbility == ABILITY_STORM_DRAIN)
@@ -720,7 +763,7 @@ bool32 IsAdditionalEffectBlocked(enum BattlerId battlerAtk, u32 abilityAtk, enum
     if (gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_COVERT_CLOAK)
         return TRUE;
 
-    if (abilityDef == ABILITY_SHIELD_DUST && !IsMoldBreakerTypeAbility(battlerAtk, abilityAtk))
+    if (abilityDef == ABILITY_SHIELD_DUST && !IsMoldBreakerTypeAbility(battlerAtk, abilityAtk, MOVE_NONE)) // not a regression but needs to be fixed. Also mold breaker type move is missing
         return TRUE;
 
     return FALSE;
@@ -736,6 +779,17 @@ static inline s32 GetDamageByRollType(s32 dmg, enum DamageRollType rollType)
         return RandomRollDmg(dmg);
     else
         return DmgRoll(dmg);
+}
+
+static inline bool32 SetAiGimmick(enum BattlerId battler, bool32 shouldConsiderGimmick)
+{
+    if (gBattleStruct->gimmick.usableGimmick[battler] && GetActiveGimmick(battler) == GIMMICK_NONE
+     && gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_NONE && shouldConsiderGimmick)
+    {
+        SetActiveGimmick(battler, gBattleStruct->gimmick.usableGimmick[battler]);
+        return TRUE;
+    }
+    return FALSE;
 }
 
 static inline void AI_StoreBattlerTypes(enum BattlerId battlerAtk, enum Type *types)
@@ -896,78 +950,70 @@ static s32 AI_ApplyModifiersAfterDmgRoll(struct DamageContext *ctx, s32 dmg)
     return dmg;
 }
 
-struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, enum BattlerId battlerDef, uq4_12_t *typeEffectiveness, enum AIConsiderGimmick considerGimmickAtk, enum AIConsiderGimmick considerGimmickDef, u32 weather, u32 fieldStatuses)
+struct SimulatedDamage AI_CalcDamage(struct AiCalcValues *aiCalc)
 {
     struct SimulatedDamage simDamage = {0};
-    enum BattleMoveEffects moveEffect = GetMoveEffect(move);
+
+    enum BattleMoveEffects moveEffect = GetMoveEffect(aiCalc->move);
+    enum BattlerId battlerAtk = aiCalc->battlerAtk;
+    enum BattlerId battlerDef = aiCalc->battlerDef;
     bool32 toggledGimmickAtk = FALSE;
     bool32 toggledGimmickDef = FALSE;
-    struct AiLogicData *aiData = gAiLogicData;
+
     gAiLogicData->aiCalcInProgress = TRUE;
 
-    if (moveEffect == EFFECT_HIT_ENEMY_HEAL_ALLY
-     && battlerDef == BATTLE_PARTNER(battlerAtk))
+    if (moveEffect == EFFECT_HIT_ENEMY_HEAL_ALLY && battlerDef == BATTLE_PARTNER(battlerAtk))
         return simDamage;
 
     if (moveEffect == EFFECT_NATURE_POWER)
-        move = GetNaturePowerMove();
+    {
+        aiCalc->move = GetNaturePowerMove();
+        moveEffect = GetMoveEffect(aiCalc->move);
+    }
 
     // Temporarily enable gimmicks for damage calcs if planned
-    if (gBattleStruct->gimmick.usableGimmick[battlerAtk] && GetActiveGimmick(battlerAtk) == GIMMICK_NONE
-        && gBattleStruct->gimmick.usableGimmick[battlerAtk] != GIMMICK_NONE && considerGimmickAtk == USE_GIMMICK)
-    {
-        toggledGimmickAtk = TRUE;
-        SetActiveGimmick(battlerAtk, gBattleStruct->gimmick.usableGimmick[battlerAtk]);
-    }
+    toggledGimmickAtk = SetAiGimmick(battlerAtk, aiCalc->considerGimmickAtk);
+    toggledGimmickDef = SetAiGimmick(battlerDef, aiCalc->considerGimmickDef);
 
-    if (gBattleStruct->gimmick.usableGimmick[battlerDef] && GetActiveGimmick(battlerDef) == GIMMICK_NONE
-        && gBattleStruct->gimmick.usableGimmick[battlerDef] != GIMMICK_NONE && considerGimmickDef == USE_GIMMICK)
-    {
-        toggledGimmickDef = TRUE;
-        SetActiveGimmick(battlerDef, gBattleStruct->gimmick.usableGimmick[battlerDef]);
-    }
-
-    SetDynamicMoveCategory(battlerAtk, battlerDef, move);
-    SetTypeBeforeUsingMove(move, battlerAtk);
+    SetDynamicMoveCategory(battlerAtk, battlerDef, aiCalc->move);
+    SetTypeBeforeUsingMove(aiCalc->move, battlerAtk);
 
     // We can set those globals because they are going to get rerolled on attack execution
     gBattleStruct->magnitudeBasePower = 70;
     gBattleStruct->presentBasePower = 80;
-
-    enum BattlerId battlerAtkPartner = BATTLE_PARTNER(battlerAtk);
-    enum BattlerId battlerDefPartner = BATTLE_PARTNER(battlerDef);
 
     struct DamageContext ctx = {0};
     ctx.aiCalc = TRUE;
     ctx.aiCheckBerryModifier = FALSE;
     ctx.battlerAtk = battlerAtk;
     ctx.battlerDef = battlerDef;
-    ctx.move = ctx.chosenMove = move;
-    ctx.moveType = GetBattleMoveType(move);
-    ctx.fieldStatuses = fieldStatuses;
+    ctx.move = ctx.chosenMove = aiCalc->move;
+    ctx.moveType = GetBattleMoveType(aiCalc->move);
+    ctx.fieldStatuses = aiCalc->fieldStatuses;
     ctx.randomFactor = FALSE;
     ctx.updateFlags = FALSE;
-    ctx.weather = weather;
+    ctx.weather = aiCalc->weather;
     ctx.fixedBasePower = 0;
-    ctx.holdEffects[ctx.battlerAtk] = aiData->holdEffects[battlerAtk];
-    ctx.holdEffects[battlerAtkPartner] = aiData->holdEffects[battlerAtkPartner];
-    ctx.holdEffects[ctx.battlerDef] = aiData->holdEffects[battlerDef];
-    ctx.holdEffects[battlerDefPartner] = aiData->holdEffects[battlerDefPartner];
-    ctx.abilities[ctx.battlerAtk] = aiData->abilities[battlerAtk];
-    ctx.abilities[battlerAtkPartner] = aiData->abilities[battlerAtkPartner];
-    ctx.abilities[ctx.battlerDef] = AI_GetMoldBreakerSanitizedAbility(battlerAtk, ctx.abilities[ctx.battlerAtk], aiData->abilities[battlerDef], ctx.holdEffects[ctx.battlerDef], move);
-    ctx.abilities[battlerDefPartner] = AI_GetMoldBreakerSanitizedAbility(battlerAtk, ctx.abilities[ctx.battlerAtk], aiData->abilities[battlerDefPartner], ctx.holdEffects[battlerDefPartner], move);
+
+    struct AiLogicData *aiData = gAiLogicData;
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+    {
+        ctx.holdEffects[battler] = aiData->holdEffects[battler];
+
+        if (battlerAtk == battler)
+            ctx.abilities[battler] = aiData->abilities[battler];
+        else
+            ctx.abilities[battlerDef] = AI_GetMoldBreakerSanitizedAbility(&ctx, battlerDef);
+    }
+
     ctx.isCrit = ShouldCalcCritDamage(&ctx);
     ctx.typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(&ctx);
 
-
-    u32 movePower = GetMovePower(move);
-
-    if (movePower && !IsDamageMoveUnusable(&ctx))
+    if (GetMovePower(ctx.move) && !IsDamageMoveUnusable(&ctx))
     {
         enum Type types[3];
         AI_StoreBattlerTypes(battlerAtk, types);
-        ProteanTryChangeType(battlerAtk, aiData->abilities[battlerAtk], move, ctx.moveType);
+        ProteanTryChangeType(battlerAtk, ctx.abilities[battlerAtk], ctx.move, ctx.moveType);
 
         s32 fixedDamage = DoFixedDamageMoveCalc(&ctx);
         if (fixedDamage != INT32_MAX)
@@ -976,10 +1022,10 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
         }
         else if (moveEffect == EFFECT_TRIPLE_KICK)
         {
-            for (gMultiHitCounter = GetMoveStrikeCount(move); gMultiHitCounter > 0; gMultiHitCounter--) // The global is used to simulate actual damage done
+            u32 strikeCount = GetMoveStrikeCount(ctx.move);
+            for (gMultiHitCounter = strikeCount; gMultiHitCounter > 0; gMultiHitCounter--) // The global is used to simulate actual damage done
             {
                 s32 damageByRollType = 0;
-
                 s32 oneTripleKickHit = CalculateMoveDamageVars(&ctx);
 
                 damageByRollType = GetDamageByRollType(oneTripleKickHit, DMG_ROLL_LOWEST);
@@ -1025,8 +1071,8 @@ struct SimulatedDamage AI_CalcDamage(enum Move move, enum BattlerId battlerAtk, 
         simDamage.random = 0;
     }
 
-    // convert multiper to AI_EFFECTIVENESS_xX
-    *typeEffectiveness = ctx.typeEffectivenessModifier;
+    aiData->moveAccuracy[battlerAtk][battlerDef][aiCalc->moveIndex] = Ai_SetMoveAccuracy(&ctx);
+    aiData->effectiveness[battlerAtk][battlerDef][aiCalc->moveIndex] = ctx.typeEffectivenessModifier;
 
     // Undo temporary settings
     gBattleStruct->dynamicMoveType = 0;
@@ -1907,10 +1953,7 @@ bool32 DoesBattlerIgnoreAbilityChecks(enum BattlerId battlerAtk, enum Ability at
     if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_NEGATE_UNAWARE)
         return FALSE;   // AI handicap flag: doesn't understand ability suppression concept
 
-    if (atkAbility == ABILITY_MYCELIUM_MIGHT && IsBattleMoveStatus(move))
-        return TRUE;
-
-    if (IsMoldBreakerTypeAbility(battlerAtk, atkAbility) || MoveIgnoresTargetAbility(move))
+    if (IsMoldBreakerTypeAbility(battlerAtk, atkAbility, move) || MoveIgnoresTargetAbility(move))
         return TRUE;
 
     return FALSE;
@@ -3841,7 +3884,7 @@ bool32 AI_CanBeInfatuated(enum BattlerId battlerAtk, enum BattlerId battlerDef, 
 bool32 ShouldTryToFlinch(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability atkAbility, enum Ability defAbility, enum Move move)
 {
     enum Move predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
-    if (((!IsMoldBreakerTypeAbility(battlerAtk, gAiLogicData->abilities[battlerAtk]) && (defAbility == ABILITY_SHIELD_DUST || defAbility == ABILITY_INNER_FOCUS))
+    if (((!IsMoldBreakerTypeAbility(battlerAtk, gAiLogicData->abilities[battlerAtk], move) && (defAbility == ABILITY_SHIELD_DUST || defAbility == ABILITY_INNER_FOCUS))
       || gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_COVERT_CLOAK
       || DoesSubstituteBlockMove(battlerAtk, battlerDef, move)
       || AI_IsSlower(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY))) // Opponent goes first
@@ -3902,7 +3945,7 @@ bool32 IsFlinchGuaranteed(enum BattlerId battlerAtk, enum BattlerId battlerDef, 
         {
             if (gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_COVERT_CLOAK
             || DoesSubstituteBlockMove(battlerAtk, battlerDef, move)
-            || (!IsMoldBreakerTypeAbility(battlerAtk, gAiLogicData->abilities[battlerAtk])
+            || (!IsMoldBreakerTypeAbility(battlerAtk, gAiLogicData->abilities[battlerAtk], move)
             && (gAiLogicData->abilities[battlerDef] == ABILITY_SHIELD_DUST || gAiLogicData->abilities[battlerDef] == ABILITY_INNER_FOCUS)))
                 return FALSE;
             else
@@ -5020,6 +5063,7 @@ static enum AIScore IncreaseStatUpScoreInternal(enum BattlerId battlerAtk, enum 
     return tempScore;
 }
 
+// Function is missing moves that ignore abilities. The newly added arg has to be fixed as well. Not a regression since it was never correct
 bool32 HasHPForDamagingSetup(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 hpThreshold)
 {
     bool32 bestMoveIsPhysical = HasPhysicalBestMove(battlerDef, battlerAtk, AI_DEFENDING);
@@ -5030,12 +5074,12 @@ bool32 HasHPForDamagingSetup(enum BattlerId battlerAtk, enum BattlerId battlerDe
     if (bestMoveIsPhysical
      && gAiLogicData->abilities[battlerAtk] == ABILITY_ICE_FACE
      && gBattleMons[battlerAtk].species == SPECIES_EISCUE_ICE
-     && !IsMoldBreakerTypeAbility(battlerDef, gAiLogicData->abilities[battlerDef])) // ice face will absorb the hit, safe to use setup
+     && !IsMoldBreakerTypeAbility(battlerDef, gAiLogicData->abilities[battlerDef], MOVE_NONE)) // ice face will absorb the hit, safe to use setup
         return TRUE;
 
     if (gAiLogicData->abilities[battlerAtk] == ABILITY_DISGUISE
      && IsMimikyuDisguised(battlerAtk)
-     && !IsMoldBreakerTypeAbility(battlerDef, gAiLogicData->abilities[battlerDef])) // disguise will absorb the hit, safe to use setup
+     && !IsMoldBreakerTypeAbility(battlerDef, gAiLogicData->abilities[battlerDef], MOVE_NONE)) // disguise will absorb the hit, safe to use setup
         return TRUE;
 
     return FALSE;
@@ -5416,7 +5460,6 @@ bool32 ShouldUseZMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
         if (GetMoveEffect(chosenMove) == EFFECT_LAST_RESORT && !CanUseLastResort(battlerAtk))
             return TRUE;
 
-        uq4_12_t effectiveness;
         struct SimulatedDamage dmg;
 
         if (gBattleMons[battlerDef].ability == ABILITY_DISGUISE
@@ -5428,7 +5471,17 @@ bool32 ShouldUseZMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
             && gBattleMons[battlerDef].species == SPECIES_EISCUE_ICE && IsBattleMovePhysical(chosenMove))
             return FALSE; // Don't waste a Z-Move busting Ice Face
 
-        dmg = AI_CalcDamageSaveBattlers(chosenMove, battlerAtk, battlerDef, &effectiveness, NO_GIMMICK, NO_GIMMICK);
+        struct AiCalcValues aiCalc = {
+            .battlerAtk = battlerAtk,
+            .battlerDef = battlerDef,
+            .move = chosenMove,
+            .weather = AI_GetWeather(),
+            .fieldStatuses = gFieldStatuses,
+            .considerGimmickAtk = FALSE,
+            .considerGimmickDef = FALSE,
+        };
+
+        dmg = AI_CalcDamageSaveBattlers(&aiCalc);
 
         // don't waste a damaging z move if the normal move will KO
         if (!IsBattleMoveStatus(chosenMove) && dmg.minimum >= gBattleMons[battlerDef].hp)
@@ -5500,20 +5553,32 @@ void DecideTerastal(enum BattlerId battler)
     enum Move *aiMoves = GetMovesArray(battler);
     enum Move *oppMoves = GetMovesArray(opposingBattler);
 
-    uq4_12_t effectiveness;
+    struct AiCalcValues aiCalc = {
+        .weather = AI_GetWeather(),
+        .fieldStatuses = gFieldStatuses,
+    };
 
     for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
     {
+        aiCalc.battlerAtk = battler;
+        aiCalc.battlerDef = opposingBattler;
+        aiCalc.move = aiMoves[moveIndex];
+        aiCalc.considerGimmickAtk = FALSE;
+        aiCalc.considerGimmickDef = FALSE;
         if (!IsMoveUnusable(moveIndex, aiMoves[moveIndex], gAiLogicData->moveLimitations[battler]) && !IsBattleMoveStatus(aiMoves[moveIndex]))
-            altCalcs.dealtWithoutTera[moveIndex] = AI_CalcDamage(aiMoves[moveIndex], battler, opposingBattler, &effectiveness, NO_GIMMICK, NO_GIMMICK, AI_GetWeather(), gFieldStatuses);
+            altCalcs.dealtWithoutTera[moveIndex] = AI_CalcDamage(&aiCalc);
         else
             altCalcs.dealtWithoutTera[moveIndex] = noDmg;
 
-
+        aiCalc.battlerAtk = opposingBattler;
+        aiCalc.battlerDef = battler;
+        aiCalc.move = oppMoves[moveIndex];
+        aiCalc.considerGimmickAtk = TRUE;
+        aiCalc.considerGimmickDef = TRUE;
         if (!IsMoveUnusable(moveIndex, oppMoves[moveIndex], gAiLogicData->moveLimitations[opposingBattler]) && !IsBattleMoveStatus(oppMoves[moveIndex]))
         {
-            altCalcs.takenWithTera[moveIndex] = AI_CalcDamage(oppMoves[moveIndex], opposingBattler, battler, &effectiveness, USE_GIMMICK, USE_GIMMICK, AI_GetWeather(), gFieldStatuses);
-            effectivenessTakenWithTera[moveIndex] = effectiveness;
+            altCalcs.takenWithTera[moveIndex] =  AI_CalcDamage(&aiCalc);
+            effectivenessTakenWithTera[moveIndex] = gAiLogicData->effectiveness[aiCalc.battlerAtk][aiCalc.battlerDef][moveIndex];
         }
         else
         {
