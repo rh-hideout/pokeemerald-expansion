@@ -1,0 +1,53 @@
+{
+  "id": "MAP_DIGLETTS_CAVE_ENTRANCE_NORTH",
+  "name": "DiglettsCave_EntranceNorth",
+  "layout": "LAYOUT_DIGLETTS_CAVE_ENTRANCE_NORTH",
+  "music": "MUS_HG_ROCK_TUNNEL",
+  "region_map_section": "MAPSEC_DIGLETTS_CAVE",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_UNDERGROUND",
+  "allow_cycling": true,
+  "allow_escaping": true,
+  "allow_running": true,
+  "show_map_name": true,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": 0,
+  "object_events": [
+    {
+      "graphics_id": "OBJ_EVENT_GFX_BROCK",
+      "x": 2,
+      "y": 3,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "DiglettsCave_EntranceNorth_EventScript_Brock",
+      "flag": "FLAG_HIDE_DIGLETT_BROCK"
+    }
+  ],
+  "warp_events": [
+    {
+      "x": 3,
+      "y": 5,
+      "elevation": 0,
+      "dest_map": "MAP_ROUTE2",
+      "dest_warp_id": "7"
+    },
+    {
+      "x": 4,
+      "y": 3,
+      "elevation": 0,
+      "dest_map": "MAP_DIGLETTS_CAVE_TUNNEL",
+      "dest_warp_id": "0"
+    }
+  ],
+  "coord_events": [
+
+  ],
+  "bg_events": [
+
+  ]
+}

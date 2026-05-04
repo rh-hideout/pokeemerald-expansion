@@ -1,0 +1,46 @@
+{
+  "id": "MAP_EMBEDDED_TOWER",
+  "name": "EmbeddedTower",
+  "layout": "LAYOUT_EMBEDDED_TOWER",
+  "music": "MUS_HG_ROUTE47",
+  "region_map_section": "MAPSEC_EMBEDDED_TOWER",
+  "requires_flash": false,
+  "weather": "WEATHER_SHADE",
+  "map_type": "MAP_TYPE_UNDERGROUND",
+  "allow_cycling": false,
+  "allow_escaping": false,
+  "allow_running": false,
+  "show_map_name": true,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": 0,
+  "object_events": [
+    {
+      "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_RAYQUAZA",
+      "x": 14,
+      "y": 13,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_WALK_IN_PLACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "EmbeddedTower_EventScript_Rayquaza",
+      "flag": "FLAG_HIDE_RAYQUAZA"
+    }
+  ],
+  "warp_events": [
+    {
+      "x": 14,
+      "y": 29,
+      "elevation": 0,
+      "dest_map": "MAP_ROUTE47",
+      "dest_warp_id": "4"
+    }
+  ],
+  "coord_events": [
+
+  ],
+  "bg_events": [
+
+  ]
+}

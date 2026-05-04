@@ -1,0 +1,41 @@
+{
+  "id": "MAP_MT_SILVER_3F",
+  "name": "MtSilver_3F",
+  "layout": "LAYOUT_MT_SILVER_3F",
+  "music": "MUS_HG_LIGHTHOUSE",
+  "region_map_section": "MAPSEC_MT_SILVER",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_UNDERGROUND",
+  "allow_cycling": true,
+  "allow_escaping": true,
+  "allow_running": false,
+  "show_map_name": false,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": 0,
+  "object_events": [
+
+  ],
+  "warp_events": [
+    {
+      "x": 12,
+      "y": 1,
+      "elevation": 0,
+      "dest_map": "MAP_MT_SILVER_SUMMIT_DAY",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 32,
+      "y": 15,
+      "elevation": 0,
+      "dest_map": "MAP_MT_SILVER_SNOW",
+      "dest_warp_id": "0"
+    }
+  ],
+  "coord_events": [
+
+  ],
+  "bg_events": [
+
+  ]
+}

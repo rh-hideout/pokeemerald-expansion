@@ -1,0 +1,97 @@
+{
+  "id": "MAP_NEW_BARK_TOWN_PLAYERS_HOUSE_2F",
+  "name": "NewBarkTown_PlayersHouse_2F",
+  "layout": "LAYOUT_NEW_BARK_TOWN_PLAYERS_HOUSE_2F",
+  "music": "MUS_HG_NEW_BARK",
+  "region_map_section": "MAPSEC_NEW_BARK_TOWN",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_INDOOR",
+  "allow_cycling": false,
+  "allow_escaping": false,
+  "allow_running": true,
+  "show_map_name": false,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": 0,
+  "object_events": [
+
+  ],
+  "warp_events": [
+    {
+      "x": 9,
+      "y": 2,
+      "elevation": 0,
+      "dest_map": "MAP_NEW_BARK_TOWN_PLAYERS_HOUSE_1F",
+      "dest_warp_id": "1"
+    },
+    {
+      "x": 1,
+      "y": 6,
+      "elevation": 0,
+      "dest_map": "MAP_NEW_BARK_TOWN_PLAYERS_HOUSE_2F",
+      "dest_warp_id": "0"
+    }
+  ],
+  "coord_events": [
+    {
+      "type": "trigger",
+      "x": 9,
+      "y": 3,
+      "elevation": 0,
+      "var": "VAR_NEWBARK_TOWN_STATE",
+      "var_value": "0",
+      "script": "NewBarkTown_PlayersHouse_2F_Script_ClockSetupTrigger1"
+    },
+    {
+      "type": "trigger",
+      "x": 10,
+      "y": 3,
+      "elevation": 0,
+      "var": "VAR_NEWBARK_TOWN_STATE",
+      "var_value": "0",
+      "script": "NewBarkTown_PlayersHouse_2F_Script_ClockSetupTrigger2"
+    }
+  ],
+  "bg_events": [
+    {
+      "type": "sign",
+      "x": 10,
+      "y": 1,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "LittlerootTown_BrendansHouse_2F_EventScript_WallClock"
+    },
+    {
+      "type": "sign",
+      "x": 1,
+      "y": 1,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "LittlerootTown_BrendansHouse_2F_EventScript_PC"
+    },
+    {
+      "type": "sign",
+      "x": 4,
+      "y": 2,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "NewBarkTown_PlayersHouse_2F_EventScript_NES"
+    },
+    {
+      "type": "sign",
+      "x": 5,
+      "y": 1,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "EventScript_BookShelf"
+    },
+    {
+      "type": "sign",
+      "x": 6,
+      "y": 1,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "EventScript_BookShelf"
+    }
+  ]
+}

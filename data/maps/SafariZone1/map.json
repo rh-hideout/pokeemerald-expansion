@@ -1,0 +1,54 @@
+{
+  "id": "MAP_SAFARI_ZONE1",
+  "name": "SafariZone1",
+  "layout": "LAYOUT_SAFARI_ZONE1",
+  "music": "MUS_HG_SAFARI_ZONE",
+  "region_map_section": "MAPSEC_SAFARI_ZONE_GATE",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_ROUTE",
+  "allow_cycling": false,
+  "allow_escaping": false,
+  "allow_running": false,
+  "show_map_name": false,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": [
+    {
+      "map": "MAP_SAFARI_ZONE2",
+      "offset": -12,
+      "direction": "right"
+    }
+  ],
+  "object_events": [
+
+  ],
+  "warp_events": [
+    {
+      "x": 25,
+      "y": 29,
+      "elevation": 0,
+      "dest_map": "MAP_NEW_BARK_TOWN",
+      "dest_warp_id": "1"
+    },
+    {
+      "x": 26,
+      "y": 29,
+      "elevation": 0,
+      "dest_map": "MAP_NEW_BARK_TOWN",
+      "dest_warp_id": "1"
+    },
+    {
+      "x": 24,
+      "y": 29,
+      "elevation": 0,
+      "dest_map": "MAP_NEW_BARK_TOWN",
+      "dest_warp_id": "1"
+    }
+  ],
+  "coord_events": [
+
+  ],
+  "bg_events": [
+
+  ]
+}

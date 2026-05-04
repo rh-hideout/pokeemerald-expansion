@@ -1,0 +1,41 @@
+{
+  "id": "MAP_RUINS_OF_ALPH_WORDS_ROOM4",
+  "name": "RuinsOfAlph_WordsRoom4",
+  "layout": "LAYOUT_RUINS_OF_ALPH_WORDS_ROOM4",
+  "music": "MUS_HG_RUINS_OF_ALPH",
+  "region_map_section": "MAPSEC_RUINS_OF_ALPH",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_UNDERGROUND",
+  "allow_cycling": false,
+  "allow_escaping": true,
+  "allow_running": false,
+  "show_map_name": false,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": 0,
+  "object_events": [
+
+  ],
+  "warp_events": [
+    {
+      "x": 17,
+      "y": 10,
+      "elevation": 0,
+      "dest_map": "MAP_RUINS_OF_ALPH_B1F",
+      "dest_warp_id": "2"
+    },
+    {
+      "x": 5,
+      "y": 2,
+      "elevation": 0,
+      "dest_map": "MAP_RUINS_OF_ALPH_PUZZLE_AND_REWARD_CHAMBERS",
+      "dest_warp_id": "22"
+    }
+  ],
+  "coord_events": [
+
+  ],
+  "bg_events": [
+
+  ]
+}

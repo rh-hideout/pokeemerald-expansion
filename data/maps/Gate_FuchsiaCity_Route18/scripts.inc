@@ -1,0 +1,3 @@
+Gate_FuchsiaCity_Route18_MapScripts::
+	map_script MAP_SCRIPT_ON_TRANSITION, FuchsiaCity_EventScript_CityEnter
+	.byte 0

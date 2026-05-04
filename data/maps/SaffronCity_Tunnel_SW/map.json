@@ -1,0 +1,41 @@
+{
+  "id": "MAP_SAFFRON_CITY_TUNNEL_SW",
+  "name": "SaffronCity_Tunnel_SW",
+  "layout": "LAYOUT_SAFFRON_CITY_TUNNEL_SW",
+  "music": "MUS_HG_ROUTE1",
+  "region_map_section": "MAPSEC_ROUTE_7",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_INDOOR",
+  "allow_cycling": false,
+  "allow_escaping": false,
+  "allow_running": false,
+  "show_map_name": false,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": 0,
+  "object_events": [
+
+  ],
+  "warp_events": [
+    {
+      "x": 3,
+      "y": 4,
+      "elevation": 0,
+      "dest_map": "MAP_ROUTE7_TUNNEL_ENTRANCE",
+      "dest_warp_id": "1"
+    },
+    {
+      "x": 76,
+      "y": 4,
+      "elevation": 0,
+      "dest_map": "MAP_ROUTE8_TUNNEL_ENTRANCE",
+      "dest_warp_id": "0"
+    }
+  ],
+  "coord_events": [
+
+  ],
+  "bg_events": [
+
+  ]
+}

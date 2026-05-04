@@ -1,0 +1,266 @@
+{
+  "id": "MAP_ECRUTEAK_CITY_THEATER",
+  "name": "EcruteakCity_Theater",
+  "layout": "LAYOUT_ECRUTEAK_CITY_THEATER",
+  "music": "MUS_HG_DANCE_THEATER",
+  "region_map_section": "MAPSEC_ECRUTEAK_CITY",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_INDOOR",
+  "allow_cycling": false,
+  "allow_escaping": false,
+  "allow_running": false,
+  "show_map_name": false,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": 0,
+  "object_events": [
+    {
+      "graphics_id": "OBJ_EVENT_GFX_KIMONO_GIRL",
+      "x": 7,
+      "y": 2,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "EcruteakCity_Theater_EventScript_KimonoGirl",
+      "flag": "FLAG_HIDE_ECRUTEAK_CITY_THEATER_KIMONOS"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_KIMONO_GIRL",
+      "x": 5,
+      "y": 3,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "EcruteakCity_Theater_EventScript_KimonoGirl",
+      "flag": "FLAG_HIDE_ECRUTEAK_CITY_THEATER_KIMONOS"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_KIMONO_GIRL",
+      "x": 13,
+      "y": 2,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "EcruteakCity_Theater_EventScript_KimonoGirl",
+      "flag": "FLAG_HIDE_ECRUTEAK_CITY_THEATER_KIMONOS"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_KIMONO_GIRL",
+      "x": 15,
+      "y": 3,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "EcruteakCity_Theater_EventScript_KimonoGirl",
+      "flag": "FLAG_HIDE_ECRUTEAK_CITY_THEATER_KIMONOS"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_KIMONO_GIRL",
+      "x": 10,
+      "y": 3,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "EcruteakCity_Theater_EventScript_Zuki",
+      "flag": "FLAG_HIDE_ECRUTEAK_CITY_THEATER_ZUKI"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_OLD_WOMAN",
+      "x": 7,
+      "y": 11,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "EcruteakCity_Theater_EventScript_Granny",
+      "flag": "FLAG_HIDE_ECRUTEAK_CITY_THEATER_NPCS"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_GENTLEMAN",
+      "x": 13,
+      "y": 11,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "EcruteakCity_Theater_EventScript_SurfGuy",
+      "flag": "FLAG_HIDE_ECRUTEAK_CITY_THEATER_NPCS"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_WORKER_M",
+      "x": 17,
+      "y": 9,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "EcruteakCity_Theater_EventScript_Boy",
+      "flag": "FLAG_HIDE_ECRUTEAK_CITY_THEATER_NPCS"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_PSYDUCK",
+      "x": 13,
+      "y": 9,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "EcruteakCity_Theater_EventScript_Psyduck",
+      "flag": "FLAG_HIDE_ECRUTEAK_CITY_THEATER_NPCS"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_OLD_MAN_1",
+      "x": 3,
+      "y": 9,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "EcruteakCity_Theater_EventScript_Gramps",
+      "flag": "FLAG_HIDE_ECRUTEAK_CITY_THEATER_NPCS"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_TWIN",
+      "x": 5,
+      "y": 11,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_TOWER_BEAM",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "EcruteakCity_Theater_EventScript_Girl",
+      "flag": "FLAG_HIDE_ECRUTEAK_CITY_THEATER_NPCS"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_ROCKET_M",
+      "x": 10,
+      "y": 4,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "EcruteakCity_Theater_EventScript_Rocket",
+      "flag": "FLAG_HIDE_ECRUTEAK_ROCKET"
+    }
+  ],
+  "warp_events": [
+    {
+      "x": 10,
+      "y": 17,
+      "elevation": 0,
+      "dest_map": "MAP_ECRUTEAK_CITY",
+      "dest_warp_id": "6"
+    }
+  ],
+  "coord_events": [
+    {
+      "type": "trigger",
+      "x": 10,
+      "y": 16,
+      "elevation": 0,
+      "var": "VAR_ECRUTEAK_CITY_THEATER",
+      "var_value": "0",
+      "script": "EcruteakCity_Theater_EventScript_RocketEventTrigger"
+    },
+    {
+      "type": "trigger",
+      "x": 11,
+      "y": 17,
+      "elevation": 0,
+      "var": "VAR_ECRUTEAK_CITY_THEATER",
+      "var_value": "0",
+      "script": "EcruteakCity_Theater_EventScript_RocketEventTrigger"
+    },
+    {
+      "type": "trigger",
+      "x": 9,
+      "y": 17,
+      "elevation": 0,
+      "var": "VAR_ECRUTEAK_CITY_THEATER",
+      "var_value": "0",
+      "script": "EcruteakCity_Theater_EventScript_RocketEventTrigger"
+    },
+    {
+      "type": "trigger",
+      "x": 10,
+      "y": 17,
+      "elevation": 0,
+      "var": "VAR_ECRUTEAK_CITY_THEATER",
+      "var_value": "2",
+      "script": "EcruteakCity_Theater_EventScript_TriggerSurfGuy"
+    },
+    {
+      "type": "trigger",
+      "x": 10,
+      "y": 16,
+      "elevation": 0,
+      "var": "VAR_ECRUTEAK_CITY_THEATER",
+      "var_value": "5",
+      "script": "EcruteakCity_Theater_Trigger_PreBattleCutsceneTop"
+    },
+    {
+      "type": "trigger",
+      "x": 11,
+      "y": 17,
+      "elevation": 0,
+      "var": "VAR_ECRUTEAK_CITY_THEATER",
+      "var_value": "5",
+      "script": "EcruteakCity_Theater_Trigger_PreBattleCutsceneRight"
+    },
+    {
+      "type": "trigger",
+      "x": 9,
+      "y": 17,
+      "elevation": 0,
+      "var": "VAR_ECRUTEAK_CITY_THEATER",
+      "var_value": "5",
+      "script": "EcruteakCity_Theater_Trigger_PreBattleCutsceneLeft"
+    }
+  ],
+  "bg_events": [
+    {
+      "type": "sign",
+      "x": 11,
+      "y": 8,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "EcruteakCity_Theater_EventScript_FancyPanel"
+    },
+    {
+      "type": "sign",
+      "x": 10,
+      "y": 8,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "EcruteakCity_Theater_EventScript_FancyPanel"
+    }
+  ]
+}

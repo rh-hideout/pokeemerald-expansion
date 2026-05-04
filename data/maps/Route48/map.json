@@ -1,0 +1,187 @@
+{
+  "id": "MAP_ROUTE48",
+  "name": "Route48",
+  "layout": "LAYOUT_ROUTE48",
+  "music": "MUS_HG_ROUTE47",
+  "region_map_section": "MAPSEC_ROUTE_48",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_ROUTE",
+  "allow_cycling": true,
+  "allow_escaping": false,
+  "allow_running": true,
+  "show_map_name": true,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": [
+    {
+      "map": "MAP_ROUTE47",
+      "offset": -19,
+      "direction": "down"
+    },
+    {
+      "map": "MAP_SAFARI_ZONE_GATE",
+      "offset": 7,
+      "direction": "up"
+    }
+  ],
+  "object_events": [
+    {
+      "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_TAUROS",
+      "x": 39,
+      "y": 11,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+      "movement_range_x": 1,
+      "movement_range_y": 1,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "NULL",
+      "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_GROWLITHE",
+      "x": 41,
+      "y": 18,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "NULL",
+      "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_VULPIX",
+      "x": 42,
+      "y": 24,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "NULL",
+      "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_GLOOM",
+      "x": 11,
+      "y": 19,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "NULL",
+      "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_SKIPLOOM",
+      "x": 43,
+      "y": 13,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "NULL",
+      "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_GIRAFARIG",
+      "x": 18,
+      "y": 28,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+      "movement_range_x": 4,
+      "movement_range_y": 4,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "NULL",
+      "flag": "0"
+    }
+  ],
+  "warp_events": [
+
+  ],
+  "coord_events": [
+    {
+      "type": "trigger",
+      "x": 21,
+      "y": 0,
+      "elevation": 0,
+      "var": "VAR_SAFARI_ZONE_GATE_STATE",
+      "var_value": "2",
+      "script": "SafariZoneGate_EventScript_Trigger"
+    },
+    {
+      "type": "trigger",
+      "x": 22,
+      "y": 0,
+      "elevation": 0,
+      "var": "VAR_SAFARI_ZONE_GATE_STATE",
+      "var_value": "2",
+      "script": "SafariZoneGate_EventScript_Trigger"
+    },
+    {
+      "type": "trigger",
+      "x": 23,
+      "y": 0,
+      "elevation": 0,
+      "var": "VAR_SAFARI_ZONE_GATE_STATE",
+      "var_value": "2",
+      "script": "SafariZoneGate_EventScript_Trigger"
+    },
+    {
+      "type": "trigger",
+      "x": 24,
+      "y": 0,
+      "elevation": 0,
+      "var": "VAR_SAFARI_ZONE_GATE_STATE",
+      "var_value": "2",
+      "script": "SafariZoneGate_EventScript_Trigger"
+    },
+    {
+      "type": "trigger",
+      "x": 21,
+      "y": 1,
+      "elevation": 0,
+      "var": "VAR_TEMP_0",
+      "var_value": "0",
+      "script": "SafariZoneGate_EventScript_BackupTrigger"
+    },
+    {
+      "type": "trigger",
+      "x": 22,
+      "y": 1,
+      "elevation": 0,
+      "var": "VAR_TEMP_0",
+      "var_value": "0",
+      "script": "SafariZoneGate_EventScript_BackupTrigger"
+    },
+    {
+      "type": "trigger",
+      "x": 23,
+      "y": 1,
+      "elevation": 0,
+      "var": "VAR_TEMP_0",
+      "var_value": "0",
+      "script": "SafariZoneGate_EventScript_BackupTrigger"
+    },
+    {
+      "type": "trigger",
+      "x": 24,
+      "y": 1,
+      "elevation": 0,
+      "var": "VAR_TEMP_0",
+      "var_value": "0",
+      "script": "SafariZoneGate_EventScript_BackupTrigger"
+    }
+  ],
+  "bg_events": [
+
+  ]
+}
