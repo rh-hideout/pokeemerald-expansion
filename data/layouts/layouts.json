@@ -9327,21 +9327,21 @@
     {
       "id": "LAYOUT_TEST_MAP2_HNS",
       "name": "TestMap2_hns_Layout",
-      "width": 90,
+      "width": 80,
       "height": 30,
       "primary_tileset": "gTileset_Johto_General",
-      "secondary_tileset": "gTileset_Ecruteak_City",
+      "secondary_tileset": "gTileset_NationalPark",
       "border_filepath": "data/layouts/TestMap2_hns/border.bin",
       "blockdata_filepath": "data/layouts/TestMap2_hns/map.bin",
-        "layout_version": "hns"
+      "layout_version": "hns"
     },
     {
       "id": "LAYOUT_TEST_MAP1_HNS",
       "name": "TestMap1_hns_Layout",
-      "width": 90,
+      "width": 80,
       "height": 30,
       "primary_tileset": "gTileset_Johto_General",
-      "secondary_tileset": "gTileset_Ecruteak_City",
+      "secondary_tileset": "gTileset_NationalPark",
       "border_filepath": "data/layouts/TestMap1_hns/border.bin",
       "blockdata_filepath": "data/layouts/TestMap1_hns/map.bin",
       "layout_version": "hns"

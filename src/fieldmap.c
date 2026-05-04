@@ -429,9 +429,9 @@ u32 GetNumTilesInPrimary(struct MapLayout const *mapLayout)
 {
     switch (mapLayout->layoutVersion)
     {
-    case LAYOUT_VERSION_FRLG: return NUM_TILES_IN_PRIMARY_FRLG;
-    case LAYOUT_VERSION_HNS:  return NUM_TILES_IN_PRIMARY_HNS;
-    default:                  return NUM_TILES_IN_PRIMARY;
+    case LAYOUT_VERSION_FRLG: return NUM_TILES_IN_PRIMARY;
+    case LAYOUT_VERSION_HNS:  return NUM_TILES_IN_PRIMARY;
+    default:                  return NUM_TILES_IN_PRIMARY_EMERALD;
     }
 }
 
@@ -439,9 +439,9 @@ u32 GetNumMetatilesInPrimary(struct MapLayout const *mapLayout)
 {
     switch (mapLayout->layoutVersion)
     {
-    case LAYOUT_VERSION_FRLG: return NUM_METATILES_IN_PRIMARY_FRLG;
-    case LAYOUT_VERSION_HNS:  return NUM_METATILES_IN_PRIMARY_HNS;
-    default:                  return NUM_METATILES_IN_PRIMARY;
+    case LAYOUT_VERSION_FRLG: return NUM_METATILES_IN_PRIMARY;
+    case LAYOUT_VERSION_HNS:  return NUM_METATILES_IN_PRIMARY;
+    default:                  return NUM_METATILES_IN_PRIMARY_EMERALD;
     }
 }
 
@@ -449,9 +449,9 @@ u32 GetNumPalsInPrimary(struct MapLayout const *mapLayout)
 {
     switch (mapLayout->layoutVersion)
     {
-    case LAYOUT_VERSION_FRLG: return NUM_PALS_IN_PRIMARY_FRLG;
-    case LAYOUT_VERSION_HNS:  return NUM_PALS_IN_PRIMARY_HNS;
-    default:                  return NUM_PALS_IN_PRIMARY;
+    case LAYOUT_VERSION_FRLG: return NUM_PALS_IN_PRIMARY;
+    case LAYOUT_VERSION_HNS:  return NUM_PALS_IN_PRIMARY;
+    default:                  return NUM_PALS_IN_PRIMARY_EMERALD;
     }
 }
 

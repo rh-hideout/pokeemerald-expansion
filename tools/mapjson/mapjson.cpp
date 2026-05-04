@@ -464,35 +464,26 @@ string generate_groups_text(Json groups_data, vector<string> &invalid_maps) {
 
     text << get_generated_warning("data/maps/map_groups.json", true);
 
-    vector<string> valid_groups;
     for (auto &key : groups_data["group_order"].array_items()) {
         string group = json_to_string(key);
-        vector<string> valid_maps;
         auto maps = groups_data[group].array_items();
+
+        text << group << "::\n";
         for (Json &map_name : maps) {
             string map_name_str = json_to_string(map_name);
             auto it = find(invalid_maps.begin(), invalid_maps.end(), map_name_str);
             if (it == invalid_maps.end()) {
-                valid_maps.push_back(map_name_str);
+                text << "\t.4byte " << map_name_str << "\n";
+            } else {
+                text << "\t.4byte NULL\n";
             }
         }
-
-        if (valid_maps.size() > 0) {
-            text << group << "::\n";
-            for (string map : valid_maps)
-                text << "\t.4byte " << map << "\n";
-            text << "\n";
-            valid_groups.push_back(group);
-        }
+        text << "\n";
     }
 
     text << "\t.align 2\n" << "gMapGroups::\n";
     for (auto &group : groups_data["group_order"].array_items()) {
-        string group_str = json_to_string(group);
-        if (find(valid_groups.begin(), valid_groups.end(), group_str) != valid_groups.end())
-            text << "\t.4byte " << group_str << "\n";
-        else
-            text << "\t.4byte NULL\n";
+        text << "\t.4byte " << json_to_string(group) << "\n";
     }
     text << "\n";
 
