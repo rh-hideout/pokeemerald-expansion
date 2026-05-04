@@ -87,14 +87,14 @@
       "x": 6,
       "y": 9,
       "elevation": 0,
-      "dest_map": "MAP_TRAINER_HILL_COURTYARD",
+      "dest_map": "MAP_TRAINER_HILL_COURTYARD_HNS",
       "dest_warp_id": "2"
     },
     {
       "x": 7,
       "y": 9,
       "elevation": 0,
-      "dest_map": "MAP_TRAINER_HILL_COURTYARD",
+      "dest_map": "MAP_TRAINER_HILL_COURTYARD_HNS",
       "dest_warp_id": "2"
     }
   ],

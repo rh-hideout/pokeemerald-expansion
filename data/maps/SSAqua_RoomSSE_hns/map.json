@@ -1,0 +1,59 @@
+{
+  "id": "MAP_SSAQUA_ROOM_SSE_HNS",
+  "name": "SSAqua_RoomSSE_hns",
+  "layout": "LAYOUT_SSAQUA_ROOM_SSE_HNS",
+  "music": "MUS_HG_SS_AQUA",
+  "region_map_section": "MAPSEC_SS_AQUA",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_INDOOR",
+  "allow_cycling": false,
+  "allow_escaping": false,
+  "allow_running": false,
+  "show_map_name": false,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": 0,
+  "object_events": [
+    {
+      "graphics_id": "OBJ_EVENT_GFX_GENTLEMAN_HNS",
+      "x": 1,
+      "y": 4,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "SSAqua_RoomSSE_EventScript_Grandpa",
+      "flag": "0",
+      "local_id": "LOCALID_SSAQUA_ROOM_SSE_GRANDFATHER"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_TWIN_HNS",
+      "x": 3,
+      "y": 6,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "SSAqua_RoomSSE_EventScript_GrandDaughter",
+      "flag": "FLAG_HIDE_SSAQUA_ROOM_SSE_GRANDDAUGHTER",
+      "local_id": "LOCALID_SSAQUA_ROOM_SSE_GRANDDAUGTHER"
+    }
+  ],
+  "warp_events": [
+    {
+      "x": 3,
+      "y": 7,
+      "elevation": 0,
+      "dest_map": "MAP_SSAQUA_1F_HNS",
+      "dest_warp_id": "5"
+    }
+  ],
+  "coord_events": [],
+  "bg_events": [],
+  "game_version": "hns",
+  "region": "REGION_JOHTO"
+}

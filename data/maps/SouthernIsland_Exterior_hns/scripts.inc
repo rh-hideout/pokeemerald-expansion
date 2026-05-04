@@ -19,7 +19,7 @@ SouthernIsland_Exterior_EventScript_Sailor::
 	hideobjectat LOCALID_SAILOR, MAP_SOUTHERN_ISLAND_EXTERIOR
 	setvar VAR_0x8004, LOCALID_SS_TIDAL
 	call Common_EventScript_FerryDepartIsland
-	warpsilent MAP_OLIVINE_CITY_PORT_INSIDE, 8, 16
+	warpsilent MAP_OLIVINE_CITY_PORT_INSIDE_HNS, 8, 16
 	waitstate
 	release
 	end

@@ -1,0 +1,28 @@
+{
+  "id": "MAP_SAFARI_ZONE3_HNS",
+  "name": "SafariZone3_hns",
+  "layout": "LAYOUT_SAFARI_ZONE3_HNS",
+  "music": "MUS_HG_SAFARI_ZONE",
+  "region_map_section": "MAPSEC_SAFARI_ZONE_GATE",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_ROUTE",
+  "allow_cycling": false,
+  "allow_escaping": false,
+  "allow_running": false,
+  "show_map_name": false,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": [
+    {
+      "map": "MAP_SAFARI_ZONE2_HNS",
+      "offset": 4,
+      "direction": "down"
+    }
+  ],
+  "object_events": [],
+  "warp_events": [],
+  "coord_events": [],
+  "bg_events": [],
+  "game_version": "hns",
+  "region": "REGION_JOHTO"
+}

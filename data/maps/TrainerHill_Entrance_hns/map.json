@@ -129,14 +129,14 @@
       "x": 9,
       "y": 16,
       "elevation": 3,
-      "dest_map": "MAP_TRAINER_HILL_COURTYARD",
+      "dest_map": "MAP_TRAINER_HILL_COURTYARD_HNS",
       "dest_warp_id": "0"
     },
     {
       "x": 10,
       "y": 16,
       "elevation": 3,
-      "dest_map": "MAP_TRAINER_HILL_COURTYARD",
+      "dest_map": "MAP_TRAINER_HILL_COURTYARD_HNS",
       "dest_warp_id": "0"
     },
     {

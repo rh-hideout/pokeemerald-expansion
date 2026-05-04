@@ -1,0 +1,36 @@
+{
+  "id": "MAP_SAFARI_ZONE_ENTERANCE_HNS",
+  "name": "SafariZone_Enterance_hns",
+  "layout": "LAYOUT_SAFARI_ZONE_ENTERANCE_HNS",
+  "music": "MUS_HG_SAFARI_ZONE",
+  "region_map_section": "MAPSEC_SAFARI_ZONE_GATE",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_ROUTE",
+  "allow_cycling": false,
+  "allow_escaping": false,
+  "allow_running": false,
+  "show_map_name": false,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": [
+    {
+      "map": "MAP_SAFARI_ZONE_LOW_MID_HNS",
+      "offset": -4,
+      "direction": "up"
+    }
+  ],
+  "object_events": [],
+  "warp_events": [
+    {
+      "x": 14,
+      "y": 9,
+      "elevation": 0,
+      "dest_map": "MAP_SAFARI_ZONE_GATE_SAFARI_ZONE_ENTRANCE_HNS",
+      "dest_warp_id": "0"
+    }
+  ],
+  "coord_events": [],
+  "bg_events": [],
+  "game_version": "hns",
+  "region": "REGION_JOHTO"
+}

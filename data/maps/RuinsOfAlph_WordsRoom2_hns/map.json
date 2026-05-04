@@ -1,0 +1,37 @@
+{
+  "id": "MAP_RUINS_OF_ALPH_WORDS_ROOM2_HNS",
+  "name": "RuinsOfAlph_WordsRoom2_hns",
+  "layout": "LAYOUT_RUINS_OF_ALPH_WORDS_ROOM2_HNS",
+  "music": "MUS_HG_RUINS_OF_ALPH",
+  "region_map_section": "MAPSEC_RUINS_OF_ALPH",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_UNDERGROUND",
+  "allow_cycling": false,
+  "allow_escaping": true,
+  "allow_running": false,
+  "show_map_name": false,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": 0,
+  "object_events": [],
+  "warp_events": [
+    {
+      "x": 17,
+      "y": 10,
+      "elevation": 0,
+      "dest_map": "MAP_RUINS_OF_ALPH_B1F_HNS",
+      "dest_warp_id": "4"
+    },
+    {
+      "x": 9,
+      "y": 5,
+      "elevation": 0,
+      "dest_map": "MAP_RUINS_OF_ALPH_PUZZLE_AND_REWARD_CHAMBERS_HNS",
+      "dest_warp_id": "26"
+    }
+  ],
+  "coord_events": [],
+  "bg_events": [],
+  "game_version": "hns",
+  "region": "REGION_JOHTO"
+}

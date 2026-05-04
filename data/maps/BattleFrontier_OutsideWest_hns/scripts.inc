@@ -22,7 +22,7 @@ BattleFrontier_OutsideWest_EventScript_Sailor::
 	hideobjectat LOCALID_FERRY_ATTENDANT, MAP_BATTLE_FRONTIER_OUTSIDE_WEST
 	setvar VAR_0x8004, LOCALID_SS_TIDAL
 	call Common_EventScript_FerryDepartIsland
-	warpsilent MAP_VERMILION_CITY_PORT_INSIDE, 8, 9
+	warpsilent MAP_VERMILION_CITY_PORT_INSIDE_HNS, 8, 9
 	waitstate
 	release
 	end
