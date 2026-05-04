@@ -812,6 +812,7 @@ void Debug_ShowMainMenu(void)
 #define tSubWindowId         data[2]
 #define tInput               data[3]
 #define tDigit               data[4]
+#define tSpriteId            data[5]
 
 static bool32 Debug_SaveCallbackMenu(struct DebugMenuOption *callbackItems)
 {
@@ -926,15 +927,48 @@ static void Debug_ShowMenu(DebugFunc HandleInput, const struct DebugMenuOption *
     inputTaskId = CreateTask(HandleInput, 3);
     gTasks[inputTaskId].tMenuTaskId = menuTaskId;
     gTasks[inputTaskId].tWindowId = windowId;
-    gTasks[inputTaskId].tSubWindowId = 0;
+    gTasks[inputTaskId].tSubWindowId = 0xFF;
+    gTasks[inputTaskId].tSpriteId = 0xFF;
 
     // draw everything
     CopyWindowToVram(windowId, COPYWIN_FULL);
 }
 
+static void Debug_CreateInputDisplayWindow(u8 taskId)
+{
+    u8 windowId;
+
+    ClearStdWindowAndFrame(gTasks[taskId].tWindowId, TRUE);
+    RemoveWindow(gTasks[taskId].tWindowId);
+    HideMapNamePopUpWindow();
+    LoadMessageBoxAndBorderGfx();
+    windowId = AddWindow(&sDebugMenuWindowTemplateExtra);
+    DrawStdWindowFrame(windowId, FALSE);
+    CopyWindowToVram(windowId, COPYWIN_FULL);
+    gTasks[taskId].tSubWindowId = windowId;
+}
+
+static void Debug_ResetInputDisplayMonIcon(u8 taskId, enum Species species)
+{
+    if (gTasks[taskId].tSpriteId != 0xFF)
+    {
+        FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].tSpriteId]);
+        FreeMonIconPalettes();
+    }
+    LoadMonIconPalettePersonality(species, 0);
+    gTasks[taskId].tSpriteId = CreateMonIcon(species, SpriteCB_MonIcon, DEBUG_NUMBER_ICON_X, DEBUG_NUMBER_ICON_Y, 4, 0);
+    gSprites[gTasks[taskId].tSpriteId].oam.priority = 0;
+}
+
 static void Debug_DestroyMenu(u8 taskId)
 {
+    if (gTasks[taskId].tSubWindowId != 0xFF)
+    {
+        ClearStdWindowAndFrame(gTasks[taskId].tSubWindowId, TRUE);
+        RemoveWindow(gTasks[taskId].tSubWindowId);
+    }
     DestroyListMenuTask(gTasks[taskId].tMenuTaskId, NULL, NULL);
+    ClearStdWindowAndFrame(gTasks[taskId].tWindowId, TRUE);
     RemoveWindow(gTasks[taskId].tWindowId);
     DestroyTask(taskId);
 }
@@ -1417,9 +1451,9 @@ static void DebugAction_Util_Fly(u8 taskId)
     SetMainCallback2(CB2_OpenFlyMap);
 }
 
-#define tMapGroup  data[5]
-#define tMapNum    data[6]
-#define tWarp      data[7]
+#define tMapGroup  data[6]
+#define tMapNum    data[7]
+#define tWarp      data[8]
 
 #define LAST_MAP_GROUP (MAP_GROUPS_COUNT - 1)
 
@@ -1705,8 +1739,7 @@ static void DebugAction_Util_Weather_SelectId(u8 taskId)
     {
         if (gTasks[taskId].tInput <= 14 || gTasks[taskId].tInput >= 20)
         {
-            gTasks[taskId].data[5] = gTasks[taskId].tInput;
-            SetWeather(gTasks[taskId].data[5]);
+            SetWeather(gTasks[taskId].tInput);
         }
     }
     else if (JOY_NEW(B_BUTTON))
@@ -1878,7 +1911,6 @@ static void GetTrainerIdFromLocalId(u32 localId)
 }
 
 #define TRAINER_TAG 0xFDF3
-#define tSpriteId   data[5]
 #define LOCAL_ID_MIN 1
 #define LOCAL_ID_MAX (gMapHeader.events->objectEventCount)
 
@@ -1969,12 +2001,11 @@ static void DebugAction_Trainers_ChooseFromMap(u8 taskId)
 }
 
 #undef TRAINER_TAG
-#undef tSpriteId
 #undef LOCAL_ID_MIN
 #undef LOCAL_ID_MAX
 
-#define tSelection  data[5]
-#define tInitial    data[6]
+#define tSelection  data[6]
+#define tInitial    data[7]
 
 static void Debug_Display_TrainerID(u32 trainerID, u32 selection, u32 digit, u8 windowId)
 {
@@ -2246,7 +2277,8 @@ static void DebugAction_FlagsVars_FlagsSelect(u8 taskId)
     }
 }
 
-#define tVarValue  data[5]
+#define tVarValue  data[6]
+#define tTmpValue  data[7]
 
 static void DebugAction_FlagsVars_Vars(u8 taskId)
 {
@@ -2321,7 +2353,7 @@ static void DebugAction_FlagsVars_Select(u8 taskId)
         StringExpandPlaceholders(gStringVar4, sDebugText_FlagsVars_VariableValueSet);
         AddTextPrinterParameterized(gTasks[taskId].tSubWindowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
 
-        gTasks[taskId].data[6] = gTasks[taskId].data[5]; //New value selector
+        gTasks[taskId].tTmpValue = gTasks[taskId].tVarValue; //New value selector
         gTasks[taskId].func = DebugAction_FlagsVars_SetValue;
     }
     else if (JOY_NEW(B_BUTTON))
@@ -2336,19 +2368,19 @@ static void DebugAction_FlagsVars_SetValue(u8 taskId)
 {
     if (JOY_NEW(DPAD_UP))
     {
-        if (gTasks[taskId].data[6] + sPowersOfTen[gTasks[taskId].tDigit] <= 32000)
-            gTasks[taskId].data[6] += sPowersOfTen[gTasks[taskId].tDigit];
+        if (gTasks[taskId].tTmpValue + sPowersOfTen[gTasks[taskId].tDigit] <= 32000)
+            gTasks[taskId].tTmpValue += sPowersOfTen[gTasks[taskId].tDigit];
         else
-            gTasks[taskId].data[6] = 32000 - 1;
+            gTasks[taskId].tTmpValue = 32000 - 1;
 
-        if (gTasks[taskId].data[6] >= 32000)
-            gTasks[taskId].data[6] = 32000 - 1;
+        if (gTasks[taskId].tTmpValue >= 32000)
+            gTasks[taskId].tTmpValue = 32000 - 1;
     }
     if (JOY_NEW(DPAD_DOWN))
     {
-        gTasks[taskId].data[6] -= sPowersOfTen[gTasks[taskId].tDigit];
-        if (gTasks[taskId].data[6] < 0)
-            gTasks[taskId].data[6] = 0;
+        gTasks[taskId].tTmpValue -= sPowersOfTen[gTasks[taskId].tDigit];
+        if (gTasks[taskId].tTmpValue < 0)
+            gTasks[taskId].tTmpValue = 0;
     }
     if (JOY_NEW(DPAD_LEFT))
     {
@@ -2366,7 +2398,7 @@ static void DebugAction_FlagsVars_SetValue(u8 taskId)
     if (JOY_NEW(A_BUTTON))
     {
         PlaySE(SE_SELECT);
-        VarSet(gTasks[taskId].tInput, gTasks[taskId].data[6]);
+        VarSet(gTasks[taskId].tInput, gTasks[taskId].tTmpValue);
     }
     else if (JOY_NEW(B_BUTTON))
     {
@@ -2383,7 +2415,7 @@ static void DebugAction_FlagsVars_SetValue(u8 taskId)
         ConvertIntToHexStringN(gStringVar2, gTasks[taskId].tInput, STR_CONV_MODE_LEFT_ALIGN, 4);
         StringExpandPlaceholders(gStringVar1, sDebugText_FlagsVars_VariableHex);
         StringCopyPadded(gStringVar1, gStringVar1, CHAR_SPACE, 15);
-        ConvertIntToDecimalStringN(gStringVar3, gTasks[taskId].data[6], STR_CONV_MODE_LEADING_ZEROS, DEBUG_NUMBER_DIGITS_VARIABLES);
+        ConvertIntToDecimalStringN(gStringVar3, gTasks[taskId].tTmpValue, STR_CONV_MODE_LEADING_ZEROS, DEBUG_NUMBER_DIGITS_VARIABLES);
         StringCopyPadded(gStringVar3, gStringVar3, CHAR_SPACE, 15);
         StringCopy(gStringVar2, gText_DigitIndicator[gTasks[taskId].tDigit]);
         StringExpandPlaceholders(gStringVar4, sDebugText_FlagsVars_VariableValueSet);
@@ -2392,6 +2424,7 @@ static void DebugAction_FlagsVars_SetValue(u8 taskId)
 }
 
 #undef tVarValue
+#undef tTmpValue
 
 static void DebugAction_FlagsVars_PokedexFlags_All(u8 taskId)
 {
@@ -2617,8 +2650,7 @@ static void DebugAction_FlagsVars_CatchingOnOff(u8 taskId)
 // *******************************
 // Actions Give
 #define ITEM_TAG 0xFDF3
-#define tItemId    data[5]
-#define tSpriteId  data[6]
+#define tItemId    data[6]
 
 static void Debug_Display_ItemInfo(enum Item itemId, u32 digit, u8 windowId)
 {
@@ -2746,7 +2778,6 @@ static void DebugAction_Give_Item_SelectQuantity(u8 taskId)
 }
 
 #undef tItemId
-#undef tSpriteId
 
 //Pokemon
 static void ResetMonDataStruct(struct DebugMonData *sDebugMonData)
@@ -2766,8 +2797,7 @@ static void ResetMonDataStruct(struct DebugMonData *sDebugMonData)
     }
 }
 
-#define tIsComplex  data[5]
-#define tSpriteId   data[6]
+#define tIsComplex  data[6]
 #define tIterator   data[7]
 #define tIsEgg      data[8]
 
@@ -3575,12 +3605,10 @@ static void DebugAction_Give_Pokemon_ComplexCreateMon(u8 taskId) //https://githu
 }
 
 #undef tIsComplex
-#undef tSpriteId
 #undef tIterator
 #undef tIsEgg
 
 //Decoration
-#define tSpriteId  data[6]
 
 static void Debug_Display_DecorationInfo(enum Item itemId, u32 digit, u8 windowId)
 {
@@ -3652,8 +3680,6 @@ static void DebugAction_Give_Decoration_SelectId(u8 taskId)
         DebugAction_DestroyExtraWindow(taskId);
     }
 }
-
-#undef tSpriteId
 
 static void DebugAction_Give_MaxMoney(u8 taskId)
 {
@@ -3876,7 +3902,7 @@ static void DebugAction_PCBag_ClearBoxes(u8 taskId)
 // Actions Sound
 static const u8 *const sSongNames[];
 
-#define tCurrentSong  data[5]
+#define tCurrentSong  data[6]
 
 static void DebugAction_Sound_SE(u8 taskId)
 {
@@ -4730,8 +4756,8 @@ void DebugNative_GetAbilityNames(void)
     StringCopy(gStringVar3, gAbilitiesInfo[GetAbilityBySpecies(species, 2)].name);
 }
 
-#define tPartyId               data[5]
-#define tFriendship            data[6]
+#define tPartyId               data[6]
+#define tFriendship            data[7]
 
 static void Debug_Display_FriendshipInfo(s32 oldFriendship, s32 newFriendship, u32 digit, u8 windowId)
 {
