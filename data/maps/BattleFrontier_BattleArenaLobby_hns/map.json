@@ -16,7 +16,6 @@
   "connections": null,
   "object_events": [
     {
-      "local_id": "LOCALID_ARENA_ATTENDANT",
       "graphics_id": "OBJ_EVENT_GFX_BLACK_BELT",
       "x": 7,
       "y": 7,
@@ -30,7 +29,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_WOMAN_5",
+      "graphics_id": "OBJ_EVENT_GFX_WOMAN_2",
       "x": 2,
       "y": 10,
       "elevation": 3,
@@ -43,7 +42,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_MAN_5",
+      "graphics_id": "OBJ_EVENT_GFX_ROCKER",
       "x": 14,
       "y": 11,
       "elevation": 3,

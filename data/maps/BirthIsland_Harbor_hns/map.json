@@ -16,7 +16,6 @@
   "connections": null,
   "object_events": [
     {
-      "local_id": "LOCALID_BIRTH_ISLAND_SAILOR",
       "graphics_id": "OBJ_EVENT_GFX_SAILOR",
       "x": 8,
       "y": 5,
@@ -30,7 +29,6 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_BIRTH_ISLAND_SS_TIDAL",
       "graphics_id": "OBJ_EVENT_GFX_SS_TIDAL",
       "x": 8,
       "y": 7,

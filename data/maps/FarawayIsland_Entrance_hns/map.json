@@ -16,7 +16,6 @@
   "connections": null,
   "object_events": [
     {
-      "local_id": "LOCALID_FARAWAY_ISLAND_SAILOR",
       "graphics_id": "OBJ_EVENT_GFX_SAILOR",
       "x": 13,
       "y": 39,
@@ -30,7 +29,6 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_FARAWAY_ISLAND_SS_TIDAL",
       "graphics_id": "OBJ_EVENT_GFX_SS_TIDAL",
       "x": 13,
       "y": 41,
@@ -47,14 +45,14 @@
   "warp_events": [
     {
       "x": 22,
-      "y": 7,
+      "y": 8,
       "elevation": 3,
       "dest_map": "MAP_FARAWAY_ISLAND_INTERIOR",
       "dest_warp_id": "0"
     },
     {
       "x": 23,
-      "y": 7,
+      "y": 8,
       "elevation": 3,
       "dest_map": "MAP_FARAWAY_ISLAND_INTERIOR",
       "dest_warp_id": "1"

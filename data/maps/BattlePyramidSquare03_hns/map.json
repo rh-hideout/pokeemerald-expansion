@@ -17,7 +17,7 @@
   "shared_scripts_map": "BattlePyramidSquare01",
   "object_events": [
     {
-      "graphics_id": "OBJ_EVENT_GFX_BOY_1",
+      "graphics_id": "OBJ_EVENT_GFX_MR_FUJI",
       "x": 2,
       "y": 1,
       "elevation": 4,
@@ -43,7 +43,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_FISHERMAN",
+      "graphics_id": "OBJ_EVENT_GFX_FISHER",
       "x": 6,
       "y": 4,
       "elevation": 4,
@@ -56,7 +56,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_MAN_3",
+      "graphics_id": "OBJ_EVENT_GFX_MAN",
       "x": 3,
       "y": 4,
       "elevation": 4,

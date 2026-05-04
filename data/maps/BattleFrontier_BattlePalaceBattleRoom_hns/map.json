@@ -16,7 +16,6 @@
   "connections": null,
   "object_events": [
     {
-      "local_id": "LOCALID_PALACE_BATTLE_PLAYER",
       "graphics_id": "OBJ_EVENT_GFX_VAR_1",
       "x": 1,
       "y": 9,
@@ -30,7 +29,6 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_PALACE_BATTLE_OPPONENT",
       "graphics_id": "OBJ_EVENT_GFX_VAR_0",
       "x": 13,
       "y": 1,
@@ -44,8 +42,7 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_PALACE_BATTLE_ATTENDANT",
-      "graphics_id": "OBJ_EVENT_GFX_EXPERT_M",
+      "graphics_id": "OBJ_EVENT_GFX_OLD_MAN_1",
       "x": 1,
       "y": 4,
       "elevation": 3,
@@ -58,8 +55,7 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_PALACE_DUSCLOPS",
-      "graphics_id": "OBJ_EVENT_GFX_DUSCLOPS",
+      "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_DUSCLOPS",
       "x": 13,
       "y": 1,
       "elevation": 3,
@@ -72,8 +68,7 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_PALACE_AZURILL",
-      "graphics_id": "OBJ_EVENT_GFX_AZURILL",
+      "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_AZURILL",
       "x": 13,
       "y": 1,
       "elevation": 3,

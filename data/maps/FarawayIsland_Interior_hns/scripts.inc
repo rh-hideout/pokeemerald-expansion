@@ -1,3 +1,5 @@
+@ Note: LOCALID_FARAWAY_ISLAND_MEW is a local id for this map used elsewhere. It's defined in event_objects.h
+
 FarawayIsland_Interior_MapScripts::
 	map_script MAP_SCRIPT_ON_RESUME, FarawayIsland_Interior_OnResume
 	map_script MAP_SCRIPT_ON_TRANSITION, FarawayIsland_Interior_OnTransition
@@ -33,6 +35,7 @@ FarawayIsland_Interior_EventScript_TryRemoveMew::
 	return
 
 FarawayIsland_Interior_OnTransition:
+	setflag FLAG_TEMP_HIDE_FOLLOWER
 	setvar VAR_FARAWAY_ISLAND_STEP_COUNTER, 0
 	setvar VAR_TEMP_1, 1
 	call_if_unset FLAG_CAUGHT_MEW, FarawayIsland_Interior_EventScript_TryShowMew
@@ -127,7 +130,7 @@ FarawayIsland_Interior_EventScript_Mew::
 	special DestroyMewEmergingGrassSprite
 	delay 40
 	waitmoncry
-	seteventmon SPECIES_MEW, 30
+	seteventmon SPECIES_MEW, 50
 	setflag FLAG_SYS_CTRL_OBJ_DELETE
 	special BattleSetup_StartLegendaryBattle
 	waitstate
@@ -138,11 +141,19 @@ FarawayIsland_Interior_EventScript_Mew::
 	goto_if_eq VAR_RESULT, B_OUTCOME_PLAYER_TELEPORTED, FarawayIsland_Interior_EventScript_PlayerOrMewRan
 	goto_if_eq VAR_RESULT, B_OUTCOME_MON_TELEPORTED, FarawayIsland_Interior_EventScript_PlayerOrMewRan
 	setflag FLAG_CAUGHT_MEW
+	call_if_set FLAG_EXTRA_LEGENDARIES, FarawayIsland_Interior_Enable_Mewtwo
 	release
 	end
 
+FarawayIsland_Interior_Enable_Mewtwo::
+	setflag FLAG_UNLOCK_MEWTWO
+	playmoncry SPECIES_MEWTWO, CRY_MODE_NORMAL
+	waitmoncry
+	return
+
 FarawayIsland_Interior_EventScript_MewDefeated::
 	setflag FLAG_DEFEATED_MEW
+	call_if_set FLAG_EXTRA_LEGENDARIES, FarawayIsland_Interior_Enable_Mewtwo
 	setvar VAR_0x8004, SPECIES_MEW
 	goto Common_EventScript_LegendaryFlewAway
 	end

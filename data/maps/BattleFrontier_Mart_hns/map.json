@@ -16,9 +16,8 @@
   "connections": null,
   "object_events": [
     {
-      "local_id": "LOCALID_FRONTIER_MART_CLERK",
-      "graphics_id": "OBJ_EVENT_GFX_MART_EMPLOYEE",
-      "x": 1,
+      "graphics_id": "OBJ_EVENT_GFX_CLERK",
+      "x": 2,
       "y": 3,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
@@ -30,9 +29,8 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_FRONTIER_MART_OLD_WOMAN",
-      "graphics_id": "OBJ_EVENT_GFX_OLD_WOMAN",
-      "x": 5,
+      "graphics_id": "OBJ_EVENT_GFX_WOMAN_3",
+      "x": 6,
       "y": 4,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
@@ -44,8 +42,8 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_OLD_MAN",
-      "x": 5,
+      "graphics_id": "OBJ_EVENT_GFX_OLD_MAN_2",
+      "x": 6,
       "y": 5,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
@@ -57,8 +55,8 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BOY_2",
-      "x": 8,
+      "graphics_id": "OBJ_EVENT_GFX_BOY",
+      "x": 9,
       "y": 4,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
@@ -68,15 +66,41 @@
       "trainer_sight_or_berry_tree_id": "0",
       "script": "BattleFrontier_Mart_EventScript_Boy",
       "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_CLERK",
+      "x": 1,
+      "y": 1,
+      "elevation": 4,
+      "movement_type": "MOVEMENT_TYPE_INVISIBLE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "BattleFrontier_Mart_EventScript_Clerk2",
+      "flag": "FLAG_FRONTIER_SECOND_CLERK"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_CLERK",
+      "x": 2,
+      "y": 1,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_INVISIBLE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "BattleFrontier_Mart_EventScript_ClerkTMs",
+      "flag": "FLAG_FINITE_TMS_CLERK"
     }
   ],
   "warp_events": [
     {
-      "x": 3,
+      "x": 4,
       "y": 7,
       "elevation": 0,
-      "dest_map": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST",
-      "dest_warp_id": "4"
+      "dest_map": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST",
+      "dest_warp_id": "12"
     },
     {
       "x": 4,

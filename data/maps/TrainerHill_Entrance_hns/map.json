@@ -16,8 +16,7 @@
   "connections": null,
   "object_events": [
     {
-      "local_id": "LOCALID_TRAINER_HILL_ATTENDANT",
-      "graphics_id": "OBJ_EVENT_GFX_TEALA",
+      "graphics_id": "OBJ_EVENT_GFX_WORKER_F",
       "x": 11,
       "y": 6,
       "elevation": 3,
@@ -30,7 +29,6 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_TRAINER_HILL_NURSE",
       "graphics_id": "OBJ_EVENT_GFX_NURSE",
       "x": 4,
       "y": 9,
@@ -44,7 +42,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_MART_EMPLOYEE",
+      "graphics_id": "OBJ_EVENT_GFX_CLERK",
       "x": 14,
       "y": 9,
       "elevation": 3,
@@ -57,8 +55,7 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_TRAINER_HILL_GIRL",
-      "graphics_id": "OBJ_EVENT_GFX_GIRL_3",
+      "graphics_id": "OBJ_EVENT_GFX_LASS",
       "x": 5,
       "y": 14,
       "elevation": 3,
@@ -71,8 +68,7 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_TRAINER_HILL_MAN",
-      "graphics_id": "OBJ_EVENT_GFX_MAN_3",
+      "graphics_id": "OBJ_EVENT_GFX_WORKER_M",
       "x": 14,
       "y": 15,
       "elevation": 3,
@@ -83,6 +79,45 @@
       "trainer_sight_or_berry_tree_id": "0",
       "script": "TrainerHill_Entrance_EventScript_Man",
       "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_CLERK",
+      "x": 12,
+      "y": 9,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "TrainerHill_Entrance_EventScript_Clerk2",
+      "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_NURSE_CHANSEY",
+      "x": 5,
+      "y": 9,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "CherryGrove_Pokecenter_Chansey",
+      "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_BLACK_BELT",
+      "x": 11,
+      "y": 13,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+      "movement_range_x": 1,
+      "movement_range_y": 1,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "TrainerHill_Entrance_EventScript_Man2",
+      "flag": "0"
     }
   ],
   "warp_events": [
@@ -90,15 +125,15 @@
       "x": 9,
       "y": 16,
       "elevation": 3,
-      "dest_map": "MAP_ROUTE111",
-      "dest_warp_id": "4"
+      "dest_map": "MAP_TRAINER_HILL_COURTYARD",
+      "dest_warp_id": "0"
     },
     {
       "x": 10,
       "y": 16,
       "elevation": 3,
-      "dest_map": "MAP_ROUTE111",
-      "dest_warp_id": "4"
+      "dest_map": "MAP_TRAINER_HILL_COURTYARD",
+      "dest_warp_id": "0"
     },
     {
       "x": 9,

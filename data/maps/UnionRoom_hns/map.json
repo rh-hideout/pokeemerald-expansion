@@ -16,7 +16,7 @@
   "connections": null,
   "object_events": [
     {
-      "graphics_id": "OBJ_EVENT_GFX_UNION_ROOM_NURSE",
+      "graphics_id": "OBJ_EVENT_GFX_RED_NORMAL",
       "x": 3,
       "y": 2,
       "elevation": 3,
@@ -29,7 +29,6 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_UNION_ROOM_PLAYER_4",
       "graphics_id": "OBJ_EVENT_GFX_VAR_3",
       "x": 1,
       "y": 8,
@@ -43,7 +42,6 @@
       "flag": "FLAG_HIDE_UNION_ROOM_PLAYER_4"
     },
     {
-      "local_id": "LOCALID_UNION_ROOM_PLAYER_8",
       "graphics_id": "OBJ_EVENT_GFX_VAR_7",
       "x": 7,
       "y": 8,
@@ -57,7 +55,6 @@
       "flag": "FLAG_HIDE_UNION_ROOM_PLAYER_8"
     },
     {
-      "local_id": "LOCALID_UNION_ROOM_PLAYER_7",
       "graphics_id": "OBJ_EVENT_GFX_VAR_6",
       "x": 1,
       "y": 4,
@@ -71,7 +68,6 @@
       "flag": "FLAG_HIDE_UNION_ROOM_PLAYER_7"
     },
     {
-      "local_id": "LOCALID_UNION_ROOM_PLAYER_6",
       "graphics_id": "OBJ_EVENT_GFX_VAR_5",
       "x": 7,
       "y": 4,
@@ -85,7 +81,6 @@
       "flag": "FLAG_HIDE_UNION_ROOM_PLAYER_6"
     },
     {
-      "local_id": "LOCALID_UNION_ROOM_PLAYER_5",
       "graphics_id": "OBJ_EVENT_GFX_VAR_4",
       "x": 13,
       "y": 4,
@@ -99,7 +94,6 @@
       "flag": "FLAG_HIDE_UNION_ROOM_PLAYER_5"
     },
     {
-      "local_id": "LOCALID_UNION_ROOM_PLAYER_3",
       "graphics_id": "OBJ_EVENT_GFX_VAR_2",
       "x": 10,
       "y": 6,
@@ -113,7 +107,6 @@
       "flag": "FLAG_HIDE_UNION_ROOM_PLAYER_3"
     },
     {
-      "local_id": "LOCALID_UNION_ROOM_PLAYER_2",
       "graphics_id": "OBJ_EVENT_GFX_VAR_1",
       "x": 13,
       "y": 8,
@@ -127,7 +120,6 @@
       "flag": "FLAG_HIDE_UNION_ROOM_PLAYER_2"
     },
     {
-      "local_id": "LOCALID_UNION_ROOM_PLAYER_1",
       "graphics_id": "OBJ_EVENT_GFX_VAR_0",
       "x": 4,
       "y": 6,

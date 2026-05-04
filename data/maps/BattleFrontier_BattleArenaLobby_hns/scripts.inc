@@ -1,3 +1,5 @@
+.set LOCALID_ATTENDANT, 1
+
 BattleFrontier_BattleArenaLobby_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, BattleFrontier_BattleArenaLobby_OnFrame
 	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, BattleFrontier_BattleArenaLobby_OnWarp
@@ -9,7 +11,7 @@ BattleFrontier_BattleArenaLobby_OnWarp:
 
 BattleFrontier_BattleArenaLobby_EventScript_TurnPlayerNorth::
 	setvar VAR_TEMP_1, 1
-	turnobject LOCALID_PLAYER, DIR_NORTH
+	turnobject OBJ_EVENT_ID_PLAYER, DIR_NORTH
 	end
 
 BattleFrontier_BattleArenaLobby_OnFrame:
@@ -182,14 +184,10 @@ BattleFrontier_BattleArenaLobby_EventScript_NotEnoughValidMons::
 
 BattleFrontier_BattleArenaLobby_EventScript_NotEnoughValidMonsLv50::
 	msgbox BattleFrontier_BattleArenaLobby_Text_NotEnoughValidMonsLv50, MSGBOX_DEFAULT
-	call BattleFrontier_ShowCaughtBannedSpecies
-	msgbox BattleFrontier_BattleArenaLobby_Text_NotEnoughValidMonsEnd, MSGBOX_DEFAULT
 	goto BattleFrontier_BattleArenaLobby_EventScript_EndCancelChallenge
 
 BattleFrontier_BattleArenaLobby_EventScript_NotEnoughValidMonsLvOpen::
 	msgbox BattleFrontier_BattleArenaLobby_Text_NotEnoughValidMonsLvOpen, MSGBOX_DEFAULT
-	call BattleFrontier_ShowCaughtBannedSpecies
-	msgbox BattleFrontier_BattleArenaLobby_Text_NotEnoughValidMonsEnd, MSGBOX_DEFAULT
 	goto BattleFrontier_BattleArenaLobby_EventScript_EndCancelChallenge
 
 BattleFrontier_BattleArenaLobby_EventScript_CancelChallengeSaveFailed::
@@ -206,13 +204,13 @@ BattleFrontier_BattleArenaLobby_EventScript_EndCancelChallenge::
 	end
 
 BattleFrontier_BattleArenaLobby_EventScript_WalkToDoorLv50::
-	applymovement LOCALID_ARENA_ATTENDANT, BattleFrontier_BattleArenaLobby_Movement_AttendantWalkToLeftDoor
-	applymovement LOCALID_PLAYER, BattleFrontier_BattleArenaLobby_Movement_PlayerWalkToLeftDoor
+	applymovement LOCALID_ATTENDANT, BattleFrontier_BattleArenaLobby_Movement_AttendantWalkToLeftDoor
+	applymovement OBJ_EVENT_ID_PLAYER, BattleFrontier_BattleArenaLobby_Movement_PlayerWalkToLeftDoor
 	waitmovement 0
 	opendoor 2, 2
 	waitdooranim
-	applymovement LOCALID_ARENA_ATTENDANT, BattleFrontier_BattleArenaLobby_Movement_AttendantEnterDoor
-	applymovement LOCALID_PLAYER, BattleFrontier_BattleArenaLobby_Movement_PlayerEnterDoor
+	applymovement LOCALID_ATTENDANT, BattleFrontier_BattleArenaLobby_Movement_AttendantEnterDoor
+	applymovement OBJ_EVENT_ID_PLAYER, BattleFrontier_BattleArenaLobby_Movement_PlayerEnterDoor
 	waitmovement 0
 	closedoor 2, 2
 	waitdooranim
@@ -255,13 +253,13 @@ BattleFrontier_BattleArenaLobby_Movement_PlayerEnterDoor:
 	step_end
 
 BattleFrontier_BattleArenaLobby_EventScript_WalkToDoorLvOpen::
-	applymovement LOCALID_ARENA_ATTENDANT, BattleFrontier_BattleArenaLobby_Movement_AttendantWalkToRightDoor
-	applymovement LOCALID_PLAYER, BattleFrontier_BattleArenaLobby_Movement_PlayerWalkToRightDoor
+	applymovement LOCALID_ATTENDANT, BattleFrontier_BattleArenaLobby_Movement_AttendantWalkToRightDoor
+	applymovement OBJ_EVENT_ID_PLAYER, BattleFrontier_BattleArenaLobby_Movement_PlayerWalkToRightDoor
 	waitmovement 0
 	opendoor 11, 2
 	waitdooranim
-	applymovement LOCALID_ARENA_ATTENDANT, BattleFrontier_BattleArenaLobby_Movement_AttendantEnterDoor
-	applymovement LOCALID_PLAYER, BattleFrontier_BattleArenaLobby_Movement_PlayerEnterDoor
+	applymovement LOCALID_ATTENDANT, BattleFrontier_BattleArenaLobby_Movement_AttendantEnterDoor
+	applymovement OBJ_EVENT_ID_PLAYER, BattleFrontier_BattleArenaLobby_Movement_PlayerEnterDoor
 	waitmovement 0
 	closedoor 11, 2
 	waitdooranim
@@ -398,7 +396,7 @@ BattleFrontier_BattleArenaLobby_Text_OkayToSave:
 
 BattleFrontier_BattleArenaLobby_Text_WhichLevelMode:
 	.string "The BATTLE ARENA offers two levels\n"
-	.string "of challenge, Level 50 and Open Level.\l"
+	.string "of challenge, NORMAL and HARD.\l"
 	.string "Which is your choice?$"
 
 BattleFrontier_BattleArenaLobby_Text_SelectThreeMons:
@@ -413,9 +411,7 @@ BattleFrontier_BattleArenaLobby_Text_NotEnoughValidMonsLvOpen:
 	.string "different kinds of POKéMON.\p"
 	.string "They also must not hold the same\n"
 	.string "kinds of items.\p"
-	.string "EGGS{STR_VAR_1}.$"
-
-BattleFrontier_BattleArenaLobby_Text_NotEnoughValidMonsEnd:
+	.string "EGGS{STR_VAR_1} ineligible.\p"
 	.string "When you have made your preparations,\n"
 	.string "please do return.$"
 
@@ -425,11 +421,11 @@ BattleFrontier_BattleArenaLobby_Text_NotEnoughValidMonsLv50:
 	.string "required for entry.\p"
 	.string "To qualify, you must bring three\n"
 	.string "different kinds of POKéMON.\p"
-	.string "The three different POKéMON\n"
-	.string "must all be Level 50 or lower.\p"
 	.string "They also must not hold the same\n"
 	.string "kinds of items.\p"
-	.string "EGGS{STR_VAR_1}.$"
+	.string "EGGS{STR_VAR_1} ineligible.\p"
+	.string "When you have made your preparations,\n"
+	.string "please do return.$"
 
 BattleFrontier_BattleArenaLobby_Text_GuideYouToArena:
 	.string "I shall now guide you to\n"

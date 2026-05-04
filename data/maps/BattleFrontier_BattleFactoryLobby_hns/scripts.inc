@@ -1,3 +1,6 @@
+.set LOCALID_ATTENDANT_SINGLES, 1
+.set LOCALID_ATTENDANT_DOUBLES, 6
+
 BattleFrontier_BattleFactoryLobby_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, BattleFrontier_BattleFactoryLobby_OnFrame
 	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, BattleFrontier_BattleFactoryLobby_OnWarp
@@ -9,7 +12,7 @@ BattleFrontier_BattleFactoryLobby_OnWarp:
 
 BattleFrontier_BattleFactoryLobby_EventScript_TurnPlayerNorth::
 	setvar VAR_TEMP_1, 1
-	turnobject LOCALID_PLAYER, DIR_NORTH
+	turnobject OBJ_EVENT_ID_PLAYER, DIR_NORTH
 	end
 
 BattleFrontier_BattleFactoryLobby_OnFrame:
@@ -169,7 +172,7 @@ BattleFrontier_BattleFactoryLobby_EventScript_EnterChallenge::
 	call_if_eq VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_SINGLES, BattleFrontier_BattleFactoryLobby_EventScript_TalkedToSinglesAttendant
 	call_if_eq VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_DOUBLES, BattleFrontier_BattleFactoryLobby_EventScript_TalkedToDoublesAttendant
 	applymovement VAR_LAST_TALKED, BattleFrontier_BattleFactoryLobby_Movement_AttendantEnterDoor
-	applymovement LOCALID_PLAYER, BattleFrontier_BattleFactoryLobby_Movement_PlayerEnterDoor
+	applymovement OBJ_EVENT_ID_PLAYER, BattleFrontier_BattleFactoryLobby_Movement_PlayerEnterDoor
 	waitmovement 0
 	warp MAP_BATTLE_FRONTIER_BATTLE_FACTORY_PRE_BATTLE_ROOM, 8, 13
 	setvar VAR_TEMP_CHALLENGE_STATUS, 0
@@ -177,11 +180,11 @@ BattleFrontier_BattleFactoryLobby_EventScript_EnterChallenge::
 	end
 
 BattleFrontier_BattleFactoryLobby_EventScript_TalkedToSinglesAttendant::
-	setvar VAR_LAST_TALKED, LOCALID_FACTORY_ATTENDANT_SINGLES
+	setvar VAR_LAST_TALKED, LOCALID_ATTENDANT_SINGLES
 	return
 
 BattleFrontier_BattleFactoryLobby_EventScript_TalkedToDoublesAttendant::
-	setvar VAR_LAST_TALKED, LOCALID_FACTORY_ATTENDANT_DOUBLES
+	setvar VAR_LAST_TALKED, LOCALID_ATTENDANT_DOUBLES
 	return
 
 BattleFrontier_BattleFactoryLobby_EventScript_ExplainChallenge::
@@ -356,7 +359,7 @@ BattleFrontier_BattleFactoryLobby_Text_LookForwardToNextVisit:
 
 BattleFrontier_BattleFactoryLobby_Text_WhichLevelMode:
 	.string "Which level do you wish to challenge?\n"
-	.string "Level 50 or Open Level?$"
+	.string "NORMAL or HARD?$"
 
 BattleFrontier_BattleFactoryLobby_Text_OkayToSaveBeforeChallenge:
 	.string "Before you begin your challenge,\n"
@@ -546,6 +549,6 @@ BattleFrontier_BattleFactoryLobby_Text_ExplainSwapNotesRules:
 	.string "even when swaps are made.$"
 
 BattleFrontier_BattleFactoryLobby_Text_ExplainOpenLvRules:
-	.string "In the Open Level, the rental POKéMON\n"
+	.string "In the HARD Level, the rental POKéMON\n"
 	.string "and the opposing TRAINERS' POKéMON\l"
-	.string "are all Level 100.$"
+	.string "are all Level 50 too.$"

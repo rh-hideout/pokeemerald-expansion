@@ -16,7 +16,6 @@
   "connections": null,
   "object_events": [
     {
-      "local_id": "LOCALID_SOUTHERN_ISLAND_SAILOR",
       "graphics_id": "OBJ_EVENT_GFX_SAILOR",
       "x": 13,
       "y": 23,
@@ -30,7 +29,6 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_SOUTHERN_ISLAND_SS_TIDAL",
       "graphics_id": "OBJ_EVENT_GFX_SS_TIDAL",
       "x": 13,
       "y": 25,
@@ -47,14 +45,14 @@
   "warp_events": [
     {
       "x": 14,
-      "y": 5,
+      "y": 6,
       "elevation": 3,
       "dest_map": "MAP_SOUTHERN_ISLAND_INTERIOR",
       "dest_warp_id": "0"
     },
     {
       "x": 15,
-      "y": 5,
+      "y": 6,
       "elevation": 3,
       "dest_map": "MAP_SOUTHERN_ISLAND_INTERIOR",
       "dest_warp_id": "1"

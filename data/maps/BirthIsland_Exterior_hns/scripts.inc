@@ -1,3 +1,7 @@
+.set LOCALID_DEOXYS, 2
+
+@ Note: LOCALID_BIRTH_ISLAND_EXTERIOR_ROCK is a local id for this map used elsewhere. It's defined in event_objects.h
+
 BirthIsland_Exterior_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, BirthIsland_Exterior_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, BirthIsland_Exterior_OnResume
@@ -9,6 +13,7 @@ BirthIsland_Exterior_OnReturnToField:
 	end
 
 BirthIsland_Exterior_OnTransition:
+	setflag FLAG_TEMP_HIDE_FOLLOWER
 	setflag FLAG_MAP_SCRIPT_CHECKED_DEOXYS
 	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_RIVAL_BRENDAN_NORMAL
 	setvar VAR_DEOXYS_ROCK_STEP_COUNT, 0
@@ -35,7 +40,7 @@ BirthIsland_Exterior_OnResume:
 BirthIsland_Exterior_EventScript_TryRemoveDeoxys::
 	specialvar VAR_RESULT, GetBattleOutcome
 	goto_if_ne VAR_RESULT, B_OUTCOME_CAUGHT, Common_EventScript_NopReturn
-	removeobject LOCALID_BIRTH_ISLAND_DEOXYS
+	removeobject LOCALID_DEOXYS
 	return
 
 BirthIsland_Exterior_EventScript_Triangle::
@@ -68,20 +73,20 @@ BirthIsland_Exterior_EventScript_Complete::
 BirthIsland_Exterior_EventScript_Deoxys::
 	waitse
 	setfieldeffectargument 0, LOCALID_BIRTH_ISLAND_EXTERIOR_ROCK
-	setfieldeffectargument 1, MAP_NUM(MAP_BIRTH_ISLAND_EXTERIOR)
-	setfieldeffectargument 2, MAP_GROUP(MAP_BIRTH_ISLAND_EXTERIOR)
+	setfieldeffectargument 1, MAP_NUM(BIRTH_ISLAND_EXTERIOR)
+	setfieldeffectargument 2, MAP_GROUP(BIRTH_ISLAND_EXTERIOR)
 	dofieldeffect FLDEFF_DESTROY_DEOXYS_ROCK
 	playbgm MUS_RG_ENCOUNTER_DEOXYS, FALSE
 	waitfieldeffect FLDEFF_DESTROY_DEOXYS_ROCK
-	addobject LOCALID_BIRTH_ISLAND_DEOXYS
-	applymovement LOCALID_BIRTH_ISLAND_DEOXYS, BirthIsland_Exterior_Movement_DeoxysApproach
+	addobject LOCALID_DEOXYS
+	applymovement LOCALID_DEOXYS, BirthIsland_Exterior_Movement_DeoxysApproach
 	waitmovement 0
 	waitse
-	playmoncry SPECIES_DEOXYS_NORMAL, CRY_MODE_ENCOUNTER
+	playmoncry SPECIES_DEOXYS, CRY_MODE_ENCOUNTER
 	delay 40
 	waitmoncry
-	setvar VAR_LAST_TALKED, LOCALID_BIRTH_ISLAND_DEOXYS
-	seteventmon SPECIES_DEOXYS_NORMAL, 30
+	setvar VAR_LAST_TALKED, LOCALID_DEOXYS
+	seteventmon SPECIES_DEOXYS, 70
 	setflag FLAG_SYS_CTRL_OBJ_DELETE
 	special BattleSetup_StartLegendaryBattle
 	waitstate
@@ -96,12 +101,12 @@ BirthIsland_Exterior_EventScript_Deoxys::
 
 BirthIsland_Exterior_EventScript_DefeatedDeoxys::
 	setflag FLAG_DEFEATED_DEOXYS
-	setvar VAR_0x8004, SPECIES_DEOXYS_NORMAL
+	setvar VAR_0x8004, SPECIES_DEOXYS
 	goto Common_EventScript_LegendaryFlewAway
 	end
 
 BirthIsland_Exterior_EventScript_RanFromDeoxys::
-	setvar VAR_0x8004, SPECIES_DEOXYS_NORMAL
+	setvar VAR_0x8004, SPECIES_DEOXYS
 	goto Common_EventScript_LegendaryFlewAway
 	end
 

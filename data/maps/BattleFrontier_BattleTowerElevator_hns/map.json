@@ -16,9 +16,8 @@
   "connections": null,
   "object_events": [
     {
-      "local_id": "LOCALID_TOWER_ELEVATOR_ATTENDANT",
-      "graphics_id": "OBJ_EVENT_GFX_TEALA",
-      "x": 1,
+      "graphics_id": "OBJ_EVENT_GFX_WORKER_F",
+      "x": 2,
       "y": 5,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_UP",

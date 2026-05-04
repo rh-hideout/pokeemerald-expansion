@@ -16,7 +16,6 @@
   "connections": null,
   "object_events": [
     {
-      "local_id": "LOCALID_FRONTIER_NURSE",
       "graphics_id": "OBJ_EVENT_GFX_NURSE",
       "x": 7,
       "y": 2,
@@ -30,7 +29,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_SCHOOL_KID_M",
+      "graphics_id": "OBJ_EVENT_GFX_LITTLE_BOY",
       "x": 4,
       "y": 5,
       "elevation": 3,
@@ -43,9 +42,9 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_MAN_3",
+      "graphics_id": "OBJ_EVENT_GFX_WORKER_M",
       "x": 11,
-      "y": 4,
+      "y": 5,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
       "movement_range_x": 1,
@@ -69,7 +68,7 @@
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_SKITTY",
+      "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_SKITTY",
       "x": 1,
       "y": 3,
       "elevation": 3,
@@ -80,6 +79,19 @@
       "trainer_sight_or_berry_tree_id": "0",
       "script": "BattleFrontier_PokemonCenter_1F_EventScript_Skitty",
       "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_NURSE_CHANSEY",
+      "x": 8,
+      "y": 2,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "CherryGrove_Pokecenter_Chansey",
+      "flag": "0"
     }
   ],
   "warp_events": [
@@ -88,7 +100,7 @@
       "y": 8,
       "elevation": 3,
       "dest_map": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST",
-      "dest_warp_id": "12"
+      "dest_warp_id": "10"
     },
     {
       "x": 6,

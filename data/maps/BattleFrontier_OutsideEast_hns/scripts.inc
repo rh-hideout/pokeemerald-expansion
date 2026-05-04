@@ -1,3 +1,5 @@
+.set LOCALID_SUDOWOODO, 14
+
 BattleFrontier_OutsideEast_MapScripts::
 	map_script MAP_SCRIPT_ON_RESUME, BattleFrontier_OutsideEast_OnResume
 	map_script MAP_SCRIPT_ON_TRANSITION, BattleFrontier_OutsideEast_OnTransition
@@ -65,6 +67,42 @@ BattleFrontier_OutsideEast_EventScript_Cook::
 	release
 	end
 
+BattleFrontier_OutsideWest_EventScript_Engineer5::
+	msgbox BattleFrontier_OutsideWest_Text_Reparations5, MSGBOX_NPC
+	end
+
+BattleFrontier_OutsideWest_EventScript_Engineer6::
+	msgbox BattleFrontier_OutsideWest_Text_Reparations6, MSGBOX_NPC
+	end
+
+BattleFrontier_OutsideWest_EventScript_Engineer7::
+	msgbox BattleFrontier_OutsideWest_Text_Reparations7, MSGBOX_NPC
+	end
+
+BattleFrontier_OutsideWest_EventScript_Engineer8::
+	msgbox BattleFrontier_OutsideWest_Text_Reparations8, MSGBOX_NPC
+	end
+
+BattleFrontier_OutsideWest_Text_Reparations5:
+	.string "We’re almost done with the repairs.\p"
+    .string "MACHAMP’s been a huge help\n"
+    .string "lifting the heavier rocks.$"
+
+BattleFrontier_OutsideWest_Text_Reparations6:
+    .string "Watch your step!\n"
+    .string "The ground’s still unstable here.\p"
+    .string "Good thing the MACHOKE team’s been\n"
+    .string "helping us clear the debris.$"
+
+BattleFrontier_OutsideWest_Text_Reparations7:
+    .string "Those wooden bridges are the only\n"
+    .string "way across while we finish repairs.$"
+
+BattleFrontier_OutsideWest_Text_Reparations8:
+    .string "The cave’s still unstable, so we built\n"
+    .string "temporary wooden bridges.\p"
+    .string "They’re sturdy… I think.$"
+
 BattleFrontier_OutsideEast_EventScript_Zigzagoon::
 	lock
 	faceplayer
@@ -106,7 +144,7 @@ BattleFrontier_OutsideEast_EventScript_Sudowoodo::
 	faceplayer
 	waitse
 	playse SE_SUDOWOODO_SHAKE
-	applymovement LOCALID_FRONTIER_SUDOWOODO, BattleFrontier_OutsideEast_Movement_SudowoodoShake
+	applymovement LOCALID_SUDOWOODO, BattleFrontier_OutsideEast_Movement_SudowoodoShake
 	waitmovement 0
 	release
 	end
@@ -118,7 +156,7 @@ BattleFrontier_OutsideEast_EventScript_WaterSudowoodo::
 	waitstate
 	waitse
 	playse SE_SUDOWOODO_SHAKE
-	applymovement LOCALID_FRONTIER_SUDOWOODO, BattleFrontier_OutsideEast_Movement_SudowoodoShake
+	applymovement LOCALID_SUDOWOODO, BattleFrontier_OutsideEast_Movement_SudowoodoShake
 	waitmovement 0
 	msgbox gText_Sudowoodo_Attacked, MSGBOX_DEFAULT
 	closemessage
@@ -126,7 +164,7 @@ BattleFrontier_OutsideEast_EventScript_WaterSudowoodo::
 	playmoncry SPECIES_SUDOWOODO, CRY_MODE_ENCOUNTER
 	delay 40
 	waitmoncry
-	setvar VAR_LAST_TALKED, LOCALID_FRONTIER_SUDOWOODO
+	setvar VAR_LAST_TALKED, LOCALID_SUDOWOODO
 	setwildbattle SPECIES_SUDOWOODO, 40
 	setflag FLAG_SYS_CTRL_OBJ_DELETE
 	dowildbattle
@@ -254,7 +292,8 @@ BattleFrontier_OutsideEast_Text_RankingHallSign:
 
 BattleFrontier_OutsideEast_Text_ExchangeCornerSign:
 	.string "BATTLE POINT EXCHANGE SERVICE CORNER\n"
-	.string "Exchange your Battle Points!$"
+	.string "Exchange your Battle Points and\l"
+	.string "trade with other TRAINERS!$"
 
 BattleFrontier_OutsideEast_Text_BattleTowerFeelsSpecial:
 	.string "Wow!\n"
@@ -290,7 +329,9 @@ BattleFrontier_OutsideEast_Text_PutTogetherUltimateTeam:
 	.string "We're storming the BATTLE ARENA!$"
 
 BattleFrontier_OutsideEast_Text_DidScottBringYouHere:
-	.string "Did SCOTT bring you here, too?\n"
+	.string "Did SCOTT bring you here, too?\p"
+	.string "No?\p"
+	.string "But you surely know who he is!\p"
 	.string "What is it with that guy?\p"
 	.string "It sounds like he really does know\n"
 	.string "how to spot talented TRAINERS, but…\p"

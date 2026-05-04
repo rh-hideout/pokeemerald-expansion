@@ -2,5 +2,11 @@ TrainerHill_1F_MapScripts::
 	map_script MAP_SCRIPT_ON_RESUME, TrainerHill_OnResume
 	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, TrainerHill_OnWarp
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, TrainerHill_OnFrame
+	map_script MAP_SCRIPT_ON_LOAD, TrainerHill1F_OnLoad
 	.byte 0
 
+TrainerHill1F_OnLoad::
+	setflag FLAG_TEMP_HIDE_FOLLOWER
+	setflag FLAG_LIMIT_TO_50
+	calculatemonstats
+	end

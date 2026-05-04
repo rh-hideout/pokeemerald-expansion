@@ -16,7 +16,6 @@
   "connections": null,
   "object_events": [
     {
-      "local_id": "LOCALID_TOWER_MULTI_CORRIDOR_PLAYER",
       "graphics_id": "OBJ_EVENT_GFX_VAR_F",
       "x": 1,
       "y": 1,
@@ -30,8 +29,7 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_TOWER_MULTI_CORRIDOR_ATTENDANT_1",
-      "graphics_id": "OBJ_EVENT_GFX_TEALA",
+      "graphics_id": "OBJ_EVENT_GFX_WORKER_F",
       "x": 14,
       "y": 3,
       "elevation": 3,
@@ -44,8 +42,7 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_TOWER_MULTI_CORRIDOR_ATTENDANT_2",
-      "graphics_id": "OBJ_EVENT_GFX_TEALA",
+      "graphics_id": "OBJ_EVENT_GFX_WORKER_F",
       "x": 1,
       "y": 3,
       "elevation": 3,
@@ -58,7 +55,6 @@
       "flag": "0"
     },
     {
-      "local_id": "LOCALID_TOWER_MULTI_CORRIDOR_PARTNER",
       "graphics_id": "OBJ_EVENT_GFX_VAR_E",
       "x": 14,
       "y": 1,
