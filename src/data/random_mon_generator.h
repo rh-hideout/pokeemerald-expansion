@@ -1,6 +1,7 @@
-// Pool settings for random mon generation via scripts. For more info on options, check out struct RandomMonGeneratorOptions in src/script_pokemon_util.c
+// Pool settings for random mon generation via scripts. For more info on options, check out
+// struct RandomSpeciesGeneratorOptions and struct RandomItemGeneratorOptions in src/random_mon_generation.c.
 
-static const enum Species sRandomMonOption1SpeciesPool[] =
+static const enum Species sRandomSpeciesOption1SpeciesPool[] =
 {
     SPECIES_TREECKO,
     SPECIES_TORCHIC,
@@ -12,12 +13,12 @@ static const enum Species sRandomMonOption1SpeciesPool[] =
     SPECIES_BELDUM,
 };
 
-static const enum Species sRandomMonOption1BannedSpecies[] =
+static const enum Species sRandomSpeciesOption1BannedSpecies[] =
 {
     SPECIES_BELDUM,
 };
 
-static const enum HoldEffect sRandomMonStandardBannedHoldEffects[] =
+static const enum HoldEffect sRandomItemStandardBannedHoldEffects[] =
 {
     HOLD_EFFECT_NONE,
     HOLD_EFFECT_REPEL,
@@ -42,7 +43,7 @@ static const enum HoldEffect sRandomMonStandardBannedHoldEffects[] =
     HOLD_EFFECT_OGERPON_MASK,
 };
 
-static const enum Item sRandomMonOption1HeldItemPool[] =
+static const enum Item sRandomItemOption1HeldItemPool[] =
 {
     ITEM_LEFTOVERS,
     ITEM_SITRUS_BERRY,
@@ -52,7 +53,7 @@ static const enum Item sRandomMonOption1HeldItemPool[] =
     ITEM_CHOICE_SPECS,
 };
 
-static const struct RandomMonGeneratorOptions sRandomMonGeneratorOptions[] =
+static const struct RandomSpeciesGeneratorOptions sRandomSpeciesGeneratorOptions[] =
 {
     [0] =
     {
@@ -63,55 +64,44 @@ static const struct RandomMonGeneratorOptions sRandomMonGeneratorOptions[] =
         .allowUltraBeast = FALSE,
         .allowParadox = FALSE,
         .randomizeForms = TRUE,
-        .randomTeachableMoveCount = 0,
-        .randomizeAbility = TRUE,
-        .randomizeHeldItem = FALSE,
-        .randomizeBall = FALSE,
-        .shinyMode = SHINY_MODE_RANDOM,
-        .bstStandard = 0,
-        .bstLeniency = 0,
     },
     [1] =
     {
-        .speciesPool = sRandomMonOption1SpeciesPool,
-        .speciesPoolCount = ARRAY_COUNT(sRandomMonOption1SpeciesPool),
-        .bannedSpecies = sRandomMonOption1BannedSpecies,
-        .bannedSpeciesCount = ARRAY_COUNT(sRandomMonOption1BannedSpecies),
-        .heldItemPool = sRandomMonOption1HeldItemPool,
-        .heldItemPoolCount = ARRAY_COUNT(sRandomMonOption1HeldItemPool),
-        .bannedHoldEffects = sRandomMonStandardBannedHoldEffects,
-        .bannedHoldEffectsCount = ARRAY_COUNT(sRandomMonStandardBannedHoldEffects),
+        .speciesPool = sRandomSpeciesOption1SpeciesPool,
+        .speciesPoolCount = ARRAY_COUNT(sRandomSpeciesOption1SpeciesPool),
+        .bannedSpecies = sRandomSpeciesOption1BannedSpecies,
+        .bannedSpeciesCount = ARRAY_COUNT(sRandomSpeciesOption1BannedSpecies),
         .allowLegendary = FALSE,
         .allowMythical = FALSE,
         .allowSubLegendary = FALSE,
         .allowUltraBeast = FALSE,
         .allowParadox = FALSE,
         .randomizeForms = TRUE,
-        .randomTeachableMoveCount = 2,
-        .randomizeAbility = TRUE,
-        .randomizeHeldItem = TRUE,
-        .randomizeBall = TRUE,
-        .shinyMode = SHINY_MODE_RANDOM,
-        .bstStandard = 0,
-        .bstLeniency = 0,
     },
     [2] =
     {
         .dexMode = RANDOM_MON_DEX_HOENN,
-        .bannedHoldEffects = sRandomMonStandardBannedHoldEffects,
-        .bannedHoldEffectsCount = ARRAY_COUNT(sRandomMonStandardBannedHoldEffects),
         .allowLegendary = FALSE,
         .allowMythical = FALSE,
         .allowSubLegendary = FALSE,
         .allowUltraBeast = FALSE,
         .allowParadox = FALSE,
         .randomizeForms = TRUE,
-        .randomTeachableMoveCount = 4,
-        .randomizeAbility = TRUE,
-        .randomizeHeldItem = TRUE,
-        .randomizeBall = TRUE,
-        .shinyMode = SHINY_MODE_RANDOM,
-        .bstStandard = 300,
-        .bstLeniency = 100,
+    },
+};
+
+static const struct RandomItemGeneratorOptions sRandomItemGeneratorOptions[] =
+{
+    [0] =
+    {
+        .bannedHoldEffects = sRandomItemStandardBannedHoldEffects,
+        .bannedHoldEffectsCount = ARRAY_COUNT(sRandomItemStandardBannedHoldEffects),
+    },
+    [1] =
+    {
+        .heldItemPool = sRandomItemOption1HeldItemPool,
+        .heldItemPoolCount = ARRAY_COUNT(sRandomItemOption1HeldItemPool),
+        .bannedHoldEffects = sRandomItemStandardBannedHoldEffects,
+        .bannedHoldEffectsCount = ARRAY_COUNT(sRandomItemStandardBannedHoldEffects),
     },
 };
