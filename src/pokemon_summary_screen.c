@@ -4491,9 +4491,10 @@ static enum Type SummaryScreen_GetDynamicMoveType(struct Pokemon *mon, enum Move
     if (!gMain.inBattle)
         return CheckDynamicMoveType(mon, move, 0, MON_OUTSIDE_BATTLE);
 
+    u32 partyIndex = sMonSummaryScreen->curMonIndex;
     bool32 isDouble = IsDoubleBattle();
 
-    if ((isDouble && sMonSummaryScreen->curMonIndex > 1) || (!isDouble && sMonSummaryScreen->curMonIndex > 0))
+    if ((isDouble && partyIndex > 1) || (!isDouble && partyIndex > 0))
         return CheckDynamicMoveType(mon, move, 0, MON_OUTSIDE_BATTLE);
 
     return CheckDynamicMoveType(mon, move, GetCurrentBattlerFromSumIndex(sMonSummaryScreen->curMonIndex), MON_IN_BATTLE);
