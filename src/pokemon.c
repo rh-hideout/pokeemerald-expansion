@@ -1139,6 +1139,8 @@ static const s8 sFriendshipEventModifiers[][3] =
     [FRIENDSHIP_EVENT_FAINT_FIELD_PSN] = {-5, -5, -10},
     [FRIENDSHIP_EVENT_FAINT_LARGE]     = {-5, -5, -10},
     [FRIENDSHIP_EVENT_MASSAGE]         = { 3,  3,  3 },
+    [FRIENDSHIP_EVENT_HAIRCUT1]        = {99,  99,  99},
+    [FRIENDSHIP_EVENT_HAIRCUT2]        = {66,  66,  66},
 };
 
 static const struct SpeciesItem sAlteringCaveWildMonHeldItems[] =

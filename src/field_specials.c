@@ -5777,3 +5777,13 @@ bool8 CheckAddCoins(void)
     else
         return TRUE;
 }
+
+void HaircutBrother1(void)
+{
+    AdjustFriendship(&gPlayerParty[gSpecialVar_0x8004], FRIENDSHIP_EVENT_HAIRCUT1);
+}
+
+void HaircutBrother2(void)
+{
+    AdjustFriendship(&gPlayerParty[gSpecialVar_0x8004], FRIENDSHIP_EVENT_HAIRCUT2);
+}
