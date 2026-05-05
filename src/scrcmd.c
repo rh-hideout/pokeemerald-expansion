@@ -2954,6 +2954,30 @@ bool8 ScrCmd_checkfieldmove(struct ScriptContext *ctx)
     return FALSE;
 }
 
+bool8 ScrCmd_checkpartymove(struct ScriptContext *ctx)
+{
+    u16 moveId = ScriptReadHalfword(ctx);
+
+    gSpecialVar_Result = PARTY_SIZE;
+    for (u32 i = 0; i < PARTY_SIZE; i++)
+    {
+        u16 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES);
+        if (!species)
+            break;
+        if (!GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG) && MonKnowsMove(&gPlayerParty[i], moveId) == TRUE)
+        {
+            gSpecialVar_Result = i;
+            gSpecialVar_0x8004 = species;
+            break;
+        }
+    }
+    // TODO: HnS has two additional fallbacks here:
+    // 1. Tutor fallback — if no mon knows the move, check if any can *learn* it via MoveIdToTutorIndex/CanLearnTutorMove
+    // 2. HM overwrite fallback — if HMsOverwriteOptionActive(), check bag for the HM item via MoveToHM/BattleMoveIdToItemId
+    // These require porting the helper functions from pokemonHnS/src/scrcmd.c:1996-2046
+    return FALSE;
+}
+
 bool8 ScrCmd_addmoney(struct ScriptContext *ctx)
 {
     u32 amount = ScriptReadWord(ctx);

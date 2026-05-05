@@ -268,6 +268,7 @@ gScriptCmdTable::
 	script_cmd_table_entry SCR_OP_CHECKPARTYMONLEVEL           ScrCmd_checkpartymonlevel,          requests_effects=0  @ 0xf3
 	script_cmd_table_entry SCR_OP_CALCULATEMONSTATS            ScrCmd_calculatemonstats,           requests_effects=0  @ 0xf4
 	script_cmd_table_entry SCR_OP_DELETEPARTY                  ScrCmd_deleteparty,                 requests_effects=0  @ 0xf5
+	script_cmd_table_entry SCR_OP_CHECKPARTYMOVE              ScrCmd_checkpartymove,              requests_effects=0  @ 0xf6
 
 	.if ALLOCATE_SCRIPT_CMD_TABLE
 gScriptCmdTableEnd::

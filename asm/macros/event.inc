@@ -2932,3 +2932,10 @@
 	getbraillestringwidth \text
 	call EventScript_BrailleCursorWaitButton
 	.endm
+
+	@ Checks if any Pokemon in the player's party knows the given move.
+	@ Sets VAR_RESULT to the (zero-indexed) slot number, or PARTY_SIZE if none.
+	.macro checkpartymove move:req
+	.byte SCR_OP_CHECKPARTYMOVE
+	.2byte \move
+	.endm
