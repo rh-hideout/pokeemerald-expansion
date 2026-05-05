@@ -28,8 +28,6 @@ const struct Tileset gTileset_SecretBaseRedCave =
 const struct Tileset *const gTilesetPointer_SecretBase = &gTileset_SecretBase;
 const struct Tileset *const gTilesetPointer_SecretBaseRedCave = &gTileset_SecretBaseRedCave;
 
-#if !IS_FRLG && !IS_HNS
-
 const struct Tileset gTileset_General =
 {
     .isCompressed = TRUE,
@@ -40,6 +38,8 @@ const struct Tileset gTileset_General =
     .metatileAttributes = gMetatileAttributes_General,
     .callback = InitTilesetAnim_General,
 };
+
+#if !IS_FRLG && !IS_HNS
 
 const struct Tileset gTileset_Petalburg =
 {
