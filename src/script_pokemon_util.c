@@ -131,6 +131,45 @@ void CreateScriptedWildMon(u16 species, u8 level, enum Item item)
         SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM, heldItem);
     }
 }
+static u32 GenerateShinyPersonalityForOtId(u32 otId)
+{
+    u32 personality;
+    do {
+        personality = Random32();
+    } while ((HIHALF(otId) ^ LOHALF(otId) ^ HIHALF(personality) ^ LOHALF(personality)) >= 8);
+    return personality;
+}
+
+void CreateShinyScriptedMon(u16 species, u8 level, enum Item item)
+{
+    u8 heldItem[2];
+
+    // TODO: HnS challenge mode hooks (needs tx_Random_* / tx_Challenges SaveBlock fields)
+    // if (gSaveBlock1Ptr->tx_Random_Static)
+    //     species = GetSpeciesRandomSeeded(species, TX_RANDOM_T_STATIC, 0);
+    // if (gSaveBlock1Ptr->tx_Random_Items)
+    //     item = RandomItemId(item);
+
+    ZeroEnemyPartyMons();
+
+    u32 otId = gSaveBlock2Ptr->playerTrainerId[0]
+             | (gSaveBlock2Ptr->playerTrainerId[1] << 8)
+             | (gSaveBlock2Ptr->playerTrainerId[2] << 16)
+             | (gSaveBlock2Ptr->playerTrainerId[3] << 24);
+
+    u32 shinyPersonality = GenerateShinyPersonalityForOtId(otId);
+
+    CreateMonWithIVs(&gEnemyParty[0], species, level, shinyPersonality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
+    GiveMonInitialMoveset(&gEnemyParty[0]);
+    if (item)
+    {
+        heldItem[0] = item;
+        heldItem[1] = item >> 8;
+        SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM, heldItem);
+    }
+    // TODO: SetNuzlockeChecks(); (needs tx_Challenges_Nuzlocke SaveBlock field)
+}
+
 void CreateScriptedDoubleWildMon(u16 species1, u8 level1, enum Item item1, u16 species2, u8 level2, enum Item item2)
 {
     u8 heldItem1[2];

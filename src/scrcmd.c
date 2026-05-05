@@ -64,6 +64,7 @@
 #include "battle.h"
 #include "constants/event_objects.h"
 #include "constants/map_types.h"
+#include "constants/battle_frontier.h"
 #include "constants/easy_chat.h"
 #include "mail.h"
 
@@ -1446,7 +1447,8 @@ bool8 ScrCmd_givenamedmon(struct ScriptContext *ctx)
         {
             mon = &gPlayerParty[i];
             ZeroMonData(mon);
-            CreateBoxMon(&mon->box, species, level, USE_RANDOM_IVS, TRUE, personality, OT_ID_PRESET, otId);
+            CreateBoxMon(&mon->box, species, level, personality, OTID_STRUCT_PRESET(otId));
+            SetBoxMonIVs(&mon->box, USE_RANDOM_IVS);
 
             if (nickname != NULL)
                 SetMonData(mon, MON_DATA_NICKNAME, nickname);
@@ -1559,6 +1561,350 @@ bool8 ScrCmd_removenamedmon(struct ScriptContext *ctx)
     }
 
     gSpecialVar_Result = MON_CANT_GIVE;
+    return FALSE;
+}
+
+bool8 ScrCmd_remove5mons(struct ScriptContext *ctx)
+{
+    u8 removedCount = 0;
+
+    if (GetMonData(&gPlayerParty[0], MON_DATA_HP) == 0)
+    {
+        gSpecialVar_Result = MON_CANT_GIVE;
+        return FALSE;
+    }
+
+    if (GetMonData(&gPlayerParty[0], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
+    {
+        gSpecialVar_Result = MON_CANT_GIVE;
+        return FALSE;
+    }
+
+    for (u8 i = 1; i < PARTY_SIZE; i++)
+    {
+        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) != SPECIES_NONE)
+        {
+            ZeroMonData(&gPlayerParty[i]);
+            removedCount++;
+        }
+    }
+
+    if (removedCount > 0)
+        CompactPartySlots();
+
+    gSpecialVar_Result = MON_GIVEN_TO_PARTY;
+    return FALSE;
+}
+
+bool8 ScrCmd_baobacheckmon(struct ScriptContext *ctx)
+{
+    u16 checkId = ScriptReadHalfword(ctx);
+    u16 partyIndex = VarGet(VAR_0x8004);
+    u16 species;
+
+    gSpecialVar_Result = FALSE;
+
+    if (partyIndex >= PARTY_SIZE)
+        return FALSE;
+
+    if (GetMonData(&gPlayerParty[partyIndex], MON_DATA_SPECIES, NULL) == SPECIES_NONE)
+        return FALSE;
+    if (GetMonData(&gPlayerParty[partyIndex], MON_DATA_IS_EGG, NULL))
+        return FALSE;
+
+    species = GetMonData(&gPlayerParty[partyIndex], MON_DATA_SPECIES, NULL);
+
+    switch (checkId)
+    {
+    case 1:
+        gSpecialVar_Result =
+            (species == SPECIES_CACNEA ||
+             species == SPECIES_LOTAD ||
+             species == SPECIES_MAKUHITA ||
+             species == SPECIES_LOMBRE ||
+             species == SPECIES_TRAPINCH ||
+             species == SPECIES_BELDUM ||
+             species == SPECIES_VIBRAVA);
+        break;
+    case 2:
+        gSpecialVar_Result =
+            (species == SPECIES_TROPIUS ||
+             species == SPECIES_CHIMECHO ||
+             species == SPECIES_ABSOL ||
+             species == SPECIES_CASTFORM);
+        break;
+    case 3:
+        gSpecialVar_Result =
+            (species == SPECIES_BARBOACH ||
+             species == SPECIES_WHISCASH ||
+             species == SPECIES_MEDITITE ||
+             species == SPECIES_NUMEL ||
+             species == SPECIES_BALTOY ||
+             species == SPECIES_ABSOL ||
+             species == SPECIES_MEDICHAM ||
+             species == SPECIES_CAMERUPT);
+        break;
+    case 4:
+        gSpecialVar_Result =
+            (species == SPECIES_WHISMUR ||
+             species == SPECIES_NOSEPASS ||
+             species == SPECIES_BAGON ||
+             species == SPECIES_RELICANTH ||
+             species == SPECIES_FEEBAS);
+        break;
+    default:
+        gSpecialVar_Result = FALSE;
+        break;
+    }
+
+    return FALSE;
+}
+
+bool8 ScrCmd_givebp(struct ScriptContext *ctx)
+{
+    u16 add = VarGet(ScriptReadHalfword(ctx));
+    u32 total;
+
+    total = gSaveBlock2Ptr->frontier.battlePoints;
+    if (total + add > MAX_BATTLE_FRONTIER_POINTS)
+        total = MAX_BATTLE_FRONTIER_POINTS;
+    else
+        total += add;
+    gSaveBlock2Ptr->frontier.battlePoints = total;
+
+    ConvertIntToDecimalStringN(gStringVar1, add, STR_CONV_MODE_LEFT_ALIGN, 3);
+
+    {
+        u32 card = gSaveBlock2Ptr->frontier.cardBattlePoints + add;
+        if (card > 0xFFFF)
+            card = 0xFFFF;
+        gSaveBlock2Ptr->frontier.cardBattlePoints = card;
+    }
+    IncrementDailyBattlePoints(add);
+
+    return FALSE;
+}
+
+bool8 ScrCmd_setwildbattleshiny(struct ScriptContext *ctx)
+{
+    u16 species = ScriptReadHalfword(ctx);
+    u8 level = ScriptReadByte(ctx);
+    u16 item = ScriptReadHalfword(ctx);
+
+    CreateShinyScriptedMon(species, level, item);
+    return FALSE;
+}
+
+bool8 ScrCmd_removegenericmon(struct ScriptContext *ctx)
+{
+    u16 targetSpecies = ScriptReadHalfword(ctx);
+    u8 monIndex = VarGet(VAR_0x8004);
+
+    if (monIndex >= PARTY_SIZE)
+    {
+        gSpecialVar_Result = FALSE;
+        return FALSE;
+    }
+
+    struct Pokemon *mon = &gPlayerParty[monIndex];
+    u16 species = GetMonData(mon, MON_DATA_SPECIES);
+
+    if (species == SPECIES_NONE || species != targetSpecies)
+    {
+        gSpecialVar_Result = FALSE;
+        return FALSE;
+    }
+
+    if (species == SPECIES_MAGIKARP)
+    {
+        u8 level = GetMonData(mon, MON_DATA_LEVEL);
+        if (level == 100)
+        {
+            ZeroMonData(mon);
+            CompactPartySlots();
+            gSpecialVar_Result = MON_SATISFACTORY;
+            return FALSE;
+        }
+    }
+
+    ZeroMonData(mon);
+    CompactPartySlots();
+    gSpecialVar_Result = MON_UNSATISFACTORY;
+    return FALSE;
+}
+
+static const u16 sOddEggSpecies[8] = {
+    SPECIES_NONE,        // [0] unused
+    SPECIES_PICHU,       // 1
+    SPECIES_CLEFFA,      // 2
+    SPECIES_IGGLYBUFF,   // 3
+    SPECIES_TYROGUE,     // 4
+    SPECIES_SMOOCHUM,    // 5
+    SPECIES_ELEKID,      // 6
+    SPECIES_MAGBY        // 7
+};
+
+static const u8 sOddEggShinyNameList[][PLAYER_NAME_LENGTH + 1] = {
+    _("DYLAN"),
+    _("Zee"),
+    _("Meara"),
+    _("Anthony"),
+    _("RAINBOW"),
+    _("FERRO"),
+    _("Kris"),
+    _("Chad"),
+    _("Bacon"),
+    _("Excl"),
+    _("Liquid"),
+    _("Dyn"),
+    _("Fabian"),
+    _("peepy"),
+    _("Cameron"),
+    _("Joe"),
+    _("Andrew"),
+    _("Nova"),
+    _("Cromlnt"),
+    _("Phant"),
+    _("Papito"),
+    _("Casper"),
+    _("ELLI"),
+    _("Grey"),
+    _("Necro"),
+    _("Penka"),
+    _("Emmam"),
+    _("Casper"),
+    _("MARZ"),
+    _("leob050"),
+    _("Sayu"),
+    _("Brick"),
+    _("Kino"),
+    _("JIRAIYA"),
+};
+
+static bool8 IsPlayerNameInShinyList(void)
+{
+    for (u32 i = 0; i < ARRAY_COUNT(sOddEggShinyNameList); i++)
+    {
+        if (StringCompare(gSaveBlock2Ptr->playerName, sOddEggShinyNameList[i]) == 0)
+            return TRUE;
+    }
+    return FALSE;
+}
+
+static u32 MakeShinyPidForOt(u32 otId)
+{
+    u16 tid = (u16)(otId & 0xFFFF);
+    u16 sid = (u16)(otId >> 16);
+    u16 hi  = (u16)Random();
+    u16 s   = (u16)(Random() % 8);
+    u16 lo  = tid ^ sid ^ hi ^ s;
+    return ((u32)hi << 16) | lo;
+}
+
+static u32 MakeNonShinyPidForOt(u32 otId)
+{
+    u16 tid = (u16)(otId & 0xFFFF);
+    u16 sid = (u16)(otId >> 16);
+    while (TRUE) {
+        u16 hi = (u16)Random();
+        u16 lo = (u16)Random();
+        if ((tid ^ sid ^ hi ^ lo) >= 8)
+            return ((u32)hi << 16) | lo;
+    }
+}
+
+static u32 GetPlayerOtId32(void)
+{
+    return ((u32)gSaveBlock2Ptr->playerTrainerId[0])
+         | ((u32)gSaveBlock2Ptr->playerTrainerId[1] <<  8)
+         | ((u32)gSaveBlock2Ptr->playerTrainerId[2] << 16)
+         | ((u32)gSaveBlock2Ptr->playerTrainerId[3] << 24);
+}
+
+#define ODD_EGG_START_CYCLES 2
+
+static bool8 GiveOddEgg_Internal(u16 species, bool8 forceShiny, bool8 allow14PercentShiny)
+{
+    for (u8 i = 0; i < PARTY_SIZE; i++)
+    {
+        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) == SPECIES_NONE)
+        {
+            struct Pokemon *mon = &gPlayerParty[i];
+            ZeroMonData(mon);
+
+            u32 otId = GetPlayerOtId32();
+            bool8 makeShiny = forceShiny;
+            if (!makeShiny && allow14PercentShiny)
+                makeShiny = ((Random() % 100) < 14);
+
+            u32 pid = makeShiny ? MakeShinyPidForOt(otId) : MakeNonShinyPidForOt(otId);
+
+            CreateBoxMon(&mon->box, species, 5, pid, OTID_STRUCT_PLAYER_ID);
+            SetBoxMonIVs(&mon->box, USE_RANDOM_IVS);
+
+            {
+                bool8 isEgg = TRUE;
+                SetMonData(mon, MON_DATA_IS_EGG, &isEgg);
+            }
+            {
+                u8 cycles = gSpeciesInfo[species].eggCycles;
+                if (cycles > ODD_EGG_START_CYCLES)
+                    cycles = ODD_EGG_START_CYCLES;
+                SetMonData(mon, MON_DATA_FRIENDSHIP, &cycles);
+            }
+
+            SetMonMoveSlot(mon, MOVE_DIZZY_PUNCH, 1);
+            CalculateMonStats(mon);
+            gSpecialVar_Result = MON_GIVEN_TO_PARTY;
+            return TRUE;
+        }
+    }
+    gSpecialVar_Result = MON_CANT_GIVE;
+    return FALSE;
+}
+
+bool8 ScrCmd_giveoddegg(struct ScriptContext *ctx)
+{
+    u16 which = VarGet(ScriptReadHalfword(ctx));
+    if (which == 0 || which >= ARRAY_COUNT(sOddEggSpecies))
+    {
+        gSpecialVar_Result = MON_CANT_GIVE;
+        return FALSE;
+    }
+
+    u16 species = sOddEggSpecies[which];
+    if (species == SPECIES_NONE)
+    {
+        gSpecialVar_Result = MON_CANT_GIVE;
+        return FALSE;
+    }
+
+    bool8 forceShiny = IsPlayerNameInShinyList();
+    (void)GiveOddEgg_Internal(species, forceShiny, TRUE);
+    return FALSE;
+}
+
+// HnS stub — TODO: implement with GetPokedexCategoryName
+bool8 ScrCmd_buffermoncategory(struct ScriptContext *ctx)
+{
+    u8 stringvar = ScriptReadByte(ctx);
+    u16 species = ScriptReadHalfword(ctx);
+    (void)stringvar;
+    (void)species;
+    return FALSE;
+}
+
+// HnS stub — TODO: implement with tx_Challenges_Nuzlocke SaveBlock field
+bool8 ScrCmd_checknuzlocke(struct ScriptContext *ctx)
+{
+    gSpecialVar_Result = FALSE;
+    return FALSE;
+}
+
+// HnS stub — TODO: implement with tx_Random_* SaveBlock fields
+bool8 ScrCmd_checkrandomizer(struct ScriptContext *ctx)
+{
+    gSpecialVar_Result = FALSE;
     return FALSE;
 }
 

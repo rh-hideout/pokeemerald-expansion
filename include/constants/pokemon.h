@@ -167,6 +167,8 @@ enum OtIdMethod
 #define MON_GIVEN_TO_PARTY      0
 #define MON_GIVEN_TO_PC         1
 #define MON_CANT_GIVE           2
+#define MON_UNSATISFACTORY      1
+#define MON_SATISFACTORY        2
 
 #define PLAYER_HAS_TWO_USABLE_MONS     0
 #define PLAYER_HAS_ONE_MON             1

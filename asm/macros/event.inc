@@ -650,6 +650,51 @@
 		.2byte \number
 	.endm
 
+	.macro remove5mons
+		.byte SCR_OP_REMOVE5MONS
+	.endm
+
+	.macro baobacheckmon checkId:req
+		.byte SCR_OP_BAOBACHECKMON
+		.2byte \checkId
+	.endm
+
+	.macro givebp amount:req
+		.byte SCR_OP_GIVEBP
+		.2byte \amount
+	.endm
+
+	.macro setwildbattleshiny species:req, level:req, item:req
+		.byte SCR_OP_SETWILDBATTLESHINY
+		.2byte \species
+		.byte \level
+		.2byte \item
+	.endm
+
+	.macro removegenericmon number:req
+		.byte SCR_OP_REMOVEGENERICMON
+		.2byte \number
+	.endm
+
+	.macro giveoddegg number:req
+		.byte SCR_OP_GIVEODDEGG
+		.2byte \number
+	.endm
+
+	.macro buffermoncategory stringvar:req, species:req
+		.byte SCR_OP_BUFFERMONCATEGORY
+		.byte \stringvar - STRING_VAR_0
+		.2byte \species
+	.endm
+
+	.macro checknuzlocke
+		.byte SCR_OP_CHECKNUZLOCKE
+	.endm
+
+	.macro checkrandomizer
+		.byte SCR_OP_CHECKRANDOMIZER
+	.endm
+
 	@ Blocks script execution until the movements being applied to the specified (localId) object finish.
 	@ If localId is LOCALID_NONE (0), then the id of the last-moved object will be used instead.
 	@ If the specified object is not currently being manipulated with applymovement, then this command does nothing.
