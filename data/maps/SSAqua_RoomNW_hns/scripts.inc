@@ -15,7 +15,7 @@ SSAqua_RoomNW_EventScript_Stanly::
     lock
     faceplayer
     msgbox SSAqua_RoomNW_Text_SailorStanlySeen, MSGBOX_DEFAULT
-    trainerbattle_no_intro TRAINER_STANLY, SSAqua_RoomNW_Text_SailorStanlyBeaten
+    trainerbattle_no_intro TRAINER_STANLY_HNS, SSAqua_RoomNW_Text_SailorStanlyBeaten
 	msgbox SSAqua_RoomNW_Text_SailorStanlyAfterBattle, MSGBOX_DEFAULT
     closemessage
     fadescreenswapbuffers FADE_TO_BLACK
@@ -27,12 +27,12 @@ SSAqua_RoomNW_EventScript_Stanly::
 	end
 
 SSAqua_RoomNW_EventScript_Edward::
-    trainerbattle_single TRAINER_EDWARD, SSAqua_RoomNW_Text_GentlemanEdwardSeen, SSAqua_RoomNW_Text_GentlemanEdwardBeaten
+    trainerbattle_single TRAINER_EDWARD_HNS, SSAqua_RoomNW_Text_GentlemanEdwardSeen, SSAqua_RoomNW_Text_GentlemanEdwardBeaten
 	msgbox SSAqua_RoomNW_Text_GentlemanEdwardAfterBattle, MSGBOX_AUTOCLOSE
 	end
 
 SSAqua_RoomNW_EventScript_Corey::
-    trainerbattle_single TRAINER_COREY, SSAqua_RoomNW_Text_BurglarCoreySeen, SSAqua_RoomNW_Text_BurglarCoreyBeaten
+    trainerbattle_single TRAINER_COREY_HNS, SSAqua_RoomNW_Text_BurglarCoreySeen, SSAqua_RoomNW_Text_BurglarCoreyBeaten
 	msgbox SSAqua_RoomNW_Text_BurglarCoreyAfterBattle, MSGBOX_AUTOCLOSE
 	end
 

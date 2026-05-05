@@ -4,7 +4,7 @@ PewterCity_Gym_hns_MapScripts::
 
 
 PewterCity_Gym_EventScript_Jerry::
-	trainerbattle_single TRAINER_JERRY, PewterCity_Gym_Text_CamperJerry_Seen, PewterCity_Gym_Text_CamperJerry_Beaten
+	trainerbattle_single TRAINER_JERRY_HNS, PewterCity_Gym_Text_CamperJerry_Seen, PewterCity_Gym_Text_CamperJerry_Beaten
 	msgbox PewterCity_Gym_Text_CamperJerry_AfterBattle, MSGBOX_AUTOCLOSE
 	end
 
@@ -13,7 +13,7 @@ PewterCity_Gym_EventScript_Brock::
 	faceplayer
 	goto_if_set FLAG_DEFEATED_PEWTER_GYM, PewterCity_Gym_EventScript_Brock_Defeated
 	msgbox PewterCity_Gym_Text_Brock_Intro, MSGBOX_DEFAULT
-	trainerbattle_no_intro TRAINER_BROCK, PewterCity_Gym_Text_Brock_WinLoss
+	trainerbattle_no_intro TRAINER_BROCK_HNS, PewterCity_Gym_Text_Brock_WinLoss
 	message PewterCity_Gym_Text_ReceivedBoulderBadge
 	waitmessage
 	call Common_EventScript_PlayGymBadgeFanfare

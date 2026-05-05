@@ -1336,6 +1336,24 @@ Common_EventScript_NameReceivedPartyMon::
 	waitstate
 	return
 
+Common_EventScript_GiftMonNamed::
+	call_if_eq VAR_RESULT, MON_GIVEN_TO_PARTY, Common_EventScript_RecieveMonPartyNamed
+	call_if_eq VAR_RESULT, MON_CANT_GIVE, Common_EventScript_PartyIsFull
+	return
+
+Common_EventScript_RecieveMonPartyNamed::
+	playfanfare MUS_OBTAIN_ITEM
+	message Common_Text_ReceivedMon
+	waitmessage
+	waitfanfare
+	return
+
+
+Common_EventScript_PartyIsFull::
+	msgbox Common_Text_PartyIsFull, MSGBOX_DEFAULT
+	closemessage
+	end
+
 Common_EventScript_PlayerHandedOverTheItem::
 	bufferitemname STR_VAR_1, VAR_0x8004
 	playfanfare MUS_OBTAIN_TMHM

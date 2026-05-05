@@ -2,7 +2,7 @@ SproutTower_1F_hns_MapScripts::
 	.byte 0
 
 SproutTower_1F_EventScript_SageChow::
-	trainerbattle_single TRAINER_CHOW, SproutTower_Text_SageChow_Seen, SproutTower_Text_SageChow_Beaten
+	trainerbattle_single TRAINER_CHOW_HNS, SproutTower_Text_SageChow_Seen, SproutTower_Text_SageChow_Beaten
 	msgbox SproutTower_Text_SageChow_AfterBattle, MSGBOX_AUTOCLOSE
 	end
 

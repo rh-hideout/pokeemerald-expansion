@@ -37,15 +37,15 @@ MtMoon_Cave_EventScript_Silver::
 	end
 
 MtMoon_Cave_EventScript_Silver_Battle_Cyndaquil::
-	trainerbattle_no_intro TRAINER_RIVAL_CYNDAQUIL_6, MtMoon_Cave_Text_Rival_Win
+	trainerbattle_no_intro TRAINER_RIVAL_CYNDAQUIL_6_HNS, MtMoon_Cave_Text_Rival_Win
 	goto MtMoon_Cave_EventScript_SilverAfterBattle
 
 MtMoon_Cave_EventScript_Silver_Battle_Totodile::
-	trainerbattle_no_intro TRAINER_RIVAL_TOTODILE_6, MtMoon_Cave_Text_Rival_Win
+	trainerbattle_no_intro TRAINER_RIVAL_TOTODILE_6_HNS, MtMoon_Cave_Text_Rival_Win
 	goto MtMoon_Cave_EventScript_SilverAfterBattle
 
 MtMoon_Cave_EventScript_Silver_Battle_Chikorita::
-	trainerbattle_no_intro TRAINER_RIVAL_CHIKORITA_6, MtMoon_Cave_Text_Rival_Win
+	trainerbattle_no_intro TRAINER_RIVAL_CHIKORITA_6_HNS, MtMoon_Cave_Text_Rival_Win
 	goto MtMoon_Cave_EventScript_SilverAfterBattle
 
 MtMoon_Cave_EventScript_SilverAfterBattle::

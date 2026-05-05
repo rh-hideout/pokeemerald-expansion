@@ -234,17 +234,17 @@ VermilionCity_Gym_EventScript_GymStatuePostVictory::
 	end
 
 VermilionCity_Gym_EventScript_Gregory::
-	trainerbattle_single TRAINER_GREGORY, VermilionGym_Text_GentlemanGregorySeen, VermilionGym_Text_GentlemanGregoryBeaten
+	trainerbattle_single TRAINER_GREGORY_HNS, VermilionGym_Text_GentlemanGregorySeen, VermilionGym_Text_GentlemanGregoryBeaten
 	msgbox VermilionGym_Text_GentlemanGregoryAfter, MSGBOX_AUTOCLOSE
 	end
 
 VermilionCity_Gym_EventScript_Vincent::
-	trainerbattle_single TRAINER_VINCENT, VermilionGym_Text_GuitaristVincentSeen, VermilionGym_Text_GuitaristVincentBeaten
+	trainerbattle_single TRAINER_VINCENT_HNS, VermilionGym_Text_GuitaristVincentSeen, VermilionGym_Text_GuitaristVincentBeaten
 	msgbox VermilionGym_Text_GuitaristVincentAfter, MSGBOX_AUTOCLOSE
 	end
 
 VermilionCity_Gym_EventScript_Horton::
-	trainerbattle_single TRAINER_HORTON, VermilionGym_Text_JugglerHortonSeen, VermilionGym_Text_JugglerHortonBeaten
+	trainerbattle_single TRAINER_HORTON_HNS, VermilionGym_Text_JugglerHortonSeen, VermilionGym_Text_JugglerHortonBeaten
 	msgbox VermilionGym_Text_JugglerHortonAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -253,7 +253,7 @@ VermilionCity_Gym_EventScript_Surge::
 	faceplayer
 	goto_if_set FLAG_DEFEATED_VERMILION_GYM, VermilionCity_Gym_EventScript_Surge_Defeated
 	msgbox VermilionGym_Text_LtSurgeIntro, MSGBOX_DEFAULT
-	trainerbattle_no_intro TRAINER_LTSURGE, VermilionGym_Text_LtSurgeWinLoss
+	trainerbattle_no_intro TRAINER_LTSURGE_HNS, VermilionGym_Text_LtSurgeWinLoss
 	message VermilionGym_Text_ReceivedThunderBadge
 	waitmessage
 	call Common_EventScript_PlayGymBadgeFanfare

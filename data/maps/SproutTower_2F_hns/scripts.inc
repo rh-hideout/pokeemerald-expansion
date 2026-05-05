@@ -8,12 +8,12 @@ SproutTower_2F_OnTransition:
 	end
 
 SproutTower_2F_EventScript_SageNico::
-	trainerbattle_single TRAINER_NICO, SproutTower_Text_SageNico_Seen, SproutTower_Text_SageNico_Beaten
+	trainerbattle_single TRAINER_NICO_HNS, SproutTower_Text_SageNico_Seen, SproutTower_Text_SageNico_Beaten
 	msgbox SproutTower_Text_SageNico_AfterBattle, MSGBOX_AUTOCLOSE
 	end
 
 SproutTower_2F_EventScript_SageEdmond::
-	trainerbattle_single TRAINER_EDMOND, SproutTower_Text_SageEdmond_Seen, SproutTower_Text_SageEdmond_Beaten
+	trainerbattle_single TRAINER_EDMOND_HNS, SproutTower_Text_SageEdmond_Seen, SproutTower_Text_SageEdmond_Beaten
 	msgbox SproutTower_Text_SageEdmond_AfterBattle, MSGBOX_AUTOCLOSE
 	end
 

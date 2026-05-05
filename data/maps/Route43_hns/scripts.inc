@@ -9,32 +9,32 @@ Route43_MapScript_OnTransition::
 	end
 
 Route43_EventScript_Ben::
-	trainerbattle_single TRAINER_BEN, Route43_Text_PokemaniacBenSeen, Route43_Text_PokemaniacBenBeaten
+	trainerbattle_single TRAINER_BEN_HNS, Route43_Text_PokemaniacBenSeen, Route43_Text_PokemaniacBenBeaten
 	msgbox Route43_Text_PokemaniacBenAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route43_EventScript_Brent::
-	trainerbattle_single TRAINER_BRENT, Route43_Text_PokemaniacBrentSeen, Route43_Text_PokemaniacBrentBeaten
+	trainerbattle_single TRAINER_BRENT_HNS, Route43_Text_PokemaniacBrentSeen, Route43_Text_PokemaniacBrentBeaten
 	msgbox Route43_Text_PokemaniacBrentAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route43_EventScript_Ron::
-	trainerbattle_single TRAINER_RON, Route43_Text_PokemaniacRonSeen, Route43_Text_PokemaniacRonBeaten
+	trainerbattle_single TRAINER_RON_HNS, Route43_Text_PokemaniacRonSeen, Route43_Text_PokemaniacRonBeaten
 	msgbox Route43_Text_PokemaniacRonAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route43_EventScript_Marvin::
-	trainerbattle_single TRAINER_MARVIN, Route43_Text_FisherMarvinSeen, Route43_Text_FisherMarvinBeaten
+	trainerbattle_single TRAINER_MARVIN_HNS, Route43_Text_FisherMarvinSeen, Route43_Text_FisherMarvinBeaten
 	msgbox Route43_Text_FisherMarvinAfter, MSGBOX_AUTOCLOSE
 	end
 	
 Route43_EventScript_Spencer::
-	trainerbattle_single TRAINER_SPENCER, Route43_Text_CamperSpencerSeen, Route43_Text_CamperSpencerBeaten
+	trainerbattle_single TRAINER_SPENCER_HNS, Route43_Text_CamperSpencerSeen, Route43_Text_CamperSpencerBeaten
 	msgbox Route43_Text_CamperSpencerAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route43_EventScript_Tiffany::
-	trainerbattle_single TRAINER_TIFFANY, Route43_Text_PicnickerTiffanySeen, Route43_Text_PicnickerTiffanyBeaten
+	trainerbattle_single TRAINER_TIFFANY_HNS, Route43_Text_PicnickerTiffanySeen, Route43_Text_PicnickerTiffanyBeaten
 	msgbox Route43_Text_PicnickerTiffanyWantsPicnic, MSGBOX_AUTOCLOSE
 	end
 

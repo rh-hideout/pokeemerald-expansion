@@ -8,17 +8,17 @@ Route46_OnTransition:
 	end
 
 Route46_EventScript_Bailey::
-	trainerbattle_single TRAINER_BAILEY, Route46_Text_HikerBaileySeen, Route46_Text_HikerBaileyBeaten
+	trainerbattle_single TRAINER_BAILEY_HNS, Route46_Text_HikerBaileySeen, Route46_Text_HikerBaileyBeaten
 	msgbox Route46_Text_HikerBaileyAfterBattle, MSGBOX_AUTOCLOSE
 	end
 
 Route46_EventScript_Ted::
-	trainerbattle_single TRAINER_TED, Route46_Text_CamperTedSeen, Route46_Text_CamperTedBeaten
+	trainerbattle_single TRAINER_TED_HNS, Route46_Text_CamperTedSeen, Route46_Text_CamperTedBeaten
 	msgbox Route46_Text_CamperTedAfterBattle, MSGBOX_AUTOCLOSE
 	end
 
 Route46_EventScript_Erin::
-	trainerbattle_single TRAINER_ERIN, Route46_Text_PicnickerErinSeen, Route46_Text_PicnickerErinBeaten
+	trainerbattle_single TRAINER_ERIN_HNS, Route46_Text_PicnickerErinSeen, Route46_Text_PicnickerErinBeaten
 	msgbox Route46_Text_PicnickerErinAfterBattle, MSGBOX_AUTOCLOSE
 	end
 

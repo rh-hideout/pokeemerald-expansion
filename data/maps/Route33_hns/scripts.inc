@@ -8,7 +8,7 @@ Route33_OnTransition:
 	end
 
 Route33_EventScript_HikerAnthony::
-	trainerbattle_single TRAINER_ANTHONY, Route33_Text_HikerAnthony2Seen, Route33_Text_HikerAnthony2Beaten
+	trainerbattle_single TRAINER_ANTHONY_HNS, Route33_Text_HikerAnthony2Seen, Route33_Text_HikerAnthony2Beaten
 	msgbox Route33_Text_HikerAnthony2After, MSGBOX_AUTOCLOSE
 	end
 

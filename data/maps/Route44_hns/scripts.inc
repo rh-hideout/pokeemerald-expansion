@@ -8,37 +8,37 @@ Route44_OnTransition:
 	end
 
 Route44_EventScript_Wilton::
-	trainerbattle_single TRAINER_WILTON, Route44_Text_FisherWilton1Seen, Route44_Text_FisherWilton1Beaten
+	trainerbattle_single TRAINER_WILTON_HNS, Route44_Text_FisherWilton1Seen, Route44_Text_FisherWilton1Beaten
 	msgbox Route44_Text_FisherWiltonHugePoliwag, MSGBOX_AUTOCLOSE
 	end
 
 Route44_EventScript_Edgar::
-	trainerbattle_single TRAINER_EDGAR, Route44_Text_FisherEdgarSeen, Route44_Text_FisherEdgarBeaten
+	trainerbattle_single TRAINER_EDGAR_HNS, Route44_Text_FisherEdgarSeen, Route44_Text_FisherEdgarBeaten
 	msgbox Route44_Text_FisherEdgarAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route44_EventScript_Vance::
-	trainerbattle_single TRAINER_VANCE, Route44_Text_BirdKeeperVance1Seen, Route44_Text_BirdKeeperVance1Beaten
+	trainerbattle_single TRAINER_VANCE_HNS, Route44_Text_BirdKeeperVance1Seen, Route44_Text_BirdKeeperVance1Beaten
 	msgbox Route44_Text_BirdKeeperVanceBirds, MSGBOX_AUTOCLOSE
 	end
 
 Route44_EventScript_Phil::
-	trainerbattle_single TRAINER_PHIL, Route44_Text_PsychicPhilSeen, Route44_Text_PsychicPhilBeaten
+	trainerbattle_single TRAINER_PHIL_HNS, Route44_Text_PsychicPhilSeen, Route44_Text_PsychicPhilBeaten
 	msgbox Route44_Text_PsychicPhilAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route44_EventScript_Zach::
-	trainerbattle_single TRAINER_ZACH, Route44_Text_PokemaniacZachSeen, Route44_Text_PokemaniacZachBeaten
+	trainerbattle_single TRAINER_ZACH_HNS, Route44_Text_PokemaniacZachSeen, Route44_Text_PokemaniacZachBeaten
 	msgbox Route44_Text_PokemaniacZachAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route44_EventScript_Allen::
-	trainerbattle_single TRAINER_ALLEN, Route44_Text_CooltrainermAllenSeen, Route44_Text_CooltrainermAllenBeaten
+	trainerbattle_single TRAINER_ALLEN_HNS, Route44_Text_CooltrainermAllenSeen, Route44_Text_CooltrainermAllenBeaten
 	msgbox Route44_Text_CooltrainermAllenAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route44_EventScript_Cybil::
-	trainerbattle_single TRAINER_CYBIL, Route44_Text_CooltrainerfCybilSeen, Route44_Text_CooltrainerfCybilBeaten
+	trainerbattle_single TRAINER_CYBIL_HNS, Route44_Text_CooltrainerfCybilSeen, Route44_Text_CooltrainerfCybilBeaten
 	msgbox Route44_Text_CooltrainerfCybilAfter, MSGBOX_AUTOCLOSE
 	end
 

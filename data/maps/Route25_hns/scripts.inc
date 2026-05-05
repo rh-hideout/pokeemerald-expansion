@@ -34,37 +34,37 @@ Route25_Text_Misty:
 	.string "meet me at the FIGHTING DOJO!$"
 
 Route25_EventScript_Dudley::
-	trainerbattle_single TRAINER_DUDLEY, Route25_Text_SchoolboyDudleySeen, Route25_Text_SchoolboyDudleyBeaten
+	trainerbattle_single TRAINER_DUDLEY_HNS, Route25_Text_SchoolboyDudleySeen, Route25_Text_SchoolboyDudleyBeaten
 	msgbox Route25_Text_SchoolboyDudleyAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route25_EventScript_Ellen::
-	trainerbattle_single TRAINER_ELLEN, Route25_Text_LassEllenSeen, Route25_Text_LassEllenBeaten
+	trainerbattle_single TRAINER_ELLEN_HNS, Route25_Text_LassEllenSeen, Route25_Text_LassEllenBeaten
 	msgbox Route25_Text_LassEllenAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route25_EventScript_Joe::
-	trainerbattle_single TRAINER_JOE, Route25_Text_SchoolboyJoeSeen, Route25_Text_SchoolboyJoeBeaten
+	trainerbattle_single TRAINER_JOE_HNS, Route25_Text_SchoolboyJoeSeen, Route25_Text_SchoolboyJoeBeaten
 	msgbox Route25_Text_SchoolboyJoeAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route25_EventScript_Laura::
-	trainerbattle_single TRAINER_LAURA, Route25_Text_LassLauraSeen, Route25_Text_LassLauraBeaten
+	trainerbattle_single TRAINER_LAURA_HNS, Route25_Text_LassLauraSeen, Route25_Text_LassLauraBeaten
 	msgbox Route25_Text_LassLauraAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route25_EventScript_Lloyd::
-	trainerbattle_single TRAINER_LLOYD, Route25_Text_CamperLloydSeen, Route25_Text_CamperLloydBeaten
+	trainerbattle_single TRAINER_LLOYD_HNS, Route25_Text_CamperLloydSeen, Route25_Text_CamperLloydBeaten
 	msgbox Route25_Text_CamperLloydAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route25_EventScript_Shannon::
-	trainerbattle_single TRAINER_SHANNON, Route25_Text_LassShannonSeen, Route25_Text_LassShannonBeaten
+	trainerbattle_single TRAINER_SHANNON_HNS, Route25_Text_LassShannonSeen, Route25_Text_LassShannonBeaten
 	msgbox Route25_Text_LassShannonAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route25_EventScript_Pat::
-	trainerbattle_single TRAINER_PAT, Route25_Text_SupernerdPatSeen, Route25_Text_SupernerdPatBeaten
+	trainerbattle_single TRAINER_PAT_HNS, Route25_Text_SupernerdPatSeen, Route25_Text_SupernerdPatBeaten
 	msgbox Route25_Text_SupernerdPatAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -77,7 +77,7 @@ Route25_EventScript_Kevin::
 	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
 	setflag FLAG_ROUTE25_GOT_NUGGET
 	msgbox Route25_Text_CooltrainerKevinSeen, MSGBOX_DEFAULT
-	trainerbattle_no_intro TRAINER_KEVIN, Route25_Text_CooltrainerKevinBeaten
+	trainerbattle_no_intro TRAINER_KEVIN_HNS, Route25_Text_CooltrainerKevinBeaten
 	msgbox Route25_Text_CooltrainerKevinAfter, MSGBOX_DEFAULT
 	closemessage
 	release

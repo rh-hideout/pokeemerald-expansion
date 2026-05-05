@@ -105,7 +105,7 @@ TohjoFalls_EventScript_GiovanniScene::
 	applymovement2 LOCALID_TOHJOFALLS_GIOVANNI, Common_Movement_WalkDown1
 	waitmovement 0
 	msgbox TohjoFalls_GiovanniRoom_Text_GiovanniBeforeBattle, MSGBOX_DEFAULT
-	trainerbattle_no_intro TRAINER_GIOVANNI, TohjoFalls_GiovanniRoom_Text_GiovanniDefeat
+	trainerbattle_no_intro TRAINER_GIOVANNI_HNS, TohjoFalls_GiovanniRoom_Text_GiovanniDefeat
 	playbgm MUS_HG_RADIO_ROCKET, TRUE
 	applymovement2 LOCALID_TOHJOFALLS_GIOVANNI, TohjoFalls_Movement_GiovanniTakenAback
 	waitmovement 0

@@ -8,7 +8,7 @@ Route31_OnTransition:
 	end
 
 Route31_EventScript_Bugcatcher_Wade::
-	trainerbattle_single TRAINER_WADE, Route31_Text_BugCatcherWade1_Seen, Route31_Text_BugCatcherWade1_Beaten
+	trainerbattle_single TRAINER_WADE_HNS, Route31_Text_BugCatcherWade1_Seen, Route31_Text_BugCatcherWade1_Beaten
 	msgbox Route31_Text_BugCatcherWade1_After, MSGBOX_AUTOCLOSE
 	end
 

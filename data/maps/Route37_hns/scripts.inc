@@ -10,21 +10,21 @@ Route37_OnTransition:
 
 
 Route37_EventScript_TwinAnn::
-	trainerbattle_double TRAINER_ANN_AND_ANNE, Route37_Text_TwinsAnnAndAnne1_Seen, Route37_Text_TwinsAnnAndAnne1_Beaten, Route104_Text_GinaNotEnoughMons
+	trainerbattle_double TRAINER_ANN_AND_ANNE_HNS, Route37_Text_TwinsAnnAndAnne1_Seen, Route37_Text_TwinsAnnAndAnne1_Beaten, Route104_Text_GinaNotEnoughMons
 	special GetPlayerBigGuyGirlString
 	msgbox Route37_Text_TwinsAnnAndAnne1_After, MSGBOX_DEFAULT
 	release
 	end
 	
 Route37_EventScript_TwinAnne::
-	trainerbattle_double TRAINER_ANN_AND_ANNE, Route37_Text_TwinsAnnAndAnne2_Seen, Route37_Text_TwinsAnnAndAnne2_Beaten, Route104_Text_GinaNotEnoughMons
+	trainerbattle_double TRAINER_ANN_AND_ANNE_HNS, Route37_Text_TwinsAnnAndAnne2_Seen, Route37_Text_TwinsAnnAndAnne2_Beaten, Route104_Text_GinaNotEnoughMons
 	special GetPlayerBigGuyGirlString
 	msgbox Route37_Text_TwinsAnnAndAnne2_After, MSGBOX_DEFAULT
 	release
 	end
 
 Route37_EventScript_Greg::
-	trainerbattle_single TRAINER_GREG, Route37_Text_PsychicGreg_Seen, Route37_Text_PsychicGreg_Beaten
+	trainerbattle_single TRAINER_GREG_HNS, Route37_Text_PsychicGreg_Seen, Route37_Text_PsychicGreg_Beaten
 	msgbox Route37_Text_PsychicGreg_After, MSGBOX_AUTOCLOSE
 	end
 

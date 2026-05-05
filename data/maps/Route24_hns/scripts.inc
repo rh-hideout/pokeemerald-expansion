@@ -75,7 +75,7 @@ Route24_EventScript_Grunt::
 	lock
 	faceplayer
 	msgbox Route24_Text_RocketSeen, MSGBOX_DEFAULT
-	trainerbattle_no_intro TRAINER_GRUNT_31, Route24_Text_RocketBeaten
+	trainerbattle_no_intro TRAINER_GRUNT_31_HNS, Route24_Text_RocketBeaten
 	msgbox Route24_Text_RocketAfter, MSGBOX_DEFAULT
 	closemessage
 	playse SE_PIN

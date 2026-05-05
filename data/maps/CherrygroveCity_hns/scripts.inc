@@ -234,15 +234,15 @@ CherryGroveCity_EventScript_TriggerSilver::
 	end
 
 CherryGroveCity_Silver_Battle_Cyndaquil::
-	trainerbattle_no_intro TRAINER_RIVAL_CYNDAQUIL_1, CherrygroveCity_Text_SilverWin
+	trainerbattle_no_intro TRAINER_RIVAL_CYNDAQUIL_1_HNS, CherrygroveCity_Text_SilverWin
 	goto CherryGroveCity_Silver_AfterBattle
 
 CherryGroveCity_Silver_Battle_Totodile::
-	trainerbattle_no_intro TRAINER_RIVAL_TOTODILE_1, CherrygroveCity_Text_SilverWin
+	trainerbattle_no_intro TRAINER_RIVAL_TOTODILE_1_HNS, CherrygroveCity_Text_SilverWin
 	goto CherryGroveCity_Silver_AfterBattle
 
 CherryGroveCity_Silver_Battle_Chikorita::
-	trainerbattle_no_intro TRAINER_RIVAL_CHIKORITA_1, CherrygroveCity_Text_SilverWin
+	trainerbattle_no_intro TRAINER_RIVAL_CHIKORITA_1_HNS, CherrygroveCity_Text_SilverWin
 	goto CherryGroveCity_Silver_AfterBattle
 
 CherryGroveCity_Silver_AfterBattle::

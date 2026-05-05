@@ -21,17 +21,17 @@ GoldenrodCity_UndergroundStorage_EventScript_Director2::
     end
 
 GoldenrodCity_UndergroundStorage_EventScript_Grunt19::
-    trainerbattle_single TRAINER_GRUNT_19, RadioTowerBasement_Text_GruntM24Seen, RadioTowerBasement_Text_GruntM24Beaten
+    trainerbattle_single TRAINER_GRUNT_19_HNS, RadioTowerBasement_Text_GruntM24Seen, RadioTowerBasement_Text_GruntM24Beaten
 	msgbox RadioTowerBasement_Text_GruntM24After, MSGBOX_AUTOCLOSE
 	end
 
 GoldenrodCity_UndergroundStorage_EventScript_Grunt12::
-    trainerbattle_single TRAINER_GRUNT_12, RadioTowerBasement_Text_GruntM14Seen, RadioTowerBasement_Text_GruntM14Beaten
+    trainerbattle_single TRAINER_GRUNT_12_HNS, RadioTowerBasement_Text_GruntM14Seen, RadioTowerBasement_Text_GruntM14Beaten
 	msgbox RadioTowerBasement_Text_GruntM14After, MSGBOX_AUTOCLOSE
 	end
 
 GoldenrodCity_UndergroundStorage_EventScript_Eto::
-    trainerbattle_single TRAINER_ETO_3, RadioTowerBasement_Text_GruntM15Seen, RadioTowerBasement_Text_GruntM15Beaten
+    trainerbattle_single TRAINER_ETO_3_HNS, RadioTowerBasement_Text_GruntM15Seen, RadioTowerBasement_Text_GruntM15Beaten
 	msgbox RadioTowerBasement_Text_GruntM15After, MSGBOX_AUTOCLOSE
 	end
 

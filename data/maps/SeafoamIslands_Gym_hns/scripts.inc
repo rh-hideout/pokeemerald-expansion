@@ -11,7 +11,7 @@ SeafoamIslands_Gym_EventScript_Blaine::
 	faceplayer
 	goto_if_set FLAG_DEFEATED_CINNABAR_ISLAND_GYM, SeafoamIslands_Gym_EventScript_Blaine_Defeated
 	msgbox SeafoamIslands_Gym_Text_BlaineIntro, MSGBOX_DEFAULT
-	trainerbattle_no_intro TRAINER_BLAINE, SeafoamIslands_Gym_Text_BlaineWinLoss
+	trainerbattle_no_intro TRAINER_BLAINE_HNS, SeafoamIslands_Gym_Text_BlaineWinLoss
 	message SeafoamIslands_Gym_Text_ReceivedVolcanoBadge
 	waitmessage
 	call Common_EventScript_PlayGymBadgeFanfare

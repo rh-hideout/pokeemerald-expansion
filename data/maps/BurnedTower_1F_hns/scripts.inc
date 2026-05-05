@@ -136,15 +136,15 @@ BurnedTower_1F_EventScript_Silver::
 	end
 
 BurnedTower_1F_Silver_Battle_Cyndaquil::
-	trainerbattle_no_intro TRAINER_RIVAL_CYNDAQUIL_3, BurnedTowerSilver_WinText
+	trainerbattle_no_intro TRAINER_RIVAL_CYNDAQUIL_3_HNS, BurnedTowerSilver_WinText
 	return
 
 BurnedTower_1F_Silver_Battle_Totodile::
-	trainerbattle_no_intro TRAINER_RIVAL_TOTODILE_3, BurnedTowerSilver_WinText
+	trainerbattle_no_intro TRAINER_RIVAL_TOTODILE_3_HNS, BurnedTowerSilver_WinText
 	return
 
 BurnedTower_1F_Silver_Battle_Chikorita::
-	trainerbattle_no_intro TRAINER_RIVAL_CHIKORITA_3, BurnedTowerSilver_WinText
+	trainerbattle_no_intro TRAINER_RIVAL_CHIKORITA_3_HNS, BurnedTowerSilver_WinText
 	return
 
 BurnedTowerSilver_BeforeText:
@@ -182,12 +182,12 @@ BurnedTowerSilver_AfterText2:
 	.string "Serves you right!$"
 
 BurnedTower_1F_EventScript_Nard::
-	trainerbattle_single TRAINER_NARD, BurnedTower_Text_NardSeen, BurnedTower_Text_NardBeaten
+	trainerbattle_single TRAINER_NARD_HNS, BurnedTower_Text_NardSeen, BurnedTower_Text_NardBeaten
 	msgbox BurnedTower_Text_NardAfter, MSGBOX_AUTOCLOSE
 	end
 
 BurnedTower_1F_EventScript_Richardo::
-	trainerbattle_single TRAINER_RICHARDO, BurnedTower_Text_RichardoSeen, BurnedTower_Text_RichardoBeaten
+	trainerbattle_single TRAINER_RICHARDO_HNS, BurnedTower_Text_RichardoSeen, BurnedTower_Text_RichardoBeaten
 	msgbox BurnedTower_Text_RichardoAfter, MSGBOX_AUTOCLOSE
 	end
 

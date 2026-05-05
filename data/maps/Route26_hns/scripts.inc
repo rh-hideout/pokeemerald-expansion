@@ -8,27 +8,27 @@ Route26_OnTransition:
 	end
 
 Route26_EventScript_Jake::
-	trainerbattle_single TRAINER_JAKE, Route26_Text_CooltrainermJakeSeen, Route26_Text_CooltrainermJakeBeaten
+	trainerbattle_single TRAINER_JAKE_HNS, Route26_Text_CooltrainermJakeSeen, Route26_Text_CooltrainermJakeBeaten
 	msgbox Route26_Text_CooltrainermJakeAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route26_EventScript_Gaven::
-	trainerbattle_single TRAINER_GAVEN, Route26_Text_CooltrainermGavenSeen, Route26_Text_CooltrainermGavenBeaten
+	trainerbattle_single TRAINER_GAVEN_HNS, Route26_Text_CooltrainermGavenSeen, Route26_Text_CooltrainermGavenBeaten
 	msgbox Route26_Text_CooltrainermGavenAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route26_EventScript_Joyce::
-	trainerbattle_single TRAINER_JOYCE, Route26_Text_CooltrainerfJoyceSeen, Route26_Text_CooltrainerfJoyceBeaten
+	trainerbattle_single TRAINER_JOYCE_HNS, Route26_Text_CooltrainerfJoyceSeen, Route26_Text_CooltrainerfJoyceBeaten
 	msgbox Route26_Text_CooltrainerfJoyceAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route26_EventScript_Beth::
-	trainerbattle_single TRAINER_BETH, Route26_Text_CooltrainerfBethSeen, Route26_Text_CooltrainerfBethBeaten
+	trainerbattle_single TRAINER_BETH_HNS, Route26_Text_CooltrainerfBethSeen, Route26_Text_CooltrainerfBethBeaten
 	msgbox Route26_Text_CooltrainerfBethAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route26_EventScript_Richard::
-	trainerbattle_single TRAINER_RICHARD, Route26_Text_PsychicRichardSeen, Route26_Text_PsychicRichardBeaten
+	trainerbattle_single TRAINER_RICHARD_HNS, Route26_Text_PsychicRichardSeen, Route26_Text_PsychicRichardBeaten
 	msgbox Route26_Text_PsychicRichardAfter, MSGBOX_AUTOCLOSE
 	end
 

@@ -23,7 +23,7 @@ PokemonLeague_HallOfFame_EventScript_Cutscene::
 	delay 40
 	setvar VAR_TEMP_1, 1
 	call PokemonLeague_HallOfFame_EventScript_SetFirstGameClearFlags
-	setrespawn HEAL_LOCATION_NEW_BARK_TOWN
+	setrespawn HEAL_LOCATION_NEW_BARK_TOWN_HNS
 	fadescreenspeed FADE_TO_BLACK, 24
 	special GameClear
 	waitstate
@@ -45,7 +45,7 @@ PokemonLeague_HallOfFame_EventScript_CutsceneKantoChamp::
 	delay 40
 	setvar VAR_TEMP_1, 1
 	call PokemonLeague_HallOfFame_EventScript_SetGameClearFlags
-	setrespawn HEAL_LOCATION_NEW_BARK_TOWN
+	setrespawn HEAL_LOCATION_NEW_BARK_TOWN_HNS
 	fadescreenspeed FADE_TO_BLACK, 24
 	special GameClear
 	waitstate

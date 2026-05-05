@@ -167,6 +167,20 @@
 #define MULTI_HOF_VICTORIES_QUIT                         156
 #define MULTI_EGGS_VICTORIES_QUIT                        157
 #define MULTI_HOF_EGGS_VICTORIES_QUIT                    158
+#define MULTI_DAYS_OF_WEEK                 159
+#define MULTI_KURT_BALLS                   160
+#define MULTI_PRIZE_MONS                   161
+#define MULTI_7FLOORS                      162
+#define MULTI_GOLDSILVER                   163
+#define MULTI_ELDERQUIIZ1                  164
+#define MULTI_ELDERQUIIZ2                  165
+#define MULTI_ELDERQUIIZ3                  166
+#define MULTI_ELDERQUIIZ4                  167
+#define MULTI_ELDERQUIIZ5                  168
+#define MULTI_OLIVINE_HARBOR               169
+#define MULTI_VERMILION_HARBOR             170
+#define MULTI_HOENN_STARTERS               171
+#define MULTI_5FLOORS                      172
 
 #define MULTI_NONE 255
 

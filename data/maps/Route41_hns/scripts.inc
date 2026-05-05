@@ -11,7 +11,7 @@ Route41_MapScript_DoNothing::
 	end
 
 Route41_EventScript_Charlie::
-	trainerbattle_single TRAINER_CHARLIE, Route41_Text_SwimmermCharlieSeen, Route41_Text_SwimmermCharlieBeaten
+	trainerbattle_single TRAINER_CHARLIE_HNS, Route41_Text_SwimmermCharlieSeen, Route41_Text_SwimmermCharlieBeaten
 	msgbox Route41_Text_SwimmermCharlieAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -28,7 +28,7 @@ Route41_Text_SwimmermCharlieAfter:
 	.string "like this?$"
 
 Route41_EventScript_George::
-	trainerbattle_single TRAINER_GEORGE, Route41_Text_SwimmermGeorgeSeen, Route41_Text_SwimmermGeorgeBeaten
+	trainerbattle_single TRAINER_GEORGE_HNS, Route41_Text_SwimmermGeorgeSeen, Route41_Text_SwimmermGeorgeBeaten
 	msgbox Route41_Text_SwimmermGeorgeAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -46,7 +46,7 @@ Route41_Text_SwimmermGeorgeAfter:
 	.string "What should I do?$"
 
 Route41_EventScript_Berke::
-	trainerbattle_single TRAINER_BERKE, Route41_Text_SwimmermBerkeSeen, Route41_Text_SwimmermBerkeBeaten
+	trainerbattle_single TRAINER_BERKE_HNS, Route41_Text_SwimmermBerkeSeen, Route41_Text_SwimmermBerkeBeaten
 	msgbox Route41_Text_SwimmermBerkeAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -67,7 +67,7 @@ Route41_Text_SwimmermBerkeAfter:
 	.string "from its silver wings.$"
 
 Route41_EventScript_Kirk::
-	trainerbattle_single TRAINER_KIRK, Route41_Text_SwimmermKirkSeen, Route41_Text_SwimmermKirkBeaten
+	trainerbattle_single TRAINER_KIRK_HNS, Route41_Text_SwimmermKirkSeen, Route41_Text_SwimmermKirkBeaten
 	msgbox Route41_Text_SwimmermKirkAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -84,7 +84,7 @@ Route41_Text_SwimmermKirkAfter:
 	.string "reaching that island.$"
 
 Route41_EventScript_Mathew::
-	trainerbattle_single TRAINER_MATHEW, Route41_Text_SwimmermMathewSeen, Route41_Text_SwimmermMathewBeaten
+	trainerbattle_single TRAINER_MATHEW_HNS, Route41_Text_SwimmermMathewSeen, Route41_Text_SwimmermMathewBeaten
 	msgbox Route41_Text_SwimmermMathewAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -100,7 +100,7 @@ Route41_Text_SwimmermMathewAfter:
 	.string "It's pitch-black inside!$"
 
 Route41_EventScript_Kaylee::
-	trainerbattle_single TRAINER_KAYLEE, Route41_Text_SwimmerfKayleeSeen, Route41_Text_SwimmerfKayleeBeaten
+	trainerbattle_single TRAINER_KAYLEE_HNS, Route41_Text_SwimmerfKayleeSeen, Route41_Text_SwimmerfKayleeBeaten
 	msgbox Route41_Text_SwimmerfKayleeAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -117,7 +117,7 @@ Route41_Text_SwimmerfKayleeAfter:
 	.string "I wonder what it could be?$"
 
 Route41_EventScript_Susie::
-	trainerbattle_single TRAINER_SUSIE, Route41_Text_SwimmerfSusieSeen, Route41_Text_SwimmerfSusieBeaten
+	trainerbattle_single TRAINER_SUSIE_HNS, Route41_Text_SwimmerfSusieSeen, Route41_Text_SwimmerfSusieBeaten
 	msgbox Route41_Text_SwimmerfSusieAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -133,7 +133,7 @@ Route41_Text_SwimmerfSusieAfter:
 	.string "a boy riding a LAPRAS?$"
 
 Route41_EventScript_Denise::
-	trainerbattle_single TRAINER_DENISE, Route41_Text_SwimmerfDeniseSeen, Route41_Text_SwimmerfDeniseBeaten
+	trainerbattle_single TRAINER_DENISE_HNS, Route41_Text_SwimmerfDeniseSeen, Route41_Text_SwimmerfDeniseBeaten
 	msgbox Route41_Text_SwimmerfDeniseAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -150,7 +150,7 @@ Route41_Text_SwimmerfDeniseAfter:
 	.string "I won't pollute the water.$"
 
 Route41_EventScript_Kara::
-	trainerbattle_single TRAINER_KARA, Route41_Text_SwimmerfKaraSeen, Route41_Text_SwimmerfKaraBeaten
+	trainerbattle_single TRAINER_KARA_HNS, Route41_Text_SwimmerfKaraSeen, Route41_Text_SwimmerfKaraBeaten
 	msgbox Route41_Text_SwimmerfKaraAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -168,7 +168,7 @@ Route41_Text_SwimmerfKaraAfter:
 	.string "the ISLANDS.$"
 
 Route41_EventScript_Wendy::
-	trainerbattle_single TRAINER_WENDY, Route41_Text_SwimmerfWendySeen, Route41_Text_SwimmerfWendyBeaten
+	trainerbattle_single TRAINER_WENDY_HNS, Route41_Text_SwimmerfWendySeen, Route41_Text_SwimmerfWendyBeaten
 	msgbox Route41_Text_SwimmerfWendyAfter, MSGBOX_AUTOCLOSE
 	end
 

@@ -179,14 +179,14 @@ RocketHideout_B1F_Trigger_StatueGruntLeft::
 	waitmovement 0
 	turnobject OBJ_EVENT_ID_PLAYER, DIR_WEST
 	msgbox RocketHideout_B1F_Text_CameraGrunt1Seen, MSGBOX_DEFAULT
-	trainerbattle_no_intro TRAINER_GRUNT_17, RocketHideout_B1F_Text_CameraGrunt1Beaten
+	trainerbattle_no_intro TRAINER_GRUNT_17_HNS, RocketHideout_B1F_Text_CameraGrunt1Beaten
 	applymovement VAR_TEMP_0, RocketHideout_B1F_Movement_GruntWalkLeft
 	waitmovement 0
 	delay 55
 	applymovement VAR_TEMP_0, RocketHideout_B1F_Movement_GruntWalkRight
 	waitmovement 0
 	msgbox RocketHideout_B1F_Text_CameraGrunt2Seen, MSGBOX_DEFAULT
-	trainerbattle_no_intro TRAINER_GRUNT_18, RocketHideout_B1F_Text_CameraGrunt2Beaten
+	trainerbattle_no_intro TRAINER_GRUNT_18_HNS, RocketHideout_B1F_Text_CameraGrunt2Beaten
 	applymovement VAR_TEMP_0, RocketHideout_B1F_Movement_GruntWalkLeft
 	waitmovement 0
 	setflag FLAG_HIDE_ROCKETHIDEOUT_ROCKETS
@@ -206,14 +206,14 @@ RocketHideout_B1F_Trigger_StatueGruntRight::
 	waitmovement 0
 	turnobject OBJ_EVENT_ID_PLAYER, DIR_EAST
 	msgbox RocketHideout_B1F_Text_CameraGrunt1Seen, MSGBOX_DEFAULT
-	trainerbattle_no_intro TRAINER_GRUNT_17, RocketHideout_B1F_Text_CameraGrunt1Beaten
+	trainerbattle_no_intro TRAINER_GRUNT_17_HNS, RocketHideout_B1F_Text_CameraGrunt1Beaten
 	applymovement VAR_TEMP_0, RocketHideout_B1F_Movement_GruntWalkRight
 	waitmovement 0
 	delay 55
 	applymovement VAR_TEMP_0, RocketHideout_B1F_Movement_GruntWalkLeft
 	waitmovement 0
 	msgbox RocketHideout_B1F_Text_CameraGrunt2Seen, MSGBOX_DEFAULT
-	trainerbattle_no_intro TRAINER_GRUNT_18, RocketHideout_B1F_Text_CameraGrunt2Beaten
+	trainerbattle_no_intro TRAINER_GRUNT_18_HNS, RocketHideout_B1F_Text_CameraGrunt2Beaten
 	applymovement VAR_TEMP_0, RocketHideout_B1F_Movement_GruntWalkRight
 	waitmovement 0
 	setflag FLAG_HIDE_ROCKETHIDEOUT_ROCKETS
@@ -261,7 +261,7 @@ RocketHideout_B1F_Text_CameraGrunt2Beaten:
     .string "trip a secret switch.$"
 
 RocketHideout_B1F_EventScript_TrainerJed::
-	trainerbattle_single TRAINER_JED, RocketHideout_B1F_Text_ScientistJedSeen, RocketHideout_B1F_Text_ScientistJedBeaten
+	trainerbattle_single TRAINER_JED_HNS, RocketHideout_B1F_Text_ScientistJedSeen, RocketHideout_B1F_Text_ScientistJedBeaten
 	msgbox RocketHideout_B1F_Text_ScientistJedAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -294,7 +294,7 @@ RocketHideout_B1F_Text_GruntM16After:
     .string "courage and walk.$"
 
 RocketHideout_B1F_EventScript_Rocket16::
-	trainerbattle_single TRAINER_GRUNT_13, RocketHideout_B1F_Text_GruntM16Seen, RocketHideout_B1F_Text_GruntM16Beaten
+	trainerbattle_single TRAINER_GRUNT_13_HNS, RocketHideout_B1F_Text_GruntM16Seen, RocketHideout_B1F_Text_GruntM16Beaten
 	msgbox RocketHideout_B1F_Text_GruntM16After, MSGBOX_AUTOCLOSE
 	end
 

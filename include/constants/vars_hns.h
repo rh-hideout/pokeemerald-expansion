@@ -88,7 +88,7 @@
 #define VAR_VIOLET_CITY_STATE                            0x4091
 
 // Unused HnS vars
-#define VAR_UNUSED_HNS_0x4092                            0x4092
+#define VAR_TIME_BASED_ENCOUNTER                            0x4092
 #define VAR_UNUSED_HNS_0x4093                            0x4093
 #define VAR_UNUSED_HNS_0x4094                            0x4094
 #define VAR_UNUSED_HNS_0x4095                            0x4095

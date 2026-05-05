@@ -8,22 +8,22 @@ Route11_OnTransition:
 	end
 
 Route11_EventScript_Owen::
-	trainerbattle_single TRAINER_OWEN, Route11_Text_YoungsterOwenSeen, Route11_Text_YoungsterOwenBeaten
+	trainerbattle_single TRAINER_OWEN_HNS, Route11_Text_YoungsterOwenSeen, Route11_Text_YoungsterOwenBeaten
 	msgbox Route11_Text_YoungsterOwenAfterBattle, MSGBOX_AUTOCLOSE
 	end
 
 Route11_EventScript_Jason::
-	trainerbattle_single TRAINER_JASON, Route11_Text_YoungsterJasonSeen, Route11_Text_YoungsterJasonBeaten
+	trainerbattle_single TRAINER_JASON_HNS, Route11_Text_YoungsterJasonSeen, Route11_Text_YoungsterJasonBeaten
 	msgbox Route11_Text_YoungsterJasonAfterBattle, MSGBOX_AUTOCLOSE
 	end
 
 Route11_EventScript_Herman::
-	trainerbattle_single TRAINER_HERMAN, Route11_Text_PsychicHermanSeen, Route11_Text_PsychicHermanBeaten
+	trainerbattle_single TRAINER_HERMAN_HNS, Route11_Text_PsychicHermanSeen, Route11_Text_PsychicHermanBeaten
 	msgbox Route11_Text_PsychicHermanAfterBattle, MSGBOX_AUTOCLOSE
 	end
 
 Route11_EventScript_Fidel::
-	trainerbattle_single TRAINER_FIDEL, Route11_Text_PsychicFidelSeen, Route11_Text_PsychicFidelBeaten
+	trainerbattle_single TRAINER_FIDEL_HNS, Route11_Text_PsychicFidelSeen, Route11_Text_PsychicFidelBeaten
 	msgbox Route11_Text_PsychicFidelAfterBattle, MSGBOX_AUTOCLOSE
 	end
 

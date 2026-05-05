@@ -16,12 +16,12 @@ VioletCity_Gym_EventScript_GymGuy2::
 	end	
 
 VioletCity_Gym_EventScript_Rod::
-	trainerbattle_single TRAINER_ROD, VioletGym_Text_BirdKeeperRod_Seen, VioletGym_Text_BirdKeeperRod_Beaten
+	trainerbattle_single TRAINER_ROD_HNS, VioletGym_Text_BirdKeeperRod_Seen, VioletGym_Text_BirdKeeperRod_Beaten
 	msgbox VioletGym_Text_BirdKeeperRod_After, MSGBOX_AUTOCLOSE
 	end
 
 VioletCity_Gym_EventScript_Abe::
-	trainerbattle_single TRAINER_ABE, VioletGym_Text_BirdKeeperAbe_Seen, VioletGym_Text_BirdKeeperAbe_Beaten
+	trainerbattle_single TRAINER_ABE_HNS, VioletGym_Text_BirdKeeperAbe_Seen, VioletGym_Text_BirdKeeperAbe_Beaten
 	msgbox VioletGym_Text_BirdKeeperAbe_After, MSGBOX_AUTOCLOSE
 	end
 
@@ -30,7 +30,7 @@ VioletCity_Gym_EventScript_Falkner::
 	faceplayer
 	goto_if_set FLAG_DEFEATED_VIOLET_GYM, VioletCity_Gym_EventScript_Falkner_Defeated
 	msgbox VioletGym_Text_Falkner_Intro, MSGBOX_DEFAULT
-	trainerbattle_no_intro TRAINER_FALKNER_1, VioletGym_Text_Falkner_WinLoss
+	trainerbattle_no_intro TRAINER_FALKNER_1_HNS, VioletGym_Text_Falkner_WinLoss
 	message VioletGym_Text_ReceivedZephyrBadge
 	waitmessage
 	call Common_EventScript_PlayGymBadgeFanfare

@@ -12,7 +12,7 @@ Route40_MapScript_ClearWeather::
 	end
 
 Route40_EventScript_Simon::
-	trainerbattle_single TRAINER_SIMON, Route40_Text_SwimmermSimonSeen, Route40_Text_SwimmermSimonBeaten
+	trainerbattle_single TRAINER_SIMON_HNS, Route40_Text_SwimmermSimonSeen, Route40_Text_SwimmermSimonBeaten
 	msgbox Route40_Text_SwimmermSimonAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -29,7 +29,7 @@ Route40_Text_SwimmermSimonAfter:
 	.string "distance away from here.$"
 
 Route40_EventScript_Randall::
-	trainerbattle_single TRAINER_RANDALL, Route40_Text_SwimmermRandallSeen, Route40_Text_SwimmermRandallBeaten
+	trainerbattle_single TRAINER_RANDALL_HNS, Route40_Text_SwimmermRandallSeen, Route40_Text_SwimmermRandallBeaten
 	msgbox Route40_Text_SwimmermRandallAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -46,7 +46,7 @@ Route40_Text_SwimmermRandallAfter:
 	.string "entire body. It's healthy.$"
 
 Route40_EventScript_Elaine::
-	trainerbattle_single TRAINER_ELAINE, Route40_Text_SwimmerfElaineSeen, Route40_Text_SwimmerfElaineBeaten
+	trainerbattle_single TRAINER_ELAINE_HNS, Route40_Text_SwimmerfElaineSeen, Route40_Text_SwimmerfElaineBeaten
 	msgbox Route40_Text_SwimmerfElaineAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -63,7 +63,7 @@ Route40_Text_SwimmerfElaineAfter:
 	.string "than you. Yeah!$"
 
 Route40_EventScript_Paula::
-	trainerbattle_single TRAINER_PAULA, Route40_Text_SwimmerfPaulaSeen, Route40_Text_SwimmerfPaulaBeaten
+	trainerbattle_single TRAINER_PAULA_HNS, Route40_Text_SwimmerfPaulaSeen, Route40_Text_SwimmerfPaulaBeaten
 	msgbox Route40_Text_SwimmerfPaulaAfter, MSGBOX_AUTOCLOSE
 	end
 

@@ -8,27 +8,27 @@ Route13_OnTransition:
 	end
 
 Route13_EventScript_Alex::
-	trainerbattle_single TRAINER_ALEX, Route13_Text_PokefanmAlexSeen, Route13_Text_PokefanmAlexBeaten
+	trainerbattle_single TRAINER_ALEX_HNS, Route13_Text_PokefanmAlexSeen, Route13_Text_PokefanmAlexBeaten
 	msgbox Route13_Text_PokefanmAlexAfterBattle, MSGBOX_AUTOCLOSE
 	end
 
 Route13_EventScript_Joshua::
-	trainerbattle_single TRAINER_JOSHUA, Route13_Text_PokefanmJoshuaSeen, Route13_Text_PokefanmJoshuaBeaten
+	trainerbattle_single TRAINER_JOSHUA_HNS, Route13_Text_PokefanmJoshuaSeen, Route13_Text_PokefanmJoshuaBeaten
 	msgbox Route13_Text_PokefanmJoshuaAfterBattle, MSGBOX_AUTOCLOSE
 	end
 
 Route13_EventScript_Perry::
-	trainerbattle_single TRAINER_PERRY, Route13_Text_BirdKeeperPerrySeen, Route13_Text_BirdKeeperPerryBeaten
+	trainerbattle_single TRAINER_PERRY_HNS, Route13_Text_BirdKeeperPerrySeen, Route13_Text_BirdKeeperPerryBeaten
 	msgbox Route13_Text_BirdKeeperPerryAfterBattle, MSGBOX_AUTOCLOSE
 	end
 
 Route13_EventScript_Bret::
-	trainerbattle_single TRAINER_BRET, Route13_Text_BirdKeeperBretSeen, Route13_Text_BirdKeeperBretBeaten
+	trainerbattle_single TRAINER_BRET_HNS, Route13_Text_BirdKeeperBretSeen, Route13_Text_BirdKeeperBretBeaten
 	msgbox Route13_Text_BirdKeeperBretAfterBattle, MSGBOX_AUTOCLOSE
 	end
 
 Route13_EventScript_Kenny::
-	trainerbattle_single TRAINER_KENNY, Route13_Text_HikerKennySeen, Route13_Text_HikerKennyBeaten
+	trainerbattle_single TRAINER_KENNY_HNS, Route13_Text_HikerKennySeen, Route13_Text_HikerKennyBeaten
 	msgbox Route13_Text_HikerKennyAfterBattle, MSGBOX_AUTOCLOSE
 	end
 

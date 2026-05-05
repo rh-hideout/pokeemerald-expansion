@@ -33,7 +33,7 @@ MountMortar4_EventScript_Kiyo::
 	goto_if_set FLAG_GOT_TYROGUE, MountMortar4_EventScript_KiyoAfter
 	goto_if_set FLAG_BEAT_KIYO, MountMortar4_EventScript_KiyoTryGiveTyrogue
 	msgbox MountMortar4_Text_KiyoIntro, MSGBOX_DEFAULT
-	trainerbattle_no_intro TRAINER_KIYO, MountMortar4_Text_KiyoWin
+	trainerbattle_no_intro TRAINER_KIYO_HNS, MountMortar4_Text_KiyoWin
 	setflag FLAG_BEAT_KIYO
 MountMortar4_EventScript_KiyoTryGiveTyrogue::
 	msgbox MountMortar4_Text_KiyoTyrogueReward, MSGBOX_DEFAULT

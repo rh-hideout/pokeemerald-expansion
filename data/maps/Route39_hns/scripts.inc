@@ -235,7 +235,7 @@ Route39_Text_Miltank:
 	.string "MILTANK: Mooo!$"
 
 Route39_EventScript_Eugene::
-	trainerbattle_single TRAINER_EUGENE, Route39_Text_SailorEugeneSeen, Route39_Text_SailorEugeneBeaten
+	trainerbattle_single TRAINER_EUGENE_HNS, Route39_Text_SailorEugeneSeen, Route39_Text_SailorEugeneBeaten
 	msgbox Route39_Text_SailorEugeneAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -253,7 +253,7 @@ Route39_Text_SailorEugeneAfter:
 	.string "those long voyages.$"
 
 Route39_EventScript_Derek::
-	trainerbattle_single TRAINER_DEREK, Route39_Text_PokefanMDerekSeen, Route39_Text_PokefanMDerekBeaten
+	trainerbattle_single TRAINER_DEREK_HNS, Route39_Text_PokefanMDerekSeen, Route39_Text_PokefanMDerekBeaten
 	msgbox Route39_Text_PokefanMDerekAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -272,7 +272,7 @@ Route39_Text_PokefanMDerekAfter:
 	.string "of not listening to bragging!$"
 
 Route39_EventScript_Ruth::
-	trainerbattle_single TRAINER_RUTH, Route39_Text_PokefanFRuthSeen, Route39_Text_PokefanFRuthBeaten
+	trainerbattle_single TRAINER_RUTH_HNS, Route39_Text_PokefanFRuthSeen, Route39_Text_PokefanFRuthBeaten
 	msgbox Route39_Text_PokefanFRuthAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -290,7 +290,7 @@ Route39_Text_PokefanFRuthAfter:
 	.string "I bet they're just adorable!$"
 
 Route39_EventScript_Norman::
-	trainerbattle_single TRAINER_NORMAN, Route39_Text_PsychicNormanSeen, Route39_Text_PsychicNormanBeaten
+	trainerbattle_single TRAINER_NORMAN_HNS, Route39_Text_PsychicNormanSeen, Route39_Text_PsychicNormanBeaten
 	msgbox Route39_Text_PsychicNormanAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -310,7 +310,7 @@ Route39_Text_PsychicNormanAfter:
 	.string "potential.$"
 
 Route39_EventScript_Jamie::
-	trainerbattle_single TRAINER_JAMIE, Route39_Text_PokefanFJaimeSeen, Route39_Text_PokefanFJaimeBeaten
+	trainerbattle_single TRAINER_JAMIE_HNS, Route39_Text_PokefanFJaimeSeen, Route39_Text_PokefanFJaimeBeaten
 	msgbox Route39_Text_PokefanFJaimeAfter, MSGBOX_AUTOCLOSE
 	end
 

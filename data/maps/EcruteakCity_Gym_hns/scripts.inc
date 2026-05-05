@@ -16,21 +16,21 @@ EcruteakCity_Gym_EventScript_GymGuy2::
 	end	
 
 EcruteakCity_Gym_EventScript_Jeffrey::
-	trainerbattle_single TRAINER_JEFFREY, SageJeffreySeenText, SageJeffreyBeatenText
+	trainerbattle_single TRAINER_JEFFREY_HNS, SageJeffreySeenText, SageJeffreyBeatenText
 	msgbox SageJeffreyAfterBattleText, MSGBOX_AUTOCLOSE
 	end
 EcruteakCity_Gym_EventScript_Ping::
-	trainerbattle_single TRAINER_PING, SagePingSeenText, SagePingBeatenText
+	trainerbattle_single TRAINER_PING_HNS, SagePingSeenText, SagePingBeatenText
 	msgbox SagePingAfterBattleText, MSGBOX_AUTOCLOSE
 	end
 
 EcruteakCity_Gym_EventScript_Martha::
-	trainerbattle_single TRAINER_MARTHA, MediumMarthaSeenText, MediumMarthaBeatenText
+	trainerbattle_single TRAINER_MARTHA_HNS, MediumMarthaSeenText, MediumMarthaBeatenText
 	msgbox MediumMarthaAfterBattleText, MSGBOX_AUTOCLOSE
 	end
 
 EcruteakCity_Gym_EventScript_Grace::
-	trainerbattle_single TRAINER_GRACE, MediumGraceSeenText, MediumGraceBeatenText
+	trainerbattle_single TRAINER_GRACE_HNS, MediumGraceSeenText, MediumGraceBeatenText
 	msgbox MediumGraceAfterBattleText, MSGBOX_AUTOCLOSE
 	end
 
@@ -39,7 +39,7 @@ EcruteakCity_Gym_EventScript_Morty::
 	faceplayer
 	goto_if_set FLAG_DEFEATED_ECRUTEAK_CITY_GYM, EcruteakCity_Gym_EventScript_Morty_Defeated
 	msgbox MortyIntroText, MSGBOX_DEFAULT
-	trainerbattle_no_intro TRAINER_MORTY_1, MortyWinLossText
+	trainerbattle_no_intro TRAINER_MORTY_1_HNS, MortyWinLossText
 	message Text_ReceivedFogBadge
 	waitmessage
 	call Common_EventScript_PlayGymBadgeFanfare

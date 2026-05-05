@@ -778,7 +778,7 @@ RocketHideout_B2F_Text_GruntM17After:
     .string "Too bad for you.$"
 
 RocketHideout_B2F_EventScript_Grunt14::
-	trainerbattle_single TRAINER_GRUNT_14, RocketHideout_B2F_Text_GruntM17Seen, RocketHideout_B2F_Text_GruntM17Beaten
+	trainerbattle_single TRAINER_GRUNT_14_HNS, RocketHideout_B2F_Text_GruntM17Seen, RocketHideout_B2F_Text_GruntM17Beaten
 	msgbox RocketHideout_B2F_Text_GruntM17After, MSGBOX_AUTOCLOSE
 	end
 
@@ -798,7 +798,7 @@ RocketHideout_B2F_Text_GruntM18After:
     .string "creamed me…$"
 
 RocketHideout_B2F_EventScript_Grunt15::
-	trainerbattle_single TRAINER_GRUNT_15, RocketHideout_B2F_Text_GruntM18Seen, RocketHideout_B2F_Text_GruntM18Beaten
+	trainerbattle_single TRAINER_GRUNT_15_HNS, RocketHideout_B2F_Text_GruntM18Seen, RocketHideout_B2F_Text_GruntM18Beaten
 	msgbox RocketHideout_B2F_Text_GruntM18After, MSGBOX_AUTOCLOSE
 	end
 
@@ -815,7 +815,7 @@ RocketHideout_B2F_Text_GruntM19After:
     .string "Go look for yourself.$"
 
 RocketHideout_B2F_EventScript_Grunt16::
-	trainerbattle_single TRAINER_GRUNT_16, RocketHideout_B2F_Text_GruntM19Seen, RocketHideout_B2F_Text_GruntM19Beaten
+	trainerbattle_single TRAINER_GRUNT_16_HNS, RocketHideout_B2F_Text_GruntM19Seen, RocketHideout_B2F_Text_GruntM19Beaten
 	msgbox RocketHideout_B2F_Text_GruntM19After, MSGBOX_AUTOCLOSE
 	end
 

@@ -12,6 +12,7 @@
 #include "constants/map_scripts.h"
 #include "constants/script_commands.h"
 #include "field_message_box.h"
+#include "rtc.h"
 
 #include "dexnav.h"
 
@@ -692,3 +693,35 @@ void SetWalkingIntoSignVars(void)
     // gWalkAwayFromSignInhibitTimer = 6;
     // sMsgBoxIsCancelable = TRUE;
 }
+
+void SetTimeBasedEncounters(void)
+{   
+    RtcCalcLocalTime();
+	if ((gLocalTime.hours >= 6 && gLocalTime.hours <= 17)) //6am-6pm DAY
+	{
+		VarSet(VAR_TIME_BASED_ENCOUNTER, 1); // Day
+	}
+    else
+    {
+		VarSet(VAR_TIME_BASED_ENCOUNTER, 2); // Night
+	}
+	/*
+    RtcCalcLocalTime();
+    if ((gLocalTime.hours >= 6 && gLocalTime.hours <= 17) && (gSaveBlock1Ptr->tx_Mode_AlternateSpawns == 1)) //6am-6pm DAY
+    {
+		VarSet(VAR_TIME_BASED_ENCOUNTER, 3); // Modern Spawns, Day
+	}
+    else if (gSaveBlock1Ptr->tx_Mode_AlternateSpawns == 1)
+    {
+		VarSet(VAR_TIME_BASED_ENCOUNTER, 4); // Modern Spawns, Night
+	}
+	else if ((gLocalTime.hours >= 6 && gLocalTime.hours <= 17) && (gSaveBlock1Ptr->tx_Mode_AlternateSpawns == 0)) //6am-6pm DAY
+	{
+		VarSet(VAR_TIME_BASED_ENCOUNTER, 1); // Day
+	}
+	else if (gSaveBlock1Ptr->tx_Mode_AlternateSpawns == 0)
+    {
+		VarSet(VAR_TIME_BASED_ENCOUNTER, 2); // Night
+	}
+    */
+}    

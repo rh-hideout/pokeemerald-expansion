@@ -53,17 +53,17 @@ Route30_EventScript_Youngster_Joey_Fighting::
 
 
 Route30_EventScript_Youngster_Joey::
-	trainerbattle_single TRAINER_JOEY, Route30_Text_YoungsterJoey1Seen, Route30_Text_YoungsterJoey1Beaten
+	trainerbattle_single TRAINER_JOEY_HNS, Route30_Text_YoungsterJoey1Seen, Route30_Text_YoungsterJoey1Beaten
 	msgbox Route30_Text_YoungsterJoey1After, MSGBOX_AUTOCLOSE
 	end
 
 Route30_EventScript_Youngster_Mikey::
-	trainerbattle_single TRAINER_MIKEY, Route30_Text_YoungsterMikeySeen, Route30_Text_YoungsterMikeyBeaten
+	trainerbattle_single TRAINER_MIKEY_HNS, Route30_Text_YoungsterMikeySeen, Route30_Text_YoungsterMikeyBeaten
 	msgbox Route30_Text_YoungsterMikeyAfter, MSGBOX_AUTOCLOSE
 	end
 	
 Route30_EventScript_Bugcatcher_Don::
-	trainerbattle_single TRAINER_DON, Route30_Text_BugCatcherDonSeen, Route30_Text_BugCatcherDonBeaten
+	trainerbattle_single TRAINER_DON_HNS, Route30_Text_BugCatcherDonSeen, Route30_Text_BugCatcherDonBeaten
 	msgbox Route30_Text_BugCatcherDonAfter, MSGBOX_AUTOCLOSE
 	end
 

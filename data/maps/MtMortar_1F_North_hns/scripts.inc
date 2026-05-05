@@ -36,12 +36,12 @@ MtMortar_1F_North_EventScript_Item_KingsRock::
     end
 
 MtMortar_1F_North_EventScript_Miller::
-	trainerbattle_single TRAINER_MILLER, MountMortar2_Text_PokemaniacMillerSeen, MountMortar2_Text_PokemaniacMillerBeaten
+	trainerbattle_single TRAINER_MILLER_HNS, MountMortar2_Text_PokemaniacMillerSeen, MountMortar2_Text_PokemaniacMillerBeaten
 	msgbox MountMortar2_Text_PokemaniacMillerAfter, MSGBOX_AUTOCLOSE
 	end
 
 MtMortar_1F_North_EventScript_Markus::
-	trainerbattle_single TRAINER_MARKUS, MountMortar2_Text_SupernerdMarkusSeen, MountMortar2_Text_SupernerdMarkusBeaten
+	trainerbattle_single TRAINER_MARKUS_HNS, MountMortar2_Text_SupernerdMarkusSeen, MountMortar2_Text_SupernerdMarkusBeaten
 	msgbox MountMortar2_Text_SupernerdMarkusAfter, MSGBOX_AUTOCLOSE
 	end
 

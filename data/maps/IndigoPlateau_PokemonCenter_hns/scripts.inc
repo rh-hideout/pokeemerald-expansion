@@ -74,15 +74,15 @@ IndigoPlateau_EventScript_SilverBeat::
 	end
 
 IndigoPlateau_Silver_Battle_Cyndaquil::
-	trainerbattle_no_intro TRAINER_RIVAL_CYNDAQUIL_7, IndigoPlateau_Text_RivalWin
+	trainerbattle_no_intro TRAINER_RIVAL_CYNDAQUIL_7_HNS, IndigoPlateau_Text_RivalWin
 	return
 
 IndigoPlateau_Silver_Battle_Totodile::
-	trainerbattle_no_intro TRAINER_RIVAL_TOTODILE_7, IndigoPlateau_Text_RivalWin
+	trainerbattle_no_intro TRAINER_RIVAL_TOTODILE_7_HNS, IndigoPlateau_Text_RivalWin
 	return
 
 IndigoPlateau_Silver_Battle_Chikorita::
-	trainerbattle_no_intro TRAINER_RIVAL_CHIKORITA_7, IndigoPlateau_Text_RivalWin
+	trainerbattle_no_intro TRAINER_RIVAL_CHIKORITA_7_HNS, IndigoPlateau_Text_RivalWin
 	return
 
 IndigoPlateau_Text_RivalEntrance1:

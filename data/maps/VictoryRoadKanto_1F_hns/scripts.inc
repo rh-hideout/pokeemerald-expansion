@@ -61,15 +61,15 @@ VictoryRoadKanto_1F_EventScript_SilverEnterRight::
 
 
 VictoryRoadKanto_1F_Silver_Battle_Cyndaquil::
-	trainerbattle_no_intro TRAINER_RIVAL_CYNDAQUIL_5, VictoryRoad_Text_RivalDefeat
+	trainerbattle_no_intro TRAINER_RIVAL_CYNDAQUIL_5_HNS, VictoryRoad_Text_RivalDefeat
 	return
 
 VictoryRoadKanto_1F_Silver_Battle_Totodile::
-	trainerbattle_no_intro TRAINER_RIVAL_TOTODILE_5, VictoryRoad_Text_RivalDefeat
+	trainerbattle_no_intro TRAINER_RIVAL_TOTODILE_5_HNS, VictoryRoad_Text_RivalDefeat
 	return
 
 VictoryRoadKanto_1F_Silver_Battle_Chikorita::
-	trainerbattle_no_intro TRAINER_RIVAL_CHIKORITA_5, VictoryRoad_Text_RivalDefeat
+	trainerbattle_no_intro TRAINER_RIVAL_CHIKORITA_5_HNS, VictoryRoad_Text_RivalDefeat
 	return
 
 VictoryRoadKanto_1F_Movement_SilverEnterLeft:

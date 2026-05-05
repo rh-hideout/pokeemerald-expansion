@@ -9348,13 +9348,13 @@
     },
     {
       "id": "LAYOUT_UNION_ROOM_HNS",
-      "name": "UnionRoom_hns_Layout",
+      "name": "UnionRoom_Layout",
       "width": 15,
       "height": 12,
-      "primary_tileset": "gTileset_Building",
-      "secondary_tileset": "gTileset_UnionRoom",
-      "border_filepath": "data/layouts/UnionRoom_hns/border.bin",
-      "blockdata_filepath": "data/layouts/UnionRoom_hns/map.bin",
+      "primary_tileset": "gTileset_Johto_South_Hns",
+      "secondary_tileset": "gTileset_AzaleaTown_Hns",
+      "border_filepath": "data/layouts/UnionRoom/border.bin",
+      "blockdata_filepath": "data/layouts/UnionRoom/map.bin",
       "layout_version": "emerald"
     },
     {

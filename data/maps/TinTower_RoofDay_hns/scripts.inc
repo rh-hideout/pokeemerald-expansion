@@ -11,11 +11,11 @@ TinTower_RoofDay_OnTransition:
 	end
 
 TinTower_RoofDay_EventScript_SetNight::
-	setmaplayoutindex LAYOUT_TIN_TOWER_ROOF_NIGHT
+	setmaplayoutindex LAYOUT_TIN_TOWER_ROOF_NIGHT_HNS
 	return
 
 TinTower_RoofDay_EventScript_SetDay::
-	setmaplayoutindex LAYOUT_TIN_TOWER_ROOF_DAY
+	setmaplayoutindex LAYOUT_TIN_TOWER_ROOF_DAY_HNS
 	return
 
 TinTower_RoofDay_MapScript_HoohStory::

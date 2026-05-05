@@ -8,22 +8,22 @@ Route17_OnTransition:
 	end
 
 Route17_EventScript_Riley::
-	trainerbattle_single TRAINER_RILEY, Route17_Text_BikerRileySeen, Route17_Text_BikerRileyBeaten
+	trainerbattle_single TRAINER_RILEY_HNS, Route17_Text_BikerRileySeen, Route17_Text_BikerRileyBeaten
 	msgbox Route17_Text_BikerRileyAfterBattle, MSGBOX_AUTOCLOSE
 	end
 
 Route17_EventScript_Joel::
-	trainerbattle_single TRAINER_JOEL, Route17_Text_BikerJoelSeen, Route17_Text_BikerJoelBeaten
+	trainerbattle_single TRAINER_JOEL_HNS, Route17_Text_BikerJoelSeen, Route17_Text_BikerJoelBeaten
 	msgbox Route17_Text_BikerJoelAfterBattle, MSGBOX_AUTOCLOSE
 	end
 
 Route17_EventScript_Glenn::
-	trainerbattle_single TRAINER_GLENN, Route17_Text_BikerGlennSeen, Route17_Text_BikerGlennBeaten
+	trainerbattle_single TRAINER_GLENN_HNS, Route17_Text_BikerGlennSeen, Route17_Text_BikerGlennBeaten
 	msgbox Route17_Text_BikerGlennAfterBattle, MSGBOX_AUTOCLOSE
 	end
 
 Route17_EventScript_Charles::
-	trainerbattle_single TRAINER_CHARLES, Route17_Text_BikerCharlesSeen, Route17_Text_BikerCharlesBeaten
+	trainerbattle_single TRAINER_CHARLES_HNS, Route17_Text_BikerCharlesSeen, Route17_Text_BikerCharlesBeaten
 	msgbox Route17_Text_BikerCharlesAfterBattle, MSGBOX_AUTOCLOSE
 	end
 

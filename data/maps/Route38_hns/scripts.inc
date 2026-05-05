@@ -8,32 +8,32 @@ Route38_OnTransition:
 	end
 
 Route38_EventScript_Toby::
-	trainerbattle_single TRAINER_TOBY, Route38_Text_BirdKeeperTobySeen, Route38_Text_BirdKeeperTobyBeaten
+	trainerbattle_single TRAINER_TOBY_HNS, Route38_Text_BirdKeeperTobySeen, Route38_Text_BirdKeeperTobyBeaten
 	msgbox Route38_Text_BirdKeeperTobyAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route38_EventScript_Chad::
-	trainerbattle_single TRAINER_CHAD, Route38_Text_SchoolboyChad1Seen, Route38_Text_SchoolboyChad1Beaten
+	trainerbattle_single TRAINER_CHAD_HNS, Route38_Text_SchoolboyChad1Seen, Route38_Text_SchoolboyChad1Beaten
 	msgbox Route38_Text_SchoolboyChadAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route38_EventScript_Dana::
-	trainerbattle_single TRAINER_DANA, Route38_Text_LassDana1Seen, Route38_Text_LassDana1Beaten
+	trainerbattle_single TRAINER_DANA_HNS, Route38_Text_LassDana1Seen, Route38_Text_LassDana1Beaten
 	msgbox Route38_Text_LassDanaAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route38_EventScript_Valerie::
-	trainerbattle_single TRAINER_VALERIE, Route38_Text_BeautyValerieSeen, Route38_Text_BeautyValerieBeaten
+	trainerbattle_single TRAINER_VALERIE_HNS, Route38_Text_BeautyValerieSeen, Route38_Text_BeautyValerieBeaten
 	msgbox Route38_Text_BeautyValerieAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route38_EventScript_Harry::
-	trainerbattle_single TRAINER_HARRY, Route38_Text_SailorHarrySeen, Route38_Text_SailorHarryBeaten
+	trainerbattle_single TRAINER_HARRY_HNS, Route38_Text_SailorHarrySeen, Route38_Text_SailorHarryBeaten
 	msgbox Route38_Text_SailorHarryAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route38_EventScript_Olivia::
-	trainerbattle_single TRAINER_OLIVIA, Route38_Text_BeautyOliviaSeen, Route38_Text_BeautyOliviaBeaten
+	trainerbattle_single TRAINER_OLIVIA_HNS, Route38_Text_BeautyOliviaSeen, Route38_Text_BeautyOliviaBeaten
 	msgbox Route38_Text_BeautyOliviaAfter, MSGBOX_AUTOCLOSE
 	end
 

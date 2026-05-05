@@ -8,10 +8,10 @@ FuchsiaCity_Gym_OnTransition::
 	setflag FLAG_TEMP_3
 	setflag FLAG_TEMP_5
 	setflag FLAG_TEMP_7
-	call_if_defeated TRAINER_ALICE, FuchsiaCity_Gym_DefeatedAlice
-	call_if_defeated TRAINER_LINDA, FuchsiaCity_Gym_DefeatedLinda
-	call_if_defeated TRAINER_CINDY, FuchsiaCity_Gym_DefeatedCindy
-	call_if_defeated TRAINER_BARRY, FuchsiaCity_Gym_DefeatedBarry
+	call_if_defeated TRAINER_ALICE_HNS, FuchsiaCity_Gym_DefeatedAlice
+	call_if_defeated TRAINER_LINDA_HNS, FuchsiaCity_Gym_DefeatedLinda
+	call_if_defeated TRAINER_CINDY_HNS, FuchsiaCity_Gym_DefeatedCindy
+	call_if_defeated TRAINER_BARRY_HNS, FuchsiaCity_Gym_DefeatedBarry
 	end
 
 FuchsiaCity_Gym_OnTransitionAfter::
@@ -46,7 +46,7 @@ FuchsiaCity_Gym_EventScript_Janine::
 	faceplayer
 	goto_if_set FLAG_DEFEATED_FUCHSIA_GYM, FuchsiaCity_Gym_EventScript_Janine_Defeated
 	msgbox FuchsiaCity_Gym_Text_Janine_DisappointYou, MSGBOX_DEFAULT
-	trainerbattle_no_intro TRAINER_JANINE, FuchsiaCity_Gym_Text_Janine_ToughOne
+	trainerbattle_no_intro TRAINER_JANINE_HNS, FuchsiaCity_Gym_Text_Janine_ToughOne
 	message FuchsiaCity_Gym_Text_ReceivedSoulBadge
 	waitmessage
 	call Common_EventScript_PlayGymBadgeFanfare
@@ -125,7 +125,7 @@ FuchsiaCity_Gym_EventScript_Alice_J::
 	applymovement LOCALID_FUCHSIAGYM_ALICE, Common_Movement_FacePlayer
 	waitmovement 0
 	msgbox FuchsiaCity_Gym_Text_LassAlice_Before, MSGBOX_DEFAULT
-	trainerbattle_no_intro TRAINER_ALICE, FuchsiaCity_Gym_Text_LassAlice_Beaten
+	trainerbattle_no_intro TRAINER_ALICE_HNS, FuchsiaCity_Gym_Text_LassAlice_Beaten
 	msgbox FuchsiaCity_Gym_Text_LassAlice_After, MSGBOX_DEFAULT
 	closemessage
 	release
@@ -150,7 +150,7 @@ FuchsiaCity_Gym_EventScript_Linda_J::
 	applymovement LOCALID_FUCHSIAGYM_LINDA, Common_Movement_FacePlayer
 	waitmovement 0
 	msgbox FuchsiaCity_Gym_Text_LassLinda_Before, MSGBOX_DEFAULT
-	trainerbattle_no_intro TRAINER_LINDA, FuchsiaCity_Gym_Text_LassLinda_Beaten
+	trainerbattle_no_intro TRAINER_LINDA_HNS, FuchsiaCity_Gym_Text_LassLinda_Beaten
 	msgbox FuchsiaCity_Gym_Text_LassLinda_After, MSGBOX_DEFAULT
 	closemessage
 	release
@@ -174,7 +174,7 @@ FuchsiaCity_Gym_EventScript_Cindy_J::
 	applymovement LOCALID_FUCHSIAGYM_CINDY, Common_Movement_FacePlayer
 	waitmovement 0
 	msgbox FuchsiaCity_Gym_Text_PicnickerCindy_Before, MSGBOX_DEFAULT
-	trainerbattle_no_intro TRAINER_CINDY, FuchsiaCity_Gym_Text_PicnickerCindy_Beaten
+	trainerbattle_no_intro TRAINER_CINDY_HNS, FuchsiaCity_Gym_Text_PicnickerCindy_Beaten
 	msgbox FuchsiaCity_Gym_Text_PicnickerCindy_After, MSGBOX_DEFAULT
 	closemessage
 	release
@@ -198,7 +198,7 @@ FuchsiaCity_Gym_EventScript_Barry_J::
 	applymovement LOCALID_FUCHSIAGYM_BARRY, Common_Movement_FacePlayer
 	waitmovement 0
 	msgbox FuchsiaCity_Gym_Text_CamperBarry_Before, MSGBOX_DEFAULT
-	trainerbattle_no_intro TRAINER_BARRY, FuchsiaCity_Gym_Text_CamperBarry_Beaten
+	trainerbattle_no_intro TRAINER_BARRY_HNS, FuchsiaCity_Gym_Text_CamperBarry_Beaten
 	msgbox FuchsiaCity_Gym_Text_CamperBarry_After, MSGBOX_DEFAULT
 	closemessage
 	release

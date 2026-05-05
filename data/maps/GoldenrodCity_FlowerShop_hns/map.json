@@ -50,7 +50,7 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "Route104_PrettyPetalFlowerShop_EventScript_MintOwner",
+      "script": "NULL",
       "flag": "FLAG_MINTS_CLERK",
       "local_id": "LOCALID_MINT_CLERK"
     },

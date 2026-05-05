@@ -9,18 +9,18 @@ SproutTower_3F_OnTransition:
 
 
 SproutTower_3F_EventScript_SageJin::
-	trainerbattle_single TRAINER_JIN, SproutTower_Text_SageJin_Seen, SproutTower_Text_SageJin_Beaten
+	trainerbattle_single TRAINER_JIN_HNS, SproutTower_Text_SageJin_Seen, SproutTower_Text_SageJin_Beaten
 	msgbox SproutTower_Text_SageJin_AfterBattle, MSGBOX_AUTOCLOSE
 	end
 
 
 SproutTower_3F_EventScript_SageNeal::
-	trainerbattle_single TRAINER_NEAL, SproutTower_Text_SageNeal_Seen, SproutTower_Text_SageNeal_Beaten
+	trainerbattle_single TRAINER_NEAL_HNS, SproutTower_Text_SageNeal_Seen, SproutTower_Text_SageNeal_Beaten
 	msgbox SproutTower_Text_SageNeal_AfterBattle, MSGBOX_AUTOCLOSE
 	end
 
 SproutTower_3F_EventScript_SageTroy::
-	trainerbattle_single TRAINER_TROY, SproutTower_Text_SageTroy_Seen, SproutTower_Text_SageTroy_Beaten
+	trainerbattle_single TRAINER_TROY_HNS, SproutTower_Text_SageTroy_Seen, SproutTower_Text_SageTroy_Beaten
 	msgbox SproutTower_Text_SageTroy_AfterBattle, MSGBOX_AUTOCLOSE
 	end
 
@@ -104,7 +104,7 @@ SproutTower_3F_EventScript_SageLi::
 	goto_if_set FLAG_RECEIVED_HM_FLASH, SproutTower_3F_EventScript_SageLi_Beaten
 	msgbox SproutTower_Text_SageLi_Seen, MSGBOX_DEFAULT
 	closemessage
-	trainerbattle_no_intro TRAINER_LI, SproutTower_Text_SageLi_Beaten
+	trainerbattle_no_intro TRAINER_LI_HNS, SproutTower_Text_SageLi_Beaten
 	msgbox SproutTower_Text_SageLi_TakeFlash, MSGBOX_DEFAULT
 	giveitem ITEM_HM_FLASH
 	setflag FLAG_RECEIVED_HM_FLASH

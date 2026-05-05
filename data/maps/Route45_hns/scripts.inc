@@ -2,42 +2,42 @@ Route45_hns_MapScripts::
 	.byte 0
 
 Route45_EventScript_Erik::
-	trainerbattle_single TRAINER_ERIK, Route45_Text_HikerErikSeen, Route45_Text_HikerErikBeaten
+	trainerbattle_single TRAINER_ERIK_HNS, Route45_Text_HikerErikSeen, Route45_Text_HikerErikBeaten
 	msgbox Route45_Text_HikerErikAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route45_EventScript_Michael::
-	trainerbattle_single TRAINER_MICHAEL, Route45_Text_HikerMichaelSeen, Route45_Text_HikerMichaelBeaten
+	trainerbattle_single TRAINER_MICHAEL_HNS, Route45_Text_HikerMichaelSeen, Route45_Text_HikerMichaelBeaten
 	msgbox Route45_Text_HikerMichaelAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route45_EventScript_Parry::
-	trainerbattle_single TRAINER_PARRY, Route45_Text_HikerParrySeen, Route45_Text_HikerParryBeaten
+	trainerbattle_single TRAINER_PARRY_HNS, Route45_Text_HikerParrySeen, Route45_Text_HikerParryBeaten
 	msgbox Route45_Text_HikerParryAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route45_EventScript_Timothy::
-	trainerbattle_single TRAINER_TIMOTHY, Route45_Text_HikerTimothySeen, Route45_Text_HikerTimothyBeaten
+	trainerbattle_single TRAINER_TIMOTHY_HNS, Route45_Text_HikerTimothySeen, Route45_Text_HikerTimothyBeaten
 	msgbox Route45_Text_HikerTimothyAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route45_EventScript_Kenji::
-	trainerbattle_single TRAINER_KENJI, Route45_Text_BlackbeltKenjiSeen, Route45_Text_BlackbeltKenjiBeaten
+	trainerbattle_single TRAINER_KENJI_HNS, Route45_Text_BlackbeltKenjiSeen, Route45_Text_BlackbeltKenjiBeaten
 	msgbox Route45_Text_BlackbeltKenjiAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route45_EventScript_Ryan::
-	trainerbattle_single TRAINER_RYAN, Route45_Text_CooltrainermRyanSeen, Route45_Text_CooltrainermRyanBeaten
+	trainerbattle_single TRAINER_RYAN_HNS, Route45_Text_CooltrainermRyanSeen, Route45_Text_CooltrainermRyanBeaten
 	msgbox Route45_Text_CooltrainermRyanAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route45_EventScript_Kelly::
-	trainerbattle_single TRAINER_KELLY, Route45_Text_CooltrainerfKellySeen, Route45_Text_CooltrainerfKellyBeaten
+	trainerbattle_single TRAINER_KELLY_HNS, Route45_Text_CooltrainerfKellySeen, Route45_Text_CooltrainerfKellyBeaten
 	msgbox Route45_Text_CooltrainerfKellyAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route45_EventScript_Quentin::
-	trainerbattle_single TRAINER_QUENTIN, Route45_Text_CamperQuentinSeen, Route45_Text_CamperQuentinBeaten
+	trainerbattle_single TRAINER_QUENTIN_HNS, Route45_Text_CamperQuentinSeen, Route45_Text_CamperQuentinBeaten
 	msgbox Route45_Text_CamperQuentinAfter, MSGBOX_AUTOCLOSE
 	end
 

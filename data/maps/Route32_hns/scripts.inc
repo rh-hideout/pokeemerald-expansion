@@ -8,42 +8,42 @@ Route32_OnTransition:
 	end
 
 Route32_EventScript_FisherJustin::
-	trainerbattle_single TRAINER_JUSTIN, Route32_Text_FisherJustin_Seen, Route32_Text_FisherJustin_Beaten
+	trainerbattle_single TRAINER_JUSTIN_HNS, Route32_Text_FisherJustin_Seen, Route32_Text_FisherJustin_Beaten
 	msgbox Route32_Text_FisherJustin_After, MSGBOX_AUTOCLOSE
 	end
 
 Route32_EventScript_FisherRalph::
-	trainerbattle_single TRAINER_RALPH, Route32_Text_FisherRalph1_Seen, Route32_Text_FisherRalph1_Beaten
+	trainerbattle_single TRAINER_RALPH_HNS, Route32_Text_FisherRalph1_Seen, Route32_Text_FisherRalph1_Beaten
 	msgbox Route32_Text_FisherRalph1_After, MSGBOX_AUTOCLOSE
 	end
 
 Route32_EventScript_FisherHenry::
-	trainerbattle_single TRAINER_HENRY, Route32_Text_FisherHenry_Seen, Route32_Text_FisherHenry_Beaten
+	trainerbattle_single TRAINER_HENRY_HNS, Route32_Text_FisherHenry_Seen, Route32_Text_FisherHenry_Beaten
 	msgbox Route32_Text_FisherHenry_After, MSGBOX_AUTOCLOSE
 	end
 
 Route32_EventScript_YoungsterAlbert::
-	trainerbattle_single TRAINER_ALBERT, Route32_Text_YoungsterAlbert_Seen, Route32_Text_YoungsterAlbert_Beaten
+	trainerbattle_single TRAINER_ALBERT_HNS, Route32_Text_YoungsterAlbert_Seen, Route32_Text_YoungsterAlbert_Beaten
 	msgbox Route32_Text_YoungsterAlbert_After, MSGBOX_AUTOCLOSE
 	end
 
 Route32_EventScript_YoungsterGordon::
-	trainerbattle_single TRAINER_GORDON, Route32_Text_YoungsterGordon_Seen, Route32_Text_YoungsterGordon_Beaten
+	trainerbattle_single TRAINER_GORDON_HNS, Route32_Text_YoungsterGordon_Seen, Route32_Text_YoungsterGordon_Beaten
 	msgbox Route32_Text_YoungsterGordon_After, MSGBOX_AUTOCLOSE
 	end
 
 Route32_EventScript_CamperRoland::
-	trainerbattle_single TRAINER_ROLAND, Route32_Text_CamperRoland_Seen, Route32_Text_CamperRoland_Beaten
+	trainerbattle_single TRAINER_ROLAND_HNS, Route32_Text_CamperRoland_Seen, Route32_Text_CamperRoland_Beaten
 	msgbox Route32_Text_CamperRoland_After, MSGBOX_AUTOCLOSE
 	end
 
 Route32_EventScript_PicnickerLiz::
-	trainerbattle_single TRAINER_LIZ, Route32_Text_PicnickerLiz1_Seen, Route32_Text_PicnickerLiz1_Beaten
+	trainerbattle_single TRAINER_LIZ_HNS, Route32_Text_PicnickerLiz1_Seen, Route32_Text_PicnickerLiz1_Beaten
 	msgbox Route32_Text_PicnickerLiz1_After, MSGBOX_AUTOCLOSE
 	end
 
 Route32_EventScript_BirdkeeperPeter::
-	trainerbattle_single TRAINER_PETER, Route32_Text_BirdKeeperPeter_Seen, Route32_Text_BirdKeeperPeter_Beaten
+	trainerbattle_single TRAINER_PETER_HNS, Route32_Text_BirdKeeperPeter_Seen, Route32_Text_BirdKeeperPeter_Beaten
 	msgbox Route32_Text_BirdKeeperPeter_After, MSGBOX_AUTOCLOSE
 	end
 

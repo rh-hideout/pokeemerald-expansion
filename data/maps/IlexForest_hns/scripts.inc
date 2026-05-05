@@ -213,7 +213,7 @@ IlexForest_EventScript_Picnicker::
 	end
 
 IlexForest_EventScript_BugcatcherWayne::
-	trainerbattle_single TRAINER_WAYNE, IlexForest_Text_BugCatcherWayneSeen, IlexForest_Text_BugCatcherWayneBeaten
+	trainerbattle_single TRAINER_WAYNE_HNS, IlexForest_Text_BugCatcherWayneSeen, IlexForest_Text_BugCatcherWayneBeaten
 	msgbox IlexForest_Text_BugCatcherWayneAfter, MSGBOX_AUTOCLOSE
 	end
 

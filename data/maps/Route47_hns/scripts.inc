@@ -3,7 +3,7 @@ Route47_hns_MapScripts::
 
 
 Route47_EventScript_Hiker::
-	trainerbattle_single TRAINER_DEVIN, Route47_Text_HikerSeen, Route47_Text_HikerBeaten
+	trainerbattle_single TRAINER_DEVIN_HNS, Route47_Text_HikerSeen, Route47_Text_HikerBeaten
 	msgbox Route47_Text_HikerAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -21,7 +21,7 @@ Route47_Text_HikerAfter::
 	.string "with a parting laugh!$"
 
 Route47_EventScript_Camper::
-	trainerbattle_single TRAINER_GRANT, Route47_Text_CamperSeen, Route47_Text_CamperBeaten
+	trainerbattle_single TRAINER_GRANT_HNS, Route47_Text_CamperSeen, Route47_Text_CamperBeaten
 	msgbox Route47_Text_CamperAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -38,13 +38,13 @@ Route47_Text_CamperAfter::
 	.string "See ya!$"
 
 Route47_EventScript_Thom::
-	trainerbattle_double TRAINER_THOM_AND_KAE, Route47_Text_Couple1Seen, Route47_Text_Couple1Beaten, Route104_Text_GinaNotEnoughMons
+	trainerbattle_double TRAINER_THOM_AND_KAE_HNS, Route47_Text_Couple1Seen, Route47_Text_Couple1Beaten, Route104_Text_GinaNotEnoughMons
 	special GetPlayerBigGuyGirlString
 	msgbox Route47_Text_Couple1After1, MSGBOX_AUTOCLOSE
 	end
 
 Route47_EventScript_Kae::
-	trainerbattle_double TRAINER_THOM_AND_KAE, Route47_Text_Couple1Seen, Route47_Text_Couple1Beaten, Route104_Text_GinaNotEnoughMons
+	trainerbattle_double TRAINER_THOM_AND_KAE_HNS, Route47_Text_Couple1Seen, Route47_Text_Couple1Beaten, Route104_Text_GinaNotEnoughMons
 	special GetPlayerBigGuyGirlString
 	msgbox Route47_Text_Couple1After2, MSGBOX_AUTOCLOSE
 	end
@@ -69,13 +69,13 @@ Route47_Text_Couple1After2::
 	.string "lone trainer. Boy was I wrong!$"
 
 Route47_EventScript_Duff::
-	trainerbattle_double TRAINER_DUFF_AND_EDA, Route47_Text_Couple2Seen, Route47_Text_Couple2Beaten, Route104_Text_GinaNotEnoughMons
+	trainerbattle_double TRAINER_DUFF_AND_EDA_HNS, Route47_Text_Couple2Seen, Route47_Text_Couple2Beaten, Route104_Text_GinaNotEnoughMons
 	special GetPlayerBigGuyGirlString
 	msgbox Route47_Text_Couple2After1, MSGBOX_AUTOCLOSE
 	end
 
 Route47_EventScript_Eda::
-	trainerbattle_double TRAINER_DUFF_AND_EDA, Route47_Text_Couple2Seen, Route47_Text_Couple2Beaten, Route104_Text_GinaNotEnoughMons
+	trainerbattle_double TRAINER_DUFF_AND_EDA_HNS, Route47_Text_Couple2Seen, Route47_Text_Couple2Beaten, Route104_Text_GinaNotEnoughMons
 	msgbox Route47_Text_Couple2After2, MSGBOX_AUTOCLOSE
 	end
 

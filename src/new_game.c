@@ -54,6 +54,7 @@
 
 extern const u8 EventScript_ResetAllMapFlags[];
 extern const u8 EventScript_ResetAllMapFlagsFrlg[];
+extern const u8 EventScript_ResetAllMapFlagsHnS[];
 
 static void ClearFrontierRecord(void);
 static void WarpToTruck(void);
@@ -215,6 +216,8 @@ void NewGameInitData(void)
     WarpToTruck();
     if (IS_FRLG)
         RunScriptImmediately(EventScript_ResetAllMapFlagsFrlg);
+    else if (IS_HNS)
+        RunScriptImmediately(EventScript_ResetAllMapFlagsHnS);
     else
         RunScriptImmediately(EventScript_ResetAllMapFlags);
 #if IS_FRLG

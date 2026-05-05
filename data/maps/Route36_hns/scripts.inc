@@ -163,12 +163,12 @@ Route36_Movement_RockSmashGuy:
 	step_end
 
 Route36_EventScript_Mark::
-	trainerbattle_single TRAINER_MARK, Route36_Text_PsychicMarkSeen, Route36_Text_PsychicMarkBeaten
+	trainerbattle_single TRAINER_MARK_HNS, Route36_Text_PsychicMarkSeen, Route36_Text_PsychicMarkBeaten
 	msgbox Route36_Text_PsychicMarkAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route36_EventScript_Schoolboy::
-	trainerbattle_single TRAINER_ALAN, Route36_Text_SchoolboyAlan1Seen, Route36_Text_SchoolboyAlan1Beaten
+	trainerbattle_single TRAINER_ALAN_HNS, Route36_Text_SchoolboyAlan1Seen, Route36_Text_SchoolboyAlan1Beaten
 	msgbox Route36_Text_SchoolboyAlanAfter, MSGBOX_AUTOCLOSE
 	end
 

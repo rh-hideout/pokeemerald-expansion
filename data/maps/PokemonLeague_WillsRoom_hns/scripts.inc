@@ -59,14 +59,14 @@ PokemonLeague_WillsRoom_EventScript_Will::
 	msgbox PokemonLeague_WillsRoom_Text_Before, MSGBOX_DEFAULT
 	setflag FLAG_TEMP_3
 	setflag FLAG_TEMP_5
-	trainerbattle_no_intro TRAINER_WILL_1, PokemonLeague_WillsRoom_Text_Beaten
+	trainerbattle_no_intro TRAINER_WILL_1_HNS, PokemonLeague_WillsRoom_Text_Beaten
 	goto PokemonLeague_WillsRoom_EventScript_WillOnDefeat
 
 PokemonLeague_WillsRoom_EventScript_WillRematch::
 	msgbox PokemonLeague_WillsRoom_Text_RematchBefore, MSGBOX_DEFAULT
 	setflag FLAG_TEMP_3
 	setflag FLAG_TEMP_5
-	trainerbattle_no_intro TRAINER_WILL_2, PokemonLeague_WillsRoom_Text_Beaten
+	trainerbattle_no_intro TRAINER_WILL_2_HNS, PokemonLeague_WillsRoom_Text_Beaten
 	goto PokemonLeague_WillsRoom_EventScript_WillOnDefeat
 
 PokemonLeague_WillsRoom_EventScript_WillOnDefeat::

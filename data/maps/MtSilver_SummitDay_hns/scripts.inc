@@ -19,11 +19,11 @@ MtSilver_SummitDay_OnTransition:
 	end
 
 MtSilver_SummitDay_EventScript_SetNight::
-	setmaplayoutindex LAYOUT_MT_SILVER_SUMMIT_NIGHT
+	setmaplayoutindex LAYOUT_MT_SILVER_SUMMIT_NIGHT_HNS
 	return
 
 MtSilver_SummitDay_EventScript_SetDay::
-	setmaplayoutindex LAYOUT_MT_SILVER_SUMMIT_DAY
+	setmaplayoutindex LAYOUT_MT_SILVER_SUMMIT_DAY_HNS
 	return
 
 MtSilver_SummitDay_EventScript_Red::
@@ -31,9 +31,9 @@ MtSilver_SummitDay_EventScript_Red::
 	faceplayer
 	msgbox MtSilver_SummitDay_Text_Red, MSGBOX_DEFAULT
 	closemessage
-	trainerbattle_no_intro TRAINER_RED_2, MtSilver_SummitDay_Text_RedBeaten
+	trainerbattle_no_intro TRAINER_RED_2_HNS, MtSilver_SummitDay_Text_RedBeaten
 	playse SE_M_BLIZZARD
-	setrespawn HEAL_LOCATION_NEW_BARK_TOWN
+	setrespawn HEAL_LOCATION_NEW_BARK_TOWN_HNS
 	msgbox MtSilver_SummitDay_Text_Red, MSGBOX_DEFAULT
 	closemessage
 	fadescreenswapbuffers FADE_TO_BLACK
