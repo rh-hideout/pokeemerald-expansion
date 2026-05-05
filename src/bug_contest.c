@@ -216,4 +216,20 @@ bool8 ShowBugContestChosenMon(void)
 
     return FALSE;
 }
+
+#else
+
+void BugContestRetirePrompt(void) {}
+void EnterBugContestMode(void) {}
+void ExitBugContestMode(void) {}
+bool8 TransferBugContestMon(void) { return FALSE; }
+bool8 JudgeBugContestMon(void) { return FALSE; }
+bool8 RemoveSafariBalls(void) { return FALSE; }
+bool8 ShowBugContestChosenMon(void) { return FALSE; }
+bool32 GetBugContestFlag(void) { return FALSE; }
+void CB2_EndBugContestBattle(void) {}
+bool8 BugContestCheckTimeLimit(void) { return FALSE; }
+const u8 BugContest_EventScript_WhiteOut[] = {0};
+const u8 BugContest_EventScript_TimesUp[] = {0};
+
 #endif

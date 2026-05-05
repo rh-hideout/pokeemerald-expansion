@@ -1390,6 +1390,13 @@ Common_EventScript_PartyIsFull::
 	closemessage
 	end
 
+Common_Text_ReceivedMon:
+	.string "{PLAYER} received {STR_VAR_1}!$"
+
+Common_Text_PartyIsFull:
+	.string "Whoa, wait. You can't carry any\n"
+	.string "more POKéMON.$"	
+
 Common_EventScript_PlayerHandedOverTheItem::
 	bufferitemname STR_VAR_1, VAR_0x8004
 	playfanfare MUS_OBTAIN_TMHM
@@ -1768,7 +1775,9 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/text/trainers.inc"
 	.include "data/scripts/repel.inc"
 	.include "data/scripts/safari_zone.inc"
+#if IS_HNS
 	.include "data/scripts/bug_contest.inc"
+#endif
 	.include "data/scripts/roulette.inc"
 	.include "data/scripts/pokedex_rating.inc"
 	.include "data/text/pokedex_rating.inc"
@@ -1797,6 +1806,8 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/scripts/dexnav.inc"
 	.include "data/scripts/battle_frontier.inc"
 	.include "data/scripts/apricorn_tree.inc"
+
+.if IS_HNS
 
 @ HnS scripts
 	.include "data/maps/TestMap2_hns/scripts.inc"
@@ -2219,4 +2230,6 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/maps/SafariZone3_hns/scripts.inc"
 	.include "data/maps/SafariZoneIndoor_hns/scripts.inc"
 	.include "data/maps/Saffron_Temp_hns/scripts.inc"
+
+.endif
 

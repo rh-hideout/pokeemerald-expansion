@@ -205,10 +205,3 @@ NewBarkTown_PlayersHouse_1F_Text_MomLeaving:
 	.string "You need to work as a team.\p"
 	.string "Now, go on!\n"
 	.string "I'm behind you all the way!$"
-
-Common_Text_ReceivedMon:
-	.string "{PLAYER} received {STR_VAR_1}!$"
-
-Common_Text_PartyIsFull:
-	.string "Whoa, wait. You can't carry any\n"
-	.string "more POKéMON.$"	

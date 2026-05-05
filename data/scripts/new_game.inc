@@ -319,6 +319,7 @@ EventScript_ResetAllMapFlags::
 	call EventScript_ResetAllBerries
 	end
 
+#if IS_HNS
 EventScript_ResetAllMapFlagsHnS::
 	setflag FLAG_HIDE_BATTLE_TOWER_OPPONENT
 	setflag FLAG_HIDE_DEOXYS @???
@@ -434,7 +435,9 @@ EventScript_ResetAllMapFlagsHnS::
 
 	call EventScript_ResetAllBerries
 	end
+#endif
 
+#if IS_FRLG
 EventScript_ResetAllMapFlagsFrlg::
 	setflag FLAG_HIDE_OAK_IN_HIS_LAB
 	setflag FLAG_HIDE_OAK_IN_PALLET_TOWN
@@ -487,3 +490,4 @@ EventScript_ResetAllMapFlagsFrlg::
 	setflag FLAG_HIDE_SAFFRON_CITY_POKECENTER_SABRINA_JOURNALS
 	setvar VAR_MASSAGE_COOLDOWN_STEP_COUNTER, 500
 	end
+#endif

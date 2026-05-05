@@ -751,6 +751,16 @@ void process_groups(string groups_filepath, vector<string> &map_filepaths, strin
     write_text_file(output_c + sep + "map_groups.h", map_header_text);
 }
 
+bool layout_matches_version(const Json &layout) {
+    string game_ver = json_to_string(layout, "game_version", true);
+    if (game_ver.empty())
+        game_ver = "emerald";
+    string expected = version;
+    if (expected == "firered")
+        expected = "frlg";
+    return game_ver == expected;
+}
+
 string generate_layout_headers_text(Json layouts_data) {
     ostringstream text;
 
@@ -760,15 +770,11 @@ string generate_layout_headers_text(Json layouts_data) {
         if (layout == Json::object()) continue;
         if (!std::filesystem::exists(json_to_string(layout, "border_filepath")))
             continue;
-        string layout_version = json_to_string(layout, "layout_version", true);
-
-        if (layout_version.empty()) {
-            layout_version = "emerald";
-        }
-        if ((version == "emerald" && layout_version != "emerald")
-         || (version == "firered" && layout_version != "frlg")
-         || (version == "hns" && layout_version != "hns"))
+        if (!layout_matches_version(layout))
             continue;
+        string layout_version = json_to_string(layout, "layout_version", true);
+        if (layout_version.empty())
+            layout_version = "emerald";
         string layoutName = json_to_string(layout, "name");
         string border_label = layoutName + "_Border";
         string blockdata_label = layoutName + "_Blockdata";
@@ -819,11 +825,7 @@ string generate_layouts_table_text(Json layouts_data) {
     for (auto &layout : layouts_data["layouts"].array_items()) {
         if (!std::filesystem::exists(json_to_string(layout, "border_filepath")))
             continue;
-        string layout_version = json_to_string(layout, "layout_version", true);
-        if (layout_version.empty()) {
-            layout_version = "emerald";
-        }
-        if ((version == "emerald" && layout_version != "emerald") || (version == "firered" && layout_version != "frlg") || (version == "hns" && layout_version != "hns")) {
+        if (!layout_matches_version(layout)) {
             text << "\t.4byte NULL\n";
         } else {
             string layout_name = json_to_string(layout, "name", true);

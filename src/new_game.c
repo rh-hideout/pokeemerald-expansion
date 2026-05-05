@@ -53,8 +53,12 @@
 #include "follower_npc.h"
 
 extern const u8 EventScript_ResetAllMapFlags[];
+#if IS_FRLG
 extern const u8 EventScript_ResetAllMapFlagsFrlg[];
+#endif
+#if IS_HNS
 extern const u8 EventScript_ResetAllMapFlagsHnS[];
+#endif
 
 static void ClearFrontierRecord(void);
 static void WarpToTruck(void);
@@ -214,12 +218,13 @@ void NewGameInitData(void)
     ResetFanClub();
     ResetLotteryCorner();
     WarpToTruck();
-    if (IS_FRLG)
-        RunScriptImmediately(EventScript_ResetAllMapFlagsFrlg);
-    else if (IS_HNS)
-        RunScriptImmediately(EventScript_ResetAllMapFlagsHnS);
-    else
-        RunScriptImmediately(EventScript_ResetAllMapFlags);
+#if IS_FRLG
+    RunScriptImmediately(EventScript_ResetAllMapFlagsFrlg);
+#elif IS_HNS
+    RunScriptImmediately(EventScript_ResetAllMapFlagsHnS);
+#else
+    RunScriptImmediately(EventScript_ResetAllMapFlags);
+#endif
 #if IS_FRLG
         StringCopy(gSaveBlock1Ptr->rivalName, rivalName);
 #endif
