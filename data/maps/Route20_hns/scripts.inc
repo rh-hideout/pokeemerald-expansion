@@ -12,17 +12,17 @@ Route20_OnTransition:
 	end
 
 Route20_EventScript_Nicole::
-	trainerbattle_single TRAINER_NICOLE Route20_Text_SwimmerfNicoleSeen, Route20_Text_SwimmerfNicoleBeaten
+	trainerbattle_single TRAINER_NICOLE, Route20_Text_SwimmerfNicoleSeen, Route20_Text_SwimmerfNicoleBeaten
 	msgbox Route20_Text_SwimmerfNicoleAfterBattle, MSGBOX_AUTOCLOSE
 	end	
 
 Route20_EventScript_Lori::
-	trainerbattle_single TRAINER_LORI Route20_Text_SwimmerfLoriSeen, Route20_Text_SwimmerfLoriBeaten
+	trainerbattle_single TRAINER_LORI, Route20_Text_SwimmerfLoriSeen, Route20_Text_SwimmerfLoriBeaten
 	msgbox Route20_Text_SwimmerfLoriAfterBattle, MSGBOX_AUTOCLOSE
 	end	
 
 Route20_EventScript_Cameron::
-	trainerbattle_single TRAINER_CAMERON Route20_Text_SwimmermCameronSeen, Route20_Text_SwimmermCameronBeaten
+	trainerbattle_single TRAINER_CAMERON, Route20_Text_SwimmermCameronSeen, Route20_Text_SwimmermCameronBeaten
 	msgbox Route20_Text_SwimmermCameronAfterBattle, MSGBOX_AUTOCLOSE
 	end	
 

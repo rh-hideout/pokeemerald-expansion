@@ -32,12 +32,12 @@ Route10_EventScript_UltraBall::
 	end
 
 Route10_EventScript_Jim::
-	trainerbattle_single TRAINER_JIM Route10_Text_HikerJimSeen, Route10_Text_HikerJimBeaten
+	trainerbattle_single TRAINER_JIM, Route10_Text_HikerJimSeen, Route10_Text_HikerJimBeaten
 	msgbox Route10_Text_HikerJimAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route10_EventScript_Robert::
-	trainerbattle_single TRAINER_ROBERT Route10_Text_PokefanmRobertSeen, Route10_Text_PokefanmRobertBeaten
+	trainerbattle_single TRAINER_ROBERT, Route10_Text_PokefanmRobertSeen, Route10_Text_PokefanmRobertBeaten
 	msgbox Route10_Text_PokefanmRobertAfter, MSGBOX_AUTOCLOSE
 	end
 

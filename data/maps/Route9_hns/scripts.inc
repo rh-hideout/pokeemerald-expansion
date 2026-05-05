@@ -8,32 +8,32 @@ Route9_OnTransition:
 	end
 
 Route9_EventScript_Dean::
-	trainerbattle_single TRAINER_DEAN Route9_Text_CamperDeanSeen, Route9_Text_CamperDeanBeaten
+	trainerbattle_single TRAINER_DEAN, Route9_Text_CamperDeanSeen, Route9_Text_CamperDeanBeaten
 	msgbox Route9_Text_CamperDeanAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route9_EventScript_Heidi::
-	trainerbattle_single TRAINER_HEIDI Route9_Text_PicnickerHeidiSeen, Route9_Text_PicnickerHeidiBeaten
+	trainerbattle_single TRAINER_HEIDI, Route9_Text_PicnickerHeidiSeen, Route9_Text_PicnickerHeidiBeaten
 	msgbox Route9_Text_PicnickerHeidiAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route9_EventScript_Edna::
-	trainerbattle_single TRAINER_EDNA Route9_Text_PicnickerEdnaSeen, Route9_Text_PicnickerEdnaBeaten
+	trainerbattle_single TRAINER_EDNA, Route9_Text_PicnickerEdnaSeen, Route9_Text_PicnickerEdnaBeaten
 	msgbox Route9_Text_PicnickerEdnaAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route9_EventScript_Sid::
-	trainerbattle_single TRAINER_SID Route9_Text_CamperSidSeen, Route9_Text_CamperSidBeaten
+	trainerbattle_single TRAINER_SID, Route9_Text_CamperSidSeen, Route9_Text_CamperSidBeaten
 	msgbox Route9_Text_CamperSidAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route9_EventScript_Tim::
-	trainerbattle_single TRAINER_TIM Route9_Text_HikerTimSeen, Route9_Text_HikerTimBeaten
+	trainerbattle_single TRAINER_TIM, Route9_Text_HikerTimSeen, Route9_Text_HikerTimBeaten
 	msgbox Route9_Text_HikerTimAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route9_EventScript_Sidney::
-	trainerbattle_single TRAINER_SIDNEY Route9_Text_HikerSidneySeen, Route9_Text_HikerSidneyBeaten
+	trainerbattle_single TRAINER_SIDNEY, Route9_Text_HikerSidneySeen, Route9_Text_HikerSidneyBeaten
 	msgbox Route9_Text_HikerSidneyAfter, MSGBOX_AUTOCLOSE
 	end
 

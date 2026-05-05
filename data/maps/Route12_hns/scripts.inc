@@ -8,22 +8,22 @@ Route12_OnTransition:
 	end
 
 Route12_EventScript_Martin::
-	trainerbattle_single TRAINER_MARTIN Route12_Text_FisherMartinSeen, Route12_Text_FisherMartinBeaten
+	trainerbattle_single TRAINER_MARTIN, Route12_Text_FisherMartinSeen, Route12_Text_FisherMartinBeaten
 	msgbox Route12_Text_FisherMartinAfterBattle, MSGBOX_AUTOCLOSE
 	end
 
 Route12_EventScript_Stephen::
-	trainerbattle_single TRAINER_STEPHEN Route12_Text_FisherStephenSeen, Route12_Text_FisherStephenBeaten
+	trainerbattle_single TRAINER_STEPHEN, Route12_Text_FisherStephenSeen, Route12_Text_FisherStephenBeaten
 	msgbox Route12_Text_FisherStephenAfterBattle, MSGBOX_AUTOCLOSE
 	end
 
 Route12_EventScript_Barney::
-	trainerbattle_single TRAINER_BARNEY Route12_Text_FisherBarneySeen, Route12_Text_FisherBarneyBeaten
+	trainerbattle_single TRAINER_BARNEY, Route12_Text_FisherBarneySeen, Route12_Text_FisherBarneyBeaten
 	msgbox Route12_Text_FisherBarneyAfterBattle, MSGBOX_AUTOCLOSE
 	end
 
 Route12_EventScript_Kyle::
-	trainerbattle_single TRAINER_KYLE Route12_Text_FisherKyleSeen, Route12_Text_FisherKyleBeaten
+	trainerbattle_single TRAINER_KYLE, Route12_Text_FisherKyleSeen, Route12_Text_FisherKyleBeaten
 	msgbox Route12_Text_FisherKyleAfterBattle, MSGBOX_AUTOCLOSE
 	end
 

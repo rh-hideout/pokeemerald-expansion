@@ -638,6 +638,18 @@
 		.4byte \movements
 	.endm
 
+	@ Gives a named/gift Pokemon. 1=Kenya, 2=Shuckie, 3=Eevee, 4=Dratini
+	.macro givenamedmon number:req
+		.byte SCR_OP_GIVENAMEDMON
+		.2byte \number
+	.endm
+
+	@ Removes a named/gift Pokemon. 1=Kenya, 2=Shuckie
+	.macro removenamedmon number:req
+		.byte SCR_OP_REMOVENAMEDMON
+		.2byte \number
+	.endm
+
 	@ Blocks script execution until the movements being applied to the specified (localId) object finish.
 	@ If localId is LOCALID_NONE (0), then the id of the last-moved object will be used instead.
 	@ If the specified object is not currently being manipulated with applymovement, then this command does nothing.

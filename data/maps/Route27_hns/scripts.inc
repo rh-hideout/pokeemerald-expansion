@@ -84,37 +84,37 @@ Route27_EventScript_Fatman::
     end
 
 Route27_EventScript_Blake::
-	trainerbattle_single TRAINER_BLAKE Route27_Text_CooltrainermBlakeSeen, Route27_Text_CooltrainermBlakeBeaten
+	trainerbattle_single TRAINER_BLAKE, Route27_Text_CooltrainermBlakeSeen, Route27_Text_CooltrainermBlakeBeaten
 	msgbox Route27_Text_CooltrainermBlakeAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route27_EventScript_Brian::
-	trainerbattle_single TRAINER_BRIAN Route27_Text_CooltrainermBrianSeen, Route27_Text_CooltrainermBrianBeaten
+	trainerbattle_single TRAINER_BRIAN, Route27_Text_CooltrainermBrianSeen, Route27_Text_CooltrainermBrianBeaten
 	msgbox Route27_Text_CooltrainermBrianAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route27_EventScript_Reena::
-	trainerbattle_single TRAINER_REENA Route27_Text_CooltrainerfReenaSeen, Route27_Text_CooltrainerfReenaBeaten
+	trainerbattle_single TRAINER_REENA, Route27_Text_CooltrainerfReenaSeen, Route27_Text_CooltrainerfReenaBeaten
 	msgbox Route27_Text_CooltrainerfReenaAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route27_EventScript_Megan::
-	trainerbattle_single TRAINER_MEGAN Route27_Text_CooltrainerfMeganSeen, Route27_Text_CooltrainerfMeganBeaten
+	trainerbattle_single TRAINER_MEGAN, Route27_Text_CooltrainerfMeganSeen, Route27_Text_CooltrainerfMeganBeaten
 	msgbox Route27_Text_CooltrainerfMeganAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route27_EventScript_Gilbert::
-	trainerbattle_single TRAINER_GILBERT Route27_Text_PsychicGilbertSeen, Route27_Text_PsychicGilbertBeaten
+	trainerbattle_single TRAINER_GILBERT, Route27_Text_PsychicGilbertSeen, Route27_Text_PsychicGilbertBeaten
 	msgbox Route27_Text_PsychicGilbertAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route27_EventScript_Jose::
-	trainerbattle_single TRAINER_JOSE Route27_Text_BirdKeeperJoseSeen, Route27_Text_BirdKeeperJoseBeaten
+	trainerbattle_single TRAINER_JOSE, Route27_Text_BirdKeeperJoseSeen, Route27_Text_BirdKeeperJoseBeaten
 	msgbox Route27_Text_BirdKeeperJoseAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route27_EventScript_Scott::
-	trainerbattle_single TRAINER_SCOTT Route27_Text_FisherScottSeen, Route27_Text_FisherScottBeaten
+	trainerbattle_single TRAINER_SCOTT, Route27_Text_FisherScottSeen, Route27_Text_FisherScottBeaten
 	msgbox Route27_Text_FisherScottAfter, MSGBOX_AUTOCLOSE
 	end
 

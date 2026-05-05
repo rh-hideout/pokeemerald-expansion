@@ -8,12 +8,12 @@ Route6_OnTransition:
 	end
 
 Route6_EventScript_Rex::
-	trainerbattle_single TRAINER_REX PokefanM_Text_RexSeen, PokefanM_Text_RexBeaten
+	trainerbattle_single TRAINER_REX, PokefanM_Text_RexSeen, PokefanM_Text_RexBeaten
 	msgbox PokefanM_Text_RexAfter, MSGBOX_AUTOCLOSE
 	end
 
 Route6_EventScript_Allan::
-	trainerbattle_single TRAINER_ALLAN PokefanM_Text_AllanSeen, PokefanM_Text_AllanBeaten
+	trainerbattle_single TRAINER_ALLAN, PokefanM_Text_AllanSeen, PokefanM_Text_AllanBeaten
 	msgbox PokefanM_Text_AllanAfter, MSGBOX_AUTOCLOSE
 	end
 

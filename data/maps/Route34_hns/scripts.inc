@@ -14,48 +14,48 @@ Route34_MapScript_EggReady::
 	return
 
 Route34_EventScript_YoungsterSamuel::
-	trainerbattle_single TRAINER_SAMUEL Route34_Text_YoungsterSamuel_Seen, Route34_Text_YoungsterSamuel_Beaten
+	trainerbattle_single TRAINER_SAMUEL, Route34_Text_YoungsterSamuel_Seen, Route34_Text_YoungsterSamuel_Beaten
 	msgbox Route34_Text_YoungsterSamuel_After, MSGBOX_AUTOCLOSE
 	end
 
 Route34_EventScript_YoungsterIan::
-	trainerbattle_single TRAINER_IAN Route34_Text_YoungsterIan_Seen, Route34_Text_YoungsterIan_Beaten
+	trainerbattle_single TRAINER_IAN, Route34_Text_YoungsterIan_Seen, Route34_Text_YoungsterIan_Beaten
 	msgbox Route34_Text_YoungsterIan_After, MSGBOX_AUTOCLOSE
 	end
 
 Route34_EventScript_CamperTodd::
-	trainerbattle_single TRAINER_TODD Route34_Text_CamperTodd_Seen, Route34_Text_CamperTodd_Beaten
+	trainerbattle_single TRAINER_TODD, Route34_Text_CamperTodd_Seen, Route34_Text_CamperTodd_Beaten
 	msgbox Route34_Text_CamperTodd_After, MSGBOX_AUTOCLOSE
 	end
 
 Route34_EventScript_PicnickerGina::
-	trainerbattle_single TRAINER_GINA Route34_Text_PicnickerGina_Seen, Route34_Text_PicnickerGina_Beaten
+	trainerbattle_single TRAINER_GINA, Route34_Text_PicnickerGina_Seen, Route34_Text_PicnickerGina_Beaten
 	msgbox Route34_Text_PicnickerGina_After, MSGBOX_AUTOCLOSE
 	end
 
 Route34_EventScript_OfficerKeith::
-	trainerbattle_single TRAINER_KEITH Route34_Text_OfficerKeith_Seen, Route34_Text_OfficerKeith_Win
+	trainerbattle_single TRAINER_KEITH, Route34_Text_OfficerKeith_Seen, Route34_Text_OfficerKeith_Win
 	msgbox Route34_Text_OfficerKeith_After, MSGBOX_AUTOCLOSE
 	end
 
 
 Route34_EventScript_PokefanMBrandon::
-	trainerbattle_single TRAINER_BRANDON Route34_Text_PokefanBrandon_Seen, Route34_Text_PokefanBrandon_Beaten
+	trainerbattle_single TRAINER_BRANDON, Route34_Text_PokefanBrandon_Seen, Route34_Text_PokefanBrandon_Beaten
 	msgbox Route34_Text_PokefanBrandon_After, MSGBOX_AUTOCLOSE
 	end
 
 Route34_EventScript_Irene::
-	trainerbattle_single TRAINER_IRENE Route34_Text_CooltrainerIrene_Seen, Route34_Text_CooltrainerIrene_Beaten
+	trainerbattle_single TRAINER_IRENE, Route34_Text_CooltrainerIrene_Seen, Route34_Text_CooltrainerIrene_Beaten
 	msgbox Route34_Text_CooltrainerIrene_After2, MSGBOX_AUTOCLOSE
 	end
 
 Route34_EventScript_Jenn::
-	trainerbattle_single TRAINER_JENN Route34_Text_CooltrainerJenn_Seen, Route34_Text_CooltrainerJenn_Beaten
+	trainerbattle_single TRAINER_JENN, Route34_Text_CooltrainerJenn_Seen, Route34_Text_CooltrainerJenn_Beaten
 	msgbox Route34_Text_CooltrainerJenn_After2, MSGBOX_AUTOCLOSE
 	end
 
 Route34_EventScript_Kate::
-	trainerbattle_single TRAINER_KATE Route34_Text_CooltrainerKate_Seen, Route34_Text_CooltrainerKate_Beaten
+	trainerbattle_single TRAINER_KATE, Route34_Text_CooltrainerKate_Seen, Route34_Text_CooltrainerKate_Beaten
 	msgbox Route34_Text_CooltrainerKate_After, MSGBOX_AUTOCLOSE
 	end
 

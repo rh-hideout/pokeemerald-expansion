@@ -319,14 +319,6 @@ RocketHideout_B2F_EventScript_DoLanceMultiBattle::
 	special SetCB2WhiteOut
 	waitstate
 
-RocketHideout_B2F_EventScript_ArianaTrainer::
-	trainerbattle TRAINER_BATTLE_SET_TRAINER_A, TRAINER_ARIANA_1, 0, RocketHideout_B2F_Text_ArianaLoss, RocketHideout_B2F_Text_ArianaLoss
-	end
-
-RocketHideout_B2F_EventScript_GruntTrainer::
-	trainerbattle TRAINER_BATTLE_SET_TRAINER_B, TRAINER_GRUNT_23, 0, RocketHideout_B2F_Text_GruntLoss, RocketHideout_B2F_Text_GruntLoss
-	end
-
 RocketHideout_B2F_EventScript_DefeatedAriana::
 	clearflag FLAG_ROCKETHIDEOUT2_BATTLE
 	msgbox RocketHideout_Text_ArianaRetreat, MSGBOX_DEFAULT
@@ -786,7 +778,7 @@ RocketHideout_B2F_Text_GruntM17After:
     .string "Too bad for you.$"
 
 RocketHideout_B2F_EventScript_Grunt14::
-	trainerbattle_single TRAINER_GRUNT_14 RocketHideout_B2F_Text_GruntM17Seen, RocketHideout_B2F_Text_GruntM17Beaten
+	trainerbattle_single TRAINER_GRUNT_14, RocketHideout_B2F_Text_GruntM17Seen, RocketHideout_B2F_Text_GruntM17Beaten
 	msgbox RocketHideout_B2F_Text_GruntM17After, MSGBOX_AUTOCLOSE
 	end
 
@@ -806,7 +798,7 @@ RocketHideout_B2F_Text_GruntM18After:
     .string "creamed me…$"
 
 RocketHideout_B2F_EventScript_Grunt15::
-	trainerbattle_single TRAINER_GRUNT_15 RocketHideout_B2F_Text_GruntM18Seen, RocketHideout_B2F_Text_GruntM18Beaten
+	trainerbattle_single TRAINER_GRUNT_15, RocketHideout_B2F_Text_GruntM18Seen, RocketHideout_B2F_Text_GruntM18Beaten
 	msgbox RocketHideout_B2F_Text_GruntM18After, MSGBOX_AUTOCLOSE
 	end
 
@@ -823,7 +815,7 @@ RocketHideout_B2F_Text_GruntM19After:
     .string "Go look for yourself.$"
 
 RocketHideout_B2F_EventScript_Grunt16::
-	trainerbattle_single TRAINER_GRUNT_16 RocketHideout_B2F_Text_GruntM19Seen, RocketHideout_B2F_Text_GruntM19Beaten
+	trainerbattle_single TRAINER_GRUNT_16, RocketHideout_B2F_Text_GruntM19Seen, RocketHideout_B2F_Text_GruntM19Beaten
 	msgbox RocketHideout_B2F_Text_GruntM19After, MSGBOX_AUTOCLOSE
 	end
 

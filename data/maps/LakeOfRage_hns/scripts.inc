@@ -66,22 +66,22 @@ LakeOfRage_EventScript_Nerd::
 	end
 
 LakeOfRage_EventScript_Andre::
-	trainerbattle_single TRAINER_ANDRE LakeOfRage_Text_FisherAndreSeen, LakeOfRage_Text_FisherAndreBeaten
+	trainerbattle_single TRAINER_ANDRE, LakeOfRage_Text_FisherAndreSeen, LakeOfRage_Text_FisherAndreBeaten
 	msgbox LakeOfRage_Text_FisherAndreAfter, MSGBOX_AUTOCLOSE
 	end
 
 LakeOfRage_EventScript_Raymond::
-	trainerbattle_single TRAINER_RAYMOND LakeOfRage_Text_FisherRaymondSeen, LakeOfRage_Text_FisherRaymondBeaten
+	trainerbattle_single TRAINER_RAYMOND, LakeOfRage_Text_FisherRaymondSeen, LakeOfRage_Text_FisherRaymondBeaten
 	msgbox LakeOfRage_Text_FisherRaymondAfter, MSGBOX_AUTOCLOSE
 	end
 
 LakeOfRage_EventScript_Aaron::
-	trainerbattle_single TRAINER_AARON LakeOfRage_Text_CooltrainermAaronSeen, LakeOfRage_Text_CooltrainermAaronBeaten
+	trainerbattle_single TRAINER_AARON, LakeOfRage_Text_CooltrainermAaronSeen, LakeOfRage_Text_CooltrainermAaronBeaten
 	msgbox LakeOfRage_Text_CooltrainermAaronAfter, MSGBOX_AUTOCLOSE
 	end
 
 LakeOfRage_EventScript_Lois::
-	trainerbattle_single TRAINER_LOIS LakeOfRage_Text_CooltrainerfLoisSeen, LakeOfRage_Text_CooltrainerfLoisBeaten
+	trainerbattle_single TRAINER_LOIS, LakeOfRage_Text_CooltrainerfLoisSeen, LakeOfRage_Text_CooltrainerfLoisBeaten
 	msgbox LakeOfRage_Text_CooltrainerfLoisAfter, MSGBOX_AUTOCLOSE
 	end
 

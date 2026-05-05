@@ -24,7 +24,7 @@ Route37_EventScript_TwinAnne::
 	end
 
 Route37_EventScript_Greg::
-	trainerbattle_single TRAINER_GREG Route37_Text_PsychicGreg_Seen, Route37_Text_PsychicGreg_Beaten
+	trainerbattle_single TRAINER_GREG, Route37_Text_PsychicGreg_Seen, Route37_Text_PsychicGreg_Beaten
 	msgbox Route37_Text_PsychicGreg_After, MSGBOX_AUTOCLOSE
 	end
 

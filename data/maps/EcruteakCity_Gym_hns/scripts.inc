@@ -16,21 +16,21 @@ EcruteakCity_Gym_EventScript_GymGuy2::
 	end	
 
 EcruteakCity_Gym_EventScript_Jeffrey::
-	trainerbattle_single TRAINER_JEFFREY SageJeffreySeenText, SageJeffreyBeatenText
+	trainerbattle_single TRAINER_JEFFREY, SageJeffreySeenText, SageJeffreyBeatenText
 	msgbox SageJeffreyAfterBattleText, MSGBOX_AUTOCLOSE
 	end
 EcruteakCity_Gym_EventScript_Ping::
-	trainerbattle_single TRAINER_PING SagePingSeenText, SagePingBeatenText
+	trainerbattle_single TRAINER_PING, SagePingSeenText, SagePingBeatenText
 	msgbox SagePingAfterBattleText, MSGBOX_AUTOCLOSE
 	end
 
 EcruteakCity_Gym_EventScript_Martha::
-	trainerbattle_single TRAINER_MARTHA MediumMarthaSeenText, MediumMarthaBeatenText
+	trainerbattle_single TRAINER_MARTHA, MediumMarthaSeenText, MediumMarthaBeatenText
 	msgbox MediumMarthaAfterBattleText, MSGBOX_AUTOCLOSE
 	end
 
 EcruteakCity_Gym_EventScript_Grace::
-	trainerbattle_single TRAINER_GRACE MediumGraceSeenText, MediumGraceBeatenText
+	trainerbattle_single TRAINER_GRACE, MediumGraceSeenText, MediumGraceBeatenText
 	msgbox MediumGraceAfterBattleText, MSGBOX_AUTOCLOSE
 	end
 

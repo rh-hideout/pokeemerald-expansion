@@ -231,7 +231,7 @@ ContestHall_hns_EventScript_RandomAudienceExpertF::
 	return
 
 ContestHall_hns_EventScript_RandomAudiencePokefanM::
-	setvar VAR_TEMP_1, OBJ_EVENT_GFX_ATTENDANT_M
+	setvar VAR_TEMP_1, OBJ_EVENT_GFX_ATTENDANT_M_HNS
 	return
 
 ContestHall_hns_EventScript_RandomAudienceWoman4::
@@ -247,7 +247,7 @@ ContestHall_hns_EventScript_RandomAudienceLass::
 	return
 
 ContestHall_hns_EventScript_RandomAudienceOldWoman::
-	setvar VAR_TEMP_1, OBJ_EVENT_GFX_ATTENDANT
+	setvar VAR_TEMP_1, OBJ_EVENT_GFX_ATTENDANT_F_HNS
 	return
 
 ContestHall_hns_EventScript_RandomAudienceCamper::
@@ -291,36 +291,36 @@ ContestHall_hns_EventScript_RandomAudienceBeauty::
 	return
 
 ContestHall_hns_EventScript_RandomAudienceScientist1::
-	setvar VAR_TEMP_1, OBJ_EVENT_GFX_SCIENTIST_M
+	setvar VAR_TEMP_1, OBJ_EVENT_GFX_SCIENTIST_M_HNS
 	return
 
 ContestHall_hns_EventScript_CreateAudience::
 	specialvar VAR_RESULT, IsWirelessContest
 	goto_if_eq VAR_RESULT, TRUE, ContestHall_hns_EventScript_CreateWirelessContestAudience
 	switch VAR_CONTEST_TYPE
-	case CONTEST_TYPE_NPC_NORMAL, ContestHall_hns_EventScript_CreateNormalContestAudience
-	case CONTEST_TYPE_NPC_SUPER, ContestHall_hns_EventScript_CreateSuperContestAudience
-	case CONTEST_TYPE_NPC_HYPER, ContestHall_hns_EventScript_CreateHyperContestAudience
-	case CONTEST_TYPE_NPC_MASTER, ContestHall_hns_EventScript_CreateMasterContestAudience
-	case CONTEST_TYPE_LINK, ContestHall_hns_EventScript_CreateMasterContestAudience
+	case 1, ContestHall_hns_EventScript_CreateNormalContestAudience
+	case 2, ContestHall_hns_EventScript_CreateSuperContestAudience
+	case 3, ContestHall_hns_EventScript_CreateHyperContestAudience
+	case 4, ContestHall_hns_EventScript_CreateMasterContestAudience
+	case 5, ContestHall_hns_EventScript_CreateMasterContestAudience
 	return
 
 ContestHall_hns_EventScript_CreateNormalContestAudience::
 	createvobject OBJ_EVENT_GFX_NINJA_BOY, 20, 3, 2, 3, DIR_SOUTH
-	createvobject OBJ_EVENT_GFX_SCIENTIST_M, 24, 11, 2, 3, DIR_SOUTH
+	createvobject OBJ_EVENT_GFX_SCIENTIST_M_HNS, 24, 11, 2, 3, DIR_SOUTH
 	return
 
 ContestHall_hns_EventScript_CreateSuperContestAudience::
 	createvobject OBJ_EVENT_GFX_BEAUTY, 0, 2, 3, 3, DIR_EAST
 	createvobject OBJ_EVENT_GFX_ROCKER, 1, 2, 4, 3, DIR_EAST
 	createvobject OBJ_EVENT_GFX_HIKER, 2, 2, 7, 3, DIR_EAST
-	createvobject OBJ_EVENT_GFX_SCIENTIST_M, 3, 2, 8, 3, DIR_EAST
+	createvobject OBJ_EVENT_GFX_SCIENTIST_M_HNS, 3, 2, 8, 3, DIR_EAST
 	createvobject OBJ_EVENT_GFX_NINJA_BOY, 10, 12, 3, 3, DIR_WEST
 	createvobject OBJ_EVENT_GFX_WOMAN_2, 11, 12, 4, 3, DIR_WEST
 	createvobject OBJ_EVENT_GFX_COOLTRAINER_F, 12, 12, 7, 3, DIR_WEST
 	createvobject OBJ_EVENT_GFX_LITTLE_GIRL, 13, 12, 8, 3, DIR_WEST
 	createvobject OBJ_EVENT_GFX_PSYCHIC_M, 20, 3, 2, 3, DIR_SOUTH
-	createvobject OBJ_EVENT_GFX_SCIENTIST_M, 24, 11, 2, 3, DIR_SOUTH
+	createvobject OBJ_EVENT_GFX_SCIENTIST_M_HNS, 24, 11, 2, 3, DIR_SOUTH
 	return
 
 ContestHall_hns_EventScript_CreateHyperContestAudience::
@@ -335,7 +335,7 @@ ContestHall_hns_EventScript_CreateHyperContestAudience::
 	createvobject OBJ_EVENT_GFX_OLD_WOMAN, 20, 3, 2, 3, DIR_SOUTH
 	createvobject OBJ_EVENT_GFX_GYM_GUY, 20, 6, 2, 3, DIR_SOUTH
 	createvobject OBJ_EVENT_GFX_WORKER_F, 20, 7, 2, 3, DIR_SOUTH
-	createvobject OBJ_EVENT_GFX_SCIENTIST_M, 24, 8, 2, 3, DIR_SOUTH
+	createvobject OBJ_EVENT_GFX_SCIENTIST_M_HNS, 24, 8, 2, 3, DIR_SOUTH
 	createvobject OBJ_EVENT_GFX_GENTLEMAN, 24, 11, 2, 3, DIR_SOUTH
 	createvobject OBJ_EVENT_GFX_LITTLE_BOY, 25, 3, 9, 3, DIR_NORTH
 	createvobject OBJ_EVENT_GFX_YOUNGSTER, 26, 4, 9, 3, DIR_NORTH
@@ -363,10 +363,10 @@ ContestHall_hns_EventScript_CreateMasterContestAudience::
 	createvobject OBJ_EVENT_GFX_COOLTRAINER_M, 17, 13, 6, 3, DIR_WEST
 	createvobject OBJ_EVENT_GFX_CLERK, 18, 13, 7, 3, DIR_WEST
 	createvobject OBJ_EVENT_GFX_KIMONO_GIRL, 19, 13, 8, 3, DIR_WEST
-	createvobject OBJ_EVENT_GFX_ATTENDANT_M, 20, 3, 2, 3, DIR_SOUTH
+	createvobject OBJ_EVENT_GFX_ATTENDANT_M_HNS, 20, 3, 2, 3, DIR_SOUTH
 	createvobject OBJ_EVENT_GFX_CAMPER, 21, 6, 2, 3, DIR_SOUTH
 	createvobject OBJ_EVENT_GFX_MAN, 22, 7, 2, 3, DIR_SOUTH
-	createvobject OBJ_EVENT_GFX_SCIENTIST_M, 24, 11, 2, 3, DIR_SOUTH
+	createvobject OBJ_EVENT_GFX_SCIENTIST_M_HNS, 24, 11, 2, 3, DIR_SOUTH
 	createvobject OBJ_EVENT_GFX_SAILOR, 25, 3, 9, 3, DIR_NORTH
 	createvobject OBJ_EVENT_GFX_YOUNGSTER, 26, 4, 9, 3, DIR_NORTH
 	createvobject OBJ_EVENT_GFX_GENTLEMAN, 27, 5, 9, 3, DIR_NORTH
@@ -393,20 +393,20 @@ ContestHall_hns_EventScript_CreateWirelessContestAudience::
 	createvobject OBJ_EVENT_GFX_COOLTRAINER_M, 17, 13, 6, 3, DIR_WEST
 	createvobject OBJ_EVENT_GFX_CLERK, 18, 13, 7, 3, DIR_WEST
 	createvobject OBJ_EVENT_GFX_KIMONO_GIRL, 19, 13, 8, 3, DIR_WEST
-	createvobject OBJ_EVENT_GFX_ATTENDANT_M, 20, 3, 2, 3, DIR_SOUTH
+	createvobject OBJ_EVENT_GFX_ATTENDANT_M_HNS, 20, 3, 2, 3, DIR_SOUTH
 	createvobject OBJ_EVENT_GFX_CAMPER, 21, 6, 2, 3, DIR_SOUTH
 	createvobject OBJ_EVENT_GFX_MAN, 22, 7, 2, 3, DIR_SOUTH
-	createvobject OBJ_EVENT_GFX_SCIENTIST_M, 24, 11, 2, 3, DIR_SOUTH
+	createvobject OBJ_EVENT_GFX_SCIENTIST_M_HNS, 24, 11, 2, 3, DIR_SOUTH
 	return
 
 ContestHall_hns_EventScript_SetExitWarp::
 	special ClearLinkContestFlags
 	switch VAR_CONTEST_TYPE
-	case CONTEST_TYPE_NPC_NORMAL, ContestHall_hns_EventScript_SetExitWarpNormalContest
-	case CONTEST_TYPE_NPC_SUPER, ContestHall_hns_EventScript_SetExitWarpSuperContest
-	case CONTEST_TYPE_NPC_HYPER, ContestHall_hns_EventScript_SetExitWarpHyperContest
-	case CONTEST_TYPE_NPC_MASTER, ContestHall_hns_EventScript_SetExitWarpMasterContest
-	case CONTEST_TYPE_LINK, ContestHall_hns_EventScript_SetExitWarpLinkContest
+	case 1, ContestHall_hns_EventScript_SetExitWarpNormalContest
+	case 2, ContestHall_hns_EventScript_SetExitWarpSuperContest
+	case 3, ContestHall_hns_EventScript_SetExitWarpHyperContest
+	case 4, ContestHall_hns_EventScript_SetExitWarpMasterContest
+	case 5, ContestHall_hns_EventScript_SetExitWarpLinkContest
 	return
 
 ContestHall_hns_EventScript_SetExitWarpNormalContest::

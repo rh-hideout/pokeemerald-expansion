@@ -32,7 +32,7 @@ MtMortar_2F_EventScript_Item_Elixir::
     end
 
 MtMortar_2F_EventScript_Nerd::
-	trainerbattle_single TRAINER_HUGH MtMortar_2F_Text_SupernerdHughSeen, MtMortar_2F_Text_SupernerdHughBeaten
+	trainerbattle_single TRAINER_HUGH, MtMortar_2F_Text_SupernerdHughSeen, MtMortar_2F_Text_SupernerdHughBeaten
 	msgbox MtMortar_2F_Text_SupernerdHughAfter, MSGBOX_AUTOCLOSE
 	end
 

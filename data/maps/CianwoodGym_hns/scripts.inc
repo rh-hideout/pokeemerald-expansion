@@ -184,7 +184,7 @@ CianwoodGym_Text_ChuckRematchDefeat:
 	.string "Again?$"
 
 CianwoodGym_EventScript_Yoshi::
-	trainerbattle_single TRAINER_YOSHI CianwoodGym_Text_BlackbeltYoshiSeen, CianwoodGym_Text_BlackbeltYoshiBeaten
+	trainerbattle_single TRAINER_YOSHI, CianwoodGym_Text_BlackbeltYoshiSeen, CianwoodGym_Text_BlackbeltYoshiBeaten
 	msgbox CianwoodGym_Text_BlackbeltYoshiAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -201,7 +201,7 @@ CianwoodGym_Text_BlackbeltYoshiAfter:
 	.string "with your POKéMON too!$"
 
 CianwoodGym_EventScript_Lao::
-	trainerbattle_single TRAINER_LAO CianwoodGym_Text_BlackbeltLaoSeen, CianwoodGym_Text_BlackbeltLaoBeaten
+	trainerbattle_single TRAINER_LAO, CianwoodGym_Text_BlackbeltLaoSeen, CianwoodGym_Text_BlackbeltLaoBeaten
 	msgbox CianwoodGym_Text_BlackbeltLaoAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -217,7 +217,7 @@ CianwoodGym_Text_BlackbeltLaoAfter:
 
 
 CianwoodGym_EventScript_Nob::
-	trainerbattle_single TRAINER_NOB CianwoodGym_Text_BlackbeltNobSeen, CianwoodGym_Text_BlackbeltNobBeaten
+	trainerbattle_single TRAINER_NOB, CianwoodGym_Text_BlackbeltNobSeen, CianwoodGym_Text_BlackbeltNobBeaten
 	msgbox CianwoodGym_Text_BlackbeltNobAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -232,7 +232,7 @@ CianwoodGym_Text_BlackbeltNobAfter:
 	.string "I lost! I'm speechless!$"
 
 CianwoodGym_EventScript_Lung::
-	trainerbattle_single TRAINER_LUNG CianwoodGym_Text_BlackbeltLungSeen, CianwoodGym_Text_BlackbeltLungBeaten
+	trainerbattle_single TRAINER_LUNG, CianwoodGym_Text_BlackbeltLungSeen, CianwoodGym_Text_BlackbeltLungBeaten
 	msgbox CianwoodGym_Text_BlackbeltLungAfter, MSGBOX_AUTOCLOSE
 	end
 

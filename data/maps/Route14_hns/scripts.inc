@@ -160,17 +160,17 @@ Route14_Movement_EusineLeave:
 	step_end
 
 Route14_EventScript_Carter::
-	trainerbattle_single TRAINER_CARTER Route14_Text_PokefanmCarterSeen, Route14_Text_PokefanmCarterBeaten
+	trainerbattle_single TRAINER_CARTER, Route14_Text_PokefanmCarterSeen, Route14_Text_PokefanmCarterBeaten
 	msgbox Route14_Text_PokefanmCarterAfterBattle, MSGBOX_AUTOCLOSE
 	end
 
 Route14_EventScript_Roy::
-	trainerbattle_single TRAINER_ROY Route14_Text_BirdKeeperRoySeen, Route14_Text_BirdKeeperRoyBeaten
+	trainerbattle_single TRAINER_ROY, Route14_Text_BirdKeeperRoySeen, Route14_Text_BirdKeeperRoyBeaten
 	msgbox Route14_Text_BirdKeeperRoyAfterBattle, MSGBOX_AUTOCLOSE
 	end
 
 Route14_EventScript_Trevor::
-	trainerbattle_single TRAINER_TREVOR Route14_Text_PokefanmTrevorSeen, Route14_Text_PokefanmTrevorBeaten
+	trainerbattle_single TRAINER_TREVOR, Route14_Text_PokefanmTrevorSeen, Route14_Text_PokefanmTrevorBeaten
 	msgbox Route14_Text_PokefanmTrevorAfterBattle, MSGBOX_AUTOCLOSE
 	end
 

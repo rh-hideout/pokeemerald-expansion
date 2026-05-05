@@ -182,12 +182,12 @@ BurnedTowerSilver_AfterText2:
 	.string "Serves you right!$"
 
 BurnedTower_1F_EventScript_Nard::
-	trainerbattle_single TRAINER_NARD BurnedTower_Text_NardSeen, BurnedTower_Text_NardBeaten
+	trainerbattle_single TRAINER_NARD, BurnedTower_Text_NardSeen, BurnedTower_Text_NardBeaten
 	msgbox BurnedTower_Text_NardAfter, MSGBOX_AUTOCLOSE
 	end
 
 BurnedTower_1F_EventScript_Richardo::
-	trainerbattle_single TRAINER_RICHARDO BurnedTower_Text_RichardoSeen, BurnedTower_Text_RichardoBeaten
+	trainerbattle_single TRAINER_RICHARDO, BurnedTower_Text_RichardoSeen, BurnedTower_Text_RichardoBeaten
 	msgbox BurnedTower_Text_RichardoAfter, MSGBOX_AUTOCLOSE
 	end
 

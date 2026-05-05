@@ -216,7 +216,7 @@ RocketHideout_B3F_EventScript_DoorIsOpen::
 	end
 
 RocketHideout_B3F_EventScript_GruntF5::
-	trainerbattle_single TRAINER_GRUNT_29 RocketHideout_B3F_Text_GruntF5Seen, RocketHideout_B3F_Text_GruntF5Beaten
+	trainerbattle_single TRAINER_GRUNT_29, RocketHideout_B3F_Text_GruntF5Seen, RocketHideout_B3F_Text_GruntF5Beaten
 	msgbox RocketHideout_B3F_Text_GruntF5After, MSGBOX_NPC
 	goto_if_unset FLAG_GOT_PASSWORD_FROM_GRUNTF, RocketHideout_B3F_EventScript_IncrementPasswordGruntF
 	end
@@ -227,7 +227,7 @@ RocketHideout_B3F_EventScript_IncrementPasswordGruntF::
 	end
 
 RocketHideout_B3F_EventScript_Eto::
-	trainerbattle_single TRAINER_ETO_2 RocketHideout_B3F_Text_GruntM28Seen, RocketHideout_B3F_Text_GruntM28Beaten
+	trainerbattle_single TRAINER_ETO_2, RocketHideout_B3F_Text_GruntM28Seen, RocketHideout_B3F_Text_GruntM28Beaten
 	msgbox RocketHideout_B3F_Text_GruntM28After, MSGBOX_NPC
 	goto_if_unset FLAG_GOT_PASSWORD_FROM_ETO, RocketHideout_B3F_EventScript_IncrementPasswordEto
 	end
@@ -238,12 +238,12 @@ RocketHideout_B3F_EventScript_IncrementPasswordEto::
 	end
 
 RocketHideout_B3F_EventScript_Ross::
-	trainerbattle_single TRAINER_ROSS RocketHideout_B3F_Text_ScientistRossSeen, RocketHideout_B3F_Text_ScientistRossBeaten
+	trainerbattle_single TRAINER_ROSS, RocketHideout_B3F_Text_ScientistRossSeen, RocketHideout_B3F_Text_ScientistRossBeaten
 	msgbox RocketHideout_B3F_Text_ScientistRossAfter, MSGBOX_AUTOCLOSE
 	end
 
 RocketHideout_B3F_EventScript_Mitch::
-	trainerbattle_single TRAINER_MITCH RocketHideout_B3F_Text_ScientistMitchSeen, RocketHideout_B3F_Text_ScientistMitchBeaten
+	trainerbattle_single TRAINER_MITCH, RocketHideout_B3F_Text_ScientistMitchSeen, RocketHideout_B3F_Text_ScientistMitchBeaten
 	msgbox RocketHideout_B3F_Text_ScientistMitchAfter, MSGBOX_AUTOCLOSE
 	end
 

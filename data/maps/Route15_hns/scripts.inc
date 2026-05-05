@@ -8,32 +8,32 @@ Route15_OnTransition:
 	end
 
 Route15_EventScript_Colette::
-	trainerbattle_single TRAINER_COLETTE Route15_Text_TeacherColetteSeen, Route15_Text_TeacherColetteBeaten
+	trainerbattle_single TRAINER_COLETTE, Route15_Text_TeacherColetteSeen, Route15_Text_TeacherColetteBeaten
 	msgbox Route15_Text_TeacherColetteAfterBattle, MSGBOX_AUTOCLOSE
 	end
 
 Route15_EventScript_Hillary::
-	trainerbattle_single TRAINER_HILLARY Route15_Text_TeacherHillarySeen, Route15_Text_TeacherHillaryBeaten
+	trainerbattle_single TRAINER_HILLARY, Route15_Text_TeacherHillarySeen, Route15_Text_TeacherHillaryBeaten
 	msgbox Route15_Text_TeacherHillaryAfterBattle, MSGBOX_AUTOCLOSE
 	end
 
 Route15_EventScript_Kipp::
-	trainerbattle_single TRAINER_KIPP Route15_Text_SchoolboyKippSeen, Route15_Text_SchoolboyKippBeaten
+	trainerbattle_single TRAINER_KIPP, Route15_Text_SchoolboyKippSeen, Route15_Text_SchoolboyKippBeaten
 	msgbox Route15_Text_SchoolboyKippAfterBattle, MSGBOX_AUTOCLOSE
 	end
 
 Route15_EventScript_Tommy::
-	trainerbattle_single TRAINER_TOMMY Route15_Text_SchoolboyTommySeen, Route15_Text_SchoolboyTommyBeaten
+	trainerbattle_single TRAINER_TOMMY, Route15_Text_SchoolboyTommySeen, Route15_Text_SchoolboyTommyBeaten
 	msgbox Route15_Text_SchoolboyTommyAfterBattle, MSGBOX_AUTOCLOSE
 	end
 
 Route15_EventScript_Johnny::
-	trainerbattle_single TRAINER_JOHNNY Route15_Text_SchoolboyJohnnySeen, Route15_Text_SchoolboyJohnnyBeaten
+	trainerbattle_single TRAINER_JOHNNY, Route15_Text_SchoolboyJohnnySeen, Route15_Text_SchoolboyJohnnyBeaten
 	msgbox Route15_Text_SchoolboyJohnnyAfterBattle, MSGBOX_AUTOCLOSE
 	end
 
 Route15_EventScript_Billy::
-	trainerbattle_single TRAINER_BILLY Route15_Text_SchoolboyBillySeen, Route15_Text_SchoolboyBillyBeaten
+	trainerbattle_single TRAINER_BILLY, Route15_Text_SchoolboyBillySeen, Route15_Text_SchoolboyBillyBeaten
 	msgbox Route15_Text_SchoolboyBillyAfterBattle, MSGBOX_AUTOCLOSE
 	end
 

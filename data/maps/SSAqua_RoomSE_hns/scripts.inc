@@ -2,7 +2,7 @@ SSAqua_RoomSE_hns_MapScripts::
 	.byte 0
 
 SSAqua_RoomSE_EventScript_Colin::
-	trainerbattle_single TRAINER_COLIN SSAqua_RoomSE_Text_PokefanmColinSeen, SSAqua_RoomSE_Text_PokefanmColinBeaten
+	trainerbattle_single TRAINER_COLIN, SSAqua_RoomSE_Text_PokefanmColinSeen, SSAqua_RoomSE_Text_PokefanmColinBeaten
 	msgbox SSAqua_RoomSE_Text_PokefanmColinAfter, MSGBOX_AUTOCLOSE
 	end
 

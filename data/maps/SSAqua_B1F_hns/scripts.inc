@@ -72,7 +72,7 @@ SSAqua_B1F_Text_FastShipOnDutySailorDirections:
 	.string "the CAPTAIN's cabin.$"
 
 SSAqua_B1F_EventScript_Jeff::
-	trainerbattle_single TRAINER_JEFF SSAqua_B1F_Text_SailorJeffSeen, SSAqua_B1F_Text_SailorJeffBeaten
+	trainerbattle_single TRAINER_JEFF, SSAqua_B1F_Text_SailorJeffSeen, SSAqua_B1F_Text_SailorJeffBeaten
 	msgbox SSAqua_B1F_Text_SailorJeffAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -88,7 +88,7 @@ SSAqua_B1F_Text_SailorJeffAfter:
 	.string "get serious.$"
 
 SSAqua_B1F_EventScript_Debra::
-	trainerbattle_single TRAINER_DEBRA SSAqua_B1F_Text_PicnickerDebraSeen, SSAqua_B1F_Text_PicnickerDebraBeaten
+	trainerbattle_single TRAINER_DEBRA, SSAqua_B1F_Text_PicnickerDebraSeen, SSAqua_B1F_Text_PicnickerDebraBeaten
 	msgbox SSAqua_B1F_Text_PicnickerDebraAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -103,7 +103,7 @@ SSAqua_B1F_Text_PicnickerDebraAfter:
 	.string "are many big cities in KANTO.$"
 
 SSAqua_B1F_EventScript_Fritz::
-	trainerbattle_single TRAINER_FRITZ SSAqua_B1F_Text_JugglerFritzSeen, SSAqua_B1F_Text_JugglerFritzBeaten
+	trainerbattle_single TRAINER_FRITZ, SSAqua_B1F_Text_JugglerFritzSeen, SSAqua_B1F_Text_JugglerFritzBeaten
 	msgbox SSAqua_B1F_Text_JugglerFritzAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -119,7 +119,7 @@ SSAqua_B1F_Text_JugglerFritzAfter:
 	.string "I'm taking the MAGNET TRAIN.$"
 
 SSAqua_B1F_EventScript_Garrett::
-	trainerbattle_single TRAINER_GARRETT SSAqua_B1F_Text_SailorGarrettSeen, SSAqua_B1F_Text_SailorGarrettBeaten
+	trainerbattle_single TRAINER_GARRETT, SSAqua_B1F_Text_SailorGarrettSeen, SSAqua_B1F_Text_SailorGarrettBeaten
 	msgbox SSAqua_B1F_Text_SailorGarrettAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -135,7 +135,7 @@ SSAqua_B1F_Text_SailorGarrettAfter:
 	.string "OLIVINE CITY.$"
 
 SSAqua_B1F_EventScript_Jonah::
-	trainerbattle_single TRAINER_JONAH SSAqua_B1F_Text_FisherJonahSeen, SSAqua_B1F_Text_FisherJonahBeaten
+	trainerbattle_single TRAINER_JONAH, SSAqua_B1F_Text_FisherJonahSeen, SSAqua_B1F_Text_FisherJonahBeaten
 	msgbox SSAqua_B1F_Text_FisherJonahAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -152,7 +152,7 @@ SSAqua_B1F_Text_FisherJonahAfter:
 	.string "VERMILION's pier.$"
 
 SSAqua_B1F_EventScript_Wai::
-	trainerbattle_single TRAINER_WAI SSAqua_B1F_Text_BlackbeltWaiSeen, SSAqua_B1F_Text_BlackbeltWaiBeaten
+	trainerbattle_single TRAINER_WAI, SSAqua_B1F_Text_BlackbeltWaiSeen, SSAqua_B1F_Text_BlackbeltWaiBeaten
 	msgbox SSAqua_B1F_Text_BlackbeltWaiAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -171,7 +171,7 @@ SSAqua_B1F_Text_BlackbeltWaiAfter:
 	.string "a cave somewhere.$"
 
 SSAqua_B1F_EventScript_Kenneth::
-	trainerbattle_single TRAINER_KENNETH SSAqua_B1F_Text_SailorKennethSeen, SSAqua_B1F_Text_SailorKennethBeaten
+	trainerbattle_single TRAINER_KENNETH, SSAqua_B1F_Text_SailorKennethSeen, SSAqua_B1F_Text_SailorKennethBeaten
 	msgbox SSAqua_B1F_Text_SailorKennethAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -190,7 +190,7 @@ SSAqua_B1F_Text_SailorKennethAfter:
 	.string "No wonder you're so good!$"
 
 SSAqua_B1F_EventScript_Shirley::
-	trainerbattle_single TRAINER_SHIRLEY SSAqua_B1F_Text_TeacherShirleySeen, SSAqua_B1F_Text_TeacherShirleyBeaten
+	trainerbattle_single TRAINER_SHIRLEY, SSAqua_B1F_Text_TeacherShirleySeen, SSAqua_B1F_Text_TeacherShirleyBeaten
 	msgbox SSAqua_B1F_Text_TeacherShirleyAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -206,7 +206,7 @@ SSAqua_B1F_Text_TeacherShirleyAfter:
 	.string "RUINS outside VIOLET.$"
 
 SSAqua_B1F_EventScript_Nate::
-	trainerbattle_single TRAINER_NATE SSAqua_B1F_Text_SchoolboyNateSeen, SSAqua_B1F_Text_SchoolboyNateBeaten
+	trainerbattle_single TRAINER_NATE, SSAqua_B1F_Text_SchoolboyNateSeen, SSAqua_B1F_Text_SchoolboyNateBeaten
 	msgbox SSAqua_B1F_Text_SchoolboyNateAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -221,7 +221,7 @@ SSAqua_B1F_Text_SchoolboyNateAfter:
 	.string "inside the RUINS.$"
 
 SSAqua_B1F_EventScript_Ricky::
-	trainerbattle_single TRAINER_RICKY SSAqua_B1F_Text_SchoolboyRickySeen, SSAqua_B1F_Text_SchoolboyRickyBeaten
+	trainerbattle_single TRAINER_RICKY, SSAqua_B1F_Text_SchoolboyRickySeen, SSAqua_B1F_Text_SchoolboyRickyBeaten
 	msgbox SSAqua_B1F_Text_SchoolboyRickyAfter, MSGBOX_AUTOCLOSE
 	end
 

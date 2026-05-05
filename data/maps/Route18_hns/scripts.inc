@@ -8,12 +8,12 @@ Route18_OnTransition:
 	end
 
 Route18_EventScript_Boris::
-	trainerbattle_single TRAINER_BORIS Route18_Text_BirdKeeperBorisSeen, Route18_Text_BirdKeeperBorisBeaten
+	trainerbattle_single TRAINER_BORIS, Route18_Text_BirdKeeperBorisSeen, Route18_Text_BirdKeeperBorisBeaten
 	msgbox Route18_Text_BirdKeeperBorisAfterBattle, MSGBOX_AUTOCLOSE
 	end
 
 Route18_EventScript_Bob::
-	trainerbattle_single TRAINER_BOB Route18_Text_BirdKeeperBobSeen, Route18_Text_BirdKeeperBobBeaten
+	trainerbattle_single TRAINER_BOB, Route18_Text_BirdKeeperBobSeen, Route18_Text_BirdKeeperBobBeaten
 	msgbox Route18_Text_BirdKeeperBobAfterBattle, MSGBOX_AUTOCLOSE
 	end
 

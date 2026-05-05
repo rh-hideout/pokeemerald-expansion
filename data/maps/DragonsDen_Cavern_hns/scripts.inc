@@ -164,12 +164,12 @@ DragonsDen_Cavern_Text_ClairWhatsTheMatter:
     .string "Give it everything you've got.$"
 
 DragonsDen_Cavern_EventScript_Darin::
-	trainerbattle_single TRAINER_DARIN DragonsDen_Cavern_Text_CooltrainermDarinSeen, DragonsDen_Cavern_Text_CooltrainermDarinBeaten
+	trainerbattle_single TRAINER_DARIN, DragonsDen_Cavern_Text_CooltrainermDarinSeen, DragonsDen_Cavern_Text_CooltrainermDarinBeaten
 	msgbox DragonsDen_Cavern_Text_CooltrainermDarinAfter, MSGBOX_AUTOCLOSE
 	end
 
 DragonsDen_Cavern_EventScript_Cara::
-	trainerbattle_single TRAINER_CARA DragonsDen_Cavern_Text_CooltrainerfCaraSeen, DragonsDen_Cavern_Text_CooltrainerfCaraBeaten
+	trainerbattle_single TRAINER_CARA, DragonsDen_Cavern_Text_CooltrainerfCaraSeen, DragonsDen_Cavern_Text_CooltrainerfCaraBeaten
 	msgbox DragonsDen_Cavern_Text_CooltrainerfCaraAfter, MSGBOX_AUTOCLOSE
 	end
 

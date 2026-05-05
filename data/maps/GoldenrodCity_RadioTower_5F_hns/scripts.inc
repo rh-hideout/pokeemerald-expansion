@@ -142,7 +142,7 @@ GoldenrodCity_RadioTower_5F_EventScript_Ben::
 	end
 
 GoldenrodRaidoTower4_EventScript_ARIANA::
-	trainerbattle_single TRAINER_ARIANA_2 GoldenrodCity_RadioTower_5F_Text_ExecutiveF1Seen, GoldenrodCity_RadioTower_5F_Text_ExecutiveF1Beaten
+	trainerbattle_single TRAINER_ARIANA_2, GoldenrodCity_RadioTower_5F_Text_ExecutiveF1Seen, GoldenrodCity_RadioTower_5F_Text_ExecutiveF1Beaten
 	msgbox GoldenrodCity_RadioTower_5F_Text_ExecutiveF1After, MSGBOX_AUTOCLOSE
 	end
 

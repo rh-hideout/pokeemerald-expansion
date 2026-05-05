@@ -82,7 +82,7 @@ CeladonCity_Gym_Text_ErikaRematchDefeat:
 	.string "trainers spurs me to do better…$"
 
 CeladonCity_Gym_EventScript_Michelle::
-	trainerbattle_single TRAINER_MICHELLE CeladonCity_Gym_Text_LassMichelleSeen, CeladonCity_Gym_Text_LassMichelleBeaten
+	trainerbattle_single TRAINER_MICHELLE, CeladonCity_Gym_Text_LassMichelleSeen, CeladonCity_Gym_Text_LassMichelleBeaten
 	msgbox CeladonCity_Gym_Text_LassMichelleAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -98,7 +98,7 @@ CeladonCity_Gym_Text_LassMichelleAfter:
 
 
 CeladonCity_Gym_EventScript_Tanya::
-	trainerbattle_single TRAINER_TANYA CeladonCity_Gym_Text_PicnickerTanyaSeen, CeladonCity_Gym_Text_PicnickerTanyaBeaten
+	trainerbattle_single TRAINER_TANYA, CeladonCity_Gym_Text_PicnickerTanyaSeen, CeladonCity_Gym_Text_PicnickerTanyaBeaten
 	msgbox CeladonCity_Gym_Text_PicnickerTanyaAfter, MSGBOX_AUTOCLOSE
 	end
 
@@ -114,7 +114,7 @@ CeladonCity_Gym_Text_PicnickerTanyaAfter:
 	.string "wonder I couldn't win!$"
 
 CeladonCity_Gym_EventScript_Julia::
-	trainerbattle_single TRAINER_JULIA CeladonCity_Gym_Text_BeautyJuliaSeen, CeladonCity_Gym_Text_BeautyJuliaBeaten
+	trainerbattle_single TRAINER_JULIA, CeladonCity_Gym_Text_BeautyJuliaSeen, CeladonCity_Gym_Text_BeautyJuliaBeaten
 	msgbox CeladonCity_Gym_Text_BeautyJuliaAfter, MSGBOX_AUTOCLOSE
 	end
 

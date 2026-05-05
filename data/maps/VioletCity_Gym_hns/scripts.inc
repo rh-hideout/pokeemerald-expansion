@@ -16,12 +16,12 @@ VioletCity_Gym_EventScript_GymGuy2::
 	end	
 
 VioletCity_Gym_EventScript_Rod::
-	trainerbattle_single TRAINER_ROD VioletGym_Text_BirdKeeperRod_Seen, VioletGym_Text_BirdKeeperRod_Beaten
+	trainerbattle_single TRAINER_ROD, VioletGym_Text_BirdKeeperRod_Seen, VioletGym_Text_BirdKeeperRod_Beaten
 	msgbox VioletGym_Text_BirdKeeperRod_After, MSGBOX_AUTOCLOSE
 	end
 
 VioletCity_Gym_EventScript_Abe::
-	trainerbattle_single TRAINER_ABE VioletGym_Text_BirdKeeperAbe_Seen, VioletGym_Text_BirdKeeperAbe_Beaten
+	trainerbattle_single TRAINER_ABE, VioletGym_Text_BirdKeeperAbe_Seen, VioletGym_Text_BirdKeeperAbe_Beaten
 	msgbox VioletGym_Text_BirdKeeperAbe_After, MSGBOX_AUTOCLOSE
 	end
 
