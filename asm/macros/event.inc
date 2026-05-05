@@ -695,6 +695,19 @@
 		.byte SCR_OP_CHECKRANDOMIZER
 	.endm
 
+	.macro checkpartymonlevel level:req
+		.byte SCR_OP_CHECKPARTYMONLEVEL
+		.2byte \level
+	.endm
+
+	.macro calculatemonstats
+		.byte SCR_OP_CALCULATEMONSTATS
+	.endm
+
+	.macro deleteparty
+		.byte SCR_OP_DELETEPARTY
+	.endm
+
 	@ Blocks script execution until the movements being applied to the specified (localId) object finish.
 	@ If localId is LOCALID_NONE (0), then the id of the last-moved object will be used instead.
 	@ If the specified object is not currently being manipulated with applymovement, then this command does nothing.

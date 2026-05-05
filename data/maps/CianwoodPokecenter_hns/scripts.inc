@@ -10,7 +10,7 @@ CianwoodPokemoncenter_EventScript_Fisher::
 	lock
 	faceplayer
 	goto_if_set FLAG_TEMP_1, CianwoodPokemoncenter_EventScript_FisherNormal
-	checkpartymove MOVE_SURF
+	checkfieldmove FIELD_MOVE_SURF
 	goto_if_eq VAR_RESULT, PARTY_SIZE, CianwoodPokemoncenter_EventScript_FisherGiveTentacool
 CianwoodPokemoncenter_EventScript_FisherNormal::
 	msgbox CianwoodPokemoncenter_Text_Fisher1, MSGBOX_DEFAULT

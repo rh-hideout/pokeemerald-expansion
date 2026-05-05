@@ -3,7 +3,7 @@ Route28_House_hns_MapScripts::
 
 Route28House_EventScript_Celebrity::
 	lock
-	goto_if_set FLAG_GOT_TM_STEEL_WING Route28House_EventScript_CelebrityAfter
+	goto_if_set FLAG_GOT_TM_STEEL_WING, Route28House_EventScript_CelebrityAfter
 	msgbox Route28House_Text_Celebrity1, MSGBOX_NPC
 	giveitem ITEM_TM_STEEL_WING
 	setflag FLAG_GOT_TM_STEEL_WING

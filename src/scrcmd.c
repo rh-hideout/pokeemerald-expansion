@@ -1908,6 +1908,34 @@ bool8 ScrCmd_checkrandomizer(struct ScriptContext *ctx)
     return FALSE;
 }
 
+bool8 ScrCmd_checkpartymonlevel(struct ScriptContext *ctx)
+{
+    u16 level = ScriptReadHalfword(ctx);
+    (void)level;
+    struct Pokemon *pokemon = &gPlayerParty[gSpecialVar_0x8004];
+    if (GetMonData(pokemon, MON_DATA_LEVEL) == 100)
+        gSpecialVar_Result = TRUE;
+    else
+        gSpecialVar_Result = FALSE;
+    return FALSE;
+}
+
+bool8 ScrCmd_calculatemonstats(struct ScriptContext *ctx)
+{
+    s32 i;
+    for (i = 0; i < PARTY_SIZE; i++)
+        CalculateMonStats(&gPlayerParty[i]);
+    return FALSE;
+}
+
+bool8 ScrCmd_deleteparty(struct ScriptContext *ctx)
+{
+    s32 i;
+    for (i = 0; i < PARTY_SIZE; i++)
+        ZeroMonData(&gPlayerParty[i]);
+    return FALSE;
+}
+
 bool8 ScrCmd_applymovementat(struct ScriptContext *ctx)
 {
     u16 localId = VarGet(ScriptReadHalfword(ctx));

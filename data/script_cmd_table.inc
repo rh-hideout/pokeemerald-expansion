@@ -265,6 +265,9 @@ gScriptCmdTable::
 	script_cmd_table_entry SCR_OP_BUFFERMONCATEGORY            ScrCmd_buffermoncategory,            requests_effects=0  @ 0xf0
 	script_cmd_table_entry SCR_OP_CHECKNUZLOCKE                ScrCmd_checknuzlocke,               requests_effects=0  @ 0xf1
 	script_cmd_table_entry SCR_OP_CHECKRANDOMIZER              ScrCmd_checkrandomizer,             requests_effects=0  @ 0xf2
+	script_cmd_table_entry SCR_OP_CHECKPARTYMONLEVEL           ScrCmd_checkpartymonlevel,          requests_effects=0  @ 0xf3
+	script_cmd_table_entry SCR_OP_CALCULATEMONSTATS            ScrCmd_calculatemonstats,           requests_effects=0  @ 0xf4
+	script_cmd_table_entry SCR_OP_DELETEPARTY                  ScrCmd_deleteparty,                 requests_effects=0  @ 0xf5
 
 	.if ALLOCATE_SCRIPT_CMD_TABLE
 gScriptCmdTableEnd::

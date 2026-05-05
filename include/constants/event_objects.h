@@ -607,6 +607,7 @@
 
 // Don't use (1u << 15) to avoid conflict with BLEND_IMMUNE_FLAG.
 #define OBJ_EVENT_MON               (1u << 14)
+#define OBJ_EVENT_GFX_MON_BASE     OBJ_EVENT_MON
 #define OBJ_EVENT_MON_SHINY         (1u << 13)
 #define OBJ_EVENT_MON_FEMALE        (1u << 12)
 #define OBJ_EVENT_MON_SPECIES_MASK  (~(7u << 12))
