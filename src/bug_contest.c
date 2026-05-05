@@ -14,6 +14,8 @@
 #include "field_screen_effect.h"
 #include "string_util.h"
 
+#if IS_HNS
+
 static u32 sBugContestStartTime;
 static bool8 sBugContestTimerActive;
 
@@ -214,3 +216,4 @@ bool8 ShowBugContestChosenMon(void)
 
     return FALSE;
 }
+#endif

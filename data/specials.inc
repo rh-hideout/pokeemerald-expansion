@@ -653,3 +653,5 @@ gSpecials::
 	def_special JudgeBugContestMon
 	def_special RemoveSafariBalls
 	def_special ShowBugContestChosenMon
+	def_special SwitchMonAbility
+	def_special NameRival

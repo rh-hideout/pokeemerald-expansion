@@ -89,10 +89,10 @@
 
 // Unused HnS vars
 #define VAR_TIME_BASED_ENCOUNTER                            0x4092
-#define VAR_UNUSED_HNS_0x4093                            0x4093
-#define VAR_UNUSED_HNS_0x4094                            0x4094
-#define VAR_UNUSED_HNS_0x4095                            0x4095
-#define VAR_UNUSED_HNS_0x4096                            0x4096
+#define VAR_CELADON_CITY_STATE                            0x4093
+#define VAR_PALLET_TOWN_STATE                            0x4094
+#define VAR_VIRIDIAN_CITY_STATE                            0x4095
+#define VAR_LAVENDER_TOWN_STATE                            0x4096
 #define VAR_UNUSED_HNS_0x4097                            0x4097
 #define VAR_UNUSED_HNS_0x4098                            0x4098
 #define VAR_UNUSED_HNS_0x4099                            0x4099

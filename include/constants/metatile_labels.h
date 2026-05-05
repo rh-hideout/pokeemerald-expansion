@@ -1107,5 +1107,8 @@
 #define METATILE_GoldenrodUnderground_Elevator_Hns 0x2AB
 #define METATILE_SSAqua_Door_Hns                   0x281
 #define METATILE_PalletTown_Door_Green_Hns     0x2AC
+#define METATILE_R26_21_Broken_Window          0x32B
+#define METATILE_Route38Farm_Grass                               0x2E4
+
 
 #endif // GUARD_METATILE_LABELS_H
