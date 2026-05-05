@@ -2,7 +2,7 @@
   "id": "MAP_TRAINER_HILL_COURTYARD_HNS",
   "name": "TrainerHill_Courtyard_hns",
   "layout": "LAYOUT_TRAINER_HILL_COURTYARD_HNS",
-  "music": "MUS_PL_FIGHT_AREA_DAY",
+  "music": "MUS_B_FRONTIER",
   "region_map_section": "MAPSEC_TRAINER_HILL",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -403,28 +403,28 @@
       "x": 12,
       "y": 10,
       "elevation": 0,
-      "dest_map": "MAP_TRAINER_HILL_ENTRANCE_HNS",
+      "dest_map": "MAP_TEST_MAP1_HNS",
       "dest_warp_id": "0"
     },
     {
       "x": 27,
       "y": 19,
       "elevation": 0,
-      "dest_map": "MAP_FALLARBOR_TOWN_BATTLE_TENT_LOBBY_HNS",
+      "dest_map": "MAP_TEST_MAP1_HNS",
       "dest_warp_id": "0"
     },
     {
       "x": 20,
       "y": 28,
       "elevation": 0,
-      "dest_map": "MAP_VERDANTURF_TOWN_BATTLE_TENT_LOBBY_HNS",
+      "dest_map": "MAP_TEST_MAP1_HNS",
       "dest_warp_id": "0"
     },
     {
       "x": 34,
       "y": 28,
       "elevation": 0,
-      "dest_map": "MAP_SLATEPORT_CITY_BATTLE_TENT_LOBBY_HNS",
+      "dest_map": "MAP_TEST_MAP1_HNS",
       "dest_warp_id": "0"
     }
   ],
