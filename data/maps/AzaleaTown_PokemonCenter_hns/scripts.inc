@@ -3,7 +3,7 @@ AzaleaTown_PokemonCenter_hns_MapScripts::
 	.byte 0
 
 AzaleaTown_Pokecenter_OnTransition::
-	setrespawn HEAL_LOCATION_AZALEA_TOWN
+	setrespawn HEAL_LOCATION_AZALEA_TOWN_HNS
 	end
 
 AzaleaPokeCenter_EventScript_Gentleman::

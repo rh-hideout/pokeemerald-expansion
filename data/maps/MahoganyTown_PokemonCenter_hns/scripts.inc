@@ -3,7 +3,7 @@ MahoganyTown_PokemonCenter_hns_MapScripts::
 	.byte 0
 
 MahoganyTown_PokemonCenter_OnTransition::
-	setrespawn HEAL_LOCATION_MAHOGANYTOWN_HNS
+	setrespawn HEAL_LOCATION_MAHOGANY_TOWN_HNS
 	end
 
 MahoganyTown_PokemonCenter_EventScript_Hiker::

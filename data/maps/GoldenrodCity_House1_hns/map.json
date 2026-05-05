@@ -53,7 +53,7 @@
       "y": 1,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "GoldenrodCity_NameRatersHouse_EventScript_ToggleShinies"
+      "script": "NULL"
     },
     {
       "type": "sign",
@@ -61,7 +61,7 @@
       "y": 1,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "GoldenrodCity_NameRatersHouse_EventScript_ToggleShinies"
+      "script": "NULL"
     }
   ],
   "game_version": "hns",

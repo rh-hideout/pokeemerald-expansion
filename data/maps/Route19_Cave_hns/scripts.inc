@@ -1,3 +1,5 @@
+.set LOCALID_ROUTE19CAVEKYOGRE, 1
+
 Route19_Cave_hns_MapScripts::
 	.byte 0
 

@@ -407,7 +407,7 @@
       "respawn_npc": "0"
     },
     {
-      "id": "HEAL_LOCATION_CIANWOOD_CITY_HNS_HNS",
+      "id": "HEAL_LOCATION_CIANWOOD_CITY_HNS",
       "map": "MAP_CIANWOOD_CITY_HNS",
       "x": 31,
       "y": 46,
@@ -511,7 +511,7 @@
       "respawn_npc": "0"
     },
     {
-      "id": "HEAL_LOCATION_MT_SILVER_HNS_HNS",
+      "id": "HEAL_LOCATION_MT_SILVER_HNS",
       "map": "MAP_MT_SILVER_OUTSIDE_HNS",
       "x": 25,
       "y": 15
@@ -531,7 +531,7 @@
       "respawn_npc": "0"
     },
     {
-      "id": "HEAL_LOCATION_SAFARI_ZONE_GATE_HNS_HNS",
+      "id": "HEAL_LOCATION_SAFARI_ZONE_GATE_HNS",
       "map": "MAP_SAFARI_ZONE_GATE_HNS",
       "x": 11,
       "y": 16
@@ -545,7 +545,7 @@
       "respawn_npc": "0"
     },
     {
-      "id": "HEAL_LOCATION_ROUTE_32_HNS_HNS",
+      "id": "HEAL_LOCATION_ROUTE_32_HNS",
       "map": "MAP_ROUTE32_HNS",
       "x": 25,
       "y": 85

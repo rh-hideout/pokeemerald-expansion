@@ -165,7 +165,7 @@ NewBarkTown_Lab_EventScript_ChikoritaBall::
 	end
 
 NewBarkTown_Lab_EventScript_ChikoritaBall_Choice::
-	callnative DisableStaticRandomizer
+	@callnative DisableStaticRandomizer
 	setvar VAR_STARTER_MON, 0
 	setvar PLAYER_STARTER_SPECIES, SPECIES_CHIKORITA
 	showmonpic PLAYER_STARTER_SPECIES, 10, 3
@@ -187,7 +187,7 @@ NewBarkTown_Lab_EventScript_CyndaquilBall::
 	end
 
 NewBarkTown_Lab_EventScript_CyndaquilBall_Choice::
-	callnative DisableStaticRandomizer
+	@callnative DisableStaticRandomizer
 	setvar VAR_STARTER_MON, 1
 	setvar PLAYER_STARTER_SPECIES, SPECIES_CYNDAQUIL
 	showmonpic PLAYER_STARTER_SPECIES, 10, 3
@@ -209,7 +209,7 @@ NewBarkTown_Lab_EventScript_TotodileBall::
 	end
 
 NewBarkTown_Lab_EventScript_TotodileBall_Choice::
-	callnative DisableStaticRandomizer
+	@callnative DisableStaticRandomizer
 	setvar VAR_STARTER_MON, 2
 	setvar PLAYER_STARTER_SPECIES, SPECIES_TOTODILE
 	showmonpic PLAYER_STARTER_SPECIES, 10, 3

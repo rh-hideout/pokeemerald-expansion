@@ -1,7 +1,7 @@
 {
   "id": "MAP_GOLDENROD_CITY_DEPARTMENT_STORE_7F_HNS",
   "name": "GoldenrodCity_DepartmentStore_7F_hns",
-  "layout": "LAYOUT_GOLDENROD_CITY_DEPARTMENT_STORE_7F_HNS_HNS",
+  "layout": "LAYOUT_GOLDENROD_CITY_DEPARTMENT_STORE_7F_HNS",
   "music": "MUS_HG_GOLDENROD",
   "region_map_section": "MAPSEC_GOLDENROD_CITY",
   "requires_flash": false,

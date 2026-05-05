@@ -86,7 +86,7 @@ MahoganyTown_Gym_EventScript_PryceVictory::
 	giveitem ITEM_TM_HAIL
 	msgbox MahoganyTown_Gym_Text_HailSpeech, MSGBOX_DEFAULT
 	setvar VAR_MAHOGANY_TOWN_STATE, 15
-    setrespawn HEAL_LOCATION_MAHOGANYTOWN_HNS
+    setrespawn HEAL_LOCATION_MAHOGANY_TOWN_HNS
 	closemessage
 	release
 	end

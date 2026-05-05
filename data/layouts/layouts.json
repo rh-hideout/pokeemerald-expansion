@@ -9348,13 +9348,13 @@
     },
     {
       "id": "LAYOUT_UNION_ROOM_HNS",
-      "name": "UnionRoom_Layout_hns",
+      "name": "UnionRoom_hns_Layout",
       "width": 15,
       "height": 12,
       "primary_tileset": "gTileset_Johto_South_Hns",
       "secondary_tileset": "gTileset_AzaleaTown_Hns",
-      "border_filepath": "data/layouts/UnionRoom/border.bin",
-      "blockdata_filepath": "data/layouts/UnionRoom/map.bin",
+      "border_filepath": "data/layouts/UnionRoom_hns/border.bin",
+      "blockdata_filepath": "data/layouts/UnionRoom_hns/map.bin",
       "layout_version": "emerald"
     },
     {
@@ -9600,7 +9600,7 @@
       "layout_version": "hns"
     },
     {
-      "id": "LAYOUT_CELADON_CITY_DEPARTMENT_STORE_ROOF_DAY_HNS_HNS",
+      "id": "LAYOUT_CELADON_CITY_DEPARTMENT_STORE_ROOF_DAY_HNS",
       "name": "CeladonCity_DepartmentStore_RoofDay_hns_Layout",
       "width": 19,
       "height": 14,
@@ -9611,7 +9611,7 @@
       "layout_version": "hns"
     },
     {
-      "id": "LAYOUT_CELADON_CITY_DEPARTMENT_STORE_ROOF_NIGHT_HNS_HNS",
+      "id": "LAYOUT_CELADON_CITY_DEPARTMENT_STORE_ROOF_NIGHT_HNS",
       "name": "CeladonCity_DepartmentStore_RoofNight_hns_Layout",
       "width": 19,
       "height": 14,
@@ -10513,7 +10513,7 @@
       "layout_version": "hns"
     },
     {
-      "id": "LAYOUT_GOLDENROD_CITY_DEPARTMENT_STORE_7F_HNS_HNS",
+      "id": "LAYOUT_GOLDENROD_CITY_DEPARTMENT_STORE_7F_HNS",
       "name": "GoldenrodCity_DepartmentStore_7F_hns_Layout",
       "width": 32,
       "height": 19,
@@ -10865,7 +10865,7 @@
       "layout_version": "hns"
     },
     {
-      "id": "LAYOUT_LAKE_OF_RAGE_LOW_TIDE_HNS_HNS",
+      "id": "LAYOUT_LAKE_OF_RAGE_LOW_TIDE_HNS",
       "name": "LakeOfRageLowTide_hns_Layout",
       "width": 64,
       "height": 47,

@@ -8,7 +8,7 @@ GoldenrodCity_DepartmentStore_7F_OnTransition:
 	end
 
 GoldenrodCity_DepartmentStore_7F_EventScript_SetNight::
-	setmaplayoutindex LAYOUT_GOLDENROD_CITY_DEPARTMENT_STORE_7F_HNSNIGHT
+	setmaplayoutindex LAYOUT_GOLDENROD_CITY_DEPARTMENT_STORE_7FNIGHT_HNS
 	return
 
 GoldenrodCity_DepartmentStore_7F_EventScript_SetDay::

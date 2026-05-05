@@ -1,7 +1,7 @@
 {
   "id": "MAP_CELADON_CITY_DEPARTMENT_STORE_ROOF_NIGHT_HNS",
   "name": "CeladonCity_DepartmentStore_RoofNight_hns",
-  "layout": "LAYOUT_CELADON_CITY_DEPARTMENT_STORE_ROOF_NIGHT_HNS_HNS",
+  "layout": "LAYOUT_CELADON_CITY_DEPARTMENT_STORE_ROOF_NIGHT_HNS",
   "music": "MUS_HG_CELADON",
   "region_map_section": "MAPSEC_CELADON_CITY",
   "requires_flash": false,

@@ -5,7 +5,7 @@ GoldenrodCity_NameRatersHouse_EventScript_ToggleShinies::
 	lock
 	msgbox GoldenrodCity_NameRatersHouse_Text_AskToggleShinies, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, FALSE, GoldenrodCity_NameRatersHouse_EventScript_ToggleShiniesRefused
-	special ToggleShinyColors
+	@special ToggleShinyColors
 	msgbox GoldenrodCity_NameRatersHouse_Text_ToggleShinies, MSGBOX_DEFAULT
 	closemessage
 	release

@@ -8,11 +8,11 @@ CeladonCity_Apartments_RoofDay_OnTransition:
 	end
 
 CeladonCity_Apartments_RoofDay_EventScript_SetNight::
-	setmaplayoutindex LAYOUT_CELADON_CITY_APARTMENTS_ROOF_NIGHT
+	setmaplayoutindex LAYOUT_CELADON_CITY_APARTMENTS_ROOF_NIGHT_HNS
 	return
 
 CeladonCity_Apartments_RoofDay_EventScript_SetDay::
-	setmaplayoutindex LAYOUT_CELADON_CITY_APARTMENTS_ROOF_DAY
+	setmaplayoutindex LAYOUT_CELADON_CITY_APARTMENTS_ROOF_DAY_HNS
 	return
 
 CeladonCity_Apartments_RoofDay_EventScript_Fisher::
