@@ -555,20 +555,6 @@
       "map": "MAP_ROUTE26NORTH_HNS",
       "x": 12,
       "y": 6
-    },
-    {
-      "id": "HEAL_LOCATION_BATTLE_FRONTIER_OUTSIDE_EAST_HNS",
-      "map": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST_HNS",
-      "x": 3,
-      "y": 52,
-      "respawn_map": "MAP_BATTLE_FRONTIER_POKEMON_CENTER_1F_HNS",
-      "respawn_npc": "0"
-    },
-    {
-      "id": "HEAL_LOCATION_SOUTHERN_ISLAND_EXTERIOR_HNS",
-      "map": "MAP_SOUTHERN_ISLAND_EXTERIOR_HNS",
-      "x": 15,
-      "y": 20
     }
   ]
 }
