@@ -241,7 +241,9 @@ Route14_EventScript_Pidgeotto::
 	goto_if_set FLAG_GOT_ROUTE_14_AERIAL_ACE, Route14_EventScript_PidgeottoBlowPlayer
 	msgbox Route14_Text_PidgeottoBerry, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, FALSE, Route14_EventScript_PidgeottoBlowPlayer
-	chooseitem BERRIES_POCKET
+	fadescreen FADE_TO_BLACK
+	special Bag_ChooseBerry
+	waitstate
 	removeitem VAR_ITEM_ID, 1
 	goto_if_ne VAR_ITEM_ID, ITEM_QUALOT_BERRY, Route14_EventScript_PidgeottoDislikedBerry
 	msgbox Route14_Text_PidgeottoAteBerry, MSGBOX_DEFAULT

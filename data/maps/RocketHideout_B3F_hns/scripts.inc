@@ -306,7 +306,7 @@ RocketHideout_B3F_EventScript_Giovanni::
 	playse SE_PIN
 	applymovement LOCALID_ROCKETHIDEOUT3_GIOVANNI, Common_Movement_QuestionMark
 	delay 60
-	msgbox RocketHideout_B3F_Text_PetrelDisbelief MSGBOX_DEFAULT
+	msgbox RocketHideout_B3F_Text_PetrelDisbelief, MSGBOX_DEFAULT
 	closemessage
 	applymovement LOCALID_ROCKETHIDEOUT3_GIOVANNI, RocketHideout_B3F_Movement_Spin
 	waitmovement 0

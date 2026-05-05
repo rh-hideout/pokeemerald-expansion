@@ -52,7 +52,7 @@ VioletCity_EventScript_Earl::
 	applymovement LOCALID_VIOLETCITY_EARL, VioletCity_Movement_Earl_Spin
 	waitmovement 0
 	faceplayer
-	msgbox VioletCity_Text_EarlAsksIfYouBeatFalkner MSGBOX_YESNO
+	msgbox VioletCity_Text_EarlAsksIfYouBeatFalkner, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, VioletCity_EventScript_EarlTrainerSchool
 	msgbox VioletCity_Text_VeryNiceIndeed, MSGBOX_DEFAULT
 	closemessage

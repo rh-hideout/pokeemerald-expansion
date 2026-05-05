@@ -4,7 +4,7 @@ CianwoodHouse1_hns_MapScripts::
 CianwoodHouse1_EventScript_Hermit::
 	lock
 	faceplayer
-	msgbox CianwoodCity_Text_OldManIntro MSGBOX_DEFAULT
+	msgbox CianwoodCity_Text_OldManIntro, MSGBOX_DEFAULT
 	goto_if_eq VAR_LUGIA_OR_HOOH, 2, CianwoodHouse1_EventScript_HermitHooh
 	checkitem ITEM_TIDAL_BELL
 	goto_if_eq VAR_RESULT, TRUE, CianwoodHouse1_EventScript_HermitTidalBell

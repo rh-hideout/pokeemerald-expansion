@@ -30,7 +30,7 @@ Route31_EventScript_SleepyMan::
 	end
 
 Route31_EventScript_SleepyMan_AskForKenya::
-	msgbox Route31_Text_SleepyManGotMail MSGBOX_YESNO
+	msgbox Route31_Text_SleepyManGotMail, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, TRUE, Route31_EventScript_SleepyMan_GiveKenya
 	msgbox Route31_Text_SleepyManFail, MSGBOX_DEFAULT
 	closemessage

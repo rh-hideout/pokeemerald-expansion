@@ -11,7 +11,7 @@ Route30_House_EventScript_BaldMan::
 	closemessage
 	setflag FLAG_GOT_BERRY_ROUTE_30_HOUSE
 Route30_House_EventScript_BaldMan2::
-	msgbox Route30_BerryHouse_Text_CheckTrees MSGBOX_DEFAULT
+	msgbox Route30_BerryHouse_Text_CheckTrees, MSGBOX_DEFAULT
 	closemessage
 	release
 	end

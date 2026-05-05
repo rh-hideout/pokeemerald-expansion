@@ -347,7 +347,7 @@ IlexForest_EventScript_SecondCelebiRan::
 
 IlexForest_EventScript_Sign::
 	lock
-	msgbox IlexForest_Text_Signpost MSGBOX_SIGN
+	msgbox IlexForest_Text_Signpost, MSGBOX_SIGN
 	closemessage
 	release
 	end
@@ -375,10 +375,10 @@ IlexForest_EventScript_Kimono::
 	applymovement2 OBJ_EVENT_ID_FOLLOWER, IlexForest_Movement_Follower1
 	waitmovement 0
 	playfirstmoncry
-	turnobject LOCALID_ILEX_FOREST_KIMONO DIR_WEST
+	turnobject LOCALID_ILEX_FOREST_KIMONO, DIR_WEST
 	msgbox IlexForest_Text_Kimono_Girl4, MSGBOX_DEFAULT
 	closemessage 
-	turnobject LOCALID_ILEX_FOREST_KIMONO DIR_SOUTH
+	turnobject LOCALID_ILEX_FOREST_KIMONO, DIR_SOUTH
 	delay 16
 	msgbox IlexForest_Text_Kimono_Girl5, MSGBOX_DEFAULT
 	closemessage

@@ -664,7 +664,7 @@
 		.2byte \amount
 	.endm
 
-	.macro setwildbattleshiny species:req, level:req, item:req
+	.macro setwildbattleshiny species:req, level:req, item=ITEM_NONE
 		.byte SCR_OP_SETWILDBATTLESHINY
 		.2byte \species
 		.byte \level
@@ -681,9 +681,9 @@
 		.2byte \number
 	.endm
 
-	.macro buffermoncategory stringvar:req, species:req
+	.macro buffermoncategory stringVarId:req, species:req
 		.byte SCR_OP_BUFFERMONCATEGORY
-		.byte \stringvar - STRING_VAR_0
+		stringvar \stringVarId
 		.2byte \species
 	.endm
 

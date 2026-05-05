@@ -37,7 +37,7 @@ MrPokemonHouse_EventScript_GiveEgg::
 	waitfanfare
 
 	
-	msgbox MrPokemonHouse_Text_OakParting MSGBOX_DEFAULT
+	msgbox MrPokemonHouse_Text_OakParting, MSGBOX_DEFAULT
 	closemessage
 	applymovement LOCALID_ROUTE30_OAK, MrPokemonHouse_Movement_OakLeave
 	waitmovement 0

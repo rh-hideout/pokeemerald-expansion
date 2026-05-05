@@ -38,7 +38,9 @@ IcePath_B3F_EventScript_Swinub::
 	goto_if_set FLAG_ITEM_ICEPATH4_TM_BLIZZARD, IcePath_B3F_EventScript_SwinubBlowPlayer
 	msgbox IcePath_B3F_Text_SwinubBerry, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, FALSE, IcePath_B3F_EventScript_SwinubBlowPlayer
-	chooseitem BERRIES_POCKET
+	fadescreen FADE_TO_BLACK
+	special Bag_ChooseBerry
+	waitstate
 	removeitem VAR_ITEM_ID, 1
 	goto_if_ne VAR_ITEM_ID, ITEM_ASPEAR_BERRY, IcePath_B3F_EventScript_SwinubDislikedBerry
 	msgbox IcePath_B3F_Text_SwinubAteBerry, MSGBOX_DEFAULT
@@ -78,7 +80,9 @@ IcePath_B3F_EventScript_Delibird::
 	goto_if_set FLAG_ITEM_ICEPATH4_TM_BLIZZARD, IcePath_B3F_EventScript_DelibirdBlowPlayer
 	msgbox IcePath_B3F_Text_DelibirdBerry, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, FALSE, IcePath_B3F_EventScript_DelibirdBlowPlayer
-	chooseitem BERRIES_POCKET
+	fadescreen FADE_TO_BLACK
+	special Bag_ChooseBerry
+	waitstate
 	removeitem VAR_ITEM_ID, 1
 	goto_if_ne VAR_ITEM_ID, ITEM_ASPEAR_BERRY, IcePath_B3F_EventScript_DelibirdDislikedBerry
 	msgbox IcePath_B3F_Text_DelibirdAteBerry, MSGBOX_DEFAULT
