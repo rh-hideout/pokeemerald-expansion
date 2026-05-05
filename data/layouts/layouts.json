@@ -10326,17 +10326,6 @@
       "layout_version": "hns"
     },
     {
-      "id": "LAYOUT_GATE_ROUTE40_TRAINER_HILL_COURTYARD_HNS",
-      "name": "Gate_Route40_TrainerHill_Courtyard_hns_Layout",
-      "width": 15,
-      "height": 12,
-      "primary_tileset": "gTileset_Johto_Building_Hns",
-      "secondary_tileset": "gTileset_Gate_Standard_Hns",
-      "border_filepath": "data/layouts/Gate_Route40_TrainerHill_Courtyard_hns/border.bin",
-      "blockdata_filepath": "data/layouts/Gate_Route40_TrainerHill_Courtyard_hns/map.bin",
-      "layout_version": "hns"
-    },
-    {
       "id": "LAYOUT_GATE_ROUTE43_HNS",
       "name": "Gate_Route43_hns_Layout",
       "width": 15,
@@ -12820,17 +12809,6 @@
       "secondary_tileset": "gTileset_Cave_Default_Hns",
       "border_filepath": "data/layouts/TohjoFalls_GiovanniRoom_hns/border.bin",
       "blockdata_filepath": "data/layouts/TohjoFalls_GiovanniRoom_hns/map.bin",
-      "layout_version": "hns"
-    },
-    {
-      "id": "LAYOUT_TRAINER_HILL_COURTYARD_HNS",
-      "name": "TrainerHill_Courtyard_hns_Layout",
-      "width": 46,
-      "height": 46,
-      "primary_tileset": "gTileset_Johto_General_Hns",
-      "secondary_tileset": "gTileset_TrainerHill_Courtyard_Hns",
-      "border_filepath": "data/layouts/TrainerHill_Courtyard_hns/border.bin",
-      "blockdata_filepath": "data/layouts/TrainerHill_Courtyard_hns/map.bin",
       "layout_version": "hns"
     },
     {
