@@ -237,8 +237,8 @@ IlexForest_EventScript_HeadbuttTutorFinite::
 	goto_if_set FLAG_MOVE_TUTOR_TAUGHT_HEADBUTT, MoveTutor_EventScript_HeadbuttTaught
 	msgbox MoveTutor_Text_HeadbuttTeach, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, MoveTutor_EventScript_HeadbuttDeclined
-	call MoveTutor_EventScript_CanOnlyBeLearnedOnceFinite
-	goto_if_eq VAR_RESULT, NO, MoveTutor_EventScript_HeadbuttDeclined
+	@call MoveTutor_EventScript_CanOnlyBeLearnedOnceFinite
+	@goto_if_eq VAR_RESULT, NO, MoveTutor_EventScript_HeadbuttDeclined
 	msgbox MoveTutor_Text_HeadbuttWhichMon, MSGBOX_DEFAULT
 	setvar VAR_0x8005, TUTOR_MOVE_HEADBUTT
 	call MoveTutor_EventScript_OpenPartyMenu

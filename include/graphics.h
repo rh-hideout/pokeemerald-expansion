@@ -1771,6 +1771,38 @@ extern const u16 gItemIconPalette_SwapSnack[];
 extern const u32 gItemIcon_TwiceSpicedRadish[];
 extern const u16 gItemIconPalette_TwiceSpicedRadish[];
 
+// HnS Items
+extern const u32 gItemIcon_ClearBell[];
+extern const u16 gItemIconPalette_ClearBell[];
+extern const u32 gItemIcon_GSBall[];
+extern const u16 gItemIconPalette_GSBall[];
+extern const u32 gItemIcon_RainbowWing[];
+extern const u16 gItemIconPalette_RainbowWing[];
+extern const u32 gItemIcon_SilverWing[];
+extern const u16 gItemIconPalette_SilverWing[];
+extern const u32 gItemIcon_TidalBell[];
+extern const u16 gItemIconPalette_TidalBell[];
+extern const u32 gItemIcon_MysteryEgg[];
+extern const u16 gItemIconPalette_MysteryEgg[];
+extern const u32 gItemIcon_MachinePart[];
+extern const u16 gItemIconPalette_MachinePart[];
+extern const u32 gItemIcon_RedScale[];
+extern const u16 gItemIconPalette_RedScale[];
+extern const u32 gItemIcon_LostItem[];
+extern const u16 gItemIconPalette_LostItem[];
+extern const u32 gItemIcon_HnsPass[];
+extern const u16 gItemIconPalette_HnsPass[];
+extern const u32 gItemIcon_Radio[];
+extern const u16 gItemIconPalette_Radio[];
+extern const u32 gItemIcon_SecretPotion[];
+extern const u16 gItemIconPalette_SecretPotion[];
+extern const u32 gItemIcon_HealingHeart[];
+extern const u16 gItemIconPalette_HealingHeart[];
+extern const u32 gItemIcon_Room1Key[];
+extern const u32 gItemIcon_Room2Key[];
+extern const u32 gItemIcon_Room4Key[];
+extern const u32 gItemIcon_Room6Key[];
+
 extern const u32 gItemIcon_ReturnToFieldArrow[];
 extern const u16 gItemIconPalette_ReturnToFieldArrow[];
 

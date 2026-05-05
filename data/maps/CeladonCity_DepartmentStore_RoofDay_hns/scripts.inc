@@ -8,11 +8,11 @@ CeladonCity_DepartmentStore_RoofDay_OnTransition:
 	end
 
 CeladonCity_DepartmentStore_RoofDay_EventScript_SetNight::
-	setmaplayoutindex LAYOUT_CELADON_CITY_DEPARTMENT_STORE_ROOF_NIGHT
+	setmaplayoutindex LAYOUT_CELADON_CITY_DEPARTMENT_STORE_ROOF_NIGHT_HNS
 	return
 
 CeladonCity_DepartmentStore_RoofDay_EventScript_SetDay::
-	setmaplayoutindex LAYOUT_CELADON_CITY_DEPARTMENT_STORE_ROOF_DAY
+	setmaplayoutindex LAYOUT_CELADON_CITY_DEPARTMENT_STORE_ROOF_DAY_HNS
 	return
 
 CeladonDept6_EventScript_Nerd::

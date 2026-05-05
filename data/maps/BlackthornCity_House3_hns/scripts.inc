@@ -107,8 +107,8 @@ BlackthornCity_MoveDeletersHouse_Text_CantForgetSurf:
 BlackthornCity_MoveRelearnersHouse_EventScript_MoveRelearner::
 	lockall
 	faceplayer
-	specialvar VAR_RESULT, IsRandomMovesActivated
-	goto_if_eq VAR_RESULT, TRUE, BlackthornCity_MoveRelearnersHouse_EventScript_Randomizer
+	@specialvar VAR_RESULT, IsRandomMovesActivated
+	@goto_if_eq VAR_RESULT, TRUE, BlackthornCity_MoveRelearnersHouse_EventScript_Randomizer
 	goto_if_set FLAG_TEMP_1, BlackthornCity_MoveRelearnersHouse_EventScript_AskTeachMove
 	msgbox BlackthornCity_MoveRelearnersHouse_Text_ImTheMoveTutor, MSGBOX_DEFAULT
 	setflag FLAG_TEMP_1

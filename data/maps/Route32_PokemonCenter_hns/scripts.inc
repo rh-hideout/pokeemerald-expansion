@@ -3,7 +3,7 @@ Route32_PokemonCenter_hns_MapScripts::
 	.byte 0
 
 Route32_PokemonCenter_OnTransition::
-	setrespawn HEAL_LOCATION_ROUTE_32
+	setrespawn HEAL_LOCATION_ROUTE_32_HNS
 	end
 
 Route32_PokemonCenter_EventScript_Lass::

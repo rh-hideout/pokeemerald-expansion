@@ -105,9 +105,9 @@ FuchsiaCity_SafariZoneEntrance_EventScript_EntranceCounterTrigger::
 	lockall
 	turnobject OBJ_EVENT_ID_PLAYER, DIR_WEST
 	showmoneybox 0, 0
-	msgbox Route121_SafariZoneGate_SafariZoneEntrance_Text_WouldYouLikeToPlay, MSGBOX_YESNO
+	msgbox Route121_SafariZoneEntrance_Text_WouldYouLikeToPlay, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, YES, FuchsiaCity_SafariZoneEntrance_EventScript_TryEnterSafariZone
-	msgbox Route121_SafariZoneGate_SafariZoneEntrance_Text_PlayAnotherTime, MSGBOX_DEFAULT
+	msgbox Route121_SafariZoneEntrance_Text_PlayAnotherTime, MSGBOX_DEFAULT
 	goto FuchsiaCity_SafariZoneEntrance_EventScript_MovePlayerBackFromCounter
 	end
 
@@ -117,15 +117,15 @@ FuchsiaCity_SafariZoneEntrance_EventScript_TryEnterSafariZone::
 	call FuchsiaCity_SafariZoneEntrance_EventScript_CheckHasRoomForPokemon
 	checkmoney 500
 	goto_if_eq VAR_RESULT, 0, FuchsiaCity_SafariZoneEntrance_EventScript_NotEnoughMoney
-	msgbox Route121_SafariZoneGate_SafariZoneEntrance_Text_ThatWillBe500Please, MSGBOX_DEFAULT
+	msgbox Route121_SafariZoneEntrance_Text_ThatWillBe500Please, MSGBOX_DEFAULT
 	removemoney 500
 	playse SE_SHOP
 	updatemoneybox
-	msgbox Route121_SafariZoneGate_SafariZoneEntrance_Text_HereAreYourSafariBalls, MSGBOX_DEFAULT
+	msgbox Route121_SafariZoneEntrance_Text_HereAreYourSafariBalls, MSGBOX_DEFAULT
 	playfanfare MUS_OBTAIN_ITEM
-	message Route121_SafariZoneGate_SafariZoneEntrance_Text_Received30SafariBalls
+	message Route121_SafariZoneEntrance_Text_Received30SafariBalls
 	waitfanfare
-	msgbox Route121_SafariZoneGate_SafariZoneEntrance_Text_PleaseEnjoyYourself, MSGBOX_DEFAULT
+	msgbox Route121_SafariZoneEntrance_Text_PleaseEnjoyYourself, MSGBOX_DEFAULT
 	closemessage
 	hidemoneybox
 	getplayerxy VAR_TEMP_0, VAR_TEMP_1
@@ -156,7 +156,7 @@ FuchsiaCity_SafariZoneEntrance_EventScript_CheckHasRoomForPokemon::
 	goto_if_ne VAR_RESULT, PARTY_SIZE, FuchsiaCity_SafariZoneEntrance_EventScript_HasRoomForPokemon
 	specialvar VAR_RESULT, ScriptCheckFreePokemonStorageSpace
 	goto_if_eq VAR_RESULT, 1, FuchsiaCity_SafariZoneEntrance_EventScript_HasRoomForPokemon
-	msgbox Route121_SafariZoneGate_SafariZoneEntrance_Text_PCIsFull, MSGBOX_DEFAULT
+	msgbox Route121_SafariZoneEntrance_Text_PCIsFull, MSGBOX_DEFAULT
 	goto FuchsiaCity_SafariZoneEntrance_EventScript_MovePlayerBackFromCounter
 	end
 
@@ -164,12 +164,12 @@ FuchsiaCity_SafariZoneEntrance_EventScript_HasRoomForPokemon::
 	return
 
 FuchsiaCity_SafariZoneEntrance_EventScript_NoPokeblockCase::
-	msgbox Route121_SafariZoneGate_SafariZoneEntrance_Text_YouNeedPokeblockCase, MSGBOX_DEFAULT
+	msgbox Route121_SafariZoneEntrance_Text_YouNeedPokeblockCase, MSGBOX_DEFAULT
 	goto FuchsiaCity_SafariZoneEntrance_EventScript_MovePlayerBackFromCounter
 	end
 
 FuchsiaCity_SafariZoneEntrance_EventScript_NotEnoughMoney::
-	msgbox Route121_SafariZoneGate_SafariZoneEntrance_Text_NotEnoughMoney, MSGBOX_DEFAULT
+	msgbox Route121_SafariZoneEntrance_Text_NotEnoughMoney, MSGBOX_DEFAULT
 	goto FuchsiaCity_SafariZoneEntrance_EventScript_MovePlayerBackFromCounter
 	end
 
@@ -290,7 +290,7 @@ FuchsiaCity_SafariZoneEntrance_UpgradeGuyDecline::
 	end
 
 FuchsiaCity_SafariZoneEntrance_UpgradeGuyNotEnoughMoney::
-	msgbox Route121_SafariZoneGate_SafariZoneEntrance_Text_NotEnoughMoney, MSGBOX_NPC
+	msgbox Route121_SafariZoneEntrance_Text_NotEnoughMoney, MSGBOX_NPC
 	hidemoneybox
 	end
 

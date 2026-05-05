@@ -211,7 +211,7 @@ OlivinePort_EventScript_EnterShip::
 	applymovement LOCALID_OLIVINEPORT_SAILOR, OlivinePort_Movement_BoatLeave
 	applymovement LOCALID_OLIVINEPORT_BOAT, OlivinePort_Movement_BoatLeave
 	waitmovement LOCALID_OLIVINEPORT_BOAT
-	setrespawn HEAL_LOCATION_OLIVINE_CITY
+	setrespawn HEAL_LOCATION_OLIVINE_CITY_HNS
 	return
 
 OlivinePort_EventScript_Sailor_Refused::

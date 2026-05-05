@@ -3,7 +3,7 @@ SafariZoneGate_PokemonCenter_hns_MapScripts::
 	.byte 0
 
 SafariZoneGate_PokemonCenter_OnTransition::
-	setrespawn HEAL_LOCATION_SAFARI_ZONE_GATE
+	setrespawn HEAL_LOCATION_SAFARI_ZONE_GATE_HNS
 	end
 
 SafariZoneGate_PokemonCenter_EventScript_NPC1::

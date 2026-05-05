@@ -217,7 +217,7 @@ Route34_EventScript_DaycareEggWaiting::
 	end
 
 Route34_EventScript_DaycareAcceptEgg::
-	specialvar VAR_0x8004, GetMaxPartySize @ tx_randomizer_and_challenges
+	@specialvar VAR_0x8004, GetMaxPartySize @ tx_randomizer_and_challenges
 	specialvar VAR_RESULT, CalculatePlayerPartyCount
 	goto_if_ne VAR_RESULT, VAR_0x8004, Route34_EventScript_DaycareReceiveEgg
 	msgbox Route34_Text_YouHaveNoRoomForIt, MSGBOX_DEFAULT
@@ -356,7 +356,7 @@ Route34_DayCare_EventScript_OneMonInDaycare::
 	end
 
 Route34_DayCare_EventScript_TryRetrieveMon::
-	specialvar VAR_0x8004, GetMaxPartySize @ tx_randomizer_and_challenges
+	@specialvar VAR_0x8004, GetMaxPartySize @ tx_randomizer_and_challenges
 	specialvar VAR_RESULT, CalculatePlayerPartyCount
 	goto_if_eq VAR_RESULT, VAR_0x8004, Route34_DayCare_EventScript_NoRoom
 	specialvar VAR_RESULT, GetDaycareState

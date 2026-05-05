@@ -4,7 +4,7 @@ BlackthornCity_PokemonCenter_hns_MapScripts::
 	.byte 0
 
 BlackthornCity_PokemonCenter_OnTransition::
-	setrespawn HEAL_LOCATION_BLACKTHORN_CITY
+	setrespawn HEAL_LOCATION_BLACKTHORN_CITY_HNS
 	end
 
 BlackthornCity_PokemonCenter_EventScript_Gent::

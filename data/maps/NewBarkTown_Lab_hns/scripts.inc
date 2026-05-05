@@ -225,12 +225,12 @@ NewBarkTown_Lab_EventScript_DeclinedStarter::
 	hidemonpic
 	msgbox NewBarkTown_Lab_Text_DidntChooseStarter, MSGBOX_DEFAULT
 	closemessage
-	callnative EnableStaticRandomizer
+	@callnative EnableStaticRandomizer
 	release
 	end
 
 NewBarkTown_Lab_EventScript_ChoseStarter::
-	callnative EnableStaticRandomizer
+	@callnative EnableStaticRandomizer
 	hidemonpic
 	removeobject VAR_LAST_TALKED
 	msgbox NewBarkTown_Lab_Text_ChoseStarter, MSGBOX_DEFAULT
@@ -240,8 +240,8 @@ NewBarkTown_Lab_EventScript_ChoseStarter::
 	bufferspeciesname STR_VAR_1, PLAYER_STARTER_SPECIES
 	message NewBarkTown_Lab_Text_ReceivedStarter
 	waitfanfare
-	specialvar VAR_RESULT, IsNuzlockeNicknamingActive
-	goto_if_eq VAR_RESULT, TRUE, NewBarkTown_Lab_EventScript_ChoseStarter_NicknameStarter_Nuzlocke
+	@specialvar VAR_RESULT, IsNuzlockeNicknamingActive
+	@goto_if_eq VAR_RESULT, TRUE, NewBarkTown_Lab_EventScript_ChoseStarter_NicknameStarter_Nuzlocke
 	msgbox NewBarkTown_Lab_Text_Nickname, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, YES, NewBarkTown_Lab_EventScript_NicknameStarter
 	callnative UpdateFollowingPokemon

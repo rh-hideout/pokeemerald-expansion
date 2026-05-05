@@ -3,7 +3,7 @@ EcruteakCity_PokemonCenter_hns_MapScripts::
 	.byte 0
 
 EcruteakCity_PokemonCenter_OnTransition::
-	setrespawn HEAL_LOCATION_ECRUTEAK_CITY
+	setrespawn HEAL_LOCATION_ECRUTEAK_CITY_HNS
 	end
 
 EcruteakCity_PokemonCenter_EventScript_Bill::

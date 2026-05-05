@@ -3,7 +3,7 @@ CherrygroveCity_PokemonCenter_hns_MapScripts::
 	.byte 0
 
 CherryGrove_Pokecenter_OnTransition::
-	setrespawn HEAL_LOCATION_CHERRYGROVE_CITY
+	setrespawn HEAL_LOCATION_CHERRYGROVE_CITY_HNS
 	end
 
 CherryGrove_Pokecenter_EventScript_Fisher::

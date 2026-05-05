@@ -3,7 +3,7 @@ OlivineCity_PokemonCenter_hns_MapScripts::
 	.byte 0
 
 OlivineCity_PokemonCenter_OnTransition::
-	setrespawn HEAL_LOCATION_OLIVINE_CITY
+	setrespawn HEAL_LOCATION_OLIVINE_CITY_HNS
 	end
 
 OlivineCity_EventScript_Fisher::

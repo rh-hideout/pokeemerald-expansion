@@ -40,7 +40,7 @@ DragonsDen_Cavern_Trigger_ClairLeft::
 	removeobject LOCALID_DRAGONSDEN2_CLAIR
 	playse SE_EXIT
 	setvar VAR_BLACKTHORN_CITY_STATE, 4
-	setrespawn HEAL_LOCATION_BLACKTHORN_CITY
+	setrespawn HEAL_LOCATION_BLACKTHORN_CITY_HNS
 	releaseall
 	end
 

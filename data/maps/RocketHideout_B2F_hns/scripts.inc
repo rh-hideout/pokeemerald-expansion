@@ -498,7 +498,7 @@ RocketHideout_B2F_EventScript_ElectrodeDone::
 	turnobject OBJ_EVENT_ID_PLAYER, DIR_EAST
 	delay 30
 	msgbox RocketHideout_B2F_Text_LanceElectrodeDone, MSGBOX_DEFAULT
-	giveitem ITEM_HM_WHIRLPOOL
+	@giveitem ITEM_HM_WHIRLPOOL
 	msgbox RocketHideout_B2F_Text_LanceWhirlpool, MSGBOX_DEFAULT
 	closemessage
 	turnobject LOCALID_ROCKETHIDEOUT2_LANCE, DIR_SOUTH

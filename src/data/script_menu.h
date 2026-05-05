@@ -799,7 +799,6 @@ static const u8 gText_FourIsland[] = _("FOUR ISLAND");
 static const u8 gText_FiveIsland[] = _("FIVE ISLAND");
 static const u8 gText_SixIsland[] = _("SIX ISLAND");
 static const u8 gText_SevenIsland[] = _("SEVEN ISLAND");
-static const u8 gText_Vermilion[] = _("VERMILION");
 
 static const struct MenuAction sMultichoiceList_Island23[] = {
     { gText_TwoIsland },

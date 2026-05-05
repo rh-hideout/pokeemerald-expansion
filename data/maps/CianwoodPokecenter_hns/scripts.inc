@@ -3,7 +3,7 @@ CianwoodPokecenter_hns_MapScripts::
 	.byte 0
 
 CianwoodPokecenter_OnTransition::
-	setrespawn HEAL_LOCATION_CIANWOOD_CITY
+	setrespawn HEAL_LOCATION_CIANWOOD_CITY_HNS
 	end
 
 CianwoodPokemoncenter_EventScript_Fisher::

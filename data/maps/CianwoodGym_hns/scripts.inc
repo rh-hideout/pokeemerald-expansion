@@ -65,7 +65,7 @@ CianwoodGym_EventScript_ChuckVictory::
 	giveitem ITEM_TM_FOCUS_PUNCH
 	msgbox CianwoodGym_Text_ChuckTMSpeech, MSGBOX_DEFAULT
 	setvar VAR_GETFLY, 1
-	setrespawn HEAL_LOCATION_CIANWOOD_CITY
+	setrespawn HEAL_LOCATION_CIANWOOD_CITY_HNS
 	closemessage
 	release
 	end
