@@ -3,6 +3,7 @@ OBJEVENTGFXDIR := graphics/object_events/pics
 FLDEFFGFXDIR := graphics/field_effects/pics
 BATINTGFXDIR := graphics/battle_interface
 MISCGFXDIR := graphics/misc
+SLIDINGPUZZLESDIR := graphics/sliding_puzzle/puzzles
 
 $(OBJEVENTGFXDIR)/people/brendan/walking.4bpp: %.4bpp: %.png
 	$(GFX) $< $@ -mwidth 2 -mheight 4
@@ -5813,3 +5814,15 @@ $(BATINTGFXDIR)/healthbox_singles_opponent.4bpp: %.4bpp: %.png
 
 $(BATINTGFXDIR)/healthbox_singles_player.4bpp: %.4bpp: %.png
 	$(GFX) $< $@ -mwidth 8 -mheight 8
+
+$(SLIDINGPUZZLESDIR)/kabuto/tiles.4bpp: %.4bpp: %.png
+	$(GFX) $< $@ -mwidth 4 -mheight 4
+
+$(SLIDINGPUZZLESDIR)/omanyte/tiles.4bpp: %.4bpp: %.png
+	$(GFX) $< $@ -mwidth 4 -mheight 4
+
+$(SLIDINGPUZZLESDIR)/aerodactyl/tiles.4bpp: %.4bpp: %.png
+	$(GFX) $< $@ -mwidth 4 -mheight 4
+
+$(SLIDINGPUZZLESDIR)/ho_oh/tiles.4bpp: %.4bpp: %.png
+	$(GFX) $< $@ -mwidth 4 -mheight 4
