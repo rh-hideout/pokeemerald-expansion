@@ -81,6 +81,7 @@ static const struct RandomSpeciesGeneratorOptions sRandomSpeciesGeneratorOptions
     [2] =
     {
         .dexMode = RANDOM_MON_DEX_HOENN,
+        .filterFunc = IsSpeciesAllowedByRandomBstVars,
         .allowLegendary = FALSE,
         .allowMythical = FALSE,
         .allowSubLegendary = FALSE,

@@ -32,6 +32,7 @@ struct RandomSpeciesGeneratorOptions
     u8 allowParadox:1;
     u8 randomizeForms:1;
     u8 padding:2;
+    bool32 (*filterFunc)(enum Species species);
 };
 
 struct RandomItemGeneratorOptions
@@ -42,8 +43,6 @@ struct RandomItemGeneratorOptions
     u16 bannedHoldEffectsCount;
 };
 
-#include "data/random_mon_generator.h"
-
 static bool32 TryGetRandomSpeciesOptions(enum Species species, const struct RandomSpeciesGeneratorOptions **options);
 static bool32 TryGetRandomItemOptions(enum Item item, const struct RandomItemGeneratorOptions **options);
 static enum Species GetRandomMonSpecies(const struct RandomSpeciesGeneratorOptions *options);
@@ -51,7 +50,12 @@ static enum Species GetRandomMonFormSpecies(enum Species species);
 static bool32 IsSpeciesAllowedByRandomBstVars(enum Species species);
 static enum Item GetRandomMonHeldItem(const struct RandomItemGeneratorOptions *options);
 static enum PokeBall GetRandomMonBall(void);
+static enum Species ResolveRandomMonSpecies(enum Species species);
+static enum Item ResolveRandomMonItem(enum Item item);
+static enum PokeBall ResolveRandomMonBall(enum PokeBall ball);
 static void ResolveRandomMonMoves(enum Species species, enum Move *moves);
+
+#include "data/random_mon_generator.h"
 
 static bool32 TryGetRandomSpeciesOptions(enum Species species, const struct RandomSpeciesGeneratorOptions **options)
 {
@@ -117,6 +121,8 @@ static bool32 IsSpeciesBannedByRandomMonOptions(enum Species species, const stru
         return TRUE;
     if (!options->allowParadox && speciesInfo->isParadox)
         return TRUE;
+    if (options->filterFunc != NULL && !options->filterFunc(species))
+        return TRUE;
 
     return FALSE;
 }
@@ -169,7 +175,7 @@ static enum Species GetFirstValidRandomMonSpecies(const struct RandomSpeciesGene
         for (i = 0; i < options->speciesPoolCount; i++)
         {
             enum Species species = GET_BASE_SPECIES_ID(options->speciesPool[i]);
-            if (species != SPECIES_NONE && species < NUM_SPECIES && !IsSpeciesBannedByRandomMonOptions(species, options) && IsSpeciesAllowedByRandomBstVars(species))
+            if (!IsSpeciesBannedByRandomMonOptions(species, options))
                 return species;
         }
     }
@@ -182,7 +188,7 @@ static enum Species GetFirstValidRandomMonSpecies(const struct RandomSpeciesGene
                 ? NationalPokedexNumToSpecies(HoennToNationalOrder(i))
                 : NationalPokedexNumToSpecies(i);
 
-            if (species != SPECIES_NONE && species < NUM_SPECIES && !IsSpeciesBannedByRandomMonOptions(species, options) && IsSpeciesAllowedByRandomBstVars(species))
+            if (!IsSpeciesBannedByRandomMonOptions(species, options))
                 return species;
         }
     }
@@ -190,25 +196,85 @@ static enum Species GetFirstValidRandomMonSpecies(const struct RandomSpeciesGene
     return SPECIES_BULBASAUR;
 }
 
-static bool32 AreBaseSpeciesFormsExcluded(enum Species species)
+static bool32 IsRandomMonFormTableException(enum Species species)
 {
     switch (GET_BASE_SPECIES_ID(species))
     {
-    case SPECIES_ARCEUS:
-    case SPECIES_GENESECT:
-    case SPECIES_SILVALLY:
-    case SPECIES_OGERPON:
+    case SPECIES_ROTOM:
+    case SPECIES_ORICORIO:
+    case SPECIES_TORNADUS:
+    case SPECIES_THUNDURUS:
+    case SPECIES_LANDORUS:
+    case SPECIES_ENAMORUS:
         return TRUE;
     default:
         return FALSE;
     }
 }
 
-static bool32 IsRandomMonFormAllowed(enum Species species)
+static bool32 IsSpeciesInRandomMonFormChangeTables(enum Species species, const u16 *formTable)
+{
+    u32 i, j;
+
+    for (i = 0; formTable[i] != FORM_SPECIES_END; i++)
+    {
+        const struct FormChange *formChanges = GetSpeciesFormChanges(formTable[i]);
+
+        for (j = 0; formChanges != NULL && formChanges[j].method != FORM_CHANGE_TERMINATOR; j++)
+        {
+            if (formChanges[j].targetSpecies == species)
+                return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+
+static bool32 IsSpeciesInRandomMonFusionTables(enum Species species, const u16 *formTable)
+{
+    u32 i, j;
+
+    for (i = 0; formTable[i] != FORM_SPECIES_END; i++)
+    {
+        const struct Fusion *fusionTable = gFusionTablePointers[formTable[i]];
+
+        for (j = 0; fusionTable != NULL && fusionTable[j].fusionStorageIndex != FUSION_TERMINATOR; j++)
+        {
+            if (fusionTable[j].targetSpecies1 == species
+             || fusionTable[j].targetSpecies2 == species
+             || fusionTable[j].fusingIntoMon == species)
+                return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+
+static bool32 IsSpeciesInRandomMonFormOrFusionTables(enum Species species, const u16 *formTable)
+{
+    return IsSpeciesInRandomMonFormChangeTables(species, formTable)
+        || IsSpeciesInRandomMonFusionTables(species, formTable);
+}
+
+static bool32 IsRandomMonFormAllowed(enum Species species, const u16 *formTable)
 {
     const struct SpeciesInfo *speciesInfo;
+    enum Species baseSpecies = GET_BASE_SPECIES_ID(species);
 
-    if (species == SPECIES_NONE || species >= NUM_SPECIES)
+    switch (species) // Special case because darm has galarian forms (desired) and zen mode forms (not desired)
+    {
+    case SPECIES_DARMANITAN_ZEN:
+    case SPECIES_DARMANITAN_GALAR_ZEN:
+        return FALSE;
+    case SPECIES_DARMANITAN_GALAR:
+        return TRUE;
+    default:
+        break;
+    }
+
+    if (species != baseSpecies
+     && !IsRandomMonFormTableException(baseSpecies)
+     && IsSpeciesInRandomMonFormOrFusionTables(species, formTable))
         return FALSE;
 
     speciesInfo = &gSpeciesInfo[species];
@@ -234,12 +300,9 @@ static enum Species GetRandomMonFormSpecies(enum Species species)
     if (formTable == NULL)
         return species;
 
-    if (AreBaseSpeciesFormsExcluded(species))
-        return species;
-
     for (i = 0; formTable[i] != FORM_SPECIES_END; i++)
     {
-        if (IsRandomMonFormAllowed(formTable[i]))
+        if (IsRandomMonFormAllowed(formTable[i], formTable))
         {
             eligibleForms[eligibleFormCount] = formTable[i];
             eligibleFormCount++;
@@ -259,7 +322,7 @@ static enum Species GetRandomMonSpecies(const struct RandomSpeciesGeneratorOptio
     for (i = 0; i < 512; i++)
     {
         enum Species species = GetRandomMonCandidateSpecies(options);
-        if (species != SPECIES_NONE && species < NUM_SPECIES && !IsSpeciesBannedByRandomMonOptions(species, options) && IsSpeciesAllowedByRandomBstVars(species))
+        if (!IsSpeciesBannedByRandomMonOptions(species, options))
         {
             if (options->randomizeForms)
                 species = GetRandomMonFormSpecies(species);
@@ -339,6 +402,40 @@ static enum PokeBall GetRandomMonBall(void)
     return RandomUniform(RNG_RANDOM_MON_GEN, BALL_STRANGE, POKEBALL_COUNT - 1);
 }
 
+static enum Species ResolveRandomMonSpecies(enum Species species)
+{
+    const struct RandomSpeciesGeneratorOptions *randomSpeciesOptions;
+
+    if (TryGetRandomSpeciesOptions(species, &randomSpeciesOptions))
+        return GetRandomMonSpecies(randomSpeciesOptions);
+
+    return species;
+}
+
+static enum Item ResolveRandomMonItem(enum Item item)
+{
+    const struct RandomItemGeneratorOptions *randomItemOptions;
+
+    if (item < ITEMS_COUNT)
+        return item;
+    if (TryGetRandomItemOptions(item, &randomItemOptions))
+        return GetRandomMonHeldItem(randomItemOptions);
+
+    errorf("Unknown item value %d", item);
+    return ITEM_NONE;
+}
+
+static enum PokeBall ResolveRandomMonBall(enum PokeBall ball)
+{
+    if (ball < POKEBALL_COUNT)
+        return ball;
+    if (ball == BALL_RANDOM)
+        return GetRandomMonBall();
+
+    errorf("Unknown ball value %d", ball);
+    return BALL_STRANGE;
+}
+
 static bool32 IsMoveInRandomMonMoves(enum Move move, enum Move *moves, u32 count)
 {
     u32 i;
@@ -365,7 +462,7 @@ static void ResolveRandomMonMoves(enum Species species, enum Move *moves)
     {
         u32 j;
 
-        if (moves[i] != MOVE_RANDOM)
+        if (moves[i] != MOVE_RANDOM_TEACHABLE)
             continue;
 
         for (j = 0; j < 64 && teachableCount != 0; j++)
@@ -378,7 +475,7 @@ static void ResolveRandomMonMoves(enum Species species, enum Move *moves)
             }
         }
 
-        if (moves[i] == MOVE_RANDOM)
+        if (moves[i] == MOVE_RANDOM_TEACHABLE)
         {
             for (j = 0; j < teachableCount; j++)
             {
@@ -390,24 +487,15 @@ static void ResolveRandomMonMoves(enum Species species, enum Move *moves)
             }
         }
 
-        if (moves[i] == MOVE_RANDOM)
+        if (moves[i] == MOVE_RANDOM_TEACHABLE)
             moves[i] = MOVE_NONE;
     }
 }
 
 void ResolveRandomMonGeneration(enum Species *species, enum Item *item, enum PokeBall *ball, enum Move *moves)
 {
-    const struct RandomSpeciesGeneratorOptions *randomSpeciesOptions;
-    const struct RandomItemGeneratorOptions *randomItemOptions;
-
-    if (TryGetRandomSpeciesOptions(*species, &randomSpeciesOptions))
-        *species = GetRandomMonSpecies(randomSpeciesOptions);
-
-    if (TryGetRandomItemOptions(*item, &randomItemOptions))
-        *item = GetRandomMonHeldItem(randomItemOptions);
-
-    if (*ball == BALL_RANDOM)
-        *ball = GetRandomMonBall();
-
+    *species = ResolveRandomMonSpecies(*species);
+    *item = ResolveRandomMonItem(*item);
+    *ball = ResolveRandomMonBall(*ball);
     ResolveRandomMonMoves(*species, moves);
 }
