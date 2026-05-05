@@ -10101,3 +10101,29 @@ void RemoveSelectedPcMon(struct Pokemon *mon)
     BoxMonToMon(boxmon, mon);
     ZeroBoxMonData(boxmon);
 }
+
+s32 StorePokemonInBox(struct BoxPokemon *src, u8 *boxId, u8 *position)
+{
+    u8 boxIdTemp = StorageGetCurrentBox();
+
+    while (boxIdTemp < TOTAL_BOXES_COUNT)
+    {
+        for (u32 boxPosition = 0; boxPosition < IN_BOX_COUNT; boxPosition++)
+        {
+            if (GetBoxMonDataAt(boxIdTemp, boxPosition, MON_DATA_SPECIES) == SPECIES_NONE)
+            {
+                gPokemonStoragePtr->boxes[boxIdTemp][boxPosition] = *src;
+
+                if (boxId != NULL)
+                    *boxId = boxIdTemp;
+                if (position != NULL)
+                    *position = boxPosition;
+
+                return 0;
+            }
+        }
+        boxIdTemp++;
+    }
+
+    return -1;
+}

@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle_setup.h"
 #include "bike.h"
+#include "bug_contest.h"
 #include "coord_event_weather.h"
 #include "daycare.h"
 #include "debug.h"
@@ -808,6 +809,8 @@ static bool8 TryStartStepCountScript(u16 metatileBehavior)
     }
 
     if (SafariZoneTakeStep() == TRUE)
+        return TRUE;
+    if (BugContestCheckTimeLimit() == TRUE)
         return TRUE;
     if (CountSSTidalStep(1) == TRUE)
     {

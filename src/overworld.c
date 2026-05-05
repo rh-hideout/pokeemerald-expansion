@@ -5,6 +5,7 @@
 #include "battle_util.h"
 #include "berry.h"
 #include "bg.h"
+#include "bug_contest.h"
 #include "cable_club.h"
 #include "credits_frlg.h"
 #include "clock.h"
@@ -1923,6 +1924,34 @@ void CB2_WhiteOut(void)
         SetFieldVBlankCallback();
         SetMainCallback1(CB1_Overworld);
         SetMainCallback2(CB2_Overworld);
+    }
+}
+
+void CB2_BugContestWhiteOut(void)
+{
+    u8 state;
+
+    if (++gMain.state >= 120)
+    {
+        FieldClearVBlankHBlankCallbacks();
+        StopMapMusic();
+        // TODO: needs tx_Challenges_NuzlockeHardcore SaveBlock field
+        // if (gSaveBlock1Ptr->tx_Challenges_NuzlockeHardcore && !FlagGet(FLAG_DEFEATED_RED))
+        // {
+        //     ClearSaveData();
+        //     DoSoftReset();
+        // }
+        ResetSafariZoneFlag_();
+        ResetInitialPlayerAvatarState();
+        ScriptContext_Init();
+        UnlockPlayerFieldControls();
+        gFieldCallback = FieldCB_WarpExitFadeFromBlack;
+        state = 0;
+        DoMapLoadLoop(&state);
+        SetFieldVBlankCallback();
+        SetMainCallback1(CB1_Overworld);
+        SetMainCallback2(CB2_Overworld);
+        ScriptContext_SetupScript(BugContest_EventScript_WhiteOut);
     }
 }
 

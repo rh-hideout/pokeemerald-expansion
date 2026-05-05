@@ -647,3 +647,9 @@ gSpecials::
 	def_special CheckCelebi
 	def_special HaircutBrother1
 	def_special HaircutBrother2
+	def_special EnterBugContestMode
+	def_special ExitBugContestMode
+	def_special TransferBugContestMon
+	def_special JudgeBugContestMon
+	def_special RemoveSafariBalls
+	def_special ShowBugContestChosenMon
