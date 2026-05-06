@@ -1214,7 +1214,9 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
         }
         else
         {
-            gBattlescriptCurrInstr = failInstr;
+            gBattlescriptCurrInstr = failInstr == BattleScript_ButItFailed
+                ? BattleScript_TargetAvoidsAttackEnd
+                : failInstr;
         }
 
         if (gBattleStruct->moveResultFlags[gBattlerTarget] & (MOVE_RESULT_ONE_HIT_KO_NO_AFFECT | MOVE_RESULT_ONE_HIT_KO_STURDY))

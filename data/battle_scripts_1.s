@@ -2243,6 +2243,13 @@ BattleScript_MoveMissed::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
+BattleScript_TargetAvoidsAttackEnd::
+	pause B_WAIT_TIME_SHORT
+	setbyte cMULTISTRING_CHOOSER, B_MSG_AVOIDED_ATK
+	printfromtable gMissStringIds
+	waitmessage B_WAIT_TIME_LONG
+	goto BattleScript_MoveEnd
+
 BattleScript_TerrainPreventsEnd2::
 	pause B_WAIT_TIME_SHORT
 	printfromtable gTerrainPreventsStringIds

@@ -12,6 +12,7 @@ extern const u8 BattleScript_MakeMoveMissed[];
 extern const u8 BattleScript_MoveMissedPause[];
 extern const u8 BattleScript_MoveMissedPause[];
 extern const u8 BattleScript_MoveMissed[];
+extern const u8 BattleScript_TargetAvoidsAttackEnd[];
 extern const u8 BattleScript_FlingFailConsumeItem[];
 extern const u8 BattleScript_FlingBlockedByShieldDust[];
 extern const u8 BattleScript_EffectFlingConsumeBerry[];
