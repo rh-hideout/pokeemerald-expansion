@@ -1178,16 +1178,12 @@
     .byte \battler
 	.endm
 
-    .macro tryanystatchange
-    .byte B_SCR_OP_TRYANYSTATCHANGE
+    .macro trymovestatchanges
+    .byte B_SCR_OP_TRYMOVESTATCHANGES
     .endm
 
-    .macro trystatchange
-    .byte B_SCR_OP_TRYSTATCHANGE
-    .endm
-
-    .macro trynonmovestatchange battler:req statChangeFlags:req
-    .byte B_SCR_OP_TRYNONMOVESTATCHANGE
+    .macro trystatchanges battler:req statChangeFlags:req
+    .byte B_SCR_OP_TRYSTATCHANGES
     .byte \battler
     .2byte \statChangeFlags
     .endm

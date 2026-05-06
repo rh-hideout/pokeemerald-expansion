@@ -10881,6 +10881,13 @@ void SetOrClearRageVolatile(void)
 
 enum BattlerId GetTargetBySlot(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
+    if (IsDoubleBattle())
+        return GetTargetFromSlotId(battlerAtk, battlerDef);
+    return battlerDef;
+}
+
+enum BattlerId GetTargetFromSlotId(enum BattlerId battlerAtk, enum BattlerId battlerDef)
+{
     switch (battlerDef)
     {
     case B_BATTLER_0:

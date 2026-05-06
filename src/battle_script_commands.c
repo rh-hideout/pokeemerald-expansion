@@ -566,8 +566,8 @@ static void Cmd_setnonvolatilestatus(void);
 static void Cmd_tryoverwriteability(void);
 static void Cmd_trysynchronize(void);
 static void Cmd_tryconfusionafterskydrop(void);
-static void Cmd_tryanystatchange(void);
-static void Cmd_trynonmovestatchange(void);
+static void Cmd_trymovestatchanges(void);
+static void Cmd_trystatchanges(void);
 static void Cmd_trybattlerstatchange(void);
 static void Cmd_dummy(void);
 static void Cmd_callnative(void);
@@ -791,8 +791,8 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_TRYOVERWRITEABILITY]                   = Cmd_tryoverwriteability,
     [B_SCR_OP_TRY_SYNCHRONIZE]                       = Cmd_trysynchronize,
     [B_SCR_OP_TRY_CONFUSION_AFTER_SKY_DROP]          = Cmd_tryconfusionafterskydrop,
-    [B_SCR_OP_TRYANYSTATCHANGE]                      = Cmd_tryanystatchange,
-    [B_SCR_OP_TRYNONMOVESTATCHANGE]                  = Cmd_trynonmovestatchange,
+    [B_SCR_OP_TRYMOVESTATCHANGES]                    = Cmd_trymovestatchanges,
+    [B_SCR_OP_TRYSTATCHANGES]                        = Cmd_trystatchanges,
     [B_SCR_OP_TRYBATTLERSTATCHANGE]                  = Cmd_trybattlerstatchange,
     [B_SCR_OP_UNUSED_1]                              = Cmd_dummy,
     [B_SCR_OP_UNUSED_2]                              = Cmd_dummy,
@@ -6156,7 +6156,7 @@ static u32 GetPossibleNextTarget(u32 currTarget)
     {
         for (i = 0; i < MAX_BATTLERS_COUNT; i++)
         {
-            if (GetTargetBySlot(gBattlerAttacker, i) == currTarget)
+            if (GetTargetFromSlotId(gBattlerAttacker, i) == currTarget)
                 break;
         }
         i++; // next target after finding currTarget
@@ -6164,7 +6164,7 @@ static u32 GetPossibleNextTarget(u32 currTarget)
 
     while (i < MAX_BATTLERS_COUNT)
     {
-        enum BattlerId battler = GetTargetBySlot(gBattlerAttacker, i);
+        enum BattlerId battler = GetTargetFromSlotId(gBattlerAttacker, i);
         i++;
 
         if (!IsBattlerAlive(battler))
@@ -10866,7 +10866,7 @@ static void Cmd_tryconfusionafterskydrop(void)
 }
 
 
-static void Cmd_tryanystatchange(void)
+static void Cmd_trymovestatchanges(void)
 {
     CMD_ARGS();
 
@@ -10888,9 +10888,8 @@ static void SetStatChangeFlags(struct StatChange *st, u32 flags)
 }
 #undef SET_FLAG
 
-// The battler input is here who will cause the stat change.
-// Maybe a name like statChangeCausedByBattler would be better even if verbose
-static void Cmd_trynonmovestatchange(void)
+// Scripting battler is the one causing the stat change
+static void Cmd_trystatchanges(void)
 {
     CMD_ARGS(u8 battler, u16 statChangeFlags);
 
@@ -10909,10 +10908,7 @@ static void Cmd_trynonmovestatchange(void)
 
     while (gBattleStruct->statChangeBattler < gBattlersCount)
     {
-        if (IsDoubleBattle())
-            cv.battlerDef = GetTargetBySlot(cv.battlerAtk, gBattleStruct->statChangeBattler);
-        else
-            cv.battlerDef = gBattleStruct->statChangeBattler;
+        cv.battlerDef = GetTargetBySlot(cv.battlerAtk, gBattleStruct->statChangeBattler);
 
         if (!IsBattlerAlive(cv.battlerDef) || gSpecialStatuses[cv.battlerDef].statStageAmount == 0)
         {
