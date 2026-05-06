@@ -5,6 +5,7 @@
 #include "battle_controllers.h"
 #include "battle_util.h"
 #include "battle_hold_effects.h"
+#include "battle_stat_change.h"
 #include "battle_scripts.h"
 #include "item.h"
 #include "string_util.h"
@@ -77,10 +78,8 @@ static enum ItemEffect TryRoomService(enum BattlerId battler)
     if (gFieldStatuses & STATUS_FIELD_TRICK_ROOM && CompareStat(battler, STAT_SPEED, MIN_STAT_STAGE, CMP_GREATER_THAN, GetBattlerAbility(battler)))
     {
         gEffectBattler = gBattleScripting.battler = battler;
-        SET_STATCHANGER(STAT_SPEED, 1, TRUE);
-        gBattleScripting.animArg1 = STAT_ANIM_PLUS1 + STAT_SPEED;
-        gBattleScripting.animArg2 = 0;
         gLastUsedItem = gBattleMons[battler].item;
+        SetStatChange(battler, STAT_SPEED, -1);
         BattleScriptCall(BattleScript_ConsumableItemStatRaise);
         return ITEM_STATS_CHANGE;
     }
@@ -93,9 +92,7 @@ enum ItemEffect TryHandleSeed(enum BattlerId battler, u32 terrainFlag, enum Stat
     if (gFieldStatuses & terrainFlag && CompareStat(battler, statId, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(battler)))
     {
         gEffectBattler = gBattleScripting.battler = battler;
-        SET_STATCHANGER(statId, 1, FALSE);
-        gBattleScripting.animArg1 = STAT_ANIM_PLUS1 + statId;
-        gBattleScripting.animArg2 = 0;
+        SetStatChange(battler, statId, 1);
         BattleScriptCall(BattleScript_ConsumableItemStatRaise);
         return ITEM_STATS_CHANGE;
     }
@@ -137,12 +134,13 @@ static bool32 CanBeInfinitelyConfused(enum BattlerId battler)
 
 static enum ItemEffect TryBerserkGene(enum BattlerId battler)
 {
+    if (CompareStat(battler, STAT_ATK, MAX_STAT_STAGE, CMP_EQUAL, GetBattlerAbility(battler)))
+        return ITEM_NO_EFFECT;
+
     if (CanBeInfinitelyConfused(battler))
         gBattleMons[battler].volatiles.infiniteConfusion = TRUE;
 
-    SET_STATCHANGER(STAT_ATK, 2, FALSE);
-    gBattleScripting.animArg1 = STAT_ANIM_PLUS1 + STAT_ATK;
-    gBattleScripting.animArg2 = 0;
+    SetStatChange(battler, STAT_ATK, 2);
     BattleScriptCall(BattleScript_BerserkGeneRet);
     return ITEM_STATS_CHANGE;
 }
@@ -172,8 +170,14 @@ static enum ItemEffect TryConsumeMirrorHerb(enum BattlerId battler)
 
     if (gProtectStructs[battler].eatMirrorHerb)
     {
+        for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
+        {
+            u32 queuedStat = stat - 1;
+            if (gQueuedStatBoosts[battler].stats & (1 << queuedStat))
+                SetStatChange(battler, stat, gQueuedStatBoosts[battler].statChanges[queuedStat]);
+
+        }
         gProtectStructs[battler].eatMirrorHerb = 0;
-        ChooseStatBoostAnimation(battler);
         BattleScriptCall(BattleScript_MirrorHerbCopyStatChange);
         effect = ITEM_STATS_CHANGE;
     }
@@ -256,7 +260,9 @@ static enum ItemEffect TryWeaknessPolicy(enum BattlerId battlerDef)
     if (IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)
      && gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_SUPER_EFFECTIVE)
     {
-        BattleScriptCall(BattleScript_WeaknessPolicy);
+        SetStatChange(battlerDef, STAT_ATK, 2);
+        SetStatChange(battlerDef, STAT_SPATK, 2);
+        BattleScriptCall(BattleScript_ItemStatChange);
         effect = ITEM_STATS_CHANGE;
     }
 
@@ -270,8 +276,8 @@ static enum ItemEffect TrySnowball(enum BattlerId battlerDef)
     if (IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)
      && GetBattleMoveType(gCurrentMove) == TYPE_ICE)
     {
-        BattleScriptCall(BattleScript_TargetItemStatRaise);
-        SET_STATCHANGER(STAT_ATK, 1, FALSE);
+        SetStatChange(battlerDef, STAT_ATK, 1);
+        BattleScriptCall(BattleScript_ItemStatChange);
         effect = ITEM_STATS_CHANGE;
     }
 
@@ -285,8 +291,8 @@ static enum ItemEffect TryLuminousMoss(enum BattlerId battlerDef)
     if (IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)
      && GetBattleMoveType(gCurrentMove) == TYPE_WATER)
     {
-        BattleScriptCall(BattleScript_TargetItemStatRaise);
-        SET_STATCHANGER(STAT_SPDEF, 1, FALSE);
+        SetStatChange(battlerDef, STAT_SPDEF, 1);
+        BattleScriptCall(BattleScript_ItemStatChange);
         effect = ITEM_STATS_CHANGE;
     }
 
@@ -300,8 +306,8 @@ static enum ItemEffect TryCellBattery(enum BattlerId battlerDef)
     if (IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)
      && GetBattleMoveType(gCurrentMove) == TYPE_ELECTRIC)
     {
-        BattleScriptCall(BattleScript_TargetItemStatRaise);
-        SET_STATCHANGER(STAT_ATK, 1, FALSE);
+        SetStatChange(battlerDef, STAT_ATK, 1);
+        BattleScriptCall(BattleScript_ItemStatChange);
         effect = ITEM_STATS_CHANGE;
     }
 
@@ -315,9 +321,9 @@ static enum ItemEffect TryAbsorbBulb(enum BattlerId battlerDef)
     if (IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)
      && GetBattleMoveType(gCurrentMove) == TYPE_WATER)
     {
+        SetStatChange(battlerDef, STAT_SPATK, 1);
+        BattleScriptCall(BattleScript_ItemStatChange);
         effect = ITEM_STATS_CHANGE;
-        BattleScriptCall(BattleScript_TargetItemStatRaise);
-        SET_STATCHANGER(STAT_SPATK, 1, FALSE);
     }
 
     return effect;
@@ -397,8 +403,9 @@ static enum ItemEffect TryBlunderPolicy(enum BattlerId battlerAtk)
      && !gBattleStruct->battlerState[battlerAtk].redCardSwitched
      && CompareStat(battlerAtk, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(battlerAtk)))
     {
-        SET_STATCHANGER(STAT_SPEED, 2, FALSE);
-        BattleScriptCall(BattleScript_AttackerItemStatRaise);
+        gBattleStruct->blunderPolicy = FALSE;
+        SetStatChange(battlerAtk, STAT_SPEED, 2);
+        BattleScriptCall(BattleScript_ItemStatChange);
         effect = ITEM_STATS_CHANGE;
     }
 
@@ -477,8 +484,8 @@ static enum ItemEffect TryThroatSpray(enum BattlerId battlerAtk)
      && CompareStat(battlerAtk, STAT_SPATK, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(battlerAtk))
      && !NoAliveMonsForEitherParty())   // Don't activate if battle will end
     {
-        SET_STATCHANGER(STAT_SPATK, 1, FALSE);
-        BattleScriptCall(BattleScript_AttackerItemStatRaise);
+        SetStatChange(battlerAtk, STAT_SPATK, 1);
+        BattleScriptCall(BattleScript_ItemStatChange);
         effect = ITEM_STATS_CHANGE;
     }
 
@@ -498,13 +505,16 @@ static enum ItemEffect DamagedStatBoostBerryEffect(enum BattlerId battlerDef, en
          && IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)))
     {
         if (GetBattlerAbility(battlerDef) == ABILITY_RIPEN)
-            SET_STATCHANGER(statId, 2, FALSE);
+        {
+            SetStatChange(battlerDef, statId, 2);
+            BattleScriptCall(BattleScript_ConsumableBerryStatRaiseRipen);
+        }
         else
-            SET_STATCHANGER(statId, 1, FALSE);
+        {
+            SetStatChange(battlerDef, statId, 1);
+            BattleScriptCall(BattleScript_ConsumableBerryStatRaise);
+        }
 
-        gBattleScripting.animArg1 = STAT_ANIM_PLUS1 + statId;
-        gBattleScripting.animArg2 = 0;
-        BattleScriptCall(BattleScript_ConsumableBerryStatRaise);
         effect = ITEM_STATS_CHANGE;
     }
 
@@ -936,10 +946,16 @@ static enum ItemEffect StatRaiseBerry(enum BattlerId battler, enum Item itemId, 
      && HasEnoughHpToEatBerry(battler, ability, GetItemHoldEffectParam(itemId), itemId))
     {
         gEffectBattler = gBattleScripting.battler = battler;
-        SET_STATCHANGER(statId, ability == ABILITY_RIPEN ? 2 : 1, FALSE);
-        gBattleScripting.animArg1 = STAT_ANIM_PLUS1 + statId;
-        gBattleScripting.animArg2 = 0;
-        BattleScriptCall(BattleScript_ConsumableBerryStatRaise);
+        if (ability == ABILITY_RIPEN)
+        {
+            SetStatChange(battler, statId, 2);
+            BattleScriptCall(BattleScript_ConsumableBerryStatRaiseRipen);
+        }
+        else
+        {
+            SetStatChange(battler, statId, 1);
+            BattleScriptCall(BattleScript_ConsumableBerryStatRaise);
+        }
         effect = ITEM_STATS_CHANGE;
     }
 
@@ -982,18 +998,19 @@ static enum ItemEffect RandomStatRaiseBerry(enum BattlerId battler, enum Item it
         u32 savedAttacker = gBattlerAttacker;
         // MoodyCantRaiseStat requires that the battler is set to gBattlerAttacker
         gBattlerAttacker = gBattleScripting.battler = battler;
-        gBattleScripting.statChanger = 0;
-        if (ability != ABILITY_CONTRARY)
-            stat = RandomUniformExcept(RNG_RANDOM_STAT_UP, STAT_ATK, NUM_STATS - 1, MoodyCantRaiseStat);
-        else
-            stat = RandomUniformExcept(RNG_RANDOM_STAT_UP, STAT_ATK, NUM_STATS - 1, MoodyCantLowerStat);
+        stat = RandomUniformExcept(RNG_RANDOM_STAT_UP, STAT_ATK, NUM_STATS - 1, MoodyCantRaiseStat);
         gBattlerAttacker = savedAttacker;
 
-        PREPARE_STAT_BUFFER(gBattleTextBuff1, stat);
-        SET_STATCHANGER(stat, ability == ABILITY_RIPEN ? 4 : 2, FALSE);
-        gBattleScripting.animArg1 = STAT_ANIM_PLUS2 + stat;
-        gBattleScripting.animArg2 = 0;
-        BattleScriptCall(BattleScript_ConsumableBerryStatRaise);
+        if (ability == ABILITY_RIPEN)
+        {
+            BattleScriptCall(BattleScript_ConsumableBerryStatRaiseRipen);
+            SetStatChange(battler, stat, 4);
+        }
+        else
+        {
+            BattleScriptCall(BattleScript_ConsumableBerryStatRaise);
+            SetStatChange(battler, stat, 2);
+        }
         effect = ITEM_STATS_CHANGE;
     }
 

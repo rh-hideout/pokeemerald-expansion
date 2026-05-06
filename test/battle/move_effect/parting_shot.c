@@ -173,7 +173,8 @@ SINGLE_BATTLE_TEST("Parting Shot: Does not switch if both stats are at minimum (
         TURN { MOVE(player, MOVE_TOPSY_TURVY); MOVE(opponent, MOVE_CELEBRATE); }
         TURN { MOVE(player, MOVE_PARTING_SHOT); MOVE(opponent, MOVE_CELEBRATE); }
     } SCENE {
-        MESSAGE("The opposing Omastar's stats won't go any lower!");
+        MESSAGE("The opposing Omastar's Attack won't go any lower!");
+        MESSAGE("The opposing Omastar's Sp. Atk won't go any lower!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], MIN_STAT_STAGE);
         EXPECT_EQ(opponent->statStages[STAT_SPATK], MIN_STAT_STAGE);
@@ -195,7 +196,8 @@ SINGLE_BATTLE_TEST("Parting Shot: Does not switch if Contrary is at maximum stat
         TURN { MOVE(player, MOVE_TOPSY_TURVY); MOVE(opponent, MOVE_CELEBRATE); }
         TURN { MOVE(player, MOVE_PARTING_SHOT); MOVE(opponent, MOVE_CELEBRATE); }
     } SCENE {
-        MESSAGE("The opposing Inkay's stats won't go any higher!");
+        MESSAGE("The opposing Inkay's Attack won't go any higher!");
+        MESSAGE("The opposing Inkay's Sp. Atk won't go any higher!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], MAX_STAT_STAGE);
         EXPECT_EQ(opponent->statStages[STAT_SPATK], MAX_STAT_STAGE);
@@ -221,7 +223,7 @@ SINGLE_BATTLE_TEST("Parting Shot: Stat drop prevention by abilities/items does n
     } WHEN {
         TURN { MOVE(player, MOVE_PARTING_SHOT); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_PARTING_SHOT, player);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_PARTING_SHOT, player);
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
         EXPECT_EQ(opponent->statStages[STAT_SPATK], DEFAULT_STAT_STAGE);
@@ -240,7 +242,8 @@ SINGLE_BATTLE_TEST("Parting Shot: Mist prevents stat drops and does not switch (
         TURN { MOVE(opponent, MOVE_MIST); MOVE(player, MOVE_CELEBRATE); }
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_PARTING_SHOT); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_PARTING_SHOT, player);
+        // ANIMATION(ANIM_TYPE_MOVE, MOVE_PARTING_SHOT, player); ???
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_PARTING_SHOT, player);
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
         EXPECT_EQ(opponent->statStages[STAT_SPATK], DEFAULT_STAT_STAGE);
@@ -261,7 +264,7 @@ DOUBLE_BATTLE_TEST("Parting Shot: Flower Veil prevents stat drops and does not s
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_PARTING_SHOT, target: opponentLeft); MOVE(playerRight, MOVE_CELEBRATE); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_PARTING_SHOT, playerLeft);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_PARTING_SHOT, playerLeft);
     } THEN {
         EXPECT_EQ(opponentLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
         EXPECT_EQ(opponentLeft->statStages[STAT_SPATK], DEFAULT_STAT_STAGE);
@@ -283,7 +286,8 @@ SINGLE_BATTLE_TEST("Parting Shot: Switches if both stats are at minimum (Gen6)")
         TURN { MOVE(player, MOVE_TOPSY_TURVY); MOVE(opponent, MOVE_CELEBRATE); }
         TURN { MOVE(player, MOVE_PARTING_SHOT); MOVE(opponent, MOVE_CELEBRATE); SEND_OUT(player, 1); }
     } SCENE {
-        MESSAGE("The opposing Omastar's stats won't go any lower!");
+        MESSAGE("The opposing Omastar's Attack won't go any lower!");
+        MESSAGE("The opposing Omastar's Sp. Atk won't go any lower!");
         SEND_IN_MESSAGE("Wynaut");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], MIN_STAT_STAGE);
@@ -306,7 +310,8 @@ SINGLE_BATTLE_TEST("Parting Shot: Switches if Contrary is at maximum stats (Gen6
         TURN { MOVE(player, MOVE_TOPSY_TURVY); MOVE(opponent, MOVE_CELEBRATE); }
         TURN { MOVE(player, MOVE_PARTING_SHOT); MOVE(opponent, MOVE_CELEBRATE); SEND_OUT(player, 1); }
     } SCENE {
-        MESSAGE("The opposing Inkay's stats won't go any higher!");
+        MESSAGE("The opposing Inkay's Attack won't go any higher!");
+        MESSAGE("The opposing Inkay's Sp. Atk won't go any higher!");
         SEND_IN_MESSAGE("Wynaut");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], MAX_STAT_STAGE);

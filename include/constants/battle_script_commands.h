@@ -73,7 +73,6 @@ enum BattleScriptOpcode
     B_SCR_OP_JUMPFIFSEMIINVULNERABLE,
     B_SCR_OP_TRAINERSLIDEIN,
     B_SCR_OP_MOVEEND,
-    B_SCR_OP_SETHEALBLOCK,
     B_SCR_OP_RETURNATKTOBALL,
     B_SCR_OP_GETSWITCHEDMONDATA,
     B_SCR_OP_SWITCHINDATAUPDATE,
@@ -128,8 +127,6 @@ enum BattleScriptOpcode
     B_SCR_OP_MANIPULATEDAMAGE,
     B_SCR_OP_TRYSETREST,
     B_SCR_OP_JUMPIFUPROARWAKES,
-    B_SCR_OP_STOCKPILE,
-    B_SCR_OP_STOCKPILETOBASEDAMAGE,
     B_SCR_OP_STOCKPILETOHPHEAL,
     B_SCR_OP_STATBUFFCHANGE,
     B_SCR_OP_NORMALISEBUFFS,
@@ -170,7 +167,6 @@ enum BattleScriptOpcode
     B_SCR_OP_SETSAFEGUARD,
     B_SCR_OP_JUMPIFNOPURSUITSWITCHDMG,
     B_SCR_OP_TRYACTIVATEITEM,
-    B_SCR_OP_HALVEHP,
     B_SCR_OP_COPYFOESTATS,
     B_SCR_OP_RAPIDSPINFREE,
     B_SCR_OP_RECOVERBASEDONSUNLIGHT,
@@ -220,11 +216,13 @@ enum BattleScriptOpcode
     B_SCR_OP_SETTELEKINESIS,
     B_SCR_OP_SWAPSTATSTAGES,
     B_SCR_OP_AVERAGESTATS,
-    B_SCR_OP_JUMPIFCAPTIVATEAFFECTED,
     B_SCR_OP_SETNONVOLATILESTATUS,
     B_SCR_OP_TRYOVERWRITEABILITY,
     B_SCR_OP_TRY_SYNCHRONIZE,
     B_SCR_OP_TRY_CONFUSION_AFTER_SKY_DROP,
+    B_SCR_OP_TRYANYSTATCHANGE,
+    B_SCR_OP_TRYNONMOVESTATCHANGE,
+    B_SCR_OP_TRYBATTLERSTATCHANGE,
 
     // Expansion users, please don't use any of the unused commands.
     // They are reserved for expansion usage.
@@ -262,6 +260,7 @@ enum BattleScriptOpcode
     B_SCR_OP_UNUSED_31,
     B_SCR_OP_UNUSED_32,
     B_SCR_OP_UNUSED_33,
+    B_SCR_OP_UNUSED_34,
     B_SCR_OP_CALLNATIVE,
 };
 
@@ -275,13 +274,13 @@ enum BattleScriptOpcode
 #define sB_ANIM_ARG2                 (gBattleScripting + 0x11) // animArg2
 #define sSAVED_STRINID               (gBattleScripting + 0x12) // savedStringId
 #define sMOVEEND_STATE               (gBattleScripting + 0x14) // moveendState
-#define sSAVED_STAT_CHANGER          (gBattleScripting + 0x15) // savedStatChanger
+#define sUNUSED_0x15                 (gBattleScripting + 0x15) // unused_0x15
 #define sSHIFT_SWITCHED              (gBattleScripting + 0x16) // shiftSwitched
 #define sBATTLER                     (gBattleScripting + 0x17) // battler
 #define sB_ANIM_TURN                 (gBattleScripting + 0x18) // animTurn
 #define sB_ANIM_TARGETS_HIT          (gBattleScripting + 0x19) // animTargetsHit
-#define sSTATCHANGER                 (gBattleScripting + 0x1A) // statChanger
-#define sSTAT_ANIM_PLAYED            (gBattleScripting + 0x1B) // statAnimPlayed
+#define sUNUSED_0x1A                 (gBattleScripting + 0x1A) // unused_0x1a
+#define sUNUSED_0x1B                 (gBattleScripting + 0x1B) // unused_0x1b
 #define sGIVEEXP_STATE               (gBattleScripting + 0x1C) // getexpState
 #define sBATTLE_STYLE                (gBattleScripting + 0x1D) // battleStyle
 #define sLVLBOX_STATE                (gBattleScripting + 0x1E) // drawlvlupboxState
@@ -355,25 +354,6 @@ enum BattleScriptOpcode
 // Cmd_jumpifcantswitch
 #define SWITCH_IGNORE_ESCAPE_PREVENTION   (1 << 7)
 
-// Cmd_statbuffchange
-#define STAT_CHANGE_ALLOW_PTR               (1 << 0)   // If set, allow use of jumpptr. If not set and unable to raise/lower stats, jump to failInstr.
-#define STAT_CHANGE_MIRROR_ARMOR            (1 << 1)   // Stat change redirection caused by Mirror Armor ability.
-#define STAT_CHANGE_ONLY_CHECKING           (1 << 2)   // Checks if the stat change can occur. Does not change stats or play stat change animation.
-#define STAT_CHANGE_NOT_PROTECT_AFFECTED    (1 << 3)
-#define STAT_CHANGE_UPDATE_MOVE_EFFECT      (1 << 4)
-#define STAT_CHANGE_CHECK_PREVENTION        (1 << 5)
-#define STAT_CHANGE_CERTAIN                 (1 << 6)
-
-// stat flags for TryPlayStatChangeAnimation
-#define BIT_HP                      (1 << 0)
-#define BIT_ATK                     (1 << 1)
-#define BIT_DEF                     (1 << 2)
-#define BIT_SPEED                   (1 << 3)
-#define BIT_SPATK                   (1 << 4)
-#define BIT_SPDEF                   (1 << 5)
-#define BIT_ACC                     (1 << 6)
-#define BIT_EVASION                 (1 << 7)
-
 #define PARTY_SCREEN_OPTIONAL (1 << 7) // Flag for first argument to openpartyscreen
 
 enum SetMoveEffectFlags
@@ -381,6 +361,7 @@ enum SetMoveEffectFlags
     NO_FLAGS          = 0,
     EFFECT_PRIMARY    = (1 << 0),
     EFFECT_CERTAIN    = (1 << 1),
+    EFFECT_ON_SIDE    = (1 << 2),
 };
 
 enum FaintBlockStates

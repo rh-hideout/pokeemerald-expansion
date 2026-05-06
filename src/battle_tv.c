@@ -2,6 +2,7 @@
 #include "pokemon.h"
 #include "battle.h"
 #include "battle_anim.h"
+#include "battle_stat_change.h"
 #include "battle_tv.h"
 #include "constants/battle_string_ids.h"
 #include "constants/battle_anim.h"
@@ -267,18 +268,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
     case STRINGID_CRITICALHIT:
         AddMovePoints(PTS_CRITICAL_HIT, moveSlot, 0, 0);
         break;
-    case STRINGID_ATTACKERSSTATROSE:
-        if (gBattleTextBuff1[2] != 0)
-        {
-            if (*statStringId == STRINGID_DRASTICALLY)
-                AddMovePoints(PTS_STAT_INCREASE_3, moveSlot, gBattleTextBuff1[2] - 1, 0);
-            else if (*statStringId == STRINGID_STATSHARPLY)
-                AddMovePoints(PTS_STAT_INCREASE_2, moveSlot, gBattleTextBuff1[2] - 1, 0);
-            else
-                AddMovePoints(PTS_STAT_INCREASE_1, moveSlot, gBattleTextBuff1[2] - 1, 0);
-        }
-        break;
-    case STRINGID_DEFENDERSSTATROSE:
+    case STRINGID_STATROSE:
         if (gBattleTextBuff1[2] != 0)
         {
             if (gBattlerAttacker == gBattlerTarget)
@@ -296,19 +286,22 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
             }
         }
         break;
-    case STRINGID_ATTACKERSSTATFELL:
-        if (gBattleTextBuff1[2] != 0)
-            AddMovePoints(PTS_STAT_DECREASE_SELF, moveSlot, gBattleTextBuff1[2] - 1, 0);
-        break;
-    case STRINGID_DEFENDERSSTATFELL:
+    case STRINGID_STATFELL:
         if (gBattleTextBuff1[2] != 0)
         {
-            if (*statStringId == STRINGID_SEVERELY)
-                AddMovePoints(PTS_STAT_DECREASE_3, moveSlot, gBattleTextBuff1[2] - 1, 0);
-            else if (*statStringId == STRINGID_STATHARSHLY)
-                AddMovePoints(PTS_STAT_DECREASE_2, moveSlot, gBattleTextBuff1[2] - 1, 0);
+            if (gBattlerAttacker != gBattlerTarget)
+            {
+                if (*statStringId == STRINGID_SEVERELY)
+                    AddMovePoints(PTS_STAT_DECREASE_3, moveSlot, gBattleTextBuff1[2] - 1, 0);
+                else if (*statStringId == STRINGID_STATHARSHLY)
+                    AddMovePoints(PTS_STAT_DECREASE_2, moveSlot, gBattleTextBuff1[2] - 1, 0);
+                else
+                    AddMovePoints(PTS_STAT_DECREASE_1, moveSlot, gBattleTextBuff1[2] - 1, 0);
+            }
             else
-                AddMovePoints(PTS_STAT_DECREASE_1, moveSlot, gBattleTextBuff1[2] - 1, 0);
+            {
+                AddMovePoints(PTS_STAT_DECREASE_SELF, moveSlot, gBattleTextBuff1[2] - 1, 0);
+            }
         }
         break;
     case STRINGID_PKMNLAIDCURSE:
@@ -809,41 +802,6 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
         case EFFECT_FIXED_HP_DAMAGE:
             baseFromEffect *= (GetMoveFixedHPDamage(move) / 20);
             break;
-        case EFFECT_TWO_TURNS_ATTACK:
-            for (i = 0; i < GetMoveAdditionalEffectCount(move); i++)
-            {
-                const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(move, i);
-                switch ((enum MoveEffect)additionalEffect->moveEffect)
-                {
-                case MOVE_EFFECT_ATK_PLUS_1:
-                case MOVE_EFFECT_DEF_PLUS_1:
-                case MOVE_EFFECT_SP_ATK_PLUS_1:
-                case MOVE_EFFECT_SP_DEF_PLUS_1:
-                case MOVE_EFFECT_SPD_PLUS_1:
-                case MOVE_EFFECT_ACC_PLUS_1:
-                case MOVE_EFFECT_EVS_PLUS_1:
-                    if (additionalEffect->self == TRUE && (additionalEffect->chance == 100 || additionalEffect->chance == 0))
-                        baseFromEffect += 2;
-                    break;
-                case MOVE_EFFECT_ATK_PLUS_2:
-                case MOVE_EFFECT_DEF_PLUS_2:
-                case MOVE_EFFECT_SP_ATK_PLUS_2:
-                case MOVE_EFFECT_SP_DEF_PLUS_2:
-                case MOVE_EFFECT_SPD_PLUS_2:
-                case MOVE_EFFECT_ACC_PLUS_2:
-                case MOVE_EFFECT_EVS_PLUS_2:
-                    if (additionalEffect->self == TRUE && (additionalEffect->chance == 100 || additionalEffect->chance == 0))
-                        baseFromEffect += 3;
-                    break;
-                case MOVE_EFFECT_FLINCH:
-                    if (additionalEffect->self == FALSE)
-                        baseFromEffect += 3;
-                    break;
-                default:
-                    break;
-                }
-            }
-            break;
         case EFFECT_FIRST_TURN_ONLY:
             if (MoveHasAdditionalEffectWithChance(move, MOVE_EFFECT_FLINCH, 100))
                 baseFromEffect += 3;
@@ -916,16 +874,28 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
                 if (additionalEffect->self == TRUE)
                     baseFromEffect += 3;
                 break;
-            case MOVE_EFFECT_ATK_DEF_DOWN:
-            case MOVE_EFFECT_ATK_MINUS_2:
-            case MOVE_EFFECT_DEF_MINUS_2:
-            case MOVE_EFFECT_SP_ATK_MINUS_2:
-            case MOVE_EFFECT_SP_DEF_MINUS_2:
-            case MOVE_EFFECT_SPD_MINUS_2:
-            case MOVE_EFFECT_ACC_MINUS_2:
-            case MOVE_EFFECT_EVS_MINUS_2:
-                if (additionalEffect->self == TRUE && (additionalEffect->chance == 100 || additionalEffect->chance == 0))
-                    baseFromEffect += 2;
+            case MOVE_EFFECT_STAT_PLUS:
+                for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
+                {
+                    enum Stat stat = sAccurateStatOrder[i];
+                    s32 stage = GetStatStage(stat, additionalEffect);
+
+                    if (stage == 0)
+                        continue;
+
+                    if (additionalEffect->self == TRUE && (additionalEffect->chance == 100 || additionalEffect->chance == 0))
+                    {
+                        switch (stage)
+                        {
+                        case 1:
+                            baseFromEffect += 2;
+                            break;
+                        case 2:
+                            baseFromEffect += 3;
+                            break;
+                        }
+                    }
+                }
                 break;
             default:
                 break;

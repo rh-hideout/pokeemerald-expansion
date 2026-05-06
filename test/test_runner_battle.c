@@ -3465,3 +3465,124 @@ void TestRunner_Battle_AIAdjustScore(const char *file, u32 line, enum BattlerId 
 {
     TestRunner_Battle_AILogScore(file, line, battlerId, moveIndex, score, FALSE);
 }
+
+void AssumeStatChange_(u32 sourceLine, u32 moveId, struct StatChangeAssumption asc)
+{
+    u32 numAdditionalEffects = GetMoveAdditionalEffectCount(moveId);
+
+    bool32 hasEffect = FALSE;
+    bool32 expectPlus = asc.attack > 0 || asc.defense > 0 || asc.spAtk > 0 || asc.spDef > 0 || asc.speed > 0 || asc.accuracy > 0 || asc.evasion > 0;
+    bool32 expectMinus = asc.attack < 0 || asc.defense < 0 || asc.spAtk < 0 || asc.spDef < 0 || asc.speed < 0 || asc.accuracy < 0 || asc.evasion < 0;
+
+
+    for (u32 i = 0; i < numAdditionalEffects; i++)
+    {
+        const struct AdditionalEffect *effect = GetMoveAdditionalEffectById(moveId, i);
+        if (effect->moveEffect == STAT_CHANGE_EFFECT_MINUS)
+        {
+            if (!expectMinus)
+              continue;
+
+            hasEffect = TRUE;
+            if (asc.attack < 0)
+                ASSUME(asc.attack == (-1 * effect->attack));
+            if (asc.defense < 0)
+                ASSUME(asc.defense == (-1 * effect->defense));
+            if (asc.spAtk < 0)
+                ASSUME(asc.spAtk == (-1 * effect->spAtk));
+            if (asc.spDef < 0)
+                ASSUME(asc.spDef == (-1 * effect->spDef));
+            if (asc.speed < 0)
+                ASSUME(asc.speed == (-1 * effect->speed));
+            if (asc.accuracy < 0)
+                ASSUME(asc.accuracy == (-1 * effect->accuracy));
+            if (asc.evasion < 0)
+                ASSUME(asc.evasion == (-1 * effect->evasion));
+        }
+        else if (effect->moveEffect == STAT_CHANGE_EFFECT_PLUS)
+        {
+            if (!expectPlus)
+              continue;
+
+            hasEffect = TRUE;
+            if (asc.attack > 0)
+                ASSUME(asc.attack == effect->attack);
+            if (asc.defense > 0)
+                ASSUME(asc.defense == effect->defense);
+            if (asc.spAtk > 0)
+                ASSUME(asc.spAtk == effect->spAtk);
+            if (asc.spDef > 0)
+                ASSUME(asc.spDef == effect->spDef);
+            if (asc.speed > 0)
+                ASSUME(asc.speed == effect->speed);
+            if (asc.accuracy > 0)
+                ASSUME(asc.accuracy == effect->accuracy);
+            if (asc.evasion > 0)
+                ASSUME(asc.evasion == effect->evasion);
+        }
+    }
+
+    ASSUME(hasEffect == TRUE);
+}
+
+void AssumeMoveEffectStatChange_(u32 sourceLine, u32 moveId, struct StatChangeAssumption asc)
+{
+    u32 numAdditionalEffects = GetMoveAdditionalEffectCount(moveId);
+
+    bool32 hasEffect = FALSE;
+    bool32 expectPlus = asc.attack > 0 || asc.defense > 0 || asc.spAtk > 0 || asc.spDef > 0 || asc.speed > 0 || asc.accuracy > 0 || asc.evasion > 0;
+    bool32 expectMinus = asc.attack < 0 || asc.defense < 0 || asc.spAtk < 0 || asc.spDef < 0 || asc.speed < 0 || asc.accuracy < 0 || asc.evasion < 0;
+
+    for (u32 i = 0; i < numAdditionalEffects; i++)
+    {
+        const struct AdditionalEffect *effect = GetMoveAdditionalEffectById(moveId, i);
+        if (effect->moveEffect == MOVE_EFFECT_STAT_MINUS)
+        {
+            if (!expectMinus)
+              continue;
+
+            hasEffect = TRUE;
+            if (asc.attack < 0)
+                ASSUME(asc.attack == (-1 * effect->attack));
+            if (asc.defense < 0)
+                ASSUME(asc.defense == (-1 * effect->defense));
+            if (asc.spAtk < 0)
+                ASSUME(asc.spAtk == (-1 * effect->spAtk));
+            if (asc.spDef < 0)
+                ASSUME(asc.spDef == (-1 * effect->spDef));
+            if (asc.speed < 0)
+                ASSUME(asc.speed == (-1 * effect->speed));
+            if (asc.accuracy < 0)
+                ASSUME(asc.accuracy == (-1 * effect->accuracy));
+            if (asc.evasion < 0)
+                ASSUME(asc.evasion == (-1 * effect->evasion));
+
+            ASSUME(asc.self == effect->self);
+        }
+        else if (effect->moveEffect == MOVE_EFFECT_STAT_PLUS)
+        {
+            if (!expectPlus)
+              continue;
+
+            hasEffect = TRUE;
+            if (asc.attack > 0)
+                ASSUME(asc.attack == effect->attack);
+            if (asc.defense > 0)
+                ASSUME(asc.defense == effect->defense);
+            if (asc.spAtk > 0)
+                ASSUME(asc.spAtk == effect->spAtk);
+            if (asc.spDef > 0)
+                ASSUME(asc.spDef == effect->spDef);
+            if (asc.speed > 0)
+                ASSUME(asc.speed == effect->speed);
+            if (asc.accuracy > 0)
+                ASSUME(asc.accuracy == effect->accuracy);
+            if (asc.evasion > 0)
+                ASSUME(asc.evasion == effect->evasion);
+
+            ASSUME(asc.self == effect->self);
+        }
+    }
+
+    ASSUME(hasEffect == TRUE);
+}
