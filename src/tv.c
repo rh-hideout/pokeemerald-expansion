@@ -74,7 +74,6 @@ static EWRAM_DATA ALIGNED(4) u8 sTVShowState = 0;
 
 static void ClearPokeNews(void);
 static u8 GetTVGroupByShowId(u8);
-static u8 FindFirstActiveTVShowThatIsNotAMassOutbreak(void);
 static void SetTVMetatilesOnMap(int, int, u16);
 static u8 FindAnyPokeNewsOnTheAir(void);
 static void TakeGabbyAndTyOffTheAir(void);
@@ -755,7 +754,8 @@ u8 GetRandomActiveShowIdx(void)
         else
         {
             show = &gSaveBlock1Ptr->tvShows[j];
-            if (show->massOutbreak.daysBeforeOutbreak == 0 && show->massOutbreak.active == TRUE)
+            // only select a mass outbreak tv program if the timer reached zero and there is no outbreak currently happening
+            if (show->massOutbreak.daysBeforeOutbreak == 0 && show->massOutbreak.active == TRUE && !IsMassOutbreakActive())
                 return j;
         }
 
@@ -773,10 +773,6 @@ u8 FindAnyTVShowOnTheAir(void)
     u8 slot = GetRandomActiveShowIdx();
     if (slot == 0xFF)
         return 0xFF;
-
-    if (IsMassOutbreakActive()
-     && gSaveBlock1Ptr->tvShows[slot].common.kind == TVSHOW_MASS_OUTBREAK)
-        return FindFirstActiveTVShowThatIsNotAMassOutbreak();
 
     return slot;
 }
@@ -840,20 +836,6 @@ void TurnOnTVScreen(void)
 u8 GetSelectedTVShow(void)
 {
     return gSaveBlock1Ptr->tvShows[gSpecialVar_0x8004].common.kind;
-}
-
-static u8 FindFirstActiveTVShowThatIsNotAMassOutbreak(void)
-{
-    u8 i;
-
-    for (i = 0; i < ARRAY_COUNT(gSaveBlock1Ptr->tvShows) - 1; i++)
-    {
-        if (gSaveBlock1Ptr->tvShows[i].common.kind != TVSHOW_OFF_AIR
-         && gSaveBlock1Ptr->tvShows[i].common.kind != TVSHOW_MASS_OUTBREAK
-         && gSaveBlock1Ptr->tvShows[i].common.active == TRUE)
-            return i;
-    }
-    return 0xFF;
 }
 
 // IN SEARCH OF TRAINERS
