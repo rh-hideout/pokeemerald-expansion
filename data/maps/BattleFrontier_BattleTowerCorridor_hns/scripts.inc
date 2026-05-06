@@ -1,0 +1,54 @@
+BattleFrontier_BattleTowerCorridor_hns_MapScripts::
+	map_script MAP_SCRIPT_ON_LOAD, BattleFrontier_BattleTowerCorridor_OnLoad_hns
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, BattleFrontier_BattleTowerCorridor_OnFrame_hns
+	.byte 0
+
+BattleFrontier_BattleTowerCorridor_OnLoad_hns:
+	goto_if_eq VAR_0x8006, 1, BattleFrontier_BattleTowerCorridor_EventScript_OpenFarDoor_hns
+	setmetatile 12, 0, METATILE_BattleFrontier_CorridorOpenDoor_Top, FALSE
+	setmetatile 12, 1, METATILE_BattleFrontier_CorridorOpenDoor_Bottom, FALSE
+	end
+
+BattleFrontier_BattleTowerCorridor_EventScript_OpenFarDoor_hns::
+	setmetatile 15, 0, METATILE_BattleFrontier_CorridorOpenDoor_Top, FALSE
+	setmetatile 15, 1, METATILE_BattleFrontier_CorridorOpenDoor_Bottom, FALSE
+	end
+
+BattleFrontier_BattleTowerCorridor_OnFrame_hns:
+	map_script_2 VAR_TEMP_0, 0, BattleFrontier_BattleTowerCorridor_EventScript_EnterCorridor_hns
+	.2byte 0
+
+BattleFrontier_BattleTowerCorridor_EventScript_EnterCorridor_hns::
+	setvar VAR_TEMP_0, 1
+	goto_if_eq VAR_0x8006, 1, BattleFrontier_BattleTowerCorridor_EventScript_WalkToFarDoor_hns
+	applymovement LOCALID_TOWER_CORRIDOR_ATTENDANT, BattleFrontier_BattleTowerCorridor_Movement_AttendantWalkToDoor_hns
+	applymovement LOCALID_PLAYER, BattleFrontier_BattleTowerCorridor_Movement_PlayerWalkToDoor_hns
+	waitmovement 0
+	goto BattleFrontier_BattleTowerCorridor_EventScript_WarpToBattleRoom_hns
+
+BattleFrontier_BattleTowerCorridor_EventScript_WalkToFarDoor_hns::
+	applymovement LOCALID_TOWER_CORRIDOR_ATTENDANT, BattleFrontier_BattleTowerCorridor_Movement_AttendantWalkToFarDoor_hns
+	applymovement LOCALID_PLAYER, BattleFrontier_BattleTowerCorridor_Movement_PlayerWalkToFarDoor_hns
+	waitmovement 0
+
+BattleFrontier_BattleTowerCorridor_EventScript_WarpToBattleRoom_hns::
+	setvar VAR_TEMP_0, 0
+	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_BATTLE_ROOM, 4, 8
+	waitstate
+	end
+
+BattleFrontier_BattleTowerCorridor_Movement_PlayerWalkToFarDoor_hns:
+	walk_right
+BattleFrontier_BattleTowerCorridor_Movement_AttendantWalkToFarDoor_hns:
+	walk_right
+	walk_right
+BattleFrontier_BattleTowerCorridor_Movement_PlayerWalkToDoor_hns:
+	walk_right
+BattleFrontier_BattleTowerCorridor_Movement_AttendantWalkToDoor_hns:
+	walk_right
+	walk_right
+	walk_right
+	walk_up
+	set_invisible
+	step_end
+

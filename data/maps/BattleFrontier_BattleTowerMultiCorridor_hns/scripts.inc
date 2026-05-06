@@ -1,0 +1,170 @@
+@ On this map the player will automatically walk into the room, but the camera is supposed to remain still.
+@ To do this GF sets the player (LOCALID_PLAYER) invisible and creates a fake player object (LOCALID_TOWER_MULTI_CORRIDOR_PLAYER).
+@ The graphics of this fake player object are represented with VAR_OBJ_GFX_ID_F.
+@ The graphics of the partner are represented with VAR_OBJ_GFX_ID_E, which will ultimately be set by tower_setpartnergfx.
+
+BattleFrontier_BattleTowerMultiCorridor_hns_MapScripts::
+	map_script MAP_SCRIPT_ON_TRANSITION, BattleFrontier_BattleTowerMultiCorridor_OnTransition_hns
+	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, BattleFrontier_BattleTowerMultiCorridor_OnWarp_hns
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, BattleFrontier_BattleTowerMultiCorridor_OnFrame_hns
+	.byte 0
+
+BattleFrontier_BattleTowerMultiCorridor_OnTransition_hns:
+	call_if_eq VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_MULTIS, BattleFrontier_BattleTowerMultiCorridor_EventScript_SetObjGfx_hns
+	call_if_eq VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_LINK_MULTIS, BattleFrontier_BattleTowerMultiCorridor_EventScript_SetLinkPlayerGfx_hns
+	end
+
+BattleFrontier_BattleTowerMultiCorridor_EventScript_SetObjGfx_hns::
+	tower_setpartnergfx
+	checkplayergender
+	goto_if_eq VAR_RESULT, FEMALE, BattleFrontier_BattleTowerMultiCorridor_EventScript_SetPlayerGfxFemale_hns
+	setvar VAR_OBJ_GFX_ID_F, OBJ_EVENT_GFX_BRENDAN_NORMAL
+	return
+
+BattleFrontier_BattleTowerMultiCorridor_EventScript_SetPlayerGfxFemale_hns::
+	setvar VAR_OBJ_GFX_ID_F, OBJ_EVENT_GFX_MAY_NORMAL
+	return
+
+BattleFrontier_BattleTowerMultiCorridor_EventScript_SetLinkPlayerGfx_hns::
+	special SetBattleTowerLinkPlayerGfx
+	return
+
+BattleFrontier_BattleTowerMultiCorridor_OnWarp_hns:
+	map_script_2 VAR_TEMP_1, 0, BattleFrontier_BattleTowerMultiCorridor_EventScript_SetUpObjects_hns
+	.2byte 0
+
+BattleFrontier_BattleTowerMultiCorridor_EventScript_SetUpObjects_hns::
+	hideobjectat LOCALID_PLAYER, MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_CORRIDOR
+	hideobjectat LOCALID_TOWER_MULTI_CORRIDOR_PLAYER, MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_CORRIDOR
+	hideobjectat LOCALID_TOWER_MULTI_CORRIDOR_PARTNER, MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_CORRIDOR
+	special OffsetCameraForBattle
+	end
+
+BattleFrontier_BattleTowerMultiCorridor_OnFrame_hns:
+	map_script_2 VAR_TEMP_1, 0, BattleFrontier_BattleTowerMultiCorridor_EventScript_EnterCorridor_hns
+	.2byte 0
+
+BattleFrontier_BattleTowerMultiCorridor_EventScript_EnterCorridor_hns::
+	lockall
+	setflag FLAG_ENABLE_MULTI_CORRIDOR_DOOR
+	setvar VAR_0x8004, 14  @ x coord of far door, used by DrawDoor
+	setvar VAR_0x8005, 1   @ y coord of far door, used by DrawDoor
+	opendoor 1, 1
+	waitdooranim
+	clearflag FLAG_ENABLE_MULTI_CORRIDOR_DOOR
+	showobjectat LOCALID_TOWER_MULTI_CORRIDOR_PLAYER, MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_CORRIDOR
+	showobjectat LOCALID_TOWER_MULTI_CORRIDOR_PARTNER, MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_CORRIDOR
+	applymovement LOCALID_TOWER_MULTI_CORRIDOR_PLAYER, BattleFrontier_BattleTowerMultiCorridor_Movement_ExitElevator_hns
+	applymovement LOCALID_TOWER_MULTI_CORRIDOR_PARTNER, BattleFrontier_BattleTowerMultiCorridor_Movement_ExitElevator_hns
+	waitmovement 0
+	setflag FLAG_ENABLE_MULTI_CORRIDOR_DOOR
+	setvar VAR_0x8004, 14  @ x coord of far door, used by DrawDoor
+	setvar VAR_0x8005, 1   @ y coord of far door, used by DrawDoor
+	closedoor 1, 1
+	waitdooranim
+	clearflag FLAG_ENABLE_MULTI_CORRIDOR_DOOR
+	applymovement LOCALID_TOWER_MULTI_CORRIDOR_PLAYER, BattleFrontier_BattleTowerMultiCorridor_Movement_PlayerWalkToDoor_hns
+	applymovement LOCALID_TOWER_MULTI_CORRIDOR_PARTNER, BattleFrontier_BattleTowerMultiCorridor_Movement_PartnerWalkToDoor_hns
+	applymovement LOCALID_TOWER_MULTI_CORRIDOR_ATTENDANT_2, BattleFrontier_BattleTowerMultiCorridor_Movement_PlayerAttendantWalkToDoor_hns
+	applymovement LOCALID_TOWER_MULTI_CORRIDOR_ATTENDANT_1, BattleFrontier_BattleTowerMultiCorridor_Movement_PartnerAttendantWalkToDoor_hns
+	waitmovement 0
+	delay 40
+	applymovement LOCALID_TOWER_MULTI_CORRIDOR_ATTENDANT_2, Common_Movement_WalkInPlaceFasterUp
+	applymovement LOCALID_TOWER_MULTI_CORRIDOR_ATTENDANT_1, Common_Movement_WalkInPlaceFasterUp
+	waitmovement 0
+	opendoor 7, 1
+	waitdooranim
+	applymovement LOCALID_TOWER_MULTI_CORRIDOR_ATTENDANT_2, BattleFrontier_BattleTowerMultiCorridor_Movement_AttendantEnterDoor_hns
+	applymovement LOCALID_TOWER_MULTI_CORRIDOR_ATTENDANT_1, BattleFrontier_BattleTowerMultiCorridor_Movement_AttendantEnterDoor_hns
+	applymovement LOCALID_TOWER_MULTI_CORRIDOR_PLAYER, BattleFrontier_BattleTowerMultiCorridor_Movement_TrainerEnterDoor_hns
+	applymovement LOCALID_TOWER_MULTI_CORRIDOR_PARTNER, BattleFrontier_BattleTowerMultiCorridor_Movement_TrainerEnterDoor_hns
+	waitmovement 0
+	closedoor 7, 1
+	waitdooranim
+	delay 30
+	setvar VAR_TEMP_1, 1
+	call BattleFrontier_BattleTowerMultiCorridor_EventScript_WarpToBattleRoom_hns
+	releaseall
+	end
+
+BattleFrontier_BattleTowerMultiCorridor_EventScript_WarpToBattleRoom_hns::
+	call_if_eq VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_SINGLES, BattleFrontier_BattleTowerMultiCorridor_EventScript_WarpToNormalBattleRoom_hns
+	call_if_eq VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_DOUBLES, BattleFrontier_BattleTowerMultiCorridor_EventScript_WarpToNormalBattleRoom_hns
+	call_if_eq VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_MULTIS, BattleFrontier_BattleTowerMultiCorridor_EventScript_WarpToMultiBattleRoom_hns
+	call_if_eq VAR_FRONTIER_BATTLE_MODE, FRONTIER_MODE_LINK_MULTIS, BattleFrontier_BattleTowerMultiCorridor_EventScript_WarpToLinkMultiBattleRoom_hns
+	return
+
+BattleFrontier_BattleTowerMultiCorridor_EventScript_WarpToNormalBattleRoom_hns::
+	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_BATTLE_ROOM, 4, 8
+	waitstate
+	return
+
+BattleFrontier_BattleTowerMultiCorridor_EventScript_WarpToMultiBattleRoom_hns::
+	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_BATTLE_ROOM, 4, 5
+	waitstate
+	return
+
+@ Unnecessary duplicate of the above
+BattleFrontier_BattleTowerMultiCorridor_EventScript_WarpToLinkMultiBattleRoom_hns::
+	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_BATTLE_ROOM, 4, 5
+	waitstate
+	return
+
+BattleFrontier_BattleTowerMultiCorridor_Movement_PlayerWalkToDoor_hns:
+	walk_down
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	step_end
+
+BattleFrontier_BattleTowerMultiCorridor_Movement_PartnerWalkToDoor_hns:
+	walk_down
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	step_end
+
+BattleFrontier_BattleTowerMultiCorridor_Movement_PlayerAttendantWalkToDoor_hns:
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_up
+	walk_in_place_faster_right
+	step_end
+
+BattleFrontier_BattleTowerMultiCorridor_Movement_PartnerAttendantWalkToDoor_hns:
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_up
+	walk_in_place_faster_left
+	step_end
+
+BattleFrontier_BattleTowerMultiCorridor_Movement_TrainerEnterDoor_hns:
+	delay_16
+	walk_up
+	walk_up
+	set_invisible
+	step_end
+
+BattleFrontier_BattleTowerMultiCorridor_Movement_AttendantEnterDoor_hns:
+	walk_up
+	set_invisible
+	step_end
+
+BattleFrontier_BattleTowerMultiCorridor_Movement_ExitElevator_hns:
+	walk_down
+	step_end
+

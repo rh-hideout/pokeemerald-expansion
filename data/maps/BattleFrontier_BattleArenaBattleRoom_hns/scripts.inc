@@ -1,0 +1,629 @@
+@ On this map the player will automatically walk into the room, but the camera is supposed to remain still.
+@ To do this GF sets the player (LOCALID_PLAYER) invisible and creates a fake player object (LOCALID_ARENA_BATTLE_PLAYER).
+@ The graphics of this fake player object are represented with VAR_OBJ_GFX_ID_1.
+@ The graphics of the opponent are represented with VAR_OBJ_GFX_ID_0, which will ultimately be set by tower_setopponent.
+BattleFrontier_BattleArenaBattleRoom_hns_MapScripts::
+	map_script MAP_SCRIPT_ON_TRANSITION, BattleFrontier_BattleArenaBattleRoom_OnTransition_hns
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, BattleFrontier_BattleArenaBattleRoom_OnFrame_hns
+	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, BattleFrontier_BattleArenaBattleRoom_OnWarp_hns
+	map_script MAP_SCRIPT_ON_RESUME, BattleFrontier_BattleArenaBattleRoom_OnResume_hns
+	.byte 0
+
+BattleFrontier_BattleArenaBattleRoom_OnResume_hns:
+	special OffsetCameraForBattle
+	end
+
+BattleFrontier_BattleArenaBattleRoom_OnTransition_hns:
+	frontier_settrainers
+	call BattleFrontier_BattleArenaBattleRoom_EventScript_SetPlayerGfx_hns
+	end
+
+BattleFrontier_BattleArenaBattleRoom_EventScript_SetPlayerGfx_hns::
+	checkplayergender
+	goto_if_eq VAR_RESULT, MALE, BattleFrontier_BattleArenaBattleRoom_EventScript_SetPlayerGfx_hnsMale_hns
+	goto_if_eq VAR_RESULT, FEMALE, BattleFrontier_BattleArenaBattleRoom_EventScript_SetPlayerGfx_hnsFemale_hns
+	return
+
+BattleFrontier_BattleArenaBattleRoom_EventScript_SetPlayerGfx_hnsMale_hns::
+	setvar VAR_OBJ_GFX_ID_1, OBJ_EVENT_GFX_RIVAL_BRENDAN_NORMAL
+	return
+
+BattleFrontier_BattleArenaBattleRoom_EventScript_SetPlayerGfx_hnsFemale_hns::
+	setvar VAR_OBJ_GFX_ID_1, OBJ_EVENT_GFX_RIVAL_MAY_NORMAL
+	return
+
+BattleFrontier_BattleArenaBattleRoom_OnFrame_hns:
+	map_script_2 VAR_TEMP_0, 0, BattleFrontier_BattleArenaBattleRoom_EventScript_EnterRoom_hns
+	.2byte 0
+
+BattleFrontier_BattleArenaBattleRoom_EventScript_EnterRoom_hns::
+	lockall
+	showobjectat LOCALID_ARENA_BATTLE_PLAYER, MAP_BATTLE_FRONTIER_BATTLE_ARENA_BATTLE_ROOM
+	applymovement LOCALID_ARENA_BATTLE_PLAYER, BattleFrontier_BattleArenaBattleRoom_Movement_PlayerEnter_hns
+	waitmovement 0
+	frontier_get FRONTIER_DATA_BATTLE_NUM
+	goto_if_eq VAR_RESULT, 0, BattleFrontier_BattleArenaBattleRoom_EventScript_AnnounceTrainers_hns
+	applymovement LOCALID_ARENA_BATTLE_ATTENDANT, BattleFrontier_BattleArenaBattleRoom_Movement_WalkInPlaceDown_hns
+	applymovement LOCALID_ARENA_BATTLE_PLAYER, BattleFrontier_BattleArenaBattleRoom_Movement_WalkInPlaceLeft_hns
+	setvar VAR_TEMP_2, 1
+	frontier_set FRONTIER_DATA_RECORD_DISABLED, TRUE
+	goto BattleFrontier_BattleArenaBattleRoom_EventScript_AskReadyForOpponent_hns
+
+BattleFrontier_BattleArenaBattleRoom_EventScript_AnnounceTrainers_hns::
+	tower_setopponent
+	addobject LOCALID_ARENA_BATTLE_OPPONENT
+	applymovement LOCALID_ARENA_BATTLE_OPPONENT, BattleFrontier_BattleArenaBattleRoom_Movement_OpponentEnter_hns
+	waitmovement 0
+	applymovement LOCALID_ARENA_BATTLE_ANNOUNCER, BattleFrontier_BattleArenaBattleRoom_Movement_JumpInPlaceDown_hns
+	playse SE_M_BELLY_DRUM
+	waitse
+	waitmovement 0
+	msgbox BattleFrontier_BattleArenaBattleRoom_Text_PlayerStepForward_hns, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_ARENA_BATTLE_PLAYER, BattleFrontier_BattleArenaBattleRoom_Movement_PlayerStepForward_hns
+	waitmovement 0
+	applymovement LOCALID_ARENA_BATTLE_ANNOUNCER, BattleFrontier_BattleArenaBattleRoom_Movement_JumpInPlaceDown_hns
+	playse SE_M_BELLY_DRUM
+	waitse
+	waitmovement 0
+	arena_gettrainername
+	msgbox BattleFrontier_BattleArenaBattleRoom_Text_OpponentStepForward_hns, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_ARENA_BATTLE_OPPONENT, BattleFrontier_BattleArenaBattleRoom_Movement_OpponentStepForward_hns
+	waitmovement 0
+	applymovement LOCALID_ARENA_BATTLE_ANNOUNCER, BattleFrontier_BattleArenaBattleRoom_Movement_JumpInPlaceDown_hns
+	playse SE_M_BELLY_DRUM
+	waitse
+	waitmovement 0
+	msgbox BattleFrontier_BattleArenaBattleRoom_Text_SetKOTourneyBegin_hns, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_ARENA_BATTLE_PLAYER, BattleFrontier_BattleArenaBattleRoom_Movement_PlayerStepForward_hns
+	applymovement LOCALID_ARENA_BATTLE_OPPONENT, BattleFrontier_BattleArenaBattleRoom_Movement_OpponentStepForward_hns
+	waitmovement 0
+	palace_getopponentintro
+	msgbox gStringVar4, MSGBOX_DEFAULT
+	waitmessage
+	call BattleFrontier_BattleArenaBattleRoom_EventScript_DoArenaBattle_hns
+	switch VAR_RESULT
+	case 1, BattleFrontier_BattleArenaBattleRoom_EventScript_DefeatedOpponent_hns
+BattleFrontier_BattleArenaBattleRoom_EventScript_DeclareOpponentWinner_hns::
+	applymovement LOCALID_ARENA_BATTLE_ANNOUNCER, BattleFrontier_BattleArenaBattleRoom_Movement_JumpInPlaceDown_hns
+	applymovement LOCALID_ARENA_BATTLE_BLACK_BELT_1, BattleFrontier_BattleArenaBattleRoom_Movement_JumpInPlaceDown_hns
+	applymovement LOCALID_ARENA_BATTLE_BLACK_BELT_2, BattleFrontier_BattleArenaBattleRoom_Movement_JumpInPlaceDown_hns
+	applymovement LOCALID_ARENA_BATTLE_BLACK_BELT_3, BattleFrontier_BattleArenaBattleRoom_Movement_JumpInPlaceUp_hns
+	applymovement LOCALID_ARENA_BATTLE_BLACK_BELT_4, BattleFrontier_BattleArenaBattleRoom_Movement_JumpInPlaceUp_hns
+	playse SE_M_SNORE
+	waitse
+	waitmovement 0
+	arena_gettrainername
+	msgbox BattleFrontier_BattleArenaBattleRoom_Text_WinnerIsOpponent_hns, MSGBOX_DEFAULT
+BattleFrontier_BattleArenaBattleRoom_EventScript_WarpToLobbyLost_hns::
+	frontier_set FRONTIER_DATA_CHALLENGE_STATUS, CHALLENGE_STATUS_LOST
+	warp MAP_BATTLE_FRONTIER_BATTLE_ARENA_LOBBY, 7, 8
+	waitstate
+
+BattleFrontier_BattleArenaBattleRoom_EventScript_DefeatedOpponent_hns::
+	call BattleFrontier_BattleArenaBattleRoom_EventScript_DeclarePlayerWinner_hns
+	frontier_get FRONTIER_DATA_BATTLE_NUM
+	addvar VAR_RESULT, 1
+	frontier_set FRONTIER_DATA_BATTLE_NUM, VAR_RESULT
+	switch VAR_RESULT
+	case 7, BattleFrontier_BattleArenaBattleRoom_EventScript_ReturnToLobbyWon_hns
+	applymovement LOCALID_ARENA_BATTLE_PLAYER, BattleFrontier_BattleArenaBattleRoom_Movement_PlayerWalkBackToLine_hns
+	applymovement LOCALID_ARENA_BATTLE_OPPONENT, BattleFrontier_BattleArenaBattleRoom_Movement_OpponentExit_hns
+	waitmovement 0
+	removeobject LOCALID_ARENA_BATTLE_OPPONENT
+	applymovement LOCALID_ARENA_BATTLE_ATTENDANT, BattleFrontier_BattleArenaBattleRoom_Movement_WalkInPlaceDown_hns
+	applymovement LOCALID_ARENA_BATTLE_PLAYER, BattleFrontier_BattleArenaBattleRoom_Movement_WalkInPlaceLeft_hns
+	waitmovement 0
+	msgbox BattleFrontier_BattleArenaBattleRoom_Text_MonsWillBeRestored_hns, MSGBOX_DEFAULT
+	special LoadPlayerParty
+	special SavePlayerParty
+	frontier_setpartyorder FRONTIER_PARTY_SIZE
+	playfanfare MUS_HEAL
+	waitfanfare
+	special HealPlayerParty
+BattleFrontier_BattleArenaBattleRoom_EventScript_AskReadyForOpponent_hns::
+	frontier_getbrainstatus
+	copyvar VAR_TEMP_F, VAR_RESULT
+	goto_if_ne VAR_RESULT, FRONTIER_BRAIN_NOT_READY, BattleFrontier_BattleArenaBattleRoom_EventScript_TycoonUpNext_hns
+	frontier_get FRONTIER_DATA_BATTLE_NUM
+	call_if_eq VAR_RESULT, 1, BattleFrontier_BattleArenaBattleRoom_EventScript_ReadyFor2ndOpponent_hns
+	call_if_eq VAR_RESULT, 2, BattleFrontier_BattleArenaBattleRoom_EventScript_ReadyFor3rdOpponent_hns
+	call_if_eq VAR_RESULT, 3, BattleFrontier_BattleArenaBattleRoom_EventScript_ReadyFor4thOpponent_hns
+	call_if_eq VAR_RESULT, 4, BattleFrontier_BattleArenaBattleRoom_EventScript_ReadyFor5thOpponent_hns
+	call_if_eq VAR_RESULT, 5, BattleFrontier_BattleArenaBattleRoom_EventScript_ReadyFor6thOpponent_hns
+	call_if_eq VAR_RESULT, 6, BattleFrontier_BattleArenaBattleRoom_EventScript_ReadyFor7thOpponent_hns
+	call BattleFrontier_EventScript_GetCantRecordBattle
+	goto_if_eq VAR_RESULT, TRUE, BattleFrontier_BattleArenaBattleRoom_EventScript_AskReadyForOpponent_hnsNoRecord_hns
+	multichoice 19, 4, MULTI_GO_ON_RECORD_REST_RETIRE, TRUE
+	switch VAR_RESULT
+	case 0, BattleFrontier_BattleArenaBattleRoom_EventScript_ContinueChallenge_hns
+	case 1, BattleFrontier_BattleArenaBattleRoom_EventScript_AskRecordBattle_hns
+	case 2, BattleFrontier_BattleArenaBattleRoom_EventScript_AskPauseChallenge_hns
+	case 3, BattleFrontier_BattleArenaBattleRoom_EventScript_AskRetireChallenge_hns
+	case MULTI_B_PRESSED, BattleFrontier_BattleArenaBattleRoom_EventScript_AskReadyForOpponent_hns
+
+BattleFrontier_BattleArenaBattleRoom_EventScript_AskReadyForOpponent_hnsNoRecord_hns::
+	multichoice 20, 6, MULTI_GO_ON_REST_RETIRE, TRUE
+	switch VAR_RESULT
+	case 0, BattleFrontier_BattleArenaBattleRoom_EventScript_ContinueChallenge_hns
+	case 1, BattleFrontier_BattleArenaBattleRoom_EventScript_AskPauseChallenge_hns
+	case 2, BattleFrontier_BattleArenaBattleRoom_EventScript_AskRetireChallenge_hns
+	case MULTI_B_PRESSED, BattleFrontier_BattleArenaBattleRoom_EventScript_AskReadyForOpponent_hns
+
+BattleFrontier_BattleArenaBattleRoom_EventScript_AskRecordBattle_hns::
+	message BattleFrontier_BattleArenaBattleRoom_Text_RecordLastBattle_hns
+	waitmessage
+	multichoicedefault 20, 8, MULTI_YESNO, 1, FALSE
+	switch VAR_RESULT
+	case 1, BattleFrontier_BattleArenaBattleRoom_EventScript_AskReadyForOpponent_hns
+	case 0, BattleFrontier_BattleArenaBattleRoom_EventScript_RecordBattle_hns
+	case MULTI_B_PRESSED, BattleFrontier_BattleArenaBattleRoom_EventScript_AskReadyForOpponent_hns
+
+BattleFrontier_BattleArenaBattleRoom_EventScript_RecordBattle_hns::
+	call BattleFrontier_EventScript_SaveBattle
+	goto BattleFrontier_BattleArenaBattleRoom_EventScript_AskReadyForOpponent_hns
+
+BattleFrontier_BattleArenaBattleRoom_EventScript_AskPauseChallenge_hns::
+	msgbox BattleFrontier_BattleArenaBattleRoom_Text_SaveAndShutDown_hns, MSGBOX_YESNO
+	switch VAR_RESULT
+	case NO, BattleFrontier_BattleArenaBattleRoom_EventScript_AskReadyForOpponent_hns
+	case YES, BattleFrontier_BattleArenaBattleRoom_EventScript_PauseChallenge_hns
+	case MULTI_B_PRESSED, BattleFrontier_BattleArenaBattleRoom_EventScript_AskReadyForOpponent_hns
+
+BattleFrontier_BattleArenaBattleRoom_EventScript_AskRetireChallenge_hns::
+	message BattleFrontier_BattleArenaBattleRoom_Text_RetireFromChallenge_hns
+	waitmessage
+	multichoicedefault 20, 8, MULTI_YESNO, 1, FALSE
+	switch VAR_RESULT
+	case 1, BattleFrontier_BattleArenaBattleRoom_EventScript_AskReadyForOpponent_hns
+	case 0, BattleFrontier_BattleArenaBattleRoom_EventScript_WarpToLobbyLost_hns
+	case MULTI_B_PRESSED, BattleFrontier_BattleArenaBattleRoom_EventScript_AskReadyForOpponent_hns
+
+BattleFrontier_BattleArenaBattleRoom_EventScript_ContinueChallenge_hns::
+	closemessage
+	applymovement LOCALID_ARENA_BATTLE_PLAYER, BattleFrontier_BattleArenaBattleRoom_Movement_WalkInPlaceRight_hns
+	applymovement LOCALID_ARENA_BATTLE_ATTENDANT, BattleFrontier_BattleArenaBattleRoom_Movement_WalkInPlaceRight_hns
+	waitmovement 0
+	goto BattleFrontier_BattleArenaBattleRoom_EventScript_AnnounceTrainers_hns
+	waitstate
+BattleFrontier_BattleArenaBattleRoom_EventScript_ReturnToLobbyWon_hns::
+	delay 60
+	frontier_set FRONTIER_DATA_CHALLENGE_STATUS, CHALLENGE_STATUS_WON
+	warp MAP_BATTLE_FRONTIER_BATTLE_ARENA_LOBBY, 7, 8
+	waitstate
+
+BattleFrontier_BattleArenaBattleRoom_EventScript_ReadyFor2ndOpponent_hns::
+	message BattleFrontier_BattleArenaBattleRoom_Text_ReadyFor2ndOpponent_hns
+	waitmessage
+	return
+
+BattleFrontier_BattleArenaBattleRoom_EventScript_ReadyFor3rdOpponent_hns::
+	message BattleFrontier_BattleArenaBattleRoom_Text_ReadyFor3rdOpponent_hns
+	waitmessage
+	return
+
+BattleFrontier_BattleArenaBattleRoom_EventScript_ReadyFor4thOpponent_hns::
+	message BattleFrontier_BattleArenaBattleRoom_Text_ReadyFor4thOpponent_hns
+	waitmessage
+	return
+
+BattleFrontier_BattleArenaBattleRoom_EventScript_ReadyFor5thOpponent_hns::
+	message BattleFrontier_BattleArenaBattleRoom_Text_ReadyFor5thOpponent_hns
+	waitmessage
+	return
+
+BattleFrontier_BattleArenaBattleRoom_EventScript_ReadyFor6thOpponent_hns::
+	message BattleFrontier_BattleArenaBattleRoom_Text_ReadyFor6thOpponent_hns
+	waitmessage
+	return
+
+BattleFrontier_BattleArenaBattleRoom_EventScript_ReadyFor7thOpponent_hns::
+	message BattleFrontier_BattleArenaBattleRoom_Text_ReadyFor7thOpponent_hns
+	waitmessage
+	return
+
+BattleFrontier_BattleArenaBattleRoom_EventScript_PauseChallenge_hns::
+	message BattleFrontier_BattleArenaBattleRoom_Text_SavingPleaseWait_hns
+	waitmessage
+	arena_save CHALLENGE_STATUS_PAUSED
+	playse SE_SAVE
+	waitse
+	fadescreen FADE_TO_BLACK
+	frontier_reset
+	end
+
+BattleFrontier_BattleArenaBattleRoom_EventScript_TycoonUpNext_hns::
+	goto_if_eq VAR_TEMP_2, 1, BattleFrontier_BattleArenaBattleRoom_EventScript_AskReadyForTycoon_hns
+	msgbox BattleFrontier_BattleArenaBattleRoom_Text_NowFaceTycoon_hns, MSGBOX_DEFAULT
+	setvar VAR_TEMP_2, 1
+BattleFrontier_BattleArenaBattleRoom_EventScript_AskReadyForTycoon_hns::
+	message BattleFrontier_BattleArenaBattleRoom_Text_PreparedForTycoon_hns
+	waitmessage
+	call BattleFrontier_EventScript_GetCantRecordBattle
+	goto_if_eq VAR_RESULT, TRUE, BattleFrontier_BattleArenaBattleRoom_EventScript_AskReadyForTycoon_hnsNoRecord_hns
+	multichoice 19, 4, MULTI_GO_ON_RECORD_REST_RETIRE, TRUE
+	switch VAR_RESULT
+	case 0, BattleFrontier_BattleArenaBattleRoom_EventScript_BattleGreta_hns
+	case 1, BattleFrontier_BattleArenaBattleRoom_EventScript_AskRecordBattle_hns
+	case 2, BattleFrontier_BattleArenaBattleRoom_EventScript_AskPauseChallenge_hns
+	case 3, BattleFrontier_BattleArenaBattleRoom_EventScript_AskRetireChallenge_hns
+	case MULTI_B_PRESSED, BattleFrontier_BattleArenaBattleRoom_EventScript_AskReadyForTycoon_hns
+
+BattleFrontier_BattleArenaBattleRoom_EventScript_AskReadyForTycoon_hnsNoRecord_hns::
+	multichoice 20, 6, MULTI_GO_ON_REST_RETIRE, TRUE
+	switch VAR_RESULT
+	case 0, BattleFrontier_BattleArenaBattleRoom_EventScript_BattleGreta_hns
+	case 1, BattleFrontier_BattleArenaBattleRoom_EventScript_AskPauseChallenge_hns
+	case 2, BattleFrontier_BattleArenaBattleRoom_EventScript_AskRetireChallenge_hns
+	case MULTI_B_PRESSED, BattleFrontier_BattleArenaBattleRoom_EventScript_AskReadyForTycoon_hns
+
+BattleFrontier_BattleArenaBattleRoom_EventScript_BattleGreta_hns::
+	call BattleFrontier_EventScript_SetBrainObjectGfx
+	applymovement LOCALID_ARENA_BATTLE_PLAYER, BattleFrontier_BattleArenaBattleRoom_Movement_WalkInPlaceRight_hns
+	applymovement LOCALID_ARENA_BATTLE_ATTENDANT, BattleFrontier_BattleArenaBattleRoom_Movement_WalkInPlaceRight_hns
+	waitmovement 0
+	applymovement LOCALID_ARENA_BATTLE_ANNOUNCER, BattleFrontier_BattleArenaBattleRoom_Movement_JumpInPlaceDown_hns
+	playse SE_M_BELLY_DRUM
+	waitse
+	waitmovement 0
+	msgbox BattleFrontier_BattleArenaBattleRoom_Text_PlayerStepForward_hns, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_ARENA_BATTLE_PLAYER, BattleFrontier_BattleArenaBattleRoom_Movement_PlayerStepForward_hnsLong_hns
+	waitmovement 0
+	applymovement LOCALID_ARENA_BATTLE_ANNOUNCER, BattleFrontier_BattleArenaBattleRoom_Movement_JumpInPlaceDown_hns
+	playse SE_M_BELLY_DRUM
+	waitse
+	waitmovement 0
+	msgbox BattleFrontier_BattleArenaBattleRoom_Text_MakeWayForGreta_hns, MSGBOX_DEFAULT
+	closemessage
+	addobject LOCALID_ARENA_BATTLE_OPPONENT
+	applymovement LOCALID_ARENA_BATTLE_OPPONENT, BattleFrontier_BattleArenaBattleRoom_Movement_GretaEnter_hns
+	waitmovement 0
+	applymovement LOCALID_ARENA_BATTLE_OPPONENT, BattleFrontier_BattleArenaBattleRoom_Movement_OpponentStepForward_hns
+	waitmovement 0
+	switch VAR_TEMP_F
+	case FRONTIER_BRAIN_GOLD, BattleFrontier_BattleArenaBattleRoom_EventScript_IntroGretaGold_hns
+	case FRONTIER_BRAIN_STREAK, BattleFrontier_BattleArenaBattleRoom_EventScript_BattleGreta_hnsSilver_hns
+	case FRONTIER_BRAIN_STREAK_LONG, BattleFrontier_BattleArenaBattleRoom_EventScript_BattleGreta_hnsGold_hns
+	frontier_get FRONTIER_DATA_HEARD_BRAIN_SPEECH
+	goto_if_ne VAR_RESULT, FALSE, BattleFrontier_BattleArenaBattleRoom_EventScript_BattleGreta_hnsSilver_hns
+	msgbox BattleFrontier_BattleArenaBattleRoom_Text_GretaYoureChallenger_hns, MSGBOX_DEFAULT
+	closemessage
+	frontier_set FRONTIER_DATA_HEARD_BRAIN_SPEECH
+	applymovement LOCALID_ARENA_BATTLE_OPPONENT, BattleFrontier_BattleArenaBattleRoom_Movement_GretaLookAroundPlayer_hns
+	waitmovement 0
+	msgbox BattleFrontier_BattleArenaBattleRoom_Text_IsThatRight_hns, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_ARENA_BATTLE_OPPONENT, BattleFrontier_BattleArenaBattleRoom_Movement_GretaWalkBackToCenter_hns
+	waitmovement 0
+	msgbox BattleFrontier_BattleArenaBattleRoom_Text_YouLookWeakTakeThingsEasy_hns, MSGBOX_DEFAULT
+BattleFrontier_BattleArenaBattleRoom_EventScript_BattleGreta_hnsSilver_hns::
+	msgbox BattleFrontier_BattleArenaBattleRoom_Text_IgniteMyPassionForBattle_hns, MSGBOX_DEFAULT
+	call BattleFrontier_BattleArenaBattleRoom_EventScript_StartArenaBattle_hns
+	goto_if_eq VAR_RESULT, 1, BattleFrontier_BattleArenaBattleRoom_EventScript_DefeatedGretaSilver_hns
+	goto BattleFrontier_BattleArenaBattleRoom_EventScript_DeclareOpponentWinner_hns
+
+BattleFrontier_BattleArenaBattleRoom_EventScript_DefeatedGretaSilver_hns::
+	call BattleFrontier_BattleArenaBattleRoom_EventScript_DeclarePlayerWinner_hns
+	frontier_getsymbols
+	goto_if_ne VAR_RESULT, 0, BattleFrontier_BattleArenaBattleRoom_EventScript_ReturnToLobbyWon_hns
+	applymovement LOCALID_ARENA_BATTLE_OPPONENT, BattleFrontier_BattleArenaBattleRoom_Movement_OpponentStepForward_hnsLong_hns
+	waitmovement 0
+	msgbox BattleFrontier_BattleArenaBattleRoom_Text_GretaYoureToughAfterAll_hns, MSGBOX_DEFAULT
+	playfanfare MUS_OBTAIN_SYMBOL
+	message BattleFrontier_BattleArenaBattleRoom_Text_ReceivedGutsSymbol_hns
+	waitmessage
+	waitfanfare
+	frontier_givesymbol
+	msgbox BattleFrontier_BattleArenaBattleRoom_Text_GoingToBeFunNextTime_hns, MSGBOX_DEFAULT
+	goto BattleFrontier_BattleArenaBattleRoom_EventScript_ReturnToLobbyWon_hns
+
+BattleFrontier_BattleArenaBattleRoom_EventScript_IntroGretaGold_hns::
+	frontier_get FRONTIER_DATA_HEARD_BRAIN_SPEECH
+	goto_if_ne VAR_RESULT, FALSE, BattleFrontier_BattleArenaBattleRoom_EventScript_BattleGreta_hnsGold_hns
+	msgbox BattleFrontier_BattleArenaBattleRoom_Text_GretaLookingForwardToSeeingAgain_hns, MSGBOX_DEFAULT
+	closemessage
+	frontier_set FRONTIER_DATA_HEARD_BRAIN_SPEECH
+	applymovement LOCALID_ARENA_BATTLE_OPPONENT, BattleFrontier_BattleArenaBattleRoom_Movement_GretaLookAroundPlayer_hns
+	waitmovement 0
+	msgbox BattleFrontier_BattleArenaBattleRoom_Text_SoAreYouReady_hns, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_ARENA_BATTLE_OPPONENT, BattleFrontier_BattleArenaBattleRoom_Movement_GretaWalkBackToCenter_hns
+	waitmovement 0
+	msgbox BattleFrontier_BattleArenaBattleRoom_Text_WontAllowHalfheartedEffort_hns, MSGBOX_DEFAULT
+BattleFrontier_BattleArenaBattleRoom_EventScript_BattleGreta_hnsGold_hns::
+	msgbox BattleFrontier_BattleArenaBattleRoom_Text_LetsGetThisStarted_hns, MSGBOX_DEFAULT
+	call BattleFrontier_BattleArenaBattleRoom_EventScript_StartArenaBattle_hns
+	goto_if_eq VAR_RESULT, 1, BattleFrontier_BattleArenaBattleRoom_EventScript_DefeatedGretaGold_hns
+	goto BattleFrontier_BattleArenaBattleRoom_EventScript_DeclareOpponentWinner_hns
+
+BattleFrontier_BattleArenaBattleRoom_EventScript_DefeatedGretaGold_hns::
+	call BattleFrontier_BattleArenaBattleRoom_EventScript_DeclarePlayerWinner_hns
+	frontier_getsymbols
+	goto_if_eq VAR_RESULT, 2, BattleFrontier_BattleArenaBattleRoom_EventScript_ReturnToLobbyWon_hns
+	applymovement LOCALID_ARENA_BATTLE_OPPONENT, BattleFrontier_BattleArenaBattleRoom_Movement_OpponentStepForward_hnsLong_hns
+	waitmovement 0
+	msgbox BattleFrontier_BattleArenaBattleRoom_Text_GretaBlownAway_hns, MSGBOX_DEFAULT
+	playfanfare MUS_OBTAIN_SYMBOL
+	message BattleFrontier_BattleArenaBattleRoom_Text_GutsSymbolTookGoldenShine_hns
+	waitmessage
+	waitfanfare
+	frontier_givesymbol
+	msgbox BattleFrontier_BattleArenaBattleRoom_Text_IfWeBattleAgainWontLose_hns, MSGBOX_DEFAULT
+	goto BattleFrontier_BattleArenaBattleRoom_EventScript_ReturnToLobbyWon_hns
+
+BattleFrontier_BattleArenaBattleRoom_EventScript_StartArenaBattle_hns::
+	msgbox BattleFrontier_BattleArenaBattleRoom_Text_SetKOTourneyBegin_hns, MSGBOX_DEFAULT
+	call BattleFrontier_BattleArenaBattleRoom_EventScript_DoArenaBattle_hns
+	return
+
+BattleFrontier_BattleArenaBattleRoom_EventScript_DoArenaBattle_hns::
+	closemessage
+	setvar VAR_TEMP_2, 0
+	frontier_set FRONTIER_DATA_RECORD_DISABLED, FALSE
+	special HealPlayerParty
+	dofacilitytrainerbattle FACILITY_BATTLE_ARENA
+	waitstate
+	frontier_restorehelditems
+	special HealPlayerParty
+	frontier_resetsketch
+	return
+
+BattleFrontier_BattleArenaBattleRoom_EventScript_DeclarePlayerWinner_hns::
+	applymovement LOCALID_ARENA_BATTLE_ANNOUNCER, BattleFrontier_BattleArenaBattleRoom_Movement_JumpInPlaceDown_hns
+	applymovement LOCALID_ARENA_BATTLE_BLACK_BELT_1, BattleFrontier_BattleArenaBattleRoom_Movement_JumpInPlaceDown_hns
+	applymovement LOCALID_ARENA_BATTLE_BLACK_BELT_2, BattleFrontier_BattleArenaBattleRoom_Movement_JumpInPlaceDown_hns
+	applymovement LOCALID_ARENA_BATTLE_BLACK_BELT_3, BattleFrontier_BattleArenaBattleRoom_Movement_JumpInPlaceUp_hns
+	applymovement LOCALID_ARENA_BATTLE_BLACK_BELT_4, BattleFrontier_BattleArenaBattleRoom_Movement_JumpInPlaceUp_hns
+	playse SE_BANG
+	waitse
+	waitmovement 0
+	msgbox BattleFrontier_BattleArenaBattleRoom_Text_WinnerIsPlayer_hns, MSGBOX_DEFAULT
+	closemessage
+	call BattleFrontier_EventScript_IncrementWinStreak
+	return
+
+BattleFrontier_BattleArenaBattleRoom_Movement_PlayerEnter_hns:
+	walk_right
+	walk_right
+BattleFrontier_BattleArenaBattleRoom_Movement_PlayerStepForward_hnsLong_hns:
+	walk_right
+BattleFrontier_BattleArenaBattleRoom_Movement_PlayerStepForward_hns:
+	walk_right
+	step_end
+
+BattleFrontier_BattleArenaBattleRoom_Movement_PlayerWalkBackToLine_hns:
+	walk_left
+	walk_left
+	walk_in_place_faster_right
+	step_end
+
+BattleFrontier_BattleArenaBattleRoom_Movement_WalkInPlaceLeft_hns:
+	walk_in_place_faster_up
+	step_end
+
+BattleFrontier_BattleArenaBattleRoom_Movement_WalkInPlaceRight_hns:
+	walk_in_place_faster_right
+	step_end
+
+BattleFrontier_BattleArenaBattleRoom_Movement_OpponentEnter_hns:
+	walk_left
+	walk_left
+BattleFrontier_BattleArenaBattleRoom_Movement_OpponentStepForward_hnsLong_hns:
+	walk_left
+BattleFrontier_BattleArenaBattleRoom_Movement_OpponentStepForward_hns:
+	walk_left
+	step_end
+
+BattleFrontier_BattleArenaBattleRoom_Movement_GretaEnter_hns:
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	step_end
+
+BattleFrontier_BattleArenaBattleRoom_Movement_OpponentExit_hns:
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	step_end
+
+BattleFrontier_BattleArenaBattleRoom_Movement_JumpInPlaceDown_hns:
+	disable_jump_landing_ground_effect
+	jump_in_place_down
+	step_end
+
+BattleFrontier_BattleArenaBattleRoom_Movement_JumpInPlaceUp_hns:
+	disable_jump_landing_ground_effect
+	jump_in_place_up
+	step_end
+
+BattleFrontier_BattleArenaBattleRoom_Movement_WalkInPlaceDown_hns:
+	walk_in_place_faster_down
+	step_end
+
+@ Unused, redundant
+BattleFrontier_BattleArenaBattleRoom_Movement_WalkInPlaceRight_hns2_hns:
+	walk_in_place_faster_right
+	step_end
+
+BattleFrontier_BattleArenaBattleRoom_OnWarp_hns:
+	map_script_2 VAR_TEMP_1, 0, BattleFrontier_BattleArenaBattleRoom_EventScript_SetUpRoomObjects_hns
+	.2byte 0
+
+BattleFrontier_BattleArenaBattleRoom_EventScript_SetUpRoomObjects_hns::
+	hideobjectat LOCALID_ARENA_BATTLE_PLAYER, MAP_BATTLE_FRONTIER_BATTLE_ARENA_BATTLE_ROOM
+	removeobject LOCALID_ARENA_BATTLE_OPPONENT
+	call BattleFrontier_BattleDomeBattleRoom_EventScript_SetPlayerGfx
+	applymovement LOCALID_PLAYER, BattleFrontier_BattleDomeBattleRoom_Movement_SetInvisible
+	setvar VAR_TEMP_1, 1
+	end
+
+BattleFrontier_BattleArenaBattleRoom_Movement_GretaLookAroundPlayer_hns:
+	walk_down
+	walk_in_place_faster_left
+	delay_16
+	delay_16
+	delay_16
+	delay_16
+	walk_up
+	walk_up
+	walk_in_place_faster_left
+	step_end
+
+BattleFrontier_BattleArenaBattleRoom_Movement_GretaWalkBackToCenter_hns:
+	walk_down
+	walk_in_place_faster_left
+	step_end
+
+BattleFrontier_BattleArenaBattleRoom_Text_PlayerStepForward_hns:
+	.string "REFEREE: TRAINER {PLAYER}!\n"
+	.string "Step forward, please!$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_OpponentStepForward_hns:
+	.string "REFEREE: TRAINER {STR_VAR_1}!\n"
+	.string "Step forward, please!$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_SetKOTourneyBegin_hns:
+	.string "REFEREE: Set KO Tourney!\n"
+	.string "Begin!$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_WinnerIsPlayer_hns:
+	.string "REFEREE: The winner is {PLAYER}!$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_WinnerIsOpponent_hns:
+	.string "REFEREE: The winner is {STR_VAR_1}!$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_MonsWillBeRestored_hns:
+	.string "Your POKéMON will be restored to\n"
+	.string "full health.$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_ReadyFor2ndOpponent_hns:
+	.string "Next up, your second opponent!\n"
+	.string "Are you ready to move on?$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_ReadyFor3rdOpponent_hns:
+	.string "Next up, your third opponent!\n"
+	.string "Are you ready to move on?$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_ReadyFor4thOpponent_hns:
+	.string "Next up, your fourth opponent!\n"
+	.string "Are you ready to move on?$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_ReadyFor5thOpponent_hns:
+	.string "Next up, your fifth opponent!\n"
+	.string "Are you ready to move on?$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_ReadyFor6thOpponent_hns:
+	.string "Next up, your sixth opponent!\n"
+	.string "Are you ready to move on?$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_ReadyFor7thOpponent_hns:
+	.string "Next up, your seventh opponent!\n"
+	.string "Are you ready to move on?$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_SaveAndShutDown_hns:
+	.string "Would you like to save the game and\n"
+	.string "shut down now?$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_RetireFromChallenge_hns:
+	.string "Would you like to retire from your\n"
+	.string "Set KO Tourney challenge?$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_SavingPleaseWait_hns:
+	.string "I am saving your game data.\n"
+	.string "Please wait.$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_RecordLastBattle_hns:
+	.string "Would you like to record your last\n"
+	.string "battle on your FRONTIER PASS?$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_NowFaceTycoon_hns:
+	.string "My dear challenger!\p"
+	.string "Your skill level is truly astounding!\p"
+	.string "We now would like you to face our\n"
+	.string "leader, the ARENA TYCOON!$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_PreparedForTycoon_hns:
+	.string "A battle with the ARENA TYCOON!\n"
+	.string "Are you prepared?$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_MakeWayForGreta_hns:
+	.string "REFEREE: The ARENA TYCOON!\n"
+	.string "Make way for GRETA!$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_GretaYoureChallenger_hns:
+	.string "GRETA: Hey!\n"
+	.string "Howdy!\p"
+	.string "…Wait, are you the challenger?$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_IsThatRight_hns:
+	.string "Is that right? Hmm…\n"
+	.string "Hmhm…$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_YouLookWeakTakeThingsEasy_hns:
+	.string "I don't know how to say it, but…\n"
+	.string "To put it bluntly, you look pretty weak.\l"
+	.string "Are you sure you're up for me?\p"
+	.string "Hmm…\p"
+	.string "Well, all right!\n"
+	.string "We'll take things easy to start with!$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_IgniteMyPassionForBattle_hns:
+	.string "Okay! Let's see you ignite my passion\n"
+	.string "for battle!$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_GretaYoureToughAfterAll_hns:
+	.string "GRETA: Ow, wait a second!\n"
+	.string "You are tough after all!\p"
+	.string "I like you!\n"
+	.string "Let's see your FRONTIER PASS.$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_ReceivedGutsSymbol_hns:
+	.string "The Guts Symbol was embossed on\n"
+	.string "the FRONTIER PASS!$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_GoingToBeFunNextTime_hns:
+	.string "Hmm…\p"
+	.string "It's going to be fun the next time!\n"
+	.string "I'm looking forward to it!$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_GretaLookingForwardToSeeingAgain_hns:
+	.string "GRETA: Hey! Howdy!\n"
+	.string "You finally won your way up to me!\p"
+	.string "I was getting worried waiting for you!\n"
+	.string "I was really looking forward to seeing\l"
+	.string "you again!$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_SoAreYouReady_hns:
+	.string "… … …\n"
+	.string "So, are you ready?$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_WontAllowHalfheartedEffort_hns:
+	.string "I won't allow a halfhearted effort!\n"
+	.string "Be ready for a thrashing!$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_LetsGetThisStarted_hns:
+	.string "Come on, REFEREE!\n"
+	.string "Let's get this started!$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_GretaBlownAway_hns:
+	.string "GRETA: Gaaah! Blown away!\n"
+	.string "Let's see your FRONTIER PASS!$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_GutsSymbolTookGoldenShine_hns:
+	.string "The Guts Symbol took on\n"
+	.string "a golden shine!$"
+
+BattleFrontier_BattleArenaBattleRoom_Text_IfWeBattleAgainWontLose_hns:
+	.string "Arrrgh!\n"
+	.string "This is so infuriating!\p"
+	.string "If we ever battle again, I won't lose!\n"
+	.string "Don't you forget it! Bye-bye!$"
