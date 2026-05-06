@@ -55,7 +55,11 @@ static enum Item ResolveRandomMonItem(enum Item item);
 static enum PokeBall ResolveRandomMonBall(enum PokeBall ball);
 static void ResolveRandomMonMoves(enum Species species, enum Move *moves);
 
+#if TESTING
+#include "../test/random_mon_generator.h"
+#else
 #include "data/random_mon_generator.h"
+#endif
 
 static bool32 TryGetRandomSpeciesOptions(enum Species species, const struct RandomSpeciesGeneratorOptions **options)
 {
