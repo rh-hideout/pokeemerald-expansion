@@ -312,6 +312,5 @@ const void *RandomElementArrayDefaultValue(enum RandomTag tag, const void *array
 #endif
 
 u32 Crc32B (const u8 *data, u32 size);
-u32 GetDailySeed(void);
 
 #endif // GUARD_RANDOM_H

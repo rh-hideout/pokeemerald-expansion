@@ -120,9 +120,6 @@
                                             // Due to changes in project scope, as detailed in docs/team_procedures/scope.md,
                                             // no other overworld popups will be implemented in expansion.
 
-// Daily seed config
-#define OW_USE_DAILY_SEED          FALSE    // Adds a random 32 bit number that changes everyday to the save file (currently unused)
-
 // Gen5 map pop-up config
 // Constants
 #define OW_POPUP_BW_TIME_NONE      0   // Don't show the time

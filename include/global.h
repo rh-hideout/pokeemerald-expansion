@@ -255,9 +255,6 @@ struct NPCFollower
 
 struct SaveBlock3
 {
-#if OW_USE_DAILY_SEED
-    u32 dailySeed;
-#endif
 #if OW_USE_FAKE_RTC
     struct SiiRtcInfo fakeRTC;
 #endif
@@ -1175,7 +1172,7 @@ struct SaveBlock1
     /*0x3150*/ struct LinkBattleRecords linkBattleRecords;
 #endif //FREE_LINK_BATTLE_RECORDS
     /*0x31A8*/ u8 giftRibbons[NUM_GIFT_RIBBONS];
-               u8 padding[4];
+               u32 dailySeed;
     /*0x31B3*/ struct ExternalEventData externalEventData;
     /*0x31C7*/ struct ExternalEventFlags externalEventFlags;
     /*0x31DC*/ struct Roamer roamer[ROAMER_COUNT];

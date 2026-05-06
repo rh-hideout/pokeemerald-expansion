@@ -39,9 +39,7 @@ void DoTimeBasedEvents(void)
 
 static void UpdateDailySeed(void)
 {
-    #if OW_USE_DAILY_SEED
-    gSaveBlock3Ptr->dailySeed = Random32();
-    #endif
+    gSaveBlock1Ptr->dailySeed = Random32();
 }
 
 static void UpdatePerDay(struct Time *localTime)

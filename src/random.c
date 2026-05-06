@@ -284,12 +284,3 @@ u32 Crc32B (const u8 *data, u32 size)
    }
    return ~crc;
 }
-
-u32 GetDailySeed(void)
-{
-    #if OW_USE_DAILY_SEED
-    return gSaveBlock3Ptr->dailySeed;
-    #endif
-    errorf("Tried to access daily seed but OW_USE_DAILY_SEED is set to FALSE");
-    return 0;
-}
