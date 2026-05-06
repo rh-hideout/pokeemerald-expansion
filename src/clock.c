@@ -9,6 +9,7 @@
 #include "main.h"
 #include "overworld.h"
 #include "pokerus.h"
+#include "random.h"
 #include "rtc.h"
 #include "time_events.h"
 #include "tv.h"
