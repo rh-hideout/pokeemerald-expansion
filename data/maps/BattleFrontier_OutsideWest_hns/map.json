@@ -651,22 +651,15 @@
       "dest_warp_id": "0"
     },
     {
-      "x": 51,
-      "y": 51,
-      "elevation": 0,
-      "dest_map": "MAP_BATTLE_FRONTIER_MART_HNS",
-      "dest_warp_id": "0"
-    },
-    {
-      "x": 44,
+      "x": 42,
       "y": 5,
       "elevation": 0,
       "dest_map": "MAP_BATTLE_FRONTIER_SCOTTS_HOUSE_HNS",
       "dest_warp_id": "0"
     },
     {
-      "x": 53,
-      "y": 44,
+      "x": 37,
+      "y": 47,
       "elevation": 0,
       "dest_map": "MAP_BATTLE_FRONTIER_LOUNGE4_HNS",
       "dest_warp_id": "0"
@@ -698,6 +691,13 @@
       "elevation": 0,
       "dest_map": "MAP_ARTISAN_CAVE_B1F",
       "dest_warp_id": "0"
+    },
+    {
+      "x": 49,
+      "y": 51,
+      "elevation": 0,
+      "dest_map": "MAP_BATTLE_FRONTIER_LOUNGE1_HNS",
+      "dest_warp_id": "0"
     }
   ],
   "coord_events": [],
@@ -725,22 +725,6 @@
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "BattleFrontier_OutsideWest_EventScript_BattleFactorySign_hns"
-    },
-    {
-      "type": "sign",
-      "x": 52,
-      "y": 51,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "Common_EventScript_ShowPokemartSign"
-    },
-    {
-      "type": "sign",
-      "x": 53,
-      "y": 51,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "Common_EventScript_ShowPokemartSign"
     }
   ],
   "game_version": "hns"
