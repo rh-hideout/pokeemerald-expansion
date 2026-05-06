@@ -6,6 +6,7 @@
 #include "battle_ai_field_statuses.h"
 #include "battle_ai_util.h"
 #include "battle_ai_main.h"
+#include "battle_stat_change.h"
 #include "battle_controllers.h"
 #include "battle_factory.h"
 #include "battle_setup.h"
@@ -1090,83 +1091,26 @@ static bool32 AI_IsMoveEffectInPlus(enum BattlerId battlerAtk, enum BattlerId ba
         {
             switch (additionalEffect->moveEffect)
             {
-            case MOVE_EFFECT_ATK_MINUS_1:
-            case MOVE_EFFECT_ATK_MINUS_2:
-                if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_ATK))
-                    return TRUE;
-                break;
-            case MOVE_EFFECT_DEF_MINUS_1:
-            case MOVE_EFFECT_DEF_MINUS_2:
-                if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_ATK))
-                    return TRUE;
-                break;
-            case MOVE_EFFECT_SPD_MINUS_1:
-            case MOVE_EFFECT_SPD_MINUS_2:
-                if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_DEF))
-                    return TRUE;
-                break;
-            case MOVE_EFFECT_SP_ATK_MINUS_1:
-            case MOVE_EFFECT_SP_ATK_MINUS_2:
-                if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_SPATK))
-                    return TRUE;
-                break;
-            case MOVE_EFFECT_SP_DEF_MINUS_1:
-            case MOVE_EFFECT_SP_DEF_MINUS_2:
-                if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_SPDEF))
-                    return TRUE;
-                break;
-            case MOVE_EFFECT_EVS_MINUS_1:
-            case MOVE_EFFECT_EVS_MINUS_2:
-                if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_EVASION))
-                    return TRUE;
-                break;
-            case MOVE_EFFECT_ACC_MINUS_1:
-            case MOVE_EFFECT_ACC_MINUS_2:
-                if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_ACC))
-                    return TRUE;
-                break;
-            case MOVE_EFFECT_ATK_DEF_DOWN:
-                if (abilityAtk == ABILITY_CONTRARY && (BattlerStatCanRise(battlerAtk, abilityAtk, STAT_ATK) || BattlerStatCanRise(battlerAtk, abilityAtk, STAT_DEF)))
-                    return TRUE;
-                break;
-            case MOVE_EFFECT_DEF_SPDEF_DOWN:
-                if (abilityAtk == ABILITY_CONTRARY && (BattlerStatCanRise(battlerAtk, abilityAtk, STAT_DEF) || BattlerStatCanRise(battlerAtk, abilityAtk, STAT_SPDEF)))
-                    return TRUE;
-                break;
-            case MOVE_EFFECT_ATK_PLUS_1:
-            case MOVE_EFFECT_ATK_PLUS_2:
-                if (BattlerStatCanRise(battlerAtk, abilityAtk, STAT_ATK))
-                    return TRUE;
-                break;
-            case MOVE_EFFECT_DEF_PLUS_1:
-            case MOVE_EFFECT_DEF_PLUS_2:
-                if (BattlerStatCanRise(battlerAtk, abilityAtk, STAT_DEF))
-                    return TRUE;
-                break;
-            case MOVE_EFFECT_SPD_PLUS_1:
-            case MOVE_EFFECT_SPD_PLUS_2:
-                if (BattlerStatCanRise(battlerAtk, abilityAtk, STAT_SPEED))
-                    return TRUE;
-                break;
-            case MOVE_EFFECT_SP_ATK_PLUS_1:
-            case MOVE_EFFECT_SP_ATK_PLUS_2:
-                if (BattlerStatCanRise(battlerAtk, abilityAtk, STAT_SPATK))
-                    return TRUE;
-                break;
-            case MOVE_EFFECT_EVS_PLUS_1:
-            case MOVE_EFFECT_EVS_PLUS_2:
-                if (BattlerStatCanRise(battlerAtk, abilityAtk, STAT_EVASION))
-                    return TRUE;
-                break;
-            case MOVE_EFFECT_ACC_PLUS_1:
-            case MOVE_EFFECT_ACC_PLUS_2:
-                if (BattlerStatCanRise(battlerAtk, abilityAtk, STAT_ACC))
-                    return TRUE;
-                break;
-            case MOVE_EFFECT_ALL_STATS_UP:
-                for (enum Stat statId = STAT_ATK; statId <= NUM_STATS; statId++)
+            case MOVE_EFFECT_STAT_PLUS:
+            case MOVE_EFFECT_STAT_MINUS:
+                for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
                 {
-                    if (BattlerStatCanRise(battlerAtk, abilityAtk, statId))
+                    enum Stat stat = sAccurateStatOrder[i];
+                    s32 stage = GetStatStage(stat, additionalEffect);
+
+                    if (stage == 0)
+                        continue;
+
+                    if (additionalEffect->moveEffect == MOVE_EFFECT_STAT_MINUS)
+                        stage = -1 * stage;
+
+                    if (abilityAtk == ABILITY_CONTRARY)
+                        stage = -1 * stage;
+
+                    if (stage < 0)
+                        continue;
+
+                    if (gBattleMons[battlerAtk].statStages[stat] < MAX_STAT_STAGE)
                         return TRUE;
                 }
                 break;
@@ -1206,25 +1150,28 @@ static bool32 AI_IsMoveEffectInPlus(enum BattlerId battlerAtk, enum BattlerId ba
                 if (ShouldTryToFlinch(battlerAtk, battlerDef, abilityAtk, abilityDef, move))
                     return TRUE;
                 break;
-            case MOVE_EFFECT_ATK_MINUS_1:
-            case MOVE_EFFECT_DEF_MINUS_1:
-            case MOVE_EFFECT_SPD_MINUS_1:
-            case MOVE_EFFECT_SP_ATK_MINUS_1:
-            case MOVE_EFFECT_SP_DEF_MINUS_1:
-            case MOVE_EFFECT_ACC_MINUS_1:
-            case MOVE_EFFECT_EVS_MINUS_1:
-                if (CanLowerStat(battlerAtk, battlerDef, gAiLogicData, STAT_ATK + (additionalEffect->moveEffect - MOVE_EFFECT_ATK_MINUS_1)) && noOfHitsToKo > 1)
-                    return TRUE;
-                break;
-            case MOVE_EFFECT_ATK_MINUS_2:
-            case MOVE_EFFECT_DEF_MINUS_2:
-            case MOVE_EFFECT_SPD_MINUS_2:
-            case MOVE_EFFECT_SP_ATK_MINUS_2:
-            case MOVE_EFFECT_SP_DEF_MINUS_2:
-            case MOVE_EFFECT_ACC_MINUS_2:
-            case MOVE_EFFECT_EVS_MINUS_2:
-                if (CanLowerStat(battlerAtk, battlerDef, gAiLogicData, STAT_ATK + (additionalEffect->moveEffect - MOVE_EFFECT_ATK_MINUS_2)) && noOfHitsToKo > 1)
-                    return TRUE;
+            case MOVE_EFFECT_STAT_PLUS:
+            case MOVE_EFFECT_STAT_MINUS:
+                for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
+                {
+                    enum Stat stat = sAccurateStatOrder[i];
+                    s32 stage = GetStatStage(stat, additionalEffect);
+
+                    if (stage == 0)
+                        continue;
+
+                    if (additionalEffect->moveEffect == MOVE_EFFECT_STAT_MINUS)
+                        stage = -1 * stage;
+
+                    if (abilityDef == ABILITY_CONTRARY && !DoesBattlerIgnoreAbilityChecks(battlerAtk, abilityAtk, move))
+                        stage = -1 * stage;
+
+                    if (stage > 0)
+                        continue;
+
+                    if (gBattleMons[battlerDef].statStages[stat] > MIN_STAT_STAGE && noOfHitsToKo > 1)
+                        return TRUE;
+                }
                 break;
             default:
                 break;
@@ -1287,48 +1234,41 @@ static bool32 AI_IsMoveEffectInMinus(enum BattlerId battlerAtk, enum BattlerId b
             const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(move, effectIndex);
             switch (additionalEffect->moveEffect)
             {
-            case MOVE_EFFECT_ATK_MINUS_1:
-            case MOVE_EFFECT_DEF_MINUS_1:
-            case MOVE_EFFECT_SPD_MINUS_1:
-            case MOVE_EFFECT_SP_ATK_MINUS_1:
-            case MOVE_EFFECT_SP_DEF_MINUS_1:
-            case MOVE_EFFECT_EVS_MINUS_1:
-            case MOVE_EFFECT_ACC_MINUS_1:
-            case MOVE_EFFECT_ATK_MINUS_2:
-            case MOVE_EFFECT_DEF_MINUS_2:
-            case MOVE_EFFECT_SPD_MINUS_2:
-            case MOVE_EFFECT_SP_ATK_MINUS_2:
-            case MOVE_EFFECT_SP_DEF_MINUS_2:
-            case MOVE_EFFECT_EVS_MINUS_2:
-            case MOVE_EFFECT_ACC_MINUS_2:
-            case MOVE_EFFECT_V_CREATE:
-            case MOVE_EFFECT_ATK_DEF_DOWN:
-            case MOVE_EFFECT_DEF_SPDEF_DOWN:
-                if ((additionalEffect->self && abilityAtk != ABILITY_CONTRARY)
-                    || (noOfHitsToKo > 1 && !additionalEffect->self && abilityDef == ABILITY_CONTRARY && !DoesBattlerIgnoreAbilityChecks(battlerAtk, abilityAtk, move)))
-                    return TRUE;
+            case MOVE_EFFECT_STAT_PLUS:
+            case MOVE_EFFECT_STAT_MINUS:
+                for (enum Stat i = STAT_ATK; i < NUM_BATTLE_STATS; i++)
+                {
+                    enum Stat stat = sAccurateStatOrder[i];
+                    s32 stage = GetStatStage(stat, additionalEffect);
+                    enum Ability ability = ABILITY_NONE;
+
+                    if (stage == 0)
+                        continue;
+
+                    if (additionalEffect->self)
+                        ability = abilityAtk;
+                    else if (!DoesBattlerIgnoreAbilityChecks(battlerAtk, abilityAtk, move))
+                        ability = abilityDef;
+
+                    if (additionalEffect->moveEffect == MOVE_EFFECT_STAT_MINUS)
+                        stage = -1 * stage;
+
+                    if (ability == ABILITY_CONTRARY)
+                        stage = -1 * stage;
+
+                    if (additionalEffect->self)
+                    {
+                        if (stage < 0)
+                            return TRUE;
+                        continue;
+                    }
+
+                    if (noOfHitsToKo > 1 && stage > 0)
+                        return TRUE;
+                }
                 break;
             case MOVE_EFFECT_RECHARGE:
                 return additionalEffect->self;
-            case MOVE_EFFECT_ATK_PLUS_1:
-            case MOVE_EFFECT_DEF_PLUS_1:
-            case MOVE_EFFECT_SPD_PLUS_1:
-            case MOVE_EFFECT_SP_ATK_PLUS_1:
-            case MOVE_EFFECT_SP_DEF_PLUS_1:
-            case MOVE_EFFECT_EVS_PLUS_1:
-            case MOVE_EFFECT_ACC_PLUS_1:
-            case MOVE_EFFECT_ATK_PLUS_2:
-            case MOVE_EFFECT_DEF_PLUS_2:
-            case MOVE_EFFECT_SPD_PLUS_2:
-            case MOVE_EFFECT_SP_ATK_PLUS_2:
-            case MOVE_EFFECT_SP_DEF_PLUS_2:
-            case MOVE_EFFECT_EVS_PLUS_2:
-            case MOVE_EFFECT_ACC_PLUS_2:
-            case MOVE_EFFECT_ALL_STATS_UP:
-                if ((additionalEffect->self && abilityAtk == ABILITY_CONTRARY)
-                    || (noOfHitsToKo > 1 && !additionalEffect->self && !(abilityDef == ABILITY_CONTRARY && !DoesBattlerIgnoreAbilityChecks(battlerAtk, abilityAtk, move))))
-                    return TRUE;
-                break;
             default:
                 break;
             }
@@ -1336,6 +1276,7 @@ static bool32 AI_IsMoveEffectInMinus(enum BattlerId battlerAtk, enum BattlerId b
         break;
     }
     }
+
     return FALSE;
 }
 
@@ -2045,7 +1986,6 @@ bool32 IsConfusionMoveEffect(enum BattleMoveEffects moveEffect)
     {
     case EFFECT_CONFUSE:
     case EFFECT_SWAGGER:
-    case EFFECT_FLATTER:
         return TRUE;
     default:
         return FALSE;
@@ -2214,9 +2154,6 @@ bool32 ShouldTryOHKO(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
 
 bool32 ShouldRaiseAnyStat(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
-    if (AreBattlersStatsMaxed(battlerAtk))
-        return FALSE;
-
     // Don't increase stats if opposing battler has Unaware
     if (AI_IsAbilityOnSide(battlerDef, ABILITY_UNAWARE))
         return FALSE;
@@ -2428,6 +2365,10 @@ enum AIScore IncreaseStatDownScore(enum BattlerId battlerAtk, enum BattlerId bat
         return NO_INCREASE;
 
     if (DoesAbilityRaiseStatsWhenLowered(gAiLogicData->abilities[battlerDef]))
+        return NO_INCREASE;
+
+    // Don't increase score if AI can just KO
+    if (GetNoOfHitsToKOBattlerDmg(GetBestDmgFromBattler(battlerAtk, battlerDef, AI_ATTACKING), battlerDef) == 1)
         return NO_INCREASE;
 
     // TODO: Avoid decreasing stat if
@@ -2891,7 +2832,7 @@ bool32 HasMoveThatLowersOwnStats(enum BattlerId battlerId)
             for (u32 effectIndex = 0; effectIndex < additionalEffectCount; effectIndex++)
             {
                 const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(aiMove, effectIndex);
-                if (IsSelfStatLoweringEffect(additionalEffect->moveEffect) && additionalEffect->self)
+                if (additionalEffect->moveEffect == MOVE_EFFECT_STAT_MINUS && additionalEffect->self)
                     return TRUE;
             }
         }
@@ -2913,7 +2854,7 @@ bool32 HasMoveThatRaisesOwnStats(enum BattlerId battlerId)
             for (u32 effectIndex = 0; effectIndex < additionalEffectCount; effectIndex++)
             {
                 const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(aiMove, effectIndex);
-                if (IsSelfStatRaisingEffect(additionalEffect->moveEffect) && additionalEffect->self)
+                if (additionalEffect->moveEffect == MOVE_EFFECT_STAT_PLUS && additionalEffect->self)
                     return TRUE;
             }
         }
@@ -3041,153 +2982,15 @@ bool32 IsUngroundingEffect(enum BattleMoveEffects effect)
     }
 }
 
-// for anger point
-bool32 IsAttackBoostMoveEffect(enum BattleMoveEffects effect)
+bool32 IsStatRaisingMove(enum Move move)
 {
-    switch (effect)
-    {
-    case EFFECT_ATTACK_UP:
-    case EFFECT_ATTACK_UP_2:
-    case EFFECT_ATTACK_ACCURACY_UP:
-    case EFFECT_ATTACK_SPATK_UP:
-    case EFFECT_DRAGON_DANCE:
-    case EFFECT_COIL:
-    case EFFECT_BELLY_DRUM:
-    case EFFECT_BULK_UP:
-    case EFFECT_GROWTH:
-    case EFFECT_FILLET_AWAY:
-        return TRUE;
-    default:
-        return FALSE;
-    }
+    return GetMoveEffect(move) == EFFECT_ACUPRESSURE
+        || MoveHasAdditionalEffect(move, STAT_CHANGE_EFFECT_PLUS);
 }
 
-bool32 IsStatRaisingEffect(enum BattleMoveEffects effect)
+bool32 IsStatLoweringMove(enum Move move)
 {
-    switch (effect)
-    {
-    case EFFECT_ATTACK_UP:
-    case EFFECT_ATTACK_UP_2:
-    case EFFECT_DEFENSE_UP:
-    case EFFECT_DEFENSE_UP_2:
-    case EFFECT_DEFENSE_UP_3:
-    case EFFECT_AUTOTOMIZE:
-    case EFFECT_SPEED_UP:
-    case EFFECT_SPEED_UP_2:
-    case EFFECT_SPECIAL_ATTACK_UP:
-    case EFFECT_SPECIAL_ATTACK_UP_2:
-    case EFFECT_SPECIAL_ATTACK_UP_3:
-    case EFFECT_SPECIAL_DEFENSE_UP:
-    case EFFECT_SPECIAL_DEFENSE_UP_2:
-    case EFFECT_ACCURACY_UP:
-    case EFFECT_ACCURACY_UP_2:
-    case EFFECT_EVASION_UP:
-    case EFFECT_EVASION_UP_2:
-    case EFFECT_MINIMIZE:
-    case EFFECT_DEFENSE_CURL:
-    case EFFECT_CALM_MIND:
-    case EFFECT_COSMIC_POWER:
-    case EFFECT_DRAGON_DANCE:
-    case EFFECT_ACUPRESSURE:
-    case EFFECT_SHELL_SMASH:
-    case EFFECT_SHIFT_GEAR:
-    case EFFECT_ATTACK_ACCURACY_UP:
-    case EFFECT_ATTACK_SPATK_UP:
-    case EFFECT_GROWTH:
-    case EFFECT_COIL:
-    case EFFECT_QUIVER_DANCE:
-    case EFFECT_BULK_UP:
-    case EFFECT_GEOMANCY:
-    case EFFECT_STOCKPILE:
-    case EFFECT_VICTORY_DANCE:
-        return TRUE;
-    case EFFECT_CHARGE:
-        return B_CHARGE_SPDEF_RAISE >= GEN_5;
-    default:
-        return FALSE;
-    }
-}
-
-bool32 IsStatLoweringEffect(enum BattleMoveEffects effect)
-{
-    // ignore other potentially-beneficial effects like defog, gravity
-    switch (effect)
-    {
-    case EFFECT_ATTACK_DOWN:
-    case EFFECT_DEFENSE_DOWN:
-    case EFFECT_SPEED_DOWN:
-    case EFFECT_SPECIAL_ATTACK_DOWN:
-    case EFFECT_SPECIAL_DEFENSE_DOWN:
-    case EFFECT_ACCURACY_DOWN:
-    case EFFECT_EVASION_DOWN:
-    case EFFECT_ATTACK_DOWN_2:
-    case EFFECT_DEFENSE_DOWN_2:
-    case EFFECT_SPEED_DOWN_2:
-    case EFFECT_SPECIAL_ATTACK_DOWN_2:
-    case EFFECT_SPECIAL_DEFENSE_DOWN_2:
-    case EFFECT_ACCURACY_DOWN_2:
-    case EFFECT_EVASION_DOWN_2:
-    case EFFECT_TICKLE:
-    case EFFECT_CAPTIVATE:
-    case EFFECT_NOBLE_ROAR:
-    case EFFECT_MEMENTO:
-        return TRUE;
-    default:
-        return FALSE;
-    }
-}
-
-bool32 IsSelfStatLoweringEffect(enum MoveEffect effect)
-{
-    // Self stat lowering moves like Overheart, Superpower etc.
-    switch (effect)
-    {
-    case MOVE_EFFECT_ATK_MINUS_1:
-    case MOVE_EFFECT_DEF_MINUS_1:
-    case MOVE_EFFECT_SPD_MINUS_1:
-    case MOVE_EFFECT_SP_ATK_MINUS_1:
-    case MOVE_EFFECT_SP_DEF_MINUS_1:
-    case MOVE_EFFECT_EVS_MINUS_1:
-    case MOVE_EFFECT_ACC_MINUS_1:
-    case MOVE_EFFECT_ATK_MINUS_2:
-    case MOVE_EFFECT_DEF_MINUS_2:
-    case MOVE_EFFECT_SPD_MINUS_2:
-    case MOVE_EFFECT_SP_ATK_MINUS_2:
-    case MOVE_EFFECT_SP_DEF_MINUS_2:
-    case MOVE_EFFECT_EVS_MINUS_2:
-    case MOVE_EFFECT_ACC_MINUS_2:
-    case MOVE_EFFECT_V_CREATE:
-    case MOVE_EFFECT_ATK_DEF_DOWN:
-    case MOVE_EFFECT_DEF_SPDEF_DOWN:
-        return TRUE;
-    default:
-        return FALSE;
-    }
-}
-
-bool32 IsSelfStatRaisingEffect(enum MoveEffect effect)
-{
-    // Self stat lowering moves like Power Up Punch or Charge Beam
-    switch (effect)
-    {
-    case MOVE_EFFECT_ATK_PLUS_1:
-    case MOVE_EFFECT_DEF_PLUS_1:
-    case MOVE_EFFECT_SPD_PLUS_1:
-    case MOVE_EFFECT_SP_ATK_PLUS_1:
-    case MOVE_EFFECT_SP_DEF_PLUS_1:
-    case MOVE_EFFECT_EVS_PLUS_1:
-    case MOVE_EFFECT_ACC_PLUS_1:
-    case MOVE_EFFECT_ATK_PLUS_2:
-    case MOVE_EFFECT_DEF_PLUS_2:
-    case MOVE_EFFECT_SPD_PLUS_2:
-    case MOVE_EFFECT_SP_ATK_PLUS_2:
-    case MOVE_EFFECT_SP_DEF_PLUS_2:
-    case MOVE_EFFECT_EVS_PLUS_2:
-    case MOVE_EFFECT_ACC_PLUS_2:
-        return TRUE;
-    default:
-        return FALSE;
-    }
+    return MoveHasAdditionalEffect(move, STAT_CHANGE_EFFECT_MINUS);
 }
 
 bool32 IsSwitchOutEffect(enum BattleMoveEffects effect)
@@ -4787,7 +4590,7 @@ bool32 IsRecycleEncouragedItem(enum Item item)
     return FALSE;
 }
 
-static bool32 HasMoveThatChangesKOThreshold(enum BattlerId battlerId, u32 noOfHitsToFaint, bool32 aiIsFaster)
+static bool32 HasMoveThatChangesKOThreshold(enum BattlerId battlerId, u32 noOfHitsToFaint)
 {
     enum Move *moves = GetMovesArray(battlerId);
 
@@ -4806,10 +4609,9 @@ static bool32 HasMoveThatChangesKOThreshold(enum BattlerId battlerId, u32 noOfHi
                 const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(moves[moveIndex], effectIndex);
                 switch (additionalEffect->moveEffect)
                 {
-                case MOVE_EFFECT_SPD_MINUS_1:
-                case MOVE_EFFECT_SPD_MINUS_2:
+                case MOVE_EFFECT_STAT_MINUS:
                 {
-                    if (aiIsFaster && !additionalEffect->self)
+                    if (additionalEffect->speed && !additionalEffect->self)
                         return TRUE;
                 }
                 default:
@@ -4822,87 +4624,19 @@ static bool32 HasMoveThatChangesKOThreshold(enum BattlerId battlerId, u32 noOfHi
     return FALSE;
 }
 
-static enum Stat GetStatBeingChanged(enum StatChange statChange)
-{
-    switch (statChange)
-    {
-    case STAT_CHANGE_ATK:
-    case STAT_CHANGE_ATK_2:
-    case STAT_CHANGE_ATK_3:
-    case STAT_CHANGE_ATK_MAX:
-        return STAT_ATK;
-    case STAT_CHANGE_DEF:
-    case STAT_CHANGE_DEF_2:
-    case STAT_CHANGE_DEF_3:
-        return STAT_DEF;
-    case STAT_CHANGE_SPEED:
-    case STAT_CHANGE_SPEED_2:
-    case STAT_CHANGE_SPEED_3:
-        return STAT_SPEED;
-    case STAT_CHANGE_SPATK:
-    case STAT_CHANGE_SPATK_2:
-    case STAT_CHANGE_SPATK_3:
-        return STAT_SPATK;
-    case STAT_CHANGE_SPDEF:
-    case STAT_CHANGE_SPDEF_2:
-    case STAT_CHANGE_SPDEF_3:
-        return STAT_SPDEF;
-    case STAT_CHANGE_ACC:
-        return STAT_ACC;
-    case STAT_CHANGE_EVASION:
-        return STAT_EVASION;
-    }
-    return 0; // STAT_HP, should never be getting changed
-}
-
-static u32 GetStagesOfStatChange(enum StatChange statChange)
-{
-    switch (statChange)
-    {
-    case STAT_CHANGE_ATK:
-    case STAT_CHANGE_DEF:
-    case STAT_CHANGE_SPEED:
-    case STAT_CHANGE_SPATK:
-    case STAT_CHANGE_SPDEF:
-    case STAT_CHANGE_ACC:
-    case STAT_CHANGE_EVASION:
-        return 1;
-    case STAT_CHANGE_ATK_2:
-    case STAT_CHANGE_DEF_2:
-    case STAT_CHANGE_SPEED_2:
-    case STAT_CHANGE_SPATK_2:
-    case STAT_CHANGE_SPDEF_2:
-        return 2;
-    case STAT_CHANGE_ATK_3:
-    case STAT_CHANGE_DEF_3:
-    case STAT_CHANGE_SPEED_3:
-    case STAT_CHANGE_SPATK_3:
-    case STAT_CHANGE_SPDEF_3:
-        return 3;
-    case STAT_CHANGE_ATK_MAX:
-            return 6;
-    }
-    return 0; // STAT_HP, should never be getting changed
-}
-
-static enum AIScore IncreaseStatUpScoreInternal(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum StatChange statChange, bool32 considerContrary)
+static enum AIScore IncreaseStatUpScoreInternal(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Stat statId, s32 stages, bool32 considerContrary)
 {
     enum AIScore tempScore = NO_INCREASE;
     u32 noOfHitsToFaint = NoOfHitsForTargetToFaintBattler(battlerDef, battlerAtk, AI_SHOULD_SETUP_DEFENDING, DONT_CONSIDER_ENDURE);
     enum Move predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
     bool32 aiIsFaster = AI_IsFaster(battlerAtk, battlerDef, MOVE_NONE, predictedMoveSpeedCheck, DONT_CONSIDER_PRIORITY); // Don't care about the priority of our setup move, care about outspeeding otherwise
     bool32 shouldSetUp = ((noOfHitsToFaint >= 2 && aiIsFaster) || (noOfHitsToFaint >= 3 && !aiIsFaster) || noOfHitsToFaint == UNKNOWN_NO_OF_HITS);
-    enum Stat statId = GetStatBeingChanged(statChange);
-    u32 stages = GetStagesOfStatChange(statChange);
 
+    // This should be now redundant
     if (considerContrary && gAiLogicData->abilities[battlerAtk] == ABILITY_CONTRARY)
         return NO_INCREASE;
 
     if (!ShouldRaiseAnyStat(battlerAtk, battlerDef))
-        return NO_INCREASE;
-
-    // Don't increase stat if AI is at +4
-    if (gBattleMons[battlerAtk].statStages[statId] >= MAX_STAT_STAGE - 2)
         return NO_INCREASE;
 
     // Don't increase stat if AI has less then 70% HP and number of hits isn't known
@@ -4910,7 +4644,11 @@ static enum AIScore IncreaseStatUpScoreInternal(enum BattlerId battlerAtk, enum 
         return NO_INCREASE;
 
     // Don't increase stats if player has a move that can change the KO threshold
-    if (HasMoveThatChangesKOThreshold(battlerDef, noOfHitsToFaint, aiIsFaster))
+    if (aiIsFaster && HasMoveThatChangesKOThreshold(battlerDef, noOfHitsToFaint))
+        return NO_INCREASE;
+
+    // Don't increase stat if AI is at +4
+    if (gBattleMons[battlerAtk].statStages[statId] >= MAX_STAT_STAGE - 2)
         return NO_INCREASE;
 
     // Stat stages are effectively doubled under Simple.
@@ -5041,14 +4779,14 @@ bool32 HasHPForDamagingSetup(enum BattlerId battlerAtk, enum BattlerId battlerDe
     return FALSE;
 }
 
-enum AIScore IncreaseStatUpScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum StatChange statChange)
+enum AIScore IncreaseStatUpScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Stat stat, s32 stage)
 {
-    return IncreaseStatUpScoreInternal(battlerAtk, battlerDef, statChange, TRUE);
+    return IncreaseStatUpScoreInternal(battlerAtk, battlerDef, stat, stage, TRUE);
 }
 
-enum AIScore IncreaseStatUpScoreContrary(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum StatChange statChange)
+enum AIScore IncreaseStatUpScoreContrary(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Stat stat, s32 stage)
 {
-    return IncreaseStatUpScoreInternal(battlerAtk, battlerDef, statChange, FALSE);
+    return IncreaseStatUpScoreInternal(battlerAtk, battlerDef, stat, stage, FALSE);
 }
 
 void IncreasePoisonScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, s32 *score)
@@ -5066,7 +4804,7 @@ void IncreasePoisonScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, e
             ADJUST_SCORE_PTR(WEAK_EFFECT);    // stall tactic
 
         if (IsPowerBasedOnStatus(battlerAtk, EFFECT_DOUBLE_POWER_ON_ARG_STATUS, STATUS1_PSN_ANY)
-         || HasMoveWithEffect(battlerAtk, EFFECT_VENOM_DRENCH)
+         || HasMoveWithEffect(battlerAtk, EFFECT_STAT_CHANGE_ON_STATUS)
          || gAiLogicData->abilities[battlerAtk] == ABILITY_MERCILESS)
             ADJUST_SCORE_PTR(DECENT_EFFECT);
         else
@@ -5300,8 +5038,8 @@ bool32 ShouldUseZMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
 
         switch (baseEffect)
         {
+        case EFFECT_STAT_CHANGE_HALF_HP:
         case EFFECT_BELLY_DRUM:
-        case EFFECT_FILLET_AWAY:
             if (isSlower)
                 return TRUE;
             isEager = TRUE;
@@ -5330,7 +5068,8 @@ bool32 ShouldUseZMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
         if (IsBattleMoveStatus(chosenMove))
         {
             enum ZEffect zEffect = GetMoveZEffect(chosenMove);
-            enum StatChange statChange = 0;
+            enum Stat stat = STAT_HP;
+            s32 stage = 0;
 
             if (zEffect == Z_EFFECT_CURSE)
             {
@@ -5368,39 +5107,50 @@ bool32 ShouldUseZMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum
             case Z_EFFECT_ACC_UP_1:
             case Z_EFFECT_ACC_UP_2:
             case Z_EFFECT_ACC_UP_3:
-                statChange = STAT_CHANGE_ACC;
+                stat = STAT_ACC;
+                stage = zEffect - Z_EFFECT_ACC_UP_1 + 1;
                 break;
             case Z_EFFECT_EVSN_UP_1:
             case Z_EFFECT_EVSN_UP_2:
             case Z_EFFECT_EVSN_UP_3:
-                statChange = STAT_CHANGE_EVASION;
+                stat = STAT_EVASION;
+                stage = zEffect - Z_EFFECT_EVSN_UP_1 + 1;
                 break;
             case Z_EFFECT_ATK_UP_1:
-            case Z_EFFECT_DEF_UP_1:
-            case Z_EFFECT_SPD_UP_1:
-            case Z_EFFECT_SPATK_UP_1:
-            case Z_EFFECT_SPDEF_UP_1:
-                statChange = STAT_CHANGE_ATK + zEffect - Z_EFFECT_ATK_UP_1;
-                break;
             case Z_EFFECT_ATK_UP_2:
-            case Z_EFFECT_DEF_UP_2:
-            case Z_EFFECT_SPD_UP_2:
-            case Z_EFFECT_SPATK_UP_2:
-            case Z_EFFECT_SPDEF_UP_2:
-                statChange = STAT_CHANGE_ATK_2 + zEffect - Z_EFFECT_ATK_UP_2;
-                break;
             case Z_EFFECT_ATK_UP_3:
+                stat = STAT_ATK;
+                stage = zEffect - Z_EFFECT_ATK_UP_1 + 1;
+                break;
+            case Z_EFFECT_DEF_UP_1:
+            case Z_EFFECT_DEF_UP_2:
             case Z_EFFECT_DEF_UP_3:
+                stat = STAT_DEF;
+                stage = zEffect - Z_EFFECT_DEF_UP_1 + 1;
+                break;
+            case Z_EFFECT_SPD_UP_1:
+            case Z_EFFECT_SPD_UP_2:
             case Z_EFFECT_SPD_UP_3:
+                stat = STAT_SPEED;
+                stage = zEffect - Z_EFFECT_SPD_UP_1 + 1;
+                break;
+            case Z_EFFECT_SPATK_UP_1:
+            case Z_EFFECT_SPATK_UP_2:
             case Z_EFFECT_SPATK_UP_3:
+                stat = STAT_SPATK;
+                stage = zEffect - Z_EFFECT_SPATK_UP_1 + 1;
+                break;
+            case Z_EFFECT_SPDEF_UP_1:
+            case Z_EFFECT_SPDEF_UP_2:
             case Z_EFFECT_SPDEF_UP_3:
-                statChange = STAT_CHANGE_ATK_2 + zEffect - Z_EFFECT_ATK_UP_3;
+                stat = STAT_SPDEF;
+                stage = zEffect - Z_EFFECT_SPDEF_UP_1 + 1;
                 break;
             default:
                 return FALSE;
             }
 
-            if (statChange != 0 && (isEager || IncreaseStatUpScoreContrary(battlerAtk, battlerDef, statChange) > 0))
+            if (stat != STAT_HP && (isEager || IncreaseStatUpScoreContrary(battlerAtk, battlerDef, stat, stage) > 0))
                 return TRUE;
 
         }
@@ -5818,10 +5568,10 @@ bool32 AI_ShouldSpicyExtract(enum BattlerId battlerAtk, enum BattlerId battlerAt
 
     switch (GetMoveEffect(aiData->partnerMove))
     {
-    case EFFECT_DEFENSE_UP:
-    case EFFECT_DEFENSE_UP_2:
-    case EFFECT_DEFENSE_UP_3:
-    case EFFECT_BULK_UP:
+    // case EFFECT_DEFENSE_UP:
+    // case EFFECT_DEFENSE_UP_2:
+    // case EFFECT_DEFENSE_UP_3:
+    // case EFFECT_BULK_UP:
     case EFFECT_STOCKPILE:
         if (!preventsStatLoss)
             return FALSE;
@@ -6487,5 +6237,305 @@ bool32 IsPartyMonPlannedToBeSwitchedInByPartner(u32 partyIndex, enum BattlerId b
     enum BattlerId battlerPartner = BATTLE_PARTNER(battler);
     if (partyIndex == gAiLogicData->mostSuitableMonId[battlerPartner] && (gAiLogicData->shouldSwitch & (1u << battlerPartner)) && BattlersShareParty(battler, battlerPartner))
         return TRUE;
+    return FALSE;
+}
+
+static u32 AI_GetAdjustedStatStage(enum BattlerId battler, enum Move move, s32 stage)
+{
+    if (GetMoveEffect(move) == EFFECT_GROWTH
+     && IsBattlerWeatherAffected(gAiLogicData->holdEffects[battler], AI_GetWeather(), B_WEATHER_SUN))
+        stage = 2;
+
+    switch (gAiLogicData->abilities[battler])
+    {
+    case ABILITY_CONTRARY:
+        return (stage * -1);
+        break;
+    case ABILITY_SIMPLE:
+        return (stage * 2);
+    default:
+        return stage;
+    }
+}
+
+// For user and Foe
+s32 GetStatChangeScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
+{
+    s32 tempScore = 0;
+    enum MoveTarget targetType = AI_GetBattlerMoveTargetType(battlerAtk, move);
+
+    switch (targetType)
+    {
+    case TARGET_ALL_BATTLERS:
+    case TARGET_USER:
+        tempScore = GetSelfStatChangeScore(battlerAtk, battlerDef, move);
+        break;
+    case TARGET_USER_AND_ALLY:
+    case TARGET_USER_OR_ALLY:
+        if (battlerAtk == BATTLE_PARTNER(battlerDef))
+            break; // Handled in AI_DoubleBattler
+        tempScore = GetSelfStatChangeScore(battlerAtk, battlerDef, move);
+        break;
+    case TARGET_ALLY:
+        break; // Handled in AI_DoubleBattle
+    default:
+        if (battlerAtk == BATTLE_PARTNER(battlerDef))
+            break; // Handled in AI_DoubleBattle
+        tempScore = GetFoeStatChangeScore(battlerDef, battlerAtk, move);
+        break;
+    }
+
+    return tempScore;
+}
+
+s32 GetSelfStatChangeScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
+{
+    s32 tempScore = 0;
+    u32 numAdditionalEffects = GetMoveAdditionalEffectCount(move);
+
+    // This is technically already included in IncreaseStatUpScore
+    if (!ShouldRaiseAnyStat(battlerAtk, battlerDef))
+        return NO_INCREASE;
+
+    for (u32 i = 0; i < numAdditionalEffects; i++)
+    {
+        const struct AdditionalEffect *effect = GetMoveAdditionalEffectById(move, i);
+
+        if (effect->moveEffect != STAT_CHANGE_EFFECT_PLUS
+         && effect->moveEffect != STAT_CHANGE_EFFECT_MINUS)
+            continue;
+
+        for (enum Stat stat = STAT_ATK; stat < NUM_STATS; stat++)
+        {
+            s32 stage = AI_GetAdjustedStatStage(battlerAtk, move, GetStatStage(stat, effect));
+
+            if (stage > 0)
+            {
+                // The function handles Simple which it does not need in this case, but it is harmless
+                // Also a lot of recalculating happening in there, can be optimized later (should be split in 2 parts)
+                tempScore += IncreaseStatUpScoreContrary(battlerAtk, battlerDef, stat, stage);
+            }
+            else if (stage < 0)
+            {
+                if (gAiLogicData->holdEffects[battlerAtk] == HOLD_EFFECT_WHITE_HERB)
+                    continue; // No Score decrease
+
+                switch (stat)
+                {
+                case STAT_ATK:
+                    if (HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_PHYSICAL))
+                        return NO_INCREASE; // Don't lower power of mons attacking moves
+                    break;
+                case STAT_SPATK:
+                    if (HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_SPECIAL))
+                        return NO_INCREASE; // Don't lower power of mons attacking moves
+                    break;
+                default: // Case can be made to also never lower Speed
+                    tempScore--; // Minor score decrease if stats are reduced. Positive stat changes should take priority
+                }
+            }
+        }
+    }
+
+    return (tempScore > BEST_EFFECT) ? BEST_EFFECT : tempScore;
+}
+
+s32 GetFoeStatChangeScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
+{
+    s32 score = 0;
+    u32 numAdditionalEffects = GetMoveAdditionalEffectCount(move);
+
+    for (u32 i = 0; i < numAdditionalEffects; i++)
+    {
+        const struct AdditionalEffect *effect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
+
+        for (enum Stat stat = STAT_ATK; stat < NUM_STATS; stat++)
+        {
+            s32 stage = AI_GetAdjustedStatStage(battlerAtk, move, GetStatStage(stat, effect));
+
+            if (stage > 0)
+            {
+                if ((stat == STAT_ATK && HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_PHYSICAL))
+                 || (stat == STAT_SPATK && HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_SPECIAL)))
+                    return -10; // Don't decrease any stats since the price might be to high
+            }
+            else if (stage < 0)
+            {
+                if (gAiLogicData->holdEffects[battlerAtk] == HOLD_EFFECT_WHITE_HERB)
+                    return -10; // White Herb resotres stats
+                score += IncreaseStatDownScore(battlerAtk, battlerDef, stat);
+            }
+        }
+    }
+
+    return (score > BEST_EFFECT) ? BEST_EFFECT : score;
+}
+
+s32 GetAllyStatChangeScore(u32 battlerAtk, u32 partner, u32 move)
+{
+    s32 tempScore = 0;
+    enum BattlerId foe = LEFT_FOE(battlerAtk);
+
+    if (AI_IsAbilityOnSide(foe, ABILITY_UNAWARE) || AI_IsAbilityOnSide(foe, ABILITY_OPPORTUNIST))
+        return tempScore;
+
+    if (gBattleMons[partner].volatiles.yawn && CanBeSlept(partner, partner, gAiLogicData->abilities[partner], BLOCKED_BY_SLEEP_CLAUSE))
+        return tempScore;
+
+    if (GetBattlerSecondaryDamage(partner) >= gBattleMons[partner].hp)
+        return tempScore;
+
+    if (!RandomPercentage(RNG_AI_BOOST_INTO_HAZE, BOOST_INTO_HAZE_CHANCE)
+     && HasBattlerSideUsedMoveWithEffect(foe, EFFECT_HAZE))
+        return tempScore;
+
+    if (CanBattlerKOTargetIgnoringSturdy(partner, foe)
+     || CanBattlerKOTargetIgnoringSturdy(partner, BATTLE_PARTNER(foe)))
+        return tempScore;
+
+    u32 numAdditionalEffects = GetMoveAdditionalEffectCount(move);
+
+    for (u32 i = 0; i < numAdditionalEffects; i++)
+    {
+        const struct AdditionalEffect *effect = GetMoveAdditionalEffectById(move, i);
+
+        for (enum Stat stat = STAT_ATK; stat < NUM_STATS; stat++)
+        {
+            s32 stage = GetStatStage(stat, effect);
+
+            if (effect->moveEffect == STAT_CHANGE_EFFECT_MINUS)
+                stage = -1 * stage;
+
+            stage = AI_GetAdjustedStatStage(partner, move, stage);
+
+            if (stage > 0)
+            {
+                switch (stat)
+                {
+                case STAT_ATK:
+                    if (HasMoveWithCategory(partner, DAMAGE_CATEGORY_PHYSICAL)
+                     && !HasBattlerSideMoveWithEffect(foe, EFFECT_FOUL_PLAY))
+                        tempScore += GOOD_EFFECT;
+                    break;
+                case STAT_SPATK:
+                    if (HasMoveWithCategory(partner, DAMAGE_CATEGORY_SPECIAL))
+                        tempScore += GOOD_EFFECT;
+                    break;
+                case STAT_DEF: // could check if foes moves are physical / status only
+                case STAT_SPDEF: // same here but for special
+                case STAT_SPEED: // could check if slower then foes
+                case STAT_ACC:
+                case STAT_EVASION:
+                    tempScore += WEAK_EFFECT; // only increase if multiply stats can be increased
+                    break;
+                default:
+                    break;
+                }
+            }
+            else if (stage < 0)
+            {
+                if (gAiLogicData->holdEffects[partner] == HOLD_EFFECT_WHITE_HERB
+                 || gAiLogicData->holdEffects[partner] == HOLD_EFFECT_CLEAR_AMULET)
+                    continue; // No Score decrease
+
+                switch (stat)
+                {
+                // TODO: check if partner has move to increase corresponding stats. In which case don't increase score at all
+                case STAT_ATK:
+                    if (HasMoveWithCategory(partner, DAMAGE_CATEGORY_PHYSICAL))
+                        return NO_INCREASE; // Don't lower power of mons attacking moves
+                    break;
+                case STAT_SPATK:
+                    if (HasMoveWithCategory(partner, DAMAGE_CATEGORY_SPECIAL))
+                        return NO_INCREASE; // Don't lower power of mons attacking moves
+                    break;
+                default: // Case can be made to also never lower Speed
+                    tempScore--; // Minor score decrease if stats are reduced. Positive stat changes should take priority
+                }
+            }
+        }
+    }
+
+    return (tempScore > BEST_EFFECT) ? BEST_EFFECT : tempScore;
+}
+
+static bool32 AI_CanStatChangeBePrevented(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
+{
+    enum MoveTarget targetType = AI_GetBattlerMoveTargetType(battlerAtk, move);
+
+    switch (targetType)
+    {
+    case TARGET_USER:
+    case TARGET_USER_AND_ALLY:
+    case TARGET_USER_OR_ALLY:
+    case TARGET_ALLY:
+        return FALSE;
+    case TARGET_ALL_BATTLERS:
+        if (battlerAtk == battlerDef)
+            return FALSE;
+    default:
+        if (IsSubstituteProtected(battlerAtk, battlerDef, gAiLogicData->abilities[battlerAtk], move)
+         || gAiLogicData->abilities[battlerDef] == ABILITY_GOOD_AS_GOLD)
+            return TRUE;
+    }
+
+    return FALSE;
+}
+
+// Only checks if a stat can actually change. Doesn't do any other sophisticated decision
+bool32 AI_CanAnyStatChange(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
+{
+    if (AI_CanStatChangeBePrevented(battlerAtk, battlerDef, move))
+        return FALSE;
+
+    struct BattleCalcValues cv = {
+        .battlerAtk = battlerAtk,
+        .battlerDef = battlerDef,
+        .move = move,
+    };
+    struct StatChange st = {
+        .onlyChecking = TRUE,
+        .certain = (battlerAtk == battlerDef),
+    };
+
+    cv.abilities[battlerAtk] = gAiLogicData->abilities[battlerAtk];
+    cv.holdEffects[battlerAtk] = gAiLogicData->holdEffects[battlerAtk];
+
+    if (battlerAtk != battlerDef)
+    {
+        cv.abilities[battlerDef] = AI_GetMoldBreakerSanitizedAbility(
+                                        battlerAtk,
+                                        cv.abilities[battlerAtk],
+                                        gAiLogicData->abilities[battlerDef],
+                                        cv.holdEffects[battlerAtk],
+                                        move
+                                    );
+        cv.holdEffects[battlerDef] = gAiLogicData->holdEffects[battlerDef];
+    }
+
+    u32 numAdditionalEffects = GetMoveAdditionalEffectCount(move);
+
+    for (u32 i = 0; i < numAdditionalEffects; i++)
+    {
+        const struct AdditionalEffect *effect = GetMoveAdditionalEffectById(move, i);
+
+        for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
+        {
+            st.stat = stat;
+            st.stage = GetStatStage(stat, effect);
+
+            if (st.stage == 0)
+                continue;
+
+            if (effect->moveEffect == STAT_CHANGE_EFFECT_MINUS)
+                st.stage = -1 * st.stage;
+
+            st.stage = AI_GetAdjustedStatStage(battlerAtk, move, st.stage);
+
+            if (CanStatChange(&cv, &st))
+                return TRUE;
+        }
+    }
+
     return FALSE;
 }
