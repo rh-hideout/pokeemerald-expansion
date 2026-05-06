@@ -403,7 +403,7 @@
       "x": 12,
       "y": 10,
       "elevation": 0,
-      "dest_map": "MAP_TEST_MAP1_HNS",
+      "dest_map": "MAP_TRAINER_HILL_ENTRANCE_HNS",
       "dest_warp_id": "0"
     },
     {

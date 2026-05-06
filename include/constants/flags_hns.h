@@ -803,8 +803,8 @@
 
 // Unused general-purpose
 #define HNS_UNUSED_START                            (HNS_UNUSED_HIDDEN_ITEM_START + HNS_UNUSED_HIDDEN_ITEM_COUNT)
-#define FLAG_UNUSED_0                               (HNS_UNUSED_START + 0)
-#define FLAG_UNUSED_1                               (HNS_UNUSED_START + 1)
+#define FLAG_LIMIT_TO_50                               (HNS_UNUSED_START + 0)
+#define FLAG_COLLISION                               (HNS_UNUSED_START + 1)
 #define FLAG_UNUSED_2                               (HNS_UNUSED_START + 2)
 #define FLAG_UNUSED_3                               (HNS_UNUSED_START + 3)
 #define FLAG_UNUSED_4                               (HNS_UNUSED_START + 4)

@@ -39,6 +39,28 @@ const struct Tileset gTileset_General =
     .callback = InitTilesetAnim_General,
 };
 
+const struct Tileset gTileset_Building =
+{
+    .isCompressed = TRUE,
+    .isSecondary = FALSE,
+    .tiles = gTilesetTiles_InsideBuilding,
+    .palettes = gTilesetPalettes_InsideBuilding,
+    .metatiles = gMetatiles_InsideBuilding,
+    .metatileAttributes = gMetatileAttributes_InsideBuilding,
+    .callback = InitTilesetAnim_Building,
+};
+
+const struct Tileset gTileset_TrainerHill =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_TrainerHill,
+    .palettes = gTilesetPalettes_TrainerHill,
+    .metatiles = gMetatiles_TrainerHill,
+    .metatileAttributes = gMetatileAttributes_TrainerHill,
+    .callback = NULL,
+};
+
 #if !IS_FRLG && !IS_HNS
 
 const struct Tileset gTileset_Petalburg =
@@ -204,17 +226,6 @@ const struct Tileset gTileset_BattleFrontierOutsideEast =
     .metatiles = gMetatiles_BattleFrontierOutsideEast,
     .metatileAttributes = gMetatileAttributes_BattleFrontierOutsideEast,
     .callback = InitTilesetAnim_BattleFrontierOutsideEast,
-};
-
-const struct Tileset gTileset_Building =
-{
-    .isCompressed = TRUE,
-    .isSecondary = FALSE,
-    .tiles = gTilesetTiles_InsideBuilding,
-    .palettes = gTilesetPalettes_InsideBuilding,
-    .metatiles = gMetatiles_InsideBuilding,
-    .metatileAttributes = gMetatileAttributes_InsideBuilding,
-    .callback = InitTilesetAnim_Building,
 };
 
 const struct Tileset gTileset_Shop =
@@ -764,17 +775,6 @@ const struct Tileset gTileset_IslandHarbor =
     .palettes = gTilesetPalettes_IslandHarbor,
     .metatiles = gMetatiles_IslandHarbor,
     .metatileAttributes = gMetatileAttributes_IslandHarbor,
-    .callback = NULL,
-};
-
-const struct Tileset gTileset_TrainerHill =
-{
-    .isCompressed = TRUE,
-    .isSecondary = TRUE,
-    .tiles = gTilesetTiles_TrainerHill,
-    .palettes = gTilesetPalettes_TrainerHill,
-    .metatiles = gMetatiles_TrainerHill,
-    .metatileAttributes = gMetatileAttributes_TrainerHill,
     .callback = NULL,
 };
 
