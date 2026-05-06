@@ -460,6 +460,10 @@ extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_KurtLyingDo
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Kurt_hns;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Lance_hns;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Lass_hns;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BallLight_Hns;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_SmallLight_Hns;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PokeCenterLight_Hns;
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_MartLight_Hns;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_LegendaryShadow_hns;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_LinkReceptionist_hns;
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_LittleBoy_hns;
@@ -1062,6 +1066,10 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_TRAIN_WEST_HNS] = &gObjectEventGraphicsInfo_TrainWest_hns,
     [OBJ_EVENT_GFX_WHIRLPOOL_HNS] = &gObjectEventGraphicsInfo_Whirlpool_hns,
     [OBJ_EVENT_GFX_NURSE_CHANSEY_HNS] = &gObjectEventGraphicsInfo_NurseChansey_hns,
+    [OBJ_EVENT_GFX_LIGHT_HNS] =             &gObjectEventGraphicsInfo_BallLight_Hns,
+    [OBJ_EVENT_GFX_MART_LIGHT_HNS] =        &gObjectEventGraphicsInfo_MartLight_Hns,
+    [OBJ_EVENT_GFX_POKE_CENTER_LIGHT_HNS] = &gObjectEventGraphicsInfo_PokeCenterLight_Hns,
+    [OBJ_EVENT_GFX_SMALL_LIGHT_HNS] =       &gObjectEventGraphicsInfo_SmallLight_Hns,
     // HnS protagonists
     [OBJ_EVENT_GFX_GOLD_NORMAL_HNS] =       &gObjectEventGraphicsInfo_GoldNormal_hns,
     [OBJ_EVENT_GFX_GOLD_MACH_BIKE_HNS] =    &gObjectEventGraphicsInfo_GoldMachBike_hns,

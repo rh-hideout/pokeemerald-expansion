@@ -298,6 +298,12 @@ const u32 gFieldEffectObjectPic_ShadowExtraLarge[] = INCBIN_U32("graphics/field_
 const u32 gFieldEffectObjectPic_BallLight[] = INCBIN_U32("graphics/object_events/pics/misc/light.4bpp");
 const u32 gFieldEffectObjectPic_PokeCenterLight[] = INCBIN_U32("graphics/object_events/pics/misc/poke_center_light.4bpp");
 const u32 gFieldEffectObjectPic_MartLight[] = INCBIN_U32("graphics/object_events/pics/misc/mart_light.4bpp");
+#if IS_HNS
+const u32 gFieldEffectObjectPic_BallLight_Hns[] = INCBIN_U32("graphics/object_events/pics/misc/light_hns.4bpp");
+const u32 gFieldEffectObjectPic_SmallLight_Hns[] = INCBIN_U32("graphics/object_events/pics/misc/small_light_hns.4bpp");
+const u32 gFieldEffectObjectPic_PokeCenterLight_Hns[] = INCBIN_U32("graphics/object_events/pics/misc/poke_center_light_hns.4bpp");
+const u32 gFieldEffectObjectPic_MartLight_Hns[] = INCBIN_U32("graphics/object_events/pics/misc/mart_light_hns.4bpp");
+#endif
 const u8 gFieldEffectPic_CutGrass[] = INCBIN_U8("graphics/field_effects/pics/cut_grass.4bpp");
 const u32 gFieldEffectPic_CutGrass_Copy[] = INCBIN_U32("graphics/field_effects/pics/cut_grass.4bpp");
 const u16 gFieldEffectPal_CutGrass[] = INCBIN_U16("graphics/field_effects/palettes/cut_grass.gbapal");

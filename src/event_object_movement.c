@@ -2820,6 +2820,38 @@ void GetFollowerAction(struct ScriptContext *ctx) // Essentially a big switch fo
 #define sLightXPos data[6]
 #define sLightYPos data[7]
 
+static bool32 IsLightSpriteGfxId(u16 graphicsId)
+{
+    if (graphicsId == OBJ_EVENT_GFX_LIGHT_SPRITE)
+        return TRUE;
+#if IS_HNS
+    switch (graphicsId)
+    {
+    case OBJ_EVENT_GFX_LIGHT_HNS:
+    case OBJ_EVENT_GFX_POKE_CENTER_LIGHT_HNS:
+    case OBJ_EVENT_GFX_MART_LIGHT_HNS:
+    case OBJ_EVENT_GFX_SMALL_LIGHT_HNS:
+        return TRUE;
+    }
+#endif
+    return FALSE;
+}
+
+static u32 GetLightTypeFromTemplate(struct ObjectEventTemplate *template)
+{
+#if IS_HNS
+    switch (template->graphicsId)
+    {
+    case OBJ_EVENT_GFX_POKE_CENTER_LIGHT_HNS: return LIGHT_TYPE_PKMN_CENTER_SIGN;
+    case OBJ_EVENT_GFX_MART_LIGHT_HNS:        return LIGHT_TYPE_POKE_MART_SIGN;
+    case OBJ_EVENT_GFX_LIGHT_HNS:
+    case OBJ_EVENT_GFX_SMALL_LIGHT_HNS:
+        return template->trainerRange_berryTreeId;
+    }
+#endif
+    return template->trainerRange_berryTreeId;
+}
+
 // Sprite callback for light sprites
 void UpdateLightSprite(struct Sprite *sprite)
 {
@@ -2842,7 +2874,7 @@ void UpdateLightSprite(struct Sprite *sprite)
         return;
     }
 
-    if (gTimeOfDay != TIME_NIGHT)
+    if (gTimeOfDay == TIME_DAY && sprite->sLightType != LIGHT_TYPE_LIGHTHOUSE)
     {
         sprite->invisible = TRUE;
         return;
@@ -2920,6 +2952,34 @@ static void SpawnLightSprite(s16 x, s16 y, s16 camX, s16 camY, u32 lightType)
         sprite->subpriority = 0xFF;
         sprite->oam.objMode = ST_OAM_OBJ_BLEND;
         break;
+    case LIGHT_TYPE_SMALL_LAMP:
+        sprite->centerToCornerVecX = -(16 >> 1);
+        sprite->centerToCornerVecY = -(16 >> 1);
+        sprite->oam.priority = 1;
+        sprite->oam.objMode = ST_OAM_OBJ_BLEND;
+        sprite->oam.affineMode = ST_OAM_AFFINE_NORMAL;
+        sprite->x += 8;
+        sprite->y += 7 + sprite->centerToCornerVecY;
+        break;
+    case LIGHT_TYPE_LIGHTHOUSE:
+        sprite->centerToCornerVecX = -(32 >> 1);
+        sprite->centerToCornerVecY = -(32 >> 1);
+        sprite->oam.priority = 2;
+        sprite->subpriority = 0xFF;
+        sprite->oam.objMode = ST_OAM_OBJ_BLEND;
+        sprite->oam.affineMode = ST_OAM_AFFINE_NORMAL;
+        sprite->x += 8;
+        sprite->y += 28 + sprite->centerToCornerVecY;
+        break;
+    case LIGHT_TYPE_BATTLE_FRONTIER_ARCH:
+        sprite->centerToCornerVecX = -(32 >> 1);
+        sprite->centerToCornerVecY = -(32 >> 1);
+        sprite->oam.priority = 1;
+        sprite->oam.objMode = ST_OAM_OBJ_BLEND;
+        sprite->oam.affineMode = ST_OAM_AFFINE_NORMAL;
+        sprite->x += 8;
+        sprite->y += 28 + sprite->centerToCornerVecY;
+        break;
     }
 }
 
@@ -2953,8 +3013,8 @@ void TrySpawnLightSprites(s16 camX, s16 camY)
         if (top <= npcY && bottom >= npcY
          && left <= npcX && right >= npcX
          && !FlagGet(template->flagId)
-         && template->graphicsId == OBJ_EVENT_GFX_LIGHT_SPRITE)  // event is light sprite instead
-            SpawnLightSprite(npcX, npcY, camX, camY, template->trainerRange_berryTreeId);
+         && IsLightSpriteGfxId(template->graphicsId))
+            SpawnLightSprite(npcX, npcY, camX, camY, GetLightTypeFromTemplate(template));
     }
 }
 
@@ -2985,8 +3045,8 @@ void TrySpawnObjectEvents(s16 cameraX, s16 cameraY)
 
             if (top <= npcY && bottom >= npcY && left <= npcX && right >= npcX && !FlagGet(template->flagId))
             {
-                if (template->graphicsId == OBJ_EVENT_GFX_LIGHT_SPRITE)
-                    SpawnLightSprite(npcX, npcY, cameraX, cameraY, template->trainerRange_berryTreeId); // light sprite instead
+                if (IsLightSpriteGfxId(template->graphicsId))
+                    SpawnLightSprite(npcX, npcY, cameraX, cameraY, GetLightTypeFromTemplate(template));
                 else
                     TrySpawnObjectEventTemplate(template, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, cameraX, cameraY);
             }

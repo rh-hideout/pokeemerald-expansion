@@ -642,9 +642,12 @@
 #define TRACKS_SPOT       4
 #define TRACKS_BUG        5
 
-#define LIGHT_TYPE_BALL             0
-#define LIGHT_TYPE_PKMN_CENTER_SIGN 1
-#define LIGHT_TYPE_POKE_MART_SIGN   2
+#define LIGHT_TYPE_BALL                 0
+#define LIGHT_TYPE_PKMN_CENTER_SIGN     1
+#define LIGHT_TYPE_POKE_MART_SIGN       2
+#define LIGHT_TYPE_SMALL_LAMP           3
+#define LIGHT_TYPE_LIGHTHOUSE           4
+#define LIGHT_TYPE_BATTLE_FRONTIER_ARCH 5
 
 #define FIRST_DECORATION_SPRITE_GFX OBJ_EVENT_GFX_PICHU_DOLL
 
