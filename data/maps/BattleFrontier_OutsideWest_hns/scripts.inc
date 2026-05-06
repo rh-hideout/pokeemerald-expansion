@@ -17,6 +17,7 @@ BattleFrontier_OutsideWest_EventScript_EventScript_Sailor_hns::
 	applymovement VAR_LAST_TALKED, Common_Movement_WalkInPlaceFasterDown
 	waitmovement 0
 	delay 30
+	clearflag FLAG_SAFE_FOLLOWER_MOVEMENT
 	hideobjectat LOCALID_BATTLE_FRONTIER_SAILOR_HNS, MAP_BATTLE_FRONTIER_OUTSIDE_WEST_HNS
 	setvar VAR_0x8004, LOCALID_FARAWAY_BATTLE_FRONTIER_HNS_SS_TIDAL
 	call Common_EventScript_FerryDepartIsland
