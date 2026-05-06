@@ -10,6 +10,7 @@
 #include "field_effect.h"
 #include "field_player_avatar.h"
 #include "follower_npc.h"
+#include "mass_outbreak.h"
 #include "metatile_behavior.h"
 #include "overworld.h"
 #include "random.h"
@@ -144,7 +145,7 @@ static bool32 CreateEnemyPartyOWE(struct InfoOWE *info, s32 x, s32 y);
 static bool32 OWE_DoesOWERoamerExist(void);
 static bool32 StartWildBattleWithOWE_CheckRoamer(enum CategoryOWE category);
 static bool32 StartWildBattleWithOWE_CheckBattleFrontier(u32 headerId);
-static bool32 StartWildBattleWithOWE_CheckMassOutbreak(enum CategoryOWE category, enum Species speciesId);
+static bool32 StartWildBattleWithOWE_CheckMassOutbreak(enum CategoryOWE category, enum Species speciesId, u32 level);
 static bool32 StartWildBattleWithOWE_CheckDoubleBattle(struct ObjectEvent *owe, u32 headerId);
 static bool32 CheckCurrentWildMonHeaderForOWE(bool32 shouldSpawnWaterMons);
 static u32 GetOldestActiveOWESlot(bool32 forceRemove);
@@ -400,7 +401,7 @@ void StartWildBattleWithOWE(struct ScriptContext *ctx)
     if (StartWildBattleWithOWE_CheckBattleFrontier(headerId))
         return;
     
-    if (StartWildBattleWithOWE_CheckMassOutbreak(category, speciesId))
+    if (StartWildBattleWithOWE_CheckMassOutbreak(category, speciesId, level))
         return;
 
     if (StartWildBattleWithOWE_CheckDoubleBattle(owe, headerId))
@@ -953,18 +954,19 @@ static bool32 StartWildBattleWithOWE_CheckBattleFrontier(u32 headerId)
     return FALSE;
 }
 
-static bool32 StartWildBattleWithOWE_CheckMassOutbreak(enum CategoryOWE category, enum Species speciesId)
+static bool32 StartWildBattleWithOWE_CheckMassOutbreak(enum CategoryOWE category, enum Species speciesId, u32 level)
 {
-    if (category == OWE_CATEGORY_MASS_OUTBREAK
-     && gSaveBlock1Ptr->outbreakPokemonSpecies == speciesId)
-    {
-        ZeroEnemyPartyMons();
-        SetUpMassOutbreakEncounter(0);
-        BattleSetup_StartWildBattle();
-        return TRUE;
-    }
+    if (category != OWE_CATEGORY_MASS_OUTBREAK)
+        return FALSE;
 
-    return FALSE;
+    assertf(gSaveBlock1Ptr->outbreakPokemonSpecies == speciesId && gSaveBlock1Ptr->outbreakPokemonLevel == level, "Outbreak OW encounter is not matching last active outbreak")
+    {
+        return FALSE;
+    }
+    ZeroEnemyPartyMons();
+    SetUpMassOutbreakEncounter(0);
+    BattleSetup_StartWildBattle();
+    return TRUE;
 }
 
 static bool32 StartWildBattleWithOWE_CheckDoubleBattle(struct ObjectEvent *owe, u32 headerId)
