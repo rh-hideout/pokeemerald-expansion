@@ -72,19 +72,6 @@ const struct Tileset gTileset_BattleTent =
     .callback = NULL,
 };
 
-#if !IS_FRLG && !IS_HNS
-
-const struct Tileset gTileset_Petalburg =
-{
-    .isCompressed = TRUE,
-    .isSecondary = TRUE,
-    .tiles = gTilesetTiles_Petalburg,
-    .palettes = gTilesetPalettes_Petalburg,
-    .metatiles = gMetatiles_Petalburg,
-    .metatileAttributes = gMetatileAttributes_Petalburg,
-    .callback = InitTilesetAnim_Petalburg,
-};
-
 const struct Tileset gTileset_Rustboro =
 {
     .isCompressed = TRUE,
@@ -105,6 +92,41 @@ const struct Tileset gTileset_Dewford =
     .metatiles = gMetatiles_Dewford,
     .metatileAttributes = gMetatileAttributes_Dewford,
     .callback = InitTilesetAnim_Dewford,
+};
+
+const struct Tileset gTileset_Fortree =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_Fortree,
+    .palettes = gTilesetPalettes_Fortree,
+    .metatiles = gMetatiles_Fortree,
+    .metatileAttributes = gMetatileAttributes_Fortree,
+    .callback = InitTilesetAnim_Fortree,
+};
+
+const struct Tileset gTileset_IslandHarbor =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_IslandHarbor,
+    .palettes = gTilesetPalettes_IslandHarbor,
+    .metatiles = gMetatiles_IslandHarbor,
+    .metatileAttributes = gMetatileAttributes_IslandHarbor,
+    .callback = NULL,
+};
+
+#if !IS_FRLG && !IS_HNS
+
+const struct Tileset gTileset_Petalburg =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_Petalburg,
+    .palettes = gTilesetPalettes_Petalburg,
+    .metatiles = gMetatiles_Petalburg,
+    .metatileAttributes = gMetatileAttributes_Petalburg,
+    .callback = InitTilesetAnim_Petalburg,
 };
 
 const struct Tileset gTileset_Slateport =
@@ -149,17 +171,6 @@ const struct Tileset gTileset_Fallarbor =
     .metatiles = gMetatiles_Fallarbor,
     .metatileAttributes = gMetatileAttributes_Fallarbor,
     .callback = InitTilesetAnim_Fallarbor,
-};
-
-const struct Tileset gTileset_Fortree =
-{
-    .isCompressed = TRUE,
-    .isSecondary = TRUE,
-    .tiles = gTilesetTiles_Fortree,
-    .palettes = gTilesetPalettes_Fortree,
-    .metatiles = gMetatiles_Fortree,
-    .metatileAttributes = gMetatileAttributes_Fortree,
-    .callback = InitTilesetAnim_Fortree,
 };
 
 const struct Tileset gTileset_Lilycove =
@@ -775,17 +786,6 @@ const struct Tileset gTileset_MossdeepGameCorner =
     .palettes = gTilesetPalettes_MossdeepGameCorner,
     .metatiles = gMetatiles_MossdeepGameCorner,
     .metatileAttributes = gMetatileAttributes_MossdeepGameCorner,
-    .callback = NULL,
-};
-
-const struct Tileset gTileset_IslandHarbor =
-{
-    .isCompressed = TRUE,
-    .isSecondary = TRUE,
-    .tiles = gTilesetTiles_IslandHarbor,
-    .palettes = gTilesetPalettes_IslandHarbor,
-    .metatiles = gMetatiles_IslandHarbor,
-    .metatileAttributes = gMetatileAttributes_IslandHarbor,
     .callback = NULL,
 };
 

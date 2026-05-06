@@ -1,0 +1,95 @@
+{
+  "id": "MAP_BIRTH_ISLAND_EXTERIOR_HNS",
+  "name": "BirthIsland_Exterior_hns",
+  "layout": "LAYOUT_BIRTH_ISLAND_EXTERIOR_HNS",
+  "music": "MUS_NONE",
+  "region_map_section": "MAPSEC_BIRTH_ISLAND",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_INDOOR",
+  "allow_cycling": false,
+  "allow_escaping": false,
+  "allow_running": true,
+  "show_map_name": true,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": null,
+  "object_events": [
+    {
+      "local_id": "LOCALID_BIRTH_ISLAND_EXTERIOR_HNS_ROCK",
+      "graphics_id": "OBJ_EVENT_GFX_DEOXYS_TRIANGLE",
+      "x": 15,
+      "y": 12,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 1,
+      "movement_range_y": 1,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "BirthIsland_Exterior_hns_EventScript_Triangle",
+      "flag": "FLAG_HIDE_BIRTH_ISLAND_DEOXYS_TRIANGLE"
+    },
+    {
+      "local_id": "LOCALID_BIRTH_ISLAND_EXTERIOR_HNS_DEOXYS",
+      "graphics_id": "OBJ_EVENT_GFX_DEOXYS",
+      "x": 15,
+      "y": 3,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 1,
+      "movement_range_y": 1,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "0x0",
+      "flag": "FLAG_HIDE_DEOXYS"
+    },
+    {
+      "local_id": "LOCALID_BIRTH_ISLAND_EXTERIOR_HNS_SS_TIDAL",
+      "graphics_id": "OBJ_EVENT_GFX_SS_TIDAL",
+      "x": 13,
+      "y": 26,
+      "elevation": 1,
+      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "0x0",
+      "flag": "0"
+    },
+    {
+      "local_id": "LOCALID_BIRTH_ISLAND_EXTERIOR_HNS_SAILOR",
+      "graphics_id": "OBJ_EVENT_GFX_SAILOR",
+      "x": 13,
+      "y": 24,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "FarawayIsland_Entrance_hns_EventScript_Sailor",
+      "flag": "0"
+    }
+  ],
+  "warp_events": [
+    {
+      "x": 22,
+      "y": 19,
+      "elevation": 0,
+      "dest_map": "MAP_BIRTH_ISLAND_HARBOR_HNS",
+      "dest_warp_id": "0"
+    }
+  ],
+  "coord_events": [],
+  "bg_events": [
+    {
+      "type": "sign",
+      "x": 21,
+      "y": 11,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "BirthIsland_Exterior_hns_MeteorInteract"
+    }
+  ],
+  "game_version": "hns"
+}

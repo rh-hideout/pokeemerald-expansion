@@ -16,16 +16,22 @@ const u16 gMetatileAttributes_TrainerHill[] = INCBIN_U16("data/tilesets/secondar
 const u16 gMetatiles_BattleTent[] = INCBIN_U16("data/tilesets/secondary/battle_tent/metatiles.bin");
 const u16 gMetatileAttributes_BattleTent[] = INCBIN_U16("data/tilesets/secondary/battle_tent/metatile_attributes.bin");
 
-#if !IS_FRLG && !IS_HNS
-
-const u16 gMetatiles_Petalburg[] = INCBIN_U16("data/tilesets/secondary/petalburg/metatiles.bin");
-const u16 gMetatileAttributes_Petalburg[] = INCBIN_U16("data/tilesets/secondary/petalburg/metatile_attributes.bin");
-
 const u16 gMetatiles_Rustboro[] = INCBIN_U16("data/tilesets/secondary/rustboro/metatiles.bin");
 const u16 gMetatileAttributes_Rustboro[] = INCBIN_U16("data/tilesets/secondary/rustboro/metatile_attributes.bin");
 
 const u16 gMetatiles_Dewford[] = INCBIN_U16("data/tilesets/secondary/dewford/metatiles.bin");
 const u16 gMetatileAttributes_Dewford[] = INCBIN_U16("data/tilesets/secondary/dewford/metatile_attributes.bin");
+
+const u16 gMetatiles_Fortree[] = INCBIN_U16("data/tilesets/secondary/fortree/metatiles.bin");
+const u16 gMetatileAttributes_Fortree[] = INCBIN_U16("data/tilesets/secondary/fortree/metatile_attributes.bin");
+
+const u16 gMetatiles_IslandHarbor[] = INCBIN_U16("data/tilesets/secondary/island_harbor/metatiles.bin");
+const u16 gMetatileAttributes_IslandHarbor[] = INCBIN_U16("data/tilesets/secondary/island_harbor/metatile_attributes.bin");
+
+#if !IS_FRLG && !IS_HNS
+
+const u16 gMetatiles_Petalburg[] = INCBIN_U16("data/tilesets/secondary/petalburg/metatiles.bin");
+const u16 gMetatileAttributes_Petalburg[] = INCBIN_U16("data/tilesets/secondary/petalburg/metatile_attributes.bin");
 
 const u16 gMetatiles_Slateport[] = INCBIN_U16("data/tilesets/secondary/slateport/metatiles.bin");
 const u16 gMetatileAttributes_Slateport[] = INCBIN_U16("data/tilesets/secondary/slateport/metatile_attributes.bin");
@@ -38,9 +44,6 @@ const u16 gMetatileAttributes_Lavaridge[] = INCBIN_U16("data/tilesets/secondary/
 
 const u16 gMetatiles_Fallarbor[] = INCBIN_U16("data/tilesets/secondary/fallarbor/metatiles.bin");
 const u16 gMetatileAttributes_Fallarbor[] = INCBIN_U16("data/tilesets/secondary/fallarbor/metatile_attributes.bin");
-
-const u16 gMetatiles_Fortree[] = INCBIN_U16("data/tilesets/secondary/fortree/metatiles.bin");
-const u16 gMetatileAttributes_Fortree[] = INCBIN_U16("data/tilesets/secondary/fortree/metatile_attributes.bin");
 
 const u16 gMetatiles_Lilycove[] = INCBIN_U16("data/tilesets/secondary/lilycove/metatiles.bin");
 const u16 gMetatileAttributes_Lilycove[] = INCBIN_U16("data/tilesets/secondary/lilycove/metatile_attributes.bin");
@@ -194,9 +197,6 @@ const u16 gMetatileAttributes_MirageTower[] = INCBIN_U16("data/tilesets/secondar
 
 const u16 gMetatiles_MossdeepGameCorner[] = INCBIN_U16("data/tilesets/secondary/mossdeep_game_corner/metatiles.bin");
 const u16 gMetatileAttributes_MossdeepGameCorner[] = INCBIN_U16("data/tilesets/secondary/mossdeep_game_corner/metatile_attributes.bin");
-
-const u16 gMetatiles_IslandHarbor[] = INCBIN_U16("data/tilesets/secondary/island_harbor/metatiles.bin");
-const u16 gMetatileAttributes_IslandHarbor[] = INCBIN_U16("data/tilesets/secondary/island_harbor/metatile_attributes.bin");
 
 const u16 gMetatiles_NavelRock[] = INCBIN_U16("data/tilesets/secondary/navel_rock/metatiles.bin");
 const u16 gMetatileAttributes_NavelRock[] = INCBIN_U16("data/tilesets/secondary/navel_rock/metatile_attributes.bin");

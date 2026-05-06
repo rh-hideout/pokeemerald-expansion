@@ -655,3 +655,4 @@ gSpecials::
 	def_special ShowBugContestChosenMon
 	def_special SwitchMonAbility
 	def_special NameRival
+	

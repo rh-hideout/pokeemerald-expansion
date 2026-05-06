@@ -1806,6 +1806,7 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/scripts/dexnav.inc"
 	.include "data/scripts/battle_frontier.inc"
 	.include "data/scripts/apricorn_tree.inc"
+	
 
 .if IS_HNS
 
@@ -2245,6 +2246,12 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/maps/SafariZone3_hns/scripts.inc"
 	.include "data/maps/SafariZoneIndoor_hns/scripts.inc"
 	.include "data/maps/Saffron_Temp_hns/scripts.inc"
+	.include "data/maps/SouthernIsland_Exterior_hns/scripts.inc"
+	.include "data/maps/SouthernIsland_Interior_hns/scripts.inc"
+	.include "data/maps/FarawayIsland_Entrance_hns/scripts.inc"
+	.include "data/maps/FarawayIsland_Interior_hns/scripts.inc"
+	.include "data/maps/BirthIsland_Exterior_hns/scripts.inc"
+	.include "data/maps/BirthIsland_Harbor_hns/scripts.inc"
 
 .endif
 

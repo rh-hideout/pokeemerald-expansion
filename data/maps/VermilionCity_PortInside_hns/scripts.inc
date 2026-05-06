@@ -68,7 +68,7 @@ VermilionPort_EventScript_ChoseSouthernIsland::
 	bufferitemname STR_VAR_1, ITEM_EON_TICKET
 	goto_if_eq VAR_RESULT, FALSE, VermilionPort_EventScript_Sailor_NoCredentials
 	call VermilionPort_EventScript_EnterShip
-	warpsilent MAP_SOUTHERN_ISLAND_EXTERIOR, 13, 22
+	warpsilent MAP_SOUTHERN_ISLAND_EXTERIOR_HNS, 13, 22
 	release
 	end
 
@@ -79,7 +79,7 @@ VermilionPort_EventScript_ChoseBirthIsland::
 	bufferitemname STR_VAR_1, ITEM_AURORA_TICKET
 	goto_if_eq VAR_RESULT, FALSE, VermilionPort_EventScript_Sailor_NoCredentials
 	call VermilionPort_EventScript_EnterShip
-	warpsilent MAP_BIRTH_ISLAND_EXTERIOR, 13, 23
+	warpsilent MAP_BIRTH_ISLAND_EXTERIOR_HNS, 13, 23
 	release
 	end
 
@@ -90,7 +90,7 @@ VermilionPort_EventScript_ChoseFarawayIsland::
 	bufferitemname STR_VAR_1, ITEM_OLD_SEA_MAP
 	goto_if_eq VAR_RESULT, FALSE, VermilionPort_EventScript_Sailor_NoCredentials
 	call VermilionPort_EventScript_EnterShip
-	warpsilent MAP_FARAWAY_ISLAND_ENTRANCE, 13, 38
+	warpsilent MAP_FARAWAY_ISLAND_ENTRANCE_HNS, 13, 38
 	release
 	end	
 

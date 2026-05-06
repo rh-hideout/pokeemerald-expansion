@@ -805,13 +805,14 @@
 #define HNS_UNUSED_START                            (HNS_UNUSED_HIDDEN_ITEM_START + HNS_UNUSED_HIDDEN_ITEM_COUNT)
 #define FLAG_LIMIT_TO_50                               (HNS_UNUSED_START + 0)
 #define FLAG_COLLISION                               (HNS_UNUSED_START + 1)
-#define FLAG_UNUSED_2                               (HNS_UNUSED_START + 2)
-#define FLAG_UNUSED_3                               (HNS_UNUSED_START + 3)
-#define FLAG_UNUSED_4                               (HNS_UNUSED_START + 4)
-#define FLAG_UNUSED_5                               (HNS_UNUSED_START + 5)
-#define FLAG_UNUSED_6                               (HNS_UNUSED_START + 6)
-#define FLAG_UNUSED_7                               (HNS_UNUSED_START + 7)
-#define FLAG_UNUSED_8                               (HNS_UNUSED_START + 8)
+#define FLAG_EXTRA_LEGENDARIES                               (HNS_UNUSED_START + 2)
+#define FLAG_MAP_SCRIPT_CHECKED_DEOXYS                               (HNS_UNUSED_START + 3)
+#define FLAG_HIDE_BIRTH_ISLAND_DEOXYS_TRIANGLE                               (HNS_UNUSED_START + 4)
+#define FLAG_DEOXYS_ROCK_COMPLETE                               (HNS_UNUSED_START + 5)
+#define FLAG_HIDE_DEOXYS                               (HNS_UNUSED_START + 6)
+#define FLAG_DEOXYS_FLEW_AWAY                               (HNS_UNUSED_START + 7)
+#define FLAG_FOUGHT_DEOXYS                               (HNS_UNUSED_START + 8)
+
 #define FLAG_UNUSED_9                               (HNS_UNUSED_START + 9)
 #define FLAG_UNUSED_10                              (HNS_UNUSED_START + 10)
 #define FLAG_UNUSED_11                              (HNS_UNUSED_START + 11)
@@ -1228,7 +1229,6 @@
 #define FLAG_ENABLE_WINONA_MATCH_CALL               0
 #define FLAG_ENABLE_TATE_AND_LIZA_MATCH_CALL        0
 #define FLAG_ENABLE_JUAN_MATCH_CALL                 0
-#define FLAG_MAP_SCRIPT_CHECKED_DEOXYS              0
 #define FLAG_ENABLE_SHIP_FARAWAY_ISLAND             0
 #define FLAG_ARRIVED_ON_FARAWAY_ISLAND              0
 #define FLAG_ARRIVED_AT_MARINE_CAVE_EMERGE_SPOT     0
@@ -1504,7 +1504,6 @@
 #define FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_RIVAL_BEDROOM 0
 #define FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_TRUCK 0
 #define FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_TRUCK  0
-#define FLAG_HIDE_BIRTH_ISLAND_DEOXYS_TRIANGLE      0
 #define FLAG_HIDE_MAUVILLE_CITY_SCOTT               0
 #define FLAG_HIDE_VERDANTURF_TOWN_SCOTT             0
 #define FLAG_HIDE_FALLARBOR_TOWN_BATTLE_TENT_SCOTT  0
@@ -1926,7 +1925,6 @@
 #define FLAG_SYS_SEVII_MAP_123                      0
 #define FLAG_SYS_SEVII_MAP_4567                     0
 #define FLAG_SYS_GOT_BERRY_POUCH                    0
-#define FLAG_DEOXYS_ROCK_COMPLETE                   0
 #define FLAG_SYS_UNLOCKED_TANOBY_RUINS              0
 #define FLAG_ENABLE_SHIP_NAVEL_ROCK                 0
 #define FLAG_ENABLE_SHIP_BIRTH_ISLAND               0
@@ -2184,7 +2182,6 @@
 #define FLAG_DEFEATED_MISTY                                     0
 #define FLAG_DEFEATED_ROCKETS_IN_WAREHOUSE                      0
 #define FLAG_DEFEATED_SABRINA                                   0
-#define FLAG_DEOXYS_FLEW_AWAY                                   0
 #define FLAG_DID_CH_DING_TRADE                                  0
 #define FLAG_DID_ESPHERE_TRADE                                  0
 #define FLAG_DID_MARC_TRADE                                     0
@@ -2195,7 +2192,6 @@
 #define FLAG_DID_TANGENY_TRADE                                  0
 #define FLAG_DID_ZYNX_TRADE                                     0
 #define FLAG_FOUGHT_ARTICUNO                                    0
-#define FLAG_FOUGHT_DEOXYS                                      0
 #define FLAG_FOUGHT_HO_OH                                       0
 #define FLAG_FOUGHT_LUGIA                                       0
 #define FLAG_FOUGHT_MEWTWO                                      0
@@ -2474,7 +2470,6 @@
 #define FLAG_HIDE_CINNABAR_SEAGALLOP                            0
 #define FLAG_HIDE_CREDITS_OAK                                   0
 #define FLAG_HIDE_CREDITS_RIVAL                                 0
-#define FLAG_HIDE_DEOXYS                                        0
 #define FLAG_HIDE_DOJO_HITMONCHAN_BALL                          0
 #define FLAG_HIDE_DOJO_HITMONLEE_BALL                           0
 #define FLAG_HIDE_DOME_FOSSIL                                   0

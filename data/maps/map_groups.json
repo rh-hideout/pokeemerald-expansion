@@ -1673,6 +1673,12 @@
     "SafariZone2_hns",
     "SafariZone3_hns",
     "SafariZoneIndoor_hns",
-    "Saffron_Temp_hns"
+    "Saffron_Temp_hns",
+    "SouthernIsland_Exterior_hns",
+    "SouthernIsland_Interior_hns",
+    "FarawayIsland_Entrance_hns",
+    "FarawayIsland_Interior_hns",
+    "BirthIsland_Exterior_hns",
+    "BirthIsland_Harbor_hns"
   ]
 }

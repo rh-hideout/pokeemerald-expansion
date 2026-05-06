@@ -14803,6 +14803,78 @@
       "blockdata_filepath": "data/layouts/ViridianForest_hns/map.bin",
       "game_version": "hns",
       "layout_version": "hns"
+    },
+    {
+      "id": "LAYOUT_SOUTHERN_ISLAND_EXTERIOR_HNS",
+      "name": "SouthernIsland_Exterior_hns_Layout",
+      "width": 33,
+      "height": 30,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Rustboro",
+      "border_filepath": "data/layouts/SouthernIsland_Exterior_hns/border.bin",
+      "blockdata_filepath": "data/layouts/SouthernIsland_Exterior_hns/map.bin",
+      "game_version": "hns",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_SOUTHERN_ISLAND_INTERIOR_HNS",
+      "name": "SouthernIsland_Interior_hns_Layout",
+      "width": 27,
+      "height": 24,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Rustboro",
+      "border_filepath": "data/layouts/SouthernIsland_Interior_hns/border.bin",
+      "blockdata_filepath": "data/layouts/SouthernIsland_Interior_hns/map.bin",
+      "game_version": "hns",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_FARAWAY_ISLAND_ENTRANCE_HNS",
+      "name": "FarawayIsland_Entrance_hns_Layout",
+      "width": 34,
+      "height": 46,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Rustboro",
+      "border_filepath": "data/layouts/FarawayIsland_Entrance_hns/border.bin",
+      "blockdata_filepath": "data/layouts/FarawayIsland_Entrance_hns/map.bin",
+      "game_version": "hns",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_FARAWAY_ISLAND_INTERIOR_HNS",
+      "name": "FarawayIsland_Interior_hns_Layout",
+      "width": 29,
+      "height": 26,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Fortree",
+      "border_filepath": "data/layouts/FarawayIsland_Interior_hns/border.bin",
+      "blockdata_filepath": "data/layouts/FarawayIsland_Interior_hns/map.bin",
+      "game_version": "hns",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_BIRTH_ISLAND_EXTERIOR_HNS",
+      "name": "BirthIsland_Exterior_hns_Layout",
+      "width": 30,
+      "height": 30,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Dewford",
+      "border_filepath": "data/layouts/BirthIsland_Exterior_hns/border.bin",
+      "blockdata_filepath": "data/layouts/BirthIsland_Exterior_hns/map.bin",
+      "game_version": "hns",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_ISLAND_HARBOR_HNS",
+      "name": "IslandHarbor_hns_Layout",
+      "width": 17,
+      "height": 13,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_IslandHarbor",
+      "border_filepath": "data/layouts/IslandHarbor_hns/border.bin",
+      "blockdata_filepath": "data/layouts/IslandHarbor_hns/map.bin",
+      "game_version": "hns",
+      "layout_version": "emerald"
     }
   ]
 }

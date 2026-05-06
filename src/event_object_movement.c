@@ -10172,6 +10172,9 @@ static void SetObjectEventSpriteOamTableForLongGrass(struct ObjectEvent *objEven
     if (objEvent->disableCoveringGroundEffects)
         return;
 
+    if (objEvent->fixedPriority)
+        return;
+
     if (!MetatileBehavior_IsLongGrass(objEvent->currentMetatileBehavior))
         return;
 
