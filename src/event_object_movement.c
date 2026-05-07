@@ -828,6 +828,67 @@ static const u16 *const sObjectPaletteTagSets[] = {
     sObjectPaletteTags3,
 };
 
+#if IS_HNS
+static const u16 sObjectPaletteTagsHns0[] = {
+    [PALSLOT_PLAYER]            = OBJ_EVENT_PAL_TAG_GOLD_HNS,
+    [PALSLOT_PLAYER_REFLECTION] = OBJ_EVENT_PAL_TAG_GOLD_REFLECTION_HNS,
+    [PALSLOT_NPC_1]             = OBJ_EVENT_PAL_TAG_NPC_1_HNS,
+    [PALSLOT_NPC_2]             = OBJ_EVENT_PAL_TAG_NPC_2_HNS,
+    [PALSLOT_NPC_3]             = OBJ_EVENT_PAL_TAG_NPC_3_HNS,
+    [PALSLOT_NPC_4]             = OBJ_EVENT_PAL_TAG_NPC_4_HNS,
+    [PALSLOT_NPC_1_REFLECTION]  = OBJ_EVENT_PAL_TAG_NPC_1_REFLECTION,
+    [PALSLOT_NPC_2_REFLECTION]  = OBJ_EVENT_PAL_TAG_NPC_2_REFLECTION,
+    [PALSLOT_NPC_3_REFLECTION]  = OBJ_EVENT_PAL_TAG_NPC_3_REFLECTION,
+    [PALSLOT_NPC_4_REFLECTION]  = OBJ_EVENT_PAL_TAG_NPC_4_REFLECTION,
+};
+
+static const u16 sObjectPaletteTagsHns1[] = {
+    [PALSLOT_PLAYER]            = OBJ_EVENT_PAL_TAG_GOLD_HNS,
+    [PALSLOT_PLAYER_REFLECTION] = OBJ_EVENT_PAL_TAG_GOLD_REFLECTION_HNS,
+    [PALSLOT_NPC_1]             = OBJ_EVENT_PAL_TAG_NPC_1_HNS,
+    [PALSLOT_NPC_2]             = OBJ_EVENT_PAL_TAG_NPC_2_HNS,
+    [PALSLOT_NPC_3]             = OBJ_EVENT_PAL_TAG_NPC_3_HNS,
+    [PALSLOT_NPC_4]             = OBJ_EVENT_PAL_TAG_NPC_4_HNS,
+    [PALSLOT_NPC_1_REFLECTION]  = OBJ_EVENT_PAL_TAG_NPC_1_REFLECTION,
+    [PALSLOT_NPC_2_REFLECTION]  = OBJ_EVENT_PAL_TAG_NPC_2_REFLECTION,
+    [PALSLOT_NPC_3_REFLECTION]  = OBJ_EVENT_PAL_TAG_NPC_3_REFLECTION,
+    [PALSLOT_NPC_4_REFLECTION]  = OBJ_EVENT_PAL_TAG_NPC_4_REFLECTION,
+};
+
+static const u16 sObjectPaletteTagsHns2[] = {
+    [PALSLOT_PLAYER]            = OBJ_EVENT_PAL_TAG_GOLD_HNS,
+    [PALSLOT_PLAYER_REFLECTION] = OBJ_EVENT_PAL_TAG_GOLD_REFLECTION_HNS,
+    [PALSLOT_NPC_1]             = OBJ_EVENT_PAL_TAG_NPC_1_HNS,
+    [PALSLOT_NPC_2]             = OBJ_EVENT_PAL_TAG_NPC_2_HNS,
+    [PALSLOT_NPC_3]             = OBJ_EVENT_PAL_TAG_NPC_3_HNS,
+    [PALSLOT_NPC_4]             = OBJ_EVENT_PAL_TAG_NPC_4_HNS,
+    [PALSLOT_NPC_1_REFLECTION]  = OBJ_EVENT_PAL_TAG_NPC_1_REFLECTION,
+    [PALSLOT_NPC_2_REFLECTION]  = OBJ_EVENT_PAL_TAG_NPC_2_REFLECTION,
+    [PALSLOT_NPC_3_REFLECTION]  = OBJ_EVENT_PAL_TAG_NPC_3_REFLECTION,
+    [PALSLOT_NPC_4_REFLECTION]  = OBJ_EVENT_PAL_TAG_NPC_4_REFLECTION,
+};
+
+static const u16 sObjectPaletteTagsHns3[] = {
+    [PALSLOT_PLAYER]            = OBJ_EVENT_PAL_TAG_GOLD_HNS,
+    [PALSLOT_PLAYER_REFLECTION] = OBJ_EVENT_PAL_TAG_GOLD_REFLECTION_HNS,
+    [PALSLOT_NPC_1]             = OBJ_EVENT_PAL_TAG_NPC_1_HNS,
+    [PALSLOT_NPC_2]             = OBJ_EVENT_PAL_TAG_NPC_2_HNS,
+    [PALSLOT_NPC_3]             = OBJ_EVENT_PAL_TAG_NPC_3_HNS,
+    [PALSLOT_NPC_4]             = OBJ_EVENT_PAL_TAG_NPC_4_HNS,
+    [PALSLOT_NPC_1_REFLECTION]  = OBJ_EVENT_PAL_TAG_NPC_1_REFLECTION,
+    [PALSLOT_NPC_2_REFLECTION]  = OBJ_EVENT_PAL_TAG_NPC_2_REFLECTION,
+    [PALSLOT_NPC_3_REFLECTION]  = OBJ_EVENT_PAL_TAG_NPC_3_REFLECTION,
+    [PALSLOT_NPC_4_REFLECTION]  = OBJ_EVENT_PAL_TAG_NPC_4_REFLECTION,
+};
+
+static const u16 *const sObjectPaletteTagSetsHns[] = {
+    sObjectPaletteTagsHns0,
+    sObjectPaletteTagsHns1,
+    sObjectPaletteTagsHns2,
+    sObjectPaletteTagsHns3,
+};
+#endif // IS_HNS
+
 #include "data/object_events/berry_tree_graphics_tables.h"
 #include "data/field_effects/field_effect_objects.h"
 
@@ -3989,17 +4050,30 @@ void OverrideSecretBaseDecorationSpriteScript(u8 localId, u8 mapNum, u8 mapGroup
 
 void InitObjectEventPalettes(u8 reflectionType)
 {
+#if IS_HNS
+    const u16 *const *palTagSets = sObjectPaletteTagSetsHns;
+#else
+    const u16 *const *palTagSets = sObjectPaletteTagSets;
+#endif
     FreeAndReserveObjectSpritePalettes();
     sCurrentSpecialObjectPaletteTag = OBJ_EVENT_PAL_TAG_NONE;
     sCurrentReflectionType = reflectionType;
     if (reflectionType == 1)
     {
-        PatchObjectPaletteRange(sObjectPaletteTagSets[sCurrentReflectionType], PALSLOT_PLAYER, PALSLOT_NPC_4 + 1);
+        PatchObjectPaletteRange(palTagSets[sCurrentReflectionType], PALSLOT_PLAYER, PALSLOT_NPC_4 + 1);
         gReservedSpritePaletteCount = 8;
     }
     else
     {
-        PatchObjectPaletteRange(sObjectPaletteTagSets[sCurrentReflectionType], PALSLOT_PLAYER, PALSLOT_NPC_4_REFLECTION + 1);
+#if IS_HNS
+        // HNS: only load player + 4 NPC palettes (slots 0-5).
+        // NPC reflections are generated dynamically by LoadObjectRegularReflectionPalette,
+        // so slots 6-9 don't need Emerald's pre-loaded reflection palettes.
+        PatchObjectPaletteRange(palTagSets[sCurrentReflectionType], PALSLOT_PLAYER, PALSLOT_NPC_4 + 1);
+        gReservedSpritePaletteCount = 6;
+#else
+        PatchObjectPaletteRange(palTagSets[sCurrentReflectionType], PALSLOT_PLAYER, PALSLOT_NPC_4_REFLECTION + 1);
+#endif
     }
 }
 
@@ -4008,7 +4082,11 @@ u16 GetObjectPaletteTag(u8 palSlot)
     u8 i;
 
     if (palSlot < PALSLOT_NPC_SPECIAL)
+#if IS_HNS
+        return sObjectPaletteTagSetsHns[sCurrentReflectionType][palSlot];
+#else
         return sObjectPaletteTagSets[sCurrentReflectionType][palSlot];
+#endif
 
     for (i = 0; sSpecialObjectReflectionPaletteSets[i].tag != OBJ_EVENT_PAL_TAG_NONE; i++)
     {
