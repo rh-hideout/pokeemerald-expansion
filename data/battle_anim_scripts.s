@@ -1600,12 +1600,12 @@ gBattleAnimMove_PowerGem:: @ Copy of Hidden Power with background blackened
 	delay 4
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
 	playsewithpan SE_M_REVERSAL, SOUND_PAN_ATTACKER
-	create_particle_ring sprite=gPowerGemOrbSpriteTemplate
+	create_particle_ring sprite=gPowerGemOrbSpriteTemplate, anim_battler=ANIM_ATTACKER
 	delay 52
 	setarg 7, -1
 	playsewithpan SE_M_REFLECT, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
-	create_scattered_particle_ring sprite=gPowerGemOrbScatterSpriteTemplate
+	create_scattered_particle_ring sprite=gPowerGemOrbScatterSpriteTemplate, anim_battler=ANIM_TARGET
 	simple_palette_blend unused_subpriority_offset=5, selector=F_PAL_BG, delay=1, initial_blend_y=7, target_blend_y=0, color=RGB_BLACK
 	waitforvisualfinish
 	end
@@ -2742,12 +2742,12 @@ gBattleAnimMove_MagnetBomb::
 	delay 4
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
 	playsewithpan SE_M_REVERSAL, SOUND_PAN_ATTACKER
-	create_particle_ring sprite=gHiddenPowerOrbSpriteTemplate
+	create_particle_ring sprite=gHiddenPowerOrbSpriteTemplate, anim_battler=ANIM_ATTACKER
 	delay 52
 	setarg 7, -1
 	playsewithpan SE_M_REFLECT, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
-	create_scattered_particle_ring sprite=gHiddenPowerOrbScatterSpriteTemplate
+	create_scattered_particle_ring sprite=gHiddenPowerOrbScatterSpriteTemplate, anim_battler=ANIM_TARGET
 	playsewithpan SE_M_SELF_DESTRUCT, SOUND_PAN_TARGET
 	createsprite gOctazookaSmokeSpriteTemplate, ANIM_TARGET, 2, 8, 8, 1, 0
 	delay 2
@@ -7462,13 +7462,13 @@ gBattleAnimMove_GrassyTerrain::
 	delay 4
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
 	playsewithpan SE_M_REVERSAL, SOUND_PAN_ATTACKER
-	create_particle_ring sprite=gGrassyTerrainOrbsTemplate
+	create_particle_ring sprite=gGrassyTerrainOrbsTemplate, anim_battler=ANIM_ATTACKER
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 3, 0, 4, RGB(11, 26, 11)
 	delay 52
 	setarg 7, -1
 	playsewithpan SE_M_HEAL_BELL, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
-	create_scattered_particle_ring sprite=gGrassyTerrainStarTemplate
+	create_scattered_particle_ring sprite=gGrassyTerrainStarTemplate, anim_battler=ANIM_TARGET
 	panse_adjustnone SE_M_PETAL_DANCE, SOUND_PAN_ATTACKER, SOUND_PAN_TARGET, +1, 0
 	waitforvisualfinish
 	delay 4
@@ -7485,7 +7485,7 @@ gBattleAnimMove_MistyTerrain::
 	delay 4
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
 	playsewithpan SE_M_REVERSAL, SOUND_PAN_ATTACKER
-	create_particle_ring sprite=gMistyTerrainOrbsTemplate
+	create_particle_ring sprite=gMistyTerrainOrbsTemplate, anim_battler=ANIM_ATTACKER
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 3, 0, 7, RGB(31, 24, 31)
 	delay 52
 	setarg 7, -1
@@ -8300,13 +8300,13 @@ gBattleAnimMove_ElectricTerrain::
 	delay 4
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
 	playsewithpan SE_M_REVERSAL, SOUND_PAN_ATTACKER
-	create_particle_ring sprite=gElectricTerrainOrbsTemplate
+	create_particle_ring sprite=gElectricTerrainOrbsTemplate, anim_battler=ANIM_ATTACKER
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 3, 0, 4, RGB(28, 28, 0)
 	delay 52
 	setarg 7, -1
 	playsewithpan SE_M_REFLECT, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
-	create_scattered_particle_ring sprite=gElectricTerrainFlyingBallTemplate
+	create_scattered_particle_ring sprite=gElectricTerrainFlyingBallTemplate, anim_battler=ANIM_TARGET
 	loopsewithpan SE_M_THUNDERBOLT2, SOUND_PAN_TARGET, 22, 3
 	waitforvisualfinish
 	delay 2
@@ -9070,7 +9070,7 @@ gBattleAnimMove_ShoreUp::
 	playsewithpan SE_M_SANDSTORM, SOUND_PAN_MIDDLE
 	createvisualtask AnimTask_LoadSandstormBackground, 5, 0
 	delay 16
-	create_flying_sand_crescents unknown=0
+	create_flying_sand_crescents anim_battler=ANIM_ATTACKER, unknown=0
 	call HealingEffect
 	waitforvisualfinish
 	end
@@ -9812,13 +9812,13 @@ gBattleAnimMove_PsychicTerrain::
 	delay 4
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
 	playsewithpan SE_M_REVERSAL, SOUND_PAN_ATTACKER
-	create_particle_ring sprite=gPsychicTerrainOrbsTemplate
+	create_particle_ring sprite=gPsychicTerrainOrbsTemplate, anim_battler=ANIM_ATTACKER
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 3, 0, 4, RGB(27, 0, 13)
 	delay 52
 	setarg 7, -1
 	playsewithpan SE_M_ATTRACT, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
-	create_scattered_particle_ring sprite=gPsychicTerrainStarTemplate
+	create_scattered_particle_ring sprite=gPsychicTerrainStarTemplate, anim_battler=ANIM_TARGET
 	loopsewithpan SE_M_SUPERSONIC, SOUND_PAN_TARGET, 10, 3
 	waitforvisualfinish
 	delay 4
@@ -12239,7 +12239,7 @@ gBattleAnimMove_TarShot::
 	end
 
 gBattleAnimMove_MagicPowder::
-	create_powder_particles sound_effect=SE_M_MORNING_SUN, sprite=create_magic_powder_particle_sprite
+	create_powder_particles anim_battler=ANIM_TARGET, sound_effect=SE_M_MORNING_SUN, sprite=create_magic_powder_particle_sprite
 	playsewithpan SE_M_SUPERSONIC, SOUND_PAN_TARGET
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -6, -6, 15, ANIM_TARGET, 1
 	waitforvisualfinish
@@ -15344,11 +15344,11 @@ gBattleAnimMove_SyrupBomb::
 	jumpargeq 0, TRUE, gBattleAnimMove_SyrupBombYellow
 
 gBattleAnimMove_SyrupBombRed::
-	create_syrup_bomb projectile_sprite=gSyrupRedProjectileSpriteTemplate, blend_color=RGB(20, 3, 3), particle_sprite=gSyrupBombRedHitParticleSpriteTemplate
+	create_syrup_bomb anim_battler=ANIM_TARGET, projectile_sprite=gSyrupRedProjectileSpriteTemplate, blend_color=RGB(20, 3, 3), shell_sprite=gSyrupBombRedShellSpriteTemplate, particle_sprite=gSyrupBombRedHitParticleSpriteTemplate
 	end
 
 gBattleAnimMove_SyrupBombYellow::
-	create_syrup_bomb projectile_sprite=gSyrupYellowProjectileSpriteTemplate, blend_color=RGB(23, 13, 1), particle_sprite=gSyrupBombYellowHitParticleSpriteTemplate
+	create_syrup_bomb anim_battler=ANIM_TARGET, projectile_sprite=gSyrupYellowProjectileSpriteTemplate, blend_color=RGB(23, 13, 1), shell_sprite=gSyrupBombYellowShellSpriteTemplate, particle_sprite=gSyrupBombYellowHitParticleSpriteTemplate
 	end
 
 gBattleAnimGeneral_SyrupBombSpeedDrop::
@@ -15357,11 +15357,11 @@ gBattleAnimGeneral_SyrupBombSpeedDrop::
 	jumpargeq 0, TRUE, SyrupBombSpeedDropYellow
 
 SyrupBombSpeedDropRed:
-	create_syrup_bomb_speed_drop blend_color=RGB(20, 3, 3), sprite=gSyrupBombRedShellBSpriteTemplate
+	create_syrup_bomb_speed_drop anim_battler=ANIM_TARGET, blend_color=RGB(20, 3, 3), sprite=gSyrupBombRedShellBSpriteTemplate
 	end
 
 SyrupBombSpeedDropYellow:
-	create_syrup_bomb_speed_drop blend_color=RGB(23, 13, 1), sprite=gSyrupBombYellowShellBSpriteTemplate
+	create_syrup_bomb_speed_drop anim_battler=ANIM_TARGET, blend_color=RGB(23, 13, 1), sprite=gSyrupBombYellowShellBSpriteTemplate
 	end
 
 gBattleAnimMove_ChillyReception::
@@ -15950,15 +15950,15 @@ gBattleAnimMove_TorchSong::
 	setalpha 8, 8
 	createvisualtask SoundTask_PlayCryWithEcho, 5, FALSE
 	call TorchSongEffect
-	create_overheat_flames y=10
+	create_overheat_flames anim_battler=ANIM_ATTACKER, y=10
 	waitforvisualfinish
 	createvisualtask SoundTask_PlayCryWithEcho, 5, FALSE
 	call TorchSongEffect
-	create_overheat_flames y=-5
+	create_overheat_flames anim_battler=ANIM_ATTACKER, y=-5
 	waitforvisualfinish
 	createvisualtask SoundTask_PlayCryWithEcho, 5, TRUE
 	call TorchSongEffect
-	create_overheat_flames y=-20
+	create_overheat_flames anim_battler=ANIM_ATTACKER, y=-20
 	delay 12
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_BIRD, 0, 10, 10, RGB_RED
 	createsprite gSkyAttackBirdSpriteTemplate, ANIM_TARGET, 2
@@ -19181,15 +19181,15 @@ DoubleSlapRight:
 	goto DoubleSlapContinue
 
 gBattleAnimMove_PoisonPowder::
-	create_powder_particles sprite=create_poison_powder_particle_sprite
+	create_powder_particles anim_battler=ANIM_TARGET, sprite=create_poison_powder_particle_sprite
 	end
 
 gBattleAnimMove_StunSpore::
-	create_powder_particles sprite=create_stun_spore_particle_sprite
+	create_powder_particles anim_battler=ANIM_TARGET, sprite=create_stun_spore_particle_sprite
 	end
 
 gBattleAnimMove_SleepPowder::
-	create_powder_particles sprite=create_sleep_powder_particle_sprite
+	create_powder_particles anim_battler=ANIM_TARGET, sprite=create_sleep_powder_particle_sprite
 	end
 
 gBattleAnimMove_Swift::
@@ -19845,12 +19845,12 @@ gBattleAnimMove_HiddenPower::
 	delay 4
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
 	playsewithpan SE_M_REVERSAL, SOUND_PAN_ATTACKER
-	create_particle_ring sprite=gHiddenPowerOrbSpriteTemplate
+	create_particle_ring sprite=gHiddenPowerOrbSpriteTemplate, anim_battler=ANIM_ATTACKER
 	delay 52
 	setarg 7, -1
 	playsewithpan SE_M_REFLECT, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_ScaleMonAndRestore, 5, -7, -7, 11, ANIM_ATTACKER, 0
-	create_scattered_particle_ring sprite=gHiddenPowerOrbScatterSpriteTemplate
+	create_scattered_particle_ring sprite=gHiddenPowerOrbScatterSpriteTemplate, anim_battler=ANIM_TARGET
 	end
 
 gBattleAnimMove_Reversal::
@@ -19861,7 +19861,7 @@ gBattleAnimMove_Reversal::
 	blend_color_cycle selector=(F_PAL_BG | F_PAL_BATTLERS), delay=3, num_blends=2, initial_blend_y=0, target_blend_y=10, color=RGB_WHITE
 	delay 10
 	playsewithpan SE_M_REVERSAL, SOUND_PAN_ATTACKER
-	create_particle_ring sprite=gReversalOrbSpriteTemplate
+	create_particle_ring sprite=gReversalOrbSpriteTemplate, anim_battler=ANIM_ATTACKER
 	waitforvisualfinish
 	delay 20
 	createsprite gHorizontalLungeSpriteTemplate, ANIM_ATTACKER, 2, 6, 4
@@ -21974,7 +21974,7 @@ gBattleAnimMove_HeatWave::
 	delay 4
 	createvisualtask AnimTask_MoveHeatWaveTargets, 5
 	delay 12
-	create_flying_sand_crescents unknown=1
+	create_flying_sand_crescents anim_battler=ANIM_ATTACKER, unknown=1
 	end
 
 @ Also used by Hail weather
@@ -24687,7 +24687,7 @@ gBattleAnimMove_Sandstorm::
 	playsewithpan SE_M_SANDSTORM, SOUND_PAN_MIDDLE
 	createvisualtask AnimTask_LoadSandstormBackground, 5, FALSE
 	delay 16
-	create_flying_sand_crescents unknown=0
+	create_flying_sand_crescents anim_battler=ANIM_ATTACKER, unknown=0
 	end
 
 gBattleAnimMove_Whirlpool::
@@ -27514,11 +27514,11 @@ gBattleAnimMove_Overheat::
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_ATTACKER, 2, 0, 15, 1
 	waitforvisualfinish
 	playsewithpan SE_M_FLAME_WHEEL2, SOUND_PAN_ATTACKER
-	create_overheat_flames y=-20
+	create_overheat_flames anim_battler=ANIM_ATTACKER, y=-20
 	delay 5
-	create_overheat_flames y=0
+	create_overheat_flames anim_battler=ANIM_ATTACKER, y=0
 	delay 5
-	create_overheat_flames y=10
+	create_overheat_flames anim_battler=ANIM_ATTACKER, y=10
 	delay 5
 	waitforvisualfinish
 	create_basic_hitsplat_sprite ANIM_TARGET, 3, x=-5, y=3, relative_to=ANIM_TARGET, animation=0
@@ -29797,7 +29797,7 @@ FinishAcidDownpour:
 	blendoff
 	delay 32
 	loopsewithpan SE_M_BUBBLE3, SOUND_PAN_TARGET, 13, 3
-	create_particle_ring sprite=gAcidDownpourReversalSpriteTemplate
+	create_particle_ring sprite=gAcidDownpourReversalSpriteTemplate, anim_battler=ANIM_ATTACKER
 	delay 32
 	panse SE_M_WHIRLPOOL, SOUND_PAN_ATTACKER, SOUND_PAN_TARGET, 2, 0
 	create_surf_wave palette=ANIM_SURF_PAL_SLUDGE_WAVE
