@@ -2000,6 +2000,8 @@ static void Cmd_resultmessage(void)
         if (gMultiHitCounter && gMultiHitCounter < GetMoveStrikeCount(gCurrentMove))
         {
             gMultiHitCounter = 0;
+            gBattleStruct->moveDamage[gBattlerTarget] = 0;
+            gSpecialStatuses[gBattlerTarget].damagedByAttack = FALSE;
             *moveResultFlags &= ~MOVE_RESULT_MISSED;
             BattleScriptCall(BattleScript_MultiHitPrintStrings);
             return;
