@@ -4620,8 +4620,12 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_MiniorMeteor,              \
         .frontPicSize = MON_COORDS_SIZE(48, 40),            \
         .frontPicYOffset = 14,                              \
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,   \
-        .frontAnimId = ANIM_TUMBLING_FRONT_FLIP_TWICE,      \
+        .frontAnimFrames = ANIM_FRAMES(                     \
+            ANIMCMD_FRAME(0, 10),                           \
+            ANIMCMD_FRAME(1, 30),                           \
+            ANIMCMD_FRAME(0, 1),                            \
+        ),                                                  \
+        .frontAnimId = ANIM_BACK_FLIP_BIG,                  \ 
         .enemyMonElevation = 17,                            \
         .backPic = gMonBackPic_MiniorMeteor,                \
         .backPicSize = MON_COORDS_SIZE(56, 40),             \
@@ -4660,8 +4664,11 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_MiniorCore,                    \
         .frontPicSize = MON_COORDS_SIZE(48, 40),                \
         .frontPicYOffset = 16,                                  \
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,       \
-        .frontAnimId = ANIM_TUMBLING_FRONT_FLIP_TWICE,          \
+        .frontAnimFrames = ANIM_FRAMES(                         \
+            ANIMCMD_FRAME(0, 30),                               \
+            ANIMCMD_FRAME(1, 50),                               \
+            ANIMCMD_FRAME(0, 1),                                \
+        ),                                                      \
         .enemyMonElevation = 17,                                \
         .backPic = gMonBackPic_MiniorCore,                      \
         .backPicSize = MON_COORDS_SIZE(56, 40),                 \
