@@ -171,7 +171,7 @@ BattleFrontier_BattleFactoryLobby_EventScript_EnterChallenge_hns::
 	applymovement VAR_LAST_TALKED, BattleFrontier_BattleFactoryLobby_Movement_AttendantEnterDoor_hns
 	applymovement LOCALID_PLAYER, BattleFrontier_BattleFactoryLobby_Movement_PlayerEnterDoor_hns
 	waitmovement 0
-	warp MAP_BATTLE_FRONTIER_BATTLE_FACTORY_PRE_BATTLE_ROOM, 8, 13
+	warp MAP_BATTLE_FRONTIER_BATTLE_FACTORY_PRE_BATTLE_ROOM_HNS, 8, 13
 	setvar VAR_TEMP_CHALLENGE_STATUS, 0
 	waitstate
 	end

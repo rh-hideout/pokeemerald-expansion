@@ -37,7 +37,7 @@ BattleFrontier_BattleDomeCorridor_EventScript_WalkToBattleRoomLvOpen_hns::
 BattleFrontier_BattleDomeCorridor_EventScript_WarpToPreBattleRoom_hns::
 	waitmovement 0
 	setvar VAR_0x8006, 0
-	warp MAP_BATTLE_FRONTIER_BATTLE_DOME_PRE_BATTLE_ROOM, 5, 7
+	warp MAP_BATTLE_FRONTIER_BATTLE_DOME_PRE_BATTLE_ROOM_HNS, 5, 7
 	waitstate
 	end
 

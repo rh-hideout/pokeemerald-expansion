@@ -34,9 +34,9 @@ BattleFrontier_BattleTowerMultiCorridor_OnWarp_hns:
 	.2byte 0
 
 BattleFrontier_BattleTowerMultiCorridor_EventScript_SetUpObjects_hns::
-	hideobjectat LOCALID_PLAYER, MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_CORRIDOR
-	hideobjectat LOCALID_TOWER_MULTI_CORRIDOR_PLAYER, MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_CORRIDOR
-	hideobjectat LOCALID_TOWER_MULTI_CORRIDOR_PARTNER, MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_CORRIDOR
+	hideobjectat LOCALID_PLAYER, MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_CORRIDOR_HNS
+	hideobjectat LOCALID_TOWER_MULTI_CORRIDOR_PLAYER, MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_CORRIDOR_HNS
+	hideobjectat LOCALID_TOWER_MULTI_CORRIDOR_PARTNER, MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_CORRIDOR_HNS
 	special OffsetCameraForBattle
 	end
 
@@ -52,8 +52,8 @@ BattleFrontier_BattleTowerMultiCorridor_EventScript_EnterCorridor_hns::
 	opendoor 1, 1
 	waitdooranim
 	clearflag FLAG_ENABLE_MULTI_CORRIDOR_DOOR
-	showobjectat LOCALID_TOWER_MULTI_CORRIDOR_PLAYER, MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_CORRIDOR
-	showobjectat LOCALID_TOWER_MULTI_CORRIDOR_PARTNER, MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_CORRIDOR
+	showobjectat LOCALID_TOWER_MULTI_CORRIDOR_PLAYER, MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_CORRIDOR_HNS
+	showobjectat LOCALID_TOWER_MULTI_CORRIDOR_PARTNER, MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_CORRIDOR_HNS
 	applymovement LOCALID_TOWER_MULTI_CORRIDOR_PLAYER, BattleFrontier_BattleTowerMultiCorridor_Movement_ExitElevator_hns
 	applymovement LOCALID_TOWER_MULTI_CORRIDOR_PARTNER, BattleFrontier_BattleTowerMultiCorridor_Movement_ExitElevator_hns
 	waitmovement 0
@@ -95,18 +95,18 @@ BattleFrontier_BattleTowerMultiCorridor_EventScript_WarpToBattleRoom_hns::
 	return
 
 BattleFrontier_BattleTowerMultiCorridor_EventScript_WarpToNormalBattleRoom_hns::
-	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_BATTLE_ROOM, 4, 8
+	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_BATTLE_ROOM_HNS, 4, 8
 	waitstate
 	return
 
 BattleFrontier_BattleTowerMultiCorridor_EventScript_WarpToMultiBattleRoom_hns::
-	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_BATTLE_ROOM, 4, 5
+	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_BATTLE_ROOM_HNS, 4, 5
 	waitstate
 	return
 
 @ Unnecessary duplicate of the above
 BattleFrontier_BattleTowerMultiCorridor_EventScript_WarpToLinkMultiBattleRoom_hns::
-	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_BATTLE_ROOM, 4, 5
+	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_BATTLE_ROOM_HNS, 4, 5
 	waitstate
 	return
 

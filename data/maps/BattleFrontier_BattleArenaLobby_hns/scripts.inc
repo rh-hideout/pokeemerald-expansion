@@ -166,7 +166,7 @@ BattleFrontier_BattleArenaLobby_EventScript_EnterChallenge_hns::
 	frontier_get FRONTIER_DATA_LVL_MODE
 	call_if_eq VAR_RESULT, FRONTIER_LVL_50, BattleFrontier_BattleArenaLobby_EventScript_WalkToDoorLv50_hns
 	call_if_eq VAR_RESULT, FRONTIER_LVL_OPEN, BattleFrontier_BattleArenaLobby_EventScript_WalkToDoorLvOpen_hns
-	warp MAP_BATTLE_FRONTIER_BATTLE_ARENA_CORRIDOR, 9, 13
+	warp MAP_BATTLE_FRONTIER_BATTLE_ARENA_CORRIDOR_HNS, 9, 13
 	setvar VAR_TEMP_CHALLENGE_STATUS, 0
 	waitstate
 	end

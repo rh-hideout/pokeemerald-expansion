@@ -35,7 +35,7 @@ BattleFrontier_BattleTowerMultiBattleRoom_OnWarp_hns:
 	.2byte 0
 
 BattleFrontier_BattleTowerMultiBattleRoom_EventScript_HidePlayerObj_hns::
-	hideobjectat LOCALID_PLAYER, MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_BATTLE_ROOM
+	hideobjectat LOCALID_PLAYER, MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_BATTLE_ROOM_HNS
 	end
 
 BattleFrontier_BattleTowerMultiBattleRoom_OnFrame_hns:

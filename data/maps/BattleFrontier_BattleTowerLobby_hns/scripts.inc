@@ -613,7 +613,7 @@ BattleFrontier_BattleTowerLobby_EventScript_WaitForLinkOpponentLoad_hns::
 	goto_if_ne VAR_RESULT, 6, BattleFrontier_BattleTowerLobby_EventScript_WaitForLinkOpponentLoad_hns
 	call BattleFrontier_BattleTowerLobby_EventScript_ShowYouToBattleRoom_hns
 	clearflag FLAG_CANCEL_BATTLE_ROOM_CHALLENGE
-	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_ELEVATOR, 1, 6
+	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_ELEVATOR_HNS, 1, 6
 	setvar VAR_TEMP_CHALLENGE_STATUS, 0
 	waitstate
 	end

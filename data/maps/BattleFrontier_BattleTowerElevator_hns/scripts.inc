@@ -31,23 +31,23 @@ BattleFrontier_BattleTowerElevator_EventScript_WarpToNextRoom_hns::
 	return
 
 BattleFrontier_BattleTowerElevator_EventScript_WarpToCorridor_hns::
-	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_CORRIDOR, 8, 1
+	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_CORRIDOR_HNS, 8, 1
 	waitstate
 	return
 
 BattleFrontier_BattleTowerElevator_EventScript_WarpToNextRoom_hnsMulti_hns::
 	goto_if_unset FLAG_CHOSEN_MULTI_BATTLE_NPC_PARTNER, BattleFrontier_BattleTowerElevator_EventScript_WarpToPartnerRoom_hns
-	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_CORRIDOR, 7, 2
+	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_CORRIDOR_HNS, 7, 2
 	waitstate
 	return
 
 BattleFrontier_BattleTowerElevator_EventScript_WarpToCorridor_hnsMulti_hns::
-	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_CORRIDOR, 7, 2
+	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_CORRIDOR_HNS, 7, 2
 	waitstate
 	return
 
 BattleFrontier_BattleTowerElevator_EventScript_WarpToPartnerRoom_hns::
-	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_PARTNER_ROOM, 10, 1
+	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_MULTI_PARTNER_ROOM_HNS, 10, 1
 	waitstate
 	return
 

@@ -30,9 +30,9 @@ BattleFrontier_BattleFactoryBattleRoom_OnWarp_hns:
 
 BattleFrontier_BattleFactoryBattleRoom_EventScript_HideObjects_hns::
 	setvar VAR_TEMP_1, 1
-	hideobjectat LOCALID_PLAYER, MAP_BATTLE_FRONTIER_BATTLE_FACTORY_BATTLE_ROOM
+	hideobjectat LOCALID_PLAYER, MAP_BATTLE_FRONTIER_BATTLE_FACTORY_BATTLE_ROOM_HNS
 	goto_if_ne VAR_TEMP_F, FRONTIER_BRAIN_NOT_READY, BattleFrontier_BattleFactoryBattleRoom_EventScript_EndHideObjects_hns
-	hideobjectat LOCALID_FACTORY_BATTLE_OPPONENT, MAP_BATTLE_FRONTIER_BATTLE_FACTORY_BATTLE_ROOM
+	hideobjectat LOCALID_FACTORY_BATTLE_OPPONENT, MAP_BATTLE_FRONTIER_BATTLE_FACTORY_BATTLE_ROOM_HNS
 BattleFrontier_BattleFactoryBattleRoom_EventScript_EndHideObjects_hns::
 	end
 
@@ -103,7 +103,7 @@ BattleFrontier_BattleFactoryBattleRoom_EventScript_IncrementBattleNum_hns::
 	switch VAR_RESULT
 	case 7, BattleFrontier_BattleFactoryBattleRoom_EventScript_WarpToLobby_hnsWon_hns
 	setvar VAR_0x8006, 1
-	warp MAP_BATTLE_FRONTIER_BATTLE_FACTORY_PRE_BATTLE_ROOM, 8, 8
+	warp MAP_BATTLE_FRONTIER_BATTLE_FACTORY_PRE_BATTLE_ROOM_HNS, 8, 8
 	waitstate
 BattleFrontier_BattleFactoryBattleRoom_EventScript_WarpToLobby_hnsWon_hns::
 	frontier_set FRONTIER_DATA_CHALLENGE_STATUS, CHALLENGE_STATUS_WON
@@ -220,12 +220,12 @@ BattleFrontier_BattleFactoryBattleRoom_Movement_NolandMoveToBattle_hns:
 BattleFrontier_BattleFactoryBattleRoom_EventScript_WarpToLobby_hns::
 	copyvar VAR_RESULT, VAR_FRONTIER_BATTLE_MODE
 	goto_if_eq VAR_RESULT, FRONTIER_MODE_DOUBLES, BattleFrontier_BattleFactoryBattleRoom_EventScript_WarpToLobby_hnsDoubles_hns
-	warp MAP_BATTLE_FRONTIER_BATTLE_FACTORY_LOBBY, 4, 8
+	warp MAP_BATTLE_FRONTIER_BATTLE_FACTORY_LOBBY_HNS, 4, 8
 	waitstate
 	end
 
 BattleFrontier_BattleFactoryBattleRoom_EventScript_WarpToLobby_hnsDoubles_hns::
-	warp MAP_BATTLE_FRONTIER_BATTLE_FACTORY_LOBBY, 14, 8
+	warp MAP_BATTLE_FRONTIER_BATTLE_FACTORY_LOBBY_HNS, 14, 8
 	waitstate
 	end
 

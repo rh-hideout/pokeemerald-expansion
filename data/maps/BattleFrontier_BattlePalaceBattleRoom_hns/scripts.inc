@@ -36,7 +36,7 @@ BattleFrontier_BattlePalaceBattleRoom_OnFrame_hns:
 	.2byte 0
 
 BattleFrontier_BattlePalaceBattleRoom_EventScript_EnterRoom_hns::
-	showobjectat LOCALID_PALACE_BATTLE_PLAYER, MAP_BATTLE_FRONTIER_BATTLE_PALACE_BATTLE_ROOM
+	showobjectat LOCALID_PALACE_BATTLE_PLAYER, MAP_BATTLE_FRONTIER_BATTLE_PALACE_BATTLE_ROOM_HNS
 	frontier_get FRONTIER_DATA_BATTLE_NUM
 	goto_if_eq VAR_RESULT, 0, BattleFrontier_BattlePalaceBattleRoom_EventScript_BeginChallenge_hns
 	applymovement LOCALID_PALACE_BATTLE_PLAYER, BattleFrontier_BattlePalaceBattleRoom_Movement_PlayerReturnToChallenge_hns
@@ -195,7 +195,7 @@ BattleFrontier_BattlePalaceBattleRoom_EventScript_BattleSpenser_hns::
 	applymovement LOCALID_PALACE_BATTLE_ATTENDANT, BattleFrontier_BattlePalaceBattleRoom_Movement_FaceRight_hns
 	setobjectxyperm LOCALID_PALACE_BATTLE_OPPONENT, 15, 1
 	addobject LOCALID_PALACE_BATTLE_OPPONENT
-	hideobjectat LOCALID_PALACE_BATTLE_OPPONENT, MAP_BATTLE_FRONTIER_BATTLE_PALACE_BATTLE_ROOM
+	hideobjectat LOCALID_PALACE_BATTLE_OPPONENT, MAP_BATTLE_FRONTIER_BATTLE_PALACE_BATTLE_ROOM_HNS
 	setobjectxy LOCALID_PALACE_BATTLE_OPPONENT, 13, 1
 	setobjectxyperm LOCALID_PALACE_BATTLE_OPPONENT, 13, 1
 	applymovement LOCALID_PALACE_DUSCLOPS, BattleFrontier_BattlePalaceBattleRoom_Movement_DusclopsEnter_hns
@@ -286,7 +286,7 @@ BattleFrontier_BattlePalaceBattleRoom_OnWarp_hns:
 	.2byte 0
 
 BattleFrontier_BattlePalaceBattleRoom_EventScript_SetUpRoomObjects_hns::
-	hideobjectat LOCALID_PALACE_BATTLE_PLAYER, MAP_BATTLE_FRONTIER_BATTLE_PALACE_BATTLE_ROOM
+	hideobjectat LOCALID_PALACE_BATTLE_PLAYER, MAP_BATTLE_FRONTIER_BATTLE_PALACE_BATTLE_ROOM_HNS
 	call BattleFrontier_BattlePalaceBattleRoom_EventScript_SetPlayerGfx_hns
 	setvar VAR_TEMP_1, 1
 	applymovement LOCALID_PLAYER, BattleFrontier_BattlePalaceBattleRoom_Movement_SetInvisible_hns
@@ -392,12 +392,12 @@ BattleFrontier_BattlePalaceBattleRoom_Movement_UnusedOpponentEnter3_hns:
 BattleFrontier_BattlePalaceBattleRoom_EventScript_WarpToLobby_hns::
 	copyvar VAR_RESULT, VAR_FRONTIER_BATTLE_MODE
 	goto_if_eq VAR_RESULT, FRONTIER_MODE_DOUBLES, BattleFrontier_BattlePalaceBattleRoom_EventScript_WarpToLobby_hnsDoubles_hns
-	warp MAP_BATTLE_FRONTIER_BATTLE_PALACE_LOBBY, 5, 7
+	warp MAP_BATTLE_FRONTIER_BATTLE_PALACE_LOBBY_HNS, 5, 7
 	waitstate
 	end
 
 BattleFrontier_BattlePalaceBattleRoom_EventScript_WarpToLobby_hnsDoubles_hns::
-	warp MAP_BATTLE_FRONTIER_BATTLE_PALACE_LOBBY, 19, 7
+	warp MAP_BATTLE_FRONTIER_BATTLE_PALACE_LOBBY_HNS, 19, 7
 	waitstate
 	end
 

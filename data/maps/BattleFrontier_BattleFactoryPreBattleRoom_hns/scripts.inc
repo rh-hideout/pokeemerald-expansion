@@ -47,7 +47,7 @@ BattleFrontier_BattleFactoryPreBattleRoom_EventScript_EnterBattleRoom_hns::
 	call_if_eq VAR_RESULT, FRONTIER_LVL_50, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_WalkToBattleRoomLv50_hns
 	call_if_eq VAR_RESULT, FRONTIER_LVL_OPEN, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_WalkToBattleRoomLvOpen_hns
 	waitmovement 0
-	warp MAP_BATTLE_FRONTIER_BATTLE_FACTORY_BATTLE_ROOM, 6, 11
+	warp MAP_BATTLE_FRONTIER_BATTLE_FACTORY_BATTLE_ROOM_HNS, 6, 11
 	waitstate
 	end
 

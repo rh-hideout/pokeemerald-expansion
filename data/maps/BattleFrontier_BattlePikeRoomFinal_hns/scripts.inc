@@ -16,7 +16,7 @@ BattleFrontier_BattlePikeRoomFinal_EventScript_EnterRoom_hns::
 	msgbox BattleFrontier_BattlePikeRoomFinal_Text_CongratsThisWayPlease_hns, MSGBOX_DEFAULT
 	closemessage
 	releaseall
-	warp MAP_BATTLE_FRONTIER_BATTLE_PIKE_LOBBY, 5, 6
+	warp MAP_BATTLE_FRONTIER_BATTLE_PIKE_LOBBY_HNS, 5, 6
 	waitstate
 	end
 

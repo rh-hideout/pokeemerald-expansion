@@ -38,7 +38,7 @@ BattleFrontier_BattleArenaBattleRoom_OnFrame_hns:
 
 BattleFrontier_BattleArenaBattleRoom_EventScript_EnterRoom_hns::
 	lockall
-	showobjectat LOCALID_ARENA_BATTLE_PLAYER, MAP_BATTLE_FRONTIER_BATTLE_ARENA_BATTLE_ROOM
+	showobjectat LOCALID_ARENA_BATTLE_PLAYER, MAP_BATTLE_FRONTIER_BATTLE_ARENA_BATTLE_ROOM_HNS
 	applymovement LOCALID_ARENA_BATTLE_PLAYER, BattleFrontier_BattleArenaBattleRoom_Movement_PlayerEnter_hns
 	waitmovement 0
 	frontier_get FRONTIER_DATA_BATTLE_NUM
@@ -99,7 +99,7 @@ BattleFrontier_BattleArenaBattleRoom_EventScript_DeclareOpponentWinner_hns::
 	msgbox BattleFrontier_BattleArenaBattleRoom_Text_WinnerIsOpponent_hns, MSGBOX_DEFAULT
 BattleFrontier_BattleArenaBattleRoom_EventScript_WarpToLobbyLost_hns::
 	frontier_set FRONTIER_DATA_CHALLENGE_STATUS, CHALLENGE_STATUS_LOST
-	warp MAP_BATTLE_FRONTIER_BATTLE_ARENA_LOBBY, 7, 8
+	warp MAP_BATTLE_FRONTIER_BATTLE_ARENA_LOBBY_HNS, 7, 8
 	waitstate
 
 BattleFrontier_BattleArenaBattleRoom_EventScript_DefeatedOpponent_hns::
@@ -191,7 +191,7 @@ BattleFrontier_BattleArenaBattleRoom_EventScript_ContinueChallenge_hns::
 BattleFrontier_BattleArenaBattleRoom_EventScript_ReturnToLobbyWon_hns::
 	delay 60
 	frontier_set FRONTIER_DATA_CHALLENGE_STATUS, CHALLENGE_STATUS_WON
-	warp MAP_BATTLE_FRONTIER_BATTLE_ARENA_LOBBY, 7, 8
+	warp MAP_BATTLE_FRONTIER_BATTLE_ARENA_LOBBY_HNS, 7, 8
 	waitstate
 
 BattleFrontier_BattleArenaBattleRoom_EventScript_ReadyFor2ndOpponent_hns::
@@ -459,7 +459,7 @@ BattleFrontier_BattleArenaBattleRoom_OnWarp_hns:
 	.2byte 0
 
 BattleFrontier_BattleArenaBattleRoom_EventScript_SetUpRoomObjects_hns::
-	hideobjectat LOCALID_ARENA_BATTLE_PLAYER, MAP_BATTLE_FRONTIER_BATTLE_ARENA_BATTLE_ROOM
+	hideobjectat LOCALID_ARENA_BATTLE_PLAYER, MAP_BATTLE_FRONTIER_BATTLE_ARENA_BATTLE_ROOM_HNS
 	removeobject LOCALID_ARENA_BATTLE_OPPONENT
 	call BattleFrontier_BattleDomeBattleRoom_EventScript_SetPlayerGfx
 	applymovement LOCALID_PLAYER, BattleFrontier_BattleDomeBattleRoom_Movement_SetInvisible

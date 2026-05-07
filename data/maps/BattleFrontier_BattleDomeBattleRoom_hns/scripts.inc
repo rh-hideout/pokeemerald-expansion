@@ -50,7 +50,7 @@ BattleFrontier_BattleDomeBattleRoom_EventScript_EnterRoom_hns::
 	call BattleFrontier_BattleDomeBattleRoom_EventScript_AnnouncePlayer_hns
 	msgbox BattleFrontier_BattleDomeBattleRoom_Text_PlayerHasEnteredDome_hns, MSGBOX_DEFAULT
 	closemessage
-	showobjectat LOCALID_DOME_PLAYER, MAP_BATTLE_FRONTIER_BATTLE_DOME_BATTLE_ROOM
+	showobjectat LOCALID_DOME_PLAYER, MAP_BATTLE_FRONTIER_BATTLE_DOME_BATTLE_ROOM_HNS
 	goto_if_ne VAR_TEMP_F, DOME_FINAL, BattleFrontier_BattleDomeBattleRoom_EventScript_PlayerEnter_hns
 	goto_if_ne VAR_TEMP_E, FRONTIER_BRAIN_NOT_READY, BattleFrontier_BattleDomeBattleRoom_EventScript_PlayerEnter_hnsForTucker_hns
 BattleFrontier_BattleDomeBattleRoom_EventScript_PlayerEnter_hns::
@@ -149,7 +149,7 @@ BattleFrontier_BattleDomeBattleRoom_EventScript_DefeatedOpponent_hns::
 	switch VAR_RESULT
 	case DOME_ROUNDS_COUNT, BattleFrontier_BattleDomeBattleRoom_EventScript_WonTourney_hns
 	setvar VAR_0x8006, 1
-	warp MAP_BATTLE_FRONTIER_BATTLE_DOME_PRE_BATTLE_ROOM, 5, 3
+	warp MAP_BATTLE_FRONTIER_BATTLE_DOME_PRE_BATTLE_ROOM_HNS, 5, 3
 	waitstate
 
 BattleFrontier_BattleDomeBattleRoom_EventScript_WonTourney_hns::
@@ -459,7 +459,7 @@ BattleFrontier_BattleDomeBattleRoom_OnWarp_hns:
 	.2byte 0
 
 BattleFrontier_BattleDomeBattleRoom_EventScript_SetUpObjects_hns::
-	hideobjectat LOCALID_DOME_PLAYER, MAP_BATTLE_FRONTIER_BATTLE_DOME_BATTLE_ROOM
+	hideobjectat LOCALID_DOME_PLAYER, MAP_BATTLE_FRONTIER_BATTLE_DOME_BATTLE_ROOM_HNS
 	call BattleFrontier_BattleDomeBattleRoom_EventScript_AddAudience_hns
 	call BattleFrontier_BattleDomeBattleRoom_EventScript_SetPlayerGfx_hns
 	setvar VAR_TEMP_1, 1
@@ -853,12 +853,12 @@ BattleFrontier_BattleDomeBattleRoom_EventScript_AudienceLookAround_hns::
 BattleFrontier_BattleDomeBattleRoom_EventScript_WarpToLobby_hns::
 	copyvar VAR_RESULT, VAR_FRONTIER_BATTLE_MODE
 	goto_if_eq VAR_RESULT, FRONTIER_MODE_DOUBLES, BattleFrontier_BattleDomePreBattleRoom_EventScript_WarpToLobbyDoubles_hns
-	warp MAP_BATTLE_FRONTIER_BATTLE_DOME_LOBBY, 5, 11
+	warp MAP_BATTLE_FRONTIER_BATTLE_DOME_LOBBY_HNS, 5, 11
 	waitstate
 	end
 
 BattleFrontier_BattleDomePreBattleRoom_EventScript_WarpToLobbyDoubles_hns::
-	warp MAP_BATTLE_FRONTIER_BATTLE_DOME_LOBBY, 17, 11
+	warp MAP_BATTLE_FRONTIER_BATTLE_DOME_LOBBY_HNS, 17, 11
 	waitstate
 	end
 

@@ -406,23 +406,23 @@ BattleFrontier_BattleTowerBattleRoom_EventScript_WarpToLobby_hns::
 	goto_if_eq VAR_RESULT, FRONTIER_MODE_DOUBLES, BattleFrontier_BattleTowerBattleRoom_EventScript_WarpToLobby_hnsDoubles_hns
 	goto_if_eq VAR_RESULT, FRONTIER_MODE_MULTIS, BattleFrontier_BattleTowerBattleRoom_EventScript_WarpToLobby_hnsMultis_hns
 	goto_if_eq VAR_RESULT, FRONTIER_MODE_LINK_MULTIS, BattleFrontier_BattleTowerBattleRoom_EventScript_WarpToLobby_hnsLinkMultis_hns
-	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY, 6, 6
+	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY_HNS, 6, 6
 	waitstate
 	end
 
 BattleFrontier_BattleTowerBattleRoom_EventScript_WarpToLobby_hnsDoubles_hns::
-	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY, 10, 6
+	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY_HNS, 10, 6
 	waitstate
 	end
 
 BattleFrontier_BattleTowerBattleRoom_EventScript_WarpToLobby_hnsMultis_hns::
-	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY, 14, 6
+	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY_HNS, 14, 6
 	waitstate
 	end
 
 BattleFrontier_BattleTowerBattleRoom_EventScript_WarpToLobby_hnsLinkMultis_hns::
 	tower_closelink
-	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY, 18, 6
+	warp MAP_BATTLE_FRONTIER_BATTLE_TOWER_LOBBY_HNS, 18, 6
 	waitstate
 	end
 

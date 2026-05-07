@@ -83,7 +83,7 @@ BattleFrontier_BattlePyramidTop_EventScript_Attendant_hns::
 	closemessage
 BattleFrontier_BattlePyramidTop_EventScript_WarpToLobbyWon_hns::
 	frontier_set FRONTIER_DATA_CHALLENGE_STATUS, CHALLENGE_STATUS_WON
-	warp MAP_BATTLE_FRONTIER_BATTLE_PYRAMID_LOBBY, 7, 13
+	warp MAP_BATTLE_FRONTIER_BATTLE_PYRAMID_LOBBY_HNS, 7, 13
 	waitstate
 	end
 

@@ -37,7 +37,7 @@ BattleFrontier_BattlePikeRoomNormal_EventScript_EnterSingleBattleRoom_hns::
 	case 1, BattleFrontier_BattlePikeRoomNormal_EventScript_WonSingleBattle_hns
 BattleFrontier_BattlePikeRoomNormal_EventScript_WarpToLobbyLost_hns::
 	frontier_set FRONTIER_DATA_CHALLENGE_STATUS, CHALLENGE_STATUS_LOST
-	warp MAP_BATTLE_FRONTIER_BATTLE_PIKE_LOBBY, 5, 6
+	warp MAP_BATTLE_FRONTIER_BATTLE_PIKE_LOBBY_HNS, 5, 6
 	waitstate
 	end
 
@@ -114,7 +114,7 @@ BattleFrontier_BattlePikeRoomNormal_EventScript_LucyEnter_hns::
 	playse SE_PIKE_CURTAIN_OPEN
 	delay 65
 	call BattleFrontier_BattlePikeRoomNormal_EventScript_SetCurtainTilesMostlyClosed_hns
-	showobjectat LOCALID_PIKE_ROOM_NPC_1, MAP_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_NORMAL
+	showobjectat LOCALID_PIKE_ROOM_NPC_1, MAP_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_NORMAL_HNS
 	delay 4
 	call BattleFrontier_BattlePikeRoomNormal_EventScript_SetCurtainTilesLittleClosed_hns
 	delay 4

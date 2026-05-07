@@ -45,7 +45,7 @@ BattleFrontier_BattlePalaceCorridor_EventScript_WalkToOpenBattleRoom_hns::
 	closedoor 10, 3
 	waitdooranim
 BattleFrontier_BattlePalaceCorridor_EventScript_WarpToBattleRoom_hns::
-	warp MAP_BATTLE_FRONTIER_BATTLE_PALACE_BATTLE_ROOM, 7, 4
+	warp MAP_BATTLE_FRONTIER_BATTLE_PALACE_BATTLE_ROOM_HNS, 7, 4
 	waitstate
 	end
 

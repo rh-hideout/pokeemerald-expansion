@@ -26,7 +26,7 @@ BattleFrontier_BattlePikeThreePathRoom_EventScript_GetChallengeStatus_hns::
 	end
 
 BattleFrontier_BattlePikeThreePathRoom_EventScript_WarpToLobby_hns::
-	warp MAP_BATTLE_FRONTIER_BATTLE_PIKE_LOBBY, 5, 6
+	warp MAP_BATTLE_FRONTIER_BATTLE_PIKE_LOBBY_HNS, 5, 6
 	waitstate
 	end
 
