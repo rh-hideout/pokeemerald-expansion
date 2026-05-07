@@ -20,13 +20,13 @@ FallarborTown_BattleTentBattleRoom_hns_EventScript_SetPlayerGfx::
 	return
 
 FallarborTown_BattleTentBattleRoom_hns_EventScript_SetPlayerGfxMale::
-	setvar VAR_OBJ_GFX_ID_1, OBJ_EVENT_GFX_RIVAL_BRENDAN_NORMAL
-	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_RIVAL_BRENDAN_NORMAL
+	setvar VAR_OBJ_GFX_ID_1, OBJ_EVENT_GFX_GOLD_NORMAL_HNS
+	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_GOLD_NORMAL_HNS
 	return
 
 FallarborTown_BattleTentBattleRoom_hns_EventScript_SetPlayerGfxFemale::
-	setvar VAR_OBJ_GFX_ID_1, OBJ_EVENT_GFX_RIVAL_MAY_NORMAL
-	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_RIVAL_MAY_NORMAL
+	setvar VAR_OBJ_GFX_ID_1, OBJ_EVENT_GFX_KRIS_NORMAL_HNS
+	setvar VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_KRIS_NORMAL_HNS
 	return
 
 FallarborTown_BattleTentBattleRoom_hns_OnFrame:

@@ -19,11 +19,11 @@ SlateportCity_BattleTentBattleRoom_hns_EventScript_SetPlayerGfx::
 	return
 
 SlateportCity_BattleTentBattleRoom_hns_EventScript_SetPlayerGfxMale::
-	setvar VAR_OBJ_GFX_ID_1, OBJ_EVENT_GFX_RIVAL_BRENDAN_NORMAL
+	setvar VAR_OBJ_GFX_ID_1, OBJ_EVENT_GFX_GOLD_NORMAL_HNS
 	return
 
 SlateportCity_BattleTentBattleRoom_hns_EventScript_SetPlayerGfxFemale::
-	setvar VAR_OBJ_GFX_ID_1, OBJ_EVENT_GFX_RIVAL_MAY_NORMAL
+	setvar VAR_OBJ_GFX_ID_1, OBJ_EVENT_GFX_KRIS_NORMAL_HNS
 	return
 
 SlateportCity_BattleTentBattleRoom_hns_OnWarp:

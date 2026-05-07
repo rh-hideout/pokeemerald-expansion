@@ -19,11 +19,11 @@ BattleFrontier_BattleTowerMultiBattleRoom_EventScript_SetObjGfx_hns::
 	tower_setpartnergfx
 	checkplayergender
 	goto_if_eq VAR_RESULT, FEMALE, BattleFrontier_BattleTowerMultiBattleRoom_EventScript_SetPlayerGfxFemale_hns
-	setvar VAR_OBJ_GFX_ID_F, OBJ_EVENT_GFX_BRENDAN_NORMAL
+	setvar VAR_OBJ_GFX_ID_F, OBJ_EVENT_GFX_GOLD_NORMAL_HNS
 	return
 
 BattleFrontier_BattleTowerMultiBattleRoom_EventScript_SetPlayerGfxFemale_hns::
-	setvar VAR_OBJ_GFX_ID_F, OBJ_EVENT_GFX_MAY_NORMAL
+	setvar VAR_OBJ_GFX_ID_F, OBJ_EVENT_GFX_KRIS_NORMAL_HNS
 	return
 
 BattleFrontier_BattleTowerMultiBattleRoom_EventScript_SetLinkPlayerGfx_hns::
