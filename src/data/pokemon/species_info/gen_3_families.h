@@ -6745,7 +6745,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         FOOTPRINT(Wailord)
         OVERWORLD(
             sPicTable_Wailord,
-            SIZE_64x64,
+            SIZE_32x32,
             SHADOW_SIZE_M,
             TRACKS_NONE,
             sAnimTable_Following,

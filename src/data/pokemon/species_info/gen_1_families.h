@@ -12500,7 +12500,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         FOOTPRINT(Steelix)
         OVERWORLD(
             sPicTable_Steelix,
-            SIZE_64x64,
+            SIZE_32x32,
             SHADOW_SIZE_M,
             TRACKS_SLITHER,
             sAnimTable_Following,
@@ -12509,7 +12509,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         )
         OVERWORLD_FEMALE(
             sPicTable_SteelixF,
-            SIZE_64x64,
+            SIZE_32x32,
             SHADOW_SIZE_M,
             TRACKS_SLITHER,
             sAnimTable_Following
