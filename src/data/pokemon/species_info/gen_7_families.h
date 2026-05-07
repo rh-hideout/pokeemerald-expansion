@@ -4625,11 +4625,11 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
             ANIMCMD_FRAME(1, 30),                           \
             ANIMCMD_FRAME(0, 1),                            \
         ),                                                  \
-        .frontAnimId = ANIM_BACK_FLIP_BIG,                  \ 
+        .frontAnimId = ANIM_BACK_FLIP_BIG,                  \
         .enemyMonElevation = 17,                            \
         .backPic = gMonBackPic_MiniorMeteor,                \
         .backPicSize = MON_COORDS_SIZE(56, 40),             \
-        .backPicYOffset = 14,                               \
+        .backPicYOffset = 13,                               \
         /*.backAnimId = BACK_ANIM_NONE,*/                   \
         .palette = gMonPalette_MiniorMeteor,                \
         .shinyPalette = gMonShinyPalette_MiniorMeteor,      \
@@ -4672,7 +4672,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .enemyMonElevation = 17,                                \
         .backPic = gMonBackPic_MiniorCore,                      \
         .backPicSize = MON_COORDS_SIZE(56, 40),                 \
-        .backPicYOffset = 15,                                   \
+        .backPicYOffset = 11,                                   \
         /*.backAnimId = BACK_ANIM_NONE,*/                       \
         .palette = gMonPalette_MiniorCore##Form,                \
         .shinyPalette = gMonShinyPalette_MiniorCore,            \
