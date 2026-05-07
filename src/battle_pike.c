@@ -267,151 +267,251 @@ static const struct PikeWildMon *const *const sWildMons[2] =
 static const struct PikeRoomNPC sNPCTable[] =
 {
     {
+#if IS_HNS
+        .graphicsId = OBJ_EVENT_GFX_WOMAN_1_HNS,
+#else
         .graphicsId = OBJ_EVENT_GFX_POKEFAN_F,
+#endif
         .speechId1 = 3,
         .speechId2 = 5,
         .speechId3 = 6
     },
     {
+#if IS_HNS
+        .graphicsId = OBJ_EVENT_GFX_BUG_CATCHER_HNS,
+#else
         .graphicsId = OBJ_EVENT_GFX_NINJA_BOY,
+#endif
         .speechId1 = 13,
         .speechId2 = 32,
         .speechId3 = 37
     },
     {
+#if IS_HNS
+        .graphicsId = OBJ_EVENT_GFX_FAT_MAN_HNS,
+#else
         .graphicsId = OBJ_EVENT_GFX_FAT_MAN,
+#endif
         .speechId1 = 8,
         .speechId2 = 11,
         .speechId3 = 12
     },
     {
+#if IS_HNS
+        .graphicsId = OBJ_EVENT_GFX_BUG_CATCHER_HNS,
+#else
         .graphicsId = OBJ_EVENT_GFX_BUG_CATCHER,
+#endif
         .speechId1 = 34,
         .speechId2 = 30,
         .speechId3 = 33
     },
     {
+#if IS_HNS
+        .graphicsId = OBJ_EVENT_GFX_COOLTRAINER_M_HNS,
+#else
         .graphicsId = OBJ_EVENT_GFX_EXPERT_M,
+#endif
         .speechId1 = 0,
         .speechId2 = 0,
         .speechId3 = 0
     },
     {
+#if IS_HNS
+        .graphicsId = OBJ_EVENT_GFX_OLD_WOMAN_HNS,
+#else
         .graphicsId = OBJ_EVENT_GFX_OLD_WOMAN,
+#endif
         .speechId1 = 1,
         .speechId2 = 1,
         .speechId3 = 1
     },
     {
+#if IS_HNS
+        .graphicsId = OBJ_EVENT_GFX_BLACK_BELT_HNS,
+#else
         .graphicsId = OBJ_EVENT_GFX_BLACK_BELT,
+#endif
         .speechId1 = 22,
         .speechId2 = 23,
         .speechId3 = 27
     },
     {
+#if IS_HNS
+        .graphicsId = OBJ_EVENT_GFX_HIKER_HNS,
+#else
         .graphicsId = OBJ_EVENT_GFX_HIKER,
+#endif
         .speechId1 = 8,
         .speechId2 = 22,
         .speechId3 = 31
     },
     {
+#if IS_HNS
+        .graphicsId = OBJ_EVENT_GFX_GIRL_1_HNS,
+#else
         .graphicsId = OBJ_EVENT_GFX_GIRL_3,
+#endif
         .speechId1 = 13,
         .speechId2 = 39,
         .speechId3 = 21
     },
     {
+#if IS_HNS
+        .graphicsId = OBJ_EVENT_GFX_WOMAN_2_HNS,
+#else
         .graphicsId = OBJ_EVENT_GFX_WOMAN_2,
+#endif
         .speechId1 = 2,
         .speechId2 = 4,
         .speechId3 = 17
     },
     {
+#if IS_HNS
+        .graphicsId = OBJ_EVENT_GFX_BIKER_HNS,
+#else
         .graphicsId = OBJ_EVENT_GFX_CYCLING_TRIATHLETE_M,
+#endif
         .speechId1 = 30,
         .speechId2 = 20,
         .speechId3 = 36
     },
     {
+#if IS_HNS
+        .graphicsId = OBJ_EVENT_GFX_GENTLEMAN_HNS,
+#else
         .graphicsId = OBJ_EVENT_GFX_MAN_5,
+#endif
         .speechId1 = 28,
         .speechId2 = 34,
         .speechId3 = 25
     },
     {
+#if IS_HNS
+        .graphicsId = OBJ_EVENT_GFX_YOUNGSTER_HNS,
+#else
         .graphicsId = OBJ_EVENT_GFX_SCHOOL_KID_M,
+#endif
         .speechId1 = 23,
         .speechId2 = 38,
         .speechId3 = 26
     },
     {
+#if IS_HNS
+        .graphicsId = OBJ_EVENT_GFX_FISHERMAN_HNS,
+#else
         .graphicsId = OBJ_EVENT_GFX_FISHERMAN,
+#endif
         .speechId1 = 23,
         .speechId2 = 30,
         .speechId3 = 11
     },
     {
+#if IS_HNS
+        .graphicsId = OBJ_EVENT_GFX_LASS_HNS,
+#else
         .graphicsId = OBJ_EVENT_GFX_LASS,
+#endif
         .speechId1 = 15,
         .speechId2 = 19,
         .speechId3 = 14
     },
     {
+#if IS_HNS
+        .graphicsId = OBJ_EVENT_GFX_SUPER_NERD_HNS,
+#else
         .graphicsId = OBJ_EVENT_GFX_MANIAC,
+#endif
         .speechId1 = 2,
         .speechId2 = 29,
         .speechId3 = 26
     },
     {
+#if IS_HNS
+        .graphicsId = OBJ_EVENT_GFX_COOLTRAINER_M_HNS,
+#else
         .graphicsId = OBJ_EVENT_GFX_RUNNING_TRIATHLETE_M,
+#endif
         .speechId1 = 37,
         .speechId2 = 12,
         .speechId3 = 32
     },
     {
+#if IS_HNS
+        .graphicsId = OBJ_EVENT_GFX_MAN_HNS,
+#else
         .graphicsId = OBJ_EVENT_GFX_MAN_3,
+#endif
         .speechId1 = 24,
         .speechId2 = 23,
         .speechId3 = 38
     },
     {
+#if IS_HNS
+        .graphicsId = OBJ_EVENT_GFX_WOMAN_3_HNS,
+#else
         .graphicsId = OBJ_EVENT_GFX_WOMAN_3,
+#endif
         .speechId1 = 5,
         .speechId2 = 22,
         .speechId3 = 4
     },
     {
+#if IS_HNS
+        .graphicsId = OBJ_EVENT_GFX_LITTLE_BOY_HNS,
+#else
         .graphicsId = OBJ_EVENT_GFX_LITTLE_BOY,
+#endif
         .speechId1 = 41,
         .speechId2 = 37,
         .speechId3 = 35
     },
     {
+#if IS_HNS
+        .graphicsId = OBJ_EVENT_GFX_TUBER_F_HNS,
+#else
         .graphicsId = OBJ_EVENT_GFX_TUBER_F,
+#endif
         .speechId1 = 39,
         .speechId2 = 14,
         .speechId3 = 13
     },
     {
+#if IS_HNS
+        .graphicsId = OBJ_EVENT_GFX_GENTLEMAN_HNS,
+#else
         .graphicsId = OBJ_EVENT_GFX_GENTLEMAN,
+#endif
         .speechId1 = 10,
         .speechId2 = 7,
         .speechId3 = 9
     },
     {
+#if IS_HNS
+        .graphicsId = OBJ_EVENT_GFX_LITTLE_GIRL_HNS,
+#else
         .graphicsId = OBJ_EVENT_GFX_LITTLE_GIRL,
+#endif
         .speechId1 = 40,
         .speechId2 = 20,
         .speechId3 = 16
     },
     {
+#if IS_HNS
+        .graphicsId = OBJ_EVENT_GFX_COOLTRAINER_F_HNS,
+#else
         .graphicsId = OBJ_EVENT_GFX_RUNNING_TRIATHLETE_F,
+#endif
         .speechId1 = 18,
         .speechId2 = 13,
         .speechId3 = 21
     },
     {
+#if IS_HNS
+        .graphicsId = OBJ_EVENT_GFX_MAN_HNS,
+#else
         .graphicsId = OBJ_EVENT_GFX_MAN_1,
+#endif
         .speechId1 = 22,
         .speechId2 = 31,
         .speechId3 = 27
@@ -556,8 +656,13 @@ static void SetupRoomObjectEvents(void)
     u32 objGfx1;
     u16 objGfx2;
 
+#if IS_HNS
+    VarSet(VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_LINK_RECEPTIONIST_HNS);
+    VarSet(VAR_OBJ_GFX_ID_1, OBJ_EVENT_GFX_DUSCLOPS);
+#else
     VarSet(VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_LINK_RECEPTIONIST);
     VarSet(VAR_OBJ_GFX_ID_1, OBJ_EVENT_GFX_DUSCLOPS);
+#endif
     setObjGfx1 = TRUE;
     setObjGfx2 = FALSE;
     objGfx1 = 0;
@@ -570,28 +675,48 @@ static void SetupRoomObjectEvents(void)
         setObjGfx1 = FALSE;
         break;
     case PIKE_ROOM_HEAL_FULL:
+#if IS_HNS
+        objGfx1 = OBJ_EVENT_GFX_LINK_RECEPTIONIST_HNS;
+#else
         objGfx1 = OBJ_EVENT_GFX_LINK_RECEPTIONIST;
+#endif
         break;
     case PIKE_ROOM_NPC:
-        objGfx1 = (u8)(GetNPCRoomGraphicsId());
+        objGfx1 = GetNPCRoomGraphicsId();
         break;
     case PIKE_ROOM_STATUS:
+#if IS_HNS
+        objGfx1 = OBJ_EVENT_GFX_GENTLEMAN_HNS;
+        if (sStatusMon == PIKE_STATUSMON_DUSCLOPS)
+            objGfx2 = OBJ_EVENT_GFX_DUSCLOPS;
+        else
+            objGfx2 = OBJ_EVENT_GFX_KIRLIA;
+#else
         objGfx1 = OBJ_EVENT_GFX_GENTLEMAN;
         if (sStatusMon == PIKE_STATUSMON_DUSCLOPS)
             objGfx2 = OBJ_EVENT_GFX_DUSCLOPS;
         else
             objGfx2 = OBJ_EVENT_GFX_KIRLIA;
+#endif
         setObjGfx2 = TRUE;
         break;
     case PIKE_ROOM_HEAL_PART:
+#if IS_HNS
+        objGfx1 = OBJ_EVENT_GFX_GENTLEMAN_HNS;
+#else
         objGfx1 = OBJ_EVENT_GFX_GENTLEMAN;
+#endif
         break;
     case PIKE_ROOM_WILD_MONS:
         setObjGfx1 = FALSE;
         break;
     case PIKE_ROOM_HARD_BATTLE:
         PrepareOneTrainer(TRUE);
+#if IS_HNS
+        objGfx2 = OBJ_EVENT_GFX_LINK_RECEPTIONIST_HNS;
+#else
         objGfx2 = OBJ_EVENT_GFX_LINK_RECEPTIONIST;
+#endif
         setObjGfx1 = FALSE;
         setObjGfx2 = TRUE;
         break;
@@ -601,7 +726,11 @@ static void SetupRoomObjectEvents(void)
         break;
     case PIKE_ROOM_BRAIN:
         SetFrontierBrainObjEventGfx(FRONTIER_FACILITY_PIKE);
+#if IS_HNS
+        objGfx2 = OBJ_EVENT_GFX_LINK_RECEPTIONIST_HNS;
+#else
         objGfx2 = OBJ_EVENT_GFX_LINK_RECEPTIONIST;
+#endif
         setObjGfx1 = FALSE;
         setObjGfx2 = TRUE;
         break;

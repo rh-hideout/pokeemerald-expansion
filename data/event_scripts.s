@@ -483,6 +483,7 @@ gStdScripts_End::
 	.include "data/maps/SSTidalLowerDeck/scripts.inc"
 	.include "data/maps/SSTidalRooms/scripts.inc"
 	.include "data/maps/BattlePyramidSquare01/scripts.inc"
+	.include "data/maps/BattlePyramidSquare01_hns/scripts.inc"
 	.include "data/maps/UnionRoom/scripts.inc"
 	.include "data/maps/SafariZone_Northwest/scripts.inc"
 	.include "data/maps/SafariZone_North/scripts.inc"

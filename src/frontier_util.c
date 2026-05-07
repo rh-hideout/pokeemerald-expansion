@@ -57,7 +57,7 @@ struct FrontierBrainMon
 struct FrontierBrain
 {
     u16 trainerId;
-    u8 objEventGfx;
+    u16 objEventGfx;
     u8 isFemale;
     const u8 *lostTexts[2];
     const u8 *wonTexts[2];
@@ -109,7 +109,11 @@ const struct FrontierBrain gFrontierBrainInfo[NUM_FRONTIER_FACILITIES] =
     [FRONTIER_FACILITY_TOWER] =
     {
         .trainerId = TRAINER_ANABEL,
+#if IS_HNS
+        .objEventGfx = OBJ_EVENT_GFX_ANABEL_HNS,
+#else
         .objEventGfx = OBJ_EVENT_GFX_ANABEL,
+#endif
         .isFemale = TRUE,
         .lostTexts = {
             COMPOUND_STRING("Okay, I understand…"), //Silver
@@ -125,7 +129,11 @@ const struct FrontierBrain gFrontierBrainInfo[NUM_FRONTIER_FACILITIES] =
     [FRONTIER_FACILITY_DOME] =
     {
         .trainerId = TRAINER_TUCKER,
+#if IS_HNS
+        .objEventGfx = OBJ_EVENT_GFX_TUCKER_HNS,
+#else
         .objEventGfx = OBJ_EVENT_GFX_TUCKER,
+#endif
         .isFemale = FALSE,
         .lostTexts = {
             COMPOUND_STRING(
@@ -147,7 +155,11 @@ const struct FrontierBrain gFrontierBrainInfo[NUM_FRONTIER_FACILITIES] =
     [FRONTIER_FACILITY_PALACE] =
     {
         .trainerId = TRAINER_SPENSER,
+#if IS_HNS
+        .objEventGfx = OBJ_EVENT_GFX_SPENSER_HNS,
+#else
         .objEventGfx = OBJ_EVENT_GFX_SPENSER,
+#endif
         .isFemale = FALSE,
         .lostTexts = {
             COMPOUND_STRING(
@@ -171,7 +183,11 @@ const struct FrontierBrain gFrontierBrainInfo[NUM_FRONTIER_FACILITIES] =
     [FRONTIER_FACILITY_ARENA] =
     {
         .trainerId = TRAINER_GRETA,
+#if IS_HNS
+        .objEventGfx = OBJ_EVENT_GFX_GRETA_HNS,
+#else
         .objEventGfx = OBJ_EVENT_GFX_GRETA,
+#endif
         .isFemale = TRUE,
         .lostTexts = {
             COMPOUND_STRING(
@@ -195,7 +211,11 @@ const struct FrontierBrain gFrontierBrainInfo[NUM_FRONTIER_FACILITIES] =
     [FRONTIER_FACILITY_FACTORY] =
     {
         .trainerId = TRAINER_NOLAND,
+#if IS_HNS
+        .objEventGfx = OBJ_EVENT_GFX_NOLAND_HNS,
+#else
         .objEventGfx = OBJ_EVENT_GFX_NOLAND,
+#endif
         .isFemale = FALSE,
         .lostTexts = {
             COMPOUND_STRING(
@@ -217,7 +237,11 @@ const struct FrontierBrain gFrontierBrainInfo[NUM_FRONTIER_FACILITIES] =
     [FRONTIER_FACILITY_PIKE] =
     {
         .trainerId = TRAINER_LUCY,
+#if IS_HNS
+        .objEventGfx = OBJ_EVENT_GFX_LUCY_HNS,
+#else
         .objEventGfx = OBJ_EVENT_GFX_LUCY,
+#endif
         .isFemale = TRUE,
         .lostTexts = {
             COMPOUND_STRING("Urk…"), //Silver
@@ -233,7 +257,11 @@ const struct FrontierBrain gFrontierBrainInfo[NUM_FRONTIER_FACILITIES] =
     [FRONTIER_FACILITY_PYRAMID] =
     {
         .trainerId = TRAINER_BRANDON,
+#if IS_HNS
+        .objEventGfx = OBJ_EVENT_GFX_BRANDON_HNS,
+#else
         .objEventGfx = OBJ_EVENT_GFX_BRANDON,
+#endif
         .isFemale = FALSE,
         .lostTexts = {
             COMPOUND_STRING(
@@ -2875,7 +2903,7 @@ void SetBattleFacilityTrainerGfxId(u16 trainerId, u8 tempVarId)
 {
     u32 i;
     u8 facilityClass;
-    u8 trainerObjectGfxId;
+    u16 trainerObjectGfxId;
 
     SetFacilityPtrsGetLevel();
 #if FREE_BATTLE_TOWER_E_READER == FALSE
@@ -2956,13 +2984,25 @@ void SetBattleFacilityTrainerGfxId(u16 trainerId, u8 tempVarId)
     {
     case 0:
     default:
+    #if IS_HNS
+        VarSet(VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_YOUNGSTER_HNS);
+    #else
         VarSet(VAR_OBJ_GFX_ID_0, OBJ_EVENT_GFX_BOY_1);
+    #endif
         return;
     case 1:
+    #if IS_HNS
+        VarSet(VAR_OBJ_GFX_ID_1, OBJ_EVENT_GFX_YOUNGSTER_HNS);
+    #else
         VarSet(VAR_OBJ_GFX_ID_1, OBJ_EVENT_GFX_BOY_1);
+    #endif
         return;
     case 15:
+    #if IS_HNS
+        VarSet(VAR_OBJ_GFX_ID_E, OBJ_EVENT_GFX_YOUNGSTER_HNS);
+    #else
         VarSet(VAR_OBJ_GFX_ID_E, OBJ_EVENT_GFX_BOY_1);
+    #endif
         return;
     }
 }
@@ -3020,7 +3060,11 @@ u16 GetBattleFacilityTrainerGfxId(u16 trainerId)
     }
     else
     {
+    #if IS_HNS
+        return OBJ_EVENT_GFX_YOUNGSTER_HNS;
+    #else
         return OBJ_EVENT_GFX_BOY_1;
+    #endif
     }
 }
 
@@ -3336,7 +3380,11 @@ u16 FacilityClassToGraphicsId(u8 facilityClass)
     }
     else
     {
+    #if IS_HNS
+        return OBJ_EVENT_GFX_YOUNGSTER_HNS;
+    #else
         return OBJ_EVENT_GFX_BOY_1;
+    #endif
     }
 }
 
