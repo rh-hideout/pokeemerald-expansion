@@ -82,7 +82,7 @@ def main():
     generate_enums(lines)
     generate_table(lines)
 
-    print("Generated files enums.h and table.h in the migration_scripts/1.17/trainer_pic_migration folder.")
+    print("Generated files enums.h and table.h in the migration_scripts/1.16/trainer_pic_migration folder.")
     print("The script output requires to be manually added.")
     print("Inline (copy over) the content of the files to the right locations")
 
