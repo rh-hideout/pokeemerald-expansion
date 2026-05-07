@@ -1,9 +1,9 @@
 {
-  "id": "MAP_LILYCOVE_CITY_CONTEST_HALL",
-  "name": "LilycoveCity_ContestHall",
-  "layout": "LAYOUT_LILYCOVE_CITY_CONTEST_HALL",
+  "id": "MAP_LILYCOVE_CITY_CONTEST_HALL_HNS",
+  "name": "LilycoveCity_ContestHall_hns",
+  "layout": "LAYOUT_LILYCOVE_CITY_CONTEST_HALL_HNS",
   "music": "MUS_CONTEST_LOBBY",
-  "region_map_section": "MAPSEC_LILYCOVE_CITY",
+  "region_map_section": "MAPSEC_VIRIDIAN_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
   "map_type": "MAP_TYPE_INDOOR",
@@ -15,7 +15,7 @@
   "connections": null,
   "object_events": [
     {
-      "graphics_id": "OBJ_EVENT_GFX_BOY_1",
+      "graphics_id": "OBJ_EVENT_GFX_OLD_MAN_2_HNS",
       "x": 30,
       "y": 30,
       "elevation": 3,
@@ -24,11 +24,11 @@
       "movement_range_y": 4,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_Boy1",
+      "script": "LilycoveCity_ContestHall_EventScript_Boy1_hns",
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BOY_3",
+      "graphics_id": "OBJ_EVENT_GFX_WORKER_M_HNS",
       "x": 11,
       "y": 7,
       "elevation": 3,
@@ -37,11 +37,11 @@
       "movement_range_y": 3,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_Boy2",
+      "script": "LilycoveCity_ContestHall_EventScript_Boy2_hns",
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_GIRL_3",
+      "graphics_id": "OBJ_EVENT_GFX_PICNICKER_HNS",
       "x": 40,
       "y": 8,
       "elevation": 3,
@@ -50,12 +50,12 @@
       "movement_range_y": 2,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_Girl",
+      "script": "LilycoveCity_ContestHall_EventScript_Girl_hns",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_SMART_MC",
-      "graphics_id": "OBJ_EVENT_GFX_WOMAN_3",
+      "graphics_id": "OBJ_EVENT_GFX_WOMAN_2_HNS",
       "x": 12,
       "y": 22,
       "elevation": 3,
@@ -64,12 +64,12 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_SmartContestMC",
+      "script": "LilycoveCity_ContestHall_EventScript_SmartContestMC_hns",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_SMART_JUDGE",
-      "graphics_id": "OBJ_EVENT_GFX_CONTEST_JUDGE",
+      "graphics_id": "OBJ_EVENT_GFX_GENTLEMAN_HNS",
       "x": 15,
       "y": 22,
       "elevation": 3,
@@ -78,12 +78,12 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_SmartContestJudge",
+      "script": "LilycoveCity_ContestHall_EventScript_SmartContestJudge_hns",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_SMART_CONTESTANT_1",
-      "graphics_id": "OBJ_EVENT_GFX_BLACK_BELT",
+      "graphics_id": "OBJ_EVENT_GFX_BLACK_BELT_HNS",
       "x": 10,
       "y": 25,
       "elevation": 3,
@@ -92,12 +92,12 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_SmartContestant1",
+      "script": "LilycoveCity_ContestHall_EventScript_SmartContestant1_hns",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_SMART_CONTESTANT_2",
-      "graphics_id": "OBJ_EVENT_GFX_EXPERT_M",
+      "graphics_id": "OBJ_EVENT_GFX_OLD_MAN_HNS",
       "x": 12,
       "y": 25,
       "elevation": 3,
@@ -106,12 +106,12 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_SmartContestant2",
+      "script": "LilycoveCity_ContestHall_EventScript_SmartContestant2_hns",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_SMART_CONTESTANT_3",
-      "graphics_id": "OBJ_EVENT_GFX_MANIAC",
+      "graphics_id": "OBJ_EVENT_GFX_SUPER_NERD_HNS",
       "x": 14,
       "y": 25,
       "elevation": 3,
@@ -120,12 +120,12 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_SmartContestant3",
+      "script": "LilycoveCity_ContestHall_EventScript_SmartContestant3_hns",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_SMART_CONTESTANT_4",
-      "graphics_id": "OBJ_EVENT_GFX_LINK_RECEPTIONIST",
+      "graphics_id": "OBJ_EVENT_GFX_LINK_RECEPTIONIST_HNS",
       "x": 16,
       "y": 25,
       "elevation": 3,
@@ -134,11 +134,11 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_SmartContestant4",
+      "script": "LilycoveCity_ContestHall_EventScript_SmartContestant4_hns",
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_EXPERT_F",
+      "graphics_id": "OBJ_EVENT_GFX_OLD_WOMAN_HNS",
       "x": 8,
       "y": 24,
       "elevation": 3,
@@ -147,12 +147,12 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_SmartContestAudience1",
+      "script": "LilycoveCity_ContestHall_EventScript_SmartContestAudience1_hns",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_SMART_AUDIENCE_4",
-      "graphics_id": "OBJ_EVENT_GFX_WOMAN_5",
+      "graphics_id": "OBJ_EVENT_GFX_WORKER_F_HNS",
       "x": 18,
       "y": 24,
       "elevation": 3,
@@ -161,12 +161,12 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_SmartContestAudience4",
+      "script": "LilycoveCity_ContestHall_EventScript_SmartContestAudience4_hns",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_SMART_AUDIENCE_2",
-      "graphics_id": "OBJ_EVENT_GFX_BOY_1",
+      "graphics_id": "OBJ_EVENT_GFX_OLD_MAN_2_HNS",
       "x": 8,
       "y": 22,
       "elevation": 3,
@@ -175,12 +175,12 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_SmartContestAudience2",
+      "script": "LilycoveCity_ContestHall_EventScript_SmartContestAudience2_hns",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_BEAUTY_MC",
-      "graphics_id": "OBJ_EVENT_GFX_WOMAN_3",
+      "graphics_id": "OBJ_EVENT_GFX_WOMAN_2_HNS",
       "x": 24,
       "y": 10,
       "elevation": 3,
@@ -189,12 +189,12 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_BeautyContestMC",
+      "script": "LilycoveCity_ContestHall_EventScript_BeautyContestMC_hns",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_BEAUTY_JUDGE",
-      "graphics_id": "OBJ_EVENT_GFX_CONTEST_JUDGE",
+      "graphics_id": "OBJ_EVENT_GFX_GENTLEMAN_HNS",
       "x": 27,
       "y": 10,
       "elevation": 3,
@@ -203,12 +203,12 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_BeautyContestJudge",
+      "script": "LilycoveCity_ContestHall_EventScript_BeautyContestJudge_hns",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_BEAUTY_CONTESTANT_1",
-      "graphics_id": "OBJ_EVENT_GFX_WOMAN_4",
+      "graphics_id": "OBJ_EVENT_GFX_LASS_HNS",
       "x": 22,
       "y": 13,
       "elevation": 3,
@@ -217,12 +217,12 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_BeautyContestant1",
+      "script": "LilycoveCity_ContestHall_EventScript_BeautyContestant1_hns",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_BEAUTY_CONTESTANT_2",
-      "graphics_id": "OBJ_EVENT_GFX_TWIN",
+      "graphics_id": "OBJ_EVENT_GFX_TWIN_HNS",
       "x": 24,
       "y": 13,
       "elevation": 3,
@@ -231,12 +231,12 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_BeautyContestant2",
+      "script": "LilycoveCity_ContestHall_EventScript_BeautyContestant2_hns",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_BEAUTY_CONTESTANT_3",
-      "graphics_id": "OBJ_EVENT_GFX_PSYCHIC_M",
+      "graphics_id": "OBJ_EVENT_GFX_COOLTRAINER_M_HNS",
       "x": 26,
       "y": 13,
       "elevation": 3,
@@ -245,12 +245,12 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_BeautyContestant3",
+      "script": "LilycoveCity_ContestHall_EventScript_BeautyContestant3_hns",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_BEAUTY_CONTESTANT_4",
-      "graphics_id": "OBJ_EVENT_GFX_POKEFAN_F",
+      "graphics_id": "OBJ_EVENT_GFX_BEAUTY_HNS",
       "x": 28,
       "y": 13,
       "elevation": 3,
@@ -259,12 +259,12 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_BeautyContestant4",
+      "script": "LilycoveCity_ContestHall_EventScript_BeautyContestant4_hns",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_BEAUTY_AUDIENCE_1",
-      "graphics_id": "OBJ_EVENT_GFX_WOMAN_2",
+      "graphics_id": "OBJ_EVENT_GFX_WOMAN_2_HNS",
       "x": 20,
       "y": 10,
       "elevation": 3,
@@ -273,12 +273,12 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_BeautyContestAudience1",
+      "script": "LilycoveCity_ContestHall_EventScript_BeautyContestAudience1_hns",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_BEAUTY_AUDIENCE_3",
-      "graphics_id": "OBJ_EVENT_GFX_WOMAN_1",
+      "graphics_id": "OBJ_EVENT_GFX_WOMAN_3_HNS",
       "x": 30,
       "y": 11,
       "elevation": 3,
@@ -287,12 +287,12 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_BeautyContestAudience3",
+      "script": "LilycoveCity_ContestHall_EventScript_BeautyContestAudience3_hns",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_BEAUTY_AUDIENCE_2",
-      "graphics_id": "OBJ_EVENT_GFX_MAN_1",
+      "graphics_id": "OBJ_EVENT_GFX_BALDING_MAN_HNS",
       "x": 26,
       "y": 8,
       "elevation": 3,
@@ -301,12 +301,12 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_BeautyContestAudience2",
+      "script": "LilycoveCity_ContestHall_EventScript_BeautyContestAudience2_hns",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_SMART_AUDIENCE_3",
-      "graphics_id": "OBJ_EVENT_GFX_CAMPER",
+      "graphics_id": "OBJ_EVENT_GFX_CAMPER_HNS",
       "x": 13,
       "y": 20,
       "elevation": 3,
@@ -315,12 +315,12 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_SmartContestAudience3",
+      "script": "LilycoveCity_ContestHall_EventScript_SmartContestAudience3_hns",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_CUTE_MC",
-      "graphics_id": "OBJ_EVENT_GFX_WOMAN_3",
+      "graphics_id": "OBJ_EVENT_GFX_WOMAN_2_HNS",
       "x": 36,
       "y": 22,
       "elevation": 3,
@@ -329,12 +329,12 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_CuteContestMC",
+      "script": "LilycoveCity_ContestHall_EventScript_CuteContestMC_hns",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_CUTE_JUDGE",
-      "graphics_id": "OBJ_EVENT_GFX_CONTEST_JUDGE",
+      "graphics_id": "OBJ_EVENT_GFX_GENTLEMAN_HNS",
       "x": 39,
       "y": 22,
       "elevation": 3,
@@ -343,12 +343,12 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_CuteContestJudge",
+      "script": "LilycoveCity_ContestHall_EventScript_CuteContestJudge_hns",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_CUTE_CONTESTANT_1",
-      "graphics_id": "OBJ_EVENT_GFX_BOY_2",
+      "graphics_id": "OBJ_EVENT_GFX_BOY_2_HNS",
       "x": 34,
       "y": 25,
       "elevation": 3,
@@ -357,12 +357,12 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_CuteContestant1",
+      "script": "LilycoveCity_ContestHall_EventScript_CuteContestant1_hns",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_CUTE_CONTESTANT_2",
-      "graphics_id": "OBJ_EVENT_GFX_GIRL_2",
+      "graphics_id": "OBJ_EVENT_GFX_SAGE_HNS",
       "x": 36,
       "y": 25,
       "elevation": 3,
@@ -371,12 +371,12 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_CuteContestant2",
+      "script": "LilycoveCity_ContestHall_EventScript_CuteContestant2_hns",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_CUTE_CONTESTANT_3",
-      "graphics_id": "OBJ_EVENT_GFX_BOY_3",
+      "graphics_id": "OBJ_EVENT_GFX_WORKER_M_HNS",
       "x": 38,
       "y": 25,
       "elevation": 3,
@@ -385,12 +385,12 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_CuteContestant3",
+      "script": "LilycoveCity_ContestHall_EventScript_CuteContestant3_hns",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_CUTE_CONTESTANT_4",
-      "graphics_id": "OBJ_EVENT_GFX_EXPERT_F",
+      "graphics_id": "OBJ_EVENT_GFX_OLD_WOMAN_HNS",
       "x": 40,
       "y": 25,
       "elevation": 3,
@@ -399,12 +399,12 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_CuteContestant4",
+      "script": "LilycoveCity_ContestHall_EventScript_CuteContestant4_hns",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_CUTE_AUDIENCE_1",
-      "graphics_id": "OBJ_EVENT_GFX_WOMAN_2",
+      "graphics_id": "OBJ_EVENT_GFX_WOMAN_2_HNS",
       "x": 32,
       "y": 23,
       "elevation": 3,
@@ -413,12 +413,12 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_CuteContestAudience1",
+      "script": "LilycoveCity_ContestHall_EventScript_CuteContestAudience1_hns",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_CUTE_AUDIENCE_3",
-      "graphics_id": "OBJ_EVENT_GFX_MAN_1",
+      "graphics_id": "OBJ_EVENT_GFX_BALDING_MAN_HNS",
       "x": 37,
       "y": 20,
       "elevation": 3,
@@ -427,12 +427,12 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_CuteContestAudience3",
+      "script": "LilycoveCity_ContestHall_EventScript_CuteContestAudience3_hns",
       "flag": "0"
     },
     {
       "local_id": "LOCALID_CUTE_AUDIENCE_2",
-      "graphics_id": "OBJ_EVENT_GFX_LITTLE_GIRL",
+      "graphics_id": "OBJ_EVENT_GFX_LITTLE_GIRL_HNS",
       "x": 42,
       "y": 24,
       "elevation": 3,
@@ -441,11 +441,11 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_CuteContestAudience2",
+      "script": "LilycoveCity_ContestHall_EventScript_CuteContestAudience2_hns",
       "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_SAILOR",
+      "graphics_id": "OBJ_EVENT_GFX_SAILOR_HNS",
       "x": 23,
       "y": 26,
       "elevation": 3,
@@ -454,7 +454,7 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_ContestHall_EventScript_Sailor",
+      "script": "LilycoveCity_ContestHall_EventScript_Sailor_hns",
       "flag": "0"
     }
   ],
@@ -463,28 +463,28 @@
       "x": 19,
       "y": 32,
       "elevation": 0,
-      "dest_map": "MAP_LILYCOVE_CITY_CONTEST_LOBBY",
+      "dest_map": "MAP_LILYCOVE_CITY_CONTEST_LOBBY_HNS",
       "dest_warp_id": "2"
     },
     {
       "x": 30,
       "y": 32,
       "elevation": 0,
-      "dest_map": "MAP_LILYCOVE_CITY_CONTEST_LOBBY",
+      "dest_map": "MAP_LILYCOVE_CITY_CONTEST_LOBBY_HNS",
       "dest_warp_id": "3"
     },
     {
       "x": 20,
       "y": 32,
       "elevation": 0,
-      "dest_map": "MAP_LILYCOVE_CITY_CONTEST_LOBBY",
+      "dest_map": "MAP_LILYCOVE_CITY_CONTEST_LOBBY_HNS",
       "dest_warp_id": "2"
     },
     {
       "x": 31,
       "y": 32,
       "elevation": 0,
-      "dest_map": "MAP_LILYCOVE_CITY_CONTEST_LOBBY",
+      "dest_map": "MAP_LILYCOVE_CITY_CONTEST_LOBBY_HNS",
       "dest_warp_id": "3"
     }
   ],
@@ -496,7 +496,7 @@
       "y": 16,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "LilycoveCity_ContestHall_EventScript_BeautyStageSign"
+      "script": "LilycoveCity_ContestHall_EventScript_BeautyStageSign_hns"
     },
     {
       "type": "sign",
@@ -504,7 +504,7 @@
       "y": 28,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "LilycoveCity_ContestHall_EventScript_CuteStageSign"
+      "script": "LilycoveCity_ContestHall_EventScript_CuteStageSign_hns"
     },
     {
       "type": "sign",
@@ -512,7 +512,7 @@
       "y": 28,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "LilycoveCity_ContestHall_EventScript_SmartStageSign"
+      "script": "LilycoveCity_ContestHall_EventScript_SmartStageSign_hns"
     },
     {
       "type": "sign",
@@ -520,7 +520,7 @@
       "y": 28,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "LilycoveCity_ContestHall_EventScript_SmartStageSign"
+      "script": "LilycoveCity_ContestHall_EventScript_SmartStageSign_hns"
     },
     {
       "type": "sign",
@@ -528,7 +528,7 @@
       "y": 16,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "LilycoveCity_ContestHall_EventScript_BeautyStageSign"
+      "script": "LilycoveCity_ContestHall_EventScript_BeautyStageSign_hns"
     },
     {
       "type": "sign",
@@ -536,8 +536,8 @@
       "y": 28,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "LilycoveCity_ContestHall_EventScript_CuteStageSign"
+      "script": "LilycoveCity_ContestHall_EventScript_CuteStageSign_hns"
     }
   ],
-  "game_version": "emerald"
+  "game_version": "hns"
 }

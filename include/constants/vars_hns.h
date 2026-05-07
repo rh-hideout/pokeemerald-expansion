@@ -19,6 +19,7 @@
 #define VAR_HAS_ENTERED_BATTLE_FRONTIER                  0x40D0
 #define VAR_SCOTT_STATE                                  0x40D1
 #define VAR_TRAINER_HILL_IS_ACTIVE                       0x40D6
+#define VAR_LILYCOVE_CONTEST_LOBBY_STATE                            0x4099
 
 // HnS-unique vars
 #define VAR_1                                            0x4050
@@ -88,14 +89,13 @@
 #define VAR_VIOLET_CITY_STATE                            0x4091
 
 // Unused HnS vars
-#define VAR_TIME_BASED_ENCOUNTER                            0x4092
-#define VAR_CELADON_CITY_STATE                            0x4093
+#define VAR_TIME_BASED_ENCOUNTER                         0x4092
+#define VAR_CELADON_CITY_STATE                           0x4093
 #define VAR_PALLET_TOWN_STATE                            0x4094
-#define VAR_VIRIDIAN_CITY_STATE                            0x4095
-#define VAR_LAVENDER_TOWN_STATE                            0x4096
+#define VAR_VIRIDIAN_CITY_STATE                          0x4095
+#define VAR_LAVENDER_TOWN_STATE                          0x4096
 #define VAR_UNUSED_HNS_0x4097                            0x4097
 #define VAR_UNUSED_HNS_0x4098                            0x4098
-#define VAR_UNUSED_HNS_0x4099                            0x4099
 #define VAR_UNUSED_HNS_0x409A                            0x409A
 #define VAR_UNUSED_HNS_0x409B                            0x409B
 #define VAR_UNUSED_HNS_0x409C                            0x409C

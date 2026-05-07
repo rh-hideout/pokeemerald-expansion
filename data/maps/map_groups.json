@@ -641,7 +641,21 @@
     "BattleFrontier_Lounge9_hns",
     "BattleFrontier_PokemonCenter_1F_hns",
     "BattleFrontier_PokemonCenter_2F_hns",
-    "BattleFrontier_Mart_hns"
+    "BattleFrontier_Mart_hns",
+    "ContestHall_hns",
+    "ContestHallBeauty_hns",
+    "ContestHallCool_hns",
+    "ContestHallCute_hns",
+    "ContestHallSmart_hns",
+    "ContestHallTough_hns",
+    "LilycoveCity_ContestHall_hns",
+    "LilycoveCity_ContestLobby_hns",
+    "UnusedContestHall1_hns",
+    "UnusedContestHall2_hns",
+    "UnusedContestHall3_hns",
+    "UnusedContestHall4_hns",
+    "UnusedContestHall5_hns",
+    "UnusedContestHall6_hns"
   ],
   "gMapGroup_TownsAndRoutes": [
     "PetalburgCity",

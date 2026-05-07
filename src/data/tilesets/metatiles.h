@@ -53,6 +53,9 @@ const u16 gMetatileAttributes_BattleFrontierRankingHall[] = INCBIN_U16("data/til
 const u16 gMetatiles_BattleFrontier[] = INCBIN_U16("data/tilesets/secondary/battle_frontier/metatiles.bin");
 const u16 gMetatileAttributes_BattleFrontier[] = INCBIN_U16("data/tilesets/secondary/battle_frontier/metatile_attributes.bin");
 
+const u16 gMetatiles_Contest[] = INCBIN_U16("data/tilesets/secondary/contest/metatiles.bin");
+const u16 gMetatileAttributes_Contest[] = INCBIN_U16("data/tilesets/secondary/contest/metatile_attributes.bin");
+
 #if !IS_FRLG && !IS_HNS
 
 const u16 gMetatiles_Petalburg[] = INCBIN_U16("data/tilesets/secondary/petalburg/metatiles.bin");
@@ -130,9 +133,6 @@ const u16 gMetatileAttributes_RusturfTunnel[] = INCBIN_U16("data/tilesets/second
 
 const u16 gMetatiles_InsideOfTruck[] = INCBIN_U16("data/tilesets/secondary/inside_of_truck/metatiles.bin");
 const u16 gMetatileAttributes_InsideOfTruck[] = INCBIN_U16("data/tilesets/secondary/inside_of_truck/metatile_attributes.bin");
-
-const u16 gMetatiles_Contest[] = INCBIN_U16("data/tilesets/secondary/contest/metatiles.bin");
-const u16 gMetatileAttributes_Contest[] = INCBIN_U16("data/tilesets/secondary/contest/metatile_attributes.bin");
 
 const u16 gMetatiles_LilycoveMuseum[] = INCBIN_U16("data/tilesets/secondary/lilycove_museum/metatiles.bin");
 const u16 gMetatileAttributes_LilycoveMuseum[] = INCBIN_U16("data/tilesets/secondary/lilycove_museum/metatile_attributes.bin");
