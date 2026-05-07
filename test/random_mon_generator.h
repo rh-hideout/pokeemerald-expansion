@@ -3,6 +3,7 @@ enum
     SPECIES_GENERATOR_FILTERED_POOL = SPECIES_RANDOMLY_GENERATED_START,
     SPECIES_GENERATOR_MYTHICAL_FILTER,
     SPECIES_GENERATOR_BST_FILTER,
+    SPECIES_GENERATOR_FORM_FILTER,
     SPECIES_GENERATOR_END,
 };
 
@@ -37,6 +38,16 @@ static const enum Species sRandomSpeciesOption2SpeciesPool[] =
     SPECIES_WOBBUFFET,
     SPECIES_MEW,
 };
+
+static const enum Species sRandomSpeciesOption3SpeciesPool[] =
+{
+    SPECIES_ROTOM,
+};
+
+static bool32 IsSpeciesRotomHeat(enum Species species)
+{
+    return species == SPECIES_ROTOM_HEAT;
+}
 
 static const enum Item sRandomItemOption0HeldItemPool[] =
 {
@@ -99,6 +110,18 @@ static const struct RandomSpeciesGeneratorOptions sRandomSpeciesGeneratorOptions
         .allowParadox = FALSE,
         .randomizeForms = FALSE,
         .filterFunc = IsSpeciesAllowedByRandomBstVars,
+    },
+    [SPECIES_OPTION(SPECIES_GENERATOR_FORM_FILTER)] =
+    {
+        .speciesPool = sRandomSpeciesOption3SpeciesPool,
+        .speciesPoolCount = ARRAY_COUNT(sRandomSpeciesOption3SpeciesPool),
+        .allowLegendary = FALSE,
+        .allowMythical = FALSE,
+        .allowSubLegendary = FALSE,
+        .allowUltraBeast = FALSE,
+        .allowParadox = FALSE,
+        .randomizeForms = TRUE,
+        .filterFunc = IsSpeciesRotomHeat,
     },
 };
 

@@ -46,14 +46,13 @@ struct RandomItemGeneratorOptions
 };
 
 static enum Species GetRandomMonSpecies(u32 optionId);
-static enum Species GetRandomMonFormSpecies(enum Species species);
+static enum Species GetRandomMonFormSpecies(enum Species species, const struct RandomSpeciesGeneratorOptions *options);
 static bool32 IsSpeciesAllowedByRandomBstVars(enum Species species);
 static u32 GetRandomMonSpeciesPoolSize(const struct RandomSpeciesGeneratorOptions *options);
 static enum Species GetRandomMonSpeciesAtIndex(const struct RandomSpeciesGeneratorOptions *options, u32 index);
 static enum Species SlowPickRandomMonSpecies(const struct RandomSpeciesGeneratorOptions *options, u32 poolSize);
 static enum Species FastPickRandomMonSpecies(const struct RandomSpeciesGeneratorOptions *options, u32 poolSize);
 static enum Item GetRandomMonHeldItem(u32 optionId);
-static u32 GetRandomMonHeldItemPoolSize(const struct RandomItemGeneratorOptions *options);
 static enum Item GetRandomMonHeldItemAtIndex(const struct RandomItemGeneratorOptions *options, u32 index);
 static enum Item SlowPickRandomMonHeldItem(const struct RandomItemGeneratorOptions *options, u32 poolSize);
 static enum Item FastPickRandomMonHeldItem(const struct RandomItemGeneratorOptions *options, u32 poolSize);
@@ -61,10 +60,10 @@ static enum PokeBall GetRandomMonBall(void);
 static enum Species ResolveRandomMonSpecies(enum Species species);
 static enum Item ResolveRandomMonItem(enum Item item);
 static enum PokeBall ResolveRandomMonBall(enum PokeBall ball);
-static bool32 ShouldSwapRandomMonMoves(enum Move moveA, enum Move moveB);
-static void SortRandomMonMoves(enum Move *moves);
-static bool32 IsMoveInRandomMonMoveset(enum Move move, enum Move *moves, u32 count);
-static bool32 HasRandomMonTeachableMoveCandidate(const u16 *teachableLearnset, u32 teachableCount, enum Move *moves, u32 count);
+static bool32 IsRandomMonSpeciesCandidateAllowed(enum Species species, const struct RandomSpeciesGeneratorOptions *options);
+static bool32 MoveOrder(u16 moveA, u16 moveB);
+static void SortMoves(enum Move *moves);
+static bool32 IsMoveInMoveset(enum Move move, enum Move *moves, u32 count);
 static void ResolveRandomMonMoves(enum Species species, enum Move *moves);
 
 #if TESTING
@@ -73,25 +72,12 @@ static void ResolveRandomMonMoves(enum Species species, enum Move *moves);
 #include "data/random_mon_generator.h"
 #endif
 
-static u16 GetSpeciesBaseStatTotal(enum Species species)
-{
-    const struct SpeciesInfo *speciesInfo = &gSpeciesInfo[species];
-
-    return speciesInfo->baseHP
-         + speciesInfo->baseAttack
-         + speciesInfo->baseDefense
-         + speciesInfo->baseSpeed
-         + speciesInfo->baseSpAttack
-         + speciesInfo->baseSpDefense;
-}
-
 static bool32 IsSpeciesBannedByRandomMonOptions(enum Species species, const struct RandomSpeciesGeneratorOptions *options)
 {
-    u32 i;
     enum Species baseSpecies = GET_BASE_SPECIES_ID(species);
-    const struct SpeciesInfo *speciesInfo = &gSpeciesInfo[baseSpecies];
+    const struct SpeciesInfo *speciesInfo = &gSpeciesInfo[species];
 
-    for (i = 0; i < options->bannedSpeciesCount; i++)
+    for (u32 i = 0; i < options->bannedSpeciesCount; i++)
     {
         if (baseSpecies == GET_BASE_SPECIES_ID(options->bannedSpecies[i]))
             return TRUE;
@@ -128,9 +114,6 @@ static bool32 IsSpeciesAllowedByRandomBstVars(enum Species species)
     u16 minBst;
     u16 maxBst;
 
-    if (bstStandard < 100)
-        return TRUE;
-
     minBst = (bstStandard > bstLeniency) ? bstStandard - bstLeniency : 0;
     maxBst = bstStandard + bstLeniency;
 
@@ -151,42 +134,12 @@ static u32 GetRandomMonSpeciesPoolSize(const struct RandomSpeciesGeneratorOption
 static enum Species GetRandomMonSpeciesAtIndex(const struct RandomSpeciesGeneratorOptions *options, u32 index)
 {
     if (options->speciesPool != NULL && options->speciesPoolCount != 0)
-        return GET_BASE_SPECIES_ID(options->speciesPool[index]);
+        return options->speciesPool[index];
 
     if (options->dexMode == RANDOM_MON_DEX_HOENN)
         return NationalPokedexNumToSpecies(HoennToNationalOrder(index + 1));
 
     return NationalPokedexNumToSpecies(index + 1);
-}
-
-static enum Species GetFirstValidRandomMonSpecies(const struct RandomSpeciesGeneratorOptions *options)
-{
-    u32 i;
-
-    if (options->speciesPool != NULL && options->speciesPoolCount != 0)
-    {
-        for (i = 0; i < options->speciesPoolCount; i++)
-        {
-            enum Species species = GET_BASE_SPECIES_ID(options->speciesPool[i]);
-            if (!IsSpeciesBannedByRandomMonOptions(species, options))
-                return species;
-        }
-    }
-    else
-    {
-        u32 maxDex = (options->dexMode == RANDOM_MON_DEX_HOENN) ? HOENN_DEX_COUNT - 1 : NATIONAL_DEX_COUNT;
-        for (i = 1; i <= maxDex; i++)
-        {
-            enum Species species = (options->dexMode == RANDOM_MON_DEX_HOENN)
-                ? NationalPokedexNumToSpecies(HoennToNationalOrder(i))
-                : NationalPokedexNumToSpecies(i);
-
-            if (!IsSpeciesBannedByRandomMonOptions(species, options))
-                return species;
-        }
-    }
-
-    return SPECIES_BULBASAUR;
 }
 
 static bool32 IsRandomMonFormTableException(enum Species species)
@@ -207,13 +160,11 @@ static bool32 IsRandomMonFormTableException(enum Species species)
 
 static bool32 IsSpeciesInRandomMonFormChangeTables(enum Species species, const u16 *formTable)
 {
-    u32 i, j;
-
-    for (i = 0; formTable[i] != FORM_SPECIES_END; i++)
+    for (u32 i = 0; formTable[i] != FORM_SPECIES_END; i++)
     {
         const struct FormChange *formChanges = GetSpeciesFormChanges(formTable[i]);
 
-        for (j = 0; formChanges != NULL && formChanges[j].method != FORM_CHANGE_TERMINATOR; j++)
+        for (u32 j = 0; formChanges != NULL && formChanges[j].method != FORM_CHANGE_TERMINATOR; j++)
         {
             if (formChanges[j].targetSpecies == species)
                 return TRUE;
@@ -225,13 +176,11 @@ static bool32 IsSpeciesInRandomMonFormChangeTables(enum Species species, const u
 
 static bool32 IsSpeciesInRandomMonFusionTables(enum Species species, const u16 *formTable)
 {
-    u32 i, j;
-
-    for (i = 0; formTable[i] != FORM_SPECIES_END; i++)
+    for (u32 i = 0; formTable[i] != FORM_SPECIES_END; i++)
     {
         const struct Fusion *fusionTable = gFusionTablePointers[formTable[i]];
 
-        for (j = 0; fusionTable != NULL && fusionTable[j].fusionStorageIndex != FUSION_TERMINATOR; j++)
+        for (u32 j = 0; fusionTable != NULL && fusionTable[j].fusionStorageIndex != FUSION_TERMINATOR; j++)
         {
             if (fusionTable[j].targetSpecies1 == species
              || fusionTable[j].targetSpecies2 == species
@@ -281,9 +230,8 @@ static bool32 IsRandomMonFormAllowed(enum Species species, const u16 *formTable)
         && !speciesInfo->isPrimalReversion;
 }
 
-static enum Species GetRandomMonFormSpecies(enum Species species)
+static enum Species GetRandomMonFormSpecies(enum Species species, const struct RandomSpeciesGeneratorOptions *options)
 {
-    u32 i;
     u32 eligibleFormCount = 0;
     enum Species eligibleForms[NUM_SPECIES];
     const u16 *formTable;
@@ -293,9 +241,10 @@ static enum Species GetRandomMonFormSpecies(enum Species species)
     if (formTable == NULL)
         return species;
 
-    for (i = 0; formTable[i] != FORM_SPECIES_END; i++)
+    for (u32 i = 0; formTable[i] != FORM_SPECIES_END; i++)
     {
-        if (IsRandomMonFormAllowed(formTable[i], formTable))
+        if (IsRandomMonFormAllowed(formTable[i], formTable)
+         && !IsSpeciesBannedByRandomMonOptions(formTable[i], options))
         {
             eligibleForms[eligibleFormCount] = formTable[i];
             eligibleFormCount++;
@@ -306,6 +255,28 @@ static enum Species GetRandomMonFormSpecies(enum Species species)
         return species;
 
     return eligibleForms[RandomUniform(RNG_RANDOM_MON_GEN, 0, eligibleFormCount - 1)];
+}
+
+static bool32 IsRandomMonSpeciesCandidateAllowed(enum Species species, const struct RandomSpeciesGeneratorOptions *options)
+{
+    const u16 *formTable;
+
+    if (!options->randomizeForms)
+        return !IsSpeciesBannedByRandomMonOptions(species, options);
+
+    formTable = GetSpeciesFormTable(species);
+
+    if (formTable == NULL)
+        return !IsSpeciesBannedByRandomMonOptions(species, options);
+
+    for (u32 i = 0; formTable[i] != FORM_SPECIES_END; i++)
+    {
+        if (IsRandomMonFormAllowed(formTable[i], formTable)
+         && !IsSpeciesBannedByRandomMonOptions(formTable[i], options))
+            return TRUE;
+    }
+
+    return FALSE;
 }
 
 static enum Species GetRandomMonSpecies(u32 optionId)
@@ -320,21 +291,20 @@ static enum Species GetRandomMonSpecies(u32 optionId)
         species = FastPickRandomMonSpecies(options, poolSize);
 
     if (options->randomizeForms)
-        species = GetRandomMonFormSpecies(species);
+        species = GetRandomMonFormSpecies(species, options);
 
     return species;
 }
 
 static enum Species SlowPickRandomMonSpecies(const struct RandomSpeciesGeneratorOptions *options, u32 poolSize)
 {
-    u32 i;
     u32 eligibleSpeciesCount = 0;
     enum Species eligibleSpecies[MAX_EXHAUSTIVE_SEARCH_POOL_SIZE];
 
-    for (i = 0; i < poolSize; i++)
+    for (u32 i = 0; i < poolSize; i++)
     {
         enum Species species = GetRandomMonSpeciesAtIndex(options, i);
-        if (!IsSpeciesBannedByRandomMonOptions(species, options))
+        if (IsRandomMonSpeciesCandidateAllowed(species, options))
             eligibleSpecies[eligibleSpeciesCount++] = species;
     }
 
@@ -349,24 +319,20 @@ static enum Species SlowPickRandomMonSpecies(const struct RandomSpeciesGenerator
 
 static enum Species FastPickRandomMonSpecies(const struct RandomSpeciesGeneratorOptions *options, u32 poolSize)
 {
-    u32 i;
-
-    for (i = 0; i < poolSize; i++)
+    for (u32 i = 0; i < poolSize; i++)
     {
         enum Species species = GetRandomMonSpeciesAtIndex(options, RandomUniform(RNG_RANDOM_MON_GEN, 0, poolSize - 1));
-        if (!IsSpeciesBannedByRandomMonOptions(species, options))
+        if (IsRandomMonSpeciesCandidateAllowed(species, options))
             return species;
     }
 
     errorf("Could not get random species after %d tries", poolSize);
-    return GetFirstValidRandomMonSpecies(options);
+    return SPECIES_BULBASAUR;
 }
 
 static bool32 IsRandomItemBannedHoldEffect(const struct RandomItemGeneratorOptions *options, enum HoldEffect holdEffect)
 {
-    u32 i;
-
-    for (i = 0; i < options->bannedHoldEffectsCount; i++)
+    for (u32 i = 0; i < options->bannedHoldEffectsCount; i++)
     {
         if (options->bannedHoldEffects[i] == holdEffect)
             return TRUE;
@@ -380,22 +346,14 @@ static bool32 IsRandomMonHeldItemAllowed(const struct RandomItemGeneratorOptions
     if (item >= ITEMS_COUNT)
         return FALSE;
     if (item == ITEM_NONE)
-        return options->heldItemPool != NULL && options->heldItemPoolCount != 0;
+        return options->heldItemPoolCount != 0;
 
     return !IsRandomItemBannedHoldEffect(options, GetItemHoldEffect(item));
 }
 
-static u32 GetRandomMonHeldItemPoolSize(const struct RandomItemGeneratorOptions *options)
-{
-    if (options->heldItemPool != NULL && options->heldItemPoolCount != 0)
-        return options->heldItemPoolCount;
-
-    return ITEMS_COUNT - 1;
-}
-
 static enum Item GetRandomMonHeldItemAtIndex(const struct RandomItemGeneratorOptions *options, u32 index)
 {
-    if (options->heldItemPool != NULL && options->heldItemPoolCount != 0)
+    if (options->heldItemPoolCount != 0)
         return options->heldItemPool[index];
 
     return index + 1;
@@ -403,20 +361,18 @@ static enum Item GetRandomMonHeldItemAtIndex(const struct RandomItemGeneratorOpt
 
 static enum Item SlowPickRandomMonHeldItem(const struct RandomItemGeneratorOptions *options, u32 poolSize)
 {
-    u32 i;
     u32 eligibleItemCount = 0;
     enum Item eligibleItems[MAX_EXHAUSTIVE_SEARCH_POOL_SIZE];
 
-    for (i = 0; i < poolSize; i++)
+    for (u32 i = 0; i < poolSize; i++)
     {
         enum Item item = GetRandomMonHeldItemAtIndex(options, i);
         if (IsRandomMonHeldItemAllowed(options, item))
             eligibleItems[eligibleItemCount++] = item;
     }
 
-    if (eligibleItemCount == 0)
+    assertf(eligibleItemCount > 0, "Could not find a random held item matching random mon options")
     {
-        errorf("Could not find a random held item matching random mon options");
         return ITEM_NONE;
     }
 
@@ -425,9 +381,7 @@ static enum Item SlowPickRandomMonHeldItem(const struct RandomItemGeneratorOptio
 
 static enum Item FastPickRandomMonHeldItem(const struct RandomItemGeneratorOptions *options, u32 poolSize)
 {
-    u32 i;
-
-    for (i = 0; i < poolSize; i++)
+    for (u32 i = 0; i < poolSize; i++)
     {
         enum Item item = GetRandomMonHeldItemAtIndex(options, RandomUniform(RNG_RANDOM_MON_GEN, 0, poolSize - 1));
         if (IsRandomMonHeldItemAllowed(options, item))
@@ -435,12 +389,6 @@ static enum Item FastPickRandomMonHeldItem(const struct RandomItemGeneratorOptio
     }
 
     errorf("Could not get random held item after %d tries", poolSize);
-    for (i = 0; i < poolSize; i++)
-    {
-        enum Item item = GetRandomMonHeldItemAtIndex(options, i);
-        if (IsRandomMonHeldItemAllowed(options, item))
-            return item;
-    }
 
     return ITEM_NONE;
 }
@@ -448,9 +396,22 @@ static enum Item FastPickRandomMonHeldItem(const struct RandomItemGeneratorOptio
 static enum Item GetRandomMonHeldItem(u32 optionId)
 {
     const struct RandomItemGeneratorOptions *options = &sRandomItemGeneratorOptions[optionId];
-    u32 poolSize = GetRandomMonHeldItemPoolSize(options);
+    u32 poolSize;
 
-    if (options->heldItemPool != NULL && options->heldItemPoolCount != 0 && options->heldItemPoolCount <= MAX_EXHAUSTIVE_SEARCH_POOL_SIZE)
+    if (options->heldItemPoolCount != 0)
+    {
+        assertf(options->heldItemPool != NULL, "positive heldItemPoolCount passed with empty heldItemPool")
+        {
+            return ITEM_NONE;
+        }
+        poolSize = options->heldItemPoolCount;
+    }
+    else
+    {
+        poolSize = ITEMS_COUNT - 1;
+    }
+
+    if (options->heldItemPoolCount != 0 && options->heldItemPoolCount <= MAX_EXHAUSTIVE_SEARCH_POOL_SIZE)
         return SlowPickRandomMonHeldItem(options, poolSize);
 
     return FastPickRandomMonHeldItem(options, poolSize);
@@ -491,7 +452,7 @@ static enum PokeBall ResolveRandomMonBall(enum PokeBall ball)
     return BALL_STRANGE;
 }
 
-static bool32 ShouldSwapRandomMonMoves(enum Move moveA, enum Move moveB)
+static bool32 MoveOrder(u16 moveA, u16 moveB)
 {
     if (moveA == moveB)
         return FALSE;
@@ -505,29 +466,26 @@ static bool32 ShouldSwapRandomMonMoves(enum Move moveA, enum Move moveB)
     return FALSE;
 }
 
-static void SortRandomMonMoves(enum Move *moves)
+static void SortMoves(enum Move *moves)
 {
-    u32 i, j;
-    enum Move temp;
+    u16 temp;
 
-    for (i = 0; i < MAX_MON_MOVES; i++)
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
     {
-        for (j = i; j < MAX_MON_MOVES; j++)
+        for (u32 j = i; j < MAX_MON_MOVES; j++)
         {
-            if (ShouldSwapRandomMonMoves(moves[i], moves[j]))
+            if (MoveOrder(moves[i], moves[j]))
                 SWAP(moves[i], moves[j], temp);
         }
     }
 }
 
-static bool32 IsMoveInRandomMonMoveset(enum Move move, enum Move *moves, u32 count)
+static bool32 IsMoveInMoveset(enum Move move, enum Move *moves, u32 count)
 {
-    u32 i;
-
     if (move == MOVE_NONE)
         return FALSE;
 
-    for (i = 0; i < count; i++)
+    for (u32 i = 0; i < count; i++)
     {
         if (moves[i] == move)
             return TRUE;
@@ -536,35 +494,23 @@ static bool32 IsMoveInRandomMonMoveset(enum Move move, enum Move *moves, u32 cou
     return FALSE;
 }
 
-static bool32 HasRandomMonTeachableMoveCandidate(const u16 *teachableLearnset, u32 teachableCount, enum Move *moves, u32 count)
-{
-    u32 i;
-
-    for (i = 0; i < teachableCount; i++)
-    {
-        if (!IsMoveInRandomMonMoveset(teachableLearnset[i], moves, count))
-            return TRUE;
-    }
-
-    return FALSE;
-}
+#define IS_DUPLICATE_MOVE(move) IsMoveInMoveset(move, moves, i)
 
 static void ResolveRandomMonMoves(enum Species species, enum Move *moves)
 {
-    u32 i;
     u32 teachableCount = 0;
     const u16 *teachableLearnset = GetSpeciesTeachableLearnset(species);
 
-    SortRandomMonMoves(moves);
+    SortMoves(moves);
 
     while (teachableLearnset[teachableCount] != MOVE_UNAVAILABLE)
         teachableCount++;
 
-    for (i = 0; i < MAX_MON_MOVES; i++)
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
     {
         if (moves[i] < MOVES_COUNT)
         {
-            assertf(!IsMoveInRandomMonMoveset(moves[i], moves, i), "move %d was assigned twice", moves[i])
+            assertf(!IS_DUPLICATE_MOVE(moves[i]), "move %d was assigned twice", moves[i])
             {
                 moves[i] = MOVE_NONE;
             }
@@ -573,31 +519,31 @@ static void ResolveRandomMonMoves(enum Species species, enum Move *moves)
 
         if (moves[i] == MOVE_RANDOM_TEACHABLE)
         {
+            bool32 noCandidateFlag;
             enum Move candidate;
-            u32 j;
 
-            if (!HasRandomMonTeachableMoveCandidate(teachableLearnset, teachableCount, moves, i))
+            if (teachableCount <= i)
             {
-                moves[i] = MOVE_NONE;
-                continue;
-            }
-
-            for (j = 0; j < teachableCount; j++)
-            {
-                candidate = teachableLearnset[RandomUniform(RNG_RANDOM_MON_GEN, 0, teachableCount - 1)];
-                if (!IsMoveInRandomMonMoveset(candidate, moves, i))
-                    break;
-            }
-
-            if (j == teachableCount)
-            {
-                for (j = 0; j < teachableCount; j++)
+                noCandidateFlag = TRUE;
+                for (u32 j = 0; j < teachableCount; j++)
                 {
-                    candidate = teachableLearnset[j];
-                    if (!IsMoveInRandomMonMoveset(candidate, moves, i))
+                    if (!IS_DUPLICATE_MOVE(teachableLearnset[j]))
+                    {
+                        noCandidateFlag = FALSE;
                         break;
+                    }
+                }
+
+                if (noCandidateFlag)
+                {
+                    moves[i] = MOVE_NONE;
+                    continue;
                 }
             }
+
+            do {
+                candidate = teachableLearnset[RandomUniform(RNG_RANDOM_MON_GEN, 0, teachableCount - 1)];
+            } while (IS_DUPLICATE_MOVE(candidate));
 
             moves[i] = candidate;
             continue;
@@ -609,7 +555,7 @@ static void ResolveRandomMonMoves(enum Species species, enum Move *moves)
         }
     }
 
-    SortRandomMonMoves(moves);
+    SortMoves(moves);
 }
 
 void ResolveRandomMonGeneration(enum Species *species, enum Item *item, enum PokeBall *ball, enum Move *moves)

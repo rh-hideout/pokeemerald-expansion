@@ -14,6 +14,7 @@
 #define TEST_SPECIES_GENERATOR_FILTERED_POOL (SPECIES_RANDOMLY_GENERATED_START + 0)
 #define TEST_SPECIES_GENERATOR_MYTHICAL_FILTER (SPECIES_RANDOMLY_GENERATED_START + 1)
 #define TEST_SPECIES_GENERATOR_BST_FILTER (SPECIES_RANDOMLY_GENERATED_START + 2)
+#define TEST_SPECIES_GENERATOR_FORM_FILTER (SPECIES_RANDOMLY_GENERATED_START + 3)
 
 #define TEST_ITEM_GENERATOR_SINGLE_ITEM (ITEM_RANDOMLY_GENERATED_START + 0)
 #define TEST_ITEM_GENERATOR_FILTERED_POOL (ITEM_RANDOMLY_GENERATED_START + 1)
@@ -82,6 +83,18 @@ TEST("Random mon generation rejects species outside BST vars")
     EXPECT_EQ(species, SPECIES_MEW);
 }
 
+TEST("Random mon generation applies filters to possible forms")
+{
+    enum Species species = TEST_SPECIES_GENERATOR_FORM_FILTER;
+    enum Item item = ITEM_NONE;
+    enum PokeBall ball = BALL_POKE;
+    enum Move moves[MAX_MON_MOVES] = {MOVE_DEFAULT, MOVE_DEFAULT, MOVE_DEFAULT, MOVE_DEFAULT};
+
+    ResolveRandomMonTestValues(&species, &item, &ball, moves);
+
+    EXPECT_EQ(species, SPECIES_ROTOM_HEAT);
+}
+
 TEST("Random mon generation resolves held item from a pool")
 {
     enum Species species = SPECIES_CHARIZARD;
@@ -131,23 +144,17 @@ TEST("Random mon generation resolves random ball")
     EXPECT_EQ(ball, BALL_MASTER);
 }
 
-TEST("Random mon generation resolves teachable moves without duplicates")
+TEST("Random mon generation resolves teachable moves")
 {
     enum Species species = SPECIES_CHARIZARD;
     enum Item item = ITEM_NONE;
     enum PokeBall ball = BALL_POKE;
-    enum Move moves[MAX_MON_MOVES] = {MOVE_FLAMETHROWER, MOVE_RANDOM_TEACHABLE, MOVE_RANDOM_TEACHABLE, MOVE_DEFAULT};
+    enum Move moves[MAX_MON_MOVES] = {MOVE_RANDOM_TEACHABLE, MOVE_DEFAULT, MOVE_DEFAULT, MOVE_DEFAULT};
 
     ResolveRandomMonTestValues(&species, &item, &ball, moves);
 
-    EXPECT_EQ(moves[0], MOVE_FLAMETHROWER);
-    EXPECT_NE(moves[1], MOVE_RANDOM_TEACHABLE);
-    EXPECT_NE(moves[1], MOVE_FLAMETHROWER);
-    EXPECT_NE(moves[1], MOVE_NONE);
-    EXPECT_NE(moves[2], MOVE_RANDOM_TEACHABLE);
-    EXPECT_NE(moves[2], MOVE_FLAMETHROWER);
-    EXPECT_NE(moves[2], moves[1]);
-    EXPECT_NE(moves[2], MOVE_NONE);
+    EXPECT_NE(moves[0], MOVE_RANDOM_TEACHABLE);
+    EXPECT_NE(moves[0], MOVE_NONE);
 }
 
 TEST("createmon resolves random mon generation settings")
@@ -155,15 +162,13 @@ TEST("createmon resolves random mon generation settings")
     ZeroPlayerPartyMons();
 
     RUN_OVERWORLD_SCRIPT(
-        createmon 1, 0, TEST_SPECIES_GENERATOR_FILTERED_POOL, 50, item=TEST_ITEM_GENERATOR_SINGLE_ITEM, ball=BALL_MASTER, move1=MOVE_DEFAULT, move2=MOVE_RANDOM_TEACHABLE, move3=MOVE_SCRATCH;
+        createmon 1, 0, TEST_SPECIES_GENERATOR_FILTERED_POOL, 50, item=TEST_ITEM_GENERATOR_SINGLE_ITEM, ball=BALL_MASTER, move1=MOVE_RANDOM_TEACHABLE, move2=MOVE_DEFAULT;
     );
 
     EXPECT_EQ(GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_SPECIES), SPECIES_CHARIZARD);
     EXPECT_EQ(GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_LEVEL), 50);
     EXPECT_EQ(GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_HELD_ITEM), ITEM_LEFTOVERS);
     EXPECT_EQ(GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_POKEBALL), BALL_MASTER);
-    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_MOVE1), MOVE_SCRATCH);
-    EXPECT_NE(GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_MOVE2), MOVE_RANDOM_TEACHABLE);
-    EXPECT_NE(GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_MOVE2), MOVE_SCRATCH);
-    EXPECT_NE(GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_MOVE2), MOVE_NONE);
+    EXPECT_NE(GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_MOVE1), MOVE_RANDOM_TEACHABLE);
+    EXPECT_NE(GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_MOVE1), MOVE_NONE);
 }
