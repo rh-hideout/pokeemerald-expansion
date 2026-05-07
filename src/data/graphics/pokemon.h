@@ -22444,7 +22444,7 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
 #endif //P_FAMILY_TYPE_NULL
 
 #if P_FAMILY_MINIOR
-    const u32 gMonFrontPic_MiniorMeteor[] = INCGFX_U32("graphics/pokemon/minior/front.png", ".4bpp.smol");
+    const u32 gMonFrontPic_MiniorMeteor[] = INCGFX_U32("graphics/pokemon/minior/anim_front.png", ".4bpp.smol");
     const u16 gMonPalette_MiniorMeteor[] = INCGFX_U16("graphics/pokemon/minior/normal.pal", ".gbapal");
     const u32 gMonBackPic_MiniorMeteor[] = INCGFX_U32("graphics/pokemon/minior/back.png", ".4bpp.smol");
     const u16 gMonShinyPalette_MiniorMeteor[] = INCGFX_U16("graphics/pokemon/minior/shiny.pal", ".gbapal");
@@ -22453,7 +22453,7 @@ const u32 gObjectEventPic_Substitute[] = INCGFX_COMP("graphics/pokemon/question_
     const u8 gMonFootprint_Minior[] = INCGFX_U8("graphics/pokemon/minior/footprint.png", ".1bpp");
 #endif //P_FOOTPRINTS
 
-    const u32 gMonFrontPic_MiniorCore[] = INCGFX_U32("graphics/pokemon/minior/core/front.png", ".4bpp.smol");
+    const u32 gMonFrontPic_MiniorCore[] = INCGFX_U32("graphics/pokemon/minior/core/anim_front.png", ".4bpp.smol");
     const u32 gMonBackPic_MiniorCore[] = INCGFX_U32("graphics/pokemon/minior/core/back.png", ".4bpp.smol");
     const u16 gMonShinyPalette_MiniorCore[] = INCGFX_U16("graphics/pokemon/minior/core/shiny.pal", ".gbapal");
 
