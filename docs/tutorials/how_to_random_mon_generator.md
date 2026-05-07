@@ -13,7 +13,7 @@ So you want to make a custom ruleset for a possible random pokemon you'd like to
 
 ### Setting Up Our Random Species
 
-First thing's first, we need a way for the logic to read that we want a specific kind of random mon. This is done by editing [include/constants/species.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/include/constants/species.h) and adding in a new random species or editing an existing random species at the bottom of the file, incrementing as necessary.
+First thing's first, we need a way for the logic to read that we want a specific kind of random mon. The species constants file only defines the start of the random species range with `SPECIES_RANDOMLY_GENERATED_START`. Add your named species generator options in [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h), then use those names in scripts.
 
 ### The Random Species Struct
 
@@ -58,9 +58,20 @@ You could also, using similar logic, create a function that reads a VAR with a t
 
 ### Example Setup
 
-For random mon option 0, defined as `#define SPECIES_RANDOM_MON_OPTION_0 6000` in [include/constants/species.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/include/constants/species.h), we'd use index 0 in RandomSpeciesGeneratorOptions, with separate species and/or ban pools like so in [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h):
+For a named random mon option, define the script-facing value and use `SPECIES_OPTION` to keep the array index tied to that value. With separate species and/or ban pools, your setup in [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h) would look like this:
 
 ```
+enum
+{
+    SPECIES_GENERATOR_NO_SUPERMONS = SPECIES_RANDOMLY_GENERATED_START,
+    SPECIES_GENERATOR_LIMITED_POOL,
+    SPECIES_GENERATOR_BST_RESTRICTED,
+    SPECIES_GENERATOR_END,
+};
+
+#define RANDOM_SPECIES_OPTIONS_COUNT (SPECIES_GENERATOR_END - SPECIES_RANDOMLY_GENERATED_START)
+#define SPECIES_OPTION(option) ((option) - SPECIES_RANDOMLY_GENERATED_START)
+
 static const enum Species sRandomSpeciesOption0SpeciesPool[] =
 {
     SPECIES_TREECKO,
@@ -80,16 +91,30 @@ static const enum Species sRandomSpeciesOption0BannedSpecies[] =
 
 static const struct RandomSpeciesGeneratorOptions sRandomSpeciesGeneratorOptions[] =
 {
-    [0] =
+    [SPECIES_OPTION(SPECIES_GENERATOR_LIMITED_POOL)] =
     {
-        .dexMode = RANDOM_MON_DEX_NATIONAL,
+        .speciesPool = sRandomSpeciesOption0SpeciesPool,
+        .speciesPoolCount = ARRAY_COUNT(sRandomSpeciesOption0SpeciesPool),
+        .bannedSpecies = sRandomSpeciesOption0BannedSpecies,
+        .bannedSpeciesCount = ARRAY_COUNT(sRandomSpeciesOption0BannedSpecies),
         .allowLegendary = FALSE,
         .allowMythical = FALSE,
         .allowSubLegendary = FALSE,
         .allowUltraBeast = FALSE,
         .allowParadox = FALSE,
         .randomizeForms = TRUE,
+    },
+
+    [SPECIES_OPTION(SPECIES_GENERATOR_BST_RESTRICTED)] =
+    {
+        .dexMode = RANDOM_MON_DEX_HOENN,
         .filterFunc = IsSpeciesAllowedByRandomBstVars,
+        .allowLegendary = FALSE,
+        .allowMythical = FALSE,
+        .allowSubLegendary = FALSE,
+        .allowUltraBeast = FALSE,
+        .allowParadox = FALSE,
+        .randomizeForms = TRUE,
     },
 }
 ```
@@ -97,13 +122,15 @@ static const struct RandomSpeciesGeneratorOptions sRandomSpeciesGeneratorOptions
 > [!NOTE]
 > You really don't need to use a choosable species pool and a banned species pool in the same ruleset, it just doesn't make sense and may end up causing more trouble than anything. Additionally, you should never include SPECIES_NONE in either of these kinds of pools, only actual, defined species.
 
+Small explicit species pools are checked exhaustively before choosing, which gives clear errors if every entry is filtered out. Larger explicit pools and full dex searches use repeated random attempts, then fall back to the first valid entry if the filters are too restrictive.
+
 ## Item Generator Options
 
 Item randomization is handled separately from pokemon randomization, meaning that you could always give a charmander but it could always hold a random or semi-random item. Compared to the species generation options, here we have far fewer to discuss.
 
-### Setting Up Our Random Species
+### Setting Up Our Random Items
 
-As we did for our random species, we need to also do for our random items. This is done by editing [include/constants/items.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/include/constants/items.h) and adding in a new random species or editing an existing random species at the bottom of the file, incrementing as necessary.
+As we did for our random species, we need to also do for our random items. The item constants file only defines the start of the random item range with `ITEM_RANDOMLY_GENERATED_START`. Add your named item generator options in [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h), then use those names in scripts.
 
 ### The Random Item Struct
 
@@ -119,14 +146,23 @@ struct RandomItemGeneratorOptions
 
 * `const enum Item *heldItemPool`: A pointer to the specific item pool you want to use, if any. Leave it NULL or create one in [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h).
 * `u16 heldItemPoolCount`: The number of items in your held item pool, if any.
-* `const enum HoldEffect *bannedHoldEffects`: A pointer to the specific list of banned hold effects you want to use, if any. Leave it NULL or create one in [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h). Do not use with heldItemPool, use one or the other.
+* `const enum HoldEffect *bannedHoldEffects`: A pointer to the specific list of banned hold effects you want to use, if any. Leave it NULL or create one in [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h).
 * `u16 bannedHoldEffectsCount`: The number of banned hold effects in your pool, if any.
 
 ### Example Setup
 
-For random mon option 0, defined as `#define ITEM_RANDOM_OPTION_0 6000` in [include/constants/items.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/include/constants/items.h), we'd use index 0 in RandomItemGeneratorOptions, with separate held item pools and/or hold effect ban pools like so in [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h):
+For a named random item option, define the script-facing value and use `ITEM_OPTION` to keep the array index tied to that value. With separate held item pools and/or hold effect ban pools, your setup in [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h) would look like this:
 
 ```
+enum
+{
+    ITEM_GENERATOR_STANDARD = ITEM_RANDOMLY_GENERATED_START,
+    ITEM_GENERATOR_END,
+};
+
+#define RANDOM_ITEM_OPTIONS_COUNT (ITEM_GENERATOR_END - ITEM_RANDOMLY_GENERATED_START)
+#define ITEM_OPTION(option) ((option) - ITEM_RANDOMLY_GENERATED_START)
+
 static const enum HoldEffect sRandomItemOption0BannedHoldEffects[] =
 {
     HOLD_EFFECT_NONE,
@@ -164,12 +200,7 @@ static const enum Item sRandomItemOption0HeldItemPool[] =
 
 static const struct RandomItemGeneratorOptions sRandomItemGeneratorOptions[] =
 {
-    [0] =
-    {
-        .bannedHoldEffects = sRandomItemStandardBannedHoldEffects,
-        .bannedHoldEffectsCount = ARRAY_COUNT(sRandomItemStandardBannedHoldEffects),
-    },
-    [1] =
+    [ITEM_OPTION(ITEM_GENERATOR_STANDARD)] =
     {
         .heldItemPool = sRandomItemOption0HeldItemPool,
         .heldItemPoolCount = ARRAY_COUNT(sRandomItemOption0HeldItemPool),
@@ -180,7 +211,7 @@ static const struct RandomItemGeneratorOptions sRandomItemGeneratorOptions[] =
 ```
 
 > [!NOTE]
-> You really don't need to use a choosable item pool and a banned hold effects pool in the same ruleset, it just doesn't make sense and may end up causing more trouble than anything.
+> `ITEM_NONE` is never selected during full item randomization, but it can be included in an explicit held item pool if you want that option to sometimes produce no held item. Small explicit item pools are checked exhaustively before choosing, while larger explicit pools and full item searches use repeated random attempts.
 
 # Step 2: Other options to be aware of
 
@@ -199,12 +230,12 @@ Here's an example of how you'd call it in a script when it all comes together:
 ```
 EventScript_GiveFilteredRandomMon::
     // BST target = 300, leniency = 100, so valid BST range is 200-400.
-    // SPECIES_RANDOM_MON_OPTION_0, in this scenario, is the option using IsSpeciesAllowedByRandomBstVars.
+    // SPECIES_GENERATOR_BST_RESTRICTED, in this scenario, is the option using IsSpeciesAllowedByRandomBstVars as a filterFunc.
     setvar VAR_0x8007, 300
     setvar VAR_0x8008, 100
 
-    givemon SPECIES_RANDOM_MON_OPTION_0, 50,
-        item=ITEM_RANDOM_OPTION_0,
+    givemon SPECIES_GENERATOR_BST_RESTRICTED, 50,
+        item=ITEM_GENERATOR_LIMITED_POOL,
         ball=BALL_RANDOM,
         move1=MOVE_RANDOM_TEACHABLE,
         move2=MOVE_RANDOM_TEACHABLE,
@@ -218,4 +249,4 @@ EventScript_GiveFilteredRandomMon::
     end
 ```
 
-This will produce a random mon from pool 0 with between 200 and 400 BST, a random item from pool 0, a random ball, with 3 random teachable moves, and with one move it'd normally have at that level (MOVE_DEFAULT)
+This will produce a random mon from the BST-restricted species option with between 200 and 400 BST, a random item from the limited item pool, a random ball, with 3 random teachable moves, and with one move it'd normally have at that level (MOVE_DEFAULT)

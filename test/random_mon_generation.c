@@ -11,14 +11,22 @@
 #include "constants/species.h"
 #include "constants/vars.h"
 
+#define TEST_SPECIES_GENERATOR_FILTERED_POOL (SPECIES_RANDOMLY_GENERATED_START + 0)
+#define TEST_SPECIES_GENERATOR_MYTHICAL_FILTER (SPECIES_RANDOMLY_GENERATED_START + 1)
+#define TEST_SPECIES_GENERATOR_BST_FILTER (SPECIES_RANDOMLY_GENERATED_START + 2)
+
+#define TEST_ITEM_GENERATOR_SINGLE_ITEM (ITEM_RANDOMLY_GENERATED_START + 0)
+#define TEST_ITEM_GENERATOR_FILTERED_POOL (ITEM_RANDOMLY_GENERATED_START + 1)
+#define TEST_ITEM_GENERATOR_NONE_POOL (ITEM_RANDOMLY_GENERATED_START + 2)
+
 static void ResolveRandomMonTestValues(enum Species *species, enum Item *item, enum PokeBall *ball, enum Move *moves)
 {
     ResolveRandomMonGeneration(species, item, ball, moves);
 }
 
-TEST("Random mon generation resolves species from a pool")
+TEST("Random mon generation filters species from a small pool")
 {
-    enum Species species = SPECIES_RANDOM_MON_OPTION_0;
+    enum Species species = TEST_SPECIES_GENERATOR_FILTERED_POOL;
     enum Item item = ITEM_NONE;
     enum PokeBall ball = BALL_POKE;
     enum Move moves[MAX_MON_MOVES] = {MOVE_DEFAULT, MOVE_DEFAULT, MOVE_DEFAULT, MOVE_DEFAULT};
@@ -32,19 +40,19 @@ TEST("Random mon generation resolves species from a pool")
 
 TEST("Random mon generation rejects disallowed mythical species")
 {
-    enum Species species = SPECIES_RANDOM_MON_OPTION_1;
+    enum Species species = TEST_SPECIES_GENERATOR_MYTHICAL_FILTER;
     enum Item item = ITEM_NONE;
     enum PokeBall ball = BALL_POKE;
     enum Move moves[MAX_MON_MOVES] = {MOVE_DEFAULT, MOVE_DEFAULT, MOVE_DEFAULT, MOVE_DEFAULT};
 
     ResolveRandomMonTestValues(&species, &item, &ball, moves);
 
-    EXPECT_EQ(species, SPECIES_BULBASAUR);
+    EXPECT_EQ(species, SPECIES_CHARIZARD);
 }
 
 TEST("Random mon generation allows species within BST vars")
 {
-    enum Species species = SPECIES_RANDOM_MON_OPTION_2;
+    enum Species species = TEST_SPECIES_GENERATOR_BST_FILTER;
     enum Item item = ITEM_NONE;
     enum PokeBall ball = BALL_POKE;
     enum Move moves[MAX_MON_MOVES] = {MOVE_DEFAULT, MOVE_DEFAULT, MOVE_DEFAULT, MOVE_DEFAULT};
@@ -60,7 +68,7 @@ TEST("Random mon generation allows species within BST vars")
 
 TEST("Random mon generation rejects species outside BST vars")
 {
-    enum Species species = SPECIES_RANDOM_MON_OPTION_2;
+    enum Species species = TEST_SPECIES_GENERATOR_BST_FILTER;
     enum Item item = ITEM_NONE;
     enum PokeBall ball = BALL_POKE;
     enum Move moves[MAX_MON_MOVES] = {MOVE_DEFAULT, MOVE_DEFAULT, MOVE_DEFAULT, MOVE_DEFAULT};
@@ -71,13 +79,13 @@ TEST("Random mon generation rejects species outside BST vars")
     VarSet(VAR_0x8007, 0);
     VarSet(VAR_0x8008, 0);
 
-    EXPECT_EQ(species, SPECIES_BULBASAUR);
+    EXPECT_EQ(species, SPECIES_MEW);
 }
 
 TEST("Random mon generation resolves held item from a pool")
 {
     enum Species species = SPECIES_CHARIZARD;
-    enum Item item = ITEM_RANDOM_OPTION_0;
+    enum Item item = TEST_ITEM_GENERATOR_SINGLE_ITEM;
     enum PokeBall ball = BALL_POKE;
     enum Move moves[MAX_MON_MOVES] = {MOVE_DEFAULT, MOVE_DEFAULT, MOVE_DEFAULT, MOVE_DEFAULT};
 
@@ -86,10 +94,22 @@ TEST("Random mon generation resolves held item from a pool")
     EXPECT_EQ(item, ITEM_LEFTOVERS);
 }
 
-TEST("Random mon generation rejects banned hold effects")
+TEST("Random mon generation filters banned hold effects from a small pool")
 {
     enum Species species = SPECIES_CHARIZARD;
-    enum Item item = ITEM_RANDOM_OPTION_1;
+    enum Item item = TEST_ITEM_GENERATOR_FILTERED_POOL;
+    enum PokeBall ball = BALL_POKE;
+    enum Move moves[MAX_MON_MOVES] = {MOVE_DEFAULT, MOVE_DEFAULT, MOVE_DEFAULT, MOVE_DEFAULT};
+
+    ResolveRandomMonTestValues(&species, &item, &ball, moves);
+
+    EXPECT_EQ(item, ITEM_LUM_BERRY);
+}
+
+TEST("Random mon generation allows ITEM_NONE in an explicit item pool")
+{
+    enum Species species = SPECIES_CHARIZARD;
+    enum Item item = TEST_ITEM_GENERATOR_NONE_POOL;
     enum PokeBall ball = BALL_POKE;
     enum Move moves[MAX_MON_MOVES] = {MOVE_DEFAULT, MOVE_DEFAULT, MOVE_DEFAULT, MOVE_DEFAULT};
 
@@ -135,7 +155,7 @@ TEST("createmon resolves random mon generation settings")
     ZeroPlayerPartyMons();
 
     RUN_OVERWORLD_SCRIPT(
-        createmon 1, 0, SPECIES_RANDOM_MON_OPTION_0, 50, item=ITEM_RANDOM_OPTION_0, ball=BALL_MASTER, move1=MOVE_SCRATCH, move2=MOVE_RANDOM_TEACHABLE;
+        createmon 1, 0, TEST_SPECIES_GENERATOR_FILTERED_POOL, 50, item=TEST_ITEM_GENERATOR_SINGLE_ITEM, ball=BALL_MASTER, move1=MOVE_DEFAULT, move2=MOVE_RANDOM_TEACHABLE, move3=MOVE_SCRATCH;
     );
 
     EXPECT_EQ(GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_SPECIES), SPECIES_CHARIZARD);

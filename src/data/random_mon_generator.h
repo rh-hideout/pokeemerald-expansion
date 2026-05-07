@@ -1,6 +1,27 @@
 // Pool settings for random mon generation via scripts. For more info on options, check out
 // struct RandomSpeciesGeneratorOptions and struct RandomItemGeneratorOptions in src/random_mon_generation.c.
 
+enum
+{
+    SPECIES_GENERATOR_NO_SUPERMONS = SPECIES_RANDOMLY_GENERATED_START,
+    SPECIES_GENERATOR_LIMITED_POOL,
+    SPECIES_GENERATOR_BST_RESTRICTED,
+    SPECIES_GENERATOR_END,
+};
+
+#define RANDOM_SPECIES_OPTIONS_COUNT (SPECIES_GENERATOR_END - SPECIES_RANDOMLY_GENERATED_START)
+#define SPECIES_OPTION(option) ((option) - SPECIES_RANDOMLY_GENERATED_START)
+
+enum
+{
+    ITEM_GENERATOR_STANDARD = ITEM_RANDOMLY_GENERATED_START,
+    ITEM_GENERATOR_LIMITED_POOL,
+    ITEM_GENERATOR_END,
+};
+
+#define RANDOM_ITEM_OPTIONS_COUNT (ITEM_GENERATOR_END - ITEM_RANDOMLY_GENERATED_START)
+#define ITEM_OPTION(option) ((option) - ITEM_RANDOMLY_GENERATED_START)
+
 static const enum Species sRandomSpeciesOption1SpeciesPool[] =
 {
     SPECIES_TREECKO,
@@ -55,7 +76,7 @@ static const enum Item sRandomItemOption1HeldItemPool[] =
 
 static const struct RandomSpeciesGeneratorOptions sRandomSpeciesGeneratorOptions[] =
 {
-    [0] =
+    [SPECIES_OPTION(SPECIES_GENERATOR_NO_SUPERMONS)] =
     {
         .dexMode = RANDOM_MON_DEX_NATIONAL,
         .allowLegendary = FALSE,
@@ -65,7 +86,7 @@ static const struct RandomSpeciesGeneratorOptions sRandomSpeciesGeneratorOptions
         .allowParadox = FALSE,
         .randomizeForms = TRUE,
     },
-    [1] =
+    [SPECIES_OPTION(SPECIES_GENERATOR_LIMITED_POOL)] =
     {
         .speciesPool = sRandomSpeciesOption1SpeciesPool,
         .speciesPoolCount = ARRAY_COUNT(sRandomSpeciesOption1SpeciesPool),
@@ -78,7 +99,7 @@ static const struct RandomSpeciesGeneratorOptions sRandomSpeciesGeneratorOptions
         .allowParadox = FALSE,
         .randomizeForms = TRUE,
     },
-    [2] =
+    [SPECIES_OPTION(SPECIES_GENERATOR_BST_RESTRICTED)] =
     {
         .dexMode = RANDOM_MON_DEX_HOENN,
         .filterFunc = IsSpeciesAllowedByRandomBstVars,
@@ -93,12 +114,12 @@ static const struct RandomSpeciesGeneratorOptions sRandomSpeciesGeneratorOptions
 
 static const struct RandomItemGeneratorOptions sRandomItemGeneratorOptions[] =
 {
-    [0] =
+    [ITEM_OPTION(ITEM_GENERATOR_STANDARD)] =
     {
         .bannedHoldEffects = sRandomItemStandardBannedHoldEffects,
         .bannedHoldEffectsCount = ARRAY_COUNT(sRandomItemStandardBannedHoldEffects),
     },
-    [1] =
+    [ITEM_OPTION(ITEM_GENERATOR_LIMITED_POOL)] =
     {
         .heldItemPool = sRandomItemOption1HeldItemPool,
         .heldItemPoolCount = ARRAY_COUNT(sRandomItemOption1HeldItemPool),

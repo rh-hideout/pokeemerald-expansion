@@ -494,20 +494,6 @@ u32 ScriptGiveMon(enum Species species, u8 level, enum Item item)
 
 #define PARSE_FLAG(n, default_) (flags & (1 << (n))) ? VarGet(ScriptReadHalfword(ctx)) : (default_)
 
-#define ADD_MOVE_IF_NOT_DEFAULT(i, move)               \
-    if (move && move != MOVE_DEFAULT)                  \
-    {                                                  \
-        moves[i] = move;                               \
-        i++;                                           \
-    }
-
-#define ADD_MOVE_IF_DEFAULT(i, move)                   \
-    if (moves[i] == MOVE_NONE && move == MOVE_DEFAULT) \
-    {                                                  \
-        moves[i] = MOVE_DEFAULT;                       \
-        i++;                                           \
-    }
-
 /* Give or create a mon to either player or opponent
  */
 
@@ -572,29 +558,14 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
         }
     }
 
-    enum Move move1          = PARSE_FLAG(17, MOVE_DEFAULT);
-    enum Move move2          = PARSE_FLAG(18, MOVE_DEFAULT);
-    enum Move move3          = PARSE_FLAG(19, MOVE_DEFAULT);
-    enum Move move4          = PARSE_FLAG(20, MOVE_DEFAULT);
+    enum Move moves[MAX_MON_MOVES];
+    for (i = 0; i < MAX_MON_MOVES; i++)
+        moves[i] = PARSE_FLAG(17 + i, MOVE_DEFAULT);
+
     enum ShinyMode shinyMode = PARSE_FLAG(21, SHINY_MODE_RANDOM);
     bool8 gmaxFactor         = PARSE_FLAG(22, FALSE);
     enum Type teraType       = PARSE_FLAG(23, NUMBER_OF_MON_TYPES);
     u8 dmaxLevel             = PARSE_FLAG(24, 0);
-
-    enum Move moves[MAX_MON_MOVES];
-    for (i = 0; i < MAX_MON_MOVES; i++)
-        moves[i] = MOVE_NONE;
-
-    i = 0;
-    //Reorder moves to put non-default moves first, default moves second and empty moves last
-    ADD_MOVE_IF_NOT_DEFAULT(i, move1)
-    ADD_MOVE_IF_NOT_DEFAULT(i, move2)
-    ADD_MOVE_IF_NOT_DEFAULT(i, move3)
-    ADD_MOVE_IF_NOT_DEFAULT(i, move4)
-    ADD_MOVE_IF_DEFAULT(i, move1)
-    ADD_MOVE_IF_DEFAULT(i, move2)
-    ADD_MOVE_IF_DEFAULT(i, move3)
-    ADD_MOVE_IF_DEFAULT(i, move4)
 
     enum GeneratedMonOrigin origin;
     if (side == 0)
