@@ -39,7 +39,7 @@ def parse_trainer_entry(line):
 
 
 def generate_enums(lines):
-    with open("migration_scripts/1.17/trainer_pic_migration/enums.h", "w") as output:
+    with open("migration_scripts/1.16/trainer_pic_migration/enums.h", "w") as output:
         output.write(f"enum __attribute__((packed)) TrainerPicID\n")
         output.write(f"{{\n")
 
@@ -54,7 +54,7 @@ def generate_enums(lines):
 
 
 def generate_table(lines):
-    with open("migration_scripts/1.17/trainer_pic_migration/table.h", "w") as output:
+    with open("migration_scripts/1.16/trainer_pic_migration/table.h", "w") as output:
         output.write(f'const struct TrainerPicInfo gTrainerPicInfo[TRAINER_PIC_COUNT] =\n')
         output.write(f'{{\n')
 
