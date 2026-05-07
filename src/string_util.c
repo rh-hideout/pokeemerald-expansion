@@ -366,17 +366,13 @@ static bool8 TextConditionUsesSecondBranch(u8 conditionId)
     }
 }
 
-static u8 *CopyExtCtrlCode(u8 *dest, const u8 **srcPtr, u8 code)
+static u8 GetExtCtrlCodeArgCountForPlaceholderExpansion(u8 code)
 {
-    const u8 *src = *srcPtr;
-
-    *dest++ = EXT_CTRL_CODE_BEGIN;
-    *dest++ = code;
-
     switch (code)
     {
     case EXT_CTRL_CODE_RESET_FONT:
     case EXT_CTRL_CODE_PAUSE_UNTIL_PRESS:
+    case EXT_CTRL_CODE_WAIT_SE:
     case EXT_CTRL_CODE_FILL_WINDOW:
     case EXT_CTRL_CODE_JPN:
     case EXT_CTRL_CODE_ENG:
@@ -384,16 +380,29 @@ static u8 *CopyExtCtrlCode(u8 *dest, const u8 **srcPtr, u8 code)
     case EXT_CTRL_CODE_RESUME_MUSIC:
     case EXT_CTRL_CODE_CONDITION_ELSE:
     case EXT_CTRL_CODE_CONDITION_END:
-        break;
+        return 0;
     case EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW:
     case EXT_CTRL_CODE_TEXT_COLORS:
-        *dest++ = *src++;
+        return 3;
     case EXT_CTRL_CODE_PLAY_BGM:
     case EXT_CTRL_CODE_PLAY_SE:
-        *dest++ = *src++;
+        return 2;
     default:
-        *dest++ = *src++;
+        return 1;
     }
+}
+
+static u8 *CopyExtCtrlCode(u8 *dest, const u8 **srcPtr, u8 code)
+{
+    const u8 *src = *srcPtr;
+    u8 i;
+    u8 argCount = GetExtCtrlCodeArgCountForPlaceholderExpansion(code);
+
+    *dest++ = EXT_CTRL_CODE_BEGIN;
+    *dest++ = code;
+
+    for (i = 0; i < argCount; i++)
+        *dest++ = *src++;
 
     *srcPtr = src;
     return dest;
@@ -401,31 +410,7 @@ static u8 *CopyExtCtrlCode(u8 *dest, const u8 **srcPtr, u8 code)
 
 static void SkipExtCtrlCodeArgs(const u8 **srcPtr, u8 code)
 {
-    const u8 *src = *srcPtr;
-
-    switch (code)
-    {
-    case EXT_CTRL_CODE_RESET_FONT:
-    case EXT_CTRL_CODE_PAUSE_UNTIL_PRESS:
-    case EXT_CTRL_CODE_FILL_WINDOW:
-    case EXT_CTRL_CODE_JPN:
-    case EXT_CTRL_CODE_ENG:
-    case EXT_CTRL_CODE_PAUSE_MUSIC:
-    case EXT_CTRL_CODE_RESUME_MUSIC:
-    case EXT_CTRL_CODE_CONDITION_ELSE:
-    case EXT_CTRL_CODE_CONDITION_END:
-        break;
-    case EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW:
-    case EXT_CTRL_CODE_TEXT_COLORS:
-        src++;
-    case EXT_CTRL_CODE_PLAY_BGM:
-    case EXT_CTRL_CODE_PLAY_SE:
-        src++;
-    default:
-        src++;
-    }
-
-    *srcPtr = src;
+    *srcPtr += GetExtCtrlCodeArgCountForPlaceholderExpansion(code);
 }
 
 static void SkipPlaceholdersUntil(const u8 **srcPtr, bool8 stopAtElse, bool8 stopAtEnd, u8 *stopCode)
