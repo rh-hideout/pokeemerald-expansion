@@ -4339,12 +4339,12 @@ static const struct SpriteFrameImage sPicTable_Fossil_hns[] = {
 };
 
 static const struct SpriteFrameImage sPicTable_ItemBall_hns[] = {
-    overworld_frame(gObjectEventPic_ItemBall_hns, 2, 4, 0),
-    overworld_frame(gObjectEventPic_ItemBall_hns, 2, 4, 1),
-    overworld_frame(gObjectEventPic_ItemBall_hns, 2, 4, 2),
-    overworld_frame(gObjectEventPic_ItemBall_hns, 2, 4, 3),
-    overworld_frame(gObjectEventPic_ItemBall_hns, 2, 4, 4),
-    overworld_frame(gObjectEventPic_ItemBall_hns, 2, 4, 0),
+    overworld_frame(gObjectEventPic_PokeBall, 2, 4, 0),
+    overworld_frame(gObjectEventPic_PokeBall, 2, 4, 1),
+    overworld_frame(gObjectEventPic_PokeBall, 2, 4, 2),
+    overworld_frame(gObjectEventPic_PokeBall, 2, 4, 3),
+    overworld_frame(gObjectEventPic_PokeBall, 2, 4, 4),
+    overworld_frame(gObjectEventPic_PokeBall, 2, 4, 0),
 };
 
 static const struct SpriteFrameImage sPicTable_LegendaryShadow_hns[] = {

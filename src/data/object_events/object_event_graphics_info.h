@@ -7451,7 +7451,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_CuttableTree_hns =
 
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Fossil_hns = {TAG_NONE, OBJ_EVENT_PAL_TAG_ROCKET_1_HNS, OBJ_EVENT_PAL_TAG_NONE, 128, 16, 16, 2, SHADOW_SIZE_S, TRUE, FALSE, TRACKS_NONE, &gObjectEventBaseOam_16x16, sOamTables_16x16, sAnimTable_Inanimate, sPicTable_Fossil_hns, gDummySpriteAffineAnimTable};
 
-const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_ItemBall_hns = {TAG_NONE, OBJ_EVENT_PAL_TAG_ROCKET_1_HNS, OBJ_EVENT_PAL_TAG_NONE, 256, 16, 32, 2, SHADOW_SIZE_M, TRUE, FALSE, TRACKS_NONE, &gObjectEventBaseOam_16x32, sOamTables_16x32, sAnimTable_Following, sPicTable_ItemBall_hns, gDummySpriteAffineAnimTable};
+const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_ItemBall_hns = {TAG_NONE, OBJ_EVENT_PAL_TAG_NPC_3, OBJ_EVENT_PAL_TAG_NONE, 256, 16, 32, 2, SHADOW_SIZE_M, TRUE, FALSE, TRACKS_NONE, &gObjectEventBaseOam_16x32, sOamTables_16x32, sAnimTable_Following, sPicTable_ItemBall_hns, gDummySpriteAffineAnimTable};
 
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_LegendaryShadow_hns = {TAG_NONE, OBJ_EVENT_PAL_TAG_LEGENDARY_SHADOW_HNS, OBJ_EVENT_PAL_TAG_NONE, 1408, 88, 32, 10, SHADOW_SIZE_M, FALSE, FALSE, TRACKS_NONE, &gObjectEventBaseOam_8x8, sOamTables_88x32, sAnimTable_Standard, sPicTable_LegendaryShadow_hns, gDummySpriteAffineAnimTable};
 

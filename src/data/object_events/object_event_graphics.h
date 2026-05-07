@@ -756,7 +756,6 @@ const u32 gObjectEventPic_BirthIslandStone_hns[] = INCBIN_U32("graphics/object_e
 const u32 gObjectEventPic_BreakableRock_hns[] = INCBIN_U32("graphics/object_events/pics/misc/breakable_rock_hns.4bpp");
 const u32 gObjectEventPic_CuttableTree_hns[] = INCBIN_U32("graphics/object_events/pics/misc/cuttable_tree_hns.4bpp");
 const u32 gObjectEventPic_Fossil_hns[] = INCBIN_U32("graphics/object_events/pics/misc/fossil_hns.4bpp");
-const u32 gObjectEventPic_ItemBall_hns[] = INCBIN_U32("graphics/object_events/pics/misc/item_ball_hns.4bpp");
 const u32 gObjectEventPic_LegendaryShadow_hns[] = INCBIN_U32("graphics/object_events/pics/misc/legendary_shadow_hns.4bpp");
 const u32 gObjectEventPic_NoTailSlowpoke_hns[] = INCBIN_U32("graphics/object_events/pics/misc/no_tail_slowpoke_hns.4bpp");
 const u32 gObjectEventPic_PushableBoulder_hns[] = INCBIN_U32("graphics/object_events/pics/misc/pushable_boulder_hns.4bpp");
