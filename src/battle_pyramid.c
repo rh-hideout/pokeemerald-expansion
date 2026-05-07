@@ -1759,7 +1759,11 @@ void GenerateBattlePyramidFloorLayout(u16 *backupMapData, bool8 setPlayerPositio
     {
         u16 *map;
         int yOffset, xOffset;
+    #if IS_HNS
+        const struct MapLayout *mapLayout = gMapLayouts[floorLayoutOffsets[i] + LAYOUT_BATTLE_PYRAMID_SQUARE01_HNS - 1];
+    #else
         const struct MapLayout *mapLayout = gMapLayouts[floorLayoutOffsets[i] + LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR];
+    #endif
         const u16 *layoutMap = mapLayout->map;
 
         gBackupMapLayout.map = backupMapData;
