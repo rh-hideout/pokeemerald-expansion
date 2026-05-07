@@ -1888,22 +1888,20 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
         else if (!CanBreakThroughSemiInvulnerablity(cv->battlerAtk, cv->battlerDef, cv->abilities[cv->battlerAtk], cv->abilities[cv->battlerDef], cv->move))
         {
             gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_FAILED;
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_AVOIDED_ATK;
             if (cv->moveEffect == EFFECT_FLING)
                 BattleScriptCall(BattleScript_TargetAvoidsAttackConsumeFlingItem);
             else
-                BattleScriptCall(BattleScript_TargetAvoidsAttack);
+                BattleScriptCall(BattleScript_BattlerAvoidedAttack);
             targetAvoidedAttack = TRUE;
         }
         else if (IsBattlerProtected(cv))
         {
             SetOrClearRageVolatile();
             gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_MISSED;
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_PROTECTED;
             if (cv->moveEffect == EFFECT_FLING)
-                BattleScriptCall(BattleScript_TargetAvoidsAttackConsumeFlingItem);
+                BattleScriptCall(BattleScript_TargetProtectedConsumeFlingItem);
             else
-                BattleScriptCall(BattleScript_TargetAvoidsAttack);
+                BattleScriptCall(BattleScript_TargetProtected);
             targetAvoidedAttack = TRUE;
         }
         else if (CanBattlerBounceBackMove(cv))
@@ -4508,9 +4506,8 @@ static enum MoveResult StatChangeTryChange(struct BattleCalcValues *cv)
 
         if (gBattleStruct->moveResultFlags[cv->battlerDef] & MOVE_RESULT_MISSED)
         {
-            gBattleStruct->statChangeBattler++;
-            gBattleCommunication[MISS_TYPE] = B_MSG_MISSED;
-            BattleScriptCall(BattleScript_MissedTarget);
+            gBattleScripting.battler = gBattleStruct->statChangeBattler++;
+            BattleScriptCall(BattleScript_BattlerAvoidedAttack);
             return MOVE_RESULT_RUN_SCRIPT;
         }
 

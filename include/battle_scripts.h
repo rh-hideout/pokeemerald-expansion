@@ -213,7 +213,6 @@ extern const u8 BattleScript_ConsumableBerryStatRaise[];
 extern const u8 BattleScript_ConsumableBerryStatRaiseRipen[];
 extern const u8 BattleScript_BerryFocusEnergy[];
 extern const u8 BattleScript_ActionSelectionItemsCantBeUsed[];
-extern const u8 BattleScript_AbilityAvoidsDamage[];
 extern const u8 BattleScript_AbilityShieldProtects[];
 extern const u8 BattleScript_ArenaTurnBeginning[];
 extern const u8 BattleScript_ArenaTurnBeginningRet[];
@@ -426,8 +425,11 @@ extern const u8 BattleScript_HealingWishActivates[];
 extern const u8 BattleScript_LunarDanceActivates[];
 extern const u8 BattleScript_ShellTrapSetUp[];
 extern const u8 BattleScript_MoveEffectStealthRock[];
+extern const u8 BattleScript_TargetProtected[];
 extern const u8 BattleScript_CouldntFullyProtect[];
 extern const u8 BattleScript_TargetAvoidsAttack[];
+extern const u8 BattleScript_BattlerAvoidedAttack[];
+extern const u8 BattleScript_TargetProtectedConsumeFlingItem[];
 extern const u8 BattleScript_TargetAvoidsAttackConsumeFlingItem[];
 extern const u8 BattleScript_MoveEffectStockpileWoreOff[];
 extern const u8 BattleScript_MoveEffectSpikes[];
@@ -497,7 +499,6 @@ extern const u8 BattleScript_SkyDropNoTarget[];
 extern const u8 BattleScript_IncreaseStatChangeMessage[];
 extern const u8 BattleScript_DecreaseStatChangeMessage[];
 extern const u8 BattleScript_StatDidntChangeMessagePause[];
-extern const u8 BattleScript_MissedTarget[];
 
 // zmoves
 extern const u8 BattleScript_ZMoveActivateDamaging[];

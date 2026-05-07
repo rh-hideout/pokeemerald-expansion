@@ -3,9 +3,8 @@
 	.byte B_SCR_OP_ATTACKCANCELER
 	.endm
 
-	.macro accuracycheck failInstr:req
+	.macro accuracycheck
 	.byte B_SCR_OP_ACCURACYCHECK
-	.4byte \failInstr
 	.endm
 
 	.macro printattackstring

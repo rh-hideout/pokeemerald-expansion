@@ -343,7 +343,7 @@ static void TryUpdateRoundTurnOrder(void);
 void ApplyExperienceMultipliers(s32 *expAmount, u8 expGetterMonId, u8 faintedBattler);
 static void RemoveAllWeather(void);
 static void RemoveAllTerrains(void);
-static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u8 *failInstr);
+static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr);
 static void ResetValuesForCalledMove(void);
 static bool32 CanAbilityShieldActivateForBattler(enum BattlerId battler);
 static void PlayAnimation(enum BattlerId battler, u8 animId, const u16 *argPtr, const u8 *nextInstr);
@@ -1077,7 +1077,7 @@ static bool32 ShouldSkipFRLGAccuracyCheck(void)
     return FALSE;
 }
 
-static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u8 *failInstr)
+static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr)
 {
     enum Ability abilityAtk = GetBattlerAbility(gBattlerAttacker);
     enum HoldEffect holdEffectAtk = GetBattlerHoldEffect(gBattlerAttacker);
@@ -1120,7 +1120,6 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
         if (DoesMoveMissTarget(&cv))
         {
             gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_MISSED;
-            gBattleCommunication[MISS_TYPE] = STRINGID_PKMNEVADEDATTACK;
             numMisses++;
 
             enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
@@ -1138,7 +1137,7 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
                 // Smart target to partner if miss
                 numMisses = 0; // Other dart might hit
                 gBattlerTarget = BATTLE_PARTNER(battlerDef);
-                AccuracyCheck(TRUE, nextInstr, failInstr);
+                AccuracyCheck(TRUE, nextInstr);
                 return;
             }
         }
@@ -1169,7 +1168,7 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
             if (GetMoveEffect(gCurrentMove) == EFFECT_FLING)
                 gBattlescriptCurrInstr = BattleScript_FlingMissed;
             else
-                gBattlescriptCurrInstr = failInstr;
+                gBattlescriptCurrInstr = BattleScript_MoveMissedPause;
         }
 
         if (gBattleStruct->moveResultFlags[gBattlerTarget] & (MOVE_RESULT_ONE_HIT_KO_NO_AFFECT | MOVE_RESULT_ONE_HIT_KO_STURDY))
@@ -1185,12 +1184,12 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
 
 static void Cmd_accuracycheck(void)
 {
-    CMD_ARGS(const u8 *failInstr);
+    CMD_ARGS();
 
     // The main body of this function has been moved to AccuracyCheck() to accomodate
     // Dragon Darts' multiple accuracy checks on a single attack;
     // each dart can try to re-target once after missing.
-    AccuracyCheck(FALSE, cmd->nextInstr, cmd->failInstr);
+    AccuracyCheck(FALSE, cmd->nextInstr);
 }
 
 static void Cmd_printattackstring(void)
@@ -1951,7 +1950,7 @@ static void Cmd_resultmessage(void)
         else
         {
             gBattleCommunication[MSG_DISPLAY] = 1;
-            stringId = STRINGID_PKMNEVADEDATTACK;
+            stringId = STRINGID_PKMNAVOIDEDATTACK;
         }
     }
     else
