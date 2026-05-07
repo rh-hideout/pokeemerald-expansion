@@ -51,7 +51,7 @@
       "elevation": 3,
       "var": "VAR_TEMP_1",
       "var_value": "0",
-      "script": "BattleFrontier_BattlePikeThreePathRoom_EventScript_LeftRoomWarp"
+      "script": "BattleFrontier_BattlePikeThreePathRoom_EventScript_LeftRoomWarp_hns"
     },
     {
       "type": "trigger",
@@ -60,7 +60,7 @@
       "elevation": 3,
       "var": "VAR_TEMP_1",
       "var_value": "0",
-      "script": "BattleFrontier_BattlePikeThreePathRoom_EventScript_CenterRoomWarp"
+      "script": "BattleFrontier_BattlePikeThreePathRoom_EventScript_CenterRoomWarp_hns"
     },
     {
       "type": "trigger",
@@ -69,7 +69,7 @@
       "elevation": 3,
       "var": "VAR_TEMP_1",
       "var_value": "0",
-      "script": "BattleFrontier_BattlePikeThreePathRoom_EventScript_RightRoomWarp"
+      "script": "BattleFrontier_BattlePikeThreePathRoom_EventScript_RightRoomWarp_hns"
     },
     {
       "type": "trigger",
@@ -78,7 +78,7 @@
       "elevation": 0,
       "var": "VAR_TEMP_3",
       "var_value": "1",
-      "script": "BattleFrontier_BattlePikeThreePathRoom_EventScript_NoTurningBack"
+      "script": "BattleFrontier_BattlePikeThreePathRoom_EventScript_NoTurningBack_hns"
     },
     {
       "type": "trigger",
@@ -87,7 +87,7 @@
       "elevation": 0,
       "var": "VAR_TEMP_3",
       "var_value": "1",
-      "script": "BattleFrontier_BattlePikeThreePathRoom_EventScript_NoTurningBack"
+      "script": "BattleFrontier_BattlePikeThreePathRoom_EventScript_NoTurningBack_hns"
     },
     {
       "type": "trigger",
@@ -96,7 +96,7 @@
       "elevation": 3,
       "var": "VAR_TEMP_2",
       "var_value": "0",
-      "script": "BattleFrontier_BattlePikeThreePathRoom_EventScript_SetEnteredRoom"
+      "script": "BattleFrontier_BattlePikeThreePathRoom_EventScript_SetEnteredRoom_hns"
     },
     {
       "type": "trigger",
@@ -105,7 +105,7 @@
       "elevation": 3,
       "var": "VAR_TEMP_2",
       "var_value": "0",
-      "script": "BattleFrontier_BattlePikeThreePathRoom_EventScript_SetEnteredRoom"
+      "script": "BattleFrontier_BattlePikeThreePathRoom_EventScript_SetEnteredRoom_hns"
     },
     {
       "type": "trigger",
@@ -114,7 +114,7 @@
       "elevation": 3,
       "var": "VAR_TEMP_2",
       "var_value": "0",
-      "script": "BattleFrontier_BattlePikeThreePathRoom_EventScript_SetEnteredRoom"
+      "script": "BattleFrontier_BattlePikeThreePathRoom_EventScript_SetEnteredRoom_hns"
     },
     {
       "type": "trigger",
@@ -123,7 +123,7 @@
       "elevation": 0,
       "var": "VAR_TEMP_3",
       "var_value": "1",
-      "script": "BattleFrontier_BattlePikeThreePathRoom_EventScript_NoTurningBack"
+      "script": "BattleFrontier_BattlePikeThreePathRoom_EventScript_NoTurningBack_hns"
     }
   ],
   "bg_events": []

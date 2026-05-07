@@ -92,7 +92,7 @@ BattleFrontier_BattleTowerMultiPartnerRoom_EventScript_Attendant_hns::
 
 BattleFrontier_BattleTowerMultiPartnerRoom_EventScript_QuitChallenge_hns::
 	frontier_set FRONTIER_DATA_RECORD_DISABLED, TRUE
-	goto BattleFrontier_BattleTower_EventScript_WarpToLobbyLost
+	goto BattleFrontier_BattleTower_EventScript_WarpToLobbyLost_hns
 	end
 
 BattleFrontier_BattleTowerMultiPartnerRoom_EventScript_EnterElevator_hns::

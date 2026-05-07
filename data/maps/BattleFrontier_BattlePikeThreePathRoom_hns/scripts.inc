@@ -1,5 +1,5 @@
 BattleFrontier_BattlePikeThreePathRoom_hns_MapScripts::
-	map_script MAP_SCRIPT_ON_RESUME, BattleFrontier_BattlePikeRoom_OnResume
+	map_script MAP_SCRIPT_ON_RESUME, BattleFrontier_BattlePikeRoom_OnResume_hns
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, BattleFrontier_BattlePikeThreePathRoom_OnFrame_hns
 	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, BattleFrontier_BattlePikeThreePathRoom_OnWarp_hns
 	.byte 0
@@ -143,7 +143,7 @@ BattleFrontier_BattlePikeThreePathRoom_EventScript_AskRetireChallenge_hns::
 	waitmessage
 	multichoicedefault 20, 8, MULTI_YESNO, 1, FALSE
 	switch VAR_RESULT
-	case 0, BattleFrontier_BattlePike_EventScript_Retire
+	case 0, BattleFrontier_BattlePike_EventScript_Retire_hns
 	release
 	end
 

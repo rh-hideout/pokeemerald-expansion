@@ -1,8 +1,8 @@
 BattleFrontier_BattlePikeRoomNormal_hns_MapScripts::
-	map_script MAP_SCRIPT_ON_RESUME, BattleFrontier_BattlePikeRoom_OnResume
-	map_script MAP_SCRIPT_ON_TRANSITION, BattleFrontier_BattlePikeRoom_OnTransition
+	map_script MAP_SCRIPT_ON_RESUME, BattleFrontier_BattlePikeRoom_OnResume_hns
+	map_script MAP_SCRIPT_ON_TRANSITION, BattleFrontier_BattlePikeRoom_OnTransition_hns
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, BattleFrontier_BattlePikeRoomNormal_OnFrame_hns
-	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, BattleFrontier_BattlePikeRoom_OnWarp
+	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, BattleFrontier_BattlePikeRoom_OnWarp_hns
 	.byte 0
 
 BattleFrontier_BattlePikeRoomNormal_OnFrame_hns:
@@ -185,7 +185,7 @@ BattleFrontier_BattlePikeRoomNormal_EventScript_DefeatedLucy_hns::
 	pike_get PIKE_DATA_WIN_STREAK
 	addvar VAR_RESULT, 1
 	pike_set PIKE_DATA_WIN_STREAK, VAR_RESULT
-	call BattleFrontier_BattlePikeRoom_EventScript_WarpToFinalRoom
+	call BattleFrontier_BattlePikeRoom_EventScript_WarpToFinalRoom_hns
 	waitstate
 	end
 

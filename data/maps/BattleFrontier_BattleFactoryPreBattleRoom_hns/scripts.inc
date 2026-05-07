@@ -131,7 +131,7 @@ BattleFrontier_BattleFactoryPreBattleRoom_EventScript_AskRetireChallenge_hns::
 	multichoicedefault 20, 8, MULTI_YESNO, 1, FALSE
 	switch VAR_RESULT
 	case 1, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_AskReadyForOpponent_hns
-	case 0, BattleFrontier_BattleFactoryBattleRoom_EventScript_WarpToLobbyLost
+	case 0, BattleFrontier_BattleFactoryBattleRoom_EventScript_WarpToLobby_hnsLost_hns
 	case MULTI_B_PRESSED, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_AskReadyForOpponent_hns
 
 BattleFrontier_BattleFactoryPreBattleRoom_EventScript_AskSwapMon_hns::
