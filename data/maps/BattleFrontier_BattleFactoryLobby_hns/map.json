@@ -1,7 +1,6 @@
 {
   "id": "MAP_BATTLE_FRONTIER_BATTLE_FACTORY_LOBBY_HNS",
   "name": "BattleFrontier_BattleFactoryLobby_hns",
-  "game_version": "hns",
   "layout": "LAYOUT_BATTLE_FRONTIER_BATTLE_FACTORY_LOBBY_HNS",
   "music": "MUS_B_FACTORY",
   "region_map_section": "MAPSEC_BATTLE_FRONTIER",
@@ -136,5 +135,6 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "BattleFrontier_BattleFactoryLobby_EventScript_RulesBoard_hns"
     }
-  ]
+  ],
+  "game_version": "hns"
 }

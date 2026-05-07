@@ -652,6 +652,20 @@
       "elevation": 0,
       "dest_map": "MAP_BATTLE_FRONTIER_MART_HNS",
       "dest_warp_id": "0"
+    },
+    {
+      "x": 0,
+      "y": 7,
+      "elevation": 0,
+      "dest_map": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST_HNS",
+      "dest_warp_id": "11"
+    },
+    {
+      "x": 7,
+      "y": 46,
+      "elevation": 0,
+      "dest_map": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST_HNS",
+      "dest_warp_id": "12"
     }
   ],
   "coord_events": [],

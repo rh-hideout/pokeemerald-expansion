@@ -1,7 +1,6 @@
 {
   "id": "MAP_BATTLE_FRONTIER_LOUNGE9_HNS",
   "name": "BattleFrontier_Lounge9_hns",
-  "game_version": "hns",
   "layout": "LAYOUT_BATTLE_FRONTIER_LOUNGE2_HNS",
   "music": "MUS_B_TOWER_RS",
   "region_map_section": "MAPSEC_BATTLE_FRONTIER",
@@ -139,16 +138,17 @@
       "y": 9,
       "elevation": 0,
       "dest_map": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST_HNS",
-      "dest_warp_id": "11"
+      "dest_warp_id": "10"
     },
     {
       "x": 2,
       "y": 9,
       "elevation": 0,
       "dest_map": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST_HNS",
-      "dest_warp_id": "11"
+      "dest_warp_id": "10"
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [],
+  "game_version": "hns"
 }

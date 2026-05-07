@@ -87,14 +87,14 @@
       "y": 13,
       "elevation": 0,
       "dest_map": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST_HNS",
-      "dest_warp_id": "8"
+      "dest_warp_id": "7"
     },
     {
       "x": 4,
       "y": 1,
       "elevation": 0,
       "dest_map": "MAP_BATTLE_FRONTIER_OUTSIDE_WEST_HNS",
-      "dest_warp_id": "9"
+      "dest_warp_id": "8"
     }
   ],
   "coord_events": [],

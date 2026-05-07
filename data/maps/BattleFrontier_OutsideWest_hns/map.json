@@ -571,7 +571,7 @@
     {
       "graphics_id": "OBJ_EVENT_GFX_ENGINEER_HNS",
       "x": 49,
-      "y": 10,
+      "y": 11,
       "elevation": 0,
       "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
       "movement_range_x": 1,
@@ -698,6 +698,20 @@
       "elevation": 0,
       "dest_map": "MAP_BATTLE_FRONTIER_LOUNGE1_HNS",
       "dest_warp_id": "0"
+    },
+    {
+      "x": 44,
+      "y": 7,
+      "elevation": 0,
+      "dest_map": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST_HNS",
+      "dest_warp_id": "14"
+    },
+    {
+      "x": 50,
+      "y": 46,
+      "elevation": 0,
+      "dest_map": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST_HNS",
+      "dest_warp_id": "15"
     }
   ],
   "coord_events": [],
