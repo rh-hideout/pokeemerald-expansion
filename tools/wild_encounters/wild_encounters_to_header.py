@@ -168,7 +168,7 @@ class WildEncounterAssembler:
                 version = "FIRERED"
             elif "LeafGreen" in shared_label:
                 version = "LEAFGREEN"
-            elif "_Hns" in shared_label:
+            elif "_Hns" in shared_label or "_hns" in shared_label:
                 version = "POKEMON_HNS"
 
             self.WriteLine(f"#ifdef {version}")
@@ -243,7 +243,7 @@ class WildEncounterAssembler:
                     version = "FIRERED"
                 elif "LeafGreen" in shared_label:
                     version = "LEAFGREEN"
-                elif "_Hns" in shared_label:
+                elif "_Hns" in shared_label or "_hns" in shared_label:
                     version = "POKEMON_HNS"
                 self.WriteLine(f"#ifdef {version}")
                 for mon_type in self.config.mon_types:
