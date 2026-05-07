@@ -722,7 +722,11 @@ static bool8 TryStartMiscWalkingScripts(u16 metatileBehavior)
     }
     else if (MetatileBehavior_IsBattlePyramidWarp(metatileBehavior))
     {
+#if IS_HNS
+        ScriptContext_SetupScript(BattlePyramid_WarpToNextFloor_hns);
+#else
         ScriptContext_SetupScript(BattlePyramid_WarpToNextFloor);
+#endif
         return TRUE;
     }
     else if (MetatileBehavior_IsSecretBaseGlitterMat(metatileBehavior) == TRUE)

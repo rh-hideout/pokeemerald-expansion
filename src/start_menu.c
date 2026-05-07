@@ -961,7 +961,11 @@ static bool8 BattlePyramidRetireCallback(void)
         ClearDialogWindowAndFrameToTransparent(0, TRUE);
         ScriptUnfreezeObjectEvents();
         UnlockPlayerFieldControls();
+#if IS_HNS
+        ScriptContext_SetupScript(BattlePyramid_Retire_hns);
+#else
         ScriptContext_SetupScript(BattlePyramid_Retire);
+#endif
         return TRUE;
     }
 

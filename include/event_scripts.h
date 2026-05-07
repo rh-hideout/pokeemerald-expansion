@@ -610,6 +610,10 @@ extern const u8 BattlePyramid_Retire[];
 extern const u8 BattlePyramid_WarpToNextFloor[];
 extern const u8 BattlePyramid_TrainerBattle[];
 extern const u8 BattlePyramid_FindItemBall[];
+extern const u8 BattlePyramid_Retire_hns[];
+extern const u8 BattlePyramid_WarpToNextFloor_hns[];
+extern const u8 BattlePyramid_TrainerBattle_hns[];
+extern const u8 BattlePyramid_FindItemBall_hns[];
 
 // fldeff misc
 extern const u8 SecretBase_EventScript_CaveUseSecretPower[];

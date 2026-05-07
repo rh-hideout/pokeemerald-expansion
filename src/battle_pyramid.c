@@ -1712,7 +1712,11 @@ u8 GetTrainerEncounterMusicIdInBattlePyramid(u16 trainerId)
 
 static void UNUSED BattlePyramidRetireChallenge(void)
 {
+#if IS_HNS
+    ScriptContext_SetupScript(BattlePyramid_Retire_hns);
+#else
     ScriptContext_SetupScript(BattlePyramid_Retire);
+#endif
 }
 
 static u16 GetUniqueTrainerId(u8 objectEventId)
@@ -1764,7 +1768,7 @@ void GenerateBattlePyramidFloorLayout(u16 *backupMapData, bool8 setPlayerPositio
         u16 *map;
         int yOffset, xOffset;
     #if IS_HNS
-        const struct MapLayout *mapLayout = gMapLayouts[floorLayoutOffsets[i] + LAYOUT_BATTLE_PYRAMID_SQUARE01_HNS - 1];
+        const struct MapLayout *mapLayout = gMapLayouts[floorLayoutOffsets[i] + LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR_HNS];
     #else
         const struct MapLayout *mapLayout = gMapLayouts[floorLayoutOffsets[i] + LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR];
     #endif
@@ -1863,9 +1867,9 @@ void LoadBattlePyramidFloorObjectEventScripts(void)
     {
 #if IS_HNS
         if (events[i].graphicsId != OBJ_EVENT_GFX_ITEM_BALL_HNS)
-            events[i].script = BattlePyramid_TrainerBattle;
+            events[i].script = BattlePyramid_TrainerBattle_hns;
         else
-            events[i].script = BattlePyramid_FindItemBall;
+            events[i].script = BattlePyramid_FindItemBall_hns;
 #else
         if (events[i].graphicsId != OBJ_EVENT_GFX_ITEM_BALL)
             events[i].script = BattlePyramid_TrainerBattle;
