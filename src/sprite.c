@@ -446,10 +446,7 @@ u32 CreateSpriteUnchecked(const struct SpriteTemplate *template, s16 x, s16 y, u
 
 u32 CreateSpriteAtEnd(const struct SpriteTemplate *template, s16 x, s16 y, u32 subpriority)
 {
-    u32 spriteId = CreateSpriteAtEndUnchecked(template, x, y, subpriority);
-
-    assertf(spriteId < MAX_SPRITES, "Out of sprite slots");
-    return spriteId;
+    return CreateSpriteAtEndUnchecked(template, x, y, subpriority);
 }
 
 u32 CreateSpriteAtEndUnchecked(const struct SpriteTemplate *template, s16 x, s16 y, u32 subpriority)
