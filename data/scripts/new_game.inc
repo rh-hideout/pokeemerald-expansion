@@ -432,7 +432,8 @@ EventScript_ResetAllMapFlagsHnS::
 	setvar VAR_ROUTE27_BAOBA_CALL, 0
 
 	additem ITEM_EXP_SHARE
-
+	setrespawn HEAL_LOCATION_NEW_BARK_TOWN_HNS
+	
 	call EventScript_ResetAllBerries
 	end
 #endif
