@@ -128,7 +128,6 @@ static void HandleEndTurn_BattleLost(void);
 static void HandleEndTurn_RanFromBattle(void);
 static void HandleEndTurn_MonFled(void);
 static void HandleEndTurn_FinishBattle(void);
-static u32 Crc32B (const u8 *data, u32 size);
 static u32 GeneratePartyHash(const struct Trainer *trainer, u32 i);
 
 EWRAM_DATA u16 gBattle_BG0_X = 0;
@@ -1803,26 +1802,6 @@ void CB2_QuitRecordedBattle(void)
         FreeAllWindowBuffers();
         SetMainCallback2(gMain.savedCallback);
     }
-}
-
-static u32 Crc32B (const u8 *data, u32 size)
-{
-   s32 i, j;
-   u32 byte, crc, mask;
-
-   i = 0;
-   crc = 0xFFFFFFFF;
-   for (i = 0; i < size; ++i)
-   {
-        byte = data[i];
-        crc = crc ^ byte;
-        for (j = 7; j >= 0; --j)
-        {
-            mask = -(crc & 1);
-            crc = (crc >> 1) ^ (0xEDB88320 & mask);
-        }
-   }
-   return ~crc;
 }
 
 static u32 GeneratePartyHash(const struct Trainer *trainer, u32 i)
@@ -3775,12 +3754,26 @@ static void TryDoEventsBeforeFirstTurn(void)
     case FIRST_TURN_EVENTS_TOTEM_BOOST:
         for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
         {
-            if (gQueuedStatBoosts[battler].stats != 0 && !gProtectStructs[battler].eatMirrorHerb && gProtectStructs[battler].activateOpportunist == 0)
+            if (gQueuedStatBoosts[battler].stats == 0)
+                continue;
+
+            for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
             {
-                gBattlerAttacker = battler;
-                BattleScriptExecute(BattleScript_TotemVar);
-                return;
+                if (gQueuedStatBoosts[battler].stats & (1 << stat))
+                {
+                    s32 stage = gQueuedStatBoosts[battler].statChanges[stat];
+                    gBattleMons[battler].statStages[stat] += stage;
+                    if (gBattleMons[battler].statStages[stat] > MAX_STAT_STAGE)
+                        gBattleMons[battler].statStages[stat] = MAX_STAT_STAGE;
+                    else if (gBattleMons[battler].statStages[stat] < MIN_STAT_STAGE)
+                        gBattleMons[battler].statStages[stat] = MIN_STAT_STAGE;
+                }
             }
+
+            gBattlerAttacker = battler;
+            gQueuedStatBoosts[battler].stats = 0;
+            BattleScriptPushCursorAndCallback(BattleScript_TotemBoost);
+            return;
         }
         memset(gQueuedStatBoosts, 0, sizeof(gQueuedStatBoosts)); // erase all totem boosts for Mirror Herb and Opportunist
         gBattleStruct->eventState.beforeFirstTurn++;
@@ -3960,7 +3953,7 @@ u8 IsRunningFromBattleImpossible(enum BattlerId battler)
     enum HoldEffect holdEffect;
     u32 i;
 
-    if (FlagGet(B_FLAG_NO_RUNNING))
+    if (FlagGet(WE_FLAG_NO_RUNNING))
     {
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CANT_ESCAPE;
         return BATTLE_RUN_FORBIDDEN;
@@ -4344,7 +4337,7 @@ static void HandleTurnActionSelectionState(void)
                 }
                 else if ((IsRunningFromBattleImpossible(battler) != BATTLE_RUN_SUCCESS
                          && gBattleResources->bufferB[battler][1] == B_ACTION_RUN)
-                         || (FlagGet(B_FLAG_NO_RUNNING) == TRUE && gBattleResources->bufferB[battler][1] == B_ACTION_RUN))
+                         || (FlagGet(WE_FLAG_NO_RUNNING) == TRUE && gBattleResources->bufferB[battler][1] == B_ACTION_RUN))
                 {
                     gSelectionBattleScripts[battler] = BattleScript_PrintCantEscapeFromBattle;
                     gBattleCommunication[battler] = STATE_SELECTION_SCRIPT;
@@ -4576,9 +4569,7 @@ static void HandleTurnActionSelectionState(void)
                 gBattlerAttacker = battler;
                 gBattlescriptCurrInstr = gSelectionBattleScripts[battler];
                 if (!IsBattleControllerActiveOrPendingSyncAnywhere(battler))
-                {
                     gBattleScriptingCommandsTable[gBattlescriptCurrInstr[0]]();
-                }
                 gSelectionBattleScripts[battler] = gBattlescriptCurrInstr;
             }
             break;
@@ -4667,18 +4658,16 @@ u32 GetBattlerTotalSpeedStat(enum BattlerId battler, enum Ability ability, enum 
     speed *= gStatStageRatios[gBattleMons[battler].statStages[STAT_SPEED]][0];
     speed /= gStatStageRatios[gBattleMons[battler].statStages[STAT_SPEED]][1];
 
+    u32 weather = GetWeather();
     // weather abilities
-    if (HasWeatherEffect())
-    {
-        if (ability == ABILITY_SWIFT_SWIM       && holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA && gBattleWeather & B_WEATHER_RAIN)
-            speed *= 2;
-        else if (ability == ABILITY_CHLOROPHYLL && holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA && gBattleWeather & B_WEATHER_SUN)
-            speed *= 2;
-        else if (ability == ABILITY_SAND_RUSH   && gBattleWeather & B_WEATHER_SANDSTORM)
-            speed *= 2;
-        else if (ability == ABILITY_SLUSH_RUSH  && (gBattleWeather & B_WEATHER_ICY_ANY))
-            speed *= 2;
-    }
+    if (ability == ABILITY_SWIFT_SWIM       && holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA && weather  & B_WEATHER_RAIN)
+        speed *= 2;
+    else if (ability == ABILITY_CHLOROPHYLL && holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA && weather  & B_WEATHER_SUN)
+        speed *= 2;
+    else if (ability == ABILITY_SAND_RUSH   && weather & B_WEATHER_SANDSTORM)
+        speed *= 2;
+    else if (ability == ABILITY_SLUSH_RUSH  && weather & B_WEATHER_ICY_ANY)
+        speed *= 2;
 
     // other abilities
     if (ability == ABILITY_QUICK_FEET && gBattleMons[battler].status1 & STATUS1_ANY)
@@ -4687,7 +4676,7 @@ u32 GetBattlerTotalSpeedStat(enum BattlerId battler, enum Ability ability, enum 
         speed *= 2;
     else if (ability == ABILITY_SLOW_START && gBattleMons[battler].volatiles.slowStartTimer != 0)
         speed /= 2;
-    else if (ability == ABILITY_PROTOSYNTHESIS && !(gBattleMons[battler].volatiles.transformed) && ((gBattleWeather & B_WEATHER_SUN && HasWeatherEffect()) || gBattleMons[battler].volatiles.boosterEnergyActivated))
+    else if ((ability == ABILITY_PROTOSYNTHESIS && !gBattleMons[battler].volatiles.transformed && weather & B_WEATHER_SUN) || gBattleMons[battler].volatiles.boosterEnergyActivated)
         speed = (GetParadoxBoostedStatId(battler) == STAT_SPEED) ? (speed * 150) / 100 : speed;
     else if (ability == ABILITY_QUARK_DRIVE && !(gBattleMons[battler].volatiles.transformed) && (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gBattleMons[battler].volatiles.boosterEnergyActivated))
         speed = (GetParadoxBoostedStatId(battler) == STAT_SPEED) ? (speed * 150) / 100 : speed;
@@ -5023,7 +5012,7 @@ static void SetActionsAndBattlersTurnOrder(void)
         }
     }
     gBattleMainFunc = CheckChangingTurnOrderEffects;
-    gBattleStruct->quickClawBattlerId = 0;
+    gBattleScripting.battler = 0;
 }
 
 static void TurnValuesCleanUp(bool8 var0)
@@ -5219,10 +5208,10 @@ static void CheckChangingTurnOrderEffects(void)
 
     if (!(gHitMarker & HITMARKER_RUN))
     {
-        while (gBattleStruct->quickClawBattlerId < gBattlersCount)
+        while (gBattleScripting.battler < gBattlersCount)
         {
-            battler = gBattlerAttacker = gBattleStruct->quickClawBattlerId;
-            gBattleStruct->quickClawBattlerId++;
+            battler = gBattlerAttacker = gBattleScripting.battler++;
+
             if (gChosenActionByBattler[battler] == B_ACTION_USE_MOVE
              && GetMoveEffect(gChosenMoveByBattler[battler]) != EFFECT_FOCUS_PUNCH   // quick claw message doesn't need to activate here
              && (gProtectStructs[battler].usedCustapBerry || gProtectStructs[battler].quickDraw)
@@ -5258,9 +5247,6 @@ static void CheckChangingTurnOrderEffects(void)
         }
     }
 
-    // setup stuff before turns/actions
-    TryClearRageAndFuryCutter();
-
     // Prevents trainer slides triggering a turn late if another slide took priority on the previous turn
     for (i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
@@ -5274,11 +5260,13 @@ static void CheckChangingTurnOrderEffects(void)
     gCurrentActionFuncId = gActionsByTurnOrder[0];
     gBattleStruct->dynamicMoveType = 0;
     gBattleStruct->effectsBeforeUsingMoveDone = FALSE;
-    for (i = 0; i < MAX_BATTLERS_COUNT; i++)
+    for (i = 0; i < gBattlersCount; i++)
     {
         gBattleStruct->battlerState[i].focusPunchBattlers = FALSE;
         gBattleStruct->battlerState[i].ateBoost = FALSE;
         gSpecialStatuses[i].gemBoost = FALSE;
+        if (!MoveHasAdditionalEffectSelf(gChosenMoveByBattler[i], MOVE_EFFECT_RAGE))
+            gBattleMons[i].volatiles.rage = FALSE;
     }
 
     gBattleMainFunc = RunTurnActionsFunctions;
@@ -5310,7 +5298,6 @@ static void RunTurnActionsFunctions(void)
         }
     }
 
-    gBattleStruct->savedTurnActionNumber = gCurrentTurnActionNumber;
     sTurnActionsFuncsTable[gCurrentActionFuncId]();
 
     if (gCurrentTurnActionNumber >= gBattlersCount) // everyone did their actions, turn finished
@@ -5659,7 +5646,7 @@ static void TryEvolvePokemon(void)
 
             if (species != SPECIES_NONE)
             {
-                FreeAllWindowBuffers();
+                CloseMainBattleScreen();
                 gBattleMainFunc = WaitForEvoSceneToFinish;
                 GetEvolutionTargetSpecies(&gParties[B_TRAINER_0][i], mode, evolutionItemArg, NULL, &canStopEvo, DO_EVO);
                 EvolutionScene(&gParties[B_TRAINER_0][i], species, canStopEvo, i);
@@ -5789,7 +5776,7 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
     enum Species species;
     enum Item heldItem;
-    enum Type type1, type2, type3;
+    enum Type types[3];
     enum Ability ability;
     enum HoldEffect holdEffect;
     enum Gimmick gimmick = GetActiveGimmick(battler);
@@ -5803,9 +5790,7 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId
         heldItem = gBattleMons[battler].item;
         holdEffect = GetBattlerHoldEffect(battler);
         ability = GetBattlerAbility(battler);
-        type1 = gBattleMons[battler].types[0];
-        type2 = gBattleMons[battler].types[1];
-        type3 = gBattleMons[battler].types[2];
+        GetBattlerTypes(battler, FALSE, types);
     }
     else
     {
@@ -5813,9 +5798,9 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId
         heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, 0);
         holdEffect = GetItemHoldEffect(heldItem);
         ability = GetMonAbility(mon);
-        type1 = GetSpeciesType(species, 0);
-        type2 = GetSpeciesType(species, 1);
-        type3 = TYPE_MYSTERY;
+        types[0] = GetSpeciesType(species, 0);
+        types[1] = GetSpeciesType(species, 1);
+        types[2] = TYPE_MYSTERY;
     }
 
     switch (moveEffect)
@@ -5902,14 +5887,14 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId
             enum Type teraType;
             if (gimmick == GIMMICK_TERA && ((teraType = GetMonData(mon, MON_DATA_TERA_TYPE)) != TYPE_STELLAR))
                 return teraType;
-            else if (type1 != TYPE_MYSTERY && !(gBattleMons[battler].volatiles.roostActive && type1 == TYPE_FLYING))
-                return type1;
-            else if (type2 != TYPE_MYSTERY && !(gBattleMons[battler].volatiles.roostActive && type2 == TYPE_FLYING))
-                return type2;
+            else if (types[0] != TYPE_MYSTERY && !(gBattleMons[battler].volatiles.roostActive && types[0] == TYPE_FLYING))
+                return types[0];
+            else if (types[1] != TYPE_MYSTERY && !(gBattleMons[battler].volatiles.roostActive && types[1] == TYPE_FLYING))
+                return types[1];
             else if (gBattleMons[battler].volatiles.roostActive)
                 return (B_ROOST_PURE_FLYING >= GEN_5 ? TYPE_NORMAL : TYPE_MYSTERY);
-            else if (type3 != TYPE_MYSTERY)
-                return type3;
+            else if (types[2] != TYPE_MYSTERY)
+                return types[2];
             else
                 return TYPE_MYSTERY;
         }
@@ -6069,27 +6054,24 @@ void SetTypeBeforeUsingMove(enum Move move, enum BattlerId battler)
 void ScriptSetTotemBoost(struct ScriptContext *ctx)
 {
     enum BattlerId battler = VarGet(ScriptReadHalfword(ctx));
-    u32 stat;
-    u32 i;
 
     Script_RequestEffects(SCREFF_V1);
 
-    for (i = 0; i < (NUM_BATTLE_STATS - 1); i++)
+    for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
     {
-        stat = VarGet(ScriptReadHalfword(ctx));
-        if (stat)
+        u32 stage = VarGet(ScriptReadHalfword(ctx));
+        if (stage)
         {
-            gQueuedStatBoosts[battler].stats |= (1 << i);
-            gQueuedStatBoosts[battler].statChanges[i] = stat;
-            gQueuedStatBoosts[battler].stats |= 0x80;  // used as a flag for the "totem flared to life" script
+            gQueuedStatBoosts[battler].stats |= (1 << stat);
+            gQueuedStatBoosts[battler].statChanges[stat] = stage;
         }
     }
 }
 
 bool32 IsWildMonSmart(void)
 {
-#if B_SMART_WILD_AI_FLAG != 0
-    return (FlagGet(B_SMART_WILD_AI_FLAG));
+#if WE_SMART_WILD_AI_FLAG != 0
+    return (FlagGet(WE_SMART_WILD_AI_FLAG));
 #else
     return FALSE;
 #endif

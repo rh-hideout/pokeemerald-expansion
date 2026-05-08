@@ -18,13 +18,13 @@
 
 #define TAG_SKIP_INTRO 2000
 
-static const u32 gQuickstartHudGfx[] = INCBIN_U32("graphics/quickstart/quickstart_hud.4bpp.smol");
+static const u32 gQuickstartHudGfx[] = INCGFX_U32("graphics/quickstart/quickstart_hud.png", ".4bpp.smol");
 #if FIRERED
-static const u16 gQuickstartHudPal[] = INCBIN_U16("graphics/quickstart/firered.gbapal");
+static const u16 gQuickstartHudPal[] = INCGFX_U16("graphics/quickstart/firered.pal", ".gbapal");
 #elif LEAFGREEN
-static const u16 gQuickstartHudPal[] = INCBIN_U16("graphics/quickstart/leafgreen.gbapal");
+static const u16 gQuickstartHudPal[] = INCGFX_U16("graphics/quickstart/leafgreen.pal", ".gbapal");
 #else
-static const u16 gQuickstartHudPal[] = INCBIN_U16("graphics/quickstart/emerald.gbapal");
+static const u16 gQuickstartHudPal[] = INCGFX_U16("graphics/quickstart/emerald.pal", ".gbapal");
 #endif
 
 static const struct OamData sQuickstartHudOam = {

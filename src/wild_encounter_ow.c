@@ -240,7 +240,7 @@ void UpdateOverworldWildEncounter(void)
 
     if (!WE_OW_ENCOUNTERS
      || FlagGet(WE_OWE_FLAG_DISABLED)
-     || FlagGet(OW_FLAG_NO_ENCOUNTER)
+     || FlagGet(WE_FLAG_NO_ENCOUNTER)
      || FlagGet(DN_FLAG_SEARCHING)
      || (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS && !WE_OWE_BATTLE_PIKE)
      || (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR && !WE_OWE_BATTLE_PYRAMID)
@@ -1478,16 +1478,12 @@ void DespawnAllOverworldWildEncounters(enum TypeOWE oweType, u32 flags)
     }
 }
 
-bool32 TryAndDespawnOldestGeneratedOWE_ToFreeObject(u8 *objectEventId)
+u32 TryAndDespawnOldestGeneratedOWE_ToFreeObject(void)
 {
     if (!WE_OW_ENCOUNTERS)
-        return FALSE;
-    
-    *objectEventId = RemoveOldestGeneratedOWE();
-    if (*objectEventId == OBJECT_EVENTS_COUNT)
-        return TRUE;
-    
-    return FALSE;
+        return OBJECT_EVENTS_COUNT;
+
+    return RemoveOldestGeneratedOWE();
 }
 
 void DespawnOWEOnBattleStart(void)

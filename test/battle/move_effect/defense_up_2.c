@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_IRON_DEFENSE) == EFFECT_DEFENSE_UP_2);
+    ASSUME_STAT_CHANGE(MOVE_IRON_DEFENSE, defense: +2);
 }
 
 SINGLE_BATTLE_TEST("Iron Defense raises Defense by 2 stages", s16 damage)

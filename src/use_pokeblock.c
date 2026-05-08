@@ -178,7 +178,7 @@ static EWRAM_DATA u8 *sMonFrame_TilemapPtr = NULL;
 static EWRAM_DATA struct UsePokeblockMenu *sMenu = NULL;
 
 static const u32 sMonFrame_Pal[] = INCBIN_U32("graphics/pokeblock/use_screen/mon_frame_pal.bin");
-static const u32 sMonFrame_Gfx[] = INCBIN_U32("graphics/pokeblock/use_screen/mon_frame.4bpp");
+static const u32 sMonFrame_Gfx[] = INCGFX_U32("graphics/pokeblock/use_screen/mon_frame.png", ".4bpp");
 static const u32 sMonFrame_Tilemap[] = INCBIN_U32("graphics/pokeblock/use_screen/mon_frame.bin.smolTM");
 static const u32 sGraphData_Tilemap[] = INCBIN_U32("graphics/pokeblock/use_screen/graph_data.bin.smolTM");
 

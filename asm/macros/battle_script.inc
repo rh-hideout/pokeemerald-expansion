@@ -17,11 +17,6 @@
 	.4byte \ptr
 	.endm
 
-	.macro critcalc
-	.warning "critcalc macro has been deprecated, please remove from scripts"
-	.byte B_SCR_OP_CRITCALC
-	.endm
-
 	.macro damagecalc
 	.byte B_SCR_OP_DAMAGECALC
 	.endm
@@ -448,11 +443,6 @@
 	moveend 2, \to
 	.endm
 
-	.macro sethealblock failInstr:req
-	.byte B_SCR_OP_SETHEALBLOCK
-	.4byte \failInstr
-	.endm
-
 	.macro returnatktoball
 	.byte B_SCR_OP_RETURNATKTOBALL
 	.endm
@@ -718,14 +708,6 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro stockpile
-	.byte B_SCR_OP_STOCKPILE
-	.endm
-
-	.macro stockpiletobasedamage
-	.byte B_SCR_OP_STOCKPILETOBASEDAMAGE
-	.endm
-
 	.macro stockpiletohpheal failInstr:req
 	.byte B_SCR_OP_STOCKPILETOHPHEAL
 	.4byte \failInstr
@@ -933,11 +915,6 @@
 	.byte \flag
 	.endm
 
-	.macro halvehp failInstr:req
-	.byte B_SCR_OP_HALVEHP
-	.4byte \failInstr
-	.endm
-
 	.macro copyfoestats
 	.byte B_SCR_OP_COPYFOESTATS
 	.endm
@@ -1110,11 +1087,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro pursuitdoubles failInstr:req
-	.byte B_SCR_OP_PURSUITDOUBLES
-	.4byte \failInstr
-	.endm
-
 	.macro snatchsetbattlers
 	.byte B_SCR_OP_SNATCHSETBATTLERS
 	.endm
@@ -1177,11 +1149,6 @@
 	.byte \stat
 	.endm
 
-	.macro jumpifcaptivateaffected jumpInstr:req
-	.byte B_SCR_OP_JUMPIFCAPTIVATEAFFECTED
-	.4byte \jumpInstr
-	.endm
-
 	.macro setnonvolatilestatus trigger:req
 	.byte B_SCR_OP_SETNONVOLATILESTATUS
 	.byte \trigger
@@ -1200,6 +1167,22 @@
 	.byte B_SCR_OP_TRY_CONFUSION_AFTER_SKY_DROP
     .byte \battler
 	.endm
+
+    .macro trymovestatchanges
+    .byte B_SCR_OP_TRYMOVESTATCHANGES
+    .endm
+
+    .macro trystatchanges battler:req statChangeFlags:req
+    .byte B_SCR_OP_TRYSTATCHANGES
+    .byte \battler
+    .2byte \statChangeFlags
+    .endm
+
+    .macro trybattlerstatchange battler:req statChangeFlags:req
+    .byte B_SCR_OP_TRYBATTLERSTATCHANGE
+    .byte \battler
+    .2byte \statChangeFlags
+    .endm
 
 	.macro callnative func:req
 	.byte B_SCR_OP_CALLNATIVE
@@ -1222,10 +1205,6 @@
 	callnative BS_RestoreAttacker
 	.endm
 
-	.macro jumpifintimidateabilityprevented
-	callnative BS_JumpIfIntimidateAbilityPrevented
-	.endm
-
 	.macro allyswitchswapbattlers
 	callnative BS_AllySwitchSwapBattler
 	.endm
@@ -1233,12 +1212,6 @@
 	.macro tryallyswitch jumpInstr:req
 	callnative BS_TryAllySwitch
 	.4byte \jumpInstr
-	.endm
-
-	.macro dostockpilestatchangeswearoff, battler:req, statChangeInstr:req
-	callnative BS_DoStockpileStatChangesWearOff
-	.byte \battler
-	.4byte \statChangeInstr
 	.endm
 
 	.macro jumpifmorethanhalfHP battler:req, jumpInstr:req
@@ -1454,12 +1427,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro copyfoesstatincrease battler:req, failInstr:req
-	callnative BS_CopyFoesStatIncrease
-	.byte \battler
-	.4byte \failInstr
-	.endm
-
 	.macro removeweather
 	callnative BS_RemoveWeather
 	.endm
@@ -1471,11 +1438,6 @@
 	.macro jumpifsleepclause jumpInstr:req
 	callnative BS_JumpIfSleepClause
 	.4byte \jumpInstr
-	.endm
-
-	.macro trytarshot failInstr:req
-	callnative BS_TryTarShot
-	.4byte \failInstr
 	.endm
 
 	.macro jumpifnoberry battler:req, jumpInstr:req
@@ -1539,17 +1501,8 @@
 	callnative BS_WaitFanfare
 	.endm
 
-	.macro cantarshotwork failInstr:req
-	callnative BS_CanTarShotWork
-	.4byte \failInstr
-	.endm
-
 	.macro removeterrain
 	callnative BS_RemoveTerrain
-	.endm
-
-	.macro spectralthiefprintstats
-	callnative BS_SpectralThiefPrintStats
 	.endm
 
 	.macro setmoveresultflags flags:req
@@ -1596,11 +1549,24 @@
 	callnative BS_RestoreSavedMove
 	.endm
 
-@ helpful macros
-	.macro setstatchanger stat:req, stages:req, down:req
-	setbyte sSTATCHANGER, \stat | \stages << 3 | \down << 7
-	.endm
+    .macro trydefiantrattled
+    callnative BS_TryDefiantRattled
+    .endm
 
+    .macro tryadrenalineorb
+    callnative BS_TryAdrenalineOrb
+    .endm
+
+    .macro raisecritstatchangeanim battler:req
+    callnative BS_RaiseCritStatChangeAnim
+    .byte \battler
+    .endm
+
+    .macro restorestatchangequeue
+    callnative BS_RestoreStatChangeQueue
+    .endm
+
+@ helpful macros
 	.macro setmoveeffect effect:req
 	sethword sMOVE_EFFECT, \effect
 	.endm
@@ -1732,11 +1698,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro getstatvalue stat:req
-	callnative BS_GetStatValue
-	.byte \stat
-	.endm
-
 	.macro jumpiffullhp battler:req, jumpInstr:req
 	callnative BS_JumpIfFullHp
 	.byte \battler
@@ -1763,11 +1724,6 @@
 
 	.macro gravityonairbornemons
 	callnative BS_GravityOnAirborneMons
-	.endm
-
-	.macro tryacupressure failInstr:req
-	callnative BS_TryAcupressure
-	.4byte \failInstr
 	.endm
 
 	.macro cancelmultiturnmoves
@@ -1955,11 +1911,6 @@
 	.byte \bufferSpeciesName
 	.endm
 
-	.macro tryautotomize failInstr:req
-	callnative BS_TryAutotomize
-	.4byte \failInstr
-	.endm
-
 	.macro tryinstruct failInstr:req
 	callnative BS_TryInstruct
 	.4byte \failInstr
@@ -2032,11 +1983,6 @@
 	callnative BS_DestroyAbilityPopup
 	.endm
 
-	.macro gettotemboost jumpInstr:req
-	callnative BS_GetTotemBoost
-	.4byte \jumpInstr
-	.endm
-
 	.macro activateitemeffects
 	callnative BS_ActivateItemEffects
 	.endm
@@ -2082,11 +2028,6 @@
 	callnative BS_TryEndNeutralizingGas
 	.endm
 
-	.macro getrototillertargets failInstr:req
-	callnative BS_GetRototillerTargets
-	.4byte \failInstr
-	.endm
-
 	.macro consumeberry battler:req, fromBattler:req
 	callnative BS_ConsumeBerry
 	.byte \battler
@@ -2109,10 +2050,6 @@
 	callnative BS_JumpIfAbilityPreventsRest
 	.byte \battler
 	.4byte \jumpInstr
-	.endm
-
-	.macro setattackertostickywebuser
-	callnative BS_SetAttackerToStickyWebUser
 	.endm
 
 	.macro cutonethirdhpandraisestats failInstr:req
@@ -2158,36 +2095,6 @@
 	jumpifability BS_ATTACKER, ABILITY_INFILTRATOR, 1f
 	jumpifsideaffecting BS_TARGET, SIDE_STATUS_SAFEGUARD, \jumpInstr
 	1:
-	.endm
-
-	@ Tries to increase or decrease a battler's stat's stat stage by a specified amount. If impossible, jumps to \script.
-	.macro modifybattlerstatstage battler:req, stat:req, mode:req, amount:req, script:req, animation:req, customString
-
-	@ \mode parameters
-	INCREASE = FALSE
-	DECREASE = TRUE
-
-	@ \animation parameters
-	ANIM_OFF = FALSE
-	ANIM_ON = TRUE
-
-	setstatchanger \stat, \amount, \mode
-	.if \animation == FALSE
-		setbyte sSTAT_ANIM_PLAYED, TRUE
-	.endif
-	statbuffchange BS_TARGET, STAT_CHANGE_ALLOW_PTR, \script
-	.ifnb \customString
-		printstring \customString
-	.else
-		.if \mode == DECREASE
-			printfromtable gStatDownStringIds
-		.else
-		.if \mode == INCREASE
-			printfromtable gStatUpStringIds
-		.endif
-		.endif
-	.endif
-	waitmessage B_WAIT_TIME_LONG
 	.endm
 
 	.macro flushtextbox

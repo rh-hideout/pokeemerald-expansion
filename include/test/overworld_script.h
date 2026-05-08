@@ -30,12 +30,12 @@
     ({ \
         const u8 *_script; \
         asm("mov %0, pc\n" \
-            "b .Lend" STR(__LINE__) "\n" \
+            "b 1f\n" \
             STR(__VA_ARGS__) \
             "\n" \
             "end\n" \
             ".balign 2\n" \
-            ".Lend" STR(__LINE__) ":\n" \
+            "1:\n" \
         : "=r" (_script)); \
         _script; \
     })
