@@ -679,10 +679,11 @@ static inline u32 GetPledgeComboMove(enum Move moveId)
     return gMovesInfo[moveId].argument.pledge.comboMove;
 }
 
-// no assert because the result move does not have to be a pledge move
 static inline u32 GetPledgeResultMove(enum Move moveId)
 {
-    return gMovesInfo[SanitizeMoveId(moveId)].argument.pledge.resultMove;
+    moveId = SanitizeMoveId(moveId);
+    assertf(gMovesInfo[moveId].effect == EFFECT_PLEDGE, "not a pledge move: %S", GetMoveName(moveId));
+    return gMovesInfo[moveId].argument.pledge.resultMove;
 }
 
 static inline enum ProtectMethod GetMoveProtectMethod(enum Move moveId)
