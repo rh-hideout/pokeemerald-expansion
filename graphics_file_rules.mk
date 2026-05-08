@@ -281,6 +281,9 @@ $(MISCGFXDIR)/emoticons.4bpp: %.4bpp: %.png
 $(TITLESCREENGFXDIR)/pokemon_logo.gbapal: %.gbapal: %.pal
 	$(GFX) $< $@ -num_colors 224
 
+$(TITLESCREENGFXDIR)/hns/pokemon_logo.gbapal: %.gbapal: %.pal
+	$(GFX) $< $@ -num_colors 224
+
 $(TITLESCREENGFXDIR)/emerald_version.8bpp: %.8bpp: %.png
 	$(GFX) $< $@ -mwidth 8 -mheight 4
 
