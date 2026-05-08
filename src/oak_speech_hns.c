@@ -35,6 +35,16 @@
 
 #if IS_HNS
 
+extern const u8 gText_Oak_Welcome[];
+extern const u8 gText_Oak_MainSpeech[];
+extern const u8 gText_Oak_AndYouAre[];
+extern const u8 gText_Oak_BoyOrGirl[];
+extern const u8 gText_Oak_WhatChallenge[];
+extern const u8 gText_Oak_WhatsYourName[];
+extern const u8 gText_Oak_SoItsPlayer[];
+extern const u8 gText_Oak_YourePlayer[];
+extern const u8 gText_Oak_AreYouReady[];
+
 static EWRAM_DATA bool8 sStartedPokeBallTask = 0;
 
 static u8 sHnsSpeechMainTaskId;
@@ -63,6 +73,10 @@ static void Task_NewGameHnsSpeech_WaitToShowGenderMenu(u8);
 static void Task_NewGameHnsSpeech_ChooseGender(u8);
 static void NewGameHnsSpeech_ShowGenderMenu(void);
 static void NewGameHnsSpeech_ClearGenderWindow(u8, u8);
+static void Task_NewGameHnsSpeech_ChallengePrompt(u8);
+static void Task_NewGameHnsSpeech_WaitForChallengePrompt(u8);
+static void Task_NewGameHnsSpeech_WaitPressBeforeChallengeMenu(u8);
+static void Task_NewGameHnsSpeech_ChallengeMenu(u8);
 static void Task_NewGameHnsSpeech_WhatsYourName(u8);
 static void Task_NewGameHnsSpeech_SlideOutOldGenderSprite(u8);
 static void Task_NewGameHnsSpeech_SlideInNewGenderSprite(u8);
@@ -98,13 +112,13 @@ static void DrawMainMenuWindowBorder(const struct WindowTemplate *, u16);
 // .rodata
 
 static const u16 sHnsSpeechBgPals[][16] = {
-    INCBIN_U16("graphics/birch_speech/bg0_hns.gbapal"),
-    INCBIN_U16("graphics/birch_speech/bg1_hns.gbapal")
+    INCBIN_U16("graphics/oak_speech_hns/bg0_hns.gbapal"),
+    INCBIN_U16("graphics/oak_speech_hns/bg1_hns.gbapal")
 };
 
-static const u32 sHnsSpeechShadowGfx[] = INCBIN_U32("graphics/birch_speech/shadow_hns.4bpp.smol");
-static const u32 sHnsSpeechBgMap[] = INCBIN_U32("graphics/birch_speech/map_hns.bin.smolTM");
-static const u16 sHnsSpeechBgGradientPal[] = INCBIN_U16("graphics/birch_speech/bg2_hns.gbapal");
+static const u32 sHnsSpeechShadowGfx[] = INCBIN_U32("graphics/oak_speech_hns/shadow_hns.4bpp.smol");
+static const u32 sHnsSpeechBgMap[] = INCBIN_U32("graphics/oak_speech_hns/map_hns.bin.smolTM");
+static const u16 sHnsSpeechBgGradientPal[] = INCBIN_U16("graphics/oak_speech_hns/bg2_hns.gbapal");
 
 static const struct WindowTemplate sNewGameHnsSpeechTextWindows[] =
 {
@@ -186,48 +200,10 @@ static const struct MenuAction sMenuActions_Gender[] = {
 
 static const u8 *const sMalePresetNames[] = {
     COMPOUND_STRING("GOLD"),
-    COMPOUND_STRING("ETHAN"),
-    COMPOUND_STRING("CHRIS"),
-    COMPOUND_STRING("KENTA"),
-    COMPOUND_STRING("JOHNNY"),
-    COMPOUND_STRING("BRETT"),
-    COMPOUND_STRING("SETH"),
-    COMPOUND_STRING("TERRY"),
-    COMPOUND_STRING("CASEY"),
-    COMPOUND_STRING("DARREN"),
-    COMPOUND_STRING("LANDON"),
-    COMPOUND_STRING("COLLIN"),
-    COMPOUND_STRING("STANLEY"),
-    COMPOUND_STRING("QUINCY"),
-    COMPOUND_STRING("HIBIKI"),
-    COMPOUND_STRING("HIRO"),
-    COMPOUND_STRING("TAYLOR"),
-    COMPOUND_STRING("KARL"),
-    COMPOUND_STRING("HEART"),
-    COMPOUND_STRING("SOUL")
 };
 
 static const u8 *const sFemalePresetNames[] = {
     COMPOUND_STRING("KRIS"),
-    COMPOUND_STRING("LYRA"),
-    COMPOUND_STRING("MARINA"),
-    COMPOUND_STRING("CRYSTAL"),
-    COMPOUND_STRING("ALLIE"),
-    COMPOUND_STRING("LIANNA"),
-    COMPOUND_STRING("SARA"),
-    COMPOUND_STRING("MONICA"),
-    COMPOUND_STRING("CAMILA"),
-    COMPOUND_STRING("AUBREE"),
-    COMPOUND_STRING("RUTHIE"),
-    COMPOUND_STRING("HAZEL"),
-    COMPOUND_STRING("NADINE"),
-    COMPOUND_STRING("TANJA"),
-    COMPOUND_STRING("YASMIN"),
-    COMPOUND_STRING("NICOLA"),
-    COMPOUND_STRING("LILLIE"),
-    COMPOUND_STRING("TERRA"),
-    COMPOUND_STRING("KOTONE"),
-    COMPOUND_STRING("LEAF")
 };
 
 #define NUM_PRESET_NAMES min(ARRAY_COUNT(sMalePresetNames), ARRAY_COUNT(sFemalePresetNames))
@@ -305,7 +281,7 @@ static void Task_NewGameHnsSpeech_Init(u8 taskId)
     AddHnsSpeechObjects(taskId);
     BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
     gTasks[taskId].func = Task_NewGameHnsSpeech_WaitToShowProfessor;
-    PlayBGM(MUS_ROUTE122);
+    PlayBGM(MUS_HG_NEW_GAME);
     ShowBg(0);
     ShowBg(1);
 }
@@ -350,7 +326,7 @@ static void Task_NewGameHnsSpeech_WaitForSpriteFadeInWelcome(u8 taskId)
             PutWindowTilemap(0);
             CopyWindowToVram(0, COPYWIN_GFX);
             NewGameHnsSpeech_ClearWindow(0);
-            StringExpandPlaceholders(gStringVar4, gText_Birch_Welcome);
+            StringExpandPlaceholders(gStringVar4, gText_Oak_Welcome);
             AddTextPrinterForMessage(TRUE);
             gTasks[taskId].func = Task_NewGameHnsSpeech_ThisIsAPokemon;
         }
@@ -372,7 +348,7 @@ static void Task_NewGameHnsSpeech_MainSpeech(u8 taskId)
 {
     if (!RunTextPrintersAndIsPrinter0Active())
     {
-        StringExpandPlaceholders(gStringVar4, gText_Birch_MainSpeech);
+        StringExpandPlaceholders(gStringVar4, gText_Oak_MainSpeech);
         AddTextPrinterForMessage(TRUE);
         gTasks[taskId].func = Task_NewGameHnsSpeech_AndYouAre;
     }
@@ -389,7 +365,7 @@ static void Task_NewGameHnsSpeechSub_InitPokeBall(u8 taskId)
     gSprites[spriteId].invisible = FALSE;
     gSprites[spriteId].data[0] = 0;
 
-    CreatePokeballSpriteToReleaseMon(spriteId, gSprites[spriteId].oam.paletteNum, 112, 58, 0, 0, 32, PALETTES_BG, SPECIES_MARILL);
+    CreatePokeballSpriteToReleaseMon(spriteId, gSprites[spriteId].oam.paletteNum, 112, 58, 0, 0, 32, PALETTES_BG, SPECIES_WOOPER);
     gTasks[taskId].func = Task_NewGameHnsSpeechSub_WaitForMon;
     gTasks[sHnsSpeechMainTaskId].tTimer = 0;
 }
@@ -427,7 +403,7 @@ static void Task_NewGameHnsSpeech_AndYouAre(u8 taskId)
     if (!RunTextPrintersAndIsPrinter0Active())
     {
         sStartedPokeBallTask = FALSE;
-        StringExpandPlaceholders(gStringVar4, gText_Birch_AndYouAre);
+        StringExpandPlaceholders(gStringVar4, gText_Oak_AndYouAre);
         AddTextPrinterForMessage(TRUE);
         gTasks[taskId].func = Task_NewGameHnsSpeech_StartProfessorMonPlatformFade;
     }
@@ -499,7 +475,7 @@ static void Task_NewGameHnsSpeech_WaitForPlayerFadeIn(u8 taskId)
 static void Task_NewGameHnsSpeech_BoyOrGirl(u8 taskId)
 {
     NewGameHnsSpeech_ClearWindow(0);
-    StringExpandPlaceholders(gStringVar4, gText_Birch_BoyOrGirl);
+    StringExpandPlaceholders(gStringVar4, gText_Oak_BoyOrGirl);
     AddTextPrinterForMessage(TRUE);
     gTasks[taskId].func = Task_NewGameHnsSpeech_WaitToShowGenderMenu;
 }
@@ -524,13 +500,13 @@ static void Task_NewGameHnsSpeech_ChooseGender(u8 taskId)
         PlaySE(SE_SELECT);
         gSaveBlock2Ptr->playerGender = gender;
         NewGameHnsSpeech_ClearGenderWindow(1, 1);
-        gTasks[taskId].func = Task_NewGameHnsSpeech_WhatsYourName;
+        gTasks[taskId].func = Task_NewGameHnsSpeech_ChallengePrompt;
         break;
     case FEMALE:
         PlaySE(SE_SELECT);
         gSaveBlock2Ptr->playerGender = gender;
         NewGameHnsSpeech_ClearGenderWindow(1, 1);
-        gTasks[taskId].func = Task_NewGameHnsSpeech_WhatsYourName;
+        gTasks[taskId].func = Task_NewGameHnsSpeech_ChallengePrompt;
         break;
     default:
         break;
@@ -588,10 +564,36 @@ static void Task_NewGameHnsSpeech_SlideInNewGenderSprite(u8 taskId)
     }
 }
 
+static void Task_NewGameHnsSpeech_ChallengePrompt(u8 taskId)
+{
+    NewGameHnsSpeech_ClearWindow(0);
+    StringExpandPlaceholders(gStringVar4, gText_Oak_WhatChallenge);
+    AddTextPrinterForMessage(TRUE);
+    gTasks[taskId].func = Task_NewGameHnsSpeech_WaitForChallengePrompt;
+}
+
+static void Task_NewGameHnsSpeech_WaitForChallengePrompt(u8 taskId)
+{
+    if (!RunTextPrintersAndIsPrinter0Active())
+        gTasks[taskId].func = Task_NewGameHnsSpeech_WaitPressBeforeChallengeMenu;
+}
+
+static void Task_NewGameHnsSpeech_WaitPressBeforeChallengeMenu(u8 taskId)
+{
+    if ((JOY_NEW(A_BUTTON)) || (JOY_NEW(B_BUTTON)))
+        gTasks[taskId].func = Task_NewGameHnsSpeech_ChallengeMenu;
+}
+
+// TODO: implement challenge/randomizer menu
+static void Task_NewGameHnsSpeech_ChallengeMenu(u8 taskId)
+{
+    gTasks[taskId].func = Task_NewGameHnsSpeech_WhatsYourName;
+}
+
 static void Task_NewGameHnsSpeech_WhatsYourName(u8 taskId)
 {
     NewGameHnsSpeech_ClearWindow(0);
-    StringExpandPlaceholders(gStringVar4, gText_Birch_WhatsYourName);
+    StringExpandPlaceholders(gStringVar4, gText_Oak_WhatsYourName);
     AddTextPrinterForMessage(TRUE);
     gTasks[taskId].func = Task_NewGameHnsSpeech_WaitForWhatsYourNameToPrint;
 }
@@ -611,13 +613,27 @@ static void Task_NewGameHnsSpeech_WaitPressBeforeNameChoice(u8 taskId)
     }
 }
 
+static void NewGameHnsSpeech_SetDefaultPlayerName(u8 nameId)
+{
+    const u8 *name;
+    u8 i;
+
+    if (gSaveBlock2Ptr->playerGender == MALE)
+        name = sMalePresetNames[nameId];
+    else
+        name = sFemalePresetNames[nameId];
+    for (i = 0; i < PLAYER_NAME_LENGTH; i++)
+        gSaveBlock2Ptr->playerName[i] = name[i];
+    gSaveBlock2Ptr->playerName[PLAYER_NAME_LENGTH] = EOS;
+}
+
 static void Task_NewGameHnsSpeech_StartNamingScreen(u8 taskId)
 {
     if (!gPaletteFade.active)
     {
         FreeAllWindowBuffers();
         FreeAndDestroyMonPicSprite(gTasks[taskId].tMonSpriteId);
-        NewGameBirchSpeech_SetDefaultPlayerName(Random() % NUM_PRESET_NAMES);
+        NewGameHnsSpeech_SetDefaultPlayerName(Random() % NUM_PRESET_NAMES);
         DestroyTask(taskId);
         DoNamingScreen(NAMING_SCREEN_PLAYER, gSaveBlock2Ptr->playerName, gSaveBlock2Ptr->playerGender, 0, 0, CB2_NewGameHnsSpeech_ReturnFromNamingScreen);
     }
@@ -626,7 +642,7 @@ static void Task_NewGameHnsSpeech_StartNamingScreen(u8 taskId)
 static void Task_NewGameHnsSpeech_SoItsPlayerName(u8 taskId)
 {
     NewGameHnsSpeech_ClearWindow(0);
-    StringExpandPlaceholders(gStringVar4, gText_Birch_SoItsPlayer);
+    StringExpandPlaceholders(gStringVar4, gText_Oak_SoItsPlayer);
     AddTextPrinterForMessage(TRUE);
     gTasks[taskId].func = Task_NewGameHnsSpeech_CreateNameYesNo;
 }
@@ -692,7 +708,7 @@ static void Task_NewGameHnsSpeech_ReshowProfessorMon(u8 taskId)
         NewGameHnsSpeech_StartFadeInTarget1OutTarget2(taskId, 2);
         NewGameHnsSpeech_StartFadePlatformOut(taskId, 1);
         NewGameHnsSpeech_ClearWindow(0);
-        StringExpandPlaceholders(gStringVar4, gText_Birch_YourePlayer);
+        StringExpandPlaceholders(gStringVar4, gText_Oak_YourePlayer);
         AddTextPrinterForMessage(TRUE);
         gTasks[taskId].func = Task_NewGameHnsSpeech_WaitForSpriteFadeInAndTextPrinter;
     }
@@ -740,7 +756,7 @@ static void Task_NewGameHnsSpeech_AreYouReady(u8 taskId)
         gTasks[taskId].tPlayerSpriteId = spriteId;
         NewGameHnsSpeech_StartFadeInTarget1OutTarget2(taskId, 2);
         NewGameHnsSpeech_StartFadePlatformOut(taskId, 1);
-        StringExpandPlaceholders(gStringVar4, gText_Birch_AreYouReady);
+        StringExpandPlaceholders(gStringVar4, gText_Oak_AreYouReady);
         AddTextPrinterForMessage(TRUE);
         gTasks[taskId].func = Task_NewGameHnsSpeech_ShrinkPlayer;
     }
@@ -893,7 +909,7 @@ static void SpriteCB_MovePlayerDownWhileShrinking(struct Sprite *sprite)
 
 static u8 NewGameHnsSpeech_CreateMonSprite(u8 x, u8 y)
 {
-    return CreateMonPicSprite_Affine(SPECIES_MARILL, FALSE, 0, MON_PIC_AFFINE_FRONT, x, y, 14, TAG_NONE);
+    return CreateMonPicSprite_Affine(SPECIES_WOOPER, FALSE, 0, MON_PIC_AFFINE_FRONT, x, y, 14, TAG_NONE);
 }
 
 static void AddHnsSpeechObjects(u8 taskId)
@@ -913,12 +929,12 @@ static void AddHnsSpeechObjects(u8 taskId)
     gSprites[monSpriteId].oam.priority = 0;
     gSprites[monSpriteId].invisible = TRUE;
     gTasks[taskId].tMonSpriteId = monSpriteId;
-    goldSpriteId = CreateTrainerSprite(FacilityClassToPicIndex(FACILITY_CLASS_BRENDAN), 120, 60, 0, NULL);
+    goldSpriteId = CreateTrainerSprite(FacilityClassToPicIndex(FACILITY_CLASS_GOLD_HNS), 120, 60, 0, NULL);
     gSprites[goldSpriteId].callback = SpriteCB_Null;
     gSprites[goldSpriteId].invisible = TRUE;
     gSprites[goldSpriteId].oam.priority = 0;
     gTasks[taskId].tGoldSpriteId = goldSpriteId;
-    krisSpriteId = CreateTrainerSprite(FacilityClassToPicIndex(FACILITY_CLASS_MAY), 120, 60, 0, NULL);
+    krisSpriteId = CreateTrainerSprite(FacilityClassToPicIndex(FACILITY_CLASS_KRIS_HNS), 120, 60, 0, NULL);
     gSprites[krisSpriteId].callback = SpriteCB_Null;
     gSprites[krisSpriteId].invisible = TRUE;
     gSprites[krisSpriteId].oam.priority = 0;
