@@ -3791,7 +3791,7 @@ static bool32 CanApplyAdditionalEffect(const struct AdditionalEffect *additional
     if (additionalEffect->preAttackEffect)
         return FALSE;
 
-    if (additionalEffect->pledgeCombo && !gBattleStruct->pledgeMove)
+    if (additionalEffect->pledgeCombo && gBattleStruct->pledgeState != PLEDGE_COMBO_ATTACK)
         return FALSE;
 
     // If Toxic Chain will activate it blocks all other non volatile effects
@@ -3870,7 +3870,6 @@ static void Cmd_setadditionaleffects(void)
         }
     }
 
-    gBattleStruct->pledgeMove = FALSE;
     gBattleStruct->additionalEffectsCounter = 0;
     gBattleScripting.moveEffect = 0;
     gBattlescriptCurrInstr = cmd->nextInstr;
@@ -12299,75 +12298,6 @@ void BS_TrySetOctolock(void)
         gBattleMons[gBattlerTarget].volatiles.escapePrevention = TRUE;
         gBattleMons[gBattlerTarget].volatiles.battlerPreventingEscape = gBattlerAttacker;
         gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-}
-
-void BS_SetPledge(void)
-{
-    NATIVE_ARGS(const u8 *jumpInstr);
-
-    enum BattlerId partner = BATTLE_PARTNER(gBattlerAttacker);
-    enum Move partnerMove = GetBattlerChosenMove(partner);
-    u32 i = 0;
-    u32 k = 0;
-
-    if (gBattleStruct->pledgeMove && !gBattleStruct->unableToUseMove)
-    {
-        if (GetPledgeComboMove(gCurrentMove) == partnerMove)
-            gCurrentMove = GetPledgeResultMove(gCurrentMove);
-        else
-            gCurrentMove = GetPledgeResultMove(partnerMove);
-
-        gBattlescriptCurrInstr = BattleScript_EffectHitCombinedPledge;
-        gBattleCommunication[MSG_DISPLAY] = 0;
-    }
-    else if ((gChosenActionByBattler[partner] == B_ACTION_USE_MOVE)
-          && !gBattleStruct->unableToUseMove
-          && IsDoubleBattle()
-          && IsBattlerAlive(partner)
-          && gCurrentMove != partnerMove
-          && GetMoveEffect(gCurrentMove) == EFFECT_PLEDGE
-          && GetMoveEffect(partnerMove) == EFFECT_PLEDGE
-          && !HasBattlerActedThisTurn(partner)
-          && (GetPledgeComboMove(gCurrentMove) == partnerMove || GetPledgeComboMove(partnerMove) == gCurrentMove))
-    {
-        u32 currPledgeUser = 0;
-        u32 newTurnOrder[] = {0xFF, 0xFF};
-
-        for (i = 0; i < gBattlersCount; i++)
-        {
-            if (gBattlerByTurnOrder[i] == gBattlerAttacker)
-            {
-                currPledgeUser = i + 1; // Current battler going after attacker
-                break;
-            }
-        }
-        for (i = currPledgeUser; i < gBattlersCount; i++)
-        {
-            if (gBattlerByTurnOrder[i] != partner)
-            {
-                newTurnOrder[k] = gBattlerByTurnOrder[i];
-                k++;
-            }
-        }
-
-        gBattlerByTurnOrder[currPledgeUser] = partner;
-        currPledgeUser++;
-
-        for (i = 0; newTurnOrder[i] != 0xFF && i < 2; i++)
-        {
-            gBattlerByTurnOrder[currPledgeUser] = newTurnOrder[i];
-            currPledgeUser++;
-        }
-
-        gBattleStruct->pledgeMove = TRUE;
-        gBattleScripting.battler = partner;
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-    else
-    {
-        gBattleStruct->pledgeMove = FALSE;
-        gBattlescriptCurrInstr = cmd->jumpInstr;
     }
 }
 

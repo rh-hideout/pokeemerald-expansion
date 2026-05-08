@@ -431,6 +431,13 @@ enum FlungItem
     FLUNG_ITEM_REMOVED,
 };
 
+enum PledgeCombo
+{
+    PLEDGE_COMBO_NONE,
+    PLEDGE_COMBO_WAITING,
+    PLEDGE_COMBO_ATTACK,
+};
+
 enum SynchronizeState
 {
     SYNCH_STATE_NONE,

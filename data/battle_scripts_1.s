@@ -272,9 +272,7 @@ BattleScript_MoveSwitchOpenPartyScreenReturnWithNoAnim:
 	printstring STRINGID_SWITCHINMON
 	return
 
-BattleScript_EffectPledge::
-	attackcanceler
-	setpledge BattleScript_HitFromAccCheck
+BattleScript_PledgeWaitingForPartner::
 	pause B_WAIT_TIME_MED
 	printstring STRINGID_WAITINGFORPARTNERSMOVE
 	waitmessage B_WAIT_TIME_LONG
@@ -284,7 +282,7 @@ BattleScript_EffectHitCombinedPledge::
 	pause B_WAIT_TIME_MED
 	printstring STRINGID_THETWOMOVESBECOMEONE
 	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_HitFromAccCheck
+	return
 
 BattleScript_TheRainbowActivates::
 	pause B_WAIT_TIME_SHORTEST

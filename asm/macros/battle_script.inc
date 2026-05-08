@@ -1276,11 +1276,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro setpledge jumpInstr:req
-	callnative BS_SetPledge
-	.4byte \jumpInstr
-	.endm
-
 	.macro setzeffect
 	callnative BS_SetZEffect
 	.endm

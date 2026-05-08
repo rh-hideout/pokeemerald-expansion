@@ -537,6 +537,25 @@ static enum CancelerResult CancelerCallSubmove(struct BattleCalcValues *cv)
     case EFFECT_ME_FIRST:
         calledMove = GetMeFirstMove();
         break;
+    case EFFECT_PLEDGE:
+        if (gBattleStruct->pledgeState == PLEDGE_COMBO_WAITING)
+        {
+            enum Move partnerMove = GetBattlerChosenMove(BATTLE_PARTNER(cv->battlerAtk));
+
+            if (GetPledgeComboMove(cv->move) == partnerMove)
+                gCurrentMove = GetPledgeResultMove(cv->move);
+            else
+                gCurrentMove = GetPledgeResultMove(partnerMove);
+
+            gBattleStruct->pledgeState = PLEDGE_COMBO_ATTACK;
+            BattleScriptCall(BattleScript_EffectHitCombinedPledge);
+            return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
+        }
+        else
+        {
+            noEffect = TRUE;
+        }
+        break;
     default:
         noEffect = TRUE;
         break;
@@ -1484,6 +1503,76 @@ static enum CancelerResult CancelerExplodingDamp(struct BattleCalcValues *cv)
     return CANCELER_RESULT_SUCCESS;
 }
 
+static bool32 CanPledgeComboAttackHappen(struct BattleCalcValues *cv)
+{
+    enum BattlerId partner = BATTLE_PARTNER(cv->battlerAtk);
+    enum Move partnerMove = GetBattlerChosenMove(partner);
+
+    if (gBattleStruct->pledgeState != PLEDGE_COMBO_NONE)
+        return FALSE; // already in progress
+
+    if (!IsDoubleBattle()
+     || GetMoveEffect(partnerMove) != EFFECT_PLEDGE
+     || !IsBattlerAlive(partner)
+     || cv->move == partnerMove
+     || gChosenActionByBattler[partner] != B_ACTION_USE_MOVE
+     || HasBattlerActedThisTurn(partner))
+        return FALSE;
+
+    if (GetPledgeComboMove(cv->move) == partnerMove || GetPledgeComboMove(partnerMove) == cv->move)
+    {
+        u32 k = 0;
+        u32 currPledgeUser = 0;
+        u32 newTurnOrder[] = {0xFF, 0xFF};
+
+        for (u32 i = 0; i < gBattlersCount; i++)
+        {
+            if (gBattlerByTurnOrder[i] == gBattlerAttacker)
+            {
+                currPledgeUser = i + 1; // Current battler going after attacker
+                break;
+            }
+        }
+        for (u32 i = currPledgeUser; i < gBattlersCount; i++)
+        {
+            if (gBattlerByTurnOrder[i] != partner)
+                newTurnOrder[k++] = gBattlerByTurnOrder[i];
+        }
+
+        gBattlerByTurnOrder[currPledgeUser++] = partner;
+
+        for (u32 i = 0; newTurnOrder[i] != 0xFF && i < 2; i++)
+            gBattlerByTurnOrder[currPledgeUser++] = newTurnOrder[i];
+
+        gBattleStruct->pledgeState = PLEDGE_COMBO_WAITING;
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+static enum CancelerResult CancelerInterruptibleMoves(struct BattleCalcValues *cv)
+{
+    switch (cv->moveEffect)
+    {
+    case EFFECT_FUTURE_SIGHT:
+        gBattleStruct->eventState.atkCanceler = CANCELER_END;
+        break;
+    case EFFECT_PLEDGE:
+        if (CanPledgeComboAttackHappen(cv))
+        {
+            gBattleStruct->eventState.atkCanceler = CANCELER_END;
+            gBattlescriptCurrInstr = BattleScript_PledgeWaitingForPartner;
+            return CANCELER_RESULT_RUN_SCRIPT;
+        }
+        break;
+    default:
+        break;
+    }
+
+    return CANCELER_RESULT_SUCCESS;
+}
+
 static enum CancelerResult CancelerProtean(struct BattleCalcValues *cv)
 {
     enum Type moveType = GetBattleMoveType(cv->move);
@@ -1914,7 +2003,6 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             gLastLandedMoves[cv->battlerDef] = 0; // Might need investigation on what exactly clears is
             gLastHitByType[cv->battlerDef] = 0;
             gBattleScripting.battler = cv->battlerDef;
-            gBattleStruct->pledgeMove = FALSE;
             CancelMultiTurnMoves(cv->battlerAtk);
             return CANCELER_RESULT_RUN_SCRIPT;
         }
@@ -2128,6 +2216,7 @@ static enum CancelerResult (*const sMoveSuccessOrderCancelers[])(struct BattleCa
     [CANCELER_POWDER_STATUS] = CancelerPowderStatus,
     [CANCELER_PRIORITY_BLOCK] = CancelerPriorityBlock,
     [CANCELER_EXPLODING_DAMP] = CancelerExplodingDamp,
+    [CANCELER_INTERRUPTIBLE_MOVES] = CancelerInterruptibleMoves,
     [CANCELER_PROTEAN] = CancelerProtean,
     [CANCELER_CHARGING] = CancelerCharging,
     [CANCELER_SNATCH] = CancelerSnatch,
@@ -2165,7 +2254,11 @@ enum CancelerResult DoAttackCanceler(void)
     }
 
     if (result == CANCELER_RESULT_FAILURE)
+    {
         gBattleStruct->unableToUseMove = TRUE;
+        gBattleStruct->pledgeState = PLEDGE_COMBO_NONE;
+    }
+
     return result;
 }
 
@@ -3867,7 +3960,7 @@ static bool32 ShouldSetStompingTantrumTimer(void)
     if (gBattleStruct->battlerState[gBattlerAttacker].redCardSwitched) // no longer the same battler
         return FALSE;
 
-    if (gBattleStruct->pledgeMove == TRUE // Is the battler that uses the first Pledge move in the combo
+    if (gBattleStruct->pledgeState == PLEDGE_COMBO_WAITING // Is the battler that uses the first Pledge move in the combo
      || gBattleStruct->unableToUseMove)
         return TRUE;
 
@@ -3918,8 +4011,9 @@ static enum MoveEndResult MoveEndClearBits(struct BattleCalcValues *cv)
     gBattleStruct->flungItem = FLUNG_ITEM_NONE;
     gBattleStruct->blunderPolicy = FALSE;
 
-    if (gBattleStruct->unableToUseMove)
-        gBattleStruct->pledgeMove = FALSE;
+    if (gBattleStruct->pledgeState == PLEDGE_COMBO_ATTACK)
+        gBattleStruct->pledgeState = PLEDGE_COMBO_NONE;
+
     if (GetActiveGimmick(cv->battlerAtk) == GIMMICK_Z_MOVE)
         SetActiveGimmick(cv->battlerAtk, GIMMICK_NONE);
     if (gBattleMons[cv->battlerAtk].volatiles.destinyBond > 0)
@@ -4404,14 +4498,9 @@ static bool32 TryMagicCoat(struct BattleCalcValues *cv)
 
 static bool32 TryActivatePowderStatus(enum Move move)
 {
-    enum Move partnerMove = GetBattlerChosenMove(BATTLE_PARTNER(gBattlerAttacker));
     if (!gBattleMons[gBattlerAttacker].volatiles.powder)
         return FALSE;
-    if (GetBattleMoveType(move) == TYPE_FIRE && !gBattleStruct->pledgeMove)
-        return TRUE;
-    if (move == MOVE_FIRE_PLEDGE && partnerMove == MOVE_GRASS_PLEDGE)
-        return TRUE;
-    if (move == MOVE_GRASS_PLEDGE && partnerMove == MOVE_FIRE_PLEDGE && gBattleStruct->pledgeMove)
+    if (GetBattleMoveType(move) == TYPE_FIRE)
         return TRUE;
     return FALSE;
 }
