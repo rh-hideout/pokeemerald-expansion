@@ -552,25 +552,6 @@ static enum CancelerResult CancelerCallSubmove(struct BattleCalcValues *cv)
     case EFFECT_ME_FIRST:
         calledMove = GetMeFirstMove();
         break;
-    case EFFECT_PLEDGE:
-        if (gBattleStruct->pledgeState == PLEDGE_COMBO_WAITING)
-        {
-            enum Move partnerMove = GetBattlerChosenMove(BATTLE_PARTNER(cv->battlerAtk));
-
-            if (GetPledgeComboMove(cv->move) == partnerMove)
-                gCurrentMove = GetPledgeResultMove(cv->move);
-            else
-                gCurrentMove = GetPledgeResultMove(partnerMove);
-
-            gBattleStruct->pledgeState = PLEDGE_COMBO_ATTACK;
-            BattleScriptCall(BattleScript_EffectHitCombinedPledge);
-            return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
-        }
-        else
-        {
-            noEffect = TRUE;
-        }
-        break;
     default:
         noEffect = TRUE;
         break;
@@ -660,6 +641,25 @@ static enum CancelerResult CancelerAttackstring(struct BattleCalcValues *cv)
         RecordKnownMove(gBattlerAttacker, gChosenMove);
     }
     return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
+}
+
+static enum CancelerResult CancelerPledgeAttack(struct BattleCalcValues *cv)
+{
+    if (gBattleStruct->pledgeState == PLEDGE_COMBO_WAITING)
+    {
+        enum Move partnerMove = GetBattlerChosenMove(BATTLE_PARTNER(cv->battlerAtk));
+
+        if (GetPledgeComboMove(cv->move) == partnerMove)
+            gCurrentMove = GetPledgeResultMove(cv->move);
+        else
+            gCurrentMove = GetPledgeResultMove(partnerMove);
+
+        gBattleStruct->pledgeState = PLEDGE_COMBO_ATTACK;
+        BattleScriptCall(BattleScript_EffectHitCombinedPledge);
+        return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
+    }
+
+    return CANCELER_RESULT_SUCCESS;
 }
 
 #define checkFailure TRUE
@@ -2269,6 +2269,7 @@ static enum CancelerResult (*const sMoveSuccessOrderCancelers[])(struct BattleCa
     [CANCELER_THAW] = CancelerThaw,
     [CANCELER_STANCE_CHANGE_2] = CancelerStanceChangeTwo,
     [CANCELER_ATTACKSTRING] = CancelerAttackstring,
+    [CANCELER_PLEDGE_ATTACK] = CancelerPledgeAttack,
     [CANCELER_SET_TARGETS] = CancelerSetTargets,
     [CANCELER_PPDEDUCTION] = CancelerPPDeduction,
     [CANCELER_SKY_BATTLE] = CancelerSkyBattle,
