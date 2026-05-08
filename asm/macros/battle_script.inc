@@ -960,16 +960,6 @@
 	.byte B_SCR_OP_SELECTFIRSTVALIDTARGET
 	.endm
 
-	.macro setfutureattack
-	.byte B_SCR_OP_SETFUTUREATTACK
-	.endm
-
-	.macro trydobeatup endInstr:req, failInstr:req
-	.byte B_SCR_OP_TRYDOBEATUP
-	.4byte \endInstr
-	.4byte \failInstr
-	.endm
-
 	.macro setsemiinvulnerablebit clear=FALSE
 	.byte B_SCR_OP_SETSEMIINVULNERABLEBIT
 	.byte \clear

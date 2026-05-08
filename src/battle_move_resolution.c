@@ -1556,6 +1556,16 @@ static enum CancelerResult CancelerInterruptibleMoves(struct BattleCalcValues *c
     switch (cv->moveEffect)
     {
     case EFFECT_FUTURE_SIGHT:
+        gBattleStruct->futureSight[cv->battlerDef].move = cv->move;
+        gBattleStruct->futureSight[cv->battlerDef].battlerIndex = cv->battlerAtk;
+        gBattleStruct->futureSight[cv->battlerDef].partyIndex = gBattlerPartyIndexes[cv->battlerAtk];
+        gBattleStruct->futureSight[cv->battlerDef].counter = 3;
+
+        if (gCurrentMove == MOVE_DOOM_DESIRE)
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_DOOM_DESIRE;
+        else
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_FUTURE_SIGHT;
+
         gBattleStruct->eventState.atkCanceler = CANCELER_END;
         break;
     case EFFECT_PLEDGE:

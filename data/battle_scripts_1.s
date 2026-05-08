@@ -3345,7 +3345,6 @@ BattleScript_EffectPsychUp::
 
 BattleScript_EffectFutureSight::
 	attackcanceler
-	setfutureattack
 	attackanimation
 	waitanimation
 	printfromtable gFutureMoveUsedStringIds

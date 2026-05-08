@@ -526,8 +526,6 @@ static void Cmd_rapidspinfree(void);
 static void Cmd_recoverbasedonsunlight(void);
 static void Cmd_setstickyweb(void);
 static void Cmd_selectfirstvalidtarget(void);
-static void Cmd_setfutureattack(void);
-static void Cmd_trydobeatup(void);
 static void Cmd_setsemiinvulnerablebit(void);
 static void Cmd_trymemento(void);
 static void Cmd_setforcedtarget(void);
@@ -753,8 +751,6 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_RECOVERBASEDONSUNLIGHT]                = Cmd_recoverbasedonsunlight,
     [B_SCR_OP_SETSTICKYWEB]                          = Cmd_setstickyweb,
     [B_SCR_OP_SELECTFIRSTVALIDTARGET]                = Cmd_selectfirstvalidtarget,
-    [B_SCR_OP_SETFUTUREATTACK]                       = Cmd_setfutureattack,
-    [B_SCR_OP_TRYDOBEATUP]                           = Cmd_trydobeatup,
     [B_SCR_OP_SETSEMIINVULNERABLEBIT]                = Cmd_setsemiinvulnerablebit,
     [B_SCR_OP_TRYMEMENTO]                            = Cmd_trymemento,
     [B_SCR_OP_SETFORCEDTARGET]                       = Cmd_setforcedtarget,
@@ -835,6 +831,8 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     [B_SCR_OP_UNUSED_31]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_32]                             = Cmd_dummy,
     [B_SCR_OP_UNUSED_33]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_34]                             = Cmd_dummy,
+    [B_SCR_OP_UNUSED_35]                             = Cmd_dummy,
     [B_SCR_OP_CALLNATIVE]                            = Cmd_callnative,
 };
 
@@ -9516,27 +9514,6 @@ static void Cmd_selectfirstvalidtarget(void)
     if (gBattlerTarget >= gBattlersCount)
         gBattlerTarget = 0;
     gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-static void Cmd_setfutureattack(void)
-{
-    CMD_ARGS();
-
-    gBattleStruct->futureSight[gBattlerTarget].move = gCurrentMove;
-    gBattleStruct->futureSight[gBattlerTarget].battlerIndex = gBattlerAttacker;
-    gBattleStruct->futureSight[gBattlerTarget].partyIndex = gBattlerPartyIndexes[gBattlerAttacker];
-    gBattleStruct->futureSight[gBattlerTarget].counter = 3;
-
-    if (gCurrentMove == MOVE_DOOM_DESIRE)
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_DOOM_DESIRE;
-    else
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_FUTURE_SIGHT;
-
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-static void Cmd_trydobeatup(void)
-{
 }
 
 static void Cmd_setsemiinvulnerablebit(void)
