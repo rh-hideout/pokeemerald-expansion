@@ -167,7 +167,7 @@ enum DebugMenuTypes
     DEBUG_BASIC_MENU,
     DEBUG_FLAGS_MENU,
     DEBUG_TRAINERS_MENU,
-    DEBUG_OUTBREAK_MENU,
+    DEBUG_OUTBREAK_MENU
 };
 
 // *******************************
@@ -239,7 +239,8 @@ struct DebugMenuListData
     const struct DebugMenuOption *subMenuItems[DEBUG_MAX_SUB_MENU_LEVELS];
     struct ListMenuItem listItems[DEBUG_MAX_MENU_ITEMS + 1];
     u8 itemNames[DEBUG_MAX_MENU_ITEMS + 1][26];
-    enum DebugMenuTypes menuType;
+    enum DebugMenuTypes menuType:2;
+    u32 padding:30;
     s16 data[8];
 };
 
@@ -918,6 +919,22 @@ static bool32 IsSubMenuAction(const void *action)
         || action == DebugAction_OpenSubMenuCreateFollowerNPC
         || action == DebugAction_OpenSubMenuTrainers
         || action == DebugAction_OpenOutbreakMenu;
+}
+
+static u32 Debug_GenerateListBasicMenu(const struct DebugMenuOption *items)
+{
+    u32 totalItems = 0;
+    for (u32 i = 0; items[i].text != NULL; i++)
+    {
+        sDebugMenuListData->listItems[i].id = i;
+        StringExpandPlaceholders(gStringVar4, items[i].text);
+        if (IsSubMenuAction(items[i].action))
+            StringAppend(gStringVar4, sDebugText_Arrow);
+        StringCopy(&sDebugMenuListData->itemNames[i][0], gStringVar4);
+        sDebugMenuListData->listItems[i].name = &sDebugMenuListData->itemNames[i][0];
+        totalItems++;
+    }
+    return totalItems;
 }
 
 static u32 Debug_GenerateListBasicMenu(const struct DebugMenuOption *items)
