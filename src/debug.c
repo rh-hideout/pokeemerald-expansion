@@ -937,22 +937,6 @@ static u32 Debug_GenerateListBasicMenu(const struct DebugMenuOption *items)
     return totalItems;
 }
 
-static u32 Debug_GenerateListBasicMenu(const struct DebugMenuOption *items)
-{
-    u32 totalItems = 0;
-    for (u32 i = 0; items[i].text != NULL; i++)
-    {
-        sDebugMenuListData->listItems[i].id = i;
-        StringExpandPlaceholders(gStringVar4, items[i].text);
-        if (IsSubMenuAction(items[i].action))
-            StringAppend(gStringVar4, sDebugText_Arrow);
-        StringCopy(&sDebugMenuListData->itemNames[i][0], gStringVar4);
-        sDebugMenuListData->listItems[i].name = &sDebugMenuListData->itemNames[i][0];
-        totalItems++;
-    }
-    return totalItems;
-}
-
 static void Debug_ShowMenu(DebugFunc HandleInput, const struct DebugMenuOption *items)
 {
     struct ListMenuTemplate menuTemplate = {0};
