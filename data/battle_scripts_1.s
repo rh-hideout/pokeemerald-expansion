@@ -7731,7 +7731,7 @@ BattleScript_EjectPackActivate_End2::
 	end2
 
 BattleScript_EjectPackActivates::
-	jumpifcantswitch BS_SCRIPTING, BattleScript_EjectButtonEnd
+	jumpifcantswitch SWITCH_IGNORE_ESCAPE_PREVENTION | BS_SCRIPTING, BattleScript_EjectButtonEnd
 	goto BattleScript_EjectPackActivate_Ret
 
 BattleScript_DoesntAffectTargetAtkString::
