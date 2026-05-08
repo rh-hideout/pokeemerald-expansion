@@ -1052,10 +1052,11 @@ static void SerialCB_CopyrightScreen(void)
 
 static u8 SetUpCopyrightScreen(void)
 {
-    if (IS_FRLG)
-        return SetUpCopyrightScreenFrlg();
-    if (IS_HNS)
-        return SetUpCopyrightScreenHns();
+#if IS_FRLG
+    return SetUpCopyrightScreenFrlg();
+#elif IS_HNS
+    return SetUpCopyrightScreenHns();
+#endif
 
     switch (gMain.state)
     {
