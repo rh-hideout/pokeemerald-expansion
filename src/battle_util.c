@@ -7888,13 +7888,18 @@ static inline s32 DoMoveDamageCalc(struct BattleContext *ctx)
     return DoMoveDamageCalcVars(ctx);
 }
 
-static inline s32 DoFutureSightAttackDamageCalcVars(struct BattleContext *ctx)
+static inline s32 DoFutureSightAttackDamageCalc(struct BattleContext *ctx)
 {
+    if (ctx->typeEffectivenessModifier == UQ_4_12(0.0))
+        return 0;
+
     s32 dmg;
     u32 userFinalAttack;
     u32 targetFinalDefense;
     enum BattlerId battlerAtk = ctx->battlerAtk;
     enum BattlerId battlerDef = ctx->battlerDef;
+    ctx->abilityAtk = ABILITY_NONE;
+    ctx->holdEffectAtk = HOLD_EFFECT_NONE;
     enum Move move = ctx->move;
     enum Type moveType = ctx->moveType;
 
@@ -7904,15 +7909,23 @@ static inline s32 DoFutureSightAttackDamageCalcVars(struct BattleContext *ctx)
     u32 partyMonSpecies = GetMonData(partyMon, MON_DATA_SPECIES);
     gBattleMovePower = GetMovePower(move);
 
+    if (ctx->fixedBasePower)
+        gBattleMovePower = ctx->fixedBasePower;
+    else
+        gBattleMovePower = CalcMoveBasePowerAfterModifiers(ctx);
+
     if (IsBattleMovePhysical(move))
         userFinalAttack = GetMonData(partyMon, MON_DATA_ATK);
     else
         userFinalAttack = GetMonData(partyMon, MON_DATA_SPATK);
 
     targetFinalDefense = CalcDefenseStat(ctx);
-    dmg = CalculateBaseDamage(gBattleMovePower, userFinalAttack, partyMonLevel, targetFinalDefense);
 
+    dmg = CalculateBaseDamage(gBattleMovePower, userFinalAttack, partyMonLevel, targetFinalDefense);
+    DAMAGE_APPLY_MODIFIER(GetTargetDamageModifier(ctx));
+    DAMAGE_APPLY_MODIFIER(GetWeatherDamageModifier(ctx));
     DAMAGE_APPLY_MODIFIER(GetCriticalModifier(ctx->isCrit));
+    DAMAGE_APPLY_MODIFIER(GetGlaiveRushModifier(ctx->battlerDef));
 
     if (ctx->randomFactor)
     {
@@ -7931,14 +7944,6 @@ static inline s32 DoFutureSightAttackDamageCalcVars(struct BattleContext *ctx)
         dmg = 1;
 
     return dmg;
-}
-
-static inline s32 DoFutureSightAttackDamageCalc(struct BattleContext *ctx)
-{
-    if (ctx->typeEffectivenessModifier == UQ_4_12(0.0))
-        return 0;
-
-    return DoFutureSightAttackDamageCalcVars(ctx);
 }
 
 bool32 IsFutureSightAttackerInParty(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)

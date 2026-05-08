@@ -1436,6 +1436,14 @@ static enum CancelerResult CancelerPriorityBlock(struct BattleContext *ctx)
     return CANCELER_RESULT_SUCCESS;
 }
 
+static enum CancelerResult CancelerInterruptibleMoves(struct BattleContext *ctx)
+{
+    if (GetMoveEffect(ctx->move) == EFFECT_FUTURE_SIGHT)
+        gBattleStruct->eventState.atkCanceler = CANCELER_END;
+
+    return CANCELER_RESULT_SUCCESS;
+}
+
 static enum CancelerResult CancelerProtean(struct BattleContext *ctx)
 {
     enum Type moveType = GetBattleMoveType(ctx->move);
@@ -2019,6 +2027,7 @@ static enum CancelerResult (*const sMoveSuccessOrderCancelers[])(struct BattleCo
     [CANCELER_MOVE_EFFECT_FAILURE_TARGET] = CancelerMoveEffectFailureTarget,
     [CANCELER_POWDER_STATUS] = CancelerPowderStatus,
     [CANCELER_PRIORITY_BLOCK] = CancelerPriorityBlock,
+    [CANCELER_INTERRUPTIBLE_MOVES] = CancelerInterruptibleMoves,
     [CANCELER_PROTEAN] = CancelerProtean,
     [CANCELER_EXPLODING_DAMP] = CancelerExplodingDamp,
     [CANCELER_EXPLOSION] = CancelerExplosion,
