@@ -41,7 +41,7 @@ DOUBLE_BATTLE_TEST("Ally Switch fails if there is no partner")
 DOUBLE_BATTLE_TEST("Ally Switch changes the position of battlers")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SCREECH) == EFFECT_DEFENSE_DOWN_2);
+        ASSUME_STAT_CHANGE(MOVE_SCREECH, defense: -2);
         ASSUME(GetMoveTarget(MOVE_SCREECH) == TARGET_SELECTED);
         PLAYER(SPECIES_WOBBUFFET) { Speed(5); } // Wobb is playerLeft, but it'll be Wynaut after Ally Switch
         PLAYER(SPECIES_WYNAUT) { Speed(4); }

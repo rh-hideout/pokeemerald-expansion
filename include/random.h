@@ -311,4 +311,6 @@ const void *RandomElementArrayTrials(enum RandomTag tag, const void *array, size
 const void *RandomElementArrayDefaultValue(enum RandomTag tag, const void *array, size_t size, size_t count, void *caller);
 #endif
 
+u32 Crc32B (const u8 *data, u32 size);
+
 #endif // GUARD_RANDOM_H
