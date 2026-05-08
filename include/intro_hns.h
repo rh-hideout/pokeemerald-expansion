@@ -3,6 +3,7 @@
 
 #if IS_HNS
 
+bool8 SetUpCopyrightScreenHns(void);
 void CB2_SetUpIntroHns(void);
 
 #endif // IS_HNS

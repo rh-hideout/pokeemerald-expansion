@@ -27,6 +27,7 @@
 #include "expansion_intro.h"
 #include "battle_anim.h"
 #include "intro_frlg.h"
+#include "intro_hns.h"
 #include "constants/rgb.h"
 #include "constants/battle_anim.h"
 
@@ -1053,6 +1054,8 @@ static u8 SetUpCopyrightScreen(void)
 {
     if (IS_FRLG)
         return SetUpCopyrightScreenFrlg();
+    if (IS_HNS)
+        return SetUpCopyrightScreenHns();
 
     switch (gMain.state)
     {

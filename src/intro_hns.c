@@ -955,6 +955,7 @@ bool8 SetUpCopyrightScreenHns(void)
         SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_1D_MAP | DISPCNT_BG0_ON);
         SetSerialCallback(SerialCB_CopyrightScreen);
         GameCubeMultiBoot_Init(&sGcmb);
+        m4aSongNumStart(MUS_HG_INTRO, FlagGet(FLAG_SYS_GBS_ENABLED));
         // fallthrough
     default:
         UpdatePaletteFade();
@@ -1157,7 +1158,6 @@ static void IntroCB_GF_Star(struct IntroSequenceData * this)
     switch (this->state)
     {
     case 0:
-        PlaySE(MUS_RG_GAME_FREAK);
         GFScene_LoadGfxCreateStar();
         this->timer = 0;
         this->state++;
@@ -1244,13 +1244,12 @@ static void IntroCB_GF_RevealLogo(struct IntroSequenceData * this)
         if (!IsDma3ManagerBusyWithBgCopy())
         {
             DestroySprite(this->gameFreakLogoArtSprite);
-            GFScene_CreatePresentsSprite();
             this->timer = 0;
             this->state++;
         }
         break;
     case 4:
-        if (++this->timer > 90)
+        if (++this->timer > 80)
         {
             SetGpuRegBits(REG_OFFSET_BLDCNT, BLDCNT_TGT1_BG2);
             StartBlendTask(16, 0, 0, 16, 20, 0);
@@ -1271,7 +1270,7 @@ static void IntroCB_GF_RevealLogo(struct IntroSequenceData * this)
         this->state++;
         break;
     case 7:
-        if (++this->timer > 20)
+        if (++this->timer > 10)
         {
             SetGpuReg(REG_OFFSET_BLDCNT, 0);
             SetIntroCB(this, IntroCB_ExitToTitleScreen);
