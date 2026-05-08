@@ -11,7 +11,7 @@
   "allow_escaping": false,
   "allow_running": false,
   "show_map_name": false,
-  "battle_scene": "MAP_BATTLE_SCENE_KAREN",
+  "battle_scene": "MAP_BATTLE_SCENE_KAREN_HNS",
   "connections": 0,
   "object_events": [
     {

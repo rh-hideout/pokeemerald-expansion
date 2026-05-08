@@ -28,6 +28,7 @@
 #include "constants/trainers.h"
 #include "constants/battle_anim.h"
 #include "constants/battle_partner.h"
+#include "rtc.h"
 #include "data/battle_environment.h"
 
 // .rodata
@@ -861,26 +862,87 @@ static u8 GetBattleEnvironmentByMapScene(u8 mapBattleScene)
     return BATTLE_ENVIRONMENT_PLAIN;
 }
 
-// Loads the initial battle environment.
-static void LoadBattleEnvironmentGfx(u16 environment)
+static bool32 UseModernBattleEnvironment(void)
 {
-    if (environment >= NELEMS(gBattleEnvironmentInfo))
-        environment = BATTLE_ENVIRONMENT_PLAIN;  // If higher than the number of entries in gBattleEnvironmentInfo, use the default.
-    // Copy to bg3
-    DecompressDataWithHeaderVram(gBattleEnvironmentInfo[environment].background.tileset, (void *)(BG_CHAR_ADDR(2)));
-    DecompressDataWithHeaderVram(gBattleEnvironmentInfo[environment].background.tilemap, (void *)(BG_SCREEN_ADDR(26)));
-    LoadPalette(gBattleEnvironmentInfo[environment].palette, BG_PLTT_ID(2), 3 * PLTT_SIZE_4BPP);
+    return TRUE; // TODO: Wire to settings system
 }
 
-// Loads the entry associated with the battle environment.
-// This can be the grass moving on the screen at the start of a wild encounter in tall grass.
-static void LoadBattleEnvironmentEntryGfx(u16 environment)
+enum
 {
+    BATTLE_TERRAIN_TIME_DAY,
+    BATTLE_TERRAIN_TIME_TWILIGHT,
+    BATTLE_TERRAIN_TIME_NIGHT,
+};
+
+// Matches HnS time-of-day cutoffs for battle terrain palettes.
+// 7–17 day, 5–7 and 17–19 twilight (sunrise/sunset), rest night.
+static u32 GetBattleTerrainTimeOfDay(void)
+{
+    RtcCalcLocalTime();
+    s32 hours = gLocalTime.hours;
+    if (hours >= 7 && hours < 17)
+        return BATTLE_TERRAIN_TIME_DAY;
+    else if ((hours >= 5 && hours < 7) || (hours >= 17 && hours < 19))
+        return BATTLE_TERRAIN_TIME_TWILIGHT;
+    else
+        return BATTLE_TERRAIN_TIME_NIGHT;
+}
+
+static void LoadBattleEnvironmentGfx(u16 environment)
+{
+    const void *tileset, *tilemap, *palette;
+
     if (environment >= NELEMS(gBattleEnvironmentInfo))
         environment = BATTLE_ENVIRONMENT_PLAIN;
-    // Copy to bg1
-    DecompressDataWithHeaderVram(gBattleEnvironmentInfo[environment].entry.tileset, (void *)BG_CHAR_ADDR(1));
-    DecompressDataWithHeaderVram(gBattleEnvironmentInfo[environment].entry.tilemap, (void *)BG_SCREEN_ADDR(28));
+
+    tileset = gBattleEnvironmentInfo[environment].background.tileset;
+    tilemap = gBattleEnvironmentInfo[environment].background.tilemap;
+    palette = gBattleEnvironmentInfo[environment].palette;
+
+    if (UseModernBattleEnvironment())
+    {
+        const struct ModernBattleGfx *modern = &sModernBattleGfx[environment];
+        if (modern->background.tileset)
+            tileset = modern->background.tileset;
+        if (modern->background.tilemap)
+            tilemap = modern->background.tilemap;
+        if (modern->palette)
+        {
+            u32 terrainTime = GetBattleTerrainTimeOfDay();
+            palette = modern->palette;
+            if (terrainTime == BATTLE_TERRAIN_TIME_NIGHT && modern->paletteNight)
+                palette = modern->paletteNight;
+            else if (terrainTime == BATTLE_TERRAIN_TIME_TWILIGHT && modern->paletteTwilight)
+                palette = modern->paletteTwilight;
+        }
+    }
+
+    DecompressDataWithHeaderVram(tileset, (void *)(BG_CHAR_ADDR(2)));
+    DecompressDataWithHeaderVram(tilemap, (void *)(BG_SCREEN_ADDR(26)));
+    LoadPalette(palette, BG_PLTT_ID(2), 3 * PLTT_SIZE_4BPP);
+}
+
+static void LoadBattleEnvironmentEntryGfx(u16 environment)
+{
+    const void *tileset, *tilemap;
+
+    if (environment >= NELEMS(gBattleEnvironmentInfo))
+        environment = BATTLE_ENVIRONMENT_PLAIN;
+
+    tileset = gBattleEnvironmentInfo[environment].entry.tileset;
+    tilemap = gBattleEnvironmentInfo[environment].entry.tilemap;
+
+    if (UseModernBattleEnvironment())
+    {
+        const struct ModernBattleGfx *modern = &sModernBattleGfx[environment];
+        if (modern->entry.tileset)
+            tileset = modern->entry.tileset;
+        if (modern->entry.tilemap)
+            tilemap = modern->entry.tilemap;
+    }
+
+    DecompressDataWithHeaderVram(tileset, (void *)BG_CHAR_ADDR(1));
+    DecompressDataWithHeaderVram(tilemap, (void *)BG_SCREEN_ADDR(28));
 }
 
 static u8 GetBattleEnvironmentOverride(void)
@@ -912,9 +974,9 @@ static u8 GetBattleEnvironmentOverride(void)
     else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
     {
         u32 trainerClass = GetTrainerClassFromId(TRAINER_BATTLE_PARAM.opponentA);
-        if (trainerClass == TRAINER_CLASS_LEADER)
+        if (trainerClass == TRAINER_CLASS_LEADER || trainerClass == TRAINER_CLASS_LEADER_FRLG || trainerClass == TRAINER_CLASS_LEADER_HNS)
             return BATTLE_ENVIRONMENT_LEADER;
-        else if (trainerClass == TRAINER_CLASS_CHAMPION)
+        else if (trainerClass == TRAINER_CLASS_CHAMPION || trainerClass == TRAINER_CLASS_CHAMPION_FRLG || trainerClass == TRAINER_CLASS_CHAMPION_HNS)
             return BATTLE_ENVIRONMENT_CHAMPION;
     }
 

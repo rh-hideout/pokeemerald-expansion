@@ -725,10 +725,121 @@ static void CB2_EndMarowakBattle(void)
     }
 }
 
+static const struct {
+    u16 mapId;
+    u8  environment;
+} sMapDefaultEnvironments[] = {
+    // MOUNTAIN (33 maps)
+    {MAP_BLACKTHORN_CITY_HNS,                    BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_LAKE_OF_RAGE_HNS,                       BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_LAKE_OF_RAGE_LOW_TIDE_HNS,              BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_MAHOGANYTOWN_HNS,                       BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_MT_SILVER_OUTSIDE_HNS,                  BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_MT_SILVER_MOUNTAIN_SIDE_HNS,            BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_MT_SILVER_SNOW_HNS,                     BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_ROUTE3_HNS,                             BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_ROUTE4_HNS,                             BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_ROUTE9_HNS,                             BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_ROUTE10_HNS,                            BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_ROUTE28_HNS,                            BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_ROUTE41_HNS,                            BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_ROUTE42_HNS,                            BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_ROUTE43_HNS,                            BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_ROUTE44_HNS,                            BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_ROUTE45_HNS,                            BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_ROUTE46_HNS,                            BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_ROUTE47_HNS,                            BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_ROUTE48_HNS,                            BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_RUINS_OF_ALPH_OUTSIDE_HNS,              BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_SAFARI_ZONE1_HNS,                       BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_SAFARI_ZONE2_HNS,                       BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_SAFARI_ZONE3_HNS,                       BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_SAFARI_ZONE_ENTERANCE_HNS,              BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_SAFARI_ZONE_GATE_HNS,                   BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_SAFARI_ZONE_LOW_LEFT_HNS,               BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_SAFARI_ZONE_LOW_MID_HNS,                BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_SAFARI_ZONE_TOP_LEFT_HNS,               BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_SAFARI_ZONE_TOP_MID_HNS,                BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_SAFARI_ZONE_TOP_RIGHT_HNS,              BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_WHIRL_ISLANDS_1F_HNS,                   BATTLE_ENVIRONMENT_MOUNTAIN},
+    {MAP_FUCHSIA_CITY_SAFARI_ZONE_MOUNTAIN_HNS,  BATTLE_ENVIRONMENT_MOUNTAIN},
+    // SAND (2 maps)
+    {MAP_FUCHSIA_CITY_SAFARI_ZONE_BEACH_HNS,    BATTLE_ENVIRONMENT_SAND},
+    {MAP_CINNABAR_ISLAND_HNS,                    BATTLE_ENVIRONMENT_SAND},
+    // GRAY_CAVE (32 maps)
+    {MAP_CERULEAN_CAVE_1F_HNS,                   BATTLE_ENVIRONMENT_GRAY_CAVE},
+    {MAP_CERULEAN_CAVE_B1F_HNS,                  BATTLE_ENVIRONMENT_GRAY_CAVE},
+    {MAP_CERULEAN_CAVE_B2F_HNS,                  BATTLE_ENVIRONMENT_GRAY_CAVE},
+    {MAP_WHIRL_ISLANDS_B1F_HNS,                  BATTLE_ENVIRONMENT_GRAY_CAVE},
+    {MAP_WHIRL_ISLANDS_B2F_HNS,                  BATTLE_ENVIRONMENT_GRAY_CAVE},
+    {MAP_SEAFOAM_ISLANDS_1F_HNS,                 BATTLE_ENVIRONMENT_GRAY_CAVE},
+    {MAP_SEAFOAM_ISLANDS_GYM_HNS,                BATTLE_ENVIRONMENT_GRAY_CAVE},
+    {MAP_SEAFOAM_ISLANDS_B1F_HNS,                BATTLE_ENVIRONMENT_GRAY_CAVE},
+    {MAP_MT_SILVER_1F_ITEM_ROOM_HNS,             BATTLE_ENVIRONMENT_GRAY_CAVE},
+    {MAP_MT_SILVER_1F_WATERFALL_ROOM_HNS,        BATTLE_ENVIRONMENT_GRAY_CAVE},
+    {MAP_MT_SILVER_1F_MOLTRES_ROOM_HNS,          BATTLE_ENVIRONMENT_GRAY_CAVE},
+    {MAP_MT_SILVER_2F_HNS,                       BATTLE_ENVIRONMENT_GRAY_CAVE},
+    {MAP_MT_SILVER_3F_HNS,                       BATTLE_ENVIRONMENT_GRAY_CAVE},
+    {MAP_ICE_PATH_1F_HNS,                        BATTLE_ENVIRONMENT_GRAY_CAVE},
+    {MAP_ICE_PATH_B1F_HNS,                       BATTLE_ENVIRONMENT_GRAY_CAVE},
+    {MAP_ICE_PATH_B2F_HNS,                       BATTLE_ENVIRONMENT_GRAY_CAVE},
+    {MAP_ICE_PATH_B3F_HNS,                       BATTLE_ENVIRONMENT_GRAY_CAVE},
+    {MAP_ICE_PATH_B4F_HNS,                       BATTLE_ENVIRONMENT_GRAY_CAVE},
+    {MAP_MT_MORTAR_1F_SOUTH_HNS,                 BATTLE_ENVIRONMENT_GRAY_CAVE},
+    {MAP_MT_MORTAR_1F_NORTH_HNS,                 BATTLE_ENVIRONMENT_GRAY_CAVE},
+    {MAP_MT_MORTAR_2F_HNS,                       BATTLE_ENVIRONMENT_GRAY_CAVE},
+    {MAP_MT_MORTAR_B1F_HNS,                      BATTLE_ENVIRONMENT_GRAY_CAVE},
+    {MAP_DRAGONS_DEN_ENTRANCE_HNS,               BATTLE_ENVIRONMENT_GRAY_CAVE},
+    {MAP_DRAGONS_DEN_CAVERN_HNS,                 BATTLE_ENVIRONMENT_GRAY_CAVE},
+    {MAP_ROCK_TUNNEL_B1F_HNS,                    BATTLE_ENVIRONMENT_GRAY_CAVE},
+    {MAP_ROCK_TUNNEL_1F_HNS,                     BATTLE_ENVIRONMENT_GRAY_CAVE},
+    {MAP_SLOWPOKE_WELL_B1F_HNS,                  BATTLE_ENVIRONMENT_GRAY_CAVE},
+    {MAP_SLOWPOKE_WELL_B2F_HNS,                  BATTLE_ENVIRONMENT_GRAY_CAVE},
+    {MAP_SAFARI_ZONE_LOW_RIGHT_HNS,              BATTLE_ENVIRONMENT_GRAY_CAVE},
+    {MAP_FUCHSIA_CITY_SAFARI_ZONE_CAVE_HNS,      BATTLE_ENVIRONMENT_GRAY_CAVE},
+    {MAP_RUINS_OF_ALPH_B1F_HNS,                  BATTLE_ENVIRONMENT_GRAY_CAVE},
+    // BLUE_BUILDING (22 maps)
+    {MAP_ROCKET_HIDEOUT_B1F_HNS,                  BATTLE_ENVIRONMENT_BLUE_BUILDING},
+    {MAP_ROCKET_HIDEOUT_B2F_HNS,                  BATTLE_ENVIRONMENT_BLUE_BUILDING},
+    {MAP_ROCKET_HIDEOUT_B3F_HNS,                  BATTLE_ENVIRONMENT_BLUE_BUILDING},
+    {MAP_GOLDENROD_CITY_UNDERGROUND_ENTRANCE_HNS, BATTLE_ENVIRONMENT_BLUE_BUILDING},
+    {MAP_GOLDENROD_CITY_UNDERGROUND_SWITCHES_HNS, BATTLE_ENVIRONMENT_BLUE_BUILDING},
+    {MAP_GOLDENROD_CITY_UNDERGROUND_TUNNEL_HNS,   BATTLE_ENVIRONMENT_BLUE_BUILDING},
+    {MAP_GOLDENROD_CITY_UNDERGROUND_STORAGE_HNS,  BATTLE_ENVIRONMENT_BLUE_BUILDING},
+    {MAP_GOLDENROD_CITY_RADIO_TOWER_1F_HNS,       BATTLE_ENVIRONMENT_BLUE_BUILDING},
+    {MAP_GOLDENROD_CITY_RADIO_TOWER_2F_HNS,       BATTLE_ENVIRONMENT_BLUE_BUILDING},
+    {MAP_GOLDENROD_CITY_RADIO_TOWER_3F_HNS,       BATTLE_ENVIRONMENT_BLUE_BUILDING},
+    {MAP_GOLDENROD_CITY_RADIO_TOWER_4F_HNS,       BATTLE_ENVIRONMENT_BLUE_BUILDING},
+    {MAP_GOLDENROD_CITY_RADIO_TOWER_5F_HNS,       BATTLE_ENVIRONMENT_BLUE_BUILDING},
+    {MAP_VIOLET_CITY_GYM_HNS,                     BATTLE_ENVIRONMENT_BLUE_BUILDING},
+    {MAP_ECRUTEAK_CITY_GYM_HNS,                   BATTLE_ENVIRONMENT_BLUE_BUILDING},
+    {MAP_CIANWOOD_GYM_HNS,                        BATTLE_ENVIRONMENT_BLUE_BUILDING},
+    {MAP_OLIVINE_CITY_LIGHTHOUSE_HNS,              BATTLE_ENVIRONMENT_BLUE_BUILDING},
+    {MAP_OLIVINE_CITY_GYM_HNS,                    BATTLE_ENVIRONMENT_BLUE_BUILDING},
+    {MAP_MAHOGANY_TOWN_GYM_HNS,                   BATTLE_ENVIRONMENT_BLUE_BUILDING},
+    {MAP_BLACKTHORN_CITY_GYM_HNS,                 BATTLE_ENVIRONMENT_BLUE_BUILDING},
+    {MAP_VIRIDIAN_CITY_GYM_HNS,                   BATTLE_ENVIRONMENT_BLUE_BUILDING},
+    {MAP_CERULEAN_CITY_GYM_HNS,                   BATTLE_ENVIRONMENT_BLUE_BUILDING},
+    {MAP_SAFFRON_CITY_GYM_HNS,                    BATTLE_ENVIRONMENT_BLUE_BUILDING},
+};
+
+static s32 GetMapDefaultEnvironment(u16 mapId)
+{
+    u32 i;
+    for (i = 0; i < NELEMS(sMapDefaultEnvironments); i++)
+    {
+        if (sMapDefaultEnvironments[i].mapId == mapId)
+            return sMapDefaultEnvironments[i].environment;
+    }
+    return -1;
+}
+
 enum BattleEnvironments BattleSetup_GetEnvironmentId(void)
 {
     u16 tileBehavior;
     s16 x, y;
+    u16 currentMap;
+    s32 mapDefault;
 
     if (ShouldUseFishingEnvironmentInBattle())
         GetXYCoordsOneStepInFrontOfPlayer(&x, &y);
@@ -737,6 +848,48 @@ enum BattleEnvironments BattleSetup_GetEnvironmentId(void)
 
     tileBehavior = MapGridGetMetatileBehaviorAt(x, y);
 
+    // Water/surfing checks always win regardless of map default.
+    // In caves, use cave water variants instead of outdoor water.
+    if (MetatileBehavior_IsDeepOrOceanWater(tileBehavior)
+     || MetatileBehavior_IsSurfableWaterOrUnderwater(tileBehavior))
+    {
+        if (gMapHeader.mapType == MAP_TYPE_UNDERGROUND)
+        {
+            currentMap = (gSaveBlock1Ptr->location.mapGroup << 8) | gSaveBlock1Ptr->location.mapNum;
+            mapDefault = GetMapDefaultEnvironment(currentMap);
+            if (mapDefault == BATTLE_ENVIRONMENT_GRAY_CAVE)
+                return BATTLE_ENVIRONMENT_GRAY_CAVE_WATER;
+            return BATTLE_ENVIRONMENT_CAVE_WATER;
+        }
+        if (MetatileBehavior_IsDeepOrOceanWater(tileBehavior))
+            return BATTLE_ENVIRONMENT_WATER;
+        return BATTLE_ENVIRONMENT_POND;
+    }
+    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
+    {
+        if (gMapHeader.mapType == MAP_TYPE_UNDERGROUND)
+        {
+            currentMap = (gSaveBlock1Ptr->location.mapGroup << 8) | gSaveBlock1Ptr->location.mapNum;
+            mapDefault = GetMapDefaultEnvironment(currentMap);
+            if (mapDefault == BATTLE_ENVIRONMENT_GRAY_CAVE)
+                return BATTLE_ENVIRONMENT_GRAY_CAVE_WATER;
+            return BATTLE_ENVIRONMENT_CAVE_WATER;
+        }
+        if (MetatileBehavior_GetBridgeType(tileBehavior) != BRIDGE_TYPE_OCEAN)
+            return BATTLE_ENVIRONMENT_POND;
+        if (MetatileBehavior_IsBridgeOverWater(tileBehavior) == TRUE)
+            return BATTLE_ENVIRONMENT_WATER;
+    }
+    if (gMapHeader.mapType == MAP_TYPE_UNDERWATER)
+        return BATTLE_ENVIRONMENT_UNDERWATER;
+
+    // Per-map default: if this map is in the table, use its environment
+    currentMap = (gSaveBlock1Ptr->location.mapGroup << 8) | gSaveBlock1Ptr->location.mapNum;
+    mapDefault = GetMapDefaultEnvironment(currentMap);
+    if (mapDefault >= 0)
+        return mapDefault;
+
+    // Standard metatile-based detection
     if (MetatileBehavior_IsTallGrass(tileBehavior))
         return BATTLE_ENVIRONMENT_GRASS;
     if (MetatileBehavior_IsLongGrass(tileBehavior))
@@ -753,40 +906,21 @@ enum BattleEnvironments BattleSetup_GetEnvironmentId(void)
     case MAP_TYPE_UNDERGROUND:
         if (MetatileBehavior_IsIndoorEncounter(tileBehavior))
             return BATTLE_ENVIRONMENT_BUILDING;
-        if (MetatileBehavior_IsSurfableWaterOrUnderwater(tileBehavior))
-            return BATTLE_ENVIRONMENT_POND;
         return BATTLE_ENVIRONMENT_CAVE;
     case MAP_TYPE_INDOOR:
     case MAP_TYPE_SECRET_BASE:
         return BATTLE_ENVIRONMENT_BUILDING;
-    case MAP_TYPE_UNDERWATER:
-        return BATTLE_ENVIRONMENT_UNDERWATER;
     case MAP_TYPE_OCEAN_ROUTE:
-        if (MetatileBehavior_IsSurfableWaterOrUnderwater(tileBehavior))
-            return BATTLE_ENVIRONMENT_WATER;
         return BATTLE_ENVIRONMENT_PLAIN;
     }
-    if (MetatileBehavior_IsDeepOrOceanWater(tileBehavior))
-        return BATTLE_ENVIRONMENT_WATER;
-    if (MetatileBehavior_IsSurfableWaterOrUnderwater(tileBehavior))
-        return BATTLE_ENVIRONMENT_POND;
     if (MetatileBehavior_IsMountain(tileBehavior))
         return BATTLE_ENVIRONMENT_MOUNTAIN;
-    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
-    {
-        // Is BRIDGE_TYPE_POND_*?
-        if (MetatileBehavior_GetBridgeType(tileBehavior) != BRIDGE_TYPE_OCEAN)
-            return BATTLE_ENVIRONMENT_POND;
-
-        if (MetatileBehavior_IsBridgeOverWater(tileBehavior) == TRUE)
-            return BATTLE_ENVIRONMENT_WATER;
-    }
     if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_ROUTE113) && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_ROUTE113))
         return BATTLE_ENVIRONMENT_SAND;
     if (GetSavedWeather() == WEATHER_SANDSTORM)
         return BATTLE_ENVIRONMENT_SAND;
 
-    return BATTLE_ENVIRONMENT_PLAIN;
+    return BATTLE_ENVIRONMENT_GRASS;
 }
 
 static enum TransitionType GetBattleTransitionTypeByMap(void)
