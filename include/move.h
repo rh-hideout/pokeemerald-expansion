@@ -180,9 +180,8 @@ struct MoveInfo
             u16 hitsBothFoes:1;
         } terrainBoost;
         struct {
-            u32 comboMove:12;
-            u32 resultMove:12;
-            u32 basePower:8;
+            u16 comboMove;
+            u16 resultMove;
         } pledge;
         u32 protectMethod;
         u32 status;
@@ -665,18 +664,10 @@ static inline u32 GetPledgeComboMove(enum Move moveId)
     return gMovesInfo[moveId].argument.pledge.comboMove;
 }
 
+// no assert because the result move does not have to be a pledge move
 static inline u32 GetPledgeResultMove(enum Move moveId)
 {
-    moveId = SanitizeMoveId(moveId);
-    assertf(gMovesInfo[moveId].effect == EFFECT_PLEDGE, "not a pledge move: %S", GetMoveName(moveId));
-    return gMovesInfo[moveId].argument.pledge.resultMove;
-}
-
-static inline u32 GetPledgeMoveBasePower(enum Move moveId)
-{
-    moveId = SanitizeMoveId(moveId);
-    assertf(gMovesInfo[moveId].effect == EFFECT_PLEDGE, "not a pledge move: %S", GetMoveName(moveId));
-    return gMovesInfo[moveId].argument.pledge.basePower;
+    return gMovesInfo[SanitizeMoveId(moveId)].argument.pledge.resultMove;
 }
 
 static inline enum ProtectMethod GetMoveProtectMethod(enum Move moveId)

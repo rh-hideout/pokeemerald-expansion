@@ -6119,14 +6119,11 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
     if (GetActiveGimmick(battlerAtk) == GIMMICK_DYNAMAX)
         return GetMaxMovePower(move);
 
-    if (gBattleStruct->pledgeState == PLEDGE_COMBO_ATTACK && GetPledgeMoveBasePower(ctx->move) > 0)
-        basePower = GetPledgeMoveBasePower(ctx->move);
-
     switch (moveEffect)
     {
     case EFFECT_PLEDGE:
-        if (gBattleStruct->pledgeState && GetPledgeMoveBasePower(ctx->move) > 0)
-            basePower = GetPledgeMoveBasePower(ctx->move);
+        if (gBattleStruct->pledgeState == PLEDGE_COMBO_ATTACK)
+            basePower = 150;
         break;
     case EFFECT_FLING:
         basePower = GetFlingPowerFromItemId(gBattleMons[battlerAtk].item);
