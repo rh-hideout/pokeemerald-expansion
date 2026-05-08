@@ -10,6 +10,7 @@
 #include "main.h"
 #include "intro.h"
 #include "intro_frlg.h"
+#include "intro_hns.h"
 #include "m4a.h"
 #include "event_data.h"
 #include "expansion_intro.h"
@@ -277,7 +278,11 @@ void Task_HandleExpansionIntro(u8 taskId)
             ResetSpriteData();
             FreeAllSpritePalettes();
             DestroyTask(taskId);
-            if (IS_FRLG)
+            if (IS_HNS)
+            {
+                SetMainCallback2(CB2_SetUpIntroHns);
+            }
+            else if (IS_FRLG)
             {
                 SetMainCallback2(CB2_SetUpIntroFrlg);
             }
