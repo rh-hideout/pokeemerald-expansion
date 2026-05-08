@@ -15,6 +15,9 @@ void FieldEffectActiveListClear(void);
 void ReturnToFieldFromFlyMapSelect(void);
 void FieldCallback_UseFly(void);
 u8 AddNewGameBirchObject(s16 x, s16 y, u8 subpriority);
+#if IS_HNS
+u8 AddNewGameOakObject(s16 x, s16 y, u8 subpriority);
+#endif
 void FieldEffectStop(struct Sprite *sprite, u8 id);
 u8 CreateTrainerSprite(u8 trainerSpriteID, s16 x, s16 y, u8 subpriority, u8 *buffer);
 void FldEff_TeleportWarpOut(void);

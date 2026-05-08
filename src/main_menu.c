@@ -19,6 +19,7 @@
 #include "mystery_event_menu.h"
 #include "naming_screen.h"
 #include "oak_speech.h"
+#include "oak_speech_hns.h"
 #include "option_menu.h"
 #include "overworld.h"
 #include "palette.h"
@@ -1085,6 +1086,17 @@ static void Task_HandleMainMenuAPressed(u8 taskId)
                 else
                     sCurrItemAndOptionMenuCheck |= OPTION_MENU_FLAG;  // entering the options menu
                 StartNewGameSceneFrlg();
+                return;
+            }
+            else if (IS_HNS)
+            {
+                DestroyTask(taskId);
+                FreeAllWindowBuffers();
+                if (action != ACTION_OPTION)
+                    sCurrItemAndOptionMenuCheck = 0;
+                else
+                    sCurrItemAndOptionMenuCheck |= OPTION_MENU_FLAG;
+                StartNewGameSceneHns();
                 return;
             }
 

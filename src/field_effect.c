@@ -272,6 +272,11 @@ static const u32 sNewGameBirch_Gfx[] = INCBIN_U32("graphics/birch_speech/birch.4
 static const u32 sUnusedBirchBeauty[] = INCBIN_U32("graphics/birch_speech/unused_beauty.4bpp");
 static const u16 sNewGameBirch_Pal[16] = INCBIN_U16("graphics/birch_speech/birch.gbapal");
 
+#if IS_HNS
+static const u32 sNewGameOak_Gfx[] = INCBIN_U32("graphics/birch_speech/oak_hns.4bpp");
+static const u16 sNewGameOak_Pal[16] = INCBIN_U16("graphics/birch_speech/oak_hns.gbapal");
+#endif
+
 static const u32 sPokeballGlow_Gfx[] = INCBIN_U32("graphics/field_effects/pics/pokeball_glow.4bpp");
 static const u16 sPokeballGlow_Pal[16] = INCBIN_U16("graphics/field_effects/palettes/pokeball_glow.gbapal");
 static const u32 sPokecenterMonitor0_Gfx[] = INCBIN_U32("graphics/field_effects/pics/pokecenter_monitor/0.4bpp");
@@ -384,6 +389,39 @@ static const struct SpriteTemplate sSpriteTemplate_NewGameBirch =
     .anims = sAnimTable_NewGameBirch,
     .images = sPicTable_NewGameBirch,
 };
+
+#if IS_HNS
+static const struct SpriteFrameImage sPicTable_NewGameOak[] =
+{
+    obj_frame_tiles(sNewGameOak_Gfx)
+};
+
+static const struct SpritePalette sSpritePalette_NewGameOak =
+{
+    .data = sNewGameOak_Pal,
+    .tag = 0x1007
+};
+
+static const union AnimCmd sAnim_NewGameOak[] =
+{
+    ANIMCMD_FRAME(.imageValue = 0, .duration = 1),
+    ANIMCMD_END
+};
+
+static const union AnimCmd *const sAnimTable_NewGameOak[] =
+{
+    sAnim_NewGameOak
+};
+
+static const struct SpriteTemplate sSpriteTemplate_NewGameOak =
+{
+    .tileTag = TAG_NONE,
+    .paletteTag = 0x1007,
+    .oam = &sOam_64x64,
+    .anims = sAnimTable_NewGameOak,
+    .images = sPicTable_NewGameOak,
+};
+#endif
 
 const struct SpritePalette gSpritePalette_PokeballGlow =
 {
@@ -1014,6 +1052,14 @@ u8 AddNewGameBirchObject(s16 x, s16 y, u8 subpriority)
     LoadSpritePalette(&sSpritePalette_NewGameBirch);
     return CreateSprite(&sSpriteTemplate_NewGameBirch, x, y, subpriority);
 }
+
+#if IS_HNS
+u8 AddNewGameOakObject(s16 x, s16 y, u8 subpriority)
+{
+    LoadSpritePalette(&sSpritePalette_NewGameOak);
+    return CreateSprite(&sSpriteTemplate_NewGameOak, x, y, subpriority);
+}
+#endif
 
 u8 CreateMonSprite_PicBox(u16 species, s16 x, s16 y, u8 subpriority)
 {
