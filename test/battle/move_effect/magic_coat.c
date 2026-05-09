@@ -98,6 +98,48 @@ DOUBLE_BATTLE_TEST("Magic Coat reflects hazards regardless of the user's positio
     }
 }
 
+DOUBLE_BATTLE_TEST("Magic Coat activates on the fastest opposing mon for hazard setting moves (raw speed)")
+{
+    u32 speedPlayerLeft = 0;
+    u32 speedPlayerRight = 0;
+    PARAMETRIZE { speedPlayerLeft = 2; speedPlayerRight = 1; }
+    PARAMETRIZE { speedPlayerLeft = 1; speedPlayerRight = 2; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SPIKES) == EFFECT_SPIKES);
+        ASSUME(GetMoveEffect(MOVE_STEALTH_ROCK) == EFFECT_STEALTH_ROCK);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(speedPlayerLeft); }
+        PLAYER(SPECIES_WYNAUT) { Speed(speedPlayerRight); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(3); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(4); }
+    } WHEN {
+        TURN {
+            if (speedPlayerRight == 2) {
+                MOVE(playerRight, MOVE_MAGIC_COAT);
+                MOVE(playerLeft, MOVE_MAGIC_COAT);
+            } else {
+                MOVE(playerLeft, MOVE_MAGIC_COAT);
+                MOVE(playerRight, MOVE_MAGIC_COAT);
+            }
+            MOVE(opponentLeft, MOVE_CELEBRATE);
+            MOVE(opponentRight, MOVE_STEALTH_ROCK);
+        }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, opponentRight);
+        if (speedPlayerRight == 2) {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGIC_COAT, playerRight);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGIC_COAT, playerLeft);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, playerRight);
+            NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, playerLeft);
+        } else {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGIC_COAT, playerLeft);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGIC_COAT, playerRight);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, playerLeft);
+            NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, playerRight);
+        }
+    }
+}
+
 SINGLE_BATTLE_TEST("Magic Coat reflection doesn't activate Protean/Libero")
 {
     u32 species, ability;

@@ -573,7 +573,7 @@ static void Task_BindSurfBlobToFollowerNPC(u8 taskId)
     struct ObjectEvent *npc = &gObjectEvents[GetFollowerNPCObjectId()];
     // Wait for the jump animation.
     bool32 animStatus = ObjectEventClearHeldMovementIfFinished(npc);
-    if (animStatus == 0)
+    if (!animStatus)
         return;
 
     // Bind the blob to the follower.
@@ -590,7 +590,7 @@ static void Task_FinishSurfDismount(u8 taskId)
     // Wait for the animation to finish.
     bool32 animStatus = ObjectEventClearHeldMovementIfFinished(npc);
 
-    if (animStatus == 0)
+    if (!animStatus)
     {
         // Temporarily stop running.
         if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH) && ObjectEventClearHeldMovementIfFinished(&gObjectEvents[gPlayerAvatar.objectEventId]))
@@ -611,7 +611,7 @@ static void Task_FinishSurfDismount(u8 taskId)
 static void Task_ReallowPlayerMovement(u8 taskId)
 {
     bool32 animStatus = ObjectEventClearHeldMovementIfFinished(&gObjectEvents[GetFollowerNPCObjectId()]);
-    if (animStatus == 0)
+    if (!animStatus)
     {
         // Temporarily stop running.
         if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH)
@@ -1162,9 +1162,9 @@ static void ChooseFirstThreeEligibleMons(void)
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        if (GetMonData(&gPlayerParty[i], MON_DATA_HP) != 0
-         && GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG) == FALSE
-         && GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) != SPECIES_NONE)
+        if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_HP) != 0
+         && GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_IS_EGG) == FALSE
+         && GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES) != SPECIES_NONE)
         {
             gSelectedOrderFromParty[count] = (i + 1);
             count++;
@@ -1365,20 +1365,7 @@ void FollowerNPC_HandleSprite(void)
 
 enum Direction DetermineFollowerNPCDirection(struct ObjectEvent *player, struct ObjectEvent *follower)
 {
-    s32 delta_x = follower->currentCoords.x - player->currentCoords.x;
-    s32 delta_y = follower->currentCoords.y - player->currentCoords.y;
-
-    if (delta_x < 0)
-        return DIR_EAST;
-    else if (delta_x > 0)
-        return DIR_WEST;
-
-    if (delta_y < 0)
-        return DIR_SOUTH;
-    else if (delta_y > 0)
-        return DIR_NORTH;
-
-    return DIR_NONE;
+    return DetermineObjectEventDirectionFromObject(player, follower);
 }
 
 u32 GetFollowerNPCObjectId(void)
@@ -1826,38 +1813,10 @@ void ScriptFaceFollowerNPC(struct ScriptContext *ctx)
     if (!FNPC_ENABLE_NPC_FOLLOWERS || !PlayerHasFollowerNPC())
         return;
 
-    enum Direction playerDirection, followerDirection;
     struct ObjectEvent *player, *follower;
     player = &gObjectEvents[gPlayerAvatar.objectEventId];
     follower = &gObjectEvents[GetFollowerNPCData(FNPC_DATA_OBJ_ID)];
-
-    if (follower->invisible == FALSE)
-    {
-        playerDirection = DetermineFollowerNPCDirection(player, follower);
-        followerDirection = playerDirection;
-
-        //Flip direction.
-        switch (playerDirection)
-        {
-        case DIR_NORTH:
-            playerDirection = DIR_SOUTH;
-            break;
-        case DIR_SOUTH:
-            playerDirection = DIR_NORTH;
-            break;
-        case DIR_WEST:
-            playerDirection = DIR_EAST;
-            break;
-        case DIR_EAST:
-            playerDirection = DIR_WEST;
-            break;
-        default:
-            break;
-        }
-
-        ObjectEventTurn(player, playerDirection);
-        ObjectEventTurn(follower, followerDirection);
-    }
+    ObjectEventsTurnToEachOther(player, follower);
 }
 
 static const u8 *const FollowerNPCHideMovementsSpeedTable[][4] =

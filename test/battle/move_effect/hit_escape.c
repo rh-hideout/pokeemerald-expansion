@@ -208,6 +208,22 @@ SINGLE_BATTLE_TEST("Hit Escape: U-turn will fail to switch if the user faints")
     }
 }
 
+SINGLE_BATTLE_TEST("Hit Escape: U-Turn switches user out and target activates Pickpocket before replacement enters")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_POTION); }
+        PLAYER(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
+        OPPONENT(SPECIES_TINKATON) { Ability(ABILITY_PICKPOCKET); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_U_TURN); SEND_OUT(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, player);
+        HP_BAR(opponent);
+        ABILITY_POPUP(opponent, ABILITY_PICKPOCKET);
+        ABILITY_POPUP(player, ABILITY_INTIMIDATE);
+    }
+}
+
 SINGLE_BATTLE_TEST("Hit Escape: U-turn will switch if the target is behind a Substitute")
 {
     GIVEN {

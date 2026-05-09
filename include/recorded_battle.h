@@ -5,35 +5,35 @@
 #include "link.h"
 #include "random.h"
 
-#define BATTLER_RECORD_SIZE 664
+#define BATTLER_RECORD_SIZE 388
 
 struct RecordedBattleSave
 {
-    struct Pokemon playerParty[PARTY_SIZE];
-    struct Pokemon opponentParty[PARTY_SIZE];
+    struct Pokemon parties[MAX_BATTLE_TRAINERS][PARTY_SIZE];
     u8 playersName[MAX_LINK_PLAYERS][PLAYER_NAME_LENGTH + 1];
-    u8 playersGender[MAX_LINK_PLAYERS];
     u32 playersTrainerId[MAX_LINK_PLAYERS];
     u8 playersLanguage[MAX_LINK_PLAYERS];
     rng_value_t rngSeed;
     u32 battleFlags;
-    u8 playersBattlers[MAX_LINK_PLAYERS];
     u16 opponentA;
     u16 opponentB;
     u16 partnerId;
-    u16 multiplayerId;
-    u8 lvlMode;
-    u8 frontierFacility;
-    u8 frontierBrainSymbol;
-    u8 battleScene:1;
-    u8 textSpeed:3;
+    u16 frontierFacility:4; // 7 Frontier facilities + Union Room + E-reader
+    u16 frontierBrainSymbol:1;
+    u16 lvlMode:2;
+    u16 battleScene:1;
+    u16 textSpeed:3;
+    u16 playersGender:4; // 1 bit per player; please don't hate me
+    u16 padding:1;
     u64 AI_scripts[MAX_BATTLERS_COUNT];
     u8 recordMixFriendName[PLAYER_NAME_LENGTH + 1];
     u8 recordMixFriendClass;
     u8 apprenticeId;
+    u8 recordMixFriendLanguage:3; // 7 languages
+    u8 apprenticeLanguage:3;
+    u8 multiplayerId:2;
+    u8 playersBattlers; // Setup so player 2/3 battler and player 0/1 second battler occupy same bits
     u16 easyChatSpeech[EASY_CHAT_BATTLE_WORDS_COUNT];
-    u8 recordMixFriendLanguage;
-    u8 apprenticeLanguage;
     u8 battleRecord[MAX_BATTLERS_COUNT][BATTLER_RECORD_SIZE];
     u32 checksum;
 };

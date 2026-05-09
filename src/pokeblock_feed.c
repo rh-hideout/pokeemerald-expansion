@@ -55,7 +55,7 @@ struct PokeblockFeed
     u8 animId;
     u8 unused2;
     bool8 noMonFlip;
-    u16 species;
+    enum Species species;
     u16 monAnimLength;
     u16 timer;
     u8 nature;
@@ -580,7 +580,7 @@ static bool8 LoadPokeblockFeedScene(void)
         gMain.state++;
         break;
     case 7:
-        if (LoadMonAndSceneGfx(&gPlayerParty[gPokeblockMonId]))
+        if (LoadMonAndSceneGfx(&gParties[B_TRAINER_0][gPokeblockMonId]))
             gMain.state++;
         break;
     case 8:
@@ -588,7 +588,7 @@ static bool8 LoadPokeblockFeedScene(void)
         gMain.state++;
         break;
     case 9:
-        sPokeblockFeed->monSpriteId = CreateMonSprite(&gPlayerParty[gPokeblockMonId]);
+        sPokeblockFeed->monSpriteId = CreateMonSprite(&gParties[B_TRAINER_0][gPokeblockMonId]);
         gMain.state++;
         break;
     case 10:
@@ -649,7 +649,7 @@ static void HandleInitBackgrounds(void)
 
 static bool8 LoadMonAndSceneGfx(struct Pokemon *mon)
 {
-    u16 species;
+    enum Species species;
     u32 personality;
     bool32 isShiny;
 
@@ -787,7 +787,7 @@ static void Task_WaitForAtePokeblockMessage(u8 taskId)
 
 static void Task_PrintAtePokeblockMessage(u8 taskId)
 {
-    struct Pokemon *mon = &gPlayerParty[gPokeblockMonId];
+    struct Pokemon *mon = &gParties[B_TRAINER_0][gPokeblockMonId];
     struct Pokeblock *pokeblock = &gSaveBlock1Ptr->pokeblocks[gSpecialVar_ItemId];
 
     gPokeblockGain = PokeblockGetGain(GetNature(mon), pokeblock);
@@ -837,7 +837,7 @@ static void Task_FadeOutPokeblockFeed(u8 taskId)
 
 static u8 CreateMonSprite(struct Pokemon *mon)
 {
-    u16 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    enum Species species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
     u8 spriteId = CreateSprite(&gMultiuseSpriteTemplate, MON_X, MON_Y, 2);
 
     sPokeblockFeed->species = species;

@@ -276,7 +276,7 @@ DOUBLE_BATTLE_TEST("Dancer doesn't trigger when an ally snatches the move")
 DOUBLE_BATTLE_TEST("Dancer doesn't activate if the original move missed")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_DOUBLE_TEAM) == EFFECT_EVASION_UP);
+        ASSUME_STAT_CHANGE(MOVE_DOUBLE_TEAM, evasion: +1);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); }
@@ -287,7 +287,7 @@ DOUBLE_BATTLE_TEST("Dancer doesn't activate if the original move missed")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DOUBLE_TEAM, opponentLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerLeft);
-        MESSAGE("Wobbuffet's attack missed!");
+        MESSAGE("The opposing Oricorio avoided the attack!");
         NONE_OF {
             ABILITY_POPUP(opponentLeft, ABILITY_DANCER);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, opponentLeft);
@@ -375,7 +375,7 @@ SINGLE_BATTLE_TEST("Dancer-called moves can be reflected by Magic Bounce")
         ABILITY_POPUP(opponent, ABILITY_DANCER);
         ABILITY_POPUP(player, ABILITY_MAGIC_BOUNCE);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FEATHER_DANCE, opponent);
-        MESSAGE("The opposing Oricorio's Feather Dance was bounced back by Espeon's Magic Bounce!");
+        MESSAGE("The opposing Oricorio's Feather Dance was bounced back!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FEATHER_DANCE, player);
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
@@ -560,7 +560,7 @@ DOUBLE_BATTLE_TEST("Dancer still activate after Red Card even if blocked by Suct
         // red card trigger
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
         MESSAGE("The opposing Wobbuffet held up its Red Card against Octillery!");
-        MESSAGE("Octillery anchors itself with Suction Cups!");
+        MESSAGE("Octillery is anchored in place with its suction cups!");
         NOT MESSAGE("Chansey was dragged out!");
         // Dancer
         ABILITY_POPUP(playerRight, ABILITY_DANCER);
@@ -639,7 +639,7 @@ SINGLE_BATTLE_TEST("Dancer copies a status Z-Move's base move without gaining an
 {
     GIVEN {
         ASSUME(IsDanceMove(MOVE_SWORDS_DANCE));
-        ASSUME(GetMoveEffect(MOVE_SCREECH) == EFFECT_DEFENSE_DOWN_2);
+        ASSUME_STAT_CHANGE(MOVE_SCREECH, defense: -2);
         ASSUME(GetMoveZEffect(MOVE_SWORDS_DANCE) == Z_EFFECT_RESET_STATS);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
         OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); }

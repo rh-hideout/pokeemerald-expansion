@@ -139,7 +139,7 @@ The `HP_BAR` command's `captureDamage` causes the change in HP to be stored in a
 You might notice that all the tests check the outputs the player could see rather than the internal battle state. e.g. the Meditate test could have used `gBattleMons[B_POSITION_OPPONENT_LEFT].hp` instead of using `HP_BAR` to capture the damage. This is a deliberate choice, by checking what the player can observe the tests are more robust to refactoring, e.g. if `gBattleMons` got moved into `gBattleStruct` then any test that used it would need to be updated.
 
 ### Note on Overworld Tests
-The overworld is not available, so it is only possible to test commands which don't affect the overworld itself, e.g. `givemon` can be tested because it only alters `gPlayerParty`, but `addobject` cannot because it affects object events (which aren't loaded).
+The overworld is not available, so it is only possible to test commands which don't affect the overworld itself, e.g. `givemon` can be tested because it only alters `gParties[B_TRAINER_0]`, but `addobject` cannot because it affects object events (which aren't loaded).
 
 ## REFERENCE
 
@@ -285,16 +285,13 @@ For example to create a level 42 Wobbuffet that is poisoned:
 **Note if Speed is specified for any Pokémon then it must be specified for all Pokémon.**
 **Note if Moves is specified then MOVE will not automatically add moves to the moveset.**
 
-### `MULTI_PLAYER`, `MULTI_PARTNER`, `MULTI_OPPONENT_A`, and `MULTI_OPPONENT_B`
-For tests using `MULTI_BATTLE_TEST`, `AI_MULTI_BATTLE_TEST`, `TWO_VS_ONE_BATTLE_TEST`, `AI_TWO_VS_ONE_BATTLE_TEST`, `ONE_VS_TWO_BATTLE_TEST`, and `AI_ONE_VS_TWO_BATTLE_TEST`, the below must be used instead of `PLAYER(species)` and `OPPONENT(species)`.
-`MULTI_PLAYER(species)`, `MULTI_PARTNER(species)`, `MULTI_OPPONENT_A(species)`, and `MULTI_OPPONENT_B(species)`
-Adds the species to the player's, player partner's, opponent A's, or opponent B's party, respectively.
+### `PARTNER`, `OPPONENT_A`, and `OPPONENT_B`
+For tests using `MULTI_BATTLE_TEST`, `AI_MULTI_BATTLE_TEST`, `TWO_VS_ONE_BATTLE_TEST`, `AI_TWO_VS_ONE_BATTLE_TEST`, `ONE_VS_TWO_BATTLE_TEST`, and `AI_ONE_VS_TWO_BATTLE_TEST`, the below must be used.
+`PLAYER(species)`, `PARTNER(species)`, `OPPONENT_A(species)`, and `OPPONENT_B(species)`
+Adds the species to the player's (`B_TRAINER_0`), player partner's (`B_TRAINER_2`), opponent A's (`B_TRAINER_1`), or opponent B's (`B_TRAINER_3`), party, respectively.
 Pokemon can be customised as per the guidance for `PLAYER(species)` and `OPPONENT(species)`.
 The functions assign the Pokémon to the party of the trainer at `B_POSITION_PLAYER_LEFT`, `B_POSITION_PLAYER_RIGHT`, `B_POSITION_OPPONENT_LEFT`, and `B_POSITION_OPPONENT_RIGHT`, respectively.
-`MULTI_PLAYER(species)` and `MULTI_OPPONENT_A(species)` set Pokémon starting at party index 0, while `MULTI_PARTNER(species)` and `MULTI_OPPONENT_B(species)` set Pokémon starting at party index 3.
-For `ONE_VS_TWO` tests, `MULTI_PLAYER(species)` must be used for all player-side Pokémon, and for `TWO_VS_ONE` tests, `MULTI_OPPONENT_A(species)` must be used for all opponent-side Pokémon.
-All `MULTI_PLAYER(species)` Pokémon must be set before any `MULTI_PARTNER(species)` Pokémon, and all `MULTI_OPPONENT_A(species)` must be set before any `MULTI_OPPONENT_B(species)` Pokémon, else Pokémon will be set in the incorrect parties in the test.
-**Note where a side in a test has two trainers, the test setup manages the assigning of correct multi-party orders, therefore when using functions such as SEND_OUT, Player and Opponent A Pokémon may be referenced using indexes 0, 1, and 2, and Player's Partner and Opponent B Pokémon may be referenced using indexes 3, 4, and 5.**
+For `ONE_VS_TWO` tests, `PLAYER(species)` must be used for all player-side Pokémon, and for `TWO_VS_ONE` tests, `OPPONENT_A(species)` must be used for all opponent-side Pokémon.
 
 ### `AI_FLAGS`
 `AI_FLAGS(flags)`

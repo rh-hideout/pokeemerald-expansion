@@ -105,3 +105,17 @@ SINGLE_BATTLE_TEST("Thunder Wave doesn't print an effectiveness message")
         NOT MESSAGE("It's super effective!");
     }
 }
+
+SINGLE_BATTLE_TEST("Thunder Wave prints an avoided attack message when it misses")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_THUNDER_WAVE, hit: FALSE); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Thunder Wave!");
+        MESSAGE("The opposing Wobbuffet avoided the attack!");
+        NOT MESSAGE("But it failed!");
+    }
+}

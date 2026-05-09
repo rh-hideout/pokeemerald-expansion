@@ -39,8 +39,7 @@ static const struct UnknownStruct sBigMonSizeTable[] =
     { 1700,   1,   -26 },
 };
 
-// - 4 for unused gift ribbon bits in MON_DATA_UNUSED_RIBBONS
-static const u8 sGiftRibbonsMonDataIds[GIFT_RIBBONS_COUNT - 4] =
+static const u8 sGiftRibbonsMonDataIds[NUM_GIFT_RIBBONS] =
 {
     MON_DATA_MARINE_RIBBON, MON_DATA_LAND_RIBBON, MON_DATA_SKY_RIBBON,
     MON_DATA_COUNTRY_RIBBON, MON_DATA_NATIONAL_RIBBON, MON_DATA_EARTH_RIBBON,
@@ -85,7 +84,7 @@ static u8 TranslateBigMonSizeTableIndex(u16 a)
     return i;
 }
 
-static u32 GetMonSize(u16 species, u16 b)
+static u32 GetMonSize(enum Species species, u16 b)
 {
     u64 unk2;
     u64 unk4;
@@ -124,7 +123,7 @@ static u8* ReturnHeightStringNoWhitespace(u32 size)
     return heightStr;
 }
 
-static u8 CompareMonSize(u16 species, u16 *sizeRecord)
+static u8 CompareMonSize(enum Species species, u16 *sizeRecord)
 {
     if (gSpecialVar_Result == 0xFF)
     {
@@ -159,7 +158,7 @@ static u8 CompareMonSize(u16 species, u16 *sizeRecord)
 }
 
 // Stores species name in gStringVar1, trainer's name in gStringVar2, and size in gStringVar3
-static void GetMonSizeRecordInfo(u16 species, u16 *sizeRecord)
+static void GetMonSizeRecordInfo(enum Species species, u16 *sizeRecord)
 {
     u32 size = GetMonSize(species, *sizeRecord);
 
@@ -259,12 +258,12 @@ void GiveGiftRibbonToParty(u8 index, u8 ribbonId)
     u8 array[ARRAY_COUNT(sGiftRibbonsMonDataIds)];
     memcpy(array, sGiftRibbonsMonDataIds, sizeof(sGiftRibbonsMonDataIds));
 
-    if (index < GIFT_RIBBONS_COUNT && ribbonId <= MAX_GIFT_RIBBON)
+    if (index < NUM_GIFT_RIBBONS && ribbonId <= MAX_GIFT_RIBBON)
     {
         gSaveBlock1Ptr->giftRibbons[index] = ribbonId;
         for (i = 0; i < PARTY_SIZE; i++)
         {
-            struct Pokemon *mon = &gPlayerParty[i];
+            struct Pokemon *mon = &gParties[B_TRAINER_0][i];
 
             if (GetMonData(mon, MON_DATA_SPECIES) != 0 && GetMonData(mon, MON_DATA_SANITY_IS_EGG) == 0)
             {
