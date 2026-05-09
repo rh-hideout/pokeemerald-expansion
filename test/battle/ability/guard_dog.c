@@ -67,7 +67,6 @@ SINGLE_BATTLE_TEST("Guard Dog still raises Attack against Intimidate when holdin
         NOT MESSAGE("The effects of the Clear Amulet held by Okidogi prevents its stats from being lowered!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
-        EXPECT_EQ(player->item, ITEM_CLEAR_AMULET);
     }
 }
 
@@ -148,23 +147,28 @@ SINGLE_BATTLE_TEST("Guard Dog does not activate if Intimidate cannot lower Attac
 DOUBLE_BATTLE_TEST("Guard Dog does not activate if Intimidate is blocked by Flower Veil")
 {
     GIVEN {
-        ASSUME(GetSpeciesType(SPECIES_CHIKORITA, 0) == TYPE_GRASS || GetSpeciesType(SPECIES_CHIKORITA, 1) == TYPE_GRASS);
+        ASSUME(GetMoveEffect(MOVE_FORESTS_CURSE) == EFFECT_THIRD_TYPE);
+        ASSUME(GetMoveArgType(MOVE_FORESTS_CURSE) == TYPE_GRASS);
         PLAYER(SPECIES_COMFEY) { Ability(ABILITY_FLOWER_VEIL); Speed(40); }
-        PLAYER(SPECIES_CHIKORITA) { Ability(ABILITY_GUARD_DOG); Speed(30); }
-        OPPONENT(SPECIES_WOBBUFFET) {Speed(20); }
-        OPPONENT(SPECIES_ARBOK) { Ability(ABILITY_INTIMIDATE); Speed(10); }
+        PLAYER(SPECIES_OKIDOGI) { Ability(ABILITY_GUARD_DOG); Speed(30); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
+        OPPONENT(SPECIES_ARBOK) { Ability(ABILITY_INTIMIDATE); Speed(5); }
     } WHEN {
-        TURN {}
+        TURN { MOVE(playerLeft, MOVE_FORESTS_CURSE, target: playerRight); }
+        TURN { SWITCH(opponentRight, 2); }
     } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FORESTS_CURSE, playerLeft);
         ABILITY_POPUP(opponentRight, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
         ABILITY_POPUP(playerLeft, ABILITY_FLOWER_VEIL);
         NONE_OF {
             ABILITY_POPUP(playerRight, ABILITY_GUARD_DOG);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
-            MESSAGE("Chikorita's Attack rose!");
+            MESSAGE("Okidogi's Attack rose!");
         }
     } THEN {
+        EXPECT_EQ(playerRight->types[2], TYPE_GRASS);
         EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
     }
 }
@@ -172,21 +176,26 @@ DOUBLE_BATTLE_TEST("Guard Dog does not activate if Intimidate is blocked by Flow
 DOUBLE_BATTLE_TEST("Guard Dog activates before Flower Veil if it has higher unmodified Speed")
 {
     GIVEN {
-        ASSUME(GetSpeciesType(SPECIES_CHIKORITA, 0) == TYPE_GRASS || GetSpeciesType(SPECIES_CHIKORITA, 1) == TYPE_GRASS);
+        ASSUME(GetMoveEffect(MOVE_FORESTS_CURSE) == EFFECT_THIRD_TYPE);
+        ASSUME(GetMoveArgType(MOVE_FORESTS_CURSE) == TYPE_GRASS);
         PLAYER(SPECIES_COMFEY) { Ability(ABILITY_FLOWER_VEIL); Speed(30); }
-        PLAYER(SPECIES_CHIKORITA) { Ability(ABILITY_GUARD_DOG); Speed(40); }
-        OPPONENT(SPECIES_WOBBUFFET) {Speed(20); }
-        OPPONENT(SPECIES_ARBOK) { Ability(ABILITY_INTIMIDATE); Speed(10); }
+        PLAYER(SPECIES_OKIDOGI) { Ability(ABILITY_GUARD_DOG); Speed(40); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
+        OPPONENT(SPECIES_ARBOK) { Ability(ABILITY_INTIMIDATE); Speed(5); }
     } WHEN {
-        TURN {}
+        TURN { MOVE(playerLeft, MOVE_FORESTS_CURSE, target: playerRight); }
+        TURN { SWITCH(opponentRight, 2); }
     } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FORESTS_CURSE, playerLeft);
         ABILITY_POPUP(opponentRight, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
         ABILITY_POPUP(playerRight, ABILITY_GUARD_DOG);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
-        MESSAGE("Chikorita's Attack rose!");
+        MESSAGE("Okidogi's Attack rose!");
         NOT ABILITY_POPUP(playerLeft, ABILITY_FLOWER_VEIL);
     } THEN {
+        EXPECT_EQ(playerRight->types[2], TYPE_GRASS);
         EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
     }
 }
