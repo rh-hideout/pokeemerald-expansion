@@ -31,6 +31,12 @@
 #include "constants/battle_move_effects.h"
 #include "constants/event_objects.h" // only for SHADOW_SIZE constants
 
+// TODO: Wire to saveblock option or flag for runtime toggle
+bool8 UseGen4BattleUI(void)
+{
+    return FALSE;
+}
+
 // this file's functions
 static u8 GetBattlePalaceMoveGroup(enum BattlerId battler, enum Move move);
 static u16 GetBattlePalaceTarget(enum BattlerId battler);
@@ -40,33 +46,66 @@ static void Task_ClearBitWhenBattleTableAnimDone(u8 taskId);
 static void Task_ClearBitWhenSpecialAnimDone(u8 taskId);
 static void ClearSpritesBattlerHealthboxAnimData(void);
 
-// const rom data
-static const struct CompressedSpriteSheet sSpriteSheet_SinglesPlayerHealthbox =
+// Getter functions for battle UI style switching
+static struct CompressedSpriteSheet GetSinglesPlayerHealthbox(void)
 {
-    gHealthboxSinglesPlayerGfx, 0x1000, TAG_HEALTHBOX_PLAYER1_TILE
-};
+    if (UseGen4BattleUI())
+        return (struct CompressedSpriteSheet){ gHealthboxSinglesPlayerGfxGen4, 0x1000, TAG_HEALTHBOX_PLAYER1_TILE };
+    else
+        return (struct CompressedSpriteSheet){ gHealthboxSinglesPlayerGfxGen3, 0x1000, TAG_HEALTHBOX_PLAYER1_TILE };
+}
 
-static const struct CompressedSpriteSheet sSpriteSheet_SinglesOpponentHealthbox =
+static struct CompressedSpriteSheet GetSinglesOpponentHealthbox(void)
 {
-    gHealthboxSinglesOpponentGfx, 0x1000, TAG_HEALTHBOX_OPPONENT1_TILE
-};
+    if (UseGen4BattleUI())
+        return (struct CompressedSpriteSheet){ gHealthboxSinglesOpponentGfxGen4, 0x1000, TAG_HEALTHBOX_OPPONENT1_TILE };
+    else
+        return (struct CompressedSpriteSheet){ gHealthboxSinglesOpponentGfxGen3, 0x1000, TAG_HEALTHBOX_OPPONENT1_TILE };
+}
 
-static const struct CompressedSpriteSheet sSpriteSheets_DoublesPlayerHealthbox[2] =
+static struct CompressedSpriteSheet GetSinglesPlayerHealthboxFrontier(void)
 {
-    {gHealthboxDoublesPlayerGfx, 0x800, TAG_HEALTHBOX_PLAYER1_TILE},
-    {gHealthboxDoublesPlayerGfx, 0x800, TAG_HEALTHBOX_PLAYER2_TILE}
-};
+    if (UseGen4BattleUI())
+        return (struct CompressedSpriteSheet){ gHealthboxSinglesPlayerGfx_FrontierGen4, 0x1000, TAG_HEALTHBOX_PLAYER1_TILE };
+    else
+        return (struct CompressedSpriteSheet){ gHealthboxSinglesPlayerGfx_FrontierGen3, 0x1000, TAG_HEALTHBOX_PLAYER1_TILE };
+}
 
-static const struct CompressedSpriteSheet sSpriteSheets_DoublesOpponentHealthbox[2] =
+static void GetDoublesPlayerHealthbox(struct CompressedSpriteSheet out[2])
 {
-    {gHealthboxDoublesOpponentGfx, 0x800, TAG_HEALTHBOX_OPPONENT1_TILE},
-    {gHealthboxDoublesOpponentGfx, 0x800, TAG_HEALTHBOX_OPPONENT2_TILE}
-};
+    if (UseGen4BattleUI())
+    {
+        out[0] = (struct CompressedSpriteSheet){ gHealthboxDoublesPlayerGfxGen4, 0x800, TAG_HEALTHBOX_PLAYER1_TILE };
+        out[1] = (struct CompressedSpriteSheet){ gHealthboxDoublesPlayerGfxGen4, 0x800, TAG_HEALTHBOX_PLAYER2_TILE };
+    }
+    else
+    {
+        out[0] = (struct CompressedSpriteSheet){ gHealthboxDoublesPlayerGfxGen3, 0x800, TAG_HEALTHBOX_PLAYER1_TILE };
+        out[1] = (struct CompressedSpriteSheet){ gHealthboxDoublesPlayerGfxGen3, 0x800, TAG_HEALTHBOX_PLAYER2_TILE };
+    }
+}
 
-static const struct CompressedSpriteSheet sSpriteSheet_SafariHealthbox =
+static void GetDoublesOpponentHealthbox(struct CompressedSpriteSheet out[2])
 {
-    gHealthboxSafariGfx, 0x1000, TAG_HEALTHBOX_SAFARI_TILE
-};
+    if (UseGen4BattleUI())
+    {
+        out[0] = (struct CompressedSpriteSheet){ gHealthboxDoublesOpponentGfxGen4, 0x800, TAG_HEALTHBOX_OPPONENT1_TILE };
+        out[1] = (struct CompressedSpriteSheet){ gHealthboxDoublesOpponentGfxGen4, 0x800, TAG_HEALTHBOX_OPPONENT2_TILE };
+    }
+    else
+    {
+        out[0] = (struct CompressedSpriteSheet){ gHealthboxDoublesOpponentGfxGen3, 0x800, TAG_HEALTHBOX_OPPONENT1_TILE };
+        out[1] = (struct CompressedSpriteSheet){ gHealthboxDoublesOpponentGfxGen3, 0x800, TAG_HEALTHBOX_OPPONENT2_TILE };
+    }
+}
+
+static struct CompressedSpriteSheet GetSafariHealthbox(void)
+{
+    if (UseGen4BattleUI())
+        return (struct CompressedSpriteSheet){ gHealthboxSafariGfxGen4, 0x1000, TAG_HEALTHBOX_SAFARI_TILE };
+    else
+        return (struct CompressedSpriteSheet){ gHealthboxSafariGfxGen3, 0x1000, TAG_HEALTHBOX_SAFARI_TILE };
+}
 
 static const struct CompressedSpriteSheet sSpriteSheets_HealthBar[MAX_BATTLERS_COUNT] =
 {
@@ -76,23 +115,35 @@ static const struct CompressedSpriteSheet sSpriteSheets_HealthBar[MAX_BATTLERS_C
     {gBlankGfxCompressed, 0x0120, TAG_HEALTHBAR_OPPONENT2_TILE}
 };
 
-const struct SpritePalette sSpritePalettes_HealthBoxHealthBar[2] =
+void GetHealthBoxHealthBarPalettes(struct SpritePalette out[2])
 {
-    {gBattleInterface_BallStatusBarPal, TAG_HEALTHBOX_PAL},
-    {gBattleInterface_BallDisplayPal, TAG_HEALTHBAR_PAL}
-};
+    if (UseGen4BattleUI())
+    {
+        out[0] = (struct SpritePalette){ gBattleInterface_BallStatusBarPalGen4, TAG_HEALTHBOX_PAL };
+        out[1] = (struct SpritePalette){ gBattleInterface_BallDisplayPalGen4, TAG_HEALTHBAR_PAL };
+    }
+    else
+    {
+        out[0] = (struct SpritePalette){ gBattleInterface_BallStatusBarPalGen3, TAG_HEALTHBOX_PAL };
+        out[1] = (struct SpritePalette){ gBattleInterface_BallDisplayPalGen3, TAG_HEALTHBAR_PAL };
+    }
+}
 
-const struct CompressedSpriteSheet gSpriteSheet_EnemyShadow =
+struct CompressedSpriteSheet GetEnemyShadowSheet(void)
 {
-    .data = gEnemyMonShadow_Gfx, .size = 0x80, .tag = TAG_SHADOW_TILE
-};
+    if (UseGen4BattleUI())
+        return (struct CompressedSpriteSheet){ .data = gEnemyMonShadow_GfxGen4, .size = 0x80, .tag = TAG_SHADOW_TILE };
+    else
+        return (struct CompressedSpriteSheet){ .data = gEnemyMonShadow_GfxGen3, .size = 0x80, .tag = TAG_SHADOW_TILE };
+}
 
-const struct CompressedSpriteSheet gSpriteSheet_EnemyShadowsSized =
+struct CompressedSpriteSheet GetEnemyShadowsSizedSheet(void)
 {
-    .data = gEnemyMonShadowsSized_Gfx,
-    .size = TILE_SIZE_4BPP * 8 * 4, // 8 tiles per sprite, 4 sprites total
-    .tag = TAG_SHADOW_TILE,
-};
+    if (UseGen4BattleUI())
+        return (struct CompressedSpriteSheet){ .data = gEnemyMonShadowsSized_GfxGen4, .size = TILE_SIZE_4BPP * 8 * 4, .tag = TAG_SHADOW_TILE };
+    else
+        return (struct CompressedSpriteSheet){ .data = gEnemyMonShadowsSized_GfxGen3, .size = TILE_SIZE_4BPP * 8 * 4, .tag = TAG_SHADOW_TILE };
+}
 
 static const struct OamData sOamData_EnemyShadow =
 {
@@ -715,21 +766,29 @@ void BattleLoadAllHealthBoxesGfxAtOnce(void)
 {
     u8 numberOfBattlers = 0;
     u8 i;
+    struct SpritePalette palettes[2];
+    struct CompressedSpriteSheet sheet;
 
-    LoadSpritePalette(&sSpritePalettes_HealthBoxHealthBar[0]);
-    LoadSpritePalette(&sSpritePalettes_HealthBoxHealthBar[1]);
+    GetHealthBoxHealthBarPalettes(palettes);
+    LoadSpritePalette(&palettes[0]);
+    LoadSpritePalette(&palettes[1]);
     if (!IsDoubleBattle())
     {
-        LoadCompressedSpriteSheet(&sSpriteSheet_SinglesPlayerHealthbox);
-        LoadCompressedSpriteSheet(&sSpriteSheet_SinglesOpponentHealthbox);
+        sheet = GetSinglesPlayerHealthbox();
+        LoadCompressedSpriteSheet(&sheet);
+        sheet = GetSinglesOpponentHealthbox();
+        LoadCompressedSpriteSheet(&sheet);
         numberOfBattlers = 2;
     }
     else
     {
-        LoadCompressedSpriteSheet(&sSpriteSheets_DoublesPlayerHealthbox[0]);
-        LoadCompressedSpriteSheet(&sSpriteSheets_DoublesPlayerHealthbox[1]);
-        LoadCompressedSpriteSheet(&sSpriteSheets_DoublesOpponentHealthbox[0]);
-        LoadCompressedSpriteSheet(&sSpriteSheets_DoublesOpponentHealthbox[1]);
+        struct CompressedSpriteSheet doublesSheets[2];
+        GetDoublesPlayerHealthbox(doublesSheets);
+        LoadCompressedSpriteSheet(&doublesSheets[0]);
+        LoadCompressedSpriteSheet(&doublesSheets[1]);
+        GetDoublesOpponentHealthbox(doublesSheets);
+        LoadCompressedSpriteSheet(&doublesSheets[0]);
+        LoadCompressedSpriteSheet(&doublesSheets[1]);
         numberOfBattlers = MAX_BATTLERS_COUNT;
     }
     for (i = 0; i < numberOfBattlers; i++)
@@ -739,13 +798,17 @@ void BattleLoadAllHealthBoxesGfxAtOnce(void)
 bool8 BattleLoadAllHealthBoxesGfx(u8 state)
 {
     bool8 retVal = FALSE;
+    struct CompressedSpriteSheet sheet;
+    struct CompressedSpriteSheet doublesSheets[2];
+    struct SpritePalette palettes[2];
 
     if (state != 0)
     {
         if (state == 1)
         {
-            LoadSpritePalette(&sSpritePalettes_HealthBoxHealthBar[0]);
-            LoadSpritePalette(&sSpritePalettes_HealthBoxHealthBar[1]);
+            GetHealthBoxHealthBarPalettes(palettes);
+            LoadSpritePalette(&palettes[0]);
+            LoadSpritePalette(&palettes[1]);
             CategoryIcons_LoadSpritesGfx();
         }
         else if (!IsDoubleBattle())
@@ -753,13 +816,15 @@ bool8 BattleLoadAllHealthBoxesGfx(u8 state)
             if (state == 2)
             {
                 if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
-                    LoadCompressedSpriteSheet(&sSpriteSheet_SafariHealthbox);
+                    sheet = GetSafariHealthbox();
                 else
-                    LoadCompressedSpriteSheet(&sSpriteSheet_SinglesPlayerHealthbox);
+                    sheet = GetSinglesPlayerHealthbox();
+                LoadCompressedSpriteSheet(&sheet);
             }
             else if (state == 3)
             {
-                LoadCompressedSpriteSheet(&sSpriteSheet_SinglesOpponentHealthbox);
+                sheet = GetSinglesOpponentHealthbox();
+                LoadCompressedSpriteSheet(&sheet);
             }
             else if (state == 4)
             {
@@ -781,19 +846,30 @@ bool8 BattleLoadAllHealthBoxesGfx(u8 state)
                 switch (GetBattlerCoordsIndex(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)))
                 {
                 default:
-                    LoadCompressedSpriteSheet(&sSpriteSheets_DoublesPlayerHealthbox[0]);
+                    GetDoublesPlayerHealthbox(doublesSheets);
+                    LoadCompressedSpriteSheet(&doublesSheets[0]);
                     break;
                 case BATTLE_COORDS_SINGLES:
-                    LoadCompressedSpriteSheet(&sSpriteSheet_SinglesPlayerHealthbox);
+                    sheet = GetSinglesPlayerHealthbox();
+                    LoadCompressedSpriteSheet(&sheet);
                     break;
                 }
             }
             else if (state == 3)
-                LoadCompressedSpriteSheet(&sSpriteSheets_DoublesPlayerHealthbox[1]);
+            {
+                GetDoublesPlayerHealthbox(doublesSheets);
+                LoadCompressedSpriteSheet(&doublesSheets[1]);
+            }
             else if (state == 4)
-                LoadCompressedSpriteSheet(&sSpriteSheets_DoublesOpponentHealthbox[0]);
+            {
+                GetDoublesOpponentHealthbox(doublesSheets);
+                LoadCompressedSpriteSheet(&doublesSheets[0]);
+            }
             else if (state == 5)
-                LoadCompressedSpriteSheet(&sSpriteSheets_DoublesOpponentHealthbox[1]);
+            {
+                GetDoublesOpponentHealthbox(doublesSheets);
+                LoadCompressedSpriteSheet(&doublesSheets[1]);
+            }
             else if (state == 6)
                 LoadCompressedSpriteSheet(&sSpriteSheets_HealthBar[GetBattlerPosition(B_BATTLER_0)]);
             else if (state == 7)
@@ -1215,7 +1291,10 @@ void LoadAndCreateEnemyShadowSprites(void)
 
     if (B_ENEMY_MON_SHADOW_STYLE >= GEN_4 && P_GBA_STYLE_SPECIES_GFX == FALSE)
     {
-        LoadCompressedSpriteSheet(&gSpriteSheet_EnemyShadowsSized);
+        {
+            struct CompressedSpriteSheet sizedSheet = GetEnemyShadowsSizedSheet();
+            LoadCompressedSpriteSheet(&sizedSheet);
+        }
 
         // initialize shadow sprite ids
         for (i = 0; i < gBattlersCount; i++)
@@ -1226,7 +1305,10 @@ void LoadAndCreateEnemyShadowSprites(void)
     }
     else
     {
-        LoadCompressedSpriteSheet(&gSpriteSheet_EnemyShadow);
+        {
+            struct CompressedSpriteSheet shadowSheet = GetEnemyShadowSheet();
+            LoadCompressedSpriteSheet(&shadowSheet);
+        }
 
         // initialize shadow sprite ids
         for (i = 0; i < gBattlersCount; i++)

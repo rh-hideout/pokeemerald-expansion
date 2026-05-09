@@ -1,9 +1,15 @@
 #include "global.h"
 #include "graphics.h"
 
+#if IS_HNS
+const u32 gBattleTextboxTiles[] = INCBIN_U32("graphics/battle_interface/hns/textbox.4bpp.smol");
+const u16 gBattleTextboxPalette[] = INCBIN_U16("graphics/battle_interface/hns/textbox.gbapal");
+const u32 gBattleTextboxTilemap[] = INCBIN_U32("graphics/battle_interface/hns/textbox_map.bin.smolTM");
+#else
 const u32 gBattleTextboxTiles[] = INCBIN_U32("graphics/battle_interface/textbox.4bpp.smol");
 const u16 gBattleTextboxPalette[] = INCBIN_U16("graphics/battle_interface/textbox.gbapal");
 const u32 gBattleTextboxTilemap[] = INCBIN_U32("graphics/battle_interface/textbox_map.bin.smolTM");
+#endif
 
 const u32 gUnusedGfx_OldCharmap[] = INCBIN_U32("graphics/unused/old_charmap.4bpp.smol"); // japanese table and bunch of stuff
 const u32 gUnusedTimemap_OldCharmap[] = INCBIN_U32("graphics/unused/old_charmap.bin.smolTM");
@@ -707,11 +713,51 @@ const u32 gUnusedTilemap_BasicFrame[] = INCBIN_U32("graphics/unused/basic_frame.
 
 // Battle Interface
 
-const u16 gBattleInterface_BallStatusBarPal[] = INCBIN_U16("graphics/battle_interface/ball_status_bar.gbapal");
+// Gen 4 (HGSS-style) palettes — engine-wide
+const u16 gBattleInterface_BallStatusBarPalGen4[] = INCBIN_U16("graphics/battle_interface/gen4/ball_status_bar.gbapal");
+const u16 gBattleInterface_BallDisplayPalGen4[] = INCBIN_U16("graphics/battle_interface/gen4/ball_display.gbapal");
 
-const u16 gBattleInterface_BallDisplayPal[] = INCBIN_U16("graphics/battle_interface/ball_display.gbapal");
+// Gen 3 palettes — per-game
+#if IS_HNS
+const u16 gBattleInterface_BallStatusBarPalGen3[] = INCBIN_U16("graphics/battle_interface/hns/ball_status_bar.gbapal");
+const u16 gBattleInterface_BallDisplayPalGen3[] = INCBIN_U16("graphics/battle_interface/hns/ball_display.gbapal");
+#else
+const u16 gBattleInterface_BallStatusBarPalGen3[] = INCBIN_U16("graphics/battle_interface/ball_status_bar.gbapal");
+const u16 gBattleInterface_BallDisplayPalGen3[] = INCBIN_U16("graphics/battle_interface/ball_display.gbapal");
+#endif
 
-const u8 gHealthboxElementsGfxTable[][32] = INCBIN_U8("graphics/battle_interface/hpbar.4bpp",
+// Gen 4 healthbox elements — engine-wide
+const u8 gHealthboxElementsGfxTableGen4[][32] = INCBIN_U8("graphics/battle_interface/gen4/hpbar.4bpp",
+                                                  "graphics/battle_interface/gen4/expbar.4bpp",
+                                                  "graphics/battle_interface/gen4/status.4bpp",
+                                                  "graphics/battle_interface/gen4/misc.4bpp",
+                                                  "graphics/battle_interface/gen4/hpbar_anim.4bpp",
+                                                  "graphics/battle_interface/gen4/misc_frameend.4bpp",
+                                                  "graphics/battle_interface/gen4/ball_display.4bpp",
+                                                  "graphics/battle_interface/gen4/ball_caught_indicator.4bpp",
+                                                  "graphics/battle_interface/gen4/status2.4bpp",
+                                                  "graphics/battle_interface/gen4/status3.4bpp",
+                                                  "graphics/battle_interface/gen4/status4.4bpp",
+                                                  "graphics/battle_interface/gen4/healthbox_doubles_frameend.4bpp",
+                                                  "graphics/battle_interface/gen4/healthbox_doubles_frameend_bar.4bpp");
+
+// Gen 3 healthbox elements — per-game
+#if IS_HNS
+const u8 gHealthboxElementsGfxTableGen3[][32] = INCBIN_U8("graphics/battle_interface/hns/hpbar.4bpp",
+                                                  "graphics/battle_interface/hns/expbar.4bpp",
+                                                  "graphics/battle_interface/hns/status.4bpp",
+                                                  "graphics/battle_interface/hns/misc.4bpp",
+                                                  "graphics/battle_interface/hns/hpbar_anim.4bpp",
+                                                  "graphics/battle_interface/hns/misc_frameend.4bpp",
+                                                  "graphics/battle_interface/hns/ball_display.4bpp",
+                                                  "graphics/battle_interface/hns/ball_caught_indicator.4bpp",
+                                                  "graphics/battle_interface/hns/status2.4bpp",
+                                                  "graphics/battle_interface/hns/status3.4bpp",
+                                                  "graphics/battle_interface/hns/status4.4bpp",
+                                                  "graphics/battle_interface/hns/healthbox_doubles_frameend.4bpp",
+                                                  "graphics/battle_interface/hns/healthbox_doubles_frameend_bar.4bpp");
+#else
+const u8 gHealthboxElementsGfxTableGen3[][32] = INCBIN_U8("graphics/battle_interface/hpbar.4bpp",
                                                   "graphics/battle_interface/expbar.4bpp",
                                                   "graphics/battle_interface/status.4bpp",
                                                   "graphics/battle_interface/misc.4bpp",
@@ -719,11 +765,12 @@ const u8 gHealthboxElementsGfxTable[][32] = INCBIN_U8("graphics/battle_interface
                                                   "graphics/battle_interface/misc_frameend.4bpp",
                                                   "graphics/battle_interface/ball_display.4bpp",
                                                   "graphics/battle_interface/ball_caught_indicator.4bpp",
-                                                  "graphics/battle_interface/status2.4bpp", // these three duplicate sets of graphics are for the opponent/partner Pokémon
+                                                  "graphics/battle_interface/status2.4bpp",
                                                   "graphics/battle_interface/status3.4bpp",
                                                   "graphics/battle_interface/status4.4bpp",
                                                   "graphics/battle_interface/healthbox_doubles_frameend.4bpp",
                                                   "graphics/battle_interface/healthbox_doubles_frameend_bar.4bpp");
+#endif
 const u32 gBattleInterfaceGfx_UnusedWindow3[] = INCBIN_U32("graphics/battle_interface/unused_window3.4bpp.smol");
 const u32 gBattleInterfaceGfx_UnusedWindow4[] = INCBIN_U32("graphics/battle_interface/unused_window4.4bpp.smol");
 
@@ -998,11 +1045,30 @@ const u16 gBattleAnimSpritePal_Eye[] = INCBIN_U16("graphics/battle_anims/sprites
 const u32 gBattleAnimSpriteGfx_Tendrils[] = INCBIN_U32("graphics/battle_anims/sprites/tendrils.4bpp.smol");
 const u16 gBattleAnimSpritePal_Tendrils[] = INCBIN_U16("graphics/battle_anims/sprites/tendrils.gbapal");
 
-const u32 gHealthboxSinglesPlayerGfx[] = INCBIN_U32("graphics/battle_interface/healthbox_singles_player.4bpp.smol");
-const u32 gHealthboxSinglesOpponentGfx[] = INCBIN_U32("graphics/battle_interface/healthbox_singles_opponent.4bpp.smol");
-const u32 gHealthboxDoublesPlayerGfx[] = INCBIN_U32( "graphics/battle_interface/healthbox_doubles_player.4bpp.smol");
-const u32 gHealthboxDoublesOpponentGfx[] = INCBIN_U32("graphics/battle_interface/healthbox_doubles_opponent.4bpp.smol");
-const u32 gHealthboxSafariGfx[] = INCBIN_U32("graphics/battle_interface/healthbox_safari.4bpp.smol");
+// Gen 4 healthboxes — engine-wide
+const u32 gHealthboxSinglesPlayerGfxGen4[] = INCBIN_U32("graphics/battle_interface/gen4/healthbox_singles_player.4bpp.smol");
+const u32 gHealthboxSinglesPlayerGfx_FrontierGen4[] = INCBIN_U32("graphics/battle_interface/gen4/healthbox_singles_player_frontier.4bpp.smol");
+const u32 gHealthboxSinglesOpponentGfxGen4[] = INCBIN_U32("graphics/battle_interface/gen4/healthbox_singles_opponent.4bpp.smol");
+const u32 gHealthboxDoublesPlayerGfxGen4[] = INCBIN_U32("graphics/battle_interface/gen4/healthbox_doubles_player.4bpp.smol");
+const u32 gHealthboxDoublesOpponentGfxGen4[] = INCBIN_U32("graphics/battle_interface/gen4/healthbox_doubles_opponent.4bpp.smol");
+const u32 gHealthboxSafariGfxGen4[] = INCBIN_U32("graphics/battle_interface/gen4/healthbox_safari.4bpp.smol");
+
+// Gen 3 healthboxes — per-game
+#if IS_HNS
+const u32 gHealthboxSinglesPlayerGfxGen3[] = INCBIN_U32("graphics/battle_interface/hns/healthbox_singles_player.4bpp.smol");
+const u32 gHealthboxSinglesPlayerGfx_FrontierGen3[] = INCBIN_U32("graphics/battle_interface/hns/healthbox_singles_player_frontier.4bpp.smol");
+const u32 gHealthboxSinglesOpponentGfxGen3[] = INCBIN_U32("graphics/battle_interface/hns/healthbox_singles_opponent.4bpp.smol");
+const u32 gHealthboxDoublesPlayerGfxGen3[] = INCBIN_U32("graphics/battle_interface/hns/healthbox_doubles_player.4bpp.smol");
+const u32 gHealthboxDoublesOpponentGfxGen3[] = INCBIN_U32("graphics/battle_interface/hns/healthbox_doubles_opponent.4bpp.smol");
+const u32 gHealthboxSafariGfxGen3[] = INCBIN_U32("graphics/battle_interface/hns/healthbox_safari.4bpp.smol");
+#else
+const u32 gHealthboxSinglesPlayerGfxGen3[] = INCBIN_U32("graphics/battle_interface/healthbox_singles_player.4bpp.smol");
+const u32 gHealthboxSinglesPlayerGfx_FrontierGen3[] = INCBIN_U32("graphics/battle_interface/healthbox_singles_player.4bpp.smol");
+const u32 gHealthboxSinglesOpponentGfxGen3[] = INCBIN_U32("graphics/battle_interface/healthbox_singles_opponent.4bpp.smol");
+const u32 gHealthboxDoublesPlayerGfxGen3[] = INCBIN_U32("graphics/battle_interface/healthbox_doubles_player.4bpp.smol");
+const u32 gHealthboxDoublesOpponentGfxGen3[] = INCBIN_U32("graphics/battle_interface/healthbox_doubles_opponent.4bpp.smol");
+const u32 gHealthboxSafariGfxGen3[] = INCBIN_U32("graphics/battle_interface/healthbox_safari.4bpp.smol");
+#endif
 
 const u32 gUnusedGfx_Shadow[] = INCBIN_U32("graphics/unused/shadow.4bpp.smol");
 const u16 gUnusedPal_Shadow[] = INCBIN_U16("graphics/unused/shadow.gbapal");
@@ -1419,10 +1485,25 @@ const u16 gBattleAnimSpritePal_Protect[] = INCBIN_U16("graphics/battle_anims/spr
 
 const u16 gBattleAnimBackgroundImageMuddyWater_Pal[] = INCBIN_U16("graphics/battle_anims/backgrounds/water_muddy.gbapal");
 
-const u32 gEnemyMonShadow_Gfx[] = INCBIN_U32("graphics/battle_interface/enemy_mon_shadow.4bpp.smol");
-const u32 gEnemyMonShadowsSized_Gfx[] = INCBIN_U32("graphics/battle_interface/enemy_mon_shadows_sized.4bpp.smol");
+// Gen 4 shadow — engine-wide
+const u32 gEnemyMonShadow_GfxGen4[] = INCBIN_U32("graphics/battle_interface/gen4/enemy_mon_shadow.4bpp.smol");
+// Gen 3 shadow — per-game
+#if IS_HNS
+const u32 gEnemyMonShadow_GfxGen3[] = INCBIN_U32("graphics/battle_interface/hns/enemy_mon_shadow.4bpp.smol");
+#else
+const u32 gEnemyMonShadow_GfxGen3[] = INCBIN_U32("graphics/battle_interface/enemy_mon_shadow.4bpp.smol");
+#endif
+const u32 gEnemyMonShadowsSized_GfxGen4[] = INCBIN_U32("graphics/battle_interface/gen4/enemy_mon_shadows_sized.4bpp.smol");
+const u32 gEnemyMonShadowsSized_GfxGen3[] = INCBIN_U32("graphics/battle_interface/enemy_mon_shadows_sized.4bpp.smol");
 
-const u32 gBattleInterface_BallStatusBarGfx[] = INCBIN_U32("graphics/battle_interface/ball_status_bar.4bpp.smol");
+// Gen 4 ball status bar — engine-wide
+const u32 gBattleInterface_BallStatusBarGfxGen4[] = INCBIN_U32("graphics/battle_interface/gen4/ball_status_bar.4bpp.smol");
+// Gen 3 ball status bar — per-game
+#if IS_HNS
+const u32 gBattleInterface_BallStatusBarGfxGen3[] = INCBIN_U32("graphics/battle_interface/hns/ball_status_bar.4bpp.smol");
+#else
+const u32 gBattleInterface_BallStatusBarGfxGen3[] = INCBIN_U32("graphics/battle_interface/ball_status_bar.4bpp.smol");
+#endif
 
 const u32 gBattleAnimBgImage_Ghost[] = INCBIN_U32("graphics/battle_anims/backgrounds/ghost.4bpp.smol");
 const u16 gBattleAnimBgPalette_Ghost[] = INCBIN_U16("graphics/battle_anims/backgrounds/ghost.gbapal");
