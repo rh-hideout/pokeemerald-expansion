@@ -13270,7 +13270,7 @@ void BS_JumpIfIntimidateAbilityPrevented(void)
         bool32 blockedByFlowerVeil = FALSE;
         u32 flowerVeilBattler = IsFlowerVeilProtected(gBattlerTarget);
 
-        if (flowerVeilBattler != 0)
+        if (flowerVeilBattler)
         {
             flowerVeilBattler--;
             if (gBattleMons[flowerVeilBattler].speed > gBattleMons[gBattlerTarget].speed)
