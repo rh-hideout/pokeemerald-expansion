@@ -38,7 +38,7 @@ void DoTimeBasedEvents(void)
     }
 }
 
-static void UpdateDailySeed(void)
+void GetNewDailySeed(void)
 {
     gSaveBlock1Ptr->dailySeed = Random32();
 }
@@ -52,17 +52,20 @@ static void UpdatePerDay(struct Time *localTime)
     {
         daysSince = localTime->days - *days;
         ClearDailyFlags();
-        UpdateDailySeed();
+        GetNewDailySeed();
         UpdateDewfordTrendPerDay(daysSince);
         UpdateTVShowsPerDay(daysSince);
         UpdateWeatherPerDay(daysSince);
         UpdatePartyPokerusTime(daysSince);
-        UpdateMirageRnd(daysSince);
         UpdateBirchState(daysSince);
         UpdateFrontierManiac(daysSince);
         UpdateFrontierGambler(daysSince);
         SetShoalItemFlag(daysSince);
-        SetRandomLotteryNumber(daysSince);
+        if (!OW_USE_DAILY_SEED_FOR_VANILLA_VARIABLES)
+        {
+            UpdateMirageRnd(daysSince);
+            SetRandomLotteryNumber(daysSince);
+        }
         UpdateDaysPassedSinceFormChange(daysSince);
         DailyResetApricornTrees();
         *days = localTime->days;

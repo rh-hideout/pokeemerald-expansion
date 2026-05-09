@@ -195,6 +195,7 @@ void NewGameInitData(void)
     ClearPlayerLinkBattleRecords();
     InitSeedotSizeRecord();
     InitLotadSizeRecord();
+    GetNewDailySeed();
     gPartiesCount[B_TRAINER_0] = 0;
     ZeroPlayerPartyMons();
     ResetPokemonStorageSystem();
