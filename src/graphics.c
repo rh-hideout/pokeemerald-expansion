@@ -1805,9 +1805,6 @@ const u16 gSummaryMoveSelect_Pal[] = INCBIN_U16("graphics/summary_screen/move_se
 #if IS_HNS
 const u32 gSummaryScreen_Gfx[]                = INCBIN_U32("graphics/summary_screen/hns/tiles.4bpp.smol");
 const u16 gSummaryScreen_Pal[]                = INCBIN_U16("graphics/summary_screen/hns/tiles.gbapal");
-#elif P_SUMMARY_SCREEN_IV_EV_TILESET
-const u32 gSummaryScreen_Gfx[]                = INCBIN_U32("graphics/summary_screen/iv_ev_tiles.4bpp.smol");
-const u16 gSummaryScreen_Pal[]                = INCBIN_U16("graphics/summary_screen/tiles.gbapal");
 #else
 const u32 gSummaryScreen_Gfx[]                = INCBIN_U32("graphics/summary_screen/tiles.4bpp.smol");
 const u16 gSummaryScreen_Pal[]                = INCBIN_U16("graphics/summary_screen/tiles.gbapal");
