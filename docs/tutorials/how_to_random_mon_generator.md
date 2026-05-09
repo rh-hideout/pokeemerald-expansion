@@ -13,7 +13,7 @@ So you want to make a custom ruleset for a possible random pokemon you'd like to
 
 ### Setting Up Our Random Species
 
-First thing's first, we need a way for the logic to read that we want a specific kind of random mon. The species constants file only defines the start of the random species range with `SPECIES_RANDOMLY_GENERATED_START`. Add your named species generator options in [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h), then use those names in scripts.
+First thing's first, we need a way for the logic to read that we want a specific kind of random mon. The species constants file only defines the start of the random species range with `SPECIES_RANDOMLY_GENERATED_START`. Add your named species generator options in [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h), then pass those names to `getrandomspecies` in scripts.
 
 ### The Random Species Struct
 
@@ -32,7 +32,7 @@ struct RandomSpeciesGeneratorOptions
     u8 allowParadox:1;
     u8 randomizeForms:1;
     u8 padding:2;
-    bool32 (*filterFunc)(enum Species species);
+    bool32 (*filterFunc)(enum Species species, u16 arg1, u16 arg2);
 };
 ```
 
@@ -48,13 +48,15 @@ These are the options you can toggle and change to select the ideal possible spe
 * `u8 allowSubLegendary`: Whether to allow sub-legendary pokemon (Regi trio, genies, etc) to be viable selected mons.
 * `u8 allowUltraBeast`: Whether to allow ultra beast pokemon to be viable selected mons.
 * `u8 allowParadox`: Whether to allow paradox pokemon to be viable selected mons.
-* `u8 randomizeForms`: Whether to randomize forms of pokemon. By default, megas, fusions, and in-battle transformations are disallowed. To add exceptions, see and modify IsRandomMonFormTableException in [src/random_mon_generation.c](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/random_mon_generation.c).
+* `u8 randomizeForms`: Whether to randomize forms of pokemon. By default, megas, fusions, and in-battle transformations are disallowed. To add exceptions, see and modify `IsRandomMonFormTableException` in [src/random_mon_generation.c](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/random_mon_generation.c).
 
 ### Filter Functions
 
-Now you may notice that we didn't discuss `bool32 (*filterFunc)(enum Species species)`, and for good reason, as that element is more complicated than the others. This is a pointer an additional filter you can mess with or add to select for specific traits or features. For example, one of the default options for pools has `.filterFunc = IsSpeciesAllowedByRandomBstVars`. This function, if you set up VAR_0x8007 and VAR_0x8008 prior to calling, will filter out pokemon that are not within a specific BST range, as laid out in IsSpeciesAllowedByRandomBstVars in [src/random_mon_generation.c](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/random_mon_generation.c).
+Now you may notice that we didn't discuss `bool32 (*filterFunc)(enum Species species, u16 arg1, u16 arg2)`, and for good reason, as that element is more complicated than the others. This is a pointer to an additional filter you can mess with or add to select for specific traits or features.
 
-You could also, using similar logic, create a function that reads a VAR with a type value, and then filter only for pokemon of that type if possible, and have that function be the filterFunc in your ruleset. If you do not pass a filter function, then no filter beyond the other elements is applied.
+For example, one of the default options uses `.filterFunc = IsSpeciesAllowedByRandomBstArgs`. When you call `getrandomspecies`, the optional `arg1` and `arg2` values are forwarded to the filter function. `IsSpeciesAllowedByRandomBstArgs` treats `arg1` as the BST target and `arg2` as the leniency, so `arg1=300, arg2=100` allows pokemon with BST 200 through 400.
+
+You could also, using similar logic, create a function that treats `arg1` as a type value, and then filter only for pokemon of that type if possible. If you do not pass a filter function, then no filter beyond the other elements is applied.
 
 ### Example Setup
 
@@ -108,7 +110,7 @@ static const struct RandomSpeciesGeneratorOptions sRandomSpeciesGeneratorOptions
     [SPECIES_OPTION(SPECIES_GENERATOR_BST_RESTRICTED)] =
     {
         .dexMode = RANDOM_MON_DEX_HOENN,
-        .filterFunc = IsSpeciesAllowedByRandomBstVars,
+        .filterFunc = IsSpeciesAllowedByRandomBstArgs,
         .allowLegendary = FALSE,
         .allowMythical = FALSE,
         .allowSubLegendary = FALSE,
@@ -122,7 +124,7 @@ static const struct RandomSpeciesGeneratorOptions sRandomSpeciesGeneratorOptions
 > [!NOTE]
 > You really don't need to use a choosable species pool and a banned species pool in the same ruleset, it just doesn't make sense and may end up causing more trouble than anything. Additionally, you should never include SPECIES_NONE in either of these kinds of pools, only actual, defined species.
 
-Small explicit species pools are checked exhaustively before choosing, which gives clear errors if every entry is filtered out. Larger explicit pools and full dex searches use repeated random attempts, then fall back to the first valid entry if the filters are too restrictive.
+Small explicit species pools are checked exhaustively before choosing, which gives clear errors if every entry is filtered out. Larger explicit pools and full dex searches use repeated random attempts, then fall back to `SPECIES_BULBASAUR` if the filters are too restrictive.
 
 ## Item Generator Options
 
@@ -130,7 +132,7 @@ Item randomization is handled separately from pokemon randomization, meaning tha
 
 ### Setting Up Our Random Items
 
-As we did for our random species, we need to also do for our random items. The item constants file only defines the start of the random item range with `ITEM_RANDOMLY_GENERATED_START`. Add your named item generator options in [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h), then use those names in scripts.
+As we did for our random species, we need to also do for our random items. The item constants file only defines the start of the random item range with `ITEM_RANDOMLY_GENERATED_START`. Add your named item generator options in [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h), then pass those names to `getrandomitem` in scripts.
 
 ### The Random Item Struct
 
@@ -157,6 +159,7 @@ For a named random item option, define the script-facing value and use `ITEM_OPT
 enum
 {
     ITEM_GENERATOR_STANDARD = ITEM_RANDOMLY_GENERATED_START,
+    ITEM_GENERATOR_LIMITED_POOL,
     ITEM_GENERATOR_END,
 };
 
@@ -202,6 +205,11 @@ static const struct RandomItemGeneratorOptions sRandomItemGeneratorOptions[] =
 {
     [ITEM_OPTION(ITEM_GENERATOR_STANDARD)] =
     {
+        .bannedHoldEffects = sRandomItemOption0BannedHoldEffects,
+        .bannedHoldEffectsCount = ARRAY_COUNT(sRandomItemOption0BannedHoldEffects),
+    },
+    [ITEM_OPTION(ITEM_GENERATOR_LIMITED_POOL)] =
+    {
         .heldItemPool = sRandomItemOption0HeldItemPool,
         .heldItemPoolCount = ARRAY_COUNT(sRandomItemOption0HeldItemPool),
         .bannedHoldEffects = sRandomItemOption0BannedHoldEffects,
@@ -215,13 +223,29 @@ static const struct RandomItemGeneratorOptions sRandomItemGeneratorOptions[] =
 
 # Step 2: Other options to be aware of
 
+## Random Species and Item Commands
+
+Random species and random items are generated before calling `givemon` or `createmon`. Use `getrandomspecies` to write a generated species into a var, and `getrandomitem` to write a generated item into a var. Then pass those vars into `givemon`, `createmon`, or another script command.
+
+```
+getrandomspecies VAR_0x8000, SPECIES_GENERATOR_LIMITED_POOL
+getrandomitem VAR_0x8001, ITEM_GENERATOR_LIMITED_POOL
+givemon VAR_0x8000, 50, item=VAR_0x8001
+```
+
+If your species option uses a `filterFunc`, you can pass up to two optional arguments. If you omit them, they default to `0xFFFF`.
+
+```
+getrandomspecies VAR_0x8000, SPECIES_GENERATOR_BST_RESTRICTED, arg1=300, arg2=100
+```
+
 ## Random Ball Generation
 
-This feature also includes random ball generation. When doing givemon/createmon, just use `ball=BALL_RANDOM` as an argument.
+This feature also includes random ball generation. When doing `givemon` or `createmon`, just use `ball=BALL_RANDOM` as an argument.
 
 ## Random Move Generation
 
-This feature also includes random teachable move generation. When doing givemon/createmon, for move slot x, just use `movex=MOVE_RANDOM_TEACHABLE` as an argument.
+This feature also includes random teachable move generation. When doing `givemon` or `createmon`, for move slot x, just use `movex=MOVE_RANDOM_TEACHABLE` as an argument.
 
 # Step 3: Putting it all together
 
@@ -230,23 +254,19 @@ Here's an example of how you'd call it in a script when it all comes together:
 ```
 EventScript_GiveFilteredRandomMon::
     // BST target = 300, leniency = 100, so valid BST range is 200-400.
-    // SPECIES_GENERATOR_BST_RESTRICTED, in this scenario, is the option using IsSpeciesAllowedByRandomBstVars as a filterFunc.
-    setvar VAR_0x8007, 300
-    setvar VAR_0x8008, 100
+    // SPECIES_GENERATOR_BST_RESTRICTED uses IsSpeciesAllowedByRandomBstArgs as a filterFunc.
+    getrandomspecies VAR_0x8000, SPECIES_GENERATOR_BST_RESTRICTED, arg1=300, arg2=100
+    getrandomitem VAR_0x8001, ITEM_GENERATOR_LIMITED_POOL
 
-    givemon SPECIES_GENERATOR_BST_RESTRICTED, 50,
-        item=ITEM_GENERATOR_LIMITED_POOL,
+    givemon VAR_0x8000, 50,
+        item=VAR_0x8001,
         ball=BALL_RANDOM,
         move1=MOVE_RANDOM_TEACHABLE,
         move2=MOVE_RANDOM_TEACHABLE,
         move3=MOVE_RANDOM_TEACHABLE,
         move4=MOVE_DEFAULT;
 
-    // Optional cleanup: makes future BST-filtered random mons skip BST filtering
-    // unless the script intentionally sets these vars again.
-    setvar VAR_0x8007, 0
-    setvar VAR_0x8008, 0
     end
 ```
 
-This will produce a random mon from the BST-restricted species option with between 200 and 400 BST, a random item from the limited item pool, a random ball, with 3 random teachable moves, and with one move it'd normally have at that level (MOVE_DEFAULT)
+This will produce a random mon from the BST-restricted species option with between 200 and 400 BST, a random item from the limited item pool, a random ball, 3 random teachable moves, and one move it'd normally have at that level (`MOVE_DEFAULT`).

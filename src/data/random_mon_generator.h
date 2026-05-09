@@ -102,7 +102,7 @@ static const struct RandomSpeciesGeneratorOptions sRandomSpeciesGeneratorOptions
     [SPECIES_OPTION(SPECIES_GENERATOR_BST_RESTRICTED)] =
     {
         .dexMode = RANDOM_MON_DEX_HOENN,
-        .filterFunc = IsSpeciesAllowedByRandomBstVars,
+        .filterFunc = IsSpeciesAllowedByRandomBstArgs,
         .allowLegendary = FALSE,
         .allowMythical = FALSE,
         .allowSubLegendary = FALSE,

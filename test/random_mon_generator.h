@@ -44,8 +44,11 @@ static const enum Species sRandomSpeciesOption3SpeciesPool[] =
     SPECIES_ROTOM,
 };
 
-static bool32 IsSpeciesRotomHeat(enum Species species)
+static bool32 IsSpeciesRotomHeat(enum Species species, u16 arg1, u16 arg2)
 {
+    (void)arg1;
+    (void)arg2;
+
     return species == SPECIES_ROTOM_HEAT;
 }
 
@@ -109,7 +112,7 @@ static const struct RandomSpeciesGeneratorOptions sRandomSpeciesGeneratorOptions
         .allowUltraBeast = FALSE,
         .allowParadox = FALSE,
         .randomizeForms = FALSE,
-        .filterFunc = IsSpeciesAllowedByRandomBstVars,
+        .filterFunc = IsSpeciesAllowedByRandomBstArgs,
     },
     [SPECIES_OPTION(SPECIES_GENERATOR_FORM_FILTER)] =
     {

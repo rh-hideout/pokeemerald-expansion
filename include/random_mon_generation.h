@@ -6,6 +6,8 @@
 #include "constants/pokeball.h"
 #include "constants/species.h"
 
-void ResolveRandomMonGeneration(enum Species *species, enum Item *item, enum PokeBall *ball, enum Move *moves);
+enum Species GetRandomSpecies(u32 optionId, u16 arg1, u16 arg2);
+enum Item GetRandomItem(u32 optionId);
+void ResolveRandomMonGeneration(enum Species species, enum PokeBall *ball, enum Move *moves);
 
 #endif // GUARD_RANDOM_MON_GENERATION_H

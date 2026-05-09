@@ -365,7 +365,7 @@ static u32 ScriptGiveMonParameterized(u8 side, u8 slot, enum Species species, u8
     u32 i;
     bool32 isShiny;
 
-    ResolveRandomMonGeneration(&species, &item, &ball, moves);
+    ResolveRandomMonGeneration(species, &ball, moves);
 
     u32 personality = GetMonPersonality(species, gender, nature, RANDOM_UNOWN_LETTER);
     CreateMon(&mon, species, level, personality, OTID_STRUCT_PLAYER_ID);
