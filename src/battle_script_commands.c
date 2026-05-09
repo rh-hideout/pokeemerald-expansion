@@ -13299,15 +13299,15 @@ void BS_TryFlingHoldEffect(void)
     NATIVE_ARGS();
     enum HoldEffect holdEffect = GetItemHoldEffect(gBattleStruct->flingItem);
 
-    if (GetItemPocket(gBattleStruct->flingItem) == POCKET_BERRIES)
-    {
-        gBattlescriptCurrInstr = BattleScript_EffectFlingConsumeBerry;
-        return;
-    }
-
     if (IsMoveEffectBlockedByTarget(GetBattlerAbility(gBattlerTarget)))
     {
         gBattlescriptCurrInstr = BattleScript_FlingBlockedByShieldDust;
+        return;
+    }
+
+    if (GetItemPocket(gBattleStruct->flingItem) == POCKET_BERRIES)
+    {
+        gBattlescriptCurrInstr = BattleScript_EffectFlingConsumeBerry;
         return;
     }
 
