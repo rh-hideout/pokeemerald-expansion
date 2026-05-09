@@ -13266,9 +13266,30 @@ void BS_JumpIfIntimidateAbilityPrevented(void)
         }
         break;
     case ABILITY_GUARD_DOG:
-        hasAbility = TRUE;
-        gBattlescriptCurrInstr = BattleScript_IntimidateInReverse;
+    {
+        bool32 blockedByFlowerVeil = FALSE;
+        u32 flowerVeilBattler = IsFlowerVeilProtected(gBattlerTarget);
+
+        if (flowerVeilBattler != 0)
+        {
+            flowerVeilBattler--;
+            if (gBattleMons[flowerVeilBattler].speed > gBattleMons[gBattlerTarget].speed)
+                blockedByFlowerVeil = TRUE;
+        }
+
+        if (!(gSideTimers[GetBattlerSide(gBattlerTarget)].mistTimer)
+         && CompareStat(gBattlerTarget, STAT_ATK, MIN_STAT_STAGE, CMP_GREATER_THAN, ability)
+         && !blockedByFlowerVeil)
+        {
+            hasAbility = TRUE;
+            gBattlescriptCurrInstr = BattleScript_IntimidateInReverse;
+        }
+        else
+        {
+            gBattlescriptCurrInstr = cmd->nextInstr;
+        }
         break;
+    }
     default:
         gBattlescriptCurrInstr = cmd->nextInstr;
         break;
