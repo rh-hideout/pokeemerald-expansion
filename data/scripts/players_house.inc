@@ -43,14 +43,22 @@ PlayersHouse_1F_EventScript_MomGoSeeRoom::
 LittlerootTown_BrendansHouse_2F_EventScript_WallClock::
 	lockall
 	setvar VAR_0x8004, MALE
+	goto_if_unset FLAG_SET_WALL_CLOCK, PlayersHouse_2F_EventScript_WallClock
+	msgbox PlayersHouse_2F_Text_ClockChange, MSGBOX_DEFAULT
 	goto PlayersHouse_2F_EventScript_WallClock
 	end
 
 LittlerootTown_MaysHouse_2F_EventScript_WallClock::
 	lockall
 	setvar VAR_0x8004, FEMALE
+	goto_if_unset FLAG_SET_WALL_CLOCK, PlayersHouse_2F_EventScript_WallClock
+	msgbox PlayersHouse_2F_Text_ClockChange, MSGBOX_DEFAULT
 	goto PlayersHouse_2F_EventScript_WallClock
 	end
+
+PlayersHouse_2F_Text_ClockChange:
+	.string "Press the R Button to set the\n"
+	.string "clock when looking at the time.$"
 
 PlayersHouse_2F_EventScript_WallClock::
 	goto_if_set FLAG_SET_WALL_CLOCK, PlayersHouse_2F_EventScript_CheckWallClock

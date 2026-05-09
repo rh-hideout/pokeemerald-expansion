@@ -877,6 +877,15 @@ static void Task_ViewClock_HandleInput(u8 taskId)
     InitClockWithRtc(taskId);
     if (JOY_NEW(A_BUTTON | B_BUTTON))
         gTasks[taskId].func = Task_ViewClock_FadeOut;
+    if (JOY_NEW(R_BUTTON))
+    {
+        PlaySE(SE_SELECT);
+        DecompressDataWithHeaderVram(gWallClockStart_Tilemap, (u16 *)BG_SCREEN_ADDR(7));
+        AddTextPrinterParameterized(WIN_BUTTON_LABEL, FONT_NORMAL, gText_Confirm3, 0, 1, 0, NULL);
+        PutWindowTilemap(WIN_BUTTON_LABEL);
+        ScheduleBgCopyTilemapToVram(2);
+        gTasks[taskId].func = Task_SetClock_HandleInput;
+    }
 }
 
 static void Task_ViewClock_FadeOut(u8 taskId)
