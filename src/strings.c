@@ -72,7 +72,11 @@ const u8 gText_ListByFirstLetter[] = _("List by the first letter in the name.\nS
 const u8 gText_ListByBodyColor[] = _("List by body color.\nSpotted POKéMON only.");
 const u8 gText_ListByType[] = _("List by type.\nOwned POKéMON only.");
 const u8 gText_ExecuteSearchSwitch[] = _("Execute search/switch.");
+#if IS_HNS
+const u8 gText_DexHoennTitle[] = _("JOHTO DEX");
+#else
 const u8 gText_DexHoennTitle[] = _("HOENN DEX");
+#endif
 const u8 gText_DexNatTitle[] = _("NATIONAL DEX");
 const u8 gText_DexSortNumericalTitle[] = _("NUMERICAL MODE");
 const u8 gText_DexSortAtoZTitle[] = _("A TO Z MODE");
@@ -99,7 +103,11 @@ const u8 gText_DexSearchColorPurple[] = _("PURPLE");
 const u8 gText_DexSearchColorGray[] = _("GRAY");
 const u8 gText_DexSearchColorWhite[] = _("WHITE");
 const u8 gText_DexSearchColorPink[] = _("PINK");
+#if IS_HNS
+const u8 gText_DexHoennDescription[] = _("JOHTO region's POKéDEX");
+#else
 const u8 gText_DexHoennDescription[] = _("HOENN region's POKéDEX");
+#endif
 const u8 gText_DexNatDescription[] = _("National edition POKéDEX");
 const u8 gText_DexSortNumericalDescription[] = _("POKéMON are listed according to their\nnumber.");
 const u8 gText_DexSortAtoZDescription[] = _("Spotted and owned POKéMON are listed\nalphabetically.");
