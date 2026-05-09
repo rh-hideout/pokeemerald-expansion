@@ -11,14 +11,14 @@
 #include "constants/species.h"
 #include "constants/vars.h"
 
-#define TEST_SPECIES_GENERATOR_FILTERED_POOL (SPECIES_RANDOMLY_GENERATED_START + 0)
-#define TEST_SPECIES_GENERATOR_MYTHICAL_FILTER (SPECIES_RANDOMLY_GENERATED_START + 1)
-#define TEST_SPECIES_GENERATOR_BST_FILTER (SPECIES_RANDOMLY_GENERATED_START + 2)
-#define TEST_SPECIES_GENERATOR_FORM_FILTER (SPECIES_RANDOMLY_GENERATED_START + 3)
+#define TEST_SPECIES_GENERATOR_FILTERED_POOL 0
+#define TEST_SPECIES_GENERATOR_MYTHICAL_FILTER 1
+#define TEST_SPECIES_GENERATOR_BST_FILTER 2
+#define TEST_SPECIES_GENERATOR_FORM_FILTER 3
 
-#define TEST_ITEM_GENERATOR_SINGLE_ITEM (ITEM_RANDOMLY_GENERATED_START + 0)
-#define TEST_ITEM_GENERATOR_FILTERED_POOL (ITEM_RANDOMLY_GENERATED_START + 1)
-#define TEST_ITEM_GENERATOR_NONE_POOL (ITEM_RANDOMLY_GENERATED_START + 2)
+#define TEST_ITEM_GENERATOR_SINGLE_ITEM 0
+#define TEST_ITEM_GENERATOR_FILTERED_POOL 1
+#define TEST_ITEM_GENERATOR_NONE_POOL 2
 
 static void ResolveRandomMonTestValues(enum Species species, enum PokeBall *ball, enum Move *moves)
 {
@@ -27,56 +27,69 @@ static void ResolveRandomMonTestValues(enum Species species, enum PokeBall *ball
 
 TEST("Random mon generation filters species from a small pool")
 {
-    enum Species species = GetRandomSpecies(TEST_SPECIES_GENERATOR_FILTERED_POOL, 0xFFFF, 0xFFFF);
+    const struct FilterFuncArgs filterFuncArgs = {FILTER_FUNC_ARG_NONE, FILTER_FUNC_ARG_NONE};
+    enum Species species = GetRandomSpecies(TEST_SPECIES_GENERATOR_FILTERED_POOL, &filterFuncArgs);
 
     EXPECT_EQ(species, SPECIES_CHARIZARD);
 }
 
 TEST("Random mon generation rejects disallowed mythical species")
 {
-    enum Species species = GetRandomSpecies(TEST_SPECIES_GENERATOR_MYTHICAL_FILTER, 0xFFFF, 0xFFFF);
+    const struct FilterFuncArgs filterFuncArgs = {FILTER_FUNC_ARG_NONE, FILTER_FUNC_ARG_NONE};
+    enum Species species = GetRandomSpecies(TEST_SPECIES_GENERATOR_MYTHICAL_FILTER, &filterFuncArgs);
 
     EXPECT_EQ(species, SPECIES_CHARIZARD);
 }
 
 TEST("Random mon generation allows species within BST vars")
 {
-    enum Species species = GetRandomSpecies(TEST_SPECIES_GENERATOR_BST_FILTER, 400, 10);
+    const struct FilterFuncArgs filterFuncArgs = {400, 10};
+    enum Species species = GetRandomSpecies(TEST_SPECIES_GENERATOR_BST_FILTER, &filterFuncArgs);
 
     EXPECT_EQ(species, SPECIES_WOBBUFFET);
 }
 
 TEST("Random mon generation rejects species outside BST vars")
 {
-    enum Species species = GetRandomSpecies(TEST_SPECIES_GENERATOR_BST_FILTER, 600, 10);
+    const struct FilterFuncArgs filterFuncArgs = {600, 10};
+    enum Species species = GetRandomSpecies(TEST_SPECIES_GENERATOR_BST_FILTER, &filterFuncArgs);
 
     EXPECT_EQ(species, SPECIES_MEW);
 }
 
 TEST("Random mon generation applies filters to possible forms")
 {
-    enum Species species = GetRandomSpecies(TEST_SPECIES_GENERATOR_FORM_FILTER, 0xFFFF, 0xFFFF);
+    const struct FilterFuncArgs filterFuncArgs = {0, 0};
+    enum Species species = GetRandomSpecies(TEST_SPECIES_GENERATOR_FORM_FILTER, &filterFuncArgs);
 
     EXPECT_EQ(species, SPECIES_ROTOM_HEAT);
 }
 
+TEST("Random mon generation rejects missing filter args")
+{
+    const struct FilterFuncArgs filterFuncArgs = {FILTER_FUNC_ARG_NONE, FILTER_FUNC_ARG_NONE};
+    enum Species species = GetRandomSpecies(TEST_SPECIES_GENERATOR_BST_FILTER, &filterFuncArgs);
+
+    EXPECT_EQ(species, SPECIES_NONE);
+}
+
 TEST("Random mon generation resolves held item from a pool")
 {
-    enum Item item = GetRandomItem(TEST_ITEM_GENERATOR_SINGLE_ITEM);
+    enum Item item = GetRandomHeldItem(TEST_ITEM_GENERATOR_SINGLE_ITEM);
 
     EXPECT_EQ(item, ITEM_LEFTOVERS);
 }
 
 TEST("Random mon generation filters banned hold effects from a small pool")
 {
-    enum Item item = GetRandomItem(TEST_ITEM_GENERATOR_FILTERED_POOL);
+    enum Item item = GetRandomHeldItem(TEST_ITEM_GENERATOR_FILTERED_POOL);
 
     EXPECT_EQ(item, ITEM_LUM_BERRY);
 }
 
 TEST("Random mon generation allows ITEM_NONE in an explicit item pool")
 {
-    enum Item item = GetRandomItem(TEST_ITEM_GENERATOR_NONE_POOL);
+    enum Item item = GetRandomHeldItem(TEST_ITEM_GENERATOR_NONE_POOL);
 
     EXPECT_EQ(item, ITEM_NONE);
 }

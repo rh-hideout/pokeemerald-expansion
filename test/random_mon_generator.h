@@ -1,25 +1,19 @@
 enum
 {
-    SPECIES_GENERATOR_FILTERED_POOL = SPECIES_RANDOMLY_GENERATED_START,
+    SPECIES_GENERATOR_FILTERED_POOL,
     SPECIES_GENERATOR_MYTHICAL_FILTER,
     SPECIES_GENERATOR_BST_FILTER,
     SPECIES_GENERATOR_FORM_FILTER,
-    SPECIES_GENERATOR_END,
+    RANDOM_SPECIES_OPTIONS_COUNT,
 };
-
-#define RANDOM_SPECIES_OPTIONS_COUNT (SPECIES_GENERATOR_END - SPECIES_RANDOMLY_GENERATED_START)
-#define SPECIES_OPTION(option) ((option) - SPECIES_RANDOMLY_GENERATED_START)
 
 enum
 {
-    ITEM_GENERATOR_SINGLE_ITEM = ITEM_RANDOMLY_GENERATED_START,
+    ITEM_GENERATOR_SINGLE_ITEM,
     ITEM_GENERATOR_FILTERED_POOL,
     ITEM_GENERATOR_NONE_POOL,
-    ITEM_GENERATOR_END,
+    RANDOM_ITEM_OPTIONS_COUNT,
 };
-
-#define RANDOM_ITEM_OPTIONS_COUNT (ITEM_GENERATOR_END - ITEM_RANDOMLY_GENERATED_START)
-#define ITEM_OPTION(option) ((option) - ITEM_RANDOMLY_GENERATED_START)
 
 static const enum Species sRandomSpeciesOption0SpeciesPool[] =
 {
@@ -44,10 +38,9 @@ static const enum Species sRandomSpeciesOption3SpeciesPool[] =
     SPECIES_ROTOM,
 };
 
-static bool32 IsSpeciesRotomHeat(enum Species species, u16 arg1, u16 arg2)
+static bool32 IsSpeciesRotomHeat(enum Species species, const struct FilterFuncArgs *filterFuncArgs)
 {
-    (void)arg1;
-    (void)arg2;
+    (void)filterFuncArgs;
 
     return species == SPECIES_ROTOM_HEAT;
 }
@@ -73,14 +66,9 @@ static const enum HoldEffect sRandomItemOption1BannedHoldEffects[] =
     HOLD_EFFECT_LEFTOVERS,
 };
 
-static const enum HoldEffect sRandomItemOption2BannedHoldEffects[] =
-{
-    HOLD_EFFECT_NONE,
-};
-
 static const struct RandomSpeciesGeneratorOptions sRandomSpeciesGeneratorOptions[] =
 {
-    [SPECIES_OPTION(SPECIES_GENERATOR_FILTERED_POOL)] =
+    [SPECIES_GENERATOR_FILTERED_POOL] =
     {
         .speciesPool = sRandomSpeciesOption0SpeciesPool,
         .speciesPoolCount = ARRAY_COUNT(sRandomSpeciesOption0SpeciesPool),
@@ -91,7 +79,7 @@ static const struct RandomSpeciesGeneratorOptions sRandomSpeciesGeneratorOptions
         .allowParadox = FALSE,
         .randomizeForms = FALSE,
     },
-    [SPECIES_OPTION(SPECIES_GENERATOR_MYTHICAL_FILTER)] =
+    [SPECIES_GENERATOR_MYTHICAL_FILTER] =
     {
         .speciesPool = sRandomSpeciesOption1SpeciesPool,
         .speciesPoolCount = ARRAY_COUNT(sRandomSpeciesOption1SpeciesPool),
@@ -102,7 +90,7 @@ static const struct RandomSpeciesGeneratorOptions sRandomSpeciesGeneratorOptions
         .allowParadox = TRUE,
         .randomizeForms = FALSE,
     },
-    [SPECIES_OPTION(SPECIES_GENERATOR_BST_FILTER)] =
+    [SPECIES_GENERATOR_BST_FILTER] =
     {
         .speciesPool = sRandomSpeciesOption2SpeciesPool,
         .speciesPoolCount = ARRAY_COUNT(sRandomSpeciesOption2SpeciesPool),
@@ -114,7 +102,7 @@ static const struct RandomSpeciesGeneratorOptions sRandomSpeciesGeneratorOptions
         .randomizeForms = FALSE,
         .filterFunc = IsSpeciesAllowedByRandomBstArgs,
     },
-    [SPECIES_OPTION(SPECIES_GENERATOR_FORM_FILTER)] =
+    [SPECIES_GENERATOR_FORM_FILTER] =
     {
         .speciesPool = sRandomSpeciesOption3SpeciesPool,
         .speciesPoolCount = ARRAY_COUNT(sRandomSpeciesOption3SpeciesPool),
@@ -130,23 +118,21 @@ static const struct RandomSpeciesGeneratorOptions sRandomSpeciesGeneratorOptions
 
 static const struct RandomItemGeneratorOptions sRandomItemGeneratorOptions[] =
 {
-    [ITEM_OPTION(ITEM_GENERATOR_SINGLE_ITEM)] =
+    [ITEM_GENERATOR_SINGLE_ITEM] =
     {
         .heldItemPool = sRandomItemOption0HeldItemPool,
         .heldItemPoolCount = ARRAY_COUNT(sRandomItemOption0HeldItemPool),
     },
-    [ITEM_OPTION(ITEM_GENERATOR_FILTERED_POOL)] =
+    [ITEM_GENERATOR_FILTERED_POOL] =
     {
         .heldItemPool = sRandomItemOption1HeldItemPool,
         .heldItemPoolCount = ARRAY_COUNT(sRandomItemOption1HeldItemPool),
         .bannedHoldEffects = sRandomItemOption1BannedHoldEffects,
         .bannedHoldEffectsCount = ARRAY_COUNT(sRandomItemOption1BannedHoldEffects),
     },
-    [ITEM_OPTION(ITEM_GENERATOR_NONE_POOL)] =
+    [ITEM_GENERATOR_NONE_POOL] =
     {
         .heldItemPool = sRandomItemOption2HeldItemPool,
         .heldItemPoolCount = ARRAY_COUNT(sRandomItemOption2HeldItemPool),
-        .bannedHoldEffects = sRandomItemOption2BannedHoldEffects,
-        .bannedHoldEffectsCount = ARRAY_COUNT(sRandomItemOption2BannedHoldEffects),
     },
 };

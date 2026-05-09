@@ -1,4 +1,5 @@
 #include "global.h"
+#include "random_mon_generation.h"
 #include "string_util.h"
 #include "test/test.h"
 #include "constants/form_change_types.h"
@@ -23,6 +24,26 @@ TEST("Form species ID tables are shared between all forms")
         u32 formSpeciesId = formSpeciesIdTable[i];
         EXPECT_EQ(gSpeciesInfo[formSpeciesId].formSpeciesIdTable, formSpeciesIdTable);
     }
+}
+
+TEST("Form species ID tables fit within RANDOM_MON_MAX_FORMS")
+{
+    u32 i;
+    u32 formCount;
+    u32 species = SPECIES_NONE;
+    const u16 *formSpeciesIdTable;
+
+    for (i = 0; i < NUM_SPECIES; i++)
+    {
+        if (gSpeciesInfo[i].formSpeciesIdTable)
+            PARAMETRIZE_LABEL("ID:%d - %S", i, gSpeciesInfo[i].speciesName) { species = i; }
+    }
+
+    formSpeciesIdTable = gSpeciesInfo[species].formSpeciesIdTable;
+    for (formCount = 0; formSpeciesIdTable[formCount] != FORM_SPECIES_END; formCount++)
+        ;
+
+    EXPECT(formCount <= RANDOM_MON_MAX_FORMS);
 }
 
 TEST("Form change tables contain only forms in the form species ID table")

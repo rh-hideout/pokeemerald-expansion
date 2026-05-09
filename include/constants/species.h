@@ -1700,6 +1700,4 @@ enum __attribute__((packed)) Species
 
 #define SPECIES_SHINY_TAG 5000
 
-#define SPECIES_RANDOMLY_GENERATED_START 6000
-
 #endif  // GUARD_CONSTANTS_SPECIES_H

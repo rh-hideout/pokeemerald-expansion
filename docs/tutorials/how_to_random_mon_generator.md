@@ -13,26 +13,26 @@ So you want to make a custom ruleset for a possible random pokemon you'd like to
 
 ### Setting Up Our Random Species
 
-First thing's first, we need a way for the logic to read that we want a specific kind of random mon. The species constants file only defines the start of the random species range with `SPECIES_RANDOMLY_GENERATED_START`. Add your named species generator options in [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h), then pass those names to `getrandomspecies` in scripts.
+First thing's first, we need a way for the logic to read that we want a specific kind of random mon. Add your named species generator options in [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h), then pass those names to `getrandomspecies` in scripts.
 
 ### The Random Species Struct
 
 ```
 struct RandomSpeciesGeneratorOptions
 {
-    enum RandomMonDexMode dexMode;
-    const enum Species *speciesPool;
-    u16 speciesPoolCount;
     const enum Species *bannedSpecies;
-    u16 bannedSpeciesCount;
-    u8 allowLegendary:1;
-    u8 allowMythical:1;
-    u8 allowSubLegendary:1;
-    u8 allowUltraBeast:1;
-    u8 allowParadox:1;
-    u8 randomizeForms:1;
-    u8 padding:2;
-    bool32 (*filterFunc)(enum Species species, u16 arg1, u16 arg2);
+    const enum Species *speciesPool;
+    bool32 (*filterFunc)(enum Species species, const struct FilterFuncArgs *filterFuncArgs);
+    u32 speciesPoolCount:11;
+    u32 bannedSpeciesCount:11;
+    u32 allowLegendary:1;
+    u32 allowMythical:1;
+    u32 allowSubLegendary:1;
+    u32 allowUltraBeast:1;
+    u32 allowParadox:1;
+    u32 randomizeForms:1;
+    enum RandomMonDexMode dexMode:1;
+    u32 padding:3;
 };
 ```
 
@@ -40,39 +40,38 @@ These are the options you can toggle and change to select the ideal possible spe
 
 * `enum RandomMonDexMode dexMode`: With values of either `RANDOM_MON_DEX_NATIONAL` or `RANDOM_MON_DEX_HOENN`, allows you to select whether you want to choose from your National Dex or the Hoenn Dex. If you've replaced the hoenn dex but want to use that functionality, be sure that you investigate that path and substitute any references or functions specific to the hoenn dex to parallel ones for your custom dex.
 * `const enum Species *speciesPool`: A pointer to the specific species pool you want to use, if any. Leave it NULL or create one in [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h). Examples of this will come later.
-* `u16 speciesPoolCount`: The total number of species in your pool, if any.
+* `u32 speciesPoolCount`: The total number of species in your pool, if any.
 * `const enum Species *bannedSpecies`: A pointer to the a pool containing any species of pokemon you want *banned* from selection. Leave it NULL or create one in [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h). You shouldn't use this in combination with the speciesPool, as that doesn't really make sense. Leave this one NULL if you have a specific pool of species you want to pick from, or use it if you want more randomness but with some specific banning restrictions that the other options below don't allow.
-* `u16 bannedSpeciesCount`: The total number of banned species in the above pool, if any.
-* `u8 allowLegendary`: Whether to allow restricted legendary pokemon to be viable selected mons.
-* `u8 allowMythical`: Whether to allow mythical pokemon to be viable selected mons.
-* `u8 allowSubLegendary`: Whether to allow sub-legendary pokemon (Regi trio, genies, etc) to be viable selected mons.
-* `u8 allowUltraBeast`: Whether to allow ultra beast pokemon to be viable selected mons.
-* `u8 allowParadox`: Whether to allow paradox pokemon to be viable selected mons.
-* `u8 randomizeForms`: Whether to randomize forms of pokemon. By default, megas, fusions, and in-battle transformations are disallowed. To add exceptions, see and modify `IsRandomMonFormTableException` in [src/random_mon_generation.c](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/random_mon_generation.c).
+* `u32 bannedSpeciesCount`: The total number of banned species in the above pool, if any.
+* `u32 allowLegendary`: Whether to allow restricted legendary pokemon to be viable selected mons.
+* `u32 allowMythical`: Whether to allow mythical pokemon to be viable selected mons.
+* `u32 allowSubLegendary`: Whether to allow sub-legendary pokemon (Regi trio, genies, etc) to be viable selected mons.
+* `u32 allowUltraBeast`: Whether to allow ultra beast pokemon to be viable selected mons.
+* `u32 allowParadox`: Whether to allow paradox pokemon to be viable selected mons.
+* `u32 randomizeForms`: Whether to randomize forms of pokemon. By default, megas, fusions, and in-battle transformations are disallowed. To add exceptions, see and modify `IsRandomMonFormTableException` in [src/random_mon_generation.c](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/random_mon_generation.c).
 
 ### Filter Functions
 
-Now you may notice that we didn't discuss `bool32 (*filterFunc)(enum Species species, u16 arg1, u16 arg2)`, and for good reason, as that element is more complicated than the others. This is a pointer to an additional filter you can mess with or add to select for specific traits or features.
+Now you may notice that we didn't discuss `bool32 (*filterFunc)(enum Species species, const struct FilterFuncArgs *filterFuncArgs)`, and for good reason, as that element is more complicated than the others. This is a pointer to an additional filter you can mess with or add to select for specific traits or features.
 
 For example, one of the default options uses `.filterFunc = IsSpeciesAllowedByRandomBstArgs`. When you call `getrandomspecies`, the optional `arg1` and `arg2` values are forwarded to the filter function. `IsSpeciesAllowedByRandomBstArgs` treats `arg1` as the BST target and `arg2` as the leniency, so `arg1=300, arg2=100` allows pokemon with BST 200 through 400.
+
+If a species option has a `filterFunc`, pass the required args for that function. Omitted args default to `0xFFFF`, and an option with a filter function rejects every species if both args are omitted. That makes the command resolve to `SPECIES_NONE` instead of silently giving something outside the intended rules.
 
 You could also, using similar logic, create a function that treats `arg1` as a type value, and then filter only for pokemon of that type if possible. If you do not pass a filter function, then no filter beyond the other elements is applied.
 
 ### Example Setup
 
-For a named random mon option, define the script-facing value and use `SPECIES_OPTION` to keep the array index tied to that value. With separate species and/or ban pools, your setup in [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h) would look like this:
+For a named random mon option, define the script-facing value and use that same enum value as the array index. With separate species and/or ban pools, your setup in [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h) would look like this:
 
 ```
 enum
 {
-    SPECIES_GENERATOR_NO_SUPERMONS = SPECIES_RANDOMLY_GENERATED_START,
+    SPECIES_GENERATOR_NO_SUPERMONS,
     SPECIES_GENERATOR_LIMITED_POOL,
     SPECIES_GENERATOR_BST_RESTRICTED,
-    SPECIES_GENERATOR_END,
+    RANDOM_SPECIES_OPTIONS_COUNT,
 };
-
-#define RANDOM_SPECIES_OPTIONS_COUNT (SPECIES_GENERATOR_END - SPECIES_RANDOMLY_GENERATED_START)
-#define SPECIES_OPTION(option) ((option) - SPECIES_RANDOMLY_GENERATED_START)
 
 static const enum Species sRandomSpeciesOption0SpeciesPool[] =
 {
@@ -93,7 +92,7 @@ static const enum Species sRandomSpeciesOption0BannedSpecies[] =
 
 static const struct RandomSpeciesGeneratorOptions sRandomSpeciesGeneratorOptions[] =
 {
-    [SPECIES_OPTION(SPECIES_GENERATOR_LIMITED_POOL)] =
+    [SPECIES_GENERATOR_LIMITED_POOL] =
     {
         .speciesPool = sRandomSpeciesOption0SpeciesPool,
         .speciesPoolCount = ARRAY_COUNT(sRandomSpeciesOption0SpeciesPool),
@@ -107,7 +106,7 @@ static const struct RandomSpeciesGeneratorOptions sRandomSpeciesGeneratorOptions
         .randomizeForms = TRUE,
     },
 
-    [SPECIES_OPTION(SPECIES_GENERATOR_BST_RESTRICTED)] =
+    [SPECIES_GENERATOR_BST_RESTRICTED] =
     {
         .dexMode = RANDOM_MON_DEX_HOENN,
         .filterFunc = IsSpeciesAllowedByRandomBstArgs,
@@ -124,7 +123,7 @@ static const struct RandomSpeciesGeneratorOptions sRandomSpeciesGeneratorOptions
 > [!NOTE]
 > You really don't need to use a choosable species pool and a banned species pool in the same ruleset, it just doesn't make sense and may end up causing more trouble than anything. Additionally, you should never include SPECIES_NONE in either of these kinds of pools, only actual, defined species.
 
-Small explicit species pools are checked exhaustively before choosing, which gives clear errors if every entry is filtered out. Larger explicit pools and full dex searches use repeated random attempts, then fall back to `SPECIES_BULBASAUR` if the filters are too restrictive.
+Small explicit species pools are checked exhaustively before choosing, which gives clear errors if every entry is filtered out. Larger explicit pools and full dex searches use repeated random attempts. If the filters are too restrictive or an invalid option is requested, the command resolves to `SPECIES_NONE`.
 
 ## Item Generator Options
 
@@ -132,7 +131,7 @@ Item randomization is handled separately from pokemon randomization, meaning tha
 
 ### Setting Up Our Random Items
 
-As we did for our random species, we need to also do for our random items. The item constants file only defines the start of the random item range with `ITEM_RANDOMLY_GENERATED_START`. Add your named item generator options in [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h), then pass those names to `getrandomitem` in scripts.
+As we did for our random species, we need to also do for our random items. Add your named item generator options in [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h), then pass those names to `getrandomitem` in scripts.
 
 ### The Random Item Struct
 
@@ -140,8 +139,8 @@ As we did for our random species, we need to also do for our random items. The i
 struct RandomItemGeneratorOptions
 {
     const enum Item *heldItemPool;
-    u16 heldItemPoolCount;
     const enum HoldEffect *bannedHoldEffects;
+    u16 heldItemPoolCount;
     u16 bannedHoldEffectsCount;
 };
 ```
@@ -153,18 +152,15 @@ struct RandomItemGeneratorOptions
 
 ### Example Setup
 
-For a named random item option, define the script-facing value and use `ITEM_OPTION` to keep the array index tied to that value. With separate held item pools and/or hold effect ban pools, your setup in [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h) would look like this:
+For a named random item option, define the script-facing value and use that same enum value as the array index. With separate held item pools and/or hold effect ban pools, your setup in [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h) would look like this:
 
 ```
 enum
 {
-    ITEM_GENERATOR_STANDARD = ITEM_RANDOMLY_GENERATED_START,
+    ITEM_GENERATOR_STANDARD,
     ITEM_GENERATOR_LIMITED_POOL,
-    ITEM_GENERATOR_END,
+    RANDOM_ITEM_OPTIONS_COUNT,
 };
-
-#define RANDOM_ITEM_OPTIONS_COUNT (ITEM_GENERATOR_END - ITEM_RANDOMLY_GENERATED_START)
-#define ITEM_OPTION(option) ((option) - ITEM_RANDOMLY_GENERATED_START)
 
 static const enum HoldEffect sRandomItemOption0BannedHoldEffects[] =
 {
@@ -203,12 +199,12 @@ static const enum Item sRandomItemOption0HeldItemPool[] =
 
 static const struct RandomItemGeneratorOptions sRandomItemGeneratorOptions[] =
 {
-    [ITEM_OPTION(ITEM_GENERATOR_STANDARD)] =
+    [ITEM_GENERATOR_STANDARD] =
     {
         .bannedHoldEffects = sRandomItemOption0BannedHoldEffects,
         .bannedHoldEffectsCount = ARRAY_COUNT(sRandomItemOption0BannedHoldEffects),
     },
-    [ITEM_OPTION(ITEM_GENERATOR_LIMITED_POOL)] =
+    [ITEM_GENERATOR_LIMITED_POOL] =
     {
         .heldItemPool = sRandomItemOption0HeldItemPool,
         .heldItemPoolCount = ARRAY_COUNT(sRandomItemOption0HeldItemPool),
@@ -233,7 +229,7 @@ getrandomitem VAR_0x8001, ITEM_GENERATOR_LIMITED_POOL
 givemon VAR_0x8000, 50, item=VAR_0x8001
 ```
 
-If your species option uses a `filterFunc`, you can pass up to two optional arguments. If you omit them, they default to `0xFFFF`.
+If your species option uses a `filterFunc`, you can pass up to two optional arguments. If you omit them, they default to `0xFFFF`; when both are omitted, filtered species options reject every species and return `SPECIES_NONE`.
 
 ```
 getrandomspecies VAR_0x8000, SPECIES_GENERATOR_BST_RESTRICTED, arg1=300, arg2=100
