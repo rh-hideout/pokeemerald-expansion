@@ -229,7 +229,7 @@ static enum Species GetSpeciesCandidateForm(enum Species species, const struct R
     if (!options->randomizeForms || formTable == NULL)
     {
         if (IsSpeciesBannedByRandomMonOptions(species, options, filterFuncArgs))
-            return INVALID_RANDOM_SPECIES;
+            return SPECIES_NONE;
         return species;
     }
 
@@ -241,7 +241,7 @@ static enum Species GetSpeciesCandidateForm(enum Species species, const struct R
     }
 
     if (validFormsCount == 0)
-        return INVALID_RANDOM_SPECIES;
+        return SPECIES_NONE;
 
     return formTable[validForms[RandomUniform(RNG_RANDOM_MON_GEN, 0, validFormsCount - 1)]];
 }
@@ -293,7 +293,7 @@ static enum Species SlowPickRandomMonSpecies(const struct RandomSpeciesGenerator
     {
         enum Species species = GetRandomMonSpeciesAtIndex(options, i);
         species = GetSpeciesCandidateForm(species, options, filterFuncArgs);
-        if (species != INVALID_RANDOM_SPECIES)
+        if (species != SPECIES_NONE)
             eligibleSpecies[eligibleSpeciesCount++] = species;
     }
 
@@ -312,7 +312,7 @@ static enum Species FastPickRandomMonSpecies(const struct RandomSpeciesGenerator
     {
         enum Species species = GetRandomMonSpeciesAtIndex(options, RandomUniform(RNG_RANDOM_MON_GEN, 0, poolSize - 1));
         species = GetSpeciesCandidateForm(species, options, filterFuncArgs);
-        if (species != INVALID_RANDOM_SPECIES)
+        if (species != SPECIES_NONE)
             return species;
     }
 
