@@ -655,6 +655,7 @@ static enum CancelerResult CancelerPledgeAttack(struct BattleCalcValues *cv)
             gCurrentMove = GetPledgeResultMove(partnerMove);
 
         gBattleStruct->pledgeState = PLEDGE_COMBO_ATTACK;
+        gBattlescriptCurrInstr = GetMoveBattleScript(gCurrentMove);
         BattleScriptCall(BattleScript_EffectHitCombinedPledge);
         return CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
     }
