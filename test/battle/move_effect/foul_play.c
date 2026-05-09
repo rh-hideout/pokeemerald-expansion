@@ -15,7 +15,7 @@ SINGLE_BATTLE_TEST("Foul Play uses the target's Attack stat and stat stages of t
 
     GIVEN {
         ASSUME(GetMovePower(MOVE_HIGH_HORSEPOWER) == GetMovePower(MOVE_FOUL_PLAY));
-        ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
+        ASSUME_STAT_CHANGE(MOVE_SWORDS_DANCE, attack: +2);
         PLAYER(SPECIES_SHELLDER);
         OPPONENT(SPECIES_SHELLDER);
     } WHEN {

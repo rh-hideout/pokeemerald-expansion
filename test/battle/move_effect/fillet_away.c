@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_FILLET_AWAY) == EFFECT_FILLET_AWAY);
+    ASSUME(GetMoveEffect(MOVE_FILLET_AWAY) == EFFECT_STAT_CHANGE_HALF_HP);
 }
 
 SINGLE_BATTLE_TEST("Fillet Away cuts the user's HP in half")
@@ -74,3 +74,4 @@ SINGLE_BATTLE_TEST("Fillet Away's HP cost doesn't trigger effects that trigger o
 }
 
 TO_DO_BATTLE_TEST("Fillet Away fails if the user's Attack, Sp. Atk and Speed are all maxed out")
+

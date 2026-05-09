@@ -48,8 +48,8 @@ static void Task_MysteryGift(u8 taskId);
 EWRAM_DATA static u8 sDownArrowCounterAndYCoordIdx[8] = {};
 EWRAM_DATA bool8 gGiftIsFromEReader = FALSE;
 
-static const u16 sTextboxBorder_Pal[] = INCBIN_U16("graphics/interface/mystery_gift_textbox_border.gbapal");
-static const u32 sTextboxBorder_Gfx[] = INCBIN_U32("graphics/interface/mystery_gift_textbox_border.4bpp.smol");
+static const u16 sTextboxBorder_Pal[] = INCGFX_U16("graphics/interface/mystery_gift_textbox_border.png", ".gbapal");
+static const u32 sTextboxBorder_Gfx[] = INCGFX_U32("graphics/interface/mystery_gift_textbox_border.png", ".4bpp.smol");
 
 struct MysteryGiftTaskData
 {

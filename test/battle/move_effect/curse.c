@@ -63,7 +63,7 @@ SINGLE_BATTLE_TEST("Curse applies to the opponent if user is afflicted by Trick-
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponent, MOVE_TRICK_OR_TREAT); MOVE(player, MOVE_CURSE, target: player); }
+        TURN { MOVE(opponent, MOVE_TRICK_OR_TREAT); MOVE(player, MOVE_CURSE); }
     } SCENE {
         s32 playerMaxHP = GetMonData(&PLAYER_PARTY[0], MON_DATA_MAX_HP);
         s32 opponentMaxHP = GetMonData(&OPPONENT_PARTY[0], MON_DATA_MAX_HP);
@@ -71,6 +71,29 @@ SINGLE_BATTLE_TEST("Curse applies to the opponent if user is afflicted by Trick-
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CURSE, player);
         HP_BAR(player, damage: playerMaxHP / 2);
         HP_BAR(opponent, damage: opponentMaxHP / 4);
+    }
+}
+
+SINGLE_BATTLE_TEST("Curse lowering stats is not prevented by Mist")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_MIST); }
+        TURN { MOVE(player, MOVE_CURSE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MIST, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CURSE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        MESSAGE("Wobbuffet's Speed fell!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        MESSAGE("Wobbuffet's Attack rose!");
+        MESSAGE("Wobbuffet's Defense rose!");
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
+        EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 1);
     }
 }
 
