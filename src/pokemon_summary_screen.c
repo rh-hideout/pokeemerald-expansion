@@ -308,6 +308,9 @@ static void StopPokemonAnimations(void);
 static void CreateMonMarkingsSprite(struct Pokemon *);
 static void RemoveAndCreateMonMarkingsSprite(struct Pokemon *);
 static void CreateCaughtBallSprite(struct Pokemon *);
+static void CreateShinyStarObj(u16 tileTag, u16 palTag);
+static void DestroyShinyStarObj(void);
+static void ShowShinyStarObjIfMonShiny(void);
 static void CreateSetStatusSprite(void);
 static void CreateMoveSelectorSprites(u8);
 static void SpriteCB_MoveSelector(struct Sprite *);
@@ -783,6 +786,8 @@ static const u8 sMovesPPLayout[] = _("{PP}{DYNAMIC 0}/{DYNAMIC 1}");
 #define TAG_MOVE_TYPES 30002
 #define TAG_MON_MARKINGS 30003
 #define TAG_CATEGORY_ICONS 30004
+#define TAG_SHINY_STAR_PAL  30005
+#define TAG_SHINY_STAR_TILE 30006
 
 static const struct OamData sOamData_CategoryIcons =
 {
@@ -1163,7 +1168,39 @@ static const struct SpriteTemplate sSpriteTemplate_StatusCondition =
     .oam = &sOamData_StatusCondition,
     .anims = sSpriteAnimTable_StatusCondition,
 };
+#if IS_HNS
+static const u16 sMarkings_Pal[] = INCBIN_U16("graphics/summary_screen/hns/markings.gbapal");
+#else
 static const u16 sMarkings_Pal[] = INCBIN_U16("graphics/summary_screen/markings.gbapal");
+#endif
+
+static const u32 sShinyStarObjTiles[] = INCBIN_U32("graphics/summary_screen/shiny_icon.4bpp.smol");
+static const u16 sShinyStarObjPal[] = INCBIN_U16("graphics/summary_screen/heart.gbapal");
+
+static const struct OamData sShinyStarObjOamData =
+{
+    .affineMode = ST_OAM_AFFINE_OFF,
+    .objMode = ST_OAM_OBJ_NORMAL,
+    .bpp = ST_OAM_4BPP,
+    .shape = SPRITE_SHAPE(8x8),
+    .size = SPRITE_SIZE(8x8),
+    .priority = 1,
+};
+
+static const union AnimCmd sShinyStarObjAnim0[] = {
+    ANIMCMD_FRAME(0, 0),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd *const sShinyStarObjAnimTable[] = {
+    sShinyStarObjAnim0,
+};
+
+struct ShinyStarObjData {
+    struct Sprite *sprite;
+    u16 tileTag, palTag;
+};
+static EWRAM_DATA struct ShinyStarObjData *sShinyStarObjData = NULL;
 
 // code
 static u8 ShowCategoryIcon(enum DamageCategory category)
@@ -1376,6 +1413,8 @@ static bool8 LoadGraphics(void)
         break;
     case 19:
         CreateCaughtBallSprite(&sMonSummaryScreen->currentMon);
+        CreateShinyStarObj(TAG_SHINY_STAR_TILE, TAG_SHINY_STAR_PAL);
+        ShowShinyStarObjIfMonShiny();
         gMain.state++;
         break;
     case 20:
@@ -1641,6 +1680,71 @@ static void BeginCloseSummaryScreen(u8 taskId)
     gTasks[taskId].func = CloseSummaryScreen;
 }
 
+static void CreateShinyStarObj(u16 tileTag, u16 palTag)
+{
+    if (sShinyStarObjData != NULL)
+        return;
+
+    sShinyStarObjData = AllocZeroed(sizeof(*sShinyStarObjData));
+    if (sShinyStarObjData == NULL)
+        return;
+
+    struct CompressedSpriteSheet sheet = {
+        .data = sShinyStarObjTiles,
+        .size = 0x20 * 2,
+        .tag  = tileTag,
+    };
+    struct SpritePalette pal = { .data = sShinyStarObjPal, .tag = palTag };
+    struct SpriteTemplate tmpl = {
+        .tileTag = tileTag,
+        .paletteTag = palTag,
+        .oam = &sShinyStarObjOamData,
+        .anims = sShinyStarObjAnimTable,
+        .images = NULL,
+        .affineAnims = gDummySpriteAffineAnimTable,
+        .callback = SpriteCallbackDummy,
+    };
+
+    LoadCompressedSpriteSheet(&sheet);
+    LoadSpritePalette(&pal);
+
+    u8 spriteId = CreateSprite(&tmpl, 68, 37, 0);
+    sShinyStarObjData->sprite = &gSprites[spriteId];
+    sShinyStarObjData->tileTag = tileTag;
+    sShinyStarObjData->palTag  = palTag;
+    sShinyStarObjData->sprite->invisible = TRUE;
+}
+
+static void DestroyShinyStarObj(void)
+{
+    if (sShinyStarObjData == NULL)
+        return;
+
+    if (sShinyStarObjData->sprite != NULL)
+        DestroySpriteAndFreeResources(sShinyStarObjData->sprite);
+
+    Free(sShinyStarObjData);
+    sShinyStarObjData = NULL;
+}
+
+static void ShowShinyStarObjIfMonShiny(void)
+{
+    if (sShinyStarObjData == NULL || sShinyStarObjData->sprite == NULL)
+        return;
+
+    if (IsMonShiny(&sMonSummaryScreen->currentMon) && !sMonSummaryScreen->summary.isEgg)
+    {
+        sShinyStarObjData->sprite->invisible = FALSE;
+    }
+    else
+    {
+        sShinyStarObjData->sprite->invisible = TRUE;
+    }
+
+    sShinyStarObjData->sprite->x = 68;
+    sShinyStarObjData->sprite->y = 37;
+}
+
 static void CloseSummaryScreen(u8 taskId)
 {
     if (MenuHelpers_ShouldWaitForLinkRecv() != TRUE && !gPaletteFade.active)
@@ -1651,6 +1755,7 @@ static void CloseSummaryScreen(u8 taskId)
         gLastViewedMonIndex = sMonSummaryScreen->curMonIndex;
         SummaryScreen_DestroyAnimDelayTask();
         ResetSpriteData();
+        DestroyShinyStarObj();
         FreeAllSpritePalettes();
         StopCryAndClearCrySongs();
         m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL, 0x100);
@@ -2130,6 +2235,8 @@ static void Task_ChangeSummaryMon(u8 taskId)
         break;
     case 6:
         CreateCaughtBallSprite(&sMonSummaryScreen->currentMon);
+        CreateShinyStarObj(TAG_SHINY_STAR_TILE, TAG_SHINY_STAR_PAL);
+        ShowShinyStarObjIfMonShiny();
         break;
     case 7:
         if (sMonSummaryScreen->summary.ailment != AILMENT_NONE)
@@ -2142,6 +2249,7 @@ static void Task_ChangeSummaryMon(u8 taskId)
         if (sMonSummaryScreen->spriteIds[SPRITE_ARR_ID_MON] == SPRITE_NONE)
             return;
         gSprites[sMonSummaryScreen->spriteIds[SPRITE_ARR_ID_MON]].data[2] = 1;
+        ShowShinyStarObjIfMonShiny();
         TryDrawExperienceProgressBar();
         data[1] = 0;
         break;
@@ -2329,6 +2437,7 @@ static void PssScrollRightEnd(u8 taskId) // display right
     DrawPagination();
     PutPageWindowTilemaps(sMonSummaryScreen->currPageIndex);
     SetTypeIcons();
+    ShowShinyStarObjIfMonShiny();
     TryDrawExperienceProgressBar();
     SwitchTaskToFollowupFunc(taskId);
     ShowRelearnPrompt();
@@ -2382,6 +2491,7 @@ static void PssScrollLeftEnd(u8 taskId) // display left
     DrawPagination();
     PutPageWindowTilemaps(sMonSummaryScreen->currPageIndex);
     SetTypeIcons();
+    ShowShinyStarObjIfMonShiny();
     TryDrawExperienceProgressBar();
     SwitchTaskToFollowupFunc(taskId);
     ShowRelearnPrompt();
