@@ -76,6 +76,7 @@
     "gMapGroup_IndoorSixIslandRoute_Frlg",
     "gMapGroup_IndoorSevenIslandRoute_Frlg",
     "gMapGroup_ow_TownsAndRoutes",
+    "gMapGroup_ow_SpecialArea",
     "gMapGroup_ow_Dungeons",
     "gMapGroup_ow_IndoorKolchavi",
     "gMapGroup_ow_IndoorFloran",
@@ -1179,6 +1180,9 @@
     "ow_r9",
     "ow_r16",
     "ow_r12"
+  ],
+  "gMapGroup_ow_SpecialArea": [
+    "ow_Intro_PokemonCenter"
   ],
   "gMapGroup_ow_Dungeons": [],
   "gMapGroup_ow_IndoorKolchavi": [

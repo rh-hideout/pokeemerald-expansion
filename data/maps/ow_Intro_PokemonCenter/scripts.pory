@@ -1,0 +1,286 @@
+mapscripts ow_Intro_PokemonCenter_MapScripts {}
+
+script ow_Intro_PokemonCenter_EventScript_Nurse {
+    lock
+    faceplayer
+    goto_if_set(FLAG_SYS_POKEMON_GET, LilycoveCity_PokemonCenter_1F_EventScript_Nurse)
+    setspeaker("Nurse")
+    msgbox(format("Welcome! Once you've got a Pokémon of your own, I can take care of it for you."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+script ow_Intro_PokemonCenter_EventScript_LeagueRep {
+    lock
+    faceplayer
+    goto_if_set(FLAG_SYS_POKEMON_GET, ow_Intro_PokemonCenter_EventScript_LeagueRepDone)
+    setspeaker("Steven")
+    msgbox(format("{PLAYER}! Glad you made it."))
+    msgbox(format("I'm with the Pokémon League. Here to get you set up before you head out into Kavora."))
+    msgbox(format("First - your partner. Pick whichever feels right."))
+    goto(ow_Intro_PokemonCenter_EventScript_StarterSelect)
+}
+
+script ow_Intro_PokemonCenter_EventScript_StarterSelect {
+    dynmultipush("TREECKO", 0)
+    dynmultipush("TORCHIC", 1)
+    dynmultipush("MUDKIP", 2)
+    dynmultistack(0, 0, TRUE, 3, FALSE, 0, DYN_MULTICHOICE_CB_NONE)
+    switch (var(VAR_RESULT)) {
+        case 0: goto(ow_Intro_PokemonCenter_EventScript_ConfirmTreecko)
+        case 1: goto(ow_Intro_PokemonCenter_EventScript_ConfirmTorchic)
+        case 2: goto(ow_Intro_PokemonCenter_EventScript_ConfirmMudkip)
+    }
+    end
+}
+
+script ow_Intro_PokemonCenter_EventScript_ConfirmTreecko {
+    showmonpic(SPECIES_TREECKO, 10, 3)
+    playmoncry(SPECIES_TREECKO, CRY_MODE_NORMAL)
+    bufferspeciesname(STR_VAR_1, SPECIES_TREECKO)
+    msgbox(format("Are you sure you want {STR_VAR_1}?"), MSGBOX_YESNO)
+    waitmoncry
+    hidemonpic
+    if (var(VAR_RESULT) == NO) {
+        closemessage
+        goto(ow_Intro_PokemonCenter_EventScript_StarterSelect)
+    }
+    playfanfare(MUS_OBTAIN_ITEM)
+    waitfanfare
+    givemon(SPECIES_TREECKO, 5)
+    goto(ow_Intro_PokemonCenter_EventScript_AfterStarter)
+}
+
+script ow_Intro_PokemonCenter_EventScript_ConfirmTorchic {
+    showmonpic(SPECIES_TORCHIC, 10, 3)
+    playmoncry(SPECIES_TORCHIC, CRY_MODE_NORMAL)
+    bufferspeciesname(STR_VAR_1, SPECIES_TORCHIC)
+    msgbox(format("Are you sure you want {STR_VAR_1}?"), MSGBOX_YESNO)
+    waitmoncry
+    hidemonpic
+    if (var(VAR_RESULT) == NO) {
+        closemessage
+        goto(ow_Intro_PokemonCenter_EventScript_StarterSelect)
+    }
+    playfanfare(MUS_OBTAIN_ITEM)
+    waitfanfare
+    givemon(SPECIES_TORCHIC, 5)
+    goto(ow_Intro_PokemonCenter_EventScript_AfterStarter)
+}
+
+script ow_Intro_PokemonCenter_EventScript_ConfirmMudkip {
+    showmonpic(SPECIES_MUDKIP, 10, 3)
+    playmoncry(SPECIES_MUDKIP, CRY_MODE_NORMAL)
+    bufferspeciesname(STR_VAR_1, SPECIES_MUDKIP)
+    msgbox(format("Are you sure you want {STR_VAR_1}?"), MSGBOX_YESNO)
+    waitmoncry
+    hidemonpic
+    if (var(VAR_RESULT) == NO) {
+        closemessage
+        goto(ow_Intro_PokemonCenter_EventScript_StarterSelect)
+    }
+    playfanfare(MUS_OBTAIN_ITEM)
+    waitfanfare
+    givemon(SPECIES_MUDKIP, 5)
+    goto(ow_Intro_PokemonCenter_EventScript_AfterStarter)
+}
+
+script ow_Intro_PokemonCenter_EventScript_AfterStarter {
+    setflag(FLAG_SYS_POKEMON_GET)
+    setspeaker("Steven")
+    msgbox(format("Good pick."))
+    msgbox(format("Would you like to give a nickname to your new Pokémon?"), MSGBOX_YESNO)
+    if (var(VAR_RESULT) == YES) {
+        call(Common_EventScript_GetGiftMonPartySlot)
+        call(Common_EventScript_NameReceivedPartyMon)
+    }
+    msgbox(format("Here are some supplies to get you started."))
+    additem(ITEM_POKE_BALL, 10)
+    additem(ITEM_POTION, 3)
+    playfanfare(MUS_OBTAIN_ITEM)
+    setspeaker(NULL)
+    message(format("Steven gave you 10 Poké Balls and 3 Potions!"))
+    waitmessage
+    waitfanfare
+    closemessage
+    setspeaker("Steven")
+    msgbox(format("And one more thing - your Pokédex."))
+    setflag(FLAG_SYS_POKEDEX_GET)
+    playfanfare(MUS_RG_OBTAIN_KEY_ITEM)
+    setspeaker(NULL)
+    message(format("Steven gave you the Pokédex!"))
+    waitmessage
+    waitfanfare
+    closemessage
+    setflag(FLAG_SYS_B_DASH)
+    setspeaker("Steven")
+    msgbox(format("Good luck out there, {PLAYER}!"))
+    setspeaker(NULL)
+    release
+    end
+}
+
+script ow_Intro_PokemonCenter_EventScript_LeagueRepDone {
+    setspeaker("Steven")
+    msgbox(format("Take care out there."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+script ow_Intro_PokemonCenter_EventScript_BlockExit {
+    goto_if_set(FLAG_SYS_POKEMON_GET, ow_Intro_PokemonCenter_EventScript_ConfirmExit)
+    lockall
+    setspeaker("Steven")
+    msgbox(format("Wait!"))
+    applymovement(LOCALID_PLAYER, ow_Intro_PokemonCenter_Movement_PlayerStepBack)
+    waitmovement(0)
+    msgbox(format("Grab a partner first!"))
+    setspeaker(NULL)
+    releaseall
+    end
+}
+
+script ow_Intro_PokemonCenter_EventScript_ConfirmExit {
+    lockall
+    setspeaker("Steven")
+    msgbox(format("Once you head out, you won't be able to come back to change these settings.\pWhere would you like to start your journey?"))
+    setspeaker(NULL)
+    goto(ow_Intro_PokemonCenter_EventScript_DestinationSelect)
+}
+
+script ow_Intro_PokemonCenter_EventScript_DestinationSelect {
+    dynmultipush("Kolchavi", 0)
+    dynmultipush("Floran", 1)
+    dynmultipush("Cancel", 2)
+    dynmultistack(0, 0, FALSE, 3, FALSE, 0, DYN_MULTICHOICE_CB_NONE)
+    switch (var(VAR_RESULT)) {
+        case 0: goto(ow_Intro_PokemonCenter_EventScript_ConfirmKolchavi)
+        case 1: goto(ow_Intro_PokemonCenter_EventScript_ConfirmFloran)
+        case 2: goto(ow_Intro_PokemonCenter_EventScript_CancelExit)
+        case MULTI_B_PRESSED: goto(ow_Intro_PokemonCenter_EventScript_CancelExit)
+    }
+    end
+}
+
+script ow_Intro_PokemonCenter_EventScript_ConfirmKolchavi {
+    msgbox(format("Head out to Kolchavi?"), MSGBOX_YESNO)
+    if (var(VAR_RESULT) == NO) {
+        closemessage
+        goto(ow_Intro_PokemonCenter_EventScript_DestinationSelect)
+    }
+    setspeaker("Steven")
+    msgbox(format("Good luck out there, {PLAYER}!"))
+    setspeaker(NULL)
+    closemessage
+    fadescreen(FADE_TO_BLACK)
+    warp(MAP_OW_KOLCHAVI, 0)
+    waitstate
+    releaseall
+    end
+}
+
+script ow_Intro_PokemonCenter_EventScript_ConfirmFloran {
+    msgbox(format("Head out to Floran?"), MSGBOX_YESNO)
+    if (var(VAR_RESULT) == NO) {
+        closemessage
+        goto(ow_Intro_PokemonCenter_EventScript_DestinationSelect)
+    }
+    setspeaker("Steven")
+    msgbox(format("Good luck out there, {PLAYER}!"))
+    setspeaker(NULL)
+    closemessage
+    playse(SE_DOOR)
+    fadescreen(FADE_TO_BLACK)
+    warp(MAP_OW_FLORAN, 0)
+    waitstate
+    releaseall
+    end
+}
+
+script ow_Intro_PokemonCenter_EventScript_CancelExit {
+    applymovement(LOCALID_PLAYER, ow_Intro_PokemonCenter_Movement_PlayerStepBack)
+    waitmovement(0)
+    releaseall
+    end
+}
+
+movement ow_Intro_PokemonCenter_Movement_PlayerStepBack {
+    walk_up
+}
+
+script ow_Intro_PokemonCenter_EventScript_NuzlockeNPC {
+    lock
+    faceplayer
+    setspeaker("Challenge Runner")
+    goto_if_set(FLAG_NUZLOCKE, ow_Intro_PokemonCenter_EventScript_NuzlockeNPCActive)
+    msgbox(format("Looking for a tougher run? I can set you up with Nuzlocke mode."))
+    goto(ow_Intro_PokemonCenter_EventScript_NuzlockeMenu)
+}
+
+script ow_Intro_PokemonCenter_EventScript_NuzlockeNPCActive {
+    msgbox(format("Nuzlocke mode is currently enabled. Good luck!"))
+    goto(ow_Intro_PokemonCenter_EventScript_NuzlockeMenu)
+}
+
+script ow_Intro_PokemonCenter_EventScript_NuzlockeMenu {
+    call_if_set(FLAG_NUZLOCKE, ow_Intro_PokemonCenter_EventScript_NuzlockePushDisable)
+    call_if_unset(FLAG_NUZLOCKE, ow_Intro_PokemonCenter_EventScript_NuzlockePushEnable)
+    dynmultipush("What is Nuzlocke?", 1)
+    dynmultipush("Cancel", 2)
+    dynmultistack(0, 0, FALSE, 3, FALSE, 0, DYN_MULTICHOICE_CB_NONE)
+    switch (var(VAR_RESULT)) {
+        case 0: goto(ow_Intro_PokemonCenter_EventScript_NuzlockeToggle)
+        case 1: goto(ow_Intro_PokemonCenter_EventScript_NuzlockeInfo)
+        case 2: goto(ow_Intro_PokemonCenter_EventScript_NuzlockeCancel)
+        case MULTI_B_PRESSED: goto(ow_Intro_PokemonCenter_EventScript_NuzlockeCancel)
+    }
+    end
+}
+
+script ow_Intro_PokemonCenter_EventScript_NuzlockePushEnable {
+    dynmultipush("Turn {COLOR GREEN}{SHADOW LIGHT_GREEN}ON{COLOR DARK_GRAY}{SHADOW LIGHT_GRAY} Nuzlocke", 0)
+    return
+}
+
+script ow_Intro_PokemonCenter_EventScript_NuzlockePushDisable {
+    dynmultipush("Turn {COLOR RED}{SHADOW LIGHT_RED}OFF{COLOR DARK_GRAY}{SHADOW LIGHT_GRAY} Nuzlocke", 0)
+    return
+}
+
+script ow_Intro_PokemonCenter_EventScript_NuzlockeToggle {
+    goto_if_set(FLAG_NUZLOCKE, ow_Intro_PokemonCenter_EventScript_NuzlockeDisable)
+    setflag(FLAG_NUZLOCKE)
+    playse(SE_PC_ON)
+    msgbox(format("Nuzlocke mode is now ON. Good luck out there!"))
+    setspeaker(NULL)
+    release
+    end
+}
+
+script ow_Intro_PokemonCenter_EventScript_NuzlockeDisable {
+    clearflag(FLAG_NUZLOCKE)
+    playse(SE_PC_OFF)
+    msgbox(format("Nuzlocke mode is now OFF. Standard rules apply."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+script ow_Intro_PokemonCenter_EventScript_NuzlockeInfo {
+    msgbox(format("Nuzlocke mode tightens the rules of your run."))
+    msgbox(format("First Encounter: in each location, only the very first wild Pokémon you meet can be caught. Miss it and the route is locked."))
+    msgbox(format("Duplicate Clause: if you already own a species, that encounter is skipped so you can keep searching."))
+    msgbox(format("Shiny Clause: shinies are always fair game, no matter what."))
+    msgbox(format("Permadeath: any Pokémon that faints is gone for good - unusable for the rest of the run."))
+    msgbox(format("If your whole party faints, you'll get a chance to disable Nuzlocke mode and carry on."))
+    goto(ow_Intro_PokemonCenter_EventScript_NuzlockeMenu)
+}
+
+script ow_Intro_PokemonCenter_EventScript_NuzlockeCancel {
+    msgbox(format("No worries. Come back if you change your mind."))
+    setspeaker(NULL)
+    release
+    end
+}

@@ -9613,6 +9613,16 @@
       "secondary_tileset": "gTileset_GenericBuilding",
       "border_filepath": "data/layouts/ow_r12_House1/border.bin",
       "blockdata_filepath": "data/layouts/ow_r12_House1/map.bin"
+    },
+    {
+      "id": "LAYOUT_OW_INTRO_POKEMON_CENTER",
+      "name": "ow_Intro_PokemonCenter_Layout",
+      "width": 24,
+      "height": 20,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_PokemonCenter",
+      "border_filepath": "data/layouts/ow_Intro_PokemonCenter/border.bin",
+      "blockdata_filepath": "data/layouts/ow_Intro_PokemonCenter/map.bin"
     }
   ]
 }

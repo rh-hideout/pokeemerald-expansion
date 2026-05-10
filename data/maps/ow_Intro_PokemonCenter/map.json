@@ -1,0 +1,97 @@
+{
+  "id": "MAP_OW_INTRO_POKEMON_CENTER",
+  "name": "ow_Intro_PokemonCenter",
+  "layout": "LAYOUT_OW_INTRO_POKEMON_CENTER",
+  "music": "MUS_DUMMY",
+  "region_map_section": "MAPSEC_ABANDONED_SHIP",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_NONE",
+  "allow_cycling": false,
+  "allow_escaping": false,
+  "allow_running": false,
+  "show_map_name": true,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": null,
+  "object_events": [
+    {
+      "local_id": "LOCALID_INTRO_PC_NURSE",
+      "graphics_id": "OBJ_EVENT_GFX_NURSE",
+      "x": 12,
+      "y": 5,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "ow_Intro_PokemonCenter_EventScript_Nurse",
+      "flag": "0"
+    },
+    {
+      "local_id": "LOCALID_INTRO_PC_LEAGUE_REP",
+      "graphics_id": "OBJ_EVENT_GFX_STEVEN",
+      "x": 8,
+      "y": 7,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "ow_Intro_PokemonCenter_EventScript_LeagueRep",
+      "flag": "0"
+    },
+    {
+      "local_id": "LOCALID_INTRO_PC_NUZLOCKE_NPC",
+      "graphics_id": "OBJ_EVENT_GFX_MAN_1",
+      "x": 8,
+      "y": 8,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "ow_Intro_PokemonCenter_EventScript_NuzlockeNPC",
+      "flag": "0"
+    }
+  ],
+  "warp_events": [
+    {
+      "x": 11,
+      "y": 11,
+      "elevation": 0,
+      "dest_map": "MAP_OW_KOLCHAVI",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 12,
+      "y": 11,
+      "elevation": 0,
+      "dest_map": "MAP_OW_KOLCHAVI",
+      "dest_warp_id": "0"
+    }
+  ],
+  "coord_events": [
+    {
+      "type": "trigger",
+      "x": 11,
+      "y": 11,
+      "elevation": 0,
+      "var": "VAR_TEMP_0",
+      "var_value": "0",
+      "script": "ow_Intro_PokemonCenter_EventScript_BlockExit"
+    },
+    {
+      "type": "trigger",
+      "x": 12,
+      "y": 11,
+      "elevation": 0,
+      "var": "VAR_TEMP_0",
+      "var_value": "0",
+      "script": "ow_Intro_PokemonCenter_EventScript_BlockExit"
+    }
+  ],
+  "bg_events": []
+}

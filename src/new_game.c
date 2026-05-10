@@ -114,7 +114,7 @@ static void SetDefaultOptions(void)
     VarSet(VAR_BATTLE_SPEED, gSaveBlock2Ptr->optionsBattleSpeed);  // Initialize runtime variable
 #endif
 #if OPT_AUTORUN == TRUE
-    gSaveBlock2Ptr->optionsAutoRun = FALSE;  // Default to OFF (classic behavior)
+    gSaveBlock2Ptr->optionsAutoRun = TRUE;
 #endif
 }
 
@@ -149,7 +149,7 @@ static void WarpToTruck(void)
     if (IS_FRLG)
         SetWarpDestination(MAP_GROUP(MAP_PALLET_TOWN_PLAYERS_HOUSE_2F), MAP_NUM(MAP_PALLET_TOWN_PLAYERS_HOUSE_2F), WARP_ID_NONE, 6, 6);
     else
-        SetWarpDestination(MAP_GROUP(MAP_INSIDE_OF_TRUCK), MAP_NUM(MAP_INSIDE_OF_TRUCK), WARP_ID_NONE, -1, -1);
+        SetWarpDestination(MAP_GROUP(MAP_OW_INTRO_POKEMON_CENTER), MAP_NUM(MAP_OW_INTRO_POKEMON_CENTER), WARP_ID_NONE, 12, 9);
     WarpIntoMap();
 }
 
