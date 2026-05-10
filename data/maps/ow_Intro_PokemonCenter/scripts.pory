@@ -284,3 +284,77 @@ script ow_Intro_PokemonCenter_EventScript_NuzlockeCancel {
     release
     end
 }
+
+script ow_Intro_PokemonCenter_EventScript_PerfectIVsNPC {
+    lock
+    faceplayer
+    setspeaker("Breeder")
+    goto_if_set(FLAG_PERFECT_IVS_MODE, ow_Intro_PokemonCenter_EventScript_PerfectIVsNPCActive)
+    msgbox(format("Want a smoother ride? I can guarantee every Pokémon you find or receive comes with perfect stats."))
+    goto(ow_Intro_PokemonCenter_EventScript_PerfectIVsMenu)
+}
+
+script ow_Intro_PokemonCenter_EventScript_PerfectIVsNPCActive {
+    msgbox(format("Perfect IVs mode is currently enabled. Every Pokémon will roll a flawless 6x31."))
+    goto(ow_Intro_PokemonCenter_EventScript_PerfectIVsMenu)
+}
+
+script ow_Intro_PokemonCenter_EventScript_PerfectIVsMenu {
+    call_if_set(FLAG_PERFECT_IVS_MODE, ow_Intro_PokemonCenter_EventScript_PerfectIVsPushDisable)
+    call_if_unset(FLAG_PERFECT_IVS_MODE, ow_Intro_PokemonCenter_EventScript_PerfectIVsPushEnable)
+    dynmultipush("What is Perfect IVs?", 1)
+    dynmultipush("Cancel", 2)
+    dynmultistack(0, 0, FALSE, 3, FALSE, 0, DYN_MULTICHOICE_CB_NONE)
+    switch (var(VAR_RESULT)) {
+        case 0: goto(ow_Intro_PokemonCenter_EventScript_PerfectIVsToggle)
+        case 1: goto(ow_Intro_PokemonCenter_EventScript_PerfectIVsInfo)
+        case 2: goto(ow_Intro_PokemonCenter_EventScript_PerfectIVsCancel)
+        case MULTI_B_PRESSED: goto(ow_Intro_PokemonCenter_EventScript_PerfectIVsCancel)
+    }
+    end
+}
+
+script ow_Intro_PokemonCenter_EventScript_PerfectIVsPushEnable {
+    dynmultipush("Turn {COLOR GREEN}{SHADOW LIGHT_GREEN}ON{COLOR DARK_GRAY}{SHADOW LIGHT_GRAY} Perfect IVs", 0)
+    return
+}
+
+script ow_Intro_PokemonCenter_EventScript_PerfectIVsPushDisable {
+    dynmultipush("Turn {COLOR RED}{SHADOW LIGHT_RED}OFF{COLOR DARK_GRAY}{SHADOW LIGHT_GRAY} Perfect IVs", 0)
+    return
+}
+
+script ow_Intro_PokemonCenter_EventScript_PerfectIVsToggle {
+    goto_if_set(FLAG_PERFECT_IVS_MODE, ow_Intro_PokemonCenter_EventScript_PerfectIVsDisable)
+    setflag(FLAG_PERFECT_IVS_MODE)
+    special(MaxPartyIVs)
+    playse(SE_PC_ON)
+    msgbox(format("Perfect IVs mode is now ON. Every Pokémon in your party - and every one you find or receive from now on - will have flawless stats."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+script ow_Intro_PokemonCenter_EventScript_PerfectIVsDisable {
+    clearflag(FLAG_PERFECT_IVS_MODE)
+    playse(SE_PC_OFF)
+    msgbox(format("Perfect IVs mode is now OFF. Pokémon will roll their stats normally."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+script ow_Intro_PokemonCenter_EventScript_PerfectIVsInfo {
+    msgbox(format("Every Pokémon has six hidden stats called IVs, ranging from 0 to 31."))
+    msgbox(format("They influence each Pokémon's HP, Attack, Defense, Speed, and both Special stats."))
+    msgbox(format("With Perfect IVs mode on, every wild Pokémon and every Pokémon you receive comes pre-maxed at 31 across the board."))
+    msgbox(format("It won't affect Pokémon you've already caught - only ones you encounter from now on."))
+    goto(ow_Intro_PokemonCenter_EventScript_PerfectIVsMenu)
+}
+
+script ow_Intro_PokemonCenter_EventScript_PerfectIVsCancel {
+    msgbox(format("Suit yourself. The luck of the roll has its own charm."))
+    setspeaker(NULL)
+    release
+    end
+}

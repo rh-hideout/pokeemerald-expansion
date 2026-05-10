@@ -1331,6 +1331,14 @@ void SetBoxMonIVs(struct BoxPokemon *mon, u8 fixedIV)
         return;
     }
 
+    if (FlagGet(FLAG_PERFECT_IVS_MODE))
+    {
+        u32 maxIv = MAX_PER_STAT_IVS;
+        for (i = 0; i < NUM_STATS; i++)
+            SetBoxMonData(mon, MON_DATA_HP_IV + i, &maxIv);
+        return;
+    }
+
     u32 iv;
     u32 ivRandom = Random32();
     u32 species = GetBoxMonData(mon, MON_DATA_SPECIES);

@@ -4585,6 +4585,21 @@ void GetCodeFeedback(void)
         gSpecialVar_Result = 0;
 }
 
+void MaxPartyIVs(void)
+{
+    u32 i, stat;
+    u32 maxIv = MAX_PER_STAT_IVS;
+    u32 partyCount = CalculatePlayerPartyCount();
+    for (i = 0; i < partyCount; i++)
+    {
+        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) == SPECIES_NONE)
+            continue;
+        for (stat = 0; stat < NUM_STATS; stat++)
+            SetMonData(&gPlayerParty[i], MON_DATA_HP_IV + stat, &maxIv);
+        CalculateMonStats(&gPlayerParty[i]);
+    }
+}
+
 void SetHiddenNature(void)
 {
     u32 hiddenNature = gSpecialVar_Result;
