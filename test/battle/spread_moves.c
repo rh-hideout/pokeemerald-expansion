@@ -238,7 +238,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: AOE move vs Eiscue and Mimikyu (Based on vanil
         NONE_OF {
             HP_BAR(playerRight);
             HP_BAR(opponentRight);
-        }        
+        }
     } THEN {
         EXPECT_EQ(disguiseDamage, opponentLeft->maxHP / 8);
         EXPECT_EQ(opponentLeft->species, SPECIES_MIMIKYU_BUSTED);
@@ -519,5 +519,24 @@ DOUBLE_BATTLE_TEST("Spread Moves: Earthquake fails in order of ally, left foe, r
         ABILITY_POPUP(opponentLeft, ABILITY_LEVITATE);
         ABILITY_POPUP(opponentRight, ABILITY_LEVITATE);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerLeft);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Spread Moves: Earthquake fails due to accuracy in order of ally, left foe, right foe")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveCategory(MOVE_EARTHQUAKE) == DAMAGE_CATEGORY_PHYSICAL);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(SPECIES_WYNAUT) { Speed(1); Item(ITEM_BRIGHTPOWDER); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); Item(ITEM_BRIGHTPOWDER); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(3); Item(ITEM_BRIGHTPOWDER); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_EARTHQUAKE, hit: FALSE); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerLeft);
+        MESSAGE("Wynaut avoided the attack!");
+        MESSAGE("The opposing Wobbuffet avoided the attack!");
+        MESSAGE("The opposing Wynaut avoided the attack!");
     }
 }

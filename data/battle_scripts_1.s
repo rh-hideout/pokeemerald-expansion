@@ -608,10 +608,6 @@ BattleScript_FlingBlockedByShieldDust::
 	removeitem BS_ATTACKER
 	return
 
-BattleScript_FlingMissed::
-	removeitem BS_ATTACKER
-	goto BattleScript_MoveMissedPauseRet
-
 BattleScript_RemoveItem::
 	removeitem BS_ATTACKER
 	return
@@ -1454,7 +1450,6 @@ BattleScript_MoveEnd::
 	end
 
 BattleScript_EffectHit_RetFromAccCheck::
-	accuracycheck
 	copybyte gEffectBattler, gBattlerAttacker
 	setpreattackadditionaleffect
 	damagecalc
@@ -1482,13 +1477,6 @@ BattleScript_MoveMissed::
 	resultmessage
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
-
-BattleScript_MoveMissedPauseRet::
-	pause B_WAIT_TIME_SHORT
-	effectivenesssound
-	resultmessage
-	waitmessage B_WAIT_TIME_LONG
-	return
 
 BattleScript_TerrainPrevents::
 	pause B_WAIT_TIME_SHORT
@@ -3611,7 +3599,6 @@ BattleScript_MonTookFutureAttack::
 	waitmessage B_WAIT_TIME_LONG
 	futuresighttargetfailure BattleScript_DoFutureAttackResult
 	jumpifmovehadnoeffect BattleScript_FutureAttackEnd
-	accuracycheck
 	damagecalc
 	jumpifmovehadnoeffect BattleScript_DoFutureAttackResult
 	jumpifbyte CMP_NOT_EQUAL, cMULTISTRING_CHOOSER, B_MSG_FUTURE_SIGHT, BattleScript_FutureHitAnimDoomDesire
@@ -4829,7 +4816,7 @@ BattleScript_TookAttack::
 BattleScript_SturdyPreventsOHKO::
 	pause B_WAIT_TIME_SHORT
 	call BattleScript_AbilityPopUp
-	printstring STRINGID_ITDOESNTAFFECT
+	printstring STRINGID_ITDOESNTAFFECTSCR
 	pause B_WAIT_TIME_LONG
 	return
 
@@ -6142,7 +6129,6 @@ BattleScript_DynamaxEnds_Ret::
 	return
 
 BattleScript_MoveBlockedByDynamax::
-	accuracycheck
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_MOVEBLOCKEDBYDYNAMAX
 	waitmessage B_WAIT_TIME_LONG

@@ -6027,7 +6027,7 @@ static void Cmd_statusanimation(void)
     }
 }
 
-#define DONE_TARGET_FAILURE (gBattleStruct->eventState.atkCanceler == CANCELER_TARGET_FAILURE + 1)
+#define DONE_TARGET_FAILURE (gBattleStruct->eventState.atkCanceler == CANCELER_END)
 static void Cmd_futuresighttargetfailure(void)
 {
     CMD_ARGS(const u8 *failInstr);
@@ -12185,14 +12185,14 @@ void BS_RemoveTerrain(void)
 
 void BS_SetMoveResultFlags(void)
 {
-    NATIVE_ARGS(u16 value);
+    NATIVE_ARGS(u32 value);
     gBattleStruct->moveResultFlags[gBattlerTarget] = cmd->value;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 void BS_ClearMoveResultFlags(void)
 {
-    NATIVE_ARGS(u16 value);
+    NATIVE_ARGS(u32 value);
     gBattleStruct->moveResultFlags[gBattlerTarget] &= ~(cmd->value);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
@@ -12206,7 +12206,7 @@ void BS_ClearSpecialStatuses(void)
 
 void BS_JumpIfMoveResultFlags(void)
 {
-    NATIVE_ARGS(u16 value, const u8 *jumpInstr);
+    NATIVE_ARGS(u32 value, const u8 *jumpInstr);
 
     if (gBattleStruct->moveResultFlags[gBattlerTarget] & cmd->value)
         gBattlescriptCurrInstr = cmd->jumpInstr;

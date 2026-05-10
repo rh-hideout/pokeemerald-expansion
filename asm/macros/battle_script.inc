@@ -1506,7 +1506,7 @@
 
 	.macro setmoveresultflags flags:req
 	callnative BS_SetMoveResultFlags
-	.2byte \flags
+	.4byte \flags
 	.endm
 
 	.macro clearspecialstatuses
@@ -1515,12 +1515,12 @@
 
 	.macro clearmoveresultflags flags:req
 	callnative BS_ClearMoveResultFlags
-	.2byte \flags
+	.4byte \flags
 	.endm
 
 	.macro jumpifmoveresultflags flags:req failInstr:req
 	callnative BS_JumpIfMoveResultFlags
-	.2byte \flags
+	.4byte \flags
 	.4byte \failInstr
 	.endm
 
