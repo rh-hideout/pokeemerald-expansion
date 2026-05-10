@@ -2215,7 +2215,7 @@ static enum CancelerResult CancelerAccuracyCheck(struct BattleCalcValues *cv)
                 gLastHitByType[cv->battlerDef] = 0;
             }
 
-            if (smartTargetState == MISSED_FIRST_TARGET) // Silent failure on first target. Old expansion behavior. Is this correct?
+            if (smartTargetState == MISSED_FIRST_TARGET) // Silent failure on first target.
             {
                 smartTargetState = TRY_SECOND_TARGET;
                 continue;

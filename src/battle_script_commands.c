@@ -1055,12 +1055,13 @@ static bool32 ShouldSkipFRLGAccuracyCheck(void)
     return FALSE;
 }
 
-// Only used for non damage moves
+
 static void Cmd_accuracycheck(void)
 {
     CMD_ARGS();
 
-    if (ShouldSkipFRLGAccuracyCheck()
+    if ((GetMovePower(gCurrentMove) > 0) // Only used for non damage moves (damaging moves are handled in move resolution)
+     || ShouldSkipFRLGAccuracyCheck()
      || IsMaxMove(gCurrentMove)
      || IsZMove(gCurrentMove))
     {
