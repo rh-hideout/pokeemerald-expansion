@@ -1,6 +1,10 @@
 EventScript_PC::
 	lockall
+#if IS_HNS
+	setvar VAR_0x8004, PC_LOCATION_HNS
+#else
 	setvar VAR_0x8004, PC_LOCATION_OTHER
+#endif
 	special DoPCTurnOnEffect
 	playse SE_PC_ON
 	msgbox Text_BootUpPC, MSGBOX_DEFAULT
@@ -55,7 +59,11 @@ EventScript_AccessLanettesPC::
 	return
 
 EventScript_TurnOffPC::
+#if IS_HNS
+	setvar VAR_0x8004, PC_LOCATION_HNS
+#else
 	setvar VAR_0x8004, PC_LOCATION_OTHER
+#endif
 	playse SE_PC_OFF
 	special DoPCTurnOffEffect
 	releaseall

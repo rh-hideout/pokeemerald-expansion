@@ -18,8 +18,8 @@ PokemonLeague_HallOfFame_EventScript_Cutscene::
 	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterUp
 	waitmovement 0
 	delay 20
-	dofieldeffect FLDEFF_HALL_OF_FAME_RECORD
-	waitfieldeffect FLDEFF_HALL_OF_FAME_RECORD
+	dofieldeffect FLDEFF_HALL_OF_FAME_RECORD_FRLG
+	waitfieldeffect FLDEFF_HALL_OF_FAME_RECORD_FRLG
 	delay 40
 	setvar VAR_TEMP_1, 1
 	call PokemonLeague_HallOfFame_EventScript_SetFirstGameClearFlags
@@ -40,8 +40,8 @@ PokemonLeague_HallOfFame_EventScript_CutsceneKantoChamp::
 	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterUp
 	waitmovement 0
 	delay 20
-	dofieldeffect FLDEFF_HALL_OF_FAME_RECORD
-	waitfieldeffect FLDEFF_HALL_OF_FAME_RECORD
+	dofieldeffect FLDEFF_HALL_OF_FAME_RECORD_FRLG
+	waitfieldeffect FLDEFF_HALL_OF_FAME_RECORD_FRLG
 	delay 40
 	setvar VAR_TEMP_1, 1
 	call PokemonLeague_HallOfFame_EventScript_SetGameClearFlags

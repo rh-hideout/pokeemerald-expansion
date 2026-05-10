@@ -878,13 +878,13 @@ static void SetTVMetatilesOnMap(int width, int height, u16 metatileId)
 
 void TurnOffTVScreen(void)
 {
-    SetTVMetatilesOnMap(gBackupMapLayout.width, gBackupMapLayout.height, METATILE_Building_TV_Off);
+    SetTVMetatilesOnMap(gBackupMapLayout.width, gBackupMapLayout.height, IS_HNS ? METATILE_JohtoBuildingHns_TV_Off : METATILE_Building_TV_Off);
     DrawWholeMapView();
 }
 
 void TurnOnTVScreen(void)
 {
-    SetTVMetatilesOnMap(gBackupMapLayout.width, gBackupMapLayout.height, METATILE_Building_TV_On);
+    SetTVMetatilesOnMap(gBackupMapLayout.width, gBackupMapLayout.height, IS_HNS ? METATILE_JohtoBuildingHns_TV_On : METATILE_Building_TV_On);
     DrawWholeMapView();
 }
 

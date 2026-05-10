@@ -117,6 +117,16 @@
 #define METATILE_Building_TV_Off  0x002
 #define METATILE_Building_TV_On   0x003
 
+// gTileset_Johto_Building_Hns
+#define METATILE_JohtoBuildingHns_PC_Off  0x062
+#define METATILE_JohtoBuildingHns_PC_On   0x063
+#define METATILE_JohtoBuildingHns_TV_Off  0x035
+#define METATILE_JohtoBuildingHns_TV_On   0x061
+
+// gTileset_PlayersHouse_Hns
+#define METATILE_PlayersHouseHns_PC_Off   0x288
+#define METATILE_PlayersHouseHns_PC_On    0x28A
+
 // gTileset_BuildingFrlg
 #define METATILE_BuildingFrlg_PCOff  0x062
 #define METATILE_BuildingFrlg_PCOn   0x063

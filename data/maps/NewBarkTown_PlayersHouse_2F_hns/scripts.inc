@@ -49,6 +49,24 @@ NewBarkTown_PlayersHouse_2F_EventScript_NES::
 	msgbox NewBarkTown_PlayersHouse_2F_Text_NES, MSGBOX_SIGN
 	end
 
+NewBarkTown_PlayersHouse_2F_EventScript_PC::
+	lockall
+	setvar VAR_0x8004, PC_LOCATION_PLAYER_HOUSE_HNS
+	special DoPCTurnOnEffect
+	playse SE_PC_ON
+	msgbox gText_PlayerHouseBootPC, MSGBOX_DEFAULT
+	special BedroomPC
+	waitstate
+	releaseall
+	end
+
+NewBarkTown_PlayersHouse_2F_EventScript_TurnOffPlayerPC::
+	setvar VAR_0x8004, PC_LOCATION_PLAYER_HOUSE_HNS
+	playse SE_PC_OFF
+	special DoPCTurnOffEffect
+	releaseall
+	end
+
 NewBarkTown_PlayersHouse_2F_Text_NES:
     .string "{PLAYER} played with the NES.\p"
     .string "…Okay!\n"

@@ -813,7 +813,7 @@
 #define FLAG_DEOXYS_FLEW_AWAY                               (HNS_UNUSED_START + 7)
 #define FLAG_FOUGHT_DEOXYS                               (HNS_UNUSED_START + 8)
 
-#define FLAG_UNUSED_9                               (HNS_UNUSED_START + 9)
+#define FLAG_POKERUS_EXPLAINED                               (HNS_UNUSED_START + 9)
 #define FLAG_UNUSED_10                              (HNS_UNUSED_START + 10)
 #define FLAG_UNUSED_11                              (HNS_UNUSED_START + 11)
 #define FLAG_UNUSED_12                              (HNS_UNUSED_START + 12)
@@ -1151,7 +1151,6 @@
 #define FLAG_CONTEST_SKETCH_CREATED                 0
 #define FLAG_EVIL_TEAM_ESCAPED_STERN_SPOKE          0
 #define FLAG_RECEIVED_EXP_SHARE                     0
-#define FLAG_POKERUS_EXPLAINED                      0
 #define FLAG_RECEIVED_QUICK_CLAW                    0
 #define FLAG_RECEIVED_KINGS_ROCK                    0
 #define FLAG_RECEIVED_MACHO_BRACE                   0
