@@ -17,6 +17,7 @@
 #include "list_menu.h"
 #include "naming_screen.h"
 #include "oak_speech_hns.h"
+#include "challenge_menu.h"
 #include "overworld.h"
 #include "palette.h"
 #include "pokeball.h"
@@ -84,6 +85,9 @@ static void Task_NewGameHnsSpeech_WaitForWhatsYourNameToPrint(u8);
 static void Task_NewGameHnsSpeech_WaitPressBeforeNameChoice(u8);
 static void Task_NewGameHnsSpeech_StartNamingScreen(u8);
 static void CB2_NewGameHnsSpeech_ReturnFromNamingScreen(void);
+static void CB2_NewGameHnsSpeech_ReturnFromChallengeMenu(void);
+static void Task_NewGameHnsSpeech_FadeOutToChallengeMenu(u8);
+static void Task_NewGameHnsSpeech_ReturnFromChallengeMenuShowTextbox(u8);
 static void Task_NewGameHnsSpeech_ReturnFromNamingScreenShowTextbox(u8);
 static void Task_NewGameHnsSpeech_SoItsPlayerName(u8);
 static void Task_NewGameHnsSpeech_CreateNameYesNo(u8);
@@ -584,10 +588,21 @@ static void Task_NewGameHnsSpeech_WaitPressBeforeChallengeMenu(u8 taskId)
         gTasks[taskId].func = Task_NewGameHnsSpeech_ChallengeMenu;
 }
 
-// TODO: implement challenge/randomizer menu
 static void Task_NewGameHnsSpeech_ChallengeMenu(u8 taskId)
 {
-    gTasks[taskId].func = Task_NewGameHnsSpeech_WhatsYourName;
+    BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+    gTasks[taskId].func = Task_NewGameHnsSpeech_FadeOutToChallengeMenu;
+}
+
+static void Task_NewGameHnsSpeech_FadeOutToChallengeMenu(u8 taskId)
+{
+    if (!gPaletteFade.active)
+    {
+        FreeAllWindowBuffers();
+        DestroyTask(taskId);
+        gMain.savedCallback = CB2_NewGameHnsSpeech_ReturnFromChallengeMenu;
+        SetMainCallback2(CB2_InitChallengeMenu);
+    }
 }
 
 static void Task_NewGameHnsSpeech_WhatsYourName(u8 taskId)
@@ -892,6 +907,91 @@ static void CB2_NewGameHnsSpeech_ReturnFromNamingScreen(void)
     LoadMessageBoxGfx(0, HNS_DLG_BASE_TILE_NUM, BG_PLTT_ID(15));
     PutWindowTilemap(0);
     CopyWindowToVram(0, COPYWIN_FULL);
+}
+
+static void CB2_NewGameHnsSpeech_ReturnFromChallengeMenu(void)
+{
+    u8 taskId;
+    u8 spriteId;
+    u16 savedIme;
+
+    ResetBgsAndClearDma3BusyFlags(0);
+    SetGpuReg(REG_OFFSET_DISPCNT, 0);
+    SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_ON | DISPCNT_OBJ_1D_MAP);
+    InitBgsFromTemplates(0, sMainMenuBgTemplates, ARRAY_COUNT(sMainMenuBgTemplates));
+    InitBgFromTemplate(&sHnsBgTemplate);
+    SetVBlankCallback(NULL);
+    SetGpuReg(REG_OFFSET_BG2CNT, 0);
+    SetGpuReg(REG_OFFSET_BG1CNT, 0);
+    SetGpuReg(REG_OFFSET_BG0CNT, 0);
+    SetGpuReg(REG_OFFSET_BG2HOFS, 0);
+    SetGpuReg(REG_OFFSET_BG2VOFS, 0);
+    SetGpuReg(REG_OFFSET_BG1HOFS, 0);
+    SetGpuReg(REG_OFFSET_BG1VOFS, 0);
+    SetGpuReg(REG_OFFSET_BG0HOFS, 0);
+    SetGpuReg(REG_OFFSET_BG0VOFS, 0);
+    DmaFill16(3, 0, VRAM, VRAM_SIZE);
+    DmaFill32(3, 0, OAM, OAM_SIZE);
+    DmaFill16(3, 0, PLTT, PLTT_SIZE);
+    ResetPaletteFade();
+    DecompressDataWithHeaderVram(sHnsSpeechShadowGfx, (u8 *)VRAM);
+    DecompressDataWithHeaderVram(sHnsSpeechBgMap, (u8 *)(BG_SCREEN_ADDR(7)));
+    LoadPalette(sHnsSpeechBgPals, BG_PLTT_ID(0), 2 * PLTT_SIZE_4BPP);
+    LoadPalette(&sHnsSpeechBgGradientPal[1], BG_PLTT_ID(0) + 1, PLTT_SIZEOF(8));
+    ResetTasks();
+    taskId = CreateTask(Task_NewGameHnsSpeech_ReturnFromChallengeMenuShowTextbox, 0);
+    gTasks[taskId].tTimer = 5;
+    gTasks[taskId].tBG1HOFS = -60;
+    ScanlineEffect_Stop();
+    ResetSpriteData();
+    FreeAllSpritePalettes();
+    ResetAllPicSprites();
+    AddHnsSpeechObjects(taskId);
+    if (gSaveBlock2Ptr->playerGender != MALE)
+    {
+        gTasks[taskId].tPlayerGender = FEMALE;
+        spriteId = gTasks[taskId].tKrisSpriteId;
+    }
+    else
+    {
+        gTasks[taskId].tPlayerGender = MALE;
+        spriteId = gTasks[taskId].tGoldSpriteId;
+    }
+    gSprites[spriteId].x = 180;
+    gSprites[spriteId].y = 60;
+    gSprites[spriteId].invisible = FALSE;
+    gTasks[taskId].tPlayerSpriteId = spriteId;
+    SetGpuReg(REG_OFFSET_BG1HOFS, -60);
+    BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
+    SetGpuReg(REG_OFFSET_WIN0H, 0);
+    SetGpuReg(REG_OFFSET_WIN0V, 0);
+    SetGpuReg(REG_OFFSET_WININ, 0);
+    SetGpuReg(REG_OFFSET_WINOUT, 0);
+    SetGpuReg(REG_OFFSET_BLDCNT, 0);
+    SetGpuReg(REG_OFFSET_BLDALPHA, 0);
+    SetGpuReg(REG_OFFSET_BLDY, 0);
+    ShowBg(0);
+    ShowBg(1);
+    savedIme = REG_IME;
+    REG_IME = 0;
+    REG_IE |= 1;
+    REG_IME = savedIme;
+    SetVBlankCallback(VBlankCB_HnsMenu);
+    SetMainCallback2(CB2_HnsMenu);
+    InitWindows(sNewGameHnsSpeechTextWindows);
+    LoadMainMenuWindowFrameTiles(0, 0xF3);
+    LoadMessageBoxGfx(0, HNS_DLG_BASE_TILE_NUM, BG_PLTT_ID(15));
+    PutWindowTilemap(0);
+    CopyWindowToVram(0, COPYWIN_FULL);
+}
+
+static void Task_NewGameHnsSpeech_ReturnFromChallengeMenuShowTextbox(u8 taskId)
+{
+    if (gTasks[taskId].tTimer-- <= 0)
+    {
+        DrawDialogFrameWithCustomTile(0, TRUE, HNS_DLG_BASE_TILE_NUM);
+        gTasks[taskId].func = Task_NewGameHnsSpeech_WhatsYourName;
+    }
 }
 
 static void SpriteCB_Null(struct Sprite *sprite)
