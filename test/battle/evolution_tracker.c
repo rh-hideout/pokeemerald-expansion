@@ -26,7 +26,7 @@ WILD_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing a Bisharp that holds Leader'
 DOUBLE_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing multiple Bisharps holding Leader's Crest increases tracker multiple times")
 {
     GIVEN {
-        ASSUME(GetMoveTarget(MOVE_LAVA_PLUME) == MOVE_TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveTarget(MOVE_LAVA_PLUME) == TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_BISHARP);
         PLAYER(SPECIES_BISHARP) { Item(ITEM_LEADERS_CREST); HP(1); }
         OPPONENT(SPECIES_BISHARP) { Item(ITEM_LEADERS_CREST); HP(1); }

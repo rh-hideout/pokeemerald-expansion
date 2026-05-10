@@ -48,4 +48,28 @@ SINGLE_BATTLE_TEST("Cud Chew will activate Oran Berry effect again on the next t
     }
 }
 
-TO_DO_BATTLE_TEST("Cud Chew will activate Lum Berry effect again on the next turn")
+SINGLE_BATTLE_TEST("Cud Chew will activate Lum Berry effect again on the next turn")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_LUM_BERRY].holdEffect == HOLD_EFFECT_CURE_STATUS);
+        ASSUME(GetMoveEffect(MOVE_THUNDER_WAVE) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_THUNDER_WAVE) == MOVE_EFFECT_PARALYSIS);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_TAUROS_PALDEA_COMBAT) { Ability(ABILITY_CUD_CHEW); Item(ITEM_LUM_BERRY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_THUNDER_WAVE); }
+        TURN { MOVE(player, MOVE_THUNDER_WAVE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER_WAVE, player);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, opponent);
+        STATUS_ICON(opponent, paralysis: TRUE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        STATUS_ICON(opponent, paralysis: FALSE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER_WAVE, player);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, opponent);
+        STATUS_ICON(opponent, paralysis: TRUE);
+        ABILITY_POPUP(opponent, ABILITY_CUD_CHEW);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        STATUS_ICON(opponent, paralysis: FALSE);
+    }
+}

@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(!IsBattleMoveStatus(MOVE_WATER_GUN));
+    ASSUME(GetMoveCategory(MOVE_WATER_GUN) != DAMAGE_CATEGORY_STATUS);
     ASSUME(GetMoveType(MOVE_WATER_GUN) == TYPE_WATER);
 }
 
@@ -32,9 +32,9 @@ SINGLE_BATTLE_TEST("Desolate Land blocks damaging Water-type moves")
 DOUBLE_BATTLE_TEST("Desolate Land blocks damaging Water-type moves and prints the message only once with moves hitting multiple targets")
 {
     GIVEN {
-        ASSUME(!IsBattleMoveStatus(MOVE_SURF));
+        ASSUME(GetMoveCategory(MOVE_SURF) != DAMAGE_CATEGORY_STATUS);
         ASSUME(GetMoveType(MOVE_SURF) == TYPE_WATER);
-        ASSUME(GetMoveTarget(MOVE_SURF) == MOVE_TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); Speed(5); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
@@ -101,7 +101,7 @@ SINGLE_BATTLE_TEST("Desolate Land is removed immediately if user faints")
 
 SINGLE_BATTLE_TEST("Desolate Land blocks weather-setting moves")
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_SUNNY_DAY; }
     PARAMETRIZE { move = MOVE_RAIN_DANCE; }
     PARAMETRIZE { move = MOVE_SANDSTORM; }
@@ -109,11 +109,12 @@ SINGLE_BATTLE_TEST("Desolate Land blocks weather-setting moves")
     PARAMETRIZE { move = MOVE_SNOWSCAPE; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SUNNY_DAY) == EFFECT_SUNNY_DAY);
-        ASSUME(GetMoveEffect(MOVE_RAIN_DANCE) == EFFECT_RAIN_DANCE);
-        ASSUME(GetMoveEffect(MOVE_SANDSTORM) == EFFECT_SANDSTORM);
-        ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_HAIL);
-        ASSUME(GetMoveEffect(MOVE_SNOWSCAPE) == EFFECT_SNOWSCAPE);
+        ASSUME(GetMoveEffect(move) == EFFECT_WEATHER);
+        ASSUME(GetMoveWeatherType(MOVE_SUNNY_DAY) == BATTLE_WEATHER_SUN);
+        ASSUME(GetMoveWeatherType(MOVE_RAIN_DANCE) == BATTLE_WEATHER_RAIN);
+        ASSUME(GetMoveWeatherType(MOVE_SANDSTORM) == BATTLE_WEATHER_SANDSTORM);
+        ASSUME(GetMoveWeatherType(MOVE_HAIL) == BATTLE_WEATHER_HAIL);
+        ASSUME(GetMoveWeatherType(MOVE_SNOWSCAPE) == BATTLE_WEATHER_SNOW);
         PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

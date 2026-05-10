@@ -4,6 +4,8 @@
 #include "link_rfu.h"
 #include "constants/trade.h"
 
+#define TRADEMON_FROM_PC 1
+
 extern struct Mail gTradeMail[PARTY_SIZE];
 extern u8 gSelectedTradeMonPositions[2];
 

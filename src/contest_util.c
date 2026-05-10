@@ -214,10 +214,6 @@ static const struct SpriteTemplate sSpriteTemplate_ResultsTextWindow =
     .tileTag = TAG_TEXT_WINDOW_BASE,
     .paletteTag = TAG_TEXT_WINDOW_BASE,
     .oam = &sOamData_ResultsTextWindow,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteSheet sSpriteSheets_ResultsTextWindow[] =
@@ -260,9 +256,6 @@ static const struct SpriteTemplate sSpriteTemplate_Confetti =
     .tileTag = TAG_CONFETTI,
     .paletteTag = TAG_CONFETTI,
     .oam = &sOamData_Confetti,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Confetti
 };
 
@@ -385,10 +378,6 @@ static const struct SpriteTemplate sSpriteTemplate_WirelessIndicatorWindow =
     .tileTag = TAG_WIRELESS_INDICATOR_WINDOW,
     .paletteTag = 0,
     .oam = &sOamData_WirelessIndicatorWindow,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteSheet sSpriteSheet_WirelessIndicatorWindow =
@@ -1922,6 +1911,7 @@ static void AddContestTextPrinterFitWidth(int windowId, u8 *str, int x, int widt
 {
     struct TextPrinterTemplate textPrinter;
     textPrinter.currentChar = str;
+    textPrinter.type = WINDOW_TEXT_PRINTER;
     textPrinter.windowId = windowId;
     textPrinter.fontId = GetFontIdToFit(str, FONT_NARROW, 0, widthPx);
     textPrinter.x = x;
@@ -1930,10 +1920,10 @@ static void AddContestTextPrinterFitWidth(int windowId, u8 *str, int x, int widt
     textPrinter.currentY = 2;
     textPrinter.letterSpacing = 0;
     textPrinter.lineSpacing = 0;
-    textPrinter.unk = 0;
-    textPrinter.fgColor = 1;
-    textPrinter.bgColor = 0;
-    textPrinter.shadowColor = 8;
+    textPrinter.color.accent = TEXT_COLOR_TRANSPARENT;
+    textPrinter.color.foreground = 1;
+    textPrinter.color.background = TEXT_COLOR_TRANSPARENT;
+    textPrinter.color.shadow = 8;
     AddTextPrinter(&textPrinter, 0, NULL);
     PutWindowTilemap(windowId);
 }
@@ -1982,6 +1972,8 @@ u16 HasMonWonThisContestBefore(void)
     case CONTEST_CATEGORY_TOUGH:
         if (GetMonData(mon, MON_DATA_TOUGH_RIBBON) > gSpecialVar_ContestRank)
             hasRankRibbon = TRUE;
+        break;
+    default:
         break;
     }
 
@@ -2046,6 +2038,8 @@ void GiveMonContestRibbon(void)
             if (GetRibbonCount(&gPlayerParty[gContestMonPartyIndex]) > NUM_CUTIES_RIBBONS)
                 TryPutSpotTheCutiesOnAir(&gPlayerParty[gContestMonPartyIndex], MON_DATA_TOUGH_RIBBON);
         }
+        break;
+    default:
         break;
     }
 }
@@ -2477,7 +2471,7 @@ void SetLinkContestPlayerGfx(void)
     {
         for (i = 0; i < gNumLinkContestPlayers; i++)
         {
-            int version = (u8)gLinkPlayers[i].version;
+            enum GameVersion version = (u8)gLinkPlayers[i].version;
             if (version == VERSION_RUBY || version == VERSION_SAPPHIRE)
             {
                 if (gLinkPlayers[i].gender == MALE)
@@ -2498,7 +2492,7 @@ void LoadLinkContestPlayerPalettes(void)
 {
     int i;
     u8 objectEventId;
-    int version;
+    enum GameVersion version;
     struct Sprite *sprite;
     static const u8 sContestantLocalIds[CONTESTANT_COUNT] = {
         LOCALID_CONTESTANT_1,
@@ -2622,7 +2616,7 @@ static void Task_ShowContestEntryMonPic(u8 taskId)
     struct Task *task = &gTasks[taskId];
     struct Sprite *sprite;
 
-    switch(task->data[0])
+    switch (task->data[0])
     {
     case 0:
         task->data[0]++;
@@ -2638,7 +2632,7 @@ static void Task_ShowContestEntryMonPic(u8 taskId)
         sprite = &gSprites[task->data[2]];
         FreeSpritePaletteByTag(GetSpritePaletteTagByPaletteNum(sprite->oam.paletteNum));
 
-        if(sprite->oam.affineMode)
+        if (sprite->oam.affineMode)
             FreeOamMatrix(sprite->oam.matrixNum);
 
         DestroySprite(sprite);

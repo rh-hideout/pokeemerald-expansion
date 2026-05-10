@@ -251,7 +251,12 @@ void DecompressPicFromTable(const struct CompressedSpriteSheet *src, void *buffe
 
 void HandleLoadSpecialPokePic(bool32 isFrontPic, void *dest, s32 species, u32 personality)
 {
-    LoadSpecialPokePic(dest, species, personality, isFrontPic);
+    LoadSpecialPokePicIsEgg(dest, species, personality, isFrontPic, FALSE);
+}
+
+void HandleLoadSpecialPokePicIsEgg(bool32 isFrontPic, void *dest, s32 species, u32 personality, bool32 isEgg)
+{
+    LoadSpecialPokePicIsEgg(dest, species, personality, isFrontPic, isEgg);
 }
 
 //  Wrapper function for all decompression calls using formats with headers
@@ -263,22 +268,22 @@ void DecompressDataWithHeaderVram(const u32 *src, void *dest)
     CpuCopy32(src, &header, 8);
     switch (header.smol.mode)
     {
-        case MODE_LZ77:
-            LZ77UnCompVram(src, dest);
-            break;
-        case IS_TILEMAP:
-            SmolDecompressTilemap(&header.smolTilemap, &src[2], dest);
-            break;
-        case BASE_ONLY:
-        case ENCODE_SYMS:
-        case ENCODE_DELTA_SYMS:
-        case ENCODE_LO:
-        case ENCODE_BOTH:
-        case ENCODE_BOTH_DELTA_SYMS:
-            SmolDecompressData(&header.smol, &src[2], dest);
-            break;
-        default:
-            DecompressionError(src, HEADER_ERROR);
+    case MODE_LZ77:
+        LZ77UnCompVram(src, dest);
+        break;
+    case IS_TILEMAP:
+        SmolDecompressTilemap(&header.smolTilemap, &src[2], dest);
+        break;
+    case BASE_ONLY:
+    case ENCODE_SYMS:
+    case ENCODE_DELTA_SYMS:
+    case ENCODE_LO:
+    case ENCODE_BOTH:
+    case ENCODE_BOTH_DELTA_SYMS:
+        SmolDecompressData(&header.smol, &src[2], dest);
+        break;
+    default:
+        DecompressionError(src, HEADER_ERROR);
     }
 }
 
@@ -291,22 +296,22 @@ void DecompressDataWithHeaderWram(const u32 *src, void *dest)
     CpuCopy32(src, &header, 8);
     switch (header.smol.mode)
     {
-        case MODE_LZ77:
-            FastLZ77UnCompWram(src, dest);
-            break;
-        case IS_TILEMAP:
-            SmolDecompressTilemap(&header.smolTilemap, &src[2], dest);
-            break;
-        case BASE_ONLY:
-        case ENCODE_SYMS:
-        case ENCODE_DELTA_SYMS:
-        case ENCODE_LO:
-        case ENCODE_BOTH:
-        case ENCODE_BOTH_DELTA_SYMS:
-            SmolDecompressData(&header.smol, &src[2], dest);
-            break;
-        default:
-            DecompressionError(src, HEADER_ERROR);
+    case MODE_LZ77:
+        FastLZ77UnCompWram(src, dest);
+        break;
+    case IS_TILEMAP:
+        SmolDecompressTilemap(&header.smolTilemap, &src[2], dest);
+        break;
+    case BASE_ONLY:
+    case ENCODE_SYMS:
+    case ENCODE_DELTA_SYMS:
+    case ENCODE_LO:
+    case ENCODE_BOTH:
+    case ENCODE_BOTH_DELTA_SYMS:
+        SmolDecompressData(&header.smol, &src[2], dest);
+        break;
+    default:
+        DecompressionError(src, HEADER_ERROR);
     }
 }
 
@@ -959,24 +964,24 @@ static void SmolDecompressData(const struct SmolHeader *header, const u32 *data,
     //  Use different decoding flows depending on which mode the data is compressed with
     switch (header->mode)
     {
-        case BASE_ONLY: // Used by .fastSmol, there is no encoding there, so we can quickly decode all the instructions and quit.
-            DecodeInstructionsIwram(headerLoSize, leftoverPos + headerSymSize*2, (void *) leftoverPos, dest);
-            return;
-        case ENCODE_LO:
-            pLoFreqs = &data[0];
-            sDataPtr = &data[3];
-            break;
-        case ENCODE_DELTA_SYMS:
-        case ENCODE_SYMS:
-            pSymFreqs = &data[0];
-            sDataPtr = &data[3];
-            break;
-        case ENCODE_BOTH:
-        case ENCODE_BOTH_DELTA_SYMS:
-            pLoFreqs = &data[0];
-            pSymFreqs = &data[3];
-            sDataPtr = &data[6];
-            break;
+    case BASE_ONLY: // Used by .fastSmol, there is no encoding there, so we can quickly decode all the instructions and quit.
+        DecodeInstructionsIwram(headerLoSize, leftoverPos + headerSymSize*2, (void *) leftoverPos, dest);
+        return;
+    case ENCODE_LO:
+        pLoFreqs = &data[0];
+        sDataPtr = &data[3];
+        break;
+    case ENCODE_DELTA_SYMS:
+    case ENCODE_SYMS:
+        pSymFreqs = &data[0];
+        sDataPtr = &data[3];
+        break;
+    case ENCODE_BOTH:
+    case ENCODE_BOTH_DELTA_SYMS:
+        pLoFreqs = &data[0];
+        pSymFreqs = &data[3];
+        sDataPtr = &data[6];
+        break;
     }
 
     bool32 loEncoded = isModeLoEncoded(header->mode);
@@ -1126,11 +1131,23 @@ static bool32 isModeSymDelta(enum CompressionMode mode)
 
 void LoadSpecialPokePic(void *dest, s32 species, u32 personality, bool8 isFrontPic)
 {
+    LoadSpecialPokePicIsEgg(dest, species, personality, isFrontPic, FALSE);
+}
+
+void LoadSpecialPokePicIsEgg(void *dest, s32 species, u32 personality, bool8 isFrontPic, bool32 isEgg)
+{
     species = SanitizeSpeciesId(species);
     if (species == SPECIES_UNOWN)
         species = GetUnownSpeciesId(personality);
 
-    if (isFrontPic)
+    if (isEgg)
+    {
+        if (gSpeciesInfo[species].eggId != EGG_ID_NONE)
+            DecompressDataWithHeaderWram(gEggDatas[gSpeciesInfo[species].eggId].eggSprite, dest);
+        else
+            DecompressDataWithHeaderWram(gSpeciesInfo[SPECIES_EGG].frontPic, dest);
+    }
+    else if (isFrontPic)
     {
     #if P_GENDER_DIFFERENCES
         if (gSpeciesInfo[species].frontPicFemale != NULL && IsPersonalityFemale(species, personality))
@@ -1321,12 +1338,12 @@ u32 GetDecompressedDataSize(const u32 *ptr)
     union CompressionHeader *header = (union CompressionHeader *)ptr;
     switch (header->smol.mode)
     {
-        case MODE_LZ77:
-            return header->lz77.size;
-        case IS_TILEMAP:
-            return header->smolTilemap.tilemapSize;
-        default:
-            return header->smol.imageSize*SMOL_IMAGE_SIZE_MULTIPLIER;
+    case MODE_LZ77:
+        return header->lz77.size;
+    case IS_TILEMAP:
+        return header->smolTilemap.tilemapSize;
+    default:
+        return header->smol.imageSize*SMOL_IMAGE_SIZE_MULTIPLIER;
     }
 }
 

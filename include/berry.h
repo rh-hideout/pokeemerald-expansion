@@ -14,7 +14,7 @@ void PlantBerryTree(u8 id, u8 berry, u8 stage, bool8 allowGrowth);
 void RemoveBerryTree(u8 id);
 u8 GetBerryTypeByBerryTreeId(u8 id);
 u8 GetStageByBerryTreeId(u8 id);
-u8 ItemIdToBerryType(u16 item);
+u8 ItemIdToBerryType(enum Item item);
 void GetBerryNameByBerryType(u8 berry, u8 *string);
 void Bag_ChooseBerry(void);
 void Bag_ChooseMulch(void);

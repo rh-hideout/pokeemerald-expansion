@@ -137,3 +137,23 @@ SINGLE_BATTLE_TEST("Recoil: No recoil is taken if the move is blocked by Disguis
         EXPECT_EQ(player->hp, player->maxHP);
     }
 }
+
+SINGLE_BATTLE_TEST("Recoil: Hitting substitutes inflicts recoil")
+{
+    u16 damage;
+    s16 recoil;
+    GIVEN {
+        ASSUME(GetMoveRecoil(MOVE_TAKE_DOWN) == 25);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_TAKE_DOWN); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TAKE_DOWN, opponent);
+        SUB_HIT(player, captureDamage: &damage);
+        HP_BAR(opponent, captureDamage: &recoil);
+    } THEN {
+        EXPECT_MUL_EQ(damage, Q_4_12(0.25), recoil);
+    }
+}

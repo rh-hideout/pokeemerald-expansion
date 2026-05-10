@@ -22,7 +22,7 @@ SINGLE_BATTLE_TEST("Poison Touch has a 30% chance to poison when attacking with 
 
 SINGLE_BATTLE_TEST("Poison Touch only applies when using contact moves")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_SCRATCH; }
     PARAMETRIZE { move = MOVE_SWIFT; }
@@ -54,7 +54,7 @@ SINGLE_BATTLE_TEST("Poison Touch only applies when using contact moves")
 SINGLE_BATTLE_TEST("Poison Touch applies between multi-hit move hits")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_ARM_THRUST) == EFFECT_MULTI_HIT);
+        ASSUME(IsMultiHitMove(MOVE_ARM_THRUST));
         ASSUME(MoveMakesContact(MOVE_ARM_THRUST));
         ASSUME(gItemsInfo[ITEM_PECHA_BERRY].holdEffect == HOLD_EFFECT_CURE_PSN);
         PLAYER(SPECIES_GRIMER) { Ability(ABILITY_POISON_TOUCH); }
@@ -73,5 +73,40 @@ SINGLE_BATTLE_TEST("Poison Touch applies between multi-hit move hits")
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
         MESSAGE("The opposing Wobbuffet was poisoned by Grimer's Poison Touch!");
         STATUS_ICON(opponent, poison: TRUE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Poison Touch activates when user has Protective Pads, but not with Punching Glove")
+{
+    u32 item;
+
+    PARAMETRIZE { item = ITEM_PROTECTIVE_PADS; }
+    PARAMETRIZE { item = ITEM_PUNCHING_GLOVE; }
+
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_MACH_PUNCH));
+        ASSUME(IsPunchingMove(MOVE_MACH_PUNCH));
+        ASSUME(GetItemHoldEffect(ITEM_PROTECTIVE_PADS) == HOLD_EFFECT_PROTECTIVE_PADS);
+        ASSUME(GetItemHoldEffect(ITEM_PUNCHING_GLOVE) == HOLD_EFFECT_PUNCHING_GLOVE);
+        PLAYER(SPECIES_GRIMER) { Ability(ABILITY_POISON_TOUCH); Item(item); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_MACH_PUNCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MACH_PUNCH, player);
+
+        if (item != ITEM_PUNCHING_GLOVE) {
+            ABILITY_POPUP(player, ABILITY_POISON_TOUCH);
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+            MESSAGE("The opposing Wobbuffet was poisoned by Grimer's Poison Touch!");
+            STATUS_ICON(opponent, poison: TRUE);
+        } else {
+            NONE_OF {
+                ABILITY_POPUP(player, ABILITY_POISON_TOUCH);
+                ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+                MESSAGE("The opposing Wobbuffet was poisoned by Grimer's Poison Touch!");
+                STATUS_ICON(opponent, poison: TRUE);
+            }
+        }
     }
 }
