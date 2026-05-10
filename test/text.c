@@ -733,9 +733,7 @@ TEST("Battle strings fit on the battle message window")
     // Buffer Stat name to B_BUFF1
     case STRINGID_STATSWONTINCREASE:
     case STRINGID_STATSWONTDECREASE:
-    case STRINGID_PKMNSXPREVENTSYLOSS:
     case STRINGID_TARGETABILITYSTATRAISE:
-    case STRINGID_TARGETSSTATWASMAXEDOUT:
     case STRINGID_ATTACKERABILITYSTATRAISE:
     case STRINGID_TARGETABILITYSTATLOWER:
     case STRINGID_SCRIPTINGABILITYSTATRAISE:
@@ -798,17 +796,15 @@ TEST("Battle strings fit on the battle message window")
         PREPARE_MON_NICK_WITH_PREFIX_LOWER_BUFFER(gBattleTextBuff1, 1, 0);
         PREPARE_ABILITY_BUFFER(gBattleTextBuff2, longAbilityID);
         break;
-    // Buffer Stat name to B_BUFF1, "rose drastically" to B_BUFF2
-    case STRINGID_ATTACKERSSTATROSE:
-    case STRINGID_DEFENDERSSTATROSE:
+    // Buffer Stat name to B_BUFF1, "drastically rose" to B_BUFF2
+    case STRINGID_STATROSE:
     case STRINGID_USINGITEMSTATOFPKMNROSE:
         StringCopy(gBattleTextBuff1, gStatNamesTable[longStatName]);
         StringCopy(gBattleTextBuff2, gText_drastically);
         StringAppend(gBattleTextBuff2, gText_StatRose);
         break;
     // Buffer Stat name to B_BUFF1, "severely fell" to B_BUFF2
-    case STRINGID_ATTACKERSSTATFELL:
-    case STRINGID_DEFENDERSSTATFELL:
+    case STRINGID_STATFELL:
         StringCopy(gBattleTextBuff1, gStatNamesTable[longStatName]);
         StringCopy(gBattleTextBuff2, gText_severely);
         StringAppend(gBattleTextBuff2, gText_StatFell);

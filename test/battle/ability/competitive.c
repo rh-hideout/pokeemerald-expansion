@@ -212,6 +212,9 @@ DOUBLE_BATTLE_TEST("Competitive is activated by Cotton Down for non-ally pokemon
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
         ABILITY_POPUP(opponentLeft, ABILITY_COTTON_DOWN);
 
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
+        MESSAGE("The opposing Igglybuff's Speed fell!");
+
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
         MESSAGE("Igglybuff's Speed fell!");
         ABILITY_POPUP(playerLeft, ABILITY_COMPETITIVE);
@@ -224,8 +227,6 @@ DOUBLE_BATTLE_TEST("Competitive is activated by Cotton Down for non-ally pokemon
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
         MESSAGE("Igglybuff's Sp. Atk rose sharply!");
 
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
-        MESSAGE("The opposing Igglybuff's Speed fell!");
     } THEN {
         EXPECT_EQ(playerLeft->statStages[STAT_SPEED], DEFAULT_STAT_STAGE - 1);
         EXPECT_EQ(playerRight->statStages[STAT_SPEED], DEFAULT_STAT_STAGE - 1);
@@ -277,7 +278,7 @@ SINGLE_BATTLE_TEST("Competitive activates before White Herb")
 SINGLE_BATTLE_TEST("Competitive activates for each stat that is lowered")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_TICKLE) == EFFECT_TICKLE);
+        ASSUME_STAT_CHANGE(MOVE_TICKLE, attack: -1, defense: -1);
         PLAYER(SPECIES_IGGLYBUFF) { Ability(ABILITY_COMPETITIVE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -311,10 +312,10 @@ SINGLE_BATTLE_TEST("Competitive doesn't activate if the pokemon lowers it's own 
     PARAMETRIZE { move = MOVE_SPIN_OUT; }
 
     GIVEN {
-        ASSUME(MoveHasAdditionalEffectSelf(MOVE_SUPERPOWER, MOVE_EFFECT_ATK_DEF_DOWN));
-        ASSUME(MoveHasAdditionalEffectSelf(MOVE_CLOSE_COMBAT, MOVE_EFFECT_DEF_SPDEF_DOWN));
-        ASSUME(MoveHasAdditionalEffectSelf(MOVE_MAKE_IT_RAIN, MOVE_EFFECT_SP_ATK_MINUS_1));
-        ASSUME(MoveHasAdditionalEffectSelf(MOVE_SPIN_OUT, MOVE_EFFECT_SPD_MINUS_2));
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_SUPERPOWER, self: TRUE, attack: -1, defense: -1);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_CLOSE_COMBAT, self: TRUE, defense: -1, spDef: -1);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAKE_IT_RAIN, self: TRUE, spAtk: -1);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_SPIN_OUT, self: TRUE, speed: -2);
         PLAYER(SPECIES_IGGLYBUFF) { Ability(ABILITY_COMPETITIVE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

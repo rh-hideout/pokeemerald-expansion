@@ -276,7 +276,7 @@ DOUBLE_BATTLE_TEST("Dancer doesn't trigger when an ally snatches the move")
 DOUBLE_BATTLE_TEST("Dancer doesn't activate if the original move missed")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_DOUBLE_TEAM) == EFFECT_EVASION_UP);
+        ASSUME_STAT_CHANGE(MOVE_DOUBLE_TEAM, evasion: +1);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); }
@@ -639,7 +639,7 @@ SINGLE_BATTLE_TEST("Dancer copies a status Z-Move's base move without gaining an
 {
     GIVEN {
         ASSUME(IsDanceMove(MOVE_SWORDS_DANCE));
-        ASSUME(GetMoveEffect(MOVE_SCREECH) == EFFECT_DEFENSE_DOWN_2);
+        ASSUME_STAT_CHANGE(MOVE_SCREECH, defense: -2);
         ASSUME(GetMoveZEffect(MOVE_SWORDS_DANCE) == Z_EFFECT_RESET_STATS);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
         OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); }

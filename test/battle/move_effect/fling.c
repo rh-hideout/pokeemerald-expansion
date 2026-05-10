@@ -647,7 +647,7 @@ SINGLE_BATTLE_TEST("Fling - Mental Herb effect should not remove the target's he
 SINGLE_BATTLE_TEST("Fling - White Herb effect should not remove the target's held item")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_GROWL) == EFFECT_ATTACK_DOWN);
+        ASSUME_STAT_CHANGE(MOVE_GROWL, attack: -1);
         ASSUME(GetItemHoldEffect(ITEM_WHITE_HERB) == HOLD_EFFECT_WHITE_HERB);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_WHITE_HERB); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RAZOR_CLAW); }

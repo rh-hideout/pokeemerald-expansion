@@ -404,12 +404,14 @@ static const u8 *GetInteractedObjectEventScript(struct MapPosition *position, u8
     gSelectedObjectEvent = objectEventId;
     gSpecialVar_LastTalked = gObjectEvents[objectEventId].localId;
 
-    if (InTrainerHill() == TRUE)
-        script = GetTrainerHillTrainerScript();
-    else if (PlayerHasFollowerNPC() && objectEventId == GetFollowerNPCObjectId())
+    if (PlayerHasFollowerNPC() && objectEventId == GetFollowerNPCObjectId())
         script = GetFollowerNPCScriptPointer();
     else if (IsOverworldWildEncounter(&gObjectEvents[objectEventId], OWE_ANY))
         script = GetOverworlWildEncounterScript(objectEventId);
+    else if (gObjectEvents[objectEventId].localId == OBJ_EVENT_ID_FOLLOWER)
+        script = EventScript_Follower;
+    else if (InTrainerHill() == TRUE)
+        script = GetTrainerHillTrainerScript();
     else
         script = GetObjectEventScriptPointerByObjectEventId(objectEventId);
 
@@ -893,7 +895,7 @@ void RestartWildEncounterImmunitySteps(void)
 
 static bool32 ShouldDisableRandomEncounters(void)
 {
-    if (FlagGet(OW_FLAG_NO_ENCOUNTER))
+    if (FlagGet(WE_FLAG_NO_ENCOUNTER))
         return TRUE;
 
     if (!WE_VANILLA_RANDOM && WE_OW_ENCOUNTERS)

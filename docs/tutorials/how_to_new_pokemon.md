@@ -526,33 +526,33 @@ Edit [src/data/graphics/pokemon.h](https://github.com/rh-hideout/pokeemerald-exp
 
 ```diff
 #if P_FAMILY_PECHARUNT
-    const u32 gMonFrontPic_Pecharunt[] = INCBIN_U32("graphics/pokemon/pecharunt/front.4bpp.lz");
-    const u16 gMonPalette_Pecharunt[] = INCBIN_U16("graphics/pokemon/pecharunt/normal.gbapal");
-    const u32 gMonBackPic_Pecharunt[] = INCBIN_U32("graphics/pokemon/pecharunt/back.4bpp.lz");
-    const u16 gMonShinyPalette_Pecharunt[] = INCBIN_U16("graphics/pokemon/pecharunt/shiny.gbapal");
-    const u8 gMonIcon_Pecharunt[] = INCBIN_U8("graphics/pokemon/pecharunt/icon.4bpp");
+    const u32 gMonFrontPic_Pecharunt[] = INCGFX_U32("graphics/pokemon/pecharunt/front.png", ".4bpp.lz");
+    const u16 gMonPalette_Pecharunt[] = INCGFX_U16("graphics/pokemon/pecharunt/normal.pal", ".gbapal");
+    const u32 gMonBackPic_Pecharunt[] = INCGFX_U32("graphics/pokemon/pecharunt/back.png", ".4bpp.lz");
+    const u16 gMonShinyPalette_Pecharunt[] = INCGFX_U16("graphics/pokemon/pecharunt/shiny.pal", ".gbapal");
+    const u8 gMonIcon_Pecharunt[] = INCGFX_U8("graphics/pokemon/pecharunt/icon.png", ".4bpp");
 #if P_FOOTPRINTS
-    const u8 gMonFootprint_Pecharunt[] = INCBIN_U8("graphics/pokemon/pecharunt/footprint.1bpp");
+    const u8 gMonFootprint_Pecharunt[] = INCGFX_U8("graphics/pokemon/pecharunt/footprint.png", ".1bpp");
 #endif //P_FOOTPRINTS
 #if OW_POKEMON_OBJECT_EVENTS
-    const u32 gObjectEventPic_Pecharunt[] = INCBIN_COMP("graphics/pokemon/pecharunt/overworld.4bpp");
+    const u32 gObjectEventPic_Pecharunt[] = INCGFX_COMP("graphics/pokemon/pecharunt/overworld.png", ".4bpp");
 #if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
-    const u16 gOverworldPalette_Pecharunt[] = INCBIN_U16("graphics/pokemon/pecharunt/overworld_normal.gbapal");
-    const u16 gShinyOverworldPalette_Pecharunt[] = INCBIN_U16("graphics/pokemon/pecharunt/overworld_shiny.gbapal");
+    const u16 gOverworldPalette_Pecharunt[] = INCGFX_U16("graphics/pokemon/pecharunt/overworld_normal.pal", ".gbapal");
+    const u16 gShinyOverworldPalette_Pecharunt[] = INCGFX_U16("graphics/pokemon/pecharunt/overworld_shiny.pal", ".gbapal");
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS
 #endif //P_FAMILY_PECHARUNT
 
-    const u32 gMonFrontPic_Egg[] = INCBIN_U32("graphics/pokemon/egg/anim_front.4bpp.lz");
-    const u16 gMonPalette_Egg[] = INCBIN_U16("graphics/pokemon/egg/normal.gbapal");
-    const u8 gMonIcon_Egg[] = INCBIN_U8("graphics/pokemon/egg/icon.4bpp");
+    const u32 gMonFrontPic_Egg[] = INCGFX_U32("graphics/pokemon/egg/anim_front.png", ".4bpp.lz");
+    const u16 gMonPalette_Egg[] = INCGFX_U16("graphics/pokemon/egg/normal.pal", ".gbapal");
+    const u8 gMonIcon_Egg[] = INCGFX_U8("graphics/pokemon/egg/icon.png", ".4bpp");
 
-+   const u32 gMonFrontPic_Mewthree[] = INCBIN_U32("graphics/pokemon/mewthree/anim_front.4bpp.lz");
-+   const u32 gMonBackPic_Mewthree[] = INCBIN_U32("graphics/pokemon/mewthree/back.4bpp.lz");
-+   const u16 gMonPalette_Mewthree[] = INCBIN_U16("graphics/pokemon/mewthree/normal.gbapal");
-+   const u16 gMonShinyPalette_Mewthree[] = INCBIN_U16("graphics/pokemon/mewthree/shiny.gbapal");
-+   const u8 gMonIcon_Mewthree[] = INCBIN_U8("graphics/pokemon/mewthree/icon.4bpp");
-+   const u8 gMonFootprint_Mewthree[] = INCBIN_U8("graphics/pokemon/mewthree/footprint.1bpp");
++   const u32 gMonFrontPic_Mewthree[] = INCGFX_U32("graphics/pokemon/mewthree/anim_front.png", ".4bpp.lz");
++   const u32 gMonBackPic_Mewthree[] = INCGFX_U32("graphics/pokemon/mewthree/back.png", ".4bpp.lz");
++   const u16 gMonPalette_Mewthree[] = INCGFX_U16("graphics/pokemon/mewthree/normal.pal", ".gbapal");
++   const u16 gMonShinyPalette_Mewthree[] = INCGFX_U16("graphics/pokemon/mewthree/shiny.pal", ".gbapal");
++   const u8 gMonIcon_Mewthree[] = INCGFX_U8("graphics/pokemon/mewthree/icon.png", ".4bpp");
++   const u8 gMonFootprint_Mewthree[] = INCGFX_U8("graphics/pokemon/mewthree/footprint.png", ".1bpp");
 ```
 
 Please note that Pecharunt, the Pokémon that should be above your insertion for the time being, reads a `front.png` sprite instead of an `anim_front.png` sprite. This is because currently, Pecharunt lacks a 2nd frame. If the front sprite sheet of your species uses 2 frames, you should use `anim_front`.
@@ -1086,27 +1086,14 @@ First, since you copied the contents from Mew's folder previously, you should al
 Secondly, in [src/data/graphics/pokemon.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/src/data/graphics/pokemon.h), add the following:
 
 ```diff
-    const u8 gMonIcon_Mewthree[] = INCBIN_U8("graphics/pokemon/mewthree/icon.4bpp");
-    const u8 gMonFootprint_Mewthree[] = INCBIN_U8("graphics/pokemon/mewthree/footprint.1bpp");
-+   const u32 gObjectEventPic_Mewthree[] = INCBIN_COMP("graphics/pokemon/mewthree/overworld.4bpp");
-+   const u32 gOverworldPalette_Mewthree[] = INCBIN_U32("graphics/pokemon/mewthree/overworld_normal.gbapal.lz");
-+   const u32 gShinyOverworldPalette_Mewthree[] = INCBIN_U32("graphics/pokemon/mewthree/overworld_shiny.gbapal.lz");
+    const u8 gMonIcon_Mewthree[] = INCGFX_U8("graphics/pokemon/mewthree/icon.png", ".4bpp");
+    const u8 gMonFootprint_Mewthree[] = INCGFX_U8("graphics/pokemon/mewthree/footprint.png", ".1bpp");
++   const u32 gObjectEventPic_Mewthree[] = INCGFX_COMP("graphics/pokemon/mewthree/overworld.png", ".4bpp");
++   const u32 gOverworldPalette_Mewthree[] = INCGFX_U32("graphics/pokemon/mewthree/overworld_normal.pal", ".gbapal");
++   const u32 gShinyOverworldPalette_Mewthree[] = INCGFX_U32("graphics/pokemon/mewthree/overworld_shiny.pal", ".gbapal");
 ```
 
-Thirdly, in [spritesheet_rules.mk](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/spritesheet_rules.mk)
-
-```diff
-$(POKEMONGFXDIR)/mewtwo/overworld.4bpp: %.4bpp: %.png
-    $(GFX) $< $@ -mwidth 4 -mheight 4
-
-+$(POKEMONGFXDIR)/mewthree/overworld.4bpp: %.4bpp: %.png
-+	$(GFX) $< $@ -mwidth 4 -mheight 4
-
-$(POKEMONGFXDIR)/mew/overworld.4bpp: %.4bpp: %.png
-    $(GFX) $< $@ -mwidth 4 -mheight 4
-```
-
-Fourthly, in [src/data/object_events/object_event_pic_tables_followers.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/src/data/object_events/object_event_pic_tables_followers.h):
+Thirdly, in [src/data/object_events/object_event_pic_tables_followers.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/src/data/object_events/object_event_pic_tables_followers.h):
 ```diff
 #if P_FAMILY_PECHARUNT
 /*static const struct SpriteFrameImage sPicTable_Pecharunt[] = {

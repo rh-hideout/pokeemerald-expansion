@@ -234,10 +234,10 @@ u8 GetBattlerSpriteDefault_Y(enum BattlerId battler);
 u8 GetSubstituteSpriteDefault_Y(enum BattlerId battler);
 
 // battle_anim_status_effects.c
-#define STAT_ANIM_PLUS1  (MOVE_EFFECT_ATK_PLUS_1 - 1)
-#define STAT_ANIM_PLUS2  (MOVE_EFFECT_ATK_PLUS_2 - 1)
-#define STAT_ANIM_MINUS1 (MOVE_EFFECT_ATK_MINUS_1 - 1)
-#define STAT_ANIM_MINUS2 (MOVE_EFFECT_ATK_MINUS_2 - 1)
+#define STAT_ANIM_PLUS1  (NUM_BATTLE_STATS * 0)
+#define STAT_ANIM_PLUS2  (NUM_BATTLE_STATS * 1)
+#define STAT_ANIM_MINUS1 (NUM_BATTLE_STATS * 2)
+#define STAT_ANIM_MINUS2 (NUM_BATTLE_STATS * 3)
 #define STAT_ANIM_MULTIPLE_PLUS1 55
 #define STAT_ANIM_MULTIPLE_PLUS2 56
 #define STAT_ANIM_MULTIPLE_MINUS1 57

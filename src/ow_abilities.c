@@ -13,7 +13,7 @@ static UNUSED bool32 IsFalse(enum Species species);
 static UNUSED bool32 IsTrue(enum Species species);
 static UNUSED bool32 IsTrueIfUndiscoveredEggGroup(enum Species species);
 
-const static bool32 (*sSynchronizeModes[])(enum Species) = 
+static const bool32 (*const sSynchronizeModes[])(enum Species) = 
 {
 #if OW_SYNCHRONIZE_NATURE == GEN_3
     [WILDMON_ORIGIN] = HasHalfChance,
@@ -48,7 +48,7 @@ const static bool32 (*sSynchronizeModes[])(enum Species) =
 #endif
 };
 
-const static bool32 (*sCuteCharmModes[])(enum Species) = 
+static const bool32 (*const sCuteCharmModes[])(enum Species) = 
 {
     [WILDMON_ORIGIN] = HasTwoThirdsChance,
     [STATIC_WILDMON_ORIGIN] = HasTwoThirdsChance,

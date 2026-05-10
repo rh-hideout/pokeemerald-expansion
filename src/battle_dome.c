@@ -5,6 +5,7 @@
 #include "battle_main.h"
 #include "battle_setup.h"
 #include "battle_tower.h"
+#include "battle_stat_change.h"
 #include "frontier_util.h"
 #include "battle_message.h"
 #include "event_data.h"
@@ -3888,20 +3889,11 @@ static bool32 IsDomeHealingMove(enum Move move)
         return FALSE;
     }
 }
-
-static bool32 IsDomeDefensiveMoveEffect(enum BattleMoveEffects effect)
+static bool32 IsDomeDefensiveMoveEffect(enum Move move)
 {
-    switch (effect)
+    switch (move)
     {
     case EFFECT_REFLECT_DAMAGE:
-    case EFFECT_EVASION_UP:
-    case EFFECT_DEFENSE_UP:
-    case EFFECT_DEFENSE_UP_2:
-    case EFFECT_SPECIAL_DEFENSE_UP:
-    case EFFECT_SPECIAL_DEFENSE_UP_2:
-    case EFFECT_MINIMIZE:
-    case EFFECT_ACCURACY_DOWN:
-    case EFFECT_DEFENSE_CURL:
     case EFFECT_LIGHT_SCREEN:
     case EFFECT_REFLECT:
     case EFFECT_AURORA_VEIL:
@@ -3916,8 +3908,14 @@ static bool32 IsDomeDefensiveMoveEffect(enum BattleMoveEffects effect)
     case EFFECT_SUBSTITUTE:
         return TRUE;
     default:
-        return FALSE;
+        break;
     }
+
+    if (IsStatChangeStatusMove(move, IsAccDownEvasionUpStatChangeMove)
+     || IsStatChangeStatusMove(move, IsDefSpDefStatUpMove))
+        return TRUE;
+
+    return FALSE;
 }
 
 static bool32 IsDomeRiskyMoveEffect(enum BattleMoveEffects effect)
@@ -3979,13 +3977,12 @@ static bool32 IsDomePopularMove(enum Move move)
     {
     case EFFECT_PROTECT:
     case EFFECT_MAT_BLOCK:
-    case EFFECT_ATTACK_UP_2:
-    case EFFECT_SPECIAL_ATTACK_UP_2:
-    case EFFECT_SPECIAL_ATTACK_UP_3:
         return TRUE;
     default:
-        return FALSE;
+        break;
     }
+
+    return IsStatChangeStatusMove(move, IsAtkSpAtkStatUpMove);
 }
 
 static bool32 IsDomeStatusMoveEffect(enum Move move)
@@ -4077,20 +4074,6 @@ static bool32 IsDomeComboMove(enum Move move)
     case EFFECT_REST:
     case EFFECT_SLEEP_TALK:
     case EFFECT_SNORE:
-    // Anything that ups offensive stats by more than one
-    case EFFECT_ATTACK_UP:
-    case EFFECT_ATTACK_UP_2:
-    case EFFECT_ATTACK_SPATK_UP:
-    case EFFECT_SPECIAL_ATTACK_UP:
-    case EFFECT_SPECIAL_ATTACK_UP_2:
-    case EFFECT_SPECIAL_ATTACK_UP_3:
-    case EFFECT_CALM_MIND:
-    case EFFECT_DRAGON_DANCE:
-    case EFFECT_BELLY_DRUM:
-    case EFFECT_CHARGE:
-    case EFFECT_BULK_UP:
-    case EFFECT_ATTACK_ACCURACY_UP:
-    case EFFECT_FILLET_AWAY:
     // Others
     case EFFECT_FOCUS_ENERGY:
     case EFFECT_LOCK_ON:
@@ -4120,7 +4103,7 @@ static bool32 IsDomeComboMove(enum Move move)
         return FALSE;
     }
 
-    return FALSE;
+    return IsStatChangeStatusMove(move, IsAtkSpAtkStatUpMove);
 }
 
 // allocatedArray below needs to be large enough to hold stat totals for each mon, or totals of each type of move points
@@ -4311,10 +4294,10 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
                     allocatedArray[k] = IsDomeComboMove(move) ? 1 : 0;
                     break;
                 case MOVE_POINTS_STAT_RAISE:
-                    allocatedArray[k] = IsStatRaisingEffect(effect) ? 1 : 0;
+                    allocatedArray[k] = IsStatRaisingMove(move) ? 1 : 0;
                     break;
                 case MOVE_POINTS_STAT_LOWER:
-                    allocatedArray[k] = IsStatLoweringEffect(effect) ? 1 : 0;
+                    allocatedArray[k] = IsStatLoweringMove(move) ? 1 : 0;
                     break;
                 case MOVE_POINTS_RARE:
                     allocatedArray[k] = IsDomeRareMove(move) ? 1 : 0;
@@ -4332,7 +4315,7 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
                     allocatedArray[k] = (!IsBattleMoveStatus(move)) ? 1 : 0;
                     break;
                 case MOVE_POINTS_DEF:
-                    allocatedArray[k] = IsDomeDefensiveMoveEffect(effect) ? 1 : 0;
+                    allocatedArray[k] = IsDomeDefensiveMoveEffect(move) ? 1 : 0;
                     break;
                 case MOVE_POINTS_ACCURATE:
                     allocatedArray[k] = (accuracy == 0 || accuracy == 100) ? 1 : 0;

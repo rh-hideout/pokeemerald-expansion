@@ -669,7 +669,7 @@ static const struct SpriteTemplate sSpriteTemplate_JudgeSpeechBubble =
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
 };
 
-static const u16 sText_Pal[] = INCBIN_U16("graphics/contest/text.gbapal");
+static const u16 sText_Pal[] = INCGFX_U16("graphics/contest/text.pal", ".gbapal");
 
 #include "data/contest_text_tables.h"
 
