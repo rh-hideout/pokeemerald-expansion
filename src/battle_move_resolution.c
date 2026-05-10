@@ -2952,25 +2952,6 @@ static enum MoveEndResult MoveEndMirrorMove(struct BattleCalcValues *cv)
     return MOVEEND_RESULT_CONTINUE;
 }
 
-static void SortBattlersByRawSpeed(u8 battlers[])
-{
-    for (u32 i = 0; i < gBattlersCount; i++)
-        battlers[i] = i;
-
-    for (u32 i = 0; i < gBattlersCount; i++)
-    {
-        for (u32 j = 0; j < gBattlersCount; j++)
-        {
-            if (gBattleMons[battlers[i]].speed >= gBattleMons[battlers[j]].speed)
-            {
-                u32 temp = battlers[i];
-                battlers[i] = battlers[j];
-                battlers[j] = temp;
-            }
-        }
-    }
-}
-
 // Used for non damaging (status) stat change moves
 bool32 IsStatChangeMove(enum Move move)
 {
@@ -3037,7 +3018,6 @@ static enum MoveEndResult MoveEndNextTarget(struct BattleCalcValues *cv)
     }
 
     RecordLastUsedMoveBy(gBattlerAttacker, gCurrentMove);
-    SortBattlersByRawSpeed(gBattlersByRawSpeed);
     gBattleScripting.moveendState++;
     return MOVEEND_RESULT_CONTINUE;
 }

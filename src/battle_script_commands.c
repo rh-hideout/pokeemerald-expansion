@@ -2166,6 +2166,17 @@ u32 GetBattlerTurnOrderNum(enum BattlerId battler)
     return i;
 }
 
+u32 GetBattlerRawSpeedOrder(enum BattlerId battler)
+{
+    u32 i;
+    for (i = 0; i < gBattlersCount; i++)
+    {
+        if (gBattlersByRawSpeed[i] == battler)
+            break;
+    }
+    return i;
+}
+
 // battlerStealer steals the item of itemBattler
 void StealTargetItem(enum BattlerId battlerStealer, enum BattlerId itemBattler)
 {

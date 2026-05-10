@@ -678,7 +678,7 @@ static bool32 IsIntimidateBlocked(struct BattleCalcValues *cv, struct StatChange
         enum BattlerId flowerVeilBattler = StatChange_IsFlowerVeilProtected(cv);
 
         if (flowerVeilBattler != MAX_BATTLERS_COUNT
-         && gBattleMons[flowerVeilBattler].speed > gBattleMons[cv->battlerDef].speed)
+         && GetBattlerRawSpeedOrder(flowerVeilBattler) < GetBattlerRawSpeedOrder(cv->battlerDef))
             return FALSE;
 
         if (!CompareStat(cv->battlerDef, STAT_ATK, MIN_STAT_STAGE, CMP_GREATER_THAN, cv->abilities[cv->battlerDef]))

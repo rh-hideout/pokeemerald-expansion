@@ -9093,6 +9093,25 @@ bool32 CanFling(enum BattlerId battlerAtk, enum Ability abilityAtk)
     return TRUE;
 }
 
+void SortBattlersByRawSpeed(u8 battlers[])
+{
+    for (u32 i = 0; i < gBattlersCount; i++)
+        battlers[i] = i;
+
+    for (u32 i = 0; i < gBattlersCount; i++)
+    {
+        for (u32 j = 0; j < gBattlersCount; j++)
+        {
+            if (gBattleMons[battlers[i]].speed >= gBattleMons[battlers[j]].speed)
+            {
+                u32 temp = battlers[i];
+                battlers[i] = battlers[j];
+                battlers[j] = temp;
+            }
+        }
+    }
+}
+
 // Sort an array of battlers by speed
 // Useful for effects like pickpocket, eject button, red card, dancer
 void SortBattlersBySpeed(enum BattlerId *battlers, bool32 slowToFast)
