@@ -208,16 +208,42 @@ Debug_EventScript_Script_1::
 	end
 
 Debug_EventScript_Script_2::
-	goto Debug_EventScript_Silver_Multi
+	setflag FLAG_SYS_POKEDEX_GET
 	release
 	end
 
 Debug_EventScript_Script_3::
-
+	setflag FLAG_VISITED_KANTO
 	release
 	end
 
 Debug_EventScript_Script_4::
+	setflag FLAG_VISITED_NEWBARK_TOWN              
+	setflag FLAG_VISITED_CHERRYGROVE_CITY            
+	setflag FLAG_VISITED_VIOLET_CITY    
+	setflag FLAG_VISITED_AZALEA_TOWN               
+	setflag FLAG_VISITED_GOLDENROD_CITY          
+	setflag FLAG_VISITED_ECRUTEAK_CITY 
+	setflag FLAG_VISITED_OLIVINE_CITY                 
+	setflag FLAG_VISITED_CIANWOOD_CITY                 
+	setflag FLAG_VISITED_MAHOGANY_TOWN              
+	setflag FLAG_VISITED_LAKE_OF_RAGE              
+	setflag FLAG_VISITED_BLACKTHORN_CITY        
+	setflag FLAG_VISITED_INDIGO_PLATEAU         
+	setflag FLAG_VISITED_MT_SILVER                  
+	setflag FLAG_VISITED_RECEPTION_GATE           
+	setflag FLAG_VISITED_SAFARI_ZONE_GATE           
+	setflag FLAG_VISITED_PALLET_TOWN    
+	setflag FLAG_VISITED_VIRIDIAN_CITY    
+	setflag FLAG_LANDMARK_BATTLE_FRONTIER
+	setflag FLAG_VISITED_PEWTER_CITY 
+	setflag FLAG_VISITED_CERULEAN_CITY         
+	setflag FLAG_VISITED_VERMILION_CITY  
+	setflag FLAG_VISITED_LAVENDER_TOWN      
+	setflag FLAG_VISITED_CELADON_CITY     
+	setflag FLAG_VISITED_SAFFRON_CITY       
+	setflag FLAG_VISITED_FUCHSIA_CITY          
+	setflag FLAG_VISITED_CINNABAR_ISLAND 
 	release
 	end
 

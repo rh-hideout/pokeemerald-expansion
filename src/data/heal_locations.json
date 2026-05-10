@@ -555,6 +555,12 @@
       "map": "MAP_ROUTE26NORTH_HNS",
       "x": 12,
       "y": 6
+    },
+    {
+      "id": "HEAL_LOCATION_BATTLE_FRONTIER_OUTSIDE_EAST_HNS",
+      "map": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST_HNS",
+      "x": 12,
+      "y": 46
     }
   ]
 }
