@@ -44,9 +44,17 @@ enum {
 // =============================================================================
 
 enum {
-    ITEM_MODE_PLACEHOLDER_1,
-    ITEM_MODE_PLACEHOLDER_2,
-    ITEM_MODE_PLACEHOLDER_3,
+    ITEM_MODE_GAMEMODE,
+    ITEM_MODE_MODERN_MOVES,
+    ITEM_MODE_SYNCHRONIZE,
+    ITEM_MODE_STURDY,
+    ITEM_MODE_NEW_CITRUS,
+    ITEM_MODE_FAIRY_TYPES,
+    ITEM_MODE_LEGENDARY_ABILITIES,
+    ITEM_MODE_INFINITE_TMS,
+    ITEM_MODE_MINTS,
+    ITEM_MODE_SURVIVE_POISON,
+    ITEM_MODE_NEXT,
     ITEM_MODE_COUNT,
 };
 
@@ -93,7 +101,7 @@ enum {
 struct ChallengeMenuItem
 {
     const u8 *name;
-    const u8 *description;
+    const u8 *const *descriptions;
     u8 numChoices;
     const u8 *const *choiceNames;
 };
@@ -176,7 +184,7 @@ static const struct BgTemplate sBgTemplates[] = {
     },
 };
 
-static const u16 sBgPal[] = {RGB(17, 18, 31)};
+static const u16 sBgPal[] = {RGB(14, 20, 24)};
 static const u16 sTextPal[] = INCBIN_U16("graphics/interface/option_menu_text_custom.gbapal");
 
 // Frame tile IDs — loaded from window frame tileset at base 0x1A2
@@ -214,17 +222,19 @@ static const u8 *const sChoices_OffOn[] = {
     COMPOUND_STRING("ON"),
 };
 
-static const u8 *const sChoices_Three[] = {
+static const u8 *const sChoices_OnOff[] = {
+    COMPOUND_STRING("ON"),
     COMPOUND_STRING("OFF"),
-    COMPOUND_STRING("NORMAL"),
-    COMPOUND_STRING("HARD"),
 };
 
-static const u8 *const sChoices_Four[] = {
-    COMPOUND_STRING("OFF"),
-    COMPOUND_STRING("EASY"),
-    COMPOUND_STRING("NORMAL"),
-    COMPOUND_STRING("HARD"),
+static const u8 *const sChoices_Gamemode[] = {
+    COMPOUND_STRING("RECOMMENDED"),
+    COMPOUND_STRING("CUSTOM"),
+};
+
+static const u8 *const sChoices_OriginalModern[] = {
+    COMPOUND_STRING("ORIGINAL"),
+    COMPOUND_STRING("MODERN"),
 };
 
 static const u8 sText_TopBar_Left[]  = _("{L_BUTTON}PREVIOUS");
@@ -234,105 +244,200 @@ static const u8 sText_TopBar_Right[] = _("{R_BUTTON}NEXT");
 // Tab item tables — skeleton placeholders
 // =============================================================================
 
+static const u8 *const sDesc_Gamemode[] = {
+    COMPOUND_STRING("Recommended settings.\nNOTE: All selections are PERMANENT."),
+    COMPOUND_STRING("Choose your own rules.\nNOTE: All selections are PERMANENT."),
+};
+static const u8 *const sDesc_ModernMoves[] = {
+    COMPOUND_STRING("No new MOVES, and original MOVEPOOL\nfor all {PKMN} + new EGG and TUTOR MOVES."),
+    COMPOUND_STRING("13 new MOVES, and improved MOVEPOOL\nfor all {PKMN} + new EGG and TUTOR MOVES."),
+};
+static const u8 *const sDesc_Synchronize[] = {
+    COMPOUND_STRING("SYNCHRONIZE works as in GEN III.\n50% chance to copy nature."),
+    COMPOUND_STRING("SYNCHRONIZE works as in GEN VIII+.\n100% chance to copy nature."),
+};
+static const u8 *const sDesc_Sturdy[] = {
+    COMPOUND_STRING("STURDY works as in GEN III. Only\nnegates OHKO moves (GUILLOTINE, etc.)"),
+    COMPOUND_STRING("STURDY works as in GEN V+.\n{PKMN} survive lethal hits with 1HP."),
+};
+static const u8 *const sDesc_NewCitrus[] = {
+    COMPOUND_STRING("SITRUS BERRY restores 30HP.\nSame as GEN III."),
+    COMPOUND_STRING("SITRUS BERRY restores 25% of\ntotal HP. Same as GEN IV and up."),
+};
+static const u8 *const sDesc_FairyTypes[] = {
+    COMPOUND_STRING("FAIRY TYPE isn't added to {PKMN}\nthat got it in GEN VI."),
+    COMPOUND_STRING("FAIRY TYPE is added / changed to\ncertain {PKMN}, as in GEN VI."),
+};
+static const u8 *const sDesc_LegAbilities[] = {
+    COMPOUND_STRING("PRESSURE stays as the main\nability of some legendaries."),
+    COMPOUND_STRING("Legendaries have PRESSURE changed\nfor a better ability."),
+};
+static const u8 *const sDesc_InfiniteTMs[] = {
+    COMPOUND_STRING("TMs are not reusable.\nLike in the original."),
+    COMPOUND_STRING("TMs are reusable.\nModern Emerald recommended."),
+};
+static const u8 *const sDesc_Mints[] = {
+    COMPOUND_STRING("Mints are not available ingame until\nfinishing the game."),
+    COMPOUND_STRING("Mints can be bought at PRETTY PETAL\nFLOWER SHOP after the 4th medal."),
+};
+static const u8 *const sDesc_SurvivePoison[] = {
+    COMPOUND_STRING("Your {PKMN} will faint if they are\nPOISONED."),
+    COMPOUND_STRING("Your {PKMN} will survive the POISON\nstatus with 1HP."),
+};
+static const u8 *const sDesc_Next[] = {
+    COMPOUND_STRING("Continue to the next page."),
+};
+
 static const struct ChallengeMenuItem sTabItems_Mode[] = {
-    [ITEM_MODE_PLACEHOLDER_1] = {
-        .name        = COMPOUND_STRING("MODE OPTION 1"),
-        .description = COMPOUND_STRING("First mode option."),
-        .numChoices  = 2,
-        .choiceNames = sChoices_OffOn,
+    [ITEM_MODE_GAMEMODE] = {
+        .name         = COMPOUND_STRING("GAMEMODE"),
+        .descriptions = sDesc_Gamemode,
+        .numChoices   = 2,
+        .choiceNames  = sChoices_Gamemode,
     },
-    [ITEM_MODE_PLACEHOLDER_2] = {
-        .name        = COMPOUND_STRING("MODE OPTION 2"),
-        .description = COMPOUND_STRING("Three choices test."),
-        .numChoices  = 3,
-        .choiceNames = sChoices_Three,
+    [ITEM_MODE_MODERN_MOVES] = {
+        .name         = COMPOUND_STRING("{PKMN} MOVEPOOL"),
+        .descriptions = sDesc_ModernMoves,
+        .numChoices   = 2,
+        .choiceNames  = sChoices_OriginalModern,
     },
-    [ITEM_MODE_PLACEHOLDER_3] = {
-        .name        = COMPOUND_STRING("MODE OPTION 3"),
-        .description = COMPOUND_STRING("Four choices test."),
-        .numChoices  = 4,
-        .choiceNames = sChoices_Four,
+    [ITEM_MODE_SYNCHRONIZE] = {
+        .name         = COMPOUND_STRING("SYNCHRONIZE"),
+        .descriptions = sDesc_Synchronize,
+        .numChoices   = 2,
+        .choiceNames  = sChoices_OriginalModern,
+    },
+    [ITEM_MODE_STURDY] = {
+        .name         = COMPOUND_STRING("STURDY"),
+        .descriptions = sDesc_Sturdy,
+        .numChoices   = 2,
+        .choiceNames  = sChoices_OriginalModern,
+    },
+    [ITEM_MODE_NEW_CITRUS] = {
+        .name         = COMPOUND_STRING("SITRUS BERRY"),
+        .descriptions = sDesc_NewCitrus,
+        .numChoices   = 2,
+        .choiceNames  = sChoices_OriginalModern,
+    },
+    [ITEM_MODE_FAIRY_TYPES] = {
+        .name         = COMPOUND_STRING("ADD FAIRY TYPE"),
+        .descriptions = sDesc_FairyTypes,
+        .numChoices   = 2,
+        .choiceNames  = sChoices_OffOn,
+    },
+    [ITEM_MODE_LEGENDARY_ABILITIES] = {
+        .name         = COMPOUND_STRING("LEGEN. ABILITIES"),
+        .descriptions = sDesc_LegAbilities,
+        .numChoices   = 2,
+        .choiceNames  = sChoices_OffOn,
+    },
+    [ITEM_MODE_INFINITE_TMS] = {
+        .name         = COMPOUND_STRING("REUSABLE TMS"),
+        .descriptions = sDesc_InfiniteTMs,
+        .numChoices   = 2,
+        .choiceNames  = sChoices_OffOn,
+    },
+    [ITEM_MODE_MINTS] = {
+        .name         = COMPOUND_STRING("NATURE MINTS"),
+        .descriptions = sDesc_Mints,
+        .numChoices   = 2,
+        .choiceNames  = sChoices_OffOn,
+    },
+    [ITEM_MODE_SURVIVE_POISON] = {
+        .name         = COMPOUND_STRING("SURVIVE POISON"),
+        .descriptions = sDesc_SurvivePoison,
+        .numChoices   = 2,
+        .choiceNames  = sChoices_OffOn,
+    },
+    [ITEM_MODE_NEXT] = {
+        .name         = COMPOUND_STRING("NEXT"),
+        .descriptions = sDesc_Next,
+        .numChoices   = 0,
+        .choiceNames  = NULL,
     },
 };
 
+static const u8 *const sDesc_Placeholder[] = { COMPOUND_STRING("Placeholder option.") };
+static const u8 *const sDesc_SaveExit[] = { COMPOUND_STRING("Save settings and exit.") };
+
 static const struct ChallengeMenuItem sTabItems_Features[] = {
     [ITEM_FEATURES_PLACEHOLDER_1] = {
-        .name        = COMPOUND_STRING("FEATURE 1"),
-        .description = COMPOUND_STRING("First feature."),
-        .numChoices  = 2,
-        .choiceNames = sChoices_OffOn,
+        .name         = COMPOUND_STRING("FEATURE 1"),
+        .descriptions = sDesc_Placeholder,
+        .numChoices   = 2,
+        .choiceNames  = sChoices_OffOn,
     },
     [ITEM_FEATURES_PLACEHOLDER_2] = {
-        .name        = COMPOUND_STRING("FEATURE 2"),
-        .description = COMPOUND_STRING("Second feature."),
-        .numChoices  = 2,
-        .choiceNames = sChoices_OffOn,
+        .name         = COMPOUND_STRING("FEATURE 2"),
+        .descriptions = sDesc_Placeholder,
+        .numChoices   = 2,
+        .choiceNames  = sChoices_OffOn,
     },
 };
 
 static const struct ChallengeMenuItem sTabItems_Randomizer[] = {
     [ITEM_RANDOM_PLACEHOLDER_1] = {
-        .name        = COMPOUND_STRING("RANDOM OPT 1"),
-        .description = COMPOUND_STRING("First randomizer option."),
-        .numChoices  = 2,
-        .choiceNames = sChoices_OffOn,
+        .name         = COMPOUND_STRING("RANDOM OPT 1"),
+        .descriptions = sDesc_Placeholder,
+        .numChoices   = 2,
+        .choiceNames  = sChoices_OffOn,
     },
     [ITEM_RANDOM_PLACEHOLDER_2] = {
-        .name        = COMPOUND_STRING("RANDOM OPT 2"),
-        .description = COMPOUND_STRING("Second randomizer option."),
-        .numChoices  = 2,
-        .choiceNames = sChoices_OffOn,
+        .name         = COMPOUND_STRING("RANDOM OPT 2"),
+        .descriptions = sDesc_Placeholder,
+        .numChoices   = 2,
+        .choiceNames  = sChoices_OffOn,
     },
 };
 
 static const struct ChallengeMenuItem sTabItems_Nuzlocke[] = {
     [ITEM_NUZLOCKE_PLACEHOLDER_1] = {
-        .name        = COMPOUND_STRING("NUZLOCKE OPT 1"),
-        .description = COMPOUND_STRING("First nuzlocke option."),
-        .numChoices  = 2,
-        .choiceNames = sChoices_OffOn,
+        .name         = COMPOUND_STRING("NUZLOCKE OPT 1"),
+        .descriptions = sDesc_Placeholder,
+        .numChoices   = 2,
+        .choiceNames  = sChoices_OffOn,
     },
     [ITEM_NUZLOCKE_PLACEHOLDER_2] = {
-        .name        = COMPOUND_STRING("NUZLOCKE OPT 2"),
-        .description = COMPOUND_STRING("Second nuzlocke option."),
-        .numChoices  = 2,
-        .choiceNames = sChoices_OffOn,
+        .name         = COMPOUND_STRING("NUZLOCKE OPT 2"),
+        .descriptions = sDesc_Placeholder,
+        .numChoices   = 2,
+        .choiceNames  = sChoices_OffOn,
     },
 };
 
 static const struct ChallengeMenuItem sTabItems_Difficulty[] = {
     [ITEM_DIFFICULTY_PLACEHOLDER_1] = {
-        .name        = COMPOUND_STRING("DIFFICULTY 1"),
-        .description = COMPOUND_STRING("First difficulty option."),
-        .numChoices  = 2,
-        .choiceNames = sChoices_OffOn,
+        .name         = COMPOUND_STRING("DIFFICULTY 1"),
+        .descriptions = sDesc_Placeholder,
+        .numChoices   = 2,
+        .choiceNames  = sChoices_OffOn,
     },
     [ITEM_DIFFICULTY_PLACEHOLDER_2] = {
-        .name        = COMPOUND_STRING("DIFFICULTY 2"),
-        .description = COMPOUND_STRING("Second difficulty option."),
-        .numChoices  = 2,
-        .choiceNames = sChoices_OffOn,
+        .name         = COMPOUND_STRING("DIFFICULTY 2"),
+        .descriptions = sDesc_Placeholder,
+        .numChoices   = 2,
+        .choiceNames  = sChoices_OffOn,
     },
 };
 
 static const struct ChallengeMenuItem sTabItems_Challenges[] = {
     [ITEM_CHALLENGES_PLACEHOLDER_1] = {
-        .name        = COMPOUND_STRING("CHALLENGE 1"),
-        .description = COMPOUND_STRING("First challenge option."),
-        .numChoices  = 2,
-        .choiceNames = sChoices_OffOn,
+        .name         = COMPOUND_STRING("CHALLENGE 1"),
+        .descriptions = sDesc_Placeholder,
+        .numChoices   = 2,
+        .choiceNames  = sChoices_OffOn,
     },
     [ITEM_CHALLENGES_PLACEHOLDER_2] = {
-        .name        = COMPOUND_STRING("CHALLENGE 2"),
-        .description = COMPOUND_STRING("Second challenge option."),
-        .numChoices  = 2,
-        .choiceNames = sChoices_OffOn,
+        .name         = COMPOUND_STRING("CHALLENGE 2"),
+        .descriptions = sDesc_Placeholder,
+        .numChoices   = 2,
+        .choiceNames  = sChoices_OffOn,
     },
     [ITEM_CHALLENGES_SAVE] = {
-        .name        = COMPOUND_STRING("SAVE & EXIT"),
-        .description = COMPOUND_STRING("Save settings and exit."),
-        .numChoices  = 0,
-        .choiceNames = NULL,
+        .name         = COMPOUND_STRING("SAVE & EXIT"),
+        .descriptions = sDesc_SaveExit,
+        .numChoices   = 0,
+        .choiceNames  = NULL,
     },
 };
 
@@ -399,6 +504,42 @@ static const struct ChallengeMenuItem *GetCurrentTabItems(void)
 }
 
 // =============================================================================
+// Conditions / presets
+// =============================================================================
+
+static bool8 CheckConditions(u8 tab, u8 itemIndex)
+{
+    switch (tab)
+    {
+    case TAB_MODE:
+        switch (itemIndex)
+        {
+        case ITEM_MODE_GAMEMODE:
+        case ITEM_MODE_NEXT:
+            return TRUE;
+        default:
+            return *GetSelectionPtr(TAB_MODE, ITEM_MODE_GAMEMODE) == 1; // CUSTOM
+        }
+    default:
+        return TRUE;
+    }
+}
+
+static void ApplyRecommendedPresets(void)
+{
+    // When RECOMMENDED is selected, force all mode options to their "on/new" values
+    *GetSelectionPtr(TAB_MODE, ITEM_MODE_MODERN_MOVES)       = 1; // ON
+    *GetSelectionPtr(TAB_MODE, ITEM_MODE_SYNCHRONIZE)        = 1; // NEW
+    *GetSelectionPtr(TAB_MODE, ITEM_MODE_STURDY)             = 1; // NEW
+    *GetSelectionPtr(TAB_MODE, ITEM_MODE_NEW_CITRUS)         = 1; // NEW
+    *GetSelectionPtr(TAB_MODE, ITEM_MODE_FAIRY_TYPES)        = 1; // ON
+    *GetSelectionPtr(TAB_MODE, ITEM_MODE_LEGENDARY_ABILITIES)= 1; // ON
+    *GetSelectionPtr(TAB_MODE, ITEM_MODE_INFINITE_TMS)       = 1; // ON
+    *GetSelectionPtr(TAB_MODE, ITEM_MODE_MINTS)              = 1; // ON
+    *GetSelectionPtr(TAB_MODE, ITEM_MODE_SURVIVE_POISON)     = 1; // ON
+}
+
+// =============================================================================
 // Callbacks
 // =============================================================================
 
@@ -459,9 +600,9 @@ static int GetMiddleX(const u8 *txt1, const u8 *txt2, const u8 *txt3)
     return (widthLeft - widthMid - widthRight) / 2 + 104;
 }
 
-static void DrawChoices_Two(const u8 *const *strings, int selection, int y, bool8 active)
+static void DrawChoices_Two(const u8 *const *strings, int selection, int y, bool8 active, int leftX)
 {
-    DrawRightSideChoiceText(strings[0], 104, y + 1, selection == 0, active);
+    DrawRightSideChoiceText(strings[0], leftX, y + 1, selection == 0, active);
     DrawRightSideChoiceText(strings[1], GetStringRightAlignXOffset(FONT_NORMAL, strings[1], 198), y + 1, selection == 1, active);
 }
 
@@ -502,6 +643,7 @@ static void ChallengeMenu_MoveCursorFunc(s32 itemIndex, bool8 onInit, struct Lis
     if (!onInit)
         PlaySE(SE_SELECT);
 
+    ListMenuGetScrollAndRow(sMenu->listTaskId, &sMenu->scrollOffset[sMenu->currentTab], &sMenu->selectedRow[sMenu->currentTab]);
     HighlightRow();
     DrawDescription();
 }
@@ -513,6 +655,15 @@ static void ChallengeMenu_ItemPrintFunc(u8 windowId, u32 itemId, u8 y)
     if (itemId >= GetCurrentTabItemCount())
         return;
 
+    bool8 active = CheckConditions(sMenu->currentTab, itemId);
+
+    // Gray out locked item names by overriding the ListMenu text colors
+    if (!active)
+    {
+        u8 color[3] = { TEXT_COLOR_TRANSPARENT, TEXT_COLOR_OPTIONS_GRAY_LIGHT_FG, TEXT_COLOR_OPTIONS_GRAY_SHADOW };
+        AddTextPrinterParameterized4(windowId, FONT_NORMAL, 8, y + 1, 0, 0, color, TEXT_SKIP_DRAW, items[itemId].name);
+    }
+
     if (items[itemId].numChoices == 0 || items[itemId].choiceNames == NULL)
         return;
 
@@ -523,22 +674,25 @@ static void ChallengeMenu_ItemPrintFunc(u8 windowId, u32 itemId, u8 y)
     switch (items[itemId].numChoices)
     {
     case 2:
-        DrawChoices_Two(items[itemId].choiceNames, sel, y, TRUE);
+    {
+        int leftX = (sMenu->currentTab == TAB_MODE && itemId == ITEM_MODE_GAMEMODE) ? 74 : 104;
+        DrawChoices_Two(items[itemId].choiceNames, sel, y, active, leftX);
         break;
+    }
     case 3:
-        DrawChoices_Three(items[itemId].choiceNames, sel, y, TRUE);
+        DrawChoices_Three(items[itemId].choiceNames, sel, y, active);
         break;
     case 4:
-        DrawChoices_Four(items[itemId].choiceNames, sel, y, TRUE);
+        DrawChoices_Four(items[itemId].choiceNames, sel, y, active);
         break;
     case 5:
-        DrawChoices_Five(items[itemId].choiceNames, sel, y, TRUE);
+        DrawChoices_Five(items[itemId].choiceNames, sel, y, active);
         break;
     default:
     {
         const u8 *choiceStr = items[itemId].choiceNames[sel];
         u8 x = GetStringRightAlignXOffset(FONT_NORMAL, choiceStr, 198);
-        DrawRightSideChoiceText(choiceStr, x, y + 1, TRUE, TRUE);
+        DrawRightSideChoiceText(choiceStr, x, y + 1, TRUE, active);
         break;
     }
     }
@@ -560,6 +714,7 @@ static void InitListMenu(void)
         sListItems[i].id = i;
     }
 
+    memset(&template, 0, sizeof(template));
     template.items = sListItems;
     template.moveCursorFunc = ChallengeMenu_MoveCursorFunc;
     template.itemPrintFunc = ChallengeMenu_ItemPrintFunc;
@@ -646,10 +801,17 @@ static void DrawDescription(void)
     FillWindowPixelBuffer(WIN_DESCRIPTION, PIXEL_FILL(1));
 
     const struct ChallengeMenuItem *items = GetCurrentTabItems();
-    if (itemIndex < GetCurrentTabItemCount() && items[itemIndex].description != NULL)
+    if (itemIndex < GetCurrentTabItemCount() && items[itemIndex].descriptions != NULL)
     {
-        AddTextPrinterParameterized4(WIN_DESCRIPTION, FONT_NORMAL,
-            8, 1, 0, 0, color, TEXT_SKIP_DRAW, items[itemIndex].description);
+        u8 sel = *GetSelectionPtr(sMenu->currentTab, itemIndex);
+        if (sel >= items[itemIndex].numChoices)
+            sel = 0;
+        const u8 *desc = items[itemIndex].descriptions[sel];
+        if (desc != NULL)
+        {
+            AddTextPrinterParameterized4(WIN_DESCRIPTION, FONT_NORMAL,
+                8, 1, 0, 0, color, TEXT_SKIP_DRAW, desc);
+        }
     }
 
     CopyWindowToVram(WIN_DESCRIPTION, COPYWIN_FULL);
@@ -719,6 +881,8 @@ static void ProcessLeftRight(void)
         return;
     if (items[itemIndex].numChoices == 0)
         return;
+    if (!CheckConditions(sMenu->currentTab, itemIndex))
+        return;
 
     u8 *sel = GetSelectionPtr(sMenu->currentTab, itemIndex);
     u8 prev = *sel;
@@ -740,6 +904,10 @@ static void ProcessLeftRight(void)
 
     if (*sel != prev)
     {
+        // When GAMEMODE changes to RECOMMENDED, apply presets
+        if (sMenu->currentTab == TAB_MODE && itemIndex == ITEM_MODE_GAMEMODE && *sel == 0)
+            ApplyRecommendedPresets();
+
         PlaySE(SE_SELECT);
         RedrawListMenu(sMenu->listTaskId);
         HighlightRow();
@@ -787,6 +955,14 @@ static void Task_ProcessInput(u8 taskId)
     {
         gTasks[taskId].func = Task_Save;
         return;
+    }
+
+    const struct ChallengeMenuItem *items = GetCurrentTabItems();
+    if ((u32)input < GetCurrentTabItemCount()
+        && items[input].numChoices == 0
+        && sMenu->currentTab < TAB_COUNT - 1)
+    {
+        SwitchTab(+1);
     }
 }
 
