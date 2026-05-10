@@ -9,6 +9,7 @@ extern const u8 BattleScript_HitFromDamageCalc[];
 extern const u8 BattleScript_MoveEnd[];
 extern const u8 BattleScript_MakeMoveMissed[];
 extern const u8 BattleScript_MoveMissedPause[];
+extern const u8 BattleScript_MoveMissedPauseRet[];
 extern const u8 BattleScript_MoveMissedPause[];
 extern const u8 BattleScript_MoveMissed[];
 extern const u8 BattleScript_FlingMissed[];

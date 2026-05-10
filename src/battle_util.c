@@ -8129,7 +8129,7 @@ static inline void TryNoticeIllusionInTypeEffectiveness(enum Move move, enum Typ
         RecordAbilityBattle(ctx.battlerDef, ABILITY_ILLUSION);
 }
 
-void UpdateMoveResultFlags(uq4_12_t modifier, u16 *resultFlags)
+void UpdateMoveResultFlags(uq4_12_t modifier, u32 *resultFlags)
 {
     if (modifier == UQ_4_12(0.0))
     {

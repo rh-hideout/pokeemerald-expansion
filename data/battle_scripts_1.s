@@ -610,7 +610,7 @@ BattleScript_FlingBlockedByShieldDust::
 
 BattleScript_FlingMissed::
 	removeitem BS_ATTACKER
-	goto BattleScript_MoveMissedPause
+	goto BattleScript_MoveMissedPauseRet
 
 BattleScript_RemoveItem::
 	removeitem BS_ATTACKER
@@ -1444,7 +1444,6 @@ BattleScript_EffectPlaceholder::
 BattleScript_EffectHit::
 	attackcanceler
 BattleScript_HitFromAccCheck::
-	accuracycheck
 	copybyte gEffectBattler, gBattlerAttacker
 	setpreattackadditionaleffect
 BattleScript_HitFromDamageCalc::
@@ -1483,6 +1482,13 @@ BattleScript_MoveMissed::
 	resultmessage
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
+
+BattleScript_MoveMissedPauseRet::
+	pause B_WAIT_TIME_SHORT
+	effectivenesssound
+	resultmessage
+	waitmessage B_WAIT_TIME_LONG
+	return
 
 BattleScript_TerrainPrevents::
 	pause B_WAIT_TIME_SHORT
@@ -4825,7 +4831,7 @@ BattleScript_SturdyPreventsOHKO::
 	call BattleScript_AbilityPopUp
 	printstring STRINGID_ITDOESNTAFFECT
 	pause B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_MoveHPDrain::
 	pause B_WAIT_TIME_SHORT
