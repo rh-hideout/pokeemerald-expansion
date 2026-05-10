@@ -54,9 +54,11 @@ These are the options you can toggle and change to select the ideal possible spe
 
 Now you may notice that we didn't discuss `bool32 (*filterFunc)(enum Species species, const struct FilterFuncArgs *filterFuncArgs)`, and for good reason, as that element is more complicated than the others. This is a pointer to an additional filter you can mess with or add to select for specific traits or features.
 
-For example, one of the default options uses `.filterFunc = IsSpeciesAllowedByRandomBstArgs`. When you call `getrandomspecies`, the optional `arg1` and `arg2` values are forwarded to the filter function. `IsSpeciesAllowedByRandomBstArgs` treats `arg1` as the BST target and `arg2` as the leniency, so `arg1=300, arg2=100` allows pokemon with BST 200 through 400.
+For example, one of the default options uses `.filterFunc = IsInBstRangeFilterFunc`. When you call `getrandomspecies`, the optional `arg1` and `arg2` values are forwarded to the filter function. `IsInBstRangeFilterFunc` treats `arg1` as the BST target and `arg2` as the leniency, so `arg1=300, arg2=100` allows pokemon with BST 200 through 400.
 
-If a species option has a `filterFunc`, pass the required args for that function. Omitted args default to `0xFFFF`, and an option with a filter function rejects every species if both args are omitted. That makes the command resolve to `SPECIES_NONE` instead of silently giving something outside the intended rules.
+If a species option has a `filterFunc`, pass any args that function requires. Omitted args default to `0xFFFF`, and each filter function decides how to handle omitted args. For example, `IsInBstRangeFilterFunc` requires both args and asserts if either one is omitted, but a custom filter function can ignore the args entirely.
+
+`IsInBstRangeFilterFunc` is marked `UNUSED` while the example options in [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h) are commented out. If you uncomment or add an option that uses `.filterFunc = IsInBstRangeFilterFunc`, remove the `UNUSED` prefix from its declaration and definition in [src/random_mon_generation.c](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/random_mon_generation.c).
 
 You could also, using similar logic, create a function that treats `arg1` as a type value, and then filter only for pokemon of that type if possible. If you do not pass a filter function, then no filter beyond the other elements is applied.
 
@@ -109,7 +111,7 @@ static const struct RandomSpeciesGeneratorOptions sRandomSpeciesGeneratorOptions
     [SPECIES_GENERATOR_BST_RESTRICTED] =
     {
         .dexMode = RANDOM_MON_DEX_HOENN,
-        .filterFunc = IsSpeciesAllowedByRandomBstArgs,
+        .filterFunc = IsInBstRangeFilterFunc,
         .allowLegendary = FALSE,
         .allowMythical = FALSE,
         .allowSubLegendary = FALSE,
@@ -229,7 +231,7 @@ getrandomitem VAR_0x8001, ITEM_GENERATOR_LIMITED_POOL
 givemon VAR_0x8000, 50, item=VAR_0x8001
 ```
 
-If your species option uses a `filterFunc`, you can pass up to two optional arguments. If you omit them, they default to `0xFFFF`; when both are omitted, filtered species options reject every species and return `SPECIES_NONE`.
+If your species option uses a `filterFunc`, you can pass up to two optional arguments. If you omit them, they default to `0xFFFF`; the filter function itself decides whether omitted args are valid.
 
 ```
 getrandomspecies VAR_0x8000, SPECIES_GENERATOR_BST_RESTRICTED, arg1=300, arg2=100
@@ -250,7 +252,7 @@ Here's an example of how you'd call it in a script when it all comes together:
 ```
 EventScript_GiveFilteredRandomMon::
     // BST target = 300, leniency = 100, so valid BST range is 200-400.
-    // SPECIES_GENERATOR_BST_RESTRICTED uses IsSpeciesAllowedByRandomBstArgs as a filterFunc.
+    // SPECIES_GENERATOR_BST_RESTRICTED uses IsInBstRangeFilterFunc as a filterFunc.
     getrandomspecies VAR_0x8000, SPECIES_GENERATOR_BST_RESTRICTED, arg1=300, arg2=100
     getrandomitem VAR_0x8001, ITEM_GENERATOR_LIMITED_POOL
 

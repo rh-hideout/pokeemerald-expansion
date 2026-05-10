@@ -3,19 +3,24 @@
 
 enum
 {
+    /*
     SPECIES_GENERATOR_NO_SUPERMONS,
     SPECIES_GENERATOR_LIMITED_POOL,
     SPECIES_GENERATOR_BST_RESTRICTED,
+    */
     RANDOM_SPECIES_OPTIONS_COUNT,
 };
 
 enum
 {
+    /*
     ITEM_GENERATOR_STANDARD,
     ITEM_GENERATOR_LIMITED_POOL,
+    */
     RANDOM_ITEM_OPTIONS_COUNT,
 };
 
+/*
 static const enum Species sRandomSpeciesOption1SpeciesPool[] =
 {
     SPECIES_TREECKO,
@@ -67,9 +72,11 @@ static const enum Item sRandomItemOption1HeldItemPool[] =
     ITEM_CHOICE_SCARF,
     ITEM_CHOICE_SPECS,
 };
+*/
 
 static const struct RandomSpeciesGeneratorOptions sRandomSpeciesGeneratorOptions[] =
 {
+    /*
     [SPECIES_GENERATOR_NO_SUPERMONS] =
     {
         .dexMode = RANDOM_MON_DEX_NATIONAL,
@@ -96,7 +103,7 @@ static const struct RandomSpeciesGeneratorOptions sRandomSpeciesGeneratorOptions
     [SPECIES_GENERATOR_BST_RESTRICTED] =
     {
         .dexMode = RANDOM_MON_DEX_HOENN,
-        .filterFunc = IsSpeciesAllowedByRandomBstArgs,
+        .filterFunc = IsInBstRangeFilterFunc,
         .allowLegendary = FALSE,
         .allowMythical = FALSE,
         .allowSubLegendary = FALSE,
@@ -104,10 +111,12 @@ static const struct RandomSpeciesGeneratorOptions sRandomSpeciesGeneratorOptions
         .allowParadox = FALSE,
         .randomizeForms = TRUE,
     },
+    */
 };
 
 static const struct RandomItemGeneratorOptions sRandomItemGeneratorOptions[] =
 {
+    /*
     [ITEM_GENERATOR_STANDARD] =
     {
         .bannedHoldEffects = sRandomItemStandardBannedHoldEffects,
@@ -120,4 +129,5 @@ static const struct RandomItemGeneratorOptions sRandomItemGeneratorOptions[] =
         .bannedHoldEffects = sRandomItemStandardBannedHoldEffects,
         .bannedHoldEffectsCount = ARRAY_COUNT(sRandomItemStandardBannedHoldEffects),
     },
+    */
 };

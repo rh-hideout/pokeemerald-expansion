@@ -12,7 +12,7 @@
 #include "constants/pokeball.h"
 #include "constants/species.h"
 
-#define MAX_EXHAUSTIVE_SEARCH_POOL_SIZE 20
+#define EXHAUSTIVE_SEARCH_POOL_MAX_SIZE 20
 #define INVALID_RANDOM_SPECIES SPECIES_NONE
 
 enum RandomMonDexMode
@@ -47,7 +47,7 @@ struct RandomItemGeneratorOptions
 };
 
 static enum Species GetSpeciesCandidateForm(enum Species species, const struct RandomSpeciesGeneratorOptions *options, const struct FilterFuncArgs *filterFuncArgs);
-static bool32 IsSpeciesAllowedByRandomBstArgs(enum Species species, const struct FilterFuncArgs *filterFuncArgs);
+static bool32 UNUSED IsInBstRangeFilterFunc(enum Species species, const struct FilterFuncArgs *filterFuncArgs);
 static enum Species GetRandomMonSpeciesAtIndex(const struct RandomSpeciesGeneratorOptions *options, u32 index);
 static enum Species SlowPickRandomMonSpecies(const struct RandomSpeciesGeneratorOptions *options, u32 poolSize, const struct FilterFuncArgs *filterFuncArgs);
 static enum Species FastPickRandomMonSpecies(const struct RandomSpeciesGeneratorOptions *options, u32 poolSize, const struct FilterFuncArgs *filterFuncArgs);
@@ -56,7 +56,6 @@ static enum Item SlowPickRandomMonHeldItem(const struct RandomItemGeneratorOptio
 static enum Item FastPickRandomMonHeldItem(const struct RandomItemGeneratorOptions *options, u32 poolSize);
 static enum PokeBall GetRandomMonBall(void);
 static enum PokeBall ResolveRandomMonBall(enum PokeBall ball);
-static bool32 FilterFuncArgsAreEmpty(const struct FilterFuncArgs *filterFuncArgs);
 static bool32 MoveOrder(u16 moveA, u16 moveB);
 static void SortMoves(enum Move *moves);
 static bool32 IsMoveInMoveset(enum Move move, enum Move *moves, u32 count);
@@ -89,8 +88,6 @@ static bool32 IsSpeciesBannedByRandomMonOptions(enum Species species, const stru
         return TRUE;
     if (!options->allowParadox && speciesInfo->isParadox)
         return TRUE;
-    if (options->filterFunc != NULL && FilterFuncArgsAreEmpty(filterFuncArgs))
-        return TRUE;
     if (options->filterFunc != NULL && !options->filterFunc(species, filterFuncArgs))
         return TRUE;
 
@@ -100,11 +97,10 @@ static bool32 IsSpeciesBannedByRandomMonOptions(enum Species species, const stru
 /*
 * The below function uses arg1 and arg2 as BST centerpoint and BST leniency points.
 * If a mon is within centerpoint +/- leniency, it's valid.
-* This only applies if .filterFunc for your struct points to this function, and if
-* the centerpoint/standard (arg1) is >= 100.
+* This only applies if .filterFunc for your struct points to this function.
 */
 
-static bool32 IsSpeciesAllowedByRandomBstArgs(enum Species species, const struct FilterFuncArgs *filterFuncArgs)
+static bool32 UNUSED IsInBstRangeFilterFunc(enum Species species, const struct FilterFuncArgs *filterFuncArgs)
 {
     u16 bstStandard = filterFuncArgs->arg1;
     u16 bstLeniency = filterFuncArgs->arg2;
@@ -112,8 +108,10 @@ static bool32 IsSpeciesAllowedByRandomBstArgs(enum Species species, const struct
     u16 minBst;
     u16 maxBst;
 
-    if (bstStandard == FILTER_FUNC_ARG_NONE && bstLeniency == FILTER_FUNC_ARG_NONE)
+    assertf(bstStandard != FILTER_FUNC_ARG_NONE && bstLeniency != FILTER_FUNC_ARG_NONE, "missing BST filter args")
+    {
         return FALSE;
+    }
 
     minBst = (bstStandard > bstLeniency) ? bstStandard - bstLeniency : 0;
     maxBst = bstStandard + bstLeniency;
@@ -258,9 +256,6 @@ enum Species GetRandomSpecies(u32 optionId, const struct FilterFuncArgs *filterF
 
     options = &sRandomSpeciesGeneratorOptions[optionId];
 
-    if (options->filterFunc != NULL && FilterFuncArgsAreEmpty(filterFuncArgs))
-        return INVALID_RANDOM_SPECIES;
-
     if (options->speciesPoolCount != 0)
     {
         assertf(options->speciesPool != NULL, "positive speciesPoolCount passed with empty speciesPool")
@@ -278,7 +273,7 @@ enum Species GetRandomSpecies(u32 optionId, const struct FilterFuncArgs *filterF
         poolSize = NATIONAL_DEX_COUNT;
     }
 
-    if (options->speciesPoolCount != 0 && options->speciesPoolCount <= MAX_EXHAUSTIVE_SEARCH_POOL_SIZE)
+    if (poolSize <= EXHAUSTIVE_SEARCH_POOL_MAX_SIZE)
         return SlowPickRandomMonSpecies(options, poolSize, filterFuncArgs);
 
     return FastPickRandomMonSpecies(options, poolSize, filterFuncArgs);
@@ -287,7 +282,7 @@ enum Species GetRandomSpecies(u32 optionId, const struct FilterFuncArgs *filterF
 static enum Species SlowPickRandomMonSpecies(const struct RandomSpeciesGeneratorOptions *options, u32 poolSize, const struct FilterFuncArgs *filterFuncArgs)
 {
     u32 eligibleSpeciesCount = 0;
-    enum Species eligibleSpecies[MAX_EXHAUSTIVE_SEARCH_POOL_SIZE];
+    enum Species eligibleSpecies[EXHAUSTIVE_SEARCH_POOL_MAX_SIZE];
 
     for (u32 i = 0; i < poolSize; i++)
     {
@@ -320,20 +315,17 @@ static enum Species FastPickRandomMonSpecies(const struct RandomSpeciesGenerator
     return INVALID_RANDOM_SPECIES;
 }
 
-static bool32 IsRandomItemBannedHoldEffect(const struct RandomItemGeneratorOptions *options, enum HoldEffect holdEffect)
+static bool32 IsRandomMonHeldItemAllowed(const struct RandomItemGeneratorOptions *options, enum Item item)
 {
+    enum HoldEffect holdEffect = GetItemHoldEffect(item);
+
     for (u32 i = 0; i < options->bannedHoldEffectsCount; i++)
     {
         if (options->bannedHoldEffects[i] == holdEffect)
-            return TRUE;
+            return FALSE;
     }
 
-    return FALSE;
-}
-
-static bool32 IsRandomMonHeldItemAllowed(const struct RandomItemGeneratorOptions *options, enum Item item)
-{
-    return !IsRandomItemBannedHoldEffect(options, GetItemHoldEffect(item));
+    return TRUE;
 }
 
 static enum Item GetRandomMonHeldItemAtIndex(const struct RandomItemGeneratorOptions *options, u32 index)
@@ -347,7 +339,7 @@ static enum Item GetRandomMonHeldItemAtIndex(const struct RandomItemGeneratorOpt
 static enum Item SlowPickRandomMonHeldItem(const struct RandomItemGeneratorOptions *options, u32 poolSize)
 {
     u32 eligibleItemCount = 0;
-    enum Item eligibleItems[MAX_EXHAUSTIVE_SEARCH_POOL_SIZE];
+    enum Item eligibleItems[EXHAUSTIVE_SEARCH_POOL_MAX_SIZE];
 
     for (u32 i = 0; i < poolSize; i++)
     {
@@ -403,7 +395,7 @@ enum Item GetRandomHeldItem(u32 optionId)
         poolSize = ITEMS_COUNT - 1;
     }
 
-    if (options->heldItemPoolCount != 0 && options->heldItemPoolCount <= MAX_EXHAUSTIVE_SEARCH_POOL_SIZE)
+    if (poolSize <= EXHAUSTIVE_SEARCH_POOL_MAX_SIZE)
         return SlowPickRandomMonHeldItem(options, poolSize);
 
     return FastPickRandomMonHeldItem(options, poolSize);
@@ -423,12 +415,6 @@ static enum PokeBall ResolveRandomMonBall(enum PokeBall ball)
 
     errorf("Unknown ball value %d", ball);
     return BALL_STRANGE;
-}
-
-static bool32 FilterFuncArgsAreEmpty(const struct FilterFuncArgs *filterFuncArgs)
-{
-    return filterFuncArgs->arg1 == FILTER_FUNC_ARG_NONE
-        && filterFuncArgs->arg2 == FILTER_FUNC_ARG_NONE;
 }
 
 static bool32 MoveOrder(u16 moveA, u16 moveB)
@@ -563,7 +549,8 @@ void ScrCmd_getrandomspecies(struct ScriptContext *ctx)
         .arg2 = ReadRandomMonFilterFuncArg(ctx),
     };
 
-    Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
+    Script_RequestEffects(SCREFF_V1);
+    Script_RequestWriteVar(destVar);
     VarSet(destVar, GetRandomSpecies(speciesOptionId, &filterFuncArgs));
 }
 
@@ -572,6 +559,7 @@ void ScrCmd_getrandomitem(struct ScriptContext *ctx)
     u16 destVar = ScriptReadHalfword(ctx);
     u16 itemOptionId = VarGet(ScriptReadHalfword(ctx));
 
-    Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
+    Script_RequestEffects(SCREFF_V1);
+    Script_RequestWriteVar(destVar);
     VarSet(destVar, GetRandomHeldItem(itemOptionId));
 }

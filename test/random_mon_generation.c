@@ -14,7 +14,8 @@
 #define TEST_SPECIES_GENERATOR_FILTERED_POOL 0
 #define TEST_SPECIES_GENERATOR_MYTHICAL_FILTER 1
 #define TEST_SPECIES_GENERATOR_BST_FILTER 2
-#define TEST_SPECIES_GENERATOR_FORM_FILTER 3
+#define TEST_SPECIES_GENERATOR_NO_ARG_FILTER 3
+#define TEST_SPECIES_GENERATOR_FORM_FILTER 4
 
 #define TEST_ITEM_GENERATOR_SINGLE_ITEM 0
 #define TEST_ITEM_GENERATOR_FILTERED_POOL 1
@@ -57,20 +58,20 @@ TEST("Random mon generation rejects species outside BST vars")
     EXPECT_EQ(species, SPECIES_MEW);
 }
 
-TEST("Random mon generation applies filters to possible forms")
+TEST("Random mon generation allows filter funcs with no args")
 {
-    const struct FilterFuncArgs filterFuncArgs = {0, 0};
+    const struct FilterFuncArgs filterFuncArgs = {FILTER_FUNC_ARG_NONE, FILTER_FUNC_ARG_NONE};
+    enum Species species = GetRandomSpecies(TEST_SPECIES_GENERATOR_NO_ARG_FILTER, &filterFuncArgs);
+
+    EXPECT_EQ(species, SPECIES_CHARIZARD);
+}
+
+TEST("Random mon generation resolves variant forms before applying filter funcs")
+{
+    const struct FilterFuncArgs filterFuncArgs = {FILTER_FUNC_ARG_NONE, FILTER_FUNC_ARG_NONE};
     enum Species species = GetRandomSpecies(TEST_SPECIES_GENERATOR_FORM_FILTER, &filterFuncArgs);
 
     EXPECT_EQ(species, SPECIES_ROTOM_HEAT);
-}
-
-TEST("Random mon generation rejects missing filter args")
-{
-    const struct FilterFuncArgs filterFuncArgs = {FILTER_FUNC_ARG_NONE, FILTER_FUNC_ARG_NONE};
-    enum Species species = GetRandomSpecies(TEST_SPECIES_GENERATOR_BST_FILTER, &filterFuncArgs);
-
-    EXPECT_EQ(species, SPECIES_NONE);
 }
 
 TEST("Random mon generation resolves held item from a pool")

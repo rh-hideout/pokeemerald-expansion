@@ -3,6 +3,7 @@ enum
     SPECIES_GENERATOR_FILTERED_POOL,
     SPECIES_GENERATOR_MYTHICAL_FILTER,
     SPECIES_GENERATOR_BST_FILTER,
+    SPECIES_GENERATOR_NO_ARG_FILTER,
     SPECIES_GENERATOR_FORM_FILTER,
     RANDOM_SPECIES_OPTIONS_COUNT,
 };
@@ -35,8 +36,20 @@ static const enum Species sRandomSpeciesOption2SpeciesPool[] =
 
 static const enum Species sRandomSpeciesOption3SpeciesPool[] =
 {
+    SPECIES_CHARIZARD,
+};
+
+static const enum Species sRandomSpeciesOption4SpeciesPool[] =
+{
     SPECIES_ROTOM,
 };
+
+static bool32 IsSpeciesCharizard(enum Species species, const struct FilterFuncArgs *filterFuncArgs)
+{
+    (void)filterFuncArgs;
+
+    return species == SPECIES_CHARIZARD;
+}
 
 static bool32 IsSpeciesRotomHeat(enum Species species, const struct FilterFuncArgs *filterFuncArgs)
 {
@@ -100,12 +113,24 @@ static const struct RandomSpeciesGeneratorOptions sRandomSpeciesGeneratorOptions
         .allowUltraBeast = FALSE,
         .allowParadox = FALSE,
         .randomizeForms = FALSE,
-        .filterFunc = IsSpeciesAllowedByRandomBstArgs,
+        .filterFunc = IsInBstRangeFilterFunc,
     },
-    [SPECIES_GENERATOR_FORM_FILTER] =
+    [SPECIES_GENERATOR_NO_ARG_FILTER] =
     {
         .speciesPool = sRandomSpeciesOption3SpeciesPool,
         .speciesPoolCount = ARRAY_COUNT(sRandomSpeciesOption3SpeciesPool),
+        .allowLegendary = FALSE,
+        .allowMythical = FALSE,
+        .allowSubLegendary = FALSE,
+        .allowUltraBeast = FALSE,
+        .allowParadox = FALSE,
+        .randomizeForms = FALSE,
+        .filterFunc = IsSpeciesCharizard,
+    },
+    [SPECIES_GENERATOR_FORM_FILTER] =
+    {
+        .speciesPool = sRandomSpeciesOption4SpeciesPool,
+        .speciesPoolCount = ARRAY_COUNT(sRandomSpeciesOption4SpeciesPool),
         .allowLegendary = FALSE,
         .allowMythical = FALSE,
         .allowSubLegendary = FALSE,
