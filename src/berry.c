@@ -49,7 +49,7 @@ static void AddTreeBonus(struct BerryTree *tree, u8 bonus);
 #error "OW_BERRY_DRAIN_RATE must be GEN_5, GEN_6_XY or GEN_6_ORAS!"
 #endif
 
-#if OW_BERRY_COLORS != GEN_6_XY && OW_BERRY_COLORS != GEN_6_ORAS 
+#if OW_BERRY_COLORS != GEN_6_XY && OW_BERRY_COLORS != GEN_6_ORAS
 #error "OW_BERRY_COLORS must be GEN_6_XY or GEN_6_ORAS!"
 #endif
 
@@ -1968,7 +1968,7 @@ void PlantBerryTree(u8 id, u8 berry, u8 stage, bool8 allowGrowth)
     if (OW_BERRY_ALWAYS_WATERABLE)
     {
         // We simulate a tree having grown without water
-        u32 berryTreeAge = GetBerryTreeAge(id, stage);
+        u32 berryTreeAge = GetBerryTreeAge(berry, stage);
         if (GetBerryInfo(berry)->maxYield - berryTreeAge * GetBerryInfo(berry)->maxYield / 5 < GetBerryInfo(berry)->minYield)
             tree->berryYield = GetBerryInfo(berry)->minYield;
         else

@@ -1588,6 +1588,8 @@ static enum CancelerResult CancelerCharging(struct BattleContext *ctx)
             gBattleScripting.animTurn = 1;
             gBattleScripting.animTargetsHit = 0;
             gProtectStructs[ctx->battlerAtk].chargingTurn = FALSE;
+            if (gBattleMoveEffects[GetMoveEffect(ctx->move)].semiInvulnerableEffect)
+                gBattleMons[ctx->battlerAtk].volatiles.semiInvulnerable = STATE_NONE;
             result = CANCELER_RESULT_SUCCESS;
         }
         else if (ctx->holdEffectAtk == HOLD_EFFECT_POWER_HERB)
@@ -1595,6 +1597,8 @@ static enum CancelerResult CancelerCharging(struct BattleContext *ctx)
             gBattleScripting.animTurn = 1;
             gBattleScripting.animTargetsHit = 0;
             gProtectStructs[ctx->battlerAtk].chargingTurn = FALSE;
+            if (gBattleMoveEffects[GetMoveEffect(ctx->move)].semiInvulnerableEffect)
+                gBattleMons[ctx->battlerAtk].volatiles.semiInvulnerable = STATE_NONE;
             gLastUsedItem = gBattleMons[ctx->battlerAtk].item;
             BattleScriptCall(BattleScript_PowerHerbActivation);
             result = CANCELER_RESULT_BREAK;
@@ -1641,7 +1645,7 @@ static bool32 NoTargetPresent(enum BattlerId battler, enum Move move, enum MoveT
     case TARGET_USER_AND_ALLY:
         return FALSE; // At least user is present
     case TARGET_ALLY:
-        if (!IsBattlerAlive(BATTLE_PARTNER(gBattlerAttacker))) // Seems like TARGET_ALLY is retargeting if no ally
+        if (!IsBattlerAlive(gBattlerTarget))
             return TRUE;
         break;
     case TARGET_SELECTED:
@@ -1859,14 +1863,16 @@ static enum CancelerResult CancelerNotFullyProtected(struct BattleContext *ctx)
 
 static bool32 IsMoveParentalBondAffected(struct BattleContext *ctx)
 {
+    enum BattleMoveEffects effect = GetMoveEffect(ctx->move);
+
     if (ctx->abilityAtk != ABILITY_PARENTAL_BOND
      || gBattleStruct->numSpreadTargets > 1
      || IsMoveParentalBondBanned(ctx->move)
      || GetMoveCategory(ctx->move) == DAMAGE_CATEGORY_STATUS
-     || GetMoveEffect(ctx->move) == EFFECT_SEMI_INVULNERABLE
-     || GetMoveEffect(ctx->move) == EFFECT_TWO_TURNS_ATTACK
+     || gBattleMoveEffects[effect].twoTurnEffect
+     || effect == EFFECT_OHKO
      || GetActiveGimmick(ctx->battlerAtk) == GIMMICK_Z_MOVE
-     || (GetMoveEffect(ctx->move) == EFFECT_PRESENT && gBattleStruct->presentBasePower == 0)
+     || (effect == EFFECT_PRESENT && gBattleStruct->presentBasePower == 0)
      || ctx->move == MOVE_STRUGGLE)
         return FALSE;
     return TRUE;
@@ -2071,6 +2077,7 @@ static enum MoveEndResult MoveEndProtectLikeEffect(void)
     enum ProtectMethod method = gProtectStructs[gBattlerTarget].protected;
 
     if (gProtectStructs[gBattlerAttacker].chargingTurn
+     || !IsBattlerAlive(gBattlerAttacker)
      || CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, abilityAtk, holdEffectAtk, gCurrentMove))
     {
         gBattleScripting.moveendState++;
@@ -2395,10 +2402,13 @@ static enum MoveEndResult MoveEndTargetVisible(void)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
-    if (!gSpecialStatuses[gBattlerTarget].restoredBattlerSprite && !IsSemiInvulnerable(gBattlerTarget, CHECK_ALL))
+    if (!gSpecialStatuses[gBattlerTarget].restoredBattlerSprite
+     && gBattlerTarget < gBattlersCount
+     && !IsSemiInvulnerable(gBattlerTarget, CHECK_ALL))
     {
         BtlController_EmitSpriteInvisibility(gBattlerTarget, B_COMM_TO_CONTROLLER, FALSE);
         MarkBattlerForControllerExec(gBattlerTarget);
+        gSpecialStatuses[gBattlerTarget].restoredBattlerSprite = TRUE;
         gBattleMons[gBattlerTarget].volatiles.semiInvulnerable = STATE_NONE;
         result = MOVEEND_RESULT_BREAK;
     }
@@ -2495,6 +2505,7 @@ static enum MoveEndResult MoveEndFaintBlock(void)
             break;
         case FAINT_BLOCK_CHECK_TARGET_FAINTED: // Stop if target already ran the block / is alive or absent
             if (IsBattlerAlive(gBattlerTarget)
+             || gBattlerTarget >= gBattlersCount
              || (gAbsentBattlerFlags & 1u << gBattlerTarget)
              || gBattleStruct->battlerState[gBattlerTarget].fainted)
             {
@@ -2674,10 +2685,12 @@ static enum MoveEndResult MoveEndUpdateLastMoves(void)
             gLastUsedMoveType[gBattlerAttacker] = 0;
         }
 
-        if (!(gHitMarker & HITMARKER_FAINTED(gBattlerTarget)))
-            gLastHitBy[gBattlerTarget] = gBattlerAttacker;
+        if (IsBattlerAlive(gBattlerTarget))
+            gLastHitBy[gBattlerTarget] = gBattlerAttacker; // Used by switch AI only
 
-        if (!gBattleStruct->unableToUseMove && !IsBattlerUnaffectedByMove(gBattlerTarget))
+        if (!gBattleStruct->unableToUseMove
+         && !IsBattlerUnaffectedByMove(gBattlerTarget)
+         && IsBattlerAlive(gBattlerTarget))
         {
             if (gChosenMove == MOVE_UNAVAILABLE)
             {
@@ -2697,6 +2710,7 @@ static enum MoveEndResult MoveEndUpdateLastMoves(void)
         }
         else
         {
+            gLastHitByType[gBattlerTarget] = TYPE_MYSTERY;
             gLastLandedMoves[gBattlerTarget] = MOVE_UNAVAILABLE;
         }
     }
@@ -2910,6 +2924,81 @@ static enum MoveEndResult MoveEndDefrost(void)
     return MOVEEND_RESULT_CONTINUE;
 }
 
+static enum MoveEndResult MoveEndMoveBlockRecoil(void)
+{
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
+    enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
+
+    switch (moveEffect)
+    {
+    case EFFECT_RECOIL_IF_MISS:
+        if (IsBattlerAlive(gBattlerAttacker)
+         && IsBattlerUnaffectedByMove(gBattlerTarget)
+         && !gBattleStruct->unableToUseMove)
+        {
+            s32 recoil = 0;
+            if (B_CRASH_IF_TARGET_IMMUNE == GEN_4 && gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_DOESNT_AFFECT_FOE)
+            {
+                recoil = GetNonDynamaxMaxHP(gBattlerTarget) / 2;
+            }
+            if (B_RECOIL_IF_MISS_DMG >= GEN_5)
+            {
+                recoil = GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
+            }
+            else if (B_RECOIL_IF_MISS_DMG >= GEN_3)
+            {
+                if ((GetNonDynamaxMaxHP(gBattlerTarget) / 2) < gBattleStruct->moveDamage[gBattlerTarget])
+                    recoil = gBattleStruct->moveDamage[gBattlerTarget];
+                else
+                    recoil = GetNonDynamaxMaxHP(gBattlerTarget) / 2;
+            }
+            else if (B_RECOIL_IF_MISS_DMG == GEN_2)
+            {
+                recoil = gBattleStruct->moveDamage[gBattlerTarget] / 8;
+            }
+            else
+            {
+                recoil = 1;
+            }
+            SetPassiveDamageAmount(gBattlerAttacker, recoil);
+            BattleScriptCall(BattleScript_RecoilIfMiss);
+            result = MOVEEND_RESULT_RUN_SCRIPT;
+        }
+        break;
+    case EFFECT_RECOIL:
+        if (gBattleStruct->moveDamage[gBattlerTarget] == 0)
+            break;
+        // fallthrough
+    case EFFECT_CHLOROBLAST:
+        if (IsBattlerTurnDamaged(gBattlerTarget, INCLUDING_SUBSTITUTES) && IsBattlerAlive(gBattlerAttacker))
+        {
+            enum Ability ability = GetBattlerAbility(gBattlerAttacker);
+            if (IsAbilityAndRecord(gBattlerAttacker, ability, ABILITY_ROCK_HEAD)
+             || IsAbilityAndRecord(gBattlerAttacker, ability, ABILITY_MAGIC_GUARD))
+                break;
+
+            if (moveEffect == EFFECT_CHLOROBLAST)
+            {
+                s32 recoil = (GetNonDynamaxMaxHP(gBattlerAttacker) + 1) / 2; // Half of Max HP Rounded UP
+                SetPassiveDamageAmount(gBattlerAttacker, recoil);
+            }
+            else
+            {
+                SetPassiveDamageAmount(gBattlerAttacker, gBattleScripting.savedDmg * max(1, GetMoveRecoil(gCurrentMove)) / 100);
+            }
+            TryUpdateEvolutionTracker(IF_RECOIL_DAMAGE_GE, gBattleStruct->passiveHpUpdate[gBattlerAttacker], MOVE_NONE);
+            BattleScriptCall(BattleScript_MoveEffectRecoil);
+            result = MOVEEND_RESULT_RUN_SCRIPT;
+        }
+        break;
+    default:
+        break;
+    }
+
+    gBattleScripting.moveendState++;
+    return result;
+}
+
 static enum MoveEndResult MoveEndSheerForce(void)
 {
     if (IsSheerForceAffected(gCurrentMove, GetBattlerAbility(gBattlerAttacker)))
@@ -3053,69 +3142,6 @@ static enum MoveEndResult MoveEndMoveBlock(void)
             gBattleMons[gBattlerTarget].volatiles.magnetRise = FALSE;
             gBattleMons[gBattlerTarget].volatiles.semiInvulnerable = STATE_NONE;
             BattleScriptCall(BattleScript_MoveEffectSmackDown);
-            result = MOVEEND_RESULT_RUN_SCRIPT;
-        }
-        break;
-    case EFFECT_RECOIL_IF_MISS:
-        if (IsBattlerAlive(gBattlerAttacker)
-         && IsBattlerUnaffectedByMove(gBattlerTarget)
-         && !gBattleStruct->unableToUseMove)
-        {
-            s32 recoil = 0;
-            if (B_CRASH_IF_TARGET_IMMUNE == GEN_4 && gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_DOESNT_AFFECT_FOE)
-            {
-                recoil = GetNonDynamaxMaxHP(gBattlerTarget) / 2;
-            }
-            if (B_RECOIL_IF_MISS_DMG >= GEN_5)
-            {
-                recoil = GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
-            }
-            else if (B_RECOIL_IF_MISS_DMG >= GEN_3)
-            {
-                if ((GetNonDynamaxMaxHP(gBattlerTarget) / 2) < gBattleStruct->moveDamage[gBattlerTarget])
-                    recoil = gBattleStruct->moveDamage[gBattlerTarget];
-                else
-                    recoil = GetNonDynamaxMaxHP(gBattlerTarget) / 2;
-            }
-            else if (B_RECOIL_IF_MISS_DMG == GEN_2)
-            {
-                recoil = gBattleStruct->moveDamage[gBattlerTarget] / 8;
-            }
-            else
-            {
-                recoil = 1;
-            }
-            SetPassiveDamageAmount(gBattlerAttacker, recoil);
-            BattleScriptCall(BattleScript_RecoilIfMiss);
-            result = MOVEEND_RESULT_RUN_SCRIPT;
-        }
-        break;
-    case EFFECT_RECOIL:
-        if (IsBattlerTurnDamaged(gBattlerTarget, INCLUDING_SUBSTITUTES) && IsBattlerAlive(gBattlerAttacker) && gBattleStruct->moveDamage[gBattlerTarget] > 0)
-        {
-            enum Ability ability = GetBattlerAbility(gBattlerAttacker);
-            if (IsAbilityAndRecord(gBattlerAttacker, ability, ABILITY_ROCK_HEAD)
-             || IsAbilityAndRecord(gBattlerAttacker, ability, ABILITY_MAGIC_GUARD))
-                break;
-
-            SetPassiveDamageAmount(gBattlerAttacker, gBattleScripting.savedDmg * max(1, GetMoveRecoil(gCurrentMove)) / 100);
-            TryUpdateEvolutionTracker(IF_RECOIL_DAMAGE_GE, gBattleStruct->passiveHpUpdate[gBattlerAttacker], MOVE_NONE);
-            BattleScriptCall(BattleScript_MoveEffectRecoil);
-            result = MOVEEND_RESULT_RUN_SCRIPT;
-        }
-        break;
-    case EFFECT_CHLOROBLAST:
-        if (IsBattlerTurnDamaged(gBattlerTarget, INCLUDING_SUBSTITUTES) && IsBattlerAlive(gBattlerAttacker))
-        {
-            enum Ability ability = GetBattlerAbility(gBattlerAttacker);
-            if (IsAbilityAndRecord(gBattlerAttacker, ability, ABILITY_ROCK_HEAD)
-             || IsAbilityAndRecord(gBattlerAttacker, ability, ABILITY_MAGIC_GUARD))
-                break;
-
-            s32 recoil = (GetNonDynamaxMaxHP(gBattlerAttacker) + 1) / 2; // Half of Max HP Rounded UP
-            SetPassiveDamageAmount(gBattlerAttacker, recoil);
-            TryUpdateEvolutionTracker(IF_RECOIL_DAMAGE_GE, gBattleStruct->passiveHpUpdate[gBattlerAttacker], MOVE_NONE);
-            BattleScriptCall(BattleScript_MoveEffectRecoil);
             result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
@@ -3859,6 +3885,7 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(void) =
     [MOVEEND_HP_THRESHOLD_ITEMS_TARGET] = MoveEndHpThresholdItemsTarget,
     [MOVEEND_MULTIHIT_MOVE] = MoveEndMultihitMove,
     [MOVEEND_DEFROST] = MoveEndDefrost,
+    [MOVEEND_MOVE_BLOCK_RECOIL] = MoveEndMoveBlockRecoil,
     [MOVEEND_SHEER_FORCE] = MoveEndSheerForce,
     [MOVEEND_MOVE_BLOCK] = MoveEndMoveBlock,
     [MOVEEND_ITEM_EFFECTS_ATTACKER_2] = MoveEndItemEffectsAttacker2,
@@ -3905,8 +3932,8 @@ enum MoveEndResult DoMoveEnd(enum MoveEndState endMode, enum MoveEndState endSta
 
 static void ValidateBattlers(void)
 {
-    assertf(gBattlerAttacker < gBattlersCount, "invalid gBattlerAttacker: %d\nmove: %S", gBattlerAttacker, GetMoveName(gCurrentMove));
-    assertf(gBattlerTarget < gBattlersCount, "invalid gBattlerTarget: %d\nmove: %S", gBattlerTarget, GetMoveName(gCurrentMove));
+    assertf(gBattlerAttacker < MAX_BATTLERS_COUNT, "invalid gBattlerAttacker: %d\nmove: %S", gBattlerAttacker, GetMoveName(gCurrentMove));
+    assertf(gBattlerTarget < MAX_BATTLERS_COUNT, "invalid gBattlerTarget: %d\nmove: %S", gBattlerTarget, GetMoveName(gCurrentMove));
 
     // More calls to SaveBattlerAttacker than RestoreBattlerAttacker.
     assertf(gBattleStruct->savedAttackerCount == 0, "savedAttackerCount is greater than 0");

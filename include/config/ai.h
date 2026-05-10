@@ -1,6 +1,14 @@
 #ifndef GUARD_CONFIG_AI_H
 #define GUARD_CONFIG_AI_H
 
+// Frame count references used by testing system
+#define AI_FRAME_CEILING_SINGLES_NO_FLAGS                       3
+#define AI_FRAME_CEILING_SINGLES_SMART_TRAINER                  8
+#define AI_FRAME_CEILING_DOUBLES_NO_FLAGS                       21
+#define AI_FRAME_CEILING_DOUBLES_SMART_TRAINER                  38
+#define AI_FRAME_CEILING_STEVEN_MULTI                           29
+#define AI_FRAME_CEILING_STEVEN_MULTI_SMART_TRAINER             31
+
 // For the details on what specific factors the switching functions are considering, go read the corresponding function inside ShouldSwitch in src/battle_ai_switch_items.c
 // These configuration options control how likely the AI is to switch if it determines that a switch meets all of its criteria
 // Think of them almost like success rates; if the AI has determined that it needs to switch out to hit Wonder Guard, how often do you want it to actually take that course of action? Etc.

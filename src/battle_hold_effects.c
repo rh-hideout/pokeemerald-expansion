@@ -160,7 +160,9 @@ static enum ItemEffect RestoreWhiteHerbStats(enum BattlerId battler, ActivationT
     }
     if (effect != ITEM_NO_EFFECT)
     {
-        if (timing == IsWhiteHerbActivation || timing == IsOnFlingActivation)
+        if (timing == IsOnFlingActivation)
+            BattleScriptCall(BattleScript_WhiteHerbFling);
+        else if (timing == IsWhiteHerbActivation)
             BattleScriptCall(BattleScript_WhiteHerbRet);
         else
             BattleScriptExecute(BattleScript_WhiteHerbEnd2);
@@ -216,7 +218,8 @@ static enum ItemEffect TryAirBalloon(enum BattlerId battler, ActivationTiming ti
 
     if (timing == IsOnTargetHitActivation)
     {
-        if (IsBattlerTurnDamaged(battler, EXCLUDING_SUBSTITUTES))
+        // If the holder or its substitute is hit by a damaging move (even if it has Disguise), the Air Balloon is destroyed.
+        if (IsBattlerTurnDamaged(battler, INCLUDING_SUBSTITUTES))
         {
             BattleScriptCall(BattleScript_AirBalloonMsgPop);
             effect = ITEM_EFFECT_OTHER;
@@ -403,16 +406,16 @@ static enum ItemEffect TryBlunderPolicy(enum BattlerId battlerAtk)
      && IsBattlerAlive(battlerAtk)
      && CompareStat(battlerAtk, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(battlerAtk)))
     {
-        gBattleStruct->blunderPolicy = FALSE;
         SET_STATCHANGER(STAT_SPEED, 2, FALSE);
         BattleScriptCall(BattleScript_AttackerItemStatRaise);
         effect = ITEM_STATS_CHANGE;
     }
 
+    gBattleStruct->blunderPolicy = FALSE;
     return effect;
 }
 
-static enum ItemEffect TryMentalHerb(enum BattlerId battler)
+static enum ItemEffect TryMentalHerb(enum BattlerId battler, ActivationTiming timing)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -467,7 +470,12 @@ static enum ItemEffect TryMentalHerb(enum BattlerId battler)
     }
 
     if (effect)
-        BattleScriptCall(BattleScript_MentalHerbCureRet);
+    {
+        if (timing == IsOnFlingActivation)
+            BattleScriptCall(BattleScript_MentalHerbCureFling);
+        else
+            BattleScriptCall(BattleScript_MentalHerbCureRet);
+    }
 
     return effect;
 }
@@ -1030,7 +1038,8 @@ enum ItemEffect ItemBattleEffects(enum BattlerId itemBattler, enum BattlerId bat
     if (!IsBattlerAlive(itemBattler)
      && holdEffect != HOLD_EFFECT_ROWAP_BERRY // Hacky workaround for them right now
      && holdEffect != HOLD_EFFECT_JABOCA_BERRY
-     && holdEffect != HOLD_EFFECT_ROCKY_HELMET)
+     && holdEffect != HOLD_EFFECT_ROCKY_HELMET
+     && holdEffect != HOLD_EFFECT_AIR_BALLOON)
         return effect;
 
     switch (holdEffect)
@@ -1093,7 +1102,7 @@ enum ItemEffect ItemBattleEffects(enum BattlerId itemBattler, enum BattlerId bat
         effect = TryBlunderPolicy(itemBattler);
         break;
     case HOLD_EFFECT_MENTAL_HERB:
-        effect = TryMentalHerb(itemBattler);
+        effect = TryMentalHerb(itemBattler, timing);
         break;
     case HOLD_EFFECT_THROAT_SPRAY:
         effect = TryThroatSpray(itemBattler);
