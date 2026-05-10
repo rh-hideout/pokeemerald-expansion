@@ -1,3 +1,83 @@
+#if IS_HNS
+
+BerryTreeScript::
+	special ObjectEventInteractionGetBerryTreeData
+	switch VAR_0x8004
+	case BERRY_STAGE_SPARKLING, BerryTree_EventScript_Hns_NotRipe
+	case BERRY_STAGE_NO_BERRY, BerryTree_EventScript_Hns_NotRipe
+	case BERRY_STAGE_PLANTED, BerryTree_EventScript_Hns_NotRipe
+	case BERRY_STAGE_SPROUTED, BerryTree_EventScript_Hns_NotRipe
+	case BERRY_STAGE_TALLER, BerryTree_EventScript_Hns_NotRipe
+	case BERRY_STAGE_FLOWERING, BerryTree_EventScript_Hns_NotRipe
+	case BERRY_STAGE_BERRIES, BerryTree_EventScript_Hns_FullyGrown
+	end
+
+BerryTree_EventScript_Hns_NotRipe::
+	lock
+	message BerryTree_Text_Hns_NotRipe
+	waitmessage
+	waitbuttonpress
+	release
+	end
+
+BerryTree_EventScript_Hns_FullyGrown::
+	buffernumberstring STR_VAR_2, VAR_0x8006
+	lock
+	faceplayer
+	goto BerryTree_EventScript_Hns_PickBerry
+
+BerryTree_EventScript_Hns_PickBerry::
+	special ObjectEventInteractionPickBerryTree
+	goto_if_eq VAR_0x8004, 0, BerryTree_EventScript_Hns_BagFull
+	special IncrementDailyPickedBerries
+	special ObjectEventInteractionRemoveBerryTree
+	message BerryTree_Text_Hns_Picked
+	playfanfare MUS_OBTAIN_BERRY
+	special ObjectEventInteractionPlantBerryTree
+	incrementgamestat GAME_STAT_PLANTED_BERRIES
+	special IncrementDailyPlantedBerries
+	waitmessage
+	waitfanfare
+	release
+	end
+
+BerryTree_EventScript_Hns_BagFull::
+	message BerryTree_Text_Hns_BagFull
+	waitmessage
+	waitbuttonpress
+	release
+	end
+
+BerryTree_EventScript_Hns_Sprout::
+	message BerryTree_Text_Hns_Sprouted
+	waitmessage
+	callnative Berry_Ready
+	waitbuttonpress
+	release
+	end
+
+BerryTree_EventScript_ItemUsePlantBerry::
+	end
+
+BerryTree_EventScript_ItemUseWailmerPail::
+	end
+
+BerryTree_Text_Hns_NotRipe:
+	.string "It's a BERRY tree!\n"
+	.string "These BERRIES aren't ripe yet.$"
+
+BerryTree_Text_Hns_Picked:
+	.string "{PLAYER} picked the {STR_VAR_2} {STR_VAR_1}.$"
+
+BerryTree_Text_Hns_BagFull:
+	.string "The BAG's BERRIES POCKET is full.\p"
+	.string "The {STR_VAR_1} couldn't be taken.$"
+
+BerryTree_Text_Hns_Sprouted:
+	.string "The berry tree suddenly sprouted!$"
+
+#else
+
 BerryTreeScript::
 	special ObjectEventInteractionGetBerryTreeData
 	switch VAR_0x8004
@@ -465,3 +545,5 @@ BerryTree_EventScript_EncounterPests::
 BerryTree_Text_APokemonAppeared:
 	.string "A Pokémon appeared!$"
 .endif
+
+#endif

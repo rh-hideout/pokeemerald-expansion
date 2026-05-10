@@ -3362,7 +3362,20 @@ static void SetBerryTreeGraphicsById(struct ObjectEvent *objectEvent, u8 berryId
     const u16 graphicsId = gBerryTreeObjectEventGraphicsIdTable[berryStage];
     const struct ObjectEventGraphicsInfo *graphicsInfo = GetObjectEventGraphicsInfo(graphicsId);
     struct Sprite *sprite = &gSprites[objectEvent->spriteId];
+#if IS_HNS
+    {
+        static const u16 sHnsBerryPalTags[] = {
+            OBJ_EVENT_PAL_TAG_NPC_1_HNS,
+            OBJ_EVENT_PAL_TAG_NPC_2_HNS,
+            OBJ_EVENT_PAL_TAG_NPC_3_HNS,
+            OBJ_EVENT_PAL_TAG_NPC_4_HNS,
+        };
+        u8 palSlot = gBerryTreePaletteSlotTablePointers[berryId][berryStage] - 2;
+        UpdateSpritePalette(&sObjectEventSpritePalettes[FindObjectEventPaletteIndexByTag(sHnsBerryPalTags[palSlot])], sprite);
+    }
+#else
     UpdateSpritePalette(&sObjectEventSpritePalettes[gBerryTreePaletteSlotTablePointers[berryId][berryStage]-2], sprite);
+#endif
     sprite->oam.shape = graphicsInfo->oam->shape;
     sprite->oam.size = graphicsInfo->oam->size;
     sprite->images = gBerryTreePicTablePointers[berryId];
@@ -4635,7 +4648,14 @@ bool8 MovementType_BerryTreeGrowth_Normal(struct ObjectEvent *objectEvent, struc
     berryStage--;
     if (sprite->animNum != berryStage)
     {
+#if IS_HNS
+        sprite->animNum = berryStage;
+        SetBerryTreeGraphics(objectEvent, sprite);
+        ObjectEventSetSingleMovement(objectEvent, sprite, MOVEMENT_ACTION_START_ANIM_IN_DIRECTION);
+        sprite->sTypeFuncId = BERRYTREEFUNC_MOVE;
+#else
         sprite->sTypeFuncId = BERRYTREEFUNC_SPARKLE_START;
+#endif
         return TRUE;
     }
     SetBerryTreeGraphics(objectEvent, sprite);
