@@ -40,10 +40,13 @@
 // Only maps in the following map groups have their encounters considered for the area screen
 #define MAP_GROUP_TOWNS_AND_ROUTES MAP_GROUP(MAP_PETALBURG_CITY)
 #define MAP_GROUP_TOWNS_AND_ROUTES_FRLG MAP_GROUP(MAP_PALLET_TOWN)
+#define MAP_GROUP_TOWNS_AND_ROUTES_HNS MAP_GROUP(MAP_NEW_BARK_TOWN_HNS)
 #define MAP_GROUP_DUNGEONS MAP_GROUP(MAP_METEOR_FALLS_1F_1R)
 #define MAP_GROUP_DUNGEONS_FRLG MAP_GROUP(MAP_VIRIDIAN_FOREST)
+#define MAP_GROUP_DUNGEONS_HNS MAP_GROUP(MAP_DARK_CAVE_SOUTH_SIDE_HNS)
 #define MAP_GROUP_SPECIAL_AREA MAP_GROUP(MAP_SAFARI_ZONE_NORTHWEST)
 #define MAP_GROUP_SPECIAL_AREA_FRLG MAP_GROUP(MAP_NAVEL_ROCK_EXTERIOR_FRLG)
+#define MAP_GROUP_SPECIAL_AREA_HNS MAP_GROUP(MAP_TRAINER_HILL_COURTYARD_HNS)
 
 #define AREA_SCREEN_WIDTH 32
 #define AREA_SCREEN_HEIGHT 20
@@ -327,12 +330,15 @@ static void FindMapsWithMon(u16 species)
             {
             case MAP_GROUP_TOWNS_AND_ROUTES:
             case MAP_GROUP_TOWNS_AND_ROUTES_FRLG:
+            case MAP_GROUP_TOWNS_AND_ROUTES_HNS:
                 SetAreaHasMon(sFeebasData[i][1], sFeebasData[i][2]);
                 break;
             case MAP_GROUP_DUNGEONS:
             case MAP_GROUP_DUNGEONS_FRLG:
+            case MAP_GROUP_DUNGEONS_HNS:
             case MAP_GROUP_SPECIAL_AREA:
             case MAP_GROUP_SPECIAL_AREA_FRLG:
+            case MAP_GROUP_SPECIAL_AREA_HNS:
                 SetSpecialMapHasMon(sFeebasData[i][1], sFeebasData[i][2]);
                 break;
             }
@@ -345,8 +351,14 @@ static void FindMapsWithMon(u16 species)
     {
         u32 headerSectionId = Overworld_GetMapHeaderByGroupAndId(gWildMonHeaders[i].mapGroup, gWildMonHeaders[i].mapNum)->regionMapSectionId;
 
+#if IS_HNS
+        if (currentRegionMapType == REGION_MAP_JOHTO
+            && headerSectionId >= KANTO_MAPSEC_START && headerSectionId <= KANTO_MAPSEC_END)
+            continue;
+#else
         if (GetRegionMapType(headerSectionId) != currentRegionMapType)
             continue;
+#endif
 
         if (MapHasSpecies(&gWildMonHeaders[i].encounterTypes[gAreaTimeOfDay], headerSectionId, species))
         {
@@ -354,12 +366,15 @@ static void FindMapsWithMon(u16 species)
             {
             case MAP_GROUP_TOWNS_AND_ROUTES:
             case MAP_GROUP_TOWNS_AND_ROUTES_FRLG:
+            case MAP_GROUP_TOWNS_AND_ROUTES_HNS:
                 SetAreaHasMon(gWildMonHeaders[i].mapGroup, gWildMonHeaders[i].mapNum);
                 break;
             case MAP_GROUP_DUNGEONS:
             case MAP_GROUP_DUNGEONS_FRLG:
+            case MAP_GROUP_DUNGEONS_HNS:
             case MAP_GROUP_SPECIAL_AREA:
             case MAP_GROUP_SPECIAL_AREA_FRLG:
+            case MAP_GROUP_SPECIAL_AREA_HNS:
                 SetSpecialMapHasMon(gWildMonHeaders[i].mapGroup, gWildMonHeaders[i].mapNum);
                 break;
             }
@@ -649,10 +664,6 @@ static const u8 *GetTimeOfDayTextWithButton(enum TimeOfDay timeOfDay)
 
     switch (gAreaTimeOfDay)
     {
-    case TIME_MORNING:
-        return gText_Morning;
-    case TIME_EVENING:
-        return gText_Evening;
     case TIME_NIGHT:
         return gText_Night;
     case TIME_DAY:
@@ -725,6 +736,8 @@ void DisplayPokedexAreaScreen(u16 species, u8 *screenSwitchState, enum TimeOfDay
     sPokedexAreaScreen->screenSwitchState = screenSwitchState;
     sPokedexAreaScreen->areaState = areaState;
     gAreaTimeOfDay = timeOfDay;
+    if (gAreaTimeOfDay == TIME_MORNING || gAreaTimeOfDay == TIME_EVENING)
+        gAreaTimeOfDay = TIME_DAY;
     screenSwitchState[0] = 0;
 
     if (sPokedexAreaScreen->areaState == DEX_UPDATE_AREA_SCREEN)
@@ -896,14 +909,14 @@ static void Task_HandlePokedexAreaScreenInput(u8 taskId)
         else if (JOY_NEW(DPAD_UP) && OW_TIME_OF_DAY_ENCOUNTERS == TRUE)
         {
             gTasks[taskId].data[1] = 3;
-            gAreaTimeOfDay = TryDecrementTimeOfDay(gAreaTimeOfDay);
+            gAreaTimeOfDay = (gAreaTimeOfDay == TIME_DAY) ? TIME_NIGHT : TIME_DAY;
             sPokedexAreaScreen->areaState = DEX_UPDATE_AREA_SCREEN;
             PlaySE(SE_DEX_PAGE);
         }
         else if (JOY_NEW(DPAD_DOWN) && OW_TIME_OF_DAY_ENCOUNTERS == TRUE)
         {
             gTasks[taskId].data[1] = 3;
-            gAreaTimeOfDay = TryIncrementTimeOfDay(gAreaTimeOfDay);
+            gAreaTimeOfDay = (gAreaTimeOfDay == TIME_DAY) ? TIME_NIGHT : TIME_DAY;
             sPokedexAreaScreen->areaState = DEX_UPDATE_AREA_SCREEN;
             PlaySE(SE_DEX_PAGE);
         }
