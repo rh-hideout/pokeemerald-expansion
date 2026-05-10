@@ -9326,293 +9326,293 @@
     },
     {
       "id": "LAYOUT_POC_KOLCHAVI",
-      "name": "poc_Kolchavi_Layout",
+      "name": "ow_Kolchavi_Layout",
       "width": 58,
       "height": 50,
       "primary_tileset": "gTileset_General",
       "secondary_tileset": "gTileset_Kolchavi",
-      "border_filepath": "data/layouts/poc_Kolchavi/border.bin",
-      "blockdata_filepath": "data/layouts/poc_Kolchavi/map.bin"
+      "border_filepath": "data/layouts/ow_Kolchavi/border.bin",
+      "blockdata_filepath": "data/layouts/ow_Kolchavi/map.bin"
     },
     {
       "id": "LAYOUT_POC_R10",
-      "name": "poc_r10_Layout",
+      "name": "ow_r10_Layout",
       "width": 62,
       "height": 50,
       "primary_tileset": "gTileset_General",
       "secondary_tileset": "gTileset_Floran",
-      "border_filepath": "data/layouts/poc_r10/border.bin",
-      "blockdata_filepath": "data/layouts/poc_r10/map.bin"
+      "border_filepath": "data/layouts/ow_r10/border.bin",
+      "blockdata_filepath": "data/layouts/ow_r10/map.bin"
     },
     {
       "id": "LAYOUT_POC_R6",
-      "name": "poc_r6_Layout",
+      "name": "ow_r6_Layout",
       "width": 40,
       "height": 46,
       "primary_tileset": "gTileset_General",
       "secondary_tileset": "gTileset_Floran",
-      "border_filepath": "data/layouts/poc_r6/border.bin",
-      "blockdata_filepath": "data/layouts/poc_r6/map.bin"
+      "border_filepath": "data/layouts/ow_r6/border.bin",
+      "blockdata_filepath": "data/layouts/ow_r6/map.bin"
     },
     {
       "id": "LAYOUT_POC_R3",
-      "name": "poc_r3_Layout",
+      "name": "ow_r3_Layout",
       "width": 44,
       "height": 70,
       "primary_tileset": "gTileset_General",
       "secondary_tileset": "gTileset_Floran",
-      "border_filepath": "data/layouts/poc_r3/border.bin",
-      "blockdata_filepath": "data/layouts/poc_r3/map.bin"
+      "border_filepath": "data/layouts/ow_r3/border.bin",
+      "blockdata_filepath": "data/layouts/ow_r3/map.bin"
     },
     {
       "id": "LAYOUT_POC_FLORAN",
-      "name": "poc_Floran_Layout",
+      "name": "ow_Floran_Layout",
       "width": 60,
       "height": 56,
       "primary_tileset": "gTileset_General",
       "secondary_tileset": "gTileset_Floran",
-      "border_filepath": "data/layouts/poc_Floran/border.bin",
-      "blockdata_filepath": "data/layouts/poc_Floran/map.bin"
+      "border_filepath": "data/layouts/ow_Floran/border.bin",
+      "blockdata_filepath": "data/layouts/ow_Floran/map.bin"
     },
     {
       "id": "LAYOUT_POC_R8",
-      "name": "poc_r8_Layout",
+      "name": "ow_r8_Layout",
       "width": 100,
       "height": 25,
       "primary_tileset": "gTileset_General",
       "secondary_tileset": "gTileset_Mirevari",
-      "border_filepath": "data/layouts/poc_r8/border.bin",
-      "blockdata_filepath": "data/layouts/poc_r8/map.bin"
+      "border_filepath": "data/layouts/ow_r8/border.bin",
+      "blockdata_filepath": "data/layouts/ow_r8/map.bin"
     },
     {
       "id": "LAYOUT_POC_R2",
-      "name": "poc_r2_Layout",
+      "name": "ow_r2_Layout",
       "width": 60,
       "height": 20,
       "primary_tileset": "gTileset_General",
       "secondary_tileset": "gTileset_Petalburg",
-      "border_filepath": "data/layouts/poc_r2/border.bin",
-      "blockdata_filepath": "data/layouts/poc_r2/map.bin"
+      "border_filepath": "data/layouts/ow_r2/border.bin",
+      "blockdata_filepath": "data/layouts/ow_r2/map.bin"
     },
     {
       "id": "LAYOUT_POC_R9",
-      "name": "poc_r9_Layout",
+      "name": "ow_r9_Layout",
       "width": 40,
       "height": 20,
       "primary_tileset": "gTileset_General",
       "secondary_tileset": "gTileset_Petalburg",
-      "border_filepath": "data/layouts/poc_r9/border.bin",
-      "blockdata_filepath": "data/layouts/poc_r9/map.bin"
+      "border_filepath": "data/layouts/ow_r9/border.bin",
+      "blockdata_filepath": "data/layouts/ow_r9/map.bin"
     },
     {
       "id": "LAYOUT_POC_R16",
-      "name": "poc_r16_Layout",
+      "name": "ow_r16_Layout",
       "width": 36,
       "height": 28,
       "primary_tileset": "gTileset_General",
       "secondary_tileset": "gTileset_Mirevari",
-      "border_filepath": "data/layouts/poc_r16/border.bin",
-      "blockdata_filepath": "data/layouts/poc_r16/map.bin"
+      "border_filepath": "data/layouts/ow_r16/border.bin",
+      "blockdata_filepath": "data/layouts/ow_r16/map.bin"
     },
     {
       "id": "LAYOUT_POC_R12",
-      "name": "poc_r12_Layout",
+      "name": "ow_r12_Layout",
       "width": 70,
       "height": 50,
       "primary_tileset": "gTileset_General",
       "secondary_tileset": "gTileset_Mirevari",
-      "border_filepath": "data/layouts/poc_r12/border.bin",
-      "blockdata_filepath": "data/layouts/poc_r12/map.bin"
+      "border_filepath": "data/layouts/ow_r12/border.bin",
+      "blockdata_filepath": "data/layouts/ow_r12/map.bin"
     },
     {
       "id": "LAYOUT_POC_KOLCHAVI_POKEMON_CENTER",
-      "name": "poc_Kolchavi_PokemonCenter_Layout",
+      "name": "ow_Kolchavi_PokemonCenter_Layout",
       "width": 24,
       "height": 20,
       "primary_tileset": "gTileset_Building",
       "secondary_tileset": "gTileset_PokemonCenter",
-      "border_filepath": "data/layouts/poc_Kolchavi_PokemonCenter/border.bin",
-      "blockdata_filepath": "data/layouts/poc_Kolchavi_PokemonCenter/map.bin"
+      "border_filepath": "data/layouts/ow_Kolchavi_PokemonCenter/border.bin",
+      "blockdata_filepath": "data/layouts/ow_Kolchavi_PokemonCenter/map.bin"
     },
     {
       "id": "LAYOUT_POC_KOLCHAVI_LAB_1F",
-      "name": "poc_Kolchavi_Lab_1F_Layout",
+      "name": "ow_Kolchavi_Lab_1F_Layout",
       "width": 25,
       "height": 20,
       "primary_tileset": "gTileset_Building",
       "secondary_tileset": "gTileset_Kolchavi_Lab",
-      "border_filepath": "data/layouts/poc_Kolchavi_Lab_1F/border.bin",
-      "blockdata_filepath": "data/layouts/poc_Kolchavi_Lab_1F/map.bin"
+      "border_filepath": "data/layouts/ow_Kolchavi_Lab_1F/border.bin",
+      "blockdata_filepath": "data/layouts/ow_Kolchavi_Lab_1F/map.bin"
     },
     {
       "id": "LAYOUT_POC_KOLCHAVI_LAB_2F",
-      "name": "poc_Kolchavi_Lab_2F_Layout",
+      "name": "ow_Kolchavi_Lab_2F_Layout",
       "width": 20,
       "height": 20,
       "primary_tileset": "gTileset_Building",
       "secondary_tileset": "gTileset_Kolchavi_Lab",
-      "border_filepath": "data/layouts/poc_Kolchavi_Lab_2F/border.bin",
-      "blockdata_filepath": "data/layouts/poc_Kolchavi_Lab_2F/map.bin"
+      "border_filepath": "data/layouts/ow_Kolchavi_Lab_2F/border.bin",
+      "blockdata_filepath": "data/layouts/ow_Kolchavi_Lab_2F/map.bin"
     },
     {
       "id": "LAYOUT_POC_KOLCHAVI_HOUSE1",
-      "name": "poc_Kolchavi_House1_Layout",
+      "name": "ow_Kolchavi_House1_Layout",
       "width": 33,
       "height": 20,
       "primary_tileset": "gTileset_Building",
       "secondary_tileset": "gTileset_GenericBuilding",
-      "border_filepath": "data/layouts/poc_Kolchavi_House1/border.bin",
-      "blockdata_filepath": "data/layouts/poc_Kolchavi_House1/map.bin"
+      "border_filepath": "data/layouts/ow_Kolchavi_House1/border.bin",
+      "blockdata_filepath": "data/layouts/ow_Kolchavi_House1/map.bin"
     },
     {
       "id": "LAYOUT_POC_KOLCHAVI_HOUSE2",
-      "name": "poc_Kolchavi_House2_Layout",
+      "name": "ow_Kolchavi_House2_Layout",
       "width": 15,
       "height": 15,
       "primary_tileset": "gTileset_Building",
       "secondary_tileset": "gTileset_GenericBuilding",
-      "border_filepath": "data/layouts/poc_Kolchavi_House2/border.bin",
-      "blockdata_filepath": "data/layouts/poc_Kolchavi_House2/map.bin"
+      "border_filepath": "data/layouts/ow_Kolchavi_House2/border.bin",
+      "blockdata_filepath": "data/layouts/ow_Kolchavi_House2/map.bin"
     },
     {
       "id": "LAYOUT_POC_KOLCHAVI_HOUSE3",
-      "name": "poc_Kolchavi_House3_Layout",
+      "name": "ow_Kolchavi_House3_Layout",
       "width": 20,
       "height": 20,
       "primary_tileset": "gTileset_Building",
       "secondary_tileset": "gTileset_GenericBuilding",
-      "border_filepath": "data/layouts/poc_Kolchavi_House3/border.bin",
-      "blockdata_filepath": "data/layouts/poc_Kolchavi_House3/map.bin"
+      "border_filepath": "data/layouts/ow_Kolchavi_House3/border.bin",
+      "blockdata_filepath": "data/layouts/ow_Kolchavi_House3/map.bin"
     },
     {
       "id": "LAYOUT_POC_KOLCHAVI_HOUSE4",
-      "name": "poc_Kolchavi_House4_Layout",
+      "name": "ow_Kolchavi_House4_Layout",
       "width": 18,
       "height": 18,
       "primary_tileset": "gTileset_Building",
       "secondary_tileset": "gTileset_GenericBuilding",
-      "border_filepath": "data/layouts/poc_Kolchavi_House4/border.bin",
-      "blockdata_filepath": "data/layouts/poc_Kolchavi_House4/map.bin"
+      "border_filepath": "data/layouts/ow_Kolchavi_House4/border.bin",
+      "blockdata_filepath": "data/layouts/ow_Kolchavi_House4/map.bin"
     },
     {
       "id": "LAYOUT_POC_KOLCHAVI_MARITIME_GUILDHALL",
-      "name": "poc_Kolchavi_MaritimeGuildhall_Layout",
+      "name": "ow_Kolchavi_MaritimeGuildhall_Layout",
       "width": 23,
       "height": 19,
       "primary_tileset": "gTileset_Building",
       "secondary_tileset": "gTileset_Kolchavi_Maritime",
-      "border_filepath": "data/layouts/poc_Kolchavi_MaritimeGuildhall/border.bin",
-      "blockdata_filepath": "data/layouts/poc_Kolchavi_MaritimeGuildhall/map.bin"
+      "border_filepath": "data/layouts/ow_Kolchavi_MaritimeGuildhall/border.bin",
+      "blockdata_filepath": "data/layouts/ow_Kolchavi_MaritimeGuildhall/map.bin"
     },
     {
       "id": "LAYOUT_POC_FLORAN_POKEMON_CENTER",
-      "name": "poc_Floran_PokemonCenter_Layout",
+      "name": "ow_Floran_PokemonCenter_Layout",
       "width": 24,
       "height": 20,
       "primary_tileset": "gTileset_Building",
       "secondary_tileset": "gTileset_PokemonCenter",
-      "border_filepath": "data/layouts/poc_Floran_PokemonCenter/border.bin",
-      "blockdata_filepath": "data/layouts/poc_Floran_PokemonCenter/map.bin"
+      "border_filepath": "data/layouts/ow_Floran_PokemonCenter/border.bin",
+      "blockdata_filepath": "data/layouts/ow_Floran_PokemonCenter/map.bin"
     },
     {
       "id": "LAYOUT_POC_FLORAN_HOUSE1",
-      "name": "poc_Floran_House1_Layout",
+      "name": "ow_Floran_House1_Layout",
       "width": 20,
       "height": 20,
       "primary_tileset": "gTileset_Building",
       "secondary_tileset": "gTileset_GenericBuilding",
-      "border_filepath": "data/layouts/poc_Floran_House1/border.bin",
-      "blockdata_filepath": "data/layouts/poc_Floran_House1/map.bin"
+      "border_filepath": "data/layouts/ow_Floran_House1/border.bin",
+      "blockdata_filepath": "data/layouts/ow_Floran_House1/map.bin"
     },
     {
       "id": "LAYOUT_POC_FLORAN_HOUSE2",
-      "name": "poc_Floran_House2_Layout",
+      "name": "ow_Floran_House2_Layout",
       "width": 20,
       "height": 20,
       "primary_tileset": "gTileset_Building",
       "secondary_tileset": "gTileset_GenericBuilding",
-      "border_filepath": "data/layouts/poc_Floran_House2/border.bin",
-      "blockdata_filepath": "data/layouts/poc_Floran_House2/map.bin"
+      "border_filepath": "data/layouts/ow_Floran_House2/border.bin",
+      "blockdata_filepath": "data/layouts/ow_Floran_House2/map.bin"
     },
     {
       "id": "LAYOUT_POC_FLORAN_HOUSE3",
-      "name": "poc_Floran_House3_Layout",
+      "name": "ow_Floran_House3_Layout",
       "width": 20,
       "height": 20,
       "primary_tileset": "gTileset_Building",
       "secondary_tileset": "gTileset_GenericBuilding",
-      "border_filepath": "data/layouts/poc_Floran_House3/border.bin",
-      "blockdata_filepath": "data/layouts/poc_Floran_House3/map.bin"
+      "border_filepath": "data/layouts/ow_Floran_House3/border.bin",
+      "blockdata_filepath": "data/layouts/ow_Floran_House3/map.bin"
     },
     {
       "id": "LAYOUT_POC_FLORAN_HOUSE4",
-      "name": "poc_Floran_House4_Layout",
+      "name": "ow_Floran_House4_Layout",
       "width": 20,
       "height": 20,
       "primary_tileset": "gTileset_Building",
       "secondary_tileset": "gTileset_GenericBuilding",
-      "border_filepath": "data/layouts/poc_Floran_House4/border.bin",
-      "blockdata_filepath": "data/layouts/poc_Floran_House4/map.bin"
+      "border_filepath": "data/layouts/ow_Floran_House4/border.bin",
+      "blockdata_filepath": "data/layouts/ow_Floran_House4/map.bin"
     },
     {
       "id": "LAYOUT_POC_FLORAN_HOUSE5",
-      "name": "poc_Floran_House5_Layout",
+      "name": "ow_Floran_House5_Layout",
       "width": 20,
       "height": 20,
       "primary_tileset": "gTileset_Building",
       "secondary_tileset": "gTileset_GenericBuilding",
-      "border_filepath": "data/layouts/poc_Floran_House5/border.bin",
-      "blockdata_filepath": "data/layouts/poc_Floran_House5/map.bin"
+      "border_filepath": "data/layouts/ow_Floran_House5/border.bin",
+      "blockdata_filepath": "data/layouts/ow_Floran_House5/map.bin"
     },
     {
       "id": "LAYOUT_POC_FLORAN_WARDEN_GUILD",
-      "name": "poc_Floran_WardenGuild_Layout",
+      "name": "ow_Floran_WardenGuild_Layout",
       "width": 35,
       "height": 25,
       "primary_tileset": "gTileset_Building",
       "secondary_tileset": "gTileset_LilycoveMuseum",
-      "border_filepath": "data/layouts/poc_Floran_WardenGuild/border.bin",
-      "blockdata_filepath": "data/layouts/poc_Floran_WardenGuild/map.bin"
+      "border_filepath": "data/layouts/ow_Floran_WardenGuild/border.bin",
+      "blockdata_filepath": "data/layouts/ow_Floran_WardenGuild/map.bin"
     },
     {
       "id": "LAYOUT_POC_FLORAN_WAREHOUSE",
-      "name": "poc_Floran_Warehouse_Layout",
+      "name": "ow_Floran_Warehouse_Layout",
       "width": 25,
       "height": 25,
       "primary_tileset": "gTileset_Building",
       "secondary_tileset": "gTileset_Facility",
-      "border_filepath": "data/layouts/poc_Floran_Warehouse/border.bin",
-      "blockdata_filepath": "data/layouts/poc_Floran_Warehouse/map.bin"
+      "border_filepath": "data/layouts/ow_Floran_Warehouse/border.bin",
+      "blockdata_filepath": "data/layouts/ow_Floran_Warehouse/map.bin"
     },
     {
       "id": "LAYOUT_POC_R8_HOUSE1",
-      "name": "poc_r8_House1_Layout",
+      "name": "ow_r8_House1_Layout",
       "width": 20,
       "height": 20,
       "primary_tileset": "gTileset_Building",
       "secondary_tileset": "gTileset_GenericBuilding",
-      "border_filepath": "data/layouts/poc_r8_House1/border.bin",
-      "blockdata_filepath": "data/layouts/poc_r8_House1/map.bin"
+      "border_filepath": "data/layouts/ow_r8_House1/border.bin",
+      "blockdata_filepath": "data/layouts/ow_r8_House1/map.bin"
     },
     {
       "id": "LAYOUT_POC_R10_HOUSE1",
-      "name": "poc_r10_House1_Layout",
+      "name": "ow_r10_House1_Layout",
       "width": 20,
       "height": 20,
       "primary_tileset": "gTileset_Building",
       "secondary_tileset": "gTileset_GenericBuilding",
-      "border_filepath": "data/layouts/poc_r10_House1/border.bin",
-      "blockdata_filepath": "data/layouts/poc_r10_House1/map.bin"
+      "border_filepath": "data/layouts/ow_r10_House1/border.bin",
+      "blockdata_filepath": "data/layouts/ow_r10_House1/map.bin"
     },
     {
       "id": "LAYOUT_POC_R12_HOUSE1",
-      "name": "poc_r12_House1_Layout",
+      "name": "ow_r12_House1_Layout",
       "width": 20,
       "height": 20,
       "primary_tileset": "gTileset_Building",
       "secondary_tileset": "gTileset_GenericBuilding",
-      "border_filepath": "data/layouts/poc_r12_House1/border.bin",
-      "blockdata_filepath": "data/layouts/poc_r12_House1/map.bin"
+      "border_filepath": "data/layouts/ow_r12_House1/border.bin",
+      "blockdata_filepath": "data/layouts/ow_r12_House1/map.bin"
     }
   ]
 }

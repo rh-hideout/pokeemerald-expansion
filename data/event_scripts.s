@@ -1888,60 +1888,60 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/scripts/battle_frontier.inc"
 	.include "data/scripts/apricorn_tree.inc"
 
-	.include "data/maps/poc_Kolchavi/scripts.inc"
+	.include "data/maps/ow_Kolchavi/scripts.inc"
 
-	.include "data/maps/poc_r10/scripts.inc"
+	.include "data/maps/ow_r10/scripts.inc"
 
-	.include "data/maps/poc_r6/scripts.inc"
+	.include "data/maps/ow_r6/scripts.inc"
 
-	.include "data/maps/poc_r3/scripts.inc"
+	.include "data/maps/ow_r3/scripts.inc"
 
-	.include "data/maps/poc_Floran/scripts.inc"
+	.include "data/maps/ow_Floran/scripts.inc"
 
-	.include "data/maps/poc_r8/scripts.inc"
+	.include "data/maps/ow_r8/scripts.inc"
 
-	.include "data/maps/poc_r2/scripts.inc"
+	.include "data/maps/ow_r2/scripts.inc"
 
-	.include "data/maps/poc_r9/scripts.inc"
+	.include "data/maps/ow_r9/scripts.inc"
 
-	.include "data/maps/poc_r16/scripts.inc"
+	.include "data/maps/ow_r16/scripts.inc"
 
-	.include "data/maps/poc_r12/scripts.inc"
+	.include "data/maps/ow_r12/scripts.inc"
 
-	.include "data/maps/poc_Kolchavi_PokemonCenter/scripts.inc"
+	.include "data/maps/ow_Kolchavi_PokemonCenter/scripts.inc"
 
-	.include "data/maps/poc_Kolchavi_Lab_1F/scripts.inc"
+	.include "data/maps/ow_Kolchavi_Lab_1F/scripts.inc"
 
-	.include "data/maps/poc_Kolchavi_Lab_2F/scripts.inc"
+	.include "data/maps/ow_Kolchavi_Lab_2F/scripts.inc"
 
-	.include "data/maps/poc_Kolchavi_House1/scripts.inc"
+	.include "data/maps/ow_Kolchavi_House1/scripts.inc"
 
-	.include "data/maps/poc_Kolchavi_House2/scripts.inc"
+	.include "data/maps/ow_Kolchavi_House2/scripts.inc"
 
-	.include "data/maps/poc_Kolchavi_House3/scripts.inc"
+	.include "data/maps/ow_Kolchavi_House3/scripts.inc"
 
-	.include "data/maps/poc_Kolchavi_House4/scripts.inc"
+	.include "data/maps/ow_Kolchavi_House4/scripts.inc"
 
-	.include "data/maps/poc_Kolchavi_MaritimeGuildhall/scripts.inc"
+	.include "data/maps/ow_Kolchavi_MaritimeGuildhall/scripts.inc"
 
-	.include "data/maps/poc_Floran_PokemonCenter/scripts.inc"
+	.include "data/maps/ow_Floran_PokemonCenter/scripts.inc"
 
-	.include "data/maps/poc_Floran_House1/scripts.inc"
+	.include "data/maps/ow_Floran_House1/scripts.inc"
 
-	.include "data/maps/poc_Floran_House2/scripts.inc"
+	.include "data/maps/ow_Floran_House2/scripts.inc"
 
-	.include "data/maps/poc_Floran_House3/scripts.inc"
+	.include "data/maps/ow_Floran_House3/scripts.inc"
 
-	.include "data/maps/poc_Floran_House4/scripts.inc"
+	.include "data/maps/ow_Floran_House4/scripts.inc"
 
-	.include "data/maps/poc_Floran_House5/scripts.inc"
+	.include "data/maps/ow_Floran_House5/scripts.inc"
 
-	.include "data/maps/poc_Floran_WardenGuild/scripts.inc"
+	.include "data/maps/ow_Floran_WardenGuild/scripts.inc"
 
-	.include "data/maps/poc_Floran_Warehouse/scripts.inc"
+	.include "data/maps/ow_Floran_Warehouse/scripts.inc"
 
-	.include "data/maps/poc_r8_House1/scripts.inc"
+	.include "data/maps/ow_r8_House1/scripts.inc"
 
-	.include "data/maps/poc_r10_House1/scripts.inc"
+	.include "data/maps/ow_r10_House1/scripts.inc"
 
-	.include "data/maps/poc_r12_House1/scripts.inc"
+	.include "data/maps/ow_r12_House1/scripts.inc"

@@ -1,0 +1,44 @@
+{
+  "id": "MAP_OW_R10",
+  "name": "ow_r10",
+  "layout": "LAYOUT_POC_R10",
+  "music": "MUS_DUMMY",
+  "region_map_section": "MAPSEC_ABANDONED_SHIP",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_NONE",
+  "allow_cycling": false,
+  "allow_escaping": false,
+  "allow_running": false,
+  "show_map_name": true,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": [
+    {
+      "map": "MAP_OW_FLORAN",
+      "offset": -22,
+      "direction": "up"
+    },
+    {
+      "map": "MAP_OW_R8",
+      "offset": 8,
+      "direction": "down"
+    },
+    {
+      "map": "MAP_OW_R12",
+      "offset": 0,
+      "direction": "right"
+    }
+  ],
+  "object_events": [],
+  "warp_events": [
+    {
+      "x": 45,
+      "y": 9,
+      "elevation": 0,
+      "dest_map": "MAP_OW_R10_HOUSE1",
+      "dest_warp_id": "0"
+    }
+  ],
+  "coord_events": [],
+  "bg_events": []
+}

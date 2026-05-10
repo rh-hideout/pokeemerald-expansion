@@ -1,0 +1,100 @@
+{
+  "id": "MAP_OW_FLORAN",
+  "name": "ow_Floran",
+  "layout": "LAYOUT_POC_FLORAN",
+  "music": "MUS_DUMMY",
+  "region_map_section": "MAPSEC_ABANDONED_SHIP",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_NONE",
+  "allow_cycling": false,
+  "allow_escaping": false,
+  "allow_running": false,
+  "show_map_name": true,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": [
+    {
+      "map": "MAP_OW_R6",
+      "offset": 0,
+      "direction": "left"
+    },
+    {
+      "map": "MAP_OW_R10",
+      "offset": 22,
+      "direction": "down"
+    },
+    {
+      "map": "MAP_OW_R9",
+      "offset": 0,
+      "direction": "up"
+    }
+  ],
+  "object_events": [],
+  "warp_events": [
+    {
+      "x": 14,
+      "y": 18,
+      "elevation": 0,
+      "dest_map": "MAP_OW_FLORAN_POKEMON_CENTER",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 8,
+      "y": 18,
+      "elevation": 0,
+      "dest_map": "MAP_OW_FLORAN_HOUSE1",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 20,
+      "y": 18,
+      "elevation": 0,
+      "dest_map": "MAP_OW_FLORAN_HOUSE2",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 35,
+      "y": 18,
+      "elevation": 0,
+      "dest_map": "MAP_OW_FLORAN_WARDEN_GUILD",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 36,
+      "y": 18,
+      "elevation": 0,
+      "dest_map": "MAP_OW_FLORAN_WARDEN_GUILD",
+      "dest_warp_id": "1"
+    },
+    {
+      "x": 10,
+      "y": 35,
+      "elevation": 0,
+      "dest_map": "MAP_OW_FLORAN_HOUSE3",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 16,
+      "y": 35,
+      "elevation": 0,
+      "dest_map": "MAP_OW_FLORAN_HOUSE4",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 11,
+      "y": 42,
+      "elevation": 0,
+      "dest_map": "MAP_OW_FLORAN_HOUSE5",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 30,
+      "y": 35,
+      "elevation": 0,
+      "dest_map": "MAP_OW_FLORAN_WAREHOUSE",
+      "dest_warp_id": "0"
+    }
+  ],
+  "coord_events": [],
+  "bg_events": []
+}

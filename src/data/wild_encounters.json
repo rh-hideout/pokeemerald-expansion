@@ -36579,8 +36579,8 @@
           }
         },
         {
-          "map": "MAP_POC_R3",
-          "base_label": "gpoc_r3",
+          "map": "MAP_OW_R3",
+          "base_label": "gow_r3",
           "land_mons": {
             "encounter_rate": 7,
             "mons": [
@@ -36763,8 +36763,8 @@
           }
         },
         {
-          "map": "MAP_POC_R6",
-          "base_label": "gpoc_r6",
+          "map": "MAP_OW_R6",
+          "base_label": "gow_r6",
           "land_mons": {
             "encounter_rate": 7,
             "mons": [
@@ -36947,8 +36947,8 @@
           }
         },
         {
-          "map": "MAP_POC_R8",
-          "base_label": "gpoc_r8",
+          "map": "MAP_OW_R8",
+          "base_label": "gow_r8",
           "land_mons": {
             "encounter_rate": 7,
             "mons": [
