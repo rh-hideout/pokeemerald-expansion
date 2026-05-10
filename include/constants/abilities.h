@@ -333,7 +333,7 @@ enum __attribute__((packed)) Ability
     ABILITY_TERAFORM_ZERO = 309,
     ABILITY_POISON_PUPPETEER = 310,
     /// New abilities
-    /// Ate abilities
+    /// Ate abilitiy
     ABILITY_DRAGONIZE = 311,
     ABILITY_RUFFIAN = 312,
     ABILITY_PSYLATE = 313,
