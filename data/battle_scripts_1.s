@@ -344,38 +344,38 @@ BattleScript_MoveSwitchOpenPartyScreenReturnWithNoAnim:
 	printstring STRINGID_SWITCHINMON
 	return
 
-BattleScript_EffectPledge::
-	attackcanceler
-	setpledge BattleScript_HitFromAccCheck
+BattleScript_PledgeWaitingForPartner::
 	pause B_WAIT_TIME_MED
 	printstring STRINGID_WAITINGFORPARTNERSMOVE
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectCombinedPledge_Water::
-	call BattleScript_EffectHit_Pledge
-	setpledgestatus BS_ATTACKER, SIDE_STATUS_RAINBOW
+BattleScript_EffectHitCombinedPledge::
+	pause B_WAIT_TIME_MED
+	printstring STRINGID_THETWOMOVESBECOMEONE
+	waitmessage B_WAIT_TIME_LONG
+	return
+
+BattleScript_TheRainbowActivates::
 	pause B_WAIT_TIME_SHORTEST
 	printstring STRINGID_ARAINBOWAPPEAREDONSIDE
 	waitmessage B_WAIT_TIME_LONG
 	playanimation BS_ATTACKER, B_ANIM_RAINBOW
 	waitanimation
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_TheRainbowDisappeared::
 	printstring STRINGID_THERAINBOWDISAPPEARED
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_EffectCombinedPledge_Fire::
-	call BattleScript_EffectHit_Pledge
-	setpledgestatus BS_TARGET, SIDE_STATUS_SEA_OF_FIRE
+BattleScript_SeaOfFireActivates::
 	pause B_WAIT_TIME_SHORTEST
 	printstring STRINGID_SEAOFFIREENVELOPEDSIDE
 	waitmessage B_WAIT_TIME_LONG
 	playanimation BS_TARGET, B_ANIM_SEA_OF_FIRE
 	waitanimation
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_HurtByTheSeaOfFire::
 	printstring STRINGID_HURTBYTHESEAOFFIRE
@@ -387,26 +387,17 @@ BattleScript_TheSeaOfFireDisappeared::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_EffectCombinedPledge_Grass::
-	call BattleScript_EffectHit_Pledge
-	setpledgestatus BS_TARGET, SIDE_STATUS_SWAMP
+BattleScript_TheSwampActivates::
 	pause B_WAIT_TIME_SHORTEST
 	printstring STRINGID_SWAMPENVELOPEDSIDE
 	waitmessage B_WAIT_TIME_LONG
 	playanimation BS_TARGET, B_ANIM_SWAMP
 	waitanimation
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_TheSwampDisappeared::
 	printstring STRINGID_THESWAMPDISAPPEARED
 	waitmessage B_WAIT_TIME_LONG
-	return
-
-BattleScript_EffectHit_Pledge::
-	pause B_WAIT_TIME_MED
-	printstring STRINGID_THETWOMOVESBECOMEONE
-	waitmessage B_WAIT_TIME_LONG
-	call BattleScript_EffectHit_RetFromAccCheck
 	return
 
 BattleScript_MoveEffectSaltCure::
@@ -2332,7 +2323,6 @@ BattleScript_EffectPsychUp::
 
 BattleScript_EffectFutureSight::
 	attackcanceler
-	setfutureattack
 	attackanimation
 	waitanimation
 	printfromtable gFutureMoveUsedStringIds

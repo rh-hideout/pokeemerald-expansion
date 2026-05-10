@@ -13799,10 +13799,19 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
         .skyBattleBanned = TRUE,
+        .argument.pledge = {
+            .comboMove = MOVE_FIRE_PLEDGE,
+            .resultMove = MOVE_WATER_PLEDGE,
+        },
         .contestEffect = CONTEST_EFFECT_EXCITE_AUDIENCE_IN_ANY_CONTEST,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
         .contestComboStarterId = 0,
         .contestComboMoves = {0},
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_RAINBOW,
+            .self = TRUE,
+            .pledgeCombo = TRUE,
+        }),
         .battleAnimScript = gBattleAnimMove_WaterPledge,
     },
 
@@ -13821,10 +13830,18 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
         .skyBattleBanned = TRUE,
+        .argument.pledge = {
+            .comboMove = MOVE_GRASS_PLEDGE,
+            .resultMove = MOVE_FIRE_PLEDGE,
+        },
         .contestEffect = CONTEST_EFFECT_EXCITE_AUDIENCE_IN_ANY_CONTEST,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
         .contestComboStarterId = 0,
         .contestComboMoves = {0},
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_SEA_OF_FIRE,
+            .pledgeCombo = TRUE,
+        }),
         .battleAnimScript = gBattleAnimMove_FirePledge,
     },
 
@@ -13843,10 +13860,18 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
         .skyBattleBanned = TRUE,
+        .argument.pledge = {
+            .comboMove = MOVE_WATER_PLEDGE,
+            .resultMove = MOVE_GRASS_PLEDGE,
+        },
         .contestEffect = CONTEST_EFFECT_EXCITE_AUDIENCE_IN_ANY_CONTEST,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
         .contestComboStarterId = 0,
         .contestComboMoves = {0},
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_SWAMP,
+            .pledgeCombo = TRUE,
+        }),
         .battleAnimScript = gBattleAnimMove_GrassPledge,
     },
 
