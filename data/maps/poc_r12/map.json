@@ -1,0 +1,39 @@
+{
+  "id": "MAP_POC_R12",
+  "name": "poc_r12",
+  "layout": "LAYOUT_POC_R12",
+  "music": "MUS_DUMMY",
+  "region_map_section": "MAPSEC_ABANDONED_SHIP",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_NONE",
+  "allow_cycling": false,
+  "allow_escaping": false,
+  "allow_running": false,
+  "show_map_name": true,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": [
+    {
+      "map": "MAP_POC_R8",
+      "offset": -54,
+      "direction": "down"
+    },
+    {
+      "map": "MAP_POC_R10",
+      "offset": 0,
+      "direction": "left"
+    }
+  ],
+  "object_events": [],
+  "warp_events": [
+    {
+      "x": 40,
+      "y": 6,
+      "elevation": 0,
+      "dest_map": "MAP_POC_R12_HOUSE1",
+      "dest_warp_id": "0"
+    }
+  ],
+  "coord_events": [],
+  "bg_events": []
+}

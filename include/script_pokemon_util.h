@@ -12,5 +12,10 @@ void Script_GetChosenMonOffensiveEVs(void);
 void Script_GetChosenMonDefensiveEVs(void);
 void Script_GetChosenMonOffensiveIVs(void);
 void Script_GetChosenMonDefensiveIVs(void);
+void ChoosePartyForStandardBattle(void);
+void SaveSelectMonsParty(void);
+void LoadSelectMonsParty(void);
+void RestoreSelectMonsPartyAfterBattle(void);
+bool8 IsSelectMonsBattleActive(void);
 
 #endif // GUARD_SCRIPT_POKEMON_UTIL_H

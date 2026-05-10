@@ -492,6 +492,7 @@ void BtlCtrl_RemoveVoiceoverMessageFrame(void);
 bool32 ShouldBattleRestrictionsApply(enum BattlerId battler);
 void FreeShinyStars(void);
 enum BattleTrainer GetBattlerTrainer(enum BattlerId battler);
+u32 GetBattleSpeedScale(bool32 forHealthbar);
 
 
 // oak and old man controller

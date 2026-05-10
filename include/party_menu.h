@@ -81,6 +81,8 @@ enum ItemEffectType GetItemEffectType(enum Item item);
 void CB2_PartyMenuFromStartMenu(void);
 void CB2_ChooseMonToGiveItem(void);
 void ChooseMonToGiveMailFromMailbox(void);
+void SetPartySelectionLimit(u8 limit);
+void ClearPartySelectionLimit(void);
 void InitChooseHalfPartyForBattle(u8 unused);
 void ClearSelectedPartyOrder(void);
 void ChooseMonForTradingBoard(u8 menuType, MainCallback callback);

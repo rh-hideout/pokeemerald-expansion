@@ -67,6 +67,7 @@ void SetPlayerInvisibility(bool8 invisible);
 u8 player_get_pos_including_state_based_drift(s16 *x, s16 *y);
 void SetPlayerAvatarFishing(enum Direction direction);
 bool8 ObjectMovingOnRockStairs(struct ObjectEvent *objectEvent, enum Direction direction);
+bool8 ObjectMovingOnRockStairsWithBehaviors(struct ObjectEvent *objectEvent, enum Direction direction, u8 currentBehavior, u8 nextBehavior);
 //sideways stairs
 enum Direction GetRightSideStairsDirection(enum Direction direction);
 enum Direction GetLeftSideStairsDirection(enum Direction direction);

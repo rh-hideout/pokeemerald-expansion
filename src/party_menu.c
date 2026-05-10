@@ -80,9 +80,11 @@
 #include "constants/party_menu.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
+#include "ui_stat_editor.h"
 
 enum {
     MENU_SUMMARY,
+    MENU_STAT_EDIT,
     MENU_SWITCH,
     MENU_CANCEL1,
     MENU_ITEM,
@@ -191,7 +193,7 @@ struct PartyMenuInternal
     u32 spriteIdCancelPokeball:7;
     u32 messageId:14;
     u8 windowId[3];
-    u8 actions[8];
+    u8 actions[9];
     u8 numActions;
     // In vanilla Emerald, only the first 0xB0 hwords (0x160 bytes) are actually used.
     // However, a full 0x100 hwords (0x200 bytes) are allocated.
@@ -226,6 +228,7 @@ static EWRAM_DATA u16 *sSlot2TilemapBuffer = 0; //
 EWRAM_DATA u8 gSelectedOrderFromParty[MAX_FRONTIER_PARTY_SIZE] = {0};
 static EWRAM_DATA u16 sPartyMenuItemId = 0;
 EWRAM_DATA u8 gBattlePartyCurrentOrder[PARTY_SIZE / 2] = {0}; // bits 0-3 are the current pos of Slot 1, 4-7 are Slot 2, and so on
+static EWRAM_DATA u8 sPartySelectionLimit = 0; // Stores the number of Pokemon to select for battles (0 = use facility default)
 static EWRAM_DATA u8 sInitialLevel = 0;
 static EWRAM_DATA u8 sFinalLevel = 0;
 
@@ -460,6 +463,7 @@ static void ShiftMoveSlot(struct BoxPokemon *, u8, u8);
 static void BlitBitmapToPartyWindow_LeftColumn(u8, u8, u8, u8, u8, bool8);
 static void BlitBitmapToPartyWindow_RightColumn(u8, u8, u8, u8, u8, bool8);
 static void CursorCb_Summary(u8);
+static void CursorCb_StatEdit(u8 taskId);
 static void CursorCb_Switch(u8);
 static void CursorCb_Cancel1(u8);
 static void CursorCb_Item(u8);
@@ -2860,29 +2864,79 @@ static void SetPartyMonSelectionActions(struct Pokemon *mons, u8 slotId, u8 acti
     }
 }
 
+// Field moves that can be used via items and should be excluded from the party menu
+static const u16 sItemBasedFieldMoves[] =
+{
+    MOVE_CUT,
+    MOVE_SURF,
+    MOVE_STRENGTH,
+    MOVE_ROCK_SMASH,
+    MOVE_DIVE,
+    MOVE_WATERFALL,
+};
+
+// Check if a field move should be excluded from the party menu (because it has an item alternative)
+static bool8 IsFieldMoveExcludedFromPartyMenu(u16 moveId)
+{
+    u32 i;
+    for (i = 0; i < ARRAY_COUNT(sItemBasedFieldMoves); i++)
+    {
+        if (sItemBasedFieldMoves[i] == moveId)
+            return TRUE;
+    }
+    return FALSE;
+}
+
 static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId)
+// modified for field move implementation
 {
     u8 i, j;
 
     sPartyMenuInternal->numActions = 0;
     AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_SUMMARY);
+    AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_STAT_EDIT);
+
+    u16 species = GetMonData(&mons[slotId], MON_DATA_SPECIES);
 
     if (P_PARTY_MOVE_RELEARNER
-     && GetMonData(&mons[slotId], MON_DATA_SPECIES)
+     && species
      && CanBoxMonRelearnAnyMove(&mons[slotId].box))
     {
         AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_SUB_MOVES);
     }
 
-    // Add field moves to action list
-    for (i = 0; i < MAX_MON_MOVES; i++)
+    if (!GetMonData(&mons[slotId], MON_DATA_IS_EGG))
     {
-        for (j = 0; j != FIELD_MOVES_COUNT; j++)
+        // Loop through all possible field moves
+        for (i = 0; i < FIELD_MOVES_COUNT; i++)
         {
-            if (GetMonData(&mons[slotId], i + MON_DATA_MOVE1) == FieldMove_GetMoveId(j))
+            u16 moveId = FieldMove_GetMoveId(i);
+
+            // Case 1: Fly and Flash - show if learnable and badge obtained
+            if (moveId == MOVE_FLY || moveId == MOVE_FLASH)
             {
-                AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, j + MENU_FIELD_MOVES);
-                break;
+                if (IsFieldMoveUnlocked(i) && CanLearnTeachableMove(species, moveId))
+                {
+                    AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, i + MENU_FIELD_MOVES);
+                }
+            }
+            // Case 2: Item-based field moves - excluded from party menu
+            else if (IsFieldMoveExcludedFromPartyMenu(moveId))
+            {
+                // Do nothing, effectively removing them from the menu.
+            }
+            // Case 3: All other field moves (Dig, Soft-Boiled, etc.)
+            else
+            {
+                // Use the original logic: check if the Pokémon knows the move.
+                for (j = 0; j < MAX_MON_MOVES; j++)
+                {
+                    if (GetMonData(&mons[slotId], MON_DATA_MOVE1 + j) == moveId)
+                    {
+                        AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, i + MENU_FIELD_MOVES);
+                        break; // Move found, stop checking this Pokémon's moves
+                    }
+                }
             }
         }
     }
@@ -4203,7 +4257,7 @@ bool32 SetUpFieldMove_Surf(void)
     if (!CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_SURF))
         return FALSE;
 
-    if (PartyHasMonWithSurf() == TRUE && IsPlayerFacingSurfableFishableWater() == TRUE)
+    if (IsPlayerFacingSurfableFishableWater() == TRUE)
     {
         gFieldCallback2 = FieldCallback_PrepareFadeInFromMenu;
         gPostMenuFieldCallback = FieldCallback_Surf;
@@ -4225,10 +4279,16 @@ bool32 SetUpFieldMove_Fly(void)
     if (!CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_LEAVE_ROUTE))
         return FALSE;
 
+    // First, check if the map allows flying.
     if (Overworld_MapTypeAllowsTeleportAndFly(gMapHeader.mapType) == TRUE)
-        return TRUE;
-    else
-        return FALSE;
+        {
+        // If it does, then perform a check for a valid Pokémon or item.
+        if (CanUseFly() == TRUE)
+            return TRUE;
+    }
+
+    // If any check fails, return FALSE.
+    return FALSE;
 }
 
 void CB2_ReturnToPartyMenuFromFlyMap(void)
@@ -4582,6 +4642,25 @@ static void UpdatePartyMonAilmentGfx(u8 status, struct PartyMenuBox *menuBox)
         gSprites[menuBox->statusSpriteId].invisible = FALSE;
         break;
     }
+}
+
+static void ChangePokemonStatsPartyScreen_CB(void)
+{
+    CB2_ReturnToPartyMenuFromSummaryScreen();
+}
+
+static void ChangePokemonStatsPartyScreen(void)
+{
+    StatEditor_Init(ChangePokemonStatsPartyScreen_CB);
+}
+
+static void CursorCb_StatEdit(u8 taskId)
+{
+    PlaySE(SE_SELECT);
+    gSpecialVar_0x8004 = gPartyMenu.slotId;
+    gLastViewedMonIndex = gPartyMenu.slotId;
+    sPartyMenuInternal->exitCallback = ChangePokemonStatsPartyScreen;
+    Task_ClosePartyMenu(taskId);
 }
 
 void LoadPartyMenuAilmentGfx(void)
@@ -7181,6 +7260,16 @@ static void TryGiveMailToSelectedMon(u8 taskId)
     gTasks[taskId].func = Task_UpdateHeldItemSpriteAndClosePartyMenu;
 }
 
+void SetPartySelectionLimit(u8 limit)
+{
+    sPartySelectionLimit = limit;
+}
+
+void ClearPartySelectionLimit(void)
+{
+    sPartySelectionLimit = 0;
+}
+
 void InitChooseHalfPartyForBattle(u8 unused)
 {
     ClearSelectedPartyOrder();
@@ -7255,10 +7344,16 @@ static u8 CheckBattleEntriesAndGetMessage(void)
     maxBattlers = GetMaxBattleEntries();
     for (i = 0; i < maxBattlers - 1; i++)
     {
+        // Skip unselected slots (selectmons allows selecting fewer than max)
+        if (order[i] == 0)
+            continue;
         u16 species = GetMonData(&party[order[i] - 1], MON_DATA_SPECIES);
         enum Item item = GetMonData(&party[order[i] - 1], MON_DATA_HELD_ITEM);
         for (j = i + 1; j < maxBattlers; j++)
         {
+            // Skip unselected slots in comparison
+            if (order[j] == 0)
+                continue;
             if (species == GetMonData(&party[order[j] - 1], MON_DATA_SPECIES))
                 return PARTY_MSG_MONS_CANT_BE_SAME;
             if (item != ITEM_NONE && item == GetMonData(&party[order[j] - 1], MON_DATA_HELD_ITEM))
@@ -7310,6 +7405,15 @@ static void Task_ContinueChoosingHalfParty(u8 taskId)
 
 static u8 GetMaxBattleEntries(void)
 {
+
+    // If party selection limit is set, use it (but don't exceed actual party size)
+    if (sPartySelectionLimit >= 1 && sPartySelectionLimit <= PARTY_SIZE)
+    {
+        if (gPlayerPartyCount < sPartySelectionLimit)
+            return gPlayerPartyCount;
+        return sPartySelectionLimit;
+    }
+
     switch (VarGet(VAR_FRONTIER_FACILITY))
     {
     case FACILITY_MULTI_OR_EREADER:
@@ -7323,6 +7427,10 @@ static u8 GetMaxBattleEntries(void)
 
 static u8 GetMinBattleEntries(void)
 {
+    // If party selection limit is set, allow selecting 1 to limit Pokémon
+    if (sPartySelectionLimit >= 1 && sPartySelectionLimit <= PARTY_SIZE)
+        return 1;
+
     switch (VarGet(VAR_FRONTIER_FACILITY))
     {
     case FACILITY_MULTI_OR_EREADER:

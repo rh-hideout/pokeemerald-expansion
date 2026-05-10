@@ -1,14 +1,17 @@
 #ifndef GUARD_GLOBAL_FIELDMAP_H
 #define GUARD_GLOBAL_FIELDMAP_H
 
+// note: metatile total limit has been changed from 1024 to 2048 per instructions in https://github.com/pret/pokeemerald/wiki/Expanding-The-Metatile-Count
+
 // Masks/shifts for blocks in the map grid
-// Map grid blocks consist of a 10 bit metatile id, a 2 bit collision value, and a 4 bit elevation value
+// Map grid blocks consist of an 11 bit metatile id, a 1 bit collision value, and a 4 bit elevation value
 // This is the data stored in each data/layouts/*/map.bin file
-#define MAPGRID_METATILE_ID_MASK 0x03FF // Bits 0-9
-#define MAPGRID_COLLISION_MASK   0x0C00 // Bits 10-11
+// Originally a 10 bit metatile id and 2 bit collision; one collision bit was reclaimed to double the metatile id space.
+#define MAPGRID_METATILE_ID_MASK 0x07FF // Bits 0-10
+#define MAPGRID_COLLISION_MASK   0x0800 // Bit 11
 #define MAPGRID_ELEVATION_MASK   0xF000 // Bits 12-15
 #define MAPGRID_METATILE_ID_SHIFT 0
-#define MAPGRID_COLLISION_SHIFT  10
+#define MAPGRID_COLLISION_SHIFT  11
 #define MAPGRID_ELEVATION_SHIFT  12
 
 enum
@@ -159,7 +162,7 @@ struct __attribute__((packed, aligned(4))) ObjectEventTemplate
     };
     /*0x10*/ const u8 *script;
     /*0x14*/ u16 flagId;
-    /*0x16*/ u16 filler;
+    /*0x16*/ u16 questId; // ID of assigned quest, 0xFFFF = none
 }; // size = 0x18
 
 struct WarpEvent
@@ -307,6 +310,7 @@ struct ObjectEvent
              u8 directionOverwrite:4;
     /*0x21*/ u8 directionSequenceIndex;
     /*0x22*/ u8 playerCopyableMovement; // COPY_MOVE_*
+             u32 hasQuestIcon:1;
     /*0x23*/ u8 spriteId;
     /*size = 0x24*/
 };

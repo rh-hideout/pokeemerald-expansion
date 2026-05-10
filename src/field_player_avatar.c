@@ -919,7 +919,11 @@ static void PlayerNotOnBikeMoving(enum Direction direction, u16 heldKeys)
     }
 
     if (!(gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_UNDERWATER)
+#if OPT_AUTORUN == TRUE
+     && ((heldKeys & B_BUTTON) || gSaveBlock2Ptr->optionsAutoRun)  // B button OR autorun
+#else
      && (heldKeys & B_BUTTON)
+#endif
      && FlagGet(FLAG_SYS_B_DASH)
      && IsRunningDisallowed(gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior) == 0
      && !FollowerNPCComingThroughDoor()
@@ -2238,9 +2242,22 @@ enum Direction GetLeftSideStairsDirection(enum Direction direction)
 
 bool8 ObjectMovingOnRockStairs(struct ObjectEvent *objectEvent, enum Direction direction)
 {
-    #if SLOW_MOVEMENT_ON_STAIRS == TRUE
+    u8 nextBehavior = 0;
+
+    if (SLOW_MOVEMENT_ON_STAIRS && direction == DIR_SOUTH)
+    {
         s16 x = objectEvent->currentCoords.x;
         s16 y = objectEvent->currentCoords.y;
+        MoveCoords(DIR_SOUTH, &x, &y);
+        nextBehavior = MapGridGetMetatileBehaviorAt(x,y);
+    }
+    
+    return ObjectMovingOnRockStairsWithBehaviors(objectEvent, direction, objectEvent->currentMetatileBehavior, nextBehavior);
+}
+
+bool8 ObjectMovingOnRockStairsWithBehaviors(struct ObjectEvent *objectEvent, enum Direction direction, u8 currentBehavior, u8 nextBehavior)
+{
+    #if SLOW_MOVEMENT_ON_STAIRS == TRUE
 
         if (IsFollowerVisible() && GetFollowerObject() != NULL && (objectEvent->isPlayer || objectEvent->localId == OBJ_EVENT_ID_FOLLOWER))
             return FALSE;
@@ -2248,10 +2265,9 @@ bool8 ObjectMovingOnRockStairs(struct ObjectEvent *objectEvent, enum Direction d
         switch (direction)
         {
         case DIR_NORTH:
-            return MetatileBehavior_IsRockStairs(MapGridGetMetatileBehaviorAt(x,y));
+            return MetatileBehavior_IsRockStairs(currentBehavior);
         case DIR_SOUTH:
-            MoveCoords(DIR_SOUTH, &x, &y);
-            return MetatileBehavior_IsRockStairs(MapGridGetMetatileBehaviorAt(x,y));
+            return MetatileBehavior_IsRockStairs(nextBehavior);
         case DIR_WEST:
         case DIR_EAST:
         case DIR_NORTHEAST:

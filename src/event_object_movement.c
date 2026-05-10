@@ -56,6 +56,7 @@
 #include "constants/trainer_types.h"
 #include "constants/union_room.h"
 #include "constants/weather.h"
+#include "quests.h"
 
 #define SPECIAL_LOCALIDS_START (min(LOCALID_CAMERA, \
                                 min(LOCALID_PLAYER, \
@@ -135,8 +136,8 @@ static void TryEnableObjectEventAnim(struct ObjectEvent *, struct Sprite *);
 static void ObjectEventExecHeldMovementAction(struct ObjectEvent *, struct Sprite *);
 static void UpdateObjectEventSpriteAnimPause(struct ObjectEvent *, struct Sprite *);
 static bool8 IsCoordOutsideObjectEventMovementRange(struct ObjectEvent *, s16, s16);
-static bool8 IsMetatileDirectionallyImpassable(struct ObjectEvent *, s16, s16, enum Direction);
-static bool8 DoesObjectCollideWithObjectAt(struct ObjectEvent *, s16, s16);
+static bool8 IsMetatileDirectionallyImpassable(struct ObjectEvent *, s16, s16, enum Direction, u8);
+static bool8 DoesObjectCollideWithObjectAt(struct ObjectEvent *, s16, s16, u8);
 static void UpdateObjectEventOffscreen(struct ObjectEvent *, struct Sprite *);
 static void UpdateObjectEventSpriteVisibility(struct ObjectEvent *, struct Sprite *);
 static void ObjectEventUpdateMetatileBehaviors(struct ObjectEvent *);
@@ -153,6 +154,10 @@ static void GetGroundEffectFlags_Tracks(struct ObjectEvent *, u32 *);
 static void GetGroundEffectFlags_Puddle(struct ObjectEvent *, u32 *);
 static void GetGroundEffectFlags_Ripple(struct ObjectEvent *, u32 *);
 static void GetGroundEffectFlags_Seaweed(struct ObjectEvent *, u32 *);
+static void GetGroundEffectFlags_SwampTallGrassOnSpawn(struct ObjectEvent *, u32 *);
+static void GetGroundEffectFlags_SwampTallGrassOnBeginStep(struct ObjectEvent *, u32 *);
+static void GetGroundEffectFlags_SwampPlantsOnSpawn(struct ObjectEvent *, u32 *);
+static void GetGroundEffectFlags_SwampPlantsOnBeginStep(struct ObjectEvent *, u32 *);
 static void GetGroundEffectFlags_JumpLanding(struct ObjectEvent *, u32 *);
 static u8 ObjectEventGetNearbyReflectionType(struct ObjectEvent *);
 static u8 GetReflectionTypeByMetatileBehavior(u32);
@@ -1912,6 +1917,8 @@ u8 TrySpawnObjectEventTemplate(const struct ObjectEventTemplate *objectEventTemp
     if (subspriteTables)
         SetSubspriteTables(&gSprites[gObjectEvents[objectEventId].spriteId], subspriteTables);
 
+    HandleQuestIconForSingleObjectEvent(&gObjectEvents[objectEventId], objectEventId);
+
     return objectEventId;
 }
 
@@ -3042,6 +3049,8 @@ static void SpawnObjectEventOnReturnToField(u8 objectEventId, s16 x, s16 y)
         ResetObjectEventFldEffData(objectEvent);
         SetObjectSubpriorityByElevation(objectEvent->previousElevation, sprite, 1);
     }
+
+    HandleQuestIconForSingleObjectEvent(objectEvent,objectEventId);
 }
 
 static void ResetObjectEventFldEffData(struct ObjectEvent *objectEvent)
@@ -3054,6 +3063,7 @@ static void ResetObjectEventFldEffData(struct ObjectEvent *objectEvent)
     objectEvent->inShallowFlowingWater = FALSE;
     objectEvent->inSandPile = FALSE;
     objectEvent->inHotSprings = FALSE;
+    ResetQuestIconOnObject(objectEvent);
     ObjectEventClearHeldMovement(objectEvent);
 }
 
@@ -6453,56 +6463,54 @@ enum Collision GetSidewaysStairsCollision(struct ObjectEvent *objectEvent, enum 
     return collision;
 }
 
-static enum Collision GetVanillaCollision(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction direction)
+__attribute__((flatten)) static enum Collision GetVanillaCollision(struct ObjectEvent *objectEvent, s16 x, s16 y, u8 elevation, enum Direction direction, u8 nextBehavior)
 {
     if (IsCoordOutsideObjectEventMovementRange(objectEvent, x, y))
         return COLLISION_OUTSIDE_RANGE;
-    else if (MapGridGetCollisionAt(x, y) || GetMapBorderIdAt(x, y) == CONNECTION_INVALID || IsMetatileDirectionallyImpassable(objectEvent, x, y, direction))
+    else if (MapGridGetCollisionAt(x, y) || GetMapBorderIdAt(x, y) == CONNECTION_INVALID || IsMetatileDirectionallyImpassable(objectEvent, x, y, direction, nextBehavior))
         return COLLISION_IMPASSABLE;
     else if (objectEvent->trackedByCamera && !CanCameraMoveInDirection(direction))
         return COLLISION_IMPASSABLE;
-    else if (IsElevationMismatchAt(objectEvent->currentElevation, x, y))
+    else if (IsElevationMismatchAt(elevation, x, y))
         return COLLISION_ELEVATION_MISMATCH;
-    else if (DoesObjectCollideWithObjectAt(objectEvent, x, y))
+    else if (DoesObjectCollideWithObjectAt(objectEvent, x, y, elevation))
         return COLLISION_OBJECT_EVENT;
 
     return COLLISION_NONE;
 }
 
-static bool8 ObjectEventOnLeftSideStair(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction direction)
+static bool8 ObjectEventOnLeftSideStair(struct ObjectEvent *objectEvent, s16 x, s16 y, u8 elevation, enum Direction direction)
 {
     switch (direction)
     {
     case DIR_EAST:
         MoveCoords(DIR_NORTH, &x, &y);
-        return DoesObjectCollideWithObjectAt(objectEvent, x, y);
+        return DoesObjectCollideWithObjectAt(objectEvent, x, y, elevation);
     case DIR_WEST:
         MoveCoords(DIR_SOUTH, &x, &y);
-        return DoesObjectCollideWithObjectAt(objectEvent, x, y);
+        return DoesObjectCollideWithObjectAt(objectEvent, x, y, elevation);
     default:
         return FALSE;   //north/south taken care of in GetVanillaCollision
     }
 }
 
-static bool8 ObjectEventOnRightSideStair(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction direction)
+static bool8 ObjectEventOnRightSideStair(struct ObjectEvent *objectEvent, s16 x, s16 y, u8 elevation, enum Direction direction)
 {
     switch (direction)
     {
     case DIR_EAST:
         MoveCoords(DIR_SOUTH, &x, &y);
-        return DoesObjectCollideWithObjectAt(objectEvent, x, y);
+        return DoesObjectCollideWithObjectAt(objectEvent, x, y, elevation);
     case DIR_WEST:
         MoveCoords(DIR_NORTH, &x, &y);
-        return DoesObjectCollideWithObjectAt(objectEvent, x, y);
+        return DoesObjectCollideWithObjectAt(objectEvent, x, y, elevation);
     default:
         return FALSE;   //north/south taken care of in GetVanillaCollision
     }
 }
 
-enum Collision GetCollisionAtCoords(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction dir)
+__attribute__((flatten)) enum Collision GetCollisionWithBehaviorsAtCoords(struct ObjectEvent *objectEvent, s16 x, s16 y, u8 elevation, enum Direction dir, u8 currentBehavior, u8 nextBehavior)
 {
-    u8 currentBehavior = MapGridGetMetatileBehaviorAt(objectEvent->currentCoords.x, objectEvent->currentCoords.y);
-    u8 nextBehavior = MapGridGetMetatileBehaviorAt(x, y);
     enum Collision collision;
 
     #if OW_FLAG_NO_COLLISION != 0
@@ -6532,19 +6540,19 @@ enum Collision GetCollisionAtCoords(struct ObjectEvent *objectEvent, s16 x, s16 
         return COLLISION_IMPASSABLE;    //trying to move north onto top stair tile at same level from non-stair -> no
 
     // regular checks
-    collision = GetVanillaCollision(objectEvent, x, y, dir);
+    collision = GetVanillaCollision(objectEvent, x, y, elevation, dir, nextBehavior);
 
     //sideways stairs direction change checks
     collision = GetSidewaysStairsCollision(objectEvent, dir, currentBehavior, nextBehavior, collision);
     switch (collision)
     {
     case COLLISION_SIDEWAYS_STAIRS_TO_LEFT:
-        if (ObjectEventOnLeftSideStair(objectEvent, x, y, dir))
+        if (ObjectEventOnLeftSideStair(objectEvent, x, y, elevation, dir))
             return COLLISION_OBJECT_EVENT;
         objectEvent->directionOverwrite = GetLeftSideStairsDirection(dir);
         return COLLISION_NONE;
     case COLLISION_SIDEWAYS_STAIRS_TO_RIGHT:
-        if (ObjectEventOnRightSideStair(objectEvent, x, y, dir))
+        if (ObjectEventOnRightSideStair(objectEvent, x, y, elevation, dir))
             return COLLISION_OBJECT_EVENT;
         objectEvent->directionOverwrite = GetRightSideStairsDirection(dir);
         return COLLISION_NONE;
@@ -6553,17 +6561,25 @@ enum Collision GetCollisionAtCoords(struct ObjectEvent *objectEvent, s16 x, s16 
     }
 }
 
+enum Collision GetCollisionAtCoords(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction dir)
+{
+    u8 currentBehavior = MapGridGetMetatileBehaviorAt(objectEvent->currentCoords.x, objectEvent->currentCoords.y);
+    u8 nextBehavior = MapGridGetMetatileBehaviorAt(x, y);
+    return GetCollisionWithBehaviorsAtCoords(objectEvent, x, y, objectEvent->currentElevation, dir, currentBehavior, nextBehavior);
+}
+
 u8 GetCollisionFlagsAtCoords(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction direction)
 {
     u8 flags = 0;
+    u8 nextBehavior = MapGridGetMetatileBehaviorAt(x, y);
 
     if (IsCoordOutsideObjectEventMovementRange(objectEvent, x, y))
         flags |= 1 << (COLLISION_OUTSIDE_RANGE - 1);
-    if (MapGridGetCollisionAt(x, y) || GetMapBorderIdAt(x, y) == CONNECTION_INVALID || IsMetatileDirectionallyImpassable(objectEvent, x, y, direction) || (objectEvent->trackedByCamera && !CanCameraMoveInDirection(direction)))
+    if (MapGridGetCollisionAt(x, y) || GetMapBorderIdAt(x, y) == CONNECTION_INVALID || IsMetatileDirectionallyImpassable(objectEvent, x, y, direction, nextBehavior) || (objectEvent->trackedByCamera && !CanCameraMoveInDirection(direction)))
         flags |= 1 << (COLLISION_IMPASSABLE - 1);
     if (IsElevationMismatchAt(objectEvent->currentElevation, x, y))
         flags |= 1 << (COLLISION_ELEVATION_MISMATCH - 1);
-    if (DoesObjectCollideWithObjectAt(objectEvent, x, y))
+    if (DoesObjectCollideWithObjectAt(objectEvent, x, y, objectEvent->currentElevation))
         flags |= 1 << (COLLISION_OBJECT_EVENT - 1);
     return flags;
 }
@@ -6594,16 +6610,16 @@ static bool8 IsCoordOutsideObjectEventMovementRange(struct ObjectEvent *objectEv
     return FALSE;
 }
 
-static bool8 IsMetatileDirectionallyImpassable(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction direction)
+static bool8 IsMetatileDirectionallyImpassable(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction direction, u8 nextBehavior)
 {
     if (gOppositeDirectionBlockedMetatileFuncs[direction - 1](objectEvent->currentMetatileBehavior)
-        || gDirectionBlockedMetatileFuncs[direction - 1](MapGridGetMetatileBehaviorAt(x, y)))
+        || gDirectionBlockedMetatileFuncs[direction - 1](nextBehavior))
         return TRUE;
 
     return FALSE;
 }
 
-u32 GetObjectObjectCollidesWith(struct ObjectEvent *objectEvent, s16 x, s16 y, bool32 addCoords)
+u32 GetObjectObjectCollidesWith(struct ObjectEvent *objectEvent, s16 x, s16 y, u8 elevation, bool32 addCoords)
 {
     u8 i;
     struct ObjectEvent *curObject;
@@ -6627,7 +6643,7 @@ u32 GetObjectObjectCollidesWith(struct ObjectEvent *objectEvent, s16 x, s16 y, b
             // check for collision if curObject is active, not the object in question, and not exempt from collisions
             if ((curObject->currentCoords.x == x && curObject->currentCoords.y == y) || (curObject->previousCoords.x == x && curObject->previousCoords.y == y))
             {
-                if (AreElevationsCompatible(objectEvent->currentElevation, curObject->currentElevation))
+                if (AreElevationsCompatible(elevation, curObject->currentElevation))
                     return i;
             }
         }
@@ -6635,9 +6651,9 @@ u32 GetObjectObjectCollidesWith(struct ObjectEvent *objectEvent, s16 x, s16 y, b
     return OBJECT_EVENTS_COUNT;
 }
 
-static bool8 DoesObjectCollideWithObjectAt(struct ObjectEvent *objectEvent, s16 x, s16 y)
+static bool8 DoesObjectCollideWithObjectAt(struct ObjectEvent *objectEvent, s16 x, s16 y, u8 elevation)
 {
-    return (GetObjectObjectCollidesWith(objectEvent, x, y, FALSE) < OBJECT_EVENTS_COUNT);
+    return (GetObjectObjectCollidesWith(objectEvent, x, y, elevation, FALSE) < OBJECT_EVENTS_COUNT);
 }
 
 bool8 IsBerryTreeSparkling(u8 localId, u8 mapNum, u8 mapGroup)
@@ -9662,6 +9678,8 @@ static void GetAllGroundEffectFlags_OnSpawn(struct ObjectEvent *objEvent, u32 *f
     GetGroundEffectFlags_Reflection(objEvent, flags);
     GetGroundEffectFlags_TallGrassOnSpawn(objEvent, flags);
     GetGroundEffectFlags_LongGrassOnSpawn(objEvent, flags);
+    GetGroundEffectFlags_SwampTallGrassOnSpawn(objEvent, flags);
+    GetGroundEffectFlags_SwampPlantsOnSpawn(objEvent, flags);
     GetGroundEffectFlags_SandHeap(objEvent, flags);
     GetGroundEffectFlags_ShallowFlowingWater(objEvent, flags);
     GetGroundEffectFlags_ShortGrass(objEvent, flags);
@@ -9674,6 +9692,8 @@ static void GetAllGroundEffectFlags_OnBeginStep(struct ObjectEvent *objEvent, u3
     GetGroundEffectFlags_Reflection(objEvent, flags);
     GetGroundEffectFlags_TallGrassOnBeginStep(objEvent, flags);
     GetGroundEffectFlags_LongGrassOnBeginStep(objEvent, flags);
+    GetGroundEffectFlags_SwampTallGrassOnBeginStep(objEvent, flags);
+    GetGroundEffectFlags_SwampPlantsOnBeginStep(objEvent, flags);
     GetGroundEffectFlags_Tracks(objEvent, flags);
     GetGroundEffectFlags_SandHeap(objEvent, flags);
     GetGroundEffectFlags_ShallowFlowingWater(objEvent, flags);
@@ -9745,6 +9765,30 @@ static void GetGroundEffectFlags_LongGrassOnBeginStep(struct ObjectEvent *objEve
 {
     if (MetatileBehavior_IsLongGrass(objEvent->currentMetatileBehavior))
         *flags |= GROUND_EFFECT_FLAG_LONG_GRASS_ON_MOVE;
+}
+
+static void GetGroundEffectFlags_SwampTallGrassOnSpawn(struct ObjectEvent *objEvent, u32 *flags)
+{
+    if (MetatileBehavior_IsSwampTallGrass(objEvent->currentMetatileBehavior))
+        *flags |= GROUND_EFFECT_FLAG_SWAMP_TALL_GRASS_ON_SPAWN;
+}
+
+static void GetGroundEffectFlags_SwampTallGrassOnBeginStep(struct ObjectEvent *objEvent, u32 *flags)
+{
+    if (MetatileBehavior_IsSwampTallGrass(objEvent->currentMetatileBehavior))
+        *flags |= GROUND_EFFECT_FLAG_SWAMP_TALL_GRASS_ON_MOVE;
+}
+
+static void GetGroundEffectFlags_SwampPlantsOnSpawn(struct ObjectEvent *objEvent, u32 *flags)
+{
+    if (MetatileBehavior_IsSwampPlants(objEvent->currentMetatileBehavior))
+        *flags |= GROUND_EFFECT_FLAG_SWAMP_PLANTS_ON_SPAWN;
+}
+
+static void GetGroundEffectFlags_SwampPlantsOnBeginStep(struct ObjectEvent *objEvent, u32 *flags)
+{
+    if (MetatileBehavior_IsSwampPlants(objEvent->currentMetatileBehavior))
+        *flags |= GROUND_EFFECT_FLAG_SWAMP_PLANTS_ON_MOVE;
 }
 
 static void GetGroundEffectFlags_Tracks(struct ObjectEvent *objEvent, u32 *flags)
@@ -9859,6 +9903,8 @@ static void GetGroundEffectFlags_JumpLanding(struct ObjectEvent *objEvent, u32 *
     static const MetatileFunc metatileFuncs[] = {
         MetatileBehavior_IsTallGrass,
         MetatileBehavior_IsLongGrass,
+        MetatileBehavior_IsSwampTallGrass,
+        MetatileBehavior_IsSwampPlants,
         MetatileBehavior_IsPuddle,
         MetatileBehavior_IsSurfableWaterOrUnderwater,
         MetatileBehavior_IsShallowFlowingWater,
@@ -9868,6 +9914,8 @@ static void GetGroundEffectFlags_JumpLanding(struct ObjectEvent *objEvent, u32 *
     static const u32 jumpLandingFlags[] = {
         GROUND_EFFECT_FLAG_LAND_IN_TALL_GRASS,
         GROUND_EFFECT_FLAG_LAND_IN_LONG_GRASS,
+        GROUND_EFFECT_FLAG_LAND_IN_SWAMP_TALL_GRASS,
+        GROUND_EFFECT_FLAG_LAND_IN_SWAMP_PLANTS,
         GROUND_EFFECT_FLAG_LAND_IN_SHALLOW_WATER,
         GROUND_EFFECT_FLAG_LAND_IN_DEEP_WATER,
         GROUND_EFFECT_FLAG_LAND_IN_SHALLOW_WATER,
@@ -9934,7 +9982,7 @@ static u8 GetReflectionTypeByMetatileBehavior(u32 behavior)
         return REFL_TYPE_NONE;
 }
 
-enum Direction GetLedgeJumpDirection(s16 x, s16 y, enum Direction direction)
+enum Direction GetLedgeJumpDirectionWithBehavior(enum Direction direction, u8 nextBehavior)
 {
     static bool8 (*const ledgeBehaviorFuncs[])(u8) = {
         [DIR_SOUTH - 1] = MetatileBehavior_IsJumpSouth,
@@ -9943,21 +9991,22 @@ enum Direction GetLedgeJumpDirection(s16 x, s16 y, enum Direction direction)
         [DIR_EAST - 1]  = MetatileBehavior_IsJumpEast,
     };
 
-    u8 behavior;
-    enum Direction index = direction;
-
-    if (index == DIR_NONE)
+    if (direction == DIR_NONE)
         return DIR_NONE;
-    else if (index > DIR_EAST)
-        index -= DIR_EAST;
+    else if (direction > DIR_EAST)
+        direction -= DIR_EAST;
 
-    index--;
-    behavior = MapGridGetMetatileBehaviorAt(x, y);
-
-    if (ledgeBehaviorFuncs[index](behavior) == TRUE)
-        return index + 1;
+    direction--;
+    if (ledgeBehaviorFuncs[direction](nextBehavior) == TRUE)
+        return direction + 1;
 
     return DIR_NONE;
+}
+
+enum Direction GetLedgeJumpDirection(s16 x, s16 y, enum Direction direction)
+{
+    u8 behavior = MapGridGetMetatileBehaviorAt(x, y);
+    return GetLedgeJumpDirectionWithBehavior(direction, behavior);
 }
 
 static void SetObjectEventSpriteOamTableForLongGrass(struct ObjectEvent *objEvent, struct Sprite *sprite)
@@ -10117,6 +10166,58 @@ void GroundEffect_StepOnTallGrass(struct ObjectEvent *objEvent, struct Sprite *s
     gFieldEffectArguments[6] = (u8)gSaveBlock1Ptr->location.mapNum << 8 | (u8)gSaveBlock1Ptr->location.mapGroup;
     gFieldEffectArguments[7] = FALSE; // don't skip to end of anim
     FieldEffectStart(FLDEFF_TALL_GRASS);
+}
+
+void GroundEffect_SpawnOnSwampTallGrass(struct ObjectEvent *objEvent, struct Sprite *sprite)
+{
+    gFieldEffectArguments[0] = objEvent->currentCoords.x;
+    gFieldEffectArguments[1] = objEvent->currentCoords.y;
+    gFieldEffectArguments[2] = objEvent->previousElevation;
+    gFieldEffectArguments[3] = 2;
+    gFieldEffectArguments[4] = objEvent->localId << 8 | objEvent->mapNum;
+    gFieldEffectArguments[5] = objEvent->mapGroup;
+    gFieldEffectArguments[6] = (u8)gSaveBlock1Ptr->location.mapNum << 8 | (u8)gSaveBlock1Ptr->location.mapGroup;
+    gFieldEffectArguments[7] = TRUE;
+    FieldEffectStart(FLDEFF_SWAMP_TALL_GRASS);
+}
+
+void GroundEffect_StepOnSwampTallGrass(struct ObjectEvent *objEvent, struct Sprite *sprite)
+{
+    gFieldEffectArguments[0] = objEvent->currentCoords.x;
+    gFieldEffectArguments[1] = objEvent->currentCoords.y;
+    gFieldEffectArguments[2] = objEvent->previousElevation;
+    gFieldEffectArguments[3] = 2;
+    gFieldEffectArguments[4] = objEvent->localId << 8 | objEvent->mapNum;
+    gFieldEffectArguments[5] = objEvent->mapGroup;
+    gFieldEffectArguments[6] = (u8)gSaveBlock1Ptr->location.mapNum << 8 | (u8)gSaveBlock1Ptr->location.mapGroup;
+    gFieldEffectArguments[7] = FALSE;
+    FieldEffectStart(FLDEFF_SWAMP_TALL_GRASS);
+}
+
+void GroundEffect_SpawnOnSwampPlants(struct ObjectEvent *objEvent, struct Sprite *sprite)
+{
+    gFieldEffectArguments[0] = objEvent->currentCoords.x;
+    gFieldEffectArguments[1] = objEvent->currentCoords.y;
+    gFieldEffectArguments[2] = objEvent->previousElevation;
+    gFieldEffectArguments[3] = 2;
+    gFieldEffectArguments[4] = objEvent->localId << 8 | objEvent->mapNum;
+    gFieldEffectArguments[5] = objEvent->mapGroup;
+    gFieldEffectArguments[6] = (u8)gSaveBlock1Ptr->location.mapNum << 8 | (u8)gSaveBlock1Ptr->location.mapGroup;
+    gFieldEffectArguments[7] = TRUE;
+    FieldEffectStart(FLDEFF_SWAMP_PLANTS);
+}
+
+void GroundEffect_StepOnSwampPlants(struct ObjectEvent *objEvent, struct Sprite *sprite)
+{
+    gFieldEffectArguments[0] = objEvent->currentCoords.x;
+    gFieldEffectArguments[1] = objEvent->currentCoords.y;
+    gFieldEffectArguments[2] = objEvent->previousElevation;
+    gFieldEffectArguments[3] = 2;
+    gFieldEffectArguments[4] = objEvent->localId << 8 | objEvent->mapNum;
+    gFieldEffectArguments[5] = objEvent->mapGroup;
+    gFieldEffectArguments[6] = (u8)gSaveBlock1Ptr->location.mapNum << 8 | (u8)gSaveBlock1Ptr->location.mapGroup;
+    gFieldEffectArguments[7] = FALSE;
+    FieldEffectStart(FLDEFF_SWAMP_PLANTS);
 }
 
 void GroundEffect_SpawnOnLongGrass(struct ObjectEvent *objEvent, struct Sprite *sprite)
@@ -10336,6 +10437,48 @@ void GroundEffect_JumpOnLongGrass(struct ObjectEvent *objEvent, struct Sprite *s
     FieldEffectStart(FLDEFF_JUMP_LONG_GRASS);
 }
 
+void GroundEffect_JumpOnSwampTallGrass(struct ObjectEvent *objEvent, struct Sprite *sprite)
+{
+    u8 spriteId;
+
+    gFieldEffectArguments[0] = objEvent->currentCoords.x;
+    gFieldEffectArguments[1] = objEvent->currentCoords.y;
+    gFieldEffectArguments[2] = objEvent->previousElevation;
+    gFieldEffectArguments[3] = 2;
+    FieldEffectStart(FLDEFF_JUMP_SWAMP_TALL_GRASS);
+
+    spriteId = FindSwampTallGrassFieldEffectSpriteId(
+        objEvent->localId,
+        objEvent->mapNum,
+        objEvent->mapGroup,
+        objEvent->currentCoords.x,
+        objEvent->currentCoords.y);
+
+    if (spriteId == MAX_SPRITES)
+        GroundEffect_SpawnOnSwampTallGrass(objEvent, sprite);
+}
+
+void GroundEffect_JumpOnSwampPlants(struct ObjectEvent *objEvent, struct Sprite *sprite)
+{
+    u8 spriteId;
+
+    gFieldEffectArguments[0] = objEvent->currentCoords.x;
+    gFieldEffectArguments[1] = objEvent->currentCoords.y;
+    gFieldEffectArguments[2] = objEvent->previousElevation;
+    gFieldEffectArguments[3] = 2;
+    FieldEffectStart(FLDEFF_JUMP_SWAMP_PLANTS);
+
+    spriteId = FindSwampPlantsFieldEffectSpriteId(
+        objEvent->localId,
+        objEvent->mapNum,
+        objEvent->mapGroup,
+        objEvent->currentCoords.x,
+        objEvent->currentCoords.y);
+
+    if (spriteId == MAX_SPRITES)
+        GroundEffect_SpawnOnSwampPlants(objEvent, sprite);
+}
+
 void GroundEffect_JumpOnShallowWater(struct ObjectEvent *objEvent, struct Sprite *sprite)
 {
     gFieldEffectArguments[0] = objEvent->currentCoords.x;
@@ -10400,7 +10543,13 @@ static void (*const sGroundEffectFuncs[])(struct ObjectEvent *objEvent, struct S
     GroundEffect_JumpLandingDust,       // GROUND_EFFECT_FLAG_LAND_ON_NORMAL_GROUND
     GroundEffect_ShortGrass,            // GROUND_EFFECT_FLAG_SHORT_GRASS
     GroundEffect_HotSprings,            // GROUND_EFFECT_FLAG_HOT_SPRINGS
-    GroundEffect_Seaweed                // GROUND_EFFECT_FLAG_SEAWEED
+    GroundEffect_Seaweed,                // GROUND_EFFECT_FLAG_SEAWEED
+    GroundEffect_SpawnOnSwampTallGrass,  // GROUND_EFFECT_FLAG_SWAMP_TALL_GRASS_ON_SPAWN
+    GroundEffect_StepOnSwampTallGrass,   // GROUND_EFFECT_FLAG_SWAMP_TALL_GRASS_ON_MOVE
+    GroundEffect_JumpOnSwampTallGrass,   // GROUND_EFFECT_FLAG_LAND_IN_SWAMP_TALL_GRASS
+    GroundEffect_SpawnOnSwampPlants,     // GROUND_EFFECT_FLAG_SWAMP_PLANTS_ON_SPAWN
+    GroundEffect_StepOnSwampPlants,      // GROUND_EFFECT_FLAG_SWAMP_PLANTS_ON_MOVE
+    GroundEffect_JumpOnSwampPlants       // GROUND_EFFECT_FLAG_LAND_IN_SWAMP_PLANTS
 };
 
 static void DoFlaggedGroundEffects(struct ObjectEvent *objEvent, struct Sprite *sprite, u32 flags)

@@ -5,5 +5,6 @@
 #define TRAINER_TYPE_NORMAL             1
 #define TRAINER_TYPE_SEE_ALL_DIRECTIONS 2
 #define TRAINER_TYPE_BURIED             3
+#define TRAINER_TYPE_QUEST_GIVER        4
 
 #endif  // GUARD_CONSTANTS_TRAINER_TYPES_H

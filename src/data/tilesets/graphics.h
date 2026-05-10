@@ -3048,3 +3048,117 @@ const u16 ALIGNED(4) gTilesetPalettes_General_Frlg[][16] =
 const u32 gTilesetTiles_General_Frlg[] = INCGFX_U32("data/tilesets/primary/general_frlg/tiles.png", ".4bpp.smol");
 
 #endif // IS_FRLG
+
+const u16 gTilesetPalettes_ShipCity[][16] =
+{
+    INCBIN_U16("data/tilesets/secondary/shipcity/palettes/00.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/shipcity/palettes/01.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/shipcity/palettes/02.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/shipcity/palettes/03.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/shipcity/palettes/04.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/shipcity/palettes/05.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/shipcity/palettes/06.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/shipcity/palettes/07.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/shipcity/palettes/08.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/shipcity/palettes/09.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/shipcity/palettes/10.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/shipcity/palettes/11.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/shipcity/palettes/12.gbapal"),
+};
+
+const u32 gTilesetTiles_ShipCity[] = INCBIN_U32("data/tilesets/secondary/shipcity/tiles.4bpp.lz");
+
+const u16 gTilesetPalettes_Kolchavi[][16] =
+{
+    INCBIN_U16("data/tilesets/secondary/kolchavi/palettes/00.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi/palettes/01.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi/palettes/02.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi/palettes/03.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi/palettes/04.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi/palettes/05.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi/palettes/06.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi/palettes/07.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi/palettes/08.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi/palettes/09.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi/palettes/10.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi/palettes/11.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi/palettes/12.gbapal"),
+};
+
+const u32 gTilesetTiles_Kolchavi[] = INCBIN_U32("data/tilesets/secondary/kolchavi/tiles.4bpp.lz");
+
+const u16 gTilesetPalettes_Floran[][16] =
+{
+    INCBIN_U16("data/tilesets/secondary/floran/palettes/00.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/floran/palettes/01.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/floran/palettes/02.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/floran/palettes/03.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/floran/palettes/04.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/floran/palettes/05.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/floran/palettes/06.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/floran/palettes/07.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/floran/palettes/08.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/floran/palettes/09.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/floran/palettes/10.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/floran/palettes/11.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/floran/palettes/12.gbapal"),
+};
+
+const u32 gTilesetTiles_Floran[] = INCBIN_U32("data/tilesets/secondary/floran/tiles.4bpp.lz");
+
+const u16 gTilesetPalettes_Mirevari[][16] =
+{
+    INCBIN_U16("data/tilesets/secondary/mirevari/palettes/00.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/mirevari/palettes/01.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/mirevari/palettes/02.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/mirevari/palettes/03.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/mirevari/palettes/04.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/mirevari/palettes/05.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/mirevari/palettes/06.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/mirevari/palettes/07.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/mirevari/palettes/08.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/mirevari/palettes/09.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/mirevari/palettes/10.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/mirevari/palettes/11.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/mirevari/palettes/12.gbapal"),
+};
+
+const u32 gTilesetTiles_Mirevari[] = INCBIN_U32("data/tilesets/secondary/mirevari/tiles.4bpp.lz");
+
+const u16 gTilesetPalettes_Kolchavi_Lab[][16] =
+{
+    INCBIN_U16("data/tilesets/secondary/kolchavi_lab/palettes/00.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi_lab/palettes/01.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi_lab/palettes/02.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi_lab/palettes/03.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi_lab/palettes/04.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi_lab/palettes/05.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi_lab/palettes/06.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi_lab/palettes/07.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi_lab/palettes/08.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi_lab/palettes/09.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi_lab/palettes/10.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi_lab/palettes/11.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi_lab/palettes/12.gbapal"),
+};
+
+const u32 gTilesetTiles_Kolchavi_Lab[] = INCBIN_U32("data/tilesets/secondary/kolchavi_lab/tiles.4bpp.lz");
+
+const u16 gTilesetPalettes_Kolchavi_Maritime[][16] =
+{
+    INCBIN_U16("data/tilesets/secondary/kolchavi_maritime/palettes/00.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi_maritime/palettes/01.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi_maritime/palettes/02.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi_maritime/palettes/03.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi_maritime/palettes/04.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi_maritime/palettes/05.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi_maritime/palettes/06.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi_maritime/palettes/07.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi_maritime/palettes/08.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi_maritime/palettes/09.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi_maritime/palettes/10.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi_maritime/palettes/11.gbapal"),
+    INCBIN_U16("data/tilesets/secondary/kolchavi_maritime/palettes/12.gbapal"),
+};
+
+const u32 gTilesetTiles_Kolchavi_Maritime[] = INCBIN_U32("data/tilesets/secondary/kolchavi_maritime/tiles.4bpp.lz");

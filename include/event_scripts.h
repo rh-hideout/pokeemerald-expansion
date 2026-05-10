@@ -32,6 +32,7 @@ extern const u8 EventScript_TestSignpostMsg[];
 extern const u8 EventScript_TryGetTrainerScript[];
 extern const u8 EventScript_StartTrainerApproach[];
 extern const u8 EventScript_DoNoIntroTrainerBattle[];
+extern const u8 EventScript_DoNoIntroTrainerBattleContinueScript[];
 extern const u8 EventScript_TryDoDoubleTrainerBattle[];
 extern const u8 EventScript_TryDoNormalTrainerBattle[];
 extern const u8 EventScript_TryDoDoubleRematchBattle[];
@@ -690,6 +691,8 @@ extern const u8 EventScript_PokemonGotAway[];
 extern const u8 EventScript_LostSignal[];
 extern const u8 EventScript_TooDark[];
 extern const u8 EventScript_MovedTooFast[];
+
+extern const u8 FieldMove_EventScript_Cut[]; // field items
 
 extern const u8 MoveTutor_AfterChooseBoxMon[];
 

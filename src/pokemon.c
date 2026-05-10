@@ -53,6 +53,7 @@
 #include "text.h"
 #include "trainer_hill.h"
 #include "util.h"
+#include "nuzlocke.h"
 #include "constants/abilities.h"
 #include "constants/battle_frontier.h"
 #include "constants/battle_move_effects.h"
@@ -2963,6 +2964,9 @@ u32 GetBoxMonData3(struct BoxPokemon *boxMon, s32 field, u8 *data)
         case MON_DATA_DAYS_SINCE_FORM_CHANGE:
             retVal = boxMon->daysSinceFormChange;
             break;
+        case MON_DATA_IS_DEAD:
+            retVal = boxMon->isDead;
+            break;
         default:
             break;
         }
@@ -3015,6 +3019,9 @@ void SetMonData(struct Pokemon *mon, s32 field, const void *dataArg)
         SET16(mon->hp);
         hpLost = mon->maxHP - mon->hp;
         SetBoxMonData(&mon->box, MON_DATA_HP_LOST, &hpLost);
+        
+        // Check for Nuzlocke fainting
+        NuzlockeHandleFaint(mon);
         break;
     }
     case MON_DATA_HP_LOST:
@@ -3023,6 +3030,9 @@ void SetMonData(struct Pokemon *mon, s32 field, const void *dataArg)
         SET16(hpLost);
         mon->hp = mon->maxHP - hpLost;
         SetBoxMonData(&mon->box, MON_DATA_HP_LOST, &hpLost);
+        
+        // Check for Nuzlocke fainting
+        NuzlockeHandleFaint(mon);
         break;
     }
     case MON_DATA_MAX_HP:
@@ -3396,6 +3406,9 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
         }
         case MON_DATA_DAYS_SINCE_FORM_CHANGE:
             SET8(boxMon->daysSinceFormChange);
+            break;
+        case MON_DATA_IS_DEAD:
+            SET8(boxMon->isDead);
             break;
         }
     }
@@ -5550,6 +5563,7 @@ s32 CalculateFriendshipBonuses(struct Pokemon *mon, s32 modifier, enum HoldEffec
     return bonus;
 }
 
+/*
 void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies)
 {
     u8 evs[NUM_STATS];
@@ -5659,6 +5673,7 @@ void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies)
         SetMonData(mon, MON_DATA_HP_EV + i, &evs[i]);
     }
 }
+*/
 
 u16 GetMonEVCount(struct Pokemon *mon)
 {
@@ -7187,6 +7202,12 @@ void UpdateMonPersonality(struct BoxPokemon *boxMon, u32 personality)
 
 void HealPokemon(struct Pokemon *mon)
 {
+    if (IsNuzlockeActive() && IsMonDead(mon))
+    {
+        // Don't heal dead Pokemon in Nuzlocke mode
+        return;
+    }
+    
     u32 data;
 
     data = GetMonData(mon, MON_DATA_MAX_HP);
@@ -7200,6 +7221,12 @@ void HealPokemon(struct Pokemon *mon)
 
 void HealBoxPokemon(struct BoxPokemon *boxMon)
 {
+    if (IsNuzlockeActive() && IsBoxMonDead(boxMon))
+    {
+        // Don't heal dead Pokemon in Nuzlocke mode
+        return;
+    }
+    
     u32 data;
 
     data = 0;

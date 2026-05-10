@@ -814,6 +814,55 @@
 	.byte SCR_OP_DOTRAINERBATTLE
 	.endm
 
+	@ Starts a trainer battle that continues the script instead of white-out on loss.
+	@ The script specified in post_battle_script will handle the battle outcome.
+	.macro trainerbattle_continuescript trainer:req, intro_text:req, lose_text:req, post_battle_script:req
+		trainerbattle TRAINER_BATTLE_CONTINUE_SCRIPT, LOCALID_NONE, \trainer, \intro_text, \lose_text, \post_battle_script, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, NULL, FALSE, TRUE, FALSE, FALSE
+	.endm
+	
+	@ Starts a trainer battle where the player selects N Pokémon from their party.
+	@ num_pokemon: The number of Pokémon the player must choose (1-6).
+	@ The party is automatically saved/restored, and the script continues on loss.
+	@ The post_battle_script is called AFTER party restoration with VAR_RESULT set to battle outcome.
+	.macro trainerbattle_selectmons trainer:req, intro_text:req, lose_text:req, post_battle_script:req, num_pokemon:req
+		@ Check if trainer is already defeated
+	    checktrainerflag \trainer
+	    goto_if 1, _selectmons_post_\@ @ If defeated, skip to post-battle dialogue
+
+	    @ Show intro text FIRST
+	    msgbox \intro_text, MSGBOX_DEFAULT
+	    @ Save party to static backup (won't be overwritten by battle auto-save)
+	    special SaveSelectMonsParty
+	    fadescreen FADE_TO_BLACK
+	    setvar VAR_0x8004, \num_pokemon
+	    special ChoosePartyForStandardBattle
+	    waitstate
+	    goto_if_eq VAR_RESULT, 0, _selectmons_cancel_\@
+	    special ReducePlayerPartyToSelectedMons
+	    setvar VAR_0x8004, FRONTIER_UTIL_FUNC_SET_DATA
+	    setvar VAR_0x8005, FRONTIER_DATA_SELECTED_MON_ORDER
+	    special CallFrontierUtilFunc
+		@ Use trainerbattle with wrapper - it will handle dotrainerbattle automatically
+	    trainerbattle TRAINER_BATTLE_CONTINUE_SCRIPT_NO_INTRO_TEXT, LOCALID_NONE, \trainer, NULL, \lose_text, _selectmons_wrapper_\@, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, NULL, FALSE, TRUE, FALSE, FALSE
+	    end
+	_selectmons_wrapper_\@:
+	    @ This runs after battle - restore party and route to user's script
+	    special LoadSelectMonsParty
+	    specialvar VAR_RESULT, GetBattleOutcome
+	    goto \post_battle_script
+	    end
+	_selectmons_cancel_\@:
+	    @ Restore party from static backup on cancel
+	    special LoadSelectMonsParty
+	    releaseall
+	    end
+	_selectmons_post_\@:
+	    @ Trainer already defeated - go to post-battle script directly
+	    setvar VAR_RESULT, B_OUTCOME_WON
+	    goto \post_battle_script
+	    end
+		.endm
+
 	@ Goes to address after the trainerbattle command (called by the battle functions, see battle_setup.c)
 	.macro gotopostbattlescript
 	.byte SCR_OP_GOTOPOSTBATTLESCRIPT
@@ -1928,6 +1977,158 @@
 	_dynmultichoice \left, \top, \ignoreBPress, \maxBeforeScroll, \shouldSort, \initialSelected, \callbacks, NULL
 	.endm
 
+    .macro questmenu case:req, questId:req
+    .byte SCR_OP_QUESTMENU
+    .byte \case
+    .byte \questId
+    .endm
+
+    .macro subquestmenu case:req, parentId:req, childId:req
+    .byte SCR_OP_SUBQUESTMENU
+    .byte \case
+    .2byte \parentId
+    .2byte \childId
+    .endm
+
+    @ Check the quest state and return a number associated with quest state
+    .macro returnqueststate questId:req
+    .byte SCR_OP_RETURNQUESTSTATE
+    .byte \questId
+    .endm
+
+    .macro openquestmenu
+    questmenu 0 0
+    .endm
+
+    @ Starts the specified quest.
+	.macro startquest quest:req
+	closemessage
+	delay 30
+	questmenu QUEST_MENU_SET_ACTIVE, \quest
+	questmenu QUEST_MENU_BUFFER_QUEST_NAME \quest
+    bufferstring 1 gText_QuestActive
+	playfanfare MUS_LEVEL_UP
+	msgbox gText_QuestAnnounce, MSGBOX_SIGN
+	waitfanfare
+	.endm
+
+    @ Completes the specified quest.
+	.macro completequest quest:req
+	closemessage
+	delay 30
+	questmenu QUEST_MENU_COMPLETE_QUEST, \quest
+	questmenu QUEST_MENU_BUFFER_QUEST_NAME \quest
+    bufferstring 1 gText_QuestComplete
+	playfanfare MUS_LEVEL_UP
+	msgbox gText_QuestAnnounce, MSGBOX_SIGN
+	waitfanfare
+	.endm
+
+.macro goto_if_quest_inactive quest:req, dest:req
+	questmenu QUEST_MENU_CHECK_INACTIVE \quest
+	goto_if_eq VAR_RESULT, TRUE, \dest
+	.endm
+
+	.macro goto_if_quest_active quest:req, dest:req
+	questmenu QUEST_MENU_CHECK_ACTIVE \quest
+	goto_if_eq VAR_RESULT, TRUE, \dest
+	.endm
+
+	.macro goto_if_quest_reward quest:req, dest:req
+	questmenu QUEST_MENU_CHECK_REWARD \quest
+	goto_if_eq VAR_RESULT, TRUE, \dest
+	.endm
+
+	.macro goto_if_quest_complete quest:req, dest:req
+	questmenu QUEST_MENU_CHECK_COMPLETE \quest
+	goto_if_eq VAR_RESULT, TRUE, \dest
+	.endm
+
+    .macro goto_if_quest_not_inactive quest:req, dest:req
+    questmenu QUEST_MENU_CHECK_INACTIVE \quest
+    goto_if_eq VAR_RESULT, FALSE, \dest
+    .endm
+
+    .macro goto_if_quest_not_active quest:req, dest:req
+    questmenu QUEST_MENU_CHECK_ACTIVE \quest
+    goto_if_eq VAR_RESULT, FALSE, \dest
+    .endm
+
+    .macro goto_if_quest_not_reward quest:req, dest:req
+    questmenu QUEST_MENU_CHECK_REWARD \quest
+    goto_if_eq VAR_RESULT, FALSE, \dest
+    .endm
+
+    .macro goto_if_quest_not_complete quest:req, dest:req
+    questmenu QUEST_MENU_CHECK_COMPLETE \quest
+    goto_if_eq VAR_RESULT, FALSE, \dest
+    .endm
+
+    .macro call_if_quest_inactive quest:req, dest:req
+    questmenu QUEST_MENU_CHECK_INACTIVE \quest
+    call_if_eq VAR_RESULT, TRUE, \dest
+    .endm
+
+    .macro call_if_quest_active quest:req, dest:req
+    questmenu QUEST_MENU_CHECK_ACTIVE \quest
+    call_if_eq VAR_RESULT, TRUE, \dest
+    .endm
+
+    .macro call_if_quest_reward quest:req, dest:req
+    questmenu QUEST_MENU_CHECK_REWARD \quest
+    call_if_eq VAR_RESULT, TRUE, \dest
+    .endm
+
+    .macro call_if_quest_complete quest:req, dest:req
+    questmenu QUEST_MENU_CHECK_COMPLETE \quest
+    call_if_eq VAR_RESULT, TRUE, \dest
+    .endm
+
+    .macro call_if_quest_not_inactive quest:req, dest:req
+    questmenu QUEST_MENU_CHECK_INACTIVE \quest
+    call_if_eq VAR_RESULT, FALSE, \dest
+    .endm
+
+    .macro call_if_quest_not_active quest:req, dest:req
+    questmenu QUEST_MENU_CHECK_ACTIVE \quest
+    call_if_eq VAR_RESULT, FALSE, \dest
+    .endm
+
+    .macro call_if_quest_not_reward quest:req, dest:req
+    questmenu QUEST_MENU_CHECK_REWARD \quest
+    call_if_eq VAR_RESULT, FALSE, \dest
+    .endm
+
+    .macro call_if_quest_not_complete quest:req, dest:req
+    questmenu QUEST_MENU_CHECK_COMPLETE \quest
+    call_if_eq VAR_RESULT, FALSE, \dest
+    .endm
+
+	.macro completesubquest quest:req, subquest:req
+	closemessage
+	subquestmenu QUEST_MENU_COMPLETE_QUEST, \quest, \subquest
+	.endm
+
+    .macro goto_if_subquest_complete parent:req,child:req, dest:req
+    subquestmenu QUEST_MENU_CHECK_COMPLETE \parent \child
+    goto_if_eq VAR_RESULT, TRUE, \dest
+    .endm
+
+    .macro call_if_subquest_complete parent:req,child:req, dest:req
+    subquestmenu QUEST_MENU_CHECK_COMPLETE \parent \child
+    call_if_eq VAR_RESULT, TRUE, \dest
+    .endm
+
+    .macro goto_if_subquest_not_complete parent:req,child:req, dest:req
+    subquestmenu QUEST_MENU_CHECK_COMPLETE \parent \child
+    goto_if_eq VAR_RESULT, FALSE, \dest
+    .endm
+
+    .macro call_if_subquest_not_complete parent:req,child:req, dest:req
+    subquestmenu QUEST_MENU_CHECK_COMPLETE \parent \child
+    call_if_eq VAR_RESULT, FALSE, \dest
+    .endm
+
 @ Supplementary
 
 	.macro goto_if_unset flag:req, dest:req
@@ -2854,4 +3055,32 @@
 	braillemessage \text
 	getbraillestringwidth \text
 	call EventScript_BrailleCursorWaitButton
+	.endm
+
+@ Pathfinder
+
+	@ Creates a movement script to the given coords by using Weighted A*.
+	@ This is meant to be used to remove branching in scripts,
+	@ since the algorithm can be slow.
+	.macro moveobjecttocoords localId:req, x:req, y:req, facingDirection:req, speed=1, maxnodes=256
+	callnative ScrCmd_moveobjecttocoords
+	.2byte \localId
+	.2byte \x
+	.2byte \y
+	.byte \facingDirection
+	.byte \speed
+	.4byte \maxnodes
+	.endm
+
+	@ Creates a movement script for approaching the given object by using Weighted A*.
+	@ This is meant to be used to remove branching in scripts,
+	@ since the algorithm can be slow.
+	.macro approachobject localId:req, targetLocalId:req, facingDirection:req, approachDirection:req, speed=1, maxnodes=256
+	callnative ScrCmd_approachobject
+	.2byte \localId
+	.2byte \targetLocalId
+	.byte \facingDirection
+	.byte \approachDirection
+	.byte \speed
+	.4byte \maxnodes
 	.endm

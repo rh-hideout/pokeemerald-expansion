@@ -74,7 +74,14 @@
     "gMapGroup_IndoorFiveIslandRoute_Frlg",
     "gMapGroup_IndoorTwoIslandRoute_Frlg",
     "gMapGroup_IndoorSixIslandRoute_Frlg",
-    "gMapGroup_IndoorSevenIslandRoute_Frlg"
+    "gMapGroup_IndoorSevenIslandRoute_Frlg",
+    "gMapGroup_owpoc_TownsAndRoutes",
+    "gMapGroup_owpoc_Dungeons",
+    "gMapGroup_owpoc_IndoorKolchavi",
+    "gMapGroup_owpoc_IndoorFloran",
+    "gMapGroup_owpoc_IndoorR8",
+    "gMapGroup_owpoc_IndoorR10",
+    "gMapGroup_owpoc_IndoorR12"
   ],
   "gMapGroup_TownsAndRoutes": [
     "PetalburgCity",
@@ -1160,5 +1167,47 @@
   ],
   "gMapGroup_IndoorSevenIslandRoute_Frlg": [
     "SevenIsland_SevaultCanyon_House_Frlg"
+  ],
+  "gMapGroup_owpoc_TownsAndRoutes": [
+    "poc_Kolchavi",
+    "poc_r3",
+    "poc_r6",
+    "poc_Floran",
+    "poc_r10",
+    "poc_r8",
+    "poc_r2",
+    "poc_r9",
+    "poc_r16",
+    "poc_r12"
+  ],
+  "gMapGroup_owpoc_Dungeons": [],
+  "gMapGroup_owpoc_IndoorKolchavi": [
+    "poc_Kolchavi_PokemonCenter",
+    "poc_Kolchavi_Lab_1F",
+    "poc_Kolchavi_Lab_2F",
+    "poc_Kolchavi_House1",
+    "poc_Kolchavi_House2",
+    "poc_Kolchavi_House3",
+    "poc_Kolchavi_House4",
+    "poc_Kolchavi_MaritimeGuildhall"
+  ],
+  "gMapGroup_owpoc_IndoorFloran": [
+    "poc_Floran_PokemonCenter",
+    "poc_Floran_House1",
+    "poc_Floran_House2",
+    "poc_Floran_House3",
+    "poc_Floran_House4",
+    "poc_Floran_House5",
+    "poc_Floran_WardenGuild",
+    "poc_Floran_Warehouse"
+  ],
+  "gMapGroup_owpoc_IndoorR8": [
+    "poc_r8_House1"
+  ],
+  "gMapGroup_owpoc_IndoorR10": [
+    "poc_r10_House1"
+  ],
+  "gMapGroup_owpoc_IndoorR12": [
+    "poc_r12_House1"
   ]
 }

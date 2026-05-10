@@ -16,6 +16,9 @@ EventScript_PkmnCenterNurse_Goodbye::
 @ VAR_0x8004 is 1 when player has Gold Card; jumps are identical
 EventScript_PkmnCenterNurse_HealPkmn::
 	incrementgamestat GAME_STAT_USED_POKECENTER
+	@ Check for dead mons in Nuzlocke mode before healing
+	specialvar VAR_RESULT, CountDeadPartyMonsSpecial
+	goto_if_gt VAR_RESULT, 0, EventScript_PkmnCenterNurse_DetectDeadMons
 	call_if_eq VAR_0x8004, 0, EventScript_PkmnCenterNurse_IllTakeYourPkmn
 	call_if_eq VAR_0x8004, 1, EventScript_PkmnCenterNurse_IllTakeYourPkmn2
 	waitmessage
@@ -122,6 +125,95 @@ EventScript_PkmnCenterNurse_GoldCardHealPkmn::
 	setvar VAR_0x8004, 1
 	goto EventScript_PkmnCenterNurse_HealPkmn
 	end
+
+@ ==========================================
+@ Nuzlocke Dead Mon PC Transfer Scripts
+@ ==========================================
+
+EventScript_PkmnCenterNurse_DetectDeadMons::
+	@ DEBUG: Entered dead mon detection
+	@ At least one dead mon exists
+	msgbox gText_NurseDetectsDeadMons, MSGBOX_DEFAULT
+	msgbox gText_NurseOffersPCTransfer, MSGBOX_YESNO
+	@ DEBUG: Show player choice
+	goto_if_eq VAR_RESULT, YES, EventScript_PkmnCenterNurse_TransferDeadMons
+	@ DEBUG: Player declined
+	@ Player declined transfer, proceed to normal healing
+	call_if_eq VAR_0x8004, 0, EventScript_PkmnCenterNurse_IllTakeYourPkmn
+	call_if_eq VAR_0x8004, 1, EventScript_PkmnCenterNurse_IllTakeYourPkmn2
+	waitmessage
+	call EventScript_PkmnCenterNurse_TakeAndHealPkmn
+	goto_if_unset FLAG_POKERUS_EXPLAINED, EventScript_PkmnCenterNurse_CheckPokerus
+	goto EventScript_PkmnCenterNurse_CheckTrainerHillAndUnionRoom
+	end
+
+EventScript_PkmnCenterNurse_TransferDeadMons::
+	@ DEBUG: Entered transfer loop
+	@ Set flag to indicate we can continue (VAR_0x8006 = 1 means continue, 0 means stop)
+	setvar VAR_0x8006, 1
+	@ Transfer dead mons one at a time
+	call EventScript_PkmnCenterNurse_TransferOneDeadMon
+	@ DEBUG: After transfer
+	@ Check if we should stop (VAR_0x8006 = 0 means error occurred)
+	goto_if_eq VAR_0x8006, 0, EventScript_PkmnCenterNurse_TransferAborted
+	@ Check if more dead mons remain
+	specialvar VAR_RESULT, CountDeadPartyMonsSpecial
+	goto_if_gt VAR_RESULT, 0, EventScript_PkmnCenterNurse_TransferDeadMons
+	@ All dead mons transferred, proceed to healing
+	msgbox gText_NurseFinishedTransfers, MSGBOX_DEFAULT
+	call_if_eq VAR_0x8004, 0, EventScript_PkmnCenterNurse_IllTakeYourPkmn
+	call_if_eq VAR_0x8004, 1, EventScript_PkmnCenterNurse_IllTakeYourPkmn2
+	waitmessage
+	call EventScript_PkmnCenterNurse_TakeAndHealPkmn
+	goto_if_unset FLAG_POKERUS_EXPLAINED, EventScript_PkmnCenterNurse_CheckPokerus
+	goto EventScript_PkmnCenterNurse_CheckTrainerHillAndUnionRoom
+	end
+
+EventScript_PkmnCenterNurse_TransferAborted::
+	@ Transfer was aborted (PC full or cannot deposit)
+	@ Proceed to normal healing
+	call_if_eq VAR_0x8004, 0, EventScript_PkmnCenterNurse_IllTakeYourPkmn
+	call_if_eq VAR_0x8004, 1, EventScript_PkmnCenterNurse_IllTakeYourPkmn2
+	waitmessage
+	call EventScript_PkmnCenterNurse_TakeAndHealPkmn
+	goto_if_unset FLAG_POKERUS_EXPLAINED, EventScript_PkmnCenterNurse_CheckPokerus
+	goto EventScript_PkmnCenterNurse_CheckTrainerHillAndUnionRoom
+	end
+
+EventScript_PkmnCenterNurse_TransferOneDeadMon::
+	@ DEBUG: Starting transfer one
+	@ Get first dead mon info (sets VAR_0x8004=slot, buffers nickname to STR_VAR_1)
+	special PrepareNextDeadMonInfo
+	@ DEBUG: Show slot found
+	copyvar VAR_0x8005, VAR_0x8004
+	@ Check if we can deposit (not last alive mon)
+	specialvar VAR_RESULT, CanDepositDeadMonSpecial
+	@ DEBUG: Show can deposit result
+	goto_if_eq VAR_RESULT, FALSE, EventScript_PkmnCenterNurse_CannotDeposit
+	@ Check if PC has space
+	specialvar VAR_RESULT, ScriptCheckFreePokemonStorageSpace
+	goto_if_eq VAR_RESULT, FALSE, EventScript_PkmnCenterNurse_PCFull
+	@ Actually deposit the mon (uses VAR_0x8004, sets VAR_0x8005=boxNum)
+	special DepositDeadPartyMonToPC
+	@ DEBUG: Show box result
+	copyvar VAR_0x8006, VAR_0x8005
+	bufferboxname STR_VAR_2, VAR_0x8005
+	msgbox gText_NurseTransferredMon, MSGBOX_DEFAULT
+	return
+
+EventScript_PkmnCenterNurse_CannotDeposit::
+	@ This shouldn't happen often (only if last alive mon is somehow also dead)
+	msgbox gText_NurseCannotDepositLastMon, MSGBOX_DEFAULT
+	@ Set flag to abort transfer loop
+	setvar VAR_0x8006, 0
+	return
+
+EventScript_PkmnCenterNurse_PCFull::
+	@ PC is completely full, cannot proceed with transfers
+	msgbox gText_NursePCFull, MSGBOX_DEFAULT
+	@ Set flag to abort transfer loop
+	setvar VAR_0x8006, 0
+	return
 
 Movement_PkmnCenterNurse_Bow:
 	nurse_joy_bow

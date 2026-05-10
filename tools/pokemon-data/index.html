@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expansion Data Parser</title>
+<script src="pokemon_data.js"></script>
+<style>
+:root {
+  --bg: #1a1a2e;
+  --surface: #16213e;
+  --surface2: #0f3460;
+  --accent: #e94560;
+  --green: #4caf50;
+  --text: #eee;
+  --text-dim: #99a;
+  --border: #2a2a4a;
+  --radius: 6px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; font-size: 14px; }
+
+.app { display: flex; flex-direction: column; height: 100vh; }
+header { background: var(--surface); padding: 10px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+header h1 { font-size: 18px; font-weight: 600; white-space: nowrap; }
+.tab-bar { display: flex; gap: 3px; }
+.tab-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; border-radius: var(--radius); font-size: 14px; }
+.tab-btn.active { background: var(--surface2); color: var(--text); }
+.tab-btn:hover { color: var(--text); }
+.hdr-badge { margin-left: auto; font-size: 13px; color: var(--text-dim); }
+.tab-content { display: none; flex: 1; overflow: hidden; }
+.tab-content.active { display: flex; }
+
+/* --- List panel --- */
+.browser { display: flex; flex: 1; overflow: hidden; }
+.list-panel { width: 360px; min-width: 300px; border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
+.filter-bar { padding: 10px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 6px; }
+.filter-bar input[type="text"] { width: 100%; padding: 7px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-size: 14px; outline: none; }
+.filter-bar input:focus { border-color: var(--accent); }
+.filter-row { display: flex; gap: 4px; flex-wrap: wrap; }
+.filter-row select { padding: 4px 8px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-size: 13px; }
+.stat-filter { display: flex; align-items: center; gap: 4px; font-size: 13px; color: var(--text-dim); }
+.stat-filter label { width: 34px; text-align: right; }
+.stat-filter input[type="range"] { width: 90px; height: 16px; accent-color: var(--accent); }
+.stat-filter .val { width: 28px; font-variant-numeric: tabular-nums; color: var(--text); text-align: center; }
+.filter-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.filter-tag { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; background: var(--surface2); border-radius: 12px; font-size: 12px; }
+.filter-tag .x { cursor: pointer; color: var(--accent); font-weight: bold; }
+.filter-summary { font-size: 12px; color: var(--text-dim); }
+
+/* Species list */
+.species-list { flex: 1; overflow-y: auto; }
+.sp-item { padding: 6px 10px; cursor: pointer; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.sp-item:hover { background: var(--surface2); }
+.sp-item.selected { background: var(--surface2); border-left: 3px solid var(--accent); padding-left: 7px; }
+.sp-item.disabled-sp { opacity: 0.45; }
+.sp-num { color: var(--text-dim); width: 36px; text-align: right; font-variant-numeric: tabular-nums; font-size: 13px; }
+.sp-name { flex: 1; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sp-types { display: flex; gap: 3px; }
+.sp-type-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+.sp-bst { color: var(--text-dim); font-variant-numeric: tabular-nums; width: 32px; text-align: right; font-size: 13px; }
+.sp-forms-badge { font-size: 11px; color: var(--accent); font-weight: 600; }
+.sp-enabled-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.sp-enabled-dot.on { background: var(--green); }
+.sp-enabled-dot.off { background: var(--accent); }
+
+/* --- Detail panel --- */
+.detail-panel { flex: 1; overflow-y: auto; padding: 16px 24px; }
+.detail-panel.empty { display: flex; align-items: center; justify-content: center; color: var(--text-dim); font-size: 15px; }
+
+/* Form tabs */
+.form-tabs { display: flex; flex-wrap: wrap; gap: 2px; margin-bottom: 14px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+.form-tab { padding: 4px 10px; font-size: 13px; cursor: pointer; border-radius: var(--radius) var(--radius) 0 0; color: var(--text-dim); background: none; border: 1px solid transparent; border-bottom: none; }
+.form-tab:hover { color: var(--text); }
+.form-tab.active { color: var(--text); background: var(--surface2); border-color: var(--border); }
+
+/* Header with big sprite */
+.detail-header { display: flex; align-items: flex-start; gap: 20px; margin-bottom: 14px; }
+.detail-sprite-wrap { flex-shrink: 0; width: 160px; height: 160px; background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.detail-sprite { width: 100%; height: 100%; image-rendering: pixelated; object-fit: contain; }
+.detail-header .info { flex: 1; }
+.detail-header h2 { font-size: 22px; line-height: 1.2; }
+.detail-sub { color: var(--text-dim); font-size: 13px; margin-top: 2px; }
+.type-badges { display: flex; gap: 5px; margin-top: 6px; }
+.type-badge { padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; text-transform: uppercase; color: #fff; }
+.enabled-badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-top: 6px; }
+.enabled-badge.on { background: var(--green); color: #fff; }
+.enabled-badge.off { background: var(--accent); color: #fff; }
+
+/* Two-column layout */
+.detail-cols { display: flex; gap: 20px; margin-bottom: 14px; }
+.detail-col { flex: 1; min-width: 0; }
+.sec-h { font-size: 13px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; font-weight: 600; }
+
+/* Stats */
+.stat-grid { display: grid; grid-template-columns: 42px 1fr 32px; gap: 3px 8px; align-items: center; font-size: 14px; }
+.stat-lbl { color: var(--text-dim); text-align: right; }
+.stat-bar-bg { height: 16px; background: var(--bg); border-radius: 3px; overflow: hidden; }
+.stat-bar { height: 100%; border-radius: 3px; }
+.stat-num { text-align: right; font-variant-numeric: tabular-nums; }
+.bst-line { grid-column: 1 / -1; display: flex; justify-content: space-between; font-weight: 600; padding-top: 4px; border-top: 1px solid var(--border); margin-top: 2px; }
+
+/* Abilities & Evos */
+.ability-list { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px; }
+.ability-tag { padding: 3px 10px; background: var(--surface2); border-radius: var(--radius); font-size: 13px; }
+.ability-tag.hidden-ab { border: 1px dashed var(--border); }
+.evo-chain { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 13px; }
+.evo-link { color: var(--accent); cursor: pointer; text-decoration: underline; }
+.evo-method { font-size: 11px; color: var(--text-dim); }
+
+/* TWOP */
+.twop-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 14px; font-size: 13px; line-height: 1.6; }
+.twop-box .twop-meta { color: var(--text-dim); font-size: 12px; margin-bottom: 4px; font-weight: 500; }
+
+/* Move tables — 4 vertical tables in a 2x2 grid */
+.move-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 14px; }
+.move-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.move-panel-header { padding: 6px 12px; background: var(--surface2); font-size: 13px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+.move-panel-header .cnt { color: var(--text-dim); font-weight: 400; }
+.move-panel-header select { padding: 2px 6px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-size: 12px; }
+.move-panel-body { max-height: 320px; overflow-y: auto; }
+.move-tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+.move-tbl th { text-align: left; color: var(--text-dim); font-weight: 500; padding: 4px 10px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--surface); }
+.move-tbl td { padding: 4px 10px; border-bottom: 1px solid var(--border); }
+.move-tbl tr:hover { background: var(--surface2); }
+.move-tbl .lv { color: var(--text-dim); width: 32px; }
+
+/* --- Move Lookup --- */
+.move-lookup { padding: 20px; display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+.move-lookup .search-input { width: 100%; max-width: 400px; padding: 7px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-size: 14px; outline: none; margin-bottom: 14px; }
+.move-lookup .search-input:focus { border-color: var(--accent); }
+.move-results { flex: 1; overflow-y: auto; }
+.move-results h3 { font-size: 16px; margin: 12px 0 6px; }
+.move-results table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.move-results th { text-align: left; color: var(--text-dim); font-weight: 500; padding: 4px 8px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg); }
+.move-results td { padding: 4px 8px; border-bottom: 1px solid var(--border); }
+.move-results tr:hover { background: var(--surface2); }
+.clickable { color: var(--accent); cursor: pointer; }
+
+/* --- Dashboard --- */
+.dashboard { padding: 24px; flex: 1; overflow-y: auto; }
+.dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; }
+.dash-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+.dash-card h3 { font-size: 15px; margin-bottom: 12px; font-weight: 600; }
+.dash-bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; font-size: 13px; }
+.dash-bar-label { width: 70px; text-align: right; color: var(--text-dim); }
+.dash-bar-bg { flex: 1; height: 18px; background: var(--bg); border-radius: 3px; overflow: hidden; }
+.dash-bar { height: 100%; border-radius: 3px; transition: width 0.4s; }
+.dash-bar-val { width: 55px; font-variant-numeric: tabular-nums; font-size: 12px; }
+.dash-stat { display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 16px; }
+.dash-stat-item { text-align: center; }
+.dash-stat-num { font-size: 28px; font-weight: 700; color: var(--accent); }
+.dash-stat-label { font-size: 12px; color: var(--text-dim); }
+
+/* Type colors */
+.type-NORMAL{background:#a8a878} .type-FIRE{background:#f08030} .type-WATER{background:#6890f0}
+.type-ELECTRIC{background:#f8d030;color:#333} .type-GRASS{background:#78c850} .type-ICE{background:#98d8d8;color:#333}
+.type-FIGHTING{background:#c03028} .type-POISON{background:#a040a0} .type-GROUND{background:#e0c068;color:#333}
+.type-FLYING{background:#a890f0} .type-PSYCHIC{background:#f85888} .type-BUG{background:#a8b820}
+.type-ROCK{background:#b8a038} .type-GHOST{background:#705898} .type-DRAGON{background:#7038f8}
+.type-DARK{background:#705848} .type-STEEL{background:#b8b8d0;color:#333} .type-FAIRY{background:#ee99ac;color:#333}
+.type-STELLAR{background:#44628e}
+.dot-NORMAL{background:#a8a878} .dot-FIRE{background:#f08030} .dot-WATER{background:#6890f0}
+.dot-ELECTRIC{background:#f8d030} .dot-GRASS{background:#78c850} .dot-ICE{background:#98d8d8}
+.dot-FIGHTING{background:#c03028} .dot-POISON{background:#a040a0} .dot-GROUND{background:#e0c068}
+.dot-FLYING{background:#a890f0} .dot-PSYCHIC{background:#f85888} .dot-BUG{background:#a8b820}
+.dot-ROCK{background:#b8a038} .dot-GHOST{background:#705898} .dot-DRAGON{background:#7038f8}
+.dot-DARK{background:#705848} .dot-STEEL{background:#b8b8d0} .dot-FAIRY{background:#ee99ac}
+.dot-STELLAR{background:#44628e}
+.bar-NORMAL{background:#a8a878} .bar-FIRE{background:#f08030} .bar-WATER{background:#6890f0}
+.bar-ELECTRIC{background:#f8d030} .bar-GRASS{background:#78c850} .bar-ICE{background:#98d8d8}
+.bar-FIGHTING{background:#c03028} .bar-POISON{background:#a040a0} .bar-GROUND{background:#e0c068}
+.bar-FLYING{background:#a890f0} .bar-PSYCHIC{background:#f85888} .bar-BUG{background:#a8b820}
+.bar-ROCK{background:#b8a038} .bar-GHOST{background:#705898} .bar-DRAGON{background:#7038f8}
+.bar-DARK{background:#705848} .bar-STEEL{background:#b8b8d0} .bar-FAIRY{background:#ee99ac}
+.bar-STELLAR{background:#44628e}
+
+/* --- Edit Mode --- */
+.edit-toggle { padding: 5px 12px; border-radius: var(--radius); font-size: 13px; cursor: pointer; border: 1px solid var(--border); background: var(--bg); color: var(--text-dim); }
+.edit-toggle.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.edit-input { padding: 2px 6px; background: var(--bg); border: 1px solid var(--border); border-radius: 3px; color: var(--text); font-size: 13px; width: 52px; text-align: right; font-variant-numeric: tabular-nums; }
+.edit-input:focus { border-color: var(--accent); outline: none; }
+.edit-input.changed { background: #3a3520; border-color: #a89030; }
+.edit-select { padding: 2px 6px; background: var(--bg); border: 1px solid var(--border); border-radius: 3px; color: var(--text); font-size: 13px; }
+.edit-select.changed { background: #3a3520; border-color: #a89030; }
+.lock-icon { color: var(--text-dim); font-size: 11px; cursor: help; margin-left: 4px; }
+.save-bar { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; padding: 8px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+.save-btn { padding: 5px 16px; background: var(--green); color: #fff; border: none; border-radius: var(--radius); cursor: pointer; font-size: 13px; font-weight: 600; }
+.save-btn:hover { opacity: 0.9; }
+.save-btn:disabled { opacity: 0.4; cursor: default; }
+.save-status { font-size: 12px; color: var(--text-dim); }
+.regen-btn { padding: 5px 12px; background: var(--surface2); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; font-size: 12px; margin-left: auto; }
+.move-edit-row { display: flex; align-items: center; gap: 4px; padding: 3px 6px; border-bottom: 1px solid var(--border); }
+.move-edit-row:hover { background: var(--surface2); }
+.move-rm-btn { background: none; border: none; color: var(--accent); cursor: pointer; font-size: 14px; padding: 0 4px; }
+.move-add-btn { padding: 3px 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text-dim); cursor: pointer; font-size: 12px; margin: 4px 6px; }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #3a3a5a; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>Expansion Data Parser</h1>
+    <div class="tab-bar">
+      <button class="tab-btn" data-tab="dashboard">Dashboard</button>
+      <button class="tab-btn active" data-tab="browser">Species</button>
+      <button class="tab-btn" data-tab="moves">Move Lookup</button>
+    </div>
+    <button class="edit-toggle" id="edit-toggle" onclick="toggleEditMode()" title="Requires serve.py for write-back">Edit Mode</button>
+    <span class="hdr-badge" id="hdr-badge"></span>
+  </header>
+
+  <!-- Dashboard -->
+  <div class="tab-content" id="tab-dashboard">
+    <div class="dashboard" id="dashboard"></div>
+  </div>
+
+  <!-- Species Browser -->
+  <div class="tab-content active" id="tab-browser">
+    <div class="browser">
+      <div class="list-panel">
+        <div class="filter-bar">
+          <input type="text" id="search" placeholder="Search name, ability, or move:name..." autofocus>
+          <div class="filter-row">
+            <select id="f-type"><option value="">Type</option></select>
+            <select id="f-type2"><option value="">Type 2</option></select>
+            <select id="f-gen"><option value="">Gen</option></select>
+            <select id="f-ability"><option value="">Ability</option></select>
+            <select id="f-enabled">
+              <option value="">All</option>
+              <option value="true">Enabled</option>
+              <option value="false">Disabled</option>
+            </select>
+            <select id="f-sort">
+              <option value="natdex">Natdex #</option>
+              <option value="name">Name</option>
+              <option value="bst-desc">BST (high)</option>
+              <option value="bst-asc">BST (low)</option>
+              <option value="hp">HP</option>
+              <option value="attack">Attack</option>
+              <option value="defense">Defense</option>
+              <option value="spattack">Sp.Atk</option>
+              <option value="spdefense">Sp.Def</option>
+              <option value="speed">Speed</option>
+            </select>
+          </div>
+          <div class="stat-filter">
+            <label>BST</label>
+            <input type="range" id="bst-min" min="0" max="800" value="0" step="10">
+            <span class="val" id="bst-min-val">0</span>
+            <span style="color:var(--text-dim)">-</span>
+            <input type="range" id="bst-max" min="0" max="800" value="800" step="10">
+            <span class="val" id="bst-max-val">800</span>
+          </div>
+          <div id="active-filters" class="filter-tags"></div>
+          <div class="filter-summary" id="filter-summary"></div>
+        </div>
+        <div class="species-list" id="species-list"></div>
+      </div>
+      <div class="detail-panel empty" id="detail-panel">
+        <span>Select a species to view details</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Move Lookup -->
+  <div class="tab-content" id="tab-moves">
+    <div class="move-lookup">
+      <input type="text" class="search-input" id="move-search" placeholder="Search for a move...">
+      <div class="move-results" id="move-results"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const allSpecies = Object.entries(POKEMON_DATA).map(([key, d]) => ({ key, ...d }));
+const allTypes = [...new Set(allSpecies.flatMap(s => [s.type1, s.type2].filter(Boolean)))].sort();
+const allGens = [...new Set(allSpecies.map(s => s.generation))].sort((a, b) => a - b);
+const allAbilities = [...new Set(allSpecies.flatMap(s => s.abilities || []))].sort();
+
+const baseKeys = new Set();
+const formOf = {};
+for (const [ndex, g] of Object.entries(FORM_GROUPS)) {
+  baseKeys.add(g.base);
+  for (const f of g.forms) formOf[f] = g.base;
+}
+for (const s of allSpecies) { if (!baseKeys.has(s.key) && !formOf[s.key]) baseKeys.add(s.key); }
+const baseSpecies = allSpecies.filter(s => baseKeys.has(s.key));
+
+// When served via serve.py (repo root), use '/'; when opened as file, use '../../'
+const SPRITE_PREFIX = location.protocol === 'file:' ? '../../' : '/';
+const moveIndex = {};
+for (const sp of allSpecies) {
+  const gk = Object.keys(sp.level_up_moves || {}).sort((a, b) => b - a);
+  if (gk.length) for (const [lv, mv] of sp.level_up_moves[gk[0]]) (moveIndex[mv] ??= []).push({ species: sp.key, name: sp.name, source: 'Level-up', level: lv });
+  for (const tm of (sp.teachable_moves || [])) (moveIndex[tm.move] ??= []).push({ species: sp.key, name: sp.name, source: tm.source });
+  for (const egg of (sp.egg_moves || [])) (moveIndex[egg] ??= []).push({ species: sp.key, name: sp.name, source: 'Egg' });
+}
+const allMoves = Object.keys(moveIndex).sort();
+
+const fmt = s => s.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()).replace(/\bHp\b/, 'HP');
+const statColor = v => v >= 150 ? '#e94560' : v >= 120 ? '#f08030' : v >= 90 ? '#f8d030' : v >= 60 ? '#78c850' : '#6890f0';
+const $ = id => document.getElementById(id);
+const spriteUrl = sp => sp.sprite ? SPRITE_PREFIX + sp.sprite : '';
+
+// Populate dropdowns
+function populateSelect(el, items, prefix) { for (const v of items) { const o = document.createElement('option'); o.value = v; o.textContent = (prefix||'') + fmt(String(v)); el.appendChild(o); } }
+populateSelect($('f-type'), allTypes);
+populateSelect($('f-type2'), allTypes);
+populateSelect($('f-gen'), allGens, 'Gen ');
+populateSelect($('f-ability'), allAbilities);
+
+const enabledCount = baseSpecies.filter(s => s.enabled).length;
+const disabledCount = baseSpecies.length - enabledCount;
+$('hdr-badge').textContent = `${enabledCount} enabled / ${baseSpecies.length} species (${allSpecies.length} incl. forms)`;
+
+// ============================================================
+// FILTERS
+// ============================================================
+let filters = {};
+
+function updateFilters() {
+  const raw = $('search').value;
+  const mm = raw.match(/move:(\S+)/i);
+  filters.move = mm ? mm[1].toUpperCase().replace(/\s+/g, '_') : '';
+  filters.search = (mm ? raw.replace(mm[0], '') : raw).trim().toLowerCase();
+  filters.type = $('f-type').value;
+  filters.type2 = $('f-type2').value;
+  filters.gen = $('f-gen').value;
+  filters.ability = $('f-ability').value;
+  filters.enabled = $('f-enabled').value;
+  filters.bstMin = +$('bst-min').value;
+  filters.bstMax = +$('bst-max').value;
+  $('bst-min-val').textContent = filters.bstMin;
+  $('bst-max-val').textContent = filters.bstMax;
+  renderFilterTags();
+  renderList();
+}
+
+function renderFilterTags() {
+  const tags = [];
+  if (filters.type) tags.push({ label: `Type: ${filters.type}`, clear: () => $('f-type').value = '' });
+  if (filters.type2) tags.push({ label: `Type 2: ${filters.type2}`, clear: () => $('f-type2').value = '' });
+  if (filters.gen) tags.push({ label: `Gen ${filters.gen}`, clear: () => $('f-gen').value = '' });
+  if (filters.ability) tags.push({ label: `Ability: ${fmt(filters.ability)}`, clear: () => $('f-ability').value = '' });
+  if (filters.enabled) tags.push({ label: filters.enabled === 'true' ? 'Enabled' : 'Disabled', clear: () => $('f-enabled').value = '' });
+  if (filters.move) tags.push({ label: `Move: ${fmt(filters.move)}`, clear: () => $('search').value = $('search').value.replace(/move:\S+/i, '').trim() });
+  if (filters.bstMin > 0 || filters.bstMax < 800) tags.push({ label: `BST ${filters.bstMin}-${filters.bstMax}`, clear: () => { $('bst-min').value = 0; $('bst-max').value = 800; } });
+  $('active-filters').innerHTML = tags.map((t, i) => `<span class="filter-tag">${t.label} <span class="x" data-i="${i}">&times;</span></span>`).join('');
+  $('active-filters').querySelectorAll('.x').forEach(el => { el.onclick = () => { tags[+el.dataset.i].clear(); updateFilters(); }; });
+}
+
+// ============================================================
+// SPECIES LIST
+// ============================================================
+let selectedKey = null;
+
+function matchesMove(sp, move) {
+  if (!move) return true;
+  for (const g of Object.keys(sp.level_up_moves || {})) if ((sp.level_up_moves[g] || []).some(([, m]) => m.includes(move))) return true;
+  if ((sp.teachable_moves || []).some(t => t.move.includes(move))) return true;
+  if ((sp.egg_moves || []).some(e => e.includes(move))) return true;
+  return false;
+}
+
+function filterAndSort() {
+  const f = filters;
+  let list = baseSpecies.filter(s => {
+    if (f.search && !s.name.toLowerCase().includes(f.search) && !s.key.toLowerCase().includes(f.search)
+        && !(s.abilities || []).some(a => fmt(a).toLowerCase().includes(f.search))) return false;
+    if (f.type && s.type1 !== f.type && s.type2 !== f.type) return false;
+    if (f.type2 && s.type1 !== f.type2 && s.type2 !== f.type2) return false;
+    if (f.type && f.type2 && f.type !== f.type2) { const t = [s.type1, s.type2]; if (!t.includes(f.type) || !t.includes(f.type2)) return false; }
+    if (f.gen && s.generation !== +f.gen) return false;
+    if (f.ability && !(s.abilities || []).includes(f.ability)) return false;
+    if (f.enabled === 'true' && !s.enabled) return false;
+    if (f.enabled === 'false' && s.enabled) return false;
+    if (s.bst < f.bstMin || s.bst > f.bstMax) return false;
+    if (f.move && !matchesMove(s, f.move)) return false;
+    return true;
+  });
+  const sm = { hp: 'HP', attack: 'Attack', defense: 'Defense', spattack: 'SpAttack', spdefense: 'SpDefense', speed: 'Speed' };
+  const sort = $('f-sort').value;
+  list.sort((a, b) => {
+    if (sort === 'natdex') return (a.natdex || 9999) - (b.natdex || 9999);
+    if (sort === 'name') return a.name.localeCompare(b.name);
+    if (sort === 'bst-desc') return (b.bst || 0) - (a.bst || 0);
+    if (sort === 'bst-asc') return (a.bst || 0) - (b.bst || 0);
+    if (sm[sort]) return ((b.stats || {})[sm[sort]] || 0) - ((a.stats || {})[sm[sort]] || 0);
+    return 0;
+  });
+  return list;
+}
+
+function renderList() {
+  const el = $('species-list');
+  const filtered = filterAndSort();
+  $('filter-summary').textContent = `${filtered.length} / ${baseSpecies.length} species`;
+  const frag = document.createDocumentFragment();
+  for (const sp of filtered) {
+    const div = document.createElement('div');
+    div.className = 'sp-item' + (sp.key === selectedKey ? ' selected' : '') + (sp.enabled ? '' : ' disabled-sp');
+    div.dataset.key = sp.key;
+    const types = [sp.type1, sp.type2].filter(Boolean);
+    const dots = types.map(t => `<span class="sp-type-dot dot-${t}"></span>`).join('');
+    const g = FORM_GROUPS[String(sp.natdex)];
+    const fc = g ? g.forms.length : 0;
+    div.innerHTML = `<span class="sp-enabled-dot ${sp.enabled?'on':'off'}"></span><span class="sp-num">${sp.natdex||''}</span><span class="sp-name">${sp.name}</span>${fc?`<span class="sp-forms-badge">+${fc}</span>`:''}<span class="sp-types">${dots}</span><span class="sp-bst">${sp.bst||''}</span>`;
+    div.onclick = () => selectSpecies(sp.key);
+    frag.appendChild(div);
+  }
+  el.innerHTML = '';
+  el.appendChild(frag);
+}
+
+// ============================================================
+// DETAIL PANEL
+// ============================================================
+function selectSpecies(key, formKey = null) {
+  if (formOf[key]) { selectSpecies(formOf[key], key); return; }
+  const sp0 = POKEMON_DATA[key];
+  if (!sp0) return;
+  const group = FORM_GROUPS[String(sp0.natdex)] || { base: key, forms: [] };
+  selectedKey = key;
+  const activeForm = formKey || group.base;
+  const sp = POKEMON_DATA[activeForm];
+  if (!sp) return;
+
+  document.querySelectorAll('.sp-item').forEach(el => el.classList.toggle('selected', el.dataset.key === key));
+  const panel = $('detail-panel');
+  panel.classList.remove('empty');
+
+  const types = [sp.type1, sp.type2].filter(Boolean);
+  const stats = sp.stats || {};
+  const SO = [['HP','HP'],['Attack','Atk'],['Defense','Def'],['SpAttack','SpA'],['SpDefense','SpD'],['Speed','Spe']];
+
+  // Form tabs
+  let formTabsHTML = '';
+  if (group.forms.length) {
+    const all = [group.base, ...group.forms];
+    formTabsHTML = `<div class="form-tabs">${all.map(f => {
+      const fd = POKEMON_DATA[f];
+      const lbl = f === group.base ? (fd?.name || f) : fmt(f.replace(group.base + '_', ''));
+      return `<div class="form-tab${f===activeForm?' active':''}" onclick="selectSpecies('${key}','${f}')">${lbl}</div>`;
+    }).join('')}</div>`;
+  }
+
+  // Sprite
+  const src = spriteUrl(sp);
+  const spriteHTML = src ? `<div class="detail-sprite-wrap"><img class="detail-sprite" src="${src}" alt="${sp.name}" onerror="this.parentElement.style.display='none'"></div>` : '';
+
+  // Enabled badge
+  const enHTML = `<div class="enabled-badge ${sp.enabled?'on':'off'}">${sp.enabled?'Enabled':'Disabled'}</div>`;
+
+  const ed = sp.editable || {};
+
+  // Stats — editable or read-only
+  let statsHTML;
+  if (editMode && ed.stats) {
+    statsHTML = `<div class="stat-grid">${SO.map(([k,l]) => {
+      const v = stats[k]||0;
+      return `<span class="stat-lbl">${l}</span><div class="stat-bar-bg"><div class="stat-bar" style="width:${Math.min(v/255*100,100)}%;background:${statColor(v)}"></div></div><input class="edit-input" type="number" data-stat="${k}" value="${v}" min="1" max="255" onchange="markChanged(this)">`;
+    }).join('')}<div class="bst-line"><span>BST</span><span>${sp.bst||0}</span></div></div>
+    <button class="save-btn" style="margin-top:6px" onclick="collectStats('${activeForm}')">Save Stats</button>`;
+  } else {
+    const lockH = editMode && !ed.stats ? '<span class="lock-icon" title="Uses macro/ternary — edit in source">&#128274;</span>' : '';
+    statsHTML = `<div class="stat-grid">${SO.map(([k,l]) => {
+      const v = stats[k]||0;
+      return `<span class="stat-lbl">${l}</span><div class="stat-bar-bg"><div class="stat-bar" style="width:${Math.min(v/255*100,100)}%;background:${statColor(v)}"></div></div><span class="stat-num">${v}</span>`;
+    }).join('')}<div class="bst-line"><span>BST${lockH}</span><span>${sp.bst||0}</span></div></div>`;
+  }
+
+  // Abilities — editable or read-only
+  const abilities = sp.abilities || [];
+  let abHTML;
+  if (editMode && ed.abilities) {
+    const abOpts = allAbilities.map(a => `<option value="${a}">${fmt(a)}</option>`).join('');
+    const slots = [0,1,2].map(i => {
+      const cur = abilities[i] || 'NONE';
+      const label = i === 2 ? ' (Hidden)' : '';
+      return `<select class="edit-select" data-field="ability" onchange="markChanged(this)"><option value="NONE">None${label}</option>${abOpts}</select>`;
+    }).join('');
+    abHTML = slots + `<br><button class="save-btn" style="margin-top:6px" onclick="collectAbilities('${activeForm}')">Save Abilities</button>`;
+  } else {
+    const lockH = editMode && !ed.abilities ? '<span class="lock-icon" title="Uses macro — edit in source">&#128274;</span>' : '';
+    abHTML = (abilities.map((a,i) => `<span class="ability-tag${i===2?' hidden-ab':''}">${fmt(a)}${i===2?' (H)':''}</span>`).join('') || '<span style="color:var(--text-dim)">None</span>') + lockH;
+  }
+
+  // Evolutions
+  let evoHTML = '';
+  if (sp.evolutions?.length) {
+    evoHTML = `<div style="margin-bottom:10px"><span class="sec-h">Evolutions</span><div class="evo-chain">${
+      sp.evolutions.map(e => `<span class="evo-method">&rarr; ${e.method} ${e.condition}</span> <span class="evo-link" onclick="selectSpecies('${e.target}')">${fmt(e.target)}</span>`).join(' ')
+    }</div></div>`;
+  }
+
+  // TWOP
+  let twopHTML = '';
+  if (sp.overview) {
+    const meta = [sp.region, sp.habitat].filter(Boolean).join(' | ');
+    twopHTML = `<div class="twop-box">${meta?`<div class="twop-meta">${meta}</div>`:''}${sp.overview}</div>`;
+  }
+
+  // === MOVE TABLES (4 separate panels in a 2x2 grid) ===
+  const genKeys = Object.keys(sp.level_up_moves || {}).sort((a,b) => b - a);
+  const tmMoves = (sp.teachable_moves || []).filter(m => m.source === 'TM/HM');
+  const tutorMoves = (sp.teachable_moves || []).filter(m => m.source === 'TUTOR');
+  const eggMoves = sp.egg_moves || [];
+
+  let moveGridHTML = '<div class="move-grid">';
+
+  // Level-up
+  if (genKeys.length) {
+    if (editMode && ed.level_up_moves) {
+      moveGridHTML += `<div class="move-panel">
+        <div class="move-panel-header">
+          <span>Level-Up</span>
+          <select id="lu-gen" onchange="renderLUEdit('${activeForm}')">${genKeys.map(g=>`<option value="${g}">Gen ${g}</option>`).join('')}</select>
+        </div>
+        <div class="move-panel-body" id="lu-edit-body"></div>
+        <div style="padding:4px 6px;display:flex;gap:6px"><button class="move-add-btn" onclick="addLevelUpMoveRow()">+ Add Move</button><button class="save-btn" onclick="collectLevelUpMoves('${activeForm}')">Save</button></div>
+      </div>`;
+    } else {
+      moveGridHTML += `<div class="move-panel">
+        <div class="move-panel-header">
+          <span>Level-Up</span>
+          <select id="lu-gen" onchange="renderLU('${activeForm}')">${genKeys.map(g=>`<option value="${g}">Gen ${g}</option>`).join('')}</select>
+        </div>
+        <div class="move-panel-body"><table class="move-tbl"><thead><tr><th class="lv">Lv</th><th>Move</th></tr></thead><tbody id="lu-body"></tbody></table></div>
+      </div>`;
+    }
+  }
+
+  // TM/HM
+  if (tmMoves.length) {
+    moveGridHTML += `<div class="move-panel">
+      <div class="move-panel-header"><span>TM / HM</span><span class="cnt">${tmMoves.length}</span></div>
+      <div class="move-panel-body"><table class="move-tbl"><thead><tr><th>Move</th></tr></thead><tbody>${
+        tmMoves.map(m => `<tr><td>${fmt(m.move)}</td></tr>`).join('')
+      }</tbody></table></div>
+    </div>`;
+  }
+
+  // Tutor
+  if (tutorMoves.length) {
+    moveGridHTML += `<div class="move-panel">
+      <div class="move-panel-header"><span>Tutor</span><span class="cnt">${tutorMoves.length}</span></div>
+      <div class="move-panel-body"><table class="move-tbl"><thead><tr><th>Move</th></tr></thead><tbody>${
+        tutorMoves.map(m => `<tr><td>${fmt(m.move)}</td></tr>`).join('')
+      }</tbody></table></div>
+    </div>`;
+  }
+
+  // Egg
+  if (eggMoves.length || (editMode && ed.egg_moves)) {
+    if (editMode && ed.egg_moves) {
+      moveGridHTML += `<div class="move-panel">
+        <div class="move-panel-header"><span>Egg Moves</span><span class="cnt">${eggMoves.length}</span></div>
+        <div class="move-panel-body" id="egg-edit-body"></div>
+        <div style="padding:4px 6px;display:flex;gap:6px"><button class="move-add-btn" onclick="addEggMoveRow()">+ Add Move</button><button class="save-btn" onclick="collectEggMoves('${activeForm}')">Save</button></div>
+      </div>`;
+    } else {
+      moveGridHTML += `<div class="move-panel">
+        <div class="move-panel-header"><span>Egg Moves</span><span class="cnt">${eggMoves.length}</span></div>
+        <div class="move-panel-body"><table class="move-tbl"><thead><tr><th>Move</th></tr></thead><tbody>${
+          eggMoves.map(m => `<tr><td>${fmt(m)}</td></tr>`).join('')
+        }</tbody></table></div>
+      </div>`;
+    }
+  }
+
+  moveGridHTML += '</div>';
+
+  panel.innerHTML = `
+    ${formTabsHTML}
+    <div class="detail-header">
+      ${spriteHTML}
+      <div class="info">
+        <h2>${sp.name}</h2>
+        <div class="detail-sub">${sp.species_const} | Gen ${sp.generation}${sp.natdex?' | #'+sp.natdex:''}${sp.family?' | '+sp.family:''}</div>
+        ${editMode && ed.types
+          ? `<div style="display:flex;gap:4px;margin-top:6px;align-items:center">
+              <select class="edit-select" data-field="type1" onchange="markChanged(this)">${allTypes.map(t=>`<option value="${t}"${t===sp.type1?' selected':''}>${t}</option>`).join('')}</select>
+              <select class="edit-select" data-field="type2" onchange="markChanged(this)"><option value="">None</option>${allTypes.map(t=>`<option value="${t}"${t===sp.type2?' selected':''}>${t}</option>`).join('')}</select>
+              <button class="save-btn" onclick="collectTypes('${activeForm}')">Save</button>
+            </div>`
+          : `<div class="type-badges">${types.map(t=>`<span class="type-badge type-${t}">${t}</span>`).join('')}${editMode && !ed.types ? '<span class="lock-icon" title="Uses macro — edit in source">&#128274;</span>' : ''}</div>`
+        }
+        ${enHTML}
+      </div>
+    </div>
+    ${twopHTML}
+    <div class="detail-cols">
+      <div class="detail-col"><div class="sec-h">Base Stats</div>${statsHTML}</div>
+      <div class="detail-col">
+        <div style="margin-bottom:10px"><span class="sec-h">Abilities</span><div class="ability-list">${abHTML}</div></div>
+        ${evoHTML}
+      </div>
+    </div>
+    ${moveGridHTML}
+  `;
+  // Set ability select values after innerHTML render
+  if (editMode && ed.abilities) {
+    const selects = panel.querySelectorAll('[data-field="ability"]');
+    selects.forEach((sel, i) => { sel.value = abilities[i] || 'NONE'; });
+  }
+
+  // Render level-up moves
+  if (genKeys.length) {
+    if (editMode && ed.level_up_moves) renderLUEdit(activeForm);
+    else renderLU(activeForm);
+  }
+
+  // Render egg move edit rows
+  if (editMode && ed.egg_moves && $('egg-edit-body')) {
+    renderEggEdit(activeForm);
+  }
+
+  panel.scrollTop = 0;
+}
+
+function renderLU(formKey) {
+  const sp = POKEMON_DATA[formKey];
+  const gen = $('lu-gen').value;
+  const moves = (sp.level_up_moves || {})[gen] || [];
+  $('lu-body').innerHTML = moves.map(([lv, mv]) => `<tr><td class="lv">${lv}</td><td>${fmt(mv)}</td></tr>`).join('');
+}
+
+function renderLUEdit(formKey) {
+  const sp = POKEMON_DATA[formKey];
+  const gen = $('lu-gen').value;
+  const moves = (sp.level_up_moves || {})[gen] || [];
+  const container = $('lu-edit-body');
+  if (!container) return;
+  container.innerHTML = moves.map(([lv, mv]) =>
+    `<div class="move-edit-row lu-edit-row"><input class="edit-input lu-lv" type="number" value="${lv}" min="0" max="100" style="width:40px" onchange="markChanged(this)"><input class="edit-input lu-mv" type="text" value="${mv}" style="width:160px;text-align:left" onchange="markChanged(this)"><button class="move-rm-btn" onclick="this.parentElement.remove()">&times;</button></div>`
+  ).join('');
+}
+
+function renderEggEdit(formKey) {
+  const sp = POKEMON_DATA[formKey];
+  const eggMoves = sp.egg_moves || [];
+  const container = $('egg-edit-body');
+  if (!container) return;
+  container.innerHTML = eggMoves.map(mv =>
+    `<div class="move-edit-row egg-edit-row"><input class="edit-input egg-mv" type="text" value="${mv}" style="width:160px;text-align:left" onchange="markChanged(this)"><button class="move-rm-btn" onclick="this.parentElement.remove()">&times;</button></div>`
+  ).join('');
+}
+
+// ============================================================
+// MOVE LOOKUP
+// ============================================================
+function renderMoveResults() {
+  const q = $('move-search').value.toUpperCase().replace(/\s+/g, '_');
+  const c = $('move-results');
+  if (q.length < 2) { c.innerHTML = '<p style="color:var(--text-dim)">Type at least 2 characters.</p>'; return; }
+  const matches = allMoves.filter(m => m.includes(q)).slice(0, 30);
+  if (!matches.length) { c.innerHTML = '<p style="color:var(--text-dim)">No moves found.</p>'; return; }
+  let h = '';
+  for (const move of matches) {
+    const byS = {};
+    for (const l of moveIndex[move]) {
+      if (!byS[l.species]) byS[l.species] = { name: l.name, species: l.species, sources: [] };
+      const src = l.level !== undefined ? `Lv ${l.level}` : l.source;
+      if (!byS[l.species].sources.includes(src)) byS[l.species].sources.push(src);
+    }
+    const entries = Object.values(byS).sort((a,b) => a.name.localeCompare(b.name));
+    h += `<h3>${fmt(move)} <span style="color:var(--text-dim);font-size:13px">(${entries.length})</span></h3>`;
+    h += `<table><thead><tr><th>Pokemon</th><th>Source</th></tr></thead><tbody>`;
+    for (const e of entries) h += `<tr><td class="clickable" onclick="switchToSpecies('${e.species}')">${e.name}</td><td style="color:var(--text-dim)">${e.sources.join(', ')}</td></tr>`;
+    h += `</tbody></table>`;
+  }
+  c.innerHTML = h;
+}
+
+function switchToSpecies(key) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === 'browser'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.toggle('active', t.id === 'tab-browser'));
+  $('search').value = '';
+  updateFilters();
+  selectSpecies(key);
+  setTimeout(() => { const el = document.querySelector(`.sp-item[data-key="${formOf[key]||key}"]`); if (el) el.scrollIntoView({ block: 'center' }); }, 50);
+}
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+function renderDashboard() {
+  const data = baseSpecies;
+  const total = data.length;
+  const en = data.filter(s => s.enabled).length;
+  const dis = total - en;
+  const mono = data.filter(s => !s.type2).length;
+  const dual = data.filter(s => s.type2).length;
+  const lore = data.filter(s => s.overview).length;
+  const totalForms = allSpecies.length - baseSpecies.length;
+
+  const genCounts = {}; for (const g of allGens) genCounts[g] = 0;
+  const genEnabled = {}; for (const g of allGens) genEnabled[g] = 0;
+  for (const s of data) { genCounts[s.generation]++; if (s.enabled) genEnabled[s.generation]++; }
+  const maxGen = Math.max(...Object.values(genCounts));
+
+  const typeCounts = {}; for (const t of allTypes) typeCounts[t] = 0;
+  for (const s of data) { if (s.type1) typeCounts[s.type1]++; if (s.type2) typeCounts[s.type2]++; }
+  const typesSorted = Object.entries(typeCounts).sort((a,b) => b[1] - a[1]);
+  const maxType = typesSorted[0]?.[1] || 1;
+
+  const bstBuckets = {}; const labels = ['<300','300-399','400-499','500-599','600-699','700+'];
+  for (const l of labels) bstBuckets[l] = 0;
+  for (const s of data) { const b = s.bst||0; if (b<300) bstBuckets['<300']++; else if (b<400) bstBuckets['300-399']++; else if (b<500) bstBuckets['400-499']++; else if (b<600) bstBuckets['500-599']++; else if (b<700) bstBuckets['600-699']++; else bstBuckets['700+']++; }
+  const maxBst = Math.max(...Object.values(bstBuckets));
+
+  $('dashboard').innerHTML = `
+    <div class="dash-stat">
+      <div class="dash-stat-item"><div class="dash-stat-num">${total}</div><div class="dash-stat-label">Base Species</div></div>
+      <div class="dash-stat-item"><div class="dash-stat-num" style="color:var(--green)">${en}</div><div class="dash-stat-label">Enabled</div></div>
+      <div class="dash-stat-item"><div class="dash-stat-num">${dis}</div><div class="dash-stat-label">Disabled</div></div>
+      <div class="dash-stat-item"><div class="dash-stat-num">${totalForms}</div><div class="dash-stat-label">Alt Forms</div></div>
+      <div class="dash-stat-item"><div class="dash-stat-num">${mono}</div><div class="dash-stat-label">Mono-Type</div></div>
+      <div class="dash-stat-item"><div class="dash-stat-num">${dual}</div><div class="dash-stat-label">Dual-Type</div></div>
+      <div class="dash-stat-item"><div class="dash-stat-num">${lore}</div><div class="dash-stat-label">With Lore</div></div>
+    </div>
+    <div class="dash-grid">
+      <div class="dash-card">
+        <h3>Type Distribution</h3>
+        ${typesSorted.map(([t, c]) => `<div class="dash-bar-row"><span class="dash-bar-label">${t}</span><div class="dash-bar-bg"><div class="dash-bar bar-${t}" style="width:${c/maxType*100}%"></div></div><span class="dash-bar-val">${c} (${(c/total*100).toFixed(1)}%)</span></div>`).join('')}
+      </div>
+      <div class="dash-card">
+        <h3>Generation Breakdown</h3>
+        ${Object.entries(genCounts).map(([g, c]) => `<div class="dash-bar-row"><span class="dash-bar-label">Gen ${g}</span><div class="dash-bar-bg"><div class="dash-bar" style="width:${c/maxGen*100}%;background:var(--accent)"></div></div><span class="dash-bar-val">${genEnabled[g]}/${c} enabled</span></div>`).join('')}
+      </div>
+      <div class="dash-card">
+        <h3>BST Distribution</h3>
+        ${labels.map(l => `<div class="dash-bar-row"><span class="dash-bar-label">${l}</span><div class="dash-bar-bg"><div class="dash-bar" style="width:${bstBuckets[l]/maxBst*100}%;background:#6890f0"></div></div><span class="dash-bar-val">${bstBuckets[l]}</span></div>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================
+// EDIT MODE
+// ============================================================
+let editMode = false;
+let pendingEdits = {}; // { species: { field: value } }
+
+function toggleEditMode() {
+  editMode = !editMode;
+  $('edit-toggle').classList.toggle('active', editMode);
+  // Re-render current detail if one is selected
+  if (selectedKey) selectSpecies(selectedKey);
+}
+
+async function saveEdit(species, field, value) {
+  const statusEl = document.querySelector('.save-status');
+  if (statusEl) statusEl.textContent = 'Saving...';
+  try {
+    const resp = await fetch('/api/edit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ species, field, value })
+    });
+    const result = await resp.json();
+    if (result.ok) {
+      if (statusEl) statusEl.textContent = `Saved to ${result.file}`;
+      // Clear pending
+      if (pendingEdits[species]) delete pendingEdits[species][field];
+      // Mark inputs as no longer changed
+      document.querySelectorAll('.edit-input.changed, .edit-select.changed').forEach(el => el.classList.remove('changed'));
+    } else {
+      if (statusEl) statusEl.textContent = `Error: ${result.error}`;
+    }
+  } catch (e) {
+    if (statusEl) statusEl.textContent = `Server not running? ${e.message}`;
+  }
+}
+
+async function regenerateData() {
+  const statusEl = document.querySelector('.save-status');
+  if (statusEl) statusEl.textContent = 'Regenerating...';
+  try {
+    const resp = await fetch('/api/regenerate', { method: 'POST' });
+    const result = await resp.json();
+    if (result.ok) {
+      if (statusEl) statusEl.textContent = 'Regenerated! Reload to see changes.';
+    } else {
+      if (statusEl) statusEl.textContent = `Error: ${result.error}`;
+    }
+  } catch (e) {
+    if (statusEl) statusEl.textContent = `Server not running? ${e.message}`;
+  }
+}
+
+function markChanged(el) {
+  el.classList.add('changed');
+}
+
+function collectStats(species) {
+  const stats = {};
+  for (const s of ['HP','Attack','Defense','SpAttack','SpDefense','Speed']) {
+    const el = document.querySelector(`[data-stat="${s}"]`);
+    if (el) stats[s] = parseInt(el.value) || 0;
+  }
+  saveEdit(species, 'stats', stats);
+}
+
+function collectTypes(species) {
+  const t1 = document.querySelector('[data-field="type1"]')?.value;
+  const t2 = document.querySelector('[data-field="type2"]')?.value;
+  saveEdit(species, 'types', { type1: t1, type2: t2 || null });
+}
+
+function collectAbilities(species) {
+  const abs = [];
+  document.querySelectorAll('[data-field="ability"]').forEach(el => {
+    if (el.value && el.value !== 'NONE') abs.push(el.value);
+  });
+  saveEdit(species, 'abilities', abs);
+}
+
+function collectLevelUpMoves(species) {
+  const moves = [];
+  document.querySelectorAll('.lu-edit-row').forEach(row => {
+    const lv = parseInt(row.querySelector('.lu-lv')?.value) || 0;
+    const mv = row.querySelector('.lu-mv')?.value;
+    if (mv) moves.push([lv, mv]);
+  });
+  saveEdit(species, 'level_up_moves', moves);
+}
+
+function collectEggMoves(species) {
+  const moves = [];
+  document.querySelectorAll('.egg-edit-row').forEach(row => {
+    const mv = row.querySelector('.egg-mv')?.value;
+    if (mv) moves.push(mv);
+  });
+  saveEdit(species, 'egg_moves', moves);
+}
+
+function addLevelUpMoveRow() {
+  const container = $('lu-edit-body');
+  if (!container) return;
+  const row = document.createElement('div');
+  row.className = 'move-edit-row lu-edit-row';
+  row.innerHTML = `<input class="edit-input lu-lv" type="number" value="1" min="0" max="100" style="width:40px" onchange="markChanged(this)"><input class="edit-input lu-mv" type="text" value="" placeholder="MOVE_NAME" style="width:140px;text-align:left" onchange="markChanged(this)"><button class="move-rm-btn" onclick="this.parentElement.remove()">&times;</button>`;
+  container.appendChild(row);
+}
+
+function addEggMoveRow() {
+  const container = $('egg-edit-body');
+  if (!container) return;
+  const row = document.createElement('div');
+  row.className = 'move-edit-row egg-edit-row';
+  row.innerHTML = `<input class="edit-input egg-mv" type="text" value="" placeholder="MOVE_NAME" style="width:160px;text-align:left" onchange="markChanged(this)"><button class="move-rm-btn" onclick="this.parentElement.remove()">&times;</button>`;
+  container.appendChild(row);
+}
+
+// ============================================================
+// EVENTS
+// ============================================================
+for (const id of ['search','f-type','f-type2','f-gen','f-ability','f-enabled','bst-min','bst-max']) {
+  const el = $(id);
+  el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', updateFilters);
+}
+$('f-sort').addEventListener('change', renderList);
+$('move-search').addEventListener('input', renderMoveResults);
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    $('tab-' + btn.dataset.tab).classList.add('active');
+    if (btn.dataset.tab === 'dashboard') renderDashboard();
+  });
+});
+updateFilters();
+</script>
+</body>
+</html>

@@ -44,6 +44,10 @@ extern const struct SpriteTemplate gFieldEffectObjectTemplate_RockClimbBlob;
 extern const struct SpriteTemplate gFieldEffectObjectTemplate_RockClimbDust;
 extern const struct SpriteTemplate gFieldEffectObjectTemplate_ORASDowsingBrendan;
 extern const struct SpriteTemplate gFieldEffectObjectTemplate_ORASDowsingMay;
+extern const struct SpriteTemplate gFieldEffectObjectTemplate_SwampTallGrass;
+extern const struct SpriteTemplate gFieldEffectObjectTemplate_JumpSwampTallGrass;
+extern const struct SpriteTemplate gFieldEffectObjectTemplate_SwampPlants;
+extern const struct SpriteTemplate gFieldEffectObjectTemplate_JumpSwampPlants;
 
 const struct SpriteTemplate *const gFieldEffectObjectTemplatePointers[] = {
     [FLDEFFOBJ_SHADOW_S]              = &gFieldEffectObjectTemplate_ShadowSmall,
@@ -91,4 +95,8 @@ const struct SpriteTemplate *const gFieldEffectObjectTemplatePointers[] = {
     [FLDEFFOBJ_ROCK_CLIMB_DUST]       = &gFieldEffectObjectTemplate_RockClimbDust,
     [FLDEFFOBJ_ORAS_DOWSE_BRENDAN]    = &gFieldEffectObjectTemplate_ORASDowsingBrendan,
     [FLDEFFOBJ_ORAS_DOWSE_MAY]        = &gFieldEffectObjectTemplate_ORASDowsingMay,
+    [FLDEFFOBJ_SWAMP_TALL_GRASS]      = &gFieldEffectObjectTemplate_SwampTallGrass,
+    [FLDEFFOBJ_JUMP_SWAMP_TALL_GRASS] = &gFieldEffectObjectTemplate_JumpSwampTallGrass,
+    [FLDEFFOBJ_SWAMP_PLANTS]          = &gFieldEffectObjectTemplate_SwampPlants,
+    [FLDEFFOBJ_JUMP_SWAMP_PLANTS]     = &gFieldEffectObjectTemplate_JumpSwampPlants,
 };

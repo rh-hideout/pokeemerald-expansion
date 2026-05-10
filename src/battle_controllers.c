@@ -5,6 +5,7 @@
 #include "battle_anim.h"
 #include "battle_arena.h"
 #include "battle_controllers.h"
+#include "battle_main.h"
 #include "battle_gfx_sfx_util.h"
 #include "battle_interface.h"
 #include "battle_message.h"
@@ -3313,5 +3314,45 @@ enum BattleTrainer GetBattlerTrainer(enum BattlerId battler)
             return B_TRAINER_1;
     default:
         return B_TRAINER_1;
+    }
+}
+
+u32 GetBattleSpeedScale(bool32 forHealthbar)
+{
+    u8 battleSpeed = gSaveBlock2Ptr->optionsBattleSpeed;
+
+    // L button override - force 1x speed when held
+    if (JOY_HELD(L_BUTTON))
+        return 1;
+
+    // Track when player starts choosing moves (includes target selection)
+    if (InBattleChoosingMoves())
+        gBattleStruct->hasBattleInputStarted = TRUE;
+
+    // Once input has started, force 1x speed during move/target selection for UI responsiveness
+    if (gBattleStruct->hasBattleInputStarted)
+    {
+        // Always run at 1x speed during move/target selection
+        if (InBattleChoosingMoves())
+            return 1;
+
+        // Force 1x when battle animations disabled (for readability)
+        if (!forHealthbar && gSaveBlock2Ptr->optionsBattleSceneOff && InBattleRunningActions())
+            return 1;
+    }
+
+    // Return speed multiplier
+    switch (battleSpeed)
+    {
+        case OPTIONS_BATTLE_SPEED_1X:
+            return forHealthbar ? 1 : 1;
+        case OPTIONS_BATTLE_SPEED_2X:
+            return forHealthbar ? 1 : 2;
+        case OPTIONS_BATTLE_SPEED_3X:
+            return forHealthbar ? 1 : 3;
+        case OPTIONS_BATTLE_SPEED_4X:
+            return forHealthbar ? 1 : 4;
+        default:
+            return 1;
     }
 }

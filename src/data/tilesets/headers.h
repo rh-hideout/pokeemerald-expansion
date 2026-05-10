@@ -1541,3 +1541,69 @@ const struct Tileset gTileset_HallOfFame =
 };
 
 #endif // IS_FRLG
+
+const struct Tileset gTileset_ShipCity =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_ShipCity,
+    .palettes = gTilesetPalettes_ShipCity,
+    .metatiles = gMetatiles_ShipCity,
+    .metatileAttributes = gMetatileAttributes_ShipCity,
+    .callback = NULL,
+};
+
+const struct Tileset gTileset_Kolchavi =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_Kolchavi,
+    .palettes = gTilesetPalettes_Kolchavi,
+    .metatiles = gMetatiles_Kolchavi,
+    .metatileAttributes = gMetatileAttributes_Kolchavi,
+    .callback = NULL,
+};
+
+const struct Tileset gTileset_Floran =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_Floran,
+    .palettes = gTilesetPalettes_Floran,
+    .metatiles = gMetatiles_Floran,
+    .metatileAttributes = gMetatileAttributes_Floran,
+    .callback = NULL,
+};
+
+const struct Tileset gTileset_Mirevari =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_Mirevari,
+    .palettes = gTilesetPalettes_Mirevari,
+    .metatiles = gMetatiles_Mirevari,
+    .metatileAttributes = gMetatileAttributes_Mirevari,
+    .callback = InitTilesetAnim_Mirevari,
+};
+
+const struct Tileset gTileset_Kolchavi_Lab =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_Kolchavi_Lab,
+    .palettes = gTilesetPalettes_Kolchavi_Lab,
+    .metatiles = gMetatiles_Kolchavi_Lab,
+    .metatileAttributes = gMetatileAttributes_Kolchavi_Lab,
+    .callback = NULL,
+};
+
+const struct Tileset gTileset_Kolchavi_Maritime =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_Kolchavi_Maritime,
+    .palettes = gTilesetPalettes_Kolchavi_Maritime,
+    .metatiles = gMetatiles_Kolchavi_Maritime,
+    .metatileAttributes = gMetatileAttributes_Kolchavi_Maritime,
+    .callback = NULL,
+};

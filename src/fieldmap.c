@@ -19,6 +19,14 @@
 #include "constants/metatile_behaviors_frlg.h"
 #include "wild_encounter.h"
 
+// Map grid bitfield invariants. MAPGRID_UNDEFINED reserves the top metatile id, so usable IDs are 0..(MASK-1).
+STATIC_ASSERT((NUM_METATILES_TOTAL - 1) <= MAPGRID_METATILE_ID_MASK, MapGridMetatileTotalFitsMask);
+STATIC_ASSERT(NUM_METATILES_IN_PRIMARY <= NUM_METATILES_TOTAL / 2, MapGridPrimaryFitsHalfTotal);
+STATIC_ASSERT((MAPGRID_METATILE_ID_MASK | MAPGRID_COLLISION_MASK | MAPGRID_ELEVATION_MASK) == 0xFFFF, MapGridFieldsCoverAllBits);
+STATIC_ASSERT((MAPGRID_METATILE_ID_MASK & MAPGRID_COLLISION_MASK) == 0, MapGridMetatileCollisionDisjoint);
+STATIC_ASSERT((MAPGRID_METATILE_ID_MASK & MAPGRID_ELEVATION_MASK) == 0, MapGridMetatileElevationDisjoint);
+STATIC_ASSERT((MAPGRID_COLLISION_MASK & MAPGRID_ELEVATION_MASK) == 0, MapGridCollisionElevationDisjoint);
+
 struct ConnectionFlags
 {
     u8 south:1;

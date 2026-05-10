@@ -421,4 +421,7 @@
 #define B_POOL_RULE_MEGA_STONE_CLAUSE       FALSE    // Pick only 1 mon with mega stone
 #define B_POOL_RULE_Z_CRYSTAL_CLAUSE        FALSE    // Pick only 1 mon with Z-crystal
 
+// Battle Speed Configuration
+#define B_BATTLE_SPEED  VAR_BATTLE_SPEED // Usage with a variable (stores player's speed preference)
+
 #endif // GUARD_CONFIG_BATTLE_H

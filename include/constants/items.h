@@ -820,6 +820,7 @@ enum __attribute__((packed)) Item
     ITEM_HM06 = 687,
     ITEM_HM07 = 688,
     ITEM_HM08 = 689,
+    ITEM_HM09 = 690, // NOTE: this conflicts with oval charm and is not a long term solution - will re-evaluate TMs/HMs
 
 
     /* Expands to:
@@ -1050,6 +1051,16 @@ enum __attribute__((packed)) Item
     ITEM_BAXCALIBRITE = 871,
     ITEM_TATSUGIRINITE = 872,
     ITEM_GLIMMORANITE = 873,
+
+    // Field Move Tools
+    ITEM_CUT_TOOL,
+    ITEM_FLY_TOOL,
+    ITEM_SURF_TOOL,
+    ITEM_STRENGTH_TOOL,
+    ITEM_FLASH_TOOL,
+    ITEM_ROCK_SMASH_TOOL,
+    ITEM_WATERFALL_TOOL,
+    ITEM_DIVE_TOOL,
 
     ITEMS_COUNT,
     ITEM_FIELD_ARROW = ITEMS_COUNT,

@@ -86,6 +86,12 @@ enum FollowerTransformTypes
 #define GROUND_EFFECT_FLAG_SHORT_GRASS           (1 << 17)
 #define GROUND_EFFECT_FLAG_HOT_SPRINGS           (1 << 18)
 #define GROUND_EFFECT_FLAG_SEAWEED               (1 << 19)
+#define GROUND_EFFECT_FLAG_SWAMP_TALL_GRASS_ON_SPAWN (1 << 20)
+#define GROUND_EFFECT_FLAG_SWAMP_TALL_GRASS_ON_MOVE  (1 << 21)
+#define GROUND_EFFECT_FLAG_LAND_IN_SWAMP_TALL_GRASS  (1 << 22)
+#define GROUND_EFFECT_FLAG_SWAMP_PLANTS_ON_SPAWN     (1 << 23)
+#define GROUND_EFFECT_FLAG_SWAMP_PLANTS_ON_MOVE      (1 << 24)
+#define GROUND_EFFECT_FLAG_LAND_IN_SWAMP_PLANTS      (1 << 25)
 
 // Sprite data for the CameraObject functions
 #define sCamera_FollowSpriteId data[0]
@@ -187,8 +193,9 @@ u8 GetWalkInPlaceFasterMovementAction(u32);
 u8 GetWalkInPlaceFastMovementAction(u32);
 u8 GetWalkInPlaceNormalMovementAction(u32);
 u8 GetWalkInPlaceSlowMovementAction(u32);
+enum Collision GetCollisionWithBehaviorsAtCoords(struct ObjectEvent *objectEvent, s16 x, s16 y, u8 elevation, enum Direction dir, u8 currentBehavior, u8 nextBehavior);
 enum Collision GetCollisionAtCoords(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction dir);
-u32 GetObjectObjectCollidesWith(struct ObjectEvent *objectEvent, s16 x, s16 y, bool32 addCoords);
+u32 GetObjectObjectCollidesWith(struct ObjectEvent *objectEvent, s16 x, s16 y, u8 elevation, bool32 addCoords);
 void MoveCoords(enum Direction direction, s16 *x, s16 *y);
 bool8 ObjectEventIsHeldMovementActive(struct ObjectEvent *objectEvent);
 u8 ObjectEventClearHeldMovementIfFinished(struct ObjectEvent *objectEvent);
@@ -250,6 +257,7 @@ bool8 FreezeObjectEvent(struct ObjectEvent *objectEvent);
 u8 GetMoveDirectionFastAnimNum(enum Direction direction);
 u8 GetMoveDirectionFasterAnimNum(enum Direction direction);
 u8 GetMoveDirectionFastestAnimNum(enum Direction direction);
+enum Direction GetLedgeJumpDirectionWithBehavior(enum Direction direction, u8 nextBehavior);
 enum Direction GetLedgeJumpDirection(s16 x, s16 y, enum Direction direction);
 void CameraObjectSetFollowedSpriteId(u8 objectId);
 u16 GetObjectPaletteTag(u8 palSlot);

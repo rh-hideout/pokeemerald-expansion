@@ -33,6 +33,7 @@
 #include "constants/rgb.h"
 #include "constants/trainers.h"
 #include "constants/union_room.h"
+#include "constants/flags.h"
 
 enum {
     WIN_MSG,
@@ -1073,12 +1074,15 @@ static void PrintPokedexOnCard(void)
 {
     s32 xOffset;
     u8 top;
+    bool8 nuzlockeActive = FlagGet(FLAG_NUZLOCKE);
+    
     if (FlagGet(FLAG_SYS_POKEDEX_GET))
     {
+        const u8 *pokedexLabel = nuzlockeActive ? gText_TrainerCardNuzlockePokedex : gText_TrainerCardPokedex;
         if (!sData->isHoenn)
-            AddTextPrinterParameterized3(WIN_CARD_TEXT, FONT_NORMAL, 20, 72, sTrainerCardTextColors, TEXT_SKIP_DRAW, gText_TrainerCardPokedex);
+            AddTextPrinterParameterized3(WIN_CARD_TEXT, FONT_NORMAL, 20, 72, sTrainerCardTextColors, TEXT_SKIP_DRAW, pokedexLabel);
         else
-            AddTextPrinterParameterized3(WIN_CARD_TEXT, FONT_NORMAL, 16, 73, sTrainerCardTextColors, TEXT_SKIP_DRAW, gText_TrainerCardPokedex);
+            AddTextPrinterParameterized3(WIN_CARD_TEXT, FONT_NORMAL, 16, 73, sTrainerCardTextColors, TEXT_SKIP_DRAW, pokedexLabel);
         StringCopy(ConvertIntToDecimalStringN(gStringVar4, sData->trainerCard.caughtMonsCount, STR_CONV_MODE_LEFT_ALIGN, 4), gText_EmptyString6);
         if (!sData->isHoenn)
         {
@@ -1091,6 +1095,15 @@ static void PrintPokedexOnCard(void)
             top = 73;
         }
         AddTextPrinterParameterized3(WIN_CARD_TEXT, FONT_NORMAL, xOffset, top, sTrainerCardTextColors, TEXT_SKIP_DRAW, gStringVar4);
+    }
+    else if (nuzlockeActive)
+    {
+        // Show Nuzlocke indicator even without Pokédex
+        const u8 *nuzlockeLabel = gText_TrainerCardNuzlockePokedex;
+        if (!sData->isHoenn)
+            AddTextPrinterParameterized3(WIN_CARD_TEXT, FONT_NORMAL, 20, 72, sTrainerCardTextColors, TEXT_SKIP_DRAW, nuzlockeLabel);
+        else
+            AddTextPrinterParameterized3(WIN_CARD_TEXT, FONT_NORMAL, 16, 73, sTrainerCardTextColors, TEXT_SKIP_DRAW, nuzlockeLabel);
     }
 }
 

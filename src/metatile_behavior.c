@@ -21,6 +21,8 @@ static const u8 sTileBitAttributes[NUM_METATILE_BEHAVIORS] =
     [MB_MOUNTAIN_TOP]                       = TILE_FLAG_UNUSED,
     [MB_BATTLE_PYRAMID_WARP]                = TILE_FLAG_UNUSED,
     [MB_MOSSDEEP_GYM_WARP]                  = TILE_FLAG_UNUSED,
+    [MB_SWAMP_TALL_GRASS]                   = TILE_FLAG_UNUSED | TILE_FLAG_HAS_ENCOUNTERS,
+    [MB_SWAMP_PLANTS]                       = TILE_FLAG_UNUSED | TILE_FLAG_HAS_ENCOUNTERS,
     [MB_MT_PYRE_HOLE]                       = TILE_FLAG_UNUSED,
     [MB_POND_WATER]                         = TILE_FLAG_UNUSED | TILE_FLAG_SURFABLE | TILE_FLAG_HAS_ENCOUNTERS,
     [MB_INTERIOR_DEEP_WATER]                = TILE_FLAG_UNUSED | TILE_FLAG_SURFABLE | TILE_FLAG_HAS_ENCOUNTERS,
@@ -186,7 +188,7 @@ bool8 MetatileBehavior_IsJumpSouth(u8 metatileBehavior)
 
 bool8 MetatileBehavior_IsPokeGrass(u8 metatileBehavior)
 {
-    if (metatileBehavior == MB_TALL_GRASS || metatileBehavior == MB_LONG_GRASS || metatileBehavior == MB_CYCLING_ROAD_PULL_DOWN_GRASS)
+    if (metatileBehavior == MB_TALL_GRASS || metatileBehavior == MB_LONG_GRASS || metatileBehavior == MB_CYCLING_ROAD_PULL_DOWN_GRASS || metatileBehavior == MB_SWAMP_TALL_GRASS || metatileBehavior == MB_SWAMP_PLANTS)
         return TRUE;
     else
         return FALSE;
@@ -751,6 +753,22 @@ bool8 MetatileBehavior_IsTallGrass(u8 metatileBehavior)
         return FALSE;
 }
 
+bool8 MetatileBehavior_IsSwampTallGrass(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_SWAMP_TALL_GRASS)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsSwampPlants(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_SWAMP_PLANTS)
+        return TRUE;
+    else
+        return FALSE;
+}
+
 bool8 MetatileBehavior_IsLongGrass(u8 metatileBehavior)
 {
     if (metatileBehavior == MB_LONG_GRASS)
@@ -1310,7 +1328,9 @@ bool8 MetatileBehavior_IsCuttableGrass(u8 metatileBehavior)
     if (metatileBehavior == MB_TALL_GRASS
      || metatileBehavior == MB_LONG_GRASS
      || metatileBehavior == MB_ASHGRASS
-     || metatileBehavior == MB_LONG_GRASS_SOUTH_EDGE)
+     || metatileBehavior == MB_LONG_GRASS_SOUTH_EDGE
+     || metatileBehavior == MB_SWAMP_TALL_GRASS
+     || metatileBehavior == MB_SWAMP_PLANTS)
         return TRUE;
     else
         return FALSE;

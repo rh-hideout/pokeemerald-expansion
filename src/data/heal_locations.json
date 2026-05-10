@@ -193,10 +193,10 @@
       "map": "MAP_PALLET_TOWN",
       "x": 6,
       "y": 8,
-      "respawn_x": 8,
-      "respawn_y": 5,
       "respawn_map": "MAP_PALLET_TOWN_PLAYERS_HOUSE_1F",
-      "respawn_npc": "LOCALID_PLAYERS_HOUSE_1F_MOM"
+      "respawn_npc": "LOCALID_PLAYERS_HOUSE_1F_MOM",
+      "respawn_x": 8,
+      "respawn_y": 5
     },
     {
       "id": "HEAL_LOCATION_VIRIDIAN_CITY",
@@ -349,6 +349,18 @@
       "y": 12,
       "respawn_map": "MAP_SIX_ISLAND_POKEMON_CENTER_1F",
       "respawn_npc": "LOCALID_SIX_ISLAND_NURSE"
+    },
+    {
+      "id": "HEAL_LOCATION_POC_FLORAN",
+      "map": "MAP_POC_FLORAN",
+      "x": 14,
+      "y": 19
+    },
+    {
+      "id": "HEAL_LOCATION_POC_KOLCHAVI",
+      "map": "MAP_POC_KOLCHAVI",
+      "x": 40,
+      "y": 14
     }
   ]
 }

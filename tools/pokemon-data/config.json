@@ -1,0 +1,6 @@
+{
+  "repo_root": "../..",
+  "twop_data": "/home/jd/decomps/tools/twop-extract/twop_pokemon_data.json",
+  "output": "pokemon_data.js",
+  "filter_enabled": false
+}

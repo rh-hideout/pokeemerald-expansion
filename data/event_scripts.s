@@ -72,6 +72,7 @@
 #include "constants/vars.h"
 #include "constants/weather.h"
 #include "constants/speaker_names.h"
+#include "constants/quests.h"
 	.include "asm/macros.inc"
 	.include "asm/macros/event.inc"
 	.include "constants/constants.inc"
@@ -1060,6 +1061,50 @@ EventScript_WhiteOut::
 
 EventScript_AfterWhiteOutHeal::
 	lockall
+	@ Check if Nuzlocke is enabled and player has Pokédex
+	goto_if_unset FLAG_NUZLOCKE, EventScript_AfterWhiteOutHeal_Normal
+	goto_if_unset FLAG_SYS_POKEDEX_GET, EventScript_AfterWhiteOutHeal_Normal
+	@ Nuzlocke whiteout - show special message and ask if they want to disable
+	msgbox gText_NuzlockeWhiteOut, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, YES, EventScript_AfterWhiteOutHeal_AskDisableConfirm
+	goto_if_eq VAR_RESULT, NO, EventScript_AfterWhiteOutHeal_AskContinueConfirm
+	end
+
+EventScript_AfterWhiteOutHeal_AskDisableConfirm::
+	@ Player wants to disable - ask for confirmation
+	msgbox gText_ConfirmDisableNuzlocke, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, YES, EventScript_AfterWhiteOutHeal_DisableNuzlocke
+	@ Player changed their mind - ask if they want to continue instead
+	goto EventScript_AfterWhiteOutHeal_AskContinueConfirm
+
+EventScript_AfterWhiteOutHeal_AskContinueConfirm::
+	@ Player wants to continue - ask for confirmation
+	msgbox gText_ConfirmContinueNuzlocke, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, YES, EventScript_AfterWhiteOutHeal_ContinueNuzlocke
+	@ Player changed their mind - ask if they want to disable instead
+	goto EventScript_AfterWhiteOutHeal_AskDisableConfirm
+
+EventScript_AfterWhiteOutHeal_DisableNuzlocke::
+	@ Disable Nuzlocke flag
+	clearflag FLAG_NUZLOCKE
+	msgbox gText_NuzlockeDisabled, MSGBOX_DEFAULT
+	@ Auto-save the game (silent, no prompt)
+	special NuzlockeSilentSave
+	msgbox gText_NuzlockeDisabledSave, MSGBOX_DEFAULT
+	@ Now proceed with normal healing since Pokémon can be healed again
+	goto EventScript_AfterWhiteOutHeal_Normal
+
+EventScript_AfterWhiteOutHeal_ContinueNuzlocke::
+	@ Player continues with Nuzlocke - Pokémon stay dead, no healing
+	msgbox gText_ContinueNuzlockeMode, MSGBOX_DEFAULT
+	applymovement VAR_LAST_TALKED, Movement_PkmnCenterNurse_Bow
+	waitmovement 0
+	fadedefaultbgm
+	releaseall
+	end
+
+EventScript_AfterWhiteOutHeal_Normal::
+	@ Normal whiteout flow (non-Nuzlocke or Nuzlocke disabled)
 	msgbox gText_FirstShouldRestoreMonsHealth
 	call EventScript_PkmnCenterNurse_TakeAndHealPkmn
 	call_if_unset FLAG_DEFEATED_RUSTBORO_GYM, EventScript_AfterWhiteOutHealMsgPreFirstBoss
@@ -1083,7 +1128,57 @@ EventScript_AfterWhiteOutMomHeal::
 	textcolor NPC_TEXT_COLOR_FEMALE
 	applymovement LOCALID_PLAYERS_HOUSE_1F_MOM, Common_Movement_WalkInPlaceFasterDown
 	waitmovement 0
+	@ Check if Nuzlocke is enabled and player has Pokédex
+	goto_if_unset FLAG_NUZLOCKE, EventScript_AfterWhiteOutMomHeal_Normal
+	goto_if_unset FLAG_SYS_POKEDEX_GET, EventScript_AfterWhiteOutMomHeal_Normal
+	@ Nuzlocke whiteout - show special message and ask if they want to disable
+	msgbox gText_NuzlockeWhiteOut, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, YES, EventScript_AfterWhiteOutMomHeal_AskDisableConfirm
+	goto_if_eq VAR_RESULT, NO, EventScript_AfterWhiteOutMomHeal_AskContinueConfirm
+	end
+
+EventScript_AfterWhiteOutMomHeal_AskDisableConfirm::
+	@ Player wants to disable - ask for confirmation
+	msgbox gText_ConfirmDisableNuzlocke, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, YES, EventScript_AfterWhiteOutMomHeal_DisableNuzlocke
+	@ Player changed their mind - ask if they want to continue instead
+	goto EventScript_AfterWhiteOutMomHeal_AskContinueConfirm
+
+EventScript_AfterWhiteOutMomHeal_AskContinueConfirm::
+	@ Player wants to continue - ask for confirmation
+	msgbox gText_ConfirmContinueNuzlocke, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, YES, EventScript_AfterWhiteOutMomHeal_ContinueNuzlocke
+	@ Player changed their mind - ask if they want to disable instead
+	goto EventScript_AfterWhiteOutMomHeal_AskDisableConfirm
+
+EventScript_AfterWhiteOutMomHeal_DisableNuzlocke::
+	@ Disable Nuzlocke flag
+	clearflag FLAG_NUZLOCKE
+	msgbox gText_NuzlockeDisabled, MSGBOX_DEFAULT
+	@ Auto-save the game (silent, no prompt)
+	special NuzlockeSilentSave
+	msgbox gText_NuzlockeDisabledSave, MSGBOX_DEFAULT
+	@ Now proceed with after Nuzlocke disabled mom healing
+	goto EventScript_AfterWhiteOutNuzlockeDisabled
+
+EventScript_AfterWhiteOutMomHeal_ContinueNuzlocke::
+	@ Player continues with Nuzlocke - Pokémon stay dead, no healing
+	msgbox gText_ContinueNuzlockeMode, MSGBOX_DEFAULT
+	fadedefaultbgm
+	releaseall
+	end
+
+EventScript_AfterWhiteOutMomHeal_Normal::
+	@ Normal whiteout flow from mom
 	msgbox gText_HadQuiteAnExperienceTakeRest
+	call Common_EventScript_OutOfCenterPartyHeal
+	msgbox gText_MomExplainHPGetPotions
+	fadedefaultbgm
+	releaseall
+	end
+
+EventScript_AfterWhiteOutNuzlockeDisabled::
+	msgbox gText_NuzlockeDisabledRest, MSGBOX_DEFAULT
 	call Common_EventScript_OutOfCenterPartyHeal
 	msgbox gText_MomExplainHPGetPotions
 	fadedefaultbgm
@@ -1422,6 +1517,43 @@ gText_MonsHealed::
 	.string "to perfect health.\p"
 	.string "We hope you excel!$"
 
+gText_NuzlockeWhiteOut::
+	.string "Oh dear! I’m so sorry.\p"
+	.string "Your whole team fainted during\n"
+	.string "Nuzlocke Mode.\p"
+	.string "If you have any healthy Pokémon in PC\n"
+	.string "storage, you can swap them into your\l"
+	.string "party and try again.\p"
+	.string "If you’d like, I can also disable\n"
+	.string "Nuzlocke Mode so you can continue\l"
+	.string "adventuring with the Pokémon you have.\p"
+	.string "Would you like me to disable\n"
+	.string "Nuzlocke Mode for this save?$"
+
+gText_ContinueNuzlockeMode::
+	.string "That’s the spirit! Take care out there.\p"
+	.string "Remember to stock up on potions and\n"
+	.string "status-healing items.\p"
+	.string "Come back when you’re ready and\n"
+	.string "I’ll heal your team.$"
+
+gText_NuzlockeDisabled::
+	.string "You have Failed the Nuzlocke Challenge.\p"
+	.string "This decision cannot be undone.$"
+
+gText_ConfirmDisableNuzlocke::
+	.string "Are you sure you want to disable\n"
+	.string "Nuzlocke Mode?\p"
+	.string "This action is non-reversible.$"
+
+gText_ConfirmContinueNuzlocke::
+	.string "Are you sure you'd like to continue\n"
+	.string "in Nuzlocke Mode?$"
+
+gText_NuzlockeDisabledSave::
+	.string "{PLAYER} saved the game.\p"
+	.string "Nuzlocke Disabled$"
+
 gText_HadQuiteAnExperienceTakeRest::
 	.string "MOM: {PLAYER}!\n"
 	.string "Welcome home.\p"
@@ -1429,6 +1561,12 @@ gText_HadQuiteAnExperienceTakeRest::
 	.string "an experience.\p"
 	.string "Maybe you should take a quick\n"
 	.string "rest.$"
+
+gText_NuzlockeDisabledRest::
+	.string "It's ok honey. I know it gets rough\n"
+	.string "out there.\p"
+	.string "Let's heal those POKéMON so you\n"
+	.string "can get back to your adventure!$"
 
 gText_MomExplainHPGetPotions::
 	.string "MOM: Oh, good! You and your\n"
@@ -1620,6 +1758,18 @@ Common_EventScript_LegendaryFlewAway::
 	release
 	end
 
+
+Text_PlayerUsedFieldTool:
+	.string "{PLAYER} used {STR_VAR_2}!$"
+
+FieldMove_EventScript_Cut::
+	lockall
+	bufferitemname STR_VAR_2, ITEM_CUT_TOOL
+	msgbox Text_PlayerUsedFieldTool, MSGBOX_DEFAULT
+	closemessage
+	goto EventScript_CutTree
+
+
 EventScript_VsSeekerChargingDone::
 	special VsSeekerFreezeObjectsAfterChargeComplete
 	waitstate
@@ -1737,3 +1887,61 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/scripts/dexnav.inc"
 	.include "data/scripts/battle_frontier.inc"
 	.include "data/scripts/apricorn_tree.inc"
+
+	.include "data/maps/poc_Kolchavi/scripts.inc"
+
+	.include "data/maps/poc_r10/scripts.inc"
+
+	.include "data/maps/poc_r6/scripts.inc"
+
+	.include "data/maps/poc_r3/scripts.inc"
+
+	.include "data/maps/poc_Floran/scripts.inc"
+
+	.include "data/maps/poc_r8/scripts.inc"
+
+	.include "data/maps/poc_r2/scripts.inc"
+
+	.include "data/maps/poc_r9/scripts.inc"
+
+	.include "data/maps/poc_r16/scripts.inc"
+
+	.include "data/maps/poc_r12/scripts.inc"
+
+	.include "data/maps/poc_Kolchavi_PokemonCenter/scripts.inc"
+
+	.include "data/maps/poc_Kolchavi_Lab_1F/scripts.inc"
+
+	.include "data/maps/poc_Kolchavi_Lab_2F/scripts.inc"
+
+	.include "data/maps/poc_Kolchavi_House1/scripts.inc"
+
+	.include "data/maps/poc_Kolchavi_House2/scripts.inc"
+
+	.include "data/maps/poc_Kolchavi_House3/scripts.inc"
+
+	.include "data/maps/poc_Kolchavi_House4/scripts.inc"
+
+	.include "data/maps/poc_Kolchavi_MaritimeGuildhall/scripts.inc"
+
+	.include "data/maps/poc_Floran_PokemonCenter/scripts.inc"
+
+	.include "data/maps/poc_Floran_House1/scripts.inc"
+
+	.include "data/maps/poc_Floran_House2/scripts.inc"
+
+	.include "data/maps/poc_Floran_House3/scripts.inc"
+
+	.include "data/maps/poc_Floran_House4/scripts.inc"
+
+	.include "data/maps/poc_Floran_House5/scripts.inc"
+
+	.include "data/maps/poc_Floran_WardenGuild/scripts.inc"
+
+	.include "data/maps/poc_Floran_Warehouse/scripts.inc"
+
+	.include "data/maps/poc_r8_House1/scripts.inc"
+
+	.include "data/maps/poc_r10_House1/scripts.inc"
+
+	.include "data/maps/poc_r12_House1/scripts.inc"

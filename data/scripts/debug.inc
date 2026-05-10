@@ -202,33 +202,184 @@ Debug_EventScript_Text_OffensiveIVs:
 Debug_EventScript_Text_DefensiveIVs:
 	.string "HP IVs: {STR_VAR_1}, DEF IVs: {STR_VAR_2}, SPDEF IVs: {STR_VAR_3}$"
 
+@ ============================================================================
+@ NUZLOCKE NURSE JOY PC TRANSFER TEST SCRIPTS
+@ ============================================================================
+
 Debug_EventScript_Script_1::
+	msgbox Debug_Nuzlocke_Test_Setup_Intro, MSGBOX_DEFAULT
+	@ Enable Nuzlocke mode
+	setflag FLAG_NUZLOCKE
+	@ Clear existing party
+	special HealPlayerParty
+	@ Give test party with strong Pokemon at varied levels
+	givemon SPECIES_LUCARIO, 60, item=ITEM_NONE, ball=BALL_POKE, nature=NATURE_JOLLY, hpEv=0, atkEv=252, defEv=0, speedEv=0, spAtkEv=0, spDefEv=252, hpIv=31, atkIv=31, defIv=31, speedIv=31, spAtkIv=31, spDefIv=31, move1=MOVE_CLOSE_COMBAT, move2=MOVE_EXTREME_SPEED, move3=MOVE_ICE_PUNCH, move4=MOVE_SWORDS_DANCE
+	givemon SPECIES_DRAGONITE, 10, item=ITEM_NONE, ball=BALL_POKE, nature=NATURE_ADAMANT, hpEv=252, atkEv=0, defEv=252, speedEv=0, spAtkEv=0, spDefEv=0, hpIv=31, atkIv=31, defIv=31, speedIv=31, spAtkIv=31, spDefIv=31, move1=MOVE_DRAGON_CLAW, move2=MOVE_EARTHQUAKE, move3=MOVE_FIRE_PUNCH, move4=MOVE_DRAGON_DANCE
+	givemon SPECIES_METAGROSS, 20, item=ITEM_NONE, ball=BALL_POKE, nature=NATURE_ADAMANT, hpEv=252, atkEv=0, defEv=252, speedEv=0, spAtkEv=0, spDefEv=0, hpIv=31, atkIv=31, defIv=31, speedIv=31, spAtkIv=31, spDefIv=31, move1=MOVE_METEOR_MASH, move2=MOVE_EARTHQUAKE, move3=MOVE_ZEN_HEADBUTT, move4=MOVE_BULLET_PUNCH
+	givemon SPECIES_GARCHOMP, 30, item=ITEM_NONE, ball=BALL_POKE, nature=NATURE_JOLLY, hpEv=0, atkEv=252, defEv=0, speedEv=0, spAtkEv=0, spDefEv=252, hpIv=31, atkIv=31, defIv=31, speedIv=31, spAtkIv=31, spDefIv=31, move1=MOVE_EARTHQUAKE, move2=MOVE_DRAGON_CLAW, move3=MOVE_STONE_EDGE, move4=MOVE_SWORDS_DANCE
+	givemon SPECIES_SALAMENCE, 40, item=ITEM_NONE, ball=BALL_POKE, nature=NATURE_JOLLY, hpEv=0, atkEv=252, defEv=0, speedEv=0, spAtkEv=0, spDefEv=252, hpIv=31, atkIv=31, defIv=31, speedIv=31, spAtkIv=31, spDefIv=31, move1=MOVE_DRAGON_CLAW, move2=MOVE_EARTHQUAKE, move3=MOVE_FLAMETHROWER, move4=MOVE_DRAGON_DANCE
+	givemon SPECIES_TYRANITAR, 50, item=ITEM_NONE, ball=BALL_POKE, nature=NATURE_ADAMANT, hpEv=252, atkEv=252, defEv=0, speedEv=0, spAtkEv=0, spDefEv=0, hpIv=31, atkIv=31, defIv=31, speedIv=31, spAtkIv=31, spDefIv=31, move1=MOVE_STONE_EDGE, move2=MOVE_CRUNCH, move3=MOVE_EARTHQUAKE, move4=MOVE_DRAGON_DANCE
+	@ Set all badges for level cap testing
+	setflag FLAG_BADGE01_GET
+	setflag FLAG_BADGE02_GET
+	setflag FLAG_BADGE03_GET
+	setflag FLAG_BADGE04_GET
+	setflag FLAG_BADGE05_GET
+	setflag FLAG_BADGE06_GET
+	setflag FLAG_BADGE07_GET
+	setflag FLAG_BADGE08_GET
+	msgbox Debug_LevelScaling_PartySetup_Complete, MSGBOX_DEFAULT
 	release
+
+@ ============================================================================
+@ EXAMPLE: SELECT MONS GYM BATTLE
+@ ============================================================================
+
+Debug_EventScript_Script_9::
+	lock
+	faceplayer
+	trainerbattle_selectmons TRAINER_ROXANNE_1, RustboroCity_Gym_Text_RoxanneIntro, RustboroCity_Gym_Text_RoxanneDefeat, RustboroCity_Gym_EventScript_PostBattleHandler, 3
 	end
 
+Debug_Nuzlocke_Test_Setup_Intro:
+	.string "NUZLOCKE PC TRANSFER TEST\p"
+	.string "Setting up:\n"
+	.string "- Nuzlocke mode ON\l"
+	.string "- 5 Pokémon party\l"
+	.string "- 2 marked as DEAD\l"
+	.string "- 3 alive\p"
+	.string "Visit Pokémon Center to test!$"
+
+Debug_LevelScaling_PartySetup_Complete:
+	.string "Party created!\p"
+	.string "Party Average: 35\n"
+	.string "Lowest: 10, Highest: 60\n"
+	.string "Level Cap: 70 (8 badges)\p"
+	.string "Now run Scripts 2-7 to test scaling!$"
+
 Debug_EventScript_Script_2::
+	msgbox Debug_LevelScaling_Test1_Intro, MSGBOX_DEFAULT
+	trainerbattle_no_intro TRAINER_ROXANNE_1, Debug_LevelScaling_Defeated
+	msgbox Debug_LevelScaling_Test1_Result, MSGBOX_DEFAULT
 	release
 	end
 
 Debug_EventScript_Script_3::
+	msgbox Debug_LevelScaling_Test2_Intro, MSGBOX_DEFAULT
+	trainerbattle_no_intro TRAINER_BRAWLY_1, Debug_LevelScaling_Defeated
+	msgbox Debug_LevelScaling_Test2_Result, MSGBOX_DEFAULT
 	release
 	end
 
 Debug_EventScript_Script_4::
+	msgbox Debug_LevelScaling_Test3_Intro, MSGBOX_DEFAULT
+	trainerbattle_no_intro TRAINER_WATTSON_1, Debug_LevelScaling_Defeated
+	msgbox Debug_LevelScaling_Test3_Result, MSGBOX_DEFAULT
 	release
 	end
 
 Debug_EventScript_Script_5::
+	msgbox Debug_LevelScaling_Test4_Intro, MSGBOX_DEFAULT
+	trainerbattle_no_intro TRAINER_FLANNERY_1, Debug_LevelScaling_Defeated
+	msgbox Debug_LevelScaling_Test4_Result, MSGBOX_DEFAULT
 	release
 	end
 
 Debug_EventScript_Script_6::
+	msgbox Debug_LevelScaling_Test5_Intro, MSGBOX_DEFAULT
+	trainerbattle_no_intro TRAINER_NORMAN_1, Debug_LevelScaling_Defeated
+	msgbox Debug_LevelScaling_Test5_Result, MSGBOX_DEFAULT
 	release
 	end
 
 Debug_EventScript_Script_7::
-	release
+	setmonmove 0, 0, MOVE_ROCK_CLIMB
+	releaseall
 	end
+
+Debug_LevelScaling_Defeated:
+	.string "Defeated!$"
+
+@ Test 1: Scale to Level Cap
+Debug_LevelScaling_Test1_Intro:
+	.string "LEVEL SCALING TEST 1\n"
+	.string "Mode: SCALE TO LEVEL CAP\p"
+	.string "Expected: All Pokémon should be\n"
+	.string "at the current level cap.\p"
+	.string "Check your current cap with badges.$"
+
+Debug_LevelScaling_Test1_Result:
+	.string "Did all enemy Pokémon match the\n"
+	.string "level cap? Check their levels!$"
+
+@ Test 2: Scale to Party Average + 3
+Debug_LevelScaling_Test2_Intro:
+	.string "LEVEL SCALING TEST 2\n"
+	.string "Mode: PARTY AVERAGE + 3\p"
+	.string "Expected: Enemy Pokémon should be\n"
+	.string "3 levels above your party average.\p"
+	.string "Excludes fainted Pokémon.$"
+
+Debug_LevelScaling_Test2_Result:
+	.string "Calculate your party average.\n"
+	.string "Were enemies that +3?$"
+
+@ Test 3: Scale to Party Highest (with variation)
+Debug_LevelScaling_Test3_Intro:
+	.string "LEVEL SCALING TEST 3\n"
+	.string "Mode: PARTY HIGHEST +/- 2\p"
+	.string "Expected: Enemy Pokémon at your\n"
+	.string "highest level, +/- 2 random variation.\p"
+	.string "Levels will vary between enemies.$"
+
+Debug_LevelScaling_Test3_Result:
+	.string "Were enemies within 2 levels of\n"
+	.string "your highest Pokémon?$"
+
+@ Test 4: Scale to Party Lowest + 5 (+ EV/moveset scaling)
+Debug_LevelScaling_Test4_Intro:
+	.string "LEVEL SCALING TEST 4\n"
+	.string "Mode: PARTY LOWEST + 5\p"
+	.string "Also tests:\n"
+	.string "- EV scaling (scaleEVs)\l"
+	.string "- Moveset filter (scaleMoves)\p"
+	.string "Expected at scaled lvl 15:\n"
+	.string "- Mons devolved\l"
+	.string "- TM/late moves dropped\l"
+	.string "- EVs capped at ~150 total$"
+
+Debug_LevelScaling_Test4_Result:
+	.string "Checks (use party screen / summary):\p"
+	.string "- Devolved species?\n"
+	.string "- Any Earthquake/Stone Edge/etc.\l"
+	.string "  replaced by learnset moves?\p"
+	.string "- Total EVs <= 150 per mon?\n"
+	.string "  (offset by base EV definitions)$"
+
+@ Test 5: Scale to Party/PC Highest + 2 (variation 3, min 25, max 50)
+Debug_LevelScaling_Test5_Intro:
+	.string "LEVEL SCALING TEST 5\n"
+	.string "Mode: PARTY/PC HIGHEST + 2\p"
+	.string "Expected: Checks party AND PC.\n"
+	.string "Adds 2, varies by 3, min 25, max 50.\p"
+	.string "Try with high-level Pokémon in PC!$"
+
+Debug_LevelScaling_Test5_Result:
+	.string "Were levels clamped to 25-50 range?\n"
+	.string "Did it check your PC box Pokémon?$"
+
+@ Test 6: Evolution Management Test
+Debug_LevelScaling_Test6_Intro:
+	.string "LEVEL SCALING TEST 6\n"
+	.string "Mode: EVOLUTION MANAGEMENT\p"
+	.string "Expected: Scales to level cap - 20.\n"
+	.string "Evolved Pokémon should devolve if\n"
+	.string "they can't legally be at that level.\p"
+	.string "Example: Dragonite at 30 = Dratini.$"
+
+Debug_LevelScaling_Test6_Result:
+	.string "Did you see any pre-evolutions?\n"
+	.string "That means it worked correctly!$"
 
 Debug_EventScript_Script_8::
 	release

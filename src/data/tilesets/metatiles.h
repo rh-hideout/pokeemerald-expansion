@@ -408,3 +408,21 @@ const u16 gMetatiles_HallOfFame[] = INCBIN_U16("data/tilesets/secondary/hall_of_
 const u16 gMetatileAttributes_HallOfFame[] = INCBIN_U16("data/tilesets/secondary/hall_of_fame_frlg/metatile_attributes.bin");
 
 #endif // IS_FRLG
+
+const u16 gMetatiles_ShipCity[] = INCBIN_U16("data/tilesets/secondary/shipcity/metatiles.bin");
+const u16 gMetatileAttributes_ShipCity[] = INCBIN_U16("data/tilesets/secondary/shipcity/metatile_attributes.bin");
+
+const u16 gMetatiles_Kolchavi[] = INCBIN_U16("data/tilesets/secondary/kolchavi/metatiles.bin");
+const u16 gMetatileAttributes_Kolchavi[] = INCBIN_U16("data/tilesets/secondary/kolchavi/metatile_attributes.bin");
+
+const u16 gMetatiles_Floran[] = INCBIN_U16("data/tilesets/secondary/floran/metatiles.bin");
+const u16 gMetatileAttributes_Floran[] = INCBIN_U16("data/tilesets/secondary/floran/metatile_attributes.bin");
+
+const u16 gMetatiles_Mirevari[] = INCBIN_U16("data/tilesets/secondary/mirevari/metatiles.bin");
+const u16 gMetatileAttributes_Mirevari[] = INCBIN_U16("data/tilesets/secondary/mirevari/metatile_attributes.bin");
+
+const u16 gMetatiles_Kolchavi_Lab[] = INCBIN_U16("data/tilesets/secondary/kolchavi_lab/metatiles.bin");
+const u16 gMetatileAttributes_Kolchavi_Lab[] = INCBIN_U16("data/tilesets/secondary/kolchavi_lab/metatile_attributes.bin");
+
+const u16 gMetatiles_Kolchavi_Maritime[] = INCBIN_U16("data/tilesets/secondary/kolchavi_maritime/metatiles.bin");
+const u16 gMetatileAttributes_Kolchavi_Maritime[] = INCBIN_U16("data/tilesets/secondary/kolchavi_maritime/metatile_attributes.bin");

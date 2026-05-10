@@ -1,0 +1,60 @@
+mapscripts poc_Kolchavi_House1_MapScripts {}
+
+script poc_Kolchavi_House1_EventScript_Father {
+    lock
+    faceplayer
+    setspeaker("Erwan")
+    msgbox(format("My wife has the whole harbour schedule in her head. I've given up asking when the next ship is. She just recites it."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+script poc_Kolchavi_House1_EventScript_Mother {
+    lock
+    faceplayer
+    setspeaker("Calloway")
+    msgbox(format("Every captain thinks their cargo is the exception. It isn't. The tide doesn't negotiate."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+script poc_Kolchavi_House1_EventScript_Boy {
+    lock
+    faceplayer
+    setspeaker("Fen")
+    # goto_if_set(FLAG_RECEIVED_DIVE_BALL_FROM_FEN, poc_Kolchavi_House1_EventScript_Boy_AlreadyGave)
+    msgbox(format("I found this by the dock. One of the sailors dropped it, I think. I don't have any Pokemon yet so you can have it."))
+    giveitem(ITEM_DIVE_BALL, 1)
+    goto_if_eq(VAR_RESULT, 0, poc_Kolchavi_House1_EventScript_Boy_BagFull)
+    # setflag(FLAG_RECEIVED_DIVE_BALL_FROM_FEN)
+    msgbox(format("The guild boss is also the gym leader, by the way. Dad says that's how they keep everyone in line."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+script poc_Kolchavi_House1_EventScript_Boy_BagFull {
+    msgbox(format("Your bag looks full. Come back when you've got room."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+script poc_Kolchavi_House1_EventScript_Boy_AlreadyGave {
+    msgbox(format("The guild boss is also the gym leader. Dad says that's how they keep everyone in line."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+script poc_Kolchavi_House1_EventScript_Girl {
+    lock
+    faceplayer
+    setspeaker("Liss")
+    msgbox(format("I want to work for the guild when I'm old enough. Not the tide schedules, though. I want to do the ship inspections."))
+    setspeaker(NULL)
+    release
+    end
+}

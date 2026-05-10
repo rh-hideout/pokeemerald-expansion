@@ -39,6 +39,8 @@
 #include "title_screen.h"
 #include "window.h"
 #include "mystery_gift_menu.h"
+#include "nuzlocke.h"
+#include "constants/flags.h"
 
 /*
  * Main menu state machine
@@ -174,6 +176,7 @@ static EWRAM_DATA bool8 sStartedPokeBallTask = 0;
 static EWRAM_DATA u16 sCurrItemAndOptionMenuCheck = 0;
 
 static u8 sBirchSpeechMainTaskId;
+static bool8 sNuzlockeModeSelected = FALSE;
 
 // Static ROM declarations
 
@@ -232,6 +235,12 @@ static void Task_NewGameBirchSpeech_SlidePlatformAway2(u8);
 static void Task_NewGameBirchSpeech_ReshowBirchLotad(u8);
 static void Task_NewGameBirchSpeech_WaitForSpriteFadeInAndTextPrinter(u8);
 static void Task_NewGameBirchSpeech_AreYouReady(u8);
+static void Task_NewGameBirchSpeech_NuzlockeChallenge(u8);
+static void Task_NewGameBirchSpeech_CreateNuzlockeYesNo(u8);
+static void Task_NewGameBirchSpeech_ProcessNuzlockeYesNoMenu(u8);
+static void Task_NewGameBirchSpeech_YesNuzlocke(u8);
+static void Task_NewGameBirchSpeech_NoNuzlocke(u8);
+static void Task_NewGameBirchSpeech_Farewell(u8);
 static void Task_NewGameBirchSpeech_ShrinkPlayer(u8);
 static void SpriteCB_MovePlayerDownWhileShrinking(struct Sprite *);
 static void Task_NewGameBirchSpeech_WaitForPlayerShrink(u8);
@@ -1758,6 +1767,74 @@ static void Task_NewGameBirchSpeech_AreYouReady(u8 taskId)
         NewGameBirchSpeech_StartFadePlatformOut(taskId, 1);
         StringExpandPlaceholders(gStringVar4, gText_Birch_AreYouReady);
         AddTextPrinterForMessage(TRUE);
+        gTasks[taskId].func = Task_NewGameBirchSpeech_NuzlockeChallenge;
+    }
+}
+
+static void Task_NewGameBirchSpeech_NuzlockeChallenge(u8 taskId)
+{
+    if (gTasks[taskId].tIsDoneFadingSprites)
+    {
+        if (!RunTextPrintersAndIsPrinter0Active())
+        {
+            NewGameBirchSpeech_ClearWindow(0);
+            StringExpandPlaceholders(gStringVar4, gText_Birch_NuzlockeChallenge);
+            AddTextPrinterForMessage(TRUE);
+            gTasks[taskId].func = Task_NewGameBirchSpeech_CreateNuzlockeYesNo;
+        }
+    }
+}
+
+static void Task_NewGameBirchSpeech_CreateNuzlockeYesNo(u8 taskId)
+{
+    if (!RunTextPrintersAndIsPrinter0Active())
+    {
+        CreateYesNoMenuParameterized(2, 1, 0xF3, 0xDF, 2, 15);
+        gTasks[taskId].func = Task_NewGameBirchSpeech_ProcessNuzlockeYesNoMenu;
+    }
+}
+
+static void Task_NewGameBirchSpeech_ProcessNuzlockeYesNoMenu(u8 taskId)
+{
+    switch (Menu_ProcessInputNoWrapClearOnChoose())
+    {
+    case 0: // YES
+        PlaySE(SE_SELECT);
+        gTasks[taskId].func = Task_NewGameBirchSpeech_YesNuzlocke;
+        break;
+    case 1: // NO
+    case MENU_B_PRESSED:
+        PlaySE(SE_SELECT);
+        gTasks[taskId].func = Task_NewGameBirchSpeech_NoNuzlocke;
+        break;
+    }
+}
+
+static void Task_NewGameBirchSpeech_YesNuzlocke(u8 taskId)
+{
+    FlagSet(FLAG_NUZLOCKE);
+    sNuzlockeModeSelected = TRUE;
+    NewGameBirchSpeech_ClearWindow(0);
+    StringExpandPlaceholders(gStringVar4, gText_Birch_YesNuzlocke);
+    AddTextPrinterForMessage(TRUE);
+    gTasks[taskId].func = Task_NewGameBirchSpeech_Farewell;
+}
+
+static void Task_NewGameBirchSpeech_NoNuzlocke(u8 taskId)
+{
+    FlagClear(FLAG_NUZLOCKE);
+    NewGameBirchSpeech_ClearWindow(0);
+    StringExpandPlaceholders(gStringVar4, gText_Birch_NoNuzlocke);
+    AddTextPrinterForMessage(TRUE);
+    gTasks[taskId].func = Task_NewGameBirchSpeech_Farewell;
+}
+
+static void Task_NewGameBirchSpeech_Farewell(u8 taskId)
+{
+    if (!RunTextPrintersAndIsPrinter0Active())
+    {
+        StringExpandPlaceholders(gStringVar4, gText_Birch_Farewell);
+        AddTextPrinterForMessage(TRUE);
         gTasks[taskId].func = Task_NewGameBirchSpeech_ShrinkPlayer;
     }
 }
@@ -2310,3 +2387,13 @@ static void Task_NewGameBirchSpeech_ReturnFromNamingScreenShowTextbox(u8 taskId)
 }
 
 #undef tTimer
+
+bool8 WasNuzlockeModeSelected(void)
+{
+    return sNuzlockeModeSelected;
+}
+
+void ClearNuzlockeModeSelection(void)
+{
+    sNuzlockeModeSelected = FALSE;
+}

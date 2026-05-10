@@ -487,6 +487,9 @@ u8 (*const gMovementActionFuncs_SpinDown[])(struct ObjectEvent *, struct Sprite 
 u8 (*const gMovementActionFuncs_SpinUp[])(struct ObjectEvent *, struct Sprite *);
 u8 (*const gMovementActionFuncs_SpinLeft[])(struct ObjectEvent *, struct Sprite *);
 u8 (*const gMovementActionFuncs_SpinRight[])(struct ObjectEvent *, struct Sprite *);
+// pathfinding
+u8 (*const gMovementActionFuncs_GeneratedBegin[])(struct ObjectEvent *, struct Sprite *);
+u8 (*const gMovementActionFuncs_GeneratedEnd[])(struct ObjectEvent *, struct Sprite *);
 
 u8 (*const *const gMovementActionFuncs[])(struct ObjectEvent *, struct Sprite *) = {
     [MOVEMENT_ACTION_FACE_DOWN] = gMovementActionFuncs_FaceDown,
@@ -672,6 +675,9 @@ u8 (*const *const gMovementActionFuncs[])(struct ObjectEvent *, struct Sprite *)
     [MOVEMENT_ACTION_SPIN_UP]          = gMovementActionFuncs_SpinUp,
     [MOVEMENT_ACTION_SPIN_LEFT]        = gMovementActionFuncs_SpinLeft,
     [MOVEMENT_ACTION_SPIN_RIGHT]       = gMovementActionFuncs_SpinRight,
+    // pathfinding
+    [MOVEMENT_ACTION_GENERATED_BEGIN] = gMovementActionFuncs_GeneratedBegin,
+    [MOVEMENT_ACTION_GENERATED_END] = gMovementActionFuncs_GeneratedEnd,
 };
 
 u8 (*const gMovementActionFuncs_FaceDown[])(struct ObjectEvent *, struct Sprite *) = {
@@ -1757,4 +1763,12 @@ u8 (*const gMovementActionFuncs_SpinRight[])(struct ObjectEvent *, struct Sprite
     MovementAction_SpinRight_Step0,
     MovementAction_SpinRight_Step1,
     MovementAction_PauseSpriteAnim,
+};
+
+u8 (*const gMovementActionFuncs_GeneratedBegin[])(struct ObjectEvent *, struct Sprite *) = {
+    MovementAction_Finish,
+};
+
+u8 (*const gMovementActionFuncs_GeneratedEnd[])(struct ObjectEvent *, struct Sprite *) = {
+    MovementAction_Finish,
 };

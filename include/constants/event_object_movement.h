@@ -271,6 +271,10 @@
 #define MOVEMENT_ACTION_SPIN_LEFT                       0xB4
 #define MOVEMENT_ACTION_SPIN_RIGHT                      0xB5
 
+// For path finder generated scripts
+#define MOVEMENT_ACTION_GENERATED_BEGIN 0xB6
+#define MOVEMENT_ACTION_GENERATED_END   0xB7
+
 #define MOVEMENT_ACTION_STEP_END 0xFE
 #define MOVEMENT_ACTION_NONE     0xFF
 

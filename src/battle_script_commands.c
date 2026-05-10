@@ -39,6 +39,7 @@
 #include "naming_screen.h"
 #include "battle_setup.h"
 #include "overworld.h"
+#include "nuzlocke.h"
 #include "wild_encounter.h"
 #include "rtc.h"
 #include "party_menu.h"
@@ -74,6 +75,7 @@
 #include "follower_npc.h"
 #include "load_save.h"
 #include "test/test_runner_battle.h"
+#include "nuzlocke.h"
 
 // Helper for accessing command arguments and advancing gBattlescriptCurrInstr.
 //
@@ -4247,8 +4249,8 @@ static void Cmd_getexp(void)
             {
                 gBattleScripting.getexpState = 5;
                 gBattleStruct->battlerExpReward = 0;
-                if (B_MAX_LEVEL_EV_GAINS >= GEN_5)
-                    MonGainEVs(&gPlayerParty[*expMonId], gBattleMons[gBattlerFainted].species);
+                //if (B_MAX_LEVEL_EV_GAINS >= GEN_5)
+                    //MonGainEVs(&gPlayerParty[*expMonId], gBattleMons[gBattlerFainted].species);
             }
             else
             {
@@ -4335,7 +4337,7 @@ static void Cmd_getexp(void)
                         gBattleStruct->teamGotExpMsgPrinted = TRUE;
                     }
 
-                    MonGainEVs(&gPlayerParty[*expMonId], gBattleMons[gBattlerFainted].species);
+                    //MonGainEVs(&gPlayerParty[*expMonId], gBattleMons[gBattlerFainted].species);
                 }
                 gBattleScripting.getexpState++;
             }
@@ -4542,7 +4544,13 @@ static void Cmd_checkteamslost(void)
     if (NoAliveMonsForPlayer())
         gBattleOutcome |= B_OUTCOME_LOST;
     if (NoAliveMonsForOpponent())
+    {
         gBattleOutcome |= B_OUTCOME_WON;
+        
+        // Handle Nuzlocke encounter tracking when wild Pokemon faints
+        if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
+            NuzlockeOnBattleEnd();
+    }
 
     // Fair switching - everyone has to switch in most at the same time, without knowing which pokemon the other trainer selected.
     // In vanilla Emerald this was only used for link battles, in expansion it's also used for regular trainer battles.
@@ -10575,6 +10583,23 @@ static void FinalizeCapture(void)
     struct Pokemon *caughtMon = GetBattlerMon(gBattlerTarget);
     SetMonData(caughtMon, MON_DATA_POKEBALL, &ballId);
 
+    // Mark area as caught and encountered for Nuzlocke
+    if (FlagGet(FLAG_NUZLOCKE) && !(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
+    {
+        u8 currentLocation = GetCurrentRegionMapSectionId();
+        struct Pokemon *nuzMon = GetBattlerMon(gBattlerTarget);
+        u32 nuzPersonality = GetMonData(nuzMon, MON_DATA_PERSONALITY);
+        u32 nuzOtId = GetMonData(nuzMon, MON_DATA_OT_ID);
+        u32 shinyValue = ((nuzPersonality >> 16) ^ (nuzPersonality & 0xFFFF)) ^ ((nuzOtId >> 16) ^ (nuzOtId & 0xFFFF));
+        bool8 isShiny = (shinyValue < 8);
+
+        if (!isShiny)
+        {
+            HasWildPokemonBeenCaughtInLocation(currentLocation, TRUE);
+            HasWildPokemonBeenSeenInLocation(currentLocation, TRUE);
+        }
+    }
+
     if (CalculatePlayerPartyCount() == PARTY_SIZE)
         gBattleCommunication[MULTISTRING_CHOOSER] = 0;
     else
@@ -10934,6 +10959,24 @@ static void Cmd_handleballthrow(void)
         BtlController_EmitBallThrowAnim(gBattlerAttacker, B_COMM_TO_CONTROLLER, BALL_3_SHAKES_SUCCESS);
         MarkBattlerForControllerExec(gBattlerAttacker);
         gBattlescriptCurrInstr = BattleScript_WallyBallThrow;
+    }
+    else if (IsNuzlockeActive() && !NuzlockeCanCatchPokemon(gBattleMons[gBattlerTarget].species, 
+                                                              gBattleMons[gBattlerTarget].personality, 
+                                                              gBattleMons[gBattlerTarget].otId))
+    {
+        // Nuzlocke rules prevent catching this Pokemon
+        BtlController_EmitBallThrowAnim(gBattlerAttacker, B_COMM_TO_CONTROLLER, BALL_TRAINER_BLOCK);
+        MarkBattlerForControllerExec(gBattlerAttacker);
+        gBattlescriptCurrInstr = BattleScript_NuzlockeBallBlock;
+    }
+    else if (IsNuzlockeActive() && !NuzlockeCanCatchPokemon(gBattleMons[gBattlerTarget].species, 
+                                                           gBattleMons[gBattlerTarget].personality,
+                                                           gBattleMons[gBattlerTarget].otId))
+    {
+        // Nuzlocke prevents catching - show message and don't waste ball
+        BtlController_EmitBallThrowAnim(gBattlerAttacker, B_COMM_TO_CONTROLLER, BALL_TRAINER_BLOCK);
+        MarkBattlerForControllerExec(gBattlerAttacker);
+        gBattlescriptCurrInstr = BattleScript_NuzlockeBallBlock;
     }
     else
     {
@@ -13936,6 +13979,10 @@ void BS_SetTeleportOutcome(void)
     else
     {
         gBattleOutcome = B_OUTCOME_MON_TELEPORTED;
+        
+        // Handle Nuzlocke encounter tracking when wild Pokemon teleports
+        if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
+            NuzlockeOnBattleEnd();
     }
     gBattlescriptCurrInstr = cmd->nextInstr;
 }

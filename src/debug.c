@@ -4910,7 +4910,7 @@ const struct Trainer* GetDebugAiTrainer(void)
 static void DebugAction_Party_SetParty(u8 taskId)
 {
     ZeroPlayerPartyMons();
-    CreateNPCTrainerPartyFromTrainer(gPlayerParty, &sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_PLAYER], TRUE, BATTLE_TYPE_TRAINER);
+    CreateNPCTrainerPartyFromTrainer(gPlayerParty, &sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_PLAYER], TRUE, BATTLE_TYPE_TRAINER, TRAINER_NONE);
     ScriptContext_Enable();
     Debug_DestroyMenu_Full(taskId);
 }
@@ -4919,8 +4919,8 @@ static void DebugAction_Party_BattleSingle(u8 taskId)
 {
     ZeroPlayerPartyMons();
     ZeroEnemyPartyMons();
-    CreateNPCTrainerPartyFromTrainer(gPlayerParty, &sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_PLAYER], TRUE, BATTLE_TYPE_TRAINER);
-    CreateNPCTrainerPartyFromTrainer(gEnemyParty, GetDebugAiTrainer(), FALSE, BATTLE_TYPE_TRAINER);
+    CreateNPCTrainerPartyFromTrainer(gPlayerParty, &sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_PLAYER], TRUE, BATTLE_TYPE_TRAINER, TRAINER_NONE);
+    CreateNPCTrainerPartyFromTrainer(gEnemyParty, GetDebugAiTrainer(), FALSE, BATTLE_TYPE_TRAINER, TRAINER_NONE);
 
     gBattleTypeFlags = BATTLE_TYPE_TRAINER;
     if (sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_AI].battleType == TRAINER_BATTLE_TYPE_DOUBLES)
@@ -4937,4 +4937,64 @@ void CheckEWRAMCounters(struct ScriptContext *ctx)
 {
     ConvertIntToDecimalStringN(gStringVar1, gFollowerSteps, STR_CONV_MODE_LEFT_ALIGN, 5);
     ConvertIntToDecimalStringN(gStringVar2, gChainFishingDexNavStreak, STR_CONV_MODE_LEFT_ALIGN, 5);
+}
+
+// ============================================================================
+// Nuzlocke Test Helper Functions
+// ============================================================================
+
+void Debug_HealPartyMon(struct ScriptContext *ctx)
+{
+    u8 slot = gSpecialVar_0x8004;
+
+    if (slot >= PARTY_SIZE)
+        return;
+
+    if (GetMonData(&gPlayerParty[slot], MON_DATA_SPECIES) == SPECIES_NONE)
+        return;
+
+    // Heal the mon
+    HealPokemon(&gPlayerParty[slot]);
+}
+
+void Debug_MarkPartyMonAsDead(struct ScriptContext *ctx)
+{
+    u8 slot = gSpecialVar_0x8004;
+
+    if (slot >= PARTY_SIZE)
+        return;
+
+    if (GetMonData(&gPlayerParty[slot], MON_DATA_SPECIES) == SPECIES_NONE)
+        return;
+
+    // Set HP to 0
+    u16 hp = 0;
+    SetMonData(&gPlayerParty[slot], MON_DATA_HP, &hp);
+
+    // Mark as dead (if Nuzlocke is active)
+    if (FlagGet(FLAG_NUZLOCKE))
+    {
+        u32 deadFlag = 1;
+        SetMonData(&gPlayerParty[slot], MON_DATA_IS_DEAD, &deadFlag);
+    }
+}
+
+void Debug_FillCurrentPCBox(struct ScriptContext *ctx)
+{
+    u8 currentBox = StorageGetCurrentBox();
+
+    // Fill all 30 slots in the current box
+    for (u8 i = 0; i < IN_BOX_COUNT; i++)
+    {
+        // Skip if slot is already occupied
+        if (GetBoxMonDataAt(currentBox, i, MON_DATA_SPECIES) != SPECIES_NONE)
+            continue;
+
+        // Create a random test mon (Magikarp for simplicity)
+        {
+            struct Pokemon tempMon;
+            CreateMon(&tempMon, SPECIES_MAGIKARP, 5, USE_RANDOM_IVS, OTID_STRUCT_PLAYER_ID);
+            SetBoxMonAt(currentBox, i, &tempMon.box);
+        }
+    }
 }

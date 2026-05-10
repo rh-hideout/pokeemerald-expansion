@@ -58,6 +58,9 @@ gSpecials::
 	def_special SavePlayerParty
 	def_special LoadPlayerParty
 	def_special ChooseHalfPartyForBattle
+	def_special ChoosePartyForStandardBattle
+	def_special SaveSelectMonsParty
+	def_special LoadSelectMonsParty
 	def_special Script_ShowLinkTrainerCard
 	def_special ObjectEventInteractionGetBerryTreeData
 	def_special ObjectEventInteractionGetBerryName
@@ -112,6 +115,13 @@ gSpecials::
 	def_special GiveMonArtistRibbon
 	def_special TryContestGModeLinkup
 	def_special SaveGame
+	def_special NuzlockeSilentSave
+	def_special NuzlockeShowWhiteoutOption
+	def_special IsSelectedPartyMonDead
+	def_special CountDeadPartyMonsSpecial
+	def_special CanDepositDeadMonSpecial
+	def_special PrepareNextDeadMonInfo
+	def_special DepositDeadPartyMonToPC
 	def_special DoWateringBerryTreeAnim
 	def_special ShowEasyChatScreen
 	def_special ShowEasyChatProfile

@@ -47,9 +47,13 @@
 #include "mystery_gift.h"
 #include "union_room_chat.h"
 #include "constants/map_groups.h"
+#include "quests.h"
 #include "constants/items.h"
 #include "difficulty.h"
+#include "main_menu.h"
+#include "constants/flags.h"
 #include "follower_npc.h"
+#include "constants/battle_mode.h"
 
 extern const u8 EventScript_ResetAllMapFlags[];
 extern const u8 EventScript_ResetAllMapFlagsFrlg[];
@@ -104,6 +108,14 @@ static void SetDefaultOptions(void)
     gSaveBlock2Ptr->optionsBattleStyle = OPTIONS_BATTLE_STYLE_SHIFT;
     gSaveBlock2Ptr->optionsBattleSceneOff = FALSE;
     gSaveBlock2Ptr->regionMapZoom = FALSE;
+    gSaveBlock2Ptr->battleMode = BATTLE_MODE_MIXED;
+#if OPT_BATTLE_SPEED == TRUE
+    gSaveBlock2Ptr->optionsBattleSpeed = OPTIONS_BATTLE_SPEED_1X;  // Default to 1x (normal)
+    VarSet(VAR_BATTLE_SPEED, gSaveBlock2Ptr->optionsBattleSpeed);  // Initialize runtime variable
+#endif
+#if OPT_AUTORUN == TRUE
+    gSaveBlock2Ptr->optionsAutoRun = FALSE;  // Default to OFF (classic behavior)
+#endif
 }
 
 static void ClearPokedexFlags(void)
@@ -232,6 +244,15 @@ void NewGameInitData(void)
     ResetItemFlags();
     ResetDexNav();
     ClearFollowerNPCData();
+    QuestMenu_ResetMenuSaveData();
+    FlagSet(FLAG_SYS_QUEST_MENU_GET);
+
+    // Set Nuzlocke flag if it was selected during Birch's speech
+    if (WasNuzlockeModeSelected())
+    {
+        FlagSet(FLAG_NUZLOCKE);
+        ClearNuzlockeModeSelection();
+    }
 }
 
 static void ResetMiniGamesRecords(void)

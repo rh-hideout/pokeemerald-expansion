@@ -32,7 +32,27 @@ u32 GetCurrentLevelCap(void)
     }
     else if (B_LEVEL_CAP_TYPE == LEVEL_CAP_VARIABLE)
     {
-        return VarGet(B_LEVEL_CAP_VARIABLE);
+        static const u32 sLevelCapVarMap[][2] =
+        {
+            {0,  5},
+            {1,  16},
+            {2,  23},
+            {3,  30},
+            {4,  37},
+            {5,  44},
+            {6,  51},
+            {7,  58},
+            {8,  65},
+            {9,  72},
+            {10, MAX_LEVEL},
+        };
+
+        u16 varValue = VarGet(B_LEVEL_CAP_VARIABLE);
+        for (i = 0; i < ARRAY_COUNT(sLevelCapVarMap); i++)
+        {
+            if (sLevelCapVarMap[i][0] == varValue)
+                return sLevelCapVarMap[i][1];
+        }
     }
 
     return MAX_LEVEL;

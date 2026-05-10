@@ -45,4 +45,14 @@ void ShowWarpArrowSprite(u8 spriteId, enum Direction direction, s16 x, s16 y);
 
 u32 FldEff_TallGrass(void);
 
+void UpdateSwampTallGrassFieldEffect(struct Sprite *sprite);
+u8 FindSwampTallGrassFieldEffectSpriteId(u8 localId, u8 mapNum, u8 mapGroup, s16 x, s16 y);
+u32 FldEff_SwampTallGrass(void);
+u32 FldEff_JumpSwampTallGrass(void);
+
+void UpdateSwampPlantsFieldEffect(struct Sprite *sprite);
+u8 FindSwampPlantsFieldEffectSpriteId(u8 localId, u8 mapNum, u8 mapGroup, s16 x, s16 y);
+u32 FldEff_SwampPlants(void);
+u32 FldEff_JumpSwampPlants(void);
+
 #endif //GUARD_FIELD_EFFECT_HELPERS_H

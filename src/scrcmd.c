@@ -62,6 +62,7 @@
 #include "list_menu.h"
 #include "malloc.h"
 #include "battle.h"
+#include "quests.h"
 #include "constants/event_objects.h"
 #include "constants/map_types.h"
 
@@ -2305,31 +2306,84 @@ bool8 ScrCmd_setmonmove(struct ScriptContext *ctx)
     return FALSE;
 }
 
+static u16 GetKeyItemForFieldMove(u16 move)
+{
+    switch (move)
+    {
+        case MOVE_CUT:
+            return ITEM_CUT_TOOL;
+        case MOVE_FLY:
+            return ITEM_FLY_TOOL;
+        case MOVE_SURF:
+            return ITEM_SURF_TOOL;
+        case MOVE_STRENGTH:
+            return ITEM_STRENGTH_TOOL;
+        case MOVE_FLASH:
+            return ITEM_FLASH_TOOL;
+        case MOVE_ROCK_SMASH:
+            return ITEM_ROCK_SMASH_TOOL;
+        case MOVE_WATERFALL:
+            return ITEM_WATERFALL_TOOL;
+        case MOVE_DIVE:
+            return ITEM_DIVE_TOOL;
+        // Add more cases here for future tools
+        default:
+            return ITEM_NONE;
+    }
+}
+
+// Checks if a field move can be used via either a Pokémon or a key item
+// Return values in gSpecialVar_Result:
+//   0-5: Party slot index of a Pokémon that can learn the move
+//   PARTY_SIZE (6): Cannot use the field move (no Pokémon/item, or badge not obtained)
+//   PARTY_SIZE + 1 (7): Can use the field move via a key item
+
 bool8 ScrCmd_checkfieldmove(struct ScriptContext *ctx)
 {
     enum FieldMove fieldMove = ScriptReadByte(ctx);
-    bool32 doUnlockedCheck = ScriptReadByte(ctx);
-    enum Move move;
+    bool32 doUnlockedCheck UNUSED = ScriptReadByte(ctx);
+    u16 move = FieldMove_GetMoveId(fieldMove);
+    u16 keyItem = GetKeyItemForFieldMove(move);
+    u32 i;
 
-    Script_RequestEffects(SCREFF_V1);
-
-    gSpecialVar_Result = PARTY_SIZE;
-    if (doUnlockedCheck && !IsFieldMoveUnlocked(fieldMove))
-        return FALSE;
-
-    move = FieldMove_GetMoveId(fieldMove);
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    // 1. Check for a party Pokémon that can learn the move.
+    for (i = 0; i < gPlayerPartyCount; i++)
     {
         u16 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES);
         if (!species)
             break;
-        if (!GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG) && MonKnowsMove(&gPlayerParty[i], move) == TRUE)
+        if (!GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG))
         {
-            gSpecialVar_Result = i;
-            gSpecialVar_0x8004 = species;
-            break;
+            if (CanLearnTeachableMove(species, move))
+            {
+                // Pokémon found. Check for the badge flag.
+                if (IsFieldMoveUnlocked(fieldMove))
+                {
+                    gSpecialVar_Result = i; // Return party slot
+                    SetFieldMoveSource(FIELD_MOVE_SOURCE_POKEMON);
+                    return FALSE; // Continue script execution
+                }
+                // Found a Pokémon but don't have the badge, so fail completely.
+                gSpecialVar_Result = PARTY_SIZE;
+                return FALSE;
+            }
         }
     }
+
+    // 2. If no Pokémon is found, check for the key item.
+    if (keyItem != ITEM_NONE && CheckBagHasItem(keyItem, 1))
+    {
+        // Key item found. Check for the badge flag.
+        if (IsFieldMoveUnlocked(fieldMove))
+        {
+            gSpecialVar_Result = PARTY_SIZE + 1; // Special value indicating item use
+            SetFieldMoveSource(FIELD_MOVE_SOURCE_ITEM);
+            return FALSE;
+        }
+    }
+
+    // 3. If neither is found, or badge check fails, fail.
+    gSpecialVar_Result = PARTY_SIZE;
 
     return FALSE;
 }
@@ -3352,4 +3406,116 @@ bool8 ScrCmd_getbraillestringwidth(struct ScriptContext * ctx)
 
     gSpecialVar_0x8004 = GetStringWidth(FONT_BRAILLE, msg, -1);
     return FALSE;
+}
+
+bool8 ScrCmd_questmenu(struct ScriptContext *ctx)
+{
+    u8 caseId = ScriptReadByte(ctx);
+    u8 questId = VarGet(ScriptReadByte(ctx));
+
+    switch (caseId)
+    {
+    case QUEST_MENU_OPEN:
+    default:
+        BeginNormalPaletteFade(0xFFFFFFFF, 2, 16, 0, 0);
+        QuestMenu_Init(0, CB2_ReturnToFieldContinueScriptPlayMapMusic);
+        ScriptContext_Stop();
+        break;
+    case QUEST_MENU_UNLOCK_QUEST:
+        QuestMenu_GetSetQuestState(questId, FLAG_SET_UNLOCKED);
+        break;
+    case QUEST_MENU_SET_ACTIVE:
+        QuestMenu_GetSetQuestState(questId, FLAG_SET_UNLOCKED);
+        QuestMenu_GetSetQuestState(questId, FLAG_SET_ACTIVE);
+        break;
+    case QUEST_MENU_SET_REWARD:
+        QuestMenu_GetSetQuestState(questId, FLAG_SET_UNLOCKED);
+        QuestMenu_GetSetQuestState(questId, FLAG_SET_REWARD);
+        QuestMenu_GetSetQuestState(questId, FLAG_REMOVE_ACTIVE);
+        break;
+    case QUEST_MENU_COMPLETE_QUEST:
+        QuestMenu_GetSetQuestState(questId, FLAG_SET_UNLOCKED);
+        QuestMenu_GetSetQuestState(questId, FLAG_SET_COMPLETED);
+        QuestMenu_GetSetQuestState(questId, FLAG_REMOVE_ACTIVE);
+        QuestMenu_GetSetQuestState(questId, FLAG_REMOVE_REWARD);
+        break;
+    case QUEST_MENU_CHECK_UNLOCKED:
+        if (QuestMenu_GetSetQuestState(questId, FLAG_GET_UNLOCKED))
+            gSpecialVar_Result = TRUE;
+        else
+            gSpecialVar_Result = FALSE;
+        break;
+    case QUEST_MENU_CHECK_ACTIVE:
+        if (QuestMenu_GetSetQuestState(questId, FLAG_GET_ACTIVE))
+            gSpecialVar_Result = TRUE;
+        else
+            gSpecialVar_Result = FALSE;
+        break;
+    case QUEST_MENU_CHECK_REWARD:
+        if (QuestMenu_GetSetQuestState(questId, FLAG_GET_REWARD))
+            gSpecialVar_Result = TRUE;
+        else
+            gSpecialVar_Result = FALSE;
+        break;
+    case QUEST_MENU_CHECK_COMPLETE:
+        if (QuestMenu_GetSetQuestState(questId, FLAG_GET_COMPLETED))
+            gSpecialVar_Result = TRUE;
+        else
+            gSpecialVar_Result = FALSE;
+        break;
+    case QUEST_MENU_BUFFER_QUEST_NAME:
+            QuestMenu_CopyQuestName(gStringVar1, questId);
+        break;
+    }
+
+    return TRUE;
+}
+
+bool8 ScrCmd_returnqueststate(struct ScriptContext *ctx)
+{
+    u8 questId = VarGet(ScriptReadByte(ctx));
+
+    if (QuestMenu_GetSetQuestState(questId, FLAG_GET_INACTIVE)){
+        gSpecialVar_Result = FLAG_GET_INACTIVE;
+        return FALSE;
+    }
+    if (QuestMenu_GetSetQuestState(questId, FLAG_GET_ACTIVE)){
+        gSpecialVar_Result = FLAG_GET_ACTIVE;
+        return FALSE;
+    }
+    if (QuestMenu_GetSetQuestState(questId, FLAG_GET_REWARD)){
+        gSpecialVar_Result = FLAG_GET_REWARD;
+        return FALSE;
+    }
+    if (QuestMenu_GetSetQuestState(questId, FLAG_GET_COMPLETED)){
+        gSpecialVar_Result = FLAG_GET_COMPLETED;
+        return FALSE;
+    }
+
+    return TRUE;
+}
+
+bool8 ScrCmd_subquestmenu(struct ScriptContext *ctx)
+{
+    u8 caseId = ScriptReadByte(ctx);
+    u8 parentId = VarGet(ScriptReadHalfword(ctx));
+    u8 childId = VarGet(ScriptReadHalfword(ctx));
+
+    switch (caseId)
+    {
+        case QUEST_MENU_COMPLETE_QUEST:
+            QuestMenu_GetSetSubquestState(parentId ,FLAG_SET_COMPLETED,childId);
+            break;
+        case QUEST_MENU_CHECK_COMPLETE:
+            if (QuestMenu_GetSetSubquestState(parentId ,FLAG_GET_COMPLETED,childId))
+                gSpecialVar_Result = TRUE;
+            else
+                gSpecialVar_Result = FALSE;
+            break;
+        case QUEST_MENU_BUFFER_QUEST_NAME:
+            QuestMenu_CopySubquestName(gStringVar1,parentId,childId);
+            break;
+    }
+
+    return TRUE;
 }

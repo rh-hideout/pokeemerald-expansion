@@ -42,6 +42,8 @@ enum BattleIntroStates
     BATTLE_INTRO_STATE_TRAINER_2_SEND_OUT_ANIM,
     BATTLE_INTRO_STATE_WAIT_FOR_TRAINER_2_SEND_OUT_ANIM,
     BATTLE_INTRO_STATE_WAIT_FOR_WILD_BATTLE_TEXT,
+    BATTLE_INTRO_STATE_NUZLOCKE_MESSAGE,
+    BATTLE_INTRO_STATE_WAIT_FOR_NUZLOCKE_MESSAGE,
     BATTLE_INTRO_STATE_PRINT_PLAYER_SEND_OUT_TEXT,
     BATTLE_INTRO_STATE_WAIT_FOR_PLAYER_SEND_OUT_TEXT,
     BATTLE_INTRO_STATE_PRINT_PLAYER_1_SEND_OUT_TEXT,
@@ -107,10 +109,12 @@ void RunBattleScriptCommands(void);
 enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId battler, enum MonState monInBattle);
 void SetTypeBeforeUsingMove(enum Move move, enum BattlerId battler);
 bool32 IsWildMonSmart(void);
-u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer, u32 battleTypeFlags);
+u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer, u32 battleTypeFlags, u16 trainerId);
 void ModifyPersonalityForNature(u32 *personality, u32 newNature);
 u32 GeneratePersonalityForGender(u32 gender, u32 species);
 void CustomTrainerPartyAssignMoves(struct Pokemon *mon, const struct TrainerMon *partyEntry);
+bool32 InBattleChoosingMoves(void);
+bool32 InBattleRunningActions(void);
 bool32 CanPlayerForfeitNormalTrainerBattle(void);
 bool32 DidPlayerForfeitNormalTrainerBattle(void);
 void BattleDebug_WonBattle(void);

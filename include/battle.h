@@ -708,9 +708,10 @@ struct BattleStruct
     u8 magicCoatActive:1;
     u8 magicBounceActive:1;
     u8 moveBouncer;
+    u8 hasBattleInputStarted:1;  // Tracks if player has started choosing moves this battle
     u8 dancerSavedAttacker:3;
     u8 dancerSavedTarget:3;
-    u8 padding:2;
+    u8 padding:1;
 };
 
 struct AiBattleData

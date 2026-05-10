@@ -1,0 +1,276 @@
+GIMP Palette
+Name: kolchavi_maritime_secondary
+Columns: 16
+#
+# Bank 00
+248   0 248	bank00_00_transparent
+  0   0   0	bank00_01
+  0   0   0	bank00_02
+  0   0   0	bank00_03
+  0   0   0	bank00_04
+  0   0   0	bank00_05
+  0   0   0	bank00_06
+  0   0   0	bank00_07
+  0   0   0	bank00_08
+  0   0   0	bank00_09
+  0   0   0	bank00_10
+  0   0   0	bank00_11
+  0   0   0	bank00_12
+  0   0   0	bank00_13
+  0   0   0	bank00_14
+  0   0   0	bank00_15
+# Bank 01
+248   0 248	bank01_00_transparent
+  0   0   0	bank01_01
+  0   0   0	bank01_02
+  0   0   0	bank01_03
+  0   0   0	bank01_04
+  0   0   0	bank01_05
+  0   0   0	bank01_06
+  0   0   0	bank01_07
+  0   0   0	bank01_08
+  0   0   0	bank01_09
+  0   0   0	bank01_10
+  0   0   0	bank01_11
+  0   0   0	bank01_12
+  0   0   0	bank01_13
+  0   0   0	bank01_14
+  0   0   0	bank01_15
+# Bank 02
+248   0 248	bank02_00_transparent
+  0   0   0	bank02_01
+  0   0   0	bank02_02
+  0   0   0	bank02_03
+  0   0   0	bank02_04
+  0   0   0	bank02_05
+  0   0   0	bank02_06
+  0   0   0	bank02_07
+  0   0   0	bank02_08
+  0   0   0	bank02_09
+  0   0   0	bank02_10
+  0   0   0	bank02_11
+  0   0   0	bank02_12
+  0   0   0	bank02_13
+  0   0   0	bank02_14
+  0   0   0	bank02_15
+# Bank 03
+248   0 248	bank03_00_transparent
+  0   0   0	bank03_01
+  0   0   0	bank03_02
+  0   0   0	bank03_03
+  0   0   0	bank03_04
+  0   0   0	bank03_05
+  0   0   0	bank03_06
+  0   0   0	bank03_07
+  0   0   0	bank03_08
+  0   0   0	bank03_09
+  0   0   0	bank03_10
+  0   0   0	bank03_11
+  0   0   0	bank03_12
+  0   0   0	bank03_13
+  0   0   0	bank03_14
+  0   0   0	bank03_15
+# Bank 04
+248   0 248	bank04_00_transparent
+  0   0   0	bank04_01
+  0   0   0	bank04_02
+  0   0   0	bank04_03
+  0   0   0	bank04_04
+  0   0   0	bank04_05
+  0   0   0	bank04_06
+  0   0   0	bank04_07
+  0   0   0	bank04_08
+  0   0   0	bank04_09
+  0   0   0	bank04_10
+  0   0   0	bank04_11
+  0   0   0	bank04_12
+  0   0   0	bank04_13
+  0   0   0	bank04_14
+  0   0   0	bank04_15
+# Bank 05
+248   0 248	bank05_00_transparent
+  0   0   0	bank05_01
+  0   0   0	bank05_02
+  0   0   0	bank05_03
+  0   0   0	bank05_04
+  0   0   0	bank05_05
+  0   0   0	bank05_06
+  0   0   0	bank05_07
+  0   0   0	bank05_08
+  0   0   0	bank05_09
+  0   0   0	bank05_10
+  0   0   0	bank05_11
+  0   0   0	bank05_12
+  0   0   0	bank05_13
+  0   0   0	bank05_14
+  0   0   0	bank05_15
+# Bank 06
+248   0 248	bank06_00_transparent
+  0   0   0	bank06_01
+  0   0   0	bank06_02
+  0   0   0	bank06_03
+  0   0   0	bank06_04
+  0   0   0	bank06_05
+  0   0   0	bank06_06
+  0   0   0	bank06_07
+  0   0   0	bank06_08
+  0   0   0	bank06_09
+  0   0   0	bank06_10
+  0   0   0	bank06_11
+  0   0   0	bank06_12
+  0   0   0	bank06_13
+  0   0   0	bank06_14
+  0   0   0	bank06_15
+# Bank 07
+248   0 248	bank07_00_transparent
+ 48  56  80	bank07_01
+152 192 240	bank07_02
+184 216 248	bank07_03
+104 144 200	bank07_04
+232 232 248	bank07_05
+  0   0   0	bank07_06
+  0   0   0	bank07_07
+  0   0   0	bank07_08
+  0   0   0	bank07_09
+  0   0   0	bank07_10
+  0   0   0	bank07_11
+  0   0   0	bank07_12
+  0   0   0	bank07_13
+  0   0   0	bank07_14
+  0   0   0	bank07_15
+# Bank 08
+248   0 248	bank08_00_transparent
+136 104  80	bank08_01
+192 168 104	bank08_02
+120 120 120	bank08_03
+ 80  80 104	bank08_04
+248 248 248	bank08_05
+184 184 200	bank08_06
+216 216 224	bank08_07
+152 152 176	bank08_08
+200 200 192	bank08_09
+ 64  72 104	bank08_10
+216 224 216	bank08_11
+128 128 136	bank08_12
+  0   0   0	bank08_13
+  0   0   0	bank08_14
+  0   0   0	bank08_15
+# Bank 09
+248   0 248	bank09_00_transparent
+ 56  40  48	bank09_01
+ 56  56  56	bank09_02
+176 136  88	bank09_03
+104  80  72	bank09_04
+ 64  48  40	bank09_05
+136 120 112	bank09_06
+232 216 192	bank09_07
+184 160 128	bank09_08
+192 160  96	bank09_09
+216 192 152	bank09_10
+152 112  64	bank09_11
+104  80  40	bank09_12
+168 144 104	bank09_13
+  0   0   0	bank09_14
+  0   0   0	bank09_15
+# Bank 10
+248   0 248	bank10_00_transparent
+120 120 120	bank10_01
+ 80  80 104	bank10_02
+248 248 248	bank10_03
+ 48  56  88	bank10_04
+200 200 192	bank10_05
+224 120  96	bank10_06
+192  72  72	bank10_07
+120 120 128	bank10_08
+ 56  72  56	bank10_09
+160 192 112	bank10_10
+112 144  80	bank10_11
+ 88 112  72	bank10_12
+128 128 136	bank10_13
+184 184 160	bank10_14
+  0   0   0	bank10_15
+# Bank 11
+248   0 248	bank11_00_transparent
+200 192 128	bank11_01
+136 104  80	bank11_02
+192 168 104	bank11_03
+120 120 120	bank11_04
+ 96  80  56	bank11_05
+ 80  80 104	bank11_06
+200 200 208	bank11_07
+232 232 240	bank11_08
+160 160 168	bank11_09
+ 64  72 104	bank11_10
+248 240 128	bank11_11
+184 168  80	bank11_12
+208 200  96	bank11_13
+168 136  56	bank11_14
+144 112  40	bank11_15
+# Bank 12
+248   0 248	bank12_00_transparent
+136 104  80	bank12_01
+192 168 104	bank12_02
+120 120 120	bank12_03
+ 80  80 104	bank12_04
+248 248 248	bank12_05
+216 216 224	bank12_06
+ 48  56  88	bank12_07
+104 144 200	bank12_08
+ 64  72 104	bank12_09
+248 240 128	bank12_10
+184 168  80	bank12_11
+208 200  96	bank12_12
+128 128 128	bank12_13
+216 224 216	bank12_14
+176 176 160	bank12_15
+# Bank 13
+248   0 248	bank13_00_transparent
+248   0 248	bank13_01
+248   0 248	bank13_02
+248   0 248	bank13_03
+248   0 248	bank13_04
+248   0 248	bank13_05
+248   0 248	bank13_06
+248   0 248	bank13_07
+248   0 248	bank13_08
+248   0 248	bank13_09
+248   0 248	bank13_10
+248   0 248	bank13_11
+248   0 248	bank13_12
+248   0 248	bank13_13
+248   0 248	bank13_14
+248   0 248	bank13_15
+# Bank 14
+248   0 248	bank14_00_transparent
+248   0 248	bank14_01
+248   0 248	bank14_02
+248   0 248	bank14_03
+248   0 248	bank14_04
+248   0 248	bank14_05
+248   0 248	bank14_06
+248   0 248	bank14_07
+248   0 248	bank14_08
+248   0 248	bank14_09
+248   0 248	bank14_10
+248   0 248	bank14_11
+248   0 248	bank14_12
+248   0 248	bank14_13
+248   0 248	bank14_14
+248   0 248	bank14_15
+# Bank 15
+248   0 248	bank15_00_transparent
+248   0 248	bank15_01
+248   0 248	bank15_02
+248   0 248	bank15_03
+248   0 248	bank15_04
+248   0 248	bank15_05
+248   0 248	bank15_06
+248   0 248	bank15_07
+248   0 248	bank15_08
+248   0 248	bank15_09
+248   0 248	bank15_10
+248   0 248	bank15_11
+248   0 248	bank15_12
+248   0 248	bank15_13
+248   0 248	bank15_14
+248   0 248	bank15_15

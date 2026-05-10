@@ -29,6 +29,17 @@
 #include "constants/items.h"
 #include "constants/layouts.h"
 #include "constants/weather.h"
+#include "level_scaling.h"
+#include "constants/pokemon.h"
+#include "nuzlocke.h"
+
+// Global variable to track if current wild Pokemon is catchable in Nuzlocke
+static bool8 gWildPokemonIsCatchableInNuzlocke = FALSE;
+
+bool8 IsWildPokemonCatchableInNuzlocke(void)
+{
+    return gWildPokemonIsCatchableInNuzlocke;
+}
 
 extern const u8 EventScript_SprayWoreOff[];
 
@@ -471,10 +482,42 @@ static u8 PickWildMonNature(u32 species)
 
 void CreateWildMon(u16 species, u8 level)
 {
+    // Apply level scaling for wild encounters
+#if B_LEVEL_SCALING_ENABLED && B_WILD_SCALING_ENABLED
+    level = CalculateWildScaledLevel(species, level);
+    // Apply species scaling (evolution management)
+    species = CalculateWildScaledSpecies(species, level);
+#endif
+
+
+    // Reset Nuzlocke indicator state - will be set after Pokemon is created
+    gWildPokemonIsCatchableInNuzlocke = FALSE;
+
     ZeroEnemyPartyMons();
     u32 personality = GetMonPersonality(species, GetSynchronizedGender(WILDMON_ORIGIN, species), PickWildMonNature(species), RANDOM_UNOWN_LETTER);
     CreateMonWithIVs(&gEnemyParty[0], species, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
     GiveMonInitialMoveset(&gEnemyParty[0]);
+
+    // Check Nuzlocke indicator after Pokemon is created
+    // Skip if this is a boss wild battle opted out via FLAG_NUZLOCKE_SKIP_ENCOUNTER
+    if (IsNuzlockeActive() && FlagGet(FLAG_SYS_POKEDEX_GET) && !FlagGet(FLAG_NUZLOCKE_SKIP_ENCOUNTER))
+    {
+        u8 currentLocation = GetCurrentRegionMapSectionId();
+        bool8 locationAlreadyUsed = HasWildPokemonBeenSeenInLocation(currentLocation, FALSE);
+
+        if (!locationAlreadyUsed)
+        {
+            u32 nuzPersonality = GetMonData(&gEnemyParty[0], MON_DATA_PERSONALITY);
+            u32 nuzOtId = GetMonData(&gEnemyParty[0], MON_DATA_OT_ID);
+            u32 shinyValue = ((nuzPersonality >> 16) ^ (nuzPersonality & 0xFFFF)) ^ ((nuzOtId >> 16) ^ (nuzOtId & 0xFFFF));
+            bool8 isShiny = (shinyValue < 8);
+
+            if (!isShiny && !PlayerOwnsSpecies(species))
+            {
+                gWildPokemonIsCatchableInNuzlocke = TRUE;
+            }
+        }
+    }
 }
 
 #ifdef BUGFIX
@@ -1176,6 +1219,15 @@ static void ApplyCleanseTagEncounterRateMod(u32 *encRate)
 
 bool8 TryDoDoubleWildBattle(void)
 {
+    // Prevent double battles on first encounters in Nuzlocke mode
+    if (IsNuzlockeActive())
+    {
+        u16 mapGroup = gSaveBlock1Ptr->location.mapGroup;
+        u16 mapNum = gSaveBlock1Ptr->location.mapNum;
+        if (IsFirstEncounterInArea(mapGroup, mapNum))
+            return FALSE;
+    }
+
     if (GetSafariZoneFlag()
       || (B_DOUBLE_WILD_REQUIRE_2_MONS == TRUE && GetMonsStateToDoubles() != PLAYER_HAS_TWO_USABLE_MONS))
         return FALSE;

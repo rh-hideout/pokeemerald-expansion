@@ -466,6 +466,12 @@ const u16 gObjectEventPal_StrangeBall[] = INCGFX_U16("graphics/object_events/pic
 const u32 gFieldEffectObjectPic_CaveDust[] = INCGFX_U32("graphics/field_effects/pics/cave_dust.png", ".4bpp");
 const u16 gFieldEffectObjectPalette_CaveDust[] = INCGFX_U16("graphics/field_effects/palettes/cave_dust.pal", ".gbapal");
 
+const u32 gFieldEffectObjectPic_SwampTallGrass[] = INCGFX_U32("graphics/field_effects/pics/swamp_tall_grass.png", ".4bpp", "-mwidth 2 -mheight 2");
+const u16 gFieldEffectObjectPalette_SwampTallGrass[] = INCGFX_U16("graphics/field_effects/palettes/swamp_tall_grass.pal", ".gbapal");
+const u32 gFieldEffectObjectPic_SwampPlants[] = INCGFX_U32("graphics/field_effects/pics/swamp_plants.png", ".4bpp", "-mwidth 2 -mheight 2");
+const u32 gFieldEffectObjectPic_JumpSwampPlants[] = INCGFX_U32("graphics/field_effects/pics/jump_swamp_plants.png", ".4bpp", "-mwidth 2 -mheight 1");
+const u16 gFieldEffectObjectPalette_SwampPlants[] = INCGFX_U16("graphics/field_effects/palettes/swamp_plants.pal", ".gbapal");
+
 const u32 gObjectEventPic_ApricornTree[] = INCGFX_U32("graphics/object_events/pics/misc/apricorn_tree.png", ".4bpp", "-mwidth 2 -mheight 2");
 
 #if IS_FRLG
