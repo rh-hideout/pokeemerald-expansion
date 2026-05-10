@@ -10880,7 +10880,7 @@ static void SetStatChangeFlags(struct StatChange *st, u32 flags)
 }
 #undef SET_FLAG
 
-// Scripting battler is the one causing the stat change
+// Script battler is the one causing the stat change
 static void Cmd_trystatchanges(void)
 {
     CMD_ARGS(u8 battler, u16 statChangeFlags);
@@ -10892,6 +10892,12 @@ static void Cmd_trystatchanges(void)
         .battlerAtk = GetBattlerForBattleScript(cmd->battler),
         .move = MOVE_NONE,
     };
+
+    for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
+    {
+        cv.abilities[battler] = GetBattlerAbility(battler);
+        cv.holdEffects[battler] = GetBattlerHoldEffect(battler);
+    }
 
     struct StatChange st = {0};
 
@@ -10910,9 +10916,6 @@ static void Cmd_trystatchanges(void)
 
         if (cmd->statChangeFlags & STAT_CHANGE_IGNORE_SELF)
             st.certain = cv.battlerAtk == cv.battlerDef;
-
-        cv.abilities[cv.battlerDef] = GetBattlerAbility(cv.battlerDef);
-        cv.holdEffects[cv.battlerDef] = GetBattlerHoldEffect(cv.battlerDef);
 
         bool32 goToNextInstr = FALSE; // Prevents an addtional stat change call
         bool32 runScript = FALSE;
@@ -10962,6 +10965,12 @@ static void Cmd_trybattlerstatchange(void)
     struct BattleCalcValues cv = {0};
     cv.battlerAtk = cv.battlerDef = GetBattlerForBattleScript(cmd->battler);
 
+    for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
+    {
+        cv.abilities[battler] = GetBattlerAbility(battler);
+        cv.holdEffects[battler] = GetBattlerHoldEffect(battler);
+    }
+
     struct StatChange st = {0};
 
     u32 flags = cmd->statChangeFlags;
@@ -10977,9 +10986,6 @@ static void Cmd_trybattlerstatchange(void)
         st.statStageQueue = gSpecialStatuses[cv.battlerDef].statStageQueue;
         st.statStageAmount = gSpecialStatuses[cv.battlerDef].statStageAmount;
     }
-
-    cv.abilities[cv.battlerDef] = GetBattlerAbility(cv.battlerDef);
-    cv.holdEffects[cv.battlerDef] = GetBattlerHoldEffect(cv.battlerDef);
 
     if (TryStatChange(&cv, &st) != STAT_CHANGE_DIDNT_WORK)
     {
