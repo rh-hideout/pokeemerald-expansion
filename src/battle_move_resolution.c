@@ -2227,12 +2227,17 @@ static enum CancelerResult CancelerAccuracyCheck(struct BattleCalcValues *cv)
                 gBattlerAbility = cv->battlerDef;
                 BattleScriptCall(BattleScript_SturdyPreventsOHKO);
             }
+            else if (gBattleStruct->moveResultFlags[cv->battlerDef] & MOVE_RESULT_ONE_HIT_KO_NO_AFFECT)
+            {
+                BattleScriptCall(BattleScript_ItDoesntAffectScrTarget);
+            }
+            else if (cv->moveEffect == EFFECT_FLING)
+            {
+                BattleScriptCall(BattleScript_TargetAvoidsAttackConsumeFlingItem);
+            }
             else
             {
-                if (cv->moveEffect == EFFECT_FLING)
-                    BattleScriptCall(BattleScript_TargetAvoidsAttackConsumeFlingItem);
-                else
-                    BattleScriptCall(BattleScript_BattlerAvoidedAttack);
+                BattleScriptCall(BattleScript_BattlerAvoidedAttack);
             }
 
             if (gBattleStruct->moveResultFlags[cv->battlerDef] & (MOVE_RESULT_ONE_HIT_KO_NO_AFFECT | MOVE_RESULT_ONE_HIT_KO_STURDY))
