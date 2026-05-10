@@ -243,7 +243,7 @@ SINGLE_BATTLE_TEST("Future Sight flying type attacker in party receives no boost
     PARAMETRIZE { species = SPECIES_WOBBUFFET; terrain = TRUE; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_PSYCHIC_TERRAIN ) == EFFECT_PSYCHIC_TERRAIN);
+        ASSUME(GetMoveEffect(MOVE_PSYCHIC_TERRAIN) == EFFECT_PSYCHIC_TERRAIN);
         ASSUME(gSpeciesInfo[SPECIES_PIDGEY].types[0] == TYPE_FLYING || gSpeciesInfo[SPECIES_PIDGEY].types[1] == TYPE_FLYING);
         PLAYER(species);
         PLAYER(SPECIES_WOBBUFFET);
