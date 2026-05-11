@@ -22,6 +22,7 @@
 #include "event_data.h"
 #include "decompress.h"
 #include "data.h"
+#include "load_save.h"
 #include "palette.h"
 #include "contest.h"
 #include "trainer_pokemon_sprites.h"
@@ -31,10 +32,9 @@
 #include "constants/battle_move_effects.h"
 #include "constants/event_objects.h" // only for SHADOW_SIZE constants
 
-// TODO: Wire to saveblock option or flag for runtime toggle
 bool8 UseGen4BattleUI(void)
 {
-    return FALSE;
+    return gSaveblock3.challengeSettings.newBattleUI;
 }
 
 // this file's functions

@@ -12,6 +12,7 @@
 #include "gpu_regs.h"
 #include "graphics.h"
 #include "link.h"
+#include "load_save.h"
 #include "main.h"
 #include "menu.h"
 #include "overworld.h"
@@ -864,7 +865,7 @@ static u8 GetBattleEnvironmentByMapScene(u8 mapBattleScene)
 
 static bool32 UseModernBattleEnvironment(void)
 {
-    return TRUE; // TODO: Wire to settings system
+    return gSaveblock3.challengeSettings.newBackgrounds;
 }
 
 enum
