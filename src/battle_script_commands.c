@@ -2771,7 +2771,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         }
         break;
     case MOVE_EFFECT_RECHARGE:
-        if (B_SKIP_RECHARGE == GEN_1 && !IsBattlerAlive(gBattlerTarget))  // Skip recharge if gen 1 and foe is KO'd
+        if ((B_SKIP_RECHARGE == GEN_1 || gSaveblock3.challengeSettings.genOneRecharge) && !IsBattlerAlive(gBattlerTarget))
             break;
 
         gBattleMons[gEffectBattler].volatiles.rechargeTimer = 2;
