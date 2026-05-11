@@ -2975,10 +2975,28 @@
   callnative Script_UpdateBankBalanceBox
 .endm
 
-@ Purchases an item from sUniquePurchaseTable/sRepeatPurchaseTable. Sets VAR_RESULT to the price of the item
+@ Purchases an item from sUniquePurchaseTable. Sets VAR_RESULT to the price of the item
 @ NOTE: The Amount is not deducted automatically
 .macro purchaseuniqueitem
   callnative Script_PurchaseUniqueItem
+.endm
+
+@ Purchases an item from sRepeatPurchaseTable. Sets VAR_RESULT to the price of the item
+@ NOTE: The Amount is not deducted automatically
+.macro purchaserepeatitem
+  callnative Script_PurchaseRepeatItem
+.endm
+
+@ Checks for pending banking purchases. If there is an item the player can recieve it sets VAR_RESULT to the item Id.
+@ If there is no valid purchase VAR_RESULT is set to ITEM_NONE
+.macro checkbankingpurchase
+  callnative Script_CheckPurchaseFromSavings
+.endm
+
+@ Gets the pending banking purchase item and stores the id in VAR_RESULT and quantity in VAR_0x8001.
+@ This does not give the item to the player.
+.macro getbankingpurchase
+  callnative Script_GetPurchaseFromSavings
 .endm
 
 @ END OF BANKING SYSTEM
