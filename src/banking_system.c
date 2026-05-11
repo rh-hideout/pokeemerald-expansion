@@ -5,12 +5,14 @@
 #include "config/banking.h"
 #include "constants/flags.h"
 #include "constants/items.h"
+#include "decompress.h"
 #include "event_data.h"
 #include "event_object_movement.h"
 #include "field_player_avatar.h"
 #include "gba/defines.h"
 #include "gba/io_reg.h"
 #include "gba/types.h"
+#include "graphics.h"
 #include "international_string_util.h"
 #include "item.h"
 #include "main.h"
@@ -41,6 +43,57 @@
 #define STEP_SPEED     360
 #define MAX_BANK_MONEY 9999999
 #define MAX_PENDING    5
+
+#define BALANCE_LABEL_TAG 0x2722
+
+static const struct OamData sOamData_BalanceLabel =
+{
+    .y = 0,
+    .affineMode = ST_OAM_AFFINE_OFF,
+    .objMode = ST_OAM_OBJ_NORMAL,
+    .mosaic = FALSE,
+    .bpp = ST_OAM_4BPP,
+    .shape = SPRITE_SHAPE(32x16),
+    .x = 0,
+    .matrixNum = 0,
+    .size = SPRITE_SIZE(32x16),
+    .tileNum = 0,
+    .priority = 0,
+    .paletteNum = 0,
+    .affineParam = 0,
+};
+
+static const union AnimCmd sSpriteAnim_BalanceLabel[] =
+{
+    ANIMCMD_FRAME(0, 0),
+    ANIMCMD_END
+};
+
+static const union AnimCmd *const sSpriteAnimTable_BalanceLabel[] =
+{
+    sSpriteAnim_BalanceLabel,
+};
+
+static const struct SpriteTemplate sSpriteTemplate_BalanceLabel =
+{
+    .tileTag = BALANCE_LABEL_TAG,
+    .paletteTag = BALANCE_LABEL_TAG,
+    .oam = &sOamData_BalanceLabel,
+    .anims = sSpriteAnimTable_BalanceLabel,
+};
+
+static const struct CompressedSpriteSheet sSpriteSheet_BalanceLabel =
+{
+    .data = gShopMenuBalance_Gfx,
+    .size = 256,
+    .tag = BALANCE_LABEL_TAG,
+};
+
+static const struct SpritePalette sSpritePalette_BalanceLabel =
+{
+    .data = gShopMenu_Pal,
+    .tag = BALANCE_LABEL_TAG
+};
 
 // Enums
 enum BankingMode
@@ -104,6 +157,8 @@ static const u8 sText_Deposit[] = _("Deposit");
 static const u8 sText_Withdraw[] = _("Withdraw");
 
 // Variables
+EWRAM_DATA static u8 sBalanceBoxWindowId = 0;
+EWRAM_DATA static u8 sBalanceLabelSpriteId = 0;
 u32 sTransactionAmount = 0;
 u8 sTransactionWindowId = 0;
 u8 sBankingModeWindowId = 0;
@@ -113,6 +168,10 @@ static u32 GetStepSize(s16 heldFrames);
 static bool32 HandleAmountInput(u32 *amount, u32 max, u32 min, s16 *heldFrames);
 static u32 GetTransactionMaxAmount(enum BankingMode mode);
 static void UpdateBankBalanceAfterTransaction(enum BankingMode mode);
+static void Banking_DrawBalanceBox(int amount, u8 x, u8 y);
+static void Banking_AddBalanceLabelObject(u16 x, u16 y);
+static void Banking_HideBalanceBox(void);
+static void Banking_RemoveBalanceLabelObject(void);
 
 // Tasks
 static void Task_ShowBankingInput(u8 taskId);
@@ -286,7 +345,27 @@ void Script_ShowBankBalanceBox(struct ScriptContext *ctx)
 
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
 
-    DrawMoneyBox(GetMoneyInBank(), x, y);
+    Banking_DrawBalanceBox(GetMoneyInBank(), x, y);
+}
+
+static void Banking_DrawBalanceBox(int amount, u8 x, u8 y)
+{
+    struct WindowTemplate template;
+
+    SetWindowTemplateFields(&template, 0, x + 1, y + 1, 10, 2, 15, 8);
+    sBalanceBoxWindowId = AddWindow(&template);
+    FillWindowPixelBuffer(sBalanceBoxWindowId, PIXEL_FILL(0));
+    PutWindowTilemap(sBalanceBoxWindowId);
+    CopyWindowToVram(sBalanceBoxWindowId, COPYWIN_MAP);
+    PrintMoneyAmountInMoneyBoxWithBorder(sBalanceBoxWindowId, 0x214, 14, amount);
+    Banking_AddBalanceLabelObject((8 * x) + 19, (8 * y) + 11);
+}
+
+static void Banking_AddBalanceLabelObject(u16 x, u16 y)
+{
+    LoadCompressedSpriteSheet(&sSpriteSheet_BalanceLabel);
+    LoadSpritePalette(&sSpritePalette_BalanceLabel);
+    sBalanceLabelSpriteId = CreateSprite(&sSpriteTemplate_BalanceLabel, x, y, 0);
 }
 
 void Script_HideBankBalanceBox(struct ScriptContext *ctx)
@@ -295,7 +374,20 @@ void Script_HideBankBalanceBox(struct ScriptContext *ctx)
 
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
 
-    HideMoneyBox();
+    Banking_HideBalanceBox();
+}
+
+static void Banking_HideBalanceBox(void)
+{
+    Banking_RemoveBalanceLabelObject();
+    ClearStdWindowAndFrameToTransparent(sBalanceBoxWindowId, FALSE);
+    CopyWindowToVram(sBalanceBoxWindowId, COPYWIN_GFX);
+    RemoveWindow(sBalanceBoxWindowId);
+}
+
+static void Banking_RemoveBalanceLabelObject(void)
+{
+    DestroySpriteAndFreeResources(&gSprites[sBalanceLabelSpriteId]);
 }
 
 void Script_UpdateBankBalanceBox(struct ScriptContext *ctx)
