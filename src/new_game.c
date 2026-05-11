@@ -132,6 +132,17 @@ static void SetDefaultChallengeSettings(void)
     gSaveblock3.challengeSettings.ballPrompt = 0;
     gSaveblock3.challengeSettings.newBackgrounds = 1;
     gSaveblock3.challengeSettings.runType = 0;
+
+    // Challenge menu — "RECOMMENDED" defaults
+    gSaveblock3.challengeSettings.tx_Mode_Modern_Moves       = 1;
+    gSaveblock3.challengeSettings.tx_Mode_Synchronize        = 1;
+    gSaveblock3.challengeSettings.tx_Mode_Sturdy             = 1;
+    gSaveblock3.challengeSettings.tx_Mode_New_Citrus         = 1;
+    gSaveblock3.challengeSettings.tx_Mode_Fairy_Types        = 1;
+    gSaveblock3.challengeSettings.tx_Mode_Legendary_Abilities = 1;
+    gSaveblock3.challengeSettings.tx_Mode_InfiniteTMs        = 1;
+    gSaveblock3.challengeSettings.tx_Mode_Mints              = 1;
+    gSaveblock3.challengeSettings.tx_Mode_PoisonSurvive      = 1;
 }
 
 static void ClearPokedexFlags(void)
@@ -192,6 +203,7 @@ void NewGameInitData(void)
 #if IS_FRLG
     u8 rivalName[PLAYER_NAME_LENGTH + 1];
 #endif
+    struct ChallengeSettings savedChallenge = gSaveBlock3Ptr->challengeSettings;
     if (gSaveFileStatus == SAVE_STATUS_EMPTY || gSaveFileStatus == SAVE_STATUS_CORRUPT)
         RtcReset();
 
@@ -207,6 +219,7 @@ void NewGameInitData(void)
     ClearSav1();
     ClearSav3();
     SetDefaultChallengeSettings();
+    gSaveBlock3Ptr->challengeSettings = savedChallenge;
     ClearAllMail();
     gSaveBlock2Ptr->specialSaveWarpFlags = 0;
     gSaveBlock2Ptr->gcnLinkFlags = 0;
