@@ -272,3 +272,117 @@ EventScript_GiveFilteredRandomMon::
 ```
 
 This will produce a random mon from the BST-restricted species option with between 200 and 400 BST, a random item from the limited item pool, a random ball, 3 random teachable moves, and one move it'd normally have at that level (`MOVE_DEFAULT`).
+
+# Appendix: Example Randomizer Data
+
+The default [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h) file intentionally leaves the option arrays empty. If you want a quick starting point, copy and adapt this into that file, then add matching enum names to [include/constants/random_mon_generation.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/include/constants/random_mon_generation.h).
+
+```
+static const enum Species sRandomSpeciesOption1SpeciesPool[] =
+{
+    SPECIES_TREECKO,
+    SPECIES_TORCHIC,
+    SPECIES_MUDKIP,
+    SPECIES_RALTS,
+    SPECIES_ARON,
+    SPECIES_TRAPINCH,
+    SPECIES_BAGON,
+    SPECIES_BELDUM,
+};
+
+static const enum Species sRandomSpeciesOption1BannedSpecies[] =
+{
+    SPECIES_BELDUM,
+};
+
+static const enum HoldEffect sRandomItemStandardBannedHoldEffects[] =
+{
+    HOLD_EFFECT_NONE,
+    HOLD_EFFECT_REPEL,
+    HOLD_EFFECT_SOUL_DEW,
+    HOLD_EFFECT_DEEP_SEA_TOOTH,
+    HOLD_EFFECT_DEEP_SEA_SCALE,
+    HOLD_EFFECT_LIGHT_BALL,
+    HOLD_EFFECT_THICK_CLUB,
+    HOLD_EFFECT_LEEK,
+    HOLD_EFFECT_ADAMANT_ORB,
+    HOLD_EFFECT_LUSTROUS_ORB,
+    HOLD_EFFECT_GRISEOUS_ORB,
+    HOLD_EFFECT_ENIGMA_BERRY,
+    HOLD_EFFECT_PLATE,
+    HOLD_EFFECT_DRIVE,
+    HOLD_EFFECT_GEMS,
+    HOLD_EFFECT_MEGA_STONE,
+    HOLD_EFFECT_PRIMAL_ORB,
+    HOLD_EFFECT_MEMORY,
+    HOLD_EFFECT_Z_CRYSTAL,
+    HOLD_EFFECT_BOOSTER_ENERGY,
+    HOLD_EFFECT_OGERPON_MASK,
+};
+
+static const enum Item sRandomItemOption1HeldItemPool[] =
+{
+    ITEM_LEFTOVERS,
+    ITEM_SITRUS_BERRY,
+    ITEM_LUM_BERRY,
+    ITEM_CHOICE_BAND,
+    ITEM_CHOICE_SCARF,
+    ITEM_CHOICE_SPECS,
+};
+
+static const struct RandomSpeciesGeneratorOptions sRandomSpeciesGeneratorOptions[RANDOM_SPECIES_OPTIONS_COUNT] =
+{
+    [SPECIES_GENERATOR_NO_SUPERMONS] =
+    {
+        .dexMode = RANDOM_MON_DEX_NATIONAL,
+        .banLegendary = TRUE,
+        .banMythical = TRUE,
+        .banSubLegendary = TRUE,
+        .banUltraBeast = TRUE,
+        .banParadox = TRUE,
+        .randomizeForms = TRUE,
+    },
+    [SPECIES_GENERATOR_LIMITED_POOL] =
+    {
+        .speciesPool = sRandomSpeciesOption1SpeciesPool,
+        .speciesPoolCount = ARRAY_COUNT(sRandomSpeciesOption1SpeciesPool),
+        .bannedSpecies = sRandomSpeciesOption1BannedSpecies,
+        .bannedSpeciesCount = ARRAY_COUNT(sRandomSpeciesOption1BannedSpecies),
+        .banLegendary = TRUE,
+        .banMythical = TRUE,
+        .banSubLegendary = TRUE,
+        .banUltraBeast = TRUE,
+        .banParadox = TRUE,
+        .randomizeForms = TRUE,
+    },
+    [SPECIES_GENERATOR_BST_RESTRICTED] =
+    {
+        .dexMode = RANDOM_MON_DEX_HOENN,
+        .filterFunc = IsInBstRangeFilterFunc,
+        .banLegendary = TRUE,
+        .banMythical = TRUE,
+        .banSubLegendary = TRUE,
+        .banUltraBeast = TRUE,
+        .banParadox = TRUE,
+        .randomizeForms = TRUE,
+    },
+};
+
+static const struct RandomItemGeneratorOptions sRandomItemGeneratorOptions[RANDOM_ITEM_OPTIONS_COUNT] =
+{
+    [ITEM_GENERATOR_STANDARD] =
+    {
+        .bannedHoldEffects = sRandomItemStandardBannedHoldEffects,
+        .bannedHoldEffectsCount = ARRAY_COUNT(sRandomItemStandardBannedHoldEffects),
+        .filterFunc = IsHeldItemFilterFunc,
+    },
+    [ITEM_GENERATOR_LIMITED_POOL] =
+    {
+        .heldItemPool = sRandomItemOption1HeldItemPool,
+        .heldItemPoolCount = ARRAY_COUNT(sRandomItemOption1HeldItemPool),
+        .bannedHoldEffects = sRandomItemStandardBannedHoldEffects,
+        .bannedHoldEffectsCount = ARRAY_COUNT(sRandomItemStandardBannedHoldEffects),
+        .filterFunc = IsHeldItemFilterFunc,
+    },
+};
+```
