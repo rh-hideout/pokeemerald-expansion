@@ -184,6 +184,7 @@ void NewGameInitData(void)
     ClearFrontierRecord();
     ClearSav1();
     ClearSav3();
+    gSaveblock3.challengeSettings.autoRun = 1;
     gSaveblock3.challengeSettings.autorunSurf = 1;
     gSaveblock3.challengeSettings.fishing = 1;
     gSaveblock3.challengeSettings.fastIntro = 1;

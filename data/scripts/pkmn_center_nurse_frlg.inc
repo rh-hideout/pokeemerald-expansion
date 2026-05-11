@@ -12,6 +12,7 @@ EventScript_AfterWhiteOutHeal_Frlg::
 	end
 
 EventScript_PkmnCenterNurse_Frlg::
+	goto_if_set FLAG_EVEN_FASTER_JOY, EventScript_PkmnCenterNurse_HealPkmnFast_Frlg
 	message Text_WelcomeWantToHealPkmn_Frlg
 	waitmessage
 	multichoice 19, 8, MULTI_YESNO, FALSE | (TRUE << 1)
@@ -19,6 +20,13 @@ EventScript_PkmnCenterNurse_Frlg::
 	case 0, EventScript_PkmnCenterNurse_HealPkmn_Frlg
 	case 1 EventScript_PkmnCenterNurse_Goodbye_Frlg
 	case MULTI_B_PRESSED, EventScript_PkmnCenterNurse_Goodbye_Frlg
+	end
+
+EventScript_PkmnCenterNurse_HealPkmnFast_Frlg::
+	incrementgamestat GAME_STAT_USED_POKECENTER
+	special HealPlayerParty
+	playse SE_M_MORNING_SUN
+	goto EventScript_PkmnCenterNurse_ReturnPkmn_Frlg
 	end
 
 EventScript_PkmnCenterNurse_HealPkmn_Frlg::
@@ -30,6 +38,7 @@ EventScript_PkmnCenterNurse_HealPkmn_Frlg::
 	end
 
 EventScript_PkmnCenterNurse_TakeAndHealPkmn_Frlg::
+	hidefollower 0
 	applymovement VAR_LAST_TALKED, Common_Movement_WalkInPlaceFasterLeft
 	waitmovement 0
 	dofieldeffect FLDEFF_POKECENTER_HEAL
@@ -54,6 +63,7 @@ EventScript_PkmnCenterNurse_ReturnPkmn_Frlg::
 	applymovement VAR_LAST_TALKED, Movement_Bow
 	waitmovement 0
 	msgbox Text_WeHopeToSeeYouAgain_Frlg
+	goto EventScript_PkmnCenterNurse_PlayerTurn_Frlg
 	return
 
 EventScript_PkmnCenterNurse_PlayerWaitingInUnionRoom_Frlg::
@@ -65,11 +75,21 @@ EventScript_PkmnCenterNurse_PlayerWaitingInUnionRoom_Frlg::
 	applymovement VAR_LAST_TALKED, Movement_Bow
 	waitmovement 0
 	msgbox Text_WeHopeToSeeYouAgain_Frlg
+	goto EventScript_PkmnCenterNurse_PlayerTurn_Frlg
 	return
 
 EventScript_PkmnCenterNurse_Goodbye_Frlg::
 	msgbox Text_WeHopeToSeeYouAgain_Frlg
+	goto EventScript_PkmnCenterNurse_PlayerTurn_Frlg
 	return
+
+EventScript_PkmnCenterNurse_PlayerTurn_Frlg::
+	closemessage
+	callnative UpdateFollowingPokemon
+	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_FaceDown
+	waitmovement 0
+	release
+	end
 
 Movement_Bow::
 	nurse_joy_bow

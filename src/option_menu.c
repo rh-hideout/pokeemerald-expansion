@@ -20,6 +20,8 @@
 #include "gba/m4a_internal.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
+#include "event_data.h"
+#include "constants/flags.h"
 
 // =============================================================================
 // Tab definitions
@@ -1108,6 +1110,10 @@ static void Task_Save(u8 taskId)
     cs->autorunSurf        = *GetSelectionPtr(TAB_MAIN, ITEM_MAIN_AUTORUN_SURF);
     cs->fishing            = *GetSelectionPtr(TAB_MAIN, ITEM_MAIN_FISHING);
     cs->evenFasterJoy      = *GetSelectionPtr(TAB_MAIN, ITEM_MAIN_FASTER_JOY);
+    if (cs->evenFasterJoy == 0)
+        FlagSet(FLAG_EVEN_FASTER_JOY);
+    else
+        FlagClear(FLAG_EVEN_FASTER_JOY);
     cs->unitSystem         = *GetSelectionPtr(TAB_MAIN, ITEM_MAIN_UNIT_TYPE);
     cs->disableMatchCall   = *GetSelectionPtr(TAB_MAIN, ITEM_MAIN_MATCHCALL);
 
