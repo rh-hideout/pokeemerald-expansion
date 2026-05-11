@@ -261,7 +261,7 @@ SINGLE_BATTLE_TEST("Future Sight flying type attacker in party receives no boost
         if (B_TERRAIN_TYPE_BOOST >= GEN_8) {
             EXPECT_MUL_EQ(results[2].damage, Q_4_12(1.3), results[3].damage);
         } else {
-            EXPECT_MUL_EQ(results[4].damage, Q_4_12(1.5), results[5].damage);
+            EXPECT_MUL_EQ(results[2].damage, Q_4_12(1.5), results[3].damage);
         }
     }
 }
