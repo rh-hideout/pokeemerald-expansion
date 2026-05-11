@@ -31,15 +31,15 @@ struct RandomSpeciesGeneratorOptions
     u32 banUltraBeast:1;
     u32 banParadox:1;
     u32 randomizeForms:1;
-    enum RandomMonDexMode dexMode:1;
+    enum RandomSpeciesDexMode dexMode:1;
     u32 padding:3;
 };
 ```
 
 These are the options you can toggle and change to select the ideal possible species. Let's go over the options one-by-one.
 
-* `enum RandomMonDexMode dexMode`: With values of either `RANDOM_MON_DEX_NATIONAL` or `RANDOM_MON_DEX_HOENN`, allows you to select whether you want to choose from your National Dex or the Hoenn Dex. If you've replaced the hoenn dex but want to use that functionality, be sure that you investigate that path and substitute any references or functions specific to the hoenn dex to parallel ones for your custom dex.
-* `const enum Species *speciesPool`: A pointer to the specific species pool you want to use, if any. Leave it NULL or create one in [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h). Examples of this will come later.
+* `enum RandomSpeciesDexMode dexMode`: With values of either `RANDOM_MON_DEX_NATIONAL` or `RANDOM_MON_DEX_HOENN`, allows you to select whether you want to choose from your National Dex or the Hoenn Dex. If you've replaced the hoenn dex but want to use that functionality, be sure that you investigate that path and substitute any references or functions specific to the hoenn dex to parallel ones for your custom dex.
+* `const enum Species *speciesPool`: A pointer to the specific species pool you want to use, if any. Leave it NULL or create one in [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h). Examples of this will come later. You can repeat values in this pool to create pseudo weights; for example, `{SPECIES_BULBASAUR, SPECIES_BULBASAUR, SPECIES_BULBASAUR, SPECIES_SQUIRTLE}` gives a 75% chance of Bulbasaur and a 25% chance of Squirtle.
 * `u32 speciesPoolCount`: The total number of species in your pool, if any.
 * `const enum Species *bannedSpecies`: A pointer to the a pool containing any species of pokemon you want *banned* from selection. Leave it NULL or create one in [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h). You shouldn't use this in combination with the speciesPool, as that doesn't really make sense. Leave this one NULL if you have a specific pool of species you want to pick from, or use it if you want more randomness but with some specific banning restrictions that the other options below don't allow.
 * `u32 bannedSpeciesCount`: The total number of banned species in the above pool, if any.
@@ -48,7 +48,7 @@ These are the options you can toggle and change to select the ideal possible spe
 * `u32 banSubLegendary`: Whether to ban sub-legendary pokemon (Regi trio, genies, etc) from selection.
 * `u32 banUltraBeast`: Whether to ban ultra beast pokemon from selection.
 * `u32 banParadox`: Whether to ban paradox pokemon from selection.
-* `u32 randomizeForms`: Whether to randomize forms of pokemon. By default, megas, fusions, and in-battle transformations are disallowed. To add exceptions, see and modify `IsRandomMonFormTableException` in [src/random_mon_generation.c](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/random_mon_generation.c).
+* `u32 randomizeForms`: Whether to randomize forms of pokemon. By default, megas, fusions, and in-battle transformations are disallowed. To add exceptions, see and modify `IsRandomSpeciesFormTableException` in [src/random_mon_generation.c](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/random_mon_generation.c).
 
 ### Filter Functions
 
@@ -57,8 +57,6 @@ Now you may notice that we didn't discuss `bool32 (*filterFunc)(enum Species spe
 For example, one of the default options uses `.filterFunc = IsInBstRangeFilterFunc`. When you call `getrandomspecies`, the optional `arg1` and `arg2` values are forwarded to the filter function. `IsInBstRangeFilterFunc` treats `arg1` as the BST target and `arg2` as the leniency, so `arg1=300, arg2=100` allows pokemon with BST 200 through 400.
 
 If a species option has a `filterFunc`, pass any args that function requires. Omitted args default to `0xFFFF`, and each filter function decides how to handle omitted args. For example, `IsInBstRangeFilterFunc` requires both args and asserts if either one is omitted, but a custom filter function can ignore the args entirely.
-
-`IsInBstRangeFilterFunc` is marked `UNUSED` while the example options in [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h) are commented out. If you uncomment or add an option that uses `.filterFunc = IsInBstRangeFilterFunc`, remove the `UNUSED` prefix from its declaration and definition in [src/random_mon_generation.c](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/random_mon_generation.c).
 
 You could also, using similar logic, create a function that treats `arg1` as a type value, and then filter only for pokemon of that type if possible. If you do not pass a filter function, then no filter beyond the other elements is applied.
 
@@ -142,7 +140,7 @@ struct RandomItemGeneratorOptions
 {
     const enum Item *heldItemPool;
     const enum HoldEffect *bannedHoldEffects;
-    bool32 (*filterFunc)(enum Item item);
+    bool32 (*filterFunc)(enum Item item, const struct FilterFuncArgs *filterFuncArgs);
     u16 heldItemPoolCount;
     u16 bannedHoldEffectsCount;
 };
@@ -152,11 +150,9 @@ struct RandomItemGeneratorOptions
 * `u16 heldItemPoolCount`: The number of items in your held item pool, if any.
 * `const enum HoldEffect *bannedHoldEffects`: A pointer to the specific list of banned hold effects you want to use, if any. Leave it NULL or create one in [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h).
 * `u16 bannedHoldEffectsCount`: The number of banned hold effects in your pool, if any.
-* `bool32 (*filterFunc)(enum Item item)`: An optional item filter function. The built-in `IsHeldItemFilterFunc` only allows items with a non-`HOLD_EFFECT_NONE` hold effect.
+* `bool32 (*filterFunc)(enum Item item, const struct FilterFuncArgs *filterFuncArgs)`: An optional item filter function. The built-in `IsHeldItemFilterFunc` only allows items with a non-`HOLD_EFFECT_NONE` hold effect. `getrandomitem` currently passes a zeroed `FilterFuncArgs` value, so custom item filters can accept the same argument struct as species filters even if the script command does not expose item filter arguments yet.
 
 Key items are always blocked from random item generation, even if they are included in an explicit pool. TM/HM-pocket items with a sell price of 0 are also blocked to protect against obvious sequence breaks.
-
-`IsHeldItemFilterFunc` is marked `UNUSED` while the example options in [src/data/random_mon_generator.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/data/random_mon_generator.h) are commented out. If you uncomment or add an option that uses `.filterFunc = IsHeldItemFilterFunc`, remove the `UNUSED` prefix from its declaration and definition in [src/random_mon_generation.c](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/src/random_mon_generation.c).
 
 ### Example Setup
 

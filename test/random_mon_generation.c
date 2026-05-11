@@ -28,6 +28,13 @@ static void ResolveRandomMonTestValues(enum Species species, enum PokeBall *ball
     ResolveRandomMonGeneration(species, ball, moves);
 }
 
+static enum Item GetRandomItemForTest(u32 optionId)
+{
+    const struct FilterFuncArgs filterFuncArgs = {0};
+
+    return GetRandomItem(optionId, &filterFuncArgs);
+}
+
 TEST("Random mon generation filters species from a small pool")
 {
     const struct FilterFuncArgs filterFuncArgs = {FILTER_FUNC_ARG_NONE, FILTER_FUNC_ARG_NONE};
@@ -78,35 +85,35 @@ TEST("Random mon generation resolves variant forms before applying filter funcs"
 
 TEST("Random mon generation resolves held item from a pool")
 {
-    enum Item item = GetRandomHeldItem(TEST_ITEM_GENERATOR_SINGLE_ITEM);
+    enum Item item = GetRandomItemForTest(TEST_ITEM_GENERATOR_SINGLE_ITEM);
 
     EXPECT_EQ(item, ITEM_LEFTOVERS);
 }
 
 TEST("Random mon generation filters banned hold effects from a small pool")
 {
-    enum Item item = GetRandomHeldItem(TEST_ITEM_GENERATOR_FILTERED_POOL);
+    enum Item item = GetRandomItemForTest(TEST_ITEM_GENERATOR_FILTERED_POOL);
 
     EXPECT_EQ(item, ITEM_LUM_BERRY);
 }
 
 TEST("Random mon generation allows ITEM_NONE in an explicit item pool")
 {
-    enum Item item = GetRandomHeldItem(TEST_ITEM_GENERATOR_NONE_POOL);
+    enum Item item = GetRandomItemForTest(TEST_ITEM_GENERATOR_NONE_POOL);
 
     EXPECT_EQ(item, ITEM_NONE);
 }
 
 TEST("Random mon generation forbids key items and zero-price TMs/HMs")
 {
-    enum Item item = GetRandomHeldItem(TEST_ITEM_GENERATOR_HARD_BANNED_POOL);
+    enum Item item = GetRandomItemForTest(TEST_ITEM_GENERATOR_HARD_BANNED_POOL);
 
     EXPECT_EQ(item, ITEM_LEFTOVERS);
 }
 
 TEST("Random mon generation supports held item filter funcs")
 {
-    enum Item item = GetRandomHeldItem(TEST_ITEM_GENERATOR_HELD_ITEM_FILTER);
+    enum Item item = GetRandomItemForTest(TEST_ITEM_GENERATOR_HELD_ITEM_FILTER);
 
     EXPECT_EQ(item, ITEM_LEFTOVERS);
 }
