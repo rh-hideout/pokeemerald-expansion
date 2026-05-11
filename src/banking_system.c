@@ -617,7 +617,8 @@ u32 PurchaseUniqueItem()
     if (banking->isPending)
         return 0;
 
-    idx++;
+    if(sUniquePurchaseTable[++idx].itemId == ITEM_NONE)
+        idx = 0;
     banking->lastBought = idx;
     banking->isPending = TRUE;
     return next.price;
