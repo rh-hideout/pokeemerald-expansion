@@ -544,8 +544,16 @@ void Script_CheckPurchaseFromSavings()
         return;
     }
 
-    struct UniquePurchaseItem purchase = sUniquePurchaseTable[purchaseIdx];
-    gSpecialVar_Result = purchase.itemId;
+    if (banking->isRepeat)
+    {
+        const struct RepeatPurchaseItem *item = &sRepeatPurchaseTable[purchaseIdx];
+        gSpecialVar_Result = item->itemId;
+    }
+    else
+    {
+        const struct UniquePurchaseItem *item = &sUniquePurchaseTable[purchaseIdx];
+        gSpecialVar_Result = item->itemId;
+    }
     return;
 }
 
