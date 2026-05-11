@@ -601,6 +601,8 @@ u32 PurchaseRepeatItem(void)
     banking->lastBought = idx;
     banking->isPending = TRUE;
     banking->isRepeat = TRUE;
+
+    return sRepeatPurchaseTable[idx].price;
 }
 
 u32 PurchaseUniqueItem()
