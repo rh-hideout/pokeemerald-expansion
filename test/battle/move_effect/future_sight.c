@@ -123,7 +123,21 @@ SINGLE_BATTLE_TEST("Future Sight is affected by type effectiveness (Gen 5+)")
 }
 
 TO_DO_BATTLE_TEST("Future Sight ignores Wonder Guard (Gen 2-4)")
-TO_DO_BATTLE_TEST("Future Sight doesn't ignore Wonder Guard (Gen 5+)")
+SINGLE_BATTLE_TEST("Future Sight doesn't ignore Wonder Guard (Gen 5+)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_SHEDINJA) { Ability(ABILITY_WONDER_GUARD); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
+        TURN {}
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
+        ABILITY_POPUP(opponent, ABILITY_WONDER_GUARD);
+        NOT HP_BAR(opponent);
+    }
+}
 
 SINGLE_BATTLE_TEST("Future Sight will miss timing if target faints before it is about to get hit")
 {
@@ -263,5 +277,30 @@ SINGLE_BATTLE_TEST("Future Sight flying type attacker in party receives no boost
         } else {
             EXPECT_MUL_EQ(results[2].damage, Q_4_12(1.5), results[3].damage);
         }
+    }
+}
+
+SINGLE_BATTLE_TEST("Future Sight is affected by Beads of Ruin on the original slot")
+{
+    s16 damage[2];
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_CHI_YU) { Ability(ABILITY_BEADS_OF_RUIN); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
+        TURN {}
+        TURN {}
+        TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
+        TURN { SWITCH(player, 1); }
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
+        HP_BAR(opponent, captureDamage: &damage[0]);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
+        HP_BAR(opponent, captureDamage: &damage[1]);
+    } THEN {
+        EXPECT_MUL_EQ(damage[0], Q_4_12(1.33), damage[1]);
     }
 }
