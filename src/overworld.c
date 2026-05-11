@@ -1292,8 +1292,8 @@ void Overworld_PlaySpecialMapMusic(void)
             music = gSaveBlock1Ptr->savedMusic;
         else if (GetCurrentMapType() == MAP_TYPE_UNDERWATER)
             music = MUS_UNDERWATER;
-        else if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
-            music = (IS_FRLG ? MUS_RG_SURF : MUS_SURF);
+        else if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING) && !gSaveblock3.challengeSettings.surfMusic)
+            music = (IS_HNS ? MUS_HG_SURF : IS_FRLG ? MUS_RG_SURF : MUS_SURF);
     }
 
     if (music != GetCurrentMapMusic())
@@ -1326,10 +1326,11 @@ static void TransitionMapMusic(void)
         u16 currentMusic = GetCurrentMapMusic();
         if (newMusic != MUS_ABNORMAL_WEATHER && newMusic != MUS_NONE)
         {
-            if (currentMusic == MUS_UNDERWATER || currentMusic == (IS_FRLG ? MUS_RG_SURF : MUS_SURF))
+            if (currentMusic == MUS_UNDERWATER
+             || (!gSaveblock3.challengeSettings.surfMusic && currentMusic == (IS_HNS ? MUS_HG_SURF : IS_FRLG ? MUS_RG_SURF : MUS_SURF)))
                 return;
-            if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
-                newMusic = (IS_FRLG ? MUS_RG_SURF : MUS_SURF);
+            if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING) && !gSaveblock3.challengeSettings.surfMusic)
+                newMusic = (IS_HNS ? MUS_HG_SURF : IS_FRLG ? MUS_RG_SURF : MUS_SURF);
         }
         if (newMusic != currentMusic)
         {

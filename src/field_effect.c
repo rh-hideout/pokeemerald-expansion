@@ -14,6 +14,7 @@
 #include "fldeff.h"
 #include "follower_npc.h"
 #include "gpu_regs.h"
+#include "load_save.h"
 #include "main.h"
 #include "malloc.h"
 #include "mirage_tower.h"
@@ -3372,8 +3373,11 @@ u8 FldEff_UseSurf(void)
 {
     u8 taskId = CreateTask(Task_SurfFieldEffect, 0xff);
     gTasks[taskId].tMonId = gFieldEffectArguments[0];
-    Overworld_ClearSavedMusic();
-    Overworld_ChangeMusicTo(IS_FRLG ? MUS_RG_SURF : MUS_SURF);
+    if (!gSaveblock3.challengeSettings.surfMusic)
+    {
+        Overworld_ClearSavedMusic();
+        Overworld_ChangeMusicTo(IS_HNS ? MUS_HG_SURF : IS_FRLG ? MUS_RG_SURF : MUS_SURF);
+    }
     return FALSE;
 }
 

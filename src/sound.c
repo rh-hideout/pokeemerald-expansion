@@ -10,6 +10,7 @@
 #include "task.h"
 #include "test_runner.h"
 #include "event_data.h"
+#include "load_save.h"
 
 struct Fanfare
 {
@@ -274,6 +275,8 @@ void FadeInNewBGM(u16 songNum, u8 speed)
     if (gDisableMusic)
         songNum = 0;
     if (songNum == MUS_NONE)
+        songNum = 0;
+    if (gSaveblock3.challengeSettings.musicOnOff)
         songNum = 0;
     m4aSongNumStart(songNum, isGBSEnabled);
     m4aMPlayImmInit(&gMPlayInfo_BGM);
@@ -563,6 +566,8 @@ void PlayBGM(u16 songNum)
     if (gDisableMusic)
         songNum = 0;
     if (songNum == MUS_NONE)
+        songNum = 0;
+    if (gSaveblock3.challengeSettings.musicOnOff)
         songNum = 0;
     m4aSongNumStart(songNum, FlagGet(FLAG_SYS_GBS_ENABLED));
 }

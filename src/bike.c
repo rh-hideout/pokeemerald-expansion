@@ -4,6 +4,7 @@
 #include "field_player_avatar.h"
 #include "fieldmap.h"
 #include "field_specials.h"
+#include "load_save.h"
 #include "metatile_behavior.h"
 #include "oras_dowse.h"
 #include "overworld.h"
@@ -1288,15 +1289,21 @@ void GetOnOffBike(u8 transitionFlags)
     if (gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_MACH_BIKE | PLAYER_AVATAR_FLAG_ACRO_BIKE))
     {
         SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT);
-        Overworld_ClearSavedMusic();
-        Overworld_PlaySpecialMapMusic();
+        if (!gSaveblock3.challengeSettings.bikeMusic)
+        {
+            Overworld_ClearSavedMusic();
+            Overworld_PlaySpecialMapMusic();
+        }
     }
     else
     {
         EndORASDowsing();
         SetPlayerAvatarTransitionFlags(transitionFlags);
-        Overworld_SetSavedMusic(IS_FRLG ? MUS_RG_CYCLING : MUS_CYCLING);
-        Overworld_ChangeMusicTo(IS_FRLG ? MUS_RG_CYCLING : MUS_CYCLING);
+        if (!gSaveblock3.challengeSettings.bikeMusic)
+        {
+            Overworld_SetSavedMusic(IS_HNS ? MUS_HG_CYCLING : IS_FRLG ? MUS_RG_CYCLING : MUS_CYCLING);
+            Overworld_ChangeMusicTo(IS_HNS ? MUS_HG_CYCLING : IS_FRLG ? MUS_RG_CYCLING : MUS_CYCLING);
+        }
     }
 }
 
