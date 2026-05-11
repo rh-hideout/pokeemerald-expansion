@@ -27,6 +27,7 @@
 #include "battle_debug.h"
 #include "item.h"
 #include "item_icon.h"
+#include "load_save.h"
 #include "item_use.h"
 #include "test_runner.h"
 #include "constants/battle_anim.h"
@@ -3055,6 +3056,8 @@ bool32 CanThrowLastUsedBall(void)
 {
     if (B_LAST_USED_BALL == FALSE)
         return FALSE;
+    if (gSaveblock3.challengeSettings.ballPrompt)
+        return FALSE;
     if (!CanThrowBall())
         return FALSE;
     if (gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_FRONTIER))
@@ -3068,6 +3071,8 @@ bool32 CanThrowLastUsedBall(void)
 void TryAddLastUsedBallItemSprites(void)
 {
     if (B_LAST_USED_BALL == FALSE)
+        return;
+    if (gSaveblock3.challengeSettings.ballPrompt)
         return;
     if (gLastThrownBall == 0
       || (gLastThrownBall != 0 && !CheckBagHasItem(gLastThrownBall, 1)))
@@ -3225,6 +3230,8 @@ static void SpriteCB_MoveInfoWin(struct Sprite *sprite)
 static void TryHideOrRestoreLastUsedBall(u8 caseId)
 {
     if (B_LAST_USED_BALL == FALSE)
+        return;
+    if (gSaveblock3.challengeSettings.ballPrompt)
         return;
     if (gBattleStruct->ballSpriteIds[0] == MAX_SPRITES)
         return;
