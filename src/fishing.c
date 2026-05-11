@@ -220,7 +220,7 @@ static bool32 Fishing_ShowDots(struct Task *task)
 
     AlignFishingAnimationFrames();
     task->tFrameCounter++;
-    if (JOY_NEW(A_BUTTON))
+    if (gSaveBlock3Ptr->challengeSettings.fishing == 1 && JOY_NEW(A_BUTTON))
     {
         if (!DoesFishingMinigameAllowCancel())
             return FALSE;
@@ -286,6 +286,11 @@ static bool32 Fishing_CheckForBite(struct Task *task)
 static bool32 Fishing_GotBite(struct Task *task)
 {
     AlignFishingAnimationFrames();
+    if (gSaveBlock3Ptr->challengeSettings.fishing == 0)
+    {
+        task->tStep = FISHING_MON_ON_HOOK;
+        return FALSE;
+    }
     AddTextPrinterParameterized(0, FONT_NORMAL, sText_OhABite, 0, 17, 0, NULL);
     task->tStep = FISHING_CHANGE_MINIGAME;
     task->tFrameCounter = 0;
