@@ -187,7 +187,6 @@ void NewGameInitData(void)
     gSaveblock3.challengeSettings.autoRun = 1;
     gSaveblock3.challengeSettings.autorunSurf = 1;
     gSaveblock3.challengeSettings.fishing = 1;
-    gSaveblock3.challengeSettings.fastIntro = 1;
     gSaveblock3.challengeSettings.evenFasterJoy = 1;
     gSaveblock3.challengeSettings.newBackgrounds = 1;
     gSaveblock3.challengeSettings.runType = 1;
