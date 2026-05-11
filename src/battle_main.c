@@ -3704,15 +3704,44 @@ static void DoBattleIntro(void)
         {
             if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
             {
-                gBattleStruct->eventState.battleIntro++;
+                gBattleStruct->eventState.battleIntro = BATTLE_INTRO_STATE_TRAINER_SEND_OUT_TEXT;
             }
             else
             {
-                if (B_FAST_INTRO_PKMN_TEXT == TRUE)
+                u8 runType = gSaveblock3.challengeSettings.runType;
+                if (runType == 1 || runType == 3)
+                    gBattleStruct->eventState.battleIntro = BATTLE_INTRO_STATE_QUICK_RUN;
+                else if (B_FAST_INTRO_PKMN_TEXT == TRUE)
                     gBattleStruct->eventState.battleIntro = BATTLE_INTRO_STATE_WAIT_FOR_WILD_BATTLE_TEXT;
                 else
                     gBattleStruct->eventState.battleIntro = BATTLE_INTRO_STATE_WAIT_FOR_TRAINER_2_SEND_OUT_ANIM;
             }
+        }
+        break;
+    case BATTLE_INTRO_STATE_QUICK_RUN:
+        if (!gBattleControllerExecFlags)
+        {
+            u8 runType = gSaveblock3.challengeSettings.runType;
+            bool32 runPressed = FALSE;
+            if (runType == 1)
+                runPressed = (JOY_HELD(R_BUTTON) && JOY_HELD(L_BUTTON));
+            else if (runType == 3)
+                runPressed = JOY_HELD(B_BUTTON);
+
+            if (runPressed)
+            {
+                battler = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
+                if (IsRunningFromBattleImpossible(battler) == BATTLE_RUN_SUCCESS && TryRunFromBattle(battler))
+                {
+                    gBattleMainFunc = HandleEndTurn_RanFromBattle;
+                    return;
+                }
+                PrepareStringBattle(STRINGID_CANTESCAPE, battler);
+            }
+            if (B_FAST_INTRO_PKMN_TEXT == TRUE)
+                gBattleStruct->eventState.battleIntro = BATTLE_INTRO_STATE_WAIT_FOR_WILD_BATTLE_TEXT;
+            else
+                gBattleStruct->eventState.battleIntro = BATTLE_INTRO_STATE_WAIT_FOR_TRAINER_2_SEND_OUT_ANIM;
         }
         break;
     case BATTLE_INTRO_STATE_TRAINER_SEND_OUT_TEXT:

@@ -131,7 +131,7 @@ static void SetDefaultChallengeSettings(void)
     gSaveblock3.challengeSettings.lrToRun = 0;
     gSaveblock3.challengeSettings.ballPrompt = 0;
     gSaveblock3.challengeSettings.newBackgrounds = 1;
-    gSaveblock3.challengeSettings.runType = 1;
+    gSaveblock3.challengeSettings.runType = 0;
 }
 
 static void ClearPokedexFlags(void)

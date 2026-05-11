@@ -8,6 +8,7 @@
 #include "data.h"
 #include "item_menu.h"
 #include "link.h"
+#include "load_save.h"
 #include "main.h"
 #include "m4a.h"
 #include "palette.h"
@@ -178,7 +179,7 @@ static void HandleInputChooseAction(enum BattlerId battler)
             ActionSelectionCreateCursorAt(gActionSelectionCursor[battler], 0);
         }
     }
-    else if (B_QUICK_MOVE_CURSOR_TO_RUN && JOY_NEW(B_BUTTON))
+    else if ((B_QUICK_MOVE_CURSOR_TO_RUN || gSaveblock3.challengeSettings.runType == 2) && JOY_NEW(B_BUTTON))
     {
         PlaySE(SE_SELECT);
         ActionSelectionDestroyCursorAt(gActionSelectionCursor[battler]);

@@ -15,6 +15,7 @@
 #include "item.h"
 #include "item_menu.h"
 #include "link.h"
+#include "load_save.h"
 #include "main.h"
 #include "m4a.h"
 #include "event_data.h"
@@ -379,9 +380,9 @@ static void HandleInputChooseAction(enum BattlerId battler)
             BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_CANCEL_PARTNER, 0);
             BtlController_Complete(battler);
         }
-        else if (B_QUICK_MOVE_CURSOR_TO_RUN)
+        else if (B_QUICK_MOVE_CURSOR_TO_RUN || gSaveblock3.challengeSettings.runType == 2)
         {
-            if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER)) // If wild battle, pressing B moves cursor to "Run".
+            if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
             {
                 PlaySE(SE_SELECT);
                 ActionSelectionDestroyCursorAt(gActionSelectionCursor[battler]);
