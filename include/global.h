@@ -250,6 +250,95 @@ struct NPCFollower
 #include "constants/items.h"
 #define ITEM_FLAGS_COUNT ((ITEMS_COUNT / 8) + ((ITEMS_COUNT % 8) ? 1 : 0))
 
+struct ChallengeSettings
+{
+    // Options Plus
+    u8 followerEnable:1;
+    u8 followerLargeEnable:1;
+    u8 autorunSurf:1;
+    u8 autorunDive:1;
+    u8 fishing:1;
+    u8 evenFasterJoy:1;
+    u8 unitSystem:1;
+    u8 fastIntro:1;
+    u8 fastBattle:1;
+    u8 optionStyle:1;
+    u8 lrToRun:1;
+    u8 ballPrompt:1;
+    u8 newBackgrounds:1;
+    u8 newBattleUI:1;
+    u8 genOneRecharge:1;
+    u8 musicOnOff:1;
+    u8 runType:3;
+    u8 disableMatchCall:1;
+    u8 bikeMusic:1;
+    u8 surfMusic:1;
+    bool8 autoRun;
+    // Randomizer
+    u8 tx_Random_Chaos:1;
+    u8 tx_Random_WildPokemon:1;
+    u8 tx_Random_Similar:1;
+    u8 tx_Random_MapBased:1;
+    u8 tx_Random_IncludeLegendaries:1;
+    u8 tx_Random_Type:1;
+    u8 tx_Random_TypeEffectiveness:1;
+    u8 tx_Random_Abilities:1;
+    u8 tx_Random_Moves:1;
+    u8 tx_Random_Trainer:1;
+    u8 tx_Random_Evolutions:1;
+    u8 tx_Random_EvolutionMethods:1;
+    u8 tx_Random_Items:1;
+    u8 tx_Random_Static:1;
+    u8 tx_Random_Starter:1;
+    // Challenges
+    u8 tx_Challenges_EvoLimit:2;
+    u8 tx_Challenges_Nuzlocke:1;
+    u8 tx_Challenges_NuzlockeHardcore:1;
+    u8 tx_Challenges_PartyLimit:3;
+    u8 tx_Challenges_OneTypeChallenge:5;
+    u8 tx_Challenges_NoItemPlayer:1;
+    u8 tx_Challenges_NoItemTrainer:1;
+    u8 tx_Challenges_PkmnCenter:2;
+    u8 tx_Challenges_LessEscapes:1;
+    u8 tx_Challenges_BaseStatEqualizer:2;
+    u8 tx_Challenges_LevelCap:2;
+    u8 tx_Challenges_ExpMultiplier:2;
+    u8 tx_Challenges_Mirror:1;
+    u8 tx_Challenges_Mirror_Thief:1;
+    u8 tx_Challenges_NoEVs:1;
+    u8 tx_Challenges_PCHeal:1;
+    u8 tx_Challenges_Expensive:3;
+    u8 tx_Challenges_TrainerScalingIVs:2;
+    u8 tx_Challenges_TrainerScalingEVs:2;
+    u8 tx_Challenges_MaxPartyIVs:2;
+    // Nuzlocke
+    u8 tx_Nuzlocke_SpeciesClause:1;
+    u8 tx_Nuzlocke_ShinyClause:1;
+    u8 tx_Nuzlocke_Nicknaming:1;
+    u8 tx_Nuzlocke_Deletion:1;
+    u8 tx_Nuzlocke_EasyMode:1;
+    u8 tx_Nuzlocke_RareCandy:1;
+    u8 nuzlockeEncounterFlags[16];
+    // Mode / Features
+    u8 tx_Mode_InfiniteTMs:1;
+    u8 tx_Mode_PoisonSurvive:1;
+    u8 tx_Mode_AlternateSpawns:1;
+    u8 tx_Mode_Synchronize:1;
+    u8 tx_Mode_Mints:1;
+    u8 tx_Mode_New_Citrus:1;
+    u8 tx_Mode_Fairy_Types:1;
+    u8 tx_Mode_Sturdy:1;
+    u8 tx_Mode_Modern_Moves:1;
+    u8 tx_Mode_Legendary_Abilities:1;
+    u8 tx_Features_ShinyColors:1;
+    u8 tx_Features_RTCType:1;
+    u8 tx_Features_LimitDifficulty:1;
+    u8 tx_Features_WildMonDropItems:1;
+    u8 tx_Features_FrontierBans:1;
+    u8 tx_Difficulty_EscapeRopeDig:1;
+    u8 tx_Features_ShinyChance:4;
+};
+
 struct SaveBlock3
 {
 #if OW_USE_FAKE_RTC
@@ -268,6 +357,7 @@ struct SaveBlock3
 #if APRICORN_TREE_COUNT > 0
     u8 apricornTrees[NUM_APRICORN_TREE_BYTES];
 #endif
+    struct ChallengeSettings challengeSettings;
 }; /* max size 1624 bytes */
 
 extern struct SaveBlock3 *gSaveBlock3Ptr;

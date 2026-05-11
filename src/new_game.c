@@ -184,6 +184,12 @@ void NewGameInitData(void)
     ClearFrontierRecord();
     ClearSav1();
     ClearSav3();
+    gSaveblock3.challengeSettings.autorunSurf = 1;
+    gSaveblock3.challengeSettings.fishing = 1;
+    gSaveblock3.challengeSettings.fastIntro = 1;
+    gSaveblock3.challengeSettings.evenFasterJoy = 1;
+    gSaveblock3.challengeSettings.newBackgrounds = 1;
+    gSaveblock3.challengeSettings.runType = 1;
     ClearAllMail();
     gSaveBlock2Ptr->specialSaveWarpFlags = 0;
     gSaveBlock2Ptr->gcnLinkFlags = 0;
