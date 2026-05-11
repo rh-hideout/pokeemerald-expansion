@@ -1,24 +1,7 @@
 // Pool settings for random mon generation via scripts. For more info on options, check out
 // struct RandomSpeciesGeneratorOptions and struct RandomItemGeneratorOptions in src/random_mon_generation.c.
 
-enum
-{
-    /*
-    SPECIES_GENERATOR_NO_SUPERMONS,
-    SPECIES_GENERATOR_LIMITED_POOL,
-    SPECIES_GENERATOR_BST_RESTRICTED,
-    */
-    RANDOM_SPECIES_OPTIONS_COUNT,
-};
-
-enum
-{
-    /*
-    ITEM_GENERATOR_STANDARD,
-    ITEM_GENERATOR_LIMITED_POOL,
-    */
-    RANDOM_ITEM_OPTIONS_COUNT,
-};
+#include "constants/random_mon_generation.h"
 
 /*
 static const enum Species sRandomSpeciesOption1SpeciesPool[] =
@@ -74,17 +57,17 @@ static const enum Item sRandomItemOption1HeldItemPool[] =
 };
 */
 
-static const struct RandomSpeciesGeneratorOptions sRandomSpeciesGeneratorOptions[] =
+static const struct RandomSpeciesGeneratorOptions sRandomSpeciesGeneratorOptions[RANDOM_SPECIES_OPTIONS_COUNT] =
 {
     /*
     [SPECIES_GENERATOR_NO_SUPERMONS] =
     {
         .dexMode = RANDOM_MON_DEX_NATIONAL,
-        .allowLegendary = FALSE,
-        .allowMythical = FALSE,
-        .allowSubLegendary = FALSE,
-        .allowUltraBeast = FALSE,
-        .allowParadox = FALSE,
+        .banLegendary = TRUE,
+        .banMythical = TRUE,
+        .banSubLegendary = TRUE,
+        .banUltraBeast = TRUE,
+        .banParadox = TRUE,
         .randomizeForms = TRUE,
     },
     [SPECIES_GENERATOR_LIMITED_POOL] =
@@ -93,34 +76,35 @@ static const struct RandomSpeciesGeneratorOptions sRandomSpeciesGeneratorOptions
         .speciesPoolCount = ARRAY_COUNT(sRandomSpeciesOption1SpeciesPool),
         .bannedSpecies = sRandomSpeciesOption1BannedSpecies,
         .bannedSpeciesCount = ARRAY_COUNT(sRandomSpeciesOption1BannedSpecies),
-        .allowLegendary = FALSE,
-        .allowMythical = FALSE,
-        .allowSubLegendary = FALSE,
-        .allowUltraBeast = FALSE,
-        .allowParadox = FALSE,
+        .banLegendary = TRUE,
+        .banMythical = TRUE,
+        .banSubLegendary = TRUE,
+        .banUltraBeast = TRUE,
+        .banParadox = TRUE,
         .randomizeForms = TRUE,
     },
     [SPECIES_GENERATOR_BST_RESTRICTED] =
     {
         .dexMode = RANDOM_MON_DEX_HOENN,
         .filterFunc = IsInBstRangeFilterFunc,
-        .allowLegendary = FALSE,
-        .allowMythical = FALSE,
-        .allowSubLegendary = FALSE,
-        .allowUltraBeast = FALSE,
-        .allowParadox = FALSE,
+        .banLegendary = TRUE,
+        .banMythical = TRUE,
+        .banSubLegendary = TRUE,
+        .banUltraBeast = TRUE,
+        .banParadox = TRUE,
         .randomizeForms = TRUE,
     },
     */
 };
 
-static const struct RandomItemGeneratorOptions sRandomItemGeneratorOptions[] =
+static const struct RandomItemGeneratorOptions sRandomItemGeneratorOptions[RANDOM_ITEM_OPTIONS_COUNT] =
 {
     /*
     [ITEM_GENERATOR_STANDARD] =
     {
         .bannedHoldEffects = sRandomItemStandardBannedHoldEffects,
         .bannedHoldEffectsCount = ARRAY_COUNT(sRandomItemStandardBannedHoldEffects),
+        .filterFunc = IsHeldItemFilterFunc,
     },
     [ITEM_GENERATOR_LIMITED_POOL] =
     {
@@ -128,6 +112,7 @@ static const struct RandomItemGeneratorOptions sRandomItemGeneratorOptions[] =
         .heldItemPoolCount = ARRAY_COUNT(sRandomItemOption1HeldItemPool),
         .bannedHoldEffects = sRandomItemStandardBannedHoldEffects,
         .bannedHoldEffectsCount = ARRAY_COUNT(sRandomItemStandardBannedHoldEffects),
+        .filterFunc = IsHeldItemFilterFunc,
     },
     */
 };

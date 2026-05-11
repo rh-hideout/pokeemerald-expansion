@@ -28,11 +28,11 @@ struct RandomSpeciesGeneratorOptions
     bool32 (*filterFunc)(enum Species species, const struct FilterFuncArgs *filterFuncArgs);
     u32 speciesPoolCount:11;
     u32 bannedSpeciesCount:11;
-    u32 allowLegendary:1;
-    u32 allowMythical:1;
-    u32 allowSubLegendary:1;
-    u32 allowUltraBeast:1;
-    u32 allowParadox:1;
+    u32 banLegendary:1;
+    u32 banMythical:1;
+    u32 banSubLegendary:1;
+    u32 banUltraBeast:1;
+    u32 banParadox:1;
     u32 randomizeForms:1;
     enum RandomMonDexMode dexMode:1;
     u32 padding:3;
@@ -42,6 +42,7 @@ struct RandomItemGeneratorOptions
 {
     const enum Item *heldItemPool;
     const enum HoldEffect *bannedHoldEffects;
+    bool32 (*filterFunc)(enum Item item);
     u16 heldItemPoolCount;
     u16 bannedHoldEffectsCount;
 };
@@ -52,6 +53,7 @@ static enum Species GetRandomMonSpeciesAtIndex(const struct RandomSpeciesGenerat
 static enum Species SlowPickRandomMonSpecies(const struct RandomSpeciesGeneratorOptions *options, u32 poolSize, const struct FilterFuncArgs *filterFuncArgs);
 static enum Species FastPickRandomMonSpecies(const struct RandomSpeciesGeneratorOptions *options, u32 poolSize, const struct FilterFuncArgs *filterFuncArgs);
 static enum Item GetRandomMonHeldItemAtIndex(const struct RandomItemGeneratorOptions *options, u32 index);
+static bool32 UNUSED IsHeldItemFilterFunc(enum Item item);
 static enum Item SlowPickRandomMonHeldItem(const struct RandomItemGeneratorOptions *options, u32 poolSize);
 static enum Item FastPickRandomMonHeldItem(const struct RandomItemGeneratorOptions *options, u32 poolSize);
 static enum PokeBall GetRandomMonBall(void);
@@ -78,15 +80,15 @@ static bool32 IsSpeciesBannedByRandomMonOptions(enum Species species, const stru
             return TRUE;
     }
 
-    if (!options->allowLegendary && speciesInfo->isRestrictedLegendary)
+    if (options->banLegendary && speciesInfo->isRestrictedLegendary)
         return TRUE;
-    if (!options->allowMythical && speciesInfo->isMythical)
+    if (options->banMythical && speciesInfo->isMythical)
         return TRUE;
-    if (!options->allowSubLegendary && speciesInfo->isSubLegendary)
+    if (options->banSubLegendary && speciesInfo->isSubLegendary)
         return TRUE;
-    if (!options->allowUltraBeast && speciesInfo->isUltraBeast)
+    if (options->banUltraBeast && speciesInfo->isUltraBeast)
         return TRUE;
-    if (!options->allowParadox && speciesInfo->isParadox)
+    if (options->banParadox && speciesInfo->isParadox)
         return TRUE;
     if (options->filterFunc != NULL && !options->filterFunc(species, filterFuncArgs))
         return TRUE;
@@ -241,7 +243,7 @@ static enum Species GetSpeciesCandidateForm(enum Species species, const struct R
     if (validFormsCount == 0)
         return SPECIES_NONE;
 
-    return formTable[validForms[RandomUniform(RNG_RANDOM_MON_GEN, 0, validFormsCount - 1)]];
+    return formTable[validForms[RandomUniform(RNG_NONE, 0, validFormsCount - 1)]];
 }
 
 enum Species GetRandomSpecies(u32 optionId, const struct FilterFuncArgs *filterFuncArgs)
@@ -298,14 +300,14 @@ static enum Species SlowPickRandomMonSpecies(const struct RandomSpeciesGenerator
         return INVALID_RANDOM_SPECIES;
     }
 
-    return eligibleSpecies[RandomUniform(RNG_RANDOM_MON_GEN, 0, eligibleSpeciesCount - 1)];
+    return eligibleSpecies[RandomUniform(RNG_NONE, 0, eligibleSpeciesCount - 1)];
 }
 
 static enum Species FastPickRandomMonSpecies(const struct RandomSpeciesGeneratorOptions *options, u32 poolSize, const struct FilterFuncArgs *filterFuncArgs)
 {
     for (u32 i = 0; i < poolSize; i++)
     {
-        enum Species species = GetRandomMonSpeciesAtIndex(options, RandomUniform(RNG_RANDOM_MON_GEN, 0, poolSize - 1));
+        enum Species species = GetRandomMonSpeciesAtIndex(options, RandomUniform(RNG_NONE, 0, poolSize - 1));
         species = GetSpeciesCandidateForm(species, options, filterFuncArgs);
         if (species != SPECIES_NONE)
             return species;
@@ -319,13 +321,24 @@ static bool32 IsRandomMonHeldItemAllowed(const struct RandomItemGeneratorOptions
 {
     enum HoldEffect holdEffect = GetItemHoldEffect(item);
 
+    if (GetItemPocket(item) == POCKET_KEY_ITEMS)
+        return FALSE;
+    if (GetItemPocket(item) == POCKET_TM_HM && GetItemPrice(item) == 0)
+        return FALSE;
     for (u32 i = 0; i < options->bannedHoldEffectsCount; i++)
     {
         if (options->bannedHoldEffects[i] == holdEffect)
             return FALSE;
     }
+    if (options->filterFunc != NULL && !options->filterFunc(item))
+        return FALSE;
 
     return TRUE;
+}
+
+static bool32 UNUSED IsHeldItemFilterFunc(enum Item item)
+{
+    return GetItemHoldEffect(item) != HOLD_EFFECT_NONE;
 }
 
 static enum Item GetRandomMonHeldItemAtIndex(const struct RandomItemGeneratorOptions *options, u32 index)
@@ -353,14 +366,14 @@ static enum Item SlowPickRandomMonHeldItem(const struct RandomItemGeneratorOptio
         return ITEM_NONE;
     }
 
-    return eligibleItems[RandomUniform(RNG_RANDOM_MON_GEN, 0, eligibleItemCount - 1)];
+    return eligibleItems[RandomUniform(RNG_NONE, 0, eligibleItemCount - 1)];
 }
 
 static enum Item FastPickRandomMonHeldItem(const struct RandomItemGeneratorOptions *options, u32 poolSize)
 {
     for (u32 i = 0; i < poolSize; i++)
     {
-        enum Item item = GetRandomMonHeldItemAtIndex(options, RandomUniform(RNG_RANDOM_MON_GEN, 0, poolSize - 1));
+        enum Item item = GetRandomMonHeldItemAtIndex(options, RandomUniform(RNG_NONE, 0, poolSize - 1));
         if (IsRandomMonHeldItemAllowed(options, item))
             return item;
     }
@@ -403,7 +416,7 @@ enum Item GetRandomHeldItem(u32 optionId)
 
 static enum PokeBall GetRandomMonBall(void)
 {
-    return RandomUniform(RNG_RANDOM_MON_GEN, BALL_STRANGE, POKEBALL_COUNT - 1);
+    return RandomUniform(RNG_RANDOM_BALL, BALL_STRANGE, POKEBALL_COUNT - 1);
 }
 
 static enum PokeBall ResolveRandomMonBall(enum PokeBall ball)
@@ -507,7 +520,7 @@ static void ResolveRandomMonMoves(enum Species species, enum Move *moves)
             }
 
             do {
-                candidate = teachableLearnset[RandomUniform(RNG_RANDOM_MON_GEN, 0, teachableCount - 1)];
+                candidate = teachableLearnset[RandomUniform(RNG_NONE, 0, teachableCount - 1)];
             } while (IS_DUPLICATE_MOVE(candidate));
 
             moves[i] = candidate;

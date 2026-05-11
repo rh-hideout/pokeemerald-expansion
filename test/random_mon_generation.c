@@ -20,6 +20,8 @@
 #define TEST_ITEM_GENERATOR_SINGLE_ITEM 0
 #define TEST_ITEM_GENERATOR_FILTERED_POOL 1
 #define TEST_ITEM_GENERATOR_NONE_POOL 2
+#define TEST_ITEM_GENERATOR_HARD_BANNED_POOL 3
+#define TEST_ITEM_GENERATOR_HELD_ITEM_FILTER 4
 
 static void ResolveRandomMonTestValues(enum Species species, enum PokeBall *ball, enum Move *moves)
 {
@@ -95,13 +97,27 @@ TEST("Random mon generation allows ITEM_NONE in an explicit item pool")
     EXPECT_EQ(item, ITEM_NONE);
 }
 
+TEST("Random mon generation forbids key items and zero-price TMs/HMs")
+{
+    enum Item item = GetRandomHeldItem(TEST_ITEM_GENERATOR_HARD_BANNED_POOL);
+
+    EXPECT_EQ(item, ITEM_LEFTOVERS);
+}
+
+TEST("Random mon generation supports held item filter funcs")
+{
+    enum Item item = GetRandomHeldItem(TEST_ITEM_GENERATOR_HELD_ITEM_FILTER);
+
+    EXPECT_EQ(item, ITEM_LEFTOVERS);
+}
+
 TEST("Random mon generation resolves random ball")
 {
     enum Species species = SPECIES_CHARIZARD;
     enum PokeBall ball = BALL_RANDOM;
     enum Move moves[MAX_MON_MOVES] = {MOVE_DEFAULT, MOVE_DEFAULT, MOVE_DEFAULT, MOVE_DEFAULT};
 
-    SET_RNG(RNG_RANDOM_MON_GEN, BALL_MASTER);
+    SET_RNG(RNG_RANDOM_BALL, BALL_MASTER);
     ResolveRandomMonTestValues(species, &ball, moves);
 
     EXPECT_EQ(ball, BALL_MASTER);
