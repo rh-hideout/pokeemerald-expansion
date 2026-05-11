@@ -1642,8 +1642,7 @@
 #define FLAG_UNUSED_0x95F                           (DAILY_FLAGS_START + 0x3F) // Unused Flag
 #define DAILY_FLAGS_END                             (FLAG_UNUSED_0x95F + (7 - FLAG_UNUSED_0x95F % 8))
 #define NUM_DAILY_FLAGS                             (DAILY_FLAGS_END - DAILY_FLAGS_START + 1)
-
-#define FLAGS_COUNT (DAILY_FLAGS_END + 1)
+#define BUILD_FLAGS_END                             DAILY_FLAGS_END
 
 // Special Flags (Stored in EWRAM (sSpecialFlags), not in the SaveBlock)
 #define SPECIAL_FLAGS_START                     0x4000
@@ -2439,6 +2438,16 @@
 #define FLAG_WORLD_MAP_BIRTH_ISLAND_EXTERIOR                        0
 
 #endif
+
+// Engine-wide flags for options/challenge settings (shared across all builds).
+// Fixed 32-flag block; not cleared by ClearDailyFlags or ClearTempFieldEventData.
+// Each build defines BUILD_FLAGS_END as its highest saveable flag.
+#define ENGINE_FLAGS_START                      (BUILD_FLAGS_END + 1)
+#define NUM_ENGINE_FLAGS                        32
+#define FLAG_EVEN_FASTER_JOY                    (ENGINE_FLAGS_START + 0)
+#define ENGINE_FLAGS_END                        (ENGINE_FLAGS_START + NUM_ENGINE_FLAGS - 1)
+
+#define FLAGS_COUNT (ENGINE_FLAGS_END + 1)
 
 #if TESTING
 #define TESTING_FLAGS_START                     0x5000

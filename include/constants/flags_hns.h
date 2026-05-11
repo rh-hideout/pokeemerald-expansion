@@ -50,7 +50,7 @@
 #define HNS_HIDE_POKEMON_COUNT                      40
 
 // NPC Hide
-#define HNS_NPC_HIDE_START                          (HNS_HIDE_POKEMON_START + HNS_HIDE_POKEMON_COUNT)
+#define HNS_NPC_HIDE_START                          0x4A
 
 #define FLAG_HIDE_SILVER_NEWBARKTOWN                (HNS_NPC_HIDE_START + 0)
 #define FLAG_HIDE_NEWBARKTOWN_LAB_AIDE              (HNS_NPC_HIDE_START + 1)
@@ -216,7 +216,7 @@
 #define HNS_NPC_HIDE_COUNT                          160
 
 // Item Ball Flags
-#define HNS_ITEM_BALL_START                         (HNS_NPC_HIDE_START + HNS_NPC_HIDE_COUNT)
+#define HNS_ITEM_BALL_START                         0xEA
 
 #define FLAG_HIDDEN_ITEMS_START                     HNS_ITEM_BALL_START
 
@@ -458,7 +458,7 @@
 #define HNS_ITEM_BALL_COUNT                         234
 
 // Quest / Story Progress
-#define HNS_QUEST_START                             (HNS_ITEM_BALL_START + HNS_ITEM_BALL_COUNT)
+#define HNS_QUEST_START                             0x1D4
 
 #define FLAG_ADVENTURE_STARTED                      (HNS_QUEST_START + 0)
 #define FLAG_AMPHAROS_HEALED                        (HNS_QUEST_START + 1)
@@ -494,7 +494,7 @@
 #define HNS_QUEST_COUNT                             30
 
 // Received / Got
-#define HNS_RECEIVED_START                          (HNS_QUEST_START + HNS_QUEST_COUNT)
+#define HNS_RECEIVED_START                          0x1F2
 
 #define FLAG_RECEIVED_BIKE                          (HNS_RECEIVED_START + 0)
 #define FLAG_RECEIVED_FIRST_BALLS                   (HNS_RECEIVED_START + 1)
@@ -553,7 +553,7 @@
 #define HNS_RECEIVED_COUNT                          53
 
 // Gym Defeated
-#define HNS_GYM_DEFEATED_START                      (HNS_RECEIVED_START + HNS_RECEIVED_COUNT)
+#define HNS_GYM_DEFEATED_START                      0x227
 
 #define FLAG_DEFEATED_VIOLET_GYM                    (HNS_GYM_DEFEATED_START + 0)
 #define FLAG_DEFEATED_AZALEA_TOWN_GYM               (HNS_GYM_DEFEATED_START + 1)
@@ -575,7 +575,7 @@
 #define HNS_GYM_DEFEATED_COUNT                      16
 
 // Legendary / Boss Defeated
-#define HNS_LEGEND_DEFEATED_START                   (HNS_GYM_DEFEATED_START + HNS_GYM_DEFEATED_COUNT)
+#define HNS_LEGEND_DEFEATED_START                   0x237
 
 #define FLAG_DEFEATED_HO_OH                         (HNS_LEGEND_DEFEATED_START + 0)
 #define FLAG_DEFEATED_LUGIA                         (HNS_LEGEND_DEFEATED_START + 1)
@@ -586,7 +586,7 @@
 #define HNS_LEGEND_DEFEATED_COUNT                   5
 
 // Legendary / Rare Caught
-#define HNS_LEGEND_CAUGHT_START                     (HNS_LEGEND_DEFEATED_START + HNS_LEGEND_DEFEATED_COUNT)
+#define HNS_LEGEND_CAUGHT_START                     0x23C
 
 #define FLAG_CAUGHT_HO_OH                           (HNS_LEGEND_CAUGHT_START + 0)
 #define FLAG_CAUGHT_LUGIA                           (HNS_LEGEND_CAUGHT_START + 1)
@@ -598,7 +598,7 @@
 #define HNS_LEGEND_CAUGHT_COUNT                     6
 
 // NPC Trade
-#define HNS_NPC_TRADE_START                         (HNS_LEGEND_CAUGHT_START + HNS_LEGEND_CAUGHT_COUNT)
+#define HNS_NPC_TRADE_START                         0x242
 
 #define FLAG_BLACKTHORN_NPC_TRADE_COMPLETED         (HNS_NPC_TRADE_START + 0)
 #define FLAG_GOLDENROD_NPC_TRADE_COMPLETED          (HNS_NPC_TRADE_START + 1)
@@ -608,7 +608,7 @@
 #define HNS_NPC_TRADE_COUNT                         4
 
 // Match Call / PokeNav
-#define HNS_MATCH_CALL_START                        (HNS_NPC_TRADE_START + HNS_NPC_TRADE_COUNT)
+#define HNS_MATCH_CALL_START                        0x246
 
 #define FLAG_ADDED_MATCH_CALL_TO_POKENAV            (HNS_MATCH_CALL_START + 0)
 #define FLAG_ENABLE_BAOBA_MATCH_CALL                (HNS_MATCH_CALL_START + 1)
@@ -618,7 +618,7 @@
 #define HNS_MATCH_CALL_COUNT                        4
 
 // Move Tutor
-#define HNS_MOVE_TUTOR_START                        (HNS_MATCH_CALL_START + HNS_MATCH_CALL_COUNT)
+#define HNS_MOVE_TUTOR_START                        0x24A
 
 #define FLAG_MET_FRONTIER_BEAUTY_MOVE_TUTOR         (HNS_MOVE_TUTOR_START + 0)
 #define FLAG_MET_FRONTIER_ELEMENTAL_MOVE_TUTOR      (HNS_MOVE_TUTOR_START + 1)
@@ -628,7 +628,7 @@
 #define HNS_MOVE_TUTOR_COUNT                        4
 
 // Battle Frontier
-#define HNS_BATTLE_FRONTIER_START                   (HNS_MOVE_TUTOR_START + HNS_MOVE_TUTOR_COUNT)
+#define HNS_BATTLE_FRONTIER_START                   0x24E
 
 #define FLAG_BATTLE_FRONTIER_TRADE_DONE             (HNS_BATTLE_FRONTIER_START + 0)
 #define FLAG_CANCEL_BATTLE_ROOM_CHALLENGE           (HNS_BATTLE_FRONTIER_START + 1)
@@ -644,7 +644,7 @@
 #define HNS_BATTLE_FRONTIER_COUNT                   10
 
 // Safari Zone
-#define HNS_SAFARI_ZONE_START                       (HNS_BATTLE_FRONTIER_START + HNS_BATTLE_FRONTIER_COUNT)
+#define HNS_SAFARI_ZONE_START                       0x258
 
 #define FLAG_GOOD_LUCK_SAFARI_ZONE                  (HNS_SAFARI_ZONE_START + 0)
 #define FLAG_IN_KANTO_SAFARI_ZONE                   (HNS_SAFARI_ZONE_START + 1)
@@ -654,7 +654,7 @@
 #define HNS_SAFARI_ZONE_COUNT                       4
 
 // Feature / Toggle
-#define HNS_FEATURE_START                           (HNS_SAFARI_ZONE_START + HNS_SAFARI_ZONE_COUNT)
+#define HNS_FEATURE_START                           0x25C
 
 #define FLAG_DAY_POKEMON                            (HNS_FEATURE_START + 0)
 #define FLAG_NIGHT_POKEMON                          (HNS_FEATURE_START + 1)
@@ -669,7 +669,7 @@
 #define HNS_FEATURE_COUNT                           9
 
 // Misc
-#define HNS_MISC_START                              (HNS_FEATURE_START + HNS_FEATURE_COUNT)
+#define HNS_MISC_START                              0x265
 
 #define FLAG_MOM_VISITED                            (HNS_MISC_START + 0)
 #define FLAG_PENDING_DAYCARE_EGG                    (HNS_MISC_START + 1)
@@ -678,7 +678,7 @@
 #define HNS_MISC_COUNT                              3
 
 // Unused hidden items
-#define HNS_UNUSED_HIDDEN_ITEM_START                (HNS_MISC_START + HNS_MISC_COUNT)
+#define HNS_UNUSED_HIDDEN_ITEM_START                0x268
 #define FLAG_UNUSED_HIDDEN_ITEM_0                   (HNS_UNUSED_HIDDEN_ITEM_START + 0)
 #define FLAG_UNUSED_HIDDEN_ITEM_1                   (HNS_UNUSED_HIDDEN_ITEM_START + 1)
 #define FLAG_UNUSED_HIDDEN_ITEM_2                   (HNS_UNUSED_HIDDEN_ITEM_START + 2)
@@ -802,7 +802,7 @@
 #define HNS_UNUSED_HIDDEN_ITEM_COUNT                120
 
 // Unused general-purpose
-#define HNS_UNUSED_START                            (HNS_UNUSED_HIDDEN_ITEM_START + HNS_UNUSED_HIDDEN_ITEM_COUNT)
+#define HNS_UNUSED_START                            0x2E0
 #define FLAG_LIMIT_TO_50                               (HNS_UNUSED_START + 0)
 #define FLAG_COLLISION                               (HNS_UNUSED_START + 1)
 #define FLAG_EXTRA_LEGENDARIES                               (HNS_UNUSED_START + 2)
@@ -846,14 +846,17 @@
 #define FLAG_UNUSED_39                              (HNS_UNUSED_START + 39)
 #define HNS_UNUSED_COUNT                            40
 
-#define HNS_CONTENT_FLAGS_END                       (HNS_UNUSED_START + HNS_UNUSED_COUNT)
+#define HNS_CONTENT_FLAGS_END                       0x308
+
+// Trainer registered (match call) flags — one per rematchable trainer
+#define TRAINER_REGISTERED_FLAGS_START               0x310
 
 // Trainer flags
 #define TRAINER_FLAGS_START                          0x500
 #define FLAG_TRAINER_FLAG_START                      TRAINER_FLAGS_START
-#define TRAINER_FLAGS_END                            (TRAINER_FLAGS_START + MAX_TRAINERS_COUNT - 1)
+#define TRAINER_FLAGS_END                            0x73F
 // System flags
-#define SYS_FLAGS                                   (TRAINER_FLAGS_END + 1)
+#define SYS_FLAGS                                   0x740
 
 #define FLAG_SYS_SAFARI_MODE                        (SYS_FLAGS + 0x0)
 #define FLAG_SYS_BUG_CONTEST_MODE                   (SYS_FLAGS + 0x1)
@@ -956,7 +959,7 @@
 #define HNS_SYS_FLAGS_END                           (SYS_FLAGS + 0xA9)
 
 // Daily flags
-#define DAILY_FLAGS_START                            ((HNS_SYS_FLAGS_END + 1 + 7) & ~7)
+#define DAILY_FLAGS_START                            0x7F0
 
 #define FLAG_DAILY_BEAT_SILVER                      (DAILY_FLAGS_START + 0)
 #define FLAG_DAILY_BUG_CONTEST_COMPLETED            (DAILY_FLAGS_START + 1)
@@ -965,9 +968,9 @@
 #define FLAG_DAILY_HAIRCUT2_RECEIVED                (DAILY_FLAGS_START + 4)
 #define FLAG_DAILY_PICKED_LOTO_TICKET               (DAILY_FLAGS_START + 5)
 #define FLAG_DAILY_APPRENTICE_LEAVES                (DAILY_FLAGS_START + 6)
-#define DAILY_FLAGS_END                             (DAILY_FLAGS_START + 7)
+#define DAILY_FLAGS_END                             0x7F7
 #define NUM_DAILY_FLAGS                             (DAILY_FLAGS_END - DAILY_FLAGS_START + 1)
-#define FLAGS_COUNT                                 (DAILY_FLAGS_END + 1)
+#define BUILD_FLAGS_END                             DAILY_FLAGS_END
 
 // Special flags
 #define SPECIAL_FLAGS_START                          0x4000
@@ -1262,8 +1265,7 @@
 #define FLAG_DEFEATED_ELITE_4_GLACIA                0
 #define FLAG_DEFEATED_ELITE_4_DRAKE                 0
 
-// Emerald registered trainer match call flags
-#define TRAINER_REGISTERED_FLAGS_START               0
+// TRAINER_REGISTERED_FLAGS_START defined above at 0x310
 #define FLAG_REGISTERED_ROSE                        0
 #define FLAG_REGISTERED_ANDRES                      0
 #define FLAG_REGISTERED_DUSTY                       0
