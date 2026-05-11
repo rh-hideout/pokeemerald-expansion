@@ -4277,7 +4277,7 @@ static void PrintUnknownMonMeasurements(void)
 
 static u8* GetUnknownMonHeightString(void)
 {
-    if (UNITS == UNITS_IMPERIAL)
+    if (gSaveBlock3Ptr->challengeSettings.unitSystem == 1)
         return ReplaceDecimalSeparator(gText_UnkHeight);
     else
         return ReplaceDecimalSeparator(gText_UnkHeightMetric);
@@ -4285,7 +4285,7 @@ static u8* GetUnknownMonHeightString(void)
 
 static u8* GetUnknownMonWeightString(void)
 {
-    if (UNITS == UNITS_IMPERIAL)
+    if (gSaveBlock3Ptr->challengeSettings.unitSystem == 1)
         return ReplaceDecimalSeparator(gText_UnkWeight);
     else
         return ReplaceDecimalSeparator(gText_UnkWeightMetric);
@@ -4334,7 +4334,7 @@ static void PrintOwnedMonHeight(u16 species)
 
 u8* ConvertMonHeightToString(u32 height)
 {
-    if (UNITS == UNITS_IMPERIAL)
+    if (gSaveBlock3Ptr->challengeSettings.unitSystem == 1)
         return ConvertMonHeightToImperialString(height);
     else
         return ConvertMonHeightToMetricString(height);
@@ -4355,7 +4355,7 @@ static void PrintOwnedMonWeight(u16 species)
 
 u8* ConvertMonWeightToString(u32 weight)
 {
-    if (UNITS == UNITS_IMPERIAL)
+    if (gSaveBlock3Ptr->challengeSettings.unitSystem == 1)
         return ConvertMonWeightToImperialString(weight);
     else
         return ConvertMonWeightToMetricString(weight);
