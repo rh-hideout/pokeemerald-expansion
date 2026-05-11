@@ -112,6 +112,28 @@ static void SetDefaultOptions(void)
     gSaveBlock2Ptr->regionMapZoom = FALSE;
 }
 
+static void SetDefaultChallengeSettings(void)
+{
+    gSaveblock3.challengeSettings.followerEnable = 0;
+    gSaveblock3.challengeSettings.followerLargeEnable = 0;
+    gSaveblock3.challengeSettings.autoRun = 1;
+    gSaveblock3.challengeSettings.autorunSurf = 1;
+    gSaveblock3.challengeSettings.autorunDive = 1;
+    gSaveblock3.challengeSettings.fishing = 1;
+    gSaveblock3.challengeSettings.evenFasterJoy = 1;
+    gSaveblock3.challengeSettings.fastIntro = 1;
+    gSaveblock3.challengeSettings.fastBattle = 0;
+    gSaveblock3.challengeSettings.optionStyle = 0;
+    gSaveblock3.challengeSettings.unitSystem = 0;
+    gSaveblock3.challengeSettings.disableMatchCall = 0;
+    gSaveblock3.challengeSettings.bikeMusic = 0;
+    gSaveblock3.challengeSettings.surfMusic = 0;
+    gSaveblock3.challengeSettings.lrToRun = 0;
+    gSaveblock3.challengeSettings.ballPrompt = 0;
+    gSaveblock3.challengeSettings.newBackgrounds = 1;
+    gSaveblock3.challengeSettings.runType = 1;
+}
+
 static void ClearPokedexFlags(void)
 {
     gUnusedPokedexU8 = 0;
@@ -184,12 +206,7 @@ void NewGameInitData(void)
     ClearFrontierRecord();
     ClearSav1();
     ClearSav3();
-    gSaveblock3.challengeSettings.autoRun = 1;
-    gSaveblock3.challengeSettings.autorunSurf = 1;
-    gSaveblock3.challengeSettings.fishing = 1;
-    gSaveblock3.challengeSettings.evenFasterJoy = 1;
-    gSaveblock3.challengeSettings.newBackgrounds = 1;
-    gSaveblock3.challengeSettings.runType = 1;
+    SetDefaultChallengeSettings();
     ClearAllMail();
     gSaveBlock2Ptr->specialSaveWarpFlags = 0;
     gSaveBlock2Ptr->gcnLinkFlags = 0;
