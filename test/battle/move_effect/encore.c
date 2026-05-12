@@ -95,10 +95,10 @@ SINGLE_BATTLE_TEST("Encore forces the last move used before the target flinched"
         WITH_CONFIG(B_ENCORE_TARGET, GEN_3);
         ASSUME(MoveHasAdditionalEffect(MOVE_HEADBUTT, MOVE_EFFECT_FLINCH) == TRUE);
         PLAYER(SPECIES_WOBBUFFET) { Speed(100); Moves(MOVE_CELEBRATE, MOVE_HEADBUTT, MOVE_ENCORE); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); Moves(MOVE_GRASS_KNOT, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); Moves(MOVE_GRASS_KNOT, MOVE_SCRATCH, MOVE_CELEBRATE); }
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_GRASS_KNOT); }
-        TURN { MOVE(player, MOVE_HEADBUTT); MOVE(opponent, MOVE_GRASS_KNOT); }
+        TURN { MOVE(player, MOVE_HEADBUTT); MOVE(opponent, MOVE_SCRATCH); }
         TURN { MOVE(player, MOVE_ENCORE); MOVE(opponent, MOVE_CELEBRATE); }
         TURN { FORCED_MOVE(opponent); }
     } SCENE {
