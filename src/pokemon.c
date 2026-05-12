@@ -3843,9 +3843,36 @@ u8 GetMonsStateToDoubles_2(void)
     return (aliveCount > 1) ? PLAYER_HAS_TWO_USABLE_MONS : PLAYER_HAS_ONE_USABLE_MON;
 }
 
+static const struct {
+    u16 species;
+    u16 customAbility;
+} sLegendaryCustomAbilities[] = {
+    { SPECIES_ARTICUNO, ABILITY_WATER_VEIL   },
+    { SPECIES_ZAPDOS,   ABILITY_LIGHTNING_ROD },
+    { SPECIES_MOLTRES,  ABILITY_FLAME_BODY   },
+    { SPECIES_MEWTWO,   ABILITY_SYNCHRONIZE  },
+    { SPECIES_RAIKOU,   ABILITY_VOLT_ABSORB  },
+    { SPECIES_ENTEI,    ABILITY_FLASH_FIRE   },
+    { SPECIES_SUICUNE,  ABILITY_WATER_ABSORB },
+    { SPECIES_LUGIA,    ABILITY_MARVEL_SCALE  },
+    { SPECIES_HO_OH,    ABILITY_SERENE_GRACE },
+};
+
 enum Ability GetAbilityBySpecies(u16 species, u8 abilityNum)
 {
     int i;
+
+    if (abilityNum == 0 && gSaveBlock3Ptr->challengeSettings.tx_Mode_Legendary_Abilities == 1)
+    {
+        for (i = 0; i < (int)ARRAY_COUNT(sLegendaryCustomAbilities); i++)
+        {
+            if (sLegendaryCustomAbilities[i].species == species)
+            {
+                gLastUsedAbility = sLegendaryCustomAbilities[i].customAbility;
+                return gLastUsedAbility;
+            }
+        }
+    }
 
     if (abilityNum < NUM_ABILITY_SLOTS)
         gLastUsedAbility = GetSpeciesAbility(species, abilityNum);
