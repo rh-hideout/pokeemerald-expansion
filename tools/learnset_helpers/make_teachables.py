@@ -46,18 +46,51 @@ def enabled() -> bool:
         cfg_defined = CONFIG_ENABLED_PAT.search(cfg_pokemon)
         return cfg_defined is not None and cfg_defined.group("cfg_val") in ("TRUE", "1")
 
-def extract_repo_tms() -> typing.Generator[str, None, None]:
+def extract_repo_tms(build: str = "") -> typing.Generator[str, None, None]:
     """
     Yield MOVE constants assigned to a TM or HM in the user's repo.
+    When `build` is set (e.g. "POKEMON_HNS", "FIRERED"), only yield
+    TMs from the matching #if block; otherwise yield all.
     """
     with open("./include/constants/tms_hms.h", "r") as tmshms_fp:
-        tmshms = tmshms_fp.read()
-        match_it = TMHM_MACRO_PAT.finditer(tmshms)
-        if not match_it:
-            return
+        text = tmshms_fp.read()
 
-        for match in match_it:
-            yield f"MOVE_{match.group(1)}"
+    if not build:
+        for m in TMHM_MACRO_PAT.finditer(text):
+            yield f"MOVE_{m.group(1)}"
+        return
+
+    BUILD_GUARD_MAP = {
+        "POKEMON_HNS": "IS_HNS",
+        "FIRERED": "IS_FRLG",
+        "LEAFGREEN": "IS_FRLG",
+    }
+    target_guard = BUILD_GUARD_MAP.get(build, "")
+
+    # Simple state machine for top-level #if IS_X / #else / #endif
+    active = True
+    depth = 0
+    for line in text.splitlines():
+        stripped = line.strip()
+
+        if stripped.startswith("#if ") or stripped.startswith("#ifdef"):
+            depth += 1
+            if depth == 1:
+                active = bool(target_guard and target_guard in stripped)
+            continue
+        if stripped.startswith("#else") and depth == 1:
+            active = not active
+            continue
+        if stripped.startswith("#endif"):
+            if depth == 1:
+                active = True
+            depth = max(0, depth - 1)
+            continue
+
+        if active:
+            m = TMHM_MACRO_PAT.search(line)
+            if m:
+                yield f"MOVE_{m.group(1)}"
 
 def extract_tm_litteracy_config() -> bool:
     config = False
@@ -187,18 +220,26 @@ def main():
         quit()
 
     tutor_mode = False
-    if len(sys.argv) < 2 or len(sys.argv) > 3:
+    build_target = ""
+    args = sys.argv[1:]
+
+    while args and args[0].startswith("--"):
+        if args[0] == "--tutors":
+            tutor_mode = True
+            args.pop(0)
+        elif args[0] == "--build" and len(args) > 1:
+            args.pop(0)
+            build_target = args.pop(0)
+        else:
+            print(f"Unknown option: {args[0]}", file=sys.stderr)
+            quit(1)
+
+    if len(args) != 1:
         print("Invalid number of arguments", file=sys.stderr)
         print(__doc__, file=sys.stderr)
         quit(1)
 
-    if len(sys.argv) == 3:
-        if sys.argv[1] != "--tutors":
-            print("Unknown make_teachables mode", file=sys.stderr)
-            quit(1)
-        tutor_mode = True
-
-    SOURCE_DIR = pathlib.Path(sys.argv[-1])
+    SOURCE_DIR = pathlib.Path(args[0])
 
     with open("src/data/pokemon/special_movesets.json", "r") as file:
         special_movesets = json.load(file)
@@ -216,7 +257,7 @@ def main():
     assert SOURCE_TEACHING_TYPES_JSON.exists(), f"{SOURCE_TEACHING_TYPES_JSON=} does not exist"
     assert SOURCE_TEACHING_TYPES_JSON.is_file(), f"{SOURCE_TEACHING_TYPES_JSON=} is not a file"
 
-    repo_tms = list(extract_repo_tms())
+    repo_tms = list(extract_repo_tms(build_target))
 
     with open("./include/config/pokedex_plus_hgss.h", "r") as cfg_pokemon_fp:
         cfg_pokemon = cfg_pokemon_fp.read()
