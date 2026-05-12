@@ -6404,6 +6404,10 @@ const u16 *GetMonSpritePalFromSpeciesIsEgg(u16 species, bool32 isShiny, bool32 i
     }
     else if (isShiny)
     {
+        if (gSaveBlock3Ptr != NULL
+            && gSaveBlock3Ptr->challengeSettings.tx_Features_ShinyColors
+            && gSpeciesInfo[species].shinyPaletteModern != NULL)
+            return gSpeciesInfo[species].shinyPaletteModern;
     #if P_GENDER_DIFFERENCES
         if (gSpeciesInfo[species].shinyPaletteFemale != NULL && isFemale)
             return gSpeciesInfo[species].shinyPaletteFemale;

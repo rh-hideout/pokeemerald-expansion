@@ -519,6 +519,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .backAnimId = BACK_ANIM_SHAKE_GLOW_RED,
         .palette = gMonPalette_Blaziken,
         .shinyPalette = gMonShinyPalette_Blaziken,
+        .shinyPaletteModern = gMonShinyPaletteModern_Blaziken,
         .iconSprite = gMonIcon_Blaziken,
         .iconPalIndex = 0,
 #if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
@@ -12320,6 +12321,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .backAnimId = BACK_ANIM_V_SHAKE,
         .palette = gMonPalette_Regice,
         .shinyPalette = gMonShinyPalette_Regice,
+        .shinyPaletteModern = gMonShinyPaletteModern_Regice,
         .iconSprite = gMonIcon_Regice,
         .iconPalIndex = P_GBA_STYLE_SPECIES_ICONS ? 2 : 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,

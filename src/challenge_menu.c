@@ -561,7 +561,7 @@ static const struct ChallengeMenuItem sTabItems_Features[] = {
         .choiceNames  = sChoices_ShinyChance,
     },
     [ITEM_FEATURES_SHINY_COLOR] = {
-        .name         = COMPOUND_STRING("SHINY COLORS"),
+        .name         = COMPOUND_STRING("ALT SHINY"),
         .descriptions = sDesc_ShinyColor,
         .numChoices   = 2,
         .choiceNames  = sChoices_OffOn,

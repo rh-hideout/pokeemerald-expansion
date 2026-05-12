@@ -439,6 +439,7 @@ struct SpeciesInfo /*0xC4*/
     const u32 *backPic;
     const u16 *palette;
     const u16 *shinyPalette;
+    const u16 *shinyPaletteModern;
     const u8 *iconSprite;
 #if P_GENDER_DIFFERENCES
     const u32 *frontPicFemale;
