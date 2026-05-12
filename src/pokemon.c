@@ -77,6 +77,19 @@ extern u16 gSpecialVar_ItemId;
 
 #define FRIENDSHIP_EVO_THRESHOLD ((P_FRIENDSHIP_EVO_THRESHOLD >= GEN_8) ? 160 : 220)
 
+static const u32 sShinyOddsTable[] = { 8, 16, 32, 64, 128 };
+
+static u32 GetShinyOdds(void)
+{
+    if (gSaveBlock3Ptr != NULL)
+    {
+        u8 setting = gSaveBlock3Ptr->challengeSettings.tx_Features_ShinyChance;
+        if (setting < ARRAY_COUNT(sShinyOddsTable))
+            return sShinyOddsTable[setting];
+    }
+    return SHINY_ODDS;
+}
+
 struct SpeciesItem
 {
     u16 species;
@@ -1674,7 +1687,7 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u32 personal
     else if (trainerId.method == OT_ID_PRESET)
     {
         value = trainerId.value;
-        isShiny = GET_SHINY_VALUE(value, personality) < SHINY_ODDS;
+        isShiny = GET_SHINY_VALUE(value, personality) < GetShinyOdds();
     }
     else // Player is the OT
     {
@@ -1707,13 +1720,13 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u32 personal
                 totalRerolls += CalculateDexNavShinyRolls();
 
             u32 shinyPersonality = personality;
-            while (GET_SHINY_VALUE(value, shinyPersonality) >= SHINY_ODDS && totalRerolls > 0)
+            while (GET_SHINY_VALUE(value, shinyPersonality) >= GetShinyOdds() && totalRerolls > 0)
             {
                 shinyPersonality = Random32();
                 totalRerolls--;
             }
 
-            isShiny = GET_SHINY_VALUE(value, shinyPersonality) < SHINY_ODDS;
+            isShiny = GET_SHINY_VALUE(value, shinyPersonality) < GetShinyOdds();
         }
     }
 
