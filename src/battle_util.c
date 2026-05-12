@@ -4618,7 +4618,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             break;
         }
         break;
-    case ABILITYEFFECT_COMMANDER:
+    case ABILITYEFFECT_DEPENDS_ON_ALLY:
         gBattleScripting.battler = battler;
         partner = BATTLE_PARTNER(battler);
         switch (ability)
