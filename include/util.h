@@ -30,4 +30,14 @@ static inline u32 Clamp(u32 value, u32 min, u32 max)
         return value;
 }
 
+static inline s32 ClampSigned(s32 value, s32 min, s32 max)
+{
+    if (value < min)
+        return min;
+    else if (value > max)
+        return max;
+    else
+        return value;
+}
+
 #endif // GUARD_UTIL_H
