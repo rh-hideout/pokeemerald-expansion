@@ -13507,6 +13507,21 @@ const struct ItemInfo gItemsInfo[] =
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
     },
 
+#if IS_HNS
+    [ITEM_HM_WHIRLPOOL] =
+    {
+        .name = ITEM_NAME("HM05"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "Traps the foe in a\n"
+            "violent swirling\n"
+            "whirlpool."),
+        .importance = 1,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+#else
     [ITEM_HM_FLASH] =
     {
         .name = ITEM_NAME("HM05"),
@@ -13520,6 +13535,7 @@ const struct ItemInfo gItemsInfo[] =
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
     },
+#endif
 
     [ITEM_HM_ROCK_SMASH] =
     {
@@ -13549,6 +13565,21 @@ const struct ItemInfo gItemsInfo[] =
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
     },
 
+#if IS_HNS
+    [ITEM_HM_ROCK_CLIMB] =
+    {
+        .name = ITEM_NAME("HM08"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "An all-out charge\n"
+            "attack that may\n"
+            "confuse the foe."),
+        .importance = 1,
+        .pocket = POCKET_TM_HM,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_TMHM,
+    },
+#else
     [ITEM_HM_DIVE] =
     {
         .name = ITEM_NAME("HM08"),
@@ -13562,6 +13593,7 @@ const struct ItemInfo gItemsInfo[] =
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
     },
+#endif
 
 
 // Charms
