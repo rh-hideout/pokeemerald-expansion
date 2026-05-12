@@ -173,3 +173,20 @@ SINGLE_BATTLE_TEST("Air Balloon pops when Disguise is broken")
         EXPECT_EQ(player->species, newSpecies);
     }
 }
+
+SINGLE_BATTLE_TEST("Air Balloon pops when the holder faints from a damaging move")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_AIR_BALLOON); HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        MESSAGE("Wobbuffet floats in the air with its Air Balloon!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        MESSAGE("Wobbuffet's Air Balloon popped!");
+        MESSAGE("Wobbuffet fainted!");
+    } THEN {
+        EXPECT_EQ(player->item, ITEM_NONE);
+    }
+}
