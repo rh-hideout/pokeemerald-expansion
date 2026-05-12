@@ -141,6 +141,7 @@ SINGLE_BATTLE_TEST("Semi-invulnerable moves don't need to charge with Power Herb
     PARAMETRIZE { move = MOVE_SHADOW_FORCE; }
 
     GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_POWER_HERB) == HOLD_EFFECT_POWER_HERB);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_POWER_HERB); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -236,6 +237,26 @@ SINGLE_BATTLE_TEST("Semi-invulnerable moves don't need to charge with Power Herb
         }
         ANIMATION(ANIM_TYPE_MOVE, move, player);
         HP_BAR(opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Power Herb semi-invulnerable moves do not keep the user untargetable that turn")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_POWER_HERB) == HOLD_EFFECT_POWER_HERB);
+        PLAYER(SPECIES_BASCULEGION) { Item(ITEM_POWER_HERB); Speed(20); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_PHANTOM_FORCE); MOVE(opponent, MOVE_WATER_GUN); }
+    } SCENE {
+        NOT MESSAGE("Basculegion vanished instantly!");
+        MESSAGE("Basculegion used Phantom Force!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PHANTOM_FORCE, player);
+        MESSAGE("Basculegion became fully charged due to its Power Herb!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PHANTOM_FORCE, player);
+        HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, opponent);
+        HP_BAR(player);
     }
 }
 

@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle.h"
 #include "battle_hold_effects.h"
+#include "battle_stat_change.h"
 #include "battle_util.h"
 #include "battle_scripts.h"
 #include "battle_switch_in.h"
@@ -36,7 +37,7 @@ bool32 DoSwitchInEvents(void)
         gBattleStruct->switchInBattlerCounter = 0;
         gBattleStruct->eventState.battlerSwitchIn = 0;
         gBattleStruct->eventState.switchIn++;
-        break;
+        // fallthrough
     case SWITCH_IN_EVENTS_TERA_SHIFT:
         while (gBattleStruct->switchInBattlerCounter < gBattlersCount)
         {
@@ -166,6 +167,9 @@ bool32 DoSwitchInEvents(void)
                 gBattleStruct->battlerState[battler].switchIn = FALSE;
             }
         }
+
+        gBattleStruct->intimidateActivated = FALSE;
+        gBattleStruct->adrenalineOrbActivated = FALSE;
         gBattleStruct->battlersSorted = FALSE;
         gBattleStruct->hazardsCounter = 0;
         gBattleStruct->eventState.switchIn++;
@@ -250,7 +254,7 @@ static bool32 FirstEventBlockEvents(struct BattleCalcValues *calcValues)
             gBattleScripting.battler = gBattlerAbility = battler;
             gBattleStruct->battlerState[battler].forcedSwitch = FALSE;
             gBattleStruct->eventState.switchIn = 0;
-            BattleScriptCall(BattleScript_EmergencyExit);
+            BattleScriptCall(BattleScript_EmergencyExitSendReplacement);
             effect = TRUE;
         }
         else
@@ -323,8 +327,8 @@ static bool32 TryHazardsOnSwitchIn(enum BattlerId battler, enum Ability ability,
     case HAZARDS_STICKY_WEB:
         if (IsBattlerAffectedByHazards(battler, holdEffect, FALSE) && IsBattlerGrounded(battler, ability, holdEffect))
         {
-            gBattleScripting.battler = battler;
-            SET_STATCHANGER(STAT_SPEED, 1, TRUE);
+            gEffectBattler = battler;
+            SetStatChange(battler, STAT_SPEED, -1);
             BattleScriptCall(BattleScript_StickyWebOnSwitchIn);
             effect = TRUE;
         }
@@ -344,7 +348,7 @@ static bool32 TryHazardsOnSwitchIn(enum BattlerId battler, enum Ability ability,
             effect = TRUE;
         }
         else if (IsBattlerAffectedByHazards(battler, holdEffect, TRUE)
-              && CanBePoisoned(battler, battler, ability, ability))
+              && CanBePoisoned(battler, battler, ABILITY_NONE, ability))
         {
             gBattleScripting.battler = battler;
             BattleScriptPushCursor();

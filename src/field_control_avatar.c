@@ -35,9 +35,11 @@
 #include "trainer_hill.h"
 #include "vs_seeker.h"
 #include "wild_encounter.h"
+#include "wild_encounter_ow.h"
 #include "constants/event_bg.h"
 #include "constants/event_objects.h"
 #include "constants/field_poison.h"
+#include "constants/layouts.h"
 #include "constants/metatile_behaviors.h"
 #include "constants/songs.h"
 #include "constants/trainer_hill.h"
@@ -183,6 +185,7 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     {
         IncrementGameStat(GAME_STAT_STEPS);
         IncrementBirthIslandRockStepCount();
+        DespawnAllOverworldWildEncounters(OWE_GENERATED, WILD_CHECK_REPEL);
         if (TryStartStepBasedScript(&position, metatileBehavior, playerDirection) == TRUE)
             return TRUE;
     }
@@ -401,10 +404,14 @@ static const u8 *GetInteractedObjectEventScript(struct MapPosition *position, u8
     gSelectedObjectEvent = objectEventId;
     gSpecialVar_LastTalked = gObjectEvents[objectEventId].localId;
 
-    if (InTrainerHill() == TRUE)
-        script = GetTrainerHillTrainerScript();
-    else if (PlayerHasFollowerNPC() && objectEventId == GetFollowerNPCObjectId())
+    if (PlayerHasFollowerNPC() && objectEventId == GetFollowerNPCObjectId())
         script = GetFollowerNPCScriptPointer();
+    else if (IsOverworldWildEncounter(&gObjectEvents[objectEventId], OWE_ANY))
+        script = GetOverworlWildEncounterScript(objectEventId);
+    else if (gObjectEvents[objectEventId].localId == OBJ_EVENT_ID_FOLLOWER)
+        script = EventScript_Follower;
+    else if (InTrainerHill() == TRUE)
+        script = GetTrainerHillTrainerScript();
     else
         script = GetObjectEventScriptPointerByObjectEventId(objectEventId);
 
@@ -592,7 +599,7 @@ static const u8 *GetInteractedMetatileScript(struct MapPosition *position, u8 me
         SetMsgSignPostAndVarFacing(direction);
         return Common_EventScript_ShowPokemonCenterSign;
     }
-    if (MetatileBehavior_IsRockClimbable(metatileBehavior) == TRUE && !IsRockClimbActive())
+    if (IsFieldMoveUnlocked(FIELD_MOVE_ROCK_CLIMB) && MetatileBehavior_IsRockClimbable(metatileBehavior) == TRUE && !IsRockClimbActive())
         return EventScript_UseRockClimb;
 
     elevation = position->elevation;
@@ -833,7 +840,7 @@ static void UpdateFriendshipStepCounter(void)
     (*ptr) %= 128;
     if (*ptr == 0)
     {
-        struct Pokemon *mon = gPlayerParty;
+        struct Pokemon *mon = gParties[B_TRAINER_0];
         for (i = 0; i < PARTY_SIZE; i++)
         {
             AdjustFriendship(mon, FRIENDSHIP_EVENT_WALKING);
@@ -844,7 +851,7 @@ static void UpdateFriendshipStepCounter(void)
 
 static void UpdateFollowerStepCounter(void)
 {
-    if (gPlayerPartyCount > 0 && gFollowerSteps < (u16)-1)
+    if (gPartiesCount[B_TRAINER_0] > 0 && gFollowerSteps < (u16)-1)
         gFollowerSteps++;
 }
 
@@ -886,9 +893,26 @@ void RestartWildEncounterImmunitySteps(void)
     sWildEncounterImmunitySteps = 0;
 }
 
+static bool32 ShouldDisableRandomEncounters(void)
+{
+    if (FlagGet(WE_FLAG_NO_ENCOUNTER))
+        return TRUE;
+
+    if (!WE_VANILLA_RANDOM && WE_OW_ENCOUNTERS)
+    {
+        if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PIKE_ROOM_WILD_MONS && !WE_OWE_BATTLE_PIKE)
+            return FALSE;
+
+        if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR && !WE_OWE_BATTLE_PYRAMID)
+            return FALSE;
+    }
+
+    return !WE_VANILLA_RANDOM;
+}
+
 static bool8 CheckStandardWildEncounter(u16 metatileBehavior)
 {
-    if (FlagGet(OW_FLAG_NO_ENCOUNTER))
+    if (ShouldDisableRandomEncounters())
         return FALSE;
 
     if (sWildEncounterImmunitySteps < 4)

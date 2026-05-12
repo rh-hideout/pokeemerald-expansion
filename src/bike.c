@@ -8,6 +8,8 @@
 #include "oras_dowse.h"
 #include "overworld.h"
 #include "sound.h"
+#include "wild_encounter.h"
+#include "wild_encounter_ow.h"
 #include "constants/songs.h"
 
 // this file's functions
@@ -1295,8 +1297,8 @@ void GetOnOffBike(u8 transitionFlags)
     {
         EndORASDowsing();
         SetPlayerAvatarTransitionFlags(transitionFlags);
-        Overworld_SetSavedMusic(MUS_CYCLING);
-        Overworld_ChangeMusicTo(MUS_CYCLING);
+        Overworld_SetSavedMusic(IS_FRLG ? MUS_RG_CYCLING : MUS_CYCLING);
+        Overworld_ChangeMusicTo(IS_FRLG ? MUS_RG_CYCLING : MUS_CYCLING);
     }
 }
 

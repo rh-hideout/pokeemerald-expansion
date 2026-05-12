@@ -118,9 +118,9 @@ DOUBLE_BATTLE_TEST("Unnerve stops applying on death but applies on revive")
         TURN {  USE_ITEM(playerLeft, ITEM_REVIVE, partyIndex: 1); SKIP_TURN(playerRight); MOVE(opponentLeft, MOVE_WILL_O_WISP, target: opponentRight); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentLeft);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponentRight);
-        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentRight);
     }
 
 }

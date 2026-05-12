@@ -62,7 +62,11 @@ SINGLE_BATTLE_TEST("Protect: Protect, Detect, Spiky Shield, Baneful Bunker and B
 SINGLE_BATTLE_TEST("Protect: King's Shield, Silk Trap and Obstruct protect from damaging moves and lower stats on contact")
 {
     u32 j;
-    static const enum Move protectMoves[][3] =
+    static const struct {
+        enum Move move;
+        enum Stat statId;
+        s8 lowersBy;
+    } protectMoves[] =
     {   // Move             Stat      Stages
         {MOVE_KINGS_SHIELD, STAT_ATK,   (B_KINGS_SHIELD_LOWER_ATK >= GEN_8) ? 1 : 2},
         {MOVE_SILK_TRAP,    STAT_SPEED, 1},
@@ -74,9 +78,9 @@ SINGLE_BATTLE_TEST("Protect: King's Shield, Silk Trap and Obstruct protect from 
 
     for (j = 0; j < ARRAY_COUNT(protectMoves); j++)
     {
-        PARAMETRIZE { usedMove = MOVE_SCRATCH; protectMove = protectMoves[j][0]; statId = protectMoves[j][1]; lowersBy = protectMoves[j][2]; }
-        PARAMETRIZE { usedMove = MOVE_LEER; protectMove = protectMoves[j][0]; statId = 0; lowersBy = 0; }
-        PARAMETRIZE { usedMove = MOVE_WATER_GUN; protectMove = protectMoves[j][0]; statId = 0; lowersBy = 0; }
+        PARAMETRIZE { usedMove = MOVE_SCRATCH; protectMove = protectMoves[j].move; statId = protectMoves[j].statId; lowersBy = protectMoves[j].lowersBy; }
+        PARAMETRIZE { usedMove = MOVE_LEER; protectMove = protectMoves[j].move; statId = 0; lowersBy = 0; }
+        PARAMETRIZE { usedMove = MOVE_WATER_GUN; protectMove = protectMoves[j].move; statId = 0; lowersBy = 0; }
     }
 
     GIVEN {
@@ -752,9 +756,9 @@ SINGLE_BATTLE_TEST("Protect: Protect does not block Confide or Decorate")
     PARAMETRIZE { move = MOVE_DECORATE; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_CONFIDE) == EFFECT_SPECIAL_ATTACK_DOWN);
+        ASSUME_STAT_CHANGE(MOVE_CONFIDE, spAtk: -1);
         ASSUME(MoveIgnoresProtect(MOVE_CONFIDE));
-        ASSUME(GetMoveEffect(MOVE_DECORATE) == EFFECT_DECORATE);
+        ASSUME_STAT_CHANGE(MOVE_DECORATE, attack: +2, spAtk: +2);
         ASSUME(MoveIgnoresProtect(MOVE_DECORATE));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -774,9 +778,9 @@ DOUBLE_BATTLE_TEST("Crafty Shield protects self and ally from Confide and Decora
     PARAMETRIZE { move = MOVE_DECORATE; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_CONFIDE) == EFFECT_SPECIAL_ATTACK_DOWN);
+        ASSUME_STAT_CHANGE(MOVE_CONFIDE, spAtk: -1);
         ASSUME(MoveIgnoresProtect(MOVE_CONFIDE));
-        ASSUME(GetMoveEffect(MOVE_DECORATE) == EFFECT_DECORATE);
+        ASSUME_STAT_CHANGE(MOVE_DECORATE, attack: +2, spAtk: +2);
         ASSUME(MoveIgnoresProtect(MOVE_DECORATE));
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
@@ -816,10 +820,10 @@ DOUBLE_BATTLE_TEST("Crafty Shield does not protect against moves that target all
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FLOWER_SHIELD, playerLeft);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
             MESSAGE("Tangela's Defense rose!");
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-            MESSAGE("The opposing Sunkern's Defense rose!");
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
             MESSAGE("Tangrowth's Defense rose!");
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+            MESSAGE("The opposing Sunkern's Defense rose!");
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
             MESSAGE("The opposing Sunflora's Defense rose!");
         } else {

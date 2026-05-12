@@ -5,6 +5,7 @@
 #include "battle_main.h"
 #include "battle_setup.h"
 #include "battle_tower.h"
+#include "battle_stat_change.h"
 #include "frontier_util.h"
 #include "battle_message.h"
 #include "event_data.h"
@@ -1935,13 +1936,13 @@ static void InitDomeTrainers(void)
     // Store the data used to display party information on the player's tourney page
     for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
     {
-        DOME_MONS[0][i] = GetMonData(&gPlayerParty[gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1], MON_DATA_SPECIES);
+        DOME_MONS[0][i] = GetMonData(&gParties[B_TRAINER_0][gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1], MON_DATA_SPECIES);
         for (j = 0; j < MAX_MON_MOVES; j++)
-            gSaveBlock2Ptr->frontier.domePlayerPartyData[i].moves[j] = GetMonData(&gPlayerParty[gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1], MON_DATA_MOVE1 + j);
+            gSaveBlock2Ptr->frontier.domePlayerPartyData[i].moves[j] = GetMonData(&gParties[B_TRAINER_0][gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1], MON_DATA_MOVE1 + j);
         for (j = 0; j < NUM_STATS; j++)
-            gSaveBlock2Ptr->frontier.domePlayerPartyData[i].evs[j] = GetMonData(&gPlayerParty[gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1], MON_DATA_HP_EV + j);
+            gSaveBlock2Ptr->frontier.domePlayerPartyData[i].evs[j] = GetMonData(&gParties[B_TRAINER_0][gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1], MON_DATA_HP_EV + j);
 
-        gSaveBlock2Ptr->frontier.domePlayerPartyData[i].nature = GetNature(&gPlayerParty[gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1]);
+        gSaveBlock2Ptr->frontier.domePlayerPartyData[i].nature = GetNature(&gParties[B_TRAINER_0][gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1]);
     }
 
     // Populate the tourney roster with random frontier trainers (dependent on streak)
@@ -2012,14 +2013,14 @@ static void InitDomeTrainers(void)
     {
         // trainerId var re-used here as index of selected mons
         trainerId = gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1;
-        rankingScores[0] += GetMonData(&gPlayerParty[trainerId], MON_DATA_ATK);
-        rankingScores[0] += GetMonData(&gPlayerParty[trainerId], MON_DATA_DEF);
-        rankingScores[0] += GetMonData(&gPlayerParty[trainerId], MON_DATA_SPATK);
-        rankingScores[0] += GetMonData(&gPlayerParty[trainerId], MON_DATA_SPDEF);
-        rankingScores[0] += GetMonData(&gPlayerParty[trainerId], MON_DATA_SPEED);
-        rankingScores[0] += GetMonData(&gPlayerParty[trainerId], MON_DATA_MAX_HP);
-        monTypesBits |= 1u << GetSpeciesType(GetMonData(&gPlayerParty[trainerId], MON_DATA_SPECIES), 0);
-        monTypesBits |= 1u << GetSpeciesType(GetMonData(&gPlayerParty[trainerId], MON_DATA_SPECIES), 1);
+        rankingScores[0] += GetMonData(&gParties[B_TRAINER_0][trainerId], MON_DATA_ATK);
+        rankingScores[0] += GetMonData(&gParties[B_TRAINER_0][trainerId], MON_DATA_DEF);
+        rankingScores[0] += GetMonData(&gParties[B_TRAINER_0][trainerId], MON_DATA_SPATK);
+        rankingScores[0] += GetMonData(&gParties[B_TRAINER_0][trainerId], MON_DATA_SPDEF);
+        rankingScores[0] += GetMonData(&gParties[B_TRAINER_0][trainerId], MON_DATA_SPEED);
+        rankingScores[0] += GetMonData(&gParties[B_TRAINER_0][trainerId], MON_DATA_MAX_HP);
+        monTypesBits |= 1u << GetSpeciesType(GetMonData(&gParties[B_TRAINER_0][trainerId], MON_DATA_SPECIES), 0);
+        monTypesBits |= 1u << GetSpeciesType(GetMonData(&gParties[B_TRAINER_0][trainerId], MON_DATA_SPECIES), 1);
     }
 
     // Count the number of types in the players party, to factor into the ranking
@@ -2188,7 +2189,7 @@ static void CreateDomeOpponentMon(u8 monPartyId, u16 tournamentTrainerId, u8 tou
     u8 level = SetFacilityPtrsGetLevel();
 
     CreateFacilityMon(&gFacilityTrainerMons[DOME_MONS[tournamentTrainerId][tournamentMonId]],
-                      level, fixedIv, otId, 0, &gEnemyParty[monPartyId]);
+                      level, fixedIv, otId, 0, &gParties[B_TRAINER_1][monPartyId]);
 }
 
 static void CreateDomeOpponentMons(u16 tournamentTrainerId)
@@ -2270,12 +2271,12 @@ static int SelectOpponentMons_Good(u16 tournamentTrainerId, bool8 allowRandom)
                 if (DOME_TRAINERS[tournamentTrainerId].trainerId == TRAINER_FRONTIER_BRAIN)
                 {
                     partyMovePoints[i] += GetTypeEffectivenessPoints(GetFrontierBrainMonMove(i, moveIndex),
-                                            GetMonData(&gPlayerParty[playerMonId], MON_DATA_SPECIES), EFFECTIVENESS_MODE_GOOD);
+                                            GetMonData(&gParties[B_TRAINER_0][playerMonId], MON_DATA_SPECIES), EFFECTIVENESS_MODE_GOOD);
                 }
                 else
                 {
                     partyMovePoints[i] += GetTypeEffectivenessPoints(gFacilityTrainerMons[DOME_MONS[tournamentTrainerId][i]].moves[moveIndex],
-                                            GetMonData(&gPlayerParty[playerMonId], MON_DATA_SPECIES), EFFECTIVENESS_MODE_GOOD);
+                                            GetMonData(&gParties[B_TRAINER_0][playerMonId], MON_DATA_SPECIES), EFFECTIVENESS_MODE_GOOD);
                 }
             }
         }
@@ -2299,12 +2300,12 @@ static int SelectOpponentMons_Bad(u16 tournamentTrainerId, bool8 allowRandom)
                 if (DOME_TRAINERS[tournamentTrainerId].trainerId == TRAINER_FRONTIER_BRAIN)
                 {
                     partyMovePoints[i] += GetTypeEffectivenessPoints(GetFrontierBrainMonMove(i, moveIndex),
-                                            GetMonData(&gPlayerParty[playerMonId], MON_DATA_SPECIES), EFFECTIVENESS_MODE_BAD);
+                                            GetMonData(&gParties[B_TRAINER_0][playerMonId], MON_DATA_SPECIES), EFFECTIVENESS_MODE_BAD);
                 }
                 else
                 {
                     partyMovePoints[i] += GetTypeEffectivenessPoints(gFacilityTrainerMons[DOME_MONS[tournamentTrainerId][i]].moves[moveIndex],
-                                            GetMonData(&gPlayerParty[playerMonId], MON_DATA_SPECIES), EFFECTIVENESS_MODE_BAD);
+                                            GetMonData(&gParties[B_TRAINER_0][playerMonId], MON_DATA_SPECIES), EFFECTIVENESS_MODE_BAD);
                 }
             }
         }
@@ -3763,7 +3764,7 @@ static u8 Task_GetInfoCardInput(u8 taskId)
     if (JOY_NEW(A_BUTTON | B_BUTTON))
         input = INFOCARD_INPUT_AB;
 
-    // Next opponent card cant scroll
+    // Next opponent card can't scroll
     if (gTasks[taskId].data[3] == INFOCARD_NEXT_OPPONENT)
         return input;
 
@@ -3888,20 +3889,11 @@ static bool32 IsDomeHealingMove(enum Move move)
         return FALSE;
     }
 }
-
-static bool32 IsDomeDefensiveMoveEffect(enum BattleMoveEffects effect)
+static bool32 IsDomeDefensiveMoveEffect(enum Move move)
 {
-    switch (effect)
+    switch (move)
     {
     case EFFECT_REFLECT_DAMAGE:
-    case EFFECT_EVASION_UP:
-    case EFFECT_DEFENSE_UP:
-    case EFFECT_DEFENSE_UP_2:
-    case EFFECT_SPECIAL_DEFENSE_UP:
-    case EFFECT_SPECIAL_DEFENSE_UP_2:
-    case EFFECT_MINIMIZE:
-    case EFFECT_ACCURACY_DOWN:
-    case EFFECT_DEFENSE_CURL:
     case EFFECT_LIGHT_SCREEN:
     case EFFECT_REFLECT:
     case EFFECT_AURORA_VEIL:
@@ -3916,8 +3908,14 @@ static bool32 IsDomeDefensiveMoveEffect(enum BattleMoveEffects effect)
     case EFFECT_SUBSTITUTE:
         return TRUE;
     default:
-        return FALSE;
+        break;
     }
+
+    if (IsStatChangeStatusMove(move, IsAccDownEvasionUpStatChangeMove)
+     || IsStatChangeStatusMove(move, IsDefSpDefStatUpMove))
+        return TRUE;
+
+    return FALSE;
 }
 
 static bool32 IsDomeRiskyMoveEffect(enum BattleMoveEffects effect)
@@ -3979,13 +3977,12 @@ static bool32 IsDomePopularMove(enum Move move)
     {
     case EFFECT_PROTECT:
     case EFFECT_MAT_BLOCK:
-    case EFFECT_ATTACK_UP_2:
-    case EFFECT_SPECIAL_ATTACK_UP_2:
-    case EFFECT_SPECIAL_ATTACK_UP_3:
         return TRUE;
     default:
-        return FALSE;
+        break;
     }
+
+    return IsStatChangeStatusMove(move, IsAtkSpAtkStatUpMove);
 }
 
 static bool32 IsDomeStatusMoveEffect(enum Move move)
@@ -4077,20 +4074,6 @@ static bool32 IsDomeComboMove(enum Move move)
     case EFFECT_REST:
     case EFFECT_SLEEP_TALK:
     case EFFECT_SNORE:
-    // Anything that ups offensive stats by more than one
-    case EFFECT_ATTACK_UP:
-    case EFFECT_ATTACK_UP_2:
-    case EFFECT_ATTACK_SPATK_UP:
-    case EFFECT_SPECIAL_ATTACK_UP:
-    case EFFECT_SPECIAL_ATTACK_UP_2:
-    case EFFECT_SPECIAL_ATTACK_UP_3:
-    case EFFECT_CALM_MIND:
-    case EFFECT_DRAGON_DANCE:
-    case EFFECT_BELLY_DRUM:
-    case EFFECT_CHARGE:
-    case EFFECT_BULK_UP:
-    case EFFECT_ATTACK_ACCURACY_UP:
-    case EFFECT_FILLET_AWAY:
     // Others
     case EFFECT_FOCUS_ENERGY:
     case EFFECT_LOCK_ON:
@@ -4120,7 +4103,7 @@ static bool32 IsDomeComboMove(enum Move move)
         return FALSE;
     }
 
-    return FALSE;
+    return IsStatChangeStatusMove(move, IsAtkSpAtkStatUpMove);
 }
 
 // allocatedArray below needs to be large enough to hold stat totals for each mon, or totals of each type of move points
@@ -4311,10 +4294,10 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
                     allocatedArray[k] = IsDomeComboMove(move) ? 1 : 0;
                     break;
                 case MOVE_POINTS_STAT_RAISE:
-                    allocatedArray[k] = IsStatRaisingEffect(effect) ? 1 : 0;
+                    allocatedArray[k] = IsStatRaisingMove(move) ? 1 : 0;
                     break;
                 case MOVE_POINTS_STAT_LOWER:
-                    allocatedArray[k] = IsStatLoweringEffect(effect) ? 1 : 0;
+                    allocatedArray[k] = IsStatLoweringMove(move) ? 1 : 0;
                     break;
                 case MOVE_POINTS_RARE:
                     allocatedArray[k] = IsDomeRareMove(move) ? 1 : 0;
@@ -4332,7 +4315,7 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
                     allocatedArray[k] = (!IsBattleMoveStatus(move)) ? 1 : 0;
                     break;
                 case MOVE_POINTS_DEF:
-                    allocatedArray[k] = IsDomeDefensiveMoveEffect(effect) ? 1 : 0;
+                    allocatedArray[k] = IsDomeDefensiveMoveEffect(move) ? 1 : 0;
                     break;
                 case MOVE_POINTS_ACCURATE:
                     allocatedArray[k] = (accuracy == 0 || accuracy == 100) ? 1 : 0;
@@ -5668,15 +5651,15 @@ static void ResetSketchedMoves(void)
             count = 0;
             while (count < MAX_MON_MOVES)
             {
-                if (GetMonData(GetSavedPlayerPartyMon(playerMonId), MON_DATA_MOVE1 + count) == GetMonData(&gPlayerParty[i], MON_DATA_MOVE1 + moveSlot))
+                if (GetMonData(GetSavedPlayerPartyMon(playerMonId), MON_DATA_MOVE1 + count) == GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_MOVE1 + moveSlot))
                     break;
                 count++;
             }
             if (count == MAX_MON_MOVES)
-                SetMonMoveSlot(&gPlayerParty[i], MOVE_SKETCH, moveSlot);
+                SetMonMoveSlot(&gParties[B_TRAINER_0][i], MOVE_SKETCH, moveSlot);
         }
 
-        SavePlayerPartyMon(playerMonId, &gPlayerParty[i]);
+        SavePlayerPartyMon(playerMonId, &gParties[B_TRAINER_0][i]);
     }
 }
 
@@ -5688,7 +5671,7 @@ static void RestoreDomePlayerPartyHeldItems(void)
     {
         int playerMonId = gSaveBlock2Ptr->frontier.selectedPartyMons[gSelectedOrderFromParty[i] - 1] - 1;
         enum Item item = GetMonData(GetSavedPlayerPartyMon(playerMonId), MON_DATA_HELD_ITEM);
-        SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM, &item);
+        SetMonData(&gParties[B_TRAINER_0][i], MON_DATA_HELD_ITEM, &item);
     }
 }
 

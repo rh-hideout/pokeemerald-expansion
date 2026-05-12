@@ -1162,9 +1162,9 @@ static void ChooseFirstThreeEligibleMons(void)
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        if (GetMonData(&gPlayerParty[i], MON_DATA_HP) != 0
-         && GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG) == FALSE
-         && GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) != SPECIES_NONE)
+        if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_HP) != 0
+         && GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_IS_EGG) == FALSE
+         && GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES) != SPECIES_NONE)
         {
             gSelectedOrderFromParty[count] = (i + 1);
             count++;
@@ -1365,20 +1365,7 @@ void FollowerNPC_HandleSprite(void)
 
 enum Direction DetermineFollowerNPCDirection(struct ObjectEvent *player, struct ObjectEvent *follower)
 {
-    s32 delta_x = follower->currentCoords.x - player->currentCoords.x;
-    s32 delta_y = follower->currentCoords.y - player->currentCoords.y;
-
-    if (delta_x < 0)
-        return DIR_EAST;
-    else if (delta_x > 0)
-        return DIR_WEST;
-
-    if (delta_y < 0)
-        return DIR_SOUTH;
-    else if (delta_y > 0)
-        return DIR_NORTH;
-
-    return DIR_NONE;
+    return DetermineObjectEventDirectionFromObject(player, follower);
 }
 
 u32 GetFollowerNPCObjectId(void)
@@ -1826,38 +1813,10 @@ void ScriptFaceFollowerNPC(struct ScriptContext *ctx)
     if (!FNPC_ENABLE_NPC_FOLLOWERS || !PlayerHasFollowerNPC())
         return;
 
-    enum Direction playerDirection, followerDirection;
     struct ObjectEvent *player, *follower;
     player = &gObjectEvents[gPlayerAvatar.objectEventId];
     follower = &gObjectEvents[GetFollowerNPCData(FNPC_DATA_OBJ_ID)];
-
-    if (follower->invisible == FALSE)
-    {
-        playerDirection = DetermineFollowerNPCDirection(player, follower);
-        followerDirection = playerDirection;
-
-        //Flip direction.
-        switch (playerDirection)
-        {
-        case DIR_NORTH:
-            playerDirection = DIR_SOUTH;
-            break;
-        case DIR_SOUTH:
-            playerDirection = DIR_NORTH;
-            break;
-        case DIR_WEST:
-            playerDirection = DIR_EAST;
-            break;
-        case DIR_EAST:
-            playerDirection = DIR_WEST;
-            break;
-        default:
-            break;
-        }
-
-        ObjectEventTurn(player, playerDirection);
-        ObjectEventTurn(follower, followerDirection);
-    }
+    ObjectEventsTurnToEachOther(player, follower);
 }
 
 static const u8 *const FollowerNPCHideMovementsSpeedTable[][4] =

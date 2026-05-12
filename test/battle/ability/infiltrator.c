@@ -76,7 +76,7 @@ SINGLE_BATTLE_TEST("Infiltrator bypasses the opponent's Mist")
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_MIST) == EFFECT_MIST);
-        ASSUME(GetMoveEffect(MOVE_SCREECH) == EFFECT_DEFENSE_DOWN_2);
+        ASSUME_STAT_CHANGE(MOVE_SCREECH, defense: -2);
         PLAYER(SPECIES_DRAGAPULT) { Ability(ability); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -99,7 +99,7 @@ DOUBLE_BATTLE_TEST("Infiltrator doesn't bypass an ally's Mist")
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_MIST) == EFFECT_MIST);
-        ASSUME(GetMoveEffect(MOVE_SCREECH) == EFFECT_DEFENSE_DOWN_2);
+        ASSUME_STAT_CHANGE(MOVE_SCREECH, defense: -2);
         PLAYER(SPECIES_DRAGAPULT) { Ability(ability); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);

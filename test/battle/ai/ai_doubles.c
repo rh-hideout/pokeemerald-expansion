@@ -419,7 +419,7 @@ AI_DOUBLE_BATTLE_TEST("AI will choose Bulldoze if it triggers its ally's ability
 {
     ASSUME(GetMoveTarget(MOVE_BULLDOZE) == TARGET_FOES_AND_ALLY);
     ASSUME(GetMoveType(MOVE_BULLDOZE) == TYPE_GROUND);
-    ASSUME(MoveHasAdditionalEffect(MOVE_BULLDOZE, MOVE_EFFECT_SPD_MINUS_1));
+    ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_BULLDOZE, speed: -1);
 
     u32 species, currentHP;
     enum Ability ability;
@@ -655,14 +655,14 @@ AI_DOUBLE_BATTLE_TEST("Battler 3 has Battler 1 AI flags set correctly (doubles)"
     ASSUME(IsExplosionMove(MOVE_EXPLOSION));
 
     u32 aiFlags;
-    enum BattlerId battler;
+    struct BattlePokemon *battler = NULL;
 
-    PARAMETRIZE { aiFlags = 0; battler = 1; }
-    PARAMETRIZE { aiFlags = 0; battler = 3; }
-    PARAMETRIZE { aiFlags = AI_FLAG_RISKY; battler = 3; }
-    PARAMETRIZE { aiFlags = AI_FLAG_RISKY; battler = 1; }
-    PARAMETRIZE { aiFlags = AI_FLAG_WILL_SUICIDE; battler = 1; }
-    PARAMETRIZE { aiFlags = AI_FLAG_WILL_SUICIDE; battler = 3; }
+    PARAMETRIZE { aiFlags = 0; battler = opponentLeft; }
+    PARAMETRIZE { aiFlags = 0; battler = opponentRight; }
+    PARAMETRIZE { aiFlags = AI_FLAG_RISKY; battler = opponentRight; }
+    PARAMETRIZE { aiFlags = AI_FLAG_RISKY; battler = opponentLeft; }
+    PARAMETRIZE { aiFlags = AI_FLAG_WILL_SUICIDE; battler = opponentLeft; }
+    PARAMETRIZE { aiFlags = AI_FLAG_WILL_SUICIDE; battler = opponentRight; }
 
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
@@ -672,7 +672,7 @@ AI_DOUBLE_BATTLE_TEST("Battler 3 has Battler 1 AI flags set correctly (doubles)"
         OPPONENT(SPECIES_VOLTORB) { Moves(MOVE_EXPLOSION, MOVE_ELECTRO_BALL); HP(1); }
         OPPONENT(SPECIES_ELECTRODE) { Moves(MOVE_EXPLOSION, MOVE_ELECTRO_BALL); HP(1); }
     } WHEN {
-        if (aiFlags == 0 || battler == 3)
+        if (aiFlags == 0 || battler == opponentRight)
             TURN { EXPECT_MOVE(opponentLeft, MOVE_ELECTRO_BALL, target: playerLeft); EXPECT_MOVE(opponentRight, MOVE_ELECTRO_BALL, target: playerLeft); }
         else
             TURN { EXPECT_MOVE(opponentLeft, MOVE_EXPLOSION, target: playerLeft); EXPECT_MOVE(opponentRight, MOVE_EXPLOSION); }
@@ -815,7 +815,7 @@ AI_DOUBLE_BATTLE_TEST("AI prioritizes Skill Swapping Contrary to allied mons tha
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
-        ASSUME(GetMoveAdditionalEffectById(MOVE_OVERHEAT, 0)->moveEffect == MOVE_EFFECT_SP_ATK_MINUS_2);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_OVERHEAT, self: TRUE, spAtk: -2);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_DOUBLE_BATTLE);
         PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
@@ -987,7 +987,6 @@ AI_DOUBLE_BATTLE_TEST("AI uses Helping Hand if it's about to die")
 
 AI_DOUBLE_BATTLE_TEST("AI uses Helping Hand if the ally does notably more damage")
 {
-
     KNOWN_FAILING;  // Failure was masked by test runner issues
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_HELPING_HAND) == EFFECT_HELPING_HAND);
@@ -1186,8 +1185,8 @@ AI_DOUBLE_BATTLE_TEST("AI uses Magnetic Flux")
 {
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_SWIFT, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_SWIFT, MOVE_CELEBRATE); }
         OPPONENT(SPECIES_KLINK) { Ability(ABILITY_PLUS); Moves(MOVE_MAGNETIC_FLUX, MOVE_POUND); }
         OPPONENT(SPECIES_KLINK) { Ability(ABILITY_PLUS); Moves(MOVE_MAGNETIC_FLUX, MOVE_POUND); }
     } WHEN {
