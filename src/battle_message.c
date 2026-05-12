@@ -880,6 +880,8 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_PKMNDISGUISEWASBUSTED]                = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s disguise was busted!"),
     [STRINGID_ZENMODETRIGGERED]                     = COMPOUND_STRING("{B_SCR_ABILITY} triggered!"),
     [STRINGID_ZENMODEENDED]                         = COMPOUND_STRING("{B_SCR_ABILITY} ended!"),
+    [STRINGID_WILDPKMNDROPPEDITEM]                  = COMPOUND_STRING("The wild Pokémon dropped\nits {B_LAST_ITEM}!\p"),
+    [STRINGID_DROPPEDITEMBAGFULL]                   = COMPOUND_STRING("The wild Pokémon dropped an item,\nbut your Bag is full!\p"),
 };
 
 const u16 gTrainerUsedItemStringIds[] =

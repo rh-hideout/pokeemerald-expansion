@@ -4161,8 +4161,20 @@ BattleScript_LocalBattleWonReward::
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_PayDayMoneyAndPickUpItems::
 	givepaydaymoney
+	callnative BS_TryGiveDroppedItems
 	pickup
 	end2
+
+BattleScript_DroppedItemObtained::
+	playse SE_BALL_BOUNCE_1
+	printstring STRINGID_WILDPKMNDROPPEDITEM
+	waitmessage B_WAIT_TIME_LONG
+	return
+
+BattleScript_DroppedItemBagFull::
+	printstring STRINGID_DROPPEDITEMBAGFULL
+	waitmessage B_WAIT_TIME_LONG
+	return
 
 BattleScript_RivalBattleLost::
 	jumpifhasnohp BS_ATTACKER, BattleScript_RivalBattleLostSkipMonRecall

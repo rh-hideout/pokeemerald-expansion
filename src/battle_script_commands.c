@@ -14984,3 +14984,32 @@ void BS_UndoDynamax(void)
 
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
+
+void BS_TryGiveDroppedItems(void)
+{
+    NATIVE_ARGS();
+
+    if (gSaveBlock3Ptr->challengeSettings.tx_Features_WildMonDropItems
+        && !(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_FIRST_BATTLE)))
+    {
+        u32 i;
+        u8 battlers[] = {GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT),
+                         GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT)};
+
+        for (i = 0; i < 1 + IsDoubleBattle(); i++)
+        {
+            gLastUsedItem = gBattleMons[battlers[i]].item;
+            if (gLastUsedItem != ITEM_NONE)
+            {
+                gBattleMons[battlers[i]].item = ITEM_NONE;
+                if (AddBagItem(gLastUsedItem, 1))
+                    BattleScriptCall(BattleScript_DroppedItemObtained);
+                else
+                    BattleScriptCall(BattleScript_DroppedItemBagFull);
+                return;
+            }
+        }
+    }
+
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}
