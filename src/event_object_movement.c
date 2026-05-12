@@ -12035,7 +12035,7 @@ bool8 MovementType_OverworldWildEncounter_FleePlayer_Step8(struct ObjectEvent *o
 
 bool8 MovementType_OverworldWildEncounter_FleePlayer_Step10(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    if (WE_OWE_FLEE_DESPAWN && sCollisionTimer >= OWE_FLEE_COLLISION_TIME)
+    if (WE_OWE_FLEE_DESPAWN && sCollisionTimer >= OWE_FLEE_COLLISION_TIME && CanRemoveObjectForOWEMovement(objectEvent))
     {
         RemoveObjectEvent(objectEvent);
         return FALSE;
@@ -12231,7 +12231,7 @@ bool8 MovementType_OverworldWildEncounter_Despawn_Step10(struct ObjectEvent *obj
 
 bool8 MovementType_OverworldWildEncounter_Despawn_Step11(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    if (sDespawnTimer == OWE_DESPAWN_FRAMES)
+    if (sDespawnTimer == OWE_DESPAWN_FRAMES && CanRemoveObjectForOWEMovement(objectEvent))
     {
         RemoveObjectEvent(objectEvent);
         return FALSE;
