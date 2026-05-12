@@ -152,6 +152,19 @@ static const struct RepeatPurchaseItem sRepeatPurchaseTable[] = {
     {ITEM_CHILAN_BERRY, 5, 100},
 };
 
+static const s32 sPowersOfTen[] = {
+    1,
+    10,
+    100,
+    1000,
+    10000,
+    100000,
+    1000000,
+    10000000,
+    100000000,
+    1000000000,
+};
+
 // Strings
 static const u8 sText_Deposit[] = _("Deposit");
 static const u8 sText_Withdraw[] = _("Withdraw");
@@ -166,6 +179,7 @@ u8 sBankingModeWindowId = 0;
 // Static Functions
 static u32 GetStepSize(s16 heldFrames);
 static bool32 HandleAmountInput(u32 *amount, u32 max, u32 min, s16 *heldFrames);
+static bool32 Banking_HandleNumericInput(u32* amount, u32 max, u32 min, s16 *digit);
 static u32 GetTransactionMaxAmount(enum BankingMode mode);
 static void UpdateBankBalanceAfterTransaction(enum BankingMode mode);
 static void Banking_DrawBalanceBox(int amount, u8 x, u8 y);
@@ -441,7 +455,7 @@ void CreateBankingModeWindow(enum BankingMode mode)
         GetStringCenterAlignXOffset(FONT_NARROW, text, 0x28), 2, 0, 0);
 }
 
-static bool32 HandleAmountInput(u32 *amount, u32 max, u32 min, s16 *heldFrames)
+static UNUSED bool32 HandleAmountInput(u32 *amount, u32 max, u32 min, s16 *heldFrames)
 {
     u32 original = *amount;
 
@@ -473,28 +487,60 @@ static bool32 HandleAmountInput(u32 *amount, u32 max, u32 min, s16 *heldFrames)
     return *amount != original;
 }
 
-static void PrintTransactionAmount(u8 windowId, u32 amount)
+static bool32 Banking_HandleNumericInput(u32* amount, u32 max, u32 min, s16 *digit)
 {
+    u32 original = *amount;
+    u16 input = JOY_REPEAT(DPAD_ANY);
+    u32 maxDigits = Util_CountDigits(*amount);
 
-    u8 *txtPtr = gStringVar4;
-    u32 numDigits = Util_CountDigits(amount);
-    u32 maxDigits = (numDigits > 6) ? MAX_MONEY_DIGITS : 6;
+    if (input & DPAD_LEFT || input & DPAD_RIGHT)
+    {
+        if (input & DPAD_RIGHT)
+            (*digit)--;
+        if (input & DPAD_LEFT)
+            (*digit)++;
 
-    ConvertIntToDecimalStringN(gStringVar1, amount, STR_CONV_MODE_LEFT_ALIGN,
-                               maxDigits);
+        *digit = ClampSigned(*digit, 0, maxDigits - 1);
+        return TRUE;
+    }
 
-    StringExpandPlaceholders(txtPtr, gText_PokedollarVar1);
+    if (input & DPAD_UP) {
+        *amount += sPowersOfTen[*digit];
+    }
+    else if (input & DPAD_DOWN) {
+        *amount -= sPowersOfTen[*digit];
+    }
 
-    u8 x = 1;
-    u8 y = 2;
+    *amount = Clamp(*amount, min, max);
+    return *amount != original;
+}
 
-    if (numDigits > 8)
-        PrependFontIdToFit(gStringVar4, txtPtr + 1 + numDigits, FONT_NORMAL,
-                           54);
+static void PrintTransactionAmount(u8 windowId, u32 amount, u32 digit)
+{
+    ConvertIntToDecimalStringN(gStringVar2, amount, STR_CONV_MODE_LEFT_ALIGN, MAX_MONEY_DIGITS);
+
+    gStringVar3[0] = EOS;
+
+    u32 numDigits = StringLength(gStringVar2);
+
+    u32 highlightIdx = numDigits - digit - 1;
+    for (u32 i = 0; i < numDigits; i++)
+    {
+        if (i == highlightIdx)
+            StringAppend(gStringVar3, COMPOUND_STRING("{COLOR RED}{SHADOW LIGHT_GRAY}"));
+
+        StringAppend(gStringVar3, (u8[]){ gStringVar2[i], EOS });
+
+        if (i == highlightIdx)
+            StringAppend(gStringVar3, COMPOUND_STRING("{COLOR DARK_GRAY}{SHADOW LIGHT_GRAY}"));
+    }
+
+    StringCopy(gStringVar1, gStringVar3);
+
+    StringExpandPlaceholders(gStringVar4, gText_PokedollarVar1);
 
     FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
-    AddTextPrinterParameterized(windowId, FONT_NORMAL, gStringVar4, x, y, 0,
-                                NULL);
+    AddTextPrinterParameterized(windowId, FONT_NORMAL, gStringVar4, 1, 2, 0, NULL);
 }
 
 static u32 GetTransactionMaxAmount(enum BankingMode mode)
@@ -540,6 +586,7 @@ static void UpdateBankBalanceAfterTransaction(enum BankingMode mode)
 
 #define tState       data[0]
 #define tBankingMode data[1]
+#define tDigit       data[2]
 static void Task_ShowBankingInput(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
@@ -563,10 +610,11 @@ static void Task_ShowBankingInput(u8 taskId)
         break;
     case 2:
         sTransactionAmount = GetTransactionMaxAmount(tBankingMode);
-        PrintTransactionAmount(sTransactionWindowId, sTransactionAmount);
+        PrintTransactionAmount(sTransactionWindowId, sTransactionAmount, tDigit);
         tState++;
         break;
     case 3:
+        tDigit = 0;
         gTasks[taskId].func = Task_HandleMoneyInput;
         break;
     }
@@ -587,15 +635,14 @@ static u32 GetStepSize(s16 heldFrames)
 
 #define tHeldFrames  data[0]
 #define tBankingMode data[1]
+#define tDigit       data[2]
 static void Task_HandleMoneyInput(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
 
-    if (HandleAmountInput(&sTransactionAmount,
-                          GetTransactionMaxAmount(tBankingMode), 0,
-                          &tHeldFrames))
+    if (Banking_HandleNumericInput(&sTransactionAmount, GetTransactionMaxAmount(tBankingMode), 0, &tDigit))
     {
-        PrintTransactionAmount(sTransactionWindowId, sTransactionAmount);
+        PrintTransactionAmount(sTransactionWindowId, sTransactionAmount, tDigit);
     }
     else if (JOY_NEW(A_BUTTON | B_BUTTON))
     {
