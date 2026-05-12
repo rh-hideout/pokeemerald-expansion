@@ -3976,9 +3976,99 @@ u32 GetSpeciesWeight(u16 species)
     return gSpeciesInfo[SanitizeSpeciesId(species)].weight;
 }
 
+static const struct {
+    u16 species;
+    u8 types[2];
+} sPreFairyTypes[] = {
+    { SPECIES_CLEFFA,      { TYPE_NORMAL,  TYPE_NORMAL  } },
+    { SPECIES_CLEFAIRY,    { TYPE_NORMAL,  TYPE_NORMAL  } },
+    { SPECIES_CLEFABLE,    { TYPE_NORMAL,  TYPE_NORMAL  } },
+    { SPECIES_IGGLYBUFF,   { TYPE_NORMAL,  TYPE_NORMAL  } },
+    { SPECIES_JIGGLYPUFF,  { TYPE_NORMAL,  TYPE_NORMAL  } },
+    { SPECIES_WIGGLYTUFF,  { TYPE_NORMAL,  TYPE_NORMAL  } },
+    { SPECIES_TOGEPI,      { TYPE_NORMAL,  TYPE_NORMAL  } },
+    { SPECIES_TOGETIC,     { TYPE_NORMAL,  TYPE_FLYING  } },
+    { SPECIES_TOGEKISS,    { TYPE_NORMAL,  TYPE_FLYING  } },
+    { SPECIES_AZURILL,     { TYPE_NORMAL,  TYPE_NORMAL  } },
+    { SPECIES_MARILL,      { TYPE_WATER,   TYPE_WATER   } },
+    { SPECIES_AZUMARILL,   { TYPE_WATER,   TYPE_WATER   } },
+    { SPECIES_SNUBBULL,    { TYPE_NORMAL,  TYPE_NORMAL  } },
+    { SPECIES_GRANBULL,    { TYPE_NORMAL,  TYPE_NORMAL  } },
+    { SPECIES_RALTS,       { TYPE_PSYCHIC, TYPE_PSYCHIC } },
+    { SPECIES_KIRLIA,      { TYPE_PSYCHIC, TYPE_PSYCHIC } },
+    { SPECIES_GARDEVOIR,   { TYPE_PSYCHIC, TYPE_PSYCHIC } },
+    { SPECIES_MIME_JR,     { TYPE_PSYCHIC, TYPE_PSYCHIC } },
+    { SPECIES_MR_MIME,     { TYPE_PSYCHIC, TYPE_PSYCHIC } },
+    { SPECIES_MAWILE,      { TYPE_STEEL,   TYPE_STEEL   } },
+};
+
 enum Type GetSpeciesType(u16 species, u8 slot)
 {
-    return gSpeciesInfo[SanitizeSpeciesId(species)].types[slot];
+    species = SanitizeSpeciesId(species);
+    if (gSaveBlock3Ptr->challengeSettings.tx_Mode_Fairy_Types == 0)
+    {
+        for (u32 i = 0; i < ARRAY_COUNT(sPreFairyTypes); i++)
+        {
+            if (sPreFairyTypes[i].species == species)
+                return sPreFairyTypes[i].types[slot];
+        }
+    }
+    return gSpeciesInfo[species].types[slot];
+}
+
+static const struct {
+    u16 move;
+    u8 altType;
+} sFairyMoveAltTypes[] = {
+    { MOVE_FAIRY_WIND,           TYPE_NORMAL   },
+    { MOVE_DISARMING_VOICE,      TYPE_NORMAL   },
+    { MOVE_DAZZLING_GLEAM,       TYPE_NORMAL   },
+    { MOVE_MOONBLAST,            TYPE_DARK     },
+    { MOVE_DRAINING_KISS,        TYPE_NORMAL   },
+    { MOVE_PLAY_ROUGH,           TYPE_NORMAL   },
+    { MOVE_BABY_DOLL_EYES,       TYPE_NORMAL   },
+    { MOVE_AROMATIC_MIST,        TYPE_NORMAL   },
+    { MOVE_CRAFTY_SHIELD,        TYPE_NORMAL   },
+    { MOVE_FAIRY_LOCK,           TYPE_NORMAL   },
+    { MOVE_FLOWER_SHIELD,        TYPE_GRASS    },
+    { MOVE_FLORAL_HEALING,       TYPE_GRASS    },
+    { MOVE_MISTY_TERRAIN,        TYPE_NORMAL   },
+    { MOVE_MISTY_EXPLOSION,      TYPE_NORMAL   },
+    { MOVE_GEOMANCY,             TYPE_PSYCHIC   },
+    { MOVE_LIGHT_OF_RUIN,        TYPE_NORMAL   },
+    { MOVE_FLEUR_CANNON,         TYPE_GRASS    },
+    { MOVE_SPIRIT_BREAK,         TYPE_FIGHTING },
+    { MOVE_NATURES_MADNESS,      TYPE_NORMAL   },
+    { MOVE_DECORATE,             TYPE_NORMAL   },
+    { MOVE_STRANGE_STEAM,        TYPE_NORMAL   },
+    { MOVE_SPARKLY_SWIRL,        TYPE_NORMAL   },
+    { MOVE_ALLURING_VOICE,       TYPE_NORMAL   },
+    { MOVE_SPRINGTIDE_STORM,     TYPE_FLYING   },
+    { MOVE_GUARDIAN_OF_ALOLA,    TYPE_NORMAL   },
+    { MOVE_LETS_SNUGGLE_FOREVER, TYPE_NORMAL   },
+    { MOVE_TWINKLE_TACKLE,       TYPE_NORMAL   },
+    { MOVE_MAX_STARFALL,         TYPE_NORMAL   },
+    { MOVE_G_MAX_FINALE,         TYPE_NORMAL   },
+    { MOVE_G_MAX_SMITE,          TYPE_NORMAL   },
+    { MOVE_MAGICAL_TORQUE,       TYPE_PSYCHIC   },
+    { MOVE_SWEET_KISS,           TYPE_NORMAL   },
+    { MOVE_CHARM,                TYPE_NORMAL   },
+    { MOVE_MOONLIGHT,            TYPE_DARK     },
+};
+
+enum Type GetMoveType(enum Move moveId)
+{
+    enum Type type = gMovesInfo[SanitizeMoveId(moveId)].type;
+    if (type == TYPE_FAIRY && gSaveBlock3Ptr->challengeSettings.tx_Mode_Fairy_Types == 0)
+    {
+        for (u32 i = 0; i < ARRAY_COUNT(sFairyMoveAltTypes); i++)
+        {
+            if (sFairyMoveAltTypes[i].move == moveId)
+                return sFairyMoveAltTypes[i].altType;
+        }
+        return TYPE_NORMAL;
+    }
+    return type;
 }
 
 enum Ability GetSpeciesAbility(u16 species, u8 slot)
@@ -7727,10 +7817,8 @@ void SavePlayerPartyMon(u32 index, struct Pokemon *mon)
 
 bool32 IsSpeciesOfType(u32 species, enum Type type)
 {
-    if (gSpeciesInfo[species].types[0] == type
-     || gSpeciesInfo[species].types[1] == type)
-        return TRUE;
-    return FALSE;
+    return (GetSpeciesType(species, 0) == type
+         || GetSpeciesType(species, 1) == type);
 }
 
 struct BoxPokemon *GetSelectedBoxMonFromPcOrParty(void)

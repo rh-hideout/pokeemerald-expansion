@@ -235,10 +235,7 @@ static inline const u8 *GetMoveDescription(enum Move moveId)
     return gMovesInfo[moveId].description;
 }
 
-static inline enum Type GetMoveType(enum Move moveId)
-{
-    return gMovesInfo[SanitizeMoveId(moveId)].type;
-}
+enum Type GetMoveType(enum Move moveId);
 
 static inline enum DamageCategory GetMoveCategory(enum Move moveId)
 {
