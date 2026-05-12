@@ -280,6 +280,10 @@ void NewGameInitData(void)
     ResetDexNav();
     ClearFollowerNPCData();
 
+    // Sync engine flags from restored challenge settings
+    if (!gSaveBlock3Ptr->challengeSettings.tx_Mode_Mints)
+        FlagSet(FLAG_MINTS_DISABLED);
+
 #if IS_HNS
     StringCopy(gSaveBlock2Ptr->rivalName, gText_ExpandedPlaceholder_Silver);
 #endif

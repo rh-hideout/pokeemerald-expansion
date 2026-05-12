@@ -1,5 +1,6 @@
 #include "global.h"
 #include "bg.h"
+#include "event_data.h"
 #include "gpu_regs.h"
 #include "international_string_util.h"
 #include "list_menu.h"
@@ -1716,6 +1717,10 @@ static void Task_Save(u8 taskId)
     cs->tx_Mode_Legendary_Abilities= *GetSelectionPtr(TAB_MODE, ITEM_MODE_LEGENDARY_ABILITIES);
     cs->tx_Mode_InfiniteTMs        = *GetSelectionPtr(TAB_MODE, ITEM_MODE_INFINITE_TMS);
     cs->tx_Mode_Mints              = *GetSelectionPtr(TAB_MODE, ITEM_MODE_MINTS);
+    if (cs->tx_Mode_Mints)
+        FlagClear(FLAG_MINTS_DISABLED);
+    else
+        FlagSet(FLAG_MINTS_DISABLED);
     cs->tx_Mode_PoisonSurvive      = *GetSelectionPtr(TAB_MODE, ITEM_MODE_SURVIVE_POISON);
 
     // Features tab
