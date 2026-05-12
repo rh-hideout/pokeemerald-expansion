@@ -4064,7 +4064,17 @@ const u16 *GetSpeciesTeachableLearnset(u16 species)
 
 const u16 *GetSpeciesEggMoves(u16 species)
 {
-    const u16 *learnset = gSpeciesInfo[SanitizeSpeciesId(species)].eggMoveLearnset;
+    const u16 *learnset;
+    u16 sanitized = SanitizeSpeciesId(species);
+
+    if (gSaveBlock3Ptr->challengeSettings.tx_Mode_Modern_Moves == 0)
+    {
+        learnset = gEggMoves_Gen3[sanitized];
+        if (learnset != NULL)
+            return learnset;
+    }
+
+    learnset = gSpeciesInfo[sanitized].eggMoveLearnset;
     if (learnset == NULL)
         return gSpeciesInfo[SPECIES_NONE].eggMoveLearnset;
     return learnset;

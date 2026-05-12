@@ -290,8 +290,8 @@ static const u8 *const sDesc_Gamemode[] = {
     COMPOUND_STRING("Choose your own rules.\nNOTE: All selections are PERMANENT."),
 };
 static const u8 *const sDesc_ModernMoves[] = {
-    COMPOUND_STRING("No new MOVES, and original MOVEPOOL\nfor all {PKMN}."),
-    COMPOUND_STRING("13 new MOVES, and improved MOVEPOOL\nfor all {PKMN}."),
+    COMPOUND_STRING("No new MOVES, and original MOVEPOOL\nfor all {PKMN} + new EGG MOVES."),
+    COMPOUND_STRING("13 new MOVES, and improved MOVEPOOL\nfor all {PKMN} + new EGG MOVES."),
 };
 static const u8 *const sDesc_Synchronize[] = {
     COMPOUND_STRING("SYNCHRONIZE works as in GEN III.\n50% chance to copy nature."),
