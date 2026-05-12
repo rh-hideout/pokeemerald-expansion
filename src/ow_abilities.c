@@ -2,6 +2,7 @@
 #include "ow_synchronize.h"
 #include "pokemon.h"
 #include "random.h"
+#include "save.h"
 #include "constants/pokemon.h"
 
 static UNUSED bool32 HasHalfChance(u32 species);
@@ -32,7 +33,7 @@ const static bool32 (*sSynchronizeModes[]) (u32) =
     [STATIC_WILDMON_ORIGIN] = HasHalfChance,
     [ROAMER_ORIGIN] = IsFalse,
     [GIFTMON_ORIGIN] = IsTrue,
-#elif OW_SYNCHRONIZE_NATURE == GEN_8
+#elif OW_SYNCHRONIZE_NATURE >= GEN_8
     [WILDMON_ORIGIN] = IsTrue,
     [STATIC_WILDMON_ORIGIN] = IsFalse,
     [ROAMER_ORIGIN] = IsTrue,
@@ -94,7 +95,12 @@ u32 GetSynchronizedNature(enum GeneratedMonOrigin origin, u32 species)
 {
     if (!IsSynchronizeActive())
         return NATURE_RANDOM;
-    if (!(sSynchronizeModes[origin](species)))
+    if (gSaveBlock3Ptr->challengeSettings.tx_Mode_Synchronize == 0)
+    {
+        if (origin != WILDMON_ORIGIN || !HasHalfChance(species))
+            return NATURE_RANDOM;
+    }
+    else if (!(sSynchronizeModes[origin](species)))
         return NATURE_RANDOM;
     return GetMonData(&gPlayerParty[0], MON_DATA_PERSONALITY) % NUM_NATURES;
 }
