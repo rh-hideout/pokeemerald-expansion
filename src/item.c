@@ -838,6 +838,9 @@ const u8 *GetItemDescription(enum Item itemId)
 
 u8 GetItemImportance(enum Item itemId)
 {
+    if (gSaveBlock3Ptr->challengeSettings.tx_Mode_InfiniteTMs == 1
+     && gItemsInfo[SanitizeItemId(itemId)].pocket == POCKET_TM_HM)
+        return TRUE;
     return gItemsInfo[SanitizeItemId(itemId)].importance;
 }
 
