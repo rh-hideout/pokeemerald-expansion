@@ -1038,7 +1038,8 @@ enum ItemEffect ItemBattleEffects(enum BattlerId itemBattler, enum BattlerId bat
     if (!IsBattlerAlive(itemBattler)
      && holdEffect != HOLD_EFFECT_ROWAP_BERRY // Hacky workaround for them right now
      && holdEffect != HOLD_EFFECT_JABOCA_BERRY
-     && holdEffect != HOLD_EFFECT_ROCKY_HELMET)
+     && holdEffect != HOLD_EFFECT_ROCKY_HELMET
+     && holdEffect != HOLD_EFFECT_AIR_BALLOON)
         return effect;
 
     switch (holdEffect)
