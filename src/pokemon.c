@@ -4038,7 +4038,17 @@ u32 GetSpeciesBaseStat(u16 species, u32 statIndex)
 
 const struct LevelUpMove *GetSpeciesLevelUpLearnset(u16 species)
 {
-    const struct LevelUpMove *learnset = gSpeciesInfo[SanitizeSpeciesId(species)].levelUpLearnset;
+    const struct LevelUpMove *learnset;
+    u16 sanitized = SanitizeSpeciesId(species);
+
+    if (gSaveBlock3Ptr->challengeSettings.tx_Mode_Modern_Moves == 0)
+    {
+        learnset = gLevelUpLearnsets_Gen3[sanitized];
+        if (learnset != NULL)
+            return learnset;
+    }
+
+    learnset = gSpeciesInfo[sanitized].levelUpLearnset;
     if (learnset == NULL)
         return gSpeciesInfo[SPECIES_NONE].levelUpLearnset;
     return learnset;
