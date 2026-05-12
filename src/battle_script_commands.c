@@ -11925,7 +11925,10 @@ void BS_ItemRestoreHP(void)
             healAmount = maxHP / 2;
             break;
         case ITEM6_HEAL_HP_QUARTER:
-            healAmount = maxHP / 4;
+            if (gLastUsedItem == ITEM_SITRUS_BERRY && gSaveBlock3Ptr->challengeSettings.tx_Mode_New_Citrus == 0)
+                healAmount = 30;
+            else
+                healAmount = maxHP / 4;
             break;
         default:
             healAmount = healParam;

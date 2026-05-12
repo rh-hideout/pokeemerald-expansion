@@ -4464,9 +4464,14 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, enum Item item, u8 partyIndex, 
                             dataUnsigned = gBattleScripting.levelUpHP;
                             break;
                         case ITEM6_HEAL_HP_QUARTER:
-                            dataUnsigned = maxHP / 4;
-                            if (dataUnsigned == 0)
-                                dataUnsigned = 1;
+                            if (item == ITEM_SITRUS_BERRY && gSaveBlock3Ptr->challengeSettings.tx_Mode_New_Citrus == 0)
+                                dataUnsigned = 30;
+                            else
+                            {
+                                dataUnsigned = maxHP / 4;
+                                if (dataUnsigned == 0)
+                                    dataUnsigned = 1;
+                            }
                             break;
                         }
 

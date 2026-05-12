@@ -1846,9 +1846,14 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, enum BattlerId battler, const st
             case HOLD_EFFECT_RESTORE_PCT_HP:
                 if (currentHP < maxHP / 2)
                 {
-                    singleUseItemHeal = maxHP / holdEffectParam;
-                    if (singleUseItemHeal == 0)
-                        singleUseItemHeal = 1;
+                    if (item == ITEM_SITRUS_BERRY && gSaveBlock3Ptr->challengeSettings.tx_Mode_New_Citrus == 0)
+                        singleUseItemHeal = 30;
+                    else
+                    {
+                        singleUseItemHeal = maxHP / holdEffectParam;
+                        if (singleUseItemHeal == 0)
+                            singleUseItemHeal = 1;
+                    }
                 }
                 break;
             case HOLD_EFFECT_CONFUSE_SPICY:

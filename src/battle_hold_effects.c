@@ -829,7 +829,9 @@ static u32 ItemHealHp(enum BattlerId battler, enum Item itemId, enum HealAmount 
      && HasEnoughHpToEatBerry(battler, ability, 2, itemId))
     {
         s32 healAmount = 0;
-        if (percentHeal == PERCENT_HEAL_AMOUNT)
+        if (itemId == ITEM_SITRUS_BERRY && gSaveBlock3Ptr->challengeSettings.tx_Mode_New_Citrus == 0)
+            healAmount = 30;
+        else if (percentHeal == PERCENT_HEAL_AMOUNT)
             healAmount = (GetNonDynamaxMaxHP(battler) * GetItemHoldEffectParam(itemId) / 100);
         else
             healAmount = GetItemHoldEffectParam(itemId);
