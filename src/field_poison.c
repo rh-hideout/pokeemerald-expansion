@@ -18,6 +18,7 @@
 #include "constants/field_poison.h"
 #include "constants/form_change_types.h"
 #include "constants/party_menu.h"
+#include "save.h"
 
 static bool32 IsMonValidSpecies(struct Pokemon *pokemon)
 {
@@ -46,7 +47,7 @@ static void FaintFromFieldPoison(u8 partyIdx)
     struct Pokemon *pokemon = &gPlayerParty[partyIdx];
     u32 status = STATUS1_NONE;
 
-    if (OW_POISON_DAMAGE < GEN_4)
+    if (gSaveBlock3Ptr->challengeSettings.tx_Mode_PoisonSurvive == 0)
         AdjustFriendship(pokemon, FRIENDSHIP_EVENT_FAINT_FIELD_PSN);
 
     SetMonData(pokemon, MON_DATA_STATUS, &status);
@@ -57,7 +58,8 @@ static void FaintFromFieldPoison(u8 partyIdx)
 static bool32 MonFaintedFromPoison(u8 partyIdx)
 {
     struct Pokemon *pokemon = &gPlayerParty[partyIdx];
-    if (IsMonValidSpecies(pokemon) && GetMonData(pokemon, MON_DATA_HP) == ((OW_POISON_DAMAGE < GEN_4) ? 0 : 1) && GetAilmentFromStatus(GetMonData(pokemon, MON_DATA_STATUS)) == AILMENT_PSN)
+    u32 threshold = (gSaveBlock3Ptr->challengeSettings.tx_Mode_PoisonSurvive == 0) ? 0 : 1;
+    if (IsMonValidSpecies(pokemon) && GetMonData(pokemon, MON_DATA_HP) == threshold && GetAilmentFromStatus(GetMonData(pokemon, MON_DATA_STATUS)) == AILMENT_PSN)
         return TRUE;
 
     return FALSE;
@@ -77,7 +79,10 @@ static void Task_TryFieldPoisonWhiteOut(u8 taskId)
             if (MonFaintedFromPoison(tPartyIdx))
             {
                 FaintFromFieldPoison(tPartyIdx);
-                ShowFieldMessage(gText_PkmnFainted_FldPsn);
+                if (gSaveBlock3Ptr->challengeSettings.tx_Mode_PoisonSurvive == 0)
+                    ShowFieldMessage(gText_PkmnFainted_FldPsn);
+                else
+                    ShowFieldMessage(gText_PkmnSurvived_FldPsn);
                 tState++;
                 return;
             }
@@ -136,12 +141,12 @@ s32 DoPoisonFieldEffect(void)
         {
             // Apply poison damage
             hp = GetMonData(pokemon, MON_DATA_HP);
-            if (OW_POISON_DAMAGE < GEN_4 && (hp == 0 || --hp == 0))
+            if (gSaveBlock3Ptr->challengeSettings.tx_Mode_PoisonSurvive == 0 && (hp == 0 || --hp == 0))
             {
                 TryFormChange(&gPlayerParty[i], FORM_CHANGE_FAINT);
                 numFainted++;
             }
-            else if (OW_POISON_DAMAGE >= GEN_4 && (hp == 1 || --hp == 1))
+            else if (gSaveBlock3Ptr->challengeSettings.tx_Mode_PoisonSurvive == 1 && (hp == 1 || --hp == 1))
                 numFainted++;
 
             SetMonData(pokemon, MON_DATA_HP, &hp);
