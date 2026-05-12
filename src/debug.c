@@ -1397,7 +1397,7 @@ static void DebugAction_OpenSubMenu(u8 taskId, const struct DebugMenuOption *ite
 
 static void DebugAction_OpenSubMenuFakeRTC(u8 taskId, const struct DebugMenuOption *items)
 {
-    if (!OW_USE_FAKE_RTC)
+    if (!UseFakeRtc())
     {
         Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_FakeRTCNotEnabled);
     }
@@ -1804,7 +1804,7 @@ void BufferExpansionVersion(struct ScriptContext *ctx)
 
 void DebugMenu_CalculateTime(struct ScriptContext *ctx)
 {
-    if (OW_USE_FAKE_RTC)
+    if (UseFakeRtc())
     {
         struct SiiRtcInfo *rtc = FakeRtc_GetCurrentTime();
         StringExpandPlaceholders(gStringVar1, gDayNameStringsTable[rtc->dayOfWeek]);

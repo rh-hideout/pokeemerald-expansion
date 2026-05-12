@@ -3901,7 +3901,7 @@ bool8 ScrCmd_fwdtime(struct ScriptContext *ctx)
 
 bool8 ScrCmd_fwdweekday(struct ScriptContext *ctx)
 {
-    if (!OW_USE_FAKE_RTC)
+    if (!UseFakeRtc())
         return FALSE;
 
     struct SiiRtcInfo *rtc = FakeRtc_GetCurrentTime();
