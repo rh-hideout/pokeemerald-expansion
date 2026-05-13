@@ -2299,21 +2299,41 @@ void GiveBoxMonInitialMoveset(struct BoxPokemon *boxMon) //Credit: AsparagusEdua
     s32 i;
     enum Move moves[MAX_MON_MOVES] = {MOVE_NONE};
     u8 addedMoves = 0;
+    bool32 firstMoveGiven = FALSE;
     const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(species);
 
     for (i = 0; learnset[i].move != LEVEL_UP_MOVE_END; i++)
     {
         s32 j;
         bool32 alreadyKnown = FALSE;
+        enum Move move;
 
         if (learnset[i].level > level)
             break;
         if (learnset[i].level == 0)
             continue;
 
+        move = learnset[i].move;
+#if RANDOMIZER_AVAILABLE
+        if (RandomizerFeatureEnabled(RANDOMIZE_LEARNSET))
+        {
+            move = RandomizeMove(move, species);
+            if (!FlagGet(FLAG_SYS_POKEMON_GET) && !firstMoveGiven)
+            {
+                u8 attempts;
+                for (attempts = 0; attempts < 100; attempts++)
+                {
+                    if (gMovesInfo[move].power > 1)
+                        break;
+                    move = RandomizeMove(move + attempts, species);
+                }
+            }
+        }
+#endif
+
         for (j = 0; j < addedMoves; j++)
         {
-            if (moves[j] == learnset[i].move)
+            if (moves[j] == move)
             {
                 alreadyKnown = TRUE;
                 break;
@@ -2324,16 +2344,18 @@ void GiveBoxMonInitialMoveset(struct BoxPokemon *boxMon) //Credit: AsparagusEdua
         {
             if (addedMoves < MAX_MON_MOVES)
             {
-                moves[addedMoves] = learnset[i].move;
+                moves[addedMoves] = move;
                 addedMoves++;
             }
             else
             {
                 for (j = 0; j < MAX_MON_MOVES - 1; j++)
                     moves[j] = moves[j + 1];
-                moves[MAX_MON_MOVES - 1] = learnset[i].move;
+                moves[MAX_MON_MOVES - 1] = move;
             }
         }
+        if (!firstMoveGiven)
+            firstMoveGiven = TRUE;
     }
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
@@ -2425,6 +2447,10 @@ enum Move MonTryLearningNewMoveAtLevel(struct Pokemon *mon, bool32 firstMove, u3
     if (learnset[sLearningMoveTableID].level == level)
     {
         gMoveToLearn = learnset[sLearningMoveTableID].move;
+#if RANDOMIZER_AVAILABLE
+        if (RandomizerFeatureEnabled(RANDOMIZE_LEARNSET))
+            gMoveToLearn = RandomizeMove(gMoveToLearn, species);
+#endif
         sLearningMoveTableID++;
         retVal = GiveMoveToMon(mon, gMoveToLearn);
     }
@@ -6186,7 +6212,12 @@ bool8 TryIncrementMonLevel(struct Pokemon *mon)
 
 u8 CanLearnTeachableMove(u16 species, enum Move move)
 {
-    const u16 *teachableLearnset = GetSpeciesTeachableLearnset(species);
+    const u16 *teachableLearnset;
+#if RANDOMIZER_AVAILABLE
+    if (RandomizerFeatureEnabled(RANDOMIZE_LEARNSET))
+        species = RandomizeMonBaseForm(RANDOMIZER_REASON_LEARNSET, GetRandomizerOption(RANDOMIZER_OPTION_SPECIES_MODE), species, species);
+#endif
+    teachableLearnset = GetSpeciesTeachableLearnset(species);
     if (species == SPECIES_EGG)
         return FALSE;
     for (u32 i = 0; teachableLearnset[i] != MOVE_UNAVAILABLE; i++)

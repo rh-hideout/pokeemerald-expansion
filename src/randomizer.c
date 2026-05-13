@@ -101,6 +101,12 @@ bool32 RandomizerFeatureEnabled(enum RandomizerFeature feature)
             #else
                 return settings->tx_Random_Type;
             #endif
+        case RANDOMIZE_LEARNSET:
+            #ifdef FORCE_RANDOMIZE_LEARNSET
+                return FORCE_RANDOMIZE_LEARNSET;
+            #else
+                return settings->tx_Random_Moves;
+            #endif
         case RANDOMIZE_EGG_MON:
             #ifdef FORCE_RANDOMIZE_EGG_MON
                 return FORCE_RANDOMIZE_EGG_MON;
@@ -955,6 +961,26 @@ u16 RandomizeAbility(u16 species, u8 abilityNum, u16 originalAbility)
     }
 
     return originalAbility;
+}
+
+u16 RandomizeMove(u16 move, u16 species)
+{
+    struct Sfc32State state;
+    u16 result;
+    u32 seed;
+
+    if (move == MOVE_NONE)
+        return MOVE_NONE;
+
+    seed = ((u32)move) + species;
+    state = RandomizerRandSeed(RANDOMIZER_REASON_LEARNSET, seed, species);
+
+    do
+    {
+        result = RandomizerNextRange(&state, MOVES_COUNT - 1) + 1;
+    } while (result >= MOVES_COUNT);
+
+    return result;
 }
 
 #endif // RANDOMIZER_AVAILABLE
