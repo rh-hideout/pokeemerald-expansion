@@ -2054,3 +2054,12 @@ void Script_OpenChallengeMenu(struct ScriptContext *ctx)
     gMain.savedCallback = CB2_ReturnToFieldWithOpenMenu;
     SetMainCallback2(CB2_InitChallengeMenu);
 }
+
+bool32 HMsOverwriteOptionActive(void)
+{
+    struct ChallengeSettings *cs = &gSaveBlock3Ptr->challengeSettings;
+    return (cs->tx_Challenges_Nuzlocke
+            || cs->tx_Challenges_Mirror
+            || cs->tx_Random_Moves
+            || cs->tx_Challenges_OneTypeChallenge != ONE_TYPE_OFF);
+}
