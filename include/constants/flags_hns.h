@@ -497,7 +497,7 @@
 #define HNS_RECEIVED_START                          0x1F2
 
 #define FLAG_RECEIVED_BIKE                          0x1F2
-#define FLAG_RECEIVED_FIRST_BALLS                   0x1F3
+#define FLAG_UNUSED_HNS_0x1F3                   0x1F3
 #define FLAG_RECEIVED_FIRST_POTION                  0x1F4
 #define FLAG_RECEIVED_HM_CUT                        0x1F5
 #define FLAG_RECEIVED_HM_FLASH                      0x1F6

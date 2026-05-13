@@ -5,6 +5,7 @@
 #include "new_game.h"
 #include "item.h"
 #include "event_data.h"
+#include "constants/flags.h"
 #include "field_control_avatar.h"
 #include "pokemon.h"
 #include "script.h"
@@ -68,7 +69,7 @@ bool32 RandomizerFeatureEnabled(enum RandomizerFeature feature)
             #ifdef FORCE_RANDOMIZE_FIELD_ITEMS
                 return FORCE_RANDOMIZE_FIELD_ITEMS;
             #else
-                return settings->tx_Random_Items;
+                return settings->tx_Random_Items && FlagGet(FLAG_RECEIVED_FIRST_BALLS);
             #endif
         case RANDOMIZE_TRAINER_MON:
             #ifdef FORCE_RANDOMIZE_TRAINER_MON
