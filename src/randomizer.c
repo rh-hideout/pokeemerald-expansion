@@ -113,6 +113,12 @@ bool32 RandomizerFeatureEnabled(enum RandomizerFeature feature)
             #else
                 return settings->tx_Random_Evolutions;
             #endif
+        case RANDOMIZE_EVO_METHODS:
+            #ifdef FORCE_RANDOMIZE_EVO_METHODS
+                return FORCE_RANDOMIZE_EVO_METHODS;
+            #else
+                return settings->tx_Random_EvolutionMethods;
+            #endif
         case RANDOMIZE_EGG_MON:
             #ifdef FORCE_RANDOMIZE_EGG_MON
                 return FORCE_RANDOMIZE_EGG_MON;
@@ -1000,6 +1006,26 @@ u16 RandomizeEvolution(u16 targetSpecies, u16 originalSpecies)
 
     seed = ((u32)targetSpecies) + originalSpecies;
     state = RandomizerRandSeed(RANDOMIZER_REASON_EVOLUTION, seed, originalSpecies);
+
+    do
+    {
+        result = RandomizerNextRange(&state, RANDOMIZER_MAX_MON) + 1;
+    } while (result > RANDOMIZER_MAX_MON || result == SPECIES_NONE);
+
+    return result;
+}
+
+u16 RandomizeEvoMethod(u16 species)
+{
+    struct Sfc32State state;
+    u16 result;
+    u32 seed;
+
+    if (species == SPECIES_NONE)
+        return SPECIES_NONE;
+
+    seed = (u32)species;
+    state = RandomizerRandSeed(RANDOMIZER_REASON_EVO_METHOD, seed, species);
 
     do
     {

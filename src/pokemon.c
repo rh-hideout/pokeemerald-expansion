@@ -5431,7 +5431,14 @@ u32 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 
     u32 heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, 0);
     u32 level = GetMonData(mon, MON_DATA_LEVEL, 0);
     enum HoldEffect holdEffect;
-    const struct Evolution *evolutions = GetSpeciesEvolutions(species);
+    const struct Evolution *evolutions;
+
+#if RANDOMIZER_AVAILABLE
+    if (RandomizerFeatureEnabled(RANDOMIZE_EVO_METHODS))
+        species = RandomizeEvoMethod(species);
+#endif
+
+    evolutions = GetSpeciesEvolutions(species);
 
     if (evolutions == NULL)
         return SPECIES_NONE;

@@ -51,6 +51,7 @@
 #include "constants/rgb.h"
 #include "constants/songs.h"
 #include "config/pokedex_plus_hgss.h"
+#include "randomizer.h"
 
 enum
 {
@@ -6275,6 +6276,11 @@ static u8 PrintPreEvolutions(u8 taskId, u16 species)
     u16 baseFormSpecies;
     sPokedexView->sEvoScreenData.isMega = FALSE;
 
+#if RANDOMIZER_AVAILABLE
+    if (RandomizerFeatureEnabled(RANDOMIZE_EVOLUTIONS) || RandomizerFeatureEnabled(RANDOMIZE_EVO_METHODS))
+        return 0;
+#endif
+
     //Check if it's a mega
     baseFormSpecies = GetFormSpeciesId(species, 0);
     if (baseFormSpecies != species)
@@ -6444,7 +6450,14 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
     u32 base_y_offset = 9;
     u32 times = 0;
     u32 arg; // shorthand for some of the more mathy evolutions
-    const struct Evolution *evolutions = GetSpeciesEvolutions(species);
+    const struct Evolution *evolutions;
+
+#if RANDOMIZER_AVAILABLE
+    if (RandomizerFeatureEnabled(RANDOMIZE_EVO_METHODS))
+        species = RandomizeEvoMethod(species);
+#endif
+
+    evolutions = GetSpeciesEvolutions(species);
 
     if (sPokedexView->sEvoScreenData.isMega)
         return;
@@ -6482,6 +6495,11 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
         targetSpecies = evolutions[i].targetSpecies;
         if (!IsSpeciesEnabled(targetSpecies))
             continue;
+
+#if RANDOMIZER_AVAILABLE
+        if (RandomizerFeatureEnabled(RANDOMIZE_EVOLUTIONS) && targetSpecies != SPECIES_NONE)
+            targetSpecies = RandomizeEvolution(targetSpecies, species);
+#endif
 
         left = !left;
 

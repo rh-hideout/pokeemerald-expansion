@@ -32,6 +32,7 @@ enum RandomizerFeature
     RANDOMIZE_EGG_MON,
     RANDOMIZE_ABILITIES,
     RANDOMIZE_EVOLUTIONS,
+    RANDOMIZE_EVO_METHODS,
 };
 
 enum RandomizerReason
@@ -47,6 +48,7 @@ enum RandomizerReason
     RANDOMIZER_REASON_EGG,
     RANDOMIZER_REASON_ABILITIES,
     RANDOMIZER_REASON_EVOLUTION,
+    RANDOMIZER_REASON_EVO_METHOD,
 };
 
 enum RandomizerOption {
@@ -117,6 +119,8 @@ u16 RandomizeAbility(u16 species, u8 abilityNum, u16 originalAbility);
 u16 RandomizeMove(u16 move, u16 species);
 
 u16 RandomizeEvolution(u16 targetSpecies, u16 originalSpecies);
+
+u16 RandomizeEvoMethod(u16 species);
 
 static inline bool32 GroupSetsIntersect(struct RandomizerGroupSet* originalCache, struct RandomizerGroupSet* targetCache)
 {
