@@ -5616,6 +5616,11 @@ u32 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 
         return SPECIES_NONE;
     }
 
+#if RANDOMIZER_AVAILABLE
+    if (RandomizerFeatureEnabled(RANDOMIZE_EVOLUTIONS) && targetSpecies != SPECIES_NONE)
+        targetSpecies = RandomizeEvolution(targetSpecies, species);
+#endif
+
     return targetSpecies;
 }
 
