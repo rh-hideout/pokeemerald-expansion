@@ -523,6 +523,26 @@ struct SpeciesInfo /*0xC4*/
     enum OverworldWildEncounterBehaviors overworldEncounterBehavior;
 };
 
+struct PokemonTemplate
+{
+    enum Species species;
+    u8 level;
+    enum Item heldItem;
+    u8 ball;
+    u8 gender;
+    u8 nature;
+    u8 abilityNum;
+    u8 evs[NUM_STATS];
+    u8 ivs[NUM_STATS];
+    enum Move moves[MAX_MON_MOVES];
+    enum ShinyMode shinyMode;
+    bool8 gmaxFactor;
+    enum Type teraType;
+    u8 dmaxLevel;
+    enum GeneratedMonOrigin origin;
+    u32 personality;
+};
+
 struct EggData
 {
     const u8 *eggIcon;
@@ -944,6 +964,7 @@ struct BoxPokemon *GetSelectedBoxMonFromPcOrParty(void);
 u32 GiveScriptedMonToPlayer(struct Pokemon *mon, u8 slot);
 void ChangePokemonNicknameWithCallback(void (*callback)(void));
 bool32 HasShedinjaHPHandling(enum Species species);
+void ValidatePokemonData(struct PokemonTemplate *monTemplate);
 
 static inline u32 OWE_GetMovementTypeFromSpecies(enum Species speciesId)
 {

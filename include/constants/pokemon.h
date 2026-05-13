@@ -381,6 +381,14 @@ enum ShinyMode {
     SHINY_MODE_NEVER
 };
 
+enum GeneratedMonOrigin
+{
+    WILDMON_ORIGIN,
+    STATIC_WILDMON_ORIGIN,
+    ROAMER_ORIGIN,
+    GIFTMON_ORIGIN
+};
+
 #define MON_PIC_WIDTH 64
 #define MON_PIC_HEIGHT 64
 #define MON_PIC_SIZE (MON_PIC_WIDTH * MON_PIC_HEIGHT / 2)
