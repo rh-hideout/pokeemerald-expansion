@@ -95,6 +95,12 @@ bool32 RandomizerFeatureEnabled(enum RandomizerFeature feature)
             #else
                 return settings->tx_Random_Abilities;
             #endif
+        case RANDOMIZE_MON_TYPES:
+            #ifdef FORCE_RANDOMIZE_MON_TYPES
+                return FORCE_RANDOMIZE_MON_TYPES;
+            #else
+                return settings->tx_Random_Type;
+            #endif
         case RANDOMIZE_EGG_MON:
             #ifdef FORCE_RANDOMIZE_EGG_MON
                 return FORCE_RANDOMIZE_EGG_MON;

@@ -1911,6 +1911,7 @@ bool8 ScrCmd_checkrandomizer(struct ScriptContext *ctx)
         || settings->tx_Random_Starter
         || settings->tx_Random_Items
         || settings->tx_Random_Abilities
+        || settings->tx_Random_Type
         || settings->tx_Random_Chaos;
     #else
     gSpecialVar_Result = FALSE;

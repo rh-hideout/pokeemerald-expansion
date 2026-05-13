@@ -4051,6 +4051,10 @@ static const struct {
 enum Type GetSpeciesType(u16 species, u8 slot)
 {
     species = SanitizeSpeciesId(species);
+#if RANDOMIZER_AVAILABLE
+    if (RandomizerFeatureEnabled(RANDOMIZE_MON_TYPES))
+        return RandomizeMonType(species, slot);
+#endif
     if (gSaveBlock3Ptr->challengeSettings.tx_Mode_Fairy_Types == 0)
     {
         for (u32 i = 0; i < ARRAY_COUNT(sPreFairyTypes); i++)

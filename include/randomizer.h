@@ -83,7 +83,12 @@ u16 RandomizerRandRange(enum RandomizerReason reason, u32 data1, u32 data2, u16 
 
 static inline u8 RandomizeMonType(u16 species, u8 typeNum)
 {
-    return (u8)RandomizerRandRange(RANDOMIZER_REASON_SPECIES_TYPE, species, typeNum, NUMBER_OF_MON_TYPES);
+    u8 type;
+    struct Sfc32State state = RandomizerRandSeed(RANDOMIZER_REASON_SPECIES_TYPE, species, typeNum);
+    do {
+        type = (u8)RandomizerNextRange(&state, NUMBER_OF_MON_TYPES);
+    } while (type == TYPE_MYSTERY);
+    return type;
 }
 
 u16 RandomizeFoundItem(u16 itemId, u8 mapNum, u8 mapGroup, u8 localId);
