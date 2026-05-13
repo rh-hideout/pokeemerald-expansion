@@ -21,6 +21,7 @@
 #include "pokemon.h"
 #include "pokemon_storage_system.h"
 #include "random.h"
+#include "randomizer.h"
 #include "script.h"
 #include "sprite.h"
 #include "string_util.h"
@@ -116,6 +117,11 @@ bool8 DoesPartyHaveEnigmaBerry(void)
 void CreateScriptedWildMon(u16 species, u8 level, enum Item item)
 {
     u8 heldItem[2];
+
+    #if RANDOMIZER_AVAILABLE
+    if (RandomizerFeatureEnabled(RANDOMIZE_FIXED_MON))
+        species = RandomizeMon(RANDOMIZER_REASON_FIXED_ENCOUNTER, GetRandomizerOption(RANDOMIZER_OPTION_SPECIES_MODE), Random32(), species);
+    #endif
 
     ZeroEnemyPartyMons();
     u32 personality = GetMonPersonality(species,
@@ -517,6 +523,18 @@ u32 ScriptGiveMon(u16 species, u8 level, enum Item item)
     struct Pokemon mon;
     u8 heldItem[2];
 
+#if RANDOMIZER_AVAILABLE
+    if (!FlagGet(FLAG_SYS_POKEMON_GET))
+    {
+        if (RandomizerFeatureEnabled(RANDOMIZE_STARTER_AND_GIFT_MON))
+            species = RandomizeMon(RANDOMIZER_REASON_STARTER_AND_GIFT_MON, GetRandomizerOption(RANDOMIZER_OPTION_SPECIES_MODE), Random32(), species);
+    }
+    else
+    {
+        if (RandomizerFeatureEnabled(RANDOMIZE_FIXED_MON))
+            species = RandomizeMon(RANDOMIZER_REASON_FIXED_ENCOUNTER, GetRandomizerOption(RANDOMIZER_OPTION_SPECIES_MODE), Random32(), species);
+    }
+#endif
     CreateRandomMon(&mon, species, level);
     if (item)
     {
@@ -643,6 +661,14 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
         Script_RequestEffects(SCREFF_V1);
         origin = STATIC_WILDMON_ORIGIN;
     }
+
+#if RANDOMIZER_AVAILABLE
+    if (FlagGet(FLAG_SYS_POKEMON_GET))
+    {
+        if (RandomizerFeatureEnabled(RANDOMIZE_FIXED_MON))
+            species = RandomizeMon(RANDOMIZER_REASON_FIXED_ENCOUNTER, GetRandomizerOption(RANDOMIZER_OPTION_SPECIES_MODE), Random32(), species);
+    }
+#endif
 
     if (gender == MON_GENDER_MAY_CUTE_CHARM)
         gender = GetSynchronizedGender(origin, species);

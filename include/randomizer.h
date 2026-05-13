@@ -68,6 +68,7 @@ struct RandomizerGroupSet {
 
 u32 GetRandomizerSeed(void);
 bool32 RandomizerFeatureEnabled(enum RandomizerFeature feature);
+u16 GetRandomizerOption(enum RandomizerOption option);
 
 struct Sfc32State RandomizerRandSeed(enum RandomizerReason reason, u32 data1, u32 data2);
 

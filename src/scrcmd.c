@@ -1885,13 +1885,12 @@ bool8 ScrCmd_giveoddegg(struct ScriptContext *ctx)
     return FALSE;
 }
 
-// HnS stub — TODO: implement with GetPokedexCategoryName
 bool8 ScrCmd_buffermoncategory(struct ScriptContext *ctx)
 {
-    u8 stringvar = ScriptReadByte(ctx);
-    u16 species = ScriptReadHalfword(ctx);
-    (void)stringvar;
-    (void)species;
+    u8 stringVarIndex = ScriptReadByte(ctx);
+    u16 species = VarGet(ScriptReadHalfword(ctx));
+
+    StringCopy(sScriptStringVars[stringVarIndex], GetSpeciesCategory(species));
     return FALSE;
 }
 
@@ -2630,11 +2629,23 @@ bool8 ScrCmd_drawboxtext(struct ScriptContext *ctx)
 
 bool8 ScrCmd_showmonpic(struct ScriptContext *ctx)
 {
-    u16 species = VarGet(ScriptReadHalfword(ctx));
+    u16 varId = ScriptReadHalfword(ctx);
+    u16 species = VarGet(varId);
     u8 x = ScriptReadByte(ctx);
     u8 y = ScriptReadByte(ctx);
 
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
+
+#if RANDOMIZER_AVAILABLE
+    if (RandomizerFeatureEnabled(RANDOMIZE_STARTER_AND_GIFT_MON) && !FlagGet(FLAG_SYS_POKEMON_GET))
+    {
+        species = RandomizeMon(RANDOMIZER_REASON_STARTER_AND_GIFT_MON, GetRandomizerOption(RANDOMIZER_OPTION_SPECIES_MODE), GetRandomizerSeed() ^ species, species);
+        if (species == SPECIES_TOGEPI)
+            species = SPECIES_CLEFFA;
+        if (varId >= VARS_START)
+            VarSet(varId, species);
+    }
+#endif
 
     ScriptMenu_ShowPokemonPic(species, x, y);
     return FALSE;
@@ -3178,17 +3189,6 @@ bool8 ScrCmd_setwildbattle(struct ScriptContext *ctx)
     enum Item item2 = ScriptReadHalfword(ctx);
 
     Script_RequestEffects(SCREFF_V1);
-
-    #if RANDOMIZER_AVAILABLE == TRUE
-    {
-        u8 mapNum = gSaveBlock1Ptr->location.mapNum;
-        u8 mapGroup = gSaveBlock1Ptr->location.mapGroup;
-        u8 localId = gObjectEvents[gSelectedObjectEvent].localId;
-        species = RandomizeFixedEncounterMon(species, mapNum, mapGroup, localId);
-        if (species2 != SPECIES_NONE)
-            species2 = RandomizeFixedEncounterMon(species2, mapNum, mapGroup, localId);
-    }
-    #endif
 
     if (species2 == SPECIES_NONE)
     {
