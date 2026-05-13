@@ -29,6 +29,7 @@
 #include "link.h"
 #include "m4a.h"
 #include "main.h"
+#include "mail.h"
 #include "move_relearner.h"
 #include "naming_screen.h"
 #include "overworld.h"
@@ -829,10 +830,10 @@ void CreateMonWithIVs(struct Pokemon *mon, enum Species species, u8 level, u32 p
 
 bool32 ComputePlayerShinyOdds(u32 personality, u32 value)
 {
-    if (P_FLAG_FORCE_NO_SHINY != 0 && FlagGet(P_FLAG_FORCE_NO_SHINY))
+    if (FlagGet(P_FLAG_FORCE_NO_SHINY))
         return FALSE;
     
-    if (P_FLAG_FORCE_SHINY != 0 && FlagGet(P_FLAG_FORCE_SHINY))
+    if (FlagGet(P_FLAG_FORCE_SHINY))
         return TRUE;
     
     if (P_ONLY_OBTAINABLE_SHINIES && (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE || (FlagGet(WE_FLAG_NO_CATCHING))))
@@ -6860,11 +6861,8 @@ bool32 HasShedinjaHPHandling(enum Species species)
     return FALSE;
 }
 
-static u32 ResolveAbility(u32 abilityNum, enum Species species)
+static u32 ResolveAbility(enum Species species, u32 abilityNum)
 {
-    if (abilityNum == NUM_ABILITY_PERSONALITY)
-        return abilityNum;
-
     assertf(abilityNum < NUM_ABILITY_SLOTS && GetAbilityBySpecies(species, abilityNum) != ABILITY_NONE,
             "invalid ability num %d for species %d", abilityNum, species)
     {
@@ -6873,18 +6871,18 @@ static u32 ResolveAbility(u32 abilityNum, enum Species species)
     return abilityNum;
 }
 
-static enum PokeBall ResolveBall(enum PokeBall ball)
+static enum PokeBall ResolveBall(u32 ballTemplate)
 {
-    if (ball < POKEBALL_COUNT)
-        return ball;
-    if (ball == BALL_RANDOM)
+    if (ballTemplate < POKEBALL_COUNT)
+        return ballTemplate;
+    if (ballTemplate == BALL_RANDOM)
         return GetRandomBall();
 
-    errorf("Unknown ball value %d when creating pokemon", ball);
+    errorf("Unknown ball value %d when creating pokemon", ballTemplate);
     return BALL_STRANGE;
 }
 
-static void ResolveIVs(u8 *ivs, enum Species species)
+static void ResolveIVs(enum Species species, const u8 *ivsTemplate, u8 *ivs)
 {
     u32 i;
     u32 nonFixedIvCount = 0;
@@ -6892,15 +6890,20 @@ static void ResolveIVs(u8 *ivs, enum Species species)
     enum Stat selectedIvs[NUM_STATS];
     for (i = 0; i < NUM_STATS; i++)
     {
-        assertf(ivs[i] <= USE_RANDOM_IVS, "invalid iv value of %d above maximum of %d", ivs[i], MAX_PER_STAT_IVS)
+        if (ivsTemplate[i] < USE_RANDOM_IVS)
         {
-            ivs[i] = MAX_PER_STAT_IVS;
+            ivs[i] = ivsTemplate[i];
         }
-        if (ivs[i] == USE_RANDOM_IVS)
+        else if (ivsTemplate[i] == USE_RANDOM_IVS)
         {
             availableIVs[nonFixedIvCount] = i;
             ivs[i] = Random() % (MAX_PER_STAT_IVS + 1);
             nonFixedIvCount++;
+        }
+        else
+        {
+            errorf("invalid iv value of %d above maximum of %d", ivs[i], MAX_PER_STAT_IVS);
+            ivs[i] = MAX_PER_STAT_IVS;
         }
     }
 
@@ -6921,13 +6924,18 @@ static void ResolveIVs(u8 *ivs, enum Species species)
     }
 }
 
-static void ResolveEVs(u8 *evs)
+static void ResolveEVs(const u8 *evsTemplate, u8 *evs)
 {
     u32 evTotal = 0;
     for (u32 i = 0; i < NUM_STATS; i++)
     {
-        assertf(evs[i] <= MAX_PER_STAT_EVS, "invalid ev value of %d above maximum of %d", evs[i], MAX_PER_STAT_EVS)
+        if (evsTemplate[i] <= MAX_PER_STAT_EVS)
         {
+            evs[i] = evsTemplate[i];
+        }
+        else
+        {
+            errorf("invalid ev value of %d above maximum of %d", evs[i], MAX_PER_STAT_EVS);
             evs[i] = 0;
         }
         evTotal += evs[i];
@@ -6941,22 +6949,153 @@ static void ResolveEVs(u8 *evs)
     }
 }
 
-void ValidatePokemonData(struct PokemonTemplate *monTemplate)
+static enum Species ResolveSpecies(u32 speciesTemplate)
 {
-    assertf(IsSpeciesEnabled(monTemplate->species), "unknown species %d when creating pokemon") { monTemplate->species = SPECIES_PORYGON; }
-    assertf(MIN_LEVEL <= monTemplate->level && monTemplate->level <= MAX_LEVEL, "using wrong level %d when creating pokemon") { monTemplate->level = MIN_LEVEL; }
-    monTemplate->ball = ResolveBall(monTemplate->ball);
-    monTemplate->abilityNum = ResolveAbility(monTemplate->abilityNum, monTemplate->species);
-    ResolveIVs(monTemplate->ivs, monTemplate->species);
-    ResolveEVs(monTemplate->evs);
-    ResolveMoves(monTemplate->species, monTemplate->level, monTemplate->moves);
-    assertf(SHINY_MODE_ALWAYS <= monTemplate->shinyMode && monTemplate->shinyMode <= SHINY_MODE_NEVER, "unknown shiny mode value %d when creating pokemon") { monTemplate->shinyMode = SHINY_MODE_RANDOM; }
-    assertf(monTemplate->teraType > TYPE_NONE && monTemplate->teraType != TYPE_MYSTERY && monTemplate->teraType <= NUMBER_OF_MON_TYPES, "using wrong type %d for tera when creating pokemon") { monTemplate->teraType = NUMBER_OF_MON_TYPES; }
-    assertf(monTemplate->gmaxFactor == TRUE || monTemplate->gmaxFactor == FALSE, "incorrect gmax factor %d when creating pokemon") { monTemplate->gmaxFactor = FALSE; }
-    assertf(monTemplate->dmaxLevel <= MAX_DYNAMAX_LEVEL, "incorrect dynamax level value %d when creating pokemon") { monTemplate->dmaxLevel = 0; }
-    if (monTemplate->gender == MON_GENDER_MAY_CUTE_CHARM)
-        monTemplate->gender = GetSynchronizedGender(monTemplate->origin, monTemplate->species);
-    if (monTemplate->nature == NATURE_MAY_SYNCHRONIZE)
-        monTemplate->nature = GetSynchronizedNature(monTemplate->origin, monTemplate->species);
-    monTemplate->personality = GetMonPersonality(monTemplate->species, monTemplate->gender, monTemplate->nature, RANDOM_UNOWN_LETTER);
+    assertf (IsSpeciesEnabled(speciesTemplate), "unknown species %d when creating pokemon", speciesTemplate)
+    {
+        return SPECIES_PORYGON;
+    }
+    return speciesTemplate;
+}
+
+static u32 ResolveLevel(u32 levelTemplate)
+{
+    assertf (MIN_LEVEL <= levelTemplate &&levelTemplate <= MAX_LEVEL, "using invalid level %d when creating pokemon", levelTemplate)
+    {
+        return MIN_LEVEL;
+    }
+    return levelTemplate;
+}
+
+static u32 ResolvePersonality(enum Species species, u32 genderTemplate, u32 natureTemplate, enum GeneratedMonOrigin originTemplate)
+{
+    u32 gender;
+    u32 nature;
+    assertf(originTemplate != UNDEFINED_MON_ORIGIN, "origin was not explicitly set when creating pokemon")
+    {
+        // if the origin was not explictly set, never apply Synchronize or Cute Charm effects
+        if (genderTemplate == MON_GENDER_MAY_CUTE_CHARM)
+            genderTemplate = MON_GENDER_RANDOM;
+        if (natureTemplate == NATURE_MAY_SYNCHRONIZE)
+            natureTemplate = NATURE_RANDOM;
+    }
+    if (genderTemplate == MON_GENDER_MAY_CUTE_CHARM)
+        gender = GetSynchronizedGender(originTemplate, genderTemplate);
+    else
+        gender = genderTemplate;
+    if (natureTemplate == NATURE_MAY_SYNCHRONIZE)
+        nature = GetSynchronizedNature(originTemplate, natureTemplate);
+    else
+        nature = natureTemplate;
+    return GetMonPersonality(species, gender, nature, RANDOM_UNOWN_LETTER);
+}
+
+static bool8 ResolveShinyness(u32 isShinyTemplate)
+{
+    assertf(isShinyTemplate == TRUE || isShinyTemplate == FALSE, "using non boolean isShiny value %d when creating pokemon", isShinyTemplate)
+    {
+        return FALSE;
+    }
+    return isShinyTemplate;
+}
+
+static bool8 ResolveDynamaxLevel(u32 dynamaxLevelTemplate)
+{
+    assertf(dynamaxLevelTemplate <= MAX_DYNAMAX_LEVEL, "invalid dynamax level value %d when creating pokemon", dynamaxLevelTemplate)
+    {
+        return FALSE;
+    }
+    return dynamaxLevelTemplate;
+}
+
+static bool8 ResolveGmaxFactor(u32 gmaxFactorTemplate)
+{
+    assertf(gmaxFactorTemplate == TRUE || gmaxFactorTemplate == FALSE, "using non boolean gmaxFactor value %d when creating pokemon", gmaxFactorTemplate)
+    {
+        return FALSE;
+    }
+    return gmaxFactorTemplate;
+}
+
+static bool8 ResolveTeraType(u32 teraTypeTemplate)
+{
+    assertf(teraTypeTemplate != TYPE_NONE && teraTypeTemplate != TYPE_MYSTERY && teraTypeTemplate < NUMBER_OF_MON_TYPES, "using invalid tera type %d when creating pokemon", teraTypeTemplate)
+    {
+        return TYPE_STELLAR;
+    }
+    return teraTypeTemplate;
+}
+
+static enum Item ResolveHeldItem(u32 heldItemTemplate)
+{
+    assertf(heldItemTemplate < ITEMS_COUNT,"using invalid tera type %d when creating pokemon", heldItemTemplate)
+    {
+        return ITEM_NONE;
+    }
+    assertf(!ItemIsMail(heldItemTemplate) && !GetItemImportance(heldItemTemplate), "trying to give item %d that can't be held to newly created pokemon", heldItemTemplate)
+    {
+        return ITEM_NONE;
+    }
+    return heldItemTemplate;
+}
+
+void CreateMonFromTemplate(struct Pokemon *mon, const struct PokemonTemplate *monTemplate)
+{
+    enum Species species = ResolveSpecies(monTemplate->species);
+    u8 level = ResolveLevel(monTemplate->level);
+    u32 personality = ResolvePersonality(species, monTemplate->gender, monTemplate->nature, monTemplate->origin);
+    CreateMon(mon, species, level, personality, OTID_STRUCT_PLAYER_ID);
+
+    enum Item heldItem = ResolveHeldItem(monTemplate->heldItem);
+    SetMonData(mon, MON_DATA_HELD_ITEM, &heldItem);
+
+    if (monTemplate->doNotUseDefaultBall)
+    {
+        enum PokeBall ball = ResolveBall(monTemplate->ball);
+        SetMonData(mon, MON_DATA_POKEBALL, &ball);
+    }
+
+    if (monTemplate->doNotUseDefaultShinyness && monTemplate->isShiny != SHINY_MODE_RANDOM)
+    {
+        bool8 isShiny = ResolveShinyness(monTemplate->isShiny);
+        SetMonData(mon, MON_DATA_IS_SHINY, &isShiny);
+    }
+
+    if (monTemplate->doNotUseDefaultAbility)
+    {
+        u8 abilityNum = ResolveAbility(species, monTemplate->abilityNum);
+        SetMonData(mon, MON_DATA_ABILITY_NUM, &abilityNum);
+    }
+
+    u8 ivs[NUM_STATS];
+    u8 evs[NUM_STATS];
+    ResolveIVs(species, monTemplate->ivs, ivs);
+    ResolveEVs(monTemplate->evs, evs);
+    for (u32 i = 0; i < NUM_STATS; i++)
+    {
+        SetMonData(mon, MON_DATA_HP_IV + i, &ivs[i]);
+        SetMonData(mon, MON_DATA_HP_EV + i, &evs[i]);
+    }
+
+    enum Move moves[MAX_MON_MOVES];
+    ResolveMoves(species, level, monTemplate->moves, moves);
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
+    {
+        SetMonData(mon, MON_DATA_MOVE1 + i, &moves[i]);
+    }
+
+    u8 dmaxLevel = ResolveDynamaxLevel(monTemplate->dmaxLevel);
+    SetMonData(mon, MON_DATA_DYNAMAX_LEVEL, &dmaxLevel);
+
+    bool8 gmaxFactor = ResolveGmaxFactor(monTemplate->gmaxFactor);
+    SetMonData(mon, MON_DATA_GIGANTAMAX_FACTOR, &gmaxFactor);
+
+    if (monTemplate->doNotUseDefaultTeraType)
+    {
+        enum Type teraType = ResolveTeraType(monTemplate->teraType);
+        SetMonData(mon, MON_DATA_TERA_TYPE, &teraType);
+    }
+
+    CalculateMonStats(mon);
+    TryFormChange(mon, FORM_CHANGE_ITEM_HOLD, B_TRAINER_0);
 }

@@ -376,13 +376,14 @@ enum EvoSpinDirections {
 };
 
 enum ShinyMode {
-    SHINY_MODE_ALWAYS,
-    SHINY_MODE_RANDOM,
-    SHINY_MODE_NEVER
+    SHINY_MODE_NEVER  = 0,
+    SHINY_MODE_ALWAYS = 1,
+    SHINY_MODE_RANDOM = 2,
 };
 
 enum GeneratedMonOrigin
 {
+    UNDEFINED_MON_ORIGIN,
     WILDMON_ORIGIN,
     STATIC_WILDMON_ORIGIN,
     ROAMER_ORIGIN,

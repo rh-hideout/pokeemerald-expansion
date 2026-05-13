@@ -116,12 +116,13 @@ TEST("Random mon generation supports held item filter funcs")
 TEST("ResolveMoves resolves teachable moves")
 {
     enum Species species = SPECIES_CHARIZARD;
-    enum Move moves[MAX_MON_MOVES] = {MOVE_RANDOM_TEACHABLE, MOVE_DEFAULT, MOVE_DEFAULT, MOVE_DEFAULT};
+    u16 moves[MAX_MON_MOVES] = {MOVE_RANDOM_TEACHABLE, MOVE_DEFAULT, MOVE_DEFAULT, MOVE_DEFAULT};
+    enum Move finalMoves[MAX_MON_MOVES];
 
-    ResolveMoves(species, 100, moves);
+    ResolveMoves(species, 100, moves, finalMoves);
 
-    EXPECT_NE(moves[0], MOVE_RANDOM_TEACHABLE);
-    EXPECT_NE(moves[0], MOVE_NONE);
+    EXPECT_NE(finalMoves[0], MOVE_RANDOM_TEACHABLE);
+    EXPECT_NE(finalMoves[0], MOVE_NONE);
 }
 
 TEST("Random mon generation commands set vars for createmon")

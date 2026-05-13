@@ -362,46 +362,7 @@ void SetTeraType(struct ScriptContext *ctx)
 u32 ScriptGiveMonParameterized(u8 side, u8 slot, struct PokemonTemplate *monTemplate)
 {
     struct Pokemon mon;
-    u32 i;
-    bool32 isShiny;
-
-    ValidatePokemonData(monTemplate);
-    CreateMon(&mon, monTemplate->species, monTemplate->level, monTemplate->personality, OTID_STRUCT_PLAYER_ID);
-
-    for (i = 0; i < NUM_STATS; i++)
-    {
-        SetMonData(&mon, MON_DATA_HP_EV + i, &monTemplate->evs[i]);
-        SetMonData(&mon, MON_DATA_HP_IV + i, &monTemplate->ivs[i]);
-    }
-    CalculateMonStats(&mon);
-
-    for (i = 0; i < MAX_MON_MOVES; i++)
-        SetMonMoveSlot(&mon, monTemplate->moves[i], i);
-
-    if (monTemplate->abilityNum != NUM_ABILITY_PERSONALITY)
-        SetMonData(&mon, MON_DATA_ABILITY_NUM, &monTemplate->abilityNum);
-
-    SetMonData(&mon, MON_DATA_POKEBALL, &monTemplate->ball);
-    SetMonData(&mon, MON_DATA_HELD_ITEM, &monTemplate->heldItem);
-    // In case a mon with a form changing item is given. Eg: SPECIES_ARCEUS_NORMAL with ITEM_SPLASH_PLATE will transform into SPECIES_ARCEUS_WATER upon gifted.
-    TryFormChange(&mon, FORM_CHANGE_ITEM_HOLD, B_TRAINER_0);
-
-    SetMonData(&mon, MON_DATA_GIGANTAMAX_FACTOR, &monTemplate->gmaxFactor);
-    SetMonData(&mon, MON_DATA_DYNAMAX_LEVEL, &monTemplate->dmaxLevel);
-    if (monTemplate->teraType != NUMBER_OF_MON_TYPES)
-        SetMonData(&mon, MON_DATA_TERA_TYPE, &monTemplate->teraType);
-
-    if (monTemplate->shinyMode == SHINY_MODE_ALWAYS)
-        isShiny = TRUE;
-    else if (monTemplate->shinyMode == SHINY_MODE_NEVER)
-        isShiny = FALSE;
-    else if (FlagGet(P_FLAG_FORCE_SHINY))
-        isShiny = TRUE;
-    else if (FlagGet(P_FLAG_FORCE_NO_SHINY))
-        isShiny = FALSE;
-    else
-        isShiny = GetMonData(&mon, MON_DATA_IS_SHINY);
-    SetMonData(&mon, MON_DATA_IS_SHINY, &isShiny);
+    CreateMonFromTemplate(&mon, monTemplate);
 
     if (side == B_SIDE_PLAYER)
         return GiveScriptedMonToPlayer(&mon, slot);
@@ -441,15 +402,23 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
     u8 side                   = ScriptReadByte(ctx);
     u8 slot                   = ScriptReadByte(ctx);
 
-    struct PokemonTemplate monTemplate;
+    struct PokemonTemplate monTemplate = {0};
     monTemplate.species      = VarGet(ScriptReadHalfword(ctx));
     monTemplate.level        = VarGet(ScriptReadHalfword(ctx));
 
     u32 flags                 = ScriptReadWord(ctx);
     monTemplate.heldItem     = PARSE_FLAG(0, ITEM_NONE);
-    monTemplate.ball         = PARSE_FLAG(1, BALL_POKE);
+    if (flags & (1 << 1))
+    {
+        monTemplate.ball = VarGet(ScriptReadHalfword(ctx));
+        monTemplate.doNotUseDefaultBall = TRUE;
+    }
     monTemplate.nature       = PARSE_FLAG(2, NATURE_RANDOM);
-    monTemplate.abilityNum   = PARSE_FLAG(3, NUM_ABILITY_PERSONALITY);
+    if (flags & (1 << 3))
+    {
+        monTemplate.abilityNum = VarGet(ScriptReadHalfword(ctx));
+        monTemplate.doNotUseDefaultAbility = TRUE;
+    }
     monTemplate.gender       = PARSE_FLAG(4, MON_GENDER_RANDOM);
 
     for (i = 0; i < NUM_STATS; i++)
@@ -461,9 +430,18 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
     for (i = 0; i < MAX_MON_MOVES; i++)
         monTemplate.moves[i] = PARSE_FLAG(17 + i, MOVE_DEFAULT);
 
-    monTemplate.shinyMode    = PARSE_FLAG(21, SHINY_MODE_RANDOM);
+    if (flags & (1 << 21))
+    {
+        monTemplate.isShiny = VarGet(ScriptReadHalfword(ctx));
+        monTemplate.doNotUseDefaultShinyness = TRUE;
+    }
+
     monTemplate.gmaxFactor   = PARSE_FLAG(22, FALSE);
-    monTemplate.teraType     = PARSE_FLAG(23, NUMBER_OF_MON_TYPES);
+    if (flags & (1 << 21))
+    {
+        monTemplate.teraType = VarGet(ScriptReadHalfword(ctx));
+        monTemplate.doNotUseDefaultTeraType = TRUE;
+    }
     monTemplate.dmaxLevel    = PARSE_FLAG(24, 0);
 
     if (side == B_SIDE_PLAYER)

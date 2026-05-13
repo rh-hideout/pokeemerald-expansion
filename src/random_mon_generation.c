@@ -512,8 +512,12 @@ static void AssignRandomTeachableMove(enum Species species, enum Move *moves, u3
     moves[i] = candidate;
 }
 
-void ResolveMoves(enum Species species, u32 level, enum Move *moves)
+void ResolveMoves(enum Species species, u32 level, const u16 *movesTemplate, enum Move *moves)
 {
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
+    {
+        moves[i] = movesTemplate[i];
+    }
     SortMoves(moves);
 
     for (u32 i = 0; i < MAX_MON_MOVES; i++)

@@ -2734,12 +2734,14 @@ static void ResetMonDataStruct(struct PokemonTemplate *sDebugMonData)
 {
     sDebugMonData->species          = 1;
     sDebugMonData->level            = MIN_LEVEL;
-    sDebugMonData->shinyMode        = SHINY_MODE_NEVER;
+    sDebugMonData->isShiny          = FALSE;
+    sDebugMonData->gender           = MON_GENDER_RANDOM;
     sDebugMonData->nature           = 0;
     sDebugMonData->abilityNum       = 0;
-    sDebugMonData->teraType         = NUMBER_OF_MON_TYPES;
+    sDebugMonData->teraType         = TYPE_NONE;
     sDebugMonData->dmaxLevel        = 0;
     sDebugMonData->gmaxFactor       = FALSE;
+    sDebugMonData->origin           = GIFTMON_ORIGIN;
     for (u32 i = 0; i < NUM_STATS; i++)
     {
         sDebugMonData->ivs[i] = 0;
@@ -2749,6 +2751,11 @@ static void ResetMonDataStruct(struct PokemonTemplate *sDebugMonData)
     {
         sDebugMonData->moves[i] = MOVE_DEFAULT;
     }
+
+    sDebugMonData->doNotUseDefaultShinyness = TRUE;
+    sDebugMonData->doNotUseDefaultBall      = FALSE;
+    sDebugMonData->doNotUseDefaultAbility   = TRUE;
+    sDebugMonData->doNotUseDefaultTeraType  = FALSE;
 }
 
 #define tIsComplex  data[5]
@@ -3041,9 +3048,9 @@ static void DebugAction_Give_Pokemon_SelectShiny(u8 taskId)
     if (JOY_NEW(A_BUTTON))
     {
         if (gTasks[taskId].tInput)
-            sDebugMonData->shinyMode = SHINY_MODE_ALWAYS;
+            sDebugMonData->isShiny = TRUE;
         else
-            sDebugMonData->shinyMode = SHINY_MODE_NEVER;
+            sDebugMonData->isShiny = FALSE;
         gTasks[taskId].tInput = 0;
         gTasks[taskId].tDigit = 0;
         Debug_Display_Nature(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
@@ -3196,8 +3203,8 @@ static void DebugAction_Give_Pokemon_SelectTeraType(u8 taskId)
         if (JOY_NEW(DPAD_DOWN))
         {
             gTasks[taskId].tInput -= sPowersOfTen[gTasks[taskId].tDigit];
-            if (gTasks[taskId].tInput < 1)
-                gTasks[taskId].tInput = 1;
+            if (gTasks[taskId].tInput < 0)
+                gTasks[taskId].tInput = 0;
         }
 
         Debug_Display_TeraType(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
@@ -3205,7 +3212,11 @@ static void DebugAction_Give_Pokemon_SelectTeraType(u8 taskId)
 
     if (JOY_NEW(A_BUTTON))
     {
-        sDebugMonData->teraType = gTasks[taskId].tInput;
+        if (gTasks[taskId].tInput >= 1)
+        {
+            sDebugMonData->teraType = gTasks[taskId].tInput;
+            sDebugMonData->doNotUseDefaultTeraType = TRUE;
+        }
         gTasks[taskId].tInput = 0;
         gTasks[taskId].tDigit = 0;
 
