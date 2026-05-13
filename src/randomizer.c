@@ -775,7 +775,12 @@ u16 RandomizeWildEncounter(u16 species, u8 mapNum, u8 mapGroup, enum WildPokemon
 {
     if (RandomizerFeatureEnabled(RANDOMIZE_WILD_MON))
     {
-        return RandomizeMon(RANDOMIZER_REASON_WILD_ENCOUNTER, GetRandomizerOption(RANDOMIZER_OPTION_SPECIES_MODE), Random32(), species);
+        u32 seed;
+        if (gSaveBlock3Ptr->challengeSettings.tx_Random_MapBased)
+            seed = GetRandomizerSeed() ^ (mapGroup << 24 | mapNum << 16 | area << 8 | slot);
+        else
+            seed = Random32();
+        return RandomizeMon(RANDOMIZER_REASON_WILD_ENCOUNTER, GetRandomizerOption(RANDOMIZER_OPTION_SPECIES_MODE), seed, species);
     }
 
     return species;

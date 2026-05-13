@@ -75,6 +75,7 @@ enum {
     ITEM_RANDOM_OFF_ON,
     ITEM_RANDOM_STARTER,
     ITEM_RANDOM_WILD_PKMN,
+    ITEM_RANDOM_MAP_BASED,
     ITEM_RANDOM_TRAINER,
     ITEM_RANDOM_STATIC,
     ITEM_RANDOM_SIMILAR,
@@ -602,6 +603,10 @@ static const u8 *const sDesc_RandomWild[] = {
     COMPOUND_STRING("Same wild encounter as in the\nbase game."),
     COMPOUND_STRING("Randomize wild {PKMN}."),
 };
+static const u8 *const sDesc_RandomMapBased[] = {
+    COMPOUND_STRING("Wild encounters are fully random\nevery time."),
+    COMPOUND_STRING("Wild encounters are seeded per map.\nSame area always has the same {PKMN}."),
+};
 static const u8 *const sDesc_RandomTrainer[] = {
     COMPOUND_STRING("Trainer will have their expected\nparty."),
     COMPOUND_STRING("Randomize enemy trainer parties."),
@@ -672,6 +677,12 @@ static const struct ChallengeMenuItem sTabItems_Randomizer[] = {
         .descriptions = sDesc_RandomWild,
         .numChoices   = 2,
         .choiceNames  = sChoices_OffRandom,
+    },
+    [ITEM_RANDOM_MAP_BASED] = {
+        .name         = COMPOUND_STRING("MAP SEEDED"),
+        .descriptions = sDesc_RandomMapBased,
+        .numChoices   = 2,
+        .choiceNames  = sChoices_OffOn,
     },
     [ITEM_RANDOM_TRAINER] = {
         .name         = COMPOUND_STRING("TRAINER"),
@@ -1164,6 +1175,8 @@ static bool8 CheckConditions(u8 tab, u8 itemIndex)
         case ITEM_RANDOM_OFF_ON:
         case ITEM_RANDOM_NEXT:
             return TRUE;
+        case ITEM_RANDOM_MAP_BASED:
+            return masterOn && *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_WILD_PKMN);
         case ITEM_RANDOM_SIMILAR:
             return masterOn && anyPkmn && !(*GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_CHAOS));
         case ITEM_RANDOM_LEGENDARIES:
@@ -1735,6 +1748,7 @@ static void Task_Save(u8 taskId)
     {
         cs->tx_Random_Starter          = 0;
         cs->tx_Random_WildPokemon      = 0;
+        cs->tx_Random_MapBased         = 0;
         cs->tx_Random_Trainer          = 0;
         cs->tx_Random_Static           = 0;
         cs->tx_Random_Similar          = 0;
@@ -1752,6 +1766,7 @@ static void Task_Save(u8 taskId)
     {
         cs->tx_Random_Starter          = *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_STARTER);
         cs->tx_Random_WildPokemon      = *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_WILD_PKMN);
+        cs->tx_Random_MapBased         = cs->tx_Random_WildPokemon ? *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_MAP_BASED) : 0;
         cs->tx_Random_Trainer          = *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_TRAINER);
         cs->tx_Random_Static           = *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_STATIC);
         cs->tx_Random_Similar          = !(*GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_SIMILAR));
@@ -1933,13 +1948,15 @@ void CB2_InitChallengeMenu(void)
 
             // Randomizer tab — derive master toggle from individual fields
             bool8 anyRandom = cs->tx_Random_WildPokemon || cs->tx_Random_Starter
-                || cs->tx_Random_Trainer || cs->tx_Random_Static || cs->tx_Random_Similar
-                || cs->tx_Random_IncludeLegendaries || cs->tx_Random_Type || cs->tx_Random_Moves
-                || cs->tx_Random_Abilities || cs->tx_Random_Evolutions || cs->tx_Random_EvolutionMethods
-                || cs->tx_Random_TypeEffectiveness || cs->tx_Random_Items || cs->tx_Random_Chaos;
+                || cs->tx_Random_MapBased || cs->tx_Random_Trainer || cs->tx_Random_Static
+                || cs->tx_Random_Similar || cs->tx_Random_IncludeLegendaries || cs->tx_Random_Type
+                || cs->tx_Random_Moves || cs->tx_Random_Abilities || cs->tx_Random_Evolutions
+                || cs->tx_Random_EvolutionMethods || cs->tx_Random_TypeEffectiveness
+                || cs->tx_Random_Items || cs->tx_Random_Chaos;
             *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_OFF_ON)      = anyRandom ? 1 : 0;
             *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_STARTER)     = cs->tx_Random_Starter;
             *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_WILD_PKMN)   = cs->tx_Random_WildPokemon;
+            *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_MAP_BASED)  = cs->tx_Random_MapBased;
             *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_TRAINER)     = cs->tx_Random_Trainer;
             *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_STATIC)      = cs->tx_Random_Static;
             *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_SIMILAR)     = !cs->tx_Random_Similar;
