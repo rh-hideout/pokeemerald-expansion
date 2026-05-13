@@ -213,11 +213,12 @@ Debug_EventScript_Script_2::
 	end
 
 Debug_EventScript_Script_3::
-
+	callnative Script_OpenChallengeMenu
 	release
 	end
 
 Debug_EventScript_Script_4::
+
 	release
 	end
 

@@ -43,6 +43,7 @@
 #include "pokedex.h"
 #include "pokemon_storage_system.h"
 #include "random.h"
+#include "randomizer.h"
 #include "overworld.h"
 #include "rotating_tile_puzzle.h"
 #include "rtc.h"
@@ -1901,10 +1902,20 @@ bool8 ScrCmd_checknuzlocke(struct ScriptContext *ctx)
     return FALSE;
 }
 
-// HnS stub — TODO: implement with tx_Random_* SaveBlock fields
 bool8 ScrCmd_checkrandomizer(struct ScriptContext *ctx)
 {
+    #if RANDOMIZER_AVAILABLE == TRUE
+    struct ChallengeSettings *settings = &gSaveBlock3Ptr->challengeSettings;
+    gSpecialVar_Result = settings->tx_Random_WildPokemon
+        || settings->tx_Random_Trainer
+        || settings->tx_Random_Static
+        || settings->tx_Random_Starter
+        || settings->tx_Random_Items
+        || settings->tx_Random_Abilities
+        || settings->tx_Random_Chaos;
+    #else
     gSpecialVar_Result = FALSE;
+    #endif
     return FALSE;
 }
 
@@ -3167,6 +3178,17 @@ bool8 ScrCmd_setwildbattle(struct ScriptContext *ctx)
     enum Item item2 = ScriptReadHalfword(ctx);
 
     Script_RequestEffects(SCREFF_V1);
+
+    #if RANDOMIZER_AVAILABLE == TRUE
+    {
+        u8 mapNum = gSaveBlock1Ptr->location.mapNum;
+        u8 mapGroup = gSaveBlock1Ptr->location.mapGroup;
+        u8 localId = gObjectEvents[gSelectedObjectEvent].localId;
+        species = RandomizeFixedEncounterMon(species, mapNum, mapGroup, localId);
+        if (species2 != SPECIES_NONE)
+            species2 = RandomizeFixedEncounterMon(species2, mapNum, mapGroup, localId);
+    }
+    #endif
 
     if (species2 == SPECIES_NONE)
     {

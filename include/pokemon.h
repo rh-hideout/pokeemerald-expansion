@@ -387,6 +387,11 @@ struct Evolution
     const struct EvolutionParam *params;
 };
 
+#define MON_RANDOMIZER_NORMAL       0
+#define MON_RANDOMIZER_RANDOM_FORM  1
+#define MON_RANDOMIZER_SPECIAL_FORM 2
+#define MON_RANDOMIZER_INVALID      3
+
 struct SpeciesInfo /*0xC4*/
 {
     u8 baseHP;
@@ -490,7 +495,8 @@ struct SpeciesInfo /*0xC4*/
     u32 teachingType:1; // Not used in the ROM but used in compilation (check constants/teaching_types.h for explanations)
     u32 isFrontierBanned:1; // This species is not allowed to participate in Battle Frontier facilities.
     u32 isSkyBattleBanned:1;
-    u32 padding4:9;
+    u32 randomizerMode:2;
+    u32 padding4:7;
     // Shadow settings
     s8 enemyShadowXOffset; // This determines the X-offset for an enemy Pokémon's shadow during battle; negative values point left, positive values point right.
     s8 enemyShadowYOffset; // This determines the Y-offset for an enemy Pokémon's shadow during battle; negative values point up, positive values point down.

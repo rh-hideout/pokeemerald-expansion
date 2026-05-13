@@ -45,6 +45,7 @@
 #include "pokemon.h"
 #include "pokerus.h"
 #include "random.h"
+#include "randomizer.h"
 #include "recorded_battle.h"
 #include "roamer.h"
 #include "safari_zone.h"
@@ -2033,7 +2034,13 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
                 otId.method = OT_ID_PRESET;
                 otId.value = HIHALF(personalityValue) ^ LOHALF(personalityValue);
             }
-            CreateMon(&party[i], partyData[monIndex].species, partyData[monIndex].lvl, personalityValue, otId);
+            {
+                u16 species = partyData[monIndex].species;
+                #if RANDOMIZER_AVAILABLE == TRUE
+                species = RandomizeTrainerMon(trainer->trainerClass, i, monsCount, species);
+                #endif
+                CreateMon(&party[i], species, partyData[monIndex].lvl, personalityValue, otId);
+            }
             SetMonData(&party[i], MON_DATA_HELD_ITEM, &partyData[monIndex].heldItem);
 
             CustomTrainerPartyAssignMoves(&party[i], &partyData[monIndex]);
