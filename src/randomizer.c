@@ -119,6 +119,12 @@ bool32 RandomizerFeatureEnabled(enum RandomizerFeature feature)
             #else
                 return settings->tx_Random_EvolutionMethods;
             #endif
+        case RANDOMIZE_TYPE_EFFECTIVENESS:
+            #ifdef FORCE_RANDOMIZE_TYPE_EFFECTIVENESS
+                return FORCE_RANDOMIZE_TYPE_EFFECTIVENESS;
+            #else
+                return settings->tx_Random_TypeEffectiveness;
+            #endif
         case RANDOMIZE_EGG_MON:
             #ifdef FORCE_RANDOMIZE_EGG_MON
                 return FORCE_RANDOMIZE_EGG_MON;
@@ -1013,6 +1019,61 @@ u16 RandomizeEvolution(u16 targetSpecies, u16 originalSpecies)
     } while (result > RANDOMIZER_MAX_MON || result == SPECIES_NONE);
 
     return result;
+}
+
+static const u8 sShuffleableTypes[] =
+{
+    TYPE_NORMAL,
+    TYPE_FIGHTING,
+    TYPE_FLYING,
+    TYPE_POISON,
+    TYPE_GROUND,
+    TYPE_ROCK,
+    TYPE_BUG,
+    TYPE_GHOST,
+    TYPE_STEEL,
+    TYPE_FIRE,
+    TYPE_WATER,
+    TYPE_GRASS,
+    TYPE_ELECTRIC,
+    TYPE_PSYCHIC,
+    TYPE_ICE,
+    TYPE_DRAGON,
+    TYPE_DARK,
+    TYPE_FAIRY,
+};
+
+#define NUM_SHUFFLEABLE_TYPES ARRAY_COUNT(sShuffleableTypes)
+
+enum Type RandomizeType(enum Type type)
+{
+    u8 shuffled[NUM_SHUFFLEABLE_TYPES];
+    u8 i, j, temp;
+    struct Sfc32State state;
+
+    if (type == TYPE_NONE || type == TYPE_MYSTERY || type == TYPE_STELLAR)
+        return type;
+
+    state = RandomizerRandSeed(RANDOMIZER_REASON_TYPE_EFFECTIVENESS, 0, 0);
+
+    for (i = 0; i < NUM_SHUFFLEABLE_TYPES; i++)
+        shuffled[i] = sShuffleableTypes[i];
+
+    for (i = NUM_SHUFFLEABLE_TYPES - 1; i > 0; i--)
+    {
+        j = RandomizerNextRange(&state, i + 1);
+        temp = shuffled[j];
+        shuffled[j] = shuffled[i];
+        shuffled[i] = temp;
+    }
+
+    for (i = 0; i < NUM_SHUFFLEABLE_TYPES; i++)
+    {
+        if (sShuffleableTypes[i] == (u8)type)
+            return shuffled[i];
+    }
+
+    return type;
 }
 
 u16 RandomizeEvoMethod(u16 species)

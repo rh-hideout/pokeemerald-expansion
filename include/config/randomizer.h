@@ -30,6 +30,7 @@
 //#define FORCE_RANDOMIZE_ABILITIES                 1
 //#define FORCE_RANDOMIZE_EVOLUTIONS                1
 //#define FORCE_RANDOMIZE_EVO_METHODS               1
+//#define FORCE_RANDOMIZE_TYPE_EFFECTIVENESS        1
 
 // Species mode var (used for legend-aware / BST / evo-stage grouping)
 #include "constants/vars.h"
