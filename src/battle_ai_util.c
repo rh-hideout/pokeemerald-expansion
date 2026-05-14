@@ -213,7 +213,7 @@ u32 AI_GetDamageWithStatChanges(enum BattlerId battlerAtk, enum BattlerId battle
     return damage;
 }
 
-void AI_SetMoveStatChangeLogic(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, enum DamageCalcContext context)
+void AI_SetMoveStatChangeThinking(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
 {
     u32 additionalEffectCount = GetMoveAdditionalEffectCount(move);
     enum Ability atkAbility = gAiLogicData->abilities[battlerAtk];
@@ -354,7 +354,7 @@ bool32 AI_WouldBeFaster(enum BattlerId battlerAtk, enum BattlerId battlerDef, en
             savedStatStages[battler][stat] = gBattleMons[battler].statStages[stat];
     }
 
-    s32 atkSpeedChange = gAiLogicData->aiStatChanges[battlerAtk][STAT_SPEED];
+    s32 atkSpeedChange = gAiThinkingStruct->aiStatChanges[battlerAtk][STAT_SPEED];
     if (atkSpeedChange != 0)
     {
         gBattleMons[battlerAtk].statStages[STAT_SPEED] += atkSpeedChange;
@@ -364,7 +364,7 @@ bool32 AI_WouldBeFaster(enum BattlerId battlerAtk, enum BattlerId battlerDef, en
         if (gBattleMons[battlerAtk].statStages[STAT_SPEED] < MIN_STAT_STAGE)
             gBattleMons[battlerAtk].statStages[STAT_SPEED] = MIN_STAT_STAGE;
     }
-    s32 defSpeedChange = gAiLogicData->aiStatChanges[battlerDef][STAT_SPEED];
+    s32 defSpeedChange = gAiThinkingStruct->aiStatChanges[battlerDef][STAT_SPEED];
     if (defSpeedChange != 0)
     {
         gBattleMons[battlerDef].statStages[STAT_SPEED] += defSpeedChange;
@@ -398,7 +398,7 @@ bool32 AI_WouldBeSlower(enum BattlerId battlerAtk, enum BattlerId battlerDef, en
             savedStatStages[battler][stat] = gBattleMons[battler].statStages[stat];
     }
 
-    s32 atkSpeedChange = gAiLogicData->aiStatChanges[battlerAtk][STAT_SPEED];
+    s32 atkSpeedChange = gAiThinkingStruct->aiStatChanges[battlerAtk][STAT_SPEED];
     if (atkSpeedChange != 0)
     {
         gBattleMons[battlerAtk].statStages[STAT_SPEED] += atkSpeedChange;
@@ -408,7 +408,7 @@ bool32 AI_WouldBeSlower(enum BattlerId battlerAtk, enum BattlerId battlerDef, en
         if (gBattleMons[battlerAtk].statStages[STAT_SPEED] < MIN_STAT_STAGE)
             gBattleMons[battlerAtk].statStages[STAT_SPEED] = MIN_STAT_STAGE;
     }
-    s32 defSpeedChange = gAiLogicData->aiStatChanges[battlerDef][STAT_SPEED];
+    s32 defSpeedChange = gAiThinkingStruct->aiStatChanges[battlerDef][STAT_SPEED];
     if (defSpeedChange != 0)
     {
         gBattleMons[battlerDef].statStages[STAT_SPEED] += defSpeedChange;
@@ -431,7 +431,7 @@ bool32 AI_WouldBeSlower(enum BattlerId battlerAtk, enum BattlerId battlerDef, en
     return result;
 }
 
-enum ShouldChangeStats BattlerShouldChangeStats(u32 battlerAtk, u32 battlerDef, u32 statMove, u32 dmgMoveIndex, enum DamageCalcContext dmgContext, enum ChangeStatContext statContext)
+enum StatChangeDecision BattlerShouldChangeStats(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move statMove, u32 dmgMoveIndex, enum ChangeStatContext context)
 {
     enum Move predictedMove = GetIncomingMove(battlerAtk, battlerDef, gAiLogicData);
     enum Move atkMove = (dmgMoveIndex == MAX_MON_MOVES ? MOVE_TACKLE : gBattleMons[battlerAtk].moves[dmgMoveIndex]); // Generic move if no move index specified
@@ -450,7 +450,7 @@ enum ShouldChangeStats BattlerShouldChangeStats(u32 battlerAtk, u32 battlerDef, 
     }
 
     // Get stat changes to be considered
-    AI_SetMoveStatChangeLogic(battlerAtk, battlerDef, statMove, dmgContext);
+    AI_SetMoveStatChangeThinking(battlerAtk, battlerDef, statMove);
 
     switch (context)
     {
@@ -459,10 +459,8 @@ enum ShouldChangeStats BattlerShouldChangeStats(u32 battlerAtk, u32 battlerDef, 
         {
             if (AI_GetDamage(battlerAtk, battlerDef, dmgMoveIndex, AI_ATTACKING, gAiLogicData) >= gBattleMons[battlerDef].hp)
                 return STAT_CHANGE_BAD;
-            else if (AI_GetDamageWithStatChanges(battlerAtk, battlerDef, dmgMoveIndex, atkStatChanges, defStatChanges) >= gBattleMons[battlerDef].hp)
+            else if (AI_GetDamageWithStatChanges(battlerAtk, battlerDef, dmgMoveIndex) >= gBattleMons[battlerDef].hp)
                 return STAT_CHANGE_GOOD;
-            else
-                return STAT_CHANGE_NEUTRAL;
         }
         else // No move index specified; check all
         {
@@ -475,34 +473,39 @@ enum ShouldChangeStats BattlerShouldChangeStats(u32 battlerAtk, u32 battlerDef, 
             // Good if makes a move KO where it previously would not
             for (u32 i = 0; i < MAX_MON_MOVES; i++)
             {
-                if ((AI_GetDamageWithStatChanges(battlerAtk, battlerDef, i, atkStatChanges, defStatChanges) >= gBattleMons[battlerDef].hp)
+                if ((AI_GetDamageWithStatChanges(battlerAtk, battlerDef, i) >= gBattleMons[battlerDef].hp)
                  && !(AI_GetDamage(battlerAtk, battlerDef, i, AI_ATTACKING, gAiLogicData) >= gBattleMons[battlerDef].hp))
+                {
                     return STAT_CHANGE_GOOD;
+                }
             }
-            return STAT_CHANGE_NEUTRAL;
         }
-        break;
+        return STAT_CHANGE_NEUTRAL;
     case CHANGE_STAT_DMG_RECEIVED:
         // Bad if KO's with stat changes
         for (u32 i = 0; i < MAX_MON_MOVES; i++)
         {
             // Bad if KO's with stat changes
-            if (AI_GetDamageWithStatChanges(battlerDef, battlerAtk, i, defStatChanges, atkStatChanges) >= gBattleMons[battlerAtk].hp)
+            if (AI_GetDamageWithStatChanges(battlerDef, battlerAtk, i) >= gBattleMons[battlerAtk].hp)
                 return STAT_CHANGE_BAD;
         }
         // Good if saves from being KO'd
         for (u32 i = 0; i < MAX_MON_MOVES; i++)
         {
-            if (!(AI_GetDamageWithStatChanges(battlerDef, battlerAtk, i, defStatChanges, atkStatChanges) >= gBattleMons[battlerAtk].hp)
+            if (!(AI_GetDamageWithStatChanges(battlerDef, battlerAtk, i) >= gBattleMons[battlerAtk].hp)
              && (AI_GetDamage(battlerAtk, battlerDef, i, AI_DEFENDING, gAiLogicData) >= gBattleMons[battlerAtk].hp))
+            {
                 return STAT_CHANGE_GOOD;
+            }
         }
         // Neutral if not KO'd either way
         for (u32 i = 0; i < MAX_MON_MOVES; i++)
         {
-            if (!(AI_GetDamageWithStatChanges(battlerAtk, battlerDef, i, atkStatChanges, defStatChanges) >= gBattleMons[battlerDef].hp)
-            && !(AI_GetDamage(battlerAtk, battlerDef, i, AI_DEFENDING, gAiLogicData) >= gBattleMons[battlerDef].hp))
+            if (!(AI_GetDamageWithStatChanges(battlerAtk, battlerDef, i) >= gBattleMons[battlerDef].hp)
+             && !(AI_GetDamage(battlerAtk, battlerDef, i, AI_DEFENDING, gAiLogicData) >= gBattleMons[battlerDef].hp))
+            {
                 return STAT_CHANGE_NEUTRAL;
+            }
         }
         // Default to not doing it
         return STAT_CHANGE_BAD;
@@ -531,16 +534,12 @@ enum ShouldChangeStats BattlerShouldChangeStats(u32 battlerAtk, u32 battlerDef, 
         {
             return STAT_CHANGE_BAD;
         }
-        else
-        {
-            return STAT_CHANGE_NEUTRAL;
-        }
-        break;
+        return STAT_CHANGE_NEUTRAL;
     case CHANGE_STAT_ACC_EVADE:
         s8 savedStatStages[MAX_BATTLERS_COUNT][NUM_BATTLE_STATS] = {0};
-        u32 hitsToKO, expectedMovesToKONoChangeAtk, expectedMovesToKOWithChangeAtk, expectedMovesToKONoChangeDef,
-         expectedMovesToKOWithChangeDef, bestMovesToKONoChangeAtk = UINT32_MAX, bestMovesToKOWithChangeAtk = UINT32_MAX,
-         bestMovesToKONoChangeDef = UINT32_MAX, bestMovesToKOWithChangeDef = UINT32_MAX, totalAccuracyNoChange = 100, totalAccuracyWithChange;
+        u32 hitsToKO, expectedTurnsToKONoChangeAtk, expectedTurnsToKOWithChangeAtk, expectedTurnsToKONoChangeDef,
+         expectedTurnsToKOWithChangeDef, bestTurnsToKONoChangeAtk = UINT32_MAX, bestTurnsToKOWithChangeAtk = UINT32_MAX,
+         bestTurnsToKONoChangeDef = UINT32_MAX, bestTurnsToKOWithChangeDef = UINT32_MAX, totalAccuracyNoChange = 100, totalAccuracyWithChange;
         if (dmgMoveIndex != MAX_MON_MOVES)
         {
             hitsToKO = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, atkMove, AI_ATTACKING, DONT_CONSIDER_ENDURE);
@@ -550,7 +549,7 @@ enum ShouldChangeStats BattlerShouldChangeStats(u32 battlerAtk, u32 battlerDef, 
             if (totalAccuracyNoChange >= 100)
                 return STAT_CHANGE_BAD;
                 
-            expectedMovesToKONoChangeAtk = (hitsToKO * 100)/totalAccuracyNoChange;
+            expectedTurnsToKONoChangeAtk = (hitsToKO * 100)/totalAccuracyNoChange;
 
             // Save current stat stages
             for (enum BattlerId battler = B_BATTLER_0; battler < MAX_BATTLERS_COUNT; battler++)
@@ -559,7 +558,7 @@ enum ShouldChangeStats BattlerShouldChangeStats(u32 battlerAtk, u32 battlerDef, 
                     savedStatStages[battler][stat] = gBattleMons[battler].statStages[stat];
             }
 
-            s32 atkAccChange = gAiLogicData->aiStatChanges[battlerAtk][STAT_ACC];
+            s32 atkAccChange = gAiThinkingStruct->aiStatChanges[battlerAtk][STAT_ACC];
             if (atkAccChange != 0)
             {
                 gBattleMons[battlerAtk].statStages[STAT_ACC] += atkAccChange;
@@ -569,7 +568,8 @@ enum ShouldChangeStats BattlerShouldChangeStats(u32 battlerAtk, u32 battlerDef, 
                 if (gBattleMons[battlerAtk].statStages[STAT_ACC] < MIN_STAT_STAGE)
                     gBattleMons[battlerAtk].statStages[STAT_ACC] = MIN_STAT_STAGE;
             }
-            s32 defEvaChange = gAiLogicData->aiStatChanges[battlerDef][STAT_EVASION];
+
+            s32 defEvaChange = gAiThinkingStruct->aiStatChanges[battlerDef][STAT_EVASION];
             if (defEvaChange != 0)
             {
                 gBattleMons[battlerDef].statStages[STAT_EVASION] += defEvaChange;
@@ -589,24 +589,24 @@ enum ShouldChangeStats BattlerShouldChangeStats(u32 battlerAtk, u32 battlerDef, 
                     gBattleMons[battler].statStages[stat] = savedStatStages[battler][stat];
             }
 
-            expectedMovesToKOWithChangeAtk = (hitsToKO * 100)/totalAccuracyWithChange;
+            expectedTurnsToKOWithChangeAtk = (hitsToKO * 100)/totalAccuracyWithChange;
 
             // Stat changes mean more moves to KO
-            if (expectedMovesToKOWithChangeAtk > expectedMovesToKONoChangeAtk)
+            if (expectedTurnsToKOWithChangeAtk > expectedTurnsToKONoChangeAtk)
                 return STAT_CHANGE_BAD;
             // Stat changes mean same number of moves to KO (with grace of 1 for this move being used) but reduces likelihood of missing
-            else if ((expectedMovesToKOWithChangeAtk == expectedMovesToKONoChangeAtk
-             || (expectedMovesToKOWithChangeAtk == (expectedMovesToKONoChangeAtk - 1))) && (totalAccuracyNoChange < 100))
+            else if ((expectedTurnsToKOWithChangeAtk == expectedTurnsToKONoChangeAtk
+             || (expectedTurnsToKOWithChangeAtk == (expectedTurnsToKONoChangeAtk - 1))) && (totalAccuracyNoChange < 100))
                 return STAT_CHANGE_NEUTRAL;
             // Stat changes reduce expected number of moves to KO
-            else if (expectedMovesToKOWithChangeAtk <= (expectedMovesToKONoChangeAtk - 2))
+            else if (expectedTurnsToKOWithChangeAtk <= (expectedTurnsToKONoChangeAtk - 2))
                 return STAT_CHANGE_GOOD;
             // Default to not do it
             return STAT_CHANGE_BAD;
         }
         else
         {
-            // expectedMovesToKONoChangeAtk, expectedMovesToKOWithChangeAtk, expectedMovesToKONoChangeDef, expectedMovesToKOWithChangeDef
+            // expectedTurnsToKONoChangeAtk, expectedTurnsToKOWithChangeAtk, expectedTurnsToKONoChangeDef, expectedTurnsToKOWithChangeDef
             // Get fewest expected moves for battlers to KO each other without stat changes
             for (u32 i = 0; i < MAX_MON_MOVES; i++)
             {
@@ -615,10 +615,10 @@ enum ShouldChangeStats BattlerShouldChangeStats(u32 battlerAtk, u32 battlerDef, 
 
                 hitsToKO = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, gBattleMons[battlerAtk].moves[i], AI_ATTACKING, DONT_CONSIDER_ENDURE);
                 totalAccuracyNoChange = GetTotalAccuracy(battlerAtk, battlerDef, gBattleMons[battlerAtk].moves[i], gAiLogicData->abilities[battlerAtk], gAiLogicData->abilities[battlerDef], gAiLogicData->holdEffects[battlerAtk], gAiLogicData->holdEffects[battlerDef]);
-                expectedMovesToKONoChangeAtk = (hitsToKO * 100)/totalAccuracyNoChange;
+                expectedTurnsToKONoChangeAtk = (hitsToKO * 100)/totalAccuracyNoChange;
                 
-                if (bestMovesToKONoChangeAtk > expectedMovesToKONoChangeAtk)
-                    bestMovesToKONoChangeAtk = expectedMovesToKONoChangeAtk;
+                if (bestTurnsToKONoChangeAtk > expectedTurnsToKONoChangeAtk)
+                    bestTurnsToKONoChangeAtk = expectedTurnsToKONoChangeAtk;
             }
             for (u32 i = 0; i < MAX_MON_MOVES; i++)
             {
@@ -627,10 +627,10 @@ enum ShouldChangeStats BattlerShouldChangeStats(u32 battlerAtk, u32 battlerDef, 
 
                 hitsToKO = GetNoOfHitsToKOBattler(battlerDef, battlerAtk, gBattleMons[battlerDef].moves[i], AI_DEFENDING, DONT_CONSIDER_ENDURE);
                 totalAccuracyNoChange = GetTotalAccuracy(battlerDef, battlerAtk, gBattleMons[battlerDef].moves[i], gAiLogicData->abilities[battlerDef], gAiLogicData->abilities[battlerAtk], gAiLogicData->holdEffects[battlerDef], gAiLogicData->holdEffects[battlerAtk]);
-                expectedMovesToKONoChangeDef = (hitsToKO * 100)/totalAccuracyNoChange;
+                expectedTurnsToKONoChangeDef = (hitsToKO * 100)/totalAccuracyNoChange;
                 
-                if (bestMovesToKONoChangeDef > expectedMovesToKONoChangeDef)
-                    bestMovesToKONoChangeDef = expectedMovesToKONoChangeDef;
+                if (bestTurnsToKONoChangeDef > expectedTurnsToKONoChangeDef)
+                    bestTurnsToKONoChangeDef = expectedTurnsToKONoChangeDef;
             }
 
             // Save current stat stages
@@ -640,7 +640,7 @@ enum ShouldChangeStats BattlerShouldChangeStats(u32 battlerAtk, u32 battlerDef, 
                     savedStatStages[battler][stat] = gBattleMons[battler].statStages[stat];
             }
 
-            s32 atkAccChange = gAiLogicData->aiStatChanges[battlerAtk][STAT_ACC];
+            s32 atkAccChange = gAiThinkingStruct->aiStatChanges[battlerAtk][STAT_ACC];
             if (atkAccChange != 0)
             {
                 gBattleMons[battlerAtk].statStages[STAT_ACC] += atkAccChange;
@@ -650,7 +650,8 @@ enum ShouldChangeStats BattlerShouldChangeStats(u32 battlerAtk, u32 battlerDef, 
                 if (gBattleMons[battlerAtk].statStages[STAT_ACC] < MIN_STAT_STAGE)
                     gBattleMons[battlerAtk].statStages[STAT_ACC] = MIN_STAT_STAGE;
             }
-            s32 atkEvaChange = gAiLogicData->aiStatChanges[battlerAtk][STAT_EVASION];
+
+            s32 atkEvaChange = gAiThinkingStruct->aiStatChanges[battlerAtk][STAT_EVASION];
             if (atkEvaChange != 0)
             {
                 gBattleMons[battlerAtk].statStages[STAT_EVASION] += atkEvaChange;
@@ -660,7 +661,8 @@ enum ShouldChangeStats BattlerShouldChangeStats(u32 battlerAtk, u32 battlerDef, 
                 if (gBattleMons[battlerAtk].statStages[STAT_EVASION] < MIN_STAT_STAGE)
                     gBattleMons[battlerAtk].statStages[STAT_EVASION] = MIN_STAT_STAGE;
             }
-            s32 defAccChange = gAiLogicData->aiStatChanges[battlerDef][STAT_ACC];
+
+            s32 defAccChange = gAiThinkingStruct->aiStatChanges[battlerDef][STAT_ACC];
             if (defAccChange != 0)
             {
                 gBattleMons[battlerDef].statStages[STAT_ACC] += defAccChange;
@@ -670,7 +672,8 @@ enum ShouldChangeStats BattlerShouldChangeStats(u32 battlerAtk, u32 battlerDef, 
                 if (gBattleMons[battlerDef].statStages[STAT_ACC] < MIN_STAT_STAGE)
                     gBattleMons[battlerDef].statStages[STAT_ACC] = MIN_STAT_STAGE;
             }
-            s32 defEvaChange = gAiLogicData->aiStatChanges[battlerDef][STAT_EVASION];
+
+            s32 defEvaChange = gAiThinkingStruct->aiStatChanges[battlerDef][STAT_EVASION];
             if (defEvaChange != 0)
             {
                 gBattleMons[battlerDef].statStages[STAT_EVASION] += defEvaChange;
@@ -689,10 +692,10 @@ enum ShouldChangeStats BattlerShouldChangeStats(u32 battlerAtk, u32 battlerDef, 
 
                 hitsToKO = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, gBattleMons[battlerAtk].moves[i], AI_ATTACKING, DONT_CONSIDER_ENDURE);
                 totalAccuracyWithChange = GetTotalAccuracy(battlerAtk, battlerDef, gBattleMons[battlerAtk].moves[i], gAiLogicData->abilities[battlerAtk], gAiLogicData->abilities[battlerDef], gAiLogicData->holdEffects[battlerAtk], gAiLogicData->holdEffects[battlerDef]);
-                expectedMovesToKOWithChangeAtk = (hitsToKO * 100)/totalAccuracyWithChange;
+                expectedTurnsToKOWithChangeAtk = (hitsToKO * 100)/totalAccuracyWithChange;
                 
-                if (bestMovesToKOWithChangeAtk > expectedMovesToKOWithChangeAtk)
-                    bestMovesToKOWithChangeAtk = expectedMovesToKOWithChangeAtk;
+                if (bestTurnsToKOWithChangeAtk > expectedTurnsToKOWithChangeAtk)
+                    bestTurnsToKOWithChangeAtk = expectedTurnsToKOWithChangeAtk;
             }
             for (u32 i = 0; i < MAX_MON_MOVES; i++)
             {
@@ -701,10 +704,10 @@ enum ShouldChangeStats BattlerShouldChangeStats(u32 battlerAtk, u32 battlerDef, 
 
                 hitsToKO = GetNoOfHitsToKOBattler(battlerDef, battlerAtk, gBattleMons[battlerDef].moves[i], AI_DEFENDING, DONT_CONSIDER_ENDURE);
                 totalAccuracyWithChange = GetTotalAccuracy(battlerDef, battlerAtk, gBattleMons[battlerDef].moves[i], gAiLogicData->abilities[battlerDef], gAiLogicData->abilities[battlerAtk], gAiLogicData->holdEffects[battlerDef], gAiLogicData->holdEffects[battlerAtk]);
-                expectedMovesToKOWithChangeDef = (hitsToKO * 100)/totalAccuracyWithChange;
+                expectedTurnsToKOWithChangeDef = (hitsToKO * 100)/totalAccuracyWithChange;
                 
-                if (bestMovesToKOWithChangeDef > expectedMovesToKOWithChangeDef)
-                    bestMovesToKOWithChangeDef = expectedMovesToKOWithChangeDef;
+                if (bestTurnsToKOWithChangeDef > expectedTurnsToKOWithChangeDef)
+                    bestTurnsToKOWithChangeDef = expectedTurnsToKOWithChangeDef;
             }
 
             // Restore original stat stages now that calcing is done
@@ -715,22 +718,27 @@ enum ShouldChangeStats BattlerShouldChangeStats(u32 battlerAtk, u32 battlerDef, 
             }
 
             // Good if makes battlerAtk statistically more likely to KO battlerDef first
-            if ((bestMovesToKONoChangeAtk >= bestMovesToKONoChangeDef) && (bestMovesToKOWithChangeAtk < (bestMovesToKOWithChangeDef - 1)))
+            if ((bestTurnsToKONoChangeAtk >= bestTurnsToKONoChangeDef) && (bestTurnsToKOWithChangeAtk < (bestTurnsToKOWithChangeDef - 1)))
+            {
                 return STAT_CHANGE_GOOD;
+            }
             // Good if increases expected number of moves battlerDef needs to KO by 2 or more
-            else if (bestMovesToKOWithChangeDef >= (bestMovesToKONoChangeDef + 2))
+            else if (bestTurnsToKOWithChangeDef >= (bestTurnsToKONoChangeDef + 2))
+            {
                 return STAT_CHANGE_GOOD;
+            }
             // Neutral if there's a minor inprovement to odds
-            else if ((bestMovesToKONoChangeAtk == bestMovesToKONoChangeDef)
-             && (bestMovesToKOWithChangeAtk == bestMovesToKOWithChangeDef || bestMovesToKOWithChangeAtk == (bestMovesToKOWithChangeDef - 1))
+            else if ((bestTurnsToKONoChangeAtk == bestTurnsToKONoChangeDef)
+             && (bestTurnsToKOWithChangeAtk == bestTurnsToKOWithChangeDef || bestTurnsToKOWithChangeAtk == (bestTurnsToKOWithChangeDef - 1))
              && (totalAccuracyNoChange < 100))
+            {
                 return STAT_CHANGE_NEUTRAL;
+            }
             // Default to not do it
             return STAT_CHANGE_BAD;
         }
     default:
         return STAT_CHANGE_NEUTRAL;
-        break;
     }
 }
 
