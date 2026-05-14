@@ -1157,6 +1157,8 @@ static u32 GetBallThrowableState(void)
         return BALL_THROW_UNABLE_SEMI_INVULNERABLE;
     else if (FlagGet(B_FLAG_NO_CATCHING) || !IsAllowedToUseBag())
         return BALL_THROW_UNABLE_DISABLED_FLAG;
+    else if (OneTypeChallengeCaptureBlocked)
+        return BALL_THROW_UNABLE_ONE_TYPE;
     else if (NuzlockeIsCaptureBlocked)
         return BALL_THROW_UNABLE_NUZLOCKE_ZONE;
     else if (NuzlockeIsSpeciesClauseActive == 2)
@@ -1178,6 +1180,7 @@ static const u8 sText_CantThrowPokeBall_Disabled[] = _("POKé BALLS cannot be us
 static const u8 sText_CantThrowPokeBall_NuzlockeZone[] = _("You already used your\nencounter for this area!\p");
 static const u8 sText_CantThrowPokeBall_NuzlockeSpecies[] = _("Species Clause: a POKéMON in\nthis evolution line was caught!\p");
 static const u8 sText_CantThrowPokeBall_NuzlockeAlreadyCaught[] = _("You have already caught\nthis POKéMON!\p");
+static const u8 sText_CantThrowPokeBall_OneType[] = _("This POKéMON doesn't match\nyour type challenge!\p");
 void ItemUseInBattle_PokeBall(u8 taskId)
 {
     switch (GetBallThrowableState())
@@ -1222,6 +1225,9 @@ void ItemUseInBattle_PokeBall(u8 taskId)
         break;
     case BALL_THROW_UNABLE_NUZLOCKE_SPECIES:
         DisplayItemMessage(taskId, FONT_NORMAL, sText_CantThrowPokeBall_NuzlockeSpecies, CloseItemMessage);
+        break;
+    case BALL_THROW_UNABLE_ONE_TYPE:
+        DisplayItemMessage(taskId, FONT_NORMAL, sText_CantThrowPokeBall_OneType, CloseItemMessage);
         break;
     }
 }
@@ -1349,6 +1355,10 @@ bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon)
             break;
         case BALL_THROW_UNABLE_NUZLOCKE_SPECIES:
             failStr = sText_CantThrowPokeBall_NuzlockeSpecies;
+            cannotUse = TRUE;
+            break;
+        case BALL_THROW_UNABLE_ONE_TYPE:
+            failStr = sText_CantThrowPokeBall_OneType;
             cannotUse = TRUE;
             break;
         }

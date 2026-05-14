@@ -21,6 +21,7 @@ u8 NuzlockeGetCurrentRegionMapSectionId(void);
 
 extern u8 NuzlockeIsCaptureBlocked;
 extern u8 NuzlockeIsSpeciesClauseActive;
+extern u8 OneTypeChallengeCaptureBlocked;
 
 void SetNuzlockeChecks(void);
 u8 NuzlockeIsCaptureBlockedBySpeciesClause(u16 species);

@@ -1,5 +1,6 @@
 #include "global.h"
 #include "bg.h"
+#include "challenge_menu.h"
 #include "data.h"
 #include "decompress.h"
 #include "event_data.h"
@@ -21,6 +22,7 @@
 #include "trainer_pokemon_sprites.h"
 #include "trig.h"
 #include "window.h"
+#include "constants/pokemon.h"
 #include "constants/songs.h"
 #include "constants/rgb.h"
 
@@ -346,11 +348,85 @@ static const struct SpriteTemplate sSpriteTemplate_StarterCircle =
     .callback = SpriteCB_StarterPokemon
 };
 
+static u16 sOneTypeChallengeStarters[STARTER_MON_COUNT];
+
+static bool32 IsBaseStageSpecies(u16 species)
+{
+    u16 j;
+    for (j = 1; j < NUM_SPECIES; j++)
+    {
+        if (!IsSpeciesEnabled(j))
+            continue;
+        const struct Evolution *evos = GetSpeciesEvolutions(j);
+        if (evos == NULL)
+            continue;
+        int k;
+        for (k = 0; evos[k].method != EVOLUTIONS_END; k++)
+        {
+            if (SanitizeSpeciesId(evos[k].targetSpecies) == species)
+                return FALSE;
+        }
+    }
+    return TRUE;
+}
+
+static u16 PickOneTypeChallengeStarter(u8 starterId)
+{
+    u8 typeChallenge = gSaveBlock3Ptr->challengeSettings.tx_Challenges_OneTypeChallenge;
+    u16 candidates[64];
+    u16 count = 0;
+    u16 i;
+
+    for (i = 1; i < NUM_SPECIES && count < ARRAY_COUNT(candidates); i++)
+    {
+        if (!IsSpeciesEnabled(i))
+            continue;
+        if (GetSpeciesType(i, 0) != typeChallenge && GetSpeciesType(i, 1) != typeChallenge)
+            continue;
+        const struct Evolution *evos = GetSpeciesEvolutions(i);
+        if (evos == NULL || evos[0].method == EVOLUTIONS_END)
+            continue;
+        if (!IsBaseStageSpecies(i))
+            continue;
+        if (i == SPECIES_TOGEPI)
+            continue;
+        u16 j;
+        bool8 duplicate = FALSE;
+        for (j = 0; j < STARTER_MON_COUNT; j++)
+        {
+            if (j != starterId && sOneTypeChallengeStarters[j] == i)
+            {
+                duplicate = TRUE;
+                break;
+            }
+        }
+        if (!duplicate)
+            candidates[count++] = i;
+    }
+
+    if (count == 0)
+    {
+        if (typeChallenge == TYPE_DRAGON)
+            return SPECIES_DRATINI;
+        return sStarterMon[starterId];
+    }
+
+    return candidates[(starterId * 13 + gSaveBlock2Ptr->playerTrainerId[0]) % count];
+}
+
 // .text
 u16 GetStarterPokemon(u16 chosenStarterId)
 {
     if (chosenStarterId > STARTER_MON_COUNT)
         chosenStarterId = 0;
+
+    if (IsOneTypeChallengeActive())
+    {
+        if (sOneTypeChallengeStarters[chosenStarterId] == 0)
+            sOneTypeChallengeStarters[chosenStarterId] = PickOneTypeChallengeStarter(chosenStarterId);
+        return sOneTypeChallengeStarters[chosenStarterId];
+    }
+
     return sStarterMon[chosenStarterId];
 }
 

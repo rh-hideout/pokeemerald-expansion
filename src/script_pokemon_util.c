@@ -6,7 +6,9 @@
 #include "data.h"
 #include "daycare.h"
 #include "decompress.h"
+#include "challenge_menu.h"
 #include "event_data.h"
+#include "starter_choose.h"
 #include "international_string_util.h"
 #include "item.h"
 #include "link.h"
@@ -547,6 +549,8 @@ u32 ScriptGiveMon(u16 species, u8 level, enum Item item)
             species = RandomizeMon(RANDOMIZER_REASON_FIXED_ENCOUNTER, GetRandomizerOption(RANDOMIZER_OPTION_SPECIES_MODE), Random32(), species);
     }
 #endif
+    if (IsOneTypeChallengeActive() && !FlagGet(FLAG_SYS_POKEMON_GET))
+        species = GetStarterPokemon(VarGet(VAR_STARTER_MON));
     CreateRandomMon(&mon, species, level);
     if (item)
     {

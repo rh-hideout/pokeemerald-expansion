@@ -5782,6 +5782,7 @@ static void HandleEndTurn_FinishBattle(void)
             }
             NuzlockeIsCaptureBlocked = FALSE;
             NuzlockeIsSpeciesClauseActive = FALSE;
+            OneTypeChallengeCaptureBlocked = FALSE;
         }
 
         BeginFastPaletteFade(3);

@@ -2118,3 +2118,8 @@ bool8 IsPokecenterChallengeActivated(void)
 {
     return gSaveBlock3Ptr->challengeSettings.tx_Challenges_PkmnCenter;
 }
+
+bool8 IsOneTypeChallengeActive(void)
+{
+    return gSaveBlock3Ptr->challengeSettings.tx_Challenges_OneTypeChallenge != 0;
+}

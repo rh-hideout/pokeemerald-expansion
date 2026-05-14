@@ -657,4 +657,5 @@ gSpecials::
 	def_special NameRival
 	def_special IsNuzlockeNicknamingActive
 	def_special IsPokecenterChallengeActivated
+	def_special IsOneTypeChallengeActive
 

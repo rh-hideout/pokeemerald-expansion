@@ -1,5 +1,6 @@
 #include "global.h"
 #include "nuzlocke.h"
+#include "challenge_menu.h"
 #include "event_data.h"
 #include "item.h"
 #include "party_menu.h"
@@ -16,6 +17,7 @@
 
 EWRAM_DATA u8 NuzlockeIsCaptureBlocked = FALSE;
 EWRAM_DATA u8 NuzlockeIsSpeciesClauseActive = FALSE;
+EWRAM_DATA u8 OneTypeChallengeCaptureBlocked = FALSE;
 
 // Zone-to-bit mapping for one-encounter-per-area tracking.
 // Only locations with wild encounters should be listed.
@@ -278,6 +280,18 @@ u8 NuzlockeIsCaptureBlockedBySpeciesClause(u16 species)
 
 void SetNuzlockeChecks(void)
 {
+    if (IsOneTypeChallengeActive())
+    {
+        u8 typeChallenge = gSaveBlock3Ptr->challengeSettings.tx_Challenges_OneTypeChallenge;
+        u16 species = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES);
+        OneTypeChallengeCaptureBlocked = (GetSpeciesType(species, 0) != typeChallenge
+                                       && GetSpeciesType(species, 1) != typeChallenge);
+    }
+    else
+    {
+        OneTypeChallengeCaptureBlocked = FALSE;
+    }
+
     if (IsNuzlockeActive())
     {
         NuzlockeIsSpeciesClauseActive = NuzlockeIsCaptureBlockedBySpeciesClause(

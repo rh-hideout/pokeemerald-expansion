@@ -1864,9 +1864,9 @@ void TryAddPokeballIconToHealthbox(u8 healthboxSpriteId, bool8 noStatus)
 
     if (!GetSetPokedexFlag(SpeciesToNationalPokedexNum(GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES)), FLAG_GET_CAUGHT))
     {
-        if (!IsNuzlockeActive())
+        if (!IsNuzlockeActive() && !OneTypeChallengeCaptureBlocked)
             return;
-        if (NuzlockeIsSpeciesClauseActive || NuzlockeIsCaptureBlocked)
+        if (NuzlockeIsSpeciesClauseActive || NuzlockeIsCaptureBlocked || OneTypeChallengeCaptureBlocked)
             return;
 
         if (noStatus)
