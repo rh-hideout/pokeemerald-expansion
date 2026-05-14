@@ -613,6 +613,12 @@ bool32 TryRunFromBattle(enum BattlerId battler)
             if (speedVar > (Random() & 0xFF))
                 effect++;
         }
+        else if (gSaveBlock3Ptr->challengeSettings.tx_Challenges_LessEscapes)
+        {
+            speedVar = (gBattleMons[battler].speed * 128) / (gBattleMons[runningFromBattler].speed) + (gBattleStruct->runTries * 30);
+            if (speedVar > (Random() & 512))
+                effect++;
+        }
         else if (gBattleMons[battler].speed < gBattleMons[runningFromBattler].speed)
         {
             speedVar = (gBattleMons[battler].speed * 128) / (gBattleMons[runningFromBattler].speed) + (gBattleStruct->runTries * 30);
