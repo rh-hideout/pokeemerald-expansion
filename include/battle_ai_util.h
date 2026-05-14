@@ -84,11 +84,15 @@ typedef bool32 (*MoveFlag)(enum Move move);
 
 bool32 AI_IsFaster(enum BattlerId battlerAi, enum BattlerId battlerDef, enum Move aiMove, enum Move playerMove, enum ConsiderPriority considerPriority);
 bool32 AI_IsSlower(enum BattlerId battlerAi, enum BattlerId battlerDef, enum Move aiMove, enum Move playerMove, enum ConsiderPriority considerPriority);
+bool32 AI_WouldBeFaster(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move atkMove, enum Move defMove, enum ConsiderPriority considerPriority);
+bool32 AI_WouldBeSlower(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move atkMove, enum Move defMove, enum ConsiderPriority considerPriority);
 bool32 AI_RandLessThan(u32 val);
 bool32 AI_IsBattlerGrounded(enum BattlerId battler);
 enum MoveTarget AI_GetBattlerMoveTargetType(enum BattlerId battler, enum Move move);
 enum Ability AI_GetMoldBreakerSanitizedAbility(enum BattlerId battlerAtk, enum Ability abilityAtk, enum Ability abilityDef, enum HoldEffect holdEffectDef, enum Move move);
 u32 AI_GetDamage(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveIndex, enum DamageCalcContext calcContext, struct AiLogicData *aiData);
+u32 AI_GetDamageWithStatChanges(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveIndex);
+enum ShouldChangeStats BattlerShouldChangeStats(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move statMove, u32 dmgMoveIndex, enum ChangeStatContext context);
 bool32 IsAiFlagPresent(u64 flag);
 bool32 IsAiBattlerAware(enum BattlerId battlerId);
 bool32 IsAiBattlerAssumingStab(enum BattlerId battlerId);

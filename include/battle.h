@@ -262,6 +262,7 @@ struct AiThinkingStruct
     u8 aiAction;
     u8 aiLogicId;
     struct AI_SavedBattleMon saved[MAX_BATTLERS_COUNT];
+    s8 aiStatChanges[MAX_BATTLERS_COUNT][NUM_BATTLE_STATS];
 };
 
 #define AI_MOVE_HISTORY_COUNT 3
