@@ -4781,6 +4781,22 @@ static bool32 NotUsingHPEVItemOnShedinja(struct Pokemon *mon, enum Item item)
     return TRUE;
 }
 
+static bool32 IsEVItem(enum Item item)
+{
+    switch (GetItemEffectType(item))
+    {
+    case ITEM_EFFECT_HP_EV:
+    case ITEM_EFFECT_ATK_EV:
+    case ITEM_EFFECT_DEF_EV:
+    case ITEM_EFFECT_SPEED_EV:
+    case ITEM_EFFECT_SPATK_EV:
+    case ITEM_EFFECT_SPDEF_EV:
+        return TRUE;
+    default:
+        return FALSE;
+    }
+}
+
 static bool32 IsItemFlute(enum Item item)
 {
     if (item == ITEM_BLUE_FLUTE || item == ITEM_RED_FLUTE || item == ITEM_YELLOW_FLUTE)
@@ -4829,6 +4845,10 @@ void ItemUseCB_Medicine(u8 taskId, TaskFunc task)
     u32 oldStatus = GetMonData(mon, MON_DATA_STATUS);
 
     if (NotUsingHPEVItemOnShedinja(mon, item) == FALSE)
+    {
+        cannotUse = TRUE;
+    }
+    else if (IsEVItem(item) && gSaveBlock3Ptr->challengeSettings.tx_Challenges_NoEVs)
     {
         cannotUse = TRUE;
     }

@@ -6121,6 +6121,9 @@ void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies)
     u8 bonus;
     u32 currentEVCap = GetCurrentEVCap();
 
+    if (gSaveBlock3Ptr->challengeSettings.tx_Challenges_NoEVs)
+        return;
+
     heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, 0);
     if (heldItem == ITEM_ENIGMA_BERRY_E_READER)
     {
