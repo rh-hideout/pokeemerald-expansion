@@ -9,5 +9,6 @@ bool32 HMsOverwriteOptionActive(void);
 u8 GetMaxPartySize(void);
 u8 GetCurrentTrainerIVs(void);
 u8 GetCurrentTrainerEVs(void);
+bool8 IsPokecenterChallengeActivated(void);
 
 #endif // GUARD_CHALLENGE_MENU_H

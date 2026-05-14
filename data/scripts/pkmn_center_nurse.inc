@@ -2,6 +2,8 @@ Common_EventScript_PkmnCenterNurse::
 	lock
 	faceplayer
 	setvar VAR_0x8004, 0
+	specialvar VAR_RESULT, IsPokecenterChallengeActivated
+    goto_if_eq VAR_RESULT, TRUE, EventScript_PkmnCenterNurse_PkmnCenterChallenge_NoVisits
 	specialvar VAR_RESULT, CountPlayerTrainerStars
 	goto_if_eq VAR_RESULT, 4, EventScript_PkmnCenterNurse_GoldCard
 	goto_if_set FLAG_EVEN_FASTER_JOY, EventScript_PkmnCenterNurse_HealPkmnFast
@@ -17,6 +19,14 @@ EventScript_PkmnCenterNurse_Goodbye::
 	message gText_WeHopeToSeeYouAgain
 	goto EventScript_PkmnCenterNurse_PlayerTurn
 	return
+
+EventScript_PkmnCenterNurse_PkmnCenterChallenge_NoVisits:: @ tx_randomizer_and_challenges
+    message gText_PkmnCenterChallenge_NoVisitsLeft
+    waitmessage
+    applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_FaceDown
+    waitmovement 0
+    release
+    end
 
 @ VAR_0x8004 is 1 when player has Gold Card; jumps are identical
 EventScript_PkmnCenterNurse_HealPkmn::

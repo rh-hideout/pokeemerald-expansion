@@ -2128,3 +2128,8 @@ u8 GetCurrentTrainerEVs(void)
     default:    return 0;
     }
 }
+
+bool8 IsPokecenterChallengeActivated(void)
+{
+    return gSaveBlock3Ptr->challengeSettings.tx_Challenges_PkmnCenter;
+}

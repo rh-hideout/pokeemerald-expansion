@@ -656,4 +656,5 @@ gSpecials::
 	def_special SwitchMonAbility
 	def_special NameRival
 	def_special IsNuzlockeNicknamingActive
+	def_special IsPokecenterChallengeActivated
 
