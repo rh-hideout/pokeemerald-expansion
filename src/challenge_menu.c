@@ -349,8 +349,8 @@ static const u8 sText_TopBar_Cancel[] = _("{B_BUTTON}CANCEL");
 // =============================================================================
 
 static const u8 *const sDesc_Gamemode[] = {
-    COMPOUND_STRING("Recommended settings.\nNOTE: All selections are PERMANENT."),
-    COMPOUND_STRING("Choose your own rules.\nNOTE: All selections are PERMANENT."),
+    COMPOUND_STRING("Recommended settings."),
+    COMPOUND_STRING("Choose your own rules."),
 };
 static const u8 *const sDesc_ModernMoves[] = {
     COMPOUND_STRING("Generation 3 LEARNSETS and EGG\n MOVES with no changes."),

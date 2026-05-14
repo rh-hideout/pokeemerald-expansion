@@ -75,9 +75,9 @@ static void Task_NewGameHnsSpeech_WaitToShowGenderMenu(u8);
 static void Task_NewGameHnsSpeech_ChooseGender(u8);
 static void NewGameHnsSpeech_ShowGenderMenu(void);
 static void NewGameHnsSpeech_ClearGenderWindow(u8, u8);
-static void Task_NewGameHnsSpeech_ChallengePrompt(u8);
-static void Task_NewGameHnsSpeech_WaitForChallengePrompt(u8);
-static void Task_NewGameHnsSpeech_WaitPressBeforeChallengeMenu(u8);
+static void Task_NewGameHnsSpeech_ChallengeDisclaimer(u8);
+static void Task_NewGameHnsSpeech_WaitDisclaimerText(u8);
+static void Task_NewGameHnsSpeech_WaitPressDisclaimer(u8);
 static void Task_NewGameHnsSpeech_ChallengeMenu(u8);
 static void Task_NewGameHnsSpeech_WhatsYourName(u8);
 static void Task_NewGameHnsSpeech_SlideOutOldGenderSprite(u8);
@@ -505,13 +505,13 @@ static void Task_NewGameHnsSpeech_ChooseGender(u8 taskId)
         PlaySE(SE_SELECT);
         gSaveBlock2Ptr->playerGender = gender;
         NewGameHnsSpeech_ClearGenderWindow(1, 1);
-        gTasks[taskId].func = Task_NewGameHnsSpeech_ChallengePrompt;
+        gTasks[taskId].func = Task_NewGameHnsSpeech_ChallengeDisclaimer;
         break;
     case FEMALE:
         PlaySE(SE_SELECT);
         gSaveBlock2Ptr->playerGender = gender;
         NewGameHnsSpeech_ClearGenderWindow(1, 1);
-        gTasks[taskId].func = Task_NewGameHnsSpeech_ChallengePrompt;
+        gTasks[taskId].func = Task_NewGameHnsSpeech_ChallengeDisclaimer;
         break;
     default:
         break;
@@ -569,21 +569,22 @@ static void Task_NewGameHnsSpeech_SlideInNewGenderSprite(u8 taskId)
     }
 }
 
-static void Task_NewGameHnsSpeech_ChallengePrompt(u8 taskId)
+static void Task_NewGameHnsSpeech_ChallengeDisclaimer(u8 taskId)
 {
+    static const u8 sText_Disclaimer[] = _("What challenge are you\n expecting?\p{COLOR RED}The following settings can be changed\nfrom the PC once you start the game.\lHowever, after starting the game, the\lnuzlocke, randomizer, difficulty and\lchallenge settings can only be made\leasier, not harder.");
     NewGameHnsSpeech_ClearWindow(0);
-    StringExpandPlaceholders(gStringVar4, gText_Oak_WhatChallenge);
-    AddTextPrinterForMessage(TRUE);
-    gTasks[taskId].func = Task_NewGameHnsSpeech_WaitForChallengePrompt;
+    StringCopy(gStringVar4, sText_Disclaimer);
+    AddTextPrinterWithCustomSpeedForMessage(FALSE, 2);
+    gTasks[taskId].func = Task_NewGameHnsSpeech_WaitDisclaimerText;
 }
 
-static void Task_NewGameHnsSpeech_WaitForChallengePrompt(u8 taskId)
+static void Task_NewGameHnsSpeech_WaitDisclaimerText(u8 taskId)
 {
     if (!RunTextPrintersAndIsPrinter0Active())
-        gTasks[taskId].func = Task_NewGameHnsSpeech_WaitPressBeforeChallengeMenu;
+        gTasks[taskId].func = Task_NewGameHnsSpeech_WaitPressDisclaimer;
 }
 
-static void Task_NewGameHnsSpeech_WaitPressBeforeChallengeMenu(u8 taskId)
+static void Task_NewGameHnsSpeech_WaitPressDisclaimer(u8 taskId)
 {
     if ((JOY_NEW(A_BUTTON)) || (JOY_NEW(B_BUTTON)))
         gTasks[taskId].func = Task_NewGameHnsSpeech_ChallengeMenu;
