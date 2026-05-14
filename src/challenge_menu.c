@@ -1928,14 +1928,8 @@ void CB2_InitChallengeMenu(void)
             *GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_FRONTIER_BANS)= cs->tx_Features_FrontierBans;
             *GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_SHINY_COLOR)  = cs->tx_Features_ShinyColors;
 
-            // Randomizer tab — derive master toggle from individual fields
-            bool8 anyRandom = cs->tx_Random_WildPokemon || cs->tx_Random_Starter
-                || cs->tx_Random_MapBased || cs->tx_Random_Trainer || cs->tx_Random_Static
-                || cs->tx_Random_Similar || cs->tx_Random_IncludeLegendaries || cs->tx_Random_Type
-                || cs->tx_Random_Moves || cs->tx_Random_Abilities || cs->tx_Random_Evolutions
-                || cs->tx_Random_EvolutionMethods || cs->tx_Random_TypeEffectiveness
-                || cs->tx_Random_Items || cs->tx_Random_Chaos;
-            *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_OFF_ON)      = anyRandom ? 1 : 0;
+            // Randomizer tab — master toggle always starts OFF (matches HnS)
+            *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_OFF_ON)      = 0;
             *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_STARTER)     = cs->tx_Random_Starter;
             *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_WILD_PKMN)   = cs->tx_Random_WildPokemon;
             *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_MAP_BASED)  = cs->tx_Random_MapBased;

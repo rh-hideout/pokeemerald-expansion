@@ -112,7 +112,7 @@ static void SetDefaultOptions(void)
     gSaveBlock2Ptr->regionMapZoom = FALSE;
 }
 
-static void SetDefaultChallengeSettings(void)
+void SetDefaultChallengeSettings(void)
 {
     gSaveblock3.challengeSettings.followerEnable = 0;
     gSaveblock3.challengeSettings.followerLargeEnable = 0;
@@ -143,6 +143,15 @@ static void SetDefaultChallengeSettings(void)
     gSaveblock3.challengeSettings.tx_Mode_InfiniteTMs        = 1;
     gSaveblock3.challengeSettings.tx_Mode_Mints              = 1;
     gSaveblock3.challengeSettings.tx_Mode_PoisonSurvive      = 1;
+
+    // Randomizer defaults (shown when Randomizer is ON)
+    gSaveblock3.challengeSettings.tx_Random_Similar          = 1;
+    gSaveblock3.challengeSettings.tx_Random_MapBased         = 1;
+
+    // Nuzlocke clause defaults (shown when Nuzlocke is NORMAL/HARD)
+    gSaveblock3.challengeSettings.tx_Nuzlocke_SpeciesClause  = 1;
+    gSaveblock3.challengeSettings.tx_Nuzlocke_ShinyClause    = 1;
+    gSaveblock3.challengeSettings.tx_Nuzlocke_Nicknaming     = 1;
 }
 
 static void ClearPokedexFlags(void)

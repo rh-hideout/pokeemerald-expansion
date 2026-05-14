@@ -18,6 +18,7 @@
 #include "naming_screen.h"
 #include "oak_speech_hns.h"
 #include "challenge_menu.h"
+#include "new_game.h"
 #include "overworld.h"
 #include "palette.h"
 #include "pokeball.h"
@@ -600,6 +601,8 @@ static void Task_NewGameHnsSpeech_FadeOutToChallengeMenu(u8 taskId)
     {
         FreeAllWindowBuffers();
         DestroyTask(taskId);
+        memset(&gSaveBlock3Ptr->challengeSettings, 0, sizeof(struct ChallengeSettings));
+        SetDefaultChallengeSettings();
         gMain.savedCallback = CB2_NewGameHnsSpeech_ReturnFromChallengeMenu;
         SetMainCallback2(CB2_InitChallengeMenu);
     }
