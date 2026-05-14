@@ -796,7 +796,10 @@ const u8 *GetItemName(enum Item itemId)
 
 u32 GetItemPrice(enum Item itemId)
 {
-    return gItemsInfo[SanitizeItemId(itemId)].price;
+    static const u8 sExpensiveMultipliers[] = { 1, 5, 10, 50 };
+    u8 setting = gSaveBlock3Ptr->challengeSettings.tx_Challenges_Expensive;
+    u8 multiplier = sExpensiveMultipliers[setting < ARRAY_COUNT(sExpensiveMultipliers) ? setting : 0];
+    return gItemsInfo[SanitizeItemId(itemId)].price * multiplier;
 }
 
 static bool32 DoesItemHavePluralName(enum Item itemId)
