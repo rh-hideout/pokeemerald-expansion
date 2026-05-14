@@ -23,22 +23,22 @@ script ow_Intro_PokemonCenter_EventScript_LeagueRep {
 }
 
 script ow_Intro_PokemonCenter_EventScript_StarterSelect {
-    dynmultipush("TREECKO", 0)
-    dynmultipush("TORCHIC", 1)
-    dynmultipush("MUDKIP", 2)
+    dynmultipush("SPRIGATITO", 0)
+    dynmultipush("CHARMANDER", 1)
+    dynmultipush("FROAKIE", 2)
     dynmultistack(0, 0, TRUE, 3, FALSE, 0, DYN_MULTICHOICE_CB_NONE)
     switch (var(VAR_RESULT)) {
-        case 0: goto(ow_Intro_PokemonCenter_EventScript_ConfirmTreecko)
-        case 1: goto(ow_Intro_PokemonCenter_EventScript_ConfirmTorchic)
-        case 2: goto(ow_Intro_PokemonCenter_EventScript_ConfirmMudkip)
+        case 0: goto(ow_Intro_PokemonCenter_EventScript_ConfirmSprigatito)
+        case 1: goto(ow_Intro_PokemonCenter_EventScript_ConfirmCharmander)
+        case 2: goto(ow_Intro_PokemonCenter_EventScript_ConfirmFroakie)
     }
     end
 }
 
-script ow_Intro_PokemonCenter_EventScript_ConfirmTreecko {
-    showmonpic(SPECIES_TREECKO, 10, 3)
-    playmoncry(SPECIES_TREECKO, CRY_MODE_NORMAL)
-    bufferspeciesname(STR_VAR_1, SPECIES_TREECKO)
+script ow_Intro_PokemonCenter_EventScript_ConfirmSprigatito {
+    showmonpic(SPECIES_SPRIGATITO, 10, 3)
+    playmoncry(SPECIES_SPRIGATITO, CRY_MODE_NORMAL)
+    bufferspeciesname(STR_VAR_1, SPECIES_SPRIGATITO)
     msgbox(format("Are you sure you want {STR_VAR_1}?"), MSGBOX_YESNO)
     waitmoncry
     hidemonpic
@@ -49,15 +49,15 @@ script ow_Intro_PokemonCenter_EventScript_ConfirmTreecko {
     msgbox(format("{PLAYER} received {STR_VAR_1}!"))
     playfanfare(MUS_OBTAIN_ITEM)
     waitfanfare
-    givemon(SPECIES_TREECKO, 5)
+    givemon(SPECIES_SPRIGATITO, 5)
     closemessage
     goto(ow_Intro_PokemonCenter_EventScript_AfterStarter)
 }
 
-script ow_Intro_PokemonCenter_EventScript_ConfirmTorchic {
-    showmonpic(SPECIES_TORCHIC, 10, 3)
-    playmoncry(SPECIES_TORCHIC, CRY_MODE_NORMAL)
-    bufferspeciesname(STR_VAR_1, SPECIES_TORCHIC)
+script ow_Intro_PokemonCenter_EventScript_ConfirmCharmander {
+    showmonpic(SPECIES_CHARMANDER, 10, 3)
+    playmoncry(SPECIES_CHARMANDER, CRY_MODE_NORMAL)
+    bufferspeciesname(STR_VAR_1, SPECIES_CHARMANDER)
     msgbox(format("Are you sure you want {STR_VAR_1}?"), MSGBOX_YESNO)
     waitmoncry
     hidemonpic
@@ -68,15 +68,15 @@ script ow_Intro_PokemonCenter_EventScript_ConfirmTorchic {
     msgbox(format("{PLAYER} received {STR_VAR_1}!"))
     playfanfare(MUS_OBTAIN_ITEM)
     waitfanfare
-    givemon(SPECIES_TORCHIC, 5)
+    givemon(SPECIES_CHARMANDER, 5)
     closemessage
     goto(ow_Intro_PokemonCenter_EventScript_AfterStarter)
 }
 
-script ow_Intro_PokemonCenter_EventScript_ConfirmMudkip {
-    showmonpic(SPECIES_MUDKIP, 10, 3)
-    playmoncry(SPECIES_MUDKIP, CRY_MODE_NORMAL)
-    bufferspeciesname(STR_VAR_1, SPECIES_MUDKIP)
+script ow_Intro_PokemonCenter_EventScript_ConfirmFroakie {
+    showmonpic(SPECIES_FROAKIE, 10, 3)
+    playmoncry(SPECIES_FROAKIE, CRY_MODE_NORMAL)
+    bufferspeciesname(STR_VAR_1, SPECIES_FROAKIE)
     msgbox(format("Are you sure you want {STR_VAR_1}?"), MSGBOX_YESNO)
     waitmoncry
     hidemonpic
@@ -87,7 +87,7 @@ script ow_Intro_PokemonCenter_EventScript_ConfirmMudkip {
     msgbox(format("{PLAYER} received {STR_VAR_1}!"))
     playfanfare(MUS_OBTAIN_ITEM)
     waitfanfare
-    givemon(SPECIES_MUDKIP, 5)
+    givemon(SPECIES_FROAKIE, 5)
     closemessage
     goto(ow_Intro_PokemonCenter_EventScript_AfterStarter)
 }
