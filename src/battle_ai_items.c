@@ -1,5 +1,6 @@
 #include "global.h"
 #include "battle.h"
+#include "challenge_menu.h"
 #include "constants/battle_ai.h"
 #include "battle_ai_items.h"
 #include "battle_ai_main.h"
@@ -31,6 +32,9 @@ bool32 ShouldUseItem(enum BattlerId battler)
     u32 validMons = 0;
     bool32 shouldUse = FALSE;
     u32 healAmount = 0;
+
+    if (gSaveBlock3Ptr->challengeSettings.tx_Challenges_NoItemTrainer)
+        return FALSE;
 
     if (IsAiVsAiBattle())
         return FALSE;
