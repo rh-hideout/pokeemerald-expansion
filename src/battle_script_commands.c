@@ -11898,6 +11898,14 @@ void ApplyExperienceMultipliers(s32 *expAmount, u8 expGetterMonId, u8 faintedBat
 
         *expAmount = value + 1;
     }
+
+    u8 expMult = gSaveBlock3Ptr->challengeSettings.tx_Challenges_ExpMultiplier;
+    if (expMult == 3)
+        *expAmount = 0;
+    else if (expMult == 2)
+        *expAmount = *expAmount * 2;
+    else if (expMult == 1)
+        *expAmount = (*expAmount * 3) / 2;
 }
 
 void BS_ItemRestoreHP(void)
