@@ -124,6 +124,7 @@ void SetDefaultChallengeSettings(void)
     gSaveblock3.challengeSettings.fastIntro = 1;
     gSaveblock3.challengeSettings.fastBattle = 0;
     gSaveblock3.challengeSettings.optionStyle = 0;
+    gSaveblock3.challengeSettings.genOneRecharge = 0;
     gSaveblock3.challengeSettings.unitSystem = 0;
     gSaveblock3.challengeSettings.disableMatchCall = 0;
     gSaveblock3.challengeSettings.bikeMusic = 0;

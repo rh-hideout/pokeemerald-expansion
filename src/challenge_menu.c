@@ -49,13 +49,15 @@ enum {
 enum {
     ITEM_MODE_GAMEMODE,
     ITEM_MODE_MODERN_MOVES,
+    ITEM_MODE_SPLIT,
+    ITEM_MODE_FAIRY_TYPES,
+    ITEM_MODE_INFINITE_TMS,
+    ITEM_MODE_MINTS,
+    ITEM_MODE_GEN_ONE_RECHARGE,
     ITEM_MODE_SYNCHRONIZE,
     ITEM_MODE_STURDY,
     ITEM_MODE_NEW_CITRUS,
-    ITEM_MODE_FAIRY_TYPES,
     ITEM_MODE_LEGENDARY_ABILITIES,
-    ITEM_MODE_INFINITE_TMS,
-    ITEM_MODE_MINTS,
     ITEM_MODE_SURVIVE_POISON,
     ITEM_MODE_NEXT,
     ITEM_MODE_COUNT,
@@ -291,8 +293,8 @@ static const u8 *const sDesc_Gamemode[] = {
     COMPOUND_STRING("Choose your own rules.\nNOTE: All selections are PERMANENT."),
 };
 static const u8 *const sDesc_ModernMoves[] = {
-    COMPOUND_STRING("No new MOVES, and original MOVEPOOL\nfor all {PKMN} + new EGG MOVES."),
-    COMPOUND_STRING("13 new MOVES, and improved MOVEPOOL\nfor all {PKMN} + new EGG MOVES."),
+    COMPOUND_STRING("Generation 3 LEARNSETS and EGG\n MOVES with no changes."),
+    COMPOUND_STRING("Generation 7 LEARNSETS and EGG\n MOVES + minor changes."),
 };
 static const u8 *const sDesc_Synchronize[] = {
     COMPOUND_STRING("SYNCHRONIZE works as in GEN III.\n50% chance to copy nature."),
@@ -316,7 +318,7 @@ static const u8 *const sDesc_LegAbilities[] = {
 };
 static const u8 *const sDesc_InfiniteTMs[] = {
     COMPOUND_STRING("TMs are not reusable.\nLike in the original."),
-    COMPOUND_STRING("TMs are reusable.\nModern Emerald recommended."),
+    COMPOUND_STRING("TMs are reusable."),
 };
 static const u8 *const sDesc_Mints[] = {
     COMPOUND_STRING("Mints are not available ingame until\nfinishing the game."),
@@ -325,6 +327,22 @@ static const u8 *const sDesc_Mints[] = {
 static const u8 *const sDesc_SurvivePoison[] = {
     COMPOUND_STRING("Your {PKMN} will faint if they are\nPOISONED."),
     COMPOUND_STRING("Your {PKMN} will survive the POISON\nstatus with 1HP."),
+};
+static const u8 *const sDesc_Split[] = {
+    COMPOUND_STRING("PHYSICAL and SPECIAL MOVES\ndepend on the {PKMN} TYPE."),
+    COMPOUND_STRING("PHYSICAL and SPECIAL MOVES\nare MOVE specific."),
+};
+static const u8 *const sChoices_Gen3Gen7[] = {
+    COMPOUND_STRING("GEN 3"),
+    COMPOUND_STRING("GEN 7"),
+};
+static const u8 *const sChoices_Gen3Gen1[] = {
+    COMPOUND_STRING("GEN 3"),
+    COMPOUND_STRING("GEN 1"),
+};
+static const u8 *const sDesc_GenOneRecharge[] = {
+    COMPOUND_STRING("RECHARGE MOVES like HYPER BEAM will\nalways need to recharge after use."),
+    COMPOUND_STRING("If a RECHARGE MOVE KO's the opponent,\nno recharge turn is needed."),
 };
 static const u8 *const sDesc_Next[] = {
     COMPOUND_STRING("Continue to the next page."),
@@ -341,7 +359,7 @@ static const struct ChallengeMenuItem sTabItems_Mode[] = {
         .name         = COMPOUND_STRING("{PKMN} MOVEPOOL"),
         .descriptions = sDesc_ModernMoves,
         .numChoices   = 2,
-        .choiceNames  = sChoices_OriginalModern,
+        .choiceNames  = sChoices_Gen3Gen7,
     },
     [ITEM_MODE_SYNCHRONIZE] = {
         .name         = COMPOUND_STRING("SYNCHRONIZE"),
@@ -390,6 +408,18 @@ static const struct ChallengeMenuItem sTabItems_Mode[] = {
         .descriptions = sDesc_SurvivePoison,
         .numChoices   = 2,
         .choiceNames  = sChoices_OffOn,
+    },
+    [ITEM_MODE_SPLIT] = {
+        .name         = COMPOUND_STRING("PHYS/SP SPLIT"),
+        .descriptions = sDesc_Split,
+        .numChoices   = 2,
+        .choiceNames  = sChoices_OffOn,
+    },
+    [ITEM_MODE_GEN_ONE_RECHARGE] = {
+        .name         = COMPOUND_STRING("RECHARGE MOVES"),
+        .descriptions = sDesc_GenOneRecharge,
+        .numChoices   = 2,
+        .choiceNames  = sChoices_Gen3Gen1,
     },
     [ITEM_MODE_NEXT] = {
         .name         = COMPOUND_STRING("NEXT"),
@@ -1223,6 +1253,8 @@ static void ApplyRecommendedPresets(void)
     *GetSelectionPtr(TAB_MODE, ITEM_MODE_INFINITE_TMS)       = 1; // ON
     *GetSelectionPtr(TAB_MODE, ITEM_MODE_MINTS)              = 1; // ON
     *GetSelectionPtr(TAB_MODE, ITEM_MODE_SURVIVE_POISON)     = 1; // ON
+    *GetSelectionPtr(TAB_MODE, ITEM_MODE_SPLIT)              = 1; // ON
+    *GetSelectionPtr(TAB_MODE, ITEM_MODE_GEN_ONE_RECHARGE)   = 0; // GEN 3
 }
 
 // =============================================================================
@@ -1715,6 +1747,8 @@ static void Task_Save(u8 taskId)
     else
         FlagSet(FLAG_MINTS_DISABLED);
     cs->tx_Mode_PoisonSurvive      = *GetSelectionPtr(TAB_MODE, ITEM_MODE_SURVIVE_POISON);
+    cs->optionStyle                = !*GetSelectionPtr(TAB_MODE, ITEM_MODE_SPLIT);
+    cs->genOneRecharge             = *GetSelectionPtr(TAB_MODE, ITEM_MODE_GEN_ONE_RECHARGE);
 
     // Features tab
     cs->tx_Features_RTCType        = *GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_RTC_TYPE);
@@ -1920,6 +1954,8 @@ void CB2_InitChallengeMenu(void)
             *GetSelectionPtr(TAB_MODE, ITEM_MODE_INFINITE_TMS)       = cs->tx_Mode_InfiniteTMs;
             *GetSelectionPtr(TAB_MODE, ITEM_MODE_MINTS)              = cs->tx_Mode_Mints;
             *GetSelectionPtr(TAB_MODE, ITEM_MODE_SURVIVE_POISON)     = cs->tx_Mode_PoisonSurvive;
+            *GetSelectionPtr(TAB_MODE, ITEM_MODE_SPLIT)              = !cs->optionStyle;
+            *GetSelectionPtr(TAB_MODE, ITEM_MODE_GEN_ONE_RECHARGE)   = cs->genOneRecharge;
 
             // Features tab
             *GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_RTC_TYPE)     = cs->tx_Features_RTCType;

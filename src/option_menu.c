@@ -56,12 +56,10 @@ enum {
 };
 
 enum {
-    ITEM_BATTLE_SPLIT,
     ITEM_BATTLE_FAST_INTRO,
     ITEM_BATTLE_FAST_BATTLES,
     ITEM_BATTLE_NEW_BACKGROUNDS,
     ITEM_BATTLE_NEW_BATTLEUI,
-    ITEM_BATTLE_GEN_ONE_RECHARGE,
     ITEM_BATTLE_BALL_PROMPT,
     ITEM_BATTLE_RUN_TYPE,
     ITEM_BATTLE_LR_RUN,
@@ -244,11 +242,6 @@ static const u8 *const sChoices_Gen3Gen4[] = {
     COMPOUND_STRING("GEN 4"),
 };
 
-static const u8 *const sChoices_Gen3Gen1[] = {
-    COMPOUND_STRING("GEN 3"),
-    COMPOUND_STRING("GEN 1"),
-};
-
 static const u8 *const sChoices_RunType[] = {
     COMPOUND_STRING("NO"),
     COMPOUND_STRING("L+R+A"),
@@ -325,10 +318,6 @@ static const u8 *const sDesc_MatchCall[] = {
 static const u8 *const sDesc_FrameType[] = {
     COMPOUND_STRING("Choose the frame surrounding the\nwindows."),
 };
-static const u8 *const sDesc_Split[] = {
-    COMPOUND_STRING("PHYSICAL and SPECIAL MOVES\nare MOVE specific."),
-    COMPOUND_STRING("PHYSICAL and SPECIAL MOVES\ndepend on the {PKMN} TYPE."),
-};
 static const u8 *const sDesc_FastIntro[] = {
     COMPOUND_STRING("Skip the sliding animation\nand enter battles faster."),
     COMPOUND_STRING("Battles load at the usual speed."),
@@ -344,10 +333,6 @@ static const u8 *const sDesc_NewBackgrounds[] = {
 static const u8 *const sDesc_NewBattleUI[] = {
     COMPOUND_STRING("Original GEN III Battle UI."),
     COMPOUND_STRING("Modernized GEN IV Battle UI."),
-};
-static const u8 *const sDesc_GenOneRecharge[] = {
-    COMPOUND_STRING("RECHARGE MOVES like HYPER BEAM will\nalways need to recharge after use."),
-    COMPOUND_STRING("If a RECHARGE MOVE KO's the opponent,\nno recharge turn is needed."),
 };
 static const u8 *const sDesc_BallPrompt[] = {
     COMPOUND_STRING("Press {R_BUTTON} in battle to use Pokeballs.\nHold {L_BUTTON}/{R_BUTTON} to swap {PKMN}BALLS."),
@@ -466,12 +451,6 @@ static const struct OptionMenuItem sTabItems_Main[] = {
 };
 
 static const struct OptionMenuItem sTabItems_Battle[] = {
-    [ITEM_BATTLE_SPLIT] = {
-        .name         = COMPOUND_STRING("PHYS/SP SPLIT"),
-        .descriptions = sDesc_Split,
-        .numChoices   = 2,
-        .choiceNames  = sChoices_OnOff,
-    },
     [ITEM_BATTLE_FAST_INTRO] = {
         .name         = COMPOUND_STRING("FAST INTRO"),
         .descriptions = sDesc_FastIntro,
@@ -495,12 +474,6 @@ static const struct OptionMenuItem sTabItems_Battle[] = {
         .descriptions = sDesc_NewBattleUI,
         .numChoices   = 2,
         .choiceNames  = sChoices_Gen3Gen4,
-    },
-    [ITEM_BATTLE_GEN_ONE_RECHARGE] = {
-        .name         = COMPOUND_STRING("RECHARGE MOVES"),
-        .descriptions = sDesc_GenOneRecharge,
-        .numChoices   = 2,
-        .choiceNames  = sChoices_Gen3Gen1,
     },
     [ITEM_BATTLE_BALL_PROMPT] = {
         .name         = COMPOUND_STRING("BALL PROMPT"),
@@ -1117,12 +1090,10 @@ static void Task_Save(u8 taskId)
     cs->unitSystem         = *GetSelectionPtr(TAB_MAIN, ITEM_MAIN_UNIT_TYPE);
     cs->disableMatchCall   = *GetSelectionPtr(TAB_MAIN, ITEM_MAIN_MATCHCALL);
 
-    cs->optionStyle        = *GetSelectionPtr(TAB_BATTLE, ITEM_BATTLE_SPLIT);
     cs->fastIntro          = *GetSelectionPtr(TAB_BATTLE, ITEM_BATTLE_FAST_INTRO);
     cs->fastBattle         = *GetSelectionPtr(TAB_BATTLE, ITEM_BATTLE_FAST_BATTLES);
     cs->newBackgrounds     = *GetSelectionPtr(TAB_BATTLE, ITEM_BATTLE_NEW_BACKGROUNDS);
     cs->newBattleUI        = *GetSelectionPtr(TAB_BATTLE, ITEM_BATTLE_NEW_BATTLEUI);
-    cs->genOneRecharge     = *GetSelectionPtr(TAB_BATTLE, ITEM_BATTLE_GEN_ONE_RECHARGE);
     cs->ballPrompt         = *GetSelectionPtr(TAB_BATTLE, ITEM_BATTLE_BALL_PROMPT);
     cs->lrToRun            = *GetSelectionPtr(TAB_BATTLE, ITEM_BATTLE_LR_RUN);
     cs->runType            = *GetSelectionPtr(TAB_BATTLE, ITEM_BATTLE_RUN_TYPE);
@@ -1227,12 +1198,10 @@ void CB2_InitOptionMenu(void)
         *GetSelectionPtr(TAB_MAIN, ITEM_MAIN_UNIT_TYPE)      = cs->unitSystem;
         *GetSelectionPtr(TAB_MAIN, ITEM_MAIN_MATCHCALL)    = cs->disableMatchCall;
 
-        *GetSelectionPtr(TAB_BATTLE, ITEM_BATTLE_SPLIT)           = cs->optionStyle;
         *GetSelectionPtr(TAB_BATTLE, ITEM_BATTLE_FAST_INTRO)      = cs->fastIntro;
         *GetSelectionPtr(TAB_BATTLE, ITEM_BATTLE_FAST_BATTLES)    = cs->fastBattle;
         *GetSelectionPtr(TAB_BATTLE, ITEM_BATTLE_NEW_BACKGROUNDS) = cs->newBackgrounds;
         *GetSelectionPtr(TAB_BATTLE, ITEM_BATTLE_NEW_BATTLEUI)    = cs->newBattleUI;
-        *GetSelectionPtr(TAB_BATTLE, ITEM_BATTLE_GEN_ONE_RECHARGE)= cs->genOneRecharge;
         *GetSelectionPtr(TAB_BATTLE, ITEM_BATTLE_BALL_PROMPT)     = cs->ballPrompt;
         *GetSelectionPtr(TAB_BATTLE, ITEM_BATTLE_LR_RUN)          = cs->lrToRun;
         *GetSelectionPtr(TAB_BATTLE, ITEM_BATTLE_RUN_TYPE)        = cs->runType;
