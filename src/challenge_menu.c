@@ -121,7 +121,6 @@ enum {
 
 enum {
     ITEM_CHALLENGES_POKECENTER,
-    ITEM_CHALLENGES_PCHEAL,
     ITEM_CHALLENGES_EXPENSIVE,
     ITEM_CHALLENGES_EVO_LIMIT,
     ITEM_CHALLENGES_ONE_TYPE,
@@ -986,10 +985,6 @@ static const u8 *const sDesc_Pokecenter[] = {
     COMPOUND_STRING("The player can visit {PKMN}centers\nand other locations to heal."),
     COMPOUND_STRING("The player CAN'T visit {PKMN}centers\nor other locations to heal."),
 };
-static const u8 *const sDesc_PCHeal[] = {
-    COMPOUND_STRING("{PKMN} deposited to the PC will be\nhealed as usual."),
-    COMPOUND_STRING("{PKMN} deposited to the PC will not\nbe healed."),
-};
 static const u8 *const sDesc_Expensive[] = {
     COMPOUND_STRING("Everything has the usual cost."),
     COMPOUND_STRING("Everything is 5 times more\nexpensive!"),
@@ -1033,12 +1028,6 @@ static const struct ChallengeMenuItem sTabItems_Challenges[] = {
         .descriptions = sDesc_Pokecenter,
         .numChoices   = 2,
         .choiceNames  = sChoices_PkmnCenter,
-    },
-    [ITEM_CHALLENGES_PCHEAL] = {
-        .name         = COMPOUND_STRING("PC HEALS {PKMN}"),
-        .descriptions = sDesc_PCHeal,
-        .numChoices   = 2,
-        .choiceNames  = sChoices_YesNo,
     },
     [ITEM_CHALLENGES_EXPENSIVE] = {
         .name         = COMPOUND_STRING("ULTRA EXPENSIVE!"),
@@ -1212,8 +1201,6 @@ static bool8 CheckConditions(u8 tab, u8 itemIndex)
     case TAB_CHALLENGES:
         switch (itemIndex)
         {
-        case ITEM_CHALLENGES_PCHEAL:
-            return !(*GetSelectionPtr(TAB_CHALLENGES, ITEM_CHALLENGES_POKECENTER));
         case ITEM_CHALLENGES_MIRROR_THIEF:
             return *GetSelectionPtr(TAB_CHALLENGES, ITEM_CHALLENGES_MIRROR) == 1;
         default:
@@ -1823,7 +1810,6 @@ static void Task_Save(u8 taskId)
 
     // Challenges tab
     cs->tx_Challenges_PkmnCenter      = *GetSelectionPtr(TAB_CHALLENGES, ITEM_CHALLENGES_POKECENTER);
-    cs->tx_Challenges_PCHeal          = *GetSelectionPtr(TAB_CHALLENGES, ITEM_CHALLENGES_PCHEAL);
     cs->tx_Challenges_Expensive       = *GetSelectionPtr(TAB_CHALLENGES, ITEM_CHALLENGES_EXPENSIVE);
     cs->tx_Challenges_EvoLimit        = *GetSelectionPtr(TAB_CHALLENGES, ITEM_CHALLENGES_EVO_LIMIT);
     // ONE_TYPE: map selection position back to type index
@@ -2001,7 +1987,6 @@ void CB2_InitChallengeMenu(void)
 
             // Challenges tab
             *GetSelectionPtr(TAB_CHALLENGES, ITEM_CHALLENGES_POKECENTER)    = cs->tx_Challenges_PkmnCenter;
-            *GetSelectionPtr(TAB_CHALLENGES, ITEM_CHALLENGES_PCHEAL)        = cs->tx_Challenges_PCHeal;
             *GetSelectionPtr(TAB_CHALLENGES, ITEM_CHALLENGES_EXPENSIVE)     = cs->tx_Challenges_Expensive;
             *GetSelectionPtr(TAB_CHALLENGES, ITEM_CHALLENGES_EVO_LIMIT)     = cs->tx_Challenges_EvoLimit;
             // ONE_TYPE: map SaveBlock type index to selection position
