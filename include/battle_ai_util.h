@@ -93,6 +93,7 @@ enum Ability AI_GetMoldBreakerSanitizedAbility(enum BattlerId battlerAtk, enum A
 u32 AI_GetDamage(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveIndex, enum DamageCalcContext calcContext, struct AiLogicData *aiData);
 u32 AI_GetDamageWithStatChanges(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 moveIndex);
 enum StatChangeDecision BattlerShouldChangeStats(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move statMove, u32 dmgMoveIndex, enum ChangeStatContext context);
+void AI_SetMoveStatChangeLogic(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, u32 moveIndex);
 bool32 IsAiFlagPresent(u64 flag);
 bool32 IsAiBattlerAware(enum BattlerId battlerId);
 bool32 IsAiBattlerAssumingStab(enum BattlerId battlerId);

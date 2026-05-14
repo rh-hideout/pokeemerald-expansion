@@ -237,6 +237,7 @@ struct AiLogicData
     enum Move predictedMove[MAX_BATTLERS_COUNT];
     u8 resistBerryAffected[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT][MAX_MON_MOVES]; // Tracks whether currently calc'd move is affected by a resist berry into given target
     u8 turnOrder[MAX_BATTLERS_COUNT];
+    s8 aiStatChanges[MAX_BATTLERS_COUNT][MAX_MON_MOVES][MAX_BATTLERS_COUNT][NUM_BATTLE_STATS];
 
     // Flags
     u32 ejectButtonSwitch:1; // Tracks whether current switch out was from Eject Button
@@ -262,7 +263,6 @@ struct AiThinkingStruct
     u8 aiAction;
     u8 aiLogicId;
     struct AI_SavedBattleMon saved[MAX_BATTLERS_COUNT];
-    s8 aiStatChanges[MAX_BATTLERS_COUNT][NUM_BATTLE_STATS];
 };
 
 #define AI_MOVE_HISTORY_COUNT 3

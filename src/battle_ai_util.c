@@ -178,7 +178,7 @@ u32 AI_GetDamageWithStatChanges(enum BattlerId battlerAtk, enum BattlerId battle
 
     for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
     {
-        stage = gAiThinkingStruct->aiStatChanges[battlerAtk][stat]; // struct does not contain a member for HP
+        stage = gAiLogicData->aiStatChanges[battlerAtk][moveIndex][battlerAtk][stat];
         if (stage != 0)
         {
             gBattleMons[battlerAtk].statStages[stat] += stage;
@@ -188,7 +188,7 @@ u32 AI_GetDamageWithStatChanges(enum BattlerId battlerAtk, enum BattlerId battle
             if (gBattleMons[battlerAtk].statStages[stat] < MIN_STAT_STAGE)
                 gBattleMons[battlerAtk].statStages[stat] = MIN_STAT_STAGE;
         }
-        stage = gAiThinkingStruct->aiStatChanges[battlerDef][stat]; // struct does not contain a member for HP
+        stage = gAiLogicData->aiStatChanges[battlerAtk][moveIndex][battlerDef][stat];
         if (stage != 0)
         {
             gBattleMons[battlerDef].statStages[stat] += stage;
@@ -213,7 +213,9 @@ u32 AI_GetDamageWithStatChanges(enum BattlerId battlerAtk, enum BattlerId battle
     return damage;
 }
 
-void AI_SetMoveStatChangeThinking(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
+// Abilities on field
+
+void AI_SetMoveStatChangeLogic(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, u32 moveIndex)
 {
     u32 additionalEffectCount = GetMoveAdditionalEffectCount(move);
     enum Ability atkAbility = gAiLogicData->abilities[battlerAtk];
@@ -255,7 +257,7 @@ void AI_SetMoveStatChangeThinking(enum BattlerId battlerAtk, enum BattlerId batt
                     if (considerSimple)
                         stage *= 2;
 
-                    gAiThinkingStruct->aiStatChanges[battlerAtk][stat] += stage;
+                    gAiLogicData->aiStatChanges[battlerAtk][moveIndex][battlerAtk][stat] += stage;
                 }
                 break;
             case MOVE_EFFECT_STAT_MINUS:
@@ -273,7 +275,7 @@ void AI_SetMoveStatChangeThinking(enum BattlerId battlerAtk, enum BattlerId batt
                     if (considerSimple)
                         stage *= 2;
 
-                    gAiThinkingStruct->aiStatChanges[battlerAtk][stat] += stage;
+                    gAiLogicData->aiStatChanges[battlerAtk][moveIndex][battlerAtk][stat] += stage;
                 }
                 break;
             default:
@@ -305,7 +307,10 @@ void AI_SetMoveStatChangeThinking(enum BattlerId battlerAtk, enum BattlerId batt
                     if (considerSimple)
                         stage *= 2;
 
-                    gAiThinkingStruct->aiStatChanges[battlerDef][stat] += stage;
+                    if (stage < 0 && !CanLowerStat(battlerAtk, battlerDef, gAiLogicData, stat))
+                        continue;
+
+                    gAiLogicData->aiStatChanges[battlerAtk][moveIndex][battlerDef][stat] += stage;
                 }
                 break;
             case MOVE_EFFECT_STAT_MINUS:
@@ -323,7 +328,10 @@ void AI_SetMoveStatChangeThinking(enum BattlerId battlerAtk, enum BattlerId batt
                     if (considerSimple)
                         stage *= 2;
 
-                    gAiThinkingStruct->aiStatChanges[battlerDef][stat] += stage;
+                    if (stage < 0 && !CanLowerStat(battlerAtk, battlerDef, gAiLogicData, stat))
+                        continue;
+
+                    gAiLogicData->aiStatChanges[battlerAtk][moveIndex][battlerDef][stat] += stage;
                 }
                 break;
             default:
@@ -346,6 +354,7 @@ bool32 AI_IsSlower(enum BattlerId battlerAi, enum BattlerId battlerDef, enum Mov
 bool32 AI_WouldBeFaster(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move atkMove, enum Move defMove, enum ConsiderPriority considerPriority)
 {
     s8 savedStatStages[MAX_BATTLERS_COUNT][NUM_BATTLE_STATS] = {0};
+    u32 moveIndex = gAiThinkingStruct->movesetIndex;
     
     // Save current stat stages
     for (enum BattlerId battler = B_BATTLER_0; battler < MAX_BATTLERS_COUNT; battler++)
@@ -354,7 +363,7 @@ bool32 AI_WouldBeFaster(enum BattlerId battlerAtk, enum BattlerId battlerDef, en
             savedStatStages[battler][stat] = gBattleMons[battler].statStages[stat];
     }
 
-    s32 atkSpeedChange = gAiThinkingStruct->aiStatChanges[battlerAtk][STAT_SPEED];
+    s32 atkSpeedChange = gAiLogicData->aiStatChanges[battlerAtk][moveIndex][battlerAtk][STAT_SPEED];
     if (atkSpeedChange != 0)
     {
         gBattleMons[battlerAtk].statStages[STAT_SPEED] += atkSpeedChange;
@@ -364,7 +373,7 @@ bool32 AI_WouldBeFaster(enum BattlerId battlerAtk, enum BattlerId battlerDef, en
         if (gBattleMons[battlerAtk].statStages[STAT_SPEED] < MIN_STAT_STAGE)
             gBattleMons[battlerAtk].statStages[STAT_SPEED] = MIN_STAT_STAGE;
     }
-    s32 defSpeedChange = gAiThinkingStruct->aiStatChanges[battlerDef][STAT_SPEED];
+    s32 defSpeedChange = gAiLogicData->aiStatChanges[battlerAtk][moveIndex][battlerDef][STAT_SPEED];
     if (defSpeedChange != 0)
     {
         gBattleMons[battlerDef].statStages[STAT_SPEED] += defSpeedChange;
@@ -390,6 +399,7 @@ bool32 AI_WouldBeFaster(enum BattlerId battlerAtk, enum BattlerId battlerDef, en
 bool32 AI_WouldBeSlower(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move atkMove, enum Move defMove, enum ConsiderPriority considerPriority)
 {
     s8 savedStatStages[MAX_BATTLERS_COUNT][NUM_BATTLE_STATS] = {0};
+    u32 moveIndex = gAiThinkingStruct->movesetIndex;
     
     // Save current stat stages
     for (enum BattlerId battler = B_BATTLER_0; battler < MAX_BATTLERS_COUNT; battler++)
@@ -398,7 +408,7 @@ bool32 AI_WouldBeSlower(enum BattlerId battlerAtk, enum BattlerId battlerDef, en
             savedStatStages[battler][stat] = gBattleMons[battler].statStages[stat];
     }
 
-    s32 atkSpeedChange = gAiThinkingStruct->aiStatChanges[battlerAtk][STAT_SPEED];
+    s32 atkSpeedChange = gAiLogicData->aiStatChanges[battlerAtk][moveIndex][battlerAtk][STAT_SPEED];
     if (atkSpeedChange != 0)
     {
         gBattleMons[battlerAtk].statStages[STAT_SPEED] += atkSpeedChange;
@@ -408,7 +418,7 @@ bool32 AI_WouldBeSlower(enum BattlerId battlerAtk, enum BattlerId battlerDef, en
         if (gBattleMons[battlerAtk].statStages[STAT_SPEED] < MIN_STAT_STAGE)
             gBattleMons[battlerAtk].statStages[STAT_SPEED] = MIN_STAT_STAGE;
     }
-    s32 defSpeedChange = gAiThinkingStruct->aiStatChanges[battlerDef][STAT_SPEED];
+    s32 defSpeedChange = gAiLogicData->aiStatChanges[battlerAtk][moveIndex][battlerDef][STAT_SPEED];
     if (defSpeedChange != 0)
     {
         gBattleMons[battlerDef].statStages[STAT_SPEED] += defSpeedChange;
@@ -437,6 +447,7 @@ enum StatChangeDecision BattlerShouldChangeStats(enum BattlerId battlerAtk, enum
     enum Move atkMove = (dmgMoveIndex == MAX_MON_MOVES ? MOVE_TACKLE : gBattleMons[battlerAtk].moves[dmgMoveIndex]); // Generic move if no move index specified
     enum Move atkBestMoves[MAX_MON_MOVES];
     enum Move defBestMoves[MAX_MON_MOVES];
+    u32 moveIndex = gAiThinkingStruct->movesetIndex;
 
     // Only care about chosen move if passed
     if (dmgMoveIndex != MAX_MON_MOVES)
@@ -448,9 +459,6 @@ enum StatChangeDecision BattlerShouldChangeStats(enum BattlerId battlerAtk, enum
         GetBestDmgMovesFromBattler(battlerAtk, battlerDef, AI_ATTACKING, atkBestMoves);
         GetBestDmgMovesFromBattler(battlerDef, battlerAtk, AI_DEFENDING, defBestMoves);
     }
-
-    // Get stat changes to be considered
-    AI_SetMoveStatChangeThinking(battlerAtk, battlerDef, statMove);
 
     switch (context)
     {
@@ -558,7 +566,7 @@ enum StatChangeDecision BattlerShouldChangeStats(enum BattlerId battlerAtk, enum
                     savedStatStages[battler][stat] = gBattleMons[battler].statStages[stat];
             }
 
-            s32 atkAccChange = gAiThinkingStruct->aiStatChanges[battlerAtk][STAT_ACC];
+            s32 atkAccChange = gAiLogicData->aiStatChanges[battlerAtk][moveIndex][battlerAtk][STAT_ACC];
             if (atkAccChange != 0)
             {
                 gBattleMons[battlerAtk].statStages[STAT_ACC] += atkAccChange;
@@ -569,7 +577,7 @@ enum StatChangeDecision BattlerShouldChangeStats(enum BattlerId battlerAtk, enum
                     gBattleMons[battlerAtk].statStages[STAT_ACC] = MIN_STAT_STAGE;
             }
 
-            s32 defEvaChange = gAiThinkingStruct->aiStatChanges[battlerDef][STAT_EVASION];
+            s32 defEvaChange = gAiLogicData->aiStatChanges[battlerAtk][moveIndex][battlerDef][STAT_EVASION];
             if (defEvaChange != 0)
             {
                 gBattleMons[battlerDef].statStages[STAT_EVASION] += defEvaChange;
@@ -640,7 +648,7 @@ enum StatChangeDecision BattlerShouldChangeStats(enum BattlerId battlerAtk, enum
                     savedStatStages[battler][stat] = gBattleMons[battler].statStages[stat];
             }
 
-            s32 atkAccChange = gAiThinkingStruct->aiStatChanges[battlerAtk][STAT_ACC];
+            s32 atkAccChange = gAiLogicData->aiStatChanges[battlerAtk][moveIndex][battlerAtk][STAT_ACC];
             if (atkAccChange != 0)
             {
                 gBattleMons[battlerAtk].statStages[STAT_ACC] += atkAccChange;
@@ -651,7 +659,7 @@ enum StatChangeDecision BattlerShouldChangeStats(enum BattlerId battlerAtk, enum
                     gBattleMons[battlerAtk].statStages[STAT_ACC] = MIN_STAT_STAGE;
             }
 
-            s32 atkEvaChange = gAiThinkingStruct->aiStatChanges[battlerAtk][STAT_EVASION];
+            s32 atkEvaChange = gAiLogicData->aiStatChanges[battlerAtk][moveIndex][battlerAtk][STAT_EVASION];
             if (atkEvaChange != 0)
             {
                 gBattleMons[battlerAtk].statStages[STAT_EVASION] += atkEvaChange;
@@ -662,7 +670,7 @@ enum StatChangeDecision BattlerShouldChangeStats(enum BattlerId battlerAtk, enum
                     gBattleMons[battlerAtk].statStages[STAT_EVASION] = MIN_STAT_STAGE;
             }
 
-            s32 defAccChange = gAiThinkingStruct->aiStatChanges[battlerDef][STAT_ACC];
+            s32 defAccChange = gAiLogicData->aiStatChanges[battlerAtk][moveIndex][battlerDef][STAT_ACC];
             if (defAccChange != 0)
             {
                 gBattleMons[battlerDef].statStages[STAT_ACC] += defAccChange;
@@ -673,7 +681,7 @@ enum StatChangeDecision BattlerShouldChangeStats(enum BattlerId battlerAtk, enum
                     gBattleMons[battlerDef].statStages[STAT_ACC] = MIN_STAT_STAGE;
             }
 
-            s32 defEvaChange = gAiThinkingStruct->aiStatChanges[battlerDef][STAT_EVASION];
+            s32 defEvaChange = gAiLogicData->aiStatChanges[battlerAtk][moveIndex][battlerDef][STAT_EVASION];
             if (defEvaChange != 0)
             {
                 gBattleMons[battlerDef].statStages[STAT_EVASION] += defEvaChange;
