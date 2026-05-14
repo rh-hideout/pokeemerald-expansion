@@ -1,4 +1,5 @@
 #include "global.h"
+#include "challenge_menu.h"
 #include "script.h"
 #include "event_data.h"
 #include "fieldmap.h"
@@ -170,7 +171,7 @@ void CB2_EndBugContestBattle(void)
     }
     else if (gBattleOutcome == B_OUTCOME_CAUGHT)
     {
-        if (partyCount == PARTY_SIZE)
+        if (partyCount == GetMaxPartySize())
             ScriptContext_SetupScript(BugContest_EventScript_TimesUp);
         SetMainCallback2(CB2_ReturnToField);
         gFieldCallback = FieldCB_ReturnToFieldNoScriptCheckMusic;

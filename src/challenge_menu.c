@@ -2063,3 +2063,8 @@ bool32 HMsOverwriteOptionActive(void)
             || cs->tx_Random_Moves
             || cs->tx_Challenges_OneTypeChallenge != ONE_TYPE_OFF);
 }
+
+u8 GetMaxPartySize(void)
+{
+    return (PARTY_SIZE - gSaveBlock3Ptr->challengeSettings.tx_Challenges_PartyLimit);
+}

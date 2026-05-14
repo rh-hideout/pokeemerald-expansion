@@ -44,6 +44,7 @@
 #include "random.h"
 #include "randomizer.h"
 #include "nuzlocke.h"
+#include "challenge_menu.h"
 #include "recorded_battle.h"
 #include "regions.h"
 #include "rtc.h"
@@ -3747,13 +3748,13 @@ u8 GiveCapturedMonToPlayer(struct Pokemon *mon)
     SetMonData(mon, MON_DATA_OT_GENDER, &gSaveBlock2Ptr->playerGender);
     SetMonData(mon, MON_DATA_OT_ID, gSaveBlock2Ptr->playerTrainerId);
 
-    for (i = 0; i < PARTY_SIZE; i++)
+    for (i = 0; i < GetMaxPartySize(); i++)
     {
         if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) == SPECIES_NONE)
             break;
     }
 
-    if (i >= PARTY_SIZE)
+    if (i >= GetMaxPartySize())
         return CopyMonToPC(mon);
 
     CopyMon(&gPlayerParty[i], mon, sizeof(*mon));
@@ -3824,7 +3825,14 @@ u8 CalculatePartyCountOfSide(enum BattlerId battler, struct Pokemon *party)
 
 u8 CalculatePlayerPartyCount(void)
 {
-    gPlayerPartyCount = CalculatePartyCount(gPlayerParty);
+    gPlayerPartyCount = 0;
+
+    while (gPlayerPartyCount < GetMaxPartySize()
+        && GetMonData(&gPlayerParty[gPlayerPartyCount], MON_DATA_SPECIES) != SPECIES_NONE)
+    {
+        gPlayerPartyCount++;
+    }
+
     return gPlayerPartyCount;
 }
 
@@ -3997,7 +4005,7 @@ bool8 IsPlayerPartyAndPokemonStorageFull(void)
 {
     s32 i;
 
-    for (i = 0; i < PARTY_SIZE; i++)
+    for (i = 0; i < GetMaxPartySize(); i++)
         if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) == SPECIES_NONE)
             return FALSE;
 

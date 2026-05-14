@@ -64,6 +64,7 @@
 #include "list_menu.h"
 #include "malloc.h"
 #include "battle.h"
+#include "challenge_menu.h"
 #include "constants/event_objects.h"
 #include "constants/map_types.h"
 #include "constants/battle_frontier.h"
@@ -1443,7 +1444,7 @@ bool8 ScrCmd_givenamedmon(struct ScriptContext *ctx)
     heldItem[0] = item & 0xFF;
     heldItem[1] = item >> 8;
 
-    for (u8 i = 0; i < PARTY_SIZE; i++)
+    for (u8 i = 0; i < GetMaxPartySize(); i++)
     {
         if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) == SPECIES_NONE)
         {
@@ -1515,7 +1516,7 @@ bool8 ScrCmd_removenamedmon(struct ScriptContext *ctx)
     }
 
     u8 partyCount = 0;
-    for (u8 i = 0; i < PARTY_SIZE; i++)
+    for (u8 i = 0; i < GetMaxPartySize(); i++)
     {
         if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) != SPECIES_NONE)
             partyCount++;
@@ -1527,7 +1528,7 @@ bool8 ScrCmd_removenamedmon(struct ScriptContext *ctx)
         return FALSE;
     }
 
-    for (u8 i = 0; i < PARTY_SIZE; i++)
+    for (u8 i = 0; i < GetMaxPartySize(); i++)
     {
         if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) != SPECIES_NONE)
         {
@@ -1606,7 +1607,7 @@ bool8 ScrCmd_baobacheckmon(struct ScriptContext *ctx)
 
     gSpecialVar_Result = FALSE;
 
-    if (partyIndex >= PARTY_SIZE)
+    if (partyIndex >= GetMaxPartySize())
         return FALSE;
 
     if (GetMonData(&gPlayerParty[partyIndex], MON_DATA_SPECIES, NULL) == SPECIES_NONE)
@@ -1827,7 +1828,7 @@ static u32 GetPlayerOtId32(void)
 
 static bool8 GiveOddEgg_Internal(u16 species, bool8 forceShiny, bool8 allow14PercentShiny)
 {
-    for (u8 i = 0; i < PARTY_SIZE; i++)
+    for (u8 i = 0; i < GetMaxPartySize(); i++)
     {
         if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) == SPECIES_NONE)
         {
@@ -2957,12 +2958,12 @@ bool8 ScrCmd_checkfieldmove(struct ScriptContext *ctx)
 
     Script_RequestEffects(SCREFF_V1);
 
-    gSpecialVar_Result = PARTY_SIZE;
+    gSpecialVar_Result = GetMaxPartySize();
     if (doUnlockedCheck && !IsFieldMoveUnlocked(fieldMove))
         return FALSE;
 
     move = FieldMove_GetMoveId(fieldMove);
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    for (u32 i = 0; i < GetMaxPartySize(); i++)
     {
         u16 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES);
         if (!species)
@@ -2982,8 +2983,8 @@ bool8 ScrCmd_checkpartymove(struct ScriptContext *ctx)
 {
     u16 moveId = ScriptReadHalfword(ctx);
 
-    gSpecialVar_Result = PARTY_SIZE;
-    for (u32 i = 0; i < PARTY_SIZE; i++)
+    gSpecialVar_Result = GetMaxPartySize();
+    for (u32 i = 0; i < GetMaxPartySize(); i++)
     {
         u16 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES);
         if (!species)
