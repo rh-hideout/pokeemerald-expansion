@@ -1943,8 +1943,7 @@ void CB2_InitChallengeMenu(void)
         {
             struct ChallengeSettings *cs = &gSaveBlock3Ptr->challengeSettings;
 
-            // Mode tab — GAMEMODE always starts as RECOMMENDED (matches HnS)
-            *GetSelectionPtr(TAB_MODE, ITEM_MODE_GAMEMODE) = 0;
+            // Mode tab — load sub-items, then derive GAMEMODE from whether they match recommended
             *GetSelectionPtr(TAB_MODE, ITEM_MODE_MODERN_MOVES)       = cs->tx_Mode_Modern_Moves;
             *GetSelectionPtr(TAB_MODE, ITEM_MODE_SYNCHRONIZE)        = cs->tx_Mode_Synchronize;
             *GetSelectionPtr(TAB_MODE, ITEM_MODE_STURDY)             = cs->tx_Mode_Sturdy;
@@ -1957,6 +1956,21 @@ void CB2_InitChallengeMenu(void)
             *GetSelectionPtr(TAB_MODE, ITEM_MODE_SPLIT)              = !cs->optionStyle;
             *GetSelectionPtr(TAB_MODE, ITEM_MODE_GEN_ONE_RECHARGE)   = cs->genOneRecharge;
 
+            if (cs->tx_Mode_Modern_Moves == 1
+             && cs->tx_Mode_Synchronize == 1
+             && cs->tx_Mode_Sturdy == 1
+             && cs->tx_Mode_New_Citrus == 1
+             && cs->tx_Mode_Fairy_Types == 1
+             && cs->tx_Mode_Legendary_Abilities == 1
+             && cs->tx_Mode_InfiniteTMs == 1
+             && cs->tx_Mode_Mints == 1
+             && cs->tx_Mode_PoisonSurvive == 1
+             && cs->optionStyle == 0
+             && cs->genOneRecharge == 0)
+                *GetSelectionPtr(TAB_MODE, ITEM_MODE_GAMEMODE) = 0; // RECOMMENDED
+            else
+                *GetSelectionPtr(TAB_MODE, ITEM_MODE_GAMEMODE) = 1; // CUSTOM
+
             // Features tab
             *GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_RTC_TYPE)     = cs->tx_Features_RTCType;
             *GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_SHINY_CHANCE) = cs->tx_Features_ShinyChance;
@@ -1964,8 +1978,14 @@ void CB2_InitChallengeMenu(void)
             *GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_FRONTIER_BANS)= cs->tx_Features_FrontierBans;
             *GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_SHINY_COLOR)  = cs->tx_Features_ShinyColors;
 
-            // Randomizer tab — master toggle always starts OFF (matches HnS)
-            *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_OFF_ON)      = 0;
+            // Randomizer tab — derive master toggle from whether any sub-field is active
+            *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_OFF_ON) =
+                (cs->tx_Random_Starter || cs->tx_Random_WildPokemon
+              || cs->tx_Random_Trainer || cs->tx_Random_Static
+              || cs->tx_Random_Type || cs->tx_Random_Moves
+              || cs->tx_Random_Abilities || cs->tx_Random_Evolutions
+              || cs->tx_Random_EvolutionMethods || cs->tx_Random_TypeEffectiveness
+              || cs->tx_Random_Items) ? 1 : 0;
             *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_STARTER)     = cs->tx_Random_Starter;
             *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_WILD_PKMN)   = cs->tx_Random_WildPokemon;
             *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_MAP_BASED)  = cs->tx_Random_MapBased;
