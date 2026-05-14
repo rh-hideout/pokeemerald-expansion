@@ -4,6 +4,43 @@
 #include "caps.h"
 #include "pokemon.h"
 
+static u8 GetCurrentBadgeCount(void)
+{
+    u16 i;
+    u8 badgeCount = 0;
+    for (i = FLAG_BADGE01_GET; i < FLAG_BADGE01_GET + NUM_BADGES; i++)
+    {
+        if (FlagGet(i))
+            badgeCount++;
+    }
+    return badgeCount;
+}
+
+static const u8 sLevelCapTable_Normal[] =
+{
+    [0] = 11,  // no badges
+    [1] = 16,  // badge 1
+    [2] = 21,  // badge 2
+    [3] = 25,  // badge 3
+    [4] = 31,  // badge 4
+    [5] = 36,  // badge 5
+    [6] = 38,  // badge 6
+    [7] = 45,  // badge 7
+    [8] = 56,  // badge 8
+};
+
+static const u8 sLevelCapTable_Hard[] =
+{
+    [0] = 8,
+    [1] = 15,
+    [2] = 20,
+    [3] = 23,
+    [4] = 29,
+    [5] = 33,
+    [6] = 37,
+    [7] = 42,
+    [8] = 54,
+};
 
 u32 GetCurrentLevelCap(void)
 {
@@ -19,6 +56,23 @@ u32 GetCurrentLevelCap(void)
         {FLAG_BADGE08_GET, 46},
         {FLAG_IS_CHAMPION, 58},
     };
+
+    u8 challengeLevelCap = gSaveBlock3Ptr->challengeSettings.tx_Challenges_LevelCap;
+
+    if (challengeLevelCap != 0)
+    {
+        u8 badgeCount = GetCurrentBadgeCount();
+        if (badgeCount > 8)
+            badgeCount = 8;
+
+        if (FlagGet(FLAG_IS_CHAMPION))
+            return MAX_LEVEL;
+
+        if (challengeLevelCap == 1)
+            return sLevelCapTable_Normal[badgeCount];
+        else
+            return sLevelCapTable_Hard[badgeCount];
+    }
 
     u32 i;
 
