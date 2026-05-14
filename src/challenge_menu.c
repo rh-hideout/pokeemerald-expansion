@@ -2180,7 +2180,8 @@ void ChallengeMenu_SetInitialSetup(bool8 isInitial)
 void Script_OpenChallengeMenu(struct ScriptContext *ctx)
 {
     sIsInitialSetup = FALSE;
-    gMain.savedCallback = CB2_ReturnToFieldWithOpenMenu;
+    ScriptContext_Stop();
+    gMain.savedCallback = CB2_ReturnToFieldContinueScriptPlayMapMusic;
     SetMainCallback2(CB2_InitChallengeMenu);
 }
 

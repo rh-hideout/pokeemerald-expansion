@@ -16,16 +16,34 @@ EventScript_PCMainMenu::
 	waitmessage
 	special ScriptMenu_CreatePCMultichoice
 	waitstate
-	goto EventScript_AccessPC
+	goto_if_unset FLAG_SYS_GAME_CLEAR, EventScript_AccessPC_BeforeLeague
+	goto EventScript_AccessPC_AfterLeague
 	end
 
-EventScript_AccessPC::
+EventScript_AccessPC_BeforeLeague::
+	switch VAR_RESULT
+	case 0, EventScript_AccessPokemonStorage
+	case 1, EventScript_AccessPlayersPC
+	case 2, EventScript_ChallengeViewer
+	case 3, EventScript_TurnOffPC
+	case MULTI_B_PRESSED, EventScript_TurnOffPC
+	end
+
+EventScript_AccessPC_AfterLeague::
 	switch VAR_RESULT
 	case 0, EventScript_AccessPokemonStorage
 	case 1, EventScript_AccessPlayersPC
 	case 2, EventScript_AccessHallOfFame
-	case 3, EventScript_TurnOffPC
+	case 3, EventScript_ChallengeViewer
+	case 4, EventScript_TurnOffPC
 	case MULTI_B_PRESSED, EventScript_TurnOffPC
+	end
+
+EventScript_ChallengeViewer::
+	playse SE_PC_LOGIN
+	callnative Script_OpenChallengeMenu
+	waitstate
+	goto EventScript_PCMainMenu
 	end
 
 EventScript_AccessPlayersPC::
@@ -74,7 +92,7 @@ EventScript_AccessHallOfFame::
 	playse SE_PC_LOGIN
 	special AccessHallOfFamePC
 	waitstate
-	goto EventScript_AccessPC
+	goto EventScript_AccessPC_AfterLeague
 	end
 
 EventScript_AccessPokemonBoxLink::
