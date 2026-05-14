@@ -11,5 +11,6 @@ u8 GetCurrentTrainerIVs(void);
 u8 GetCurrentTrainerEVs(void);
 bool8 IsPokecenterChallengeActivated(void);
 bool8 IsOneTypeChallengeActive(void);
+u32 GetBaseStatEqualizerValue(void);
 
 #endif // GUARD_CHALLENGE_MENU_H

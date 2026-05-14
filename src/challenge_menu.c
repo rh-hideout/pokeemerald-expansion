@@ -2054,6 +2054,15 @@ u8 GetMaxPartySize(void)
     return (PARTY_SIZE - gSaveBlock3Ptr->challengeSettings.tx_Challenges_PartyLimit);
 }
 
+u32 GetBaseStatEqualizerValue(void)
+{
+    static const u16 sEqualizerValues[] = {0, 100, 255, 500};
+    u8 setting = gSaveBlock3Ptr->challengeSettings.tx_Challenges_BaseStatEqualizer;
+    if (setting >= ARRAY_COUNT(sEqualizerValues))
+        return 0;
+    return sEqualizerValues[setting];
+}
+
 static u8 GetChallengesBadgeCount(void)
 {
     u16 i;
@@ -2121,5 +2130,5 @@ bool8 IsPokecenterChallengeActivated(void)
 
 bool8 IsOneTypeChallengeActive(void)
 {
-    return gSaveBlock3Ptr->challengeSettings.tx_Challenges_OneTypeChallenge != 0;
+    return gSaveBlock3Ptr->challengeSettings.tx_Challenges_OneTypeChallenge != ONE_TYPE_OFF;
 }

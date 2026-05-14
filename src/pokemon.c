@@ -2133,6 +2133,7 @@ void CalculateMonStats(struct Pokemon *mon)
 
     SetMonData(mon, MON_DATA_LEVEL, &level);
 
+    u32 equalizedBst = GetBaseStatEqualizerValue();
     bool32 hyperTrained[NUM_STATS]; //In a battle test, hyper training flag indicates a fixed stat
     s32 iv[NUM_STATS];
     s32 ev[NUM_STATS];
@@ -2154,7 +2155,7 @@ void CalculateMonStats(struct Pokemon *mon)
         if (i == STAT_HP)
             continue;
 
-        u8 baseStat = GetSpeciesBaseStat(species, i);
+        u32 baseStat = equalizedBst ? equalizedBst : GetSpeciesBaseStat(species, i);
         s32 n = (((2 * baseStat + iv[i] + ev[i] / 4) * level) / 100) + 5;
         n = ModifyStatByNature(nature, n, i);
         if (B_FRIENDSHIP_BOOST == TRUE)
@@ -2173,7 +2174,7 @@ void CalculateMonStats(struct Pokemon *mon)
     }
     else
     {
-        s32 n = 2 * GetSpeciesBaseHP(species) + iv[STAT_HP];
+        s32 n = 2 * (equalizedBst ? equalizedBst : GetSpeciesBaseHP(species)) + iv[STAT_HP];
         newMaxHP = (((n + ev[STAT_HP] / 4) * level) / 100) + level + 10;
     }
 
@@ -3775,15 +3776,13 @@ u8 GiveCapturedMonToPlayer(struct Pokemon *mon)
     if (i >= GetMaxPartySize())
         return CopyMonToPC(mon);
 
+    if (IsOneTypeChallengeActive())
     {
         u8 typeChallenge = gSaveBlock3Ptr->challengeSettings.tx_Challenges_OneTypeChallenge;
-        if (typeChallenge != 0)
-        {
-            u16 species = GetMonData(mon, MON_DATA_SPECIES);
-            if (GetSpeciesType(species, 0) != typeChallenge
-             && GetSpeciesType(species, 1) != typeChallenge)
-                return CopyMonToPC(mon);
-        }
+        u16 species = GetMonData(mon, MON_DATA_SPECIES);
+        if (GetSpeciesType(species, 0) != typeChallenge
+         && GetSpeciesType(species, 1) != typeChallenge)
+            return CopyMonToPC(mon);
     }
 
     CopyMon(&gPlayerParty[i], mon, sizeof(*mon));
@@ -8020,7 +8019,7 @@ u32 GiveScriptedMonToPlayer(struct Pokemon *mon, u8 slot)
         {
             u8 typeChallenge = gSaveBlock3Ptr->challengeSettings.tx_Challenges_OneTypeChallenge;
             u16 species = GetMonData(mon, MON_DATA_SPECIES);
-            if (typeChallenge != 0
+            if (IsOneTypeChallengeActive()
              && GetSpeciesType(species, 0) != typeChallenge
              && GetSpeciesType(species, 1) != typeChallenge)
             {

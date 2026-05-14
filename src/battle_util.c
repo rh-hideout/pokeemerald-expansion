@@ -11,6 +11,7 @@
 #include "battle_z_move.h"
 #include "battle_gimmick.h"
 #include "battle_hold_effects.h"
+#include "challenge_menu.h"
 #include "generational_changes.h"
 #include "party_menu.h"
 #include "pokemon.h"
@@ -274,10 +275,11 @@ bool32 EndOrContinueWeather(void)
 static u32 CalcBeatUpPower(void)
 {
     u32 species = gBattleStruct->beatUpSpecies[gBattleStruct->beatUpSlot++];
-    // FIXME: Why call CalcBeatUpPower when 'beatUpSlot' is OOB?
     if (species == 0xFFFF)
         return 0;
-    return (GetSpeciesBaseAttack(species) / 10) + 5;
+    u32 equalizedBst = GetBaseStatEqualizerValue();
+    u32 baseAtk = equalizedBst ? equalizedBst : GetSpeciesBaseAttack(species);
+    return (baseAtk / 10) + 5;
 }
 
 // Gen 3/4
@@ -287,11 +289,12 @@ static s32 CalcBeatUpDamage(struct BattleContext *ctx)
     struct Pokemon *party = GetBattlerParty(ctx->battlerAtk);
     u32 species = GetMonData(&party[partyIndex], MON_DATA_SPECIES);
     u32 levelFactor = GetMonData(&party[partyIndex], MON_DATA_LEVEL) * 2 / 5 + 2;
-    s32 dmg = GetSpeciesBaseAttack(species);
+    u32 equalizedBst = GetBaseStatEqualizerValue();
+    s32 dmg = equalizedBst ? equalizedBst : GetSpeciesBaseAttack(species);
 
     dmg *= GetMovePower(ctx->move);
     dmg *= levelFactor;
-    dmg /= GetSpeciesBaseDefense(gBattleMons[ctx->battlerDef].species);
+    dmg /= equalizedBst ? equalizedBst : GetSpeciesBaseDefense(gBattleMons[ctx->battlerDef].species);
     dmg = (dmg / 50) + 2;
 
     if (gProtectStructs[ctx->battlerAtk].helpingHand)

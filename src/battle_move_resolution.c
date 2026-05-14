@@ -2,6 +2,7 @@
 #include "battle.h"
 #include "battle_environment.h"
 #include "battle_hold_effects.h"
+#include "challenge_menu.h"
 #include "battle_ai_util.h"
 #include "battle_util.h"
 #include "battle_move_resolution.h"
@@ -1950,7 +1951,8 @@ static enum CancelerResult CancelerMultihitMoves(struct BattleContext *ctx)
         gMultiHitCounter = 0;
         memset(gBattleStruct->beatUpSpecies, 0xFF, sizeof(gBattleStruct->beatUpSpecies));
 
-        for (i = 0; i < PARTY_SIZE; i++)
+        u8 maxParty = (GetBattlerSide(ctx->battlerAtk) == B_SIDE_PLAYER) ? GetMaxPartySize() : PARTY_SIZE;
+        for (i = 0; i < maxParty; i++)
         {
             u32 species = GetMonData(&party[i], MON_DATA_SPECIES);
             if (species != SPECIES_NONE
