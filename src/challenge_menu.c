@@ -1638,13 +1638,6 @@ static void ProcessLeftRight(void)
             *GetSelectionPtr(TAB_NUZLOCKE, ITEM_NUZLOCKE_RARE_CANDY)     = 1; // OFF
         }
 
-        // Chaos ON — force Similar/Balancing to OFF (sel=1 in inverted ON/OFF display)
-        if (sMenu->currentTab == TAB_RANDOMIZER && itemIndex == ITEM_RANDOM_CHAOS && *sel == 1)
-            *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_SIMILAR) = 1;
-
-        // Mirror OFF — force-clear Mirror Thief
-        if (sMenu->currentTab == TAB_CHALLENGES && itemIndex == ITEM_CHALLENGES_MIRROR && *sel == 0)
-            *GetSelectionPtr(TAB_CHALLENGES, ITEM_CHALLENGES_MIRROR_THIEF) = 0;
 
         PlaySE(SE_SELECT);
         RedrawListMenu(sMenu->listTaskId);
@@ -1781,9 +1774,12 @@ static void Task_Save(u8 taskId)
             cs->tx_Nuzlocke_ShinyClause   = 0;
             cs->tx_Nuzlocke_Nicknaming    = 0;
         }
-        else if (nuzSel == 1) // EASY — only RareCandy is saved
+        else if (nuzSel == 1) // EASY — save RareCandy, clear clauses
         {
-            cs->tx_Nuzlocke_RareCandy = !(*GetSelectionPtr(TAB_NUZLOCKE, ITEM_NUZLOCKE_RARE_CANDY));
+            cs->tx_Nuzlocke_RareCandy     = !(*GetSelectionPtr(TAB_NUZLOCKE, ITEM_NUZLOCKE_RARE_CANDY));
+            cs->tx_Nuzlocke_SpeciesClause = 0;
+            cs->tx_Nuzlocke_ShinyClause   = 0;
+            cs->tx_Nuzlocke_Nicknaming    = 0;
         }
         else // NORMAL or HARD — save all sub-options with polarity inversion
         {
