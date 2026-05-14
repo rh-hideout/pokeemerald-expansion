@@ -165,6 +165,65 @@ struct ChallengeMenuState
 };
 
 static EWRAM_DATA struct ChallengeMenuState *sMenu = NULL;
+static EWRAM_DATA bool8 sIsInitialSetup = FALSE;
+
+// =============================================================================
+// Mid-game lock policies
+// =============================================================================
+
+enum {
+    LOCK_FREE,
+    LOCK_ONEWAY_DOWN,
+    LOCK_FULL,
+};
+
+static const u8 sMidGameLockPolicy[TAB_COUNT * MAX_ITEMS_PER_TAB] = {
+    // TAB_MODE — all free
+    // TAB_FEATURES — all free
+    // TAB_RANDOMIZER
+    [TAB_RANDOMIZER * MAX_ITEMS_PER_TAB + ITEM_RANDOM_OFF_ON]      = LOCK_ONEWAY_DOWN,
+    [TAB_RANDOMIZER * MAX_ITEMS_PER_TAB + ITEM_RANDOM_STARTER]     = LOCK_ONEWAY_DOWN,
+    [TAB_RANDOMIZER * MAX_ITEMS_PER_TAB + ITEM_RANDOM_WILD_PKMN]   = LOCK_ONEWAY_DOWN,
+    [TAB_RANDOMIZER * MAX_ITEMS_PER_TAB + ITEM_RANDOM_TRAINER]     = LOCK_ONEWAY_DOWN,
+    [TAB_RANDOMIZER * MAX_ITEMS_PER_TAB + ITEM_RANDOM_STATIC]      = LOCK_ONEWAY_DOWN,
+    [TAB_RANDOMIZER * MAX_ITEMS_PER_TAB + ITEM_RANDOM_LEGENDARIES] = LOCK_ONEWAY_DOWN,
+    [TAB_RANDOMIZER * MAX_ITEMS_PER_TAB + ITEM_RANDOM_TYPE]        = LOCK_ONEWAY_DOWN,
+    [TAB_RANDOMIZER * MAX_ITEMS_PER_TAB + ITEM_RANDOM_MOVES]       = LOCK_ONEWAY_DOWN,
+    [TAB_RANDOMIZER * MAX_ITEMS_PER_TAB + ITEM_RANDOM_ABILITIES]   = LOCK_ONEWAY_DOWN,
+    [TAB_RANDOMIZER * MAX_ITEMS_PER_TAB + ITEM_RANDOM_EVOLUTIONS]  = LOCK_ONEWAY_DOWN,
+    [TAB_RANDOMIZER * MAX_ITEMS_PER_TAB + ITEM_RANDOM_EVO_METHODS] = LOCK_ONEWAY_DOWN,
+    [TAB_RANDOMIZER * MAX_ITEMS_PER_TAB + ITEM_RANDOM_TYPE_EFFEC]  = LOCK_ONEWAY_DOWN,
+    [TAB_RANDOMIZER * MAX_ITEMS_PER_TAB + ITEM_RANDOM_ITEMS]       = LOCK_ONEWAY_DOWN,
+    [TAB_RANDOMIZER * MAX_ITEMS_PER_TAB + ITEM_RANDOM_CHAOS]       = LOCK_ONEWAY_DOWN,
+    // MAP_BASED and SIMILAR are LOCK_FREE (default 0)
+    // TAB_NUZLOCKE
+    [TAB_NUZLOCKE * MAX_ITEMS_PER_TAB + ITEM_NUZLOCKE_NUZLOCKE]      = LOCK_ONEWAY_DOWN,
+    [TAB_NUZLOCKE * MAX_ITEMS_PER_TAB + ITEM_NUZLOCKE_SPECIES_CLAUSE] = LOCK_ONEWAY_DOWN,
+    [TAB_NUZLOCKE * MAX_ITEMS_PER_TAB + ITEM_NUZLOCKE_SHINY_CLAUSE]   = LOCK_ONEWAY_DOWN,
+    [TAB_NUZLOCKE * MAX_ITEMS_PER_TAB + ITEM_NUZLOCKE_NICKNAMING]     = LOCK_ONEWAY_DOWN,
+    [TAB_NUZLOCKE * MAX_ITEMS_PER_TAB + ITEM_NUZLOCKE_DELETION]       = LOCK_ONEWAY_DOWN,
+    [TAB_NUZLOCKE * MAX_ITEMS_PER_TAB + ITEM_NUZLOCKE_RARE_CANDY]     = LOCK_FULL,
+    // TAB_DIFFICULTY
+    [TAB_DIFFICULTY * MAX_ITEMS_PER_TAB + ITEM_DIFFICULTY_PARTY_LIMIT]    = LOCK_ONEWAY_DOWN,
+    [TAB_DIFFICULTY * MAX_ITEMS_PER_TAB + ITEM_DIFFICULTY_LEVEL_CAP]      = LOCK_ONEWAY_DOWN,
+    [TAB_DIFFICULTY * MAX_ITEMS_PER_TAB + ITEM_DIFFICULTY_EXP_MULTIPLIER] = LOCK_ONEWAY_DOWN,
+    [TAB_DIFFICULTY * MAX_ITEMS_PER_TAB + ITEM_DIFFICULTY_ITEM_PLAYER]    = LOCK_ONEWAY_DOWN,
+    [TAB_DIFFICULTY * MAX_ITEMS_PER_TAB + ITEM_DIFFICULTY_ITEM_TRAINER]   = LOCK_ONEWAY_DOWN,
+    [TAB_DIFFICULTY * MAX_ITEMS_PER_TAB + ITEM_DIFFICULTY_MAX_PARTY_IVS]  = LOCK_ONEWAY_DOWN,
+    [TAB_DIFFICULTY * MAX_ITEMS_PER_TAB + ITEM_DIFFICULTY_SCALING_IVS]    = LOCK_ONEWAY_DOWN,
+    [TAB_DIFFICULTY * MAX_ITEMS_PER_TAB + ITEM_DIFFICULTY_NO_EVS]         = LOCK_ONEWAY_DOWN,
+    [TAB_DIFFICULTY * MAX_ITEMS_PER_TAB + ITEM_DIFFICULTY_SCALING_EVS]    = LOCK_ONEWAY_DOWN,
+    [TAB_DIFFICULTY * MAX_ITEMS_PER_TAB + ITEM_DIFFICULTY_LESS_ESCAPES]   = LOCK_ONEWAY_DOWN,
+    [TAB_DIFFICULTY * MAX_ITEMS_PER_TAB + ITEM_DIFFICULTY_ESCAPE_ROPE_DIG]= LOCK_ONEWAY_DOWN,
+    // TAB_CHALLENGES
+    [TAB_CHALLENGES * MAX_ITEMS_PER_TAB + ITEM_CHALLENGES_POKECENTER]    = LOCK_ONEWAY_DOWN,
+    [TAB_CHALLENGES * MAX_ITEMS_PER_TAB + ITEM_CHALLENGES_EXPENSIVE]     = LOCK_ONEWAY_DOWN,
+    [TAB_CHALLENGES * MAX_ITEMS_PER_TAB + ITEM_CHALLENGES_EVO_LIMIT]     = LOCK_ONEWAY_DOWN,
+    [TAB_CHALLENGES * MAX_ITEMS_PER_TAB + ITEM_CHALLENGES_ONE_TYPE]      = LOCK_ONEWAY_DOWN,
+    [TAB_CHALLENGES * MAX_ITEMS_PER_TAB + ITEM_CHALLENGES_BST_EQUALIZER] = LOCK_ONEWAY_DOWN,
+    [TAB_CHALLENGES * MAX_ITEMS_PER_TAB + ITEM_CHALLENGES_MIRROR]        = LOCK_ONEWAY_DOWN,
+    [TAB_CHALLENGES * MAX_ITEMS_PER_TAB + ITEM_CHALLENGES_MIRROR_THIEF]  = LOCK_ONEWAY_DOWN,
+};
 
 // =============================================================================
 // Window / BG templates
@@ -281,8 +340,9 @@ static const u8 *const sChoices_OriginalModern[] = {
     COMPOUND_STRING("MODERN"),
 };
 
-static const u8 sText_TopBar_Left[]  = _("{L_BUTTON}PREVIOUS");
-static const u8 sText_TopBar_Right[] = _("{R_BUTTON}NEXT");
+static const u8 sText_TopBar_Left[]   = _("{L_BUTTON}PREVIOUS");
+static const u8 sText_TopBar_Right[]  = _("{R_BUTTON}NEXT");
+static const u8 sText_TopBar_Cancel[] = _("{B_BUTTON}CANCEL");
 
 // =============================================================================
 // Tab item tables — skeleton placeholders
@@ -1169,8 +1229,18 @@ static const struct ChallengeMenuItem *GetCurrentTabItems(void)
 // Conditions / presets
 // =============================================================================
 
+static u8 GetLockPolicy(u8 tab, u8 itemIndex)
+{
+    if (sIsInitialSetup)
+        return LOCK_FREE;
+    return sMidGameLockPolicy[tab * MAX_ITEMS_PER_TAB + itemIndex];
+}
+
 static bool8 CheckConditions(u8 tab, u8 itemIndex)
 {
+    if (GetLockPolicy(tab, itemIndex) == LOCK_FULL)
+        return FALSE;
+
     switch (tab)
     {
     case TAB_MODE:
@@ -1537,6 +1607,11 @@ static void DrawTopBar(void)
         AddTextPrinterParameterized3(WIN_TOPBAR, FONT_SMALL, 5, 1, color, 0, sText_TopBar_Left);
     if (sMenu->currentTab < TAB_COUNT - 1)
         AddTextPrinterParameterized3(WIN_TOPBAR, FONT_SMALL, right, 1, color, 0, sText_TopBar_Right);
+    if (!sIsInitialSetup)
+    {
+        int cancelX = (120 + width + right) / 2 - GetStringWidth(FONT_SMALL, sText_TopBar_Cancel, 0) / 2;
+        AddTextPrinterParameterized3(WIN_TOPBAR, FONT_SMALL, cancelX, 1, color, 0, sText_TopBar_Cancel);
+    }
 
     PutWindowTilemap(WIN_TOPBAR);
     CopyWindowToVram(WIN_TOPBAR, COPYWIN_FULL);
@@ -1653,6 +1728,13 @@ static void ProcessLeftRight(void)
             *sel = items[itemIndex].numChoices - 1;
     }
 
+    if (*sel != prev && GetLockPolicy(sMenu->currentTab, itemIndex) == LOCK_ONEWAY_DOWN && *sel > prev)
+    {
+        *sel = prev;
+        PlaySE(SE_FAILURE);
+        return;
+    }
+
     if (*sel != prev)
     {
         // When GAMEMODE changes to RECOMMENDED, apply presets
@@ -1711,8 +1793,18 @@ static void Task_ProcessInput(u8 taskId)
 
     s32 input = ListMenu_ProcessInput(sMenu->listTaskId);
 
-    if (input == LIST_NOTHING_CHOSEN || input == LIST_CANCEL)
+    if (input == LIST_NOTHING_CHOSEN)
         return;
+
+    if (input == LIST_CANCEL)
+    {
+        if (!sIsInitialSetup)
+        {
+            BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+            gTasks[taskId].func = Task_FadeOut;
+        }
+        return;
+    }
 
     if (sMenu->currentTab == TAB_CHALLENGES && (u32)input == ITEM_CHALLENGES_SAVE)
     {
@@ -2080,8 +2172,14 @@ void CB2_InitChallengeMenu(void)
 // Script entry point (for callnative)
 // =============================================================================
 
+void ChallengeMenu_SetInitialSetup(bool8 isInitial)
+{
+    sIsInitialSetup = isInitial;
+}
+
 void Script_OpenChallengeMenu(struct ScriptContext *ctx)
 {
+    sIsInitialSetup = FALSE;
     gMain.savedCallback = CB2_ReturnToFieldWithOpenMenu;
     SetMainCallback2(CB2_InitChallengeMenu);
 }

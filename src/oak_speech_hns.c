@@ -603,6 +603,7 @@ static void Task_NewGameHnsSpeech_FadeOutToChallengeMenu(u8 taskId)
         DestroyTask(taskId);
         memset(&gSaveBlock3Ptr->challengeSettings, 0, sizeof(struct ChallengeSettings));
         SetDefaultChallengeSettings();
+        ChallengeMenu_SetInitialSetup(TRUE);
         gMain.savedCallback = CB2_NewGameHnsSpeech_ReturnFromChallengeMenu;
         SetMainCallback2(CB2_InitChallengeMenu);
     }
