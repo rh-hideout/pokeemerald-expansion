@@ -1535,6 +1535,21 @@ void ItemUseOutOfBattle_Honey(u8 taskId)
     Task_FadeAndCloseBagMenu(taskId);
 }
 
+void ItemUseOutOfBattle_InfiniteRareCandies(u8 taskId)
+{
+    PlaySE(MUS_OBTAIN_ITEM);
+    AddBagItem(ITEM_RARE_CANDY, 999);
+    if (gTasks[taskId].tUsingRegisteredKeyItem)
+    {
+        DisplayItemMessageOnField(taskId, gText_Obtained999RareCandies, Task_CloseCantUseKeyItemMessage);
+    }
+    else
+    {
+        DisplayItemMessage(taskId, FONT_NORMAL, gText_Obtained999RareCandies, CloseItemMessage);
+        UpdatePocketItemList(GetItemPocket(ITEM_RARE_CANDY));
+    }
+}
+
 void ItemUseOutOfBattle_CannotUse(u8 taskId)
 {
     DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
