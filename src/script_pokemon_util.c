@@ -453,7 +453,7 @@ static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, e
             SetMonData(&mon, MON_DATA_HP_EV + i, &evs[i]);
 
         // IV
-        if (ivs[i] <= MAX_PER_STAT_IVS)
+        if (ivs[i] <= MAX_PER_STAT_IVS && gSaveBlock3Ptr->challengeSettings.tx_Challenges_MaxPartyIVs == 0)
             SetMonData(&mon, MON_DATA_HP_IV + i, &ivs[i]);
     }
     CalculateMonStats(&mon);

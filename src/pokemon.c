@@ -1626,6 +1626,24 @@ void SetBoxMonIVs(struct BoxPokemon *mon, u8 fixedIV)
     u32 i, value;
     enum Stat availableIVs[NUM_STATS];
     enum Stat selectedIvs[NUM_STATS];
+    u8 maxPartyIVs = gSaveBlock3Ptr->challengeSettings.tx_Challenges_MaxPartyIVs;
+
+    if (maxPartyIVs == 1)
+    {
+        u32 iv = MAX_PER_STAT_IVS;
+        for (i = 0; i < NUM_STATS; i++)
+            SetBoxMonData(mon, MON_DATA_HP_IV + i, &iv);
+        return;
+    }
+    else if (maxPartyIVs == 2)
+    {
+        for (i = 0; i < NUM_STATS; i++)
+        {
+            u32 iv = 30 + (Random() % 2);
+            SetBoxMonData(mon, MON_DATA_HP_IV + i, &iv);
+        }
+        return;
+    }
 
     if (fixedIV < USE_RANDOM_IVS)
     {
