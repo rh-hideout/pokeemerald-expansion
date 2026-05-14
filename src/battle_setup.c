@@ -56,6 +56,7 @@
 #include "constants/trainer_hill.h"
 #include "constants/weather.h"
 #include "fishing.h"
+#include "nuzlocke.h"
 
 enum TransitionType
 {
@@ -331,6 +332,7 @@ static bool8 CheckSilphScopeInPokemonTower(u16 mapGroup, u16 mapNum)
 
 void BattleSetup_StartWildBattle(void)
 {
+    SetNuzlockeChecks();
     if (GetSafariZoneFlag())
         DoSafariBattle();
     else if (GetBugContestFlag())

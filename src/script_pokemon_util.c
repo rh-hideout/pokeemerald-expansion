@@ -22,6 +22,7 @@
 #include "pokemon_storage_system.h"
 #include "random.h"
 #include "randomizer.h"
+#include "nuzlocke.h"
 #include "script.h"
 #include "sprite.h"
 #include "string_util.h"
@@ -48,18 +49,29 @@ void HealPlayerParty(void)
         FlagSet(B_FLAG_TERA_ORB_CHARGED);
 }
 
+static bool8 IsBoxMonDead(u8 boxId, u8 boxPosition)
+{
+    struct Pokemon tempMon;
+    BoxMonAtToMon(boxId, boxPosition, &tempMon);
+    return GetMonData(&tempMon, MON_DATA_HP, NULL) == 0;
+}
+
 static void HealPlayerBoxes(void)
 {
     int boxId, boxPosition;
     struct BoxPokemon *boxMon;
+    bool8 nuzlocke = IsNuzlockeActive() || gSaveBlock3Ptr->challengeSettings.tx_Nuzlocke_EasyMode;
 
     for (boxId = 0; boxId < TOTAL_BOXES_COUNT; boxId++)
     {
         for (boxPosition = 0; boxPosition < IN_BOX_COUNT; boxPosition++)
         {
             boxMon = &gPokemonStoragePtr->boxes[boxId][boxPosition];
-            if (GetBoxMonData(boxMon, MON_DATA_SANITY_HAS_SPECIES))
-                HealBoxPokemon(boxMon);
+            if (!GetBoxMonData(boxMon, MON_DATA_SANITY_HAS_SPECIES))
+                continue;
+            if (nuzlocke && IsBoxMonDead(boxId, boxPosition))
+                continue;
+            HealBoxPokemon(boxMon);
         }
     }
 }
@@ -173,7 +185,7 @@ void CreateShinyScriptedMon(u16 species, u8 level, enum Item item)
         heldItem[1] = item >> 8;
         SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM, heldItem);
     }
-    // TODO: SetNuzlockeChecks(); (needs tx_Challenges_Nuzlocke SaveBlock field)
+    SetNuzlockeChecks();
 }
 
 void CreateScriptedDoubleWildMon(u16 species1, u8 level1, enum Item item1, u16 species2, u8 level2, enum Item item2)

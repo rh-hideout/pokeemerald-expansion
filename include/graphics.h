@@ -2166,6 +2166,7 @@ extern const u16 gBattleInterface_BallDisplayPalGen4[];
 extern const u16 gBattleInterface_BallDisplayPalGen3[];
 extern const u8 gHealthboxElementsGfxTableGen4[][32];
 extern const u8 gHealthboxElementsGfxTableGen3[][32];
+extern const u32 gNuzlockeFirstEncounterIndicatorGfx[];
 
 extern const u16 gNamingScreenMenu_Pal[6][16];
 extern const u32 gNamingScreenMenu_Gfx[];

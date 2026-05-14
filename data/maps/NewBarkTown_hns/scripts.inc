@@ -172,6 +172,7 @@ NewBarkTown_EventScript_TestMan2::
 	setvar VAR_NEWBARK_TOWN_STATE, 4
 	setflag FLAG_HIDE_MOMS_FRIEND
 	setflag FLAG_ADVENTURE_STARTED
+	setflag FLAG_START_NUZLOCKE
 	setflag FLAG_HIDE_SILVER_NEWBARKTOWN
 	end
 

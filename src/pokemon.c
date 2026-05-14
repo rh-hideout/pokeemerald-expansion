@@ -43,6 +43,7 @@
 #include "pokerus.h"
 #include "random.h"
 #include "randomizer.h"
+#include "nuzlocke.h"
 #include "recorded_battle.h"
 #include "regions.h"
 #include "rtc.h"
@@ -2061,6 +2062,7 @@ void CreateEnemyEventMon(void)
         heldItem[1] = itemId >> 8;
         SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM, heldItem);
     }
+    SetNuzlockeChecks();
 }
 
 static u16 CalculateBoxMonChecksum(struct BoxPokemon *boxMon)

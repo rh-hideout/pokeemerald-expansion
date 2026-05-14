@@ -47,6 +47,7 @@
 #include "constants/item_effects.h"
 #include "constants/items.h"
 #include "constants/songs.h"
+#include "nuzlocke.h"
 
 static void SetUpItemUseCallback(u8);
 static void FieldCB_UseItemOnField(void);
@@ -1153,6 +1154,12 @@ static u32 GetBallThrowableState(void)
         return BALL_THROW_UNABLE_SEMI_INVULNERABLE;
     else if (FlagGet(B_FLAG_NO_CATCHING) || !IsAllowedToUseBag())
         return BALL_THROW_UNABLE_DISABLED_FLAG;
+    else if (NuzlockeIsCaptureBlocked)
+        return BALL_THROW_UNABLE_NUZLOCKE_ZONE;
+    else if (NuzlockeIsSpeciesClauseActive == 2)
+        return BALL_THROW_UNABLE_NUZLOCKE_ALREADY_CAUGHT;
+    else if (NuzlockeIsSpeciesClauseActive)
+        return BALL_THROW_UNABLE_NUZLOCKE_SPECIES;
 
     return BALL_THROW_ABLE;
 }
@@ -1165,6 +1172,9 @@ bool32 CanThrowBall(void)
 static const u8 sText_CantThrowPokeBall_TwoMons[] = _("Cannot throw a ball!\nThere are two Pokémon out there!\p");
 static const u8 sText_CantThrowPokeBall_SemiInvulnerable[] = _("Cannot throw a ball!\nThere's no Pokémon in sight!\p");
 static const u8 sText_CantThrowPokeBall_Disabled[] = _("POKé BALLS cannot be used\nright now!\p");
+static const u8 sText_CantThrowPokeBall_NuzlockeZone[] = _("You already used your\nencounter for this area!\p");
+static const u8 sText_CantThrowPokeBall_NuzlockeSpecies[] = _("Species Clause: a POKéMON in\nthis evolution line was caught!\p");
+static const u8 sText_CantThrowPokeBall_NuzlockeAlreadyCaught[] = _("You have already caught\nthis POKéMON!\p");
 void ItemUseInBattle_PokeBall(u8 taskId)
 {
     switch (GetBallThrowableState())
@@ -1200,6 +1210,15 @@ void ItemUseInBattle_PokeBall(u8 taskId)
             DisplayItemMessage(taskId, FONT_NORMAL, sText_CantThrowPokeBall_Disabled, CloseItemMessage);
         else
             DisplayItemMessageInBattlePyramid(taskId, sText_CantThrowPokeBall_Disabled, Task_CloseBattlePyramidBagMessage);
+        break;
+    case BALL_THROW_UNABLE_NUZLOCKE_ZONE:
+        DisplayItemMessage(taskId, FONT_NORMAL, sText_CantThrowPokeBall_NuzlockeZone, CloseItemMessage);
+        break;
+    case BALL_THROW_UNABLE_NUZLOCKE_ALREADY_CAUGHT:
+        DisplayItemMessage(taskId, FONT_NORMAL, sText_CantThrowPokeBall_NuzlockeAlreadyCaught, CloseItemMessage);
+        break;
+    case BALL_THROW_UNABLE_NUZLOCKE_SPECIES:
+        DisplayItemMessage(taskId, FONT_NORMAL, sText_CantThrowPokeBall_NuzlockeSpecies, CloseItemMessage);
         break;
     }
 }
@@ -1317,6 +1336,18 @@ bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon)
             failStr = sText_CantThrowPokeBall_Disabled;
             cannotUse = TRUE;
             break;
+        case BALL_THROW_UNABLE_NUZLOCKE_ZONE:
+            failStr = sText_CantThrowPokeBall_NuzlockeZone;
+            cannotUse = TRUE;
+            break;
+        case BALL_THROW_UNABLE_NUZLOCKE_ALREADY_CAUGHT:
+            failStr = sText_CantThrowPokeBall_NuzlockeAlreadyCaught;
+            cannotUse = TRUE;
+            break;
+        case BALL_THROW_UNABLE_NUZLOCKE_SPECIES:
+            failStr = sText_CantThrowPokeBall_NuzlockeSpecies;
+            cannotUse = TRUE;
+            break;
         }
         break;
     case EFFECT_ITEM_INCREASE_ALL_STATS:
@@ -1354,6 +1385,8 @@ bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon)
         break;
     case EFFECT_ITEM_REVIVE:
         if (hp != 0)
+            cannotUse = TRUE;
+        if (IsNuzlockeActive())
             cannotUse = TRUE;
         break;
     case EFFECT_ITEM_RESTORE_PP:

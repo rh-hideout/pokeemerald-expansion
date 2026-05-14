@@ -46,6 +46,7 @@
 #include "constants/pokemon_icon.h"
 #include "chooseboxmon.h"
 #include "party_menu.h"
+#include "nuzlocke.h"
 
 /*
     NOTE: This file is large. Some general groups of functions have
@@ -109,6 +110,7 @@ enum {
     MSG_ITEM_IS_HELD,
     MSG_CHANGED_TO_ITEM,
     MSG_CANT_STORE_MAIL,
+    MSG_NUZLOCKE_FAINTED,
 };
 
 // IDs for how to resolve variables in the above messages
@@ -642,7 +644,7 @@ static void PlaceMon(void);
 static void RefreshDisplayMon(void);
 static void SetMovingMonData(u8, u8);
 static void SetPlacedMonData(u8, u8);
-static void PurgeMonOrBoxMon(u8, u8);
+void PurgeMonOrBoxMon(u8, u8);
 static void SetShiftedMonData(u8, u8);
 static bool8 TryStorePartyMonInBox(u8);
 static void ResetSelectionAfterDeposit(void);
@@ -1078,7 +1080,32 @@ static const struct StorageMessage sMessages[] =
     [MSG_ITEM_IS_HELD]         = {COMPOUND_STRING("{DYNAMIC 0} is now held."),   MSG_VAR_ITEM_NAME},
     [MSG_CHANGED_TO_ITEM]      = {COMPOUND_STRING("Changed to {DYNAMIC 0}."),    MSG_VAR_ITEM_NAME},
     [MSG_CANT_STORE_MAIL]      = {COMPOUND_STRING("MAIL can't be stored!"),      MSG_VAR_NONE},
+    [MSG_NUZLOCKE_FAINTED]     = {COMPOUND_STRING("This POKéMON has fainted\nin Nuzlocke mode!"),       MSG_VAR_NONE},
 };
+
+static bool8 IsBoxMonNuzlockeDead(u8 boxId, u8 position)
+{
+    struct Pokemon tempMon;
+    struct ChallengeSettings *cs = &gSaveBlock3Ptr->challengeSettings;
+
+    if (!cs->tx_Challenges_Nuzlocke && !cs->tx_Nuzlocke_EasyMode)
+        return FALSE;
+
+    BoxMonAtToMon(boxId, position, &tempMon);
+    return GetMonData(&tempMon, MON_DATA_HP, NULL) == 0;
+}
+
+static bool8 IsMovingMonNuzlockeDead(void)
+{
+    struct ChallengeSettings *cs = &gSaveBlock3Ptr->challengeSettings;
+
+    if (!cs->tx_Challenges_Nuzlocke && !cs->tx_Nuzlocke_EasyMode)
+        return FALSE;
+    if (!sIsMonBeingMoved)
+        return FALSE;
+
+    return GetMonData(&sStorage->movingMon, MON_DATA_HP, NULL) == 0;
+}
 
 static const struct WindowTemplate sYesNoWindowTemplate =
 {
@@ -2599,6 +2626,11 @@ static void Task_OnSelectedMon(u8 taskId)
             }
             break;
         case MENU_PLACE:
+            if (sIsMonBeingMoved && sCursorArea == CURSOR_AREA_IN_PARTY && IsMovingMonNuzlockeDead())
+            {
+                sStorage->state = 7;
+                break;
+            }
             PlaySE(SE_SELECT);
             ClearBottomWindow();
             SetPokeStorageTask(Task_PlaceMon);
@@ -2607,6 +2639,10 @@ static void Task_OnSelectedMon(u8 taskId)
             if (!CanShiftMon())
             {
                 sStorage->state = 3;
+            }
+            else if (sIsMonBeingMoved && sCursorArea == CURSOR_AREA_IN_PARTY && IsMovingMonNuzlockeDead())
+            {
+                sStorage->state = 7;
             }
             else
             {
@@ -2729,6 +2765,11 @@ static void Task_OnSelectedMon(u8 taskId)
             SetPokeStorageTask(Task_PokeStorageMain);
         }
         break;
+    case 7:
+        PlaySE(SE_FAILURE);
+        PrintMessage(MSG_NUZLOCKE_FAINTED);
+        sStorage->state = 6;
+        break;
     }
 }
 
@@ -2798,6 +2839,11 @@ static void Task_WithdrawMon(u8 taskId)
         if (CalculatePlayerPartyCount() == PARTY_SIZE)
         {
             PrintMessage(MSG_PARTY_FULL);
+            sStorage->state = 1;
+        }
+        else if (IsBoxMonNuzlockeDead(StorageGetCurrentBox(), sCursorPosition))
+        {
+            PrintMessage(MSG_NUZLOCKE_FAINTED);
             sStorage->state = 1;
         }
         else
@@ -6436,7 +6482,7 @@ static void SetPlacedMonData(u8 boxId, u8 position)
     }
 }
 
-static void PurgeMonOrBoxMon(u8 boxId, u8 position)
+void PurgeMonOrBoxMon(u8 boxId, u8 position)
 {
     if (boxId == TOTAL_BOXES_COUNT)
         ZeroMonData(&gPlayerParty[position]);
@@ -10126,4 +10172,35 @@ s32 StorePokemonInBox(struct BoxPokemon *src, u8 *boxId, u8 *position)
     }
 
     return -1;
+}
+
+u16 GetFirstAliveBoxPokemon(void)
+{
+    u16 i, j;
+
+    for (i = 0; i < TOTAL_BOXES_COUNT; i++)
+    {
+        for (j = 0; j < IN_BOX_COUNT; j++)
+        {
+            if (GetBoxMonData(&gPokemonStoragePtr->boxes[i][j], MON_DATA_SPECIES) != SPECIES_NONE
+                && !GetBoxMonData(&gPokemonStoragePtr->boxes[i][j], MON_DATA_IS_EGG)
+                && !IsBoxMonNuzlockeDead(i, j))
+            {
+                return (i * IN_BOX_COUNT) + j;
+            }
+        }
+    }
+    return IN_BOX_COUNT * TOTAL_BOXES_COUNT;
+}
+
+void MoveFirstBoxPokemonToParty(void)
+{
+    u16 position = GetFirstAliveBoxPokemon();
+    if (position != IN_BOX_COUNT * TOTAL_BOXES_COUNT)
+    {
+        u16 boxNum = position / IN_BOX_COUNT;
+        u16 boxIndex = position - (boxNum * IN_BOX_COUNT);
+        BoxMonAtToMon(boxNum, boxIndex, &gPlayerParty[0]);
+        PurgeMonOrBoxMon(boxNum, boxIndex);
+    }
 }

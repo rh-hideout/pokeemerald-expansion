@@ -44,6 +44,7 @@
 #include "pokemon_storage_system.h"
 #include "random.h"
 #include "randomizer.h"
+#include "nuzlocke.h"
 #include "overworld.h"
 #include "rotating_tile_puzzle.h"
 #include "rtc.h"
@@ -1894,10 +1895,9 @@ bool8 ScrCmd_buffermoncategory(struct ScriptContext *ctx)
     return FALSE;
 }
 
-// HnS stub — TODO: implement with tx_Challenges_Nuzlocke SaveBlock field
 bool8 ScrCmd_checknuzlocke(struct ScriptContext *ctx)
 {
-    gSpecialVar_Result = FALSE;
+    gSpecialVar_Result = IsNuzlockeActive();
     return FALSE;
 }
 

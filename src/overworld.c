@@ -81,6 +81,8 @@
 #include "constants/songs.h"
 #include "constants/trainer_hill.h"
 #include "constants/weather.h"
+#include "nuzlocke.h"
+#include "pokemon_storage_system.h"
 
 STATIC_ASSERT((B_FLAG_FOLLOWERS_DISABLED == 0 || OW_FOLLOWERS_ENABLED), FollowersFlagAssignedWithoutEnablingThem);
 
@@ -390,6 +392,20 @@ static void (*const sMovementStatusHandler[])(struct LinkPlayerObjectEvent *, st
 // code
 void DoWhiteOut(void)
 {
+    if (IsNuzlockeActive() || gSaveBlock3Ptr->challengeSettings.tx_Nuzlocke_EasyMode)
+    {
+        if (GetFirstAliveBoxPokemon() == IN_BOX_COUNT * TOTAL_BOXES_COUNT)
+        {
+            ZeroPlayerPartyMons();
+            CreateMon(&gPlayerParty[0], SPECIES_RATTATA, 1, 0, OTID_STRUCT_PLAYER_ID);
+            CalculateMonStats(&gPlayerParty[0]);
+            gPlayerPartyCount = 1;
+        }
+        else
+        {
+            MoveFirstBoxPokemonToParty();
+        }
+    }
     RunScriptImmediately(EventScript_WhiteOut);
     HealPlayerParty();
     Overworld_ResetStateAfterWhiteOut();
@@ -1908,6 +1924,11 @@ void CB2_WhiteOut(void)
     {
         FieldClearVBlankHBlankCallbacks();
         StopMapMusic();
+        if (gSaveBlock3Ptr->challengeSettings.tx_Challenges_NuzlockeHardcore && !FlagGet(FLAG_END_NUZLOCKE))
+        {
+            ClearSaveData();
+            DoSoftReset();
+        }
         ResetSafariZoneFlag_();
         DoWhiteOut();
         ResetInitialPlayerAvatarState();
@@ -1934,12 +1955,11 @@ void CB2_BugContestWhiteOut(void)
     {
         FieldClearVBlankHBlankCallbacks();
         StopMapMusic();
-        // TODO: needs tx_Challenges_NuzlockeHardcore SaveBlock field
-        // if (gSaveBlock1Ptr->tx_Challenges_NuzlockeHardcore && !FlagGet(FLAG_DEFEATED_RED))
-        // {
-        //     ClearSaveData();
-        //     DoSoftReset();
-        // }
+        if (gSaveBlock3Ptr->challengeSettings.tx_Challenges_NuzlockeHardcore && !FlagGet(FLAG_END_NUZLOCKE))
+        {
+            ClearSaveData();
+            DoSoftReset();
+        }
         ResetSafariZoneFlag_();
         ResetInitialPlayerAvatarState();
         ScriptContext_Init();

@@ -43,6 +43,7 @@ MtSilver_SummitDay_EventScript_Red::
 	delay 180
 	fadescreenspeed FADE_TO_BLACK, 24
 	setflag FLAG_DEFEATED_RED
+	setflag FLAG_END_NUZLOCKE
 	clearflag FLAG_HIDE_MTSILVER_RED
 	special GameClear
 	waitstate

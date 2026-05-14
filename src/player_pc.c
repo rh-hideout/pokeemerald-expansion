@@ -366,6 +366,9 @@ void NewGameInitPCItems(void)
             break;
         i++;
     }
+
+    if (gSaveBlock3Ptr->challengeSettings.tx_Nuzlocke_RareCandy)
+        AddPCItem(ITEM_INFINITE_RARE_CANDIES, 1);
 }
 
 void BedroomPC(void)

@@ -1353,8 +1353,15 @@ Common_EventScript_RecieveMonParty::
 	message Common_Text_ReceivedMon
 	waitmessage
 	waitfanfare
+	specialvar VAR_RESULT, IsNuzlockeNicknamingActive
+	goto_if_eq VAR_RESULT, TRUE, Common_EventScript_ForceNameReceivedPartyMon
 	msgbox gText_NicknameThisPokemon, MSGBOX_YESNO
 	call_if_eq VAR_RESULT, TRUE, Common_EventScript_NameReceivedPartyMonFull
+	setvar VAR_RESULT, 0
+	return
+
+Common_EventScript_ForceNameReceivedPartyMon::
+	call Common_EventScript_NameReceivedPartyMonFull
 	setvar VAR_RESULT, 0
 	return
 
@@ -1363,8 +1370,15 @@ Common_EventScript_ReceiveMonPC::
 	message Common_Text_ReceivedMon
 	waitmessage
 	waitfanfare
+	specialvar VAR_RESULT, IsNuzlockeNicknamingActive
+	goto_if_eq VAR_RESULT, TRUE, Common_EventScript_ForceNameReceivedBoxMon
 	msgbox gText_NicknameThisPokemon, MSGBOX_YESNO
 	call_if_eq VAR_RESULT, TRUE, Common_EventScript_NameReceivedBoxMon
+	call Common_EventScript_TransferredToPC
+	return
+
+Common_EventScript_ForceNameReceivedBoxMon::
+	call Common_EventScript_NameReceivedBoxMon
 	call Common_EventScript_TransferredToPC
 	return
 	

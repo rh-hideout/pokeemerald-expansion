@@ -39,6 +39,7 @@
 #include "constants/rgb.h"
 #include "party_menu.h"
 #include "randomizer.h"
+#include "nuzlocke.h"
 
 #define GFXTAG_EGG       12345
 #define GFXTAG_EGG_SHARD 23456
@@ -476,6 +477,8 @@ static void VBlankCB_EggHatch(void)
 
 void EggHatch(void)
 {
+    if (IsNuzlockeActive())
+        NuzlockeFlagSet(NuzlockeGetCurrentRegionMapSectionId());
     LockPlayerFieldControls();
     CreateTask(Task_EggHatch, 10);
     FadeScreen(FADE_TO_BLACK, 0);
@@ -707,8 +710,11 @@ static void CB2_EggHatch(void)
     case 8:
         // Ready the nickname prompt
         GetMonNickname(&gPlayerParty[sEggHatchData->eggPartyId], gStringVar1);
-        StringExpandPlaceholders(gStringVar4, gText_NicknameHatchPrompt);
-        EggHatchPrintMessage(sEggHatchData->windowId, gStringVar4, 0, 2, 1);
+        if (!IsNuzlockeNicknamingActive())
+        {
+            StringExpandPlaceholders(gStringVar4, gText_NicknameHatchPrompt);
+            EggHatchPrintMessage(sEggHatchData->windowId, gStringVar4, 0, 2, 1);
+        }
         sEggHatchData->state++;
         break;
     case 9:
@@ -716,25 +722,37 @@ static void CB2_EggHatch(void)
         if (!IsTextPrinterActiveOnWindow(sEggHatchData->windowId))
         {
             LoadUserWindowBorderGfx(sEggHatchData->windowId, 0x140, BG_PLTT_ID(14));
-            CreateYesNoMenu(&sYesNoWinTemplate, 0x140, 0xE, 0);
+            if (!IsNuzlockeNicknamingActive())
+                CreateYesNoMenu(&sYesNoWinTemplate, 0x140, 0xE, 0);
             sEggHatchData->state++;
         }
         break;
     case 10:
-        // Handle the nickname prompt input
-        switch (Menu_ProcessInputNoWrapClearOnChoose())
+        if (IsNuzlockeNicknamingActive())
         {
-        case 0: // Yes
             GetMonNickname(&gPlayerParty[sEggHatchData->eggPartyId], gStringVar3);
             species = GetMonData(&gPlayerParty[sEggHatchData->eggPartyId], MON_DATA_SPECIES);
             gender = GetMonGender(&gPlayerParty[sEggHatchData->eggPartyId]);
             personality = GetMonData(&gPlayerParty[sEggHatchData->eggPartyId], MON_DATA_PERSONALITY, 0);
             DoNamingScreen(NAMING_SCREEN_NICKNAME, gStringVar3, species, gender, personality, EggHatchSetMonNickname);
-            break;
-        case 1: // No
-        case MENU_B_PRESSED:
-            sEggHatchData->state++;
-            break;
+        }
+        else
+        {
+            // Handle the nickname prompt input
+            switch (Menu_ProcessInputNoWrapClearOnChoose())
+            {
+            case 0: // Yes
+                GetMonNickname(&gPlayerParty[sEggHatchData->eggPartyId], gStringVar3);
+                species = GetMonData(&gPlayerParty[sEggHatchData->eggPartyId], MON_DATA_SPECIES);
+                gender = GetMonGender(&gPlayerParty[sEggHatchData->eggPartyId]);
+                personality = GetMonData(&gPlayerParty[sEggHatchData->eggPartyId], MON_DATA_PERSONALITY, 0);
+                DoNamingScreen(NAMING_SCREEN_NICKNAME, gStringVar3, species, gender, personality, EggHatchSetMonNickname);
+                break;
+            case 1: // No
+            case MENU_B_PRESSED:
+                sEggHatchData->state++;
+                break;
+            }
         }
         break;
     case 11:

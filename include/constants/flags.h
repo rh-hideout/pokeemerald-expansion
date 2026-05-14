@@ -2446,7 +2446,9 @@
 #define NUM_ENGINE_FLAGS                        32
 #define FLAG_EVEN_FASTER_JOY                    (ENGINE_FLAGS_START + 0)
 #define FLAG_MINTS_DISABLED                     (ENGINE_FLAGS_START + 1)
-#define FLAG_RECEIVED_FIRST_BALLS               (ENGINE_FLAGS_START + 1)
+#define FLAG_RECEIVED_FIRST_BALLS               (ENGINE_FLAGS_START + 2)
+#define FLAG_START_NUZLOCKE                     (ENGINE_FLAGS_START + 3)
+#define FLAG_END_NUZLOCKE                       (ENGINE_FLAGS_START + 4)
 #define ENGINE_FLAGS_END                        (ENGINE_FLAGS_START + NUM_ENGINE_FLAGS - 1)
 
 #define FLAGS_COUNT (ENGINE_FLAGS_END + 1)
