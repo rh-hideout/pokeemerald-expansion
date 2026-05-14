@@ -5451,6 +5451,26 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
     return TRUE;
 }
 
+static bool32 IsSpeciesAlreadyEvolved(u32 species)
+{
+    u32 j;
+    for (j = 1; j < NUM_SPECIES; j++)
+    {
+        if (!IsSpeciesEnabled(j))
+            continue;
+        const struct Evolution *evos = GetSpeciesEvolutions(j);
+        if (evos == NULL)
+            continue;
+        int k;
+        for (k = 0; evos[k].method != EVOLUTIONS_END; k++)
+        {
+            if (SanitizeSpeciesId(evos[k].targetSpecies) == species)
+                return TRUE;
+        }
+    }
+    return FALSE;
+}
+
 u32 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 evolutionItem, struct Pokemon *tradePartner, bool32 *canStopEvo, enum EvoState evoState)
 {
     int i;
@@ -5460,6 +5480,12 @@ u32 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 
     u32 level = GetMonData(mon, MON_DATA_LEVEL, 0);
     enum HoldEffect holdEffect;
     const struct Evolution *evolutions;
+
+    u8 evoLimit = gSaveBlock3Ptr->challengeSettings.tx_Challenges_EvoLimit;
+    if (evoLimit == 2)
+        return SPECIES_NONE;
+    if (evoLimit == 1 && IsSpeciesAlreadyEvolved(species))
+        return SPECIES_NONE;
 
 #if RANDOMIZER_AVAILABLE
     if (RandomizerFeatureEnabled(RANDOMIZE_EVO_METHODS))
