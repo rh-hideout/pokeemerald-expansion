@@ -1,1 +1,19 @@
-mapscripts ow_Kolchavi_PokemonCenter_MapScripts {}
+mapscripts ow_Kolchavi_PokemonCenter_MapScripts {
+    MAP_SCRIPT_ON_TRANSITION {
+        setrespawn(HEAL_LOCATION_KOLCHAVI)
+        end
+    }
+    MAP_SCRIPT_ON_RESUME {
+        call(CableClub_OnResume)
+        end
+    }
+}
+
+script ow_Kolchavi_PokemonCenter_Nurse {
+    setvar(VAR_0x800B, LOCALID_KOLCHAVI_NURSE)
+	call(Common_EventScript_PkmnCenterNurse)
+	waitmessage
+	waitbuttonpress
+	release
+	end
+}

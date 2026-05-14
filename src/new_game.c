@@ -246,6 +246,8 @@ void NewGameInitData(void)
     ClearFollowerNPCData();
     QuestMenu_ResetMenuSaveData();
     FlagSet(FLAG_SYS_QUEST_MENU_GET);
+    FlagSet(FLAG_HIDE_SOWBACK_B1F_NADIA);
+    FlagSet(FLAG_HIDE_KOLCHAVI_LAB_2F_NADIA);
 
     // Set Nuzlocke flag if it was selected during Birch's speech
     if (WasNuzlockeModeSelected())

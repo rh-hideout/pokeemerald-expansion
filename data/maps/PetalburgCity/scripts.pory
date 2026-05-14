@@ -764,23 +764,23 @@ PetalburgCity_Text_ImLookingForTalentedTrainers:
 PetalburgCity_EventScript_ExampleQuestNpc::
 	lock
 	faceplayer
-	goto_if_quest_complete QUEST_1, PetalburgCity_EventScript_ExampleQuestDone
-	goto_if_quest_reward QUEST_1, PetalburgCity_EventScript_ExampleQuestReward
-	goto_if_quest_active QUEST_1, PetalburgCity_EventScript_ExampleQuestActive
+	goto_if_quest_complete QUEST_ZELKOVA, PetalburgCity_EventScript_ExampleQuestDone
+	goto_if_quest_reward QUEST_ZELKOVA, PetalburgCity_EventScript_ExampleQuestReward
+	goto_if_quest_active QUEST_ZELKOVA, PetalburgCity_EventScript_ExampleQuestActive
 	msgbox PetalburgCity_Text_ExampleQuestStart, MSGBOX_DEFAULT
-	startquest QUEST_1
+	startquest QUEST_ZELKOVA
 	release
 	end
 
 PetalburgCity_EventScript_ExampleQuestActive::
 	msgbox PetalburgCity_Text_ExampleQuestActive, MSGBOX_DEFAULT
-	questmenu QUEST_MENU_SET_REWARD, QUEST_1
+	questmenu QUEST_MENU_SET_REWARD, QUEST_ZELKOVA
 	release
 	end
 
 PetalburgCity_EventScript_ExampleQuestReward::
 	msgbox PetalburgCity_Text_ExampleQuestReward, MSGBOX_DEFAULT
-	completequest QUEST_1
+	completequest QUEST_ZELKOVA
 	release
 	end
 

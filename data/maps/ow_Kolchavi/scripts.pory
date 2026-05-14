@@ -114,8 +114,26 @@ script ow_Kolchavi_EventScript_Fisherman {
 script ow_Kolchavi_EventScript_Researcher {
     lock
     faceplayer
+    goto_if_quest_complete(QUEST_ZELKOVA, ow_Kolchavi_EventScript_Researcher_PostQuest)
+    goto_if_quest_active(QUEST_ZELKOVA, ow_Kolchavi_EventScript_Researcher_Active)
     setspeaker("Researcher")
-    msgbox(format("Professor Zelkova hasn't reviewed my coastal survey notes yet. Three weeks. I can't start the eastern caves without her sign-off."))
+    msgbox(format("Professor Zelkova hasn't reviewed my coastal survey notes yet. Three weeks. I can't start the eastern caves without her sign-off.\pShe's up in the lab -- second floor. If you're new to Kolchavi, it's worth the introduction. Her work is unlike anything else going on in this region."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+script ow_Kolchavi_EventScript_Researcher_Active {
+    setspeaker("Researcher")
+    msgbox(format("Zelkova's assistant Nadia has been in the Route 6 cave for days. Nobody seems worried except me.\pApparently this is normal."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+script ow_Kolchavi_EventScript_Researcher_PostQuest {
+    setspeaker("Researcher")
+    msgbox(format("Professor Zelkova finally reviewed my coastal survey notes. She had seventeen questions and no corrections.\pI'll take it."))
     setspeaker(NULL)
     release
     end

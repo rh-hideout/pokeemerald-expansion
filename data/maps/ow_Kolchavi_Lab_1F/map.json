@@ -15,86 +15,92 @@
   "connections": null,
   "object_events": [
     {
-      "graphics_id": "OBJ_EVENT_GFX_BRENDAN_NORMAL",
+      "local_id": "LOCALID_KOLCHAVI_LAB_1F_GREETER",
+      "graphics_id": "OBJ_EVENT_GFX_LINK_RECEPTIONIST",
       "x": 15,
       "y": 11,
       "elevation": 0,
-      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "ow_Kolchavi_Lab_1F_EventScript_Greeter",
       "flag": "0",
       "notes": "greeter/front attendant at the lab/museum"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BRENDAN_NORMAL",
+      "local_id": "LOCALID_KOLCHAVI_LAB_1F_COUNTER",
+      "graphics_id": "OBJ_EVENT_GFX_WOMAN_3",
       "x": 8,
       "y": 11,
       "elevation": 0,
-      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "ow_Kolchavi_Lab_1F_EventScript_Counter",
       "flag": "0",
       "notes": "attendant behind the counter who gives the player slightly "
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BRENDAN_NORMAL",
+      "local_id": "LOCALID_KOLCHAVI_LAB_1F_POKEBALL_VIEWER",
+      "graphics_id": "OBJ_EVENT_GFX_GENTLEMAN",
       "x": 8,
       "y": 5,
       "elevation": 0,
-      "movement_type": "MOVEMENT_TYPE_NONE",
-      "movement_range_x": 0,
-      "movement_range_y": 0,
+      "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+      "movement_range_x": 1,
+      "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "ow_Kolchavi_Lab_1F_EventScript_PokeballViewer",
       "flag": "0",
       "notes": "npc looking at the pokeball artefact and commenting on how technology has evolved since the rudimentary pokeballs from hundreds of years ago"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BRENDAN_NORMAL",
+      "local_id": "LOCALID_KOLCHAVI_LAB_1F_FOSSIL_CHILD",
+      "graphics_id": "OBJ_EVENT_GFX_LITTLE_BOY",
       "x": 19,
       "y": 8,
       "elevation": 0,
-      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "ow_Kolchavi_Lab_1F_EventScript_FossilChild",
       "flag": "0",
       "notes": "a child looking at the preserved fossil (north of this npc), standing next to his parent. make this somewhat humourous."
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BRENDAN_NORMAL",
+      "local_id": "LOCALID_KOLCHAVI_LAB_1F_FOSSIL_PARENT",
+      "graphics_id": "OBJ_EVENT_GFX_WOMAN_1",
       "x": 18,
       "y": 8,
       "elevation": 0,
-      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "ow_Kolchavi_Lab_1F_EventScript_FossilParent",
       "flag": "0",
       "notes": "a parent looking at the preserved fossil (north of this npc), standing next to his child. make this somewhat humourous."
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BRENDAN_NORMAL",
+      "local_id": "LOCALID_KOLCHAVI_LAB_1F_UPSTAIRS_HINT",
+      "graphics_id": "OBJ_EVENT_GFX_WOMAN_3",
       "x": 11,
       "y": 2,
       "elevation": 0,
-      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "ow_Kolchavi_Lab_1F_EventScript_UpstairsHint",
       "flag": "0",
       "notes": "a woman commenting that the professor shows some of her research publicly below, but the real interesting stuff happens upstairs"
     }
@@ -130,7 +136,7 @@
       "y": 4,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "NULL",
+      "script": "ow_Kolchavi_Lab_1F_Sign_PokeballArtefact",
       "note": "a sign describing an early version of a pokeball, preserved from sinteri. the professor thinks this is about 400 years old."
     },
     {
@@ -139,7 +145,7 @@
       "y": 4,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "NULL",
+      "script": "ow_Kolchavi_Lab_1F_Sign_PokeballArtefact",
       "note": "a sign describing an early version of a pokeball, preserved from sinteri. the professor thinks this is about 400 years old."
     },
     {
@@ -148,7 +154,7 @@
       "y": 4,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "NULL",
+      "script": "ow_Kolchavi_Lab_1F_Sign_OldMap",
       "note": "a sign describing a preserved piece of parchment which looks like an old, torn map of the region. there seems to be a large city near colori which doesn't exist anymore."
     },
     {
@@ -157,7 +163,7 @@
       "y": 4,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "NULL",
+      "script": "ow_Kolchavi_Lab_1F_Sign_OldMap",
       "note": "a sign describing a preserved piece of parchment which looks like an old, torn map of the region. there seems to be a large city near colori which doesn't exist anymore."
     },
     {
@@ -166,7 +172,7 @@
       "y": 1,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "NULL",
+      "script": "ow_Kolchavi_Lab_1F_Sign_RegionMap",
       "note": "a region map of kavora"
     },
     {
@@ -175,7 +181,7 @@
       "y": 1,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "NULL",
+      "script": "ow_Kolchavi_Lab_1F_Sign_RegionMap",
       "note": "a region map of kavora"
     },
     {
@@ -184,7 +190,7 @@
       "y": 4,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "NULL",
+      "script": "ow_Kolchavi_Lab_1F_Sign_HorseShoe",
       "note": "a sign describing a horse shoe that was likely used hundreds of years ago by people moving resources around the region."
     },
     {
@@ -193,7 +199,7 @@
       "y": 4,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "NULL",
+      "script": "ow_Kolchavi_Lab_1F_Sign_HorseShoe",
       "note": "a sign describing a horse shoe that was likely used hundreds of years ago by people moving resources around the region."
     },
     {
@@ -202,7 +208,7 @@
       "y": 7,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "NULL",
+      "script": "ow_Kolchavi_Lab_1F_Sign_PeatRock",
       "note": "a sign describing (something - the graphic is a rock in a glass cabinet. it could be something preserved in peat from the nearby swamp?)"
     },
     {
@@ -211,7 +217,7 @@
       "y": 7,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "NULL",
+      "script": "ow_Kolchavi_Lab_1F_Sign_Fossil",
       "note": "a sign describing a preserved fossil"
     }
   ]

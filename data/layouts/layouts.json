@@ -9623,6 +9623,46 @@
       "secondary_tileset": "gTileset_PokemonCenter",
       "border_filepath": "data/layouts/ow_Intro_PokemonCenter/border.bin",
       "blockdata_filepath": "data/layouts/ow_Intro_PokemonCenter/map.bin"
+    },
+    {
+      "id": "LAYOUT_OW_SOWBACK_CAVE_1F",
+      "name": "ow_SowbackCave_1F_Layout",
+      "width": 44,
+      "height": 44,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Cave",
+      "border_filepath": "data/layouts/ow_SowbackCave_1F/border.bin",
+      "blockdata_filepath": "data/layouts/ow_SowbackCave_1F/map.bin"
+    },
+    {
+      "id": "LAYOUT_OW_SOWBACK_CAVE_B1F",
+      "name": "ow_SowbackCave_B1F_Layout",
+      "width": 30,
+      "height": 45,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Cave",
+      "border_filepath": "data/layouts/ow_SowbackCave_B1F/border.bin",
+      "blockdata_filepath": "data/layouts/ow_SowbackCave_B1F/map.bin"
+    },
+    {
+      "id": "LAYOUT_OW_SOWBACK_CAVE_B2F",
+      "name": "ow_SowbackCave_B2F_Layout",
+      "width": 30,
+      "height": 45,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Cave",
+      "border_filepath": "data/layouts/ow_SowbackCave_B2F/border.bin",
+      "blockdata_filepath": "data/layouts/ow_SowbackCave_B2F/map.bin"
+    },
+    {
+      "id": "LAYOUT_OW_SOWBACK_CAVE_2F",
+      "name": "ow_SowbackCave_2F_Layout",
+      "width": 30,
+      "height": 45,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Cave",
+      "border_filepath": "data/layouts/ow_SowbackCave_2F/border.bin",
+      "blockdata_filepath": "data/layouts/ow_SowbackCave_2F/map.bin"
     }
   ]
 }

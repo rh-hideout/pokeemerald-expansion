@@ -60,7 +60,7 @@
       "local_id": "LOCALID_INTRO_PC_PERFECT_IVS_NPC",
       "graphics_id": "OBJ_EVENT_GFX_MAN_2",
       "x": 16,
-      "y": 5,
+      "y": 7,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
       "movement_range_x": 0,

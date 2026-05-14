@@ -1,0 +1,99 @@
+mapscripts ow_Kolchavi_Lab_1F_MapScripts {}
+
+// ============================================================
+// MUSEUM STAFF
+// ============================================================
+
+script ow_Kolchavi_Lab_1F_EventScript_Greeter {
+    lock
+    faceplayer
+    setspeaker("Attendant")
+    msgbox(format("Welcome to Professor Zelkova's collection. Anything on the ground floor is open to the public -- please don't tap the glass."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+script ow_Kolchavi_Lab_1F_EventScript_Counter {
+    lock
+    faceplayer
+    setspeaker("Attendant")
+    msgbox(format("If a placard's faded or missing, that's on me -- the professor keeps swapping pieces in and out faster than I can rewrite them.\pHave a look around. The upstairs gallery is staff only, but most days nobody bothers to check."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+script ow_Kolchavi_Lab_1F_EventScript_PokeballViewer {
+    lock
+    faceplayer
+    setspeaker("Visitor")
+    msgbox(format("Hard to believe people trusted their lives to these things. Wood and twine and a prayer.\pMine's clipped to my belt and I never think about it. That's progress, I suppose. Or laziness."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+script ow_Kolchavi_Lab_1F_EventScript_FossilChild {
+    lock
+    faceplayer
+    setspeaker("Child")
+    msgbox(format("Mum, if it's a rock, why is it in a museum?\pIs IT the dinosaur, or did the dinosaur leave it behind?"))
+    setspeaker(NULL)
+    release
+    end
+}
+
+script ow_Kolchavi_Lab_1F_EventScript_FossilParent {
+    lock
+    faceplayer
+    setspeaker("Parent")
+    msgbox(format("I told her this would be educational. She has asked me, in order, what it tastes like, whether it can come home with us, and if Pokémon ate rocks back then.\pThe placard does not cover any of these questions."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+script ow_Kolchavi_Lab_1F_EventScript_UpstairsHint {
+    lock
+    faceplayer
+    setspeaker("Researcher")
+    msgbox(format("The downstairs cases are what Professor Zelkova has finished thinking about. They're tidy because the arguments are over.\pUpstairs is where the work actually happens. Less to look at, but a great deal more to overhear."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+// ============================================================
+// SIGNS / EXHIBIT PLACARDS
+// ============================================================
+
+script ow_Kolchavi_Lab_1F_Sign_PokeballArtefact {
+    msgbox(format("A split-open wooden sphere sits on a velvet cushion, banded with corroded metal. The placard reads:\p'Capture device, recovered from Sinteri. Estimated age: 400 years. Mechanism unknown -- the spring assembly does not match any modern design.'"), MSGBOX_SIGN)
+    end
+}
+
+script ow_Kolchavi_Lab_1F_Sign_OldMap {
+    msgbox(format("A torn fragment of parchment under glass. The coastline matches Kavora's; the interior does not.\pA cluster of dense markings sits inland of where Colori stands today, marked with a name in a script the placard does not translate. The placard reads only: 'Provenance disputed.'"), MSGBOX_SIGN)
+    end
+}
+
+script ow_Kolchavi_Lab_1F_Sign_RegionMap {
+    msgbox(format("A large painted map of Kavora. Trade routes are inked in red, shipping lanes in blue. The western forest is shaded with hatching marks; an unlabelled pin sits north of Kolchavi, on the line of the new logging road."), MSGBOX_SIGN)
+    end
+}
+
+script ow_Kolchavi_Lab_1F_Sign_HorseShoe {
+    msgbox(format("A curved iron shoe, pitted with rust. The placard reads:\p'Worked iron, c. 250 years old. Recovered from a pack trail between Kolchavi and Floran. Before Mudbray and Mudsdale teams replaced the practice, goods were hauled by horses bred for the work.'"), MSGBOX_SIGN)
+    end
+}
+
+script ow_Kolchavi_Lab_1F_Sign_PeatRock {
+    msgbox(format("A dark, dense lump rests on a stand, its surface flecked with what might be plant fibres. The placard is handwritten and tentative:\p'Recovered from the western swamp margin. Composition consistent with peat preservation. Approximate age: pending. The dating doesn't agree with itself -- repeat sampling required.'"), MSGBOX_SIGN)
+    end
+}
+
+script ow_Kolchavi_Lab_1F_Sign_Fossil {
+    msgbox(format("An impression in pale stone, ribbed and curling. The placard reads:\p'Marine fossil, recovered inland of present coastline. The species is extinct; the location, today, is dry ground. The sea was once here, or the ground was once there.'"), MSGBOX_SIGN)
+    end
+}

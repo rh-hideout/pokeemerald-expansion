@@ -357,10 +357,12 @@
       "y": 19
     },
     {
-      "id": "HEAL_LOCATION_POC_KOLCHAVI",
+      "id": "HEAL_LOCATION_KOLCHAVI",
       "map": "MAP_OW_KOLCHAVI",
       "x": 40,
-      "y": 14
+      "y": 14,
+      "respawn_map": "MAP_OW_KOLCHAVI_POKEMON_CENTER",
+      "respawn_npc": "LOCALID_KOLCHAVI_NURSE"
     }
   ]
 }

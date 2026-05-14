@@ -1947,3 +1947,11 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/maps/ow_r12_House1/scripts.inc"
 
 	.include "data/maps/ow_Intro_PokemonCenter/scripts.inc"
+
+	.include "data/maps/ow_SowbackCave_1F/scripts.inc"
+
+	.include "data/maps/ow_SowbackCave_B1F/scripts.inc"
+
+	.include "data/maps/ow_SowbackCave_B2F/scripts.inc"
+
+	.include "data/maps/ow_SowbackCave_2F/scripts.inc"

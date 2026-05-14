@@ -1531,15 +1531,15 @@ PetalburgCity_EventScript_ExampleQuestNpc::
 # 766 "data/maps/PetalburgCity/scripts.pory"
 	faceplayer
 # 767 "data/maps/PetalburgCity/scripts.pory"
-	goto_if_quest_complete QUEST_1, PetalburgCity_EventScript_ExampleQuestDone
+	goto_if_quest_complete QUEST_ZELKOVA, PetalburgCity_EventScript_ExampleQuestDone
 # 768 "data/maps/PetalburgCity/scripts.pory"
-	goto_if_quest_reward QUEST_1, PetalburgCity_EventScript_ExampleQuestReward
+	goto_if_quest_reward QUEST_ZELKOVA, PetalburgCity_EventScript_ExampleQuestReward
 # 769 "data/maps/PetalburgCity/scripts.pory"
-	goto_if_quest_active QUEST_1, PetalburgCity_EventScript_ExampleQuestActive
+	goto_if_quest_active QUEST_ZELKOVA, PetalburgCity_EventScript_ExampleQuestActive
 # 770 "data/maps/PetalburgCity/scripts.pory"
 	msgbox PetalburgCity_Text_ExampleQuestStart, MSGBOX_DEFAULT
 # 771 "data/maps/PetalburgCity/scripts.pory"
-	startquest QUEST_1
+	startquest QUEST_ZELKOVA
 # 772 "data/maps/PetalburgCity/scripts.pory"
 	release
 # 773 "data/maps/PetalburgCity/scripts.pory"
@@ -1551,7 +1551,7 @@ PetalburgCity_EventScript_ExampleQuestActive::
 # 776 "data/maps/PetalburgCity/scripts.pory"
 	msgbox PetalburgCity_Text_ExampleQuestActive, MSGBOX_DEFAULT
 # 777 "data/maps/PetalburgCity/scripts.pory"
-	questmenu QUEST_MENU_SET_REWARD, QUEST_1
+	questmenu QUEST_MENU_SET_REWARD, QUEST_ZELKOVA
 # 778 "data/maps/PetalburgCity/scripts.pory"
 	release
 # 779 "data/maps/PetalburgCity/scripts.pory"
@@ -1563,7 +1563,7 @@ PetalburgCity_EventScript_ExampleQuestReward::
 # 782 "data/maps/PetalburgCity/scripts.pory"
 	msgbox PetalburgCity_Text_ExampleQuestReward, MSGBOX_DEFAULT
 # 783 "data/maps/PetalburgCity/scripts.pory"
-	completequest QUEST_1
+	completequest QUEST_ZELKOVA
 # 784 "data/maps/PetalburgCity/scripts.pory"
 	release
 # 785 "data/maps/PetalburgCity/scripts.pory"

@@ -1,0 +1,77 @@
+mapscripts ow_SowbackCave_B1F_MapScripts {}
+
+// ============================================================
+// NADIA - Zelkova's field assistant
+// Active while QUEST_ZELKOVA is in the Active state. Speaking
+// to her runs the field-find cutscene: she walks the player
+// north to the deeper warren entrance at (23, 23), gives them
+// the peat-bearing iron sample, and leaves with her Pikachu.
+// Quest transitions to Reward state for return to Zelkova.
+// ============================================================
+
+script ow_SowbackCave_B1F_EventScript_Nadia {
+    lock
+    faceplayer
+    goto_if_quest_reward(QUEST_ZELKOVA, ow_SowbackCave_B1F_EventScript_Nadia_Reminder)
+    goto(ow_SowbackCave_B1F_EventScript_Nadia_Cutscene)
+}
+
+script ow_SowbackCave_B1F_EventScript_Nadia_Reminder {
+    setspeaker("Nadia")
+    msgbox(format("Still here?\pGo on. The Professor will want that peat sample yesterday."))
+    setspeaker(NULL)
+    releaseall
+    end
+}
+
+script ow_SowbackCave_B1F_EventScript_Nadia_Cutscene {
+    setspeaker("Nadia")
+    msgbox(format("Oh -!"))
+    msgbox(format("Shh.\NKeep your voice down!")) // Shh!
+    msgbox(format("I've been down here for hours, studying the Drillbur."))
+    msgbox(format("What!? Days? No, surely it's only been... Oh, nevermind.\NI was supposed to be doing population counts, but then I found this."))
+    msgbox(format("It's bog iron.\NSee the dark streaks?\NThat's swamp peat.\NSomething found it near Moreavi and left it here. But why?"))
+    msgbox(format("Come look. There's one more thing."))
+    setspeaker(NULL)
+    closemessage
+    moveobjecttocoords(LOCALID_SOWBACK_CAVE_B1F_NADIA, 22, 27, DIR_EAST)
+    waitmovement(0)
+    approachobject(LOCALID_PLAYER, LOCALID_SOWBACK_CAVE_B1F_NADIA, DIR_NORTH, DIR_EAST)
+    waitmovement(0)
+    delay(20)
+    setspeaker("Nadia")
+    msgbox(format("There. Through the cracks in these rocks."))
+    applymovement(LOCALID_SOWBACK_CAVE_B1F_NADIA, Common_Movement_FaceUp)
+    msgbox(format("I think this is the Drillbur warren.\NNosik thinks there's more iron in there!"))
+    applymovement(LOCALID_SOWBACK_CAVE_B1F_NOSEPASS, SowbackCaveB1F_Movement_NosepassJump)
+    msgbox(format("It must go down to the warren proper.\NI can hear them moving."))
+    applymovement(LOCALID_SOWBACK_CAVE_B1F_NADIA, Common_Movement_FaceRight)
+    applymovement(LOCALID_PLAYER, Common_Movement_FaceLeft) 
+    msgbox(format("Look -"))
+    msgbox(format("Can you run the sample back to the prof?\pTell her that something is leaving iron out for the Drillbur to dig up."))
+    msgbox(format("I want to finish documenting my observations before I head out."))
+    setspeaker(NULL)
+    closemessage
+    questmenu(QUEST_MENU_SET_REWARD, QUEST_ZELKOVA)
+    release
+    end
+}
+
+// ============================================================
+// NADIA'S research assistant, flavour only
+// ============================================================
+
+movement SowbackCaveB1F_Movement_NosepassJump {
+    jump_in_place_up_down
+    step_end
+}
+
+script ow_SowbackCave_B1F_EventScript_Nosepass {
+    lock
+    faceplayer
+    playmoncry(SPECIES_NOSEPASS, CRY_MODE_NORMAL)
+    msgbox(format("Nosik is sniffing out minerals in the ground."), MSGBOX_DEFAULT)
+    waitmoncry
+    release
+    end
+}

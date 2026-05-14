@@ -15,93 +15,122 @@
   "connections": null,
   "object_events": [
     {
-      "graphics_id": "OBJ_EVENT_GFX_BRENDAN_NORMAL",
-      "x": 10,
+      "local_id": "LOCALID_KOLCHAVI_LAB_2F_WORKER_NOTES",
+      "graphics_id": "OBJ_EVENT_GFX_SCIENTIST_1",
+      "x": 11,
       "y": 7,
       "elevation": 0,
-      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
-      "flag": "0",
-      "notes": "npc worker at their computer (facing up). they're reviewing research notes from recent studies."
+      "script": "ow_Kolchavi_Lab_2F_EventScript_WorkerNotes",
+      "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BRENDAN_NORMAL",
+      "local_id": "LOCALID_KOLCHAVI_LAB_2F_WORKER_DATING",
+      "graphics_id": "OBJ_EVENT_GFX_SCIENTIST_2",
       "x": 17,
       "y": 7,
       "elevation": 0,
-      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
-      "flag": "0",
-      "notes": "npc worker at their computer (facing right). they're next to a large machine which they use for dating objects using advanced technology"
+      "script": "ow_Kolchavi_Lab_2F_EventScript_WorkerDating",
+      "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BRENDAN_NORMAL",
+      "local_id": "LOCALID_KOLCHAVI_LAB_2F_WORKER_CORSOLA",
+      "graphics_id": "OBJ_EVENT_GFX_WOMAN_3",
       "x": 14,
       "y": 10,
       "elevation": 0,
-      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
-      "flag": "0",
-      "notes": "npc worker at their computer (facing up). flavour tbd"
+      "script": "ow_Kolchavi_Lab_2F_EventScript_WorkerCorsola",
+      "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BRENDAN_NORMAL",
+      "local_id": "LOCALID_KOLCHAVI_LAB_2F_WORKER_SOUTH",
+      "graphics_id": "OBJ_EVENT_GFX_MANIAC",
       "x": 17,
       "y": 10,
       "elevation": 0,
-      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
-      "flag": "0",
-      "notes": "npc worker at their computer (facing right). flavour tbd"
+      "script": "ow_Kolchavi_Lab_2F_EventScript_WorkerSouth",
+      "flag": "0"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BRENDAN_NORMAL",
+      "local_id": "LOCALID_KOLCHAVI_LAB_2F_ZELKOVA",
+      "graphics_id": "OBJ_EVENT_GFX_EXPERT_F",
       "x": 5,
       "y": 5,
       "elevation": 0,
-      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
       "movement_range_x": 0,
       "movement_range_y": 0,
-      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_type": "TRAINER_TYPE_QUEST_GIVER",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "ow_Kolchavi_Lab_2F_EventScript_Zelkova",
       "flag": "0",
-      "notes": "the professor in their lab. flavour tbd."
+      "quest_id": "QUEST_ZELKOVA"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BRENDAN_NORMAL",
-      "x": 1,
-      "y": 8,
+      "local_id": "LOCALID_KOLCHAVI_LAB_2F_RECORD_KEEPER",
+      "graphics_id": "OBJ_EVENT_GFX_WOMAN_2",
+      "x": 2,
+      "y": 9,
       "elevation": 0,
-      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
-      "flag": "0",
-      "notes": "the professor's main assistant"
+      "script": "ow_Kolchavi_Lab_2F_EventScript_RecordKeeper",
+      "flag": "0"
+    },
+    {
+      "local_id": "LOCALID_KOLCHAVI_LAB_2F_NADIA",
+      "graphics_id": "OBJ_EVENT_GFX_WOMAN_3",
+      "x": 5,
+      "y": 9,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "ow_Kolchavi_Lab_2F_EventScript_Nadia",
+      "flag": "FLAG_HIDE_KOLCHAVI_LAB_2F_NADIA"
+    },
+    {
+      "local_id": "LOCALID_KOLCHAVI_LAB_2F_NOSEPASS",
+      "graphics_id": "OBJ_EVENT_GFX_SPECIES(NOSEPASS)",
+      "x": 4,
+      "y": 10,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "ow_Kolchavi_Lab_2F_EventScript_Nosepass",
+      "flag": "FLAG_HIDE_KOLCHAVI_LAB_2F_NADIA"
     }
   ],
   "warp_events": [
     {
-      "x": 13,
+      "x": 14,
       "y": 3,
       "elevation": 0,
       "dest_map": "MAP_OW_KOLCHAVI_LAB_1F",
@@ -112,21 +141,19 @@
   "bg_events": [
     {
       "type": "sign",
-      "x": 16,
+      "x": 10,
       "y": 3,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "NULL",
-      "note": "a region map of kavora"
+      "script": "ow_Kolchavi_Lab_2F_Sign_RegionMap"
     },
     {
       "type": "sign",
-      "x": 17,
+      "x": 11,
       "y": 3,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "NULL",
-      "note": "a region map of kavora"
+      "script": "ow_Kolchavi_Lab_2F_Sign_RegionMap"
     },
     {
       "type": "sign",
@@ -134,8 +161,39 @@
       "y": 3,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "NULL",
-      "note": "a preserved script/book/something in the professor's office"
+      "script": "ow_Kolchavi_Lab_2F_Sign_Artefact"
+    },
+    {
+      "type": "sign",
+      "x": 2,
+      "y": 3,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "ow_Kolchavi_Lab_2F_Sign_Bookshelf1"
+    },
+    {
+      "type": "sign",
+      "x": 3,
+      "y": 3,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "ow_Kolchavi_Lab_2F_Sign_Bookshelf2"
+    },
+    {
+      "type": "sign",
+      "x": 17,
+      "y": 6,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "ow_Kolchavi_Lab_2F_Sign_Machine"
+    },
+    {
+      "type": "sign",
+      "x": 17,
+      "y": 5,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "ow_Kolchavi_Lab_2F_Sign_Machine"
     }
   ]
 }

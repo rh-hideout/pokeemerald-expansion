@@ -198,7 +198,8 @@
       "trainer_sight_or_berry_tree_id": "0",
       "script": "ow_Kolchavi_EventScript_Researcher",
       "flag": "0",
-      "notes": "scientist/researcher pacing outside the kolchavi museum commenting about the professor"
+      "notes": "scientist/researcher pacing outside the kolchavi museum -- breadcrumb variant (with quest icon). Hidden once the player has begun QUEST_ZELKOVA by any path.",
+      "quest_id": "QUEST_ZELKOVA"
     },
     {
       "local_id": "LOCALID_KOLCHAVI_NPC4",
@@ -218,8 +219,8 @@
     {
       "local_id": "LOCALID_KOLCHAVI_NPC5",
       "graphics_id": "OBJ_EVENT_GFX_MAN_4",
-      "x": 37,
-      "y": 0,
+      "x": 38,
+      "y": 6,
       "elevation": 0,
       "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
       "movement_range_x": 2,

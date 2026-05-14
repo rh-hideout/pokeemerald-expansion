@@ -46,9 +46,11 @@ script ow_Intro_PokemonCenter_EventScript_ConfirmTreecko {
         closemessage
         goto(ow_Intro_PokemonCenter_EventScript_StarterSelect)
     }
+    msgbox(format("{PLAYER} received {STR_VAR_1}!"))
     playfanfare(MUS_OBTAIN_ITEM)
     waitfanfare
     givemon(SPECIES_TREECKO, 5)
+    closemessage
     goto(ow_Intro_PokemonCenter_EventScript_AfterStarter)
 }
 
@@ -63,9 +65,11 @@ script ow_Intro_PokemonCenter_EventScript_ConfirmTorchic {
         closemessage
         goto(ow_Intro_PokemonCenter_EventScript_StarterSelect)
     }
+    msgbox(format("{PLAYER} received {STR_VAR_1}!"))
     playfanfare(MUS_OBTAIN_ITEM)
     waitfanfare
     givemon(SPECIES_TORCHIC, 5)
+    closemessage
     goto(ow_Intro_PokemonCenter_EventScript_AfterStarter)
 }
 
@@ -80,9 +84,11 @@ script ow_Intro_PokemonCenter_EventScript_ConfirmMudkip {
         closemessage
         goto(ow_Intro_PokemonCenter_EventScript_StarterSelect)
     }
+    msgbox(format("{PLAYER} received {STR_VAR_1}!"))
     playfanfare(MUS_OBTAIN_ITEM)
     waitfanfare
     givemon(SPECIES_MUDKIP, 5)
+    closemessage
     goto(ow_Intro_PokemonCenter_EventScript_AfterStarter)
 }
 

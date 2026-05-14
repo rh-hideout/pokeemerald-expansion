@@ -1184,7 +1184,12 @@
   "gMapGroup_ow_SpecialArea": [
     "ow_Intro_PokemonCenter"
   ],
-  "gMapGroup_ow_Dungeons": [],
+  "gMapGroup_ow_Dungeons": [
+    "ow_SowbackCave_1F",
+    "ow_SowbackCave_B1F",
+    "ow_SowbackCave_B2F",
+    "ow_SowbackCave_2F"
+  ],
   "gMapGroup_ow_IndoorKolchavi": [
     "ow_Kolchavi_PokemonCenter",
     "ow_Kolchavi_Lab_1F",
