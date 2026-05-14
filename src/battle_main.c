@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle.h"
 #include "battle_anim.h"
+#include "challenge_menu.h"
 #include "battle_ai_main.h"
 #include "battle_ai_util.h"
 #include "battle_arena.h"
@@ -2115,6 +2116,36 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
             {
                 ball = gTrainerClasses[trainer->trainerClass].ball ?: ITEM_POKE_BALL;
                 SetMonData(&party[i], MON_DATA_POKEBALL, &ball);
+            }
+        }
+
+        if (gSaveBlock3Ptr->challengeSettings.tx_Challenges_TrainerScalingIVs)
+        {
+            u8 iv = GetCurrentTrainerIVs();
+            for (i = 0; i < monsCount; i++)
+            {
+                for (u32 j = 0; j < NUM_STATS; j++)
+                    SetMonData(&party[i], MON_DATA_HP_IV + j, &iv);
+                CalculateMonStats(&party[i]);
+            }
+        }
+
+        if (gSaveBlock3Ptr->challengeSettings.tx_Challenges_TrainerScalingEVs)
+        {
+            u8 ev = GetCurrentTrainerEVs();
+            for (i = 0; i < monsCount; i++)
+            {
+                SetMonData(&party[i], MON_DATA_HP_EV, &ev);
+                SetMonData(&party[i], MON_DATA_SPEED_EV, &ev);
+                if (GetMonData(&party[i], MON_DATA_ATK) > GetMonData(&party[i], MON_DATA_SPATK))
+                    SetMonData(&party[i], MON_DATA_ATK_EV, &ev);
+                else
+                    SetMonData(&party[i], MON_DATA_SPATK_EV, &ev);
+                if (GetMonData(&party[i], MON_DATA_DEF) > GetMonData(&party[i], MON_DATA_SPDEF))
+                    SetMonData(&party[i], MON_DATA_DEF_EV, &ev);
+                else
+                    SetMonData(&party[i], MON_DATA_SPDEF_EV, &ev);
+                CalculateMonStats(&party[i]);
             }
         }
     }

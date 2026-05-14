@@ -2068,3 +2068,63 @@ u8 GetMaxPartySize(void)
 {
     return (PARTY_SIZE - gSaveBlock3Ptr->challengeSettings.tx_Challenges_PartyLimit);
 }
+
+static u8 GetChallengesBadgeCount(void)
+{
+    u16 i;
+    u8 badgeCount = 0;
+    for (i = FLAG_BADGE01_GET; i < FLAG_BADGE01_GET + NUM_BADGES; i++)
+    {
+        if (FlagGet(i))
+            badgeCount++;
+    }
+    if (badgeCount > 8)
+        badgeCount = 8;
+    return badgeCount;
+}
+
+static const u8 sTrainerIVTable[] =
+{
+    [0] = 7,
+    [1] = 10,
+    [2] = 13,
+    [3] = 16,
+    [4] = 19,
+    [5] = 22,
+    [6] = 25,
+    [7] = 28,
+    [8] = 31,
+};
+
+static const u8 sTrainerEVTable[] =
+{
+    [0] = 12,
+    [1] = 24,
+    [2] = 36,
+    [3] = 48,
+    [4] = 60,
+    [5] = 72,
+    [6] = 80,
+    [7] = 100,
+    [8] = 128,
+};
+
+u8 GetCurrentTrainerIVs(void)
+{
+    switch (gSaveBlock3Ptr->challengeSettings.tx_Challenges_TrainerScalingIVs)
+    {
+    case 1:     return sTrainerIVTable[GetChallengesBadgeCount()];
+    default:    return MAX_PER_STAT_IVS;
+    }
+}
+
+u8 GetCurrentTrainerEVs(void)
+{
+    switch (gSaveBlock3Ptr->challengeSettings.tx_Challenges_TrainerScalingEVs)
+    {
+    case 1:     return sTrainerEVTable[GetChallengesBadgeCount()];
+    case 2:     return 128;
+    case 3:     return 252;
+    default:    return 0;
+    }
+}
