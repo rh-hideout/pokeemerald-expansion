@@ -658,6 +658,18 @@ static void CB2_InitBattleInternal(void)
                 CreateNPCTrainerParty(&gEnemyParty[PARTY_SIZE / 2], TRAINER_BATTLE_PARAM.opponentB, FALSE);
             SetWildMonHeldItem();
             CalculateEnemyPartyCount();
+
+            if (gSaveBlock3Ptr->challengeSettings.tx_Challenges_Mirror
+             && (gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE)))
+            {
+                if (!gSaveBlock3Ptr->challengeSettings.tx_Challenges_Mirror_Thief)
+                {
+                    for (i = 0; i < PARTY_SIZE; i++)
+                        gPlayerPartyBackup[i] = gPlayerParty[i];
+                }
+                for (i = 0; i < PARTY_SIZE; i++)
+                    gPlayerParty[i] = gEnemyParty[i];
+            }
         }
     }
 
@@ -5675,6 +5687,14 @@ static void HandleEndTurn_FinishBattle(void)
 {
     if (gCurrentActionFuncId == B_ACTION_TRY_FINISH || gCurrentActionFuncId == B_ACTION_FINISHED)
     {
+        if (gSaveBlock3Ptr->challengeSettings.tx_Challenges_Mirror
+         && !gSaveBlock3Ptr->challengeSettings.tx_Challenges_Mirror_Thief
+         && (gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE)))
+        {
+            for (u32 j = 0; j < PARTY_SIZE; j++)
+                gPlayerParty[j] = gPlayerPartyBackup[j];
+        }
+
         if (!(gBattleTypeFlags & (BATTLE_TYPE_LINK
                                   | BATTLE_TYPE_RECORDED_LINK
                                   | BATTLE_TYPE_FIRST_BATTLE
