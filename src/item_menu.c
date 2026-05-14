@@ -1,6 +1,7 @@
 #include "global.h"
 #include "item_menu.h"
 #include "battle.h"
+#include "challenge_menu.h"
 #include "battle_controllers.h"
 #include "battle_pyramid.h"
 #include "frontier_util.h"
@@ -2088,8 +2089,17 @@ static void ItemMenu_Cancel(u8 taskId)
     ReturnToItemList(taskId);
 }
 
+static const u8 sText_NoItemsInBattle[] = _("Battle items are not allowed\nunder current rules!");
+
 static void ItemMenu_UseInBattle(u8 taskId)
 {
+    if (gSaveBlock3Ptr->challengeSettings.tx_Challenges_NoItemPlayer
+        && GetItemPocket(gSpecialVar_ItemId) != POCKET_POKE_BALLS)
+    {
+        DisplayItemMessage(taskId, FONT_NORMAL, sText_NoItemsInBattle, HandleErrorMessage);
+        return;
+    }
+
     // Safety check
     enum ItemType type = GetItemType(gSpecialVar_ItemId);
     if (!GetItemBattleUsage(gSpecialVar_ItemId))
