@@ -176,3 +176,27 @@ SINGLE_BATTLE_TEST("Toxic Chain is blocked by Covert Cloak")
         EXPECT(opponent->status1 == 0);
     }
 }
+
+SINGLE_BATTLE_TEST("Toxic Chain does not override the move's guaranteed non-volatile status")
+{
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_NUZZLE) != DAMAGE_CATEGORY_STATUS);
+        ASSUME(GetMovePower(MOVE_NUZZLE) > 0);
+        PLAYER(SPECIES_OKIDOGI) { Ability(ABILITY_TOXIC_CHAIN); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_NUZZLE, WITH_RNG(RNG_TOXIC_CHAIN, TRUE)); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_NUZZLE, player);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, opponent);
+        STATUS_ICON(opponent, paralysis: TRUE);
+        NONE_OF {
+            ABILITY_POPUP(player, ABILITY_TOXIC_CHAIN);
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+            STATUS_ICON(opponent, badPoison: TRUE);
+        }
+    } THEN {
+        EXPECT(opponent->status1 & STATUS1_PARALYSIS);
+        EXPECT(!(opponent->status1 & STATUS1_TOXIC_POISON));
+    }
+}

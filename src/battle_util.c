@@ -4348,18 +4348,19 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             }
             break;
         case ABILITY_TOXIC_CHAIN:
-            if (gBattleStruct->toxicChainPriority)
+            if (IsBattlerAlive(gBattlerTarget)
+             && !gBattleStruct->unableToUseMove
+             && !IsMoveEffectBlockedByTarget(GetBattlerAbility(gBattlerTarget))
+             && CanBePoisoned(gBattlerAttacker, gBattlerTarget, gLastUsedAbility, GetBattlerAbility(gBattlerTarget))
+             && IsBattlerTurnDamaged(gBattlerTarget, EXCLUDING_SUBSTITUTES)
+             && RandomWeighted(RNG_TOXIC_CHAIN, 7, 3))
             {
-                gBattleStruct->toxicChainPriority = FALSE;
-                if (!IsMoveEffectBlockedByTarget(GetBattlerAbility(gBattlerTarget)))
-                {
-                    gEffectBattler = gBattlerTarget;
-                    gBattleScripting.battler = gBattlerAttacker;
-                    gBattleScripting.moveEffect = MOVE_EFFECT_TOXIC;
-                    PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
-                    BattleScriptCall(BattleScript_AbilityStatusEffect);
-                    effect++;
-                }
+                gEffectBattler = gBattlerTarget;
+                gBattleScripting.battler = gBattlerAttacker;
+                gBattleScripting.moveEffect = MOVE_EFFECT_TOXIC;
+                PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
+                BattleScriptCall(BattleScript_AbilityStatusEffect);
+                effect++;
             }
             break;
         case ABILITY_STENCH:
