@@ -1,3 +1,5 @@
+#define DEBUG_MATCH_CALL 1 // Set to 0 when done testing
+
 #include "global.h"
 #include "malloc.h"
 #include "battle.h"
@@ -1157,7 +1159,7 @@ static bool32 UpdateMatchCallStepCounter(void)
 
 static bool32 SelectMatchCallTrainer(void)
 {
-    u32 matchCallId;
+    s32 matchCallId;
     u32 numRegistered = GetNumRegisteredTrainers();
     if (numRegistered == 0)
         return FALSE;
@@ -1167,7 +1169,13 @@ static bool32 SelectMatchCallTrainer(void)
     if (sMatchCallState.trainerId == REMATCH_TABLE_ENTRIES)
         return FALSE;
 
+#if IS_HNS
+    matchCallId = GetRematchIdxByTrainerIdx(sMatchCallState.trainerId);
+    if (matchCallId < 0)
+        return FALSE;
+#else
     matchCallId = GetTrainerMatchCallId(sMatchCallState.trainerId);
+#endif
     if (GetRematchTrainerLocation(matchCallId) == gMapHeader.regionMapSectionId && !TrainerIsEligibleForRematch(matchCallId))
         return FALSE;
 
@@ -1218,12 +1226,18 @@ bool32 TryStartMatchCall(void)
     if (gSaveBlock3Ptr->challengeSettings.disableMatchCall)
         return FALSE;
 
+#if IS_HNS && DEBUG_MATCH_CALL
+    if (FlagGet(FLAG_HAS_MATCH_CALL)
+        && UpdateMatchCallStepCounter()
+        && SelectMatchCallTrainer())
+#else
     if (FlagGet(FLAG_HAS_MATCH_CALL)
         && UpdateMatchCallStepCounter()
         && UpdateMatchCallMinutesCounter()
         && CheckMatchCallChance()
         && MapAllowsMatchCall()
         && SelectMatchCallTrainer())
+#endif
     {
         StartMatchCall();
         return TRUE;
@@ -1390,7 +1404,12 @@ static bool32 MatchCall_PrintIntro(u8 taskId)
 
         // Ready the message (and the speaker's name if possible)
         if (!sMatchCallState.triggeredFromScript)
+        {
             SelectMatchCallMessage(sMatchCallState.trainerId, gStringVar4);
+#if IS_HNS
+            gSpeakerName = GetTrainerNameFromId(sMatchCallState.trainerId);
+#endif
+        }
 
         TrySpawnAndShowNamebox(gSpeakerName, NAME_BOX_BASE_TILE_NUM);
         InitMatchCallTextPrinter(tWindowId, gStringVar4);

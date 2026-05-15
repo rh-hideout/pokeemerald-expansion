@@ -218,8 +218,7 @@ Debug_EventScript_Script_3::
 	end
 
 Debug_EventScript_Script_4::
-	setwildbattleshiny SPECIES_GYARADOS, 30
-	dowildbattle
+	setflag FLAG_HAS_MATCH_CALL
 	release
 	end
 
