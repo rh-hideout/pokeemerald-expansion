@@ -112,45 +112,58 @@ struct MatchCallTrainerTextInfo
 };
 
 #if IS_HNS
+#define HNS_MAX_GENERAL_TEXTS 3
+
 struct HnsMatchCallTrainerInfo
 {
     u16 trainerId;
-    const u8 *generalText;
+    const u8 *generalTexts[HNS_MAX_GENERAL_TEXTS];
+    u8 numGeneralTexts;
     const u8 *battleRequestText;
 };
 
-#define HNS_MC_ENTRY(name, trId) { .trainerId = trId, .generalText = MatchCall_HNS_##name##_General, .battleRequestText = MatchCall_HNS_##name##_Battle }
+#define HNS_MC_ENTRY2(name, trId) { \
+    .trainerId = trId, \
+    .generalTexts = { MatchCall_HNS_##name##_General1, MatchCall_HNS_##name##_General2 }, \
+    .numGeneralTexts = 2, \
+    .battleRequestText = MatchCall_HNS_##name##_Battle }
+
+#define HNS_MC_ENTRY3(name, trId) { \
+    .trainerId = trId, \
+    .generalTexts = { MatchCall_HNS_##name##_General1, MatchCall_HNS_##name##_General2, MatchCall_HNS_##name##_General3 }, \
+    .numGeneralTexts = 3, \
+    .battleRequestText = MatchCall_HNS_##name##_Battle }
 
 static const struct HnsMatchCallTrainerInfo sHnsMatchCallTrainers[] =
 {
-    HNS_MC_ENTRY(Joey,     TRAINER_JOEY_HNS),
-    HNS_MC_ENTRY(Wade,     TRAINER_WADE_HNS),
-    HNS_MC_ENTRY(Ralph,    TRAINER_RALPH_HNS),
-    HNS_MC_ENTRY(Liz,      TRAINER_LIZ_HNS),
-    HNS_MC_ENTRY(Anthony,  TRAINER_ANTHONY_HNS),
-    HNS_MC_ENTRY(Todd,     TRAINER_TODD_HNS),
-    HNS_MC_ENTRY(Gina,     TRAINER_GINA_HNS),
-    HNS_MC_ENTRY(Irwin,    TRAINER_IRWIN_HNS),
-    HNS_MC_ENTRY(Arnie,    TRAINER_ARNIE_HNS),
-    HNS_MC_ENTRY(Alan,     TRAINER_ALAN_HNS),
-    HNS_MC_ENTRY(Dana,     TRAINER_DANA_HNS),
-    HNS_MC_ENTRY(Chad,     TRAINER_CHAD_HNS),
-    HNS_MC_ENTRY(Derek,    TRAINER_DEREK_HNS),
-    HNS_MC_ENTRY(Tully,    TRAINER_TULLY_HNS),
-    HNS_MC_ENTRY(Brent,    TRAINER_BRENT_HNS),
-    HNS_MC_ENTRY(Tiffany,  TRAINER_TIFFANY_HNS),
-    HNS_MC_ENTRY(Vance,    TRAINER_VANCE_HNS),
-    HNS_MC_ENTRY(Wilton,   TRAINER_WILTON_HNS),
-    HNS_MC_ENTRY(Kenji,    TRAINER_KENJI_HNS),
-    HNS_MC_ENTRY(Parry,    TRAINER_PARRY_HNS),
-    HNS_MC_ENTRY(Erin,     TRAINER_ERIN_HNS),
-    HNS_MC_ENTRY(Jack,     TRAINER_JACK_HNS),
-    HNS_MC_ENTRY(Beverly,  TRAINER_BEVERLY_HNS),
-    HNS_MC_ENTRY(Huey,     TRAINER_HUEY_HNS),
-    HNS_MC_ENTRY(Gaven,    TRAINER_GAVEN_HNS),
-    HNS_MC_ENTRY(Beth,     TRAINER_BETH_HNS),
-    HNS_MC_ENTRY(Jose,     TRAINER_JOSE_HNS),
-    HNS_MC_ENTRY(Reena,    TRAINER_REENA_HNS),
+    HNS_MC_ENTRY3(Joey,     TRAINER_JOEY_HNS),
+    HNS_MC_ENTRY3(Wade,     TRAINER_WADE_HNS),
+    HNS_MC_ENTRY3(Ralph,    TRAINER_RALPH_HNS),
+    HNS_MC_ENTRY3(Liz,      TRAINER_LIZ_HNS),
+    HNS_MC_ENTRY3(Anthony,  TRAINER_ANTHONY_HNS),
+    HNS_MC_ENTRY3(Todd,     TRAINER_TODD_HNS),
+    HNS_MC_ENTRY3(Gina,     TRAINER_GINA_HNS),
+    HNS_MC_ENTRY3(Irwin,    TRAINER_IRWIN_HNS),
+    HNS_MC_ENTRY3(Arnie,    TRAINER_ARNIE_HNS),
+    HNS_MC_ENTRY3(Alan,     TRAINER_ALAN_HNS),
+    HNS_MC_ENTRY3(Dana,     TRAINER_DANA_HNS),
+    HNS_MC_ENTRY3(Chad,     TRAINER_CHAD_HNS),
+    HNS_MC_ENTRY3(Derek,    TRAINER_DEREK_HNS),
+    HNS_MC_ENTRY3(Tully,    TRAINER_TULLY_HNS),
+    HNS_MC_ENTRY3(Brent,    TRAINER_BRENT_HNS),
+    HNS_MC_ENTRY3(Tiffany,  TRAINER_TIFFANY_HNS),
+    HNS_MC_ENTRY3(Vance,    TRAINER_VANCE_HNS),
+    HNS_MC_ENTRY3(Wilton,   TRAINER_WILTON_HNS),
+    HNS_MC_ENTRY3(Kenji,    TRAINER_KENJI_HNS),
+    HNS_MC_ENTRY3(Parry,    TRAINER_PARRY_HNS),
+    HNS_MC_ENTRY3(Erin,     TRAINER_ERIN_HNS),
+    HNS_MC_ENTRY3(Jack,     TRAINER_JACK_HNS),
+    HNS_MC_ENTRY3(Beverly,  TRAINER_BEVERLY_HNS),
+    HNS_MC_ENTRY2(Huey,     TRAINER_HUEY_HNS),
+    HNS_MC_ENTRY3(Gaven,    TRAINER_GAVEN_HNS),
+    HNS_MC_ENTRY3(Beth,     TRAINER_BETH_HNS),
+    HNS_MC_ENTRY3(Jose,     TRAINER_JOSE_HNS),
+    HNS_MC_ENTRY3(Reena,    TRAINER_REENA_HNS),
 };
 #endif
 
@@ -1609,7 +1622,8 @@ bool32 SelectMatchCallMessage(int trainerId, u8 *str)
             }
             else
             {
-                text = sHnsMatchCallTrainers[i].generalText;
+                u8 idx = Random() % sHnsMatchCallTrainers[i].numGeneralTexts;
+                text = sHnsMatchCallTrainers[i].generalTexts[idx];
             }
             break;
         }
