@@ -1810,6 +1810,7 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/scripts/cave_hole.inc"
 	.include "data/scripts/lilycove_lady.inc"
 	.include "data/text/match_call.inc"
+	.include "data/text/match_call_hns.inc"
 	.include "data/scripts/apprentice.inc"
 	.include "data/text/apprentice.inc"
 	.include "data/scripts/battle_pike.inc"

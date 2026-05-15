@@ -111,6 +111,49 @@ struct MatchCallTrainerTextInfo
     u16 differentRouteMatchCallTextId;
 };
 
+#if IS_HNS
+struct HnsMatchCallTrainerInfo
+{
+    u16 trainerId;
+    const u8 *generalText;
+    const u8 *battleRequestText;
+};
+
+#define HNS_MC_ENTRY(name, trId) { .trainerId = trId, .generalText = MatchCall_HNS_##name##_General, .battleRequestText = MatchCall_HNS_##name##_Battle }
+
+static const struct HnsMatchCallTrainerInfo sHnsMatchCallTrainers[] =
+{
+    HNS_MC_ENTRY(Joey,     TRAINER_JOEY_HNS),
+    HNS_MC_ENTRY(Wade,     TRAINER_WADE_HNS),
+    HNS_MC_ENTRY(Ralph,    TRAINER_RALPH_HNS),
+    HNS_MC_ENTRY(Liz,      TRAINER_LIZ_HNS),
+    HNS_MC_ENTRY(Anthony,  TRAINER_ANTHONY_HNS),
+    HNS_MC_ENTRY(Todd,     TRAINER_TODD_HNS),
+    HNS_MC_ENTRY(Gina,     TRAINER_GINA_HNS),
+    HNS_MC_ENTRY(Irwin,    TRAINER_IRWIN_HNS),
+    HNS_MC_ENTRY(Arnie,    TRAINER_ARNIE_HNS),
+    HNS_MC_ENTRY(Alan,     TRAINER_ALAN_HNS),
+    HNS_MC_ENTRY(Dana,     TRAINER_DANA_HNS),
+    HNS_MC_ENTRY(Chad,     TRAINER_CHAD_HNS),
+    HNS_MC_ENTRY(Derek,    TRAINER_DEREK_HNS),
+    HNS_MC_ENTRY(Tully,    TRAINER_TULLY_HNS),
+    HNS_MC_ENTRY(Brent,    TRAINER_BRENT_HNS),
+    HNS_MC_ENTRY(Tiffany,  TRAINER_TIFFANY_HNS),
+    HNS_MC_ENTRY(Vance,    TRAINER_VANCE_HNS),
+    HNS_MC_ENTRY(Wilton,   TRAINER_WILTON_HNS),
+    HNS_MC_ENTRY(Kenji,    TRAINER_KENJI_HNS),
+    HNS_MC_ENTRY(Parry,    TRAINER_PARRY_HNS),
+    HNS_MC_ENTRY(Erin,     TRAINER_ERIN_HNS),
+    HNS_MC_ENTRY(Jack,     TRAINER_JACK_HNS),
+    HNS_MC_ENTRY(Beverly,  TRAINER_BEVERLY_HNS),
+    HNS_MC_ENTRY(Huey,     TRAINER_HUEY_HNS),
+    HNS_MC_ENTRY(Gaven,    TRAINER_GAVEN_HNS),
+    HNS_MC_ENTRY(Beth,     TRAINER_BETH_HNS),
+    HNS_MC_ENTRY(Jose,     TRAINER_JOSE_HNS),
+    HNS_MC_ENTRY(Reena,    TRAINER_REENA_HNS),
+};
+#endif
+
 struct MatchCallText
 {
     const u8 *text;
@@ -148,7 +191,9 @@ static const struct MatchCallText *GetSameRouteMatchCallText(int, u8 *);
 static const struct MatchCallText *GetDifferentRouteMatchCallText(int, u8 *);
 static const struct MatchCallText *GetBattleMatchCallText(int, u8 *);
 static const struct MatchCallText *GetGeneralMatchCallText(int, u8 *);
+#if !IS_HNS
 static bool32 ShouldTrainerRequestBattle(int);
+#endif
 static void BuildMatchCallString(int, const struct MatchCallText *, u8 *);
 static u16 GetFrontierStreakInfo(u16, u32 *);
 static void PopulateMatchCallStringVars(int, const s8 *);
@@ -1546,6 +1591,48 @@ static u32 GetNthRematchTrainerFought(int n)
 
 bool32 SelectMatchCallMessage(int trainerId, u8 *str)
 {
+#if IS_HNS
+    u32 i;
+    const u8 *text = NULL;
+    bool32 newRematchRequest = FALSE;
+    s32 rematchIdx = GetRematchIdxByTrainerIdx(trainerId);
+
+    for (i = 0; i < ARRAY_COUNT(sHnsMatchCallTrainers); i++)
+    {
+        if (sHnsMatchCallTrainers[i].trainerId == trainerId)
+        {
+            if (rematchIdx >= 0 && TrainerIsEligibleForRematch(rematchIdx))
+            {
+                text = sHnsMatchCallTrainers[i].battleRequestText;
+                newRematchRequest = TRUE;
+                UpdateRematchIfDefeated(rematchIdx);
+            }
+            else
+            {
+                text = sHnsMatchCallTrainers[i].generalText;
+            }
+            break;
+        }
+    }
+
+    if (text != NULL)
+    {
+        u16 lastBeatenId = GetLastBeatenRematchTrainerId(trainerId);
+        const struct TrainerMon *party = GetTrainerPartyFromId(lastBeatenId);
+        u8 monId = Random() % GetTrainerPartySizeFromId(lastBeatenId);
+        if (party != NULL)
+            StringCopy(gStringVar3, GetSpeciesName(party[monId].species));
+        else
+            StringCopy(gStringVar3, GetSpeciesName(SPECIES_NONE));
+        StringExpandPlaceholders(str, text);
+    }
+    else
+    {
+        str[0] = EOS;
+    }
+
+    return newRematchRequest;
+#else
     u32 matchCallId;
     const struct MatchCallText *matchCallText;
     bool32 newRematchRequest = FALSE;
@@ -1582,6 +1669,7 @@ bool32 SelectMatchCallMessage(int trainerId, u8 *str)
 
     BuildMatchCallString(matchCallId, matchCallText, str);
     return newRematchRequest;
+#endif
 }
 
 static int GetTrainerMatchCallId(int trainerId)
@@ -1892,6 +1980,7 @@ static int GetNumOwnedBadges(void)
     return i;
 }
 
+#if !IS_HNS
 // Whether or not a trainer calling the player from a different route should request a battle
 static bool32 ShouldTrainerRequestBattle(int matchCallId)
 {
@@ -1920,6 +2009,7 @@ static bool32 ShouldTrainerRequestBattle(int matchCallId)
 
     return FALSE;
 }
+#endif
 
 static u16 GetFrontierStreakInfo(u16 facilityId, u32 *topicTextId)
 {
