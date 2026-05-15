@@ -1670,6 +1670,14 @@ bool32 SelectMatchCallMessage(int trainerId, u8 *str)
             {
                 text = sHnsMatchCallTrainers[i].battleRequestText;
                 newRematchRequest = TRUE;
+            }
+            else if (rematchIdx >= 0
+                  && !TrainerIsEligibleForRematch(rematchIdx)
+                  && HasTrainerBeenFought(gRematchTable[rematchIdx].trainerIds[0])
+                  && (Random() % 3) == 0)
+            {
+                text = sHnsMatchCallTrainers[i].battleRequestText;
+                newRematchRequest = TRUE;
                 UpdateRematchIfDefeated(rematchIdx);
             }
             else if (sHnsMatchCallTrainers[i].itemFlag != 0
