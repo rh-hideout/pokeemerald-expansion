@@ -220,28 +220,6 @@ void BattleAI_SetupItems(void)
     }
 }
 
-void BattleAI_SetupStatChangeConsiderations(u32 battlersCount)
-{
-    memset(gAiLogicData->aiStatChanges, 0, sizeof(gAiLogicData->aiStatChanges));
-
-    for (enum BattlerId battlerAtk = B_BATTLER_0; battlerAtk < battlersCount; battlerAtk++)
-    {
-        for (enum BattlerId battlerDef = B_BATTLER_0; battlerDef < battlersCount; battlerDef++)
-        {
-            for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
-            {
-                enum Move move = gBattleMons[battlerAtk].moves[moveIndex];
-
-                if (move == MOVE_NONE)
-                    continue;
-
-                // Get stat changes to be considered
-                AI_SetMoveStatChangeLogic(battlerAtk, battlerDef, move, moveIndex);
-            }
-        }
-    }
-}
-
 static u64 GetWildAiFlags(void)
 {
     u32 avgLevel = GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_LEVEL);
@@ -824,7 +802,7 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
     }
 
     if (IsAiFlagPresent(AI_FLAG_CONSIDER_STAT_CHANGES))
-        BattleAI_SetupStatChangeConsiderations(battlersCount);
+        memset(gAiLogicData->aiStatChanges, 0, sizeof(gAiLogicData->aiStatChanges));
 
     AIDebugTimerEnd();
     gAiLogicData->aiCalcInProgress = FALSE;
