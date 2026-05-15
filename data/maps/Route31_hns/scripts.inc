@@ -9,6 +9,7 @@ Route31_OnTransition:
 
 Route31_EventScript_Bugcatcher_Wade::
 	trainerbattle_single TRAINER_WADE_HNS, Route31_Text_BugCatcherWade1_Seen, Route31_Text_BugCatcherWade1_Beaten, Route31_EventScript_RegisterWade
+	goto_if_set FLAG_WADE_HAS_ITEM_HNS, Route31_EventScript_WadeGiveItem
 	specialvar VAR_RESULT, ShouldTryRematchBattle
 	goto_if_eq VAR_RESULT, TRUE, Route31_EventScript_RematchWade
 	msgbox Route31_Text_BugCatcherWade1_After, MSGBOX_AUTOCLOSE
@@ -25,6 +26,18 @@ Route31_EventScript_RegisterWade::
 Route31_EventScript_RematchWade::
 	trainerbattle_rematch TRAINER_WADE_HNS, Route31_Text_WadeRematchIntro, Route31_Text_WadeRematchDefeat
 	msgbox Route31_Text_WadePostRematch, MSGBOX_AUTOCLOSE
+	end
+
+Route31_EventScript_WadeGiveItem::
+	msgbox Route31_Text_WadeHasItem, MSGBOX_DEFAULT
+	giveitem VAR_WADE_ITEM_HNS
+	goto_if_eq VAR_RESULT, FALSE, Route31_EventScript_WadeNoRoom
+	clearflag FLAG_WADE_HAS_ITEM_HNS
+	msgbox Route31_Text_WadeGaveItem, MSGBOX_AUTOCLOSE
+	end
+
+Route31_EventScript_WadeNoRoom::
+	msgbox Route31_Text_WadeNoRoom, MSGBOX_AUTOCLOSE
 	end
 
 Route31_EventScript_Youngster::
@@ -208,6 +221,23 @@ Route31_Text_WadePostRematch:
 	.string "You'll hear from me as soon\n"
 	.string "as I find anything that you\l"
 	.string "might like.$"
+
+Route31_Text_WadeHasItem:
+	.string "Hey! I've been looking for\n"
+	.string "you!\p"
+	.string "I found something while I\n"
+	.string "was in the grass.\p"
+	.string "Here, you can have it!$"
+
+Route31_Text_WadeGaveItem:
+	.string "I'll let you know if I find\n"
+	.string "anything else!$"
+
+Route31_Text_WadeNoRoom:
+	.string "Hmm, looks like your BAG\n"
+	.string "is full.\p"
+	.string "Come back when you have\n"
+	.string "room!$"
 
 Route31_Text_DarkCaveSign:
 	.string "DARK CAVE$"

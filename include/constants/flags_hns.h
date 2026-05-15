@@ -814,14 +814,14 @@
 #define FLAG_FOUGHT_DEOXYS                               0x2E8
 
 #define FLAG_POKERUS_EXPLAINED                               0x2E9
-#define FLAG_UNUSED_10                              0x2EA
-#define FLAG_UNUSED_11                              0x2EB
-#define FLAG_UNUSED_12                              0x2EC
-#define FLAG_UNUSED_13                              0x2ED
-#define FLAG_UNUSED_14                              0x2EE
-#define FLAG_UNUSED_15                              0x2EF
-#define FLAG_UNUSED_16                              0x2F0
-#define FLAG_UNUSED_17                              0x2F1
+#define FLAG_WADE_HAS_ITEM_HNS                      0x2EA
+#define FLAG_ALAN_HAS_ITEM_HNS                      0x2EB
+#define FLAG_DANA_HAS_ITEM_HNS                      0x2EC
+#define FLAG_TULLY_HAS_ITEM_HNS                     0x2ED
+#define FLAG_WILTON_HAS_ITEM_HNS                    0x2EE
+#define FLAG_DEREK_HAS_ITEM_HNS                     0x2EF
+#define FLAG_BEVERLY_HAS_ITEM_HNS                   0x2F0
+#define FLAG_JOSE_HAS_ITEM_HNS                      0x2F1
 #define FLAG_UNUSED_18                              0x2F2
 #define FLAG_UNUSED_19                              0x2F3
 #define FLAG_UNUSED_20                              0x2F4

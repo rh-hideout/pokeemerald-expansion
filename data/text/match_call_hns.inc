@@ -70,6 +70,15 @@ MatchCall_HNS_Wade_General3::
 	.string "I felt a little sorry for\l"
 	.string "the poor thing.$"
 
+MatchCall_HNS_Wade_FoundItem::
+	.string "{PLAYER}, howdy!\p"
+	.string "I found all kinds of\n"
+	.string "BERRIES.\p"
+	.string "If you want, I'll share\n"
+	.string "some with you.\p"
+	.string "I'll be waiting on\n"
+	.string "ROUTE 31.$"
+
 MatchCall_HNS_Wade_Battle::
 	.string "{PLAYER}, howdy!\p"
 	.string "Do you feel like a POKéMON\n"
@@ -337,6 +346,15 @@ MatchCall_HNS_Alan_General3::
 	.string "Studying up in advance\n"
 	.string "worked!$"
 
+MatchCall_HNS_Alan_FoundItem::
+	.string "Hi, {PLAYER}!\n"
+	.string "It's ALAN!\p"
+	.string "Hehehe, I picked up\n"
+	.string "something nice!\p"
+	.string "You can have it!\p"
+	.string "Why don't you come to\n"
+	.string "ROUTE 36 and pick it up?$"
+
 MatchCall_HNS_Alan_Battle::
 	.string "Hi, {PLAYER}!\n"
 	.string "It's ALAN!\p"
@@ -369,6 +387,16 @@ MatchCall_HNS_Dana_General3::
 	.string "It must be because you\n"
 	.string "gave me some battling tips\l"
 	.string "last time.$"
+
+MatchCall_HNS_Dana_FoundItem::
+	.string "Hi, {PLAYER}!\n"
+	.string "It's DANA!\p"
+	.string "You know what?\n"
+	.string "I got a good gift!\p"
+	.string "As I promised, it's yours!\n"
+	.string "I'm sure you'd like it.\p"
+	.string "Come get it! I'm waiting\n"
+	.string "on ROUTE 38!$"
 
 MatchCall_HNS_Dana_Battle::
 	.string "Hi, {PLAYER}!\n"
@@ -446,6 +474,14 @@ MatchCall_HNS_Derek_General3::
 	.string "Let's get together and\n"
 	.string "brag about our PIKACHU!$"
 
+MatchCall_HNS_Derek_FoundItem::
+	.string "Hey, {PLAYER}!\n"
+	.string "It's DEREK!\p"
+	.string "I'd like you to have a\n"
+	.string "NUGGET.\p"
+	.string "I'm on ROUTE 39.\n"
+	.string "Come pick it up!$"
+
 MatchCall_HNS_Derek_Battle::
 	.string "Hey, {PLAYER}!\n"
 	.string "It's DEREK!\p"
@@ -479,6 +515,16 @@ MatchCall_HNS_Tully_General3::
 	.string "even.\p"
 	.string "Heh, I guess you can't\n"
 	.string "tell over the phone…$"
+
+MatchCall_HNS_Tully_FoundItem::
+	.string "Hey, {PLAYER}!\n"
+	.string "It's TULLY!\p"
+	.string "I picked up a good little\n"
+	.string "thing at the water's edge.\p"
+	.string "Like I promised, it's\n"
+	.string "yours.\p"
+	.string "I'll be waiting on\n"
+	.string "ROUTE 42.$"
 
 MatchCall_HNS_Tully_Battle::
 	.string "Hey, {PLAYER}!\n"
@@ -624,6 +670,14 @@ MatchCall_HNS_Wilton_General3::
 	.string "You know, I have more fun\n"
 	.string "fishing than beating wild\l"
 	.string "POKéMON.$"
+
+MatchCall_HNS_Wilton_FoundItem::
+	.string "Hey, {PLAYER}!\n"
+	.string "It's WILTON!\p"
+	.string "I snagged an item while\n"
+	.string "fishing.\p"
+	.string "Come pick it up on\n"
+	.string "ROUTE 44.$"
 
 MatchCall_HNS_Wilton_Battle::
 	.string "Hey, {PLAYER}!\n"
@@ -782,6 +836,18 @@ MatchCall_HNS_Beverly_General3::
 	.string "Let's chat about POKéMON\n"
 	.string "again.$"
 
+MatchCall_HNS_Beverly_FoundItem::
+	.string "Hello, {PLAYER}!\n"
+	.string "It's BEVERLY!\p"
+	.string "My husband got some\n"
+	.string "NUGGETS.\p"
+	.string "If you'd like, you could\n"
+	.string "have one as thanks for\l"
+	.string "helping me out.\p"
+	.string "I'll be at NATIONAL PARK.\n"
+	.string "Please come see me when\l"
+	.string "you can.$"
+
 MatchCall_HNS_Beverly_Battle::
 	.string "Hello, {PLAYER}!\n"
 	.string "It's BEVERLY!\p"
@@ -907,6 +973,18 @@ MatchCall_HNS_Jose_General3::
 	.string "FARFETCH'D wield that\l"
 	.string "stick.\p"
 	.string "Amazing stuff!$"
+
+MatchCall_HNS_Jose_FoundItem::
+	.string "Hey, {PLAYER}!\n"
+	.string "It's JOSE!\p"
+	.string "My FARFETCH'D had\n"
+	.string "something pretty in its\l"
+	.string "beak.\p"
+	.string "Like I promised, you can\n"
+	.string "have it.\p"
+	.string "Catch up to me on\n"
+	.string "ROUTE 27, and I'll let\l"
+	.string "you have it.$"
 
 MatchCall_HNS_Jose_Battle::
 	.string "Hey, {PLAYER}!\n"

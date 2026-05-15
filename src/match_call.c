@@ -115,6 +115,7 @@ struct MatchCallTrainerTextInfo
 
 #if IS_HNS
 #define HNS_MAX_GENERAL_TEXTS 3
+#define HNS_MAX_GIFT_ITEMS    4
 
 struct HnsMatchCallTrainerInfo
 {
@@ -122,7 +123,21 @@ struct HnsMatchCallTrainerInfo
     const u8 *generalTexts[HNS_MAX_GENERAL_TEXTS];
     u8 numGeneralTexts;
     const u8 *battleRequestText;
+    u16 itemFlag;
+    u16 itemVar;
+    const u16 *giftItems;
+    u8 numGiftItems;
+    const u8 *foundItemText;
 };
+
+static const u16 sWadeGiftItems[] = { ITEM_ORAN_BERRY, ITEM_PECHA_BERRY, ITEM_CHERI_BERRY, ITEM_RAWST_BERRY };
+static const u16 sAlanGiftItems[] = { ITEM_FIRE_STONE, ITEM_THUNDER_STONE, ITEM_WATER_STONE, ITEM_LEAF_STONE };
+static const u16 sDanaGiftItems[] = { ITEM_THUNDER_STONE, ITEM_FIRE_STONE, ITEM_WATER_STONE };
+static const u16 sTullyGiftItems[] = { ITEM_WATER_STONE, ITEM_SHARP_BEAK };
+static const u16 sWiltonGiftItems[] = { ITEM_WATER_STONE, ITEM_HEAVY_BALL, ITEM_LURE_BALL };
+static const u16 sDerekGiftItems[] = { ITEM_NUGGET };
+static const u16 sBeverlyGiftItems[] = { ITEM_NUGGET };
+static const u16 sJoseGiftItems[] = { ITEM_SHARP_BEAK, ITEM_SILK_SCARF };
 
 #define HNS_MC_ENTRY2(name, trId) { \
     .trainerId = trId, \
@@ -136,10 +151,28 @@ struct HnsMatchCallTrainerInfo
     .numGeneralTexts = 3, \
     .battleRequestText = MatchCall_HNS_##name##_Battle }
 
+#define HNS_MC_ITEM2(name, trId, flag, var, items) { \
+    .trainerId = trId, \
+    .generalTexts = { MatchCall_HNS_##name##_General1, MatchCall_HNS_##name##_General2 }, \
+    .numGeneralTexts = 2, \
+    .battleRequestText = MatchCall_HNS_##name##_Battle, \
+    .itemFlag = flag, .itemVar = var, \
+    .giftItems = items, .numGiftItems = ARRAY_COUNT(items), \
+    .foundItemText = MatchCall_HNS_##name##_FoundItem }
+
+#define HNS_MC_ITEM3(name, trId, flag, var, items) { \
+    .trainerId = trId, \
+    .generalTexts = { MatchCall_HNS_##name##_General1, MatchCall_HNS_##name##_General2, MatchCall_HNS_##name##_General3 }, \
+    .numGeneralTexts = 3, \
+    .battleRequestText = MatchCall_HNS_##name##_Battle, \
+    .itemFlag = flag, .itemVar = var, \
+    .giftItems = items, .numGiftItems = ARRAY_COUNT(items), \
+    .foundItemText = MatchCall_HNS_##name##_FoundItem }
+
 static const struct HnsMatchCallTrainerInfo sHnsMatchCallTrainers[] =
 {
     HNS_MC_ENTRY3(Joey,     TRAINER_JOEY_HNS),
-    HNS_MC_ENTRY3(Wade,     TRAINER_WADE_HNS),
+    HNS_MC_ITEM3(Wade,      TRAINER_WADE_HNS,     FLAG_WADE_HAS_ITEM_HNS,    VAR_WADE_ITEM_HNS,    sWadeGiftItems),
     HNS_MC_ENTRY3(Ralph,    TRAINER_RALPH_HNS),
     HNS_MC_ENTRY3(Liz,      TRAINER_LIZ_HNS),
     HNS_MC_ENTRY3(Anthony,  TRAINER_ANTHONY_HNS),
@@ -147,24 +180,24 @@ static const struct HnsMatchCallTrainerInfo sHnsMatchCallTrainers[] =
     HNS_MC_ENTRY3(Gina,     TRAINER_GINA_HNS),
     HNS_MC_ENTRY3(Irwin,    TRAINER_IRWIN_HNS),
     HNS_MC_ENTRY3(Arnie,    TRAINER_ARNIE_HNS),
-    HNS_MC_ENTRY3(Alan,     TRAINER_ALAN_HNS),
-    HNS_MC_ENTRY3(Dana,     TRAINER_DANA_HNS),
+    HNS_MC_ITEM3(Alan,      TRAINER_ALAN_HNS,     FLAG_ALAN_HAS_ITEM_HNS,    VAR_ALAN_ITEM_HNS,    sAlanGiftItems),
+    HNS_MC_ITEM3(Dana,      TRAINER_DANA_HNS,     FLAG_DANA_HAS_ITEM_HNS,    VAR_DANA_ITEM_HNS,    sDanaGiftItems),
     HNS_MC_ENTRY3(Chad,     TRAINER_CHAD_HNS),
-    HNS_MC_ENTRY3(Derek,    TRAINER_DEREK_HNS),
-    HNS_MC_ENTRY3(Tully,    TRAINER_TULLY_HNS),
+    HNS_MC_ITEM3(Derek,     TRAINER_DEREK_HNS,    FLAG_DEREK_HAS_ITEM_HNS,   VAR_DEREK_ITEM_HNS,   sDerekGiftItems),
+    HNS_MC_ITEM3(Tully,     TRAINER_TULLY_HNS,    FLAG_TULLY_HAS_ITEM_HNS,   VAR_TULLY_ITEM_HNS,   sTullyGiftItems),
     HNS_MC_ENTRY3(Brent,    TRAINER_BRENT_HNS),
     HNS_MC_ENTRY3(Tiffany,  TRAINER_TIFFANY_HNS),
     HNS_MC_ENTRY3(Vance,    TRAINER_VANCE_HNS),
-    HNS_MC_ENTRY3(Wilton,   TRAINER_WILTON_HNS),
+    HNS_MC_ITEM3(Wilton,    TRAINER_WILTON_HNS,   FLAG_WILTON_HAS_ITEM_HNS,  VAR_WILTON_ITEM_HNS,  sWiltonGiftItems),
     HNS_MC_ENTRY3(Kenji,    TRAINER_KENJI_HNS),
     HNS_MC_ENTRY3(Parry,    TRAINER_PARRY_HNS),
     HNS_MC_ENTRY3(Erin,     TRAINER_ERIN_HNS),
     HNS_MC_ENTRY3(Jack,     TRAINER_JACK_HNS),
-    HNS_MC_ENTRY3(Beverly,  TRAINER_BEVERLY_HNS),
+    HNS_MC_ITEM3(Beverly,   TRAINER_BEVERLY_HNS,  FLAG_BEVERLY_HAS_ITEM_HNS, VAR_BEVERLY_ITEM_HNS, sBeverlyGiftItems),
     HNS_MC_ENTRY2(Huey,     TRAINER_HUEY_HNS),
     HNS_MC_ENTRY3(Gaven,    TRAINER_GAVEN_HNS),
     HNS_MC_ENTRY3(Beth,     TRAINER_BETH_HNS),
-    HNS_MC_ENTRY3(Jose,     TRAINER_JOSE_HNS),
+    HNS_MC_ITEM3(Jose,      TRAINER_JOSE_HNS,     FLAG_JOSE_HAS_ITEM_HNS,    VAR_JOSE_ITEM_HNS,    sJoseGiftItems),
     HNS_MC_ENTRY3(Reena,    TRAINER_REENA_HNS),
 };
 #endif
@@ -1638,6 +1671,20 @@ bool32 SelectMatchCallMessage(int trainerId, u8 *str)
                 text = sHnsMatchCallTrainers[i].battleRequestText;
                 newRematchRequest = TRUE;
                 UpdateRematchIfDefeated(rematchIdx);
+            }
+            else if (sHnsMatchCallTrainers[i].itemFlag != 0
+                  && FlagGet(sHnsMatchCallTrainers[i].itemFlag))
+            {
+                text = sHnsMatchCallTrainers[i].foundItemText;
+            }
+            else if (sHnsMatchCallTrainers[i].itemFlag != 0
+                  && !FlagGet(sHnsMatchCallTrainers[i].itemFlag)
+                  && (Random() % 3) == 0)
+            {
+                u8 itemIdx = Random() % sHnsMatchCallTrainers[i].numGiftItems;
+                VarSet(sHnsMatchCallTrainers[i].itemVar, sHnsMatchCallTrainers[i].giftItems[itemIdx]);
+                FlagSet(sHnsMatchCallTrainers[i].itemFlag);
+                text = sHnsMatchCallTrainers[i].foundItemText;
             }
             else
             {
