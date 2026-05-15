@@ -189,24 +189,25 @@ Route31_Text_Sign:
 	.string "VIOLET CITY - CHERRYGROVE CITY$"
 
 Route31_Text_WadeRegister:
-	.string "That was a great battle!\p"
-	.string "Let me register you in my\n"
-	.string "POKéGEAR.\p"
-	.string "I'll call you if I find any\n"
-	.string "rare BUG POKéMON!$"
+	.string "You're awesome! I like you!\p"
+	.string "I look for POKéMON here every\n"
+	.string "day.\p"
+	.string "When I'm in the grass, I find\n"
+	.string "all kinds of BERRIES.\p"
+	.string "If you'd like, I'll share\n"
+	.string "some.$"
 
 Route31_Text_WadeRematchIntro:
-	.string "I've been catching more BUG\n"
-	.string "POKéMON! Let's battle again!$"
+	.string "I was waiting for you.\n"
+	.string "Let's battle!$"
 
 Route31_Text_WadeRematchDefeat:
-	.string "Aw, I still can't beat you…$"
+	.string "Awwwww…$"
 
 Route31_Text_WadePostRematch:
-	.string "I'll keep training my BUG\n"
-	.string "POKéMON.\p"
-	.string "Call me anytime you want\n"
-	.string "another battle!$"
+	.string "You'll hear from me as soon\n"
+	.string "as I find anything that you\l"
+	.string "might like.$"
 
 Route31_Text_DarkCaveSign:
 	.string "DARK CAVE$"
