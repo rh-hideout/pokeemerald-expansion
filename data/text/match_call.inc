@@ -2038,6 +2038,17 @@ MatchCall_Text_Mom3::
 	.string "Wear those RUNNING SHOES until\n"
 	.string "they fall apart, honey!$"
 
+MatchCall_Text_Baoba1::
+	.string "BAOBA: {PLAYER}!\n"
+	.string "The SAFARI ZONE is nearly ready!\p"
+	.string "I'll call you first thing when\n"
+	.string "it's finished!$"
+
+MatchCall_Text_Baoba2::
+	.string "BAOBA: {PLAYER}!\n"
+	.string "The SAFARI ZONE is open! Come\p"
+	.string "anytime!$"
+
 MatchCall_Text_Roxanne1::
 	.string "ROXANNE: Oh, hello, {PLAYER}!\p"
 	.string "I've been hard at work retraining\n"

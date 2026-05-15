@@ -1668,6 +1668,8 @@ extern const u8 MatchCall_Text_Norman9[];
 extern const u8 MatchCall_Text_Mom1[];
 extern const u8 MatchCall_Text_Mom2[];
 extern const u8 MatchCall_Text_Mom3[];
+extern const u8 MatchCall_Text_Baoba1[];
+extern const u8 MatchCall_Text_Baoba2[];
 extern const u8 MatchCall_Text_Steven1[];
 extern const u8 MatchCall_Text_Steven2[];
 extern const u8 MatchCall_Text_Steven3[];

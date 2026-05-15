@@ -155,6 +155,12 @@ static const u8 sBattleTransitionTable_BattleDome[] =
     .mapNum = MAP_NUM(map),                                             \
 }
 
+#if IS_HNS
+const struct RematchTrainer gRematchTable[REMATCH_TABLE_ENTRIES] =
+{
+    [0] = {{0}}
+};
+#else
 const struct RematchTrainer gRematchTable[REMATCH_TABLE_ENTRIES] =
 {
     [REMATCH_ROSE] = REMATCH(TRAINER_ROSE_1, TRAINER_ROSE_2, TRAINER_ROSE_3, TRAINER_ROSE_4, TRAINER_ROSE_5, MAP_ROUTE118),
@@ -236,6 +242,7 @@ const struct RematchTrainer gRematchTable[REMATCH_TABLE_ENTRIES] =
     [REMATCH_DRAKE] = REMATCH(TRAINER_DRAKE, TRAINER_DRAKE, TRAINER_DRAKE, TRAINER_DRAKE, TRAINER_DRAKE, MAP_EVER_GRANDE_CITY),
     [REMATCH_WALLACE] = REMATCH(TRAINER_WALLACE, TRAINER_WALLACE, TRAINER_WALLACE, TRAINER_WALLACE, TRAINER_WALLACE, MAP_EVER_GRANDE_CITY),
 };
+#endif
 
 #define tState data[0]
 #define tTransition data[1]
