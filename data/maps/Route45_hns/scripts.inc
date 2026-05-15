@@ -37,8 +37,36 @@ Route45_EventScript_Timothy::
 	end
 
 Route45_EventScript_Kenji::
-	trainerbattle_single TRAINER_KENJI_HNS, Route45_Text_BlackbeltKenjiSeen, Route45_Text_BlackbeltKenjiBeaten
+	trainerbattle_single TRAINER_KENJI_HNS, Route45_Text_BlackbeltKenjiSeen, Route45_Text_BlackbeltKenjiBeaten, Route45_EventScript_RegisterKenji
+	goto_if_set FLAG_KENJI_HAS_ITEM_HNS, Route45_EventScript_KenjiGiveItem
+	specialvar VAR_RESULT, ShouldTryRematchBattle
+	goto_if_eq VAR_RESULT, TRUE, Route45_EventScript_RematchKenji
 	msgbox Route45_Text_BlackbeltKenjiAfter, MSGBOX_AUTOCLOSE
+	end
+
+Route45_EventScript_RegisterKenji::
+	special PlayerFaceTrainerAfterBattle
+	waitmovement 0
+	msgbox Route45_Text_KenjiRegister, MSGBOX_DEFAULT
+	register_matchcall TRAINER_KENJI_HNS
+	release
+	end
+
+Route45_EventScript_RematchKenji::
+	trainerbattle_rematch TRAINER_KENJI_HNS, Route45_Text_KenjiRematchIntro, Route45_Text_KenjiRematchDefeat
+	msgbox Route45_Text_KenjiPostRematch, MSGBOX_AUTOCLOSE
+	end
+
+Route45_EventScript_KenjiGiveItem::
+	msgbox Route45_Text_KenjiHasItem, MSGBOX_DEFAULT
+	giveitem VAR_KENJI_ITEM_HNS
+	goto_if_eq VAR_RESULT, FALSE, Route45_EventScript_KenjiNoRoom
+	clearflag FLAG_KENJI_HAS_ITEM_HNS
+	msgbox Route45_Text_KenjiGaveItem, MSGBOX_AUTOCLOSE
+	end
+
+Route45_EventScript_KenjiNoRoom::
+	msgbox Route45_Text_KenjiNoRoom, MSGBOX_AUTOCLOSE
 	end
 
 Route45_EventScript_Ryan::
@@ -160,6 +188,38 @@ Route45_Text_BlackbeltKenjiAfter:
     .string "This calls for extreme measures.\p"
     .string "I must take to the hills and train\n"
     .string "in solitude.$"
+
+Route45_Text_KenjiRegister:
+    .string "This calls for extreme measures.\p"
+    .string "I must take to the hills and train\n"
+    .string "in solitude.$"
+
+Route45_Text_KenjiRematchIntro:
+    .string "I was training here alone.\p"
+    .string "Behold the fruits of my labor!$"
+
+Route45_Text_KenjiRematchDefeat:
+    .string "Waaaargh!$"
+
+Route45_Text_KenjiPostRematch:
+    .string "This calls for extreme measures.\p"
+    .string "I must take to the hills and train\n"
+    .string "in solitude.$"
+
+Route45_Text_KenjiHasItem:
+    .string "Hey! I'm taking a break from\n"
+    .string "training.\p"
+    .string "I found something good while I\n"
+    .string "was out. Here, take it!$"
+
+Route45_Text_KenjiGaveItem:
+    .string "Use it well!\p"
+    .string "I need to get back to my\n"
+    .string "training. Oooooaaarrrgh!$"
+
+Route45_Text_KenjiNoRoom:
+    .string "Hmm, your BAG is full.\p"
+    .string "Come back when you have room.$"
 
 Route45_Text_BlackbeltKenjiMorning:
     .string "I'm going to train a bit more\n"

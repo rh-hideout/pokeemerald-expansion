@@ -822,7 +822,7 @@
 #define FLAG_DEREK_HAS_ITEM_HNS                     0x2EF
 #define FLAG_BEVERLY_HAS_ITEM_HNS                   0x2F0
 #define FLAG_JOSE_HAS_ITEM_HNS                      0x2F1
-#define FLAG_UNUSED_18                              0x2F2
+#define FLAG_KENJI_HAS_ITEM_HNS                     0x2F2
 #define FLAG_UNUSED_19                              0x2F3
 #define FLAG_UNUSED_20                              0x2F4
 #define FLAG_UNUSED_21                              0x2F5

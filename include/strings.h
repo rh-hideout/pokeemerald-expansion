@@ -1752,6 +1752,7 @@ extern const u8 MatchCall_HNS_Kenji_General1[];
 extern const u8 MatchCall_HNS_Kenji_General2[];
 extern const u8 MatchCall_HNS_Kenji_General3[];
 extern const u8 MatchCall_HNS_Kenji_Battle[];
+extern const u8 MatchCall_HNS_Kenji_FoundItem[];
 extern const u8 MatchCall_HNS_Parry_General1[];
 extern const u8 MatchCall_HNS_Parry_General2[];
 extern const u8 MatchCall_HNS_Parry_General3[];

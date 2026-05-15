@@ -716,6 +716,14 @@ MatchCall_HNS_Kenji_Battle::
 	.string "Why not drop by if you\n"
 	.string "are free?$"
 
+MatchCall_HNS_Kenji_FoundItem::
+	.string "Hey, {PLAYER}!\n"
+	.string "This is KENJI!\p"
+	.string "I'm taking a break from\n"
+	.string "training.\p"
+	.string "I found something good.\n"
+	.string "Come get it if you want!$"
+
 @ Parry - Hiker, Route 45
 MatchCall_HNS_Parry_General1::
 	.string "Hey, {PLAYER}!\n"
