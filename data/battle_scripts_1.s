@@ -232,12 +232,6 @@ BattleScript_StatDidntChangeMessagePause::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_MissedTarget::
-	pause B_WAIT_TIME_SHORT
-	printstring STRINGID_PKMNAVOIDEDATTACK
-	waitmessage B_WAIT_TIME_LONG
-	return
-
 BattleScript_EffectShedTail::
 	attackcanceler
 	waitstate
@@ -424,7 +418,7 @@ BattleScript_SaltCureExtraDamage::
 
 BattleScript_EffectCorrosiveGas::
 	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	jumpifsubstituteblocks BattleScript_CorrosiveGasFail
 	jumpifcantloseitem BattleScript_CorrosiveGasFail
 	attackanimation
@@ -550,7 +544,7 @@ BattleScript_EffectShellTrap::
 
 BattleScript_EffectCourtChange::
 	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	swapsidestatuses
 	attackanimation
 	waitanimation
@@ -590,9 +584,12 @@ BattleScript_FlingFailConsumeItem::
 	goto BattleScript_ButItFailed
 
 BattleScript_TargetAvoidsAttackConsumeFlingItem::
-	pause B_WAIT_TIME_SHORT
-	printfromtable gMissStringIds
-	waitmessage B_WAIT_TIME_LONG
+	call BattleScript_BattlerAvoidedAttack
+	removeitem BS_ATTACKER
+	return
+
+BattleScript_TargetProtectedConsumeFlingItem::
+	call BattleScript_TargetProtected
 	removeitem BS_ATTACKER
 	return
 
@@ -602,10 +599,6 @@ BattleScript_FlingBlockedByShieldDust::
 	removeitem BS_ATTACKER
 	return
 
-BattleScript_FlingMissed::
-	removeitem BS_ATTACKER
-	goto BattleScript_MoveMissedPause
-
 BattleScript_RemoveItem::
 	removeitem BS_ATTACKER
 	return
@@ -613,7 +606,7 @@ BattleScript_RemoveItem::
 BattleScript_EffectOctolock::
 	attackcanceler
 	jumpifsubstituteblocks BattleScript_ButItFailed
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	trysetoctolock BattleScript_ButItFailed
 	attackanimation
 	waitanimation
@@ -731,7 +724,7 @@ BattleScript_EffectLifeDewHealing:
 
 BattleScript_EffectAllySwitch::
 	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	tryallyswitch BattleScript_ButItFailed
 	attackanimation
 	waitanimation
@@ -743,7 +736,7 @@ BattleScript_EffectAllySwitch::
 
 BattleScript_EffectFairyLock::
 	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	trysetfairylock BattleScript_ButItFailed
 	attackanimation
 	waitanimation
@@ -840,7 +833,7 @@ BattleScript_MoveEffectFeint::
 
 BattleScript_EffectThirdType::
 	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	trythirdtype BattleScript_ButItFailed
 	attackanimation
 	waitanimation
@@ -867,7 +860,7 @@ BattleScript_ActivateSwitchInAbility::
 
 BattleScript_EffectAfterYou::
 	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	tryafteryou BattleScript_ButItFailed
 	attackanimation
 	waitanimation
@@ -885,7 +878,7 @@ BattleScript_MoveEffectFlameBurst::
 
 BattleScript_EffectPowerTrick::
 	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	powertrick
 	attackanimation
 	waitanimation
@@ -895,7 +888,7 @@ BattleScript_EffectPowerTrick::
 
 BattleScript_EffectPsychoShift::
 	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	jumpifstatus BS_ATTACKER, STATUS1_ANY, BattleScript_EffectPsychoShiftCanWork
 	goto BattleScript_ButItFailed
 BattleScript_EffectPsychoShiftCanWork:
@@ -972,7 +965,7 @@ BattleScript_HitSwitchTargetForceRandomSwitchFailed:
 
 BattleScript_EffectSoak::
 	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	jumpifability BS_TARGET, ABILITY_MULTITYPE, BattleScript_ButItFailed
 	jumpifability BS_TARGET, ABILITY_RKS_SYSTEM, BattleScript_ButItFailed
 	jumpifsubstituteblocks BattleScript_ButItFailed
@@ -985,7 +978,7 @@ BattleScript_EffectSoak::
 
 BattleScript_EffectReflectType::
 	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	tryreflecttype BattleScript_ButItFailed
 	attackanimation
 	waitanimation
@@ -995,7 +988,7 @@ BattleScript_EffectReflectType::
 
 BattleScript_EffectElectrify::
 	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	tryelectrify BattleScript_ButItFailed
 	attackanimation
 	waitanimation
@@ -1036,7 +1029,7 @@ BattleScript_EffectTopsyTurvyWorks:
 
 BattleScript_EffectIonDeluge::
 	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	orword gFieldStatuses, STATUS_FIELD_ION_DELUGE
 	attackanimation
 	waitanimation
@@ -1046,7 +1039,7 @@ BattleScript_EffectIonDeluge::
 
 BattleScript_EffectQuash::
 	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	tryquash BattleScript_ButItFailed
 	attackanimation
 	waitanimation
@@ -1070,7 +1063,7 @@ BattleScript_EffectHealPulse::
 
 BattleScript_EffectEntrainment::
 	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	tryentrainment BattleScript_ButItFailed
 	attackanimation
 	waitanimation
@@ -1147,7 +1140,7 @@ BattleScript_EffectHealingWishRestore:
 
 BattleScript_EffectOverwriteAbility::
 	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	tryoverwriteability BattleScript_ButItFailed
 	attackanimation
 	waitanimation
@@ -1255,7 +1248,7 @@ BattleScript_EffectStickyWeb::
 
 BattleScript_EffectGastroAcid::
 	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	jumpifvolatile BS_TARGET, VOLATILE_GASTRO_ACID, BattleScript_ButItFailed
 	setgastroacid BattleScript_ButItFailed
 	attackanimation
@@ -1333,7 +1326,7 @@ BattleScript_EffectAquaRing::
 
 BattleScript_EffectEmbargo::
 	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	setembargo BattleScript_ButItFailed
 	attackanimation
 	waitanimation
@@ -1364,7 +1357,7 @@ BattleScript_TryTailwindAbilitiesLoop_Increment:
 
 BattleScript_EffectMiracleEye::
 	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	jumpifgenconfiglowerthan CONFIG_B_MIRACLE_EYE_FAIL, GEN_5, BattleScript_MiracleEyeSet
 	jumpifvolatile BS_TARGET, VOLATILE_MIRACLE_EYE, BattleScript_ButItFailed
 BattleScript_MiracleEyeSet:
@@ -1410,7 +1403,7 @@ BattleScript_EffectRoost::
 
 BattleScript_EffectHealBlock::
 	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	jumpifvolatile BS_TARGET, VOLATILE_HEAL_BLOCK, BattleScript_ButItFailed
 	jumpifability BS_TARGET_SIDE, ABILITY_AROMA_VEIL, BattleScript_AromaVeilProtects
 	setvolatile BS_TARGET, VOLATILE_HEAL_BLOCK, TRUE
@@ -1438,7 +1431,6 @@ BattleScript_EffectPlaceholder::
 BattleScript_EffectHit::
 	attackcanceler
 BattleScript_HitFromAccCheck::
-	accuracycheck BattleScript_MoveMissedPause
 	copybyte gEffectBattler, gBattlerAttacker
 	setpreattackadditionaleffect
 BattleScript_HitFromDamageCalc::
@@ -1449,7 +1441,6 @@ BattleScript_MoveEnd::
 	end
 
 BattleScript_EffectHit_RetFromAccCheck::
-	accuracycheck BattleScript_MoveMissedPause
 	copybyte gEffectBattler, gBattlerAttacker
 	setpreattackadditionaleffect
 	damagecalc
@@ -1649,7 +1640,7 @@ BattleScript_EffectRoar::
 	jumpifability BS_TARGET, ABILITY_SUCTION_CUPS, BattleScript_AbilityPreventsPhasingOut
 	jumpifvolatile BS_TARGET, VOLATILE_ROOT, BattleScript_PrintMonIsRooted
 	jumpiftargetdynamaxed BattleScript_RoarBlockedByDynamax
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	jumpifbattletype BATTLE_TYPE_ARENA, BattleScript_ButItFailed
 	forcerandomswitch BattleScript_ButItFailed
 
@@ -1780,7 +1771,7 @@ BattleScript_EffectConfuse::
 	jumpifsubstituteblocks BattleScript_ButItFailed
 	jumpifvolatile BS_TARGET, VOLATILE_CONFUSION, BattleScript_AlreadyConfused
 	jumpifterrainaffected BS_TARGET, STATUS_FIELD_MISTY_TERRAIN, BattleScript_MistyTerrainPrevents
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	jumpifsafeguard BattleScript_SafeguardProtected
 	attackanimation
 	waitanimation
@@ -1918,7 +1909,7 @@ BattleScript_EffectLeechSeed::
 	attackcanceler
 	pause B_WAIT_TIME_SHORT
 	jumpifsubstituteblocks BattleScript_ButItFailed
-	accuracycheck BattleScript_DoLeechSeed
+	accuracycheck
 BattleScript_DoLeechSeed::
 	setseeded
 	attackanimation
@@ -1961,7 +1952,7 @@ BattleScript_EffectHappyHour::
 BattleScript_EffectDisable::
 	attackcanceler
 	jumpifability BS_TARGET_SIDE, ABILITY_AROMA_VEIL, BattleScript_AromaVeilProtects
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	disablelastusedattack BattleScript_ButItFailed
 	attackanimation
 	waitanimation
@@ -1971,7 +1962,7 @@ BattleScript_EffectDisable::
 
 BattleScript_EffectEncore::
 	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	jumpifability BS_TARGET_SIDE, ABILITY_AROMA_VEIL, BattleScript_AromaVeilProtects
 	trysetencore BattleScript_ButItFailed
 	attackanimation
@@ -2005,7 +1996,7 @@ BattleScript_EffectConversion2::
 BattleScript_EffectLockOn::
 	attackcanceler
 	jumpifsubstituteblocks BattleScript_ButItFailed
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	setalwayshitflag
 	attackanimation
 	waitanimation
@@ -2041,7 +2032,7 @@ BattleScript_MoveEffectEerieSpell::
 
 BattleScript_EffectSpite::
 	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	tryspiteppreduce BattleScript_ButItFailed
 	attackanimation
 	waitanimation
@@ -2099,7 +2090,7 @@ BattleScript_EffectMeanLookGen5:
 BattleScript_EffectNightmare::
 	attackcanceler
 	jumpifsubstituteblocks BattleScript_ButItFailed
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	jumpifvolatile BS_TARGET, VOLATILE_NIGHTMARE, BattleScript_ButItFailed
 	jumpifstatus BS_TARGET, STATUS1_SLEEP, BattleScript_NightmareWorked
 	jumpifability BS_TARGET, ABILITY_COMATOSE, BattleScript_NightmareWorked
@@ -2150,7 +2141,7 @@ BattleScript_EffectSpikes::
 
 BattleScript_EffectForesight::
 	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	jumpifgenconfiglowerthan CONFIG_B_FORESIGHT_FAIL, GEN_3, BattleScript_ForesightFailCheck
 	jumpifgenconfiglowerthan CONFIG_B_FORESIGHT_FAIL, GEN_5, BattleScript_ForesightSet
 BattleScript_ForesightFailCheck:
@@ -2205,7 +2196,7 @@ BattleScript_TryDestinyKnotAttacker:
 
 BattleScript_EffectAttract::
 	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	jumpifability BS_TARGET_SIDE, ABILITY_AROMA_VEIL, BattleScript_AromaVeilProtects
 	tryinfatuating BattleScript_ButItFailed
 	attackanimation
@@ -2217,7 +2208,7 @@ BattleScript_EffectAttract::
 
 BattleScript_EffectPresent::
 	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	typecalc
 	presentdamagecalculation
 
@@ -2322,7 +2313,7 @@ BattleScript_BlockedByPrimalWeather::
 
 BattleScript_EffectPsychUp::
 	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	copyfoestats
 	attackanimation
 	waitanimation
@@ -2437,7 +2428,7 @@ BattleScript_EffectSwallow::
 
 BattleScript_EffectTorment::
 	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	jumpifability BS_TARGET_SIDE, ABILITY_AROMA_VEIL, BattleScript_AromaVeilProtects
 	settorment BattleScript_ButItFailed
 	attackanimation
@@ -2449,7 +2440,7 @@ BattleScript_EffectTorment::
 BattleScript_EffectNonVolatileStatus::
 	attackcanceler
 	trynonvolatilestatus
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	attackanimation
 	waitanimation
 	setnonvolatilestatus TRIGGER_ON_MOVE
@@ -2482,7 +2473,7 @@ BattleScript_EffectFollowMe::
 BattleScript_EffectTaunt::
 	attackcanceler
 	jumpifability BS_TARGET_SIDE, ABILITY_AROMA_VEIL, BattleScript_AromaVeilProtects
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	settaunt BattleScript_ButItFailed
 	attackanimation
 	waitanimation
@@ -2502,7 +2493,7 @@ BattleScript_EffectHelpingHand::
 BattleScript_EffectTrick::
 	attackcanceler
 	jumpifsubstituteblocks BattleScript_ButItFailed
-	accuracycheck BattleScript_MoveMissedPause
+	accuracycheck
 	tryswapitems BattleScript_ButItFailed
 	attackanimation
 	waitanimation
@@ -3598,7 +3589,6 @@ BattleScript_MonTookFutureAttack::
 	waitmessage B_WAIT_TIME_LONG
 	futuresighttargetfailure BattleScript_DoFutureAttackResult
 	jumpifmovehadnoeffect BattleScript_FutureAttackEnd
-	accuracycheck BattleScript_MoveMissedPause
 	damagecalc
 	jumpifmovehadnoeffect BattleScript_DoFutureAttackResult
 	jumpifbyte CMP_NOT_EQUAL, cMULTISTRING_CHOOSER, B_MSG_FUTURE_SIGHT, BattleScript_FutureHitAnimDoomDesire
@@ -4816,9 +4806,9 @@ BattleScript_TookAttack::
 BattleScript_SturdyPreventsOHKO::
 	pause B_WAIT_TIME_SHORT
 	call BattleScript_AbilityPopUp
-	printstring STRINGID_ITDOESNTAFFECT
+	printstring STRINGID_ITDOESNTAFFECTSCR
 	pause B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_MoveHPDrain::
 	pause B_WAIT_TIME_SHORT
@@ -4939,11 +4929,6 @@ BattleScript_ProteanActivates::
 	call BattleScript_AbilityPopUp
 	printstring STRINGID_PKMNCHANGEDTYPE
 	waitmessage B_WAIT_TIME_LONG
-	return
-
-BattleScript_AbilityAvoidsDamage::
-	call BattleScript_AbilityPopUp
-	printfromtable gMissStringIds @ waitmessage is executed next so no waitmessage here
 	return
 
 BattleScript_TeraShellDistortingTypeMatchups::
@@ -6134,7 +6119,6 @@ BattleScript_DynamaxEnds_Ret::
 	return
 
 BattleScript_MoveBlockedByDynamax::
-	accuracycheck BattleScript_MoveMissedPause
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_MOVEBLOCKEDBYDYNAMAX
 	waitmessage B_WAIT_TIME_LONG
@@ -6146,9 +6130,22 @@ BattleScript_PokemonCantUseTheMove::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
+
+BattleScript_BattlerAvoidedAttack::
+	pause B_WAIT_TIME_SHORT
+	printstring STRINGID_BATTLERAVOIDEDATTACK
+	waitmessage B_WAIT_TIME_LONG
+	return
+
 BattleScript_TargetAvoidsAttack::
 	pause B_WAIT_TIME_SHORT
-	printfromtable gMissStringIds
+	printstring STRINGID_PKMNAVOIDEDATTACK
+	waitmessage B_WAIT_TIME_LONG
+	return
+
+BattleScript_TargetProtected::
+	pause B_WAIT_TIME_SHORT
+	printstring STRINGID_PKMNPROTECTEDITSELF
 	waitmessage B_WAIT_TIME_LONG
 	return
 

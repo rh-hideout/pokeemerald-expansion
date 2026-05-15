@@ -2169,6 +2169,14 @@ static bool32 CheckValidOWESpecies(enum Species speciesId)
     return TRUE;
 }
 
+bool32 CanRemoveObjectForOWEMovement(struct ObjectEvent *objectEvent)
+{
+    if (WE_OWE_PREVENT_SPECIAL_MOVEMENT_DESPAWN && IsObjectActiveOWE(objectEvent) && HasOWENoDespawnFlag(objectEvent))
+        return FALSE;
+
+    return TRUE;
+}
+
 #undef sOverworldEncounterLevel
 #undef sOverworldEncounterAge
 #undef sOverworldEncounterCategory

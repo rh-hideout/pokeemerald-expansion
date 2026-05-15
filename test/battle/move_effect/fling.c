@@ -391,6 +391,60 @@ SINGLE_BATTLE_TEST("Fling's secondary effects are blocked by Shield Dust")
     }
 }
 
+SINGLE_BATTLE_TEST("Fling's berry effects are blocked by Shield Dust")
+{
+    enum Item item;
+    u32 status1 = STATUS1_NONE;
+
+    PARAMETRIZE { item = ITEM_CHERI_BERRY;  status1 = STATUS1_PARALYSIS; }
+    PARAMETRIZE { item = ITEM_LIECHI_BERRY; status1 = STATUS1_NONE; }
+
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_CHERI_BERRY) == HOLD_EFFECT_CURE_PAR);
+        ASSUME(GetItemHoldEffect(ITEM_LIECHI_BERRY) == HOLD_EFFECT_ATTACK_UP);
+        PLAYER(SPECIES_WOBBUFFET) { Item(item); }
+        OPPONENT(SPECIES_VIVILLON) { Ability(ABILITY_SHIELD_DUST); Status1(status1); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FLING); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
+        HP_BAR(opponent);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+    } THEN {
+        if (status1 != STATUS1_NONE)
+            EXPECT_EQ(opponent->status1, status1);
+        else
+            EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Fling's berry effects are blocked by Covert Cloak")
+{
+    enum Item item;
+    u32 status1 = STATUS1_NONE;
+
+    PARAMETRIZE { item = ITEM_CHERI_BERRY;  status1 = STATUS1_PARALYSIS; }
+    PARAMETRIZE { item = ITEM_LIECHI_BERRY; status1 = STATUS1_NONE; }
+
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_CHERI_BERRY) == HOLD_EFFECT_CURE_PAR);
+        ASSUME(GetItemHoldEffect(ITEM_LIECHI_BERRY) == HOLD_EFFECT_ATTACK_UP);
+        PLAYER(SPECIES_WOBBUFFET) { Item(item); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_COVERT_CLOAK); Status1(status1); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FLING); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
+        HP_BAR(opponent);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+    } THEN {
+        if (status1 != STATUS1_NONE)
+            EXPECT_EQ(opponent->status1, status1);
+        else
+            EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+    }
+}
+
 SINGLE_BATTLE_TEST("Fling - thrown berry's effect activates for the target even if the trigger conditions are not met")
 {
     enum Item item;

@@ -53,6 +53,7 @@
   - [How to use Dynamic Shop](tutorials/how_to_dynamic_shop.md)
   - [How to use Overworld Wild Encounters](tutorials/how_to_overworld_wild_encounters.md)
   - [How to use Dynamic Weather](tutorials/how_to_dynamic_weather.md)
+  - [How to use Random Mon Generation](tutorials/how_to_random_mon_generator.md)
 - [Changelog](./CHANGELOG.md)
     - [1.15.x]()
         - [Version 1.15.2](changelogs/1.15.x/1.15.2.md)
