@@ -177,9 +177,10 @@ SINGLE_BATTLE_TEST("Toxic Chain is blocked by Covert Cloak")
     }
 }
 
-SINGLE_BATTLE_TEST("Toxic Chain does not override the move's guaranteed non-volatile status")
+SINGLE_BATTLE_TEST("Toxic Chain is checked after the move's additional effect")
 {
     GIVEN {
+        ASSUME(MoveHasAdditionalEffectWithChance(MOVE_NUZZLE, MOVE_EFFECT_PARALYSIS, 100) == TRUE);
         ASSUME(GetMoveCategory(MOVE_NUZZLE) != DAMAGE_CATEGORY_STATUS);
         ASSUME(GetMovePower(MOVE_NUZZLE) > 0);
         PLAYER(SPECIES_OKIDOGI) { Ability(ABILITY_TOXIC_CHAIN); }
