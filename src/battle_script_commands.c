@@ -1851,20 +1851,8 @@ static void Cmd_resultmessage(void)
 
     if (*moveResultFlags & MOVE_RESULT_MISSED && !(*moveResultFlags & MOVE_RESULT_DOESNT_AFFECT_FOE))
     {
-        if (gMultiHitCounter && gMultiHitCounter < GetMoveStrikeCount(gCurrentMove))
-        {
-            gMultiHitCounter = 0;
-            gBattleStruct->moveDamage[gBattlerTarget] = 0;
-            gSpecialStatuses[gBattlerTarget].damagedByAttack = FALSE;
-            *moveResultFlags &= ~MOVE_RESULT_MISSED;
-            BattleScriptCall(BattleScript_MultiHitPrintStrings);
-            return;
-        }
-        else
-        {
-            gBattleCommunication[MSG_DISPLAY] = 1;
-            stringId = STRINGID_PKMNAVOIDEDATTACK;
-        }
+        gBattleCommunication[MSG_DISPLAY] = 1;
+        stringId = STRINGID_PKMNAVOIDEDATTACK;
     }
     else
     {

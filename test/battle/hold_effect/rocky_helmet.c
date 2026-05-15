@@ -25,7 +25,6 @@ SINGLE_BATTLE_TEST("Rocky Helmet does not trigger contact damage again after a l
 {
     const u32 maxHP = 600;
 
-    KNOWN_FAILING;
     GIVEN {
         ASSUME(MoveMakesContact(MOVE_POPULATION_BOMB));
         ASSUME(GetMoveEffect(MOVE_POPULATION_BOMB) == EFFECT_POPULATION_BOMB);

@@ -2192,11 +2192,12 @@ static enum CancelerResult CancelerAccuracyCheck(struct BattleCalcValues *cv)
 
         if (DoesMoveMissTarget(cv))
         {
+            bool32 isMultiHitOn = gSpecialStatuses[cv->battlerAtk].multiHitOn;
             gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_MISSED;
 
             if (cv->holdEffects[cv->battlerAtk] == HOLD_EFFECT_BLUNDER_POLICY
              && cv->moveEffect != EFFECT_OHKO
-             && !gSpecialStatuses[cv->battlerAtk].multiHitOn)
+             && !isMultiHitOn)
                 gBattleStruct->blunderPolicy = TRUE;
 
             if (isSmartTarget
@@ -2209,7 +2210,7 @@ static enum CancelerResult CancelerAccuracyCheck(struct BattleCalcValues *cv)
                 gBattlerTarget = BATTLE_PARTNER(cv->battlerDef); // Smart target to partner if miss
             }
 
-            if (!gSpecialStatuses[cv->battlerAtk].multiHitOn)
+            if (!isMultiHitOn)
             {
                 gLastLandedMoves[cv->battlerDef] = 0;
                 gLastHitByType[cv->battlerDef] = 0;
@@ -2221,7 +2222,14 @@ static enum CancelerResult CancelerAccuracyCheck(struct BattleCalcValues *cv)
                 continue;
             }
 
-            if (gBattleStruct->moveResultFlags[cv->battlerDef] & MOVE_RESULT_ONE_HIT_KO_STURDY)
+            if (isMultiHitOn)
+            {
+                gMultiHitCounter = 0;
+                gBattleStruct->moveDamage[gBattlerTarget] = 0;
+                gSpecialStatuses[gBattlerTarget].damagedByAttack = FALSE;
+                BattleScriptCall(BattleScript_BattlerAvoidedMultiHit);
+            }
+            else if (gBattleStruct->moveResultFlags[cv->battlerDef] & MOVE_RESULT_ONE_HIT_KO_STURDY)
             {
                 gLastUsedAbility = ABILITY_STURDY;
                 gBattlerAbility = cv->battlerDef;
