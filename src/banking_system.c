@@ -21,6 +21,7 @@
 #include "overworld.h"
 #include "random.h"
 #include "script.h"
+#include "script_menu.h"
 #include "string_util.h"
 #include "strings.h"
 #include "task.h"
@@ -152,19 +153,6 @@ static const struct RepeatPurchaseItem sRepeatPurchaseTable[] = {
     {ITEM_CHILAN_BERRY, 5, 100},
 };
 
-static const s32 sPowersOfTen[] = {
-    1,
-    10,
-    100,
-    1000,
-    10000,
-    100000,
-    1000000,
-    10000000,
-    100000000,
-    1000000000,
-};
-
 // Strings
 static const u8 sText_Deposit[] = _("Deposit");
 static const u8 sText_Withdraw[] = _("Withdraw");
@@ -172,14 +160,12 @@ static const u8 sText_Withdraw[] = _("Withdraw");
 // Variables
 EWRAM_DATA static u8 sBalanceBoxWindowId = 0;
 EWRAM_DATA static u8 sBalanceLabelSpriteId = 0;
-u32 sTransactionAmount = 0;
 u8 sTransactionWindowId = 0;
 u8 sBankingModeWindowId = 0;
 
 // Static Functions
 static u32 GetStepSize(s16 heldFrames);
 static bool32 HandleAmountInput(u32 *amount, u32 max, u32 min, s16 *heldFrames);
-static bool32 Banking_HandleNumericInput(u32* amount, u32 max, u32 min, s16 *digit);
 static u32 GetTransactionMaxAmount(enum BankingMode mode);
 static void UpdateBankBalanceAfterTransaction(enum BankingMode mode);
 static void Banking_DrawBalanceBox(int amount, u8 x, u8 y);
@@ -427,7 +413,7 @@ u32 CalcAmountToDeposit(u32 money)
 
 u32 GetTransactionAmount(void)
 {
-    return sTransactionAmount;
+    return gNumericInput.value;
 }
 
 void CreateBankingWindow(void)
@@ -487,60 +473,9 @@ static UNUSED bool32 HandleAmountInput(u32 *amount, u32 max, u32 min, s16 *heldF
     return *amount != original;
 }
 
-static bool32 Banking_HandleNumericInput(u32* amount, u32 max, u32 min, s16 *digit)
+static void PrintTransactionAmount()
 {
-    u32 original = *amount;
-    u16 input = JOY_REPEAT(DPAD_ANY);
-    u32 maxDigits = Util_CountDigits(*amount);
-
-    if (input & DPAD_LEFT || input & DPAD_RIGHT)
-    {
-        if (input & DPAD_RIGHT)
-            (*digit)--;
-        if (input & DPAD_LEFT)
-            (*digit)++;
-
-        *digit = ClampSigned(*digit, 0, maxDigits - 1);
-        return TRUE;
-    }
-
-    if (input & DPAD_UP) {
-        *amount += sPowersOfTen[*digit];
-    }
-    else if (input & DPAD_DOWN) {
-        *amount -= sPowersOfTen[*digit];
-    }
-
-    *amount = Clamp(*amount, min, max);
-    return *amount != original;
-}
-
-static void PrintTransactionAmount(u8 windowId, u32 amount, u32 digit)
-{
-    ConvertIntToDecimalStringN(gStringVar2, amount, STR_CONV_MODE_LEFT_ALIGN, MAX_MONEY_DIGITS);
-
-    gStringVar3[0] = EOS;
-
-    u32 numDigits = StringLength(gStringVar2);
-
-    u32 highlightIdx = numDigits - digit - 1;
-    for (u32 i = 0; i < numDigits; i++)
-    {
-        if (i == highlightIdx)
-            StringAppend(gStringVar3, COMPOUND_STRING("{COLOR RED}{SHADOW LIGHT_GRAY}"));
-
-        StringAppend(gStringVar3, (u8[]){ gStringVar2[i], EOS });
-
-        if (i == highlightIdx)
-            StringAppend(gStringVar3, COMPOUND_STRING("{COLOR DARK_GRAY}{SHADOW LIGHT_GRAY}"));
-    }
-
-    StringCopy(gStringVar1, gStringVar3);
-
-    StringExpandPlaceholders(gStringVar4, gText_PokedollarVar1);
-
-    FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
-    AddTextPrinterParameterized(windowId, FONT_NORMAL, gStringVar4, 1, 2, 0, NULL);
+    PrintNumericInputAmount(sTransactionWindowId, gText_PokedollarVar1);
 }
 
 static u32 GetTransactionMaxAmount(enum BankingMode mode)
@@ -567,21 +502,21 @@ static void UpdateBankBalanceAfterTransaction(enum BankingMode mode)
 {
     if (mode == MODE_WITHDRAW)
     {
-        SetMoneyInBank(GetMoneyInBank() - sTransactionAmount);
-        AddMoney(&gSaveBlock1Ptr->money, sTransactionAmount);
+        SetMoneyInBank(GetMoneyInBank() - gNumericInput.value);
+        AddMoney(&gSaveBlock1Ptr->money, gNumericInput.value);
     }
     else if (mode == MODE_DEPOSIT)
     {
-        SetMoneyInBank(GetMoneyInBank() + sTransactionAmount);
-        RemoveMoney(&gSaveBlock1Ptr->money, sTransactionAmount);
+        SetMoneyInBank(GetMoneyInBank() + gNumericInput.value);
+        RemoveMoney(&gSaveBlock1Ptr->money, gNumericInput.value);
     }
 
-    if (sTransactionAmount)
+    if (gNumericInput.value)
         gSpecialVar_Result = TRUE;
     else
         gSpecialVar_Result = FALSE;
 
-    sTransactionAmount = 0;
+    gNumericInput.value = 0;
 }
 
 #define tState       data[0]
@@ -604,17 +539,17 @@ static void Task_ShowBankingInput(u8 taskId)
         tState++;
         break;
     case 1:
-        CreateBankingWindow();
+        SetNumericInputDefault(0, GetTransactionMaxAmount(tBankingMode), GetTransactionMaxAmount(tBankingMode));
+        sTransactionWindowId = CreateNumericInputWindow(15, 2, 13, 5, gText_PokedollarVar1);
         CreateBankingModeWindow(tBankingMode);
         tState++;
         break;
     case 2:
-        sTransactionAmount = GetTransactionMaxAmount(tBankingMode);
-        PrintTransactionAmount(sTransactionWindowId, sTransactionAmount, tDigit);
+        gNumericInput.value = GetTransactionMaxAmount(tBankingMode);
+        PrintTransactionAmount();
         tState++;
         break;
     case 3:
-        tDigit = 0;
         gTasks[taskId].func = Task_HandleMoneyInput;
         break;
     }
@@ -640,15 +575,15 @@ static void Task_HandleMoneyInput(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
 
-    if (Banking_HandleNumericInput(&sTransactionAmount, GetTransactionMaxAmount(tBankingMode), 0, &tDigit))
+    if (HandleNumericInput())
     {
-        PrintTransactionAmount(sTransactionWindowId, sTransactionAmount, tDigit);
+        PrintTransactionAmount();
     }
     else if (JOY_NEW(A_BUTTON | B_BUTTON))
     {
         if (JOY_NEW(B_BUTTON))
-            sTransactionAmount = 0;
-        gSpecialVar_Result = sTransactionAmount;
+            gNumericInput.value = 0;
+        gSpecialVar_Result = gNumericInput.value;
         ClearStdWindowAndFrame(sTransactionWindowId, TRUE);
         ClearStdWindowAndFrame(sBankingModeWindowId, TRUE);
         UnfreezeObjectEvents();
@@ -792,7 +727,6 @@ void Script_PurchaseUniqueItem(struct ScriptContext* ctx)
     EnsureBankingEnabled();
     gSpecialVar_Result = PurchaseUniqueItem();
 }
-
 
 void Script_PurchaseRepeatItem(struct ScriptContext* ctx)
 {
