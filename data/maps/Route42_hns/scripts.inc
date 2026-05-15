@@ -159,8 +159,36 @@ Route42_Text_EusineWontGiveUp:
 
 
 Route42_EventScript_Tully::
-	trainerbattle_single TRAINER_TULLY_HNS, Route42_Text_FisherTullySeen, Route42_Text_FisherTullyBeaten
+	trainerbattle_single TRAINER_TULLY_HNS, Route42_Text_FisherTullySeen, Route42_Text_FisherTullyBeaten, Route42_EventScript_RegisterTully
+	goto_if_set FLAG_TULLY_HAS_ITEM_HNS, Route42_EventScript_TullyGiveItem
+	specialvar VAR_RESULT, ShouldTryRematchBattle
+	goto_if_eq VAR_RESULT, TRUE, Route42_EventScript_RematchTully
 	msgbox Route42_Text_FisherTullyAfter, MSGBOX_AUTOCLOSE
+	end
+
+Route42_EventScript_RegisterTully::
+	special PlayerFaceTrainerAfterBattle
+	waitmovement 0
+	msgbox Route42_Text_TullyRegister, MSGBOX_DEFAULT
+	register_matchcall TRAINER_TULLY_HNS
+	release
+	end
+
+Route42_EventScript_RematchTully::
+	trainerbattle_rematch TRAINER_TULLY_HNS, Route42_Text_TullyRematchIntro, Route42_Text_TullyRematchDefeat
+	msgbox Route42_Text_TullyPostRematch, MSGBOX_AUTOCLOSE
+	end
+
+Route42_EventScript_TullyGiveItem::
+	msgbox Route42_Text_TullyHasItem, MSGBOX_DEFAULT
+	giveitem VAR_TULLY_ITEM_HNS
+	goto_if_eq VAR_RESULT, FALSE, Route42_EventScript_TullyNoRoom
+	clearflag FLAG_TULLY_HAS_ITEM_HNS
+	msgbox Route42_Text_TullyGaveItem, MSGBOX_AUTOCLOSE
+	end
+
+Route42_EventScript_TullyNoRoom::
+	msgbox Route42_Text_TullyNoRoom, MSGBOX_AUTOCLOSE
 	end
 
 Route42_EventScript_Ben::
@@ -246,3 +274,36 @@ Route42_Text_Sign1:
 Route42_Text_MtMortarSign1:
 	.string "MT.MORTAR\p"
 	.string "WATERFALL CAVE INSIDE$"
+
+Route42_Text_TullyRegister:
+	.string "I want to become the trainer\n"
+	.string "CHAMP using the POKéMON I\l"
+	.string "caught myself.\p"
+	.string "That's the best part of fishing!$"
+
+Route42_Text_TullyRematchIntro:
+	.string "Let me demonstrate the power\n"
+	.string "of the POKéMON I caught!$"
+
+Route42_Text_TullyRematchDefeat:
+	.string "What? That's not right.\n"
+	.string "I can't believe this!$"
+
+Route42_Text_TullyPostRematch:
+	.string "I want to become the trainer\n"
+	.string "CHAMP using the POKéMON I\l"
+	.string "caught myself.\p"
+	.string "That's the best part of fishing!$"
+
+Route42_Text_TullyHasItem:
+	.string "Hey! I found something\n"
+	.string "while I was fishing!\p"
+	.string "Here, you can have it!$"
+
+Route42_Text_TullyGaveItem:
+	.string "I'll let you know if I\n"
+	.string "reel in anything else!$"
+
+Route42_Text_TullyNoRoom:
+	.string "Hmm, your BAG is full.\p"
+	.string "Come back when you have room.$"

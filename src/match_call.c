@@ -1667,57 +1667,37 @@ bool32 SelectMatchCallMessage(int trainerId, u8 *str)
     {
         if (sHnsMatchCallTrainers[i].trainerId == trainerId)
         {
-            {
-                bool32 hasItem = sHnsMatchCallTrainers[i].itemFlag != 0
-                              && FlagGet(sHnsMatchCallTrainers[i].itemFlag);
-                bool32 wantsRematch = rematchIdx >= 0
-                                   && TrainerIsEligibleForRematch(rematchIdx);
+            bool32 canGiveItem = sHnsMatchCallTrainers[i].itemFlag != 0;
+            bool32 canRematch = rematchIdx >= 0
+                             && HasTrainerBeenFought(gRematchTable[rematchIdx].trainerIds[0]);
+            u8 roll;
 
-                if (hasItem && wantsRematch)
-                {
-                    // Both pending — coin flip
-                    if (Random() & 1)
-                    {
-                        text = sHnsMatchCallTrainers[i].foundItemText;
-                    }
-                    else
-                    {
-                        text = sHnsMatchCallTrainers[i].battleRequestText;
-                        newRematchRequest = TRUE;
-                    }
-                }
-                else if (hasItem)
-                {
-                    text = sHnsMatchCallTrainers[i].foundItemText;
-                }
-                else if (wantsRematch)
-                {
-                    text = sHnsMatchCallTrainers[i].battleRequestText;
-                    newRematchRequest = TRUE;
-                }
-                else if (sHnsMatchCallTrainers[i].itemFlag != 0
-                      && !FlagGet(sHnsMatchCallTrainers[i].itemFlag)
-                      && (Random() % 3) == 0)
-                {
-                    u8 itemIdx = Random() % sHnsMatchCallTrainers[i].numGiftItems;
-                    VarSet(sHnsMatchCallTrainers[i].itemVar, sHnsMatchCallTrainers[i].giftItems[itemIdx]);
-                    FlagSet(sHnsMatchCallTrainers[i].itemFlag);
-                    text = sHnsMatchCallTrainers[i].foundItemText;
-                }
-                else if (rematchIdx >= 0
-                      && !TrainerIsEligibleForRematch(rematchIdx)
-                      && HasTrainerBeenFought(gRematchTable[rematchIdx].trainerIds[0])
-                      && (Random() % 3) == 0)
-                {
-                    text = sHnsMatchCallTrainers[i].battleRequestText;
-                    newRematchRequest = TRUE;
-                    UpdateRematchIfDefeated(rematchIdx);
-                }
-                else
-                {
-                    u8 idx = Random() % sHnsMatchCallTrainers[i].numGeneralTexts;
-                    text = sHnsMatchCallTrainers[i].generalTexts[idx];
-                }
+            if (canGiveItem && canRematch)
+                roll = Random() % 3;
+            else if (canGiveItem)
+                roll = (Random() & 1) ? 1 : 0;
+            else if (canRematch)
+                roll = (Random() & 1) ? 2 : 0;
+            else
+                roll = 0;
+
+            if (roll == 1)
+            {
+                u8 itemIdx = Random() % sHnsMatchCallTrainers[i].numGiftItems;
+                VarSet(sHnsMatchCallTrainers[i].itemVar, sHnsMatchCallTrainers[i].giftItems[itemIdx]);
+                FlagSet(sHnsMatchCallTrainers[i].itemFlag);
+                text = sHnsMatchCallTrainers[i].foundItemText;
+            }
+            else if (roll == 2)
+            {
+                text = sHnsMatchCallTrainers[i].battleRequestText;
+                newRematchRequest = TRUE;
+                UpdateRematchIfDefeated(rematchIdx);
+            }
+            else
+            {
+                u8 idx = Random() % sHnsMatchCallTrainers[i].numGeneralTexts;
+                text = sHnsMatchCallTrainers[i].generalTexts[idx];
             }
             break;
         }

@@ -127,8 +127,29 @@ NationalPark_Normal_EventScript_RematchJack::
 	end
 
 NationalPark_Normal_EventScript_Beverly::
-	trainerbattle_single TRAINER_BEVERLY_HNS, NationalPark_Normal_Text_PokefanFBeverly1_Seen, NationalPark_Normal_Text_PokefanFBeverly1_Beaten
+	trainerbattle_single TRAINER_BEVERLY_HNS, NationalPark_Normal_Text_PokefanFBeverly1_Seen, NationalPark_Normal_Text_PokefanFBeverly1_Beaten, NationalPark_Normal_EventScript_RegisterBeverly
+	goto_if_set FLAG_BEVERLY_HAS_ITEM_HNS, NationalPark_Normal_EventScript_BeverlyGiveItem
 	msgbox NationalPark_Normal_Text_PokefanFBeverly_After, MSGBOX_AUTOCLOSE
+	end
+
+NationalPark_Normal_EventScript_RegisterBeverly::
+	special PlayerFaceTrainerAfterBattle
+	waitmovement 0
+	msgbox NationalPark_Normal_Text_BeverlyRegister, MSGBOX_DEFAULT
+	register_matchcall TRAINER_BEVERLY_HNS
+	release
+	end
+
+NationalPark_Normal_EventScript_BeverlyGiveItem::
+	msgbox NationalPark_Normal_Text_BeverlyHasItem, MSGBOX_DEFAULT
+	giveitem VAR_BEVERLY_ITEM_HNS
+	goto_if_eq VAR_RESULT, FALSE, NationalPark_Normal_EventScript_BeverlyNoRoom
+	clearflag FLAG_BEVERLY_HAS_ITEM_HNS
+	msgbox NationalPark_Normal_Text_BeverlyGaveItem, MSGBOX_AUTOCLOSE
+	end
+
+NationalPark_Normal_EventScript_BeverlyNoRoom::
+	msgbox NationalPark_Normal_Text_BeverlyNoRoom, MSGBOX_AUTOCLOSE
 	end
 
 NationalPark_Normal_EventScript_William::
@@ -231,3 +252,21 @@ NationalPark_Normal_Text_TrainerTips:
 	.string "TRAINER TIPS\p"
 	.string "Print out MAIL by opening it then\n"
 	.string "pressing START.$"
+
+NationalPark_Normal_Text_BeverlyRegister:
+	.string "I must say, your POKéMON are quite\n"
+	.string "cute, too.$"
+
+NationalPark_Normal_Text_BeverlyHasItem:
+	.string "Oh, hello! I have something\n"
+	.string "for you.\p"
+	.string "Please take it as a token of\n"
+	.string "my appreciation!$"
+
+NationalPark_Normal_Text_BeverlyGaveItem:
+	.string "My darling POKéMON and I will\n"
+	.string "be cheering for you!$"
+
+NationalPark_Normal_Text_BeverlyNoRoom:
+	.string "Hmm, your BAG is full.\p"
+	.string "Come back when you have room.$"

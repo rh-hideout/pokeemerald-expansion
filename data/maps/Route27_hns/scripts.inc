@@ -124,8 +124,36 @@ Route27_EventScript_Gilbert::
 	end
 
 Route27_EventScript_Jose::
-	trainerbattle_single TRAINER_JOSE_HNS, Route27_Text_BirdKeeperJoseSeen, Route27_Text_BirdKeeperJoseBeaten
+	trainerbattle_single TRAINER_JOSE_HNS, Route27_Text_BirdKeeperJoseSeen, Route27_Text_BirdKeeperJoseBeaten, Route27_EventScript_RegisterJose
+	goto_if_set FLAG_JOSE_HAS_ITEM_HNS, Route27_EventScript_JoseGiveItem
+	specialvar VAR_RESULT, ShouldTryRematchBattle
+	goto_if_eq VAR_RESULT, TRUE, Route27_EventScript_RematchJose
 	msgbox Route27_Text_BirdKeeperJoseAfter, MSGBOX_AUTOCLOSE
+	end
+
+Route27_EventScript_RegisterJose::
+	special PlayerFaceTrainerAfterBattle
+	waitmovement 0
+	msgbox Route27_Text_JoseRegister, MSGBOX_DEFAULT
+	register_matchcall TRAINER_JOSE_HNS
+	release
+	end
+
+Route27_EventScript_RematchJose::
+	trainerbattle_rematch TRAINER_JOSE_HNS, Route27_Text_JoseRematchIntro, Route27_Text_JoseRematchDefeat
+	msgbox Route27_Text_JosePostRematch, MSGBOX_AUTOCLOSE
+	end
+
+Route27_EventScript_JoseGiveItem::
+	msgbox Route27_Text_JoseHasItem, MSGBOX_DEFAULT
+	giveitem VAR_JOSE_ITEM_HNS
+	goto_if_eq VAR_RESULT, FALSE, Route27_EventScript_JoseNoRoom
+	clearflag FLAG_JOSE_HAS_ITEM_HNS
+	msgbox Route27_Text_JoseGaveItem, MSGBOX_AUTOCLOSE
+	end
+
+Route27_EventScript_JoseNoRoom::
+	msgbox Route27_Text_JoseNoRoom, MSGBOX_AUTOCLOSE
 	end
 
 Route27_EventScript_Scott::
@@ -234,6 +262,35 @@ Route27_Text_BirdKeeperJoseBeaten:
 Route27_Text_BirdKeeperJoseAfter:
     .string "BIRD KEEPERS like me mimic bird\n"
     .string "whistles to command POKéMON.$"
+
+Route27_Text_JoseRegister:
+    .string "BIRD KEEPERS like me mimic bird\n"
+    .string "whistles to command POKéMON.$"
+
+Route27_Text_JoseRematchIntro:
+    .string "Tweet! Tweet! Tetweet!$"
+
+Route27_Text_JoseRematchDefeat:
+    .string "Tweet!$"
+
+Route27_Text_JosePostRematch:
+    .string "BIRD KEEPERS like me mimic bird\n"
+    .string "whistles to command POKéMON.$"
+
+Route27_Text_JoseHasItem:
+    .string "Hey! I found something\n"
+    .string "shiny while bird-watching!\p"
+    .string "Here, you can have it!$"
+
+Route27_Text_JoseGaveItem:
+    .string "I find all sorts of things\n"
+    .string "out here on ROUTE 27.\p"
+    .string "I'll let you know if I find\n"
+    .string "anything else!$"
+
+Route27_Text_JoseNoRoom:
+    .string "Hmm, your BAG is full.\p"
+    .string "Come back when you have room.$"
 
 TohjoFalls_Text_Sign:
     .string "TOHJO FALLS\p"

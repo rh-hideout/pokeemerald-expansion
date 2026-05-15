@@ -8,8 +8,36 @@ Route44_OnTransition:
 	end
 
 Route44_EventScript_Wilton::
-	trainerbattle_single TRAINER_WILTON_HNS, Route44_Text_FisherWilton1Seen, Route44_Text_FisherWilton1Beaten
+	trainerbattle_single TRAINER_WILTON_HNS, Route44_Text_FisherWilton1Seen, Route44_Text_FisherWilton1Beaten, Route44_EventScript_RegisterWilton
+	goto_if_set FLAG_WILTON_HAS_ITEM_HNS, Route44_EventScript_WiltonGiveItem
+	specialvar VAR_RESULT, ShouldTryRematchBattle
+	goto_if_eq VAR_RESULT, TRUE, Route44_EventScript_RematchWilton
 	msgbox Route44_Text_FisherWiltonHugePoliwag, MSGBOX_AUTOCLOSE
+	end
+
+Route44_EventScript_RegisterWilton::
+	special PlayerFaceTrainerAfterBattle
+	waitmovement 0
+	msgbox Route44_Text_WiltonRegister, MSGBOX_DEFAULT
+	register_matchcall TRAINER_WILTON_HNS
+	release
+	end
+
+Route44_EventScript_RematchWilton::
+	trainerbattle_rematch TRAINER_WILTON_HNS, Route44_Text_WiltonRematchIntro, Route44_Text_WiltonRematchDefeat
+	msgbox Route44_Text_WiltonPostRematch, MSGBOX_AUTOCLOSE
+	end
+
+Route44_EventScript_WiltonGiveItem::
+	msgbox Route44_Text_WiltonHasItem, MSGBOX_DEFAULT
+	giveitem VAR_WILTON_ITEM_HNS
+	goto_if_eq VAR_RESULT, FALSE, Route44_EventScript_WiltonNoRoom
+	clearflag FLAG_WILTON_HAS_ITEM_HNS
+	msgbox Route44_Text_WiltonGaveItem, MSGBOX_AUTOCLOSE
+	end
+
+Route44_EventScript_WiltonNoRoom::
+	msgbox Route44_Text_WiltonNoRoom, MSGBOX_AUTOCLOSE
 	end
 
 Route44_EventScript_Edgar::
@@ -90,6 +118,39 @@ Route44_Text_FisherWiltonHugePoliwag:
     .string "it was huge.\p"
     .string "I swear it must've been\n"
     .string "16 feet long!$"
+
+Route44_Text_WiltonRegister:
+    .string "That POLIWAG that got away…\n"
+    .string "it was huge.\p"
+    .string "I swear it must've been\n"
+    .string "16 feet long!$"
+
+Route44_Text_WiltonRematchIntro:
+    .string "Aack!\p"
+    .string "You made me lose a POLIWAG!\n"
+    .string "What are you going to do about it?$"
+
+Route44_Text_WiltonRematchDefeat:
+    .string "Just forget about it.$"
+
+Route44_Text_WiltonPostRematch:
+    .string "That POLIWAG that got away…\n"
+    .string "it was huge.\p"
+    .string "I swear it must've been\n"
+    .string "16 feet long!$"
+
+Route44_Text_WiltonHasItem:
+    .string "Hey! I reeled in something\n"
+    .string "other than a POKéMON!\p"
+    .string "Here, you can have it!$"
+
+Route44_Text_WiltonGaveItem:
+    .string "I'll let you know if I\n"
+    .string "fish up anything else!$"
+
+Route44_Text_WiltonNoRoom:
+    .string "Hmm, your BAG is full.\p"
+    .string "Come back when you have room.$"
 
 Route44_Text_FisherEdgarSeen:
     .string "I fish until I can't anymore.\p"

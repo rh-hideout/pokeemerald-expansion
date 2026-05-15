@@ -33,8 +33,36 @@ Route38_EventScript_RematchChad::
 	end
 
 Route38_EventScript_Dana::
-	trainerbattle_single TRAINER_DANA_HNS, Route38_Text_LassDana1Seen, Route38_Text_LassDana1Beaten
+	trainerbattle_single TRAINER_DANA_HNS, Route38_Text_LassDana1Seen, Route38_Text_LassDana1Beaten, Route38_EventScript_RegisterDana
+	goto_if_set FLAG_DANA_HAS_ITEM_HNS, Route38_EventScript_DanaGiveItem
+	specialvar VAR_RESULT, ShouldTryRematchBattle
+	goto_if_eq VAR_RESULT, TRUE, Route38_EventScript_RematchDana
 	msgbox Route38_Text_LassDanaAfter, MSGBOX_AUTOCLOSE
+	end
+
+Route38_EventScript_RegisterDana::
+	special PlayerFaceTrainerAfterBattle
+	waitmovement 0
+	msgbox Route38_Text_DanaRegister, MSGBOX_DEFAULT
+	register_matchcall TRAINER_DANA_HNS
+	release
+	end
+
+Route38_EventScript_RematchDana::
+	trainerbattle_rematch TRAINER_DANA_HNS, Route38_Text_DanaRematchIntro, Route38_Text_DanaRematchDefeat
+	msgbox Route38_Text_DanaPostRematch, MSGBOX_AUTOCLOSE
+	end
+
+Route38_EventScript_DanaGiveItem::
+	msgbox Route38_Text_DanaHasItem, MSGBOX_DEFAULT
+	giveitem VAR_DANA_ITEM_HNS
+	goto_if_eq VAR_RESULT, FALSE, Route38_EventScript_DanaNoRoom
+	clearflag FLAG_DANA_HAS_ITEM_HNS
+	msgbox Route38_Text_DanaGaveItem, MSGBOX_AUTOCLOSE
+	end
+
+Route38_EventScript_DanaNoRoom::
+	msgbox Route38_Text_DanaNoRoom, MSGBOX_AUTOCLOSE
 	end
 
 Route38_EventScript_Valerie::
@@ -192,3 +220,36 @@ Route38_Text_WaterSign:
 	.string "NO SWIMMING OR FISHING.\n"
 	.string "WATER FOR FARMING ONLY.\p"
 	.string "-ECRUTEAK COUNCIL$"
+
+Route38_Text_DanaRegister:
+	.string "I know something good!\p"
+	.string "MOOMOO FARM's milk is\n"
+	.string "famous for its flavor.$"
+
+Route38_Text_DanaRematchIntro:
+	.string "You seem to be good at\n"
+	.string "POKéMON.\p"
+	.string "If you are, how about\n"
+	.string "giving me some advice?$"
+
+Route38_Text_DanaRematchDefeat:
+	.string "I see. So you can battle\n"
+	.string "that way.$"
+
+Route38_Text_DanaPostRematch:
+	.string "I know something good!\p"
+	.string "MOOMOO FARM's milk is\n"
+	.string "famous for its flavor.$"
+
+Route38_Text_DanaHasItem:
+	.string "Hey! I found something\n"
+	.string "interesting!\p"
+	.string "Here, you can have it!$"
+
+Route38_Text_DanaGaveItem:
+	.string "I'll let you know if I find\n"
+	.string "anything else!$"
+
+Route38_Text_DanaNoRoom:
+	.string "Hmm, your BAG is full.\p"
+	.string "Come back when you have room.$"

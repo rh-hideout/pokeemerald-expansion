@@ -253,8 +253,29 @@ Route39_Text_SailorEugeneAfter:
 	.string "those long voyages.$"
 
 Route39_EventScript_Derek::
-	trainerbattle_single TRAINER_DEREK_HNS, Route39_Text_PokefanMDerekSeen, Route39_Text_PokefanMDerekBeaten
+	trainerbattle_single TRAINER_DEREK_HNS, Route39_Text_PokefanMDerekSeen, Route39_Text_PokefanMDerekBeaten, Route39_EventScript_RegisterDerek
+	goto_if_set FLAG_DEREK_HAS_ITEM_HNS, Route39_EventScript_DerekGiveItem
 	msgbox Route39_Text_PokefanMDerekAfter, MSGBOX_AUTOCLOSE
+	end
+
+Route39_EventScript_RegisterDerek::
+	special PlayerFaceTrainerAfterBattle
+	waitmovement 0
+	msgbox Route39_Text_DerekRegister, MSGBOX_DEFAULT
+	register_matchcall TRAINER_DEREK_HNS
+	release
+	end
+
+Route39_EventScript_DerekGiveItem::
+	msgbox Route39_Text_DerekHasItem, MSGBOX_DEFAULT
+	giveitem VAR_DEREK_ITEM_HNS
+	goto_if_eq VAR_RESULT, FALSE, Route39_EventScript_DerekNoRoom
+	clearflag FLAG_DEREK_HAS_ITEM_HNS
+	msgbox Route39_Text_DerekGaveItem, MSGBOX_AUTOCLOSE
+	end
+
+Route39_EventScript_DerekNoRoom::
+	msgbox Route39_Text_DerekNoRoom, MSGBOX_AUTOCLOSE
 	end
 
 Route39_Text_PokefanMDerekSeen:
@@ -369,3 +390,22 @@ Route39_Text_TrainerTips:
 	.string "drop out of trees.\p"
 	.string "Use HEADBUTT on any tree\n"
 	.string "you see!$"
+
+Route39_Text_DerekRegister:
+	.string "I'm not listening to your\n"
+	.string "bragging!\p"
+	.string "We POKé FANS have a policy\n"
+	.string "of not listening to bragging!$"
+
+Route39_Text_DerekHasItem:
+	.string "Hey! I was showing off my\n"
+	.string "PIKACHU and found something.\p"
+	.string "Here, you can have it!$"
+
+Route39_Text_DerekGaveItem:
+	.string "PIKACHU is it!\n"
+	.string "Don't you agree?$"
+
+Route39_Text_DerekNoRoom:
+	.string "Hmm, your BAG is full.\p"
+	.string "Come back when you have room.$"
