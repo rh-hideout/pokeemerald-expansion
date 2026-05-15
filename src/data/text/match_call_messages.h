@@ -1,3 +1,36 @@
+#if IS_HNS
+// HnS rematch trainer check page text — currently unused (check page disabled).
+// Rematch slot → HnS trainer mapping kept here for reference if re-enabled.
+// REMATCH_ROSE         = Joey (Youngster, Route 30)
+// REMATCH_ANDRES       = Wade (Bug Catcher, Route 31)
+// REMATCH_DUSTY        = Ralph (Fisherman, Route 32)
+// REMATCH_LOLA         = Liz (Picnicker, Route 32)
+// REMATCH_RICKY        = Anthony (Hiker, Route 33)
+// REMATCH_LILA_AND_ROY = Todd (Camper, Route 34)
+// REMATCH_CRISTIN      = Gina (Picnicker, Route 34)
+// REMATCH_BROOKE       = Irwin (Juggler, Route 35)
+// REMATCH_WILTON       = Arnie (Bug Catcher, Route 35)
+// REMATCH_VALERIE      = Alan (School Kid, Route 36)
+// REMATCH_CINDY        = Dana (Lass, Route 38)
+// REMATCH_THALIA       = Chad (School Kid, Route 38)
+// REMATCH_JESSICA      = Derek (Pokefan, Route 39)
+// REMATCH_WINSTON      = Tully (Fisherman, Route 42)
+// REMATCH_STEVE        = Brent (Pokemaniac, Route 43)
+// REMATCH_TONY         = Tiffany (Picnicker, Route 43)
+// REMATCH_NOB          = Vance (Bird Keeper, Route 44)
+// REMATCH_KOJI         = Wilton (Fisherman, Route 44)
+// REMATCH_FERNANDO     = Kenji (Black Belt, Route 45)
+// REMATCH_DALTON       = Parry (Hiker, Route 45)
+// REMATCH_BERNIE       = Erin (Picnicker, Route 46)
+// REMATCH_ETHAN        = Jack (School Kid, National Park)
+// REMATCH_JOHN_AND_JAY = Beverly (Parasol Lady, National Park)
+// REMATCH_JEFFREY      = Huey (Sailor, Lighthouse)
+// REMATCH_CAMERON      = Gaven (Cooltrainer, Route 26)
+// REMATCH_JACKI        = Beth (Cooltrainer, Route 26)
+// REMATCH_WALTER       = Jose (Bird Keeper, Route 27)
+// REMATCH_KAREN        = Reena (Cooltrainer, Route 27)
+// Crystal phone text reference: pokecrystal/data/phone/text/<name>_caller.asm
+#else
 const u8 gText_MatchCallAromaLady_Rose_Strategy[] = _("Becalm fighting emotions.");
 const u8 gText_MatchCallAromaLady_Rose_Pokemon[] = _("Fragrant GRASS POKéMON.");
 const u8 gText_MatchCallAromaLady_Rose_Intro1[] = _("Soothing aromas make the");
@@ -387,7 +420,13 @@ const u8 gText_MatchCallChampion_Wallace_Strategy[] = _("Dignity and respect.");
 const u8 gText_MatchCallChampion_Wallace_Pokemon[] = _("I prefer POKéMON of grace.");
 const u8 gText_MatchCallChampion_Wallace_Intro1[] = _("I represent beauty as");
 const u8 gText_MatchCallChampion_Wallace_Intro2[] = _("well as intelligence.");
+#endif
 
+#if IS_HNS
+// Check page disabled for HnS trainers — table left empty.
+// To re-enable: add MCFLAVOR entries here and set HasCheckPage_Trainer to TRUE.
+const u8 *const gMatchCallFlavorTexts[REMATCH_TABLE_ENTRIES][CHECK_PAGE_ENTRY_COUNT] = {0};
+#else
 const u8 *const gMatchCallFlavorTexts[REMATCH_TABLE_ENTRIES][CHECK_PAGE_ENTRY_COUNT] =
 {
     [REMATCH_ROSE] = MCFLAVOR(AromaLady_Rose),
@@ -469,3 +508,4 @@ const u8 *const gMatchCallFlavorTexts[REMATCH_TABLE_ENTRIES][CHECK_PAGE_ENTRY_CO
     [REMATCH_DRAKE] = MCFLAVOR(EliteFour_Drake),
     [REMATCH_WALLACE] = MCFLAVOR(Champion_Wallace),
 };
+#endif

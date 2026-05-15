@@ -96,7 +96,7 @@ static u32 CB2_HandleMatchCallInput(struct Pokenav_MatchCallMenu *state)
         state->optionCursorPos = 0;
         selection = PokenavList_GetSelectedIndex();
 
-        if (!state->matchCallEntries[selection].isSpecialTrainer || MatchCall_HasCheckPage(state->matchCallEntries[selection].headerId))
+        if (MatchCall_HasCheckPage(state->matchCallEntries[selection].headerId))
         {
             state->matchCallOptions = sMatchCallOptionsHasCheckPage;
             state->maxOptionId = ARRAY_COUNT(sMatchCallOptionsHasCheckPage) - 1;
@@ -443,8 +443,6 @@ int GetIndexDeltaOfNextCheckPageDown(int index)
     int count = 1;
     while (++index < state->numRegistered)
     {
-        if (!state->matchCallEntries[index].isSpecialTrainer)
-            return count;
         if (MatchCall_HasCheckPage(state->matchCallEntries[index].headerId))
             return count;
 
@@ -460,8 +458,6 @@ int GetIndexDeltaOfNextCheckPageUp(int index)
     int count = -1;
     while (--index >= 0)
     {
-        if (!state->matchCallEntries[index].isSpecialTrainer)
-            return count;
         if (MatchCall_HasCheckPage(state->matchCallEntries[index].headerId))
             return count;
 

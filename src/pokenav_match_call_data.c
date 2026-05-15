@@ -1428,6 +1428,8 @@ static bool32 MatchCall_HasCheckPage_NPC(match_call_t matchCall)
 
 static bool32 MatchCall_HasCheckPage_Trainer(match_call_t matchCall)
 {
+    if (IS_HNS)
+        return FALSE;
     return TRUE;
 }
 
