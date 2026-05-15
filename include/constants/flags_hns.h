@@ -497,7 +497,7 @@
 #define HNS_RECEIVED_START                          0x1F2
 
 #define FLAG_RECEIVED_BIKE                          0x1F2
-#define FLAG_UNUSED_HNS_0x1F3                   0x1F3
+#define FLAG_HAS_MATCH_CALL                   0x1F3
 #define FLAG_RECEIVED_FIRST_POTION                  0x1F4
 #define FLAG_RECEIVED_HM_CUT                        0x1F5
 #define FLAG_RECEIVED_HM_FLASH                      0x1F6
@@ -1209,7 +1209,6 @@
 #define FLAG_MET_FANCLUB_YOUNGER_BROTHER            0
 #define FLAG_RIVAL_LEFT_FOR_ROUTE103                0
 #define FLAG_OMIT_DIVE_FROM_STEVEN_LETTER           0
-#define FLAG_HAS_MATCH_CALL                         0
 #define FLAG_REGISTERED_STEVEN_POKENAV              0
 #define FLAG_ENABLE_NORMAN_MATCH_CALL               0
 #define FLAG_STEVEN_GUIDES_TO_CAVE_OF_ORIGIN        0

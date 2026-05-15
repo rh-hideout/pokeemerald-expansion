@@ -8,8 +8,23 @@ Route31_OnTransition:
 	end
 
 Route31_EventScript_Bugcatcher_Wade::
-	trainerbattle_single TRAINER_WADE_HNS, Route31_Text_BugCatcherWade1_Seen, Route31_Text_BugCatcherWade1_Beaten
+	trainerbattle_single TRAINER_WADE_HNS, Route31_Text_BugCatcherWade1_Seen, Route31_Text_BugCatcherWade1_Beaten, Route31_EventScript_RegisterWade
+	specialvar VAR_RESULT, ShouldTryRematchBattle
+	goto_if_eq VAR_RESULT, TRUE, Route31_EventScript_RematchWade
 	msgbox Route31_Text_BugCatcherWade1_After, MSGBOX_AUTOCLOSE
+	end
+
+Route31_EventScript_RegisterWade::
+	special PlayerFaceTrainerAfterBattle
+	waitmovement 0
+	msgbox Route31_Text_WadeRegister, MSGBOX_DEFAULT
+	register_matchcall TRAINER_WADE_HNS
+	release
+	end
+
+Route31_EventScript_RematchWade::
+	trainerbattle_rematch TRAINER_WADE_HNS, Route31_Text_WadeRematchIntro, Route31_Text_WadeRematchDefeat
+	msgbox Route31_Text_WadePostRematch, MSGBOX_AUTOCLOSE
 	end
 
 Route31_EventScript_Youngster::
@@ -172,6 +187,26 @@ Route31_Text_Youngster:
 Route31_Text_Sign:
 	.string "ROUTE 31\p"
 	.string "VIOLET CITY - CHERRYGROVE CITY$"
+
+Route31_Text_WadeRegister:
+	.string "That was a great battle!\p"
+	.string "Let me register you in my\n"
+	.string "POKéGEAR.\p"
+	.string "I'll call you if I find any\n"
+	.string "rare BUG POKéMON!$"
+
+Route31_Text_WadeRematchIntro:
+	.string "I've been catching more BUG\n"
+	.string "POKéMON! Let's battle again!$"
+
+Route31_Text_WadeRematchDefeat:
+	.string "Aw, I still can't beat you…$"
+
+Route31_Text_WadePostRematch:
+	.string "I'll keep training my BUG\n"
+	.string "POKéMON.\p"
+	.string "Call me anytime you want\n"
+	.string "another battle!$"
 
 Route31_Text_DarkCaveSign:
 	.string "DARK CAVE$"
