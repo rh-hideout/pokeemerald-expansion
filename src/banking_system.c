@@ -30,7 +30,7 @@
 #include "window.h"
 
 // Macros
-#define EnsureBankingEnabled()                                              \
+#define RETURN_IF_BANKING_DISABLED()                                        \
     {                                                                       \
         assertf(IsBankingEnabled(),"Banking functionality is not enabled")  \
             {                                                               \
@@ -261,7 +261,7 @@ void NewGameInitBanking(void)
 
 void Script_CompareBankBalance(struct ScriptContext *ctx)
 {
-    EnsureBankingEnabled();
+    RETURN_IF_BANKING_DISABLED();
 
     u32 value = ScriptReadWord(ctx);
     u32 balance = GetMoneyInBank();
@@ -293,14 +293,14 @@ bool32 RemoveFromBank(u32 amount)
 
 void Script_RemoveFromBank(struct ScriptContext *ctx)
 {
-    EnsureBankingEnabled();
+    RETURN_IF_BANKING_DISABLED();
     u32 amount = ScriptReadWord(ctx);
     gSpecialVar_Result = RemoveFromBank(amount);
 }
 
 void Script_RemoveFromBankWithVar(struct ScriptContext *ctx)
 {
-    EnsureBankingEnabled();
+    RETURN_IF_BANKING_DISABLED();
     u32 amount = VarGet(ScriptReadHalfword(ctx));
     gSpecialVar_Result = RemoveFromBank(amount);
 }
@@ -324,21 +324,21 @@ bool32 AddToBank(u32 amount)
 
 void Script_AddToBank(struct ScriptContext *ctx)
 {
-    EnsureBankingEnabled();
+    RETURN_IF_BANKING_DISABLED();
     u32 amount = ScriptReadWord(ctx);
     gSpecialVar_Result = AddToBank(amount);
 }
 
 void Script_AddToBankWithVar(struct ScriptContext *ctx)
 {
-    EnsureBankingEnabled();
+    RETURN_IF_BANKING_DISABLED();
     u32 amount = VarGet(ScriptReadHalfword(ctx));
     gSpecialVar_Result = AddToBank(amount);
 }
 
 void Script_ShowBankBalanceBox(struct ScriptContext *ctx)
 {
-    EnsureBankingEnabled();
+    RETURN_IF_BANKING_DISABLED();
 
     u8 x = ScriptReadByte(ctx);
     u8 y = ScriptReadByte(ctx);
@@ -370,7 +370,7 @@ static void Banking_AddBalanceLabelObject(u16 x, u16 y)
 
 void Script_HideBankBalanceBox(struct ScriptContext *ctx)
 {
-    EnsureBankingEnabled();
+    RETURN_IF_BANKING_DISABLED();
 
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
 
@@ -392,7 +392,7 @@ static void Banking_RemoveBalanceLabelObject(void)
 
 void Script_UpdateBankBalanceBox(struct ScriptContext *ctx)
 {
-    EnsureBankingEnabled();
+    RETURN_IF_BANKING_DISABLED();
 
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
     ChangeAmountInMoneyBox(GetMoneyInBank());
@@ -599,7 +599,7 @@ static void Task_HandleMoneyInput(u8 taskId)
 #define tBankingMode data[1]
 void Script_StartTransactionTask(struct ScriptContext *ctx)
 {
-    EnsureBankingEnabled();
+    RETURN_IF_BANKING_DISABLED();
     u8 bankingMode = ScriptReadByte(ctx);
     u8 taskId = CreateTask(Task_ShowBankingInput, 2);
     gTasks[taskId].tBankingMode = bankingMode;
@@ -608,7 +608,7 @@ void Script_StartTransactionTask(struct ScriptContext *ctx)
 
 void Script_CheckPurchaseFromSavings()
 {
-    EnsureBankingEnabled();
+    RETURN_IF_BANKING_DISABLED();
     struct Banking* banking = GetBankingPtr();
     u32 purchaseIdx = banking->lastBought;
 
@@ -633,7 +633,7 @@ void Script_CheckPurchaseFromSavings()
 
 void Script_CheckSavingsPurchaseQuantity()
 {
-    EnsureBankingEnabled();
+    RETURN_IF_BANKING_DISABLED();
     struct Banking *banking = GetBankingPtr();
     u32 purchaseIdx = banking->isPending;
 
@@ -645,7 +645,7 @@ void Script_CheckSavingsPurchaseQuantity()
 
 void Script_GetPurchaseFromSavings()
 {
-    EnsureBankingEnabled();
+    RETURN_IF_BANKING_DISABLED();
     struct Banking* banking = GetBankingPtr();
     u32 idx = banking->lastBought;
 
@@ -724,12 +724,12 @@ u32 TriggerBankingPurchase(u32 toDeposit)
 
 void Script_PurchaseUniqueItem(struct ScriptContext* ctx)
 {
-    EnsureBankingEnabled();
+    RETURN_IF_BANKING_DISABLED();
     gSpecialVar_Result = PurchaseUniqueItem();
 }
 
 void Script_PurchaseRepeatItem(struct ScriptContext* ctx)
 {
-    EnsureBankingEnabled();
+    RETURN_IF_BANKING_DISABLED();
     gSpecialVar_Result = PurchaseRepeatItem();
 }
