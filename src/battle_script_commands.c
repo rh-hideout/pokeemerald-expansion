@@ -1128,19 +1128,10 @@ static void Cmd_printselectionstringfromtable(void)
     }
 }
 
-static inline void CalculateAndSetMoveDamage(struct DamageContext *ctx)
+static inline void SetDynamicMoveCategoryAndDamage(struct DamageContext *ctx)
 {
     SetDynamicMoveCategory(gBattlerAttacker, ctx->battlerDef, gCurrentMove);
-    ctx->isCrit = gSpecialStatuses[ctx->battlerDef].criticalHit;
-    ctx->fixedBasePower = 0;
     gBattleStruct->moveDamage[ctx->battlerDef] = CalculateMoveDamage(ctx);
-
-    // Slighly hacky but we need to check move result flags for distortion match-up as well but it can only be done after damage calcs
-    if (gSpecialStatuses[ctx->battlerDef].distortedTypeMatchups && IsBattlerUnaffectedByMove(ctx->battlerDef))
-    {
-        gSpecialStatuses[ctx->battlerDef].distortedTypeMatchups = FALSE;
-        gSpecialStatuses[ctx->battlerDef].teraShellAbilityDone = FALSE;
-    }
 }
 
 static void Cmd_damagecalc(void)
@@ -1178,14 +1169,14 @@ static void Cmd_damagecalc(void)
                 continue;
 
             ctx.battlerDef = battlerDef;
-            CalculateAndSetMoveDamage(&ctx);
+            SetDynamicMoveCategoryAndDamage(&ctx);
         }
         gBattleStruct->calculatedDamageDone = TRUE;
     }
     else
     {
         ctx.battlerDef = gBattlerTarget;
-        CalculateAndSetMoveDamage(&ctx);
+        SetDynamicMoveCategoryAndDamage(&ctx);
     }
 
     gBattlescriptCurrInstr = cmd->nextInstr;

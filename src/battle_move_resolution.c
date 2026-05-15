@@ -2041,9 +2041,16 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
             ctx.abilities[ctx.battlerDef] = cv->abilities[cv->battlerDef];
             ctx.holdEffects[ctx.battlerAtk] = cv->holdEffects[cv->battlerAtk];
             ctx.holdEffects[ctx.battlerDef] = cv->holdEffects[cv->battlerDef];
+            ctx.typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(&ctx);
 
-            if (CalcTypeEffectivenessMultiplier(&ctx) == UQ_4_12(0.0))
+            if (ctx.typeEffectivenessModifier == UQ_4_12(0.0))
                 gSpecialStatuses[cv->battlerDef].updateStallMons = TRUE;
+
+            if (ctx.typeEffectivenessModifier > UQ_4_12(0.0) && ShouldTeraShellDistortTypeMatchups(&ctx))
+            {
+                gSpecialStatuses[ctx.battlerDef].distortedTypeMatchups = TRUE;
+                gSpecialStatuses[ctx.battlerDef].teraShellAbilityDone = TRUE;
+            }
 
             if (ctx.abilityBlocked)
             {
@@ -2177,6 +2184,7 @@ static enum CancelerResult CancelerAccuracyCheck(struct BattleCalcValues *cv)
 
     enum SmartTargetState smartTargetState = INITIAL_STATE;
     bool32 isSmartTarget = GetBattlerMoveTargetType(cv->battlerAtk, cv->move) == TARGET_SMART;
+    bool32 isMultiHitOn = gSpecialStatuses[cv->battlerAtk].multiHitOn;
 
     while (gBattleStruct->eventState.atkCancelerBattler < gBattlersCount)
     {
@@ -2192,7 +2200,6 @@ static enum CancelerResult CancelerAccuracyCheck(struct BattleCalcValues *cv)
 
         if (DoesMoveMissTarget(cv))
         {
-            bool32 isMultiHitOn = gSpecialStatuses[cv->battlerAtk].multiHitOn;
             gBattleStruct->moveResultFlags[cv->battlerDef] |= MOVE_RESULT_MISSED;
 
             if (cv->holdEffects[cv->battlerAtk] == HOLD_EFFECT_BLUNDER_POLICY
