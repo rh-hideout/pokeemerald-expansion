@@ -12,8 +12,23 @@ Route45_EventScript_Michael::
 	end
 
 Route45_EventScript_Parry::
-	trainerbattle_single TRAINER_PARRY_HNS, Route45_Text_HikerParrySeen, Route45_Text_HikerParryBeaten
+	trainerbattle_single TRAINER_PARRY_HNS, Route45_Text_HikerParrySeen, Route45_Text_HikerParryBeaten, Route45_EventScript_RegisterParry
+	specialvar VAR_RESULT, ShouldTryRematchBattle
+	goto_if_eq VAR_RESULT, TRUE, Route45_EventScript_RematchParry
 	msgbox Route45_Text_HikerParryAfter, MSGBOX_AUTOCLOSE
+	end
+
+Route45_EventScript_RegisterParry::
+	special PlayerFaceTrainerAfterBattle
+	waitmovement 0
+	msgbox Route45_Text_ParryRegister, MSGBOX_DEFAULT
+	register_matchcall TRAINER_PARRY_HNS
+	release
+	end
+
+Route45_EventScript_RematchParry::
+	trainerbattle_rematch TRAINER_PARRY_HNS, Route45_Text_ParryRematchIntro, Route45_Text_ParryRematchDefeat
+	msgbox Route45_Text_ParryPostRematch, MSGBOX_AUTOCLOSE
 	end
 
 Route45_EventScript_Timothy::
@@ -98,6 +113,21 @@ Route45_Text_HikerParryAfter:
     .string "see?\p"
     .string "So, I just plow ahead with power!$"
 
+Route45_Text_ParryRegister:
+    .string "I'm not much good at thinking,\n"
+    .string "see?\p"
+    .string "So, I just plow ahead with power!$"
+
+Route45_Text_ParryRematchIntro:
+    .string "My POKéMON are power packed!$"
+
+Route45_Text_ParryRematchDefeat:
+    .string "Wahahah! I'm the big loser!$"
+
+Route45_Text_ParryPostRematch:
+    .string "I'm not much good at thinking,\n"
+    .string "see?\p"
+    .string "So, I just plow ahead with power!$"
 
 Route45_Text_HikerTimothySeen:
     .string "Why do I climb mountains?\p"

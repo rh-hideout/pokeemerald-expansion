@@ -24,8 +24,23 @@ Route34_EventScript_YoungsterIan::
 	end
 
 Route34_EventScript_CamperTodd::
-	trainerbattle_single TRAINER_TODD_HNS, Route34_Text_CamperTodd_Seen, Route34_Text_CamperTodd_Beaten
+	trainerbattle_single TRAINER_TODD_HNS, Route34_Text_CamperTodd_Seen, Route34_Text_CamperTodd_Beaten, Route34_EventScript_RegisterTodd
+	specialvar VAR_RESULT, ShouldTryRematchBattle
+	goto_if_eq VAR_RESULT, TRUE, Route34_EventScript_RematchTodd
 	msgbox Route34_Text_CamperTodd_After, MSGBOX_AUTOCLOSE
+	end
+
+Route34_EventScript_RegisterTodd::
+	special PlayerFaceTrainerAfterBattle
+	waitmovement 0
+	msgbox Route34_Text_ToddRegister, MSGBOX_DEFAULT
+	register_matchcall TRAINER_TODD_HNS
+	release
+	end
+
+Route34_EventScript_RematchTodd::
+	trainerbattle_rematch TRAINER_TODD_HNS, Route34_Text_ToddRematchIntro, Route34_Text_ToddRematchDefeat
+	msgbox Route34_Text_ToddPostRematch, MSGBOX_AUTOCLOSE
 	end
 
 Route34_EventScript_PicnickerGina::
@@ -124,6 +139,22 @@ Route34_Text_CamperTodd_Beaten:
 	.string "Did I screw up my training?$"
 
 Route34_Text_CamperTodd_After:
+	.string "Maybe I should take one to DAY-CARE,\n"
+	.string "or maybe use some items…$"
+
+Route34_Text_ToddRegister:
+	.string "Maybe I should take one to DAY-CARE,\n"
+	.string "or maybe use some items…$"
+
+Route34_Text_ToddRematchIntro:
+	.string "I'm confident in my ability to\n"
+	.string "raise POKéMON.\p"
+	.string "Want to see?$"
+
+Route34_Text_ToddRematchDefeat:
+	.string "Did I screw up my training?$"
+
+Route34_Text_ToddPostRematch:
 	.string "Maybe I should take one to DAY-CARE,\n"
 	.string "or maybe use some items…$"
 

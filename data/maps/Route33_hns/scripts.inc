@@ -8,8 +8,23 @@ Route33_OnTransition:
 	end
 
 Route33_EventScript_HikerAnthony::
-	trainerbattle_single TRAINER_ANTHONY_HNS, Route33_Text_HikerAnthony2Seen, Route33_Text_HikerAnthony2Beaten
+	trainerbattle_single TRAINER_ANTHONY_HNS, Route33_Text_HikerAnthony2Seen, Route33_Text_HikerAnthony2Beaten, Route33_EventScript_RegisterAnthony
+	specialvar VAR_RESULT, ShouldTryRematchBattle
+	goto_if_eq VAR_RESULT, TRUE, Route33_EventScript_RematchAnthony
 	msgbox Route33_Text_HikerAnthony2After, MSGBOX_AUTOCLOSE
+	end
+
+Route33_EventScript_RegisterAnthony::
+	special PlayerFaceTrainerAfterBattle
+	waitmovement 0
+	msgbox Route33_Text_AnthonyRegister, MSGBOX_DEFAULT
+	register_matchcall TRAINER_ANTHONY_HNS
+	release
+	end
+
+Route33_EventScript_RematchAnthony::
+	trainerbattle_rematch TRAINER_ANTHONY_HNS, Route33_Text_AnthonyRematchIntro, Route33_Text_AnthonyRematchDefeat
+	msgbox Route33_Text_AnthonyPostRematch, MSGBOX_AUTOCLOSE
 	end
 
 Route33_EventScript_Lass::
@@ -30,6 +45,23 @@ Route33_Text_HikerAnthony2Beaten:
 	.string "than me!$"
 
 Route33_Text_HikerAnthony2After:
+	.string "We HIKERS are at our best\n"
+	.string "in the mountains.$"
+
+Route33_Text_AnthonyRegister:
+	.string "We HIKERS are at our best\n"
+	.string "in the mountains.$"
+
+Route33_Text_AnthonyRematchIntro:
+	.string "I came through the tunnel,\n"
+	.string "but I still have plenty\l"
+	.string "of energy left.$"
+
+Route33_Text_AnthonyRematchDefeat:
+	.string "Whoa! You've got more zip\n"
+	.string "than me!$"
+
+Route33_Text_AnthonyPostRematch:
 	.string "We HIKERS are at our best\n"
 	.string "in the mountains.$"
 

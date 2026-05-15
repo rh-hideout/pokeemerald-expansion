@@ -38,8 +38,23 @@ Route35_EventScript_JugglerIrwin::
 	end
 
 Route35_EventScript_BugCatcherArnie::
-	trainerbattle_single TRAINER_ARNIE_HNS, Route35_Text_BugCatcherArnieSeen, Route35_Text_BugCatcherArnieBeaten
+	trainerbattle_single TRAINER_ARNIE_HNS, Route35_Text_BugCatcherArnieSeen, Route35_Text_BugCatcherArnieBeaten, Route35_EventScript_RegisterArnie
+	specialvar VAR_RESULT, ShouldTryRematchBattle
+	goto_if_eq VAR_RESULT, TRUE, Route35_EventScript_RematchArnie
 	msgbox Route35_Text_BugCatcherArnieAfter, MSGBOX_AUTOCLOSE
+	end
+
+Route35_EventScript_RegisterArnie::
+	special PlayerFaceTrainerAfterBattle
+	waitmovement 0
+	msgbox Route35_Text_ArnieRegister, MSGBOX_DEFAULT
+	register_matchcall TRAINER_ARNIE_HNS
+	release
+	end
+
+Route35_EventScript_RematchArnie::
+	trainerbattle_rematch TRAINER_ARNIE_HNS, Route35_Text_ArnieRematchIntro, Route35_Text_ArnieRematchDefeat
+	msgbox Route35_Text_ArniePostRematch, MSGBOX_AUTOCLOSE
 	end
 
 Route35_EventScript_FirebreatherWalt::
@@ -154,6 +169,21 @@ Route35_Text_BugCatcherArnieBeaten:
 	.string "Huh? I shouldn't have lost that…$"
 
 Route35_Text_BugCatcherArnieAfter:
+	.string "My VENONAT won me the Bug-Catching\n"
+	.string "Contest at the NATIONAL PARK.$"
+
+Route35_Text_ArnieRegister:
+	.string "My VENONAT won me the Bug-Catching\n"
+	.string "Contest at the NATIONAL PARK.$"
+
+Route35_Text_ArnieRematchIntro:
+	.string "I'll go anywhere if bug POKéMON\n"
+	.string "appear there.$"
+
+Route35_Text_ArnieRematchDefeat:
+	.string "Huh? I shouldn't have lost that…$"
+
+Route35_Text_ArniePostRematch:
 	.string "My VENONAT won me the Bug-Catching\n"
 	.string "Contest at the NATIONAL PARK.$"
 

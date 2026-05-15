@@ -94,8 +94,23 @@ Route27_EventScript_Brian::
 	end
 
 Route27_EventScript_Reena::
-	trainerbattle_single TRAINER_REENA_HNS, Route27_Text_CooltrainerfReenaSeen, Route27_Text_CooltrainerfReenaBeaten
+	trainerbattle_single TRAINER_REENA_HNS, Route27_Text_CooltrainerfReenaSeen, Route27_Text_CooltrainerfReenaBeaten, Route27_EventScript_RegisterReena
+	specialvar VAR_RESULT, ShouldTryRematchBattle
+	goto_if_eq VAR_RESULT, TRUE, Route27_EventScript_RematchReena
 	msgbox Route27_Text_CooltrainerfReenaAfter, MSGBOX_AUTOCLOSE
+	end
+
+Route27_EventScript_RegisterReena::
+	special PlayerFaceTrainerAfterBattle
+	waitmovement 0
+	msgbox Route27_Text_ReenaRegister, MSGBOX_DEFAULT
+	register_matchcall TRAINER_REENA_HNS
+	release
+	end
+
+Route27_EventScript_RematchReena::
+	trainerbattle_rematch TRAINER_REENA_HNS, Route27_Text_ReenaRematchIntro, Route27_Text_ReenaRematchDefeat
+	msgbox Route27_Text_ReenaPostRematch, MSGBOX_AUTOCLOSE
 	end
 
 Route27_EventScript_Megan::
@@ -162,6 +177,21 @@ Route27_Text_CooltrainerfReenaBeaten:
     .string "Oh! You're much too strong!$"
 
 Route27_Text_CooltrainerfReenaAfter:
+    .string "You're just a kid, but you're not\n"
+    .string "to be underestimated either.$"
+
+Route27_Text_ReenaRegister:
+    .string "You're just a kid, but you're not\n"
+    .string "to be underestimated either.$"
+
+Route27_Text_ReenaRematchIntro:
+    .string "You shouldn't underestimate the\n"
+    .string "wild POKéMON in these parts.$"
+
+Route27_Text_ReenaRematchDefeat:
+    .string "Oh! You're much too strong!$"
+
+Route27_Text_ReenaPostRematch:
     .string "You're just a kid, but you're not\n"
     .string "to be underestimated either.$"
 

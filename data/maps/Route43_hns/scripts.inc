@@ -14,8 +14,23 @@ Route43_EventScript_Ben::
 	end
 
 Route43_EventScript_Brent::
-	trainerbattle_single TRAINER_BRENT_HNS, Route43_Text_PokemaniacBrentSeen, Route43_Text_PokemaniacBrentBeaten
+	trainerbattle_single TRAINER_BRENT_HNS, Route43_Text_PokemaniacBrentSeen, Route43_Text_PokemaniacBrentBeaten, Route43_EventScript_RegisterBrent
+	specialvar VAR_RESULT, ShouldTryRematchBattle
+	goto_if_eq VAR_RESULT, TRUE, Route43_EventScript_RematchBrent
 	msgbox Route43_Text_PokemaniacBrentAfter, MSGBOX_AUTOCLOSE
+	end
+
+Route43_EventScript_RegisterBrent::
+	special PlayerFaceTrainerAfterBattle
+	waitmovement 0
+	msgbox Route43_Text_BrentRegister, MSGBOX_DEFAULT
+	register_matchcall TRAINER_BRENT_HNS
+	release
+	end
+
+Route43_EventScript_RematchBrent::
+	trainerbattle_rematch TRAINER_BRENT_HNS, Route43_Text_BrentRematchIntro, Route43_Text_BrentRematchDefeat
+	msgbox Route43_Text_BrentPostRematch, MSGBOX_AUTOCLOSE
 	end
 
 Route43_EventScript_Ron::
@@ -34,8 +49,23 @@ Route43_EventScript_Spencer::
 	end
 
 Route43_EventScript_Tiffany::
-	trainerbattle_single TRAINER_TIFFANY_HNS, Route43_Text_PicnickerTiffanySeen, Route43_Text_PicnickerTiffanyBeaten
+	trainerbattle_single TRAINER_TIFFANY_HNS, Route43_Text_PicnickerTiffanySeen, Route43_Text_PicnickerTiffanyBeaten, Route43_EventScript_RegisterTiffany
+	specialvar VAR_RESULT, ShouldTryRematchBattle
+	goto_if_eq VAR_RESULT, TRUE, Route43_EventScript_RematchTiffany
 	msgbox Route43_Text_PicnickerTiffanyWantsPicnic, MSGBOX_AUTOCLOSE
+	end
+
+Route43_EventScript_RegisterTiffany::
+	special PlayerFaceTrainerAfterBattle
+	waitmovement 0
+	msgbox Route43_Text_TiffanyRegister, MSGBOX_DEFAULT
+	register_matchcall TRAINER_TIFFANY_HNS
+	release
+	end
+
+Route43_EventScript_RematchTiffany::
+	trainerbattle_rematch TRAINER_TIFFANY_HNS, Route43_Text_TiffanyRematchIntro, Route43_Text_TiffanyRematchDefeat
+	msgbox Route43_Text_TiffanyPostRematch, MSGBOX_AUTOCLOSE
 	end
 
 Route43_EventScript_Sign1::
@@ -72,6 +102,21 @@ Route43_Text_PokemaniacBrentBeaten:
     .string "Oh, my poor POKéMON! Darlings!$"
 
 Route43_Text_PokemaniacBrentAfter:
+    .string "I'd be happy just to own a single\n"
+    .string "rare POKéMON.$"
+
+Route43_Text_BrentRegister:
+    .string "I'd be happy just to own a single\n"
+    .string "rare POKéMON.$"
+
+Route43_Text_BrentRematchIntro:
+    .string "Hey! Do you have any rare\n"
+    .string "POKéMON?$"
+
+Route43_Text_BrentRematchDefeat:
+    .string "Oh, my poor POKéMON! Darlings!$"
+
+Route43_Text_BrentPostRematch:
     .string "I'd be happy just to own a single\n"
     .string "rare POKéMON.$"
 
@@ -123,6 +168,21 @@ Route43_Text_PicnickerTiffanyBeaten:
     .string "I played too much!$"
 
 Route43_Text_PicnickerTiffanyWantsPicnic:
+    .string "I'm having a picnic with POKéMON.\p"
+    .string "Won't you join us?$"
+
+Route43_Text_TiffanyRegister:
+    .string "I'm having a picnic with POKéMON.\p"
+    .string "Won't you join us?$"
+
+Route43_Text_TiffanyRematchIntro:
+    .string "Are you going to LAKE OF RAGE too?\p"
+    .string "Let's play for a little while!$"
+
+Route43_Text_TiffanyRematchDefeat:
+    .string "I played too much!$"
+
+Route43_Text_TiffanyPostRematch:
     .string "I'm having a picnic with POKéMON.\p"
     .string "Won't you join us?$"
 

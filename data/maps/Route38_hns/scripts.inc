@@ -13,8 +13,23 @@ Route38_EventScript_Toby::
 	end
 
 Route38_EventScript_Chad::
-	trainerbattle_single TRAINER_CHAD_HNS, Route38_Text_SchoolboyChad1Seen, Route38_Text_SchoolboyChad1Beaten
+	trainerbattle_single TRAINER_CHAD_HNS, Route38_Text_SchoolboyChad1Seen, Route38_Text_SchoolboyChad1Beaten, Route38_EventScript_RegisterChad
+	specialvar VAR_RESULT, ShouldTryRematchBattle
+	goto_if_eq VAR_RESULT, TRUE, Route38_EventScript_RematchChad
 	msgbox Route38_Text_SchoolboyChadAfter, MSGBOX_AUTOCLOSE
+	end
+
+Route38_EventScript_RegisterChad::
+	special PlayerFaceTrainerAfterBattle
+	waitmovement 0
+	msgbox Route38_Text_ChadRegister, MSGBOX_DEFAULT
+	register_matchcall TRAINER_CHAD_HNS
+	release
+	end
+
+Route38_EventScript_RematchChad::
+	trainerbattle_rematch TRAINER_CHAD_HNS, Route38_Text_ChadRematchIntro, Route38_Text_ChadRematchDefeat
+	msgbox Route38_Text_ChadPostRematch, MSGBOX_AUTOCLOSE
 	end
 
 Route38_EventScript_Dana::
@@ -76,6 +91,28 @@ Route38_Text_SchoolboyChad1Beaten:
 	.string "I guess.$"
 
 Route38_Text_SchoolboyChadAfter:
+	.string "I have to take so many\n"
+	.string "tests, I don't have much\l"
+	.string "time for POKéMON.\p"
+	.string "So when I do get to play,\n"
+	.string "I really concentrate.$"
+
+Route38_Text_ChadRegister:
+	.string "I have to take so many\n"
+	.string "tests, I don't have much\l"
+	.string "time for POKéMON.\p"
+	.string "So when I do get to play,\n"
+	.string "I really concentrate.$"
+
+Route38_Text_ChadRematchIntro:
+	.string "Let me try something\n"
+	.string "I learned today.$"
+
+Route38_Text_ChadRematchDefeat:
+	.string "I didn't study enough,\n"
+	.string "I guess.$"
+
+Route38_Text_ChadPostRematch:
 	.string "I have to take so many\n"
 	.string "tests, I don't have much\l"
 	.string "time for POKéMON.\p"

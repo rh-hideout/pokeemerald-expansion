@@ -13,8 +13,23 @@ Route32_EventScript_FisherJustin::
 	end
 
 Route32_EventScript_FisherRalph::
-	trainerbattle_single TRAINER_RALPH_HNS, Route32_Text_FisherRalph1_Seen, Route32_Text_FisherRalph1_Beaten
+	trainerbattle_single TRAINER_RALPH_HNS, Route32_Text_FisherRalph1_Seen, Route32_Text_FisherRalph1_Beaten, Route32_EventScript_RegisterRalph
+	specialvar VAR_RESULT, ShouldTryRematchBattle
+	goto_if_eq VAR_RESULT, TRUE, Route32_EventScript_RematchRalph
 	msgbox Route32_Text_FisherRalph1_After, MSGBOX_AUTOCLOSE
+	end
+
+Route32_EventScript_RegisterRalph::
+	special PlayerFaceTrainerAfterBattle
+	waitmovement 0
+	msgbox Route32_Text_RalphRegister, MSGBOX_DEFAULT
+	register_matchcall TRAINER_RALPH_HNS
+	release
+	end
+
+Route32_EventScript_RematchRalph::
+	trainerbattle_rematch TRAINER_RALPH_HNS, Route32_Text_RalphRematchIntro, Route32_Text_RalphRematchDefeat
+	msgbox Route32_Text_RalphPostRematch, MSGBOX_AUTOCLOSE
 	end
 
 Route32_EventScript_FisherHenry::
@@ -38,8 +53,23 @@ Route32_EventScript_CamperRoland::
 	end
 
 Route32_EventScript_PicnickerLiz::
-	trainerbattle_single TRAINER_LIZ_HNS, Route32_Text_PicnickerLiz1_Seen, Route32_Text_PicnickerLiz1_Beaten
+	trainerbattle_single TRAINER_LIZ_HNS, Route32_Text_PicnickerLiz1_Seen, Route32_Text_PicnickerLiz1_Beaten, Route32_EventScript_RegisterLiz
+	specialvar VAR_RESULT, ShouldTryRematchBattle
+	goto_if_eq VAR_RESULT, TRUE, Route32_EventScript_RematchLiz
 	msgbox Route32_Text_PicnickerLiz1_After, MSGBOX_AUTOCLOSE
+	end
+
+Route32_EventScript_RegisterLiz::
+	special PlayerFaceTrainerAfterBattle
+	waitmovement 0
+	msgbox Route32_Text_LizRegister, MSGBOX_DEFAULT
+	register_matchcall TRAINER_LIZ_HNS
+	release
+	end
+
+Route32_EventScript_RematchLiz::
+	trainerbattle_rematch TRAINER_LIZ_HNS, Route32_Text_LizRematchIntro, Route32_Text_LizRematchDefeat
+	msgbox Route32_Text_LizPostRematch, MSGBOX_AUTOCLOSE
 	end
 
 Route32_EventScript_BirdkeeperPeter::
@@ -398,6 +428,25 @@ Route32_Text_FisherRalph1_After:
 	.string "passion.\p"
 	.string "POKéMON are lifelong friends!$"
 
+Route32_Text_RalphRegister:
+	.string "Fishing is a lifelong\n"
+	.string "passion.\p"
+	.string "POKéMON are lifelong friends!$"
+
+Route32_Text_RalphRematchIntro:
+	.string "I'm really good at both\n"
+	.string "fishing and POKéMON.\p"
+	.string "I'm not about to lose to any kid!$"
+
+Route32_Text_RalphRematchDefeat:
+	.string "Tch! I tried to rush\n"
+	.string "things…$"
+
+Route32_Text_RalphPostRematch:
+	.string "Fishing is a lifelong\n"
+	.string "passion.\p"
+	.string "POKéMON are lifelong friends!$"
+
 Route32_Text_FisherHenry_Seen:
 	.string "My POKéMON? Freshly caught!$"
 
@@ -453,6 +502,21 @@ Route32_Text_PicnickerLiz1_Beaten:
 	.string "my anger!$"
 
 Route32_Text_PicnickerLiz1_After:
+	.string "I was having a nice chat too.$"
+
+Route32_Text_LizRegister:
+	.string "I was having a nice chat too.$"
+
+Route32_Text_LizRematchIntro:
+	.string "Uh-huh. Yeah, and you know…\p"
+	.string "Pardon? Battle? I'm on the phone.\n"
+	.string "Oh, all right. But make it fast.$"
+
+Route32_Text_LizRematchDefeat:
+	.string "Oh! I've got to relieve\n"
+	.string "my anger!$"
+
+Route32_Text_LizPostRematch:
 	.string "I was having a nice chat too.$"
 
 Route32_Text_BirdKeeperPeter_Seen:

@@ -107,8 +107,23 @@ NationalPark_Normal_Text_Persian:
 	.string "PERSIAN: Fufushaa!$"
 
 NationalPark_Normal_EventScript_Jack::
-	trainerbattle_single TRAINER_JACK_HNS, NationalPark_Normal_Text_SchoolboyJack1_Seen, NationalPark_Normal_Text_SchoolboyJack1_Beaten
+	trainerbattle_single TRAINER_JACK_HNS, NationalPark_Normal_Text_SchoolboyJack1_Seen, NationalPark_Normal_Text_SchoolboyJack1_Beaten, NationalPark_Normal_EventScript_RegisterJack
+	specialvar VAR_RESULT, ShouldTryRematchBattle
+	goto_if_eq VAR_RESULT, TRUE, NationalPark_Normal_EventScript_RematchJack
 	msgbox NationalPark_Normal_Text_SchoolboyJack_After, MSGBOX_AUTOCLOSE
+	end
+
+NationalPark_Normal_EventScript_RegisterJack::
+	special PlayerFaceTrainerAfterBattle
+	waitmovement 0
+	msgbox NationalPark_Normal_Text_JackRegister, MSGBOX_DEFAULT
+	register_matchcall TRAINER_JACK_HNS
+	release
+	end
+
+NationalPark_Normal_EventScript_RematchJack::
+	trainerbattle_rematch TRAINER_JACK_HNS, NationalPark_Normal_Text_JackRematchIntro, NationalPark_Normal_Text_JackRematchDefeat
+	msgbox NationalPark_Normal_Text_JackPostRematch, MSGBOX_AUTOCLOSE
 	end
 
 NationalPark_Normal_EventScript_Beverly::
@@ -144,6 +159,25 @@ NationalPark_Normal_Text_SchoolboyJack1_Beaten:
 	.string "Wha-wha-what?$"
 
 NationalPark_Normal_Text_SchoolboyJack_After:
+	.string "There is a lot to learn.\p"
+	.string "For example…\p"
+	.string "There are 50 kinds of TMs.\p"
+	.string "Traded POKéMON level up faster.$"
+
+NationalPark_Normal_Text_JackRegister:
+	.string "There is a lot to learn.\p"
+	.string "For example…\p"
+	.string "There are 50 kinds of TMs.\p"
+	.string "Traded POKéMON level up faster.$"
+
+NationalPark_Normal_Text_JackRematchIntro:
+	.string "I've learned a lot since we\n"
+	.string "last battled! Let's go!$"
+
+NationalPark_Normal_Text_JackRematchDefeat:
+	.string "Wha-wha-what?$"
+
+NationalPark_Normal_Text_JackPostRematch:
 	.string "There is a lot to learn.\p"
 	.string "For example…\p"
 	.string "There are 50 kinds of TMs.\p"

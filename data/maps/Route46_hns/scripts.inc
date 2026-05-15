@@ -18,8 +18,23 @@ Route46_EventScript_Ted::
 	end
 
 Route46_EventScript_Erin::
-	trainerbattle_single TRAINER_ERIN_HNS, Route46_Text_PicnickerErinSeen, Route46_Text_PicnickerErinBeaten
+	trainerbattle_single TRAINER_ERIN_HNS, Route46_Text_PicnickerErinSeen, Route46_Text_PicnickerErinBeaten, Route46_EventScript_RegisterErin
+	specialvar VAR_RESULT, ShouldTryRematchBattle
+	goto_if_eq VAR_RESULT, TRUE, Route46_EventScript_RematchErin
 	msgbox Route46_Text_PicnickerErinAfterBattle, MSGBOX_AUTOCLOSE
+	end
+
+Route46_EventScript_RegisterErin::
+	special PlayerFaceTrainerAfterBattle
+	waitmovement 0
+	msgbox Route46_Text_ErinRegister, MSGBOX_DEFAULT
+	register_matchcall TRAINER_ERIN_HNS
+	release
+	end
+
+Route46_EventScript_RematchErin::
+	trainerbattle_rematch TRAINER_ERIN_HNS, Route46_Text_ErinRematchIntro, Route46_Text_ErinRematchDefeat
+	msgbox Route46_Text_ErinPostRematch, MSGBOX_AUTOCLOSE
 	end
 
 Route46_EventScript_Sign::
@@ -65,6 +80,23 @@ Route46_Text_PicnickerErinBeaten:
 	.string "Oh, rats!$"
 
 Route46_Text_PicnickerErinAfterBattle:
+	.string "I've been to many GYMS, but the\n"
+	.string "GYM in GOLDENROD is my favorite.\p"
+	.string "It's filled with pretty flowers!$"
+
+Route46_Text_ErinRegister:
+	.string "I've been to many GYMS, but the\n"
+	.string "GYM in GOLDENROD is my favorite.\p"
+	.string "It's filled with pretty flowers!$"
+
+Route46_Text_ErinRematchIntro:
+	.string "I raise POKéMON too!\p"
+	.string "Will you battle with me?$"
+
+Route46_Text_ErinRematchDefeat:
+	.string "Oh, rats!$"
+
+Route46_Text_ErinPostRematch:
 	.string "I've been to many GYMS, but the\n"
 	.string "GYM in GOLDENROD is my favorite.\p"
 	.string "It's filled with pretty flowers!$"

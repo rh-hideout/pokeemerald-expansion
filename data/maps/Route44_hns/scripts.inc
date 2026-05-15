@@ -18,8 +18,23 @@ Route44_EventScript_Edgar::
 	end
 
 Route44_EventScript_Vance::
-	trainerbattle_single TRAINER_VANCE_HNS, Route44_Text_BirdKeeperVance1Seen, Route44_Text_BirdKeeperVance1Beaten
+	trainerbattle_single TRAINER_VANCE_HNS, Route44_Text_BirdKeeperVance1Seen, Route44_Text_BirdKeeperVance1Beaten, Route44_EventScript_RegisterVance
+	specialvar VAR_RESULT, ShouldTryRematchBattle
+	goto_if_eq VAR_RESULT, TRUE, Route44_EventScript_RematchVance
 	msgbox Route44_Text_BirdKeeperVanceBirds, MSGBOX_AUTOCLOSE
+	end
+
+Route44_EventScript_RegisterVance::
+	special PlayerFaceTrainerAfterBattle
+	waitmovement 0
+	msgbox Route44_Text_VanceRegister, MSGBOX_DEFAULT
+	register_matchcall TRAINER_VANCE_HNS
+	release
+	end
+
+Route44_EventScript_RematchVance::
+	trainerbattle_rematch TRAINER_VANCE_HNS, Route44_Text_VanceRematchIntro, Route44_Text_VanceRematchDefeat
+	msgbox Route44_Text_VancePostRematch, MSGBOX_AUTOCLOSE
 	end
 
 Route44_EventScript_Phil::
@@ -97,6 +112,25 @@ Route44_Text_BirdKeeperVance1Beaten:
     .string "Whew! You're hot stuff.$"
 
 Route44_Text_BirdKeeperVanceBirds:
+    .string "ARTICUNO, ZAPDOS and MOLTRES are\n"
+    .string "the three legendary bird POKéMON.\p"
+    .string "I heard there are other legendary\n"
+    .string "birds, though.$"
+
+Route44_Text_VanceRegister:
+    .string "ARTICUNO, ZAPDOS and MOLTRES are\n"
+    .string "the three legendary bird POKéMON.\p"
+    .string "I heard there are other legendary\n"
+    .string "birds, though.$"
+
+Route44_Text_VanceRematchIntro:
+    .string "Do you know about the legendary\n"
+    .string "bird POKéMON?$"
+
+Route44_Text_VanceRematchDefeat:
+    .string "Whew! You're hot stuff.$"
+
+Route44_Text_VancePostRematch:
     .string "ARTICUNO, ZAPDOS and MOLTRES are\n"
     .string "the three legendary bird POKéMON.\p"
     .string "I heard there are other legendary\n"
