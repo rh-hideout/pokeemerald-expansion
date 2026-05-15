@@ -2196,7 +2196,7 @@ static bool8 WasSecondRematchWon(const struct RematchTrainer *table, u16 firstBa
 }
 
 #if FREE_MATCH_CALL == FALSE
-static bool32 HasEnoughBadgesForRematch(void)
+bool32 HasEnoughBadgesForRematch(void)
 {
     s32 i, count;
 

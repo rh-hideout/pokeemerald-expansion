@@ -96,6 +96,8 @@ void UpdateRematchIfDefeated(s32 rematchTableId);
 void ClearCurrentTrainerWantRematchVsSeeker(void);
 void IncrementRematchStepCounter(void);
 void TryUpdateRandomTrainerRematches(u16 mapGroup, u16 mapNum);
+bool32 TrainerIsMatchCallRegistered(s32 i);
+bool32 HasEnoughBadgesForRematch(void);
 bool32 DoesSomeoneWantRematchIn(u16 mapGroup, u16 mapNum);
 bool32 IsRematchTrainerIn(u16 mapGroup, u16 mapNum);
 u16 GetLastBeatenRematchTrainerId(u16 trainerId);

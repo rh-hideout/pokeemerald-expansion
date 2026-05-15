@@ -1,4 +1,4 @@
-#define DEBUG_MATCH_CALL 1 // Set to 0 when done testing
+#define DEBUG_MATCH_CALL 0
 
 #include "global.h"
 #include "malloc.h"
@@ -1128,6 +1128,70 @@ void InitMatchCallCounters(void)
     sMatchCallState.minutes = GetCurrentTotalMinutes(&gLocalTime) + 10;
     sMatchCallState.stepCounter = 0;
 }
+
+#if IS_HNS
+#define ROUTE_STEP_COUNTER_MAX 255
+
+static EWRAM_DATA u16 sRouteStepLastMap = 0;
+
+bool32 HnsUpdateRouteStepCounter(void)
+{
+    u16 curMap = (gSaveBlock1Ptr->location.mapGroup << 8) | gSaveBlock1Ptr->location.mapNum;
+    u16 steps;
+
+    if (!FlagGet(FLAG_HAS_MATCH_CALL))
+        return FALSE;
+    if (gSaveBlock3Ptr->challengeSettings.disableMatchCall)
+        return FALSE;
+    if (!HasEnoughBadgesForRematch())
+        return FALSE;
+
+    if (curMap != sRouteStepLastMap)
+    {
+        sRouteStepLastMap = curMap;
+        VarSet(VAR_ROUTE_STEP_COUNTER_HNS, 0);
+    }
+
+    steps = VarGet(VAR_ROUTE_STEP_COUNTER_HNS) + 1;
+
+    if (steps >= ROUTE_STEP_COUNTER_MAX)
+    {
+        u16 mapGroup = gSaveBlock1Ptr->location.mapGroup;
+        u16 mapNum = gSaveBlock1Ptr->location.mapNum;
+        u16 candidates[REMATCH_SPECIAL_TRAINER_START];
+        u32 numCandidates = 0;
+        s32 i;
+
+        VarSet(VAR_ROUTE_STEP_COUNTER_HNS, 0);
+
+        for (i = 0; i < REMATCH_SPECIAL_TRAINER_START; i++)
+        {
+            if (gRematchTable[i].mapGroup != mapGroup || gRematchTable[i].mapNum != mapNum)
+                continue;
+            if (!TrainerIsMatchCallRegistered(i))
+                continue;
+            if (!HasTrainerBeenFought(gRematchTable[i].trainerIds[0]))
+                continue;
+
+            candidates[numCandidates++] = gRematchTable[i].trainerIds[0];
+        }
+
+        if (numCandidates > 0)
+        {
+            sMatchCallState.trainerId = candidates[Random() % numCandidates];
+            sMatchCallState.triggeredFromScript = FALSE;
+            StartMatchCall();
+            return TRUE;
+        }
+    }
+    else
+    {
+        VarSet(VAR_ROUTE_STEP_COUNTER_HNS, steps);
+    }
+
+    return FALSE;
+}
+#endif
 
 static u32 GetCurrentTotalMinutes(struct Time *time)
 {

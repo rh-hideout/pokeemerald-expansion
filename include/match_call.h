@@ -25,5 +25,6 @@ bool32 GetActiveTrainerRematches(u32 matchCallId);
 void SetActiveTrainerRematches(u32 matchCallId, u32 value);
 u32 GetTrainerRematchStepCounter(void);
 void SetTrainerRematchStepCounter(u32 value);
+bool32 HnsUpdateRouteStepCounter(void);
 
 #endif //GUARD_MATCH_CALL_H
