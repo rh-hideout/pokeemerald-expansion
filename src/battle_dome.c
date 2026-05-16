@@ -3889,7 +3889,7 @@ static bool32 IsDomeHealingMove(enum Move move)
         return FALSE;
     }
 }
-static bool32 IsDomeDefensiveMoveEffect(enum Move move)
+static bool32 IsDomeDefensiveMove(enum Move move)
 {
     switch (GetMoveEffect(move))
     {
@@ -3918,7 +3918,7 @@ static bool32 IsDomeDefensiveMoveEffect(enum Move move)
     return FALSE;
 }
 
-static bool32 IsDomeRiskyMoveEffect(enum Move move)
+static bool32 IsDomeRiskyMove(enum Move move)
 {
     switch (GetMoveEffect(move))
     {
@@ -3985,7 +3985,7 @@ static bool32 IsDomePopularMove(enum Move move)
     return IsStatChangeStatusMove(move, IsAtkSpAtkStatUpMove);
 }
 
-static bool32 IsDomeStatusMoveEffect(enum Move move)
+static bool32 IsDomeStatusMove(enum Move move)
 {
     switch (GetMoveEffect(move))
     {
@@ -4305,16 +4305,16 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
                     allocatedArray[k] = IsDomeHealingMove(move) ? 1 : 0;
                     break;
                 case MOVE_POINTS_RISKY:
-                    allocatedArray[k] = IsDomeRiskyMoveEffect(move) ? 1 : 0;
+                    allocatedArray[k] = IsDomeRiskyMove(move) ? 1 : 0;
                     break;
                 case MOVE_POINTS_STATUS:
-                    allocatedArray[k] = IsDomeStatusMoveEffect(move);
+                    allocatedArray[k] = IsDomeStatusMove(move);
                     break;
                 case MOVE_POINTS_DMG:
                     allocatedArray[k] = (!IsBattleMoveStatus(move)) ? 1 : 0;
                     break;
                 case MOVE_POINTS_DEF:
-                    allocatedArray[k] = IsDomeDefensiveMoveEffect(move) ? 1 : 0;
+                    allocatedArray[k] = IsDomeDefensiveMove(move) ? 1 : 0;
                     break;
                 case MOVE_POINTS_ACCURATE:
                     allocatedArray[k] = (accuracy == 0 || accuracy == 100) ? 1 : 0;
