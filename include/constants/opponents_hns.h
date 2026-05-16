@@ -567,8 +567,33 @@
 #define TRAINER_REENA_3_HNS                            559
 #define TRAINER_LANCE_3_HNS                            560
 #define TRAINER_CLAIR_3_HNS                            561
+#define TRAINER_ALEX_2_HNS                             562
+#define TRAINER_ALEX_3_HNS                             563
+#define TRAINER_RILEY_2_HNS                            564
+#define TRAINER_RILEY_3_HNS                            565
+#define TRAINER_RILEY_4_HNS                            566
+#define TRAINER_TREVOR_2_HNS                           567
+#define TRAINER_TREVOR_3_HNS                           568
+#define TRAINER_KYLE_2_HNS                             569
+#define TRAINER_KYLE_3_HNS                             570
+#define TRAINER_CARTER_2_HNS                           571
+#define TRAINER_CARTER_3_HNS                           572
+#define TRAINER_HILLARY_2_HNS                          573
+#define TRAINER_HILLARY_3_HNS                          574
+#define TRAINER_ROB_2_HNS                              575
+#define TRAINER_ROB_3_HNS                              576
+#define TRAINER_NICOLE_2_HNS                           577
+#define TRAINER_NICOLE_3_HNS                           578
+#define TRAINER_BILLY_2_HNS                            579
+#define TRAINER_BILLY_3_HNS                            580
+#define TRAINER_KENNY_2_HNS                            581
+#define TRAINER_KENNY_3_HNS                            582
+#define TRAINER_JOEL_2_HNS                             583
+#define TRAINER_JOEL_3_HNS                             584
+#define TRAINER_CHARLES_2_HNS                          585
+#define TRAINER_CHARLES_3_HNS                          586
 
-#define TRAINERS_COUNT_HNS                       562
+#define TRAINERS_COUNT_HNS                       587
 #define MAX_TRAINERS_COUNT_HNS                   864
 
 #endif  // GUARD_CONSTANTS_OPPONENTS_HNS_H

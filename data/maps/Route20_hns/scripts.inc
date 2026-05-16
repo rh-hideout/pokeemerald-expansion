@@ -12,9 +12,24 @@ Route20_OnTransition:
 	end
 
 Route20_EventScript_Nicole::
-	trainerbattle_single TRAINER_NICOLE_HNS, Route20_Text_SwimmerfNicoleSeen, Route20_Text_SwimmerfNicoleBeaten
+	trainerbattle_single TRAINER_NICOLE_HNS, Route20_Text_SwimmerfNicoleSeen, Route20_Text_SwimmerfNicoleBeaten, Route20_EventScript_RegisterNicole
+	specialvar VAR_RESULT, ShouldTryRematchBattle
+	goto_if_eq VAR_RESULT, TRUE, Route20_EventScript_RematchNicole
 	msgbox Route20_Text_SwimmerfNicoleAfterBattle, MSGBOX_AUTOCLOSE
-	end	
+	end
+
+Route20_EventScript_RegisterNicole::
+	special PlayerFaceTrainerAfterBattle
+	waitmovement 0
+	msgbox Route20_Text_NicoleRegister, MSGBOX_DEFAULT
+	register_matchcall TRAINER_NICOLE_HNS
+	release
+	end
+
+Route20_EventScript_RematchNicole::
+	trainerbattle_rematch TRAINER_NICOLE_HNS, Route20_Text_NicoleRematchIntro, Route20_Text_NicoleRematchDefeat
+	msgbox Route20_Text_NicolePostRematch, MSGBOX_AUTOCLOSE
+	end
 
 Route20_EventScript_Lori::
 	trainerbattle_single TRAINER_LORI_HNS, Route20_Text_SwimmerfLoriSeen, Route20_Text_SwimmerfLoriBeaten
@@ -93,6 +108,21 @@ Route20_Text_Dewgong:
 
 Route20_Text_SeafoamSign:
 	.string "SEAFOAM ISLANDS$"
+
+Route20_Text_NicoleRegister:
+	.string "Your POKéMON swims fast!\n"
+	.string "Let me get your number!$"
+
+Route20_Text_NicoleRematchIntro:
+	.string "All this swimming has made my\n"
+	.string "POKéMON stronger! Let's battle!$"
+
+Route20_Text_NicoleRematchDefeat:
+	.string "Swept away again…$"
+
+Route20_Text_NicolePostRematch:
+	.string "Win or lose, I'm getting fit and\n"
+	.string "so are my POKéMON!$"
 
 Route20_Text_SwimmerfNicoleSeen:
 	.string "I feel so much lighter in water.$"

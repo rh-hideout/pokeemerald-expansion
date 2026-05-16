@@ -12934,3 +12934,498 @@ Level: 56
 
 Starmie
 Level: 57
+
+=== TRAINER_ALEX_2_HNS ===
+Name: ALEX
+Class: Battle Girl Hns
+Pic: Battle Girl
+Gender: Male
+Music: Hg Girl 2
+Double Battle: No
+AI: Check Bad Move
+
+Nidoking
+Level: 58
+
+Slowking
+Level: 59
+
+Seaking
+Level: 60
+
+Kingdra
+Level: 53
+
+=== TRAINER_ALEX_3_HNS ===
+Name: ALEX
+Class: Battle Girl Hns
+Pic: Battle Girl
+Gender: Male
+Music: Hg Girl 2
+Double Battle: No
+AI: Check Bad Move
+
+Gallade
+Level: 55
+
+Nidoking
+Level: 60
+
+Slowking
+Level: 61
+
+Seaking
+Level: 62
+
+Kingdra
+Level: 57
+
+=== TRAINER_RILEY_2_HNS ===
+Name: RILEY
+Class: Biker Hns
+Pic: Biker Hns
+Gender: Male
+Music: Hg Boy 2
+Double Battle: No
+AI: Check Bad Move
+
+Weezing
+Level: 62
+
+Arbok
+Level: 60
+
+=== TRAINER_RILEY_3_HNS ===
+Name: RILEY
+Class: Biker Hns
+Pic: Biker Hns
+Gender: Male
+Music: Hg Boy 2
+Double Battle: No
+AI: Check Bad Move
+
+Weezing
+Level: 64
+
+Arbok
+Level: 62
+
+Seviper
+Level: 60
+
+=== TRAINER_RILEY_4_HNS ===
+Name: RILEY
+Class: Biker Hns
+Pic: Biker Hns
+Gender: Male
+Music: Hg Boy 2
+Double Battle: No
+AI: Check Bad Move
+
+Weezing
+Level: 66
+
+Arbok
+Level: 68
+
+Seviper
+Level: 65
+
+=== TRAINER_TREVOR_2_HNS ===
+Name: TREVOR
+Class: Juggler Hns
+Pic: Juggler Hns
+Gender: Male
+Music: Hg Suspicious 1
+Double Battle: No
+AI: Check Bad Move
+
+Scizor
+Level: 65
+
+Aipom
+Level: 40
+
+=== TRAINER_TREVOR_3_HNS ===
+Name: TREVOR
+Class: Juggler Hns
+Pic: Juggler Hns
+Gender: Male
+Music: Hg Suspicious 1
+Double Battle: No
+AI: Check Bad Move
+
+Scizor
+Level: 69
+
+Ambipom
+Level: 64
+
+=== TRAINER_KYLE_2_HNS ===
+Name: KYLE
+Class: Fisherman Hns
+Pic: Fisherman
+Gender: Male
+Music: Hg Suspicious 2
+Double Battle: No
+AI: Check Bad Move
+
+Seaking
+Level: 60
+
+Qwilfish
+Level: 59
+
+Poliwhirl
+Level: 60
+
+Seaking
+Level: 61
+
+=== TRAINER_KYLE_3_HNS ===
+Name: KYLE
+Class: Fisherman Hns
+Pic: Fisherman
+Gender: Male
+Music: Hg Suspicious 2
+Double Battle: No
+AI: Check Bad Move
+
+Qwilfish
+Level: 63
+
+Seaking
+Level: 62
+
+Poliwhirl
+Level: 62
+
+Seaking
+Level: 63
+
+=== TRAINER_CARTER_2_HNS ===
+Name: CARTER
+Class: Pokefan Hns
+Pic: Pokefan M
+Gender: Male
+Music: Hg Suspicious 2
+Double Battle: No
+AI: Check Bad Move
+
+Bulbasaur
+Level: 65
+
+Squirtle
+Level: 65
+
+Charmander
+Level: 65
+
+=== TRAINER_CARTER_3_HNS ===
+Name: CARTER
+Class: Pokefan Hns
+Pic: Pokefan M
+Gender: Male
+Music: Hg Suspicious 2
+Double Battle: No
+AI: Check Bad Move
+
+Treecko
+Level: 65
+
+Torchic
+Level: 65
+
+Mudkip
+Level: 65
+
+=== TRAINER_HILLARY_2_HNS ===
+Name: HILLARY
+Class: Expert Hns
+Pic: Expert F
+Gender: Male
+Music: Hg Girl 2
+Double Battle: No
+AI: Check Bad Move
+
+Sunkern
+Level: 40
+
+Aipom
+Level: 63
+
+Cubone
+Level: 62
+
+=== TRAINER_HILLARY_3_HNS ===
+Name: HILLARY
+Class: Expert Hns
+Pic: Expert F
+Gender: Male
+Music: Hg Girl 2
+Double Battle: No
+AI: Check Bad Move
+
+Sunflora
+Level: 65
+
+Aipom
+Level: 63
+
+Cubone
+Level: 62
+
+=== TRAINER_ROB_2_HNS ===
+Name: ROB
+Class: Bug Catcher Hns
+Pic: Bug Catcher
+Gender: Male
+Music: Hg Boy 1
+Double Battle: No
+AI: Check Bad Move
+
+Beedrill
+Level: 63
+
+Butterfree
+Level: 63
+
+Beautifly
+Level: 63
+
+=== TRAINER_ROB_3_HNS ===
+Name: ROB
+Class: Bug Catcher Hns
+Pic: Bug Catcher
+Gender: Male
+Music: Hg Boy 1
+Double Battle: No
+AI: Check Bad Move
+
+Beedrill
+Level: 64
+
+Butterfree
+Level: 64
+
+Beautifly
+Level: 64
+
+Dustox
+Level: 64
+
+=== TRAINER_NICOLE_2_HNS ===
+Name: NICOLE
+Class: Swimmer F Hns
+Pic: Swimmer F
+Gender: Male
+Music: Hg Girl 2
+Double Battle: No
+AI: Check Bad Move
+
+Mantine
+Level: 63
+
+Lapras
+Level: 66
+
+Luvdisc
+Level: 66
+
+=== TRAINER_NICOLE_3_HNS ===
+Name: NICOLE
+Class: Swimmer F Hns
+Pic: Swimmer F
+Gender: Male
+Music: Hg Girl 2
+Double Battle: No
+AI: Check Bad Move
+
+Mantine
+Level: 65
+
+Lapras
+Level: 68
+
+Luvdisc
+Level: 69
+
+=== TRAINER_BILLY_2_HNS ===
+Name: BILLY
+Class: School Kid Hns
+Pic: School Kid M
+Gender: Male
+Music: Hg Boy 1
+Double Battle: No
+AI: Check Bad Move
+
+Mr. Mime
+Level: 60
+
+Parasect
+Level: 62
+
+Poliwrath
+Level: 61
+
+Ditto
+Level: 62
+
+=== TRAINER_BILLY_3_HNS ===
+Name: BILLY
+Class: School Kid Hns
+Pic: School Kid M
+Gender: Male
+Music: Hg Boy 1
+Double Battle: No
+AI: Check Bad Move
+
+Mr. Mime
+Level: 62
+
+Parasect
+Level: 64
+
+Poliwrath
+Level: 66
+
+Ditto
+Level: 65
+
+Kecleon
+Level: 68
+
+=== TRAINER_KENNY_2_HNS ===
+Name: KENNY
+Class: Hiker Hns
+Pic: Hiker
+Gender: Male
+Music: Hg Suspicious 2
+Double Battle: No
+AI: Check Bad Move
+
+Sandslash
+Level: 58
+
+Golem
+Level: 59
+
+Golem
+Level: 61
+
+Aggron
+Level: 60
+
+=== TRAINER_KENNY_3_HNS ===
+Name: KENNY
+Class: Hiker Hns
+Pic: Hiker
+Gender: Male
+Music: Hg Suspicious 2
+Double Battle: No
+AI: Check Bad Move
+
+Sandslash
+Level: 62
+
+Golem
+Level: 61
+
+Golem
+Level: 62
+
+Aggron
+Level: 63
+
+=== TRAINER_JOEL_2_HNS ===
+Name: JOEL
+Class: Biker Hns
+Pic: Biker Hns
+Gender: Male
+Music: Hg Boy 2
+Double Battle: No
+AI: Check Bad Move
+
+Magmar
+Level: 60
+
+Electabuzz
+Level: 60
+
+Tangela
+Level: 60
+
+Togetic
+Level: 60
+
+Roselia
+Level: 60
+
+=== TRAINER_JOEL_3_HNS ===
+Name: JOEL
+Class: Biker Hns
+Pic: Biker Hns
+Gender: Male
+Music: Hg Boy 2
+Double Battle: No
+AI: Check Bad Move
+
+Magmortar
+Level: 62
+
+Electivire
+Level: 62
+
+Tangrowth
+Level: 62
+
+Togekiss
+Level: 62
+
+Roserade
+Level: 62
+
+=== TRAINER_CHARLES_2_HNS ===
+Name: CHARLES
+Class: Biker Hns
+Pic: Biker Hns
+Gender: Male
+Music: Hg Boy 2
+Double Battle: No
+AI: Check Bad Move
+
+Poliwrath
+Level: 56
+
+Charizard
+Level: 56
+
+Weezing
+Level: 56
+
+Mightyena
+Level: 58
+
+=== TRAINER_CHARLES_3_HNS ===
+Name: CHARLES
+Class: Biker Hns
+Pic: Biker Hns
+Gender: Male
+Music: Hg Boy 2
+Double Battle: No
+AI: Check Bad Move
+
+Poliwrath
+Level: 60
+
+Slaking
+Level: 65
+
+Charizard
+Level: 60
+
+Weezing
+Level: 61
+
+Mightyena
+Level: 63

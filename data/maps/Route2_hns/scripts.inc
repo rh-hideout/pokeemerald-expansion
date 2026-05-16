@@ -8,8 +8,23 @@ Route2_OnTransition:
 	end
 
 Route2_EventScript_Rob::
-	trainerbattle_single TRAINER_ROB_HNS, Route2_Text_BugCatcherRob_Seen, Route2_Text_BugCatcherRob_Beaten
+	trainerbattle_single TRAINER_ROB_HNS, Route2_Text_BugCatcherRob_Seen, Route2_Text_BugCatcherRob_Beaten, Route2_EventScript_RegisterRob
+	specialvar VAR_RESULT, ShouldTryRematchBattle
+	goto_if_eq VAR_RESULT, TRUE, Route2_EventScript_RematchRob
 	msgbox Route2_Text_BugCatcherRob_AfterBattle, MSGBOX_AUTOCLOSE
+	end
+
+Route2_EventScript_RegisterRob::
+	special PlayerFaceTrainerAfterBattle
+	waitmovement 0
+	msgbox Route2_Text_RobRegister, MSGBOX_DEFAULT
+	register_matchcall TRAINER_ROB_HNS
+	release
+	end
+
+Route2_EventScript_RematchRob::
+	trainerbattle_rematch TRAINER_ROB_HNS, Route2_Text_RobRematchIntro, Route2_Text_RobRematchDefeat
+	msgbox Route2_Text_RobPostRematch, MSGBOX_AUTOCLOSE
 	end
 
 Route2_EventScript_Ed::
@@ -37,6 +52,20 @@ Route2_EventScript_Carbos::
 Route2_EventScript_Nugget::
     finditem ITEM_NUGGET
     end
+
+Route2_Text_RobRegister:
+	.string "Let me get your number!$"
+
+Route2_Text_RobRematchIntro:
+	.string "I've caught even more bugs!\n"
+	.string "Check them out!$"
+
+Route2_Text_RobRematchDefeat:
+	.string "I need better bugs!$"
+
+Route2_Text_RobPostRematch:
+	.string "I caught every bug in VIRIDIAN.\n"
+	.string "Is there a better FOREST somewhere?$"
 
 Route2_Text_BugCatcherRob_Seen:
 	.string "My bug POKéMON are tough. Prepare to\n"

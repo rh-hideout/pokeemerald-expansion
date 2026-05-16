@@ -8,8 +8,23 @@ Route13_OnTransition:
 	end
 
 Route13_EventScript_Alex::
-	trainerbattle_single TRAINER_ALEX_HNS, Route13_Text_PokefanmAlexSeen, Route13_Text_PokefanmAlexBeaten
+	trainerbattle_single TRAINER_ALEX_HNS, Route13_Text_PokefanmAlexSeen, Route13_Text_PokefanmAlexBeaten, Route13_EventScript_RegisterAlex
+	specialvar VAR_RESULT, ShouldTryRematchBattle
+	goto_if_eq VAR_RESULT, TRUE, Route13_EventScript_RematchAlex
 	msgbox Route13_Text_PokefanmAlexAfterBattle, MSGBOX_AUTOCLOSE
+	end
+
+Route13_EventScript_RegisterAlex::
+	special PlayerFaceTrainerAfterBattle
+	waitmovement 0
+	msgbox Route13_Text_AlexRegister, MSGBOX_DEFAULT
+	register_matchcall TRAINER_ALEX_HNS
+	release
+	end
+
+Route13_EventScript_RematchAlex::
+	trainerbattle_rematch TRAINER_ALEX_HNS, Route13_Text_AlexRematchIntro, Route13_Text_AlexRematchDefeat
+	msgbox Route13_Text_AlexPostRematch, MSGBOX_AUTOCLOSE
 	end
 
 Route13_EventScript_Joshua::
@@ -28,8 +43,23 @@ Route13_EventScript_Bret::
 	end
 
 Route13_EventScript_Kenny::
-	trainerbattle_single TRAINER_KENNY_HNS, Route13_Text_HikerKennySeen, Route13_Text_HikerKennyBeaten
+	trainerbattle_single TRAINER_KENNY_HNS, Route13_Text_HikerKennySeen, Route13_Text_HikerKennyBeaten, Route13_EventScript_RegisterKenny
+	specialvar VAR_RESULT, ShouldTryRematchBattle
+	goto_if_eq VAR_RESULT, TRUE, Route13_EventScript_RematchKenny
 	msgbox Route13_Text_HikerKennyAfterBattle, MSGBOX_AUTOCLOSE
+	end
+
+Route13_EventScript_RegisterKenny::
+	special PlayerFaceTrainerAfterBattle
+	waitmovement 0
+	msgbox Route13_Text_KennyRegister, MSGBOX_DEFAULT
+	register_matchcall TRAINER_KENNY_HNS
+	release
+	end
+
+Route13_EventScript_RematchKenny::
+	trainerbattle_rematch TRAINER_KENNY_HNS, Route13_Text_KennyRematchIntro, Route13_Text_KennyRematchDefeat
+	msgbox Route13_Text_KennyPostRematch, MSGBOX_AUTOCLOSE
 	end
 
 Route13_EventScript_TrainerTips::
@@ -53,6 +83,20 @@ Route13_Text_PokefanmAlexBeaten:
 Route13_Text_PokefanmAlexAfterBattle:
 	.string "Doesn't everyone wish to someday\n"
 	.string "be a king?$"
+
+Route13_Text_AlexRegister:
+	.string "You're not royalty but you're good.\n"
+	.string "Let me get your number.$"
+
+Route13_Text_AlexRematchIntro:
+	.string "I've added knights to my court!\n"
+	.string "Let's battle!$"
+
+Route13_Text_AlexRematchDefeat:
+	.string "Dethroned again…$"
+
+Route13_Text_AlexPostRematch:
+	.string "Maybe I'm just a pawn after all.$"
 
 Route13_Text_PokefanmJoshuaSeen:
 	.string "Nihihi! Would you like to battle\n"
@@ -101,6 +145,21 @@ Route13_Text_HikerKennyAfterBattle:
 	.string "to change.\p"
 	.string "But they actually change, little\n"
 	.string "by little.$"
+
+Route13_Text_KennyRegister:
+	.string "Maybe POKéMON change over time too.\n"
+	.string "Let's battle again sometime!$"
+
+Route13_Text_KennyRematchIntro:
+	.string "I've learned from geology!\n"
+	.string "Let's go!$"
+
+Route13_Text_KennyRematchDefeat:
+	.string "Still not enough…$"
+
+Route13_Text_KennyPostRematch:
+	.string "The power of POKéMON is like\n"
+	.string "erosion. We will persevere!$"
 
 Route13_Text_TrainerTips:
 	.string "TRAINER TIPS\p"

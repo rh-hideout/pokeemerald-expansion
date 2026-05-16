@@ -13,8 +13,23 @@ Route15_EventScript_Colette::
 	end
 
 Route15_EventScript_Hillary::
-	trainerbattle_single TRAINER_HILLARY_HNS, Route15_Text_TeacherHillarySeen, Route15_Text_TeacherHillaryBeaten
+	trainerbattle_single TRAINER_HILLARY_HNS, Route15_Text_TeacherHillarySeen, Route15_Text_TeacherHillaryBeaten, Route15_EventScript_RegisterHillary
+	specialvar VAR_RESULT, ShouldTryRematchBattle
+	goto_if_eq VAR_RESULT, TRUE, Route15_EventScript_RematchHillary
 	msgbox Route15_Text_TeacherHillaryAfterBattle, MSGBOX_AUTOCLOSE
+	end
+
+Route15_EventScript_RegisterHillary::
+	special PlayerFaceTrainerAfterBattle
+	waitmovement 0
+	msgbox Route15_Text_HillaryRegister, MSGBOX_DEFAULT
+	register_matchcall TRAINER_HILLARY_HNS
+	release
+	end
+
+Route15_EventScript_RematchHillary::
+	trainerbattle_rematch TRAINER_HILLARY_HNS, Route15_Text_HillaryRematchIntro, Route15_Text_HillaryRematchDefeat
+	msgbox Route15_Text_HillaryPostRematch, MSGBOX_AUTOCLOSE
 	end
 
 Route15_EventScript_Kipp::
@@ -33,8 +48,23 @@ Route15_EventScript_Johnny::
 	end
 
 Route15_EventScript_Billy::
-	trainerbattle_single TRAINER_BILLY_HNS, Route15_Text_SchoolboyBillySeen, Route15_Text_SchoolboyBillyBeaten
+	trainerbattle_single TRAINER_BILLY_HNS, Route15_Text_SchoolboyBillySeen, Route15_Text_SchoolboyBillyBeaten, Route15_EventScript_RegisterBilly
+	specialvar VAR_RESULT, ShouldTryRematchBattle
+	goto_if_eq VAR_RESULT, TRUE, Route15_EventScript_RematchBilly
 	msgbox Route15_Text_SchoolboyBillyAfterBattle, MSGBOX_AUTOCLOSE
+	end
+
+Route15_EventScript_RegisterBilly::
+	special PlayerFaceTrainerAfterBattle
+	waitmovement 0
+	msgbox Route15_Text_BillyRegister, MSGBOX_DEFAULT
+	register_matchcall TRAINER_BILLY_HNS
+	release
+	end
+
+Route15_EventScript_RematchBilly::
+	trainerbattle_rematch TRAINER_BILLY_HNS, Route15_Text_BillyRematchIntro, Route15_Text_BillyRematchDefeat
+	msgbox Route15_Text_BillyPostRematch, MSGBOX_AUTOCLOSE
 	end
 
 Route15_EventScript_Sign::
@@ -66,6 +96,20 @@ Route15_Text_TeacherHillaryBeaten:
 Route15_Text_TeacherHillaryAfterBattle:
 	.string "Studying is important, but\n"
 	.string "exercise is just as vital.$"
+
+Route15_Text_HillaryRegister:
+	.string "You've taught me a lesson!\n"
+	.string "May I have your number?$"
+
+Route15_Text_HillaryRematchIntro:
+	.string "I'll school you this time!$"
+
+Route15_Text_HillaryRematchDefeat:
+	.string "Back to the drawing board…$"
+
+Route15_Text_HillaryPostRematch:
+	.string "Teaching POKéMON is just like\n"
+	.string "teaching children. Patience!$"
 
 Route15_Text_SchoolboyKippSeen:
 	.string "Hang on. I have to phone my mom.$"
@@ -107,6 +151,21 @@ Route15_Text_SchoolboyBillyBeaten:
 Route15_Text_SchoolboyBillyAfterBattle:
 	.string "If POKéMON were a subject at\n"
 	.string "school, I'd be the best!$"
+
+Route15_Text_BillyRegister:
+	.string "I should've paid more attention in class.\n"
+	.string "Can I have your number?$"
+
+Route15_Text_BillyRematchIntro:
+	.string "I've been studying hard!\n"
+	.string "Let me show you what I learned!$"
+
+Route15_Text_BillyRematchDefeat:
+	.string "I need to study more…$"
+
+Route15_Text_BillyPostRematch:
+	.string "Book smarts aren't everything.\n"
+	.string "I need battle experience too!$"
 
 Route15_Text_Sign:
 	.string "ROUTE 15\p"

@@ -1036,3 +1036,263 @@ MatchCall_HNS_Reena_Battle::
 	.string "It's REENA.\p"
 	.string "I was waiting for you.\n"
 	.string "Let's battle!$"
+
+@ Alex - Battle Girl, Route 13
+MatchCall_HNS_Alex_General1::
+	.string "Hey, {PLAYER}!\n"
+	.string "It's ALEX!\p"
+	.string "My regal POKéMON\n"
+	.string "grow sharper by the day.\p"
+	.string "{STR_VAR_3} is getting\n"
+	.string "really tough!$"
+
+MatchCall_HNS_Alex_General2::
+	.string "Hey, {PLAYER}!\p"
+	.string "I heard other regions have\n"
+	.string "kings and queens. Why\l"
+	.string "doesn't KANTO have\p"
+	.string "any royalty?$"
+
+MatchCall_HNS_Alex_Battle::
+	.string "Hey, {PLAYER}!\n"
+	.string "It's ALEX!\p"
+	.string "My regal POKéMON are ready\n"
+	.string "for a rematch! Come to ROUTE 13!$"
+
+@ Riley - Biker, Route 17
+MatchCall_HNS_Riley_General1::
+	.string "Yo, {PLAYER}!\n"
+	.string "RILEY here.\p"
+	.string "CYCLING ROAD is the best.\n"
+	.string "Nothing beats the wind\l"
+	.string "in your face.\p"
+	.string "{STR_VAR_3} loves the\n"
+	.string "speed too!$"
+
+MatchCall_HNS_Riley_General2::
+	.string "Yo, {PLAYER}!\p"
+	.string "You JOHTO kids aren't bad.\n"
+	.string "Maybe I misjudged you.\p"
+	.string "Don't let it go to your\n"
+	.string "head though!$"
+
+MatchCall_HNS_Riley_Battle::
+	.string "Yo, {PLAYER}!\n"
+	.string "RILEY here.\p"
+	.string "Get down to CYCLING ROAD!\n"
+	.string "I want a rematch!$"
+
+@ Trevor - Juggler, Route 14
+MatchCall_HNS_Trevor_General1::
+	.string "Hi, {PLAYER}!\n"
+	.string "It's TREVOR.\p"
+	.string "Did you know POKéMON get\n"
+	.string "friendlier when you train\l"
+	.string "in memorable places?\p"
+	.string "{STR_VAR_3} seems to\n"
+	.string "like it here.$"
+
+MatchCall_HNS_Trevor_General2::
+	.string "Hi, {PLAYER}!\p"
+	.string "Some POKéMON moves\n"
+	.string "are stronger when your\p"
+	.string "POKéMON feels more\n"
+	.string "friendly toward you!$"
+
+MatchCall_HNS_Trevor_Battle::
+	.string "Hi, {PLAYER}!\n"
+	.string "It's TREVOR.\p"
+	.string "My friends are ready for battle!\n"
+	.string "Come see on ROUTE 14!$"
+
+@ Kyle - Fisherman, Route 12
+MatchCall_HNS_Kyle_General1::
+	.string "Who is this?!\n"
+	.string "I called you?\p"
+	.string "This is KYLE. Don't forget!$"
+
+MatchCall_HNS_Kyle_General2::
+	.string "Hey, {PLAYER}!\p"
+	.string "Do you remember?\n"
+	.string "The secrets of fishing?$"
+
+MatchCall_HNS_Kyle_Battle::
+	.string "Hey, {PLAYER}!\n"
+	.string "KYLE here.\p"
+	.string "I've reeled in some tough\n"
+	.string "new POKéMON!\p"
+	.string "Come to ROUTE 12 for\n"
+	.string "a battle!$"
+
+@ Carter - Pokefan, Route 14
+MatchCall_HNS_Carter_General1::
+	.string "Hi there, {PLAYER}!\n"
+	.string "CARTER here.\p"
+	.string "I've been collecting rare\n"
+	.string "starter POKéMON.\p"
+	.string "My {STR_VAR_3} is my\n"
+	.string "newest pride and joy!$"
+
+MatchCall_HNS_Carter_General2::
+	.string "Hi, {PLAYER}!\p"
+	.string "Did you know there are\n"
+	.string "starter POKéMON from many\l"
+	.string "different regions?\p"
+	.string "I want to collect them\n"
+	.string "all!$"
+
+MatchCall_HNS_Carter_Battle::
+	.string "Hi, {PLAYER}!\n"
+	.string "CARTER here.\p"
+	.string "I have new starters to\n"
+	.string "show off! Come to\l"
+	.string "ROUTE 14!$"
+
+@ Hillary - Expert, Route 15
+MatchCall_HNS_Hillary_General1::
+	.string "Hello, {PLAYER}.\n"
+	.string "It's TEACHER HILLARY.\p"
+	.string "Why aren't you in school?$"
+
+MatchCall_HNS_Hillary_General2::
+	.string "Hello, {PLAYER}.\p"
+	.string "Are you playing games\n"
+	.string "instead of doing homework?$"
+
+MatchCall_HNS_Hillary_Battle::
+	.string "Hello, {PLAYER}.\n"
+	.string "It's HILLARY.\p"
+	.string "My POKéMON have graduated\n"
+	.string "to the next level!\p"
+	.string "Come test us on ROUTE 15!$"
+
+@ Rob - Bug Catcher, Route 2
+MatchCall_HNS_Rob_General1::
+	.string "Hey, {PLAYER}!\n"
+	.string "ROB here!\p"
+	.string "VIRIDIAN FOREST is full\n"
+	.string "of cool bugs!$"
+
+MatchCall_HNS_Rob_General2::
+	.string "Hey, {PLAYER}!\p"
+	.string "I saw a BUG TYPE GYM\n"
+	.string "LEADER in VIRIDIAN FOREST!$" 
+
+MatchCall_HNS_Rob_Battle::
+	.string "Hey, {PLAYER}!\n"
+	.string "ROB here!\p"
+	.string "My bug team is stronger\n"
+	.string "than ever!\p"
+	.string "Come to ROUTE 2 for a\n"
+	.string "rematch!$"
+
+@ Nicole - Swimmer, Route 20
+MatchCall_HNS_Nicole_General1::
+	.string "Hi, {PLAYER}!\n"
+	.string "It's NICOLE!\p"
+	.string "The waves are great today!\n"
+	.string "My POKéMON love swimming\l"
+	.string "in the open sea.\p"
+	.string "{STR_VAR_3} is getting\n"
+	.string "so fast!$"
+
+MatchCall_HNS_Nicole_General2::
+	.string "Hi, {PLAYER}!\p"
+	.string "Swimming with POKéMON is\n"
+	.string "the best exercise.$"
+
+MatchCall_HNS_Nicole_Battle::
+	.string "Hi, {PLAYER}!\n"
+	.string "It's NICOLE!\p"
+	.string "My water POKéMON are\n"
+	.string "raring to battle!\p"
+	.string "Come to ROUTE 20!$"
+
+@ Billy - School Kid, Route 15
+MatchCall_HNS_Billy_General1::
+	.string "Hey, {PLAYER}!\n"
+	.string "It's BILLY.\p"
+	.string "I've been studying battle\n"
+	.string "strategies in class.\p"
+	.string "{STR_VAR_3} and I have\n"
+	.string "been practicing them!$"
+
+MatchCall_HNS_Billy_General2::
+	.string "Hey, {PLAYER}!\p"
+	.string "Tests are coming up, but\n"
+	.string "I'd rather be battling.\p"
+	.string "Book smarts aren't\n"
+	.string "everything, right?$"
+
+MatchCall_HNS_Billy_Battle::
+	.string "Hey, {PLAYER}!\n"
+	.string "It's BILLY.\p"
+	.string "I learned some new tricks!\n"
+	.string "Come to ROUTE 15!$"
+
+@ Kenny - Hiker, Route 13
+MatchCall_HNS_Kenny_General1::
+	.string "Hey there, {PLAYER}!\n"
+	.string "KENNY here.\p"
+	.string "Were all mountains really\n"
+	.string "shaped by oceans and rivers?$"
+
+MatchCall_HNS_Kenny_General2::
+	.string "Hey, {PLAYER}!\p"
+	.string "It's KENNY here.\n"
+	.string "I visited the PEWTER museum!\p"
+	.string "Did you know the entire KANTO\n"
+	.string "region was once under water?$"
+
+MatchCall_HNS_Kenny_Battle::
+	.string "Hey there, {PLAYER}!\n"
+	.string "KENNY here.\p"
+	.string "I've trained hard in the\n"
+	.string "mountains!\p"
+	.string "Come to ROUTE 13 for\n"
+	.string "a battle!$"
+
+@ Joel - Biker, Route 17
+MatchCall_HNS_Joel_General1::
+	.string "Hey, {PLAYER}!\n"
+	.string "JOEL here.\p"
+	.string "I've been working on\n"
+	.string "looking cool in battle.\p"
+	.string "{STR_VAR_3} has some\n"
+	.string "flashy new moves!$"
+
+MatchCall_HNS_Joel_General2::
+	.string "Hey, {PLAYER}!\p"
+	.string "JOEL here.\p"
+	.string "There was an accident on\n"
+	.string "CYCLING ROAD.\p"
+	.string "Being safe is the coolest thing\n"
+	.string "you can be.$"
+
+MatchCall_HNS_Joel_Battle::
+	.string "Hey, {PLAYER}!\n"
+	.string "JOEL here.\p"
+	.string "I look AND fight cool now!\n"
+	.string "Come to CYCLING ROAD!$"
+
+@ Charles - Biker, Route 17
+MatchCall_HNS_Charles_General1::
+	.string "Hey, {PLAYER}!\n"
+	.string "CHARLES here.\p"
+	.string "I was something of a\n"
+	.string "heartbreaker in UNOVA.\p"
+	.string "Now I'm a highway star!$"
+
+MatchCall_HNS_Charles_General2::
+	.string "Hey, {PLAYER}!\p"
+	.string "CYCLING ROAD at night is\n"
+	.string "something else.\p"
+	.string "The streetlights and the\n"
+	.string "wind… it's freedom!$"
+
+MatchCall_HNS_Charles_Battle::
+	.string "Hey, {PLAYER}!\n"
+	.string "CHARLES here.\p"
+	.string "The highway stars want\n"
+	.string "revenge! Come to\l"
+	.string "CYCLING ROAD!$"

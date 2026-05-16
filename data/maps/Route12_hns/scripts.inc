@@ -23,8 +23,23 @@ Route12_EventScript_Barney::
 	end
 
 Route12_EventScript_Kyle::
-	trainerbattle_single TRAINER_KYLE_HNS, Route12_Text_FisherKyleSeen, Route12_Text_FisherKyleBeaten
+	trainerbattle_single TRAINER_KYLE_HNS, Route12_Text_FisherKyleSeen, Route12_Text_FisherKyleBeaten, Route12_EventScript_RegisterKyle
+	specialvar VAR_RESULT, ShouldTryRematchBattle
+	goto_if_eq VAR_RESULT, TRUE, Route12_EventScript_RematchKyle
 	msgbox Route12_Text_FisherKyleAfterBattle, MSGBOX_AUTOCLOSE
+	end
+
+Route12_EventScript_RegisterKyle::
+	special PlayerFaceTrainerAfterBattle
+	waitmovement 0
+	msgbox Route12_Text_KyleRegister, MSGBOX_DEFAULT
+	register_matchcall TRAINER_KYLE_HNS
+	release
+	end
+
+Route12_EventScript_RematchKyle::
+	trainerbattle_rematch TRAINER_KYLE_HNS, Route12_Text_KyleRematchIntro, Route12_Text_KyleRematchDefeat
+	msgbox Route12_Text_KylePostRematch, MSGBOX_AUTOCLOSE
 	end
 
 Route12_EventScript_NewFisher::
@@ -91,6 +106,21 @@ Route12_Text_FisherBarneyAfterBattle:
 	.string "have made such a fuss when the\l"
 	.string "POWER PLANT went out of\l"
 	.string "commission.$"
+
+Route12_Text_KyleRegister:
+	.string "I'll remember this.\n"
+	.string "Give me your number!$"
+
+Route12_Text_KyleRematchIntro:
+	.string "Did you forget?\n"
+	.string "Let's see!$"
+
+Route12_Text_KyleRematchDefeat:
+	.string "You remembered.$"
+
+Route12_Text_KylePostRematch:
+	.string "The thrill of battle is almost\n"
+	.string "as good as a big catch!$"
 
 Route12_Text_FisherKyleSeen:
 	.string "Do you remember?$"

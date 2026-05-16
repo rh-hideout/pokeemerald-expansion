@@ -160,8 +160,23 @@ Route14_Movement_EusineLeave:
 	step_end
 
 Route14_EventScript_Carter::
-	trainerbattle_single TRAINER_CARTER_HNS, Route14_Text_PokefanmCarterSeen, Route14_Text_PokefanmCarterBeaten
+	trainerbattle_single TRAINER_CARTER_HNS, Route14_Text_PokefanmCarterSeen, Route14_Text_PokefanmCarterBeaten, Route14_EventScript_RegisterCarter
+	specialvar VAR_RESULT, ShouldTryRematchBattle
+	goto_if_eq VAR_RESULT, TRUE, Route14_EventScript_RematchCarter
 	msgbox Route14_Text_PokefanmCarterAfterBattle, MSGBOX_AUTOCLOSE
+	end
+
+Route14_EventScript_RegisterCarter::
+	special PlayerFaceTrainerAfterBattle
+	waitmovement 0
+	msgbox Route14_Text_CarterRegister, MSGBOX_DEFAULT
+	register_matchcall TRAINER_CARTER_HNS
+	release
+	end
+
+Route14_EventScript_RematchCarter::
+	trainerbattle_rematch TRAINER_CARTER_HNS, Route14_Text_CarterRematchIntro, Route14_Text_CarterRematchDefeat
+	msgbox Route14_Text_CarterPostRematch, MSGBOX_AUTOCLOSE
 	end
 
 Route14_EventScript_Roy::
@@ -170,8 +185,23 @@ Route14_EventScript_Roy::
 	end
 
 Route14_EventScript_Trevor::
-	trainerbattle_single TRAINER_TREVOR_HNS, Route14_Text_PokefanmTrevorSeen, Route14_Text_PokefanmTrevorBeaten
+	trainerbattle_single TRAINER_TREVOR_HNS, Route14_Text_PokefanmTrevorSeen, Route14_Text_PokefanmTrevorBeaten, Route14_EventScript_RegisterTrevor
+	specialvar VAR_RESULT, ShouldTryRematchBattle
+	goto_if_eq VAR_RESULT, TRUE, Route14_EventScript_RematchTrevor
 	msgbox Route14_Text_PokefanmTrevorAfterBattle, MSGBOX_AUTOCLOSE
+	end
+
+Route14_EventScript_RegisterTrevor::
+	special PlayerFaceTrainerAfterBattle
+	waitmovement 0
+	msgbox Route14_Text_TrevorRegister, MSGBOX_DEFAULT
+	register_matchcall TRAINER_TREVOR_HNS
+	release
+	end
+
+Route14_EventScript_RematchTrevor::
+	trainerbattle_rematch TRAINER_TREVOR_HNS, Route14_Text_TrevorRematchIntro, Route14_Text_TrevorRematchDefeat
+	msgbox Route14_Text_TrevorPostRematch, MSGBOX_AUTOCLOSE
 	end
 
 
@@ -197,28 +227,6 @@ Route14_Text_Eusine:
 	.string "Who'll find it first?\n"
 	.string "I challenge you!$"
 
-Route14_Text_PokefanmCarterSeen:
-	.string "Let me tell you, I had a hard time\n"
-	.string "catching my prized POKéMON.$"
-
-Route14_Text_PokefanmCarterBeaten:
-	.string "Awaaah!$"
-
-Route14_Text_PokefanmCarterAfterBattle:
-	.string "TOTODILE, CYNDAQUIL, CHIKORITA…\p"
-	.string "I think that's a well-balanced mix.$"
-
-Route14_Text_BirdKeeperRoySeen:
-	.string "My dream is to fly with my beloved\n"
-	.string "bird POKéMON.$"
-
-Route14_Text_BirdKeeperRoyBeaten:
-	.string "I can dream, but I can't ever fly…$"
-
-Route14_Text_BirdKeeperRoyAfterBattle:
-	.string "You have POKéMON that know the HM\n"
-	.string "move FLY, don't you? I envy you.$"
-
 Route14_Text_PokefanmTrevorSeen:
 	.string "Hi. Did you know…?\p"
 	.string "POKéMON get more friendly if you\n"
@@ -231,6 +239,58 @@ Route14_Text_PokefanmTrevorBeaten:
 Route14_Text_PokefanmTrevorAfterBattle:
 	.string "If only there were an easy way to\n"
 	.string "identify where I got my POKéMON…$"
+
+Route14_Text_TrevorRegister:
+	.string "You're interesting!\n"
+	.string "Can I have your number?$"
+
+Route14_Text_TrevorRematchIntro:
+	.string "I've been training with my\n"
+	.string "POKéMON in familiar places!$"
+
+Route14_Text_TrevorRematchDefeat:
+	.string "Maybe I need new places…$"
+
+Route14_Text_TrevorPostRematch:
+	.string "Friendship makes POKéMON\n"
+	.string "stronger. I'm sure of it!$"
+
+Route14_Text_PokefanmCarterSeen:
+	.string "Let me tell you, I had a hard time\n"
+	.string "catching my prized POKéMON.$"
+
+Route14_Text_PokefanmCarterBeaten:
+	.string "Awaaah!$"
+
+Route14_Text_PokefanmCarterAfterBattle:
+	.string "TOTODILE, CYNDAQUIL, CHIKORITA…\p"
+	.string "I think that's a well-balanced mix.$"
+
+Route14_Text_CarterRegister:
+	.string "You know your starters!\n"
+	.string "Let me get your number!$"
+
+Route14_Text_CarterRematchIntro:
+	.string "I've found even more rare starters\n"
+	.string "to show off! Battle me!$"
+
+Route14_Text_CarterRematchDefeat:
+	.string "My precious starters…$"
+
+Route14_Text_CarterPostRematch:
+	.string "There are so many starters from\n"
+	.string "different regions to collect!$"
+
+Route14_Text_BirdKeeperRoySeen:
+	.string "My dream is to fly with my beloved\n"
+	.string "bird POKéMON.$"
+
+Route14_Text_BirdKeeperRoyBeaten:
+	.string "I can dream, but I can't ever fly…$"
+
+Route14_Text_BirdKeeperRoyAfterBattle:
+	.string "You have POKéMON that know the HM\n"
+	.string "move FLY, don't you? I envy you.$"
 
 Route14_EventScript_Pidgeotto::
 	lockall
