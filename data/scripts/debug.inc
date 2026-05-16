@@ -218,7 +218,7 @@ Debug_EventScript_Script_3::
 	end
 
 Debug_EventScript_Script_4::
-	setflag FLAG_HAS_MATCH_CALL
+	setflag FLAG_ENABLE_RADIO
 	release
 	end
 

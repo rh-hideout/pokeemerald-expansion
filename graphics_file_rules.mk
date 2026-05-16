@@ -658,7 +658,8 @@ $(PKNAVGFXDIR)/hns/options/options.4bpp: $(PKNAVGFXDIR)/hns/options/hoenn_map.4b
                                          $(PKNAVOPTIONSGFXDIR)/cute.4bpp \
                                          $(PKNAVOPTIONSGFXDIR)/smart.4bpp \
                                          $(PKNAVOPTIONSGFXDIR)/tough.4bpp \
-                                         $(PKNAVOPTIONSGFXDIR)/cancel.4bpp
+                                         $(PKNAVOPTIONSGFXDIR)/cancel.4bpp \
+                                         $(PKNAVGFXDIR)/hns/options/radio.4bpp
 	@cat $^ >$@
 
 $(PKNAVGFXDIR)/header.4bpp: %.4bpp: %.png

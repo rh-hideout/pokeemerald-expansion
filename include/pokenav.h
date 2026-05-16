@@ -86,7 +86,8 @@ enum
     POKENAV_SUBSTRUCT_CONDITION_GRAPH_MENU_GFX,
     POKENAV_SUBSTRUCT_RIBBONS_SUMMARY_LIST,
     POKENAV_SUBSTRUCT_RIBBONS_SUMMARY_MENU,
-    POKENAV_SUBSTRUCT_UNUSED,
+    POKENAV_SUBSTRUCT_RADIO,
+    POKENAV_SUBSTRUCT_RADIO_GFX,
     POKENAV_SUBSTRUCT_REGION_MAP,
     POKENAV_SUBSTRUCT_LIST,
     POKENAV_SUBSTRUCT_MON_LIST,
@@ -131,6 +132,7 @@ enum
     POKENAV_RIBBONS_MON_LIST,                   // The list of Pokémon with ribbons
     POKENAV_RIBBONS_SUMMARY_SCREEN,             // The ribbon summary screen shown when a Pokémon has been selected
     POKENAV_RIBBONS_RETURN_TO_MON_LIST,         // Exited the summary screen back to the ribbon list
+    POKENAV_RADIO,
 };
 
 enum
@@ -138,6 +140,10 @@ enum
     POKENAV_MENU_TYPE_DEFAULT,
     POKENAV_MENU_TYPE_UNLOCK_MC,
     POKENAV_MENU_TYPE_UNLOCK_MC_RIBBONS,
+#if IS_HNS
+    POKENAV_MENU_TYPE_UNLOCK_MC_RADIO,
+    POKENAV_MENU_TYPE_UNLOCK_MC_RIBBONS_RADIO,
+#endif
     POKENAV_MENU_TYPE_CONDITION,
     POKENAV_MENU_TYPE_CONDITION_SEARCH,
     POKENAV_MENU_TYPE_COUNT
@@ -151,6 +157,7 @@ enum
     POKENAV_MENUITEM_CONDITION,
     POKENAV_MENUITEM_MATCH_CALL,
     POKENAV_MENUITEM_RIBBONS,
+    POKENAV_MENUITEM_RADIO,
     POKENAV_MENUITEM_SWITCH_OFF,
     POKENAV_MENUITEM_CONDITION_PARTY,
     POKENAV_MENUITEM_CONDITION_SEARCH,
@@ -528,5 +535,14 @@ bool32 OpenRibbonsSummaryMenu(void);
 void CreateRibbonsSummaryLoopedTask(s32 id);
 u32 IsRibbonsSummaryLoopedTaskActive(void);
 void FreeRibbonsSummaryScreen2(void);
+
+// pokenav_radio.c
+bool32 PokenavCallback_Init_Radio(void);
+u32 GetRadioCallback(void);
+bool32 OpenPokenavRadio(void);
+void CreateRadioLoopedTask(s32 index);
+bool32 IsRadioLoopedTaskActive(void);
+void FreeRadioSubstruct1(void);
+void FreeRadioSubstruct2(void);
 
 #endif // GUARD_POKENAV_H

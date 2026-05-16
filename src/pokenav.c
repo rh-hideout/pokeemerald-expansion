@@ -49,7 +49,7 @@ static void Task_RunLoopedTask(u8);
 static void Task_Pokenav(u8);
 static void CB2_InitPokenavForTutorial(void);
 
-const struct PokenavCallbacks PokenavMenuCallbacks[15] =
+const struct PokenavCallbacks PokenavMenuCallbacks[16] =
 {
     [POKENAV_MAIN_MENU - POKENAV_MENU_IDS_START] =
     {
@@ -200,6 +200,16 @@ const struct PokenavCallbacks PokenavMenuCallbacks[15] =
         .isLoopTaskActive = IsRibbonsMonListLoopedTaskActive,
         .free1 = FreeRibbonsMonList,
         .free2 = FreeRibbonsMonMenu,
+    },
+    [POKENAV_RADIO - POKENAV_MENU_IDS_START] =
+    {
+        .init = PokenavCallback_Init_Radio,
+        .callback = GetRadioCallback,
+        .open = OpenPokenavRadio,
+        .createLoopTask = CreateRadioLoopedTask,
+        .isLoopTaskActive = IsRadioLoopedTaskActive,
+        .free1 = FreeRadioSubstruct1,
+        .free2 = FreeRadioSubstruct2,
     },
 };
 
