@@ -3918,17 +3918,17 @@ static bool32 IsDomeDefensiveMoveEffect(enum Move move)
     return FALSE;
 }
 
-static bool32 IsDomeRiskyMoveEffect(enum BattleMoveEffects effect)
+static bool32 IsDomeRiskyMoveEffect(enum Move move)
 {
-    switch (effect)
+    switch (GetMoveEffect(move))
     {
-    // TODO: Bring back Misty Explosion and Explosion. Also non of those functions have been updated from gen3
+    // TODO: None of those functions have been updated from gen3
     case EFFECT_SPITE:
     case EFFECT_DESTINY_BOND:
     case EFFECT_PERISH_SONG:
         return TRUE;
     default:
-        return FALSE;
+        return IsExplosionMove(move);
     }
 }
 
@@ -4285,7 +4285,6 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
                     move = gSaveBlock2Ptr->frontier.domePlayerPartyData[i].moves[j];
                 else
                     move = gFacilityTrainerMons[DOME_MONS[trainerTourneyId][i]].moves[j];
-                enum BattleMoveEffects effect = GetMoveEffect(move);
                 u32 accuracy = GetMoveAccuracy(move);
 
                 switch (k)
@@ -4306,7 +4305,7 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
                     allocatedArray[k] = IsDomeHealingMove(move) ? 1 : 0;
                     break;
                 case MOVE_POINTS_RISKY:
-                    allocatedArray[k] = IsDomeRiskyMoveEffect(effect) ? 1 : 0;
+                    allocatedArray[k] = IsDomeRiskyMoveEffect(move) ? 1 : 0;
                     break;
                 case MOVE_POINTS_STATUS:
                     allocatedArray[k] = IsDomeStatusMoveEffect(move);
