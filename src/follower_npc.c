@@ -695,7 +695,7 @@ void Task_FollowerNPCOutOfDoor(u8 taskId)
 
         playerDirection = GetPlayerFacingDirection();
         GetPlayerPosition(&position);
-        metatileBehavior = MapGridGetMetatileBehaviorAt(position.x, position.y);
+        player->currentMetatileBehavior;
         if (TryStartStepBasedScript(&position, metatileBehavior, playerDirection) == TRUE)
         {
             LockPlayerFieldControls();
