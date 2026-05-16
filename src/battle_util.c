@@ -2950,7 +2950,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         switch (gLastUsedAbility)
         {
         case ABILITY_TRACE:
-            if (!gBattleStruct->battlerState[battler].traceActivated)
+            if (!gBattleMons[battler].volatiles.traceActivated)
             {
                 enum BattlerId chosenTarget;
                 enum BattlerId target1;
@@ -2977,7 +2977,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
 
                 if (effect != 0)
                 {
-                    gBattleStruct->battlerState[battler].traceActivated = TRUE;
+                    gBattleMons[battler].volatiles.traceActivated = TRUE;
                     if (GetBattlerHoldEffectIgnoreAbility(battler) == HOLD_EFFECT_ABILITY_SHIELD)
                         break;
                     BattleScriptCall(BattleScript_TraceActivates);
@@ -10838,20 +10838,20 @@ void TryUpdateEvolutionTracker(enum EvolutionConditions evolutionCondition, u32 
     }
 }
 
-static const u16 sProtectSuccessRates[] =
+static const u16 sProtectFailChances[] =
 {
-    USHRT_MAX,
-    USHRT_MAX / 2,
-    USHRT_MAX / 4,
-    USHRT_MAX / 8
+    1,
+    2,
+    4,
+    8
 };
 
-static const u16 sGen5ProtectSuccessRates[] =
+static const u16 sGen5ProtectFailChances[] =
 {
-    USHRT_MAX,
-    USHRT_MAX / 3,
-    USHRT_MAX / 9,
-    USHRT_MAX / 27
+    1,
+    3,
+    9,
+    27
 };
 
 bool32 CanUseMoveConsecutively(enum BattlerId battler)
@@ -10860,11 +10860,14 @@ bool32 CanUseMoveConsecutively(enum BattlerId battler)
     if (moveUses >= ARRAY_COUNT(sProtectSuccessRates))
         moveUses = ARRAY_COUNT(sProtectSuccessRates) - 1;
 
-    u32 successRate = sGen5ProtectSuccessRates[moveUses];
-    if (B_PROTECT_FAILURE_RATE < GEN_5)
-        successRate = sProtectSuccessRates[moveUses];
+    u32 failChances;
 
-    return successRate >= RandomUniform(RNG_PROTECT_FAIL, 0, USHRT_MAX);
+    if (B_PROTECT_FAILURE_RATE < GEN_5)
+        failChances = sProtectFailChances[moveUses];
+    else
+        failChances = sGen5ProtectFailChances[moveUses];
+
+    return RandomUniform(RNG_PROTECT_FAIL, 1, failChances) == 1;
 }
 
 // Used for Protect, Endure and Ally switch
