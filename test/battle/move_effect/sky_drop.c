@@ -302,11 +302,13 @@ DOUBLE_BATTLE_TEST("Sky Drop user and target can't activate Eject items while th
     GIVEN {
         ASSUME(GetItemHoldEffect(ITEM_EJECT_BUTTON) == HOLD_EFFECT_EJECT_BUTTON);
         ASSUME(GetItemHoldEffect(ITEM_EJECT_PACK) == HOLD_EFFECT_EJECT_PACK);
+        ASSUME(gSpeciesInfo[SPECIES_VULLABY].weight < 2000);
+        ASSUME(GetSpeciesType(SPECIES_VULLABY, 0) == TYPE_FLYING || GetSpeciesType(SPECIES_VULLABY, 1) == TYPE_FLYING);
         ASSUME(MoveHasAdditionalEffectWithChance(MOVE_BREAKING_SWIPE, MOVE_EFFECT_STAT_MINUS, 100));
         PLAYER(SPECIES_WOBBUFFET) { Item(item); }
         PLAYER(SPECIES_MACHAMP) { Ability(ABILITY_NO_GUARD); }
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(item); }
+        OPPONENT(SPECIES_VULLABY) { Item(item); } // Flying type used here so Sky Drop doesn't damage
         OPPONENT(SPECIES_MACHAMP) { Ability(ABILITY_NO_GUARD); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -322,7 +324,6 @@ DOUBLE_BATTLE_TEST("Sky Drop user and target can't activate Eject items while th
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, playerLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKING_SWIPE, opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKING_SWIPE, playerRight);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, playerLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKING_SWIPE, opponentRight);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKING_SWIPE, playerRight);
