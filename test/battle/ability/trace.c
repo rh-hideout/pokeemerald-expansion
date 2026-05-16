@@ -85,18 +85,17 @@ SINGLE_BATTLE_TEST("Trace will copy an opponent's ability whenever it has the ch
 SINGLE_BATTLE_TEST("Trace doesn't activate if activation was prevented by Ability Shield")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_FLING) == EFFECT_FLING);
-        ASSUME(MoveHasAdditionalEffect(MOVE_FLING, MOVE_EFFECT_FLING));
+        ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
         ASSUME(GetItemHoldEffect(ITEM_ABILITY_SHIELD) == HOLD_EFFECT_ABILITY_SHIELD);
         ASSUME(!gAbilitiesInfo[ABILITY_BLAZE].cantBeTraced);
         PLAYER(SPECIES_RALTS) { Ability(ABILITY_TRACE); Item(ITEM_ABILITY_SHIELD); }
         OPPONENT(SPECIES_TORCHIC) { Ability(ABILITY_BLAZE); }
         OPPONENT(SPECIES_TORCHIC) { Ability(ABILITY_BLAZE); }
     } WHEN {
-        TURN { MOVE(player, MOVE_FLING); }
+        TURN { MOVE(opponent, MOVE_KNOCK_OFF); }
         TURN { SWITCH(opponent, 1); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, opponent);
         // Can't activate even when no longer holding Ability Shield
         NOT ABILITY_POPUP(player, ABILITY_TRACE);
     } THEN {
@@ -107,8 +106,7 @@ SINGLE_BATTLE_TEST("Trace doesn't activate if activation was prevented by Abilit
 SINGLE_BATTLE_TEST("Trace can activate if it couldn't copy opponent's ability even with an Ability Shield")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_FLING) == EFFECT_FLING);
-        ASSUME(MoveHasAdditionalEffect(MOVE_FLING, MOVE_EFFECT_FLING));
+        ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
         ASSUME(GetItemHoldEffect(ITEM_ABILITY_SHIELD) == HOLD_EFFECT_ABILITY_SHIELD);
         ASSUME(gAbilitiesInfo[ABILITY_FLOWER_GIFT].cantBeTraced);
         ASSUME(!gAbilitiesInfo[ABILITY_BLAZE].cantBeTraced);
@@ -116,10 +114,10 @@ SINGLE_BATTLE_TEST("Trace can activate if it couldn't copy opponent's ability ev
         OPPONENT(SPECIES_CHERRIM) { Ability(ABILITY_FLOWER_GIFT); }
         OPPONENT(SPECIES_TORCHIC) { Ability(ABILITY_BLAZE); }
     } WHEN {
-        TURN { MOVE(player, MOVE_FLING); }
+        TURN { MOVE(opponent, MOVE_KNOCK_OFF); }
         TURN { SWITCH(opponent, 1); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, opponent);
         // After switching
         ABILITY_POPUP(player, ABILITY_TRACE);
         MESSAGE("It traced the opposing Torchic's Blaze!");

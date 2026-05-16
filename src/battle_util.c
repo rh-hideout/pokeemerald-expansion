@@ -10867,6 +10867,9 @@ bool32 CanUseMoveConsecutively(enum BattlerId battler)
     else
         failChances = sGen5ProtectFailChances[moveUses];
 
+    if (failChances == 1)
+        return TRUE;
+
     return RandomUniform(RNG_PROTECT_FAIL, 1, failChances) == 1;
 }
 
