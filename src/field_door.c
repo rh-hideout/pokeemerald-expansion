@@ -576,10 +576,13 @@ static const struct DoorGraphics sDoorAnimGraphicsTable[] =
 //       animation is played they will be overwritten.
 #define DOOR_TILE_START_SIZE1 (NUM_TILES_TOTAL - 8)
 #define DOOR_TILE_START_SIZE2 (NUM_TILES_TOTAL - 16)
+#define DOOR_TILE_START_HNS 434
 
 static void CopyDoorTilesToVram(const struct DoorGraphics *gfx, const struct DoorAnimFrame *frame)
 {
-    if (gfx->size == 2 && !LAYOUT_USES_FRLG_DOORS(gMapHeader.mapLayout->layoutVersion))
+    if (gMapHeader.mapLayout->layoutVersion == LAYOUT_VERSION_HNS)
+        CpuFastCopy(gfx->tiles + frame->offset, (void *)(VRAM + TILE_OFFSET_4BPP(DOOR_TILE_START_HNS)), 8 * TILE_SIZE_4BPP);
+    else if (gfx->size == 2 && !LAYOUT_USES_FRLG_DOORS(gMapHeader.mapLayout->layoutVersion))
         CpuFastCopy(gfx->tiles + frame->offset, (void *)(VRAM + TILE_OFFSET_4BPP(DOOR_TILE_START_SIZE2)), 16 * TILE_SIZE_4BPP);
     else
         CpuFastCopy(gfx->tiles + frame->offset, (void *)(VRAM + TILE_OFFSET_4BPP(DOOR_TILE_START_SIZE1)), 8 * TILE_SIZE_4BPP);
@@ -608,14 +611,15 @@ static void BuildDoorTiles(u16 *tiles, u16 tileNum, const u8 *paletteNums)
 static void DrawCurrentDoorAnimFrameFrlg(const struct DoorGraphics *gfx, int x, int y, const u8 *paletteNums)
 {
     u16 tiles[8];
-    if (gfx->size == 1)
-        BuildDoorTiles(tiles, DOOR_TILE_START_SIZE1, paletteNums);
+    u16 tileStart = (gMapHeader.mapLayout->layoutVersion == LAYOUT_VERSION_HNS) ? DOOR_TILE_START_HNS : DOOR_TILE_START_SIZE1;
 
+    if (gfx->size == 1)
+        BuildDoorTiles(tiles, tileStart, paletteNums);
     else
     {
-        BuildDoorTiles(tiles, DOOR_TILE_START_SIZE1, paletteNums);
+        BuildDoorTiles(tiles, tileStart, paletteNums);
         DrawDoorMetatileAt(x, y - 1, tiles);
-        BuildDoorTiles(tiles, DOOR_TILE_START_SIZE1 + 4, &paletteNums[4]);
+        BuildDoorTiles(tiles, tileStart + 4, &paletteNums[4]);
     }
 
     DrawDoorMetatileAt(x, y, tiles);
