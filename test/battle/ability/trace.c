@@ -68,18 +68,65 @@ DOUBLE_BATTLE_TEST("Trace copies opponents ability randomly")
 SINGLE_BATTLE_TEST("Trace will copy an opponent's ability whenever it has the chance but only once")
 {
     GIVEN {
+        ASSUME(gAbilitiesInfo[ABILITY_FLOWER_GIFT].cantBeTraced);
+        ASSUME(!gAbilitiesInfo[ABILITY_BLAZE].cantBeTraced);
         PLAYER(SPECIES_RALTS) { Ability(ABILITY_TRACE); }
         OPPONENT(SPECIES_CHERRIM) { Ability(ABILITY_FLOWER_GIFT); }
         OPPONENT(SPECIES_TORCHIC) { Ability(ABILITY_BLAZE); }
     } WHEN {
         TURN { SWITCH(opponent, 1); }
     } SCENE {
-        // TURN 2
+        // After switching
         ABILITY_POPUP(player, ABILITY_TRACE);
         MESSAGE("It traced the opposing Torchic's Blaze!");
     }
 }
 
+SINGLE_BATTLE_TEST("Trace doesn't activate if activation was prevented by Ability Shield")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FLING) == EFFECT_FLING);
+        ASSUME(MoveHasAdditionalEffect(MOVE_FLING, MOVE_EFFECT_FLING));
+        ASSUME(GetItemHoldEffect(ITEM_ABILITY_SHIELD) == HOLD_EFFECT_ABILITY_SHIELD);
+        ASSUME(!gAbilitiesInfo[ABILITY_BLAZE].cantBeTraced);
+        PLAYER(SPECIES_RALTS) { Ability(ABILITY_TRACE); Item(ITEM_ABILITY_SHIELD); }
+        OPPONENT(SPECIES_TORCHIC) { Ability(ABILITY_BLAZE); }
+        OPPONENT(SPECIES_TORCHIC) { Ability(ABILITY_BLAZE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FLING); }
+        TURN { SWITCH(opponent, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
+        // Can't activate even when no longer holding Ability Shield
+        NOT ABILITY_POPUP(player, ABILITY_TRACE);
+    } THEN {
+        EXPECT_EQ(player->item, ITEM_NONE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Trace can activate if it couldn't copy opponent's ability even with an Ability Shield")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FLING) == EFFECT_FLING);
+        ASSUME(MoveHasAdditionalEffect(MOVE_FLING, MOVE_EFFECT_FLING));
+        ASSUME(GetItemHoldEffect(ITEM_ABILITY_SHIELD) == HOLD_EFFECT_ABILITY_SHIELD);
+        ASSUME(gAbilitiesInfo[ABILITY_FLOWER_GIFT].cantBeTraced);
+        ASSUME(!gAbilitiesInfo[ABILITY_BLAZE].cantBeTraced);
+        PLAYER(SPECIES_RALTS) { Ability(ABILITY_TRACE); Item(ITEM_ABILITY_SHIELD); }
+        OPPONENT(SPECIES_CHERRIM) { Ability(ABILITY_FLOWER_GIFT); }
+        OPPONENT(SPECIES_TORCHIC) { Ability(ABILITY_BLAZE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FLING); }
+        TURN { SWITCH(opponent, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
+        // After switching
+        ABILITY_POPUP(player, ABILITY_TRACE);
+        MESSAGE("It traced the opposing Torchic's Blaze!");
+    } THEN {
+        EXPECT_EQ(player->item, ITEM_NONE);
+    }
+}
 
 SINGLE_BATTLE_TEST("Trace copies opponent's Intimidate and triggers it immediately")
 {
