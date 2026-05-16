@@ -882,9 +882,9 @@
 // Trainer flags
 #define TRAINER_FLAGS_START                          0x500
 #define FLAG_TRAINER_FLAG_START                      TRAINER_FLAGS_START
-#define TRAINER_FLAGS_END                            0x73F
+#define TRAINER_FLAGS_END                            0x85F
 // System flags
-#define SYS_FLAGS                                   0x740
+#define SYS_FLAGS                                   0x860
 
 #define FLAG_SYS_SAFARI_MODE                        (SYS_FLAGS + 0x0)
 #define FLAG_SYS_BUG_CONTEST_MODE                   (SYS_FLAGS + 0x1)
@@ -987,7 +987,7 @@
 #define HNS_SYS_FLAGS_END                           (SYS_FLAGS + 0xA9)
 
 // Daily flags
-#define DAILY_FLAGS_START                            0x7F0
+#define DAILY_FLAGS_START                            0x910
 
 #define FLAG_DAILY_BEAT_SILVER                      (DAILY_FLAGS_START + 0)
 #define FLAG_DAILY_BUG_CONTEST_COMPLETED            (DAILY_FLAGS_START + 1)
@@ -996,7 +996,7 @@
 #define FLAG_DAILY_HAIRCUT2_RECEIVED                (DAILY_FLAGS_START + 4)
 #define FLAG_DAILY_PICKED_LOTO_TICKET               (DAILY_FLAGS_START + 5)
 #define FLAG_DAILY_APPRENTICE_LEAVES                (DAILY_FLAGS_START + 6)
-#define DAILY_FLAGS_END                             0x7F7
+#define DAILY_FLAGS_END                             0x917
 #define NUM_DAILY_FLAGS                             (DAILY_FLAGS_END - DAILY_FLAGS_START + 1)
 #define BUILD_FLAGS_END                             DAILY_FLAGS_END
 

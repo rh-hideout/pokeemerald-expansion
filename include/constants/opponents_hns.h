@@ -569,6 +569,6 @@
 #define TRAINER_CLAIR_3_HNS                            561
 
 #define TRAINERS_COUNT_HNS                       562
-#define MAX_TRAINERS_COUNT_HNS                   576
+#define MAX_TRAINERS_COUNT_HNS                   864
 
 #endif  // GUARD_CONSTANTS_OPPONENTS_HNS_H
