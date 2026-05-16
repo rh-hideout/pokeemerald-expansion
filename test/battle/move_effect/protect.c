@@ -992,3 +992,33 @@ DOUBLE_BATTLE_TEST("Protect is not ignored after a new mon switched in because o
     }
 }
 
+SINGLE_BATTLE_TEST("Protect may fail if used consecutively")
+{
+    u32 numRolls = (B_PROTECT_FAILURE_RATE < GEN_5 ? 2 : 3);
+    PASSES_RANDOMLY(1, numRolls, RNG_PROTECT_FAIL);
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_PROTECT); }
+        TURN { MOVE(player, MOVE_PROTECT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Protect doesn't fail if used consecutively if broken by Feint")
+{
+    PASSES_RANDOMLY(1, 1, RNG_PROTECT_FAIL);
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_FEINT, MOVE_EFFECT_FEINT));
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_PROTECT); MOVE(opponent, MOVE_FEINT); }
+        TURN { MOVE(player, MOVE_PROTECT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+    }
+}

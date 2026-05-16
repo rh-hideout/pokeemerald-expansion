@@ -2629,11 +2629,13 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
          && gProtectStructs[effectBattler].protected != PROTECT_MAX_GUARD)
         {
             gProtectStructs[effectBattler].protected = PROTECT_NONE;
+            gBattleMons[effectBattler].volatiles.consecutiveMoveUses = 0;
             i = TRUE;
         }
         if (GetProtectType(gProtectStructs[BATTLE_PARTNER(effectBattler)].protected) == PROTECT_TYPE_SIDE)
         {
             gProtectStructs[BATTLE_PARTNER(effectBattler)].protected = PROTECT_NONE;
+            gBattleMons[BATTLE_PARTNER(effectBattler)].volatiles.consecutiveMoveUses = 0;
             i = TRUE;
         }
         if (i)
