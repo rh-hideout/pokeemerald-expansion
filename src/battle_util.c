@@ -2865,23 +2865,24 @@ static bool32 IsRestrictedAbility(enum BattlerId battler, enum Ability ability)
 
 static bool32 TryDancer(void)
 {
-    bool32 anyDancerQueued = FALSE;
+    u32 order = 0;
     enum BattlerId dancerBattler = MAX_BATTLERS_COUNT;
 
     if (!IsDanceMove(gCurrentMove))
         return FALSE;
 
-    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+    for (order = 0; order < gBattlersCount; order++)
     {
-        if (gBattleMons[battler].volatiles.activateDancer && !gSpecialStatuses[battler].dancerUsedMove)
-        {
-            if (!anyDancerQueued || (gBattleMons[battler].speed < gBattleMons[dancerBattler].speed))
-                dancerBattler = battler;
-            anyDancerQueued = TRUE;
-        }
+        if (GetConfig(B_DANCER_ORDER) < GEN_8)
+            dancerBattler = gBattlersByRawSpeed[gBattlersCount - order]; // pick from slowest to fastest Raw Speed
+        else
+            dancerBattler = gBattlersBySpeed[order]; // pick from fastest to slowest Speed including modifiers
+
+        if (gBattleMons[dancerBattler].volatiles.activateDancer && !gSpecialStatuses[dancerBattler].dancerUsedMove)
+            break;
     }
 
-    if (!anyDancerQueued)
+    if (order >= gBattlersCount) // no battler activates Dancer
         return FALSE;
 
     // Dance move succeeds
@@ -2893,9 +2894,7 @@ static bool32 TryDancer(void)
         gSpecialStatuses[gBattlerAttacker].dancerUsedMove = TRUE;
     }
 
-    if (IsBattlerAlive(dancerBattler)
-     && !gSpecialStatuses[dancerBattler].dancerUsedMove
-     && gBattlerAttacker != dancerBattler)
+    if (IsBattlerAlive(dancerBattler))
     {
         gSpecialStatuses[dancerBattler].dancerUsedMove = TRUE;
         gSpecialStatuses[dancerBattler].backUpTarget = gBattleStruct->moveTarget[dancerBattler] + 1;
