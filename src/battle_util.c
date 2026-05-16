@@ -2874,7 +2874,7 @@ static bool32 TryDancer(void)
     for (order = 0; order < gBattlersCount; order++)
     {
         if (GetConfig(B_DANCER_ORDER) < GEN_8)
-            dancerBattler = gBattlersByRawSpeed[gBattlersCount - order]; // pick from slowest to fastest Raw Speed
+            dancerBattler = gBattlersByRawSpeed[gBattlersCount - order - 1]; // pick from slowest to fastest Raw Speed
         else
             dancerBattler = gBattlersBySpeed[order]; // pick from fastest to slowest Speed including modifiers
 
