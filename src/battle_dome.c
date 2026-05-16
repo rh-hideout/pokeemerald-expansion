@@ -3891,7 +3891,7 @@ static bool32 IsDomeHealingMove(enum Move move)
 }
 static bool32 IsDomeDefensiveMoveEffect(enum Move move)
 {
-    switch (move)
+    switch (GetMoveEffect(move))
     {
     case EFFECT_REFLECT_DAMAGE:
     case EFFECT_LIGHT_SCREEN:
