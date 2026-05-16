@@ -1004,6 +1004,7 @@ SINGLE_BATTLE_TEST("Protect may fail if used consecutively")
         TURN { MOVE(player, MOVE_PROTECT); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
     }
 }
 
@@ -1019,6 +1020,7 @@ SINGLE_BATTLE_TEST("Protect doesn't fail if used consecutively if broken by Fein
         TURN { MOVE(player, MOVE_PROTECT); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FEINT, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
     }
 }
