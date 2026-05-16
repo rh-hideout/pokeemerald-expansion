@@ -9190,11 +9190,6 @@ bool32 CanStealItem(enum BattlerId battlerStealing, enum BattlerId battlerItem, 
         return FALSE;
     }
 
-    // It's supposed to pop before trying to steal but this also works
-    // Now that the order is correct this is redundant. The question is whether Trick can steal it.
-    if (GetItemHoldEffect(item) == HOLD_EFFECT_AIR_BALLOON)
-        return FALSE;
-
     if (!CanBattlerGetOrLoseItem(battlerItem, battlerStealing, item)  // Battler with item cannot have it stolen
      || !CanBattlerGetOrLoseItem(battlerStealing, battlerItem, item)) // Stealer cannot take the item
         return FALSE;
