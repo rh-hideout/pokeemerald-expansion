@@ -14,6 +14,7 @@ enum ChangeStatContext
     CHANGE_STAT_DMG_RECEIVED,
     CHANGE_STAT_SPEEDS,
     CHANGE_STAT_ACC_EVADE,
+    CHANGE_STAT_CONTEXT_COUNT,
 };
 
 enum StatChangeDecision
