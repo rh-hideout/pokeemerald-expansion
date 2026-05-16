@@ -3710,7 +3710,7 @@ static bool32 HasAnyBattlerQueuedSwitch(void)
     return FALSE;
 }
 
-static bool32 TryRedCard(enum BattlerId battlerAtk, enum BattlerId redCardBattler, enum Move move)
+static bool32 TryRedCard(enum BattlerId battlerAtk, enum BattlerId redCardBattler)
 {
     if (!IsBattlerAlive(redCardBattler)
      || gBattleStruct->redCardActivated
@@ -3768,7 +3768,7 @@ static enum MoveEndResult MoveEndCardButton(struct BattleCalcValues *cv)
                 return MOVEEND_RESULT_RUN_SCRIPT;
             break;
         case HOLD_EFFECT_RED_CARD:
-            if (TryRedCard(cv->battlerAtk, battler, cv->move))
+            if (TryRedCard(cv->battlerAtk, battler))
                 return MOVEEND_RESULT_RUN_SCRIPT;
             break;
         default:

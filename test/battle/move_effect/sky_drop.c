@@ -322,6 +322,7 @@ DOUBLE_BATTLE_TEST("Sky Drop user and target can't activate Eject items while th
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, playerLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKING_SWIPE, opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKING_SWIPE, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, playerLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKING_SWIPE, opponentRight);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKING_SWIPE, playerRight);
