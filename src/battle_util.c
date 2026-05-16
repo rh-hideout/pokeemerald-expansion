@@ -10857,8 +10857,8 @@ static const u16 sGen5ProtectFailChances[] =
 bool32 CanUseMoveConsecutively(enum BattlerId battler)
 {
     u32 moveUses = gBattleMons[battler].volatiles.consecutiveMoveUses;
-    if (moveUses >= ARRAY_COUNT(sProtectSuccessRates))
-        moveUses = ARRAY_COUNT(sProtectSuccessRates) - 1;
+    if (moveUses >= ARRAY_COUNT(sProtectFailChances))
+        moveUses = ARRAY_COUNT(sProtectFailChances) - 1;
 
     u32 failChances;
 
