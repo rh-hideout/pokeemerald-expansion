@@ -687,7 +687,6 @@ void Task_FollowerNPCOutOfDoor(u8 taskId)
     case REALLOW_MOVEMENT:
         struct MapPosition position;
         enum Direction playerDirection;
-        u16 metatileBehavior;
 
         FollowerNPC_HandleSprite();
         SetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR, FNPC_DOOR_NONE);
@@ -695,8 +694,7 @@ void Task_FollowerNPCOutOfDoor(u8 taskId)
 
         playerDirection = GetPlayerFacingDirection();
         GetPlayerPosition(&position);
-        player->currentMetatileBehavior;
-        if (TryStartStepBasedScript(&position, metatileBehavior, playerDirection) == TRUE)
+        if (TryStartStepBasedScript(&position, player->currentMetatileBehavior, playerDirection) == TRUE)
         {
             LockPlayerFieldControls();
             HideMapNamePopUpWindow();
