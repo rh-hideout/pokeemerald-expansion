@@ -452,6 +452,7 @@ const struct TrainerClass gTrainerClasses[TRAINER_CLASS_COUNT] =
     [TRAINER_CLASS_KIMONO_GIRL_HNS] =      { _("KIMONO GIRL") },
     [TRAINER_CLASS_LASS_HNS] =             { _("LASS"), 4 },
     [TRAINER_CLASS_LEADER_HNS] =           { _("LEADER"), 25 },
+    [TRAINER_CLASS_LEADER_KANTO_HNS] =     { _("LEADER"), 25 },
     [TRAINER_CLASS_MYSTERY_MAN_HNS] =      { _("MYSTERY MAN") },
     [TRAINER_CLASS_OFFICER_HNS] =          { _("OFFICER") },
     [TRAINER_CLASS_PALACE_MAVEN_HNS] =     { _("PALACE MAVEN") },

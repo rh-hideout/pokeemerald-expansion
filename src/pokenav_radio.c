@@ -855,6 +855,7 @@ static void GenerateStationContent(struct Pokenav_Radio *radio, u8 station)
                     excluded = (trainerClass == TRAINER_CLASS_CHAMPION_HNS
                              || trainerClass == TRAINER_CLASS_ELITE_FOUR_HNS
                              || trainerClass == TRAINER_CLASS_LEADER_HNS
+                             || trainerClass == TRAINER_CLASS_LEADER_KANTO_HNS
                              || trainerClass == TRAINER_CLASS_RIVAL_HNS
                              || trainerClass == TRAINER_CLASS_CHAMPION
                              || trainerClass == TRAINER_CLASS_ELITE_FOUR
