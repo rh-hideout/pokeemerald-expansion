@@ -25,9 +25,12 @@ static const u8 sRadioStationName_PokeFlute[]       = _("POKé FLUTE");
 static const u8 sRadioText_OPT_Intro[] = _("MARY: PROF.OAK's POKéMON TALK!");
 static const u8 sRadioText_OPT_WithMeMary[] = _("With me, MARY!");
 static const u8 sRadioText_OPT_OakPrefix[] = _("OAK: ");
-static const u8 sRadioText_OPT_SeenAround[] = _("may be seen around here.");
+static const u8 sRadioText_OPT_SeenAround[] = _("may be seen around");
 static const u8 sRadioText_OPT_MaryPrefix[] = _("MARY: ");
 static const u8 sRadioText_OPT_MaryIs[] = _("'s ");
+
+// Pokemon Channel interlude
+static const u8 sRadioText_OPT_PokemonChannel[] = _("POKéMON Channel");
 
 // Adverbs (randomly selected)
 static const u8 sRadioText_OPT_Adverb_SweetAdorably[]      = _("sweet and adorably");
@@ -215,5 +218,136 @@ static const u8 sRadioBuenaPassword_Grass[]           = _("GRASS");
 static const u8 sRadioBuenaPassword_PkmnTalk[]        = _("POKéMON Talk");
 static const u8 sRadioBuenaPassword_PkmnMusic[]       = _("POKéMON Music");
 static const u8 sRadioBuenaPassword_LuckyChannel[]    = _("Lucky Channel");
+
+// ==========================================================
+// Oak's POKéMON Talk - Special Reports
+// ==========================================================
+
+static const u8 sOPT_Report_Clefairy_0[]  = _("MARY: Tonight, a rare moonlight");
+static const u8 sOPT_Report_Clefairy_1[]  = _("moment on POKéMON TALK!");
+static const u8 sOPT_Report_Clefairy_2[]  = _("OAK: We're spotlighting the");
+static const u8 sOPT_Report_Clefairy_3[]  = _("mystical CLEFAIRY!");
+static const u8 sOPT_Report_Clefairy_4[]  = _("They gather at MT.MOON");
+static const u8 sOPT_Report_Clefairy_5[]  = _("under full moons.");
+static const u8 sOPT_Report_Clefairy_6[]  = _("MARY: They DANCE in circles!");
+static const u8 sOPT_Report_Clefairy_7[]  = _("So adorably weird!");
+static const u8 sOPT_Report_Clefairy_8[]  = _("OAK: A timeless mystery");
+static const u8 sOPT_Report_Clefairy_9[]  = _("and a sight to behold!");
+
+static const u8 sOPT_Report_Lapras_0[]  = _("MARY: A gentle giant takes");
+static const u8 sOPT_Report_Lapras_1[]  = _("the stage on today's show!");
+static const u8 sOPT_Report_Lapras_2[]  = _("OAK: It's the ocean ferry,");
+static const u8 sOPT_Report_Lapras_3[]  = _("our beloved LAPRAS!");
+static const u8 sOPT_Report_Lapras_4[]  = _("Seen in UNION CAVE, but only");
+static const u8 sOPT_Report_Lapras_5[]  = _("on Evenings. How curious!");
+static const u8 sOPT_Report_Lapras_6[]  = _("MARY: So rare and peaceful!");
+static const u8 sOPT_Report_Lapras_7[]  = _("And it sings, too!");
+static const u8 sOPT_Report_Lapras_8[]  = _("OAK: Some say its songs calm");
+static const u8 sOPT_Report_Lapras_9[]  = _("the soul of the sea.");
+
+static const u8 sOPT_Report_Ampharos_0[]  = _("MARY: Welcome back, everyone!");
+static const u8 sOPT_Report_Ampharos_1[]  = _("Time for POKéMON TALK!");
+static const u8 sOPT_Report_Ampharos_2[]  = _("OAK: Let's shine a light on");
+static const u8 sOPT_Report_Ampharos_3[]  = _("our friend AMPHAROS!");
+static const u8 sOPT_Report_Ampharos_4[]  = _("Its bright tail glows through");
+static const u8 sOPT_Report_Ampharos_5[]  = _("fog to guide lost folks.");
+static const u8 sOPT_Report_Ampharos_6[]  = _("MARY: Powerful, elegant,");
+static const u8 sOPT_Report_Ampharos_7[]  = _("and undeniably friendly!");
+static const u8 sOPT_Report_Ampharos_8[]  = _("OAK: A key part of many");
+static const u8 sOPT_Report_Ampharos_9[]  = _("lighthouse stories!");
+
+static const u8 sOPT_Report_Sudowoodo_0[]  = _("MARY: Up next, a real oddball");
+static const u8 sOPT_Report_Sudowoodo_1[]  = _("on ROUTE 36...");
+static const u8 sOPT_Report_Sudowoodo_2[]  = _("OAK: SUDOWOODO! Looks like a");
+static const u8 sOPT_Report_Sudowoodo_3[]  = _("tree, but isn't one!");
+static const u8 sOPT_Report_Sudowoodo_4[]  = _("It blocks the road and won't");
+static const u8 sOPT_Report_Sudowoodo_5[]  = _("budge without water.");
+static const u8 sOPT_Report_Sudowoodo_6[]  = _("MARY: It only reacts to a");
+static const u8 sOPT_Report_Sudowoodo_7[]  = _("SQUIRTBOTTLE!");
+static const u8 sOPT_Report_Sudowoodo_8[]  = _("OAK: That's no bush, it's a");
+static const u8 sOPT_Report_Sudowoodo_9[]  = _("ROCK-type in disguise!");
+
+static const u8 sOPT_Report_RedGyarados_0[]  = _("MARY: Today's story is a");
+static const u8 sOPT_Report_RedGyarados_1[]  = _("shocking one from JOHTO!");
+static const u8 sOPT_Report_RedGyarados_2[]  = _("OAK: Trainers spotted a RED");
+static const u8 sOPT_Report_RedGyarados_3[]  = _("GYARADOS at LAKE OF RAGE!");
+static const u8 sOPT_Report_RedGyarados_4[]  = _("Unlike the usual blue ones,");
+static const u8 sOPT_Report_RedGyarados_5[]  = _("this one's bright crimson!");
+static const u8 sOPT_Report_RedGyarados_6[]  = _("MARY: People say it's linked");
+static const u8 sOPT_Report_RedGyarados_7[]  = _("to some strange radio waves!");
+static const u8 sOPT_Report_RedGyarados_8[]  = _("OAK: A mysterious evolution…");
+static const u8 sOPT_Report_RedGyarados_9[]  = _("Possibly unnatural.");
+
+static const u8 sOPT_Report_Unown_0[]  = _("MARY: Ever visited the RUINS");
+static const u8 sOPT_Report_Unown_1[]  = _("OF ALPH? Spooky stuff!");
+static const u8 sOPT_Report_Unown_2[]  = _("OAK: Strange symbols line the");
+static const u8 sOPT_Report_Unown_3[]  = _("walls, like ancient runes.");
+static const u8 sOPT_Report_Unown_4[]  = _("Inside, you'll find UNOWN…");
+static const u8 sOPT_Report_Unown_5[]  = _("each shaped like letters!");
+static const u8 sOPT_Report_Unown_6[]  = _("MARY: They spell things,");
+static const u8 sOPT_Report_Unown_7[]  = _("maybe? Or just freak us out!");
+static const u8 sOPT_Report_Unown_8[]  = _("OAK: A true puzzle of nature,");
+static const u8 sOPT_Report_Unown_9[]  = _("still unsolved to this day.");
+
+static const u8 sOPT_Report_Snubbull_0[]  = _("MARY: GOLDENROD residents are");
+static const u8 sOPT_Report_Snubbull_1[]  = _("searching high and low!");
+static const u8 sOPT_Report_Snubbull_2[]  = _("OAK: A SNUBBULL has gone rogue");
+static const u8 sOPT_Report_Snubbull_3[]  = _("and is on the run!");
+static const u8 sOPT_Report_Snubbull_4[]  = _("Usually shy and fussy, it's");
+static const u8 sOPT_Report_Snubbull_5[]  = _("been seen near the station.");
+static const u8 sOPT_Report_Snubbull_6[]  = _("MARY: Maybe it's chasing");
+static const u8 sOPT_Report_Snubbull_7[]  = _("love… or just adventure!");
+static const u8 sOPT_Report_Snubbull_8[]  = _("OAK: Keep your eyes peeled,");
+static const u8 sOPT_Report_Snubbull_9[]  = _("and your leash ready.");
+
+static const u8 sOPT_Report_Slowpoke_0[]  = _("MARY: Big news from AZALEA");
+static const u8 sOPT_Report_Slowpoke_1[]  = _("TOWN this week!");
+static const u8 sOPT_Report_Slowpoke_2[]  = _("OAK: SLOWPOKE have returned");
+static const u8 sOPT_Report_Slowpoke_3[]  = _("to their well after a crisis!");
+static const u8 sOPT_Report_Slowpoke_4[]  = _("TEAM ROCKET had been cutting");
+static const u8 sOPT_Report_Slowpoke_5[]  = _("off their tails! Horrible!");
+static const u8 sOPT_Report_Slowpoke_6[]  = _("MARY: But a brave young");
+static const u8 sOPT_Report_Slowpoke_7[]  = _("trainer shut them down!");
+static const u8 sOPT_Report_Slowpoke_8[]  = _("OAK: The SLOWPOKE are safe");
+static const u8 sOPT_Report_Slowpoke_9[]  = _("and happily dozing again.");
+
+static const u8 sOPT_Report_LavenderTower_0[]  = _("MARY: LAVENDER TOWN's tower");
+static const u8 sOPT_Report_LavenderTower_1[]  = _("has changed tunes!");
+static const u8 sOPT_Report_LavenderTower_2[]  = _("OAK: The old ghost tower is");
+static const u8 sOPT_Report_LavenderTower_3[]  = _("now a RADIO STATION!");
+static const u8 sOPT_Report_LavenderTower_4[]  = _("Some locals say it still");
+static const u8 sOPT_Report_LavenderTower_5[]  = _("feels… spooky.");
+static const u8 sOPT_Report_LavenderTower_6[]  = _("MARY: I swear I saw a GASTLY");
+static const u8 sOPT_Report_LavenderTower_7[]  = _("near the mic booth!");
+static const u8 sOPT_Report_LavenderTower_8[]  = _("OAK: Might be static…");
+static const u8 sOPT_Report_LavenderTower_9[]  = _("or specters!");
+
+static const u8 sOPT_Report_Tentacruel_0[]  = _("MARY: Weird news from the");
+static const u8 sOPT_Report_Tentacruel_1[]  = _("WHIRL ISLANDS today!");
+static const u8 sOPT_Report_Tentacruel_2[]  = _("OAK: TENTACRUEL have been");
+static const u8 sOPT_Report_Tentacruel_3[]  = _("surrounding cave entrances!");
+static const u8 sOPT_Report_Tentacruel_4[]  = _("They're massive, and acting");
+static const u8 sOPT_Report_Tentacruel_5[]  = _("almost territorial.");
+static const u8 sOPT_Report_Tentacruel_6[]  = _("MARY: They block the way");
+static const u8 sOPT_Report_Tentacruel_7[]  = _("without attacking…");
+static const u8 sOPT_Report_Tentacruel_8[]  = _("OAK: As if guarding something");
+static const u8 sOPT_Report_Tentacruel_9[]  = _("deep beneath the waves.");
+
+#define OPT_REPORT_LINES 10
+#define NUM_OPT_REPORTS 10
+
+static const u8 *const sOPT_Reports[NUM_OPT_REPORTS][OPT_REPORT_LINES] =
+{
+    { sOPT_Report_Clefairy_0, sOPT_Report_Clefairy_1, sOPT_Report_Clefairy_2, sOPT_Report_Clefairy_3, sOPT_Report_Clefairy_4, sOPT_Report_Clefairy_5, sOPT_Report_Clefairy_6, sOPT_Report_Clefairy_7, sOPT_Report_Clefairy_8, sOPT_Report_Clefairy_9 },
+    { sOPT_Report_Lapras_0, sOPT_Report_Lapras_1, sOPT_Report_Lapras_2, sOPT_Report_Lapras_3, sOPT_Report_Lapras_4, sOPT_Report_Lapras_5, sOPT_Report_Lapras_6, sOPT_Report_Lapras_7, sOPT_Report_Lapras_8, sOPT_Report_Lapras_9 },
+    { sOPT_Report_Ampharos_0, sOPT_Report_Ampharos_1, sOPT_Report_Ampharos_2, sOPT_Report_Ampharos_3, sOPT_Report_Ampharos_4, sOPT_Report_Ampharos_5, sOPT_Report_Ampharos_6, sOPT_Report_Ampharos_7, sOPT_Report_Ampharos_8, sOPT_Report_Ampharos_9 },
+    { sOPT_Report_Sudowoodo_0, sOPT_Report_Sudowoodo_1, sOPT_Report_Sudowoodo_2, sOPT_Report_Sudowoodo_3, sOPT_Report_Sudowoodo_4, sOPT_Report_Sudowoodo_5, sOPT_Report_Sudowoodo_6, sOPT_Report_Sudowoodo_7, sOPT_Report_Sudowoodo_8, sOPT_Report_Sudowoodo_9 },
+    { sOPT_Report_RedGyarados_0, sOPT_Report_RedGyarados_1, sOPT_Report_RedGyarados_2, sOPT_Report_RedGyarados_3, sOPT_Report_RedGyarados_4, sOPT_Report_RedGyarados_5, sOPT_Report_RedGyarados_6, sOPT_Report_RedGyarados_7, sOPT_Report_RedGyarados_8, sOPT_Report_RedGyarados_9 },
+    { sOPT_Report_Unown_0, sOPT_Report_Unown_1, sOPT_Report_Unown_2, sOPT_Report_Unown_3, sOPT_Report_Unown_4, sOPT_Report_Unown_5, sOPT_Report_Unown_6, sOPT_Report_Unown_7, sOPT_Report_Unown_8, sOPT_Report_Unown_9 },
+    { sOPT_Report_Snubbull_0, sOPT_Report_Snubbull_1, sOPT_Report_Snubbull_2, sOPT_Report_Snubbull_3, sOPT_Report_Snubbull_4, sOPT_Report_Snubbull_5, sOPT_Report_Snubbull_6, sOPT_Report_Snubbull_7, sOPT_Report_Snubbull_8, sOPT_Report_Snubbull_9 },
+    { sOPT_Report_Slowpoke_0, sOPT_Report_Slowpoke_1, sOPT_Report_Slowpoke_2, sOPT_Report_Slowpoke_3, sOPT_Report_Slowpoke_4, sOPT_Report_Slowpoke_5, sOPT_Report_Slowpoke_6, sOPT_Report_Slowpoke_7, sOPT_Report_Slowpoke_8, sOPT_Report_Slowpoke_9 },
+    { sOPT_Report_LavenderTower_0, sOPT_Report_LavenderTower_1, sOPT_Report_LavenderTower_2, sOPT_Report_LavenderTower_3, sOPT_Report_LavenderTower_4, sOPT_Report_LavenderTower_5, sOPT_Report_LavenderTower_6, sOPT_Report_LavenderTower_7, sOPT_Report_LavenderTower_8, sOPT_Report_LavenderTower_9 },
+    { sOPT_Report_Tentacruel_0, sOPT_Report_Tentacruel_1, sOPT_Report_Tentacruel_2, sOPT_Report_Tentacruel_3, sOPT_Report_Tentacruel_4, sOPT_Report_Tentacruel_5, sOPT_Report_Tentacruel_6, sOPT_Report_Tentacruel_7, sOPT_Report_Tentacruel_8, sOPT_Report_Tentacruel_9 },
+};
 
 #endif // GUARD_DATA_TEXT_RADIO_STRINGS_H

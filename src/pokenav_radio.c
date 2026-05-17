@@ -18,6 +18,9 @@
 #include "item.h"
 #include "move.h"
 #include "strings.h"
+#include "wild_encounter.h"
+#include "overworld.h"
+#include "region_map.h"
 #include "constants/songs.h"
 
 #define RADIO_FRAME_BASE_TILE 150
@@ -37,7 +40,7 @@
 #define RADIO_SCROLL_DELAY 90
 
 #define MAX_RADIO_LINES 15
-#define RADIO_LINE_BUF_SIZE 32
+#define RADIO_LINE_BUF_SIZE 40
 #define NUM_RADIO_LINE_BUFS 8
 
 enum RadioStation
@@ -62,16 +65,29 @@ struct RadioChannelEntry
     const u8 *name;
 };
 
+#define OPT_SEGMENTS_PER_CYCLE 5
+#define OPT_INTERLUDE_DELAY (RADIO_SCROLL_DELAY * 4)
+
+enum OPT_Phase
+{
+    OPT_PHASE_INTRO,
+    OPT_PHASE_POKEMON,
+    OPT_PHASE_INTERLUDE,
+    OPT_PHASE_REPORT,
+};
+
 struct Pokenav_Radio
 {
     u32 (*callback)(void);
     s32 tuningPos;
     u8 tuneDelay;
     u8 currentStation;
-    u8 scrollTimer;
+    u16 scrollTimer;
     u8 currentLine;
     u8 numLines;
     bool8 needsScroll;
+    u8 optSegmentCounter;
+    u8 optPhase;
     const u8 *lines[MAX_RADIO_LINES];
     u8 lineBuffers[NUM_RADIO_LINE_BUFS][RADIO_LINE_BUF_SIZE];
 };
@@ -107,6 +123,7 @@ static void PrintStationName(struct Pokenav_RadioGfx *gfx, u8 station);
 static void PrintRadioText(struct Pokenav_RadioGfx *gfx, const u8 *text);
 static void ClearRadioText(struct Pokenav_RadioGfx *gfx);
 static void GenerateStationContent(struct Pokenav_Radio *radio, u8 station);
+static void GenerateOPTSegment(struct Pokenav_Radio *radio);
 
 static const u16 sRadioUI_Pal[] = INCBIN_U16("graphics/pokenav/hns/radio/ui.gbapal");
 static const u32 sRadioUI_Gfx[] = INCBIN_U32("graphics/pokenav/hns/radio/ui_tiles.4bpp.smol");
@@ -129,6 +146,33 @@ static const struct RadioChannelEntry sRadioChannels[] =
 };
 
 static const u8 sRadioText_NoStation[] = _("- - - -");
+
+struct OPTRouteEntry
+{
+    u8 mapGroup;
+    u8 mapNum;
+};
+
+static const struct OPTRouteEntry sOPTRoutes[] =
+{
+    { MAP_GROUP(MAP_ROUTE29_HNS), MAP_NUM(MAP_ROUTE29_HNS) },
+    { MAP_GROUP(MAP_ROUTE46_HNS), MAP_NUM(MAP_ROUTE46_HNS) },
+    { MAP_GROUP(MAP_ROUTE30_HNS), MAP_NUM(MAP_ROUTE30_HNS) },
+    { MAP_GROUP(MAP_ROUTE32_HNS), MAP_NUM(MAP_ROUTE32_HNS) },
+    { MAP_GROUP(MAP_ROUTE34_HNS), MAP_NUM(MAP_ROUTE34_HNS) },
+    { MAP_GROUP(MAP_ROUTE35_HNS), MAP_NUM(MAP_ROUTE35_HNS) },
+    { MAP_GROUP(MAP_ROUTE37_HNS), MAP_NUM(MAP_ROUTE37_HNS) },
+    { MAP_GROUP(MAP_ROUTE38_HNS), MAP_NUM(MAP_ROUTE38_HNS) },
+    { MAP_GROUP(MAP_ROUTE39_HNS), MAP_NUM(MAP_ROUTE39_HNS) },
+    { MAP_GROUP(MAP_ROUTE42_HNS), MAP_NUM(MAP_ROUTE42_HNS) },
+    { MAP_GROUP(MAP_ROUTE43_HNS), MAP_NUM(MAP_ROUTE43_HNS) },
+    { MAP_GROUP(MAP_ROUTE44_HNS), MAP_NUM(MAP_ROUTE44_HNS) },
+    { MAP_GROUP(MAP_ROUTE45_HNS), MAP_NUM(MAP_ROUTE45_HNS) },
+    { MAP_GROUP(MAP_ROUTE36_HNS), MAP_NUM(MAP_ROUTE36_HNS) },
+    { MAP_GROUP(MAP_ROUTE31_HNS), MAP_NUM(MAP_ROUTE31_HNS) },
+};
+
+#define NUM_OPT_ROUTES ARRAY_COUNT(sOPTRoutes)
 
 // Day-of-week name table
 static const u8 *const sDayOfWeekNames[] =
@@ -313,6 +357,134 @@ static void GetBuenaPasswordString(u8 *dest, u32 category, u32 word)
     }
 }
 
+static u16 PickWildSpeciesFromRoute(u8 mapGroup, u8 mapNum)
+{
+    u32 i;
+    for (i = 0; gWildMonHeaders[i].mapGroup != MAP_GROUP(MAP_UNDEFINED); i++)
+    {
+        if (gWildMonHeaders[i].mapGroup == mapGroup && gWildMonHeaders[i].mapNum == mapNum)
+        {
+            enum TimeOfDay tod = Random() % TIMES_OF_DAY_COUNT;
+            const struct WildPokemonInfo *info;
+
+            info = gWildMonHeaders[i].encounterTypes[tod].landMonsInfo;
+            if (info != NULL && info->wildPokemon != NULL)
+            {
+                // Pick from the middle slots (2-4) like Crystal
+                u32 slot = 2 + (Random() % 3);
+                return info->wildPokemon[slot].species;
+            }
+            // Fallback: try any time of day with land mons
+            for (tod = TIME_MORNING; tod < TIMES_OF_DAY_COUNT; tod++)
+            {
+                info = gWildMonHeaders[i].encounterTypes[tod].landMonsInfo;
+                if (info != NULL && info->wildPokemon != NULL)
+                    return info->wildPokemon[2 + (Random() % 3)].species;
+            }
+        }
+    }
+    return SPECIES_CHIKORITA;
+}
+
+static void GenerateOPTSegment(struct Pokenav_Radio *radio)
+{
+    u32 n = 0;
+    u32 buf = 0;
+    u8 *dst;
+
+    switch (radio->optPhase)
+    {
+    case OPT_PHASE_INTRO:
+        radio->lines[n++] = sRadioText_OPT_Intro;
+        radio->lines[n++] = sRadioText_OPT_WithMeMary;
+        radio->optPhase = OPT_PHASE_POKEMON;
+        break;
+
+    case OPT_PHASE_POKEMON:
+    {
+        u32 routeIdx = Random() % NUM_OPT_ROUTES;
+        u8 mg = sOPTRoutes[routeIdx].mapGroup;
+        u8 mn = sOPTRoutes[routeIdx].mapNum;
+        u16 species = PickWildSpeciesFromRoute(mg, mn);
+        const u8 *speciesName = GetSpeciesName(species);
+        const struct MapHeader *header = Overworld_GetMapHeaderByGroupAndId(mg, mn);
+
+        // "OAK: Bayleef"
+        dst = radio->lineBuffers[buf];
+        StringCopy(dst, sRadioText_OPT_OakPrefix);
+        StringAppend(dst, speciesName);
+        radio->lines[n++] = radio->lineBuffers[buf++];
+
+        // "may be seen around Route 29."
+        dst = radio->lineBuffers[buf];
+        StringCopy(dst, sRadioText_OPT_SeenAround);
+        {
+            u8 *end = dst + StringLength(dst);
+            *end++ = CHAR_SPACE;
+            *end = EOS;
+        }
+        {
+            u8 mapNameBuf[24];
+            GetMapName(mapNameBuf, header->regionMapSectionId, 0);
+            StringAppend(dst, mapNameBuf);
+        }
+        {
+            u8 *end = dst + StringLength(dst);
+            *end++ = CHAR_PERIOD;
+            *end = EOS;
+        }
+        radio->lines[n++] = radio->lineBuffers[buf++];
+
+        // "MARY: Bayleef's"
+        dst = radio->lineBuffers[buf];
+        StringCopy(dst, sRadioText_OPT_MaryPrefix);
+        StringAppend(dst, speciesName);
+        StringAppend(dst, sRadioText_OPT_MaryIs);
+        radio->lines[n++] = radio->lineBuffers[buf++];
+
+        // "sweet and adorably cute."
+        dst = radio->lineBuffers[buf];
+        StringCopy(dst, sRadioText_OPT_Adverbs[Random() % ARRAY_COUNT(sRadioText_OPT_Adverbs)]);
+        {
+            u8 *end = dst + StringLength(dst);
+            *end++ = CHAR_SPACE;
+            *end = EOS;
+        }
+        StringAppend(dst, sRadioText_OPT_Adjectives[Random() % ARRAY_COUNT(sRadioText_OPT_Adjectives)]);
+        radio->lines[n++] = radio->lineBuffers[buf++];
+
+        radio->optSegmentCounter--;
+        if (radio->optSegmentCounter == 0)
+            radio->optPhase = OPT_PHASE_INTERLUDE;
+        break;
+    }
+
+    case OPT_PHASE_INTERLUDE:
+        radio->lines[n++] = sRadioText_OPT_PokemonChannel;
+        radio->optPhase = OPT_PHASE_REPORT;
+        radio->needsScroll = FALSE;
+        radio->numLines = n;
+        radio->currentLine = 0;
+        radio->scrollTimer = OPT_INTERLUDE_DELAY;
+        return;
+
+    case OPT_PHASE_REPORT:
+    {
+        u32 reportIdx = Random() % NUM_OPT_REPORTS;
+        u32 i;
+        for (i = 0; i < OPT_REPORT_LINES; i++)
+            radio->lines[n++] = sOPT_Reports[reportIdx][i];
+        radio->optPhase = OPT_PHASE_POKEMON;
+        radio->optSegmentCounter = OPT_SEGMENTS_PER_CYCLE;
+        break;
+    }
+    }
+
+    radio->numLines = n;
+    radio->currentLine = 0;
+    radio->scrollTimer = RADIO_SCROLL_DELAY;
+}
+
 static void GenerateStationContent(struct Pokenav_Radio *radio, u8 station)
 {
     u32 n = 0;
@@ -322,36 +494,10 @@ static void GenerateStationContent(struct Pokenav_Radio *radio, u8 station)
     switch (station)
     {
     case RADIO_STATION_POKEMON_TALK:
-    {
-        u32 i;
-        u16 species = SPECIES_CHIKORITA + (Random() % 3);
-        const u8 *speciesName = GetSpeciesName(species);
-
-        radio->lines[n++] = sRadioText_OPT_Intro;
-        radio->lines[n++] = sRadioText_OPT_WithMeMary;
-
-        // "OAK: Bayleef"
-        dst = radio->lineBuffers[buf];
-        StringCopy(dst, sRadioText_OPT_OakPrefix);
-        StringAppend(dst, speciesName);
-        radio->lines[n++] = radio->lineBuffers[buf++];
-
-        radio->lines[n++] = sRadioText_OPT_SeenAround;
-
-        // "MARY: Bayleef's"
-        dst = radio->lineBuffers[buf];
-        StringCopy(dst, sRadioText_OPT_MaryPrefix);
-        StringAppend(dst, speciesName);
-        StringAppend(dst, sRadioText_OPT_MaryIs);
-        radio->lines[n++] = radio->lineBuffers[buf++];
-
-        for (i = 0; i < 5 && n + 1 < MAX_RADIO_LINES; i++)
-        {
-            radio->lines[n++] = sRadioText_OPT_Adverbs[Random() % ARRAY_COUNT(sRadioText_OPT_Adverbs)];
-            radio->lines[n++] = sRadioText_OPT_Adjectives[Random() % ARRAY_COUNT(sRadioText_OPT_Adjectives)];
-        }
-        break;
-    }
+        radio->optPhase = OPT_PHASE_INTRO;
+        radio->optSegmentCounter = OPT_SEGMENTS_PER_CYCLE;
+        GenerateOPTSegment(radio);
+        return;
 
     case RADIO_STATION_POKEMON_MUSIC:
     {
@@ -528,7 +674,7 @@ static void PrintRadioText(struct Pokenav_RadioGfx *gfx, const u8 *text)
 {
     FillWindowPixelBuffer(gfx->radioTextWindowId, PIXEL_FILL(1));
     AddTextPrinterParameterized3(gfx->radioTextWindowId, FONT_NORMAL,
-        2, 1, sRadioTextColors, TEXT_SKIP_DRAW, text);
+        2, RADIO_LINE_HEIGHT + 1, sRadioTextColors, TEXT_SKIP_DRAW, text);
     CopyWindowToVram(gfx->radioTextWindowId, COPYWIN_GFX);
 }
 
@@ -549,7 +695,7 @@ static u32 HandleRadioInput(void)
         return POKENAV_RADIO_FUNC_EXIT;
     }
 
-    if (radio->numLines > 1)
+    if (radio->numLines > 0)
     {
         if (radio->scrollTimer > 0)
             radio->scrollTimer--;
@@ -558,7 +704,14 @@ static u32 HandleRadioInput(void)
             radio->scrollTimer = RADIO_SCROLL_DELAY;
             radio->currentLine++;
             if (radio->currentLine >= radio->numLines)
+            {
+                if (radio->currentStation == RADIO_STATION_POKEMON_TALK)
+                {
+                    GenerateOPTSegment(radio);
+                    return POKENAV_RADIO_FUNC_SCROLL;
+                }
                 radio->currentLine = 0;
+            }
             return POKENAV_RADIO_FUNC_SCROLL;
         }
     }
@@ -703,9 +856,14 @@ static u32 LoopedTask_TuneRadio(s32 state)
     GenerateStationContent(radio, radio->currentStation);
 
     if (radio->numLines > 0)
+    {
         PrintRadioText(gfx, radio->lines[0]);
+        radio->needsScroll = TRUE;
+    }
     else
+    {
         ClearRadioText(gfx);
+    }
 
     return LT_FINISH;
 }
@@ -715,13 +873,14 @@ static u32 LoopedTask_ScrollRadio(s32 state)
     struct Pokenav_RadioGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_RADIO_GFX);
     struct Pokenav_Radio *radio = GetSubstructPtr(POKENAV_SUBSTRUCT_RADIO);
 
-    if (radio->needsScroll)
+    if (!radio->needsScroll)
     {
-        ScrollWindow(gfx->radioTextWindowId, 0, RADIO_LINE_HEIGHT, PIXEL_FILL(1));
+        FillWindowPixelBuffer(gfx->radioTextWindowId, PIXEL_FILL(1));
+        radio->needsScroll = TRUE;
     }
     else
     {
-        radio->needsScroll = TRUE;
+        ScrollWindow(gfx->radioTextWindowId, 0, RADIO_LINE_HEIGHT, PIXEL_FILL(1));
     }
     AddTextPrinterParameterized3(gfx->radioTextWindowId, FONT_NORMAL,
         2, RADIO_LINE_HEIGHT + 1, sRadioTextColors, TEXT_SKIP_DRAW,
