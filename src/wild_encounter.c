@@ -29,7 +29,9 @@
 #include "constants/item.h"
 #include "constants/items.h"
 #include "constants/layouts.h"
+#include "constants/songs.h"
 #include "constants/weather.h"
+#include "sound.h"
 
 extern const u8 EventScript_SprayWoreOff[];
 
@@ -59,6 +61,9 @@ static bool8 TryGetAbilityInfluencedWildMonIndex(const struct WildPokemon *wildM
 static bool8 TryGetAbilityInfluencedWildMonIndex(const struct WildPokemon *wildMon, enum Type type, enum Ability ability, u8 *monIndex);
 #endif
 static bool8 IsAbilityAllowingEncounter(u8 level);
+#if IS_HNS
+static bool8 TryGetHoennSoundWildMonIndex(const struct WildPokemon *wildMon, u8 numMon, u8 *monIndex);
+#endif
 
 EWRAM_DATA static u8 sWildEncountersDisabled = 0;
 EWRAM_DATA static u32 sFeebasRngValue = 0;
@@ -504,6 +509,10 @@ static bool8 TryGenerateWildMon(const struct WildPokemonInfo *wildMonInfo, enum 
             break;
         if (OW_STORM_DRAIN >= GEN_8 && TRY_GET_ABILITY_INFLUENCED_WILD_MON_INDEX(wildMonInfo->wildPokemon, TYPE_WATER, ABILITY_STORM_DRAIN, &wildMonIndex, LAND_WILD_COUNT))
             break;
+    #if IS_HNS
+        if (TryGetHoennSoundWildMonIndex(wildMonInfo->wildPokemon, LAND_WILD_COUNT, &wildMonIndex))
+            break;
+    #endif
 
         wildMonIndex = ChooseWildMonIndex_Land();
         break;
@@ -520,6 +529,10 @@ static bool8 TryGenerateWildMon(const struct WildPokemonInfo *wildMonInfo, enum 
             break;
         if (OW_STORM_DRAIN >= GEN_8 && TRY_GET_ABILITY_INFLUENCED_WILD_MON_INDEX(wildMonInfo->wildPokemon, TYPE_WATER, ABILITY_STORM_DRAIN, &wildMonIndex, WATER_WILD_COUNT))
             break;
+    #if IS_HNS
+        if (TryGetHoennSoundWildMonIndex(wildMonInfo->wildPokemon, WATER_WILD_COUNT, &wildMonIndex))
+            break;
+    #endif
 
         wildMonIndex = ChooseWildMonIndex_Water();
         break;
@@ -1118,6 +1131,35 @@ static bool8 TryGetRandomWildMonIndexByType(const struct WildPokemon *wildMon, e
     *monIndex = validIndexes[Random() % validMonCount];
     return TRUE;
 }
+
+#if IS_HNS
+#define HOENN_DEX_START SPECIES_TREECKO
+#define HOENN_DEX_END   386
+
+static bool8 TryGetHoennSoundWildMonIndex(const struct WildPokemon *wildMon, u8 numMon, u8 *monIndex)
+{
+    u8 validIndexes[12];
+    u8 i, validMonCount;
+
+    if (GetCurrentMapMusic() != MUS_HG_RADIO_ROUTE101)
+        return FALSE;
+    if (Random() % 2 != 0)
+        return FALSE;
+
+    for (validMonCount = 0, i = 0; i < numMon; i++)
+    {
+        u16 species = wildMon[i].species;
+        if (species >= HOENN_DEX_START && species <= HOENN_DEX_END)
+            validIndexes[validMonCount++] = i;
+    }
+
+    if (validMonCount == 0 || validMonCount == numMon)
+        return FALSE;
+
+    *monIndex = validIndexes[Random() % validMonCount];
+    return TRUE;
+}
+#endif
 
 #include "data.h"
 

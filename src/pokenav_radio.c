@@ -65,6 +65,7 @@ enum RadioStation
     RADIO_STATION_POKE_FLUTE,
     RADIO_STATION_EVOLUTION,
     RADIO_STATION_ROCKET,
+    RADIO_STATION_HOENN_SOUND,
     NUM_RADIO_STATIONS,
 };
 
@@ -150,6 +151,7 @@ static const struct RadioChannelEntry sRadioChannels[] =
     { .tuningPos = 22, .station = RADIO_STATION_POKEMON_MUSIC,    .name = sRadioStationName_PokemonMusic },
     { .tuningPos = 25, .station = RADIO_STATION_LUCKY_CHANNEL,    .name = sRadioStationName_LuckyChannel },
     { .tuningPos = 32, .station = RADIO_STATION_BUENAS_PASSWORD,  .name = sRadioStationName_BuenasPassword },
+    { .tuningPos =  5, .station = RADIO_STATION_HOENN_SOUND,     .name = sRadioStationName_HoennSound },
     { .tuningPos = 41, .station = RADIO_STATION_UNOWN,            .name = sRadioStationName_Unown },
     { .tuningPos = 50, .station = RADIO_STATION_PLACES_AND_PEOPLE,.name = sRadioStationName_PlacesAndPeople },
     { .tuningPos = 57, .station = RADIO_STATION_LETS_ALL_SING,    .name = sRadioStationName_LetsAllSing },
@@ -173,6 +175,7 @@ static const u16 sRadioStationMusic[NUM_RADIO_STATIONS] =
     [RADIO_STATION_POKE_FLUTE]       = MUS_HG_RADIO_POKE_FLUTE,
     [RADIO_STATION_EVOLUTION]        = MUS_HG_RADIO_UNOWN,
     [RADIO_STATION_ROCKET]           = MUS_HG_RADIO_ROCKET,
+    [RADIO_STATION_HOENN_SOUND]      = MUS_HG_RADIO_ROUTE101,
 };
 
 struct OPTRouteEntry
@@ -884,6 +887,13 @@ static void GenerateStationContent(struct Pokenav_Radio *radio, u8 station)
         radio->lines[n++] = sRadioText_Rocket10;
         break;
 
+    case RADIO_STATION_HOENN_SOUND:
+        radio->lines[n++] = sRadioText_Hoenn1;
+        radio->lines[n++] = sRadioText_Hoenn2;
+        radio->lines[n++] = sRadioText_Hoenn3;
+        radio->lines[n++] = sRadioText_Hoenn4;
+        break;
+
     case RADIO_STATION_UNOWN:
     case RADIO_STATION_POKE_FLUTE:
     case RADIO_STATION_EVOLUTION:
@@ -946,6 +956,8 @@ void CheckRadioStation(void)
 
     if (music == MUS_HG_RADIO_POKE_FLUTE)
         gSpecialVar_Result = 1;
+    else if (music == MUS_HG_RADIO_ROUTE101)
+        gSpecialVar_Result = 2;
     else
         gSpecialVar_Result = 0;
 }
@@ -985,6 +997,9 @@ static bool8 IsStationAvailable(u8 station)
     case RADIO_STATION_POKE_FLUTE:
         return !IsPlayerInJohto() && FlagGet(FLAG_KANTO_RADIO_GOT);
 
+    case RADIO_STATION_HOENN_SOUND:
+        return !IsPlayerInJohto() && FlagGet(FLAG_KANTO_RADIO_GOT);
+
     default:
         return TRUE;
     }
@@ -1016,7 +1031,8 @@ static u8 FindStation(s32 tuningPos)
                 && station != RADIO_STATION_POKE_FLUTE
                 && station != RADIO_STATION_EVOLUTION
                 && station != RADIO_STATION_PLACES_AND_PEOPLE
-                && station != RADIO_STATION_LETS_ALL_SING)
+                && station != RADIO_STATION_LETS_ALL_SING
+                && station != RADIO_STATION_HOENN_SOUND)
             {
                 return RADIO_STATION_ROCKET;
             }
