@@ -940,6 +940,16 @@ void FreeRadioSubstruct1(void)
     FreePokenavSubstruct(POKENAV_SUBSTRUCT_RADIO);
 }
 
+void CheckRadioStation(void)
+{
+    u16 music = GetCurrentMapMusic();
+
+    if (music == MUS_HG_RADIO_POKE_FLUTE)
+        gSpecialVar_Result = 1;
+    else
+        gSpecialVar_Result = 0;
+}
+
 static bool8 IsPlayerInJohto(void)
 {
     u16 mapsec = gMapHeader.regionMapSectionId;

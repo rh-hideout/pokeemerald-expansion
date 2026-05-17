@@ -658,4 +658,5 @@ gSpecials::
 	def_special IsNuzlockeNicknamingActive
 	def_special IsPokecenterChallengeActivated
 	def_special IsOneTypeChallengeActive
+	def_special CheckRadioStation
 

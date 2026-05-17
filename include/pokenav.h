@@ -544,5 +544,6 @@ void CreateRadioLoopedTask(s32 index);
 bool32 IsRadioLoopedTaskActive(void);
 void FreeRadioSubstruct1(void);
 void FreeRadioSubstruct2(void);
+void CheckRadioStation(void);
 
 #endif // GUARD_POKENAV_H
