@@ -934,6 +934,9 @@ u32 GetRadioCallback(void)
 
 void FreeRadioSubstruct1(void)
 {
+    struct Pokenav_Radio *radio = GetSubstructPtr(POKENAV_SUBSTRUCT_RADIO);
+    if (radio->currentStation == RADIO_STATION_NONE)
+        PlayNewMapMusic(GetCurrLocationDefaultMusic());
     FreePokenavSubstruct(POKENAV_SUBSTRUCT_RADIO);
 }
 
