@@ -9,7 +9,7 @@
 #include "wild_encounter.h"
 
 static const struct MassOutbreak sPokeOutbreakSpeciesList[OUTBREAK_COUNT] = {
-    [OUTBREAK_ROUTE102] = {
+    [OUTBREAK_ID_ROUTE102] = {
         .species = SPECIES_SEEDOT,
         .moves = {MOVE_BIDE, MOVE_HARDEN, MOVE_LEECH_SEED},
         .level = 3,
@@ -18,7 +18,7 @@ static const struct MassOutbreak sPokeOutbreakSpeciesList[OUTBREAK_COUNT] = {
         .location = MAP_ROUTE102
 
     },
-    [OUTBREAK_ROUTE114] = {
+    [OUTBREAK_ID_ROUTE114] = {
         .species = SPECIES_NUZLEAF,
         .moves = {MOVE_HARDEN, MOVE_GROWTH, MOVE_NATURE_POWER, MOVE_LEECH_SEED},
         .level = 15,
@@ -26,7 +26,7 @@ static const struct MassOutbreak sPokeOutbreakSpeciesList[OUTBREAK_COUNT] = {
         .duration = 1,
         .location = MAP_ROUTE114,
     },
-    [OUTBREAK_ROUTE117] = {
+    [OUTBREAK_ID_ROUTE117] = {
         .species = SPECIES_SEEDOT,
         .moves = {MOVE_HARDEN, MOVE_GROWTH, MOVE_NATURE_POWER, MOVE_LEECH_SEED},
         .level = 13,
@@ -34,7 +34,7 @@ static const struct MassOutbreak sPokeOutbreakSpeciesList[OUTBREAK_COUNT] = {
         .duration = 1,
         .location = MAP_ROUTE117,
     },
-    [OUTBREAK_ROUTE120] = {
+    [OUTBREAK_ID_ROUTE120] = {
         .species = SPECIES_SEEDOT,
         .moves = {MOVE_GIGA_DRAIN, MOVE_FRUSTRATION, MOVE_SOLAR_BEAM, MOVE_LEECH_SEED},
         .level = 25,
@@ -42,7 +42,7 @@ static const struct MassOutbreak sPokeOutbreakSpeciesList[OUTBREAK_COUNT] = {
         .duration = 1,
         .location = MAP_ROUTE120,
     },
-    [OUTBREAK_ROUTE116] = {
+    [OUTBREAK_ID_ROUTE116] = {
         .species = SPECIES_SKITTY,
         .moves = {MOVE_GROWL, MOVE_TACKLE, MOVE_TAIL_WHIP, MOVE_ATTRACT},
         .level = 8,
@@ -130,13 +130,11 @@ bool32 IsMassOutbreakActive(void)
 
 bool8 SetUpMassOutbreakEncounter(u8 flags)
 {
-    u16 i;
-
     if (flags & WILD_CHECK_REPEL && !IsWildLevelAllowedByRepel(gSaveBlock1Ptr->outbreakPokemonLevel))
         return FALSE;
 
     CreateWildMon(gSaveBlock1Ptr->outbreakPokemonSpecies, gSaveBlock1Ptr->outbreakPokemonLevel);
-    for (i = 0; i < MAX_MON_MOVES; i++)
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
         SetMonMoveSlot(&gParties[B_TRAINER_1][0], gSaveBlock1Ptr->outbreakPokemonMoves[i], i);
 
     return TRUE;
