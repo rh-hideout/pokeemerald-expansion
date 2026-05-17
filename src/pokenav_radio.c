@@ -21,7 +21,10 @@
 #include "wild_encounter.h"
 #include "overworld.h"
 #include "region_map.h"
+#include "event_data.h"
 #include "constants/songs.h"
+#include "constants/region_map_sections.h"
+#include "constants/flags_hns.h"
 
 #define RADIO_FRAME_BASE_TILE 150
 #define RADIO_FRAME_PALETTE 4
@@ -55,6 +58,7 @@ enum RadioStation
     RADIO_STATION_LETS_ALL_SING,
     RADIO_STATION_POKE_FLUTE,
     RADIO_STATION_EVOLUTION,
+    RADIO_STATION_ROCKET,
     NUM_RADIO_STATIONS,
 };
 
@@ -160,6 +164,7 @@ static const u16 sRadioStationMusic[NUM_RADIO_STATIONS] =
     [RADIO_STATION_LETS_ALL_SING]    = MUS_HG_RADIO_LULLABY,
     [RADIO_STATION_POKE_FLUTE]       = MUS_HG_RADIO_POKE_FLUTE,
     [RADIO_STATION_EVOLUTION]        = MUS_HG_RADIO_UNOWN,
+    [RADIO_STATION_ROCKET]           = MUS_HG_RADIO_ROCKET,
 };
 
 struct OPTRouteEntry
@@ -606,6 +611,20 @@ static void GenerateStationContent(struct Pokenav_Radio *radio, u8 station)
         break;
     }
 
+    case RADIO_STATION_ROCKET:
+        radio->lines[n++] = sRadioText_Rocket1;
+        radio->lines[n++] = sRadioText_Rocket2;
+        radio->lines[n++] = sRadioText_Rocket3;
+        radio->lines[n++] = sRadioText_Rocket4;
+        radio->lines[n++] = sRadioText_Rocket5;
+        radio->lines[n++] = sRadioText_Rocket6;
+        break;
+
+    case RADIO_STATION_UNOWN:
+    case RADIO_STATION_POKE_FLUTE:
+    case RADIO_STATION_EVOLUTION:
+        break;
+
     default:
         break;
     }
@@ -654,13 +673,50 @@ void FreeRadioSubstruct1(void)
     FreePokenavSubstruct(POKENAV_SUBSTRUCT_RADIO);
 }
 
+static bool8 IsStationAvailable(u8 station)
+{
+    switch (station)
+    {
+    case RADIO_STATION_UNOWN:
+        return gMapHeader.regionMapSectionId == MAPSEC_RUINS_OF_ALPH;
+
+    case RADIO_STATION_EVOLUTION:
+        return !FlagGet(FLAG_HIDE_MAHOGANY_ROCKETS)
+            && (gMapHeader.regionMapSectionId == MAPSEC_MAHOGANY_TOWN
+             || gMapHeader.regionMapSectionId == MAPSEC_ROUTE_43
+             || gMapHeader.regionMapSectionId == MAPSEC_LAKE_OF_RAGE);
+
+    case RADIO_STATION_POKE_FLUTE:
+        return FlagGet(FLAG_KANTO_RADIO_GOT);
+
+    default:
+        return TRUE;
+    }
+}
+
 static u8 FindStation(s32 tuningPos)
 {
     u32 i;
     for (i = 0; i < ARRAY_COUNT(sRadioChannels); i++)
     {
         if (sRadioChannels[i].tuningPos == tuningPos)
-            return sRadioChannels[i].station;
+        {
+            u8 station = sRadioChannels[i].station;
+            if (!IsStationAvailable(station))
+                return RADIO_STATION_NONE;
+
+            // Rocket takeover overrides normal Johto stations
+            // but not location-locked ones (Unown, Poke Flute, Evolution)
+            if (!FlagGet(FLAG_HIDE_GOLDENROD_ROCKETS)
+                && station != RADIO_STATION_UNOWN
+                && station != RADIO_STATION_POKE_FLUTE
+                && station != RADIO_STATION_EVOLUTION)
+            {
+                return RADIO_STATION_ROCKET;
+            }
+
+            return station;
+        }
     }
     return RADIO_STATION_NONE;
 }
@@ -670,6 +726,8 @@ static const u8 *GetStationName(u8 station)
     u32 i;
     if (station == RADIO_STATION_NONE)
         return sRadioText_NoStation;
+    if (station == RADIO_STATION_ROCKET)
+        return sRadioStationName_Rocket;
     for (i = 0; i < ARRAY_COUNT(sRadioChannels); i++)
     {
         if (sRadioChannels[i].station == station)

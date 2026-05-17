@@ -219,10 +219,12 @@ Debug_EventScript_Script_3::
 
 Debug_EventScript_Script_4::
 	setflag FLAG_ENABLE_RADIO
+	setflag FLAG_HIDE_GOLDENROD_ROCKETS
 	release
 	end
 
 Debug_EventScript_Script_5::
+	setflag FLAG_KANTO_RADIO_GOT
 	release
 	end
 
