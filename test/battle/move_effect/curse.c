@@ -4,7 +4,6 @@
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_CURSE) == EFFECT_CURSE);
-    ASSUME(GetSpeciesType(SPECIES_MISDREAVUS, 0) == TYPE_GHOST || GetSpeciesType(SPECIES_MISDREAVUS, 0) == TYPE_GHOST);
 }
 
 SINGLE_BATTLE_TEST("Curse lowers Speed, raises Attack, and raises Defense when used by non-Ghost-types")
@@ -27,6 +26,7 @@ SINGLE_BATTLE_TEST("Curse lowers Speed, raises Attack, and raises Defense when u
 SINGLE_BATTLE_TEST("Curse cuts the user's HP in half when used by Ghost-types")
 {
     GIVEN {
+        ASSUME(GetSpeciesType(SPECIES_MISDREAVUS, 0) == TYPE_GHOST || GetSpeciesType(SPECIES_MISDREAVUS, 0) == TYPE_GHOST);
         PLAYER(SPECIES_MISDREAVUS);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -77,6 +77,8 @@ SINGLE_BATTLE_TEST("Curse applies to the opponent if user is afflicted by Trick-
 SINGLE_BATTLE_TEST("Baton Pass passes Cursed status")
 {
     GIVEN {
+        ASSUME(GetSpeciesType(SPECIES_MISDREAVUS, 0) == TYPE_GHOST || GetSpeciesType(SPECIES_MISDREAVUS, 0) == TYPE_GHOST);
+        ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_MISDREAVUS);
