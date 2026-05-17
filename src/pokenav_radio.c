@@ -178,6 +178,19 @@ static const u16 sRadioStationMusic[NUM_RADIO_STATIONS] =
     [RADIO_STATION_HOENN_SOUND]      = MUS_HG_RADIO_ROUTE101,
 };
 
+static const u16 sHoennSoundSongs[] =
+{
+    MUS_ROUTE101,
+    MUS_ROUTE104,
+    MUS_ROUTE110,
+    MUS_ROUTE113,
+    MUS_ROUTE119,
+    MUS_ROUTE120,
+    MUS_ROUTE122,
+};
+
+#define NUM_HOENN_SOUND_SONGS ARRAY_COUNT(sHoennSoundSongs)
+
 struct OPTRouteEntry
 {
     u8 mapGroup;
@@ -957,13 +970,31 @@ void FreeRadioSubstruct1(void)
     FreePokenavSubstruct(POKENAV_SUBSTRUCT_RADIO);
 }
 
+bool8 IsHoennSoundPlaying(void)
+{
+    u16 music = GetCurrentMapMusic();
+    u16 mapsec = gMapHeader.regionMapSectionId;
+    u8 i;
+
+    if (!((mapsec >= JOHTO_MAPSEC_START && mapsec <= JOHTO_MAPSEC_END)
+       || (mapsec >= KANTO_MAPSEC_START && mapsec <= KANTO_MAPSEC_END)))
+        return FALSE;
+
+    for (i = 0; i < NUM_HOENN_SOUND_SONGS; i++)
+    {
+        if (music == sHoennSoundSongs[i])
+            return TRUE;
+    }
+    return FALSE;
+}
+
 void CheckRadioStation(void)
 {
     u16 music = GetCurrentMapMusic();
 
     if (music == MUS_HG_RADIO_POKE_FLUTE)
         gSpecialVar_Result = 1;
-    else if (music == MUS_HG_RADIO_ROUTE101)
+    else if (IsHoennSoundPlaying())
         gSpecialVar_Result = 2;
     else
         gSpecialVar_Result = 0;
@@ -1282,6 +1313,10 @@ static u32 LoopedTask_TuneRadio(s32 state)
                 || radio->currentStation == RADIO_STATION_LETS_ALL_SING)
             {
                 music = (GetDayOfWeek() % 2 == 0) ? MUS_HG_RADIO_MARCH : MUS_HG_RADIO_LULLABY;
+            }
+            else if (radio->currentStation == RADIO_STATION_HOENN_SOUND)
+            {
+                music = sHoennSoundSongs[Random() % NUM_HOENN_SOUND_SONGS];
             }
         }
         else

@@ -31,6 +31,7 @@
 #include "constants/layouts.h"
 #include "constants/songs.h"
 #include "constants/weather.h"
+#include "pokenav.h"
 #include "sound.h"
 
 extern const u8 EventScript_SprayWoreOff[];
@@ -1141,9 +1142,9 @@ static bool8 TryGetHoennSoundWildMonIndex(const struct WildPokemon *wildMon, u8 
     u8 validIndexes[12];
     u8 i, validMonCount;
 
-    if (GetCurrentMapMusic() != MUS_HG_RADIO_ROUTE101)
+    if (!IsHoennSoundPlaying())
         return FALSE;
-    if (Random() % 2 != 0)
+    if (Random() % 10 != 0)
         return FALSE;
 
     for (validMonCount = 0, i = 0; i < numMon; i++)
