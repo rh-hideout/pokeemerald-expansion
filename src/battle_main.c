@@ -1980,7 +1980,7 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
 {
     u32 personalityValue;
     s32 i;
-    u8 monsCount;
+    u8 monsCount = trainer->partySize;
 
     // Invalidate party level cache at start of battle for level scaling
     #if B_LEVEL_SCALING_ENABLED && B_TRAINER_SCALING_ENABLED
@@ -2007,15 +2007,43 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
             monsCount = trainer->partySize;
         }
 
-        u32 monIndices[monsCount];
-        DoTrainerPartyPool(trainer, monIndices, monsCount, battleTypeFlags);
+        u8 fullCount = monsCount;
+        u32 monIndices[fullCount];
+        DoTrainerPartyPool(trainer, monIndices, fullCount, battleTypeFlags);
+
+        const struct TrainerMon *partyData = trainer->party;
+
+        #if B_LEVEL_SCALING_ENABLED && B_TRAINER_SCALING_ENABLED
+        // Precompute each drawn mon's final (post-scale, post-devolution)
+        // level/species once — CalculateScaledLevel uses RNG, so recomputing
+        // later would desync from what BST selection saw. SelectScaledTrainerParty
+        // then drops over-BST non-ace mons and applies the party-size cap.
+        u8 scaledLevelArr[fullCount];
+        u16 scaledSpeciesArr[fullCount];
+        const struct LevelScalingConfig *psConfig = GetTrainerLevelScalingConfig(trainerId);
+        for (i = 0; i < fullCount; i++)
+        {
+            u32 mi = monIndices[i];
+            if (psConfig->mode != LEVEL_SCALING_NONE)
+            {
+                scaledLevelArr[i] = CalculateScaledLevel(psConfig, partyData[mi].lvl);
+                scaledSpeciesArr[i] = ValidateSpeciesForLevel(partyData[mi].species, scaledLevelArr[i], psConfig->manageEvolutions);
+            }
+            else
+            {
+                scaledLevelArr[i] = partyData[mi].lvl;
+                scaledSpeciesArr[i] = partyData[mi].species;
+            }
+        }
+        if (psConfig->mode != LEVEL_SCALING_NONE)
+            monsCount = SelectScaledTrainerParty(trainer, trainerId, monIndices, scaledLevelArr, scaledSpeciesArr, fullCount);
+        #endif
 
         for (i = 0; i < monsCount; i++)
         {
             u32 monIndex = monIndices[i];
             s32 ball = -1;
             u32 personalityHash = GeneratePartyHash(trainer, i);
-            const struct TrainerMon *partyData = trainer->party;
             struct OriginalTrainerId otId = OTID_STRUCT_RANDOM_NO_SHINY;
             u32 abilityNum = 0;
 
@@ -2044,19 +2072,14 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
             u8 scaledLevel = partyData[monIndex].lvl;
             u16 scaledSpecies = partyData[monIndex].species;
             #if B_LEVEL_SCALING_ENABLED && B_TRAINER_SCALING_ENABLED
-            const struct LevelScalingConfig *config = GetTrainerLevelScalingConfig(trainerId);
-            if (config->mode != LEVEL_SCALING_NONE)
-            {
-                // Calculate scaled level for this mon
-                scaledLevel = CalculateScaledLevel(config, partyData[monIndex].lvl);
-                // Validate species for the scaled level
-                scaledSpecies = ValidateSpeciesForLevel(partyData[monIndex].species, scaledLevel, config->manageEvolutions);
-            }
+            scaledLevel = scaledLevelArr[i];
+            scaledSpecies = scaledSpeciesArr[i];
             CreateMon(&party[i], scaledSpecies, scaledLevel, personalityValue, otId);
             #else
             CreateMon(&party[i], partyData[monIndex].species, partyData[monIndex].lvl, personalityValue, otId);
             #endif
             SetMonData(&party[i], MON_DATA_HELD_ITEM, &partyData[monIndex].heldItem);
+            MaybeStripTrainerItem(&party[i], trainerId, scaledLevel);
 
             CustomTrainerPartyAssignMoves(&party[i], &partyData[monIndex]);
             MaybeFilterTrainerMoves(&party[i], trainerId, scaledSpecies, scaledLevel);

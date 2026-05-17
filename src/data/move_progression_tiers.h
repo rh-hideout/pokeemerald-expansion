@@ -8,9 +8,9 @@
 //
 // Tiers:
 //   MOVE_TIER_DEFAULT  - No gate (always allowed). Moves omitted below default to this.
-//   MOVE_TIER_MID      - Available at >= B_MOVE_TIER_MID_MIN_LEVEL
-//   MOVE_TIER_LATE     - Available at >= B_MOVE_TIER_LATE_MIN_LEVEL
-//   MOVE_TIER_ENDGAME  - Available at >= B_MOVE_TIER_ENDGAME_MIN_LEVEL
+//   MOVE_TIER_MID      - Available at >= B_SCALING_TIER_MID_MIN_LEVEL
+//   MOVE_TIER_LATE     - Available at >= B_SCALING_TIER_LATE_MIN_LEVEL
+//   MOVE_TIER_ENDGAME  - Available at >= B_SCALING_TIER_ENDGAME_MIN_LEVEL
 //
 // Note that a move that appears in a species' own level-up learnset at <= scaledLevel
 // always passes, regardless of tier — so tiers only matter for trainer-defined moves.
