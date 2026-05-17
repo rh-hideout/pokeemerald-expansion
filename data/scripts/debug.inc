@@ -225,6 +225,7 @@ Debug_EventScript_Script_4::
 
 Debug_EventScript_Script_5::
 	setflag FLAG_KANTO_RADIO_GOT
+	setflag FLAG_VISITED_KANTO
 	release
 	end
 

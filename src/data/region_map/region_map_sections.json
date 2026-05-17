@@ -1726,8 +1726,8 @@
       "id": "MAPSEC_SAFARI_ZONE",
       "name": "SAFARI ZONE",
       "width": 1,
-      "x": 0,
-      "y": 6
+      "x": 2,
+      "y": 9
     },
     {
       "height": 1,
@@ -2062,8 +2062,8 @@
       "id": "MAPSEC_ROCKET_HIDEOUT",
       "name": "ROCKET HIDEOUT",
       "width": 1,
-      "x": 9,
-      "y": 3
+      "x": 15,
+      "y": 2
     },
     {
       "height": 1,
@@ -2205,73 +2205,73 @@
       "height": 1,
       "id": "MAPSEC_ROUTE_29",
       "name": "ROUTE 29",
-      "width": 3,
-      "x": 10,
-      "y": 11
+      "width": 4,
+      "x": 15,
+      "y": 10
     },
     {
       "height": 5,
       "id": "MAPSEC_ROUTE_30",
       "name": "ROUTE 30",
       "width": 1,
-      "x": 9,
-      "y": 6
+      "x": 14,
+      "y": 5
     },
     {
       "height": 1,
       "id": "MAPSEC_ROUTE_31",
       "name": "ROUTE 31",
       "width": 2,
-      "x": 8,
-      "y": 5
+      "x": 13,
+      "y": 4
     },
     {
-      "height": 5,
+      "height": 6,
       "id": "MAPSEC_ROUTE_32",
       "name": "ROUTE 32",
       "width": 1,
-      "x": 7,
-      "y": 6
+      "x": 12,
+      "y": 5
     },
     {
       "height": 1,
       "id": "MAPSEC_ROUTE_33",
       "name": "ROUTE 33",
-      "width": 1,
-      "x": 7,
-      "y": 12
+      "width": 2,
+      "x": 11,
+      "y": 13
     },
     {
       "height": 2,
       "id": "MAPSEC_ROUTE_34",
       "name": "ROUTE 34",
       "width": 1,
-      "x": 5,
-      "y": 9
+      "x": 8,
+      "y": 10
     },
     {
-      "height": 1,
+      "height": 3,
       "id": "MAPSEC_ROUTE_35",
       "name": "ROUTE 35",
       "width": 1,
-      "x": 5,
-      "y": 6
+      "x": 8,
+      "y": 5
     },
     {
       "height": 1,
       "id": "MAPSEC_ROUTE_36",
       "name": "ROUTE 36",
-      "width": 1,
-      "x": 6,
-      "y": 5
+      "width": 3,
+      "x": 9,
+      "y": 4
     },
     {
       "height": 1,
       "id": "MAPSEC_ROUTE_37",
       "name": "ROUTE 37",
       "width": 1,
-      "x": 6,
-      "y": 4
+      "x": 10,
+      "y": 3
     },
     {
       "height": 1,
@@ -2390,8 +2390,8 @@
       "id": "MAPSEC_DRAGONS_DEN",
       "name": "DRAGON'S DEN",
       "width": 1,
-      "x": 12,
-      "y": 2
+      "x": 18,
+      "y": 1
     },
     {
       "height": 2,
@@ -2458,12 +2458,12 @@
       "y": 4
     },
     {
-      "height": 1,
+      "height": 2,
       "id": "MAPSEC_RUINS_OF_ALPH",
       "name": "RUINS OF ALPH",
-      "width": 1,
-      "x": 6,
-      "y": 6
+      "width": 2,
+      "x": 10,
+      "y": 5
     },
     {
       "height": 1,
