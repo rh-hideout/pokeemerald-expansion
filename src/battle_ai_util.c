@@ -3331,6 +3331,18 @@ static u32 GetTrapDamage(enum BattlerId battler)
     return damage;
 }
 
+static u32 GetToxicDamageMultiplier(enum BattlerId battlerId, u32 status1)
+{
+    if (!gBattleStruct->battlerState[battlerId].toxicCounterAdvancedByPoisonHeal
+     || (status1 & STATUS1_TOXIC_COUNTER) == 0)
+    {
+        if ((status1 & STATUS1_TOXIC_COUNTER) != STATUS1_TOXIC_TURN(15)) // not 16 turns
+            status1 += STATUS1_TOXIC_TURN(1);
+    }
+
+    return (status1 & STATUS1_TOXIC_COUNTER) >> 8;
+}
+
 static u32 GetPoisonDamage(enum BattlerId battlerId)
 {
     u32 damage = 0;
@@ -3346,13 +3358,10 @@ static u32 GetPoisonDamage(enum BattlerId battlerId)
     }
     else if (gBattleMons[battlerId].status1 & STATUS1_TOXIC_POISON)
     {
-        u32 status1Temp = gBattleMons[battlerId].status1;
         damage = gBattleMons[battlerId].maxHP / 16;
         if (damage == 0)
             damage = 1;
-        if ((status1Temp & STATUS1_TOXIC_COUNTER) != STATUS1_TOXIC_TURN(15)) // not 16 turns
-            status1Temp += STATUS1_TOXIC_TURN(1);
-        damage *= (status1Temp & STATUS1_TOXIC_COUNTER) >> 8;
+        damage *= GetToxicDamageMultiplier(battlerId, gBattleMons[battlerId].status1);
     }
     return damage;
 }
