@@ -4,6 +4,7 @@
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_CURSE) == EFFECT_CURSE);
+    ASSUME(GetSpeciesType(SPECIES_MISDREAVUS, 0) == TYPE_GHOST || GetSpeciesType(SPECIES_MISDREAVUS, 0) == TYPE_GHOST);
 }
 
 SINGLE_BATTLE_TEST("Curse lowers Speed, raises Attack, and raises Defense when used by non-Ghost-types")
@@ -73,4 +74,19 @@ SINGLE_BATTLE_TEST("Curse applies to the opponent if user is afflicted by Trick-
     }
 }
 
-TO_DO_BATTLE_TEST("Baton Pass passes Cursed status");
+SINGLE_BATTLE_TEST("Baton Pass passes Cursed status")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_MISDREAVUS);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CURSE); MOVE(player, MOVE_BATON_PASS); SEND_OUT(player, 1); }
+    } SCENE {
+        s32 playerMaxHP = GetMonData(&PLAYER_PARTY[1], MON_DATA_MAX_HP);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CURSE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, player);
+        SEND_IN_MESSAGE("Wynaut");
+        HP_BAR(player, damage: playerMaxHP / 4);
+    }
+}
