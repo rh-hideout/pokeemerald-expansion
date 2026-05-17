@@ -996,6 +996,8 @@
 #define FLAG_DAILY_HAIRCUT2_RECEIVED                (DAILY_FLAGS_START + 4)
 #define FLAG_DAILY_PICKED_LOTO_TICKET               (DAILY_FLAGS_START + 5)
 #define FLAG_DAILY_APPRENTICE_LEAVES                (DAILY_FLAGS_START + 6)
+#define FLAG_DAILY_BUENAS_PASSWORD                  (DAILY_FLAGS_START + 7)
+#define FLAG_DAILY_LUCKY_NUMBER_SET                 (DAILY_FLAGS_START + 8)
 #define DAILY_FLAGS_END                             0x917
 #define NUM_DAILY_FLAGS                             (DAILY_FLAGS_END - DAILY_FLAGS_START + 1)
 #define BUILD_FLAGS_END                             DAILY_FLAGS_END

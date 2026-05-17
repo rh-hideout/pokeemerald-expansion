@@ -22,9 +22,14 @@
 #include "overworld.h"
 #include "region_map.h"
 #include "event_data.h"
+#include "data.h"
+#include "pokedex.h"
+#include "constants/pokedex.h"
 #include "constants/songs.h"
 #include "constants/region_map_sections.h"
 #include "constants/flags_hns.h"
+#include "constants/vars_hns.h"
+#include "constants/trainers.h"
 
 #define RADIO_FRAME_BASE_TILE 150
 #define RADIO_FRAME_PALETTE 4
@@ -50,6 +55,7 @@ enum RadioStation
 {
     RADIO_STATION_NONE,
     RADIO_STATION_POKEMON_TALK,
+    RADIO_STATION_POKEDEX_SHOW,
     RADIO_STATION_POKEMON_MUSIC,
     RADIO_STATION_LUCKY_CHANNEL,
     RADIO_STATION_BUENAS_PASSWORD,
@@ -156,6 +162,7 @@ static const u16 sRadioStationMusic[NUM_RADIO_STATIONS] =
 {
     [RADIO_STATION_NONE]             = 0,
     [RADIO_STATION_POKEMON_TALK]     = MUS_HG_RADIO_OAK,
+    [RADIO_STATION_POKEDEX_SHOW]     = MUS_HG_RADIO_OAK,
     [RADIO_STATION_POKEMON_MUSIC]    = MUS_HG_RADIO_MARCH,
     [RADIO_STATION_LUCKY_CHANNEL]    = MUS_HG_RADIO_JINGLE,
     [RADIO_STATION_BUENAS_PASSWORD]  = MUS_HG_RADIO_BUENA,
@@ -509,6 +516,141 @@ static void GenerateOPTSegment(struct Pokenav_Radio *radio)
     radio->scrollTimer = RADIO_SCROLL_DELAY;
 }
 
+#define RADIO_LINE_PIXEL_WIDTH (28 * 8 - 4)
+
+static bool8 IsRadioBreakChar(u8 c)
+{
+    return c == CHAR_SPACE || c == CHAR_NEWLINE
+        || c == CHAR_PROMPT_SCROLL || c == CHAR_PROMPT_CLEAR;
+}
+
+static const u8 *SkipRadioBreakChars(const u8 *text)
+{
+    while (*text != EOS && IsRadioBreakChar(*text))
+        text++;
+    return text;
+}
+
+// Find the end of the current word (run of non-break, non-EOS chars)
+static const u8 *FindWordEnd(const u8 *text)
+{
+    while (*text != EOS && !IsRadioBreakChar(*text))
+        text++;
+    return text;
+}
+
+static u32 WrapDexTextIntoLines(struct Pokenav_Radio *radio, const u8 *text, u32 *n, u32 *buf)
+{
+    u32 linesAdded = 0;
+
+    text = SkipRadioBreakChars(text);
+
+    while (*text != EOS && *buf < NUM_RADIO_LINE_BUFS && *n < MAX_RADIO_LINES)
+    {
+        u8 *dst = radio->lineBuffers[*buf];
+        u32 pos = 0;
+        dst[0] = EOS;
+
+        while (*text != EOS)
+        {
+            const u8 *wordStart = text;
+            const u8 *wordEnd = FindWordEnd(wordStart);
+            u32 wordLen = wordEnd - wordStart;
+            u32 needSpace = (pos > 0) ? 1 : 0;
+
+            if (pos + needSpace + wordLen >= RADIO_LINE_BUF_SIZE)
+                break;
+
+            // Trial: append space + word, check pixel width
+            if (needSpace)
+                dst[pos++] = CHAR_SPACE;
+            memcpy(&dst[pos], wordStart, wordLen);
+            pos += wordLen;
+            dst[pos] = EOS;
+
+            if (GetStringWidth(FONT_NORMAL, dst, -1) > RADIO_LINE_PIXEL_WIDTH)
+            {
+                // Undo: this word doesn't fit
+                pos -= wordLen + needSpace;
+                dst[pos] = EOS;
+                break;
+            }
+
+            text = SkipRadioBreakChars(wordEnd);
+        }
+
+        if (pos == 0)
+            break;
+
+        dst[pos] = EOS;
+        radio->lines[(*n)++] = radio->lineBuffers[(*buf)++];
+        linesAdded++;
+    }
+    return linesAdded;
+}
+
+static void GeneratePokemonMusicContent(struct Pokenav_Radio *radio, u32 *n, u32 *buf)
+{
+    u32 dayOfWeek = gLocalTime.days % 7;
+    bool32 isEvenDay = (dayOfWeek % 2) == 0;
+    u8 *dst;
+
+    if (isEvenDay)
+    {
+        radio->lines[(*n)++] = sRadioText_BenIntro;
+        radio->lines[(*n)++] = sRadioText_BenIntro2;
+    }
+    else
+    {
+        radio->lines[(*n)++] = sRadioText_FernIntro;
+        radio->lines[(*n)++] = sRadioText_FernIntro2;
+    }
+
+    dst = radio->lineBuffers[*buf];
+    StringCopy(dst, sRadioText_BenFern_TodayIs);
+    StringAppend(dst, sDayOfWeekNames[dayOfWeek]);
+    {
+        u8 *end = dst + StringLength(dst);
+        *end++ = CHAR_COMMA;
+        *end = EOS;
+    }
+    radio->lines[(*n)++] = radio->lineBuffers[(*buf)++];
+
+    radio->lines[(*n)++] = isEvenDay ? sRadioText_BenFern_JamTo : sRadioText_BenFern_ChillTo;
+    radio->lines[(*n)++] = isEvenDay ? sRadioText_BenFern_March : sRadioText_BenFern_Lullaby;
+}
+
+static u32 GetOrGenerateLuckyNumber(void)
+{
+    if (!FlagGet(FLAG_DAILY_LUCKY_NUMBER_SET))
+    {
+        u16 lo = Random();
+        u16 hi = Random() % 2;
+        u32 num = ((u32)hi << 16) | lo;
+        num %= 100000;
+        VarSet(VAR_RADIO_LUCKY_ID, num & 0xFFFF);
+        VarSet(VAR_RADIO_LUCKY_ID_HI, num >> 16);
+        FlagSet(FLAG_DAILY_LUCKY_NUMBER_SET);
+    }
+    return ((u32)VarGet(VAR_RADIO_LUCKY_ID_HI) << 16) | VarGet(VAR_RADIO_LUCKY_ID);
+}
+
+static void GetOrGenerateBuenaPassword(u32 *outCategory, u32 *outWord)
+{
+    u16 stored;
+    if (!FlagGet(FLAG_DAILY_BUENAS_PASSWORD))
+    {
+        u32 cat, word;
+        do { cat = Random() & 0xF; } while (cat >= NUM_BUENA_CATEGORIES);
+        do { word = Random() & 0x3; } while (word >= 3);
+        VarSet(VAR_RADIO_BUENAS_PASSWORD, (cat << 4) | word);
+        FlagSet(FLAG_DAILY_BUENAS_PASSWORD);
+    }
+    stored = VarGet(VAR_RADIO_BUENAS_PASSWORD);
+    *outCategory = (stored >> 4) & 0xF;
+    *outWord = stored & 0xF;
+}
+
 static void GenerateStationContent(struct Pokenav_Radio *radio, u8 station)
 {
     u32 n = 0;
@@ -523,41 +665,69 @@ static void GenerateStationContent(struct Pokenav_Radio *radio, u8 station)
         GenerateOPTSegment(radio);
         return;
 
-    case RADIO_STATION_POKEMON_MUSIC:
+    case RADIO_STATION_POKEDEX_SHOW:
     {
-        u32 dayOfWeek = gLocalTime.days % 7;
-        bool32 isEvenDay = (dayOfWeek % 2) == 0;
+        enum NationalDexOrder natDex;
+        u16 species;
+        u32 caughtCount = 0;
+        u32 pick, seen;
 
-        if (isEvenDay)
+        for (natDex = 1; natDex <= NATIONAL_DEX_COUNT; natDex++)
         {
-            radio->lines[n++] = sRadioText_BenIntro;
-            radio->lines[n++] = sRadioText_BenIntro2;
-        }
-        else
-        {
-            radio->lines[n++] = sRadioText_FernIntro;
-            radio->lines[n++] = sRadioText_FernIntro2;
+            if (GetSetPokedexFlag(natDex, FLAG_GET_CAUGHT))
+                caughtCount++;
         }
 
-        // "Today's SATURDAY,"
-        dst = radio->lineBuffers[buf];
-        StringCopy(dst, sRadioText_BenFern_TodayIs);
-        StringAppend(dst, sDayOfWeekNames[dayOfWeek]);
+        if (caughtCount > 0)
         {
-            u8 *end = dst + StringLength(dst);
-            *end++ = CHAR_COMMA;
-            *end = EOS;
-        }
-        radio->lines[n++] = radio->lineBuffers[buf++];
+            pick = Random() % caughtCount;
+            seen = 0;
+            for (natDex = 1; natDex <= NATIONAL_DEX_COUNT; natDex++)
+            {
+                if (GetSetPokedexFlag(natDex, FLAG_GET_CAUGHT))
+                {
+                    if (seen == pick)
+                        break;
+                    seen++;
+                }
+            }
 
-        radio->lines[n++] = isEvenDay ? sRadioText_BenFern_JamTo : sRadioText_BenFern_ChillTo;
-        radio->lines[n++] = isEvenDay ? sRadioText_BenFern_March : sRadioText_BenFern_Lullaby;
+            species = NationalPokedexNumToSpecies(natDex);
+            if (species != SPECIES_NONE)
+            {
+                const u8 *speciesName = GetSpeciesName(species);
+                const u8 *dexText = GetSpeciesPokedexDescription(species);
+
+                radio->lines[n++] = sRadioText_PokedexShow_Intro;
+
+                dst = radio->lineBuffers[buf];
+                StringCopy(dst, sRadioText_PokedexShow_TodaysPrefix);
+                StringAppend(dst, speciesName);
+                {
+                    u8 *end = dst + StringLength(dst);
+                    *end++ = CHAR_EXCL_MARK;
+                    *end = EOS;
+                }
+                radio->lines[n++] = radio->lineBuffers[buf++];
+
+                if (dexText != NULL)
+                    WrapDexTextIntoLines(radio, dexText, &n, &buf);
+            }
+        }
         break;
     }
 
+    case RADIO_STATION_POKEMON_MUSIC:
+        GeneratePokemonMusicContent(radio, &n, &buf);
+        break;
+
+    case RADIO_STATION_LETS_ALL_SING:
+        GeneratePokemonMusicContent(radio, &n, &buf);
+        break;
+
     case RADIO_STATION_LUCKY_CHANNEL:
     {
-        u32 luckyNum = Random() % 100000;
+        u32 luckyNum = GetOrGenerateLuckyNumber();
 
         radio->lines[n++] = sRadioText_LC1;
         radio->lines[n++] = sRadioText_LC2;
@@ -565,7 +735,6 @@ static void GenerateStationContent(struct Pokenav_Radio *radio, u8 station)
         radio->lines[n++] = sRadioText_LC4;
         radio->lines[n++] = sRadioText_LC5;
 
-        // "{number}!"
         dst = radio->lineBuffers[buf];
         ConvertIntToDecimalStringN(dst, luckyNum, STR_CONV_MODE_LEADING_ZEROS, 5);
         {
@@ -583,14 +752,13 @@ static void GenerateStationContent(struct Pokenav_Radio *radio, u8 station)
 
     case RADIO_STATION_BUENAS_PASSWORD:
     {
-        u32 category = Random() % NUM_BUENA_CATEGORIES;
-        u32 word = Random() % 3;
+        u32 category, word;
+        GetOrGenerateBuenaPassword(&category, &word);
 
         radio->lines[n++] = sRadioText_Buena1;
         radio->lines[n++] = sRadioText_Buena2;
         radio->lines[n++] = sRadioText_Buena3;
 
-        // "{password}!"
         dst = radio->lineBuffers[buf];
         GetBuenaPasswordString(gStringVar1, category, word);
         StringExpandPlaceholders(dst, sRadioText_Buena4);
@@ -603,11 +771,36 @@ static void GenerateStationContent(struct Pokenav_Radio *radio, u8 station)
 
     case RADIO_STATION_PLACES_AND_PEOPLE:
     {
-        u32 adjIdx = Random() % ARRAY_COUNT(sRadioText_PnP_PeopleAdj);
+        bool32 doPeople = (Random() % 2) == 0;
 
         radio->lines[n++] = sRadioText_PnP_Intro;
         radio->lines[n++] = sRadioText_PnP_Intro2;
-        radio->lines[n++] = sRadioText_PnP_PeopleAdj[adjIdx];
+
+        if (doPeople)
+        {
+            u16 trainerId;
+            do {
+                trainerId = (Random() % (TRAINERS_COUNT - 1)) + 1;
+            } while (trainerId == 0);
+
+            dst = radio->lineBuffers[buf];
+            StringCopy(dst, GetTrainerClassNameFromId(trainerId));
+            StringAppend(dst, sRadioText_PnP_Space);
+            StringAppend(dst, GetTrainerNameFromId(trainerId));
+            radio->lines[n++] = radio->lineBuffers[buf++];
+        }
+        else
+        {
+            u16 mapsec = KANTO_MAPSEC_START + (Random() % KANTO_MAPSEC_COUNT);
+            u8 mapNameBuf[24];
+            GetMapName(mapNameBuf, mapsec, 0);
+
+            dst = radio->lineBuffers[buf];
+            StringCopy(dst, mapNameBuf);
+            radio->lines[n++] = radio->lineBuffers[buf++];
+        }
+
+        radio->lines[n++] = sRadioText_PnP_PeopleAdj[Random() % ARRAY_COUNT(sRadioText_PnP_PeopleAdj)];
         break;
     }
 
@@ -673,10 +866,25 @@ void FreeRadioSubstruct1(void)
     FreePokenavSubstruct(POKENAV_SUBSTRUCT_RADIO);
 }
 
+static bool8 IsPlayerInJohto(void)
+{
+    u16 mapsec = gMapHeader.regionMapSectionId;
+    return (mapsec >= JOHTO_MAPSEC_START && mapsec <= JOHTO_MAPSEC_END);
+}
+
 static bool8 IsStationAvailable(u8 station)
 {
     switch (station)
     {
+    case RADIO_STATION_POKEMON_TALK:
+    case RADIO_STATION_POKEDEX_SHOW:
+    case RADIO_STATION_POKEMON_MUSIC:
+    case RADIO_STATION_LUCKY_CHANNEL:
+        return IsPlayerInJohto();
+
+    case RADIO_STATION_BUENAS_PASSWORD:
+        return IsPlayerInJohto() && GetTimeOfDay() == TIME_NIGHT;
+
     case RADIO_STATION_UNOWN:
         return gMapHeader.regionMapSectionId == MAPSEC_RUINS_OF_ALPH;
 
@@ -686,8 +894,12 @@ static bool8 IsStationAvailable(u8 station)
              || gMapHeader.regionMapSectionId == MAPSEC_ROUTE_43
              || gMapHeader.regionMapSectionId == MAPSEC_LAKE_OF_RAGE);
 
+    case RADIO_STATION_PLACES_AND_PEOPLE:
+    case RADIO_STATION_LETS_ALL_SING:
+        return !IsPlayerInJohto() && FlagGet(FLAG_KANTO_RADIO_GOT);
+
     case RADIO_STATION_POKE_FLUTE:
-        return FlagGet(FLAG_KANTO_RADIO_GOT);
+        return !IsPlayerInJohto() && FlagGet(FLAG_KANTO_RADIO_GOT);
 
     default:
         return TRUE;
@@ -702,6 +914,14 @@ static u8 FindStation(s32 tuningPos)
         if (sRadioChannels[i].tuningPos == tuningPos)
         {
             u8 station = sRadioChannels[i].station;
+
+            // OPT frequency is shared: morning = Pokedex Show, else = OPT
+            if (station == RADIO_STATION_POKEMON_TALK)
+            {
+                if (GetTimeOfDay() == TIME_MORNING)
+                    station = RADIO_STATION_POKEDEX_SHOW;
+            }
+
             if (!IsStationAvailable(station))
                 return RADIO_STATION_NONE;
 
@@ -710,7 +930,9 @@ static u8 FindStation(s32 tuningPos)
             if (!FlagGet(FLAG_HIDE_GOLDENROD_ROCKETS)
                 && station != RADIO_STATION_UNOWN
                 && station != RADIO_STATION_POKE_FLUTE
-                && station != RADIO_STATION_EVOLUTION)
+                && station != RADIO_STATION_EVOLUTION
+                && station != RADIO_STATION_PLACES_AND_PEOPLE
+                && station != RADIO_STATION_LETS_ALL_SING)
             {
                 return RADIO_STATION_ROCKET;
             }
@@ -728,6 +950,8 @@ static const u8 *GetStationName(u8 station)
         return sRadioText_NoStation;
     if (station == RADIO_STATION_ROCKET)
         return sRadioStationName_Rocket;
+    if (station == RADIO_STATION_POKEDEX_SHOW)
+        return sRadioStationName_PokedexShow;
     for (i = 0; i < ARRAY_COUNT(sRadioChannels); i++)
     {
         if (sRadioChannels[i].station == station)

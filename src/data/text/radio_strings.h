@@ -19,6 +19,13 @@ static const u8 sRadioStationName_LetsAllSing[]     = _("Let's All Sing!");
 static const u8 sRadioStationName_PokeFlute[]       = _("POKé FLUTE");
 
 // ==========================================================
+// POKéDEX Show
+// ==========================================================
+
+static const u8 sRadioText_PokedexShow_Intro[] = _("OAK's POKéDEX SHOW!");
+static const u8 sRadioText_PokedexShow_TodaysPrefix[] = _("OAK: Today's POKéMON is ");
+
+// ==========================================================
 // Oak's POKéMON Talk
 // ==========================================================
 
@@ -143,6 +150,7 @@ static const u8 sRadioText_LC_Drag[] = _("…Repeating gets old…");
 
 static const u8 sRadioText_PnP_Intro[] = _("PLACES AND PEOPLE! Brought");
 static const u8 sRadioText_PnP_Intro2[] = _("to you by me, DJ LILY!");
+static const u8 sRadioText_PnP_Space[] = _(" ");
 
 // People adjectives
 static const u8 sRadioText_PnP_Cute[]       = _("is cute.");
