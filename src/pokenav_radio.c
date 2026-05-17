@@ -946,7 +946,14 @@ void FreeRadioSubstruct1(void)
 {
     struct Pokenav_Radio *radio = GetSubstructPtr(POKENAV_SUBSTRUCT_RADIO);
     if (radio->currentStation == RADIO_STATION_NONE)
+    {
+        VarSet(VAR_TEMP_RADIO_MUSIC, 0);
         PlayNewMapMusic(GetCurrLocationDefaultMusic());
+    }
+    else
+    {
+        VarSet(VAR_TEMP_RADIO_MUSIC, GetCurrentMapMusic());
+    }
     FreePokenavSubstruct(POKENAV_SUBSTRUCT_RADIO);
 }
 

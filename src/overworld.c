@@ -81,6 +81,7 @@
 #include "constants/songs.h"
 #include "constants/trainer_hill.h"
 #include "constants/weather.h"
+#include "constants/vars_hns.h"
 #include "nuzlocke.h"
 #include "pokemon_storage_system.h"
 
@@ -1302,7 +1303,11 @@ void Overworld_PlaySpecialMapMusic(void)
     if (gDisableMapMusicChangeOnMapLoad == MUSIC_DISABLE_KEEP)
         return;
 
-    if (music != MUS_ABNORMAL_WEATHER && music != MUS_NONE)
+    if (IS_HNS && VarGet(VAR_TEMP_RADIO_MUSIC) != 0)
+    {
+        music = VarGet(VAR_TEMP_RADIO_MUSIC);
+    }
+    else if (music != MUS_ABNORMAL_WEATHER && music != MUS_NONE)
     {
         if (gSaveBlock1Ptr->savedMusic)
             music = gSaveBlock1Ptr->savedMusic;
