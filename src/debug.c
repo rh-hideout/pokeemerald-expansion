@@ -1559,7 +1559,6 @@ static void DebugAction_Util_Fly(u8 taskId)
 
 #define LAST_MAP_GROUP (MAP_GROUPS_COUNT - 1)
 
-
 static void DebugAction_Util_DisplayMapGroup(u8 taskId)
 {
     ConvertIntToDecimalStringN(gStringVar1, gTasks[taskId].tInput, STR_CONV_MODE_LEADING_ZEROS, 3);

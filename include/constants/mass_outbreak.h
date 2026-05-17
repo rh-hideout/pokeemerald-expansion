@@ -25,3 +25,4 @@ enum MassOutbreakData
 };
 
 #endif // GUARD_MASS_OUTBREAK_H
+

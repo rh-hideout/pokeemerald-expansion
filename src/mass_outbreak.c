@@ -191,7 +191,6 @@ void ScrCmd_setdynamicoutbreak(struct ScriptContext *ctx)
     u32 map = ReadMapFromContext(ctx);
     bool32 noReplacement = ScriptReadByte(ctx);
 
-
     assertf(!IsMassOutbreakActive() || noReplacement == FALSE, "Trying to start a new outbreak while one is already in progress")
     {
         return;
@@ -334,3 +333,4 @@ void ScrCmd_getmassoutbreakdata(struct ScriptContext *ctx)
     }
     VarSet(varId, value);
 }
+

@@ -36,4 +36,5 @@ The following commands are available to the user:
 When starting or modifying an outbreak, the function is by default called with these values
 `species=SPECIES_NONE, level=0, move1=MOVES_COUNT, move2=MOVES_COUNT, move3=MOVES_COUNT, move4=MOVES_COUNT, probability=0xFF, daysLeft=0x3FFF, map=MAP_UNDEFINED`
 
-These are default values that tells the game nothing needs to change. So you can set one, multiple or all values at the same time when calling the coomand.
+These are default values that tells the game nothing needs to change. So you can set one, multiple or all values at the same time when calling the command.
+

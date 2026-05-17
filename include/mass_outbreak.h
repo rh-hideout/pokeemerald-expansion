@@ -28,3 +28,4 @@ void ZeroMassOutbreak(void);
 struct MassOutbreak GetStaticOutbreak(enum MassOutbreakIndex outbreakIdx);
 
 #endif // GUARD_MASS_OUTBREAK_H
+
