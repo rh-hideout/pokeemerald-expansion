@@ -172,7 +172,7 @@ SINGLE_BATTLE_TEST("Encore fails if the target's last move was Dynamax Cannon")
     }
 }
 
-DOUBLE_BATTLE_TEST("Encore works if the target's last move failed")
+DOUBLE_BATTLE_TEST("Encore works even if the target's last move failed")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
