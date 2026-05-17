@@ -674,6 +674,9 @@ $(PKNAVGFXDIR)/device_outline.4bpp: %.4bpp: %.png
 $(PKNAVGFXDIR)/match_call/ui.4bpp: %.4bpp: %.png
 	$(GFX) $< $@ -num_tiles 13 -Wnum_tiles
 
+$(PKNAVGFXDIR)/hns/radio/ui_tiles.4bpp: %.4bpp: %.png
+	$(GFX) $< $@ -num_tiles 64 -Wnum_tiles
+
 $(POKEDEXGFXDIR)/region_map.8bpp: %.8bpp: %.png
 	$(GFX) $< $@ -num_tiles 232 -Wnum_tiles
 
