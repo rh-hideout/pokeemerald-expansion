@@ -27,6 +27,8 @@
 #define RADIO_TUNING_STEP 1
 #define RADIO_DIAL_BASE_X 144
 #define RADIO_DIAL_Y 28
+#define RADIO_LINE_HEIGHT 16
+#define RADIO_SCROLL_DELAY 90
 
 enum RadioStation
 {
@@ -56,6 +58,11 @@ struct Pokenav_Radio
     s32 tuningPos;
     u8 tuneDelay;
     u8 currentStation;
+    u8 scrollTimer;
+    u8 currentLine;
+    u8 numLines;
+    bool8 needsScroll;
+    const u8 *const *stationLines;
 };
 
 struct Pokenav_RadioGfx
@@ -74,6 +81,7 @@ enum
     POKENAV_RADIO_FUNC_NONE,
     POKENAV_RADIO_FUNC_TUNE,
     POKENAV_RADIO_FUNC_EXIT,
+    POKENAV_RADIO_FUNC_SCROLL,
 };
 
 static u32 HandleRadioInput(void);
@@ -81,6 +89,7 @@ static u32 GetExitRadioMenuId(void);
 static u32 LoopedTask_OpenRadio(s32 state);
 static u32 LoopedTask_TuneRadio(s32 state);
 static u32 LoopedTask_ExitRadio(s32 state);
+static u32 LoopedTask_ScrollRadio(s32 state);
 static bool32 GetCurrentRadioLoopedTaskActive(void);
 static u8 FindStation(s32 tuningPos);
 static void PrintStationName(struct Pokenav_RadioGfx *gfx, u8 station);
@@ -105,6 +114,38 @@ static const struct RadioChannelEntry sRadioChannels[] =
     { .tuningPos = 57, .station = RADIO_STATION_LETS_ALL_SING,    .name = sRadioStationName_LetsAllSing },
     { .tuningPos = 61, .station = RADIO_STATION_POKE_FLUTE,       .name = sRadioStationName_PokeFlute },
     { .tuningPos = 63, .station = RADIO_STATION_EVOLUTION,        .name = sRadioStationName_Unown },
+};
+
+static const u8 *const sRadioLines_PokemonTalk[] =
+{
+    sRadioText_OPT_Intro1, sRadioText_OPT_Intro2, sRadioText_OPT_Intro3,
+};
+
+static const u8 *const sRadioLines_PokemonMusic[] =
+{
+    sRadioText_BenIntro1, sRadioText_BenIntro2, sRadioText_BenIntro3,
+};
+
+static const u8 *const sRadioLines_LuckyChannel[] =
+{
+    sRadioText_LC1, sRadioText_LC2, sRadioText_LC3, sRadioText_LC4,
+    sRadioText_LC5, sRadioText_LC6, sRadioText_LC7, sRadioText_LC8,
+    sRadioText_LC9, sRadioText_LC10, sRadioText_LC11,
+    sRadioText_LC_Drag1, sRadioText_LC_Drag2,
+};
+
+static const u8 *const sRadioLines_Buena[] =
+{
+    sRadioText_Buena1, sRadioText_Buena2, sRadioText_Buena3,
+    sRadioText_Buena4, sRadioText_Buena5, sRadioText_Buena6,
+    sRadioText_Buena7,
+    sRadioText_BuenaMidnight1, sRadioText_BuenaMidnight2,
+    sRadioText_BuenaMidnight3,
+};
+
+static const u8 *const sRadioLines_PlacesAndPeople[] =
+{
+    sRadioText_PnP1, sRadioText_PnP2, sRadioText_PnP3,
 };
 
 static const u8 sRadioText_NoStation[] = _("- - - -");
@@ -202,6 +243,7 @@ static const LoopedTask sRadioLoopTaskFuncs[] =
     [POKENAV_RADIO_FUNC_NONE] = NULL,
     [POKENAV_RADIO_FUNC_TUNE] = LoopedTask_TuneRadio,
     [POKENAV_RADIO_FUNC_EXIT] = LoopedTask_ExitRadio,
+    [POKENAV_RADIO_FUNC_SCROLL] = LoopedTask_ScrollRadio,
 };
 
 bool32 PokenavCallback_Init_Radio(void)
@@ -213,6 +255,11 @@ bool32 PokenavCallback_Init_Radio(void)
     radio->callback = HandleRadioInput;
     radio->tuningPos = RADIO_TUNING_MIN;
     radio->currentStation = RADIO_STATION_NONE;
+    radio->stationLines = NULL;
+    radio->numLines = 0;
+    radio->currentLine = 0;
+    radio->scrollTimer = 0;
+    radio->needsScroll = FALSE;
     return TRUE;
 }
 
@@ -292,6 +339,20 @@ static u32 HandleRadioInput(void)
         PlaySE(SE_SELECT);
         radio->callback = GetExitRadioMenuId;
         return POKENAV_RADIO_FUNC_EXIT;
+    }
+
+    if (radio->stationLines != NULL && radio->numLines > 1)
+    {
+        if (radio->scrollTimer > 0)
+            radio->scrollTimer--;
+        else
+        {
+            radio->scrollTimer = RADIO_SCROLL_DELAY;
+            radio->currentLine++;
+            if (radio->currentLine >= radio->numLines)
+                radio->currentLine = 0;
+            return POKENAV_RADIO_FUNC_SCROLL;
+        }
     }
 
     if (JOY_HELD(DPAD_RIGHT) || JOY_HELD(DPAD_LEFT))
@@ -424,44 +485,74 @@ static u32 LoopedTask_OpenRadio(s32 state)
     return LT_FINISH;
 }
 
-static const u8 *GetStationIntroText(u8 station)
+static void SetStationLines(struct Pokenav_Radio *radio, u8 station)
 {
     switch (station)
     {
     case RADIO_STATION_POKEMON_TALK:
-        return sRadioText_OPT_Intro1;
+        radio->stationLines = sRadioLines_PokemonTalk;
+        radio->numLines = ARRAY_COUNT(sRadioLines_PokemonTalk);
+        break;
     case RADIO_STATION_POKEMON_MUSIC:
-        return sRadioText_BenIntro1;
+        radio->stationLines = sRadioLines_PokemonMusic;
+        radio->numLines = ARRAY_COUNT(sRadioLines_PokemonMusic);
+        break;
     case RADIO_STATION_LUCKY_CHANNEL:
-        return sRadioText_LC1;
+        radio->stationLines = sRadioLines_LuckyChannel;
+        radio->numLines = ARRAY_COUNT(sRadioLines_LuckyChannel);
+        break;
     case RADIO_STATION_BUENAS_PASSWORD:
-        return sRadioText_Buena1;
+        radio->stationLines = sRadioLines_Buena;
+        radio->numLines = ARRAY_COUNT(sRadioLines_Buena);
+        break;
     case RADIO_STATION_PLACES_AND_PEOPLE:
-        return sRadioText_PnP1;
-    case RADIO_STATION_UNOWN:
-    case RADIO_STATION_EVOLUTION:
-    case RADIO_STATION_LETS_ALL_SING:
-    case RADIO_STATION_POKE_FLUTE:
+        radio->stationLines = sRadioLines_PlacesAndPeople;
+        radio->numLines = ARRAY_COUNT(sRadioLines_PlacesAndPeople);
+        break;
     default:
-        return NULL;
+        radio->stationLines = NULL;
+        radio->numLines = 0;
+        break;
     }
+    radio->currentLine = 0;
+    radio->scrollTimer = RADIO_SCROLL_DELAY;
+    radio->needsScroll = FALSE;
 }
 
 static u32 LoopedTask_TuneRadio(s32 state)
 {
     struct Pokenav_RadioGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_RADIO_GFX);
     struct Pokenav_Radio *radio = GetSubstructPtr(POKENAV_SUBSTRUCT_RADIO);
-    const u8 *introText;
 
     gfx->dialSprite->x = RADIO_DIAL_BASE_X + radio->tuningPos;
     PrintStationName(gfx, radio->currentStation);
+    SetStationLines(radio, radio->currentStation);
 
-    introText = GetStationIntroText(radio->currentStation);
-    if (introText != NULL)
-        PrintRadioText(gfx, introText);
+    if (radio->stationLines != NULL)
+        PrintRadioText(gfx, radio->stationLines[0]);
     else
         ClearRadioText(gfx);
 
+    return LT_FINISH;
+}
+
+static u32 LoopedTask_ScrollRadio(s32 state)
+{
+    struct Pokenav_RadioGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_RADIO_GFX);
+    struct Pokenav_Radio *radio = GetSubstructPtr(POKENAV_SUBSTRUCT_RADIO);
+
+    if (radio->needsScroll)
+    {
+        ScrollWindow(gfx->radioTextWindowId, 0, RADIO_LINE_HEIGHT, PIXEL_FILL(1));
+    }
+    else
+    {
+        radio->needsScroll = TRUE;
+    }
+    AddTextPrinterParameterized3(gfx->radioTextWindowId, FONT_NORMAL,
+        2, RADIO_LINE_HEIGHT + 1, sRadioTextColors, TEXT_SKIP_DRAW,
+        radio->stationLines[radio->currentLine]);
+    CopyWindowToVram(gfx->radioTextWindowId, COPYWIN_GFX);
     return LT_FINISH;
 }
 
