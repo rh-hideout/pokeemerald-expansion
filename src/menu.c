@@ -4,6 +4,7 @@
 #include "decompress.h"
 #include "dma3.h"
 #include "event_data.h"
+#include "field_message_box.h"
 #include "field_name_box.h"
 #include "field_weather.h"
 #include "gpu_regs.h"
@@ -193,7 +194,9 @@ u16 AddTextPrinterParameterized2(u8 windowId, u8 fontId, const u8 *str, u8 speed
 void AddTextPrinterForMessage(bool8 allowSkippingDelayWithButtonPress)
 {
     gTextFlags.canABSpeedUpPrint = allowSkippingDelayWithButtonPress;
-    AddTextPrinterParameterized2(0, FONT_NORMAL, gStringVar4, GetPlayerTextSpeedDelay(), NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+    ApplyFieldMessageTextPrinterProfile();
+    AddTextPrinterParameterized2(0, FONT_NORMAL, gStringVar4, GetFieldMessageTextSpeedDelay(), NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
+    ClearTextPrinterSpeedProfile();
 }
 
 void AddTextPrinterWithCustomSpeedForMessage(bool8 allowSkippingDelayWithButtonPress, u8 speed)
