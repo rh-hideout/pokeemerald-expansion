@@ -1424,7 +1424,7 @@ void TryPutSmartShopperOnAir(void)
      && RandomChance(RNG_NONE, 1, 3))
     {
         sCurTVShowSlot = FindFirstEmptyRecordMixTVShowSlot(gSaveBlock1Ptr->tvShows);
-        if (sCurTVShowSlot != -1 && IsRecordMixShowAlreadySpawned(TVSHOW_SMART_SHOPPER, FALSE) != TRUE)
+        if (sCurTVShowSlot != -1 && !IsRecordMixShowAlreadySpawned(TVSHOW_SMART_SHOPPER, FALSE))
         {
             SortPurchasesByQuantity();
             if (gMartPurchaseHistory[0].quantity >= 20)
@@ -1681,7 +1681,7 @@ static void TryPutWorldOfMastersOnAir(void)
 
     show = &gSaveBlock1Ptr->tvShows[LAST_TVSHOW_IDX];
     sCurTVShowSlot = FindFirstEmptyRecordMixTVShowSlot(gSaveBlock1Ptr->tvShows);
-    if (sCurTVShowSlot != -1 && IsRecordMixShowAlreadySpawned(TVSHOW_WORLD_OF_MASTERS, FALSE) != TRUE)
+    if (sCurTVShowSlot != -1 && !IsRecordMixShowAlreadySpawned(TVSHOW_WORLD_OF_MASTERS, FALSE))
     {
         show2 = &gSaveBlock1Ptr->tvShows[sCurTVShowSlot];
         show2->worldOfMasters.kind = TVSHOW_WORLD_OF_MASTERS;

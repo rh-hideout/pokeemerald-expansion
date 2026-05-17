@@ -479,7 +479,8 @@ typedef union // size = 0x24
         /*0x03*/ u8 unused3;
         /*0x04*/ enum Move moves[MAX_MON_MOVES]; // UNUSED*
         /*0x0C*/ enum Species species;
-        /*0x0E*/ u16 outbreakIndex;
+        /*0x0E*/ enum MassOutbreakIndex outbreakIndex;
+        /*0x0F*/ u8 unused2;
         /*0x10*/ u8 locationMapNum;
         /*0x11*/ u8 locationMapGroup;
         /*0x12*/ u8 unused4;

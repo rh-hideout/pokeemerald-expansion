@@ -738,8 +738,6 @@ static const struct DebugMenuOption sDebugMenu_Actions_Encounters[] =
     { NULL }
 };
 
-
-
 static const struct DebugMenuOption sDebugMenu_Actions_Sound[] =
 {
     { COMPOUND_STRING("SFX…"),   DebugAction_Sound_SE },
@@ -1609,7 +1607,6 @@ static void DebugAction_Util_Warp_Warp(u8 taskId)
     DebugAction_Util_DisplayMapGroup(taskId);
 }
 
-
 static void DebugAction_Util_Warp_SelectMapGroup(u8 taskId)
 {
     if (JOY_NEW(DPAD_ANY))
@@ -2457,9 +2454,6 @@ static void DebugAction_Outbreak_SetSpecies(u8 taskId)
     Debug_Display_SpeciesInfo(species, gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
     Debug_ResetInputDisplayMonIcon(taskId, species);
 }
-
-
-
 static void DebugAction_Outbreak_ApplyLocation(u8 taskId)
 {
     gSaveBlock1Ptr->outbreakLocationMapGroup = gTasks[taskId].tMapGroup;
@@ -2524,7 +2518,6 @@ static void DebugAction_ChooseOutbreakLevel_Select(u8 taskId)
             Debug_RemoveCallbackMenu();
             DebugAction_OpenOutbreakMenu(taskId, sDebugMenu_Actions_MassOutbreak);
         }
-
     }
     if (JOY_NEW(B_BUTTON))
     {
