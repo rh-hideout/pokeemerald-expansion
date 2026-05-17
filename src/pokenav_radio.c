@@ -166,7 +166,7 @@ static const struct WindowTemplate sRadioTextWindowTemplate =
 {
     .bg = 1,
     .tilemapLeft = 1,
-    .tilemapTop = 14,
+    .tilemapTop = 13,
     .width = 28,
     .height = 4,
     .paletteNum = RADIO_TEXT_PALETTE,
@@ -265,7 +265,7 @@ static void PrintStationName(struct Pokenav_RadioGfx *gfx, u8 station)
 
     FillWindowPixelBuffer(gfx->stationNameWindowId, PIXEL_FILL(0));
     AddTextPrinterParameterized3(gfx->stationNameWindowId, FONT_NORMAL,
-        (windowWidth - width) / 2, 5, sStationNameTextColors, TEXT_SKIP_DRAW, name);
+        (windowWidth - width) / 2, 1, sStationNameTextColors, TEXT_SKIP_DRAW, name);
     CopyWindowToVram(gfx->stationNameWindowId, COPYWIN_FULL);
 }
 
