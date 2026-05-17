@@ -2454,6 +2454,7 @@ static void DebugAction_Outbreak_SetSpecies(u8 taskId)
     Debug_Display_SpeciesInfo(species, gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
     Debug_ResetInputDisplayMonIcon(taskId, species);
 }
+
 static void DebugAction_Outbreak_ApplyLocation(u8 taskId)
 {
     gSaveBlock1Ptr->outbreakLocationMapGroup = gTasks[taskId].tMapGroup;
