@@ -156,22 +156,6 @@ TO_DO_BATTLE_TEST("Encore lasts for 3-7 turns (Gen 4)");
 TO_DO_BATTLE_TEST("Encore lasts for 3 turns (Gen 5+)");
 TO_DO_BATTLE_TEST("Encore randomly chooses an opponent target");
 
-SINGLE_BATTLE_TEST("Encore fails if the target's last move was Dynamax Cannon")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_DYNAMAX_CANNON); MOVE(opponent, MOVE_ENCORE); }
-        TURN { MOVE(player, MOVE_EMBER); }
-    } SCENE {
-        MESSAGE("Wobbuffet used Dynamax Cannon!");
-        MESSAGE("The opposing Wobbuffet used Encore!");
-        MESSAGE("But it failed!");
-        MESSAGE("Wobbuffet used Ember!");
-    }
-}
-
 DOUBLE_BATTLE_TEST("Encore works even if the target's last move failed")
 {
     GIVEN {
