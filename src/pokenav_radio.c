@@ -88,6 +88,7 @@ struct Pokenav_Radio
     bool8 needsScroll;
     u8 optSegmentCounter;
     u8 optPhase;
+    u16 currentMusic;
     const u8 *lines[MAX_RADIO_LINES];
     u8 lineBuffers[NUM_RADIO_LINE_BUFS][RADIO_LINE_BUF_SIZE];
 };
@@ -146,6 +147,20 @@ static const struct RadioChannelEntry sRadioChannels[] =
 };
 
 static const u8 sRadioText_NoStation[] = _("- - - -");
+
+static const u16 sRadioStationMusic[NUM_RADIO_STATIONS] =
+{
+    [RADIO_STATION_NONE]             = 0,
+    [RADIO_STATION_POKEMON_TALK]     = MUS_HG_RADIO_OAK,
+    [RADIO_STATION_POKEMON_MUSIC]    = MUS_HG_RADIO_MARCH,
+    [RADIO_STATION_LUCKY_CHANNEL]    = MUS_HG_RADIO_JINGLE,
+    [RADIO_STATION_BUENAS_PASSWORD]  = MUS_HG_RADIO_BUENA,
+    [RADIO_STATION_UNOWN]            = MUS_HG_RADIO_UNOWN,
+    [RADIO_STATION_PLACES_AND_PEOPLE]= MUS_HG_RADIO_OAK,
+    [RADIO_STATION_LETS_ALL_SING]    = MUS_HG_RADIO_LULLABY,
+    [RADIO_STATION_POKE_FLUTE]       = MUS_HG_RADIO_POKE_FLUTE,
+    [RADIO_STATION_EVOLUTION]        = MUS_HG_RADIO_UNOWN,
+};
 
 struct OPTRouteEntry
 {
@@ -460,6 +475,8 @@ static void GenerateOPTSegment(struct Pokenav_Radio *radio)
     }
 
     case OPT_PHASE_INTERLUDE:
+        PlayNewMapMusic(MUS_HG_RADIO_JINGLE);
+        radio->currentMusic = MUS_HG_RADIO_JINGLE;
         radio->lines[n++] = sRadioText_OPT_PokemonChannel;
         radio->optPhase = OPT_PHASE_REPORT;
         radio->needsScroll = FALSE;
@@ -472,6 +489,8 @@ static void GenerateOPTSegment(struct Pokenav_Radio *radio)
     {
         u32 reportIdx = Random() % NUM_OPT_REPORTS;
         u32 i;
+        PlayNewMapMusic(MUS_HG_RADIO_OAK);
+        radio->currentMusic = MUS_HG_RADIO_OAK;
         for (i = 0; i < OPT_REPORT_LINES; i++)
             radio->lines[n++] = sOPT_Reports[reportIdx][i];
         radio->optPhase = OPT_PHASE_POKEMON;
@@ -614,6 +633,7 @@ bool32 PokenavCallback_Init_Radio(void)
     radio->currentLine = 0;
     radio->scrollTimer = 0;
     radio->needsScroll = FALSE;
+    radio->currentMusic = GetCurrLocationDefaultMusic();
     return TRUE;
 }
 
@@ -854,6 +874,31 @@ static u32 LoopedTask_TuneRadio(s32 state)
     gfx->dialSprite->x = RADIO_DIAL_BASE_X + radio->tuningPos;
     PrintStationName(gfx, radio->currentStation);
     GenerateStationContent(radio, radio->currentStation);
+
+    {
+        u16 music;
+        if (radio->currentStation != RADIO_STATION_NONE)
+        {
+            music = sRadioStationMusic[radio->currentStation];
+            if (radio->currentStation == RADIO_STATION_POKEMON_MUSIC
+                || radio->currentStation == RADIO_STATION_LETS_ALL_SING)
+            {
+                music = (gLocalTime.days % 2 == 0) ? MUS_HG_RADIO_MARCH : MUS_HG_RADIO_LULLABY;
+            }
+        }
+        else
+        {
+            music = 0;
+        }
+        if (music != radio->currentMusic)
+        {
+            if (music != 0)
+                PlayNewMapMusic(music);
+            else
+                StopMapMusic();
+            radio->currentMusic = music;
+        }
+    }
 
     if (radio->numLines > 0)
     {
