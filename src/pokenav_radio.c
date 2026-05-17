@@ -12,6 +12,12 @@
 #include "text.h"
 #include "string_util.h"
 #include "text_window.h"
+#include "random.h"
+#include "rtc.h"
+#include "pokemon.h"
+#include "item.h"
+#include "move.h"
+#include "strings.h"
 #include "constants/songs.h"
 
 #define RADIO_FRAME_BASE_TILE 150
@@ -29,6 +35,10 @@
 #define RADIO_DIAL_Y 28
 #define RADIO_LINE_HEIGHT 16
 #define RADIO_SCROLL_DELAY 90
+
+#define MAX_RADIO_LINES 15
+#define RADIO_LINE_BUF_SIZE 32
+#define NUM_RADIO_LINE_BUFS 8
 
 enum RadioStation
 {
@@ -62,7 +72,8 @@ struct Pokenav_Radio
     u8 currentLine;
     u8 numLines;
     bool8 needsScroll;
-    const u8 *const *stationLines;
+    const u8 *lines[MAX_RADIO_LINES];
+    u8 lineBuffers[NUM_RADIO_LINE_BUFS][RADIO_LINE_BUF_SIZE];
 };
 
 struct Pokenav_RadioGfx
@@ -95,6 +106,7 @@ static u8 FindStation(s32 tuningPos);
 static void PrintStationName(struct Pokenav_RadioGfx *gfx, u8 station);
 static void PrintRadioText(struct Pokenav_RadioGfx *gfx, const u8 *text);
 static void ClearRadioText(struct Pokenav_RadioGfx *gfx);
+static void GenerateStationContent(struct Pokenav_Radio *radio, u8 station);
 
 static const u16 sRadioUI_Pal[] = INCBIN_U16("graphics/pokenav/hns/radio/ui.gbapal");
 static const u32 sRadioUI_Gfx[] = INCBIN_U32("graphics/pokenav/hns/radio/ui_tiles.4bpp.smol");
@@ -116,39 +128,70 @@ static const struct RadioChannelEntry sRadioChannels[] =
     { .tuningPos = 63, .station = RADIO_STATION_EVOLUTION,        .name = sRadioStationName_Unown },
 };
 
-static const u8 *const sRadioLines_PokemonTalk[] =
-{
-    sRadioText_OPT_Intro1, sRadioText_OPT_Intro2, sRadioText_OPT_Intro3,
-};
-
-static const u8 *const sRadioLines_PokemonMusic[] =
-{
-    sRadioText_BenIntro1, sRadioText_BenIntro2, sRadioText_BenIntro3,
-};
-
-static const u8 *const sRadioLines_LuckyChannel[] =
-{
-    sRadioText_LC1, sRadioText_LC2, sRadioText_LC3, sRadioText_LC4,
-    sRadioText_LC5, sRadioText_LC6, sRadioText_LC7, sRadioText_LC8,
-    sRadioText_LC9, sRadioText_LC10, sRadioText_LC11,
-    sRadioText_LC_Drag1, sRadioText_LC_Drag2,
-};
-
-static const u8 *const sRadioLines_Buena[] =
-{
-    sRadioText_Buena1, sRadioText_Buena2, sRadioText_Buena3,
-    sRadioText_Buena4, sRadioText_Buena5, sRadioText_Buena6,
-    sRadioText_Buena7,
-    sRadioText_BuenaMidnight1, sRadioText_BuenaMidnight2,
-    sRadioText_BuenaMidnight3,
-};
-
-static const u8 *const sRadioLines_PlacesAndPeople[] =
-{
-    sRadioText_PnP1, sRadioText_PnP2, sRadioText_PnP3,
-};
-
 static const u8 sRadioText_NoStation[] = _("- - - -");
+
+// Day-of-week name table
+static const u8 *const sDayOfWeekNames[] =
+{
+    gText_Sunday, gText_Monday, gText_Tuesday, gText_Wednesday,
+    gText_Thursday, gText_Friday, gText_Saturday,
+};
+
+// Buena's password categories
+enum BuenaPasswordType
+{
+    BUENA_MON,
+    BUENA_ITEM,
+    BUENA_MOVE,
+    BUENA_STRING,
+};
+
+struct BuenaPasswordEntry
+{
+    u8 type;
+    u16 value;
+};
+
+static const struct BuenaPasswordEntry sBuenaPasswords[][3] =
+{
+    // Johto Starters
+    {{ BUENA_MON, SPECIES_CYNDAQUIL }, { BUENA_MON, SPECIES_TOTODILE }, { BUENA_MON, SPECIES_CHIKORITA }},
+    // Beverages
+    {{ BUENA_ITEM, ITEM_FRESH_WATER }, { BUENA_ITEM, ITEM_SODA_POP }, { BUENA_ITEM, ITEM_LEMONADE }},
+    // Healing Items
+    {{ BUENA_ITEM, ITEM_POTION }, { BUENA_ITEM, ITEM_ANTIDOTE }, { BUENA_ITEM, ITEM_PARALYZE_HEAL }},
+    // Balls
+    {{ BUENA_ITEM, ITEM_POKE_BALL }, { BUENA_ITEM, ITEM_GREAT_BALL }, { BUENA_ITEM, ITEM_ULTRA_BALL }},
+    // Pokemon 1
+    {{ BUENA_MON, SPECIES_PIKACHU }, { BUENA_MON, SPECIES_RATTATA }, { BUENA_MON, SPECIES_GEODUDE }},
+    // Pokemon 2
+    {{ BUENA_MON, SPECIES_HOOTHOOT }, { BUENA_MON, SPECIES_SPINARAK }, { BUENA_MON, SPECIES_DROWZEE }},
+    // Johto Towns
+    {{ BUENA_STRING, 0 }, { BUENA_STRING, 1 }, { BUENA_STRING, 2 }},
+    // Types
+    {{ BUENA_STRING, 3 }, { BUENA_STRING, 4 }, { BUENA_STRING, 5 }},
+    // Moves
+    {{ BUENA_MOVE, MOVE_TACKLE }, { BUENA_MOVE, MOVE_GROWL }, { BUENA_MOVE, MOVE_MUD_SLAP }},
+    // X Items
+    {{ BUENA_ITEM, ITEM_X_ATTACK }, { BUENA_ITEM, ITEM_X_DEFENSE }, { BUENA_ITEM, ITEM_X_SPEED }},
+    // Radio Stations
+    {{ BUENA_STRING, 6 }, { BUENA_STRING, 7 }, { BUENA_STRING, 8 }},
+};
+
+#define NUM_BUENA_CATEGORIES ARRAY_COUNT(sBuenaPasswords)
+
+static const u8 *const sBuenaStringPasswords[] =
+{
+    sRadioBuenaPassword_NewBarkTown,
+    sRadioBuenaPassword_CherrygroveCity,
+    sRadioBuenaPassword_AzaleaTown,
+    sRadioBuenaPassword_Flying,
+    sRadioBuenaPassword_Bug,
+    sRadioBuenaPassword_Grass,
+    sRadioBuenaPassword_PkmnTalk,
+    sRadioBuenaPassword_PkmnMusic,
+    sRadioBuenaPassword_LuckyChannel,
+};
 
 static const struct CompressedSpriteSheet sRadioDialSpriteSheet =
 {
@@ -188,7 +231,7 @@ static const struct SpriteTemplate sRadioDialSpriteTemplate =
     .callback = SpriteCallbackDummy,
 };
 
-// Station name window: inside the text box area (cols 7-25, row 9)
+// Station name window: inside the text box area
 static const struct WindowTemplate sStationNameWindowTemplate =
 {
     .bg = 1,
@@ -246,6 +289,172 @@ static const LoopedTask sRadioLoopTaskFuncs[] =
     [POKENAV_RADIO_FUNC_SCROLL] = LoopedTask_ScrollRadio,
 };
 
+// ========================================
+// Station content generation
+// ========================================
+
+static void GetBuenaPasswordString(u8 *dest, u32 category, u32 word)
+{
+    const struct BuenaPasswordEntry *entry = &sBuenaPasswords[category][word];
+    switch (entry->type)
+    {
+    case BUENA_MON:
+        StringCopy(dest, GetSpeciesName(entry->value));
+        break;
+    case BUENA_ITEM:
+        CopyItemName(entry->value, dest);
+        break;
+    case BUENA_MOVE:
+        StringCopy(dest, GetMoveName(entry->value));
+        break;
+    case BUENA_STRING:
+        StringCopy(dest, sBuenaStringPasswords[entry->value]);
+        break;
+    }
+}
+
+static void GenerateStationContent(struct Pokenav_Radio *radio, u8 station)
+{
+    u32 n = 0;
+    u32 buf = 0;
+    u8 *dst;
+
+    switch (station)
+    {
+    case RADIO_STATION_POKEMON_TALK:
+    {
+        u32 i;
+        u16 species = SPECIES_CHIKORITA + (Random() % 3);
+        const u8 *speciesName = GetSpeciesName(species);
+
+        radio->lines[n++] = sRadioText_OPT_Intro;
+        radio->lines[n++] = sRadioText_OPT_WithMeMary;
+
+        // "OAK: Bayleef"
+        dst = radio->lineBuffers[buf];
+        StringCopy(dst, sRadioText_OPT_OakPrefix);
+        StringAppend(dst, speciesName);
+        radio->lines[n++] = radio->lineBuffers[buf++];
+
+        radio->lines[n++] = sRadioText_OPT_SeenAround;
+
+        // "MARY: Bayleef's"
+        dst = radio->lineBuffers[buf];
+        StringCopy(dst, sRadioText_OPT_MaryPrefix);
+        StringAppend(dst, speciesName);
+        StringAppend(dst, sRadioText_OPT_MaryIs);
+        radio->lines[n++] = radio->lineBuffers[buf++];
+
+        for (i = 0; i < 5 && n + 1 < MAX_RADIO_LINES; i++)
+        {
+            radio->lines[n++] = sRadioText_OPT_Adverbs[Random() % ARRAY_COUNT(sRadioText_OPT_Adverbs)];
+            radio->lines[n++] = sRadioText_OPT_Adjectives[Random() % ARRAY_COUNT(sRadioText_OPT_Adjectives)];
+        }
+        break;
+    }
+
+    case RADIO_STATION_POKEMON_MUSIC:
+    {
+        u32 dayOfWeek = gLocalTime.days % 7;
+        bool32 isEvenDay = (dayOfWeek % 2) == 0;
+
+        if (isEvenDay)
+        {
+            radio->lines[n++] = sRadioText_BenIntro;
+            radio->lines[n++] = sRadioText_BenIntro2;
+        }
+        else
+        {
+            radio->lines[n++] = sRadioText_FernIntro;
+            radio->lines[n++] = sRadioText_FernIntro2;
+        }
+
+        // "Today's SATURDAY,"
+        dst = radio->lineBuffers[buf];
+        StringCopy(dst, sRadioText_BenFern_TodayIs);
+        StringAppend(dst, sDayOfWeekNames[dayOfWeek]);
+        {
+            u8 *end = dst + StringLength(dst);
+            *end++ = CHAR_COMMA;
+            *end = EOS;
+        }
+        radio->lines[n++] = radio->lineBuffers[buf++];
+
+        radio->lines[n++] = isEvenDay ? sRadioText_BenFern_JamTo : sRadioText_BenFern_ChillTo;
+        radio->lines[n++] = isEvenDay ? sRadioText_BenFern_March : sRadioText_BenFern_Lullaby;
+        break;
+    }
+
+    case RADIO_STATION_LUCKY_CHANNEL:
+    {
+        u32 luckyNum = Random() % 100000;
+
+        radio->lines[n++] = sRadioText_LC1;
+        radio->lines[n++] = sRadioText_LC2;
+        radio->lines[n++] = sRadioText_LC3;
+        radio->lines[n++] = sRadioText_LC4;
+        radio->lines[n++] = sRadioText_LC5;
+
+        // "{number}!"
+        dst = radio->lineBuffers[buf];
+        ConvertIntToDecimalStringN(dst, luckyNum, STR_CONV_MODE_LEADING_ZEROS, 5);
+        {
+            u8 *end = dst + StringLength(dst);
+            *end++ = CHAR_EXCL_MARK;
+            *end = EOS;
+        }
+        radio->lines[n++] = radio->lineBuffers[buf++];
+
+        radio->lines[n++] = sRadioText_LC6;
+        radio->lines[n++] = sRadioText_LC7;
+        radio->lines[n++] = sRadioText_LC_Drag;
+        break;
+    }
+
+    case RADIO_STATION_BUENAS_PASSWORD:
+    {
+        u32 category = Random() % NUM_BUENA_CATEGORIES;
+        u32 word = Random() % 3;
+
+        radio->lines[n++] = sRadioText_Buena1;
+        radio->lines[n++] = sRadioText_Buena2;
+        radio->lines[n++] = sRadioText_Buena3;
+
+        // "{password}!"
+        dst = radio->lineBuffers[buf];
+        GetBuenaPasswordString(gStringVar1, category, word);
+        StringExpandPlaceholders(dst, sRadioText_Buena4);
+        radio->lines[n++] = radio->lineBuffers[buf++];
+
+        radio->lines[n++] = sRadioText_Buena5;
+        radio->lines[n++] = sRadioText_Buena6;
+        break;
+    }
+
+    case RADIO_STATION_PLACES_AND_PEOPLE:
+    {
+        u32 adjIdx = Random() % ARRAY_COUNT(sRadioText_PnP_PeopleAdj);
+
+        radio->lines[n++] = sRadioText_PnP_Intro;
+        radio->lines[n++] = sRadioText_PnP_Intro2;
+        radio->lines[n++] = sRadioText_PnP_PeopleAdj[adjIdx];
+        break;
+    }
+
+    default:
+        break;
+    }
+
+    radio->numLines = n;
+    radio->currentLine = 0;
+    radio->scrollTimer = RADIO_SCROLL_DELAY;
+    radio->needsScroll = FALSE;
+}
+
+// ========================================
+// Core radio logic
+// ========================================
+
 bool32 PokenavCallback_Init_Radio(void)
 {
     struct Pokenav_Radio *radio = AllocSubstruct(POKENAV_SUBSTRUCT_RADIO, sizeof(struct Pokenav_Radio));
@@ -255,7 +464,6 @@ bool32 PokenavCallback_Init_Radio(void)
     radio->callback = HandleRadioInput;
     radio->tuningPos = RADIO_TUNING_MIN;
     radio->currentStation = RADIO_STATION_NONE;
-    radio->stationLines = NULL;
     radio->numLines = 0;
     radio->currentLine = 0;
     radio->scrollTimer = 0;
@@ -341,7 +549,7 @@ static u32 HandleRadioInput(void)
         return POKENAV_RADIO_FUNC_EXIT;
     }
 
-    if (radio->stationLines != NULL && radio->numLines > 1)
+    if (radio->numLines > 1)
     {
         if (radio->scrollTimer > 0)
             radio->scrollTimer--;
@@ -485,40 +693,6 @@ static u32 LoopedTask_OpenRadio(s32 state)
     return LT_FINISH;
 }
 
-static void SetStationLines(struct Pokenav_Radio *radio, u8 station)
-{
-    switch (station)
-    {
-    case RADIO_STATION_POKEMON_TALK:
-        radio->stationLines = sRadioLines_PokemonTalk;
-        radio->numLines = ARRAY_COUNT(sRadioLines_PokemonTalk);
-        break;
-    case RADIO_STATION_POKEMON_MUSIC:
-        radio->stationLines = sRadioLines_PokemonMusic;
-        radio->numLines = ARRAY_COUNT(sRadioLines_PokemonMusic);
-        break;
-    case RADIO_STATION_LUCKY_CHANNEL:
-        radio->stationLines = sRadioLines_LuckyChannel;
-        radio->numLines = ARRAY_COUNT(sRadioLines_LuckyChannel);
-        break;
-    case RADIO_STATION_BUENAS_PASSWORD:
-        radio->stationLines = sRadioLines_Buena;
-        radio->numLines = ARRAY_COUNT(sRadioLines_Buena);
-        break;
-    case RADIO_STATION_PLACES_AND_PEOPLE:
-        radio->stationLines = sRadioLines_PlacesAndPeople;
-        radio->numLines = ARRAY_COUNT(sRadioLines_PlacesAndPeople);
-        break;
-    default:
-        radio->stationLines = NULL;
-        radio->numLines = 0;
-        break;
-    }
-    radio->currentLine = 0;
-    radio->scrollTimer = RADIO_SCROLL_DELAY;
-    radio->needsScroll = FALSE;
-}
-
 static u32 LoopedTask_TuneRadio(s32 state)
 {
     struct Pokenav_RadioGfx *gfx = GetSubstructPtr(POKENAV_SUBSTRUCT_RADIO_GFX);
@@ -526,10 +700,10 @@ static u32 LoopedTask_TuneRadio(s32 state)
 
     gfx->dialSprite->x = RADIO_DIAL_BASE_X + radio->tuningPos;
     PrintStationName(gfx, radio->currentStation);
-    SetStationLines(radio, radio->currentStation);
+    GenerateStationContent(radio, radio->currentStation);
 
-    if (radio->stationLines != NULL)
-        PrintRadioText(gfx, radio->stationLines[0]);
+    if (radio->numLines > 0)
+        PrintRadioText(gfx, radio->lines[0]);
     else
         ClearRadioText(gfx);
 
@@ -551,7 +725,7 @@ static u32 LoopedTask_ScrollRadio(s32 state)
     }
     AddTextPrinterParameterized3(gfx->radioTextWindowId, FONT_NORMAL,
         2, RADIO_LINE_HEIGHT + 1, sRadioTextColors, TEXT_SKIP_DRAW,
-        radio->stationLines[radio->currentLine]);
+        radio->lines[radio->currentLine]);
     CopyWindowToVram(gfx->radioTextWindowId, COPYWIN_GFX);
     return LT_FINISH;
 }
