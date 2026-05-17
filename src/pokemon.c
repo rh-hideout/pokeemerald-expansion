@@ -6431,18 +6431,36 @@ u16 GetBattleBGM(void)
         case TRAINER_CLASS_PYRAMID_KING:
             return MUS_VS_FRONTIER_BRAIN;
         default:
+        #if IS_HNS
+            if (GetCurrentRegion() == REGION_JOHTO)
+                return MUS_HG_VS_TRAINER;
+            else if (GetCurrentRegion() == REGION_KANTO)
+                return MUS_HG_VS_TRAINER_KANTO;
+            else
+                return MUS_VS_TRAINER;
+        #else
             if (GetCurrentRegion() == REGION_KANTO)
                 return MUS_RG_VS_TRAINER;
             else
                 return MUS_VS_TRAINER;
+        #endif
         }
     }
     else
     {
+    #if IS_HNS
+        if (GetCurrentRegion() == REGION_JOHTO)
+            return MUS_HG_VS_WILD;
+        else if (GetCurrentRegion() == REGION_KANTO)
+            return MUS_HG_VS_WILD_KANTO;
+        else
+            return MUS_VS_WILD;
+    #else
         if (GetCurrentRegion() == REGION_KANTO)
             return MUS_RG_VS_WILD;
         else
             return MUS_VS_WILD;
+    #endif
     }
 }
 

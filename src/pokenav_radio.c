@@ -27,6 +27,7 @@
 #include "constants/pokedex.h"
 #include "constants/songs.h"
 #include "constants/region_map_sections.h"
+#include "regions.h"
 #include "constants/flags_hns.h"
 #include "constants/vars_hns.h"
 #include "constants/trainers.h"
@@ -973,11 +974,9 @@ void FreeRadioSubstruct1(void)
 bool8 IsHoennSoundPlaying(void)
 {
     u16 music = GetCurrentMapMusic();
-    u16 mapsec = gMapHeader.regionMapSectionId;
     u8 i;
 
-    if (!((mapsec >= JOHTO_MAPSEC_START && mapsec <= JOHTO_MAPSEC_END)
-       || (mapsec >= KANTO_MAPSEC_START && mapsec <= KANTO_MAPSEC_END)))
+    if (GetCurrentRegion() == REGION_HOENN)
         return FALSE;
 
     for (i = 0; i < NUM_HOENN_SOUND_SONGS; i++)
