@@ -135,6 +135,7 @@ static void PrintRadioText(struct Pokenav_RadioGfx *gfx, const u8 *text);
 static void ClearRadioText(struct Pokenav_RadioGfx *gfx);
 static void GenerateStationContent(struct Pokenav_Radio *radio, u8 station);
 static void GenerateOPTSegment(struct Pokenav_Radio *radio);
+static void GeneratePokemonMusicContent(struct Pokenav_Radio *radio, u32 *n, u32 *buf, bool32 isBen);
 
 static const u16 sRadioUI_Pal[] = INCBIN_U16("graphics/pokenav/hns/radio/ui.gbapal");
 static const u32 sRadioUI_Gfx[] = INCBIN_U32("graphics/pokenav/hns/radio/ui_tiles.4bpp.smol");
@@ -206,6 +207,19 @@ static const u8 *const sDayOfWeekNames[] =
 {
     gText_Sunday, gText_Monday, gText_Tuesday, gText_Wednesday,
     gText_Thursday, gText_Friday, gText_Saturday,
+};
+
+static const u16 sPnPPlaces[] =
+{
+    MAPSEC_PALLET_TOWN,
+    MAPSEC_ROUTE_22,
+    MAPSEC_PEWTER_CITY,
+    MAPSEC_CERULEAN_CITY,
+    MAPSEC_ROUTE_12,
+    MAPSEC_ROUTE_11,
+    MAPSEC_ROUTE_16,
+    MAPSEC_ROUTE_14,
+    MAPSEC_CINNABAR_ISLAND,
 };
 
 // Buena's password categories
@@ -589,13 +603,13 @@ static u32 WrapDexTextIntoLines(struct Pokenav_Radio *radio, const u8 *text, u32
     return linesAdded;
 }
 
-static void GeneratePokemonMusicContent(struct Pokenav_Radio *radio, u32 *n, u32 *buf)
+static void GeneratePokemonMusicContent(struct Pokenav_Radio *radio, u32 *n, u32 *buf, bool32 isBen)
 {
-    u32 dayOfWeek = gLocalTime.days % 7;
+    u32 dayOfWeek = GetDayOfWeek();
     bool32 isEvenDay = (dayOfWeek % 2) == 0;
     u8 *dst;
 
-    if (isEvenDay)
+    if (isBen)
     {
         radio->lines[(*n)++] = sRadioText_BenIntro;
         radio->lines[(*n)++] = sRadioText_BenIntro2;
@@ -718,11 +732,11 @@ static void GenerateStationContent(struct Pokenav_Radio *radio, u8 station)
     }
 
     case RADIO_STATION_POKEMON_MUSIC:
-        GeneratePokemonMusicContent(radio, &n, &buf);
+        GeneratePokemonMusicContent(radio, &n, &buf, TRUE);
         break;
 
     case RADIO_STATION_LETS_ALL_SING:
-        GeneratePokemonMusicContent(radio, &n, &buf);
+        GeneratePokemonMusicContent(radio, &n, &buf, FALSE);
         break;
 
     case RADIO_STATION_LUCKY_CHANNEL:
@@ -744,28 +758,63 @@ static void GenerateStationContent(struct Pokenav_Radio *radio, u8 station)
         }
         radio->lines[n++] = radio->lineBuffers[buf++];
 
-        radio->lines[n++] = sRadioText_LC6;
-        radio->lines[n++] = sRadioText_LC7;
-        radio->lines[n++] = sRadioText_LC_Drag;
+        radio->lines[n++] = sRadioText_LC_Repeat;
+        radio->lines[n++] = sRadioText_LC5;
+
+        dst = radio->lineBuffers[buf];
+        ConvertIntToDecimalStringN(dst, luckyNum, STR_CONV_MODE_LEADING_ZEROS, 5);
+        {
+            u8 *end = dst + StringLength(dst);
+            *end++ = CHAR_EXCL_MARK;
+            *end = EOS;
+        }
+        radio->lines[n++] = radio->lineBuffers[buf++];
+
+        radio->lines[n++] = sRadioText_LC_Match;
+        radio->lines[n++] = sRadioText_LC_Tower;
+
+        if (Random() % 2 == 0)
+        {
+            radio->lines[n++] = sRadioText_LC_Drag1;
+            radio->lines[n++] = sRadioText_LC_Drag2;
+        }
         break;
     }
 
     case RADIO_STATION_BUENAS_PASSWORD:
     {
-        u32 category, word;
-        GetOrGenerateBuenaPassword(&category, &word);
+        RtcCalcLocalTime();
+        if (GetTimeOfDay() != TIME_NIGHT)
+        {
+            radio->lines[n++] = sRadioText_BuenaMidnight1;
+            radio->lines[n++] = sRadioText_BuenaMidnight2;
+            radio->lines[n++] = sRadioText_BuenaMidnight3;
+            radio->lines[n++] = sRadioText_BuenaMidnight4;
+            radio->lines[n++] = sRadioText_BuenaMidnight5;
+            radio->lines[n++] = sRadioText_BuenaMidnight6;
+            radio->lines[n++] = sRadioText_BuenaMidnight7;
+            radio->lines[n++] = sRadioText_BuenaMidnight8;
+            radio->lines[n++] = sRadioText_BuenaMidnight9;
+            radio->lines[n++] = sRadioText_BuenaMidnight10;
+            radio->lines[n++] = sRadioText_BuenaOffAir;
+        }
+        else
+        {
+            u32 category, word;
+            GetOrGenerateBuenaPassword(&category, &word);
 
-        radio->lines[n++] = sRadioText_Buena1;
-        radio->lines[n++] = sRadioText_Buena2;
-        radio->lines[n++] = sRadioText_Buena3;
+            radio->lines[n++] = sRadioText_Buena1;
+            radio->lines[n++] = sRadioText_Buena2;
+            radio->lines[n++] = sRadioText_Buena3;
 
-        dst = radio->lineBuffers[buf];
-        GetBuenaPasswordString(gStringVar1, category, word);
-        StringExpandPlaceholders(dst, sRadioText_Buena4);
-        radio->lines[n++] = radio->lineBuffers[buf++];
+            dst = radio->lineBuffers[buf];
+            GetBuenaPasswordString(gStringVar1, category, word);
+            StringExpandPlaceholders(dst, sRadioText_Buena4);
+            radio->lines[n++] = radio->lineBuffers[buf++];
 
-        radio->lines[n++] = sRadioText_Buena5;
-        radio->lines[n++] = sRadioText_Buena6;
+            radio->lines[n++] = sRadioText_Buena5;
+            radio->lines[n++] = sRadioText_Buena6;
+        }
         break;
     }
 
@@ -776,31 +825,49 @@ static void GenerateStationContent(struct Pokenav_Radio *radio, u8 station)
         radio->lines[n++] = sRadioText_PnP_Intro;
         radio->lines[n++] = sRadioText_PnP_Intro2;
 
-        if (doPeople)
+        while (n < MAX_RADIO_LINES - 1 && buf < NUM_RADIO_LINE_BUFS)
         {
-            u16 trainerId;
-            do {
-                trainerId = (Random() % (TRAINERS_COUNT - 1)) + 1;
-            } while (trainerId == 0);
+            if (doPeople)
+            {
+                u16 trainerId;
+                u8 trainerClass;
+                bool8 excluded;
+                do {
+                    trainerId = (Random() % (TRAINERS_COUNT - 1)) + 1;
+                    trainerClass = GetTrainerClassFromId(trainerId);
+                    excluded = (trainerClass == TRAINER_CLASS_CHAMPION_HNS
+                             || trainerClass == TRAINER_CLASS_ELITE_FOUR_HNS
+                             || trainerClass == TRAINER_CLASS_LEADER_HNS
+                             || trainerClass == TRAINER_CLASS_RIVAL_HNS
+                             || trainerClass == TRAINER_CLASS_CHAMPION
+                             || trainerClass == TRAINER_CLASS_ELITE_FOUR
+                             || trainerClass == TRAINER_CLASS_LEADER
+                             || trainerClass == TRAINER_CLASS_RIVAL);
+                } while (excluded);
 
-            dst = radio->lineBuffers[buf];
-            StringCopy(dst, GetTrainerClassNameFromId(trainerId));
-            StringAppend(dst, sRadioText_PnP_Space);
-            StringAppend(dst, GetTrainerNameFromId(trainerId));
-            radio->lines[n++] = radio->lineBuffers[buf++];
+                dst = radio->lineBuffers[buf];
+                StringCopy(dst, GetTrainerClassNameFromId(trainerId));
+                StringAppend(dst, sRadioText_PnP_Space);
+                StringAppend(dst, GetTrainerNameFromId(trainerId));
+                radio->lines[n++] = radio->lineBuffers[buf++];
+            }
+            else
+            {
+                u8 mapNameBuf[24];
+                u16 mapsec = sPnPPlaces[Random() % ARRAY_COUNT(sPnPPlaces)];
+                GetMapName(mapNameBuf, mapsec, 0);
+
+                dst = radio->lineBuffers[buf];
+                StringCopy(dst, mapNameBuf);
+                radio->lines[n++] = radio->lineBuffers[buf++];
+            }
+
+            radio->lines[n++] = sRadioText_PnP_PeopleAdj[Random() % ARRAY_COUNT(sRadioText_PnP_PeopleAdj)];
+
+            if (Random() % 256 < 10)
+                break;
+            doPeople = (Random() % 2) == 0;
         }
-        else
-        {
-            u16 mapsec = KANTO_MAPSEC_START + (Random() % KANTO_MAPSEC_COUNT);
-            u8 mapNameBuf[24];
-            GetMapName(mapNameBuf, mapsec, 0);
-
-            dst = radio->lineBuffers[buf];
-            StringCopy(dst, mapNameBuf);
-            radio->lines[n++] = radio->lineBuffers[buf++];
-        }
-
-        radio->lines[n++] = sRadioText_PnP_PeopleAdj[Random() % ARRAY_COUNT(sRadioText_PnP_PeopleAdj)];
         break;
     }
 
@@ -811,6 +878,10 @@ static void GenerateStationContent(struct Pokenav_Radio *radio, u8 station)
         radio->lines[n++] = sRadioText_Rocket4;
         radio->lines[n++] = sRadioText_Rocket5;
         radio->lines[n++] = sRadioText_Rocket6;
+        radio->lines[n++] = sRadioText_Rocket7;
+        radio->lines[n++] = sRadioText_Rocket8;
+        radio->lines[n++] = sRadioText_Rocket9;
+        radio->lines[n++] = sRadioText_Rocket10;
         break;
 
     case RADIO_STATION_UNOWN:
@@ -1012,6 +1083,15 @@ static u32 HandleRadioInput(void)
                     GenerateOPTSegment(radio);
                     return POKENAV_RADIO_FUNC_SCROLL;
                 }
+                if (radio->currentStation == RADIO_STATION_BUENAS_PASSWORD)
+                {
+                    RtcCalcLocalTime();
+                    if (GetTimeOfDay() != TIME_NIGHT)
+                    {
+                        GenerateStationContent(radio, RADIO_STATION_BUENAS_PASSWORD);
+                        return POKENAV_RADIO_FUNC_SCROLL;
+                    }
+                }
                 radio->currentLine = 0;
             }
             return POKENAV_RADIO_FUNC_SCROLL;
@@ -1165,7 +1245,7 @@ static u32 LoopedTask_TuneRadio(s32 state)
             if (radio->currentStation == RADIO_STATION_POKEMON_MUSIC
                 || radio->currentStation == RADIO_STATION_LETS_ALL_SING)
             {
-                music = (gLocalTime.days % 2 == 0) ? MUS_HG_RADIO_MARCH : MUS_HG_RADIO_LULLABY;
+                music = (GetDayOfWeek() % 2 == 0) ? MUS_HG_RADIO_MARCH : MUS_HG_RADIO_LULLABY;
             }
         }
         else

@@ -140,9 +140,11 @@ static const u8 sRadioText_LC3[] = _("down low, don't you miss the");
 static const u8 sRadioText_LC4[] = _("LUCKY NUMBER SHOW!");
 static const u8 sRadioText_LC5[] = _("This week's Lucky Number is");
 // "{number}!" built dynamically
-static const u8 sRadioText_LC6[] = _("I'll repeat that! Match it");
-static const u8 sRadioText_LC7[] = _("and go to the RADIO TOWER!");
-static const u8 sRadioText_LC_Drag[] = _("…Repeating gets old…");
+static const u8 sRadioText_LC_Repeat[] = _("I'll repeat that!");
+static const u8 sRadioText_LC_Match[] = _("Match it and go to");
+static const u8 sRadioText_LC_Tower[] = _("the RADIO TOWER!");
+static const u8 sRadioText_LC_Drag1[] = _("…Repeating myself");
+static const u8 sRadioText_LC_Drag2[] = _("gets to be a drag…");
 
 // ==========================================================
 // Places and People
@@ -195,12 +197,16 @@ static const u8 *const sRadioText_PnP_PeopleAdj[] =
 // ==========================================================
 
 static const u8 sRadioStationName_Rocket[] = _("TEAM ROCKET");
-static const u8 sRadioText_Rocket1[]  = _("… …Ahem, we are TEAM ROCKET!");
-static const u8 sRadioText_Rocket2[]  = _("After three years of preparation,");
-static const u8 sRadioText_Rocket3[]  = _("we have risen from the ashes!");
-static const u8 sRadioText_Rocket4[]  = _("GIOVANNI! Can you hear?");
-static const u8 sRadioText_Rocket5[]  = _("We did it! Where is our boss?");
-static const u8 sRadioText_Rocket6[]  = _("Is he listening?");
+static const u8 sRadioText_Rocket1[]  = _("… …Ahem, we are");
+static const u8 sRadioText_Rocket2[]  = _("TEAM ROCKET!");
+static const u8 sRadioText_Rocket3[]  = _("After three years");
+static const u8 sRadioText_Rocket4[]  = _("of preparation, we");
+static const u8 sRadioText_Rocket5[]  = _("have risen again");
+static const u8 sRadioText_Rocket6[]  = _("from the ashes!");
+static const u8 sRadioText_Rocket7[]  = _("GIOVANNI!");
+static const u8 sRadioText_Rocket8[]  = _("Can you hear?");
+static const u8 sRadioText_Rocket9[]  = _("");
+static const u8 sRadioText_Rocket10[] = _("");
 
 // ==========================================================
 // Buena's Password
@@ -213,6 +219,19 @@ static const u8 sRadioText_Buena3[] = _("Let me think… It's");
 static const u8 sRadioText_Buena4[] = _("{STR_VAR_1}!");
 static const u8 sRadioText_Buena5[] = _("Don't forget it! I'm in");
 static const u8 sRadioText_Buena6[] = _("GOLDENROD's RADIO TOWER!");
+
+// Buena midnight shutdown
+static const u8 sRadioText_BuenaMidnight1[] = _("BUENA: Oh my…");
+static const u8 sRadioText_BuenaMidnight2[] = _("It's midnight! I");
+static const u8 sRadioText_BuenaMidnight3[] = _("have to shut down!");
+static const u8 sRadioText_BuenaMidnight4[] = _("Thanks for tuning");
+static const u8 sRadioText_BuenaMidnight5[] = _("in to the end! But");
+static const u8 sRadioText_BuenaMidnight6[] = _("don't stay up too");
+static const u8 sRadioText_BuenaMidnight7[] = _("late! Presented to");
+static const u8 sRadioText_BuenaMidnight8[] = _("you by DJ BUENA!");
+static const u8 sRadioText_BuenaMidnight9[] = _("I'm outta here!");
+static const u8 sRadioText_BuenaMidnight10[] = _("…");
+static const u8 sRadioText_BuenaOffAir[] = _("");
 
 // ==========================================================
 // Buena's Password Categories & Options
