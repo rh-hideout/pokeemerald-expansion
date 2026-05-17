@@ -95,7 +95,6 @@ static EWRAM_DATA u32 sBikeCyclingTimer = 0;
 static EWRAM_DATA u8 sSlidingDoorNextFrameCounter = 0;
 static EWRAM_DATA u8 sSlidingDoorFrame = 0;
 static EWRAM_DATA u8 sTutorMoveAndElevatorWindowId = 0;
-static EWRAM_DATA u16 sLilycoveDeptStore_NeverRead = 0;
 static EWRAM_DATA u16 sLilycoveDeptStore_DefaultFloorChoice = 0;
 static EWRAM_DATA struct ListMenuItem *sScrollableMultichoice_ListMenuItem = NULL;
 
@@ -1361,7 +1360,7 @@ void SpawnCameraObject(void)
                                                   LOCALID_CAMERA,
                                                   gSaveBlock1Ptr->pos.x + MAP_OFFSET,
                                                   gSaveBlock1Ptr->pos.y + MAP_OFFSET,
-                                                  3); // elevation
+                                                  ELEVATION_DEFAULT);
     gObjectEvents[obj].invisible = TRUE;
     CameraObjectSetFollowedSpriteId(gObjectEvents[obj].spriteId);
 }
@@ -1881,7 +1880,6 @@ void SetDeptStoreFloor(void)
 
 u16 GetDeptStoreDefaultFloorChoice(void)
 {
-    sLilycoveDeptStore_NeverRead = 0;
     sLilycoveDeptStore_DefaultFloorChoice = 0;
 
     if (gSaveBlock1Ptr->dynamicWarp.mapGroup == MAP_GROUP(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_1F))
@@ -1889,23 +1887,18 @@ u16 GetDeptStoreDefaultFloorChoice(void)
         switch (gSaveBlock1Ptr->dynamicWarp.mapNum)
         {
         case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_5F):
-            sLilycoveDeptStore_NeverRead = 0;
             sLilycoveDeptStore_DefaultFloorChoice = 0;
             break;
         case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_4F):
-            sLilycoveDeptStore_NeverRead = 0;
             sLilycoveDeptStore_DefaultFloorChoice = 1;
             break;
         case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_3F):
-            sLilycoveDeptStore_NeverRead = 0;
             sLilycoveDeptStore_DefaultFloorChoice = 2;
             break;
         case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_2F):
-            sLilycoveDeptStore_NeverRead = 0;
             sLilycoveDeptStore_DefaultFloorChoice = 3;
             break;
         case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_1F):
-            sLilycoveDeptStore_NeverRead = 0;
             sLilycoveDeptStore_DefaultFloorChoice = 4;
             break;
         }
@@ -2498,13 +2491,13 @@ void ShowScrollableMultichoice(void)
         task->tTaskId = taskId;
         break;
     case SCROLL_MULTI_SILPHCO_FLOORS:
-        task->tMaxItemsOnScreen = 7;
+        task->tMaxItemsOnScreen = MAX_SCROLL_MULTI_ON_SCREEN;
         task->tNumItems = 12;
         task->tLeft = 1;
         task->tTop = 1;
         task->tWidth = 8;
         task->tHeight = 12;
-        task->tKeepOpenAfterSelect = 0;
+        task->tKeepOpenAfterSelect = FALSE;
         task->tTaskId = taskId;
         task->tScrollOffset = sElevatorScroll;
         task->tSelectedRow = sElevatorCursorPos;
@@ -2672,14 +2665,14 @@ static const u8 *const sScrollableMultichoiceOptions[][MAX_SCROLL_MULTI_LENGTH] 
     },
     [SCROLL_MULTI_BADGES] =
     {
-		gText_Boulderbadge,
-		gText_Cascadebadge,
-		gText_Thunderbadge,
-		gText_Rainbowbadge,
-		gText_Soulbadge,
-		gText_Marshbadge,
-		gText_Volcanobadge,
-		gText_Earthbadge,
+        gText_Boulderbadge,
+        gText_Cascadebadge,
+        gText_Thunderbadge,
+        gText_Rainbowbadge,
+        gText_Soulbadge,
+        gText_Marshbadge,
+        gText_Volcanobadge,
+        gText_Earthbadge,
         gText_Exit,
     },
     [SCROLL_MULTI_SILPHCO_FLOORS] =
@@ -3333,17 +3326,17 @@ void DoDeoxysRockInteraction(void)
 }
 
 static const u16 sDeoxysRockPalettes[DEOXYS_ROCK_LEVELS][16] = {
-    INCBIN_U16("graphics/field_effects/palettes/deoxys_rock_1.gbapal"),
-    INCBIN_U16("graphics/field_effects/palettes/deoxys_rock_2.gbapal"),
-    INCBIN_U16("graphics/field_effects/palettes/deoxys_rock_3.gbapal"),
-    INCBIN_U16("graphics/field_effects/palettes/deoxys_rock_4.gbapal"),
-    INCBIN_U16("graphics/field_effects/palettes/deoxys_rock_5.gbapal"),
-    INCBIN_U16("graphics/field_effects/palettes/deoxys_rock_6.gbapal"),
-    INCBIN_U16("graphics/field_effects/palettes/deoxys_rock_7.gbapal"),
-    INCBIN_U16("graphics/field_effects/palettes/deoxys_rock_8.gbapal"),
-    INCBIN_U16("graphics/field_effects/palettes/deoxys_rock_9.gbapal"),
-    INCBIN_U16("graphics/field_effects/palettes/deoxys_rock_10.gbapal"),
-    INCBIN_U16("graphics/field_effects/palettes/deoxys_rock_11.gbapal"),
+    INCGFX_U16("graphics/field_effects/palettes/deoxys_rock_1.pal", ".gbapal"),
+    INCGFX_U16("graphics/field_effects/palettes/deoxys_rock_2.pal", ".gbapal"),
+    INCGFX_U16("graphics/field_effects/palettes/deoxys_rock_3.pal", ".gbapal"),
+    INCGFX_U16("graphics/field_effects/palettes/deoxys_rock_4.pal", ".gbapal"),
+    INCGFX_U16("graphics/field_effects/palettes/deoxys_rock_5.pal", ".gbapal"),
+    INCGFX_U16("graphics/field_effects/palettes/deoxys_rock_6.pal", ".gbapal"),
+    INCGFX_U16("graphics/field_effects/palettes/deoxys_rock_7.pal", ".gbapal"),
+    INCGFX_U16("graphics/field_effects/palettes/deoxys_rock_8.pal", ".gbapal"),
+    INCGFX_U16("graphics/field_effects/palettes/deoxys_rock_9.pal", ".gbapal"),
+    INCGFX_U16("graphics/field_effects/palettes/deoxys_rock_10.pal", ".gbapal"),
+    INCGFX_U16("graphics/field_effects/palettes/deoxys_rock_11.pal", ".gbapal"),
 };
 
 static const u8 sDeoxysRockCoords[DEOXYS_ROCK_LEVELS][2] = {
@@ -4328,27 +4321,27 @@ static void BufferFanClubTrainerName_(u8 whichLinkTrainer, u8 whichNPCTrainer)
 {
     switch (whichNPCTrainer)
     {
-        case 0:
-            StringCopy(gStringVar1, sText_Wallace);
-            break;
-        case 1:
-            StringCopy(gStringVar1, sText_Steven);
-            break;
-        case 2:
-            StringCopy(gStringVar1, sText_Brawly);
-            break;
-        case 3:
-            StringCopy(gStringVar1, sText_Winona);
-            break;
-        case 4:
-            StringCopy(gStringVar1, sText_Phoebe);
-            break;
-        case 5:
-            StringCopy(gStringVar1, sText_Glacia);
-            break;
-        default:
-            StringCopy(gStringVar1, sText_Wallace);
-            break;
+    case 0:
+        StringCopy(gStringVar1, sText_Wallace);
+        break;
+    case 1:
+        StringCopy(gStringVar1, sText_Steven);
+        break;
+    case 2:
+        StringCopy(gStringVar1, sText_Brawly);
+        break;
+    case 3:
+        StringCopy(gStringVar1, sText_Winona);
+        break;
+    case 4:
+        StringCopy(gStringVar1, sText_Phoebe);
+        break;
+    case 5:
+        StringCopy(gStringVar1, sText_Glacia);
+        break;
+    default:
+        StringCopy(gStringVar1, sText_Wallace);
+        break;
     }
 }
 #endif //FREE_LINK_BATTLE_RECORDS
@@ -4630,18 +4623,18 @@ u8 GetLeadMonFriendship(void)
         return 0;
 }
 
-u16 GetFirstPartnerMove(u16 species)
+enum Move GetFirstPartnerMove(u16 species)
 {
-    switch(species)
+    switch (species)
     {
-        case SPECIES_VENUSAUR:
-            return MOVE_FRENZY_PLANT;
-        case SPECIES_CHARIZARD:
-            return MOVE_BLAST_BURN;
-        case SPECIES_BLASTOISE:
-            return MOVE_HYDRO_CANNON;
-        default:
-            return MOVE_NONE;
+    case SPECIES_VENUSAUR:
+        return MOVE_FRENZY_PLANT;
+    case SPECIES_CHARIZARD:
+        return MOVE_BLAST_BURN;
+    case SPECIES_BLASTOISE:
+        return MOVE_HYDRO_CANNON;
+    default:
+        return MOVE_NONE;
     }
 }
 
@@ -4663,19 +4656,19 @@ bool8 CapeBrinkGetMoveToTeachLeadPokemon(void)
         return FALSE;
 
     moveId = GetFirstPartnerMove(GetMonData(leadMon, MON_DATA_SPECIES_OR_EGG));
-    switch(moveId)
+    switch (moveId)
     {
-        case MOVE_FRENZY_PLANT:
-            tutorFlag = FLAG_TUTOR_FRENZY_PLANT;
-            break;
-        case MOVE_BLAST_BURN:
-            tutorFlag = FLAG_TUTOR_BLAST_BURN;
-            break;
-        case MOVE_HYDRO_CANNON:
-            tutorFlag = FLAG_TUTOR_HYDRO_CANNON;
-            break;
-        default:
-            return FALSE;
+    case MOVE_FRENZY_PLANT:
+        tutorFlag = FLAG_TUTOR_FRENZY_PLANT;
+        break;
+    case MOVE_BLAST_BURN:
+        tutorFlag = FLAG_TUTOR_BLAST_BURN;
+        break;
+    case MOVE_HYDRO_CANNON:
+        tutorFlag = FLAG_TUTOR_HYDRO_CANNON;
+        break;
+    default:
+        return FALSE;
     }
 
     StringCopy(gStringVar2, gMovesInfo[moveId].name);
@@ -4697,15 +4690,15 @@ bool8 HasLearnedAllMovesFromCapeBrinkTutor(void)
     // 8005 is set by CapeBrinkGetMoveToTeachLeadPokemon
     switch (gSpecialVar_0x8005)
     {
-        case MOVE_FRENZY_PLANT:
-            FlagSet(FLAG_TUTOR_FRENZY_PLANT);
-            break;
-        case MOVE_BLAST_BURN:
-            FlagSet(FLAG_TUTOR_BLAST_BURN);
-            break;
-        case MOVE_HYDRO_CANNON:
-            FlagSet(FLAG_TUTOR_HYDRO_CANNON);
-            break;
+    case MOVE_FRENZY_PLANT:
+        FlagSet(FLAG_TUTOR_FRENZY_PLANT);
+        break;
+    case MOVE_BLAST_BURN:
+        FlagSet(FLAG_TUTOR_BLAST_BURN);
+        break;
+    case MOVE_HYDRO_CANNON:
+        FlagSet(FLAG_TUTOR_HYDRO_CANNON);
+        break;
     }
 
     return (FlagGet(FLAG_TUTOR_FRENZY_PLANT) == TRUE)
@@ -5406,8 +5399,8 @@ void ForcePlayerOntoBike(void)
 {
     if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ON_FOOT)
         SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ACRO_BIKE);
-    Overworld_SetSavedMusic(MUS_CYCLING);
-    Overworld_ChangeMusicTo(MUS_CYCLING);
+    Overworld_SetSavedMusic(IS_FRLG ? MUS_RG_CYCLING : MUS_CYCLING);
+    Overworld_ChangeMusicTo(IS_FRLG ? MUS_RG_CYCLING : MUS_CYCLING);
 }
 
 bool8 IsPlayerNotInTrainerTowerLobby(void)
@@ -5432,30 +5425,30 @@ void BrailleCursorToggle(void)
 }
 
 static const u16 sEliteFourLightingPalettes[][16] = {
-    INCBIN_U16("graphics/field_specials/elite_four_lighting_0.gbapal"),
-    INCBIN_U16("graphics/field_specials/elite_four_lighting_1.gbapal"),
-    INCBIN_U16("graphics/field_specials/elite_four_lighting_2.gbapal"),
-    INCBIN_U16("graphics/field_specials/elite_four_lighting_3.gbapal"),
-    INCBIN_U16("graphics/field_specials/elite_four_lighting_4.gbapal"),
-    INCBIN_U16("graphics/field_specials/elite_four_lighting_5.gbapal"),
-    INCBIN_U16("graphics/field_specials/elite_four_lighting_6.gbapal"),
-    INCBIN_U16("graphics/field_specials/elite_four_lighting_7.gbapal"),
-    INCBIN_U16("graphics/field_specials/elite_four_lighting_8.gbapal"),
-    INCBIN_U16("graphics/field_specials/elite_four_lighting_9.gbapal"),
-    INCBIN_U16("graphics/field_specials/elite_four_lighting_10.gbapal"),
-    INCBIN_U16("graphics/field_specials/elite_four_lighting_11.gbapal")
+    INCGFX_U16("graphics/field_specials/elite_four_lighting_0.pal", ".gbapal"),
+    INCGFX_U16("graphics/field_specials/elite_four_lighting_1.pal", ".gbapal"),
+    INCGFX_U16("graphics/field_specials/elite_four_lighting_2.pal", ".gbapal"),
+    INCGFX_U16("graphics/field_specials/elite_four_lighting_3.pal", ".gbapal"),
+    INCGFX_U16("graphics/field_specials/elite_four_lighting_4.pal", ".gbapal"),
+    INCGFX_U16("graphics/field_specials/elite_four_lighting_5.pal", ".gbapal"),
+    INCGFX_U16("graphics/field_specials/elite_four_lighting_6.pal", ".gbapal"),
+    INCGFX_U16("graphics/field_specials/elite_four_lighting_7.pal", ".gbapal"),
+    INCGFX_U16("graphics/field_specials/elite_four_lighting_8.pal", ".gbapal"),
+    INCGFX_U16("graphics/field_specials/elite_four_lighting_9.pal", ".gbapal"),
+    INCGFX_U16("graphics/field_specials/elite_four_lighting_10.pal", ".gbapal"),
+    INCGFX_U16("graphics/field_specials/elite_four_lighting_11.pal", ".gbapal")
 };
 
 static const u16 sChampionRoomLightingPalettes[][16] = {
-    INCBIN_U16("graphics/field_specials/champion_room_lighting_0.gbapal"),
-    INCBIN_U16("graphics/field_specials/champion_room_lighting_1.gbapal"),
-    INCBIN_U16("graphics/field_specials/champion_room_lighting_2.gbapal"),
-    INCBIN_U16("graphics/field_specials/champion_room_lighting_3.gbapal"),
-    INCBIN_U16("graphics/field_specials/champion_room_lighting_4.gbapal"),
-    INCBIN_U16("graphics/field_specials/champion_room_lighting_5.gbapal"),
-    INCBIN_U16("graphics/field_specials/champion_room_lighting_6.gbapal"),
-    INCBIN_U16("graphics/field_specials/champion_room_lighting_7.gbapal"),
-    INCBIN_U16("graphics/field_specials/champion_room_lighting_8.gbapal")
+    INCGFX_U16("graphics/field_specials/champion_room_lighting_0.pal", ".gbapal"),
+    INCGFX_U16("graphics/field_specials/champion_room_lighting_1.pal", ".gbapal"),
+    INCGFX_U16("graphics/field_specials/champion_room_lighting_2.pal", ".gbapal"),
+    INCGFX_U16("graphics/field_specials/champion_room_lighting_3.pal", ".gbapal"),
+    INCGFX_U16("graphics/field_specials/champion_room_lighting_4.pal", ".gbapal"),
+    INCGFX_U16("graphics/field_specials/champion_room_lighting_5.pal", ".gbapal"),
+    INCGFX_U16("graphics/field_specials/champion_room_lighting_6.pal", ".gbapal"),
+    INCGFX_U16("graphics/field_specials/champion_room_lighting_7.pal", ".gbapal"),
+    INCGFX_U16("graphics/field_specials/champion_room_lighting_8.pal", ".gbapal")
 };
 
 static const u8 sEliteFourLightingTimers[] = {

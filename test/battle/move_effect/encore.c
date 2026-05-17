@@ -14,7 +14,7 @@ SINGLE_BATTLE_TEST("Encore forces consecutive move uses for 3 turns: Encore used
     PARAMETRIZE { encoreUser = opponent; encoreTarget = player; speedPlayer = 10; speedOpponent = 20; }
     PARAMETRIZE { encoreUser = player; encoreTarget = opponent; speedPlayer = 20; speedOpponent = 10; }
     GIVEN {
-        WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_3);
+        WITH_CONFIG(B_ENCORE_TARGET, GEN_3);
         PLAYER(SPECIES_WOBBUFFET) { Speed(speedPlayer); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(speedOpponent); }
     } WHEN {
@@ -42,7 +42,7 @@ SINGLE_BATTLE_TEST("Encore forces consecutive move uses for 3 turns for player: 
     PARAMETRIZE { encoreUser = opponent; encoreTarget = player; speedPlayer = 20; speedOpponent = 10; }
     PARAMETRIZE { encoreUser = player; encoreTarget = opponent; speedPlayer = 10; speedOpponent = 20; }
     GIVEN {
-        WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_3);
+        WITH_CONFIG(B_ENCORE_TARGET, GEN_3);
         PLAYER(SPECIES_WOBBUFFET) { Speed(speedPlayer); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(speedOpponent); }
     } WHEN {
@@ -86,6 +86,32 @@ SINGLE_BATTLE_TEST("Encore overrides the chosen move if it occurs first")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Encore forces the last move used before the target flinched")
+{
+    GIVEN {
+        WITH_CONFIG(B_ENCORE_TARGET, GEN_3);
+        ASSUME(MoveHasAdditionalEffect(MOVE_HEADBUTT, MOVE_EFFECT_FLINCH) == TRUE);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(100); Moves(MOVE_CELEBRATE, MOVE_HEADBUTT, MOVE_ENCORE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); Moves(MOVE_GRASS_KNOT, MOVE_SCRATCH, MOVE_CELEBRATE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_GRASS_KNOT); }
+        TURN { MOVE(player, MOVE_HEADBUTT); MOVE(opponent, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_ENCORE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { FORCED_MOVE(opponent); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASS_KNOT, opponent);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HEADBUTT, player);
+        MESSAGE("The opposing Wobbuffet flinched and couldn't move!");
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASS_KNOT, opponent);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASS_KNOT, opponent);
     }
 }
 

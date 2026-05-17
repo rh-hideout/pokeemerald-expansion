@@ -245,11 +245,11 @@ static s16 sDebug_GameTimeStage;
 
 COMMON_DATA u8 gInGameOpponentsNo = 0;
 
-static const u16 sBlenderCenter_Pal[] = INCBIN_U16("graphics/berry_blender/center.gbapal");
+static const u16 sBlenderCenter_Pal[] = INCGFX_U16("graphics/berry_blender/center.png", ".gbapal");
 static const u8 sBlenderCenter_Tilemap[] = INCBIN_U8("graphics/berry_blender/center_map.bin");
-static const u16 sBlenderOuter_Pal[] = INCBIN_U16("graphics/berry_blender/outer.gbapal");
+static const u16 sBlenderOuter_Pal[] = INCGFX_U16("graphics/berry_blender/outer.png", ".gbapal");
 
-static const u16 sUnused_Pal[] = INCBIN_U16("graphics/berry_blender/unused.gbapal");
+static const u16 sUnused_Pal[] = INCGFX_U16("graphics/berry_blender/unused.pal", ".gbapal");
 static const u16 sEmpty_Pal[16 * 14] = {0};
 
 static const u8 sText_BerryBlenderStart[] = _("Starting up the BERRY BLENDER.\pPlease select a BERRY from your BAG\nto put in the BERRY BLENDER.\p");
@@ -1812,7 +1812,7 @@ static void ResetLinkCmds(void)
 
 static void Task_OpponentMiss(u8 taskId)
 {
-   if(++gTasks[taskId].tTimer > gTasks[taskId].tDelay)
+   if (++gTasks[taskId].tTimer > gTasks[taskId].tDelay)
    {
         gRecvCmds[gTasks[taskId].tPlayerId][BLENDER_COMM_SCORE] = LINKCMD_BLENDER_SCORE_MISS;
         DestroyTask(taskId);

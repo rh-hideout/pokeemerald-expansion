@@ -83,6 +83,19 @@ SINGLE_BATTLE_TEST("Sitrus Berry restores HP immediately after Leech Seed damage
     }
 }
 
+SINGLE_BATTLE_TEST("Healing berry animates on the correct battler at battle start")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); MaxHP(400); Item(ITEM_ORAN_BERRY); }
+    } WHEN {
+        TURN {  }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+    }
+}
+
 SINGLE_BATTLE_TEST("Sitrus Berry restores HP before Shields Down form change")
 {
     GIVEN {

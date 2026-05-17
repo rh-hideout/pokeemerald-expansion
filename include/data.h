@@ -227,7 +227,7 @@ extern const struct FollowerMsgInfo gFollowerPoisonedMessages[];
 
 static inline bool8 IsPartnerTrainerId(u16 trainerId)
 {
-    if (trainerId >= TRAINER_PARTNER(PARTNER_NONE) && trainerId < TRAINER_PARTNER(PARTNER_COUNT))
+    if (trainerId > TRAINER_PARTNER(PARTNER_NONE) && trainerId < TRAINER_PARTNER(PARTNER_COUNT))
         return TRUE;
     return FALSE;
 }
@@ -236,11 +236,6 @@ static inline u16 SanitizeTrainerId(u16 trainerId)
 {
     switch (trainerId)
     {
-    case TRAINER_RECORD_MIXING_FRIEND:
-    case TRAINER_RECORD_MIXING_APPRENTICE:
-    case TRAINER_EREADER:
-    case TRAINER_FRONTIER_BRAIN:
-    case TRAINER_PLAYER:
     case TRAINER_SECRET_BASE:
     case TRAINER_LINK_OPPONENT:
     case TRAINER_UNION_ROOM:
@@ -260,12 +255,17 @@ static inline const struct Trainer *GetTrainerStructFromId(u16 trainerId)
     u32 sanitizedTrainerId = 0;
     if (gIsDebugBattle) return GetDebugAiTrainer();
     sanitizedTrainerId = SanitizeTrainerId(trainerId);
-    enum DifficultyLevel difficulty = GetTrainerDifficultyLevel(sanitizedTrainerId);
 
     if (IsPartnerTrainerId(trainerId))
+    {
+        enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(sanitizedTrainerId);
         return &gBattlePartners[difficulty][sanitizedTrainerId - TRAINER_PARTNER(PARTNER_NONE)];
+    }
     else
+    {
+        enum DifficultyLevel difficulty = GetTrainerDifficultyLevel(sanitizedTrainerId);
         return &gTrainers[difficulty][sanitizedTrainerId];
+    }
 }
 
 static inline const enum TrainerClassID GetTrainerClassFromId(u16 trainerId)

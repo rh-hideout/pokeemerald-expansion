@@ -309,7 +309,7 @@
  * of `enum ConfigTag`
  * Example:
  *     GIVEN {
- *         WITH_CONFIG(CONFIG_GALE_WINGS, GEN_6);
+ *         WITH_CONFIG(B_GALE_WINGS, GEN_6);
  *     }
  * The `value` may be inferred from a local variable, e.g. set by
  * PARAMETRIZE.
@@ -365,8 +365,8 @@
  * BATTLER_AI_FLAGS
  * Specifies additional AI flags to be applied to specific battlers (battler 0/1/2/3). Has use only for AI tests.
  * Must be used strictly after AI_FLAGS(flags), which overwrites all existing flags.
- * Example: BATTLER_AI_FLAGS(3, AI_FLAG_RISKY) used after AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT)
- * will set AI_FLAG_RISKY to only battler3 (Opponent B), in addition to the flags set by AI_FLAGS.
+ * Example: BATTLER_AI_FLAGS(opponentRight, AI_FLAG_RISKY) used after AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT)
+ * will set AI_FLAG_RISKY to only the right opponent, in addition to the flags set by AI_FLAGS.
  *
  * WHEN
  * Contains the choices that battlers make during the battle.
@@ -564,6 +564,7 @@
 #include "constants/items.h"
 #include "constants/moves.h"
 #include "constants/species.h"
+#include "constants/songs.h"
 #include "test/test.h"
 
 // NOTE: If the stack is too small the test runner will probably crash
@@ -617,6 +618,13 @@ enum
     QUEUED_MESSAGE_EVENT,
     QUEUED_STATUS_EVENT,
     QUEUED_CATCH_CHANCE_EVENT,
+    QUEUED_EFFECTIVENESS_EVENT,
+};
+
+struct QueuedEffectiveness
+{
+    u8 battlerId;
+    u16 soundId;
 };
 
 struct QueuedAbilityEvent
@@ -690,6 +698,7 @@ struct QueuedEvent
         struct QueuedMessageEvent message;
         struct QueuedStatusEvent status;
         struct QueuedCaptureEvent capture;
+        struct QueuedEffectiveness eff_se;
     } as;
 };
 
@@ -787,6 +796,7 @@ struct BattleTestData
     bool8 isShiny;
     enum Ability forcedAbilities[MAX_BATTLE_TRAINERS][PARTY_SIZE];
     u8 chosenGimmick[MAX_BATTLE_TRAINERS][PARTY_SIZE];
+    enum BattleTrainer partyTrainers[NUM_BATTLE_SIDES][PARTY_SIZE];
     u8 forcedEnvironment;
 
     u8 currentMonIndexes[MAX_BATTLERS_COUNT];
@@ -1012,7 +1022,7 @@ struct moveWithPP {
 
 #define FLAG_SET(flagId) SetFlagForTest(__LINE__, flagId)
 #define VAR_SET(varId, value) SetVarForTest(__LINE__, varId, value)
-#define WITH_CONFIG(configTag, value) TestSetConfig(__LINE__, configTag, value)
+#define WITH_CONFIG(configTag, value) TestSetConfig(__LINE__, CONFIG_##configTag, value)
 
 #define PLAYER(species) for (OpenPokemon(__LINE__, B_TRAINER_0, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
 #define OPPONENT(species) for (OpenPokemon(__LINE__, B_TRAINER_1, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
@@ -1039,7 +1049,7 @@ struct moveWithPP {
 #define SpDefenseIV(spDefenseIV) SpDefenseIV_(__LINE__, spDefenseIV)
 #define SpeedIV(speedIV) SpeedIV_(__LINE__, speedIV)
 #define Item(item) Item_(__LINE__, item)
-#define Moves(move1, ...) do { u16 moves_[MAX_MON_MOVES] = {move1, __VA_ARGS__}; Moves_(__LINE__, moves_); } while(0)
+#define Moves(move1, ...) do { u16 moves_[MAX_MON_MOVES] = {move1, __VA_ARGS__}; Moves_(__LINE__, moves_); } while (0)
 #define MovesWithPP(movewithpp1, ...) MovesWithPP_(__LINE__, (struct moveWithPP[MAX_MON_MOVES]) {movewithpp1, __VA_ARGS__})
 #define Friendship(friendship) Friendship_(__LINE__, friendship)
 #define Status1(status1) Status1_(__LINE__, status1)
@@ -1064,7 +1074,7 @@ void ClosePokemon(u32 sourceLine);
 
 void RNGSeed_(u32 sourceLine, rng_value_t seed);
 void AIFlags_(u32 sourceLine, u64 flags);
-void BattlerAIFlags_(u32 sourceLine, enum BattlerId battler, u64 flags);
+void BattlerAIFlags_(u32 sourceLine, struct BattlePokemon *, u64 flags);
 void AILogScores(u32 sourceLine);
 void Gender_(u32 sourceLine, u32 gender);
 void Nature_(u32 sourceLine, u32 nature);
@@ -1249,12 +1259,18 @@ void SendOut(u32 sourceLine, struct BattlePokemon *, u32 partyIndex);
                                      MESSAGE("Go for it, " name "!");                       \
                                      MESSAGE("Your opponent's weak! Get 'em, " name "!");   \
                                  }
+#define EFFECTIVENESS_SE(battler, ...) QueueEffectivenessSound(__LINE__, battler, (struct EffectivenessEventContext) { __VA_ARGS__ })
 
 enum QueueGroupType
 {
     QUEUE_GROUP_NONE,
     QUEUE_GROUP_ONE_OF,
     QUEUE_GROUP_NONE_OF,
+};
+
+struct EffectivenessEventContext
+{
+    u16 soundId;
 };
 
 struct AbilityEventContext
@@ -1323,6 +1339,7 @@ void QueueExp(u32 sourceLine, struct BattlePokemon *battler, struct ExpEventCont
 void QueueMessage(u32 sourceLine, const u8 *pattern);
 void QueueStatus(u32 sourceLine, struct BattlePokemon *battler, struct StatusEventContext);
 void QueueCatchingChance(u32 sourceLine, u32 *captureAdress);
+void QueueEffectivenessSound(u32 sourceLine, struct BattlePokemon *battler, struct EffectivenessEventContext);
 
 /* Then */
 

@@ -847,12 +847,12 @@ static const struct WindowTemplate sPokemonList_WindowTemplate[] =
 
 static const u8 sText_No0000[] = _("{NO}0000");
 static const u8 sText_No000[] = _("{NO}000");
-static const u8 sCaughtBall_Gfx[] = INCBIN_U8("graphics/pokedex/caught_ball.4bpp");
+static const u8 sCaughtBall_Gfx[] = INCGFX_U8("graphics/pokedex/caught_ball.png", ".4bpp");
 static const u8 sText_TenDashes[] = _("----------");
 
 ALIGNED(4) static const u8 sExpandedPlaceholder_PokedexDescription[] = _("");
 
-static const u16 sSizeScreenSilhouette_Pal[] = INCBIN_U16("graphics/pokedex/size_silhouette.gbapal");
+static const u16 sSizeScreenSilhouette_Pal[] = INCGFX_U16("graphics/pokedex/size_silhouette.pal", ".gbapal");
 
 static const struct BgTemplate sInfoScreen_BgTemplate[] =
 {
@@ -4245,17 +4245,17 @@ static u32 GetMeasurementTextPositions(u32 textElement)
     if (!POKEDEX_PLUS_HGSS)
         return textElement;
 
-    switch(textElement)
+    switch (textElement)
     {
-        case DEX_HEADER_X:
-            return (DEX_HEADER_X + DEX_HGSS_HEADER_X_PADDING);
-        case DEX_Y_TOP:
-            return (DEX_Y_TOP + DEX_HGSS_Y_TOP_PADDING);
-        case DEX_Y_BOTTOM:
-            return (DEX_Y_BOTTOM + DEX_HGSS_Y_BOTTOM_PADDING);
-        default:
-        case DEX_MEASUREMENT_X:
-            return (DEX_MEASUREMENT_X + DEX_HGSS_MEASUREMENT_X_PADDING);
+    case DEX_HEADER_X:
+        return (DEX_HEADER_X + DEX_HGSS_HEADER_X_PADDING);
+    case DEX_Y_TOP:
+        return (DEX_Y_TOP + DEX_HGSS_Y_TOP_PADDING);
+    case DEX_Y_BOTTOM:
+        return (DEX_Y_BOTTOM + DEX_HGSS_Y_BOTTOM_PADDING);
+    default:
+    case DEX_MEASUREMENT_X:
+        return (DEX_MEASUREMENT_X + DEX_HGSS_MEASUREMENT_X_PADDING);
     }
 }
 

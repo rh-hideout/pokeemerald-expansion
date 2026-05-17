@@ -301,7 +301,7 @@ static const struct WindowTemplate sDecorationWindowTemplates[WINDOW_COUNT] =
     }
 };
 
-static const u16 sDecorationMenuPalette[] = INCBIN_U16("graphics/decorations/decoration_menu.gbapal");
+static const u16 sDecorationMenuPalette[] = INCGFX_U16("graphics/decorations/decoration_menu.pal", ".gbapal");
 
 static const struct ListMenuTemplate sDecorationItemsListMenuTemplate =
 {
@@ -440,9 +440,9 @@ static const u16 sDecorShapeSizes[] = {
     [DECORSHAPE_3x2] = 32,
 };
 
-static const u16 sBrendanPalette[] = INCBIN_U16("graphics/decorations/brendan.gbapal");
+static const u16 sBrendanPalette[] = INCGFX_U16("graphics/decorations/brendan.pal", ".gbapal");
 
-static const u16 sMayPalette[] = INCBIN_U16("graphics/decorations/may.gbapal");
+static const u16 sMayPalette[] = INCGFX_U16("graphics/decorations/may.pal", ".gbapal");
 
 static const struct YesNoFuncTable sReturnDecorationYesNoFunctions =
 {
@@ -456,7 +456,7 @@ static const struct YesNoFuncTable sStopPuttingAwayDecorationsYesNoFunctions =
     .noFunc = ContinuePuttingAwayDecorations,
 };
 
-static const u8 sDecorationPuttingAwayCursor[] = INCBIN_U8("graphics/decorations/put_away_cursor.4bpp");
+static const u8 sDecorationPuttingAwayCursor[] = INCGFX_U8("graphics/decorations/put_away_cursor.png", ".4bpp");
 
 static const struct SpritePalette sSpritePal_PuttingAwayCursorBrendan =
 {
@@ -1197,7 +1197,7 @@ static void WarpToInitialPosition(u8 taskId)
 
 static u16 GetDecorationElevation(u8 decoration, u8 tileIndex)
 {
-    u16 elevation = -1;
+    u16 elevation = ELEVATION_INVALID;
     switch (decoration)
     {
     case DECOR_STAND:
@@ -1242,7 +1242,7 @@ static void ShowDecorationOnMap_(u16 mapX, u16 mapY, u8 decWidth, u8 decHeight, 
                 overlapsWall = 0;
 
             elevation = GetDecorationElevation(gDecorations[decoration].id, j * decWidth + i);
-            if (elevation != 0xFFFF)
+            if (elevation != ELEVATION_INVALID)
                 MapGridSetMetatileEntryAt(x, y, (gDecorations[decoration].tiles[j * decWidth + i] + (NUM_TILES_IN_PRIMARY | overlapsWall)) | impassableFlag | elevation);
             else
                 MapGridSetMetatileIdAt(x, y, (gDecorations[decoration].tiles[j * decWidth + i] + (NUM_TILES_IN_PRIMARY | overlapsWall)) | impassableFlag);
@@ -1370,30 +1370,30 @@ static void Task_PlaceDecoration(u8 taskId)
 {
     switch (gTasks[taskId].tState)
     {
-        case 0:
-            if (!gPaletteFade.active)
-            {
-                SetInitialPositions(taskId);
-                gTasks[taskId].tState = 1;
-            }
-            break;
-        case 1:
-            RemoveFollowingPokemon();
-            gPaletteFade.bufferTransferDisabled = TRUE;
-            ConfigureCameraObjectForPlacingDecoration(&sPlaceDecorationGraphicsDataBuffer, gCurDecorationItems[gCurDecorationIndex]);
-            SetUpDecorationShape(taskId);
-            SetUpPlacingDecorationPlayerAvatar(taskId, &sPlaceDecorationGraphicsDataBuffer);
-            FadeInFromBlack();
-            gPaletteFade.bufferTransferDisabled = FALSE;
-            gTasks[taskId].tState = 2;
-            break;
-        case 2:
-            if (IsWeatherNotFadingIn() == TRUE)
-            {
-                gTasks[taskId].tDecorationItemsMenuCommand = DECOR_ITEMS_MENU_PLACE;
-                ContinueDecorating(taskId);
-            }
-            break;
+    case 0:
+        if (!gPaletteFade.active)
+        {
+            SetInitialPositions(taskId);
+            gTasks[taskId].tState = 1;
+        }
+        break;
+    case 1:
+        RemoveFollowingPokemon();
+        gPaletteFade.bufferTransferDisabled = TRUE;
+        ConfigureCameraObjectForPlacingDecoration(&sPlaceDecorationGraphicsDataBuffer, gCurDecorationItems[gCurDecorationIndex]);
+        SetUpDecorationShape(taskId);
+        SetUpPlacingDecorationPlayerAvatar(taskId, &sPlaceDecorationGraphicsDataBuffer);
+        FadeInFromBlack();
+        gPaletteFade.bufferTransferDisabled = FALSE;
+        gTasks[taskId].tState = 2;
+        break;
+    case 2:
+        if (IsWeatherNotFadingIn() == TRUE)
+        {
+            gTasks[taskId].tDecorationItemsMenuCommand = DECOR_ITEMS_MENU_PLACE;
+            ContinueDecorating(taskId);
+        }
+        break;
     }
 }
 
@@ -1429,47 +1429,47 @@ static void SetUpDecorationShape(u8 taskId)
 {
     switch (gDecorations[gCurDecorationItems[gCurDecorationIndex]].shape)
     {
-        case DECORSHAPE_1x1:
-            gTasks[taskId].tDecorWidth = 1;
-            gTasks[taskId].tDecorHeight = 1;
-            break;
-        case DECORSHAPE_2x1:
-            gTasks[taskId].tDecorWidth = 2;
-            gTasks[taskId].tDecorHeight = 1;
-            break;
-        case DECORSHAPE_3x1:
-            gTasks[taskId].tDecorWidth = 3;
-            gTasks[taskId].tDecorHeight = 1;
-            break;
-        case DECORSHAPE_4x2:
-            gTasks[taskId].tDecorWidth = 4;
-            gTasks[taskId].tDecorHeight = 2;
-            break;
-        case DECORSHAPE_2x2:
-            gTasks[taskId].tDecorWidth = 2;
-            gTasks[taskId].tDecorHeight = 2;
-            break;
-        case DECORSHAPE_1x2:
-            gTasks[taskId].tDecorWidth = 1;
-            gTasks[taskId].tDecorHeight = 2;
-            break;
-        case DECORSHAPE_1x3:
-            gTasks[taskId].tDecorWidth = 1;
-            gTasks[taskId].tDecorHeight = 3;
-            gTasks[taskId].tCursorY++;
-            break;
-        case DECORSHAPE_2x4:
-            gTasks[taskId].tDecorWidth = 2;
-            gTasks[taskId].tDecorHeight = 4;
-            break;
-        case DECORSHAPE_3x3:
-            gTasks[taskId].tDecorWidth = 3;
-            gTasks[taskId].tDecorHeight = 3;
-            break;
-        case DECORSHAPE_3x2:
-            gTasks[taskId].tDecorWidth = 3;
-            gTasks[taskId].tDecorHeight = 2;
-            break;
+    case DECORSHAPE_1x1:
+        gTasks[taskId].tDecorWidth = 1;
+        gTasks[taskId].tDecorHeight = 1;
+        break;
+    case DECORSHAPE_2x1:
+        gTasks[taskId].tDecorWidth = 2;
+        gTasks[taskId].tDecorHeight = 1;
+        break;
+    case DECORSHAPE_3x1:
+        gTasks[taskId].tDecorWidth = 3;
+        gTasks[taskId].tDecorHeight = 1;
+        break;
+    case DECORSHAPE_4x2:
+        gTasks[taskId].tDecorWidth = 4;
+        gTasks[taskId].tDecorHeight = 2;
+        break;
+    case DECORSHAPE_2x2:
+        gTasks[taskId].tDecorWidth = 2;
+        gTasks[taskId].tDecorHeight = 2;
+        break;
+    case DECORSHAPE_1x2:
+        gTasks[taskId].tDecorWidth = 1;
+        gTasks[taskId].tDecorHeight = 2;
+        break;
+    case DECORSHAPE_1x3:
+        gTasks[taskId].tDecorWidth = 1;
+        gTasks[taskId].tDecorHeight = 3;
+        gTasks[taskId].tCursorY++;
+        break;
+    case DECORSHAPE_2x4:
+        gTasks[taskId].tDecorWidth = 2;
+        gTasks[taskId].tDecorHeight = 4;
+        break;
+    case DECORSHAPE_3x3:
+        gTasks[taskId].tDecorWidth = 3;
+        gTasks[taskId].tDecorHeight = 3;
+        break;
+    case DECORSHAPE_3x2:
+        gTasks[taskId].tDecorWidth = 3;
+        gTasks[taskId].tDecorHeight = 2;
+        break;
     }
 }
 

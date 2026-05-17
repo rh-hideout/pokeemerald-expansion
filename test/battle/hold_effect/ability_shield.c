@@ -35,6 +35,38 @@ SINGLE_BATTLE_TEST("Ability Shield protects against Neutralizing Gas")
     }
 }
 
+DOUBLE_BATTLE_TEST("Ability Shield prevents Intimidate from reactivating after Neutralizing Gas ends")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
+        PLAYER(SPECIES_WYNAUT) { Speed(4); }
+        OPPONENT(SPECIES_KOFFING) { Ability(ABILITY_NEUTRALIZING_GAS); HP(1); Speed(1); }
+        OPPONENT(SPECIES_GYARADOS) { Ability(ABILITY_INTIMIDATE); Item(ITEM_ABILITY_SHIELD); Speed(3); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft); }
+    } SCENE {
+        ABILITY_POPUP(opponentLeft, ABILITY_NEUTRALIZING_GAS);
+        MESSAGE("Neutralizing gas filled the area!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
+        MESSAGE("The opposing Gyarados's Ability is protected by the effects of its Ability Shield!");
+        ABILITY_POPUP(opponentRight, ABILITY_INTIMIDATE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
+        HP_BAR(opponentLeft);
+        MESSAGE("The effects of the neutralizing gas wore off!");
+        NONE_OF {
+            ABILITY_POPUP(opponentRight, ABILITY_INTIMIDATE);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+        }
+        MESSAGE("The opposing Koffing fainted!");
+    } THEN {
+        EXPECT_EQ(playerLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
+    }
+}
+
 SINGLE_BATTLE_TEST("Ability Shield protects against Mold Breaker (no message)")
 {
     enum Item item;
@@ -269,8 +301,65 @@ SINGLE_BATTLE_TEST("Ability Shield protects against Skill Swap even if user has 
     }
 }
 
+DOUBLE_BATTLE_TEST("Ability Shield prevents Receiver/Power of Alchemy holder from copying ally's ability")
+{
+    u32 species;
+    enum Ability ability;
+
+    PARAMETRIZE { species = SPECIES_PASSIMIAN; ability = ABILITY_RECEIVER; }
+    PARAMETRIZE { species = SPECIES_MUK_ALOLA; ability = ABILITY_POWER_OF_ALCHEMY; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(species) { Ability(ability); Item(ITEM_ABILITY_SHIELD); }
+        OPPONENT(SPECIES_GYARADOS) { Ability(ABILITY_INTIMIDATE); HP(1); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentRight); }
+    } SCENE {
+        ABILITY_POPUP(opponentRight, ABILITY_INTIMIDATE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
+        MESSAGE("The opposing Gyarados fainted!");
+        NONE_OF {
+            ABILITY_POPUP(opponentLeft, ability);
+            ABILITY_POPUP(opponentLeft, ABILITY_INTIMIDATE);
+        }
+    } THEN {
+        EXPECT_EQ(opponentLeft->ability, ability);
+        EXPECT_EQ(playerLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Ability Shield on fainted ally does not block Receiver/Power of Alchemy")
+{
+    u32 species;
+    enum Ability ability;
+
+    PARAMETRIZE { species = SPECIES_PASSIMIAN; ability = ABILITY_RECEIVER; }
+    PARAMETRIZE { species = SPECIES_MUK_ALOLA; ability = ABILITY_POWER_OF_ALCHEMY; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(species) { Ability(ability); }
+        OPPONENT(SPECIES_GYARADOS) { Ability(ABILITY_INTIMIDATE); Item(ITEM_ABILITY_SHIELD); HP(1); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentRight); }
+    } SCENE {
+        ABILITY_POPUP(opponentRight, ABILITY_INTIMIDATE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
+        MESSAGE("The opposing Gyarados fainted!");
+        ABILITY_POPUP(opponentLeft, ability);
+        ABILITY_POPUP(opponentLeft, ABILITY_INTIMIDATE);
+    } THEN {
+        EXPECT_EQ(opponentLeft->ability, ABILITY_INTIMIDATE);
+        EXPECT_EQ(playerLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 2);
+        EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 2);
+    }
+}
+
 // These currently do not activate, but probably should do held item animation + message
 TO_DO_BATTLE_TEST("Ability Shield prevents the user's Trace from changing its ability");
-TO_DO_BATTLE_TEST("Ability Shield prevents the user's Receiver from changing its ability");
 TO_DO_BATTLE_TEST("Ability Shield protects against Wandering Spirit");
 TO_DO_BATTLE_TEST("Ability Shield protects against Mummy/Lingering Aroma");

@@ -602,14 +602,14 @@ AI_DOUBLE_BATTLE_TEST("Battler 3 has Battler 1 AI flags set correctly (doubles)"
     ASSUME(IsExplosionMove(MOVE_EXPLOSION));
 
     u32 aiFlags;
-    enum BattlerId battler;
+    struct BattlePokemon *battler = NULL;
 
-    PARAMETRIZE { aiFlags = 0; battler = 1; }
-    PARAMETRIZE { aiFlags = 0; battler = 3; }
-    PARAMETRIZE { aiFlags = AI_FLAG_RISKY; battler = 3; }
-    PARAMETRIZE { aiFlags = AI_FLAG_RISKY; battler = 1; }
-    PARAMETRIZE { aiFlags = AI_FLAG_WILL_SUICIDE; battler = 1; }
-    PARAMETRIZE { aiFlags = AI_FLAG_WILL_SUICIDE; battler = 3; }
+    PARAMETRIZE { aiFlags = 0; battler = opponentLeft; }
+    PARAMETRIZE { aiFlags = 0; battler = opponentRight; }
+    PARAMETRIZE { aiFlags = AI_FLAG_RISKY; battler = opponentRight; }
+    PARAMETRIZE { aiFlags = AI_FLAG_RISKY; battler = opponentLeft; }
+    PARAMETRIZE { aiFlags = AI_FLAG_WILL_SUICIDE; battler = opponentLeft; }
+    PARAMETRIZE { aiFlags = AI_FLAG_WILL_SUICIDE; battler = opponentRight; }
 
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
@@ -619,7 +619,7 @@ AI_DOUBLE_BATTLE_TEST("Battler 3 has Battler 1 AI flags set correctly (doubles)"
         OPPONENT(SPECIES_VOLTORB) { Moves(MOVE_EXPLOSION, MOVE_ELECTRO_BALL); HP(1); }
         OPPONENT(SPECIES_ELECTRODE) { Moves(MOVE_EXPLOSION, MOVE_ELECTRO_BALL); HP(1); }
     } WHEN {
-        if (aiFlags == 0 || battler == 3)
+        if (aiFlags == 0 || battler == opponentRight)
             TURN { EXPECT_MOVE(opponentLeft, MOVE_ELECTRO_BALL, target: playerLeft); EXPECT_MOVE(opponentRight, MOVE_ELECTRO_BALL, target: playerLeft); }
         else
             TURN { EXPECT_MOVE(opponentLeft, MOVE_EXPLOSION, target: playerLeft); EXPECT_MOVE(opponentRight, MOVE_EXPLOSION); }
@@ -670,7 +670,6 @@ AI_DOUBLE_BATTLE_TEST("AI sees corresponding absorbing abilities on partners")
 
 AI_DOUBLE_BATTLE_TEST("AI treats an ally's redirection ability appropriately (gen 4)")
 {
-    KNOWN_FAILING;
     ASSUME(GetMoveTarget(MOVE_DISCHARGE) == TARGET_FOES_AND_ALLY);
     ASSUME(GetMoveType(MOVE_DISCHARGE) == TYPE_ELECTRIC);
     ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
@@ -717,7 +716,7 @@ AI_DOUBLE_BATTLE_TEST("AI treats an ally's redirection ability appropriately (ge
         ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
         ASSUME(GetMoveType(MOVE_SURF) == TYPE_WATER);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_HP_AWARE);
-        WITH_CONFIG(CONFIG_REDIRECT_ABILITY_IMMUNITY, config);
+        WITH_CONFIG(B_REDIRECT_ABILITY_IMMUNITY, config);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(move, MOVE_HEADBUTT); }

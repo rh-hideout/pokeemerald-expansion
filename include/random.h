@@ -160,6 +160,7 @@ enum RandomTag
     RNG_SECONDARY_EFFECT_3,
     RNG_SHED_SKIN,
     RNG_SLEEP_TURNS,
+    RNG_TAUNT_TURNS,
     RNG_SPEED_TIE,
     RNG_STATIC,
     RNG_STENCH,
@@ -241,7 +242,6 @@ enum RandomTag
     RNG_FISHING_BITE,
     RNG_FISHING_GEN3_STICKY,
     RNG_WILD_MON_TARGET,
-    RNG_TAUNT,
 };
 
 #define RandomWeighted(tag, ...) \

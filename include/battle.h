@@ -235,7 +235,8 @@ struct AiLogicData
     u32 shouldConsiderExplosion:1; // Determines whether AI should consider explosion moves this turn
     u32 shouldSwitch:4; // Stores result of ShouldSwitch, which decides whether a mon should be switched out
     u32 shouldConsiderFinalGambit:1; // Determines whether AI should consider Final Gambit this turn
-    u32 padding2:19;
+    u32 switchInCalc:1; // Indicates if we're doing switch in calcs, this is purely for Retaliate damage calcs
+    u32 padding2:18;
 };
 
 struct AiThinkingStruct
@@ -601,7 +602,8 @@ struct BattleStruct
     u8 sleepClauseNotBlocked:1;
     u8 isSkyBattle:1;
     u8 unableToUseMove:1; // for the current action only, to check if the battler failed to act at end turn use the DisableStruct member
-    u8 unused:4;
+    u8 triAttackBurn:1;
+    u8 unused:3;
     void (*savedCallback)(void);
     u16 chosenItem[MAX_BATTLERS_COUNT];
     u16 choicedMove[MAX_BATTLERS_COUNT];
@@ -681,6 +683,7 @@ struct BattleStruct
     u16 prevTurnSpecies[MAX_BATTLERS_COUNT]; // Stores species the AI has in play at start of turn
     s16 passiveHpUpdate[MAX_BATTLERS_COUNT]; // non-move damage and healing
     s16 moveDamage[MAX_BATTLERS_COUNT];
+    u16 innardsOutHpLost[MAX_BATTLERS_COUNT];
     u16 moveResultFlags[MAX_BATTLERS_COUNT];
     enum CalcDamageState noResultString[MAX_BATTLERS_COUNT];
     u8 doneDoublesSpreadHit:1;
@@ -700,11 +703,14 @@ struct BattleStruct
     u16 flingItem;
     u8 incrementEchoedVoice:1;
     u8 echoedVoiceCounter:3;
-    u8 preAttackAnimPlayed:1;
-    u8 padding4:1;
+    u8 attackAnimPlayed:1;
+    u8 preAttackEffectHappened:1;
     u8 magicCoatActive:1;
     u8 magicBounceActive:1;
     u8 moveBouncer;
+    u8 dancerSavedAttacker:3;
+    u8 dancerSavedTarget:3;
+    u8 padding:2;
 };
 
 struct AiBattleData
@@ -1066,9 +1072,15 @@ static inline bool32 IsBattlerAlive(enum BattlerId battler)
         return TRUE;
 }
 
-static inline bool32 IsBattlerTurnDamaged(enum BattlerId battler)
+enum SubCheck
 {
-    return gSpecialStatuses[battler].damagedByAttack;
+    EXCLUDING_SUBSTITUTES,
+    INCLUDING_SUBSTITUTES
+};
+
+static inline bool32 IsBattlerTurnDamaged(enum BattlerId battler, enum SubCheck subCheck)
+{
+    return gSpecialStatuses[battler].damagedByAttack || ((subCheck == INCLUDING_SUBSTITUTES) && gBattleStruct->moveDamage[battler] > 0);
 }
 
 static inline bool32 IsBattlerAtMaxHp(enum BattlerId battler)
@@ -1092,17 +1104,17 @@ static inline enum BattlerId GetBattlerAtPosition(enum BattlerPosition position)
     return battler;
 }
 
-static inline u32 GetPartnerBattler(enum BattlerId battler)
+static inline enum BattlerId GetPartnerBattler(enum BattlerId battler)
 {
     return GetBattlerAtPosition(BATTLE_PARTNER(GetBattlerPosition(battler)));
 }
 
-static inline u32 GetOppositeBattler(enum BattlerId battler)
+static inline enum BattlerId GetOppositeBattler(enum BattlerId battler)
 {
     return GetBattlerAtPosition(BATTLE_OPPOSITE(GetBattlerPosition(battler)));
 }
 
-static inline u32 GetBattlerSide(enum BattlerId battler)
+static inline enum BattleSide GetBattlerSide(enum BattlerId battler)
 {
     return GetBattlerPosition(battler) & BIT_SIDE;
 }
@@ -1117,7 +1129,7 @@ static inline bool32 IsBattlerAlly(enum BattlerId battlerAtk, enum BattlerId bat
     return GetBattlerSide(battlerAtk) == GetBattlerSide(battlerDef);
 }
 
-static inline u32 GetOpposingSideBattler(enum BattlerId battler)
+static inline enum BattlerId GetOpposingSideBattler(enum BattlerId battler)
 {
     return GetBattlerAtPosition(BATTLE_OPPOSITE(GetBattlerSide(battler)));
 }
@@ -1155,7 +1167,7 @@ static inline bool32 IsSpreadMove(enum MoveTarget moveTarget)
     return moveTarget == TARGET_BOTH || moveTarget == TARGET_FOES_AND_ALLY;
 }
 
-static inline u32 GetBattlerChosenMove(enum BattlerId battler)
+static inline enum Move GetBattlerChosenMove(enum BattlerId battler)
 {
     return gBattleMons[battler].moves[gBattleStruct->chosenMovePositions[battler]];
 }

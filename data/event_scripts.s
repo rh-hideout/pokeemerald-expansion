@@ -50,6 +50,7 @@
 #include "constants/moves.h"
 #include "constants/mystery_gift.h"
 #include "constants/party_menu.h"
+#include "constants/pokeball.h"
 #include "constants/pokedex.h"
 #include "constants/pokemon.h"
 #include "constants/rtc.h"
@@ -1062,7 +1063,7 @@ EventScript_AfterWhiteOutHeal::
 	lockall
 	msgbox gText_FirstShouldRestoreMonsHealth
 	call EventScript_PkmnCenterNurse_TakeAndHealPkmn
-	call_if_unset FLAG_DEFEATED_RUSTBORO_GYM, EventScript_AfterWhiteOutHealMsgPreRoxanne
+	call_if_unset FLAG_DEFEATED_RUSTBORO_GYM, EventScript_AfterWhiteOutHealMsgPreFirstBoss
 	call_if_set FLAG_DEFEATED_RUSTBORO_GYM, EventScript_AfterWhiteOutHealMsg
 	applymovement VAR_LAST_TALKED, Movement_PkmnCenterNurse_Bow
 	waitmovement 0
@@ -1070,7 +1071,7 @@ EventScript_AfterWhiteOutHeal::
 	releaseall
 	end
 
-EventScript_AfterWhiteOutHealMsgPreRoxanne::
+EventScript_AfterWhiteOutHealMsgPreFirstBoss::
 	msgbox gText_MonsHealedShouldBuyPotions
 	return
 
@@ -1080,6 +1081,7 @@ EventScript_AfterWhiteOutHealMsg::
 
 EventScript_AfterWhiteOutMomHeal::
 	lockall
+	textcolor NPC_TEXT_COLOR_FEMALE
 	applymovement LOCALID_PLAYERS_HOUSE_1F_MOM, Common_Movement_WalkInPlaceFasterDown
 	waitmovement 0
 	msgbox gText_HadQuiteAnExperienceTakeRest
@@ -1432,7 +1434,7 @@ gText_HadQuiteAnExperienceTakeRest::
 gText_MomExplainHPGetPotions::
 	.string "MOM: Oh, good! You and your\n"
 	.string "POKéMON are looking great.\p"
-	.string "I just heard from PROF. BIRCH.\p"
+	.string "I just heard from {STR_VAR_1}.\p"
 	.string "He said that POKéMON's energy is\n"
 	.string "measured in HP.\p"
 	.string "If your POKéMON lose their HP,\n"
@@ -1526,9 +1528,8 @@ gText_WantWhichFloor::
 	.include "data/text/abnormal_weather.inc"
 
 EventScript_GetInGameTradeSpeciesInfo::
-	copyvar VAR_0x8004, VAR_0x8008
-	specialvar VAR_RESULT, GetInGameTradeSpeciesInfo
-	copyvar VAR_0x8009, VAR_RESULT
+	copyvar VAR_0x8005, VAR_0x8008
+	specialvar VAR_0x8009, GetInGameTradeSpeciesInfo
 	return
 
 EventScript_ChooseMonForInGameTrade::
@@ -1536,18 +1537,13 @@ EventScript_ChooseMonForInGameTrade::
 	waitstate
 	lock
 	faceplayer
-	copyvar VAR_0x800A, VAR_0x8004
 	return
 
 EventScript_GetInGameTradeSpecies::
-	copyvar VAR_0x8005, VAR_0x800A
 	specialvar VAR_RESULT, GetTradeSpecies
-	copyvar VAR_0x800B, VAR_RESULT
 	return
 
 EventScript_DoInGameTrade::
-	copyvar VAR_0x8004, VAR_0x8008
-	copyvar VAR_0x8005, VAR_0x800A
 	special CreateInGameTradePokemon
 	special DoInGameTradeScene
 	waitstate

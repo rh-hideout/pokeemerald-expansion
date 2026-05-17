@@ -1,10 +1,13 @@
 #include "global.h"
 #include "battle.h"
+#include "egg_hatch.h"
 #include "event_data.h"
+#include "new_game.h"
 #include "pokemon.h"
 #include "test/overworld_script.h"
 #include "test/test.h"
 #include "constants/characters.h"
+#include "constants/daycare.h"
 #include "constants/move_relearner.h"
 
 TEST("Nature independent from Hidden Nature")
@@ -85,6 +88,27 @@ TEST("Shininess independent from PID and OTID")
     EXPECT_EQ(pid, GetMonData(&mon, MON_DATA_PERSONALITY));
     EXPECT_EQ(otId, GetMonData(&mon, MON_DATA_OT_ID));
     EXPECT_EQ(!isShiny, GetMonData(&mon, MON_DATA_IS_SHINY));
+}
+
+TEST("Shininess set on an Egg persists after hatching")
+{
+    u32 personality = SHINY_ODDS;
+    u32 trainerId = 0;
+    bool32 isShiny = TRUE;
+    bool8 isEgg = TRUE;
+
+    SetTrainerId(trainerId, gSaveBlock2Ptr->playerTrainerId);
+    CreateMon(&gPlayerParty[0], SPECIES_TOGEPI, EGG_HATCH_LEVEL, personality, OTID_STRUCT_PLAYER_ID);
+    SetMonData(&gPlayerParty[0], MON_DATA_IS_EGG, &isEgg);
+    SetMonData(&gPlayerParty[0], MON_DATA_IS_SHINY, &isShiny);
+
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_IS_SHINY), TRUE);
+
+    gSpecialVar_0x8004 = 0;
+    ScriptHatchMon();
+
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_IS_EGG), FALSE);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_IS_SHINY), TRUE);
 }
 
 TEST("Hyper Training increases stats without affecting IVs")
@@ -354,10 +378,10 @@ TEST("givemon [moves (default)]")
     }
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_PYUKUMUKU);
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_LEVEL), 100);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE1), learnset[learnsetLength - 1].move);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE2), learnset[learnsetLength - 2].move);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE3), learnset[learnsetLength - 3].move);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE4), learnset[learnsetLength - 4].move);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE1), learnset[learnsetLength - 4].move);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE2), learnset[learnsetLength - 3].move);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE3), learnset[learnsetLength - 2].move);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MOVE4), learnset[learnsetLength - 1].move);
 }
 
 TEST("givemon [all]")
@@ -365,7 +389,7 @@ TEST("givemon [all]")
     ZeroPlayerPartyMons();
 
     RUN_OVERWORLD_SCRIPT(
-        givemon SPECIES_WOBBUFFET, 100, item=ITEM_LEFTOVERS, ball=ITEM_MASTER_BALL, nature=NATURE_BOLD, abilityNum=2, gender=MON_MALE, hpEv=1, atkEv=2, defEv=3, speedEv=4, spAtkEv=5, spDefEv=6, hpIv=7, atkIv=8, defIv=9, speedIv=10, spAtkIv=11, spDefIv=12, move1=MOVE_SCRATCH, move2=MOVE_SPLASH, move3=MOVE_CELEBRATE, move4=MOVE_EXPLOSION, shinyMode=SHINY_MODE_ALWAYS, gmaxFactor=TRUE, teraType=TYPE_FIRE, dmaxLevel=7;
+        givemon SPECIES_WOBBUFFET, 100, item=ITEM_LEFTOVERS, ball=BALL_MASTER, nature=NATURE_BOLD, abilityNum=2, gender=MON_MALE, hpEv=1, atkEv=2, defEv=3, speedEv=4, spAtkEv=5, spDefEv=6, hpIv=7, atkIv=8, defIv=9, speedIv=10, spAtkIv=11, spDefIv=12, move1=MOVE_SCRATCH, move2=MOVE_SPLASH, move3=MOVE_CELEBRATE, move4=MOVE_EXPLOSION, shinyMode=SHINY_MODE_ALWAYS, gmaxFactor=TRUE, teraType=TYPE_FIRE, dmaxLevel=7;
     );
 
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_WOBBUFFET);
@@ -404,7 +428,7 @@ TEST("givemon [vars]")
     VarSet(VAR_TEMP_C, SPECIES_WOBBUFFET);
     VarSet(VAR_TEMP_D, 100);
     VarSet(VAR_0x8000, ITEM_LEFTOVERS);
-    VarSet(VAR_0x8001, ITEM_MASTER_BALL);
+    VarSet(VAR_0x8001, BALL_MASTER);
     VarSet(VAR_0x8002, NATURE_BOLD);
     VarSet(VAR_0x8003, 2);
     VarSet(VAR_0x8004, MON_MALE);
@@ -544,7 +568,7 @@ TEST("CalculateMonStats")
     ZeroPlayerPartyMons();
 
     RUN_OVERWORLD_SCRIPT(
-        givemon SPECIES_WOBBUFFET, 100, item=ITEM_LEFTOVERS, ball=ITEM_MASTER_BALL, nature=NATURE_BOLD, abilityNum=2, gender=MON_MALE, hpEv=1, atkEv=2, defEv=3, speedEv=4, spAtkEv=5, spDefEv=6, hpIv=7, atkIv=8, defIv=9, speedIv=10, spAtkIv=11, spDefIv=12, move1=MOVE_SCRATCH, move2=MOVE_SPLASH, move3=MOVE_CELEBRATE, move4=MOVE_EXPLOSION, shinyMode=SHINY_MODE_ALWAYS, gmaxFactor=TRUE, teraType=TYPE_FIRE, dmaxLevel=7;
+        givemon SPECIES_WOBBUFFET, 100, item=ITEM_LEFTOVERS, ball=BALL_MASTER, nature=NATURE_BOLD, abilityNum=2, gender=MON_MALE, hpEv=1, atkEv=2, defEv=3, speedEv=4, spAtkEv=5, spDefEv=6, hpIv=7, atkIv=8, defIv=9, speedIv=10, spAtkIv=11, spDefIv=12, move1=MOVE_SCRATCH, move2=MOVE_SPLASH, move3=MOVE_CELEBRATE, move4=MOVE_EXPLOSION, shinyMode=SHINY_MODE_ALWAYS, gmaxFactor=TRUE, teraType=TYPE_FIRE, dmaxLevel=7;
     );
 
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MAX_HP), 497);
@@ -558,6 +582,9 @@ TEST("CalculateMonStats")
 
 TEST("BoxPokemon encryption works")
 {
+    // This test exists to ensure that expansion has not broken anything with regards to how BoxPokemon encryption works.
+    // If users make changes to the definitions of BoxPokemon, Pokemon, or any of their members, it is expected that this test will fail. To avoid the failing test from blocking CI, users can uncomment the KNOWN_FAILING declaration.
+    // KNOWN_FAILING;
     u32 raw[20] =
     {
         990384375,

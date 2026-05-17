@@ -49,7 +49,7 @@ static void AddTreeBonus(struct BerryTree *tree, u8 bonus);
 #error "OW_BERRY_DRAIN_RATE must be GEN_5, GEN_6_XY or GEN_6_ORAS!"
 #endif
 
-#if OW_BERRY_COLORS != GEN_6_XY && OW_BERRY_COLORS != GEN_6_ORAS 
+#if OW_BERRY_COLORS != GEN_6_XY && OW_BERRY_COLORS != GEN_6_ORAS
 #error "OW_BERRY_COLORS must be GEN_6_XY or GEN_6_ORAS!"
 #endif
 
@@ -1968,7 +1968,7 @@ void PlantBerryTree(u8 id, u8 berry, u8 stage, bool8 allowGrowth)
     if (OW_BERRY_ALWAYS_WATERABLE)
     {
         // We simulate a tree having grown without water
-        u32 berryTreeAge = GetBerryTreeAge(id, stage);
+        u32 berryTreeAge = GetBerryTreeAge(berry, stage);
         if (GetBerryInfo(berry)->maxYield - berryTreeAge * GetBerryInfo(berry)->maxYield / 5 < GetBerryInfo(berry)->minYield)
             tree->berryYield = GetBerryInfo(berry)->minYield;
         else
@@ -2370,7 +2370,7 @@ static const u8 sBerryMutations[][3] = {
 static u8 GetMutationOutcome(u8 berry1, u8 berry2)
 {
     u8 i;
-    for(i = 0; i < ARRAY_COUNT(sBerryMutations); i++)
+    for (i = 0; i < ARRAY_COUNT(sBerryMutations); i++)
     {
         if ((sBerryMutations[i][0] == berry1 && sBerryMutations[i][1] == berry2)
           ||(sBerryMutations[i][0] == berry2 && sBerryMutations[i][1] == berry1))
@@ -2405,7 +2405,12 @@ static u8 TryForMutation(u8 berryTreeId, u8 berry)
         {
             x2 = gObjectEvents[j].currentCoords.x;
             y2 = gObjectEvents[j].currentCoords.y;
-            if (Random() % 100 < (OW_BERRY_MUTATION_CHANCE * (mulch == ITEM_TO_MULCH(ITEM_SURPRISE_MULCH) || mulch == ITEM_TO_MULCH(ITEM_AMAZE_MULCH))) && (
+            u32 rate = OW_BERRY_MUTATION_CHANCE;
+
+            if (mulch == ITEM_TO_MULCH(ITEM_SURPRISE_MULCH) || mulch == ITEM_TO_MULCH(ITEM_AMAZE_MULCH))
+                rate *= 2;
+
+            if (Random() % 100 < rate && (
                 (x1 == x2 && y1 == y2 - 1) ||
                 (x1 == x2 && y1 == y2 + 1) ||
                 (x1 == x2 - 1 && y1 == y2) ||
@@ -2462,26 +2467,26 @@ static u16 GetBerryPestSpecies(u8 berryId)
 {
 #if OW_BERRY_PESTS == TRUE
     const struct Berry *berry = GetBerryInfo(berryId);
-    switch(berry->color)
+    switch (berry->color)
     {
-        case BERRY_COLOR_RED:
-            return P_FAMILY_LEDYBA ? SPECIES_LEDYBA : SPECIES_NONE;
-            break;
-        case BERRY_COLOR_BLUE:
-            return P_FAMILY_VOLBEAT_ILLUMISE ? SPECIES_VOLBEAT : SPECIES_NONE;
-            break;
-        case BERRY_COLOR_PURPLE:
-            return P_FAMILY_VOLBEAT_ILLUMISE ? SPECIES_ILLUMISE : SPECIES_NONE;
-            break;
-        case BERRY_COLOR_GREEN:
-            return P_FAMILY_BURMY ? SPECIES_BURMY_PLANT : SPECIES_NONE;
-            break;
-        case BERRY_COLOR_YELLOW:
-            return P_FAMILY_COMBEE ? SPECIES_COMBEE : SPECIES_NONE;
-            break;
-        case BERRY_COLOR_PINK:
-            return P_FAMILY_SCATTERBUG ? SPECIES_SPEWPA : SPECIES_NONE;
-            break;
+    case BERRY_COLOR_RED:
+        return P_FAMILY_LEDYBA ? SPECIES_LEDYBA : SPECIES_NONE;
+        break;
+    case BERRY_COLOR_BLUE:
+        return P_FAMILY_VOLBEAT_ILLUMISE ? SPECIES_VOLBEAT : SPECIES_NONE;
+        break;
+    case BERRY_COLOR_PURPLE:
+        return P_FAMILY_VOLBEAT_ILLUMISE ? SPECIES_ILLUMISE : SPECIES_NONE;
+        break;
+    case BERRY_COLOR_GREEN:
+        return P_FAMILY_BURMY ? SPECIES_BURMY_PLANT : SPECIES_NONE;
+        break;
+    case BERRY_COLOR_YELLOW:
+        return P_FAMILY_COMBEE ? SPECIES_COMBEE : SPECIES_NONE;
+        break;
+    case BERRY_COLOR_PINK:
+        return P_FAMILY_SCATTERBUG ? SPECIES_SPEWPA : SPECIES_NONE;
+        break;
     }
 #endif
     return SPECIES_NONE;

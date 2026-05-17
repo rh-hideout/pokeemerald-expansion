@@ -141,7 +141,7 @@ SINGLE_BATTLE_TEST("Strength Sap fails if target is at -6 Atk")
     }
 }
 
-TO_DO_BATTLE_TEST("Strength Sap doesn't fail if target has Contrary and is at +6 Atk, restoring HP based on +5 Atk")
+TO_DO_BATTLE_TEST("Strength Sap will restore hp if target has Contrary and is at +6 Atk")
 
 SINGLE_BATTLE_TEST("Strength Sap restores more HP if Big Root is held", s16 hp)
 {
@@ -165,5 +165,94 @@ SINGLE_BATTLE_TEST("Strength Sap restores more HP if Big Root is held", s16 hp)
         MESSAGE("The opposing Wobbuffet had its energy drained!");
     } FINALLY {
         EXPECT_GT(abs(results[1].hp), abs(results[0].hp));
+    }
+}
+
+SINGLE_BATTLE_TEST("Strength Sap will not drain users hp due to Liquid Ooze if user is Magic Guard protected")
+{
+    GIVEN {
+        PLAYER(SPECIES_TENTACOOL) { Ability(ABILITY_LIQUID_OOZE); }
+        OPPONENT(SPECIES_CLEFAIRY) { HP(1); Ability(ABILITY_MAGIC_GUARD); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_STRENGTH_SAP); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STRENGTH_SAP, opponent);
+        ABILITY_POPUP(player, ABILITY_LIQUID_OOZE);
+        NOT HP_BAR(opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Strength Sap does not fail if target has Contrary and is at +6 Atk")
+{
+    GIVEN {
+        PLAYER(SPECIES_SNIVY) { Ability(ABILITY_CONTRARY); }
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CHARM); }
+        TURN { MOVE(opponent, MOVE_CHARM); }
+        TURN { MOVE(opponent, MOVE_CHARM); }
+        TURN { MOVE(opponent, MOVE_STRENGTH_SAP); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CHARM, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CHARM, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CHARM, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STRENGTH_SAP, opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Strength Sap does not fail if user is at full hp and target has Clear Body")
+{
+    GIVEN {
+        PLAYER(SPECIES_BELDUM) { Ability(ABILITY_CLEAR_BODY); }
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_STRENGTH_SAP); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STRENGTH_SAP, opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Strength Sap fails if Heal Block applies")
+{
+    GIVEN {
+        ASSUME(B_HEAL_BLOCKING >= GEN_6);
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_HEAL_BLOCK); MOVE(player, MOVE_STRENGTH_SAP); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAL_BLOCK, opponent);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_STRENGTH_SAP, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Strength Sap will drain users HP if target has Liquid Ooze")
+{
+    s16 lostHp;
+    s32 atkStat;
+
+    PARAMETRIZE { atkStat = 100; }
+    PARAMETRIZE { atkStat = 490; } // Checks that attacker can faint with no problems.
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_TENTACOOL) { Attack(atkStat); Ability(ABILITY_LIQUID_OOZE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_STRENGTH_SAP); if (atkStat == 490) { SEND_OUT(player, 1); } }
+    } SCENE {
+        MESSAGE("Wobbuffet used Strength Sap!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STRENGTH_SAP, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        MESSAGE("The opposing Tentacool's Attack fell!");
+        ABILITY_POPUP(opponent, ABILITY_LIQUID_OOZE);
+        HP_BAR(player, captureDamage: &lostHp);
+        MESSAGE("Wobbuffet sucked up the liquid ooze!");
+        if (atkStat >= 490) {
+            MESSAGE("Wobbuffet fainted!");
+            SEND_IN_MESSAGE("Wobbuffet");
+        }
+    } THEN {
+        EXPECT_EQ(lostHp, atkStat);
     }
 }

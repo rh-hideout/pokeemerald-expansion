@@ -268,36 +268,37 @@ static u8 sActiveList[32];
 extern u8 *gFieldEffectScriptPointers[];
 extern const struct SpriteTemplate *const gFieldEffectObjectTemplatePointers[];
 
-static const u32 sNewGameBirch_Gfx[] = INCBIN_U32("graphics/birch_speech/birch.4bpp");
-static const u32 sUnusedBirchBeauty[] = INCBIN_U32("graphics/birch_speech/unused_beauty.4bpp");
-static const u16 sNewGameBirch_Pal[16] = INCBIN_U16("graphics/birch_speech/birch.gbapal");
+static const u32 sNewGameBirch_Gfx[] = INCGFX_U32("graphics/birch_speech/birch.png", ".4bpp");
+static const u32 sUnusedBirchBeauty[] = INCGFX_U32("graphics/birch_speech/unused_beauty.png", ".4bpp", "-num_tiles 822 -Wnum_tiles");
+static const u16 sNewGameBirch_Pal[16] = INCGFX_U16("graphics/birch_speech/birch.png", ".gbapal");
 
-static const u32 sPokeballGlow_Gfx[] = INCBIN_U32("graphics/field_effects/pics/pokeball_glow.4bpp");
-static const u16 sPokeballGlow_Pal[16] = INCBIN_U16("graphics/field_effects/palettes/pokeball_glow.gbapal");
-static const u32 sPokecenterMonitor0_Gfx[] = INCBIN_U32("graphics/field_effects/pics/pokecenter_monitor/0.4bpp");
-static const u32 sPokecenterMonitor1_Gfx[] = INCBIN_U32("graphics/field_effects/pics/pokecenter_monitor/1.4bpp");
-static const u32 sHofMonitorBig_Gfx[] = INCBIN_U32("graphics/field_effects/pics/hof_monitor_big.4bpp");
-static const u8 sHofMonitorSmall_Gfx[] = INCBIN_U8("graphics/field_effects/pics/hof_monitor_small.4bpp");
-static const u16 sHofMonitor_Pal[16] = INCBIN_U16("graphics/field_effects/palettes/hof_monitor.gbapal");
-static const u16 sHofMonitor_Gfx_Frlg[] = INCBIN_U16("graphics/field_effects/pics/hof_monitor_frlg.4bpp");
-static const u16 sHofMonitor_Pal_Frlg[] = INCBIN_U16("graphics/field_effects/pics/hof_monitor_frlg.gbapal");
+static const u32 sPokeballGlow_Gfx[] = INCGFX_U32("graphics/field_effects/pics/pokeball_glow.png", ".4bpp");
+static const u16 sPokeballGlow_Pal[16] = INCGFX_U16("graphics/field_effects/palettes/pokeball_glow.pal", ".gbapal");
+static const u32 sPokecenterMonitor0_Gfx[] = INCGFX_U32("graphics/field_effects/pics/pokecenter_monitor/0.png", ".4bpp");
+static const u32 sPokecenterMonitor1_Gfx[] = INCGFX_U32("graphics/field_effects/pics/pokecenter_monitor/1.png", ".4bpp");
+static const u16 sPokecenterMonitor_Gfx_Frlg[] = INCGFX_U16("graphics/field_effects/pics/pokecenter_monitor/frlg.png", ".4bpp");
+static const u32 sHofMonitorBig_Gfx[] = INCGFX_U32("graphics/field_effects/pics/hof_monitor_big.png", ".4bpp");
+static const u8 sHofMonitorSmall_Gfx[] = INCGFX_U8("graphics/field_effects/pics/hof_monitor_small.png", ".4bpp");
+static const u16 sHofMonitor_Pal[16] = INCGFX_U16("graphics/field_effects/palettes/hof_monitor.pal", ".gbapal");
+static const u16 sHofMonitor_Gfx_Frlg[] = INCGFX_U16("graphics/field_effects/pics/hof_monitor_frlg.png", ".4bpp");
+static const u16 sHofMonitor_Pal_Frlg[] = INCGFX_U16("graphics/field_effects/pics/hof_monitor_frlg.png", ".gbapal");
 
 // Graphics for the lights streaking past your Pokémon when it uses a field move.
-static const u32 sFieldMoveStreaksOutdoors_Gfx[] = INCBIN_U32("graphics/field_effects/pics/field_move_streaks.4bpp");
-static const u16 sFieldMoveStreaksOutdoors_Pal[16] = INCBIN_U16("graphics/field_effects/pics/field_move_streaks.gbapal");
+static const u32 sFieldMoveStreaksOutdoors_Gfx[] = INCGFX_U32("graphics/field_effects/pics/field_move_streaks.png", ".4bpp");
+static const u16 sFieldMoveStreaksOutdoors_Pal[16] = INCGFX_U16("graphics/field_effects/pics/field_move_streaks.png", ".gbapal");
 static const u16 sFieldMoveStreaksOutdoors_Tilemap[320] = INCBIN_U16("graphics/field_effects/pics/field_move_streaks.bin");
 
 // The following light streaks effect is used when the map is indoors
-static const u32 sFieldMoveStreaksIndoors_Gfx[] = INCBIN_U32("graphics/field_effects/pics/field_move_streaks_indoors.4bpp");
-static const u16 sFieldMoveStreaksIndoors_Pal[16] = INCBIN_U16("graphics/field_effects/pics/field_move_streaks_indoors.gbapal");
+static const u32 sFieldMoveStreaksIndoors_Gfx[] = INCGFX_U32("graphics/field_effects/pics/field_move_streaks_indoors.png", ".4bpp");
+static const u16 sFieldMoveStreaksIndoors_Pal[16] = INCGFX_U16("graphics/field_effects/pics/field_move_streaks_indoors.png", ".gbapal");
 static const u16 sFieldMoveStreaksIndoors_Tilemap[320] = INCBIN_U16("graphics/field_effects/pics/field_move_streaks_indoors.bin");
 
-static const u16 sSpotlight_Pal[16] = INCBIN_U16("graphics/field_effects/pics/spotlight.gbapal");
-static const u8 sSpotlight_Gfx[] = INCBIN_U8("graphics/field_effects/pics/spotlight.4bpp");
-static const u8 sRockFragment_TopLeft[] = INCBIN_U8("graphics/field_effects/pics/deoxys_rock_fragment_top_left.4bpp");
-static const u8 sRockFragment_TopRight[] = INCBIN_U8("graphics/field_effects/pics/deoxys_rock_fragment_top_right.4bpp");
-static const u8 sRockFragment_BottomLeft[] = INCBIN_U8("graphics/field_effects/pics/deoxys_rock_fragment_bottom_left.4bpp");
-static const u8 sRockFragment_BottomRight[] = INCBIN_U8("graphics/field_effects/pics/deoxys_rock_fragment_bottom_right.4bpp");
+static const u16 sSpotlight_Pal[16] = INCGFX_U16("graphics/field_effects/pics/spotlight.png", ".gbapal");
+static const u8 sSpotlight_Gfx[] = INCGFX_U8("graphics/field_effects/pics/spotlight.png", ".4bpp");
+static const u8 sRockFragment_TopLeft[] = INCGFX_U8("graphics/field_effects/pics/deoxys_rock_fragment_top_left.png", ".4bpp");
+static const u8 sRockFragment_TopRight[] = INCGFX_U8("graphics/field_effects/pics/deoxys_rock_fragment_top_right.png", ".4bpp");
+static const u8 sRockFragment_BottomLeft[] = INCGFX_U8("graphics/field_effects/pics/deoxys_rock_fragment_bottom_left.png", ".4bpp");
+static const u8 sRockFragment_BottomRight[] = INCGFX_U8("graphics/field_effects/pics/deoxys_rock_fragment_bottom_right.png", ".4bpp");
 
 bool8 (*const gFieldEffectScriptFuncs[])(u8 **, u32 *) =
 {
@@ -425,6 +426,13 @@ static const struct SpriteFrameImage sPicTable_PokecenterMonitor[] =
 {
     obj_frame_tiles(sPokecenterMonitor0_Gfx),
     obj_frame_tiles(sPokecenterMonitor1_Gfx)
+};
+
+static const struct SpriteFrameImage sPicTable_PokecenterMonitor_Frlg[] = {
+    {sPokecenterMonitor_Gfx_Frlg + 0x000, 0x100},
+    {sPokecenterMonitor_Gfx_Frlg + 0x080, 0x100},
+    {sPokecenterMonitor_Gfx_Frlg + 0x100, 0x100},
+    {sPokecenterMonitor_Gfx_Frlg + 0x180, 0x100}
 };
 
 static const struct SpriteFrameImage sPicTable_HofMonitorBig[] =
@@ -595,6 +603,15 @@ static const struct SpriteTemplate sSpriteTemplate_PokecenterMonitor =
     .oam = &sOam_16x16,
     .anims = sAnims_Flicker,
     .images = sPicTable_PokecenterMonitor,
+    .callback = SpriteCB_PokecenterMonitor
+};
+
+static const struct SpriteTemplate sSpriteTemplate_PokecenterMonitor_FrLg = {
+    .tileTag = TAG_NONE,
+    .paletteTag = FLDEFF_PAL_TAG_POKEBALL_GLOW,
+    .oam = &sOam_32x16,
+    .anims = sAnims_Flicker,
+    .images = sPicTable_PokecenterMonitor_Frlg,
     .callback = SpriteCB_PokecenterMonitor
 };
 
@@ -841,14 +858,22 @@ void FieldEffectScript_LoadTiles(u8 **script)
     (*script) += 4;
 }
 
+static bool32 ShouldFieldEffectBeFogBlended(u8 *script)
+{
+    u32 ptr = FieldEffectScript_ReadWord(&script);
+    if (ptr == (u32)FldEff_TallGrass)
+        return FALSE;
+    return TRUE;
+}
+
 void FieldEffectScript_LoadFadedPalette(u8 **script)
 {
     struct SpritePalette *palette = (struct SpritePalette *)FieldEffectScript_ReadWord(script);
     u32 paletteSlot = LoadSpritePalette(palette);
     (*script) += 4;
     SetPaletteColorMapType(paletteSlot + 16, T1_READ_8(*script));
-    UpdateSpritePaletteWithWeather(paletteSlot, TRUE);
     (*script)++;
+    UpdateSpritePaletteWithWeather(paletteSlot, ShouldFieldEffectBeFogBlended(*script));
 }
 
 void FieldEffectScript_LoadPalette(u8 **script)
@@ -1119,7 +1144,7 @@ static void PokecenterHealEffect_WaitForBallPlacement(struct Task *task)
 {
     if (gSprites[task->tBallSpriteId].sState > 1)
     {
-        gSprites[task->tMonitorSpriteId].sState++;
+        gSprites[task->tMonitorSpriteId].data[0]++;
         task->tState++;
     }
 }
@@ -1351,11 +1376,18 @@ static u8 CreatePokecenterMonitorSprite(s16 x, s16 y)
 {
     u8 spriteId;
     struct Sprite *sprite;
-    spriteId = CreateSpriteAtEnd(&sSpriteTemplate_PokecenterMonitor, x, y, 0);
+    if (IS_FRLG)
+    {
+        spriteId = CreateSpriteAtEnd(&sSpriteTemplate_PokecenterMonitor_FrLg, x + 4, y, 0);
+    }
+    else
+    {
+        spriteId = CreateSpriteAtEnd(&sSpriteTemplate_PokecenterMonitor, x, y, 0);
+        SetSubspriteTables(&gSprites[spriteId], &sSubspriteTable_PokecenterMonitor);
+    }
     sprite = &gSprites[spriteId];
     sprite->oam.priority = 2;
     sprite->invisible = TRUE;
-    SetSubspriteTables(sprite, &sSubspriteTable_PokecenterMonitor);
     return spriteId;
 }
 
@@ -2346,7 +2378,7 @@ void StartLavaridgeGym1FWarp(u8 priority)
 
 static void Task_LavaridgeGym1FWarp(u8 taskId)
 {
-    while(sLavaridgeGym1FWarpEffectFuncs[gTasks[taskId].data[0]](&gTasks[taskId], &gObjectEvents[gPlayerAvatar.objectEventId], &gSprites[gPlayerAvatar.spriteId]));
+    while (sLavaridgeGym1FWarpEffectFuncs[gTasks[taskId].data[0]](&gTasks[taskId], &gObjectEvents[gPlayerAvatar.objectEventId], &gSprites[gPlayerAvatar.spriteId]));
 }
 
 static bool8 LavaridgeGym1FWarpEffect_Init(struct Task *task, struct ObjectEvent *objectEvent, struct Sprite *sprite)
@@ -3295,7 +3327,7 @@ u8 FldEff_UseSurf(void)
     u8 taskId = CreateTask(Task_SurfFieldEffect, 0xff);
     gTasks[taskId].tMonId = gFieldEffectArguments[0];
     Overworld_ClearSavedMusic();
-    Overworld_ChangeMusicTo(MUS_SURF);
+    Overworld_ChangeMusicTo(IS_FRLG ? MUS_RG_SURF : MUS_SURF);
     return FALSE;
 }
 
@@ -4192,33 +4224,33 @@ static void Task_MoveDeoxysRock(u8 taskId)
     struct Sprite *sprite = &gSprites[tSpriteId];
     switch (tState)
     {
-        case 0:
-            tCurX = sprite->x << 4;
-            tCurY = sprite->y << 4;
-            tVelocityX = SAFE_DIV(tTargetX * 16 - tCurX, tMoveSteps);
-            tVelocityY = SAFE_DIV(tTargetY * 16 - tCurY, tMoveSteps);
-            tState++;
-            // fallthrough
-        case 1:
-            if (tMoveSteps != 0)
-            {
-                tMoveSteps--;
-                tCurX += tVelocityX;
-                tCurY += tVelocityY;
-                sprite->x = tCurX >> 4;
-                sprite->y = tCurY >> 4;
-            }
-            else
-            {
-                struct ObjectEvent *object = &gObjectEvents[tObjEventId];
-                sprite->x = tTargetX;
-                sprite->y = tTargetY;
-                ShiftStillObjectEventCoords(object);
-                object->triggerGroundEffectsOnStop = TRUE;
-                FieldEffectActiveListRemove(FLDEFF_MOVE_DEOXYS_ROCK);
-                DestroyTask(taskId);
-            }
-            break;
+    case 0:
+        tCurX = sprite->x << 4;
+        tCurY = sprite->y << 4;
+        tVelocityX = SAFE_DIV(tTargetX * 16 - tCurX, tMoveSteps);
+        tVelocityY = SAFE_DIV(tTargetY * 16 - tCurY, tMoveSteps);
+        tState++;
+        // fallthrough
+    case 1:
+        if (tMoveSteps != 0)
+        {
+            tMoveSteps--;
+            tCurX += tVelocityX;
+            tCurY += tVelocityY;
+            sprite->x = tCurX >> 4;
+            sprite->y = tCurY >> 4;
+        }
+        else
+        {
+            struct ObjectEvent *object = &gObjectEvents[tObjEventId];
+            sprite->x = tTargetX;
+            sprite->y = tTargetY;
+            ShiftStillObjectEventCoords(object);
+            object->triggerGroundEffectsOnStop = TRUE;
+            FieldEffectActiveListRemove(FLDEFF_MOVE_DEOXYS_ROCK);
+            DestroyTask(taskId);
+        }
+        break;
     }
 }
 
