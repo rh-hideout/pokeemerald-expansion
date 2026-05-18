@@ -141,7 +141,7 @@ DOUBLE_BATTLE_TEST("Toxic Debris sets Toxic Spikes on the opposing side even whe
     }
 }
 
-DOUBLE_BATTLE_TEST("Toxic Debris does not activate if two layers of Toxic Spikes are already up on target side")
+DOUBLE_BATTLE_TEST("Toxic Debris does not activate if two layers of Toxic Spikes are already up on the opposing side of the field")
 {
     GIVEN {
         PLAYER(SPECIES_GLIMMORA) { Ability(ABILITY_TOXIC_DEBRIS); }
