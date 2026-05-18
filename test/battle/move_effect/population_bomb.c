@@ -1,10 +1,16 @@
 #include "global.h"
 #include "test/battle.h"
 
+ASSUMPTIONS
+{
+    ASSUME(GetMoveEffect(MOVE_POPULATION_BOMB) == EFFECT_POPULATION_BOMB);
+    ASSUME(GetMoveStrikeCount(MOVE_POPULATION_BOMB) == 10);
+    ASSUME(GetMoveAccuracy(MOVE_POPULATION_BOMB) == 90);
+}
+
 SINGLE_BATTLE_TEST("Population Bomb can hit ten times")
 {
     GIVEN {
-        ASSUME(GetMoveStrikeCount(MOVE_POPULATION_BOMB) == 10);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -27,8 +33,6 @@ SINGLE_BATTLE_TEST("Population Bomb can hit ten times")
 SINGLE_BATTLE_TEST("Accuracy for Population Bomb is checked independently for each hit")
 {
     GIVEN {
-        ASSUME(GetMoveAccuracy(MOVE_POPULATION_BOMB) == 90);
-        ASSUME(GetMoveEffect(MOVE_POPULATION_BOMB) == EFFECT_POPULATION_BOMB);
         ASSUME(MoveMakesContact(MOVE_POPULATION_BOMB));
         PLAYER(SPECIES_MACHAMP) { Ability(ABILITY_NO_GUARD); }
         OPPONENT(SPECIES_OINKOLOGNE) { Ability(ABILITY_LINGERING_AROMA); }
@@ -49,9 +53,6 @@ SINGLE_BATTLE_TEST("Accuracy for Population Bomb is only checked for the first h
 {
     PASSES_RANDOMLY(9, 10, RNG_ACCURACY);
     GIVEN {
-        ASSUME(GetMoveAccuracy(MOVE_POPULATION_BOMB) == 90);
-        ASSUME(GetMoveEffect(MOVE_POPULATION_BOMB) == EFFECT_POPULATION_BOMB);
-        ASSUME(GetMoveStrikeCount(MOVE_POPULATION_BOMB) == 10);
         PLAYER(SPECIES_PIKIPEK) { Ability(ABILITY_SKILL_LINK); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -75,8 +76,6 @@ SINGLE_BATTLE_TEST("Accuracy for Population Bomb is only checked for the first h
 {
     PASSES_RANDOMLY(9, 10, RNG_ACCURACY);
     GIVEN {
-        ASSUME(GetMoveAccuracy(MOVE_POPULATION_BOMB) == 90);
-        ASSUME(GetMoveEffect(MOVE_POPULATION_BOMB) == EFFECT_POPULATION_BOMB);
         ASSUME(GetItemHoldEffect(ITEM_LOADED_DICE) == HOLD_EFFECT_LOADED_DICE);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LOADED_DICE); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -94,8 +93,6 @@ SINGLE_BATTLE_TEST("Accuracy for Population Bomb is only checked for the first h
 SINGLE_BATTLE_TEST("Population Bomb with Skill Link ignores Loaded Dice roll and still hits ten times")
 {
     GIVEN {
-        ASSUME(GetMoveStrikeCount(MOVE_POPULATION_BOMB) == 10);
-        ASSUME(GetMoveEffect(MOVE_POPULATION_BOMB) == EFFECT_POPULATION_BOMB);
         ASSUME(GetItemHoldEffect(ITEM_LOADED_DICE) == HOLD_EFFECT_LOADED_DICE);
         PLAYER(SPECIES_PIKIPEK) { Ability(ABILITY_SKILL_LINK); Item(ITEM_LOADED_DICE); }
         OPPONENT(SPECIES_WOBBUFFET);
