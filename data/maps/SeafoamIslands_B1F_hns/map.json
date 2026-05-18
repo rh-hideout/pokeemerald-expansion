@@ -12,9 +12,10 @@
   "allow_running": true,
   "show_map_name": false,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
-  "connections": 0,
+  "connections": null,
   "object_events": [
     {
+      "local_id": "LOCALID_SEAFOAM_ARTICUNO",
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_ARTICUNO",
       "x": 33,
       "y": 11,
@@ -25,8 +26,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "SeafoamIslands_B1F_EventScript_Articuno",
-      "flag": "FLAG_HIDE_ARTICUNO",
-      "local_id": "LOCALID_SEAFOAM_ARTICUNO"
+      "flag": "FLAG_HIDE_ARTICUNO"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_PILOSWINE",
@@ -92,6 +92,19 @@
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
       "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL_HNS",
+      "x": 24,
+      "y": 44,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "SeafoamIslands_B1F_EventScript_Item_Ice_Beam",
+      "flag": "FLAG_ITEM_SEAFOAM_ISLANDS_B4F_TM_ICE_BEAM"
     }
   ],
   "warp_events": [

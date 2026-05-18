@@ -218,9 +218,9 @@ Route42_EventScript_MortarSign::
 Route42_EventScript_Item_SuperPotion::
 	finditem ITEM_SUPER_POTION
 	end
-Route42_EventScript_Item_Mint::
-	finditem ITEM_MODEST_MINT
-	end
+Route42_EventScript_Item_Shadow_Claw::
+    finditem ITEM_TM_SHADOW_CLAW
+    end
 Route42_EventScript_Item_UltraBall::
 	finditem ITEM_ULTRA_BALL
 	end

@@ -22,12 +22,12 @@ ViridianForest_Text_Bugsy:
     .string "If you're ready for another match,\n"
     .string "I'll be at the DOJO in SAFFRON!$"
 
-ViridianForest_EventScript_MaxPotion::
-    finditem ITEM_MAX_POTION
+ViridianForest_EventScript_Item_Psych_Up::
+    finditem ITEM_TM_PSYCH_UP
     end
 
-ViridianForest_EventScript_DireHit::
-    finditem ITEM_DIRE_HIT
+ViridianForest_EventScript_MaxPotion::
+    finditem ITEM_MAX_POTION
     end
 
 ViridianForest_EventScript_Elixir::

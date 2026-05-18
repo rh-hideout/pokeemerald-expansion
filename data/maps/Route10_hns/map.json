@@ -32,18 +32,19 @@
   "object_events": [
     {
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL_HNS",
-      "x": 11,
-      "y": 58,
+      "x": 25,
+      "y": 56,
       "elevation": 0,
       "movement_type": "MOVEMENT_TYPE_NONE",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "Route10_EventScript_UltraBall",
-      "flag": "FLAG_ITEM_ROUTE10_ULTRABALL"
+      "script": "Route10_EventScript_Item_Rock_Polish",
+      "flag": "FLAG_ITEM_ROUTE10_TM_ROCK_POLISH"
     },
     {
+      "local_id": "LOCALID_ROUTE10_ZAPDOS",
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_ZAPDOS",
       "x": 4,
       "y": 35,
@@ -54,8 +55,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "Route10_EventScript_Zapdos",
-      "flag": "FLAG_HIDE_ZAPDOS",
-      "local_id": "LOCALID_ROUTE10_ZAPDOS"
+      "flag": "FLAG_HIDE_ZAPDOS"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_HIKER_HNS",
@@ -123,6 +123,7 @@
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_ROUTE10_SURGE",
       "graphics_id": "OBJ_EVENT_GFX_SURGE_HNS",
       "x": 19,
       "y": 42,
@@ -133,8 +134,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "Route10_EventScript_Surge",
-      "flag": "FLAG_HIDE_PLANT_SURGE",
-      "local_id": "LOCALID_ROUTE10_SURGE"
+      "flag": "FLAG_HIDE_PLANT_SURGE"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE_HNS",
@@ -277,6 +277,14 @@
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Route10_EventScript_PPSign"
+    },
+    {
+      "type": "hidden_item",
+      "x": 12,
+      "y": 59,
+      "elevation": 0,
+      "item": "ITEM_ULTRA_BALL",
+      "flag": "FLAG_ITEM_ROUTE10_ULTRABALL"
     }
   ],
   "game_version": "hns",

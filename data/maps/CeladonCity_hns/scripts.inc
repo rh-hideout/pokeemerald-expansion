@@ -66,6 +66,10 @@ CeladonCity_EventScript_Lass::
 	msgbox CeladonCity_Text_Lass, MSGBOX_NPC
 	end
 
+CeladonCity_EventScript_Item_Recycle::
+    finditem ITEM_TM_RECYCLE
+    end
+
 CeladonCity_Text_Fisher:
 	.string "This POLIWRATH is my partner.\p"
 	.string "I wonder if it'll ever evolve\n"

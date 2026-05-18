@@ -169,6 +169,7 @@
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_ROUTE34_DAYCAREMAN",
       "graphics_id": "OBJ_EVENT_GFX_OLD_MAN_HNS",
       "x": 31,
       "y": 34,
@@ -179,8 +180,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "Route34_EventScript_DaycareMan",
-      "flag": "0",
-      "local_id": "LOCALID_ROUTE34_DAYCAREMAN"
+      "flag": "0"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_DITTO",
@@ -335,8 +335,8 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "Route34_EventScript_Item_SuperPotion",
-      "flag": "FLAG_ITEM_ROUTE34_SUPERPOTION"
+      "script": "Route34_EventScript_Item_Embargo",
+      "flag": "FLAG_ITEM_ROUTE34_TM_EMBARGO"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_SNUBBULL",
@@ -563,6 +563,14 @@
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Route7_EventScript_Door"
+    },
+    {
+      "type": "hidden_item",
+      "x": 47,
+      "y": 38,
+      "elevation": 0,
+      "item": "ITEM_SUPER_POTION",
+      "flag": "FLAG_ITEM_ROUTE34_SUPERPOTION"
     }
   ],
   "game_version": "hns",

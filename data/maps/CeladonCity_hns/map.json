@@ -208,6 +208,7 @@
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_CELADON_ERIKA",
       "graphics_id": "OBJ_EVENT_GFX_ERIKA_HNS",
       "x": 11,
       "y": 21,
@@ -218,8 +219,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "CeladonCity_EventScript_Erika",
-      "flag": "FLAG_HIDE_FOUNTAIN_ERIKA",
-      "local_id": "LOCALID_CELADON_ERIKA"
+      "flag": "FLAG_HIDE_FOUNTAIN_ERIKA"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
@@ -285,6 +285,19 @@
       "trainer_sight_or_berry_tree_id": "3",
       "script": "NULL",
       "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL_HNS",
+      "x": 8,
+      "y": 3,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "CeladonCity_EventScript_Item_Recycle",
+      "flag": "FLAG_ITEM_CELADON_CITY_TM_RECYCLE"
     }
   ],
   "warp_events": [

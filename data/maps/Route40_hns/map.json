@@ -385,7 +385,16 @@
     }
   ],
   "coord_events": [],
-  "bg_events": [],
+  "bg_events": [
+    {
+      "type": "hidden_item",
+      "x": 15,
+      "y": 18,
+      "elevation": 0,
+      "item": "ITEM_TM_PLUCK",
+      "flag": "FLAG_ITEM_ROUTE40_TM_PLUCK"
+    }
+  ],
   "game_version": "hns",
   "region": "REGION_JOHTO"
 }

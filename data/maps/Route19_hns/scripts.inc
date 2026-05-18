@@ -63,6 +63,10 @@ Route19_EventScript_FisherBefore::
 	msgbox Route19_Text_FisherBefore, MSGBOX_NPC
 	end
 
+Route19_EventScript_Item_Brine::
+    finditem ITEM_TM_BRINE
+    end
+
 Route19_Text_SwimmermHaroldSeen:
 	.string "Have you ever gone swimming in the\n"
 	.string "sea at night?$"

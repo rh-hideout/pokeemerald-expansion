@@ -290,9 +290,10 @@ Route32_EventScript_BaldingManEgg::
 	release
 	end
 
-Route32_EventScript_Potion::
-	finditem ITEM_POTION
-	end
+Route32_EventScript_Item_Bullet_Seed::
+    finditem ITEM_TM_BULLET_SEED
+    end
+	
 Route32_EventScript_GreatBall::
 	finditem ITEM_GREAT_BALL
 	end

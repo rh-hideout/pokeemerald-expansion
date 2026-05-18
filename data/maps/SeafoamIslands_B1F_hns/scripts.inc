@@ -27,4 +27,7 @@ SeafoamIslands_B1F_EventScript_ArticunoRan::
 SeafoamIslands_B1F_Text_ArticunoBattle:
 	.string "Gyaoo!$"
 
+SeafoamIslands_B1F_EventScript_Item_Ice_Beam::
+    finditem ITEM_TM_ICE_BEAM
+    end
 

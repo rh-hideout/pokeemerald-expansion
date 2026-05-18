@@ -25,6 +25,10 @@ Route6_EventScript_Sign::
 	msgbox Route6_Text_UndergroundPathSign, MSGBOX_SIGN
 	end
 
+Route6_EventScript_Item_Silver_Wind::
+    finditem ITEM_TM_SILVER_WIND
+    end
+
 Route6_Text_PokefanM:
 	.string "The road is closed until the\n"
 	.string "problem at the POWER PLANT is\l"

@@ -7,9 +7,9 @@ VictoryRoadKanto_1F_EventScript_Item_RareCandy::
 VictoryRoadKanto_1F_EventScript_Item_MaxEther::
 	finditem ITEM_MAX_ETHER
 	end
-VictoryRoadKanto_1F_EventScript_Item_UltraBall::
-	finditem ITEM_ULTRA_BALL
-	end
+VictoryRoadKanto_EventScript_Item_Dark_Pulse::
+    finditem ITEM_TM_DARK_PULSE
+    end
 
 VictoryRoadKanto_1F_Trigger::
 	lock

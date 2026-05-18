@@ -234,6 +234,7 @@
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_ROUTE42_SUICUNE",
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_SUICUNE",
       "x": 42,
       "y": 18,
@@ -244,8 +245,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_ROUTE42_SUICUNE",
-      "local_id": "LOCALID_ROUTE42_SUICUNE"
+      "flag": "FLAG_HIDE_ROUTE42_SUICUNE"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_POKE_BALL",
@@ -257,10 +257,11 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "Route42_EventScript_Item_Mint",
-      "flag": "FLAG_ITEM_ROUTE42_MODEST_MINT"
+      "script": "Route42_EventScript_Item_Shadow_Claw",
+      "flag": "FLAG_ITEM_ROUTE42_TM_SHADOW_CLAW"
     },
     {
+      "local_id": "LOCALID_ROUTE42_EUSINE",
       "graphics_id": "OBJ_EVENT_GFX_EUSINE_HNS",
       "x": 40,
       "y": 11,
@@ -271,8 +272,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_ROUTE42_EUSINE",
-      "local_id": "LOCALID_ROUTE42_EUSINE"
+      "flag": "FLAG_HIDE_ROUTE42_EUSINE"
     }
   ],
   "warp_events": [
@@ -384,6 +384,14 @@
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Route42_EventScript_Sign"
+    },
+    {
+      "type": "hidden_item",
+      "x": 38,
+      "y": 18,
+      "elevation": 0,
+      "item": "ITEM_MODEST_MINT",
+      "flag": "FLAG_ITEM_ROUTE42_MODEST_MINT"
     }
   ],
   "game_version": "hns",

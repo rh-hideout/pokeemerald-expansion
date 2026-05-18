@@ -41,6 +41,10 @@ Route9_EventScript_Sign::
 	msgbox Route9_Text_Sign, MSGBOX_SIGN
 	end
 
+Route9_EventScript_Item_Flash_Cannon::
+    finditem ITEM_TM_FLASH_CANNON
+    end
+
 Route9_Text_CamperDeanSeen:
 	.string "I came to explore ROCK TUNNEL.$"
 

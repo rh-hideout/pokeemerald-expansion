@@ -47,6 +47,7 @@
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_LAKEOFRAGE_LANCE",
       "graphics_id": "OBJ_EVENT_GFX_LANCE_HNS",
       "x": 30,
       "y": 37,
@@ -57,10 +58,10 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "LakeOfRage_EventScript_Lance",
-      "flag": "FLAG_HIDE_LAKE_OF_RAGE_LANCE",
-      "local_id": "LOCALID_LAKEOFRAGE_LANCE"
+      "flag": "FLAG_HIDE_LAKE_OF_RAGE_LANCE"
     },
     {
+      "local_id": "LOCALID_LAKEOFRAGE_OLDMAN",
       "graphics_id": "OBJ_EVENT_GFX_OLD_MAN_HNS",
       "x": 32,
       "y": 35,
@@ -71,8 +72,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "LakeOfRage_EventScript_Gramps",
-      "flag": "0",
-      "local_id": "LOCALID_LAKEOFRAGE_OLDMAN"
+      "flag": "0"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_FISHERMAN_HNS",
@@ -114,6 +114,7 @@
       "flag": "FLAG_TEMP_1"
     },
     {
+      "local_id": "LOCALID_LAKEOFRAGE_GYARADOS",
       "graphics_id": "OBJ_EVENT_GFX_SHINY_GYARADOS_HNS",
       "x": 32,
       "y": 28,
@@ -124,8 +125,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "LakeOfRage_EventScript_Gyarados",
-      "flag": "FLAG_HIDE_LAKE_OF_RAGE_GYARADOS",
-      "local_id": "LOCALID_LAKEOFRAGE_GYARADOS"
+      "flag": "FLAG_HIDE_LAKE_OF_RAGE_GYARADOS"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_COOLTRAINER_M_HNS",
@@ -163,8 +163,8 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LakeOfRage_EventScript_Item_Max_Revive",
-      "flag": "FLAG_ITEM_LAKEOFRAGE_MAX_REVIVE"
+      "script": "LakeOfRage_EventScript_Item_Secret_Power",
+      "flag": "FLAG_ITEM_LAKE_OF_RAGE_TM_SECRET_POWER"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_POKE_BALL",
@@ -219,6 +219,7 @@
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_LAKEOFRAGE_DRAGONITE",
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_DRAGONITE",
       "x": 31,
       "y": 37,
@@ -229,10 +230,10 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "LakeOfRage_EventScript_Dragonite",
-      "flag": "FLAG_HIDE_LAKE_OF_RAGE_LANCE",
-      "local_id": "LOCALID_LAKEOFRAGE_DRAGONITE"
+      "flag": "FLAG_HIDE_LAKE_OF_RAGE_LANCE"
     },
     {
+      "local_id": "LOCALID_LAKE_PRYCE",
       "graphics_id": "OBJ_EVENT_GFX_PRYCE_HNS",
       "x": 9,
       "y": 38,
@@ -243,8 +244,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "LakeOfRage_EventScript_Pryce",
-      "flag": "FLAG_HIDE_LAKE_PRYCE",
-      "local_id": "LOCALID_LAKE_PRYCE"
+      "flag": "FLAG_HIDE_LAKE_PRYCE"
     }
   ],
   "warp_events": [
@@ -280,6 +280,14 @@
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "LakeOfRage_EventScript_Sign2"
+    },
+    {
+      "type": "hidden_item",
+      "x": 4,
+      "y": 36,
+      "elevation": 0,
+      "item": "ITEM_MAX_REVIVE",
+      "flag": "FLAG_ITEM_LAKEOFRAGE_MAX_REVIVE"
     }
   ],
   "game_version": "hns",

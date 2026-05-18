@@ -27,10 +27,13 @@ Route11_EventScript_Fidel::
 	msgbox Route11_Text_PsychicFidelAfterBattle, MSGBOX_AUTOCLOSE
 	end
 
-
 Route11_EventScript_Engineer::
 	msgbox Route11_Text_Engineer, MSGBOX_NPC
 	end
+
+Route11_EventScript_Item_Grass_Knot::
+    finditem ITEM_TM_GRASS_KNOT
+    end
 
 Route11_Text_Engineer:
 	.string "I saw a strange POKéMON climbing\n"

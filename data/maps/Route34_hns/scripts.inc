@@ -102,10 +102,10 @@ Route34_EventScript_Item_SoftSand::
 Route34_EventScript_Item_RareCandy::
 	finditem ITEM_RARE_CANDY
 	end
-
-Route34_EventScript_Item_SuperPotion::
-	finditem ITEM_SUPER_POTION
-	end
+	
+Route34_EventScript_Item_Embargo::
+    finditem ITEM_TM_EMBARGO
+    end
 
 
 Route34_Text_YoungsterSamuel_Seen:
