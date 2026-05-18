@@ -37,4 +37,24 @@ u32 BXPY_TeamPreview_TransformSpeciesId(u32 originalSpeciesId);
 bool8 BXPY_SummaryScreen_ShouldHideStats(enum PokemonSummaryScreenMode mode, enum PokemonSummarySkillsMode stats);
 u32 IsDoingBringXPickYSelection(void);
 
+#include "sprite.h"
+
+struct BXPYState
+{
+    void* savedCallback;
+    u8 position;
+    u8 spriteId[BXPY_SPRITEID_COUNT];
+    u8 selectedMons[PARTY_SIZE];
+    u32 battleFlags;
+    u8 bringSize;
+    u8 pickSize;
+};
+
+struct BXPYSpriteSheet
+{
+    const struct SpriteSheet spriteSheet;
+    const struct SpritePalette palette;
+};
+
+
 #endif // GUARD_BXPY_H
