@@ -41,7 +41,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "OlivineCity_EventScript_Youngster",
-      "flag": "FLAG_ITEM_OLIVINE_TM_SHOCKWAVE"
+      "flag": "0"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_SAILOR_HNS",
@@ -70,6 +70,7 @@
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_OLIVINE_SILVER",
       "graphics_id": "OBJ_EVENT_GFX_SILVER_HNS",
       "x": 11,
       "y": 27,
@@ -80,8 +81,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_OLIVINE_SILVER",
-      "local_id": "LOCALID_OLIVINE_SILVER"
+      "flag": "FLAG_HIDE_OLIVINE_SILVER"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_PIDGEOTTO",
@@ -293,16 +293,16 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL_HNS",
-      "x": 53,
-      "y": 47,
+      "x": 42,
+      "y": 57,
       "elevation": 0,
       "movement_type": "MOVEMENT_TYPE_NONE",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "OlivineCity_EventScript_Item_Shockwave",
-      "flag": "FLAG_ITEM_OLIVINE_TM_SHOCKWAVE"
+      "script": "OlivineCity_EventScript_Item_ChargeBeam",
+      "flag": "FLAG_ITEM_OLIVINE_TM_CHARGEBEAM"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ATTENDANT_F_HNS",

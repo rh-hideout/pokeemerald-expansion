@@ -50,8 +50,8 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "UnionCave_B1F_EventScript_Item_SecretPower",
-      "flag": "FLAG_ITEM_UNION_CAVE_SECRET_POWER"
+      "script": "UnionCave_B1F_EventScript_Item_RockTomb",
+      "flag": "FLAG_ITEM_UNION_CAVE_ROCK_TOMB"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_PUSHABLE_BOULDER_HNS",

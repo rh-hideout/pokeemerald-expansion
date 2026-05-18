@@ -12,7 +12,7 @@
   "allow_running": true,
   "show_map_name": false,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
-  "connections": 0,
+  "connections": null,
   "object_events": [
     {
       "graphics_id": "OBJ_EVENT_GFX_WOMAN_3_HNS",
@@ -158,6 +158,7 @@
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_LIGHTHOUSE_JASMINE",
       "graphics_id": "OBJ_EVENT_GFX_JASMINE_HNS",
       "x": 156,
       "y": 9,
@@ -168,10 +169,10 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "OlivineLighthouse_EventScript_Jasmine",
-      "flag": "FLAG_HIDE_LIGHTHOUSE_JASMINE",
-      "local_id": "LOCALID_LIGHTHOUSE_JASMINE"
+      "flag": "FLAG_HIDE_LIGHTHOUSE_JASMINE"
     },
     {
+      "local_id": "LOCALID_LIGHTHOUSE_AMPHAROS",
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_AMPHAROS",
       "x": 156,
       "y": 8,
@@ -182,8 +183,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "OlivineLighthouse_EventScript_Ampharos",
-      "flag": "0",
-      "local_id": "LOCALID_LIGHTHOUSE_AMPHAROS"
+      "flag": "0"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_POKE_BALL",
@@ -221,8 +221,8 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "OlivineCity_EventScript_Item_Shockwave",
-      "flag": "FLAG_ITEM_OLIVINE_TM_SHOCKWAVE"
+      "script": "OlivineLighthouse_EventScript_Item_TMSwagger",
+      "flag": "FLAG_ITEM_OLIVINE_TM_SWAGGER"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_POKE_BALL",

@@ -263,7 +263,7 @@ VermilionCity_Gym_EventScript_Surge::
 	addvar VAR_NUM_BADGES, 1
 	setvar VAR_0x8008, 11
 	call Common_EventScript_SetGymTrainers
-	checkitem ITEM_TM_THUNDERBOLT
+	checkitem ITEM_TM_SHOCK_WAVE
 	call_if_eq VAR_RESULT, TRUE, VermilionCity_Gym_EventScript_GiveThunderstone
 	call_if_eq VAR_RESULT, FALSE, VermilionCity_Gym_EventScript_GiveTM
 	clearflag FLAG_HIDE_PLANT_SURGE
@@ -277,7 +277,7 @@ VermilionCity_Gym_EventScript_GiveThunderstone::
 	return
 VermilionCity_Gym_EventScript_GiveTM::
 	msgbox VermilionGym_Text_LtSurgeTm, MSGBOX_DEFAULT
-	giveitem ITEM_TM_THUNDERBOLT
+	giveitem ITEM_TM_SHOCK_WAVE
 	return
 
 VermilionCity_Gym_EventScript_Surge_Defeated::

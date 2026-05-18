@@ -9,8 +9,8 @@ OlivineLighthouse_EventScript_Item_RareCandy::
     finditem ITEM_RARE_CANDY
     end
 
-OlivineLighthouse_EventScript_Item_TMBulkUp::
-    finditem ITEM_TM_BULK_UP
+OlivineLighthouse_EventScript_Item_TMSwagger::
+    finditem ITEM_TM_SWAGGER
     end
 
 OlivineLighthouse_EventScript_Item_HyperPotion::

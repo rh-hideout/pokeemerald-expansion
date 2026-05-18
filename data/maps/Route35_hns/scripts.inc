@@ -81,8 +81,8 @@ Route35_EventScript_Sign2::
 	release
 	end
 
-Route35_EventScript_Item_RockTomb::
-	finditem ITEM_TM_ROCK_TOMB
+Route35_EventScript_Item_Payback::
+	finditem ITEM_TM_PAYBACK
 	end
 
 Route35_EventScript_Item_Nugget::

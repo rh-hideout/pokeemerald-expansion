@@ -18,7 +18,7 @@ PewterCity_Gym_EventScript_Brock::
 	waitmessage
 	call Common_EventScript_PlayGymBadgeFanfare
 	msgbox PewterCity_Gym_Text_Brock_FightDone, MSGBOX_DEFAULT
-	giveitem ITEM_TM_EARTHQUAKE
+	giveitem ITEM_TM_ROCK_SLIDE
 	setflag FLAG_BADGE09_GET
 	setflag FLAG_DEFEATED_PEWTER_GYM
 	addvar VAR_NUM_BADGES, 1

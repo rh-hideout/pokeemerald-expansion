@@ -32,10 +32,10 @@ VirianCity_EventScript_GymGrampsBlue::
 	end
 
 ViridianCity_EventScript_Fisher::
-	goto_if_set FLAG_GOT_VIRIDIAN_TM_SLUDGE_BOMB, ViridianCity_EventScript_FisherAfter
-	msgbox ViridianCity_Text_DreamEaterFisherNew, MSGBOX_NPC
-	giveitem ITEM_TM_SLUDGE_BOMB
-	setflag FLAG_GOT_VIRIDIAN_TM_SLUDGE_BOMB
+	goto_if_set FLAG_GOT_VIRIDIAN_TM_DREAM_EATER, ViridianCity_EventScript_FisherAfter
+	msgbox ViridianCity_Text_DreamEaterFisher, MSGBOX_NPC
+	giveitem ITEM_TM_DREAM_EATER
+	setflag FLAG_GOT_VIRIDIAN_TM_DREAM_EATER
 	end
 
 ViridianCity_EventScript_FisherAfter::

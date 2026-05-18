@@ -8,7 +8,7 @@ Route39_OnTransition:
 	end
 
 Route39_EventScript_Item_TM::
-	finditem ITEM_TM_BRICK_BREAK
+	finditem ITEM_TM_DRAIN_PUNCH
 	end
 
 Route39_EventScript_Item_Nugget::

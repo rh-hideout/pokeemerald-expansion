@@ -537,7 +537,7 @@ AzaleaTown_Gym_EventScript_Bugsy::
 	addvar VAR_NUM_BADGES, 1
 	setvar VAR_0x8008, 2
 	call Common_EventScript_SetGymTrainers
-	giveitem ITEM_TM_BULLET_SEED
+	giveitem ITEM_TM_U_TURN
 	msgbox AzaleaTown_Gym_Text_FuryCutterSpeech, MSGBOX_DEFAULT
 	setvar VAR_AZALEA_TOWN_STATE, 5
 	closemessage
@@ -701,11 +701,10 @@ AzaleaTown_Gym_Text_HiveBadgeSpeech:
 	.string "have this.$"
 
 AzaleaTown_Gym_Text_FuryCutterSpeech:
-	.string "TM09 contains BULLET SEED.\p"
-	.string "It shoots a torrent of seeds\n"
-	.string "between 2 and 5 times every turn.\p"
-	.string "So even though the power is 25, it\n"
-	.string "is really between 50 and 125 power!\p"
+	.string "TM89 contains U-TURN.\p"
+	.string "U-TURN lets you do damage and\n"
+	.string "switch your POKéMON in the same\l"
+	.string "turn!\p"
 	.string "Isn't that great?\n"
 	.string "I discovered it!$"
 

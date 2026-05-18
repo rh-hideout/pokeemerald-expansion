@@ -13,7 +13,7 @@ ViridianCity_Gym_EventScript_Blue::
 	waitmessage
 	call Common_EventScript_PlayGymBadgeFanfare
 	msgbox ViridianCity_Gym_Text_LeaderBlue_After, MSGBOX_DEFAULT
-	giveitem ITEM_TM_BULK_UP
+	giveitem ITEM_TM_TRICK_ROOM
 	setflag FLAG_BADGE16_GET
 	setflag FLAG_DEFEATED_VIRIDIAN_GYM
 	addvar VAR_NUM_BADGES, 1

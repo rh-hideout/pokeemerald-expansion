@@ -270,8 +270,8 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "Route27_EventScript_Item_SolarBeam",
-      "flag": "FLAG_ITEM_ROUTE27_SOLARBEAM"
+      "script": "Route27_EventScript_Item_DragonClaw",
+      "flag": "FLAG_ITEM_ROUTE27_DRAGONCLAW"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL_HNS",

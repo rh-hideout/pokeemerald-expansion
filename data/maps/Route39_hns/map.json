@@ -154,7 +154,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "Route39_EventScript_Item_TM",
-      "flag": "FLAG_ITEM_ROUTE39_TM_BRICK_BREAK"
+      "flag": "FLAG_ITEM_ROUTE39_TM_DRAIN_PUNCH"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_PONYTA",

@@ -21,8 +21,8 @@ UnionCave_B1F_EventScript_PokemaniacCalvin::
 	msgbox UnionCave_B1F_Text_PokemaniacCalvinAfter, MSGBOX_AUTOCLOSE
 	end
 
-UnionCave_B1F_EventScript_Item_SecretPower::
-	finditem ITEM_TM_SECRET_POWER
+UnionCave_B1F_EventScript_Item_RockTomb::
+	finditem ITEM_TM_ROCK_TOMB
 	end
 
 UnionCave_B1F_EventScript_Item_Xdefend::

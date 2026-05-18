@@ -227,8 +227,8 @@ OlivineCity_EventScript_LighthouseSign::
 	msgbox OlivineCity_Text_LighthouseSign, MSGBOX_SIGN
 	end
 
-OlivineCity_EventScript_Item_Shockwave::
-	finditem ITEM_TM_SHOCK_WAVE
+OlivineCity_EventScript_Item_ChargeBeam::
+	finditem ITEM_TM_CHARGE_BEAM
 	end
 
 OlivineCity_EventScript_EonTicketWoman::

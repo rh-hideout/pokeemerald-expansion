@@ -246,7 +246,7 @@
 #define FLAG_ITEM_UNION_CAVE_HYPERPOTION            (HNS_ITEM_BALL_START + 23)
 #define FLAG_ITEM_UNION_CAVE_MAXREVIVE              (HNS_ITEM_BALL_START + 24)
 #define FLAG_ITEM_UNION_CAVE_POTION                 (HNS_ITEM_BALL_START + 25)
-#define FLAG_ITEM_UNION_CAVE_SECRET_POWER           (HNS_ITEM_BALL_START + 26)
+#define FLAG_ITEM_UNION_CAVE_ROCK_TOMB           (HNS_ITEM_BALL_START + 26)
 #define FLAG_ITEM_UNION_CAVE_X_ATTACK               (HNS_ITEM_BALL_START + 27)
 #define FLAG_ITEM_UNION_CAVE_X_DEFEND               (HNS_ITEM_BALL_START + 28)
 #define FLAG_ITEM_RUINSOFALPH_CHARCOAL              (HNS_ITEM_BALL_START + 29)
@@ -407,7 +407,7 @@
 #define FLAG_ITEM_ROUTE35_ROCK_TOMB                 (HNS_ITEM_BALL_START + 184)
 #define FLAG_ITEM_ROUTE38_LAX_INCENSE               (HNS_ITEM_BALL_START + 185)
 #define FLAG_ITEM_ROUTE39_NUGGET                    (HNS_ITEM_BALL_START + 186)
-#define FLAG_ITEM_ROUTE39_TM_BRICK_BREAK            (HNS_ITEM_BALL_START + 187)
+#define FLAG_ITEM_ROUTE39_TM_DRAIN_PUNCH            (HNS_ITEM_BALL_START + 187)
 #define FLAG_ITEM_ROUTE42_MODEST_MINT               (HNS_ITEM_BALL_START + 188)
 #define FLAG_ITEM_ROUTE42_SUPER_POTION              (HNS_ITEM_BALL_START + 189)
 #define FLAG_ITEM_ROUTE42_ULTRA_BALL                (HNS_ITEM_BALL_START + 190)
@@ -427,7 +427,7 @@
 #define FLAG_ITEM_ROUTE27_MOONSTONE                 (HNS_ITEM_BALL_START + 204)
 #define FLAG_ITEM_ROUTE27_RARECANDY                 (HNS_ITEM_BALL_START + 205)
 #define FLAG_ITEM_ROUTE27_REVIVE                    (HNS_ITEM_BALL_START + 206)
-#define FLAG_ITEM_ROUTE27_SOLARBEAM                 (HNS_ITEM_BALL_START + 207)
+#define FLAG_ITEM_ROUTE27_DRAGONCLAW                 (HNS_ITEM_BALL_START + 207)
 #define FLAG_ITEM_ROUTE2_CARBOS                     (HNS_ITEM_BALL_START + 208)
 #define FLAG_ITEM_ROUTE2_NUGGET                     (HNS_ITEM_BALL_START + 209)
 #define FLAG_ITEM_ROUTE4_HPUP                       (HNS_ITEM_BALL_START + 210)
@@ -439,7 +439,7 @@
 #define FLAG_ITEM_ROUTE15_PP_UP                     (HNS_ITEM_BALL_START + 216)
 #define FLAG_ITEM_ROUTE20_SHELL_BELL                (HNS_ITEM_BALL_START + 217)
 #define FLAG_ITEM_ECRUTEAK_RARE_CANDY               (HNS_ITEM_BALL_START + 218)
-#define FLAG_ITEM_OLIVINE_TM_SHOCKWAVE              (HNS_ITEM_BALL_START + 219)
+#define FLAG_ITEM_OLIVINE_TM_CHARGEBEAM              (HNS_ITEM_BALL_START + 219)
 #define FLAG_ITEM_VIOLET_CITY_HYPER_POTION          (HNS_ITEM_BALL_START + 220)
 #define FLAG_ITEM_VIOLET_CITY_PECHA_BERRY           (HNS_ITEM_BALL_START + 221)
 #define FLAG_ITEM_VIOLET_CITY_RARE_CANDY            (HNS_ITEM_BALL_START + 222)
@@ -519,7 +519,7 @@
 #define FLAG_GOT_FRUSTRATION                        0x206
 #define FLAG_GOT_HIDDEN_POWER                       0x207
 #define FLAG_GOT_RETURN                             0x208
-#define FLAG_GOT_SKILL_SWAP                         0x209
+#define FLAG_GOT_SUNNY_DAY                         0x209
 #define FLAG_GOT_TM_FROM_MAHOGANY_COP               0x20A
 #define FLAG_GOT_TM_PSYCHIC                         0x20B
 #define FLAG_GOT_TM_REST                            0x20C
@@ -527,7 +527,7 @@
 #define FLAG_GOT_TM_SNATCH                          0x20E
 #define FLAG_GOT_TM_STEEL_WING                      0x20F
 #define FLAG_GOT_ROUTE_14_AERIAL_ACE                0x210
-#define FLAG_GOT_VIRIDIAN_TM_SLUDGE_BOMB           0x211
+#define FLAG_GOT_VIRIDIAN_TM_DREAM_EATER           0x211
 #define FLAG_GOT_BERRY_ROUTE_30_HOUSE               0x212
 #define FLAG_GOT_BLACK_BELT                         0x213
 #define FLAG_GOT_BLACK_GLASSES                      0x214
@@ -823,7 +823,7 @@
 #define FLAG_BEVERLY_HAS_ITEM_HNS                   0x2F0
 #define FLAG_JOSE_HAS_ITEM_HNS                      0x2F1
 #define FLAG_KENJI_HAS_ITEM_HNS                     0x2F2
-#define FLAG_UNUSED_19                              0x2F3
+#define FLAG_ITEM_OLIVINE_TM_SWAGGER                0x2F3
 #define FLAG_UNUSED_20                              0x2F4
 #define FLAG_UNUSED_21                              0x2F5
 #define FLAG_UNUSED_22                              0x2F6

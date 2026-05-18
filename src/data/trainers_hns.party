@@ -7577,7 +7577,7 @@ Level: 11
 IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
 - Tackle
 - Mud Slap
-- Growl
+- Roost
 - Peck
 
 
@@ -7655,13 +7655,13 @@ Level: 15
 IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
 - Pin Missile
 - Headbutt
-- Bullet Seed
+- Rollout
 - Harden
 
 Ledian
 Level: 15
 IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
-- Bullet Seed
+- Thunder Punch
 - Comet Punch
 - Supersonic
 - Reflect
@@ -7671,7 +7671,7 @@ Level: 16
 IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
 - Quick Attack
 - Fury Cutter
-- Bullet Seed
+- U Turn 
 - Pursuit
 
 
@@ -8566,7 +8566,7 @@ IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
 - Thunder Wave
 - Thunderbolt
 - Flamethrower
-- Dragon Breath
+- Dragon Pulse
 
 Gyarados @ Focus Band
 Level: 43
@@ -8598,7 +8598,7 @@ IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
 - Smokescreen
 - Surf
 - Hyper Beam
-- Dragon Breath
+- Dragon Pulse
 
 
 === TRAINER_CLAIR_2_HNS ===
@@ -8791,7 +8791,7 @@ Items: Full Restore / Full Restore
 Electrode @ Focus Band
 Level: 57
 IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
-- Thunder
+- Shock Wave
 - Rain Dance
 - Thunder Wave
 - Explosion
@@ -8977,7 +8977,7 @@ Muk
 Level: 62
 IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
 - Minimize
-- Sludge Bomb
+- Poison Jab
 - Toxic
 - Acid Armor
 
@@ -8993,7 +8993,7 @@ Nidoqueen @ Quick Claw
 Level: 62
 IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
 - Earthquake
-- Sludge Bomb
+- Poison Jab
 - Thunderbolt
 - Submission
 
@@ -9111,7 +9111,7 @@ Exeggutor @ Leftovers
 Level: 68
 IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
 - Leech Seed
-- Sleep Powder
+- Trick Room
 - Psychic
 - Giga Drain
 

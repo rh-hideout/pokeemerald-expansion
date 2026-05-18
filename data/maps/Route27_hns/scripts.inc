@@ -71,8 +71,8 @@ Route27_EventScript_Item_RareCandy::
     finditem ITEM_RARE_CANDY
     end
 
-Route27_EventScript_Item_SolarBeam::
-    finditem ITEM_TM_SOLAR_BEAM
+Route27_EventScript_Item_DragonClaw::
+    finditem ITEM_DRAGON_CLAW
     end
 
 Route27_EventScript_Item_Revive::

@@ -40,7 +40,7 @@ VioletCity_Gym_EventScript_Falkner::
 	addvar VAR_NUM_BADGES, 1
 	setvar VAR_0x8008, 1
 	call Common_EventScript_SetGymTrainers
-	giveitem ITEM_TM_DOUBLE_TEAM
+	giveitem ITEM_TM_ROOST
 	msgbox VioletGym_Text_Falkner_TMExplain, MSGBOX_DEFAULT
 	setvar VAR_VIOLET_CITY_STATE, 3
 	setrespawn HEAL_LOCATION_VIOLET_CITY_HNS
@@ -86,10 +86,11 @@ VioletGym_Text_Falkner_BadgeExplain:
 VioletGym_Text_Falkner_TMExplain:
 	.string "By using a TM, a POKéMON will\n"
 	.string "instantly learn a new move.\p"
-	.string "TM32 contains DOUBLE TEAM.\p"
-	.string "It increase a POKéMON's evasion.\p"
-	.string "In other words, your POKéMON\n"
-	.string "will be harder to hit.$"
+	.string "That TM contains ROOST.\p"
+	.string "It restores HP up to half of your\n"
+	.string "POKéMON's maximum.\p"
+	.string "In other words, it heals your\n"
+	.string "POKéMON.$"
 
 VioletGym_Text_Falkner_AfterFight:
 	.string "There are POKéMON GYMS in cities\n"

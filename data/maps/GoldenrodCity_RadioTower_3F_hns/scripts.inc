@@ -54,7 +54,7 @@ GoldenrodRaidoTower3_EventScript_Scientist::
 GoldenrodCity_RadioTower_3F_EventScript_Cooltrainer::
 	lock
 	faceplayer
-	goto_if_set FLAG_GOT_SKILL_SWAP, GoldenrodCity_RadioTower_3F_EventScript_Cooltrainer3
+	goto_if_set FLAG_GOT_SUNNY_DAY, GoldenrodCity_RadioTower_3F_EventScript_Cooltrainer3
 	goto_if_ge VAR_GOLDENROD_CITY_STATE, 10, GoldenrodCity_RadioTower_3F_EventScript_Cooltrainer2
 
 	msgbox GoldenrodCity_RadioTower_3F_Text_CooltrainerFPleaseSave, MSGBOX_DEFAULT
@@ -67,8 +67,8 @@ GoldenrodCity_RadioTower_3F_EventScript_Cooltrainer2::
 	faceplayer
 	msgbox GoldenrodCity_RadioTower_3F_Text_CooltrainerFHeroGift, MSGBOX_DEFAULT
 	closemessage
-	giveitem ITEM_TM_SKILL_SWAP
-	setflag FLAG_GOT_SKILL_SWAP
+	giveitem ITEM_TM_SUNNY_DAY
+	setflag FLAG_GOT_SUNNY_DAY
 	msgbox GoldenrodCity_RadioTower_3F_Text_CooltrainerFSunnyDay, MSGBOX_DEFAULT
 	closemessage
 	release
@@ -178,8 +178,9 @@ GoldenrodCity_RadioTower_3F_Text_CooltrainerFHeroGift:
 	.string "This is a token of my appreciation.$"
 
 GoldenrodCity_RadioTower_3F_Text_CooltrainerFSunnyDay:
-	.string "It's SKILL SWAP. It swaps the ability\n"
-	.string "of one POKéMON with another's.$"
+	.string "It's SUNNY DAY.\p"
+	.string "It powers up fire-type moves\n"
+	.string "for a while.$"
 
 GoldenrodCity_RadioTower_3F_Text_CooltrainerFMarvelous:
 	.string "You were simply marvelous!$"
