@@ -411,8 +411,8 @@ IlexForest_EventScript_FullHeal::
 	finditem ITEM_FULL_HEAL
 	end
 
-IlexForest_EventScript_SunnyDay::
-	finditem ITEM_TM_SUNNY_DAY
+IlexForest_EventScript_Item_FalseSwipe::
+	finditem ITEM_TM_FALSE_SWIPE
 	end
 
 IlexForest_Movement_Kimono_Girl1:

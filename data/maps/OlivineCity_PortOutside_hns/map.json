@@ -47,6 +47,7 @@
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_OLIVINE_SABRINA",
       "graphics_id": "OBJ_EVENT_GFX_SABRINA_HNS",
       "x": 24,
       "y": 5,
@@ -57,8 +58,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "OlivineCity_PortOutside_EventScript_Sabrina",
-      "flag": "FLAG_HIDE_OLIVINE_SABRINA",
-      "local_id": "LOCALID_OLIVINE_SABRINA"
+      "flag": "FLAG_HIDE_OLIVINE_SABRINA"
     }
   ],
   "warp_events": [

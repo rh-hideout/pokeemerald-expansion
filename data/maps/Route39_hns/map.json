@@ -39,6 +39,7 @@
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_R39_BAOBA",
       "graphics_id": "OBJ_EVENT_GFX_GENTLEMAN_HNS",
       "x": 31,
       "y": 27,
@@ -49,8 +50,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_ENABLE_BAOBA_MATCH_CALL",
-      "local_id": "LOCALID_R39_BAOBA"
+      "flag": "FLAG_ENABLE_BAOBA_MATCH_CALL"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_WOMAN_1_HNS",
@@ -154,7 +154,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "Route39_EventScript_Item_TM",
-      "flag": "FLAG_ITEM_ROUTE39_TM_DRAIN_PUNCH"
+      "flag": "FLAG_ITEM_ROUTE39_TM_BRICK_BREAK"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_PONYTA",
@@ -235,6 +235,7 @@
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_R39_SHADOW",
       "graphics_id": "OBJ_EVENT_GFX_LEGENDARY_SHADOW_HNS",
       "x": 30,
       "y": 12,
@@ -245,8 +246,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_ROUTE39_SHADOW",
-      "local_id": "LOCALID_R39_SHADOW"
+      "flag": "FLAG_HIDE_ROUTE39_SHADOW"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_WOMAN_2_HNS",

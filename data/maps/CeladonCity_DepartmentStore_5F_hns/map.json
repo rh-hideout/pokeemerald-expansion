@@ -12,7 +12,7 @@
   "allow_running": false,
   "show_map_name": false,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
-  "connections": 0,
+  "connections": null,
   "object_events": [
     {
       "graphics_id": "OBJ_EVENT_GFX_SAILOR_HNS",
@@ -67,6 +67,7 @@
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_CELADON_FALKNER",
       "graphics_id": "OBJ_EVENT_GFX_FALKNER_HNS",
       "x": 4,
       "y": 7,
@@ -77,8 +78,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "CeladonDeptStore5_EventScript_Falkner",
-      "flag": "FLAG_HIDE_CELADON_FALKNER",
-      "local_id": "LOCALID_CELADON_FALKNER"
+      "flag": "FLAG_HIDE_CELADON_FALKNER"
     }
   ],
   "warp_events": [

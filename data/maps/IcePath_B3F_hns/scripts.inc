@@ -35,7 +35,7 @@ IcePath_B3F_EventScript_Swinub::
 	playmoncry SPECIES_SWINUB, CRY_MODE_NORMAL
 	msgbox IcePath_B3F_Text_Swinub, MSGBOX_DEFAULT
 	waitmoncry
-	goto_if_set FLAG_ITEM_ICEPATH4_TM_BLIZZARD, IcePath_B3F_EventScript_SwinubBlowPlayer
+	goto_if_set FLAG_ITEM_ICEPATH4_TM_AVALANCHE, IcePath_B3F_EventScript_SwinubBlowPlayer
 	msgbox IcePath_B3F_Text_SwinubBerry, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, FALSE, IcePath_B3F_EventScript_SwinubBlowPlayer
 	fadescreen FADE_TO_BLACK
@@ -44,8 +44,8 @@ IcePath_B3F_EventScript_Swinub::
 	removeitem VAR_ITEM_ID, 1
 	goto_if_ne VAR_ITEM_ID, ITEM_ASPEAR_BERRY, IcePath_B3F_EventScript_SwinubDislikedBerry
 	msgbox IcePath_B3F_Text_SwinubAteBerry, MSGBOX_DEFAULT
-	giveitem ITEM_TM_BLIZZARD
-	setflag FLAG_ITEM_ICEPATH4_TM_BLIZZARD
+	giveitem ITEM_TM_AVALANCHE
+	setflag FLAG_ITEM_ICEPATH4_TM_AVALANCHE
 IcePath_B3F_EventScript_SwinubBlowPlayer::
 	closemessage
 	playse SE_M_BLIZZARD
@@ -77,7 +77,7 @@ IcePath_B3F_EventScript_Delibird::
 	playmoncry SPECIES_DELIBIRD, CRY_MODE_NORMAL
 	msgbox IcePath_B3F_Text_Delibird, MSGBOX_DEFAULT
 	waitmoncry
-	goto_if_set FLAG_ITEM_ICEPATH4_TM_BLIZZARD, IcePath_B3F_EventScript_DelibirdBlowPlayer
+	goto_if_set FLAG_ITEM_ICEPATH4_TM_AVALANCHE, IcePath_B3F_EventScript_DelibirdBlowPlayer
 	msgbox IcePath_B3F_Text_DelibirdBerry, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, FALSE, IcePath_B3F_EventScript_DelibirdBlowPlayer
 	fadescreen FADE_TO_BLACK
@@ -87,7 +87,7 @@ IcePath_B3F_EventScript_Delibird::
 	goto_if_ne VAR_ITEM_ID, ITEM_ASPEAR_BERRY, IcePath_B3F_EventScript_DelibirdDislikedBerry
 	msgbox IcePath_B3F_Text_DelibirdAteBerry, MSGBOX_DEFAULT
 	giveitem ITEM_TM_BLIZZARD
-	setflag FLAG_ITEM_ICEPATH4_TM_BLIZZARD
+	setflag FLAG_ITEM_ICEPATH4_TM_AVALANCHE
 IcePath_B3F_EventScript_DelibirdBlowPlayer::
 	closemessage
 	playse SE_M_BLIZZARD

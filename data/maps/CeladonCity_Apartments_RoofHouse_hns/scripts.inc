@@ -4,13 +4,13 @@ CeladonCity_Apartments_RoofHouse_hns_MapScripts::
 CeladonCity_Apartments_RoofHouse_EventScript_BlackBelt::
 	lock 
 	faceplayer
-	goto_if_set FLAG_GOT_TM_REST, CeladonCity_Apartments_RoofHouse_EventScript_BlackBeltAfter
+	goto_if_set FLAG_GOT_TM_SLEEP_TALK, CeladonCity_Apartments_RoofHouse_EventScript_BlackBeltAfter
 	msgbox CeladonMansionRoofHouse_Text_PharmacistIntro, MSGBOX_DEFAULT	
 	goto_if_set FLAG_NIGHT_POKEMON, CeladonCity_Apartments_RoofHouse_EventScript_BlackBeltRefused
 	msgbox CeladonMansionRoofHouse_Text_PharmacistStory, MSGBOX_NPC
-	giveitem ITEM_TM_REST
+	giveitem ITEM_TM_SLEEP_TALK
 	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
-	setflag FLAG_GOT_TM_REST
+	setflag FLAG_GOT_TM_SLEEP_TALK
 	msgbox CeladonMansionRoofHouse_Text_PharmacistCurse, MSGBOX_NPC
 	closemessage
 	release
@@ -59,12 +59,12 @@ CeladonMansionRoofHouse_Text_PharmacistStory:
 	.string "…\n"
 	.string "Ba-dum ba-dum!\p"
 	.string "For listening so patiently, you\n"
-	.string "may take this--TM44!$"
+	.string "may take this--TM82!$"
 
 CeladonMansionRoofHouse_Text_PharmacistCurse:
-	.string "TM44 is REST.\p"
-	.string "It will allow your POKéMON to nap\n"
-	.string "mid-battle and regain health.\p"
+	.string "TM82 is SLEEP TALK.\p"
+	.string "It will allow your POKéMON to use\n"
+	.string "a random move while asleep.\p"
 	.string "But good luck sleeping after that\n"
 	.string "terrifying tale!$"
 

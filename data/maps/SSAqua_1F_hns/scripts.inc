@@ -76,7 +76,7 @@ SSAqua_1F_EventScript_LeaveBoat::
 	clearflag FLAG_HIDE_ZAPDOS
 	clearflag FLAG_HIDE_ARTICUNO
 	clearflag FLAG_HIDE_MOLTRES
-	clearflag FLAG_GOT_TM_REST
+	clearflag FLAG_GOT_TM_SLEEP_TALK
 	clearflag FLAG_GOT_SUPER_ROD
 	clearflag FLAG_HIDE_CINNABAR_BLUE
 	clearflag FLAG_GOT_ROUTE2_NUGGET

@@ -9,8 +9,8 @@ MtMortar_1F_South_OnTransition:
 
 
 
-MtMortar_1F_South_EventScript_Item_Revive::
-    finditem ITEM_REVIVE
+MtMortar_1F_South_EventScript_Item_Aerial_Ace::
+    finditem ITEM_TM_AERIAL_ACE
     end
 
 MtMortar_1F_South_EventScript_Item_Elixir::

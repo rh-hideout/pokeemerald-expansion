@@ -70,6 +70,7 @@
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_VIOLETCITY_EARL",
       "graphics_id": "OBJ_EVENT_GFX_SUPER_NERD_HNS",
       "x": 18,
       "y": 35,
@@ -80,8 +81,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "VioletCity_EventScript_Earl",
-      "flag": "FLAG_HIDE_VIOLET_CITY_EARL",
-      "local_id": "LOCALID_VIOLETCITY_EARL"
+      "flag": "FLAG_HIDE_VIOLET_CITY_EARL"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER_HNS",
@@ -422,6 +422,7 @@
       "flag": "FLAG_NIGHT_POKEMON"
     },
     {
+      "local_id": "LOCALID_VIOLET_KIMONO",
       "graphics_id": "OBJ_EVENT_GFX_KIMONO_HNS",
       "x": 43,
       "y": 48,
@@ -432,8 +433,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "FLAG_HIDE_VIOLET_CITY_KIMONO_GIRL",
-      "local_id": "LOCALID_VIOLET_KIMONO"
+      "flag": "FLAG_HIDE_VIOLET_CITY_KIMONO_GIRL"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_SMALL_LIGHT_HNS",
