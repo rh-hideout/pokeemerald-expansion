@@ -273,8 +273,6 @@ struct SaveBlock3
 #endif
 }; /* max size 1624 bytes */
 
-extern struct SaveBlock3 *gSaveBlock3Ptr;
-
 struct Pokedex
 {
     /*0x00*/ u8 order;
@@ -624,8 +622,6 @@ struct SaveBlock2
     /*0x64C*/ struct BattleFrontier frontier;
 }; // sizeof=0xF2C
 
-extern struct SaveBlock2 *gSaveBlock2Ptr;
-
 extern u8 UpdateSpritePaletteWithTime(u8);
 
 struct SecretBaseParty
@@ -662,6 +658,7 @@ struct SecretBase
 #include "global.berry.h"
 #include "global.tv.h"
 #include "pokemon.h"
+#include "load_save.h"
 
 struct WarpData
 {
@@ -1211,8 +1208,6 @@ struct SaveBlock1
 #endif
     // sizeof: 0x3???
 };
-
-extern struct SaveBlock1 *gSaveBlock1Ptr;
 
 struct MapPosition
 {

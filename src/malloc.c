@@ -197,9 +197,43 @@ bool32 CheckMemBlockInternal(void *heapStart, void *pointer)
 
 void InitHeap(void *heapStart, u32 heapSize)
 {
+    // The heap already exists, report any leaks.
+    if (REPORT_MEMORY_LEAKS && sHeapStart != NULL)
+    {
+        DebugPrintf("Memory leaks:");
+        PrintHeap();
+    }
+
     sHeapStart = heapStart;
     sHeapSize = heapSize;
     PutFirstMemBlockHeader(heapStart, heapSize);
+}
+
+void PrintHeap(void)
+{
+    const struct MemBlock *head = HeapHead();
+    const struct MemBlock *block = head;
+    do
+    {
+        if (block->magic != MALLOC_SYSTEM_ID
+         || !(EWRAM_START <= (uintptr_t)block->next && (uintptr_t)block->next < EWRAM_END)
+         || (block->next <= block && block->next != head))
+        {
+            DebugPrintf("gHeap corrupted block at %07x", block);
+            break;
+        }
+
+        if (block->allocated)
+        {
+            const char *location = MemBlockLocation(block);
+            if (location)
+                DebugPrintf("%s: allocated %d bytes", location, block->size);
+            else
+                DebugPrintf("<unknown>: allocated %d bytes", block->size);
+        }
+        block = block->next;
+    }
+    while (block != head);
 }
 
 void *Alloc_(u32 size, const char *location)
