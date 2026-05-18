@@ -241,7 +241,11 @@ LittlerootTown_BrendansHouse_2F_EventScript_PC::
 	end
 
 LittlerootTown_BrendansHouse_2F_EventScript_CheckPlayersPC::
+#if IS_HNS
+	setvar VAR_0x8004, PC_LOCATION_PLAYER_HOUSE_HNS
+#else
 	setvar VAR_0x8004, PC_LOCATION_BRENDANS_HOUSE
+#endif
 	special DoPCTurnOnEffect
 	playse SE_PC_ON
 	msgbox gText_PlayerHouseBootPC, MSGBOX_DEFAULT
@@ -251,7 +255,11 @@ LittlerootTown_BrendansHouse_2F_EventScript_CheckPlayersPC::
 	end
 
 LittlerootTown_BrendansHouse_2F_EventScript_TurnOffPlayerPC::
+#if IS_HNS
+	setvar VAR_0x8004, PC_LOCATION_PLAYER_HOUSE_HNS
+#else
 	setvar VAR_0x8004, PC_LOCATION_BRENDANS_HOUSE
+#endif
 	playse SE_PC_OFF
 	special DoPCTurnOffEffect
 	releaseall
