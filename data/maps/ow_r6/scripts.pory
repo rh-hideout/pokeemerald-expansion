@@ -1,0 +1,81 @@
+mapscripts ow_r6_MapScripts {
+    MAP_SCRIPT_ON_TRANSITION: ow_r6_OnTransition
+}
+
+// Syncs survey blocker / surveyor trainer visibility with VAR_CULTURE_STATE on every map entry.
+// Blockers are visible (flags clear) until phase 1 is done (state >= 4).
+// Surveyor trainer is hidden (flag set) until then.
+script ow_r6_OnTransition {
+    goto_if_ge(VAR_CULTURE_STATE, 4, ow_r6_OnTransition_QuestDone)
+    setflag(FLAG_HIDE_OW_R6_SURVEYOR_TRAINER)
+    clearflag(FLAG_HIDE_OW_R6_SURVEYOR_BLOCK_1)
+    clearflag(FLAG_HIDE_OW_R6_SURVEYOR_BLOCK_2)
+    clearflag(FLAG_HIDE_OW_R6_SURVEYOR_BLOCK_3)
+    clearflag(FLAG_HIDE_OW_R6_SURVEYOR_BLOCK_4)
+    end
+}
+
+script ow_r6_OnTransition_QuestDone {
+    clearflag(FLAG_HIDE_OW_R6_SURVEYOR_TRAINER)
+    setflag(FLAG_HIDE_OW_R6_SURVEYOR_BLOCK_1)
+    setflag(FLAG_HIDE_OW_R6_SURVEYOR_BLOCK_2)
+    setflag(FLAG_HIDE_OW_R6_SURVEYOR_BLOCK_3)
+    setflag(FLAG_HIDE_OW_R6_SURVEYOR_BLOCK_4)
+    end
+}
+
+// ============================================================
+// SURVEY BLOCKERS (shared script - all four use this)
+// ============================================================
+
+script ow_r6_EventScript_SurveyorBlock {
+    lock
+    faceplayer
+    setspeaker("Survey Crew")
+    msgbox(format("Survey in progress - upper section's\Nrestricted until we've cleared it.\pWestmark's orders. You'll be able to\Npass once the results are filed."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+// ============================================================
+// SURVEYOR TRAINER (hidden until VAR_CULTURE_STATE >= 4)
+// ============================================================
+
+script ow_r6_EventScript_SurveyorTrainer {
+    trainerbattle_single(
+        TRAINER_OW_R6_SURVEYOR,
+        ow_r6_Text_SurveyorTrainer_Intro,
+        ow_r6_Text_SurveyorTrainer_Defeat
+    )
+    msgbox(format("The data I gave them would cut a haul road\Nright through the lower ridge.\pWhether it gets built is someone else's\Nproblem now."), MSGBOX_AUTOCLOSE)
+}
+
+text ow_r6_Text_SurveyorTrainer_Intro {
+    "Didn't expect to find someone\nup here this late in the season.\pThe survey's done. I've got nothing\nto do but wait for Westmark to\ldecide what to do with my findings."
+}
+
+text ow_r6_Text_SurveyorTrainer_Defeat {
+    "Ha. I spend too much time with\nmy instruments and not enough\lwith my team."
+}
+
+// ============================================================
+// BUG CATCHER (clifftop hunter)
+// ============================================================
+
+script ow_r6_EventScript_BugCatcher {
+    trainerbattle_single(
+        TRAINER_OW_R6_BUG_CATCHER,
+        ow_r6_Text_BugCatcher_Intro,
+        ow_r6_Text_BugCatcher_Defeat
+    )
+    msgbox(format("Come back in spring - the winged ones\Ncome through the gap in the cliffs.\NWorth the climb."), MSGBOX_AUTOCLOSE)
+}
+
+text ow_r6_Text_BugCatcher_Intro {
+    "There are Caterpie up here that\nhave never seen a person before!\pThe perfect specimens - and\nthey're going to be MINE!"
+}
+
+text ow_r6_Text_BugCatcher_Defeat {
+    "They scattered!\nThe noise scared them all off!"
+}

@@ -16873,3 +16873,520 @@ Double Battle: No
 Kyogre
 Level: 5
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+=== TRAINER_OW_R3_WOODCUTTER_1 ===
+Name: DAVAN
+Class: Hiker
+Pic: Hiker
+Gender: Male
+Music: Male
+Double Battle: Yes
+Party Size: 4
+Pool Rules: Doubles
+AI: Check Bad Move / Try To Faint
+
+Golem @ Weakness Policy
+Level: 100
+Ability: Sturdy
+Nature: Adamant
+EVs: 252 HP / 252 Atk / 4 Def
+Tags: Lead
+- High Horsepower
+- Protect
+- Rock Polish
+- Rock Slide
+
+Sandslash @ Life Orb
+Level: 100
+Ability: Sand Veil
+Nature: Adamant
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Lead
+- Swords Dance
+- Earthquake
+- Knock Off
+- Gunk Shot
+
+Poliwrath @ Leftovers
+Level: 100
+Ability: Water Absorb
+Nature: Adamant
+EVs: 252 HP / 252 Atk / 4 SpD
+Tags: Lead
+- Bulk Up
+- Drain Punch
+- Knock Off
+- Substitute
+
+Conkeldurr @ Flame Orb
+Level: 100
+Ability: Guts
+Nature: Adamant
+EVs: 252 HP / 252 Atk / 4 SpD
+Tags: Ace
+- Drain Punch
+- Facade
+- Knock Off
+- Mach Punch
+
+Heracross @ Choice Scarf
+Level: 100
+Ability: Moxie
+Nature: Jolly
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Ace
+- Close Combat
+- Megahorn
+- Knock Off
+- Stone Edge
+
+Mamoswine @ Choice Band
+Level: 100
+Ability: Thick Fat
+Nature: Adamant
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Ace
+- Icicle Crash
+- Earthquake
+- Ice Shard
+- Knock Off
+
+=== TRAINER_OW_R3_WOODCUTTER_2 ===
+Name: RIST
+Class: Camper
+Pic: Camper
+Gender: Male
+Music: Male
+Double Battle: Yes
+Party Size: 4
+Pool Rules: Doubles
+AI: Check Bad Move / Try To Faint
+
+Crobat @ Heavy-Duty Boots
+Level: 100
+Ability: Infiltrator
+Nature: Jolly
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Lead
+- Brave Bird
+- U-turn
+- Roost
+- Taunt
+
+Sandslash @ Life Orb
+Level: 100
+Ability: Sand Veil
+Nature: Adamant
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Lead
+- Swords Dance
+- Earthquake
+- Knock Off
+- Gunk Shot
+
+Politoed @ Damp Rock
+Level: 100
+Ability: Drizzle
+Nature: Modest
+EVs: 252 HP / 252 SpA / 4 SpD
+Tags: Lead
+- Scald
+- Encore
+- Ice Beam
+- Rest
+
+Obstagoon @ Flame Orb
+Level: 100
+Ability: Guts
+Nature: Adamant
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Ace
+- Taunt
+- Facade
+- Knock Off
+- Close Combat
+
+Gyarados @ Leftovers
+Level: 100
+Ability: Intimidate
+Nature: Jolly
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Ace
+- Dragon Dance
+- Waterfall
+- Scale Shot
+- Substitute
+
+Poliwrath @ Choice Band
+Level: 100
+Ability: Water Absorb
+Nature: Adamant
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Ace
+- Liquidation
+- Close Combat
+- Darkest Lariat
+- Earthquake
+
+=== TRAINER_OW_R3_TUBER_BEACHBOY ===
+Name: MATTEO
+Class: Tuber M
+Pic: Tuber M
+Gender: Male
+Music: Male
+Double Battle: Yes
+Party Size: 2
+Pool Rules: Doubles
+AI: Check Bad Move
+
+Politoed @ Damp Rock
+Level: 100
+Ability: Drizzle
+Nature: Modest
+EVs: 252 HP / 252 SpA / 4 SpD
+Tags: Lead
+- Scald
+- Encore
+- Ice Beam
+- Rest
+
+Pelipper @ Heavy-Duty Boots
+Level: 100
+Ability: Drizzle
+Nature: Modest
+EVs: 252 SpA / 4 SpD / 252 Spe
+Tags: Lead
+- Hurricane
+- U-turn
+- Roost
+- Knock Off
+
+Gyarados @ Life Orb
+Level: 100
+Ability: Intimidate
+Nature: Jolly
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Ace
+- Dragon Dance
+- Waterfall
+- Crunch
+- Earthquake
+
+Kingler @ Choice Band
+Level: 100
+Ability: Sheer Force
+Nature: Adamant
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Ace
+- Liquidation
+- Knock Off
+- High Horsepower
+- Rock Slide
+
+=== TRAINER_OW_R3_SAILOR ===
+Name: BORVO
+Class: Sailor
+Pic: Sailor
+Gender: Male
+Music: Male
+Double Battle: Yes
+Party Size: 4
+Pool Rules: Weather Doubles
+AI: Check Bad Move / Try To Faint
+
+Pelipper @ Damp Rock
+Level: 100
+Ability: Drizzle
+Nature: Modest
+EVs: 252 SpA / 4 SpD / 252 Spe
+Tags: Lead / Weather Setter
+- Hurricane
+- U-turn
+- Roost
+- Knock Off
+
+Politoed @ Eject Button
+Level: 100
+Ability: Drizzle
+Nature: Modest
+EVs: 252 HP / 252 SpA / 4 SpD
+Tags: Lead / Weather Setter
+- Weather Ball
+- Helping Hand
+- Encore
+- Protect
+
+Gyarados @ Life Orb
+Level: 100
+Ability: Moxie
+Nature: Jolly
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Lead / Weather Abuser
+- Dragon Dance
+- Waterfall
+- Crunch
+- Thunder
+
+Kingler @ Choice Band
+Level: 100
+Ability: Sheer Force
+Nature: Adamant
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Lead / Weather Abuser
+- Liquidation
+- Knock Off
+- High Horsepower
+- Rock Slide
+
+Poliwrath @ Leftovers
+Level: 100
+Ability: Water Absorb
+Nature: Adamant
+EVs: 252 HP / 252 Atk / 4 SpD
+Tags: Ace
+- Bulk Up
+- Drain Punch
+- Knock Off
+- Substitute
+
+Crobat @ Rocky Helmet
+Level: 100
+Ability: Infiltrator
+Nature: Jolly
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Ace
+- Brave Bird
+- U-turn
+- Roost
+- Taunt
+
+Quagsire @ Heavy-Duty Boots
+Level: 100
+Ability: Unaware
+Nature: Relaxed
+EVs: 252 HP / 252 Def / 4 SpD
+Tags: Ace
+- Earthquake
+- Toxic
+- Haze
+- Recover
+
+=== TRAINER_OW_R3_BEACH_FATHER ===
+Name: CALLUM
+Class: Pokefan
+Pic: Pokefan M
+Gender: Male
+Music: Male
+Double Battle: Yes
+Party Size: 4
+Pool Rules: Support Doubles
+AI: Check Bad Move / Try To Faint
+
+Pelipper @ Heavy-Duty Boots
+Level: 100
+Ability: Drizzle
+Nature: Modest
+EVs: 252 SpA / 4 SpD / 252 Spe
+Tags: Lead
+- Hurricane
+- U-turn
+- Roost
+- Knock Off
+
+Politoed @ Damp Rock
+Level: 100
+Ability: Drizzle
+Nature: Modest
+EVs: 252 HP / 252 SpA / 4 SpD
+Tags: Lead
+- Scald
+- Encore
+- Ice Beam
+- Rest
+
+Crobat @ Rocky Helmet
+Level: 100
+Ability: Infiltrator
+Nature: Jolly
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Lead
+- Brave Bird
+- U-turn
+- Roost
+- Taunt
+
+Ribombee @ Focus Sash
+Level: 100
+Ability: Compound Eyes
+Nature: Timid
+EVs: 252 HP / 4 SpA / 252 Spe
+Tags: Support
+- Sticky Web
+- Moonblast
+- Tailwind
+- Stun Spore
+
+Gyarados @ Life Orb
+Level: 100
+Ability: Intimidate
+Nature: Jolly
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Ace
+- Dragon Dance
+- Waterfall
+- Crunch
+- Earthquake
+
+Obstagoon @ Flame Orb
+Level: 100
+Ability: Guts
+Nature: Adamant
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Ace
+- Taunt
+- Facade
+- Knock Off
+- Close Combat
+
+=== TRAINER_OW_R6_SURVEYOR ===
+Name: HENK
+Class: Ruin Maniac
+Pic: Ruin Maniac
+Gender: Male
+Music: Male
+Double Battle: Yes
+Party Size: 4
+Pool Rules: Doubles
+AI: Check Bad Move / Try To Faint
+
+Golem @ Weakness Policy
+Level: 100
+Ability: Sturdy
+Nature: Adamant
+EVs: 252 HP / 252 Atk / 4 Def
+Tags: Lead
+- High Horsepower
+- Protect
+- Rock Polish
+- Rock Slide
+
+Crobat @ Heavy-Duty Boots
+Level: 100
+Ability: Infiltrator
+Nature: Jolly
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Lead
+- Brave Bird
+- U-turn
+- Roost
+- Taunt
+
+Probopass @ Power Herb
+Level: 100
+Ability: Sturdy
+Nature: Modest
+EVs: 252 HP / 252 SpA / 4 SpD
+Tags: Lead
+- Meteor Beam
+- Earth Power
+- Flash Cannon
+- Dazzling Gleam
+
+Mamoswine @ Choice Band
+Level: 100
+Ability: Thick Fat
+Nature: Adamant
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Ace
+- Icicle Crash
+- Earthquake
+- Ice Shard
+- Knock Off
+
+Sandslash @ Life Orb
+Level: 100
+Ability: Sand Veil
+Nature: Adamant
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Ace
+- Swords Dance
+- Earthquake
+- Knock Off
+- Gunk Shot
+
+Ferrothorn @ Rocky Helmet
+Level: 100
+Ability: Iron Barbs
+Nature: Relaxed
+EVs: 252 HP / 252 Def / 4 SpD
+Tags: Ace
+- Leech Seed
+- Knock Off
+- Power Whip
+- Stealth Rock
+
+=== TRAINER_OW_R6_BUG_CATCHER ===
+Name: FERDO
+Class: Bug Catcher
+Pic: Bug Catcher
+Gender: Male
+Music: Male
+Double Battle: Yes
+Party Size: 4
+Pool Rules: Support Doubles
+AI: Check Bad Move / Try To Faint
+
+Vivillon @ Focus Sash
+Level: 100
+Ability: Compound Eyes
+Nature: Timid
+EVs: 252 HP / 4 SpA / 252 Spe
+Tags: Support
+- Hurricane
+- Rage Powder
+- Sleep Powder
+- Protect
+
+Vikavolt @ Heavy-Duty Boots
+Level: 100
+Ability: Levitate
+Nature: Modest
+EVs: 4 HP / 252 SpA / 252 Spe
+Tags: Lead
+- Sticky Web
+- Volt Switch
+- Bug Buzz
+- Energy Ball
+
+Ninjask @ Life Orb
+Level: 100
+Ability: Speed Boost
+Nature: Jolly
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Lead
+- Swords Dance
+- Protect
+- U-turn
+- Dual Wingbeat
+
+Heracross @ Flame Orb
+Level: 100
+Ability: Guts
+Nature: Jolly
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Ace
+- Close Combat
+- Facade
+- Knock Off
+- Earthquake
+
+Yanmega @ Choice Specs
+Level: 100
+Ability: Tinted Lens
+Nature: Modest
+EVs: 4 HP / 252 SpA / 252 Spe
+Tags: Ace
+- Bug Buzz
+- Air Slash
+- Giga Drain
+- U-turn

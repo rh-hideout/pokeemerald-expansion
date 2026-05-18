@@ -149,7 +149,7 @@
 #define P_FAMILY_HOPPIP                  TRUE
 #define P_FAMILY_AIPOM                   FALSE
 #define P_FAMILY_SUNKERN                 TRUE
-#define P_FAMILY_YANMA                   FALSE
+#define P_FAMILY_YANMA                   TRUE
 #define P_FAMILY_WOOPER                  TRUE
 #define P_FAMILY_MURKROW                 TRUE
 #define P_FAMILY_MISDREAVUS              TRUE

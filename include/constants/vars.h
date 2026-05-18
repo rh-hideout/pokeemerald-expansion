@@ -97,14 +97,14 @@
 #define VAR_POKELOT_RND1                                 0x404B
 #define VAR_POKELOT_RND2                                 0x404C
 #define VAR_POKELOT_PRIZE_PLACE                          0x404D
-#define VAR_LEVEL_CAP                                    0x404E // Level cap variable, used with LEVEL_CAP_VARIABLE
+#define VAR_RIVAL_RAYQUAZA_CALL_STEP_COUNTER             0x404E
 #define VAR_LOTAD_SIZE_RECORD                            0x404F
 #define VAR_LITTLEROOT_TOWN_STATE                        0x4050
 #define VAR_OLDALE_TOWN_STATE                            0x4051
-#define VAR_DEWFORD_TOWN_STATE                           0x4052 // Unused Var
+#define VAR_UNUSED_0x4052                                0x4052 // Unused Var
 #define VAR_LAVARIDGE_TOWN_STATE                         0x4053
 #define VAR_CURRENT_SECRET_BASE                          0x4054 // was probably allocated for VAR_FALLARBOR_TOWN_STATE at one point
-#define VAR_VERDANTURF_TOWN_STATE                        0x4055 // Unused Var
+#define VAR_UNUSED_0x4055                                0x4055 // Unused Var
 #define VAR_PACIFIDLOG_TOWN_STATE                        0x4056 // Unused Var
 #define VAR_PETALBURG_CITY_STATE                         0x4057
 #define VAR_SLATEPORT_CITY_STATE                         0x4058
@@ -265,7 +265,9 @@
 #define VAR_SCOTT_FORTREE_CALL_STEP_COUNTER              0x40F3
 #define VAR_ROXANNE_CALL_STEP_COUNTER                    0x40F4
 #define VAR_SCOTT_BF_CALL_STEP_COUNTER                   0x40F5
-#define VAR_RIVAL_RAYQUAZA_CALL_STEP_COUNTER             0x40F6
+
+// used for ow:
+#define VAR_LEVEL_CAP                                    0x40F6 // Level cap variable, used with LEVEL_CAP_VARIABLE
 #define VAR_NUZLOCKE_ENCOUNTERS_1                        0x40F7 // Nuzlocke: Track first encounters in routes/areas (32 bits)
 #define VAR_NUZLOCKE_ENCOUNTERS_2                        0x40F8 // Nuzlocke: Track first encounters in routes/areas (32 bits)
 #define VAR_NUZLOCKE_ENCOUNTERS_3                        0x40F9 // Nuzlocke: Track first encounters in routes/areas (32 bits)
@@ -276,8 +278,22 @@
 #define VAR_NUZLOCKE_CATCHES_4                           0x40FE // Nuzlocke: Track successful catches in routes/areas (32 bits)
 #define VAR_UNUSED_0x40FF                                0x40FF // Unused Var
 #define VAR_BATTLE_SPEED                                 0x4100 // Battle speed setting (0-3 for 1x/2x/3x/4x)
+#define VAR_DEXNAV_SPECIES                               0x4101
+#define VAR_DEXNAV_STEPCOUNTER                           0x4102
+#define VAR_OW_UNUSED_0x4103                             0x4103
+#define VAR_OW_UNUSED_0x4104                             0x4104
+#define VAR_OW_UNUSED_0x4105                             0x4105
+#define VAR_OW_UNUSED_0x4106                             0x4106
+#define VAR_OW_UNUSED_0x4107                             0x4107
+#define VAR_OW_UNUSED_0x4108                             0x4108
+#define VAR_OW_UNUSED_0x4109                             0x4109
+#define VAR_OW_UNUSED_0x410A                             0x410A
+#define VAR_CULTURE_STATE                                0x410B // Culture questline state machine (see docs/11-ow/quests/culture/culture.md)
+#define VAR_OW_UNUSED_0x410C                             0x410C // etc.
+#define VAR_OW_UNUSED_0x410D                             0x410D
+#define VAR_OW_UNUSED_0x410E                             0x410E
 
-#define VARS_END                                         0x4100
+#define VARS_END                                         0x41C8 // Extended by 200 vars
 #define VARS_COUNT                                       (VARS_END - VARS_START + 1)
 
 #define SPECIAL_VARS_START            0x8000

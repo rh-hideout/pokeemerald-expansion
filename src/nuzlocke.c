@@ -24,113 +24,22 @@ bool8 IsNuzlockeActive(void)
 // Location conversion for Nuzlocke tracking
 static u8 GetNuzlockeLocationId(u8 currLocation)
 {
+    // Maps custom mapsecs to sequential slot IDs (0-63).
+    // Vanilla Emerald locations are unused in this game — their slots are repurposed.
+    // Add new areas here in order; max 64 total (4 vars x 16 bits).
     switch (currLocation)
     {
-        
-    // Cities and towns that have encounters are treated as separate areas
-    case MAPSEC_LITTLEROOT_TOWN:
-    case MAPSEC_OLDALE_TOWN:
-    case MAPSEC_DEWFORD_TOWN:
-    case MAPSEC_LAVARIDGE_TOWN:
-    case MAPSEC_FALLARBOR_TOWN:
-    case MAPSEC_VERDANTURF_TOWN:
-    case MAPSEC_PACIFIDLOG_TOWN:
-    case MAPSEC_PETALBURG_CITY:
-    case MAPSEC_SLATEPORT_CITY:
-    case MAPSEC_MAUVILLE_CITY:
-    case MAPSEC_RUSTBORO_CITY:
-    case MAPSEC_FORTREE_CITY:
-    case MAPSEC_LILYCOVE_CITY:
-    case MAPSEC_MOSSDEEP_CITY:
-    case MAPSEC_SOOTOPOLIS_CITY:
-    case MAPSEC_EVER_GRANDE_CITY:
-        return currLocation;
-        
-    // Routes are separate areas
-    case MAPSEC_ROUTE_101:
-    case MAPSEC_ROUTE_102:
-    case MAPSEC_ROUTE_103:
-    case MAPSEC_ROUTE_104:
-    case MAPSEC_ROUTE_105:
-    case MAPSEC_ROUTE_106:
-    case MAPSEC_ROUTE_107:
-    case MAPSEC_ROUTE_108:
-    case MAPSEC_ROUTE_109:
-    case MAPSEC_ROUTE_110:
-    case MAPSEC_ROUTE_111:
-    case MAPSEC_ROUTE_112:
-    case MAPSEC_ROUTE_113:
-    case MAPSEC_ROUTE_114:
-    case MAPSEC_ROUTE_115:
-    case MAPSEC_ROUTE_116:
-    case MAPSEC_ROUTE_117:
-    case MAPSEC_ROUTE_118:
-    case MAPSEC_ROUTE_119:
-    case MAPSEC_ROUTE_120:
-    case MAPSEC_ROUTE_121:
-    case MAPSEC_ROUTE_122:
-    case MAPSEC_ROUTE_123:
-    case MAPSEC_ROUTE_124:
-    case MAPSEC_ROUTE_125:
-    case MAPSEC_ROUTE_126:
-    case MAPSEC_ROUTE_127:
-    case MAPSEC_ROUTE_128:
-    case MAPSEC_ROUTE_129:
-    case MAPSEC_ROUTE_130:
-    case MAPSEC_ROUTE_131:
-    case MAPSEC_ROUTE_132:
-    case MAPSEC_ROUTE_133:
-    case MAPSEC_ROUTE_134:
-        return currLocation;
-        
-    // Caves and special areas
-    case MAPSEC_GRANITE_CAVE:
-    case MAPSEC_MT_CHIMNEY:
-    case MAPSEC_SAFARI_ZONE:
-    case MAPSEC_BATTLE_FRONTIER:
-    case MAPSEC_RUSTURF_TUNNEL:
-    case MAPSEC_ABANDONED_SHIP:
-    case MAPSEC_NEW_MAUVILLE:
-    case MAPSEC_METEOR_FALLS:
-    case MAPSEC_MT_PYRE:
-    case MAPSEC_SHOAL_CAVE:
-    case MAPSEC_SEAFLOOR_CAVERN:
-    case MAPSEC_VICTORY_ROAD:
-    case MAPSEC_MIRAGE_ISLAND:
-    case MAPSEC_CAVE_OF_ORIGIN:
-    case MAPSEC_FIERY_PATH:
-    case MAPSEC_JAGGED_PASS:
-    case MAPSEC_SEALED_CHAMBER:
-    case MAPSEC_SCORCHED_SLAB:
-        return currLocation;
-        
-    // Underwater areas consolidated with their surface counterparts
-    case MAPSEC_UNDERWATER_124:
-        return MAPSEC_ROUTE_124;
-    case MAPSEC_UNDERWATER_126:
-        return MAPSEC_ROUTE_126;
-    case MAPSEC_UNDERWATER_127:
-        return MAPSEC_ROUTE_127;
-    case MAPSEC_UNDERWATER_128:
-        return MAPSEC_ROUTE_128;
-    case MAPSEC_UNDERWATER_SOOTOPOLIS:
-        return MAPSEC_SOOTOPOLIS_CITY;
-    case MAPSEC_UNDERWATER_SEAFLOOR_CAVERN:
-        return MAPSEC_SEAFLOOR_CAVERN;
-    case MAPSEC_UNDERWATER_SEALED_CHAMBER:
-        return MAPSEC_SEALED_CHAMBER;
-    
-    // Multiple areas consolidated
-    case MAPSEC_METEOR_FALLS2:
-        return MAPSEC_METEOR_FALLS;
-    case MAPSEC_FIERY_PATH2:
-        return MAPSEC_FIERY_PATH;
-    case MAPSEC_JAGGED_PASS2:
-        return MAPSEC_JAGGED_PASS;
-        
-    // Default to the location itself if not handled above
+    case MAPSEC_OW_KOLCHAVI:      return 0;
+    case MAPSEC_OW_FLORAN:        return 1;
+    case MAPSEC_OW_R3:            return 2;
+    case MAPSEC_OW_R6:            return 3;
+    case MAPSEC_OW_SOWBACK_CAVE:  return 4;
+    case MAPSEC_OW_R10:           return 5;
+    case MAPSEC_OW_R8:            return 6;
+    case MAPSEC_OW_R12:           return 7;
+    // Next area: return 8;
     default:
-        return currLocation;
+        return 63; // unmapped areas share a single inert slot
     }
 }
 

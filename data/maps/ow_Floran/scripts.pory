@@ -1,0 +1,8 @@
+mapscripts ow_Floran_MapScripts {
+    MAP_SCRIPT_ON_TRANSITION: ow_Floran_OnTransition
+}
+
+script ow_Floran_OnTransition {
+    setflag(FLAG_VISITED_FLORAN)
+    end
+}

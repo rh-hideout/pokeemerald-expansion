@@ -1,4 +1,11 @@
-mapscripts ow_Kolchavi_MapScripts {}
+mapscripts ow_Kolchavi_MapScripts {
+    MAP_SCRIPT_ON_TRANSITION: ow_Kolchavi_OnTransition
+}
+
+script ow_Kolchavi_OnTransition {
+    setflag(FLAG_VISITED_KOLCHAVI)
+    end
+}
 
 script ow_Kolchavi_EventScript_NPC1 {
     lock

@@ -55,12 +55,12 @@
 #define FLAG_POKEMON_FOLLOWERS       0x21
 #define FLAG_NUZLOCKE_SKIP_ENCOUNTER 0x22 // Set by scripts around boss wild battles to exclude them from Nuzlocke tracking
 #define FLAG_PERFECT_IVS_MODE        0x23 // All wild & gift Pokémon get 6x31 IVs while set
-#define FLAG_CULTURE_ZELKOVA_MET                   0x25
-#define FLAG_UNUSED_0x024    0x24 // Unused Flag
-#define FLAG_HIDE_SOWBACK_B1F_NADIA  0x26
-#define FLAG_HIDE_KOLCHAVI_LAB_2F_NADIA  0x27
-#define FLAG_UNUSED_0x028    0x28 // Unused Flag
-#define FLAG_UNUSED_0x029    0x29 // Unused Flag
+#define FLAG_EXP_SHARE_ENABLED     0x24
+#define FLAG_DEXNAV_SEARCHING     0x25
+#define FLAG_DEXNAV_GET     0x26
+#define FLAG_DEXNAV_DETECTOR     0x27
+#define FLAG_VISITED_KOLCHAVI    0x28
+#define FLAG_VISITED_FLORAN    0x29 // Unused Flag
 #define FLAG_UNUSED_0x02A    0x2A // Unused Flag
 #define FLAG_UNUSED_0x02B    0x2B // Unused Flag
 #define FLAG_UNUSED_0x02C    0x2C // Unused Flag
@@ -1639,7 +1639,22 @@
 #define DAILY_FLAGS_END                             (FLAG_UNUSED_0x95F + (7 - FLAG_UNUSED_0x95F % 8))
 #define NUM_DAILY_FLAGS                             (DAILY_FLAGS_END - DAILY_FLAGS_START + 1)
 
-#define FLAGS_COUNT (DAILY_FLAGS_END + 1)
+// Custom flags for open world romhack content
+// Add new flags here using (OW_FLAGS_START + N), incrementing N for each new flag.
+#define OW_FLAGS_START                              (DAILY_FLAGS_END + 1)
+#define FLAG_CULTURE_ZELKOVA_MET                    (OW_FLAGS_START + 0)
+#define FLAG_HIDE_SOWBACK_B1F_NADIA                 (OW_FLAGS_START + 1)
+#define FLAG_HIDE_KOLCHAVI_LAB_2F_NADIA             (OW_FLAGS_START + 2)
+#define FLAG_HIDE_OW_R6_SURVEYOR_BLOCK_1            (OW_FLAGS_START + 3)
+#define FLAG_HIDE_OW_R6_SURVEYOR_BLOCK_2            (OW_FLAGS_START + 4)
+#define FLAG_HIDE_OW_R6_SURVEYOR_BLOCK_3            (OW_FLAGS_START + 5)
+#define FLAG_HIDE_OW_R6_SURVEYOR_BLOCK_4            (OW_FLAGS_START + 6)
+#define FLAG_HIDE_OW_R6_SURVEYOR_TRAINER            (OW_FLAGS_START + 7)
+#define FLAG_RECEIVED_R3_PAINTER_REWARD             (OW_FLAGS_START + 8)
+#define FLAG_RECEIVED_R3_MYSTIC_WATER               (OW_FLAGS_START + 9)
+#define OW_FLAGS_END                                (OW_FLAGS_START + 199)
+
+#define FLAGS_COUNT (OW_FLAGS_END + 1)
 
 // Special Flags (Stored in EWRAM (sSpecialFlags), not in the SaveBlock)
 #define SPECIAL_FLAGS_START                     0x4000

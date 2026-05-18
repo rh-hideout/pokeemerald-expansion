@@ -111,14 +111,19 @@ script ow_Intro_PokemonCenter_EventScript_AfterStarter {
     waitfanfare
     closemessage
     setspeaker("Steven")
-    msgbox(format("And one more thing - your Pokédex."))
+    msgbox(format("And two more items - your Pokédex and Exp. Share."))
     setflag(FLAG_SYS_POKEDEX_GET)
-    playfanfare(MUS_RG_OBTAIN_KEY_ITEM)
     setspeaker(NULL)
+    playfanfare(MUS_RG_OBTAIN_KEY_ITEM)
     message(format("Steven gave you the Pokédex!"))
     waitmessage
     waitfanfare
-    closemessage
+    giveitem(ITEM_EXP_SHARE)
+    setflag(FLAG_EXP_SHARE_ENABLED)
+    setspeaker("Steven")
+    message(format("By default, the Exp. Share will spread experience to all Pokémon in your party! You can disable this from your bag if you want."))
+    waitmessage
+    waitfanfare
     setflag(FLAG_SYS_B_DASH)
     setspeaker("Steven")
     msgbox(format("Good luck out there, {PLAYER}!"))

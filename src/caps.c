@@ -34,17 +34,16 @@ u32 GetCurrentLevelCap(void)
     {
         static const u32 sLevelCapVarMap[][2] =
         {
-            {0,  5},
-            {1,  16},
-            {2,  23},
-            {3,  30},
-            {4,  37},
-            {5,  44},
-            {6,  51},
-            {7,  58},
-            {8,  65},
-            {9,  72},
-            {10, MAX_LEVEL},
+            {0,  16},
+            {1,  23},
+            {2,  30},
+            {3,  37},
+            {4,  44},
+            {5,  51},
+            {6,  58},
+            {7,  65},
+            {8,  72},
+            {9,  MAX_LEVEL},
         };
 
         u16 varValue = VarGet(B_LEVEL_CAP_VARIABLE);
