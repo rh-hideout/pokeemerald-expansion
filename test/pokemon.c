@@ -98,17 +98,17 @@ TEST("Shininess set on an Egg persists after hatching")
     bool8 isEgg = TRUE;
 
     SetTrainerId(trainerId, gSaveBlock2Ptr->playerTrainerId);
-    CreateMon(&gPlayerParty[0], SPECIES_TOGEPI, EGG_HATCH_LEVEL, personality, OTID_STRUCT_PLAYER_ID);
-    SetMonData(&gPlayerParty[0], MON_DATA_IS_EGG, &isEgg);
-    SetMonData(&gPlayerParty[0], MON_DATA_IS_SHINY, &isShiny);
+    CreateMon(&gParties[B_TRAINER_0][0], SPECIES_TOGEPI, EGG_HATCH_LEVEL, personality, OTID_STRUCT_PLAYER_ID);
+    SetMonData(&gParties[B_TRAINER_0][0], MON_DATA_IS_EGG, &isEgg);
+    SetMonData(&gParties[B_TRAINER_0][0], MON_DATA_IS_SHINY, &isShiny);
 
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_IS_SHINY), TRUE);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_IS_SHINY), TRUE);
 
     gSpecialVar_0x8004 = 0;
     ScriptHatchMon();
 
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_IS_EGG), FALSE);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_IS_SHINY), TRUE);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_IS_EGG), FALSE);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_IS_SHINY), TRUE);
 }
 
 TEST("Hyper Training increases stats without affecting IVs")

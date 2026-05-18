@@ -3312,15 +3312,15 @@ bool8 ScrCmd_fwdweekday(struct ScriptContext *ctx)
 static bool32 EventEvolution(u32 partyIndex)
 {
     bool32 canStopEvo = gSpecialVar_0x8000;
-    u32 targetSpecies = GetEvolutionTargetSpecies(&gPlayerParty[partyIndex], EVO_MODE_SCRIPT_TRIGGER, gSpecialVar_0x8005, NULL, &canStopEvo, CHECK_EVO);
+    u32 targetSpecies = GetEvolutionTargetSpecies(&gParties[B_TRAINER_0][partyIndex], EVO_MODE_SCRIPT_TRIGGER, gSpecialVar_0x8005, NULL, &canStopEvo, CHECK_EVO);
     if (targetSpecies == SPECIES_NONE)
     {
         gSpecialVar_Result = EVO_EVENT_IMPOSSIBLE;
         return FALSE;
     }
     gSpecialVar_Result = EVO_EVENT_SUCCESSFUL;
-    GetEvolutionTargetSpecies(&gPlayerParty[partyIndex], EVO_MODE_SCRIPT_TRIGGER, gSpecialVar_0x8005, NULL, &canStopEvo, DO_EVO);
-    BeginEvolutionScene(&gPlayerParty[partyIndex], targetSpecies, canStopEvo, partyIndex);
+    GetEvolutionTargetSpecies(&gParties[B_TRAINER_0][partyIndex], EVO_MODE_SCRIPT_TRIGGER, gSpecialVar_0x8005, NULL, &canStopEvo, DO_EVO);
+    BeginEvolutionScene(&gParties[B_TRAINER_0][partyIndex], targetSpecies, canStopEvo, partyIndex);
     ScriptContext_Stop();
     return TRUE;
 }
@@ -3331,7 +3331,7 @@ static void TriggerMultipleEvolutions_Repeatable(void)
         gSpecialVar_0x8006++;
 
     gCB2_AfterEvolution = TriggerMultipleEvolutions_Repeatable;
-    for (u32 i = 0; i < gPlayerPartyCount; i++)
+    for (u32 i = 0; i < gPartiesCount[B_TRAINER_0]; i++)
     {
         if (!(gTriedEvolving & (1u << i)))
         {

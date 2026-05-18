@@ -175,9 +175,9 @@ void ChooseBoxMon(struct ScriptContext *ctx)
 void PickPartyMon(struct ScriptContext *ctx)
 {
     sSelectionType = ScriptReadByte(ctx);
-    for (u32 i = 0; i < gPlayerPartyCount; i++)
+    for (u32 i = 0; i < gPartiesCount[B_TRAINER_0]; i++)
     {
-        if (!sPcMonSelectionTypes[sSelectionType].isMonInvalid(&gPlayerParty[i].box))
+        if (!sPcMonSelectionTypes[sSelectionType].isMonInvalid(&gParties[B_TRAINER_0][i].box))
         {
             gSpecialVar_0x8004 = i;
             return;
