@@ -60,6 +60,29 @@ static const struct Fanfare sFanfares[] = {
     [FANFARE_REGISTER_MATCH_CALL] = { MUS_REGISTER_MATCH_CALL, 135 },
 };
 
+#if IS_HNS
+static const struct Fanfare sFanfaresHnS[] = {
+    [FANFARE_LEVEL_UP]            = { MUS_HG_LEVEL_UP,          80 },
+    [FANFARE_OBTAIN_ITEM]         = { MUS_HG_OBTAIN_ITEM,      160 },
+    [FANFARE_EVOLVED]             = { MUS_HG_EVOLVED,           220 },
+    [FANFARE_OBTAIN_TMHM]         = { MUS_HG_OBTAIN_TMHM,      220 },
+    [FANFARE_HEAL]                = { MUS_HG_HEAL,             160 },
+    [FANFARE_OBTAIN_BADGE]        = { MUS_HG_OBTAIN_BADGE,     340 },
+    [FANFARE_MOVE_DELETED]        = { MUS_HG_MOVE_DELETED,     180 },
+    [FANFARE_OBTAIN_BERRY]        = { MUS_HG_OBTAIN_BERRY,     120 },
+    [FANFARE_AWAKEN_LEGEND]       = { MUS_AWAKEN_LEGEND,       710 },
+    [FANFARE_SLOTS_JACKPOT]       = { MUS_SLOTS_JACKPOT,       250 },
+    [FANFARE_SLOTS_WIN]           = { MUS_SLOTS_WIN,           150 },
+    [FANFARE_TOO_BAD]             = { MUS_TOO_BAD,             160 },
+    [FANFARE_RG_POKE_FLUTE]       = { MUS_RG_POKE_FLUTE,       450 },
+    [FANFARE_RG_OBTAIN_KEY_ITEM]  = { MUS_HG_OBTAIN_KEY_ITEM,  170 },
+    [FANFARE_RG_DEX_RATING]       = { MUS_RG_DEX_RATING,       196 },
+    [FANFARE_OBTAIN_B_POINTS]     = { MUS_HG_OBTAIN_B_POINTS,  264 },
+    [FANFARE_OBTAIN_SYMBOL]       = { MUS_OBTAIN_SYMBOL,       318 },
+    [FANFARE_REGISTER_MATCH_CALL] = { MUS_REGISTER_MATCH_CALL, 135 },
+};
+#endif
+
 void InitMapMusic(void)
 {
     gDisableMusic = FALSE;
@@ -188,8 +211,13 @@ void PlayFanfareByFanfareNum(u8 fanfareNum)
     bool32 isGBSEnabled = FlagGet(FLAG_SYS_GBS_ENABLED);
     m4aMPlayStop(&gMPlayInfo_BGM);
     m4aMPlayStop(&gMPlayInfo_SE2);
+#if IS_HNS
+    songNum = sFanfaresHnS[fanfareNum].songNum;
+    sFanfareCounter = sFanfaresHnS[fanfareNum].duration;
+#else
     songNum = sFanfares[fanfareNum].songNum;
     sFanfareCounter = sFanfares[fanfareNum].duration;
+#endif
     m4aSongNumStart(songNum, isGBSEnabled);
 }
 
@@ -214,7 +242,11 @@ bool8 WaitFanfare(bool8 stop)
 // Unused
 void StopFanfareByFanfareNum(u8 fanfareNum)
 {
+#if IS_HNS
+    m4aSongNumStop(sFanfaresHnS[fanfareNum].songNum, FlagGet(FLAG_SYS_GBS_ENABLED));
+#else
     m4aSongNumStop(sFanfares[fanfareNum].songNum, FlagGet(FLAG_SYS_GBS_ENABLED));
+#endif
 }
 
 void PlayFanfare(u16 songNum)
