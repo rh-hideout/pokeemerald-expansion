@@ -66,11 +66,10 @@ CeladonGameCorner_Text_Gramps:
 	.string "better for PIKACHU's line,\l"
 	.string "but... what to do?$"
 
-	.set TM_DOUBLE_TEAM_COINS, 1500
-	.set TM_PSYCHIC_COINS, 3500
-	.set TM_FLAMETHROWER_COINS, 4000
-	.set TM_THUNDERBOLT_COINS, 4000
-	.set TM_ICE_BEAM_COINS, 4000
+	.set TM_DOUBLE_TEAM_COINS, 2000
+	.set TM_ENDURE_COINS, 2000
+	.set TM_GIGA_IMPACT_COINS, 3000
+	.set TM_GYRO_BALL_COINS, 3000
 
 CeladonCity_GameCorner_PrizeRoom_EventScript_PrizeClerkTMs::
 	lock
@@ -94,14 +93,13 @@ CeladonCity_GameCorner_PrizeRoom_EventScript_ReturnToChooseTMPrize::
 	goto CeladonCity_GameCorner_PrizeRoom_EventScript_ChooseTMPrize
 
 CeladonCity_GameCorner_PrizeRoom_EventScript_ChooseTMPrize::
-	multichoice 12, 0, MULTI_GAME_CORNER_TMS, FALSE
+	dynmultichoice 12, 0, FALSE, 5, 0, DYN_MULTICHOICE_CB_NONE, CeladonCity_GameCorner_PrizeRoom_Text_TM32, CeladonCity_GameCorner_PrizeRoom_Text_TM58, CeladonCity_GameCorner_PrizeRoom_Text_TM68, CeladonCity_GameCorner_PrizeRoom_Text_TM74, CeladonCity_GameCorner_PrizeRoom_Text_Cancel
 	switch VAR_RESULT
 	case 0, CeladonCity_GameCorner_PrizeRoom_EventScript_TMDoubleTeam
-	case 1, CeladonCity_GameCorner_PrizeRoom_EventScript_TMPsychic
-	case 2, CeladonCity_GameCorner_PrizeRoom_EventScript_TMFlamethrower
-	case 3, CeladonCity_GameCorner_PrizeRoom_EventScript_TMThunderbolt
-	case 4, CeladonCity_GameCorner_PrizeRoom_EventScript_TMIceBeam
-	case 5, CeladonCity_GameCorner_PrizeRoom_EventScript_CancelTMSelect
+	case 1, CeladonCity_GameCorner_PrizeRoom_EventScript_TMEndure
+	case 2, CeladonCity_GameCorner_PrizeRoom_EventScript_TMGigaImpact
+	case 3, CeladonCity_GameCorner_PrizeRoom_EventScript_TMGyroBall
+	case 4, CeladonCity_GameCorner_PrizeRoom_EventScript_CancelTMSelect
 	goto CeladonCity_GameCorner_PrizeRoom_EventScript_CancelTMSelect
 	end
 
@@ -111,28 +109,22 @@ CeladonCity_GameCorner_PrizeRoom_EventScript_TMDoubleTeam::
 	setvar VAR_0x8004, ITEM_TM_DOUBLE_TEAM
 	goto CeladonCity_GameCorner_PrizeRoom_EventScript_ConfirmTMPrize
 
-CeladonCity_GameCorner_PrizeRoom_EventScript_TMPsychic::
+CeladonCity_GameCorner_PrizeRoom_EventScript_TMEndure::
 	setvar VAR_TEMP_1, 2
-	bufferitemname STR_VAR_1, ITEM_TM_PSYCHIC
-	setvar VAR_0x8004, ITEM_TM_PSYCHIC
+	bufferitemname STR_VAR_1, ITEM_TM58
+	setvar VAR_0x8004, ITEM_TM58
 	goto CeladonCity_GameCorner_PrizeRoom_EventScript_ConfirmTMPrize
 
-CeladonCity_GameCorner_PrizeRoom_EventScript_TMFlamethrower::
+CeladonCity_GameCorner_PrizeRoom_EventScript_TMGigaImpact::
 	setvar VAR_TEMP_1, 3
-	bufferitemname STR_VAR_1, ITEM_TM_FLAMETHROWER
-	setvar VAR_0x8004, ITEM_TM_FLAMETHROWER
+	bufferitemname STR_VAR_1, ITEM_TM68
+	setvar VAR_0x8004, ITEM_TM68
 	goto CeladonCity_GameCorner_PrizeRoom_EventScript_ConfirmTMPrize
 
-CeladonCity_GameCorner_PrizeRoom_EventScript_TMThunderbolt::
+CeladonCity_GameCorner_PrizeRoom_EventScript_TMGyroBall::
 	setvar VAR_TEMP_1, 4
-	bufferitemname STR_VAR_1, ITEM_TM_THUNDERBOLT
-	setvar VAR_0x8004, ITEM_TM_THUNDERBOLT
-	goto CeladonCity_GameCorner_PrizeRoom_EventScript_ConfirmTMPrize
-
-CeladonCity_GameCorner_PrizeRoom_EventScript_TMIceBeam::
-	setvar VAR_TEMP_1, 5
-	bufferitemname STR_VAR_1, ITEM_TM_ICE_BEAM
-	setvar VAR_0x8004, ITEM_TM_ICE_BEAM
+	bufferitemname STR_VAR_1, ITEM_TM74
+	setvar VAR_0x8004, ITEM_TM74
 	goto CeladonCity_GameCorner_PrizeRoom_EventScript_ConfirmTMPrize
 
 CeladonCity_GameCorner_PrizeRoom_EventScript_ConfirmTMPrize::
@@ -142,19 +134,17 @@ CeladonCity_GameCorner_PrizeRoom_EventScript_ConfirmTMPrize::
 	goto_if_unset FLAG_FINITE_TMS, CeladonCity_GameCorner_PrizeRoom_EventScript_ConfirmTMPrizeInfinite
 	switch VAR_TEMP_1
 	case 1, CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMDoubleTeam
-	case 2, CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMPsychic
-	case 3, CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMFlamethrower
-	case 4, CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMThunderbolt
-	case 5, CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMIceBeam
+	case 2, CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMEndure
+	case 3, CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMGigaImpact
+	case 4, CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMGyroBall
 	end
 
 CeladonCity_GameCorner_PrizeRoom_EventScript_ConfirmTMPrizeInfinite::
 	switch VAR_TEMP_1
 	case 1, CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMDoubleTeamInfinite
-	case 2, CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMPsychicInfinite
-	case 3, CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMFlamethrowerInfinite
-	case 4, CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMThunderboltInfinite
-	case 5, CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMIceBeamInfinite
+	case 2, CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMEndureInfinite
+	case 3, CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMGigaImpactInfinite
+	case 4, CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMGyroBallInfinite
 	end
 
 CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMDoubleTeamInfinite::
@@ -170,52 +160,39 @@ CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMDoubleTeamInfinite::
 	goto CeladonCity_GameCorner_PrizeRoom_EventScript_ReturnToChooseTMPrize
 	end
 
-CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMPsychicInfinite::
+CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMEndureInfinite::
 	checkcoins VAR_TEMP_2
-	goto_if_lt VAR_TEMP_2, TM_PSYCHIC_COINS, CeladonCity_GameCorner_PrizeRoom_EventScript_NotEnoughCoinsForTM
-	checkitem ITEM_TM_PSYCHIC, 1
+	goto_if_lt VAR_TEMP_2, TM_ENDURE_COINS, CeladonCity_GameCorner_PrizeRoom_EventScript_NotEnoughCoinsForTM
+	checkitem ITEM_TM58, 1
 	goto_if_eq VAR_RESULT, TRUE, CeladonCity_GameCorner_PrizeRoom_EventScript_YouAlreadyHaveThis
-	removecoins TM_PSYCHIC_COINS
-	additem ITEM_TM_PSYCHIC
+	removecoins TM_ENDURE_COINS
+	additem ITEM_TM58
 	updatecoinsbox 1, 1
 	playse SE_SHOP
 	msgbox CeladonCity_GameCorner_PrizeRoom_Text_PrizeVendorHereYouGo, MSGBOX_DEFAULT
 	goto CeladonCity_GameCorner_PrizeRoom_EventScript_ReturnToChooseTMPrize
 	end
 
-CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMFlamethrowerInfinite::
+CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMGigaImpactInfinite::
 	checkcoins VAR_TEMP_2
-	goto_if_lt VAR_TEMP_2, TM_FLAMETHROWER_COINS, CeladonCity_GameCorner_PrizeRoom_EventScript_NotEnoughCoinsForTM
-	checkitem ITEM_TM_FLAMETHROWER, 1
+	goto_if_lt VAR_TEMP_2, TM_GIGA_IMPACT_COINS, CeladonCity_GameCorner_PrizeRoom_EventScript_NotEnoughCoinsForTM
+	checkitem ITEM_TM68, 1
 	goto_if_eq VAR_RESULT, TRUE, CeladonCity_GameCorner_PrizeRoom_EventScript_YouAlreadyHaveThis
-	removecoins TM_FLAMETHROWER_COINS
-	additem ITEM_TM_FLAMETHROWER
+	removecoins TM_GIGA_IMPACT_COINS
+	additem ITEM_TM68
 	updatecoinsbox 1, 1
 	playse SE_SHOP
 	msgbox CeladonCity_GameCorner_PrizeRoom_Text_PrizeVendorHereYouGo, MSGBOX_DEFAULT
 	goto CeladonCity_GameCorner_PrizeRoom_EventScript_ReturnToChooseTMPrize
 	end
 
-CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMThunderboltInfinite::
+CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMGyroBallInfinite::
 	checkcoins VAR_TEMP_2
-	goto_if_lt VAR_TEMP_2, TM_THUNDERBOLT_COINS, CeladonCity_GameCorner_PrizeRoom_EventScript_NotEnoughCoinsForTM
-	checkitem ITEM_TM_THUNDERBOLT, 1
+	goto_if_lt VAR_TEMP_2, TM_GYRO_BALL_COINS, CeladonCity_GameCorner_PrizeRoom_EventScript_NotEnoughCoinsForTM
+	checkitem ITEM_TM74, 1
 	goto_if_eq VAR_RESULT, TRUE, CeladonCity_GameCorner_PrizeRoom_EventScript_YouAlreadyHaveThis
-	removecoins TM_THUNDERBOLT_COINS
-	additem ITEM_TM_THUNDERBOLT
-	updatecoinsbox 1, 1
-	playse SE_SHOP
-	msgbox CeladonCity_GameCorner_PrizeRoom_Text_PrizeVendorHereYouGo, MSGBOX_DEFAULT
-	goto CeladonCity_GameCorner_PrizeRoom_EventScript_ReturnToChooseTMPrize
-	end
-
-CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMIceBeamInfinite::
-	checkcoins VAR_TEMP_2
-	goto_if_lt VAR_TEMP_2, TM_ICE_BEAM_COINS, CeladonCity_GameCorner_PrizeRoom_EventScript_NotEnoughCoinsForTM
-	checkitem ITEM_TM_ICE_BEAM, 1
-	goto_if_eq VAR_RESULT, TRUE, CeladonCity_GameCorner_PrizeRoom_EventScript_YouAlreadyHaveThis
-	removecoins TM_ICE_BEAM_COINS
-	additem ITEM_TM_ICE_BEAM
+	removecoins TM_GYRO_BALL_COINS
+	additem ITEM_TM74
 	updatecoinsbox 1, 1
 	playse SE_SHOP
 	msgbox CeladonCity_GameCorner_PrizeRoom_Text_PrizeVendorHereYouGo, MSGBOX_DEFAULT
@@ -235,52 +212,39 @@ CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMDoubleTeam::
 	goto CeladonCity_GameCorner_PrizeRoom_EventScript_ReturnToChooseTMPrize
 	end
 
-CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMPsychic::
+CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMEndure::
 	checkcoins VAR_TEMP_2
-	goto_if_lt VAR_TEMP_2, TM_PSYCHIC_COINS, CeladonCity_GameCorner_PrizeRoom_EventScript_NotEnoughCoinsForTM
-	checkitemspace ITEM_TM_PSYCHIC
+	goto_if_lt VAR_TEMP_2, TM_ENDURE_COINS, CeladonCity_GameCorner_PrizeRoom_EventScript_NotEnoughCoinsForTM
+	checkitemspace ITEM_TM58
 	goto_if_eq VAR_RESULT, FALSE, CeladonCity_GameCorner_PrizeRoom_EventScript_NoRoomForTM
-	removecoins TM_PSYCHIC_COINS
-	additem ITEM_TM_PSYCHIC
+	removecoins TM_ENDURE_COINS
+	additem ITEM_TM58
 	updatecoinsbox 1, 1
 	playse SE_SHOP
 	msgbox CeladonCity_GameCorner_PrizeRoom_Text_PrizeVendorHereYouGo, MSGBOX_DEFAULT
 	goto CeladonCity_GameCorner_PrizeRoom_EventScript_ReturnToChooseTMPrize
 	end
 
-CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMFlamethrower::
+CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMGigaImpact::
 	checkcoins VAR_TEMP_2
-	goto_if_lt VAR_TEMP_2, TM_FLAMETHROWER_COINS, CeladonCity_GameCorner_PrizeRoom_EventScript_NotEnoughCoinsForTM
-	checkitemspace ITEM_TM_FLAMETHROWER
+	goto_if_lt VAR_TEMP_2, TM_GIGA_IMPACT_COINS, CeladonCity_GameCorner_PrizeRoom_EventScript_NotEnoughCoinsForTM
+	checkitemspace ITEM_TM68
 	goto_if_eq VAR_RESULT, FALSE, CeladonCity_GameCorner_PrizeRoom_EventScript_NoRoomForTM
-	removecoins TM_FLAMETHROWER_COINS
-	additem ITEM_TM_FLAMETHROWER
+	removecoins TM_GIGA_IMPACT_COINS
+	additem ITEM_TM68
 	updatecoinsbox 1, 1
 	playse SE_SHOP
 	msgbox CeladonCity_GameCorner_PrizeRoom_Text_PrizeVendorHereYouGo, MSGBOX_DEFAULT
 	goto CeladonCity_GameCorner_PrizeRoom_EventScript_ReturnToChooseTMPrize
 	end
 
-CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMThunderbolt::
+CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMGyroBall::
 	checkcoins VAR_TEMP_2
-	goto_if_lt VAR_TEMP_2, TM_THUNDERBOLT_COINS, CeladonCity_GameCorner_PrizeRoom_EventScript_NotEnoughCoinsForTM
-	checkitemspace ITEM_TM_THUNDERBOLT
+	goto_if_lt VAR_TEMP_2, TM_GYRO_BALL_COINS, CeladonCity_GameCorner_PrizeRoom_EventScript_NotEnoughCoinsForTM
+	checkitemspace ITEM_TM74
 	goto_if_eq VAR_RESULT, FALSE, CeladonCity_GameCorner_PrizeRoom_EventScript_NoRoomForTM
-	removecoins TM_THUNDERBOLT_COINS
-	additem ITEM_TM_THUNDERBOLT
-	updatecoinsbox 1, 1
-	playse SE_SHOP
-	msgbox CeladonCity_GameCorner_PrizeRoom_Text_PrizeVendorHereYouGo, MSGBOX_DEFAULT
-	goto CeladonCity_GameCorner_PrizeRoom_EventScript_ReturnToChooseTMPrize
-	end
-
-CeladonCity_GameCorner_PrizeRoom_EventScript_BuyTMIceBeam::
-	checkcoins VAR_TEMP_2
-	goto_if_lt VAR_TEMP_2, TM_ICE_BEAM_COINS, CeladonCity_GameCorner_PrizeRoom_EventScript_NotEnoughCoinsForTM
-	checkitemspace ITEM_TM_ICE_BEAM
-	goto_if_eq VAR_RESULT, FALSE, CeladonCity_GameCorner_PrizeRoom_EventScript_NoRoomForTM
-	removecoins TM_ICE_BEAM_COINS
-	additem ITEM_TM_ICE_BEAM
+	removecoins TM_GYRO_BALL_COINS
+	additem ITEM_TM74
 	updatecoinsbox 1, 1
 	playse SE_SHOP
 	msgbox CeladonCity_GameCorner_PrizeRoom_Text_PrizeVendorHereYouGo, MSGBOX_DEFAULT
@@ -312,6 +276,21 @@ CeladonCity_GameCorner_PrizeRoom_EventScript_CancelTMSelect::
 	hidecoinsbox 0, 0
 	release
 	end
+
+CeladonCity_GameCorner_PrizeRoom_Text_TM32:
+	.string "Double Team 2000$"
+
+CeladonCity_GameCorner_PrizeRoom_Text_TM58:
+	.string "Endure     2000$"
+
+CeladonCity_GameCorner_PrizeRoom_Text_TM68:
+	.string "Giga Impact 3000$"
+
+CeladonCity_GameCorner_PrizeRoom_Text_TM74:
+	.string "Gyro Ball  3000$"
+
+CeladonCity_GameCorner_PrizeRoom_Text_Cancel:
+	.string "Cancel$"
 
 CeladonCity_GameCorner_PrizeRoom_Text_SoYourChoiceIsTM:
 	.string "So your choice is\n"

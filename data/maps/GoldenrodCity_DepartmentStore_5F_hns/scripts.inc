@@ -106,11 +106,18 @@ GoldenrodDeptStore5_EventScript_Clerk::
 
 	.align 2
 GoldenrodDeptStore5_Pokemart:
-	.2byte ITEM_TM_FIRE_BLAST
-	.2byte ITEM_TM_THUNDER
+	.2byte ITEM_TM_LIGHT_SCREEN
+	.2byte ITEM_TM_PROTECT
+	.2byte ITEM_TM_REFLECT
+	.2byte ITEM_TM_NATURAL_GIFT
 	.2byte ITEM_TM_BLIZZARD
 	.2byte ITEM_TM_HYPER_BEAM
+	.2byte ITEM_TM_SOLAR_BEAM
+	.2byte ITEM_TM_THUNDER
+	.2byte ITEM_TM_FIRE_BLAST
+	.2byte ITEM_TM_FOCUS_BLAST
 	pokemartlistend
+
 
 GoldenrodDeptStore_Text_5FDirectory:
     .string "Customize Your POKéMON\p"
