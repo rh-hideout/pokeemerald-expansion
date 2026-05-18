@@ -18,6 +18,26 @@ void BlendPalette(u16 palOffset, u16 numEntries, u8 coeff, u32 blendColor);
 void DoBgAffineSet(struct BgAffineDstData *dest, u32 texX, u32 texY, s16 scrX, s16 scrY, s16 sx, s16 sy, u16 alpha);
 void CopySpriteTiles(u8 shape, u8 size, u8 *tiles, u16 *tilemap, u8 *output);
 s32 SubtractClamped(s32 lowestVal, s32 highestVal, s32 currentVal, s32 delta);
+u32 Util_CountDigits(u32 value);
 
+static inline u32 Clamp(u32 value, u32 min, u32 max)
+{
+    if (value < min)
+        return min;
+    else if (value > max)
+        return max;
+    else
+        return value;
+}
+
+static inline s32 ClampSigned(s32 value, s32 min, s32 max)
+{
+    if (value < min)
+        return min;
+    else if (value > max)
+        return max;
+    else
+        return value;
+}
 
 #endif // GUARD_UTIL_H

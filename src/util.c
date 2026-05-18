@@ -249,3 +249,18 @@ s32 SubtractClamped(s32 lowestVal, s32 highestVal, s32 currentVal, s32 delta)
 
     return newValue;
 }
+
+u32 Util_CountDigits(u32 value)
+{
+    u32 count = 0;
+
+    if (value == 0)
+        return 1;
+
+    while (value > 0)
+    {
+        value /= 10;
+        count++;
+    }
+    return count;
+}

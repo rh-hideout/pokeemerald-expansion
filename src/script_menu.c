@@ -1,4 +1,5 @@
 #include "global.h"
+#include "gba/defines.h"
 #include "main.h"
 #include "event_data.h"
 #include "field_effect.h"
@@ -24,6 +25,7 @@
 #include "constants/songs.h"
 
 #include "data/script_menu.h"
+#include "window.h"
 
 struct DynamicListMenuEventArgs
 {
@@ -40,6 +42,8 @@ struct DynamicListMenuEventCollection
     DynamicListCallback OnSelectionChanged;
     DynamicListCallback OnDestroy;
 };
+
+EWRAM_DATA struct NumericInput gNumericInput;
 
 static EWRAM_DATA u8 sProcessInputDelay = 0;
 static EWRAM_DATA u8 sDynamicMenuEventId = 0;
@@ -95,6 +99,31 @@ static const struct ListMenuTemplate sScriptableListMenuTemplate =
     .lettersSpacing = 1,
     .scrollMultiple = LIST_NO_MULTIPLE_SCROLL,
     .fontId = FONT_NORMAL,
+};
+
+
+static const struct WindowTemplate sSavingsWithdrawalWindowTemplate = {
+    .bg = 0,
+    .tilemapLeft = 0,
+    .tilemapTop = 0,
+    .width = 13,
+    .height = 2,
+    .paletteNum = 15,
+    .baseBlock = 1,
+};
+
+
+static const s32 sPowersOfTen[] = {
+    1,
+    10,
+    100,
+    1000,
+    10000,
+    100000,
+    1000000,
+    10000000,
+    100000000,
+    1000000000,
 };
 
 bool8 ScriptMenu_MultichoiceDynamic(u8 left, u8 top, u8 argc, struct ListMenuItem *items, bool8 ignoreBPress, u8 maxBeforeScroll, u32 initialRow, u32 callbackSet)
@@ -1306,4 +1335,84 @@ u16 GetSelectedSeagallopDestination(void)
             return gSpecialVar_Result;
     }
     return SEAGALLOP_VERMILION_CITY;
+}
+
+
+u32 CreateNumericInputWindow(s16 x, s16 y, u8 width, u8 numDigits, const u8* templStr)
+{
+    struct WindowTemplate template;
+    u32 windowId;
+    SetWindowTemplateFields(&template, 0, x, y, width, 2, 15, 0x100);
+    windowId = AddWindow(&template);
+    DrawStdWindowFrame(windowId, FALSE);
+    PrintNumericInputAmount(windowId, templStr);
+    CopyWindowToVram(windowId, COPYWIN_FULL);
+    return windowId;
+}
+
+void SetNumericInputDefault(u16 min, u16 max, u16 initial)
+{
+    gNumericInput = (struct NumericInput){min, max, initial, 0};
+}
+
+void PrintNumericInputAmount(u8 windowId, const u8* templString)
+{
+    ConvertIntToDecimalStringN(gStringVar2, gNumericInput.value, STR_CONV_MODE_LEFT_ALIGN, Util_CountDigits(gNumericInput.value));
+
+    gStringVar3[0] = EOS;
+
+    u32 numDigits = StringLength(gStringVar2);
+
+    u32 highlightIdx = numDigits - gNumericInput.selectedDigit - 1;
+    for (u32 i = 0; i < numDigits; i++)
+    {
+        if (i == highlightIdx)
+            StringAppend(gStringVar3, COMPOUND_STRING("{COLOR RED}{SHADOW LIGHT_GRAY}"));
+
+        StringAppend(gStringVar3, (u8[]){ gStringVar2[i], EOS });
+
+        if (i == highlightIdx)
+            StringAppend(gStringVar3, COMPOUND_STRING("{COLOR DARK_GRAY}{SHADOW LIGHT_GRAY}"));
+    }
+
+    StringCopy(gStringVar1, gStringVar3);
+
+    StringExpandPlaceholders(gStringVar4, templString);
+
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
+    AddTextPrinterParameterized(windowId, FONT_NORMAL, gStringVar4, 1, 2, 0, NULL);
+}
+
+
+bool32 HandleNumericInput(void)
+{
+    u32 original = gNumericInput.value;
+    u16 keypress = JOY_REPEAT(DPAD_ANY);
+    u32 maxDigits = Util_CountDigits(gNumericInput.value);
+
+    if (keypress & DPAD_LEFT || keypress & DPAD_RIGHT)
+    {
+        if (keypress & DPAD_RIGHT)
+            gNumericInput.selectedDigit--;
+        if (keypress & DPAD_LEFT)
+            gNumericInput.selectedDigit++;
+
+        gNumericInput.selectedDigit = ClampSigned(gNumericInput.selectedDigit, 0, maxDigits - 1);
+        return TRUE;
+    }
+
+    if (keypress & DPAD_UP) {
+        gNumericInput.value += sPowersOfTen[gNumericInput.selectedDigit];
+    }
+    else if (keypress & DPAD_DOWN) {
+        gNumericInput.value -= sPowersOfTen[gNumericInput.selectedDigit];
+    }
+
+    gNumericInput.value = Clamp(gNumericInput.value, gNumericInput.min, gNumericInput.max);
+    return gNumericInput.value != original;
+}
+
+void ScrCmd_CreateNumericInputWindow(struct ScriptContext* ctx)
+{
+
 }

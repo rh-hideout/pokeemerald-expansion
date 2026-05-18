@@ -2871,6 +2871,9 @@ BattleScript_LocalBattleWonLoseTexts::
 BattleScript_LocalBattleWonReward::
 	getmoneyreward
 	printstring STRINGID_PLAYERGOTMONEY
+  jumpifnotsavingmoney BattleScript_LocalBattleWonRewardContinue
+  printstring STRINGID_SENTMONEYTOMUM
+BattleScript_LocalBattleWonRewardContinue::
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_PayDayMoneyAndPickUpItems::
 	givepaydaymoney
