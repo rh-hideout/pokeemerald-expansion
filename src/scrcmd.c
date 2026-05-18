@@ -2432,9 +2432,6 @@ bool8 ScrCmd_showcoinsbox(struct ScriptContext *ctx)
 
 bool8 ScrCmd_hidecoinsbox(struct ScriptContext *ctx)
 {
-    u8 UNUSED x = ScriptReadByte(ctx);
-    u8 UNUSED y = ScriptReadByte(ctx);
-
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
 
     HideCoinsWindow();
@@ -2443,9 +2440,6 @@ bool8 ScrCmd_hidecoinsbox(struct ScriptContext *ctx)
 
 bool8 ScrCmd_updatecoinsbox(struct ScriptContext *ctx)
 {
-    u8 UNUSED x = ScriptReadByte(ctx);
-    u8 UNUSED y = ScriptReadByte(ctx);
-
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
 
     PrintCoinsString(GetCoins());

@@ -62,7 +62,7 @@ CeladonCity_GameCorner_EventScript_Buy50Coins::
 
 CeladonCity_GameCorner_EventScript_BoughtCoins::
 	updatemoneybox
-	updatecoinsbox 0, 5
+	updatecoinsbox
 	playse SE_SHOP
 	msgbox CeladonCity_GameCorner_Text_HereAreYourCoins
 	goto CeladonCity_GameCorner_EventScript_ClerkEnd
@@ -70,7 +70,7 @@ CeladonCity_GameCorner_EventScript_BoughtCoins::
 
 CeladonCity_GameCorner_EventScript_ClerkEnd::
 	hidemoneybox
-	hidecoinsbox 0, 5
+	hidecoinsbox
 	release
 	end
 
