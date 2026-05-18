@@ -2851,7 +2851,7 @@ void SpriteCB_FaintOpponentMon(struct Sprite *sprite)
     if (gBattleSpritesDataPtr->battlerData[battler].transformSpecies != 0)
         species = gBattleSpritesDataPtr->battlerData[battler].transformSpecies;
     else
-        species = sprite->sSpeciesId;
+        species = GetBattlerVisualSpecies(battler); // fix to intermittent defect where data[2] containing stale data resulted in wrong data being used in SanitizeSpeciesId (passing 1 i.e. Bulbasaur) and therefore crashing if Bulbasaur was disabled
 
     species = SanitizeSpeciesId(species);
     if (species == SPECIES_UNOWN)
