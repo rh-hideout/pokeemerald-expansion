@@ -40,6 +40,7 @@ SaffronCity_Gym_EventScript_Sabrina::
 	waitmessage
 	call Common_EventScript_PlayGymBadgeFanfare
 	msgbox SaffronCity_Gym_Text_MarshBadgeInfo, MSGBOX_DEFAULT
+	giveitem ITEM_TM_SKILL_SWAP
 	setflag FLAG_BADGE13_GET
 	setflag FLAG_DEFEATED_SAFFRON_GYM
 	addvar VAR_NUM_BADGES, 1
