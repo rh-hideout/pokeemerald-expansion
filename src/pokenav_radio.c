@@ -1,4 +1,6 @@
 #include "global.h"
+#if IS_HNS
+#include "event_data.h"
 #include "pokenav.h"
 #include "window.h"
 #include "bg.h"
@@ -988,18 +990,6 @@ bool8 IsHoennSoundPlaying(void)
     return FALSE;
 }
 
-void CheckRadioStation(void)
-{
-    u16 music = GetCurrentMapMusic();
-
-    if (music == MUS_HG_RADIO_POKE_FLUTE)
-        gSpecialVar_Result = 1;
-    else if (IsHoennSoundPlaying())
-        gSpecialVar_Result = 2;
-    else
-        gSpecialVar_Result = 0;
-}
-
 static bool8 IsPlayerInJohto(void)
 {
     u16 mapsec = gMapHeader.regionMapSectionId;
@@ -1391,3 +1381,24 @@ static u32 LoopedTask_ExitRadio(s32 state)
     }
     return LT_FINISH;
 }
+
+void CheckRadioStation(void)
+{
+    u16 music = GetCurrentMapMusic();
+
+    if (music == MUS_HG_RADIO_POKE_FLUTE)
+        gSpecialVar_Result = 1;
+    else if (IsHoennSoundPlaying())
+        gSpecialVar_Result = 2;
+    else
+        gSpecialVar_Result = 0;
+}
+#else // !IS_HNS
+
+#include "event_data.h"
+
+void CheckRadioStation(void)
+{
+    gSpecialVar_Result = 0;
+}
+#endif // IS_HNS

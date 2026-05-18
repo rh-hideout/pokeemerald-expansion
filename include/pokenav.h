@@ -132,7 +132,9 @@ enum
     POKENAV_RIBBONS_MON_LIST,                   // The list of Pokémon with ribbons
     POKENAV_RIBBONS_SUMMARY_SCREEN,             // The ribbon summary screen shown when a Pokémon has been selected
     POKENAV_RIBBONS_RETURN_TO_MON_LIST,         // Exited the summary screen back to the ribbon list
+#if IS_HNS
     POKENAV_RADIO,
+#endif
 };
 
 enum
@@ -157,7 +159,9 @@ enum
     POKENAV_MENUITEM_CONDITION,
     POKENAV_MENUITEM_MATCH_CALL,
     POKENAV_MENUITEM_RIBBONS,
+#if IS_HNS
     POKENAV_MENUITEM_RADIO,
+#endif
     POKENAV_MENUITEM_SWITCH_OFF,
     POKENAV_MENUITEM_CONDITION_PARTY,
     POKENAV_MENUITEM_CONDITION_SEARCH,
@@ -537,6 +541,8 @@ u32 IsRibbonsSummaryLoopedTaskActive(void);
 void FreeRibbonsSummaryScreen2(void);
 
 // pokenav_radio.c
+void CheckRadioStation(void);
+#if IS_HNS
 bool32 PokenavCallback_Init_Radio(void);
 u32 GetRadioCallback(void);
 bool32 OpenPokenavRadio(void);
@@ -544,7 +550,7 @@ void CreateRadioLoopedTask(s32 index);
 bool32 IsRadioLoopedTaskActive(void);
 void FreeRadioSubstruct1(void);
 void FreeRadioSubstruct2(void);
-void CheckRadioStation(void);
 bool8 IsHoennSoundPlaying(void);
+#endif
 
 #endif // GUARD_POKENAV_H

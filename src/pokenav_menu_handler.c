@@ -283,10 +283,12 @@ static u32 HandleMainMenuInput(struct Pokenav_Menu *menu)
                 menu->callback = HandleCantOpenRibbonsInput;
                 return POKENAV_MENU_FUNC_NO_RIBBON_WINNERS;
             }
+#if IS_HNS
         case POKENAV_MENUITEM_RADIO:
             menu->helpBarIndex = HELPBAR_NONE;
             SetMenuIdAndCB(menu, POKENAV_RADIO);
             return POKENAV_MENU_FUNC_OPEN_FEATURE;
+#endif
         case POKENAV_MENUITEM_SWITCH_OFF:
             return POKENAV_MENU_FUNC_EXIT;
         }
