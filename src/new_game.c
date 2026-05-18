@@ -1,6 +1,7 @@
 #include "global.h"
 #include "new_game.h"
 #include "random.h"
+#include "clock.h"
 #include "pokemon.h"
 #include "roamer.h"
 #include "pokemon_size_record.h"
@@ -195,6 +196,7 @@ void NewGameInitData(void)
     ClearPlayerLinkBattleRecords();
     InitSeedotSizeRecord();
     InitLotadSizeRecord();
+    GetNewDailySeed();
     gPartiesCount[B_TRAINER_0] = 0;
     ZeroPlayerPartyMons();
     ResetPokemonStorageSystem();
