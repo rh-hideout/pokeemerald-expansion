@@ -57,6 +57,26 @@ GoldenrodDeptStore_Text_4FGameboyKid:
     .string "but they all evolve through\l"
     .string "level up.$"
 
+GoldenrodDeptStore4_EventScript_Clerk::
+	lock
+	faceplayer
+	message gText_HowMayIServeYou
+	waitmessage
+	pokemart GoldenrodDeptStore4_Pokemart
+	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
+	release
+	end
+
+	.align 2
+GoldenrodDeptStore4_Pokemart:
+	.2byte ITEM_PROTEIN
+	.2byte ITEM_CALCIUM
+	.2byte ITEM_IRON
+	.2byte ITEM_ZINC
+	.2byte ITEM_CARBOS
+	.2byte ITEM_HP_UP
+	pokemartlistend
+
 GoldenrodDeptStore_Text_4FDirectory:
     .string "Let Us Pump Up Your POKéMON!\p"
     .string "4F MEDICINE BOX$"

@@ -24,7 +24,7 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "LilycoveCity_DepartmentStore_2F_EventScript_ClerkLeft",
+      "script": "GoldenrodDeptStore2_EventScript_Clerk",
       "flag": "0"
     },
     {
@@ -116,7 +116,7 @@
       "y": 5,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "LilycoveCity_DepartmentStoreRooftop_EventScript_VendingMachine"
+      "script": "GoldenrodDeptStore_EventScript_VendingMachine"
     },
     {
       "type": "sign",
@@ -124,7 +124,7 @@
       "y": 5,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "LilycoveCity_DepartmentStoreRooftop_EventScript_VendingMachine"
+      "script": "GoldenrodDeptStore_EventScript_VendingMachine"
     },
     {
       "type": "sign",
@@ -132,7 +132,7 @@
       "y": 5,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "LilycoveCity_DepartmentStoreRooftop_EventScript_VendingMachine"
+      "script": "GoldenrodDeptStore_EventScript_VendingMachine"
     }
   ],
   "game_version": "hns",

@@ -94,6 +94,24 @@ GoldenrodDeptStore_Text_Girl:
 	.string "The lady gave me RETURN!\n"
     .string "My POKéMON must really like me!$"
 
+GoldenrodDeptStore5_EventScript_Clerk::
+	lock
+	faceplayer
+	message gText_HowMayIServeYou
+	waitmessage
+	pokemart GoldenrodDeptStore5_Pokemart
+	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
+	release
+	end
+
+	.align 2
+GoldenrodDeptStore5_Pokemart:
+	.2byte ITEM_TM_FIRE_BLAST
+	.2byte ITEM_TM_THUNDER
+	.2byte ITEM_TM_BLIZZARD
+	.2byte ITEM_TM_HYPER_BEAM
+	pokemartlistend
+
 GoldenrodDeptStore_Text_5FDirectory:
     .string "Customize Your POKéMON\p"
     .string "5F TM CORNER$"

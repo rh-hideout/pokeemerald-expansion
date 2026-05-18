@@ -37,6 +37,27 @@ GoldenrodDeptStore_Text_3FRocker:
     .string "It's awesome. It really jacks up\n"
     .string "SPECIAL ATTACK!$"
 
+GoldenrodDeptStore3_EventScript_Clerk::
+	lock
+	faceplayer
+	message gText_HowMayIServeYou
+	waitmessage
+	pokemart GoldenrodDeptStore3_Pokemart
+	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
+	release
+	end
+
+	.align 2
+GoldenrodDeptStore3_Pokemart:
+	.2byte ITEM_X_SPEED
+	.2byte ITEM_X_SP_ATK
+	.2byte ITEM_X_ATTACK
+	.2byte ITEM_X_DEFENSE
+	.2byte ITEM_DIRE_HIT
+	.2byte ITEM_GUARD_SPEC
+	.2byte ITEM_X_ACCURACY
+	pokemartlistend
+
 GoldenrodDeptStore_Text_3FDirectory:
     .string "For Victory Seekers\p"
     .string "3F BATTLE COLLECTION$"
