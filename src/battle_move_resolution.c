@@ -2689,6 +2689,11 @@ static enum MoveEndResult MoveEndUpdateLastMoves(void)
         }
         else
         {
+            if (!gSpecialStatuses[gBattlerAttacker].dancerUsedMove
+                && !gBattleMons[gBattlerAttacker].volatiles.flinched)
+            {
+                gLastMoves[gBattlerAttacker] = gChosenMove;
+            }
             gLastResultingMoves[gBattlerAttacker] = MOVE_UNAVAILABLE;
             gLastUsedMoveType[gBattlerAttacker] = 0;
         }

@@ -18,3 +18,29 @@ TO_DO_BATTLE_TEST("Disable lasts 4 turns (Gen 5+)");
 TO_DO_BATTLE_TEST("Disable's timer only counts down when trying to use a move (Gen 1-2)");
 TO_DO_BATTLE_TEST("Disable's timer counts down regardless of the action (Gen 3+)");
 TO_DO_BATTLE_TEST("Baton Pass doesn't pass Disable's effect");
+
+DOUBLE_BATTLE_TEST("Disable works even if the target's last move failed")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN {
+            MOVE(opponentLeft, MOVE_SUCKER_PUNCH, target: playerRight);
+            MOVE(opponentRight, MOVE_SUCKER_PUNCH, target: playerLeft);
+            MOVE(playerRight, MOVE_FOLLOW_ME);
+            MOVE(playerLeft, MOVE_DISABLE, target: opponentLeft);
+        }
+        TURN {}
+    } SCENE {
+        MESSAGE("Wynaut used Follow Me!");
+        MESSAGE("The opposing Wobbuffet used Sucker Punch!");
+        MESSAGE("But it failed!");
+        MESSAGE("The opposing Wynaut used Sucker Punch!");
+        MESSAGE("But it failed!");
+        MESSAGE("Wobbuffet used Disable!");
+        MESSAGE("The opposing Wobbuffet's Sucker Punch was disabled!");
+    }
+}
