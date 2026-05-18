@@ -28,14 +28,14 @@ static void BXPY_ErrorCheck_ClauseSpecialPokemon(void);
 static void Debug_BXPY_PrintArguments(enum BXPYBattleTypes battleType, u32 bringSize, u32 pickSize, u32 trainerA, const u8 *loseTextA, u32 trainerB, const u8* loseTextB, u32 partnerId);
 static void BXPY_InitTrainerBattleParams(u32 trainerA, const u8 *loseTextA, u32 trainerB, const u8* loseTextB, u32 partnerId);
 static void BXPY_PrepareEnemyParty(u32 bringSize, u32 battleFlags);
-static void BXPY_GetPlayerEnterMons(u32* enteredMons, u32 pickSize);
-static void BXPY_GetEnemyEnterMons(u32* enteredMons, u32 pickSize);
+static void BXPY_GetEnemyEnterMons(u8* enteredMons, u32 pickSize);
 static void BXPY_PrepareParty(u32 pickSize);
 static void BXPY_DeleteNonAliveMons(void);
-static void BXPY_SelectPartyMembers(struct Pokemon *party, u32* enteredMons);
+static void BXPY_SelectPartyMembers(struct Pokemon *party, u8* enteredMons);
 static u32 BXPY_ConvertBattleTypeToFlags(enum BXPYBattleTypes battleType);
 static bool8 BXPY_IsSummaryScreenForEnemy(enum PokemonSummaryScreenMode mode);
 static void Task_BXPY_PartySelection(u8 taskId);
+static void BXPY_StartPickInterface(u32 bringSize, u32 pickSize, u32 battleFlags);
 
 static void (*const sBXPYErrorCheckFuncs[])(void) =
 {
@@ -298,15 +298,7 @@ void BXPY_Init(enum BXPYBattleTypes battleType, u32 bringSize, u32 pickSize, u32
     BXPY_PrepareEnemyParty(bringSize,battleFlags);
     BXPY_PrepareParty(pickSize);
 
-    u32 playerEnteredMons[PARTY_SIZE] = {PARTY_SIZE};
-    u32 enemyEnteredMons[PARTY_SIZE] = {PARTY_SIZE};
-
-    BXPY_GetPlayerEnterMons(playerEnteredMons,pickSize);
-    BXPY_GetEnemyEnterMons(enemyEnteredMons,pickSize);
-    BXPY_SelectPartyMembers(gPlayerParty,playerEnteredMons);
-    BXPY_SelectPartyMembers(gEnemyParty,enemyEnteredMons);
-
-    BattleSetup_StartBXPYBattle(battleFlags);
+    BXPY_StartPickInterface(bringSize, pickSize, battleFlags);
 }
 
 static void BXPY_InitTrainerBattleParams(u32 trainerA, const u8 *loseTextA, u32 trainerB, const u8* loseTextB, u32 partnerId)
@@ -337,7 +329,7 @@ static void BXPY_PrepareEnemyParty(u32 bringSize, u32 battleFlags)
     CreateNPCTrainerPartyFromTrainer(&gEnemyParty[PARTY_SIZE/2], &gTrainers[GetCurrentDifficultyLevel()][TRAINER_BATTLE_PARAM.opponentB], FALSE, battleFlags);
 }
 
-static void BXPY_GetPlayerEnterMons(u32* enteredMons, u32 pickSize)
+static void BXPY_GetPlayerEnterMons(u8* enteredMons, u32 pickSize)
 {
     u32 mons[PARTY_SIZE] = {0, 1, 2, 3, 4, 5};
 
@@ -354,7 +346,7 @@ static void BXPY_GetPlayerEnterMons(u32* enteredMons, u32 pickSize)
     DestroyTask(taskId);
 }
 
-static void BXPY_GetEnemyEnterMons(u32* enteredMons, u32 pickSize)
+static void BXPY_GetEnemyEnterMons(u8* enteredMons, u32 pickSize)
 {
     BXPY_GetPlayerEnterMons(enteredMons, pickSize);
 }
@@ -385,7 +377,7 @@ static void BXPY_DeleteNonAliveMons(void)
     CompactPartySlots();
 }
 
-static void BXPY_SelectPartyMembers(struct Pokemon *party, u32* enteredMons)
+static void BXPY_SelectPartyMembers(struct Pokemon *party, u8* enteredMons)
 {
     struct Pokemon tempParty[PARTY_SIZE];
     u32 participatingPokemonSlot = 0;
@@ -693,13 +685,696 @@ bool8 BXPY_SummaryScreen_ShouldHideStats(enum PokemonSummaryScreenMode mode, enu
     return (!BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_NATURE);
 }
 
+// Start BXPY User Interface
+
+#include "bg.h"
+#include "window.h"
+#include "constants/rgb.h"
+#include "constants/songs.h"
+#include "dma3.h"
+#include "gpu_regs.h"
+#include "sprite.h"
+#include "palette.h"
+#include "pokemon_icon.h"
+#include "scanline_effect.h"
+#include "sound.h"
+#include "string_util.h"
+#include "overworld.h"
+#include "menu_helpers.h"
+#include "malloc.h"
+#include "task.h"
+#include "text.h"
+#include "text_window.h"
+#include "menu.h"
+
+
+static void Task_BXPY_PartySelection(u8 taskId);
+static void BXPY_SetSavedCallback(void* callback);
+static void* BXPY_GetSavedcallback(void);
+static void BXPY_SetPosition(u32 position);
+static u8 BXPY_GetPosition(void);
+static void BXPY_SetSpriteId(u32 spriteIndex, u32 spriteId);
+static u8 BXPY_GetSpriteId(u32 spriteIndex);
+static void BXPY_SetSelectedMons(u32 monIndex, u32 order);
+static u8 BXPY_GetSelectedMons(u32 monIndex);
+u32 IsDoingBringXPickYSelection(void);
+static void BXPY_InitializeBackgroundsAndLoadBackgroundGraphics(void);
+static void BXPY_VBlankCB(void);
+static void BXPY_MainCB(void);
+static void BXPY_StartPickInterface(u32 bringSize, u32 pickSize, u32 battleFlags);
+static bool8 BXPY_InitalizeBackgrounds(void);
+static bool8 AllocZeroedTilemapBuffers(void);
+static void HandleAndShowBgs(void);
+static void SetScheduleBgs(enum BXPYBackgrounds backgroundId);
+static bool8 AreTilesOrTilemapEmpty(enum BXPYBackgrounds backgroundId);
+static void LoadGraphics(void);
+static void LoadBXPYPalettes(void);
+static void PlaySoundStartFadeQuitApp(u8 taskId);
+static bool8 BXPY_HasSelectedEnough(void);
+static bool8 BXPY_CanStartBattle(void);
+static bool8 BXPY_IsCursorOnEnemy(void);
+static bool8 BXPY_IsMultiBattle(void);
+static void BXPY_ResetAllSpriteIds(void);
+static void Task_WaitFadeAndExitGracefully(u8 taskId);
+void BXPY_FadescreenAndExitGracefully(void);
+static void BXPY_FreeResources(void);
+static void BXPY_FreeStructs(void);
+static void BXPY_StartPickInterface(u32 bringSize, u32 pickSize, u32 battleFlags);
+static void BXPY_InitializeAndSaveCallback(u32 bringSize, u32 pickSize, u32 battleFlags);
+static void BXPY_FreeBackgrounds(void);
+static bool8 BXPY_AllocateStructs(void);
+void BXPY_SetupCallback(void);
+static void BXPY_CreateCursorSprite(void);
+static void BXPY_InitWindows(void);
+static void BXPY_DisplayPlayerParty(void);
+static void BXPY_DisplayEnemyParty(void);
+static void BXPY_DisplayHelpBar(enum BXPYWindows windowId);
+static void BXPY_PrintHelpBarText(enum BXPYWindows windowId);
+static bool8 BXPY_IsCursorOnEnemy(void);
+static bool8 BXPY_IsMultiBattle(void);
+
+struct BXPYState *sBXPYState = NULL;
+static u8 *sBgTilemapBuffer[BG_BXPY_COUNT] = {NULL};
+
 static void Task_BXPY_PartySelection(u8 taskId)
 {
-    return;
+    if (JOY_NEW(B_BUTTON) || JOY_REPEAT(B_BUTTON))
+    {
+        PlaySoundStartFadeQuitApp(taskId);
+        return;
+    }
+
+}
+
+static void BXPY_SetSavedCallback(void* callback)
+{
+    sBXPYState->savedCallback = callback;
+}
+
+static void* BXPY_GetSavedcallback(void)
+{
+    return sBXPYState->savedCallback;
+}
+
+static void BXPY_SetPosition(u32 position)
+{
+    sBXPYState->position = position;
+}
+
+static u8 BXPY_GetPosition(void)
+{
+    return sBXPYState->position;
+}
+
+static u8 BXPY_GetBringSize(void)
+{
+    return sBXPYState->bringSize;
+}
+
+static void BXPY_SetBringSize(u32 bringSize)
+{
+    sBXPYState->bringSize = bringSize;
+}
+
+static u8 BXPY_GetPickSize(void)
+{
+    return sBXPYState->pickSize;
+}
+
+static void BXPY_SetPickSize(u32 pickSize)
+{
+    sBXPYState->pickSize = pickSize;
+}
+
+static void BXPY_SetBattleFlags(u32 battleFlags)
+{
+    sBXPYState->battleFlags = battleFlags;
+}
+
+static u32 BXPY_GetBattleFlags(void)
+{
+    return sBXPYState->battleFlags;
+}
+
+static void BXPY_SetSpriteId(u32 spriteIndex, u32 spriteId)
+{
+    sBXPYState->spriteId[spriteIndex] = spriteId;
+}
+
+static u8 BXPY_GetSpriteId(u32 spriteIndex)
+{
+    return sBXPYState->spriteId[spriteIndex];
+}
+
+static void BXPY_SetSelectedMons(u32 monIndex, u32 order)
+{
+    sBXPYState->selectedMons[monIndex] = order;
+}
+
+static u8 BXPY_GetSelectedMons(u32 monIndex)
+{
+    return sBXPYState->selectedMons[monIndex];
 }
 
 u32 IsDoingBringXPickYSelection(void)
 {
     return (FindTaskIdByFunc(Task_BXPY_PartySelection) != TASK_NONE);
+}
+
+static const struct BgTemplate sBXPYBgTemplates[] =
+{
+    [BG0_BXPY_TEXT] =
+    {
+        .bg = BG0_BXPY_TEXT,
+        .charBaseIndex = 0,
+        .mapBaseIndex = 31,
+        .priority = 0,
+    },
+    [BG1_BXPY_INFO] =
+    {
+        .bg = BG1_BXPY_INFO,
+        .charBaseIndex = 1,
+        .mapBaseIndex = 30,
+        .priority = 1,
+    },
+    [BG2_BXPY_PARTY_BG] =
+    {
+        .bg = BG2_BXPY_PARTY_BG,
+        .charBaseIndex = 2,
+        .mapBaseIndex = 29,
+        .priority = 2,
+    },
+    [BG3_BXPY_WALLPAPER] =
+    {
+        .bg = BG3_BXPY_WALLPAPER,
+        .charBaseIndex = 3,
+        .mapBaseIndex = 28,
+        .priority = 2,
+    },
+};
+
+static const struct {
+    const u32 *tiles;
+    const u32 *tilemap;
+} sBXPY_BackgroundGraphics[BG_BXPY_COUNT] =
+{
+    [BG0_BXPY_TEXT] =
+    {
+        .tiles = NULL,
+        .tilemap = NULL,
+    },
+    [BG1_BXPY_INFO] =
+    {
+        .tiles = NULL,
+        .tilemap = NULL,
+    },
+    [BG2_BXPY_PARTY_BG] =
+    {
+        .tiles = (const u32[])INCBIN_U32("graphics/bxpy/partyBg.4bpp.smol"),
+        .tilemap = (const u32[])INCBIN_U32("graphics/bxpy/partyBg.bin.smolTM"),
+    },
+    [BG3_BXPY_WALLPAPER] =
+    {
+        .tiles = (const u32[])INCBIN_U32("graphics/bxpy/wallpaper.4bpp.smol"),
+        .tilemap = (const u32[])INCBIN_U32("graphics/bxpy/wallpaper.bin.smolTM"),
+    },
+};
+
+static const struct WindowTemplate sBXPYWindows[] =
+{
+    [WIN_BXPY_PLAYER_INFO] =
+    {
+        .bg = BG0_BXPY_TEXT,
+        .tilemapLeft = 2,
+        .tilemapTop = 0,
+        .width = 11,
+        .height = 18,
+        .paletteNum = BXPY_PALETTE_TEXT_ID,
+    },
+    [WIN_BXPY_ENEMY_NAME] =
+    {
+        .bg = BG0_BXPY_TEXT,
+        .tilemapLeft = 23,
+        .tilemapTop = 2,
+        .width = 6,
+        .height = 2,
+        .paletteNum = BXPY_PALETTE_TEXT_ID,
+    },
+    [WIN_BXPY_ENEMY_LEVELS] =
+    {
+        .bg = BG0_BXPY_TEXT,
+        .tilemapLeft = 23,
+        .tilemapTop = 2,
+        .width = 4,
+        .height = 16,
+        .paletteNum = BXPY_PALETTE_TEXT_ID,
+    },
+    [WIN_BXPY_HELP_BAR] =
+    {
+        .bg = BG0_BXPY_TEXT,
+        .tilemapLeft = 0,
+        .tilemapTop = 18,
+        .width = 30,
+        .height = 2,
+        .paletteNum = BXPY_PALETTE_TEXT_ID,
+    },
+    DUMMY_WIN_TEMPLATE
+};
+
+const u8 sBXPYWindowFontColors[BXPY_FONT_COLOR_COUNT][3] =
+{
+    [BXPY_FONT_COLOR_BLACK]  = {TEXT_COLOR_TRANSPARENT,  TEXT_COLOR_DARK_GRAY, TEXT_COLOR_TRANSPARENT},
+    [BXPY_FONT_COLOR_WHITE]  = {TEXT_COLOR_TRANSPARENT,  TEXT_COLOR_WHITE,  TEXT_COLOR_TRANSPARENT},
+};
+
+static const struct BXPYSpriteSheet sBXPYSpriteSheets[BXPY_SPRITEID_COUNT] =
+{
+    [BXPY_SPRITEID_CURSOR] =
+    {
+        {
+            .data = (const u16[])INCBIN_U16("graphics/bxpy/cursor.4bpp"),
+            .size = TILE_OFFSET_4BPP(4),
+            .tag = BXPY_SPRITETAG_CURSOR,
+        },
+        {
+            .data = (const u16[])INCBIN_U16("graphics/bxpy/cursor.gbapal"),
+            .tag = BXPY_PALTAG_SPRITE,
+        },
+    },
+    [BXPY_SPRITEID_PLAYER_SEX_0] =
+    {
+        {
+            .data = (const u16[])INCBIN_U16("graphics/bxpy/sex.4bpp"),
+            .size = TILE_OFFSET_4BPP(8),
+            .tag = BXPY_SPRITETAG_SEX,
+        },
+    },
+    [BXPY_SPRITEID_PLAYER_SELECTED_0] =
+    {
+        {
+            .data = (const u16[])INCBIN_U16("graphics/bxpy/selected.4bpp"),
+            .size = TILE_OFFSET_4BPP(4),
+            .tag = BXPY_SPRITETAG_SELECTED,
+        },
+    },
+    [BXPY_SPRITEID_PLAYER_HP_0] =
+    {
+        {
+            .data = (const u16[])INCBIN_U16("graphics/bxpy/hp.4bpp"),
+            .size = TILE_OFFSET_4BPP(128),
+            .tag = BXPY_SPRITETAG_HP,
+        },
+    }
+};
+
+static void BXPY_VBlankCB(void)
+{
+    LoadOam();
+    ProcessSpriteCopyRequests();
+    TransferPlttBuffer();
+}
+
+static void BXPY_MainCB(void)
+{
+    RunTasks();
+    AnimateSprites();
+    BuildOamBuffer();
+    DoScheduledBgTilemapCopiesToVram();
+    UpdatePaletteFade();
+}
+
+static bool8 BXPY_InitalizeBackgrounds(void)
+{
+    ResetAllBgsCoordinates();
+
+    if (!AllocZeroedTilemapBuffers())
+        return FALSE;
+
+    HandleAndShowBgs();
+
+    return TRUE;
+}
+
+static bool8 AllocZeroedTilemapBuffers(void)
+{
+    for (enum BXPYBackgrounds backgroundId = 0; backgroundId < BG_BXPY_COUNT; backgroundId++)
+    {
+        sBgTilemapBuffer[backgroundId] = AllocZeroed(BG_SCREEN_SIZE);
+
+        if (sBgTilemapBuffer[backgroundId] == NULL)
+            return FALSE;
+
+        memset(sBgTilemapBuffer[backgroundId],0,BG_SCREEN_SIZE);
+    }
+    return TRUE;
+}
+
+static void HandleAndShowBgs(void)
+{
+    ResetBgsAndClearDma3BusyFlags(0);
+    InitBgsFromTemplates(0, sBXPYBgTemplates, NELEMS(sBXPYBgTemplates));
+
+    for (enum BXPYBackgrounds backgroundId = 0; backgroundId < BG_BXPY_COUNT; backgroundId++)
+    {
+        SetScheduleBgs(backgroundId);
+        ShowBg(backgroundId);
+    }
+}
+
+static void SetScheduleBgs(enum BXPYBackgrounds backgroundId)
+{
+    SetBgTilemapBuffer(backgroundId, sBgTilemapBuffer[backgroundId]);
+    ScheduleBgCopyTilemapToVram(backgroundId);
+}
+
+static const u16 bxpyPalettesText[] = INCBIN_U16("graphics/bxpy/palettes/text.gbapal");
+static const u16 bxpyBackgroundPalette[] = INCBIN_U16("graphics/bxpy/wallpaper.gbapal");
+
+static bool8 AreTilesOrTilemapEmpty(enum BXPYBackgrounds backgroundId)
+{
+    return (sBXPY_BackgroundGraphics[backgroundId].tiles == NULL || sBXPY_BackgroundGraphics[backgroundId].tilemap == NULL);
+}
+
+static void LoadGraphics(void)
+{
+    ResetTempTileDataBuffers();
+
+    for (enum BXPYBackgrounds backgroundId = BG0_BXPY_TEXT; backgroundId < BG_BXPY_COUNT; backgroundId++)
+    {
+        if (AreTilesOrTilemapEmpty(backgroundId))
+            continue;
+
+        DecompressAndLoadBgGfxUsingHeap(backgroundId, sBXPY_BackgroundGraphics[backgroundId].tiles,0,0,0);
+        CopyToBgTilemapBuffer(backgroundId, sBXPY_BackgroundGraphics[backgroundId].tilemap,0,0);
+    }
+
+    LoadBXPYPalettes();
+
+    for (u32 spriteId = 0; spriteId < BXPY_SPRITEID_COUNT; spriteId++)
+    {
+        if (sBXPYSpriteSheets[spriteId].spriteSheet.tag == 0)
+            continue;
+
+        LoadSpriteSheet(&sBXPYSpriteSheets[spriteId].spriteSheet);
+
+        if (sBXPYSpriteSheets[spriteId].palette.tag == 0)
+            continue;
+
+        LoadSpritePalette(&sBXPYSpriteSheets[spriteId].palette);
+    }
+    CpuFill32(RGB_BLACK, gPlttBufferFaded, PLTT_SIZE);
+}
+
+static void LoadBXPYPalettes(void)
+{
+    LoadMonIconPalettes();
+    LoadPalette(bxpyBackgroundPalette, BXPY_PALETTE_BG_SLOT, PLTT_SIZE_4BPP);
+    LoadPalette(bxpyPalettesText, BXPY_PALETTE_TEXT_SLOT, PLTT_SIZE_4BPP);
+}
+
+static void PlaySoundStartFadeQuitApp(u8 taskId)
+{
+    PlaySE(SE_PC_OFF);
+    BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+    gTasks[taskId].func = Task_WaitFadeAndExitGracefully;
+}
+
+static void Task_WaitFadeAndExitGracefully(u8 taskId)
+{
+    if (gPaletteFade.active)
+        return;
+
+    u8 playerEnteredMons[PARTY_SIZE] = {PARTY_SIZE};
+    memcpy(playerEnteredMons,sBXPYState->selectedMons,sizeof(sBXPYState->selectedMons));
+
+    //BXPY_GetPlayerEnterMons(playerEnteredMons,pickSize);
+    u8 enemyEnteredMons[PARTY_SIZE] = {PARTY_SIZE};
+    BXPY_GetEnemyEnterMons(enemyEnteredMons,BXPY_GetPickSize());
+    // BXPY TODO Add Pawkkie logic to GetEnemyEnterMons
+    BXPY_SelectPartyMembers(gPlayerParty,playerEnteredMons);
+    BXPY_SelectPartyMembers(gEnemyParty,enemyEnteredMons);
+
+    BXPY_FreeResources();
+    DestroyTask(taskId);
+    BattleSetup_StartBXPYBattle(BXPY_GetBattleFlags());
+}
+
+void BXPY_FadescreenAndExitGracefully(void)
+{
+    BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+    CreateTask(Task_WaitFadeAndExitGracefully,0);
+    SetVBlankCallback(BXPY_VBlankCB);
+    SetMainCallback2(BXPY_MainCB);
+}
+
+static void FreeSpritePalettesResetSpriteData(void)
+{
+    ResetSpriteData();
+    FreeSpriteTileRanges();
+    FreeAllSpritePalettes();
+    ClearDma3Requests();
+
+}
+
+static void BXPY_FreeResources(void)
+{
+    FreeSpritePalettesResetSpriteData();
+    BXPY_FreeStructs();
+    BXPY_FreeBackgrounds();
+    FreeAllWindowBuffers();
+    ResetSpriteData();
+}
+
+static void BXPY_FreeStructs(void)
+{
+    TRY_FREE_AND_SET_NULL(sBXPYState);
+}
+
+static void BXPY_FreeBackgrounds(void)
+{
+    for (enum BXPYBackgrounds backgroundId = 0; backgroundId < BG_BXPY_COUNT; backgroundId++)
+        if (sBgTilemapBuffer[backgroundId] != NULL)
+            TRY_FREE_AND_SET_NULL(sBgTilemapBuffer[backgroundId]);
+}
+
+static void BXPY_InitializeAndSaveCallback(u32 bringSize, u32 pickSize, u32 battleFlags)
+{
+    if (BXPY_AllocateStructs())
+    {
+        SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
+        return;
+    }
+
+    BXPY_SetPickSize(pickSize);
+    BXPY_SetBringSize(bringSize);
+    BXPY_SetBattleFlags(battleFlags);
+
+    SetMainCallback2(BXPY_SetupCallback);
+}
+
+static bool8 BXPY_AllocateStructs(void)
+{
+    sBXPYState = AllocZeroed(sizeof(struct BXPYState));
+
+    return (sBXPYState == NULL);
+}
+
+
+void BXPY_SetupCallback(void)
+{
+    switch (gMain.state)
+    {
+        case 0:
+            /*
+            SetGpuReg(REG_OFFSET_DISPCNT, 0);
+            SetGpuReg(REG_OFFSET_BG3CNT, 0);
+            SetGpuReg(REG_OFFSET_BG2CNT, 0);
+            SetGpuReg(REG_OFFSET_BG1CNT, 0);
+            SetGpuReg(REG_OFFSET_BG0CNT, 0);
+            ChangeBgX(0, 0, BG_COORD_SET);
+            ChangeBgY(0, 0, BG_COORD_SET);
+            ChangeBgX(1, 0, BG_COORD_SET);
+            ChangeBgY(1, 0, BG_COORD_SET);
+            ChangeBgX(2, 0, BG_COORD_SET);
+            ChangeBgY(2, 0, BG_COORD_SET);
+            ChangeBgX(3, 0, BG_COORD_SET);
+            ChangeBgY(3, 0, BG_COORD_SET);
+            SetGpuReg(REG_OFFSET_BLDCNT, 0);
+            SetGpuReg(REG_OFFSET_BLDY, 0);
+            SetGpuReg(REG_OFFSET_BLDALPHA, 0);
+            SetGpuReg(REG_OFFSET_WIN0H, 0);
+            SetGpuReg(REG_OFFSET_WIN0V, 0);
+            SetGpuReg(REG_OFFSET_WIN1H, 0);
+            SetGpuReg(REG_OFFSET_WIN1V, 0);
+            SetGpuReg(REG_OFFSET_WININ, 0);
+            SetGpuReg(REG_OFFSET_WINOUT, 0);
+            CpuFill16(0, (void *)VRAM, VRAM_SIZE);
+            CpuFill32(0, (void *)OAM, OAM_SIZE);
+            */
+
+            DmaClearLarge16(3, (void *)VRAM, VRAM_SIZE, 0x1000);
+            SetVBlankHBlankCallbacksToNull();
+            ClearScheduledBgCopiesToVram();
+            gMain.state++;
+            break;
+        case 1:
+            ScanlineEffect_Stop();
+            ResetPaletteFade();
+            ResetTasks();
+            FreeSpritePalettesResetSpriteData();
+            BXPY_ResetAllSpriteIds();
+            gMain.state++;
+            break;
+        case 2:
+            //BXPY_SetPosition(BXPY_GetSavedCursorPosition());
+            BXPY_SetPosition(0);
+            BXPY_InitializeBackgroundsAndLoadBackgroundGraphics();
+            gMain.state++;
+            break;
+        case 3:
+            BXPY_CreateCursorSprite();
+            BXPY_InitWindows();
+            BXPY_DisplayPlayerParty();
+            BXPY_DisplayEnemyParty();
+            BXPY_DisplayHelpBar(WIN_BXPY_HELP_BAR);
+            gMain.state++;
+            break;
+        case 4:
+            CreateTask(Task_BXPY_PartySelection,0);
+            BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
+            SetVBlankCallback(BXPY_VBlankCB);
+            SetMainCallback2(BXPY_MainCB);
+            break;
+    }
+}
+
+static void BXPY_CreateCursorSprite(void)
+{
+    struct SpriteTemplate TempSpriteTemplate = gDummySpriteTemplate;
+
+    TempSpriteTemplate.tileTag = BXPY_SPRITETAG_CURSOR;
+    TempSpriteTemplate.callback = SpriteCallbackDummy;
+    TempSpriteTemplate.paletteTag = BXPY_PALTAG_SPRITE;
+
+    u32 spriteId = CreateSprite(&TempSpriteTemplate, 6, 15, 0);
+    gSprites[spriteId].oam.shape = SPRITE_SHAPE(16x16);
+    gSprites[spriteId].oam.size = SPRITE_SIZE(16x16);
+    gSprites[spriteId].invisible = FALSE;
+    gSprites[spriteId].oam.priority = 0;
+    gSprites[spriteId].subpriority = 0;
+
+    BXPY_SetSpriteId(BXPY_SPRITEID_CURSOR,spriteId);
+}
+
+static void ClearWindowCopyToVram(u32 windowId)
+{
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(TEXT_COLOR_TRANSPARENT));
+    PutWindowTilemap(windowId);
+    CopyWindowToVram(windowId, COPYWIN_FULL);
+}
+
+static void BXPY_InitWindows(void)
+{
+    const struct WindowTemplate *templates = sBXPYWindows;
+
+    InitWindows(templates);
+
+    u32 baseBlock = 1;
+    for (enum BXPYWindows windowId = 0; windowId < WIN_BXPY_COUNT; windowId++)
+    {
+        SetWindowAttribute(windowId, WINDOW_BASE_BLOCK, baseBlock);
+        ClearWindowCopyToVram(windowId);
+        baseBlock += (templates[windowId].width * templates[windowId].height);
+    }
+    DeactivateAllTextPrinters();
+}
+
+static void BXPY_DisplayPlayerParty(void)
+{
+    return;
+}
+
+static void BXPY_DisplayEnemyParty(void)
+{
+    return;
+}
+
+static void BXPY_DisplayHelpBar(enum BXPYWindows windowId)
+{
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(TEXT_COLOR_TRANSPARENT));
+    BXPY_PrintHelpBarText(windowId);
+    CopyWindowToVram(windowId, COPYWIN_GFX);
+}
+
+static void BXPY_PrintHelpBarText(enum BXPYWindows windowId)
+{
+    u32 x = 4;
+    u32 y = 0;
+    u32 fontId = FONT_BXPY_HELPBAR;
+    u32 lineSpacing = GetFontAttribute(fontId, FONTATTR_LINE_SPACING);
+    u32 letterSpacing = GetFontAttribute(fontId, FONTATTR_LETTER_SPACING);
+
+    StringCopy(gStringVar4, COMPOUND_STRING(""));
+
+    if (BXPY_HasSelectedEnough() == FALSE)
+    {
+        u32 pickSize = BXPY_GetPickSize();
+        ConvertIntToDecimalStringN(gStringVar1,pickSize,STR_CONV_MODE_LEFT_ALIGN,CountDigits(pickSize));
+        StringAppend(gStringVar4, COMPOUND_STRING(" Select {STR_VAR_1} Pokemon."));
+    }
+
+    if (BXPY_CanStartBattle())
+        StringAppend(gStringVar4, COMPOUND_STRING(" {START_BUTTON} Start Battle"));
+
+    if (BXPY_IsCursorOnEnemy())
+        StringAppend(gStringVar4,COMPOUND_STRING(" {A_BUTTON} Summary"));
+    else
+        StringAppend(gStringVar4,COMPOUND_STRING(" {A_BUTTON} Select"));
+
+    if (BXPY_IsMultiBattle())
+        StringAppend(gStringVar4,COMPOUND_STRING(" {SELECT_BUTTON} See Partners"));
+
+    StringExpandPlaceholders(gStringVar4,gStringVar4);
+
+    AddTextPrinterParameterized4(windowId, fontId, x, y, letterSpacing, lineSpacing, sBXPYWindowFontColors[BXPY_FONT_COLOR_WHITE], TEXT_SKIP_DRAW, gStringVar4);
+}
+
+static bool8 BXPY_HasSelectedEnough(void)
+{
+    return FALSE;
+}
+
+static bool8 BXPY_CanStartBattle(void)
+{
+    return FALSE;
+}
+
+static bool8 BXPY_IsCursorOnEnemy(void)
+{
+    return BXPY_GetPosition() > PARTY_SIZE;
+}
+
+static bool8 BXPY_IsMultiBattle(void)
+{
+    return FALSE;
+}
+
+static void BXPY_ResetAllSpriteIds(void)
+{
+    for (u32 spriteIndex = 0; spriteIndex < BXPY_SPRITEID_COUNT; spriteIndex++)
+        BXPY_SetSpriteId(spriteIndex,SPRITE_NONE);
+}
+
+static void BXPY_InitializeBackgroundsAndLoadBackgroundGraphics(void)
+{
+    if (BXPY_InitalizeBackgrounds())
+        LoadGraphics();
+    else
+        BXPY_FadescreenAndExitGracefully();
+}
+
+static void BXPY_StartPickInterface(u32 bringSize, u32 pickSize, u32 battleFlags)
+{
+    BXPY_InitializeAndSaveCallback(bringSize, pickSize, battleFlags);
 }
 
