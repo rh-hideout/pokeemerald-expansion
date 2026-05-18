@@ -161,7 +161,7 @@ void TestRunner_CheckMemory(void)
                         {
                             Test_MgbaPrintf("%s: %d bytes not freed", location, block->size);
                             gTestRunnerState.result = TEST_RESULT_FAIL;
-       
+
                             if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
                                 gTestRunnerState.expectedFailState = EXPECT_FAIL_SUCCESS;
                             break;
@@ -185,7 +185,7 @@ void TestRunner_CheckMemory(void)
         {
             if (gTasks[i].isActive)
             {
-                Test_MgbaPrintf(":L%s:%d - %p: task not freed", gTestRunnerState.test->filename, SourceLine(0), gTasks[i].func);
+                Test_MgbaPrintf("%s:%d - %p: task not freed", gTestRunnerState.test->filename, SourceLine(0), gTasks[i].func);
                 gTestRunnerState.result = TEST_RESULT_FAIL;
 
                 if (gTestRunnerState.expectedFailState == EXPECT_FAIL_OPEN)
@@ -257,7 +257,7 @@ top:
 
             if (gPersistentTestRunnerState.expectCrash)
                 gTestRunnerState.expectedResult = TEST_RESULT_CRASH;
-            
+
             gTestRunnerState.expectedFailLine = 0;
             gTestRunnerState.expectedFailState = NO_EXPECT_FAIL;
         }
@@ -457,6 +457,9 @@ top:
             case TEST_RESULT_CRASH:
                 result = "CRASH";
                 break;
+            case TEST_RESULT_FLAKY:
+                result = "FLAKY";
+                break;
             default:
                 result = "UNKNOWN";
                 break;
@@ -603,7 +606,7 @@ static u32 FunctionTest_RandomUniform(enum RandomTag tag, u32 lo, u32 hi, bool32
         if (gFunctionTestRunnerState->rngList[i].tag == tag)
         {
             if (reject && reject(gFunctionTestRunnerState->rngList[i].value))
-                Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":LWITH_RNG specified a rejected value (%d)", gFunctionTestRunnerState->rngList[i].value);
+                Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), "WITH_RNG specified a rejected value (%d)", gFunctionTestRunnerState->rngList[i].value);
             return gFunctionTestRunnerState->rngList[i].value;
         }
     }
@@ -650,7 +653,7 @@ static const void* FunctionTest_RandomElementArray(enum RandomTag tag, const voi
                 if (element == gFunctionTestRunnerState->rngList[i].value)
                     return (const u8 *)array + size * index;
             }
-            Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":L%s: RandomElement illegal value requested: %d", gTestRunnerState.test->filename, gFunctionTestRunnerState->rngList[i].value);
+            Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), "%s: RandomElement illegal value requested: %d", gTestRunnerState.test->filename, gFunctionTestRunnerState->rngList[i].value);
         }
     }
 
@@ -727,7 +730,7 @@ static void Intr_Timer2(void)
             if (gTestRunnerState.state == STATE_RUN_TEST)
                 gTestRunnerState.state = STATE_REPORT_RESULT;
             gTestRunnerState.result = TEST_RESULT_TIMEOUT;
-            Test_MgbaPrintf(":L%s:%d - TIMEOUT", gTestRunnerState.test->filename, SourceLine(0));
+            Test_MgbaPrintf("%s:%d - TIMEOUT", gTestRunnerState.test->filename, SourceLine(0));
             ReinitCallbacks();
             IRQ_LR = ((uintptr_t)JumpToAgbMainLoop & ~1) + 4;
         }
@@ -759,11 +762,11 @@ void Test_ExitWithResult_(enum TestResult result, u32 stopLine, const void *retu
      && gTestRunnerState.expectedResult == TEST_RESULT_FAIL
      && result == TEST_RESULT_FAIL)
     {
-        Test_MgbaPrintf(":L%s:%d: Expected failure in block from line %d, but failed on line %d",
+        Test_MgbaPrintf("%s:%d: Expected failure in block from line %d, but failed on line %d",
          gTestRunnerState.test->filename, stopLine,
          gTestRunnerState.expectedFailLine, stopLine);
     }
-    
+
     ReinitCallbacks();
     if (gTestRunnerState.state == STATE_REPORT_RESULT
      && gTestRunnerState.result != gTestRunnerState.expectedResult)
@@ -776,6 +779,8 @@ void Test_ExitWithResult_(enum TestResult result, u32 stopLine, const void *retu
                 const void *return0 = __builtin_return_address(0);
                 Test_MgbaPrintf("in %p\nin %p", return1, return0);
             }
+            // TODO: If 'fmt' starts with ':', insert a space to prevent
+            // Hydra interpreting it as a command.
             va_list va;
             va_start(va, fmt);
             MgbaVPrintf_(fmt, va);
@@ -820,9 +825,119 @@ static s32 MgbaPutchar_(s32 i, s32 c)
     return i;
 }
 
-extern const u8 gWireless_RSEtoASCIITable[];
+static const u8 sRSEtoConstantTable[256] =
+{
+    [CHAR_SPACE] = '_',
+    [CHAR_A_GRAVE] = 'A',
+    [CHAR_A_ACUTE] = 'A',
+    [CHAR_A_CIRCUMFLEX] = 'A',
+    [CHAR_C_CEDILLA] = 'C',
+    [CHAR_E_GRAVE] = 'E',
+    [CHAR_E_ACUTE] = 'E',
+    [CHAR_E_CIRCUMFLEX] = 'E',
+    [CHAR_E_DIAERESIS] = 'E',
+    [CHAR_I_GRAVE] = 'I',
+    [CHAR_I_CIRCUMFLEX] = 'I',
+    [CHAR_I_DIAERESIS] = 'I',
+    [CHAR_O_GRAVE] = 'O',
+    [CHAR_O_ACUTE] = 'O',
+    [CHAR_O_CIRCUMFLEX] = 'O',
+    [CHAR_U_GRAVE] = 'U',
+    [CHAR_U_ACUTE] = 'U',
+    [CHAR_U_CIRCUMFLEX] = 'U',
+    [CHAR_N_TILDE] = 'N',
+    [CHAR_a_GRAVE] = 'A',
+    [CHAR_a_ACUTE] = 'A',
+    [CHAR_c_CEDILLA] = 'C',
+    [CHAR_e_GRAVE] = 'E',
+    [CHAR_e_ACUTE] = 'E',
+    [CHAR_e_CIRCUMFLEX] = 'E',
+    [CHAR_e_DIAERESIS] = 'E',
+    [CHAR_i_GRAVE] = 'I',
+    [CHAR_i_CIRCUMFLEX] = 'I',
+    [CHAR_i_DIAERESIS] = 'I',
+    [CHAR_o_GRAVE] = 'O',
+    [CHAR_o_ACUTE] = 'O',
+    [CHAR_o_CIRCUMFLEX] = 'O',
+    [CHAR_u_GRAVE] = 'U',
+    [CHAR_u_ACUTE] = 'U',
+    [CHAR_u_CIRCUMFLEX] = 'U',
+    [CHAR_n_TILDE] = 'N',
+    [CHAR_I_ACUTE] = 'I',
+    [CHAR_a_CIRCUMFLEX] = 'A',
+    [CHAR_i_ACUTE] = 'I',
+    [CHAR_0] = '0',
+    [CHAR_1] = '1',
+    [CHAR_2] = '2',
+    [CHAR_3] = '3',
+    [CHAR_4] = '4',
+    [CHAR_5] = '5',
+    [CHAR_6] = '6',
+    [CHAR_7] = '7',
+    [CHAR_8] = '8',
+    [CHAR_9] = '9',
+    [CHAR_A] = 'A',
+    [CHAR_B] = 'B',
+    [CHAR_C] = 'C',
+    [CHAR_D] = 'D',
+    [CHAR_E] = 'E',
+    [CHAR_F] = 'F',
+    [CHAR_G] = 'G',
+    [CHAR_H] = 'H',
+    [CHAR_I] = 'I',
+    [CHAR_J] = 'J',
+    [CHAR_K] = 'K',
+    [CHAR_L] = 'L',
+    [CHAR_M] = 'M',
+    [CHAR_N] = 'N',
+    [CHAR_O] = 'O',
+    [CHAR_P] = 'P',
+    [CHAR_Q] = 'Q',
+    [CHAR_R] = 'R',
+    [CHAR_S] = 'S',
+    [CHAR_T] = 'T',
+    [CHAR_U] = 'U',
+    [CHAR_V] = 'V',
+    [CHAR_W] = 'W',
+    [CHAR_X] = 'X',
+    [CHAR_Y] = 'Y',
+    [CHAR_Z] = 'Z',
+    [CHAR_a] = 'A',
+    [CHAR_b] = 'B',
+    [CHAR_c] = 'C',
+    [CHAR_d] = 'D',
+    [CHAR_e] = 'E',
+    [CHAR_f] = 'F',
+    [CHAR_g] = 'G',
+    [CHAR_h] = 'H',
+    [CHAR_i] = 'I',
+    [CHAR_j] = 'J',
+    [CHAR_k] = 'K',
+    [CHAR_l] = 'L',
+    [CHAR_m] = 'M',
+    [CHAR_n] = 'N',
+    [CHAR_o] = 'O',
+    [CHAR_p] = 'P',
+    [CHAR_q] = 'Q',
+    [CHAR_r] = 'R',
+    [CHAR_s] = 'S',
+    [CHAR_t] = 'T',
+    [CHAR_u] = 'U',
+    [CHAR_v] = 'V',
+    [CHAR_w] = 'W',
+    [CHAR_x] = 'X',
+    [CHAR_y] = 'Y',
+    [CHAR_z] = 'Z',
+    [CHAR_A_DIAERESIS] = 'A',
+    [CHAR_O_DIAERESIS] = 'O',
+    [CHAR_U_DIAERESIS] = 'U',
+    [CHAR_a_DIAERESIS] = 'A',
+    [CHAR_o_DIAERESIS] = 'O',
+    [CHAR_u_DIAERESIS] = 'U',
+};
 
 // Bare-bones, only supports plain %s, %S, and %d.
+// Extensions: %p (pointer), %q (UQ4.12), %C (GF-string as CONSTANT_NAME).
 static s32 MgbaVPrintf_(const char *fmt, va_list va)
 {
     s32 i = 0;
@@ -916,7 +1031,9 @@ static s32 MgbaVPrintf_(const char *fmt, va_list va)
                         if (++n == 2)
                         {
                             u *= 10;
-                            i = MgbaPutchar_(i, '0' + ((u + UQ_4_12_ROUND) >> 12));
+                            // TODO: 'min' is a hack, we should have
+                            // rounded up the previous number.
+                            i = MgbaPutchar_(i, min('0' + ((u + UQ_4_12_ROUND) >> 12), '9'));
                             break;
                         }
                     }
@@ -926,6 +1043,28 @@ static s32 MgbaVPrintf_(const char *fmt, va_list va)
                 s = va_arg(va, const char *);
                 while ((c = *s++) != '\0')
                     i = MgbaPutchar_(i, c);
+                break;
+            case 'C':
+                pokeS = va_arg(va, const u8 *);
+                if (pokeS == NULL)
+                {
+                    i = MgbaPutchar_(i, 'N');
+                    i = MgbaPutchar_(i, 'U');
+                    i = MgbaPutchar_(i, 'L');
+                    i = MgbaPutchar_(i, 'L');
+                }
+                else
+                {
+                    bool32 prevUnderscore = FALSE;
+                    while ((c = *pokeS++) != EOS)
+                    {
+                        if ((c = sRSEtoConstantTable[c]) == '\0')
+                            c = '_';
+                        if (!prevUnderscore || c != '_')
+                            i = MgbaPutchar_(i, c);
+                        prevUnderscore = c == '_';
+                    }
+                }
                 break;
             case 'S':
                 pokeS = va_arg(va, const u8 *);
@@ -938,13 +1077,9 @@ static s32 MgbaVPrintf_(const char *fmt, va_list va)
                 }
                 else
                 {
+                    extern char mini_pchar_decode(u8);
                     while ((c = *pokeS++) != EOS)
-                    {
-                        if ((c = gWireless_RSEtoASCIITable[c]) != '\0')
-                            i = MgbaPutchar_(i, c);
-                        else
-                            i = MgbaPutchar_(i, '?');
-                    }
+                        i = MgbaPutchar_(i, mini_pchar_decode(c));
                 }
                 break;
             }
@@ -1056,7 +1191,7 @@ u32 RandomUniformDefaultValue(enum RandomTag tag, u32 lo, u32 hi, bool32 (*rejec
         while (reject(default_))
         {
             if (default_ == lo)
-                Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomUniformExcept called from %p with tag %d rejected all values", caller, tag);
+                Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), "RandomUniformExcept called from %p with tag %d rejected all values", caller, tag);
             default_--;
         }
     }
@@ -1068,7 +1203,7 @@ u32 RandomWeightedArrayDefaultValue(enum RandomTag tag, u32 n, const u16 *weight
     while (weights[n-1] == 0)
     {
         if (n == 1)
-            Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomWeightedArray called from %p with tag %d and all zero weights", caller, tag);
+            Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), "RandomWeightedArray called from %p with tag %d and all zero weights", caller, tag);
         n--;
     }
     return n-1;
@@ -1108,5 +1243,5 @@ void SetupRiggedRng(u32 sourceLine, enum RandomTag randomTag, u32 value)
         }
     }
     if (i == RIGGED_RNG_COUNT)
-        Test_ExitWithResult(TEST_RESULT_FAIL, __LINE__, ":L%s:%d: Too many rigged RNGs to set up", gTestRunnerState.test->filename, sourceLine);
+        Test_ExitWithResult(TEST_RESULT_FAIL, __LINE__, "%s:%d: Too many rigged RNGs to set up", gTestRunnerState.test->filename, sourceLine);
 }
