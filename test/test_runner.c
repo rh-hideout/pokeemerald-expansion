@@ -822,10 +822,11 @@ static s32 MgbaPutchar_(s32 i, s32 c)
 
 extern const u8 gWireless_RSEtoASCIITable[];
 
-// Bare-bones, only supports plain %s, %S, and %d.
+// Bare-bones, only supports plain %s, %S, %d, and %p; plus a UQ4.12 %q.
 static s32 MgbaVPrintf_(const char *fmt, va_list va)
 {
     s32 i = 0;
+    u32 n;
     s32 c, d;
     u32 p;
     const char *s;
@@ -835,6 +836,16 @@ static s32 MgbaVPrintf_(const char *fmt, va_list va)
         switch ((c = *fmt++))
         {
         case '%':
+            if (*fmt == '*')
+            {
+                fmt++;
+                n = va_arg(va, unsigned);
+            }
+            else
+            {
+                n = -1;
+            }
+
             switch (*fmt++)
             {
             case '%':
@@ -924,7 +935,7 @@ static s32 MgbaVPrintf_(const char *fmt, va_list va)
                 break;
             case 's':
                 s = va_arg(va, const char *);
-                while ((c = *s++) != '\0')
+                while (n-- > 0 && (c = *s++) != '\0')
                     i = MgbaPutchar_(i, c);
                 break;
             case 'S':
@@ -938,7 +949,7 @@ static s32 MgbaVPrintf_(const char *fmt, va_list va)
                 }
                 else
                 {
-                    while ((c = *pokeS++) != EOS)
+                    while (n-- > 0 && (c = *pokeS++) != EOS)
                     {
                         if ((c = gWireless_RSEtoASCIITable[c]) != '\0')
                             i = MgbaPutchar_(i, c);

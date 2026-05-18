@@ -2859,6 +2859,22 @@ u32 BattleStringExpandPlaceholdersToDisplayedString(const u8 *src)
 #endif
 }
 
+static void BattleStringPoisonBuffer(u8 *buffer)
+{
+    buffer[0] = B_BUFF_PLACEHOLDER_BEGIN;
+    buffer[1] = B_BUFF_POISON;
+    buffer[2] = EOS;
+}
+
+void BattleStringPoisonBuffers(void)
+{
+    // Insert 'B_BUFF_POISON' at the start of the text buffers so that
+    // using them before buffering new text will trip an 'assertf'.
+    BattleStringPoisonBuffer(gBattleTextBuff1);
+    BattleStringPoisonBuffer(gBattleTextBuff2);
+    BattleStringPoisonBuffer(gBattleTextBuff3);
+}
+
 static const u8 *TryGetStatusString(u8 *src)
 {
     u32 i;
@@ -3136,6 +3152,7 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
             case B_TXT_BUFF1:
                 if (gBattleTextBuff1[0] == B_BUFF_PLACEHOLDER_BEGIN)
                 {
+                    assertf(gBattleTextBuff1[1] != B_BUFF_POISON, "B_BUFF1 is uninitialized in %p (%*S) at %p", src, dstID, dst, gBattlescriptCurrInstr);
                     ExpandBattleTextBuffPlaceholders(gBattleTextBuff1, gStringVar1);
                     toCpy = gStringVar1;
                 }
@@ -3149,6 +3166,7 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
             case B_TXT_BUFF2:
                 if (gBattleTextBuff2[0] == B_BUFF_PLACEHOLDER_BEGIN)
                 {
+                    assertf(gBattleTextBuff2[1] != B_BUFF_POISON, "B_BUFF2 is uninitialized in %p (%*S) at %p", src, dstID, dst, gBattlescriptCurrInstr);
                     ExpandBattleTextBuffPlaceholders(gBattleTextBuff2, gStringVar2);
                     toCpy = gStringVar2;
                 }
@@ -3160,6 +3178,7 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
             case B_TXT_BUFF3:
                 if (gBattleTextBuff3[0] == B_BUFF_PLACEHOLDER_BEGIN)
                 {
+                    assertf(gBattleTextBuff3[1] != B_BUFF_POISON, "B_BUFF3 is uninitialized in %p (%*S) at %p", src, dstID, dst, gBattlescriptCurrInstr);
                     ExpandBattleTextBuffPlaceholders(gBattleTextBuff3, gStringVar3);
                     toCpy = gStringVar3;
                 }
@@ -3859,6 +3878,9 @@ void ExpandBattleTextBuffPlaceholders(const u8 *src, u8 *dst)
                 CopyItemName(hword, dst);
             }
             srcID += 3;
+            break;
+        case B_BUFF_POISON:
+            srcID += 1;
             break;
         }
     }
