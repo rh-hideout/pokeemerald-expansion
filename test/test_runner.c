@@ -457,6 +457,9 @@ top:
             case TEST_RESULT_CRASH:
                 result = "CRASH";
                 break;
+            case TEST_RESULT_ASSERT_FAIL:
+                result = "EXPECTED_ASSERT_FAIL";
+                break;
             default:
                 result = "UNKNOWN";
                 break;
@@ -483,6 +486,9 @@ top:
                 Test_MgbaPrintf(":A%s%s\e[0m", color, result);
             else if (gTestRunnerState.result == TEST_RESULT_TODO)
                 Test_MgbaPrintf(":T%s%s\e[0m", color, result);
+            else if (gTestRunnerState.expectedResult == gTestRunnerState.result
+                 && gTestRunnerState.result == TEST_RESULT_ASSERT_FAIL)
+                Test_MgbaPrintf(":E%s%s\e[0m", color, result);
             else if (gTestRunnerState.expectedResult == gTestRunnerState.result
                  && gTestRunnerState.result == TEST_RESULT_CRASH)
                 Test_MgbaPrintf(":E%s%s\e[0m", color, result);
@@ -556,6 +562,12 @@ void Test_ExpectFail(u32 failLine)
             gTestRunnerState.expectedFailState = EXPECT_FAIL_CLOSED;
         }
     }
+}
+
+void Test_ExpectAssertFail(enum AssertTag tag)
+{
+    Test_ExpectedResult(TEST_RESULT_ASSERT_FAIL);
+    gTestRunnerState.expectedFailLine = tag;
 }
 
 static void FunctionTest_SetUp(void *data)
@@ -763,7 +775,14 @@ void Test_ExitWithResult_(enum TestResult result, u32 stopLine, const void *retu
          gTestRunnerState.test->filename, stopLine,
          gTestRunnerState.expectedFailLine, stopLine);
     }
-    
+
+    if (result == TEST_RESULT_ASSERT_FAIL)
+    {
+        gTestRunnerState.failedAssumptionsBlockLine = 0;
+        if (gTestRunnerState.expectedResult != result || gTestRunnerState.expectedFailLine != stopLine)
+            gTestRunnerState.result = TEST_RESULT_INVALID;
+    }
+
     ReinitCallbacks();
     if (gTestRunnerState.state == STATE_REPORT_RESULT
      && gTestRunnerState.result != gTestRunnerState.expectedResult)
@@ -771,7 +790,7 @@ void Test_ExitWithResult_(enum TestResult result, u32 stopLine, const void *retu
         if (!gTestRunnerState.test->runner->handleExitWithResult
          || !gTestRunnerState.test->runner->handleExitWithResult(gTestRunnerState.test->data, result))
         {
-            if (result == TEST_RESULT_INVALID)
+            if (gTestRunnerState.result == TEST_RESULT_INVALID)
             {
                 const void *return0 = __builtin_return_address(0);
                 Test_MgbaPrintf("in %p\nin %p", return1, return0);

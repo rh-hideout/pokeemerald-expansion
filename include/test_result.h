@@ -1,6 +1,8 @@
 #ifndef GUARD_TEST_RESULT_H
 #define GUARD_TEST_RESULT_H
 
+#include "constants/assert.h"
+
 enum TestResult
 {
     TEST_RESULT_FAIL,
@@ -12,6 +14,7 @@ enum TestResult
     TEST_RESULT_CRASH,
     TEST_RESULT_TODO,
     TEST_RESULT_KNOWN_FAIL,
+    TEST_RESULT_ASSERT_FAIL,
 };
 
 void Test_ExitWithResult_(enum TestResult, u32 stopLine, const void *return0, const char *fmt, ...);

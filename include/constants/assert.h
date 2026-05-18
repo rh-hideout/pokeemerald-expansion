@@ -1,0 +1,10 @@
+#ifndef CONSTANTS_ASSERT_H
+#define CONSTANTS_ASSERT_H
+
+enum AssertTag
+{
+    ASSERT_TAG_NONE,
+    ASSERT_TAG_USE_MISSING_ITEM_IN_BATTLE,
+};
+
+#endif
