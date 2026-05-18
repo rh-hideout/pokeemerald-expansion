@@ -38,26 +38,12 @@ GoldenrodDeptStore5_EventScript_Sign::
 GoldenrodDeptStore5_EventScript_Receptionist::
 	lock
 	faceplayer
+	goto_if_set FLAG_GOT_RETURN, GoldenrodDeptStore5_EventScript_Receptionist_Already
 	msgbox GoldenrodDeptStore_Text_5FReceptionistOhYourMon, MSGBOX_DEFAULT
 	closemessage
 	specialvar VAR_RESULT, GetLeadMonFriendshipScore
-	goto_if_ge VAR_RESULT, FRIENDSHIP_150_TO_199, GoldenrodDeptStore5_EventScript_Receptionist_HighFriendship
-	specialvar VAR_RESULT, GetLeadMonFriendshipScore
-	goto_if_ge VAR_RESULT, FRIENDSHIP_50_TO_99, GoldenrodDeptStore5_EventScript_Receptionist_PutInEffort
-	goto GoldenrodDeptStore5_EventScript_Receptionist_LowFriendship
-	release
-	end
-
-GoldenrodDeptStore5_EventScript_Receptionist_HighFriendship::
-	call_if_unset FLAG_GOT_RETURN, GoldenrodDeptStore5_EventScript_Receptionist_GiveReturn
-	msgbox GoldenrodDeptStore_Text_5FReceptionistThisMoveShouldBePerfect, MSGBOX_DEFAULT
-	closemessage
-	release
-	end
-
-GoldenrodDeptStore5_EventScript_Receptionist_LowFriendship::
-	call_if_unset FLAG_GOT_FRUSTRATION, GoldenrodDeptStore5_EventScript_Receptionist_GiveFrustration
-	msgbox GoldenrodDeptStore_Text_5FReceptionistItLooksEvilHowAboutThisTM, MSGBOX_DEFAULT
+	goto_if_ge VAR_RESULT, FRIENDSHIP_150_TO_199, GoldenrodDeptStore5_EventScript_Receptionist_GiveReturn
+	msgbox GoldenrodDeptStore_Text_5FReceptionistPutInSomeMoreEffort, MSGBOX_DEFAULT
 	closemessage
 	release
 	end
@@ -65,15 +51,7 @@ GoldenrodDeptStore5_EventScript_Receptionist_LowFriendship::
 GoldenrodDeptStore5_EventScript_Receptionist_GiveReturn::
 	giveitem ITEM_TM_RETURN
 	setflag FLAG_GOT_RETURN
-	return
-
-GoldenrodDeptStore5_EventScript_Receptionist_GiveFrustration::
-	giveitem ITEM_TM_FRUSTRATION
-	setflag FLAG_GOT_FRUSTRATION
-	return
-
-GoldenrodDeptStore5_EventScript_Receptionist_PutInEffort::
-	msgbox GoldenrodDeptStore_Text_5FReceptionistPutInSomeMoreEffort, MSGBOX_DEFAULT
+	msgbox GoldenrodDeptStore_Text_5FReceptionistThisMoveShouldBePerfect, MSGBOX_DEFAULT
 	closemessage
 	release
 	end
@@ -83,8 +61,6 @@ GoldenrodDeptStore5_EventScript_Receptionist_Already::
 	closemessage
 	release
 	end
-
-
 
 GoldenrodDeptStore_Text_5FReceptionistOhYourMon:
     .string "Hello. Oh, your POKéMON…$"
@@ -98,19 +74,10 @@ GoldenrodDeptStore_Text_5FReceptionistPutInSomeMoreEffort:
 	.string "You, as the TRAINER, need to put in\n"
 	.string "some more effort.$"
 
-
 GoldenrodDeptStore_Text_5FReceptionistThisMoveShouldBePerfect:
     .string "It's very attached to you.\p"
     .string "This move should be perfect for a\n"
     .string "pair like you.$"
-
-GoldenrodDeptStore_Text_5FReceptionistItLooksEvilHowAboutThisTM:
-    .string "It looks evil. How about this TM\n"
-    .string "for it?$"
-
-GoldenrodDeptStore_Text_5FReceptionistThereAreTMsPerfectForMon:
-    .string "There are sure to be TMs that are\n"
-    .string "just perfect for your POKéMON.$"
 
 GoldenrodDeptStore_Text_5FLass:
     .string "During the day, a lady comes to check\n"

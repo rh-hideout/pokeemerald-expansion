@@ -2,6 +2,49 @@ CeladonCity_DepartmentStore_5F_hns_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, CeladonDeptElevator_OnFrame
 	.byte 0
 
+CeladonDeptStore5_EventScript_Receptionist::
+	lock
+	faceplayer
+	goto_if_set FLAG_GOT_FRUSTRATION, CeladonDeptStore5_EventScript_Receptionist_Already
+	msgbox CeladonDeptStore_Text_5FReceptionistOhYourMon, MSGBOX_DEFAULT
+	closemessage
+	specialvar VAR_RESULT, GetLeadMonFriendshipScore
+	goto_if_lt VAR_RESULT, FRIENDSHIP_50_TO_99, CeladonDeptStore5_EventScript_Receptionist_GiveFrustration
+	msgbox CeladonDeptStore_Text_5FReceptionistPutInSomeMoreEffort, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+
+CeladonDeptStore5_EventScript_Receptionist_GiveFrustration::
+	giveitem ITEM_TM_FRUSTRATION
+	setflag FLAG_GOT_FRUSTRATION
+	msgbox CeladonDeptStore_Text_5FReceptionistItLooksEvilHowAboutThisTM, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+
+CeladonDeptStore5_EventScript_Receptionist_Already::
+	msgbox CeladonDeptStore_Text_5FReceptionistWait, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+
+CeladonDeptStore_Text_5FReceptionistOhYourMon:
+    .string "Hello. Oh, your POKéMON…$"
+
+CeladonDeptStore_Text_5FReceptionistWait:
+    .string "Wait, I already gave you that TM!$"
+
+CeladonDeptStore_Text_5FReceptionistPutInSomeMoreEffort:
+	.string "Hmm…\n"
+	.string "It's not bad, but it's also not good.\p"
+	.string "You, as the TRAINER, need to put in\n"
+	.string "some more effort.$"
+
+CeladonDeptStore_Text_5FReceptionistItLooksEvilHowAboutThisTM:
+    .string "It looks evil. How about this TM\n"
+    .string "for it?$"
+
 CeladonDept5_EventScript_Gent::
 	msgbox CeladonDeptStore5F_Text_Gentleman, MSGBOX_NPC
 	end

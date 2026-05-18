@@ -72,7 +72,7 @@ Route27_EventScript_Item_RareCandy::
     end
 
 Route27_EventScript_Item_DragonClaw::
-    finditem ITEM_DRAGON_CLAW
+    finditem ITEM_TM_DRAGON_CLAW
     end
 
 Route27_EventScript_Item_Revive::
