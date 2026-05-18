@@ -6,6 +6,10 @@
 // If you plan on adding more TMs, increase this number too.
 #define MAX_RELEARNER_MOVES 60
 
+
+// While this is inactive, the party menu relearner prompt will default to saying "(select) RELEARN" and relearning level up moves. While active, the prompt reads, for examle "(select) RELEARN TUTOR" and may be scrolled with L/R.
+#define SPECIAL_RELEARNER_IS_ACTIVE (P_ENABLE_MOVE_RELEARNERS || P_TM_MOVES_RELEARNER || FlagGet(P_FLAG_EGG_MOVES) || FlagGet(P_FLAG_TUTOR_MOVES))
+
 // Move Relearner menu change constants
 enum MoveRelearnerStates
 {
