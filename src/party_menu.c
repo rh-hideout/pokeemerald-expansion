@@ -319,6 +319,7 @@ static void PartyMenuDisplayYesNoMenu(void);
 static void Task_HandleCancelChooseMonYesNoInput(u8);
 static void Task_ReturnToChooseMonAfterText(u8);
 static void UpdateCurrentPartySelection(s8 *, s8);
+static u8 GetPartyMenuSelectionPartyCount(void);
 static void UpdatePartySelectionSingleLayout(s8 *, s8);
 static void UpdatePartySelectionDoubleLayout(s8 *, s8);
 static s8 GetNewSlotDoubleLayout(s8, s8);
@@ -1790,7 +1791,7 @@ static u16 PartyMenuButtonHandler(s8 *slotPtr)
         return R_BUTTON;
     }
 
-    if (movementDir && gPartiesCount[B_TRAINER_0] != 0)
+    if (movementDir && GetPartyMenuSelectionPartyCount() != 0)
     {
         UpdateCurrentPartySelection(slotPtr, movementDir);
         return 0;
@@ -1827,8 +1828,21 @@ static void UpdateCurrentPartySelection(s8 *slotPtr, s8 movementDir)
     }
 }
 
+static u8 GetPartyMenuSelectionPartyCount(void)
+{
+    if (gPartyMenu.layout == PARTY_LAYOUT_MULTI_FULL_PARTNER)
+        return CalculatePartyCount(B_TRAINER_2);
+    else
+        return gPartiesCount[B_TRAINER_0];
+}
+
 static void UpdatePartySelectionSingleLayout(s8 *slotPtr, s8 movementDir)
 {
+    u8 partyCount = GetPartyMenuSelectionPartyCount();
+
+    if (partyCount == 0)
+        return;
+
     // PARTY_SIZE + 1 is Cancel, PARTY_SIZE is Confirm
     switch (movementDir)
     {
@@ -1839,14 +1853,14 @@ static void UpdatePartySelectionSingleLayout(s8 *slotPtr, s8 movementDir)
         }
         else if (*slotPtr == PARTY_SIZE)
         {
-            *slotPtr = gPartiesCount[B_TRAINER_0] - 1;
+            *slotPtr = partyCount - 1;
         }
         else if (*slotPtr == PARTY_SIZE + 1)
         {
             if (sPartyMenuInternal->chooseHalf)
                 *slotPtr = PARTY_SIZE;
             else
-                *slotPtr = gPartiesCount[B_TRAINER_0] - 1;
+                *slotPtr = partyCount - 1;
         }
         else
         {
@@ -1860,7 +1874,7 @@ static void UpdatePartySelectionSingleLayout(s8 *slotPtr, s8 movementDir)
         }
         else
         {
-            if (*slotPtr == gPartiesCount[B_TRAINER_0] - 1)
+            if (*slotPtr == partyCount - 1)
             {
                 if (sPartyMenuInternal->chooseHalf)
                     *slotPtr = PARTY_SIZE;
@@ -1874,9 +1888,10 @@ static void UpdatePartySelectionSingleLayout(s8 *slotPtr, s8 movementDir)
         }
         break;
     case MENU_DIR_RIGHT:
-        if (gPartiesCount[B_TRAINER_0] != 1 && *slotPtr == 0)
+        if (partyCount != 1 && *slotPtr == 0)
         {
-            if (sPartyMenuInternal->lastSelectedSlot == 0)
+            if (sPartyMenuInternal->lastSelectedSlot == 0
+             || sPartyMenuInternal->lastSelectedSlot >= partyCount)
                 *slotPtr = 1;
             else
                 *slotPtr = sPartyMenuInternal->lastSelectedSlot;
@@ -1891,6 +1906,23 @@ static void UpdatePartySelectionSingleLayout(s8 *slotPtr, s8 movementDir)
         break;
     }
 }
+
+#if TESTING
+s8 Test_UpdatePartySelectionSingleLayout(s8 slotId, s8 movementDir, bool8 chooseHalf, u8 lastSelectedSlot)
+{
+    struct PartyMenuInternal internal = {0};
+    struct PartyMenuInternal *savedInternal = sPartyMenuInternal;
+
+    internal.chooseHalf = chooseHalf;
+    internal.lastSelectedSlot = lastSelectedSlot;
+    sPartyMenuInternal = &internal;
+
+    UpdatePartySelectionSingleLayout(&slotId, movementDir);
+
+    sPartyMenuInternal = savedInternal;
+    return slotId;
+}
+#endif
 
 static void UpdatePartySelectionDoubleLayout(s8 *slotPtr, s8 movementDir)
 {
