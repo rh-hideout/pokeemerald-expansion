@@ -115,6 +115,27 @@ SINGLE_BATTLE_TEST("Encore forces the last move used before the target flinched"
     }
 }
 
+SINGLE_BATTLE_TEST("Encore forces the last move used while asleep")
+{
+    GIVEN {
+        WITH_CONFIG(B_ENCORE_TARGET, GEN_3);
+        ASSUME(MoveHasAdditionalEffect(MOVE_HEADBUTT, MOVE_EFFECT_FLINCH) == TRUE);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(50); Moves(MOVE_CELEBRATE, MOVE_SPORE, MOVE_ENCORE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(100); Moves(MOVE_GRASS_KNOT, MOVE_SCRATCH, MOVE_CELEBRATE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SPORE); MOVE(opponent, MOVE_GRASS_KNOT); }
+        TURN { MOVE(player, MOVE_ENCORE); MOVE(opponent, MOVE_SCRATCH); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASS_KNOT, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASS_KNOT, opponent);
+    }
+}
+
 SINGLE_BATTLE_TEST("(DYNAMAX) Dynamaxed Pokemon are immune to Encore")
 {
     GIVEN {
