@@ -5654,8 +5654,7 @@ static void HandleEndTurn_FinishBattle(void)
     }
     else
     {
-        if (gBattleControllerExecFlags == 0)
-            gBattleScriptingCommandsTable[gBattlescriptCurrInstr[0]]();
+        RunBattleScriptCommands();
     }
 }
 
@@ -5801,8 +5800,7 @@ void RunBattleScriptCommands_PopCallbacksStack(void)
     }
     else
     {
-        if (gBattleControllerExecFlags == 0)
-            gBattleScriptingCommandsTable[gBattlescriptCurrInstr[0]]();
+        RunBattleScriptCommands();
     }
 }
 

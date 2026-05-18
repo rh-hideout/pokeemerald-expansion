@@ -337,16 +337,37 @@ void LaunchBattleAnimation(u32 animType, u32 animId)
     if (gTestRunnerEnabled)
     {
         TestRunner_Battle_RecordAnimation(animType, animId);
-        // Play Transform and Ally Switch even in Headless as these move animations also change mon data.
-        if (gTestRunnerHeadless
-            #if TESTING // Because gBattleTestRunnerState is not seen outside of test env.
-             && !gBattleTestRunnerState->forceMoveAnim
-            #endif // TESTING
-            && !(animType == ANIM_TYPE_MOVE && (animId == MOVE_TRANSFORM || animId == MOVE_ALLY_SWITCH)))
+
+        bool32 forceMoveAnim = FALSE;
+        #if TESTING // Because gBattleTestRunnerState is not seen outside of test env.
+        forceMoveAnim = gBattleTestRunnerState->forceMoveAnim;
+        #endif
+        if (!forceMoveAnim)
         {
-            gAnimScriptCallback = Nop;
-            gAnimScriptActive = FALSE;
-            return;
+            enum { DEFAULT, PLAY, SKIP } mode = DEFAULT;
+            if (animType == ANIM_TYPE_MOVE)
+            {
+                switch (animId)
+                {
+                // Play Transform and Ally Switch even in headless
+                // because the animations also change mon data.
+                case MOVE_TRANSFORM:
+                case MOVE_ALLY_SWITCH:
+                    mode = PLAY;
+                    break;
+                // Skip Celebrate even in non-headless because it's
+                // very noisy.
+                case MOVE_CELEBRATE:
+                    mode = SKIP;
+                    break;
+                }
+            }
+            if ((mode == DEFAULT && gTestRunnerHeadless) || mode == SKIP)
+            {
+                gAnimScriptCallback = Nop;
+                gAnimScriptActive = FALSE;
+                return;
+            }
         }
     }
 
@@ -445,6 +466,7 @@ void LaunchBattleAnimation(u32 animType, u32 animId)
         sBattleAnimScriptPtr = sBattleAnims_Special[animId];
         break;
     }
+    sBattleAnimScriptRetAddr = NULL;
     gAnimScriptActive = TRUE;
     sAnimFramesToWait = 0;
     gAnimScriptCallback = RunAnimScriptCommand;
@@ -1464,6 +1486,7 @@ static void Cmd_blendoff(void)
 
 static void Cmd_call(void)
 {
+    assertf(sBattleAnimScriptRetAddr == NULL);
     sBattleAnimScriptPtr++;
     sBattleAnimScriptRetAddr = sBattleAnimScriptPtr + 4;
     sBattleAnimScriptPtr = T2_READ_PTR(sBattleAnimScriptPtr);
@@ -1471,7 +1494,9 @@ static void Cmd_call(void)
 
 static void Cmd_return(void)
 {
+    assertf(sBattleAnimScriptRetAddr != NULL);
     sBattleAnimScriptPtr = sBattleAnimScriptRetAddr;
+    sBattleAnimScriptRetAddr = NULL;
 }
 
 static void Cmd_setarg(void)
