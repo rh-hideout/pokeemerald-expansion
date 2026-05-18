@@ -46,6 +46,8 @@ SINGLE_BATTLE_TEST("Accuracy for Population Bomb is checked independently for ea
             ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
             MESSAGE("The Pokémon was hit 2 time(s)!");
         }
+    } THEN {
+        EXPECT_EQ(player->ability, ABILITY_LINGERING_AROMA);
     }
 }
 
