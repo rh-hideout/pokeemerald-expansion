@@ -3057,6 +3057,7 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     u32 noOfHitsToKOPartner = GetNoOfHitsToKOBattler(battlerAtk, battlerAtkPartner, gAiThinkingStruct->movesetIndex, AI_ATTACKING_PARTNER, CONSIDER_ENDURE);
     bool32 wouldPartnerFaint = hasPartner && CanIndexMoveFaintTarget(battlerAtk, battlerAtkPartner, gAiThinkingStruct->movesetIndex, AI_ATTACKING_PARTNER) && !partnerProtecting;
     bool32 isFriendlyFireOK = !wouldPartnerFaint && (noOfHitsToKOPartner == 0 || noOfHitsToKOPartner > friendlyFireThreshold);
+    bool32 isTargetingPartner = IsTargetingPartner(battlerAtk, battlerDef);
 
     // check what effect partner is using
     if (aiData->partnerMove != MOVE_NONE && hasPartner)
@@ -3085,6 +3086,87 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
         case EFFECT_TRICK_ROOM:
             if (effect == EFFECT_AFTER_YOU && !(gFieldStatuses & STATUS_FIELD_TRICK_ROOM) && ShouldSetFieldStatus(battlerAtk, STATUS_FIELD_TRICK_ROOM))
                 ADJUST_SCORE(DECENT_EFFECT);
+            break;
+        case EFFECT_STORED_POWER:
+            if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSIDER_STAT_CHANGES)
+            {
+                if (isTargetingPartner && effect == EFFECT_STAT_CHANGE)
+                {
+                    if (AI_IsFaster(battlerAtk, battlerAtkPartner, move, aiData->partnerMove, CONSIDER_PRIORITY))
+                    {
+                        enum StatChangeDecision decision = STAT_CHANGE_BAD;
+                        u32 partnerIndex = GetBattlerMoveIndexWithEffect(battlerAtkPartner, EFFECT_STORED_POWER);
+                        decision = BattlerShouldChangeStats(battlerAtk, battlerAtkPartner, battlerAtkPartner, BATTLE_OPPOSITE(battlerAtkPartner), move, partnerIndex, CHANGE_STAT_DMG_DEALT);
+
+                        if (decision == STAT_CHANGE_GOOD)
+                        {
+                            RETURN_SCORE_PLUS(GOOD_EFFECT);
+                        }
+
+                        decision = BattlerShouldChangeStats(battlerAtk, battlerAtkPartner, battlerAtkPartner, BATTLE_PARTNER(BATTLE_OPPOSITE(battlerAtkPartner)), move, partnerIndex, CHANGE_STAT_DMG_DEALT);
+
+                        if (decision == STAT_CHANGE_GOOD)
+                        {
+                            RETURN_SCORE_PLUS(GOOD_EFFECT);
+                        }
+                    }
+                }
+            }
+            break;
+        case EFFECT_PROTECT:
+            if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSIDER_STAT_CHANGES)
+            {
+                if (isTargetingPartner && MoveIgnoresProtect(move))
+                {
+                    if (effect == EFFECT_STAT_CHANGE)
+                    {
+                        enum StatChangeDecision decision = STAT_CHANGE_BAD;
+
+                        for (enum ChangeStatContext statContext = CHANGE_STAT_DMG_DEALT; statContext < CHANGE_STAT_CONTEXT_COUNT; statContext++)
+                        {
+                            decision = BattlerShouldChangeStats(battlerAtk, battlerAtkPartner, battlerAtkPartner, BATTLE_OPPOSITE(battlerAtkPartner), move, MAX_MON_MOVES, CHANGE_STAT_DMG_DEALT);
+                            if (decision == STAT_CHANGE_GOOD)
+                            {
+                                RETURN_SCORE_PLUS(GOOD_EFFECT);
+                            }
+                        }
+                        for (enum ChangeStatContext statContext = CHANGE_STAT_DMG_DEALT; statContext < CHANGE_STAT_CONTEXT_COUNT; statContext++)
+                        {
+                            decision = BattlerShouldChangeStats(battlerAtk, battlerAtkPartner, battlerAtkPartner, BATTLE_PARTNER(BATTLE_OPPOSITE(battlerAtkPartner)), move, MAX_MON_MOVES, CHANGE_STAT_DMG_DEALT);
+                            if (decision == STAT_CHANGE_GOOD)
+                            {
+                                RETURN_SCORE_PLUS(GOOD_EFFECT);
+                            }
+                        }
+                    }
+                }
+            }
+        case EFFECT_HIT:
+            if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSIDER_STAT_CHANGES)
+            {
+                if (isTargetingPartner && effect == EFFECT_STAT_CHANGE)
+                {
+                    if (AI_IsFaster(battlerAtk, battlerAtkPartner, move, aiData->partnerMove, CONSIDER_PRIORITY))
+                    {
+                        enum StatChangeDecision decision = STAT_CHANGE_BAD;
+                        u32 partnerIndex = GetMoveIndex(battlerAtkPartner, aiData->partnerMove);
+                        decision = BattlerShouldChangeStats(battlerAtk, battlerAtkPartner, battlerAtkPartner, BATTLE_OPPOSITE(battlerAtkPartner), move, partnerIndex, CHANGE_STAT_DMG_DEALT);
+
+                        if (decision == STAT_CHANGE_GOOD)
+                        {
+                            RETURN_SCORE_PLUS(GOOD_EFFECT);
+                        }
+
+                        decision = BattlerShouldChangeStats(battlerAtk, battlerAtkPartner, battlerAtkPartner, BATTLE_PARTNER(BATTLE_OPPOSITE(battlerAtkPartner)), move, partnerIndex, CHANGE_STAT_DMG_DEALT);
+
+                        if (decision == STAT_CHANGE_GOOD)
+                        {
+                            RETURN_SCORE_PLUS(GOOD_EFFECT);
+                        }
+                    }
+                }
+            }
+
             break;
         default:
             break;
