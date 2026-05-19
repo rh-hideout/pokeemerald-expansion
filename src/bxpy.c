@@ -614,7 +614,7 @@ bool8 BXPY_SummaryScreen_HideSpecies(enum PokemonSummaryScreenMode mode)
 bool8 BXPY_SummaryScreen_ShowTrueSpecies(enum PokemonSummaryScreenMode mode)
 {
     if (BXPY_IsSummaryScreenForEnemy(mode) == FALSE)
-        return FALSE;
+        return TRUE;
 
     return (BXPY_GetEnemySpeciesVisibilityLevel() == BXPY_SPECIES_SHOW_TRUE);
 }
@@ -670,6 +670,9 @@ bool8 BXPY_SummaryScreen_ShouldHideEnemyLevel(enum PokemonSummaryScreenMode mode
 bool8 BXPY_SummaryScreen_ShouldHideStats(enum PokemonSummaryScreenMode mode, enum PokemonSummarySkillsMode stats)
 {
     if (stats != SUMMARY_SKILLS_MODE_STATS)
+        return FALSE;
+
+    if (BXPY_IsSummaryScreenForEnemy(mode) == FALSE)
         return FALSE;
 
     if (BXPY_SummaryScreen_ShouldHideEnemyLevel(mode))
@@ -731,6 +734,8 @@ static bool8 AreTilesOrTilemapEmpty(enum BXPYBackgrounds backgroundId);
 static bool8 BXPY_IsMonAlreadySelected(u32 partyMonIndex);
 static u8 BXPY_GetOrderForMon(u32 monIndex);
 static u32 BXPY_CountNumberSelected(void);
+static void BXPY_CreateHighlightSprite(void);
+static void SpriteCB_HighlightSprite(struct Sprite *sprite);
 static void SpriteCB_SelectionSprite(struct Sprite *sprite);
 static void BXPY_DrawOrderOnSelectionSprite(u32 spriteId, u32 index);
 static void LoadGraphics(void);
@@ -794,12 +799,13 @@ static void Task_BXPY_PartySelection(u8 taskId)
         return;
     }
 
-    if (JOY_NEW(B_BUTTON) || JOY_REPEAT(B_BUTTON))
+    if (JOY_NEW(START_BUTTON) || JOY_REPEAT(START_BUTTON))
     {
-        PlaySoundStartFadeQuitApp(taskId);
-        return;
-    }
+        if (BXPY_HasSelectedEnough() == FALSE)
+            return;
 
+        PlaySoundStartFadeQuitApp(taskId);
+    }
 }
 
 static void BXPY_AddRemoveSelectedMon(void)
@@ -1128,6 +1134,14 @@ static const struct BXPYSpriteSheet sBXPYSpriteSheets[BXPY_SPRITEID_COUNT] =
             .size = TILE_OFFSET_4BPP(128),
             .tag = BXPY_SPRITETAG_HP,
         },
+    },
+    [BXPY_SPRITEID_HIGHLIGHT_LEFT] =
+    {
+        {
+            .data = (const u16[])INCBIN_U16("graphics/bxpy/highlight.4bpp"),
+            .size = TILE_OFFSET_4BPP(32),
+            .tag = BXPY_SPRITETAG_HIGHLIGHT,
+        },
     }
 };
 
@@ -1383,6 +1397,7 @@ void BXPY_SetupCallback(void)
             BXPY_DisplayPlayerParty();
             BXPY_DisplayEnemyParty();
             BXPY_DisplayHelpBar(WIN_BXPY_HELP_BAR);
+            BXPY_CreateHighlightSprite();
             gMain.state++;
             break;
         case 4:
@@ -1493,6 +1508,12 @@ static void SpriteCB_SelectionSprite(struct Sprite *sprite)
 static void BXPY_DrawOrderOnSelectionSprite(u32 spriteId, u32 index)
 {
     index++;
+
+    u32 max = min(BXPY_GetBringSize(),NUM_BXPY_MAX_MONS_SHOWED);
+
+    if (index > max)
+        return;
+
     u8* orderString = Alloc(BXPY_ORDER_LENGTH_SIZE);
     ConvertIntToDecimalStringN(orderString,index,STR_CONV_MODE_LEFT_ALIGN,CountDigits(index));
 
@@ -1993,4 +2014,37 @@ static u32 BXPY_CountNumberSelected(void)
             count++;
 
     return count;
+}
+
+static void SpriteCB_HighlightSprite(struct Sprite *sprite)
+{
+    sprite->invisible = BXPY_IsCursorOnEnemy();
+    sprite->y = 12 + (23 * BXPY_GetPosition());
+}
+
+static void BXPY_CreateHighlightSprite(void)
+{
+    for (u32 highlightIndex = 0; highlightIndex < 2; highlightIndex++)
+    {
+        struct SpriteTemplate TempSpriteTemplate = gDummySpriteTemplate;
+
+        TempSpriteTemplate.tileTag = BXPY_SPRITETAG_HIGHLIGHT;
+        TempSpriteTemplate.callback = SpriteCB_HighlightSprite;
+        TempSpriteTemplate.paletteTag = BXPY_PALTAG_SPRITE;
+
+        u32 x = (highlightIndex) ? 76 : 12;
+        u32 spriteId = CreateSprite(&TempSpriteTemplate, x, 12, 0);
+        gSprites[spriteId].oam.shape = SPRITE_SHAPE(64x32);
+        gSprites[spriteId].oam.size = SPRITE_SIZE(64x32);
+        gSprites[spriteId].oam.priority = 2;
+        gSprites[spriteId].subpriority = 0;
+
+        if (highlightIndex)
+        {
+            gSprites[spriteId].oam.matrixNum = ST_OAM_HFLIP;
+            gSprites[spriteId].hFlip = TRUE;
+        }
+
+        BXPY_SetSpriteId(BXPY_SPRITEID_HIGHLIGHT_LEFT + highlightIndex,spriteId);
+    }
 }
