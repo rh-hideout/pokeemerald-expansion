@@ -15,6 +15,7 @@
 #include "tv.h"
 #include "constants/battle.h"
 
+static void BXPY_InitializeAndSaveCallback(u32 bringSize, u32 pickSize, u32 battleFlags);
 static enum BXPYHealModes BXPY_GetHealMode(void);
 static bool8 BXPY_ShouldHealBeforeBattle(void);
 static bool8 BXPY_ShouldHealAfterBattle(void);
@@ -35,7 +36,6 @@ static void BXPY_SelectPartyMembers(struct Pokemon *party, u8* enteredMons);
 static u32 BXPY_ConvertBattleTypeToFlags(enum BXPYBattleTypes battleType);
 static bool8 BXPY_IsSummaryScreenForEnemy(enum PokemonSummaryScreenMode mode);
 static void Task_BXPY_PartySelection(u8 taskId);
-static void BXPY_StartPickInterface(u32 bringSize, u32 pickSize, u32 battleFlags);
 
 static void (*const sBXPYErrorCheckFuncs[])(void) =
 {
@@ -277,7 +277,6 @@ static void BXPY_ErrorCheck_ClauseSpecialPokemon(void)
 
 static void Debug_BXPY_PrintArguments(enum BXPYBattleTypes battleType, u32 bringSize, u32 pickSize, u32 trainerA, const u8 *loseTextA, u32 trainerB, const u8* loseTextB, u32 partnerId)
 {
-    return;
     DebugPrintf("battleType %d",battleType);
     DebugPrintf("bringSize %d",bringSize);
     DebugPrintf("pickSize %d",pickSize);
@@ -298,7 +297,7 @@ void BXPY_Init(enum BXPYBattleTypes battleType, u32 bringSize, u32 pickSize, u32
     BXPY_PrepareEnemyParty(bringSize,battleFlags);
     BXPY_PrepareParty(pickSize);
 
-    BXPY_StartPickInterface(bringSize, pickSize, battleFlags);
+    BXPY_InitializeAndSaveCallback(bringSize, pickSize, battleFlags);
 }
 
 static void BXPY_InitTrainerBattleParams(u32 trainerA, const u8 *loseTextA, u32 trainerB, const u8* loseTextB, u32 partnerId)
@@ -724,7 +723,6 @@ u32 IsDoingBringXPickYSelection(void);
 static void BXPY_InitializeBackgroundsAndLoadBackgroundGraphics(void);
 static void BXPY_VBlankCB(void);
 static void BXPY_MainCB(void);
-static void BXPY_StartPickInterface(u32 bringSize, u32 pickSize, u32 battleFlags);
 static bool8 BXPY_InitalizeBackgrounds(void);
 static bool8 AllocZeroedTilemapBuffers(void);
 static void HandleAndShowBgs(void);
@@ -747,8 +745,6 @@ static void Task_WaitFadeAndExitGracefully(u8 taskId);
 void BXPY_FadescreenAndExitGracefully(void);
 static void BXPY_FreeResources(void);
 static void BXPY_FreeStructs(void);
-static void BXPY_StartPickInterface(u32 bringSize, u32 pickSize, u32 battleFlags);
-static void BXPY_InitializeAndSaveCallback(u32 bringSize, u32 pickSize, u32 battleFlags);
 static void BXPY_FreeBackgrounds(void);
 static bool8 BXPY_AllocateStructs(void);
 void BXPY_SetupCallback(void);
@@ -762,7 +758,6 @@ static void BXPY_PrintEnemyName(enum BXPYWindows windowId);
 static void BXPY_DisplayHelpBar(enum BXPYWindows windowId);
 static void BXPY_PrintHelpBarText(enum BXPYWindows windowId);
 static bool8 BXPY_IsCursorOnEnemy(void);
-static bool8 BXPY_IsMultiBattle(void);
 static void BXPY_DisplayParty(enum BattleSide side);
 static void BXPY_DisplayPlayerParty(void);
 static void BXPY_DisplayPartyMon(enum BXPYWindows windowId, u32 partyMonIndex, enum BattleSide side);
@@ -813,13 +808,19 @@ static void BXPY_AddRemoveSelectedMon(void)
     bool32 isAlreadySelected = BXPY_IsMonAlreadySelected(currentIndex);
 
     if (isAlreadySelected)
+    {
         BXPY_RemoveIndexFromSelected(currentIndex);
+    }
     else
-        BXPY_SetSelectedMons(BXPY_CountNumberSelected(),currentIndex);
+    {
+        if (BXPY_HasSelectedEnough() == FALSE)
+            BXPY_SetSelectedMons(BXPY_CountNumberSelected(),currentIndex);
+    }
 
     DebugPrintf("----------- %d",Random() * 100);
     for (u32 selectedIndex = 0; selectedIndex < 6; selectedIndex++)
         DebugPrintf("slot %d is mon %d",selectedIndex,BXPY_GetSelectedMons(selectedIndex));
+    BXPY_DisplayHelpBar(WIN_BXPY_HELP_BAR);
 }
 
 static void BXPY_RemoveIndexFromSelected(u32 currentIndex)
@@ -1257,9 +1258,10 @@ static void Task_WaitFadeAndExitGracefully(u8 taskId)
     BXPY_SelectPartyMembers(gPlayerParty,playerEnteredMons);
     BXPY_SelectPartyMembers(gEnemyParty,enemyEnteredMons);
 
+    u32 temp = BXPY_GetBattleFlags();
     BXPY_FreeResources();
     DestroyTask(taskId);
-    BattleSetup_StartBXPYBattle(BXPY_GetBattleFlags());
+    BattleSetup_StartBXPYBattle(temp);
 }
 
 void BXPY_FadescreenAndExitGracefully(void)
@@ -1464,7 +1466,7 @@ static void BXPY_CreateSelectionSprite(u32 partyMonIndex, enum BattleSide side)
     TempSpriteTemplate.callback = SpriteCB_SelectionSprite;
     TempSpriteTemplate.paletteTag = BXPY_PALTAG_SPRITE;
 
-    u32 y = 15 + (23 * partyMonIndex);
+    u32 y = 12 + (23 * partyMonIndex);
     u32 spriteId = CreateSprite(&TempSpriteTemplate, 134, y, 0);
     gSprites[spriteId].data[1] = spriteId;
     gSprites[spriteId].data[2] = partyMonIndex;
@@ -1481,7 +1483,6 @@ static void SpriteCB_SelectionSprite(struct Sprite *sprite)
 {
     u32 mon = sprite->data[2];
     bool32 isAlreadySelected = BXPY_IsMonAlreadySelected(mon);
-
     sprite->invisible = (isAlreadySelected == FALSE);
 
     u32 spriteId = sprite->data[1];
@@ -1930,9 +1931,10 @@ static void BXPY_PrintHelpBarText(enum BXPYWindows windowId)
         ConvertIntToDecimalStringN(gStringVar1,pickSize,STR_CONV_MODE_LEFT_ALIGN,CountDigits(pickSize));
         StringAppend(gStringVar4, COMPOUND_STRING(" Select {STR_VAR_1} Pokemon."));
     }
-
-    if (BXPY_CanStartBattle())
+    else
+    {
         StringAppend(gStringVar4, COMPOUND_STRING(" {START_BUTTON} Start Battle"));
+    }
 
     if (BXPY_IsCursorOnEnemy())
         StringAppend(gStringVar4,COMPOUND_STRING(" {A_BUTTON} Summary"));
@@ -1949,12 +1951,7 @@ static void BXPY_PrintHelpBarText(enum BXPYWindows windowId)
 
 static bool8 BXPY_HasSelectedEnough(void)
 {
-    return FALSE;
-}
-
-static bool8 BXPY_CanStartBattle(void)
-{
-    return FALSE;
+    return (BXPY_CountNumberSelected() == BXPY_GetPickSize());
 }
 
 static bool8 BXPY_IsCursorOnEnemy(void)
@@ -1964,7 +1961,7 @@ static bool8 BXPY_IsCursorOnEnemy(void)
 
 static bool8 BXPY_IsMultiBattle(void)
 {
-    return FALSE;
+    return (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE);
 }
 
 static void BXPY_ResetAllSpriteIds(void)
@@ -1980,12 +1977,6 @@ static void BXPY_InitializeBackgroundsAndLoadBackgroundGraphics(void)
     else
         BXPY_FadescreenAndExitGracefully();
 }
-
-static void BXPY_StartPickInterface(u32 bringSize, u32 pickSize, u32 battleFlags)
-{
-    BXPY_InitializeAndSaveCallback(bringSize, pickSize, battleFlags);
-}
-
 
 static void BXPY_ResetAllSelectedMons(void)
 {
