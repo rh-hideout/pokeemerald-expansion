@@ -48,6 +48,7 @@ struct BXPYState
     u32 battleFlags;
     u8 bringSize;
     u8 pickSize;
+    struct Pokemon tempParty[PARTY_SIZE];
 };
 
 struct BXPYSpriteSheet
