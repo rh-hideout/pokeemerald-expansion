@@ -178,7 +178,9 @@ VermilionCity_EventScript_Nerd::
 
 VermilionCity_EventScript_Snorlax::
 	lock
-	goto_if_set FLAG_KANTO_RADIO_GOT, VermilionCity_EventScript_SnorlaxWakeUp
+	special CheckRadioStation
+	goto_if_eq VAR_RESULT, TRUE, VermilionCity_EventScript_SnorlaxWakeUp
+	@goto_if_set FLAG_KANTO_RADIO_GOT, VermilionCity_EventScript_SnorlaxWakeUp
 	msgbox VermilionCity_Text_SnorlaxSleeping, MSGBOX_DEFAULT
 	closemessage
 	release
