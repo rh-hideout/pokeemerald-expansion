@@ -1,7 +1,6 @@
 {
   "id": "MAP_BATTLE_FRONTIER_LOUNGE7_HNS",
   "name": "BattleFrontier_Lounge7_hns",
-  "game_version": "hns",
   "layout": "LAYOUT_BATTLE_FRONTIER_LOUNGE2_HNS",
   "music": "MUS_B_TOWER_RS",
   "region_map_section": "MAPSEC_BATTLE_FRONTIER",
@@ -77,7 +76,7 @@
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "BattleFrontier_Lounge7_EventScript_ElementalMoveTutor",
       "flag": "0"
     }
   ],
@@ -91,5 +90,6 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [],
+  "game_version": "hns"
 }

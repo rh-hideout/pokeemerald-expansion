@@ -38,8 +38,8 @@ BattleFrontier_Lounge7_EventScript_ChooseLeftTutorMove_hns::
 	case 7, BattleFrontier_Lounge7_EventScript_Counter_hns
 	case 8, BattleFrontier_Lounge7_EventScript_ThunderWave_hns
 	case 9, BattleFrontier_Lounge7_EventScript_SwordsDance_hns
-	case 10, BattleFrontier_Lounge7_EventScript_ExitTutorMoveSelect_hns
-	case MULTI_B_PRESSED, BattleFrontier_Lounge7_EventScript_ExitTutorMoveSelect_hns
+	case 10, BattleFrontier_Lounge7_EventScript_ExitTutorMoveSelect_hns_hns
+	case MULTI_B_PRESSED, BattleFrontier_Lounge7_EventScript_ExitTutorMoveSelect_hns_hns
 	end
 
 BattleFrontier_Lounge7_EventScript_ChooseNewLeftTutorMove_hns::
@@ -62,8 +62,8 @@ BattleFrontier_Lounge7_EventScript_ChooseNewLeftTutorMove_hns::
 	case 7, BattleFrontier_Lounge7_EventScript_Counter_hns
 	case 8, BattleFrontier_Lounge7_EventScript_ThunderWave_hns
 	case 9, BattleFrontier_Lounge7_EventScript_SwordsDance_hns
-	case 10, BattleFrontier_Lounge7_EventScript_ExitTutorMoveSelect_hns
-	case MULTI_B_PRESSED, BattleFrontier_Lounge7_EventScript_ExitTutorMoveSelect_hns
+	case 10, BattleFrontier_Lounge7_EventScript_ExitTutorMoveSelect_hns_hns
+	case MULTI_B_PRESSED, BattleFrontier_Lounge7_EventScript_ExitTutorMoveSelect_hns_hns
 	end
 
 BattleFrontier_Lounge7_EventScript_Softboiled_hns::
@@ -162,8 +162,8 @@ BattleFrontier_Lounge7_EventScript_ChooseRightTutorMove_hns::
 	case 7, BattleFrontier_Lounge7_EventScript_IcePunch_hns
 	case 8, BattleFrontier_Lounge7_EventScript_ThunderPunch_hns
 	case 9, BattleFrontier_Lounge7_EventScript_FirePunch_hns
-	case 10, BattleFrontier_Lounge7_EventScript_ExitTutorMoveSelect_hns
-	case MULTI_B_PRESSED, BattleFrontier_Lounge7_EventScript_ExitTutorMoveSelect_hns
+	case 10, BattleFrontier_Lounge7_EventScript_ExitTutorMoveSelect_hns_hns
+	case MULTI_B_PRESSED, BattleFrontier_Lounge7_EventScript_ExitTutorMoveSelect_hns_hns
 	end
 
 BattleFrontier_Lounge7_EventScript_ChooseNewRightTutorMove_hns::
@@ -186,8 +186,8 @@ BattleFrontier_Lounge7_EventScript_ChooseNewRightTutorMove_hns::
 	case 7, BattleFrontier_Lounge7_EventScript_IcePunch_hns
 	case 8, BattleFrontier_Lounge7_EventScript_ThunderPunch_hns
 	case 9, BattleFrontier_Lounge7_EventScript_FirePunch_hns
-	case 10, BattleFrontier_Lounge7_EventScript_ExitTutorMoveSelect_hns
-	case MULTI_B_PRESSED, BattleFrontier_Lounge7_EventScript_ExitTutorMoveSelect_hns
+	case 10, BattleFrontier_Lounge7_EventScript_ExitTutorMoveSelect_hns_hns
+	case MULTI_B_PRESSED, BattleFrontier_Lounge7_EventScript_ExitTutorMoveSelect_hns_hns
 	end
 
 BattleFrontier_Lounge7_EventScript_DefenseCurl_hns::
@@ -250,14 +250,14 @@ BattleFrontier_Lounge7_EventScript_FirePunch_hns::
 	goto BattleFrontier_Lounge7_EventScript_ConfirmMoveSelection_hns
 	end
 
-BattleFrontier_Lounge7_EventScript_ExitTutorMoveSelect_hns::
+BattleFrontier_Lounge7_EventScript_ExitTutorMoveSelect_hns_hns::
 	special CloseBattleFrontierTutorWindow
 	special CloseBattlePointsWindow
 	msgbox BattleFrontier_Lounge7_Text_YouDontWantTo_hns, MSGBOX_DEFAULT
 	release
 	end
 
-BattleFrontier_Lounge7_EventScript_CancelChooseMon_hns::
+BattleFrontier_Lounge7_EventScript_CancelChooseMon_hns_hns::
 	msgbox BattleFrontier_Lounge7_Text_YouDontWantTo_hns, MSGBOX_DEFAULT
 	release
 	end
@@ -285,7 +285,7 @@ BattleFrontier_Lounge7_EventScript_TeachTutorMove_hns::
 	special CloseBattleFrontierTutorWindow
 	chooseboxmon SELECT_PC_MON_MOVE_TUTOR
 	waitstate
-	goto_if_eq VAR_RESULT, FALSE, BattleFrontier_Lounge7_EventScript_CancelChooseMon_hns
+	goto_if_eq VAR_RESULT, FALSE, BattleFrontier_Lounge7_EventScript_CancelChooseMon_hns_hns
 	msgbox BattleFrontier_Lounge7_Text_IllTakeBattlePoints_hns, MSGBOX_DEFAULT
 	copyvar VAR_0x8004, VAR_0x8008
 	special TakeFrontierBattlePoints
@@ -304,6 +304,87 @@ BattleFrontier_Lounge7_EventScript_Sailor_hns::
 BattleFrontier_Lounge7_EventScript_Gentleman_hns::
 	msgbox BattleFrontier_Lounge7_Text_LadiesWereStrongAndBeautiful_hns, MSGBOX_NPC
 	end
+
+BattleFrontier_Lounge7_EventScript_ElementalMoveTutor::
+	lock
+	faceplayer
+	setvar VAR_TEMP_C, SCROLL_MULTI_BF_MOVE_TUTOR_3
+	goto_if_set FLAG_MET_FRONTIER_ELEMENTAL_MOVE_TUTOR, BattleFrontier_Lounge7_EventScript_AlreadyMetElementalTutor
+	msgbox BattleFrontier_Lounge7_Text_ElementalTutorIntro, MSGBOX_DEFAULT
+	setflag FLAG_MET_FRONTIER_ELEMENTAL_MOVE_TUTOR
+	goto BattleFrontier_Lounge7_EventScript_ChooseElementalTutorMove
+	end
+
+BattleFrontier_Lounge7_EventScript_AlreadyMetElementalTutor::
+	msgbox BattleFrontier_Lounge7_Text_ElementalTutorWelcomeBack, MSGBOX_DEFAULT
+	goto BattleFrontier_Lounge7_EventScript_ChooseElementalTutorMove
+	end
+
+BattleFrontier_Lounge7_EventScript_ChooseElementalTutorMove::
+	message BattleFrontier_Lounge7_Text_TeachWhichMoveElemental
+	waitmessage
+	special ShowBattlePointsWindow
+	setvar VAR_TEMP_FRONTIER_TUTOR_ID, 2
+	setvar VAR_0x8004, SCROLL_MULTI_BF_MOVE_TUTOR_3
+	setvar VAR_0x8006, 0
+	special ShowScrollableMultichoice
+	waitstate
+	copyvar VAR_TEMP_FRONTIER_TUTOR_SELECTION, VAR_RESULT
+	switch VAR_RESULT
+	case 0, BattleFrontier_Lounge7_EventScript_FrenzyPlant
+	case 1, BattleFrontier_Lounge7_EventScript_BlastBurn
+	case 2, BattleFrontier_Lounge7_EventScript_HydroCannon
+	case 3, BattleFrontier_Lounge7_EventScript_ExitTutorMoveSelect_hns
+	case MULTI_B_PRESSED, BattleFrontier_Lounge7_EventScript_ExitTutorMoveSelect_hns
+	end
+
+BattleFrontier_Lounge7_EventScript_ChooseNewElementalTutorMove::
+	message BattleFrontier_Lounge7_Text_TeachWhichMoveElemental
+	waitmessage
+	setvar VAR_TEMP_FRONTIER_TUTOR_ID, 2
+	setvar VAR_0x8004, SCROLL_MULTI_BF_MOVE_TUTOR_3
+	setvar VAR_0x8006, 1
+	special ShowScrollableMultichoice
+	waitstate
+	copyvar VAR_TEMP_FRONTIER_TUTOR_SELECTION, VAR_RESULT
+	switch VAR_RESULT
+	case 0, BattleFrontier_Lounge7_EventScript_FrenzyPlant
+	case 1, BattleFrontier_Lounge7_EventScript_BlastBurn
+	case 2, BattleFrontier_Lounge7_EventScript_HydroCannon
+	case 3, BattleFrontier_Lounge7_EventScript_ExitTutorMoveSelect_hns
+	case MULTI_B_PRESSED, BattleFrontier_Lounge7_EventScript_ExitTutorMoveSelect_hns
+	end
+
+BattleFrontier_Lounge7_EventScript_FrenzyPlant::
+	setvar VAR_0x8008, 64
+	setvar VAR_0x8005, MOVE_FRENZY_PLANT
+	goto BattleFrontier_Lounge7_EventScript_ConfirmMoveSelection
+	end
+
+BattleFrontier_Lounge7_EventScript_BlastBurn::
+	setvar VAR_0x8008, 64
+	setvar VAR_0x8005, MOVE_BLAST_BURN
+	goto BattleFrontier_Lounge7_EventScript_ConfirmMoveSelection
+	end
+
+BattleFrontier_Lounge7_EventScript_HydroCannon::
+	setvar VAR_0x8008, 64
+	setvar VAR_0x8005, MOVE_HYDRO_CANNON
+	goto BattleFrontier_Lounge7_EventScript_ConfirmMoveSelection
+	end
+
+BattleFrontier_Lounge7_EventScript_ExitTutorMoveSelect_hns::
+	special CloseBattleFrontierTutorWindow
+	special CloseBattlePointsWindow
+	msgbox BattleFrontier_Lounge7_Text_YouDontWantTo, MSGBOX_DEFAULT
+	release
+	end
+
+BattleFrontier_Lounge7_EventScript_CancelChooseMon_hns::
+	msgbox BattleFrontier_Lounge7_Text_YouDontWantTo, MSGBOX_DEFAULT
+	release
+	end
+
 
 BattleFrontier_Lounge7_Text_LeftTutorIntro_hns:
 	.string "Buhahaha!\p"
@@ -495,3 +576,31 @@ BattleFrontier_Lounge7_Text_FirePunchDesc_hns::
 	.string "A fiery punch\n"
 	.string "that may burn\n"
 	.string "the foe.$"
+
+
+BattleFrontier_Lounge7_Text_ElementalTutorIntro::
+	.string "Zzzzzz…\p"
+	.string "What, how, what?\p"
+	.string "Oh, sorry, I was snoozing a bit.\p"
+	.string "I'm the ELEMENTAL TUTOR.\p"
+	.string "I have the power to teach the most\n"
+	.string "powerful moves to GRASS, FIRE and\l"
+	.string "WATER TYPE POKéMON.\p"
+	.string "Did you come to learn such a strong\n"
+	.string "power?$"
+
+BattleFrontier_Lounge7_Text_ElementalTutorWelcomeBack:
+	.string "Zzzzzz…\p"
+	.string "What, how, what, who?\p"
+	.string "Oh, did you come to learn the\n"
+	.string "power of my strongest moves?$"
+
+BattleFrontier_Lounge7_Text_TeachWhichMoveElemental::
+	.string "Which move do you think is suitable\n"
+	.string "for your POKéMON?$"
+
+BattleFrontier_Lounge7_Text_StrongElementalMoveDesc::
+	.string "Powerful, but\n"
+	.string "leaves the user\n"
+	.string "immobile one turn.$"
+

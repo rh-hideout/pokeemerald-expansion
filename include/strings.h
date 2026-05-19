@@ -580,6 +580,7 @@ extern const u8 BattleFrontier_Lounge7_Text_PsychUpDesc[];
 extern const u8 BattleFrontier_Lounge7_Text_IcePunchDesc[];
 extern const u8 BattleFrontier_Lounge7_Text_ThunderPunchDesc[];
 extern const u8 BattleFrontier_Lounge7_Text_FirePunchDesc[];
+extern const u8 BattleFrontier_Lounge7_Text_StrongElementalMoveDesc[];
 
 extern const u8 gText_YourPartnerHasRetired[];
 
