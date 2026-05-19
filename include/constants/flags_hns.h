@@ -698,7 +698,7 @@
 #define FLAG_ITEM_GOLDENROD_DEPT_STORE_TM_FACADE    (HNS_ITEMS_2_START + 16)
 #define FLAG_ITEM_SAFFRON_GYM_TM_SKILL_SWAP         (HNS_ITEMS_2_START + 17)
 #define FLAG_ITEM_UNDERGROUND_PATH_TM_EXPLOSION      (HNS_ITEMS_2_START + 18)
-#define FLAG_UNUSED_HIDDEN_ITEM_19                  (HNS_ITEMS_2_START + 19)
+#define FLAG_ITEM_OLIVINE_TM_SWAGGER                  (HNS_ITEMS_2_START + 19)
 #define FLAG_UNUSED_HIDDEN_ITEM_20                  (HNS_ITEMS_2_START + 20)
 #define FLAG_UNUSED_HIDDEN_ITEM_21                  (HNS_ITEMS_2_START + 21)
 #define FLAG_UNUSED_HIDDEN_ITEM_22                  (HNS_ITEMS_2_START + 22)
@@ -803,17 +803,16 @@
 
 // Unused general-purpose
 #define HNS_UNUSED_START                            0x2E0
-#define FLAG_LIMIT_TO_50                               0x2E0
-#define FLAG_COLLISION                               0x2E1
-#define FLAG_EXTRA_LEGENDARIES                               0x2E2
-#define FLAG_MAP_SCRIPT_CHECKED_DEOXYS                               0x2E3
-#define FLAG_HIDE_BIRTH_ISLAND_DEOXYS_TRIANGLE                               0x2E4
-#define FLAG_DEOXYS_ROCK_COMPLETE                               0x2E5
-#define FLAG_HIDE_DEOXYS                               0x2E6
-#define FLAG_DEOXYS_FLEW_AWAY                               0x2E7
-#define FLAG_FOUGHT_DEOXYS                               0x2E8
-
-#define FLAG_POKERUS_EXPLAINED                               0x2E9
+#define FLAG_LIMIT_TO_50                            0x2E0
+#define FLAG_COLLISION                              0x2E1
+#define FLAG_UNUSED_3                               0x2E2
+#define FLAG_MAP_SCRIPT_CHECKED_DEOXYS              0x2E3
+#define FLAG_HIDE_BIRTH_ISLAND_DEOXYS_TRIANGLE      0x2E4
+#define FLAG_DEOXYS_ROCK_COMPLETE                   0x2E5
+#define FLAG_HIDE_DEOXYS                            0x2E6
+#define FLAG_DEOXYS_FLEW_AWAY                       0x2E7
+#define FLAG_FOUGHT_DEOXYS                          0x2E8
+#define FLAG_POKERUS_EXPLAINED                      0x2E9
 #define FLAG_WADE_HAS_ITEM_HNS                      0x2EA
 #define FLAG_ALAN_HAS_ITEM_HNS                      0x2EB
 #define FLAG_DANA_HAS_ITEM_HNS                      0x2EC
@@ -823,14 +822,14 @@
 #define FLAG_BEVERLY_HAS_ITEM_HNS                   0x2F0
 #define FLAG_JOSE_HAS_ITEM_HNS                      0x2F1
 #define FLAG_KENJI_HAS_ITEM_HNS                     0x2F2
-#define FLAG_ITEM_OLIVINE_TM_SWAGGER                0x2F3
-#define FLAG_UNUSED_20                              0x2F4
-#define FLAG_UNUSED_21                              0x2F5
-#define FLAG_UNUSED_22                              0x2F6
-#define FLAG_UNUSED_23                              0x2F7
-#define FLAG_UNUSED_24                              0x2F8
-#define FLAG_UNUSED_25                              0x2F9
-#define FLAG_UNUSED_26                              0x2FA
+#define FLAG_HIDE_ICEPATH_B1F_BOULDER1                              0x2F3
+#define FLAG_HIDE_ICEPATH_B1F_BOULDER2                              0x2F4
+#define FLAG_HIDE_ICEPATH_B1F_BOULDER3                              0x2F5
+#define FLAG_HIDE_ICEPATH_B1F_BOULDER4                              0x2F6
+#define FLAG_HIDE_ICEPATH_B2F_BOULDER1                              0x2F7
+#define FLAG_HIDE_ICEPATH_B2F_BOULDER2                              0x2F8
+#define FLAG_HIDE_ICEPATH_B2F_BOULDER3                              0x2F9
+#define FLAG_HIDE_ICEPATH_B2F_BOULDER4                              0x2FA
 #define FLAG_UNUSED_27                              0x2FB
 #define FLAG_UNUSED_28                              0x2FC
 #define FLAG_UNUSED_29                              0x2FD

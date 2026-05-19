@@ -1,10 +1,8 @@
 {
   "id": "MAP_VICTORY_ROAD_1F_FRLG",
   "name": "VictoryRoad_1F_Frlg",
-  "game_version": "frlg",
   "layout": "LAYOUT_VICTORY_ROAD_1F_FRLG",
   "music": "MUS_RG_MT_MOON",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_KANTO_VICTORY_ROAD",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -13,12 +11,10 @@
   "allow_escaping": true,
   "allow_running": true,
   "show_map_name": true,
-  "floor_number": 0,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
-  "connections": 0,
+  "connections": null,
   "object_events": [
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_COOLTRAINER_M",
       "x": 5,
       "y": 2,
@@ -32,7 +28,6 @@
       "flag": "0"
     },
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_COOLTRAINER_F",
       "x": 14,
       "y": 6,
@@ -46,7 +41,6 @@
       "flag": "0"
     },
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
       "x": 12,
       "y": 3,
@@ -60,7 +54,6 @@
       "flag": "FLAG_HIDE_VICTORY_ROAD_1F_RARE_CANDY"
     },
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
       "x": 14,
       "y": 1,
@@ -75,7 +68,6 @@
     },
     {
       "local_id": "LOCALID_VICTORY_ROAD_1F_BOULDER",
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_PUSHABLE_BOULDER",
       "x": 7,
       "y": 18,
@@ -89,7 +81,6 @@
       "flag": "0"
     },
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_PUSHABLE_BOULDER",
       "x": 4,
       "y": 12,
@@ -103,7 +94,6 @@
       "flag": "0"
     },
     {
-      "type": "object",
       "graphics_id": "OBJ_EVENT_GFX_PUSHABLE_BOULDER",
       "x": 16,
       "y": 3,
@@ -165,5 +155,8 @@
       "quantity": 1,
       "underfoot": false
     }
-  ]
+  ],
+  "floor_number": 0,
+  "game_version": "frlg",
+  "region": "REGION_KANTO"
 }

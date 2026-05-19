@@ -12,7 +12,7 @@
   "allow_running": true,
   "show_map_name": false,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
-  "connections": 0,
+  "connections": null,
   "object_events": [
     {
       "graphics_id": "OBJ_EVENT_GFX_POKE_BALL",
@@ -25,8 +25,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "IcePath_B1F_EventScript_Item_Iron",
-      "flag": "FLAG_ITEM_ICEPATH2_IRON",
-      "local_id": "LOCALID_ICEPATH2_BOULDER4"
+      "flag": "FLAG_ITEM_ICEPATH2_IRON"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_SNEASEL",
@@ -35,12 +34,11 @@
       "elevation": 0,
       "movement_type": "MOVEMENT_TYPE_WALK_UP_AND_DOWN",
       "movement_range_x": 0,
-      "movement_range_y": 12,
+      "movement_range_y": 4,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "0",
-      "local_id": "LOCALID_ICEPATH2_BOULDER3"
+      "flag": "0"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_SNEASEL",
@@ -53,8 +51,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "0",
-      "local_id": "LOCALID_ICEPATH2_BOULDER1"
+      "flag": "0"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_SNEASEL",
@@ -67,8 +64,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "0",
-      "local_id": "LOCALID_ICEPATH2_BOULDER2"
+      "flag": "0"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_POKE_BALL",
@@ -108,6 +104,72 @@
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
       "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_PUSHABLE_BOULDER_HNS",
+      "x": 13,
+      "y": 12,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "FLAG_HIDE_ICEPATH_B2F_BOULDER1",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "EventScript_StrengthBoulder",
+      "flag": "FLAG_HIDE_ICEPATH_B1F_BOULDER1"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_PUSHABLE_BOULDER_HNS",
+      "x": 14,
+      "y": 13,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "FLAG_HIDE_ICEPATH_B2F_BOULDER2",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "EventScript_StrengthBoulder",
+      "flag": "FLAG_HIDE_ICEPATH_B1F_BOULDER2"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_PUSHABLE_BOULDER_HNS",
+      "x": 17,
+      "y": 11,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "FLAG_HIDE_ICEPATH_B2F_BOULDER3",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "EventScript_StrengthBoulder",
+      "flag": "FLAG_HIDE_ICEPATH_B1F_BOULDER3"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_PUSHABLE_BOULDER_HNS",
+      "x": 23,
+      "y": 11,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "FLAG_HIDE_ICEPATH_B2F_BOULDER4",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "EventScript_StrengthBoulder",
+      "flag": "FLAG_HIDE_ICEPATH_B1F_BOULDER4"
+    },
+    {
+      "local_id": "LOCALID_ICEPATH2_BOULDER3",
+      "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_SNEASEL",
+      "x": 6,
+      "y": 4,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_WALK_SEQUENCE_LEFT_DOWN_UP_RIGHT",
+      "movement_range_x": 4,
+      "movement_range_y": 2,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "NULL",
+      "flag": "0"
     }
   ],
   "warp_events": [
@@ -126,8 +188,8 @@
       "dest_warp_id": "1"
     },
     {
-      "x": 6,
-      "y": 22,
+      "x": 24,
+      "y": 6,
       "elevation": 0,
       "dest_map": "MAP_ICE_PATH_B2F_HNS",
       "dest_warp_id": "0"
@@ -140,27 +202,48 @@
       "dest_warp_id": "2"
     },
     {
-      "x": 16,
-      "y": 12,
+      "x": 10,
+      "y": 11,
       "elevation": 0,
       "dest_map": "MAP_ICE_PATH_B2F_HNS",
       "dest_warp_id": "2"
+    },
+    {
+      "x": 11,
+      "y": 16,
+      "elevation": 0,
+      "dest_map": "MAP_ICE_PATH_B2F_HNS",
+      "dest_warp_id": "3"
+    },
+    {
+      "x": 17,
+      "y": 6,
+      "elevation": 0,
+      "dest_map": "MAP_ICE_PATH_B2F_HNS",
+      "dest_warp_id": "4"
+    },
+    {
+      "x": 18,
+      "y": 17,
+      "elevation": 0,
+      "dest_map": "MAP_ICE_PATH_B2F_HNS",
+      "dest_warp_id": "5"
     }
   ],
   "coord_events": [],
   "bg_events": [
     {
       "type": "sign",
-      "x": 6,
-      "y": 13,
+      "x": 4,
+      "y": 12,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "IcePath_B1F_EventScript_Sign"
     },
     {
       "type": "sign",
-      "x": 10,
-      "y": 21,
+      "x": 4,
+      "y": 13,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "IcePath_B1F_EventScript_PuzzleSkipButton"

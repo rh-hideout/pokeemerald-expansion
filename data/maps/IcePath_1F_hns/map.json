@@ -12,7 +12,7 @@
   "allow_running": true,
   "show_map_name": true,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
-  "connections": 0,
+  "connections": null,
   "object_events": [
     {
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL_HNS",
@@ -119,6 +119,7 @@
       "flag": "FLAG_DAY_POKEMON"
     },
     {
+      "local_id": "LOCALID_ICEPATH1_KIMONO",
       "graphics_id": "OBJ_EVENT_GFX_KIMONO_HNS",
       "x": 49,
       "y": 25,
@@ -129,8 +130,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "IcePath_1F_EventScript_KimonoGirl",
-      "flag": "FLAG_HIDE_ICE_PATH_KIMONO",
-      "local_id": "LOCALID_ICEPATH1_KIMONO"
+      "flag": "FLAG_HIDE_ICE_PATH_KIMONO"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_SWINUB",

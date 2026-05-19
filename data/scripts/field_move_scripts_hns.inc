@@ -313,7 +313,7 @@ EventScript_StrengthBoulder::
 	lockall
 	goto_if_set FLAG_SYS_USE_STRENGTH, EventScript_CheckActivatedBoulder
 	goto_if_unset FLAG_BADGE03_GET, EventScript_CantStrength
-	checkpartymove MOVE_STRENGTH
+	@checkpartymove MOVE_STRENGTH
 	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CantStrength
 	setfieldeffectargument 0, VAR_RESULT
 	bufferpartymonnick STR_VAR_1, VAR_RESULT
