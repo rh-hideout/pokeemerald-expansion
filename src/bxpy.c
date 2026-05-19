@@ -731,6 +731,7 @@ static void HandleAndShowBgs(void);
 static void SetScheduleBgs(enum BXPYBackgrounds backgroundId);
 static bool8 AreTilesOrTilemapEmpty(enum BXPYBackgrounds backgroundId);
 static bool8 BXPY_IsMonAlreadySelected(u32 partyMonIndex);
+static u8 BXPY_GetOrderForMon(u32 monIndex);
 static u32 BXPY_CountNumberSelected(void);
 static void SpriteCB_SelectionSprite(struct Sprite *sprite);
 static void BXPY_DrawOrderOnSelectionSprite(u32 spriteId, u32 index);
@@ -1076,7 +1077,47 @@ static const struct BXPYSpriteSheet sBXPYSpriteSheets[BXPY_SPRITEID_COUNT] =
         {
             .data = (const u16[])INCBIN_U16("graphics/bxpy/selected.4bpp"),
             .size = TILE_OFFSET_4BPP(4),
-            .tag = BXPY_SPRITETAG_SELECTED,
+            .tag = BXPY_SPRITETAG_SELECTED_0,
+        },
+    },
+    [BXPY_SPRITEID_PLAYER_SELECTED_1] =
+    {
+        {
+            .data = (const u16[])INCBIN_U16("graphics/bxpy/selected.4bpp"),
+            .size = TILE_OFFSET_4BPP(4),
+            .tag = BXPY_SPRITETAG_SELECTED_1,
+        },
+    },
+    [BXPY_SPRITEID_PLAYER_SELECTED_2] =
+    {
+        {
+            .data = (const u16[])INCBIN_U16("graphics/bxpy/selected.4bpp"),
+            .size = TILE_OFFSET_4BPP(4),
+            .tag = BXPY_SPRITETAG_SELECTED_2,
+        },
+    },
+    [BXPY_SPRITEID_PLAYER_SELECTED_3] =
+    {
+        {
+            .data = (const u16[])INCBIN_U16("graphics/bxpy/selected.4bpp"),
+            .size = TILE_OFFSET_4BPP(4),
+            .tag = BXPY_SPRITETAG_SELECTED_3,
+        },
+    },
+    [BXPY_SPRITEID_PLAYER_SELECTED_4] =
+    {
+        {
+            .data = (const u16[])INCBIN_U16("graphics/bxpy/selected.4bpp"),
+            .size = TILE_OFFSET_4BPP(4),
+            .tag = BXPY_SPRITETAG_SELECTED_4,
+        },
+    },
+    [BXPY_SPRITEID_PLAYER_SELECTED_5] =
+    {
+        {
+            .data = (const u16[])INCBIN_U16("graphics/bxpy/selected.4bpp"),
+            .size = TILE_OFFSET_4BPP(4),
+            .tag = BXPY_SPRITETAG_SELECTED_5,
         },
     },
     [BXPY_SPRITEID_PLAYER_HP_0] =
@@ -1419,14 +1460,14 @@ static void BXPY_CreateSelectionSprite(u32 partyMonIndex, enum BattleSide side)
 
     struct SpriteTemplate TempSpriteTemplate = gDummySpriteTemplate;
 
-    TempSpriteTemplate.tileTag = BXPY_SPRITETAG_SELECTED;
+    TempSpriteTemplate.tileTag = BXPY_SPRITETAG_SELECTED_0 + partyMonIndex;
     TempSpriteTemplate.callback = SpriteCB_SelectionSprite;
     TempSpriteTemplate.paletteTag = BXPY_PALTAG_SPRITE;
 
     u32 y = 15 + (23 * partyMonIndex);
     u32 spriteId = CreateSprite(&TempSpriteTemplate, 134, y, 0);
-    gSprites[spriteId].data[0] = partyMonIndex;
     gSprites[spriteId].data[1] = spriteId;
+    gSprites[spriteId].data[2] = partyMonIndex;
     gSprites[spriteId].oam.shape = SPRITE_SHAPE(16x16);
     gSprites[spriteId].oam.size = SPRITE_SIZE(16x16);
     gSprites[spriteId].invisible = FALSE;
@@ -1438,22 +1479,21 @@ static void BXPY_CreateSelectionSprite(u32 partyMonIndex, enum BattleSide side)
 
 static void SpriteCB_SelectionSprite(struct Sprite *sprite)
 {
-    u32 index = sprite->data[0];
-    bool32 isAlreadySelected = BXPY_IsMonAlreadySelected(index);
+    u32 mon = sprite->data[2];
+    bool32 isAlreadySelected = BXPY_IsMonAlreadySelected(mon);
 
     sprite->invisible = (isAlreadySelected == FALSE);
 
-    if (isAlreadySelected == FALSE)
-        return;
-
     u32 spriteId = sprite->data[1];
-    BXPY_DrawOrderOnSelectionSprite(spriteId,index);
+
+    BXPY_DrawOrderOnSelectionSprite(spriteId,BXPY_GetOrderForMon(mon));
 }
 
 static void BXPY_DrawOrderOnSelectionSprite(u32 spriteId, u32 index)
 {
+    index++;
     u8* orderString = Alloc(BXPY_ORDER_LENGTH_SIZE);
-    ConvertIntToDecimalStringN(orderString,index+1,STR_CONV_MODE_LEFT_ALIGN,CountDigits(index+1));
+    ConvertIntToDecimalStringN(orderString,index,STR_CONV_MODE_LEFT_ALIGN,CountDigits(index));
 
     u32 fontId = FONT_BXPY_LEVEL;
     u32 x = 7;
@@ -1462,6 +1502,16 @@ static void BXPY_DrawOrderOnSelectionSprite(u32 spriteId, u32 index)
     AddSpriteTextPrinterParametrerized(spriteId, fontId, orderString, x, y, TEXT_SKIP_DRAW, NULL);
 
     Free(orderString);
+}
+
+static u8 BXPY_GetOrderForMon(u32 monIndex)
+{
+    u32 bringSize = min(BXPY_GetBringSize(),NUM_BXPY_MAX_MONS_SHOWED);
+    for (u32 selectedIndex = 0; selectedIndex < bringSize; selectedIndex++)
+        if (BXPY_GetSelectedMons(selectedIndex) == monIndex)
+            return selectedIndex;
+
+    return bringSize;
 }
 
 static bool8 BXPY_IsMonAlreadySelected(u32 partyMonIndex)
