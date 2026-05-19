@@ -48,6 +48,6 @@
 #define BXPY_RETAIN_CHANGES                             FALSE // When TRUE, after battle, any changes that occured to the participating Pokemon is retained. This includes changes in HP, PP, Experience, Level, or even Evolution.
 
 #define B_VAR_BXPY                                       B_VAR_SKY_BATTLE // This var is used to maintain BXPY_RETAIN_CHANGES.
-#define B_FLAG_BXPY                                      0                // This flag is used to manage BXPY mode's interaction with other features.
+#define B_FLAG_BXPY                                      FLAG_UNUSED_0x264                // This flag is used to manage BXPY mode's interaction with other features.
 
 #endif // GUARD_CONFIG_BXPY_H

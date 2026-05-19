@@ -689,6 +689,7 @@ bool8 BXPY_SummaryScreen_ShouldHideStats(enum PokemonSummaryScreenMode mode, enu
 
 #include "bg.h"
 #include "window.h"
+#include "trig.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
 #include "dma3.h"
@@ -711,6 +712,8 @@ bool8 BXPY_SummaryScreen_ShouldHideStats(enum PokemonSummaryScreenMode mode, enu
 static void Task_BXPY_PartySelection(u8 taskId);
 static void BXPY_SetSavedCallback(void* callback);
 static void* BXPY_GetSavedcallback(void);
+static void BXPY_ChangePosition(s32 delta);
+static u8 BXPY_GetBringSize(void);
 static void BXPY_SetPosition(u32 position);
 static u8 BXPY_GetPosition(void);
 static void BXPY_SetSpriteId(u32 spriteIndex, u32 spriteId);
@@ -727,6 +730,10 @@ static bool8 AllocZeroedTilemapBuffers(void);
 static void HandleAndShowBgs(void);
 static void SetScheduleBgs(enum BXPYBackgrounds backgroundId);
 static bool8 AreTilesOrTilemapEmpty(enum BXPYBackgrounds backgroundId);
+static bool8 BXPY_IsMonAlreadySelected(u32 partyMonIndex);
+static u32 BXPY_CountNumberSelected(void);
+static void SpriteCB_SelectionSprite(struct Sprite *sprite);
+static void BXPY_DrawOrderOnSelectionSprite(u32 spriteId, u32 index);
 static void LoadGraphics(void);
 static void LoadBXPYPalettes(void);
 static void PlaySoundStartFadeQuitApp(u8 taskId);
@@ -745,25 +752,104 @@ static void BXPY_FreeBackgrounds(void);
 static bool8 BXPY_AllocateStructs(void);
 void BXPY_SetupCallback(void);
 static void BXPY_CreateCursorSprite(void);
+static void SpriteCB_BXPYCursor(struct Sprite *sprite);
 static void BXPY_InitWindows(void);
 static void BXPY_DisplayPlayerParty(void);
 static void BXPY_DisplayEnemyParty(void);
+static void BXPY_DisplayEnemyName(void);
+static void BXPY_PrintEnemyName(enum BXPYWindows windowId);
 static void BXPY_DisplayHelpBar(enum BXPYWindows windowId);
 static void BXPY_PrintHelpBarText(enum BXPYWindows windowId);
 static bool8 BXPY_IsCursorOnEnemy(void);
 static bool8 BXPY_IsMultiBattle(void);
+static void BXPY_DisplayParty(enum BattleSide side);
+static void BXPY_DisplayPlayerParty(void);
+static void BXPY_DisplayPartyMon(enum BXPYWindows windowId, u32 partyMonIndex, enum BattleSide side);
+static void BXPY_PrintNickname(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex);
+static void BXPY_PrintItemName(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex);
+static void BXPY_PrintLevel(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex);
+static void BXPY_PrintSex(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex);
+static void BXPY_PrintMonIcon(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex, u32 species);
+static void BXPY_PrintHP(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex);
+static void BXPY_ResetAllSelectedMons(void);
+static void BXPY_RemoveIndexFromSelected(u32 currentIndex);
+static void BXPY_AddRemoveSelectedMon(void);
 
 struct BXPYState *sBXPYState = NULL;
 static u8 *sBgTilemapBuffer[BG_BXPY_COUNT] = {NULL};
 
 static void Task_BXPY_PartySelection(u8 taskId)
 {
+    if (JOY_NEW(DPAD_UP) || JOY_REPEAT(DPAD_UP))
+    {
+        BXPY_ChangePosition(-1);
+        return;
+    }
+
+    if (JOY_NEW(DPAD_DOWN) || JOY_REPEAT(DPAD_DOWN))
+    {
+        BXPY_ChangePosition(1);
+        return;
+    }
+
+    if (JOY_NEW(A_BUTTON) || JOY_REPEAT(A_BUTTON))
+    {
+        BXPY_AddRemoveSelectedMon();
+        return;
+    }
+
     if (JOY_NEW(B_BUTTON) || JOY_REPEAT(B_BUTTON))
     {
         PlaySoundStartFadeQuitApp(taskId);
         return;
     }
 
+}
+
+static void BXPY_AddRemoveSelectedMon(void)
+{
+    u32 currentIndex = BXPY_GetPosition();
+    bool32 isAlreadySelected = BXPY_IsMonAlreadySelected(currentIndex);
+
+    if (isAlreadySelected)
+        BXPY_RemoveIndexFromSelected(currentIndex);
+    else
+        BXPY_SetSelectedMons(BXPY_CountNumberSelected(),currentIndex);
+
+    DebugPrintf("----------- %d",Random() * 100);
+    for (u32 selectedIndex = 0; selectedIndex < 6; selectedIndex++)
+        DebugPrintf("slot %d is mon %d",selectedIndex,BXPY_GetSelectedMons(selectedIndex));
+}
+
+static void BXPY_RemoveIndexFromSelected(u32 currentIndex)
+{
+    u32 bringSize = min(BXPY_GetBringSize(),NUM_BXPY_MAX_MONS_SHOWED);
+    u32 selectedIndex = 0;
+    s32 retVal = -1;
+
+    for (selectedIndex = 0; selectedIndex < bringSize; selectedIndex++)
+        if (BXPY_GetSelectedMons(selectedIndex) == currentIndex)
+            BXPY_SetSelectedMons(selectedIndex,BXPY_EMPTY_MON);
+
+    u32 i, last;
+    for (i = 0, last = 0; i < bringSize; i++)
+    {
+        u32 mon = (BXPY_GetSelectedMons(i));
+
+        if (mon != BXPY_EMPTY_MON)
+        {
+            if (i != last)
+                BXPY_SetSelectedMons(last,mon);
+            last++;
+        }
+        else if (retVal == -1)
+        {
+            retVal = i;
+        }
+    }
+
+    for (; last < bringSize; last++)
+        BXPY_SetSelectedMons(last,BXPY_EMPTY_MON);
 }
 
 static void BXPY_SetSavedCallback(void* callback)
@@ -774,6 +860,21 @@ static void BXPY_SetSavedCallback(void* callback)
 static void* BXPY_GetSavedcallback(void)
 {
     return sBXPYState->savedCallback;
+}
+
+static void BXPY_ChangePosition(s32 delta)
+{
+    u32 current = BXPY_GetPosition();
+    s32 new = delta + current;
+    u32 max = BXPY_GetBringSize() - 1;
+
+    if (new < 0)
+        new = max;
+
+    if (new > max)
+        new = 0;
+
+    BXPY_SetPosition(new);
 }
 
 static void BXPY_SetPosition(u32 position)
@@ -915,7 +1016,7 @@ static const struct WindowTemplate sBXPYWindows[] =
     {
         .bg = BG0_BXPY_TEXT,
         .tilemapLeft = 23,
-        .tilemapTop = 2,
+        .tilemapTop = 0,
         .width = 6,
         .height = 2,
         .paletteNum = BXPY_PALETTE_TEXT_ID,
@@ -943,8 +1044,9 @@ static const struct WindowTemplate sBXPYWindows[] =
 
 const u8 sBXPYWindowFontColors[BXPY_FONT_COLOR_COUNT][3] =
 {
-    [BXPY_FONT_COLOR_BLACK]  = {TEXT_COLOR_TRANSPARENT,  TEXT_COLOR_DARK_GRAY, TEXT_COLOR_TRANSPARENT},
-    [BXPY_FONT_COLOR_WHITE]  = {TEXT_COLOR_TRANSPARENT,  TEXT_COLOR_WHITE,  TEXT_COLOR_TRANSPARENT},
+    [BXPY_FONT_COLOR_BLACK]  = {TEXT_COLOR_TRANSPARENT,  TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY},
+    [BXPY_FONT_COLOR_WHITE]  = {TEXT_COLOR_TRANSPARENT,  TEXT_COLOR_WHITE,  TEXT_COLOR_DARK_GRAY},
+    [BXPY_FONT_COLOR_WHITE_RED]  = {TEXT_COLOR_TRANSPARENT,  TEXT_COLOR_WHITE,  TEXT_COLOR_RED},
 };
 
 static const struct BXPYSpriteSheet sBXPYSpriteSheets[BXPY_SPRITEID_COUNT] =
@@ -1104,11 +1206,11 @@ static void Task_WaitFadeAndExitGracefully(u8 taskId)
     if (gPaletteFade.active)
         return;
 
-    u8 playerEnteredMons[PARTY_SIZE] = {PARTY_SIZE};
+    u8 playerEnteredMons[PARTY_SIZE] = {BXPY_EMPTY_MON};
     memcpy(playerEnteredMons,sBXPYState->selectedMons,sizeof(sBXPYState->selectedMons));
 
     //BXPY_GetPlayerEnterMons(playerEnteredMons,pickSize);
-    u8 enemyEnteredMons[PARTY_SIZE] = {PARTY_SIZE};
+    u8 enemyEnteredMons[PARTY_SIZE] = {BXPY_EMPTY_MON};
     BXPY_GetEnemyEnterMons(enemyEnteredMons,BXPY_GetPickSize());
     // BXPY TODO Add Pawkkie logic to GetEnemyEnterMons
     BXPY_SelectPartyMembers(gPlayerParty,playerEnteredMons);
@@ -1234,6 +1336,7 @@ void BXPY_SetupCallback(void)
         case 3:
             BXPY_CreateCursorSprite();
             BXPY_InitWindows();
+            BXPY_ResetAllSelectedMons();
             BXPY_DisplayPlayerParty();
             BXPY_DisplayEnemyParty();
             BXPY_DisplayHelpBar(WIN_BXPY_HELP_BAR);
@@ -1248,12 +1351,19 @@ void BXPY_SetupCallback(void)
     }
 }
 
+static void SpriteCB_BXPYCursor(struct Sprite *sprite)
+{
+    sprite->y = 15 + (BXPY_GetPosition() * 23);
+    sprite->x2 = gSineTable[(u8)sprite->data[0]] / 128;
+    sprite->data[0] += 8;
+}
+
 static void BXPY_CreateCursorSprite(void)
 {
     struct SpriteTemplate TempSpriteTemplate = gDummySpriteTemplate;
 
     TempSpriteTemplate.tileTag = BXPY_SPRITETAG_CURSOR;
-    TempSpriteTemplate.callback = SpriteCallbackDummy;
+    TempSpriteTemplate.callback = SpriteCB_BXPYCursor;
     TempSpriteTemplate.paletteTag = BXPY_PALTAG_SPRITE;
 
     u32 spriteId = CreateSprite(&TempSpriteTemplate, 6, 15, 0);
@@ -1289,14 +1399,462 @@ static void BXPY_InitWindows(void)
     DeactivateAllTextPrinters();
 }
 
+static void BXPY_DisplayParty(enum BattleSide side)
+{
+    u32 bringSize = min(BXPY_GetBringSize(),NUM_BXPY_MAX_MONS_SHOWED);
+    enum BXPYWindows windowId = (side == B_SIDE_PLAYER) ? WIN_BXPY_PLAYER_INFO : WIN_BXPY_ENEMY_LEVELS;
+
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(TEXT_COLOR_TRANSPARENT));
+
+    for (u32 partyMonIndex = 0; partyMonIndex < bringSize; partyMonIndex++)
+        BXPY_DisplayPartyMon(windowId, partyMonIndex, side);
+
+    CopyWindowToVram(windowId, COPYWIN_GFX);
+}
+
+static void BXPY_CreateSelectionSprite(u32 partyMonIndex, enum BattleSide side)
+{
+    if (side == B_SIDE_OPPONENT)
+        return;
+
+    struct SpriteTemplate TempSpriteTemplate = gDummySpriteTemplate;
+
+    TempSpriteTemplate.tileTag = BXPY_SPRITETAG_SELECTED;
+    TempSpriteTemplate.callback = SpriteCB_SelectionSprite;
+    TempSpriteTemplate.paletteTag = BXPY_PALTAG_SPRITE;
+
+    u32 y = 15 + (23 * partyMonIndex);
+    u32 spriteId = CreateSprite(&TempSpriteTemplate, 134, y, 0);
+    gSprites[spriteId].data[0] = partyMonIndex;
+    gSprites[spriteId].data[1] = spriteId;
+    gSprites[spriteId].oam.shape = SPRITE_SHAPE(16x16);
+    gSprites[spriteId].oam.size = SPRITE_SIZE(16x16);
+    gSprites[spriteId].invisible = FALSE;
+    gSprites[spriteId].oam.priority = 0;
+    gSprites[spriteId].subpriority = 0;
+
+    BXPY_SetSpriteId(BXPY_SPRITEID_PLAYER_SELECTED_0 + partyMonIndex,spriteId);
+}
+
+static void SpriteCB_SelectionSprite(struct Sprite *sprite)
+{
+    u32 index = sprite->data[0];
+    bool32 isAlreadySelected = BXPY_IsMonAlreadySelected(index);
+
+    sprite->invisible = (isAlreadySelected == FALSE);
+
+    if (isAlreadySelected == FALSE)
+        return;
+
+    u32 spriteId = sprite->data[1];
+    BXPY_DrawOrderOnSelectionSprite(spriteId,index);
+}
+
+static void BXPY_DrawOrderOnSelectionSprite(u32 spriteId, u32 index)
+{
+    u8* orderString = Alloc(BXPY_ORDER_LENGTH_SIZE);
+    ConvertIntToDecimalStringN(orderString,index+1,STR_CONV_MODE_LEFT_ALIGN,CountDigits(index+1));
+
+    u32 fontId = FONT_BXPY_LEVEL;
+    u32 x = 7;
+    u32 y = 0;
+
+    AddSpriteTextPrinterParametrerized(spriteId, fontId, orderString, x, y, TEXT_SKIP_DRAW, NULL);
+
+    Free(orderString);
+}
+
+static bool8 BXPY_IsMonAlreadySelected(u32 partyMonIndex)
+{
+    u32 bringSize = min(BXPY_GetBringSize(),NUM_BXPY_MAX_MONS_SHOWED);
+    for (u32 selectedIndex = 0; selectedIndex < bringSize; selectedIndex++)
+        if (BXPY_GetSelectedMons(selectedIndex) == partyMonIndex)
+            return TRUE;
+
+    return FALSE;
+}
+
 static void BXPY_DisplayPlayerParty(void)
 {
-    return;
+    BXPY_DisplayParty(B_SIDE_PLAYER);
+}
+
+static void BXPY_DisplayPartyMon(enum BXPYWindows windowId, u32 partyMonIndex, enum BattleSide side)
+{
+    struct Pokemon *mon = (side == B_SIDE_PLAYER) ? &gPlayerParty[partyMonIndex] : &gEnemyParty[partyMonIndex];
+
+    u32 species = GetMonData(mon,MON_DATA_SPECIES_OR_EGG);
+
+    if (species == SPECIES_NONE)
+        return;
+
+    if (species == SPECIES_EGG)
+        return;
+
+    BXPY_PrintNickname(windowId, mon, side, partyMonIndex);
+    BXPY_PrintItemName(windowId, mon, side, partyMonIndex);
+    BXPY_PrintLevel(windowId, mon, side, partyMonIndex);
+    BXPY_PrintSex(windowId, mon, side, partyMonIndex);
+    BXPY_PrintMonIcon(windowId, mon, side, partyMonIndex,species);
+    BXPY_PrintHP(windowId, mon, side, partyMonIndex);
+    BXPY_CreateSelectionSprite(partyMonIndex, side);
+}
+
+static void BXPY_PrintNickname(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex)
+{
+    if (side == B_SIDE_OPPONENT)
+        return;
+
+    u32 x = 2;
+    u32 y = 7 + (partyMonIndex * 23);
+    u32 fontId = FONT_BXPY_SPECIES_NAME;
+    u32 letterSpacing = GetFontAttribute(fontId, FONTATTR_LETTER_SPACING);
+    u32 lineSpacing = GetFontAttribute(fontId, FONTATTR_LINE_SPACING);
+    u32 windowWidth = BXPY_SPECIES_NICKNAME_WIDTH;
+
+    GetMonData(mon,MON_DATA_NICKNAME,gStringVar1);
+    fontId = GetFontIdToFit(gStringVar1,fontId,letterSpacing,windowWidth);
+
+    AddTextPrinterParameterized4(windowId, fontId, x, y, letterSpacing, lineSpacing, sBXPYWindowFontColors[BXPY_FONT_COLOR_WHITE], TEXT_SKIP_DRAW, gStringVar1);
+}
+
+static void BXPY_PrintItemName(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex)
+{
+    if (side == B_SIDE_OPPONENT)
+        return;
+
+    u32 x = 2;
+    u32 y = 17 + (partyMonIndex * 23);
+    u32 fontId = FONT_BXPY_SPECIES_NAME;
+    u32 letterSpacing = GetFontAttribute(fontId, FONTATTR_LETTER_SPACING);
+    u32 lineSpacing = GetFontAttribute(fontId, FONTATTR_LINE_SPACING);
+    u32 windowWidth = BXPY_SPECIES_ITEM_WIDTH;
+
+    StringCopy(gStringVar1,GetItemName(GetMonData(mon,MON_DATA_HELD_ITEM)));
+    fontId = GetFontIdToFit(gStringVar1,fontId,letterSpacing,windowWidth);
+
+    AddTextPrinterParameterized4(windowId, fontId, x, y, letterSpacing, lineSpacing, sBXPYWindowFontColors[BXPY_FONT_COLOR_WHITE], TEXT_SKIP_DRAW, gStringVar1);
+}
+
+static void BXPY_PrintLevel(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex)
+{
+    u32 x = (side == B_SIDE_PLAYER) ? 68 : 8;
+    u32 y = (side == B_SIDE_PLAYER) ? 7 + (partyMonIndex * 23) : 0 + (partyMonIndex * 22);
+    u32 color = (side == B_SIDE_PLAYER) ? BXPY_FONT_COLOR_WHITE : BXPY_FONT_COLOR_BLACK;
+    u32 fontId = FONT_BXPY_LEVEL;
+    u32 letterSpacing = GetFontAttribute(fontId, FONTATTR_LETTER_SPACING);
+    u32 lineSpacing = GetFontAttribute(fontId, FONTATTR_LINE_SPACING);
+
+    ConvertIntToDecimalStringN(gStringVar2,GetMonData(mon,MON_DATA_LEVEL),STR_CONV_MODE_LEFT_ALIGN,CountDigits(MAX_LEVEL));
+    StringExpandPlaceholders(gStringVar1,COMPOUND_STRING("{LV}{STR_VAR_2}"));
+
+    AddTextPrinterParameterized4(windowId, fontId, x, y, letterSpacing, lineSpacing, sBXPYWindowFontColors[color], TEXT_SKIP_DRAW, gStringVar1);
+}
+
+static const union AnimCmd sAnim_MonSexFemale[] =
+{
+    ANIMCMD_FRAME(BXPY_SEX_FRAME_FEMALE,4),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd sAnim_MonSexMale[] =
+{
+    ANIMCMD_FRAME(BXPY_SEX_FRAME_MALE,4),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd * const sSpriteAnimTable_MonSexIcon[] =
+{
+    sAnim_MonSexFemale,
+    sAnim_MonSexMale,
+};
+
+static void BXPY_PrintSex(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex)
+{
+    u32 sex = GetMonGender(mon);
+
+    if (sex == MON_GENDERLESS)
+        return;
+
+    struct SpriteTemplate TempSpriteTemplate = gDummySpriteTemplate;
+
+    TempSpriteTemplate.tileTag = BXPY_SPRITETAG_SEX;
+    TempSpriteTemplate.callback = SpriteCallbackDummy;
+    TempSpriteTemplate.paletteTag = BXPY_PALTAG_SPRITE;
+    TempSpriteTemplate.anims = sSpriteAnimTable_MonSexIcon;
+
+    u32 x = (side == B_SIDE_PLAYER) ? 96 : 220;
+    u32 y = (side == B_SIDE_PLAYER) ?  24 + (partyMonIndex * 23) : 23 + (partyMonIndex * 22);
+    u32 spriteId = CreateSprite(&TempSpriteTemplate, x, y, 0);
+    gSprites[spriteId].oam.shape = SPRITE_SHAPE(16x16);
+    gSprites[spriteId].oam.size = SPRITE_SIZE(16x16);
+    gSprites[spriteId].oam.priority = 0;
+
+
+    u32 animState = (sex == MON_FEMALE) ? 0 : 1;
+    StartSpriteAnimIfDifferent(&gSprites[spriteId],animState);
+    BXPY_SetSpriteId(BXPY_SPRITEID_PLAYER_SEX_0 + partyMonIndex,spriteId);
+}
+
+static void BXPY_PrintMonIcon(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex, u32 species)
+{
+    u32 x = (side == B_SIDE_PLAYER) ? 119: 172;
+    u32 y = (side == B_SIDE_PLAYER) ? 15 + (partyMonIndex * 23) : 20 + (partyMonIndex * 22);
+    u32 spriteId = CreateMonIcon(species,SpriteCB_MonIcon,x,y,0,0);
+    BXPY_SetSpriteId(BXPY_SPRITEID_PLAYER_MON_0 + partyMonIndex,spriteId);
+}
+
+static const union AnimCmd sAnim_MonHP0[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_0,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonHP1[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_1,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonHP2[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_2,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonHP3[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_3,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonHP4[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_4,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonHP5[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_5,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonHP6[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_6,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonHP7[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_7,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonHP8[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_8,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonHP9[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_9,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonHP10[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_10,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonHP11[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_11,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonHP12[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_12,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonHP13[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_13,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonHP14[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_14,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonHP15[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_15,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonHP16[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_16,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonHP17[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_17,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonHP18[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_18,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonHP19[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_19,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonHP20[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_20,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonHP21[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_21,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonHP22[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_22,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonHP23[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_23,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonHP24[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_24,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonHP25[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_25,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonHP26[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_26,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonHP27[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_27,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonHP28[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_28,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonHP29[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_29,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonHP30[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_30,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonHP31[] =
+{
+    ANIMCMD_FRAME(BXPY_HP_FRAME_31,4),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd * const sSpriteAnimTable_MonHP[] =
+{
+    sAnim_MonHP0,
+    sAnim_MonHP1,
+    sAnim_MonHP2,
+    sAnim_MonHP3,
+    sAnim_MonHP4,
+    sAnim_MonHP5,
+    sAnim_MonHP6,
+    sAnim_MonHP7,
+    sAnim_MonHP8,
+    sAnim_MonHP9,
+    sAnim_MonHP10,
+    sAnim_MonHP11,
+    sAnim_MonHP12,
+    sAnim_MonHP13,
+    sAnim_MonHP14,
+    sAnim_MonHP15,
+    sAnim_MonHP16,
+    sAnim_MonHP17,
+    sAnim_MonHP18,
+    sAnim_MonHP19,
+    sAnim_MonHP20,
+    sAnim_MonHP21,
+    sAnim_MonHP22,
+    sAnim_MonHP23,
+    sAnim_MonHP24,
+    sAnim_MonHP25,
+    sAnim_MonHP26,
+    sAnim_MonHP27,
+    sAnim_MonHP28,
+    sAnim_MonHP29,
+    sAnim_MonHP30,
+    sAnim_MonHP31,
+};
+
+static void BXPY_PrintHP(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex)
+{
+    if (side == B_SIDE_OPPONENT)
+        return;
+
+    u32 current = GetMonData(mon,MON_DATA_HP);
+    u32 max = GetMonData(mon,MON_DATA_MAX_HP);
+    u32 percent = (current * BXPY_HP_STEP_COUNT / max) - 1;
+
+    struct SpriteTemplate TempSpriteTemplate = gDummySpriteTemplate;
+
+    TempSpriteTemplate.tileTag = BXPY_SPRITETAG_HP;
+    TempSpriteTemplate.callback = SpriteCallbackDummy;
+    TempSpriteTemplate.paletteTag = BXPY_PALTAG_SPRITE;
+    TempSpriteTemplate.anims = sSpriteAnimTable_MonHP;
+
+    u32 y = 29 + (partyMonIndex * 23);
+    u32 spriteId = CreateSprite(&TempSpriteTemplate, 106, y, 0);
+    gSprites[spriteId].oam.shape = SPRITE_SHAPE(32x8);
+    gSprites[spriteId].oam.size = SPRITE_SIZE(32x8);
+    gSprites[spriteId].oam.priority = 1;
+
+    StartSpriteAnimIfDifferent(&gSprites[spriteId],percent);
+    BXPY_SetSpriteId(BXPY_SPRITEID_PLAYER_HP_0 + partyMonIndex,spriteId);
 }
 
 static void BXPY_DisplayEnemyParty(void)
 {
-    return;
+    BXPY_DisplayEnemyName();
+    BXPY_DisplayParty(B_SIDE_OPPONENT);
+}
+
+static void BXPY_DisplayEnemyName(void)
+{
+    enum BXPYWindows windowId = WIN_BXPY_ENEMY_NAME;
+
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(TEXT_COLOR_TRANSPARENT));
+    BXPY_PrintEnemyName(windowId);
+    CopyWindowToVram(windowId, COPYWIN_GFX);
+}
+
+static void BXPY_PrintEnemyName(enum BXPYWindows windowId)
+{
+    u32 x = 2;
+    u32 y = 0;
+    u32 fontId = FONT_BXPY_LEVEL;
+    u32 lineSpacing = GetFontAttribute(fontId, FONTATTR_LINE_SPACING);
+    u32 letterSpacing = GetFontAttribute(fontId, FONTATTR_LETTER_SPACING);
+    u32 windowWidth = TILE_SIZE_4BPP * GetWindowAttribute(windowId, WINDOW_WIDTH);
+
+    StringCopy(gStringVar4, GetTrainerNameFromId(TRAINER_BATTLE_PARAM.opponentA));
+    fontId = GetFontIdToFit(gStringVar4,fontId,letterSpacing,windowWidth);
+
+    AddTextPrinterParameterized4(windowId, fontId, x, y, letterSpacing, lineSpacing, sBXPYWindowFontColors[BXPY_FONT_COLOR_WHITE_RED], TEXT_SKIP_DRAW, gStringVar4);
 }
 
 static void BXPY_DisplayHelpBar(enum BXPYWindows windowId)
@@ -1378,3 +1936,20 @@ static void BXPY_StartPickInterface(u32 bringSize, u32 pickSize, u32 battleFlags
     BXPY_InitializeAndSaveCallback(bringSize, pickSize, battleFlags);
 }
 
+
+static void BXPY_ResetAllSelectedMons(void)
+{
+    for (u32 index = 0; index < PARTY_SIZE; index++)
+        BXPY_SetSelectedMons(index,BXPY_EMPTY_MON);
+}
+
+static u32 BXPY_CountNumberSelected(void)
+{
+    u32 count = 0;
+    u32 bringSize = min(BXPY_GetBringSize(),NUM_BXPY_MAX_MONS_SHOWED);
+    for (u32 selectedIndex = 0; selectedIndex < bringSize; selectedIndex++)
+        if (BXPY_GetSelectedMons(selectedIndex) != BXPY_EMPTY_MON)
+            count++;
+
+    return count;
+}
