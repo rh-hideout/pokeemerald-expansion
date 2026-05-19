@@ -218,15 +218,12 @@ Debug_EventScript_Script_3::
 	end
 
 Debug_EventScript_Script_4::
-	setflag FLAG_HIDE_ICEPATH_B2F_BOULDER1     
-	setflag FLAG_HIDE_ICEPATH_B2F_BOULDER2      
-	setflag FLAG_HIDE_ICEPATH_B2F_BOULDER3         
-	setflag FLAG_HIDE_ICEPATH_B2F_BOULDER4
-	giveitem ITEM_HM_STRENGTH
+	special InitRoamer
 	release
 	end
 
 Debug_EventScript_Script_5::
+	special InitKantoRoamers
 	release
 	end
 
