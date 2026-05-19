@@ -294,6 +294,7 @@ BattleFrontier_Lounge7_EventScript_TeachTutorMove_hns::
 
 BattleFrontier_Lounge7_EventScript_ChooseNewMove_hns::
 	goto_if_eq VAR_TEMP_FRONTIER_TUTOR_ID, 0, BattleFrontier_Lounge7_EventScript_ChooseNewLeftTutorMove_hns
+	goto_if_eq VAR_TEMP_FRONTIER_TUTOR_ID, 2, BattleFrontier_Lounge7_EventScript_ChooseNewElementalTutorMove
 	goto BattleFrontier_Lounge7_EventScript_ChooseNewRightTutorMove_hns
 	end
 
@@ -358,19 +359,19 @@ BattleFrontier_Lounge7_EventScript_ChooseNewElementalTutorMove::
 BattleFrontier_Lounge7_EventScript_FrenzyPlant::
 	setvar VAR_0x8008, 64
 	setvar VAR_0x8005, MOVE_FRENZY_PLANT
-	goto BattleFrontier_Lounge7_EventScript_ConfirmMoveSelection
+	goto BattleFrontier_Lounge7_EventScript_ConfirmMoveSelection_hns
 	end
 
 BattleFrontier_Lounge7_EventScript_BlastBurn::
 	setvar VAR_0x8008, 64
 	setvar VAR_0x8005, MOVE_BLAST_BURN
-	goto BattleFrontier_Lounge7_EventScript_ConfirmMoveSelection
+	goto BattleFrontier_Lounge7_EventScript_ConfirmMoveSelection_hns
 	end
 
 BattleFrontier_Lounge7_EventScript_HydroCannon::
 	setvar VAR_0x8008, 64
 	setvar VAR_0x8005, MOVE_HYDRO_CANNON
-	goto BattleFrontier_Lounge7_EventScript_ConfirmMoveSelection
+	goto BattleFrontier_Lounge7_EventScript_ConfirmMoveSelection_hns
 	end
 
 BattleFrontier_Lounge7_EventScript_ExitTutorMoveSelect_hns::
