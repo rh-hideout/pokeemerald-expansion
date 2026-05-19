@@ -227,7 +227,7 @@ VerdanturfTown_BattleTentLobby_hns_EventScript_AttractGiver::
 	faceplayer
 	goto_if_set FLAG_RECEIVED_TM_ATTRACT, VerdanturfTown_BattleTentLobby_hns_EventScript_ReceivedAttract
 	msgbox VerdanturfTown_BattleTentLobby_hns_Text_AttractionRunsDeep, MSGBOX_DEFAULT
-	giveitem ITEM_TM_ATTRACT
+	giveitem ITEM_TM_SAFEGUARD
 	goto_if_eq VAR_RESULT, 0, Common_EventScript_ShowBagIsFull
 	setflag FLAG_RECEIVED_TM_ATTRACT
 	msgbox VerdanturfTown_BattleTentLobby_hns_Text_AttractionMutual, MSGBOX_DEFAULT
