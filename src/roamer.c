@@ -1,9 +1,15 @@
 #include "global.h"
 #include "event_data.h"
+#include "event_object_movement.h"
+#include "field_player_avatar.h"
+#include "fieldmap.h"
 #include "ow_synchronize.h"
 #include "pokemon.h"
 #include "random.h"
 #include "roamer.h"
+#include "sprite.h"
+#include "task.h"
+#include "constants/event_objects.h"
 #if IS_HNS
 #include "pokedex.h"
 #endif
@@ -477,14 +483,146 @@ void GetRoamerLocation(u32 roamerIndex, u8 *mapGroup, u8 *mapNum)
     *mapNum = sRoamerLocation[roamerIndex][MAP_NUM];
 }
 
-bool8 IsRoamerOnCurrentMap(void)
+#define ROAMER_FLASH_VOBJ_ID 0xFF
+#define ROAMER_FLASH_HORZ_SPEED 10
+#define ROAMER_FLASH_VERT_SPEED 8
+
+enum {
+    ROAMER_FLASH_NONE,
+    ROAMER_FLASH_CROSS_PATH,
+    ROAMER_FLASH_RACE_PAST,
+    ROAMER_FLASH_COUNT,
+};
+
+#define tSpriteId   data[0]
+#define tDeltaX     data[1]
+#define tDeltaY     data[2]
+#define tFrames     data[3]
+#define tMaxFrames  data[4]
+
+static void Task_RoamerFlash(u8 taskId)
+{
+    struct Task *task = &gTasks[taskId];
+    struct Sprite *sprite = &gSprites[task->tSpriteId];
+
+    sprite->x += task->tDeltaX;
+    sprite->y += task->tDeltaY;
+    task->tFrames++;
+
+    if (task->tFrames >= task->tMaxFrames)
+    {
+        DestroySprite(sprite);
+        DestroyTask(taskId);
+    }
+}
+
+static u16 GetFirstRoamerSpeciesOnCurrentMap(void)
 {
     u32 i;
 
     for (i = 0; i < ROAMER_COUNT; i++)
     {
         if (IsRoamerAt(i, gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
-            return TRUE;
+            return ROAMER(i)->species;
     }
-    return FALSE;
+    return SPECIES_NONE;
 }
+
+void TryShowRoamerFlash(void)
+{
+    u16 species = GetFirstRoamerSpeciesOnCurrentMap();
+    u8 spriteId;
+    u8 taskId;
+    s16 startX, startY;
+    s16 playerX = gSaveBlock1Ptr->pos.x;
+    s16 playerY = gSaveBlock1Ptr->pos.y;
+    u8 facing = GetPlayerFacingDirection();
+    u8 flashType;
+    s16 deltaX = 0;
+    s16 deltaY = 0;
+    s16 maxFrames;
+    enum Direction spriteDir;
+
+    if (species == SPECIES_NONE)
+        return;
+
+    flashType = Random() % ROAMER_FLASH_COUNT;
+
+    if (flashType == ROAMER_FLASH_NONE)
+        return;
+
+    if (flashType == ROAMER_FLASH_CROSS_PATH)
+    {
+        // Mon crosses vertically 7 tiles in front of the player
+        switch (facing)
+        {
+        case DIR_NORTH:
+            startX = playerX + 5;
+            startY = playerY - 7;
+            deltaX = -ROAMER_FLASH_VERT_SPEED;
+            spriteDir = DIR_WEST;
+            break;
+        case DIR_SOUTH:
+            startX = playerX - 5;
+            startY = playerY + 7;
+            deltaX = ROAMER_FLASH_VERT_SPEED;
+            spriteDir = DIR_EAST;
+            break;
+        case DIR_EAST:
+            startX = playerX + 7;
+            startY = playerY - 5;
+            deltaY = ROAMER_FLASH_VERT_SPEED;
+            spriteDir = DIR_SOUTH;
+            break;
+        case DIR_WEST:
+        default:
+            startX = playerX - 7;
+            startY = playerY - 5;
+            deltaY = ROAMER_FLASH_VERT_SPEED;
+            spriteDir = DIR_SOUTH;
+            break;
+        }
+        maxFrames = (10 * 16) / ROAMER_FLASH_VERT_SPEED;
+    }
+    else
+    {
+        // Mon races past horizontally in the player's facing direction
+        startY = playerY - 4;
+        if (facing == DIR_EAST)
+        {
+            startX = playerX - 9;
+            deltaX = ROAMER_FLASH_HORZ_SPEED;
+            spriteDir = DIR_EAST;
+        }
+        else
+        {
+            startX = playerX + 9;
+            deltaX = -ROAMER_FLASH_HORZ_SPEED;
+            spriteDir = DIR_WEST;
+        }
+        maxFrames = (18 * 16) / ROAMER_FLASH_HORZ_SPEED;
+    }
+
+    spriteId = CreateVirtualObject(
+        OBJ_EVENT_GFX_MON_BASE + species,
+        ROAMER_FLASH_VOBJ_ID,
+        startX, startY,
+        3, spriteDir
+    );
+
+    if (spriteId == MAX_SPRITES)
+        return;
+
+    taskId = CreateTask(Task_RoamerFlash, 80);
+    gTasks[taskId].tSpriteId = spriteId;
+    gTasks[taskId].tDeltaX = deltaX;
+    gTasks[taskId].tDeltaY = deltaY;
+    gTasks[taskId].tFrames = 0;
+    gTasks[taskId].tMaxFrames = maxFrames;
+}
+
+#undef tSpriteId
+#undef tDeltaX
+#undef tDeltaY
+#undef tFrames
+#undef tMaxFrames

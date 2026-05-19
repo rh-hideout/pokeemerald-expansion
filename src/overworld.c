@@ -928,8 +928,7 @@ void LoadMapFromCameraTransition(u8 mapGroup, u8 mapNum)
     InitSecondaryTilesetAnimation();
     UpdateLocationHistoryForRoamer();
     MoveAllRoamers();
-    if (OW_ROAMER_NEARBY_MESSAGE && IsRoamerOnCurrentMap())
-        ScriptContext_SetupScript(EventScript_RoamerNearby);
+    TryShowRoamerFlash();
     DoCurrentWeather();
     ResetFieldTasksArgs();
     RunOnResumeMapScript();

@@ -16,7 +16,7 @@ void GetRoamerLocation(u32 roamerIndex, u8 *mapGroup, u8 *mapNum);
 bool8 TryAddRoamer(u16 species, u8 level, u8 locationTableId);
 void MoveAllRoamersToOtherLocationSets(void);
 void MoveAllRoamers(void);
-bool8 IsRoamerOnCurrentMap(void);
+void TryShowRoamerFlash(void);
 
 extern u8 gEncounteredRoamerIndex;
 
