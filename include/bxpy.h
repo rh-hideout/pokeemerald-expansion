@@ -25,7 +25,7 @@ bool8 BXPY_SummaryScreen_ItemVisibility(enum PokemonSummaryScreenMode mode);
 const u8 *BXPY_ReturnItemText(enum Item item);
 enum BXPYTeamPreviewSpeciesModes BXPY_GetEnemySpeciesVisibilityLevel(void);
 enum BXPYTeamPreviewSpeciesModes BXPY_SummaryScreen_SpeciesVisibility(enum PokemonSummaryScreenMode mode);
-bool8 BXPY_TeamPreview_ShouldHideEnemyGender(void);
+bool8 BXPY_TeamPreview_ShouldHideEnemyGender(enum BattleSide side);
 bool8 BXPY_SummaryScreen_ShouldHideEnemyGender(enum PokemonSummaryScreenMode mode);
 enum Type BXPY_TransformTypeIfHidden(enum PokemonSummaryScreenMode mode, enum Type originalTypeId, u32 spriteArrayId, u32 species, enum PokemonSummaryScreenPage page);
 bool8 BXPY_SummaryScreen_ShowTrueSpecies(enum PokemonSummaryScreenMode mode);
@@ -34,9 +34,11 @@ bool8 BXPY_SummaryScreen_ShowBaseSpecies(enum PokemonSummaryScreenMode mode);
 u32 BXPY_SummaryScreen_TransformSpeciesId(enum PokemonSummaryScreenMode mode, u32 originalSpeciesId);
 bool8 BXPY_SummaryScreen_ShouldShowFullItem(enum PokemonSummaryScreenMode mode);
 bool8 BXPY_SummaryScreen_ShouldHideEnemyLevel(enum PokemonSummaryScreenMode mode);
-u32 BXPY_TeamPreview_TransformSpeciesId(u32 originalSpeciesId);
+u32 BXPY_TeamPreview_TransformSpeciesId(u32 originalSpeciesId, enum BattleSide side);
 bool8 BXPY_SummaryScreen_ShouldHideStats(enum PokemonSummaryScreenMode mode, enum PokemonSummarySkillsMode stats);
+u32 BXPY_TransformSpeciesId(u32 originalSpeciesId);
 u32 IsDoingBringXPickYSelection(void);
+bool8 BXPY_ShouldHideEnemyLevel(void);
 
 #include "sprite.h"
 

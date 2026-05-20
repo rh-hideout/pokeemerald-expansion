@@ -624,9 +624,17 @@ bool8 BXPY_SummaryScreen_ShowTrueSpecies(enum PokemonSummaryScreenMode mode)
     return (BXPY_GetEnemySpeciesVisibilityLevel() == BXPY_SPECIES_SHOW_TRUE);
 }
 
-bool8 BXPY_TeamPreview_ShouldHideEnemyGender(void)
+bool8 BXPY_ShouldHideEnemyGender(void)
 {
     return !(BXPY_TEAM_PREVIEW_SHOW_ENEMY_GENDER);
+}
+
+bool8 BXPY_TeamPreview_ShouldHideEnemyGender(enum BattleSide side)
+{
+    if (side == B_SIDE_PLAYER)
+        return FALSE;
+
+    return BXPY_ShouldHideEnemyGender();
 }
 
 bool8 BXPY_SummaryScreen_ShouldHideEnemyGender(enum PokemonSummaryScreenMode mode)
@@ -634,7 +642,7 @@ bool8 BXPY_SummaryScreen_ShouldHideEnemyGender(enum PokemonSummaryScreenMode mod
     if (BXPY_IsSummaryScreenForEnemy(mode) == FALSE)
         return FALSE;
 
-    return BXPY_TeamPreview_ShouldHideEnemyGender();
+    return BXPY_ShouldHideEnemyGender();
 }
 
 u32 BXPY_SummaryScreen_TransformSpeciesId(enum PokemonSummaryScreenMode mode, u32 originalSpeciesId)
@@ -642,10 +650,18 @@ u32 BXPY_SummaryScreen_TransformSpeciesId(enum PokemonSummaryScreenMode mode, u3
     if (BXPY_IsSummaryScreenForEnemy(mode) == FALSE)
         return originalSpeciesId;
 
-    return BXPY_TeamPreview_TransformSpeciesId(originalSpeciesId);
+    return BXPY_TransformSpeciesId(originalSpeciesId);
 }
 
-u32 BXPY_TeamPreview_TransformSpeciesId(u32 originalSpeciesId)
+u32 BXPY_TeamPreview_TransformSpeciesId(u32 originalSpeciesId, enum BattleSide side)
+{
+    if (side == B_SIDE_PLAYER)
+        return originalSpeciesId;
+
+    return BXPY_TransformSpeciesId(originalSpeciesId);
+}
+
+u32 BXPY_TransformSpeciesId(u32 originalSpeciesId)
 {
     switch (BXPY_GetEnemySpeciesVisibilityLevel())
     {
@@ -659,9 +675,17 @@ u32 BXPY_TeamPreview_TransformSpeciesId(u32 originalSpeciesId)
     }
 }
 
-bool8 BXPY_TeamPreview_ShouldHideEnemyLevel(void)
+bool8 BXPY_ShouldHideEnemyLevel(void)
 {
     return !(BXPY_TEAM_PREVIEW_SHOW_ENEMY_LEVEL);
+}
+
+bool8 BXPY_TeamPreview_ShouldHideEnemyLevel(enum BattleSide side)
+{
+    if (side == B_SIDE_PLAYER)
+        return FALSE;
+
+    return BXPY_ShouldHideEnemyLevel();
 }
 
 bool8 BXPY_SummaryScreen_ShouldHideEnemyLevel(enum PokemonSummaryScreenMode mode)
@@ -669,7 +693,7 @@ bool8 BXPY_SummaryScreen_ShouldHideEnemyLevel(enum PokemonSummaryScreenMode mode
     if (BXPY_IsSummaryScreenForEnemy(mode) == FALSE)
         return FALSE;
 
-    return BXPY_TeamPreview_ShouldHideEnemyLevel();
+    return BXPY_ShouldHideEnemyLevel();
 }
 
 bool8 BXPY_SummaryScreen_ShouldHideStats(enum PokemonSummaryScreenMode mode, enum PokemonSummarySkillsMode stats)
@@ -711,6 +735,7 @@ bool8 BXPY_SummaryScreen_ShouldHideStats(enum PokemonSummaryScreenMode mode, enu
 #include "menu_helpers.h"
 #include "malloc.h"
 #include "task.h"
+#include "international_string_util.h"
 #include "text.h"
 #include "text_window.h"
 #include "menu.h"
@@ -725,6 +750,7 @@ static u8 BXPY_GetPosition(void);
 static void BXPY_SetSpriteId(u32 spriteIndex, u32 spriteId);
 static u8 BXPY_GetSpriteId(u32 spriteIndex);
 static void BXPY_SetSelectedMons(u32 monIndex, u32 order);
+bool8 BXPY_IsOpenTeamSheetOn(void);
 static u8 BXPY_GetSelectedMons(u32 monIndex);
 u32 IsDoingBringXPickYSelection(void);
 static void BXPY_InitializeBackgroundsAndLoadBackgroundGraphics(void);
@@ -801,6 +827,22 @@ static void Task_BXPY_PartySelection(u8 taskId)
     if (gPaletteFade.active)
         return;
 
+    if (JOY_NEW(DPAD_LEFT) || JOY_REPEAT(DPAD_LEFT))
+    {
+        BXPY_ChangePosition(-6);
+        BXPY_DisplayHelpBar(WIN_BXPY_HELP_BAR);
+        BXPY_DisplayPlayerPartyCursorMove();
+        return;
+    }
+
+    if (JOY_NEW(DPAD_RIGHT) || JOY_REPEAT(DPAD_RIGHT))
+    {
+        BXPY_ChangePosition(6);
+        BXPY_DisplayHelpBar(WIN_BXPY_HELP_BAR);
+        BXPY_DisplayPlayerPartyCursorMove();
+        return;
+    }
+
     if (JOY_NEW(DPAD_UP) || JOY_REPEAT(DPAD_UP))
     {
         BXPY_ChangePosition(-1);
@@ -819,8 +861,10 @@ static void Task_BXPY_PartySelection(u8 taskId)
 
     if (JOY_NEW(A_BUTTON) || JOY_REPEAT(A_BUTTON))
     {
-        if (BXPY_IsCursorOnEnemy())
+        if (BXPY_IsCursorOnEnemy() && BXPY_IsOpenTeamSheetOn() == TRUE)
             BXPY_GoToPokemonSummary(taskId);
+        else if (BXPY_IsCursorOnEnemy() && BXPY_IsOpenTeamSheetOn() == FALSE)
+            return;
         else
             BXPY_SelectMonAndShowMenu(taskId);
         return;
@@ -896,6 +940,17 @@ static void BXPY_ChangePosition(s32 delta)
     u32 current = BXPY_GetPosition();
     s32 new = delta + current;
     u32 max = BXPY_GetBringSize() - 1 + CalculatePartyCount(gEnemyParty);
+
+    if (delta == 6)
+    {
+        if (new > max)
+            new = current - 6;
+    }
+    else if (delta == -6)
+    {
+        if (new < 0)
+            new = current + 6;
+    }
 
     if (new < 0)
         new = max;
@@ -1054,9 +1109,9 @@ static const struct WindowTemplate sBXPYWindows[] =
     [WIN_BXPY_ENEMY_NAME] =
     {
         .bg = BG1_BXPY_INFO,
-        .tilemapLeft = 23,
+        .tilemapLeft = 19,
         .tilemapTop = 0,
-        .width = 6,
+        .width = 9,
         .height = 2,
         .paletteNum = BXPY_PALETTE_TEXT_ID,
     },
@@ -1152,7 +1207,7 @@ static const struct BXPYSpriteSheet sBXPYSpriteSheets[BXPY_SPRITEID_COUNT] =
     {
         {
             .data = (const u16[])INCBIN_U16("graphics/bxpy/sex.4bpp"),
-            .size = TILE_OFFSET_4BPP(8),
+            .size = TILE_OFFSET_4BPP(12),
             .tag = BXPY_SPRITETAG_SEX,
         },
     },
@@ -1670,7 +1725,7 @@ static void BXPY_PrintNickname(enum BXPYWindows windowId, struct Pokemon *mon, e
     u32 fontId = FONT_BXPY_SPECIES_NAME;
     u32 letterSpacing = GetFontAttribute(fontId, FONTATTR_LETTER_SPACING);
     u32 lineSpacing = GetFontAttribute(fontId, FONTATTR_LINE_SPACING);
-    u32 windowWidth = BXPY_SPECIES_NICKNAME_WIDTH;
+    u32 windowWidth = BXPY_SPECIES_NICKNAME_WIDTH * TILE_SIZE_1BPP;
     u32 color = (BXPY_GetPosition() == partyMonIndex) ? BXPY_FONT_COLOR_PLAYER_SELECTED : BXPY_FONT_COLOR_PLAYER;
 
     GetMonData(mon,MON_DATA_NICKNAME,gStringVar1);
@@ -1693,7 +1748,7 @@ static void BXPY_PrintItemName(enum BXPYWindows windowId, struct Pokemon *mon, e
     u32 fontId = FONT_BXPY_SPECIES_NAME;
     u32 letterSpacing = GetFontAttribute(fontId, FONTATTR_LETTER_SPACING);
     u32 lineSpacing = GetFontAttribute(fontId, FONTATTR_LINE_SPACING);
-    u32 windowWidth = BXPY_SPECIES_ITEM_WIDTH;
+    u32 windowWidth = BXPY_SPECIES_ITEM_WIDTH * TILE_SIZE_1BPP;
     u32 color = (BXPY_GetPosition() == partyMonIndex) ? BXPY_FONT_COLOR_PLAYER_SELECTED : BXPY_FONT_COLOR_PLAYER;
 
     StringCopy(gStringVar1,GetItemName(heldItem));
@@ -1718,7 +1773,11 @@ static void BXPY_PrintLevel(enum BXPYWindows windowId, struct Pokemon *mon, enum
     else
         color = BXPY_FONT_COLOR_PLAYER;
 
-    ConvertIntToDecimalStringN(gStringVar2,GetMonData(mon,MON_DATA_LEVEL),STR_CONV_MODE_LEFT_ALIGN,CountDigits(MAX_LEVEL));
+    if (BXPY_TeamPreview_ShouldHideEnemyLevel(side))
+        StringCopy(gStringVar2,COMPOUND_STRING("?"));
+    else
+        ConvertIntToDecimalStringN(gStringVar2,GetMonData(mon,MON_DATA_LEVEL),STR_CONV_MODE_LEFT_ALIGN,CountDigits(MAX_LEVEL));
+
     StringExpandPlaceholders(gStringVar1,COMPOUND_STRING("{LV}{STR_VAR_2}"));
 
     AddTextPrinterParameterized4(windowId, fontId, x, y, letterSpacing, lineSpacing, sBXPYWindowFontColors[color], TEXT_SKIP_DRAW, gStringVar1);
@@ -1736,18 +1795,22 @@ static const union AnimCmd sAnim_MonSexMale[] =
     ANIMCMD_END,
 };
 
+static const union AnimCmd sAnim_MonSexHidden[] =
+{
+    ANIMCMD_FRAME(BXPY_SEX_FRAME_HIDDEN,4),
+    ANIMCMD_END,
+};
+
 static const union AnimCmd * const sSpriteAnimTable_MonSexIcon[] =
 {
     sAnim_MonSexFemale,
     sAnim_MonSexMale,
+    sAnim_MonSexHidden,
 };
 
 static void BXPY_PrintSex(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex)
 {
     u32 sex = GetMonGender(mon);
-
-    if (sex == MON_GENDERLESS)
-        return;
 
     struct SpriteTemplate TempSpriteTemplate = gDummySpriteTemplate;
 
@@ -1763,8 +1826,18 @@ static void BXPY_PrintSex(enum BXPYWindows windowId, struct Pokemon *mon, enum B
     gSprites[spriteId].oam.size = SPRITE_SIZE(16x16);
     gSprites[spriteId].oam.priority = 1;
 
+    u32 animState = 0;
 
-    u32 animState = (sex == MON_FEMALE) ? 0 : 1;
+    if (BXPY_TeamPreview_ShouldHideEnemyGender(side))
+    {
+        animState = BXPY_SEX_HIDDEN;
+    }
+    else
+    {
+        animState = (sex == MON_FEMALE) ? BXPY_SEX_FEMALE : BXPY_SEX_MALE;
+        gSprites[spriteId].invisible = (sex == MON_GENDERLESS);
+    }
+
     StartSpriteAnimIfDifferent(&gSprites[spriteId],animState);
     BXPY_SetSpriteId(BXPY_SPRITEID_PLAYER_SEX_0 + partyMonIndex,spriteId);
 }
@@ -1773,6 +1846,8 @@ static void BXPY_PrintMonIcon(enum BXPYWindows windowId, struct Pokemon *mon, en
 {
     u32 x = (side == B_SIDE_PLAYER) ? 119: 172;
     u32 y = (side == B_SIDE_PLAYER) ? 15 + (partyMonIndex * 23) : 20 + (partyMonIndex * 22);
+    species = BXPY_TeamPreview_TransformSpeciesId(species, side);
+
     u32 spriteId = CreateMonIcon(species,SpriteCB_MonIcon,x,y,0,0);
     BXPY_SetSpriteId(BXPY_SPRITEID_PLAYER_MON_0 + partyMonIndex,spriteId);
 }
@@ -2017,15 +2092,15 @@ static void BXPY_DisplayEnemyName(void)
 
 static void BXPY_PrintEnemyName(enum BXPYWindows windowId)
 {
-    u32 x = 2;
     u32 y = 0;
     u32 fontId = FONT_BXPY_LEVEL;
     u32 lineSpacing = GetFontAttribute(fontId, FONTATTR_LINE_SPACING);
     u32 letterSpacing = GetFontAttribute(fontId, FONTATTR_LETTER_SPACING);
-    u32 windowWidth = TILE_SIZE_4BPP * GetWindowAttribute(windowId, WINDOW_WIDTH);
+    u32 windowWidth = TILE_SIZE_1BPP * GetWindowAttribute(windowId, WINDOW_WIDTH);
 
     StringCopy(gStringVar4, GetTrainerNameFromId(TRAINER_BATTLE_PARAM.opponentA));
     fontId = GetFontIdToFit(gStringVar4,fontId,letterSpacing,windowWidth);
+    u32 x = GetStringRightAlignXOffset(fontId,gStringVar4,windowWidth);
 
     AddTextPrinterParameterized4(windowId, fontId, x, y, letterSpacing, lineSpacing, sBXPYWindowFontColors[BXPY_FONT_COLOR_ENEMY_NAME], TEXT_SKIP_DRAW, gStringVar4);
 }
@@ -2058,9 +2133,9 @@ static void BXPY_PrintHelpBarText(enum BXPYWindows windowId)
         StringAppend(gStringVar4, COMPOUND_STRING(" {START_BUTTON} Start Battle"));
     }
 
-    if (BXPY_IsCursorOnEnemy())
+    if (BXPY_IsCursorOnEnemy() && BXPY_IsOpenTeamSheetOn() == TRUE)
         StringAppend(gStringVar4,COMPOUND_STRING(" {A_BUTTON} Summary"));
-    else
+    else if (!BXPY_IsCursorOnEnemy())
         StringAppend(gStringVar4,COMPOUND_STRING(" {A_BUTTON} Select"));
 
     if (BXPY_IsMultiBattle())
@@ -2172,9 +2247,6 @@ static void Task_LoadPokemonSummary(u8 taskId)
 
     DestroyTask(taskId);
     FreeAllWindowBuffers();
-
-    DebugPrintf("partySize %d",partySize);
-    DebugPrintf("selectedMon %d",selectedMon);
 
     if (BXPY_IsCursorOnEnemy())
         ShowPokemonSummaryScreen(SUMMARY_MODE_BXPY, party, selectedMon, partySize, CB2_ReturnToBXPYInterface);
@@ -2308,3 +2380,7 @@ static void BXPY_CreateMonMenu(void)
     InitMenuInUpperLeftCornerNormal(windowId, menuCount, 0);
 }
 
+bool8 BXPY_IsOpenTeamSheetOn(void)
+{
+    return BXPY_OPEN_TEAM_SHEET;
+}
