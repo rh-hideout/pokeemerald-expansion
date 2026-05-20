@@ -745,6 +745,7 @@ static bool8 BXPY_InitalizeBackgrounds(void);
 static bool8 AllocZeroedTilemapBuffers(void);
 static void HandleAndShowBgs(void);
 static void SetScheduleBgs(enum BXPYBackgrounds backgroundId);
+static void BXPY_DisplayPartyMonText(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex);
 static void BXPY_SelectMonAndShowMenu(u8 taskId);
 static bool8 BXPY_ShouldHandleMonsWithFullMenu(void);
 static void Task_HandleMonMenu(u8 taskId);
@@ -784,9 +785,10 @@ static void BXPY_PrintEnemyName(enum BXPYWindows windowId);
 static void BXPY_DisplayHelpBar(enum BXPYWindows windowId);
 static void BXPY_PrintHelpBarText(enum BXPYWindows windowId);
 static bool8 BXPY_IsCursorOnEnemy(void);
-static void BXPY_DisplayParty(enum BattleSide side);
+static void BXPY_DisplayParty(enum BattleSide side, bool32 cursorMove);
+static void BXPY_DisplayPlayerPartyCursorMove(void);
 static void BXPY_DisplayPlayerParty(void);
-static void BXPY_DisplayPartyMon(enum BXPYWindows windowId, u32 partyMonIndex, enum BattleSide side);
+static void BXPY_DisplayPartyMonIcons(enum BXPYWindows windowId, struct Pokemon *mon, u32 partyMonIndex, enum BattleSide side, u32 species);
 static void BXPY_PrintNickname(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex);
 static void BXPY_PrintItemName(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex);
 static void BXPY_PrintLevel(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex);
@@ -808,6 +810,7 @@ static void Task_BXPY_PartySelection(u8 taskId)
     {
         BXPY_ChangePosition(-1);
         BXPY_DisplayHelpBar(WIN_BXPY_HELP_BAR);
+        BXPY_DisplayPlayerPartyCursorMove();
         return;
     }
 
@@ -815,6 +818,7 @@ static void Task_BXPY_PartySelection(u8 taskId)
     {
         BXPY_ChangePosition(1);
         BXPY_DisplayHelpBar(WIN_BXPY_HELP_BAR);
+        BXPY_DisplayPlayerPartyCursorMove();
         return;
     }
 
@@ -1076,7 +1080,7 @@ static const struct WindowTemplate sBXPYWindows[] =
         .tilemapTop = 12,
         .width = 8,
         .height = 6,
-        .paletteNum = BXPY_PALETTE_TEXT_ID,
+        .paletteNum = BXPY_PALETTE_MENU_ID,
     },
     [WIN_BXPY_MENU_FULL]
     {
@@ -1085,16 +1089,44 @@ static const struct WindowTemplate sBXPYWindows[] =
         .tilemapTop = 14,
         .width = 8,
         .height = 4,
-        .paletteNum = BXPY_PALETTE_TEXT_ID,
+        .paletteNum = BXPY_PALETTE_MENU_ID,
     },
     DUMMY_WIN_TEMPLATE
 };
 
 const u8 sBXPYWindowFontColors[BXPY_FONT_COLOR_COUNT][3] =
 {
-    [BXPY_FONT_COLOR_BLACK]  = {TEXT_COLOR_TRANSPARENT,  TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY},
-    [BXPY_FONT_COLOR_WHITE]  = {TEXT_COLOR_TRANSPARENT,  TEXT_COLOR_WHITE,  TEXT_COLOR_DARK_GRAY},
-    [BXPY_FONT_COLOR_WHITE_RED]  = {TEXT_COLOR_TRANSPARENT,  TEXT_COLOR_WHITE,  TEXT_COLOR_RED},
+    [BXPY_FONT_COLOR_PLAYER] =
+    {
+        BXPY_TEXT_PALETTE_TRANSPERANT,
+        BXPY_TEXT_PALETTE_WHITE,
+        BXPY_TEXT_PALETTE_BLUE,
+    },
+    [BXPY_FONT_COLOR_PLAYER_SELECTED] =
+    {
+        BXPY_TEXT_PALETTE_TRANSPERANT,
+        BXPY_TEXT_PALETTE_BLACK,
+        BXPY_TEXT_PALETTE_YELLOW,
+    },
+    [BXPY_FONT_COLOR_ENEMY_NAME] =
+    {
+        BXPY_TEXT_PALETTE_TRANSPERANT,
+        BXPY_TEXT_PALETTE_WHITE,
+        BXPY_TEXT_PALETTE_RED,
+    },
+    [BXPY_FONT_COLOR_ENEMY] =
+    {
+        BXPY_TEXT_PALETTE_TRANSPERANT,
+        BXPY_TEXT_PALETTE_BLACK,
+        BXPY_TEXT_PALETTE_GRAY,
+    },
+    [BXPY_FONT_COLOR_HELP_BAR] =
+    {
+        BXPY_TEXT_PALETTE_TRANSPERANT,
+        BXPY_TEXT_PALETTE_WHITE,
+        BXPY_TEXT_PALETTE_LIGHT_BLUE,
+    },
+
 };
 
 static const struct BXPYSpriteSheet sBXPYSpriteSheets[BXPY_SPRITEID_COUNT] =
@@ -1288,7 +1320,6 @@ static void LoadBXPYPalettes(void)
     LoadMonIconPalettes();
     LoadPalette(bxpyBackgroundPalette, BXPY_PALETTE_BG_SLOT, PLTT_SIZE_4BPP);
     LoadPalette(bxpyPalettesText, BXPY_PALETTE_TEXT_SLOT, PLTT_SIZE_4BPP);
-    LoadPalette(bxpyPalettesText, BXPY_PALETTE_MENU_SLOT, PLTT_SIZE_4BPP);
 }
 
 static void PlaySoundStartFadeQuitApp(u8 taskId)
@@ -1495,7 +1526,7 @@ static void BXPY_InitWindows(void)
     DeactivateAllTextPrinters();
 }
 
-static void BXPY_DisplayParty(enum BattleSide side)
+static void BXPY_DisplayParty(enum BattleSide side, bool32 cursorMove)
 {
     u32 bringSize = min(BXPY_GetBringSize(),NUM_BXPY_MAX_MONS_SHOWED);
     enum BXPYWindows windowId = (side == B_SIDE_PLAYER) ? WIN_BXPY_PLAYER_INFO : WIN_BXPY_ENEMY_LEVELS;
@@ -1503,7 +1534,24 @@ static void BXPY_DisplayParty(enum BattleSide side)
     FillWindowPixelBuffer(windowId, PIXEL_FILL(TEXT_COLOR_TRANSPARENT));
 
     for (u32 partyMonIndex = 0; partyMonIndex < bringSize; partyMonIndex++)
-        BXPY_DisplayPartyMon(windowId, partyMonIndex, side);
+    {
+        struct Pokemon *mon = (side == B_SIDE_PLAYER) ? &gPlayerParty[partyMonIndex] : &gEnemyParty[partyMonIndex];
+
+        u32 species = GetMonData(mon,MON_DATA_SPECIES_OR_EGG);
+
+        if (species == SPECIES_NONE)
+            return;
+
+        if (species == SPECIES_EGG)
+            return;
+
+        BXPY_DisplayPartyMonText(windowId, mon, side, partyMonIndex);
+
+        if (cursorMove == TRUE)
+            continue;
+
+        BXPY_DisplayPartyMonIcons(windowId, mon, partyMonIndex, side, species);
+    }
 
     CopyWindowToVram(windowId, COPYWIN_GFX);
 }
@@ -1586,24 +1634,23 @@ static bool8 BXPY_IsMonAlreadySelected(u32 partyMonIndex)
 
 static void BXPY_DisplayPlayerParty(void)
 {
-    BXPY_DisplayParty(B_SIDE_PLAYER);
+    BXPY_DisplayParty(B_SIDE_PLAYER,FALSE);
 }
 
-static void BXPY_DisplayPartyMon(enum BXPYWindows windowId, u32 partyMonIndex, enum BattleSide side)
+static void BXPY_DisplayPlayerPartyCursorMove(void)
 {
-    struct Pokemon *mon = (side == B_SIDE_PLAYER) ? &gPlayerParty[partyMonIndex] : &gEnemyParty[partyMonIndex];
+    BXPY_DisplayParty(B_SIDE_PLAYER,TRUE);
+}
 
-    u32 species = GetMonData(mon,MON_DATA_SPECIES_OR_EGG);
-
-    if (species == SPECIES_NONE)
-        return;
-
-    if (species == SPECIES_EGG)
-        return;
-
+static void BXPY_DisplayPartyMonText(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex)
+{
     BXPY_PrintNickname(windowId, mon, side, partyMonIndex);
     BXPY_PrintItemName(windowId, mon, side, partyMonIndex);
     BXPY_PrintLevel(windowId, mon, side, partyMonIndex);
+}
+
+static void BXPY_DisplayPartyMonIcons(enum BXPYWindows windowId, struct Pokemon *mon, u32 partyMonIndex, enum BattleSide side, u32 species)
+{
     BXPY_PrintSex(windowId, mon, side, partyMonIndex);
     BXPY_PrintMonIcon(windowId, mon, side, partyMonIndex,species);
     BXPY_PrintHP(windowId, mon, side, partyMonIndex);
@@ -1621,11 +1668,12 @@ static void BXPY_PrintNickname(enum BXPYWindows windowId, struct Pokemon *mon, e
     u32 letterSpacing = GetFontAttribute(fontId, FONTATTR_LETTER_SPACING);
     u32 lineSpacing = GetFontAttribute(fontId, FONTATTR_LINE_SPACING);
     u32 windowWidth = BXPY_SPECIES_NICKNAME_WIDTH;
+    u32 color = (BXPY_GetPosition() == partyMonIndex) ? BXPY_FONT_COLOR_PLAYER_SELECTED : BXPY_FONT_COLOR_PLAYER;
 
     GetMonData(mon,MON_DATA_NICKNAME,gStringVar1);
     fontId = GetFontIdToFit(gStringVar1,fontId,letterSpacing,windowWidth);
 
-    AddTextPrinterParameterized4(windowId, fontId, x, y, letterSpacing, lineSpacing, sBXPYWindowFontColors[BXPY_FONT_COLOR_WHITE], TEXT_SKIP_DRAW, gStringVar1);
+    AddTextPrinterParameterized4(windowId, fontId, x, y, letterSpacing, lineSpacing, sBXPYWindowFontColors[color], TEXT_SKIP_DRAW, gStringVar1);
 }
 
 static void BXPY_PrintItemName(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex)
@@ -1643,21 +1691,29 @@ static void BXPY_PrintItemName(enum BXPYWindows windowId, struct Pokemon *mon, e
     u32 letterSpacing = GetFontAttribute(fontId, FONTATTR_LETTER_SPACING);
     u32 lineSpacing = GetFontAttribute(fontId, FONTATTR_LINE_SPACING);
     u32 windowWidth = BXPY_SPECIES_ITEM_WIDTH;
+    u32 color = (BXPY_GetPosition() == partyMonIndex) ? BXPY_FONT_COLOR_PLAYER_SELECTED : BXPY_FONT_COLOR_PLAYER;
 
     StringCopy(gStringVar1,GetItemName(heldItem));
     fontId = GetFontIdToFit(gStringVar1,fontId,letterSpacing,windowWidth);
 
-    AddTextPrinterParameterized4(windowId, fontId, x, y, letterSpacing, lineSpacing, sBXPYWindowFontColors[BXPY_FONT_COLOR_WHITE], TEXT_SKIP_DRAW, gStringVar1);
+    AddTextPrinterParameterized4(windowId, fontId, x, y, letterSpacing, lineSpacing, sBXPYWindowFontColors[color], TEXT_SKIP_DRAW, gStringVar1);
 }
 
 static void BXPY_PrintLevel(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex)
 {
     u32 x = (side == B_SIDE_PLAYER) ? 68 : 8;
     u32 y = (side == B_SIDE_PLAYER) ? 7 + (partyMonIndex * 23) : 0 + (partyMonIndex * 22);
-    u32 color = (side == B_SIDE_PLAYER) ? BXPY_FONT_COLOR_WHITE : BXPY_FONT_COLOR_BLACK;
     u32 fontId = FONT_BXPY_LEVEL;
     u32 letterSpacing = GetFontAttribute(fontId, FONTATTR_LETTER_SPACING);
     u32 lineSpacing = GetFontAttribute(fontId, FONTATTR_LINE_SPACING);
+    u32 color = 0;
+
+    if (side == B_SIDE_OPPONENT)
+        color = BXPY_FONT_COLOR_ENEMY;
+    else if (BXPY_GetPosition() == partyMonIndex)
+        color = BXPY_FONT_COLOR_PLAYER_SELECTED;
+    else
+        color = BXPY_FONT_COLOR_PLAYER;
 
     ConvertIntToDecimalStringN(gStringVar2,GetMonData(mon,MON_DATA_LEVEL),STR_CONV_MODE_LEFT_ALIGN,CountDigits(MAX_LEVEL));
     StringExpandPlaceholders(gStringVar1,COMPOUND_STRING("{LV}{STR_VAR_2}"));
@@ -1944,7 +2000,7 @@ static void BXPY_PrintHP(enum BXPYWindows windowId, struct Pokemon *mon, enum Ba
 static void BXPY_DisplayEnemyParty(void)
 {
     BXPY_DisplayEnemyName();
-    BXPY_DisplayParty(B_SIDE_OPPONENT);
+    BXPY_DisplayParty(B_SIDE_OPPONENT,FALSE);
 }
 
 static void BXPY_DisplayEnemyName(void)
@@ -1968,7 +2024,7 @@ static void BXPY_PrintEnemyName(enum BXPYWindows windowId)
     StringCopy(gStringVar4, GetTrainerNameFromId(TRAINER_BATTLE_PARAM.opponentA));
     fontId = GetFontIdToFit(gStringVar4,fontId,letterSpacing,windowWidth);
 
-    AddTextPrinterParameterized4(windowId, fontId, x, y, letterSpacing, lineSpacing, sBXPYWindowFontColors[BXPY_FONT_COLOR_WHITE_RED], TEXT_SKIP_DRAW, gStringVar4);
+    AddTextPrinterParameterized4(windowId, fontId, x, y, letterSpacing, lineSpacing, sBXPYWindowFontColors[BXPY_FONT_COLOR_ENEMY_NAME], TEXT_SKIP_DRAW, gStringVar4);
 }
 
 static void BXPY_DisplayHelpBar(enum BXPYWindows windowId)
@@ -2009,7 +2065,7 @@ static void BXPY_PrintHelpBarText(enum BXPYWindows windowId)
 
     StringExpandPlaceholders(gStringVar4,gStringVar4);
 
-    AddTextPrinterParameterized4(windowId, fontId, x, y, letterSpacing, lineSpacing, sBXPYWindowFontColors[BXPY_FONT_COLOR_WHITE], TEXT_SKIP_DRAW, gStringVar4);
+    AddTextPrinterParameterized4(windowId, fontId, x, y, letterSpacing, lineSpacing, sBXPYWindowFontColors[BXPY_FONT_COLOR_HELP_BAR], TEXT_SKIP_DRAW, gStringVar4);
 }
 
 static bool8 BXPY_HasSelectedEnough(void)
@@ -2218,11 +2274,11 @@ static void BXPY_CreateMonMenu(void)
 {
     struct TextPrinterTemplate printer;
     u32 baseTileNum = 1;
-    u32 paletteNum = BXPY_PALETTE_TEXT_ID;
+    u32 paletteNum = BXPY_PALETTE_BORDER_ID;
     u32 windowId = BXPY_ShouldHandleMonsWithFullMenu() ? WIN_BXPY_MENU_FULL : WIN_BXPY_MENU;
 
-    LoadUserWindowBorderGfx(windowId,1,BXPY_PALETTE_MENU_SLOT);
-    DrawStdFrameWithCustomTileAndPalette(windowId, TRUE, baseTileNum, paletteNum);
+    LoadUserWindowBorderGfx(windowId,1,BXPY_PALETTE_BORDER_SLOT);
+    DrawStdFrameWithCustomTileAndPalette(windowId, TRUE, baseTileNum, BXPY_PALETTE_BORDER_ID);
 
     if (BXPY_IsCursorOnSelectedMon())
         printer.currentChar = sText_RemoveMenu;
