@@ -2475,6 +2475,7 @@ void ShowScrollableMultichoice(void)
         task->tKeepOpenAfterSelect = FALSE;
         task->tTaskId = taskId;
         break;
+#if IS_HNS
     case SCROLL_MULTI_BF_MOVE_TUTOR_3:
         task->tMaxItemsOnScreen = 4;
         task->tNumItems = 4;
@@ -2485,6 +2486,7 @@ void ShowScrollableMultichoice(void)
         task->tKeepOpenAfterSelect = FALSE;
         task->tTaskId = taskId;
         break;
+#endif
     case SCROLL_MULTI_SS_TIDAL_DESTINATION:
         task->tMaxItemsOnScreen = MAX_SCROLL_MULTI_ON_SCREEN;
         task->tNumItems = 7;
@@ -2668,6 +2670,7 @@ static const u8 *const sScrollableMultichoiceOptions[][MAX_SCROLL_MULTI_LENGTH] 
         COMPOUND_STRING("FIRE PUNCH{CLEAR_TO 0x4E}48BP"),
         gText_Exit
     },
+#if IS_HNS
         [SCROLL_MULTI_BF_MOVE_TUTOR_3] =
     {
         COMPOUND_STRING("FRENZY PLANT{CLEAR_TO 0x4E}64BP"),
@@ -2675,6 +2678,7 @@ static const u8 *const sScrollableMultichoiceOptions[][MAX_SCROLL_MULTI_LENGTH] 
         COMPOUND_STRING("HYDRO CANNON{CLEAR_TO 0x4E}64BP"),
         gText_Exit
     },
+#endif
     [SCROLL_MULTI_SS_TIDAL_DESTINATION] =
     {
         gText_SlateportCity,
@@ -3235,7 +3239,11 @@ static void ShowBattleFrontierTutorWindow(enum ScrollMulti menu, u16 selection)
         .baseBlock = 28,
     };
 
-    if (menu == SCROLL_MULTI_BF_MOVE_TUTOR_1 || menu == SCROLL_MULTI_BF_MOVE_TUTOR_2 || menu == SCROLL_MULTI_BF_MOVE_TUTOR_3)
+    if (menu == SCROLL_MULTI_BF_MOVE_TUTOR_1 || menu == SCROLL_MULTI_BF_MOVE_TUTOR_2
+#if IS_HNS
+        || menu == SCROLL_MULTI_BF_MOVE_TUTOR_3
+#endif
+    )
     {
         if (gSpecialVar_0x8006 == 0)
         {
@@ -3279,6 +3287,7 @@ static void ShowBattleFrontierTutorMoveDescription(enum ScrollMulti menu, u16 se
     };
 
 
+#if IS_HNS
     static const u8 *const sBattleFrontier_TutorMoveDescriptions3[] =
     {
         BattleFrontier_Lounge7_Text_StrongElementalMoveDesc,
@@ -3286,16 +3295,23 @@ static void ShowBattleFrontierTutorMoveDescription(enum ScrollMulti menu, u16 se
         BattleFrontier_Lounge7_Text_StrongElementalMoveDesc,
         gText_Exit,
     };
+#endif
 
-    if (menu == SCROLL_MULTI_BF_MOVE_TUTOR_1 || menu == SCROLL_MULTI_BF_MOVE_TUTOR_2 || menu == SCROLL_MULTI_BF_MOVE_TUTOR_3)
+    if (menu == SCROLL_MULTI_BF_MOVE_TUTOR_1 || menu == SCROLL_MULTI_BF_MOVE_TUTOR_2
+#if IS_HNS
+        || menu == SCROLL_MULTI_BF_MOVE_TUTOR_3
+#endif
+    )
     {
         FillWindowPixelRect(sTutorMoveAndElevatorWindowId, PIXEL_FILL(1), 0, 0, 96, 48);
         if (menu == SCROLL_MULTI_BF_MOVE_TUTOR_2)
             AddTextPrinterParameterized(sTutorMoveAndElevatorWindowId, FONT_NORMAL, sBattleFrontier_TutorMoveDescriptions2[selection], 0, 1, 0, NULL);
         else if (menu == SCROLL_MULTI_BF_MOVE_TUTOR_1)
             AddTextPrinterParameterized(sTutorMoveAndElevatorWindowId, FONT_NORMAL, sBattleFrontier_TutorMoveDescriptions1[selection], 0, 1, 0, NULL);
+#if IS_HNS
         else
             AddTextPrinterParameterized(sTutorMoveAndElevatorWindowId, FONT_NORMAL, sBattleFrontier_TutorMoveDescriptions3[selection], 0, 1, 0, NULL);
+#endif
     }
 }
 
