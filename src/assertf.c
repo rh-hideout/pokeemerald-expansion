@@ -211,16 +211,29 @@ static bool32 Putx(u32 *x, u32 *y, unsigned u)
     return TRUE;
 }
 
+static u32 CenterText(const char *str)
+{
+    u32 len = 0;
+    while (str[len] != '\0')
+        len++;
+
+    return (len < 30) ? (30 - len) / 2 : 0;
+}
+
+static const char PressStartContinue[] = "Press START to continue.";
+static void PrintFooter(const char *footer)
+{
+    u32 x = CenterText(footer);
+    u32 y = 19;
+    while (*footer != '\0')
+        Putc(&x, &y, *footer++);
+}
+
 // This printf renders directly into VRAM rather than into a buffer.
 static void Vprintf(const void *return1, const void *return0, const char *fmt, va_list va)
 {
     u32 x, y;
-
-    x = 3;
-    y = 19;
-    static const char footer[] = "Press START to continue.";
-    for (u32 i = 0; i < sizeof(footer) - 1; i++)
-        Putc(&x, &y, footer[i]);
+    PrintFooter(PressStartContinue);
 
     x = 0;
     y = 0;
@@ -297,7 +310,7 @@ struct Backup
 
 /* Blue Screen of Death style screen that displays the error message and
  * hijacks the main loop until the start button is pressed. */
-void AssertfCrashScreen(const void *return1, const char *fmt, ...)
+static void BlueScreenOpen(struct Backup **backupOut)
 {
     // Backup and override hardware state.
     struct Backup *backup = NULL;
@@ -350,12 +363,11 @@ void AssertfCrashScreen(const void *return1, const char *fmt, ...)
     for (u32 i = 0; i < 32 * 20; i++)
         ((vu16 *)VRAM)[i] = TILE0_OFFSET;
     BitUnPack(sGlyphs1BPP, (void *)(VRAM + TILE_OFFSET_4BPP(TILE0_OFFSET)), &sBitUnPack1BPP);
+    *backupOut = backup;
+}
 
-    va_list va;
-    va_start(va, fmt);
-    Vprintf(return1, __builtin_return_address(0), fmt, va);
-    va_end(va);
-
+static void BlueScreenClose(struct Backup *backup)
+{
     BusyWaitForVBlank();
     REG_DISPCNT = DISPCNT_MODE_0 | DISPCNT_BG0_ON;
 
@@ -399,4 +411,18 @@ void AssertfCrashScreen(const void *return1, const char *fmt, ...)
 
     if (backup->onHeap)
         Free(backup);
+}
+
+void AssertfCrashScreen(const void *return1, const char *fmt, ...)
+{
+    struct Backup *backup = NULL;
+    BlueScreenOpen(&backup);
+    if (backup == NULL)
+        return;
+
+    va_list va;
+    va_start(va, fmt);
+    Vprintf(return1, __builtin_return_address(0), fmt, va);
+    va_end(va);
+    BlueScreenClose(backup);
 }
