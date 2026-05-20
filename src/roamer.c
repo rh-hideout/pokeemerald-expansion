@@ -1,6 +1,7 @@
 #include "global.h"
 #include "event_data.h"
 #include "event_object_movement.h"
+#include "field_effect.h"
 #include "field_player_avatar.h"
 #include "fieldmap.h"
 #include "ow_synchronize.h"
@@ -502,6 +503,16 @@ enum {
 #define tFrames     data[3]
 #define tMaxFrames  data[4]
 
+static void DestroyRoamerFlashSprite(struct Sprite *sprite)
+{
+    u8 paletteNum = sprite->oam.paletteNum;
+    u16 tileStart = sprite->sheetTileStart;
+    DestroySprite(sprite);
+    FieldEffectFreePaletteIfUnused(paletteNum);
+    if (tileStart)
+        FieldEffectFreeTilesIfUnused(tileStart);
+}
+
 static void Task_RoamerFlash(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
@@ -513,7 +524,7 @@ static void Task_RoamerFlash(u8 taskId)
 
     if (task->tFrames >= task->tMaxFrames)
     {
-        DestroySprite(sprite);
+        DestroyRoamerFlashSprite(sprite);
         DestroyTask(taskId);
     }
 }
@@ -565,7 +576,7 @@ static void Task_RoamerPeek(u8 taskId)
         sprite->y += 5;
         if (task->tFrames >= 28)
         {
-            DestroySprite(sprite);
+            DestroyRoamerFlashSprite(sprite);
             DestroyTask(taskId);
         }
         break;
@@ -602,7 +613,7 @@ void TryShowRoamerFlash(void)
     if (species == SPECIES_NONE)
         return;
 
-    if (CountFreeSpriteTiles() < 32)
+    if (CountFreeSpriteTiles() < 64)
         return;
 
     flashType = Random() % ROAMER_FLASH_COUNT;
