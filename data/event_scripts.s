@@ -1061,6 +1061,10 @@ gStdScripts_End::
 
 EventScript_WhiteOut::
 	call EverGrandeCity_HallOfFame_EventScript_ResetEliteFour
+.if IS_HNS
+	clearflag FLAG_SYS_NO_CATCHING
+	clearflag FLAG_NO_SHINY
+.endif
 	goto EventScript_ResetMrBriney
 	end
 
