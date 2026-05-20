@@ -13,6 +13,7 @@ void BXPY_Init(enum BXPYBattleTypes battleType, u32 bringSize, u32 pickSize, u32
 void BXPY_TryHealAfterBattle(void);
 void BXPY_TryHealBeforeBattle(void);
 
+bool8 BXPY_IsSummaryScreenForEnemy(enum PokemonSummaryScreenMode mode);
 bool8 BXPY_ShouldHideEnemyAbility(enum PokemonSummaryScreenMode mode);
 bool8 BXPY_ShouldHideEnemyNature(enum PokemonSummaryScreenMode mode);
 bool8 BXPY_ShouldHideEnemyEffortValues(enum PokemonSummaryScreenMode mode, enum PokemonSummarySkillsMode stats);

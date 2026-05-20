@@ -35,7 +35,6 @@ static void BXPY_PrepareParty(u32 pickSize);
 static void BXPY_DeleteNonAliveMons(void);
 static void BXPY_SelectPartyMembers(struct Pokemon *party, u8* enteredMons);
 static u32 BXPY_ConvertBattleTypeToFlags(enum BXPYBattleTypes battleType);
-static bool8 BXPY_IsSummaryScreenForEnemy(enum PokemonSummaryScreenMode mode);
 static void Task_BXPY_PartySelection(u8 taskId);
 
 static void (*const sBXPYErrorCheckFuncs[])(void) =
@@ -434,7 +433,7 @@ static u32 BXPY_ConvertBattleTypeToFlags(enum BXPYBattleTypes battleType)
         return (BATTLE_TYPE_DOUBLE | BATTLE_TYPE_TRAINER);
 }
 
-static bool8 BXPY_IsSummaryScreenForEnemy(enum PokemonSummaryScreenMode mode)
+bool8 BXPY_IsSummaryScreenForEnemy(enum PokemonSummaryScreenMode mode)
 {
     return (mode == SUMMARY_MODE_BXPY);
 }
@@ -825,7 +824,6 @@ static void Task_BXPY_PartySelection(u8 taskId)
             BXPY_GoToPokemonSummary(taskId);
         else
             BXPY_SelectMonAndShowMenu(taskId);
-            //BXPY_AddRemoveSelectedMon();
         return;
     }
 
@@ -1037,7 +1035,7 @@ static const struct WindowTemplate sBXPYWindows[] =
 {
     [WIN_BXPY_PLAYER_INFO] =
     {
-        .bg = BG0_BXPY_TEXT,
+        .bg = BG1_BXPY_INFO,
         .tilemapLeft = 2,
         .tilemapTop = 0,
         .width = 11,
@@ -1046,7 +1044,7 @@ static const struct WindowTemplate sBXPYWindows[] =
     },
     [WIN_BXPY_ENEMY_NAME] =
     {
-        .bg = BG0_BXPY_TEXT,
+        .bg = BG1_BXPY_INFO,
         .tilemapLeft = 23,
         .tilemapTop = 0,
         .width = 6,
@@ -1055,7 +1053,7 @@ static const struct WindowTemplate sBXPYWindows[] =
     },
     [WIN_BXPY_ENEMY_LEVELS] =
     {
-        .bg = BG0_BXPY_TEXT,
+        .bg = BG1_BXPY_INFO,
         .tilemapLeft = 23,
         .tilemapTop = 2,
         .width = 4,
@@ -1064,7 +1062,7 @@ static const struct WindowTemplate sBXPYWindows[] =
     },
     [WIN_BXPY_HELP_BAR] =
     {
-        .bg = BG0_BXPY_TEXT,
+        .bg = BG1_BXPY_INFO,
         .tilemapLeft = 0,
         .tilemapTop = 18,
         .width = 30,
@@ -1290,6 +1288,7 @@ static void LoadBXPYPalettes(void)
     LoadMonIconPalettes();
     LoadPalette(bxpyBackgroundPalette, BXPY_PALETTE_BG_SLOT, PLTT_SIZE_4BPP);
     LoadPalette(bxpyPalettesText, BXPY_PALETTE_TEXT_SLOT, PLTT_SIZE_4BPP);
+    LoadPalette(bxpyPalettesText, BXPY_PALETTE_MENU_SLOT, PLTT_SIZE_4BPP);
 }
 
 static void PlaySoundStartFadeQuitApp(u8 taskId)
@@ -1703,7 +1702,7 @@ static void BXPY_PrintSex(enum BXPYWindows windowId, struct Pokemon *mon, enum B
     u32 spriteId = CreateSprite(&TempSpriteTemplate, x, y, 0);
     gSprites[spriteId].oam.shape = SPRITE_SHAPE(16x16);
     gSprites[spriteId].oam.size = SPRITE_SIZE(16x16);
-    gSprites[spriteId].oam.priority = 0;
+    gSprites[spriteId].oam.priority = 1;
 
 
     u32 animState = (sex == MON_FEMALE) ? 0 : 1;
@@ -2102,19 +2101,21 @@ static void Task_LoadPokemonSummary(u8 taskId)
     u32 selectedMon = BXPY_GetPosition();
     u32 partySize = BXPY_GetBringSize();
 
-    DebugPrintf("partySize %d",partySize);
-    DebugPrintf("selectedMon %d",selectedMon);
 
     if (BXPY_IsCursorOnEnemy())
     {
         u32 trainerId = TRAINER_BATTLE_PARAM.opponentA;
         const struct Trainer *viewedTrainer = &gTrainers[GetCurrentDifficultyLevel()][trainerId];
-        partySize = (CreateNPCTrainerPartyFromTrainer(party, viewedTrainer, TRUE, BATTLE_TYPE_TRAINER)) - 1;
+        partySize = (CreateNPCTrainerPartyFromTrainer(party, viewedTrainer, TRUE, BATTLE_TYPE_TRAINER));
         selectedMon = selectedMon - partySize;
+        partySize--;
     }
 
     DestroyTask(taskId);
     FreeAllWindowBuffers();
+
+    DebugPrintf("partySize %d",partySize);
+    DebugPrintf("selectedMon %d",selectedMon);
 
     if (BXPY_IsCursorOnEnemy())
         ShowPokemonSummaryScreen(SUMMARY_MODE_BXPY, party, selectedMon, partySize, CB2_ReturnToBXPYInterface);
@@ -2178,14 +2179,15 @@ static void BXPY_HandleMonClearMenu(u8 taskId)
 
 static void BXPY_ClearMenuReturnToMainTask(u8 taskId)
 {
-    ClearWindowCopyToVram(WIN_BXPY_MENU);
-    ClearWindowCopyToVram(WIN_BXPY_MENU_FULL);
+    ClearStdWindowAndFrameToTransparent(WIN_BXPY_MENU_FULL,TRUE);
+    ClearStdWindowAndFrameToTransparent(WIN_BXPY_MENU,TRUE);
     gTasks[taskId].func = Task_BXPY_PartySelection;
 }
 
 static void Task_HandleMonMenu(u8 taskId)
 {
-    s8 input = Menu_ProcessInputNoWrapClearOnChoose();
+    //s8 input = Menu_ProcessInputNoWrapClearOnChoose();
+    s8 input = Menu_ProcessInput();
 
     if (input == MENU_B_PRESSED || input == BXPY_MENU_CANCEL)
     {
@@ -2217,12 +2219,9 @@ static void BXPY_CreateMonMenu(void)
     struct TextPrinterTemplate printer;
     u32 baseTileNum = 1;
     u32 paletteNum = BXPY_PALETTE_TEXT_ID;
-    u32 windowId = WIN_BXPY_MENU;
+    u32 windowId = BXPY_ShouldHandleMonsWithFullMenu() ? WIN_BXPY_MENU_FULL : WIN_BXPY_MENU;
 
-
-    if (BXPY_ShouldHandleMonsWithFullMenu())
-        windowId = WIN_BXPY_MENU_FULL;
-
+    LoadUserWindowBorderGfx(windowId,1,BXPY_PALETTE_MENU_SLOT);
     DrawStdFrameWithCustomTileAndPalette(windowId, TRUE, baseTileNum, paletteNum);
 
     if (BXPY_IsCursorOnSelectedMon())
