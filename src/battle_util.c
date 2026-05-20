@@ -753,8 +753,12 @@ void HandleAction_SafariZoneBallThrow(void)
     gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
     gBattle_BG0_X = 0;
     gBattle_BG0_Y = 0;
+#if IS_HNS
+    gLastUsedItem = gBallToDisplay;
+#else
     gNumSafariBalls--;
     gLastUsedItem = ITEM_SAFARI_BALL;
+#endif
     gBattlescriptCurrInstr = BattleScript_SafariBallThrow;
     gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
 }

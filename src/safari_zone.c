@@ -2,6 +2,7 @@
 #include "battle.h"
 #include "event_data.h"
 #include "field_player_avatar.h"
+#include "item.h"
 #include "overworld.h"
 #include "main.h"
 #include "pokeblock.h"
@@ -10,6 +11,7 @@
 #include "string_util.h"
 #include "tv.h"
 #include "constants/game_stat.h"
+#include "constants/items.h"
 #include "field_screen_effect.h"
 
 struct PokeblockFeeder
@@ -58,6 +60,9 @@ void EnterSafariMode(void)
     SetSafariZoneFlag();
     ClearAllPokeblockFeeders();
     gNumSafariBalls = 30;
+#if IS_HNS
+    AddBagItem(ITEM_SAFARI_BALL, 30);
+#endif
     if (IS_FRLG)
         gSafariZoneStepCounter = 600;
     else
@@ -71,6 +76,13 @@ void ExitSafariMode(void)
     TryPutSafariFanClubOnAir(sSafariZoneCaughtMons, sSafariZonePkblkUses);
     ResetSafariZoneFlag();
     ClearAllPokeblockFeeders();
+#if IS_HNS
+    {
+        u16 remaining = CountTotalItemQuantityInBag(ITEM_SAFARI_BALL);
+        if (remaining > 0)
+            RemoveBagItem(ITEM_SAFARI_BALL, remaining);
+    }
+#endif
     gNumSafariBalls = 0;
     gSafariZoneStepCounter = 0;
 }
