@@ -50,6 +50,7 @@ struct BXPYState
     u8 bringSize;
     u8 pickSize;
     struct Pokemon tempParty[PARTY_SIZE];
+    u8 page;
 };
 
 struct BXPYSpriteSheet

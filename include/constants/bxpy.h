@@ -274,4 +274,11 @@ enum BXPYMenuChoices
     BXPY_MENU_COUNT,
 };
 
+enum BXPYPages
+{
+    BXPY_PAGE_OPPONENT_A,
+    BXPY_PAGE_OPPONENT_B,
+    BXPY_PAGE_COUNT,
+};
+
 #endif //GUARD_CONSTANTS_BXPY_H

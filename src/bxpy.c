@@ -340,26 +340,19 @@ static void BXPY_PrepareEnemyParty(u32 bringSize, u32 battleFlags)
     CreateNPCTrainerPartyFromTrainer(&gEnemyParty[PARTY_SIZE/2], &gTrainers[GetCurrentDifficultyLevel()][TRAINER_BATTLE_PARAM.opponentB], FALSE, battleFlags);
 }
 
-static void BXPY_GetPlayerEnterMons(u8* enteredMons, u32 pickSize)
+static void BXPY_GetEnemyEnterMons(u8* enteredMons, u32 pickSize)
 {
     u32 mons[PARTY_SIZE] = {0, 1, 2, 3, 4, 5};
 
     for (u32 i = 0; i < PARTY_SIZE; i++)
         enteredMons[i] = PARTY_SIZE;
 
-    u8 taskId = CreateTask(Task_BXPY_PartySelection,0);
     // Start BXPY TODO Replace with Pawkkie's logic and UI output
     Shuffle(mons, ARRAY_COUNT(mons), sizeof(mons[0]));
 
     for (u32 i = 0; i < PARTY_SIZE; i++)
         enteredMons[i] = (i < pickSize) ? mons[i] : PARTY_SIZE;
     // End BXPY TODO Replace with Pawkkie's logic and UI output
-    DestroyTask(taskId);
-}
-
-static void BXPY_GetEnemyEnterMons(u8* enteredMons, u32 pickSize)
-{
-    BXPY_GetPlayerEnterMons(enteredMons, pickSize);
 }
 
 static void BXPY_PrepareParty(u32 pickSize)
@@ -746,6 +739,8 @@ static bool8 AllocZeroedTilemapBuffers(void);
 static void HandleAndShowBgs(void);
 static void SetScheduleBgs(enum BXPYBackgrounds backgroundId);
 static void BXPY_DisplayPartyMonText(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex);
+static void BXPY_SetPage(u32 page);
+static u32 BXPY_GetPage(void);
 static void BXPY_SelectMonAndShowMenu(u8 taskId);
 static bool8 BXPY_ShouldHandleMonsWithFullMenu(void);
 static void Task_HandleMonMenu(u8 taskId);
@@ -949,6 +944,16 @@ static void BXPY_SetBattleFlags(u32 battleFlags)
 static u32 BXPY_GetBattleFlags(void)
 {
     return sBXPYState->battleFlags;
+}
+
+static void BXPY_SetPage(u32 page)
+{
+    sBXPYState->page = page;
+}
+
+static u32 BXPY_GetPage(void)
+{
+    return sBXPYState->page;
 }
 
 static void BXPY_SetSpriteId(u32 spriteIndex, u32 spriteId)
@@ -1339,10 +1344,8 @@ static void Task_WaitFadeAndExitGracefully(u8 taskId)
     for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
         playerEnteredMons[partyIndex] = BXPY_GetSelectedMons(partyIndex);
 
-    //BXPY_GetPlayerEnterMons(playerEnteredMons,pickSize);
     u8 enemyEnteredMons[PARTY_SIZE] = {BXPY_EMPTY_MON};
     BXPY_GetEnemyEnterMons(enemyEnteredMons,BXPY_GetPickSize());
-    // BXPY TODO Add Pawkkie logic to GetEnemyEnterMons
     BXPY_SelectPartyMembers(gPlayerParty,playerEnteredMons);
     BXPY_SelectPartyMembers(gEnemyParty,enemyEnteredMons);
 
@@ -2274,10 +2277,9 @@ static void BXPY_CreateMonMenu(void)
 {
     struct TextPrinterTemplate printer;
     u32 baseTileNum = 1;
-    u32 paletteNum = BXPY_PALETTE_BORDER_ID;
     u32 windowId = BXPY_ShouldHandleMonsWithFullMenu() ? WIN_BXPY_MENU_FULL : WIN_BXPY_MENU;
 
-    LoadUserWindowBorderGfx(windowId,1,BXPY_PALETTE_BORDER_SLOT);
+    LoadUserWindowBorderGfx(windowId,baseTileNum,BXPY_PALETTE_BORDER_SLOT);
     DrawStdFrameWithCustomTileAndPalette(windowId, TRUE, baseTileNum, BXPY_PALETTE_BORDER_ID);
 
     if (BXPY_IsCursorOnSelectedMon())
