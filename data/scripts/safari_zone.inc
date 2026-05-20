@@ -1,29 +1,50 @@
 SafariZone_EventScript_OutOfBallsMidBattle::
-#ifdef IS_FRLG
+#if IS_FRLG
 	setvar VAR_MAP_SCENE_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE, 3
+#elif IS_HNS
+	setvar VAR_SAFARI_ZONE_STATE, 1
 #else
 	setvar VAR_SAFARI_ZONE_STATE, 1
 #endif
 	special ExitSafariMode
-#ifdef IS_FRLG
+#if IS_FRLG
 	setwarp MAP_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE, 4, 1
+#elif IS_HNS
+	goto_if_set FLAG_IN_KANTO_SAFARI_ZONE, SafariZone_EventScript_ExitKantoMidBattle
+	setwarp MAP_SAFARI_ZONE_GATE_SAFARI_ZONE_ENTRANCE_HNS, 9, 3
 #else
 	setwarp MAP_ROUTE121_SAFARI_ZONE_ENTRANCE, 2, 5
 #endif
 	end
 
+SafariZone_EventScript_ExitKantoMidBattle::
+	clearflag FLAG_IN_KANTO_SAFARI_ZONE
+	setwarp MAP_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE_HNS, 5, 6
+	end
+
 SafariZone_EventScript_Exit::
-#ifdef IS_FRLG
+#if IS_FRLG
 	setvar VAR_MAP_SCENE_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE, 1
+#elif IS_HNS
+	setvar VAR_SAFARI_ZONE_STATE, 1
 #else
 	setvar VAR_SAFARI_ZONE_STATE, 1
 #endif
 	special ExitSafariMode
-#ifdef IS_FRLG
+#if IS_FRLG
 	warp MAP_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE, 4, 1
+#elif IS_HNS
+	goto_if_set FLAG_IN_KANTO_SAFARI_ZONE, SafariZone_EventScript_ExitKanto
+	warp MAP_SAFARI_ZONE_GATE_SAFARI_ZONE_ENTRANCE_HNS, 9, 3
 #else
 	warp MAP_ROUTE121_SAFARI_ZONE_ENTRANCE, 2, 5
 #endif
+	waitstate
+	end
+
+SafariZone_EventScript_ExitKanto::
+	clearflag FLAG_IN_KANTO_SAFARI_ZONE
+	warp MAP_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE_HNS, 5, 6
 	waitstate
 	end
 
