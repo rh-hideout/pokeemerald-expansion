@@ -416,3 +416,103 @@ VermilionCity_Text_DiglettsCaveSign:
 VermilionCity_Text_PortSign:
 	.string "VERMILION PORT\n"
 	.string "ENTRANCE$"
+
+VermilionCity_EventScript_TriggerStevenLeft::
+	lock
+	applymovement2 LOCALID_VERMILIONCITY_STEVEN, Common_Movement_WalkLeft1
+	waitmovement 0
+	call VermilionCity_EventScript_LatiChoice
+	applymovement2 LOCALID_VERMILIONCITY_STEVEN, Common_Movement_WalkRight1
+	waitmovement 0
+	applymovement2 LOCALID_VERMILIONCITY_STEVEN, VermilionCity_Movement_StevenWalkToPlayer
+	waitmovement 0
+	applymovement2 LOCALID_VERMILIONCITY_STEVEN, Common_Movement_WalkDown1
+	waitmovement 0
+	setvar VAR_VERMILION_CITY_STEVEN, 1
+	removeobject LOCALID_VERMILIONCITY_STEVEN
+	release
+	end
+
+VermilionCity_EventScript_TriggerStevenMiddle::
+	lock
+	call VermilionCity_EventScript_LatiChoice
+	applymovement2 LOCALID_VERMILIONCITY_STEVEN, Common_Movement_WalkLeft1
+	waitmovement 0
+	applymovement2 LOCALID_VERMILIONCITY_STEVEN, VermilionCity_Movement_StevenWalkToPlayer
+	waitmovement 0
+	applymovement2 LOCALID_VERMILIONCITY_STEVEN, Common_Movement_WalkDown1
+	waitmovement 0
+	setvar VAR_VERMILION_CITY_STEVEN, 1
+	removeobject LOCALID_VERMILIONCITY_STEVEN
+	release
+	end
+ 
+VermilionCity_EventScript_TriggerStevenRight::
+	lock
+	applymovement2 LOCALID_VERMILIONCITY_STEVEN, Common_Movement_WalkRight1
+	waitmovement 0
+	call VermilionCity_EventScript_LatiChoice
+	applymovement2 LOCALID_VERMILIONCITY_STEVEN, Common_Movement_WalkLeft1
+	waitmovement 0
+	applymovement2 LOCALID_VERMILIONCITY_STEVEN, VermilionCity_Movement_StevenWalkToPlayer
+	waitmovement 0
+	applymovement2 LOCALID_VERMILIONCITY_STEVEN, Common_Movement_WalkDown1
+	waitmovement 0
+	setvar VAR_VERMILION_CITY_STEVEN, 1
+	removeobject LOCALID_VERMILIONCITY_STEVEN
+	release
+	end
+
+
+VermilionCity_EventScript_LatiChoice::
+	applymovement2 LOCALID_VERMILIONCITY_STEVEN, VermilionCity_Movement_StevenWalkToPlayer
+	waitmovement 0	
+	msgbox VermilionCity_Text_StevenIntro, MSGBOX_DEFAULT
+	multichoice 20, 8, MULTI_TV_LATI, TRUE
+	@goto_if_eq VAR_RESULT, MULTI_B_PRESSED, VermilionCity_EventScript_LatiCancel
+	copyvar VAR_0x8004, VAR_RESULT
+	copyvar VAR_ROAMER_POKEMON_HNS, VAR_RESULT
+	special InitKantoRoamers
+	setflag FLAG_LATIOS_OR_LATIAS_ROAMING
+	msgbox VermilionCity_Text_StevenOutro, MSGBOX_DEFAULT
+	closemessage
+	return
+
+VermilionCity_Movement_StevenWalkToPlayer:
+	walk_down
+	walk_down
+	walk_down
+	walk_down
+	walk_down
+	walk_down
+	step_end
+
+VermilionCity_Text_StevenIntro:
+	.string "Hi!\n"
+	.string "My name is Steven.\l"
+	.string "The Champion from the HOENN region.\p"
+	.string "Have we met...before?\p"
+	.string "That's not possible. \n"
+	.string "All the trainers I have battled\l"
+	.string "seem to have the same look, anyway.\p"
+	.string "Especially the ones who gave me\n"
+	.string "tough battles.\p"
+	.string "I'm in KANTO for business.\n"
+	.string "Recently many HOENN POKéMON have\l"
+	.string "migrated to this region.\l"
+	.string "This influx risks disrupting the\l"
+	.string "natural ecosystem here.\p"
+	.string "So with the help of my company,\n"
+	.string "I'm creating a special habitat\l"
+	.string "to attract and contain the most\l"
+	.string "invasive species.\p"
+	.string "Make sure you keep an eye out\n"
+	.string "and catch any HOENN POKéMON you see.\p"
+	.string "Some trainers have even reported\n"
+	.string "one that soars through the sky like\l"
+	.string "a jet... What color was it again?$"
+
+VermilionCity_Text_StevenOutro:
+	.string "Ah, that's right.\p"
+	.string "I must go.\n"
+	.string "May our journeys cross again.$"

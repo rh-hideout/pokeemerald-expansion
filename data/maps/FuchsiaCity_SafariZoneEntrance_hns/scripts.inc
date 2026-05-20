@@ -221,11 +221,16 @@ FuchsiaCity_SafariZoneEntrance_Movement_ReturnToTable:
 	step_end
 
 FuchsiaCity_SafariZoneEntrance_Text_StevenWelcome:
-	.string "My name is STEVEN. My family's\n"
-	.string "company recently purchased this\l"
-	.string "SAFARI ZONE, and we've made many\l"
-	.string "improvements.\p"
-	.string "You'll find very exotic POKéMON\n"
+	.string "Hello again, {PLAYER}!\p"
+	.string "Welcome to the DEVON SAFARI ZONE!\p"
+	.string "This specially designed safari\n"
+	.string "Has 4 different habitats that\l"
+	.string "attract and house different invasive\l"
+	.string "species from the HOENN region.\p"
+	.string "We encourage trainers to capture\n"
+	.string "as many as they can to safely\l"
+	.string "remove them from the environment.\p"
+	.string "You'll find very rare POKéMON\n"
 	.string "here. Especially if you increase\l"
 	.string "your SAFARI LEVEL.\p"
 	.string "Just speak to the attendant here\n"

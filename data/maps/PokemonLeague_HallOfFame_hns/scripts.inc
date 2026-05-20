@@ -96,7 +96,9 @@ PokemonLeague_HallOfFame_EventScript_SpawnRoamers::
 	clearflag FLAG_CAUGHT_ENTEI
 	clearflag FLAG_CAUGHT_RAIKOU
 	special InitRoamer
+	copyvar VAR_0x8004, VAR_ROAMER_POKEMON_HNS
 	special InitKantoRoamers
+	setflag FLAG_LATIOS_OR_LATIAS_ROAMING
 	return
 
 PokemonLeague_HallOfFame_EventScript_SpawnSuicune::

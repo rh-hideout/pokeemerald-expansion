@@ -699,7 +699,7 @@
 #define FLAG_ITEM_SAFFRON_GYM_TM_SKILL_SWAP         (HNS_ITEMS_2_START + 17)
 #define FLAG_ITEM_UNDERGROUND_PATH_TM_EXPLOSION      (HNS_ITEMS_2_START + 18)
 #define FLAG_ITEM_OLIVINE_TM_SWAGGER                  (HNS_ITEMS_2_START + 19)
-#define FLAG_UNUSED_HIDDEN_ITEM_20                  (HNS_ITEMS_2_START + 20)
+#define FLAG_ITEM_SOUTHER_ISLAND_SOUL_DEW                  (HNS_ITEMS_2_START + 20)
 #define FLAG_UNUSED_HIDDEN_ITEM_21                  (HNS_ITEMS_2_START + 21)
 #define FLAG_UNUSED_HIDDEN_ITEM_22                  (HNS_ITEMS_2_START + 22)
 #define FLAG_UNUSED_HIDDEN_ITEM_23                  (HNS_ITEMS_2_START + 23)
@@ -830,8 +830,8 @@
 #define FLAG_HIDE_ICEPATH_B2F_BOULDER2                              0x2F8
 #define FLAG_HIDE_ICEPATH_B2F_BOULDER3                              0x2F9
 #define FLAG_HIDE_ICEPATH_B2F_BOULDER4                              0x2FA
-#define FLAG_UNUSED_27                              0x2FB
-#define FLAG_UNUSED_28                              0x2FC
+#define FLAG_LATIOS_OR_LATIAS_ROAMING                              0x2FB
+#define FLAG_HIDE_VERMILION_STEVEN                              0x2FC
 #define FLAG_UNUSED_29                              0x2FD
 #define FLAG_UNUSED_30                              0x2FE
 #define FLAG_UNUSED_31                              0x2FF
@@ -1166,7 +1166,6 @@
 #define FLAG_RECEIVED_BELUE_BERRY                   0
 #define FLAG_ENABLE_RIVAL_MATCH_CALL                0
 #define FLAG_RECEIVED_CHARCOAL                      0
-#define FLAG_LATIOS_OR_LATIAS_ROAMING               0
 #define FLAG_RECEIVED_REPEAT_BALL                   0
 #define FLAG_RECEIVED_OLD_ROD                       0
 #define FLAG_RECEIVED_COIN_CASE                     0

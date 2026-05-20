@@ -1,5 +1,16 @@
 SouthernIsland_Interior_hns_MapScripts::
+	map_script MAP_SCRIPT_ON_TRANSITION, SouthernIsland_Interior_hns_OnTransition
 	.byte 0
+
+SouthernIsland_Interior_hns_OnTransition::
+	goto_if_eq VAR_ROAMER_POKEMON_HNS, 0, SouthernIsland_Interior_hns_HideLatias
+	removeobject LOCALID_SOUTHERN_ISLAND_INTERIOR_HNS_LATIOS
+	setflag FLAG_HIDE_LATIOS
+	end
+SouthernIsland_Interior_hns_HideLatias::
+	removeobject LOCALID_SOUTHERN_ISLAND_INTERIOR_HNS_LATIAS
+	setflag FLAG_HIDE_LATIAS
+	end
 
 SouthernIsland_Interior_hns_EventScript_Latios::
 	lock

@@ -107,6 +107,7 @@ SSAqua_1F_EventScript_LeaveBoat::
 
 	setvar VAR_KANTO_ROCKET_STORY_STATE, 0
 	setvar VAR_BILLS_GRANDPA, 0
+	setvar VAR_VERMILION_CITY_STEVEN, 0
 
 
 	setvar VAR_FAN_CLUB_CLEFAIRY, 0
