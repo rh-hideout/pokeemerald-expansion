@@ -10601,6 +10601,13 @@ static void ComputeBallData(u32 wildMonBattler, u32 playerBattler, struct BallDa
     }
     switch (ballId)
     {
+#if IS_HNS
+    case BALL_FRIEND:
+        if (IS_BATTLER_OF_TYPE(wildMonBattler, TYPE_BUG)
+            || IS_BATTLER_OF_TYPE(wildMonBattler, TYPE_GRASS))
+            ball->multiplier = 400;
+        break;
+#endif
     case BALL_GREAT:
         ball->multiplier = 150;
         break;
@@ -10667,6 +10674,13 @@ static void ComputeBallData(u32 wildMonBattler, u32 playerBattler, struct BallDa
             ball->multiplier = 400;
         else if (gBattleMons[playerBattler].level > battleMon->level)
             ball->multiplier = 200;
+#if IS_HNS
+        if (ball->multiplier < 400
+            && (IS_BATTLER_OF_TYPE(wildMonBattler, TYPE_NORMAL)
+                || IS_BATTLER_OF_TYPE(wildMonBattler, TYPE_FLYING)
+                || IS_BATTLER_OF_TYPE(wildMonBattler, TYPE_ICE)))
+            ball->multiplier = 400;
+#endif
         break;
     case BALL_LURE:
         if (gIsFishingEncounter)
@@ -10678,18 +10692,32 @@ static void ComputeBallData(u32 wildMonBattler, u32 playerBattler, struct BallDa
             else
                 ball->multiplier = 300;
         }
+#if IS_HNS
+        if (ball->multiplier < 400
+            && (IS_BATTLER_OF_TYPE(wildMonBattler, TYPE_WATER)
+                || IS_BATTLER_OF_TYPE(wildMonBattler, TYPE_DRAGON)))
+            ball->multiplier = 400;
+#endif
         break;
     case BALL_MOON:
     {
         const struct Evolution *evolutions = GetSpeciesEvolutions(battleMon->species);
-        if (evolutions == NULL)
-            break;
-        for (i = 0; evolutions[i].method != EVOLUTIONS_END; i++)
+        if (evolutions != NULL)
         {
-            if (evolutions[i].method == EVO_ITEM
-                && evolutions[i].param == ITEM_MOON_STONE)
-                ball->multiplier = 400;
+            for (i = 0; evolutions[i].method != EVOLUTIONS_END; i++)
+            {
+                if (evolutions[i].method == EVO_ITEM
+                    && evolutions[i].param == ITEM_MOON_STONE)
+                    ball->multiplier = 400;
+            }
         }
+#if IS_HNS
+        if (ball->multiplier < 400
+            && (IS_BATTLER_OF_TYPE(wildMonBattler, TYPE_DARK)
+                || IS_BATTLER_OF_TYPE(wildMonBattler, TYPE_GHOST)
+                || IS_BATTLER_OF_TYPE(wildMonBattler, TYPE_POISON)))
+            ball->multiplier = 400;
+#endif
         break;
     }
     case BALL_LOVE:
@@ -10701,10 +10729,23 @@ static void ComputeBallData(u32 wildMonBattler, u32 playerBattler, struct BallDa
             if (gender1 != gender2 && gender1 != MON_GENDERLESS && gender2 != MON_GENDERLESS)
                 ball->multiplier = 800;
         }
+#if IS_HNS
+        if (ball->multiplier < 400
+            && (IS_BATTLER_OF_TYPE(wildMonBattler, TYPE_FAIRY)
+                || IS_BATTLER_OF_TYPE(wildMonBattler, TYPE_PSYCHIC)))
+            ball->multiplier = 400;
+#endif
         break;
     case BALL_FAST:
         if (GetSpeciesBaseSpeed(battleMon->species) >= 100)
             ball->multiplier = 400;
+#if IS_HNS
+        if (ball->multiplier < 400
+            && (IS_BATTLER_OF_TYPE(wildMonBattler, TYPE_ELECTRIC)
+                || IS_BATTLER_OF_TYPE(wildMonBattler, TYPE_FIGHTING)
+                || IS_BATTLER_OF_TYPE(wildMonBattler, TYPE_FIRE)))
+            ball->multiplier = 400;
+#endif
         break;
     case BALL_HEAVY:
         i = GetSpeciesWeight(battleMon->species);
@@ -10743,6 +10784,16 @@ static void ComputeBallData(u32 wildMonBattler, u32 playerBattler, struct BallDa
             else
                 ball->flatBonus = 40;
         }
+#if IS_HNS
+        if (IS_BATTLER_OF_TYPE(wildMonBattler, TYPE_ROCK)
+            || IS_BATTLER_OF_TYPE(wildMonBattler, TYPE_GROUND)
+            || IS_BATTLER_OF_TYPE(wildMonBattler, TYPE_STEEL))
+        {
+            ball->multiplier = 400;
+            if (ball->flatBonus < 0)
+                ball->flatBonus = 0;
+        }
+#endif
         break;
     case BALL_DREAM:
         if (B_DREAM_BALL_MODIFIER >= GEN_8 && (battleMon->status1 & STATUS1_SLEEP || (GetBattlerAbilityIgnoreMoldBreaker(wildMonBattler) == ABILITY_COMATOSE)))
