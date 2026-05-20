@@ -231,6 +231,17 @@ void DeactivateAllRoamers(void)
         SetRoamerInactive(i);
 }
 
+static void DeactivateRoamersByLocationTable(u8 locationTableId)
+{
+    u32 i;
+
+    for (i = 0; i < ROAMER_COUNT; i++)
+    {
+        if (ROAMER(i)->active && ROAMER(i)->locationTableId == locationTableId)
+            SetRoamerInactive(i);
+    }
+}
+
 static void ClearRoamerLocationHistory(u32 roamerIndex)
 {
     u32 i;
@@ -320,6 +331,7 @@ bool8 TryAddRoamer(u16 species, u8 level, u8 locationTableId)
 #if IS_HNS
 void InitRoamer(void)
 {
+    DeactivateRoamersByLocationTable(ROAMER_LOC_TABLE_JOHTO);
     GetSetPokedexFlag(SpeciesToNationalPokedexNum(SPECIES_ENTEI), FLAG_SET_SEEN);
     GetSetPokedexFlag(SpeciesToNationalPokedexNum(SPECIES_RAIKOU), FLAG_SET_SEEN);
     GetSetPokedexFlag(SpeciesToNationalPokedexNum(SPECIES_SUICUNE), FLAG_SET_SEEN);
@@ -329,7 +341,7 @@ void InitRoamer(void)
 
 void InitKantoRoamers(void)
 {
-    // gSpecialVar_0x8004: 0 = Latias roams, 1 = Latios roams
+    DeactivateRoamersByLocationTable(ROAMER_LOC_TABLE_KANTO);
     if (gSpecialVar_0x8004 == 0)
     {
         GetSetPokedexFlag(SpeciesToNationalPokedexNum(SPECIES_LATIAS), FLAG_SET_SEEN);
