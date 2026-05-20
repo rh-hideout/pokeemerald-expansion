@@ -3430,7 +3430,12 @@ static void PrintPageNamesAndStats(void)
 
     ShowUtilityPrompt(SUMMARY_MODE_NORMAL);
 
-    PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_INFO_RENTAL, gText_RentalPkmn, 0, 1, 0, 1);
+    // Start bringXpickY
+    if (BXPY_IsSummaryScreenForEnemy(sMonSummaryScreen->mode))
+        PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_INFO_RENTAL, COMPOUND_STRING(""), 0, 1, 0, 1);
+    else
+        PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_INFO_RENTAL, gText_RentalPkmn, 0, 1, 0, 1);
+    // End bringXpickY
     PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_INFO_TYPE, gText_TypeSlash, 0, 1, 0, 0);
     statsXPos = 6 + GetStringCenterAlignXOffset(FONT_NORMAL, gText_HP4, 42);
     PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATS_LEFT, gText_HP4, statsXPos, 1, 0, 1);
@@ -3474,7 +3479,10 @@ static void PutPageWindowTilemaps(u8 page)
     case PSS_PAGE_INFO:
         PutWindowTilemap(PSS_LABEL_WINDOW_POKEMON_INFO_TITLE);
         PutWindowTilemap(PSS_LABEL_WINDOW_PROMPT_UTILITY);
-        if (InBattleFactory() == TRUE || InSlateportBattleTent() == TRUE)
+        // Start bringXpickY
+        //if (InBattleFactory() == TRUE || InSlateportBattleTent() == TRUE)
+        if (InBattleFactory() == TRUE || InSlateportBattleTent() == TRUE || BXPY_IsSummaryScreenForEnemy(sMonSummaryScreen->mode))
+        // End bringXpickY
             PutWindowTilemap(PSS_LABEL_WINDOW_POKEMON_INFO_RENTAL);
         PutWindowTilemap(PSS_LABEL_WINDOW_POKEMON_INFO_TYPE);
         break;
@@ -3530,7 +3538,10 @@ static void ClearPageWindowTilemaps(u8 page)
     {
     case PSS_PAGE_INFO:
         ClearWindowTilemap(PSS_LABEL_WINDOW_PROMPT_UTILITY);
-        if (InBattleFactory() == TRUE || InSlateportBattleTent() == TRUE)
+        // Start bringXpickY
+        //if (InBattleFactory() == TRUE || InSlateportBattleTent() == TRUE)
+        if (InBattleFactory() == TRUE || InSlateportBattleTent() == TRUE || BXPY_IsSummaryScreenForEnemy(sMonSummaryScreen->mode))
+        // End bringXpickY
             ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_INFO_RENTAL);
         ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_INFO_TYPE);
         ClearWindowTilemap(PSS_LABEL_WINDOW_PROMPT_RELEARN);
@@ -3663,7 +3674,10 @@ static void Task_PrintInfoPage(u8 taskId)
 static void PrintMonOTName(void)
 {
     int x, windowId;
-    if (InBattleFactory() != TRUE && InSlateportBattleTent() != TRUE)
+    // Start bringXpickY
+    //if (InBattleFactory() != TRUE && InSlateportBattleTent() != TRUE)
+    if (InBattleFactory() != TRUE && InSlateportBattleTent() != TRUE && BXPY_IsSummaryScreenForEnemy(sMonSummaryScreen->mode) != TRUE)
+    // End bringXpickY
     {
         windowId = AddWindowFromTemplateList(sPageInfoTemplate, PSS_DATA_WINDOW_INFO_ORIGINAL_TRAINER);
         PrintTextOnWindow(windowId, gText_OTSlash, 0, 1, 0, 1);
@@ -3678,7 +3692,10 @@ static void PrintMonOTName(void)
 static void PrintMonOTID(void)
 {
     int xPos;
-    if (InBattleFactory() != TRUE && InSlateportBattleTent() != TRUE)
+    // Start bringXpickY
+    //if (InBattleFactory() != TRUE && InSlateportBattleTent() != TRUE)
+    if (InBattleFactory() != TRUE && InSlateportBattleTent() != TRUE && BXPY_IsSummaryScreenForEnemy(sMonSummaryScreen->mode) != TRUE)
+    // End bringXpickY
     {
         ConvertIntToDecimalStringN(StringCopy(gStringVar1, gText_IDNumber2), (u16)sMonSummaryScreen->summary.OTID, STR_CONV_MODE_LEADING_ZEROS, 5);
         xPos = GetStringRightAlignXOffset(FONT_NORMAL, gStringVar1, 56);
@@ -3718,7 +3735,10 @@ static void BufferMonTrainerMemo(void)
     DynamicPlaceholderTextUtil_SetPlaceholderPtr(1, sMemoMiscTextColor);
     BufferNatureString();
 
-    if (InBattleFactory() == TRUE || InSlateportBattleTent() == TRUE || IsInGamePartnerMon() == TRUE)
+    // Start bringXpickY
+    //if (InBattleFactory() == TRUE || InSlateportBattleTent() == TRUE || IsInGamePartnerMon() == TRUE)
+    if (InBattleFactory() == TRUE || InSlateportBattleTent() == TRUE || IsInGamePartnerMon() == TRUE || BXPY_IsSummaryScreenForEnemy(sMonSummaryScreen->mode))
+    // End bringXpickY
     {
         DynamicPlaceholderTextUtil_ExpandPlaceholders(gStringVar4, gText_XNature);
     }
