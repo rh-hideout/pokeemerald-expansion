@@ -689,6 +689,19 @@ s16 AllocSpriteTiles(u16 tileCount)
     return start;
 }
 
+u16 CountFreeSpriteTiles(void)
+{
+    u16 i;
+    u16 count = 0;
+
+    for (i = gReservedSpriteTileCount; i < TOTAL_OBJ_TILE_COUNT; i++)
+    {
+        if (!SPRITE_TILE_IS_ALLOCATED(i))
+            count++;
+    }
+    return count;
+}
+
 u8 SpriteTileAllocBitmapOp(u16 bit, u8 op)
 {
     u8 index = bit / 8;

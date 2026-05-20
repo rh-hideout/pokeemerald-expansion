@@ -7,6 +7,7 @@
 #include "pokemon.h"
 #include "random.h"
 #include "roamer.h"
+#include "sound.h"
 #include "sprite.h"
 #include "task.h"
 #include "constants/event_objects.h"
@@ -484,13 +485,14 @@ void GetRoamerLocation(u32 roamerIndex, u8 *mapGroup, u8 *mapNum)
 }
 
 #define ROAMER_FLASH_VOBJ_ID 0xFF
-#define ROAMER_FLASH_HORZ_SPEED 10
+#define ROAMER_FLASH_HORZ_SPEED 12
 #define ROAMER_FLASH_VERT_SPEED 8
 
 enum {
     ROAMER_FLASH_NONE,
     ROAMER_FLASH_CROSS_PATH,
     ROAMER_FLASH_RACE_PAST,
+    ROAMER_FLASH_PEEK,
     ROAMER_FLASH_COUNT,
 };
 
@@ -513,6 +515,60 @@ static void Task_RoamerFlash(u8 taskId)
     {
         DestroySprite(sprite);
         DestroyTask(taskId);
+    }
+}
+
+enum {
+    PEEK_PHASE_ENTER,
+    PEEK_PHASE_LOOK_1,
+    PEEK_PHASE_LOOK_2,
+    PEEK_PHASE_EXIT,
+};
+
+#define tPhase      data[5]
+
+static void Task_RoamerPeek(u8 taskId)
+{
+    struct Task *task = &gTasks[taskId];
+    struct Sprite *sprite = &gSprites[task->tSpriteId];
+
+    task->tFrames++;
+
+    switch (task->tPhase)
+    {
+    case PEEK_PHASE_ENTER:
+        sprite->y -= 3;
+        if (task->tFrames >= 22)
+        {
+            task->tFrames = 0;
+            task->tPhase = PEEK_PHASE_LOOK_1;
+            TurnVirtualObject(ROAMER_FLASH_VOBJ_ID, DIR_WEST);
+        }
+        break;
+    case PEEK_PHASE_LOOK_1:
+        if (task->tFrames >= 10)
+        {
+            task->tFrames = 0;
+            task->tPhase = PEEK_PHASE_LOOK_2;
+            TurnVirtualObject(ROAMER_FLASH_VOBJ_ID, DIR_NORTH);
+        }
+        break;
+    case PEEK_PHASE_LOOK_2:
+        if (task->tFrames >= 8)
+        {
+            task->tFrames = 0;
+            task->tPhase = PEEK_PHASE_EXIT;
+            TurnVirtualObject(ROAMER_FLASH_VOBJ_ID, DIR_SOUTH);
+        }
+        break;
+    case PEEK_PHASE_EXIT:
+        sprite->y += 5;
+        if (task->tFrames >= 28)
+        {
+            DestroySprite(sprite);
+            DestroyTask(taskId);
+        }
+        break;
     }
 }
 
@@ -546,61 +602,73 @@ void TryShowRoamerFlash(void)
     if (species == SPECIES_NONE)
         return;
 
+    if (CountFreeSpriteTiles() < 32)
+        return;
+
     flashType = Random() % ROAMER_FLASH_COUNT;
 
     if (flashType == ROAMER_FLASH_NONE)
         return;
 
+    PlayCry_Normal(species, 0);
+
     if (flashType == ROAMER_FLASH_CROSS_PATH)
     {
-        // Mon crosses vertically 7 tiles in front of the player
         switch (facing)
         {
         case DIR_NORTH:
-            startX = playerX + 5;
+            startX = playerX + 10;
             startY = playerY - 7;
             deltaX = -ROAMER_FLASH_VERT_SPEED;
             spriteDir = DIR_WEST;
             break;
         case DIR_SOUTH:
-            startX = playerX - 5;
+            startX = playerX - 10;
             startY = playerY + 7;
             deltaX = ROAMER_FLASH_VERT_SPEED;
             spriteDir = DIR_EAST;
             break;
         case DIR_EAST:
             startX = playerX + 7;
-            startY = playerY - 5;
+            startY = playerY - 10;
             deltaY = ROAMER_FLASH_VERT_SPEED;
             spriteDir = DIR_SOUTH;
             break;
         case DIR_WEST:
         default:
             startX = playerX - 7;
-            startY = playerY - 5;
+            startY = playerY - 10;
             deltaY = ROAMER_FLASH_VERT_SPEED;
             spriteDir = DIR_SOUTH;
             break;
         }
-        maxFrames = (10 * 16) / ROAMER_FLASH_VERT_SPEED;
+        maxFrames = (20 * 16) / ROAMER_FLASH_VERT_SPEED;
     }
-    else
+    else if (flashType == ROAMER_FLASH_RACE_PAST)
     {
-        // Mon races past horizontally in the player's facing direction
         startY = playerY - 4;
         if (facing == DIR_EAST)
         {
-            startX = playerX - 9;
+            startX = playerX - 12;
             deltaX = ROAMER_FLASH_HORZ_SPEED;
             spriteDir = DIR_EAST;
         }
         else
         {
-            startX = playerX + 9;
+            startX = playerX + 12;
             deltaX = -ROAMER_FLASH_HORZ_SPEED;
             spriteDir = DIR_WEST;
         }
-        maxFrames = (18 * 16) / ROAMER_FLASH_HORZ_SPEED;
+        maxFrames = (24 * 16) / ROAMER_FLASH_HORZ_SPEED;
+    }
+    else
+    {
+        if (facing == DIR_EAST || facing == DIR_SOUTH)
+            startX = playerX + 6;
+        else
+            startX = playerX - 6;
+        startY = playerY + 8;
+        spriteDir = DIR_NORTH;
     }
 
     spriteId = CreateVirtualObject(
@@ -613,12 +681,22 @@ void TryShowRoamerFlash(void)
     if (spriteId == MAX_SPRITES)
         return;
 
-    taskId = CreateTask(Task_RoamerFlash, 80);
-    gTasks[taskId].tSpriteId = spriteId;
-    gTasks[taskId].tDeltaX = deltaX;
-    gTasks[taskId].tDeltaY = deltaY;
-    gTasks[taskId].tFrames = 0;
-    gTasks[taskId].tMaxFrames = maxFrames;
+    if (flashType == ROAMER_FLASH_PEEK)
+    {
+        taskId = CreateTask(Task_RoamerPeek, 80);
+        gTasks[taskId].tSpriteId = spriteId;
+        gTasks[taskId].tFrames = 0;
+        gTasks[taskId].tPhase = PEEK_PHASE_ENTER;
+    }
+    else
+    {
+        taskId = CreateTask(Task_RoamerFlash, 80);
+        gTasks[taskId].tSpriteId = spriteId;
+        gTasks[taskId].tDeltaX = deltaX;
+        gTasks[taskId].tDeltaY = deltaY;
+        gTasks[taskId].tFrames = 0;
+        gTasks[taskId].tMaxFrames = maxFrames;
+    }
 }
 
 #undef tSpriteId
@@ -626,3 +704,4 @@ void TryShowRoamerFlash(void)
 #undef tDeltaY
 #undef tFrames
 #undef tMaxFrames
+#undef tPhase
