@@ -3,7 +3,7 @@
   "name": "TestMap2_hns",
   "layout": "LAYOUT_TEST_MAP2_HNS",
   "music": "MUS_DUMMY",
-  "region_map_section": "MAPSEC_ABANDONED_SHIP",
+  "region_map_section": "MAPSEC_NEW_BARK_TOWN",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
   "map_type": "MAP_TYPE_NONE",
