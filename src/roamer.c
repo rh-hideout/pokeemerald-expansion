@@ -607,7 +607,7 @@ void TryShowRoamerFlash(void)
     u8 flashType;
     s16 deltaX = 0;
     s16 deltaY = 0;
-    s16 maxFrames;
+    s16 maxFrames = 0;
     enum Direction spriteDir;
 
     if (species == SPECIES_NONE)
@@ -691,6 +691,12 @@ void TryShowRoamerFlash(void)
 
     if (spriteId == MAX_SPRITES)
         return;
+
+    if (OW_GFX_COMPRESS && gSprites[spriteId].sheetTileStart == TAG_NONE)
+    {
+        DestroyRoamerFlashSprite(&gSprites[spriteId]);
+        return;
+    }
 
     if (flashType == ROAMER_FLASH_PEEK)
     {

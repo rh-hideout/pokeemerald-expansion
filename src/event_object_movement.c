@@ -1864,8 +1864,6 @@ static s16 ReallocSpriteTiles(struct Sprite *sprite, u32 byteSize)
         i = AllocSpriteTiles(byteSize / TILE_SIZE_4BPP);
         if (i >= 0)
         {
-            // Fill the allocated area with zeroes
-            // To avoid visual glitches if the frame hasn't been copied yet
             CpuFastFill16(0, (u8 *)OBJ_VRAM0 + TILE_SIZE_4BPP * i, byteSize);
             sprite->oam.tileNum = i;
         }
@@ -1909,22 +1907,17 @@ u16 LoadSheetGraphicsInfo(const struct ObjectEventGraphicsInfo *info, u16 uuid, 
         {
             struct SpriteFrameImage image = {.size = info->size, .data = info->images->data};
             struct SpriteTemplate template = {.tileTag = tag, .images = &image};
-            // Load, then free, in order to avoid displaying garbage data
-            // before sprite's `sheetTileStart` is repointed
             tileStart = LoadCompressedSpriteSheetByTemplate(&template, TILE_SIZE_4BPP << sheetSpan);
             if (oldTiles)
             {
                 FieldEffectFreeTilesIfUnused(oldTiles);
-                // We weren't able to load the sheet;
-                // retry (after having freed), and set sprite to invisible until done
-                if (tileStart <= 0)
+                if (tileStart == TAG_NONE)
                 {
                     if (sprite)
                         sprite->invisible = TRUE;
                     tileStart = LoadCompressedSpriteSheetByTemplate(&template, TILE_SIZE_4BPP << sheetSpan);
                 }
             }
-        // sheet loaded; unload any *other* sheet for sprite
         }
         else if (oldTiles && oldTiles != tileStart)
         {
@@ -1933,10 +1926,18 @@ u16 LoadSheetGraphicsInfo(const struct ObjectEventGraphicsInfo *info, u16 uuid, 
 
         if (sprite)
         {
-            sprite->sheetTileStart = tileStart;
+            if (tileStart == TAG_NONE)
+            {
+                sprite->sheetTileStart = 0;
+                sprite->invisible = TRUE;
+            }
+            else
+            {
+                sprite->sheetTileStart = tileStart;
+                sprite->invisible = oldInvisible;
+            }
             sprite->sheetSpan = sheetSpan;
             sprite->usingSheet = TRUE;
-            sprite->invisible = oldInvisible;
         }
     // Going from sheet -> !sheet, reset tile number
     // (sheet stays loaded)
@@ -1985,7 +1986,7 @@ static u8 TrySetupObjectEventSprite(const struct ObjectEventTemplate *objectEven
     if (objectEvent->graphicsId & OBJ_EVENT_MON && objectEvent->graphicsId & OBJ_EVENT_MON_SHINY)
         objectEvent->shiny = TRUE;
 
-    spriteId = CreateSprite(spriteTemplate, 0, 0, 0);
+    spriteId = CreateSpriteUnchecked(spriteTemplate, 0, 0, 0);
     if (spriteId == MAX_SPRITES)
     {
         gObjectEvents[objectEventId].active = FALSE;
@@ -1993,6 +1994,12 @@ static u8 TrySetupObjectEventSprite(const struct ObjectEventTemplate *objectEven
     }
 
     sprite = &gSprites[spriteId];
+    if (OW_GFX_COMPRESS && sprite->sheetTileStart == TAG_NONE)
+    {
+        DestroySprite(sprite);
+        gObjectEvents[objectEventId].active = FALSE;
+        return OBJECT_EVENTS_COUNT;
+    }
     // Use palette from species palette table
     if (spriteTemplate->paletteTag == OBJ_EVENT_PAL_TAG_DYNAMIC)
         sprite->oam.paletteNum = LoadDynamicFollowerPalette(OW_SPECIES(objectEvent), OW_SHINY(objectEvent), OW_FEMALE(objectEvent));
