@@ -19,6 +19,7 @@ struct NumericInput {
     u16 max;
     u16 value;
     u8 selectedDigit;
+    u8 stringVarIdx;
 };
 
 extern EWRAM_DATA struct NumericInput gNumericInput;
@@ -59,5 +60,6 @@ u32 CreateNumericInputWindow(s16 x, s16 y, u8 width, u8 numDigits, const u8* tem
 void SetNumericInputDefault(u16 min, u16 max, u16 initial);
 void PrintNumericInputAmount(u8 windowId, const u8* templString);
 bool32 HandleNumericInput(void);
+void ScrCmd_GetUserNumericInput(struct ScriptContext* ctx);
 
 #endif //GUARD_SCRIPT_MENU_H

@@ -1,4 +1,6 @@
 #include "global.h"
+#include "event_object_movement.h"
+#include "field_player_avatar.h"
 #include "gba/defines.h"
 #include "main.h"
 #include "event_data.h"
@@ -6,6 +8,7 @@
 #include "field_specials.h"
 #include "item.h"
 #include "menu.h"
+#include "overworld.h"
 #include "palette.h"
 #include "script.h"
 #include "script_menu.h"
@@ -44,6 +47,8 @@ struct DynamicListMenuEventCollection
 };
 
 EWRAM_DATA struct NumericInput gNumericInput;
+static const u8* sNumericInputTemplateStr;
+static u8 sNUmericInputWindowId;
 
 static EWRAM_DATA u8 sProcessInputDelay = 0;
 static EWRAM_DATA u8 sDynamicMenuEventId = 0;
@@ -1357,25 +1362,28 @@ void SetNumericInputDefault(u16 min, u16 max, u16 initial)
 
 void PrintNumericInputAmount(u8 windowId, const u8* templString)
 {
-    ConvertIntToDecimalStringN(gStringVar2, gNumericInput.value, STR_CONV_MODE_LEFT_ALIGN, Util_CountDigits(gNumericInput.value));
+    u8 numberBuffer[32];
+    u8 formattedBuffer[256];
 
-    gStringVar3[0] = EOS;
+    ConvertIntToDecimalStringN( numberBuffer, gNumericInput.value, STR_CONV_MODE_LEADING_ZEROS, Util_CountDigits(gNumericInput.max));
 
-    u32 numDigits = StringLength(gStringVar2);
+    formattedBuffer[0] = EOS;
 
+    u32 numDigits = StringLength(numberBuffer);
     u32 highlightIdx = numDigits - gNumericInput.selectedDigit - 1;
+
     for (u32 i = 0; i < numDigits; i++)
     {
         if (i == highlightIdx)
-            StringAppend(gStringVar3, COMPOUND_STRING("{COLOR RED}{SHADOW LIGHT_GRAY}"));
+            StringAppend(formattedBuffer, COMPOUND_STRING("{COLOR RED}{SHADOW LIGHT_GRAY}"));
 
-        StringAppend(gStringVar3, (u8[]){ gStringVar2[i], EOS });
+        StringAppend(formattedBuffer, (u8[]){ numberBuffer[i], EOS });
 
         if (i == highlightIdx)
-            StringAppend(gStringVar3, COMPOUND_STRING("{COLOR DARK_GRAY}{SHADOW LIGHT_GRAY}"));
+            StringAppend(formattedBuffer, COMPOUND_STRING("{COLOR DARK_GRAY}{SHADOW LIGHT_GRAY}"));
     }
 
-    StringCopy(gStringVar1, gStringVar3);
+    StringCopy(GetStringVar(gNumericInput.stringVarIdx), formattedBuffer);
 
     StringExpandPlaceholders(gStringVar4, templString);
 
@@ -1383,14 +1391,13 @@ void PrintNumericInputAmount(u8 windowId, const u8* templString)
     AddTextPrinterParameterized(windowId, FONT_NORMAL, gStringVar4, 1, 2, 0, NULL);
 }
 
-
 bool32 HandleNumericInput(void)
 {
     u32 original = gNumericInput.value;
     u16 keypress = JOY_REPEAT(DPAD_ANY);
-    u32 maxDigits = Util_CountDigits(gNumericInput.value);
+    u32 maxDigits = Util_CountDigits(gNumericInput.max);
 
-    if (keypress & DPAD_LEFT || keypress & DPAD_RIGHT)
+    if (keypress & (DPAD_LEFT | DPAD_RIGHT))
     {
         if (keypress & DPAD_RIGHT)
             gNumericInput.selectedDigit--;
@@ -1401,18 +1408,90 @@ bool32 HandleNumericInput(void)
         return TRUE;
     }
 
-    if (keypress & DPAD_UP) {
-        gNumericInput.value += sPowersOfTen[gNumericInput.selectedDigit];
-    }
-    else if (keypress & DPAD_DOWN) {
-        gNumericInput.value -= sPowersOfTen[gNumericInput.selectedDigit];
-    }
+    u32 place = sPowersOfTen[gNumericInput.selectedDigit];
+    u32 currentDigit = (gNumericInput.value / place) % 10;
 
-    gNumericInput.value = Clamp(gNumericInput.value, gNumericInput.min, gNumericInput.max);
+    if (keypress & DPAD_UP)
+        currentDigit = (currentDigit + 1) % 10;
+    else if (keypress & DPAD_DOWN)
+        currentDigit = (currentDigit + 9) % 10;
+    else
+        return FALSE;
+
+    gNumericInput.value = gNumericInput.value - ((gNumericInput.value / place) % 10) * place + currentDigit * place;
+    gNumericInput.value = ClampSigned(gNumericInput.value, gNumericInput.min, gNumericInput.max);
+
     return gNumericInput.value != original;
 }
 
-void ScrCmd_CreateNumericInputWindow(struct ScriptContext* ctx)
+static void Task_HandleNumericInput(u8 taskId)
 {
-
+    if (HandleNumericInput())
+    {
+        PrintNumericInputAmount(sNUmericInputWindowId, sNumericInputTemplateStr);
+    }
+    else if (JOY_NEW(A_BUTTON | B_BUTTON))
+    {
+        if (JOY_NEW(B_BUTTON))
+            gNumericInput.value = 0;
+        gSpecialVar_Result = gNumericInput.value;
+        ClearStdWindowAndFrame(sNUmericInputWindowId, TRUE);
+        UnfreezeObjectEvents();
+        ScriptContext_Enable();
+        UnlockPlayerFieldControls();
+        DestroyTask(taskId);
+    }
 }
+
+static void Task_ShowNumericInput(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+    s16* tState = &data[0];
+
+    switch (*tState)
+    {
+    case 0:
+        if (!IsOverworldLinkActive())
+        {
+            FreezeObjectEvents();
+            PlayerFreeze();
+            StopPlayerAvatar();
+            LockPlayerFieldControls();
+        }
+        (*tState)++;
+        break;
+    case 1:
+        sNUmericInputWindowId = CreateNumericInputWindow(15, 2, 13, 5, sNumericInputTemplateStr);
+        (*tState)++;
+        break;
+    case 2:
+        PrintNumericInputAmount(sNUmericInputWindowId, sNumericInputTemplateStr);
+        (*tState)++;
+        break;
+    case 3:
+        gTasks[taskId].func = Task_HandleNumericInput;
+        break;
+    }
+}
+
+void ScrCmd_buffernumericinputstring(struct ScriptContext* ctx)
+{
+    sNumericInputTemplateStr = (const u8*)ScriptReadWord(ctx);
+    u8 stringVarIndex = ScriptReadByte(ctx);
+    gNumericInput.stringVarIdx = stringVarIndex;
+}
+
+void ScrCmd_setnumericinputdefault(struct ScriptContext* ctx)
+{
+    u32 min = ScriptReadWord(ctx);
+    u32 max = ScriptReadWord(ctx);
+    u32 val = ScriptReadWord(ctx);
+
+    gNumericInput = (struct NumericInput){min, max, val, 0, gNumericInput.stringVarIdx};
+}
+
+void ScrCmd_getnumericinput(struct ScriptContext* ctx)
+{
+    CreateTask(Task_ShowNumericInput, 0);
+}
+

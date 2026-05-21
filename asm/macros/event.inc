@@ -2999,6 +2999,24 @@
   callnative Script_GetPurchaseFromSavings
 .endm
 
+.macro buffernumericinputstring templStr:req, stringVarId=STR_VAR_1
+  callnative ScrCmd_buffernumericinputstring
+	.4byte \templStr
+	stringvar \stringVarId
+.endm
+
+.macro setnumericinputdefault min=0, max=0, val=0, stringVarId=STR_VAR_1
+  callnative ScrCmd_setnumericinputdefault
+  .4byte \min
+  .4byte \max
+  .4byte \val
+  stringvar \stringVarId
+.endm
+
+.macro getnumericinput
+  callnative ScrCmd_getnumericinput
+.endm
+
 @ END OF BANKING SYSTEM
 
 
