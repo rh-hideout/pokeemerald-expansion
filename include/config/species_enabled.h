@@ -324,7 +324,7 @@
 #define P_FAMILY_TYMPOLE                 TRUE
 #define P_FAMILY_THROH                   FALSE
 #define P_FAMILY_SAWK                    FALSE
-#define P_FAMILY_SEWADDLE                FALSE
+#define P_FAMILY_SEWADDLE                TRUE
 #define P_FAMILY_VENIPEDE                FALSE
 #define P_FAMILY_COTTONEE                TRUE
 #define P_FAMILY_PETILIL                 TRUE
@@ -357,7 +357,7 @@
 #define P_FAMILY_TYNAMO                  FALSE
 #define P_FAMILY_ELGYEM                  TRUE
 #define P_FAMILY_LITWICK                 FALSE
-#define P_FAMILY_AXEW                    FALSE
+#define P_FAMILY_AXEW                    TRUE
 #define P_FAMILY_CUBCHOO                 TRUE
 #define P_FAMILY_CRYOGONAL               FALSE
 #define P_FAMILY_SHELMET                 TRUE
