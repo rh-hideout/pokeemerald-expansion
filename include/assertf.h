@@ -99,11 +99,11 @@
  * - In a release/test build: does nothing.
  * - In a development build: shows a resumable heap usage screen. */
 #if RELEASE
-#define heapcond(cond) ((void)0)
+#define heapcond(conditon) ((void)0)
 #elif TESTING
-#define heapcond(cond) ((void)0)
+#define heapcond(conditon) ((void)0)
 #else
-#define heapcond(cond) TryShowHeapCrashScreen(cond && CheckHeapAllocFreeDifference())
+#define heapcond(conditon) TryShowHeapCrashScreen(conditon && CheckHeapAllocFreeDifference())
 #endif
 
 /* heapsize;
