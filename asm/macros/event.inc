@@ -3013,8 +3013,13 @@
   stringvar \stringVarId
 .endm
 
-.macro getnumericinput
+.macro getnumericinput min:req, max:req, val:req, templStrVar=STR_VAR_1, numStrVar=STR_VAR_2
   callnative ScrCmd_getnumericinput
+  .2byte \min
+  .2byte \max
+  .2byte \val
+  stringvar  \templStrVar
+  stringvar  \numStrVar
 .endm
 
 @ END OF BANKING SYSTEM

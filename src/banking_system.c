@@ -407,11 +407,6 @@ u32 CalcAmountToDeposit(u32 money)
          + ((money % 100) * SAVINGS_PERCENT) / 100;
 }
 
-u32 GetTransactionAmount(void)
-{
-    return gNumericInput.value;
-}
-
 static u32 GetTransactionMaxAmount(enum BankingMode mode)
 {
     u32 money = GetMoney(&gSaveBlock1Ptr->money);

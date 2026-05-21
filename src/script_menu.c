@@ -46,9 +46,16 @@ struct DynamicListMenuEventCollection
     DynamicListCallback OnDestroy;
 };
 
-EWRAM_DATA struct NumericInput gNumericInput;
-static const u8* sNumericInputTemplateStr;
-static u8 sNUmericInputWindowId;
+struct NumericInput {
+    u16 value;
+    u16 min;
+    u16 max;
+    u8 digit;
+    u8 templStrVar:4;
+    u8 numStrVar:4;
+};
+
+static u8 sNumericInputWindowId;
 
 static EWRAM_DATA u8 sProcessInputDelay = 0;
 static EWRAM_DATA u8 sDynamicMenuEventId = 0;
@@ -77,6 +84,11 @@ static void MultichoiceDynamicEventDebug_OnDestroy(struct DynamicListMenuEventAr
 static void MultichoiceDynamicEventShowItem_OnInit(struct DynamicListMenuEventArgs *eventArgs);
 static void MultichoiceDynamicEventShowItem_OnSelectionChanged(struct DynamicListMenuEventArgs *eventArgs);
 static void MultichoiceDynamicEventShowItem_OnDestroy(struct DynamicListMenuEventArgs *eventArgs);
+
+// Numeric Input
+static u32 CreateNumericInputWindow(s16 x, s16 y, u8 width);
+static bool32 HandleNumericInput(struct NumericInput *input);
+static void PrintNumericInputAmount(u8 windowId, struct NumericInput input);
 
 static const struct DynamicListMenuEventCollection sDynamicListMenuEventCollections[] =
 {
@@ -1341,29 +1353,44 @@ u16 GetSelectedSeagallopDestination(void)
     return SEAGALLOP_VERMILION_CITY;
 }
 
-u32 CreateNumericInputWindow(s16 x, s16 y, u8 width, u8 numDigits, const u8* templStr)
+// Numeric Input
+
+struct NumericInput ReadNumericInputFromTask(u32 taskId)
+{
+  struct NumericInput numericInput;
+  _Static_assert(sizeof(numericInput) <= (sizeof(gTasks[taskId].data) - sizeof(gTasks[taskId].data[0])), "");
+  memcpy(&numericInput, &gTasks[taskId].data[1], sizeof(numericInput));
+  return numericInput;
+}
+
+void WriteNumericInputToTask(u32 taskId, const struct NumericInput *numericInput)
+{
+  _Static_assert(sizeof(*numericInput) <= (sizeof(gTasks[taskId].data) - sizeof(gTasks[taskId].data[0])), "");
+  memcpy(&gTasks[taskId].data[1], numericInput, sizeof(*numericInput));
+}
+
+static u32 CreateNumericInputWindow(s16 x, s16 y, u8 width)
 {
     struct WindowTemplate template;
     u32 windowId;
     SetWindowTemplateFields(&template, 0, x, y, width, 2, 15, 0x100);
     windowId = AddWindow(&template);
     DrawStdWindowFrame(windowId, FALSE);
-    PrintNumericInputAmount(windowId, templStr);
     CopyWindowToVram(windowId, COPYWIN_FULL);
     return windowId;
 }
 
-void PrintNumericInputAmount(u8 windowId, const u8* templString)
+static void PrintNumericInputAmount(u8 windowId, struct NumericInput input)
 {
     u8 numberBuffer[32];
     u8 formattedBuffer[256];
 
-    ConvertIntToDecimalStringN( numberBuffer, gNumericInput.value, STR_CONV_MODE_LEADING_ZEROS, Util_CountDigits(gNumericInput.max));
+    ConvertIntToDecimalStringN( numberBuffer, input.value, STR_CONV_MODE_LEADING_ZEROS, Util_CountDigits(input.max));
 
     formattedBuffer[0] = EOS;
 
     u32 numDigits = StringLength(numberBuffer);
-    u32 highlightIdx = numDigits - gNumericInput.selectedDigit - 1;
+    u32 highlightIdx = numDigits - input.digit - 1;
 
     for (u32 i = 0; i < numDigits; i++)
     {
@@ -1376,33 +1403,33 @@ void PrintNumericInputAmount(u8 windowId, const u8* templString)
             StringAppend(formattedBuffer, COMPOUND_STRING("{COLOR DARK_GRAY}{SHADOW LIGHT_GRAY}"));
     }
 
-    StringCopy(GetStringVar(gNumericInput.stringVarIdx), formattedBuffer);
+    StringCopy(GetStringVar(input.numStrVar), formattedBuffer);
 
-    StringExpandPlaceholders(gStringVar4, templString);
+    StringExpandPlaceholders(gStringVar4, GetStringVar(input.templStrVar));
 
     FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
     AddTextPrinterParameterized(windowId, FONT_NORMAL, gStringVar4, 1, 2, 0, NULL);
 }
 
-bool32 HandleNumericInput(void)
+static bool32 HandleNumericInput(struct NumericInput *input)
 {
-    u32 original = gNumericInput.value;
+    u32 original = input->value;
     u16 keypress = JOY_REPEAT(DPAD_ANY);
-    u32 maxDigits = Util_CountDigits(gNumericInput.max);
+    u32 maxDigits = Util_CountDigits(input->max);
 
     if (keypress & (DPAD_LEFT | DPAD_RIGHT))
     {
         if (keypress & DPAD_RIGHT)
-            gNumericInput.selectedDigit--;
+            input->digit--;
         if (keypress & DPAD_LEFT)
-            gNumericInput.selectedDigit++;
+            input->digit++;
 
-        gNumericInput.selectedDigit = ClampSigned(gNumericInput.selectedDigit, 0, maxDigits - 1);
+        input->digit = ClampSigned(input->digit, 0, maxDigits - 1);
         return TRUE;
     }
 
-    u32 place = sPowersOfTen[gNumericInput.selectedDigit];
-    u32 currentDigit = (gNumericInput.value / place) % 10;
+    u32 place = sPowersOfTen[input->digit];
+    u32 currentDigit = (input->value / place) % 10;
 
     if (keypress & DPAD_UP)
         currentDigit = (currentDigit + 1) % 10;
@@ -1411,24 +1438,29 @@ bool32 HandleNumericInput(void)
     else
         return FALSE;
 
-    gNumericInput.value = gNumericInput.value - ((gNumericInput.value / place) % 10) * place + currentDigit * place;
-    gNumericInput.value = ClampSigned(gNumericInput.value, gNumericInput.min, gNumericInput.max);
+    input->value = input->value
+        - ((input->value / place) % 10) * place
+        + currentDigit * place;
 
-    return gNumericInput.value != original;
+    input->value = ClampSigned(input->value, input->min, input->max);
+
+    return input->value != original;
 }
 
 static void Task_HandleNumericInput(u8 taskId)
 {
-    if (HandleNumericInput())
+    struct NumericInput input = ReadNumericInputFromTask(taskId);
+    if (HandleNumericInput(&input))
     {
-        PrintNumericInputAmount(sNUmericInputWindowId, sNumericInputTemplateStr);
+        WriteNumericInputToTask(taskId, &input);
+        PrintNumericInputAmount(sNumericInputWindowId, input);
     }
     else if (JOY_NEW(A_BUTTON | B_BUTTON))
     {
         if (JOY_NEW(B_BUTTON))
-            gNumericInput.value = 0;
-        gSpecialVar_Result = gNumericInput.value;
-        ClearStdWindowAndFrame(sNUmericInputWindowId, TRUE);
+            input.value = 0;
+        gSpecialVar_Result = input.value;
+        ClearStdWindowAndFrame(sNumericInputWindowId, TRUE);
         UnfreezeObjectEvents();
         ScriptContext_Enable();
         UnlockPlayerFieldControls();
@@ -1454,11 +1486,11 @@ static void Task_ShowNumericInput(u8 taskId)
         (*tState)++;
         break;
     case 1:
-        sNUmericInputWindowId = CreateNumericInputWindow(15, 2, 13, 5, sNumericInputTemplateStr);
+        sNumericInputWindowId = CreateNumericInputWindow(15, 2, 16);
         (*tState)++;
         break;
     case 2:
-        PrintNumericInputAmount(sNUmericInputWindowId, sNumericInputTemplateStr);
+        PrintNumericInputAmount(sNumericInputWindowId, ReadNumericInputFromTask(taskId));
         (*tState)++;
         break;
     case 3:
@@ -1469,22 +1501,20 @@ static void Task_ShowNumericInput(u8 taskId)
 
 void ScrCmd_buffernumericinputstring(struct ScriptContext* ctx)
 {
-    sNumericInputTemplateStr = (const u8*)ScriptReadWord(ctx);
-    u8 stringVarIndex = ScriptReadByte(ctx);
-    gNumericInput.stringVarIdx = stringVarIndex;
-}
-
-void ScrCmd_setnumericinputdefault(struct ScriptContext* ctx)
-{
-    u32 min = ScriptReadWord(ctx);
-    u32 max = ScriptReadWord(ctx);
-    u32 val = ScriptReadWord(ctx);
-
-    gNumericInput = (struct NumericInput){min, max, val, 0, gNumericInput.stringVarIdx};
+    const u8* templStr = (const u8*)ScriptReadWord(ctx);
+    u8 strVarIndex = ScriptReadByte(ctx);
+    StringCopy(GetStringVar(strVarIndex), templStr);
 }
 
 void ScrCmd_getnumericinput(struct ScriptContext* ctx)
 {
-    CreateTask(Task_ShowNumericInput, 0);
+    u16 min = ScriptReadHalfword(ctx);
+    u16 max = ScriptReadHalfword(ctx);
+    u16 val = ScriptReadHalfword(ctx);
+    u8 templStrVar = ScriptReadByte(ctx);
+    u8 numStrVar = ScriptReadByte(ctx);
+
+    u8 taskId = CreateTask(Task_ShowNumericInput, 0);
+    WriteNumericInputToTask(taskId, &(const struct NumericInput){ val, min, max, 0, templStrVar, numStrVar});
 }
 

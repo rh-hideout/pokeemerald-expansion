@@ -21,7 +21,6 @@ void Script_SetBankingMode(struct ScriptContext *ctx);
 void Script_CompareBankBalance(struct ScriptContext *ctx);
 void Script_GetBankBalanceString(void);
 bool32 IsSavingMoney(void);
-u32 GetTransactionAmount(void);
 void CreateBankingWindow(void);
 void Script_StartTransactionTask(struct ScriptContext *ctx);
 u32 PurchaseRepeatItem(void);
