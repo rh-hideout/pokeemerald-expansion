@@ -17,12 +17,9 @@ void SetMoneyInBank(u32 amount);
 void DepositAndTrackMoney(u32 amount);
 void NewGameInitBanking(void);
 u32 CalcAmountToDeposit(u32 money);
-void Script_SetBankingMode(struct ScriptContext *ctx);
-void Script_CompareBankBalance(struct ScriptContext *ctx);
-void Script_GetBankBalanceString(void);
+void ScrCmd_comparebankbalance(struct ScriptContext *ctx);
+void ScrCmd_bufferbankbalancestring(struct ScriptContext* ctx);
 bool32 IsSavingMoney(void);
-void CreateBankingWindow(void);
-void Script_StartTransactionTask(struct ScriptContext *ctx);
 u32 PurchaseRepeatItem(void);
 u32 TriggerBankingPurchase(u32 toDeposit);
 

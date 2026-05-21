@@ -251,7 +251,7 @@ void NewGameInitBanking(void)
     banking->isPending = FALSE;
 }
 
-void Script_CompareBankBalance(struct ScriptContext *ctx)
+void ScrCmd_comparebankbalance(struct ScriptContext *ctx)
 {
     RETURN_IF_BANKING_DISABLED();
 
@@ -283,14 +283,14 @@ bool32 RemoveFromBank(u32 amount)
     return res;
 }
 
-void Script_RemoveFromBank(struct ScriptContext *ctx)
+void ScrCmd_removefrombank(struct ScriptContext *ctx)
 {
     RETURN_IF_BANKING_DISABLED();
     u32 amount = ScriptReadWord(ctx);
     gSpecialVar_Result = RemoveFromBank(amount);
 }
 
-void Script_RemoveFromBankWithVar(struct ScriptContext *ctx)
+void ScrCmd_removefrombankvar(struct ScriptContext *ctx)
 {
     RETURN_IF_BANKING_DISABLED();
     u32 amount = VarGet(ScriptReadHalfword(ctx));
@@ -314,21 +314,21 @@ bool32 AddToBank(u32 amount)
     return res;
 }
 
-void Script_AddToBank(struct ScriptContext *ctx)
+void ScrCmd_addtobank(struct ScriptContext *ctx)
 {
     RETURN_IF_BANKING_DISABLED();
     u32 amount = ScriptReadWord(ctx);
     gSpecialVar_Result = AddToBank(amount);
 }
 
-void Script_AddToBankWithVar(struct ScriptContext *ctx)
+void ScrCmd_addtobankvar(struct ScriptContext *ctx)
 {
     RETURN_IF_BANKING_DISABLED();
     u32 amount = VarGet(ScriptReadHalfword(ctx));
     gSpecialVar_Result = AddToBank(amount);
 }
 
-void Script_ShowBankBalanceBox(struct ScriptContext *ctx)
+void ScrCmd_showbalancebox(struct ScriptContext *ctx)
 {
     RETURN_IF_BANKING_DISABLED();
 
@@ -360,7 +360,7 @@ static void Banking_AddBalanceLabelObject(u16 x, u16 y)
     sBalanceLabelSpriteId = CreateSprite(&sSpriteTemplate_BalanceLabel, x, y, 0);
 }
 
-void Script_HideBankBalanceBox(struct ScriptContext *ctx)
+void ScrCmd_hidebalancebox(struct ScriptContext *ctx)
 {
     RETURN_IF_BANKING_DISABLED();
 
@@ -382,7 +382,7 @@ static void Banking_RemoveBalanceLabelObject(void)
     DestroySpriteAndFreeResources(&gSprites[sBalanceLabelSpriteId]);
 }
 
-void Script_UpdateBankBalanceBox(struct ScriptContext *ctx)
+void ScrCmd_updatebalancebox(struct ScriptContext *ctx)
 {
     RETURN_IF_BANKING_DISABLED();
 
@@ -425,7 +425,7 @@ static u32 GetTransactionMaxAmount(enum BankingMode mode)
     return max;
 }
 
-void Script_CheckPurchaseFromSavings()
+void ScrCmd_checkbankingpurchase()
 {
     RETURN_IF_BANKING_DISABLED();
     struct Banking* banking = GetBankingPtr();
@@ -450,7 +450,7 @@ void Script_CheckPurchaseFromSavings()
     return;
 }
 
-void Script_CheckSavingsPurchaseQuantity()
+void UNUSED ScrCmd_checkbankingpurchasequantity()
 {
     RETURN_IF_BANKING_DISABLED();
     struct Banking *banking = GetBankingPtr();
@@ -462,7 +462,7 @@ void Script_CheckSavingsPurchaseQuantity()
     gSpecialVar_Result = currentPurchase.quantity;
 }
 
-void Script_GetPurchaseFromSavings()
+void ScrCmd_getbankingpurchase()
 {
     RETURN_IF_BANKING_DISABLED();
     struct Banking* banking = GetBankingPtr();
@@ -541,13 +541,13 @@ u32 TriggerBankingPurchase(u32 toDeposit)
     return price;
 }
 
-void Script_PurchaseUniqueItem(struct ScriptContext* ctx)
+void ScrCmd_purchaseuniqueitem(struct ScriptContext* ctx)
 {
     RETURN_IF_BANKING_DISABLED();
     gSpecialVar_Result = PurchaseUniqueItem();
 }
 
-void Script_PurchaseRepeatItem(struct ScriptContext* ctx)
+void ScrCmd_purchaserepeatitem(struct ScriptContext* ctx)
 {
     RETURN_IF_BANKING_DISABLED();
     gSpecialVar_Result = PurchaseRepeatItem();
