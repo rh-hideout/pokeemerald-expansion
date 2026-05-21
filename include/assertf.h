@@ -76,21 +76,6 @@
 #define _ASSERTF_HANDLE(fmt, ...) AssertfCrashScreen(__builtin_return_address(0), fmt, __VA_ARGS__)
 #endif
 
-/* heapcond(cond);
- *
- * If DEBUG_HEAP_PRINT is FALSE, this will have no effect.
- *
- * Shows the heap usage screen if cond is TRUE and total allocations != total frees.
- * - In a release/test build: does nothing.
- * - In a development build: shows a resumable heap usage screen. */
-#if RELEASE
-#define heapcond(cond) ((void)0)
-#elif TESTING
-#define heapcond(cond) ((void)0)
-#else
-#define heapcond(cond) TryShowHeapCrashScreen(cond && CheckHeapAllocFreeDifference())
-#endif
-
 /* heapcheck;
  *
  * If DEBUG_HEAP_PRINT is FALSE, this will have no effect.
@@ -104,6 +89,21 @@
 #define heapcheck ((void)0)
 #else
 #define heapcheck TryShowHeapCrashScreen(CheckHeapAllocFreeDifference())
+#endif
+
+/* heapcond(cond);
+ *
+ * If DEBUG_HEAP_PRINT is FALSE, this will have no effect.
+ *
+ * Shows the heap usage screen if cond is TRUE and total allocations != total frees.
+ * - In a release/test build: does nothing.
+ * - In a development build: shows a resumable heap usage screen. */
+#if RELEASE
+#define heapcond(cond) ((void)0)
+#elif TESTING
+#define heapcond(cond) ((void)0)
+#else
+#define heapcond(cond) TryShowHeapCrashScreen(cond && CheckHeapAllocFreeDifference())
 #endif
 
 /* heapsize;
