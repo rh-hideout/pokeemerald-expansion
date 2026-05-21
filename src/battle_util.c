@@ -10553,6 +10553,7 @@ bool32 IsAffectedByPowderMove(enum BattlerId battler, enum Ability ability, enum
 void RemoveAbilityFlags(enum BattlerId battler)
 {
     gBattleMons[battler].volatiles.unburdenActive = FALSE;
+    gBattleMons[battler].volatiles.traceActivated = FALSE;
 
     switch (GetBattlerAbility(battler))
     {
