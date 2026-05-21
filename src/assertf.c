@@ -501,21 +501,16 @@ void AssertfCrashScreen(const void *return1, const char *fmt, ...)
 }
 
 // Heap Screen
-bool32 HasHeapLeak(void)
+bool32 CheckHeapAllocFreeDifference(void)
 {
     return GetHeapTotalAllocations() != GetHeapTotalFrees();
 }
 
-void ShowHeapCrashScreen_OnCondition(bool32 condition)
+void TryShowHeapCrashScreen(bool32 condition)
 {
     if (!condition)
         return;
 
-    ShowHeapCrashScreen();
-}
-
-void ShowHeapCrashScreen(void)
-{
     u32 activeBytes = GetHeapAllocatedBytes();
     struct Backup *backup = NULL;
     BlueScreenOpen(&backup);

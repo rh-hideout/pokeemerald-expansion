@@ -88,7 +88,7 @@
 #elif TESTING
 #define heapcond(cond) ((void)0)
 #else
-#define heapcond(cond) ShowHeapCrashScreen_OnCondition(cond && HasHeapLeak())
+#define heapcond(cond) TryShowHeapCrashScreen(cond && CheckHeapAllocFreeDifference())
 #endif
 
 /* heapcheck;
@@ -103,7 +103,7 @@
 #elif TESTING
 #define heapcheck ((void)0)
 #else
-#define heapcheck ShowHeapCrashScreen_OnCondition(HasHeapLeak())
+#define heapcheck TryShowHeapCrashScreen(CheckHeapAllocFreeDifference())
 #endif
 
 /* heapdump;
@@ -116,13 +116,12 @@
 #elif TESTING
 #define heapdump ((void)0)
 #else
-#define heapdump ShowHeapCrashScreen()
+#define heapdump TryShowHeapCrashScreen(TRUE)
 #endif
 
 void AssertfCrashScreen(const void *return0, const char *fmt, ...);
 
-bool32 HasHeapLeak(void);
-void ShowHeapCrashScreen_OnCondition(bool32 condition);
-void ShowHeapCrashScreen(void);
+bool32 CheckHeapAllocFreeDifference(void);
+void TryShowHeapCrashScreen(bool32 condition);
 
 #endif
