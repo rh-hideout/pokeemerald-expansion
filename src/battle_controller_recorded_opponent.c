@@ -143,7 +143,7 @@ static void Intro_WaitForShinyAnimAndHealthbox(enum BattlerId battler)
 {
     bool8 healthboxAnimDone = FALSE;
 
-    if (!IsDoubleBattle() || (IsDoubleBattle() && (gBattleTypeFlags & BATTLE_TYPE_MULTI)))
+    if (!IsDoubleBattle() || (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
     {
         if (gSprites[gHealthboxSpriteIds[battler]].callback == SpriteCallbackDummy
          && gSprites[gBattlerSpriteIds[battler]].animEnded)
@@ -197,7 +197,7 @@ static void Intro_TryShinyAnimShowHealthbox(enum BattlerId battler)
     {
         if (!gBattleSpritesDataPtr->healthBoxesData[battler].healthboxSlideInStarted)
         {
-            if (IsDoubleBattle() && !(gBattleTypeFlags & BATTLE_TYPE_MULTI))
+            if (IsDoubleBattle() && !(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
             {
                 UpdateHealthboxAttribute(gHealthboxSpriteIds[BATTLE_PARTNER(battler)], GetBattlerMon(BATTLE_PARTNER(battler)), HEALTHBOX_ALL);
                 StartHealthboxSlideIn(BATTLE_PARTNER(battler));
@@ -257,7 +257,7 @@ static void Intro_TryShinyAnimShowHealthbox(enum BattlerId battler)
 
     if (bgmRestored && battlerAnimsDone)
     {
-        if (IsDoubleBattle() && !(gBattleTypeFlags & BATTLE_TYPE_MULTI))
+        if (IsDoubleBattle() && !(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
             DestroySprite(&gSprites[gBattleControllerData[BATTLE_PARTNER(battler)]]);
 
         DestroySprite(&gSprites[gBattleControllerData[battler]]);

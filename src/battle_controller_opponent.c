@@ -137,7 +137,7 @@ static void Intro_WaitForShinyAnimAndHealthbox(enum BattlerId battler)
     bool8 twoMons;
 
     twoMons = TwoOpponentIntroMons(battler);
-    if (!twoMons || ((twoMons && (gBattleTypeFlags & BATTLE_TYPE_MULTI) && !BATTLE_TWO_VS_ONE_OPPONENT) || (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)))
+    if (!twoMons || (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
     {
         if (gSprites[gHealthboxSpriteIds[battler]].callback == SpriteCallbackDummy)
             healthboxAnimDone = TRUE;
@@ -220,7 +220,7 @@ static void Intro_TryShinyAnimShowHealthbox(enum BattlerId battler)
     {
         if (!gBattleSpritesDataPtr->healthBoxesData[battler].healthboxSlideInStarted)
         {
-            if (twoMons && (!(gBattleTypeFlags & BATTLE_TYPE_MULTI) || BATTLE_TWO_VS_ONE_OPPONENT))
+            if (twoMons && !(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
             {
                 UpdateHealthboxAttribute(gHealthboxSpriteIds[BATTLE_PARTNER(battler)], GetBattlerMon(BATTLE_PARTNER(battler)), HEALTHBOX_ALL);
                 StartHealthboxSlideIn(BATTLE_PARTNER(battler));
@@ -240,7 +240,7 @@ static void Intro_TryShinyAnimShowHealthbox(enum BattlerId battler)
     {
         if (!gBattleSpritesDataPtr->healthBoxesData[battler].bgmRestored)
         {
-            if (gBattleTypeFlags & BATTLE_TYPE_MULTI && gBattleTypeFlags & BATTLE_TYPE_LINK)
+            if ((gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS) && (gBattleTypeFlags & BATTLE_TYPE_LINK))
             {
                 if (GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT)
                     m4aMPlayContinue(&gMPlayInfo_BGM);
@@ -254,7 +254,7 @@ static void Intro_TryShinyAnimShowHealthbox(enum BattlerId battler)
         bgmRestored = TRUE;
     }
 
-    if (!twoMons || (twoMons && gBattleTypeFlags & BATTLE_TYPE_MULTI && !BATTLE_TWO_VS_ONE_OPPONENT))
+    if (!twoMons || (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
     {
         if (gSprites[gBattleControllerData[battler]].callback == SpriteCallbackDummy)
         {
@@ -282,7 +282,7 @@ static void Intro_TryShinyAnimShowHealthbox(enum BattlerId battler)
 
     if (bgmRestored && battlerAnimsDone)
     {
-        if (twoMons && (!(gBattleTypeFlags & BATTLE_TYPE_MULTI) || BATTLE_TWO_VS_ONE_OPPONENT))
+        if (twoMons && !(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
             DestroySprite(&gSprites[gBattleControllerData[BATTLE_PARTNER(battler)]]);
 
         DestroySprite(&gSprites[gBattleControllerData[battler]]);
@@ -399,7 +399,7 @@ static void OpponentHandleDrawTrainerPic(enum BattlerId battler)
     {
         trainerPicId = OpponentGetTrainerPicId(battler);
 
-        if (gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS) && !BATTLE_TWO_VS_ONE_OPPONENT)
+        if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
         {
             if ((GetBattlerPosition(battler) & BIT_FLANK) != 0) // second mon
                 xPos = 152;
