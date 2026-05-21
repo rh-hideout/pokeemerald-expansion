@@ -502,7 +502,7 @@ void AssertfCrashScreen(const void *return1, const char *fmt, ...)
 }
 
 // Heap Screen
-bool32 CheckHeapAllocFreeDifference(void)
+bool32 CheckHeapIsAlloced(void)
 {
     const struct MemBlock *head = HeapHead();
     return head->next != head || head->allocated;

@@ -86,7 +86,7 @@
 #elif TESTING
 #define heapcheck ((void)0)
 #else
-#define heapcheck TryShowHeapCrashScreen(CheckHeapAllocFreeDifference())
+#define heapcheck TryShowHeapCrashScreen(CheckHeapIsAlloced())
 #endif
 
 /* heapcond(condition);
@@ -99,7 +99,7 @@
 #elif TESTING
 #define heapcond(conditon) ((void)0)
 #else
-#define heapcond(conditon) TryShowHeapCrashScreen(conditon && CheckHeapAllocFreeDifference())
+#define heapcond(conditon) TryShowHeapCrashScreen(conditon && CheckHeapIsAlloced())
 #endif
 
 /* heapsize;
@@ -130,7 +130,7 @@
 
 void AssertfCrashScreen(const void *return0, const char *fmt, ...);
 
-bool32 CheckHeapAllocFreeDifference(void);
+bool32 CheckHeapIsAlloced(void);
 bool32 CheckHeapSize(u32 allocatedBytes);
 void TryShowHeapCrashScreen(bool32 condition);
 
