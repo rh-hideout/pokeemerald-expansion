@@ -506,15 +506,15 @@ bool32 HasHeapLeak(void)
     return GetHeapTotalAllocations() != GetHeapTotalFrees();
 }
 
-bool32 CheckHeapCrashScreen(void)
+void ShowHeapCrashScreen_OnCondition(bool32 condition)
 {
-    if (!HasHeapLeak())
-        return FALSE;
-    HeapCrashScreen();
-    return TRUE;
+    if (!condition)
+        return;
+
+    ShowHeapCrashScreen();
 }
 
-void HeapCrashScreen(void)
+void ShowHeapCrashScreen(void)
 {
     u32 activeBytes = GetHeapAllocatedBytes();
     struct Backup *backup = NULL;

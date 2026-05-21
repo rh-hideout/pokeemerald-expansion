@@ -76,10 +76,53 @@
 #define _ASSERTF_HANDLE(fmt, ...) AssertfCrashScreen(__builtin_return_address(0), fmt, __VA_ARGS__)
 #endif
 
+/* heapcond(cond);
+ *
+ * If DEBUG_HEAP_PRINT is FALSE, this will have no effect.
+ *
+ * Shows the heap usage screen if cond is TRUE and total allocations != total frees.
+ * - In a release/test build: does nothing.
+ * - In a development build: shows a resumable heap usage screen. */
+#if RELEASE
+#define heapcond(cond) ((void)0)
+#elif TESTING
+#define heapcond(cond) ((void)0)
+#else
+#define heapcond(cond) ShowHeapCrashScreen_OnCondition(cond && HasHeapLeak())
+#endif
+
+/* heapcheck;
+ *
+ * If DEBUG_HEAP_PRINT is FALSE, this will have no effect.
+ *
+ * Shows the heap usage screen if total allocations != total frees.
+ * - In a release/test build: does nothing.
+ * - In a development build: shows a resumable heap usage screen. */
+#if RELEASE
+#define heapcheck ((void)0)
+#elif TESTING
+#define heapcheck ((void)0)
+#else
+#define heapcheck ShowHeapCrashScreen_OnCondition(HasHeapLeak())
+#endif
+
+/* heapdump;
+ *
+ * Shows the heap usage screen regardless of heap state.
+ * - In a release/test build: does nothing.
+ * - In a development build: shows a resumable heap usage screen. */
+#if RELEASE
+#define heapdump ((void)0)
+#elif TESTING
+#define heapdump ((void)0)
+#else
+#define heapdump ShowHeapCrashScreen()
+#endif
+
 void AssertfCrashScreen(const void *return0, const char *fmt, ...);
 
 bool32 HasHeapLeak(void);
-bool32 CheckHeapCrashScreen(void);
-void HeapCrashScreen(void);
+void ShowHeapCrashScreen_OnCondition(bool32 condition);
+void ShowHeapCrashScreen(void);
 
 #endif
