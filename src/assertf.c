@@ -504,10 +504,8 @@ void AssertfCrashScreen(const void *return1, const char *fmt, ...)
 // Heap Screen
 bool32 CheckHeapAllocFreeDifference(void)
 {
-    if (!DEBUG_HEAP_PRINT)
-        return FALSE;
-    
-    return GetHeapTotalAllocations() != GetHeapTotalFrees();
+    const struct MemBlock *head = HeapHead();
+    return head->next != head || head->allocated;
 }
 
 bool32 CheckHeapSize(u32 allocatedBytes)

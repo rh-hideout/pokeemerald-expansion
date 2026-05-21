@@ -78,8 +78,6 @@
 
 /* heapcheck;
  *
- * If DEBUG_HEAP_PRINT is FALSE, this will have no effect.
- *
  * Shows the heap usage screen if total allocations != total frees.
  * - In a release/test build: does nothing.
  * - In a development build: shows a resumable heap usage screen. */
@@ -91,9 +89,7 @@
 #define heapcheck TryShowHeapCrashScreen(CheckHeapAllocFreeDifference())
 #endif
 
-/* heapcond(cond);
- *
- * If DEBUG_HEAP_PRINT is FALSE, this will have no effect.
+/* heapcond(condition);
  *
  * Shows the heap usage screen if cond is TRUE and total allocations != total frees.
  * - In a release/test build: does nothing.
