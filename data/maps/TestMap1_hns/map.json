@@ -672,8 +672,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_KURT_LYING_DOWN_HNS",
-      "x": 17,
-      "y": 4,
+      "x": 15,
+      "y": 2,
       "elevation": 0,
       "movement_type": "MOVEMENT_TYPE_NONE",
       "movement_range_x": 0,

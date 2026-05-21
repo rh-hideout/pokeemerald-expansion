@@ -117,16 +117,6 @@
 #define METATILE_Building_TV_Off  0x002
 #define METATILE_Building_TV_On   0x003
 
-// gTileset_Johto_Building_Hns
-#define METATILE_JohtoBuildingHns_PC_Off  0x062
-#define METATILE_JohtoBuildingHns_PC_On   0x063
-#define METATILE_JohtoBuildingHns_TV_Off  0x035
-#define METATILE_JohtoBuildingHns_TV_On   0x061
-
-// gTileset_PlayersHouse_Hns
-#define METATILE_PlayersHouseHns_PC_Off   0x288
-#define METATILE_PlayersHouseHns_PC_On    0x28A
-
 // gTileset_BuildingFrlg
 #define METATILE_BuildingFrlg_PCOff  0x062
 #define METATILE_BuildingFrlg_PCOn   0x063
@@ -1096,6 +1086,10 @@
 #define METATILE_GoldenrodUnderground_Elevator_Hns   0x2AB
 #define METATILE_Goldenrod_Door_Hns                  0x284
 #define METATILE_Goldenrod_Door_Saffron_Hns          0x35C
+#define METATILE_JohtoBuildingHns_PC_Off             0x062
+#define METATILE_JohtoBuildingHns_PC_On              0x063
+#define METATILE_JohtoBuildingHns_TV_Off             0x035
+#define METATILE_JohtoBuildingHns_TV_On              0x061
 #define METATILE_Johto_General_Door_Gym_Hns          0x15B
 #define METATILE_Johto_General_Door_Hns              0x03D
 #define METATILE_Johto_General_Door_Sliding_Hns      0x062
@@ -1104,6 +1098,8 @@
 #define METATILE_NewBarkTown_Door_Yellow_Hns         0x309
 #define METATILE_OlivineCity_Door_Hns                0x312
 #define METATILE_OlivineCity_Door_Vermilion_Hns      0x29E
+#define METATILE_PlayersHouseHns_PC_Off              0x288
+#define METATILE_PlayersHouseHns_PC_On               0x28A
 #define METATILE_R26_21_Broken_Window                0x32B
 #define METATILE_RSCave_CrackedFloor                 0x22F
 #define METATILE_RSCave_CrackedFloor_Hole            0x206
