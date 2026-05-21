@@ -28,6 +28,7 @@
 #include "text.h"
 #include "util.h"
 #include "window.h"
+#include <limits.h>
 
 // Macros
 #define RETURN_IF_BANKING_DISABLED()                                        \
@@ -40,7 +41,7 @@
     }
 
 // Config
-#define MAX_BANK_MONEY 9999999
+#define MAX_BANK_MONEY USHRT_MAX
 #define MAX_PENDING    5
 
 #define BALANCE_LABEL_TAG 0x2722
@@ -92,13 +93,6 @@ static const struct SpritePalette sSpritePalette_BalanceLabel =
 {
     .data = gShopMenu_Pal,
     .tag = BALANCE_LABEL_TAG
-};
-
-// Enums
-enum BankingMode
-{
-    MODE_DEPOSIT,
-    MODE_WITHDRAW
 };
 
 // Structs
@@ -160,7 +154,6 @@ EWRAM_DATA static u8 sBalanceBoxWindowId = 0;
 EWRAM_DATA static u8 sBalanceLabelSpriteId = 0;
 
 // Static Functions
-static u32 GetTransactionMaxAmount(enum BankingMode mode);
 static void Banking_DrawBalanceBox(int amount, u8 x, u8 y);
 static void Banking_AddBalanceLabelObject(u16 x, u16 y);
 static void Banking_HideBalanceBox(void);
@@ -297,6 +290,20 @@ void ScrCmd_removefrombankvar(struct ScriptContext *ctx)
     gSpecialVar_Result = RemoveFromBank(amount);
 }
 
+void ScrCmd_addmoneyvar(struct ScriptContext *ctx)
+{
+    Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
+    u32 amount = VarGet(ScriptReadHalfword(ctx));
+    AddMoney(&gSaveBlock1Ptr->money, amount);
+}
+
+void ScrCmd_removemoneyvar(struct ScriptContext *ctx)
+{
+    Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
+    u32 amount = VarGet(ScriptReadHalfword(ctx));
+    RemoveMoney(&gSaveBlock1Ptr->money, amount);
+}
+
 bool32 AddToBank(u32 amount)
 {
     u32 balance = GetMoneyInBank();
@@ -405,7 +412,7 @@ u32 CalcAmountToDeposit(u32 money)
          + ((money % 100) * SAVINGS_PERCENT) / 100;
 }
 
-static u32 GetTransactionMaxAmount(enum BankingMode mode)
+u32 GetTransactionMaxAmount(enum BankingMode mode)
 {
     u32 money = GetMoney(&gSaveBlock1Ptr->money);
     u32 savings = GetMoneyInBank();

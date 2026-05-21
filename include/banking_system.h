@@ -11,6 +11,14 @@
     bool8 isPending:1;
     bool8 isRepeat:1;
 };
+
+
+enum BankingMode
+{
+    MODE_DEPOSIT,
+    MODE_WITHDRAW
+};
+
 bool32 IsBankingEnabled(void);
 u32 GetMoneyInBank(void);
 void SetMoneyInBank(u32 amount);
@@ -22,5 +30,6 @@ void ScrCmd_bufferbankbalancestring(struct ScriptContext* ctx);
 bool32 IsSavingMoney(void);
 u32 PurchaseRepeatItem(void);
 u32 TriggerBankingPurchase(u32 toDeposit);
+u32 GetTransactionMaxAmount(enum BankingMode mode);
 
 #endif // GUARD_SAVINGS_SYSTEM_H

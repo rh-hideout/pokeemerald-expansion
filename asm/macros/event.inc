@@ -3018,6 +3018,23 @@
   stringvar  \numStrVar
 .endm
 
+.macro getbankinginput mode:req, templStrVar=STR_VAR_1, numStrVar=STR_VAR_2
+  callnative ScrCmd_getbankinginput
+  .byte \mode
+  stringvar  \templStrVar
+  stringvar  \numStrVar
+.endm
+
+.macro addmoneyvar varId:req
+  callnative ScrCmd_addmoneyvar, requests_effects=1
+  .2byte \varId
+.endm
+
+.macro removemoneyvar varId:req
+  callnative ScrCmd_removemoneyvar, requests_effects=1
+  .2byte \varId
+.endm
+
 @ END OF BANKING SYSTEM
 
 

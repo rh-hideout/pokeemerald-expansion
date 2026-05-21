@@ -1,4 +1,5 @@
 #include "global.h"
+#include "banking_system.h"
 #include "event_object_movement.h"
 #include "field_player_avatar.h"
 #include "gba/defines.h"
@@ -1468,7 +1469,7 @@ static void Task_HandleNumericInput(u8 taskId)
     }
 }
 
-static void Task_ShowNumericInput(u8 taskId)
+void Task_ShowNumericInput(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
     s16* tState = &data[0];
@@ -1516,5 +1517,17 @@ void ScrCmd_getnumericinput(struct ScriptContext* ctx)
 
     u8 taskId = CreateTask(Task_ShowNumericInput, 0);
     WriteNumericInputToTask(taskId, &(const struct NumericInput){ val, min, max, 0, templStrVar, numStrVar});
+}
+
+void ScrCmd_getbankinginput(struct ScriptContext* ctx)
+{
+    enum BankingMode mode = ScriptReadByte(ctx);
+    u8 templStrVar = ScriptReadByte(ctx);
+    u8 numStrVar = ScriptReadByte(ctx);
+
+    u16 max = GetTransactionMaxAmount(mode);
+
+    u8 taskId = CreateTask(Task_ShowNumericInput, 0);
+    WriteNumericInputToTask(taskId, &(const struct NumericInput){ max, 0, max, 0, templStrVar, numStrVar});
 }
 
