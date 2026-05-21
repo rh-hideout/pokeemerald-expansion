@@ -2919,9 +2919,10 @@
   .byte \mode
 .endm
 
-@ Copies the current Bank Balance into STR_VAR_2
-.macro getbankbalancestring
-  void Script_GetBankBalanceString
+@ Copies the current Bank Balance into a string var
+.macro bufferbankbalancestring stringVarId:req
+  callnative ScrCmd_bufferbankbalancestring
+  stringvar \stringVarId
 .endm
 
 @ Compares the current bank balance with a user-provided value.

@@ -390,11 +390,13 @@ void Script_UpdateBankBalanceBox(struct ScriptContext *ctx)
     ChangeAmountInMoneyBox(GetMoneyInBank());
 }
 
-void Script_GetBankBalanceString(void)
+void ScrCmd_bufferbankbalancestring(struct ScriptContext* ctx)
 {
+    u8* strvar = GetStringVar(ScriptReadByte(ctx));
+
     u32 savings = GetMoneyInBank();
     u32 digits = Util_CountDigits(savings);
-    ConvertIntToDecimalStringN(gStringVar2, savings, STR_CONV_MODE_LEFT_ALIGN, digits);
+    ConvertIntToDecimalStringN(strvar, savings, STR_CONV_MODE_LEFT_ALIGN, digits);
 }
 
 u32 CalcAmountToDeposit(u32 money)
