@@ -108,8 +108,6 @@
 
 /* heapsize;
  *
- * If DEBUG_HEAP_PRINT is FALSE, this will have no effect.
- *
  * Shows the heap usage screen if total allocated size is not equal to the value used.
  * - In a release/test build: does nothing.
  * - In a development build: shows a resumable heap usage screen. */

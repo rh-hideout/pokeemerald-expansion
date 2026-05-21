@@ -12,7 +12,6 @@ ALIGNED(4) EWRAM_DATA u8 gHeap[HEAP_SIZE] = {0};
 #if DEBUG_HEAP_PRINT
 static EWRAM_DATA u32 sTotalAllocations = 0;
 static EWRAM_DATA u32 sTotalFrees = 0;
-static EWRAM_DATA u32 sCurrentAllocatedBytes = 0;
 #endif
 
 static void TryTrackAllocatedHeap(u32 size);
@@ -263,7 +262,6 @@ static void TryTrackAllocatedHeap(u32 size)
 {
 #if DEBUG_HEAP_PRINT
     sTotalAllocations++;
-    sCurrentAllocatedBytes += size;
 #endif
 }
 
@@ -271,7 +269,6 @@ static void TryTrackFreedHeap(u32 size)
 {
 #if DEBUG_HEAP_PRINT
     sTotalFrees++;
-    sCurrentAllocatedBytes -= size;
 #endif
 }
 
@@ -295,11 +292,17 @@ u32 GetHeapTotalFrees(void)
 
 u32 GetHeapAllocatedBytes(void)
 {
-#if DEBUG_HEAP_PRINT
-    return sCurrentAllocatedBytes;
-#else
-    return 0;
-#endif
+    u32 total = 0;
+    const struct MemBlock *head = HeapHead();
+    const struct MemBlock *block = head;
+    do
+    {
+        if (block->allocated)
+            total += block->size;
+        block = block->next;
+    }
+    while (block != head);
+    return total;
 }
 
 void ResetHeapTrackers(void)
@@ -307,6 +310,5 @@ void ResetHeapTrackers(void)
 #if DEBUG_HEAP_PRINT
     sTotalAllocations = 0;
     sTotalFrees = 0;
-    sCurrentAllocatedBytes = 0;
 #endif
 }
