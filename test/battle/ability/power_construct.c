@@ -76,7 +76,6 @@ SINGLE_BATTLE_TEST("Power Construct does not switch Zygarde's form if end-turn h
         TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("Zygarde restored a little HP using its Leftovers!");
         HP_BAR(player, damage: -10);
         NONE_OF {
             MESSAGE("You sense the presence of many!");
