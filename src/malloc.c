@@ -301,3 +301,12 @@ u32 GetHeapAllocatedBytes(void)
     return 0;
 #endif
 }
+
+void ResetHeapTrackers(void)
+{
+#if DEBUG_HEAP_PRINT
+    sTotalAllocations = 0;
+    sTotalFrees = 0;
+    sCurrentAllocatedBytes = 0;
+#endif
+}

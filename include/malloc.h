@@ -67,5 +67,6 @@ const char *MemBlockLocation(const struct MemBlock *block);
 u32 GetHeapTotalAllocations(void);
 u32 GetHeapTotalFrees(void);
 u32 GetHeapAllocatedBytes(void);
+void ResetHeapTrackers(void);
 
 #endif // GUARD_ALLOC_H
