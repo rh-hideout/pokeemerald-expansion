@@ -160,18 +160,11 @@ EWRAM_DATA static u8 sBalanceBoxWindowId = 0;
 EWRAM_DATA static u8 sBalanceLabelSpriteId = 0;
 
 // Static Functions
-static u32 GetStepSize(s16 heldFrames);
-static bool32 HandleAmountInput(u32 *amount, u32 max, u32 min, s16 *heldFrames);
 static u32 GetTransactionMaxAmount(enum BankingMode mode);
-static void UpdateBankBalanceAfterTransaction(enum BankingMode mode);
 static void Banking_DrawBalanceBox(int amount, u8 x, u8 y);
 static void Banking_AddBalanceLabelObject(u16 x, u16 y);
 static void Banking_HideBalanceBox(void);
 static void Banking_RemoveBalanceLabelObject(void);
-
-// Tasks
-static void Task_ShowBankingInput(u8 taskId);
-static void Task_HandleMoneyInput(u8 taskId);
 
 // Windows
 static const struct WindowTemplate sSavingsWithdrawalWindowTemplate = {
