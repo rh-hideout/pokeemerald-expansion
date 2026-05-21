@@ -1678,6 +1678,9 @@
       "width": 1,
       "height": 1,
       "in_hns": true
+    },
+    {
+      "id": "MAPSEC_SAFARI_ZONE_GATE"
     }
   ],
   "hns_map_sections": [
