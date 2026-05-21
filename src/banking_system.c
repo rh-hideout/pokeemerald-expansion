@@ -248,6 +248,9 @@ void DepositAndTrackMoney(u32 amount)
 
 void NewGameInitBanking(void)
 {
+    if (!IsBankingEnabled())
+        return;
+
     struct Banking *banking = GetBankingPtr();
     SetMoneyInBank(0);
     banking->lastBought = 0;
