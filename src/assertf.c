@@ -321,7 +321,8 @@ static void Vprintf_Heap(struct Backup *backup, u32 activeBytes)
     PrintFooter(PressStartContinue);
 
     const struct MemBlock *backupBlock = (const struct MemBlock *)backup;
-    const struct MemBlock *block = HeapHead();
+    const struct MemBlock *head = HeapHead();
+    const struct MemBlock *block = head;
     u32 totalAllocs = GetHeapTotalAllocations();
     u32 totalFrees = GetHeapTotalFrees();
 
@@ -348,7 +349,7 @@ static void Vprintf_Heap(struct Backup *backup, u32 activeBytes)
         }
         block = block->next;
     }
-    while (block != HeapHead());
+    while (block != head);
 
     if (!Putc(&x, &y, '\n'))
         return;
