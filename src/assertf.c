@@ -506,6 +506,11 @@ bool32 CheckHeapAllocFreeDifference(void)
     return GetHeapTotalAllocations() != GetHeapTotalFrees();
 }
 
+bool32 CheckHeapSize(u32 allocatedBytes)
+{
+    return allocatedBytes != GetHeapAllocatedBytes();
+}
+
 void TryShowHeapCrashScreen(bool32 condition)
 {
     if (!condition)

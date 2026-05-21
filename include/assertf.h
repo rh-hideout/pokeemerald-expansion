@@ -106,6 +106,21 @@
 #define heapcheck TryShowHeapCrashScreen(CheckHeapAllocFreeDifference())
 #endif
 
+/* heapsize;
+ *
+ * If DEBUG_HEAP_PRINT is FALSE, this will have no effect.
+ *
+ * Shows the heap usage screen if total allocated size is not equal to the value used.
+ * - In a release/test build: does nothing.
+ * - In a development build: shows a resumable heap usage screen. */
+#if RELEASE
+#define heapsize(size) ((void)0)
+#elif TESTING
+#define heapsize(size) ((void)0)
+#else
+#define heapsize(size) TryShowHeapCrashScreen(CheckHeapSize(size))
+#endif
+
 /* heapdump;
  *
  * Shows the heap usage screen regardless of heap state.
@@ -122,6 +137,7 @@
 void AssertfCrashScreen(const void *return0, const char *fmt, ...);
 
 bool32 CheckHeapAllocFreeDifference(void);
+bool32 CheckHeapSize(u32 allocatedBytes);
 void TryShowHeapCrashScreen(bool32 condition);
 
 #endif
