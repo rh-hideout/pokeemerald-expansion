@@ -276,8 +276,8 @@ static const struct SpriteTemplate sSpriteTemplate_Confetti = {
     .callback = SpriteCB_Confetti
 };
 
-static const u16 sHallOfFame_Pal[] = INCBIN_U16("graphics/misc/hall_of_fame.gbapal");
-static const u32 sHallOfFame_Gfx[] = INCBIN_U32("graphics/misc/hall_of_fame.4bpp.smol");
+static const u16 sHallOfFame_Pal[] = INCGFX_U16("graphics/misc/hall_of_fame.png", ".gbapal");
+static const u32 sHallOfFame_Gfx[] = INCGFX_U32("graphics/misc/hall_of_fame.png", ".4bpp.smol");
 
 static const struct HallofFameMon sDummyHofMon = {
     .tid = 0x03EA03EA, // (u16[]){1002, 1002} corrupted sprite template?
@@ -549,7 +549,7 @@ static void Task_Hof_TryDisplayAnotherMon(u8 taskId)
     else
     {
         sSelectedPaletteIndices |= (0x10000 << gSprites[gTasks[taskId].data[5 + currPokeId]].oam.paletteNum);
-        if (gTasks[taskId].data[1] < PARTY_SIZE - 1 && currMon[1].species != SPECIES_NONE) // there is another pokemon to display
+        if (gTasks[taskId].data[1] < PARTY_SIZE - 1 && currMon[1].species != SPECIES_NONE) // there is another Pokémon to display
         {
             gTasks[taskId].data[1]++;
             BeginNormalPaletteFade(sSelectedPaletteIndices, 0, 12, 12, HALL_OF_FAME_BG_PAL);
@@ -1076,7 +1076,7 @@ static void HallOfFame_PrintPlayerInfo(u8 unused1, u8 unused2)
     u8 text[20];
     u16 trainerId;
     s32 textWidth = sWindowTemplate.width * 8 - 6;
-    
+
     FillWindowPixelBuffer(1, PIXEL_FILL(1));
     PutWindowTilemap(1);
     DrawStdFrameWithCustomTileAndPalette(1, FALSE, 0x21D, 13);

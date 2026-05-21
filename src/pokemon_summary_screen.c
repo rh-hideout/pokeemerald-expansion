@@ -79,7 +79,7 @@
 #define PSS_LABEL_WINDOW_MOVES_APPEAL_JAM 15
 #define PSS_LABEL_WINDOW_PROMPT_RELEARN 16
 
-// Above/below the pokemon's portrait (left)
+// Above/below the Pokémon's portrait (left)
 #define PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER 17
 #define PSS_LABEL_WINDOW_PORTRAIT_NICKNAME 18 // The upper name
 #define PSS_LABEL_WINDOW_PORTRAIT_SPECIES 19 // The lower name
@@ -747,8 +747,8 @@ static const u8 sTextColors[][3] =
 };
 
 static const u8 sButtons_Gfx[][4 * TILE_SIZE_4BPP] = {
-    INCBIN_U8("graphics/summary_screen/a_button.4bpp"),
-    INCBIN_U8("graphics/summary_screen/b_button.4bpp"),
+    INCGFX_U8("graphics/summary_screen/a_button.png", ".4bpp"),
+    INCGFX_U8("graphics/summary_screen/b_button.png", ".4bpp"),
 };
 
 static void (*const sTextPrinterFunctions[])(void) =
@@ -1169,7 +1169,7 @@ static const struct SpriteTemplate sSpriteTemplate_StatusCondition =
     .oam = &sOamData_StatusCondition,
     .anims = sSpriteAnimTable_StatusCondition,
 };
-static const u16 sMarkings_Pal[] = INCBIN_U16("graphics/summary_screen/markings.gbapal");
+static const u16 sMarkings_Pal[] = INCGFX_U16("graphics/summary_screen/markings.pal", ".gbapal");
 
 // code
 static u8 ShowCategoryIcon(enum DamageCategory category)
@@ -1786,6 +1786,7 @@ static void Task_HandleInput(u8 taskId)
                         {
                             gSpecialVar_0x8004 = PC_MON_CHOSEN;
                             gSpecialVar_MonBoxPos = sMonSummaryScreen->curMonIndex;
+                            gSpecialVar_MonBoxId = StorageGetCurrentBox();
                         }
                         else
                         {
@@ -4379,6 +4380,37 @@ static void SetMonTypeIcons(void)
     }
 }
 
+static enum BattlerId GetCurrentBattlerFromSumIndex(u32 sumIndex)
+{
+    for (u32 battler = B_BATTLER_0; battler < gBattlersCount; battler++)
+    {
+        if (!IsOnPlayerSide(battler))
+            continue;
+
+        if (gBattlerPartyIndexes[battler] == sumIndex)
+            return battler;
+    }
+
+    return B_BATTLER_0;
+}
+
+static enum Type SummaryScreen_GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum Type type)
+{
+    if (!P_SHOW_DYNAMIC_TYPES)
+        return type;
+
+    if (gBattleStruct == NULL)
+        return CheckDynamicMoveType(mon, move, 0, MON_OUTSIDE_BATTLE);
+
+    u32 partyIndex = sMonSummaryScreen->curMonIndex;
+    bool32 isDouble = IsDoubleBattle();
+
+    if ((isDouble && partyIndex > 1) || (!isDouble && partyIndex > 0))
+        return CheckDynamicMoveType(mon, move, 0, MON_OUTSIDE_BATTLE);
+
+    return CheckDynamicMoveType(mon, move, GetCurrentBattlerFromSumIndex(sMonSummaryScreen->curMonIndex), MON_IN_BATTLE);
+}
+
 static void SetMoveTypeIcons(void)
 {
     u32 i;
@@ -4391,12 +4423,7 @@ static void SetMoveTypeIcons(void)
         if (summary->moves[i] != MOVE_NONE)
         {
             type = GetMoveType(summary->moves[i]);
-            if (P_SHOW_DYNAMIC_TYPES)
-            {
-                enum MonState state = gMain.inBattle ? MON_IN_BATTLE : MON_OUTSIDE_BATTLE;
-                type = CheckDynamicMoveType(mon, summary->moves[i], 0, state); // Bug: in battle, this only shows the dynamic type of battler in position 0
-            }
-
+            type = SummaryScreen_GetDynamicMoveType(mon, summary->moves[i], type);
             SetTypeSpritePosAndPal(type, 85, 32 + (i * 16), i + SPRITE_ARR_ID_TYPE);
         }
         else
@@ -4421,14 +4448,9 @@ static void SetContestMoveTypeIcons(void)
 
 static void SetNewMoveTypeIcon(void)
 {
-    enum Type type = GetMoveType(sMonSummaryScreen->newMove);
     struct Pokemon *mon = &sMonSummaryScreen->currentMon;
-
-    if (P_SHOW_DYNAMIC_TYPES)
-    {
-        enum MonState state = gMain.inBattle ? MON_IN_BATTLE : MON_OUTSIDE_BATTLE;
-        type = CheckDynamicMoveType(mon, sMonSummaryScreen->newMove, 0, state);  // Bug: in battle, this only shows the dynamic type of battler in position 0
-    }
+    enum Type type = GetMoveType(sMonSummaryScreen->newMove);
+    type = SummaryScreen_GetDynamicMoveType(mon, sMonSummaryScreen->newMove, type);
 
     if (sMonSummaryScreen->newMove == MOVE_NONE)
     {

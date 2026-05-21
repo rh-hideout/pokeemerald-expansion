@@ -55,7 +55,6 @@ static u32 ReturnAnimIdForBattler(bool32 isPlayerSide, u32 specificBattler);
 static void LaunchKOAnimation(enum BattlerId battlerId, u16 animId, bool32 isFront);
 static void AnimateMonAfterKnockout(enum BattlerId battler);
 
-
 bool32 IsAiVsAiBattle(void)
 {
     return (B_FLAG_AI_VS_AI_BATTLE && FlagGet(B_FLAG_AI_VS_AI_BATTLE));
@@ -300,9 +299,11 @@ static void InitBtlControllersInternal(void)
             }
             else if (TESTING && isMulti && isRecorded && !isRecordedLink)
             { // Sets to PlayerPartner if EXPECT_XXXX used in test for partner trainer, else sets to RecordedPartner.
+#if TESTING
                 if (gBattleTestRunnerState->data.expectedAiActions[B_BATTLER_2][0].actionSet == TRUE)
                     gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_2)] = SetControllerToPlayerPartner;
                 else
+#endif
                     gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_2)] = SetControllerToRecordedPartner;
             }
             else if ((isInGamePartner && !isRecorded)
@@ -485,7 +486,7 @@ static void SetBattlePartyIds(void)
                 {
                     if (gBattlerPartyIndexes[i - 2] == j && BattlersShareParty(i - 2, i))
                     {
-                        // Exclude already assigned pokemon;
+                        // Exclude already assigned Pokémon;
                     }
                     else if (IsValidForBattle(&GetBattlerParty(i)[j]))
                     {
@@ -2264,7 +2265,7 @@ void BattleControllerDummy(enum BattlerId battler)
 // Handlers of the controller commands
 void BtlController_HandleGetMonData(enum BattlerId battler)
 {
-    u8 monData[sizeof(struct Pokemon) * 2 + 56]; // this allows to get full data of two pokemon, trying to get more will result in overwriting data
+    u8 monData[sizeof(struct Pokemon) * 2 + 56]; // this allows to get full data of two Pokémon, trying to get more will result in overwriting data
     struct Pokemon *party = GetBattlerParty(battler);
     u32 size = 0;
     u8 monToCheck;
@@ -2827,12 +2828,12 @@ void BtlController_HandleSpriteInvisibility(enum BattlerId battler)
     BtlController_Complete(battler);
 }
 
-bool32 TwoPlayerIntroMons(enum BattlerId battler) // Double battle with both player pokemon active.
+bool32 TwoPlayerIntroMons(enum BattlerId battler) // Double battle with both player Pokémon active.
 {
     return (IsDoubleBattle() && IsValidForBattle(GetBattlerMon(battler ^ BIT_FLANK)));
 }
 
-bool32 TwoOpponentIntroMons(enum BattlerId battler) // Double battle with both opponent pokemon active.
+bool32 TwoOpponentIntroMons(enum BattlerId battler) // Double battle with both opponent Pokémon active.
 {
     return (IsDoubleBattle()
             && IsValidForBattle(GetBattlerMon(battler))
@@ -3328,7 +3329,7 @@ bool32 BattleSideHasTwoTrainers(enum BattleSide side)
     if (side == B_SIDE_PLAYER)
         return gBattleTypeFlags & BATTLE_TYPE_MULTI;
     else
-        return (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS || (gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_MULTI));
+        return ((gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && TRAINER_BATTLE_PARAM.opponentB != 0xFFFF) || (gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_MULTI));
 }
 
 bool32 BattlersShareParty(enum BattlerId battler1, enum BattlerId battler2)

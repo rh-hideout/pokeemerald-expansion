@@ -67,10 +67,10 @@ The test runner rigs the RNG so that unless otherwise specified, moves always hi
 ### Example 2
 As a second example, to manually test that Stun Spore does not effect Grass-types you might:
 1. Put a Wobbuffet that knows Stun Spore in your party.
-2. Battle a wild Oddish.
+2. Battle an opponent with Oddish.
 3. Use Stun Spore.
 4. Check that the move animation does not play.
-5. Check that a "It doesn't affect Foe Oddish…" message is shown.
+5. Check that a "It doesn't affect the opposing Oddish…" message is shown.
 
 This can again be translated as follows:
 
@@ -80,7 +80,7 @@ SINGLE_BATTLE_TEST("Stun Spore does not affect Grass-types")
     GIVEN {
         ASSUME(IsPowderMove(MOVE_STUN_SPORE));
         ASSUME(GetSpeciesType(SPECIES_ODDISH, 0) == TYPE_GRASS);
-        PLAYER(SPECIES_ODDISH); // 1.
+        PLAYER(SPECIES_WOBBUFFET); // 1.
         OPPONENT(SPECIES_ODDISH); // 2.
     } WHEN {
         TURN { MOVE(player, MOVE_STUN_SPORE); } // 3.

@@ -127,10 +127,10 @@ extern const u16 gPokedexOrder_Weight[];
 // static .rodata strings
 
 static const u8 sText_No0000[] = _("0000");
-static const u8 sCaughtBall_Gfx[] = INCBIN_U8("graphics/pokedex/caught_ball.4bpp");
+static const u8 sCaughtBall_Gfx[] = INCGFX_U8("graphics/pokedex/caught_ball.png", ".4bpp");
 static const u8 sText_TenDashes[] = _("----------");
 ALIGNED(4) static const u8 sExpandedPlaceholder_PokedexDescription[] = _("");
-static const u16 sSizeScreenSilhouette_Pal[] = INCBIN_U16("graphics/pokedex/size_silhouette.gbapal");
+static const u16 sSizeScreenSilhouette_Pal[] = INCGFX_U16("graphics/pokedex/size_silhouette.pal", ".gbapal");
 
 static const u8 sText_Stats_Buttons[] = _("{A_BUTTON}TOGGLE   {DPAD_UPDOWN}MOVES");
 static const u8 sText_Stats_Buttons_Decapped[] = _("{A_BUTTON}Toggle   {DPAD_UPDOWN}Moves");
@@ -232,23 +232,23 @@ static const u8 sText_PlusSymbol[] = _("+");
 
 // static .rodata graphics
 
-static const u16 sPokedexPlusHGSS_Default_Pal[] = INCBIN_U16("graphics/pokedex/hgss/palette_default.gbapal");
-static const u16 sPokedexPlusHGSS_National_Pal[] = INCBIN_U16("graphics/pokedex/hgss/palette_national.gbapal");
-static const u16 sPokedexPlusHGSS_MenuSearch_Pal[] = INCBIN_U16("graphics/pokedex/hgss/palette_search_menu.gbapal");
-static const u16 sPokedexPlusHGSS_SearchResults_Pal[] = INCBIN_U16("graphics/pokedex/hgss/palette_search_results.gbapal");
-static const u16 sPokedexPlusHGSS_Default_dark_Pal[] = INCBIN_U16("graphics/pokedex/hgss/palette_default_dark.gbapal");
-static const u16 sPokedexPlusHGSS_National_dark_Pal[] = INCBIN_U16("graphics/pokedex/hgss/palette_national_dark.gbapal");
-static const u16 sPokedexPlusHGSS_MenuSearch_dark_Pal[] = INCBIN_U16("graphics/pokedex/hgss/palette_search_menu_dark.gbapal");
-static const u16 sPokedexPlusHGSS_SearchResults_dark_Pal[] = INCBIN_U16("graphics/pokedex/hgss/palette_search_results_dark.gbapal");
-static const u32 sPokedexPlusHGSS_MenuList_Gfx[] = INCBIN_U32("graphics/pokedex/hgss/tileset_menu_list.4bpp.smol");
-static const u32 sPokedexPlusHGSS_MenuList_DECA_Gfx[] = INCBIN_U32("graphics/pokedex/hgss/tileset_menu_list_DECA.4bpp.smol");
-static const u32 sPokedexPlusHGSS_Interface_Gfx[] = INCBIN_U32("graphics/pokedex/hgss/tileset_interface.4bpp.smol");
-static const u32 sPokedexPlusHGSS_Interface_DECA_Gfx[] = INCBIN_U32("graphics/pokedex/hgss/tileset_interface_DECA.4bpp.smol");
-static const u32 sPokedexPlusHGSS_Menu_1_Gfx[] = INCBIN_U32("graphics/pokedex/hgss/tileset_menu1.4bpp.smol");
-static const u32 sPokedexPlusHGSS_Menu_2_Gfx[] = INCBIN_U32("graphics/pokedex/hgss/tileset_menu2.4bpp.smol");
-static const u32 sPokedexPlusHGSS_Menu_3_Gfx[] = INCBIN_U32("graphics/pokedex/hgss/tileset_menu3.4bpp.smol");
-static const u32 sPokedexPlusHGSS_MenuSearch_Gfx[] = INCBIN_U32("graphics/pokedex/hgss/tileset_menu_search.4bpp.smol");
-static const u32 sPokedexPlusHGSS_MenuSearch_DECA_Gfx[] = INCBIN_U32("graphics/pokedex/hgss/tileset_menu_search_DECA.4bpp.smol");
+static const u16 sPokedexPlusHGSS_Default_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_default.pal", ".gbapal");
+static const u16 sPokedexPlusHGSS_National_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_national.pal", ".gbapal");
+static const u16 sPokedexPlusHGSS_MenuSearch_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_search_menu.pal", ".gbapal");
+static const u16 sPokedexPlusHGSS_SearchResults_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_search_results.pal", ".gbapal");
+static const u16 sPokedexPlusHGSS_Default_dark_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_default_dark.pal", ".gbapal");
+static const u16 sPokedexPlusHGSS_National_dark_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_national_dark.pal", ".gbapal");
+static const u16 sPokedexPlusHGSS_MenuSearch_dark_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_search_menu_dark.pal", ".gbapal");
+static const u16 sPokedexPlusHGSS_SearchResults_dark_Pal[] = INCGFX_U16("graphics/pokedex/hgss/palette_search_results_dark.pal", ".gbapal");
+static const u32 sPokedexPlusHGSS_MenuList_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_menu_list.png", ".4bpp.smol");
+static const u32 sPokedexPlusHGSS_MenuList_DECA_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_menu_list_DECA.png", ".4bpp.smol");
+static const u32 sPokedexPlusHGSS_Interface_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_interface.png", ".4bpp.smol");
+static const u32 sPokedexPlusHGSS_Interface_DECA_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_interface_DECA.png", ".4bpp.smol");
+static const u32 sPokedexPlusHGSS_Menu_1_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_menu1.png", ".4bpp.smol");
+static const u32 sPokedexPlusHGSS_Menu_2_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_menu2.png", ".4bpp.smol");
+static const u32 sPokedexPlusHGSS_Menu_3_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_menu3.png", ".4bpp.smol");
+static const u32 sPokedexPlusHGSS_MenuSearch_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_menu_search.png", ".4bpp.smol");
+static const u32 sPokedexPlusHGSS_MenuSearch_DECA_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_menu_search_DECA.png", ".4bpp.smol");
 static const u32 sPokedexPlusHGSS_StartMenuMain_Tilemap[] = INCBIN_U32("graphics/pokedex/hgss/tilemap_start_menu.bin.smolTM");
 static const u32 sPokedexPlusHGSS_StartMenuSearchResults_Tilemap[] = INCBIN_U32("graphics/pokedex/hgss/tilemap_start_menu_search_results.bin.smolTM");
 static const u32 sPokedexPlusHGSS_ScreenSelectBarSubmenu_Tilemap[] = INCBIN_U32("graphics/pokedex/hgss/SelectBar.bin.smolTM");
@@ -659,7 +659,7 @@ enum
     COLOR_BAD, // Orange
     COLOR_WORST, // Red
 };
-static const u8 sStatBarsGfx[] = INCBIN_U8("graphics/pokedex/hgss/stat_bars.4bpp");
+static const u8 sStatBarsGfx[] = INCGFX_U8("graphics/pokedex/hgss/stat_bars.png", ".4bpp");
 static const u16 sStatBarPalette[16] = {
     [COLOR_ID_ALPHA] = RGB(0, 0, 10),
     [COLOR_ID_BAR_WHITE] = RGB_WHITE,
@@ -3645,7 +3645,7 @@ static void CreateStatBarsBg(void) //stat bars background text
     LoadSpriteSheet(&sheetStatBarsBg);
     sPokedexView->statBarsBgSpriteId = CreateSprite(&sStatBarBgSpriteTemplate, 36+offset_x, 107+offset_y, 0);
 }
-// Hack to destroy sprites when a pokemon data is being loaded in
+// Hack to destroy sprites when a Pokémon data is being loaded in
 static bool32 IsMonInfoBeingLoaded(void)
 {
     return (gSprites[sPokedexView->selectedMonSpriteId].callback == SpriteCB_MoveMonForInfoScreen);
@@ -4872,7 +4872,7 @@ static void Task_LoadStatsScreen(u8 taskId)
             u32 personality = GetPokedexMonPersonality(species);
             FreeMonIconPalettes(); //Free space for new pallete
             LoadMonIconPalettePersonality(species, personality); //Loads pallete for current mon
-            gTasks[taskId].data[6] = CreateMonIcon(species, SpriteCB_MonIcon, 18, 31, 4, personality); //Create pokemon sprite
+            gTasks[taskId].data[6] = CreateMonIcon(species, SpriteCB_MonIcon, 18, 31, 4, personality); //Create Pokémon sprite
             gSprites[gTasks[taskId].data[4]].oam.priority = 0;
         }
         gMain.state++;
@@ -5837,8 +5837,8 @@ static void Task_SwitchScreensFromStatsScreen(u8 taskId)
         FreeSpritePaletteByTag(ITEM_TAG);                       //Destroy item icon
         FreeSpriteOamMatrix(&gSprites[gTasks[taskId].data[3]]); //Destroy item icon
         DestroySprite(&gSprites[gTasks[taskId].data[3]]);       //Destroy item icon
-        FreeMonIconPalettes();                                          //Destroy pokemon icon sprite
-        FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4]]); //Destroy pokemon icon sprite
+        FreeMonIconPalettes();                                          //Destroy Pokémon icon sprite
+        FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4]]); //Destroy Pokémon icon sprite
 
         FreeAndDestroyMonPicSprite(gTasks[taskId].tMonSpriteId);
         switch (sPokedexView->screenSwitchState)
@@ -5871,8 +5871,8 @@ static void Task_ExitStatsScreen(u8 taskId)
         FreeSpritePaletteByTag(ITEM_TAG);                       //Destroy item icon
         FreeSpriteOamMatrix(&gSprites[gTasks[taskId].data[3]]); //Destroy item icon
         DestroySprite(&gSprites[gTasks[taskId].data[3]]);       //Destroy item icon
-        FreeMonIconPalettes();                                          //Destroy pokemon icon sprite
-        FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4]]); //Destroy pokemon icon sprite
+        FreeMonIconPalettes();                                          //Destroy Pokémon icon sprite
+        FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4]]); //Destroy Pokémon icon sprite
 
         FreeAndDestroyMonPicSprite(gTasks[taskId].tMonSpriteId);
         FreeInfoScreenWindowAndBgBuffers();
@@ -6005,7 +6005,7 @@ static void Task_LoadEvolutionScreen(u8 taskId)
             FreeMonIconPalettes(); //Free space for new pallete
             LoadMonIconPalettePersonality(species, personality); //Loads pallete for current mon
             PrintPreEvolutions(taskId, species);
-            gTasks[taskId].data[4] = CreateMonIcon(species, SpriteCB_MonIcon, 18 + 32*sPokedexView->numPreEvolutions, 31, 4, personality); //Create pokemon sprite
+            gTasks[taskId].data[4] = CreateMonIcon(species, SpriteCB_MonIcon, 18 + 32*sPokedexView->numPreEvolutions, 31, 4, personality); //Create Pokémon sprite
             EvoFormsPage_PrintNavigationButtons(); // Navigation buttons
             gSprites[gTasks[taskId].data[4]].oam.priority = 0;
         }
@@ -6238,7 +6238,7 @@ static void HandlePreEvolutionSpeciesPrint(u8 taskId, enum Species preSpecies, e
     {
         u32 personality = GetPokedexMonPersonality(preSpecies);
         LoadMonIconPalettePersonality(preSpecies, personality); //Loads pallete for current mon
-        gTasks[taskId].data[4+base_i] = CreateMonIcon(preSpecies, SpriteCB_MonIcon, 18 + 32*base_i, 31, 4, personality); //Create pokemon sprite
+        gTasks[taskId].data[4+base_i] = CreateMonIcon(preSpecies, SpriteCB_MonIcon, 18 + 32*base_i, 31, 4, personality); //Create Pokémon sprite
         gSprites[gTasks[taskId].data[4+base_i]].oam.priority = 0;
     }
 }
@@ -6826,11 +6826,11 @@ static void Task_SwitchScreensFromEvolutionScreen(u8 taskId)
     u8 i;
     if (!gPaletteFade.active)
     {
-        FreeMonIconPalettes();                                          //Destroy pokemon icon sprite
-        FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4]]); //Destroy pokemon icon sprite
+        FreeMonIconPalettes();                                          //Destroy Pokémon icon sprite
+        FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4]]); //Destroy Pokémon icon sprite
         for (i = 1; i <= gTasks[taskId].data[3]; i++)
         {
-            FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4+i]]); //Destroy pokemon icon sprite
+            FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4+i]]); //Destroy Pokémon icon sprite
         }
         FreeAndDestroyMonPicSprite(gTasks[taskId].tMonSpriteId);
 
@@ -6857,11 +6857,11 @@ static void Task_ExitEvolutionScreen(u8 taskId)
     u8 i;
     if (!gPaletteFade.active)
     {
-        FreeMonIconPalettes();                                          //Destroy pokemon icon sprite
-        FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4]]); //Destroy pokemon icon sprite
+        FreeMonIconPalettes();                                          //Destroy Pokémon icon sprite
+        FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4]]); //Destroy Pokémon icon sprite
         for (i = 1; i <= gTasks[taskId].data[3]; i++)
         {
-            FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4+i]]); //Destroy pokemon icon sprite
+            FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4+i]]); //Destroy Pokémon icon sprite
         }
         FreeAndDestroyMonPicSprite(gTasks[taskId].tMonSpriteId);
 
@@ -6925,7 +6925,7 @@ static void Task_LoadFormsScreen(u8 taskId)
             u32 personality = GetPokedexMonPersonality(species);
             FreeMonIconPalettes(); //Free space for new pallete
             LoadMonIconPalettePersonality(species, personality); //Loads pallete for current mon
-            gTasks[taskId].data[4] = CreateMonIcon(species, SpriteCB_MonIcon, 18, 31, 4, personality); //Create pokemon sprite
+            gTasks[taskId].data[4] = CreateMonIcon(species, SpriteCB_MonIcon, 18, 31, 4, personality); //Create Pokémon sprite
             gSprites[gTasks[taskId].data[4]].oam.priority = 0;
         }
         EvoFormsPage_PrintNavigationButtons(); // Navigation buttons
@@ -7113,9 +7113,9 @@ static void PrintForms(u8 taskId, enum Species species)
             times += 1;
             LoadMonIconPalettePersonality(speciesForm, personality); //Loads pallete for current mon
             if (times < 7)
-                gTasks[taskId].data[4+times] = CreateMonIcon(speciesForm, SpriteCB_MonIcon, 52 + 34*(times-1), 31, 4, personality); //Create pokemon sprite
+                gTasks[taskId].data[4+times] = CreateMonIcon(speciesForm, SpriteCB_MonIcon, 52 + 34*(times-1), 31, 4, personality); //Create Pokémon sprite
             else if (times < 14)
-                gTasks[taskId].data[4+times] = CreateMonIcon(speciesForm, SpriteCB_MonIcon, 18 + 34*(times-7), 70 - y_offset_icons, 4, personality); //Create pokemon sprite
+                gTasks[taskId].data[4+times] = CreateMonIcon(speciesForm, SpriteCB_MonIcon, 18 + 34*(times-7), 70 - y_offset_icons, 4, personality); //Create Pokémon sprite
             gSprites[gTasks[taskId].data[4+times]].oam.priority = 0;
         }
     }
@@ -7135,11 +7135,11 @@ static void Task_SwitchScreensFromFormsScreen(u8 taskId)
     u8 i;
     if (!gPaletteFade.active)
     {
-        FreeMonIconPalettes();                                          //Destroy pokemon icon sprite
-        FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4]]); //Destroy pokemon icon sprite
+        FreeMonIconPalettes();                                          //Destroy Pokémon icon sprite
+        FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4]]); //Destroy Pokémon icon sprite
         for (i = 1; i <= gTasks[taskId].data[3]; i++)
         {
-            FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4+i]]); //Destroy pokemon icon sprite
+            FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4+i]]); //Destroy Pokémon icon sprite
         }
         FreeAndDestroyMonPicSprite(gTasks[taskId].tMonSpriteId);
 
@@ -7160,11 +7160,11 @@ static void Task_ExitFormsScreen(u8 taskId)
     u8 i;
     if (!gPaletteFade.active)
     {
-        FreeMonIconPalettes();                                          //Destroy pokemon icon sprite
-        FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4]]); //Destroy pokemon icon sprite
+        FreeMonIconPalettes();                                          //Destroy Pokémon icon sprite
+        FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4]]); //Destroy Pokémon icon sprite
         for (i = 1; i <= gTasks[taskId].data[3]; i++)
         {
-            FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4+i]]); //Destroy pokemon icon sprite
+            FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].data[4+i]]); //Destroy Pokémon icon sprite
         }
         FreeAndDestroyMonPicSprite(gTasks[taskId].tMonSpriteId);
 

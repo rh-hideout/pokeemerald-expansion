@@ -302,7 +302,7 @@ static void OpenPartyMenuToChooseMon(enum BattlerId battler)
         gBattlerControllerFuncs[battler] = WaitForMonSelection;
         caseId = gTasks[gBattleControllerData[battler]].data[0];
         DestroyTask(gBattleControllerData[battler]);
-        FreeAllWindowBuffers();
+        CloseMainBattleScreen();
         OpenPartyMenuInBattle(caseId);
     }
 }
@@ -325,7 +325,7 @@ static void OpenBagAndChooseItem(enum BattlerId battler)
     {
         gBattlerControllerFuncs[battler] = CompleteWhenChoseItem;
         ReshowBattleScreenDummy();
-        FreeAllWindowBuffers();
+        CloseMainBattleScreen();
         if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
             CB2_BagMenuFromBattle();
         else
@@ -355,7 +355,7 @@ static void CompleteWhenChoseItem(enum BattlerId battler)
 static void Intro_TryShinyAnimShowHealthbox(enum BattlerId battler)
 {
     struct Pokemon *party = GetBattlerParty(battler);
-    
+
     if (!gBattleSpritesDataPtr->healthBoxesData[battler].triedShinyMonAnim
      && !gBattleSpritesDataPtr->healthBoxesData[battler].ballAnimActive)
         TryShinyAnimation(battler, &party[gBattlerPartyIndexes[battler]]);
@@ -725,8 +725,8 @@ static void OakOldManHandlePrintString(enum BattlerId battler)
         {
             switch (*stringId)
             {
-            case STRINGID_DEFENDERSSTATFELL:
-                if (IS_FRLG && !BtlCtrl_OakOldMan_TestState2Flag(FIRST_BATTLE_MSG_FLAG_STAT_CHG))
+            case STRINGID_STATFELL:
+                if (gBattlerTarget == battler && IS_FRLG && !BtlCtrl_OakOldMan_TestState2Flag(FIRST_BATTLE_MSG_FLAG_STAT_CHG))
                 {
                     BtlCtrl_OakOldMan_SetState2Flag(FIRST_BATTLE_MSG_FLAG_STAT_CHG);
                     gBattlerControllerFuncs[battler] = PrintOakText_LoweringStats;

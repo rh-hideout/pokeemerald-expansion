@@ -169,6 +169,7 @@ string generate_map_header_text(Json map_data, Json layouts_data) {
          << "\t.byte "  << json_to_string(map_data, "weather") << "\n"
          << "\t.byte "  << json_to_string(map_data, "map_type") << "\n";
 
+    /*
     // Multi-region support is currently only for pokeemerald-expansion
     // TODO: Make this more generic for other versions if needed
     if (version == "emerald")
@@ -182,6 +183,15 @@ string generate_map_header_text(Json map_data, Json layouts_data) {
             text << "\t.byte REGION_HOENN\n"
                  << "\t.byte 0\n";
     }
+    */
+
+    string floor_number = json_to_string(map_data, "floor_number", true);
+    if (floor_number.empty())
+        text << "\t.byte 0\n";
+    else
+        text << "\t.byte " << floor_number << "\n";
+
+    text << "\t.byte 0\n";
 
     if (version == "ruby")
         text << "\t.2byte 0\n"
@@ -192,9 +202,6 @@ string generate_map_header_text(Json map_data, Json layouts_data) {
              << "allow_escaping=" << json_to_string(map_data, "allow_escaping") << ", "
              << "allow_running=" << json_to_string(map_data, "allow_running") << ", "
              << "show_map_name=" << json_to_string(map_data, "show_map_name") << "\n";
-
-    if (version == "firered")
-        text << "\t.byte " << json_to_string(map_data, "floor_number") << "\n";
 
      text << "\t.byte " << json_to_string(map_data, "battle_scene") << "\n\n";
 

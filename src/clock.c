@@ -9,6 +9,7 @@
 #include "main.h"
 #include "overworld.h"
 #include "pokerus.h"
+#include "random.h"
 #include "rtc.h"
 #include "time_events.h"
 #include "tv.h"
@@ -37,6 +38,11 @@ void DoTimeBasedEvents(void)
     }
 }
 
+static void UpdateDailySeed(void)
+{
+    gSaveBlock1Ptr->dailySeed = Random32();
+}
+
 static void UpdatePerDay(struct Time *localTime)
 {
     u16 *days = GetVarPointer(VAR_DAYS);
@@ -46,6 +52,7 @@ static void UpdatePerDay(struct Time *localTime)
     {
         daysSince = localTime->days - *days;
         ClearDailyFlags();
+        UpdateDailySeed();
         UpdateDewfordTrendPerDay(daysSince);
         UpdateTVShowsPerDay(daysSince);
         UpdateWeatherPerDay(daysSince);

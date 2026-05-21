@@ -1529,7 +1529,7 @@ enum KantoDexOrder
 
 #define REGIONAL_DEX_COUNT (IS_FRLG ? KANTO_DEX_COUNT : HOENN_DEX_COUNT)
 
-#define DECAGRAMS_IN_POUND             4536
+#define DECAGRAMS_IN_POUND             453592
 #define CM_PER_INCH                    2.54
 #define CM_PER_INCH_FACTOR             (CM_PER_INCH * 100)
 #define INCHES_IN_FOOT                 12

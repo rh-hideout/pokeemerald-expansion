@@ -587,7 +587,7 @@ static enum FactoryStyle GetMoveBattleStyle(enum Move move)
     }
     // Bad secondary effects for the user
     if (MoveHasAdditionalEffectSelf(move, MOVE_EFFECT_RECHARGE)
-     || MoveHasAdditionalEffectSelf(move, MOVE_EFFECT_SP_ATK_MINUS_2))
+     || MoveHasAdditionalEffectSelf(move, MOVE_EFFECT_STAT_MINUS))
         return FACTORY_STYLE_HIGH_RISK;
 
     // Non-volatile effects

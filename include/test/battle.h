@@ -554,6 +554,7 @@
 #include "constants/items.h"
 #include "constants/moves.h"
 #include "constants/species.h"
+#include "constants/songs.h"
 #include "test/test.h"
 
 // NOTE: If the stack is too small the test runner will probably crash
@@ -567,6 +568,7 @@ enum {
     BATTLE_TEST_SINGLES,
     BATTLE_TEST_DOUBLES,
     BATTLE_TEST_WILD,
+    BATTLE_TEST_GHOST,
     BATTLE_TEST_MULTI,
     BATTLE_TEST_TWO_VS_ONE,
     BATTLE_TEST_ONE_VS_TWO,
@@ -607,6 +609,13 @@ enum
     QUEUED_MESSAGE_EVENT,
     QUEUED_STATUS_EVENT,
     QUEUED_CATCH_CHANCE_EVENT,
+    QUEUED_EFFECTIVENESS_EVENT,
+};
+
+struct QueuedEffectiveness
+{
+    u8 battlerId;
+    u16 soundId;
 };
 
 struct QueuedAbilityEvent
@@ -680,6 +689,7 @@ struct QueuedEvent
         struct QueuedMessageEvent message;
         struct QueuedStatusEvent status;
         struct QueuedCaptureEvent capture;
+        struct QueuedEffectiveness eff_se;
     } as;
 };
 
@@ -845,6 +855,7 @@ struct BattleTestRunnerState
 
 extern const struct TestRunner gBattleTestRunner;
 extern struct BattleTestRunnerState *const gBattleTestRunnerState;
+bool32 IsAITest(void);
 
 #define APPEND_COMMA_TRUE(a) , a, TRUE
 #define R_APPEND_TRUE(...) __VA_OPT__(FIRST(__VA_ARGS__), TRUE RECURSIVELY(R_FOR_EACH(APPEND_COMMA_TRUE, EXCEPT_1(__VA_ARGS__))))
@@ -954,6 +965,7 @@ extern struct BattleTestRunnerState *const gBattleTestRunnerState;
 
 #define SINGLE_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_SINGLE(_name, BATTLE_TEST_SINGLES, __VA_ARGS__)
 #define WILD_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_SINGLE(_name, BATTLE_TEST_WILD, __VA_ARGS__)
+#define GHOST_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_SINGLE(_name, BATTLE_TEST_GHOST, __VA_ARGS__)
 #define AI_SINGLE_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_SINGLE(_name, BATTLE_TEST_AI_SINGLES, __VA_ARGS__)
 
 #define DOUBLE_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_DOUBLE(_name, BATTLE_TEST_DOUBLES, __VA_ARGS__)
@@ -1226,12 +1238,18 @@ void SendOut(u32 sourceLine, struct BattlePokemon *, u32 partyIndex);
                                      MESSAGE("Go for it, " name "!");                       \
                                      MESSAGE("Your opponent's weak! Get 'em, " name "!");   \
                                  }
+#define EFFECTIVENESS_SE(battler, ...) QueueEffectivenessSound(__LINE__, battler, (struct EffectivenessEventContext) { __VA_ARGS__ })
 
 enum QueueGroupType
 {
     QUEUE_GROUP_NONE,
     QUEUE_GROUP_ONE_OF,
     QUEUE_GROUP_NONE_OF,
+};
+
+struct EffectivenessEventContext
+{
+    u16 soundId;
 };
 
 struct AbilityEventContext
@@ -1289,6 +1307,25 @@ struct StatusEventContext
     bool8 frostbite:1;
 };
 
+
+struct StatChangeAssumption
+{
+    s8 attack;
+    s8 defense;
+    s8 spAtk;
+    s8 spDef;
+    s8 speed;
+    s8 accuracy;
+    s8 evasion;
+    bool8 self;
+};
+
+void AssumeStatChange_(u32 sourceLine, u32 moveId, struct StatChangeAssumption asc);
+#define ASSUME_STAT_CHANGE(moveId, ...) AssumeStatChange_(__LINE__, moveId, (struct StatChangeAssumption) { __VA_ARGS__ })
+
+void AssumeMoveEffectStatChange_(u32 sourceLine, u32 moveId, struct StatChangeAssumption asc);
+#define ASSUME_MOVE_EFFECT_STAT_CHANGE(moveId, ...) AssumeMoveEffectStatChange_(__LINE__, moveId, (struct StatChangeAssumption) { __VA_ARGS__ })
+
 void OpenQueueGroup(u32 sourceLine, enum QueueGroupType);
 void CloseQueueGroup(u32 sourceLine);
 
@@ -1300,6 +1337,7 @@ void QueueExp(u32 sourceLine, struct BattlePokemon *battler, struct ExpEventCont
 void QueueMessage(u32 sourceLine, const u8 *pattern);
 void QueueStatus(u32 sourceLine, struct BattlePokemon *battler, struct StatusEventContext);
 void QueueCatchingChance(u32 sourceLine, u32 *captureAdress);
+void QueueEffectivenessSound(u32 sourceLine, struct BattlePokemon *battler, struct EffectivenessEventContext);
 
 /* Then */
 
