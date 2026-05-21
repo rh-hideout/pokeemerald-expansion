@@ -32,13 +32,13 @@
   "object_events": [
     {
       "local_id": "LOCALID_R3_WOODCUTTER_1",
-      "graphics_id": "OBJ_EVENT_GFX_HIKER",
-      "x": 33,
-      "y": 55,
+      "graphics_id": "OBJ_EVENT_GFX_LUMBERJACK",
+      "x": 28,
+      "y": 54,
       "elevation": 0,
-      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "movement_type": "MOVEMENT_TYPE_WANDER_DOWN_AND_UP",
       "movement_range_x": 0,
-      "movement_range_y": 0,
+      "movement_range_y": 3,
       "trainer_type": "TRAINER_TYPE_NORMAL",
       "trainer_sight_or_berry_tree_id": "3",
       "script": "ow_r3_EventScript_Woodcutter1",

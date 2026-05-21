@@ -3029,3 +3029,7 @@ static const struct SpriteFrameImage sPicTable_MomFrlg[] = {
 };
 
 #endif // IS_FRLG
+
+static const struct SpriteFrameImage sPicTable_Lumberjack[] = {
+    overworld_ascending_frames(gObjectEventPic_Lumberjack, 2, 4),
+};
