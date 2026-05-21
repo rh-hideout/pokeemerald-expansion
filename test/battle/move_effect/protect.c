@@ -992,7 +992,7 @@ DOUBLE_BATTLE_TEST("Protect is not ignored after a new mon switched in because o
     }
 }
 
-SINGLE_BATTLE_TEST("Protect may fail if used consecutively")
+SINGLE_BATTLE_TEST("Protect may fail if used consecutively - 2nd time has 1/2 or 1/3 odds")
 {
     u32 numRolls = (B_PROTECT_FAILURE_RATE < GEN_5 ? 2 : 3);
     PASSES_RANDOMLY(1, numRolls, RNG_PROTECT_FAIL);
@@ -1003,6 +1003,44 @@ SINGLE_BATTLE_TEST("Protect may fail if used consecutively")
         TURN { MOVE(player, MOVE_PROTECT); }
         TURN { MOVE(player, MOVE_PROTECT); }
     } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Protect may fail if used consecutively - 3rd time has 1/4 or 1/9 odds")
+{
+    u32 numRolls = (B_PROTECT_FAILURE_RATE < GEN_5 ? 4 : 9);
+    PASSES_RANDOMLY(1, numRolls, RNG_PROTECT_FAIL);
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_PROTECT); }
+        TURN { MOVE(player, MOVE_PROTECT, WITH_RNG(RNG_PROTECT_FAIL, 1)); }
+        TURN { MOVE(player, MOVE_PROTECT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Protect may fail if used consecutively - 4th time has 1/8 or 1/27 odds")
+{
+    u32 numRolls = (B_PROTECT_FAILURE_RATE < GEN_5 ? 8 : 27);
+    PASSES_RANDOMLY(1, numRolls, RNG_PROTECT_FAIL);
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_PROTECT); }
+        TURN { MOVE(player, MOVE_PROTECT, WITH_RNG(RNG_PROTECT_FAIL, 1)); }
+        TURN { MOVE(player, MOVE_PROTECT, WITH_RNG(RNG_PROTECT_FAIL, 1)); }
+        TURN { MOVE(player, MOVE_PROTECT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
     }
