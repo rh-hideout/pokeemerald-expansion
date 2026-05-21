@@ -28,6 +28,7 @@
 #include "intro_frlg.h"
 #include "constants/rgb.h"
 #include "constants/battle_anim.h"
+#include "pokemon.h"
 
 /*
     The intro is grouped into the following scenes
@@ -1925,7 +1926,8 @@ static void Task_Scene3_Groudon(u8 taskId)
             tScreenX = 80;
             tScreenY = 41;
             tDelay = 16;
-            PlayCryInternal(SPECIES_GROUDON, 0, 100, CRY_PRIORITY_NORMAL, CRY_MODE_NORMAL);
+            if (IsSpeciesEnabled(SPECIES_GROUDON))
+                PlayCryInternal(SPECIES_GROUDON, 0, 100, CRY_PRIORITY_NORMAL, CRY_MODE_NORMAL);
             tState++;
         }
         break;
@@ -2127,7 +2129,8 @@ static void Task_Scene3_Kyogre(u8 taskId)
             {
                 tDelay = 1;
                 tState++;
-                PlayCryInternal(SPECIES_KYOGRE, 0, 120, CRY_PRIORITY_NORMAL, CRY_MODE_NORMAL);
+                if (IsSpeciesEnabled(SPECIES_KYOGRE))
+                    PlayCryInternal(SPECIES_KYOGRE, 0, 120, CRY_PRIORITY_NORMAL, CRY_MODE_NORMAL);
             }
         }
         break;

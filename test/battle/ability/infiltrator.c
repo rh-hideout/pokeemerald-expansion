@@ -92,15 +92,10 @@ SINGLE_BATTLE_TEST("Infiltrator bypasses the opponent's Mist")
 
 DOUBLE_BATTLE_TEST("Infiltrator doesn't bypass an ally's Mist")
 {
-    u32 ability;
-
-    PARAMETRIZE { ability = ABILITY_CLEAR_BODY; }
-    PARAMETRIZE { ability = ABILITY_INFILTRATOR; }
-
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_MIST) == EFFECT_MIST);
         ASSUME(GetMoveEffect(MOVE_SCREECH) == EFFECT_DEFENSE_DOWN_2);
-        PLAYER(SPECIES_DRAGAPULT) { Ability(ability); }
+        PLAYER(SPECIES_DRAGAPULT) { Ability(ABILITY_INFILTRATOR); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
@@ -135,17 +130,12 @@ SINGLE_BATTLE_TEST("Infiltrator bypasses the opponent's Safeguard")
     }
 }
 
-DOUBLE_BATTLE_TEST("Infiltrator doesn't bypass an ally's Safeguard")
+DOUBLE_BATTLE_TEST("Infiltrator doesn't bypass an ally's Safeguard - Thunder Wave")
 {
-    u32 ability;
-
-    PARAMETRIZE { ability = ABILITY_CLEAR_BODY; }
-    PARAMETRIZE { ability = ABILITY_INFILTRATOR; }
-
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SAFEGUARD) == EFFECT_SAFEGUARD);
         ASSUME(GetMoveEffect(MOVE_THUNDER_WAVE) == EFFECT_NON_VOLATILE_STATUS);
-        PLAYER(SPECIES_DRAGAPULT) { Ability(ability); }
+        PLAYER(SPECIES_DRAGAPULT) { Ability(ABILITY_INFILTRATOR); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
@@ -154,6 +144,23 @@ DOUBLE_BATTLE_TEST("Infiltrator doesn't bypass an ally's Safeguard")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SAFEGUARD, playerRight);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER_WAVE, playerLeft);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Infiltrator doesn't bypass an ally's Safeguard - Confuse")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SAFEGUARD) == EFFECT_SAFEGUARD);
+        ASSUME(GetMoveEffect(MOVE_CONFUSE_RAY) == EFFECT_CONFUSE);
+        PLAYER(SPECIES_DRAGAPULT) { Ability(ABILITY_INFILTRATOR); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_SAFEGUARD); MOVE(playerLeft, MOVE_CONFUSE_RAY, target: playerRight); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SAFEGUARD, playerRight);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, playerLeft);
     }
 }
 

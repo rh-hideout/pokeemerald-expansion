@@ -4309,11 +4309,13 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             }
             break;
         case ABILITY_TOXIC_DEBRIS:
+        {
+            enum BattlerId toxicSpikesTarget = BATTLE_OPPOSITE(gBattlerTarget);
             if (!gBattleStruct->isSkyBattle
              && !gBattleStruct->unableToUseMove
              && IsBattleMovePhysical(gCurrentMove)
              && IsBattlerTurnDamaged(gBattlerTarget, EXCLUDING_SUBSTITUTES)
-             && (gSideTimers[GetBattlerSide(gBattlerAttacker)].toxicSpikesAmount != 2))
+             && (gSideTimers[GetBattlerSide(toxicSpikesTarget)].toxicSpikesAmount != 2))
             {
                 SaveBattlerTarget(gBattlerTarget);
                 SaveBattlerAttacker(gBattlerAttacker);
@@ -4323,6 +4325,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 effect++;
             }
             break;
+        }
         default:
             break;
         }

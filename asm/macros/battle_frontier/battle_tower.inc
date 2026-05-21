@@ -95,7 +95,6 @@
 	.macro choose_mons
 	fadescreen 1
 	special ChooseHalfPartyForBattle @ choose 3 mons for battle
-	waitstate
 	.endm
 
 	.macro multi_do type:req
@@ -106,7 +105,6 @@
 	setvar VAR_0x8004, SPECIAL_BATTLE_MULTI
 	setvar VAR_0x8005, \type | MULTI_BATTLE_CHOOSE_MONS
 	special DoSpecialTrainerBattle
-	waitstate
 	setvar VAR_0x8004, FRONTIER_UTIL_FUNC_SAVE_PARTY
 	special CallFrontierUtilFunc
 	special LoadPlayerParty
@@ -135,7 +133,6 @@
 	setvar VAR_0x8004, SPECIAL_BATTLE_MULTI
 	setvar VAR_0x8005, \type
 	special DoSpecialTrainerBattle
-	waitstate
 	setvar VAR_0x8004, FRONTIER_UTIL_FUNC_SAVE_PARTY
 	special CallFrontierUtilFunc
 	special LoadPlayerParty
