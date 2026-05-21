@@ -40,8 +40,6 @@
     }
 
 // Config
-#define MAX_STEP       1000
-#define STEP_SPEED     360
 #define MAX_BANK_MONEY 9999999
 #define MAX_PENDING    5
 
@@ -160,8 +158,6 @@ static const u8 sText_Withdraw[] = _("Withdraw");
 // Variables
 EWRAM_DATA static u8 sBalanceBoxWindowId = 0;
 EWRAM_DATA static u8 sBalanceLabelSpriteId = 0;
-u8 sTransactionWindowId = 0;
-u8 sBankingModeWindowId = 0;
 
 // Static Functions
 static u32 GetStepSize(s16 heldFrames);
@@ -416,68 +412,6 @@ u32 GetTransactionAmount(void)
     return gNumericInput.value;
 }
 
-void CreateBankingWindow(void)
-{
-    // print window
-    sTransactionWindowId = AddWindow(&sSavingsWithdrawalWindowTemplate);
-    DrawStdWindowFrame(sTransactionWindowId, FALSE);
-    CopyWindowToVram(sTransactionWindowId, COPYWIN_FULL);
-}
-
-void CreateBankingModeWindow(enum BankingMode mode)
-{
-    const u8 *text = NULL;
-
-    if (mode == MODE_DEPOSIT)
-        text = sText_Deposit;
-    else if (mode == MODE_WITHDRAW)
-        text = sText_Withdraw;
-
-    sBankingModeWindowId = AddWindow(&sBankingModeWindowTemplate);
-    DrawStdWindowFrame(sBankingModeWindowId, FALSE);
-    CopyWindowToVram(sBankingModeWindowId, COPYWIN_FULL);
-    AddTextPrinterParameterized(
-        sBankingModeWindowId, FONT_NARROW, text,
-        GetStringCenterAlignXOffset(FONT_NARROW, text, 0x28), 2, 0, 0);
-}
-
-static UNUSED bool32 HandleAmountInput(u32 *amount, u32 max, u32 min, s16 *heldFrames)
-{
-    u32 original = *amount;
-
-    u16 input = JOY_REPEAT(DPAD_ANY);
-    u16 held = JOY_HELD(DPAD_ANY);
-
-    u32 step = GetStepSize(*heldFrames);
-
-    if (held)
-        (*heldFrames)++;
-    else
-        *heldFrames = 0;
-
-    if (input & DPAD_UP || input & DPAD_RIGHT)
-    {
-        if (*amount + step > max)
-            *amount = max;
-        else
-            *amount += step;
-    }
-    else if (input & DPAD_DOWN || input & DPAD_LEFT)
-    {
-        if (*amount < step)
-            *amount = min;
-        else
-            *amount -= step;
-    }
-
-    return *amount != original;
-}
-
-static void PrintTransactionAmount()
-{
-    PrintNumericInputAmount(sTransactionWindowId, gText_PokedollarVar1);
-}
-
 static u32 GetTransactionMaxAmount(enum BankingMode mode)
 {
     u32 money = GetMoney(&gSaveBlock1Ptr->money);
@@ -497,114 +431,6 @@ static u32 GetTransactionMaxAmount(enum BankingMode mode)
 
     return max;
 }
-
-static void UpdateBankBalanceAfterTransaction(enum BankingMode mode)
-{
-    if (mode == MODE_WITHDRAW)
-    {
-        SetMoneyInBank(GetMoneyInBank() - gNumericInput.value);
-        AddMoney(&gSaveBlock1Ptr->money, gNumericInput.value);
-    }
-    else if (mode == MODE_DEPOSIT)
-    {
-        SetMoneyInBank(GetMoneyInBank() + gNumericInput.value);
-        RemoveMoney(&gSaveBlock1Ptr->money, gNumericInput.value);
-    }
-
-    if (gNumericInput.value)
-        gSpecialVar_Result = TRUE;
-    else
-        gSpecialVar_Result = FALSE;
-
-    gNumericInput.value = 0;
-}
-
-#define tState       data[0]
-#define tBankingMode data[1]
-#define tDigit       data[2]
-static void Task_ShowBankingInput(u8 taskId)
-{
-    s16 *data = gTasks[taskId].data;
-
-    switch (tState)
-    {
-    case 0:
-        if (!IsOverworldLinkActive())
-        {
-            FreezeObjectEvents();
-            PlayerFreeze();
-            StopPlayerAvatar();
-            LockPlayerFieldControls();
-        }
-        tState++;
-        break;
-    case 1:
-        SetNumericInputDefault(0, GetTransactionMaxAmount(tBankingMode), GetTransactionMaxAmount(tBankingMode));
-        sTransactionWindowId = CreateNumericInputWindow(15, 2, 13, 5, gText_PokedollarVar1);
-        CreateBankingModeWindow(tBankingMode);
-        tState++;
-        break;
-    case 2:
-        gNumericInput.value = GetTransactionMaxAmount(tBankingMode);
-        PrintTransactionAmount();
-        tState++;
-        break;
-    case 3:
-        gTasks[taskId].func = Task_HandleMoneyInput;
-        break;
-    }
-}
-#undef tState
-#undef tBankingMode
-
-static u32 GetStepSize(s16 heldFrames)
-{
-    u32 t = heldFrames;
-    if (t > STEP_SPEED)
-        t = STEP_SPEED;
-
-    u32 eased = (t * t * t) / (STEP_SPEED * STEP_SPEED);
-
-    return 1 + (eased * (MAX_STEP - 1)) / STEP_SPEED;
-}
-
-#define tHeldFrames  data[0]
-#define tBankingMode data[1]
-#define tDigit       data[2]
-static void Task_HandleMoneyInput(u8 taskId)
-{
-    s16 *data = gTasks[taskId].data;
-
-    if (HandleNumericInput())
-    {
-        PrintTransactionAmount();
-    }
-    else if (JOY_NEW(A_BUTTON | B_BUTTON))
-    {
-        if (JOY_NEW(B_BUTTON))
-            gNumericInput.value = 0;
-        gSpecialVar_Result = gNumericInput.value;
-        ClearStdWindowAndFrame(sTransactionWindowId, TRUE);
-        ClearStdWindowAndFrame(sBankingModeWindowId, TRUE);
-        UnfreezeObjectEvents();
-        ScriptContext_Enable();
-        UnlockPlayerFieldControls();
-        UpdateBankBalanceAfterTransaction(tBankingMode);
-        DestroyTask(taskId);
-    }
-}
-#undef tHeldFrames
-#undef tBankingMode
-
-#define tBankingMode data[1]
-void Script_StartTransactionTask(struct ScriptContext *ctx)
-{
-    RETURN_IF_BANKING_DISABLED();
-    u8 bankingMode = ScriptReadByte(ctx);
-    u8 taskId = CreateTask(Task_ShowBankingInput, 2);
-    gTasks[taskId].tBankingMode = bankingMode;
-}
-#undef tBankingMode
 
 void Script_CheckPurchaseFromSavings()
 {

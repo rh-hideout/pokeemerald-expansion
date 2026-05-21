@@ -117,7 +117,6 @@ static const struct WindowTemplate sSavingsWithdrawalWindowTemplate = {
     .baseBlock = 1,
 };
 
-
 static const s32 sPowersOfTen[] = {
     1,
     10,
@@ -1342,7 +1341,6 @@ u16 GetSelectedSeagallopDestination(void)
     return SEAGALLOP_VERMILION_CITY;
 }
 
-
 u32 CreateNumericInputWindow(s16 x, s16 y, u8 width, u8 numDigits, const u8* templStr)
 {
     struct WindowTemplate template;
@@ -1353,11 +1351,6 @@ u32 CreateNumericInputWindow(s16 x, s16 y, u8 width, u8 numDigits, const u8* tem
     PrintNumericInputAmount(windowId, templStr);
     CopyWindowToVram(windowId, COPYWIN_FULL);
     return windowId;
-}
-
-void SetNumericInputDefault(u16 min, u16 max, u16 initial)
-{
-    gNumericInput = (struct NumericInput){min, max, initial, 0};
 }
 
 void PrintNumericInputAmount(u8 windowId, const u8* templString)
