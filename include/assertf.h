@@ -78,7 +78,7 @@
 
 /* heapcheck;
  *
- * Shows the heap usage screen if total allocations != total frees.
+ * Shows the heap usage screen if any memory blocks are detcted on the heap.
  * - In a release/test build: does nothing.
  * - In a development build: shows a resumable heap usage screen. */
 #if RELEASE
@@ -91,7 +91,7 @@
 
 /* heapcond(condition);
  *
- * Shows the heap usage screen if cond is TRUE and total allocations != total frees.
+ * Shows the heap usage screen if cond is TRUE and any memory blocks are detcted on the heap.
  * - In a release/test build: does nothing.
  * - In a development build: shows a resumable heap usage screen. */
 #if RELEASE
