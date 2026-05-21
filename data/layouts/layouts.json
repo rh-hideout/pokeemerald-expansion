@@ -11867,7 +11867,7 @@
     {
       "id": "LAYOUT_OLIVINE_CITY_HNS",
       "name": "OlivineCity_hns_Layout",
-      "width": 52,
+      "width": 60,
       "height": 72,
       "primary_tileset": "gTileset_Johto_General_Hns",
       "secondary_tileset": "gTileset_OlivineCity_Hns",
