@@ -12,9 +12,10 @@
   "allow_running": false,
   "show_map_name": true,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
-  "connections": 0,
+  "connections": null,
   "object_events": [
     {
+      "local_id": "LOCALID_BUGCONTEST_BC1",
       "graphics_id": "OBJ_EVENT_GFX_BUG_CATCHER_HNS",
       "x": 11,
       "y": 13,
@@ -25,10 +26,10 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NationalPark_BugContest_EventScript_BC2",
-      "flag": "0",
-      "local_id": "LOCALID_BUGCONTEST_BC1"
+      "flag": "0"
     },
     {
+      "local_id": "LOCALID_BUGCONTEST_BC2",
       "graphics_id": "OBJ_EVENT_GFX_BUG_CATCHER_HNS",
       "x": 26,
       "y": 9,
@@ -39,8 +40,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NationalPark_BugContest_EventScript_BC1",
-      "flag": "0",
-      "local_id": "LOCALID_BUGCONTEST_BC2"
+      "flag": "0"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_PSYDUCK",
@@ -147,6 +147,7 @@
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_BUGCONTEST_ATTENDANT",
       "graphics_id": "OBJ_EVENT_GFX_MYSTERY_EVENT_DELIVERYMAN_HNS",
       "x": 10,
       "y": 49,
@@ -157,10 +158,10 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NationalPark_BugContest_EventScript_Attendant",
-      "flag": "0",
-      "local_id": "LOCALID_BUGCONTEST_ATTENDANT"
+      "flag": "0"
     },
     {
+      "local_id": "LOCALID_BUGCONTEST_BOY",
       "graphics_id": "OBJ_EVENT_GFX_LITTLE_BOY_HNS",
       "x": 29,
       "y": 27,
@@ -171,10 +172,10 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NationalPark_BugContest_EventScript_Boy",
-      "flag": "0",
-      "local_id": "LOCALID_BUGCONTEST_BOY"
+      "flag": "0"
     },
     {
+      "local_id": "LOCALID_BUGCONTEST_GIRL",
       "graphics_id": "OBJ_EVENT_GFX_COOLTRAINER_F_HNS",
       "x": 14,
       "y": 28,
@@ -185,8 +186,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NationalPark_BugContest_EventScript_Belinda",
-      "flag": "0",
-      "local_id": "LOCALID_BUGCONTEST_GIRL"
+      "flag": "0"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_PARAS",
@@ -228,6 +228,7 @@
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_BUGCONTEST_ATTENDANT_SIDE",
       "graphics_id": "OBJ_EVENT_GFX_MYSTERY_EVENT_DELIVERYMAN_HNS",
       "x": 40,
       "y": 19,
@@ -238,10 +239,10 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NationalPark_BugContest_EventScript_Attendant",
-      "flag": "FLAG_HIDE_BUG_CONTEST_ATTENDANT_SIDE",
-      "local_id": "LOCALID_BUGCONTEST_ATTENDANT_SIDE"
+      "flag": "FLAG_HIDE_BUG_CONTEST_ATTENDANT_SIDE"
     },
     {
+      "local_id": "LOCALID_BUGCONTEST_BUG1",
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_WEEDLE",
       "x": 22,
       "y": -3,
@@ -252,10 +253,10 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "0",
-      "local_id": "LOCALID_BUGCONTEST_BUG1"
+      "flag": "0"
     },
     {
+      "local_id": "LOCALID_BUGCONTEST_BUG2",
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_PINSIR",
       "x": 24,
       "y": -3,
@@ -266,10 +267,10 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "0",
-      "local_id": "LOCALID_BUGCONTEST_BUG2"
+      "flag": "0"
     },
     {
+      "local_id": "LOCALID_BUGCONTEST_BUG3",
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_BUTTERFREE",
       "x": 18,
       "y": -3,
@@ -280,10 +281,10 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "0",
-      "local_id": "LOCALID_BUGCONTEST_BUG3"
+      "flag": "0"
     },
     {
+      "local_id": "LOCALID_BUGCONTEST_BUG4",
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_METAPOD",
       "x": 16,
       "y": -3,
@@ -294,8 +295,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "NULL",
-      "flag": "0",
-      "local_id": "LOCALID_BUGCONTEST_BUG4"
+      "flag": "0"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_CATERPIE",
