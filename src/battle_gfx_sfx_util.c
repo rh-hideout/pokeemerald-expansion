@@ -51,6 +51,11 @@ static const struct CompressedSpriteSheet sSpriteSheet_SinglesOpponentHealthbox 
     gHealthboxSinglesOpponentGfx, 0x1000, TAG_HEALTHBOX_OPPONENT1_TILE
 };
 
+static const struct CompressedSpriteSheet sSpriteSheet_SinglesOpponentLargeHealthbox =
+{
+    gHealthboxSinglesOpponentLargeGfx, 0x1000, TAG_HEALTHBOX_OPPONENT1_TILE
+};
+
 static const struct CompressedSpriteSheet sSpriteSheets_DoublesPlayerHealthbox[2] =
 {
     {gHealthboxDoublesPlayerGfx, 0x800, TAG_HEALTHBOX_PLAYER1_TILE},
@@ -713,7 +718,7 @@ void BattleLoadAllHealthBoxesGfxAtOnce(void)
     if (!IsDoubleBattle())
     {
         LoadCompressedSpriteSheet(&sSpriteSheet_SinglesPlayerHealthbox);
-        LoadCompressedSpriteSheet(&sSpriteSheet_SinglesOpponentHealthbox);
+        LoadCompressedSpriteSheet(&sSpriteSheet_SinglesOpponentLargeHealthbox);
         numberOfBattlers = 2;
     }
     else
@@ -751,7 +756,7 @@ bool8 BattleLoadAllHealthBoxesGfx(u8 state)
             }
             else if (state == 3)
             {
-                LoadCompressedSpriteSheet(&sSpriteSheet_SinglesOpponentHealthbox);
+                LoadCompressedSpriteSheet(&sSpriteSheet_SinglesOpponentLargeHealthbox);
             }
             else if (state == 4)
             {
