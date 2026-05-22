@@ -324,6 +324,7 @@ static u32 LoopedTask_OpenRegionMap(s32 taskState)
         InitBgTemplates(sRegionMapBgTemplates, ARRAY_COUNT(sRegionMapBgTemplates) - 1);
         regionMap = GetSubstructPtr(POKENAV_SUBSTRUCT_REGION_MAP);
         InitRegionMapData(regionMap, &sRegionMapBgTemplates[1], ShouldOpenRegionMapZoomed());
+        SetActiveMapRegionMapId(GetRegionMap(gMapHeader.regionMapSectionId));
         LoadCityZoomViewGfx();
         return LT_INC_AND_PAUSE;
     case 1:

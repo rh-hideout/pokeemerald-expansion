@@ -1008,7 +1008,10 @@ u8 GetLeadMonFriendshipScore(void)
 
 static void CB2_FieldShowRegionMap(void)
 {
-    FieldInitRegionMap(CB2_ReturnToFieldContinueScriptPlayMapMusic);
+    enum RegionMapId regionMapId = gSpecialVar_0x800B;
+    if (regionMapId == REGION_MAP_UNKNOWN)
+        regionMapId = GetRegionMap(gMapHeader.regionMapSectionId);
+    FieldInitRegionMap(CB2_ReturnToFieldContinueScriptPlayMapMusic, regionMapId);
 }
 
 void FieldShowRegionMap(void)

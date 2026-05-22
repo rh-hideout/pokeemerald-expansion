@@ -714,9 +714,19 @@ static const struct SpriteTemplate sFlyDestIconSpriteTemplate =
     .anims = sFlyDestIcon_Anims,
 };
 
-void InitRegionMap(struct RegionMapData *regionMapData, bool8 zoomed)
+void SetActiveMapRegionMapId(enum RegionMapId regionMapId)
+{
+    assertf(regionMapId < REGION_MAP_COUNT, "Trying to load unkown region map %d", regionMapId)
+    {
+        regionMapId = REGION_MAP_UNKNOWN;
+    }
+    sRegionMap->regionMapId = regionMapId;
+}
+
+void InitRegionMap(struct RegionMapData *regionMapData, enum RegionMapId regionMapId, bool8 zoomed)
 {
     InitRegionMapData(regionMapData, NULL, zoomed);
+    SetActiveMapRegionMapId(regionMapId);
     while (LoadRegionMapGfx());
 }
 
@@ -752,29 +762,28 @@ void ShowRegionMapForPokedexAreaScreen(struct RegionMapData *regionMapData)
 
 bool8 LoadRegionMapGfx(void)
 {
-    enum RegionMapId regionMap = GetRegionMap(gMapHeader.regionMapSectionId);
     switch (sRegionMap->initStep)
     {
     case 0:
         if (sRegionMap->bgManaged)
-            DecompressAndCopyTileDataToVram(sRegionMap->bgNum, gRegionMapInfos[regionMap].regionMapGfx, 0, 0, 0);
+            DecompressAndCopyTileDataToVram(sRegionMap->bgNum, gRegionMapInfos[sRegionMap->regionMapId].regionMapGfx, 0, 0, 0);
         else
-            DecompressDataWithHeaderVram(gRegionMapInfos[regionMap].regionMapGfx, (u16 *)BG_CHAR_ADDR(2));
+            DecompressDataWithHeaderVram(gRegionMapInfos[sRegionMap->regionMapId].regionMapGfx, (u16 *)BG_CHAR_ADDR(2));
         break;
     case 1:
         if (sRegionMap->bgManaged)
         {
             if (!FreeTempTileDataBuffersIfPossible())
-                DecompressAndCopyTileDataToVram(sRegionMap->bgNum, gRegionMapInfos[regionMap].regionMapTilemap, 0, 0, 1);
+                DecompressAndCopyTileDataToVram(sRegionMap->bgNum, gRegionMapInfos[sRegionMap->regionMapId].regionMapTilemap, 0, 0, 1);
         }
         else
         {
-            DecompressDataWithHeaderVram(gRegionMapInfos[regionMap].regionMapTilemap, (u16 *)BG_SCREEN_ADDR(28));
+            DecompressDataWithHeaderVram(gRegionMapInfos[sRegionMap->regionMapId].regionMapTilemap, (u16 *)BG_SCREEN_ADDR(28));
         }
         break;
     case 2:
         if (!FreeTempTileDataBuffersIfPossible())
-            LoadPalette(gRegionMapInfos[regionMap].regionMapPalette, BG_PLTT_ID(7), 3 * PLTT_SIZE_4BPP);
+            LoadPalette(gRegionMapInfos[sRegionMap->regionMapId].regionMapPalette, BG_PLTT_ID(7), 3 * PLTT_SIZE_4BPP);
         break;
     case 3:
         DecompressDataWithHeaderWram(sRegionMapCursorSmallGfxLZ, sRegionMap->cursorSmallImage);
@@ -1172,19 +1181,14 @@ void PokedexAreaScreen_UpdateRegionMapVariablesAndVideoRegs(s16 x, s16 y)
     }
 }
 
-const u8 *GetCurrentMapRegionName(void)
+const u8 *GetMapRegionName(void)
 {
-    enum RegionMapId regionMap = GetRegionMap(gMapHeader.regionMapSectionId);
-    return gRegionMapInfos[regionMap].regionName;
+    return gRegionMapInfos[sRegionMap->regionMapId].regionName;
 }
 
 enum RegionMapId GetRegionMap(u32 mapSecId)
 {
     enum RegionMapId regionMap = gMapSections[mapSecId].regionMap;
-    assertf(regionMap < REGION_MAP_COUNT, "Trying to load unkown region map %d", regionMap)
-    {
-        return REGION_MAP_UNKNOWN;
-    }
     return regionMap;
 }
 
@@ -1197,7 +1201,7 @@ static mapsec_u16_t GetMapSecIdAt(u16 x, u16 y)
     y -= MAPCURSOR_Y_MIN;
     x -= MAPCURSOR_X_MIN;
 
-    enum RegionMapId regionMap = GetRegionMap(gMapHeader.regionMapSectionId);
+    enum RegionMapId regionMap = sRegionMap->regionMapId;
     if (regionMap == REGION_MAP_UNKNOWN || gRegionMapInfos[regionMap].sectionLayout == NULL)
         return MAPSEC_NONE;
     const SectionLayout *layout = gRegionMapInfos[regionMap].sectionLayout;
@@ -1925,6 +1929,9 @@ bool32 IsEventIslandMapSecId(mapsec_u8_t mapSecId)
 {
     u32 i;
 
+    if (sRegionMap->regionMapId != GetRegionMap(gMapHeader.regionMapSectionId))
+        return TRUE;
+
     for (i = 0; i < ARRAY_COUNT(sMapSecIdsOffMap); i++)
     {
         if (mapSecId == sMapSecIdsOffMap[i])
@@ -1978,7 +1985,7 @@ void CB2_OpenFlyMap(void)
         gMain.state++;
         break;
     case 4:
-        InitRegionMap(&sFlyMap->regionMap, FALSE);
+        InitRegionMap(&sFlyMap->regionMap, GetRegionMap(gMapHeader.regionMapSectionId), FALSE);
         CreateRegionMapCursor(TAG_CURSOR, TAG_CURSOR);
         CreateRegionMapPlayerIcon(TAG_PLAYER_ICON, TAG_PLAYER_ICON);
         sFlyMap->mapSecId = sFlyMap->regionMap.mapSecId;
@@ -2318,7 +2325,6 @@ static const struct FlyLocation sFlyLocations[] =
 
 static void CreateFlyDestIcons(void)
 {
-    enum RegionMapId regionMap = GetRegionMap(gMapHeader.regionMapSectionId);
     u32 i;
     u16 x;
     u16 y;
@@ -2329,7 +2335,7 @@ static void CreateFlyDestIcons(void)
 
     for (i = 0; i < ARRAY_COUNT(sFlyLocations); i++)
     {
-        if (sFlyLocations[i].regionMap != regionMap)
+        if (sFlyLocations[i].regionMap != sRegionMap->regionMapId)
             continue;
 
         GetMapSecDimensions(sFlyLocations[i].mapsec, &x, &y, &width, &height);

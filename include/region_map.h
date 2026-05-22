@@ -9,17 +9,6 @@
 #define MAP_WIDTH 28
 #define MAP_HEIGHT 15
 
-enum RegionMapId
-{
-    REGION_MAP_UNKNOWN,
-    REGION_MAP_HOENN,
-    REGION_MAP_KANTO,
-    REGION_MAP_SEVII123,
-    REGION_MAP_SEVII45,
-    REGION_MAP_SEVII67,
-    REGION_MAP_COUNT,
-};
-
 enum
 {
     MAP_INPUT_NONE,
@@ -106,9 +95,10 @@ struct RegionMapData {
     /*0x082*/ u8 mapBaseIdx;
     /*0x083*/ bool8 bgManaged;
     /*0x084*/ u8 filler_084[0x100];
-    /*0x184*/ u8 cursorSmallImage[0x100];
-    /*0x284*/ u8 cursorLargeImage[0x600];
-}; // size = 0x884
+    /*0x085*/ u8 cursorSmallImage[0x100];
+    /*0x185*/ u8 cursorLargeImage[0x600];
+              enum RegionMapId regionMapId:8;
+}; // size = 0x785
 
 struct MapSectionInfo
 {
@@ -128,7 +118,7 @@ struct MapSectionInfo
 void InitRegionMapData(struct RegionMapData *regionMapData, const struct BgTemplate *template, bool8 zoomed);
 bool8 LoadRegionMapGfx(void);
 void UpdateRegionMapVideoRegs(void);
-void InitRegionMap(struct RegionMapData *regionMapData, bool8 zoomed);
+void InitRegionMap(struct RegionMapData *regionMapData, enum RegionMapId regionMapId, bool8 zoomed);
 u8 DoRegionMapInputCallback(void);
 bool8 UpdateRegionMapZoom(void);
 void FreeRegionMapIconResources(void);
@@ -148,7 +138,8 @@ void TrySetPlayerIconBlink(void);
 void BlendRegionMap(u16 color, u32 coeff);
 void SetRegionMapDataForZoom(void);
 enum RegionMapId GetRegionMap(u32 mapSecId);
-const u8 *GetCurrentMapRegionName(void);
+const u8 *GetMapRegionName(void);
+void SetActiveMapRegionMapId(enum RegionMapId regionMapId);
 
 //Pokenav Fly funcs
 u32 FilterFlyDestination(struct RegionMapData *regionMapData);

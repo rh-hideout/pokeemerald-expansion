@@ -41,9 +41,10 @@ enum {
 
 static EWRAM_DATA struct {
     MainCallback callback;
-    u32 unused;
     struct RegionMapData regionMap;
+    enum RegionMapId regionMapId;
     u16 state;
+
 } *sFieldRegionMapHandler = NULL;
 
 static void MCB2_InitRegionMapRegisters(void);
@@ -96,12 +97,13 @@ static const struct WindowTemplate sFieldRegionMapWindowTemplates[] =
     DUMMY_WIN_TEMPLATE
 };
 
-void FieldInitRegionMap(MainCallback callback)
+void FieldInitRegionMap(MainCallback callback, enum RegionMapId regionMapId)
 {
     SetVBlankCallback(NULL);
     sFieldRegionMapHandler = Alloc(sizeof(*sFieldRegionMapHandler));
     sFieldRegionMapHandler->state = 0;
     sFieldRegionMapHandler->callback = callback;
+    sFieldRegionMapHandler->regionMapId = regionMapId;
     SetMainCallback2(MCB2_InitRegionMapRegisters);
 }
 
@@ -149,7 +151,7 @@ static void FieldUpdateRegionMap(void)
     switch (sFieldRegionMapHandler->state)
     {
     case 0:
-        InitRegionMap(&sFieldRegionMapHandler->regionMap, FALSE);
+        InitRegionMap(&sFieldRegionMapHandler->regionMap, sFieldRegionMapHandler->regionMapId, FALSE);
         CreateRegionMapPlayerIcon(TAG_PLAYER_ICON, TAG_PLAYER_ICON);
         CreateRegionMapCursor(TAG_CURSOR, TAG_CURSOR);
         sFieldRegionMapHandler->state++;
@@ -160,7 +162,15 @@ static void FieldUpdateRegionMap(void)
         PrintTitleWindowText();
         ScheduleBgCopyTilemapToVram(0);
         DrawStdFrameWithCustomTileAndPalette(WIN_MAPSEC_NAME, FALSE, 0x27, 0xd);
-        PrintRegionMapSecName();
+        if (sFieldRegionMapHandler->regionMapId == GetRegionMap(gMapHeader.regionMapSectionId))
+        {
+            PrintRegionMapSecName();
+        }
+        else
+        {
+            FillWindowPixelBuffer(WIN_MAPSEC_NAME, PIXEL_FILL(1));
+            CopyWindowToVram(WIN_MAPSEC_NAME, COPYWIN_FULL);
+        }
         BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
         sFieldRegionMapHandler->state++;
         break;
@@ -233,7 +243,7 @@ static void PrintRegionMapSecName(void)
 
 static void PrintTitleWindowText(void)
 {
-    const u8* regionName = GetCurrentMapRegionName();
+    const u8* regionName = GetMapRegionName();
     u32 regionFontId = GetFontIdToFit(regionName, FONT_NORMAL, 0, 60);
     u32 regionOffset = GetStringCenterAlignXOffset(regionFontId, regionName, 0x38);
 
