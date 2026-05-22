@@ -33,7 +33,6 @@ DOUBLE_BATTLE_TEST("Disable works even if the target's last move failed")
             MOVE(playerRight, MOVE_FOLLOW_ME);
             MOVE(playerLeft, MOVE_DISABLE, target: opponentLeft);
         }
-        TURN {}
     } SCENE {
         MESSAGE("Wynaut used Follow Me!");
         MESSAGE("The opposing Wobbuffet used Sucker Punch!");

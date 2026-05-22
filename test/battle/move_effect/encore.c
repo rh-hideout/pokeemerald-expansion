@@ -119,7 +119,6 @@ SINGLE_BATTLE_TEST("Encore forces the last move used while asleep")
 {
     GIVEN {
         WITH_CONFIG(B_ENCORE_TARGET, GEN_3);
-        ASSUME(MoveHasAdditionalEffect(MOVE_HEADBUTT, MOVE_EFFECT_FLINCH) == TRUE);
         PLAYER(SPECIES_WOBBUFFET) { Speed(50); Moves(MOVE_CELEBRATE, MOVE_SPORE, MOVE_ENCORE); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(100); Moves(MOVE_GRASS_KNOT, MOVE_SCRATCH, MOVE_CELEBRATE); }
     } WHEN {
@@ -191,20 +190,28 @@ DOUBLE_BATTLE_TEST("Encore works even if the target's last move failed")
             MOVE(playerRight, MOVE_FOLLOW_ME);
             MOVE(playerLeft, MOVE_ENCORE, target: opponentLeft);
         }
-        TURN {
-            MOVE(opponentLeft, MOVE_SUCKER_PUNCH, target: playerRight);
-            MOVE(opponentRight, MOVE_CELEBRATE, target: playerLeft);
-            MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft);
-            MOVE(playerLeft, MOVE_CELEBRATE);
-        }
     } SCENE {
-        MESSAGE("Wynaut used Follow Me!");
-        MESSAGE("The opposing Wobbuffet used Sucker Punch!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FOLLOW_ME, playerRight);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SUCKER_PUNCH, opponentLeft);
         MESSAGE("But it failed!");
-        MESSAGE("The opposing Wynaut used Sucker Punch!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SUCKER_PUNCH, opponentRight);
         MESSAGE("But it failed!");
-        MESSAGE("Wobbuffet used Encore!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, playerLeft);
         MESSAGE("The opposing Wobbuffet must do an encore!");
-        MESSAGE("The opposing Wobbuffet used Sucker Punch!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Encore fails if target has not used any move yet")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP_TURN(3)); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_ENCORE); }
+    } SCENE {
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, opponent);
+        }
     }
 }
