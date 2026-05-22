@@ -756,7 +756,7 @@ bool8 BattleLoadAllHealthBoxesGfx(u8 state)
             }
             else if (state == 3)
             {
-                if (B_PERCENTAGE_HP_DISPLAY == TRUE)
+                if (B_HP_PERCENTAGE_DISPLAY == TRUE)
                     LoadCompressedSpriteSheet(&sSpriteSheet_SinglesOpponentLargeHealthbox);
                 else
                     LoadCompressedSpriteSheet(&sSpriteSheet_SinglesOpponentHealthbox);

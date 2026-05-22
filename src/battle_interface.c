@@ -635,7 +635,7 @@ u8 CreateBattlerHealthboxSprites(enum BattlerId battler)
             healthboxLeftSpriteId = CreateSprite(&sHealthboxOpponentSpriteTemplates[0], DISPLAY_WIDTH, DISPLAY_HEIGHT, 1);
             healthboxRightSpriteId = CreateSpriteAtEnd(&sHealthboxOpponentSpriteTemplates[0], DISPLAY_WIDTH, DISPLAY_HEIGHT, 1);
 
-            if (B_PERCENTAGE_HP_DISPLAY == TRUE)
+            if (B_HP_PERCENTAGE_DISPLAY == TRUE)
             {
                 gSprites[healthboxLeftSpriteId].oam.shape = ST_OAM_SQUARE;
 
@@ -1073,7 +1073,7 @@ void UpdateHpTextInHealthbox(u32 healthboxSpriteId, u32 maxOrCurrent, s16 currHp
         }
         else // Opponent
         {
-            if (B_PERCENTAGE_HP_DISPLAY == TRUE)
+            if (B_HP_PERCENTAGE_DISPLAY == TRUE)
                 PrintHPPercentageOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, -8, 16);
             else if (gBattleSpritesDataPtr->battlerData[battler].hpNumbersNoBars)
                 PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, -8, 8);  // debug only
@@ -1105,7 +1105,7 @@ static void UpdateHpTextInHealthboxInDoubles(u32 healthboxSpriteId, u32 maxOrCur
     {
         if (gBattleSpritesDataPtr->battlerData[battler].hpNumbersNoBars) // don't print text if only bars are visible
         {
-            if (B_PERCENTAGE_HP_DISPLAY == TRUE)
+            if (B_HP_PERCENTAGE_DISPLAY == TRUE)
                 PrintHPPercentageOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, -8, 8);
             else 
                 PrintHpOnHealthbox(healthboxSpriteId, currHp, maxHp, HEALTHBOX_BG_INDEX, -8, 8); // debug only
@@ -1195,7 +1195,7 @@ void SwapHpBarsWithHpText(void)
     {
         struct Pokemon *mon = GetBattlerMon(i);
         if (gSprites[gHealthboxSpriteIds[i]].callback == SpriteCallbackDummy
-         && (IsOnPlayerSide(i) || B_PERCENTAGE_HP_DISPLAY))
+         && (IsOnPlayerSide(i) || B_HP_PERCENTAGE_DISPLAY))
         {
             s32 currHp = GetMonData(mon, MON_DATA_HP);
             s32 maxHp = GetMonData(mon, MON_DATA_MAX_HP);
