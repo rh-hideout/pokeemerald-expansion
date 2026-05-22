@@ -139,6 +139,7 @@ void BlendRegionMap(u16 color, u32 coeff);
 void SetRegionMapDataForZoom(void);
 enum RegionMapId GetRegionMap(u32 mapSecId);
 const u8 *GetMapRegionName(void);
+const u8 *GetRegionName(enum RegionMapId regionMap);
 void SetActiveMapRegionMapId(enum RegionMapId regionMapId);
 
 //Pokenav Fly funcs

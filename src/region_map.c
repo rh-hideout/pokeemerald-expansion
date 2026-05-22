@@ -1183,6 +1183,11 @@ const u8 *GetMapRegionName(void)
     return gRegionMapInfos[sRegionMap->regionMapId].regionName;
 }
 
+const u8 *GetRegionName(enum RegionMapId regionMap)
+{
+    return gRegionMapInfos[regionMap].regionName;
+}
+
 enum RegionMapId GetRegionMap(u32 mapSecId)
 {
     enum RegionMapId regionMap = gMapSections[mapSecId].regionMap;

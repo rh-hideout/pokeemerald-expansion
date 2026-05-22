@@ -1262,6 +1262,7 @@ EventScript_RegionMapItem::
 
 EventScript_CurrentRegionMap::
 	lockall
+	bufferregionname STR_VAR_1
 	msgbox Common_Text_LookCloserAtMap, MSGBOX_DEFAULT
 	setvar VAR_0x800B, REGION_MAP_UNKNOWN
 	call Common_EventScript_OpenRegionMap
