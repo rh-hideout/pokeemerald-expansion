@@ -3,7 +3,6 @@
   "name": "PokemonMansion_2F_Frlg",
   "layout": "LAYOUT_POKEMON_MANSION_2F",
   "music": "MUS_RG_POKE_MANSION",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_POKEMON_MANSION",
   "requires_flash": false,
   "weather": "WEATHER_SHADE",
@@ -110,9 +109,7 @@
       "dest_warp_id": "5"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",
@@ -138,5 +135,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "PokemonMansion_2F_EventScript_DiaryJuly5th"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

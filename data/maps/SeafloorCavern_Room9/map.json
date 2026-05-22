@@ -132,5 +132,8 @@
       "script": "SeafloorCavern_Room9_EventScript_ArchieAwakenKyogre"
     }
   ],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "emerald"
+  ]
 }

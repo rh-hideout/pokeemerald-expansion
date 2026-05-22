@@ -289,5 +289,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "SlateportCity_OceanicMuseum_2F_EventScript_SSTidalReplica"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

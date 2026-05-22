@@ -3,7 +3,6 @@
   "name": "Route24_Frlg",
   "layout": "LAYOUT_ROUTE24",
   "music": "MUS_RG_ROUTE24",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_ROUTE_24",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -141,9 +140,7 @@
       "flag": "FLAG_HIDE_ROUTE24_TM45"
     }
   ],
-  "warp_events": [
-
-  ],
+  "warp_events": [],
   "coord_events": [
     {
       "type": "trigger",
@@ -175,5 +172,9 @@
       "quantity": 1,
       "underfoot": false
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

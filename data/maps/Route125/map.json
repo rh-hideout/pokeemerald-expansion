@@ -200,5 +200,8 @@
       "elevation": 0,
       "secret_base_id": "SECRET_BASE_YELLOW_CAVE4_2"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

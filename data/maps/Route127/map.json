@@ -217,5 +217,8 @@
       "elevation": 0,
       "secret_base_id": "SECRET_BASE_YELLOW_CAVE1_3"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

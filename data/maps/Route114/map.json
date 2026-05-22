@@ -505,5 +505,8 @@
       "item": "ITEM_REVIVE",
       "flag": "FLAG_HIDDEN_ITEM_ROUTE_114_REVIVE"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

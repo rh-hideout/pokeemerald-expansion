@@ -136,5 +136,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "ShoalCave_LowTideInnerRoom_EventScript_ShoalShell4"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

@@ -84,5 +84,8 @@
       "item": "ITEM_HEART_SCALE",
       "flag": "FLAG_HIDDEN_ITEM_UNDERWATER_124_HEART_SCALE_2"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

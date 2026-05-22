@@ -78,5 +78,8 @@
       "item": "ITEM_IRON",
       "flag": "FLAG_HIDDEN_ITEM_ARTISAN_CAVE_B1F_IRON"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

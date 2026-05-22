@@ -55,5 +55,8 @@
       "script": "BattleFrontier_BattlePyramidTop_EventScript_BattleBrandon"
     }
   ],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "emerald"
+  ]
 }

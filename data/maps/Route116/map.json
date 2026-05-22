@@ -525,5 +525,8 @@
       "item": "ITEM_BLACK_GLASSES",
       "flag": "FLAG_HIDDEN_ITEM_ROUTE_116_BLACK_GLASSES"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

@@ -90,5 +90,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "MossdeepCity_GameCorner_1F_EventScript_PokemonJumpRecords"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

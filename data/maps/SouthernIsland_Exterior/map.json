@@ -69,5 +69,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "SouthernIsland_Exterior_EventScript_Sign"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

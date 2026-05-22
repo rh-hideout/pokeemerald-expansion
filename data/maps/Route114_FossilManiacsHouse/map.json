@@ -85,5 +85,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
       "script": "Route114_FossilManiacsHouse_EventScript_Bookshelf"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

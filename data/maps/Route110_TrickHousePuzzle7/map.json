@@ -272,5 +272,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Route110_TrickHousePuzzle7_EventScript_Scroll"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

@@ -461,5 +461,8 @@
       "item": "ITEM_NUGGET",
       "flag": "FLAG_HIDDEN_ITEM_ROUTE_113_NUGGET"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

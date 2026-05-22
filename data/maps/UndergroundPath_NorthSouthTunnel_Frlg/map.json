@@ -3,7 +3,6 @@
   "name": "UndergroundPath_NorthSouthTunnel_Frlg",
   "layout": "LAYOUT_UNDERGROUND_PATH_NORTH_SOUTH_TUNNEL",
   "music": "MUS_RG_ROUTE1",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_UNDERGROUND_PATH",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -104,5 +103,9 @@
       "quantity": 1,
       "underfoot": false
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

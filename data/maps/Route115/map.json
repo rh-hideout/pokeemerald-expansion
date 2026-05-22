@@ -451,5 +451,8 @@
       "item": "ITEM_HEART_SCALE",
       "flag": "FLAG_HIDDEN_ITEM_ROUTE_115_HEART_SCALE"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

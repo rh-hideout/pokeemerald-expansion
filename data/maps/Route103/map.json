@@ -306,5 +306,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Route103_EventScript_RouteSign"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

@@ -3,7 +3,6 @@
   "name": "CeruleanCave_B1F_Frlg",
   "layout": "LAYOUT_CERULEAN_CAVE_B1F",
   "music": "MUS_RG_ROCKET_HIDEOUT",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_CERULEAN_CAVE",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -195,5 +194,9 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "firered",
+    "leafgreen"
+  ]
 }

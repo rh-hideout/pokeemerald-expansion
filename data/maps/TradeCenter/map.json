@@ -64,5 +64,8 @@
       "script": "EventScript_TradeCenter_Chair1"
     }
   ],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "emerald"
+  ]
 }

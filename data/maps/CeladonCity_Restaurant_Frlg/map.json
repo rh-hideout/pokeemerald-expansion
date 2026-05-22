@@ -3,7 +3,6 @@
   "name": "CeladonCity_Restaurant_Frlg",
   "layout": "LAYOUT_CELADON_CITY_RESTAURANT",
   "music": "MUS_RG_CELADON",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_CELADON_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -111,5 +110,9 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "firered",
+    "leafgreen"
+  ]
 }

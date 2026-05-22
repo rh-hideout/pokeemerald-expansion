@@ -65,5 +65,8 @@
       "item": "ITEM_NUGGET",
       "flag": "FLAG_HIDDEN_ITEM_TRICK_HOUSE_NUGGET"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

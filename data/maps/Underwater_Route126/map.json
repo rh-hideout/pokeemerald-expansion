@@ -105,5 +105,8 @@
       "item": "ITEM_BLUE_SHARD",
       "flag": "FLAG_HIDDEN_ITEM_UNDERWATER_126_BLUE_SHARD"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

@@ -78,5 +78,8 @@
       "script": "Route110_SeasideCyclingRoadSouthEntrance_EventScript_ClearCyclingRoad"
     }
   ],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "emerald"
+  ]
 }

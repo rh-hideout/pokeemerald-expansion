@@ -80,5 +80,8 @@
       "script": "BattleFrontier_BattlePikeRoomWildMons_EventScript_NoTurningBack"
     }
   ],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "emerald"
+  ]
 }

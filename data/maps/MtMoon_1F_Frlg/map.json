@@ -3,7 +3,6 @@
   "name": "MtMoon_1F_Frlg",
   "layout": "LAYOUT_MT_MOON_1F",
   "music": "MUS_RG_MT_MOON",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_MT_MOON",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -253,5 +252,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "MtMoon_1F_EventScript_ZubatSign"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

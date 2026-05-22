@@ -162,5 +162,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Route102_EventScript_RouteSignOldale"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

@@ -3,7 +3,6 @@
   "name": "SSAnne_CaptainsOffice_Frlg",
   "layout": "LAYOUT_SSANNE_CAPTAINS_OFFICE",
   "music": "MUS_RG_SS_ANNE",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_S_S_ANNE",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -41,9 +40,7 @@
       "dest_warp_id": "2"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",
@@ -69,5 +66,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "SSAnne_CaptainsOffice_EventScript_Book"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

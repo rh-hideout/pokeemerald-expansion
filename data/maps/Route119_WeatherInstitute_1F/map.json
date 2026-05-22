@@ -138,5 +138,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Route119_WeatherInstitute_1F_EventScript_Bed"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

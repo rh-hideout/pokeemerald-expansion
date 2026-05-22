@@ -3,7 +3,6 @@
   "name": "FuchsiaCity_SafariZone_Entrance_Frlg",
   "layout": "LAYOUT_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE",
   "music": "MUS_RG_FUCHSIA",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_FUCHSIA_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -104,5 +103,9 @@
       "script": "FuchsiaCity_SafariZone_Entrance_EventScript_EntryTriggerLeft"
     }
   ],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "firered",
+    "leafgreen"
+  ]
 }

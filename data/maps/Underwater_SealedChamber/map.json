@@ -33,5 +33,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Underwater_SealedChamber_EventScript_Braille"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

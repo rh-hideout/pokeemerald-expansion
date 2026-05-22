@@ -96,5 +96,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "RustboroCity_DevonCorp_1F_EventScript_RocksMetalDisplay"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

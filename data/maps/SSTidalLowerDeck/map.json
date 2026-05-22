@@ -60,5 +60,8 @@
       "item": "ITEM_LEFTOVERS",
       "flag": "FLAG_HIDDEN_ITEM_SS_TIDAL_LOWER_DECK_LEFTOVERS"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

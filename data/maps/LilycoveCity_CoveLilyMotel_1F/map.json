@@ -63,5 +63,8 @@
       "script": "LilycoveCity_CoveLilyMotel_1F_EventScript_BlockingTV"
     }
   ],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "emerald"
+  ]
 }

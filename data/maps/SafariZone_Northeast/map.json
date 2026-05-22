@@ -162,5 +162,8 @@
       "item": "ITEM_ZINC",
       "flag": "FLAG_HIDDEN_ITEM_SAFARI_ZONE_NORTH_EAST_ZINC"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

@@ -3,7 +3,6 @@
   "name": "FiveIsland_ResortGorgeous_Frlg",
   "layout": "LAYOUT_FIVE_ISLAND_RESORT_GORGEOUS",
   "music": "MUS_RG_SEVII_ROUTE",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_RESORT_GORGEOUS",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -152,9 +151,7 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "hidden_item",
@@ -204,5 +201,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "FiveIsland_ResortGorgeous_EventScript_SelphysHouseSign"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

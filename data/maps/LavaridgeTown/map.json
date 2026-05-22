@@ -260,5 +260,8 @@
       "item": "ITEM_ICE_HEAL",
       "flag": "FLAG_HIDDEN_ITEM_LAVARIDGE_TOWN_ICE_HEAL"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

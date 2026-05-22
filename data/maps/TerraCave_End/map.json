@@ -49,5 +49,8 @@
       "script": "TerraCave_End_EventScript_Groudon"
     }
   ],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "emerald"
+  ]
 }

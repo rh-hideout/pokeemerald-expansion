@@ -170,5 +170,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "DewfordTown_Hall_EventScript_Painting"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

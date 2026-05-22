@@ -3,7 +3,6 @@
   "name": "Route18_EastEntrance_2F_Frlg",
   "layout": "LAYOUT_ENTRANCE_2F",
   "music": "MUS_RG_PEWTER",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_ROUTE_18",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -58,5 +57,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Route18_EastEntrance_2F_EventScript_RightBinoculars"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

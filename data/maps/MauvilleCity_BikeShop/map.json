@@ -75,5 +75,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "MauvilleCity_BikeShop_EventScript_AcroBikeHandbook"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

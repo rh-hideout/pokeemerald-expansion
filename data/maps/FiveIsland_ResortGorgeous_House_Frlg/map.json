@@ -3,7 +3,6 @@
   "name": "FiveIsland_ResortGorgeous_House_Frlg",
   "layout": "LAYOUT_FIVE_ISLAND_RESORT_GORGEOUS_HOUSE",
   "music": "MUS_RG_SEVII_45",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_RESORT_GORGEOUS",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -74,5 +73,9 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
       "script": "FiveIsland_ResortGorgeous_House_EventScript_PokemonJournal"
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

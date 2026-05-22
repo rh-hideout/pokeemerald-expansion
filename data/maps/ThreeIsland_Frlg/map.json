@@ -3,7 +3,6 @@
   "name": "ThreeIsland_Frlg",
   "layout": "LAYOUT_THREE_ISLAND",
   "music": "MUS_RG_SEVII_123",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_THREE_ISLAND",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -395,5 +394,9 @@
       "quantity": 1,
       "underfoot": false
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

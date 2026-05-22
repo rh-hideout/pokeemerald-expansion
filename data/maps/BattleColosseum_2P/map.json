@@ -64,5 +64,8 @@
       "script": "EventScript_BattleColosseum_2P_PlayerSpot1"
     }
   ],
-  "bg_events": []
+  "bg_events": [],
+  "build_version": [
+    "emerald"
+  ]
 }

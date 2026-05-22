@@ -214,5 +214,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "0x0"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

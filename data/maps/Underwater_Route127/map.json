@@ -80,5 +80,8 @@
       "item": "ITEM_RED_SHARD",
       "flag": "FLAG_HIDDEN_ITEM_UNDERWATER_127_RED_SHARD"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }

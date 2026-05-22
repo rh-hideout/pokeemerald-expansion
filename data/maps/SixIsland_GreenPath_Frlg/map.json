@@ -3,7 +3,6 @@
   "name": "SixIsland_GreenPath_Frlg",
   "layout": "LAYOUT_SIX_ISLAND_GREEN_PATH",
   "music": "MUS_RG_SEVII_ROUTE",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_GREEN_PATH",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -72,9 +71,7 @@
       "dest_warp_id": "4"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",
@@ -102,5 +99,9 @@
       "quantity": 1,
       "underfoot": false
     }
+  ],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

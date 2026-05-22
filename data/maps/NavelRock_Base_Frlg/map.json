@@ -3,7 +3,6 @@
   "name": "NavelRock_Base_Frlg",
   "layout": "LAYOUT_NAVEL_ROCK_BASE_FRLG",
   "music": "MUS_RG_SEVII_CAVE",
-  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_NAVEL_ROCK_FRLG",
   "requires_flash": false,
   "weather": "WEATHER_NONE",
@@ -41,10 +40,10 @@
       "dest_warp_id": "1"
     }
   ],
-  "coord_events": [
-
-  ],
-  "bg_events": [
-
+  "coord_events": [],
+  "bg_events": [],
+  "build_version": [
+    "firered",
+    "leafgreen"
   ]
 }

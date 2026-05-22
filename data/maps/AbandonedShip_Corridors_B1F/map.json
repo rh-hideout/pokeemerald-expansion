@@ -109,5 +109,8 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "AbandonedShip_Corridors_B1F_EventScript_StorageRoomDoor"
     }
+  ],
+  "build_version": [
+    "emerald"
   ]
 }
