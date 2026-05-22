@@ -13,16 +13,16 @@
 
 void LoadPokedexAreaMapGfx(void)
 {
-    enum RegionMapType regionMapType = GetRegionMapType(gMapHeader.regionMapSectionId);
+    enum RegionMapId regionMap = GetRegionMap(gMapHeader.regionMapSectionId);
 
     SetBgAttribute(POKEDEX_AREA_MAP_BG, BG_ATTR_METRIC, 0);
-    DecompressAndCopyTileDataToVram(POKEDEX_AREA_MAP_BG, gRegionMapInfos[regionMapType].dexMapGfx, 0, 0, 0);
-    DecompressAndCopyTileDataToVram(POKEDEX_AREA_MAP_BG, gRegionMapInfos[regionMapType].dexMapTilemap, 0, 0, 1);
+    DecompressAndCopyTileDataToVram(POKEDEX_AREA_MAP_BG, gRegionMapInfos[regionMap].dexMapGfx, 0, 0, 0);
+    DecompressAndCopyTileDataToVram(POKEDEX_AREA_MAP_BG, gRegionMapInfos[regionMap].dexMapTilemap, 0, 0, 1);
 
     ChangeBgX(POKEDEX_AREA_MAP_BG, 0, BG_COORD_SET);
     ChangeBgY(POKEDEX_AREA_MAP_BG, 0, BG_COORD_SET);
     SetBgAttribute(POKEDEX_AREA_MAP_BG, BG_ATTR_PALETTEMODE, 1);
-    CpuCopy32(gRegionMapInfos[regionMapType].dexMapPalette, &gPlttBufferUnfaded[BG_PLTT_ID(7)], gRegionMapInfos[regionMapType].dexMapPaletteSize);
+    CpuCopy32(gRegionMapInfos[regionMap].dexMapPalette, &gPlttBufferUnfaded[BG_PLTT_ID(7)], gRegionMapInfos[regionMap].dexMapPaletteSize);
 }
 
 bool32 TryShowPokedexAreaMap(void)

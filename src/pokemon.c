@@ -4459,11 +4459,11 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
             }
             break;
         case IF_REGION:
-            if (GetCurrentRegion() == params[i].arg1)
+            if (GetCurrentPokemonRegion() == params[i].arg1)
                 currentCondition = TRUE;
             break;
         case IF_NOT_REGION:
-            if (GetCurrentRegion() != params[i].arg1)
+            if (GetCurrentPokemonRegion() != params[i].arg1)
                 currentCondition = TRUE;
             break;
         case CONDITIONS_END:
@@ -5281,7 +5281,7 @@ u16 GetBattleBGM(void)
         case TRAINER_CLASS_PYRAMID_KING:
             return MUS_VS_FRONTIER_BRAIN;
         default:
-            if (GetCurrentRegion() == REGION_KANTO)
+            if (IS_FRLG)
                 return MUS_RG_VS_TRAINER;
             else
                 return MUS_VS_TRAINER;
@@ -5289,7 +5289,7 @@ u16 GetBattleBGM(void)
     }
     else
     {
-        if (GetCurrentRegion() == REGION_KANTO)
+        if (IS_FRLG)
             return MUS_RG_VS_WILD;
         else
             return MUS_VS_WILD;
@@ -6711,10 +6711,10 @@ bool32 IsSpeciesRegionalFormFromRegion(enum Species species, u32 region)
 {
     switch (region)
     {
-    case REGION_ALOLA:  return gSpeciesInfo[species].isAlolanForm;
-    case REGION_GALAR:  return gSpeciesInfo[species].isGalarianForm;
-    case REGION_HISUI:  return gSpeciesInfo[species].isHisuianForm;
-    case REGION_PALDEA: return gSpeciesInfo[species].isPaldeanForm;
+    case POKEMON_REGION_ALOLA:  return gSpeciesInfo[species].isAlolanForm;
+    case POKEMON_REGION_GALAR:  return gSpeciesInfo[species].isGalarianForm;
+    case POKEMON_REGION_HISUI:  return gSpeciesInfo[species].isHisuianForm;
+    case POKEMON_REGION_PALDEA: return gSpeciesInfo[species].isPaldeanForm;
     default:            return FALSE;
     }
 }
@@ -6756,7 +6756,7 @@ u32 GetRegionalFormByRegion(enum Species species, u32 region)
 bool32 IsSpeciesForeignRegionalForm(enum Species species, u32 currentRegion)
 {
     u32 i;
-    for (i = 0; i < REGIONS_COUNT; i++)
+    for (i = 0; i < POKEMON_REGIONS_COUNT; i++)
     {
         if (currentRegion != i && IsSpeciesRegionalFormFromRegion(species, i))
             return TRUE;

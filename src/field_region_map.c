@@ -42,7 +42,7 @@ enum {
 static EWRAM_DATA struct {
     MainCallback callback;
     u32 unused;
-    struct RegionMap regionMap;
+    struct RegionMapData regionMap;
     u16 state;
 } *sFieldRegionMapHandler = NULL;
 
@@ -233,7 +233,7 @@ static void PrintRegionMapSecName(void)
 
 static void PrintTitleWindowText(void)
 {
-    const u8* regionName = GetCurrentRegionName();
+    const u8* regionName = GetCurrentMapRegionName();
     u32 regionFontId = GetFontIdToFit(regionName, FONT_NORMAL, 0, 60);
     u32 regionOffset = GetStringCenterAlignXOffset(regionFontId, regionName, 0x38);
 

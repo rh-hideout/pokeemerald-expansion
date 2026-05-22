@@ -6,13 +6,18 @@
 // Exported type declarations
 #define MAP_NAME_LENGTH 16
 
-enum RegionMapType
+#define MAP_WIDTH 28
+#define MAP_HEIGHT 15
+
+enum RegionMapId
 {
+    REGION_MAP_UNKNOWN,
     REGION_MAP_HOENN,
     REGION_MAP_KANTO,
     REGION_MAP_SEVII123,
     REGION_MAP_SEVII45,
-    REGION_MAP_SEVII67
+    REGION_MAP_SEVII67,
+    REGION_MAP_COUNT,
 };
 
 enum
@@ -35,6 +40,8 @@ enum {
     NUM_MAPSEC_TYPES
 };
 
+typedef mapsec_u8_t SectionLayout[MAP_HEIGHT][MAP_WIDTH];
+
 struct RegionMapInfo
 {
     const u32 *dexMapTilemap;
@@ -43,10 +50,12 @@ struct RegionMapInfo
     const u32 *regionMapTilemap;
     const u32 *regionMapGfx;
     const u16 *regionMapPalette;
+    const SectionLayout *sectionLayout;
+    const u8 *regionName;
     u16 dexMapPaletteSize;
 };
 
-struct RegionMap {
+struct RegionMapData {
     /*0x000*/ mapsec_u16_t mapSecId;
     /*0x002*/ u8 mapSecType;
     /*0x003*/ u8 posWithinMapSec;
@@ -101,22 +110,25 @@ struct RegionMap {
     /*0x284*/ u8 cursorLargeImage[0x600];
 }; // size = 0x884
 
-struct RegionMapLocation
+struct MapSectionInfo
 {
     u8 x;
     u8 y;
     u8 width;
     u8 height;
+    enum PokemonRegion pokemonRegion:4;
+    enum RegionMapId regionMap:3;
+    u32 padding:25;
     const u8 *name;
 };
 
 // Exported RAM declarations
 
 // Exported ROM declarations
-void InitRegionMapData(struct RegionMap *regionMap, const struct BgTemplate *template, bool8 zoomed);
+void InitRegionMapData(struct RegionMapData *regionMapData, const struct BgTemplate *template, bool8 zoomed);
 bool8 LoadRegionMapGfx(void);
 void UpdateRegionMapVideoRegs(void);
-void InitRegionMap(struct RegionMap *regionMap, bool8 zoomed);
+void InitRegionMap(struct RegionMapData *regionMapData, bool8 zoomed);
 u8 DoRegionMapInputCallback(void);
 bool8 UpdateRegionMapZoom(void);
 void FreeRegionMapIconResources(void);
@@ -128,20 +140,21 @@ u8 *GetMapName(u8 *dest, mapsec_u16_t regionMapId, u16 padLength);
 u8 *GetMapNameGeneric(u8 *dest, mapsec_u16_t mapSecId);
 u8 *GetMapNameHandleAquaHideout(u8 *dest, mapsec_u16_t mapSecId);
 mapsec_u16_t CorrectSpecialMapSecId(mapsec_u16_t mapSecId);
-void ShowRegionMapForPokedexAreaScreen(struct RegionMap *regionMap);
+void ShowRegionMapForPokedexAreaScreen(struct RegionMapData *regionMapData);
 void PokedexAreaScreen_UpdateRegionMapVariablesAndVideoRegs(s16 x, s16 y);
 void CB2_OpenFlyMap(void);
 bool8 IsRegionMapZoomed(void);
 void TrySetPlayerIconBlink(void);
 void BlendRegionMap(u16 color, u32 coeff);
 void SetRegionMapDataForZoom(void);
-enum RegionMapType GetRegionMapType(u32 mapSecId);
+enum RegionMapId GetRegionMap(u32 mapSecId);
+const u8 *GetCurrentMapRegionName(void);
 
 //Pokenav Fly funcs
-u32 FilterFlyDestination(struct RegionMap* regionMap);
-void SetFlyDestination(struct RegionMap* regionMap);
+u32 FilterFlyDestination(struct RegionMapData *regionMapData);
+void SetFlyDestination(struct RegionMapData *regionMapData);
 
-extern const struct RegionMapLocation gRegionMapEntries[];
+extern const struct MapSectionInfo gMapSections[];
 extern const struct RegionMapInfo gRegionMapInfos[];
 
 #endif //GUARD_REGION_MAP_H

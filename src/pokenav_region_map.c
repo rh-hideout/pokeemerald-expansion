@@ -179,7 +179,7 @@ u32 PokenavCallback_Init_RegionMap(void)
     if (!state)
         return FALSE;
 
-    if (!AllocSubstruct(POKENAV_SUBSTRUCT_REGION_MAP, sizeof(struct RegionMap)))
+    if (!AllocSubstruct(POKENAV_SUBSTRUCT_REGION_MAP, sizeof(struct RegionMapData)))
         return FALSE;
 
     state->zoomDisabled = IsEventIslandMapSecId(gMapHeader.regionMapSectionId);
@@ -206,7 +206,7 @@ u32 GetRegionMapCallback(void)
 
 static u32 HandleRegionMapInput(struct Pokenav_RegionMapMenu *state)
 {
-    struct RegionMap* regionMap = GetSubstructPtr(POKENAV_SUBSTRUCT_REGION_MAP);
+    struct RegionMapData* regionMap = GetSubstructPtr(POKENAV_SUBSTRUCT_REGION_MAP);
 
     switch (DoRegionMapInputCallback())
     {
@@ -311,7 +311,7 @@ static bool8 ShouldOpenRegionMapZoomed(void)
 static u32 LoopedTask_OpenRegionMap(s32 taskState)
 {
     int menuGfxId;
-    struct RegionMap *regionMap;
+    struct RegionMapData *regionMap;
     struct Pokenav_RegionMapGfx *state = GetSubstructPtr(POKENAV_SUBSTRUCT_REGION_MAP_ZOOM);
     switch (taskState)
     {
@@ -498,7 +498,7 @@ static u32 LoopedTask_TreatAsPokeNavFlyMap(s32 taskState)
     {
     case 0:
         PlaySE(SE_SELECT);
-        struct RegionMap* regionMap = GetSubstructPtr(POKENAV_SUBSTRUCT_REGION_MAP);
+        struct RegionMapData* regionMap = GetSubstructPtr(POKENAV_SUBSTRUCT_REGION_MAP);
         SetFlyDestination(regionMap);
         gSkipShowMonAnim = TRUE;
         ReturnToFieldFromFlyMapSelect();
@@ -559,7 +559,7 @@ static bool32 TryFreeTempTileDataBuffers(void)
 
 static void UpdateMapSecInfoWindow(struct Pokenav_RegionMapGfx *state)
 {
-    struct RegionMap *regionMap = GetSubstructPtr(POKENAV_SUBSTRUCT_REGION_MAP);
+    struct RegionMapData *regionMap = GetSubstructPtr(POKENAV_SUBSTRUCT_REGION_MAP);
     switch (regionMap->mapSecType)
     {
     case MAPSECTYPE_CITY_CANFLY:
@@ -770,7 +770,7 @@ static void SetCityZoomTextInvisibility(bool32 invisible)
 
 void UpdateRegionMapHelpBarText(void)
 {
-    struct RegionMap* regionMap = GetSubstructPtr(POKENAV_SUBSTRUCT_REGION_MAP);
+    struct RegionMapData* regionMap = GetSubstructPtr(POKENAV_SUBSTRUCT_REGION_MAP);
 
     if (regionMap->mapSecType == MAPSECTYPE_CITY_CANFLY && FlagGet(OW_FLAG_POKE_RIDER)
         && Overworld_MapTypeAllowsTeleportAndFly(gMapHeader.mapType) == TRUE)

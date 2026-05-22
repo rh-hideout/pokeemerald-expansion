@@ -35,7 +35,7 @@
 //   rectangles is determined by the positions of the matching MAPSEC values on the region map layout.
 // - Area markers, which highlight any of the maps in MAP_GROUP_DUNGEONS or MAP_GROUP_SPECIAL_AREA that
 //   have the species. These are circular sprites that flash twice. The positions of the sprites is
-//   determined by the data for the corresponding MAPSEC in gRegionMapEntries.
+//   determined by the data for the corresponding MAPSEC in gMapSections.
 
 // Only maps in the following map groups have their encounters considered for the area screen
 #define MAP_GROUP_TOWNS_AND_ROUTES MAP_GROUP(MAP_PETALBURG_CITY)
@@ -106,7 +106,7 @@ struct
     /*0x6E2*/ u16 alteringCaveCounter;
     /*0x6E4*/ u16 alteringCaveId;
     /*0x6E8*/ u8 *screenSwitchState;
-    /*0x6EC*/ struct RegionMap regionMap;
+    /*0x6EC*/ struct RegionMapData regionMap;
     /*0xF70*/ u8 charBuffer[64];
     /*0xFB0*/ struct Sprite *areaUnknownSprites[3];
     /*0xFBC*/ u8 areaUnknownGraphicsBuffer[0x600];
@@ -287,7 +287,7 @@ static bool8 DrawAreaGlow(void)
 
 static void FindMapsWithMon(enum Species species)
 {
-    enum RegionMapType currentRegionMapType;
+    enum RegionMapId currentRegionMap;
     u16 i;
     struct Roamer *roamer;
 
@@ -331,13 +331,13 @@ static void FindMapsWithMon(enum Species species)
         }
     }
 
-    currentRegionMapType = GetRegionMapType(gMapHeader.regionMapSectionId);
+    currentRegionMap = GetRegionMap(gMapHeader.regionMapSectionId);
     // Add regular species to the area map
     for (i = 0; gWildMonHeaders[i].mapGroup != MAP_GROUP(MAP_UNDEFINED); i++)
     {
         u32 headerSectionId = Overworld_GetMapHeaderByGroupAndId(gWildMonHeaders[i].mapGroup, gWildMonHeaders[i].mapNum)->regionMapSectionId;
 
-        if (GetRegionMapType(headerSectionId) != currentRegionMapType)
+        if (GetRegionMap(headerSectionId) != currentRegionMap)
             continue;
 
         if (MapHasSpecies(&gWildMonHeaders[i].encounterTypes[gAreaTimeOfDay], headerSectionId, species))
@@ -953,10 +953,10 @@ static void CreateAreaMarkerSprites(void)
     for (i = 0; i < sPokedexAreaScreen->numSpecialAreas; i++)
     {
         mapSecId = sPokedexAreaScreen->specialAreaRegionMapSectionIds[i];
-        x = 8 * (gRegionMapEntries[mapSecId].x + 1) + 4;
-        y = 8 * (gRegionMapEntries[mapSecId].y) + 28;
-        x += 4 * (gRegionMapEntries[mapSecId].width - 1);
-        y += 4 * (gRegionMapEntries[mapSecId].height - 1);
+        x = 8 * (gMapSections[mapSecId].x + 1) + 4;
+        y = 8 * (gMapSections[mapSecId].y) + 28;
+        x += 4 * (gMapSections[mapSecId].width - 1);
+        y += 4 * (gMapSections[mapSecId].height - 1);
         spriteId = CreateSprite(&sAreaMarkerSpriteTemplate, x, y, 0);
         if (spriteId != MAX_SPRITES)
         {
