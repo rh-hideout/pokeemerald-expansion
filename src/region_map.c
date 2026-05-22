@@ -283,12 +283,12 @@ static const u32 sRegionMapFrameTilemapLZ[] = INCBIN_U32("graphics/pokenav/regio
 static const u16 sFlyTargetIcons_Pal[] = INCGFX_U16("graphics/pokenav/region_map/fly_target_icons.png", ".gbapal");
 static const u32 sFlyTargetIcons_Gfx[] = INCGFX_U32("graphics/pokenav/region_map/fly_target_icons.png", ".4bpp.smol");
 
-static const u16 ALIGNED(4) sPokedexAreaMap_Pal[] = INCGFX_U16("graphics/pokedex/region_map.pal", ".gbapal");
-static const u32 sPokedexAreaMap_Gfx[] = INCGFX_U32("graphics/pokedex/region_map.png", ".8bpp.smol", "-num_tiles 232 -Wnum_tiles");
-static const u32 sPokedexAreaMap_Tilemap[] = INCBIN_U32("graphics/pokedex/region_map.bin.smolTM");
-static const u16 sRegionMapBgHoenn_Pal[] = INCBIN_U16("graphics/pokenav/region_map/map.gbapal");
-static const u32 sRegionMapBgHoenn_Gfx[] = INCBIN_U32("graphics/pokenav/region_map/map.8bpp.smol");
-static const u32 sRegionMapBgHoenn_Tilemap[] = INCBIN_U32("graphics/pokenav/region_map/map.bin.smolTM");
+static const u16 ALIGNED(4) sPokedexAreaMapHoenn_Pal[] = INCGFX_U16("graphics/pokedex/region_map_hoenn.pal", ".gbapal");
+static const u32 sPokedexAreaMapHoenn_Gfx[] = INCGFX_U32("graphics/pokedex/region_map_hoenn.png", ".8bpp.smol", "-num_tiles 232 -Wnum_tiles");
+static const u32 sPokedexAreaMapHoenn_Tilemap[] = INCBIN_U32("graphics/pokedex/region_map_hoenn.bin.smolTM");
+static const u16 sRegionMapBgHoenn_Pal[] = INCBIN_U16("graphics/pokenav/region_map/map_hoenn.gbapal");
+static const u32 sRegionMapBgHoenn_Gfx[] = INCBIN_U32("graphics/pokenav/region_map/map_hoenn.8bpp.smol");
+static const u32 sRegionMapBgHoenn_Tilemap[] = INCBIN_U32("graphics/pokenav/region_map/map_hoenn.bin.smolTM");
 
 static const u16 ALIGNED(4) sPokedexAreaMapKanto_Pal[] = INCGFX_U16("graphics/pokedex/region_map_kanto.pal", ".gbapal");
 static const u32 sPokedexAreaMapKanto_Gfx[] = INCGFX_U32("graphics/pokedex/region_map_kanto.png", ".8bpp.smol");
@@ -322,10 +322,10 @@ const struct RegionMapInfo gRegionMapInfos[REGION_MAP_COUNT] =
 {
     [REGION_MAP_UNKNOWN]    =
     {
-        .dexMapPalette = sPokedexAreaMap_Pal,
-        .dexMapGfx = sPokedexAreaMap_Gfx,
-        .dexMapTilemap = sPokedexAreaMap_Tilemap,
-        .dexMapPaletteSize = sizeof(sPokedexAreaMap_Pal),
+        .dexMapPalette = sPokedexAreaMapHoenn_Pal,
+        .dexMapGfx = sPokedexAreaMapHoenn_Gfx,
+        .dexMapTilemap = sPokedexAreaMapHoenn_Tilemap,
+        .dexMapPaletteSize = sizeof(sPokedexAreaMapHoenn_Pal),
         .regionMapPalette = sRegionMapBgHoenn_Pal,
         .regionMapGfx = sRegionMapBgHoenn_Gfx,
         .regionMapTilemap = sRegionMapBgHoenn_Tilemap,
@@ -334,10 +334,10 @@ const struct RegionMapInfo gRegionMapInfos[REGION_MAP_COUNT] =
     },
     [REGION_MAP_HOENN]    =
     {
-        .dexMapPalette = sPokedexAreaMap_Pal,
-        .dexMapGfx = sPokedexAreaMap_Gfx,
-        .dexMapTilemap = sPokedexAreaMap_Tilemap,
-        .dexMapPaletteSize = sizeof(sPokedexAreaMap_Pal),
+        .dexMapPalette = sPokedexAreaMapHoenn_Pal,
+        .dexMapGfx = sPokedexAreaMapHoenn_Gfx,
+        .dexMapTilemap = sPokedexAreaMapHoenn_Tilemap,
+        .dexMapPaletteSize = sizeof(sPokedexAreaMapHoenn_Pal),
         .regionMapPalette = sRegionMapBgHoenn_Pal,
         .regionMapGfx = sRegionMapBgHoenn_Gfx,
         .regionMapTilemap = sRegionMapBgHoenn_Tilemap,
