@@ -67,6 +67,14 @@ void write_text_file(string filepath, string text) {
     out_file.close();
 }
 
+bool json_to_bool(const Json &data, const string &field) {
+    const Json value = data[field];
+    if (value.type() == Json::Type::NUL)
+        return false;
+    if (value.type() == Json::Type::BOOL)
+        return value.bool_value();
+    FATAL_ERROR("Value for %s is unexpected type; expected bool.\n", field.c_str());
+}
 
 string json_to_string(const Json &data, const string &field = "", bool silent = false) {
     const Json value = !field.empty() ? data[field] : data;
@@ -169,22 +177,6 @@ string generate_map_header_text(Json map_data, Json layouts_data) {
          << "\t.byte "  << json_to_string(map_data, "weather") << "\n"
          << "\t.byte "  << json_to_string(map_data, "map_type") << "\n";
 
-    /*
-    // Multi-region support is currently only for pokeemerald-expansion
-    // TODO: Make this more generic for other versions if needed
-    if (version == "emerald")
-    {
-        // If the 'region' field exists in the JSON, write it followed by a zero byte.
-        // If not, default the region to REGION_HOENN so that other projects are not affected if they don't specify it.
-        if (map_data.object_items().find("region") != map_data.object_items().end())
-            text << "\t.byte "  << json_to_string(map_data, "region") << "\n"
-                 << "\t.byte 0\n";
-        else
-            text << "\t.byte REGION_HOENN\n"
-                 << "\t.byte 0\n";
-    }
-    */
-
     string floor_number = json_to_string(map_data, "floor_number", true);
     if (floor_number.empty())
         text << "\t.byte 0\n";
@@ -192,16 +184,11 @@ string generate_map_header_text(Json map_data, Json layouts_data) {
         text << "\t.byte " << floor_number << "\n";
 
     text << "\t.byte 0\n";
-
-    if (version == "ruby")
-        text << "\t.2byte 0\n"
-             << "\t.byte " << json_to_string(map_data, "show_map_name") << "\n";
-    else if (version == "emerald" || version == "firered")
-        text << "\tmap_header_flags "
-             << "allow_cycling=" << json_to_string(map_data, "allow_cycling") << ", "
-             << "allow_escaping=" << json_to_string(map_data, "allow_escaping") << ", "
-             << "allow_running=" << json_to_string(map_data, "allow_running") << ", "
-             << "show_map_name=" << json_to_string(map_data, "show_map_name") << "\n";
+    text << "\tmap_header_flags "
+         << "allow_cycling=" << json_to_string(map_data, "allow_cycling") << ", "
+         << "allow_escaping=" << json_to_string(map_data, "allow_escaping") << ", "
+         << "allow_running=" << json_to_string(map_data, "allow_running") << ", "
+         << "show_map_name=" << json_to_string(map_data, "show_map_name") << "\n";
 
      text << "\t.byte " << json_to_string(map_data, "battle_scene") << "\n\n";
 
@@ -730,6 +717,19 @@ void clean_heal_locations(vector<string> &valid_map_ids)
     write_text_file("src/data/heal_locations.json", new_json.str());
 }
 
+bool is_build_version_compatible(Json build_version)
+{
+
+    if (build_version.type() == Json::Type::NUL)
+        return true;
+
+    for (auto &build : build_version.array_items()) {
+        if (build.string_value() == version)
+            return true;
+    }
+    return false;
+}
+
 // Output paths are directories with trailing path separators
 void process_groups(string groups_filepath, vector<string> &map_filepaths, string output_asm, string output_c) {
     output_asm = strip_trailing_separator(output_asm); // Remove separator if existing.
@@ -747,15 +747,8 @@ void process_groups(string groups_filepath, vector<string> &map_filepaths, strin
         if (map_data == Json())
             FATAL_ERROR("Failed to read '%s' while processing groups: %s\n", filepath.c_str(), err.c_str());
 
-        string region = json_to_string(map_data, "region", true);
-
-        if (region.empty()) {
-            region = "REGION_HOENN";
-        }
-        string map_name = json_to_string(map_data, "name");
-
-        if ((version == "emerald" && region != "REGION_HOENN")
-         || (version == "firered" && region != "REGION_KANTO")) {
+        if (!is_build_version_compatible(map_data["build_version"])) {
+            string map_name = json_to_string(map_data, "name");
             invalid_maps.push_back(map_name);
         }
     }
@@ -786,14 +779,10 @@ string generate_layout_headers_text(Json layouts_data) {
         if (layout == Json::object()) continue;
         if (!std::filesystem::exists(json_to_string(layout, "border_filepath")))
             continue;
-        string layout_version = json_to_string(layout, "layout_version", true);
 
-        if (layout_version.empty()) {
-            layout_version = "emerald";
-        }
-        if ((version == "emerald" && layout_version != "emerald")
-         || (version == "firered" && layout_version != "frlg"))
+        if (!is_build_version_compatible(layout["build_version"]))
             continue;
+
         string layoutName = json_to_string(layout, "name");
         string border_label = layoutName + "_Border";
         string blockdata_label = layoutName + "_Blockdata";
@@ -809,20 +798,17 @@ string generate_layout_headers_text(Json layouts_data) {
              << "\t.4byte " << blockdata_label << "\n"
              << "\t.4byte " << json_to_string(layout, "primary_tileset") << "\n"
              << "\t.4byte " << json_to_string(layout, "secondary_tileset") << "\n";
-        if (layout_version == "frlg")
-            text << "\t.byte TRUE\n";
-        else
-            text << "\t.byte FALSE\n";
-
-        if (layout_version == "frlg")
+        if (json_to_bool(layout, "frlg_layout_rules"))
         {
-            text << "\t.byte " << json_to_string(layout, "border_width") << "\n"
+            text << "\t.byte TRUE\n"
+                 << "\t.byte " << json_to_string(layout, "border_width") << "\n"
                  << "\t.byte " << json_to_string(layout, "border_height") << "\n"
                  << "\t.byte 0\n";
         }
         else
         {
-            text << "\t.2byte 0\n"
+            text << "\t.byte FALSE\n"
+                 << "\t.2byte 0\n"
                  << "\t.byte 0\n";
         }
         text << "\n";
@@ -842,17 +828,13 @@ string generate_layouts_table_text(Json layouts_data) {
     for (auto &layout : layouts_data["layouts"].array_items()) {
         if (!std::filesystem::exists(json_to_string(layout, "border_filepath")))
             continue;
-        string layout_version = json_to_string(layout, "layout_version", true);
-        if (layout_version.empty()) {
-            layout_version = "emerald";
-        }
-        if ((version == "emerald" && layout_version != "emerald") || (version == "firered" && layout_version != "frlg")) {
-            text << "\t.4byte NULL\n";
-        } else {
-            string layout_name = json_to_string(layout, "name", true);
-            if (layout_name.empty()) layout_name = "NULL";
-            text << "\t.4byte " << layout_name << "\n";
-        }
+
+        if (!is_build_version_compatible(layout["build_version"]))
+            continue;
+
+        string layout_name = json_to_string(layout, "name", true);
+        if (layout_name.empty()) layout_name = "NULL";
+        text << "\t.4byte " << layout_name << "\n";
     }
 
     return text.str();
@@ -940,8 +922,6 @@ int main(int argc, char *argv[]) {
 
     char *version_arg = argv[2];
     version = string(version_arg);
-    if (version != "emerald" && version != "ruby" && version != "firered")
-        FATAL_ERROR("ERROR: <game-version> must be 'emerald', 'firered', or 'ruby'.\n");
 
     char *mode_arg = argv[1];
     string mode(mode_arg);
