@@ -281,7 +281,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Copies special ability."),
         .aiRating = 6,
         .cantBeCopied = TRUE,
-        .cantBeTraced = TRUE,
+        .cantBeTraced = TRUE, //B_UPDATED_ABILITY_DATA >= GEN_4
     },
 
     [ABILITY_HUGE_POWER] =
@@ -452,7 +452,8 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Changes with the weather."),
         .aiRating = 6,
         .cantBeCopied = TRUE,
-        .cantBeTraced = TRUE,
+        .cantBeTraced = B_UPDATED_ABILITY_DATA >= GEN_4,
+        .failsOnImposter = B_UPDATED_ABILITY_DATA >= GEN_5,
     },
 
     [ABILITY_STICKY_HOLD] =
@@ -912,6 +913,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .cantBeTraced = TRUE,
         .cantBeSuppressed = TRUE,
         .cantBeOverwritten = TRUE,
+        .failsOnImposter = B_UPDATED_ABILITY_DATA >= GEN_5,
     },
 
     [ABILITY_FLOWER_GIFT] =
@@ -920,7 +922,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Allies power up in sunshine."),
         .aiRating = 4,
         .cantBeCopied = TRUE,
-        .cantBeTraced = TRUE,
+        .cantBeTraced = B_UPDATED_ABILITY_DATA >= GEN_5,
         .breakable = TRUE,
     },
 
@@ -1212,9 +1214,11 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Transforms at half HP."),
         .aiRating = -1,
         .cantBeCopied = TRUE,
-        .cantBeSwapped = TRUE,
+        .cantBeSwapped = B_UPDATED_ABILITY_DATA >= GEN_7,
         .cantBeTraced = TRUE,
         .cantBeSuppressed = B_UPDATED_ABILITY_DATA >= GEN_7,
+        .cantBeOverwritten = B_UPDATED_ABILITY_DATA >= GEN_7,
+        .failsOnImposter = TRUE,
     },
 
     [ABILITY_VICTORY_STAR] =
@@ -1251,6 +1255,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Flower Veil"),
         .description = COMPOUND_STRING("Protects Grass-types."),
         .aiRating = 0,
+        .breakable = TRUE,
     },
 
     [ABILITY_CHEEK_POUCH] =
@@ -1329,6 +1334,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .cantBeTraced = TRUE,
         .cantBeSuppressed = TRUE,
         .cantBeOverwritten = TRUE,
+        .failsOnImposter = TRUE,
     },
 
     [ABILITY_GALE_WINGS] =
@@ -1400,6 +1406,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Dark Aura"),
         .description = COMPOUND_STRING("Boosts Dark moves."),
         .aiRating = 6,
+        .breakable = B_UPDATED_ABILITY_DATA < GEN_8,
     },
 
     [ABILITY_FAIRY_AURA] =
@@ -1407,6 +1414,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Fairy Aura"),
         .description = COMPOUND_STRING("Boosts Fairy moves."),
         .aiRating = 6,
+        .breakable = B_UPDATED_ABILITY_DATA < GEN_8,
     },
 
     [ABILITY_AURA_BREAK] =
@@ -1414,6 +1422,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Aura Break"),
         .description = COMPOUND_STRING("Reverse aura abilities."),
         .aiRating = 3,
+        .breakable = TRUE,
     },
 
     [ABILITY_PRIMORDIAL_SEA] =
@@ -1482,6 +1491,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .cantBeTraced = TRUE,
         .cantBeSuppressed = TRUE,
         .cantBeOverwritten = TRUE,
+        .failsOnImposter = TRUE,
     },
 
     [ABILITY_STAKEOUT] =
@@ -1496,6 +1506,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Water Bubble"),
         .description = COMPOUND_STRING("Guards from fire and burns."),
         .aiRating = 8,
+        .breakable = TRUE,
     },
 
     [ABILITY_STEELWORKER] =
@@ -1564,6 +1575,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .cantBeTraced = TRUE,
         .cantBeSuppressed = TRUE,
         .cantBeOverwritten = TRUE,
+        .failsOnImposter = TRUE,
     },
 
     [ABILITY_DISGUISE] =
@@ -1590,6 +1602,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .cantBeTraced = TRUE,
         .cantBeSuppressed = TRUE,
         .cantBeOverwritten = TRUE,
+        .failsOnImposter = TRUE,
     },
 
     [ABILITY_POWER_CONSTRUCT] =
@@ -1602,6 +1615,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .cantBeTraced = TRUE,
         .cantBeSuppressed = TRUE,
         .cantBeOverwritten = TRUE,
+        .failsOnImposter = TRUE,
     },
 
     [ABILITY_CORROSION] =
@@ -1717,6 +1731,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .cantBeTraced = TRUE,
         .cantBeSuppressed = TRUE,
         .cantBeOverwritten = TRUE,
+        .failsOnImposter = TRUE,
     },
 
     [ABILITY_ELECTRIC_SURGE] =
@@ -1829,7 +1844,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Gulp Missile"),
         .description = COMPOUND_STRING("If hit, spits prey from sea."),
         .aiRating = 3,
-        .cantBeCopied = TRUE,
+        .cantBeSwapped = B_UPDATED_ABILITY_DATA < GEN_9,
+        .cantBeCopied = B_UPDATED_ABILITY_DATA < GEN_9,
+        .cantBeTraced = B_UPDATED_ABILITY_DATA < GEN_9,
         .cantBeSuppressed = TRUE,
         .cantBeOverwritten = TRUE,
         .failsOnImposter = TRUE,
@@ -2219,6 +2236,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Orichalcum Pulse"),
         .description = COMPOUND_STRING("Summons sunlight in battle."),
         .aiRating = 8,
+        .cantBeSwapped = TRUE,
+        .cantBeCopied = TRUE,
+        .cantBeOverwritten = TRUE,
     },
 
     [ABILITY_HADRON_ENGINE] =
@@ -2226,6 +2246,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Hadron Engine"),
         .description = COMPOUND_STRING("Field becomes Electric."),
         .aiRating = 8,
+        .cantBeSwapped = TRUE,
+        .cantBeCopied = TRUE,
+        .cantBeOverwritten = TRUE,
     },
 
     [ABILITY_OPPORTUNIST] =
@@ -2408,5 +2431,53 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .cantBeCopied = TRUE,
         .cantBeSwapped = TRUE,
         .cantBeTraced = TRUE,
+    },
+
+    [ABILITY_PIERCING_DRILL] =
+    {
+        .name = _("Piercing Drill"),
+        .description = COMPOUND_STRING("Contact evades protection."),
+    },
+
+    [ABILITY_DRAGONIZE] =
+    {
+        .name = _("Dragonize"),
+        .description = COMPOUND_STRING("Normal moves turn Dragon."),
+    },
+
+    [ABILITY_313] =
+    {
+        .name = _("-------"),
+        .description = COMPOUND_STRING("No special ability."),
+    },
+
+    [ABILITY_314] =
+    {
+        .name = _("-------"),
+        .description = COMPOUND_STRING("No special ability."),
+    },
+
+    [ABILITY_MEGA_SOL] =
+    {
+        .name = _("Mega Sol"),
+        .description = COMPOUND_STRING("Acts like under sun."),
+    },
+
+    [ABILITY_316] =
+    {
+        .name = _("-------"),
+        .description = COMPOUND_STRING("No special ability."),
+    },
+
+    [ABILITY_317] =
+    {
+        .name = _("-------"),
+        .description = COMPOUND_STRING("No special ability."),
+    },
+
+    [ABILITY_SPICY_SPRAY] =
+    {
+        .name = _("Spicy Spray"),
+        .description = COMPOUND_STRING("Burns the foe when damaged."),
     },
 };

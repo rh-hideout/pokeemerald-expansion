@@ -30,7 +30,6 @@ def add_filter_data(match):
     if trainer_name in source_data:
         contest_filter = source_data[trainer_name]
         print(f"Updating {trainer_name}: adding {contest_filter}")
-        #return f'{trainer_name} = {{\n        .filter = {contest_filter}'
         return f'{match.group(0)}\n        .filter = {contest_filter}'
     else:
         return match.group(0)

@@ -9,7 +9,11 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Telekinesis makes the target unable to avoid any attacks made against it")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_MINIMIZE) == EFFECT_MINIMIZE); // Raises evs by 2
+        #if B_MINIMIZE_EVASION >= GEN_5
+        ASSUME_STAT_CHANGE(MOVE_MINIMIZE, evasion: +2);
+        #else
+        ASSUME_STAT_CHANGE(MOVE_MINIMIZE, evasion: +1);
+        #endif
         ASSUME(GetMoveAccuracy(MOVE_SCREECH) < 100);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
@@ -22,7 +26,7 @@ SINGLE_BATTLE_TEST("Telekinesis makes the target unable to avoid any attacks mad
         MESSAGE("The opposing Wynaut used Minimize!");
         MESSAGE("Wobbuffet used Screech!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCREECH, player);
-        NOT MESSAGE("Wobbuffet's attack missed!");
+        NOT MESSAGE("The opposing Wynaut avoided the attack!");
     }
 }
 
@@ -33,8 +37,8 @@ SINGLE_BATTLE_TEST("Telekinesis ends after 3 turns")
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_TELEKINESIS); }
-        TURN { }
-        TURN { }
+        TURN {}
+        TURN {}
     } SCENE {
         MESSAGE("Wobbuffet used Telekinesis!");
         MESSAGE("The opposing Wynaut was hurled into the air!");

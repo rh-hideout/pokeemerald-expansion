@@ -100,6 +100,7 @@ PetalburgCity_Gym_Movement_WallyExitGym:
 	step_end
 
 PetalburgCity_Gym_EventScript_Norman::
+	vsseeker_rematchid TRAINER_NORMAN_1
 	lock
 	faceplayer
 	switch VAR_PETALBURG_GYM_STATE
@@ -1095,7 +1096,6 @@ PetalburgCity_Gym_EventScript_SetOHKORoomDoorMetatiles::
 
 PetalburgCity_Gym_EventScript_SlideOpenRoomDoors::
 	special PetalburgGymSlideOpenRoomDoors
-	waitstate
 	return
 
 PetalburgCity_Gym_EventScript_UnlockRoomDoors::

@@ -45,6 +45,22 @@ bool8 ScriptMovement_IsObjectMovementFinished(u8 localId, u8 mapNum, u8 mapGroup
     return IsMovementScriptFinished(taskId, moveScrId);
 }
 
+bool32 ScriptMovement_IsAllObjectMovementFinished(void)
+{
+    u8 taskId = GetMoveObjectsTaskId();
+    if (taskId != TASK_NONE)
+    {
+        u32 finishedMovements = gTasks[taskId].data[0];
+        const u8 *objEventIds = (u8 *)&gTasks[taskId].data[1];
+        for (u32 i = 0; i < OBJECT_EVENTS_COUNT; i++)
+        {
+            if (objEventIds[i] != 0xFF && !(finishedMovements & (1 << i)))
+                return FALSE;
+        }
+    }
+    return TRUE;
+}
+
 void ScriptMovement_UnfreezeObjectEvents(void)
 {
     u8 taskId;
@@ -218,7 +234,7 @@ static void ScriptMovement_TakeStep(u8 taskId, u8 moveScrId, u8 objEventId, cons
     if (ObjectEventIsHeldMovementActive(obj) && !ObjectEventClearHeldMovementIfFinished(obj))
     {
         // If, while undergoing scripted movement,
-        // a non-player object collides with an active follower pokemon,
+        // a non-player object collides with an active follower Pokémon,
         // put that follower into a pokeball
         // (sTimer helps limit this expensive check to once per step)
         if (OW_FOLLOWERS_SCRIPT_MOVEMENT && gSprites[obj->spriteId].sTimer == 1

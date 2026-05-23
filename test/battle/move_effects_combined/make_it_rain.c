@@ -4,7 +4,7 @@
 ASSUMPTIONS
 {
     ASSUME(MoveHasAdditionalEffectWithChance(MOVE_MAKE_IT_RAIN, MOVE_EFFECT_PAYDAY, 0) == TRUE);
-    ASSUME(MoveHasAdditionalEffectSelf(MOVE_MAKE_IT_RAIN, MOVE_EFFECT_SP_ATK_MINUS_1));
+    ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAKE_IT_RAIN, self: TRUE, spAtk: -1);
 }
 
 SINGLE_BATTLE_TEST("Make It Rain lowers special attack by one stage")
@@ -82,6 +82,7 @@ DOUBLE_BATTLE_TEST("Make It Rain lowers special attack by one stage if it hits b
         MESSAGE("Wobbuffet's Sp. Atk fell!");
     }
 }
+
 DOUBLE_BATTLE_TEST("Make It Rain lowers special attack by one stage if second target Protects")
 {
     GIVEN {
@@ -94,8 +95,8 @@ DOUBLE_BATTLE_TEST("Make It Rain lowers special attack by one stage if second ta
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MAKE_IT_RAIN, playerLeft);
-        HP_BAR(opponentLeft);
         NOT HP_BAR(opponentRight);
+        HP_BAR(opponentLeft);
         MESSAGE("Coins were scattered everywhere!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
         MESSAGE("Wobbuffet's Sp. Atk fell!");

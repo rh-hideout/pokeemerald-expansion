@@ -13,10 +13,10 @@ PRs with the Github label [`type: big feature`](https://github.com/rh-hideout/po
 
 ### Merge Freeze (14 days to the next Minor Release)
 Pull Requests that **DO NOT** have one of the following Github labels:
-- [`bugfix`](https://github.com/rh-hideout/pokeemerald-expansion/issues?q=sort%3Aupdated-desc+label%3Abugfix) 
-- [`type: cleanup`](https://github.com/rh-hideout/pokeemerald-expansion/issues?q=sort%3Aupdated-desc+label%3A%22type%3A+cleanup%22+) 
-- [`type: credits`](https://github.com/rh-hideout/pokeemerald-expansion/issues?q=sort%3Aupdated-desc+label%3A%22type%3A+credits%22+) 
-- [`type: documentation`](https://github.com/rh-hideout/pokeemerald-expansion/issues?q=sort%3Aupdated-desc+label%3A%22type%3A+documentation%22+) 
+- [`bugfix`](https://github.com/rh-hideout/pokeemerald-expansion/issues?q=sort%3Aupdated-desc+label%3Abugfix)
+- [`type: cleanup`](https://github.com/rh-hideout/pokeemerald-expansion/issues?q=sort%3Aupdated-desc+label%3A%22type%3A+cleanup%22+)
+- [`type: credits`](https://github.com/rh-hideout/pokeemerald-expansion/issues?q=sort%3Aupdated-desc+label%3A%22type%3A+credits%22+)
+- [`type: documentation`](https://github.com/rh-hideout/pokeemerald-expansion/issues?q=sort%3Aupdated-desc+label%3A%22type%3A+documentation%22+)
 - [`category: battle-tests`](https://github.com/rh-hideout/pokeemerald-expansion/issues?q=sort%3Aupdated-desc+is%3Aopen+label%3A%22category%3A+battle-tests%22)
 will NOT be merged until after the next Minor Release.
 
@@ -34,9 +34,9 @@ will NOT be merged until after the next Minor Release.
 ---
 
 ## What is a "Big Feature"?
-* If the original owner of the PR thinks a feature should be labeled a Big Feature, it is, no questions asked
-* If a reviewer thinks a PR is a Big Feature, then it is
-* If the two disagree, it can be discussed in a PR thread, and can ultimately be resolved with a Maintainer vote. 
+* If any maintainer thinks a PR is a Big Feature, then it is, no question asked
+* If there is disagreement, it can be discussed in a PR thread, and can ultimately be resolved with a Maintainer vote. 
+* If you believe your PR should have this feature, please let a maintainer know.
 
 ### How To Identify a Big Feature
 * **Big diffs**: It's easy for something to go unnoticed in review when it's a tiny part of a massive diff.

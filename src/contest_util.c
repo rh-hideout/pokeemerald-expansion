@@ -188,9 +188,9 @@ static void SpriteCB_Confetti(struct Sprite *sprite);
 static void Task_ShowContestEntryMonPic(u8 taskId);
 static void Task_LinkContestWaitForConnection(u8 taskId);
 
-static const u16 sResultsTextWindow_Pal[] = INCBIN_U16("graphics/contest/results_screen/text_window.gbapal");
-static const u8 sResultsTextWindow_Gfx[] = INCBIN_U8("graphics/contest/results_screen/text_window.4bpp");
-static const u16 sMiscBlank_Pal[] = INCBIN_U16("graphics/interface/blank.gbapal");
+static const u16 sResultsTextWindow_Pal[] = INCGFX_U16("graphics/contest/results_screen/text_window.pal", ".gbapal");
+static const u8 sResultsTextWindow_Gfx[] = INCGFX_U8("graphics/contest/results_screen/text_window.png", ".4bpp");
+static const u16 sMiscBlank_Pal[] = INCGFX_U16("graphics/interface/blank.pal", ".gbapal");
 
 static const struct OamData sOamData_ResultsTextWindow =
 {
@@ -214,10 +214,6 @@ static const struct SpriteTemplate sSpriteTemplate_ResultsTextWindow =
     .tileTag = TAG_TEXT_WINDOW_BASE,
     .paletteTag = TAG_TEXT_WINDOW_BASE,
     .oam = &sOamData_ResultsTextWindow,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteSheet sSpriteSheets_ResultsTextWindow[] =
@@ -260,9 +256,6 @@ static const struct SpriteTemplate sSpriteTemplate_Confetti =
     .tileTag = TAG_CONFETTI,
     .paletteTag = TAG_CONFETTI,
     .oam = &sOamData_Confetti,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Confetti
 };
 
@@ -385,10 +378,6 @@ static const struct SpriteTemplate sSpriteTemplate_WirelessIndicatorWindow =
     .tileTag = TAG_WIRELESS_INDICATOR_WINDOW,
     .paletteTag = 0,
     .oam = &sOamData_WirelessIndicatorWindow,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteSheet sSpriteSheet_WirelessIndicatorWindow =
@@ -879,7 +868,7 @@ static void Task_ShowWinnerMonBanner(u8 taskId)
 {
     int i;
     u8 spriteId;
-    u16 species;
+    enum Species species;
     bool8 isShiny;
     u32 personality;
 
@@ -1092,7 +1081,7 @@ static void Task_FlashStarsAndHearts(u8 taskId)
         sContestResults->data->pointsFlashing = TRUE;
 }
 
-static void LoadContestMonIcon(u16 species, u8 monIndex, u8 srcOffset, u8 useDmaNow, u32 personality)
+static void LoadContestMonIcon(enum Species species, u8 monIndex, u8 srcOffset, u8 useDmaNow, u32 personality)
 {
     const u8 *iconPtr;
     u16 var0, var1;
@@ -1922,6 +1911,7 @@ static void AddContestTextPrinterFitWidth(int windowId, u8 *str, int x, int widt
 {
     struct TextPrinterTemplate textPrinter;
     textPrinter.currentChar = str;
+    textPrinter.type = WINDOW_TEXT_PRINTER;
     textPrinter.windowId = windowId;
     textPrinter.fontId = GetFontIdToFit(str, FONT_NARROW, 0, widthPx);
     textPrinter.x = x;
@@ -1930,10 +1920,10 @@ static void AddContestTextPrinterFitWidth(int windowId, u8 *str, int x, int widt
     textPrinter.currentY = 2;
     textPrinter.letterSpacing = 0;
     textPrinter.lineSpacing = 0;
-    textPrinter.unk = 0;
-    textPrinter.fgColor = 1;
-    textPrinter.bgColor = 0;
-    textPrinter.shadowColor = 8;
+    textPrinter.color.accent = TEXT_COLOR_TRANSPARENT;
+    textPrinter.color.foreground = 1;
+    textPrinter.color.background = TEXT_COLOR_TRANSPARENT;
+    textPrinter.color.shadow = 8;
     AddTextPrinter(&textPrinter, 0, NULL);
     PutWindowTilemap(windowId);
 }
@@ -1945,7 +1935,7 @@ static void AddContestTextPrinter(int windowId, u8 *str, int x)
 
 void TryEnterContestMon(void)
 {
-    u8 eligibility = GetContestEntryEligibility(&gPlayerParty[gContestMonPartyIndex]);
+    u8 eligibility = GetContestEntryEligibility(&gParties[B_TRAINER_0][gContestMonPartyIndex]);
 
     // Nonzero eligibility can still be non-eligibile, if mon is fainted or egg
     if (eligibility)
@@ -1960,7 +1950,7 @@ void TryEnterContestMon(void)
 u16 HasMonWonThisContestBefore(void)
 {
     bool32 hasRankRibbon = FALSE;
-    struct Pokemon *mon = &gPlayerParty[gContestMonPartyIndex];
+    struct Pokemon *mon = &gParties[B_TRAINER_0][gContestMonPartyIndex];
     switch (gSpecialVar_ContestCategory)
     {
     case CONTEST_CATEGORY_COOL:
@@ -1983,6 +1973,8 @@ u16 HasMonWonThisContestBefore(void)
         if (GetMonData(mon, MON_DATA_TOUGH_RIBBON) > gSpecialVar_ContestRank)
             hasRankRibbon = TRUE;
         break;
+    default:
+        break;
     }
 
     return hasRankRibbon;
@@ -1998,54 +1990,56 @@ void GiveMonContestRibbon(void)
     switch (gSpecialVar_ContestCategory)
     {
     case CONTEST_CATEGORY_COOL:
-        ribbonData = GetMonData(&gPlayerParty[gContestMonPartyIndex], MON_DATA_COOL_RIBBON);
+        ribbonData = GetMonData(&gParties[B_TRAINER_0][gContestMonPartyIndex], MON_DATA_COOL_RIBBON);
         if (ribbonData <= gSpecialVar_ContestRank && ribbonData <= CONTEST_RANK_MASTER)
         {
             ribbonData++;
-            SetMonData(&gPlayerParty[gContestMonPartyIndex], MON_DATA_COOL_RIBBON, &ribbonData);
-            if (GetRibbonCount(&gPlayerParty[gContestMonPartyIndex]) > NUM_CUTIES_RIBBONS)
-                TryPutSpotTheCutiesOnAir(&gPlayerParty[gContestMonPartyIndex], MON_DATA_COOL_RIBBON);
+            SetMonData(&gParties[B_TRAINER_0][gContestMonPartyIndex], MON_DATA_COOL_RIBBON, &ribbonData);
+            if (GetRibbonCount(&gParties[B_TRAINER_0][gContestMonPartyIndex]) > NUM_CUTIES_RIBBONS)
+                TryPutSpotTheCutiesOnAir(&gParties[B_TRAINER_0][gContestMonPartyIndex], MON_DATA_COOL_RIBBON);
         }
         break;
     case CONTEST_CATEGORY_BEAUTY:
-        ribbonData = GetMonData(&gPlayerParty[gContestMonPartyIndex], MON_DATA_BEAUTY_RIBBON);
+        ribbonData = GetMonData(&gParties[B_TRAINER_0][gContestMonPartyIndex], MON_DATA_BEAUTY_RIBBON);
         if (ribbonData <= gSpecialVar_ContestRank && ribbonData <= CONTEST_RANK_MASTER)
         {
             ribbonData++;
-            SetMonData(&gPlayerParty[gContestMonPartyIndex], MON_DATA_BEAUTY_RIBBON, &ribbonData);
-            if (GetRibbonCount(&gPlayerParty[gContestMonPartyIndex]) > NUM_CUTIES_RIBBONS)
-                TryPutSpotTheCutiesOnAir(&gPlayerParty[gContestMonPartyIndex], MON_DATA_BEAUTY_RIBBON);
+            SetMonData(&gParties[B_TRAINER_0][gContestMonPartyIndex], MON_DATA_BEAUTY_RIBBON, &ribbonData);
+            if (GetRibbonCount(&gParties[B_TRAINER_0][gContestMonPartyIndex]) > NUM_CUTIES_RIBBONS)
+                TryPutSpotTheCutiesOnAir(&gParties[B_TRAINER_0][gContestMonPartyIndex], MON_DATA_BEAUTY_RIBBON);
         }
         break;
     case CONTEST_CATEGORY_CUTE:
-        ribbonData = GetMonData(&gPlayerParty[gContestMonPartyIndex], MON_DATA_CUTE_RIBBON);
+        ribbonData = GetMonData(&gParties[B_TRAINER_0][gContestMonPartyIndex], MON_DATA_CUTE_RIBBON);
         if (ribbonData <= gSpecialVar_ContestRank && ribbonData <= CONTEST_RANK_MASTER)
         {
             ribbonData++;
-            SetMonData(&gPlayerParty[gContestMonPartyIndex], MON_DATA_CUTE_RIBBON, &ribbonData);
-            if (GetRibbonCount(&gPlayerParty[gContestMonPartyIndex]) > NUM_CUTIES_RIBBONS)
-                TryPutSpotTheCutiesOnAir(&gPlayerParty[gContestMonPartyIndex], MON_DATA_CUTE_RIBBON);
+            SetMonData(&gParties[B_TRAINER_0][gContestMonPartyIndex], MON_DATA_CUTE_RIBBON, &ribbonData);
+            if (GetRibbonCount(&gParties[B_TRAINER_0][gContestMonPartyIndex]) > NUM_CUTIES_RIBBONS)
+                TryPutSpotTheCutiesOnAir(&gParties[B_TRAINER_0][gContestMonPartyIndex], MON_DATA_CUTE_RIBBON);
         }
         break;
     case CONTEST_CATEGORY_SMART:
-        ribbonData = GetMonData(&gPlayerParty[gContestMonPartyIndex], MON_DATA_SMART_RIBBON);
+        ribbonData = GetMonData(&gParties[B_TRAINER_0][gContestMonPartyIndex], MON_DATA_SMART_RIBBON);
         if (ribbonData <= gSpecialVar_ContestRank && ribbonData <= CONTEST_RANK_MASTER)
         {
             ribbonData++;
-            SetMonData(&gPlayerParty[gContestMonPartyIndex], MON_DATA_SMART_RIBBON, &ribbonData);
-            if (GetRibbonCount(&gPlayerParty[gContestMonPartyIndex]) > NUM_CUTIES_RIBBONS)
-                TryPutSpotTheCutiesOnAir(&gPlayerParty[gContestMonPartyIndex], MON_DATA_SMART_RIBBON);
+            SetMonData(&gParties[B_TRAINER_0][gContestMonPartyIndex], MON_DATA_SMART_RIBBON, &ribbonData);
+            if (GetRibbonCount(&gParties[B_TRAINER_0][gContestMonPartyIndex]) > NUM_CUTIES_RIBBONS)
+                TryPutSpotTheCutiesOnAir(&gParties[B_TRAINER_0][gContestMonPartyIndex], MON_DATA_SMART_RIBBON);
         }
         break;
     case CONTEST_CATEGORY_TOUGH:
-        ribbonData = GetMonData(&gPlayerParty[gContestMonPartyIndex], MON_DATA_TOUGH_RIBBON);
+        ribbonData = GetMonData(&gParties[B_TRAINER_0][gContestMonPartyIndex], MON_DATA_TOUGH_RIBBON);
         if (ribbonData <= gSpecialVar_ContestRank && ribbonData <= CONTEST_RANK_MASTER)
         {
             ribbonData++;
-            SetMonData(&gPlayerParty[gContestMonPartyIndex], MON_DATA_TOUGH_RIBBON, &ribbonData);
-            if (GetRibbonCount(&gPlayerParty[gContestMonPartyIndex]) > NUM_CUTIES_RIBBONS)
-                TryPutSpotTheCutiesOnAir(&gPlayerParty[gContestMonPartyIndex], MON_DATA_TOUGH_RIBBON);
+            SetMonData(&gParties[B_TRAINER_0][gContestMonPartyIndex], MON_DATA_TOUGH_RIBBON, &ribbonData);
+            if (GetRibbonCount(&gParties[B_TRAINER_0][gContestMonPartyIndex]) > NUM_CUTIES_RIBBONS)
+                TryPutSpotTheCutiesOnAir(&gParties[B_TRAINER_0][gContestMonPartyIndex], MON_DATA_TOUGH_RIBBON);
         }
+        break;
+    default:
         break;
     }
 }
@@ -2477,7 +2471,7 @@ void SetLinkContestPlayerGfx(void)
     {
         for (i = 0; i < gNumLinkContestPlayers; i++)
         {
-            int version = (u8)gLinkPlayers[i].version;
+            enum GameVersion version = (u8)gLinkPlayers[i].version;
             if (version == VERSION_RUBY || version == VERSION_SAPPHIRE)
             {
                 if (gLinkPlayers[i].gender == MALE)
@@ -2498,7 +2492,7 @@ void LoadLinkContestPlayerPalettes(void)
 {
     int i;
     u8 objectEventId;
-    int version;
+    enum GameVersion version;
     struct Sprite *sprite;
     static const u8 sContestantLocalIds[CONTESTANT_COUNT] = {
         LOCALID_CONTESTANT_1,
@@ -2538,16 +2532,16 @@ bool8 GiveMonArtistRibbon(void)
 {
     u8 hasArtistRibbon;
 
-    hasArtistRibbon = GetMonData(&gPlayerParty[gContestMonPartyIndex], MON_DATA_ARTIST_RIBBON);
+    hasArtistRibbon = GetMonData(&gParties[B_TRAINER_0][gContestMonPartyIndex], MON_DATA_ARTIST_RIBBON);
     if (!hasArtistRibbon
         && gContestFinalStandings[gContestPlayerMonIndex] == 0
         && gSpecialVar_ContestRank == CONTEST_RANK_MASTER
         && gContestMonTotalPoints[gContestPlayerMonIndex] >= 800)
     {
         hasArtistRibbon = 1;
-        SetMonData(&gPlayerParty[gContestMonPartyIndex], MON_DATA_ARTIST_RIBBON, &hasArtistRibbon);
-        if (GetRibbonCount(&gPlayerParty[gContestMonPartyIndex]) > NUM_CUTIES_RIBBONS)
-            TryPutSpotTheCutiesOnAir(&gPlayerParty[gContestMonPartyIndex], MON_DATA_ARTIST_RIBBON);
+        SetMonData(&gParties[B_TRAINER_0][gContestMonPartyIndex], MON_DATA_ARTIST_RIBBON, &hasArtistRibbon);
+        if (GetRibbonCount(&gParties[B_TRAINER_0][gContestMonPartyIndex]) > NUM_CUTIES_RIBBONS)
+            TryPutSpotTheCutiesOnAir(&gParties[B_TRAINER_0][gContestMonPartyIndex], MON_DATA_ARTIST_RIBBON);
 
         return TRUE;
     }
@@ -2565,7 +2559,7 @@ bool8 IsContestDebugActive(void)
 void ShowContestEntryMonPic(void)
 {
     u32 personality;
-    u16 species;
+    enum Species species;
     u8 spriteId;
     u8 taskId;
     u8 left, top;
@@ -2622,7 +2616,7 @@ static void Task_ShowContestEntryMonPic(u8 taskId)
     struct Task *task = &gTasks[taskId];
     struct Sprite *sprite;
 
-    switch(task->data[0])
+    switch (task->data[0])
     {
     case 0:
         task->data[0]++;
@@ -2638,7 +2632,7 @@ static void Task_ShowContestEntryMonPic(u8 taskId)
         sprite = &gSprites[task->data[2]];
         FreeSpritePaletteByTag(GetSpritePaletteTagByPaletteNum(sprite->oam.paletteNum));
 
-        if(sprite->oam.affineMode)
+        if (sprite->oam.affineMode)
             FreeOamMatrix(sprite->oam.matrixNum);
 
         DestroySprite(sprite);

@@ -213,9 +213,9 @@ static const struct OamData sOamData_Arrow =
     .affineParam = 0,
 };
 
-static const u8 sArrowDown_Gfx[] = INCBIN_U8("graphics/reset_rtc_screen/arrow_down.4bpp");
-static const u8 sArrowRight_Gfx[] = INCBIN_U8("graphics/reset_rtc_screen/arrow_right.4bpp");
-static const u16 sArrow_Pal[] = INCBIN_U16("graphics/reset_rtc_screen/arrow.gbapal");
+static const u8 sArrowDown_Gfx[] = INCGFX_U8("graphics/reset_rtc_screen/arrow_down.png", ".4bpp");
+static const u8 sArrowRight_Gfx[] = INCGFX_U8("graphics/reset_rtc_screen/arrow_right.png", ".4bpp");
+static const u16 sArrow_Pal[] = INCGFX_U16("graphics/reset_rtc_screen/arrow.pal", ".gbapal");
 
 static const struct SpriteFrameImage sPicTable_Arrow[] =
 {
@@ -266,8 +266,6 @@ const struct SpriteTemplate gSpriteTemplate_Arrow =
     .oam = &sOamData_Arrow,
     .anims = sAnims_Arrow,
     .images = sPicTable_Arrow,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 #define sTaskId data[0]

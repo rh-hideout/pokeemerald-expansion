@@ -13,6 +13,10 @@
 #include "sound.h"
 #include "constants/songs.h"
 
+// GF cast Task data to ListMenu in many places, which effectively puts
+// an upper bound on sizeof(struct ListMenu).
+STATIC_ASSERT(sizeof(struct ListMenu) <= sizeof(((struct Task *)NULL)->data), ListMenuTooLargeForTaskData);
+
 // Cursors after this point are created using a sprite with their own task.
 // This allows them to have idle animations. Cursors prior to this are simply printed text.
 #define CURSOR_OBJECT_START CURSOR_RED_OUTLINE
@@ -157,8 +161,6 @@ static const struct SpriteTemplate sSpriteTemplate_ScrollArrowIndicator =
     .paletteTag = 0,
     .oam = &sOamData_ScrollArrowIndicator,
     .anims = sSpriteAnimTable_ScrollArrowIndicator,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCallback_ScrollIndicatorArrow,
 };
 
@@ -276,15 +278,13 @@ static const struct SpriteTemplate sSpriteTemplate_RedArrowCursor =
     .paletteTag = 0,
     .oam = &sOamData_RedArrowCursor,
     .anims = sSpriteAnimTable_RedArrowCursor,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCallback_RedArrowCursor,
 };
 
-static const u16 sRedInterface_Pal[]    = INCBIN_U16("graphics/interface/red.gbapal"); // Shared by all of the below gfx
-static const u32 sScrollIndicator_Gfx[] = INCBIN_U32("graphics/interface/scroll_indicator.4bpp.smol");
-static const u32 sOutlineCursor_Gfx[]   = INCBIN_U32("graphics/interface/outline_cursor.4bpp.smol");
-static const u32 sArrowCursor_Gfx[]     = INCBIN_U32("graphics/interface/arrow_cursor.4bpp.smol");
+static const u16 sRedInterface_Pal[]    = INCGFX_U16("graphics/interface/red.pal", ".gbapal"); // Shared by all of the below gfx
+static const u32 sScrollIndicator_Gfx[] = INCGFX_U32("graphics/interface/scroll_indicator.png", ".4bpp.smol");
+static const u32 sOutlineCursor_Gfx[]   = INCGFX_U32("graphics/interface/outline_cursor.png", ".4bpp.smol", "-num_tiles 8 -Wnum_tiles");
+static const u32 sArrowCursor_Gfx[]     = INCGFX_U32("graphics/interface/arrow_cursor.png", ".4bpp.smol");
 
 // code
 static void ListMenuDummyTask(u8 taskId)
@@ -472,6 +472,7 @@ void RedrawListMenu(u8 listTaskId)
     FillWindowPixelBuffer(list->template.windowId, PIXEL_FILL(list->template.fillValue));
     ListMenuPrintEntries(list, list->scrollOffset, 0, list->template.maxShowed);
     ListMenuDrawCursor(list);
+    ListMenuCallSelectionChangedCallback(list, TRUE);
     CopyWindowToVram(list->template.windowId, COPYWIN_GFX);
 }
 

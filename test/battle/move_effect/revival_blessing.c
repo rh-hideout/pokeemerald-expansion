@@ -49,27 +49,26 @@ SINGLE_BATTLE_TEST("Revival Blessing fails if no party members are fainted")
     }
 }
 
-// Can only be tested through AI test, else test fails due to trying to force illegal action
-AI_MULTI_BATTLE_TEST("Revival Blessing cannot revive a partner's party member")
+AI_MULTI_BATTLE_TEST("AI will not revive a partner's party member with Revival Blessing")
 {
     struct BattlePokemon *user = NULL;
-    u32 move1, move2, move3;
+    enum Move move1, move2, move3;
     PARAMETRIZE { user = opponentLeft, move1 = MOVE_REVIVAL_BLESSING, move2 = MOVE_CELEBRATE, move3 = MOVE_CELEBRATE; }
     PARAMETRIZE { user = playerRight, move1 = MOVE_CELEBRATE, move2 = MOVE_REVIVAL_BLESSING, move3 = MOVE_CELEBRATE; }
     PARAMETRIZE { user = opponentRight, move1 = MOVE_CELEBRATE, move2 = MOVE_CELEBRATE, move3 = MOVE_REVIVAL_BLESSING; }
     GIVEN {
-        MULTI_PLAYER(SPECIES_CLEFABLE);
-        MULTI_PLAYER(SPECIES_CLEFABLE) { HP(0); }
-        MULTI_PLAYER(SPECIES_CLEFABLE);
-        MULTI_PARTNER(SPECIES_CLEFAIRY) { Moves(move2); } 
-        MULTI_PARTNER(SPECIES_CLEFAIRY);
-        MULTI_PARTNER(SPECIES_CLEFAIRY);
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Moves(move1); } 
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET);
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET);
-        MULTI_OPPONENT_B(SPECIES_WYNAUT) { Moves(move3); } 
-        MULTI_OPPONENT_B(SPECIES_WYNAUT) { HP(0); }
-        MULTI_OPPONENT_B(SPECIES_WYNAUT);
+        PLAYER(SPECIES_CLEFABLE);
+        PLAYER(SPECIES_CLEFABLE) { HP(0); }
+        PLAYER(SPECIES_CLEFABLE);
+        PARTNER(SPECIES_CLEFAIRY) { Moves(move2); }
+        PARTNER(SPECIES_CLEFAIRY);
+        PARTNER(SPECIES_CLEFAIRY);
+        OPPONENT_A(SPECIES_WOBBUFFET) { Moves(move1); }
+        OPPONENT_A(SPECIES_WOBBUFFET);
+        OPPONENT_A(SPECIES_WOBBUFFET);
+        OPPONENT_B(SPECIES_WYNAUT) { Moves(move3); }
+        OPPONENT_B(SPECIES_WYNAUT) { HP(0); }
+        OPPONENT_B(SPECIES_WYNAUT);
     } WHEN {
         TURN { EXPECT_MOVE(playerRight, move2); } // EXPECT_MOVE makes battler2 AI-controlled
     } SCENE {

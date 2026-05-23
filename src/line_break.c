@@ -176,7 +176,6 @@ void BreakSubStringNaive(u8 *src, u32 maxWidth, u32 screenLines, u8 fontId, enum
 
     Free(allWords);
 }
-#undef SCROLL_PROMPT_WIDTH
 
 void BreakSubStringAutomatic(u8 *src, u32 maxWidth, u32 screenLines, u8 fontId, enum ToggleScrollPrompt toggleScrollPrompt)
 {
@@ -246,6 +245,9 @@ void BreakSubStringAutomatic(u8 *src, u32 maxWidth, u32 screenLines, u8 fontId, 
     for (u32 i = 1; i < numWords; i++)
         totalWidth += allWords[i].width + spaceWidth;
 
+    if (toggleScrollPrompt == SHOW_SCROLL_PROMPT)
+        totalWidth += SCROLL_PROMPT_WIDTH;
+
     //  If it doesn't fit on 1 line, do fancy line break calculation
     //  NOTE: Currently the line break calculation isn't fancy
     if (totalWidth > maxWidth)
@@ -256,6 +258,8 @@ void BreakSubStringAutomatic(u8 *src, u32 maxWidth, u32 screenLines, u8 fontId, 
         bool32 shouldTryAgain;
         for (currWordIndex = 0; currWordIndex < numWords; currWordIndex++)
         {
+            if (toggleScrollPrompt == SHOW_SCROLL_PROMPT && currWordIndex + 1 == numWords)
+                currLineWidth += SCROLL_PROMPT_WIDTH;
             if (currLineWidth + allWords[currWordIndex].length > maxWidth)
             {
                 totalLines++;
@@ -266,6 +270,10 @@ void BreakSubStringAutomatic(u8 *src, u32 maxWidth, u32 screenLines, u8 fontId, 
                 currLineWidth += allWords[currWordIndex].width + spaceWidth;
             }
         }
+
+        if (currLineWidth > maxWidth)
+            totalLines++;
+
         //  LINE LAYOUT STARTS HERE
         struct StringLine *stringLines;
         do
@@ -287,7 +295,7 @@ void BreakSubStringAutomatic(u8 *src, u32 maxWidth, u32 screenLines, u8 fontId, 
             currWordIndex++;
             while (currWordIndex < numWords)
             {
-                if (currLineWidth + spaceWidth + allWords[currWordIndex].width > maxWidth)
+                if (currLineWidth + spaceWidth + allWords[currWordIndex].width + ((toggleScrollPrompt == SHOW_SCROLL_PROMPT) ? SCROLL_PROMPT_WIDTH : 0) > maxWidth)
                 {
                     //  go to next line
                     currLineIndex++;
@@ -342,10 +350,10 @@ bool32 IsWordSplittingChar(const u8 *src, u32 index)
 {
     switch (src[index])
     {
-        case CHAR_SPACE:
-            return TRUE;
-        default:
-            return FALSE;
+    case CHAR_SPACE:
+        return TRUE;
+    default:
+        return FALSE;
     }
 }
 
@@ -424,3 +432,4 @@ bool32 StringHasManualBreaks(u8 *src)
     }
     return FALSE;
 }
+#undef SCROLL_PROMPT_WIDTH

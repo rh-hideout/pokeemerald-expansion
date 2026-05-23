@@ -3,7 +3,7 @@
 
 SINGLE_BATTLE_TEST("Blizzard bypasses accuracy checks in Hail and Snow")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_HAIL; }
     PARAMETRIZE { move = MOVE_SNOWSCAPE; }
     PASSES_RANDOMLY(100, 100, RNG_ACCURACY);
@@ -15,6 +15,6 @@ SINGLE_BATTLE_TEST("Blizzard bypasses accuracy checks in Hail and Snow")
     } WHEN {
         TURN { MOVE(opponent, move); MOVE(player, MOVE_BLIZZARD); }
     } SCENE {
-        NOT MESSAGE("Wobbuffet's attack missed!");
+        NOT MESSAGE("The opposing Wobbuffet avoided the attack!");
     }
 }

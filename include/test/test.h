@@ -1,22 +1,12 @@
 #ifndef GUARD_TEST_H
 #define GUARD_TEST_H
 
+#include "test_result.h"
 #include "test_runner.h"
+#include "random.h"
 
 #define MAX_PROCESSES 32 // See also tools/mgba-rom-test-hydra/main.c
-
-enum TestResult
-{
-    TEST_RESULT_FAIL,
-    TEST_RESULT_PASS,
-    TEST_RESULT_ASSUMPTION_FAIL,
-    TEST_RESULT_INVALID,
-    TEST_RESULT_ERROR,
-    TEST_RESULT_TIMEOUT,
-    TEST_RESULT_CRASH,
-    TEST_RESULT_TODO,
-    TEST_RESULT_KNOWN_FAIL,
-};
+#define RIGGED_RNG_COUNT 8
 
 struct TestRunner
 {
@@ -26,6 +16,9 @@ struct TestRunner
     void (*tearDown)(void *);
     bool32 (*checkProgress)(void *);
     bool32 (*handleExitWithResult)(void *, enum TestResult);
+    u32 (*randomUniform)(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32), void *caller);
+    u32 (*randomWeightedArray)(enum RandomTag tag, u32 sum, u32 n, const u16 *weights, void *caller);
+    const void* (*randomElementArray)(enum RandomTag tag, const void *array, size_t size, size_t count, void *caller);
 };
 
 struct Test
@@ -44,6 +37,16 @@ enum TestFilterMode
     TEST_FILTER_MODE_FILENAME_EXACT,
 };
 
+enum ExpectFailState
+{
+    NO_EXPECT_FAIL,
+    EXPECT_FAIL_OPEN,
+    EXPECT_FAIL_TURN_OPEN,
+    EXPECT_FAIL_SCENE_OPEN,
+    EXPECT_FAIL_SUCCESS,
+    EXPECT_FAIL_CLOSED
+};
+
 struct TestRunnerState
 {
     u8 state;
@@ -60,6 +63,8 @@ struct TestRunnerState
     bool8 inBenchmark:1;
     bool8 tearDown:1;
     u32 timeoutSeconds;
+    s32 expectedFailLine;
+    enum ExpectFailState expectedFailState;
 };
 
 struct PersistentTestRunnerState
@@ -76,11 +81,18 @@ extern const char gTestRunnerArgv[256];
 
 extern const struct TestRunner gAssumptionsRunner;
 
+struct RiggedRNG
+{
+    u16 tag;
+    u16 value;
+};
+
 struct FunctionTestRunnerState
 {
     u16 parameters;
     u16 runParameter;
     u16 checkProgressParameter;
+    struct RiggedRNG rngList[RIGGED_RNG_COUNT];
 };
 
 extern const struct TestRunner gFunctionTestRunner;
@@ -94,9 +106,11 @@ void CB2_TestRunner(void);
 void Test_ExpectedResult(enum TestResult);
 void Test_ExpectLeaks(bool32);
 void Test_ExpectCrash(bool32);
-void Test_ExitWithResult(enum TestResult, u32 stopLine, const char *fmt, ...);
+void Test_ExpectFail(u32 failLine);
 u32 SourceLine(u32 sourceLineOffset);
 u32 SourceLineOffset(u32 sourceLine);
+void SetupRiggedRng(u32 sourceLine, enum RandomTag randomTag, u32 value);
+void ClearRiggedRng();
 
 s32 Test_MgbaPrintf(const char *fmt, ...);
 
@@ -143,7 +157,7 @@ s32 Test_MgbaPrintf(const char *fmt, ...);
     { \
         typeof(a) _a = (a), _b = (b); \
         if (_a != _b) \
-            Test_ExitWithResult(TEST_RESULT_FAIL, __LINE__, ":L%s:%d: EXPECT_EQ(%d, %d) failed", gTestRunnerState.test->filename, __LINE__, _a, _b); \
+            Test_ExitWithResult(TEST_RESULT_FAIL, __LINE__, ":L%s:%d: EXPECT_EQ(%d, %d) failed", gTestRunnerState.test->filename, __LINE__, a, b); \
     } while (0)
 
 #define EXPECT_NE(a, b) \
@@ -151,7 +165,7 @@ s32 Test_MgbaPrintf(const char *fmt, ...);
     { \
         typeof(a) _a = (a), _b = (b); \
         if (_a == _b) \
-            Test_ExitWithResult(TEST_RESULT_FAIL, __LINE__, ":L%s:%d: EXPECT_NE(%d, %d) failed", gTestRunnerState.test->filename, __LINE__, _a, _b); \
+            Test_ExitWithResult(TEST_RESULT_FAIL, __LINE__, ":L%s:%d: EXPECT_NE(%d, %d) failed", gTestRunnerState.test->filename, __LINE__, a, b); \
     } while (0)
 
 #define EXPECT_LT(a, b) \
@@ -159,7 +173,7 @@ s32 Test_MgbaPrintf(const char *fmt, ...);
     { \
         typeof(a) _a = (a), _b = (b); \
         if (_a >= _b) \
-            Test_ExitWithResult(TEST_RESULT_FAIL, __LINE__, ":L%s:%d: EXPECT_LT(%d, %d) failed", gTestRunnerState.test->filename, __LINE__, _a, _b); \
+            Test_ExitWithResult(TEST_RESULT_FAIL, __LINE__, ":L%s:%d: EXPECT_LT(%d, %d) failed", gTestRunnerState.test->filename, __LINE__, a, b); \
     } while (0)
 
 #define EXPECT_LE(a, b) \
@@ -167,7 +181,7 @@ s32 Test_MgbaPrintf(const char *fmt, ...);
     { \
         typeof(a) _a = (a), _b = (b); \
         if (_a > _b) \
-            Test_ExitWithResult(TEST_RESULT_FAIL, __LINE__, ":L%s:%d: EXPECT_LE(%d, %d) failed", gTestRunnerState.test->filename, __LINE__, _a, _b); \
+            Test_ExitWithResult(TEST_RESULT_FAIL, __LINE__, ":L%s:%d: EXPECT_LE(%d, %d) failed", gTestRunnerState.test->filename, __LINE__, a, b); \
     } while (0)
 
 #define EXPECT_GT(a, b) \
@@ -175,7 +189,7 @@ s32 Test_MgbaPrintf(const char *fmt, ...);
     { \
         typeof(a) _a = (a), _b = (b); \
         if (_a <= _b) \
-            Test_ExitWithResult(TEST_RESULT_FAIL, __LINE__, ":L%s:%d: EXPECT_GT(%d, %d) failed", gTestRunnerState.test->filename, __LINE__, _a, _b); \
+            Test_ExitWithResult(TEST_RESULT_FAIL, __LINE__, ":L%s:%d: EXPECT_GT(%d, %d) failed", gTestRunnerState.test->filename, __LINE__, a, b); \
     } while (0)
 
 #define EXPECT_GE(a, b) \
@@ -183,7 +197,7 @@ s32 Test_MgbaPrintf(const char *fmt, ...);
     { \
         typeof(a) _a = (a), _b = (b); \
         if (_a < _b) \
-            Test_ExitWithResult(TEST_RESULT_FAIL, __LINE__, ":L%s:%d: EXPECT_GE(%d, %d) failed", gTestRunnerState.test->filename, __LINE__, _a, _b); \
+            Test_ExitWithResult(TEST_RESULT_FAIL, __LINE__, ":L%s:%d: EXPECT_GE(%d, %d) failed", gTestRunnerState.test->filename, __LINE__, a, b); \
     } while (0)
 
 struct Benchmark { s32 ticks; };
@@ -241,9 +255,13 @@ static inline struct Benchmark BenchmarkStop(void)
 #define KNOWN_CRASHING \
     Test_ExpectCrash(TRUE)
 
+#define EXPECT_FAIL for (u32 _expect_fail = (Test_ExpectFail(-1), 1); _expect_fail; Test_ExpectFail(__LINE__), _expect_fail = 0)
+
 #define PARAMETRIZE if (gFunctionTestRunnerState->parameters++ == gFunctionTestRunnerState->runParameter)
 
-#define PARAMETRIZE_LABEL(f, label) if (gFunctionTestRunnerState->parameters++ == gFunctionTestRunnerState->runParameter && (Test_MgbaPrintf(":N%s: " f " (%d/%d)", gTestRunnerState.test->name, label, gFunctionTestRunnerState->runParameter + 1, gFunctionTestRunnerState->parameters), 1))
+#define PARAMETRIZE_LABEL(f, ...) if (gFunctionTestRunnerState->parameters++ == gFunctionTestRunnerState->runParameter && (Test_MgbaPrintf(":N%s: (%d/%d) " f, gTestRunnerState.test->name, gFunctionTestRunnerState->runParameter + 1, gFunctionTestRunnerState->parameters, __VA_ARGS__), 1))
+
+#define SET_RNG(tag, value) SetupRiggedRng(__LINE__, tag, value)
 
 #define TO_DO \
     do { \

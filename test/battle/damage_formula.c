@@ -41,7 +41,7 @@ SINGLE_BATTLE_TEST("Damage calculation matches Gen5+")
     }
 }
 
-SINGLE_BATTLE_TEST("Damage calculation matches Gen5+ (Muscle Band, crit)")
+SINGLE_BATTLE_TEST("Damage calculation matches Gen6+ (Muscle Band, crit)")
 {
     s16 dmg;
     s16 expectedDamage;
@@ -62,6 +62,7 @@ SINGLE_BATTLE_TEST("Damage calculation matches Gen5+ (Muscle Band, crit)")
     PARAMETRIZE { expectedDamage = 276; }
     PARAMETRIZE { expectedDamage = 268; }
     GIVEN {
+        WITH_CONFIG(B_CRIT_MULTIPLIER, GEN_6);
         ASSUME(GetMoveCategory(MOVE_ICE_FANG) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_GLACEON) { Level(75); Attack(123); Item(ITEM_MUSCLE_BAND); }
         OPPONENT(SPECIES_GARCHOMP) { Defense(163); }
@@ -156,10 +157,10 @@ MULTI_BATTLE_TEST("A spread move will do correct damage to the second mon if the
 {
     s16 damage[6];
     GIVEN {
-        MULTI_PLAYER(SPECIES_REGIROCK);
-        MULTI_PARTNER(SPECIES_REGIROCK);
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { HP(200); }
-        MULTI_OPPONENT_B(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_REGIROCK);
+        PARTNER(SPECIES_REGIROCK);
+        OPPONENT_A(SPECIES_WOBBUFFET) { HP(200); }
+        OPPONENT_B(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); }
         TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); MOVE(playerRight, MOVE_ROCK_SLIDE); }
@@ -190,10 +191,10 @@ TWO_VS_ONE_BATTLE_TEST("A spread move will do correct damage to the second mon i
 {
     s16 damage[6];
     GIVEN {
-        MULTI_PLAYER(SPECIES_REGIROCK);
-        MULTI_PARTNER(SPECIES_REGIROCK);
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { HP(200); }
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_REGIROCK);
+        PARTNER(SPECIES_REGIROCK);
+        OPPONENT_A(SPECIES_WOBBUFFET) { HP(200); }
+        OPPONENT_A(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); }
         TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); MOVE(playerRight, MOVE_ROCK_SLIDE); }
@@ -224,10 +225,10 @@ ONE_VS_TWO_BATTLE_TEST("A spread move will do correct damage to the second mon i
 {
     s16 damage[6];
     GIVEN {
-        MULTI_PLAYER(SPECIES_REGIROCK);
-        MULTI_PLAYER(SPECIES_REGIROCK);
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { HP(200); }
-        MULTI_OPPONENT_B(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_REGIROCK);
+        PLAYER(SPECIES_REGIROCK);
+        OPPONENT_A(SPECIES_WOBBUFFET) { HP(200); }
+        OPPONENT_B(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); }
         TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); MOVE(playerRight, MOVE_ROCK_SLIDE); }
@@ -383,7 +384,7 @@ DOUBLE_BATTLE_TEST("Transistor Damage calculation", s16 damage)
                     }
     }
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_TRANSISTOR_BOOST, gen);
+        WITH_CONFIG(B_TRANSISTOR_BOOST, gen);
         ASSUME(GetMoveType(MOVE_WILD_CHARGE) == TYPE_ELECTRIC);
         ASSUME(GetMoveType(MOVE_THUNDER_SHOCK) == TYPE_ELECTRIC);
         ASSUME(GetMoveCategory(MOVE_WILD_CHARGE) == DAMAGE_CATEGORY_PHYSICAL);
