@@ -9738,27 +9738,24 @@ bool32 IsSleepClauseEnabled(void)
 bool32 AreMultiPartiesFullTeams(void)
 {
 #if TESTING
-    if (IsAITest())
+    u8 *partySizes = gBattleTestRunnerState->data.partySizes;
+    bool32 fullTeam = FALSE;
+
+    if (partySizes[B_TRAINER_0] && partySizes[B_TRAINER_2]
+        && (partySizes[B_TRAINER_0] > MULTI_PARTY_SIZE || partySizes[B_TRAINER_2] > MULTI_PARTY_SIZE))
     {
-        u8 *partySizes = gBattleTestRunnerState->data.partySizes;
-        bool32 fullTeam = FALSE;
+        fullTeam = TRUE;
+    }
+    if (partySizes[B_TRAINER_1] && partySizes[B_TRAINER_3]
+        && (partySizes[B_TRAINER_1] > MULTI_PARTY_SIZE || partySizes[B_TRAINER_3] > MULTI_PARTY_SIZE))
+    {
+        fullTeam = TRUE;
+    }
 
-        if (partySizes[B_TRAINER_0] && partySizes[B_TRAINER_2]
-         && (partySizes[B_TRAINER_0] > MULTI_PARTY_SIZE || partySizes[B_TRAINER_2] > MULTI_PARTY_SIZE))
-        {
-            fullTeam = TRUE;
-        }
-        if (partySizes[B_TRAINER_1] && partySizes[B_TRAINER_3]
-         && (partySizes[B_TRAINER_1] > MULTI_PARTY_SIZE || partySizes[B_TRAINER_3] > MULTI_PARTY_SIZE))
-        {
-            fullTeam = TRUE;
-        }
-
-        if (!fullTeam)
-        {
-            gSpecialVar_Result = FALSE;
-            return FALSE;
-        }
+    if (!fullTeam)
+    {
+        gSpecialVar_Result = FALSE;
+        return FALSE;
     }
 #else
     enum DifficultyLevel difficulty = GetCurrentDifficultyLevel();
