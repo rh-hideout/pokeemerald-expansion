@@ -935,9 +935,9 @@ static const u16 sChooseBoxMenu_Pal[]        = INCGFX_U16("graphics/pokemon_stor
 static const u8 sChooseBoxMenuCenter_Gfx[]   = INCGFX_U8("graphics/pokemon_storage/box_selection_popup_center.png", ".4bpp");
 static const u8 sChooseBoxMenuSides_Gfx[]    = INCGFX_U8("graphics/pokemon_storage/box_selection_popup_sides.png", ".4bpp");
 static const u32 sScrollingBg_Gfx[]          = INCGFX_U32("graphics/pokemon_storage/scrolling_bg.png", ".4bpp.smol");
-static const u32 sScrollingBg_Tilemap[]      = INCBIN_U32("graphics/pokemon_storage/scrolling_bg.bin.smolTM");
+static const u32 sScrollingBg_Tilemap[]      = INCGFX_U32("graphics/pokemon_storage/scrolling_bg.bin", ".smolTM");
 static const u16 sDisplayMenu_Pal[]          = INCGFX_U16("graphics/pokemon_storage/display_menu.pal", ".gbapal"); // Unused
-static const u32 sDisplayMenu_Tilemap[]      = INCBIN_U32("graphics/pokemon_storage/display_menu.bin.smolTM");
+static const u32 sDisplayMenu_Tilemap[]      = INCGFX_U32("graphics/pokemon_storage/display_menu.bin", ".smolTM");
 static const u16 sPkmnData_Tilemap[]         = INCBIN_U16("graphics/pokemon_storage/pkmn_data.bin");
 // sInterface_Pal - parts of the display frame, "PkmnData"'s normal color, Close Box
 static const u16 sInterface_Pal[]            = INCGFX_U16("graphics/pokemon_storage/interface.pal", ".gbapal");

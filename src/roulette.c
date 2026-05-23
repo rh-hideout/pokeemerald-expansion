@@ -430,8 +430,8 @@ static const u8 Roulette_Text_BoardWillBeCleared[] = _("The ROULETTE board will 
 static const u8 Roulette_Text_CoinCaseIsFull[] = _("Your COIN CASE is full!\nCoins can be exchanged for prizes.");
 
 static const u16 sWheel_Pal[] = INCGFX_U16("graphics/roulette/wheel.png", ".gbapal"); // also palette for grid
-static const u32 sGrid_Tilemap[] = INCBIN_U32("graphics/roulette/grid.bin.smolTM");
-static const u32 sWheel_Tilemap[] = INCBIN_U32("graphics/roulette/wheel.bin.smolTM");
+static const u32 sGrid_Tilemap[] = INCGFX_U32("graphics/roulette/grid.bin", ".smolTM");
+static const u32 sWheel_Tilemap[] = INCGFX_U32("graphics/roulette/wheel.bin", ".smolTM");
 static const struct BgTemplate sBgTemplates[] =
 {
     // Text box

@@ -2900,15 +2900,15 @@ static const u16 sInterface_Pal[] = INCGFX_U16("graphics/pokemon_jump/interface.
 
 static const u16 sBg_Pal[] = INCGFX_U16("graphics/pokemon_jump/bg.png", ".gbapal");
 static const u32 sBg_Gfx[] = INCGFX_U32("graphics/pokemon_jump/bg.png", ".4bpp.smol", "-num_tiles 63 -Wnum_tiles");
-static const u32 sBg_Tilemap[] = INCBIN_U32("graphics/pokemon_jump/bg.bin.smolTM");
+static const u32 sBg_Tilemap[] = INCGFX_U32("graphics/pokemon_jump/bg.bin", ".smolTM");
 
 static const u16 sVenusaur_Pal[] = INCGFX_U16("graphics/pokemon_jump/venusaur.png", ".gbapal");
 static const u32 sVenusaur_Gfx[] = INCGFX_U32("graphics/pokemon_jump/venusaur.png", ".4bpp.smol");
-static const u32 sVenusaur_Tilemap[] = INCBIN_U32("graphics/pokemon_jump/venusaur.bin.smolTM");
+static const u32 sVenusaur_Tilemap[] = INCGFX_U32("graphics/pokemon_jump/venusaur.bin", ".smolTM");
 
 static const u16 sBonuses_Pal[] = INCGFX_U16("graphics/pokemon_jump/bonuses.png", ".gbapal");
 static const u32 sBonuses_Gfx[] = INCGFX_U32("graphics/pokemon_jump/bonuses.png", ".4bpp.smol");
-static const u32 sBonuses_Tilemap[] = INCBIN_U32("graphics/pokemon_jump/bonuses.bin.smolTM");
+static const u32 sBonuses_Tilemap[] = INCGFX_U32("graphics/pokemon_jump/bonuses.bin", ".smolTM");
 
 static const struct BgTemplate sBgTemplates[] =
 {

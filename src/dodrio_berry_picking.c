@@ -3608,9 +3608,9 @@ static const u32 sTreeBorder_Gfx[]          = INCGFX_U32("graphics/dodrio_berry_
 static const u32 sStatus_Gfx[]              = INCGFX_U32("graphics/dodrio_berry_picking/status.png", ".4bpp.smol");
 static const u32 sCloud_Gfx[]               = INCGFX_U32("graphics/dodrio_berry_picking/cloud.png", ".4bpp.smol");
 static const u32 sDodrio_Gfx[]              = INCGFX_U32("graphics/dodrio_berry_picking/dodrio.png", ".4bpp.smol");
-static const u32 sBg_Tilemap[]              = INCBIN_U32("graphics/dodrio_berry_picking/bg.bin.smolTM");
-static const u32 sTreeBorderRight_Tilemap[] = INCBIN_U32("graphics/dodrio_berry_picking/tree_border_right.bin.smolTM");
-static const u32 sTreeBorderLeft_Tilemap[]  = INCBIN_U32("graphics/dodrio_berry_picking/tree_border_left.bin.smolTM");
+static const u32 sBg_Tilemap[]              = INCGFX_U32("graphics/dodrio_berry_picking/bg.bin", ".smolTM");
+static const u32 sTreeBorderRight_Tilemap[] = INCGFX_U32("graphics/dodrio_berry_picking/tree_border_right.bin", ".smolTM");
+static const u32 sTreeBorderLeft_Tilemap[]  = INCGFX_U32("graphics/dodrio_berry_picking/tree_border_left.bin", ".smolTM");
 
 static const struct OamData sOamData_Dodrio =
 {
