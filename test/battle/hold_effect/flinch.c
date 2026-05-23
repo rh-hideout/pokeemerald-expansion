@@ -55,6 +55,6 @@ DOUBLE_BATTLE_TEST("Kings Rock flinch chance boosted by Serene Grace does not st
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_PLEDGE, playerRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
-        MESSAGE("The opposing Wynaut flinched and couldn't move!");
+        MESSAGE("The opposing Wobbuffet flinched and couldn't move!");
     }
 }
