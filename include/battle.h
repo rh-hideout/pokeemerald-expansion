@@ -250,7 +250,9 @@ struct AiLogicData
     u32 shouldSwitch:4; // Stores result of ShouldSwitch, which decides whether a mon should be switched out
     u32 shouldConsiderFinalGambit:1; // Determines whether AI should consider Final Gambit this turn
     u32 switchInCalc:1; // Indicates if we're doing switch in calcs, this is purely for Retaliate damage calcs
-    u32 padding2:19;
+    enum BattlerId partnerTarget:3;
+    bool32 reverseBattlerLogicOrder:1;
+    u32 padding2:15;
 };
 
 struct AiThinkingStruct

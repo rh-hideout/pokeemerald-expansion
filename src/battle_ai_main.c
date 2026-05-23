@@ -915,6 +915,72 @@ static u32 ChooseMoveOrAction_Singles(enum BattlerId battler)
     return consideredMoveArray[RandomUniform(RNG_AI_SCORE_TIE_SINGLES, 0, numOfBestMoves - 1)];
 }
 
+static enum Move BattleAI_DoPartnerThonk(enum BattlerId battler, enum BattlerId battlerPartner)
+{
+    u64 flags;
+    s32 highestMoveScore = 0;
+    enum Move mostViableMove = MOVE_NONE;
+    enum Move *allyMoves = GetMovesArray(battlerPartner);
+
+    for (u32 allyIndex = 0; allyIndex < MAX_MON_MOVES; allyIndex++)
+    {
+        for (enum BattlerId battlerIndex = B_BATTLER_0; battlerIndex < MAX_BATTLERS_COUNT; battlerIndex++)
+        {
+            if (gBattleMons[battlerIndex].hp == 0)
+            {
+                continue;
+            }
+            else
+            {
+                if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
+                    BattleAI_SetupAIData(gBattleStruct->palaceFlags >> 4, battler);
+                else
+                    BattleAI_SetupAIData(0xF, battler);
+
+                gBattlerTarget = battlerIndex;
+
+                gAiLogicData->partnerMove = allyMoves[allyIndex];
+                gAiThinkingStruct->aiLogicId = 0;
+                gAiThinkingStruct->movesetIndex = 0;
+                flags = gAiThinkingStruct->aiFlags[battler];
+
+                while (flags != 0)
+                {
+                    if (flags & 1)
+                    {
+                        if (IsBattlerPredictedToSwitch(gBattlerTarget) && (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_PREDICT_INCOMING_MON))
+                            BattleAI_DoAIProcessing_PredictedSwitchin(gAiThinkingStruct, gAiLogicData, battler, gBattlerTarget);
+                        else
+                            BattleAI_DoAIProcessing(gAiThinkingStruct, battler, gBattlerTarget);
+                    }
+                    flags >>= (u64)1;
+                    gAiThinkingStruct->aiLogicId++;
+                }
+                if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_CHECK_VIABILITY)
+                    AI_CompareDamagingMoves(battler, gBattlerTarget);
+
+                for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+                {
+                    if (gBattleMons[battler].moves[moveIndex] != MOVE_NONE)
+                    {
+                        if (!CanTargetBattler(battler, battlerIndex, gBattleMons[battler].moves[moveIndex]))
+                            continue;
+
+                        if (highestMoveScore < gAiThinkingStruct->score[moveIndex])
+                        {
+                            highestMoveScore = gAiThinkingStruct->score[moveIndex];
+                            gAiLogicData->partnerTarget = battlerIndex;
+                            mostViableMove = gBattleMons[battler].moves[moveIndex];
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return mostViableMove;
+}
+
 static u32 ChooseMoveOrAction_Doubles(enum BattlerId battler)
 {
     u64 flags;
@@ -936,14 +1002,24 @@ static u32 ChooseMoveOrAction_Doubles(enum BattlerId battler)
         }
         else
         {
+            if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_AI_THONK)
+            {
+                enum BattlerId battlerPartner = GetPartnerBattler(battler);
+                bool32 shouldThonk = (battlerPartner > battler || (battlerPartner < battler && gAiLogicData->reverseBattlerLogicOrder));
+                if (shouldThonk)
+                    gAiLogicData->partnerMove = BattleAI_DoPartnerThonk(battlerPartner, battler);
+                else
+                    gAiLogicData->partnerMove = GetAllyChosenMove(battler);
+            }
+            else
+                gAiLogicData->partnerMove = GetAllyChosenMove(battler);
+
             if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
                 BattleAI_SetupAIData(gBattleStruct->palaceFlags >> 4, battler);
             else
                 BattleAI_SetupAIData(0xF, battler);
 
             gBattlerTarget = battlerIndex;
-
-            gAiLogicData->partnerMove = GetAllyChosenMove(battler);
             gAiThinkingStruct->aiLogicId = 0;
             gAiThinkingStruct->movesetIndex = 0;
             flags = gAiThinkingStruct->aiFlags[battler];
