@@ -1315,12 +1315,12 @@ static bool32 HandleEndTurnFormChange(enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
-    enum Ability ability = GetBattlerAbility(battler);
-
     gBattleStruct->eventState.endTurnBattler++;
 
     if (!IsBattlerAlive(battler))
         return FALSE;
+
+    enum Ability ability = GetBattlerAbility(battler);
 
     if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_TURN_END, ability)
         || TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT_TURN_END, ability))
