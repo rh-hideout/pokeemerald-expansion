@@ -384,7 +384,6 @@
 #define B_NEW_MORNING_SUN_STAR_PARTICLE FALSE    // If set to TRUE, it updates Morning Sun's star particles.
 #define B_NEW_IMPACT_PALETTE            FALSE    // If set to TRUE, it updates the basic 'hit' palette.
 #define B_NEW_SURF_PARTICLE_PALETTE     FALSE    // If set to TRUE, it updates Surf's wave palette.
-#define B_SHOW_ITEM_ICON_WHEN_LOST      FALSE    // If set to TRUE, it updates Knock Off, Thief and Covet's animations so it shows the item being lost
 
 // Poké Ball animation and sounds
 #define B_ENEMY_THROW_BALLS          GEN_LATEST  // In GEN_6+, enemy Trainers throw Poké Balls into battle instead of them just appearing on the ground and opening.

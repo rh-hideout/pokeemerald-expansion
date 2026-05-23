@@ -28950,11 +28950,7 @@ gBattleAnimGeneral_PokeblockThrow::
 	end
 
 gBattleAnimGeneral_ItemKnockoff::
-.if B_SHOW_ITEM_ICON_WHEN_LOST
 	createvisualtask AnimTask_KnockOffItem, ANIM_TARGET, 2
-.else
-	createsprite gKnockOffItemSpriteTemplate, ANIM_TARGET, 2
-.endif
 	end
 
 gBattleAnimGeneral_TurnTrap::
@@ -29195,11 +29191,7 @@ gBattleAnimGeneral_ItemSteal::
 	createvisualtask AnimTask_SetAnimAttackerAndTargetForEffectAtk, 2
 	createvisualtask AnimTask_SetTargetToEffectBattler, 2  @ Redundant with above
 	delay 1
-.if B_SHOW_ITEM_ICON_WHEN_LOST
 	createvisualtask AnimTask_StealItem, ANIM_TARGET, 2
-.else
-	create_item_steal_sprite ANIM_ATTACKER, 2, initial_x=0, initial_y=-5, unk2=10, unk3=2, unk4=-1
-.endif
 	end
 
 gBattleAnimGeneral_SnatchMove::
