@@ -8909,7 +8909,7 @@ bool32 TryClearIllusion(enum BattlerId battler, enum Ability ability)
 {
     if (gBattleStruct->illusion[battler].state != ILLUSION_ON)
         return FALSE;
-    if (ability == ABILITY_ILLUSION && IsBattlerAlive(battler))
+    if (ability == ABILITY_ILLUSION && !IsBattlerTurnDamaged(battler, EXCLUDING_SUBSTITUTES))
         return FALSE;
 
     gBattleScripting.battler = battler;
