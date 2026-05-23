@@ -924,6 +924,8 @@ static enum Move BattleAI_DoPartnerThonk(enum BattlerId battler, enum BattlerId 
 
     for (u32 allyIndex = 0; allyIndex < MAX_MON_MOVES; allyIndex++)
     {
+        gAiLogicData->partnerMove = allyMoves[allyIndex];
+
         for (enum BattlerId battlerIndex = B_BATTLER_0; battlerIndex < MAX_BATTLERS_COUNT; battlerIndex++)
         {
             if (gBattleMons[battlerIndex].hp == 0)
@@ -939,7 +941,6 @@ static enum Move BattleAI_DoPartnerThonk(enum BattlerId battler, enum BattlerId 
 
                 gBattlerTarget = battlerIndex;
 
-                gAiLogicData->partnerMove = allyMoves[allyIndex];
                 gAiThinkingStruct->aiLogicId = 0;
                 gAiThinkingStruct->movesetIndex = 0;
                 flags = gAiThinkingStruct->aiFlags[battler];
@@ -993,6 +994,18 @@ static u32 ChooseMoveOrAction_Doubles(enum BattlerId battler)
     u32 mostViableMovesNo;
     s32 mostMovePoints;
 
+    if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_AI_THONK)
+    {
+        enum BattlerId battlerPartner = GetPartnerBattler(battler);
+        bool32 shouldThonk = (battlerPartner > battler || (battlerPartner < battler && gAiLogicData->reverseBattlerLogicOrder));
+        if (shouldThonk)
+            gAiLogicData->partnerMove = BattleAI_DoPartnerThonk(battlerPartner, battler);
+        else
+            gAiLogicData->partnerMove = GetAllyChosenMove(battler);
+    }
+    else
+        gAiLogicData->partnerMove = GetAllyChosenMove(battler);
+
     for (enum BattlerId battlerIndex = 0; battlerIndex < MAX_BATTLERS_COUNT; battlerIndex++)
     {
         if (gBattleMons[battlerIndex].hp == 0)
@@ -1002,18 +1015,6 @@ static u32 ChooseMoveOrAction_Doubles(enum BattlerId battler)
         }
         else
         {
-            if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_AI_THONK)
-            {
-                enum BattlerId battlerPartner = GetPartnerBattler(battler);
-                bool32 shouldThonk = (battlerPartner > battler || (battlerPartner < battler && gAiLogicData->reverseBattlerLogicOrder));
-                if (shouldThonk)
-                    gAiLogicData->partnerMove = BattleAI_DoPartnerThonk(battlerPartner, battler);
-                else
-                    gAiLogicData->partnerMove = GetAllyChosenMove(battler);
-            }
-            else
-                gAiLogicData->partnerMove = GetAllyChosenMove(battler);
-
             if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
                 BattleAI_SetupAIData(gBattleStruct->palaceFlags >> 4, battler);
             else
