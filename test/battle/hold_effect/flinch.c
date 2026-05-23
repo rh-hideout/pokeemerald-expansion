@@ -44,7 +44,7 @@ DOUBLE_BATTLE_TEST("Kings Rock flinch chance boosted by Serene Grace does not st
         PLAYER(SPECIES_TOGEPI) { Speed(4); Ability(ABILITY_SERENE_GRACE); Item(ITEM_KINGS_ROCK); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
     } WHEN {
         TURN
         {
