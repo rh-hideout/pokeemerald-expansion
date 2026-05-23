@@ -68,6 +68,7 @@ BattleScript_TeraFormChange::
 	printstring STRINGID_PKMNTERASTALLIZEDINTO
 	waitmessage B_WAIT_TIME_LONG
 	switchinabilities BS_ATTACKER
+	abilityonformchange BS_ATTACKER
 	end3
 
 BattleScript_LowerAtkSpAtk::

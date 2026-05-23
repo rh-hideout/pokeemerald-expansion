@@ -1919,6 +1919,11 @@
 	.byte \battler
 	.endm
 
+	.macro abilityonformchange battler:req
+	callnative BS_AbilityOnFormChange
+	.byte \battler
+	.endm
+
 	.macro instanthpdrop
 	callnative BS_InstantHpDrop
 	.endm

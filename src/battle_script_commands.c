@@ -1422,7 +1422,7 @@ static u32 UpdateEffectivenessResultFlagsForDoubleSpreadMoves(u32 resultFlags, u
     {
         if (IsBattlerInvalidForSpreadMove(gBattlerAttacker, battlerDef))
                 continue;
-        
+
         if (DoesBattlerNegateDamage(battlerDef))
             continue; // doesnt contribute to SE
         if (!(gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_NOT_VERY_EFFECTIVE))
@@ -13999,6 +13999,16 @@ void BS_SwitchinAbilities(void)
      || AbilityBattleEffects(ABILITYEFFECT_ON_WEATHER, battler, ability, MOVE_NONE, TRUE)
      || AbilityBattleEffects(ABILITYEFFECT_ON_TERRAIN, battler, ability, MOVE_NONE, TRUE)
      || AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, battler, ability, MOVE_NONE, TRUE))
+        return;
+}
+
+void BS_AbilityOnFormChange(void)
+{
+    NATIVE_ARGS(u8 battler);
+    enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
+    enum Ability ability = GetBattlerAbility(battler);
+    gBattlescriptCurrInstr = cmd->nextInstr;
+    if (AbilityBattleEffects(ABILITYEFFECT_ON_FORM_CHANGE, battler, ability, MOVE_NONE, TRUE))
         return;
 }
 

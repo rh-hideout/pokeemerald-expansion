@@ -3075,6 +3075,20 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
 
     switch (caseID)
     {
+    case ABILITYEFFECT_ON_FORM_CHANGE:
+        switch (gLastUsedAbility)
+        {
+        case ABILITY_TERAFORM_ZERO:
+            if (gBattleWeather != WEATHER_NONE || gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
+            {
+                BattleScriptCall(BattleScript_ActivateTeraformZero);
+                effect++;
+            }
+            break;
+        default:
+            break;
+        }
+        break;
     case ABILITYEFFECT_ON_SWITCHIN:
         gBattleScripting.battler = battler;
         switch (gLastUsedAbility)
@@ -3460,13 +3474,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             if (shouldAbilityTrigger)
             {
                 BattleScriptCall(BattleScript_AnnounceAirLockCloudNine);
-                effect++;
-            }
-            break;
-        case ABILITY_TERAFORM_ZERO:
-            if (shouldAbilityTrigger && gBattleMons[battler].species == SPECIES_TERAPAGOS_STELLAR)
-            {
-                BattleScriptCall(BattleScript_ActivateTeraformZero);
                 effect++;
             }
             break;
