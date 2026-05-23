@@ -28,7 +28,6 @@ DOUBLE_BATTLE_TEST("Symbiosis transfers its item to an ally after it consumes an
     }
 }
 
-
 DOUBLE_BATTLE_TEST("Symbiosis triggers after partners berry eaten from bug bite")
 {
     GIVEN {
@@ -176,5 +175,49 @@ DOUBLE_BATTLE_TEST("Symbiosis transfers its item after Gem consumption, but befo
     } THEN {
         EXPECT_EQ(playerLeft->item, ITEM_TOXIC_ORB);
         EXPECT_EQ(playerRight->item, ITEM_NONE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Symbiosis does not transfer its item after an ally's Eject Button activates")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_EJECT_BUTTON].holdEffect == HOLD_EFFECT_EJECT_BUTTON);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_BUTTON); }
+        PLAYER(SPECIES_ORANGURU) { Ability(ABILITY_SYMBIOSIS); Item(ITEM_POTION); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); SEND_OUT(playerLeft, 2); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+        MESSAGE("Wobbuffet is switched out with the Eject Button!");
+        NOT ABILITY_POPUP(playerRight, ABILITY_SYMBIOSIS);
+    } THEN {
+        EXPECT_EQ(playerRight->item, ITEM_POTION);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Symbiosis does not transfer its item after an ally's Eject Pack activates")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_EJECT_PACK].holdEffect == HOLD_EFFECT_EJECT_PACK);
+        ASSUME(GetMoveEffect(MOVE_CHARM) == EFFECT_ATTACK_DOWN_2);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
+        PLAYER(SPECIES_ORANGURU) { Ability(ABILITY_SYMBIOSIS); Item(ITEM_POTION); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_CHARM, target: playerLeft); SEND_OUT(playerLeft, 2); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CHARM, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+        MESSAGE("Wobbuffet is switched out with the Eject Pack!");
+        NOT ABILITY_POPUP(playerRight, ABILITY_SYMBIOSIS);
+    } THEN {
+        EXPECT_EQ(playerRight->item, ITEM_POTION);
     }
 }
