@@ -4263,6 +4263,9 @@ bool32 NoAliveMonsForPlayer(void)
 
     if (GetConfig(B_MULTI_BATTLE_WHITEOUT) > GEN_3 && gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER))
     {
+        if (HP_count == 0 && AreMultiPartiesFullTeams())
+            return TRUE;
+
         // Get total HP for the partner's party
         for (u32 i = 0; i < PARTY_SIZE; i++)
         {

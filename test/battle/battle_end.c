@@ -1,7 +1,7 @@
 #include "global.h"
 #include "test/battle.h"
 
-MULTI_BATTLE_TEST("Player does not whiteout in a multibattle if the Partner still has Pokemon (Multi; Full Team; Gen4+)")
+MULTI_BATTLE_TEST("Player does whiteout in a multibattle even if the Partner still has Pokemon (Multi; Full Team; Gen4+)")
 {
     GIVEN {
         WITH_CONFIG(B_MULTI_BATTLE_WHITEOUT, GEN_4);
@@ -52,8 +52,6 @@ MULTI_BATTLE_TEST("Player does not whiteout in a multibattle if the Partner stil
         }
         TURN {
             MOVE(opponentLeft, MOVE_DRAGON_RAGE, target:playerLeft);
-            MOVE(opponentRight, MOVE_DRAGON_RAGE, target:playerRight);
-            SEND_OUT(playerRight, 1);
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_RAGE, opponentLeft);
@@ -62,13 +60,12 @@ MULTI_BATTLE_TEST("Player does not whiteout in a multibattle if the Partner stil
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_RAGE, opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_RAGE, opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_RAGE, opponentLeft);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_RAGE, opponentRight);
     } THEN {
-        EXPECT_EQ(NoAliveMonsForPlayer(), FALSE);
+        EXPECT_EQ(NoAliveMonsForPlayer(), TRUE);
     }
 }
 
-TWO_VS_ONE_BATTLE_TEST("Player does not whiteout in a multibattle if the Partner still has Pokemon (2v1; Full Team; Gen4+)")
+TWO_VS_ONE_BATTLE_TEST("Player does whiteout in a multibattle even if the Partner still has Pokemon (2v1; Full Team; Gen4+)")
 {
     GIVEN {
         WITH_CONFIG(B_MULTI_BATTLE_WHITEOUT, GEN_4);
@@ -113,8 +110,6 @@ TWO_VS_ONE_BATTLE_TEST("Player does not whiteout in a multibattle if the Partner
         }
         TURN {
             MOVE(opponentLeft, MOVE_DRAGON_RAGE, target:playerLeft);
-            MOVE(opponentRight, MOVE_DRAGON_RAGE, target:playerRight);
-            SEND_OUT(playerRight, 1);
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_RAGE, opponentLeft);
@@ -123,9 +118,8 @@ TWO_VS_ONE_BATTLE_TEST("Player does not whiteout in a multibattle if the Partner
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_RAGE, opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_RAGE, opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_RAGE, opponentLeft);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_RAGE, opponentRight);
     } THEN {
-        EXPECT_EQ(NoAliveMonsForPlayer(), FALSE);
+        EXPECT_EQ(NoAliveMonsForPlayer(), TRUE);
     }
 }
 
