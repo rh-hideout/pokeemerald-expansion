@@ -287,6 +287,7 @@ bool32 PartnerMoveActivatesSleepClause(enum Move partnerMove);
 bool32 ShouldUseWishAromatherapy(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);
 u32 GetFriendlyFireKOThreshold(enum BattlerId battler);
 bool32 IsAllyProtectingFromMove(enum BattlerId battlerAtk, enum Move attackerMove, enum Move allyMove);
+bool32 IsThinkingBeforePartner(enum BattlerId battlerAtk, enum BattlerId battlerAtkPartner);
 
 // party logic
 struct BattlePokemon *AllocSaveBattleMons(void);

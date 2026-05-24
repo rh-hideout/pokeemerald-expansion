@@ -4283,7 +4283,7 @@ bool32 PartnerMoveEffectIs(enum BattlerId battlerAtkPartner, enum Move partnerMo
 //PARTNER_MOVE_IS_TAILWIND_TRICKROOM
 bool32 PartnerMoveIs(enum BattlerId battlerAtkPartner, enum Move partnerMove, enum Move moveCheck)
 {
-    if (!HasPartner(battlerAtkPartner))
+    if (!IsBattlerAlive(battlerAtkPartner))
         return FALSE;
 
     if (partnerMove != MOVE_NONE && partnerMove == moveCheck)
@@ -4294,7 +4294,7 @@ bool32 PartnerMoveIs(enum BattlerId battlerAtkPartner, enum Move partnerMove, en
 //PARTNER_MOVE_IS_SAME
 bool32 PartnerMoveIsSameAsAttacker(enum BattlerId battlerAtkPartner, enum BattlerId battlerDef, enum Move move, enum Move partnerMove)
 {
-    if (!HasPartner(battlerAtkPartner))
+    if (!IsBattlerAlive(battlerAtkPartner))
         return FALSE;
 
     if (partnerMove != MOVE_NONE && move == partnerMove && gBattleStruct->moveTarget[battlerAtkPartner] == battlerDef)
@@ -4305,7 +4305,7 @@ bool32 PartnerMoveIsSameAsAttacker(enum BattlerId battlerAtkPartner, enum Battle
 //PARTNER_MOVE_IS_SAME_NO_TARGET
 bool32 PartnerMoveIsSameNoTarget(enum BattlerId battlerAtkPartner, enum Move move, enum Move partnerMove)
 {
-    if (!HasPartner(battlerAtkPartner))
+    if (!IsBattlerAlive(battlerAtkPartner))
         return FALSE;
     if (partnerMove != MOVE_NONE && move == partnerMove)
         return TRUE;
@@ -6533,4 +6533,12 @@ bool32 AI_CanAnyStatChange(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     }
 
     return FALSE;
+}
+
+bool32 IsThinkingBeforePartner(enum BattlerId battlerAtk, enum BattlerId battlerAtkPartner)
+{
+    if (!BattlerHasAi(battlerAtkPartner))
+        return TRUE;
+
+    return (battlerAtkPartner > battlerAtk || (battlerAtkPartner < battlerAtk && gAiLogicData->reverseBattlerLogicOrder));
 }

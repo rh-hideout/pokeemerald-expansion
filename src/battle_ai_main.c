@@ -1020,11 +1020,10 @@ static u32 ChooseMoveOrAction_Doubles(enum BattlerId battler)
     if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_AI_THONK)
     {
         enum BattlerId battlerPartner = GetPartnerBattler(battler);
-        bool32 shouldThonk = (battlerPartner > battler || (battlerPartner < battler && gAiLogicData->reverseBattlerLogicOrder)); // Only if you are thinking first
         enum Move partnerBestMoves[MAX_MON_MOVES * MAX_BATTLERS_COUNT + 1] = {MOVE_NONE};
         enum BattlerId partnerBestTargets[MAX_MON_MOVES * MAX_BATTLERS_COUNT + 1] = {B_BATTLER_0};
     
-        if (shouldThonk)
+        if (IsThinkingBeforePartner(battler, battlerPartner))
         {
             BattleAI_DoPartnerThonk(battlerPartner, battler, partnerBestMoves, partnerBestTargets);
             for (u32 i = 0; partnerBestMoves[i] != MOVE_NONE; i++)
