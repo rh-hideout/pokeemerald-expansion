@@ -1,0 +1,47 @@
+{{ doNotModifyHeader }}
+
+## for region_map in region_maps
+static const u16 ALIGNED(4) sRegionMap{{ capitalize(region_map.label) }}_Pal[] = INCGFX_U16("{{ join(region_map.palette, "\", \"") }}");
+static const u32 sRegionMap{{ capitalize(region_map.label) }}_Gfx[] = INCGFX_U32("{{ join(region_map.gfx, "\", \"") }}");
+static const u32 sRegionMap{{ capitalize(region_map.label) }}_Tilemap[] = INCGFX_U32("{{ join(region_map.tilemap, "\", \"") }}");
+static const u16 ALIGNED(4) sPokedexAreaMap{{ capitalize(region_map.label) }}_Pal[] = INCGFX_U16("{{ join(region_map.pokedexPalette, "\", \"") }}");
+static const u32 sPokedexAreaMap{{ capitalize(region_map.label) }}_Gfx[] = INCGFX_U32("{{ join(region_map.pokedexGfx, "\", \"") }}");
+static const u32 sPokedexAreaMap{{ capitalize(region_map.label) }}_Tilemap[] = INCGFX_U32("{{ join(region_map.pokedexTilemap, "\", \"") }}");
+
+#include "{{ replace(region_map.layoutFile, "src/data/region_map/", "") }}"
+
+## endfor
+
+const struct RegionMapInfo gRegionMapInfos[REGION_MAP_COUNT] =
+{
+    [REGION_MAP_UNKNOWN] =
+    {
+        .dexMapPalette = sPokedexAreaMapHoenn_Pal,
+        .dexMapGfx = sPokedexAreaMapHoenn_Gfx,
+        .dexMapTilemap = sPokedexAreaMapHoenn_Tilemap,
+        .dexMapPaletteSize = sizeof(sPokedexAreaMapHoenn_Pal),
+        .regionMapPalette = sRegionMapHoenn_Pal,
+        .regionMapGfx = sRegionMapHoenn_Gfx,
+        .regionMapTilemap = sRegionMapHoenn_Tilemap,
+        .sectionLayout = NULL,
+        .regionName = COMPOUND_STRING("???"),
+    },
+## for region_map in region_maps
+    [REGION_MAP_{{ upper(region_map.label) }}] =
+    {
+        .regionMapPalette = sRegionMap{{ capitalize(region_map.label) }}_Pal,
+        .regionMapGfx = sRegionMap{{ capitalize(region_map.label) }}_Gfx,
+        .regionMapTilemap = sRegionMap{{ capitalize(region_map.label) }}_Tilemap,
+        .dexMapPalette = sPokedexAreaMap{{ capitalize(region_map.label) }}_Pal,
+        .dexMapGfx = sPokedexAreaMap{{ capitalize(region_map.label) }}_Gfx,
+        .dexMapTilemap = sPokedexAreaMap{{ capitalize(region_map.label) }}_Tilemap,
+        .regionName = COMPOUND_STRING("{{ region_map.region_name }} "),
+        .sectionLayout = sRegionMap_SectionLayout_{{ capitalize(region_map.label) }},
+        .dexMapPaletteSize = sizeof(sPokedexAreaMap{{ capitalize(region_map.label) }}_Pal),
+        .width = {{ region_map.layout_width}},
+        .height = {{ region_map.layout_height}},
+        .leftOffset = {{ region_map.layout_offset_left}},
+        .topOffset = {{ region_map.layout_offset_top}},
+    },
+## endfor
+};

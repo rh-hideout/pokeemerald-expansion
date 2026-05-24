@@ -39,9 +39,13 @@ struct RegionMapInfo
     const u32 *regionMapTilemap;
     const u32 *regionMapGfx;
     const u16 *regionMapPalette;
-    const SectionLayout *sectionLayout;
     const u8 *regionName;
+    const void *sectionLayout;
     u16 dexMapPaletteSize;
+    u8 width;
+    u8 height;
+    u8 leftOffset;
+    u8 topOffset;
 };
 
 struct RegionMapData {

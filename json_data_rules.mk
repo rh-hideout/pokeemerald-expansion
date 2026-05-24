@@ -11,6 +11,11 @@ AUTO_GEN_TARGETS += include/constants/region_map_sections.h
 include/constants/region_map_sections.h: $(DATA_SRC_SUBDIR)/region_map/region_map_sections.json $(DATA_SRC_SUBDIR)/region_map/region_map_sections.constants.json.txt
 	$(JSONPROC) $^ $@
 
+AUTO_GEN_TARGETS += $(DATA_SRC_SUBDIR)/region_map/region_maps_data.h
+$(DATA_SRC_SUBDIR)/region_map/region_maps_data.h: $(DATA_SRC_SUBDIR)/region_map/region_maps.json $(DATA_SRC_SUBDIR)/region_map/region_maps.json.txt
+	python3 $(TOOLS_DIR)/region_map_helpers/missing_region_layouts.py $(DATA_SRC_SUBDIR)/region_map/region_maps.json
+	$(JSONPROC) $^ $@
+
 AUTO_GEN_TARGETS += $(DATA_SRC_SUBDIR)/heal_locations.h
 $(DATA_SRC_SUBDIR)/heal_locations.h: $(DATA_SRC_SUBDIR)/heal_locations.json $(DATA_SRC_SUBDIR)/heal_locations.json.txt
 	$(JSONPROC) $^ $@
