@@ -39,8 +39,14 @@
  *
  */
 
-#define MAPCURSOR_X_MIN 1
-#define MAPCURSOR_Y_MIN 2
+#define REGION_MAP_DATA(field) (gRegionMapInfos[sRegionMap->regionMapId].field)
+
+#define MAP_WIDTH REGION_MAP_DATA(width)
+#define MAP_HEIGHT REGION_MAP_DATA(height)
+
+#define MAPCURSOR_X_MIN REGION_MAP_DATA(leftOffset)
+#define MAPCURSOR_Y_MIN REGION_MAP_DATA(topOffset)
+
 #define MAPCURSOR_X_MAX (MAPCURSOR_X_MIN + MAP_WIDTH - 1)
 #define MAPCURSOR_Y_MAX (MAPCURSOR_Y_MIN + MAP_HEIGHT - 1)
 
@@ -1095,8 +1101,8 @@ static mapsec_u16_t GetMapSecIdAt(u16 x, u16 y)
     enum RegionMapId regionMap = sRegionMap->regionMapId;
     if (regionMap == REGION_MAP_UNKNOWN || gRegionMapInfos[regionMap].sectionLayout == NULL)
         return MAPSEC_NONE;
-    const SectionLayout *layout = gRegionMapInfos[regionMap].sectionLayout;
-    return (*layout)[y][x];
+    const mapsec_u8_t *layout = gRegionMapInfos[regionMap].sectionLayout;
+    return layout[y * MAP_WIDTH + x];
 }
 
 static void InitMapBasedOnPlayerLocation(void)

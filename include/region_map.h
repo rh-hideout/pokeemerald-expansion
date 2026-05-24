@@ -6,9 +6,6 @@
 // Exported type declarations
 #define MAP_NAME_LENGTH 16
 
-#define MAP_WIDTH 28
-#define MAP_HEIGHT 15
-
 enum
 {
     MAP_INPUT_NONE,
@@ -28,8 +25,6 @@ enum {
     MAPSECTYPE_BATTLE_FRONTIER,
     NUM_MAPSEC_TYPES
 };
-
-typedef mapsec_u8_t SectionLayout[MAP_HEIGHT][MAP_WIDTH];
 
 struct RegionMapInfo
 {
