@@ -11580,175 +11580,231 @@ void BS_TrySetOctolock(void)
 void BS_TryTrainerSlideZMoveMsg(void)
 {
     NATIVE_ARGS();
-    u32 slideId = BattlerIsPlayer(gBattlerAttacker) ? TRAINER_SLIDE_PLAYER_Z_MOVE : TRAINER_SLIDE_ENEMY_Z_MOVE;
+    enum BattlerId tempBattler = gBattleScripting.battler;
 
-    if (slideId == TRAINER_SLIDE_ENEMY_Z_MOVE)
+    switch(gBattlerAttacker)
     {
-        if ((ShouldDoTrainerSlide(gBattlerAttacker, slideId)))
-        {
-            gBattleScripting.battler = gBattlerAttacker;
-            BattleScriptPush(cmd->nextInstr);
-
-            switch(gBattlerAttacker)
-            {
-                case B_BATTLER_1:
-                    gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
-                    break;
-                case B_BATTLER_2:
-                    gBattlescriptCurrInstr = BattleScript_TrainerPartnerSlideMsgRet;
-                    break;
-                case B_BATTLER_3:
-                    gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
-                    break;
-                default:
-                    break;
-            }
-        }
-        else
-        {
-            gBattlescriptCurrInstr = cmd->nextInstr;
-        }
-    }
-    else // Currently only one slide can play at a time for player side
-    {
-        if ((ShouldDoTrainerSlide(LEFT_FOE(gBattlerAttacker), slideId)))
-        {
-            gBattleScripting.battler = gBattlerAttacker;
-            BattleScriptPush(cmd->nextInstr);
-            gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
-        }
-        else if ((ShouldDoTrainerSlide(BATTLE_PARTNER(gBattlerAttacker), slideId)))
+    case B_BATTLER_2:
+        if ((ShouldDoTrainerSlide(gBattlerAttacker, TRAINER_SLIDE_ATTACKER_Z_MOVE)))
         {
             gBattleScripting.battler = gBattlerAttacker;
             BattleScriptPush(cmd->nextInstr);
             gBattlescriptCurrInstr = BattleScript_TrainerPartnerSlideMsgRet;
         }
-        else if ((ShouldDoTrainerSlide(RIGHT_FOE(gBattlerAttacker), slideId)))
+        else if ((ShouldDoTrainerSlide(LEFT_FOE(gBattlerAttacker), TRAINER_SLIDE_OPPONENT_Z_MOVE)))
+        {
+            gBattleScripting.battler = gBattlerAttacker;
+            BattleScriptPush(cmd->nextInstr);
+            gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
+            gBattleScripting.battler = tempBattler;
+        }
+        else if ((ShouldDoTrainerSlide(RIGHT_FOE(gBattlerAttacker), TRAINER_SLIDE_OPPONENT_Z_MOVE)))
+        {
+            gBattleScripting.battler = gBattlerAttacker;
+            BattleScriptPush(cmd->nextInstr);
+            gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
+            gBattleScripting.battler = tempBattler;
+        }
+        else
+        {
+            gBattlescriptCurrInstr = cmd->nextInstr;
+            gBattleScripting.battler = tempBattler;
+        }
+        break;
+    case B_BATTLER_0:
+        if ((ShouldDoTrainerSlide(LEFT_FOE(gBattlerAttacker), TRAINER_SLIDE_OPPONENT_Z_MOVE)))
+        {
+            gBattleScripting.battler = gBattlerAttacker;
+            BattleScriptPush(cmd->nextInstr);
+            gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
+            gBattleScripting.battler = tempBattler;
+        }
+        else if ((ShouldDoTrainerSlide(RIGHT_FOE(gBattlerAttacker), TRAINER_SLIDE_OPPONENT_Z_MOVE)))
+        {
+            gBattleScripting.battler = gBattlerAttacker;
+            BattleScriptPush(cmd->nextInstr);
+            gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
+            gBattleScripting.battler = tempBattler;
+        }
+        else
+        {
+            gBattlescriptCurrInstr = cmd->nextInstr;
+            gBattleScripting.battler = tempBattler;
+        }
+        break;
+    case B_BATTLER_1:
+        if ((ShouldDoTrainerSlide(gBattlerAttacker, TRAINER_SLIDE_ATTACKER_Z_MOVE)))
+        {
+            gBattleScripting.battler = gBattlerAttacker;
+            BattleScriptPush(cmd->nextInstr);
+            gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
+        }
+        else if ((ShouldDoTrainerSlide(RIGHT_FOE(gBattlerAttacker), TRAINER_SLIDE_OPPONENT_Z_MOVE)))
+        {
+            gBattleScripting.battler = gBattlerAttacker;
+            BattleScriptPush(cmd->nextInstr);
+            gBattlescriptCurrInstr = BattleScript_TrainerPartnerSlideMsgRet;
+            gBattleScripting.battler = tempBattler;
+        }
+        else
+        {
+            gBattlescriptCurrInstr = cmd->nextInstr;
+            gBattleScripting.battler = tempBattler;
+        }
+        break;
+    case B_BATTLER_3:
+        if ((ShouldDoTrainerSlide(gBattlerAttacker, TRAINER_SLIDE_ATTACKER_Z_MOVE)))
         {
             gBattleScripting.battler = gBattlerAttacker;
             BattleScriptPush(cmd->nextInstr);
             gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
         }
+        else if ((ShouldDoTrainerSlide(RIGHT_FOE(gBattlerAttacker), TRAINER_SLIDE_OPPONENT_Z_MOVE)))
+        {
+            gBattleScripting.battler = gBattlerAttacker;
+            BattleScriptPush(cmd->nextInstr);
+            gBattlescriptCurrInstr = BattleScript_TrainerPartnerSlideMsgRet;
+            gBattleScripting.battler = tempBattler;
+        }
         else
         {
             gBattlescriptCurrInstr = cmd->nextInstr;
+            gBattleScripting.battler = tempBattler;
         }
+        break;
+    default:
+        break;
     }
 }
 
 void BS_TryTrainerSlideMegaEvolutionMsg(void)
 {
     NATIVE_ARGS();
-    u32 slideId = BattlerIsPlayer(gBattlerAttacker) ? TRAINER_SLIDE_PLAYER_MEGA_EVOLUTION : TRAINER_SLIDE_ENEMY_MEGA_EVOLUTION;
+    enum BattlerId tempBattler = gBattleScripting.battler;
 
-    if (slideId == TRAINER_SLIDE_ENEMY_MEGA_EVOLUTION)
+    switch(gBattlerAttacker)
     {
-        if ((ShouldDoTrainerSlide(gBattlerAttacker, slideId)))
-        {
-            gBattleScripting.battler = gBattlerAttacker;
-            BattleScriptPush(cmd->nextInstr);
-
-            switch(gBattlerAttacker)
-            {
-                case B_BATTLER_1:
-                    gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
-                    break;
-                case B_BATTLER_2:
-                    gBattlescriptCurrInstr = BattleScript_TrainerPartnerSlideMsgRet;
-                    break;
-                case B_BATTLER_3:
-                    gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
-                    break;
-                default:
-                    break;
-            }
-        }
-        else
-        {
-            gBattlescriptCurrInstr = cmd->nextInstr;
-        }
-    }
-    else // Currently only one slide can play at a time for player side
-    {
-        if ((ShouldDoTrainerSlide(LEFT_FOE(gBattlerAttacker), slideId)))
-        {
-            gBattleScripting.battler = gBattlerAttacker;
-            BattleScriptPush(cmd->nextInstr);
-            gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
-        }
-        else if ((ShouldDoTrainerSlide(BATTLE_PARTNER(gBattlerAttacker), slideId)))
+    case B_BATTLER_2:
+        if ((ShouldDoTrainerSlide(gBattlerAttacker, TRAINER_SLIDE_ATTACKER_MEGA_EVOLUTION)))
         {
             gBattleScripting.battler = gBattlerAttacker;
             BattleScriptPush(cmd->nextInstr);
             gBattlescriptCurrInstr = BattleScript_TrainerPartnerSlideMsgRet;
         }
-        else if ((ShouldDoTrainerSlide(RIGHT_FOE(gBattlerAttacker), slideId)))
+        else if ((ShouldDoTrainerSlide(LEFT_FOE(gBattlerAttacker), TRAINER_SLIDE_OPPONENT_MEGA_EVOLUTION)))
+        {
+            gBattleScripting.battler = gBattlerAttacker;
+            BattleScriptPush(cmd->nextInstr);
+            gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
+            gBattleScripting.battler = tempBattler;
+        }
+        else if ((ShouldDoTrainerSlide(RIGHT_FOE(gBattlerAttacker), TRAINER_SLIDE_OPPONENT_MEGA_EVOLUTION)))
+        {
+            gBattleScripting.battler = gBattlerAttacker;
+            BattleScriptPush(cmd->nextInstr);
+            gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
+            gBattleScripting.battler = tempBattler;
+        }
+        else
+        {
+            gBattlescriptCurrInstr = cmd->nextInstr;
+            gBattleScripting.battler = tempBattler;
+        }
+        break;
+    case B_BATTLER_0:
+        if ((ShouldDoTrainerSlide(LEFT_FOE(gBattlerAttacker), TRAINER_SLIDE_OPPONENT_MEGA_EVOLUTION)))
+        {
+            gBattleScripting.battler = gBattlerAttacker;
+            BattleScriptPush(cmd->nextInstr);
+            gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
+            gBattleScripting.battler = tempBattler;
+        }
+        else if ((ShouldDoTrainerSlide(RIGHT_FOE(gBattlerAttacker), TRAINER_SLIDE_OPPONENT_MEGA_EVOLUTION)))
+        {
+            gBattleScripting.battler = gBattlerAttacker;
+            BattleScriptPush(cmd->nextInstr);
+            gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
+            gBattleScripting.battler = tempBattler;
+        }
+        else
+        {
+            gBattlescriptCurrInstr = cmd->nextInstr;
+            gBattleScripting.battler = tempBattler;
+        }
+        break;
+    case B_BATTLER_1:
+        if ((ShouldDoTrainerSlide(gBattlerAttacker, TRAINER_SLIDE_ATTACKER_MEGA_EVOLUTION)))
+        {
+            gBattleScripting.battler = gBattlerAttacker;
+            BattleScriptPush(cmd->nextInstr);
+            gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
+        }
+        else if ((ShouldDoTrainerSlide(RIGHT_FOE(gBattlerAttacker), TRAINER_SLIDE_OPPONENT_MEGA_EVOLUTION)))
+        {
+            gBattleScripting.battler = gBattlerAttacker;
+            BattleScriptPush(cmd->nextInstr);
+            gBattlescriptCurrInstr = BattleScript_TrainerPartnerSlideMsgRet;
+            gBattleScripting.battler = tempBattler;
+        }
+        else
+        {
+            gBattlescriptCurrInstr = cmd->nextInstr;
+            gBattleScripting.battler = tempBattler;
+        }
+        break;
+    case B_BATTLER_3:
+        if ((ShouldDoTrainerSlide(gBattlerAttacker, TRAINER_SLIDE_ATTACKER_MEGA_EVOLUTION)))
         {
             gBattleScripting.battler = gBattlerAttacker;
             BattleScriptPush(cmd->nextInstr);
             gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
         }
+        else if ((ShouldDoTrainerSlide(RIGHT_FOE(gBattlerAttacker), TRAINER_SLIDE_OPPONENT_MEGA_EVOLUTION)))
+        {
+            gBattleScripting.battler = gBattlerAttacker;
+            BattleScriptPush(cmd->nextInstr);
+            gBattlescriptCurrInstr = BattleScript_TrainerPartnerSlideMsgRet;
+            gBattleScripting.battler = tempBattler;
+        }
         else
         {
             gBattlescriptCurrInstr = cmd->nextInstr;
+            gBattleScripting.battler = tempBattler;
         }
+        break;
+    default:
+        break;
     }
 }
 
 void BS_TryTrainerSlideDynamaxMsg(void)
 {
     NATIVE_ARGS();
-    u32 slideId = BattlerIsPlayer(gBattleScripting.battler) ? TRAINER_SLIDE_PLAYER_DYNAMAX : TRAINER_SLIDE_ENEMY_DYNAMAX;
-    u32 tempBattler = gBattleScripting.battler;
+    enum BattlerId tempBattler = gBattleScripting.battler;
 
-    if (slideId == TRAINER_SLIDE_ENEMY_DYNAMAX)
+    switch(gBattleScripting.battler)
     {
-        if ((ShouldDoTrainerSlide(gBattleScripting.battler, slideId)))
+    case B_BATTLER_2:
+        if ((ShouldDoTrainerSlide(gBattleScripting.battler, TRAINER_SLIDE_ATTACKER_DYNAMAX)))
         {
             BattleScriptPush(cmd->nextInstr);
-            
-            switch(gBattleScripting.battler)
-            {
-                case B_BATTLER_1:
-                    gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
-                    break;
-                case B_BATTLER_2:
-                    gBattlescriptCurrInstr = BattleScript_TrainerPartnerSlideMsgRet;
-                    break;
-                case B_BATTLER_3:
-                    gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
-                    break;
-                default:
-                    gBattlescriptCurrInstr = cmd->nextInstr;
-                    break;
-            }
-        }
-        else
-        {
-            gBattlescriptCurrInstr = cmd->nextInstr;
-        }
-    }
-    else // Currently only one slide can play at a time for player side
-    {
-        if ((ShouldDoTrainerSlide(LEFT_FOE(gBattleScripting.battler), slideId)))
-        {
-            BattleScriptPush(cmd->nextInstr);
-            gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
-            gBattleScripting.battler = tempBattler;
+            gBattlescriptCurrInstr = BattleScript_TrainerPartnerSlideMsgRet;
         }
         else
         {
             gBattleScripting.battler = tempBattler;
-            if ((ShouldDoTrainerSlide(BATTLE_PARTNER(gBattleScripting.battler), slideId)))
+
+            if ((ShouldDoTrainerSlide(LEFT_FOE(gBattleScripting.battler), TRAINER_SLIDE_OPPONENT_DYNAMAX)))
             {
                 BattleScriptPush(cmd->nextInstr);
-                gBattlescriptCurrInstr = BattleScript_TrainerPartnerSlideMsgRet;
+                gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
                 gBattleScripting.battler = tempBattler;
             }
             else
             {
                 gBattleScripting.battler = tempBattler;
-                if ((ShouldDoTrainerSlide(RIGHT_FOE(gBattleScripting.battler), slideId)))
+
+                if ((ShouldDoTrainerSlide(RIGHT_FOE(gBattleScripting.battler), TRAINER_SLIDE_OPPONENT_DYNAMAX)))
                 {
                     BattleScriptPush(cmd->nextInstr);
                     gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
@@ -11756,66 +11812,180 @@ void BS_TryTrainerSlideDynamaxMsg(void)
                 }
                 else
                 {
-                    gBattlescriptCurrInstr = cmd->nextInstr;
                     gBattleScripting.battler = tempBattler;
+                    gBattlescriptCurrInstr = cmd->nextInstr;
                 }
             }
         }
+        break;
+    case B_BATTLER_0:
+        if ((ShouldDoTrainerSlide(LEFT_FOE(gBattleScripting.battler), TRAINER_SLIDE_OPPONENT_DYNAMAX)))
+        {
+            BattleScriptPush(cmd->nextInstr);
+            gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
+            gBattleScripting.battler = tempBattler;
+        }
+        else
+        {
+            gBattleScripting.battler = tempBattler;
+
+            if ((ShouldDoTrainerSlide(RIGHT_FOE(gBattleScripting.battler), TRAINER_SLIDE_OPPONENT_DYNAMAX)))
+            {
+                BattleScriptPush(cmd->nextInstr);
+                gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
+                gBattleScripting.battler = tempBattler;
+            }
+            else
+            {
+                gBattleScripting.battler = tempBattler;
+                gBattlescriptCurrInstr = cmd->nextInstr;
+            }
+        }
+        break;
+    case B_BATTLER_1:
+        if ((ShouldDoTrainerSlide(gBattleScripting.battler, TRAINER_SLIDE_ATTACKER_DYNAMAX)))
+        {
+            BattleScriptPush(cmd->nextInstr);
+            gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
+        }
+        else if ((ShouldDoTrainerSlide(RIGHT_FOE(gBattleScripting.battler), TRAINER_SLIDE_OPPONENT_DYNAMAX)))
+        {
+            BattleScriptPush(cmd->nextInstr);
+            gBattlescriptCurrInstr = BattleScript_TrainerPartnerSlideMsgRet;
+            gBattleScripting.battler = tempBattler;
+        }
+        else
+        {
+            gBattleScripting.battler = tempBattler;
+            gBattlescriptCurrInstr = cmd->nextInstr;
+        }
+        break;
+    case B_BATTLER_3:
+        if ((ShouldDoTrainerSlide(gBattleScripting.battler, TRAINER_SLIDE_ATTACKER_DYNAMAX)))
+        {
+            BattleScriptPush(cmd->nextInstr);
+            gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
+        }
+        else if ((ShouldDoTrainerSlide(RIGHT_FOE(gBattleScripting.battler), TRAINER_SLIDE_OPPONENT_DYNAMAX)))
+        {
+            BattleScriptPush(cmd->nextInstr);
+            gBattlescriptCurrInstr = BattleScript_TrainerPartnerSlideMsgRet;
+            gBattleScripting.battler = tempBattler;
+        }
+        else
+        {
+            gBattleScripting.battler = tempBattler;
+            gBattlescriptCurrInstr = cmd->nextInstr;
+        }
+        break;
+    default:
+        break;
     }
 }
 
 void BS_TryTrainerSlideTeraMsg(void)
 {
     NATIVE_ARGS();
-    u32 slideId = BattlerIsPlayer(gBattleScripting.battler) ? TRAINER_SLIDE_PLAYER_TERA : TRAINER_SLIDE_ENEMY_TERA;
+    enum BattlerId tempBattler = gBattleScripting.battler;
 
-    if (slideId == TRAINER_SLIDE_ENEMY_TERA)
+    switch(gBattleScripting.battler)
     {
-        if ((ShouldDoTrainerSlide(gBattleScripting.battler, slideId)))
-        {
-            BattleScriptPush(cmd->nextInstr);
-            
-            switch(gBattleScripting.battler)
-            {
-                case B_BATTLER_1:
-                    gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
-                    break;
-                case B_BATTLER_2:
-                    gBattlescriptCurrInstr = BattleScript_TrainerPartnerSlideMsgRet;
-                    break;
-                case B_BATTLER_3:
-                    gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
-                    break;
-                default:
-                    break;
-            }
-        }
-        else
-        {
-            gBattlescriptCurrInstr = cmd->nextInstr;
-        }
-    }
-    else // Currently only one slide can play at a time for player side
-    {
-        if ((ShouldDoTrainerSlide(LEFT_FOE(gBattleScripting.battler), slideId)))
-        {
-            BattleScriptPush(cmd->nextInstr);
-            gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
-        }
-        else if ((ShouldDoTrainerSlide(BATTLE_PARTNER(gBattleScripting.battler), slideId)))
+    case B_BATTLER_2:
+        if ((ShouldDoTrainerSlide(gBattleScripting.battler, TRAINER_SLIDE_ATTACKER_TERA)))
         {
             BattleScriptPush(cmd->nextInstr);
             gBattlescriptCurrInstr = BattleScript_TrainerPartnerSlideMsgRet;
         }
-        else if ((ShouldDoTrainerSlide(RIGHT_FOE(gBattleScripting.battler), slideId)))
+        else
+        {
+            gBattleScripting.battler = tempBattler;
+
+            if ((ShouldDoTrainerSlide(LEFT_FOE(gBattleScripting.battler), TRAINER_SLIDE_OPPONENT_TERA)))
+            {
+                BattleScriptPush(cmd->nextInstr);
+                gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
+                gBattleScripting.battler = tempBattler;
+            }
+            else
+            {
+                gBattleScripting.battler = tempBattler;
+
+                if ((ShouldDoTrainerSlide(RIGHT_FOE(gBattleScripting.battler), TRAINER_SLIDE_OPPONENT_TERA)))
+                {
+                    BattleScriptPush(cmd->nextInstr);
+                    gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
+                    gBattleScripting.battler = tempBattler;
+                }
+                else
+                {
+                    gBattleScripting.battler = tempBattler;
+                    gBattlescriptCurrInstr = cmd->nextInstr;
+                }
+            }
+        }
+        break;
+    case B_BATTLER_0:
+        if ((ShouldDoTrainerSlide(LEFT_FOE(gBattleScripting.battler), TRAINER_SLIDE_OPPONENT_TERA)))
+        {
+            BattleScriptPush(cmd->nextInstr);
+            gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
+            gBattleScripting.battler = tempBattler;
+        }
+        else
+        {
+            gBattleScripting.battler = tempBattler;
+
+            if ((ShouldDoTrainerSlide(RIGHT_FOE(gBattleScripting.battler), TRAINER_SLIDE_OPPONENT_TERA)))
+            {
+                BattleScriptPush(cmd->nextInstr);
+                gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
+                gBattleScripting.battler = tempBattler;
+            }
+            else
+            {
+                gBattleScripting.battler = tempBattler;
+                gBattlescriptCurrInstr = cmd->nextInstr;
+            }
+        }
+        break;
+    case B_BATTLER_1:
+        if ((ShouldDoTrainerSlide(gBattleScripting.battler, TRAINER_SLIDE_ATTACKER_TERA)))
+        {
+            BattleScriptPush(cmd->nextInstr);
+            gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
+        }
+        else if ((ShouldDoTrainerSlide(RIGHT_FOE(gBattleScripting.battler), TRAINER_SLIDE_OPPONENT_TERA)))
+        {
+            BattleScriptPush(cmd->nextInstr);
+            gBattlescriptCurrInstr = BattleScript_TrainerPartnerSlideMsgRet;
+            gBattleScripting.battler = tempBattler;
+        }
+        else
+        {
+            gBattleScripting.battler = tempBattler;
+            gBattlescriptCurrInstr = cmd->nextInstr;
+        }
+        break;
+    case B_BATTLER_3:
+        if ((ShouldDoTrainerSlide(gBattleScripting.battler, TRAINER_SLIDE_ATTACKER_TERA)))
         {
             BattleScriptPush(cmd->nextInstr);
             gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
         }
+        else if ((ShouldDoTrainerSlide(RIGHT_FOE(gBattleScripting.battler), TRAINER_SLIDE_OPPONENT_TERA)))
+        {
+            BattleScriptPush(cmd->nextInstr);
+            gBattlescriptCurrInstr = BattleScript_TrainerPartnerSlideMsgRet;
+            gBattleScripting.battler = tempBattler;
+        }
         else
         {
+            gBattleScripting.battler = tempBattler;
             gBattlescriptCurrInstr = cmd->nextInstr;
         }
+        break;
+    default:
+        break;
     }
 }
 
@@ -13535,33 +13705,153 @@ void BS_TryTrainerSlideMsgFirstOff(void)
 {
     NATIVE_ARGS(u8 battler);
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
-    enum TrainerSlideType slideId = BattlerIsPlayer(battler) ? TRAINER_SLIDE_ENEMY_LANDS_FIRST_DOWN : TRAINER_SLIDE_PLAYER_LANDS_FIRST_DOWN;
+    enum BattlerId tempBattler = gBattleScripting.battler;
 
-    if (slideId == TRAINER_SLIDE_PLAYER_LANDS_FIRST_DOWN)
+    switch (gBattlerFainted)
     {
-        if ((ShouldDoTrainerSlide(battler, slideId)))
+    case B_BATTLER_0:
+        if ((ShouldDoTrainerSlide(B_BATTLER_1, TRAINER_SLIDE_ATTACKER_LANDS_FIRST_DOWN)))
         {
             gBattleScripting.battler = battler;
             BattleScriptPush(cmd->nextInstr);
-            switch (battler)
-            {
-            case B_BATTLER_1:
-                gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
-                break;
-            case B_BATTLER_2:
-                gBattlescriptCurrInstr = BattleScript_TrainerPartnerSlideMsgRet;
-                break;
-            case B_BATTLER_3:
-                gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
-                break;
-            default:
-                gBattlescriptCurrInstr = cmd->nextInstr;
-                break;
-            }
+            gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
+            gBattleScripting.battler = tempBattler;
         }
         else
         {
-            gBattlescriptCurrInstr = cmd->nextInstr;
+            gBattleScripting.battler = tempBattler;
+            if ((ShouldDoTrainerSlide(B_BATTLER_3, TRAINER_SLIDE_ATTACKER_LANDS_FIRST_DOWN)))
+            {
+                gBattleScripting.battler = battler;
+                BattleScriptPush(cmd->nextInstr);
+                gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
+                gBattleScripting.battler = tempBattler;
+            }
+            else
+            {
+                gBattleScripting.battler = tempBattler;
+                gBattlescriptCurrInstr = cmd->nextInstr;
+            }
+        }
+        break;
+    case B_BATTLER_2:
+        if (ShouldDoTrainerSlide(B_BATTLER_2, TRAINER_SLIDE_DEFENDER_TAKES_FIRST_DOWN))
+        {
+                gBattleScripting.battler = battler;
+                BattleScriptPush(cmd->nextInstr);
+                gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
+                gBattleScripting.battler = tempBattler;
+        }
+        else
+        {
+            gBattleScripting.battler = tempBattler;
+            if ((ShouldDoTrainerSlide(B_BATTLER_1, TRAINER_SLIDE_ATTACKER_LANDS_FIRST_DOWN)))
+            {
+                gBattleScripting.battler = battler;
+                BattleScriptPush(cmd->nextInstr);
+                gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
+                gBattleScripting.battler = tempBattler;
+            }
+            else
+            {
+                gBattleScripting.battler = tempBattler;
+                if ((ShouldDoTrainerSlide(B_BATTLER_3, TRAINER_SLIDE_ATTACKER_LANDS_FIRST_DOWN)))
+                {
+                    gBattleScripting.battler = battler;
+                    BattleScriptPush(cmd->nextInstr);
+                    gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
+                    gBattleScripting.battler = tempBattler;
+                }
+                else
+                {
+                    gBattleScripting.battler = tempBattler;
+                    gBattlescriptCurrInstr = cmd->nextInstr;
+                }
+            }
+        }
+        break;
+    case B_BATTLER_1:
+        if ((ShouldDoTrainerSlide(B_BATTLER_1, TRAINER_SLIDE_DEFENDER_TAKES_FIRST_DOWN)))
+        {
+            gBattleScripting.battler = battler;
+            BattleScriptPush(cmd->nextInstr);
+            gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
+            gBattleScripting.battler = tempBattler;
+        }
+        else
+        {
+            gBattleScripting.battler = tempBattler;
+            if ((ShouldDoTrainerSlide(B_BATTLER_2, TRAINER_SLIDE_ATTACKER_LANDS_FIRST_DOWN)))
+            {
+                gBattleScripting.battler = battler;
+                BattleScriptPush(cmd->nextInstr);
+                gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
+                gBattleScripting.battler = tempBattler;
+            }
+            else
+            {
+                gBattleScripting.battler = tempBattler;
+                gBattlescriptCurrInstr = cmd->nextInstr;
+            }
+        }
+        break;
+    case B_BATTLER_3:
+        if ((ShouldDoTrainerSlide(B_BATTLER_3, TRAINER_SLIDE_DEFENDER_TAKES_FIRST_DOWN)))
+        {
+            gBattleScripting.battler = battler;
+            BattleScriptPush(cmd->nextInstr);
+            gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
+            gBattleScripting.battler = tempBattler;
+        }
+        else
+        {
+            gBattleScripting.battler = tempBattler;
+            if ((ShouldDoTrainerSlide(B_BATTLER_2, TRAINER_SLIDE_ATTACKER_LANDS_FIRST_DOWN)))
+            {
+                gBattleScripting.battler = battler;
+                BattleScriptPush(cmd->nextInstr);
+                gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
+                gBattleScripting.battler = tempBattler;
+            }
+            else
+            {
+                gBattleScripting.battler = tempBattler;
+                gBattlescriptCurrInstr = cmd->nextInstr;
+            }
+        }
+        break;
+    default:
+        break;
+    }
+}
+
+void BS_TryTrainerSlideMsgLastOn(void)
+{
+    NATIVE_ARGS(u8 battler);
+    enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
+    //u32 slideId = BattlerIsPlayer(battler) ? TRAINER_SLIDE_OPPONENT_LAST_SWITCHIN : TRAINER_SLIDE_SELF_LAST_SWITCHIN;
+
+    if (battler >= MAX_BATTLERS_COUNT) // Edge case for double KO cases where gBattlerFainted == MAX_BATTLERS_COUNT so GetBattlerForBattleScript returns 6
+    {
+        gBattlescriptCurrInstr = cmd->nextInstr;
+    }
+    /*else if ((ShouldDoTrainerSlide(battler, TRAINER_SLIDE_SELF_LAST_SWITCHIN)))
+    {
+        gBattleScripting.battler = battler;
+        BattleScriptPush(cmd->nextInstr);
+        switch (battler)
+        {
+        case B_BATTLER_1:
+            gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
+            break;
+        case B_BATTLER_2:
+            gBattlescriptCurrInstr = BattleScript_TrainerPartnerSlideMsgRet;
+            break;
+        case B_BATTLER_3:
+            gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
+            break;
+        default:
+            break;
         }
     }
     else // Currently only one slide can play at a time for player side
@@ -13588,55 +13878,125 @@ void BS_TryTrainerSlideMsgFirstOff(void)
         {
             gBattlescriptCurrInstr = cmd->nextInstr;
         }
-    }
-}
+    }*/
 
-void BS_TryTrainerSlideMsgLastOn(void)
-{
-    NATIVE_ARGS(u8 battler);
-    enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
-    u32 slideId = BattlerIsPlayer(battler) ? TRAINER_SLIDE_PLAYER_LAST_SWITCHIN : TRAINER_SLIDE_ENEMY_LAST_SWITCHIN;
-    if ((ShouldDoTrainerSlide(battler, slideId)))
+    enum BattlerId tempBattler = gBattleScripting.battler;
+
+    switch (gBattleScripting.battler)
     {
-        gBattleScripting.battler = battler;
-        BattleScriptPush(cmd->nextInstr);
-        switch (battler)
+    case B_BATTLER_0:
+        if ((ShouldDoTrainerSlide(B_BATTLER_1, TRAINER_SLIDE_OPPONENT_LAST_SWITCHIN)))
         {
-        case B_BATTLER_1:
+            gBattleScripting.battler = battler;
+            BattleScriptPush(cmd->nextInstr);
             gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
-            break;
-        case B_BATTLER_2:
-            gBattlescriptCurrInstr = BattleScript_TrainerPartnerSlideMsgRet;
-            break;
-        case B_BATTLER_3:
-            gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
-            break;
-        default:
-            break;
+            gBattleScripting.battler = tempBattler;
         }
-    }
-    else if ((ShouldDoTrainerSlide(battler, TRAINER_SLIDE_PLAYER_LAST_SWITCHIN)))
-    {
-        gBattleScripting.battler = battler;
-        BattleScriptPush(cmd->nextInstr);
-        switch(battler)
+        else
         {
-            case B_BATTLER_1:
-                gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
-                break;
-            case B_BATTLER_2:
-                gBattlescriptCurrInstr = BattleScript_TrainerPartnerSlideMsgRet;
-                break;
-            case B_BATTLER_3:
+            gBattleScripting.battler = tempBattler;
+            if ((ShouldDoTrainerSlide(B_BATTLER_3, TRAINER_SLIDE_OPPONENT_LAST_SWITCHIN)))
+            {
+                gBattleScripting.battler = battler;
+                BattleScriptPush(cmd->nextInstr);
                 gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
-                break;
-            default:
-                break;
+                gBattleScripting.battler = tempBattler;
+            }
+            else
+            {
+                gBattleScripting.battler = tempBattler;
+                gBattlescriptCurrInstr = cmd->nextInstr;
+            }
         }
-    }
-    else
-    {
-        gBattlescriptCurrInstr = cmd->nextInstr;
+        break;
+    case B_BATTLER_2:
+        if (ShouldDoTrainerSlide(B_BATTLER_2, TRAINER_SLIDE_SELF_LAST_SWITCHIN))
+        {
+                gBattleScripting.battler = battler;
+                BattleScriptPush(cmd->nextInstr);
+                gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
+                gBattleScripting.battler = tempBattler;
+        }
+        else
+        {
+            gBattleScripting.battler = tempBattler;
+            if ((ShouldDoTrainerSlide(B_BATTLER_1, TRAINER_SLIDE_OPPONENT_LAST_SWITCHIN)))
+            {
+                gBattleScripting.battler = battler;
+                BattleScriptPush(cmd->nextInstr);
+                gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
+                gBattleScripting.battler = tempBattler;
+            }
+            else
+            {
+                gBattleScripting.battler = tempBattler;
+                if ((ShouldDoTrainerSlide(B_BATTLER_3, TRAINER_SLIDE_OPPONENT_LAST_SWITCHIN)))
+                {
+                    gBattleScripting.battler = battler;
+                    BattleScriptPush(cmd->nextInstr);
+                    gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
+                    gBattleScripting.battler = tempBattler;
+                }
+                else
+                {
+                    gBattleScripting.battler = tempBattler;
+                    gBattlescriptCurrInstr = cmd->nextInstr;
+                }
+            }
+        }
+        break;
+    case B_BATTLER_1:
+        if ((ShouldDoTrainerSlide(B_BATTLER_1, TRAINER_SLIDE_SELF_LAST_SWITCHIN)))
+        {
+            gBattleScripting.battler = battler;
+            BattleScriptPush(cmd->nextInstr);
+            gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
+            gBattleScripting.battler = tempBattler;
+        }
+        else
+        {
+            gBattleScripting.battler = tempBattler;
+            if ((ShouldDoTrainerSlide(B_BATTLER_2, TRAINER_SLIDE_OPPONENT_LAST_SWITCHIN)))
+            {
+                gBattleScripting.battler = battler;
+                BattleScriptPush(cmd->nextInstr);
+                gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
+                gBattleScripting.battler = tempBattler;
+            }
+            else
+            {
+                gBattleScripting.battler = tempBattler;
+                gBattlescriptCurrInstr = cmd->nextInstr;
+            }
+        }
+        break;
+    case B_BATTLER_3:
+        if ((ShouldDoTrainerSlide(B_BATTLER_3, TRAINER_SLIDE_SELF_LAST_SWITCHIN)))
+        {
+            gBattleScripting.battler = battler;
+            BattleScriptPush(cmd->nextInstr);
+            gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
+            gBattleScripting.battler = tempBattler;
+        }
+        else
+        {
+            gBattleScripting.battler = tempBattler;
+            if ((ShouldDoTrainerSlide(B_BATTLER_2, TRAINER_SLIDE_OPPONENT_LAST_SWITCHIN)))
+            {
+                gBattleScripting.battler = battler;
+                BattleScriptPush(cmd->nextInstr);
+                gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
+                gBattleScripting.battler = tempBattler;
+            }
+            else
+            {
+                gBattleScripting.battler = tempBattler;
+                gBattlescriptCurrInstr = cmd->nextInstr;
+            }
+        }
+        break;
+    default:
+        break;
     }
 }
 

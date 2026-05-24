@@ -8213,7 +8213,7 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct DamageCont
     }
 
     if (ctx->updateFlags)
-        TryInitializeFirstSTABMoveTrainerSlide(ctx->battlerDef, ctx->battlerAtk, GetBattlerSide(ctx->battlerAtk), ctx->moveType);
+        TryInitializeFirstSTABMoveTrainerSlide(ctx->battlerDef, ctx->battlerAtk, ctx->moveType);
 
     return modifier;
 }
