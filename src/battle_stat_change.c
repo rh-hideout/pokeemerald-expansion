@@ -100,7 +100,7 @@ static bool32 CheckSpecificMoveCondition(struct BattleCalcValues *cv, struct Sta
         {
             if (!st->onlyChecking)
             {
-                PREPARE_STAT_BUFFER(gBattleTextBuff1, st->stat);
+                PREPARE_STAT_BUFFER(gBattleTextBuff1, STAT_ATK);
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STAT_WONT_CHANGE;
                 st->script = BattleScript_DecreaseStatChangeMessage;
                 gBattleScripting.battler = cv->battlerDef;
