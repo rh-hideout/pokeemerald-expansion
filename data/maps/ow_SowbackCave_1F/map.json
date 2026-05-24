@@ -80,46 +80,124 @@
       "flag": "FLAG_TEMP_5"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BRENDAN_NORMAL",
+      "graphics_id": "OBJ_EVENT_GFX_CAMPER",
       "x": 13,
-      "y": 14,
+      "y": 12,
       "elevation": 0,
       "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
       "movement_range_x": 0,
       "movement_range_y": 0,
-      "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "trainer_type": "TRAINER_TYPE_NORMAL",
+      "trainer_sight_or_berry_tree_id": "4",
+      "script": "ow_SowbackCave_1F_EventScript_Camper",
       "flag": "0",
-      "notes": "trainer"
+      "notes": "trainer - camper exploring cave",
+      "local_id": "LOCALID_SOWBACK_1F_CAMPER"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BRENDAN_NORMAL",
+      "graphics_id": "OBJ_EVENT_GFX_HIKER",
       "x": 18,
       "y": 23,
       "elevation": 0,
       "movement_type": "MOVEMENT_TYPE_FACE_DOWN_LEFT_AND_RIGHT",
       "movement_range_x": 0,
       "movement_range_y": 0,
-      "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "trainer_type": "TRAINER_TYPE_NORMAL",
+      "trainer_sight_or_berry_tree_id": "4",
+      "script": "ow_SowbackCave_1F_EventScript_Hiker1",
       "flag": "0",
-      "notes": "trainer"
+      "notes": "trainer - hiker exploring cave. he wants to climb up the nearby rock face to get to the upper level",
+      "local_id": "LOCALID_SOWBACK_1F_HIKER_1"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BRENDAN_NORMAL",
-      "x": 30,
-      "y": 8,
+      "graphics_id": "OBJ_EVENT_GFX_HIKER",
+      "x": 27,
+      "y": 4,
       "elevation": 0,
-      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN_LEFT_AND_RIGHT",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NORMAL",
+      "trainer_sight_or_berry_tree_id": "4",
+      "script": "ow_SowbackCave_1F_EventScript_Hiker2",
+      "flag": "0",
+      "notes": "trainer - hiker exploring cave, is very close to floran exit",
+      "local_id": "LOCALID_SOWBACK_1F_HIKER_2"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_BUG_CATCHER",
+      "x": 32,
+      "y": 6,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN_AND_LEFT",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "ow_SowbackCave_1F_EventScript_BugCatcher",
       "flag": "0",
-      "notes": "trainer"
+      "notes": "npc - bug catcher who walked into cave to explore but is scared of the dark",
+      "local_id": "LOCALID_SOWBACK_1F_BUG_CATCHER"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_HIKER",
+      "x": 23,
+      "y": 32,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_WANDER_LEFT_AND_RIGHT",
+      "movement_range_x": 3,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "ow_SowbackCave_1F_EventScript_HikerNPC",
+      "flag": "0",
+      "notes": "npc - hiker walking around, commenting he thought he heard a collapse up ahead.",
+      "local_id": "LOCALID_SOWBACK_1F_HIKER_NPC"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
+      "x": 19,
+      "y": 18,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "ITEM_DUSK_BALL",
+      "script": "Common_EventScript_FindItem",
+      "flag": "FLAG_ITEM_OW_SOWBACK_1F_DUSK_BALL",
+      "notes": "this is an item that can be found in a cave",
+      "local_id": "LOCALID_SOWBACK_1F_DUSK_BALL"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
+      "x": 20,
+      "y": 4,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "ITEM_ESCAPE_ROPE",
+      "script": "Common_EventScript_FindItem",
+      "flag": "FLAG_ITEM_OW_SOWBACK_1F_ESCAPE_ROPE",
+      "notes": "this is an item that can be found in a cave",
+      "local_id": "LOCALID_SOWBACK_1F_ESCAPE_ROPE"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
+      "x": 26,
+      "y": 32,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "ITEM_REVIVE",
+      "script": "Common_EventScript_FindItem",
+      "flag": "FLAG_ITEM_OW_SOWBACK_1F_REVIVE",
+      "notes": "this is an item that can be found in a cave",
+      "local_id": "LOCALID_SOWBACK_1F_REVIVE"
     }
   ],
   "warp_events": [
@@ -174,5 +252,24 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [
+    {
+      "type": "hidden_item",
+      "x": 14,
+      "y": 16,
+      "elevation": 0,
+      "item": "ITEM_ANTIDOTE",
+      "flag": "FLAG_HIDDEN_ITEM_OW_SOWBACK_1F_ANTIDOTE",
+      "notes": "this is a hidden item"
+    },
+    {
+      "type": "hidden_item",
+      "x": 33,
+      "y": 7,
+      "elevation": 0,
+      "item": "ITEM_GREAT_BALL",
+      "flag": "FLAG_HIDDEN_ITEM_OW_SOWBACK_1F_GREAT_BALL",
+      "notes": "this is a hidden item"
+    }
+  ]
 }

@@ -18,7 +18,7 @@ text ow_r3_Text_Woodcutter1_Intro {
 }
 
 text ow_r3_Text_Woodcutter1_Defeat {
-    "...Good hand.\nMost people just walk around us."
+    "...You have a steady hand."
 }
 
 script ow_r3_EventScript_Woodcutter2 {
@@ -31,7 +31,7 @@ script ow_r3_EventScript_Woodcutter2 {
 }
 
 text ow_r3_Text_Woodcutter2_Intro {
-    "You come up from Kolchavi?\nMust've passed the institute van.\lThey photograph every stump."
+    "Huh, a battle? Aye, I can take a break."
 }
 
 text ow_r3_Text_Woodcutter2_Defeat {
@@ -46,7 +46,7 @@ script ow_r3_EventScript_PondChild {
     lock
     faceplayer
     setspeaker("Child")
-    msgbox(format("Bidoof doesn't care about the stumps.\pHe just finds the biggest puddle and dives in.\pI tried telling him that's not how ponds work.\NHe disagreed."))
+    msgbox(format("Bidoof doesn't care about the stumps.\pHe just finds the biggest puddle and dives in.\pI tried telling him that's not how ponds work."))
     setspeaker(NULL)
     release
     end
@@ -70,10 +70,10 @@ script ow_r3_EventScript_Painter {
     faceplayer
     setspeaker("Painter")
     goto_if_set(FLAG_RECEIVED_R3_PAINTER_REWARD, ow_r3_EventScript_Painter_AlreadyGave)
-    msgbox(format("I came here to paint the western cliffs.\pRed stone, blue sea, yellow morning light -\Nthe whole palette in one place.\pIf you've got Pokémon that match those colours,\Nbring them over. I want to see how it all\Nsits together."))
+    msgbox(format("I came here to paint the western coast.\pRed flowers, blue sea, yellow sands, the whole palette in one place.\NIf you've got Pokémon that match those colours, bring them over.\NI want to see how it all sits together."))
     specialvar(VAR_RESULT, CheckPartyHasRGBPokemon)
     goto_if_eq(VAR_RESULT, 0, ow_r3_EventScript_Painter_NotReady)
-    msgbox(format("Yes! That's exactly it.\pThe contrast - it's everything.\pHere - take this. You've more of an eye for\Ncomposition than most of the people I've\Npainted next to."))
+    msgbox(format("Yes! That's exactly it.\pThe contrast - it's everything.\NHere - take this. You've got an eye for composition."))
     giveitem(ITEM_POKE_DOLL)
     goto_if_eq(VAR_RESULT, 0, ow_r3_EventScript_Painter_BagFull)
     setflag(FLAG_RECEIVED_R3_PAINTER_REWARD)
@@ -109,43 +109,26 @@ script ow_r3_EventScript_Painter_AlreadyGave {
 
 script ow_r3_EventScript_TuberBeachboy {
     trainerbattle_single(
-        TRAINER_OW_R3_TUBER_BEACHBOY,
+        TRAINER_OW_R3_TUBER_MATTEO,
         ow_r3_Text_TuberBeachboy_Intro,
         ow_r3_Text_TuberBeachboy_Defeat
     )
-    msgbox(format("You actually got me pretty good.\pBest battle I've had on this trip!"), MSGBOX_AUTOCLOSE)
+    msgbox(format("You might even be better than daddy!"), MSGBOX_AUTOCLOSE)
 }
 
 text ow_r3_Text_TuberBeachboy_Intro {
-    "Race you to the waterline!\pLast one in has to battle standing up!"
+    "Race you to the waterline!"
 }
 
 text ow_r3_Text_TuberBeachboy_Defeat {
     "Ugh!\nYou're so fast!"
 }
 
-script ow_r3_EventScript_Sailor {
-    trainerbattle_single(
-        TRAINER_OW_R3_SAILOR,
-        ow_r3_Text_Sailor_Intro,
-        ow_r3_Text_Sailor_Defeat
-    )
-    msgbox(format("Used to be nothing but trees down to the water here.\pNow at least the timber's moving.\NThat's trade, not beauty, but it keeps\Nthe boats running."), MSGBOX_AUTOCLOSE)
-}
-
-text ow_r3_Text_Sailor_Intro {
-    "I've run this coast enough times\nto know a rookie from a vet.\pYou're no sailor.\nLet's see what you are."
-}
-
-text ow_r3_Text_Sailor_Defeat {
-    "Hah!\nGood.\nGood eye."
-}
-
 script ow_r3_EventScript_BeachMother {
     lock
     faceplayer
     setspeaker("Mother")
-    msgbox(format("Matteo! Don't go past where I can see you!\p...Sorry. We try to get out of the city on weekends.\NThe route's rough but the water's clean.\NAt least it was."))
+    msgbox(format("Matteo! Don't go past where I can see you!\p...Sorry. We try to get out of the city on weekends.\NOur kids enjoy the gentle waves here."))
     setspeaker(NULL)
     release
     end
@@ -157,7 +140,7 @@ script ow_r3_EventScript_BeachFather {
         ow_r3_Text_BeachFather_Intro,
         ow_r3_Text_BeachFather_Defeat
     )
-    msgbox(format("Right. Team debrief after we eat.\pThey saw nothing."), MSGBOX_AUTOCLOSE)
+    msgbox(format("Right. Uhh...\pThey saw nothing."), MSGBOX_AUTOCLOSE)
 }
 
 text ow_r3_Text_BeachFather_Intro {
@@ -178,6 +161,23 @@ script ow_r3_EventScript_BeachChild {
     end
 }
 
+script ow_r3_EventScript_Sailor {
+    trainerbattle_single(
+        TRAINER_OW_R3_SAILOR,
+        ow_r3_Text_Sailor_Intro,
+        ow_r3_Text_Sailor_Defeat
+    )
+    msgbox(format("Used to be almost impossible to get to Kolchavi without a boat or Pokemon to carry you.\NIt's a bit easier now."), MSGBOX_AUTOCLOSE)
+}
+
+text ow_r3_Text_Sailor_Intro {
+    "I've run this coast enough times\nto know a rookie from a vet.\pYou're no sailor.\nLet's see what you are."
+}
+
+text ow_r3_Text_Sailor_Defeat {
+    "Hah!\nGood eye."
+}
+
 // ============================================================
 // BATTLE REWARDER (cliff split near r6 junction)
 // ============================================================
@@ -194,7 +194,7 @@ script ow_r3_EventScript_BattleRewarder {
     if (defeated(TRAINER_OW_R3_WOODCUTTER_2) == TRUE) {
         addvar(VAR_TEMP_0, 1)
     }
-    if (defeated(TRAINER_OW_R3_TUBER_BEACHBOY) == TRUE) {
+    if (defeated(TRAINER_OW_R3_TUBER_MATTEO) == TRUE) {
         addvar(VAR_TEMP_0, 1)
     }
     if (defeated(TRAINER_OW_R3_SAILOR) == TRUE) {

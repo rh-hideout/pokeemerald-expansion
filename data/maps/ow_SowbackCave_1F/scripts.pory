@@ -1,1 +1,103 @@
 mapscripts ow_SowbackCave_1F_MapScripts {}
+
+// ============================================================
+// CAMPER MATO - exploring the cave
+// ============================================================
+
+script ow_SowbackCave_1F_EventScript_Camper {
+    trainerbattle_single(
+        TRAINER_OW_SOWBACK_1F_CAMPER,
+        ow_SowbackCave_1F_Text_Camper_Intro,
+        ow_SowbackCave_1F_Text_Camper_Defeat
+    )
+    setspeaker("Mato")
+    msgbox(format("I'm making it to the top of that wall\Nbefore sundown."), MSGBOX_AUTOCLOSE)
+    setspeaker(NULL)
+    end
+}
+
+text ow_SowbackCave_1F_Text_Camper_Intro {
+    "Hold it! You're not getting past\nwithout a battle!\lMy Pokemon love a good rocky floor fight!"
+}
+
+text ow_SowbackCave_1F_Text_Camper_Defeat {
+    "Ugh...\nI thought I had the altitude advantage!"
+}
+
+// ============================================================
+// HIKER KRAL - eyeing the rock face above
+// ============================================================
+
+script ow_SowbackCave_1F_EventScript_Hiker1 {
+    trainerbattle_single(
+        TRAINER_OW_SOWBACK_1F_HIKER_1,
+        ow_SowbackCave_1F_Text_Hiker1_Intro,
+        ow_SowbackCave_1F_Text_Hiker1_Defeat
+    )
+    setspeaker("Kral")
+    msgbox(format("That crack up there -\Nthat's your starting hold."), MSGBOX_AUTOCLOSE)
+    setspeaker(NULL)
+    end
+}
+
+text ow_SowbackCave_1F_Text_Hiker1_Intro {
+    "Ghahahaha! Eyeing that rock face, are ya?\nI've been sizing it up all morning.\pProve you're worth climbing with first!"
+}
+
+text ow_SowbackCave_1F_Text_Hiker1_Defeat {
+    "Ha! That was a fine warm-up.\nLet's see if you can tackle that wall\lhalf as well."
+}
+
+// ============================================================
+// HIKER VESH - near the Floran exit
+// ============================================================
+
+script ow_SowbackCave_1F_EventScript_Hiker2 {
+    trainerbattle_single(
+        TRAINER_OW_SOWBACK_1F_HIKER_2,
+        ow_SowbackCave_1F_Text_Hiker2_Intro,
+        ow_SowbackCave_1F_Text_Hiker2_Defeat
+    )
+    setspeaker("Vesh")
+    msgbox(format("There's a track just past the cave mouth.\NFaster than going back through the trees."), MSGBOX_AUTOCLOSE)
+    setspeaker(NULL)
+    end
+}
+
+text ow_SowbackCave_1F_Text_Hiker2_Intro {
+    "Ghahahaha! I've tramped the whole forest\nand half this mountain today!\pMy Pokemon need one more battle\nbefore I head out to Floran!"
+}
+
+text ow_SowbackCave_1F_Text_Hiker2_Defeat {
+    "Good one.\nKolchavi folk?\pThought so."
+}
+
+// ============================================================
+// BUG CATCHER NPC - scared of the dark
+// ============================================================
+
+script ow_SowbackCave_1F_EventScript_BugCatcher {
+    lock
+    faceplayer
+    setspeaker("Bug Catcher")
+    msgbox(format("Oh! You scared me.\NI thought you were one of those shadows..."))
+    msgbox(format("I was going to explore the whole cave.\NI am.\NI'm just... waiting for my eyes to adjust."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+// ============================================================
+// HIKER NPC - heard something shift ahead
+// ============================================================
+
+script ow_SowbackCave_1F_EventScript_HikerNPC {
+    lock
+    faceplayer
+    setspeaker("Hiker")
+    msgbox(format("Careful going deeper.\NThought I heard rocks shifting up ahead."))
+    msgbox(format("Could be nothing.\NDrilbur kick up a lot of noise when they move.\pBut I'd watch your step."))
+    setspeaker(NULL)
+    release
+    end
+}

@@ -3,10 +3,9 @@
 #include "event_data.h"
 #include "constants/pokemon.h"
 
-// Sets gSpecialVar_Result = TRUE if the player's party contains at least one
-// RED, one BLUE, and one YELLOW Pokémon (by body colour). Used by the painter
-// NPC on r3 (ow_r3_EventScript_Painter).
-void CheckPartyHasRGBPokemon(void)
+// Returns TRUE if the player's party contains at least one RED, one BLUE, and
+// one YELLOW Pokémon (by body colour). Used by the painter NPC on r3.
+u16 CheckPartyHasRGBPokemon(void)
 {
     bool8 hasRed = FALSE, hasBlue = FALSE, hasYellow = FALSE;
     u8 i;
@@ -26,5 +25,5 @@ void CheckPartyHasRGBPokemon(void)
         }
     }
 
-    gSpecialVar_Result = (hasRed && hasBlue && hasYellow) ? TRUE : FALSE;
+    return (hasRed && hasBlue && hasYellow) ? TRUE : FALSE;
 }

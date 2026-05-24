@@ -75,3 +75,99 @@ script ow_SowbackCave_B1F_EventScript_Nosepass {
     release
     end
 }
+
+// ============================================================
+// HIKER DRAGAN - been clearing rocks all day
+// ============================================================
+
+script ow_SowbackCave_B1F_EventScript_Hiker {
+    trainerbattle_single(
+        TRAINER_OW_SOWBACK_B1F_HIKER,
+        ow_SowbackCave_B1F_Text_Hiker_Intro,
+        ow_SowbackCave_B1F_Text_Hiker_Defeat
+    )
+    setspeaker("Dragan")
+    msgbox(format("Those Drilbur move fast when something disturbs them.\NMind the tunnels."), MSGBOX_AUTOCLOSE)
+    setspeaker(NULL)
+    end
+}
+
+text ow_SowbackCave_B1F_Text_Hiker_Intro {
+    "Ghahahaha! Found anything good in there?\nMy Pokemon have been clearing a path all day.\pBet I've covered more ground than you!"
+}
+
+text ow_SowbackCave_B1F_Text_Hiker_Defeat {
+    "Good arm on you!\nKeep an eye on that far alcove -\lI cracked open a nice vein in there."
+}
+
+// ============================================================
+// RUIN MANIAC OSKAR - noticing misplaced iron flecks
+// ============================================================
+
+script ow_SowbackCave_B1F_EventScript_RuinManiac {
+    trainerbattle_single(
+        TRAINER_OW_SOWBACK_B1F_RUIN_MANIAC,
+        ow_SowbackCave_B1F_Text_RuinManiac_Intro,
+        ow_SowbackCave_B1F_Text_RuinManiac_Defeat
+    )
+    setspeaker("Oskar")
+    msgbox(format("Limonite.\NBog iron.\NThis hill has a story it isn't telling us."), MSGBOX_AUTOCLOSE)
+    setspeaker(NULL)
+    end
+}
+
+text ow_SowbackCave_B1F_Text_RuinManiac_Intro {
+    "Look at that smear in the rock!\nIron, yes, but not the right kind\lfor this geology!\pIf you want to study this chamber,\nbreak through my vanguard first!"
+}
+
+text ow_SowbackCave_B1F_Text_RuinManiac_Defeat {
+    "Remarkable!\pIron shouldn't be here - not this variety.\nSomething carried it in."
+}
+
+// ============================================================
+// BLACK BELT STEV - training in cave acoustics
+// ============================================================
+
+script ow_SowbackCave_B1F_EventScript_BlackBelt {
+    trainerbattle_single(
+        TRAINER_OW_SOWBACK_B1F_BLACK_BELT,
+        ow_SowbackCave_B1F_Text_BlackBelt_Intro,
+        ow_SowbackCave_B1F_Text_BlackBelt_Defeat
+    )
+    setspeaker("Stev")
+    msgbox(format("The acoustics down here are extraordinary.\NI could train for months."), MSGBOX_AUTOCLOSE)
+    setspeaker(NULL)
+    end
+}
+
+text ow_SowbackCave_B1F_Text_BlackBelt_Intro {
+    "KIIAAAI!\nThe cave walls focus every sound.\pMy fists ring like iron in here.\nTest them if you dare!"
+}
+
+text ow_SowbackCave_B1F_Text_BlackBelt_Defeat {
+    "Hoo-hah!\nThe echo threw my timing.\lWell fought."
+}
+
+// ============================================================
+// FIREBREATHER IGNO - practicing in the damp cave air
+// ============================================================
+
+script ow_SowbackCave_B1F_EventScript_Firebreather {
+    trainerbattle_single(
+        TRAINER_OW_SOWBACK_B1F_FIREBREATHER,
+        ow_SowbackCave_B1F_Text_Firebreather_Intro,
+        ow_SowbackCave_B1F_Text_Firebreather_Defeat
+    )
+    setspeaker("Igno")
+    msgbox(format("The stone walls hold the heat beautifully.\NRemarkable location for practice."), MSGBOX_AUTOCLOSE)
+    setspeaker(NULL)
+    end
+}
+
+text ow_SowbackCave_B1F_Text_Firebreather_Intro {
+    "Fwoosh!\nThe damp air makes the flames dance\lbeautifully in here - can you feel the heat?\pMy partners are about to light this place up!"
+}
+
+text ow_SowbackCave_B1F_Text_Firebreather_Defeat {
+    "Argh! Put out completely!\nThe smoke must have got in my eyes."
+}

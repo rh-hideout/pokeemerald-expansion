@@ -267,6 +267,7 @@
 #define OBJ_EVENT_GFX_LIGHT_SPRITE               241
 #define OBJ_EVENT_GFX_APRICORN_TREE              242
 #define OBJ_EVENT_GFX_LUMBERJACK                     388
+#define OBJ_EVENT_GFX_OW_FIRE_BREATHER               389
 
 // FRLG objects
 #define OBJ_EVENT_GFX_RED_NORMAL                 243
@@ -424,7 +425,7 @@
 // NOTE: The maximum amount of object events has been expanded from 255 to 65535.
 // Since dynamic graphics ids still require at least 16 free values, the actual limit
 // is 65519, but even considering follower Pokémon, this should be more than enough :)
-#define NUM_OBJ_EVENT_GFX                        389
+#define NUM_OBJ_EVENT_GFX                        390
 
 
 // These are dynamic object gfx ids.
@@ -570,6 +571,7 @@
 #define OBJ_EVENT_PAL_TAG_SEAGALLOP               0x1132
 #define OBJ_EVENT_PAL_TAG_SS_ANNE                 0x1133
 #define OBJ_EVENT_PAL_TAG_LUMBERJACK                 0x1134
+#define OBJ_EVENT_PAL_TAG_OW_FIRE_BREATHER           0x1135
 
 #if OW_FOLLOWERS_POKEBALLS
 // Vanilla

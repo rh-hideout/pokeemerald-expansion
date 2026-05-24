@@ -486,6 +486,10 @@ const u16 gTrainerBackPicPalette_OldMan[] = INCGFX_U16("graphics/trainers/back_p
 const u32 gTrainerFrontPic_Lumberjack[] = INCGFX_U32("graphics/trainers/front_pics/lumberjack.png", ".4bpp.smol");
 const u16 gTrainerPalette_Lumberjack[] = INCGFX_U16("graphics/trainers/front_pics/lumberjack.png", ".gbapal");
 
+
+const u32 gTrainerFrontPic_FirebreatherM[] = INCGFX_U32("graphics/trainers/front_pics/firebreather_m.png", ".4bpp.smol");
+const u16 gTrainerPalette_FirebreatherM[] = INCGFX_U16("graphics/trainers/front_pics/firebreather_m.png", ".gbapal");
+
 // The first two parameters invoke a front pic and palette by
 // calling a "TRAINER_PIC" constant (e.g. TRAINER_PIC_FRONT_HIKER), and
 // gTrainerFrontPic/gTrainerPalette pointers, (e.g "gTrainerFrontPic_Hiker" and "gTrainerPalette_Hiker").
@@ -658,6 +662,7 @@ const struct TrainerSprite gTrainerSprites[] =
     TRAINER_SPRITE(TRAINER_PIC_FRONT_LADY_FRLG, gTrainerFrontPic_LadyFrlg, gTrainerPalette_LadyFrlg),
     TRAINER_SPRITE(TRAINER_PIC_FRONT_PAINTER_FRLG, gTrainerFrontPic_PainterFrlg, gTrainerPalette_PainterFrlg),
     TRAINER_SPRITE(TRAINER_PIC_FRONT_LUMBERJACK, gTrainerFrontPic_Lumberjack, gTrainerPalette_Lumberjack),
+    TRAINER_SPRITE(TRAINER_PIC_FRONT_OW_FIRE_BREATHER, gTrainerFrontPic_FirebreatherM, gTrainerPalette_FirebreatherM),
 };
 
 static const union AnimCmd sAnimCmd_Hoenn[] =

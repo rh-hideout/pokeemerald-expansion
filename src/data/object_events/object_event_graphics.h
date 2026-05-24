@@ -477,6 +477,9 @@ const u32 gObjectEventPic_ApricornTree[] = INCGFX_U32("graphics/object_events/pi
 const u32 gObjectEventPic_Lumberjack[] = INCGFX_U32("graphics/object_events/pics/people/lumberjack.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPal_Lumberjack[] = INCGFX_U16("graphics/object_events/pics/people/lumberjack.png", ".gbapal");
 
+const u32 gObjectEventPic_FirebreatherM[] = INCGFX_U32("graphics/object_events/pics/people/firebreather_m.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPal_FirebreatherM[] = INCGFX_U16("graphics/object_events/pics/people/firebreather_m.png", ".gbapal");
+
 #if IS_FRLG
 
 const u16 gObjectEventPic_RedNormal[] = INCGFX_U16("graphics/object_events/pics/people/red/red_normal.png", ".4bpp", "-mwidth 2 -mheight 4");
