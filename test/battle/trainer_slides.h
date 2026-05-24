@@ -2,6 +2,8 @@
 {
     [TRAINER_LEAF_TEST] =
     {
+        [TRAINER_SLIDE_BEFORE_FIRST_TURN] = COMPOUND_STRING("Trainer A: This message plays before the first turn.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_PLAYER_LANDS_FIRST_CRITICAL_HIT] = COMPOUND_STRING("Trainer A: This message plays after the player lands their first critical hit.{PAUSE_UNTIL_PRESS}"),
         [TRAINER_SLIDE_ENEMY_LANDS_FIRST_CRITICAL_HIT] = COMPOUND_STRING("Trainer A: This message plays after the enemy lands their first critical hit.{PAUSE_UNTIL_PRESS}"),
         [TRAINER_SLIDE_PLAYER_LANDS_FIRST_SUPER_EFFECTIVE_HIT] = COMPOUND_STRING("Trainer A: This message plays after the player lands their first super effective hit.{PAUSE_UNTIL_PRESS}"),
         [TRAINER_SLIDE_PLAYER_LANDS_FIRST_DOWN] = COMPOUND_STRING("Trainer A: This message plays after the player KOs one enemy mon.{PAUSE_UNTIL_PRESS}"),
@@ -34,6 +36,8 @@
     },
     [TRAINER_RED_TEST] =
     {
+        [TRAINER_SLIDE_BEFORE_FIRST_TURN] = COMPOUND_STRING("Trainer B: This message plays before the first turn.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_PLAYER_LANDS_FIRST_CRITICAL_HIT] = COMPOUND_STRING("Trainer B: This message plays after the player lands their first critical hit.{PAUSE_UNTIL_PRESS}"),
         [TRAINER_SLIDE_ENEMY_LANDS_FIRST_CRITICAL_HIT] = COMPOUND_STRING("Trainer B: This message plays after the enemy lands their first critical hit.{PAUSE_UNTIL_PRESS}"),
         [TRAINER_SLIDE_PLAYER_LANDS_FIRST_SUPER_EFFECTIVE_HIT] = COMPOUND_STRING("Trainer B: This message plays after the player lands their first super effective hit.{PAUSE_UNTIL_PRESS}"),
         [TRAINER_SLIDE_PLAYER_LANDS_FIRST_DOWN] = COMPOUND_STRING("Trainer B: This message plays after the player KOs one enemy mon.{PAUSE_UNTIL_PRESS}"),
@@ -66,6 +70,8 @@
     },
     [TRAINER_PARTNER(PARTNER_STEVEN_TEST)] =
     {
+        [TRAINER_SLIDE_BEFORE_FIRST_TURN] = COMPOUND_STRING("Trainer Partner: This message plays before the first turn.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_PLAYER_LANDS_FIRST_CRITICAL_HIT] = COMPOUND_STRING("Trainer Partner: This message plays after the player lands their first critical hit.{PAUSE_UNTIL_PRESS}"),
         [TRAINER_SLIDE_ENEMY_LANDS_FIRST_CRITICAL_HIT] = COMPOUND_STRING("Trainer Partner: This message plays after the enemy lands their first critical hit.{PAUSE_UNTIL_PRESS}"),
         [TRAINER_SLIDE_PLAYER_LANDS_FIRST_SUPER_EFFECTIVE_HIT] = COMPOUND_STRING("Trainer Partner: This message plays after the player lands their first super effective hit.{PAUSE_UNTIL_PRESS}"),
         [TRAINER_SLIDE_PLAYER_LANDS_FIRST_DOWN] = COMPOUND_STRING("Trainer Partner: This message plays after the player KOs one enemy mon.{PAUSE_UNTIL_PRESS}"),

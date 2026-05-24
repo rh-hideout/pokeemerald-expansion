@@ -13,10 +13,10 @@ struct MessageStatus
 void SetTrainerSlideMessage(enum DifficultyLevel difficulty, u32 trainerId, u32 slideId);
 enum TrainerSlideTargets ShouldDoTrainerSlide(enum BattlerId battler, enum TrainerSlideType slideId);
 void TryInitializeFirstSTABMoveTrainerSlide(enum BattlerId battlerDef, enum BattlerId battlerAtk, enum BattleSide side, enum Type moveType);
-void TryInitializeTrainerSlidePlayerLandsFirstCriticalHit(u32 target);
-void TryInitializeTrainerSlideEnemyLandsFirstCriticalHit(u32 target);
-void TryInitializeTrainerSlideLandsFirstSuperEffectiveHit(u32 target, enum BattleSide side);
-void TryInitializeTrainerSlideMonUnaffected(u32 target, enum BattleSide side);
+void TryInitializeTrainerSlidePlayerLandsFirstCriticalHit(enum BattlerId target);
+void TryInitializeTrainerSlideEnemyLandsFirstCriticalHit(enum BattlerId target);
+void TryInitializeTrainerSlideLandsFirstSuperEffectiveHit(enum BattlerId battlerDef, enum BattlerId battlerAtk);
+void TryInitializeTrainerSlideMonUnaffected(enum BattlerId battlerDef, enum BattlerId battlerAtk);
 bool32 IsTrainerSlideInitialized(enum BattlerId battler, enum TrainerSlideType slideId);
 bool32 IsTrainerSlidePlayed(enum BattlerId battler, enum TrainerSlideType slideId);
 void InitalizeTrainerSlide(enum BattlerId battler, enum TrainerSlideType slideId);

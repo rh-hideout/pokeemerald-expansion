@@ -2,7 +2,33 @@
 #include "test/battle.h"
 #include "battle_setup.h"
 
+#define TRAINER_RED_TEST    1
+#define TRAINER_LEAF_TEST   2
+#define PARTNER_STEVEN_TEST 1
+
+static const u8* const sTestTrainerSlides[DIFFICULTY_COUNT][MAX_TRAINERS_COUNT_EMERALD + PARTNER_COUNT][TRAINER_SLIDE_COUNT] =
+{
+#include "../test/battle/trainer_slides.h"
+};
+
+static const u8* const GetTestTrainerSlideMessage(u16 trainerId, enum TrainerSlideType slideId)
+{
+    return sTestTrainerSlides[DIFFICULTY_NORMAL][trainerId][slideId];
+}
+
 // SINGLES TESTS START
+/*
+    TRAINER_SLIDE_PLAYER_MON_UNAFFECTED,
+    TRAINER_SLIDE_PLAYER_LAST_SWITCHIN,
+    TRAINER_SLIDE_PLAYER_LAST_HALF_HP,
+    TRAINER_SLIDE_PLAYER_LAST_LOW_HP,
+    TRAINER_SLIDE_PLAYER_USES_MON_AND_MOVE,
+    TRAINER_SLIDE_ENEMY_USES_MON_AND_MOVE,
+    TRAINER_SLIDE_PLAYER_SWITCHES_CERTAIN_MON,
+    TRAINER_SLIDE_ENEMY_SWITCHES_CERTAIN_MON,
+    TRAINER_SLIDE_PLAYER_CERTAIN_MON_FORM_CHANGE,
+    TRAINER_SLIDE_ENEMY_CERTAIN_MON_FORM_CHANGE,
+*/
 AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Before First Turn")
 {
     GIVEN {
@@ -52,6 +78,42 @@ AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Enemy Lands First Critical Hit")
     }
 }
 
+AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Player Lands First Super Effective Hit")
+{
+    GIVEN {
+        FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
+        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_PLAYER_LANDS_FIRST_SUPER_EFFECTIVE_HIT);
+        ASSUME(GetMoveType(MOVE_BITE) == TYPE_DARK);
+        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 0) == TYPE_PSYCHIC);
+        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 0) == TYPE_PSYCHIC);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_BITE); }
+    } SCENE {
+        MESSAGE("It's super effective!");
+        MESSAGE("Trainer A: This message plays after the player lands their first super effective hit.{PAUSE_UNTIL_PRESS}");
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Enemy Lands First Super Effective Hit")
+{
+    GIVEN {
+        FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
+        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ENEMY_LANDS_FIRST_SUPER_EFFECTIVE_HIT);
+        ASSUME(GetMoveType(MOVE_BITE) == TYPE_DARK);
+        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 0) == TYPE_PSYCHIC);
+        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 0) == TYPE_PSYCHIC);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { EXPECT_MOVE(opponent, MOVE_BITE); }
+    } SCENE {
+        MESSAGE("It's super effective!");
+        MESSAGE("Trainer A: This message plays after the enemy lands their first super effective hit.{PAUSE_UNTIL_PRESS}");
+    }
+}
+
 AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Player Lands First STAB Hit")
 {
     GIVEN {
@@ -69,21 +131,19 @@ AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Player Lands First STAB Hit")
     }
 }
 
-AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Player Lands First Super Effective Hit")
+AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Enemy Lands First STAB Hit")
 {
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
-        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_PLAYER_LANDS_FIRST_SUPER_EFFECTIVE_HIT);
-        ASSUME(GetMoveType(MOVE_BITE) == TYPE_DARK);
-        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 0) == TYPE_PSYCHIC);
-        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 0) == TYPE_PSYCHIC);
+        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ENEMY_LANDS_FIRST_STAB_MOVE);
+        ASSUME((GetMoveType(MOVE_VINE_WHIP)) == GetSpeciesType(SPECIES_BULBASAUR, 0));
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_BULBASAUR);
     } WHEN {
-        TURN { MOVE(player, MOVE_BITE); }
+        TURN { EXPECT_MOVE(opponent, MOVE_VINE_WHIP); }
     } SCENE {
-        MESSAGE("It's super effective!");
-        MESSAGE("Trainer A: This message plays after the player lands their first super effective hit.{PAUSE_UNTIL_PRESS}");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_VINE_WHIP, opponent);
+        MESSAGE("Trainer A: Enemy lands their first STAB move.{PAUSE_UNTIL_PRESS}");
     }
 }
 
@@ -103,6 +163,22 @@ AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Player Lands First Down")
     }
 }
 
+AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Enemy Lands First Down")
+{
+    GIVEN {
+        FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
+        VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ENEMY_LANDS_FIRST_DOWN);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_HEALING_WISH); SEND_OUT(player,1); }
+    } SCENE {
+        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("Trainer A: This message plays after the enemy KOs one player mon.{PAUSE_UNTIL_PRESS}");
+    }
+}
+
 AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Enemy Mon Unaffected")
 {
     GIVEN {
@@ -111,7 +187,7 @@ AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Enemy Mon Unaffected")
         WITH_CONFIG(B_SHEER_COLD_IMMUNITY, GEN_7);
         ASSUME(GetSpeciesType(SPECIES_GLALIE, 0) == TYPE_ICE);
         PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_GLALIE) { Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_GLALIE);
     } WHEN {
         TURN { MOVE(player, MOVE_SHEER_COLD); }
     } SCENE {
@@ -160,7 +236,7 @@ AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Enemy Last Low Hp")
         VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ENEMY_LAST_LOW_HP);
         ASSUME(GetMoveEffect(MOVE_FALSE_SWIPE) == EFFECT_FALSE_SWIPE);
         PLAYER(SPECIES_WOBBUFFET) { Attack(999); Speed(1); }
-        OPPONENT(SPECIES_WOBBUFFET) { Defense(1); Speed(2); Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Defense(1); Speed(2); }
     } WHEN {
         TURN { MOVE(player, MOVE_FALSE_SWIPE); }
     } SCENE {
@@ -174,7 +250,7 @@ AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Enemy Mega Evolution")
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
         VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ENEMY_MEGA_EVOLUTION);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_LOPUNNY) { Item(ITEM_LOPUNNITE); Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_LOPUNNY) { Item(ITEM_LOPUNNITE); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
@@ -216,29 +292,29 @@ AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Enemy Dynamax")
     }
 }
 
-SINGLE_BATTLE_TEST("Trainer Slide: Singles: Enemy Tera")
+AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Enemy Tera")
 {
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
         VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ENEMY_TERA);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
     } WHEN {
-            TURN { MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
+            TURN { EXPECT_MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
     } SCENE {
-        MESSAGE("This message plays before the enemy activates the Tera gimmick.{PAUSE_UNTIL_PRESS}");
+        MESSAGE("Trainer A: This message plays before the enemy activates the Tera gimmick.{PAUSE_UNTIL_PRESS}");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, opponent);
     }
 }
 
-SINGLE_BATTLE_TEST("Trainer Slide: Singles: Player Mega Evolution")
+AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Player Mega Evolution")
 {
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
         VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_PLAYER_MEGA_EVOLUTION);
         PLAYER(SPECIES_LOPUNNY) {Item(ITEM_LOPUNNITE); };
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
@@ -248,13 +324,13 @@ SINGLE_BATTLE_TEST("Trainer Slide: Singles: Player Mega Evolution")
     }
 }
 
-SINGLE_BATTLE_TEST("Trainer Slide: Singles: Player Z Move")
+AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Player Z Move")
 {
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
         VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_PLAYER_Z_MOVE);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
     } WHEN {
         TURN { MOVE(player, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE); }
     } SCENE {
@@ -265,13 +341,13 @@ SINGLE_BATTLE_TEST("Trainer Slide: Singles: Player Z Move")
     }
 }
 
-SINGLE_BATTLE_TEST("Trainer Slide: Singles: Player Dynamax")
+AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Player Dynamax")
 {
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
         VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_PLAYER_DYNAMAX);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
     } WHEN {
             TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_DYNAMAX); }
     } SCENE {
@@ -280,13 +356,13 @@ SINGLE_BATTLE_TEST("Trainer Slide: Singles: Player Dynamax")
     }
 }
 
-SINGLE_BATTLE_TEST("Trainer Slide: Singles: Player Tera")
+AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Player Tera")
 {
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
         VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_PLAYER_TERA);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
     } WHEN {
             TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
     } SCENE {
@@ -298,6 +374,26 @@ SINGLE_BATTLE_TEST("Trainer Slide: Singles: Player Tera")
 // SINGLES TESTS END
 
 // DOUBLES TESTS START - Tests message activation & message not activating twice
+/*
+    TRAINER_SLIDE_ENEMY_TERA,
+    TRAINER_SLIDE_ENEMY_LANDS_FIRST_SUPER_EFFECTIVE_HIT,
+    TRAINER_SLIDE_ENEMY_LANDS_FIRST_STAB_MOVE,
+    TRAINER_SLIDE_ENEMY_LANDS_FIRST_DOWN,
+    TRAINER_SLIDE_PLAYER_MON_UNAFFECTED,
+    TRAINER_SLIDE_PLAYER_LAST_SWITCHIN,
+    TRAINER_SLIDE_PLAYER_LAST_HALF_HP,
+    TRAINER_SLIDE_PLAYER_LAST_LOW_HP,
+    TRAINER_SLIDE_PLAYER_MEGA_EVOLUTION,
+    TRAINER_SLIDE_PLAYER_Z_MOVE,
+    TRAINER_SLIDE_PLAYER_DYNAMAX,
+    TRAINER_SLIDE_PLAYER_TERA,
+    TRAINER_SLIDE_PLAYER_USES_MON_AND_MOVE,
+    TRAINER_SLIDE_ENEMY_USES_MON_AND_MOVE,
+    TRAINER_SLIDE_PLAYER_SWITCHES_CERTAIN_MON,
+    TRAINER_SLIDE_ENEMY_SWITCHES_CERTAIN_MON,
+    TRAINER_SLIDE_PLAYER_CERTAIN_MON_FORM_CHANGE,
+    TRAINER_SLIDE_ENEMY_CERTAIN_MON_FORM_CHANGE,
+*/
 AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Before First Turn")
 {
     GIVEN {
@@ -417,7 +513,7 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Player Lands First Down")
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
-        OPPONENT(SPECIES_WYNAUT) { Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN { EXPECT_MOVE(opponentLeft, MOVE_HEALING_WISH); EXPECT_SEND_OUT(opponentLeft,2); }
     } SCENE {
@@ -438,8 +534,8 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Enemy Mon Unaffected")
         ASSUME(GetSpeciesType(SPECIES_GLALIE, 0) == TYPE_ICE);
         PLAYER(SPECIES_WYNAUT);
         PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_GLALIE) { Moves(MOVE_CELEBRATE); }
-        OPPONENT(SPECIES_GLALIE) { Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_GLALIE);
+        OPPONENT(SPECIES_GLALIE);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SHEER_COLD); }
     } SCENE {
@@ -483,7 +579,7 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Enemy Last Half Hp")
         PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(4); Moves(MOVE_MEMENTO); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(3); Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(3); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SUPER_FANG, target: opponentRight); }
     } SCENE {
@@ -503,7 +599,7 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Enemy Last Low Hp")
         PLAYER(SPECIES_WOBBUFFET) { Attack(999); Speed(2); }
         PLAYER(SPECIES_WOBBUFFET) { Attack(999); Speed(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Defense(1); Speed(4); Moves(MOVE_MEMENTO);}
-        OPPONENT(SPECIES_WOBBUFFET) { Defense(1); Speed(3); Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Defense(1); Speed(3); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FALSE_SWIPE, target: opponentRight); }
     } SCENE {
@@ -522,7 +618,7 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Enemy Mega Evolution")
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_LOPUNNY) { Item(ITEM_LOPUNNITE); };
-        OPPONENT(SPECIES_LOPUNNY) { Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_LOPUNNY);
     } WHEN {
         TURN { EXPECT_MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
@@ -543,7 +639,7 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Enemy Z Move")
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
     } WHEN {
         TURN { EXPECT_MOVE(opponentLeft, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE); }
     } SCENE {
@@ -579,6 +675,26 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Enemy Dynamax")
 // DOUBLES TESTS END
 
 // MULTI TESTS START
+/*
+    TRAINER_SLIDE_ENEMY_TERA,
+    TRAINER_SLIDE_ENEMY_LANDS_FIRST_SUPER_EFFECTIVE_HIT,
+    TRAINER_SLIDE_ENEMY_LANDS_FIRST_STAB_MOVE,
+    TRAINER_SLIDE_ENEMY_LANDS_FIRST_DOWN,
+    TRAINER_SLIDE_PLAYER_MON_UNAFFECTED,
+    TRAINER_SLIDE_PLAYER_LAST_SWITCHIN,
+    TRAINER_SLIDE_PLAYER_LAST_HALF_HP,
+    TRAINER_SLIDE_PLAYER_LAST_LOW_HP,
+    TRAINER_SLIDE_PLAYER_MEGA_EVOLUTION,
+    TRAINER_SLIDE_PLAYER_Z_MOVE,
+    TRAINER_SLIDE_PLAYER_DYNAMAX,
+    TRAINER_SLIDE_PLAYER_TERA,
+    TRAINER_SLIDE_PLAYER_USES_MON_AND_MOVE,
+    TRAINER_SLIDE_ENEMY_USES_MON_AND_MOVE,
+    TRAINER_SLIDE_PLAYER_SWITCHES_CERTAIN_MON,
+    TRAINER_SLIDE_ENEMY_SWITCHES_CERTAIN_MON,
+    TRAINER_SLIDE_PLAYER_CERTAIN_MON_FORM_CHANGE,
+    TRAINER_SLIDE_ENEMY_CERTAIN_MON_FORM_CHANGE,
+*/
 AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Before First Turn")
 {
     GIVEN {
@@ -605,7 +721,7 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Player Lands First Critical Hit")
         VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_PLAYER_LANDS_FIRST_CRITICAL_HIT);
         ASSUME(GetMoveEffect(MOVE_LASER_FOCUS) == EFFECT_LASER_FOCUS);
         PLAYER(SPECIES_WOBBUFFET);
-        PARTNER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
+        PARTNER(SPECIES_WOBBUFFET);
         OPPONENT_A(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
         OPPONENT_B(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
     } WHEN {
@@ -665,7 +781,7 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Player Lands First STAB Hit")
         VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_PLAYER_LANDS_FIRST_STAB_MOVE);
         ASSUME((GetMoveType(MOVE_EARTHQUAKE)) == GetSpeciesType(SPECIES_SANDSHREW, 0));
         PLAYER(SPECIES_SANDSHREW);
-        PARTNER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
+        PARTNER(SPECIES_WOBBUFFET);
         OPPONENT_A(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
         OPPONENT_B(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
     } WHEN {
@@ -689,9 +805,9 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Player Lands First Super Effective H
         ASSUME(GetSpeciesType(SPECIES_GOLEM, 0) == TYPE_ROCK);
         ASSUME(GetSpeciesType(SPECIES_GOLEM, 1) == TYPE_GROUND);
         PLAYER(SPECIES_SANDSHREW);
-        PARTNER(SPECIES_GOLEM) { Moves(MOVE_CELEBRATE); }
-        OPPONENT_A(SPECIES_GOLEM) { Moves(MOVE_CELEBRATE); }
-        OPPONENT_B(SPECIES_GOLEM) { Moves(MOVE_CELEBRATE); }
+        PARTNER(SPECIES_GOLEM);
+        OPPONENT_A(SPECIES_GOLEM);
+        OPPONENT_B(SPECIES_GOLEM);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_EARTHQUAKE); }
     } SCENE {
@@ -713,9 +829,9 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Player Lands First Down")
         PARTNER(SPECIES_RATICATE) { Speed(2); }
         PARTNER(SPECIES_RATTATA) { Speed(2); }
         OPPONENT_A(SPECIES_WOBBUFFET) { Speed(4); }
-        OPPONENT_A(SPECIES_WYNAUT) { Speed(4); Moves(MOVE_CELEBRATE); }
+        OPPONENT_A(SPECIES_WYNAUT) { Speed(4); }
         OPPONENT_B(SPECIES_WYNAUT) { Speed(3); }
-        OPPONENT_B(SPECIES_WOBBUFFET) { Speed(3); Moves(MOVE_CELEBRATE); }
+        OPPONENT_B(SPECIES_WOBBUFFET) { Speed(3); }
     } WHEN {
         TURN { 
             EXPECT_MOVE(playerRight, MOVE_HEALING_WISH); EXPECT_SEND_OUT(playerRight,1); 
@@ -741,9 +857,9 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Enemy Mon Unaffected")
         WITH_CONFIG(B_SHEER_COLD_IMMUNITY, GEN_7);
         ASSUME(GetSpeciesType(SPECIES_GLALIE, 0) == TYPE_ICE);
         PLAYER(SPECIES_WYNAUT);
-        PARTNER(SPECIES_GASTLY) { Moves(MOVE_CELEBRATE); }
-        OPPONENT_A(SPECIES_GENGAR) { Moves(MOVE_CELEBRATE); }
-        OPPONENT_B(SPECIES_HAUNTER) { Moves(MOVE_CELEBRATE); }
+        PARTNER(SPECIES_GASTLY);
+        OPPONENT_A(SPECIES_GENGAR);
+        OPPONENT_B(SPECIES_HAUNTER);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_BOOMBURST); }
     } SCENE {
@@ -767,9 +883,9 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Enemy Last Switchin")
         PARTNER(SPECIES_RATICATE) { Speed(3); }
         PARTNER(SPECIES_RATTATA) { Speed(3); }
         OPPONENT_A(SPECIES_WOBBUFFET) { Speed(4); }
-        OPPONENT_A(SPECIES_WYNAUT) { Speed(4); Moves(MOVE_CELEBRATE); }
+        OPPONENT_A(SPECIES_WYNAUT) { Speed(4); }
         OPPONENT_B(SPECIES_WYNAUT) { Speed(2); }
-        OPPONENT_B(SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_CELEBRATE); }
+        OPPONENT_B(SPECIES_WOBBUFFET) { Speed(2); }
     } WHEN {
         TURN { 
             EXPECT_MOVE(opponentLeft, MOVE_MEMENTO, target: playerRight); EXPECT_SEND_OUT(opponentLeft,1); 
@@ -897,8 +1013,8 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Enemy Dynamax")
         VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_ENEMY_DYNAMAX);
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
         PARTNER(SPECIES_WOBBUFFET) { Speed(2); DynamaxLevel(10); }
-        OPPONENT_A(SPECIES_WOBBUFFET) { Speed(3); Moves(MOVE_CELEBRATE); DynamaxLevel(dynamaxLevelA); }
-        OPPONENT_B(SPECIES_WOBBUFFET) { Speed(1); Moves(MOVE_CELEBRATE); DynamaxLevel(dynamaxLevelB); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { Speed(3); DynamaxLevel(dynamaxLevelA); }
+        OPPONENT_B(SPECIES_WOBBUFFET) { Speed(1); DynamaxLevel(dynamaxLevelB); }
     } WHEN {
             TURN { 
                 if (dynamaxLevelA == 10)
