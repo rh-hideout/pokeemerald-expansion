@@ -27,12 +27,6 @@
         [TRAINER_SLIDE_OPPONENT_LAST_SWITCHIN] = COMPOUND_STRING("Trainer A: This message plays after the opponent switches in their last Pokemon.{PAUSE_UNTIL_PRESS}"),
         [TRAINER_SLIDE_OPPONENT_LAST_HALF_HP] = COMPOUND_STRING("Trainer A: Opponent last Mon has < 51% HP.{PAUSE_UNTIL_PRESS}"),
         [TRAINER_SLIDE_OPPONENT_LAST_LOW_HP] = COMPOUND_STRING("Trainer A: Opponent last Mon has < 26% HP.{PAUSE_UNTIL_PRESS}"),
-        [TRAINER_SLIDE_PLAYER_USES_MON_AND_MOVE] = COMPOUND_STRING("Trainer A: This message plays before the player uses a specific Pokemon and move.{PAUSE_UNTIL_PRESS}"),
-        [TRAINER_SLIDE_ENEMY_USES_MON_AND_MOVE] = COMPOUND_STRING("Trainer A: This message plays before the enemy uses a specific Pokemon and move.{PAUSE_UNTIL_PRESS}"),
-        [TRAINER_SLIDE_PLAYER_SWITCHES_CERTAIN_MON] = COMPOUND_STRING("Trainer A: This message plays after the player switches in a specific Pokemon.{PAUSE_UNTIL_PRESS}"),
-        [TRAINER_SLIDE_ENEMY_SWITCHES_CERTAIN_MON] = COMPOUND_STRING("Trainer A: This message plays after the enemy switches in a specific Pokemon.{PAUSE_UNTIL_PRESS}"),
-        [TRAINER_SLIDE_PLAYER_CERTAIN_MON_FORM_CHANGE] = COMPOUND_STRING("Trainer A: This message plays after a specific player Pokemon undergoes a form change.{PAUSE_UNTIL_PRESS}"),
-        [TRAINER_SLIDE_ENEMY_CERTAIN_MON_FORM_CHANGE] = COMPOUND_STRING("Trainer A: This message plays after a specific enemy Pokemon undergoes a form change.{PAUSE_UNTIL_PRESS}"),
     },
     [TRAINER_RED_TEST] =
     {
@@ -61,12 +55,6 @@
         [TRAINER_SLIDE_OPPONENT_LAST_SWITCHIN] = COMPOUND_STRING("Trainer B: This message plays after the opponent switches in their last Pokemon.{PAUSE_UNTIL_PRESS}"),
         [TRAINER_SLIDE_OPPONENT_LAST_HALF_HP] = COMPOUND_STRING("Trainer B: Opponent last Mon has < 51% HP.{PAUSE_UNTIL_PRESS}"),
         [TRAINER_SLIDE_OPPONENT_LAST_LOW_HP] = COMPOUND_STRING("Trainer B: Opponent last Mon has < 26% HP.{PAUSE_UNTIL_PRESS}"),
-        [TRAINER_SLIDE_PLAYER_USES_MON_AND_MOVE] = COMPOUND_STRING("Trainer B: This message plays before the player uses a specific Pokemon and move.{PAUSE_UNTIL_PRESS}"),
-        [TRAINER_SLIDE_ENEMY_USES_MON_AND_MOVE] = COMPOUND_STRING("Trainer B: This message plays before the enemy uses a specific Pokemon and move.{PAUSE_UNTIL_PRESS}"),
-        [TRAINER_SLIDE_PLAYER_SWITCHES_CERTAIN_MON] = COMPOUND_STRING("Trainer B: This message plays after the player switches in a specific Pokemon.{PAUSE_UNTIL_PRESS}"),
-        [TRAINER_SLIDE_ENEMY_SWITCHES_CERTAIN_MON] = COMPOUND_STRING("Trainer B: This message plays after the enemy switches in a specific Pokemon.{PAUSE_UNTIL_PRESS}"),
-        [TRAINER_SLIDE_PLAYER_CERTAIN_MON_FORM_CHANGE] = COMPOUND_STRING("Trainer B: This message plays after a specific player Pokemon undergoes a form change.{PAUSE_UNTIL_PRESS}"),
-        [TRAINER_SLIDE_ENEMY_CERTAIN_MON_FORM_CHANGE] = COMPOUND_STRING("Trainer B: This message plays after a specific enemy Pokemon undergoes a form change.{PAUSE_UNTIL_PRESS}"),
     },
     [TRAINER_PARTNER(PARTNER_STEVEN_TEST)] =
     {
@@ -95,11 +83,5 @@
         [TRAINER_SLIDE_OPPONENT_LAST_SWITCHIN] = COMPOUND_STRING("Trainer Partner: This message plays after the opponent switches in their last Pokemon.{PAUSE_UNTIL_PRESS}"),
         [TRAINER_SLIDE_OPPONENT_LAST_HALF_HP] = COMPOUND_STRING("Trainer Partner: Opponent last Mon has < 51% HP.{PAUSE_UNTIL_PRESS}"),
         [TRAINER_SLIDE_OPPONENT_LAST_LOW_HP] = COMPOUND_STRING("Trainer Partner: Opponent last Mon has < 26% HP.{PAUSE_UNTIL_PRESS}"),
-        [TRAINER_SLIDE_PLAYER_USES_MON_AND_MOVE] = COMPOUND_STRING("Trainer Partner: This message plays before the player uses a specific Pokemon and move.{PAUSE_UNTIL_PRESS}"),
-        [TRAINER_SLIDE_ENEMY_USES_MON_AND_MOVE] = COMPOUND_STRING("Trainer Partner: This message plays before the enemy uses a specific Pokemon and move.{PAUSE_UNTIL_PRESS}"),
-        [TRAINER_SLIDE_PLAYER_SWITCHES_CERTAIN_MON] = COMPOUND_STRING("Trainer Partner: This message plays after the player switches in a specific Pokemon.{PAUSE_UNTIL_PRESS}"),
-        [TRAINER_SLIDE_ENEMY_SWITCHES_CERTAIN_MON] = COMPOUND_STRING("Trainer Partner: This message plays after the enemy switches in a specific Pokemon.{PAUSE_UNTIL_PRESS}"),
-        [TRAINER_SLIDE_PLAYER_CERTAIN_MON_FORM_CHANGE] = COMPOUND_STRING("Trainer Partner: This message plays after a specific player Pokemon undergoes a form change.{PAUSE_UNTIL_PRESS}"),
-        [TRAINER_SLIDE_ENEMY_CERTAIN_MON_FORM_CHANGE] = COMPOUND_STRING("Trainer Partner: This message plays after a specific enemy Pokemon undergoes a form change.{PAUSE_UNTIL_PRESS}"),
     },
 },
