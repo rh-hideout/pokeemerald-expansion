@@ -1,10 +1,15 @@
 #include "global.h"
+#include "banking_system.h"
+#include "event_object_movement.h"
+#include "field_player_avatar.h"
+#include "gba/defines.h"
 #include "main.h"
 #include "event_data.h"
 #include "field_effect.h"
 #include "field_specials.h"
 #include "item.h"
 #include "menu.h"
+#include "overworld.h"
 #include "palette.h"
 #include "script.h"
 #include "script_menu.h"
@@ -24,6 +29,7 @@
 #include "constants/songs.h"
 
 #include "data/script_menu.h"
+#include "window.h"
 
 struct DynamicListMenuEventArgs
 {
@@ -40,6 +46,17 @@ struct DynamicListMenuEventCollection
     DynamicListCallback OnSelectionChanged;
     DynamicListCallback OnDestroy;
 };
+
+struct NumericInput {
+    u16 value;
+    u16 min;
+    u16 max;
+    u8 digit;
+    u8 templStrVar:4;
+    u8 numStrVar:4;
+};
+
+static u8 sNumericInputWindowId;
 
 static EWRAM_DATA u8 sProcessInputDelay = 0;
 static EWRAM_DATA u8 sDynamicMenuEventId = 0;
@@ -69,6 +86,11 @@ static void MultichoiceDynamicEventShowItem_OnInit(struct DynamicListMenuEventAr
 static void MultichoiceDynamicEventShowItem_OnSelectionChanged(struct DynamicListMenuEventArgs *eventArgs);
 static void MultichoiceDynamicEventShowItem_OnDestroy(struct DynamicListMenuEventArgs *eventArgs);
 
+// Numeric Input
+static u32 CreateNumericInputWindow(s16 x, s16 y, u8 width);
+static bool32 HandleNumericInput(struct NumericInput *input);
+static void PrintNumericInputAmount(u8 windowId, struct NumericInput input);
+
 static const struct DynamicListMenuEventCollection sDynamicListMenuEventCollections[] =
 {
     [DYN_MULTICHOICE_CB_DEBUG] =
@@ -95,6 +117,30 @@ static const struct ListMenuTemplate sScriptableListMenuTemplate =
     .lettersSpacing = 1,
     .scrollMultiple = LIST_NO_MULTIPLE_SCROLL,
     .fontId = FONT_NORMAL,
+};
+
+
+static const struct WindowTemplate sSavingsWithdrawalWindowTemplate = {
+    .bg = 0,
+    .tilemapLeft = 0,
+    .tilemapTop = 0,
+    .width = 13,
+    .height = 2,
+    .paletteNum = 15,
+    .baseBlock = 1,
+};
+
+static const s32 sPowersOfTen[] = {
+    1,
+    10,
+    100,
+    1000,
+    10000,
+    100000,
+    1000000,
+    10000000,
+    100000000,
+    1000000000,
 };
 
 bool8 ScriptMenu_MultichoiceDynamic(u8 left, u8 top, u8 argc, struct ListMenuItem *items, bool8 ignoreBPress, u8 maxBeforeScroll, u32 initialRow, u32 callbackSet)
@@ -1307,3 +1353,181 @@ u16 GetSelectedSeagallopDestination(void)
     }
     return SEAGALLOP_VERMILION_CITY;
 }
+
+// Numeric Input
+
+struct NumericInput ReadNumericInputFromTask(u32 taskId)
+{
+  struct NumericInput numericInput;
+  _Static_assert(sizeof(numericInput) <= (sizeof(gTasks[taskId].data) - sizeof(gTasks[taskId].data[0])), "");
+  memcpy(&numericInput, &gTasks[taskId].data[1], sizeof(numericInput));
+  return numericInput;
+}
+
+void WriteNumericInputToTask(u32 taskId, const struct NumericInput *numericInput)
+{
+  _Static_assert(sizeof(*numericInput) <= (sizeof(gTasks[taskId].data) - sizeof(gTasks[taskId].data[0])), "");
+  memcpy(&gTasks[taskId].data[1], numericInput, sizeof(*numericInput));
+}
+
+static u32 CreateNumericInputWindow(s16 x, s16 y, u8 width)
+{
+    struct WindowTemplate template;
+    u32 windowId;
+    SetWindowTemplateFields(&template, 0, x, y, width, 2, 15, 0x100);
+    windowId = AddWindow(&template);
+    DrawStdWindowFrame(windowId, FALSE);
+    CopyWindowToVram(windowId, COPYWIN_FULL);
+    return windowId;
+}
+
+static void PrintNumericInputAmount(u8 windowId, struct NumericInput input)
+{
+    u8 numberBuffer[32];
+    u8 formattedBuffer[256];
+
+    ConvertIntToDecimalStringN( numberBuffer, input.value, STR_CONV_MODE_LEADING_ZEROS, Util_CountDigits(input.max));
+
+    formattedBuffer[0] = EOS;
+
+    u32 numDigits = StringLength(numberBuffer);
+    u32 highlightIdx = numDigits - input.digit - 1;
+
+    for (u32 i = 0; i < numDigits; i++)
+    {
+        if (i == highlightIdx)
+            StringAppend(formattedBuffer, COMPOUND_STRING("{COLOR RED}{SHADOW LIGHT_GRAY}"));
+
+        StringAppend(formattedBuffer, (u8[]){ numberBuffer[i], EOS });
+
+        if (i == highlightIdx)
+            StringAppend(formattedBuffer, COMPOUND_STRING("{COLOR DARK_GRAY}{SHADOW LIGHT_GRAY}"));
+    }
+
+    StringCopy(GetStringVar(input.numStrVar), formattedBuffer);
+
+    StringExpandPlaceholders(gStringVar4, GetStringVar(input.templStrVar));
+
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
+    AddTextPrinterParameterized(windowId, FONT_NORMAL, gStringVar4, 1, 2, 0, NULL);
+}
+
+static bool32 HandleNumericInput(struct NumericInput *input)
+{
+    u32 original = input->value;
+    u16 keypress = JOY_REPEAT(DPAD_ANY);
+    u32 maxDigits = Util_CountDigits(input->max);
+
+    if (keypress & (DPAD_LEFT | DPAD_RIGHT))
+    {
+        if (keypress & DPAD_RIGHT)
+            input->digit--;
+        if (keypress & DPAD_LEFT)
+            input->digit++;
+
+        input->digit = ClampSigned(input->digit, 0, maxDigits - 1);
+        return TRUE;
+    }
+
+    u32 place = sPowersOfTen[input->digit];
+    u32 currentDigit = (input->value / place) % 10;
+
+    if (keypress & DPAD_UP)
+        currentDigit = (currentDigit + 1) % 10;
+    else if (keypress & DPAD_DOWN)
+        currentDigit = (currentDigit + 9) % 10;
+    else
+        return FALSE;
+
+    input->value = input->value
+        - ((input->value / place) % 10) * place
+        + currentDigit * place;
+
+    input->value = ClampSigned(input->value, input->min, input->max);
+
+    return input->value != original;
+}
+
+static void Task_HandleNumericInput(u8 taskId)
+{
+    struct NumericInput input = ReadNumericInputFromTask(taskId);
+    if (HandleNumericInput(&input))
+    {
+        WriteNumericInputToTask(taskId, &input);
+        PrintNumericInputAmount(sNumericInputWindowId, input);
+    }
+    else if (JOY_NEW(A_BUTTON | B_BUTTON))
+    {
+        if (JOY_NEW(B_BUTTON))
+            input.value = 0;
+        gSpecialVar_Result = input.value;
+        ClearStdWindowAndFrame(sNumericInputWindowId, TRUE);
+        UnfreezeObjectEvents();
+        ScriptContext_Enable();
+        UnlockPlayerFieldControls();
+        DestroyTask(taskId);
+    }
+}
+
+void Task_ShowNumericInput(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+    s16* tState = &data[0];
+
+    switch (*tState)
+    {
+    case 0:
+        if (!IsOverworldLinkActive())
+        {
+            FreezeObjectEvents();
+            PlayerFreeze();
+            StopPlayerAvatar();
+            LockPlayerFieldControls();
+        }
+        (*tState)++;
+        break;
+    case 1:
+        sNumericInputWindowId = CreateNumericInputWindow(15, 2, 16);
+        (*tState)++;
+        break;
+    case 2:
+        PrintNumericInputAmount(sNumericInputWindowId, ReadNumericInputFromTask(taskId));
+        (*tState)++;
+        break;
+    case 3:
+        gTasks[taskId].func = Task_HandleNumericInput;
+        break;
+    }
+}
+
+void ScrCmd_buffernumericinputstring(struct ScriptContext* ctx)
+{
+    const u8* templStr = (const u8*)ScriptReadWord(ctx);
+    u8 strVarIndex = ScriptReadByte(ctx);
+    StringCopy(GetStringVar(strVarIndex), templStr);
+}
+
+void ScrCmd_getnumericinput(struct ScriptContext* ctx)
+{
+    u16 min = ScriptReadHalfword(ctx);
+    u16 max = ScriptReadHalfword(ctx);
+    u16 val = ScriptReadHalfword(ctx);
+    u8 templStrVar = ScriptReadByte(ctx);
+    u8 numStrVar = ScriptReadByte(ctx);
+
+    u8 taskId = CreateTask(Task_ShowNumericInput, 0);
+    WriteNumericInputToTask(taskId, &(const struct NumericInput){ val, min, max, 0, templStrVar, numStrVar});
+}
+
+void ScrCmd_getbankinginput(struct ScriptContext* ctx)
+{
+    enum BankingMode mode = ScriptReadByte(ctx);
+    u8 templStrVar = ScriptReadByte(ctx);
+    u8 numStrVar = ScriptReadByte(ctx);
+
+    u16 max = GetTransactionMaxAmount(mode);
+
+    u8 taskId = CreateTask(Task_ShowNumericInput, 0);
+    WriteNumericInputToTask(taskId, &(const struct NumericInput){ max, 0, max, 0, templStrVar, numStrVar});
+}
+

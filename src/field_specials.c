@@ -1,4 +1,5 @@
 #include "global.h"
+#include "banking_system.h"
 #include "debug.h"
 #include "malloc.h"
 #include "battle.h"
@@ -54,6 +55,7 @@
 #include "text_window.h"
 #include "tilesets.h"
 #include "tv.h"
+#include "util.h"
 #include "wallclock.h"
 #include "window.h"
 #include "constants/battle_frontier.h"

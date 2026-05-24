@@ -2109,4 +2109,9 @@
 
 	.macro trywakebattlersuproar
 	callnative BS_TryWakeBattlersUproar
+  .endm
+
+	.macro jumpifnotsavingmoney, ptr:req
+	callnative BS_JumpIfNotSavingMoney
+	.4byte \ptr
 	.endm

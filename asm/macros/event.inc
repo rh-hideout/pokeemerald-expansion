@@ -2946,3 +2946,132 @@
 	getbraillestringwidth \text
 	call EventScript_BrailleCursorWaitButton
 	.endm
+
+
+@ BANKING SYSTEM
+
+@ Copies the current Bank Balance into a string var
+.macro bufferbankbalancestring stringVarId:req
+  callnative ScrCmd_bufferbankbalancestring
+  stringvar \stringVarId
+.endm
+
+@ Compares the current bank balance with a user-provided value.
+@ Sets VAR_RESULT to FALSE if values is greater than the balance and TRUE if the value is less than or equal to the balance
+.macro comparebankbalance value:req
+  callnative ScrCmd_comparebankbalance
+  .4byte \value
+.endm
+
+@ Adds an amount into the bank
+@ NOTE: Does not accept VAR as argument
+.macro addtobank amount:req
+  callnative ScrCmd_addtobank
+  .4byte \amount
+.endm
+
+@ Removes an amount from the bank
+@ NOTE: Does not accept VAR as argument
+.macro removefrombank amount:req
+  callnative ScrCmd_removefrombank
+  .4byte \amount
+.endm
+
+@ Adds an amount into the bank using a VAR
+@ The argument should be a VAR
+.macro addtobankvar varId:req
+  callnative ScrCmd_addtobankvar
+  .2byte \varId
+.endm
+
+@ Removes an amount from the bank using a VAR
+.macro removefrombankvar varId:req
+  callnative ScrCmd_removefrombankvar
+  .2byte \varId
+.endm
+
+@ Shows the bank balance box at (x, y)
+.macro showbankbalancebox x:req, y:req
+  callnative ScrCmd_showbalancebox
+  .byte \x
+  .byte \y
+.endm
+
+@ Hides the bank balance box
+.macro hidebankbalancebox
+  callnative ScrCmd_hidebalancebox
+.endm
+
+@ Updates the bank balance box with current value
+.macro updatebankbalancebox
+  callnative ScrCmd_updatebankbalancebox
+.endm
+
+@ Purchases an item from sUniquePurchaseTable. Sets VAR_RESULT to the price of the item
+@ NOTE: The Amount is not deducted automatically
+.macro purchaseuniqueitem
+  callnative ScrCmd_purchaseuniqueitem
+.endm
+
+@ Purchases an item from sRepeatPurchaseTable. Sets VAR_RESULT to the price of the item
+@ NOTE: The Amount is not deducted automatically
+.macro purchaserepeatitem
+  callnative ScrCmd_purchaserepeatitem
+.endm
+
+@ Checks for pending banking purchases. If there is an item the player can recieve it sets VAR_RESULT to the item Id.
+@ If there is no valid purchase VAR_RESULT is set to ITEM_NONE
+.macro checkbankingpurchase
+  callnative ScrCmd_checkbankingpurchase
+.endm
+
+@ Gets the pending banking purchase item and stores the id in VAR_RESULT and quantity in VAR_0x8001.
+@ This does not give the item to the player.
+.macro getbankingpurchase
+  callnative ScrCmd_getbankingpurchase
+.endm
+
+.macro buffernumericinputstring templStr:req, stringVarId=STR_VAR_1
+  callnative ScrCmd_buffernumericinputstring
+	.4byte \templStr
+	stringvar \stringVarId
+.endm
+
+.macro setnumericinputdefault min=0, max=0, val=0, stringVarId=STR_VAR_1
+  callnative ScrCmd_setnumericinputdefault
+  .4byte \min
+  .4byte \max
+  .4byte \val
+  stringvar \stringVarId
+.endm
+
+.macro getnumericinput min:req, max:req, val:req, templStrVar=STR_VAR_1, numStrVar=STR_VAR_2
+  callnative ScrCmd_getnumericinput
+  .2byte \min
+  .2byte \max
+  .2byte \val
+  stringvar  \templStrVar
+  stringvar  \numStrVar
+.endm
+
+.macro getbankinginput mode:req, templStrVar=STR_VAR_1, numStrVar=STR_VAR_2
+  callnative ScrCmd_getbankinginput
+  .byte \mode
+  stringvar  \templStrVar
+  stringvar  \numStrVar
+.endm
+
+.macro addmoneyvar varId:req
+  callnative ScrCmd_addmoneyvar, requests_effects=1
+  .2byte \varId
+.endm
+
+.macro removemoneyvar varId:req
+  callnative ScrCmd_removemoneyvar, requests_effects=1
+  .2byte \varId
+.endm
+
+@ END OF BANKING SYSTEM
+
+
+
