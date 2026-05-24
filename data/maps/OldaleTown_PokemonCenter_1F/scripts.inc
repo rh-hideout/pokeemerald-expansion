@@ -21,11 +21,7 @@ OldaleTown_PokemonCenter_1F_EventScript_Gentleman::
 	end
 
 OldaleTown_PokemonCenter_1F_EventScript_Boy::
-	lockall
 	msgbox OldaleTown_PokemonCenter_1F_Text_PokemonCentersAreGreat, MSGBOX_NPC
-	setvar VAR_0x800B, REGION_MAP_SEVII123
-	call Common_EventScript_OpenRegionMap
-	releaseall
 	end
 
 OldaleTown_PokemonCenter_1F_EventScript_Girl::

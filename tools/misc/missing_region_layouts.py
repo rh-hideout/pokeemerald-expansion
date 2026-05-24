@@ -19,7 +19,7 @@ def create_missing_files(json_data):
         if os.path.exists(region["layoutFile"]):
             continue
 
-        string = "static const u8  sRegionMap_SectionLayout_" + region["label"].capitalize()
+        string = "static const mapsec_u8_t sRegionMap_SectionLayout_" + region["label"].capitalize()
         string = string + "[" + str(region["layout_height"]) + "][" + str(region["layout_width"]) + "] = {\n"
         for y in range(0, region["layout_height"]):
             line = "    {"
