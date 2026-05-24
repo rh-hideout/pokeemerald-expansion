@@ -480,6 +480,12 @@ const u16 gObjectEventPal_Lumberjack[] = INCGFX_U16("graphics/object_events/pics
 const u32 gObjectEventPic_FirebreatherM[] = INCGFX_U32("graphics/object_events/pics/people/firebreather_m.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPal_FirebreatherM[] = INCGFX_U16("graphics/object_events/pics/people/firebreather_m.png", ".gbapal");
 
+const u32 gObjectEventPic_LumberjackF[] = INCGFX_U32("graphics/object_events/pics/people/lumberjack_f.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPal_LumberjackF[] = INCGFX_U16("graphics/object_events/pics/people/lumberjack_f.png", ".gbapal");
+
+const u32 gObjectEventPic_BeekeeperM[] = INCGFX_U32("graphics/object_events/pics/people/beekeeper_m.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPal_BeekeeperM[] = INCGFX_U16("graphics/object_events/pics/people/beekeeper_m.png", ".gbapal");
+
 #if IS_FRLG
 
 const u16 gObjectEventPic_RedNormal[] = INCGFX_U16("graphics/object_events/pics/people/red/red_normal.png", ".4bpp", "-mwidth 2 -mheight 4");

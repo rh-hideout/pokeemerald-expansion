@@ -3037,3 +3037,11 @@ static const struct SpriteFrameImage sPicTable_Lumberjack[] = {
 static const struct SpriteFrameImage sPicTable_FirebreatherM[] = {
     overworld_ascending_frames(gObjectEventPic_FirebreatherM, 2, 4),
 };
+
+static const struct SpriteFrameImage sPicTable_LumberjackF[] = {
+    overworld_ascending_frames(gObjectEventPic_LumberjackF, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_BeekeeperM[] = {
+    overworld_ascending_frames(gObjectEventPic_BeekeeperM, 2, 4),
+};

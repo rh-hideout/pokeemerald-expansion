@@ -405,6 +405,10 @@ extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Lumberjack;
 
 extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_FirebreatherM;
 
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_LumberjackF;
+
+extern const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BeekeeperM;
+
 const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM_OBJ_EVENT_GFX] = {
     [OBJ_EVENT_GFX_BRENDAN_NORMAL] =           &gObjectEventGraphicsInfo_BrendanNormal,
     [OBJ_EVENT_GFX_BRENDAN_MACH_BIKE] =        &gObjectEventGraphicsInfo_BrendanMachBike,
@@ -797,6 +801,8 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
 #endif // IS_FRLG
     [OBJ_EVENT_GFX_LUMBERJACK] =               &gObjectEventGraphicsInfo_Lumberjack,
     [OBJ_EVENT_GFX_OW_FIRE_BREATHER] =               &gObjectEventGraphicsInfo_FirebreatherM,
+    [OBJ_EVENT_GFX_OW_LUMBERJACK_F] =               &gObjectEventGraphicsInfo_LumberjackF,
+    [OBJ_EVENT_GFX_OW_BEEKEEPER_M] =               &gObjectEventGraphicsInfo_BeekeeperM,
 };
 
 const struct ObjectEventGraphicsInfo *const gMauvilleOldManGraphicsInfoPointers[] = {
