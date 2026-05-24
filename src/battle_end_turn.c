@@ -665,7 +665,7 @@ static bool32 HandleEndTurnOctolock(enum BattlerId battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (gBattleMons[battler].volatiles.octolock)
+    if (gBattleMons[battler].volatiles.octolock && IsBattlerAlive(battler))
     {
         gBattlerTarget = battler;
         gBattlerAttacker = gBattleMons[battler].volatiles.battlerPreventingEscape;
