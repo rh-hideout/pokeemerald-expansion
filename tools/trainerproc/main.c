@@ -168,6 +168,13 @@ struct Trainer
     int multi_team_line;
 };
 
+enum OutputMode
+{
+    OUTPUT_TRAINERS,
+    OUTPUT_FRONTIER_MONS,
+    OUTPUT_FRONTIER_MON_CONSTANTS,
+};
+
 static bool is_empty_string(struct String s)
 {
     return s.string_n == 0;
@@ -285,6 +292,10 @@ struct Parsed
     int default_level;
     int default_level_line;
     bool default_level_off;
+
+    bool frontier_mons;
+    struct String frontier_high_tier;
+    int frontier_high_tier_line;
 };
 
 static bool set_parse_error(struct Parser *p, struct SourceLocation location, const char *error)
@@ -1095,6 +1106,21 @@ static bool parse_pragma(struct Parser *p, struct Parsed *parsed)
         else if (!token_int(p, &t, &parsed->default_level))
             return show_parse_error(p);
     }
+    else if (is_literal_token(&id, "frontierHighTier"))
+    {
+        if (parsed->frontier_high_tier_line)
+            return set_show_parse_error(p, p_.location, "duplicate #pragma trainerproc frontierHighTier");
+        parsed->frontier_high_tier_line = p_.location.line;
+        skip_whitespace(&p_);
+        struct Token t;
+        if (!match_identifier(&p_, &t))
+            return set_show_parse_error(p, p_.location, "expected frontier mon id");
+        parsed->frontier_high_tier = token_string(&t);
+    }
+    else if (is_literal_token(&id, "frontierMons"))
+    {
+        parsed->frontier_mons = true;
+    }
     else
     {
         return set_show_parse_error(p, id.location, "unknown pragma");
@@ -1342,9 +1368,9 @@ static bool parse_trainer(struct Parser *p, const struct Parsed *parsed, struct 
             any_error = !set_show_parse_error(p, key.location, "expected one of 'Name', 'Class', 'Pic', 'Back Pic', 'Gender', 'Music', 'Items', 'Battle Type', 'Difficulty', 'Party Size', 'Multi Party', 'Pool Rules', 'Pool Pick Functions', 'Pool Prune' or 'AI'");
         }
     }
-    if (!trainer->pic_line && !trainer->macro_line)
+    if (!parsed->frontier_mons && !trainer->pic_line && !trainer->macro_line)
         any_error = !set_show_parse_error(p, p->location, "expected 'Pic' before Pokemon");
-    if (!trainer->name_line && !trainer->macro_line)
+    if (!parsed->frontier_mons && !trainer->name_line && !trainer->macro_line)
         any_error = !set_show_parse_error(p, p->location, "expected 'Name' before Pokemon");
     if (!match_empty_line(p))
     {
@@ -1525,7 +1551,7 @@ static bool parse_trainer(struct Parser *p, const struct Parsed *parsed, struct 
             }
         }
 
-        if (!pokemon->level_line)
+        if (!pokemon->level_line && !parsed->frontier_mons)
         {
             if (!parsed->default_level_off)
             {
@@ -1537,7 +1563,7 @@ static bool parse_trainer(struct Parser *p, const struct Parsed *parsed, struct 
                 any_error = !set_show_parse_error(p, p->location, "expected 'Level' before moves");
             }
         }
-        if (!pokemon->ivs_line)
+        if (!pokemon->ivs_line && !parsed->frontier_mons)
         {
             if (!parsed->default_ivs_off)
             {
@@ -2168,9 +2194,236 @@ static void fprint_trainers(const char *output_path, FILE *f, struct Parsed *par
     }
 }
 
+static void fprint_generated_header(FILE *f, const struct Parsed *parsed)
+{
+    fprintf(f, "//\n");
+    fprintf(f, "// DO NOT MODIFY THIS FILE! It is auto-generated from %s\n", parsed->source->path);
+    fprintf(f, "//\n");
+    fprintf(f, "// If you want to modify this file see expansion PR #7154\n");
+    fprintf(f, "//\n");
+    fprintf(f, "\n");
+    fprintf(f, "#line 1 \"%s\"\n", parsed->source->path);
+    fprintf(f, "\n");
+}
+
+static void fprint_frontier_mon(FILE *f, const struct Pokemon *pokemon)
+{
+    if (!is_empty_string(pokemon->nickname))
+    {
+        fprintf(f, "#line %d\n", pokemon->header_line);
+        fprintf(f, "        .nickname = COMPOUND_STRING(\"");
+        fprint_string(f, pokemon->nickname);
+        fprintf(f, "\"),\n");
+    }
+
+    fprintf(f, "#line %d\n", pokemon->header_line);
+    fprintf(f, "        .species = ");
+    fprint_species(f, "SPECIES", pokemon->species);
+    fprintf(f, ",\n");
+
+    switch (pokemon->gender)
+    {
+    case GENDER_ANY:
+        break;
+    case GENDER_MALE:
+        fprintf(f, "#line %d\n", pokemon->header_line);
+        fprintf(f, "        .gender = TRAINER_MON_MALE,\n");
+        break;
+    case GENDER_FEMALE:
+        fprintf(f, "#line %d\n", pokemon->header_line);
+        fprintf(f, "        .gender = TRAINER_MON_FEMALE,\n");
+        break;
+    }
+
+    if (!is_empty_string(pokemon->item))
+    {
+        fprintf(f, "#line %d\n", pokemon->header_line);
+        fprintf(f, "        .heldItem = ");
+        fprint_constant(f, "ITEM", pokemon->item);
+        fprintf(f, ",\n");
+    }
+
+    if (pokemon->evs_line)
+    {
+        fprintf(f, "#line %d\n", pokemon->evs_line);
+        fprintf(f, "        .ev = ");
+        fprint_stats(f, "TRAINER_PARTY_EVS", pokemon->evs);
+        fprintf(f, ",\n");
+    }
+
+    if (pokemon->ivs_line)
+    {
+        fprintf(f, "#line %d\n", pokemon->ivs_line);
+        fprintf(f, "        .iv = ");
+        fprint_stats(f, "TRAINER_PARTY_IVS", pokemon->ivs);
+        fprintf(f, ",\n");
+    }
+
+    if (pokemon->ability_line)
+    {
+        fprintf(f, "#line %d\n", pokemon->ability_line);
+        fprintf(f, "        .ability = ");
+        fprint_constant(f, "ABILITY", pokemon->ability);
+        fprintf(f, ",\n");
+    }
+
+    if (pokemon->level_line)
+    {
+        fprintf(f, "#line %d\n", pokemon->level_line);
+        fprintf(f, "        .lvl = %d,\n", pokemon->level);
+    }
+
+    if (pokemon->ball_line)
+    {
+        fprintf(f, "#line %d\n", pokemon->ball_line);
+        fprintf(f, "        .ball = ");
+        fprint_constant(f, "BALL", pokemon->ball);
+        fprintf(f, ",\n");
+    }
+    else
+    {
+        fprintf(f, "        .ball = POKEBALL_COUNT,\n");
+    }
+
+    if (pokemon->friendship_line)
+    {
+        fprintf(f, "#line %d\n", pokemon->friendship_line);
+        fprintf(f, "        .friendship = %d,\n", pokemon->friendship);
+    }
+
+    if (pokemon->nature_line)
+    {
+        fprintf(f, "#line %d\n", pokemon->nature_line);
+        fprintf(f, "        .nature = ");
+        fprint_constant(f, "NATURE", pokemon->nature);
+        fprintf(f, ",\n");
+    }
+    else
+    {
+        fprintf(f, "        .nature = NATURE_HARDY,\n");
+    }
+
+    if (pokemon->shiny_line)
+    {
+        fprintf(f, "#line %d\n", pokemon->shiny_line);
+        fprintf(f, "        .isShiny = ");
+        fprint_bool(f, pokemon->shiny);
+        fprintf(f, ",\n");
+    }
+
+    if (pokemon->dynamax_level_line)
+    {
+        fprintf(f, "#line %d\n", pokemon->dynamax_level_line);
+        fprintf(f, "        .dynamaxLevel = %d,\n", pokemon->dynamax_level);
+    }
+
+    if (pokemon->gigantamax_factor_line)
+    {
+        fprintf(f, "#line %d\n", pokemon->gigantamax_factor_line);
+        fprintf(f, "        .gigantamaxFactor = ");
+        fprint_bool(f, pokemon->gigantamax_factor);
+        fprintf(f, ",\n");
+    }
+
+    if (pokemon->dynamax_level_line || pokemon->gigantamax_factor_line)
+    {
+        fprintf(f, "        .shouldUseDynamax = TRUE,\n");
+    }
+    if (pokemon->tera_type_line)
+    {
+        fprintf(f, "#line %d\n", pokemon->tera_type_line);
+        fprintf(f, "        .teraType = ");
+        fprint_constant(f, "TYPE", pokemon->tera_type);
+        fprintf(f, ",\n");
+    }
+
+    if (pokemon->tags_line)
+    {
+        fprintf(f, "#line %d\n", pokemon->tags_line);
+        fprintf(f, "        .tags = ");
+        for (int i = 0; i < pokemon->tags_n; i++)
+        {
+            if (i > 0)
+                fprintf(f, " | ");
+            fprint_constant(f, "MON_POOL_TAG", pokemon->tags[i]);
+        }
+        fprintf(f, ",\n");
+    }
+
+    if (pokemon->moves_n > 0)
+    {
+        fprintf(f, "        .moves = {\n");
+        fprintf(f, "#line %d\n", pokemon->move1_line);
+        for (int k = 0; k < pokemon->moves_n; k++)
+        {
+            fprintf(f, "            ");
+            fprint_constant(f, "MOVE", pokemon->moves[k]);
+            fprintf(f, ",\n");
+        }
+        fprintf(f, "        },\n");
+    }
+}
+
+static void fprint_frontier_mons(FILE *f, struct Parsed *parsed)
+{
+    fprint_generated_header(f, parsed);
+    fprintf(f, "const struct TrainerMon gBattleFrontierMons[NUM_FRONTIER_MONS] =\n");
+    fprintf(f, "{\n");
+
+    for (int i = 0; i < parsed->trainers_n; i++)
+    {
+        struct Trainer *trainer = &parsed->trainers[i];
+        if (trainer->pokemon_n != 1)
+        {
+            fprintf(stderr, "%s:%d: frontier mon entries must contain exactly one Pokemon\n", parsed->source->path, trainer->id_line);
+            exit(1);
+        }
+
+        fprintf(f, "#line %d\n", trainer->id_line);
+        fprintf(f, "    [");
+        fprint_string(f, trainer->id);
+        fprintf(f, "] = {\n");
+        fprint_frontier_mon(f, &trainer->pokemon[0]);
+        fprintf(f, "    },\n");
+    }
+
+    fprintf(f, "};\n");
+}
+
+static void fprint_frontier_mon_constants(FILE *f, struct Parsed *parsed)
+{
+    fprintf(f, "#ifndef GUARD_CONSTANTS_BATTLE_FRONTIER_MONS_H\n");
+    fprintf(f, "#define GUARD_CONSTANTS_BATTLE_FRONTIER_MONS_H\n");
+    fprintf(f, "\n");
+    fprintf(f, "enum FrontierMonId\n");
+    fprintf(f, "{\n");
+
+    for (int i = 0; i < parsed->trainers_n; i++)
+    {
+        fprintf(f, "    ");
+        fprint_string(f, parsed->trainers[i].id);
+        fprintf(f, ",\n");
+    }
+
+    fprintf(f, "\n");
+    if (!is_empty_string(parsed->frontier_high_tier))
+    {
+        fprintf(f, "    FRONTIER_MONS_HIGH_TIER = ");
+        fprint_string(f, parsed->frontier_high_tier);
+        fprintf(f, ", // Mons above this point can only appear > level 50\n");
+        fprintf(f, "\n");
+    }
+    fprintf(f, "    NUM_FRONTIER_MONS = ");
+    fprint_string(f, parsed->trainers[parsed->trainers_n - 1].id);
+    fprintf(f, " + 1,\n");
+    fprintf(f, "};\n");
+    fprintf(f, "\n");
+    fprintf(f, "#endif // GUARD_CONSTANTS_BATTLE_FRONTIER_MONS_H\n");
+}
+
 static void usage(FILE *file, char *argv0)
 {
-    fprintf(file, "Usage: %s -o <output> <source>\n", argv0);
+    fprintf(file, "Usage: %s [-m trainers|frontier-mons|frontier-mon-constants] -o <output> <source>\n", argv0);
 }
 
 int main(int argc, char *argv[])
@@ -2187,14 +2440,29 @@ int main(int argc, char *argv[])
     const char *source_path = NULL;
     const char *output_path = NULL;
     const char *real_source_path = NULL;
+    enum OutputMode output_mode = OUTPUT_TRAINERS;
 
     int opt;
-    while ((opt = getopt(argc, argv, "i:o:")) != -1)
+    while ((opt = getopt(argc, argv, "i:m:o:")) != -1)
     {
         switch (opt)
         {
         case 'i':
             real_source_path = optarg;
+            break;
+        case 'm':
+            if (strcmp(optarg, "trainers") == 0)
+                output_mode = OUTPUT_TRAINERS;
+            else if (strcmp(optarg, "frontier-mons") == 0)
+                output_mode = OUTPUT_FRONTIER_MONS;
+            else if (strcmp(optarg, "frontier-mon-constants") == 0)
+                output_mode = OUTPUT_FRONTIER_MON_CONSTANTS;
+            else
+            {
+                fprintf(stderr, "unknown output mode '%s'\n", optarg);
+                usage(stderr, argv[0]);
+                goto exit;
+            }
             break;
         case 'o':
             output_path = optarg;
@@ -2304,7 +2572,18 @@ int main(int argc, char *argv[])
             goto exit;
         }
     }
-    fprint_trainers(output_path, output_file, &parsed);
+    switch (output_mode)
+    {
+    case OUTPUT_TRAINERS:
+        fprint_trainers(output_path, output_file, &parsed);
+        break;
+    case OUTPUT_FRONTIER_MONS:
+        fprint_frontier_mons(output_file, &parsed);
+        break;
+    case OUTPUT_FRONTIER_MON_CONSTANTS:
+        fprint_frontier_mon_constants(output_file, &parsed);
+        break;
+    }
 
     status = 0;
 
