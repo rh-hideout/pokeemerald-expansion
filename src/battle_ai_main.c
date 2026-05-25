@@ -928,7 +928,7 @@ static void BattleAI_DoPartnerThonk(enum BattlerId battler, enum BattlerId battl
 
         for (enum BattlerId battlerIndex = B_BATTLER_0; battlerIndex < MAX_BATTLERS_COUNT; battlerIndex++)
         {
-            if (gBattleMons[battlerIndex].hp == 0)
+            if (gBattleMons[battlerIndex].hp == 0 || battlerIndex == battler)
             {
                 continue;
             }
@@ -1033,7 +1033,7 @@ static u32 ChooseMoveOrAction_Doubles(enum BattlerId battler)
 
                 for (enum BattlerId battlerIndex = 0; battlerIndex < MAX_BATTLERS_COUNT; battlerIndex++)
                 {
-                    if (gBattleMons[battlerIndex].hp == 0)
+                    if (gBattleMons[battlerIndex].hp == 0 || battlerIndex == battler)
                     {
                         actionOrMoveIndex[battlerIndex] = 0xFF;
                         bestMovePointsForTarget[battlerIndex] = -1;
@@ -1104,7 +1104,7 @@ static u32 ChooseMoveOrAction_Doubles(enum BattlerId battler)
 
     for (enum BattlerId battlerIndex = 0; battlerIndex < MAX_BATTLERS_COUNT; battlerIndex++)
     {
-        if (gBattleMons[battlerIndex].hp == 0)
+        if (gBattleMons[battlerIndex].hp == 0 || battlerIndex == battler)
         {
             actionOrMoveIndex[battlerIndex] = 0xFF;
             bestMovePointsForTarget[battlerIndex] = -1;
@@ -5396,8 +5396,15 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
         }
         break;
     case EFFECT_PLEDGE:
-        if (hasPartner && HasMoveWithEffect(BATTLE_PARTNER(battlerAtk), EFFECT_PLEDGE))
+        if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_AI_THONK)
+        {
+            if (PartnerMoveEffectIs(battlerAtkPartner, aiData->partnerMove, EFFECT_PLEDGE))
+                ADJUST_SCORE(BEST_EFFECT); // Partner will use pledge move
+        }
+        else if (hasPartner && HasMoveWithEffect(BATTLE_PARTNER(battlerAtk), EFFECT_PLEDGE))
+        {
             ADJUST_SCORE(GOOD_EFFECT); // Partner might use pledge move
+        }
         break;
     case EFFECT_TRICK_ROOM:
         if (!(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_POWERFUL_STATUS))
