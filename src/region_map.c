@@ -81,6 +81,7 @@ static EWRAM_DATA struct {
     struct RegionMapData regionMap;
     u8 tileBuffer[0x1c0];
     bool8 choseFlyLocation;
+    enum RegionMapId regionMapId;
 } *sFlyMap = NULL;
 
 static bool32 sDrawFlyDestTextWindow;
@@ -119,6 +120,7 @@ static void SpriteCB_FlyDestIcon(struct Sprite *sprite);
 static void CB_FadeInFlyMap(void);
 static void CB_HandleFlyMapInput(void);
 static void CB_ExitFlyMap(void);
+static void CB_ChangeFlyMap(void);
 
 static const u16 sRegionMapCursorPal[] = INCGFX_U16("graphics/pokenav/region_map/cursor.pal", ".gbapal");
 static const u32 sRegionMapCursorSmallGfxLZ[] = INCGFX_U32("graphics/pokenav/region_map/cursor_small.png", ".4bpp.smol");
@@ -525,11 +527,12 @@ static const struct SpritePalette sFlyTargetIconsSpritePalette =
     .tag = TAG_FLY_ICON
 };
 
-static const mapsec_u16_t sRedOutlineFlyDestinations[][2] =
+static const mapsec_u16_t sRedOutlineFlyDestinations[][3] =
 {
     {
         FLAG_LANDMARK_BATTLE_FRONTIER,
-        MAPSEC_BATTLE_FRONTIER
+        MAPSEC_BATTLE_FRONTIER,
+        REGION_MAP_HOENN
     },
     {
         -1,
@@ -790,6 +793,10 @@ static u8 ProcessRegionMapInput_Full(void)
     else if (JOY_NEW(B_BUTTON))
     {
         input = MAP_INPUT_B_BUTTON;
+    }
+    else if (JOY_NEW(SELECT_BUTTON))
+    {
+        input = MAP_INPUT_CHANGE_MAP;
     }
     else if (JOY_NEW(R_BUTTON))
     {
@@ -1115,6 +1122,15 @@ static void InitMapBasedOnPlayerLocation(void)
     u16 dimensionScale;
     u16 xOnMap;
     struct WarpData *warp;
+
+    if (sRegionMap->regionMapId != GetRegionMap(gMapHeader.regionMapSectionId))
+    {
+        sRegionMap->mapSecId = MAPSEC_NONE;
+        sRegionMap->playerIsInCave = FALSE;
+        sRegionMap->cursorPosX = MAPCURSOR_X_MIN + MAP_WIDTH / 2;
+        sRegionMap->cursorPosY = MAPCURSOR_Y_MIN + MAP_HEIGHT / 2;
+        return;
+    }
 
     if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_SS_TIDAL_CORRIDOR)
         && (gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_SS_TIDAL_CORRIDOR)
@@ -1863,6 +1879,7 @@ void CB2_OpenFlyMap(void)
             ResetSpriteData();
             FreeSpriteTileRanges();
             FreeAllSpritePalettes();
+            sFlyMap->regionMapId = GetRegionMap(gMapHeader.regionMapSectionId);
             gMain.state++;
         }
         break;
@@ -1882,7 +1899,8 @@ void CB2_OpenFlyMap(void)
         gMain.state++;
         break;
     case 4:
-        InitRegionMap(&sFlyMap->regionMap, GetRegionMap(gMapHeader.regionMapSectionId), FALSE);
+        DebugPrintf("sFlyMap->regionMapId %d", sFlyMap->regionMapId);
+        InitRegionMap(&sFlyMap->regionMap, sFlyMap->regionMapId, FALSE);
         CreateRegionMapCursor(TAG_CURSOR, TAG_CURSOR);
         CreateRegionMapPlayerIcon(TAG_PLAYER_ICON, TAG_PLAYER_ICON);
         sFlyMap->mapSecId = sFlyMap->regionMap.mapSecId;
@@ -1989,7 +2007,8 @@ static void DrawFlyDestTextWindow(void)
                 // Window is already drawn, just empty it
                 FillWindowPixelBuffer(WIN_MAPSEC_NAME, PIXEL_FILL(1));
             }
-            AddTextPrinterParameterized(WIN_MAPSEC_NAME, FONT_NORMAL, sFlyMap->regionMap.mapSecName, 0, 1, 0, NULL);
+            if (sFlyMap->regionMapId == GetRegionMap(gMapHeader.regionMapSectionId))
+                AddTextPrinterParameterized(WIN_MAPSEC_NAME, FONT_NORMAL, sFlyMap->regionMap.mapSecName, 0, 1, 0, NULL);
             ScheduleBgCopyTilemapToVram(0);
             sDrawFlyDestTextWindow = FALSE;
         }
@@ -2276,6 +2295,9 @@ static void TryCreateRedOutlineFlyDestIcons(void)
 
     for (i = 0; sRedOutlineFlyDestinations[i][1] != MAPSEC_NONE; i++)
     {
+        if (sRedOutlineFlyDestinations[i][2] != sFlyMap->regionMapId)
+            continue;
+
         if (FlagGet(sRedOutlineFlyDestinations[i][0]))
         {
             mapSecId = sRedOutlineFlyDestinations[i][1];
@@ -2358,6 +2380,9 @@ static void CB_HandleFlyMapInput(void)
             sFlyMap->choseFlyLocation = FALSE;
             SetFlyMapCallback(CB_ExitFlyMap);
             break;
+        case MAP_INPUT_CHANGE_MAP:
+            SetFlyMapCallback(CB_ChangeFlyMap);
+            break;
         }
     }
 }
@@ -2389,6 +2414,33 @@ static void CB_ExitFlyMap(void)
             FreeAllWindowBuffers();
         }
         break;
+    }
+}
+
+static void CB_ChangeFlyMap(void)
+{
+    switch (sFlyMap->state)
+    {
+    case 0:
+        BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+        sFlyMap->state++;
+        break;
+    case 1:
+        if (!UpdatePaletteFade())
+        {
+            FreeRegionMapIconResources();
+            ResetPaletteFade();
+            ResetSpriteData();
+            FreeSpriteTileRanges();
+            FreeAllSpritePalettes();
+            FreeAllWindowBuffers();
+            sFlyMap->regionMapId = sFlyMap->regionMapId + 1;
+            if (sFlyMap->regionMapId == REGION_MAP_COUNT)
+                sFlyMap->regionMapId = 1;
+            SetMainCallback2(CB2_OpenFlyMap);
+            gMain.state = 1;
+        }
+    break;
     }
 }
 

@@ -162,15 +162,7 @@ static void FieldUpdateRegionMap(void)
         PrintTitleWindowText();
         ScheduleBgCopyTilemapToVram(0);
         DrawStdFrameWithCustomTileAndPalette(WIN_MAPSEC_NAME, FALSE, 0x27, 0xd);
-        if (sFieldRegionMapHandler->regionMapId == GetRegionMap(gMapHeader.regionMapSectionId))
-        {
-            PrintRegionMapSecName();
-        }
-        else
-        {
-            FillWindowPixelBuffer(WIN_MAPSEC_NAME, PIXEL_FILL(1));
-            CopyWindowToVram(WIN_MAPSEC_NAME, COPYWIN_FULL);
-        }
+        PrintRegionMapSecName();
         BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
         sFieldRegionMapHandler->state++;
         break;
@@ -206,6 +198,9 @@ static void FieldUpdateRegionMap(void)
                     gSkipShowMonAnim = TRUE;
                     ReturnToFieldFromFlyMapSelect();
                 }
+        case MAP_INPUT_CHANGE_MAP:
+            BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+            sFieldRegionMapHandler->state = 7;
         }
         break;
     case 5:
@@ -221,7 +216,17 @@ static void FieldUpdateRegionMap(void)
             FreeAllWindowBuffers();
         }
         break;
+    case 7: //Map redraw
+        if (!gPaletteFade.active)
+        {
+            FreeRegionMapIconResources();
+            sFieldRegionMapHandler->regionMapId = sFieldRegionMapHandler->regionMapId + 1;
+            if (sFieldRegionMapHandler->regionMapId == REGION_MAP_COUNT)
+                sFieldRegionMapHandler->regionMapId = 1;
+            sFieldRegionMapHandler->state = 0;
+        }
     }
+
 }
 
 static void PrintRegionMapSecName(void)
