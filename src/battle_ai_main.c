@@ -915,14 +915,14 @@ static u32 ChooseMoveOrAction_Singles(enum BattlerId battler)
     return consideredMoveArray[RandomUniform(RNG_AI_SCORE_TIE_SINGLES, 0, numOfBestMoves - 1)];
 }
 
-static void BattleAI_DoPartnerThonk(enum BattlerId battler, enum BattlerId battlerPartner, enum Move *bestMoves, enum BattlerId *bestTargets)
+static void BattleAI_ConsiderCombo(enum BattlerId battler, enum BattlerId battlerPartner, enum Move *bestMoves, enum BattlerId *bestTargets)
 {
     u64 flags;
     s32 highestMoveScore = 0;
     enum Move *allyMoves = GetMovesArray(battlerPartner);
     u32 arrayPos = 0;
 
-    for (u32 allyIndex = 0; allyIndex < MAX_MON_MOVES; allyIndex++)
+    for (u32 allyIndex = 0; allyMoves[allyIndex] != MOVE_NONE; allyIndex++)
     {
         gAiLogicData->partnerMove = allyMoves[allyIndex];
 
@@ -1016,16 +1016,17 @@ static u32 ChooseMoveOrAction_Doubles(enum BattlerId battler)
     u32 mostViableMovesNo;
     s32 mostMovePoints;
     enum Move mostViableMove = MOVE_NONE;
+    s32 comboBestScore = 0;
 
-    if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_AI_THONK)
+    if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_CONSIDER_COMBO)
     {
         enum BattlerId battlerPartner = GetPartnerBattler(battler);
         enum Move partnerBestMoves[MAX_MON_MOVES * MAX_BATTLERS_COUNT + 1] = {MOVE_NONE};
         enum BattlerId partnerBestTargets[MAX_MON_MOVES * MAX_BATTLERS_COUNT + 1] = {B_BATTLER_0};
     
-        if (IsThinkingBeforePartner(battler, battlerPartner))
+        if (IsThinkingBeforePartner(battler, battlerPartner)) // Default to normal move selection if not
         {
-            BattleAI_DoPartnerThonk(battlerPartner, battler, partnerBestMoves, partnerBestTargets);
+            BattleAI_ConsiderCombo(battlerPartner, battler, partnerBestMoves, partnerBestTargets);
             for (u32 i = 0; partnerBestMoves[i] != MOVE_NONE; i++)
             {
                 gAiLogicData->partnerMove = partnerBestMoves[i];
@@ -1065,21 +1066,17 @@ static u32 ChooseMoveOrAction_Doubles(enum BattlerId battler)
                         if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_CHECK_VIABILITY)
                             AI_CompareDamagingMoves(battler, gBattlerTarget);
 
-                        mostViableMovesScores[0] = gAiThinkingStruct->score[0];
-                        for (u32 moveIndex = 1; moveIndex < MAX_MON_MOVES; moveIndex++)
+                        for (u32 moveIndex = 0; gBattleMons[battler].moves[moveIndex] != MOVE_NONE; moveIndex++)
                         {
                             enum Move currentMove = gBattleMons[battler].moves[moveIndex];
-                            if (currentMove != MOVE_NONE)
-                            {
-                                if (!CanTargetBattler(battler, battlerIndex, currentMove))
-                                    continue;
+                            if (!CanTargetBattler(battler, battlerIndex, currentMove))
+                                continue;
 
-                                if (mostViableMovesScores[0] < gAiThinkingStruct->score[moveIndex])
-                                {
-                                    mostViableMovesScores[0] = gAiThinkingStruct->score[moveIndex];
-                                    mostViableMove = currentMove;
-                                    gAiBattleData->chosenTarget[battler] = gBattlerTarget;
-                                }
+                            if (comboBestScore < gAiThinkingStruct->score[moveIndex])
+                            {
+                                comboBestScore = gAiThinkingStruct->score[moveIndex];
+                                mostViableMove = currentMove;
+                                gAiBattleData->chosenTarget[battler] = gBattlerTarget;
                             }
                         }
 #if TESTING
@@ -3359,6 +3356,23 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             ADJUST_SCORE(GOOD_EFFECT);
         }
         break;
+    case EFFECT_FUSION_COMBO:
+        if (ShouldUseFusionMove(battlerAtk))
+        {
+            ADJUST_SCORE(BEST_EFFECT);
+        }
+    case EFFECT_ROUND:
+        if (ShouldUseRound(battlerAtk, EFFECT_ROUND))
+        {
+            ADJUST_SCORE(BEST_EFFECT);
+        }
+        break;
+    case EFFECT_PLEDGE:
+        if (ShouldUsePledgeMove(battlerAtk, battlerDef, move))
+        {
+            ADJUST_SCORE(BEST_EFFECT);
+        }
+        break;
     default:
         break;
     } // our effect relative to partner
@@ -5396,15 +5410,10 @@ static s32 AI_CalcMoveEffectScore(enum BattlerId battlerAtk, enum BattlerId batt
         }
         break;
     case EFFECT_PLEDGE:
-        if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_AI_THONK)
-        {
-            if (PartnerMoveEffectIs(battlerAtkPartner, aiData->partnerMove, EFFECT_PLEDGE))
-                ADJUST_SCORE(BEST_EFFECT); // Partner will use pledge move
-        }
-        else if (hasPartner && HasMoveWithEffect(BATTLE_PARTNER(battlerAtk), EFFECT_PLEDGE))
+        /*if (hasPartner && HasMoveWithEffect(BATTLE_PARTNER(battlerAtk), EFFECT_PLEDGE))
         {
             ADJUST_SCORE(GOOD_EFFECT); // Partner might use pledge move
-        }
+        }*/
         break;
     case EFFECT_TRICK_ROOM:
         if (!(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_POWERFUL_STATUS))
