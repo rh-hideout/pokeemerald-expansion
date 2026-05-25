@@ -1,0 +1,594 @@
+mapscripts ow_r10_MapScripts {}
+
+// ============================================================
+// COMBEEKEEPER (quest-giver) - LOCALID_R10_COMBEEKEEPER
+// ============================================================
+
+script ow_r10_EventScript_Combeekeeper {
+    lock
+    faceplayer
+    setspeaker("Combeekeeper")
+    goto_if_quest_complete(QUEST_HONEY, ow_r10_EventScript_Combeekeeper_Done)
+    goto_if_quest_reward(QUEST_HONEY, ow_r10_EventScript_Combeekeeper_Reward)
+    goto_if_quest_active(QUEST_HONEY, ow_r10_EventScript_Combeekeeper_Active)
+    goto(ow_r10_EventScript_Combeekeeper_Intro)
+}
+
+script ow_r10_EventScript_Combeekeeper_Intro {
+    msgbox(format("A powerful Heracross has broken into the apiary - it's tearing through the honey stores!"))
+    msgbox(format("The bees scattered the moment it came crashing in.\NI tried to fend it off, but I'm not strong enough."))
+    msgbox(format("Could you drive it off? My Combee won't return until it's gone."))
+    setspeaker(NULL)
+    startquest(QUEST_HONEY)
+    subquestmenu(QUEST_MENU_UNLOCK_QUEST, QUEST_HONEY, SUB_QUEST_HONEY_HERACROSS)
+    clearflag(FLAG_HIDE_R10_HERACROSS)
+    release
+    end
+}
+
+script ow_r10_EventScript_Combeekeeper_Active {
+    goto_if_eq(VAR_R10_HONEY_COMBEE, 6, ow_r10_EventScript_Combeekeeper_AllCombeeIn)
+    goto_if_subquest_complete(QUEST_HONEY, SUB_QUEST_HONEY_HERACROSS, ow_r10_EventScript_Combeekeeper_HeracrossDown)
+    goto(ow_r10_EventScript_Combeekeeper_HeracrossPending)
+}
+
+script ow_r10_EventScript_Combeekeeper_HeracrossDown {
+    goto_if_set(FLAG_R10_HONEY_THANKED, ow_r10_EventScript_Combeekeeper_CombeePending)
+    msgbox(format("Oh, thank you. Truly.\NYou actually drove it off."))
+    msgbox(format("But the hives are still empty.\pMy Combee scattered when it came crashing in - they'll be in the nearby fields. Could you help me find them?"))
+    setflag(FLAG_R10_HONEY_THANKED)
+    subquestmenu(QUEST_MENU_UNLOCK_QUEST, QUEST_HONEY, SUB_QUEST_HONEY_COMBEE)
+    setspeaker(NULL)
+    release
+    end
+}
+
+script ow_r10_EventScript_Combeekeeper_HeracrossPending {
+    msgbox(format("The Heracross is still rattling around the hives.\NIt's just south of here."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+script ow_r10_EventScript_Combeekeeper_CombeePending {
+    buffernumberstring(STR_VAR_1, VAR_R10_HONEY_COMBEE)
+    msgbox(format("You've brought {STR_VAR_1} of my Combee back so far.\pThey need someone to nudge them in the right direction to come home."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+script ow_r10_EventScript_Combeekeeper_AllCombeeIn {
+    msgbox(format("All of them are home! I can hear the hive humming properly again."))
+    msgbox(format("Take this - it's the least I owe you.\NIt's been in my family longer than the apiary has."))
+    giveitem(ITEM_HM01)
+    setspeaker(NULL)
+    completequest(QUEST_HONEY)
+    call(ow_r10_EventScript_RevealAmbientCombee)
+    release
+    end
+}
+
+script ow_r10_EventScript_Combeekeeper_Reward {
+    msgbox(format("All of them are home! I can hear the hive humming properly again."))
+    msgbox(format("Take this - it's the least I owe you.\NIt's been in my family longer than the apiary has."))
+    giveitem(ITEM_HM01)
+    setspeaker(NULL)
+    completequest(QUEST_HONEY)
+    call(ow_r10_EventScript_RevealAmbientCombee)
+    release
+    end
+}
+
+script ow_r10_EventScript_RevealAmbientCombee {
+    clearflag(FLAG_HIDE_R10_AMBIENT_COMBEE)
+    addobject(LOCALID_R10_VESPIQUEN)
+    addobject(LOCALID_R10_AMBIENT_COMBEE_1)
+    addobject(LOCALID_R10_AMBIENT_COMBEE_2)
+    addobject(LOCALID_R10_AMBIENT_COMBEE_3)
+    addobject(LOCALID_R10_AMBIENT_COMBEE_4)
+    addobject(LOCALID_R10_AMBIENT_COMBEE_5)
+    addobject(LOCALID_R10_AMBIENT_COMBEE_6)
+    return
+}
+
+// ============================================================
+// VESPIQUEN (Melli's queen) - LOCALID_R10_VESPIQUEN
+// ============================================================
+
+script ow_r10_EventScript_Vespiquen {
+    lock
+    faceplayer
+    playmoncry(SPECIES_VESPIQUEN, CRY_MODE_NORMAL)
+    waitmoncry
+    msgbox(format("The Vespiquen watches you steadily.\NShe doesn't move."))
+    release
+    end
+}
+
+script ow_r10_EventScript_AmbientCombee {
+    lock
+    faceplayer
+    playmoncry(SPECIES_COMBEE, CRY_MODE_NORMAL)
+    waitmoncry
+    release
+    end
+}
+
+script ow_r10_EventScript_Combeekeeper_Done {
+    msgbox(format("The hives are settled. The honey will keep flowing.\NThank you."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+// ============================================================
+// COMBEEKEEPER (apiary) - LOCALID_R10_COMBEEKEEPER_APIARY
+// ============================================================
+
+script ow_r10_EventScript_CombeekeeperApiary {
+    lock
+    faceplayer
+    setspeaker("Combeekeeper")
+    goto_if_quest_complete(QUEST_HONEY, ow_r10_EventScript_CombeekeeperApiary_Done)
+    msgbox(format("My poor bees.\NThey're scattered all over the route."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+script ow_r10_EventScript_CombeekeeperApiary_Done {
+    msgbox(format("Listen to them. That hum is the sound of a hive that knows it's safe."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+// ============================================================
+// HERACROSS BOSS - LOCALID_R10_HERACROSS
+// ============================================================
+
+script ow_r10_EventScript_Heracross {
+    lock
+    faceplayer
+    playmoncry(SPECIES_HERACROSS, CRY_MODE_ENCOUNTER)
+    msgbox(format("The Heracross attacks!"), MSGBOX_DEFAULT)
+    waitmoncry
+    closemessage
+    delay(30)
+    setflag(FLAG_NO_CATCHING_BOSS)
+    setflag(FLAG_NUZLOCKE_SKIP_ENCOUNTER)
+    setvar(VAR_0x8000, SPECIES_HERACROSS)
+    special(SetupBossWildBattle)
+    dowildbattle
+    clearflag(FLAG_NO_CATCHING_BOSS)
+    clearflag(FLAG_NUZLOCKE_SKIP_ENCOUNTER)
+    specialvar(VAR_RESULT, GetBattleOutcome)
+    goto_if_ne(VAR_RESULT, B_OUTCOME_WON, ow_r10_EventScript_Heracross_NotDefeated)
+    fadescreen(FADE_TO_BLACK)
+    setflag(FLAG_HIDE_R10_HERACROSS)
+    removeobject(LOCALID_R10_HERACROSS)
+    fadescreen(FADE_FROM_BLACK)
+    msgbox(format("The Heracross ran away and dropped some honey!"), MSGBOX_DEFAULT)
+    giveitem(ITEM_HONEY)
+    completesubquest(QUEST_HONEY, SUB_QUEST_HONEY_HERACROSS)
+    clearflag(FLAG_HIDE_R10_COMBEE_1)
+    clearflag(FLAG_HIDE_R10_COMBEE_2)
+    clearflag(FLAG_HIDE_R10_COMBEE_3)
+    clearflag(FLAG_HIDE_R10_COMBEE_4)
+    clearflag(FLAG_HIDE_R10_COMBEE_5)
+    clearflag(FLAG_HIDE_R10_COMBEE_6)
+    addobject(LOCALID_R10_COMBEE_1)
+    addobject(LOCALID_R10_COMBEE_2)
+    addobject(LOCALID_R10_COMBEE_3)
+    addobject(LOCALID_R10_COMBEE_4)
+    addobject(LOCALID_R10_COMBEE_5)
+    addobject(LOCALID_R10_COMBEE_6)
+    release
+    end
+}
+
+script ow_r10_EventScript_Heracross_NotDefeated {
+    release
+    end
+}
+
+// ============================================================
+// COMBEE (quest objects) - LOCALID_R10_COMBEE_1..6
+// ============================================================
+
+script ow_r10_EventScript_CombeeScared {
+    lock
+    faceplayer
+    playmoncry(SPECIES_COMBEE, CRY_MODE_ENCOUNTER)
+    msgbox(format("The Combee is scared and confused.\NIt won't budge."), MSGBOX_DEFAULT)
+    waitmoncry
+    release
+    end
+}
+
+movement ow_r10_Movement_CombeeHeart {
+    emote_heart
+    delay_16
+    delay_16
+}
+
+script ow_r10_EventScript_Combee1 {
+    lock
+    faceplayer
+    goto_if_subquest_not_complete(QUEST_HONEY, SUB_QUEST_HONEY_HERACROSS, ow_r10_EventScript_CombeeScared)
+    playmoncry(SPECIES_COMBEE, CRY_MODE_NORMAL)
+    applymovement(LOCALID_R10_COMBEE_1, ow_r10_Movement_CombeeHeart)
+    waitmovement(0)
+    waitmoncry
+    fadescreen(FADE_TO_BLACK)
+    removeobject(LOCALID_R10_COMBEE_1)
+    setflag(FLAG_HIDE_R10_COMBEE_1)
+    addvar(VAR_R10_HONEY_COMBEE, 1)
+    fadescreen(FADE_FROM_BLACK)
+    goto(ow_r10_EventScript_CombeeReturnedMsg)
+}
+
+script ow_r10_EventScript_Combee2 {
+    lock
+    faceplayer
+    goto_if_subquest_not_complete(QUEST_HONEY, SUB_QUEST_HONEY_HERACROSS, ow_r10_EventScript_CombeeScared)
+    playmoncry(SPECIES_COMBEE, CRY_MODE_NORMAL)
+    applymovement(LOCALID_R10_COMBEE_2, ow_r10_Movement_CombeeHeart)
+    waitmovement(0)
+    waitmoncry
+    fadescreen(FADE_TO_BLACK)
+    removeobject(LOCALID_R10_COMBEE_2)
+    setflag(FLAG_HIDE_R10_COMBEE_2)
+    addvar(VAR_R10_HONEY_COMBEE, 1)
+    fadescreen(FADE_FROM_BLACK)
+    goto(ow_r10_EventScript_CombeeReturnedMsg)
+}
+
+script ow_r10_EventScript_Combee3 {
+    lock
+    faceplayer
+    goto_if_subquest_not_complete(QUEST_HONEY, SUB_QUEST_HONEY_HERACROSS, ow_r10_EventScript_CombeeScared)
+    playmoncry(SPECIES_COMBEE, CRY_MODE_NORMAL)
+    applymovement(LOCALID_R10_COMBEE_3, ow_r10_Movement_CombeeHeart)
+    waitmovement(0)
+    waitmoncry
+    fadescreen(FADE_TO_BLACK)
+    removeobject(LOCALID_R10_COMBEE_3)
+    setflag(FLAG_HIDE_R10_COMBEE_3)
+    addvar(VAR_R10_HONEY_COMBEE, 1)
+    fadescreen(FADE_FROM_BLACK)
+    goto(ow_r10_EventScript_CombeeReturnedMsg)
+}
+
+script ow_r10_EventScript_Combee4 {
+    lock
+    faceplayer
+    goto_if_subquest_not_complete(QUEST_HONEY, SUB_QUEST_HONEY_HERACROSS, ow_r10_EventScript_CombeeScared)
+    playmoncry(SPECIES_COMBEE, CRY_MODE_NORMAL)
+    applymovement(LOCALID_R10_COMBEE_4, ow_r10_Movement_CombeeHeart)
+    waitmovement(0)
+    waitmoncry
+    fadescreen(FADE_TO_BLACK)
+    removeobject(LOCALID_R10_COMBEE_4)
+    setflag(FLAG_HIDE_R10_COMBEE_4)
+    addvar(VAR_R10_HONEY_COMBEE, 1)
+    fadescreen(FADE_FROM_BLACK)
+    goto(ow_r10_EventScript_CombeeReturnedMsg)
+}
+
+script ow_r10_EventScript_Combee5 {
+    lock
+    faceplayer
+    goto_if_subquest_not_complete(QUEST_HONEY, SUB_QUEST_HONEY_HERACROSS, ow_r10_EventScript_CombeeScared)
+    playmoncry(SPECIES_COMBEE, CRY_MODE_NORMAL)
+    applymovement(LOCALID_R10_COMBEE_5, ow_r10_Movement_CombeeHeart)
+    waitmovement(0)
+    waitmoncry
+    fadescreen(FADE_TO_BLACK)
+    removeobject(LOCALID_R10_COMBEE_5)
+    setflag(FLAG_HIDE_R10_COMBEE_5)
+    addvar(VAR_R10_HONEY_COMBEE, 1)
+    fadescreen(FADE_FROM_BLACK)
+    goto(ow_r10_EventScript_CombeeReturnedMsg)
+}
+
+script ow_r10_EventScript_Combee6 {
+    lock
+    faceplayer
+    goto_if_subquest_not_complete(QUEST_HONEY, SUB_QUEST_HONEY_HERACROSS, ow_r10_EventScript_CombeeScared)
+    playmoncry(SPECIES_COMBEE, CRY_MODE_NORMAL)
+    applymovement(LOCALID_R10_COMBEE_6, ow_r10_Movement_CombeeHeart)
+    waitmovement(0)
+    waitmoncry
+    fadescreen(FADE_TO_BLACK)
+    removeobject(LOCALID_R10_COMBEE_6)
+    setflag(FLAG_HIDE_R10_COMBEE_6)
+    addvar(VAR_R10_HONEY_COMBEE, 1)
+    fadescreen(FADE_FROM_BLACK)
+    goto(ow_r10_EventScript_CombeeReturnedMsg)
+}
+
+script ow_r10_EventScript_CombeeReturnedMsg {
+    goto_if_eq(VAR_R10_HONEY_COMBEE, 6, ow_r10_EventScript_AllCombeeHome)
+    buffernumberstring(STR_VAR_1, VAR_R10_HONEY_COMBEE)
+    msgbox(format("The Combee returned to the hives.\n{STR_VAR_1} of 6 gathered so far."), MSGBOX_DEFAULT)
+    release
+    end
+}
+
+script ow_r10_EventScript_AllCombeeHome {
+    msgbox(format("The Combee returned to the hives.\nAll six are home."), MSGBOX_DEFAULT)
+    completesubquest(QUEST_HONEY, SUB_QUEST_HONEY_COMBEE)
+    questmenu(QUEST_MENU_SET_REWARD, QUEST_HONEY)
+    release
+    end
+}
+
+// ============================================================
+// HILL TM TRADE NPC (one-off honey -> TM) - LOCALID_R10_HILL_TM_NPC
+// ============================================================
+
+script ow_r10_EventScript_HillTmNpc {
+    lock
+    faceplayer
+    setspeaker("Apiary Watcher")
+    goto_if_set(FLAG_R10_HONEY_TRADED, ow_r10_EventScript_HillTmNpc_Done)
+    msgbox(format("Smell that?\NMelli lets her bees forage amongst the wildflowers.\pThat's why her honey tastes different. It's the wildflowers."))
+    checkitem(ITEM_HONEY, 1)
+    goto_if_eq(VAR_RESULT, FALSE, ow_r10_EventScript_HillTmNpc_NoHoney)
+    msgbox(format("Hold on - is that a jar from her apiary?\NWould you part with it? I've something I'd trade for it."), MSGBOX_YESNO)
+    goto_if_eq(VAR_RESULT, NO, ow_r10_EventScript_HillTmNpc_Declined)
+    removeitem(ITEM_HONEY, 1)
+    giveitem(ITEM_TM_GIGA_DRAIN)
+    setflag(FLAG_R10_HONEY_TRADED)
+    msgbox(format("That's a fair trade, in my book."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+script ow_r10_EventScript_HillTmNpc_NoHoney {
+    msgbox(format("If you ever get hold of a jar of hers, come find me.\NI've something I'd trade for it."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+script ow_r10_EventScript_HillTmNpc_Declined {
+    msgbox(format("Fair enough. Hold onto it."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+script ow_r10_EventScript_HillTmNpc_Done {
+    msgbox(format("That honey is delicious.\NThank you again."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+// ============================================================
+// CAMPER (one-off item gift) - LOCALID_R10_CAMPER
+// ============================================================
+
+script ow_r10_EventScript_Camper {
+    lock
+    faceplayer
+    setspeaker("Camper")
+    goto_if_set(FLAG_R10_CAMPER_GIFT, ow_r10_EventScript_Camper_Done)
+    msgbox(format("First time down this track?\pIt's quiet but the trees crowd in close.\NSome of the bug Pokémon get bold around here."))
+    msgbox(format("Here - take this. It'll keep them off you for a bit."))
+    giveitem(ITEM_REPEL)
+    setflag(FLAG_R10_CAMPER_GIFT)
+    setspeaker(NULL)
+    release
+    end
+}
+
+script ow_r10_EventScript_Camper_Done {
+    msgbox(format("Quiet down here, isn't it?\NI'm not in a rush to head back up."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+// ============================================================
+// HIKER on hilltop (flavour) - LOCALID_R10_HIKER_HILLTOP
+// ============================================================
+
+script ow_r10_EventScript_HikerHilltop {
+    lock
+    faceplayer
+    setspeaker("Hiker")
+    msgbox(format("There's a shortcut through the rocks east of the apiary.\NIt'll save a lot of time getting to Mirevari from here."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+// ============================================================
+// HIKER by rockface (flavour - Rock Climb hint) - LOCALID_R10_HIKER_ROCKFACE
+// ============================================================
+
+script ow_r10_EventScript_HikerRockface {
+    lock
+    faceplayer
+    setspeaker("Hiker")
+    msgbox(format("That rockface up there is a bit too sheer for me.\nBut a Pokémon with the right grip?\NIt could scramble straight past."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+// ============================================================
+// NURSE + CHANSEY (outdoor heal) - LOCALID_R10_NURSE, LOCALID_R10_CHANSEY
+// ============================================================
+
+script ow_r10_EventScript_Nurse {
+    lock
+    faceplayer
+    setspeaker("Nurse")
+    msgbox(format("You look like you've been at it a while.\NLet me take a look at your team."), MSGBOX_YESNO)
+    goto_if_eq(VAR_RESULT, NO, ow_r10_EventScript_Nurse_Decline)
+    closemessage
+    call(Common_EventScript_OutOfCenterPartyHeal)
+    msgbox(format("There you go. Mind how you step out there."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+script ow_r10_EventScript_Nurse_Decline {
+    msgbox(format("Alright. I'll be here if you change your mind."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+script ow_r10_EventScript_Chansey {
+    lock
+    faceplayer
+    playmoncry(SPECIES_CHANSEY, CRY_MODE_NORMAL)
+    waitmoncry
+    release
+    end
+}
+
+// ============================================================
+// TRAINERS
+// ============================================================
+
+script ow_r10_EventScript_Picnicker {
+    trainerbattle_single(
+        TRAINER_OW_R10_PICNICKER,
+        ow_r10_Text_Picnicker_Intro,
+        ow_r10_Text_Picnicker_Defeat
+    )
+    msgbox(format("There's something special down here. I can feel it.\NI just need to keep looking."), MSGBOX_AUTOCLOSE)
+}
+
+text ow_r10_Text_Picnicker_Intro {
+    "I was just having a lovely picnic!\pJoin me - in a battle first!"
+}
+
+text ow_r10_Text_Picnicker_Defeat {
+    "You're tough!\nWant to share my lunch?"
+}
+
+script ow_r10_EventScript_Blackbelt {
+    trainerbattle_single(
+        TRAINER_OW_R10_BLACKBELT,
+        ow_r10_Text_Blackbelt_Intro,
+        ow_r10_Text_Blackbelt_Defeat
+    )
+    msgbox(format("The lumberjacks asked me to move.\pPfft!\NI can split wood without their axes."), MSGBOX_AUTOCLOSE)
+}
+
+text ow_r10_Text_Blackbelt_Intro {
+    "KIIAAAI!\pYou stepped into my training\lspace. Show me what you've got."
+}
+
+text ow_r10_Text_Blackbelt_Defeat {
+    "Hoo-hah!\nMy stance was completely broken!"
+}
+
+script ow_r10_EventScript_LumberjackF1 {
+    trainerbattle_single(
+        TRAINER_OW_R10_LUMBERJACK_F1,
+        ow_r10_Text_LumberjackF1_Intro,
+        ow_r10_Text_LumberjackF1_Defeat
+    )
+    msgbox(format("Just three more trees to fell before we can take a break..."), MSGBOX_AUTOCLOSE)
+}
+
+text ow_r10_Text_LumberjackF1_Intro {
+    format("We're thinning out the overgrowth on this trail!\pIf you want to clear this pass, you'll need to break\lour wooden defense lines!")
+}
+
+text ow_r10_Text_LumberjackF1_Defeat {
+    "Timber!"
+}
+
+script ow_r10_EventScript_LumberjackF2 {
+    trainerbattle_single(
+        TRAINER_OW_R10_LUMBERJACK_F2,
+        ow_r10_Text_LumberjackF2_Intro,
+        ow_r10_Text_LumberjackF2_Defeat
+    )
+    msgbox(format("Honey or timber. People want both.\NAct like only one of us is the problem."), MSGBOX_AUTOCLOSE)
+}
+
+text ow_r10_Text_LumberjackF2_Intro {
+    "You wandered into a cut site, kid.\pStep carefully - or step into a battle."
+}
+
+text ow_r10_Text_LumberjackF2_Defeat {
+    "You have a strong arm.\nCould use a crew member like that."
+}
+
+script ow_r10_EventScript_LumberjackM1 {
+    trainerbattle_single(
+        TRAINER_OW_R10_LUMBERJACK_M1,
+        ow_r10_Text_LumberjackM1_Intro,
+        ow_r10_Text_LumberjackM1_Defeat
+    )
+    msgbox(format("These Combee keep getting in the way.\pWe need to steer clear of the Vespiquen, though."), MSGBOX_AUTOCLOSE)
+}
+
+text ow_r10_Text_LumberjackM1_Intro {
+    "Help me stack these logs!\nOr fight me. Either works."
+}
+
+text ow_r10_Text_LumberjackM1_Defeat {
+    "Ugh, I guess I'll do it myself..."
+}
+
+script ow_r10_EventScript_LumberjackM2 {
+    trainerbattle_single(
+        TRAINER_OW_R10_LUMBERJACK_M2,
+        ow_r10_Text_LumberjackM2_Intro,
+        ow_r10_Text_LumberjackM2_Defeat
+    )
+    msgbox(format("Truth is, I'd take the Combeekeeper's job over mine.\pDon't tell the crew I said that."), MSGBOX_AUTOCLOSE)
+}
+
+text ow_r10_Text_LumberjackM2_Intro {
+    "Heard the hum from the apiary?\nThe bees know when we're working\lclose. They don't like it."
+}
+
+text ow_r10_Text_LumberjackM2_Defeat {
+    "Fair fight.\nBack to the saw."
+}
+
+// ============================================================
+// LOGGING CREW POKEMON (silent companions of the lumberjacks)
+// ============================================================
+
+script ow_r10_EventScript_LoggingFarfetchd {
+    lock
+    faceplayer
+    playmoncry(SPECIES_FARFETCHD_GALAR, CRY_MODE_NORMAL)
+    waitmoncry
+    release
+    end
+}
+
+script ow_r10_EventScript_LoggingScyther {
+    lock
+    faceplayer
+    playmoncry(SPECIES_SCYTHER, CRY_MODE_NORMAL)
+    waitmoncry
+    release
+    end
+}
+
+script ow_r10_EventScript_LoggingFraxure {
+    lock
+    faceplayer
+    playmoncry(SPECIES_FRAXURE, CRY_MODE_NORMAL)
+    waitmoncry
+    release
+    end
+}

@@ -1467,3 +1467,12 @@ const u8 gText_SubQuest2_Desc17[] = _("Description Sub 17");
 const u8 gText_SubQuest2_Desc18[] = _("Description Sub 18");
 const u8 gText_SubQuest2_Desc19[] = _("Description Sub 19");
 const u8 gText_SubQuest2_Desc20[] = _("Description Sub 20");
+
+const u8 gText_SideQuestName_Honey[] = _("Honey Trouble");
+const u8 gText_SideQuestDesc_Honey[] = _("Help the combeekeeper deal with a\nrampaging Heracross at her apiary.");
+const u8 gText_SideQuestDoneDesc_Honey[] = _("The hives are calm again, and the\ncombeekeeper has her honey flowing.");
+const u8 gText_SideQuestMap_Honey[] = _("Route 10");
+const u8 gText_SubQuestHoney_NameHeracross[] = _("Subdue the Heracross");
+const u8 gText_SubQuestHoney_DescHeracross[] = _("Drive off the Heracross raiding\nthe apiary.");
+const u8 gText_SubQuestHoney_NameCombee[] = _("Round Up the Combee");
+const u8 gText_SubQuestHoney_DescCombee[] = _("Guide the scattered Combee back\nto the hive.");

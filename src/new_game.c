@@ -248,6 +248,14 @@ void NewGameInitData(void)
     FlagSet(FLAG_SYS_QUEST_MENU_GET);
     FlagSet(FLAG_HIDE_SOWBACK_B1F_NADIA);
     FlagSet(FLAG_HIDE_KOLCHAVI_LAB_2F_NADIA);
+    FlagSet(FLAG_HIDE_R10_HERACROSS);
+    FlagSet(FLAG_HIDE_R10_COMBEE_1);
+    FlagSet(FLAG_HIDE_R10_COMBEE_2);
+    FlagSet(FLAG_HIDE_R10_COMBEE_3);
+    FlagSet(FLAG_HIDE_R10_COMBEE_4);
+    FlagSet(FLAG_HIDE_R10_COMBEE_5);
+    FlagSet(FLAG_HIDE_R10_COMBEE_6);
+    FlagSet(FLAG_HIDE_R10_AMBIENT_COMBEE);
 
     // Set Nuzlocke flag if it was selected during Birch's speech
     if (WasNuzlockeModeSelected())

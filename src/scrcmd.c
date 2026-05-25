@@ -50,6 +50,7 @@
 #include "script_menu.h"
 #include "script_movement.h"
 #include "script_pokemon_util.h"
+#include "level_scaling.h"
 #include "shop.h"
 #include "slot_machine.h"
 #include "sound.h"
@@ -2592,6 +2593,21 @@ bool8 ScrCmd_setwildbattle(struct ScriptContext *ctx)
     return FALSE;
 }
 
+// Sets up a single-mon scripted wild battle scaled to player party.
+// Input: gSpecialVar_0x8000 = species
+// Level = average party level (excluding fainted) + 2, clamped to [5, MAX_LEVEL].
+void SetupBossWildBattle(void)
+{
+    u16 species = gSpecialVar_0x8000;
+    s32 level = CalculatePlayerPartyBaseLevel(LEVEL_SCALING_PARTY_AVG, TRUE) + 3;
+    if (level < 5)
+        level = 5;
+    if (level > MAX_LEVEL)
+        level = MAX_LEVEL;
+    CreateScriptedWildMon(species, (u8)level, ITEM_NONE);
+    sIsScriptedWildDouble = FALSE;
+}
+
 bool8 ScrCmd_dowildbattle(struct ScriptContext *ctx)
 {
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
@@ -3445,6 +3461,12 @@ bool8 ScrCmd_questmenu(struct ScriptContext *ctx)
         else
             gSpecialVar_Result = FALSE;
         break;
+    case QUEST_MENU_CHECK_INACTIVE:
+        if (QuestMenu_GetSetQuestState(questId, FLAG_GET_INACTIVE))
+            gSpecialVar_Result = TRUE;
+        else
+            gSpecialVar_Result = FALSE;
+        break;
     case QUEST_MENU_CHECK_ACTIVE:
         if (QuestMenu_GetSetQuestState(questId, FLAG_GET_ACTIVE))
             gSpecialVar_Result = TRUE;
@@ -3514,6 +3536,15 @@ bool8 ScrCmd_subquestmenu(struct ScriptContext *ctx)
             break;
         case QUEST_MENU_BUFFER_QUEST_NAME:
             QuestMenu_CopySubquestName(gStringVar1,parentId,childId);
+            break;
+        case QUEST_MENU_UNLOCK_QUEST:
+            QuestMenu_GetSetSubquestState(parentId, FLAG_SET_UNLOCKED, childId);
+            break;
+        case QUEST_MENU_CHECK_UNLOCKED:
+            if (QuestMenu_GetSetSubquestState(parentId, FLAG_GET_UNLOCKED, childId))
+                gSpecialVar_Result = TRUE;
+            else
+                gSpecialVar_Result = FALSE;
             break;
     }
 

@@ -633,7 +633,8 @@ struct SaveBlock2
 
     u8 questData[QUEST_FLAGS_COUNT * QUEST_STATES];
     u8 subQuests[SUB_FLAGS_COUNT];
-}; 
+    u8 subQuestsUnlocked[SUB_FLAGS_COUNT];
+};
 
 extern struct SaveBlock2 *gSaveBlock2Ptr;
 

@@ -17707,3 +17707,333 @@ EVs: 4 HP / 252 Atk / 252 Spe
 - Rock Slide
 - Earthquake
 - Iron Head
+
+=== TRAINER_OW_R10_PICNICKER ===
+Name: LENNI
+Class: Picnicker
+Pic: Picnicker
+Gender: Female
+Music: Girl
+Double Battle: Yes
+Party Size: 4
+Pool Rules: Support Doubles
+AI: Check Bad Move / Try To Faint
+
+Whimsicott @ Covert Cloak
+Level: 100
+Ability: Prankster
+Nature: Timid
+EVs: 252 HP / 4 Def / 252 Spe
+Tags: Lead
+- Tailwind
+- Moonblast
+- Encore
+- Helping Hand
+
+Raichu @ Focus Sash
+Level: 100
+Ability: Lightning Rod
+Nature: Timid
+EVs: 4 HP / 252 SpA / 252 Spe
+Tags: Lead
+- Fake Out
+- Nuzzle
+- Grass Knot
+- Thunderbolt
+
+Clefable @ Sitrus Berry
+Level: 100
+Ability: Unaware
+Nature: Calm
+EVs: 252 HP / 172 Def / 84 SpD
+Tags: Support
+- Moonblast
+- Follow Me
+- Protect
+- Life Dew
+
+Miltank @ Heavy-Duty Boots
+Level: 100
+Ability: Thick Fat
+Nature: Bold
+EVs: 252 HP / 128 Def / 108 SpD / 20 Spe
+Tags: Ace
+- Milk Drink
+- Seismic Toss
+- Toxic
+- Heal Bell
+
+=== TRAINER_OW_R10_BLACKBELT ===
+Name: ROMAN
+Class: Black Belt
+Pic: Black Belt
+Gender: Male
+Music: Intense
+Double Battle: Yes
+Party Size: 4
+Pool Rules: Doubles
+AI: Check Bad Move / Try To Faint
+
+Mienshao @ Choice Scarf
+Level: 100
+Ability: Regenerator
+Nature: Jolly
+EVs: 252 Atk / 4 SpD / 252 Spe
+Tags: Lead
+- Close Combat
+- Knock Off
+- Ice Spinner
+- U-turn
+
+Hawlucha @ Grassy Seed
+Level: 100
+Ability: Unburden
+Nature: Adamant
+EVs: 72 HP / 252 Atk / 60 SpD / 124 Spe
+Tags: Lead
+- Swords Dance
+- Acrobatics
+- Close Combat
+- Encore
+
+Conkeldurr @ Flame Orb
+Level: 100
+Ability: Guts
+Nature: Adamant
+EVs: 252 HP / 252 Atk / 4 Def
+Tags: Ace
+- Drain Punch
+- Facade
+- Knock Off
+- Mach Punch
+
+Lucario @ Life Orb
+Level: 100
+Ability: Inner Focus
+Nature: Jolly
+EVs: 252 Atk / 4 SpD / 252 Spe
+Tags: Ace
+- Swords Dance
+- Close Combat
+- Meteor Mash
+- Extreme Speed
+
+=== TRAINER_OW_R10_LUMBERJACK_F1 ===
+Name: BREN
+Class: OW Lumberjack F
+Pic: OW Lumberjack F
+Gender: Female
+Music: Hiker
+Double Battle: Yes
+Party Size: 4
+Pool Rules: Doubles
+AI: Check Bad Move / Try To Faint
+
+Leavanny @ Life Orb
+Level: 100
+Ability: Chlorophyll
+Nature: Adamant
+EVs: 4 HP / 252 Atk / 252 Spe
+Tags: Lead
+- Leaf Blade
+- Lunge
+- Swords Dance
+- Protect
+
+Mudsdale @ Leftovers
+Level: 100
+Ability: Stamina
+Nature: Impish
+EVs: 252 HP / 252 Def / 4 SpD
+Tags: Lead
+- Body Press
+- High Horsepower
+- Heavy Slam
+- Rock Slide
+
+Absol @ Absolite
+Level: 100
+Ability: Super Luck
+Nature: Jolly
+EVs: 252 Atk / 4 SpD / 252 Spe
+Tags: Ace
+- Knock Off
+- Sucker Punch
+- Close Combat
+- Night Slash
+
+Rillaboom @ Assault Vest
+Level: 100
+Ability: Grassy Surge
+Nature: Adamant
+EVs: 252 HP / 116 Atk / 4 Def / 60 SpD / 76 Spe
+Tags: Ace
+- Wood Hammer
+- Grassy Glide
+- Fake Out
+- U-turn
+
+=== TRAINER_OW_R10_LUMBERJACK_F2 ===
+Name: TESSA
+Class: OW Lumberjack F
+Pic: OW Lumberjack F
+Gender: Female
+Music: Hiker
+Double Battle: Yes
+Party Size: 4
+Pool Rules: Doubles
+AI: Check Bad Move / Try To Faint
+
+Haxorus @ Choice Band
+Level: 100
+Ability: Mold Breaker
+Nature: Jolly
+EVs: 252 Atk / 4 SpD / 252 Spe
+Tags: Lead
+- First Impression
+- Outrage
+- Earthquake
+- Poison Jab
+
+Scizor @ Lum Berry
+Level: 100
+Ability: Technician
+Nature: Adamant
+EVs: 120 HP / 252 Atk / 136 Spe
+Tags: Lead
+- Bullet Punch
+- U-turn
+- Knock Off
+- Close Combat
+
+Breloom @ Toxic Orb
+Level: 100
+Ability: Poison Heal
+Nature: Adamant
+EVs: 252 HP / 80 Atk / 176 Spe
+Tags: Ace
+- Close Combat
+- Seed Bomb
+- Facade
+- Protect
+
+Sirfetchd @ Leek
+Level: 100
+Ability: Scrappy
+Nature: Adamant
+EVs: 40 HP / 252 Atk / 216 Spe
+Tags: Ace
+- Close Combat
+- First Impression
+- Knock Off
+- Brave Bird
+
+=== TRAINER_OW_R10_LUMBERJACK_M1 ===
+Name: HOLD
+Class: Lumberjack
+Pic: Lumberjack
+Gender: Male
+Music: Male
+Double Battle: Yes
+Party Size: 4
+Pool Rules: Doubles
+AI: Check Bad Move / Try To Faint
+
+Haxorus @ Choice Band
+Level: 100
+Ability: Mold Breaker
+Nature: Jolly
+EVs: 252 Atk / 4 SpD / 252 Spe
+Tags: Lead
+- First Impression
+- Outrage
+- Earthquake
+- Poison Jab
+
+Conkeldurr @ Flame Orb
+Level: 100
+Ability: Guts
+Nature: Adamant
+EVs: 252 HP / 252 Atk / 4 Def
+Tags: Lead
+- Drain Punch
+- Facade
+- Knock Off
+- Mach Punch
+
+Mudsdale @ Leftovers
+Level: 100
+Ability: Stamina
+Nature: Impish
+EVs: 252 HP / 252 Def / 4 SpD
+Tags: Ace
+- Body Press
+- High Horsepower
+- Heavy Slam
+- Rock Slide
+
+Rillaboom @ Assault Vest
+Level: 100
+Ability: Grassy Surge
+Nature: Adamant
+EVs: 252 HP / 116 Atk / 4 Def / 60 SpD / 76 Spe
+Tags: Ace
+- Wood Hammer
+- Grassy Glide
+- Fake Out
+- U-turn
+
+=== TRAINER_OW_R10_LUMBERJACK_M2 ===
+Name: ARDIN
+Class: Lumberjack
+Pic: Lumberjack
+Gender: Male
+Music: Male
+Double Battle: Yes
+Party Size: 4
+Pool Rules: Doubles
+AI: Check Bad Move / Try To Faint
+
+Scizor @ Choice Band
+Level: 100
+Ability: Technician
+Nature: Adamant
+EVs: 120 HP / 252 Atk / 136 Spe
+Tags: Lead
+- Bullet Punch
+- U-turn
+- Knock Off
+- Close Combat
+
+Sirfetchd @ Leek
+Level: 100
+Ability: Scrappy
+Nature: Adamant
+EVs: 40 HP / 252 Atk / 216 Spe
+Tags: Lead
+- Close Combat
+- First Impression
+- Knock Off
+- Brave Bird
+
+Heracross @ Heavy-Duty Boots
+Level: 100
+Ability: Guts
+Nature: Jolly
+EVs: 252 Atk / 4 SpD / 252 Spe
+Tags: Ace
+- Close Combat
+- Knock Off
+- Stone Edge
+- Megahorn
+
+Breloom @ Toxic Orb
+Level: 100
+Ability: Poison Heal
+Nature: Adamant
+EVs: 252 HP / 80 Atk / 176 Spe
+Tags: Ace
+- Close Combat
+- Seed Bomb
+- Facade
+- Protect

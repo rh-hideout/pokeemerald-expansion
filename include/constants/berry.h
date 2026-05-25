@@ -150,6 +150,19 @@ enum __attribute__((__packed__)) Flavor
 #define BERRY_TREE_OW_R3_ORAN_1   93
 #define BERRY_TREE_OW_R3_SOIL_2   94
 
+// OW Route 10
+#define BERRY_TREE_OW_R10_SOIL_1  95
+#define BERRY_TREE_OW_R10_SOIL_2  96
+#define BERRY_TREE_OW_R10_LUM_1   97
+#define BERRY_TREE_OW_R10_SOIL_3  98
+#define BERRY_TREE_OW_R10_SITRUS_1 99
+#define BERRY_TREE_OW_R10_SOIL_4  100
+
+// OW Route 8
+#define BERRY_TREE_OW_R8_PECHA_1  101
+#define BERRY_TREE_OW_R8_PERSIM_1 102
+#define BERRY_TREE_OW_R8_SOIL_1   103
+
 // Remainder are unused
 
 #define BERRY_TREES_COUNT 128

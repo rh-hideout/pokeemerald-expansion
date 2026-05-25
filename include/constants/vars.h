@@ -280,7 +280,7 @@
 #define VAR_BATTLE_SPEED                                 0x4100 // Battle speed setting (0-3 for 1x/2x/3x/4x)
 #define VAR_DEXNAV_SPECIES                               0x4101
 #define VAR_DEXNAV_STEPCOUNTER                           0x4102
-#define VAR_OW_UNUSED_0x4103                             0x4103
+#define VAR_R10_HONEY_COMBEE                             0x4103
 #define VAR_OW_UNUSED_0x4104                             0x4104
 #define VAR_OW_UNUSED_0x4105                             0x4105
 #define VAR_OW_UNUSED_0x4106                             0x4106

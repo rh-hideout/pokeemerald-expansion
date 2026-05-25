@@ -1,0 +1,71 @@
+mapscripts ow_r10_House1_MapScripts {}
+
+// ============================================================
+// MELLI - LOCALID_R10_HOUSE1_MELLI
+// ============================================================
+
+script ow_r10_House1_EventScript_Melli {
+    lock
+    faceplayer
+    setspeaker("Melli")
+    goto_if_quest_complete(QUEST_HONEY, ow_r10_House1_EventScript_Melli_QuestComplete)
+    msgbox(format("Something you want to know about combeekeeping?"))
+    goto(ow_r10_House1_EventScript_MelliMenu)
+}
+
+script ow_r10_House1_EventScript_Melli_QuestComplete {
+    goto_if_set(FLAG_R10_HOUSE1_MELLI_HONEY_GIFT, ow_r10_House1_EventScript_Melli_AfterGift)
+    msgbox(format("You brought them all home.\pHere. Take some of what they made."))
+    giveitem(ITEM_HONEY, 5)
+    setflag(FLAG_R10_HOUSE1_MELLI_HONEY_GIFT)
+    goto(ow_r10_House1_EventScript_MelliMenu)
+}
+
+script ow_r10_House1_EventScript_Melli_AfterGift {
+    msgbox(format("Something you want to know about combeekeeping?"))
+    goto(ow_r10_House1_EventScript_MelliMenu)
+}
+
+script ow_r10_House1_EventScript_MelliMenu {
+    dynmultipush("The honey", 0)
+    dynmultipush("Westmark", 1)
+    dynmultipush("The Combee", 2)
+    dynmultistack(0, 0, FALSE, 3, FALSE, 0, DYN_MULTICHOICE_CB_NONE)
+    switch (var(VAR_RESULT)) {
+        case 0: goto(ow_r10_House1_EventScript_Melli_Honey)
+        case 1: goto(ow_r10_House1_EventScript_Melli_Westmark)
+        case 2: goto(ow_r10_House1_EventScript_Melli_Combee)
+        case MULTI_B_PRESSED: goto(ow_r10_House1_EventScript_Melli_Exit)
+    }
+    end
+}
+
+script ow_r10_House1_EventScript_Melli_Honey {
+    msgbox(format("What I make here isn't shelf honey. My Combee forage through every wildflower on this route - each season different, each hive slightly different. You can taste where they've been."))
+    msgbox(format("There's a grade above that. Darker, heavier. Some of my Combee range far enough east to bring back nectar I can't account for. Something grows in there I haven't seen. I can taste the difference - I just can't source it."))
+    msgbox(format("Floran sells timber and my honey.\pThe timber is the same as anyone's.\NMine isn't."))
+    goto(ow_r10_House1_EventScript_MelliMenu)
+}
+
+script ow_r10_House1_EventScript_Melli_Westmark {
+    msgbox(format("I used to work out of Floran. Kept my hives on the eastern edge of the city - good forage, close to market."))
+    msgbox(format("Then Westmark started clearing the forest around the city. Sawdust in the air, trees gone. The Combee stopped bringing back what they used to. The honey changed. Not for the better."))
+    msgbox(format("I packed up and moved down here. That was six years ago.\pNow they have a cut site on this route too.\NI don't know where they plan to stop."))
+    goto(ow_r10_House1_EventScript_MelliMenu)
+}
+
+script ow_r10_House1_EventScript_Melli_Combee {
+    msgbox(format("One in eight Combee is female. That red mark on the lower face - that's how you tell. The males gather nectar their whole lives and nothing else. Females can become something more."))
+    msgbox(format("When a female Combee evolves, the whole colony follows. She becomes the queen. Her lower body is a living honeycomb - she rears the next generation inside herself, and the workers bring everything back to her."))
+    msgbox(format("I raised this one from an egg. Her mother's colony was abandoned in the old forest near Floran - already gone by the time I found them. Only one female in the whole swarm. Took three years before she was ready to evolve."))
+    msgbox(format("Lose her and I lose everything.\pNot just the hive.\NThe relationship."))
+    goto(ow_r10_House1_EventScript_MelliMenu)
+}
+
+script ow_r10_House1_EventScript_Melli_Exit {
+    msgbox(format("Right. I've got work to do."))
+    setspeaker(NULL)
+    release
+    end
+}
+

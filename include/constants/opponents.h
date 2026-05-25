@@ -873,10 +873,16 @@
 #define TRAINER_OW_SOWBACK_B1F_BLACK_BELT   866
 #define TRAINER_OW_SOWBACK_B1F_FIREBREATHER 867
 #define TRAINER_OW_R6_SURVEYOR              868
+#define TRAINER_OW_R10_PICNICKER            869
+#define TRAINER_OW_R10_BLACKBELT            870
+#define TRAINER_OW_R10_LUMBERJACK_F1        871
+#define TRAINER_OW_R10_LUMBERJACK_M1        872
+#define TRAINER_OW_R10_LUMBERJACK_M2        873
+#define TRAINER_OW_R10_LUMBERJACK_F2        874
 
 // NOTE: MAX_TRAINERS_COUNT can be increased but will take up additional saveblock space (1 bit per trainer in SaveBlock1)
 
-#define TRAINERS_COUNT_EMERALD     869
+#define TRAINERS_COUNT_EMERALD     875
 #define MAX_TRAINERS_COUNT_EMERALD 1300
 
 #if IS_FRLG
