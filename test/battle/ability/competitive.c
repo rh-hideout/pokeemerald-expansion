@@ -432,3 +432,26 @@ SINGLE_BATTLE_TEST("Competitive doesn't activate if the pokemon lowers it's own 
             EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
     }
 }
+
+SINGLE_BATTLE_TEST("Competitive doesn't activate when Room Service lowers Speed")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TRICK_ROOM) == EFFECT_TRICK_ROOM);
+        ASSUME(gItemsInfo[ITEM_ROOM_SERVICE].holdEffect == HOLD_EFFECT_ROOM_SERVICE);
+        PLAYER(SPECIES_IGGLYBUFF) { Ability(ABILITY_COMPETITIVE); Item(ITEM_ROOM_SERVICE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_TRICK_ROOM); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK_ROOM, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        NONE_OF {
+            ABILITY_POPUP(player, ABILITY_COMPETITIVE);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        }
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE);
+    }
+}
