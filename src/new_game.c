@@ -195,7 +195,7 @@ void NewGameInitData(void)
     ClearPlayerLinkBattleRecords();
     InitSeedotSizeRecord();
     InitLotadSizeRecord();
-    gPartiesCount[B_TRAINER_0] = 0;
+    gPartiesCount[B_TRAINER_PLAYER] = 0;
     ZeroPlayerPartyMons();
     ResetPokemonStorageSystem();
     DeactivateAllRoamers();

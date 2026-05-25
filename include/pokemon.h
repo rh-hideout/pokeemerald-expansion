@@ -698,10 +698,10 @@ struct OriginalTrainerId
 
 extern u8 gPartiesCount[MAX_BATTLE_TRAINERS];
 extern struct Pokemon gParties[MAX_BATTLE_TRAINERS][PARTY_SIZE];
-#define gPlayerParty gParties[B_TRAINER_0]
-#define gEnemyParty gParties[B_TRAINER_1]
-#define gPlayerPartyCount gPartiesCount[B_TRAINER_0]
-#define gEnemyPartyCount gPartiesCount[B_TRAINER_1]
+#define gPlayerParty gParties[B_TRAINER_PLAYER]
+#define gEnemyParty gParties[B_TRAINER_OPPONENT_A]
+#define gPlayerPartyCount gPartiesCount[B_TRAINER_PLAYER]
+#define gEnemyPartyCount gPartiesCount[B_TRAINER_OPPONENT_A]
 extern struct SpriteTemplate gMultiuseSpriteTemplate;
 extern u16 gFollowerSteps;
 extern bool32 consumeItem;

@@ -923,14 +923,14 @@ static void CreateNPCTrainerHillParty(u16 trainerId, enum BattleTrainer trainer)
 void FillHillTrainerParty(void)
 {
     ZeroEnemyPartyMons();
-    CreateNPCTrainerHillParty(TRAINER_BATTLE_PARAM.opponentA, B_TRAINER_1);
+    CreateNPCTrainerHillParty(TRAINER_BATTLE_PARAM.opponentA, B_TRAINER_OPPONENT_A);
 }
 
 void FillHillTrainersParties(void)
 {
     ZeroEnemyPartyMons();
-    CreateNPCTrainerHillParty(TRAINER_BATTLE_PARAM.opponentA, B_TRAINER_1);
-    CreateNPCTrainerHillParty(TRAINER_BATTLE_PARAM.opponentB, B_TRAINER_3);
+    CreateNPCTrainerHillParty(TRAINER_BATTLE_PARAM.opponentA, B_TRAINER_OPPONENT_A);
+    CreateNPCTrainerHillParty(TRAINER_BATTLE_PARAM.opponentB, B_TRAINER_OPPONENT_B);
 }
 
 // This function is unused, but my best guess is
