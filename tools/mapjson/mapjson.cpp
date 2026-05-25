@@ -830,7 +830,10 @@ string generate_layouts_table_text(Json layouts_data) {
             continue;
 
         if (!is_build_version_compatible(layout["build_version"]))
+        {
+            text << "\t.4byte NULL\n";
             continue;
+        }
 
         string layout_name = json_to_string(layout, "name", true);
         if (layout_name.empty()) layout_name = "NULL";

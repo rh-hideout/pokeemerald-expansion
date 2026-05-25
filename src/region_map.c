@@ -2007,8 +2007,7 @@ static void DrawFlyDestTextWindow(void)
                 // Window is already drawn, just empty it
                 FillWindowPixelBuffer(WIN_MAPSEC_NAME, PIXEL_FILL(1));
             }
-            if (sFlyMap->regionMapId == GetRegionMap(gMapHeader.regionMapSectionId))
-                AddTextPrinterParameterized(WIN_MAPSEC_NAME, FONT_NORMAL, sFlyMap->regionMap.mapSecName, 0, 1, 0, NULL);
+            AddTextPrinterParameterized(WIN_MAPSEC_NAME, FONT_NORMAL, sFlyMap->regionMap.mapSecName, 0, 1, 0, NULL);
             ScheduleBgCopyTilemapToVram(0);
             sDrawFlyDestTextWindow = FALSE;
         }
