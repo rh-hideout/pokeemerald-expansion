@@ -135,6 +135,7 @@
     F(B_ENCORE_TARGET,             encoreTarget,            (u32, GEN_COUNT - 1)) \
     F(B_TIME_OF_DAY_HEALING_MOVES, timeOfDayHealingMoves,   (u32, GEN_COUNT - 1)) \
     F(B_DREAM_EATER_LIQUID_OOZE,   dreamEaterLiquidOoze,    (u32, GEN_COUNT - 1)) \
+    F(B_DREAM_EATER_SUBSTITUTE,    dreamEaterSubstitute,    (u32, GEN_COUNT - 1)) \
     F(B_FOCUS_PUNCH_FAILURE,       focusPunchFailure,       (u32, GEN_COUNT - 1)) \
     F(B_RAGE_BUILDS,               rageBuilds,              (u32, GEN_COUNT - 1)) \
     F(B_CHECK_USER_FAILURE,        checkUserFailure,        (u32, GEN_COUNT - 1)) \
@@ -173,6 +174,7 @@
     F(B_ATE_MULTIPLIER,            ateMultiplier,           (u32, GEN_COUNT - 1)) \
     F(B_DEFIANT_STICKY_WEB,        defiantStickyWeb,        (u32, GEN_COUNT - 1)) \
     F(B_INFILTRATOR_SUBSTITUTE,    infiltratorSubstitute,   (u32, GEN_COUNT - 1)) \
+    F(B_DANCER_ORDER,              dancerOrder,             (u32, GEN_COUNT - 1)) \
     /* Item settings */ \
     F(B_CONFUSE_BERRIES_HEAL,      confuseBerriesHeal,      (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_X_ITEMS_BUFF,              xItemsBuff,              (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
@@ -217,7 +219,7 @@
     F(B_MISSING_BADGE_CATCH_MALUS, missingBadgeCatchMalue,  (u32, GEN_COUNT - 1)) \
     F(B_CRITICAL_CAPTURE_IF_OWNED, criticalCaptureIfOwned,  (u32, GEN_COUNT - 1)) \
     /* Other settings */ \
-    F(B_WILD_NATURAL_ENEMIES,      wildNaturalEnemies,      (u32, TRUE))          /* TODO: use in tests */ \
+    F(WE_WILD_NATURAL_ENEMIES,     wildNaturalEnemies,      (u32, TRUE))          /* TODO: use in tests */ \
     F(B_AFFECTION_MECHANICS,       affectionMechanics,      (u32, TRUE))          /* TODO: use in tests */ \
     F(B_OBEDIENCE_MECHANICS,       obedienceMechanics,      (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_USE_FROSTBITE,             useFrostbite,            (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \

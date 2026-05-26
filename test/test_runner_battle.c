@@ -30,6 +30,7 @@
 #undef TestRunner_Battle_AfterLastTurn
 #undef TestRunner_Battle_CheckBattleRecordActionType
 #undef TestRunner_Battle_GetForcedAbility
+#undef TestRunner_Battle_RecordEffectivenessSound
 #endif
 
 #define INVALID(fmt, ...) Test_ExitWithResult(TEST_RESULT_INVALID, sourceLine, ":L%s:%d: " fmt, gTestRunnerState.test->filename, sourceLine, ##__VA_ARGS__)
@@ -200,32 +201,33 @@ static void InvokeTestFunction(const struct BattleTest *test)
 {
     STATE->parametersCount = 0;
     // 2 bits per battler; battler0/1 are always trainer0/1, respectively
-    DATA.battlerTrainers = B_TRAINER_1 << 2;
+    DATA.battlerTrainers = B_TRAINER_OPPONENT_A << 2;
     switch (test->type)
     {
     case BATTLE_TEST_SINGLES:
     case BATTLE_TEST_WILD:
+    case BATTLE_TEST_GHOST:
     case BATTLE_TEST_AI_SINGLES:
         InvokeSingleTestFunctionWithStack(STATE->results, STATE->runParameter, &gBattleMons[B_POSITION_PLAYER_LEFT], &gBattleMons[B_POSITION_OPPONENT_LEFT], test->function.singles, &DATA.stack[BATTLE_TEST_STACK_SIZE]);
         break;
     case BATTLE_TEST_DOUBLES:
     case BATTLE_TEST_AI_DOUBLES:
-        DATA.battlerTrainers |= B_TRAINER_1 << 6;
+        DATA.battlerTrainers |= B_TRAINER_OPPONENT_A << 6;
         InvokeDoubleTestFunctionWithStack(STATE->results, STATE->runParameter, &gBattleMons[B_POSITION_PLAYER_LEFT], &gBattleMons[B_POSITION_OPPONENT_LEFT], &gBattleMons[B_POSITION_PLAYER_RIGHT], &gBattleMons[B_POSITION_OPPONENT_RIGHT], test->function.doubles, &DATA.stack[BATTLE_TEST_STACK_SIZE]);
         break;
     case BATTLE_TEST_MULTI:
     case BATTLE_TEST_AI_MULTI:
-        DATA.battlerTrainers |= (B_TRAINER_2 << 4 | B_TRAINER_3 << 6);
+        DATA.battlerTrainers |= (B_TRAINER_PARTNER << 4 | B_TRAINER_OPPONENT_B << 6);
         InvokeMultiTestFunctionWithStack(STATE->results, STATE->runParameter, &gBattleMons[B_POSITION_PLAYER_LEFT], &gBattleMons[B_POSITION_OPPONENT_LEFT], &gBattleMons[B_POSITION_PLAYER_RIGHT], &gBattleMons[B_POSITION_OPPONENT_RIGHT], test->function.multi, &DATA.stack[BATTLE_TEST_STACK_SIZE]);
         break;
     case BATTLE_TEST_TWO_VS_ONE:
     case BATTLE_TEST_AI_TWO_VS_ONE:
-        DATA.battlerTrainers |= (B_TRAINER_2 << 4 | B_TRAINER_1 << 6);
+        DATA.battlerTrainers |= (B_TRAINER_PARTNER << 4 | B_TRAINER_OPPONENT_A << 6);
         InvokeTwoVsOneTestFunctionWithStack(STATE->results, STATE->runParameter, &gBattleMons[B_POSITION_PLAYER_LEFT], &gBattleMons[B_POSITION_OPPONENT_LEFT], &gBattleMons[B_POSITION_PLAYER_RIGHT], &gBattleMons[B_POSITION_OPPONENT_RIGHT], test->function.two_vs_one, &DATA.stack[BATTLE_TEST_STACK_SIZE]);
         break;
     case BATTLE_TEST_ONE_VS_TWO:
     case BATTLE_TEST_AI_ONE_VS_TWO:
-        DATA.battlerTrainers |= B_TRAINER_3 << 6;
+        DATA.battlerTrainers |= B_TRAINER_OPPONENT_B << 6;
         InvokeOneVsTwoTestFunctionWithStack(STATE->results, STATE->runParameter, &gBattleMons[B_POSITION_PLAYER_LEFT], &gBattleMons[B_POSITION_OPPONENT_LEFT], &gBattleMons[B_POSITION_PLAYER_RIGHT], &gBattleMons[B_POSITION_OPPONENT_RIGHT], test->function.one_vs_two, &DATA.stack[BATTLE_TEST_STACK_SIZE]);
         break;
     }
@@ -301,6 +303,7 @@ static void BattleTest_SetUp(void *data)
     {
     case BATTLE_TEST_SINGLES:
     case BATTLE_TEST_WILD:
+    case BATTLE_TEST_GHOST:
     case BATTLE_TEST_AI_SINGLES:
         STATE->battlersCount = 2;
         break;
@@ -347,12 +350,12 @@ static void SetImplicitSpeeds(void)
     s32 i;
     u32 speed = 12;
     u32 hasSpeeds = 0;
-    u32 allSpeeds = ((1 << DATA.partySizes[B_TRAINER_0]) - 1) | (((1 << DATA.partySizes[B_TRAINER_1]) - 1) << 6) | (((1 << DATA.partySizes[B_TRAINER_2]) - 1) << 12) | (((1 << DATA.partySizes[B_TRAINER_3]) - 1) << 18);
+    u32 allSpeeds = ((1 << DATA.partySizes[B_TRAINER_PLAYER]) - 1) | (((1 << DATA.partySizes[B_TRAINER_OPPONENT_A]) - 1) << 6) | (((1 << DATA.partySizes[B_TRAINER_PARTNER]) - 1) << 12) | (((1 << DATA.partySizes[B_TRAINER_OPPONENT_B]) - 1) << 18);
     bool32 madeProgress;
     while (hasSpeeds != allSpeeds)
     {
         madeProgress = FALSE;
-        for (enum BattleTrainer trainer = B_TRAINER_0; trainer < MAX_BATTLE_TRAINERS; trainer++)
+        for (enum BattleTrainer trainer = B_TRAINER_PLAYER; trainer < MAX_BATTLE_TRAINERS; trainer++)
         {
             for (i = 0; i < DATA.partySizes[trainer]; i++)
             {
@@ -387,6 +390,11 @@ static void BattleTest_Run(void *data)
     {
     case BATTLE_TEST_WILD:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER;
+        for (i = 0; i < STATE->battlersCount; i++)
+            DATA.currentMonIndexes[i] = i / 2;
+        break;
+    case BATTLE_TEST_GHOST:
+        DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_GHOST;
         for (i = 0; i < STATE->battlersCount; i++)
             DATA.currentMonIndexes[i] = i / 2;
         break;
@@ -505,25 +513,25 @@ static void BattleTest_Run(void *data)
     {
         requiredPartySizes[Test_GetBattlerTrainer(i)] = DATA.currentMonIndexes[i] + 1;
     }
-    for (enum BattleTrainer trainer = B_TRAINER_0; trainer < MAX_BATTLE_TRAINERS; trainer++)
+    for (enum BattleTrainer trainer = B_TRAINER_PLAYER; trainer < MAX_BATTLE_TRAINERS; trainer++)
     {
         if (DATA.partySizes[trainer] < requiredPartySizes[trainer])
         {
             switch (trainer)
             {
-            case B_TRAINER_0:
+            case B_TRAINER_PLAYER:
                 Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":L%d PLAYER Pokemon required", requiredPartySizes[trainer]);
                 break;
-            case B_TRAINER_1:
+            case B_TRAINER_OPPONENT_A:
                 if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
                     Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":L%d OPPONENT_A Pokemon required", requiredPartySizes[trainer]);
                 else
                     Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":L%d OPPONENT Pokemon required", requiredPartySizes[trainer]);
                 break;
-            case B_TRAINER_2:
+            case B_TRAINER_PARTNER:
                 Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":L%d PARTNER Pokemon required", requiredPartySizes[trainer]);
                 break;
-            case B_TRAINER_3:
+            case B_TRAINER_OPPONENT_B:
                 Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":L%d OPPONENT_B Pokemon required", requiredPartySizes[trainer]);
                 break;
             default:
@@ -540,7 +548,7 @@ static void BattleTest_Run(void *data)
     {
         u8 requiredExplicitSpeeds[MAX_BATTLE_TRAINERS] = {0};
 
-        for (enum BattleTrainer trainer = B_TRAINER_0; trainer < MAX_BATTLE_TRAINERS; trainer++)
+        for (enum BattleTrainer trainer = B_TRAINER_PLAYER; trainer < MAX_BATTLE_TRAINERS; trainer++)
         {
             for (i = 0; i < PARTY_SIZE; i++)
             {
@@ -1746,6 +1754,7 @@ static const char *const sEventTypeMacros[] =
     [QUEUED_MESSAGE_EVENT] = "MESSAGE",
     [QUEUED_STATUS_EVENT] = "STATUS_ICON",
     [QUEUED_CATCH_CHANCE_EVENT] = "CATCH_CHANCE",
+    [QUEUED_EFFECTIVENESS_EVENT] = "EFFECTIVENESS_SE",
 };
 
 void TestRunner_Battle_AfterLastTurn(void)
@@ -1783,7 +1792,7 @@ void TestRunner_Battle_AfterLastTurn(void)
 static void TearDownBattle(void)
 {
     // Zero out the parties, data in them could potentially carry over
-    for (enum BattleTrainer trainer = B_TRAINER_0; trainer < MAX_BATTLE_TRAINERS; trainer++)
+    for (enum BattleTrainer trainer = B_TRAINER_PLAYER; trainer < MAX_BATTLE_TRAINERS; trainer++)
         ZeroPartyMons(gParties[trainer]);
     SetCurrentDifficultyLevel(DIFFICULTY_NORMAL);
 
@@ -2420,6 +2429,7 @@ static const char *BattlerIdentifier(enum BattlerId battlerId)
     {
     case BATTLE_TEST_SINGLES:
     case BATTLE_TEST_WILD:
+    case BATTLE_TEST_GHOST:
     case BATTLE_TEST_AI_SINGLES:
         return sBattlerIdentifiersSingles[battlerId];
     case BATTLE_TEST_DOUBLES:
@@ -2861,7 +2871,7 @@ void ExpectSendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex
     if (!(DATA.actionBattlers & (1 << battlerId)))
     { // Multi test partner trainers want setting to PlayerPartner controller even if no move set in this case.
         if (IsAITest() && (((battlerId & BIT_SIDE) == B_SIDE_OPPONENT) // If Move was not specified, allow any move used.
-         || ((gBattleTypeFlags & BATTLE_TYPE_MULTI) && Test_GetBattlerTrainer(battlerId) == B_TRAINER_2)))
+         || ((gBattleTypeFlags & BATTLE_TYPE_MULTI) && Test_GetBattlerTrainer(battlerId) == B_TRAINER_PARTNER)))
         {
             SetAiActionToPass(sourceLine, battlerId);
         }
@@ -3464,4 +3474,204 @@ void TestRunner_Battle_AISetScore(const char *file, u32 line, enum BattlerId bat
 void TestRunner_Battle_AIAdjustScore(const char *file, u32 line, enum BattlerId battlerId, u32 moveIndex, s32 score)
 {
     TestRunner_Battle_AILogScore(file, line, battlerId, moveIndex, score, FALSE);
+}
+
+void QueueEffectivenessSound(u32 sourceLine, struct BattlePokemon *battler, struct EffectivenessEventContext ctx)
+{
+    s32 battlerId = battler - gBattleMons;
+    INVALID_IF(!STATE->runScene, "EFFECTIVENESS_SE outside of SCENE");
+    if (DATA.queuedEventsCount == MAX_QUEUED_EVENTS)
+        Test_ExitWithResult(TEST_RESULT_ERROR, sourceLine, ":L%s:%d: EFFECTIVENESS_SE exceeds MAX_QUEUED_EVENTS", gTestRunnerState.test->filename, sourceLine);
+    DATA.queuedEvents[DATA.queuedEventsCount++] = (struct QueuedEvent) {
+        .type = QUEUED_EFFECTIVENESS_EVENT,
+        .sourceLineOffset = SourceLineOffset(sourceLine),
+        .groupType = QUEUE_GROUP_NONE,
+        .groupSize = 1,
+        .as = { .eff_se = {
+            .battlerId = battlerId,
+            .soundId = ctx.soundId,
+        }},
+    };
+}
+
+static s32 TryEffectivenessSound(s32 i, s32 n, u32 battlerId, u32 soundId)
+{
+    struct QueuedEffectiveness *event;
+    s32 iMax = i + n;
+    for (; i < iMax; i++)
+    {
+        if (DATA.queuedEvents[i].type != QUEUED_EFFECTIVENESS_EVENT) {
+            continue;
+        }
+
+        event = &DATA.queuedEvents[i].as.eff_se;
+        // Test_MgbaPrintf("Looking for: battler %d sound %d. Found battler %d sound %d", event->battlerId, event->soundId, battlerId, soundId);
+        if (event->battlerId == battlerId && event->soundId == soundId)
+            return i;
+    }
+    return -1;
+}
+
+void TestRunner_Battle_RecordEffectivenessSound(u32 battlerId, u32 soundId)
+{
+    s32 queuedEvent;
+    s32 match;
+    struct QueuedEvent *event;
+
+    if (DATA.trial.queuedEvent == DATA.queuedEventsCount)
+        return;
+
+    event = &DATA.queuedEvents[DATA.trial.queuedEvent];
+    switch (event->groupType)
+    {
+    case QUEUE_GROUP_NONE:
+    case QUEUE_GROUP_ONE_OF:
+        if (TryEffectivenessSound(DATA.trial.queuedEvent, event->groupSize, battlerId, soundId) != -1)
+            DATA.trial.queuedEvent += event->groupSize;
+        break;
+    case QUEUE_GROUP_NONE_OF:
+        queuedEvent = DATA.trial.queuedEvent;
+        do
+        {
+            if ((match = TryEffectivenessSound(queuedEvent, event->groupSize, battlerId, soundId)) != -1)
+            {
+                const char *filename = gTestRunnerState.test->filename;
+                u32 line = SourceLine(DATA.queuedEvents[match].sourceLineOffset);
+                Test_ExitWithResult(TEST_RESULT_FAIL, line, ":L%s:%d: Matched EFFECTIVENESS_SE", filename, line);
+            }
+
+            queuedEvent += event->groupSize;
+            if (queuedEvent == DATA.queuedEventsCount)
+                break;
+
+            event = &DATA.queuedEvents[queuedEvent];
+            if (event->groupType == QUEUE_GROUP_NONE_OF)
+                continue;
+
+            if (TryEffectivenessSound(queuedEvent, event->groupSize, battlerId, soundId) != -1)
+                DATA.trial.queuedEvent = queuedEvent + event->groupSize;
+        } while (FALSE);
+        break;
+    }
+}
+
+void AssumeStatChange_(u32 sourceLine, u32 moveId, struct StatChangeAssumption asc)
+{
+    u32 numAdditionalEffects = GetMoveAdditionalEffectCount(moveId);
+
+    bool32 hasEffect = FALSE;
+    bool32 expectPlus = asc.attack > 0 || asc.defense > 0 || asc.spAtk > 0 || asc.spDef > 0 || asc.speed > 0 || asc.accuracy > 0 || asc.evasion > 0;
+    bool32 expectMinus = asc.attack < 0 || asc.defense < 0 || asc.spAtk < 0 || asc.spDef < 0 || asc.speed < 0 || asc.accuracy < 0 || asc.evasion < 0;
+
+
+    for (u32 i = 0; i < numAdditionalEffects; i++)
+    {
+        const struct AdditionalEffect *effect = GetMoveAdditionalEffectById(moveId, i);
+        if (effect->moveEffect == STAT_CHANGE_EFFECT_MINUS)
+        {
+            if (!expectMinus)
+              continue;
+
+            hasEffect = TRUE;
+            if (asc.attack < 0)
+                ASSUME(asc.attack == (-1 * effect->attack));
+            if (asc.defense < 0)
+                ASSUME(asc.defense == (-1 * effect->defense));
+            if (asc.spAtk < 0)
+                ASSUME(asc.spAtk == (-1 * effect->spAtk));
+            if (asc.spDef < 0)
+                ASSUME(asc.spDef == (-1 * effect->spDef));
+            if (asc.speed < 0)
+                ASSUME(asc.speed == (-1 * effect->speed));
+            if (asc.accuracy < 0)
+                ASSUME(asc.accuracy == (-1 * effect->accuracy));
+            if (asc.evasion < 0)
+                ASSUME(asc.evasion == (-1 * effect->evasion));
+        }
+        else if (effect->moveEffect == STAT_CHANGE_EFFECT_PLUS)
+        {
+            if (!expectPlus)
+              continue;
+
+            hasEffect = TRUE;
+            if (asc.attack > 0)
+                ASSUME(asc.attack == effect->attack);
+            if (asc.defense > 0)
+                ASSUME(asc.defense == effect->defense);
+            if (asc.spAtk > 0)
+                ASSUME(asc.spAtk == effect->spAtk);
+            if (asc.spDef > 0)
+                ASSUME(asc.spDef == effect->spDef);
+            if (asc.speed > 0)
+                ASSUME(asc.speed == effect->speed);
+            if (asc.accuracy > 0)
+                ASSUME(asc.accuracy == effect->accuracy);
+            if (asc.evasion > 0)
+                ASSUME(asc.evasion == effect->evasion);
+        }
+    }
+
+    ASSUME(hasEffect == TRUE);
+}
+
+void AssumeMoveEffectStatChange_(u32 sourceLine, u32 moveId, struct StatChangeAssumption asc)
+{
+    u32 numAdditionalEffects = GetMoveAdditionalEffectCount(moveId);
+
+    bool32 hasEffect = FALSE;
+    bool32 expectPlus = asc.attack > 0 || asc.defense > 0 || asc.spAtk > 0 || asc.spDef > 0 || asc.speed > 0 || asc.accuracy > 0 || asc.evasion > 0;
+    bool32 expectMinus = asc.attack < 0 || asc.defense < 0 || asc.spAtk < 0 || asc.spDef < 0 || asc.speed < 0 || asc.accuracy < 0 || asc.evasion < 0;
+
+    for (u32 i = 0; i < numAdditionalEffects; i++)
+    {
+        const struct AdditionalEffect *effect = GetMoveAdditionalEffectById(moveId, i);
+        if (effect->moveEffect == MOVE_EFFECT_STAT_MINUS)
+        {
+            if (!expectMinus)
+              continue;
+
+            hasEffect = TRUE;
+            if (asc.attack < 0)
+                ASSUME(asc.attack == (-1 * effect->attack));
+            if (asc.defense < 0)
+                ASSUME(asc.defense == (-1 * effect->defense));
+            if (asc.spAtk < 0)
+                ASSUME(asc.spAtk == (-1 * effect->spAtk));
+            if (asc.spDef < 0)
+                ASSUME(asc.spDef == (-1 * effect->spDef));
+            if (asc.speed < 0)
+                ASSUME(asc.speed == (-1 * effect->speed));
+            if (asc.accuracy < 0)
+                ASSUME(asc.accuracy == (-1 * effect->accuracy));
+            if (asc.evasion < 0)
+                ASSUME(asc.evasion == (-1 * effect->evasion));
+
+            ASSUME(asc.self == effect->self);
+        }
+        else if (effect->moveEffect == MOVE_EFFECT_STAT_PLUS)
+        {
+            if (!expectPlus)
+              continue;
+
+            hasEffect = TRUE;
+            if (asc.attack > 0)
+                ASSUME(asc.attack == effect->attack);
+            if (asc.defense > 0)
+                ASSUME(asc.defense == effect->defense);
+            if (asc.spAtk > 0)
+                ASSUME(asc.spAtk == effect->spAtk);
+            if (asc.spDef > 0)
+                ASSUME(asc.spDef == effect->spDef);
+            if (asc.speed > 0)
+                ASSUME(asc.speed == effect->speed);
+            if (asc.accuracy > 0)
+                ASSUME(asc.accuracy == effect->accuracy);
+            if (asc.evasion > 0)
+                ASSUME(asc.evasion == effect->evasion);
+
+            ASSUME(asc.self == effect->self);
+        }
+    }
+
+    ASSUME(hasEffect == TRUE);
 }

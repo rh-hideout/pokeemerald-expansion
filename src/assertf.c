@@ -19,8 +19,8 @@ struct BitUnPackArgs
 
 extern void BitUnPack(const void *src, void *dest, const struct BitUnPackArgs *);
 
-static const u16 sPltt[2] = INCBIN_U16("graphics/crash_screen/palette.gbapal");
-static const u32 sGlyphs1BPP[] = INCBIN_U32("graphics/crash_screen/font.1bpp");
+static const u16 sPltt[2] = INCGFX_U16("graphics/crash_screen/palette.pal", ".gbapal");
+static const u32 sGlyphs1BPP[] = INCGFX_U32("graphics/crash_screen/font.png", ".1bpp");
 
 enum
 {

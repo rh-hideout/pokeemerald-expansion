@@ -276,8 +276,8 @@ static const struct SpriteTemplate sSpriteTemplate_Confetti = {
     .callback = SpriteCB_Confetti
 };
 
-static const u16 sHallOfFame_Pal[] = INCBIN_U16("graphics/misc/hall_of_fame.gbapal");
-static const u32 sHallOfFame_Gfx[] = INCBIN_U32("graphics/misc/hall_of_fame.4bpp.smol");
+static const u16 sHallOfFame_Pal[] = INCGFX_U16("graphics/misc/hall_of_fame.png", ".gbapal");
+static const u32 sHallOfFame_Gfx[] = INCGFX_U32("graphics/misc/hall_of_fame.png", ".4bpp.smol");
 
 static const struct HallofFameMon sDummyHofMon = {
     .tid = 0x03EA03EA, // (u16[]){1002, 1002} corrupted sprite template?
@@ -385,14 +385,14 @@ static void Task_Hof_InitMonData(u8 taskId)
     gTasks[taskId].data[2] = 0;
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES) != SPECIES_NONE)
+        if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES) != SPECIES_NONE)
         {
-            sHofMonPtr[0].mon[i].species = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES_OR_EGG);
-            sHofMonPtr[0].mon[i].tid = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_OT_ID);
-            sHofMonPtr[0].mon[i].personality = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_PERSONALITY);
-            sHofMonPtr[0].mon[i].lvl = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_LEVEL);
-            sHofMonPtr[0].mon[i].isShiny = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_IS_SHINY);
-            GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_NICKNAME, nick);
+            sHofMonPtr[0].mon[i].species = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG);
+            sHofMonPtr[0].mon[i].tid = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_OT_ID);
+            sHofMonPtr[0].mon[i].personality = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_PERSONALITY);
+            sHofMonPtr[0].mon[i].lvl = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_LEVEL);
+            sHofMonPtr[0].mon[i].isShiny = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_IS_SHINY);
+            GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_NICKNAME, nick);
             for (j = 0; j < POKEMON_NAME_LENGTH; j++)
                 sHofMonPtr[0].mon[i].nickname[j] = nick[j];
             gTasks[taskId].data[2]++;

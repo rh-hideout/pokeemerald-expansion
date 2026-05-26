@@ -877,9 +877,9 @@ s32 GetBoxOrPartyMonData(u16 boxId, u16 monId, s32 request, u8 *dst)
     if (boxId == TOTAL_BOXES_COUNT) // Party mon.
     {
         if (request == MON_DATA_NICKNAME || request == MON_DATA_OT_NAME)
-            ret = GetMonData(&gParties[B_TRAINER_0][monId], request, dst);
+            ret = GetMonData(&gParties[B_TRAINER_PLAYER][monId], request, dst);
         else
-            ret = GetMonData(&gParties[B_TRAINER_0][monId], request);
+            ret = GetMonData(&gParties[B_TRAINER_PLAYER][monId], request);
     }
     else
     {
@@ -916,8 +916,8 @@ static u8 *GetConditionMenuMonString(u8 *dst, u16 boxId, u16 monId)
     species = GetBoxOrPartyMonData(box, mon, MON_DATA_SPECIES, NULL);
     if (box == TOTAL_BOXES_COUNT) // Party mon.
     {
-        level = GetMonData(&gParties[B_TRAINER_0][mon], MON_DATA_LEVEL);
-        gender = GetMonGender(&gParties[B_TRAINER_0][mon]);
+        level = GetMonData(&gParties[B_TRAINER_PLAYER][mon], MON_DATA_LEVEL);
+        gender = GetMonGender(&gParties[B_TRAINER_PLAYER][mon]);
     }
     else
     {
@@ -1109,10 +1109,10 @@ bool8 ConditionMenu_UpdateMonExit(struct ConditionGraph *graph, s16 *x)
     return (graphUpdating || monUpdating);
 }
 
-static const u32 sConditionPokeball_Gfx[] = INCBIN_U32("graphics/pokenav/condition/pokeball.4bpp");
-static const u32 sConditionPokeballPlaceholder_Gfx[] = INCBIN_U32("graphics/pokenav/condition/pokeball_placeholder.4bpp");
-static const u16 sConditionSparkle_Gfx[] = INCBIN_U16("graphics/pokenav/condition/sparkle.gbapal");
-static const u32 sConditionSparkle_Pal[] = INCBIN_U32("graphics/pokenav/condition/sparkle.4bpp");
+static const u32 sConditionPokeball_Gfx[] = INCGFX_U32("graphics/pokenav/condition/pokeball.png", ".4bpp");
+static const u32 sConditionPokeballPlaceholder_Gfx[] = INCGFX_U32("graphics/pokenav/condition/pokeball_placeholder.png", ".4bpp");
+static const u16 sConditionSparkle_Gfx[] = INCGFX_U16("graphics/pokenav/condition/sparkle.png", ".gbapal");
+static const u32 sConditionSparkle_Pal[] = INCGFX_U32("graphics/pokenav/condition/sparkle.png", ".4bpp");
 
 static const struct OamData sOam_ConditionMonPic =
 {

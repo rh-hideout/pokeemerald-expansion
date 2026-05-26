@@ -4,27 +4,14 @@
 
 AI_SINGLE_BATTLE_TEST("AI prefers Bubble over Water Gun if it's slower")
 {
-    u32 speedPlayer, speedAi;
-
-    PARAMETRIZE { speedPlayer = 200; speedAi = 10; }
-    PARAMETRIZE { speedPlayer = 10; speedAi = 200; }
-
     GIVEN {
         ASSUME(GetMovePower(MOVE_WATER_GUN) == GetMovePower(MOVE_BUBBLE));
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_SCIZOR) { Speed(speedPlayer); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_WATER_GUN, MOVE_BUBBLE); Speed(speedAi); }
+        PLAYER(SPECIES_SCIZOR) { Speed(200); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_WATER_GUN, MOVE_BUBBLE); Speed(10); }
     } WHEN {
-        if (speedPlayer > speedAi)
-        {
-            TURN { SCORE_GT(opponent, MOVE_BUBBLE, MOVE_WATER_GUN); }
-            TURN { SCORE_GT(opponent, MOVE_BUBBLE, MOVE_WATER_GUN); }
-        }
-        else
-        {
-            TURN { SCORE_EQ(opponent, MOVE_BUBBLE, MOVE_WATER_GUN); }
-            TURN { SCORE_EQ(opponent, MOVE_BUBBLE, MOVE_WATER_GUN); }
-        }
+        TURN { SCORE_GT(opponent, MOVE_BUBBLE, MOVE_WATER_GUN); }
+        TURN { SCORE_GT(opponent, MOVE_BUBBLE, MOVE_WATER_GUN); }
     }
 }
 
@@ -42,7 +29,7 @@ AI_SINGLE_BATTLE_TEST("AI prefers Water Gun over Bubble if it knows that foe has
     } WHEN {
             TURN { MOVE(player, MOVE_DEFENSE_CURL); }
             TURN { MOVE(player, MOVE_DEFENSE_CURL);
-                   if (abilityAI == ABILITY_MOLD_BREAKER) { SCORE_EQ(opponent, MOVE_WATER_GUN, MOVE_BUBBLE); }
+                   if (abilityAI == ABILITY_MOLD_BREAKER) { SCORE_GT(opponent, MOVE_BUBBLE, MOVE_WATER_GUN); } // Bubble is a plus effect if contrary is ignored
                    else { SCORE_GT(opponent, MOVE_WATER_GUN, MOVE_BUBBLE); }}
     } SCENE {
         MESSAGE("Shuckle's Defense fell!"); // Contrary activates
@@ -786,7 +773,7 @@ SINGLE_BATTLE_TEST("AI correctly records used moves")
 AI_SINGLE_BATTLE_TEST("AI won't boost stats against opponent with Unaware")
 {
     GIVEN {
-        MoveHasAdditionalEffectSelf(MOVE_SWORDS_DANCE, MOVE_EFFECT_ATK_PLUS_2);
+        ASSUME_STAT_CHANGE(MOVE_SWORDS_DANCE, attack: +2);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
         PLAYER(SPECIES_QUAGSIRE) { Ability(ABILITY_UNAWARE); Moves(MOVE_TACKLE); }
         OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_BODY_SLAM, MOVE_SWORDS_DANCE); }

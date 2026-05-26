@@ -161,6 +161,13 @@ enum DebugTrainerSelection
     TRAINERS_DEBUG_SELECTION_PARTNER,
 };
 
+enum DebugMenuTypes
+{
+    DEBUG_BASIC_MENU,
+    DEBUG_FLAGS_MENU,
+    DEBUG_TRAINERS_MENU,
+};
+
 // *******************************
 // Constants
 #define DEBUG_MENU_FONT FONT_NORMAL
@@ -194,11 +201,13 @@ enum DebugTrainerSelection
 #define DEBUG_MAX_MENU_ITEMS 20
 #define DEBUG_MAX_SUB_MENU_LEVELS 4
 
+#define DEBUG_OPTION_CANT_BE_TOGGLED 0xFF
+
 // *******************************
 struct DebugMenuOption;
 
 typedef void (*DebugFunc)(u8 taskId);
-typedef void (*DebugSubmenuFunc)(u8 taskId, const struct DebugMenuOption *items);
+typedef void (*DebugFuncWithParams)(u8 taskId, const void *params);
 
 struct DebugMenuOption
 {
@@ -227,7 +236,8 @@ struct DebugMenuListData
     const struct DebugMenuOption *subMenuItems[DEBUG_MAX_SUB_MENU_LEVELS];
     struct ListMenuItem listItems[DEBUG_MAX_MENU_ITEMS + 1];
     u8 itemNames[DEBUG_MAX_MENU_ITEMS + 1][26];
-    u8 listId;
+    enum DebugMenuTypes menuType:2;
+    u32 padding:30;
     s16 data[8];
 };
 
@@ -240,12 +250,12 @@ EWRAM_DATA u64 gDebugAIFlags = 0;
 // *******************************
 // Define functions
 static void Debug_ShowMenu(DebugFunc HandleInput, const struct DebugMenuOption *items);
-static u8  Debug_GenerateListTrainerMenu(void);
-static u8 Debug_GenerateListMenuNames(void);
+static u32 Debug_GenerateListBasicMenu(const struct DebugMenuOption *items);
+static u32 Debug_GenerateListTrainerMenu(const struct DebugMenuOption *items);
+static u32 Debug_GenerateListFlagsMenu(const struct DebugMenuOption *items);
 static void Debug_DestroyMenu(u8 taskId);
 static void DebugAction_Cancel(u8 taskId);
 static void DebugAction_DestroyExtraWindow(u8 taskId);
-static void Debug_RefreshListMenu(u8 taskId);
 static u8 DebugNativeStep_CreateDebugWindow(void);
 static void DebugNativeStep_CloseDebugWindow(u8 taskId);
 
@@ -254,8 +264,8 @@ static void DebugAction_OpenSubMenuTrainers(u8 taskId, const struct DebugMenuOpt
 static void DebugAction_OpenSubMenuFlagsVars(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_OpenSubMenuFakeRTC(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_OpenSubMenuCreateFollowerNPC(u8 taskId, const struct DebugMenuOption *items);
-static void DebugAction_ExecuteScript(u8 taskId, const u8 *script);
-static void DebugAction_ToggleFlag(u8 taskId);
+static void DebugAction_ExecuteScript(u8 taskId, void *script);
+static void DebugAction_ToggleFlag(u8 taskId, void *flagToggleFunc);
 
 static void DebugTask_HandleMenuInput_General(u8 taskId);
 
@@ -293,7 +303,7 @@ static void DebugAction_Party_SetParty(u8 taskId);
 static void DebugAction_Party_BattleSingle(u8 taskId);
 
 static void DebugAction_Trainers_ChooseFromMap(u8 taskId);
-static void DebugAction_Trainers_ChooseTrainer(u8 taskId, u32 selection);
+static void DebugAction_Trainers_ChooseTrainer(u8 taskId, void *selection);
 static void DebugAction_Trainers_SwitchDoublesFlag(u8 taskId);
 static void DebugAction_Trainers_SetRematch(u8 taskId);
 static void DebugAction_Trainers_SetRematchReadiness(u8 taskId);
@@ -496,6 +506,13 @@ static const s32 sPowersOfTen[] =
       10000000,
      100000000,
     1000000000,
+};
+
+static const u32 (*generateListFunctions[])(const struct DebugMenuOption *) =
+{
+    [DEBUG_BASIC_MENU] = Debug_GenerateListBasicMenu,
+    [DEBUG_FLAGS_MENU] = Debug_GenerateListFlagsMenu,
+    [DEBUG_TRAINERS_MENU] = Debug_GenerateListTrainerMenu
 };
 
 // *******************************
@@ -789,7 +806,7 @@ static bool32 Debug_SaveCallbackMenu(struct DebugMenuOption *callbackItems);
 void Debug_ShowMainMenu(void)
 {
     sDebugMenuListData = AllocZeroed(sizeof(*sDebugMenuListData));
-    sDebugMenuListData->listId = 0;
+    sDebugMenuListData->menuType = DEBUG_BASIC_MENU;
     Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_Main);
 }
 
@@ -852,6 +869,22 @@ static bool32 IsSubMenuAction(const void *action)
         || action == DebugAction_OpenSubMenuTrainers;
 }
 
+static u32 Debug_GenerateListBasicMenu(const struct DebugMenuOption *items)
+{
+    u32 totalItems = 0;
+    for (u32 i = 0; items[i].text != NULL; i++)
+    {
+        sDebugMenuListData->listItems[i].id = i;
+        StringExpandPlaceholders(gStringVar4, items[i].text);
+        if (IsSubMenuAction(items[i].action))
+            StringAppend(gStringVar4, sDebugText_Arrow);
+        StringCopy(&sDebugMenuListData->itemNames[i][0], gStringVar4);
+        sDebugMenuListData->listItems[i].name = &sDebugMenuListData->itemNames[i][0];
+        totalItems++;
+    }
+    return totalItems;
+}
+
 static void Debug_ShowMenu(DebugFunc HandleInput, const struct DebugMenuOption *items)
 {
     struct ListMenuTemplate menuTemplate = {0};
@@ -869,30 +902,9 @@ static void Debug_ShowMenu(DebugFunc HandleInput, const struct DebugMenuOption *
     LoadMessageBoxAndBorderGfx();
     windowId = AddWindow(&sDebugMenuWindowTemplateMain);
     DrawStdWindowFrame(windowId, FALSE);
+    CopyWindowToVram(windowId, COPYWIN_GFX);
 
-    u32 totalItems = 0;
-
-    if (sDebugMenuListData->listId == 2)
-    {
-        totalItems = Debug_GenerateListTrainerMenu();
-    }
-    else if (sDebugMenuListData->listId == 1)
-    {
-        totalItems = Debug_GenerateListMenuNames();
-    }
-    else
-    {
-        for (u32 i = 0; items[i].text != NULL; i++)
-        {
-            sDebugMenuListData->listItems[i].id = i;
-            StringExpandPlaceholders(gStringVar4, items[i].text);
-            if (IsSubMenuAction(items[i].action))
-                StringAppend(gStringVar4, sDebugText_Arrow);
-            StringCopy(&sDebugMenuListData->itemNames[i][0], gStringVar4);
-            sDebugMenuListData->listItems[i].name = &sDebugMenuListData->itemNames[i][0];
-            totalItems++;
-        }
-    }
+    u32 totalItems = generateListFunctions[sDebugMenuListData->menuType](items);
 
     // create list menu
     menuTemplate.items = sDebugMenuListData->listItems;
@@ -919,8 +931,6 @@ static void Debug_ShowMenu(DebugFunc HandleInput, const struct DebugMenuOption *
     gTasks[inputTaskId].tMenuTaskId = menuTaskId;
     gTasks[inputTaskId].tWindowId = windowId;
     gTasks[inputTaskId].tSubWindowId = 0;
-
-    Debug_RefreshListMenu(inputTaskId);
 
     // draw everything
     CopyWindowToVram(windowId, COPYWIN_FULL);
@@ -1054,7 +1064,7 @@ static void DebugNativeStep_CloseDebugWindow(u8 taskId)
     UnlockPlayerFieldControls();
 }
 
-static u8 Debug_GenerateListTrainerMenu(void)
+static u32 Debug_GenerateListTrainerMenu(const struct DebugMenuOption *items)
 {
     u32 trainer1Id = sDebugMenuListData->data[0];
     u32 trainer2Id = sDebugMenuListData->data[2];
@@ -1239,67 +1249,53 @@ static u32 Debug_CheckToggleFlags(u8 id)
     case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_FRONTIER_PASS:
         result = FlagGet(FLAG_SYS_FRONTIER_PASS);
         break;
-    #if OW_FLAG_NO_COLLISION != 0
     case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_COLLISION:
-        result = FlagGet(OW_FLAG_NO_COLLISION);
+        result = OW_FLAG_NO_COLLISION ? FlagGet(OW_FLAG_NO_COLLISION) : DEBUG_OPTION_CANT_BE_TOGGLED;
         break;
-    #endif
-    #if OW_FLAG_NO_ENCOUNTER != 0
     case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_ENCOUNTER:
-        result = FlagGet(OW_FLAG_NO_ENCOUNTER);
+        result = WE_FLAG_NO_ENCOUNTER ? FlagGet(WE_FLAG_NO_ENCOUNTER) : DEBUG_OPTION_CANT_BE_TOGGLED;
         break;
-    #endif
-    #if OW_FLAG_NO_TRAINER_SEE != 0
     case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_TRAINER_SEE:
-        result = FlagGet(OW_FLAG_NO_TRAINER_SEE);
+        result = OW_FLAG_NO_TRAINER_SEE ? FlagGet(OW_FLAG_NO_TRAINER_SEE) : DEBUG_OPTION_CANT_BE_TOGGLED;
         break;
-    #endif
-    #if B_FLAG_NO_CATCHING != 0
     case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_CATCHING:
-        result = FlagGet(B_FLAG_NO_CATCHING);
+        result = WE_FLAG_NO_CATCHING ? FlagGet(WE_FLAG_NO_CATCHING) : DEBUG_OPTION_CANT_BE_TOGGLED;
         break;
-    #endif
     case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BAG_USE:
         result = VarGet(B_VAR_NO_BAG_USE);
         if (result >= NO_BAG_INVALID_VALUE)
             result = NO_BAG_INVALID_VALUE;
         break;
     default:
-        result = 0xFF;
+        result = DEBUG_OPTION_CANT_BE_TOGGLED;
         break;
     }
 
     return result;
 }
 
-static u8 Debug_GenerateListMenuNames(void)
+static u32 Debug_GenerateListFlagsMenu(const struct DebugMenuOption *items)
 {
     const u8 sColor_Red[] = _("{COLOR RED}");
     const u8 sColor_Green[] = _("{COLOR GREEN}");
     u32 i, flagResult = 0;
     u8 const *name = NULL;
 
-    u8 totalItems = 0;
-    if (sDebugMenuListData->listId == 1)
-        // Failsafe to prevent memory corruption
-        totalItems = min(ARRAY_COUNT(sDebugMenu_Actions_Flags) - 1, DEBUG_MAX_MENU_ITEMS);
+    u8 totalItems = min(ARRAY_COUNT(sDebugMenu_Actions_Flags) - 1, DEBUG_MAX_MENU_ITEMS);
 
     // Copy item names for all entries but the last (which is Cancel)
     for (i = 0; i < totalItems; i++)
     {
-        if (sDebugMenuListData->listId == 1)
-        {
-            flagResult = Debug_CheckToggleFlags(i);
-            if (i == DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BAG_USE)
-                name = sDebugMenu_Actions_BagUse_Options[flagResult];
-            else
-                name = sDebugMenu_Actions_Flags[i].text;
-        }
+        flagResult = Debug_CheckToggleFlags(i);
+        if (i == DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BAG_USE)
+            name = sDebugMenu_Actions_BagUse_Options[flagResult];
+        else
+            name = sDebugMenu_Actions_Flags[i].text;
 
         if (i == DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BAG_USE && flagResult == NO_BAG_INVALID_VALUE)
             flagResult = FALSE;
 
-        if (flagResult == 0xFF)
+        if (flagResult == DEBUG_OPTION_CANT_BE_TOGGLED)
         {
             StringCopy(&sDebugMenuListData->itemNames[i][0], name);
         }
@@ -1322,29 +1318,6 @@ static u8 Debug_GenerateListMenuNames(void)
     return totalItems;
 }
 
-static void Debug_RefreshListMenu(u8 taskId)
-{
-    u8 totalItems = Debug_GenerateListMenuNames();
-
-    // Set list menu data
-    gMultiuseListMenuTemplate.items = sDebugMenuListData->listItems;
-    gMultiuseListMenuTemplate.totalItems = totalItems;
-    gMultiuseListMenuTemplate.maxShowed = DEBUG_MENU_HEIGHT_MAIN;
-    gMultiuseListMenuTemplate.windowId = gTasks[taskId].tWindowId;
-    gMultiuseListMenuTemplate.header_X = 0;
-    gMultiuseListMenuTemplate.item_X = 8;
-    gMultiuseListMenuTemplate.cursor_X = 0;
-    gMultiuseListMenuTemplate.upText_Y = 1;
-    gMultiuseListMenuTemplate.cursorPal = 2;
-    gMultiuseListMenuTemplate.fillValue = 1;
-    gMultiuseListMenuTemplate.cursorShadowPal = 3;
-    gMultiuseListMenuTemplate.lettersSpacing = 1;
-    gMultiuseListMenuTemplate.itemVerticalPadding = 0;
-    gMultiuseListMenuTemplate.scrollMultiple = LIST_NO_MULTIPLE_SCROLL;
-    gMultiuseListMenuTemplate.fontId = 1;
-    gMultiuseListMenuTemplate.cursorKind = 0;
-}
-
 static void DebugTask_HandleMenuInput_General(u8 taskId)
 {
     const struct DebugMenuOption *options = Debug_GetCurrentCallbackMenu();
@@ -1356,27 +1329,10 @@ static void DebugTask_HandleMenuInput_General(u8 taskId)
         PlaySE(SE_SELECT);
         if (option.action != NULL)
         {
-            if (IsSubMenuAction(option.action))
-            {
-                ((DebugSubmenuFunc)option.action)(taskId, option.actionParams);
-            }
-            else if (option.action == DebugAction_ExecuteScript)
-            {
-                Debug_DestroyMenu_Full_Script(taskId, (const u8 *)option.actionParams);
-            }
-            else if (option.action == DebugAction_ToggleFlag)
-            {
-                ((DebugFunc)option.actionParams)(taskId);
-                DebugAction_ToggleFlag(taskId);
-            }
-            else if (option.action == DebugAction_Trainers_ChooseTrainer)
-            {
-                DebugAction_Trainers_ChooseTrainer(taskId, (u32)option.actionParams);
-            }
+            if (option.actionParams  != NULL)
+                 ((DebugFuncWithParams)option.action)(taskId, option.actionParams);
             else
-            {
                 ((DebugFunc)option.action)(taskId);
-            }
         }
     }
     else if (JOY_NEW(B_BUTTON))
@@ -1385,8 +1341,8 @@ static void DebugTask_HandleMenuInput_General(u8 taskId)
         if (Debug_GetCurrentCallbackMenu() != NULL && Debug_RemoveCallbackMenu() != 0)
         {
             Debug_DestroyMenu(taskId);
-            if (sDebugMenuListData->listId != 0)
-                sDebugMenuListData->listId = 0;
+            if (sDebugMenuListData->menuType != DEBUG_BASIC_MENU)
+                sDebugMenuListData->menuType = DEBUG_BASIC_MENU;
             Debug_ShowMenu(DebugTask_HandleMenuInput_General, NULL);
         }
         else
@@ -1397,67 +1353,55 @@ static void DebugTask_HandleMenuInput_General(u8 taskId)
     }
 }
 
+static void DebugAction_OpenSubMenuWithType(u8 taskId, const struct DebugMenuOption *items, enum DebugMenuTypes menuType)
+{
+    sDebugMenuListData->menuType = menuType;
+    Debug_DestroyMenu(taskId);
+    Debug_ShowMenu(DebugTask_HandleMenuInput_General, items);
+}
+
 static void DebugAction_OpenSubMenuTrainers(u8 taskId, const struct DebugMenuOption *items)
 {
-    Debug_DestroyMenu(taskId);
-    sDebugMenuListData->listId = 2;
     sDebugMenuListData->data[0] = TRAINER_NONE;
-    Debug_ShowMenu(DebugTask_HandleMenuInput_General, items);
+    DebugAction_OpenSubMenuWithType(taskId, items, DEBUG_TRAINERS_MENU);
 }
 
 static void DebugAction_OpenSubMenuFlagsVars(u8 taskId, const struct DebugMenuOption *items)
 {
-    Debug_DestroyMenu(taskId);
-    sDebugMenuListData->listId = 1;
-    Debug_ShowMenu(DebugTask_HandleMenuInput_General, items);
+    DebugAction_OpenSubMenuWithType(taskId, items, DEBUG_FLAGS_MENU);
 }
 
 static void DebugAction_OpenSubMenu(u8 taskId, const struct DebugMenuOption *items)
 {
-    Debug_DestroyMenu(taskId);
-    sDebugMenuListData->listId = 0;
-    Debug_ShowMenu(DebugTask_HandleMenuInput_General, items);
+    DebugAction_OpenSubMenuWithType(taskId, items, DEBUG_BASIC_MENU);
 }
 
 static void DebugAction_OpenSubMenuFakeRTC(u8 taskId, const struct DebugMenuOption *items)
 {
     if (!OW_USE_FAKE_RTC)
-    {
         Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_FakeRTCNotEnabled);
-    }
     else
-    {
-        Debug_DestroyMenu(taskId);
-        Debug_ShowMenu(DebugTask_HandleMenuInput_General, items);
-    }
+        DebugAction_OpenSubMenuWithType(taskId, items, DEBUG_BASIC_MENU);
 }
 
-static void DebugAction_ExecuteScript(u8 taskId, const u8 *script)
+static void DebugAction_ExecuteScript(u8 taskId, void *script)
 {
-    Debug_DestroyMenu_Full_Script(taskId, script);
+    Debug_DestroyMenu_Full_Script(taskId, (const u8 *)script);
 }
 
-static void DebugAction_ToggleFlag(u8 taskId)
+static void DebugAction_ToggleFlag(u8 taskId, void *flagToggleFunc)
 {
-    if (sDebugMenuListData->listId == 2)
-        Debug_GenerateListTrainerMenu();
-    else
-        Debug_GenerateListMenuNames();
-
+    ((DebugFunc)flagToggleFunc)(taskId);
+    generateListFunctions[sDebugMenuListData->menuType](NULL);
     RedrawListMenu(gTasks[taskId].tMenuTaskId);
 }
 
 static void DebugAction_OpenSubMenuCreateFollowerNPC(u8 taskId, const struct DebugMenuOption *items)
 {
     if (FNPC_ENABLE_NPC_FOLLOWERS)
-    {
-        Debug_DestroyMenu(taskId);
-        Debug_ShowMenu(DebugTask_HandleMenuInput_General, items);
-    }
+        DebugAction_OpenSubMenuWithType(taskId, items, DEBUG_BASIC_MENU);
     else
-    {
         Debug_DestroyMenu_Full_Script(taskId, Debug_Follower_NPC_Not_Enabled);
-    }
 }
 
 // *******************************
@@ -1983,7 +1927,7 @@ static void DebugAction_ChooseFromMap_Select(u8 taskId)
         DestroyTask(taskId);
 
         PlaySE(SE_SELECT);
-        sDebugMenuListData->listId = 2;
+        sDebugMenuListData->menuType = DEBUG_TRAINERS_MENU;
         Debug_RemoveCallbackMenu();
         Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_Trainers);
     }
@@ -2092,13 +2036,13 @@ static void DebugAction_ChooseTrainerID_Select(u8 taskId)
         RemoveWindow(gTasks[taskId].tSubWindowId);
         DestroyListMenuTask(gTasks[taskId].tMenuTaskId, NULL, NULL);
         DestroyTask(taskId);
-        sDebugMenuListData->listId = 2;
+        sDebugMenuListData->menuType = DEBUG_TRAINERS_MENU;
         Debug_RemoveCallbackMenu();
         Debug_ShowMenu(DebugTask_HandleMenuInput_General, sDebugMenu_Actions_Trainers);
     }
 }
 
-static void DebugAction_Trainers_ChooseTrainer(u8 taskId, u32 selection)
+static void DebugAction_Trainers_ChooseTrainer(u8 taskId, void *selection)
 {
     ClearStdWindowAndFrame(gTasks[taskId].tWindowId, TRUE);
     RemoveWindow(gTasks[taskId].tWindowId);
@@ -2469,9 +2413,9 @@ static void DebugAction_FlagsVars_PokedexFlags_Reset(u8 taskId)
     // Add party Pokemon to Pokedex
     for (partyId = 0; partyId < PARTY_SIZE; partyId++)
     {
-        if (GetMonData(&gParties[B_TRAINER_0][partyId], MON_DATA_SANITY_HAS_SPECIES))
+        if (GetMonData(&gParties[B_TRAINER_PLAYER][partyId], MON_DATA_SANITY_HAS_SPECIES))
         {
-            species = GetMonData(&gParties[B_TRAINER_0][partyId], MON_DATA_SPECIES);
+            species = GetMonData(&gParties[B_TRAINER_PLAYER][partyId], MON_DATA_SPECIES);
             GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_SET_CAUGHT);
             GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_SET_SEEN);
         }
@@ -2619,14 +2563,14 @@ static void DebugAction_FlagsVars_CollisionOnOff(u8 taskId)
 
 static void DebugAction_FlagsVars_EncounterOnOff(u8 taskId)
 {
-#if OW_FLAG_NO_ENCOUNTER == 0
+#if WE_FLAG_NO_ENCOUNTER == 0
     Debug_DestroyMenu_Full_Script(taskId, Debug_FlagsNotSetOverworldConfigMessage);
 #else
-    if (FlagGet(OW_FLAG_NO_ENCOUNTER))
+    if (FlagGet(WE_FLAG_NO_ENCOUNTER))
         PlaySE(SE_PC_OFF);
     else
         PlaySE(SE_PC_LOGIN);
-    FlagToggle(OW_FLAG_NO_ENCOUNTER);
+    FlagToggle(WE_FLAG_NO_ENCOUNTER);
 #endif
 }
 
@@ -2655,14 +2599,14 @@ static void DebugAction_FlagsVars_BagUseOnOff(u8 taskId)
 
 static void DebugAction_FlagsVars_CatchingOnOff(u8 taskId)
 {
-#if B_FLAG_NO_CATCHING == 0
+#if WE_FLAG_NO_CATCHING == 0
     Debug_DestroyMenu_Full_Script(taskId, Debug_FlagsNotSetBattleConfigMessage);
 #else
-    if (FlagGet(B_FLAG_NO_CATCHING))
+    if (FlagGet(WE_FLAG_NO_CATCHING))
         PlaySE(SE_PC_OFF);
     else
         PlaySE(SE_PC_LOGIN);
-    FlagToggle(B_FLAG_NO_CATCHING);
+    FlagToggle(WE_FLAG_NO_CATCHING);
 #endif
 }
 
@@ -4776,7 +4720,7 @@ static void DebugAction_Party_HealParty(u8 taskId)
 
 void DebugNative_GetAbilityNames(void)
 {
-    enum Species species = GetMonData(&gParties[B_TRAINER_0][gSpecialVar_0x8004], MON_DATA_SPECIES);
+    enum Species species = GetMonData(&gParties[B_TRAINER_PLAYER][gSpecialVar_0x8004], MON_DATA_SPECIES);
     StringCopy(gStringVar1, gAbilitiesInfo[GetAbilityBySpecies(species, 0)].name);
     StringCopy(gStringVar2, gAbilitiesInfo[GetAbilityBySpecies(species, 1)].name);
     StringCopy(gStringVar3, gAbilitiesInfo[GetAbilityBySpecies(species, 2)].name);
@@ -4800,7 +4744,7 @@ static void DebugNativeStep_Party_SetFriendshipSelect(u8 taskId)
     {
         PlaySE(SE_SELECT);
         gTasks[taskId].tFriendship = gTasks[taskId].tInput;
-        SetMonData(&gParties[B_TRAINER_0][gTasks[taskId].tPartyId], MON_DATA_FRIENDSHIP, &gTasks[taskId].tInput);
+        SetMonData(&gParties[B_TRAINER_PLAYER][gTasks[taskId].tPartyId], MON_DATA_FRIENDSHIP, &gTasks[taskId].tInput);
     }
     else if (JOY_NEW(B_BUTTON))
     {
@@ -4818,7 +4762,7 @@ static void DebugNativeStep_Party_SetFriendshipSelect(u8 taskId)
 static void DebugNativeStep_Party_SetFriendshipMain(u8 taskId)
 {
     u8 windowId = DebugNativeStep_CreateDebugWindow();
-    u32 friendship = GetMonData(&gParties[B_TRAINER_0][gTasks[taskId].tPartyId], MON_DATA_FRIENDSHIP);
+    u32 friendship = GetMonData(&gParties[B_TRAINER_PLAYER][gTasks[taskId].tPartyId], MON_DATA_FRIENDSHIP);
 
     // Display initial flag
     Debug_Display_FriendshipInfo(friendship, friendship, 0, windowId);
@@ -4864,7 +4808,7 @@ static void DebugNativeStep_Party_SetPokerusDaysLeftSelect(u8 taskId)
     if (JOY_NEW(A_BUTTON))
     {
         PlaySE(SE_SELECT);
-        SetMonData(&gParties[B_TRAINER_0][gTasks[taskId].tPartyId], MON_DATA_POKERUS_DAYS_LEFT, &gTasks[taskId].tInput);
+        SetMonData(&gParties[B_TRAINER_PLAYER][gTasks[taskId].tPartyId], MON_DATA_POKERUS_DAYS_LEFT, &gTasks[taskId].tInput);
         DebugNativeStep_CloseDebugWindow(taskId);
         return;
     }
@@ -4895,8 +4839,8 @@ static void DebugNativeStep_Party_SetPokerusStrainSelect(u8 taskId)
     {
         PlaySE(SE_SELECT);
         gTasks[taskId].tStrain = gTasks[taskId].tInput;
-        SetMonData(&gParties[B_TRAINER_0][gTasks[taskId].tPartyId], MON_DATA_POKERUS_STRAIN, &gTasks[taskId].tInput);
-        gTasks[taskId].tInput = GetMonData(&gParties[B_TRAINER_0][gTasks[taskId].tPartyId], MON_DATA_POKERUS_DAYS_LEFT);
+        SetMonData(&gParties[B_TRAINER_PLAYER][gTasks[taskId].tPartyId], MON_DATA_POKERUS_STRAIN, &gTasks[taskId].tInput);
+        gTasks[taskId].tInput = GetMonData(&gParties[B_TRAINER_PLAYER][gTasks[taskId].tPartyId], MON_DATA_POKERUS_DAYS_LEFT);
         Debug_Display_PokerusDaysLeftInfo(gTasks[taskId].tInput, gTasks[taskId].tStrain, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
         gTasks[taskId].func = DebugNativeStep_Party_SetPokerusDaysLeftSelect;
         return;
@@ -4917,7 +4861,7 @@ static void DebugNativeStep_Party_SetPokerusStrainSelect(u8 taskId)
 static void DebugNativeStep_Party_SetPokerusMain(u8 taskId)
 {
     u8 windowId = DebugNativeStep_CreateDebugWindow();
-    u32 strain = GetMonData(&gParties[B_TRAINER_0][gTasks[taskId].tPartyId], MON_DATA_POKERUS_STRAIN);
+    u32 strain = GetMonData(&gParties[B_TRAINER_PLAYER][gTasks[taskId].tPartyId], MON_DATA_POKERUS_STRAIN);
 
     // Display initial flag
     Debug_Display_PokerusStrainInfo(strain, 0, windowId);
@@ -4952,10 +4896,10 @@ static void DebugAction_Party_ClearPokerus(u8 taskId)
 {
     for (u32 i = 0; i < PARTY_SIZE; i++)
     {
-        if (!GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES))
+        if (!GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES))
             continue;
         u32 data = 0;
-        SetMonData(&gParties[B_TRAINER_0][i], MON_DATA_POKERUS, &data);
+        SetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_POKERUS, &data);
     }
     ScriptContext_Enable();
     Debug_DestroyMenu_Full(taskId);
@@ -4988,7 +4932,7 @@ const struct Trainer* GetDebugAiTrainer(void)
 static void DebugAction_Party_SetParty(u8 taskId)
 {
     ZeroPlayerPartyMons();
-    CreateNPCTrainerPartyFromTrainer(gParties[B_TRAINER_0], &sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_PLAYER], TRUE, BATTLE_TYPE_TRAINER);
+    CreateNPCTrainerPartyFromTrainer(gParties[B_TRAINER_PLAYER], &sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_PLAYER], TRUE, BATTLE_TYPE_TRAINER);
     ScriptContext_Enable();
     Debug_DestroyMenu_Full(taskId);
 }
@@ -4997,8 +4941,8 @@ static void DebugAction_Party_BattleSingle(u8 taskId)
 {
     ZeroPlayerPartyMons();
     ZeroEnemyPartyMons();
-    CreateNPCTrainerPartyFromTrainer(gParties[B_TRAINER_0], &sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_PLAYER], TRUE, BATTLE_TYPE_TRAINER);
-    CreateNPCTrainerPartyFromTrainer(gParties[B_TRAINER_1], GetDebugAiTrainer(), FALSE, BATTLE_TYPE_TRAINER);
+    CreateNPCTrainerPartyFromTrainer(gParties[B_TRAINER_PLAYER], &sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_PLAYER], TRUE, BATTLE_TYPE_TRAINER);
+    CreateNPCTrainerPartyFromTrainer(gParties[B_TRAINER_OPPONENT_A], GetDebugAiTrainer(), FALSE, BATTLE_TYPE_TRAINER);
 
     gBattleTypeFlags = BATTLE_TYPE_TRAINER;
     if (sDebugTrainers[DIFFICULTY_NORMAL][DEBUG_TRAINER_AI].battleType == TRAINER_BATTLE_TYPE_DOUBLES)

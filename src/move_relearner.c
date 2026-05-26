@@ -82,11 +82,11 @@ static EWRAM_DATA struct {
 EWRAM_DATA enum MoveRelearnerStates gMoveRelearnerState = MOVE_RELEARNER_LEVEL_UP_MOVES;
 EWRAM_DATA enum RelearnMode gRelearnMode = RELEARN_MODE_NONE;
 
-static const u16 sUI_Pal[] = INCBIN_U16("graphics/interface/ui_learn_move.gbapal");
+static const u16 sUI_Pal[] = INCGFX_U16("graphics/interface/ui_learn_move.png", ".gbapal");
 
 // The arrow sprites in this spritesheet aren't used. The scroll-arrow system provides its own
 // arrow sprites.
-static const u8 sUI_Tiles[] = INCBIN_U8("graphics/interface/ui_learn_move.4bpp");
+static const u8 sUI_Tiles[] = INCGFX_U8("graphics/interface/ui_learn_move.png", ".4bpp");
 
 static const struct OamData sHeartSpriteOamData =
 {
@@ -503,7 +503,7 @@ static void UIShowMoveList(u8 taskId)
     gSpecialVar_0x8008 = gTasks[taskId].tPartyIndex;
     gSpecialVar_0x8009 = gTasks[taskId].tMove;
     gSpecialVar_0x800A = gTasks[taskId].tCategory;
-    ShowSelectMovePokemonSummaryScreen(gParties[B_TRAINER_0], gTasks[taskId].tPartyIndex, CB2_InitLearnMoveReturnFromSelectMove, gTasks[taskId].tMove);
+    ShowSelectMovePokemonSummaryScreen(gParties[B_TRAINER_PLAYER], gTasks[taskId].tPartyIndex, CB2_InitLearnMoveReturnFromSelectMove, gTasks[taskId].tMove);
     DestroyTask(taskId);
     FreeMoveRelearnerResources();
 }
@@ -550,9 +550,9 @@ static void Task_MoveRelearner_Quit(u8 taskId)
     if (gInitialSummaryScreenCallback != NULL)
     {
         if (gRelearnMode == RELEARN_MODE_PSS_PAGE_CONTEST_MOVES)
-            ShowPokemonSummaryScreen(SUMMARY_MODE_RELEARNER_CONTEST, gParties[B_TRAINER_0], gTasks[taskId].tPartyIndex, gPartiesCount[B_TRAINER_0] - 1, gInitialSummaryScreenCallback);
+            ShowPokemonSummaryScreen(SUMMARY_MODE_RELEARNER_CONTEST, gParties[B_TRAINER_PLAYER], gTasks[taskId].tPartyIndex, gPartiesCount[B_TRAINER_PLAYER] - 1, gInitialSummaryScreenCallback);
         else
-            ShowPokemonSummaryScreen(SUMMARY_MODE_RELEARNER_BATTLE, gParties[B_TRAINER_0], gTasks[taskId].tPartyIndex, gPartiesCount[B_TRAINER_0] - 1, gInitialSummaryScreenCallback);
+            ShowPokemonSummaryScreen(SUMMARY_MODE_RELEARNER_BATTLE, gParties[B_TRAINER_PLAYER], gTasks[taskId].tPartyIndex, gPartiesCount[B_TRAINER_PLAYER] - 1, gInitialSummaryScreenCallback);
     }
     else
     {

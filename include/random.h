@@ -250,6 +250,7 @@ enum RandomTag
     RNG_AI_FAKE_OUT_SAVE_ALLY,
     RNG_AI_DMG_ROLL_RANDOM,
     RNG_RANDOM_BERRY,
+    RNG_RANDOM_BALL,
 };
 
 #define RandomWeighted(tag, ...) \
@@ -310,5 +311,7 @@ u32 RandomWeightedArrayDefaultValue(enum RandomTag tag, u32 n, const u16 *weight
 const void *RandomElementArrayTrials(enum RandomTag tag, const void *array, size_t size, size_t count, void *caller);
 const void *RandomElementArrayDefaultValue(enum RandomTag tag, const void *array, size_t size, size_t count, void *caller);
 #endif
+
+u32 Crc32B (const u8 *data, u32 size);
 
 #endif // GUARD_RANDOM_H

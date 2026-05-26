@@ -7,7 +7,7 @@ SINGLE_BATTLE_TEST("Howl raises user's Attack by 1 stage", s16 damage)
     PARAMETRIZE { raiseAttack = FALSE; }
     PARAMETRIZE { raiseAttack = TRUE; }
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_HOWL) == EFFECT_ATTACK_UP);
+        ASSUME_STAT_CHANGE(MOVE_HOWL, attack: +1);
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
