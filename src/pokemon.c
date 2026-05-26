@@ -101,13 +101,9 @@ EWRAM_DATA static struct MonSpritesGfxManager *sMonSpritesGfxManagers[MON_SPR_GF
 EWRAM_DATA u8 gTriedEvolving = 0;
 EWRAM_DATA u16 gFollowerSteps = 0;
 
-DEPRECATED("Use gParties[B_TRAINER_PLAYER] for player and gParties[B_TRAINER_PARTNER] for partner instead")
-struct Pokemon (*const gPlayerParty)[6] = &gParties[B_TRAINER_PLAYER];
-DEPRECATED("gPlayerPartyCount is deprecated. Use gPartiesCount[B_TRAINER_PLAYER] for player and gPartiesCount[B_TRAINER_PARTNER] for partner instead")
+struct Pokemon (*const gPlayerPartyPtr)[6] = &gParties[B_TRAINER_PLAYER];
 u8 (*const gPlayerPartyCountPtr) = &gPartiesCount[B_TRAINER_PLAYER];
-DEPRECATED("Will be removed in 1.17.0: use gParties[B_TRAINER_OPPONENT_A] for opponentA and gParties[B_TRAINER_OPPONENT_B] for opponentB instead")
-struct Pokemon (*const gEnemyParty)[6] = &gParties[B_TRAINER_OPPONENT_A];
-DEPRECATED("gEnemyPartyCount is deprecated and will be removed in 1.17.0. Use gPartiesCount[B_TRAINER_OPPONENT_A] for opponentA and gPartiesCount[B_TRAINER_OPPONENT_B] for opponentB instead")
+struct Pokemon (*const gEnemyPartyPtr)[6] = &gParties[B_TRAINER_OPPONENT_A];
 u8 (*const gEnemyPartyCountPtr) = &gPartiesCount[B_TRAINER_OPPONENT_A];
 
 #include "data/abilities.h"

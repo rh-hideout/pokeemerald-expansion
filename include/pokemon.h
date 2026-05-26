@@ -700,13 +700,15 @@ extern u8 gPartiesCount[MAX_BATTLE_TRAINERS];
 extern struct Pokemon gParties[MAX_BATTLE_TRAINERS][PARTY_SIZE];
 
 DEPRECATED("Use gParties[B_TRAINER_PLAYER] for player and gParties[B_TRAINER_PARTNER] for partner instead")
-extern struct Pokemon (*const gPlayerParty)[6];
+extern struct Pokemon (*const gPlayerPartyPtr)[6];
+#define gPlayerParty (*gPlayerPartyPtr)
 DEPRECATED("gPlayerPartyCount is deprecated. Use gPartiesCount[B_TRAINER_PLAYER] for player and gPartiesCount[B_TRAINER_PARTNER] for partner instead")
 extern u8 (*const gPlayerPartyCountPtr);
 #define gPlayerPartyCount (*gPlayerPartyCountPtr)
 
 DEPRECATED("Will be removed in 1.17.0: use gParties[B_TRAINER_OPPONENT_A] for opponentA and gParties[B_TRAINER_OPPONENT_B] for opponentB instead")
-extern struct Pokemon (*const gEnemyParty)[6];
+extern struct Pokemon (*const gEnemyPartyPtr)[6];
+#define gEnemyParty (*gEnemyPartyPtr)
 DEPRECATED("gEnemyPartyCount is deprecated and will be removed in 1.17.0. Use gPartiesCount[B_TRAINER_OPPONENT_A] for opponentA and gPartiesCount[B_TRAINER_OPPONENT_B] for opponentB instead")
 extern u8 (*const gEnemyPartyCountPtr);
 #define gEnemyPartyCount (*gEnemyPartyCountPtr)
