@@ -1857,7 +1857,14 @@ static void UpdateStatusIconInHealthbox(u8 healthboxSpriteId)
     }
     else
     {
-        tileNumAdder = 0x11;
+        if (B_HP_PERCENTAGE_DISPLAY == TRUE && GetBattlerCoordsIndex(battler) == BATTLE_COORDS_SINGLES)
+        {
+            tileNumAdder = 0x19;
+        }
+        else
+        {
+            tileNumAdder = 0x11;
+        }
     }
 
     if (status & STATUS1_SLEEP)
@@ -1897,7 +1904,7 @@ static void UpdateStatusIconInHealthbox(u8 healthboxSpriteId)
         for (i = 0; i < 3; i++)
             CpuCopy32(statusGfxPtr, (void *)(OBJ_VRAM0 + (gSprites[healthboxSpriteId].oam.tileNum + tileNumAdder + i) * TILE_SIZE_4BPP), 32);
 
-        if (!gBattleSpritesDataPtr->battlerData[battler].hpNumbersNoBars)
+        if (!gBattleSpritesDataPtr->battlerData[battler].hpNumbersNoBars || B_HP_PERCENTAGE_DISPLAY == TRUE)
             CpuCopy32(GetHealthboxElementGfxPtr(HEALTHBOX_GFX_1), (void *)(OBJ_VRAM0 + gSprites[healthBarSpriteId].oam.tileNum * TILE_SIZE_4BPP), 64);
 
         TryAddPokeballIconToHealthbox(healthboxSpriteId, TRUE);
@@ -1910,7 +1917,7 @@ static void UpdateStatusIconInHealthbox(u8 healthboxSpriteId)
     FillPalette(sStatusIconColors[statusPalId], OBJ_PLTT_OFFSET + pltAdder, PLTT_SIZEOF(1));
     CpuCopy16(&gPlttBufferUnfaded[OBJ_PLTT_OFFSET + pltAdder], (u16 *)OBJ_PLTT + pltAdder, PLTT_SIZEOF(1));
     CpuCopy32(statusGfxPtr, (void *)(OBJ_VRAM0 + (gSprites[healthboxSpriteId].oam.tileNum + tileNumAdder) * TILE_SIZE_4BPP), 96);
-    if (GetBattlerCoordsIndex(battler) == BATTLE_COORDS_DOUBLES || !IsOnPlayerSide(battler))
+    if (GetBattlerCoordsIndex(battler) == BATTLE_COORDS_DOUBLES || (!IsOnPlayerSide(battler) && B_HP_PERCENTAGE_DISPLAY == FALSE))
     {
         if (!gBattleSpritesDataPtr->battlerData[battler].hpNumbersNoBars)
         {
@@ -1918,7 +1925,7 @@ static void UpdateStatusIconInHealthbox(u8 healthboxSpriteId)
             CpuCopy32(GetHealthboxElementGfxPtr(HEALTHBOX_GFX_65), (void *)(OBJ_VRAM0 + (gSprites[healthBarSpriteId].oam.tileNum + 1) * TILE_SIZE_4BPP), 32);
         }
     }
-    TryAddPokeballIconToHealthbox(healthboxSpriteId, FALSE);
+    TryAddPokeballIconToHealthbox(healthboxSpriteId, (GetBattlerCoordsIndex(battler) == BATTLE_COORDS_SINGLES && B_HP_PERCENTAGE_DISPLAY == TRUE));
 }
 
 static u8 GetStatusIconForBattlerId(u8 statusElementId, enum BattlerId battler)
