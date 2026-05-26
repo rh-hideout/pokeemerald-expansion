@@ -38,7 +38,7 @@ void DoTimeBasedEvents(void)
     }
 }
 
-static void UpdateDailySeed(void)
+void UpdateDailySeed(void)
 {
     gSaveBlock1Ptr->dailySeed = Random32();
 }

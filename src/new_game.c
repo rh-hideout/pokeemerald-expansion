@@ -1,4 +1,5 @@
 #include "global.h"
+#include "clock.h"
 #include "new_game.h"
 #include "random.h"
 #include "pokemon.h"
@@ -209,6 +210,7 @@ void NewGameInitData(void)
     InitDewfordTrend();
     ResetFanClub();
     ResetLotteryCorner();
+    UpdateDailySeed();
     WarpToTruck();
     if (IS_FRLG)
         RunScriptImmediately(EventScript_ResetAllMapFlagsFrlg);

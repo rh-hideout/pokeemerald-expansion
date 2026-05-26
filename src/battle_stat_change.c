@@ -100,6 +100,7 @@ static bool32 CheckSpecificMoveCondition(struct BattleCalcValues *cv, struct Sta
         {
             if (!st->onlyChecking)
             {
+                PREPARE_STAT_BUFFER(gBattleTextBuff1, STAT_ATK);
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STAT_WONT_CHANGE;
                 st->script = BattleScript_DecreaseStatChangeMessage;
                 gBattleScripting.battler = cv->battlerDef;
@@ -148,7 +149,7 @@ static bool32 CheckSpecificMoveCondition(struct BattleCalcValues *cv, struct Sta
         {
             if (!st->onlyChecking)
             {
-                st->moveScript = BattleScript_OwnTempoPreventsRet;
+                st->moveScript = BattleScript_OwnTempoPrevents;
                 gBattlerAbility = cv->battlerDef;
                 gLastUsedAbility = ABILITY_OWN_TEMPO;
                 RecordAbilityBattle(cv->battlerDef, ABILITY_OWN_TEMPO);
