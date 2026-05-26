@@ -21,8 +21,8 @@ static void SetTestPartySize(enum BattleTrainer trainer, u8 partySize)
 
 TEST("Full multi partner party menu stops down navigation at partner party count")
 {
-    SetTestPartySize(B_TRAINER_0, PARTY_SIZE);
-    SetTestPartySize(B_TRAINER_2, 2);
+    SetTestPartySize(B_TRAINER_PLAYER, PARTY_SIZE);
+    SetTestPartySize(B_TRAINER_PARTNER, 2);
     gPartyMenu.layout = PARTY_LAYOUT_MULTI_FULL_PARTNER;
 
     EXPECT_EQ(Test_UpdatePartySelectionSingleLayout(1, TEST_MENU_DIR_DOWN, FALSE, 0), PARTY_SIZE + 1);
@@ -30,8 +30,8 @@ TEST("Full multi partner party menu stops down navigation at partner party count
 
 TEST("Full multi partner party menu allows down navigation through partner party count")
 {
-    SetTestPartySize(B_TRAINER_0, 2);
-    SetTestPartySize(B_TRAINER_2, PARTY_SIZE);
+    SetTestPartySize(B_TRAINER_PLAYER, 2);
+    SetTestPartySize(B_TRAINER_PARTNER, PARTY_SIZE);
     gPartyMenu.layout = PARTY_LAYOUT_MULTI_FULL_PARTNER;
 
     EXPECT_EQ(Test_UpdatePartySelectionSingleLayout(1, TEST_MENU_DIR_DOWN, FALSE, 0), 2);
@@ -39,8 +39,8 @@ TEST("Full multi partner party menu allows down navigation through partner party
 
 TEST("Full multi partner party menu wraps cancel up to partner party count")
 {
-    SetTestPartySize(B_TRAINER_0, PARTY_SIZE);
-    SetTestPartySize(B_TRAINER_2, 2);
+    SetTestPartySize(B_TRAINER_PLAYER, PARTY_SIZE);
+    SetTestPartySize(B_TRAINER_PARTNER, 2);
     gPartyMenu.layout = PARTY_LAYOUT_MULTI_FULL_PARTNER;
 
     EXPECT_EQ(Test_UpdatePartySelectionSingleLayout(PARTY_SIZE + 1, TEST_MENU_DIR_UP, FALSE, 0), 1);

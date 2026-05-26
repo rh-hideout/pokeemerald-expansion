@@ -4781,7 +4781,7 @@ static enum MoveResult (*const sStatChangeHandlers[])(struct BattleCalcValues *c
     [STAT_CHANGE_SUBSTITUTE] = StatChangeSubstitute,
     [STAT_CHANGE_CAN_ANY_CHANGE] = StatChangeCanAnyChange,
     [STAT_CHANGE_ACCURACY] = StatChangeAccuracy,
-    [STAT_CHANGE_BY_MIRROR_ARMOR] = StatChangeMirrorArmor,
+    [STAT_CHANGE_MIRROR_ARMOR] = StatChangeMirrorArmor,
     [STAT_CHANGE_BEFORE_CHANGE] = StatChangeBeforeChange,
     [STAT_CHANGE_TRY_CHANGE] = StatChangeTryChange,
 };
