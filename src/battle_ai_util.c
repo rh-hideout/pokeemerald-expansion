@@ -23,6 +23,7 @@
 #include "constants/battle_move_effects.h"
 #include "constants/moves.h"
 #include "constants/items.h"
+#include "randomizer.h"
 
 static u32 GetAIEffectGroup(enum BattleMoveEffects effect);
 static u32 GetAIEffectGroupFromMove(enum BattlerId battler, enum Move move);
@@ -346,7 +347,7 @@ static bool32 ShouldFailForIllusion(enum Species illusionSpecies, enum BattlerId
         learnset = GetSpeciesLevelUpLearnset(illusionSpecies);
         for (learnsetMoveIndex = 0; learnset[learnsetMoveIndex].move != MOVE_UNAVAILABLE; learnsetMoveIndex++)
         {
-            if (learnset[learnsetMoveIndex].move == move)
+            if (RandomizeMove(illusionSpecies, learnset[learnsetMoveIndex].move, learnset[learnsetMoveIndex].level) == move)
                 break;
         }
         // The used move is in the learnsets of the fake species.

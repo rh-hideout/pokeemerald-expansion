@@ -28,6 +28,7 @@
 #include "constants/moves.h"
 #include "constants/party_menu.h"
 #include "constants/region_map_sections.h"
+#include "randomizer.h"
 
 #define IS_DITTO(species) (gSpeciesInfo[species].eggGroups[0] == EGG_GROUP_DITTO || gSpeciesInfo[species].eggGroups[1] == EGG_GROUP_DITTO)
 
@@ -987,7 +988,7 @@ static void GiveMoveIfItem(struct Pokemon *mon, struct DayCare *daycare)
                 fatherItem == sBreedingSpecialMoveItemTable[i].item))
         {
             if (GiveMoveToMon(mon, sBreedingSpecialMoveItemTable[i].move) == MON_HAS_MAX_MOVES)
-                DeleteFirstMoveAndGiveMoveToMon(mon, sBreedingSpecialMoveItemTable[i].move);
+                DeleteFirstMoveAndGiveMoveToMon(mon, RandomizeMove(species, sBreedingSpecialMoveItemTable[i].move, 0));
         }
     }
 }

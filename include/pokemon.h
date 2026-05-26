@@ -127,6 +127,13 @@ enum MonData {
     MON_DATA_EVOLUTION_TRACKER,
 };
 
+enum {
+    MON_RANDOMIZER_NORMAL,
+    MON_RANDOMIZER_RANDOM_FORM,
+    MON_RANDOMIZER_SPECIAL_FORM,
+    MON_RANDOMIZER_INVALID
+};
+
 struct PokemonSubstruct0
 {
     u16 species:11; // 2047 species.
@@ -490,6 +497,7 @@ struct SpeciesInfo /*0xC4*/
     u32 dexForceRequired:1; // This species will be taken into account for Pokédex ratings even if they have the "isMythical" flag set.
     u32 teachingType:1; // Not used in the ROM but used in compilation (check constants/teaching_types.h for explanations)
     u32 isFrontierBanned:1; // This species is not allowed to participate in Battle Frontier facilities.
+    u32 randomizerMode:2;   // Controls how the randomizer handles this species.
     u32 isSkyBattleBanned:1;
     u32 isTelekinesisBanned:1;
     u32 padding4:8;

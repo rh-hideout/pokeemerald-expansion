@@ -2282,7 +2282,8 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
             gShinyOverworldPalette_AmpharosMega
         )
     #endif //OW_BATTLE_ONLY_FORMS
-        .isMegaEvolution = TRUE,
+        .isPaldeanForm = TRUE,
+        .randomizerMode = MON_RANDOMIZER_INVALID,
         .levelUpLearnset = sAmpharosLevelUpLearnset,
         .teachableLearnset = sAmpharosTeachableLearnset,
         .formSpeciesIdTable = sAmpharosFormSpeciesIdTable,
@@ -4046,7 +4047,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
 #endif //P_FAMILY_MISDREAVUS
 
 #if P_FAMILY_UNOWN
-#define UNOWN_MISC_INFO(letter, _noFlip, frontWidth, frontHeight, backWidth, backHeight, backYOffset)   \
+#define UNOWN_MISC_INFO(letter, _noFlip, frontWidth, frontHeight, backWidth, backHeight, backYOffset, rzMode)   \
     {                                                                                                   \
         .baseHP        = 48,                                                                            \
         .baseAttack    = 72,                                                                            \
@@ -4108,36 +4109,37 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .levelUpLearnset = sUnownLevelUpLearnset,                                                       \
         .teachableLearnset = sUnownTeachableLearnset,                                                   \
         .formSpeciesIdTable = sUnownFormSpeciesIdTable,                                                 \
+        .randomizerMode = rzMode,                                                                       \
     }
 
-    [SPECIES_UNOWN]             = UNOWN_MISC_INFO(A,           FALSE, 24, 40, 24, 48,  8 ),
-    [SPECIES_UNOWN_B]           = UNOWN_MISC_INFO(B,           TRUE,  24, 32, 40, 48,  9 ),
-    [SPECIES_UNOWN_C]           = UNOWN_MISC_INFO(C,           TRUE,  32, 32, 48, 56,  6 ),
-    [SPECIES_UNOWN_D]           = UNOWN_MISC_INFO(D,           TRUE,  32, 32, 40, 48,  8 ),
-    [SPECIES_UNOWN_E]           = UNOWN_MISC_INFO(E,           TRUE,  32, 32, 40, 48, 10 ),
-    [SPECIES_UNOWN_F]           = UNOWN_MISC_INFO(F,           TRUE,  32, 32, 48, 48, 10 ),
-    [SPECIES_UNOWN_G]           = UNOWN_MISC_INFO(G,           TRUE,  24, 40, 40, 56,  5 ),
-    [SPECIES_UNOWN_H]           = UNOWN_MISC_INFO(H,           TRUE,  32, 32, 48, 48,  8 ),
-    [SPECIES_UNOWN_I]           = UNOWN_MISC_INFO(I,           FALSE, 24, 32, 24, 56,  7 ),
-    [SPECIES_UNOWN_J]           = UNOWN_MISC_INFO(J,           TRUE,  24, 32, 32, 48,  9 ),
-    [SPECIES_UNOWN_K]           = UNOWN_MISC_INFO(K,           TRUE,  32, 32, 40, 56,  7 ),
-    [SPECIES_UNOWN_L]           = UNOWN_MISC_INFO(L,           TRUE,  24, 32, 32, 48, 10 ),
-    [SPECIES_UNOWN_M]           = UNOWN_MISC_INFO(M,           FALSE, 32, 32, 48, 40, 13 ),
-    [SPECIES_UNOWN_N]           = UNOWN_MISC_INFO(N,           TRUE,  32, 24, 48, 40, 13 ),
-    [SPECIES_UNOWN_O]           = UNOWN_MISC_INFO(O,           FALSE, 32, 32, 48, 48,  8 ),
-    [SPECIES_UNOWN_P]           = UNOWN_MISC_INFO(P,           TRUE,  24, 32, 32, 48, 10 ),
-    [SPECIES_UNOWN_Q]           = UNOWN_MISC_INFO(Q,           TRUE,  32, 24, 40, 40, 15 ),
-    [SPECIES_UNOWN_R]           = UNOWN_MISC_INFO(R,           TRUE,  24, 32, 32, 40, 12 ),
-    [SPECIES_UNOWN_S]           = UNOWN_MISC_INFO(S,           TRUE,  32, 40, 40, 56,  4 ),
-    [SPECIES_UNOWN_T]           = UNOWN_MISC_INFO(T,           FALSE, 24, 32, 32, 40, 13 ),
-    [SPECIES_UNOWN_U]           = UNOWN_MISC_INFO(U,           FALSE, 32, 32, 48, 40, 13 ),
-    [SPECIES_UNOWN_V]           = UNOWN_MISC_INFO(V,           TRUE,  32, 32, 40, 48, 11 ),
-    [SPECIES_UNOWN_W]           = UNOWN_MISC_INFO(W,           FALSE, 32, 32, 40, 40, 13 ),
-    [SPECIES_UNOWN_X]           = UNOWN_MISC_INFO(X,           FALSE, 24, 24, 40, 40, 15 ),
-    [SPECIES_UNOWN_Y]           = UNOWN_MISC_INFO(Y,           FALSE, 24, 32, 32, 48, 10 ),
-    [SPECIES_UNOWN_Z]           = UNOWN_MISC_INFO(Z,           TRUE,  24, 32, 32, 48, 10 ),
-    [SPECIES_UNOWN_EXCLAMATION] = UNOWN_MISC_INFO(Exclamation, FALSE, 24, 40, 24, 56,  6 ),
-    [SPECIES_UNOWN_QUESTION]    = UNOWN_MISC_INFO(Question,    TRUE,  24, 40, 32, 56,  6 ),
+    [SPECIES_UNOWN]       = UNOWN_MISC_INFO(A,               FALSE, 24, 40, 24, 48,  8,   MON_RANDOMIZER_NORMAL ),
+    [SPECIES_UNOWN_B]     = UNOWN_MISC_INFO(B,               TRUE,  24, 32, 40, 48,  9,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_C]     = UNOWN_MISC_INFO(C,               TRUE,  32, 32, 48, 56,  6,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_D]     = UNOWN_MISC_INFO(D,               TRUE,  32, 32, 40, 48,  8,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_E]     = UNOWN_MISC_INFO(E,               TRUE,  32, 32, 40, 48, 10,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_F]     = UNOWN_MISC_INFO(F,               TRUE,  32, 32, 48, 48, 10,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_G]     = UNOWN_MISC_INFO(G,               TRUE,  24, 40, 40, 56,  5,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_H]     = UNOWN_MISC_INFO(H,               TRUE,  32, 32, 48, 48,  8,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_I]     = UNOWN_MISC_INFO(I,               FALSE, 24, 32, 24, 56,  7,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_J]     = UNOWN_MISC_INFO(J,               TRUE,  24, 32, 32, 48,  9,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_K]     = UNOWN_MISC_INFO(K,               TRUE,  32, 32, 40, 56,  7,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_L]     = UNOWN_MISC_INFO(L,               TRUE,  24, 32, 32, 48, 10,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_M]     = UNOWN_MISC_INFO(M,               FALSE, 32, 32, 48, 40, 13,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_N]     = UNOWN_MISC_INFO(N,               TRUE,  32, 24, 48, 40, 13,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_O]     = UNOWN_MISC_INFO(O,               FALSE, 32, 32, 48, 48,  8,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_P]     = UNOWN_MISC_INFO(P,               TRUE,  24, 32, 32, 48, 10,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_Q]     = UNOWN_MISC_INFO(Q,               TRUE,  32, 24, 40, 40, 15,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_R]     = UNOWN_MISC_INFO(R,               TRUE,  24, 32, 32, 40, 12,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_S]     = UNOWN_MISC_INFO(S,               TRUE,  32, 40, 40, 56,  4,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_T]     = UNOWN_MISC_INFO(T,               FALSE, 24, 32, 32, 40, 13,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_U]     = UNOWN_MISC_INFO(U,               FALSE, 32, 32, 48, 40, 13,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_V]     = UNOWN_MISC_INFO(V,               TRUE,  32, 32, 40, 48, 11,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_W]     = UNOWN_MISC_INFO(W,               FALSE, 32, 32, 40, 40, 13,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_X]     = UNOWN_MISC_INFO(X,               FALSE, 24, 24, 40, 40, 15,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_Y]     = UNOWN_MISC_INFO(Y,               FALSE, 24, 32, 32, 48, 10,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_Z]     = UNOWN_MISC_INFO(Z,               TRUE,  24, 32, 32, 48, 10,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_EXCLAMATION] = UNOWN_MISC_INFO(Exclamation, FALSE, 24, 40, 24, 56,  6,  MON_RANDOMIZER_INVALID ),
+    [SPECIES_UNOWN_QUESTION] = UNOWN_MISC_INFO(Question,    TRUE,  24, 40, 32, 56,  6,  MON_RANDOMIZER_INVALID ),
 #endif //P_FAMILY_UNOWN
 
 #if P_FAMILY_WOBBUFFET
@@ -5564,7 +5566,8 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
             gShinyOverworldPalette_HeracrossMega
         )
     #endif //OW_BATTLE_ONLY_FORMS
-        .isMegaEvolution = TRUE,
+        .isPaldeanForm = TRUE,
+        .randomizerMode = MON_RANDOMIZER_INVALID,
         .levelUpLearnset = sHeracrossLevelUpLearnset,
         .teachableLearnset = sHeracrossTeachableLearnset,
         .eggMoveLearnset = sHeracrossEggMoveLearnset,
@@ -7530,7 +7533,8 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
             gShinyOverworldPalette_HoundoomMega
         )
     #endif //OW_BATTLE_ONLY_FORMS
-        .isMegaEvolution = TRUE,
+        .isPaldeanForm = TRUE,
+        .randomizerMode = MON_RANDOMIZER_INVALID,
         .levelUpLearnset = sHoundoomLevelUpLearnset,
         .teachableLearnset = sHoundoomTeachableLearnset,
         .formSpeciesIdTable = sHoundoomFormSpeciesIdTable,
@@ -8512,7 +8516,8 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
             gShinyOverworldPalette_TyranitarMega
         )
     #endif //OW_BATTLE_ONLY_FORMS
-        .isMegaEvolution = TRUE,
+        .isPaldeanForm = TRUE,
+        .randomizerMode = MON_RANDOMIZER_INVALID,
         .levelUpLearnset = sTyranitarLevelUpLearnset,
         .teachableLearnset = sTyranitarTeachableLearnset,
         .formSpeciesIdTable = sTyranitarFormSpeciesIdTable,

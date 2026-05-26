@@ -43,6 +43,7 @@
 #include "constants/songs.h"
 #include "constants/battle_frontier.h"
 #include "constants/rgb.h"
+#include "randomizer.h"
 
 #define TAG_BUTTONS 0
 
@@ -4022,7 +4023,7 @@ static bool32 IsDomeRareMove(enum Move move)
         const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(i);
         for (j = 0; learnset[j].move != LEVEL_UP_MOVE_END; j++)
         {
-            if (learnset[j].move == move)
+            if (RandomizeMove(species, learnset[j].move,  learnset[j].level) == move)
             {
                 species++;
                 break;

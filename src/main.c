@@ -25,6 +25,7 @@
 #include "trainer_hill.h"
 #include "test_runner.h"
 #include "constants/rgb.h"
+#include "randomizer.h"
 
 static void VBlankIntr(void);
 static void HBlankIntr(void);

@@ -51,6 +51,7 @@
 #include "constants/items.h"
 #include "difficulty.h"
 #include "follower_npc.h"
+#include "randomizer.h"
 
 extern const u8 EventScript_ResetAllMapFlags[];
 extern const u8 EventScript_ResetAllMapFlagsFrlg[];
@@ -131,6 +132,16 @@ static void ClearFrontierRecord(void)
 
     gSaveBlock2Ptr->frontier.opponentNames[0][0] = EOS;
     gSaveBlock2Ptr->frontier.opponentNames[1][0] = EOS;
+}
+
+static void SetUpRandomizer(void)
+{
+    FlagSet(I_EXP_SHARE_FLAG);
+    FlagSet(B_AFFECTION_MECHANICS);
+    VarSet(RANDOMIZER_VAR_SPECIES_MODE, MON_RANDOM_BST);
+    // VarSet(VAR_EXP_CAP_TYPE, 0);
+    // FlagSet(DN_FLAG_DEXNAV_GET);
+    EnableNationalPokedex();
 }
 
 static void WarpToTruck(void)
@@ -231,6 +242,11 @@ void NewGameInitData(void)
     ResetTrainerTowerResults();
     ResetContestLinkResults();
     SetCurrentDifficultyLevel(DIFFICULTY_NORMAL);
+
+    #if (RANDOMIZER_AVAILABLE == TRUE) && (RANDOMIZER_DYNAMIC_SPECIES == TRUE)
+        SetUpRandomizer();
+        PreloadRandomizationTables();
+    #endif
     ResetItemFlags();
     ResetDexNav();
     ClearFollowerNPCData();

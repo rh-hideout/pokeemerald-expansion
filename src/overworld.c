@@ -82,6 +82,7 @@
 #include "constants/songs.h"
 #include "constants/trainer_hill.h"
 #include "constants/weather.h"
+#include "randomizer.h"
 
 STATIC_ASSERT((B_FLAG_FOLLOWERS_DISABLED == 0 || OW_FOLLOWERS_ENABLED), FollowersFlagAssignedWithoutEnablingThem);
 
@@ -2108,6 +2109,10 @@ void CB2_ContinueSavedGame(void)
         LoadTrainerHillFloorObjectEventScripts();
     else
         LoadSaveblockObjEventScripts();
+
+    #if (RANDOMIZER_AVAILABLE == TRUE) && (RANDOMIZER_DYNAMIC_SPECIES == TRUE)
+        PreloadRandomizationTables();
+    #endif
 
     UnfreezeObjectEvents();
     DoTimeBasedEvents();

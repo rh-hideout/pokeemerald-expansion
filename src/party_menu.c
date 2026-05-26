@@ -80,6 +80,7 @@
 #include "constants/party_menu.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
+#include "randomizer.h"
 
 enum {
     MENU_SUMMARY,
@@ -6414,7 +6415,8 @@ static void DeleteInvalidFusionMoves(struct Pokemon *mon, enum Species species)
         const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(species);
         for (u32 j = 0; learnset[j].move != LEVEL_UP_MOVE_END;j++)
         {
-            if (learnset[j].move == move)
+            u16 learnedMove = RandomizeMove(species, learnset[j].move, learnset[j].level);
+            if (learnedMove == move)
             {
                 toDelete = FALSE;
                 break;
@@ -6436,7 +6438,7 @@ static void DeleteInvalidFusionMoves(struct Pokemon *mon, enum Species species)
         const u16 *learnset3 = GetSpeciesEggMoves(species);
         for (u32 j = 0; learnset3[j] != MOVE_UNAVAILABLE;j++)
         {
-            if (learnset3[j] == move)
+            if (RandomizeMove(species, learnset3[j], 0) == move)
             {
                 toDelete = FALSE;
                 break;

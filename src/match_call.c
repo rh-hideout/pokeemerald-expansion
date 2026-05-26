@@ -34,6 +34,7 @@
 #include "constants/region_map_sections.h"
 #include "constants/songs.h"
 #include "constants/trainers.h"
+#include "randomizer.h"
 
 // In this file only the values normally associated with Battle Pike and Factory are swapped.
 // Note that this is *not* a bug, because they are properly swapped consistently in this file.
@@ -1788,23 +1789,37 @@ static void PopulateSpeciesFromTrainerLocation(int matchCallId, u8 *destStr)
 
     if (gWildMonHeaders[i].mapGroup != MAP_GROUP(MAP_UNDEFINED)) // ??? This check is nonsense.
     {
-        while (gWildMonHeaders[i].mapGroup != MAP_GROUP(MAP_UNDEFINED))
-        {
-            if (gWildMonHeaders[i].mapGroup == gRematchTable[matchCallId].mapGroup
-             && gWildMonHeaders[i].mapNum == gRematchTable[matchCallId].mapNum)
-                break;
+        // while (gWildMonHeaders[i].mapGroup != MAP_GROUP(MAP_UNDEFINED))
+        // {
+        //     if (gWildMonHeaders[i].mapGroup == gRematchTable[matchCallId].mapGroup
+        //      && gWildMonHeaders[i].mapNum == gRematchTable[matchCallId].mapNum)
+        //         break;
 
-            i++;
-        }
+        //     i++;
+        // }
 
         if (gWildMonHeaders[i].mapGroup != MAP_GROUP(MAP_UNDEFINED))
         {
+            u16 curSpecies;
+            #if RANDOMIZER_AVAILABLE == TRUE
+                u8 mapGroup, mapNum;
+                mapGroup = gWildMonHeaders[i].mapGroup;
+                mapNum = gWildMonHeaders[i].mapNum;
+            #endif
+
             timeOfDay = GetTimeOfDayForEncounters(i, WILD_AREA_LAND);
             numSpecies = 0;
             if (gWildMonHeaders[i].encounterTypes[timeOfDay].landMonsInfo)
             {
                 slot = GetLandEncounterSlot();
-                species[numSpecies] = gWildMonHeaders[i].encounterTypes[timeOfDay].landMonsInfo->wildPokemon[slot].species;
+                curSpecies = gWildMonHeaders[i].encounterTypes[timeOfDay].landMonsInfo->wildPokemon[slot].species;
+
+                #if RANDOMIZER_AVAILABLE == TRUE
+                    curSpecies = RandomizeWildEncounter(curSpecies, mapNum, mapGroup,
+                    WILD_AREA_LAND, slot);
+                #endif
+
+                species[numSpecies] = curSpecies;
                 numSpecies++;
             }
 
@@ -1812,7 +1827,14 @@ static void PopulateSpeciesFromTrainerLocation(int matchCallId, u8 *destStr)
             if (gWildMonHeaders[i].encounterTypes[timeOfDay].waterMonsInfo)
             {
                 slot = GetWaterEncounterSlot();
-                species[numSpecies] = gWildMonHeaders[i].encounterTypes[timeOfDay].waterMonsInfo->wildPokemon[slot].species;
+                curSpecies = gWildMonHeaders[i].encounterTypes[timeOfDay].waterMonsInfo->wildPokemon[slot].species;
+
+                #if RANDOMIZER_AVAILABLE == TRUE
+                    curSpecies = RandomizeWildEncounter(curSpecies, mapNum, mapGroup,
+                    WILD_AREA_WATER, slot);
+                #endif
+
+                species[numSpecies] = curSpecies;
                 numSpecies++;
             }
 
@@ -1831,14 +1853,20 @@ static void PopulateSpeciesFromTrainerParty(int matchCallId, u8 *destStr)
 {
     u16 trainerId;
     const struct TrainerMon *party;
-    u8 monId;
+    u32 partySize;
     const u8 *speciesName;
 
     trainerId = GetLastBeatenRematchTrainerId(sMatchCallTrainers[matchCallId].trainerId);
     party = GetTrainerPartyFromId(trainerId);
-    monId = Random() % GetTrainerPartySizeFromId(trainerId);
-    if (party != NULL)
-        speciesName = GetSpeciesName(party[monId].species);
+    partySize = GetTrainerPartySizeFromId(trainerId);
+    if (party != NULL && partySize > 0)
+    {
+        u32 monId;
+        monId = Random() % partySize;
+        const struct TrainerMon mon = RandomizeTrainerMon(GetTrainerStructFromId(trainerId), partySize, monId, trainerId);
+
+        speciesName = GetSpeciesName(mon.species);
+    }
     else
         speciesName = GetSpeciesName(SPECIES_NONE);
 
