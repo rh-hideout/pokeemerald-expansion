@@ -2,7 +2,7 @@
 
 This document is a guide for contributors and Senate to decide if a feature is within "scope" for pokeemerald-expansion. "Scope" in this case comprises a list of features and concepts that could be merged if an appropriate implementation is submitted. If a feature is not in scope, then it should not be merged. 
 
-⚠️ Even if an opened PR is within scope, this does not mean it will be merged, as pull requests will need to pass the pass the [merge checklist](team_procedures/merge_checklist.html), which includes our  [config phiilosophy](STYLEGUIDE.html#config-philosophy), [saves philosophy](STYLEGUIDE.html#saves-philosophy), and [styleguide](STYLEGUIDE.html).
+⚠️ Even if an opened PR is within scope, this does not mean it will be merged, as pull requests will need to pass the pass the [merge checklist](merge_checklist.md), which includes our  [config phiilosophy](STYLEGUIDE.md#config-philosophy), [saves philosophy](STYLEGUIDE.md#saves-philosophy), and [styleguide](STYLEGUIDE.md).
 
 # Definitions
 ## Base Expansion Version
