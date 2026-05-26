@@ -114,6 +114,8 @@ void DoSpecialTrainerBattle(void)
         }
 
         FillPartnerParty(gPartnerTrainerId);
+        if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+            CalculatePartnerPartyCount();
         CreateTask(Task_StartBattleAfterTransition, 1);
         PlayMapChosenOrBattleBGM(0);
         if (gSpecialVar_0x8005 & MULTI_BATTLE_2_VS_WILD)

@@ -794,6 +794,7 @@ void CopyMon(void *dest, void *src, size_t size);
 u8 GiveCapturedMonToPlayer(struct Pokemon *mon);
 u8 CopyMonToPC(struct Pokemon *mon);
 u8 CalculatePlayerPartyCount(void);
+u8 CalculatePartnerPartyCount(void);
 u8 CalculateEnemyPartyCount(void);
 u8 GetMonsStateToDoubles(void);
 u8 GetMonsStateToDoubles_2(void);
