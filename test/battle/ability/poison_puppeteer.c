@@ -129,6 +129,39 @@ SINGLE_BATTLE_TEST("Poison Puppeteer confuses target (not user) after Flame Body
     }
 }
 
+SINGLE_BATTLE_TEST("Poison Puppeteer consumes its pending target after triggering")
+{
+    GIVEN {
+        ASSUME(GetMoveStrikeCount(MOVE_TWINEEDLE) == 2);
+        ASSUME(MoveHasAdditionalEffect(MOVE_TWINEEDLE, MOVE_EFFECT_POISON));
+        ASSUME(gItemsInfo[ITEM_PERSIM_BERRY].holdEffect == HOLD_EFFECT_CURE_CONFUSION);
+        PLAYER(SPECIES_PECHARUNT) { Ability(ABILITY_POISON_PUPPETEER); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_PERSIM_BERRY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TWINEEDLE, WITH_RNG(RNG_SECONDARY_EFFECT, TRUE)); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TWINEEDLE, player);
+        HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+        STATUS_ICON(opponent, poison: TRUE);
+
+        ABILITY_POPUP(player, ABILITY_POISON_PUPPETEER);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TWINEEDLE, player);
+        HP_BAR(opponent);
+        NONE_OF {
+            ABILITY_POPUP(player, ABILITY_POISON_PUPPETEER);
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, opponent);
+        }
+    } THEN {
+        EXPECT_EQ(opponent->item, ITEM_NONE);
+        EXPECT(opponent->status1 & STATUS1_POISON);
+        EXPECT(opponent->volatiles.confusionTurns == 0);
+    }
+}
+
 DOUBLE_BATTLE_TEST("Poison Puppeteer does not leak confusion to second target")
 {
     GIVEN {
