@@ -100,6 +100,7 @@ static bool32 CheckSpecificMoveCondition(struct BattleCalcValues *cv, struct Sta
         {
             if (!st->onlyChecking)
             {
+                PREPARE_STAT_BUFFER(gBattleTextBuff1, STAT_ATK);
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STAT_WONT_CHANGE;
                 st->script = BattleScript_DecreaseStatChangeMessage;
                 gBattleScripting.battler = cv->battlerDef;
@@ -794,6 +795,7 @@ static bool32 IsMirrorArmorReflected(struct BattleCalcValues *cv, struct StatCha
     return FALSE;
 }
 
+// There is a similar function AI_GetAdjustedStatStage that needs to be updated if things are changed here
 static void AdjustStatStage(struct BattleCalcValues *cv, struct StatChange *st)
 {
     if (cv->moveEffect == EFFECT_GROWTH && GetAttackerWeather(cv->holdEffects[cv->battlerDef], cv->abilities[cv->battlerDef], GetWeather()) & B_WEATHER_SUN)

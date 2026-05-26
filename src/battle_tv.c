@@ -657,12 +657,12 @@ static struct Pokemon *GetTvPartyMon(u32 scoreIndex, u32 side)
 {
     if ((gBattleTypeFlags & BATTLE_TYPE_MULTI) && scoreIndex >= MULTI_PARTY_SIZE)
     {
-        enum BattleTrainer trainer = (side == B_SIDE_PLAYER) ? B_TRAINER_2 : B_TRAINER_3;
+        enum BattleTrainer trainer = (side == B_SIDE_PLAYER) ? B_TRAINER_PARTNER : B_TRAINER_OPPONENT_B;
         return &gParties[trainer][scoreIndex - MULTI_PARTY_SIZE];
     }
     else
     {
-        enum BattleTrainer trainer = (side == B_SIDE_PLAYER) ? B_TRAINER_0 : B_TRAINER_1;
+        enum BattleTrainer trainer = (side == B_SIDE_PLAYER) ? B_TRAINER_PLAYER : B_TRAINER_OPPONENT_A;
         return &gParties[trainer][scoreIndex];
     }
 }
@@ -686,15 +686,15 @@ void TryPutLinkBattleTvShowOnAir(void)
     movePoints = &gBattleStruct->tvMovePoints;
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SPECIES) != SPECIES_NONE)
+        if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES) != SPECIES_NONE)
             countPlayer++;
-        if (GetMonData(&gParties[B_TRAINER_1][i], MON_DATA_SPECIES) != SPECIES_NONE)
+        if (GetMonData(&gParties[B_TRAINER_OPPONENT_A][i], MON_DATA_SPECIES) != SPECIES_NONE)
             countOpponent++;
         if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
         {
-            if (GetMonData(&gParties[B_TRAINER_2][i], MON_DATA_SPECIES) != SPECIES_NONE)
+            if (GetMonData(&gParties[B_TRAINER_PARTNER][i], MON_DATA_SPECIES) != SPECIES_NONE)
                 countPlayer++;
-            if (GetMonData(&gParties[B_TRAINER_3][i], MON_DATA_SPECIES) != SPECIES_NONE)
+            if (GetMonData(&gParties[B_TRAINER_OPPONENT_B][i], MON_DATA_SPECIES) != SPECIES_NONE)
                 countOpponent++;
         }
     }

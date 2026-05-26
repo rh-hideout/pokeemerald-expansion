@@ -2617,7 +2617,7 @@ static enum MoveEndResult MoveEndAbsorb(struct BattleCalcValues *cv)
     switch (cv->moveEffect)
     {
     case EFFECT_STRENGTH_SAP:
-        if (gBattleStruct->passiveHpUpdate[cv->battlerAtk] > 0)
+        if (gBattleStruct->passiveHpUpdate[cv->battlerAtk] > 0 && !IsBattlerUnaffectedByMove(cv->battlerDef))
         {
             s32 healAmount = gBattleStruct->passiveHpUpdate[cv->battlerAtk];
             SetHealScript(cv, healAmount);
@@ -4781,7 +4781,7 @@ static enum MoveResult (*const sStatChangeHandlers[])(struct BattleCalcValues *c
     [STAT_CHANGE_SUBSTITUTE] = StatChangeSubstitute,
     [STAT_CHANGE_CAN_ANY_CHANGE] = StatChangeCanAnyChange,
     [STAT_CHANGE_ACCURACY] = StatChangeAccuracy,
-    [STAT_CHANGE_BY_MIRROR_ARMOR] = StatChangeMirrorArmor,
+    [STAT_CHANGE_MIRROR_ARMOR] = StatChangeMirrorArmor,
     [STAT_CHANGE_BEFORE_CHANGE] = StatChangeBeforeChange,
     [STAT_CHANGE_TRY_CHANGE] = StatChangeTryChange,
 };
