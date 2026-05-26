@@ -3764,7 +3764,6 @@ static enum MoveEndResult MoveEndClearBits(void)
     gBattleStruct->poisonPuppeteerConfusion = FALSE;
     gBattleStruct->fickleBeamBoosted = FALSE;
     gBattleStruct->battlerState[gBattlerAttacker].usedMicleBerry = FALSE;
-    gBattleStruct->toxicChainPriority = FALSE;
     gBattleStruct->flingItem = ITEM_NONE;
     if (gBattleStruct->unableToUseMove)
         gBattleStruct->pledgeMove = FALSE;
