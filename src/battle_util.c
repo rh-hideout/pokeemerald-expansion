@@ -5397,10 +5397,11 @@ static bool32 IsNonVolatileStatusBlocked(enum BattlerId battlerDef, enum Ability
             if (battleScript != BattleScript_NotAffected)
                 gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FAILED;
 
+            gBattleScripting.battler = battlerDef;
             if (abilityAffected)
             {
                 gLastUsedAbility = abilityDef;
-                gBattleScripting.battler = gBattlerAbility = battlerDef;
+                gBattlerAbility = battlerDef;
                 RecordAbilityBattle(battlerDef, abilityDef);
             }
 
