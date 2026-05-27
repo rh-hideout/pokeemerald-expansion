@@ -873,6 +873,10 @@ static void RotateTile(u8 rotDir)
         sprite->sOrientation++;
         sprite->sOrientation = sprite->sOrientation % ORIENTATION_MAX;
     }
+    else
+    {
+        return;
+    }
 
     StartSpriteAffineAnim(sprite, affineAnimation);
     sprite->sAnimating = TRUE;
