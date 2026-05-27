@@ -349,7 +349,7 @@ bool32 IsOverworldWildEncounter(struct ObjectEvent *owe, enum TypeOWE oweType)
     }
 }
 
-static enum TypeOWE GetOverworldWildEncounterType(struct ObjectEvent *owe)
+enum TypeOWE GetOverworldWildEncounterType(struct ObjectEvent *owe)
 {
     if (!IsObjectActiveOWE(owe))
         return OWE_NONE;
@@ -1052,10 +1052,10 @@ void TryTriggerOverworldWildEncounter(struct ObjectEvent *obstacle, struct Objec
     ScriptContext_SetupScript(InteractWithOverworldWildEncounter);
 }
 
-const u8 *GetOverworlWildEncounterScript(u32 objectEventId)
+const u8 *GetOverworlWildEncounterScript(u32 objectEventId, enum TypeOWE oweType)
 {
-    const u8 *script = GetObjectEventScriptPointerByObjectEventId(objectEventId);
-    if (script)
+    const u8 *script;
+    if (oweType == OWE_MANUAL && (script = GetObjectEventScriptPointerByObjectEventId(objectEventId)) != NULL)
         return script;
     
     return InteractWithOverworldWildEncounter;

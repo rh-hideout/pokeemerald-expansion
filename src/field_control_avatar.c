@@ -402,11 +402,12 @@ static const u8 *GetInteractedObjectEventScript(struct MapPosition *position, u8
 
     gSelectedObjectEvent = objectEventId;
     gSpecialVar_LastTalked = gObjectEvents[objectEventId].localId;
+    enum TypeOWE oweType = GetOverworldWildEncounterType(&gObjectEvents[objectEventId]);
 
     if (PlayerHasFollowerNPC() && objectEventId == GetFollowerNPCObjectId())
         script = GetFollowerNPCScriptPointer();
-    else if (IsOverworldWildEncounter(&gObjectEvents[objectEventId], OWE_ANY))
-        script = GetOverworlWildEncounterScript(objectEventId);
+    else if (oweType != OWE_NONE)
+        script = GetOverworlWildEncounterScript(objectEventId, oweType);
     else if (gObjectEvents[objectEventId].localId == OBJ_EVENT_ID_FOLLOWER)
         script = EventScript_Follower;
     else if (InTrainerHill() == TRUE)
