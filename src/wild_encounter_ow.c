@@ -349,7 +349,7 @@ bool32 IsOverworldWildEncounter(struct ObjectEvent *owe, enum TypeOWE oweType)
     }
 }
 
-enum TypeOWE GetOverworldWildEncounterType(struct ObjectEvent *owe)
+static enum TypeOWE GetOverworldWildEncounterType(struct ObjectEvent *owe)
 {
     if (!IsObjectActiveOWE(owe))
         return OWE_NONE;
