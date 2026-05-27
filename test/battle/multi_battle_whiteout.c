@@ -5,6 +5,7 @@ MULTI_BATTLE_TEST("Player does whiteout in a multibattle even if the Partner sti
 {
     GIVEN {
         WITH_CONFIG(B_MULTI_BATTLE_WHITEOUT, GEN_4);
+        ASSUME(GetMoveEffect(MOVE_DRAGON_RAGE) == EFFECT_FIXED_HP_DAMAGE);
         PLAYER(SPECIES_WYNAUT) { HP(1); }
         PLAYER(SPECIES_WYNAUT) { HP(1); }
         PLAYER(SPECIES_WYNAUT) { HP(1); }
@@ -69,6 +70,7 @@ TWO_VS_ONE_BATTLE_TEST("Player does whiteout in a multibattle even if the Partne
 {
     GIVEN {
         WITH_CONFIG(B_MULTI_BATTLE_WHITEOUT, GEN_4);
+        ASSUME(GetMoveEffect(MOVE_DRAGON_RAGE) == EFFECT_FIXED_HP_DAMAGE);
         PLAYER(SPECIES_WYNAUT) { HP(1); }
         PLAYER(SPECIES_WYNAUT) { HP(1); }
         PLAYER(SPECIES_WYNAUT) { HP(1); }
@@ -127,6 +129,7 @@ MULTI_BATTLE_TEST("Player does not whiteout in a multibattle if the Partner stil
 {
     GIVEN {
         WITH_CONFIG(B_MULTI_BATTLE_WHITEOUT, GEN_4);
+        ASSUME(GetMoveEffect(MOVE_DRAGON_RAGE) == EFFECT_FIXED_HP_DAMAGE);
         PLAYER(SPECIES_WYNAUT) { HP(1); }
         PLAYER(SPECIES_WYNAUT) { HP(1); }
         PLAYER(SPECIES_WYNAUT) { HP(1); }
@@ -167,6 +170,7 @@ TWO_VS_ONE_BATTLE_TEST("Player does not whiteout in a multibattle if the Partner
 {
     GIVEN {
         WITH_CONFIG(B_MULTI_BATTLE_WHITEOUT, GEN_4);
+        ASSUME(GetMoveEffect(MOVE_DRAGON_RAGE) == EFFECT_FIXED_HP_DAMAGE);
         PLAYER(SPECIES_WYNAUT) { HP(1); }
         PLAYER(SPECIES_WYNAUT) { HP(1); }
         PLAYER(SPECIES_WYNAUT) { HP(1); }
@@ -207,6 +211,7 @@ MULTI_BATTLE_TEST("Player does whiteout in a multibattle if the Partner still ha
 {
     GIVEN {
         WITH_CONFIG(B_MULTI_BATTLE_WHITEOUT, GEN_3);
+        ASSUME(GetMoveEffect(MOVE_DRAGON_RAGE) == EFFECT_FIXED_HP_DAMAGE);
         PLAYER(SPECIES_WYNAUT) { HP(1); }
         PLAYER(SPECIES_WYNAUT) { HP(1); }
         PLAYER(SPECIES_WYNAUT) { HP(1); }
@@ -271,6 +276,7 @@ TWO_VS_ONE_BATTLE_TEST("Player does whiteout in a multibattle if the Partner sti
 {
     GIVEN {
         WITH_CONFIG(B_MULTI_BATTLE_WHITEOUT, GEN_3);
+        ASSUME(GetMoveEffect(MOVE_DRAGON_RAGE) == EFFECT_FIXED_HP_DAMAGE);
         PLAYER(SPECIES_WYNAUT) { HP(1); }
         PLAYER(SPECIES_WYNAUT) { HP(1); }
         PLAYER(SPECIES_WYNAUT) { HP(1); }
@@ -329,6 +335,7 @@ MULTI_BATTLE_TEST("Player does whiteout in a multibattle if the Partner still ha
 {
     GIVEN {
         WITH_CONFIG(B_MULTI_BATTLE_WHITEOUT, GEN_3);
+        ASSUME(GetMoveEffect(MOVE_DRAGON_RAGE) == EFFECT_FIXED_HP_DAMAGE);
         PLAYER(SPECIES_WYNAUT) { HP(1); }
         PLAYER(SPECIES_WYNAUT) { HP(1); }
         PLAYER(SPECIES_WYNAUT) { HP(1); }
@@ -362,6 +369,7 @@ TWO_VS_ONE_BATTLE_TEST("Player does whiteout in a multibattle if the Partner sti
 {
     GIVEN {
         WITH_CONFIG(B_MULTI_BATTLE_WHITEOUT, GEN_3);
+        ASSUME(GetMoveEffect(MOVE_DRAGON_RAGE) == EFFECT_FIXED_HP_DAMAGE);
         PLAYER(SPECIES_WYNAUT) { HP(1); }
         PLAYER(SPECIES_WYNAUT) { HP(1); }
         PLAYER(SPECIES_WYNAUT) { HP(1); }
