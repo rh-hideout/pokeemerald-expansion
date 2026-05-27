@@ -913,7 +913,6 @@ void ClearStatChangeValues(void)
         memset(gSpecialStatuses[battler].statStageQueue, 0, sizeof(gSpecialStatuses[battler].statStageQueue));
         gSpecialStatuses[battler].statStageAmount = 0;
     }
-    gBattleStruct->ignoreDefiant = FALSE;
     gBattleStruct->negativeAnimPlayed = 0;
     gBattleStruct->positiveAnimPlayed = 0;
     gBattleStruct->statChangeBattler  = 0;
@@ -923,7 +922,6 @@ void ClearOtherStatChangeValues(enum BattlerId battler)
 {
     memset(gSpecialStatuses[battler].statStageQueue2, 0, sizeof(gSpecialStatuses[battler].statStageQueue2));
     gSpecialStatuses[battler].statStageAmount2 = 0;
-    gBattleStruct->ignoreDefiant = FALSE;
     gBattleStruct->negativeAnimPlayed = 0;
     gBattleStruct->positiveAnimPlayed = 0;
 }

@@ -1,6 +1,10 @@
 import os
 
+<<<<<<< HEAD
 MAPS_DIR = "/data/maps"
+=======
+MAPS_DIR = "data/maps"
+>>>>>>> rhh/master
 
 for root, dirs, files in os.walk(MAPS_DIR):
     for file in files:

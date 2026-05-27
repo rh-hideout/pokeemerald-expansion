@@ -2240,8 +2240,8 @@ static void SetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId effec
 
     TrySynchronizeActivation(battlerAtk, effectBattler, effect);
 
-    if (effect == MOVE_EFFECT_POISON || effect == MOVE_EFFECT_TOXIC)
-        gBattleStruct->poisonPuppeteerConfusion = TRUE;
+    if ((effect == MOVE_EFFECT_POISON || effect == MOVE_EFFECT_TOXIC) && trigger == TRIGGER_ON_MOVE)
+        gSpecialStatuses[effectBattler].poisonPuppeteer = TRUE;
 }
 
 static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect) // Currently only used to determine move effects which happen even if the move's defined effectbattler is fainted
@@ -10805,11 +10805,11 @@ static void Cmd_trystatchanges(void)
     struct StatChange st = {0};
 
     SetStatChangeFlags(&st, cmd->statChangeFlags);
-    gBattleStruct->ignoreDefiant = FALSE;
 
     while (gBattleStruct->statChangeBattler < gBattlersCount)
     {
         cv.battlerDef = GetTargetBySlot(cv.battlerAtk, gBattleStruct->statChangeBattler);
+        gBattleStruct->ignoreDefiant = FALSE;
 
         if (!IsBattlerAlive(cv.battlerDef) || gSpecialStatuses[cv.battlerDef].statStageAmount == 0)
         {
@@ -12904,6 +12904,16 @@ void BS_SwitchinAbilities(void)
         return;
 }
 
+void BS_AbilityOnFormChange(void)
+{
+    NATIVE_ARGS(u8 battler);
+    enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
+    enum Ability ability = GetBattlerAbility(battler);
+    gBattlescriptCurrInstr = cmd->nextInstr;
+    if (AbilityBattleEffects(ABILITYEFFECT_ON_FORM_CHANGE, battler, ability, MOVE_NONE, TRUE))
+        return;
+}
+
 void BS_InstantHpDrop(void)
 {
     NATIVE_ARGS();
@@ -13890,6 +13900,7 @@ void BS_TryDefiantRattled(void)
             gBattlerAbility = battler;
             RecordAbilityBattle(battler, ability);
             BattleScriptPush(cmd->nextInstr);
+            gBattleStruct->ignoreDefiant = FALSE;
             gBattlescriptCurrInstr = BattleScript_DefiantActivates;
             return;
         }
@@ -13901,6 +13912,7 @@ void BS_TryDefiantRattled(void)
             gBattlerAbility = battler;
             RecordAbilityBattle(battler, ability);
             BattleScriptPush(cmd->nextInstr);
+            gBattleStruct->ignoreDefiant = FALSE;
             gBattlescriptCurrInstr = BattleScript_DefiantActivates;
             return;
         }
@@ -13909,6 +13921,7 @@ void BS_TryDefiantRattled(void)
         break;
     }
 
+    gBattleStruct->ignoreDefiant = FALSE;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
