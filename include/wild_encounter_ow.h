@@ -80,7 +80,7 @@ enum TypeOWE GetOverworldWildEncounterType(struct ObjectEvent *owe);
 void SetInstantOWESpawnTimer(void);
 void SetMinimumOWESpawnTimer(void);
 void TryTriggerOverworldWildEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider);
-const u8 *GetOverworlWildEncounterScript(u32 objectEventId, enum TypeOWE oweType);
+const u8 *GetOverworlWildEncounterScript(u32 objectEventId);
 void OnOverworldWildEncounterSpawn(struct ObjectEvent *owe);
 void OnOverworldWildEncounterDespawn(struct ObjectEvent *owe);
 bool32 IsOWEDespawnExempt(struct ObjectEvent *owe);
