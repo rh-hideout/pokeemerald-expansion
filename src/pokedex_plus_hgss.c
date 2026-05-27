@@ -497,7 +497,6 @@ static void Task_SwitchScreensFromInfoScreen(u8);
 static void Task_LoadInfoScreenWaitForFade(u8);
 static void Task_ExitInfoScreen(u8);
 static void Task_LoadAreaScreen(u8 taskId);
-static void Task_ReloadAreaScreen(u8 taskId);
 static void Task_WaitForAreaScreenInput(u8 taskId);
 static void Task_SwitchScreensFromAreaScreen(u8);
 static void Task_LoadCryScreen(u8);
@@ -3695,7 +3694,6 @@ static u8 LoadInfoScreen(struct PokedexListItem *item, u8 monSpriteId)
     u8 taskId;
 
     sPokedexListItem = item;
-    gAreaTimeOfDay = GetTimeOfDayForDex();
     taskId = CreateTask(Task_LoadInfoScreen, 0);
     gTasks[taskId].tScrolling = FALSE;
     gTasks[taskId].tMonSpriteDone = TRUE; // Already has sprite from list view
@@ -3954,31 +3952,9 @@ static void Task_LoadAreaScreen(u8 taskId)
         gMain.state++;
         break;
     case 2:
-        DisplayPokedexAreaScreen(NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum), &sPokedexView->screenSwitchState, gAreaTimeOfDay, DEX_SHOW_AREA_SCREEN);
+        DisplayPokedexAreaScreen(NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum), &sPokedexView->screenSwitchState);
         SetVBlankCallback(gPokedexVBlankCB);
         sPokedexView->screenSwitchState = 0;
-        gMain.state = 0;
-        gTasks[taskId].func = Task_WaitForAreaScreenInput;
-        break;
-    }
-}
-
-static void Task_ReloadAreaScreen(u8 taskId)
-{
-    switch (gMain.state)
-    {
-    case 0:
-    default:
-        sPokedexView->currentPage = PAGE_AREA;
-        gMain.state = 1;
-        break;
-    case 1:
-        LoadPokedexBgPalette(sPokedexView->isSearchResults);
-        SetGpuReg(REG_OFFSET_BG1CNT, BGCNT_PRIORITY(0) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(13) | BGCNT_16COLOR | BGCNT_TXT256x256);
-        gMain.state++;
-        break;
-    case 2:
-        DisplayPokedexAreaScreen(NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum), &sPokedexView->screenSwitchState, gAreaTimeOfDay, DEX_UPDATE_AREA_SCREEN);
         gMain.state = 0;
         gTasks[taskId].func = Task_WaitForAreaScreenInput;
         break;
@@ -4007,9 +3983,6 @@ static void Task_SwitchScreensFromAreaScreen(u8 taskId)
                 PlaySE(SE_FAILURE);
             else
                 gTasks[taskId].func = Task_LoadStatsScreen;
-            break;
-        case 3:
-            gTasks[taskId].func = Task_ReloadAreaScreen;
             break;
         }
     }

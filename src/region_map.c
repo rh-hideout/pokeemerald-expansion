@@ -52,6 +52,17 @@
 
 #define FLYDESTICON_RED_OUTLINE 6
 
+// unlockCondition possible values to show a region map
+#define ALWAYS_LOCKED     (1 << 13)
+#define ALWAYS_UNLOCKED   (2 << 13)
+#define UNLOCKED_ON_FLY   (3 << 13)
+#define UNLOCKED_ON_FLAG  (4 << 13)
+
+#define FLAG_MASK      0x1FFF
+#define CONDITION_MASK 0xE000
+
+#define FLAG_UNLOCK(flag) (UNLOCKED_ON_FLAG | flag)
+
 enum {
     TAG_CURSOR,
     TAG_PLAYER_ICON,
@@ -116,6 +127,7 @@ static void DrawFlyDestTextWindow(void);
 static void LoadFlyDestIcons(void);
 static void CreateFlyDestIcons(void);
 static void TryCreateRedOutlineFlyDestIcons(void);
+static bool32 RegionHasUnlockedFlyLocation(enum RegionMapId regionMapId);
 static void SpriteCB_FlyDestIcon(struct Sprite *sprite);
 static void CB_FadeInFlyMap(void);
 static void CB_HandleFlyMapInput(void);
@@ -609,19 +621,63 @@ static const struct SpriteTemplate sFlyDestIconSpriteTemplate =
     .anims = sFlyDestIcon_Anims,
 };
 
-void SetActiveMapRegionMapId(enum RegionMapId regionMapId)
+bool32 IsRegionMapUnlocked(enum RegionMapId regionMapId)
+{
+    switch (gRegionMapInfos[regionMapId].unlockCondition & CONDITION_MASK)
+    {
+        case ALWAYS_LOCKED:
+            return FALSE;
+        case ALWAYS_UNLOCKED:
+            return TRUE;
+        case UNLOCKED_ON_FLY:
+            return RegionHasUnlockedFlyLocation(regionMapId);
+        case UNLOCKED_ON_FLAG:
+            return FlagGet(gRegionMapInfos[regionMapId].unlockCondition & FLAG_MASK);
+        default:
+            errorf("invalid unlock condition %d for region map %d", gRegionMapInfos[regionMapId].unlockCondition, regionMapId);
+            sRegionMap->nextRegion = REGION_MAP_UNKNOWN;
+            return FALSE;
+    }
+}
+
+enum RegionMapId GetNextValidRegionMap(enum RegionMapId regionMapId)
+{
+    for (u32 i = 1; i < REGION_MAP_COUNT; i++)
+    {
+        enum RegionMapId nextRegion = regionMapId + i;
+        if (nextRegion >= REGION_MAP_COUNT)
+            nextRegion = nextRegion - REGION_MAP_COUNT + 1;
+
+        if (IsRegionMapUnlocked(nextRegion))
+            return nextRegion;
+    }
+    return REGION_MAP_UNKNOWN;
+}
+
+void SetActiveMapRegionMapId(enum RegionMapId regionMapId, bool32 allowRegionChange)
 {
     assertf(regionMapId < REGION_MAP_COUNT, "Trying to load unkown region map %d", regionMapId)
     {
         regionMapId = REGION_MAP_UNKNOWN;
     }
+
     sRegionMap->regionMapId = regionMapId;
+    if (allowRegionChange)
+    {
+        if (!IsRegionMapUnlocked(regionMapId))
+            sRegionMap->regionMapId = GetNextValidRegionMap(regionMapId);
+        sRegionMap->nextRegion = GetNextValidRegionMap(sRegionMap->regionMapId);
+    }
+    else
+    {
+        sRegionMap->nextRegion = REGION_MAP_UNKNOWN;
+    }
 }
 
-void InitRegionMap(struct RegionMapData *regionMapData, enum RegionMapId regionMapId, bool8 zoomed)
+void InitRegionMap(struct RegionMapData *regionMapData, enum RegionMapId regionMapId, bool32 zoomed, bool32 allowRegionChange)
 {
     InitRegionMapData(regionMapData, NULL, zoomed);
-    SetActiveMapRegionMapId(regionMapId);
+    SetActiveMapRegionMapId(regionMapId, allowRegionChange);
     while (LoadRegionMapGfx());
 }
 
@@ -647,9 +703,10 @@ void InitRegionMapData(struct RegionMapData *regionMapData, const struct BgTempl
     }
 }
 
-void ShowRegionMapForPokedexAreaScreen(struct RegionMapData *regionMapData)
+void ShowRegionMapForPokedexAreaScreen(struct RegionMapData *regionMapData, enum RegionMapId regionMapId)
 {
     sRegionMap = regionMapData;
+    sRegionMap->regionMapId = regionMapId;
     InitMapBasedOnPlayerLocation();
     sRegionMap->playerIconSpritePosX = sRegionMap->cursorPosX;
     sRegionMap->playerIconSpritePosY = sRegionMap->cursorPosY;
@@ -794,7 +851,7 @@ static u8 ProcessRegionMapInput_Full(void)
     {
         input = MAP_INPUT_B_BUTTON;
     }
-    else if (JOY_NEW(SELECT_BUTTON))
+    else if (JOY_NEW(SELECT_BUTTON) && sRegionMap->nextRegion != REGION_MAP_UNKNOWN)
     {
         input = MAP_INPUT_CHANGE_MAP;
     }
@@ -1899,8 +1956,7 @@ void CB2_OpenFlyMap(void)
         gMain.state++;
         break;
     case 4:
-        DebugPrintf("sFlyMap->regionMapId %d", sFlyMap->regionMapId);
-        InitRegionMap(&sFlyMap->regionMap, sFlyMap->regionMapId, FALSE);
+        InitRegionMap(&sFlyMap->regionMap, sFlyMap->regionMapId, FALSE, TRUE);
         CreateRegionMapCursor(TAG_CURSOR, TAG_CURSOR);
         CreateRegionMapPlayerIcon(TAG_PLAYER_ICON, TAG_PLAYER_ICON);
         sFlyMap->mapSecId = sFlyMap->regionMap.mapSecId;
@@ -2233,6 +2289,17 @@ static const struct FlyLocation sFlyLocations[] =
     },
 };
 
+static bool32 RegionHasUnlockedFlyLocation(enum RegionMapId regionMapId)
+{
+    for (u32 i = 0; i < ARRAY_COUNT(sFlyLocations); i++)
+    {
+        if (sFlyLocations[i].regionMap != regionMapId)
+            continue;
+        if (FlagGet(sFlyLocations[i].flag))
+            return TRUE;
+    }
+    return FALSE;
+}
 
 // Sprite data for SpriteCB_FlyDestIcon
 #define sIconMapSec   data[0]
@@ -2294,7 +2361,7 @@ static void TryCreateRedOutlineFlyDestIcons(void)
 
     for (i = 0; sRedOutlineFlyDestinations[i][1] != MAPSEC_NONE; i++)
     {
-        if (sRedOutlineFlyDestinations[i][2] != sFlyMap->regionMapId)
+        if (sRedOutlineFlyDestinations[i][2] != sRegionMap->regionMapId)
             continue;
 
         if (FlagGet(sRedOutlineFlyDestinations[i][0]))
@@ -2433,9 +2500,7 @@ static void CB_ChangeFlyMap(void)
             FreeSpriteTileRanges();
             FreeAllSpritePalettes();
             FreeAllWindowBuffers();
-            sFlyMap->regionMapId = sFlyMap->regionMapId + 1;
-            if (sFlyMap->regionMapId == REGION_MAP_COUNT)
-                sFlyMap->regionMapId = 1;
+            sFlyMap->regionMapId = sRegionMap->nextRegion;
             SetMainCallback2(CB2_OpenFlyMap);
             gMain.state = 1;
         }
@@ -2471,4 +2536,9 @@ void SetFlyDestination(struct RegionMapData *regionMapData)
         SetWarpDestinationToHealLocation(flyDestination);
     else
         SetWarpDestinationToMapWarp(sMapHealLocations[regionMapData->mapSecId][0], sMapHealLocations[regionMapData->mapSecId][1], WARP_ID_NONE);
+}
+
+enum RegionMapId GetNextRegionMap(void)
+{
+    return sRegionMap->nextRegion;
 }

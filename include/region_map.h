@@ -39,6 +39,7 @@ struct RegionMapInfo
     const u8 *regionName;
     const void *sectionLayout;
     u16 dexMapPaletteSize;
+    u16 unlockCondition;
     u8 width;
     u8 height;
     u8 leftOffset;
@@ -99,6 +100,7 @@ struct RegionMapData {
     /*0x085*/ u8 cursorSmallImage[0x100];
     /*0x185*/ u8 cursorLargeImage[0x600];
               enum RegionMapId regionMapId:8;
+              enum RegionMapId nextRegion:8;
 }; // size = 0x785
 
 struct MapSectionInfo
@@ -119,7 +121,7 @@ struct MapSectionInfo
 void InitRegionMapData(struct RegionMapData *regionMapData, const struct BgTemplate *template, bool8 zoomed);
 bool8 LoadRegionMapGfx(void);
 void UpdateRegionMapVideoRegs(void);
-void InitRegionMap(struct RegionMapData *regionMapData, enum RegionMapId regionMapId, bool8 zoomed);
+void InitRegionMap(struct RegionMapData *regionMapData, enum RegionMapId regionMapId, bool32 zoomed, bool32 allowRegionChange);
 u8 DoRegionMapInputCallback(void);
 bool8 UpdateRegionMapZoom(void);
 void FreeRegionMapIconResources(void);
@@ -131,7 +133,7 @@ u8 *GetMapName(u8 *dest, mapsec_u16_t regionMapId, u16 padLength);
 u8 *GetMapNameGeneric(u8 *dest, mapsec_u16_t mapSecId);
 u8 *GetMapNameHandleAquaHideout(u8 *dest, mapsec_u16_t mapSecId);
 mapsec_u16_t CorrectSpecialMapSecId(mapsec_u16_t mapSecId);
-void ShowRegionMapForPokedexAreaScreen(struct RegionMapData *regionMapData);
+void ShowRegionMapForPokedexAreaScreen(struct RegionMapData *regionMapData, enum RegionMapId regionMapId);
 void PokedexAreaScreen_UpdateRegionMapVariablesAndVideoRegs(s16 x, s16 y);
 void CB2_OpenFlyMap(void);
 bool8 IsRegionMapZoomed(void);
@@ -141,7 +143,10 @@ void SetRegionMapDataForZoom(void);
 enum RegionMapId GetRegionMap(u32 mapSecId);
 const u8 *GetMapRegionName(void);
 const u8 *GetRegionName(enum RegionMapId regionMap);
-void SetActiveMapRegionMapId(enum RegionMapId regionMapId);
+void SetActiveMapRegionMapId(enum RegionMapId regionMapId, bool32 allowRegionChange);
+bool32 IsRegionMapUnlocked(enum RegionMapId regionMapId);
+enum RegionMapId GetNextValidRegionMap(enum RegionMapId regionMapId);
+enum RegionMapId GetNextRegionMap(void);
 
 //Pokenav Fly funcs
 u32 FilterFlyDestination(struct RegionMapData *regionMapData);

@@ -43,6 +43,7 @@ static EWRAM_DATA struct {
     MainCallback callback;
     struct RegionMapData regionMap;
     enum RegionMapId regionMapId;
+    bool8 allowRegionChange;
     u16 state;
 
 } *sFieldRegionMapHandler = NULL;
@@ -97,13 +98,14 @@ static const struct WindowTemplate sFieldRegionMapWindowTemplates[] =
     DUMMY_WIN_TEMPLATE
 };
 
-void FieldInitRegionMap(MainCallback callback, enum RegionMapId regionMapId)
+void FieldInitRegionMap(MainCallback callback, enum RegionMapId regionMapId, bool32 allowRegionChange)
 {
     SetVBlankCallback(NULL);
     sFieldRegionMapHandler = Alloc(sizeof(*sFieldRegionMapHandler));
     sFieldRegionMapHandler->state = 0;
     sFieldRegionMapHandler->callback = callback;
     sFieldRegionMapHandler->regionMapId = regionMapId;
+    sFieldRegionMapHandler->allowRegionChange = allowRegionChange;
     SetMainCallback2(MCB2_InitRegionMapRegisters);
 }
 
@@ -151,7 +153,7 @@ static void FieldUpdateRegionMap(void)
     switch (sFieldRegionMapHandler->state)
     {
     case 0:
-        InitRegionMap(&sFieldRegionMapHandler->regionMap, sFieldRegionMapHandler->regionMapId, FALSE);
+        InitRegionMap(&sFieldRegionMapHandler->regionMap, sFieldRegionMapHandler->regionMapId, FALSE, sFieldRegionMapHandler->allowRegionChange);
         CreateRegionMapPlayerIcon(TAG_PLAYER_ICON, TAG_PLAYER_ICON);
         CreateRegionMapCursor(TAG_CURSOR, TAG_CURSOR);
         sFieldRegionMapHandler->state++;
@@ -220,9 +222,7 @@ static void FieldUpdateRegionMap(void)
         if (!gPaletteFade.active)
         {
             FreeRegionMapIconResources();
-            sFieldRegionMapHandler->regionMapId = sFieldRegionMapHandler->regionMapId + 1;
-            if (sFieldRegionMapHandler->regionMapId == REGION_MAP_COUNT)
-                sFieldRegionMapHandler->regionMapId = 1;
+            sFieldRegionMapHandler->regionMapId = GetNextRegionMap();
             sFieldRegionMapHandler->state = 0;
         }
     }
