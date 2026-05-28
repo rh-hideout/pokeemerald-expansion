@@ -51,6 +51,8 @@ enum AbilityEffect
     ABILITYEFFECT_DANCER,
     ABILITYEFFECT_MOVE_END_FOES_FAINTED, // Moxie-like abilities / Battle Bond / Magician
 
+    ABILITYEFFECT_ON_FORM_CHANGE,
+
     // On Switch in
     ABILITYEFFECT_TERA_SHIFT,
     ABILITYEFFECT_NEUTRALIZINGGAS,
