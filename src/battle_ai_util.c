@@ -2274,6 +2274,54 @@ bool32 IsBattlerDamagedByStatus(enum BattlerId battler)
         || gSideStatuses[GetBattlerSide(battler)] & (SIDE_STATUS_SEA_OF_FIRE | SIDE_STATUS_DAMAGE_NON_TYPES);
 }
 
+static bool32 ShouldAvoidProtectingAgainstPartnerMove(enum BattlerId battler, enum Move protectMove)
+{
+    enum BattlerId partner = BATTLE_PARTNER(battler);
+    enum Move partnerMove = gAiLogicData->partnerMove;
+
+    if (!IsDoubleBattle()
+     || !HasPartner(battler)
+     || partner > battler
+     || partnerMove == MOVE_NONE
+     || partnerMove == MOVE_UNAVAILABLE
+     || MoveIgnoresProtect(partnerMove)
+     || !AI_IsFaster(battler, partner, protectMove, partnerMove, CONSIDER_PRIORITY)
+     || !IsAllyProtectingFromMove(partner, partnerMove, protectMove)
+     || CanIndexMoveFaintTarget(partner, battler, gAiBattleData->chosenMoveIndex[partner], AI_ATTACKING))
+    {
+        return FALSE;
+    }
+
+    switch (AI_GetBattlerMoveTargetType(partner, partnerMove))
+    {
+    case TARGET_SELECTED:
+    case TARGET_SMART:
+    case TARGET_DEPENDS:
+    case TARGET_RANDOM:
+    case TARGET_ALLY:
+    case TARGET_USER_OR_ALLY:
+        return gAiBattleData->chosenTarget[partner] == battler;
+    case TARGET_FOES_AND_ALLY:
+    case TARGET_ALL_BATTLERS:
+        if (!DoesBattlerIgnoreAbilityChecks(partner, gAiLogicData->abilities[partner], partnerMove)
+         && ShouldTriggerAbility(partner, battler, gAiLogicData->abilities[battler]))
+        {
+            return TRUE;
+        }
+
+        if (gAiLogicData->holdEffects[battler] == HOLD_EFFECT_WEAKNESS_POLICY
+         && gAiLogicData->effectiveness[partner][battler][gAiBattleData->chosenMoveIndex[partner]] >= UQ_4_12(2.0))
+        {
+            return TRUE;
+        }
+        break;
+    default:
+        break;
+    }
+
+    return FALSE;
+}
+
 s32 ProtectChecks(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, enum Move predictedMove)
 {
     s32 score = 0;
@@ -2292,6 +2340,9 @@ s32 ProtectChecks(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Mov
     {
         return WORST_EFFECT;
     }
+
+    if (ShouldAvoidProtectingAgainstPartnerMove(battlerAtk, move))
+        return WORST_EFFECT;
 
     /*if (GetMoveResultFlags(predictedMove) & (MOVE_RESULT_NO_EFFECT | MOVE_RESULT_MISSED))
     {
