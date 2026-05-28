@@ -18,6 +18,7 @@
 #include "gym_leader_rematch.h"
 #include "battle_transition.h"
 #include "trainer_see.h"
+#include "trainer_pools.h"
 #include "new_game.h"
 #include "string_util.h"
 #include "data.h"

@@ -37,6 +37,14 @@ const struct PoolRules gPoolRulesetsList[] = {
         .tagMaxMembers[POOL_TAG_LEAD] = 2,
         .tagMaxMembers[POOL_TAG_ACE] = 2,
     },
+    [POOL_RULESET_FRONTIER] = { // Doesn't use default B_POOL_RULE behaviors to ensure vanilla compatibility.
+        .speciesClause = TRUE,
+        .excludeForms = TRUE,
+        .itemClause = TRUE,
+        .itemClauseExclusions = FALSE,
+        .megaStoneClause = B_POOL_RULE_MEGA_STONE_CLAUSE,
+        .zCrystalClause = B_POOL_RULE_Z_CRYSTAL_CLAUSE,
+    },
     [POOL_RULESET_WEATHER_SINGLES] = {
         .speciesClause = B_POOL_RULE_SPECIES_CLAUSE,
         .excludeForms = B_POOL_RULE_EXCLUDE_FORMS,

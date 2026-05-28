@@ -97,27 +97,33 @@ static const u8 sFixedIVTable[][2] =
     {31, 31},
 };
 
-static const u16 sInitialRentalMonRanges[][2] =
+static const struct FrontierMonPool sInitialRentalMonPools[][FRONTIER_STAGES_PER_CHALLENGE + 1] =
 {
     // Level 50
-    {FRONTIER_MON_GRIMER,     FRONTIER_MON_FURRET_1},   // 110 - 199
-    {FRONTIER_MON_DELCATTY_1, FRONTIER_MON_CLOYSTER_1}, // 162 - 266
-    {FRONTIER_MON_DELCATTY_2, FRONTIER_MON_CLOYSTER_2}, // 267 - 371
-    {FRONTIER_MON_DUGTRIO_1,  FRONTIER_MON_SLAKING_1},  // 372 - 467
-    {FRONTIER_MON_DUGTRIO_2,  FRONTIER_MON_SLAKING_2},  // 468 - 563
-    {FRONTIER_MON_DUGTRIO_3,  FRONTIER_MON_SLAKING_3},  // 564 - 659
-    {FRONTIER_MON_DUGTRIO_4,  FRONTIER_MON_SLAKING_4},  // 660 - 755
-    {FRONTIER_MON_DUGTRIO_1,  FRONTIER_MONS_HIGH_TIER}, // 372 - 849
+    [FRONTIER_LVL_50] =
+    {
+        FRONTIER_MON_RANGE_POOL(FRONTIER_MON_GRIMER,     FRONTIER_MON_FURRET_1),   // 110 - 199
+        FRONTIER_MON_RANGE_POOL(FRONTIER_MON_DELCATTY_1, FRONTIER_MON_CLOYSTER_1), // 162 - 266
+        FRONTIER_MON_RANGE_POOL(FRONTIER_MON_DELCATTY_2, FRONTIER_MON_CLOYSTER_2), // 267 - 371
+        FRONTIER_MON_RANGE_POOL(FRONTIER_MON_DUGTRIO_1,  FRONTIER_MON_SLAKING_1),  // 372 - 467
+        FRONTIER_MON_RANGE_POOL(FRONTIER_MON_DUGTRIO_2,  FRONTIER_MON_SLAKING_2),  // 468 - 563
+        FRONTIER_MON_RANGE_POOL(FRONTIER_MON_DUGTRIO_3,  FRONTIER_MON_SLAKING_3),  // 564 - 659
+        FRONTIER_MON_RANGE_POOL(FRONTIER_MON_DUGTRIO_4,  FRONTIER_MON_SLAKING_4),  // 660 - 755
+        FRONTIER_MON_RANGE_POOL(FRONTIER_MON_DUGTRIO_1,  FRONTIER_MON_LATIOS_8),   // 372 - 849
+    },
 
     // Open level
-    {FRONTIER_MON_DUGTRIO_1, FRONTIER_MON_SLAKING_1}, // 372 - 467
-    {FRONTIER_MON_DUGTRIO_2, FRONTIER_MON_SLAKING_2}, // 468 - 563
-    {FRONTIER_MON_DUGTRIO_3, FRONTIER_MON_SLAKING_3}, // 564 - 659
-    {FRONTIER_MON_DUGTRIO_4, FRONTIER_MON_SLAKING_4}, // 660 - 755
-    {FRONTIER_MON_DUGTRIO_1, NUM_FRONTIER_MONS - 1},  // 372 - 881
-    {FRONTIER_MON_DUGTRIO_1, NUM_FRONTIER_MONS - 1},  // 372 - 881
-    {FRONTIER_MON_DUGTRIO_1, NUM_FRONTIER_MONS - 1},  // 372 - 881
-    {FRONTIER_MON_DUGTRIO_1, NUM_FRONTIER_MONS - 1},  // 372 - 881
+    [FRONTIER_LVL_OPEN] =
+    {
+        FRONTIER_MON_RANGE_POOL(FRONTIER_MON_DUGTRIO_1, FRONTIER_MON_SLAKING_1), // 372 - 467
+        FRONTIER_MON_RANGE_POOL(FRONTIER_MON_DUGTRIO_2, FRONTIER_MON_SLAKING_2), // 468 - 563
+        FRONTIER_MON_RANGE_POOL(FRONTIER_MON_DUGTRIO_3, FRONTIER_MON_SLAKING_3), // 564 - 659
+        FRONTIER_MON_RANGE_POOL(FRONTIER_MON_DUGTRIO_4, FRONTIER_MON_SLAKING_4), // 660 - 755
+        FRONTIER_MON_RANGE_POOL(FRONTIER_MON_DUGTRIO_1, NUM_FRONTIER_MONS - 1),  // 372 - 881
+        FRONTIER_MON_RANGE_POOL(FRONTIER_MON_DUGTRIO_1, NUM_FRONTIER_MONS - 1),  // 372 - 881
+        FRONTIER_MON_RANGE_POOL(FRONTIER_MON_DUGTRIO_1, NUM_FRONTIER_MONS - 1),  // 372 - 881
+        FRONTIER_MON_RANGE_POOL(FRONTIER_MON_DUGTRIO_1, NUM_FRONTIER_MONS - 1),  // 372 - 881
+    },
 };
 
 // code
@@ -244,6 +250,7 @@ static void GenerateOpponentMons(void)
     u32 winStreak = gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode];
     u32 challengeNum = winStreak / FRONTIER_STAGES_PER_CHALLENGE;
     gFacilityTrainers = gBattleFrontierTrainers;
+    gFacilityTrainerMons = gBattleFrontierMons;
 
     do
     {
@@ -279,7 +286,7 @@ static void GenerateOpponentMons(void)
             continue;
 
         // "High tier" Pokémon are only allowed on open level mode
-        if (lvlMode == FRONTIER_LVL_50 && monId > FRONTIER_MONS_HIGH_TIER)
+        if (!IsFactoryMonAllowedByLevel(lvlMode, monId))
             continue;
 
         // Ensure this species hasn't already been chosen for the opponent
@@ -606,6 +613,11 @@ bool8 InBattleFactory(void)
         || gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_FACTORY_BATTLE_ROOM;
 }
 
+bool8 IsFactoryMonAllowedByLevel(enum FrontierLevelMode lvlMode, u16 monId)
+{
+    return lvlMode != FRONTIER_LVL_50 || !IsFrontierMonHighTier(monId);
+}
+
 static void RestorePlayerPartyHeldItems(void)
 {
     u8 i;
@@ -674,7 +686,7 @@ void FillFactoryBrainParty(void)
 
         if (gFacilityTrainerMons[monId].species == SPECIES_UNOWN)
             continue;
-        if (monLevel == FRONTIER_MAX_LEVEL_50 && monId > FRONTIER_MONS_HIGH_TIER)
+        if (!IsFactoryMonAllowedByLevel(lvlMode, monId))
             continue;
 
         for (j = 0; j < (int)ARRAY_COUNT(gSaveBlock2Ptr->frontier.rentalMons); j++)
@@ -710,43 +722,24 @@ void FillFactoryBrainParty(void)
     }
 }
 
-static u16 GetFactoryMonId(enum FrontierLevelMode lvlMode, u8 challengeNum, bool8 useBetterRange)
+const struct FrontierMonPool *GetFactoryMonPool(enum FrontierLevelMode lvlMode, u8 challengeNum, bool8 useBetterRange)
 {
-    u16 numMons, monId;
-    u16 adder; // Used to skip past early mons for open level
-
-    if (lvlMode == FRONTIER_LVL_50)
-        adder = 0;
-    else
-        adder = 8;
-
     if (challengeNum < 7)
     {
         if (useBetterRange)
-        {
-            numMons = (sInitialRentalMonRanges[adder + challengeNum + 1][1] - sInitialRentalMonRanges[adder + challengeNum + 1][0]) + 1;
-            monId = Random() % numMons;
-            monId += sInitialRentalMonRanges[adder + challengeNum + 1][0];
-        }
-        else
-        {
-            numMons = (sInitialRentalMonRanges[adder + challengeNum][1] - sInitialRentalMonRanges[adder + challengeNum][0]) + 1;
-            monId = Random() % numMons;
-            monId += sInitialRentalMonRanges[adder + challengeNum][0];
-        }
+            challengeNum++;
     }
     else
     {
-        u16 challenge = challengeNum;
-        if (challenge != 7)
-            challenge = 7; // why bother assigning it above at all
-
-        numMons = (sInitialRentalMonRanges[adder + challenge][1] - sInitialRentalMonRanges[adder + challenge][0]) + 1;
-        monId = Random() % numMons;
-        monId += sInitialRentalMonRanges[adder + challenge][0];
+        challengeNum = 7;
     }
 
-    return monId;
+    return &sInitialRentalMonPools[lvlMode][challengeNum];
+}
+
+static u16 GetFactoryMonId(enum FrontierLevelMode lvlMode, u8 challengeNum, bool8 useBetterRange)
+{
+    return GetRandomFrontierMonFromPool(GetFactoryMonPool(lvlMode, challengeNum, useBetterRange));
 }
 
 u8 GetNumPastRentalsRank(u8 battleMode, enum FrontierLevelMode lvlMode)

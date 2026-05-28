@@ -1,0 +1,48 @@
+#pragma trainerproc frontierMons
+#pragma trainerproc frontierHighTier FRONTIER_MON_TEST_ABRA
+
+=== FRONTIER_MON_TEST_PIKACHU ===
+
+Sparky (Pikachu) (M) @ Light Ball
+EVs: 252 HP / 4 Atk / 12 Def / 36 SpA / 44 SpD / 60 Spe
+IVs: 31 HP / 30 Atk / 29 Def / 28 SpA / 27 SpD / 26 Spe
+Ability: Static
+Level: 50
+Ball: Luxury
+Happiness: 200
+Nature: Timid
+Shiny: Yes
+Dynamax Level: 7
+Gigantamax: Yes
+Tera Type: Fire
+Tags: Lead / Ace
+- Thunderbolt
+- Surf
+- Protect
+- Volt Switch
+
+=== FRONTIER_MON_TEST_ABRA ===
+
+Abra @ Twisted Spoon
+EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 4 SpD / 252 Spe
+Nature: Modest
+- Psychic
+
+=== FRONTIER_MON_TEST_MACHOP ===
+
+Machop @ Black Belt
+Nature: Brave
+Tags: High Tier
+- Karate Chop
+
+=== FRONTIER_MON_TEST_PIKACHU_2 ===
+
+Pikachu @ Oran Berry
+Nature: Jolly
+- Quick Attack
+
+=== FRONTIER_MON_TEST_BULBASAUR ===
+
+Bulbasaur @ Light Ball
+Nature: Calm
+- Vine Whip

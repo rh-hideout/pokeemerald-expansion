@@ -9332,6 +9332,7 @@ Dragonite @ Bright Powder
 EVs: 170 HP / 0 Atk / 170 Def / 0 SpA / 170 SpD / 0 Spe
 Nature: Adamant
 Ball: Poke
+Tags: High Tier
 - Earthquake
 - Aerial Ace
 - Brick Break
@@ -9343,6 +9344,7 @@ Dragonite @ Bright Powder
 EVs: 170 HP / 0 Atk / 170 Def / 0 SpA / 170 SpD / 0 Spe
 Nature: Adamant
 Ball: Poke
+Tags: High Tier
 - Earthquake
 - Double Edge
 - Aerial Ace
@@ -9354,6 +9356,7 @@ Dragonite @ Leftovers
 EVs: 0 HP / 170 Atk / 170 Def / 0 SpA / 170 SpD / 0 Spe
 Nature: Adamant
 Ball: Poke
+Tags: High Tier
 - Hyper Beam
 - Attract
 - Double Team
@@ -9365,6 +9368,7 @@ Dragonite @ Chesto Berry
 EVs: 170 HP / 0 Atk / 170 Def / 0 SpA / 170 SpD / 0 Spe
 Nature: Adamant
 Ball: Poke
+Tags: High Tier
 - Hyper Beam
 - Thunder Wave
 - Dragon Dance
@@ -9376,6 +9380,7 @@ Dragonite @ Lum Berry
 EVs: 0 HP / 252 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
 Nature: Docile
 Ball: Poke
+Tags: High Tier
 - Outrage
 - Double Edge
 - Thunder Wave
@@ -9387,6 +9392,7 @@ Dragonite @ Shell Bell
 EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
 Nature: Modest
 Ball: Poke
+Tags: High Tier
 - Dragon Claw
 - Thunderbolt
 - Surf
@@ -9398,6 +9404,7 @@ Dragonite @ Shell Bell
 EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
 Nature: Modest
 Ball: Poke
+Tags: High Tier
 - Dragon Claw
 - Thunderbolt
 - Surf
@@ -9409,6 +9416,7 @@ Dragonite @ Shell Bell
 EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
 Nature: Modest
 Ball: Poke
+Tags: High Tier
 - Dragon Claw
 - Flamethrower
 - Ice Beam
@@ -9420,6 +9428,7 @@ Dragonite @ Quick Claw
 EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
 Nature: Docile
 Ball: Poke
+Tags: High Tier
 - Thunder
 - Surf
 - Rain Dance
@@ -9431,6 +9440,7 @@ Dragonite @ Quick Claw
 EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
 Nature: Docile
 Ball: Poke
+Tags: High Tier
 - Fire Blast
 - Blizzard
 - Sunny Day
@@ -9442,6 +9452,7 @@ Tyranitar @ Bright Powder
 EVs: 0 HP / 252 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
 Nature: Hardy
 Ball: Poke
+Tags: High Tier
 - Earthquake
 - Aerial Ace
 - Thunderbolt
@@ -9453,6 +9464,7 @@ Tyranitar @ Bright Powder
 EVs: 0 HP / 252 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
 Nature: Hardy
 Ball: Poke
+Tags: High Tier
 - Earthquake
 - Rock Slide
 - Crunch
@@ -9464,6 +9476,7 @@ Tyranitar @ Focus Band
 EVs: 170 HP / 0 Atk / 170 Def / 0 SpA / 170 SpD / 0 Spe
 Nature: Adamant
 Ball: Poke
+Tags: High Tier
 - Earthquake
 - Rock Slide
 - Counter
@@ -9475,6 +9488,7 @@ Tyranitar @ Quick Claw
 EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
 Nature: Modest
 Ball: Poke
+Tags: High Tier
 - Crunch
 - Ice Beam
 - Thunderbolt
@@ -9486,6 +9500,7 @@ Tyranitar @ Chesto Berry
 EVs: 170 HP / 0 Atk / 170 Def / 0 SpA / 170 SpD / 0 Spe
 Nature: Adamant
 Ball: Poke
+Tags: High Tier
 - Earthquake
 - Rock Slide
 - Dragon Dance
@@ -9497,6 +9512,7 @@ Tyranitar @ Chesto Berry
 EVs: 170 HP / 0 Atk / 170 Def / 0 SpA / 170 SpD / 0 Spe
 Nature: Adamant
 Ball: Poke
+Tags: High Tier
 - Earthquake
 - Rock Slide
 - Curse
@@ -9508,6 +9524,7 @@ Tyranitar @ Quick Claw
 EVs: 252 HP / 252 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 Nature: Adamant
 Ball: Poke
+Tags: High Tier
 - Rock Slide
 - Aerial Ace
 - Brick Break
@@ -9519,6 +9536,7 @@ Tyranitar @ Lum Berry
 EVs: 170 HP / 0 Atk / 170 Def / 0 SpA / 170 SpD / 0 Spe
 Nature: Adamant
 Ball: Poke
+Tags: High Tier
 - Rock Slide
 - Thunder Wave
 - Dragon Dance
@@ -9530,6 +9548,7 @@ Tyranitar @ Quick Claw
 EVs: 0 HP / 252 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
 Nature: Hardy
 Ball: Poke
+Tags: High Tier
 - Crunch
 - Earthquake
 - Aerial Ace
@@ -9541,6 +9560,7 @@ Tyranitar @ Lum Berry
 EVs: 170 HP / 0 Atk / 170 Def / 0 SpA / 170 SpD / 0 Spe
 Nature: Adamant
 Ball: Poke
+Tags: High Tier
 - Double Edge
 - Earthquake
 - Rock Slide
@@ -9552,6 +9572,7 @@ Articuno @ Focus Band
 EVs: 0 HP / 252 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
 Nature: Docile
 Ball: Poke
+Tags: High Tier
 - Blizzard
 - Double Edge
 - Agility
@@ -9563,6 +9584,7 @@ Articuno @ Chesto Berry
 EVs: 0 HP / 252 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
 Nature: Docile
 Ball: Poke
+Tags: High Tier
 - Ice Beam
 - Aerial Ace
 - Reflect
@@ -9574,6 +9596,7 @@ Zapdos @ Scope Lens
 EVs: 0 HP / 252 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
 Nature: Docile
 Ball: Poke
+Tags: High Tier
 - Thunderbolt
 - Drill Peck
 - Double Edge
@@ -9585,6 +9608,7 @@ Zapdos @ Lum Berry
 EVs: 0 HP / 170 Atk / 0 Def / 170 SpA / 0 SpD / 170 Spe
 Nature: Docile
 Ball: Poke
+Tags: High Tier
 - Thunder
 - Drill Peck
 - Rain Dance
@@ -9596,6 +9620,7 @@ Moltres @ White Herb
 EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
 Nature: Docile
 Ball: Poke
+Tags: High Tier
 - Overheat
 - Sunny Day
 - Swagger
@@ -9607,6 +9632,7 @@ Moltres @ White Herb
 EVs: 0 HP / 252 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
 Nature: Docile
 Ball: Poke
+Tags: High Tier
 - Overheat
 - Double Edge
 - Aerial Ace
@@ -9618,6 +9644,7 @@ Raikou @ Bright Powder
 EVs: 0 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 252 Spe
 Nature: Modest
 Ball: Poke
+Tags: High Tier
 - Thunderbolt
 - Double Edge
 - Roar
@@ -9629,6 +9656,7 @@ Raikou @ Chesto Berry
 EVs: 252 HP / 0 Atk / 252 Def / 0 SpA / 0 SpD / 0 Spe
 Nature: Modest
 Ball: Poke
+Tags: High Tier
 - Thunderbolt
 - Calm Mind
 - Substitute
@@ -9640,6 +9668,7 @@ Entei @ Salac Berry
 EVs: 0 HP / 0 Atk / 252 Def / 0 SpA / 252 SpD / 0 Spe
 Nature: Docile
 Ball: Poke
+Tags: High Tier
 - Fire Blast
 - Double Edge
 - Endure
@@ -9651,6 +9680,7 @@ Entei @ Chesto Berry
 EVs: 0 HP / 0 Atk / 252 Def / 0 SpA / 252 SpD / 0 Spe
 Nature: Modest
 Ball: Poke
+Tags: High Tier
 - Flamethrower
 - Calm Mind
 - Roar
@@ -9662,6 +9692,7 @@ Suicune @ Lum Berry
 EVs: 252 HP / 0 Atk / 0 Def / 252 SpA / 0 SpD / 0 Spe
 Nature: Modest
 Ball: Poke
+Tags: High Tier
 - Surf
 - Ice Beam
 - Calm Mind
@@ -9673,6 +9704,7 @@ Suicune @ Chesto Berry
 EVs: 170 HP / 0 Atk / 170 Def / 0 SpA / 170 SpD / 0 Spe
 Nature: Modest
 Ball: Poke
+Tags: High Tier
 - Surf
 - Ice Beam
 - Calm Mind

@@ -15,6 +15,16 @@ struct BattleFrontierTrainer
     const u16 *monSet;
 };
 
+struct FrontierMonPool
+{
+    const u16 *monIds;
+    u16 firstMonId;
+    u16 size;
+};
+
+#define FRONTIER_MON_LIST_POOL(monIds_, size_) { .monIds = (monIds_), .size = (size_) }
+#define FRONTIER_MON_RANGE_POOL(first_, last_) { .firstMonId = (first_), .size = (last_) - (first_) + 1 }
+
 // Temporary storage for monIds of the opponent team
 // during team generation in battle factory and similar facilities.
 extern u16 gFrontierTempParty[MAX_FRONTIER_PARTY_SIZE];

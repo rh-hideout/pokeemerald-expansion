@@ -367,7 +367,7 @@ static void PrunePool(const struct Trainer *trainer, u8 *poolIndexArray, const s
     }
 }
 
-void DoTrainerPartyPool(const struct Trainer *trainer, u32 *monIndices, u8 monsCount, u32 battleTypeFlags)
+bool8 DoTrainerPartyPool(const struct Trainer *trainer, u32 *monIndices, u8 monsCount, u32 battleTypeFlags)
 {
         bool32 usingPool = FALSE;
         struct PoolRules rules = defaultPoolRules;
@@ -406,4 +406,6 @@ void DoTrainerPartyPool(const struct Trainer *trainer, u32 *monIndices, u8 monsC
         if (!usingPool)
             for (u32 i = 0; i < monsCount; i++)
                 monIndices[i] = i;
+
+        return usingPool;
 }
