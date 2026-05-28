@@ -1422,7 +1422,7 @@ static u32 UpdateEffectivenessResultFlagsForDoubleSpreadMoves(u32 resultFlags, u
     {
         if (IsBattlerInvalidForSpreadMove(gBattlerAttacker, battlerDef))
                 continue;
-        
+
         if (DoesBattlerNegateDamage(battlerDef))
             continue; // doesnt contribute to SE
         if (!(gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_NOT_VERY_EFFECTIVE))
@@ -2384,8 +2384,8 @@ static void SetNonVolatileStatus(enum BattlerId effectBattler, enum MoveEffect e
      || effect == MOVE_EFFECT_BURN)
         gBattleStruct->synchronizeMoveEffect = effect;
 
-    if (effect == MOVE_EFFECT_POISON || effect == MOVE_EFFECT_TOXIC)
-        gBattleStruct->poisonPuppeteerConfusion = TRUE;
+    if ((effect == MOVE_EFFECT_POISON || effect == MOVE_EFFECT_TOXIC) && trigger == TRIGGER_ON_MOVE)
+        gSpecialStatuses[effectBattler].poisonPuppeteer = TRUE;
 }
 
 static inline bool32 IgnoreTargetingForMoveEffect(enum MoveEffect moveEffect) // Currently only used to determine move effects which happen even if the move's defined effectbattler is fainted
@@ -8809,10 +8809,10 @@ static void Cmd_trysetencore(void)
         }
     }
 
-    if ((IsMoveEncoreBanned(gLastMoves[gBattlerTarget]))
-     || i == MAX_MON_MOVES
-     || gLastMoves[gBattlerTarget] == MOVE_NONE
+    if (gLastMoves[gBattlerTarget] == MOVE_NONE
      || gLastMoves[gBattlerTarget] == MOVE_UNAVAILABLE
+     || IsMoveEncoreBanned(gLastMoves[gBattlerTarget])
+     || i == MAX_MON_MOVES
      || gBattleMons[gBattlerTarget].pp[i] == 0
      || gBattleMons[gBattlerTarget].volatiles.encoredMove != MOVE_NONE
      || GetMoveEffect(gChosenMoveByBattler[gBattlerTarget]) == EFFECT_SHELL_TRAP)
@@ -13274,9 +13274,30 @@ void BS_JumpIfIntimidateAbilityPrevented(void)
         }
         break;
     case ABILITY_GUARD_DOG:
-        hasAbility = TRUE;
-        gBattlescriptCurrInstr = BattleScript_IntimidateInReverse;
+    {
+        bool32 blockedByFlowerVeil = FALSE;
+        u32 flowerVeilBattler = IsFlowerVeilProtected(gBattlerTarget);
+
+        if (flowerVeilBattler)
+        {
+            flowerVeilBattler--;
+            if (gBattleMons[flowerVeilBattler].speed > gBattleMons[gBattlerTarget].speed)
+                blockedByFlowerVeil = TRUE;
+        }
+
+        if (!(gSideTimers[GetBattlerSide(gBattlerTarget)].mistTimer)
+         && CompareStat(gBattlerTarget, STAT_ATK, MIN_STAT_STAGE, CMP_GREATER_THAN, ability)
+         && !blockedByFlowerVeil)
+        {
+            hasAbility = TRUE;
+            gBattlescriptCurrInstr = BattleScript_IntimidateInReverse;
+        }
+        else
+        {
+            gBattlescriptCurrInstr = cmd->nextInstr;
+        }
         break;
+    }
     default:
         gBattlescriptCurrInstr = cmd->nextInstr;
         break;
@@ -13978,6 +13999,16 @@ void BS_SwitchinAbilities(void)
      || AbilityBattleEffects(ABILITYEFFECT_ON_WEATHER, battler, ability, MOVE_NONE, TRUE)
      || AbilityBattleEffects(ABILITYEFFECT_ON_TERRAIN, battler, ability, MOVE_NONE, TRUE)
      || AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, battler, ability, MOVE_NONE, TRUE))
+        return;
+}
+
+void BS_AbilityOnFormChange(void)
+{
+    NATIVE_ARGS(u8 battler);
+    enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
+    enum Ability ability = GetBattlerAbility(battler);
+    gBattlescriptCurrInstr = cmd->nextInstr;
+    if (AbilityBattleEffects(ABILITYEFFECT_ON_FORM_CHANGE, battler, ability, MOVE_NONE, TRUE))
         return;
 }
 

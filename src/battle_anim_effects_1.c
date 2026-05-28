@@ -4439,9 +4439,6 @@ static void AnimTrickBag(struct Sprite *sprite)
 {
     CMD_ARGS(initialY, waveOffset);
 
-    int a;
-    int b;
-
     if (!sprite->data[0])
     {
         if (!IsContest())
@@ -4451,13 +4448,7 @@ static void AnimTrickBag(struct Sprite *sprite)
         }
         else
         {
-            a = cmd->waveOffset - 32;
-            if (a < 0)
-                b = cmd->waveOffset + 0xDF;
-            else
-                b = a;
-
-            sprite->data[1] = a - ((b >> 8) << 8);
+            sprite->data[1] = (cmd->waveOffset - 32) % 256;
             sprite->x = 70;
         }
 
@@ -5674,18 +5665,18 @@ static void AnimLockOnMoveTarget(struct Sprite *sprite)
     CMD_ARGS(unk0);
 
     sprite->oam.affineParam = cmd->unk0;
-    if ((s16)sprite->oam.affineParam == 1)
+    if (cmd->unk0 == 1)
     {
         sprite->x -= 0x18;
         sprite->y -= 0x18;
     }
-    else if ((s16)sprite->oam.affineParam == 2)
+    else if (cmd->unk0 == 2)
     {
         sprite->x -= 0x18;
         sprite->y += 0x18;
         sprite->oam.matrixNum = ST_OAM_VFLIP;
     }
-    else if ((s16)sprite->oam.affineParam == 3)
+    else if (cmd->unk0 == 3)
     {
         sprite->x += 0x18;
         sprite->y -= 0x18;
@@ -5698,7 +5689,7 @@ static void AnimLockOnMoveTarget(struct Sprite *sprite)
         sprite->oam.matrixNum = ST_OAM_HFLIP | ST_OAM_VFLIP;
     }
 
-    sprite->oam.tileNum = (sprite->oam.tileNum + 16);
+    sprite->oam.tileNum += 16;
     sprite->callback = AnimLockOnTarget;
     sprite->callback(sprite);
 }
@@ -6974,7 +6965,7 @@ static void AnimWavyMusicNotes_Step(struct Sprite *sprite)
     u8 index;
 
     sprite->sMoveTimer++;
-    trigIdx = sprite->sMoveTimer * 5 - ((sprite->sMoveTimer * 5 / 256) << 8);
+    trigIdx = (sprite->sMoveTimer * 5) % 256;
     sprite->sX += sprite->sVelocX;
     sprite->sY += sprite->sVelocY;
     sprite->x = sprite->sX >> 4;

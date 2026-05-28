@@ -970,6 +970,8 @@ static enum CancelerResult CancelerPPDeduction(struct BattleContext *ctx)
         gBattleMons[ctx->battlerAtk].pp[movePosition] -= ppToDeduct;
     else
         gBattleMons[ctx->battlerAtk].pp[movePosition] = 0;
+        
+    gLastMoves[ctx->battlerAtk] = gChosenMove;
 
     if (MOVE_IS_PERMANENT(ctx->battlerAtk, movePosition))
     {
@@ -1432,6 +1434,14 @@ static enum CancelerResult CancelerPriorityBlock(struct BattleContext *ctx)
         gBattlescriptCurrInstr = BattleScript_DazzlingProtected;
         return CANCELER_RESULT_FAILURE;
     }
+
+    return CANCELER_RESULT_SUCCESS;
+}
+
+static enum CancelerResult CancelerInterruptibleMoves(struct BattleContext *ctx)
+{
+    if (GetMoveEffect(ctx->move) == EFFECT_FUTURE_SIGHT)
+        gBattleStruct->eventState.atkCanceler = CANCELER_END;
 
     return CANCELER_RESULT_SUCCESS;
 }
@@ -1931,7 +1941,9 @@ static enum CancelerResult CancelerMultihitMoves(struct BattleContext *ctx)
     }
     else if (GetMoveStrikeCount(ctx->move) > 1)
     {
-        if (GetMoveEffect(ctx->move) == EFFECT_POPULATION_BOMB && GetBattlerHoldEffect(ctx->battlerAtk) == HOLD_EFFECT_LOADED_DICE)
+        if (GetMoveEffect(ctx->move) == EFFECT_POPULATION_BOMB
+         && ctx->holdEffectAtk == HOLD_EFFECT_LOADED_DICE
+         && ctx->abilityAtk != ABILITY_SKILL_LINK)
         {
             gMultiHitCounter = RandomUniform(RNG_LOADED_DICE, 4, 10);
         }
@@ -2019,6 +2031,7 @@ static enum CancelerResult (*const sMoveSuccessOrderCancelers[])(struct BattleCo
     [CANCELER_MOVE_EFFECT_FAILURE_TARGET] = CancelerMoveEffectFailureTarget,
     [CANCELER_POWDER_STATUS] = CancelerPowderStatus,
     [CANCELER_PRIORITY_BLOCK] = CancelerPriorityBlock,
+    [CANCELER_INTERRUPTIBLE_MOVES] = CancelerInterruptibleMoves,
     [CANCELER_PROTEAN] = CancelerProtean,
     [CANCELER_EXPLODING_DAMP] = CancelerExplodingDamp,
     [CANCELER_EXPLOSION] = CancelerExplosion,
@@ -2203,7 +2216,7 @@ static enum MoveEndResult MoveEndAbsorb(void)
     switch (moveEffect)
     {
     case EFFECT_STRENGTH_SAP:
-        if (gBattleStruct->passiveHpUpdate[gBattlerAttacker] > 0)
+        if (gBattleStruct->passiveHpUpdate[gBattlerAttacker] > 0 && !IsBattlerUnaffectedByMove(gBattlerTarget))
         {
             s32 healAmount = gBattleStruct->passiveHpUpdate[gBattlerAttacker];
             SetHealScript(healAmount);
@@ -2680,7 +2693,6 @@ static enum MoveEndResult MoveEndUpdateLastMoves(void)
         }
         else
         {
-            gLastMoves[gBattlerAttacker] = MOVE_UNAVAILABLE;
             gLastResultingMoves[gBattlerAttacker] = MOVE_UNAVAILABLE;
             gLastUsedMoveType[gBattlerAttacker] = 0;
         }
@@ -3288,6 +3300,7 @@ static enum MoveEndResult MoveEndKeeMarangaHpThresholdItemTarget(void)
 static bool32 TryRedCard(enum BattlerId battlerAtk, enum BattlerId redCardBattler, enum Move move)
 {
     if (!IsBattlerAlive(redCardBattler)
+     || !IsBattlerAlive(battlerAtk)
      || !IsBattlerTurnDamaged(redCardBattler, EXCLUDING_SUBSTITUTES)
      || DoesSubstituteBlockMove(battlerAtk, redCardBattler, move)
      || !CanBattlerSwitch(battlerAtk))
@@ -3748,7 +3761,6 @@ static enum MoveEndResult MoveEndClearBits(void)
     gBattleStruct->categoryOverride = FALSE;
     gBattleStruct->additionalEffectsCounter = 0;
     gBattleStruct->triAttackBurn = FALSE;
-    gBattleStruct->poisonPuppeteerConfusion = FALSE;
     gBattleStruct->fickleBeamBoosted = FALSE;
     gBattleStruct->battlerState[gBattlerAttacker].usedMicleBerry = FALSE;
     gBattleStruct->toxicChainPriority = FALSE;

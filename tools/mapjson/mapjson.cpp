@@ -731,7 +731,10 @@ void process_groups(string groups_filepath, vector<string> &map_filepaths, strin
         string region = json_to_string(map_data, "region", true);
 
         if (region.empty()) {
-            region = "REGION_HOENN";
+            if (version == "emerald")
+                region = "REGION_HOENN";
+            else if (version == "firered")
+                region = "REGION_KANTO";
         }
         string map_name = json_to_string(map_data, "name");
 
@@ -770,7 +773,10 @@ string generate_layout_headers_text(Json layouts_data) {
         string layout_version = json_to_string(layout, "layout_version", true);
 
         if (layout_version.empty()) {
-            layout_version = "emerald";
+            if (version == "emerald")
+                layout_version = "emerald";
+            else if (version == "firered")
+                layout_version = "frlg";
         }
         if ((version == "emerald" && layout_version != "emerald")
          || (version == "firered" && layout_version != "frlg"))

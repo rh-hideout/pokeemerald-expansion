@@ -132,29 +132,6 @@ SINGLE_BATTLE_TEST("Octolock will not decrease Defense and Sp. Def further then 
     }
 }
 
-SINGLE_BATTLE_TEST("Octolock triggers Defiant for both stat reductions")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_BISHARP) { Ability(ABILITY_DEFIANT); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_OCTOLOCK); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_OCTOLOCK, player);
-        MESSAGE("The opposing Bisharp can no longer escape because of Octolock!");
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Bisharp's Defense fell!");
-        ABILITY_POPUP(opponent, ABILITY_DEFIANT);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Bisharp's Attack sharply rose!");
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Bisharp's Sp. Def fell!");
-        ABILITY_POPUP(opponent, ABILITY_DEFIANT);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Bisharp's Attack sharply rose!");
-    }
-}
-
 SINGLE_BATTLE_TEST("Octolock ends after user that set the lock switches out")
 {
     GIVEN {

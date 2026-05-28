@@ -80,7 +80,6 @@ MoveRelearner_EventScript_TeachMove::
 	call_if_eq VAR_RESULT, FALSE, MoveRelearner_EventScript_CantTeachMoveToPkmn
 	msgbox MoveRelearner_Text_WhichXmoveShouldTeach, MSGBOX_DEFAULT
 	special TeachMoveRelearnerMove
-	waitstate
 	goto MoveRelearner_EventScript_AnythingElse
 	end
 

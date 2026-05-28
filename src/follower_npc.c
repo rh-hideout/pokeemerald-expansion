@@ -21,6 +21,7 @@
 #include "frontier_util.h"
 #include "item.h"
 #include "load_save.h"
+#include "map_name_popup.h"
 #include "metatile_behavior.h"
 #include "overworld.h"
 #include "party_menu.h"
@@ -65,7 +66,6 @@ static void SetSurfDismount(void);
 static void Task_BindSurfBlobToFollowerNPC(u8 taskId);
 static void Task_FinishSurfDismount(u8 taskId);
 static void Task_ReallowPlayerMovement(u8 taskId);
-static void Task_FollowerNPCOutOfDoor(u8 taskId);
 static void Task_FollowerNPCHandleEscalator(u8 taskId);
 static void Task_FollowerNPCHandleEscalatorFinish(u8 taskId);
 static void CalculateFollowerNPCEscalatorTrajectoryUp(struct Task *task);
@@ -628,7 +628,7 @@ static void Task_ReallowPlayerMovement(u8 taskId)
 // Task data.
 #define tDoorTask           data[1]
 
-static void Task_FollowerNPCOutOfDoor(u8 taskId)
+void Task_FollowerNPCOutOfDoor(u8 taskId)
 {
     struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCObjectId()];
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
@@ -685,9 +685,20 @@ static void Task_FollowerNPCOutOfDoor(u8 taskId)
         }
         break;
     case REALLOW_MOVEMENT:
+        struct MapPosition position;
+        enum Direction playerDirection;
+
         FollowerNPC_HandleSprite();
         SetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR, FNPC_DOOR_NONE);
         gPlayerAvatar.preventStep = FALSE;
+
+        playerDirection = GetPlayerFacingDirection();
+        GetPlayerPosition(&position);
+        if (TryStartStepBasedScript(&position, player->currentMetatileBehavior, playerDirection) == TRUE)
+        {
+            LockPlayerFieldControls();
+            HideMapNamePopUpWindow();
+        }
         DestroyTask(taskId);
         break;
     }
