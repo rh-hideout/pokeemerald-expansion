@@ -147,6 +147,8 @@ int main(int argc, char **argv)
             std::string rule;
             if (incgfx.extensions == ".smol")
                 rule = mk_target_basedir + "\t$(SMOL) -w $< $@ " + incgfx.arguments + "\n";
+            else if (incgfx.extensions == ".smolTM")
+                rule = mk_target_basedir + "\t$(SMOLTM) $< $@ \n";
             else
                 rule = mk_target_basedir + "\t$(GFX) $< $@ " + incgfx.arguments + "\n";
 

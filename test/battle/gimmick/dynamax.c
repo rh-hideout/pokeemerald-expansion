@@ -1403,7 +1403,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Sweetness cures allies' status conditions")
         STATUS_ICON(playerRight, none: TRUE);
     } THEN {
         for (j = 0; j < PARTY_SIZE; j++)
-            EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_STATUS), STATUS1_NONE);
+            EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_STATUS), STATUS1_NONE);
     }
 }
 
@@ -1484,7 +1484,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Depletion takes away 2 PP from the target's l
     } SCENE {
         MESSAGE("The opposing Sableye used Celebrate!");
         MESSAGE("Duraludon used G-Max Depletion!");
-        MESSAGE("The opposing Sableye's PP was reduced!");
+        MESSAGE("The opposing Sableye lost 2 PP from Celebrate!");
     } THEN {
         EXPECT_EQ(opponentLeft->pp[0], GetMovePP(MOVE_CELEBRATE) - 3); // 1 from regular use + 2 from G-Max Depletion
     }

@@ -1013,6 +1013,8 @@ static enum CancelerResult CancelerPPDeduction(struct BattleCalcValues *cv)
     else
         gBattleMons[cv->battlerAtk].pp[movePosition] = 0;
 
+    gLastMoves[cv->battlerAtk] = gChosenMove;
+
     if (MOVE_IS_PERMANENT(cv->battlerAtk, movePosition))
     {
         BtlController_EmitSetMonData(
@@ -2337,7 +2339,9 @@ static enum CancelerResult CancelerMultihitMoves(struct BattleCalcValues *cv)
     }
     else if (GetMoveStrikeCount(cv->move) > 1)
     {
-        if (cv->moveEffect == EFFECT_POPULATION_BOMB && GetBattlerHoldEffect(cv->battlerAtk) == HOLD_EFFECT_LOADED_DICE)
+        if (GetMoveEffect(cv->move) == EFFECT_POPULATION_BOMB
+         && cv->holdEffects[cv->battlerAtk] == HOLD_EFFECT_LOADED_DICE
+         && cv->abilities[cv->battlerAtk] != ABILITY_SKILL_LINK)
         {
             gMultiHitCounter = RandomUniform(RNG_LOADED_DICE, 4, 10);
         }
@@ -2617,7 +2621,7 @@ static enum MoveEndResult MoveEndAbsorb(struct BattleCalcValues *cv)
     switch (cv->moveEffect)
     {
     case EFFECT_STRENGTH_SAP:
-        if (gBattleStruct->passiveHpUpdate[cv->battlerAtk] > 0)
+        if (gBattleStruct->passiveHpUpdate[cv->battlerAtk] > 0 && !IsBattlerUnaffectedByMove(cv->battlerDef))
         {
             s32 healAmount = gBattleStruct->passiveHpUpdate[cv->battlerAtk];
             SetHealScript(cv, healAmount);
@@ -4255,7 +4259,6 @@ static enum MoveEndResult MoveEndClearBits(struct BattleCalcValues *cv)
     gBattleStruct->categoryOverride = FALSE;
     gBattleStruct->additionalEffectsCounter = 0;
     gBattleStruct->triAttackBurn = FALSE;
-    gBattleStruct->poisonPuppeteerConfusion = FALSE;
     gBattleStruct->fickleBeamBoosted = FALSE;
     gBattleStruct->battlerState[cv->battlerAtk].usedMicleBerry = FALSE;
     gBattleStruct->toxicChainPriority = FALSE;
@@ -4443,8 +4446,30 @@ static bool32 ShouldSkipStatChangeOnBattler(enum BattlerId battlerAtk, enum Batt
     return FALSE;
 }
 
+// Avoid erroneous, second failure message
+static bool32 ShouldSkipStatChangeResolution(enum BattlerId battlerAtk)
+{
+    if (battlerAtk == gBattlerTarget)
+        return FALSE;
+
+    u32 numUnaffectedTargets = 0;
+
+    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+    {
+        if (gBattleStruct->battlerState[battlerAtk].targetsDone[battler])
+            numUnaffectedTargets++;
+        else if (gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_NO_EFFECT)
+            numUnaffectedTargets++;
+    }
+
+    return numUnaffectedTargets == gBattlersCount;
+}
+
 static enum MoveResult StatChangeSubstitute(struct BattleCalcValues *cv)
 {
+    if (ShouldSkipStatChangeResolution(cv->battlerAtk))
+        return MOVE_RESULT_DONE;
+
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
         if (ShouldSkipStatChangeOnBattler(cv->battlerAtk, battler)
@@ -4781,7 +4806,7 @@ static enum MoveResult (*const sStatChangeHandlers[])(struct BattleCalcValues *c
     [STAT_CHANGE_SUBSTITUTE] = StatChangeSubstitute,
     [STAT_CHANGE_CAN_ANY_CHANGE] = StatChangeCanAnyChange,
     [STAT_CHANGE_ACCURACY] = StatChangeAccuracy,
-    [STAT_CHANGE_BY_MIRROR_ARMOR] = StatChangeMirrorArmor,
+    [STAT_CHANGE_MIRROR_ARMOR] = StatChangeMirrorArmor,
     [STAT_CHANGE_BEFORE_CHANGE] = StatChangeBeforeChange,
     [STAT_CHANGE_TRY_CHANGE] = StatChangeTryChange,
 };

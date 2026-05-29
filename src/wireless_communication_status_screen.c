@@ -80,7 +80,7 @@ static const u16 sPalettes[][16] = {
     INCGFX_U16("graphics/wireless_status_screen/anim_13.pal", ".gbapal")
 };
 static const u32 sBgTiles_Gfx[] = INCGFX_U32("graphics/wireless_status_screen/bg.png", ".4bpp.smol");
-static const u32 sBgTiles_Tilemap[] = INCBIN_U32("graphics/wireless_status_screen/bg.bin.smolTM");
+static const u32 sBgTiles_Tilemap[] = INCGFX_U32("graphics/wireless_status_screen/bg.bin", ".smolTM");
 
 static const struct BgTemplate sBgTemplates[] = {
     {

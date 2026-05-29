@@ -247,14 +247,14 @@ static void SetTrainerSlideParameters(enum BattlerId battler, u32* lastId, u32* 
         {
             if (!AreMultiPartiesFullTeams())
                 *lastId = MULTI_PARTY_SIZE;
-            if (GetBattlerTrainer(battler) == B_TRAINER_3)
+            if (GetBattlerTrainer(battler) == B_TRAINER_OPPONENT_B)
             {
                 *trainerId = TRAINER_BATTLE_PARAM.opponentB;
                 *retValue = TRAINER_SLIDE_TARGET_TRAINER_B;
             }
         }
     }
-    else if (GetBattlerTrainer(battler) == B_TRAINER_2 && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+    else if (GetBattlerTrainer(battler) == B_TRAINER_PARTNER && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
     {
         if (!AreMultiPartiesFullTeams())
             *lastId = MULTI_PARTY_SIZE;
