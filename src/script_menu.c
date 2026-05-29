@@ -1409,7 +1409,8 @@ static void PrintNumericInputAmount(u8 windowId, struct NumericInput input)
     StringExpandPlaceholders(gStringVar4, GetStringVar(input.templStrVar));
 
     FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
-    AddTextPrinterParameterized(windowId, FONT_NORMAL, gStringVar4, 1, 2, 0, NULL);
+    u32 fontId = GetFontIdToFit(gStringVar4, FONT_NORMAL, 0, 16*8);
+    AddTextPrinterParameterized(windowId, fontId, gStringVar4, 1, 2, 0, NULL);
 }
 
 static bool32 HandleNumericInput(struct NumericInput *input)
