@@ -29,15 +29,18 @@
 #include "window.h"
 #include <limits.h>
 
+static const char* bankingDisabled = "Banking disabled: SAVINGS_ENABLED is FALSE";
+
 // Macros
-#define RETURN_IF_BANKING_DISABLED()                                        \
-    {                                                                       \
-        assertf(SAVINGS_ENABLED,"Banking functionality is not enabled")  \
-            {                                                               \
-                UnlockPlayerFieldControls();                                \
-                return;                                                     \
-            }                                                               \
-    }
+#define RETURN_IF_BANKING_DISABLED() \
+    do \
+    { \
+        assertf(SAVINGS_ENABLED, "%s", bankingDisabled) \
+        { \
+            UnlockPlayerFieldControls(); \
+            return; \
+        } \
+    } while (0)
 
 // Config
 #define MAX_BANK_MONEY USHRT_MAX
@@ -194,7 +197,7 @@ struct Banking* GetBankingPtr(void)
 
 u32 GetMoneyInBank(void)
 {
-    assertf(SAVINGS_ENABLED, "Banking functionality is not enabled")
+    assertf(SAVINGS_ENABLED, "%s", bankingDisabled)
     {
         return 0;
     }
@@ -205,7 +208,7 @@ u32 GetMoneyInBank(void)
 
 void SetMoneyInBank(u32 amount)
 {
-    assertf(SAVINGS_ENABLED, "Banking functionality is not enabled")
+    assertf(SAVINGS_ENABLED, "%s", bankingDisabled)
     {
         return;
     }
@@ -216,7 +219,7 @@ void SetMoneyInBank(u32 amount)
 
 void DepositAndTrackMoney(u32 amount)
 {
-    assertf(SAVINGS_ENABLED, "Banking functionality is not enabled")
+    assertf(SAVINGS_ENABLED, "%s", bankingDisabled)
     {
         return;
     }
