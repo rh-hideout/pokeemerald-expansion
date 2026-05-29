@@ -28,6 +28,7 @@
 #include "util.h"
 #include "window.h"
 #include <limits.h>
+#include <stdint.h>
 
 static const char* bankingDisabled = "Banking disabled: SAVINGS_ENABLED is FALSE";
 
@@ -43,7 +44,7 @@ static const char* bankingDisabled = "Banking disabled: SAVINGS_ENABLED is FALSE
     } while (0)
 
 // Config
-#define MAX_BANK_MONEY USHRT_MAX
+#define MAX_BANK_MONEY UINT16_MAX
 
 #define BALANCE_LABEL_TAG 0x2722
 
