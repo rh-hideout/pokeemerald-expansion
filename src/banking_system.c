@@ -44,7 +44,6 @@ static const char* bankingDisabled = "Banking disabled: SAVINGS_ENABLED is FALSE
 
 // Config
 #define MAX_BANK_MONEY USHRT_MAX
-#define MAX_PENDING    5
 
 #define BALANCE_LABEL_TAG 0x2722
 
