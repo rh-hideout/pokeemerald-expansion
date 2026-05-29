@@ -4458,7 +4458,7 @@ static bool32 ShouldSkipStatChangeResolution(enum BattlerId battlerAtk)
     {
         if (gBattleStruct->battlerState[battlerAtk].targetsDone[battler])
             numUnaffectedTargets++;
-        if (gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_NO_EFFECT)
+        else if (gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_NO_EFFECT)
             numUnaffectedTargets++;
     }
 
