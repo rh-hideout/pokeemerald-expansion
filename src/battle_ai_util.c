@@ -6238,7 +6238,7 @@ bool32 IsPartyMonPlannedToBeSwitchedInByPartner(u32 partyIndex, enum BattlerId b
 static u32 AI_GetAdjustedStatStage(enum BattlerId battler, enum Move move, s32 stage)
 {
     if (GetMoveEffect(move) == EFFECT_GROWTH
-     && GetAttackerWeather(gAiLogicData->holdEffects[battler], AI_GetWeather(), B_WEATHER_SUN))
+     && GetAttackerWeather(gAiLogicData->holdEffects[battler], gAiLogicData->abilities[battler], AI_GetWeather()) & B_WEATHER_SUN)
         stage = 2;
 
     switch (gAiLogicData->abilities[battler])
