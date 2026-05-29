@@ -3168,6 +3168,8 @@ static void BattleStartClearSetData(void)
         gBattleStruct->monCausingSleepClause[B_SIDE_PLAYER] = PARTY_SIZE;
         gBattleStruct->monCausingSleepClause[B_SIDE_OPPONENT] = PARTY_SIZE;
     }
+
+    BattleStringPoisonBuffers();
 }
 
 #define UNPACK_VOLATILE_BATON_PASSABLES(_enum, _fieldName, _typeMaxValue, ...) __VA_OPT__(if ((FIRST(__VA_ARGS__)) & V_BATON_PASSABLE) gBattleMons[battler].volatiles._fieldName = volatilesCopy->_fieldName;)
@@ -3965,6 +3967,7 @@ static void HandleEndTurn_ContinueBattle(void)
         gBattleStruct->eventState.endTurnBlock = 0;
         gBattleStruct->eventState.endTurnBattler = 0;
         gBattleStruct->eventState.endTurn = 0;
+        BattleStringPoisonBuffers();
     }
 }
 

@@ -489,6 +489,8 @@ void HandleAction_UseMove(void)
     }
 
     gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
+
+    BattleStringPoisonBuffers();
 }
 
 void HandleAction_Switch(void)
@@ -536,6 +538,8 @@ void HandleAction_UseItem(void)
 
     gBattlescriptCurrInstr = gBattlescriptsForUsingItem[GetItemBattleUsage(gLastUsedItem) - 1];
     gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
+
+    BattleStringPoisonBuffers();
 }
 
 bool32 TryRunFromBattle(enum BattlerId battler)
@@ -9070,9 +9074,15 @@ enum ImmunityHealStatusOutcome TryImmunityAbilityHealStatus(enum BattlerId battl
         break;
     case ABILITY_OBLIVIOUS:
         if (gBattleMons[battler].volatiles.infatuation)
+        {
+            StringCopy(gBattleTextBuff1, COMPOUND_STRING("infatuation"));
             outcome = IMMUNITY_INFATUATION_CLEARED;
+        }
         else if (GetConfig(B_OBLIVIOUS_TAUNT) >= GEN_6 && gBattleMons[battler].volatiles.tauntTimer != 0)
+        {
+            StringCopy(gBattleTextBuff1, COMPOUND_STRING("taunt"));
             outcome = IMMUNITY_TAUNT_CLEARED;
+        }
         break;
     default:
         break;

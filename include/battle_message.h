@@ -102,6 +102,7 @@
 #define B_BUFF_MON_NICK_WITH_PREFIX_LOWER   11 // lowercase prefix
 
 #define B_BUFF_PLACEHOLDER_BEGIN        0xFD
+#define B_BUFF_POISON                   0xFE
 #define B_BUFF_EOS                      0xFF
 
 #define PREPARE_FLAVOR_BUFFER(textVar, flavorId)                            \
@@ -256,6 +257,7 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId);
 void SetPpNumbersPaletteInMoveSelection(enum BattlerId battler);
 u8 GetCurrentPpToMaxPpState(u8 currentPp, u8 maxPp);
 void ExpandBattleTextBuffPlaceholders(const u8 *src, u8 *dst);
+void BattleStringPoisonBuffers(void);
 
 extern struct BattleMsgData *gBattleMsgDataPtr;
 
