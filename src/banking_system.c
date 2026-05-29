@@ -192,7 +192,6 @@ struct Banking* GetBankingPtr(void)
     #else
         return NULL;
     #endif /* if SAVINGS_ENABLED */
-    
 }
 
 u32 GetMoneyInBank(void)
