@@ -3001,28 +3001,23 @@
 	stringvar \stringVarId
 .endm
 
-.macro setnumericinputdefault min=0, max=0, val=0, stringVarId=STR_VAR_1
-  callnative ScrCmd_setnumericinputdefault
-  .4byte \min
-  .4byte \max
-  .4byte \val
-  stringvar \stringVarId
+.macro setupnumericinput min=0, max=0xFFFFFFFF, value=0
+loadword 0, \min
+loadword 1, \max
+loadword 2, \value
 .endm
 
-.macro getnumericinput min:req, max:req, val:req, templStrVar=STR_VAR_1, numStrVar=STR_VAR_2
+.macro getnumericinput x:req, y:req templ=gStringVar1
   callnative ScrCmd_getnumericinput
-  .2byte \min
-  .2byte \max
-  .2byte \val
-  stringvar  \templStrVar
-  stringvar  \numStrVar
+  .2byte \x
+  .2byte \y
+  .4byte \templ
 .endm
 
-.macro getbankinginput mode:req, templStrVar=STR_VAR_1, numStrVar=STR_VAR_2
+.macro getbankinginput mode:req, templ=gStringVar1
   callnative ScrCmd_getbankinginput
   .byte \mode
-  stringvar  \templStrVar
-  stringvar  \numStrVar
+  .4byte \templ
 .endm
 
 .macro addmoneyvar varId:req

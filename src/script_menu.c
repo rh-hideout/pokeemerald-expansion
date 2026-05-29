@@ -30,6 +30,7 @@
 
 #include "data/script_menu.h"
 #include "window.h"
+#include <stdint.h>
 
 struct DynamicListMenuEventArgs
 {
@@ -48,12 +49,13 @@ struct DynamicListMenuEventCollection
 };
 
 struct NumericInput {
-    u16 value;
-    u16 min;
-    u16 max;
+    u32 value;
+    u32 min;
+    u32 max;
     u8 digit;
-    u8 templStrVar:4;
-    u8 numStrVar:4;
+    struct Coords16 pos;
+    const u8* templ;
+    struct ScriptContext* ctx;
 };
 
 static u8 sNumericInputWindowId;
@@ -87,7 +89,7 @@ static void MultichoiceDynamicEventShowItem_OnSelectionChanged(struct DynamicLis
 static void MultichoiceDynamicEventShowItem_OnDestroy(struct DynamicListMenuEventArgs *eventArgs);
 
 // Numeric Input
-static u32 CreateNumericInputWindow(s16 x, s16 y, u8 width);
+static u32 CreateNumericInputWindow(struct Coords16 pos, u8 width);
 static bool32 HandleNumericInput(struct NumericInput *input);
 static void PrintNumericInputAmount(u8 windowId, struct NumericInput input);
 
@@ -1370,11 +1372,11 @@ void WriteNumericInputToTask(u32 taskId, const struct NumericInput *numericInput
   memcpy(&gTasks[taskId].data[1], numericInput, sizeof(*numericInput));
 }
 
-static u32 CreateNumericInputWindow(s16 x, s16 y, u8 width)
+static u32 CreateNumericInputWindow(struct Coords16 pos, u8 width)
 {
     struct WindowTemplate template;
     u32 windowId;
-    SetWindowTemplateFields(&template, 0, x, y, width, 2, 15, 0x100);
+    SetWindowTemplateFields(&template, 0, pos.x, pos.y, width, 2, 15, 0x100);
     windowId = AddWindow(&template);
     DrawStdWindowFrame(windowId, FALSE);
     CopyWindowToVram(windowId, COPYWIN_FULL);
@@ -1404,9 +1406,9 @@ static void PrintNumericInputAmount(u8 windowId, struct NumericInput input)
             StringAppend(formattedBuffer, COMPOUND_STRING("{COLOR DARK_GRAY}{SHADOW LIGHT_GRAY}"));
     }
 
-    StringCopy(GetStringVar(input.numStrVar), formattedBuffer);
+    StringCopy(gStringVar1, formattedBuffer);
 
-    StringExpandPlaceholders(gStringVar4, GetStringVar(input.templStrVar));
+    StringExpandPlaceholders(gStringVar4, input.templ);
 
     FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
     u32 fontId = GetFontIdToFit(gStringVar4, FONT_NORMAL, 0, 16*8);
@@ -1461,7 +1463,13 @@ static void Task_HandleNumericInput(u8 taskId)
     {
         if (JOY_NEW(B_BUTTON))
             input.value = 0;
-        gSpecialVar_Result = input.value;
+
+        input.ctx->data[0] = input.value;
+        if (input.value > UINT16_MAX)
+            gSpecialVar_Result = UINT16_MAX;
+        else
+            gSpecialVar_Result = input.value;
+
         ClearStdWindowAndFrame(sNumericInputWindowId, TRUE);
         UnfreezeObjectEvents();
         ScriptContext_Enable();
@@ -1488,7 +1496,7 @@ void Task_ShowNumericInput(u8 taskId)
         (*tState)++;
         break;
     case 1:
-        sNumericInputWindowId = CreateNumericInputWindow(15, 2, 16);
+        sNumericInputWindowId = CreateNumericInputWindow(ReadNumericInputFromTask(taskId).pos, 16);
         (*tState)++;
         break;
     case 2:
@@ -1510,25 +1518,27 @@ void ScrCmd_buffernumericinputstring(struct ScriptContext* ctx)
 
 void ScrCmd_getnumericinput(struct ScriptContext* ctx)
 {
-    u16 min = ScriptReadHalfword(ctx);
-    u16 max = ScriptReadHalfword(ctx);
-    u16 val = ScriptReadHalfword(ctx);
-    u8 templStrVar = ScriptReadByte(ctx);
-    u8 numStrVar = ScriptReadByte(ctx);
+    u32 min = ctx->data[0];
+    u32 max = ctx->data[1];
+    u32 val = ctx->data[2];
+    s16 x = ScriptReadHalfword(ctx);
+    s16 y = ScriptReadHalfword(ctx);
+    const u8* templ = (const u8*)ScriptReadWord(ctx);
 
+    struct Coords16 pos = {x, y};
     u8 taskId = CreateTask(Task_ShowNumericInput, 0);
-    WriteNumericInputToTask(taskId, &(const struct NumericInput){ val, min, max, 0, templStrVar, numStrVar});
+    WriteNumericInputToTask(taskId, &(const struct NumericInput){ val, min, max, 0, pos,templ, ctx});
 }
 
 void ScrCmd_getbankinginput(struct ScriptContext* ctx)
 {
     enum BankingMode mode = ScriptReadByte(ctx);
-    u8 templStrVar = ScriptReadByte(ctx);
-    u8 numStrVar = ScriptReadByte(ctx);
+    const u8* templ = (const u8*)ScriptReadWord(ctx);
 
     u16 max = GetTransactionMaxAmount(mode);
 
     u8 taskId = CreateTask(Task_ShowNumericInput, 0);
-    WriteNumericInputToTask(taskId, &(const struct NumericInput){ max, 0, max, 0, templStrVar, numStrVar});
+    struct Coords16 pos = {2, 12};
+    WriteNumericInputToTask(taskId, &(const struct NumericInput){ max, 0, max, 0, pos, templ, ctx});
 }
 
