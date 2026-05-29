@@ -879,10 +879,19 @@
 #define TRAINER_OW_R10_LUMBERJACK_M1        872
 #define TRAINER_OW_R10_LUMBERJACK_M2        873
 #define TRAINER_OW_R10_LUMBERJACK_F2        874
+#define TRAINER_OW_R8_PARASOL               875
+#define TRAINER_OW_R8_RUNNER_M              876
+#define TRAINER_OW_R8_RUNNER_F              877
+#define TRAINER_OW_R8_BEEKEEPER_PATROL      878
+#define TRAINER_OW_R8_BEEKEEPER_STUCK       879
+#define TRAINER_OW_R8_RANGER_F              880
+#define TRAINER_OW_R8_RANGER_M              881
+#define TRAINER_OW_R8_CAMPER                882
+#define TRAINER_OW_R8_BUG_MANIAC            883
 
 // NOTE: MAX_TRAINERS_COUNT can be increased but will take up additional saveblock space (1 bit per trainer in SaveBlock1)
 
-#define TRAINERS_COUNT_EMERALD     875
+#define TRAINERS_COUNT_EMERALD     884
 #define MAX_TRAINERS_COUNT_EMERALD 1300
 
 #if IS_FRLG

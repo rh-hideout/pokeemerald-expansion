@@ -416,7 +416,7 @@ script ow_r10_EventScript_HikerRockface {
     lock
     faceplayer
     setspeaker("Hiker")
-    msgbox(format("That rockface up there is a bit too sheer for me.\nBut a Pokémon with the right grip?\NIt could scramble straight past."))
+    msgbox(format("That rockface up there is a bit too sheer for me.\NBut a Pokémon with the right grip?\NIt could scramble straight past."))
     setspeaker(NULL)
     release
     end
@@ -461,105 +461,45 @@ script ow_r10_EventScript_Chansey {
 // ============================================================
 
 script ow_r10_EventScript_Picnicker {
-    trainerbattle_single(
-        TRAINER_OW_R10_PICNICKER,
-        ow_r10_Text_Picnicker_Intro,
-        ow_r10_Text_Picnicker_Defeat
-    )
-    msgbox(format("There's something special down here. I can feel it.\NI just need to keep looking."), MSGBOX_AUTOCLOSE)
-}
-
-text ow_r10_Text_Picnicker_Intro {
-    "I was just having a lovely picnic!\pJoin me - in a battle first!"
-}
-
-text ow_r10_Text_Picnicker_Defeat {
-    "You're tough!\nWant to share my lunch?"
+    trainerbattle_single(TRAINER_OW_R10_PICNICKER, format("I was just having a lovely picnic!\pJoin me - in a battle first!"), format("You're tough! Want to share my lunch?"))
+    msgbox(format("There's something special down here. I can feel it.\NI just need to keep looking."))
+    release
+    end
 }
 
 script ow_r10_EventScript_Blackbelt {
-    trainerbattle_single(
-        TRAINER_OW_R10_BLACKBELT,
-        ow_r10_Text_Blackbelt_Intro,
-        ow_r10_Text_Blackbelt_Defeat
-    )
-    msgbox(format("The lumberjacks asked me to move.\pPfft!\NI can split wood without their axes."), MSGBOX_AUTOCLOSE)
-}
-
-text ow_r10_Text_Blackbelt_Intro {
-    "KIIAAAI!\pYou stepped into my training\lspace. Show me what you've got."
-}
-
-text ow_r10_Text_Blackbelt_Defeat {
-    "Hoo-hah!\nMy stance was completely broken!"
+    trainerbattle_single(TRAINER_OW_R10_BLACKBELT, format("KIIAAAI!\pYou stepped into my training space. Show me what you've got."), format("Hoo-hah! My stance was completely broken!"))
+    msgbox(format("The lumberjacks asked me to move.\pPfft!\NI can split wood without their axes."))
+    release
+    end
 }
 
 script ow_r10_EventScript_LumberjackF1 {
-    trainerbattle_single(
-        TRAINER_OW_R10_LUMBERJACK_F1,
-        ow_r10_Text_LumberjackF1_Intro,
-        ow_r10_Text_LumberjackF1_Defeat
-    )
-    msgbox(format("Just three more trees to fell before we can take a break..."), MSGBOX_AUTOCLOSE)
-}
-
-text ow_r10_Text_LumberjackF1_Intro {
-    format("We're thinning out the overgrowth on this trail!\pIf you want to clear this pass, you'll need to break\lour wooden defense lines!")
-}
-
-text ow_r10_Text_LumberjackF1_Defeat {
-    "Timber!"
+    trainerbattle_single(TRAINER_OW_R10_LUMBERJACK_F1, format("We're thinning out the overgrowth on this trail!\pIf you want to clear this pass, you'll need to break our wooden defense lines!"), format("Timber!"))
+    msgbox(format("Just three more trees to fell before we can take a break..."))
+    release
+    end
 }
 
 script ow_r10_EventScript_LumberjackF2 {
-    trainerbattle_single(
-        TRAINER_OW_R10_LUMBERJACK_F2,
-        ow_r10_Text_LumberjackF2_Intro,
-        ow_r10_Text_LumberjackF2_Defeat
-    )
-    msgbox(format("Honey or timber. People want both.\NAct like only one of us is the problem."), MSGBOX_AUTOCLOSE)
-}
-
-text ow_r10_Text_LumberjackF2_Intro {
-    "You wandered into a cut site, kid.\pStep carefully - or step into a battle."
-}
-
-text ow_r10_Text_LumberjackF2_Defeat {
-    "You have a strong arm.\nCould use a crew member like that."
+    trainerbattle_single(TRAINER_OW_R10_LUMBERJACK_F2, format("You wandered into a cut site, kid.\pStep carefully - or step into a battle."), format("You have a strong arm. Could use a crew member like that."))
+    msgbox(format("Honey or timber. People want both.\NAct like only one of us is the problem."))
+    release
+    end
 }
 
 script ow_r10_EventScript_LumberjackM1 {
-    trainerbattle_single(
-        TRAINER_OW_R10_LUMBERJACK_M1,
-        ow_r10_Text_LumberjackM1_Intro,
-        ow_r10_Text_LumberjackM1_Defeat
-    )
-    msgbox(format("These Combee keep getting in the way.\pWe need to steer clear of the Vespiquen, though."), MSGBOX_AUTOCLOSE)
-}
-
-text ow_r10_Text_LumberjackM1_Intro {
-    "Help me stack these logs!\nOr fight me. Either works."
-}
-
-text ow_r10_Text_LumberjackM1_Defeat {
-    "Ugh, I guess I'll do it myself..."
+    trainerbattle_single(TRAINER_OW_R10_LUMBERJACK_M1, format("Help me stack these logs! Or fight me. Either works."), format("Ugh, I guess I'll do it myself..."))
+    msgbox(format("These Combee keep getting in the way.\pWe need to steer clear of the Vespiquen, though."))
+    release
+    end
 }
 
 script ow_r10_EventScript_LumberjackM2 {
-    trainerbattle_single(
-        TRAINER_OW_R10_LUMBERJACK_M2,
-        ow_r10_Text_LumberjackM2_Intro,
-        ow_r10_Text_LumberjackM2_Defeat
-    )
-    msgbox(format("Truth is, I'd take the Combeekeeper's job over mine.\pDon't tell the crew I said that."), MSGBOX_AUTOCLOSE)
-}
-
-text ow_r10_Text_LumberjackM2_Intro {
-    "Heard the hum from the apiary?\nThe bees know when we're working\lclose. They don't like it."
-}
-
-text ow_r10_Text_LumberjackM2_Defeat {
-    "Fair fight.\nBack to the saw."
+    trainerbattle_single(TRAINER_OW_R10_LUMBERJACK_M2, format("Heard the hum from the apiary? The bees know when we're working close. They don't like it."), format("Fair fight. Back to the saw."))
+    msgbox(format("Truth is, I'd take the Combeekeeper's job over mine.\pDon't tell the crew I said that."))
+    release
+    end
 }
 
 // ============================================================

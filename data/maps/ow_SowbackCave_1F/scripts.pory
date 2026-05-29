@@ -5,23 +5,12 @@ mapscripts ow_SowbackCave_1F_MapScripts {}
 // ============================================================
 
 script ow_SowbackCave_1F_EventScript_Camper {
-    trainerbattle_single(
-        TRAINER_OW_SOWBACK_1F_CAMPER,
-        ow_SowbackCave_1F_Text_Camper_Intro,
-        ow_SowbackCave_1F_Text_Camper_Defeat
-    )
+    trainerbattle_single(TRAINER_OW_SOWBACK_1F_CAMPER, format("Hold it! You're not getting past without a battle! My Pokemon love a good rocky floor fight!"), format("Ugh... I thought I had the altitude advantage!"))
     setspeaker("Mato")
-    msgbox(format("I'm making it to the top of that wall\Nbefore sundown."), MSGBOX_AUTOCLOSE)
+    msgbox(format("I'm making it to the top of that wall\Nbefore sundown."))
     setspeaker(NULL)
+    release
     end
-}
-
-text ow_SowbackCave_1F_Text_Camper_Intro {
-    "Hold it! You're not getting past\nwithout a battle!\lMy Pokemon love a good rocky floor fight!"
-}
-
-text ow_SowbackCave_1F_Text_Camper_Defeat {
-    "Ugh...\nI thought I had the altitude advantage!"
 }
 
 // ============================================================
@@ -29,23 +18,12 @@ text ow_SowbackCave_1F_Text_Camper_Defeat {
 // ============================================================
 
 script ow_SowbackCave_1F_EventScript_Hiker1 {
-    trainerbattle_single(
-        TRAINER_OW_SOWBACK_1F_HIKER_1,
-        ow_SowbackCave_1F_Text_Hiker1_Intro,
-        ow_SowbackCave_1F_Text_Hiker1_Defeat
-    )
+    trainerbattle_single(TRAINER_OW_SOWBACK_1F_HIKER_1, format("Ghahahaha! Eyeing that rock face, are ya? I've been sizing it up all morning.\pProve you're worth climbing with first!"), format("Ha! That was a fine warm-up. Let's see if you can tackle that wall half as well."))
     setspeaker("Kral")
-    msgbox(format("That crack up there -\Nthat's your starting hold."), MSGBOX_AUTOCLOSE)
+    msgbox(format("That crack up there -\Nthat's your starting hold."))
     setspeaker(NULL)
+    release
     end
-}
-
-text ow_SowbackCave_1F_Text_Hiker1_Intro {
-    "Ghahahaha! Eyeing that rock face, are ya?\nI've been sizing it up all morning.\pProve you're worth climbing with first!"
-}
-
-text ow_SowbackCave_1F_Text_Hiker1_Defeat {
-    "Ha! That was a fine warm-up.\nLet's see if you can tackle that wall\lhalf as well."
 }
 
 // ============================================================
@@ -53,23 +31,12 @@ text ow_SowbackCave_1F_Text_Hiker1_Defeat {
 // ============================================================
 
 script ow_SowbackCave_1F_EventScript_Hiker2 {
-    trainerbattle_single(
-        TRAINER_OW_SOWBACK_1F_HIKER_2,
-        ow_SowbackCave_1F_Text_Hiker2_Intro,
-        ow_SowbackCave_1F_Text_Hiker2_Defeat
-    )
+    trainerbattle_single(TRAINER_OW_SOWBACK_1F_HIKER_2, format("Ghahahaha! I've tramped the whole forest and half this mountain today!\pMy Pokemon need one more battle before I head out to Floran!"), format("Good one. Kolchavi folk?\pThought so."))
     setspeaker("Vesh")
-    msgbox(format("There's a track just past the cave mouth.\NFaster than going back through the trees."), MSGBOX_AUTOCLOSE)
+    msgbox(format("There's a track just past the cave mouth.\NFaster than going back through the trees."))
     setspeaker(NULL)
+    release
     end
-}
-
-text ow_SowbackCave_1F_Text_Hiker2_Intro {
-    "Ghahahaha! I've tramped the whole forest\nand half this mountain today!\pMy Pokemon need one more battle\nbefore I head out to Floran!"
-}
-
-text ow_SowbackCave_1F_Text_Hiker2_Defeat {
-    "Good one.\nKolchavi folk?\pThought so."
 }
 
 // ============================================================

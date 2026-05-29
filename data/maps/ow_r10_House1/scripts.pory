@@ -16,8 +16,10 @@ script ow_r10_House1_EventScript_Melli {
 script ow_r10_House1_EventScript_Melli_QuestComplete {
     goto_if_set(FLAG_R10_HOUSE1_MELLI_HONEY_GIFT, ow_r10_House1_EventScript_Melli_AfterGift)
     msgbox(format("You brought them all home.\pHere. Take some of what they made."))
+    setspeaker(NULL)
     giveitem(ITEM_HONEY, 5)
     setflag(FLAG_R10_HOUSE1_MELLI_HONEY_GIFT)
+    msgbox(format("Something you want to know about combeekeeping?"))
     goto(ow_r10_House1_EventScript_MelliMenu)
 }
 

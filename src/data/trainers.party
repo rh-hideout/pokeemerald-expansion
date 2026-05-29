@@ -17022,7 +17022,7 @@ Tags: Lead
 - Focus Blast
 - Sludge Wave
 
-Bellibolt @ Heavy-Duty Boots
+Bellibolt @ Leftovers
 Level: 100
 Ability: Electromorphosis
 Nature: Bold
@@ -17209,7 +17209,7 @@ Tags: Support
 - Sleep Powder
 - Protect
 
-Vikavolt @ Heavy-Duty Boots
+Vikavolt @ Silverpowder
 Level: 100
 Ability: Levitate
 Nature: Modest
@@ -17752,12 +17752,11 @@ Tags: Support
 - Protect
 - Life Dew
 
-Miltank @ Heavy-Duty Boots
+Miltank @ Leftovers
 Level: 100
 Ability: Thick Fat
 Nature: Bold
 EVs: 252 HP / 128 Def / 108 SpD / 20 Spe
-Tags: Ace
 - Milk Drink
 - Seismic Toss
 - Toxic
@@ -17825,7 +17824,7 @@ Pic: OW Lumberjack F
 Gender: Female
 Music: Hiker
 Double Battle: Yes
-Party Size: 4
+Party Size: 3
 Pool Rules: Doubles
 AI: Check Bad Move / Try To Faint
 
@@ -17851,16 +17850,16 @@ Tags: Lead
 - Heavy Slam
 - Rock Slide
 
-Absol @ Absolite
+Bibarel @ Silk Scarf
 Level: 100
-Ability: Super Luck
+Ability: Simple
 Nature: Jolly
-EVs: 252 Atk / 4 SpD / 252 Spe
+EVs: 252 HP / 252 Def / 4 Atk
 Tags: Ace
-- Knock Off
-- Sucker Punch
-- Close Combat
-- Night Slash
+- Body Slam
+- Super Fang
+- Waterfall
+- Curse
 
 Rillaboom @ Assault Vest
 Level: 100
@@ -17935,7 +17934,7 @@ Pic: Lumberjack
 Gender: Male
 Music: Male
 Double Battle: Yes
-Party Size: 4
+Party Size: 2
 Pool Rules: Doubles
 AI: Check Bad Move / Try To Faint
 
@@ -18021,7 +18020,6 @@ Level: 100
 Ability: Guts
 Nature: Jolly
 EVs: 252 Atk / 4 SpD / 252 Spe
-Tags: Ace
 - Close Combat
 - Knock Off
 - Stone Edge
@@ -18037,3 +18035,606 @@ Tags: Ace
 - Seed Bomb
 - Facade
 - Protect
+
+=== TRAINER_OW_R8_PARASOL ===
+Name: MIRRI
+Class: Parasol Lady
+Pic: Parasol Lady
+Gender: Female
+Music: Girl
+Double Battle: Yes
+Party Size: 4
+Pool Rules: Weather Doubles
+AI: Check Bad Move / Try To Faint
+
+Pelipper @ Focus Sash
+Level: 100
+Ability: Drizzle
+Nature: Modest
+EVs: 4 HP / 252 SpA / 252 Spe
+Tags: Lead / Weather Setter
+- Hurricane
+- Weather Ball
+- Tailwind
+- Protect
+
+Politoed @ Damp Rock
+Level: 100
+Ability: Drizzle
+Nature: Calm
+EVs: 252 HP / 156 SpD / 100 Spe
+Tags: Lead / Weather Setter
+- Surf
+- Ice Beam
+- Encore
+- Protect
+
+Ludicolo @ Life Orb
+Level: 100
+Ability: Swift Swim
+Nature: Modest
+EVs: 252 SpA / 4 SpD / 252 Spe
+Tags: Lead / Weather Abuser
+- Weather Ball
+- Giga Drain
+- Ice Beam
+- Protect
+
+Seismitoad @ Mystic Water
+Level: 100
+Ability: Swift Swim
+Nature: Modest
+EVs: 252 SpA / 4 SpD / 252 Spe
+Tags: Lead / Weather Abuser
+- Weather Ball
+- Earth Power
+- Focus Blast
+- Sludge Wave
+
+Jumpluff @ Covert Cloak
+Level: 100
+Ability: Infiltrator
+Nature: Timid
+EVs: 220 HP / 68 SpD / 220 Spe
+Tags: Ace
+- Tailwind
+- Sleep Powder
+- Rage Powder
+- Protect
+
+Cursola @ Choice Specs
+Level: 100
+Ability: Weak Armor
+Nature: Modest
+EVs: 4 Def / 252 SpA / 252 Spe
+Tags: Ace
+- Shadow Ball
+- Power Gem
+- Earth Power
+- Hex
+
+=== TRAINER_OW_R8_RUNNER_M ===
+Name: HOLT
+Class: Triathlete
+Pic: Running Triathlete M
+Gender: Male
+Music: Male
+Double Battle: Yes
+Party Size: 4
+Pool Rules: Doubles
+AI: Check Bad Move / Try To Faint
+
+Pawmot @ Clear Amulet
+Level: 100
+Ability: Volt Absorb
+Nature: Jolly
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Lead
+- Close Combat
+- Double Shock
+- Fake Out
+- Protect
+
+Electrode @ Assault Vest
+Level: 100
+Ability: Aftermath
+Nature: Timid
+EVs: 252 HP / 4 Def / 252 Spe
+Tags: Lead
+- Electroweb
+- Foul Play
+- Helping Hand
+- Taunt
+
+Manectric @ Life Orb
+Level: 100
+Ability: Lightning Rod
+Nature: Timid
+EVs: 4 HP / 252 SpA / 252 Spe
+Tags: Lead
+- Volt Switch
+- Thunderbolt
+- Overheat
+- Protect
+
+Weavile @ Choice Band
+Level: 100
+Ability: Pressure
+Nature: Jolly
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Ace
+- Triple Axel
+- Knock Off
+- Ice Shard
+- Low Kick
+
+Crobat @ Heavy-Duty Boots
+Level: 100
+Ability: Infiltrator
+Nature: Jolly
+EVs: 108 HP / 148 Atk / 252 Spe
+Tags: Ace
+- Brave Bird
+- Tailwind
+- U-turn
+- Taunt
+
+Accelgor @ Focus Sash
+Level: 100
+Ability: Unburden
+Nature: Timid
+EVs: 4 HP / 252 SpA / 252 Spe
+Tags: Ace
+- Bug Buzz
+- Knock Off
+- Focus Blast
+- Acid Spray
+
+=== TRAINER_OW_R8_RUNNER_F ===
+Name: PIA
+Class: Triathlete
+Pic: Running Triathlete F
+Gender: Female
+Music: Girl
+Double Battle: Yes
+Party Size: 3
+Pool Rules: Doubles
+AI: Check Bad Move / Try To Faint
+
+Raichu @ Assault Vest
+Level: 100
+Ability: Lightning Rod
+Nature: Timid
+EVs: 252 HP / 4 SpA / 252 Spe
+Tags: Lead
+- Fake Out
+- Encore
+- Grass Knot
+- Knock Off
+
+Floatzel @ Choice Band
+Level: 100
+Ability: Swift Swim
+Nature: Jolly
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Lead
+- Aqua Jet
+- Flip Turn
+- Ice Spinner
+- Wave Crash
+
+Heliolisk @ Life Orb
+Level: 100
+Ability: Dry Skin
+Nature: Timid
+EVs: 252 SpA / 4 SpD / 252 Spe
+Tags: Ace
+- Volt Switch
+- Thunder
+- Hyper Voice
+- Grass Knot
+
+Gogoat @ Leftovers
+Level: 100
+Ability: Sap Sipper
+Nature: Jolly
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Ace
+- Double-Edge
+- High Horsepower
+- Horn Leech
+- Protect
+
+=== TRAINER_OW_R8_BEEKEEPER_PATROL ===
+Name: ORVIN
+Class: OW Beekeeper M
+Pic: OW Beekeeper M
+Gender: Male
+Music: Male
+Double Battle: Yes
+Party Size: 4
+Pool Rules: Doubles
+AI: Check Bad Move / Try To Faint
+
+Vespiquen @ Leftovers
+Level: 100
+Ability: Pressure
+Nature: Sassy
+EVs: 252 HP / 4 Def / 252 SpD
+Tags: Lead
+- Helping Hand
+- Pollen Puff
+- Hurricane
+- Roost
+
+Ribombee @ Focus Sash
+Level: 100
+Ability: Shield Dust
+Nature: Timid
+EVs: 252 SpA / 4 SpD / 252 Spe
+Tags: Lead
+- Sticky Web
+- Moonblast
+- Stun Spore
+- Skill Swap
+
+Yanmega @ Choice Specs
+Level: 100
+Ability: Tinted Lens
+Nature: Timid
+EVs: 4 HP / 252 SpA / 252 Spe
+Tags: Ace
+- Air Slash
+- Bug Buzz
+- Giga Drain
+- U-turn
+
+Vikavolt @ Sitrus Berry
+Level: 100
+Ability: Levitate
+Nature: Modest
+EVs: 4 HP / 252 SpA / 252 Spe
+Tags: Ace
+- Bug Buzz
+- Thunderbolt
+- Sticky Web
+- Protect
+
+Ninjask @ Sharp Beak
+Level: 100
+Ability: Speed Boost
+Nature: Adamant
+EVs: 152 HP / 252 Atk / 104 Spe
+Tags: Ace
+- Swords Dance
+- Protect
+- U-turn
+- Dual Wingbeat
+
+=== TRAINER_OW_R8_BEEKEEPER_STUCK ===
+Name: FENN
+Class: OW Beekeeper M
+Pic: OW Beekeeper M
+Gender: Male
+Music: Male
+Double Battle: Yes
+Party Size: 4
+Pool Rules: Doubles
+AI: Check Bad Move / Try To Faint
+
+Forretress @ Leftovers
+Level: 100
+Ability: Sturdy
+Nature: Relaxed
+EVs: 252 HP / 164 Def / 92 SpD
+Tags: Lead
+- Spikes
+- Body Press
+- Volt Switch
+- Gyro Ball
+
+Leavanny @ Life Orb
+Level: 100
+Ability: Chlorophyll
+Nature: Jolly
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Lead
+- Leaf Blade
+- Lunge
+- Sticky Web
+- Protect
+
+Lokix @ Choice Band
+Level: 100
+Ability: Tinted Lens
+Nature: Adamant
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Ace
+- First Impression
+- U-turn
+- Knock Off
+- Leech Life
+
+Accelgor @ Heavy-Duty Boots
+Level: 100
+Ability: Sticky Hold
+Nature: Timid
+EVs: 4 HP / 252 SpA / 252 Spe
+Tags: Ace
+- Bug Buzz
+- Focus Blast
+- Knock Off
+- Spikes
+
+Vivillon @ Focus Sash
+Level: 100
+Ability: Compound Eyes
+Nature: Timid
+EVs: 4 HP / 252 SpA / 252 Spe
+Tags: Ace
+- Hurricane
+- Sleep Powder
+- Rage Powder
+- Protect
+
+=== TRAINER_OW_R8_RANGER_F ===
+Name: SELA
+Class: Pkmn Ranger
+Pic: Pokemon Ranger F
+Gender: Female
+Music: Girl
+Double Battle: Yes
+Party Size: 4
+Pool Rules: Doubles
+AI: Check Bad Move / Try To Faint
+
+Breloom @ Toxic Orb
+Level: 100
+Ability: Poison Heal
+Nature: Adamant
+EVs: 252 HP / 80 Atk / 176 Spe
+Tags: Lead
+- Close Combat
+- Seed Bomb
+- Facade
+- Protect
+
+Ludicolo @ Life Orb
+Level: 100
+Ability: Own Tempo
+Nature: Modest
+EVs: 252 SpA / 4 SpD / 252 Spe
+Tags: Lead
+- Giga Drain
+- Scald
+- Ice Beam
+- Protect
+
+Gardevoir @ Choice Scarf
+Level: 100
+Ability: Trace
+Nature: Modest
+EVs: 252 SpA / 4 SpD / 252 Spe
+Tags: Ace
+- Moonblast
+- Psychic Noise
+- Focus Blast
+- Healing Wish
+
+Gallade @ Clear Amulet
+Level: 100
+Ability: Sharpness
+Nature: Brave
+EVs: 252 HP / 252 Atk / 4 Def
+Tags: Ace
+- Sacred Sword
+- Psycho Cut
+- Wide Guard
+- Trick Room
+
+Gogoat @ Assault Vest
+Level: 100
+Ability: Sap Sipper
+Nature: Jolly
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Ace
+- Double-Edge
+- High Horsepower
+- Horn Leech
+- Leaf Storm
+
+=== TRAINER_OW_R8_RANGER_M ===
+Name: BREN
+Class: Pkmn Ranger
+Pic: Pokemon Ranger M
+Gender: Male
+Music: Male
+Double Battle: Yes
+Party Size: 4
+Pool Rules: Doubles
+AI: Check Bad Move / Try To Faint
+
+Obstagoon @ Flame Orb
+Level: 100
+Ability: Guts
+Nature: Jolly
+EVs: 252 Atk / 4 SpD / 252 Spe
+Tags: Lead
+- Facade
+- Knock Off
+- Close Combat
+- Parting Shot
+
+Stoutland @ Silk Scarf
+Level: 100
+Ability: Intimidate
+Nature: Adamant
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Lead
+- Body Slam
+- Crunch
+- Ice Fang
+- Protect
+
+Breloom @ Toxic Orb
+Level: 100
+Ability: Poison Heal
+Nature: Adamant
+EVs: 252 HP / 80 Atk / 176 Spe
+Tags: Ace
+- Close Combat
+- Seed Bomb
+- Facade
+- Protect
+
+Gallade @ Life Orb
+Level: 100
+Ability: Sharpness
+Nature: Adamant
+EVs: 252 Atk / 4 SpD / 252 Spe
+Tags: Ace
+- Sacred Sword
+- Psycho Cut
+- Wide Guard
+- Close Combat
+
+Gardevoir @ Choice Scarf
+Level: 100
+Ability: Trace
+Nature: Modest
+EVs: 252 SpA / 4 SpD / 252 Spe
+Tags: Ace
+- Moonblast
+- Psychic Noise
+- Focus Blast
+- Healing Wish
+
+=== TRAINER_OW_R8_CAMPER ===
+Name: TIBB
+Class: Camper
+Pic: Camper
+Gender: Male
+Music: Male
+Double Battle: Yes
+Party Size: 4
+Pool Rules: Doubles
+AI: Check Bad Move / Try To Faint
+
+Breloom @ Toxic Orb
+Level: 100
+Ability: Poison Heal
+Nature: Adamant
+EVs: 252 HP / 80 Atk / 176 Spe
+Tags: Lead
+- Close Combat
+- Seed Bomb
+- Facade
+- Protect
+
+Vileplume @ Leftovers
+Level: 100
+Ability: Effect Spore
+Nature: Bold
+EVs: 252 HP / 252 Def / 4 SpD
+Tags: Lead
+- Sludge Wave
+- Giga Drain
+- Strength Sap
+- Leech Seed
+
+Maractus @ Sitrus Berry
+Level: 100
+Ability: Storm Drain
+Nature: Calm
+EVs: 252 HP / 160 SpD / 96 Spe
+Tags: Ace
+- Giga Drain
+- Synthesis
+- Knock Off
+- Spikes
+
+Ninetales @ Heat Rock
+Level: 100
+Ability: Drought
+Nature: Timid
+EVs: 4 HP / 252 SpA / 252 Spe
+Tags: Ace
+- Weather Ball
+- Heat Wave
+- Encore
+- Protect
+
+Raichu @ Assault Vest
+Level: 100
+Ability: Lightning Rod
+Nature: Timid
+EVs: 252 HP / 4 SpA / 252 Spe
+Tags: Ace
+- Fake Out
+- Encore
+- Grass Knot
+- Knock Off
+
+=== TRAINER_OW_R8_BUG_MANIAC ===
+Name: GAREK
+Class: Bug Maniac
+Pic: Bug Maniac
+Gender: Male
+Music: Male
+Double Battle: Yes
+Party Size: 4
+Pool Rules: Doubles
+AI: Check Bad Move / Try To Faint
+
+Heracross @ Heavy-Duty Boots
+Level: 100
+Ability: Guts
+Nature: Jolly
+EVs: 252 Atk / 4 SpD / 252 Spe
+Tags: Lead
+- Close Combat
+- Knock Off
+- Stone Edge
+- Megahorn
+
+Scizor @ Life Orb
+Level: 100
+Ability: Technician
+Nature: Adamant
+EVs: 120 HP / 252 Atk / 136 Spe
+- Bullet Punch
+- U-turn
+- Knock Off
+- Close Combat
+
+Vikavolt @ Sitrus Berry
+Level: 100
+Ability: Levitate
+Nature: Modest
+EVs: 4 HP / 252 SpA / 252 Spe
+Tags: Ace
+- Bug Buzz
+- Thunderbolt
+- Sticky Web
+- Protect
+
+Frosmoth @ Assault Vest
+Level: 100
+Ability: Ice Scales
+Nature: Modest
+EVs: 4 HP / 252 SpA / 252 Spe
+- Bug Buzz
+- Ice Beam
+- Icy Wind
+- Blizzard
+
+Lokix @ Choice Band
+Level: 100
+Ability: Tinted Lens
+Nature: Adamant
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Ace
+- First Impression
+- U-turn
+- Knock Off
+- Leech Life

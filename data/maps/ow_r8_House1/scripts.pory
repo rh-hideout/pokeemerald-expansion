@@ -1,0 +1,89 @@
+mapscripts ow_r8_House1_MapScripts {}
+
+// ============================================================
+// OLD LADY (reward)
+// ============================================================
+
+script ow_r8_House1_EventScript_OldLady {
+    lock
+    faceplayer
+    setspeaker("Old Lady")
+    goto_if_set(FLAG_R8_HOUSE1_WHITE_HERB_GIVEN, ow_r8_House1_EventScript_OldLady_AlreadyGave)
+    msgbox(format("The trainers out here know this ground.\NI'll reward you with a keepsake from the swamp if you can defeat seven or more of them."))
+    setvar(VAR_TEMP_0, 0)
+    if (defeated(TRAINER_OW_R8_PARASOL) == TRUE) {
+        addvar(VAR_TEMP_0, 1)
+    }
+    if (defeated(TRAINER_OW_R8_RUNNER_M) == TRUE) {
+        addvar(VAR_TEMP_0, 1)
+    }
+    if (defeated(TRAINER_OW_R8_RUNNER_F) == TRUE) {
+        addvar(VAR_TEMP_0, 1)
+    }
+    if (defeated(TRAINER_OW_R8_BEEKEEPER_PATROL) == TRUE) {
+        addvar(VAR_TEMP_0, 1)
+    }
+    if (defeated(TRAINER_OW_R8_BEEKEEPER_STUCK) == TRUE) {
+        addvar(VAR_TEMP_0, 1)
+    }
+    if (defeated(TRAINER_OW_R8_RANGER_F) == TRUE) {
+        addvar(VAR_TEMP_0, 1)
+    }
+    if (defeated(TRAINER_OW_R8_RANGER_M) == TRUE) {
+        addvar(VAR_TEMP_0, 1)
+    }
+    if (defeated(TRAINER_OW_R8_CAMPER) == TRUE) {
+        addvar(VAR_TEMP_0, 1)
+    }
+    if (defeated(TRAINER_OW_R8_BUG_MANIAC) == TRUE) {
+        addvar(VAR_TEMP_0, 1)
+    }
+    goto_if_lt(VAR_TEMP_0, 6, ow_r8_House1_EventScript_OldLady_NotDone)
+    msgbox(format("The swamp turns up useful things if you know where to look.\NHere - you can have this."))
+    giveitem(ITEM_WHITE_HERB)
+    goto_if_eq(VAR_RESULT, 0, ow_r8_House1_EventScript_OldLady_BagFull)
+    setflag(FLAG_R8_HOUSE1_WHITE_HERB_GIVEN)
+    setspeaker(NULL)
+    release
+    end
+}
+
+script ow_r8_House1_EventScript_OldLady_NotDone {
+    msgbox(format("Keep going. There are people out on this route\Nworth testing yourself against."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+script ow_r8_House1_EventScript_OldLady_BagFull {
+    msgbox(format("No room for it? Come back when you've cleared some space."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+script ow_r8_House1_EventScript_OldLady_AlreadyGave {
+    msgbox(format("The swamp keeps giving, if you know where to look."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+// ============================================================
+// HEALER
+// ============================================================
+
+script ow_r8_House1_EventScript_Healer {
+    lock
+    faceplayer
+    setspeaker("Woman")
+    msgbox(format("You look like you've been through it.\NLet me see to your Pokemon."))
+    closemessage
+    setspeaker(NULL)
+    call(EventScript_PkmnCenterNurse_TakeAndHealPkmn)
+    setspeaker("Woman")
+    msgbox(format("There. Good as new.\NCome back anytime."))
+    setspeaker(NULL)
+    release
+    end
+}

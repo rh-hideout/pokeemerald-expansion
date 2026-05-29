@@ -46,7 +46,7 @@ script ow_SowbackCave_B1F_EventScript_Nadia_Cutscene {
     applymovement(LOCALID_SOWBACK_CAVE_B1F_NOSEPASS, SowbackCaveB1F_Movement_NosepassJump)
     msgbox(format("It must go down to the warren proper.\NI can hear them moving."))
     applymovement(LOCALID_SOWBACK_CAVE_B1F_NADIA, Common_Movement_FaceRight)
-    applymovement(LOCALID_PLAYER, Common_Movement_FaceLeft) 
+    applymovement(LOCALID_PLAYER, Common_Movement_FaceLeft)
     msgbox(format("Look -"))
     msgbox(format("Can you run the sample back to the prof?\pTell her that something is leaving iron out for the Drillbur to dig up."))
     msgbox(format("I want to finish documenting my observations before I head out."))
@@ -81,23 +81,12 @@ script ow_SowbackCave_B1F_EventScript_Nosepass {
 // ============================================================
 
 script ow_SowbackCave_B1F_EventScript_Hiker {
-    trainerbattle_single(
-        TRAINER_OW_SOWBACK_B1F_HIKER,
-        ow_SowbackCave_B1F_Text_Hiker_Intro,
-        ow_SowbackCave_B1F_Text_Hiker_Defeat
-    )
+    trainerbattle_single(TRAINER_OW_SOWBACK_B1F_HIKER, format("Ghahahaha! Found anything good in there? My Pokemon have been clearing a path all day.\pBet I've covered more ground than you!"), format("Good arm on you! Keep an eye on that far alcove - I cracked open a nice vein in there."))
     setspeaker("Dragan")
-    msgbox(format("Those Drilbur move fast when something disturbs them.\NMind the tunnels."), MSGBOX_AUTOCLOSE)
+    msgbox(format("Those Drilbur move fast when something disturbs them.\NMind the tunnels."))
     setspeaker(NULL)
+    release
     end
-}
-
-text ow_SowbackCave_B1F_Text_Hiker_Intro {
-    "Ghahahaha! Found anything good in there?\nMy Pokemon have been clearing a path all day.\pBet I've covered more ground than you!"
-}
-
-text ow_SowbackCave_B1F_Text_Hiker_Defeat {
-    "Good arm on you!\nKeep an eye on that far alcove -\lI cracked open a nice vein in there."
 }
 
 // ============================================================
@@ -105,23 +94,12 @@ text ow_SowbackCave_B1F_Text_Hiker_Defeat {
 // ============================================================
 
 script ow_SowbackCave_B1F_EventScript_RuinManiac {
-    trainerbattle_single(
-        TRAINER_OW_SOWBACK_B1F_RUIN_MANIAC,
-        ow_SowbackCave_B1F_Text_RuinManiac_Intro,
-        ow_SowbackCave_B1F_Text_RuinManiac_Defeat
-    )
+    trainerbattle_single(TRAINER_OW_SOWBACK_B1F_RUIN_MANIAC, format("Look at that smear in the rock! Iron, yes, but not the right kind for this geology!\pIf you want to study this chamber, break through my vanguard first!"), format("Remarkable!\pIron shouldn't be here - not this variety. Something carried it in."))
     setspeaker("Oskar")
-    msgbox(format("Limonite.\NBog iron.\NThis hill has a story it isn't telling us."), MSGBOX_AUTOCLOSE)
+    msgbox(format("Limonite.\NBog iron.\NThis hill has a story it isn't telling us."))
     setspeaker(NULL)
+    release
     end
-}
-
-text ow_SowbackCave_B1F_Text_RuinManiac_Intro {
-    "Look at that smear in the rock!\nIron, yes, but not the right kind\lfor this geology!\pIf you want to study this chamber,\nbreak through my vanguard first!"
-}
-
-text ow_SowbackCave_B1F_Text_RuinManiac_Defeat {
-    "Remarkable!\pIron shouldn't be here - not this variety.\nSomething carried it in."
 }
 
 // ============================================================
@@ -129,23 +107,12 @@ text ow_SowbackCave_B1F_Text_RuinManiac_Defeat {
 // ============================================================
 
 script ow_SowbackCave_B1F_EventScript_BlackBelt {
-    trainerbattle_single(
-        TRAINER_OW_SOWBACK_B1F_BLACK_BELT,
-        ow_SowbackCave_B1F_Text_BlackBelt_Intro,
-        ow_SowbackCave_B1F_Text_BlackBelt_Defeat
-    )
+    trainerbattle_single(TRAINER_OW_SOWBACK_B1F_BLACK_BELT, format("KIIAAAI! The cave walls focus every sound.\pMy fists ring like iron in here. Test them if you dare!"), format("Hoo-hah! The echo threw my timing. Well fought."))
     setspeaker("Stev")
-    msgbox(format("The acoustics down here are extraordinary.\NI could train for months."), MSGBOX_AUTOCLOSE)
+    msgbox(format("The acoustics down here are extraordinary.\NI could train for months."))
     setspeaker(NULL)
+    release
     end
-}
-
-text ow_SowbackCave_B1F_Text_BlackBelt_Intro {
-    "KIIAAAI!\nThe cave walls focus every sound.\pMy fists ring like iron in here.\nTest them if you dare!"
-}
-
-text ow_SowbackCave_B1F_Text_BlackBelt_Defeat {
-    "Hoo-hah!\nThe echo threw my timing.\lWell fought."
 }
 
 // ============================================================
@@ -153,21 +120,10 @@ text ow_SowbackCave_B1F_Text_BlackBelt_Defeat {
 // ============================================================
 
 script ow_SowbackCave_B1F_EventScript_Firebreather {
-    trainerbattle_single(
-        TRAINER_OW_SOWBACK_B1F_FIREBREATHER,
-        ow_SowbackCave_B1F_Text_Firebreather_Intro,
-        ow_SowbackCave_B1F_Text_Firebreather_Defeat
-    )
+    trainerbattle_single(TRAINER_OW_SOWBACK_B1F_FIREBREATHER, format("Fwoosh! The damp air makes the flames dance beautifully in here - can you feel the heat?\pMy partners are about to light this place up!"), format("Argh! Put out completely! The smoke must have got in my eyes."))
     setspeaker("Igno")
-    msgbox(format("The stone walls hold the heat beautifully.\NRemarkable location for practice."), MSGBOX_AUTOCLOSE)
+    msgbox(format("The stone walls hold the heat beautifully.\NRemarkable location for practice."))
     setspeaker(NULL)
+    release
     end
-}
-
-text ow_SowbackCave_B1F_Text_Firebreather_Intro {
-    "Fwoosh!\nThe damp air makes the flames dance\lbeautifully in here - can you feel the heat?\pMy partners are about to light this place up!"
-}
-
-text ow_SowbackCave_B1F_Text_Firebreather_Defeat {
-    "Argh! Put out completely!\nThe smoke must have got in my eyes."
 }

@@ -5,37 +5,17 @@ mapscripts ow_r3_MapScripts {}
 // ============================================================
 
 script ow_r3_EventScript_Woodcutter1 {
-    trainerbattle_single(
-        TRAINER_OW_R3_WOODCUTTER_1,
-        ow_r3_Text_Woodcutter1_Intro,
-        ow_r3_Text_Woodcutter1_Defeat
-    )
-    msgbox(format("We do what we do.\NThe trees were going one way or another."), MSGBOX_AUTOCLOSE)
-}
-
-text ow_r3_Text_Woodcutter1_Intro {
-    "You're not from Westmark.\nDoesn't matter - you'll learn\lto respect the crew."
-}
-
-text ow_r3_Text_Woodcutter1_Defeat {
-    "...You have a steady hand."
+    trainerbattle_single(TRAINER_OW_R3_WOODCUTTER_1, format("You're not from Westmark. Doesn't matter - you'll learn to respect the crew."), format("...You have a steady hand."))
+    msgbox(format("We do what we do.\NThe trees were going one way or another."))
+    release
+    end
 }
 
 script ow_r3_EventScript_Woodcutter2 {
-    trainerbattle_single(
-        TRAINER_OW_R3_WOODCUTTER_2,
-        ow_r3_Text_Woodcutter2_Intro,
-        ow_r3_Text_Woodcutter2_Defeat
-    )
-    msgbox(format("Doesn't sit right with me either,\Nif I'm being straight about it.\pBut I've got mouths to feed."), MSGBOX_AUTOCLOSE)
-}
-
-text ow_r3_Text_Woodcutter2_Intro {
-    "Huh, a battle? Aye, I can take a break."
-}
-
-text ow_r3_Text_Woodcutter2_Defeat {
-    "Aye.\nFair enough."
+    trainerbattle_single(TRAINER_OW_R3_WOODCUTTER_2, format("Huh, a battle? Aye, I can take a break."), format("Aye. Fair enough."))
+    msgbox(format("Doesn't sit right with me either,\Nif I'm being straight about it.\pBut I've got mouths to feed."))
+    release
+    end
 }
 
 // ============================================================
@@ -108,20 +88,10 @@ script ow_r3_EventScript_Painter_AlreadyGave {
 // ============================================================
 
 script ow_r3_EventScript_TuberBeachboy {
-    trainerbattle_single(
-        TRAINER_OW_R3_TUBER_MATTEO,
-        ow_r3_Text_TuberBeachboy_Intro,
-        ow_r3_Text_TuberBeachboy_Defeat
-    )
-    msgbox(format("You might even be better than daddy!"), MSGBOX_AUTOCLOSE)
-}
-
-text ow_r3_Text_TuberBeachboy_Intro {
-    "Race you to the waterline!"
-}
-
-text ow_r3_Text_TuberBeachboy_Defeat {
-    "Ugh!\nYou're so fast!"
+    trainerbattle_single(TRAINER_OW_R3_TUBER_MATTEO, format("Race you to the waterline!"), format("Ugh! You're so fast!"))
+    msgbox(format("You might even be better than daddy!"))
+    release
+    end
 }
 
 script ow_r3_EventScript_BeachMother {
@@ -135,20 +105,10 @@ script ow_r3_EventScript_BeachMother {
 }
 
 script ow_r3_EventScript_BeachFather {
-    trainerbattle_single(
-        TRAINER_OW_R3_BEACH_FATHER,
-        ow_r3_Text_BeachFather_Intro,
-        ow_r3_Text_BeachFather_Defeat
-    )
-    msgbox(format("Right. Uhh...\pThey saw nothing."), MSGBOX_AUTOCLOSE)
-}
-
-text ow_r3_Text_BeachFather_Intro {
-    "Kids! Watch this.\pThis is what a proper Pokémon\nbattle looks like!"
-}
-
-text ow_r3_Text_BeachFather_Defeat {
-    "...We don't need to mention this part."
+    trainerbattle_single(TRAINER_OW_R3_BEACH_FATHER, format("Kids! Watch this.\pThis is what a proper Pokémon battle looks like!"), format("...We don't need to mention this part."))
+    msgbox(format("Right. Uhh...\pThey saw nothing."))
+    release
+    end
 }
 
 script ow_r3_EventScript_BeachChild {
@@ -162,20 +122,10 @@ script ow_r3_EventScript_BeachChild {
 }
 
 script ow_r3_EventScript_Sailor {
-    trainerbattle_single(
-        TRAINER_OW_R3_SAILOR,
-        ow_r3_Text_Sailor_Intro,
-        ow_r3_Text_Sailor_Defeat
-    )
-    msgbox(format("Used to be almost impossible to get to Kolchavi without a boat or Pokemon to carry you.\NIt's a bit easier now."), MSGBOX_AUTOCLOSE)
-}
-
-text ow_r3_Text_Sailor_Intro {
-    "I've run this coast enough times\nto know a rookie from a vet.\pYou're no sailor.\nLet's see what you are."
-}
-
-text ow_r3_Text_Sailor_Defeat {
-    "Hah!\nGood eye."
+    trainerbattle_single(TRAINER_OW_R3_SAILOR, format("I've run this coast enough times to know a rookie from a vet.\pYou're no sailor. Let's see what you are."), format("Hah! Good eye."))
+    msgbox(format("Used to be almost impossible to get to Kolchavi without a boat or Pokemon to carry you.\NIt's a bit easier now."))
+    release
+    end
 }
 
 // ============================================================

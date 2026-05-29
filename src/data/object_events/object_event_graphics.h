@@ -486,6 +486,18 @@ const u16 gObjectEventPal_LumberjackF[] = INCGFX_U16("graphics/object_events/pic
 const u32 gObjectEventPic_BeekeeperM[] = INCGFX_U32("graphics/object_events/pics/people/beekeeper_m.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPal_BeekeeperM[] = INCGFX_U16("graphics/object_events/pics/people/beekeeper_m.png", ".gbapal");
 
+const u32 gObjectEventPic_RangerM[] = INCGFX_U32("graphics/object_events/pics/people/ranger_m.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPal_RangerM[] = INCGFX_U16("graphics/object_events/pics/people/ranger_m.png", ".gbapal");
+
+const u32 gObjectEventPic_RangerF[] = INCGFX_U32("graphics/object_events/pics/people/ranger_f.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPal_RangerF[] = INCGFX_U16("graphics/object_events/pics/people/ranger_f.png", ".gbapal");
+
+const u32 gObjectEventPic_BugmainiacM[] = INCGFX_U32("graphics/object_events/pics/people/bugmainiac_m.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPal_BugmainiacM[] = INCGFX_U16("graphics/object_events/pics/people/bugmainiac_m.png", ".gbapal");
+
+const u32 gObjectEventPic_ParasolladyF[] = INCGFX_U32("graphics/object_events/pics/people/parasollady_f.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPal_ParasolladyF[] = INCGFX_U16("graphics/object_events/pics/people/parasollady_f.png", ".gbapal");
+
 #if IS_FRLG
 
 const u16 gObjectEventPic_RedNormal[] = INCGFX_U16("graphics/object_events/pics/people/red/red_normal.png", ".4bpp", "-mwidth 2 -mheight 4");

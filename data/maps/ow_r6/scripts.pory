@@ -43,20 +43,10 @@ script ow_r6_EventScript_SurveyorBlock {
 // ============================================================
 
 script ow_r6_EventScript_SurveyorTrainer {
-    trainerbattle_single(
-        TRAINER_OW_R6_SURVEYOR,
-        ow_r6_Text_SurveyorTrainer_Intro,
-        ow_r6_Text_SurveyorTrainer_Defeat
-    )
-    msgbox(format("The data I gave them would cut a haul road\Nright through the lower ridge.\pWhether it gets built is someone else's\Nproblem now."), MSGBOX_AUTOCLOSE)
-}
-
-text ow_r6_Text_SurveyorTrainer_Intro {
-    "Didn't expect to find someone\nup here this late in the season.\pThe survey's done. I've got nothing\nto do but wait for Westmark to\ldecide what to do with my findings."
-}
-
-text ow_r6_Text_SurveyorTrainer_Defeat {
-    "Ha. I spend too much time with\nmy instruments and not enough\lwith my team."
+    trainerbattle_single(TRAINER_OW_R6_SURVEYOR, format("Didn't expect to find someone up here this late in the season.\pThe survey's done. I've got nothing to do but wait for Westmark to decide what to do with my findings."), format("Ha. I spend too much time with my instruments and not enough with my team."))
+    msgbox(format("The data I gave them would cut a haul road\Nright through the lower ridge.\pWhether it gets built is someone else's\Nproblem now."))
+    release
+    end
 }
 
 // ============================================================
@@ -64,18 +54,8 @@ text ow_r6_Text_SurveyorTrainer_Defeat {
 // ============================================================
 
 script ow_r6_EventScript_BugCatcher {
-    trainerbattle_single(
-        TRAINER_OW_R6_BUG_CATCHER,
-        ow_r6_Text_BugCatcher_Intro,
-        ow_r6_Text_BugCatcher_Defeat
-    )
-    msgbox(format("Come back in spring - the winged ones\Ncome through the gap in the cliffs.\NWorth the climb."), MSGBOX_AUTOCLOSE)
-}
-
-text ow_r6_Text_BugCatcher_Intro {
-    "There are Caterpie up here that\nhave never seen a person before!\pThe perfect specimens - and\nthey're going to be MINE!"
-}
-
-text ow_r6_Text_BugCatcher_Defeat {
-    "They scattered!\nThe noise scared them all off!"
+    trainerbattle_single(TRAINER_OW_R6_BUG_CATCHER, format("There are Caterpie up here that have never seen a person before!\pThe perfect specimens - and they're going to be MINE!"), format("They scattered! The noise scared them all off!"))
+    msgbox(format("Come back in spring - the winged ones\Ncome through the gap in the cliffs.\NWorth the climb."))
+    release
+    end
 }
