@@ -555,3 +555,17 @@ void ScrCmd_purchaserepeatitem(struct ScriptContext* ctx)
     RETURN_IF_BANKING_DISABLED();
     gSpecialVar_Result = PurchaseRepeatItem();
 }
+
+void ScrCmd_setupbankinginput(struct ScriptContext *ctx)
+{
+    enum BankingMode mode = ScriptReadByte(ctx);
+    u16 _max = GetTransactionMaxAmount(mode);
+
+    u32 *min = &ctx->data[0];
+    u32 *max = &ctx->data[1];
+    u32 *val = &ctx->data[2];
+
+    *min = 0;
+    *max = _max;
+    *val = _max;
+}

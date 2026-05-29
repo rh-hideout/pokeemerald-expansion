@@ -31,5 +31,6 @@ bool32 IsSavingMoney(void);
 u32 PurchaseRepeatItem(void);
 u32 TriggerBankingPurchase(u32 toDeposit);
 u32 GetTransactionMaxAmount(enum BankingMode mode);
+void ScrCmd_setupbankinginput(struct ScriptContext *ctx);
 
 #endif // GUARD_SAVINGS_SYSTEM_H

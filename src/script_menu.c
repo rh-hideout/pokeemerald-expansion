@@ -1517,15 +1517,3 @@ void ScrCmd_getnumericinput(struct ScriptContext* ctx)
     WriteNumericInputToTask(taskId, &(const struct NumericInput){ val, min, max, 0, pos,templ, ctx});
 }
 
-void ScrCmd_getbankinginput(struct ScriptContext* ctx)
-{
-    enum BankingMode mode = ScriptReadByte(ctx);
-    const u8* templ = (const u8*)ScriptReadWord(ctx);
-
-    u16 max = GetTransactionMaxAmount(mode);
-
-    u8 taskId = CreateTask(Task_ShowNumericInput, 0);
-    struct Coords16 pos = {2, 12};
-    WriteNumericInputToTask(taskId, &(const struct NumericInput){ max, 0, max, 0, pos, templ, ctx});
-}
-

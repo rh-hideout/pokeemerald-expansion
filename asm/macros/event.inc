@@ -3014,10 +3014,15 @@ loadword 2, \value
   .4byte \templ
 .endm
 
-.macro getbankinginput mode:req, templ=gStringVar1
-  callnative ScrCmd_getbankinginput
-  .byte \mode
-  .4byte \templ
+.macro setupbankinginput mode:req
+  callnative ScrCmd_setupbankinginput
+	.if \mode == deposit
+		.byte 0
+	.elseif \mode == withdraw
+		.byte 1
+	.else
+		.byte \mode
+	.endif
 .endm
 
 .macro addmoneyvar varId:req
@@ -3030,6 +3035,31 @@ loadword 2, \value
   .2byte \varId
 .endm
 
+.macro depositmoney
+  setupbankinginput deposit
+  getnumericinput x=12, y=2, templ=gText_DepositMoney
+  waitstate
+  buffernumberstring STR_VAR_1, VAR_RESULT
+  copyvar VAR_0x8001, VAR_RESULT
+  addtobankvar VAR_0x8001
+  removemoneyvar VAR_0x8001
+  msgbox gText_DepositedMoney
+  waitmessage
+	release
+.endm
+
+.macro withdrawmoney
+  setupbankinginput withdraw
+  getnumericinput x=12, y=2, templ=gText_WithdrawMoney
+  waitstate
+  buffernumberstring STR_VAR_1, VAR_RESULT
+  copyvar VAR_0x8001, VAR_RESULT
+  removefrombankvar VAR_0x8001
+  addmoneyvar VAR_0x8001
+  msgbox gText_WithdrewMoney
+  waitmessage
+	release
+.endm
 @ END OF BANKING SYSTEM
 
 
