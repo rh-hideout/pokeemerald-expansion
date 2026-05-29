@@ -6,6 +6,7 @@
 #define HP_EMPTY 0
 
 extern const u8 gMiscBlank_Gfx[]; // unused in Emerald
+extern const s32 gPowersOfTen[];
 
 u8 CreateInvisibleSpriteWithCallback(void (*callback)(struct Sprite *));
 void StoreWordInTwoHalfwords(u16 *h, u32 w);
@@ -18,7 +19,7 @@ void BlendPalette(u16 palOffset, u16 numEntries, u8 coeff, u32 blendColor);
 void DoBgAffineSet(struct BgAffineDstData *dest, u32 texX, u32 texY, s16 scrX, s16 scrY, s16 sx, s16 sy, u16 alpha);
 void CopySpriteTiles(u8 shape, u8 size, u8 *tiles, u16 *tilemap, u8 *output);
 s32 SubtractClamped(s32 lowestVal, s32 highestVal, s32 currentVal, s32 delta);
-u32 Util_CountDigits(u32 value);
+size_t CountDigits(int value);
 
 static inline u32 Clamp(u32 value, u32 min, u32 max)
 {

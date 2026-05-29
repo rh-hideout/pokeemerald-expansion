@@ -50,6 +50,7 @@
 #include "string_util.h"
 #include "task.h"
 #include "tv.h"
+#include "util.h"
 #include "pokemon_summary_screen.h"
 #include "wild_encounter.h"
 #include "constants/abilities.h"
@@ -492,20 +493,6 @@ const u8 *const gText_DigitIndicator[] =
     COMPOUND_STRING("{LEFT_ARROW}+100000{RIGHT_ARROW}   "),
     COMPOUND_STRING("{LEFT_ARROW}+1000000{RIGHT_ARROW}  "),
     COMPOUND_STRING("{LEFT_ARROW}+10000000{RIGHT_ARROW} "),
-};
-
-static const s32 sPowersOfTen[] =
-{
-             1,
-            10,
-           100,
-          1000,
-         10000,
-        100000,
-       1000000,
-      10000000,
-     100000000,
-    1000000000,
 };
 
 static const u32 (*generateListFunctions[])(const struct DebugMenuOption *) =
@@ -970,13 +957,13 @@ static void Debug_HandleInput_Numeric(u8 taskId, s32 min, s32 max, u32 digits)
 {
     if (JOY_NEW(DPAD_UP))
     {
-        gTasks[taskId].tInput += sPowersOfTen[gTasks[taskId].tDigit];
+        gTasks[taskId].tInput += gPowersOfTen[gTasks[taskId].tDigit];
         if (gTasks[taskId].tInput > max)
             gTasks[taskId].tInput = max;
     }
     if (JOY_NEW(DPAD_DOWN))
     {
-        gTasks[taskId].tInput -= sPowersOfTen[gTasks[taskId].tDigit];
+        gTasks[taskId].tInput -= gPowersOfTen[gTasks[taskId].tDigit];
         if (gTasks[taskId].tInput < min)
             gTasks[taskId].tInput = min;
     }
@@ -1000,12 +987,12 @@ static void Debug_HandleInput_SongId(u8 taskId, enum SongType type, u32 digits)
 {
     if (JOY_NEW(DPAD_UP))
     {
-        for (u32 i = 0; i < sPowersOfTen[gTasks[taskId].tDigit]; i++)
+        for (u32 i = 0; i < gPowersOfTen[gTasks[taskId].tDigit]; i++)
             gTasks[taskId].tInput = FindSong(type, SONG_FIRST_GT, gTasks[taskId].tInput);
     }
     if (JOY_NEW(DPAD_DOWN))
     {
-        for (u32 i = 0; i < sPowersOfTen[gTasks[taskId].tDigit]; i++)
+        for (u32 i = 0; i < gPowersOfTen[gTasks[taskId].tDigit]; i++)
             gTasks[taskId].tInput = FindSong(type, SONG_LAST_LT, gTasks[taskId].tInput);
     }
     if (JOY_NEW(DPAD_LEFT))
@@ -1531,13 +1518,13 @@ static void DebugAction_Util_Warp_SelectWarp(u8 taskId)
         PlaySE(SE_SELECT);
         if (JOY_NEW(DPAD_UP))
         {
-            gTasks[taskId].tInput += sPowersOfTen[gTasks[taskId].tDigit];
+            gTasks[taskId].tInput += gPowersOfTen[gTasks[taskId].tDigit];
             if (gTasks[taskId].tInput > 10)
                 gTasks[taskId].tInput = 10;
         }
         if (JOY_NEW(DPAD_DOWN))
         {
-            gTasks[taskId].tInput -= sPowersOfTen[gTasks[taskId].tDigit];
+            gTasks[taskId].tInput -= gPowersOfTen[gTasks[taskId].tDigit];
             if (gTasks[taskId].tInput < 0)
                 gTasks[taskId].tInput = 0;
         }
@@ -2332,8 +2319,8 @@ static void DebugAction_FlagsVars_SetValue(u8 taskId)
 {
     if (JOY_NEW(DPAD_UP))
     {
-        if (gTasks[taskId].data[6] + sPowersOfTen[gTasks[taskId].tDigit] <= 32000)
-            gTasks[taskId].data[6] += sPowersOfTen[gTasks[taskId].tDigit];
+        if (gTasks[taskId].data[6] + gPowersOfTen[gTasks[taskId].tDigit] <= 32000)
+            gTasks[taskId].data[6] += gPowersOfTen[gTasks[taskId].tDigit];
         else
             gTasks[taskId].data[6] = 32000 - 1;
 
@@ -2342,7 +2329,7 @@ static void DebugAction_FlagsVars_SetValue(u8 taskId)
     }
     if (JOY_NEW(DPAD_DOWN))
     {
-        gTasks[taskId].data[6] -= sPowersOfTen[gTasks[taskId].tDigit];
+        gTasks[taskId].data[6] -= gPowersOfTen[gTasks[taskId].tDigit];
         if (gTasks[taskId].data[6] < 0)
             gTasks[taskId].data[6] = 0;
     }
@@ -3085,13 +3072,13 @@ static void DebugAction_Give_Pokemon_SelectNature(u8 taskId)
 
         if (JOY_NEW(DPAD_UP))
         {
-            gTasks[taskId].tInput += sPowersOfTen[gTasks[taskId].tDigit];
+            gTasks[taskId].tInput += gPowersOfTen[gTasks[taskId].tDigit];
             if (gTasks[taskId].tInput > NUM_NATURES)
                 gTasks[taskId].tInput = NUM_NATURES;
         }
         if (JOY_NEW(DPAD_DOWN))
         {
-            gTasks[taskId].tInput -= sPowersOfTen[gTasks[taskId].tDigit];
+            gTasks[taskId].tInput -= gPowersOfTen[gTasks[taskId].tDigit];
             if (gTasks[taskId].tInput < 0)
                 gTasks[taskId].tInput = 0;
         }
@@ -3197,13 +3184,13 @@ static void DebugAction_Give_Pokemon_SelectTeraType(u8 taskId)
 
         if (JOY_NEW(DPAD_UP))
         {
-            gTasks[taskId].tInput += sPowersOfTen[gTasks[taskId].tDigit];
+            gTasks[taskId].tInput += gPowersOfTen[gTasks[taskId].tDigit];
             if (gTasks[taskId].tInput > NUMBER_OF_MON_TYPES - 1)
                 gTasks[taskId].tInput = NUMBER_OF_MON_TYPES - 1;
         }
         if (JOY_NEW(DPAD_DOWN))
         {
-            gTasks[taskId].tInput -= sPowersOfTen[gTasks[taskId].tDigit];
+            gTasks[taskId].tInput -= gPowersOfTen[gTasks[taskId].tDigit];
             if (gTasks[taskId].tInput < 0)
                 gTasks[taskId].tInput = 0;
         }

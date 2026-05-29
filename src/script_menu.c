@@ -132,19 +132,6 @@ static const struct WindowTemplate sSavingsWithdrawalWindowTemplate = {
     .baseBlock = 1,
 };
 
-static const s32 sPowersOfTen[] = {
-    1,
-    10,
-    100,
-    1000,
-    10000,
-    100000,
-    1000000,
-    10000000,
-    100000000,
-    1000000000,
-};
-
 bool8 ScriptMenu_MultichoiceDynamic(u8 left, u8 top, u8 argc, struct ListMenuItem *items, bool8 ignoreBPress, u8 maxBeforeScroll, u32 initialRow, u32 callbackSet)
 {
     if (FuncIsActiveTask(Task_HandleMultichoiceInput) == TRUE)
@@ -1388,7 +1375,7 @@ static void PrintNumericInputAmount(u8 windowId, struct NumericInput input)
     u8 numberBuffer[32];
     u8 formattedBuffer[256];
 
-    ConvertIntToDecimalStringN( numberBuffer, input.value, STR_CONV_MODE_LEADING_ZEROS, Util_CountDigits(input.max));
+    ConvertIntToDecimalStringN( numberBuffer, input.value, STR_CONV_MODE_LEADING_ZEROS, CountDigits(input.max));
 
     formattedBuffer[0] = EOS;
 
@@ -1419,7 +1406,7 @@ static bool32 HandleNumericInput(struct NumericInput *input)
 {
     u32 original = input->value;
     u16 keypress = JOY_REPEAT(DPAD_ANY);
-    u32 maxDigits = Util_CountDigits(input->max);
+    u32 maxDigits = CountDigits(input->max);
 
     if (keypress & (DPAD_LEFT | DPAD_RIGHT))
     {
@@ -1432,7 +1419,7 @@ static bool32 HandleNumericInput(struct NumericInput *input)
         return TRUE;
     }
 
-    u32 place = sPowersOfTen[input->digit];
+    u32 place = gPowersOfTen[input->digit];
     u32 currentDigit = (input->value / place) % 10;
 
     if (keypress & DPAD_UP)

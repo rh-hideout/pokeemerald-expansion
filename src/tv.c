@@ -32,6 +32,7 @@
 #include "decoration.h"
 #include "secret_base.h"
 #include "tv.h"
+#include "util.h"
 #include "pokeball.h"
 #include "data.h"
 #include "constants/battle_frontier.h"
@@ -2752,18 +2753,6 @@ void ConvertIntToDecimalString(u8 varIdx, int value)
 {
     int nDigits = CountDigits(value);
     ConvertIntToDecimalStringN(gTVStringVarPtrs[varIdx], value, STR_CONV_MODE_LEFT_ALIGN, nDigits);
-}
-
-size_t CountDigits(int value)
-{
-    u32 count = 0;
-
-    while (value > 0)
-    {
-        value /= 10;
-        count++;
-    }
-    return count;
 }
 
 static void SmartShopper_BufferPurchaseTotal(u8 varIdx, TVShow *show)

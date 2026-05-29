@@ -402,7 +402,7 @@ void ScrCmd_bufferbankbalancestring(struct ScriptContext* ctx)
     u8* strvar = GetStringVar(ScriptReadByte(ctx));
 
     u32 savings = GetMoneyInBank();
-    u32 digits = Util_CountDigits(savings);
+    u32 digits = CountDigits(savings);
     ConvertIntToDecimalStringN(strvar, savings, STR_CONV_MODE_LEFT_ALIGN, digits);
 }
 
