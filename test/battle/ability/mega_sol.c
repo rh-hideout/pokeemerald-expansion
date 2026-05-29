@@ -147,7 +147,7 @@ SINGLE_BATTLE_TEST("Mega Sol ignores Snow's Ice-type Defense boost")
     GIVEN {
         ASSUME(IsBattleMovePhysical(MOVE_SCRATCH));
         ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
-        ASSUME(GetSpeciesType(SPECIES_GLACEON, 0) == TYPE_ICE || GetSpeciesType(SPECIES_GLACEON, 1) == TYPE_ICE);
+        ASSUME(GetSpeciesType(SPECIES_VANILLUXE, 0) == TYPE_ICE || GetSpeciesType(SPECIES_VANILLUXE, 1) == TYPE_ICE);
         PLAYER(SPECIES_MEGANIUM) { Item(ITEM_MEGANIUMITE); }
         OPPONENT(SPECIES_VANILLUXE) { Ability(ABILITY_SNOW_WARNING); }
     } WHEN {
