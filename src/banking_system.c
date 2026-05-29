@@ -1,5 +1,4 @@
 #include "global.h"
-#include "assertf.h"
 #include "banking_system.h"
 #include "battle_message.h"
 #include "config/banking.h"
