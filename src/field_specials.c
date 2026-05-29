@@ -1,5 +1,4 @@
 #include "global.h"
-#include "banking_system.h"
 #include "debug.h"
 #include "malloc.h"
 #include "battle.h"
