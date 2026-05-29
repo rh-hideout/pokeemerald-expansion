@@ -32,7 +32,7 @@
 // Macros
 #define RETURN_IF_BANKING_DISABLED()                                        \
     {                                                                       \
-        assertf(IsBankingEnabled(),"Banking functionality is not enabled")  \
+        assertf(SAVINGS_ENABLED,"Banking functionality is not enabled")  \
             {                                                               \
                 UnlockPlayerFieldControls();                                \
                 return;                                                     \
@@ -177,14 +177,9 @@ static const struct WindowTemplate sBankingModeWindowTemplate = {
     .paletteNum = 15,
     .baseBlock = 1 + 13 * 2};
 
-bool32 IsBankingEnabled(void)
-{
-    return SAVINGS_ENABLED;
-}
-
 bool32 IsSavingMoney(void)
 {
-    return IsBankingEnabled() && FlagGet(SAVINGS_FLAG);
+    return SAVINGS_ENABLED && FlagGet(SAVINGS_FLAG);
 }
 
 struct Banking* GetBankingPtr(void)
@@ -199,7 +194,7 @@ struct Banking* GetBankingPtr(void)
 
 u32 GetMoneyInBank(void)
 {
-    assertf(IsBankingEnabled(), "Banking functionality is not enabled")
+    assertf(SAVINGS_ENABLED, "Banking functionality is not enabled")
     {
         return 0;
     }
@@ -210,7 +205,7 @@ u32 GetMoneyInBank(void)
 
 void SetMoneyInBank(u32 amount)
 {
-    assertf(IsBankingEnabled(), "Banking functionality is not enabled")
+    assertf(SAVINGS_ENABLED, "Banking functionality is not enabled")
     {
         return;
     }
@@ -221,7 +216,7 @@ void SetMoneyInBank(u32 amount)
 
 void DepositAndTrackMoney(u32 amount)
 {
-    assertf(IsBankingEnabled(), "Banking functionality is not enabled")
+    assertf(SAVINGS_ENABLED, "Banking functionality is not enabled")
     {
         return;
     }
@@ -233,7 +228,7 @@ void DepositAndTrackMoney(u32 amount)
 
 void NewGameInitBanking(void)
 {
-    if (!IsBankingEnabled())
+    if (!SAVINGS_ENABLED)
         return;
 
     struct Banking *banking = GetBankingPtr();
