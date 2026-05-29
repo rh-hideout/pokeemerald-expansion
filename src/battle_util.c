@@ -10234,11 +10234,13 @@ bool32 CanMoveSkipAccuracyCalc(enum BattlerId battlerAtk, enum BattlerId battler
         effect = TRUE;
     }
 
-    if (!effect && HasWeatherEffect())
+    if (!effect)
     {
-        if (MoveAlwaysHitsInRain(move) && IsBattlerWeatherAffected(GetBattlerHoldEffect(battlerDef), gBattleWeather, B_WEATHER_RAIN))// Check mega sol interaction then update to GetAttackerWeather.
+        u32 attackerWeather = GetAttackerWeather(GetBattlerHoldEffect(battlerAtk), abilityAtk, GetWeather());
+
+        if (MoveAlwaysHitsInRain(move) && (attackerWeather & B_WEATHER_RAIN))
             effect = TRUE;
-        else if ((gBattleWeather & B_WEATHER_ICY_ANY) && MoveAlwaysHitsInHailSnow(move))
+        else if ((attackerWeather & B_WEATHER_ICY_ANY) && MoveAlwaysHitsInHailSnow(move))
             effect = TRUE;
 
         if (effect)
@@ -10254,6 +10256,7 @@ bool32 CanMoveSkipAccuracyCalc(enum BattlerId battlerAtk, enum BattlerId battler
 u32 GetTotalAccuracy(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, enum Ability atkAbility, enum Ability defAbility, enum HoldEffect atkHoldEffect, enum HoldEffect defHoldEffect)
 {
     u32 calc, moveAcc;
+    u32 attackerWeather;
     s8 buff, accStage, evasionStage;
     u32 atkParam = GetBattlerHoldEffectParam(battlerAtk);
     u32 defParam = GetBattlerHoldEffectParam(battlerDef);
@@ -10279,9 +10282,10 @@ u32 GetTotalAccuracy(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
         buff = MAX_STAT_STAGE;
 
     moveAcc = GetMoveAccuracy(move);
+    attackerWeather = GetAttackerWeather(atkHoldEffect, atkAbility, GetWeather());
 
     // Check Thunder and Hurricane on sunny weather.
-    if (IsBattlerWeatherAffected(defHoldEffect, GetWeather(), B_WEATHER_SUN) && MoveHas50AccuracyInSun(move))
+    if ((attackerWeather & B_WEATHER_SUN) && MoveHas50AccuracyInSun(move))
         moveAcc = 50;
     // Check Wonder Skin.
     if (defAbility == ABILITY_WONDER_SKIN && IsBattleMoveStatus(move) && moveAcc > 50)
@@ -10311,11 +10315,11 @@ u32 GetTotalAccuracy(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
     switch (defAbility)
     {
     case ABILITY_SAND_VEIL:
-        if (GetAttackerWeather(atkHoldEffect, atkAbility, GetWeather()) & B_WEATHER_SANDSTORM)
+        if (attackerWeather & B_WEATHER_SANDSTORM)
             calc = (calc * 80) / 100; // 1.2 sand veil loss
         break;
     case ABILITY_SNOW_CLOAK:
-        if (GetAttackerWeather(atkHoldEffect, atkAbility, GetWeather()) & B_WEATHER_ICY_ANY)
+        if (attackerWeather & B_WEATHER_ICY_ANY)
             calc = (calc * 80) / 100; // 1.2 snow cloak loss
         break;
     case ABILITY_TANGLED_FEET:
