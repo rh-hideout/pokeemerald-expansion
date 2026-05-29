@@ -845,17 +845,18 @@ bool32 DoesStringProperlyTerminate(const u8 *str, u32 last)
     return FALSE;
 }
 
-u8* GetStringVar(u8 index)
+u8 *GetStringVar(u8 index)
 {
-    switch (index) {
-        case 0:
-            return gStringVar1;
-        case 1:
-            return gStringVar2;
-        case 2:
-            return gStringVar3;
-        default:
-            errorf("Incorrect stringvar index");
-            return gStringVar1;
+    switch (index)
+    {
+    case 0:
+        return gStringVar1;
+    case 1:
+        return gStringVar2;
+    case 2:
+        return gStringVar3;
+    default:
+        errorf("Incorrect stringvar index");
+        return gStringVar1;
     }
 }
