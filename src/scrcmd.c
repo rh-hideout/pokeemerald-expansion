@@ -3433,7 +3433,7 @@ bool8 ScrCmd_bufferregionname(struct ScriptContext *ctx)
     u8 stringVarIndex = ScriptReadByte(ctx);
     enum RegionMapId regionMap = VarGet(ScriptReadHalfword(ctx));
     if (regionMap == REGION_MAP_UNKNOWN)
-        regionMap = gMapHeader.regionMapSectionId;
+        regionMap = GetRegionMap(gMapHeader.regionMapSectionId);
 
     Script_RequestEffects(SCREFF_V1);
 
