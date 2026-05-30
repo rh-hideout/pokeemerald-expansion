@@ -118,11 +118,6 @@ void UpdateMassOutbreakDaysLeft(u16 days)
         gSaveBlock1Ptr->outbreakDaysLeft -= days;
 }
 
-void ClearMassOutbreak(void)
-{
-    gSaveBlock1Ptr->outbreakDaysLeft = 0;
-}
-
 bool32 IsMassOutbreakActive(void)
 {
     return (gSaveBlock1Ptr->outbreakDaysLeft > 0);

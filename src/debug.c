@@ -2379,7 +2379,7 @@ static void DebugAction_Outbreak_SetStatic(u8 taskId)
 
 static void DebugAction_Outbreak_ClearActive(u8 taskId)
 {
-    ClearMassOutbreak();
+    gSaveBlock1Ptr->outbreakDaysLeft = 0;
     Debug_RemoveCallbackMenu();
     DebugAction_OpenOutbreakMenu(taskId, sDebugMenu_Actions_MassOutbreak);
 }
