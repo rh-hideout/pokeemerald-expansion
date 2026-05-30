@@ -142,4 +142,6 @@ void FollowerNPC_TryRemoveFollowerOnWhiteOut(void);
 void Task_MoveNPCFollowerAfterForcedMovement(u8 taskId);
 void Task_HideNPCFollowerAfterMovementFinish(u8 taskId);
 
+void Task_FollowerNPCOutOfDoor(u8 taskId);
+
 #endif // GUARD_FOLLOWER_NPC_H

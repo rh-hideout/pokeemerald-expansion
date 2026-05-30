@@ -253,10 +253,10 @@ SINGLE_BATTLE_TEST("Eject Button activates after Wandering Spirit")
 
 DOUBLE_BATTLE_TEST("Eject Button will activate before Red Card if holder is faster")
 {
-    KNOWN_FAILING; // #9499
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(5); };
         OPPONENT(SPECIES_WOBBUFFET) { Speed(30); Item(ITEM_EJECT_BUTTON); }
         OPPONENT(SPECIES_WYNAUT) { Speed(25); Item(ITEM_RED_CARD); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }

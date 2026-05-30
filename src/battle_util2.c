@@ -11,7 +11,26 @@
 #include "constants/abilities.h"
 #include "random.h"
 #include "battle_scripts.h"
+#include "window.h"
 #include "constants/battle_string_ids.h"
+
+void AllocateBattleGfxResources(void)
+{
+    gBattleAnimBgTileBuffer = AllocZeroed(0x2000);
+    gBattleAnimBgTilemapBuffer = AllocZeroed(0x1000);
+}
+
+static void FreeBattleGfxResources(void)
+{
+    FREE_AND_SET_NULL(gBattleAnimBgTileBuffer);
+    FREE_AND_SET_NULL(gBattleAnimBgTilemapBuffer);
+}
+
+void CloseMainBattleScreen(void)
+{
+    FreeBattleGfxResources();
+    FreeAllWindowBuffers();
+}
 
 void AllocateBattleResources(void)
 {
@@ -40,8 +59,7 @@ void AllocateBattleResources(void)
     gLinkBattleSendBuffer = AllocZeroed(BATTLE_BUFFER_LINK_SIZE);
     gLinkBattleRecvBuffer = AllocZeroed(BATTLE_BUFFER_LINK_SIZE);
 
-    gBattleAnimBgTileBuffer = AllocZeroed(0x2000);
-    gBattleAnimBgTilemapBuffer = AllocZeroed(0x1000);
+    AllocateBattleGfxResources();
 
     if (gBattleTypeFlags & BATTLE_TYPE_SECRET_BASE)
     {
@@ -76,8 +94,7 @@ void FreeBattleResources(void)
         FREE_AND_SET_NULL(gLinkBattleSendBuffer);
         FREE_AND_SET_NULL(gLinkBattleRecvBuffer);
 
-        FREE_AND_SET_NULL(gBattleAnimBgTileBuffer);
-        FREE_AND_SET_NULL(gBattleAnimBgTilemapBuffer);
+        FreeBattleGfxResources();
     }
 }
 
@@ -115,9 +132,9 @@ void SwitchPartyOrderInGameMulti(enum BattlerId battler, u8 arg1)
         u8 switchInPartyId = arg1;
         enum BattleTrainer trainer = GetBattlerTrainer(battler);
 
-        // In 6v6 multis, the partner party is stored in gParties[B_TRAINER_2]
+        // In 6v6 multis, the partner party is stored in gParties[B_TRAINER_PARTNER]
         // and uses indexes 0-2, but we still use the combined party order.
-        if (IsMultiBattle() == TRUE && !AreMultiPartiesFullTeams() && trainer == B_TRAINER_2)
+        if (IsMultiBattle() == TRUE && !AreMultiPartiesFullTeams() && trainer == B_TRAINER_PARTNER)
         {
             battlerPartyId += MULTI_PARTY_SIZE;
             switchInPartyId += MULTI_PARTY_SIZE;

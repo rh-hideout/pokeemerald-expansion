@@ -46,6 +46,7 @@ enum CancelerState
     CANCELER_THAW,
     CANCELER_STANCE_CHANGE_2,
     CANCELER_ATTACKSTRING,
+    CANCELER_PLEDGE_ATTACK,
     CANCELER_SET_TARGETS,
     CANCELER_PPDEDUCTION,
     CANCELER_MOVE_SPECIFIC_MESSAGE,
@@ -58,6 +59,7 @@ enum CancelerState
     CANCELER_POWDER_STATUS,
     CANCELER_PRIORITY_BLOCK,
     CANCELER_EXPLODING_DAMP,
+    CANCELER_INTERRUPTIBLE_MOVES,
     CANCELER_PROTEAN,
     CANCELER_CHARGING,
     CANCELER_SNATCH,
@@ -67,7 +69,20 @@ enum CancelerState
     CANCELER_TARGET_FAILURE,
     CANCELER_NOT_FULLY_PROTECTED,
     CANCELER_MULTIHIT_MOVES,
+    CANCELER_ACCURACY_CHECK,
     CANCELER_END,
+};
+
+enum FaintBlockStates
+{
+    FAINT_BLOCK_FINAL_GAMBIT,
+    FAINT_BLOCK_CHECK_TARGET_FAINTED, // Exits if target is not fainted
+    FAINT_BLOCK_END_NEUTRALIZING_GAS,
+    FAINT_BLOCK_DO_GRUDGE,
+    // Destiny Bond is tested and called first, but Faint Target's script plays first
+    FAINT_BLOCK_TRY_DESTINY_BOND,
+    FAINT_BLOCK_FAINT_TARGET,
+    FAINT_BLOCK_COUNT,
 };
 
 enum MoveEndResult
@@ -104,7 +119,8 @@ enum MoveEndState
     MOVEEND_HP_THRESHOLD_ITEMS_TARGET, // Activation only during a multi hit move / ability (Parental Bond)
     MOVEEND_MULTIHIT_MOVE,
     MOVEEND_DEFROST,
-    MOVEEND_SHEER_FORCE, // If move is Sheer Force affected, skip to Hit Escape + One
+    MOVEEND_MOVE_BLOCK_RECOIL, // Recoil effects should still happen even if Sheer Force applies
+    MOVEEND_SHEER_FORCE, // If move is Sheer Force affected, jump to effects that are not suppressed
     MOVEEND_MOVE_BLOCK,
     MOVEEND_ITEM_EFFECTS_ATTACKER_2,
     MOVEEND_ABILITY_EFFECT_FOES_FAINTED, // Moxie-like abilities / Battle Bond / Magician
@@ -118,14 +134,12 @@ enum MoveEndState
     MOVEEND_HIT_ESCAPE,
     MOVEEND_PICKPOCKET,
     MOVEEND_ITEMS_EFFECTS_ALL,
-    MOVEEND_WHITE_HERB,
     MOVEEND_OPPORTUNIST,
-    MOVEEND_MIRROR_HERB,
     MOVEEND_THIRD_MOVE_BLOCK,
     MOVEEND_RAMPAGE,
     MOVEEND_CONFUSION_AFTER_SKY_DROP, // If target was previously rampaging, it should be confused when dropped
     MOVEEND_SPRAY_LEPPA_BLUNDER, // Throat Spray, Leppa Berry, Blunder Policy
-    MOVEEND_EJECT_PACK,
+    MOVEEND_ITEM_ON_STAT_CHANGE,
     MOVEEND_SEND_OUT_REPLACEMENTS, // For all non-forced switching effects
     MOVEEND_CLEAR_BITS,
     MOVEEND_DANCER,
@@ -134,6 +148,26 @@ enum MoveEndState
 
     // This guarantees a correct jump if new moveends are added directly after MOVEEND_HIT_ESCAPE
     MOVEEND_JUMP_TO_HIT_ESCAPE_PLUS_ONE = (MOVEEND_HIT_ESCAPE + 1),
+};
+
+enum MoveResult
+{
+    MOVE_RESULT_CONTINUE,
+    MOVE_RESULT_RUN_SCRIPT_INCREMENT,
+    MOVE_RESULT_RUN_SCRIPT,
+    MOVE_RESULT_FAILURE,
+    MOVE_RESULT_DONE,
+};
+
+enum StatChangeResolution
+{
+    STAT_CHANGE_SUBSTITUTE,
+    STAT_CHANGE_CAN_ANY_CHANGE,
+    STAT_CHANGE_ACCURACY,
+    STAT_CHANGE_MIRROR_ARMOR,
+    STAT_CHANGE_BEFORE_CHANGE,
+    STAT_CHANGE_TRY_CHANGE,
+    STAT_CHANGE_COUNT,
 };
 
 #endif // GUARD_CONSTANTS_BATTLE_MOVE_RESOLUTION_H

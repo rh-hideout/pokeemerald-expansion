@@ -487,7 +487,7 @@ static void OpponentHandleChooseMove(enum BattlerId battler)
         }
         BtlController_Complete(battler);
     }
-    else // Wild pokemon - use random move
+    else // Wild Pokémon - use random move
     {
         enum Move move;
         do
@@ -514,7 +514,7 @@ static void OpponentHandleChooseMove(enum BattlerId battler)
             } while (!CanTargetBattler(battler, targetBattler, move));
 
             // Don't bother to check if they're enemies if the move can't attack ally
-            if (B_WILD_NATURAL_ENEMIES == TRUE && GetBattlerMoveTargetType(battler, move) != TARGET_BOTH)
+            if (WE_WILD_NATURAL_ENEMIES && GetBattlerMoveTargetType(battler, move) != TARGET_BOTH)
             {
                 u32 speciesAttacker, speciesTarget;
                 speciesAttacker = gBattleMons[battler].species;

@@ -5,7 +5,7 @@ SINGLE_BATTLE_TEST("Mist prevents stat reductions from opposing moves")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_MIST) == EFFECT_MIST);
-        ASSUME(GetMoveEffect(MOVE_GROWL) == EFFECT_ATTACK_DOWN);
+        ASSUME_STAT_CHANGE(MOVE_GROWL, attack: -1);
         PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
     } WHEN {

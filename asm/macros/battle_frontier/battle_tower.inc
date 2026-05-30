@@ -95,7 +95,6 @@
 	.macro choose_mons
 	fadescreen 1
 	special ChooseHalfPartyForBattle @ choose 3 mons for battle
-	waitstate
 	.endm
 
 	.macro multi_do type:req

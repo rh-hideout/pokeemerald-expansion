@@ -67,10 +67,10 @@ The test runner rigs the RNG so that unless otherwise specified, moves always hi
 ### Example 2
 As a second example, to manually test that Stun Spore does not effect Grass-types you might:
 1. Put a Wobbuffet that knows Stun Spore in your party.
-2. Battle a wild Oddish.
+2. Battle an opponent with Oddish.
 3. Use Stun Spore.
 4. Check that the move animation does not play.
-5. Check that a "It doesn't affect Foe Oddish…" message is shown.
+5. Check that a "It doesn't affect the opposing Oddish…" message is shown.
 
 This can again be translated as follows:
 
@@ -80,7 +80,7 @@ SINGLE_BATTLE_TEST("Stun Spore does not affect Grass-types")
     GIVEN {
         ASSUME(IsPowderMove(MOVE_STUN_SPORE));
         ASSUME(GetSpeciesType(SPECIES_ODDISH, 0) == TYPE_GRASS);
-        PLAYER(SPECIES_ODDISH); // 1.
+        PLAYER(SPECIES_WOBBUFFET); // 1.
         OPPONENT(SPECIES_ODDISH); // 2.
     } WHEN {
         TURN { MOVE(player, MOVE_STUN_SPORE); } // 3.
@@ -139,7 +139,7 @@ The `HP_BAR` command's `captureDamage` causes the change in HP to be stored in a
 You might notice that all the tests check the outputs the player could see rather than the internal battle state. e.g. the Meditate test could have used `gBattleMons[B_POSITION_OPPONENT_LEFT].hp` instead of using `HP_BAR` to capture the damage. This is a deliberate choice, by checking what the player can observe the tests are more robust to refactoring, e.g. if `gBattleMons` got moved into `gBattleStruct` then any test that used it would need to be updated.
 
 ### Note on Overworld Tests
-The overworld is not available, so it is only possible to test commands which don't affect the overworld itself, e.g. `givemon` can be tested because it only alters `gParties[B_TRAINER_0]`, but `addobject` cannot because it affects object events (which aren't loaded).
+The overworld is not available, so it is only possible to test commands which don't affect the overworld itself, e.g. `givemon` can be tested because it only alters `gParties[B_TRAINER_PLAYER]`, but `addobject` cannot because it affects object events (which aren't loaded).
 
 ## REFERENCE
 
@@ -288,7 +288,7 @@ For example to create a level 42 Wobbuffet that is poisoned:
 ### `PARTNER`, `OPPONENT_A`, and `OPPONENT_B`
 For tests using `MULTI_BATTLE_TEST`, `AI_MULTI_BATTLE_TEST`, `TWO_VS_ONE_BATTLE_TEST`, `AI_TWO_VS_ONE_BATTLE_TEST`, `ONE_VS_TWO_BATTLE_TEST`, and `AI_ONE_VS_TWO_BATTLE_TEST`, the below must be used.
 `PLAYER(species)`, `PARTNER(species)`, `OPPONENT_A(species)`, and `OPPONENT_B(species)`
-Adds the species to the player's (`B_TRAINER_0`), player partner's (`B_TRAINER_2`), opponent A's (`B_TRAINER_1`), or opponent B's (`B_TRAINER_3`), party, respectively.
+Adds the species to the player's (`B_TRAINER_PLAYER`), player partner's (`B_TRAINER_PARTNER`), opponent A's (`B_TRAINER_OPPONENT_A`), or opponent B's (`B_TRAINER_OPPONENT_B`), party, respectively.
 Pokemon can be customised as per the guidance for `PLAYER(species)` and `OPPONENT(species)`.
 The functions assign the Pokémon to the party of the trainer at `B_POSITION_PLAYER_LEFT`, `B_POSITION_PLAYER_RIGHT`, `B_POSITION_OPPONENT_LEFT`, and `B_POSITION_OPPONENT_RIGHT`, respectively.
 For `ONE_VS_TWO` tests, `PLAYER(species)` must be used for all player-side Pokémon, and for `TWO_VS_ONE` tests, `OPPONENT_A(species)` must be used for all opponent-side Pokémon.

@@ -67,7 +67,7 @@
 
 #define PARTY_MSG_NONE                      127
 
-// IDs for DisplayPartyPokemonDescriptionText, to display a message in the party pokemon's box
+// IDs for DisplayPartyPokemonDescriptionText, to display a message in the party Pokémon's box
 #define PARTYBOX_DESC_NO_USE      0
 #define PARTYBOX_DESC_ABLE_3      1
 #define PARTYBOX_DESC_FIRST       2
@@ -97,6 +97,7 @@ enum PcMonSelectionType
     SELECT_PC_MON_MOVE_TUTOR,
     SELECT_PC_MON_MOVE_DELETER,
     SELECT_PC_MON_MOVE_RELEARNER,
+    SELECT_PC_MON_EVOLUTION,
 };
 
 enum CanMoveBeLearned
