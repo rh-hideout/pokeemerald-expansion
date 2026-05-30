@@ -261,7 +261,7 @@ void StorePokemonInDaycare(struct Pokemon *mon, struct DaycareMon *daycareMon)
         TakeMailFromMon(mon);
     }
 
-    TryFormChange(mon, FORM_CHANGE_DEPOSIT, B_TRAINER_0);
+    TryFormChange(mon, FORM_CHANGE_DEPOSIT, B_TRAINER_PLAYER);
 
     daycareMon->mon = mon->box;
     daycareMon->steps = 0;
@@ -289,7 +289,7 @@ void StoreSelectedPokemonInDaycare(void)
     }
     else
     {
-        mon = &gParties[B_TRAINER_0][gSpecialVar_0x8004];
+        mon = &gParties[B_TRAINER_PLAYER][gSpecialVar_0x8004];
     }
     StorePokemonInEmptyDaycareSlot(mon, &gSaveBlock1Ptr->daycare);
     if (gSpecialVar_0x8004 == PC_MON_CHOSEN)
@@ -356,7 +356,7 @@ static u16 TakeSelectedPokemonFromDaycare(struct DaycareMon *daycareMon)
     GetBoxMonNickname(&daycareMon->mon, gStringVar1);
     BoxMonToMon(&daycareMon->mon, &pokemon);
 
-    TryFormChange(&pokemon, FORM_CHANGE_WITHDRAW, B_TRAINER_0);
+    TryFormChange(&pokemon, FORM_CHANGE_WITHDRAW, B_TRAINER_PLAYER);
 
     if (GetMonData(&pokemon, MON_DATA_LEVEL) < GetCurrentLevelCap())
     {
@@ -368,10 +368,10 @@ static u16 TakeSelectedPokemonFromDaycare(struct DaycareMon *daycareMon)
         ApplyDaycareExperience(&pokemon);
     }
 
-    gParties[B_TRAINER_0][PARTY_SIZE - 1] = pokemon;
+    gParties[B_TRAINER_PLAYER][PARTY_SIZE - 1] = pokemon;
     if (daycareMon->mail.message.itemId)
     {
-        GiveMailToMon(&gParties[B_TRAINER_0][PARTY_SIZE - 1], &daycareMon->mail.message);
+        GiveMailToMon(&gParties[B_TRAINER_PLAYER][PARTY_SIZE - 1], &daycareMon->mail.message);
         ClearDaycareMonMail(&daycareMon->mail);
     }
 
@@ -1097,7 +1097,7 @@ static void _GiveEggFromDaycare(struct DayCare *daycare)
 
     isEgg = TRUE;
     SetMonData(&egg, MON_DATA_IS_EGG, &isEgg);
-    gParties[B_TRAINER_0][PARTY_SIZE - 1] = egg;
+    gParties[B_TRAINER_PLAYER][PARTY_SIZE - 1] = egg;
     CompactPartySlots();
     CalculatePlayerPartyCount();
     RemoveEggFromDayCare(daycare);
@@ -1185,14 +1185,14 @@ static bool8 TryProduceOrHatchEgg(struct DayCare *daycare)
 
         daycare->stepCounter = 0;
 
-        for (i = 0; i < gPartiesCount[B_TRAINER_0]; i++)
+        for (i = 0; i < gPartiesCount[B_TRAINER_PLAYER]; i++)
         {
-            if (!GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_IS_EGG))
+            if (!GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_IS_EGG))
                 continue;
-            if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SANITY_IS_BAD_EGG))
+            if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SANITY_IS_BAD_EGG))
                 continue;
 
-            eggCycles = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_FRIENDSHIP);
+            eggCycles = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_FRIENDSHIP);
             if (eggCycles != 0)
             {
                 if (eggCycles >= toSub)
@@ -1200,7 +1200,7 @@ static bool8 TryProduceOrHatchEgg(struct DayCare *daycare)
                 else
                     eggCycles -= 1;
 
-                SetMonData(&gParties[B_TRAINER_0][i], MON_DATA_FRIENDSHIP, &eggCycles);
+                SetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_FRIENDSHIP, &eggCycles);
             }
             else
             {
@@ -1614,7 +1614,7 @@ void PutMonInRoute5Daycare(void)
 {
 #if IS_FRLG
     u8 monIdx = GetCursorSelectionMonId();
-    StorePokemonInDaycare(&gParties[B_TRAINER_0][monIdx], &gSaveBlock1Ptr->route5DayCareMon);
+    StorePokemonInDaycare(&gParties[B_TRAINER_PLAYER][monIdx], &gSaveBlock1Ptr->route5DayCareMon);
 #endif
 }
 

@@ -127,7 +127,6 @@ enum BattleScriptOpcode
     B_SCR_OP_TRYSETREST,
     B_SCR_OP_JUMPIFUPROARWAKES,
     B_SCR_OP_STOCKPILETOHPHEAL,
-    B_SCR_OP_STATBUFFCHANGE,
     B_SCR_OP_NORMALISEBUFFS,
     B_SCR_OP_TWOTURNMOVESCHARGESTRINGANDANIMATION,
     B_SCR_OP_TRYNONVOLATILESTATUS,
@@ -258,6 +257,7 @@ enum BattleScriptOpcode
     B_SCR_OP_UNUSED_33,
     B_SCR_OP_UNUSED_34,
     B_SCR_OP_UNUSED_35,
+    B_SCR_OP_UNUSED_36,
     B_SCR_OP_CALLNATIVE,
 };
 
@@ -359,20 +359,6 @@ enum SetMoveEffectFlags
     EFFECT_PRIMARY    = (1 << 0),
     EFFECT_CERTAIN    = (1 << 1),
     EFFECT_ON_SIDE    = (1 << 2),
-};
-
-enum FaintBlockStates
-{
-    FAINT_BLOCK_FINAL_GAMBIT,
-    FAINT_BLOCK_CHECK_TARGET_FAINTED, // Exits if target is not fainted
-    FAINT_BLOCK_END_NEUTRALIZING_GAS,
-    // Destiny Bond and Grudge are tested first, but Faint Target's script plays first
-    FAINT_BLOCK_TRY_DESTINY_BOND,
-    FAINT_BLOCK_TRY_GRUDGE,
-    FAINT_BLOCK_FAINT_TARGET,
-    FAINT_BLOCK_DO_DESTINY_BOND,
-    FAINT_BLOCK_DO_GRUDGE,
-    FAINT_BLOCK_COUNT,
 };
 
 enum SwitchInCases

@@ -6,6 +6,6 @@
 void InitTimeBasedEvents(void);
 void DoTimeBasedEvents(void);
 void FormChangeTimeUpdate();
-void GetNewDailySeed(void);
+void UpdateDailySeed(void);
 
 #endif // GUARD_CLOCK_H

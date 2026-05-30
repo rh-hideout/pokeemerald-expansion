@@ -183,3 +183,28 @@ DOUBLE_BATTLE_TEST("Stomping Tantrum will not deal double damage if spread moved
         EXPECT_EQ(damage[0], damage[1]);
     }
 }
+
+SINGLE_BATTLE_TEST("Stomping Tantrum will deal double damage if hit into an immunity ability")
+{
+    s16 damage[2];
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_ELECTRIFY) == EFFECT_ELECTRIFY);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_ELECTIVIRE) { Ability(ABILITY_MOTOR_DRIVE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_STOMPING_TANTRUM); }
+        TURN { MOVE(opponent, MOVE_ELECTRIFY); MOVE(player, MOVE_STOMPING_TANTRUM); }
+        TURN { MOVE(player, MOVE_STOMPING_TANTRUM); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STOMPING_TANTRUM, player);
+        HP_BAR(opponent, captureDamage: &damage[0]);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIFY, opponent);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_STOMPING_TANTRUM, player);
+        ABILITY_POPUP(opponent, ABILITY_MOTOR_DRIVE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STOMPING_TANTRUM, player);
+        HP_BAR(opponent, captureDamage: &damage[1]);
+    } THEN {
+        EXPECT_MUL_EQ(damage[0], Q_4_12(2.0), damage[1]);
+    }
+}
+

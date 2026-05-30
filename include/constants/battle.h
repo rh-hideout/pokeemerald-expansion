@@ -27,30 +27,29 @@
 
 /*
  * BattleTrainer is the identifier used to reference one of the four 6-mon battle parties
- * in gParties[MAX_BATTLE_TRAINERS]. gParties[B_TRAINER_0] is always the player's party.
- * gParties[B_TRAINER_1] is always the first opponent trainer's party, or holds the first
- * wild mon during an encounter. gParties[B_TRAINER_2] is only used in multibattles where
+ * in gParties[MAX_BATTLE_TRAINERS]. gParties[B_TRAINER_PLAYER] is always the player's party.
+ * gParties[B_TRAINER_OPPONENT_A] is always the first opponent trainer's party, or holds the first
+ * wild mon during an encounter. gParties[B_TRAINER_PARTNER] is only used in multibattles where
  * the player's side has a second trainer such as Mossdeep Space Center tag battle with
- * trainer Steven. gParties[B_TRAINER_3] is only used in battles with two opponent trainers,
- * or for the second wild mon in a doubles wild encounter. In a double battle where the
- * battle side only has a single trainer, both battlers on that battle side will reside in
- * the same party (gParties[B_TRAINER_0] for player side and gParties[B_TRAINER_1] for
- * opponent side).
+ * trainer Steven. gParties[B_TRAINER_OPPONENT_B] is only used in battles with two opponent trainers.
+ * In a double battle where the battle side only has a single trainer, both battlers on that battle
+ * side will reside in the same party (gParties[B_TRAINER_PLAYER] for player side and 
+ * gParties[B_TRAINER_OPPONENT_A] for opponent side).
  * Note in link multi battles, parties are set locally on each player's device, meaning
  * even if a player is in the right position, on their device they will still occupy
- * gParties[B_TRAINER_0], with their link partner using gParties[B_TRAINER_2].
+ * gParties[B_TRAINER_PLAYER], with their link partner using gParties[B_TRAINER_PARTNER].
  *
  *          Regular battles              Link multi (player on left)         Link multi (player on right)
  *   + ------------------------- +      + ------------------------- +       + ------------------------- +
  *   |           Opponent's side |      |           Opponent's side |       |           Opponent's side |
  *   |            Right    Left  |      |            Right    Left  |       |            Right    Left  |
- *   | (1 trainer)  1       1    |      |              3       1    |       |              3       1    |
- *   | (2 trainers) 3       1    |      |                           |       |                           |
+ *   | (1 trainer) opA     opA   |      |             opB     opA   |       |             opB     opA   |
+ *   | (2 trainers)opB     opA   |      |                           |       |                           |
  *   |                           |      |                           |       |                           |
  *   | Player's side             |      |                           |       |                           |
  *   |  Left   Right             |      | Player's side             |       | Player's side             |
- *   |   0       0 (double)      |      |  Left   Right             |       |  Left   Right             |
- *   |   0       2 (multi)       |      |   0       2               |       |   2       0               |
+ *   |  pla     pla(double)      |      |  Left   Right             |       |  Left   Right             |
+ *   |  pla     par(multi)       |      |  pla     par              |       |  par     pla              |
  *   +---------------------------+      +---------------------------+       +---------------------------+
  *   |                           |      |                           |       |                           |
  *   |                           |      |                           |       |                           |
@@ -78,10 +77,10 @@ enum __attribute__((packed)) BattlerId
 
 enum __attribute__((packed)) BattleTrainer
 {
-    B_TRAINER_0,
-    B_TRAINER_1,
-    B_TRAINER_2,
-    B_TRAINER_3,
+    B_TRAINER_PLAYER,
+    B_TRAINER_OPPONENT_A,
+    B_TRAINER_PARTNER,
+    B_TRAINER_OPPONENT_B,
     MAX_BATTLE_TRAINERS,
 };
 
@@ -326,7 +325,8 @@ enum VolatileFlags
     F(VOLATILE_OCTOLOCKED_BY,               octolockedBy,                  (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
     F(VOLATILE_PARADOX_BOOSTED_STAT,        paradoxBoostedStat,            (enum Stat, NUM_STATS - 1)) \
     F(VOLATILE_UNABLE_TO_USE_MOVE,          unableToUseMove,               (u32, 1)) \
-    F(VOLATILE_ACTIVATE_DANCER,             activateDancer,                (u32, 1))
+    F(VOLATILE_ACTIVATE_DANCER,             activateDancer,                (u32, 1)) \
+    F(VOLATILE_TRACE_ACTIVATED,             traceActivated,                (u32, 1))
 
 
 /* Use within a macro to get the maximum allowed value for a volatile. Requires _typeMaxValue as input. */
@@ -465,8 +465,9 @@ enum TypeSideHazard
 #define MOVE_RESULT_STAT_CHANGE_PREVENTED  (1 << 13)
 #define MOVE_RESULT_MIRROR_ARMOR_PENDING   (1 << 14)
 #define MOVE_RESULT_STAT_CHANGED           (1 << 15)
-#define MOVE_RESULT_AVOIDED_ATTACK         (MOVE_RESULT_MISSED | MOVE_RESULT_FAILED)
-#define MOVE_RESULT_NO_EFFECT              (MOVE_RESULT_MISSED | MOVE_RESULT_FAILED | MOVE_RESULT_DOESNT_AFFECT_FOE)
+#define MOVE_RESULT_PROTECTED              (1 << 16)
+#define MOVE_RESULT_AVOIDED_ATTACK         (MOVE_RESULT_MISSED | MOVE_RESULT_FAILED | MOVE_RESULT_PROTECTED)
+#define MOVE_RESULT_NO_EFFECT              (MOVE_RESULT_MISSED | MOVE_RESULT_FAILED | MOVE_RESULT_PROTECTED | MOVE_RESULT_DOESNT_AFFECT_FOE)
 
 enum BattleWeather
 {
