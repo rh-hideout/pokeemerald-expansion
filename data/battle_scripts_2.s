@@ -2,6 +2,7 @@
 #include "constants/global.h"
 #include "constants/battle.h"
 #include "constants/battle_script_commands.h"
+#include "constants/battle_stat_change.h"
 #include "constants/battle_anim.h"
 #include "constants/battle_string_ids.h"
 #include "constants/moves.h"
@@ -25,7 +26,7 @@ gBattlescriptsForUsingItem::
 	.4byte BattleScript_BallThrow                    @ EFFECT_ITEM_THROW_BALL
 	.4byte BattleScript_ItemRestoreHP                @ EFFECT_ITEM_REVIVE
 	.4byte BattleScript_ItemRestorePP                @ EFFECT_ITEM_RESTORE_PP
-	.4byte BattleScript_ItemIncreaseAllStats         @ EFFECT_ITEM_INCREASE_ALL_STATS
+	.4byte BattleScript_ItemIncreaseStat             @ EFFECT_ITEM_INCREASE_ALL_STATS
 	.4byte BattleScript_UsePokeFlute                 @ EFFECT_ITEM_USE_POKE_FLUTE
 
 	.align 2
@@ -115,10 +116,8 @@ BattleScript_ItemHealAndCureStatusEnd::
 
 BattleScript_ItemIncreaseStat::
 	call BattleScript_UseItemMessage
-	itemincreasestat
-	statbuffchange BS_ATTACKER, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_ALLOW_PTR, BattleScript_ItemEnd
-	printfromtable gStatUpStringIds
-	waitmessage B_WAIT_TIME_LONG
+    itemincreasestat
+	trybattlerstatchange BS_ATTACKER, STAT_CHANGE_NO_FLAGS
 	end
 
 BattleScript_UsePokeFlute::
@@ -167,12 +166,6 @@ BattleScript_ItemRestorePP::
 	itemrestorepp
 	printstring STRINGID_ITEMRESTOREDSPECIESPP
 	waitmessage B_WAIT_TIME_LONG
-	end
-
-BattleScript_ItemIncreaseAllStats::
-	call BattleScript_UseItemMessage
-	itemincreasestat
-	call BattleScript_AllStatsUp
 	end
 
 BattleScript_BallThrow::

@@ -10,29 +10,6 @@ typedef s32 (*AiScoreFunc)(u32, u32, u32, s32);
 #define AI_IS_FASTER   1
 #define AI_IS_SLOWER   -1
 
-// for stat increasing / decreasing scores
-enum StatChange
-{
-    STAT_CHANGE_ATK,
-    STAT_CHANGE_DEF,
-    STAT_CHANGE_SPEED,
-    STAT_CHANGE_SPATK,
-    STAT_CHANGE_SPDEF,
-    STAT_CHANGE_ATK_2,
-    STAT_CHANGE_DEF_2,
-    STAT_CHANGE_SPEED_2,
-    STAT_CHANGE_SPATK_2,
-    STAT_CHANGE_SPDEF_2,
-    STAT_CHANGE_ATK_3,
-    STAT_CHANGE_DEF_3,
-    STAT_CHANGE_SPEED_3,
-    STAT_CHANGE_SPATK_3,
-    STAT_CHANGE_SPDEF_3,
-    STAT_CHANGE_ATK_MAX,
-    STAT_CHANGE_ACC,
-    STAT_CHANGE_EVASION
-};
-
 #define BEST_DAMAGE_MOVE         1  // Move with the most amount of hits with the best accuracy/effect
 #define POWERFUL_STATUS_MOVE     10 // Moves with this score will be chosen over a move that faints target
 #define NO_DAMAGE_OR_FAILS      -20 // Move fails or does no damage
