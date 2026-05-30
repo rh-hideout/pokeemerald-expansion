@@ -68,7 +68,6 @@
 #include "constants/layouts.h"
 #include "constants/moves.h"
 #include "constants/party_menu.h"
-#include "constants/regions.h"
 #include "constants/songs.h"
 #include "constants/trainers.h"
 #include "constants/union_room.h"

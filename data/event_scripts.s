@@ -55,7 +55,7 @@
 #include "constants/pokemon.h"
 #include "constants/pokemon_size_record.h"
 #include "constants/random_mon_generation.h"
-#include "constants/regions.h"
+#include "constants/region_maps.h"
 #include "constants/rtc.h"
 #include "constants/roulette.h"
 #include "constants/script_menu.h"

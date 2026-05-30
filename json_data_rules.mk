@@ -16,6 +16,10 @@ $(DATA_SRC_SUBDIR)/region_map/region_maps_data.h: $(DATA_SRC_SUBDIR)/region_map/
 	python3 $(TOOLS_DIR)/misc/missing_region_layouts.py $(DATA_SRC_SUBDIR)/region_map/region_maps.json
 	$(JSONPROC) $^ $@
 
+AUTO_GEN_TARGETS += include/constants/region_maps.h
+include/constants/region_maps.h: $(DATA_SRC_SUBDIR)/region_map/region_maps.json $(DATA_SRC_SUBDIR)/region_map/region_maps.constants.json.txt
+	$(JSONPROC) $^ $@
+
 AUTO_GEN_TARGETS += $(DATA_SRC_SUBDIR)/heal_locations.h
 $(DATA_SRC_SUBDIR)/heal_locations.h: $(DATA_SRC_SUBDIR)/heal_locations.json $(DATA_SRC_SUBDIR)/heal_locations.json.txt
 	$(JSONPROC) $^ $@

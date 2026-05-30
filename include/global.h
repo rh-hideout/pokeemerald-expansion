@@ -19,7 +19,7 @@
 #include "constants/berry.h"
 #include "constants/maps.h"
 #include "constants/pokemon.h"
-#include "constants/regions.h"
+#include "constants/region_maps.h"
 #include "constants/easy_chat.h"
 #include "constants/trainer_hill.h"
 #include "constants/trainer_tower.h"
