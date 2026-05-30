@@ -193,10 +193,10 @@ TEST("(Daycare) Pokémon can teach egg moves to their daycare partner (Gen 8)")
     StoreSelectedPokemonInDaycare();
     gSpecialVar_0x8004 = slot;
     TakePokemonFromDaycare();
-    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE1), MOVE_TACKLE);
-    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE2), MOVE_CURSE);
-    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE3), MOVE_INGRAIN);
-    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE4), MOVE_NATURE_POWER);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_MOVE1), MOVE_TACKLE);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_MOVE2), MOVE_CURSE);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_MOVE3), MOVE_INGRAIN);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_MOVE4), MOVE_NATURE_POWER);
 }
 
 TEST("(Daycare) Pokémon don't learn move from their daycare partner if they lack empty move slot (Gen 8)")
@@ -224,10 +224,10 @@ TEST("(Daycare) Pokémon don't learn move from their daycare partner if they lac
     StoreSelectedPokemonInDaycare();
     gSpecialVar_0x8004 = slot;
     TakePokemonFromDaycare();
-    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE1), MOVE_TACKLE);
-    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE2), MOVE_GROWL);
-    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE3), MOVE_VINE_WHIP);
-    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE4), MOVE_GROWTH);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_MOVE1), MOVE_TACKLE);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_MOVE2), MOVE_GROWL);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_MOVE3), MOVE_VINE_WHIP);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_MOVE4), MOVE_GROWTH);
 }
 
 
@@ -255,9 +255,9 @@ TEST("(Daycare) Only Pokémon with the same base species can share egg moves (Ge
     TakePokemonFromDaycare();
 
     if (teacherSpecies == SPECIES_VIVILLON_SUN)
-        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE4), MOVE_RAGE_POWDER);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_MOVE4), MOVE_RAGE_POWDER);
     else
-        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE4), MOVE_NONE);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_MOVE4), MOVE_NONE);
 }
 
 TEST("(Daycare) Pokémon can teach egg moves to their daycare partner (Gen 9)")
@@ -284,10 +284,10 @@ TEST("(Daycare) Pokémon can teach egg moves to their daycare partner (Gen 9)")
     StoreSelectedPokemonInDaycare();
     gSpecialVar_0x8004 = slot;
     TakePokemonFromDaycare();
-    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE1), MOVE_TACKLE);
-    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE2), MOVE_CURSE);
-    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE3), MOVE_INGRAIN);
-    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE4), MOVE_NATURE_POWER);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_MOVE1), MOVE_TACKLE);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_MOVE2), MOVE_CURSE);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_MOVE3), MOVE_INGRAIN);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_MOVE4), MOVE_NATURE_POWER);
 }
 
 TEST("(Daycare) Pokémon need to hold a mirror herb to learn move in daycare (Gen 9)")
@@ -314,9 +314,9 @@ TEST("(Daycare) Pokémon need to hold a mirror herb to learn move in daycare (Ge
     StoreSelectedPokemonInDaycare();
     TakePokemonFromDaycare();
     if (heldItem == ITEM_MIRROR_HERB)
-        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE4), MOVE_CURSE);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_MOVE4), MOVE_CURSE);
     else
-        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE4), MOVE_NONE);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_MOVE4), MOVE_NONE);
 }
 
 TEST("(Daycare) Pokémon can't learn through egg move transfer a move they already know (Gen 9)")
@@ -350,7 +350,7 @@ TEST("(Daycare) Pokémon can't learn through egg move transfer a move they alrea
     StoreSelectedPokemonInDaycare();
     StoreSelectedPokemonInDaycare();
     TakePokemonFromDaycare();
-    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE4), expectedMove);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_MOVE4), expectedMove);
 }
 
 TEST("(Daycare) Pokémon don't learn move from their daycare partner if they lack empty move slot (Gen 9)")
@@ -378,10 +378,10 @@ TEST("(Daycare) Pokémon don't learn move from their daycare partner if they lac
     StoreSelectedPokemonInDaycare();
     gSpecialVar_0x8004 = slot;
     TakePokemonFromDaycare();
-    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE1), MOVE_TACKLE);
-    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE2), MOVE_GROWL);
-    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE3), MOVE_VINE_WHIP);
-    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_MOVE4), MOVE_GROWTH);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_MOVE1), MOVE_TACKLE);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_MOVE2), MOVE_GROWL);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_MOVE3), MOVE_VINE_WHIP);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_MOVE4), MOVE_GROWTH);
 }
 
 TEST("GetChildNature always returns a random nature (gen 2)")
@@ -882,7 +882,7 @@ TEST("InheritIVs will always pass the preferred stat from the parent holding the
     );
 
     u32 value = 31;
-    SetMonData(&gParties[B_TRAINER_0][0], MON_DATA_HP_IV + powerStat, &value);
+    SetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_HP_IV + powerStat, &value);
     gSpecialVar_0x8004 = 0;
     StoreSelectedPokemonInDaycare();
     StoreSelectedPokemonInDaycare();
@@ -932,9 +932,9 @@ TEST("InheritIVs pick one parent at random to pass its power stat if two power i
     );
 
     u32 value = 31;
-    SetMonData(&gParties[B_TRAINER_0][0], MON_DATA_HP_IV + powerStat0, &value);
+    SetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_HP_IV + powerStat0, &value);
     value = 30;
-    SetMonData(&gParties[B_TRAINER_0][1], MON_DATA_HP_IV + powerStat1, &value);
+    SetMonData(&gParties[B_TRAINER_PLAYER][1], MON_DATA_HP_IV + powerStat1, &value);
     gSpecialVar_0x8004 = 0;
     StoreSelectedPokemonInDaycare();
     StoreSelectedPokemonInDaycare();
@@ -965,7 +965,7 @@ TEST("InheritPokeball doesn't do anything, all eggs are born in Pokeball (gen5-)
         givemon SPECIES_BULBASAUR, 100, gender=MON_FEMALE, ball=VAR_0x8000;
     );
     STORE_IN_DAYCARE_AND_GET_EGG();
-    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKEBALL), BALL_POKE);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_POKEBALL), BALL_POKE);
 }
 
 TEST("InheritPokeball make eggs inherit their mother ball unless it's a 'forbidden' ball (gen6)")
@@ -1007,9 +1007,9 @@ TEST("InheritPokeball make eggs inherit their mother ball unless it's a 'forbidd
     RUN_OVERWORLD_SCRIPT( special GiveEggFromDaycare; );
 
     if (ball0 == BALL_STRANGE || ball0 == BALL_MASTER || ball0 == BALL_CHERISH)
-        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKEBALL), BALL_POKE);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_POKEBALL), BALL_POKE);
     else
-        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKEBALL), ball0);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_POKEBALL), ball0);
 }
 
 TEST("InheritPokeball give eggs born from a male and a ditto a pokeball (gen6)")
@@ -1039,7 +1039,7 @@ TEST("InheritPokeball give eggs born from a male and a ditto a pokeball (gen6)")
     StoreSelectedPokemonInDaycare();
     RUN_OVERWORLD_SCRIPT( special GiveEggFromDaycare; );
 
-    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKEBALL), BALL_POKE);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_POKEBALL), BALL_POKE);
 }
 
 TEST("InheritPokeball give eggs born from a male and a ditto a pokeball (gen6)")
@@ -1069,7 +1069,7 @@ TEST("InheritPokeball give eggs born from a male and a ditto a pokeball (gen6)")
     StoreSelectedPokemonInDaycare();
     RUN_OVERWORLD_SCRIPT( special GiveEggFromDaycare; );
 
-    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKEBALL), BALL_POKE);
+    EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_POKEBALL), BALL_POKE);
 }
 
 TEST("InheritPokeball give the non-ditto ball to pokemon born from a ditto and another parent (gen7+)")
@@ -1113,9 +1113,9 @@ TEST("InheritPokeball give the non-ditto ball to pokemon born from a ditto and a
     RUN_OVERWORLD_SCRIPT( special GiveEggFromDaycare; );
 
     if (ball1 == BALL_STRANGE || ball1 == BALL_MASTER || ball1 == BALL_CHERISH)
-        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKEBALL), BALL_POKE);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_POKEBALL), BALL_POKE);
     else
-        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKEBALL), ball1);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_POKEBALL), ball1);
 }
 
 TEST("InheritPokeball give the mother ball to pokemon born two different non-ditto species (gen7+)")
@@ -1157,9 +1157,9 @@ TEST("InheritPokeball give the mother ball to pokemon born two different non-dit
     RUN_OVERWORLD_SCRIPT( special GiveEggFromDaycare; );
 
     if (ball0 == BALL_STRANGE || ball0 == BALL_MASTER || ball0 == BALL_CHERISH)
-        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKEBALL), BALL_POKE);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_POKEBALL), BALL_POKE);
     else
-        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKEBALL), ball0);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_POKEBALL), ball0);
 }
 
 TEST("InheritPokeball give a parent ball at random to pokemon born from parents of the same species (gen7+)")
@@ -1204,9 +1204,9 @@ TEST("InheritPokeball give a parent ball at random to pokemon born from parents 
     else
         expectedBall = ball0;
     if (expectedBall == BALL_STRANGE || expectedBall == BALL_MASTER || expectedBall == BALL_CHERISH)
-        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKEBALL), BALL_POKE);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_POKEBALL), BALL_POKE);
     else
-        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_POKEBALL), expectedBall);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_POKEBALL), expectedBall);
 }
 
 TEST("InheritAbility doesn't do anything, ability is chosen randomly (gen4-)")
