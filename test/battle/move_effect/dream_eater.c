@@ -73,10 +73,10 @@ SINGLE_BATTLE_TEST("Dream Eater works on targets with Comatose")
     }
 }
 
-#if B_UPDATED_MOVE_FLAGS < GEN_5
 SINGLE_BATTLE_TEST("Dream Eater fails if the target is behind a Substitute (Gen 1-4)")
 {
     GIVEN {
+        WITH_CONFIG(B_DREAM_EATER_SUBSTITUTE, GEN_4);
         ASSUME(GetMoveEffect(MOVE_YAWN) == EFFECT_YAWN);
         ASSUME(GetMoveEffect(MOVE_SUBSTITUTE) == EFFECT_SUBSTITUTE);
         ASSUME(!MoveIgnoresSubstitute(MOVE_DREAM_EATER));
@@ -91,15 +91,16 @@ SINGLE_BATTLE_TEST("Dream Eater fails if the target is behind a Substitute (Gen 
         MESSAGE("It doesn't affect Wobbuffet…");
     }
 }
-#else
+
 SINGLE_BATTLE_TEST("Dream Eater works if the target is behind a Substitute (Gen 5+)")
 {
-    s16 damage;
+    u16 damage;
     s16 healed;
-    KNOWN_FAILING; // Dream Eater can hit and drain from a Substitute, but not bypass it.
     GIVEN {
+        WITH_CONFIG(B_DREAM_EATER_SUBSTITUTE, GEN_5);
         ASSUME(GetMoveEffect(MOVE_YAWN) == EFFECT_YAWN);
         ASSUME(GetMoveEffect(MOVE_SUBSTITUTE) == EFFECT_SUBSTITUTE);
+        ASSUME(!MoveIgnoresSubstitute(MOVE_DREAM_EATER));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
     } WHEN {
@@ -108,10 +109,9 @@ SINGLE_BATTLE_TEST("Dream Eater works if the target is behind a Substitute (Gen 
         TURN { MOVE(opponent, MOVE_DREAM_EATER); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DREAM_EATER, opponent);
-        HP_BAR(player, captureDamage: &damage);
+        SUB_HIT(player, captureDamage: &damage);
         HP_BAR(opponent, captureDamage: &healed);
     } THEN {
         EXPECT_MUL_EQ(damage, Q_4_12(-1.0/2.0), healed);
     }
 }
-#endif
