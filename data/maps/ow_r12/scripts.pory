@@ -1,0 +1,162 @@
+mapscripts ow_r12_MapScripts {}
+
+// ============================================================
+// PICNICKER - LOCALID_R12_PICNICKER_1
+// ============================================================
+
+script ow_r12_EventScript_Picnicker1 {
+    trainerbattle_single(TRAINER_OW_R12_PICNICKER_1, format("Can you hear that? That subtle croaking sound?"), format("I was distracted!"))
+    msgbox(format("The Pokemon in this route come together and make such lovely songs."))
+    release
+    end
+}
+
+// ============================================================
+// RANGER - LOCALID_R12_RANGER_1
+// ============================================================
+
+script ow_r12_EventScript_Ranger1 {
+    trainerbattle_single(TRAINER_OW_R12_RANGER_1, format("My team is ready for any terrain - especially you!"), format("Oh! My compass must have been off."))
+    msgbox(format("Hup, two, three! I've been on the hunt for the perfect training spot."))
+    release
+    end
+}
+
+// ============================================================
+// PARASOL LADY - LOCALID_R12_PARASOL_LADY_1
+// ============================================================
+
+script ow_r12_EventScript_ParasolLady1 {
+    trainerbattle_single(TRAINER_OW_R12_PARASOL_LADY_1, format("Splish-splash! Lucky I'm wearing my gumboots!"), format("Oh-oh! Sudden weather shift!"))
+    msgbox(format("It's important to be dressed for the occasion. In this case, the occasion is jumping through puddles!"))
+    release
+    end
+}
+
+// ============================================================
+// FISHERMAN - LOCALID_R12_FISHERMAN_1
+// ============================================================
+
+script ow_r12_EventScript_Fisherman1 {
+    trainerbattle_single(TRAINER_OW_R12_FISHERMAN_1, format("Nothing's biting, so I'll battle you in the meanwhile."), format("Whoa!"))
+    msgbox(format("Note to self: swamps don't make great fishing spots."))
+    release
+    end
+}
+
+// ============================================================
+// HEX MANIAC - LOCALID_R12_HEX_MANIAC_1
+// ============================================================
+
+script ow_r12_EventScript_HexManiac1 {
+    trainerbattle_single(TRAINER_OW_R12_HEX_MANIAC_1, format("I'm searching for reagents... but I found a trainer instead!"), format("Maybe I should have shared the herbs I've been gathering with my Pokemon."))
+    msgbox(format("The bog gives freely if you know what to ask for."))
+    release
+    end
+}
+
+// ============================================================
+// BUG CATCHER (ZELKOVA LINK) - LOCALID_R12_BUG_CATCHER_1
+// ============================================================
+
+script ow_r12_EventScript_BugCatcher1 {
+    trainerbattle_single(TRAINER_OW_R12_BUG_CATCHER_1, format("WHOA! Don't move! You'll scare away the rare Pokemon I've been tracking!"), format("Aww, man! You scared it off."))
+    msgbox(format("Bug Pokemon love hiding in the swamp. And I love finding them!"))
+    release
+    end
+}
+
+// ============================================================
+// NINJA TRAINER (SOLFAR CLAN) - LOCALID_R12_NINJA_1
+// ============================================================
+
+script ow_r12_EventScript_Ninja1 {
+    trainerbattle_single(TRAINER_OW_R12_NINJA_1, format("Let us see if your eyes can follow my team!"), format("Hmph! You managed to track my footsteps."))
+    msgbox(format("A ninja needs to be stealthy in all environments. I'm practicing in the swamps."))
+    release
+    end
+}
+
+// ============================================================
+// HIKER - LOCALID_R12_HIKER_1
+// ============================================================
+
+script ow_r12_EventScript_Hiker1 {
+    trainerbattle_single(TRAINER_OW_R12_HIKER_1, format("My Pokemon are as solid as this hillside!"), format("Whoa! A total landslide!"))
+    msgbox(format("Did you climb all the way up this steep ridge just to look at the view?"))
+    release
+    end
+}
+
+// ============================================================
+// CAMPER NPC - LOCALID_R12_CAMPER
+// ============================================================
+
+script ow_r12_EventScript_Camper {
+    lock
+    faceplayer
+    setspeaker("Camper")
+    msgbox(format("I made it out here without half my kit.\NMy Pokemon can't cut through those trees, and I left my climbing gear back in Mirevari."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+// ============================================================
+// NINJA MASTER (MOVE TUTOR - PLACEHOLDER) - LOCALID_R12_NINJA_TUTOR
+// ============================================================
+
+script ow_r12_EventScript_NinjaTutor {
+    lock
+    faceplayer
+    setspeaker("Ninja Master")
+    msgbox(format("You found us.\NFew do."))
+    msgbox(format("Return when you are ready to learn.\NI will be here."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+// ============================================================
+// WOMAN (QUIET) - LOCALID_R12_WOMAN_QUIET
+// ============================================================
+
+script ow_r12_EventScript_WomanQuiet {
+    lock
+    faceplayer
+    setspeaker("Woman")
+    msgbox(format("There's no cutting noise here. No crews, no sawdust in the air.\pJust the bog and the birds."))
+    msgbox(format("I walk this way on purpose."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+// ============================================================
+// VASIL (HERB AND MUSHROOM FARMER) - LOCALID_R12_VASIL
+// ============================================================
+
+script ow_r12_EventScript_Vasil {
+    lock
+    faceplayer
+    setspeaker("Vasil")
+    msgbox(format("The mushrooms come up whether I want them to or not.\NI keep the herb plots for the trade."))
+    msgbox(format("You see the bog pool to the south-east?\NThere's an island out there.\pMirevari folk come to leave offerings at a stone on it.\NI leave them to it."))
+    setspeaker(NULL)
+    release
+    end
+}
+
+// ============================================================
+// VASIL'S PARTNER - LOCALID_R12_VASIL_PARTNER
+// ============================================================
+
+script ow_r12_EventScript_VasilPartner {
+    lock
+    faceplayer
+    setspeaker("Woman")
+    msgbox(format("These come up on their own, mostly. The soil stays wet enough that they don't need much from me.\pVasil does the real work - the herbs take knowing what you're doing."))
+    setspeaker(NULL)
+    release
+    end
+}

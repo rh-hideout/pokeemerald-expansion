@@ -1685,6 +1685,10 @@
 #define FLAG_HIDDEN_ITEM_OW_R8_BIG_MUSHROOM_2       (OW_FLAGS_START + 40)
 #define FLAG_ITEM_OW_R8_BIG_ROOT                    (OW_FLAGS_START + 41)
 #define FLAG_R8_HOUSE1_WHITE_HERB_GIVEN             (OW_FLAGS_START + 42)
+#define FLAG_ITEM_R12_HEAL_POWDER                   (OW_FLAGS_START + 43)
+#define FLAG_ITEM_R12_ITEM_1                        (OW_FLAGS_START + 44)
+#define FLAG_ITEM_R12_ITEM_2                        (OW_FLAGS_START + 45)
+#define FLAG_ITEM_R12_TM_1                          (OW_FLAGS_START + 46)
 #define OW_FLAGS_END                                (OW_FLAGS_START + 199)
 
 #define FLAGS_COUNT (OW_FLAGS_END + 1)

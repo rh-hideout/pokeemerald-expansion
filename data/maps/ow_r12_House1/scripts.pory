@@ -1,0 +1,15 @@
+mapscripts ow_r12_House1_MapScripts {}
+
+// ============================================================
+// VASIL (HERB AND MUSHROOM FARMER) - LOCALID_R12_VASIL
+// ============================================================
+
+script ow_r12_House1_EventScript_Vasil {
+    lock
+    faceplayer
+    setspeaker("Vasil")
+    msgbox(format("The damp's good for growing things, if you know what to look for. I supply most of what Mirevari's healers use - herbs, roots, the odd mushroom. Town's just east, but I'd rather be out here with the work."))
+    setspeaker(NULL)
+    release
+    end
+}

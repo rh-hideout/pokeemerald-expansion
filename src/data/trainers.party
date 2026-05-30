@@ -17715,7 +17715,7 @@ Pic: Picnicker
 Gender: Female
 Music: Girl
 Double Battle: Yes
-Party Size: 4
+Party Size: 3
 Pool Rules: Support Doubles
 AI: Check Bad Move / Try To Faint
 
@@ -18015,7 +18015,7 @@ Tags: Lead
 - Knock Off
 - Brave Bird
 
-Heracross @ Heavy-Duty Boots
+Heracross @ Leftovers
 Level: 100
 Ability: Guts
 Nature: Jolly
@@ -18168,7 +18168,7 @@ Tags: Ace
 - Ice Shard
 - Low Kick
 
-Crobat @ Heavy-Duty Boots
+Crobat @ Leftovers
 Level: 100
 Ability: Infiltrator
 Nature: Jolly
@@ -18355,7 +18355,7 @@ Tags: Ace
 - Knock Off
 - Leech Life
 
-Accelgor @ Heavy-Duty Boots
+Accelgor @ Silverpowder
 Level: 100
 Ability: Sticky Hold
 Nature: Timid
@@ -18364,7 +18364,7 @@ Tags: Ace
 - Bug Buzz
 - Focus Blast
 - Knock Off
-- Spikes
+- Final Gambit
 
 Vivillon @ Focus Sash
 Level: 100
@@ -18586,7 +18586,7 @@ Party Size: 4
 Pool Rules: Doubles
 AI: Check Bad Move / Try To Faint
 
-Heracross @ Heavy-Duty Boots
+Heracross @ Flame Orb
 Level: 100
 Ability: Guts
 Nature: Jolly
@@ -18638,3 +18638,618 @@ Tags: Ace
 - U-turn
 - Knock Off
 - Leech Life
+
+=== TRAINER_OW_R12_PICNICKER_1 ===
+Name: KIRA
+Class: Picnicker
+Pic: picnicker
+Gender: Female
+Music: Female
+Double Battle: Yes
+Party Size: 4
+Pool Rules: Support Doubles
+AI: Check Bad Move / Try To Faint
+
+Clefable @ Sitrus Berry
+Level: 100
+Ability: Magic Guard
+Nature: Calm
+EVs: 252 HP / 172 Def / 84 SpD
+Tags: Lead
+- Moonblast
+- Follow Me
+- Protect
+- Life Dew
+
+Whimsicott @ Covert Cloak
+Level: 100
+Ability: Prankster
+Nature: Timid
+EVs: 252 HP / 4 Def / 252 Spe
+Tags: Support
+- Tailwind
+- Moonblast
+- Encore
+- Helping Hand
+
+Raichu @ Assault Vest
+Level: 100
+Ability: Lightning Rod
+Nature: Timid
+EVs: 4 HP / 252 SpA / 252 Spe
+Tags: Lead
+- Encore
+- Fake Out
+- Grass Knot
+- Knock Off
+
+Vileplume @ Black Sludge
+Level: 100
+Ability: Effect Spore
+Nature: Bold
+EVs: 252 HP / 252 Def / 4 SpD
+Tags: Ace
+- Sludge Wave
+- Giga Drain
+- Strength Sap
+- Leech Seed
+
+Miltank @ Leftovers
+Level: 100
+Ability: Sap Sipper
+Nature: Bold
+EVs: 252 HP / 128 Def / 108 SpD / 20 Spe
+- Milk Drink
+- Seismic Toss
+- Toxic
+- Heal Bell
+
+Jumpluff @ Mental Herb
+Level: 100
+Ability: Chlorophyll
+Nature: Timid
+EVs: 220 HP / 68 SpD / 220 Spe
+Tags: Ace
+- Tailwind
+- Sleep Powder
+- Encore
+- Rage Powder
+
+=== TRAINER_OW_R12_RANGER_1 ===
+Name: BORAN
+Class: Pkmn Ranger
+Pic: Pokemon Ranger M
+Gender: Male
+Music: Male
+Double Battle: Yes
+Party Size: 4
+Pool Rules: Weather Doubles
+AI: Check Bad Move / Try To Faint
+
+Pelipper @ Focus Sash
+Level: 100
+Ability: Drizzle
+Nature: Modest
+EVs: 4 HP / 252 SpA / 252 Spe
+Tags: Lead / Weather Setter
+- Hurricane
+- Weather Ball
+- Tailwind
+- Protect
+
+Ludicolo @ Life Orb
+Level: 100
+Ability: Swift Swim
+Nature: Modest
+EVs: 252 SpA / 4 SpD / 252 Spe
+Tags: Lead / Weather Abuser
+- Weather Ball
+- Giga Drain
+- Ice Beam
+- Protect
+
+Amoonguss @ Sitrus Berry
+Level: 100
+Ability: Regenerator
+Nature: Bold
+EVs: 244 HP / 156 Def / 108 SpD
+Tags: Support
+- Pollen Puff
+- Spore
+- Rage Powder
+- Protect
+
+Breloom @ Toxic Orb
+Level: 100
+Ability: Poison Heal
+Nature: Adamant
+EVs: 252 HP / 80 Atk / 176 Spe
+Tags: Ace
+- Close Combat
+- Seed Bomb
+- Facade
+- Protect
+
+Vikavolt @ Choice Specs
+Level: 100
+Ability: Levitate
+Nature: Modest
+EVs: 4 HP / 252 SpA / 252 Spe
+Tags: Ace
+- Bug Buzz
+- Thunderbolt
+- Energy Ball
+- Flash Cannon
+
+Seismitoad @ Mystic Water
+Level: 100
+Ability: Swift Swim
+Nature: Modest
+EVs: 252 SpA / 4 SpD / 252 Spe
+Tags: Ace
+- Weather Ball
+- Earth Power
+- Focus Blast
+- Sludge Wave
+
+=== TRAINER_OW_R12_PARASOL_LADY_1 ===
+Name: VESKA
+Class: Parasol Lady
+Pic: parasol_lady
+Gender: Female
+Music: Female
+Double Battle: Yes
+Party Size: 4
+Pool Rules: Weather Doubles
+AI: Check Bad Move / Try To Faint
+
+Politoed @ Damp Rock
+Level: 100
+Ability: Drizzle
+Nature: Calm
+EVs: 252 HP / 156 SpD / 100 Spe
+Tags: Lead / Weather Setter
+- Surf
+- Ice Beam
+- Perish Song
+- Encore
+
+Pelipper @ Focus Sash
+Level: 100
+Ability: Drizzle
+Nature: Modest
+EVs: 4 HP / 252 SpA / 252 Spe
+Tags: Lead / Weather Setter
+- Hurricane
+- Weather Ball
+- Tailwind
+- Protect
+
+Ludicolo @ Life Orb
+Level: 100
+Ability: Swift Swim
+Nature: Modest
+EVs: 252 SpA / 4 SpD / 252 Spe
+Tags: Lead / Weather Abuser
+- Weather Ball
+- Giga Drain
+- Ice Beam
+- Protect
+
+Goodra @ Expert Belt
+Level: 100
+Ability: Sap Sipper
+Nature: Timid
+EVs: 252 SpA / 4 SpD / 252 Spe
+Tags: Ace
+- Draco Meteor
+- Fire Blast
+- Thunderbolt
+- Hydro Pump
+
+Floatzel @ Choice Band
+Level: 100
+Ability: Swift Swim
+Nature: Adamant
+EVs: 4 HP / 252 Atk / 252 Spe
+Tags: Ace
+- Aqua Jet
+- Flip Turn
+- Ice Spinner
+- Wave Crash
+
+Seismitoad @ Mystic Water
+Level: 100
+Ability: Swift Swim
+Nature: Modest
+EVs: 252 SpA / 4 SpD / 252 Spe
+Tags: Ace
+- Weather Ball
+- Earth Power
+- Focus Blast
+- Sludge Wave
+
+=== TRAINER_OW_R12_FISHERMAN_1 ===
+Name: VOLEK
+Class: Fisherman
+Pic: fisherman
+Gender: Male
+Music: Male
+Double Battle: Yes
+Party Size: 4
+Pool Rules: Doubles
+AI: Check Bad Move / Try To Faint
+
+Gyarados @ Leftovers
+Level: 100
+Ability: Moxie
+Nature: Adamant
+EVs: 252 Atk / 4 SpD / 252 Spe
+Tags: Lead
+- Dragon Dance
+- Waterfall
+- Scale Shot
+- Ice Fang
+
+Barraskewda @ Choice Band
+Level: 100
+Ability: Swift Swim
+Nature: Adamant
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Lead
+- Liquidation
+- Flip Turn
+- Aqua Jet
+- Close Combat
+
+Crawdaunt @ Life Orb
+Level: 100
+Ability: Adaptability
+Nature: Adamant
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Ace
+- Crabhammer
+- Knock Off
+- Close Combat
+- Aqua Jet
+
+Cloyster @ White Herb
+Level: 100
+Ability: Skill Link
+Nature: Adamant
+EVs: 252 Atk / 4 SpA / 252 Spe
+Tags: Ace
+- Shell Smash
+- Icicle Spear
+- Drill Run
+- Rock Blast
+
+Toxapex @ Black Sludge
+Level: 100
+Ability: Regenerator
+Nature: Calm
+EVs: 252 HP / 4 Def / 252 SpD
+Tags: Support
+- Toxic
+- Recover
+- Haze
+- Scald
+
+Kingdra @ Choice Specs
+Level: 100
+Ability: Sniper
+Nature: Modest
+EVs: 252 SpA / 4 SpD / 252 Spe
+Tags: Ace
+- Hydro Pump
+- Draco Meteor
+- Hurricane
+- Dragon Pulse
+
+=== TRAINER_OW_R12_HEX_MANIAC_1 ===
+Name: ILYSA
+Class: Hex Maniac
+Pic: Hex Maniac
+Gender: Female
+Music: Suspicious
+Double Battle: Yes
+Party Size: 4
+Pool Rules: Doubles
+AI: Check Bad Move / Try To Faint
+
+Gengar @ Air Balloon
+Level: 100
+Ability: Cursed Body
+Nature: Timid
+EVs: 4 Def / 252 SpA / 252 Spe
+Tags: Lead
+- Nasty Plot
+- Shadow Ball
+- Sludge Wave
+- Focus Blast
+
+Mimikyu @ Red Card
+Level: 100
+Ability: Disguise
+Nature: Impish
+EVs: 248 HP / 8 Atk / 252 Def
+Tags: Lead
+- Trick Room
+- Play Rough
+- Curse
+- Destiny Bond
+
+Sableye @ Leftovers
+Level: 100
+Ability: Prankster
+Nature: Impish
+EVs: 252 HP / 252 Def / 4 SpD
+Tags: Support
+- Knock Off
+- Night Shade
+- Will-O-Wisp
+- Recover
+
+Cofagrigus @ Colbur Berry
+Level: 100
+Ability: Mummy
+Nature: Bold
+EVs: 252 HP / 172 Def / 84 SpD
+Tags: Ace
+- Iron Defense
+- Body Press
+- Shadow Ball
+- Protect
+
+Spiritomb @ Sitrus Berry
+Level: 100
+Ability: Infiltrator
+Nature: Impish
+EVs: 252 HP / 128 Def / 128 SpD
+Tags: Ace
+- Foul Play
+- Snarl
+- Trick Room
+- Will-O-Wisp
+
+Mismagius @ Choice Specs
+Level: 100
+Ability: Levitate
+Nature: Timid
+EVs: 4 HP / 252 SpA / 252 Spe
+Tags: Ace
+- Shadow Ball
+- Dazzling Gleam
+- Mystical Fire
+- Protect
+
+=== TRAINER_OW_R12_NINJA_1 ===
+Name: YATO
+Class: Ninja Boy
+Pic: ninja_boy
+Gender: Male
+Music: Suspicious
+Double Battle: Yes
+Party Size: 4
+Pool Rules: Doubles
+AI: Check Bad Move / Try To Faint
+
+Ninjask @ Silverpowder
+Level: 100
+Ability: Speed Boost
+Nature: Adamant
+EVs: 152 HP / 252 Atk / 104 Spe
+Tags: Lead
+- Swords Dance
+- Protect
+- Baton Pass
+- Dual Wingbeat
+
+Accelgor @ Focus Sash
+Level: 100
+Ability: Sticky Hold
+Nature: Timid
+EVs: 4 HP / 252 SpA / 252 Spe
+Tags: Lead
+- Spikes
+- Bug Buzz
+- Knock Off
+- Focus Blast
+
+Toxicroak @ Life Orb
+Level: 100
+Ability: Dry Skin
+Nature: Jolly
+EVs: 252 Atk / 4 SpD / 252 Spe
+Tags: Ace
+- Swords Dance
+- Gunk Shot
+- Close Combat
+- Sucker Punch
+
+Weavile @ Choice Band
+Level: 100
+Ability: Pressure
+Nature: Jolly
+EVs: 252 Atk / 4 SpD / 252 Spe
+Tags: Ace
+- Triple Axel
+- Knock Off
+- Ice Shard
+- Close Combat
+
+Greninja @ Choice Specs
+Level: 100
+Ability: Protean
+Nature: Timid
+EVs: 252 SpA / 4 SpD / 252 Spe
+Tags: Ace
+- Hydro Pump
+- Dark Pulse
+- Water Shuriken
+- Ice Beam
+
+Crobat @ Black Sludge
+Level: 100
+Ability: Infiltrator
+Nature: Jolly
+EVs: 108 HP / 148 Atk / 252 Spe
+Tags: Ace
+- Brave Bird
+- U-turn
+- Tailwind
+- Taunt
+
+=== TRAINER_OW_R12_HIKER_1 ===
+Name: LUDOR
+Class: Hiker
+Pic: Hiker
+Gender: Male
+Music: Hiker
+Double Battle: Yes
+Party Size: 4
+Pool Rules: Weather Doubles
+AI: Check Bad Move / Try To Faint
+
+Hippowdon @ Leftovers
+Level: 100
+Ability: Sand Stream
+Nature: Impish
+EVs: 248 HP / 112 Def / 148 SpD
+Tags: Lead / Weather Setter
+- Stealth Rock
+- Ice Fang
+- Earthquake
+- Slack Off
+
+Excadrill @ Air Balloon
+Level: 100
+Ability: Sand Rush
+Nature: Adamant
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Lead / Weather Abuser
+- Earthquake
+- Rock Slide
+- Rapid Spin
+- Swords Dance
+
+Garganacl @ Rocky Helmet
+Level: 100
+Ability: Purifying Salt
+Nature: Careful
+EVs: 252 HP / 52 Def / 204 SpD
+Tags: Ace
+- Salt Cure
+- Rock Slide
+- Recover
+- Protect
+
+Conkeldurr @ Flame Orb
+Level: 100
+Ability: Guts
+Nature: Adamant
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Ace
+- Drain Punch
+- Facade
+- Knock Off
+- Mach Punch
+
+Gliscor @ Toxic Orb
+Level: 100
+Ability: Poison Heal
+Nature: Careful
+EVs: 244 HP / 36 Def / 228 SpD
+Tags: Ace
+- Swords Dance
+- Facade
+- Knock Off
+- Protect
+
+Gigalith @ Smooth Rock
+Level: 100
+Ability: Sand Stream
+Nature: Adamant
+EVs: 252 HP / 40 Atk / 172 SpD / 44 Spe
+Tags: Ace
+- Stone Edge
+- Rock Slide
+- Earthquake
+- Protect
+
+=== TRAINER_OW_R12_BUG_CATCHER_1 ===
+Name: STEFAN
+Class: Bug Catcher
+Pic: bug_catcher
+Gender: Male
+Music: Male
+Double Battle: Yes
+Party Size: 4
+Pool Rules: Doubles
+AI: Check Bad Move / Try To Faint
+
+Vikavolt @ Sitrus Berry
+Level: 100
+Ability: Levitate
+Nature: Modest
+EVs: 4 HP / 252 SpA / 252 Spe
+Tags: Lead
+- Bug Buzz
+- Thunderbolt
+- Sticky Web
+- Protect
+
+Yanmega @ Choice Specs
+Level: 100
+Ability: Speed Boost
+Nature: Modest
+EVs: 4 HP / 252 SpA / 252 Spe
+Tags: Lead
+- Air Slash
+- Bug Buzz
+- Giga Drain
+- U-turn
+
+Vespiquen @ Leftovers
+Level: 100
+Ability: Pressure
+Nature: Bold
+EVs: 252 HP / 128 Def / 128 SpD
+Tags: Support
+- Helping Hand
+- Hurricane
+- Pollen Puff
+- Roost
+
+Lokix @ Choice Band
+Level: 100
+Ability: Tinted Lens
+Nature: Adamant
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Ace
+- First Impression
+- U-turn
+- Knock Off
+- Leech Life
+
+Ribombee @ Focus Sash
+Level: 100
+Ability: Sweet Veil
+Nature: Timid
+EVs: 252 SpA / 4 SpD / 252 Spe
+Tags: Ace
+- Sticky Web
+- Moonblast
+- Stun Spore
+- Skill Swap
+
+Leavanny @ Life Orb
+Level: 100
+Ability: Chlorophyll
+Nature: Adamant
+EVs: 252 Atk / 4 Def / 252 Spe
+Tags: Ace
+- Leaf Blade
+- Lunge
+- Protect
+- X-Scissor
