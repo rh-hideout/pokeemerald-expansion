@@ -270,12 +270,15 @@
 	@ 'callnative's should set 'requests_effects=1' if the native
 	@ contains a call to 'Script_RequestEffects', which allows them
 	@ to be analyzed by 'RunScriptImmediatelyUntilEffect'.
-	.macro callnative func:req, requests_effects=0
+	.macro callnative func:req, requests_effects=0, waitstate=0
 	.byte SCR_OP_CALLNATIVE
 	.if \requests_effects == 0
 	.4byte \func
 	.else
 	.4byte \func + ROM_SIZE
+	.endif
+	.if \waitstate
+	waitstate implicit=1
 	.endif
 	.endm
 

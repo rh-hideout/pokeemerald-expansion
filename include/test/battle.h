@@ -338,8 +338,8 @@
  * AI_TWO_VS_ONE_BATTLE_TEST, ONE_VS_TWO_BATTLE_TEST, and AI_ONE_VS_TWO_BATTLE_TEST,
  * the below must be used.
  * PLAYER(species), PARTNER(species), OPPONENT_A(species), and
- * OPPONENT_B(species) Adds the species to the player's (B_TRAINER_0), player partner's (B_TRAINER_2),
- * opponent A's (B_TRAINER_1), or opponent B's (B_TRAINER_3) party, respectively.
+ * OPPONENT_B(species) Adds the species to the player's (B_TRAINER_PLAYER), player partner's (B_TRAINER_PARTNER),
+ * opponent A's (B_TRAINER_OPPONENT_A), or opponent B's (B_TRAINER_OPPONENT_B) party, respectively.
  * Pokemon can be customised as per the guidance for PLAYER(species) and OPPONENT(species).
  * The functions assign the Pokémon to the party of the trainer at B_POSITION_PLAYER_LEFT,
  * B_POSITION_PLAYER_RIGHT, B_POSITION_OPPONENT_LEFT, and B_POSITION_OPPONENT_RIGHT, respectively.
@@ -1015,11 +1015,11 @@ struct moveWithPP {
 #define VAR_SET(varId, value) SetVarForTest(__LINE__, varId, value)
 #define WITH_CONFIG(configTag, value) TestSetConfig(__LINE__, CONFIG_##configTag, value)
 
-#define PLAYER(species) for (OpenPokemon(__LINE__, B_TRAINER_0, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
-#define OPPONENT_A(species) for (OpenPokemon(__LINE__, B_TRAINER_1, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
+#define PLAYER(species) for (OpenPokemon(__LINE__, B_TRAINER_PLAYER, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
+#define OPPONENT_A(species) for (OpenPokemon(__LINE__, B_TRAINER_OPPONENT_A, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
 #define OPPONENT OPPONENT_A
-#define PARTNER(species) for (OpenPokemon(__LINE__, B_TRAINER_2, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
-#define OPPONENT_B(species) for (OpenPokemon(__LINE__, B_TRAINER_3, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
+#define PARTNER(species) for (OpenPokemon(__LINE__, B_TRAINER_PARTNER, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
+#define OPPONENT_B(species) for (OpenPokemon(__LINE__, B_TRAINER_OPPONENT_B, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
 
 #define Gender(gender) Gender_(__LINE__, gender)
 #define Nature(nature) Nature_(__LINE__, nature)
@@ -1111,11 +1111,11 @@ struct TestAIScoreStruct
     bool8 explicitTarget;
 };
 
-#define PLAYER_PARTY (gBattleTestRunnerState->data.recordedBattle.parties[B_TRAINER_0])
-#define OPPONENT_A_PARTY (gBattleTestRunnerState->data.recordedBattle.parties[B_TRAINER_1])
+#define PLAYER_PARTY (gBattleTestRunnerState->data.recordedBattle.parties[B_TRAINER_PLAYER])
+#define OPPONENT_A_PARTY (gBattleTestRunnerState->data.recordedBattle.parties[B_TRAINER_OPPONENT_A])
 #define OPPONENT_PARTY OPPONENT_A_PARTY
-#define PARTNER_PARTY (gBattleTestRunnerState->data.recordedBattle.parties[B_TRAINER_2])
-#define OPPONENT_B_PARTY (gBattleTestRunnerState->data.recordedBattle.parties[B_TRAINER_3])
+#define PARTNER_PARTY (gBattleTestRunnerState->data.recordedBattle.parties[B_TRAINER_PARTNER])
+#define OPPONENT_B_PARTY (gBattleTestRunnerState->data.recordedBattle.parties[B_TRAINER_OPPONENT_B])
 
 /* When */
 

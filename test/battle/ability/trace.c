@@ -82,7 +82,36 @@ SINGLE_BATTLE_TEST("Trace will copy an opponent's ability whenever it has the ch
     }
 }
 
-SINGLE_BATTLE_TEST("Trace doesn't activate if activation was prevented by Ability Shield")
+SINGLE_BATTLE_TEST("Trace will copy an opponent's ability after obtaining it via Skill Swap even if it Traced a different ability before")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
+        ASSUME(gAbilitiesInfo[ABILITY_FLOWER_GIFT].cantBeTraced);
+        ASSUME(!gAbilitiesInfo[ABILITY_BLAZE].cantBeTraced);
+        ASSUME(!gAbilitiesInfo[ABILITY_FLOWER_GIFT].cantBeSwapped);
+        ASSUME(!gAbilitiesInfo[ABILITY_TRACE].cantBeSwapped);
+        ASSUME(!gAbilitiesInfo[ABILITY_BLAZE].cantBeSwapped);
+        PLAYER(SPECIES_RALTS) { Ability(ABILITY_TRACE); }
+        OPPONENT(SPECIES_TORCHIC) { Ability(ABILITY_BLAZE); }
+        OPPONENT(SPECIES_CHERRIM) { Ability(ABILITY_FLOWER_GIFT); }
+        OPPONENT(SPECIES_RALTS) { Ability(ABILITY_TRACE); }
+    } WHEN {
+        TURN { SWITCH(opponent, 1); MOVE(player, MOVE_SKILL_SWAP); }
+        TURN { SWITCH(opponent, 2); MOVE(player, MOVE_SKILL_SWAP); }
+        TURN { SWITCH(opponent, 0); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_TRACE);
+        MESSAGE("It traced the opposing Torchic's Blaze!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, player);
+        // Player now has Flower Gift
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, player);
+        // Player now has Trace
+        ABILITY_POPUP(player, ABILITY_TRACE);
+        MESSAGE("It traced the opposing Torchic's Blaze!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Trace doesn't try to reactivate if activation was prevented by Ability Shield")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);

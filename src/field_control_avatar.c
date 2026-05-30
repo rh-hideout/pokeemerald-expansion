@@ -839,7 +839,7 @@ static void UpdateFriendshipStepCounter(void)
     (*ptr) %= 128;
     if (*ptr == 0)
     {
-        struct Pokemon *mon = gParties[B_TRAINER_0];
+        struct Pokemon *mon = gParties[B_TRAINER_PLAYER];
         for (i = 0; i < PARTY_SIZE; i++)
         {
             AdjustFriendship(mon, FRIENDSHIP_EVENT_WALKING);
@@ -850,7 +850,7 @@ static void UpdateFriendshipStepCounter(void)
 
 static void UpdateFollowerStepCounter(void)
 {
-    if (gPartiesCount[B_TRAINER_0] > 0 && gFollowerSteps < (u16)-1)
+    if (gPartiesCount[B_TRAINER_PLAYER] > 0 && gFollowerSteps < (u16)-1)
         gFollowerSteps++;
 }
 

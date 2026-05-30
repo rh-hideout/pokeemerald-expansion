@@ -201,7 +201,7 @@ static void InvokeTestFunction(const struct BattleTest *test)
 {
     STATE->parametersCount = 0;
     // 2 bits per battler; battler0/1 are always trainer0/1, respectively
-    DATA.battlerTrainers = B_TRAINER_1 << 2;
+    DATA.battlerTrainers = B_TRAINER_OPPONENT_A << 2;
     switch (test->type)
     {
     case BATTLE_TEST_SINGLES:
@@ -212,22 +212,22 @@ static void InvokeTestFunction(const struct BattleTest *test)
         break;
     case BATTLE_TEST_DOUBLES:
     case BATTLE_TEST_AI_DOUBLES:
-        DATA.battlerTrainers |= B_TRAINER_1 << 6;
+        DATA.battlerTrainers |= B_TRAINER_OPPONENT_A << 6;
         InvokeDoubleTestFunctionWithStack(STATE->results, STATE->runParameter, &gBattleMons[B_POSITION_PLAYER_LEFT], &gBattleMons[B_POSITION_OPPONENT_LEFT], &gBattleMons[B_POSITION_PLAYER_RIGHT], &gBattleMons[B_POSITION_OPPONENT_RIGHT], test->function.doubles, &DATA.stack[BATTLE_TEST_STACK_SIZE]);
         break;
     case BATTLE_TEST_MULTI:
     case BATTLE_TEST_AI_MULTI:
-        DATA.battlerTrainers |= (B_TRAINER_2 << 4 | B_TRAINER_3 << 6);
+        DATA.battlerTrainers |= (B_TRAINER_PARTNER << 4 | B_TRAINER_OPPONENT_B << 6);
         InvokeMultiTestFunctionWithStack(STATE->results, STATE->runParameter, &gBattleMons[B_POSITION_PLAYER_LEFT], &gBattleMons[B_POSITION_OPPONENT_LEFT], &gBattleMons[B_POSITION_PLAYER_RIGHT], &gBattleMons[B_POSITION_OPPONENT_RIGHT], test->function.multi, &DATA.stack[BATTLE_TEST_STACK_SIZE]);
         break;
     case BATTLE_TEST_TWO_VS_ONE:
     case BATTLE_TEST_AI_TWO_VS_ONE:
-        DATA.battlerTrainers |= (B_TRAINER_2 << 4 | B_TRAINER_1 << 6);
+        DATA.battlerTrainers |= (B_TRAINER_PARTNER << 4 | B_TRAINER_OPPONENT_A << 6);
         InvokeTwoVsOneTestFunctionWithStack(STATE->results, STATE->runParameter, &gBattleMons[B_POSITION_PLAYER_LEFT], &gBattleMons[B_POSITION_OPPONENT_LEFT], &gBattleMons[B_POSITION_PLAYER_RIGHT], &gBattleMons[B_POSITION_OPPONENT_RIGHT], test->function.two_vs_one, &DATA.stack[BATTLE_TEST_STACK_SIZE]);
         break;
     case BATTLE_TEST_ONE_VS_TWO:
     case BATTLE_TEST_AI_ONE_VS_TWO:
-        DATA.battlerTrainers |= B_TRAINER_3 << 6;
+        DATA.battlerTrainers |= B_TRAINER_OPPONENT_B << 6;
         InvokeOneVsTwoTestFunctionWithStack(STATE->results, STATE->runParameter, &gBattleMons[B_POSITION_PLAYER_LEFT], &gBattleMons[B_POSITION_OPPONENT_LEFT], &gBattleMons[B_POSITION_PLAYER_RIGHT], &gBattleMons[B_POSITION_OPPONENT_RIGHT], test->function.one_vs_two, &DATA.stack[BATTLE_TEST_STACK_SIZE]);
         break;
     }
@@ -350,12 +350,12 @@ static void SetImplicitSpeeds(void)
     s32 i;
     u32 speed = 12;
     u32 hasSpeeds = 0;
-    u32 allSpeeds = ((1 << DATA.partySizes[B_TRAINER_0]) - 1) | (((1 << DATA.partySizes[B_TRAINER_1]) - 1) << 6) | (((1 << DATA.partySizes[B_TRAINER_2]) - 1) << 12) | (((1 << DATA.partySizes[B_TRAINER_3]) - 1) << 18);
+    u32 allSpeeds = ((1 << DATA.partySizes[B_TRAINER_PLAYER]) - 1) | (((1 << DATA.partySizes[B_TRAINER_OPPONENT_A]) - 1) << 6) | (((1 << DATA.partySizes[B_TRAINER_PARTNER]) - 1) << 12) | (((1 << DATA.partySizes[B_TRAINER_OPPONENT_B]) - 1) << 18);
     bool32 madeProgress;
     while (hasSpeeds != allSpeeds)
     {
         madeProgress = FALSE;
-        for (enum BattleTrainer trainer = B_TRAINER_0; trainer < MAX_BATTLE_TRAINERS; trainer++)
+        for (enum BattleTrainer trainer = B_TRAINER_PLAYER; trainer < MAX_BATTLE_TRAINERS; trainer++)
         {
             for (i = 0; i < DATA.partySizes[trainer]; i++)
             {
@@ -513,25 +513,25 @@ static void BattleTest_Run(void *data)
     {
         requiredPartySizes[Test_GetBattlerTrainer(i)] = DATA.currentMonIndexes[i] + 1;
     }
-    for (enum BattleTrainer trainer = B_TRAINER_0; trainer < MAX_BATTLE_TRAINERS; trainer++)
+    for (enum BattleTrainer trainer = B_TRAINER_PLAYER; trainer < MAX_BATTLE_TRAINERS; trainer++)
     {
         if (DATA.partySizes[trainer] < requiredPartySizes[trainer])
         {
             switch (trainer)
             {
-            case B_TRAINER_0:
+            case B_TRAINER_PLAYER:
                 Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":L%d PLAYER Pokemon required", requiredPartySizes[trainer]);
                 break;
-            case B_TRAINER_1:
+            case B_TRAINER_OPPONENT_A:
                 if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
                     Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":L%d OPPONENT_A Pokemon required", requiredPartySizes[trainer]);
                 else
                     Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":L%d OPPONENT Pokemon required", requiredPartySizes[trainer]);
                 break;
-            case B_TRAINER_2:
+            case B_TRAINER_PARTNER:
                 Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":L%d PARTNER Pokemon required", requiredPartySizes[trainer]);
                 break;
-            case B_TRAINER_3:
+            case B_TRAINER_OPPONENT_B:
                 Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":L%d OPPONENT_B Pokemon required", requiredPartySizes[trainer]);
                 break;
             default:
@@ -548,7 +548,7 @@ static void BattleTest_Run(void *data)
     {
         u8 requiredExplicitSpeeds[MAX_BATTLE_TRAINERS] = {0};
 
-        for (enum BattleTrainer trainer = B_TRAINER_0; trainer < MAX_BATTLE_TRAINERS; trainer++)
+        for (enum BattleTrainer trainer = B_TRAINER_PLAYER; trainer < MAX_BATTLE_TRAINERS; trainer++)
         {
             for (i = 0; i < PARTY_SIZE; i++)
             {
@@ -1792,7 +1792,7 @@ void TestRunner_Battle_AfterLastTurn(void)
 static void TearDownBattle(void)
 {
     // Zero out the parties, data in them could potentially carry over
-    for (enum BattleTrainer trainer = B_TRAINER_0; trainer < MAX_BATTLE_TRAINERS; trainer++)
+    for (enum BattleTrainer trainer = B_TRAINER_PLAYER; trainer < MAX_BATTLE_TRAINERS; trainer++)
         ZeroPartyMons(gParties[trainer]);
     SetCurrentDifficultyLevel(DIFFICULTY_NORMAL);
 
@@ -2871,7 +2871,7 @@ void ExpectSendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex
     if (!(DATA.actionBattlers & (1 << battlerId)))
     { // Multi test partner trainers want setting to PlayerPartner controller even if no move set in this case.
         if (IsAITest() && (((battlerId & BIT_SIDE) == B_SIDE_OPPONENT) // If Move was not specified, allow any move used.
-         || ((gBattleTypeFlags & BATTLE_TYPE_MULTI) && Test_GetBattlerTrainer(battlerId) == B_TRAINER_2)))
+         || ((gBattleTypeFlags & BATTLE_TYPE_MULTI) && Test_GetBattlerTrainer(battlerId) == B_TRAINER_PARTNER)))
         {
             SetAiActionToPass(sourceLine, battlerId);
         }
