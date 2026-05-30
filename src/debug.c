@@ -5342,7 +5342,7 @@ void DebugNative_Party_SetFriendship(void)
 
 #undef tFriendship
 
-#define tStrain            data[6]
+#define tStrain            data[7]
 
 static void Debug_Display_PokerusDaysLeftInfo(s32 daysLeft, s32 strain, u32 digit, u8 windowId)
 {
