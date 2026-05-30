@@ -1131,14 +1131,14 @@ static bool32 TryToHatchEgg(struct DayCare *daycare)
     u32 eggCycles;
     u8 toSub = GetEggCyclesToSubtract();
 
-    for (u32 i = 0; i < gPartiesCount[B_TRAINER_0]; i++)
+    for (u32 i = 0; i < gPartiesCount[B_TRAINER_PLAYER]; i++)
     {
-        if (!GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_IS_EGG))
+        if (!GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_IS_EGG))
             continue;
-        if (GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_SANITY_IS_BAD_EGG))
+        if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SANITY_IS_BAD_EGG))
             continue;
 
-        eggCycles = GetMonData(&gParties[B_TRAINER_0][i], MON_DATA_FRIENDSHIP);
+        eggCycles = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_FRIENDSHIP);
         if (eggCycles != 0)
         {
             if (eggCycles >= toSub)
@@ -1146,7 +1146,7 @@ static bool32 TryToHatchEgg(struct DayCare *daycare)
             else
                 eggCycles -= 1;
 
-            SetMonData(&gParties[B_TRAINER_0][i], MON_DATA_FRIENDSHIP, &eggCycles);
+            SetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_FRIENDSHIP, &eggCycles);
         }
         else
         {

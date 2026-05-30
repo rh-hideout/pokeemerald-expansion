@@ -891,26 +891,6 @@ static void EggHatchPrintMessage(u8 windowId, u8 *string, u8 x, u8 y, u8 speed)
     AddTextPrinterParameterized4(windowId, FONT_NORMAL, x, y, 0, 0, sEggHatchData->textColor, speed, string);
 }
 
-<<<<<<< HEAD
-=======
-u8 GetEggCyclesToSubtract(void)
-{
-    u8 count, i;
-    for (count = CalculatePlayerPartyCount(), i = 0; i < count; i++)
-    {
-        if (!GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SANITY_IS_EGG))
-        {
-            enum Ability ability = GetMonAbility(&gParties[B_TRAINER_PLAYER][i]);
-            if (ability == ABILITY_MAGMA_ARMOR
-             || ability == ABILITY_FLAME_BODY
-             || ability == ABILITY_STEAM_ENGINE)
-                return 2;
-        }
-    }
-    return 1;
-}
-
->>>>>>> 7b5f3c6b06d4b8b94eb3b33f87bd74d2609dc315
 u16 CountPartyAliveNonEggMons(void)
 {
     u16 aliveNonEggMonsCount = CountStorageNonEggMons();
