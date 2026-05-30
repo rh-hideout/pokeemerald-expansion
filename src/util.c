@@ -239,17 +239,6 @@ void BlendPalette(u16 palOffset, u16 numEntries, u8 coeff, u32 blendColor)
     }
 }
 
-s32 SubtractClamped(s32 lowestVal, s32 highestVal, s32 currentVal, s32 delta)
-{
-    s32 newValue = currentVal - delta;
-    if (newValue > highestVal)
-        newValue = highestVal;
-    else if (newValue < lowestVal)
-        newValue = lowestVal;
-
-    return newValue;
-}
-
 s32 ClampS32(s32 value, s32 min, s32 max, bool32 *clamped)
 {
     if (min <= value && value <= max)
