@@ -410,7 +410,7 @@ static void Task_Sparkles_CircleInward_End(u8 taskId)
 
 #define tSpecies data[2] // Never read
 
-u8 EvolutionSparkles_SprayAndFlash(u16 species)
+u8 EvolutionSparkles_SprayAndFlash(enum Species species)
 {
     u8 taskId = CreateTask(Task_Sparkles_SprayAndFlash_Init, 0);
     gTasks[taskId].tSpecies = species;
@@ -461,7 +461,7 @@ static void Task_Sparkles_SprayAndFlash_End(u8 taskId)
 }
 
 // Separate from EvolutionSparkles_SprayAndFlash for difference in fade color
-u8 EvolutionSparkles_SprayAndFlash_Trade(u16 species)
+u8 EvolutionSparkles_SprayAndFlash_Trade(enum Species species)
 {
     u8 taskId = CreateTask(Task_Sparkles_SprayAndFlashTrade_Init, 0);
     gTasks[taskId].tSpecies = species;

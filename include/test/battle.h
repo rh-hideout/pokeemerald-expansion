@@ -336,26 +336,16 @@
  *
  * For tests using MULTI_BATTLE_TEST, AI_MULTI_BATTLE_TEST, TWO_VS_ONE_BATTLE_TEST,
  * AI_TWO_VS_ONE_BATTLE_TEST, ONE_VS_TWO_BATTLE_TEST, and AI_ONE_VS_TWO_BATTLE_TEST,
- * the below must be used instead of PLAYER(species) and OPPONENT(species).
- * MULTI_PLAYER(species), MULTI_PARTNER(species), MULTI_OPPONENT_A(species), and
- * MULTI_OPPONENT_B(species) Adds the species to the player's, player partner's,
- * opponent A's, or opponent B's party, respectively.
+ * the below must be used.
+ * PLAYER(species), PARTNER(species), OPPONENT_A(species), and
+ * OPPONENT_B(species) Adds the species to the player's (B_TRAINER_PLAYER), player partner's (B_TRAINER_PARTNER),
+ * opponent A's (B_TRAINER_OPPONENT_A), or opponent B's (B_TRAINER_OPPONENT_B) party, respectively.
  * Pokemon can be customised as per the guidance for PLAYER(species) and OPPONENT(species).
  * The functions assign the Pokémon to the party of the trainer at B_POSITION_PLAYER_LEFT,
  * B_POSITION_PLAYER_RIGHT, B_POSITION_OPPONENT_LEFT, and B_POSITION_OPPONENT_RIGHT, respectively.
- * MULTI_PLAYER(species) and MULTI_OPPONENT_A(species) set Pokémon starting at party index 0,
- * while MULTI_PARTNER(species) and MULTI_OPPONENT_B(species) set Pokémon starting at party
- * index 3.
- * For ONE_VS_TWO tests, MULTI_PLAYER(species) must be used for all player-side Pokémon,
- * and for TWO_VS_ONE tests, MULTI_OPPONENT_A(species) must be used for all opponent-side
+ * For ONE_VS_TWO tests, PLAYER(species) must be used for all player-side Pokémon,
+ * and for TWO_VS_ONE tests, OPPONENT_A(species) or OPPONENT(species) must be used for all opponent-side
  * Pokémon.
- * All MULTI_PLAYER(species) Pokémon must be set before any MULTI_PARTNER(species) Pokémon,
- * and all MULTI_OPPONENT_A(species) must be set before any MULTI_OPPONENT_B(species) Pokémon,
- * else Pokémon will be set in the incorrect parties in the test.
- * Note where a side in a test has two trainers, the test setup manages the assigning of correct
- * multi-party orders, therefore when using functions such as SEND_OUT, Player and Opponent A
- * Pokémon may be referenced using indexes 0, 1, and 2, and Player's Partner and Opponent B
- * Pokémon may be referenced using indexes 3, 4, and 5.
  *
  * AI_FLAGS
  * Specifies which AI flags are run for all battlers during the test. Has use only for AI tests.
@@ -550,7 +540,7 @@
 #include "battle.h"
 #include "battle_anim.h"
 #include "data.h"
-#include "generational_changes.h"
+#include "config_changes.h"
 #include "item.h"
 #include "random.h"
 #include "recorded_battle.h"
@@ -578,6 +568,7 @@ enum {
     BATTLE_TEST_SINGLES,
     BATTLE_TEST_DOUBLES,
     BATTLE_TEST_WILD,
+    BATTLE_TEST_GHOST,
     BATTLE_TEST_MULTI,
     BATTLE_TEST_TWO_VS_ONE,
     BATTLE_TEST_ONE_VS_TWO,
@@ -781,14 +772,13 @@ extern struct BattleTrialData gBattleTrialData;
 struct BattleTestData
 {
     u8 stack[BATTLE_TEST_STACK_SIZE];
-
-    u8 playerPartySize;
-    u8 opponentPartySize;
+    u8 partySizes[MAX_BATTLE_TRAINERS];
     u8 explicitMoves[MAX_BATTLE_TRAINERS];
     bool8 hasExplicitSpeeds;
     u8 explicitSpeeds[MAX_BATTLE_TRAINERS];
-    u16 slowerThan[NUM_BATTLE_SIDES][PARTY_SIZE];
-    enum BattleTrainer battleTrainer;
+    u32 slowerThan[MAX_BATTLE_TRAINERS][PARTY_SIZE];
+    enum BattleTrainer battlerParty;
+    u8 battlerTrainers;
     u8 currentPartyIndex;
     struct Pokemon *currentMon;
     u8 gender;
@@ -796,7 +786,6 @@ struct BattleTestData
     bool8 isShiny;
     enum Ability forcedAbilities[MAX_BATTLE_TRAINERS][PARTY_SIZE];
     u8 chosenGimmick[MAX_BATTLE_TRAINERS][PARTY_SIZE];
-    enum BattleTrainer partyTrainers[NUM_BATTLE_SIDES][PARTY_SIZE];
     u8 forcedEnvironment;
 
     u8 currentMonIndexes[MAX_BATTLERS_COUNT];
@@ -866,6 +855,7 @@ struct BattleTestRunnerState
 
 extern const struct TestRunner gBattleTestRunner;
 extern struct BattleTestRunnerState *const gBattleTestRunnerState;
+bool32 IsAITest(void);
 
 #define APPEND_COMMA_TRUE(a) , a, TRUE
 #define R_APPEND_TRUE(...) __VA_OPT__(FIRST(__VA_ARGS__), TRUE RECURSIVELY(R_FOR_EACH(APPEND_COMMA_TRUE, EXCEPT_1(__VA_ARGS__))))
@@ -975,6 +965,7 @@ extern struct BattleTestRunnerState *const gBattleTestRunnerState;
 
 #define SINGLE_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_SINGLE(_name, BATTLE_TEST_SINGLES, __VA_ARGS__)
 #define WILD_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_SINGLE(_name, BATTLE_TEST_WILD, __VA_ARGS__)
+#define GHOST_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_SINGLE(_name, BATTLE_TEST_GHOST, __VA_ARGS__)
 #define AI_SINGLE_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_SINGLE(_name, BATTLE_TEST_AI_SINGLES, __VA_ARGS__)
 
 #define DOUBLE_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_DOUBLE(_name, BATTLE_TEST_DOUBLES, __VA_ARGS__)
@@ -1024,12 +1015,11 @@ struct moveWithPP {
 #define VAR_SET(varId, value) SetVarForTest(__LINE__, varId, value)
 #define WITH_CONFIG(configTag, value) TestSetConfig(__LINE__, CONFIG_##configTag, value)
 
-#define PLAYER(species) for (OpenPokemon(__LINE__, B_TRAINER_0, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
-#define OPPONENT(species) for (OpenPokemon(__LINE__, B_TRAINER_1, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
-#define MULTI_PLAYER(species) for (OpenPokemonMulti(__LINE__, B_TRAINER_0, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
-#define MULTI_OPPONENT_A(species) for (OpenPokemonMulti(__LINE__, B_TRAINER_1, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
-#define MULTI_PARTNER(species) for (OpenPokemonMulti(__LINE__, B_TRAINER_2, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
-#define MULTI_OPPONENT_B(species) for (OpenPokemonMulti(__LINE__, B_TRAINER_3, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
+#define PLAYER(species) for (OpenPokemon(__LINE__, B_TRAINER_PLAYER, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
+#define OPPONENT_A(species) for (OpenPokemon(__LINE__, B_TRAINER_OPPONENT_A, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
+#define OPPONENT OPPONENT_A
+#define PARTNER(species) for (OpenPokemon(__LINE__, B_TRAINER_PARTNER, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
+#define OPPONENT_B(species) for (OpenPokemon(__LINE__, B_TRAINER_OPPONENT_B, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
 
 #define Gender(gender) Gender_(__LINE__, gender)
 #define Nature(nature) Nature_(__LINE__, nature)
@@ -1068,8 +1058,7 @@ void TieBreakScore(u32 sourceLine, enum RandomTag rngTag, enum ScoreTieResolutio
 void TieBreakTarget(u32 sourceLine, enum TargetTieResolution targetTieRes, u32 value);
 void ClearFlagAfterTest(void);
 void ClearVarAfterTest(void);
-void OpenPokemon(u32 sourceLine, enum BattleTrainer trainer, u32 species);
-void OpenPokemonMulti(u32 sourceLine, enum BattleTrainer trainer, u32 species);
+void OpenPokemon(u32 sourceLine, enum BattleTrainer trainer, enum Species species);
 void ClosePokemon(u32 sourceLine);
 
 void RNGSeed_(u32 sourceLine, rng_value_t seed);
@@ -1106,18 +1095,6 @@ void Shadow_(u32 sourceLine, bool32 isShadow);
 void Shiny_(u32 sourceLine, bool32 isShiny);
 void Environment_(u32 sourceLine, u32 environment);
 
-static inline bool8 IsMultibattleTest(void)
-{
-    #if TESTING
-    {
-        if (((gBattleTypeFlags & BATTLE_MULTI_TEST) == BATTLE_MULTI_TEST)
-         || ((gBattleTypeFlags & BATTLE_TWO_VS_ONE_TEST) == BATTLE_TWO_VS_ONE_TEST))
-            return TRUE;
-    }
-    #endif
-    return FALSE;
-}
-
 // Created for easy use of EXPECT_MOVES, so the user can provide 1, 2, 3 or 4 moves for AI which can pass the test.
 struct FourMoves
 {
@@ -1134,8 +1111,11 @@ struct TestAIScoreStruct
     bool8 explicitTarget;
 };
 
-#define PLAYER_PARTY (gBattleTestRunnerState->data.recordedBattle.playerParty)
-#define OPPONENT_PARTY (gBattleTestRunnerState->data.recordedBattle.opponentParty)
+#define PLAYER_PARTY (gBattleTestRunnerState->data.recordedBattle.parties[B_TRAINER_PLAYER])
+#define OPPONENT_A_PARTY (gBattleTestRunnerState->data.recordedBattle.parties[B_TRAINER_OPPONENT_A])
+#define OPPONENT_PARTY OPPONENT_A_PARTY
+#define PARTNER_PARTY (gBattleTestRunnerState->data.recordedBattle.parties[B_TRAINER_PARTNER])
+#define OPPONENT_B_PARTY (gBattleTestRunnerState->data.recordedBattle.parties[B_TRAINER_OPPONENT_B])
 
 /* When */
 
@@ -1239,8 +1219,7 @@ void SendOut(u32 sourceLine, struct BattlePokemon *, u32 partyIndex);
 #define HP_BAR(battler, ...) QueueHP(__LINE__, battler, (struct HPEventContext) { R_APPEND_TRUE(__VA_ARGS__) })
 #define SUB_HIT(battler, ...) QueueSubHit(__LINE__, battler, (struct SubHitEventContext) { R_APPEND_TRUE(__VA_ARGS__) })
 #define EXPERIENCE_BAR(battler, ...) QueueExp(__LINE__, battler, (struct ExpEventContext) { R_APPEND_TRUE(__VA_ARGS__) })
-// Static const is needed to make the modern compiler put the pattern variable in the .rodata section, instead of putting it on stack(which can break the game).
-#define MESSAGE(pattern) do {static const u8 msg[] = _(pattern); QueueMessage(__LINE__, msg);} while (0)
+#define MESSAGE(pattern) QueueMessage(__LINE__, COMPOUND_STRING(pattern))
 #define STATUS_ICON(battler, status) QueueStatus(__LINE__, battler, (struct StatusEventContext) { status })
 #define CATCHING_CHANCE(address) QueueCatchingChance(__LINE__, address)
 #define FREEZE_OR_FROSTBURN_STATUS(battler, isFrostbite) \
@@ -1327,6 +1306,25 @@ struct StatusEventContext
     bool8 badPoison:1;
     bool8 frostbite:1;
 };
+
+
+struct StatChangeAssumption
+{
+    s8 attack;
+    s8 defense;
+    s8 spAtk;
+    s8 spDef;
+    s8 speed;
+    s8 accuracy;
+    s8 evasion;
+    bool8 self;
+};
+
+void AssumeStatChange_(u32 sourceLine, u32 moveId, struct StatChangeAssumption asc);
+#define ASSUME_STAT_CHANGE(moveId, ...) AssumeStatChange_(__LINE__, moveId, (struct StatChangeAssumption) { __VA_ARGS__ })
+
+void AssumeMoveEffectStatChange_(u32 sourceLine, u32 moveId, struct StatChangeAssumption asc);
+#define ASSUME_MOVE_EFFECT_STAT_CHANGE(moveId, ...) AssumeMoveEffectStatChange_(__LINE__, moveId, (struct StatChangeAssumption) { __VA_ARGS__ })
 
 void OpenQueueGroup(u32 sourceLine, enum QueueGroupType);
 void CloseQueueGroup(u32 sourceLine);

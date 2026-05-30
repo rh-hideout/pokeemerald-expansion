@@ -468,6 +468,8 @@ const u16 gFieldEffectObjectPalette_CaveDust[] = INCGFX_U16("graphics/field_effe
 
 const u32 gObjectEventPic_ApricornTree[] = INCGFX_U32("graphics/object_events/pics/misc/apricorn_tree.png", ".4bpp", "-mwidth 2 -mheight 2");
 
+const u32 gFieldEffectObjectPic_ShinySparkle[] = INCGFX_U32("graphics/field_effects/pics/shiny_sparkle.png", ".4bpp", "-mwidth 2 -mheight 4");
+
 #if IS_FRLG
 
 const u16 gObjectEventPic_RedNormal[] = INCGFX_U16("graphics/object_events/pics/people/red/red_normal.png", ".4bpp", "-mwidth 2 -mheight 4");
@@ -517,7 +519,7 @@ const u16 gObjectEventPic_Boy[] = INCGFX_U16("graphics/object_events/pics/people
 const u16 gObjectEventPic_Woman1Frlg[] = INCGFX_U16("graphics/object_events/pics/people/woman_1_frlg.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPic_Woman3Frlg[] = INCGFX_U16("graphics/object_events/pics/people/woman_3_frlg.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPic_BugCatcherFrlg[] = INCGFX_U16("graphics/object_events/pics/people/bug_catcher_frlg.png", ".4bpp", "-mwidth 2 -mheight 4");
-const u16 gObjectEventPic_BattleGirl[] = INCGFX_U16("graphics/object_events/pics/people/battle_girl.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_CrushGirl[] = INCGFX_U16("graphics/object_events/pics/people/crush_girl.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPic_FatManFrlg[] = INCGFX_U16("graphics/object_events/pics/people/fat_man_frlg.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPic_BaldingMan[] = INCGFX_U16("graphics/object_events/pics/people/balding_man.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPic_Woman2Frlg[] = INCGFX_U16("graphics/object_events/pics/people/woman_2_frlg.png", ".4bpp", "-mwidth 2 -mheight 4");
@@ -533,14 +535,14 @@ const u16 gObjectEventPic_CamperFrlg[] = INCGFX_U16("graphics/object_events/pics
 const u16 gObjectEventPic_PicnickerFrlg[] = INCGFX_U16("graphics/object_events/pics/people/picnicker_frlg.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPic_CooltrainerM[] = INCGFX_U16("graphics/object_events/pics/people/cooltrainer_m.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPic_CooltrainerF[] = INCGFX_U16("graphics/object_events/pics/people/cooltrainer_f.png", ".4bpp", "-mwidth 2 -mheight 4");
-const u16 gObjectEventPic_SuperNerd[] = INCGFX_U16("graphics/object_events/pics/people/super_nerd.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_PokeManiacFrlg[] = INCGFX_U16("graphics/object_events/pics/people/poke_maniac_frlg.png", ".4bpp");
 const u16 gObjectEventPic_Channeler[] = INCGFX_U16("graphics/object_events/pics/people/channeler.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPic_RocketF[] = INCGFX_U16("graphics/object_events/pics/people/rocket_f.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPic_SwimmerMWater[] = INCGFX_U16("graphics/object_events/pics/people/swimmer_m_water.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPic_SwimmerFWater[] = INCGFX_U16("graphics/object_events/pics/people/swimmer_f_water.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPic_SwimmerMLand[] = INCGFX_U16("graphics/object_events/pics/people/swimmer_m_land.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPic_SwimmerFLand[] = INCGFX_U16("graphics/object_events/pics/people/swimmer_f_land.png", ".4bpp", "-mwidth 2 -mheight 4");
-const u16 gObjectEventPic_Blackbelt[] = INCGFX_U16("graphics/object_events/pics/people/blackbelt.png", ".4bpp", "-mwidth 2 -mheight 4");
+const u16 gObjectEventPic_BlackBeltFrlg[] = INCGFX_U16("graphics/object_events/pics/people/black_belt_frlg.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPic_Scientist[] = INCGFX_U16("graphics/object_events/pics/people/scientist.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPic_GentlemanFrlg[] = INCGFX_U16("graphics/object_events/pics/people/gentleman_frlg.png", ".4bpp", "-mwidth 2 -mheight 4");
 const u16 gObjectEventPic_SailorFrlg[] = INCGFX_U16("graphics/object_events/pics/people/sailor_frlg.png", ".4bpp", "-mwidth 2 -mheight 4");

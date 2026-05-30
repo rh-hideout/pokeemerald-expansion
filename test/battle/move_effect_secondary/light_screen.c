@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(MoveHasAdditionalEffect(MOVE_GLITZY_GLOW, MOVE_EFFECT_LIGHT_SCREEN) == TRUE);
+    ASSUME(MoveHasAdditionalEffectSelf(MOVE_GLITZY_GLOW, MOVE_EFFECT_LIGHT_SCREEN) == TRUE);
 }
 
 SINGLE_BATTLE_TEST("Glitzy Glow sets up Light Screen when it was succesful")

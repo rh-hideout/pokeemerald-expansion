@@ -104,7 +104,7 @@ enum {
 #define PALTAG_MISC              46546
 
 // Last berry that an NPC can put in
-#define NUM_NPC_BERRIES ITEM_TO_BERRY(ITEM_ASPEAR_BERRY)
+#define NUM_NPC_BERRIES BERRY_ID_ASPEAR
 
 enum {
     // Windows 0-3 are used implicitly in several loops over BLENDER_MAX_PLAYERS
@@ -845,31 +845,31 @@ static const s16 sBerrySpriteData[][5] =
 // There are only 5 different berries the NPCs will ever use
 // Each of these sets represents 3 berries chosen to be used by the NPCs
 // If the player's berry is one of the 5 possible berries, a set is chosen that excludes it
-static const u8 sOpponentBerrySets[NUM_NPC_BERRIES * 2][3] =
+static const u8 sOpponentBerrySets[][3] =
 {
     // These sets are used if the player chose one of the 5 NPC berries
-    {ITEM_TO_BERRY(ITEM_ASPEAR_BERRY) - 1, ITEM_TO_BERRY(ITEM_RAWST_BERRY) - 1,  ITEM_TO_BERRY(ITEM_PECHA_BERRY) - 1},   // player chose Cheri Berry
-    {ITEM_TO_BERRY(ITEM_CHERI_BERRY) - 1,  ITEM_TO_BERRY(ITEM_ASPEAR_BERRY) - 1, ITEM_TO_BERRY(ITEM_RAWST_BERRY) - 1},   // player chose Chesto Berry
-    {ITEM_TO_BERRY(ITEM_CHESTO_BERRY) - 1, ITEM_TO_BERRY(ITEM_CHERI_BERRY) - 1,  ITEM_TO_BERRY(ITEM_ASPEAR_BERRY) - 1},  // player chose Pecha Berry
-    {ITEM_TO_BERRY(ITEM_PECHA_BERRY) - 1,  ITEM_TO_BERRY(ITEM_CHESTO_BERRY) - 1, ITEM_TO_BERRY(ITEM_CHERI_BERRY) - 1},   // player chose Rawst Berry
-    {ITEM_TO_BERRY(ITEM_RAWST_BERRY) - 1,  ITEM_TO_BERRY(ITEM_PECHA_BERRY) - 1,  ITEM_TO_BERRY(ITEM_CHESTO_BERRY) - 1},  // player chose Aspear Berry
+    {BERRY_ID_ASPEAR, BERRY_ID_RAWST,  BERRY_ID_PECHA},   // player chose Cheri Berry
+    {BERRY_ID_CHERI,  BERRY_ID_ASPEAR, BERRY_ID_RAWST},   // player chose Chesto Berry
+    {BERRY_ID_CHESTO, BERRY_ID_CHERI,  BERRY_ID_ASPEAR},  // player chose Pecha Berry
+    {BERRY_ID_PECHA,  BERRY_ID_CHESTO, BERRY_ID_CHERI},   // player chose Rawst Berry
+    {BERRY_ID_RAWST,  BERRY_ID_PECHA,  BERRY_ID_CHESTO},  // player chose Aspear Berry
 
     // These sets are used if the player chose a different berry (set is selected by player's berry % 5)
-    {ITEM_TO_BERRY(ITEM_CHERI_BERRY) - 1,  ITEM_TO_BERRY(ITEM_PECHA_BERRY) - 1,  ITEM_TO_BERRY(ITEM_RAWST_BERRY) - 1},   // player chose Leppa, Figy, ...
-    {ITEM_TO_BERRY(ITEM_CHESTO_BERRY) - 1, ITEM_TO_BERRY(ITEM_RAWST_BERRY) - 1,  ITEM_TO_BERRY(ITEM_ASPEAR_BERRY) - 1},  // player chose Oran, Wiki, ...
-    {ITEM_TO_BERRY(ITEM_PECHA_BERRY) - 1,  ITEM_TO_BERRY(ITEM_ASPEAR_BERRY) - 1, ITEM_TO_BERRY(ITEM_CHERI_BERRY) - 1},   // player chose Persim, Mago, ...
-    {ITEM_TO_BERRY(ITEM_RAWST_BERRY) - 1,  ITEM_TO_BERRY(ITEM_CHERI_BERRY) - 1,  ITEM_TO_BERRY(ITEM_CHESTO_BERRY) - 1},  // player chose Lum, Aguav, ...
-    {ITEM_TO_BERRY(ITEM_ASPEAR_BERRY) - 1, ITEM_TO_BERRY(ITEM_CHESTO_BERRY) - 1, ITEM_TO_BERRY(ITEM_PECHA_BERRY) - 1},   // player chose Sitrus, Iapapa, ...
+    {BERRY_ID_CHERI,  BERRY_ID_PECHA,  BERRY_ID_RAWST},   // player chose Leppa, Figy, ...
+    {BERRY_ID_CHESTO, BERRY_ID_RAWST,  BERRY_ID_ASPEAR},  // player chose Oran, Wiki, ...
+    {BERRY_ID_PECHA,  BERRY_ID_ASPEAR, BERRY_ID_CHERI},   // player chose Persim, Mago, ...
+    {BERRY_ID_RAWST,  BERRY_ID_CHERI,  BERRY_ID_CHESTO},  // player chose Lum, Aguav, ...
+    {BERRY_ID_ASPEAR, BERRY_ID_CHESTO, BERRY_ID_PECHA},   // player chose Sitrus, Iapapa, ...
 };
 
 // Berry master's berries follow the same rules as above, but instead of explicitly listing
 // the alternate sets if the player chooses one of these berries, it implicitly uses these berries - 5, i.e. Tamato - Nomel
 static const u8 sBerryMasterBerries[] = {
-    ITEM_TO_BERRY(ITEM_SPELON_BERRY) - 1,
-    ITEM_TO_BERRY(ITEM_PAMTRE_BERRY) - 1,
-    ITEM_TO_BERRY(ITEM_WATMEL_BERRY) - 1,
-    ITEM_TO_BERRY(ITEM_DURIN_BERRY) - 1,
-    ITEM_TO_BERRY(ITEM_BELUE_BERRY) - 1
+    BERRY_ID_SPELON,
+    BERRY_ID_PAMTRE,
+    BERRY_ID_WATMEL,
+    BERRY_ID_DURIN,
+    BERRY_ID_BELUE
 };
 
 // "0 players" is link
@@ -1185,7 +1185,7 @@ static void SetBerrySpriteData(struct Sprite *sprite, s32 x, s32 y, s32 bounceSp
 
 static void CreateBerrySprite(enum Item itemId, u32 playerId)
 {
-    u32 berryId = ITEM_TO_BERRY(itemId) - 1;
+    enum BerryId berryId = ItemIdToBerryType(itemId);
     u32 spriteId = CreateSpinningBerrySprite(berryId, 0, 80, playerId & 1);
     SetBerrySpriteData(&gSprites[spriteId],
                         sBerrySpriteData[playerId][0],
@@ -1198,7 +1198,7 @@ static void CreateBerrySprite(enum Item itemId, u32 playerId)
 
 static void ConvertItemToBlenderBerry(struct BlenderBerry *berry, enum Item itemId)
 {
-    const struct Berry *berryInfo = GetBerryInfo(ITEM_TO_BERRY(itemId));
+    const struct BerryInfo *berryInfo = GetBerryInfo(ItemIdToBerryType(itemId));
 
     berry->itemId = itemId;
     StringCopy(berry->name, berryInfo->name);
@@ -1546,14 +1546,14 @@ static void SetOpponentsBerryData(u16 playerBerryItemId, u8 playersNum, struct B
     }
     else
     {
-        opponentSetId = ITEM_TO_BERRY(playerBerryItemId) - 1;
-        if (opponentSetId >= NUM_NPC_BERRIES)
-            opponentSetId = (opponentSetId % NUM_NPC_BERRIES) + NUM_NPC_BERRIES;
+        opponentSetId = ItemIdToBerryType(playerBerryItemId);
+        if (opponentSetId > NUM_NPC_BERRIES)
+            opponentSetId = ((opponentSetId - 1) % NUM_NPC_BERRIES) + NUM_NPC_BERRIES;
     }
     for (i = 0; i < playersNum - 1; i++)
     {
         opponentBerryId = sOpponentBerrySets[opponentSetId][i];
-        berryMasterDiff = ITEM_TO_BERRY(playerBerryItemId) - ITEM_TO_BERRY(ITEM_SPELON_BERRY);
+        berryMasterDiff = ItemIdToBerryType(playerBerryItemId) - BERRY_ID_SPELON;
         if (!FlagGet(FLAG_HIDE_LILYCOVE_CONTEST_HALL_BLEND_MASTER) && gSpecialVar_0x8004 == 1)
         {
             opponentSetId %= ARRAY_COUNT(sBerryMasterBerries);
@@ -1564,7 +1564,7 @@ static void SetOpponentsBerryData(u16 playerBerryItemId, u8 playersNum, struct B
             if (berryMasterDiff < ARRAY_COUNT(sBerryMasterBerries))
                 opponentBerryId -= ARRAY_COUNT(sBerryMasterBerries);
         }
-        SetPlayerBerryData(i + 1, opponentBerryId + FIRST_BERRY_INDEX);
+        SetPlayerBerryData(i + 1, BerryTypeToItemId(opponentBerryId));
     }
 }
 
@@ -3539,7 +3539,7 @@ static bool8 PrintBlendingResults(void)
         for (i = 0; i < BLENDER_MAX_PLAYERS; i++)
         {
             if (sBerryBlender->chosenItemId[i] != 0)
-                berryIds[i] = sBerryBlender->chosenItemId[i] - FIRST_BERRY_INDEX;
+                berryIds[i] = ItemIdToBerryType(sBerryBlender->chosenItemId[i]);
             if (sBerryBlender->arrowIdToPlayerId[i] != NO_PLAYER)
             {
                 PutWindowTilemap(i);

@@ -154,7 +154,7 @@ WILD_BATTLE_TEST("Capture: when CRITICAL_CAPTURE_IF_OWNED is enabled, capture of
     GIVEN {
         ASSUME(gSpeciesInfo[SPECIES_CATERPIE].catchRate > 155);
         if (alreadyOwned)
-            GetSetPokedexFlag(SPECIES_CATERPIE, FLAG_SET_CAUGHT);
+            GetSetPokedexFlag(NATIONAL_DEX_CATERPIE, FLAG_SET_CAUGHT);
         WITH_CONFIG(B_MISSING_BADGE_CATCH_MALUS, GEN_7);
         WITH_CONFIG(B_CRITICAL_CAPTURE_IF_OWNED, GEN_9);
         PLAYER(SPECIES_WOBBUFFET);
@@ -188,7 +188,7 @@ WILD_BATTLE_TEST("Capture: when CRITICAL_CAPTURE_IF_OWNED is enabled, failed cap
     PARAMETRIZE(success = FALSE);
 
     GIVEN {
-        GetSetPokedexFlag(SPECIES_CATERPIE, FLAG_SET_CAUGHT);
+        GetSetPokedexFlag(NATIONAL_DEX_CATERPIE, FLAG_SET_CAUGHT);
         WITH_CONFIG(B_MISSING_BADGE_CATCH_MALUS, GEN_7);
         WITH_CONFIG(B_CRITICAL_CAPTURE_IF_OWNED, GEN_9);
         PLAYER(SPECIES_WOBBUFFET);
@@ -211,7 +211,7 @@ WILD_BATTLE_TEST("Capture: when CRITICAL_CAPTURE_IF_OWNED is enabled, failed cap
 
 WILD_BATTLE_TEST("Capture: ball data is properly set in captured pokemon")
 {
-    u32 item = ITEM_NONE;
+    enum Item item = ITEM_NONE;
     for (enum PokeBall ballId = BALL_STRANGE; ballId < POKEBALL_COUNT; ballId++)
     {
         PARAMETRIZE(item = gPokeBalls[ballId].itemId);
@@ -229,6 +229,6 @@ WILD_BATTLE_TEST("Capture: ball data is properly set in captured pokemon")
             ANIMATION(ANIM_TYPE_SPECIAL, B_ANIM_BALL_THROW);
         }
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_POKEBALL), GetItemSecondaryId(item));
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][1], MON_DATA_POKEBALL), GetItemSecondaryId(item));
     }
 }

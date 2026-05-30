@@ -54,7 +54,8 @@ SINGLE_BATTLE_TEST("Electrify can change status moves to Electric-type")
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_LEER, player);
         ABILITY_POPUP(opponent, ABILITY_VOLT_ABSORB);
         HP_BAR(opponent, damage: -25);
-        MESSAGE("The opposing Jolteon restored HP using its Volt Absorb!");
+        MESSAGE("The opposing Jolteon had its HP restored.");
+        NOT MESSAGE("But it failed!");
     }
 }
 

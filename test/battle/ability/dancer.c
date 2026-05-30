@@ -54,9 +54,37 @@ DOUBLE_BATTLE_TEST("Dancer can copy Teeter Dance and confuse both opposing targe
     }
 }
 
-DOUBLE_BATTLE_TEST("Dancer triggers from slowest to fastest")
+DOUBLE_BATTLE_TEST("Dancer triggers from fastest to slowest including modifiers (Gen 8+)")
 {
     GIVEN {
+        WITH_CONFIG(B_DANCER_ORDER, GEN_9);
+        ASSUME(IsDanceMove(MOVE_DRAGON_DANCE));
+        ASSUME(GetItemHoldEffect(ITEM_IRON_BALL) == HOLD_EFFECT_IRON_BALL);
+        PLAYER(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); Speed(10); Item(ITEM_IRON_BALL); }
+        PLAYER(SPECIES_WYNAUT) { Speed(50); }
+        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); Speed(20); }
+        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); Speed(7); }
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_DRAGON_DANCE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, playerRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+        ABILITY_POPUP(opponentLeft, ABILITY_DANCER);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+        ABILITY_POPUP(opponentRight, ABILITY_DANCER);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, opponentRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
+        ABILITY_POPUP(playerLeft, ABILITY_DANCER);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Dancer triggers from slowest to fastest Raw Speed (Gen 7)")
+{
+    GIVEN {
+        WITH_CONFIG(B_DANCER_ORDER, GEN_7);
         ASSUME(IsDanceMove(MOVE_DRAGON_DANCE));
         PLAYER(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); Speed(10); }
         PLAYER(SPECIES_WYNAUT) { Speed(50); }
@@ -79,9 +107,10 @@ DOUBLE_BATTLE_TEST("Dancer triggers from slowest to fastest")
     }
 }
 
-DOUBLE_BATTLE_TEST("Dancer triggers from slowest to fastest during Trick Room")
+DOUBLE_BATTLE_TEST("Dancer triggers from slowest to fastest during Trick Room (Gen 7)")
 {
     GIVEN {
+        WITH_CONFIG(B_DANCER_ORDER, GEN_7);
         ASSUME(GetMoveEffect(MOVE_TRICK_ROOM) == EFFECT_TRICK_ROOM);
         ASSUME(IsDanceMove(MOVE_DRAGON_DANCE));
         PLAYER(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); Speed(10); }
@@ -110,6 +139,7 @@ DOUBLE_BATTLE_TEST("Dancer triggers from slowest to fastest during Trick Room")
 DOUBLE_BATTLE_TEST("Dancer triggering ignores Lagging Tail")
 {
     GIVEN {
+        WITH_CONFIG(B_DANCER_ORDER, GEN_7);
         ASSUME(IsDanceMove(MOVE_DRAGON_DANCE));
         ASSUME(gItemsInfo[ITEM_LAGGING_TAIL].holdEffect == HOLD_EFFECT_LAGGING_TAIL);
         PLAYER(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); Speed(10); Item(ITEM_LAGGING_TAIL); }
@@ -155,6 +185,7 @@ SINGLE_BATTLE_TEST("Dancer doesn't trigger if the original user flinches")
 DOUBLE_BATTLE_TEST("Dancer still triggers if another dancer flinches")
 {
     GIVEN {
+        WITH_CONFIG(B_DANCER_ORDER, GEN_7);
         ASSUME(MoveHasAdditionalEffectWithChance(MOVE_FAKE_OUT, MOVE_EFFECT_FLINCH, 100));
         ASSUME(IsDanceMove(MOVE_DRAGON_DANCE));
         PLAYER(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); Speed(10); }
@@ -276,7 +307,7 @@ DOUBLE_BATTLE_TEST("Dancer doesn't trigger when an ally snatches the move")
 DOUBLE_BATTLE_TEST("Dancer doesn't activate if the original move missed")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_DOUBLE_TEAM) == EFFECT_EVASION_UP);
+        ASSUME_STAT_CHANGE(MOVE_DOUBLE_TEAM, evasion: +1);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); }
@@ -287,7 +318,7 @@ DOUBLE_BATTLE_TEST("Dancer doesn't activate if the original move missed")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DOUBLE_TEAM, opponentLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerLeft);
-        MESSAGE("Wobbuffet's attack missed!");
+        MESSAGE("The opposing Oricorio avoided the attack!");
         NONE_OF {
             ABILITY_POPUP(opponentLeft, ABILITY_DANCER);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, opponentLeft);
@@ -336,6 +367,7 @@ DOUBLE_BATTLE_TEST("Dancer can activate after Neutralizing Gas enters the field 
     PARAMETRIZE { speedPlayerRight = 7; }
 
     GIVEN {
+        WITH_CONFIG(B_DANCER_ORDER, GEN_7);
         ASSUME(GetItemHoldEffect(ITEM_EJECT_BUTTON) == HOLD_EFFECT_EJECT_BUTTON);
         PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
         PLAYER(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); Speed(speedPlayerRight); }
@@ -375,7 +407,7 @@ SINGLE_BATTLE_TEST("Dancer-called moves can be reflected by Magic Bounce")
         ABILITY_POPUP(opponent, ABILITY_DANCER);
         ABILITY_POPUP(player, ABILITY_MAGIC_BOUNCE);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FEATHER_DANCE, opponent);
-        MESSAGE("The opposing Oricorio's Feather Dance was bounced back by Espeon's Magic Bounce!");
+        MESSAGE("The opposing Oricorio's Feather Dance was bounced back!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FEATHER_DANCE, player);
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
@@ -542,7 +574,7 @@ DOUBLE_BATTLE_TEST("Dancer still activates after Red Card")
     }
 }
 
-DOUBLE_BATTLE_TEST("Dancer still activate after Red Card even if blocked by Suction Cups")
+DOUBLE_BATTLE_TEST("Dancer still activates after Red Card even if blocked by Suction Cups")
 {
     GIVEN {
         PLAYER(SPECIES_OCTILLERY) { Ability(ABILITY_SUCTION_CUPS); }
@@ -560,7 +592,7 @@ DOUBLE_BATTLE_TEST("Dancer still activate after Red Card even if blocked by Suct
         // red card trigger
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
         MESSAGE("The opposing Wobbuffet held up its Red Card against Octillery!");
-        MESSAGE("Octillery anchors itself with Suction Cups!");
+        MESSAGE("Octillery is anchored in place with its suction cups!");
         NOT MESSAGE("Chansey was dragged out!");
         // Dancer
         ABILITY_POPUP(playerRight, ABILITY_DANCER);
@@ -572,6 +604,7 @@ DOUBLE_BATTLE_TEST("Dancer still activate after Red Card even if blocked by Suct
 DOUBLE_BATTLE_TEST("Dancer correctly restores move targets")
 {
     GIVEN {
+        WITH_CONFIG(B_DANCER_ORDER, GEN_7);
         ASSUME(IsDanceMove(MOVE_REVELATION_DANCE));
         PLAYER(SPECIES_ORICORIO) { Speed(10); }
         PLAYER(SPECIES_ORICORIO) { Speed(3); }
@@ -639,7 +672,7 @@ SINGLE_BATTLE_TEST("Dancer copies a status Z-Move's base move without gaining an
 {
     GIVEN {
         ASSUME(IsDanceMove(MOVE_SWORDS_DANCE));
-        ASSUME(GetMoveEffect(MOVE_SCREECH) == EFFECT_DEFENSE_DOWN_2);
+        ASSUME_STAT_CHANGE(MOVE_SCREECH, defense: -2);
         ASSUME(GetMoveZEffect(MOVE_SWORDS_DANCE) == Z_EFFECT_RESET_STATS);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
         OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); }

@@ -39,6 +39,7 @@
 #include "malloc.h"
 #include "m4a.h"
 #include "map_name_popup.h"
+#include "map_preview_screen.h"
 #include "match_call.h"
 #include "menu.h"
 #include "metatile_behavior.h"
@@ -69,6 +70,7 @@
 #include "tv.h"
 #include "scanline_effect.h"
 #include "wild_encounter.h"
+#include "wild_encounter_ow.h"
 #include "vs_seeker.h"
 #include "frontier_util.h"
 #include "constants/abilities.h"
@@ -222,7 +224,7 @@ EWRAM_DATA static struct WarpData sFixedDiveWarp = {0};
 EWRAM_DATA static struct WarpData sFixedHoleWarp = {0};
 EWRAM_DATA static mapsec_u16_t sLastMapSectionId = 0;
 EWRAM_DATA static struct InitialPlayerAvatarState sInitialPlayerAvatarState = {0};
-EWRAM_DATA static u16 sAmbientCrySpecies = 0;
+EWRAM_DATA static enum Species sAmbientCrySpecies = SPECIES_NONE;
 EWRAM_DATA static bool8 sIsAmbientCryWaterMon = FALSE;
 EWRAM_DATA static u8 sHoursOverride = 0; // used to override apparent time of day hours
 EWRAM_DATA struct LinkPlayerObjectEvent gLinkPlayerObjectEvents[4] = {0};
@@ -444,10 +446,10 @@ void Overworld_ResetBattleFlagsAndVars(void)
     #endif
 
     FlagClear(B_FLAG_INVERSE_BATTLE);
-    FlagClear(B_FLAG_FORCE_DOUBLE_WILD);
-    FlagClear(B_SMART_WILD_AI_FLAG);
-    FlagClear(B_FLAG_NO_CATCHING);
-    FlagClear(B_FLAG_NO_RUNNING);
+    FlagClear(WE_FLAG_FORCE_DOUBLE_WILD);
+    FlagClear(WE_SMART_WILD_AI_FLAG);
+    FlagClear(WE_FLAG_NO_CATCHING);
+    FlagClear(WE_FLAG_NO_RUNNING);
     FlagClear(B_FLAG_DYNAMAX_BATTLE);
     FlagClear(B_FLAG_SKY_BATTLE);
     FlagClear(B_FLAG_NO_WHITEOUT);
@@ -925,6 +927,7 @@ void LoadMapFromCameraTransition(u8 mapGroup, u8 mapNum)
          || gMapHeader.regionMapSectionId != sLastMapSectionId)
             ShowMapNamePopup();
     }
+    SetMinimumOWESpawnTimer();
 }
 
 static void LoadMapFromWarp(bool32 a1)
@@ -985,6 +988,7 @@ static void LoadMapFromWarp(bool32 a1)
         UpdateTVScreensOnMap(gBackupMapLayout.width, gBackupMapLayout.height);
         InitSecretBaseAppearance(TRUE);
     }
+    SetMinimumOWESpawnTimer();
 }
 
 void ResetInitialPlayerAvatarState(void)
@@ -1392,8 +1396,28 @@ void Overworld_FadeOutMapMusic(void)
     FadeOutMapMusic(4);
 }
 
+static bool32 ShouldPlayVanillaAmbientCry(void)
+{
+    switch (OW_AMBIENT_CRIES)
+    {
+    case OW_AMBIENT_CRIES_VANILLA:
+        return TRUE;
+    case OW_AMBIENT_CRIES_OWE_PRIORITY:
+        return !TryPlayAmbientCryOWE();
+    case OW_AMBIENT_CRIES_OWE_ONLY:
+        TryPlayAmbientCryOWE();
+        return FALSE;
+    case OW_AMBIENT_CRIES_NONE:
+    default:
+        return FALSE;
+    }
+}
+
 static void PlayAmbientCry(void)
 {
+    if (!ShouldPlayVanillaAmbientCry())
+        return;
+    
     s16 x, y;
     s8 pan;
     s8 volume;
@@ -1448,8 +1472,8 @@ void UpdateAmbientCry(s16 *state, u16 *delayCounter)
         monsCount = CalculatePlayerPartyCount();
         for (i = 0; i < monsCount; i++)
         {
-            if (!GetMonData(&gPlayerParty[i], MON_DATA_SANITY_IS_EGG)
-                && GetMonAbility(&gPlayerParty[0]) == ABILITY_SWARM)
+            if (!GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SANITY_IS_EGG)
+                && GetMonAbility(&gParties[B_TRAINER_PLAYER][0]) == ABILITY_SWARM)
             {
                 divBy = 2;
                 break;
@@ -1508,6 +1532,11 @@ enum MapType GetCurrentMapType(void)
 enum MapType GetLastUsedWarpMapType(void)
 {
     return GetMapTypeByWarpData(&gLastUsedWarp);
+}
+
+mapsec_u8_t GetLastUsedWarpMapSectionId(void)
+{
+    return Overworld_GetMapHeaderByGroupAndId(gLastUsedWarp.mapGroup, gLastUsedWarp.mapNum)->regionMapSectionId;
 }
 
 bool8 IsMapTypeOutdoors(enum MapType mapType)
@@ -1816,6 +1845,7 @@ static void OverworldBasic(void)
             ApplyWeatherColorMapIfIdle(gWeatherPtr->colorMapIndex);
         }
     }
+    UpdateOverworldWildEncounter();
 }
 
 // This CB2 is used when starting
@@ -2302,7 +2332,12 @@ static bool32 LoadMapInStepsLocal(u8 *state, bool32 a2)
         (*state)++;
         break;
     case 11:
-        if (gMapHeader.showMapName == TRUE && SecretBaseMapPopupEnabled() == TRUE)
+        if (ShouldRunMapPreview() && CurrentMapHasPreviewScreen(MPS_TYPE_FADE_IN) == TRUE)
+        {
+            MapPreview_LoadGfx(gMapHeader.regionMapSectionId);
+            RunMapPreviewScreenFadeIn(gMapHeader.regionMapSectionId);
+        }
+        else if (gMapHeader.showMapName == TRUE && SecretBaseMapPopupEnabled() == TRUE)
             ShowMapNamePopup();
         (*state)++;
         break;

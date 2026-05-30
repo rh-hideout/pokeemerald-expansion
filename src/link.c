@@ -155,7 +155,7 @@ static void SendRecvDone(void);
 
 static const u16 sWirelessLinkDisplayPal[] = INCGFX_U16("graphics/link/wireless_display.png", ".gbapal");
 static const u32 sWirelessLinkDisplayGfx[] = INCGFX_U32("graphics/link/wireless_display.png", ".4bpp.smol");
-static const u32 sWirelessLinkDisplayTilemap[] = INCBIN_U32("graphics/link/wireless_display.bin.smolTM");
+static const u32 sWirelessLinkDisplayTilemap[] = INCGFX_U32("graphics/link/wireless_display.bin", ".smolTM");
 static const u16 sLinkTestDigitsPal[] = INCGFX_U16("graphics/link/test_digits.png", ".gbapal");
 static const u16 sLinkTestDigitsGfx[] = INCGFX_U16("graphics/link/test_digits.png", ".4bpp");
 static const u8 sUnusedTransparentWhite[] = _("{BACKGROUND TRANSPARENT}{ACCENT TRANSPARENT}{COLOR WHITE}");
@@ -498,7 +498,7 @@ static void HandleReceiveRemoteLinkPlayer(u8 who)
     {
         count += gRemoteLinkPlayersNotReceived[i];
     }
-    if (count == 0 && gReceivedRemoteLinkPlayers == 0)
+    if (count == 0 && !gReceivedRemoteLinkPlayers)
     {
         gReceivedRemoteLinkPlayers = 1;
     }
@@ -1760,19 +1760,19 @@ bool8 HandleLinkConnection(void)
 
 void SetWirelessCommType1(void)
 {
-    if (gReceivedRemoteLinkPlayers == 0)
+    if (!gReceivedRemoteLinkPlayers)
         gWirelessCommType = 1;
 }
 
 static void SetWirelessCommType0_Internal(void)
 {
-    if (gReceivedRemoteLinkPlayers == 0)
+    if (!gReceivedRemoteLinkPlayers)
         gWirelessCommType = 0;
 }
 
 void SetWirelessCommType0(void)
 {
-    if (gReceivedRemoteLinkPlayers == 0)
+    if (!gReceivedRemoteLinkPlayers)
         gWirelessCommType = 0;
 }
 

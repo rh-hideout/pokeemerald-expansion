@@ -220,7 +220,7 @@ struct ChooseMoveStruct
     enum Move moves[MAX_MON_MOVES];
     u8 currentPp[MAX_MON_MOVES];
     u8 maxPp[MAX_MON_MOVES];
-    u16 species;
+    enum Species species;
     enum Type monTypes[3];
     struct ZMoveData zmove;
 };
@@ -385,8 +385,8 @@ void BtlController_HandlePlayFanfareOrBGM(enum BattlerId battler);
 void BtlController_HandleFaintingCry(enum BattlerId battler);
 void BtlController_HandleIntroSlide(enum BattlerId battler);
 void BtlController_HandleSpriteInvisibility(enum BattlerId battler);
-bool32 TwoPlayerIntroMons(enum BattlerId battlerId); // Double battle with both player pokemon active.
-bool32 TwoOpponentIntroMons(enum BattlerId battlerId); // Double battle with both opponent pokemon active.
+bool32 TwoPlayerIntroMons(enum BattlerId battlerId); // Double battle with both player Pokémon active.
+bool32 TwoOpponentIntroMons(enum BattlerId battlerId); // Double battle with both opponent Pokémon active.
 void BtlController_HandleIntroTrainerBallThrow(enum BattlerId battler, u16 tagTrainerPal, const u16 *trainerPal, s16 framesToWait, void (*controllerCallback)(enum BattlerId battler));
 void BtlController_HandleDrawPartyStatusSummary(enum BattlerId battler, enum BattleSide side, bool32 considerDelay);
 void BtlController_HandleHidePartyStatusSummary(enum BattlerId battler);
@@ -492,6 +492,10 @@ void BtlCtrl_RemoveVoiceoverMessageFrame(void);
 bool32 ShouldBattleRestrictionsApply(enum BattlerId battler);
 void FreeShinyStars(void);
 enum BattleTrainer GetBattlerTrainer(enum BattlerId battler);
+enum BattleTrainer GetTrainerFromBattlePosition(enum BattlerPosition position);
+bool32 BattleSideHasTwoTrainers(enum BattleSide side);
+bool32 BattlersShareParty(enum BattlerId battler1, enum BattlerId battler2);
+bool32 TrainerHasParty(enum BattleTrainer trainer);
 
 
 // oak and old man controller

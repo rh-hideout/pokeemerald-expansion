@@ -52,7 +52,7 @@ WILD_BATTLE_TEST("Power Construct Zygarde reverts to its original form upon catc
         // Turn 2
         ANIMATION(ANIM_TYPE_SPECIAL, B_ANIM_BALL_THROW, player);
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_SPECIES), baseSpecies);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][1], MON_DATA_SPECIES), baseSpecies);
     }
 }
 
@@ -113,6 +113,6 @@ SINGLE_BATTLE_TEST("Power Construct does not switch Zygarde's form if end-turn d
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_POWER_CONSTRUCT, player);
         }
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), baseSpecies);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SPECIES), baseSpecies);
     }
 }

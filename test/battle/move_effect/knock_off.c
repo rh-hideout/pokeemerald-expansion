@@ -43,7 +43,7 @@ SINGLE_BATTLE_TEST("Knock Off knocks a healing berry before it has the chance to
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, player);
         NONE_OF {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
             MESSAGE("The opposing Wobbuffet restored its health using its Sitrus Berry!");
         }
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF);
@@ -67,11 +67,11 @@ SINGLE_BATTLE_TEST("Knock Off activates after Rocky Helmet and Weakness Policy")
         TURN { MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, player);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         if (item == ITEM_WEAKNESS_POLICY) {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE);
-            MESSAGE("Using Weakness Policy, the Attack of the opposing Wobbuffet sharply rose!");
-            MESSAGE("Using Weakness Policy, the Sp. Atk of the opposing Wobbuffet sharply rose!");
+            MESSAGE("The Weakness Policy sharply boosted the opposing Wobbuffet's Attack!");
+            MESSAGE("The Weakness Policy sharply boosted the opposing Wobbuffet's Sp. Atk!");
         } else if (item == ITEM_ROCKY_HELMET) {
             HP_BAR(player);
             MESSAGE("Wobbuffet was hurt by the opposing Wobbuffet's Rocky Helmet!");
@@ -401,7 +401,6 @@ SINGLE_BATTLE_TEST("Knock Off does not activate if user faints")
         TURN { MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, player);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         MESSAGE("Wobbuffet was hurt by the opposing Wobbuffet's Rocky Helmet!");
         MESSAGE("Wobbuffet fainted!");
     } THEN {
@@ -418,7 +417,7 @@ SINGLE_BATTLE_TEST("Knock Off doesn't remove item if it's prevented by Sticky Ho
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_STICKY_HOLD);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
     }
 }
 
