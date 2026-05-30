@@ -4,11 +4,11 @@
 static const u16 ALIGNED(4) sRegionMap{{ capitalize(region_map.label) }}_Pal[] = INCGFX_U16("{{ join(region_map.palette, "\", \"") }}");
 static const u32 sRegionMap{{ capitalize(region_map.label) }}_Gfx[] = INCGFX_U32("{{ join(region_map.gfx, "\", \"") }}");
 static const u32 sRegionMap{{ capitalize(region_map.label) }}_Tilemap[] = INCGFX_U32("{{ join(region_map.tilemap, "\", \"") }}");
-static const u16 ALIGNED(4) sPokedexAreaMap{{ capitalize(region_map.label) }}_Pal[] = INCGFX_U16("{{ join(region_map.pokedexPalette, "\", \"") }}");
-static const u32 sPokedexAreaMap{{ capitalize(region_map.label) }}_Gfx[] = INCGFX_U32("{{ join(region_map.pokedexGfx, "\", \"") }}");
-static const u32 sPokedexAreaMap{{ capitalize(region_map.label) }}_Tilemap[] = INCGFX_U32("{{ join(region_map.pokedexTilemap, "\", \"") }}");
+static const u16 ALIGNED(4) sPokedexAreaMap{{ capitalize(region_map.label) }}_Pal[] = INCGFX_U16("{{ join(region_map.pokedex_palette, "\", \"") }}");
+static const u32 sPokedexAreaMap{{ capitalize(region_map.label) }}_Gfx[] = INCGFX_U32("{{ join(region_map.pokedex_gfx, "\", \"") }}");
+static const u32 sPokedexAreaMap{{ capitalize(region_map.label) }}_Tilemap[] = INCGFX_U32("{{ join(region_map.pokedex_tilemap, "\", \"") }}");
 
-#include "{{ replace(region_map.layoutFile, "src/data/region_map/", "") }}"
+#include "{{ replace(region_map.layout_file, "src/data/region_map/", "") }}"
 
 ## endfor
 
@@ -31,7 +31,7 @@ const struct RegionMapInfo gRegionMapInfos[REGION_MAP_COUNT] =
     {
         .regionName = COMPOUND_STRING("{{ region_map.region_name }} "),
         {% if existsIn(region_map, "unlock_condition") %}
-            .unlockCondition = {{ region_map.unlockCondition }},
+            .unlockCondition = {{ region_map.unlock_condition }},
         {% else %}
             .unlockCondition = UNLOCKED_ON_FLY,
         {% endif %}
