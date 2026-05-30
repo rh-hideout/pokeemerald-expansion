@@ -12,7 +12,6 @@ FuchsiaCity_House3_EventScript_MoveDeleter::
 FuchsiaCity_House3_EventScript_ChooseMonForMoveDeleter::
 	msgbox FuchsiaCity_House3_Text_WhichMonShouldForgetMove
 	special ChoosePartyMon
-	waitstate
 	goto_if_ge VAR_0x8004, PARTY_SIZE, FuchsiaCity_House3_EventScript_CancelForgetMove
 	special IsSelectedMonEgg
 	goto_if_eq VAR_RESULT, TRUE, FuchsiaCity_House3_EventScript_CantForgetMoveEgg

@@ -115,6 +115,26 @@ SINGLE_BATTLE_TEST("Encore forces the last move used before the target flinched"
     }
 }
 
+SINGLE_BATTLE_TEST("Encore forces the last move used while asleep")
+{
+    GIVEN {
+        WITH_CONFIG(B_ENCORE_TARGET, GEN_3);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(50); Moves(MOVE_CELEBRATE, MOVE_SPORE, MOVE_ENCORE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(100); Moves(MOVE_GRASS_KNOT, MOVE_SCRATCH, MOVE_CELEBRATE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SPORE); MOVE(opponent, MOVE_GRASS_KNOT); }
+        TURN { MOVE(player, MOVE_ENCORE); MOVE(opponent, MOVE_SCRATCH); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+        TURN { FORCED_MOVE(opponent); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASS_KNOT, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASS_KNOT, opponent);
+    }
+}
+
 SINGLE_BATTLE_TEST("(DYNAMAX) Dynamaxed Pokemon are immune to Encore")
 {
     GIVEN {
@@ -147,6 +167,46 @@ SINGLE_BATTLE_TEST("(DYNAMAX) Dynamaxed Pokemon can be encored immediately after
         MESSAGE("Wobbuffet used Max Knuckle!");
         MESSAGE("The opposing Wobbuffet used Encore!");
         MESSAGE("Wobbuffet used Arm Thrust!");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Encore works even if the target's last move failed")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN {
+            MOVE(opponentLeft, MOVE_SUCKER_PUNCH, target: playerRight);
+            MOVE(opponentRight, MOVE_SUCKER_PUNCH, target: playerLeft);
+            MOVE(playerRight, MOVE_FOLLOW_ME);
+            MOVE(playerLeft, MOVE_ENCORE, target: opponentLeft);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FOLLOW_ME, playerRight);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SUCKER_PUNCH, opponentLeft);
+        MESSAGE("But it failed!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SUCKER_PUNCH, opponentRight);
+        MESSAGE("But it failed!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, playerLeft);
+        MESSAGE("The opposing Wobbuffet must do an encore!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Encore fails if target has not used any move yet")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP_TURN(3)); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_ENCORE); }
+    } SCENE {
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, opponent);
+        }
     }
 }
 
