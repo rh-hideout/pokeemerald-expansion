@@ -207,4 +207,8 @@ Input must be of the form (upper << lower) where upper can be up to 7, lower up 
 /* Useful for counting arguments */
 #define PLUS_ONE(...) + 1
 
+/* Expands to _default if no arguments, otherwise expands to arguments. */
+#define IF_EMPTY(_default, ...) __VA_OPT__(__VA_ARGS__ IGNORE) (_default)
+#define IGNORE(...)
+
 #endif
