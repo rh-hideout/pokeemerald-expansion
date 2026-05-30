@@ -697,6 +697,24 @@
         "bug",
         "code"
       ]
+    },
+    {
+      "login": "jtebbe",
+      "name": "jtebbe",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15947257?v=4",
+      "profile": "https://github.com/jtebbe",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "Liamjd14",
+      "name": "Liam",
+      "avatar_url": "https://avatars.githubusercontent.com/u/175732139?v=4",
+      "profile": "https://github.com/Liamjd14",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,

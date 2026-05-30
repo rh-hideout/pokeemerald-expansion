@@ -1,5 +1,5 @@
-#ifndef GUARD_CONFIG_WILD_ENCOUNTER_OW_H
-#define GUARD_CONFIG_WILD_ENCOUNTER_OW_H
+#ifndef GUARD_CONFIG_WILD_ENCOUNTER_H
+#define GUARD_CONFIG_WILD_ENCOUNTER_H
 
 // Vanilla
 #define WE_VANILLA_RANDOM           TRUE    // If TRUE, Pokémon can randomly spawn on tiles that can trigger wild encounters, as in vanilla.
@@ -38,6 +38,4 @@
 #define WE_OWE_DESPAWN_ON_ENTER_TOWN            TRUE    // If TRUE, despawns all OWEs upon entering a city (MAP_TYPE_CITY) or town (MAP_TYPE_TOWN).
 #define WE_OWE_NO_REPEL_DEXNAV_COLLISION        FALSE   // If TRUE, OWEs cannot be triggered by a collision if a Repel or the DexNav is active.
 
-// Should move others from config/overworld.h here?
-
-#endif // GUARD_CONFIG_WILD_ENCOUNTER_OW_H
+#endif // GUARD_CONFIG_WILD_ENCOUNTER_H
