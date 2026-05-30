@@ -132,9 +132,9 @@ void SwitchPartyOrderInGameMulti(enum BattlerId battler, u8 arg1)
         u8 switchInPartyId = arg1;
         enum BattleTrainer trainer = GetBattlerTrainer(battler);
 
-        // In 6v6 multis, the partner party is stored in gParties[B_TRAINER_2]
+        // In 6v6 multis, the partner party is stored in gParties[B_TRAINER_PARTNER]
         // and uses indexes 0-2, but we still use the combined party order.
-        if (IsMultiBattle() == TRUE && !AreMultiPartiesFullTeams() && trainer == B_TRAINER_2)
+        if (IsMultiBattle() == TRUE && !AreMultiPartiesFullTeams() && trainer == B_TRAINER_PARTNER)
         {
             battlerPartyId += MULTI_PARTY_SIZE;
             switchInPartyId += MULTI_PARTY_SIZE;

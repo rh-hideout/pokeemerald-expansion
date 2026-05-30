@@ -39,7 +39,7 @@ void DoTimeBasedEvents(void)
     }
 }
 
-static void UpdateDailySeed(void)
+void UpdateDailySeed(void)
 {
     gSaveBlock1Ptr->dailySeed = Random32();
 }
@@ -93,7 +93,7 @@ void FormChangeTimeUpdate()
     s32 i;
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        TryFormChange(&gParties[B_TRAINER_0][i], FORM_CHANGE_TIME_OF_DAY, B_TRAINER_0);
+        TryFormChange(&gParties[B_TRAINER_PLAYER][i], FORM_CHANGE_TIME_OF_DAY, B_TRAINER_PLAYER);
     }
 }
 

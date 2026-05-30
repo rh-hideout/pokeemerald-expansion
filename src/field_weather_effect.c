@@ -6,6 +6,7 @@
 #include "overworld.h"
 #include "random.h"
 #include "script.h"
+#include "constants/region_map_sections.h"
 #include "constants/weather.h"
 #include "constants/songs.h"
 #include "constants/rgb.h"
@@ -2509,6 +2510,7 @@ static void CreateAbnormalWeatherTask(void)
 
 static u8 TranslateWeatherNum(u8);
 static void UpdateRainCounter(u8, u8);
+static u8 GetDynamicWeather(void);
 
 void SetSavedWeather(u32 weather)
 {
@@ -2596,6 +2598,76 @@ static const u8 sWeatherCycleRoute123[WEATHER_CYCLE_LENGTH] =
     WEATHER_SUNNY,
 };
 
+#define DYNAMIC_WEATHER_POOL(pool) pool, ARRAY_COUNT(pool)
+
+struct DynamicWeatherPool
+{
+    mapsec_u16_t mapSec;
+    const u8 *weathers;
+    u8 count;
+};
+
+static const u8 sDefaultDynamicWeathers[] =
+{
+    WEATHER_SUNNY,
+    WEATHER_RAIN,
+    WEATHER_SNOW,
+    WEATHER_SANDSTORM,
+    WEATHER_VOLCANIC_ASH,
+    WEATHER_RAIN_THUNDERSTORM,
+    WEATHER_DROUGHT,
+};
+
+/*static const u8 sDynamicWeathers_DewfordTown[] =
+{
+    WEATHER_SUNNY,
+    WEATHER_RAIN,
+    WEATHER_RAIN_THUNDERSTORM,
+};*/
+
+static const struct DynamicWeatherPool sDynamicWeatherPools[] =
+{
+    /*{ MAPSEC_DEWFORD_TOWN, DYNAMIC_WEATHER_POOL(sDynamicWeathers_DewfordTown) },*/
+};
+
+static const u8 *GetDynamicWeatherPool(u8 *count)
+{
+    u16 mapSec = gMapHeader.regionMapSectionId;
+
+    for (u32 i = 0; i < ARRAY_COUNT(sDynamicWeatherPools); i++)
+    {
+        if (sDynamicWeatherPools[i].mapSec == mapSec && sDynamicWeatherPools[i].count != 0)
+        {
+            *count = sDynamicWeatherPools[i].count;
+            return sDynamicWeatherPools[i].weathers;
+        }
+    }
+
+    *count = ARRAY_COUNT(sDefaultDynamicWeathers);
+    return sDefaultDynamicWeathers;
+}
+
+static u8 GetDynamicWeather(void)
+{
+    u8 count;
+    const u8 *weathers = GetDynamicWeatherPool(&count);
+    rng_value_t localRngState;
+    const u32 hashPieces[] =
+    {
+        gSaveBlock1Ptr->dailySeed,
+        gSaveBlock1Ptr->location.mapGroup,
+        gSaveBlock1Ptr->location.mapNum,
+        gMapHeader.mapLayoutId,
+        gMapHeader.regionMapSectionId,
+    };
+
+    if (count == 0)
+        return WEATHER_NONE;
+
+    localRngState = LocalRandomSeed(Crc32B((const u8 *)hashPieces, sizeof(hashPieces)));
+    return weathers[LocalRandom32(&localRngState) % count];
+}
+
 static u8 TranslateWeatherNum(u8 weather)
 {
     switch (weather)
@@ -2618,6 +2690,7 @@ static u8 TranslateWeatherNum(u8 weather)
     case WEATHER_ABNORMAL:           return WEATHER_ABNORMAL;
     case WEATHER_ROUTE119_CYCLE:     return sWeatherCycleRoute119[gSaveBlock1Ptr->weatherCycleStage];
     case WEATHER_ROUTE123_CYCLE:     return sWeatherCycleRoute123[gSaveBlock1Ptr->weatherCycleStage];
+    case WEATHER_DYNAMIC:            return GetDynamicWeather();
     default:                         return WEATHER_NONE;
     }
 }

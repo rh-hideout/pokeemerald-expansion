@@ -181,7 +181,7 @@ u8 RecordedBattle_GetBattlerAction(u32 actionType, enum BattlerId battler)
         ResetPaletteFadeControl();
         BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
         SetMainCallback2(CB2_QuitRecordedBattle);
-        return 0xFF;
+        return B_ACTION_NONE;
     }
     else
     {
@@ -490,7 +490,7 @@ static void Task_StartAfterCountdown(u8 taskId)
 
 void SetPartiesFromRecordedSave(struct RecordedBattleSave *src)
 {
-    for (enum BattleTrainer trainer = B_TRAINER_0; trainer < MAX_BATTLE_TRAINERS; trainer++)
+    for (enum BattleTrainer trainer = B_TRAINER_PLAYER; trainer < MAX_BATTLE_TRAINERS; trainer++)
     {
         ZeroPartyMons(gParties[trainer]);
         for (s32 i = 0; i < PARTY_SIZE; i++)

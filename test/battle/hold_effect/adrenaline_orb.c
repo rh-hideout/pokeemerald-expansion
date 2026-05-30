@@ -66,3 +66,27 @@ SINGLE_BATTLE_TEST("Adrenaline Orb activates after Defiant")
         EXPECT_EQ(opponent->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 1);
     }
 }
+
+SINGLE_BATTLE_TEST("Adrenaline Orb doesn't activate if attack doesn't drop")
+{
+    GIVEN {
+        ASSUME_STAT_CHANGE(MOVE_CHARM, attack: -2);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_INCINEROAR) { Ability(ABILITY_INTIMIDATE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CHARM); }
+        TURN { MOVE(player, MOVE_CHARM); }
+        TURN { MOVE(player, MOVE_CHARM); }
+        TURN { SWITCH(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CHARM, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CHARM, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CHARM, player);
+        ABILITY_POPUP(player, ABILITY_INTIMIDATE);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+    } THEN {
+        EXPECT_EQ(opponent->statStages[STAT_ATK], MIN_STAT_STAGE);
+        EXPECT_EQ(opponent->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
+    }
+}
