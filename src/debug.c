@@ -51,6 +51,7 @@
 #include "string_util.h"
 #include "task.h"
 #include "tv.h"
+#include "util.h"
 #include "pokemon_summary_screen.h"
 #include "wild_encounter.h"
 #include "constants/abilities.h"
@@ -1051,28 +1052,11 @@ static void Debug_DestroyMenu_Full_Script(u8 taskId, const u8 *script)
 
 static void Debug_HandleInput_Numeric(u8 taskId, s32 min, s32 max, u32 digits)
 {
-    if (JOY_NEW(DPAD_UP))
-    {
-        gTasks[taskId].tInput += sPowersOfTen[gTasks[taskId].tDigit];
-        if (gTasks[taskId].tInput > max)
-            gTasks[taskId].tInput = max;
-    }
-    if (JOY_NEW(DPAD_DOWN))
-    {
-        gTasks[taskId].tInput -= sPowersOfTen[gTasks[taskId].tDigit];
-        if (gTasks[taskId].tInput < min)
-            gTasks[taskId].tInput = min;
-    }
-    if (JOY_NEW(DPAD_LEFT))
-    {
-        if (gTasks[taskId].tDigit > 0)
-            gTasks[taskId].tDigit -= 1;
-    }
-    if (JOY_NEW(DPAD_RIGHT))
-    {
-        if (gTasks[taskId].tDigit < digits - 1)
-            gTasks[taskId].tDigit += 1;
-    }
+    s32 delta;
+    if ((delta = JOY_AXIS_NEW(DPAD_DOWN, DPAD_UP)) != 0)
+        SatAddPtr(&gTasks[taskId].tInput, delta * sPowersOfTen[gTasks[taskId].tDigit], min, max);
+    if ((delta = JOY_AXIS_NEW(DPAD_LEFT, DPAD_RIGHT)) != 0)
+        SatAddPtr(&gTasks[taskId].tDigit, delta, 0, digits - 1);
 }
 
 enum SongType { SONG_SE, SONG_MUS };
