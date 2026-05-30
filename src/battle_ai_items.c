@@ -95,17 +95,18 @@ bool32 ShouldUseItem(enum BattlerId battler)
                     break;
                 }
 
-                enum StatChange statChange = STAT_CHANGE_ATK;
+                enum Stat stat = STAT_ATK;
+                u32 stage = 1;
 
                 if (B_X_ITEMS_BUFF >= GEN_7)
-                    statChange = STAT_CHANGE_ATK_2;
+                    stage = 2;
 
-                statChange = statChange + itemEffects[1] - STAT_ATK;
+                stat = stat + itemEffects[1] - STAT_ATK;
 
-                if (IsBattlerAlive(LEFT_FOE(battler)) && IncreaseStatUpScore(battler, LEFT_FOE(battler), statChange) > NO_INCREASE)
+                if (IsBattlerAlive(LEFT_FOE(battler)) && IncreaseStatUpScore(battler, LEFT_FOE(battler), stat, stage) > NO_INCREASE)
                     shouldUse = TRUE;
 
-                if (IsBattlerAlive(RIGHT_FOE(battler)) && IncreaseStatUpScore(battler, RIGHT_FOE(battler), statChange) > NO_INCREASE)
+                if (IsBattlerAlive(RIGHT_FOE(battler)) && IncreaseStatUpScore(battler, RIGHT_FOE(battler), stat, stage) > NO_INCREASE)
                     shouldUse = TRUE;
 
                 break;

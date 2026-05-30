@@ -5,6 +5,7 @@
 #include "battle_util.h"
 #include "battle_controllers.h"
 #include "battle_ai_record.h"
+#include "battle_stat_change.h"
 #include "battle_gimmick.h"
 #include "battle_scripts.h"
 #include "constants/battle.h"
@@ -693,11 +694,13 @@ static bool32 HandleEndTurnOctolock(enum BattlerId battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (gBattleMons[battler].volatiles.octolock)
+    if (gBattleMons[battler].volatiles.octolock && IsBattlerAlive(battler))
     {
         gBattlerTarget = battler;
         gBattlerAttacker = gBattleMons[battler].volatiles.battlerPreventingEscape;
-        BattleScriptCall(BattleScript_OctolockEndTurn);
+        SetStatChange(battler, STAT_DEF, -1);
+        SetStatChange(battler, STAT_SPDEF, -1);
+        BattleScriptCall(BattleScript_EndTurnStatChange);
         effect = TRUE;
     }
 
@@ -716,6 +719,9 @@ static bool32 HandleEndTurnSyrupBomb(enum BattlerId battler)
         if (gBattleMons[battler].volatiles.syrupBombTimer > 0 && --gBattleMons[battler].volatiles.syrupBombTimer == 0)
             gBattleMons[battler].volatiles.syrupBomb = FALSE;
         PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_SYRUP_BOMB);
+        gBattlerTarget = battler;
+        gBattlerAttacker = gBattleMons[battler].volatiles.stickySyrupedBy;
+        SetStatChange(battler, STAT_SPEED, -1);
         BattleScriptCall(BattleScript_SyrupBombEndTurn);
         effect = TRUE;
     }
@@ -1349,9 +1355,12 @@ static bool32 HandleEndTurnFormChange(enum BattlerId battler)
 {
     bool32 effect = FALSE;
 
-    enum Ability ability = GetBattlerAbility(battler);
-
     gBattleStruct->eventState.endTurnBattler++;
+
+    if (!IsBattlerAlive(battler))
+        return FALSE;
+
+    enum Ability ability = GetBattlerAbility(battler);
 
     if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_TURN_END, ability)
         || TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT_TURN_END, ability))
