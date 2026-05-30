@@ -17769,7 +17769,7 @@ Pic: Black Belt
 Gender: Male
 Music: Intense
 Double Battle: Yes
-Party Size: 4
+Party Size: 3
 Pool Rules: Doubles
 AI: Check Bad Move / Try To Faint
 
@@ -17879,7 +17879,7 @@ Pic: OW Lumberjack F
 Gender: Female
 Music: Hiker
 Double Battle: Yes
-Party Size: 4
+Party Size: 3
 Pool Rules: Doubles
 AI: Check Bad Move / Try To Faint
 
@@ -17989,7 +17989,7 @@ Pic: Lumberjack
 Gender: Male
 Music: Male
 Double Battle: Yes
-Party Size: 4
+Party Size: 3
 Pool Rules: Doubles
 AI: Check Bad Move / Try To Faint
 
@@ -18043,20 +18043,9 @@ Pic: Parasol Lady
 Gender: Female
 Music: Girl
 Double Battle: Yes
-Party Size: 4
+Party Size: 3
 Pool Rules: Weather Doubles
 AI: Check Bad Move / Try To Faint
-
-Pelipper @ Focus Sash
-Level: 100
-Ability: Drizzle
-Nature: Modest
-EVs: 4 HP / 252 SpA / 252 Spe
-Tags: Lead / Weather Setter
-- Hurricane
-- Weather Ball
-- Tailwind
-- Protect
 
 Politoed @ Damp Rock
 Level: 100
@@ -18120,7 +18109,7 @@ Pic: Running Triathlete M
 Gender: Male
 Music: Male
 Double Battle: Yes
-Party Size: 4
+Party Size: 3
 Pool Rules: Doubles
 AI: Check Bad Move / Try To Faint
 
@@ -18252,7 +18241,7 @@ Pic: OW Beekeeper M
 Gender: Male
 Music: Male
 Double Battle: Yes
-Party Size: 4
+Party Size: 3
 Pool Rules: Doubles
 AI: Check Bad Move / Try To Faint
 
@@ -18318,7 +18307,7 @@ Pic: OW Beekeeper M
 Gender: Male
 Music: Male
 Double Battle: Yes
-Party Size: 4
+Party Size: 3
 Pool Rules: Doubles
 AI: Check Bad Move / Try To Faint
 
@@ -18384,7 +18373,7 @@ Pic: Pokemon Ranger F
 Gender: Female
 Music: Girl
 Double Battle: Yes
-Party Size: 4
+Party Size: 3
 Pool Rules: Doubles
 AI: Check Bad Move / Try To Faint
 
@@ -18450,7 +18439,7 @@ Pic: Pokemon Ranger M
 Gender: Male
 Music: Male
 Double Battle: Yes
-Party Size: 4
+Party Size: 3
 Pool Rules: Doubles
 AI: Check Bad Move / Try To Faint
 
@@ -18516,7 +18505,7 @@ Pic: Camper
 Gender: Male
 Music: Male
 Double Battle: Yes
-Party Size: 4
+Party Size: 3
 Pool Rules: Doubles
 AI: Check Bad Move / Try To Faint
 
@@ -18582,7 +18571,7 @@ Pic: Bug Maniac
 Gender: Male
 Music: Male
 Double Battle: Yes
-Party Size: 4
+Party Size: 3
 Pool Rules: Doubles
 AI: Check Bad Move / Try To Faint
 
@@ -18646,7 +18635,7 @@ Pic: picnicker
 Gender: Female
 Music: Female
 Double Battle: Yes
-Party Size: 4
+Party Size: 3
 Pool Rules: Support Doubles
 AI: Check Bad Move / Try To Faint
 
@@ -18722,7 +18711,7 @@ Pic: Pokemon Ranger M
 Gender: Male
 Music: Male
 Double Battle: Yes
-Party Size: 4
+Party Size: 3
 Pool Rules: Weather Doubles
 AI: Check Bad Move / Try To Faint
 
@@ -18799,20 +18788,9 @@ Pic: parasol_lady
 Gender: Female
 Music: Female
 Double Battle: Yes
-Party Size: 4
+Party Size: 3
 Pool Rules: Weather Doubles
 AI: Check Bad Move / Try To Faint
-
-Politoed @ Damp Rock
-Level: 100
-Ability: Drizzle
-Nature: Calm
-EVs: 252 HP / 156 SpD / 100 Spe
-Tags: Lead / Weather Setter
-- Surf
-- Ice Beam
-- Perish Song
-- Encore
 
 Pelipper @ Focus Sash
 Level: 100
@@ -18876,7 +18854,7 @@ Pic: fisherman
 Gender: Male
 Music: Male
 Double Battle: Yes
-Party Size: 4
+Party Size: 3
 Pool Rules: Doubles
 AI: Check Bad Move / Try To Faint
 
@@ -18953,7 +18931,7 @@ Pic: Hex Maniac
 Gender: Female
 Music: Suspicious
 Double Battle: Yes
-Party Size: 4
+Party Size: 3
 Pool Rules: Doubles
 AI: Check Bad Move / Try To Faint
 
@@ -19030,7 +19008,7 @@ Pic: ninja_boy
 Gender: Male
 Music: Suspicious
 Double Battle: Yes
-Party Size: 4
+Party Size: 3
 Pool Rules: Doubles
 AI: Check Bad Move / Try To Faint
 
@@ -19107,7 +19085,7 @@ Pic: Hiker
 Gender: Male
 Music: Hiker
 Double Battle: Yes
-Party Size: 4
+Party Size: 3
 Pool Rules: Weather Doubles
 AI: Check Bad Move / Try To Faint
 
@@ -19184,7 +19162,7 @@ Pic: bug_catcher
 Gender: Male
 Music: Male
 Double Battle: Yes
-Party Size: 4
+Party Size: 3
 Pool Rules: Doubles
 AI: Check Bad Move / Try To Faint
 
