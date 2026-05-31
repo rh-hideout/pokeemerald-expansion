@@ -220,9 +220,10 @@ static void InvokeTestFunction(const struct BattleTest *test)
         DATA.battlerTrainers |= (B_TRAINER_PARTNER << 4 | B_TRAINER_OPPONENT_B << 6);
         InvokeMultiTestFunctionWithStack(STATE->results, STATE->runParameter, &gBattleMons[B_POSITION_PLAYER_LEFT], &gBattleMons[B_POSITION_OPPONENT_LEFT], &gBattleMons[B_POSITION_PLAYER_RIGHT], &gBattleMons[B_POSITION_OPPONENT_RIGHT], test->function.multi, &DATA.stack[BATTLE_TEST_STACK_SIZE]);
         break;
+    case BATTLE_TEST_RAID:
+    case BATTLE_TEST_TERA:
     case BATTLE_TEST_TWO_VS_ONE:
     case BATTLE_TEST_AI_TWO_VS_ONE:
-    case BATTLE_TEST_RAID:
         DATA.battlerTrainers |= (B_TRAINER_PARTNER << 4 | B_TRAINER_OPPONENT_A << 6);
         InvokeTwoVsOneTestFunctionWithStack(STATE->results, STATE->runParameter, &gBattleMons[B_POSITION_PLAYER_LEFT], &gBattleMons[B_POSITION_OPPONENT_LEFT], &gBattleMons[B_POSITION_PLAYER_RIGHT], &gBattleMons[B_POSITION_OPPONENT_RIGHT], test->function.two_vs_one, &DATA.stack[BATTLE_TEST_STACK_SIZE]);
         break;
@@ -250,6 +251,8 @@ bool32 IsAITest(void)
     case BATTLE_TEST_AI_TWO_VS_ONE:
     case BATTLE_TEST_AI_ONE_VS_TWO:
         return TRUE;
+    default:
+        break;
     }
     return FALSE;
 }
@@ -316,7 +319,8 @@ static void BattleTest_SetUp(void *data)
     case BATTLE_TEST_AI_TWO_VS_ONE:
     case BATTLE_TEST_ONE_VS_TWO:
     case BATTLE_TEST_AI_ONE_VS_TWO:
-    case BATTLE_TEST_RAID:          // Uses 3 battlers only, but we have handling for the missing battler3
+    case BATTLE_TEST_RAID:          // Raid and Tera use 3 battlers only, but we have handling for the missing battler3
+    case BATTLE_TEST_TERA:
         STATE->battlersCount = 4;
         break;
     }
@@ -490,6 +494,7 @@ static void BattleTest_Run(void *data)
         DATA.currentMonIndexes[3] = 0; // Opponent B first mon
         break;
     case BATTLE_TEST_RAID:
+    case BATTLE_TEST_TERA:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_RECORDED_IS_MASTER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_MULTI | BATTLE_TYPE_RAID;
         DATA.recordedBattle.opponentB = 0xFFFF;
         DATA.currentMonIndexes[0] = 0; // Player first mon
@@ -2073,10 +2078,14 @@ void OpenPokemon(u32 sourceLine, enum BattleTrainer trainer, enum Species specie
     DATA.nature = NATURE_HARDY;
     (*partySize)++;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_RAID)
+    enum BattleTestType testType = GetBattleTest()->type;
+    if (testType == BATTLE_TEST_RAID || testType == BATTLE_TEST_TERA)
     {
-        INVALID_IF(DATA.battlerParty == B_TRAINER_OPPONENT_A && DATA.currentPartyIndex > , "Only 1 raid opponent can be used in a RAID_BATTLE_TEST");
-        INVALID_IF(DATA.battlerParty == B_TRAINER_OPPONENT_B, "OPPONENT_B cannot be used with RAID_BATTLE_TEST");
+        INVALID_IF(DATA.battlerParty == B_TRAINER_OPPONENT_A && DATA.currentPartyIndex > 0, "Only 1 raid opponent can be used in a %S", (testType == BATTLE_TEST_RAID) ? "RAID_BATTLE_TEST" : "TERA_BATTLE_TEST");
+        INVALID_IF(DATA.battlerParty == B_TRAINER_OPPONENT_B, "OPPONENT_B cannot be used with %S", (testType == BATTLE_TEST_RAID) ? "RAID_BATTLE_TEST" : "TERA_BATTLE_TEST");
+        
+        u32 partyLimit = (testType == BATTLE_TEST_RAID ? 3 : 1);
+        INVALID_IF((DATA.battlerParty & BIT_SIDE) == B_SIDE_PLAYER && DATA.currentPartyIndex >= partyLimit, "Only %d raid opponent can be used in a %S", partyLimit, (testType == BATTLE_TEST_RAID) ? "RAID_BATTLE_TEST" : "TERA_BATTLE_TEST");
     }
 
     CreateMon(DATA.currentMon, species, 100, 0, OTID_STRUCT_PRESET(0));
@@ -2118,6 +2127,8 @@ void ClosePokemon(u32 sourceLine)
 {
     s32 i;
     u32 data;
+    if (GetBattleTest()->type == BATTLE_TEST_TERA)
+        INVALID_IF(DATA.battlerParty == B_TRAINER_OPPONENT_A && DATA.chosenGimmick[DATA.battlerParty][DATA.currentPartyIndex] != GIMMICK_TERA, "TERA_BATTLE_TEST required explicit TeraType");
     INVALID_IF(DATA.hasExplicitSpeeds && !(DATA.explicitSpeeds[DATA.battlerParty] & (1 << DATA.currentPartyIndex)), "Speed required");
     for (i = 0; i < STATE->battlersCount; i++)
     {
@@ -2457,6 +2468,7 @@ static const char *BattlerIdentifier(enum BattlerId battlerId)
     case BATTLE_TEST_ONE_VS_TWO:
     case BATTLE_TEST_AI_ONE_VS_TWO:
     case BATTLE_TEST_RAID:
+    case BATTLE_TEST_TERA:
         return sBattlerIdentifiersDoubles[battlerId];
     }
     return "<unknown>";
