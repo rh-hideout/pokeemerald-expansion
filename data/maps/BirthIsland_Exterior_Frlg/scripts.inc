@@ -42,7 +42,6 @@ BirthIsland_Exterior_Frlg_EventScript_Triangle::
 	lock
 	faceplayer
 	special DoDeoxysRockInteraction
-	waitstate
 	switch VAR_RESULT
 	case 0, BirthIsland_Exterior_EventScript_NotSolved1
 	case 1, BirthIsland_Exterior_EventScript_NotSolved2
@@ -81,7 +80,6 @@ BirthIsland_Exterior_Frlg_EventScript_Deoxys::
 	seteventmon SPECIES_DEOXYS, 30
 	setflag FLAG_SYS_CTRL_OBJ_DELETE
 	special BattleSetup_StartLegendaryBattle
-	waitstate
 	clearflag FLAG_SYS_CTRL_OBJ_DELETE
 	specialvar VAR_RESULT, GetBattleOutcome
 	goto_if_eq VAR_RESULT, B_OUTCOME_WON, BirthIsland_Exterior_Frlg_EventScript_DefeatedDeoxys

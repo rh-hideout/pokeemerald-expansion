@@ -7,6 +7,7 @@
 #include "field_weather.h"
 #include "lottery_corner.h"
 #include "main.h"
+#include "mass_outbreak.h"
 #include "overworld.h"
 #include "pokerus.h"
 #include "random.h"
@@ -52,6 +53,7 @@ static void UpdatePerDay(struct Time *localTime)
     {
         daysSince = localTime->days - *days;
         ClearDailyFlags();
+        UpdateMassOutbreakDaysLeft(daysSince);
         UpdateDailySeed();
         UpdateDewfordTrendPerDay(daysSince);
         UpdateTVShowsPerDay(daysSince);
@@ -91,7 +93,7 @@ void FormChangeTimeUpdate()
     s32 i;
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        TryFormChange(&gParties[B_TRAINER_0][i], FORM_CHANGE_TIME_OF_DAY, B_TRAINER_0);
+        TryFormChange(&gParties[B_TRAINER_PLAYER][i], FORM_CHANGE_TIME_OF_DAY, B_TRAINER_PLAYER);
     }
 }
 

@@ -10,6 +10,7 @@
 #include "field_effect.h"
 #include "field_player_avatar.h"
 #include "follower_npc.h"
+#include "mass_outbreak.h"
 #include "metatile_behavior.h"
 #include "overworld.h"
 #include "random.h"
@@ -144,7 +145,7 @@ static bool32 CreateEnemyPartyOWE(struct InfoOWE *info, s32 x, s32 y);
 static bool32 OWE_DoesOWERoamerExist(void);
 static bool32 StartWildBattleWithOWE_CheckRoamer(enum CategoryOWE category);
 static bool32 StartWildBattleWithOWE_CheckBattleFrontier(u32 headerId);
-static bool32 StartWildBattleWithOWE_CheckMassOutbreak(enum CategoryOWE category, enum Species speciesId);
+static bool32 StartWildBattleWithOWE_CheckMassOutbreak(enum CategoryOWE category, enum Species speciesId, u32 level);
 static bool32 StartWildBattleWithOWE_CheckDoubleBattle(struct ObjectEvent *owe, u32 headerId);
 static bool32 CheckCurrentWildMonHeaderForOWE(bool32 shouldSpawnWaterMons);
 static u32 GetOldestActiveOWESlot(bool32 forceRemove);
@@ -393,14 +394,14 @@ void StartWildBattleWithOWE(struct ScriptContext *ctx)
 
     ZeroEnemyPartyMons();
     personality = GetMonPersonality(speciesId, gender, NATURE_RANDOM, RANDOM_UNOWN_LETTER);
-    CreateMonWithIVs(&gParties[B_TRAINER_1][0], speciesId, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
-    GiveMonInitialMoveset(&gParties[B_TRAINER_1][0]);
-    SetMonData(&gParties[B_TRAINER_1][0], MON_DATA_IS_SHINY, &shiny);
+    CreateMonWithIVs(&gParties[B_TRAINER_OPPONENT_A][0], speciesId, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
+    GiveMonInitialMoveset(&gParties[B_TRAINER_OPPONENT_A][0]);
+    SetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_IS_SHINY, &shiny);
     
     if (StartWildBattleWithOWE_CheckBattleFrontier(headerId))
         return;
     
-    if (StartWildBattleWithOWE_CheckMassOutbreak(category, speciesId))
+    if (StartWildBattleWithOWE_CheckMassOutbreak(category, speciesId, level))
         return;
 
     if (StartWildBattleWithOWE_CheckDoubleBattle(owe, headerId))
@@ -833,9 +834,9 @@ static bool32 CreateEnemyPartyOWE(struct InfoOWE *info, s32 x, s32 y)
             if (TryGenerateWildMon(gBattlePyramidWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo, WILD_AREA_LAND, 0) != TRUE)
                 return FALSE;
 
-            u32 id = GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_SPECIES);
+            u32 id = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_SPECIES);
             GenerateBattlePyramidWildMon(SPECIES_NONE);
-            SetMonData(&gParties[B_TRAINER_1][0], MON_DATA_LEVEL, &id);
+            SetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_LEVEL, &id);
             return TRUE;
         }
 
@@ -866,7 +867,7 @@ static bool32 CreateEnemyPartyOWE(struct InfoOWE *info, s32 x, s32 y)
         4. Attempt to generate a Standard Wild Encounter
     
     The structure of this statement ensures that only one of these encounter types can succeed per call,
-    with the resultant wild mon being created in gParties[B_TRAINER_1][0].
+    with the resultant wild mon being created in gParties[B_TRAINER_OPPONENT_A][0].
     If none of these checks succeed, speciesId is set to SPECIES_NONE and FALSE is returned.
     */
 
@@ -939,9 +940,9 @@ static bool32 StartWildBattleWithOWE_CheckBattleFrontier(u32 headerId)
         }
         if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR)
         {
-            u32 id = GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_LEVEL);
-            enum Species species = GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_SPECIES);
-            SetMonData(&gParties[B_TRAINER_1][0], MON_DATA_SPECIES, &id);
+            u32 id = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_LEVEL);
+            enum Species species = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_SPECIES);
+            SetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_SPECIES, &id);
             if (!BATTLE_PYRAMID_RANDOM_ENCOUNTERS)
                 species = SPECIES_NONE;
             GenerateBattlePyramidWildMon(species);
@@ -953,18 +954,19 @@ static bool32 StartWildBattleWithOWE_CheckBattleFrontier(u32 headerId)
     return FALSE;
 }
 
-static bool32 StartWildBattleWithOWE_CheckMassOutbreak(enum CategoryOWE category, enum Species speciesId)
+static bool32 StartWildBattleWithOWE_CheckMassOutbreak(enum CategoryOWE category, enum Species speciesId, u32 level)
 {
-    if (category == OWE_CATEGORY_MASS_OUTBREAK
-     && gSaveBlock1Ptr->outbreakPokemonSpecies == speciesId)
-    {
-        ZeroEnemyPartyMons();
-        SetUpMassOutbreakEncounter(0);
-        BattleSetup_StartWildBattle();
-        return TRUE;
-    }
+    if (category != OWE_CATEGORY_MASS_OUTBREAK)
+        return FALSE;
 
-    return FALSE;
+    assertf(gSaveBlock1Ptr->outbreakPokemonSpecies == speciesId && gSaveBlock1Ptr->outbreakPokemonLevel == level, "Outbreak OW encounter is not matching last active outbreak")
+    {
+        return FALSE;
+    }
+    ZeroEnemyPartyMons();
+    SetUpMassOutbreakEncounter(0);
+    BattleSetup_StartWildBattle();
+    return TRUE;
 }
 
 static bool32 StartWildBattleWithOWE_CheckDoubleBattle(struct ObjectEvent *owe, u32 headerId)
@@ -976,7 +978,7 @@ static bool32 StartWildBattleWithOWE_CheckDoubleBattle(struct ObjectEvent *owe, 
 
     if (TryDoDoubleWildBattle())
     {
-        struct Pokemon mon1 = gParties[B_TRAINER_1][0];
+        struct Pokemon mon1 = gParties[B_TRAINER_OPPONENT_A][0];
 
         if (MetatileBehavior_IsWaterWildEncounter(metatileBehavior))
         {
@@ -993,7 +995,7 @@ static bool32 StartWildBattleWithOWE_CheckDoubleBattle(struct ObjectEvent *owe, 
 
         if (TryGenerateWildMon(wildMonInfo, wildArea, WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE))
         {
-            gParties[B_TRAINER_1][1] = mon1;
+            gParties[B_TRAINER_OPPONENT_A][1] = mon1;
             BattleSetup_StartDoubleWildBattle();
             return TRUE;
         }
@@ -1054,8 +1056,9 @@ void TryTriggerOverworldWildEncounter(struct ObjectEvent *obstacle, struct Objec
 
 const u8 *GetOverworlWildEncounterScript(u32 objectEventId)
 {
-    const u8 *script = GetObjectEventScriptPointerByObjectEventId(objectEventId);
-    if (script)
+    const u8 *script;
+    if (GetOverworldWildEncounterType(&gObjectEvents[objectEventId]) == OWE_MANUAL
+     && (script = GetObjectEventScriptPointerByObjectEventId(objectEventId)) != NULL)
         return script;
     
     return InteractWithOverworldWildEncounter;
@@ -1234,9 +1237,9 @@ static void SetSpeciesInfoForOWE(struct InfoOWE *info, u32 x, u32 y)
         return;
     }
  
-    info->speciesId = GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_SPECIES);
-    info->level = GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_LEVEL);
-    personality = GetMonData(&gParties[B_TRAINER_1][0], MON_DATA_PERSONALITY);
+    info->speciesId = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_SPECIES);
+    info->level = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_LEVEL);
+    personality = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_PERSONALITY);
 
     if (info->speciesId == SPECIES_UNOWN)
         info->speciesId = GetUnownSpeciesId(personality);

@@ -249,21 +249,21 @@ static const u32 sPokedexPlusHGSS_Menu_2_Gfx[] = INCGFX_U32("graphics/pokedex/hg
 static const u32 sPokedexPlusHGSS_Menu_3_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_menu3.png", ".4bpp.smol");
 static const u32 sPokedexPlusHGSS_MenuSearch_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_menu_search.png", ".4bpp.smol");
 static const u32 sPokedexPlusHGSS_MenuSearch_DECA_Gfx[] = INCGFX_U32("graphics/pokedex/hgss/tileset_menu_search_DECA.png", ".4bpp.smol");
-static const u32 sPokedexPlusHGSS_StartMenuMain_Tilemap[] = INCBIN_U32("graphics/pokedex/hgss/tilemap_start_menu.bin.smolTM");
-static const u32 sPokedexPlusHGSS_StartMenuSearchResults_Tilemap[] = INCBIN_U32("graphics/pokedex/hgss/tilemap_start_menu_search_results.bin.smolTM");
-static const u32 sPokedexPlusHGSS_ScreenSelectBarSubmenu_Tilemap[] = INCBIN_U32("graphics/pokedex/hgss/SelectBar.bin.smolTM");
-static const u32 sPokedexPlusHGSS_ScreenSelectBarSubmenu_Tilemap_Clear[] = INCBIN_U32("graphics/pokedex/hgss/SelectBar_clear.bin.smolTM");
-static const u32 sPokedexPlusHGSS_ScreenList_Tilemap[] = INCBIN_U32("graphics/pokedex/hgss/tilemap_list_screen.bin.smolTM");
-static const u32 sPokedexPlusHGSS_ScreenListUnderlay_Tilemap[] = INCBIN_U32("graphics/pokedex/hgss/tilemap_list_screen_underlay.bin.smolTM");
-static const u32 sPokedexPlusHGSS_ScreenInfo_Tilemap[] = INCBIN_U32("graphics/pokedex/hgss/tilemap_info_screen.bin.smolTM");
-static const u32 sPokedexPlusHGSS_ScreenStats_Tilemap[] = INCBIN_U32("graphics/pokedex/hgss/tilemap_stats_screen.bin.smolTM");
-static const u32 sPokedexPlusHGSS_ScreenEvolution_Tilemap[] = INCBIN_U32("graphics/pokedex/hgss/tilemap_evo_screen.bin.smolTM");
-static const u32 sPokedexPlusHGSS_ScreenEvolution_Tilemap_PE[] = INCBIN_U32("graphics/pokedex/hgss/tilemap_evo_screen_PE.bin.smolTM");
-static const u32 sPokedexPlusHGSS_ScreenForms_Tilemap[] = INCBIN_U32("graphics/pokedex/hgss/tilemap_forms_screen.bin.smolTM");
-static const u32 sPokedexPlusHGSS_ScreenCry_Tilemap[] = INCBIN_U32("graphics/pokedex/hgss/tilemap_cry_screen.bin.smolTM");
-static const u32 sPokedexPlusHGSS_ScreenSize_Tilemap[] = INCBIN_U32("graphics/pokedex/hgss/tilemap_size_screen.bin.smolTM");
-static const u32 sPokedexPlusHGSS_ScreenSearchHoenn_Tilemap[] = INCBIN_U32("graphics/pokedex/hgss/tilemap_search_screen_hoenn.bin.smolTM");
-static const u32 sPokedexPlusHGSS_ScreenSearchNational_Tilemap[] = INCBIN_U32("graphics/pokedex/hgss/tilemap_search_screen_national.bin.smolTM");
+static const u32 sPokedexPlusHGSS_StartMenuMain_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_start_menu.bin", ".smolTM");
+static const u32 sPokedexPlusHGSS_StartMenuSearchResults_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_start_menu_search_results.bin", ".smolTM");
+static const u32 sPokedexPlusHGSS_ScreenSelectBarSubmenu_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/SelectBar.bin", ".smolTM");
+static const u32 sPokedexPlusHGSS_ScreenSelectBarSubmenu_Tilemap_Clear[] = INCGFX_U32("graphics/pokedex/hgss/SelectBar_clear.bin", ".smolTM");
+static const u32 sPokedexPlusHGSS_ScreenList_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_list_screen.bin", ".smolTM");
+static const u32 sPokedexPlusHGSS_ScreenListUnderlay_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_list_screen_underlay.bin", ".smolTM");
+static const u32 sPokedexPlusHGSS_ScreenInfo_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_info_screen.bin", ".smolTM");
+static const u32 sPokedexPlusHGSS_ScreenStats_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_stats_screen.bin", ".smolTM");
+static const u32 sPokedexPlusHGSS_ScreenEvolution_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_evo_screen.bin", ".smolTM");
+static const u32 sPokedexPlusHGSS_ScreenEvolution_Tilemap_PE[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_evo_screen_PE.bin", ".smolTM");
+static const u32 sPokedexPlusHGSS_ScreenForms_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_forms_screen.bin", ".smolTM");
+static const u32 sPokedexPlusHGSS_ScreenCry_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_cry_screen.bin", ".smolTM");
+static const u32 sPokedexPlusHGSS_ScreenSize_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_size_screen.bin", ".smolTM");
+static const u32 sPokedexPlusHGSS_ScreenSearchHoenn_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_search_screen_hoenn.bin", ".smolTM");
+static const u32 sPokedexPlusHGSS_ScreenSearchNational_Tilemap[] = INCGFX_U32("graphics/pokedex/hgss/tilemap_search_screen_national.bin", ".smolTM");
 
 #define SCROLLING_MON_X 146
 
