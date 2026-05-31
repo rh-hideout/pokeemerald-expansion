@@ -5,8 +5,7 @@
 #include "constants/battle_partner.h"
 
 // Start bringXpickY
-//void FillPartnerParty(u16 trainerId);
-void FillPartnerParty(u16 trainerId, u32 partnerPartyStart);
+void FillPartnerParty(u16 trainerId);
 // End bringXpickY
 
 #endif // BATTLE_PARTNER_H

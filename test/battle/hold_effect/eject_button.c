@@ -233,7 +233,7 @@ DOUBLE_BATTLE_TEST("Eject Button activation will not trigger an attack from the 
     }
 }
 
-SINGLE_BATTLE_TEST("Eject Button activates after Wandring Spirit")
+SINGLE_BATTLE_TEST("Eject Button activates after Wandering Spirit")
 {
     GIVEN {
         PLAYER(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
@@ -256,6 +256,7 @@ DOUBLE_BATTLE_TEST("Eject Button will activate before Red Card if holder is fast
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(5); };
         OPPONENT(SPECIES_WOBBUFFET) { Speed(30); Item(ITEM_EJECT_BUTTON); }
         OPPONENT(SPECIES_WYNAUT) { Speed(25); Item(ITEM_RED_CARD); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
@@ -267,6 +268,24 @@ DOUBLE_BATTLE_TEST("Eject Button will activate before Red Card if holder is fast
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
-        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
+    }
+}
+
+SINGLE_BATTLE_TEST("Eject Button activates and the attacker takes Life Orb recoil before replacement comes out")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_LIFE_ORB) == HOLD_EFFECT_LIFE_ORB);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LIFE_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_BUTTON); }
+        OPPONENT(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); SEND_OUT(opponent, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        HP_BAR(player);
+        ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
     }
 }

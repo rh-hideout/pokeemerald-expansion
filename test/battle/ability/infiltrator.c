@@ -69,14 +69,14 @@ DOUBLE_BATTLE_TEST("Infiltrator doesn't bypass an ally's Light Screen/Reflect/Au
 
 SINGLE_BATTLE_TEST("Infiltrator bypasses the opponent's Mist")
 {
-    u32 ability;
+    enum Ability ability;
 
     PARAMETRIZE { ability = ABILITY_CLEAR_BODY; }
     PARAMETRIZE { ability = ABILITY_INFILTRATOR; }
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_MIST) == EFFECT_MIST);
-        ASSUME(GetMoveEffect(MOVE_SCREECH) == EFFECT_DEFENSE_DOWN_2);
+        ASSUME_STAT_CHANGE(MOVE_SCREECH, defense: -2);
         PLAYER(SPECIES_DRAGAPULT) { Ability(ability); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -94,7 +94,7 @@ DOUBLE_BATTLE_TEST("Infiltrator doesn't bypass an ally's Mist")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_MIST) == EFFECT_MIST);
-        ASSUME(GetMoveEffect(MOVE_SCREECH) == EFFECT_DEFENSE_DOWN_2);
+        ASSUME_STAT_CHANGE(MOVE_SCREECH, defense: -2);
         PLAYER(SPECIES_DRAGAPULT) { Ability(ABILITY_INFILTRATOR); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -109,7 +109,7 @@ DOUBLE_BATTLE_TEST("Infiltrator doesn't bypass an ally's Mist")
 
 SINGLE_BATTLE_TEST("Infiltrator bypasses the opponent's Safeguard")
 {
-    u32 ability;
+    enum Ability ability;
 
     PARAMETRIZE { ability = ABILITY_CLEAR_BODY; }
     PARAMETRIZE { ability = ABILITY_INFILTRATOR; }
@@ -166,7 +166,7 @@ DOUBLE_BATTLE_TEST("Infiltrator doesn't bypass an ally's Safeguard - Confuse")
 
 SINGLE_BATTLE_TEST("Infiltrator bypasses the opponent's Substitute (Gen 6+)")
 {
-    u32 ability, config;
+    enum Ability ability; u32 config;
 
     PARAMETRIZE { ability = ABILITY_CLEAR_BODY; config = GEN_5; }
     PARAMETRIZE { ability = ABILITY_INFILTRATOR; config = GEN_5; }
@@ -193,7 +193,7 @@ SINGLE_BATTLE_TEST("Infiltrator bypasses the opponent's Substitute (Gen 6+)")
 
 DOUBLE_BATTLE_TEST("Infiltrator bypasses an ally's Substitute (Gen 6+)")
 {
-    u32 ability, config;
+    enum Ability ability; u32 config;
 
     PARAMETRIZE { ability = ABILITY_CLEAR_BODY; config = GEN_5; }
     PARAMETRIZE { ability = ABILITY_INFILTRATOR; config = GEN_5; }
@@ -222,7 +222,7 @@ DOUBLE_BATTLE_TEST("Infiltrator bypasses an ally's Substitute (Gen 6+)")
 
 SINGLE_BATTLE_TEST("Infiltrator doesn't ignore a battler's Substitute when using Transform or Sky Drop")
 {
-    u32 ability, move;
+    enum Ability ability; enum Move move;
 
     PARAMETRIZE { ability = ABILITY_CLEAR_BODY;  move = MOVE_TRANSFORM; }
     PARAMETRIZE { ability = ABILITY_INFILTRATOR; move = MOVE_TRANSFORM; }

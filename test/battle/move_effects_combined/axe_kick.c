@@ -48,7 +48,7 @@ SINGLE_BATTLE_TEST("Axe Kick deals damage half the hp to user if it fails")
     } SCENE {
         s32 maxHP = GetMonData(&PLAYER_PARTY[0], MON_DATA_MAX_HP);
         MESSAGE("Wobbuffet used Axe Kick!");
-        MESSAGE("Wobbuffet's attack missed!");
+        MESSAGE("The opposing Wobbuffet avoided the attack!");
         MESSAGE("Wobbuffet kept going and crashed!");
         HP_BAR(player, hp: maxHP / 2);
     }
@@ -70,7 +70,7 @@ SINGLE_BATTLE_TEST("Axe Kick still deals crash damage when boosted by Sheer Forc
     } SCENE {
         s32 maxHP = GetMonData(&PLAYER_PARTY[0], MON_DATA_MAX_HP);
         MESSAGE("Tauros used Axe Kick!");
-        MESSAGE("Tauros's attack missed!");
+        MESSAGE("The opposing Wobbuffet avoided the attack!");
         MESSAGE("Tauros kept going and crashed!");
         HP_BAR(player, hp: maxHP / 2);
     }

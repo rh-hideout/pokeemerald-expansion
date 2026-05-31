@@ -112,7 +112,7 @@ SINGLE_BATTLE_TEST("Blunder Policy state is cleared between actions if it could 
     PASSES_RANDOMLY(3, 10, RNG_ACCURACY);
     GIVEN {
         ASSUME(GetMoveAccuracy(MOVE_FOCUS_BLAST) == 70);
-        ASSUME(GetMoveEffect(MOVE_AGILITY) == EFFECT_SPEED_UP_2);
+        ASSUME_STAT_CHANGE(MOVE_AGILITY, speed: +2);
         ASSUME(GetMoveEffect(MOVE_CURSE) == EFFECT_CURSE);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_BLUNDER_POLICY); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -244,11 +244,9 @@ DOUBLE_BATTLE_TEST("Blunder Policy activates for Dragon Darts if one target miss
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(finalTarget);
-
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
-
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(finalTarget);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
     } THEN {
         EXPECT(playerLeft->item == ITEM_NONE);
         EXPECT_EQ(playerLeft->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 2);

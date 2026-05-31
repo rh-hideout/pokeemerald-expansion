@@ -134,6 +134,9 @@ void PreprocAsmFile(std::string filename, bool isStdin, bool doEnum, bool doSize
                 if (label.type == Label::global)
                     std::printf(".global %s\n%s:\n", s, s);
 
+                if (doSize)
+                    stack.top().OutputLocation();
+
                 prevLabel = label;
             }
             else

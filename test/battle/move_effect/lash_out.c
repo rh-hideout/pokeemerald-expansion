@@ -85,7 +85,8 @@ SINGLE_BATTLE_TEST("Lash Out damage is only boosted on the turn that Intimidate 
 SINGLE_BATTLE_TEST("Lash Out damage is boosted on turn 1 by switch in abilities")
 {
     s16 damage[2] = {0};
-    u32 species = SPECIES_NONE, ability = ABILITY_NONE;
+    u32 species = SPECIES_NONE;
+    enum Ability ability = ABILITY_NONE;
 
     PARAMETRIZE { species = SPECIES_INCINEROAR, ability = ABILITY_BLAZE; }
     PARAMETRIZE { species = SPECIES_INCINEROAR, ability = ABILITY_INTIMIDATE; }
@@ -150,7 +151,8 @@ DOUBLE_BATTLE_TEST("Lash Out damage is boosted by Cotton Down activation in doub
 DOUBLE_BATTLE_TEST("Lash Out damage is not boosted by Treasure of Ruin ability activation in doubles")
 {
     s16 damage[2] = {0};
-    u32 species = SPECIES_NONE, ability = ABILITY_NONE;
+    u32 species = SPECIES_NONE;
+    enum Ability ability = ABILITY_NONE;
 
     PARAMETRIZE { species = SPECIES_KANGASKHAN, ability = ABILITY_INNER_FOCUS; }
     PARAMETRIZE { species = SPECIES_HYDRAPPLE,  ability = ABILITY_SUPERSWEET_SYRUP; }

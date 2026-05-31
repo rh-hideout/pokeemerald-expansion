@@ -15,6 +15,7 @@
 #include "menu.h"
 #include "new_game.h"
 #include "palette.h"
+#include "quickstart.h"
 #include "random.h"
 #include "reset_rtc_screen.h"
 #include "save.h"
@@ -361,12 +362,12 @@ static const u16 sStreakYPositions[] = {
 };
 #endif
 
-static const u32 sUnused_Tilemap1[] = INCBIN_U32("graphics/title_screen_frlg/unused1.bin.smolTM");
-static const u32 sUnused_Tilemap2[] = INCBIN_U32("graphics/title_screen_frlg/unused2.bin.smolTM");
-static const u32 sUnused_Tilemap3[] = INCBIN_U32("graphics/title_screen_frlg/unused3.bin.smolTM");
-static const u32 sUnused_Tilemap4[] = INCBIN_U32("graphics/title_screen_frlg/unused4.bin.smolTM");
-static const u32 sUnused_Tilemap5[] = INCBIN_U32("graphics/title_screen_frlg/unused5.bin.smolTM");
-static const u32 sUnused_Tilemap6[] = INCBIN_U32("graphics/title_screen_frlg/unused6.bin.smolTM");
+static const u32 sUnused_Tilemap1[] = INCGFX_U32("graphics/title_screen_frlg/unused1.bin", ".smolTM");
+static const u32 sUnused_Tilemap2[] = INCGFX_U32("graphics/title_screen_frlg/unused2.bin", ".smolTM");
+static const u32 sUnused_Tilemap3[] = INCGFX_U32("graphics/title_screen_frlg/unused3.bin", ".smolTM");
+static const u32 sUnused_Tilemap4[] = INCGFX_U32("graphics/title_screen_frlg/unused4.bin", ".smolTM");
+static const u32 sUnused_Tilemap5[] = INCGFX_U32("graphics/title_screen_frlg/unused5.bin", ".smolTM");
+static const u32 sUnused_Tilemap6[] = INCGFX_U32("graphics/title_screen_frlg/unused6.bin", ".smolTM");
 
 static const u32 *const sUnused_Tilemaps[] = {
     sUnused_Tilemap1,
@@ -654,6 +655,8 @@ static void SetTitleScreenScene_Run(s16 *data)
     switch (tState)
     {
     case 0:
+        if (QUICKSTART && QUICKSTART_HUD)
+            CreateQuickstartHud();
         CreateTask(Task_TitleScreen_BlinkPressStart, 0);
 #if defined(FIRERED)
         CreateTask(Task_FlameSpawner, 5);
@@ -686,6 +689,10 @@ static void SetTitleScreenScene_Run(s16 *data)
         else if (JOY_NEW(A_BUTTON | START_BUTTON))
         {
             SetTitleScreenScene(data, TITLESCREENSCENE_CRY);
+        }
+        else if (QUICKSTART && JOY_NEW(SELECT_BUTTON))
+        {
+            Quickstart();
         }
         else if (!FuncIsActiveTask(Task_TitleScreenTimer))
         {

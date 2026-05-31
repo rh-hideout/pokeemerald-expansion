@@ -3,7 +3,7 @@
 
 SINGLE_BATTLE_TEST("Mold Breaker cancels damage reduction from Ice Scales", s16 damage)
 {
-    u16 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_SHADOW_TAG; }
     PARAMETRIZE { ability = ABILITY_MOLD_BREAKER; }
     GIVEN {
