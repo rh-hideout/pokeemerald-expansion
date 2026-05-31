@@ -4150,13 +4150,13 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .effect = EFFECT_HIT,
         .power = B_UPDATED_MOVE_DATA >= GEN_6 ? 100 : 90,
         .type = TYPE_WATER,
-    #if B_UPDATED_MOVE_DATA >= GEN_CHAMPIONS
-        .accuracy = 95,
-    #elif B_UPDATED_MOVE_DATA >= GEN_5
-        .accuracy = 90,
-    #else
-        .accuracy = 85,
-    #endif
+        #if B_UPDATED_MOVE_DATA >= GEN_CHAMPIONS
+            .accuracy = 95,
+        #elif B_UPDATED_MOVE_DATA >= GEN_5
+            .accuracy = 90,
+        #else
+            .accuracy = 85,
+        #endif
         .criticalHitStage = B_UPDATED_MOVE_DATA >= GEN_3 ? 1 : 2,
         .pp = 10,
         .target = TARGET_SELECTED,
