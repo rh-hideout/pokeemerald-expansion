@@ -331,17 +331,23 @@ static void BXPY_InitTrainerBattleParams(u32 trainerA, const u8 *loseTextA, u32 
 
 static void BXPY_PrepareEnemyParty(u32 bringSize, u32 battleFlags)
 {
-    ZeroEnemyPartyMons();
-    CreateNPCTrainerPartyFromTrainer(&gParties[B_TRAINER_OPPONENT_A][0], &gTrainers[GetCurrentDifficultyLevel()][TRAINER_BATTLE_PARAM.opponentA], TRUE, battleFlags);
+    bool32 isMulti = (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE);
+    bool32 isHalf = (B_MULTI_HALF_TEAMS && isMulti);
 
-    if (TRAINER_BATTLE_PARAM.opponentB == TRAINER_NONE)
+    ZeroEnemyPartyMons();
+    CreateNPCTrainerPartyFromTrainer(&gParties[B_TRAINER_OPPONENT_A][0], &gTrainers[GetCurrentDifficultyLevel()][TRAINER_BATTLE_PARAM.opponentA], isHalf, battleFlags);
+
+    if (isMulti == FALSE);
         return;
 
-    CreateNPCTrainerPartyFromTrainer(&gParties[B_TRAINER_OPPONENT_A][PARTY_SIZE/2], &gTrainers[GetCurrentDifficultyLevel()][TRAINER_BATTLE_PARAM.opponentB], FALSE, battleFlags);
+    CreateNPCTrainerPartyFromTrainer(&gParties[B_TRAINER_OPPONENT_B][0], &gTrainers[GetCurrentDifficultyLevel()][TRAINER_BATTLE_PARAM.opponentB], isHalf, battleFlags);
 }
 
 static void BXPY_GetEnemyEnterMons(u8* enteredMons, u32 pickSize)
 {
+    for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
+        enteredMons[partyIndex] = BXPY_EMPTY_MON;
+
     u32 mons[PARTY_SIZE] = {0, 1, 2, 3, 4, 5};
 
     for (u32 i = 0; i < PARTY_SIZE; i++)
@@ -1394,12 +1400,15 @@ static void Task_WaitFadeAndExitGracefully(u8 taskId)
     if (gPaletteFade.active)
         return;
 
-    u8 playerEnteredMons[PARTY_SIZE] = {BXPY_EMPTY_MON};
+    u8 playerEnteredMons[PARTY_SIZE];
+
+    for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
+        playerEnteredMons[partyIndex] = BXPY_EMPTY_MON;
 
     for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
         playerEnteredMons[partyIndex] = BXPY_GetSelectedMons(partyIndex);
 
-    u8 enemyEnteredMons[PARTY_SIZE] = {BXPY_EMPTY_MON};
+    u8 enemyEnteredMons[PARTY_SIZE];
     BXPY_GetEnemyEnterMons(enemyEnteredMons,BXPY_GetPickSize());
     BXPY_SelectPartyMembers(gParties[B_TRAINER_PLAYER],playerEnteredMons);
     BXPY_SelectPartyMembers(gParties[B_TRAINER_OPPONENT_A],enemyEnteredMons);
@@ -2234,13 +2243,14 @@ static void Task_LoadPokemonSummary(u8 taskId)
     struct Pokemon *party = BXPY_GetParty();
     u32 selectedMon = BXPY_GetPosition();
     u32 partySize = BXPY_GetBringSize();
-
+    bool32 isMulti = (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE);
+    bool32 isHalf = (B_MULTI_HALF_TEAMS && isMulti);
 
     if (BXPY_IsCursorOnEnemy())
     {
         u32 trainerId = TRAINER_BATTLE_PARAM.opponentA;
         const struct Trainer *viewedTrainer = &gTrainers[GetCurrentDifficultyLevel()][trainerId];
-        partySize = (CreateNPCTrainerPartyFromTrainer(party, viewedTrainer, TRUE, BATTLE_TYPE_TRAINER));
+        partySize = (CreateNPCTrainerPartyFromTrainer(party, viewedTrainer, isHalf, BATTLE_TYPE_TRAINER));
         selectedMon = selectedMon - partySize;
         partySize--;
     }
