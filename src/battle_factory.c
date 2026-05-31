@@ -8,6 +8,7 @@
 #include "frontier_util.h"
 #include "battle_tower.h"
 #include "random.h"
+#include "trainer_pools.h"
 #include "constants/battle_ai.h"
 #include "constants/battle_factory.h"
 #include "constants/battle_frontier.h"
@@ -739,7 +740,7 @@ const struct FrontierMonPool *GetFactoryMonPool(enum FrontierLevelMode lvlMode, 
 
 static u16 GetFactoryMonId(enum FrontierLevelMode lvlMode, u8 challengeNum, bool8 useBetterRange)
 {
-    return GetRandomFrontierMonFromPool(GetFactoryMonPool(lvlMode, challengeNum, useBetterRange));
+    return GetRandomTrainerMonFromPool(GetFactoryMonPool(lvlMode, challengeNum, useBetterRange));
 }
 
 u8 GetNumPastRentalsRank(u8 battleMode, enum FrontierLevelMode lvlMode)

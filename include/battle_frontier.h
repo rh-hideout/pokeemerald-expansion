@@ -3,6 +3,7 @@
 
 #include "data.h"
 #include "script.h"
+#include "trainer_pools.h"
 
 struct BattleFrontierTrainer
 {
@@ -13,17 +14,8 @@ struct BattleFrontierTrainer
     u16 speechWin[EASY_CHAT_BATTLE_WORDS_COUNT];
     u16 speechLose[EASY_CHAT_BATTLE_WORDS_COUNT];
     const u16 *monSet;
+    const struct TrainerPoolSet *poolSet;
 };
-
-struct FrontierMonPool
-{
-    const u16 *monIds;
-    u16 firstMonId;
-    u16 size;
-};
-
-#define FRONTIER_MON_LIST_POOL(monIds_, size_) { .monIds = (monIds_), .size = (size_) }
-#define FRONTIER_MON_RANGE_POOL(first_, last_) { .firstMonId = (first_), .size = (last_) - (first_) + 1 }
 
 // Temporary storage for monIds of the opponent team
 // during team generation in battle factory and similar facilities.
@@ -33,6 +25,7 @@ extern const struct BattleFrontierTrainer *gFacilityTrainers;
 extern const struct TrainerMon *gFacilityTrainerMons;
 extern const struct BattleFrontierTrainer gBattleFrontierTrainers[];
 extern const struct TrainerMon gBattleFrontierMons[];
+extern const struct TrainerPoolSet gBattleFrontierPoolSets[];
 
 void DoFacilityTrainerBattle(struct ScriptContext *ctx);
 void FillFrontierTrainerParty(u8 monsCount);

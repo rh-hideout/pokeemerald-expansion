@@ -1,10 +1,10 @@
 //
-// DO NOT MODIFY THIS FILE! It is auto-generated from test/battle/frontier_mons.party
+// DO NOT MODIFY THIS FILE! It is auto-generated from test/battle/frontier_mons.pool_mons
 //
 // If you want to modify this file see expansion PR #7154
 //
 
-#line 1 "test/battle/frontier_mons.party"
+#line 1 "test/battle/frontier_mons.pool_mons"
 
 const struct TrainerMon gBattleFrontierMons[NUM_FRONTIER_MONS] =
 {
@@ -83,31 +83,31 @@ const struct TrainerMon gBattleFrontierMons[NUM_FRONTIER_MONS] =
             MOVE_KARATE_CHOP,
         },
     },
-#line 39
+#line 38
     [FRONTIER_MON_TEST_PIKACHU_2] = {
-#line 41
+#line 40
         .species = SPECIES_PIKACHU,
-#line 41
+#line 40
         .heldItem = ITEM_ORAN_BERRY,
         .ball = POKEBALL_COUNT,
-#line 42
+#line 41
         .nature = NATURE_JOLLY,
         .moves = {
-#line 43
+#line 42
             MOVE_QUICK_ATTACK,
         },
     },
-#line 45
+#line 44
     [FRONTIER_MON_TEST_BULBASAUR] = {
-#line 47
+#line 46
         .species = SPECIES_BULBASAUR,
-#line 47
+#line 46
         .heldItem = ITEM_LIGHT_BALL,
         .ball = POKEBALL_COUNT,
-#line 48
+#line 47
         .nature = NATURE_CALM,
         .moves = {
-#line 49
+#line 48
             MOVE_VINE_WHIP,
         },
     },

@@ -2,6 +2,7 @@
 #include "battle_factory.h"
 #include "battle_frontier.h"
 #include "frontier_util.h"
+#include "trainer_pools.h"
 #include "test/test.h"
 #include "constants/battle_frontier.h"
 #include "constants/battle_frontier_mons.h"
@@ -11,8 +12,8 @@ static void ExpectFactoryPool(enum FrontierLevelMode lvlMode, u8 challengeNum, b
     const struct FrontierMonPool *pool = GetFactoryMonPool(lvlMode, challengeNum, useBetterRange);
 
     ASSUME(pool->monIds == NULL);
-    EXPECT_EQ(GetFrontierMonPoolAt(pool, 0), firstMonId);
-    EXPECT_EQ(GetFrontierMonPoolAt(pool, pool->size - 1), lastMonId);
+    EXPECT_EQ(GetTrainerMonPoolAt(pool, 0), firstMonId);
+    EXPECT_EQ(GetTrainerMonPoolAt(pool, pool->size - 1), lastMonId);
     EXPECT_EQ(pool->size, lastMonId - firstMonId + 1);
 }
 

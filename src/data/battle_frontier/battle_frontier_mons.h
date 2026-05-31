@@ -1,10 +1,10 @@
 //
-// DO NOT MODIFY THIS FILE! It is auto-generated from src/data/battle_frontier/battle_frontier_mons.party
+// DO NOT MODIFY THIS FILE! It is auto-generated from src/data/battle_frontier/battle_frontier_mons.pool_mons
 //
 // If you want to modify this file see expansion PR #7154
 //
 
-#line 1 "src/data/battle_frontier/battle_frontier_mons.party"
+#line 1 "src/data/battle_frontier/battle_frontier_mons.pool_mons"
 
 const struct TrainerMon gBattleFrontierMons[NUM_FRONTIER_MONS] =
 {
@@ -16989,660 +16989,692 @@ const struct TrainerMon gBattleFrontierMons[NUM_FRONTIER_MONS] =
         .ball = BALL_POKE,
 #line 9333
         .nature = NATURE_ADAMANT,
+#line 9335
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9335
+#line 9336
             MOVE_EARTHQUAKE,
             MOVE_AERIAL_ACE,
             MOVE_BRICK_BREAK,
             MOVE_DRAGON_DANCE,
         },
     },
-#line 9340
+#line 9341
     [FRONTIER_MON_DRAGONITE_2] = {
-#line 9342
-        .species = SPECIES_DRAGONITE,
-#line 9342
-        .heldItem = ITEM_BRIGHT_POWDER,
 #line 9343
-        .ev = TRAINER_PARTY_EVS(170, 0, 170, 0, 0, 170),
-#line 9345
-        .ball = BALL_POKE,
+        .species = SPECIES_DRAGONITE,
+#line 9343
+        .heldItem = ITEM_BRIGHT_POWDER,
 #line 9344
+        .ev = TRAINER_PARTY_EVS(170, 0, 170, 0, 0, 170),
+#line 9346
+        .ball = BALL_POKE,
+#line 9345
         .nature = NATURE_ADAMANT,
+#line 9347
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9346
+#line 9348
             MOVE_EARTHQUAKE,
             MOVE_DOUBLE_EDGE,
             MOVE_AERIAL_ACE,
             MOVE_DRAGON_DANCE,
         },
     },
-#line 9351
+#line 9353
     [FRONTIER_MON_DRAGONITE_3] = {
-#line 9353
-        .species = SPECIES_DRAGONITE,
-#line 9353
-        .heldItem = ITEM_LEFTOVERS,
-#line 9354
-        .ev = TRAINER_PARTY_EVS(0, 170, 170, 0, 0, 170),
-#line 9356
-        .ball = BALL_POKE,
 #line 9355
+        .species = SPECIES_DRAGONITE,
+#line 9355
+        .heldItem = ITEM_LEFTOVERS,
+#line 9356
+        .ev = TRAINER_PARTY_EVS(0, 170, 170, 0, 0, 170),
+#line 9358
+        .ball = BALL_POKE,
+#line 9357
         .nature = NATURE_ADAMANT,
+#line 9359
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9357
+#line 9360
             MOVE_HYPER_BEAM,
             MOVE_ATTRACT,
             MOVE_DOUBLE_TEAM,
             MOVE_THUNDER_WAVE,
         },
     },
-#line 9362
-    [FRONTIER_MON_DRAGONITE_4] = {
-#line 9364
-        .species = SPECIES_DRAGONITE,
-#line 9364
-        .heldItem = ITEM_CHESTO_BERRY,
 #line 9365
-        .ev = TRAINER_PARTY_EVS(170, 0, 170, 0, 0, 170),
+    [FRONTIER_MON_DRAGONITE_4] = {
 #line 9367
+        .species = SPECIES_DRAGONITE,
+#line 9367
+        .heldItem = ITEM_CHESTO_BERRY,
+#line 9368
+        .ev = TRAINER_PARTY_EVS(170, 0, 170, 0, 0, 170),
+#line 9370
         .ball = BALL_POKE,
-#line 9366
+#line 9369
         .nature = NATURE_ADAMANT,
+#line 9371
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9368
+#line 9372
             MOVE_HYPER_BEAM,
             MOVE_THUNDER_WAVE,
             MOVE_DRAGON_DANCE,
             MOVE_REST,
         },
     },
-#line 9373
-    [FRONTIER_MON_DRAGONITE_5] = {
-#line 9375
-        .species = SPECIES_DRAGONITE,
-#line 9375
-        .heldItem = ITEM_LUM_BERRY,
-#line 9376
-        .ev = TRAINER_PARTY_EVS(0, 252, 0, 0, 252, 0),
-#line 9378
-        .ball = BALL_POKE,
 #line 9377
+    [FRONTIER_MON_DRAGONITE_5] = {
+#line 9379
+        .species = SPECIES_DRAGONITE,
+#line 9379
+        .heldItem = ITEM_LUM_BERRY,
+#line 9380
+        .ev = TRAINER_PARTY_EVS(0, 252, 0, 0, 252, 0),
+#line 9382
+        .ball = BALL_POKE,
+#line 9381
         .nature = NATURE_DOCILE,
+#line 9383
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9379
+#line 9384
             MOVE_OUTRAGE,
             MOVE_DOUBLE_EDGE,
             MOVE_THUNDER_WAVE,
             MOVE_ROAR,
         },
     },
-#line 9384
-    [FRONTIER_MON_DRAGONITE_6] = {
-#line 9386
-        .species = SPECIES_DRAGONITE,
-#line 9386
-        .heldItem = ITEM_SHELL_BELL,
-#line 9387
-        .ev = TRAINER_PARTY_EVS(0, 0, 0, 252, 252, 0),
 #line 9389
+    [FRONTIER_MON_DRAGONITE_6] = {
+#line 9391
+        .species = SPECIES_DRAGONITE,
+#line 9391
+        .heldItem = ITEM_SHELL_BELL,
+#line 9392
+        .ev = TRAINER_PARTY_EVS(0, 0, 0, 252, 252, 0),
+#line 9394
         .ball = BALL_POKE,
-#line 9388
+#line 9393
         .nature = NATURE_MODEST,
+#line 9395
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9390
+#line 9396
             MOVE_DRAGON_CLAW,
             MOVE_THUNDERBOLT,
             MOVE_SURF,
             MOVE_FLAMETHROWER,
         },
     },
-#line 9395
+#line 9401
     [FRONTIER_MON_DRAGONITE_7] = {
-#line 9397
+#line 9403
         .species = SPECIES_DRAGONITE,
-#line 9397
+#line 9403
         .heldItem = ITEM_SHELL_BELL,
-#line 9398
+#line 9404
         .ev = TRAINER_PARTY_EVS(0, 0, 0, 252, 252, 0),
-#line 9400
+#line 9406
         .ball = BALL_POKE,
-#line 9399
+#line 9405
         .nature = NATURE_MODEST,
+#line 9407
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9401
+#line 9408
             MOVE_DRAGON_CLAW,
             MOVE_THUNDERBOLT,
             MOVE_SURF,
             MOVE_ICE_BEAM,
         },
     },
-#line 9406
+#line 9413
     [FRONTIER_MON_DRAGONITE_8] = {
-#line 9408
+#line 9415
         .species = SPECIES_DRAGONITE,
-#line 9408
+#line 9415
         .heldItem = ITEM_SHELL_BELL,
-#line 9409
+#line 9416
         .ev = TRAINER_PARTY_EVS(0, 0, 0, 252, 252, 0),
-#line 9411
+#line 9418
         .ball = BALL_POKE,
-#line 9410
+#line 9417
         .nature = NATURE_MODEST,
+#line 9419
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9412
+#line 9420
             MOVE_DRAGON_CLAW,
             MOVE_FLAMETHROWER,
             MOVE_ICE_BEAM,
             MOVE_BRICK_BREAK,
         },
     },
-#line 9417
+#line 9425
     [FRONTIER_MON_DRAGONITE_9] = {
-#line 9419
+#line 9427
         .species = SPECIES_DRAGONITE,
-#line 9419
+#line 9427
         .heldItem = ITEM_QUICK_CLAW,
-#line 9420
+#line 9428
         .ev = TRAINER_PARTY_EVS(252, 0, 0, 0, 252, 0),
-#line 9422
+#line 9430
         .ball = BALL_POKE,
-#line 9421
+#line 9429
         .nature = NATURE_DOCILE,
+#line 9431
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9423
+#line 9432
             MOVE_THUNDER,
             MOVE_SURF,
             MOVE_RAIN_DANCE,
             MOVE_EARTHQUAKE,
         },
     },
-#line 9428
+#line 9437
     [FRONTIER_MON_DRAGONITE_10] = {
-#line 9430
+#line 9439
         .species = SPECIES_DRAGONITE,
-#line 9430
+#line 9439
         .heldItem = ITEM_QUICK_CLAW,
-#line 9431
+#line 9440
         .ev = TRAINER_PARTY_EVS(252, 0, 0, 0, 252, 0),
-#line 9433
+#line 9442
         .ball = BALL_POKE,
-#line 9432
+#line 9441
         .nature = NATURE_DOCILE,
+#line 9443
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9434
+#line 9444
             MOVE_FIRE_BLAST,
             MOVE_BLIZZARD,
             MOVE_SUNNY_DAY,
             MOVE_EARTHQUAKE,
         },
     },
-#line 9439
+#line 9449
     [FRONTIER_MON_TYRANITAR_1] = {
-#line 9441
+#line 9451
         .species = SPECIES_TYRANITAR,
-#line 9441
+#line 9451
         .heldItem = ITEM_BRIGHT_POWDER,
-#line 9442
+#line 9452
         .ev = TRAINER_PARTY_EVS(0, 252, 0, 0, 252, 0),
-#line 9444
+#line 9454
         .ball = BALL_POKE,
-#line 9443
+#line 9453
         .nature = NATURE_HARDY,
+#line 9455
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9445
+#line 9456
             MOVE_EARTHQUAKE,
             MOVE_AERIAL_ACE,
             MOVE_THUNDERBOLT,
             MOVE_SURF,
         },
     },
-#line 9450
+#line 9461
     [FRONTIER_MON_TYRANITAR_2] = {
-#line 9452
+#line 9463
         .species = SPECIES_TYRANITAR,
-#line 9452
+#line 9463
         .heldItem = ITEM_BRIGHT_POWDER,
-#line 9453
+#line 9464
         .ev = TRAINER_PARTY_EVS(0, 252, 0, 0, 252, 0),
-#line 9455
+#line 9466
         .ball = BALL_POKE,
-#line 9454
+#line 9465
         .nature = NATURE_HARDY,
+#line 9467
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9456
+#line 9468
             MOVE_EARTHQUAKE,
             MOVE_ROCK_SLIDE,
             MOVE_CRUNCH,
             MOVE_THUNDERBOLT,
         },
     },
-#line 9461
+#line 9473
     [FRONTIER_MON_TYRANITAR_3] = {
-#line 9463
+#line 9475
         .species = SPECIES_TYRANITAR,
-#line 9463
+#line 9475
         .heldItem = ITEM_FOCUS_BAND,
-#line 9464
+#line 9476
         .ev = TRAINER_PARTY_EVS(170, 0, 170, 0, 0, 170),
-#line 9466
+#line 9478
         .ball = BALL_POKE,
-#line 9465
+#line 9477
         .nature = NATURE_ADAMANT,
+#line 9479
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9467
+#line 9480
             MOVE_EARTHQUAKE,
             MOVE_ROCK_SLIDE,
             MOVE_COUNTER,
             MOVE_DRAGON_DANCE,
         },
     },
-#line 9472
+#line 9485
     [FRONTIER_MON_TYRANITAR_4] = {
-#line 9474
+#line 9487
         .species = SPECIES_TYRANITAR,
-#line 9474
+#line 9487
         .heldItem = ITEM_QUICK_CLAW,
-#line 9475
+#line 9488
         .ev = TRAINER_PARTY_EVS(252, 0, 0, 0, 252, 0),
-#line 9477
+#line 9490
         .ball = BALL_POKE,
-#line 9476
+#line 9489
         .nature = NATURE_MODEST,
+#line 9491
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9478
+#line 9492
             MOVE_CRUNCH,
             MOVE_ICE_BEAM,
             MOVE_THUNDERBOLT,
             MOVE_FLAMETHROWER,
         },
     },
-#line 9483
+#line 9497
     [FRONTIER_MON_TYRANITAR_5] = {
-#line 9485
+#line 9499
         .species = SPECIES_TYRANITAR,
-#line 9485
+#line 9499
         .heldItem = ITEM_CHESTO_BERRY,
-#line 9486
+#line 9500
         .ev = TRAINER_PARTY_EVS(170, 0, 170, 0, 0, 170),
-#line 9488
+#line 9502
         .ball = BALL_POKE,
-#line 9487
+#line 9501
         .nature = NATURE_ADAMANT,
+#line 9503
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9489
+#line 9504
             MOVE_EARTHQUAKE,
             MOVE_ROCK_SLIDE,
             MOVE_DRAGON_DANCE,
             MOVE_REST,
         },
     },
-#line 9494
+#line 9509
     [FRONTIER_MON_TYRANITAR_6] = {
-#line 9496
+#line 9511
         .species = SPECIES_TYRANITAR,
-#line 9496
+#line 9511
         .heldItem = ITEM_CHESTO_BERRY,
-#line 9497
+#line 9512
         .ev = TRAINER_PARTY_EVS(170, 0, 170, 0, 0, 170),
-#line 9499
+#line 9514
         .ball = BALL_POKE,
-#line 9498
+#line 9513
         .nature = NATURE_ADAMANT,
+#line 9515
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9500
+#line 9516
             MOVE_EARTHQUAKE,
             MOVE_ROCK_SLIDE,
             MOVE_CURSE,
             MOVE_REST,
         },
     },
-#line 9505
+#line 9521
     [FRONTIER_MON_TYRANITAR_7] = {
-#line 9507
+#line 9523
         .species = SPECIES_TYRANITAR,
-#line 9507
+#line 9523
         .heldItem = ITEM_QUICK_CLAW,
-#line 9508
+#line 9524
         .ev = TRAINER_PARTY_EVS(252, 252, 0, 0, 0, 0),
-#line 9510
+#line 9526
         .ball = BALL_POKE,
-#line 9509
+#line 9525
         .nature = NATURE_ADAMANT,
+#line 9527
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9511
+#line 9528
             MOVE_ROCK_SLIDE,
             MOVE_AERIAL_ACE,
             MOVE_BRICK_BREAK,
             MOVE_CURSE,
         },
     },
-#line 9516
+#line 9533
     [FRONTIER_MON_TYRANITAR_8] = {
-#line 9518
+#line 9535
         .species = SPECIES_TYRANITAR,
-#line 9518
+#line 9535
         .heldItem = ITEM_LUM_BERRY,
-#line 9519
+#line 9536
         .ev = TRAINER_PARTY_EVS(170, 0, 170, 0, 0, 170),
-#line 9521
+#line 9538
         .ball = BALL_POKE,
-#line 9520
+#line 9537
         .nature = NATURE_ADAMANT,
+#line 9539
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9522
+#line 9540
             MOVE_ROCK_SLIDE,
             MOVE_THUNDER_WAVE,
             MOVE_DRAGON_DANCE,
             MOVE_REST,
         },
     },
-#line 9527
+#line 9545
     [FRONTIER_MON_TYRANITAR_9] = {
-#line 9529
+#line 9547
         .species = SPECIES_TYRANITAR,
-#line 9529
+#line 9547
         .heldItem = ITEM_QUICK_CLAW,
-#line 9530
+#line 9548
         .ev = TRAINER_PARTY_EVS(0, 252, 0, 0, 252, 0),
-#line 9532
+#line 9550
         .ball = BALL_POKE,
-#line 9531
+#line 9549
         .nature = NATURE_HARDY,
+#line 9551
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9533
+#line 9552
             MOVE_CRUNCH,
             MOVE_EARTHQUAKE,
             MOVE_AERIAL_ACE,
             MOVE_ATTRACT,
         },
     },
-#line 9538
+#line 9557
     [FRONTIER_MON_TYRANITAR_10] = {
-#line 9540
+#line 9559
         .species = SPECIES_TYRANITAR,
-#line 9540
+#line 9559
         .heldItem = ITEM_LUM_BERRY,
-#line 9541
+#line 9560
         .ev = TRAINER_PARTY_EVS(170, 0, 170, 0, 0, 170),
-#line 9543
+#line 9562
         .ball = BALL_POKE,
-#line 9542
+#line 9561
         .nature = NATURE_ADAMANT,
+#line 9563
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9544
+#line 9564
             MOVE_DOUBLE_EDGE,
             MOVE_EARTHQUAKE,
             MOVE_ROCK_SLIDE,
             MOVE_DRAGON_DANCE,
         },
     },
-#line 9549
+#line 9569
     [FRONTIER_MON_ARTICUNO_5] = {
-#line 9551
+#line 9571
         .species = SPECIES_ARTICUNO,
-#line 9551
+#line 9571
         .heldItem = ITEM_FOCUS_BAND,
-#line 9552
+#line 9572
         .ev = TRAINER_PARTY_EVS(0, 252, 0, 0, 252, 0),
-#line 9554
+#line 9574
         .ball = BALL_POKE,
-#line 9553
+#line 9573
         .nature = NATURE_DOCILE,
+#line 9575
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9555
+#line 9576
             MOVE_BLIZZARD,
             MOVE_DOUBLE_EDGE,
             MOVE_AGILITY,
             MOVE_SWAGGER,
         },
     },
-#line 9560
+#line 9581
     [FRONTIER_MON_ARTICUNO_6] = {
-#line 9562
+#line 9583
         .species = SPECIES_ARTICUNO,
-#line 9562
+#line 9583
         .heldItem = ITEM_CHESTO_BERRY,
-#line 9563
+#line 9584
         .ev = TRAINER_PARTY_EVS(0, 252, 0, 0, 252, 0),
-#line 9565
+#line 9586
         .ball = BALL_POKE,
-#line 9564
+#line 9585
         .nature = NATURE_DOCILE,
+#line 9587
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9566
+#line 9588
             MOVE_ICE_BEAM,
             MOVE_AERIAL_ACE,
             MOVE_REFLECT,
             MOVE_REST,
         },
     },
-#line 9571
+#line 9593
     [FRONTIER_MON_ZAPDOS_5] = {
-#line 9573
+#line 9595
         .species = SPECIES_ZAPDOS,
-#line 9573
+#line 9595
         .heldItem = ITEM_SCOPE_LENS,
-#line 9574
+#line 9596
         .ev = TRAINER_PARTY_EVS(0, 252, 0, 0, 252, 0),
-#line 9576
+#line 9598
         .ball = BALL_POKE,
-#line 9575
+#line 9597
         .nature = NATURE_DOCILE,
+#line 9599
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9577
+#line 9600
             MOVE_THUNDERBOLT,
             MOVE_DRILL_PECK,
             MOVE_DOUBLE_EDGE,
             MOVE_THUNDER_WAVE,
         },
     },
-#line 9582
+#line 9605
     [FRONTIER_MON_ZAPDOS_6] = {
-#line 9584
+#line 9607
         .species = SPECIES_ZAPDOS,
-#line 9584
+#line 9607
         .heldItem = ITEM_LUM_BERRY,
-#line 9585
+#line 9608
         .ev = TRAINER_PARTY_EVS(0, 170, 0, 170, 170, 0),
-#line 9587
+#line 9610
         .ball = BALL_POKE,
-#line 9586
+#line 9609
         .nature = NATURE_DOCILE,
+#line 9611
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9588
+#line 9612
             MOVE_THUNDER,
             MOVE_DRILL_PECK,
             MOVE_RAIN_DANCE,
             MOVE_DOUBLE_EDGE,
         },
     },
-#line 9593
+#line 9617
     [FRONTIER_MON_MOLTRES_5] = {
-#line 9595
+#line 9619
         .species = SPECIES_MOLTRES,
-#line 9595
+#line 9619
         .heldItem = ITEM_WHITE_HERB,
-#line 9596
+#line 9620
         .ev = TRAINER_PARTY_EVS(0, 0, 0, 252, 252, 0),
-#line 9598
+#line 9622
         .ball = BALL_POKE,
-#line 9597
+#line 9621
         .nature = NATURE_DOCILE,
+#line 9623
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9599
+#line 9624
             MOVE_OVERHEAT,
             MOVE_SUNNY_DAY,
             MOVE_SWAGGER,
             MOVE_FACADE,
         },
     },
-#line 9604
+#line 9629
     [FRONTIER_MON_MOLTRES_6] = {
-#line 9606
+#line 9631
         .species = SPECIES_MOLTRES,
-#line 9606
+#line 9631
         .heldItem = ITEM_WHITE_HERB,
-#line 9607
+#line 9632
         .ev = TRAINER_PARTY_EVS(0, 252, 0, 0, 252, 0),
-#line 9609
+#line 9634
         .ball = BALL_POKE,
-#line 9608
+#line 9633
         .nature = NATURE_DOCILE,
+#line 9635
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9610
+#line 9636
             MOVE_OVERHEAT,
             MOVE_DOUBLE_EDGE,
             MOVE_AERIAL_ACE,
             MOVE_STEEL_WING,
         },
     },
-#line 9615
+#line 9641
     [FRONTIER_MON_RAIKOU_5] = {
-#line 9617
+#line 9643
         .species = SPECIES_RAIKOU,
-#line 9617
+#line 9643
         .heldItem = ITEM_BRIGHT_POWDER,
-#line 9618
+#line 9644
         .ev = TRAINER_PARTY_EVS(0, 0, 0, 252, 252, 0),
-#line 9620
+#line 9646
         .ball = BALL_POKE,
-#line 9619
+#line 9645
         .nature = NATURE_MODEST,
+#line 9647
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9621
+#line 9648
             MOVE_THUNDERBOLT,
             MOVE_DOUBLE_EDGE,
             MOVE_ROAR,
             MOVE_REFLECT,
         },
     },
-#line 9626
+#line 9653
     [FRONTIER_MON_RAIKOU_6] = {
-#line 9628
+#line 9655
         .species = SPECIES_RAIKOU,
-#line 9628
+#line 9655
         .heldItem = ITEM_CHESTO_BERRY,
-#line 9629
+#line 9656
         .ev = TRAINER_PARTY_EVS(252, 0, 252, 0, 0, 0),
-#line 9631
+#line 9658
         .ball = BALL_POKE,
-#line 9630
+#line 9657
         .nature = NATURE_MODEST,
+#line 9659
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9632
+#line 9660
             MOVE_THUNDERBOLT,
             MOVE_CALM_MIND,
             MOVE_SUBSTITUTE,
             MOVE_REST,
         },
     },
-#line 9637
+#line 9665
     [FRONTIER_MON_ENTEI_5] = {
-#line 9639
+#line 9667
         .species = SPECIES_ENTEI,
-#line 9639
+#line 9667
         .heldItem = ITEM_SALAC_BERRY,
-#line 9640
+#line 9668
         .ev = TRAINER_PARTY_EVS(0, 0, 252, 0, 0, 252),
-#line 9642
+#line 9670
         .ball = BALL_POKE,
-#line 9641
+#line 9669
         .nature = NATURE_DOCILE,
+#line 9671
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9643
+#line 9672
             MOVE_FIRE_BLAST,
             MOVE_DOUBLE_EDGE,
             MOVE_ENDURE,
             MOVE_REFLECT,
         },
     },
-#line 9648
+#line 9677
     [FRONTIER_MON_ENTEI_6] = {
-#line 9650
+#line 9679
         .species = SPECIES_ENTEI,
-#line 9650
+#line 9679
         .heldItem = ITEM_CHESTO_BERRY,
-#line 9651
+#line 9680
         .ev = TRAINER_PARTY_EVS(0, 0, 252, 0, 0, 252),
-#line 9653
+#line 9682
         .ball = BALL_POKE,
-#line 9652
+#line 9681
         .nature = NATURE_MODEST,
+#line 9683
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9654
+#line 9684
             MOVE_FLAMETHROWER,
             MOVE_CALM_MIND,
             MOVE_ROAR,
             MOVE_REST,
         },
     },
-#line 9659
+#line 9689
     [FRONTIER_MON_SUICUNE_5] = {
-#line 9661
+#line 9691
         .species = SPECIES_SUICUNE,
-#line 9661
+#line 9691
         .heldItem = ITEM_LUM_BERRY,
-#line 9662
+#line 9692
         .ev = TRAINER_PARTY_EVS(252, 0, 0, 0, 252, 0),
-#line 9664
+#line 9694
         .ball = BALL_POKE,
-#line 9663
+#line 9693
         .nature = NATURE_MODEST,
+#line 9695
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9665
+#line 9696
             MOVE_SURF,
             MOVE_ICE_BEAM,
             MOVE_CALM_MIND,
             MOVE_ICY_WIND,
         },
     },
-#line 9670
+#line 9701
     [FRONTIER_MON_SUICUNE_6] = {
-#line 9672
+#line 9703
         .species = SPECIES_SUICUNE,
-#line 9672
+#line 9703
         .heldItem = ITEM_CHESTO_BERRY,
-#line 9673
+#line 9704
         .ev = TRAINER_PARTY_EVS(170, 0, 170, 0, 0, 170),
-#line 9675
+#line 9706
         .ball = BALL_POKE,
-#line 9674
+#line 9705
         .nature = NATURE_MODEST,
+#line 9707
         .tags = MON_POOL_TAG_HIGH_TIER,
         .moves = {
-#line 9676
+#line 9708
             MOVE_SURF,
             MOVE_ICE_BEAM,
             MOVE_CALM_MIND,

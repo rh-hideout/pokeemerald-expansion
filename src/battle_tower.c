@@ -32,6 +32,7 @@
 #include "constants/battle_dome.h"
 #include "constants/battle_frontier.h"
 #include "constants/battle_frontier_mons.h"
+#include "constants/battle_frontier_pool_sets.h"
 #include "constants/battle_move_effects.h"
 #include "constants/battle_tent.h"
 #include "constants/battle_tent_mons.h"
@@ -70,6 +71,7 @@ static void ClearBattleTowerRecord(struct EmeraldBattleTowerRecord *record);
 static void FillTentTrainerParty_(u16 trainerId, u8 firstMonId, u8 monCount);
 
 #include "data/battle_frontier/battle_frontier_trainer_mons.h"
+#include "data/battle_frontier/battle_frontier_pool_sets.h"
 #include "data/battle_frontier/battle_frontier_trainers.h"
 #include "data/battle_frontier/battle_frontier_mons.h"
 

@@ -8,6 +8,7 @@
 #include "trainer_pools.h"
 #include "constants/battle_frontier.h"
 #include "battle/frontier_mons_constants.h"
+#include "battle/frontier_pool_sets_constants.h"
 #include "constants/abilities.h"
 #include "constants/items.h"
 #include "constants/moves.h"
@@ -17,6 +18,7 @@
 #include "constants/trainers.h"
 
 extern const struct TrainerMon gTestBattleFrontierMons[NUM_FRONTIER_MONS];
+extern const struct TrainerPoolSet gTestBattleFrontierPoolSets[NUM_FRONTIER_POOL_SETS];
 
 TEST("trainerproc generates Battle Frontier mon constants from party data")
 {
@@ -98,14 +100,14 @@ TEST("frontier mon pools filter high tier mons by tag")
 {
     const u16 lvl50MonSet[] = {FRONTIER_MON_TEST_PIKACHU, FRONTIER_MON_TEST_MACHOP, 0xFFFF};
     const u16 openLevelMonSet[] = {FRONTIER_MON_TEST_MACHOP, 0xFFFF};
-    struct FrontierMonPool lvl50Pool = GetFrontierMonPoolFromSet(lvl50MonSet);
+    struct FrontierMonPool lvl50Pool = GetTrainerMonPoolFromSet(lvl50MonSet);
     u16 selectedMonId = 0xFFFF;
 
     gFacilityTrainerMons = gTestBattleFrontierMons;
     ASSUME(lvl50Pool.monIds == lvl50MonSet);
     ASSUME(lvl50Pool.size == 2);
-    EXPECT_EQ(GetFrontierMonPoolAt(&lvl50Pool, 0), FRONTIER_MON_TEST_PIKACHU);
-    EXPECT_EQ(GetFrontierMonPoolAt(&lvl50Pool, 1), FRONTIER_MON_TEST_MACHOP);
+    EXPECT_EQ(GetTrainerMonPoolAt(&lvl50Pool, 0), FRONTIER_MON_TEST_PIKACHU);
+    EXPECT_EQ(GetTrainerMonPoolAt(&lvl50Pool, 1), FRONTIER_MON_TEST_MACHOP);
     ASSUME(!IsFrontierMonHighTier(FRONTIER_MON_TEST_PIKACHU));
     ASSUME(IsFrontierMonHighTier(FRONTIER_MON_TEST_MACHOP));
 
@@ -114,6 +116,44 @@ TEST("frontier mon pools filter high tier mons by tag")
 
     SelectFrontierMonsFromSet(openLevelMonSet, FRONTIER_MAX_LEVEL_OPEN, 1, &selectedMonId, 0);
     EXPECT_EQ(selectedMonId, FRONTIER_MON_TEST_MACHOP);
+}
+
+TEST("trainerproc generates Battle Frontier pool sets from pool set data")
+{
+    const struct TrainerPoolSet *lvl50Pool = &gTestBattleFrontierPoolSets[FRONTIER_POOL_TEST_LEVEL_50];
+    const struct TrainerPoolSet *openLevelPool = &gTestBattleFrontierPoolSets[FRONTIER_POOL_TEST_OPEN_LEVEL];
+
+    EXPECT_EQ((u32)FRONTIER_POOL_TEST_LEVEL_50, 0);
+    EXPECT_EQ((u32)NUM_FRONTIER_POOL_SETS, 2);
+
+    EXPECT_EQ(lvl50Pool->poolSize, 2);
+    EXPECT_EQ((u32)lvl50Pool->poolRuleIndex, POOL_RULESET_FRONTIER);
+    EXPECT_EQ(lvl50Pool->monIds[0], FRONTIER_MON_TEST_PIKACHU);
+    EXPECT_EQ(lvl50Pool->monIds[1], FRONTIER_MON_TEST_MACHOP);
+
+    EXPECT_EQ(openLevelPool->poolSize, 2);
+    EXPECT_EQ((u32)openLevelPool->poolRuleIndex, POOL_RULESET_FRONTIER);
+    EXPECT_EQ((u32)openLevelPool->poolPickIndex, POOL_PICK_LOWEST);
+    EXPECT_EQ(openLevelPool->monIds[0], FRONTIER_MON_TEST_ABRA);
+    EXPECT_EQ(openLevelPool->monIds[1], FRONTIER_MON_TEST_BULBASAUR);
+}
+
+TEST("frontier trainer selection can use generated pool sets")
+{
+    const struct BattleFrontierTrainer trainers[] =
+    {
+        {
+            .poolSet = &gTestBattleFrontierPoolSets[FRONTIER_POOL_TEST_LEVEL_50],
+        },
+    };
+    u16 selectedMonId = 0xFFFF;
+
+    gFacilityTrainerMons = gTestBattleFrontierMons;
+    gFacilityTrainers = trainers;
+    ASSUME(IsFrontierMonHighTier(FRONTIER_MON_TEST_MACHOP));
+
+    SelectFrontierTrainerMons(0, FRONTIER_MAX_LEVEL_50, 1, &selectedMonId, 0);
+    EXPECT_EQ(selectedMonId, FRONTIER_MON_TEST_PIKACHU);
 }
 
 TEST("frontier mon pools preserve vanilla species and item clauses")
@@ -160,10 +200,14 @@ TEST("battle factory level gating uses high tier tags")
 
     ASSUME(lateOpenPool->monIds == NULL);
     EXPECT(lateOpenPool->size > POOL_SLOT_DISABLED);
-    EXPECT_EQ(GetFrontierMonPoolAt(lateOpenPool, lateOpenPool->size - 1),
-              GetFrontierMonPoolAt(lateOpenPool, 0) + lateOpenPool->size - 1);
+    EXPECT_EQ(GetTrainerMonPoolAt(lateOpenPool, lateOpenPool->size - 1),
+              GetTrainerMonPoolAt(lateOpenPool, 0) + lateOpenPool->size - 1);
 }
 
 #define gBattleFrontierMons gTestBattleFrontierMons
 #include "battle/frontier_mons.h"
 #undef gBattleFrontierMons
+
+#define gBattleFrontierPoolSets gTestBattleFrontierPoolSets
+#include "battle/frontier_pool_sets.h"
+#undef gBattleFrontierPoolSets

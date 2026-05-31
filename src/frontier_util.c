@@ -3222,122 +3222,49 @@ static bool8 ShouldExcludeHighTierFrontierMons(u8 level)
     return level == FRONTIER_MAX_LEVEL_50 || level == 20;
 }
 
-u16 GetFrontierMonPoolAt(const struct FrontierMonPool *pool, u16 index)
+struct FrontierPoolFilterData
 {
-    if (pool->monIds != NULL)
-        return pool->monIds[index];
-    else
-        return pool->firstMonId + index;
-}
+    u8 level;
+};
 
-u16 GetRandomFrontierMonFromPool(const struct FrontierMonPool *pool)
+static bool8 FrontierMonPassesLevelFilter(u16 monId, const struct TrainerMon *mon, void *data)
 {
-    return GetFrontierMonPoolAt(pool, Random() % pool->size);
-}
+    struct FrontierPoolFilterData *filterData = data;
 
-struct FrontierMonPool GetFrontierMonPoolFromSet(const u16 *monSet)
-{
-    u16 size;
-
-    for (size = 0; monSet[size] != 0xFFFF; size++)
-        ;
-
-    return (struct FrontierMonPool)FRONTIER_MON_LIST_POOL(monSet, size);
-}
-
-static void SelectFrontierMonsFromPoolRandomly(const u16 *poolMonIds, u16 poolSize, u8 monCount, u16 *selectedMonIds)
-{
-    u32 i = 0;
-
-    while (i != monCount)
-    {
-        u16 monId = poolMonIds[Random() % poolSize];
-        u32 j;
-
-        for (j = 0; j < i; j++)
-        {
-            if (gFacilityTrainerMons[selectedMonIds[j]].species == gFacilityTrainerMons[monId].species)
-                break;
-        }
-        if (j != i)
-            continue;
-
-        for (j = 0; j < i; j++)
-        {
-            if (gFacilityTrainerMons[selectedMonIds[j]].heldItem != ITEM_NONE
-             && gFacilityTrainerMons[selectedMonIds[j]].heldItem == gFacilityTrainerMons[monId].heldItem)
-                break;
-        }
-        if (j != i)
-            continue;
-
-        for (j = 0; j < i; j++)
-        {
-            if (selectedMonIds[j] == monId)
-                break;
-        }
-        if (j != i)
-            continue;
-
-        selectedMonIds[i] = monId;
-        i++;
-    }
+    return !(ShouldExcludeHighTierFrontierMons(filterData->level) && (mon->tags & MON_POOL_TAG_HIGH_TIER));
 }
 
 void SelectFrontierMonsFromPool(const struct FrontierMonPool *pool, u8 level, u8 monCount, u16 *selectedMonIds, u32 battleTypeFlags)
 {
-    u32 selectedIndices[MAX_FRONTIER_PARTY_SIZE];
-    u16 *poolMonIds;
-    u16 poolSize;
-    struct TrainerMon *party;
-    struct Trainer trainer = {
-        .partySize = monCount,
-        .poolRuleIndex = POOL_RULESET_FRONTIER,
-    };
+    struct FrontierPoolFilterData filterData = {level};
 
-    poolMonIds = Alloc(pool->size * sizeof(*poolMonIds));
-    party = Alloc(pool->size * sizeof(*party));
-    poolSize = 0;
-    for (u32 i = 0; i < pool->size; i++)
-    {
-        u16 monId = GetFrontierMonPoolAt(pool, i);
+    SelectTrainerMonsFromPool(pool, gFacilityTrainerMons, POOL_RULESET_FRONTIER, POOL_PICK_DEFAULT, POOL_PRUNE_NONE, monCount, selectedMonIds, battleTypeFlags, FrontierMonPassesLevelFilter, &filterData);
+}
 
-        if (ShouldExcludeHighTierFrontierMons(level) && IsFrontierMonHighTier(monId))
-            continue;
+void SelectFrontierMonsFromPoolSet(const struct TrainerPoolSet *poolSet, u8 level, u8 monCount, u16 *selectedMonIds, u32 battleTypeFlags)
+{
+    struct FrontierMonPool pool = FRONTIER_MON_LIST_POOL(poolSet->monIds, poolSet->poolSize);
+    struct FrontierPoolFilterData filterData = {level};
 
-        poolMonIds[poolSize] = monId;
-        party[poolSize] = gFacilityTrainerMons[monId];
-        poolSize++;
-    }
-
-    trainer.poolSize = (u8)poolSize;
-    trainer.party = party;
-    if (poolSize < POOL_SLOT_DISABLED && DoTrainerPartyPool(&trainer, selectedIndices, monCount, battleTypeFlags))
-    {
-        for (u32 i = 0; i < monCount; i++)
-            selectedMonIds[i] = poolMonIds[selectedIndices[i]];
-    }
-    else
-    {
-        SelectFrontierMonsFromPoolRandomly(poolMonIds, poolSize, monCount, selectedMonIds);
-    }
-
-    Free(poolMonIds);
-    Free(party);
+    SelectTrainerMonsFromPool(&pool, gFacilityTrainerMons, poolSet->poolRuleIndex, poolSet->poolPickIndex, poolSet->poolPruneIndex, monCount, selectedMonIds, battleTypeFlags, FrontierMonPassesLevelFilter, &filterData);
 }
 
 void SelectFrontierMonsFromSet(const u16 *monSet, u8 level, u8 monCount, u16 *selectedMonIds, u32 battleTypeFlags)
 {
-    struct FrontierMonPool pool = GetFrontierMonPoolFromSet(monSet);
+    struct FrontierMonPool pool = GetTrainerMonPoolFromSet(monSet);
 
     SelectFrontierMonsFromPool(&pool, level, monCount, selectedMonIds, battleTypeFlags);
 }
 
 void SelectFrontierTrainerMons(u16 trainerId, u8 level, u8 monCount, u16 *selectedMonIds, u32 battleTypeFlags)
 {
-    struct FrontierMonPool pool = GetFrontierMonPoolFromSet(gFacilityTrainers[trainerId].monSet);
+    if (gFacilityTrainers[trainerId].poolSet != NULL)
+    {
+        SelectFrontierMonsFromPoolSet(gFacilityTrainers[trainerId].poolSet, level, monCount, selectedMonIds, battleTypeFlags);
+        return;
+    }
 
-    SelectFrontierMonsFromPool(&pool, level, monCount, selectedMonIds, battleTypeFlags);
+    SelectFrontierMonsFromSet(gFacilityTrainers[trainerId].monSet, level, monCount, selectedMonIds, battleTypeFlags);
 }
 
 u16 GetRandomFrontierMonFromSet(u16 trainerId)

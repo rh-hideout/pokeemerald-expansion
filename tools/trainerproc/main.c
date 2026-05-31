@@ -7,6 +7,7 @@
  * 2. Parse that member in 'parse_trainer', probably in the 'parse_attribute' loop.
  * 3. Format that member in 'fprint_trainers'. */
 #include <assert.h>
+#include <ctype.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -168,11 +169,40 @@ struct Trainer
     int multi_team_line;
 };
 
+struct PoolSet
+{
+    struct String id;
+    int id_line;
+
+    struct String pool_rules;
+    int pool_rules_line;
+
+    struct String pool_pick_functions;
+    int pool_pick_functions_line;
+
+    struct String pool_prune;
+    int pool_prune_line;
+
+    struct String *mon_ids;
+    int mon_ids_n;
+    int mon_ids_capacity;
+};
+
+struct ParsedPoolSets
+{
+    struct Source *source;
+    struct PoolSet *pool_sets;
+    int pool_sets_n;
+    int pool_sets_capacity;
+};
+
 enum OutputMode
 {
     OUTPUT_TRAINERS,
     OUTPUT_FRONTIER_MONS,
     OUTPUT_FRONTIER_MON_CONSTANTS,
+    OUTPUT_POOL_SETS,
+    OUTPUT_POOL_SET_CONSTANTS,
 };
 
 static bool is_empty_string(struct String s)
@@ -2421,9 +2451,230 @@ static void fprint_frontier_mon_constants(FILE *f, struct Parsed *parsed)
     fprintf(f, "#endif // GUARD_CONSTANTS_BATTLE_FRONTIER_MONS_H\n");
 }
 
+static const unsigned char *skip_line_space(const unsigned char *s, const unsigned char *end)
+{
+    while (s < end && (*s == ' ' || *s == '\t' || *s == '\r'))
+        s++;
+    return s;
+}
+
+static const unsigned char *trim_line_end(const unsigned char *s, const unsigned char *end)
+{
+    while (end > s && (end[-1] == ' ' || end[-1] == '\t' || end[-1] == '\r'))
+        end--;
+    return end;
+}
+
+static bool line_starts_with(const unsigned char *s, const unsigned char *end, const char *prefix)
+{
+    int n = strlen(prefix);
+
+    return end - s >= n && strncmp((const char *)s, prefix, n) == 0;
+}
+
+static struct String line_value_after_colon(const unsigned char *s, const unsigned char *end)
+{
+    while (s < end && *s != ':')
+        s++;
+    if (s < end)
+        s++;
+    s = skip_line_space(s, end);
+    end = trim_line_end(s, end);
+    return (struct String){ s, end - s };
+}
+
+static void push_pool_set(struct ParsedPoolSets *parsed, struct PoolSet **pool_set)
+{
+    if (parsed->pool_sets_n == parsed->pool_sets_capacity)
+    {
+        parsed->pool_sets_capacity = parsed->pool_sets_capacity ? parsed->pool_sets_capacity * 2 : 32;
+        parsed->pool_sets = realloc(parsed->pool_sets, parsed->pool_sets_capacity * sizeof(*parsed->pool_sets));
+        if (!parsed->pool_sets)
+        {
+            fprintf(stderr, "could not allocate pool sets\n");
+            exit(1);
+        }
+    }
+
+    *pool_set = &parsed->pool_sets[parsed->pool_sets_n++];
+    memset(*pool_set, 0, sizeof(**pool_set));
+}
+
+static void push_pool_set_mon(struct PoolSet *pool_set, struct String mon_id)
+{
+    if (pool_set->mon_ids_n == pool_set->mon_ids_capacity)
+    {
+        pool_set->mon_ids_capacity = pool_set->mon_ids_capacity ? pool_set->mon_ids_capacity * 2 : 64;
+        pool_set->mon_ids = realloc(pool_set->mon_ids, pool_set->mon_ids_capacity * sizeof(*pool_set->mon_ids));
+        if (!pool_set->mon_ids)
+        {
+            fprintf(stderr, "could not allocate pool set mons\n");
+            exit(1);
+        }
+    }
+
+    pool_set->mon_ids[pool_set->mon_ids_n++] = mon_id;
+}
+
+static void parse_pool_set_mon_line(struct PoolSet *pool_set, const unsigned char *s, const unsigned char *end)
+{
+    while (s < end)
+    {
+        s = skip_line_space(s, end);
+        while (s < end && (*s == ',' || *s == '\\'))
+            s++;
+        s = skip_line_space(s, end);
+
+        if (s >= end)
+            break;
+        if (*s == '-')
+        {
+            while (s < end && *s != ',' && !isspace(*s))
+                s++;
+            continue;
+        }
+        if (!(isalpha(*s) || *s == '_'))
+        {
+            s++;
+            continue;
+        }
+
+        const unsigned char *start = s;
+        while (s < end && (isalnum(*s) || *s == '_'))
+            s++;
+        if (s - start > 13 && strncmp((const char *)start, "FRONTIER_MON_", 13) == 0)
+            push_pool_set_mon(pool_set, (struct String){ start, s - start });
+    }
+}
+
+static void parse_pool_sets(struct Source *source, struct ParsedPoolSets *parsed)
+{
+    const unsigned char *s = source->buffer;
+    const unsigned char *end = source->buffer + source->buffer_n;
+    struct PoolSet *pool_set = NULL;
+    int line = 1;
+
+    parsed->source = source;
+    while (s < end)
+    {
+        const unsigned char *line_start = s;
+        while (s < end && *s != '\n')
+            s++;
+        const unsigned char *line_end = trim_line_end(line_start, s);
+        const unsigned char *trimmed = skip_line_space(line_start, line_end);
+
+        if (line_starts_with(trimmed, line_end, "==="))
+        {
+            const unsigned char *id_start = skip_line_space(trimmed + 3, line_end);
+            const unsigned char *id_end = id_start;
+            while (id_end < line_end && !isspace(*id_end) && *id_end != '=')
+                id_end++;
+
+            push_pool_set(parsed, &pool_set);
+            pool_set->id = (struct String){ id_start, id_end - id_start };
+            pool_set->id_line = line;
+        }
+        else if (pool_set != NULL && line_starts_with(trimmed, line_end, "Pool Rules:"))
+        {
+            pool_set->pool_rules = line_value_after_colon(trimmed, line_end);
+            pool_set->pool_rules_line = line;
+        }
+        else if (pool_set != NULL && line_starts_with(trimmed, line_end, "Pool Pick Functions:"))
+        {
+            pool_set->pool_pick_functions = line_value_after_colon(trimmed, line_end);
+            pool_set->pool_pick_functions_line = line;
+        }
+        else if (pool_set != NULL && line_starts_with(trimmed, line_end, "Pool Prune:"))
+        {
+            pool_set->pool_prune = line_value_after_colon(trimmed, line_end);
+            pool_set->pool_prune_line = line;
+        }
+        else if (pool_set != NULL && trimmed < line_end && *trimmed != '#')
+        {
+            parse_pool_set_mon_line(pool_set, trimmed, line_end);
+        }
+
+        if (s < end && *s == '\n')
+            s++;
+        line++;
+    }
+
+    for (int i = 0; i < parsed->pool_sets_n; i++)
+    {
+        if (parsed->pool_sets[i].mon_ids_n == 0)
+        {
+            fprintf(stderr, "%s:%d: pool set must contain at least one frontier mon id\n", source->path, parsed->pool_sets[i].id_line);
+            exit(1);
+        }
+    }
+}
+
+static void fprint_pool_sets(FILE *f, struct ParsedPoolSets *parsed)
+{
+    fprintf(f, "const struct TrainerPoolSet gBattleFrontierPoolSets[NUM_FRONTIER_POOL_SETS] =\n");
+    fprintf(f, "{\n");
+    for (int i = 0; i < parsed->pool_sets_n; i++)
+    {
+        struct PoolSet *pool_set = &parsed->pool_sets[i];
+
+        fprintf(f, "    [");
+        fprint_string(f, pool_set->id);
+        fprintf(f, "] = {\n");
+        fprintf(f, "        .monIds = (const u16[]){\n");
+        for (int j = 0; j < pool_set->mon_ids_n; j++)
+        {
+            fprintf(f, "            ");
+            fprint_string(f, pool_set->mon_ids[j]);
+            fprintf(f, ",\n");
+        }
+        fprintf(f, "        },\n");
+        fprintf(f, "        .poolSize = %d,\n", pool_set->mon_ids_n);
+        fprintf(f, "        .poolRuleIndex = ");
+        if (is_empty_string(pool_set->pool_rules))
+            fprintf(f, "POOL_RULESET_BASIC");
+        else
+            fprint_constant(f, "POOL_RULESET", pool_set->pool_rules);
+        fprintf(f, ",\n");
+        if (!is_empty_string(pool_set->pool_pick_functions))
+        {
+            fprintf(f, "        .poolPickIndex = ");
+            fprint_constant(f, "POOL_PICK", pool_set->pool_pick_functions);
+            fprintf(f, ",\n");
+        }
+        if (!is_empty_string(pool_set->pool_prune))
+        {
+            fprintf(f, "        .poolPruneIndex = ");
+            fprint_constant(f, "POOL_PRUNE", pool_set->pool_prune);
+            fprintf(f, ",\n");
+        }
+        fprintf(f, "    },\n");
+    }
+    fprintf(f, "};\n");
+}
+
+static void fprint_pool_set_constants(FILE *f, struct ParsedPoolSets *parsed)
+{
+    fprintf(f, "#ifndef GUARD_CONSTANTS_BATTLE_FRONTIER_POOL_SETS_H\n");
+    fprintf(f, "#define GUARD_CONSTANTS_BATTLE_FRONTIER_POOL_SETS_H\n");
+    fprintf(f, "\n");
+    fprintf(f, "enum FrontierPoolSetId\n");
+    fprintf(f, "{\n");
+    for (int i = 0; i < parsed->pool_sets_n; i++)
+    {
+        fprintf(f, "    ");
+        fprint_string(f, parsed->pool_sets[i].id);
+        fprintf(f, ",\n");
+    }
+    fprintf(f, "\n");
+    fprintf(f, "    NUM_FRONTIER_POOL_SETS,\n");
+    fprintf(f, "};\n");
+    fprintf(f, "\n");
+    fprintf(f, "#endif // GUARD_CONSTANTS_BATTLE_FRONTIER_POOL_SETS_H\n");
+}
+
 static void usage(FILE *file, char *argv0)
 {
-    fprintf(file, "Usage: %s [-m trainers|frontier-mons|frontier-mon-constants] -o <output> <source>\n", argv0);
+    fprintf(file, "Usage: %s [-m trainers|frontier-mons|frontier-mon-constants|pool-sets|pool-set-constants] -o <output> <source>\n", argv0);
 }
 
 int main(int argc, char *argv[])
@@ -2436,6 +2687,7 @@ int main(int argc, char *argv[])
         .default_ivs = { 31, 31, 31, 31, 31, 31 },
         .default_level = 100,
     };
+    struct ParsedPoolSets parsed_pool_sets = {0};
 
     const char *source_path = NULL;
     const char *output_path = NULL;
@@ -2457,6 +2709,10 @@ int main(int argc, char *argv[])
                 output_mode = OUTPUT_FRONTIER_MONS;
             else if (strcmp(optarg, "frontier-mon-constants") == 0)
                 output_mode = OUTPUT_FRONTIER_MON_CONSTANTS;
+            else if (strcmp(optarg, "pool-sets") == 0)
+                output_mode = OUTPUT_POOL_SETS;
+            else if (strcmp(optarg, "pool-set-constants") == 0)
+                output_mode = OUTPUT_POOL_SET_CONSTANTS;
             else
             {
                 fprintf(stderr, "unknown output mode '%s'\n", optarg);
@@ -2552,10 +2808,19 @@ int main(int argc, char *argv[])
         .location = { .line = 1, .column = 1 },
         .offset = 0,
     };
-    parse(&parser, &parsed);
-    if (parser.fatal_error)
+    if (output_mode == OUTPUT_POOL_SETS || output_mode == OUTPUT_POOL_SET_CONSTANTS)
     {
-        goto exit;
+        parse_pool_sets(&source, &parsed_pool_sets);
+    }
+    else
+    {
+        if (output_mode == OUTPUT_FRONTIER_MONS || output_mode == OUTPUT_FRONTIER_MON_CONSTANTS)
+            parsed.frontier_mons = true;
+        parse(&parser, &parsed);
+        if (parser.fatal_error)
+        {
+            goto exit;
+        }
     }
 
     if (strcmp(output_path, "-") == 0)
@@ -2583,6 +2848,12 @@ int main(int argc, char *argv[])
     case OUTPUT_FRONTIER_MON_CONSTANTS:
         fprint_frontier_mon_constants(output_file, &parsed);
         break;
+    case OUTPUT_POOL_SETS:
+        fprint_pool_sets(output_file, &parsed_pool_sets);
+        break;
+    case OUTPUT_POOL_SET_CONSTANTS:
+        fprint_pool_set_constants(output_file, &parsed_pool_sets);
+        break;
     }
 
     status = 0;
@@ -2590,6 +2861,12 @@ int main(int argc, char *argv[])
 exit:
     if (output_file) fclose(output_file);
     if (parsed.trainers) free(parsed.trainers);
+    if (parsed_pool_sets.pool_sets)
+    {
+        for (int i = 0; i < parsed_pool_sets.pool_sets_n; i++)
+            free(parsed_pool_sets.pool_sets[i].mon_ids);
+        free(parsed_pool_sets.pool_sets);
+    }
     if (source_buffer) free(source_buffer);
     if (source_file) fclose(source_file);
     return status;

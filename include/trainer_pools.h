@@ -69,6 +69,27 @@ struct PoolRules
     bool8 tagRequired[POOL_NUM_TAGS];
 };
 
+struct TrainerPoolSet
+{
+    const u16 *monIds;
+    u16 poolSize;
+    u8 poolRuleIndex;
+    u8 poolPickIndex;
+    u8 poolPruneIndex;
+};
+
+struct FrontierMonPool
+{
+    const u16 *monIds;
+    u16 firstMonId;
+    u16 size;
+};
+
+#define FRONTIER_MON_LIST_POOL(monIds_, size_) { .monIds = (monIds_), .size = (size_) }
+#define FRONTIER_MON_RANGE_POOL(first_, last_) { .firstMonId = (first_), .size = (last_) - (first_) + 1 }
+
+typedef bool8 (*TrainerMonPoolFilter)(u16 monId, const struct TrainerMon *mon, void *data);
+
 struct PickFunctions
 {
     u32 (*LeadFunction)(const struct Trainer *, u8 *, u32, u32, u32, struct PoolRules *);
@@ -77,5 +98,9 @@ struct PickFunctions
 };
 
 bool8 DoTrainerPartyPool(const struct Trainer *trainer, u32 *monIndices, u8 monsCount, u32 battleTypeFlags);
+u16 GetTrainerMonPoolAt(const struct FrontierMonPool *pool, u16 index);
+u16 GetRandomTrainerMonFromPool(const struct FrontierMonPool *pool);
+struct FrontierMonPool GetTrainerMonPoolFromSet(const u16 *monSet);
+void SelectTrainerMonsFromPool(const struct FrontierMonPool *pool, const struct TrainerMon *poolMons, u8 poolRuleIndex, u8 poolPickIndex, u8 poolPruneIndex, u8 monCount, u16 *selectedMonIds, u32 battleTypeFlags, TrainerMonPoolFilter filter, void *filterData);
 
 #endif
