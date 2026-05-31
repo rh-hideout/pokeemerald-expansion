@@ -201,7 +201,7 @@ static void BXPY_ErrorCheck_ClauseSpecies(void)
 
     for (u32 i = 0; i < PARTY_SIZE; i++)
     {
-        u32 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
+        u32 species = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG);
         if (species != SPECIES_NONE && species != SPECIES_EGG)
             speciesList[partyCount++] = species;
     }
@@ -226,7 +226,7 @@ static void BXPY_ErrorCheck_ClauseItem(void)
 
     for (u32 i = 0; i < PARTY_SIZE; i++)
     {
-        u32 item = GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM);
+        u32 item = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HELD_ITEM);
         if (item != ITEM_NONE)
             itemList[itemCount++] = item;
     }
@@ -251,7 +251,7 @@ static void BXPY_ErrorCheck_ClauseSpecialPokemon(void)
 
     for (u32 i = 0; i < PARTY_SIZE; i++)
     {
-        u32 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
+        u32 species = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG);
 
         if (species == SPECIES_NONE || species == SPECIES_EGG)
             continue;
@@ -332,12 +332,12 @@ static void BXPY_InitTrainerBattleParams(u32 trainerA, const u8 *loseTextA, u32 
 static void BXPY_PrepareEnemyParty(u32 bringSize, u32 battleFlags)
 {
     ZeroEnemyPartyMons();
-    CreateNPCTrainerPartyFromTrainer(&gEnemyParty[0], &gTrainers[GetCurrentDifficultyLevel()][TRAINER_BATTLE_PARAM.opponentA], TRUE, battleFlags);
+    CreateNPCTrainerPartyFromTrainer(&gParties[B_TRAINER_OPPONENT_A][0], &gTrainers[GetCurrentDifficultyLevel()][TRAINER_BATTLE_PARAM.opponentA], TRUE, battleFlags);
 
     if (TRAINER_BATTLE_PARAM.opponentB == TRAINER_NONE)
         return;
 
-    CreateNPCTrainerPartyFromTrainer(&gEnemyParty[PARTY_SIZE/2], &gTrainers[GetCurrentDifficultyLevel()][TRAINER_BATTLE_PARAM.opponentB], FALSE, battleFlags);
+    CreateNPCTrainerPartyFromTrainer(&gParties[B_TRAINER_OPPONENT_A][PARTY_SIZE/2], &gTrainers[GetCurrentDifficultyLevel()][TRAINER_BATTLE_PARAM.opponentB], FALSE, battleFlags);
 }
 
 static void BXPY_GetEnemyEnterMons(u8* enteredMons, u32 pickSize)
@@ -363,20 +363,20 @@ static void BXPY_PrepareParty(u32 pickSize)
     if (gPartnerTrainerId == PARTNER_NONE)
         return;
 
-    FillPartnerParty(gPartnerTrainerId, pickSize/2);
+    FillPartnerParty(gPartnerTrainerId);
 }
 
 static void BXPY_DeleteNonAliveMons(void)
 {
     for (u32 i = 0; i < PARTY_SIZE; i++)
     {
-        u32 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
+        u32 species = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_SPECIES_OR_EGG);
         if (species == SPECIES_NONE || species == SPECIES_EGG)
-            ZeroMonData(&gPlayerParty[i]);
+            ZeroMonData(&gParties[B_TRAINER_PLAYER][i]);
 
-        u32 hp = GetMonData(&gPlayerParty[i], MON_DATA_HP);
+        u32 hp = GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HP);
         if (hp == 0)
-            ZeroMonData(&gPlayerParty[i]);
+            ZeroMonData(&gParties[B_TRAINER_PLAYER][i]);
     }
     CompactPartySlots();
 }
@@ -563,9 +563,9 @@ bool8 BXPY_SummaryScreen_ShouldShowFullItem(enum PokemonSummaryScreenMode mode)
 
 const u8 *BXPY_ReturnItemText(enum Item item)
 {
-    static const u8 sText_Unknown[] = COMPOUND_STRING("Unknown");
-    static const u8 sText_Question[] = COMPOUND_STRING("???");
-    static const u8 sText_None[] = COMPOUND_STRING("NONE");
+    static const u8 sText_Unknown[] = _("Unknown");
+    static const u8 sText_Question[] = _("???");
+    static const u8 sText_None[] = _("NONE");
     bool32 hasItem = (item != ITEM_NONE);
 
     switch (BXPY_GetEnemyItemVisibilityLevel())
@@ -939,7 +939,7 @@ static void BXPY_ChangePosition(s32 delta)
 {
     u32 current = BXPY_GetPosition();
     s32 new = delta + current;
-    u32 max = BXPY_GetBringSize() - 1 + CalculatePartyCount(gEnemyParty);
+    u32 max = BXPY_GetBringSize() - 1 + CalculatePartyCount(B_TRAINER_OPPONENT_A);
 
     if (delta == 6)
     {
@@ -1401,8 +1401,8 @@ static void Task_WaitFadeAndExitGracefully(u8 taskId)
 
     u8 enemyEnteredMons[PARTY_SIZE] = {BXPY_EMPTY_MON};
     BXPY_GetEnemyEnterMons(enemyEnteredMons,BXPY_GetPickSize());
-    BXPY_SelectPartyMembers(gPlayerParty,playerEnteredMons);
-    BXPY_SelectPartyMembers(gEnemyParty,enemyEnteredMons);
+    BXPY_SelectPartyMembers(gParties[B_TRAINER_PLAYER],playerEnteredMons);
+    BXPY_SelectPartyMembers(gParties[B_TRAINER_OPPONENT_A],enemyEnteredMons);
 
     u32 temp = BXPY_GetBattleFlags();
     BXPY_FreeResources();
@@ -1593,15 +1593,15 @@ static void BXPY_DisplayParty(enum BattleSide side, bool32 cursorMove)
 
     for (u32 partyMonIndex = 0; partyMonIndex < bringSize; partyMonIndex++)
     {
-        struct Pokemon *mon = (side == B_SIDE_PLAYER) ? &gPlayerParty[partyMonIndex] : &gEnemyParty[partyMonIndex];
+        struct Pokemon *mon = (side == B_SIDE_PLAYER) ? &gParties[B_TRAINER_PLAYER][partyMonIndex] : &gParties[B_TRAINER_OPPONENT_A][partyMonIndex];
 
         u32 species = GetMonData(mon,MON_DATA_SPECIES_OR_EGG);
 
         if (species == SPECIES_NONE)
-            return;
+            continue;
 
         if (species == SPECIES_EGG)
-            return;
+            continue;
 
         BXPY_DisplayPartyMonText(windowId, mon, side, partyMonIndex);
 
@@ -2251,7 +2251,7 @@ static void Task_LoadPokemonSummary(u8 taskId)
     if (BXPY_IsCursorOnEnemy())
         ShowPokemonSummaryScreen(SUMMARY_MODE_BXPY, party, selectedMon, partySize, CB2_ReturnToBXPYInterface);
     else
-        ShowPokemonSummaryScreen(SUMMARY_MODE_LOCK_MOVES, &gPlayerParty, selectedMon, (partySize - 1), CB2_ReturnToBXPYInterface);
+        ShowPokemonSummaryScreen(SUMMARY_MODE_LOCK_MOVES, &gParties[B_TRAINER_PLAYER], selectedMon, (partySize - 1), CB2_ReturnToBXPYInterface);
 }
 
 static void CB2_ReturnToBXPYInterface(void)
