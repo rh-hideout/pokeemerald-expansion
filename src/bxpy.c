@@ -331,7 +331,7 @@ static void BXPY_InitTrainerBattleParams(u32 trainerA, const u8 *loseTextA, u32 
 
 static void BXPY_PrepareEnemyParty(u32 bringSize, u32 battleFlags)
 {
-    bool32 isMulti = (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE);
+    bool32 isMulti = BXPY_IsMultiBattle();
     bool32 isHalf = (B_MULTI_HALF_TEAMS && isMulti);
 
     ZeroEnemyPartyMons();
@@ -2254,8 +2254,7 @@ static void Task_LoadPokemonSummary(u8 taskId)
     struct Pokemon *party = BXPY_GetParty();
     u32 selectedMon = BXPY_GetPosition();
     u32 partySize = BXPY_GetBringSize();
-    bool32 isMulti = (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE);
-    bool32 isHalf = (B_MULTI_HALF_TEAMS && isMulti);
+    bool32 isHalf = (B_MULTI_HALF_TEAMS && BXPY_IsMultiBattle());
 
     if (BXPY_IsCursorOnEnemy())
     {
