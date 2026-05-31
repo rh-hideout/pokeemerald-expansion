@@ -10048,7 +10048,7 @@ static void SetBallThrowShakes(void)
     if (gTestRunnerEnabled)
         TestRunner_Battle_RecordCatchChance(odds);
 
-    u32 ballId = ItemIdToBallId(gLastUsedItem);
+    enum PokeBall ballId = ItemIdToBallId(gLastUsedItem);
     if (gBattleResults.catchAttempts[ballId] < 255)
         gBattleResults.catchAttempts[ballId]++;
 
@@ -10062,8 +10062,8 @@ static void SetBallThrowShakes(void)
         return;
     }
 
-    u8 shakes;
-    u8 maxShakes;
+    u32 shakes;
+    u32 maxShakes;
 
     if (CriticalCapture(odds))
     {
