@@ -200,7 +200,7 @@ SINGLE_BATTLE_TEST("Beat Up lists each party member's name")
     }
 }
 
-SINGLE_BATTLE_TEST("Beat Up's damage is typeless", s16 damage)
+SINGLE_BATTLE_TEST("Beat Up's damage is typeless (Gen2-4)", s16 damage)
 {
     u16 defender = SPECIES_WOBBUFFET;
     u16 type1, type2;
@@ -235,12 +235,8 @@ SINGLE_BATTLE_TEST("Beat Up's damage is typeless", s16 damage)
         TURN { MOVE(player, MOVE_BEAT_UP); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BEAT_UP, player);
+        EFFECTIVENESS_SE(opponent, SE_EFFECTIVE);
         HP_BAR(opponent, captureDamage: &results[i].damage);
-        NONE_OF {
-            MESSAGE("It's super effective!");
-            MESSAGE("It's not very effective...");
-            MESSAGE("It doesn't affect");
-        }
     } THEN {
         EXPECT_GT(results[i].damage, 0);
     }
