@@ -496,3 +496,30 @@ SINGLE_BATTLE_TEST("Defiant doesn't display ability popup when already at Maximu
         EXPECT_EQ(player->statStages[STAT_ATK], MAX_STAT_STAGE);
     }
 }
+
+SINGLE_BATTLE_TEST("Defiant doesn't activate when an opposing stat drop fails at minimum stage")
+{
+    GIVEN {
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_SPIN_OUT, self: TRUE, speed: -2);
+        ASSUME_STAT_CHANGE(MOVE_SCARY_FACE, speed: -2);
+        PLAYER(SPECIES_BISHARP) { Ability(ABILITY_DEFIANT); Level(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SPIN_OUT); }
+        TURN { MOVE(player, MOVE_SPIN_OUT); }
+        TURN { MOVE(player, MOVE_SPIN_OUT); }
+        TURN { MOVE(opponent, MOVE_SCARY_FACE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIN_OUT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIN_OUT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIN_OUT, player);
+        MESSAGE("The opposing Wobbuffet used Scary Face!");
+        NONE_OF {
+            ABILITY_POPUP(player, ABILITY_DEFIANT);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        }
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_SPEED], MIN_STAT_STAGE);
+        EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+    }
+}

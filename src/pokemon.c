@@ -707,7 +707,10 @@ static const u32 sCompressedStatuses[] =
 // - The maximum HP.
 // - The maximum form countdown.
 
-// The following STATIC_ASSERT will prevent developers from compiling the game if the value of the constant on the left does not fit within the number of bits defined in PokemonSubstruct0 (currently located in include/pokemon.h).
+// The following definition of sBoxPokemonConstantsFit and STATIC_ASSERTS
+// will prevent developers from compiling the game if the value of the
+// constant on the left does not fit within the number of bits defined
+// in BoxPokemon or its substructs (currently located in include/pokemon.h).
 
 // To successfully compile, developers will need to do one of the following:
 // 1) Decrease the size of the constant.
@@ -720,18 +723,48 @@ static const u32 sCompressedStatuses[] =
 // 2) change heldItem:10 to heldItem:11 AND change the below assert for ITEMS_COUNT to check for (1 << 11).
 // 3) repurpose IDs from other items that aren't being used, like ITEM_GOLD_TEETH or ITEM_SS_TICKET until ITEMS_COUNT equals 1023, the max value that will fit in 10 bits.
 
-STATIC_ASSERT(NUM_SPECIES < (1 << 11), PokemonSubstruct0_species_TooSmall);
-STATIC_ASSERT(NUMBER_OF_MON_TYPES + 1 <= (1 << 5), PokemonSubstruct0_teraType_TooSmall);
-STATIC_ASSERT(ITEMS_COUNT < (1 << 10), PokemonSubstruct0_heldItem_TooSmall);
-STATIC_ASSERT(MAX_LEVEL <= 100, PokemonSubstruct0_experience_PotentiallTooSmall); // Maximum of ~2 million exp.
-STATIC_ASSERT(POKEBALL_COUNT <= (1 << 6), PokemonSubstruct0_pokeball_TooSmall);
-STATIC_ASSERT(MOVES_COUNT_ALL < (1 << 11), PokemonSubstruct1_moves_TooSmall);
-STATIC_ASSERT(ARRAY_COUNT(sCompressedStatuses) <= (1 << 4), PokemonSubstruct3_compressedStatus_TooSmall);
-STATIC_ASSERT(MAX_LEVEL < (1 << 7), PokemonSubstruct3_metLevel_TooSmall);
-STATIC_ASSERT(NUM_VERSIONS < (1 << 4), PokemonSubstruct3_metGame_TooSmall);
-STATIC_ASSERT(MAX_DYNAMAX_LEVEL < (1 << 4), PokemonSubstruct3_dynamaxLevel_TooSmall);
-STATIC_ASSERT(MAX_PER_STAT_IVS < (1 << 5), PokemonSubstruct3_ivs_TooSmall);
-STATIC_ASSERT(NUM_NATURES <= (1 << 5), BoxPokemon_hiddenNatureModifier_TooSmall);
+UNUSED static const struct BoxPokemon sBoxPokemonConstantsFit =
+{
+    .language = NUM_LANGUAGES - 1,
+    .hiddenNatureModifier = NUM_NATURES - 1,
+    .compressedStatus = ARRAY_COUNT(sCompressedStatuses) - 1,
+    .secure.substructs[0].type0 = {
+        .species = NUM_SPECIES - 1,
+        .teraType = NUMBER_OF_MON_TYPES - 1,
+        .heldItem = ITEMS_COUNT - 1,
+        .pokeball = POKEBALL_COUNT - 1,
+    },
+    .secure.substructs[1].type1 = {
+        .move1 = MOVES_COUNT_ALL - 1,
+        .move2 = MOVES_COUNT_ALL - 1,
+        .move3 = MOVES_COUNT_ALL - 1,
+        .move4 = MOVES_COUNT_ALL - 1,
+    },
+    .secure.substructs[2].type2 = {
+        .hpEV = MAX_PER_STAT_EVS,
+        .attackEV = MAX_PER_STAT_EVS,
+        .defenseEV = MAX_PER_STAT_EVS,
+        .speedEV = MAX_PER_STAT_EVS,
+        .spAttackEV = MAX_PER_STAT_EVS,
+        .spDefenseEV = MAX_PER_STAT_EVS,
+    },
+    .secure.substructs[3].type3 = {
+        .metLocation = min(MAPSEC_COUNT, min(METLOC_SPECIAL_EGG, min(METLOC_IN_GAME_TRADE, METLOC_FATEFUL_ENCOUNTER))),
+        .metLevel = MAX_LEVEL,
+        .metGame = NUM_VERSIONS, // NOTE: NUM_VERSIONS is inclusive!
+        .dynamaxLevel = MAX_DYNAMAX_LEVEL,
+        .otGender = GENDER_COUNT - 1,
+        .hpIV = MAX_PER_STAT_IVS,
+        .attackIV = MAX_PER_STAT_IVS,
+        .defenseIV = MAX_PER_STAT_IVS,
+        .speedIV = MAX_PER_STAT_IVS,
+        .spAttackIV = MAX_PER_STAT_IVS,
+        .spDefenseIV = MAX_PER_STAT_IVS,
+        .abilityNum = NUM_ABILITY_SLOTS - 1,
+    },
+};
+
+STATIC_ASSERT(MAX_LEVEL <= 100, PokemonSubstruct0_experience_PotentiallyTooSmall); // Maximum of ~2 million exp.
 
 static u32 CompressStatus(u32 status)
 {

@@ -359,7 +359,7 @@ static enum StatChangeResult DecreaseStat(struct BattleCalcValues *cv, struct St
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STAT_WONT_CHANGE;
 
         gBattleScripting.battler = cv->battlerDef;
-        st->script = BattleScript_DecreaseStatChangeMessage;
+        st->script = BattleScript_DecreaseStatChangeMessageMinStat;
         return STAT_CHANGE_WORKED; // Handle failure
     }
     else if (!st->onlyChecking)

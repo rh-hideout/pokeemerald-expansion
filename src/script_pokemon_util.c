@@ -44,7 +44,7 @@ void HealPlayerParty(void)
         HealPlayerBoxes();
 
     // Recharge Tera Orb, if possible.
-    if (B_FLAG_TERA_ORB_CHARGED != 0 && CheckBagHasItem(ITEM_TERA_ORB, 1))
+    if (!IsTeraOrbCharged() && CheckBagHasItem(ITEM_TERA_ORB, 1))
         FlagSet(B_FLAG_TERA_ORB_CHARGED);
 }
 

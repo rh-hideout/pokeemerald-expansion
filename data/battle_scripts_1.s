@@ -227,6 +227,11 @@ BattleScript_DecreaseStatChangeMessage::
 	tryadrenalineorb
 	return
 
+BattleScript_DecreaseStatChangeMessageMinStat::
+	printfromtable gStatDownStringIds
+	waitmessage B_WAIT_TIME_LONG
+	return
+
 BattleScript_StatDidntChangeMessagePause::
 	pause B_WAIT_TIME_SHORT
 	printfromtable gStatUpStringIds
