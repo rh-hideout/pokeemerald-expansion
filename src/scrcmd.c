@@ -2770,7 +2770,7 @@ void NativeFunc_SetMetatileInRange(struct ScriptContext *ctx)
     bool8 hasCollision = ScriptReadByte(ctx);
     u8 elevation = ScriptReadByte(ctx);
     u32 temp;
-    
+
     if (xmin > xmax)
         SWAP(xmin, xmax, temp);
 

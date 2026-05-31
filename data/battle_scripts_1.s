@@ -6148,7 +6148,6 @@ BattleScript_PokemonCantUseTheMove::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-
 BattleScript_BattlerAvoidedAttack::
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_BATTLERAVOIDEDATTACK
@@ -6310,3 +6309,20 @@ BattleScript_SilphScopeUnveiled::
 	printstring STRINGID_GHOSTWASMAROWAK
 	waitmessage B_WAIT_TIME_LONG
 	end2
+
+BattleScript_RaidShockWave::
+	pause B_WAIT_TIME_SHORT
+	printstring STRINGID_RAID_SHOCK_WAVE
+	waitstate
+    return
+
+BattleScript_BarrierAppeared::
+	pause B_WAIT_TIME_SHORT
+	printstring STRINGID_BARRIER_APPEARED
+	waitstate
+    return
+
+BattleScript_BarrierRemoved::
+    return
+BattleScript_SegmentRevemod::
+    return

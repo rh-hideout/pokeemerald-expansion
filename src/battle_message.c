@@ -887,6 +887,10 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_LIGHTSCREENWOREOFF]                   = COMPOUND_STRING("{B_DEF_TEAM1} team's Light Screen wore off!"),
     [STRINGID_AURORAVEILWOREOFF]                    = COMPOUND_STRING("{B_DEF_TEAM1} team's Aurora Veil wore off!"),
     [STRINGID_STICKYWEBDISAPPEAREDFROMYOU]          = COMPOUND_STRING("The sticky web has disappeared from the ground around you!"),
+
+    [STRINGID_RAID_SHOCK_WAVE]                      = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} nullified the the stat changes and Abilities of other Pokémon! {B_SCR_NAME_WITH_PREFIX} is getting desperate! Its attacks are growing more aggressive! A mysterious barrier appeared in fron of {B_SCR_NAME_WITH_PREFIX}! and is protecting it from all attacks!"),
+    [STRINGID_BARRIER_APPEARED]                     = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} is getting desperate!J"),
+
 };
 
 const u16 gTrainerUsedItemStringIds[] =

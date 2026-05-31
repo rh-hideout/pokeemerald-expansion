@@ -201,10 +201,14 @@ Debug_EventScript_Text_DefensiveIVs:
 	.string "HP IVs: {STR_VAR_1}, DEF IVs: {STR_VAR_2}, SPDEF IVs: {STR_VAR_3}$"
 
 Debug_EventScript_Script_1::
+	setraidmon raidType=1, species=SPECIES_ETERNATUS, level=60, dmaxLevel=10
+	doraidbattle partyType=0, faintCount=255, timer=255, screenType=0, catchable=TRUE, partner=PARTNER_STEVEN
 	release
 	end
 
 Debug_EventScript_Script_2::
+	setraidmon raidType=1, species=SPECIES_ETERNATUS, level=60, dmaxLevel=10
+    multi_fixed_wild partnerId=PARTNER_STEVEN
 	release
 	end
 

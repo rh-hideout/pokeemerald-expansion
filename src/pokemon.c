@@ -867,18 +867,18 @@ bool32 ComputePlayerShinyOdds(u32 personality, u32 value)
 {
     if (P_FLAG_FORCE_NO_SHINY != 0 && FlagGet(P_FLAG_FORCE_NO_SHINY))
         return FALSE;
-    
+
     if (P_FLAG_FORCE_SHINY != 0 && FlagGet(P_FLAG_FORCE_SHINY))
         return TRUE;
-    
+
     if (P_ONLY_OBTAINABLE_SHINIES && (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE || (FlagGet(WE_FLAG_NO_CATCHING))))
         return FALSE;
-    
+
     if (P_NO_SHINIES_WITHOUT_POKEBALLS && !HasAtLeastOnePokeBall())
         return FALSE;
 
     u32 totalRerolls = 0;
-    
+
     if (CheckBagHasItem(ITEM_SHINY_CHARM, 1))
         totalRerolls += I_SHINY_CHARM_ADDITIONAL_ROLLS;
 
@@ -985,7 +985,7 @@ void CreateBoxMon(struct BoxPokemon *boxMon, enum Species species, u8 level, u32
     else // Player is the OT
     {
         value = READ_OTID_FROM_SAVE;
-        isShiny = ComputePlayerShinyOdds(personality, value);    
+        isShiny = ComputePlayerShinyOdds(personality, value);
     }
 
     SetBoxMonData(boxMon, MON_DATA_PERSONALITY, &personality);
@@ -3443,15 +3443,6 @@ void PokemonToBattleMon(struct Pokemon *src, struct BattlePokemon *dst)
         dst->statStages[i] = DEFAULT_STAT_STAGE;
 
     memset(&dst->volatiles, 0, sizeof(struct Volatiles));
-}
-
-void CopyPartyMonToBattleData(enum BattlerId battler, u32 partyIndex)
-{
-    struct Pokemon *party = GetBattlerParty(battler);
-    PokemonToBattleMon(&party[partyIndex], &gBattleMons[battler]);
-    gBattleStruct->battlerState[battler].hpOnSwitchout = gBattleMons[battler].hp;
-    UpdateSentPokesToOpponentValue(battler);
-    ClearTemporarySpeciesSpriteData(battler, FALSE, FALSE);
 }
 
 bool8 ExecuteTableBasedItemEffect(struct Pokemon *mon, enum Item item, u8 partyIndex, u8 moveIndex)

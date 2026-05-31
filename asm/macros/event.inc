@@ -1180,6 +1180,81 @@
 	.ifnb \dmaxLevel; .2byte \dmaxLevel; .endif
 	.endm
 
+@ ===================================
+
+	.macro setraidmon raidType, species:req, level:req, item, ball, nature, abilityNum, gender, hpEv, atkEv, defEv, speedEv, spAtkEv, spDefEv, hpIv, atkIv, defIv, speedIv, spAtkIv, spDefIv, move1, move2, move3, move4, shinyMode, gmaxFactor, teraType, dmaxLevel
+	callnative ScrCmd_setraidmon, requests_effects=1
+	.byte \raidType
+	.set givemon_flags, 0
+	.2byte \species
+	.2byte \level
+	.ifnb \item; .set givemon_flags, givemon_flags | (1 << 0); .endif
+	.ifnb \ball; .set givemon_flags, givemon_flags | (1 << 1); .endif
+	.ifnb \nature; .set givemon_flags, givemon_flags | (1 << 2); .endif
+	.ifnb \abilityNum; .set givemon_flags, givemon_flags | (1 << 3); .endif
+	.ifnb \gender; .set givemon_flags, givemon_flags | (1 << 4); .endif
+	.ifnb \hpEv; .set givemon_flags, givemon_flags | (1 << 5); .endif
+	.ifnb \atkEv; .set givemon_flags, givemon_flags | (1 << 6); .endif
+	.ifnb \defEv; .set givemon_flags, givemon_flags | (1 << 7); .endif
+	.ifnb \speedEv; .set givemon_flags, givemon_flags | (1 << 8); .endif
+	.ifnb \spAtkEv; .set givemon_flags, givemon_flags | (1 << 9); .endif
+	.ifnb \spDefEv; .set givemon_flags, givemon_flags | (1 << 10); .endif
+	.ifnb \hpIv; .set givemon_flags, givemon_flags | (1 << 11); .endif
+	.ifnb \atkIv; .set givemon_flags, givemon_flags | (1 << 12); .endif
+	.ifnb \defIv; .set givemon_flags, givemon_flags | (1 << 13); .endif
+	.ifnb \speedIv; .set givemon_flags, givemon_flags | (1 << 14); .endif
+	.ifnb \spAtkIv; .set givemon_flags, givemon_flags | (1 << 15); .endif
+	.ifnb \spDefIv; .set givemon_flags, givemon_flags | (1 << 16); .endif
+	.ifnb \move1; .set givemon_flags, givemon_flags | (1 << 17); .endif
+	.ifnb \move2; .set givemon_flags, givemon_flags | (1 << 18); .endif
+	.ifnb \move3; .set givemon_flags, givemon_flags | (1 << 19); .endif
+	.ifnb \move4; .set givemon_flags, givemon_flags | (1 << 20); .endif
+	.ifnb \shinyMode; .set givemon_flags, givemon_flags | (1 << 21); .endif
+	.ifnb \gmaxFactor; .set givemon_flags, givemon_flags | (1 << 22); .endif
+	.ifnb \teraType; .set givemon_flags, givemon_flags | (1 << 23); .endif
+	.ifnb \dmaxLevel; .set givemon_flags, givemon_flags | (1 << 24); .endif
+	.4byte givemon_flags
+	.ifnb \item; .2byte \item; .endif
+	.ifnb \ball; .2byte \ball; .endif
+	.ifnb \nature; .2byte \nature; .endif
+	.ifnb \abilityNum; .2byte \abilityNum; .endif
+	.ifnb \gender; .2byte \gender; .endif
+	.ifnb \hpEv; .2byte \hpEv; .endif
+	.ifnb \atkEv; .2byte \atkEv; .endif
+	.ifnb \defEv; .2byte \defEv; .endif
+	.ifnb \speedEv; .2byte \speedEv; .endif
+	.ifnb \spAtkEv; .2byte \spAtkEv; .endif
+	.ifnb \spDefEv; .2byte \spDefEv; .endif
+	.ifnb \hpIv; .2byte \hpIv; .endif
+	.ifnb \atkIv; .2byte \atkIv; .endif
+	.ifnb \defIv; .2byte \defIv; .endif
+	.ifnb \speedIv; .2byte \speedIv; .endif
+	.ifnb \spAtkIv; .2byte \spAtkIv; .endif
+	.ifnb \spDefIv; .2byte \spDefIv; .endif
+	.ifnb \move1; .2byte \move1; .endif
+	.ifnb \move2; .2byte \move2; .endif
+	.ifnb \move3; .2byte \move3; .endif
+	.ifnb \move4; .2byte \move4; .endif
+	.ifnb \shinyMode; .2byte \shinyMode; .endif
+	.ifnb \gmaxFactor; .2byte \gmaxFactor; .endif
+	.ifnb \teraType; .2byte \teraType; .endif
+	.ifnb \dmaxLevel; .2byte \dmaxLevel; .endif
+	.endm
+
+	.macro doraidbattle partySize=1, partyType=1, faintCount=4, timer=40, revive=TRUE, screenType=CANCELLABLE, catchable=TRUE, partner=PARTNER_NONE
+	callnative ScrCmd_doraidbattle, requests_effects=1
+    .byte \partySize
+    .byte \partyType
+    .byte \faintCount
+    .byte \timer
+    .byte \revive
+    .byte \screenType
+    .byte \catchable
+    .2byte \partner
+	.endm
+
+@ ===================================
+
 	@ Gives the player an Egg of the specified species.
 	@ VAR_RESULT will be set to MON_GIVEN_TO_PARTY, MON_GIVEN_TO_PC, or MON_CANT_GIVE depending on the outcome.
 	.macro giveegg species:req
@@ -2891,7 +2966,7 @@
 	.2byte \localIdTwo
 	.endm
 
-	@ Saves the species of a specified (localId) object, or SPECIES_NONE if one is not found. 
+	@ Saves the species of a specified (localId) object, or SPECIES_NONE if one is not found.
 	.macro getoverworldwildencounterspecies var:req, localId=VAR_LAST_TALKED
 	callnative SetOverworldObjectSpecies, requests_effects=1
 	.2byte \var

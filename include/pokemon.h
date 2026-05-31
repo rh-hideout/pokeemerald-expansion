@@ -842,7 +842,6 @@ void RemoveMonPPBonus(struct Pokemon *mon, u8 moveIndex);
 void RemoveBoxMonPPBonus(struct BoxPokemon *mon, u8 moveIndex);
 void RemoveBattleMonPPBonus(struct BattlePokemon *mon, u8 moveIndex);
 void PokemonToBattleMon(struct Pokemon *src, struct BattlePokemon *dst);
-void CopyPartyMonToBattleData(enum BattlerId battler, u32 partyIndex);
 bool8 ExecuteTableBasedItemEffect(struct Pokemon *mon, enum Item item, u8 partyIndex, u8 moveIndex);
 bool8 PokemonUseItemEffects(struct Pokemon *mon, enum Item item, u8 partyIndex, u8 moveIndex, u8 usedByAI);
 bool8 HealStatusConditions(struct Pokemon *mon, u32 healMask, enum BattlerId battler);

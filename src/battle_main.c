@@ -16,6 +16,7 @@
 #include "battle_tower.h"
 #include "battle_z_move.h"
 #include "battle_gimmick.h"
+#include "battle_raid.h"
 #include "berry.h"
 #include "bg.h"
 #include "data.h"
@@ -3101,6 +3102,7 @@ static void BattleStartClearSetData(void)
     gBattleStruct->categoryOverride = FALSE; // used for Z-Moves and Max Moves
 
     ClearPursuitValues();
+
     gSelectedMonPartyId = PARTY_SIZE; // Revival Blessing
     gCategoryIconSpriteId = 0xFF;
 
@@ -3384,6 +3386,14 @@ static void DoBattleIntro(void)
                 gBattleStruct->eventState.battleIntro++;
             else
                 gBattleStruct->eventState.battleIntro = BATTLE_INTRO_STATE_GET_MON_DATA;
+        }
+        break;
+    case BATTLE_INTRO_STATE_SET_RAID_BOSS:
+        if (!gBattleControllerExecFlags)
+        {
+            LoadIndicatorSpritesGfx();
+            SetRaidMon();
+            gBattleStruct->eventState.battleIntro++;
         }
         break;
     case BATTLE_INTRO_STATE_PREPARE_BG_SLIDE:
@@ -3702,7 +3712,7 @@ static void TryDoEventsBeforeFirstTurn(void)
     switch (gBattleStruct->eventState.beforeFirstTurn)
     {
     case FIRST_TURN_EVENTS_START:
-        LoadIndicatorSpritesGfx();
+        // LoadIndicatorSpritesGfx();
         // Set invalid mons as absent(for example when starting a double battle with only one Pokémon).
         if (!(gBattleTypeFlags & BATTLE_TYPE_SAFARI))
         {

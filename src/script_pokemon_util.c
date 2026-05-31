@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle.h"
 #include "battle_gfx_sfx_util.h"
+#include "battle_raid.h"
 #include "berry.h"
 #include "caps.h"
 #include "data.h"
@@ -585,6 +586,110 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
         nature = GetSynchronizedNature(origin, species);
 
     gSpecialVar_Result = ScriptGiveMonParameterized(side, slot, species, level, item, ball, nature, abilityNum, gender, evs, ivs, moves, shinyMode, gmaxFactor, teraType, dmaxLevel);
+}
+
+void ScrCmd_setraidmon(struct ScriptContext *ctx)
+{
+    enum RaidType raidType = ScriptReadByte(ctx);
+
+    if (raidType == RAID_TYPE_NONE)
+        gBattleRaid.type = RandomUniform(RNG_NONE, RAID_TYPE_DYNAMAX, RAID_TYPE_TERA);
+    else
+        gBattleRaid.type = raidType;
+
+    enum Species species = VarGet(ScriptReadHalfword(ctx));
+    u8 level           = VarGet(ScriptReadHalfword(ctx));
+
+    u32 flags          = ScriptReadWord(ctx);
+    enum Item item     = PARSE_FLAG(0, ITEM_NONE);
+    enum PokeBall ball = PARSE_FLAG(1, BALL_POKE);
+    u8 nature          = PARSE_FLAG(2, NATURE_RANDOM);
+    u8 abilityNum      = PARSE_FLAG(3, NUM_ABILITY_PERSONALITY);
+    u8 gender          = PARSE_FLAG(4, MON_GENDER_RANDOM);
+
+    u32 i;
+    u16 evs[NUM_STATS];
+    for (i = 0; i < NUM_STATS; i++)
+    {
+        evs[i] = PARSE_FLAG(5 + i, 0);
+        assertf(evs[i] <= MAX_PER_STAT_EVS, "invalid ev value of %d above maximum of %d", evs[i], MAX_PER_STAT_EVS)
+        {
+            evs[i] = MAX_PER_STAT_EVS;
+        }
+    }
+
+    u16 ivs[NUM_STATS];
+    u32 nonFixedIvCount = 0;
+    enum Stat availableIVs[NUM_STATS];
+    enum Stat selectedIvs[NUM_STATS];
+    for (i = 0; i < NUM_STATS; i++)
+    {
+        ivs[i] = PARSE_FLAG(11 + i, USE_RANDOM_IVS);
+        assertf(ivs[i] <= USE_RANDOM_IVS, "invalid iv value of %d above maximum of %d", ivs[i], MAX_PER_STAT_IVS)
+        {
+            ivs[i] = MAX_PER_STAT_IVS;
+        }
+        if (ivs[i] == USE_RANDOM_IVS)
+        {
+            availableIVs[nonFixedIvCount] = i;
+            ivs[i] = Random() % (MAX_PER_STAT_IVS + 1);
+            nonFixedIvCount++;
+        }
+    }
+
+    // Perfect IV calculation
+    if (gSpeciesInfo[species].perfectIVCount != 0)
+    {
+        // Select the IVs that will be perfected.
+        for (i = 0; i < nonFixedIvCount && i < gSpeciesInfo[species].perfectIVCount; i++)
+        {
+            u8 index = Random() % (nonFixedIvCount - i);
+            selectedIvs[i] = availableIVs[index];
+            RemoveIVIndexFromList(availableIVs, index);
+        }
+        for (i = 0; i < nonFixedIvCount && i < gSpeciesInfo[species].perfectIVCount; i++)
+        {
+            ivs[selectedIvs[i]] = MAX_PER_STAT_IVS;
+        }
+    }
+
+    enum Move moves[MAX_MON_MOVES];
+    for (i = 0; i < MAX_MON_MOVES; i++)
+        moves[i] = PARSE_FLAG(17 + i, MOVE_DEFAULT);
+
+    enum ShinyMode shinyMode = PARSE_FLAG(21, SHINY_MODE_RANDOM);
+    bool8 gmaxFactor         = PARSE_FLAG(22, FALSE);
+    enum Type teraType       = PARSE_FLAG(23, NUMBER_OF_MON_TYPES);
+    u8 dmaxLevel             = PARSE_FLAG(24, 0);
+
+    Script_RequestEffects(SCREFF_V1);
+    enum GeneratedMonOrigin origin = STATIC_WILDMON_ORIGIN;
+
+    if (gender == MON_GENDER_MAY_CUTE_CHARM)
+        gender = GetSynchronizedGender(origin, species);
+    if (nature == NATURE_MAY_SYNCHRONIZE)
+        nature = GetSynchronizedNature(origin, species);
+
+    gBattleRaid.level = GetRaidLevel(raidType, level);
+
+    gSpecialVar_Result = ScriptGiveMonParameterized(B_SIDE_OPPONENT, 0, species, level, item, ball, nature, abilityNum, gender, evs, ivs, moves, shinyMode, gmaxFactor, teraType, dmaxLevel);
+}
+
+#include "battle_setup.h"
+void ScrCmd_doraidbattle(struct ScriptContext *ctx)
+{
+    u32 UNUSED partySize = ScriptReadByte(ctx);
+    u32 UNUSED partyType = ScriptReadByte(ctx);
+    gBattleRaid.faintCount = ScriptReadByte(ctx);
+    gBattleRaid.timer = ScriptReadByte(ctx);
+    gBattleRaid.revive = ScriptReadByte(ctx);
+    u32 UNUSED screenType = ScriptReadByte(ctx);
+    gBattleRaid.catchable = ScriptReadByte(ctx);
+    u32 partner = TRAINER_PARTNER(ScriptReadHalfword(ctx));
+
+    BattleSetup_StartRaidBattle(partner);
+    Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
+    ScriptContext_Stop();
 }
 
 #undef PARSE_FLAG

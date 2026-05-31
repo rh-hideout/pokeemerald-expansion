@@ -4823,10 +4823,26 @@ bool32 IsMoldBreakerTypeAbility(enum BattlerId battler, enum Ability ability)
     return FALSE;
 }
 
+static bool32 IsDynamaxRaidBattleSupressed(enum BattlerId battlerDef)
+{
+    // Other ignored abilities (Speed Boost? Defiant?)
+    if (!gAbilitiesInfo[gBattleMons[battlerDef].ability].breakable)
+        return FALSE;
+
+    if (!gBattleStruct->raidBattleAbilitySupression)
+        return FALSE;
+
+    return TRUE;
+}
+
 static inline bool32 CanBreakThroughAbility(enum BattlerId battlerAtk, enum BattlerId battlerDef, bool32 hasAbilityShield, bool32 ignoreMoldBreaker)
 {
     if (hasAbilityShield || ignoreMoldBreaker || battlerDef == battlerAtk)
         return FALSE;
+
+    if (IsDynamaxRaidBattleSupressed(battlerDef))
+        return TRUE;
+
     return gBattleStruct->moldBreakerActive && gAbilitiesInfo[gBattleMons[battlerDef].ability].breakable;
 }
 
@@ -11001,4 +11017,16 @@ bool32 IsBattlersFirstTurn(enum BattlerId battler)
 struct PartyState *GetBattlerPartyState(enum BattlerId battler)
 {
     return &gBattleStruct->partyState[GetBattlerTrainer(battler)][gBattlerPartyIndexes[battler]];
+}
+
+void RequestNonVolatileChange(enum BattlerId battler)
+{
+    BtlController_EmitSetMonData(
+        battler,
+        B_COMM_TO_CONTROLLER,
+        REQUEST_STATUS_BATTLE,
+        0,
+        sizeof(gBattleMons[battler].status1),
+        &gBattleMons[battler].status1);
+    MarkBattlerForControllerExec(battler);
 }

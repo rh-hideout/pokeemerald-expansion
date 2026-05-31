@@ -8,6 +8,7 @@
 #include "battle_stat_change.h"
 #include "battle_gimmick.h"
 #include "battle_scripts.h"
+#include "battle_raid.h"
 #include "constants/battle.h"
 #include "constants/battle_string_ids.h"
 #include "constants/abilities.h"
@@ -1518,6 +1519,12 @@ static bool32 HandleEndTurnDynamax(enum BattlerId battler)
     return effect;
 }
 
+static bool32 HandleEndTurnRaidShockWave(enum BattlerId battler)
+{
+    gBattleStruct->eventState.endTurn++;
+    return TryRaidShockWave();
+}
+
 static bool32 (*const sEndTurnEffectHandlers[])(enum BattlerId battler) =
 {
     [ENDTURN_ORDER] = HandleEndTurnOrder,
@@ -1573,6 +1580,7 @@ static bool32 (*const sEndTurnEffectHandlers[])(enum BattlerId battler) =
     [ENDTURN_ARENA_TURN_END] = HandleEndTurnArenaTurnEnd,
     [ENDTURN_FAINTED_MON_ACTIONS] = HandleEndTurnFaintedMonActions,
     [ENDTURN_DYNAMAX] = HandleEndTurnDynamax,
+    [ENDTURN_RAID_SHOCKWAVE] = HandleEndTurnRaidShockWave,
 };
 
 static bool32 HandleEndTurnEmergencyExit(enum BattlerId battler)
@@ -1604,6 +1612,9 @@ bool32 DoEndTurnEffects(void)
         // Activate any battler's Emergency Exit if possible (otherwise reset wasAboveHalfHp bit)
         if (gBattleStruct->eventState.endTurn > ENDTURN_VARIOUS)
         {
+            if (HandleRaidBarrier())
+                return TRUE;
+
             for (u32 i = 0; i < gBattlersCount; i++)
             {
                 battler = gBattlerByTurnOrder[i];

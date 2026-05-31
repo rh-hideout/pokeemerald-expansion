@@ -12,6 +12,7 @@
 #include "battle_z_move.h"
 #include "battle_stat_change.h"
 #include "battle_move_resolution.h"
+#include "battle_raid.h"
 #include "item.h"
 #include "util.h"
 #include "pokemon.h"
@@ -1631,6 +1632,7 @@ static void MoveDamageDataHpUpdate(enum BattlerId battler, u32 scriptBattler, co
             u16 hpBefore;
             u16 hpLost;
 
+            AdjustRaidMoveDamage(battler);
             gBideDmg[battler] += gBattleStruct->moveDamage[battler];
             gBideTarget[battler] = gBattlerAttacker;
 
@@ -1694,6 +1696,7 @@ static void Cmd_datahpupdate(void)
     if (gBattleControllerExecFlags)
         return;
 
+    u32 hpBeforeUpdate = gBattleMons[battler].hp;
 
     switch (cmd->updateState)
     {
@@ -1704,8 +1707,13 @@ static void Cmd_datahpupdate(void)
         MoveDamageDataHpUpdate(battler, cmd->battler, cmd->nextInstr);
         break;
     }
+
+    u32 hpAfterUpdate = gBattleMons[battler].hp;
+
     if (gBattleMons[battler].hp > gBattleMons[battler].maxHP / 2)
         gBattleStruct->battlerState[battler].wasAboveHalfHp = TRUE;
+
+    SetBarrierActivation(battler, hpBeforeUpdate, hpAfterUpdate);
 
 }
 

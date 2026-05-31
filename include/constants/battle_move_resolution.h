@@ -141,6 +141,7 @@ enum MoveEndState
     MOVEEND_SPRAY_LEPPA_BLUNDER, // Throat Spray, Leppa Berry, Blunder Policy
     MOVEEND_ITEM_ON_STAT_CHANGE,
     MOVEEND_SEND_OUT_REPLACEMENTS, // For all non-forced switching effects
+    MOVEEND_SET_RAID_BARRIE,
     MOVEEND_CLEAR_BITS,
     MOVEEND_DANCER,
     MOVEEND_PURSUIT_NEXT_ACTION,

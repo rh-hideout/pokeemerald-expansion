@@ -9,6 +9,7 @@
 #include "battle_stat_change.h"
 #include "battle_scripts.h"
 #include "battle_z_move.h"
+#include "battle_raid.h"
 #include "item.h"
 #include "battle_controllers.h"
 #include "move.h"
@@ -19,7 +20,6 @@ static enum Move GetOriginallyUsedMove(enum Move chosenMove);
 static void SetSameMoveTurnValues(enum BattleMoveEffects moveEffect);
 static void TryClearChargeVolatile(enum Type moveType);
 static inline bool32 IsBattlerUsingBeakBlast(enum BattlerId battler);
-static void RequestNonVolatileChange(enum BattlerId battlerAtk);
 static bool32 CanBattlerBounceBackMove(struct BattleCalcValues *cv);
 static bool32 TryMagicBounce(struct BattleCalcValues *cv);
 static bool32 TryMagicCoat(struct BattleCalcValues *cv);
@@ -1157,6 +1157,33 @@ static bool32 ShouldSkipFailureCheckOnBattler(enum BattlerId battlerAtk, enum Ba
     return FALSE;
 }
 
+static bool32 IsDynamaxRaidFailure(struct BattleCalcValues *cv)
+{
+    if (gBattleRaid.type != RAID_TYPE_DYNAMAX)
+        return FALSE;
+
+    if (IsExplosionMove(cv->move))
+        return TRUE;
+
+    if (MoveHasAdditionalEffect(cv->move, MOVE_EFFECT_BUG_BITE)
+     || MoveHasAdditionalEffect(cv->move, MOVE_EFFECT_INCINERATE))
+        return TRUE;
+
+    switch (cv->moveEffect)
+    {
+    case EFFECT_STEAL_ITEM:
+    case EFFECT_DESTINY_BOND:
+    case EFFECT_KNOCK_OFF:
+    case EFFECT_FIXED_PERCENT_DAMAGE:
+    case EFFECT_TRICK:
+        return TRUE;
+    default:
+        return FALSE;
+    }
+
+    return FALSE;
+}
+
 static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
 {
     const u8 *battleScript = NULL;
@@ -1328,6 +1355,12 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
     if (battleScript != NULL)
     {
         gBattlescriptCurrInstr = battleScript;
+        return CANCELER_RESULT_FAILURE;
+    }
+
+    if (IsDynamaxRaidFailure(cv))
+    {
+        gBattlescriptCurrInstr = BattleScript_ButItFailed;
         return CANCELER_RESULT_FAILURE;
     }
 
@@ -1763,25 +1796,29 @@ static enum CancelerResult CancelerCharging(struct BattleCalcValues *cv)
     }
     else // Try move this turn. Otherwise use next turn
     {
-        if (CanTwoTurnMoveFireThisTurn(cv))
+        bool32 firesThisTurn = CanTwoTurnMoveFireThisTurn(cv);
+        bool32 holdsPowerHerb = cv->holdEffects[cv->battlerAtk] == HOLD_EFFECT_POWER_HERB;
+        bool32 dynamaxRaid = gBattleRaid.type == RAID_TYPE_DYNAMAX;
+
+        if (firesThisTurn || holdsPowerHerb || dynamaxRaid)
         {
             gBattleScripting.animTurn = 1;
             gBattleScripting.animTargetsHit = 0;
             gProtectStructs[cv->battlerAtk].chargingTurn = FALSE;
+
             if (gBattleMoveEffects[cv->moveEffect].semiInvulnerableEffect)
                 gBattleMons[cv->battlerAtk].volatiles.semiInvulnerable = STATE_NONE;
-            result = CANCELER_RESULT_SUCCESS;
-        }
-        else if (cv->holdEffects[cv->battlerAtk] == HOLD_EFFECT_POWER_HERB)
-        {
-            gBattleScripting.animTurn = 1;
-            gBattleScripting.animTargetsHit = 0;
-            gProtectStructs[cv->battlerAtk].chargingTurn = FALSE;
-            if (gBattleMoveEffects[cv->moveEffect].semiInvulnerableEffect)
-                gBattleMons[cv->battlerAtk].volatiles.semiInvulnerable = STATE_NONE;
-            gLastUsedItem = gBattleMons[cv->battlerAtk].item;
-            BattleScriptCall(BattleScript_PowerHerbActivation);
-            result = CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
+
+            if (firesThisTurn || dynamaxRaid)
+            {
+                result = CANCELER_RESULT_SUCCESS;
+            }
+            else // Power Herb
+            {
+                gLastUsedItem = gBattleMons[cv->battlerAtk].item;
+                BattleScriptCall(BattleScript_PowerHerbActivation);
+                result = CANCELER_RESULT_RUN_SCRIPT_AND_INCREMENT;
+            }
         }
         else // Use move next turn
         {
@@ -4144,6 +4181,16 @@ static enum MoveEndResult MoveEndSendOutReplacements(struct BattleCalcValues *cv
     return MOVEEND_RESULT_CONTINUE;
 }
 
+static enum MoveEndResult MoveEndSetRaidBarrier(struct BattleCalcValues *cv)
+{
+    gBattleScripting.moveendState++;
+
+    if (HandleRaidBarrier())
+        return MOVEEND_RESULT_RUN_SCRIPT;
+
+    return MOVEEND_RESULT_CONTINUE;
+}
+
 static enum MoveEndResult MoveEndRampage(struct BattleCalcValues *cv)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
@@ -4393,6 +4440,7 @@ static enum MoveEndResult (*const sMoveEndHandlers[])(struct BattleCalcValues *c
     [MOVEEND_SPRAY_LEPPA_BLUNDER] = MoveEndSprayLeppaBlunder,
     [MOVEEND_ITEM_ON_STAT_CHANGE] = MoveEndItemOnStatChange,
     [MOVEEND_SEND_OUT_REPLACEMENTS] = MoveEndSendOutReplacements,
+    [MOVEEND_SET_RAID_BARRIE] = MoveEndSetRaidBarrier,
     [MOVEEND_CLEAR_BITS] = MoveEndClearBits,
     [MOVEEND_DANCER] = MoveEndDancer,
     [MOVEEND_PURSUIT_NEXT_ACTION] = MoveEndPursuitNextAction,
@@ -4939,18 +4987,6 @@ static inline bool32 IsBattlerUsingBeakBlast(enum BattlerId battler)
     return !HasBattlerActedThisTurn(battler);
 }
 
-static void RequestNonVolatileChange(enum BattlerId battlerAtk)
-{
-    BtlController_EmitSetMonData(
-        battlerAtk,
-        B_COMM_TO_CONTROLLER,
-        REQUEST_STATUS_BATTLE,
-        0,
-        sizeof(gBattleMons[battlerAtk].status1),
-        &gBattleMons[battlerAtk].status1);
-    MarkBattlerForControllerExec(battlerAtk);
-}
-
 static enum Move GetMirrorMoveMove(void)
 {
     s32 i, validMovesCount;
@@ -5069,6 +5105,7 @@ static enum Move GetAssistMove(void)
 enum Move GetNaturePowerMove(void)
 {
     enum Move move = gBattleEnvironmentInfo[gBattleEnvironment].naturePower;
+
     if (gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN)
         move = MOVE_MOONBLAST;
     else if (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)
@@ -5077,6 +5114,8 @@ enum Move GetNaturePowerMove(void)
         move = MOVE_ENERGY_BALL;
     else if (gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN)
         move = MOVE_PSYCHIC;
+    else if (gBattleRaid.type == RAID_TYPE_DYNAMAX)
+        move = MOVE_EARTH_POWER;
     else if (gBattleEnvironmentInfo[gBattleEnvironment].naturePower == MOVE_NONE)
         move = B_NATURE_POWER_MOVES >= GEN_4 ? MOVE_TRI_ATTACK : MOVE_SWIFT;
 

@@ -361,7 +361,9 @@ static void DoStandardWildBattle(bool32 isDouble)
         gBattleTypeFlags |= BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_DOUBLE;
     }
     else if (isDouble)
+    {
         gBattleTypeFlags |= BATTLE_TYPE_DOUBLE;
+    }
     if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
     {
         VarSet(VAR_TEMP_E, 0);
@@ -391,6 +393,36 @@ void DoStandardWildBattle_Debug(void)
     //IncrementGameStat(GAME_STAT_WILD_BATTLES);
     //IncrementDailyWildBattles();
     //TryUpdateGymLeaderRematchFromWild();
+}
+
+
+#include "battle_partner.h"
+void BattleSetup_StartRaidBattle(u32 partner)
+{
+    LockPlayerFieldControls();
+    gMain.savedCallback = CB2_EndScriptedWildBattle;
+
+    gBattleTypeFlags = BATTLE_TYPE_RAID;
+    if (partner != PARTNER_NONE)
+    {
+        InitTrainerBattleParameter();
+        gPartnerTrainerId = partner;
+        FillPartnerParty(partner);
+        CalculatePartnerPartyCount();
+        gBattleTypeFlags |= (BATTLE_TYPE_DOUBLE | BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER);
+        TRAINER_BATTLE_PARAM.opponentA = TRAINER_BATTLE_PARAM.opponentB = TRAINER_NONE;
+    }
+
+
+        // CreateTask(Task_StartBattleAfterTransition, 1);
+        // PlayMapChosenOrBattleBGM(0);
+        // if (gSpecialVar_0x8005 & MULTI_BATTLE_2_VS_WILD)
+        //     BattleTransition_StartOnField(GetWildBattleTransition());
+        // else
+        //     BattleTransition_StartOnField(GetTrainerBattleTransition());
+        //
+    CreateBattleStartTask(GetWildBattleTransition(), 0);
+    IncrementGameStat(GAME_STAT_TOTAL_BATTLES);
 }
 
 void BattleSetup_StartRoamerBattle(void)
@@ -1521,7 +1553,7 @@ void BattleSetup_StartRematchBattle(void)
     gBattleTypeFlags = BATTLE_TYPE_TRAINER;
     if (GetTrainerBattleType(TRAINER_BATTLE_PARAM.opponentA) == TRAINER_BATTLE_TYPE_DOUBLES)
         gBattleTypeFlags |= BATTLE_TYPE_DOUBLE;
-    
+
     gMain.savedCallback = CB2_EndRematchBattle;
     DoTrainerBattle();
     ScriptContext_Stop();
