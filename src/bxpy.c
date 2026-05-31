@@ -771,7 +771,7 @@ static bool8 AllocZeroedTilemapBuffers(void);
 static void HandleAndShowBgs(void);
 static void SetScheduleBgs(enum BXPYBackgrounds backgroundId);
 static void BXPY_DisplayPartyMonText(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex);
-static void BXPY_SetPage(u32 page);
+static void BXPY_SetPage(enum BXPYPages page);
 static u32 BXPY_GetPage(void);
 static void BXPY_SelectMonAndShowMenu(u8 taskId);
 static bool8 BXPY_ShouldHandleMonsWithFullMenu(void);
@@ -1007,7 +1007,7 @@ static u32 BXPY_GetBattleFlags(void)
     return sBXPYState->battleFlags;
 }
 
-static void BXPY_SetPage(u32 page)
+static void BXPY_SetPage(enum BXPYPages page)
 {
     sBXPYState->page = page;
 }
@@ -1015,6 +1015,16 @@ static void BXPY_SetPage(u32 page)
 static u32 BXPY_GetPage(void)
 {
     return sBXPYState->page;
+}
+
+static bool8 BXPY_IsOnPartnerPage(void)
+{
+    return (BXPY_GetPage() == BXPY_PAGE_OPPONENT_B);
+}
+
+static void BXPY_SetInitalPage(void)
+{
+    BXPY_SetPage(BXPY_PAGE_OPPONENT_A);
 }
 
 static void BXPY_SetSpriteId(u32 spriteIndex, u32 spriteId)
@@ -1512,6 +1522,7 @@ void BXPY_SetupCallback(void)
             break;
         case 2:
             BXPY_SetPosition(0);
+            BXPY_SetInitalPage();
             BXPY_InitializeBackgroundsAndLoadBackgroundGraphics();
             gMain.state++;
             break;
