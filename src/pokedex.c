@@ -2192,7 +2192,7 @@ bool32 ShouldSkipPokedexListEntry(enum NationalDexOrder dexNum)
 
     if (P_SKIP_POKEDEX_GAPS == SKIP_GAPS_EXCEPT_BEFORE_AFTER)
         return !GetSetPokedexFlag(dexNumBefore, FLAG_GET_SEEN)
-         && !GetSetPokedexFlag(dexNumAfter, FLAG_GET_SEEN);
+            && !GetSetPokedexFlag(dexNumAfter, FLAG_GET_SEEN);
 
     return TRUE; 
 }
