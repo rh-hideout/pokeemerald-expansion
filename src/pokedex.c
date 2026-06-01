@@ -2460,7 +2460,7 @@ static void CreateMonDexNum(u16 entryNum, u8 left, u8 top, u16 unused)
     text[offset++] = CHAR_0 + ((dexNum % 1000) % 100) % 10;
     text[offset++] = EOS;
 
-    if (!sPokedexView->pokedexList[entryNum].seen && P_SKIP_POKEDEX_GAPS == SKIP_GAPS_EXCEPT_ONE)
+    if (P_SKIP_POKEDEX_GAPS == SKIP_GAPS_EXCEPT_ONE && !sPokedexView->pokedexList[entryNum].seen)
         StringCopy(text, COMPOUND_STRING("------"));
 
     PrintMonDexNum(0, FONT_NARROW, text, left, top);
