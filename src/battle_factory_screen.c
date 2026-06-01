@@ -2747,9 +2747,10 @@ static void Swap_Task_SlideCycleBalls(u8 taskId)
     switch (gTasks[taskId].tState)
     {
     case 0:
-        gTasks[taskId].tBallCycled(0) = FALSE;
-        gTasks[taskId].tBallCycled(1) = FALSE;
-        gTasks[taskId].tBallCycled(2) = FALSE;
+        for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
+        {
+            gTasks[taskId].tBallCycled(i) = FALSE;
+        }
         gTasks[taskId].tState = 1;
         break;
     case 1:
