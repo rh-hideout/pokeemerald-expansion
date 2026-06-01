@@ -195,37 +195,19 @@ static void CompleteOnBattlerSpritePosX_0(enum BattlerId battler)
         BtlController_Complete(battler);
 }
 
-static u16 GetPrevBall(u16 ballId)
+static enum Item GetNextBall(enum Item ballId, s32 direction)
 {
-    s32 i;
     s32 index = ItemIdToBallId(ballId);
-    u32 newBall = 0;
-     for (i = 0; i < POKEBALL_COUNT; i++)
-    {
-        index--;
-        if (index == -1)
-            index = POKEBALL_COUNT - 1;
-        newBall = gPokeBalls[index].itemId;
-        if (CheckBagHasItem(newBall, 1))
-            return newBall;
-    }
-    return ballId;
-}
+    enum Item newBall = ITEM_NONE;
 
-static u32 GetNextBall(u32 ballId)
-{
-    s32 i;
-    s32 index = ItemIdToBallId(ballId);
-    u32 newBall = 0;
-    for (i = 0; i < POKEBALL_COUNT; i++)
+    for (s32 i = 0; i < POKEBALL_COUNT; i++)
     {
-        index++;
-        if (index == POKEBALL_COUNT)
-            index = 0;
+        WrapAddPtr(&index, direction, 0, POKEBALL_COUNT - 1);
         newBall = gPokeBalls[index].itemId;
         if (CheckBagHasItem(newBall, 1))
             return newBall;
     }
+
     return ballId;
 }
 
@@ -257,27 +239,16 @@ static void HandleInputChooseAction(enum BattlerId battler)
 
         if (gBattleStruct->ackBallUseBtn)
         {
-            if (JOY_HELD(B_LAST_USED_BALL_BUTTON) && (JOY_NEW(DPAD_DOWN) || JOY_NEW(DPAD_RIGHT)))
+            s32 delta = JOY_AXIS_NEW(DPAD_UP | DPAD_LEFT, DPAD_DOWN | DPAD_RIGHT);
+            if (JOY_HELD(B_LAST_USED_BALL_BUTTON) && delta != 0)
             {
                 bool32 sameBall = FALSE;
-                u32 nextBall = GetNextBall(gBallToDisplay);
+                enum Item nextBall = GetNextBall(gBallToDisplay, delta);
                 gBattleStruct->ballSwapped = TRUE;
                 if (gBallToDisplay == nextBall)
                     sameBall = TRUE;
                 else
                     gBallToDisplay = nextBall;
-                SwapBallToDisplay(sameBall);
-                PlaySE(SE_SELECT);
-            }
-            else if (JOY_HELD(B_LAST_USED_BALL_BUTTON) && (JOY_NEW(DPAD_UP) || JOY_NEW(DPAD_LEFT)))
-            {
-                bool32 sameBall = FALSE;
-                u32 prevBall = GetPrevBall(gBallToDisplay);
-                gBattleStruct->ballSwapped = TRUE;
-                if (gBallToDisplay == prevBall)
-                    sameBall = TRUE;
-                else
-                    gBallToDisplay = prevBall;
                 SwapBallToDisplay(sameBall);
                 PlaySE(SE_SELECT);
             }
