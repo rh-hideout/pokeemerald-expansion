@@ -435,7 +435,7 @@ ALIGNED(4) const u8 gCreditsString_Akira_Kinashi[] = _("\n\n\nAkira Kinashi\n\n\
 
 static const u16 sCreditsMonCircle_Pal[] = INCGFX_U16("graphics/credits_frlg/white_circle.pal", ".gbapal");
 static const u32 sCreditsMonCircle_Tiles[] = INCGFX_U32("graphics/credits_frlg/white_circle.png", ".8bpp.smol");
-static const u32 sCreditsMonCircle_Tilemap[] = INCBIN_U32("graphics/credits_frlg/white_circle.bin.smolTM");
+static const u32 sCreditsMonCircle_Tilemap[] = INCGFX_U32("graphics/credits_frlg/white_circle.bin", ".smolTM");
 
 static const u32 sCharizard1_Tiles[] = INCGFX_U32("graphics/credits_frlg/charizard_1.png", ".4bpp.smol");
 static const u32 sCharizard2_Tiles[] = INCGFX_U32("graphics/credits_frlg/charizard_2.png", ".4bpp.smol");
@@ -469,7 +469,7 @@ const u16 gCreditsMonPokeball_Pals[][16] =
 };
 
 const u32 gCreditsMonPokeball_Tiles[] = INCGFX_U32("graphics/credits_frlg/pokeball.png", ".4bpp.smol");
-const u32 gCreditsMonPokeball_Tilemap[] = INCBIN_U32("graphics/credits_frlg/pokeball.bin.smolTM");
+const u32 gCreditsMonPokeball_Tilemap[] = INCGFX_U32("graphics/credits_frlg/pokeball.bin", ".smolTM");
 
 static const struct CompressedGraphicsHeader sCopyrightOrTheEndGfxHeaders[] = {
     {
@@ -1191,7 +1191,7 @@ static void LoadCreditsMonPic(u8 whichMon)
     CopyWindowToVram(2, COPYWIN_GFX);
 }
 
-static u16 GetCreditsMonSpecies(u8 whichMon)
+static enum Species GetCreditsMonSpecies(u8 whichMon)
 {
     switch (whichMon)
     {

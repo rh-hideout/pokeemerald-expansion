@@ -8,15 +8,9 @@ Common_EventScript_MoveRelearner::
 
 Common_EventScript_MoveRelearnerDynMultiChoice::
 	dynmultipush MoveRelearner_Text_LevelUpMoves, 0
-.if P_ENABLE_MOVE_RELEARNERS == TRUE
 	dynmultipush MoveRelearner_Text_EggMoves, 1
 	dynmultipush MoveRelearner_Text_TMMoves, 2
 	dynmultipush MoveRelearner_Text_TutormoveMoves, 3
-.else
-	call_if_set P_FLAG_EGG_MOVES, MoveRelearner_EventScript_PushEggMoves
-	istmrelearneractive MoveRelearner_EventScript_PushTMMoves
-	call_if_set P_FLAG_TUTOR_MOVES, MoveRelearner_EventScript_PushTutorMoves
-.endif @ P_ENABLE_MOVE_RELEARNERS
 	dynmultipush MoveRelearner_Text_SeeYa, 4
 	dynmultistack 0, 0, FALSE, 5, 0, 0, DYN_MULTICHOICE_CB_NONE
 	closemessage
@@ -76,7 +70,7 @@ MoveRelearner_EventScript_TeachMove::
 	call_if_eq VAR_0x8004, PARTY_NOTHING_CHOSEN, MoveRelearner_EventScript_AnythingElse
 	special IsSelectedMonEgg
 	call_if_eq VAR_RESULT, TRUE, MoveRelearner_EventScript_CantTeachMoveToEgg
-	special HasMovesToRelearn
+	special Special_HasMoveToRelearn
 	call_if_eq VAR_RESULT, FALSE, MoveRelearner_EventScript_CantTeachMoveToPkmn
 	msgbox MoveRelearner_Text_WhichXmoveShouldTeach, MSGBOX_DEFAULT
 	special TeachMoveRelearnerMove

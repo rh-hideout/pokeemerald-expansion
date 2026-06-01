@@ -42,7 +42,7 @@ static void PrintContestPaintingCaption(u8, u8);
 static void VBlankCB_ContestPainting(void);
 static void _InitContestMonPixels(u8 *spriteGfx, u16 *palette, u16 (*destPixels)[64][64]);
 
-const u8 gContestHallPaintingCaption[] = COMPOUND_STRING("{STR_VAR_1}\n{STR_VAR_2}'s {STR_VAR_3}");
+const u8 gContestHallPaintingCaption[] = _("{STR_VAR_1}\n{STR_VAR_2}'s {STR_VAR_3}");
 
 static const u16 sPictureFramePalettes[]          = INCGFX_U16("graphics/picture_frame/bg.pal", ".gbapal");
 static const u32 sPictureFrameTiles_Cool[]        = INCGFX_U32("graphics/picture_frame/cool.png", ".4bpp.smol");
@@ -51,12 +51,12 @@ static const u32 sPictureFrameTiles_Cute[]        = INCGFX_U32("graphics/picture
 static const u32 sPictureFrameTiles_Smart[]       = INCGFX_U32("graphics/picture_frame/smart.png", ".4bpp.smol");
 static const u32 sPictureFrameTiles_Tough[]       = INCGFX_U32("graphics/picture_frame/tough.png", ".4bpp.smol");
 static const u32 sPictureFrameTiles_HallLobby[]   = INCGFX_U32("graphics/picture_frame/lobby.png", ".4bpp.smol", "-num_tiles 86 -Wnum_tiles");
-static const u32 sPictureFrameTilemap_Cool[]      = INCBIN_U32("graphics/picture_frame/cool_map.bin.smolTM");
-static const u32 sPictureFrameTilemap_Beauty[]    = INCBIN_U32("graphics/picture_frame/beauty_map.bin.smolTM");
-static const u32 sPictureFrameTilemap_Cute[]      = INCBIN_U32("graphics/picture_frame/cute_map.bin.smolTM");
-static const u32 sPictureFrameTilemap_Smart[]     = INCBIN_U32("graphics/picture_frame/smart_map.bin.smolTM");
-static const u32 sPictureFrameTilemap_Tough[]     = INCBIN_U32("graphics/picture_frame/tough_map.bin.smolTM");
-static const u32 sPictureFrameTilemap_HallLobby[] = INCBIN_U32("graphics/picture_frame/lobby_map.bin.smolTM");
+static const u32 sPictureFrameTilemap_Cool[]      = INCGFX_U32("graphics/picture_frame/cool_map.bin", ".smolTM");
+static const u32 sPictureFrameTilemap_Beauty[]    = INCGFX_U32("graphics/picture_frame/beauty_map.bin", ".smolTM");
+static const u32 sPictureFrameTilemap_Cute[]      = INCGFX_U32("graphics/picture_frame/cute_map.bin", ".smolTM");
+static const u32 sPictureFrameTilemap_Smart[]     = INCGFX_U32("graphics/picture_frame/smart_map.bin", ".smolTM");
+static const u32 sPictureFrameTilemap_Tough[]     = INCGFX_U32("graphics/picture_frame/tough_map.bin", ".smolTM");
+static const u32 sPictureFrameTilemap_HallLobby[] = INCGFX_U32("graphics/picture_frame/lobby_map.bin", ".smolTM");
 
 static const u8 *const sContestCategoryNames_Unused[] =
 {
@@ -335,7 +335,7 @@ static void VBlankCB_ContestPainting(void)
     TransferPlttBuffer();
 }
 
-static void InitContestMonPixels(u16 species, bool8 backPic)
+static void InitContestMonPixels(enum Species species, bool8 backPic)
 {
     const void *pal = GetMonSpritePalFromSpeciesAndPersonality(species, gContestPaintingWinner->isShiny, gContestPaintingWinner->personality);
     memcpy(gContestPaintingMonPalette, pal, PLTT_SIZE_4BPP);

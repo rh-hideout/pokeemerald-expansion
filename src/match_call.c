@@ -1057,7 +1057,7 @@ static bool32 UpdateMatchCallMinutesCounter(void)
 static bool32 CheckMatchCallChance(void)
 {
     int callChance = 1;
-    if (!GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG) && GetMonAbility(&gPlayerParty[0]) == ABILITY_LIGHTNING_ROD)
+    if (!GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SANITY_IS_EGG) && GetMonAbility(&gParties[B_TRAINER_PLAYER][0]) == ABILITY_LIGHTNING_ROD)
         callChance = 2;
 
     if (Random() % 10 < callChance * 3)
@@ -1780,7 +1780,7 @@ static u8 GetWaterEncounterSlot(void)
 
 static void PopulateSpeciesFromTrainerLocation(int matchCallId, u8 *destStr)
 {
-    u16 species[2];
+    enum Species species[2];
     int numSpecies;
     u8 slot;
     int i = 0;

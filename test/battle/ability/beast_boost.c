@@ -19,7 +19,7 @@ SINGLE_BATTLE_TEST("Beast Boost boosts the most proficient stat when knocking ou
         ABILITY_POPUP(player, ABILITY_BEAST_BOOST);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
     } THEN {
-        u32 expectedStat = STAT_ATK;
+        enum Stat expectedStat = STAT_ATK;
 
         switch (i) {
         case 1:
@@ -78,7 +78,7 @@ SINGLE_BATTLE_TEST("Beast Boost prioritizes stats in the case of a tie in the fo
         ABILITY_POPUP(player, ABILITY_BEAST_BOOST);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
     } THEN {
-        u32 expectedStat = STAT_ATK;
+        enum Stat expectedStat = STAT_ATK;
 
         switch (i) {
         case 1:
@@ -202,7 +202,7 @@ SINGLE_BATTLE_TEST("Beast Boost considers Speed Swap")
 SINGLE_BATTLE_TEST("Beast Boost doesn't consider stat stages")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
+        ASSUME_STAT_CHANGE(MOVE_SWORDS_DANCE, attack: +2);
         PLAYER(SPECIES_NIHILEGO) { Ability(ABILITY_BEAST_BOOST); Attack(100); Defense(60); SpAttack(150); SpDefense(60); }
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);

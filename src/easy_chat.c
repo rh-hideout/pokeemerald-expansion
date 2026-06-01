@@ -212,7 +212,7 @@ static void SetRectangleCursorPos_GroupMode(s8, s8);
 static void SetRectangleCursorPos_AlphabetMode(s8, s8);
 static void SpriteCB_WordSelectCursor(struct Sprite *);
 static void SetWordSelectCursorPos(u8, u8);
-static bool8 EasyChatIsNationalPokedexEnabled(void);
+static bool32 EasyChatIsNationalPokedexEnabled(void);
 static u16 GetRandomUnlockedEasyChatPokemon(void);
 static void SetUnlockedEasyChatGroups(void);
 static void SetUnlockedWordsByAlphabet(void);
@@ -220,8 +220,8 @@ static u8 *CopyEasyChatWordPadded(u8 *, u16, u16);
 static u8 IsEasyChatWordUnlocked(u16);
 static u16 SetSelectedWordGroup_GroupMode(u16);
 static u16 SetSelectedWordGroup_AlphabetMode(u16);
-static bool8 IsEasyChatIndexAndGroupUnlocked(u16, u8);
-static int IsRestrictedWordSpecies(u16);
+static bool32 IsEasyChatIndexAndGroupUnlocked(u16, u8);
+static bool32 IsRestrictedWordSpecies(enum Species);
 static void DoQuizAnswerEasyChatScreen(void);
 static void DoQuizQuestionEasyChatScreen(void);
 static void DoQuizSetAnswerEasyChatScreen(void);
@@ -5483,7 +5483,7 @@ static u16 UNUSED GetRandomUnlockedTrendySaying(void)
     return EC_EMPTY_WORD;
 }
 
-static bool8 EasyChatIsNationalPokedexEnabled(void)
+static bool32 EasyChatIsNationalPokedexEnabled(void)
 {
     return IsNationalPokedexEnabled();
 }
@@ -5761,7 +5761,7 @@ static bool8 IsEasyChatGroupUnlocked2(u8 groupId)
     return FALSE;
 }
 
-static bool8 IsEasyChatIndexAndGroupUnlocked(u16 wordIndex, u8 groupId)
+static bool32 IsEasyChatIndexAndGroupUnlocked(u16 wordIndex, u8 groupId)
 {
     switch (groupId)
     {
@@ -5783,7 +5783,7 @@ static bool8 IsEasyChatIndexAndGroupUnlocked(u16 wordIndex, u8 groupId)
 
 // Pokémon words in EC_GROUP_POKEMON_NATIONAL are always allowed (assuming the group is unlocked)
 // unless they are in this group. If they are in this group (just Deoxys), they must also have been seen.
-static int IsRestrictedWordSpecies(u16 species)
+static bool32 IsRestrictedWordSpecies(enum Species species)
 {
     u32 i;
     for (i = 0; i < ARRAY_COUNT(sRestrictedWordSpecies); i++)

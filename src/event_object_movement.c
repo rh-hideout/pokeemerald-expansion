@@ -22,6 +22,7 @@
 #include "follower_helper.h"
 #include "gpu_regs.h"
 #include "graphics.h"
+#include "item.h"
 #include "mauville_old_man.h"
 #include "metatile_behavior.h"
 #include "overworld.h"
@@ -40,6 +41,7 @@
 #include "trainer_hill.h"
 #include "util.h"
 #include "wild_encounter.h"
+#include "wild_encounter_ow.h"
 #include "constants/event_object_movement.h"
 #include "constants/abilities.h"
 #include "constants/battle.h"
@@ -59,7 +61,8 @@
 
 #define SPECIAL_LOCALIDS_START (min(LOCALID_CAMERA, \
                                 min(LOCALID_PLAYER, \
-                                    LOCALID_BERRY_BLENDER_PLAYER_END - MAX_RFU_PLAYERS + 1)))
+                                min(LOCALID_BERRY_BLENDER_PLAYER_END - MAX_RFU_PLAYERS + 1, \
+                                    LOCALID_OW_ENCOUNTER_END - OWE_SPAWNS_MAX + 1))))
 
 // The object event templates on a map cannot use the special IDs listed above or they can behave unexpectedly.
 // For more details on these special IDs see their definitions in 'include/constants/event_objects.h'.
@@ -129,13 +132,11 @@ static bool8 ObjectEventExecSingleMovementAction(struct ObjectEvent *, struct Sp
 static bool32 UpdateMonMoveInPlace(struct ObjectEvent *, struct Sprite *);
 static void SetMovementDelay(struct Sprite *, s16);
 static bool8 WaitForMovementDelay(struct Sprite *);
-static u8 GetCollisionInDirection(struct ObjectEvent *, enum Direction);
 static enum Direction GetCopyDirection(u8, enum Direction, enum Direction);
 static void TryEnableObjectEventAnim(struct ObjectEvent *, struct Sprite *);
 static void ObjectEventExecHeldMovementAction(struct ObjectEvent *, struct Sprite *);
 static void UpdateObjectEventSpriteAnimPause(struct ObjectEvent *, struct Sprite *);
 static bool8 IsCoordOutsideObjectEventMovementRange(struct ObjectEvent *, s16, s16);
-static bool8 IsMetatileDirectionallyImpassable(struct ObjectEvent *, s16, s16, enum Direction);
 static bool8 DoesObjectCollideWithObjectAt(struct ObjectEvent *, s16, s16);
 static void UpdateObjectEventOffscreen(struct ObjectEvent *, struct Sprite *);
 static void UpdateObjectEventSpriteVisibility(struct ObjectEvent *, struct Sprite *);
@@ -174,7 +175,7 @@ static bool8 MovementType_Disguise_Callback(struct ObjectEvent *, struct Sprite 
 static bool8 MovementType_Buried_Callback(struct ObjectEvent *, struct Sprite *);
 static void CreateReflectionEffectSprites(void);
 static u8 GetObjectEventIdByLocalIdAndMapInternal(u8, u8, u8);
-static bool8 GetAvailableObjectEventId(u16, u8, u8, u8 *);
+static u32 GetAvailableObjectEventId(u16, u8, u8);
 static void SetObjectEventDynamicGraphicsId(struct ObjectEvent *);
 static void RemoveObjectEventInternal(struct ObjectEvent *);
 static u16 GetObjectEventFlagIdByObjectEventId(u8);
@@ -199,7 +200,8 @@ static void SetSpriteDataForNormalStep(struct Sprite *, enum Direction, u8);
 static void InitSpriteForFigure8Anim(struct Sprite *);
 static bool8 AnimateSpriteInFigure8(struct Sprite *);
 enum Direction GetDirectionToFace(s16 x1, s16 y1, s16 x2, s16 y2);
-static void FollowerSetGraphics(struct ObjectEvent *objEvent, u32 species, bool32 shiny, bool32 female);
+static u32 LoadDynamicFollowerPalette(enum Species species, bool32 shiny, bool32 female);
+static void FollowerSetGraphics(struct ObjectEvent *objEvent, enum Species species, bool32 shiny, bool32 female);
 static void ObjectEventSetGraphics(struct ObjectEvent *, const struct ObjectEventGraphicsInfo *);
 static void SpriteCB_VirtualObject(struct Sprite *);
 static void DoShadowFieldEffect(struct ObjectEvent *);
@@ -211,16 +213,11 @@ static u8 DoJumpSpriteMovement(struct Sprite *);
 static u8 DoJumpSpecialSpriteMovement(struct Sprite *);
 static void CreateLevitateMovementTask(struct ObjectEvent *);
 static void DestroyLevitateMovementTask(u8);
-static u32 LoadDynamicFollowerPalette(u32 species, bool32 shiny, bool32 female);
-const struct ObjectEventGraphicsInfo *SpeciesToGraphicsInfo(u32 species, bool32 shiny, bool32 female);
+const struct ObjectEventGraphicsInfo *SpeciesToGraphicsInfo(enum Species species, bool32 shiny, bool32 female);
 static bool8 NpcTakeStep(struct Sprite *);
-static bool8 AreElevationsCompatible(u8, u8);
 static void CopyObjectGraphicsInfoToSpriteTemplate_WithMovementType(u16 graphicsId, u16 movementType, struct SpriteTemplate *spriteTemplate, const struct SubspriteTable **subspriteTables);
 
-static u16 GetGraphicsIdForMon(u32 species, bool32 shiny, bool32 female);
-static u16 GetUnownSpecies(struct Pokemon *mon);
-
-static const struct SpriteFrameImage sPicTable_PechaBerryTree[];
+static enum Species GetUnownSpecies(struct Pokemon *mon);
 
 static void StartSlowRunningAnim(struct ObjectEvent *objectEvent, struct Sprite *sprite, enum Direction direction);
 
@@ -346,6 +343,12 @@ static void (*const sMovementTypeCallbacks[])(struct Sprite *) =
     [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_LEFT] = MovementType_WalkSlowlyInPlace,
     [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_RIGHT] = MovementType_WalkSlowlyInPlace,
     [MOVEMENT_TYPE_FOLLOW_PLAYER] = MovementType_FollowPlayer,
+    [MOVEMENT_TYPE_WANDER_AROUND_OWE] = MovementType_OverworldWildEncounter_WanderAround,
+    [MOVEMENT_TYPE_CHASE_PLAYER_OWE] = MovementType_OverworldWildEncounter_ChasePlayer,
+    [MOVEMENT_TYPE_FLEE_PLAYER_OWE] = MovementType_OverworldWildEncounter_FleePlayer,
+    [MOVEMENT_TYPE_WATCH_PLAYER_OWE] = MovementType_OverworldWildEncounter_WatchPlayer,
+    [MOVEMENT_TYPE_APPROACH_PLAYER_OWE] = MovementType_OverworldWildEncounter_ApproachPlayer,
+    [MOVEMENT_TYPE_DESPAWN_OWE] = MovementType_OverworldWildEncounter_Despawn,
 };
 
 static const bool8 sMovementTypeHasRange[NUM_MOVEMENT_TYPES] = {
@@ -475,6 +478,12 @@ const u8 gInitialMovementTypeFacingDirections[NUM_MOVEMENT_TYPES] = {
     [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_LEFT] = DIR_WEST,
     [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_RIGHT] = DIR_EAST,
     [MOVEMENT_TYPE_FOLLOW_PLAYER] = DIR_SOUTH,
+    [MOVEMENT_TYPE_WANDER_AROUND_OWE] = DIR_SOUTH,
+    [MOVEMENT_TYPE_CHASE_PLAYER_OWE] = DIR_SOUTH,
+    [MOVEMENT_TYPE_FLEE_PLAYER_OWE] = DIR_SOUTH,
+    [MOVEMENT_TYPE_WATCH_PLAYER_OWE] = DIR_SOUTH,
+    [MOVEMENT_TYPE_APPROACH_PLAYER_OWE] = DIR_SOUTH,
+    [MOVEMENT_TYPE_DESPAWN_OWE] = DIR_SOUTH,
 };
 
 #include "data/object_events/object_event_graphics_info_pointers.h"
@@ -771,6 +780,7 @@ static const u16 *const sObjectPaletteTagSets[] = {
 static const s16 sMovementDelaysMedium[] = {32, 64,  96, 128};
 static const s16 sMovementDelaysLong[] =   {32, 64, 128, 192}; // Unused
 static const s16 sMovementDelaysShort[] =  {32, 48,  64,  80};
+static const s16 sMovementDelaysOWE[] =    {64, 80,  96, 128};
 
 #include "data/object_events/movement_type_func_tables.h"
 
@@ -1276,14 +1286,28 @@ static const u8 sSpinMovementActions[] = {
 };
 
 static const u8 sOppositeDirections[] = {
-    DIR_NORTH,
-    DIR_SOUTH,
-    DIR_EAST,
-    DIR_WEST,
-    DIR_NORTHEAST,
-    DIR_NORTHWEST,
-    DIR_SOUTHEAST,
-    DIR_SOUTHWEST,
+    [DIR_NONE]      = DIR_NONE,
+    [DIR_SOUTH]     = DIR_NORTH,
+    [DIR_NORTH]     = DIR_SOUTH,
+    [DIR_WEST]      = DIR_EAST,
+    [DIR_EAST]      = DIR_WEST,
+    [DIR_SOUTHWEST] = DIR_NORTHEAST,
+    [DIR_SOUTHEAST] = DIR_NORTHWEST,
+    [DIR_NORTHWEST] = DIR_SOUTHEAST,
+    [DIR_NORTHEAST] = DIR_SOUTHWEST,
+};
+
+static const u8 sRotate90Direction[][2] =
+{
+    [DIR_NONE]      = { DIR_NONE,       DIR_NONE },
+    [DIR_SOUTH]     = { DIR_EAST,       DIR_WEST },
+    [DIR_NORTH]     = { DIR_WEST,       DIR_EAST },
+    [DIR_WEST]      = { DIR_SOUTH,      DIR_NORTH },
+    [DIR_EAST]      = { DIR_NORTH,      DIR_SOUTH },
+    [DIR_SOUTHWEST] = { DIR_SOUTHEAST,  DIR_NORTHWEST },
+    [DIR_SOUTHEAST] = { DIR_NORTHEAST,  DIR_SOUTHWEST },
+    [DIR_NORTHWEST] = { DIR_SOUTHWEST,  DIR_NORTHEAST },
+    [DIR_NORTHEAST] = { DIR_NORTHWEST,  DIR_SOUTHEAST },
 };
 
 // Takes the player's original and current facing direction to get the direction that should be considered to copy.
@@ -1348,7 +1372,7 @@ static const u8 sPlayerDirectionToCopyDirection[][4] = {
 
 #include "data/object_events/movement_action_func_tables.h"
 
-static void ClearObjectEvent(struct ObjectEvent *objectEvent)
+void ClearObjectEvent(struct ObjectEvent *objectEvent)
 {
     *objectEvent = (struct ObjectEvent){};
     objectEvent->localId = LOCALID_PLAYER;
@@ -1563,7 +1587,8 @@ static u8 InitObjectEventStateFromTemplate(const struct ObjectEventTemplate *tem
         template = &(mapHeader->events->objectEvents[localId - 1]);
     }
 
-    if (GetAvailableObjectEventId(template->localId, mapNum, mapGroup, &objectEventId))
+    objectEventId = GetAvailableObjectEventId(template->localId, mapNum, mapGroup);
+    if (objectEventId == OBJECT_EVENTS_COUNT)
         return OBJECT_EVENTS_COUNT;
 
     if (!ShouldInitObjectEventStateFromTemplate(template, isClone, x3, y3))
@@ -1620,58 +1645,38 @@ static u8 InitObjectEventStateFromTemplate(const struct ObjectEventTemplate *tem
     return objectEventId;
 }
 
-u8 Unref_TryInitLocalObjectEvent(u8 localId)
-{
-    u8 i;
-    u8 objectEventCount;
-    struct ObjectEventTemplate *template;
-
-    if (gMapHeader.events != NULL)
-    {
-        if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
-            objectEventCount = GetNumBattlePyramidObjectEvents();
-        else if (InTrainerHill())
-            objectEventCount = HILL_TRAINERS_PER_FLOOR;
-        else
-            objectEventCount = gMapHeader.events->objectEventCount;
-
-        for (i = 0; i < objectEventCount; i++)
-        {
-            template = &gSaveBlock1Ptr->objectEventTemplates[i];
-            if (template->localId == localId && !FlagGet(template->flagId))
-                return InitObjectEventStateFromTemplate(template, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
-        }
-    }
-    return OBJECT_EVENTS_COUNT;
-}
-
-static bool8 GetAvailableObjectEventId(u16 localId, u8 mapNum, u8 mapGroup, u8 *objectEventId)
+static u32 GetAvailableObjectEventId(u16 localId, u8 mapNum, u8 mapGroup)
 // Looks for an empty slot.
-// Returns FALSE and the location of the available slot
-// in *objectEventId.
+// Returns the location of the first available slot
 // If no slots are available, or if the object is already
 // loaded, returns TRUE.
 {
-    u8 i = 0;
+    u32 availableId = OBJECT_EVENTS_COUNT;
 
-    for (i = 0; i < OBJECT_EVENTS_COUNT && gObjectEvents[i].active; i++)
+    // This function returns the first available id in vanilla Emerald
+    // If you are certain the function can return any available/inactive with no consequence, feel free to have the loop go in order
+    for (s32 i = OBJECT_EVENTS_COUNT - 1; i >= 0; i--)
     {
-        if (gObjectEvents[i].localId == localId && gObjectEvents[i].mapNum == mapNum && gObjectEvents[i].mapGroup == mapGroup)
-            return TRUE;
+        // check if object is already loaded
+        if (gObjectEvents[i].active)
+        {
+            if (gObjectEvents[i].localId == localId && gObjectEvents[i].mapNum == mapNum && gObjectEvents[i].mapGroup == mapGroup)
+                return OBJECT_EVENTS_COUNT;
+        }
+        else
+        {
+            //gets first available/inactive id (we loop in reverse so the loop will end on the first one)
+            availableId = i;
+        }
     }
-    if (i >= OBJECT_EVENTS_COUNT)
-        return TRUE;
-    *objectEventId = i;
-    for (; i < OBJECT_EVENTS_COUNT; i++)
-    {
-        if (gObjectEvents[i].active && gObjectEvents[i].localId == localId && gObjectEvents[i].mapNum == mapNum && gObjectEvents[i].mapGroup == mapGroup)
-            return TRUE;
-    }
-    return FALSE;
+    if (availableId == OBJECT_EVENTS_COUNT && !IS_LOCALID_GENERATED_OWE(localId))
+         return TryAndDespawnOldestGeneratedOWE_ToFreeObject();
+    return availableId;
 }
 
 void RemoveObjectEvent(struct ObjectEvent *objectEvent)
 {
+    OnOverworldWildEncounterDespawn(objectEvent);
     objectEvent->active = FALSE;
     RemoveObjectEventInternal(objectEvent);
     // zero potential species info
@@ -1894,17 +1899,18 @@ static u8 TrySetupObjectEventSprite(const struct ObjectEventTemplate *objectEven
 u8 TrySpawnObjectEventTemplate(const struct ObjectEventTemplate *objectEventTemplate, u8 mapNum, u8 mapGroup, s16 cameraX, s16 cameraY)
 {
     u8 objectEventId;
-    u16 graphicsId = objectEventTemplate->graphicsId;
     struct SpriteTemplate spriteTemplate;
     struct SpriteFrameImage spriteFrameImage;
     const struct ObjectEventGraphicsInfo *graphicsInfo;
     const struct SubspriteTable *subspriteTables = NULL;
+    const struct ObjectEventTemplate objectEventTemplateLocal = TryGetObjectEventTemplateForOWE(objectEventTemplate);
+    u16 graphicsId = objectEventTemplateLocal.graphicsId;
 
     graphicsInfo = GetObjectEventGraphicsInfo(graphicsId);
-    CopyObjectGraphicsInfoToSpriteTemplate_WithMovementType(graphicsId, objectEventTemplate->movementType, &spriteTemplate, &subspriteTables);
+    CopyObjectGraphicsInfoToSpriteTemplate_WithMovementType(graphicsId, objectEventTemplateLocal.movementType, &spriteTemplate, &subspriteTables);
     spriteFrameImage.size = graphicsInfo->size;
     spriteTemplate.images = &spriteFrameImage;
-    objectEventId = TrySetupObjectEventSprite(objectEventTemplate, &spriteTemplate, mapNum, mapGroup, cameraX, cameraY);
+    objectEventId = TrySetupObjectEventSprite(&objectEventTemplateLocal, &spriteTemplate, mapNum, mapGroup, cameraX, cameraY);
     if (objectEventId == OBJECT_EVENTS_COUNT)
         return OBJECT_EVENTS_COUNT;
 
@@ -1912,6 +1918,7 @@ u8 TrySpawnObjectEventTemplate(const struct ObjectEventTemplate *objectEventTemp
     if (subspriteTables)
         SetSubspriteTables(&gSprites[gObjectEvents[objectEventId].spriteId], subspriteTables);
 
+    OnOverworldWildEncounterSpawn(&gObjectEvents[objectEventId]);
     return objectEventId;
 }
 
@@ -1985,18 +1992,13 @@ static void UNUSED MakeSpriteTemplateFromObjectEventTemplate(const struct Object
 // also can write palette tag to the template
 static u32 LoadDynamicFollowerPaletteFromGraphicsId(u16 graphicsId, struct SpriteTemplate *template)
 {
-    u16 species = graphicsId & OBJ_EVENT_MON_SPECIES_MASK;
+    enum Species species = graphicsId & OBJ_EVENT_MON_SPECIES_MASK;
     bool32 shiny = graphicsId & OBJ_EVENT_MON_SHINY;
     bool32 female = graphicsId & OBJ_EVENT_MON_FEMALE;
     u8 paletteNum = LoadDynamicFollowerPalette(species, shiny, female);
     if (template)
-    {
-        template->paletteTag = species + OBJ_EVENT_MON;
-        if (shiny)
-            template->paletteTag += OBJ_EVENT_MON_SHINY;
-        if (female)
-            template->paletteTag += OBJ_EVENT_MON_FEMALE;
-    }
+        template->paletteTag = GetGraphicsIdForMon(species, shiny, female);
+
     return paletteNum;
 }
 
@@ -2114,8 +2116,8 @@ struct Pokemon *GetFirstLiveMon(void)
     u32 i;
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        struct Pokemon *mon = &gPlayerParty[i];
-        u32 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
+        struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][i];
+        enum Species species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
         if (species == SPECIES_NONE)
             continue;
 
@@ -2124,8 +2126,8 @@ struct Pokemon *GetFirstLiveMon(void)
          || (OW_FOLLOWERS_ALLOWED_MET_LOC && GetMonData(mon, MON_DATA_MET_LOCATION) != VarGet(OW_FOLLOWERS_ALLOWED_MET_LOC)))
             continue;
 
-        if (gPlayerParty[i].hp > 0 && !(gPlayerParty[i].box.isEgg || gPlayerParty[i].box.isBadEgg))
-            return &gPlayerParty[i];
+        if (gParties[B_TRAINER_PLAYER][i].hp > 0 && !(gParties[B_TRAINER_PLAYER][i].box.isEgg || gParties[B_TRAINER_PLAYER][i].box.isBadEgg))
+            return &gParties[B_TRAINER_PLAYER][i];
     }
     return NULL;
 }
@@ -2142,8 +2144,8 @@ struct ObjectEvent *GetFollowerObject(void)
     return NULL;
 }
 
-// Return graphicsInfo for a pokemon species & form
-const struct ObjectEventGraphicsInfo *SpeciesToGraphicsInfo(u32 species, bool32 shiny, bool32 female)
+// Return graphicsInfo for a Pokémon species & form
+const struct ObjectEventGraphicsInfo *SpeciesToGraphicsInfo(enum Species species, bool32 shiny, bool32 female)
 {
     const struct ObjectEventGraphicsInfo *graphicsInfo = NULL;
 #if OW_POKEMON_OBJECT_EVENTS
@@ -2177,8 +2179,8 @@ const struct ObjectEventGraphicsInfo *SpeciesToGraphicsInfo(u32 species, bool32 
     return graphicsInfo;
 }
 
-// Find, or load, the palette for the specified pokemon info
-static u32 LoadDynamicFollowerPalette(u32 species, bool32 shiny, bool32 female)
+// Find, or load, the palette for the specified Pokémon info
+static u32 LoadDynamicFollowerPalette(enum Species species, bool32 shiny, bool32 female)
 {
     u32 paletteNum;
     // Use standalone palette, unless entry is OOB or NULL (fallback to front-sprite-based)
@@ -2218,7 +2220,7 @@ static u32 LoadDynamicFollowerPalette(u32 species, bool32 shiny, bool32 female)
     else
 #endif //OW_POKEMON_OBJECT_EVENTS == TRUE && OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
     {
-        // Note that the shiny palette tag is `species + SPECIES_SHINY_TAG`, which must be increased with more pokemon
+        // Note that the shiny palette tag is `species + SPECIES_SHINY_TAG`, which must be increased with more Pokémon
         // so that palette tags do not overlap
         const u16 *palette = GetMonSpritePalFromSpecies(species, shiny, female); //ETODO
         // palette already loaded
@@ -2236,7 +2238,7 @@ static u32 LoadDynamicFollowerPalette(u32 species, bool32 shiny, bool32 female)
 }
 
 // Set graphics & sprite for a follower object event by species & shininess.
-static void FollowerSetGraphics(struct ObjectEvent *objEvent, u32 species, bool32 shiny, bool32 female)
+static void FollowerSetGraphics(struct ObjectEvent *objEvent, enum Species species, bool32 shiny, bool32 female)
 {
     const struct ObjectEventGraphicsInfo *graphicsInfo = SpeciesToGraphicsInfo(species, shiny, female);
     ObjectEventSetGraphics(objEvent, graphicsInfo);
@@ -2256,7 +2258,7 @@ static void FollowerSetGraphics(struct ObjectEvent *objEvent, u32 species, bool3
 // Intended to be used for mid-movement form changes, etc.
 static void RefreshFollowerGraphics(struct ObjectEvent *objEvent)
 {
-    u32 species = OW_SPECIES(objEvent);
+    enum Species species = OW_SPECIES(objEvent);
     bool32 shiny = OW_SHINY(objEvent);
     bool32 female = OW_FEMALE(objEvent);
     const struct ObjectEventGraphicsInfo *graphicsInfo = SpeciesToGraphicsInfo(species, shiny, female);
@@ -2298,7 +2300,7 @@ static void RefreshFollowerGraphics(struct ObjectEvent *objEvent)
     }
 }
 
-u16 GetOverworldWeatherSpecies(u16 species)
+enum Species GetOverworldWeatherSpecies(enum Species species)
 {
     u32 i;
     u32 weather = GetCurrentWeather();
@@ -2342,13 +2344,13 @@ static bool8 GetMonInfo(struct Pokemon *mon, u32 *species, bool32 *shiny, bool32
     return TRUE;
 }
 
-// Retrieve graphic information about the following pokemon, if any
+// Retrieve graphic information about the following Pokémon, if any
 bool8 GetFollowerInfo(u32 *species, bool32 *shiny, bool32 *female)
 {
     return GetMonInfo(GetFirstLiveMon(), species, shiny, female);
 }
 
-// Update following pokemon if any
+// Update following Pokémon if any
 void UpdateFollowingPokemon(void)
 {
     struct ObjectEvent *objEvent = GetFollowerObject();
@@ -2427,7 +2429,7 @@ bool32 IsFollowerVisible(void)
             || MetatileBehavior_IsForcedMovementTile(gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior));
 }
 
-static bool8 SpeciesHasType(u16 species, u8 type)
+static bool8 SpeciesHasType(enum Species species, u8 type)
 {
     return GetSpeciesType(species, 0) == type || GetSpeciesType(species, 1) == type;
 }
@@ -2475,7 +2477,7 @@ static enum Direction FindMetatileBehaviorWithinRange(s32 x, s32 y, u32 mb, u8 d
 }
 
 // Check a single follower message condition
-bool32 CheckMsgCondition(const struct MsgCondition *cond, struct Pokemon *mon, u32 species, struct ObjectEvent *obj)
+bool32 CheckMsgCondition(const struct MsgCondition *cond, struct Pokemon *mon, enum Species species, struct ObjectEvent *obj)
 {
     u32 multi;
     if (species == SPECIES_NONE)
@@ -2541,7 +2543,7 @@ bool32 CheckMsgCondition(const struct MsgCondition *cond, struct Pokemon *mon, u
 
 // Check if follower info can be displayed in the current situation;
 // i.e, if all its conditions match
-bool32 CheckMsgInfo(const struct FollowerMsgInfoExtended *info, struct Pokemon *mon, u32 species, struct ObjectEvent *obj)
+bool32 CheckMsgInfo(const struct FollowerMsgInfoExtended *info, struct Pokemon *mon, enum Species species, struct ObjectEvent *obj)
 {
     u32 i;
 
@@ -2939,9 +2941,16 @@ void RemoveObjectEventsOutsideView(void)
 
             // Followers should not go OOB, or their sprites may be freed early during a cross-map scripting event,
             // such as Wally's Ralts catch sequence
-            if (objectEvent->active && !objectEvent->isPlayer && objectEvent->localId != OBJ_EVENT_ID_FOLLOWER
-             && objectEvent->localId != OBJ_EVENT_ID_NPC_FOLLOWER)
-                RemoveObjectEventIfOutsideView(objectEvent);
+            if (!objectEvent->active)
+                continue;
+            if (objectEvent->isPlayer)
+                continue;
+            if (objectEvent->localId == OBJ_EVENT_ID_NPC_FOLLOWER || objectEvent->localId == OBJ_EVENT_ID_FOLLOWER)
+                continue;
+            if (IsOWEDespawnExempt(objectEvent))
+                continue;
+
+            RemoveObjectEventIfOutsideView(objectEvent);
         }
     }
 }
@@ -2959,6 +2968,10 @@ static void RemoveObjectEventIfOutsideView(struct ObjectEvent *objectEvent)
     if (objectEvent->initialCoords.x >= left && objectEvent->initialCoords.x <= right
      && objectEvent->initialCoords.y >= top && objectEvent->initialCoords.y <= bottom)
         return;
+
+    // Overworld Wild Ecnounters need to be set as offscreen in order to determine whether
+    // their despawn animation should play.
+    objectEvent->offScreen = TRUE;
     RemoveObjectEvent(objectEvent);
 }
 
@@ -3041,6 +3054,7 @@ static void SpawnObjectEventOnReturnToField(u8 objectEventId, s16 x, s16 y)
 
         ResetObjectEventFldEffData(objectEvent);
         SetObjectSubpriorityByElevation(objectEvent->previousElevation, sprite, 1);
+        RestoreSavedOWEBehaviorState(objectEvent, sprite);
     }
 }
 
@@ -3168,10 +3182,10 @@ static void SetBerryTreeGraphicsById(struct ObjectEvent *objectEvent, u8 berryId
     const u16 graphicsId = gBerryTreeObjectEventGraphicsIdTable[berryStage];
     const struct ObjectEventGraphicsInfo *graphicsInfo = GetObjectEventGraphicsInfo(graphicsId);
     struct Sprite *sprite = &gSprites[objectEvent->spriteId];
-    UpdateSpritePalette(&sObjectEventSpritePalettes[gBerryTreePaletteSlotTablePointers[berryId][berryStage]-2], sprite);
+    UpdateSpritePalette(&sObjectEventSpritePalettes[gBerries[berryId].berryTreePaletteSlotTable[berryStage] - 2], sprite);
     sprite->oam.shape = graphicsInfo->oam->shape;
     sprite->oam.size = graphicsInfo->oam->size;
-    sprite->images = gBerryTreePicTablePointers[berryId];
+    sprite->images = gBerries[berryId].berryTreePicTable;
     sprite->anims = graphicsInfo->anims;
     sprite->subspriteTables = graphicsInfo->subspriteTables;
     objectEvent->inanimate = graphicsInfo->inanimate;
@@ -3188,7 +3202,7 @@ static void SetBerryTreeGraphicsById(struct ObjectEvent *objectEvent, u8 berryId
 static void SetBerryTreeGraphics(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     u8 berryStage;
-    u8 berryId;
+    enum BerryId berryId;
 
     objectEvent->invisible = TRUE;
     sprite->invisible = TRUE;
@@ -3197,9 +3211,9 @@ static void SetBerryTreeGraphics(struct ObjectEvent *objectEvent, struct Sprite 
     {
         objectEvent->invisible = FALSE;
         sprite->invisible = FALSE;
-        berryId = GetBerryTypeByBerryTreeId(objectEvent->trainerRange_berryTreeId) - 1;
+        berryId = GetBerryTypeByBerryTreeId(objectEvent->trainerRange_berryTreeId);
         berryStage--;
-        if (berryId > ITEM_TO_BERRY(LAST_BERRY_INDEX))
+        if (berryId > NUM_BERRIES)
             berryId = 0;
 
         SetBerryTreeGraphicsById(objectEvent, berryId, berryStage);
@@ -3917,11 +3931,7 @@ bool8 MovementType_Wander_Step3(struct ObjectEvent *objectEvent, struct Sprite *
 
 bool8 MovementType_WanderAround_Step4(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    enum Direction directions[4];
-    u8 chosenDirection;
-
-    memcpy(directions, gStandardDirections, sizeof directions);
-    chosenDirection = directions[Random() & 3];
+    enum Direction chosenDirection = gStandardDirections[Random() & 3];
     SetObjectEventDirection(objectEvent, chosenDirection);
     sprite->sTypeFuncId = 5;
     if (GetCollisionInDirection(objectEvent, chosenDirection))
@@ -4195,12 +4205,9 @@ bool8 MovementType_LookAround_Step3(struct ObjectEvent *objectEvent, struct Spri
 
 bool8 MovementType_LookAround_Step4(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
-    enum Direction direction;
-    enum Direction directions[4];
-    memcpy(directions, gStandardDirections, sizeof directions);
-    direction = TryGetTrainerEncounterDirection(objectEvent, RUNFOLLOW_ANY);
+    enum Direction direction = TryGetTrainerEncounterDirection(objectEvent, RUNFOLLOW_ANY);
     if (direction == DIR_NONE)
-        direction = directions[Random() & 3];
+        direction = gStandardDirections[Random() & 3];
 
     SetObjectEventDirection(objectEvent, direction);
     sprite->sTypeFuncId = 1;
@@ -6363,7 +6370,7 @@ void GetDirectionToFaceScript(struct ScriptContext *ctx)
                                   gObjectEvents[targetId].currentCoords.y);
 }
 
-// Whether following pokemon is also the user of the field move
+// Whether following Pokémon is also the user of the field move
 // Intended to be called before the field effect itself
 void IsFollowerFieldMoveUser(struct ScriptContext *ctx)
 {
@@ -6381,7 +6388,7 @@ void IsFollowerFieldMoveUser(struct ScriptContext *ctx)
     *var = FALSE;
     if (follower && obj && !obj->invisible)
     {
-        u16 followIndex = ((u32)follower - (u32)gPlayerParty) / sizeof(struct Pokemon);
+        u16 followIndex = ((u32)follower - (u32)gParties[B_TRAINER_PLAYER]) / sizeof(struct Pokemon);
         *var = userIndex == followIndex;
     }
 }
@@ -6413,7 +6420,7 @@ enum Collision GetSidewaysStairsCollision(struct ObjectEvent *objectEvent, enum 
     if ((dir == DIR_SOUTH || dir == DIR_NORTH) && collision != COLLISION_NONE)
         return collision;
 
-    // cant descend stairs into water
+    // can't descend stairs into water
     if (MetatileBehavior_IsSurfableFishableWater(nextBehavior))
         return collision;
 
@@ -6594,7 +6601,7 @@ static bool8 IsCoordOutsideObjectEventMovementRange(struct ObjectEvent *objectEv
     return FALSE;
 }
 
-static bool8 IsMetatileDirectionallyImpassable(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction direction)
+bool8 IsMetatileDirectionallyImpassable(struct ObjectEvent *objectEvent, s16 x, s16 y, enum Direction direction)
 {
     if (gOppositeDirectionBlockedMetatileFuncs[direction - 1](objectEvent->currentMetatileBehavior)
         || gDirectionBlockedMetatileFuncs[direction - 1](MapGridGetMetatileBehaviorAt(x, y)))
@@ -6628,7 +6635,13 @@ u32 GetObjectObjectCollidesWith(struct ObjectEvent *objectEvent, s16 x, s16 y, b
             if ((curObject->currentCoords.x == x && curObject->currentCoords.y == y) || (curObject->previousCoords.x == x && curObject->previousCoords.y == y))
             {
                 if (AreElevationsCompatible(objectEvent->currentElevation, curObject->currentElevation))
+                {
+                    if (DespawnOWEDueToNPCCollision(curObject, objectEvent))
+                        continue;
+
+                    TryTriggerOverworldWildEncounter(objectEvent, curObject);
                     return i;
+                }
             }
         }
     }
@@ -6951,14 +6964,26 @@ dirn_to_anim(GetAcroEndWheelieMoveDirectionMovementAction, gAcroEndWheelieMoveDi
 
 enum Direction GetOppositeDirection(enum Direction direction)
 {
-    enum Direction directions[sizeof sOppositeDirections];
+    if (direction >= NELEMS(sOppositeDirections))
+    {
+        errorf("Invalid direction.");
+        return DIR_NONE;
+    }
 
-    memcpy(directions, sOppositeDirections, sizeof sOppositeDirections);
-    if (direction <= DIR_NONE || direction > (sizeof sOppositeDirections))
-        return direction;
-
-    return directions[direction - 1];
+    return sOppositeDirections[direction];
 }
+
+enum Direction GetNinetyDegreeDirection(enum Direction direction, bool32 clockwise)
+{
+    if (direction >= NELEMS(sRotate90Direction))
+    {
+        errorf("Invalid direction.");
+        return DIR_NONE;
+    }
+
+    return sRotate90Direction[direction][clockwise];
+}
+
 
 // Takes the player's original and current direction and gives a direction the copy NPC should consider as the player's direction.
 // See comments at the table's definition.
@@ -7774,7 +7799,7 @@ bool8 MovementAction_ExitPokeball_Step0(struct ObjectEvent *objectEvent, struct 
     objectEvent->invisible = FALSE;
     if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_DASH))
     {
-        // If player is dashing, the pokemon must come out faster
+        // If player is dashing, the Pokémon must come out faster
         StartSpriteAnimInDirection(objectEvent, sprite, direction, GetJumpSpecialDirectionAnimNum(direction));
         sprite->sDuration = 8;
         sprite->sSpeedFlip = 0; // fast speed
@@ -10082,7 +10107,7 @@ static void ObjectEventUpdateSubpriority(struct ObjectEvent *objEvent, struct Sp
     SetObjectSubpriorityByElevation(objEvent->previousElevation, sprite, 1);
 }
 
-static bool8 AreElevationsCompatible(u8 a, u8 b)
+bool8 AreElevationsCompatible(u8 a, u8 b)
 {
     if (a == ELEVATION_TRANSITION || b == ELEVATION_TRANSITION)
         return TRUE;
@@ -10091,6 +10116,50 @@ static bool8 AreElevationsCompatible(u8 a, u8 b)
         return FALSE;
 
     return TRUE;
+}
+
+void ScriptFaceEachOther(struct ScriptContext *ctx)
+{
+    u32 localIdOne = VarGet(ScriptReadHalfword(ctx));
+    u32 localIdTwo = VarGet(ScriptReadHalfword(ctx));
+    struct ObjectEvent *objectOne = &gObjectEvents[GetObjectEventIdByLocalId(localIdOne)];
+    struct ObjectEvent *objectTwo = &gObjectEvents[GetObjectEventIdByLocalId(localIdTwo)];
+    
+    Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
+    
+    ObjectEventsTurnToEachOther(objectOne, objectTwo);
+}
+
+enum Direction DetermineObjectEventDirectionFromObject(struct ObjectEvent *objectOne, struct ObjectEvent *objectTwo)
+{
+    s32 delta_x = objectTwo->currentCoords.x - objectOne->currentCoords.x;
+    s32 delta_y = objectTwo->currentCoords.y - objectOne->currentCoords.y;
+
+    if (delta_x < 0)
+        return DIR_EAST;
+    else if (delta_x > 0)
+        return DIR_WEST;
+
+    if (delta_y < 0)
+        return DIR_SOUTH;
+    else if (delta_y > 0)
+        return DIR_NORTH;
+
+    return DIR_NORTH;
+}
+
+void ObjectEventsTurnToEachOther(struct ObjectEvent *objectOne, struct ObjectEvent *objectTwo)
+{
+    enum Direction objectDirOne, objectDirTwo;
+
+    if (objectTwo->invisible == FALSE)
+    {
+        objectDirTwo = DetermineObjectEventDirectionFromObject(objectOne, objectTwo);
+        objectDirOne = GetOppositeDirection(objectDirTwo);
+
+        ObjectEventTurn(objectOne, objectDirOne);
+        ObjectEventTurn(objectTwo, objectDirTwo);
+    }
 }
 
 void GroundEffect_SpawnOnTallGrass(struct ObjectEvent *objEvent, struct Sprite *sprite)
@@ -11417,7 +11486,7 @@ bool8 PlayerIsUnderWaterfall(struct ObjectEvent *objectEvent)
     return FALSE;
 }
 
-// Get gfx data from daycare pokemon and store it in vars
+// Get gfx data from daycare Pokémon and store it in vars
 void GetDaycareGraphics(struct ScriptContext *ctx)
 {
     u16 varGfx[] = {ScriptReadHalfword(ctx), ScriptReadHalfword(ctx)};
@@ -11439,11 +11508,7 @@ void GetDaycareGraphics(struct ScriptContext *ctx)
         if (specGfx == SPECIES_NONE)
             break;
         // Assemble gfx ID like FollowerSetGraphics
-        specGfx = specGfx + OBJ_EVENT_MON;
-        if (shiny)
-            specGfx += OBJ_EVENT_MON_SHINY;
-        if (female)
-            specGfx += OBJ_EVENT_MON_FEMALE;
+        specGfx = GetGraphicsIdForMon(specGfx, shiny, female);
         VarSet(varGfx[i], (u16)specGfx);
         VarSet(varForm[i], 0);  //  This shouldn't be needed anymore, track down
     }
@@ -11614,7 +11679,7 @@ bool8 MovementAction_WalkSlowStairsRight_Step1(struct ObjectEvent *objectEvent, 
     return FALSE;
 }
 
-static u16 GetGraphicsIdForMon(u32 species, bool32 shiny, bool32 female)
+u16 GetGraphicsIdForMon(enum Species species, bool32 shiny, bool32 female)
 {
     u16 graphicsId = species + OBJ_EVENT_MON;
     if (shiny)
@@ -11624,7 +11689,7 @@ static u16 GetGraphicsIdForMon(u32 species, bool32 shiny, bool32 female)
     return graphicsId;
 }
 
-static u16 GetUnownSpecies(struct Pokemon *mon)
+static enum Species GetUnownSpecies(struct Pokemon *mon)
 {
     u32 form = GET_UNOWN_LETTER(mon->box.personality);
     if (form == 0)
@@ -11790,3 +11855,393 @@ bool8 MovementAction_SpinRight_Step1(struct ObjectEvent *objectEvent, struct Spr
     }
     return FALSE;
 }
+
+bool8 MovementAction_OverworldEncounterSpawn(enum SpawnDespawnTypeOWE spawnAnimType, struct ObjectEvent *objEvent)
+{
+    gFieldEffectArguments[0] = objEvent->currentCoords.x;
+    gFieldEffectArguments[1] = objEvent->currentCoords.y;
+    gFieldEffectArguments[2] = spawnAnimType;
+    FieldEffectStart(FLDEFF_OW_ENCOUNTER_SPAWN_ANIM);
+    return TRUE;
+}
+
+movement_type_def(MovementType_OverworldWildEncounter_WanderAround, gMovementTypeFuncs_WanderAround_OverworldWildEncounter)
+
+bool8 MovementType_OverworldWildEncounter_WanderAround_Step2(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (!ObjectEventExecSingleMovementAction(objectEvent, sprite))
+        return FALSE;
+    
+    SetMovementDelay(sprite, sMovementDelaysOWE[Random() % ARRAY_COUNT(sMovementDelaysOWE)]);
+    sprite->sTypeFuncId = 3;
+    return TRUE;
+}
+
+bool8 MovementType_OverworldWildEncounter_WanderAround_Step3(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (WaitForMovementDelay(sprite))
+    {
+        // resets a mid-movement sprite
+        ClearObjectEventMovement(objectEvent, sprite);
+        sprite->sTypeFuncId = 4;
+        return TRUE;
+    }
+    
+    if (OW_MON_WANDER_WALK == TRUE && IS_OW_MON_OBJ(objectEvent))
+        UpdateMonMoveInPlace(objectEvent, sprite);
+
+    if (CanAwareOWESeePlayer(objectEvent))
+        sprite->sTypeFuncId = 7;
+    
+    return FALSE;
+}
+
+bool8 MovementType_OverworldWildEncounter_WanderAround_Step4(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    enum Direction chosenDirection = objectEvent->movementDirection;
+    if ((Random() & 3) != 0)
+        chosenDirection = GetNinetyDegreeDirection(chosenDirection, Random() % 2);
+
+    SetObjectEventDirection(objectEvent, chosenDirection);
+    sprite->sTypeFuncId = 5;
+    if (CheckRestrictedOWEMovement(objectEvent, chosenDirection))
+        sprite->sTypeFuncId = 1;
+
+    return TRUE;
+}
+
+bool8 MovementType_OverworldWildEncounter_WanderAround_Step5(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    ObjectEventSetSingleMovement(objectEvent, sprite, GetOWEWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, OWE_GetIdleSpeedFromSpecies(OW_SPECIES(objectEvent))));
+    objectEvent->singleMovementActive = TRUE;
+    sprite->sTypeFuncId = 6;
+    return TRUE;
+}
+
+movement_type_def(MovementType_OverworldWildEncounter_ChasePlayer, gMovementTypeFuncs_ChasePlayer_OverworldWildEncounter)
+
+bool8 MovementType_OverworldWildEncounter_Common_Step7(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    ClearObjectEventMovement(objectEvent, sprite);
+    SetSavedOWEMovementState(objectEvent);
+    sprite->sTypeFuncId = 8;
+    return TRUE;
+}
+
+bool8 MovementType_OverworldWildEncounter_ChasePlayer_Step8(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    enum Direction direction = DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent);
+    SetObjectEventDirection(objectEvent, direction);
+    if (IsOWENextToPlayer(objectEvent))
+    {
+        sprite->sTypeFuncId = 10;
+        return TRUE;
+    }
+
+    ObjectEventSetSingleMovement(objectEvent, sprite, MOVEMENT_ACTION_EMOTE_EXCLAMATION_MARK);
+    PlaySE(SE_PIN);
+    sprite->sTypeFuncId = 9;
+    return TRUE;
+}
+
+bool8 MovementType_OverworldWildEncounter_Common_Step9(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (ObjectEventExecSingleMovementAction(objectEvent, sprite))
+        sprite->sTypeFuncId = 10;
+    
+    return TRUE;
+}
+
+bool8 MovementType_OverworldWildEncounter_ChasePlayer_Step10(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    enum Direction direction = DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent);
+    SetObjectEventDirection(objectEvent, direction);
+    sprite->sTypeFuncId = 11;
+    return TRUE;
+}
+
+bool8 MovementType_OverworldWildEncounter_ChasePlayer_Step11(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    u32 speciesId = OW_SPECIES(objectEvent);
+    u32 movementActionId = GetOWEWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
+    sprite->sTypeFuncId = 12;
+
+    if (CheckRestrictedOWEMovement(objectEvent, objectEvent->movementDirection))
+    {
+        s16 x = objectEvent->currentCoords.x;
+        s16 y = objectEvent->currentCoords.y;
+        MoveCoords(objectEvent->movementDirection, &x, &y);
+        // If colliding with the player object, don't try to walk around it.
+        if (GetObjectObjectCollidesWith(objectEvent, x, y, FALSE) == gPlayerAvatar.objectEventId)
+        {
+            ObjectEventSetSingleMovement(objectEvent, sprite, GetFaceDirectionMovementAction(objectEvent->facingDirection));
+            objectEvent->singleMovementActive = TRUE;
+            return FALSE;
+        }
+
+        enum Direction newDirection = DirectionOfOWEToPlayerFromCollision(objectEvent);
+        movementActionId = GetOWEWalkMovementActionInDirectionWithSpeed(newDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
+        if (CheckRestrictedOWEMovement(objectEvent, newDirection))
+            movementActionId = GetWalkInPlaceNormalMovementAction(objectEvent->facingDirection);
+    }
+
+    ObjectEventSetSingleMovement(objectEvent, sprite, movementActionId);
+    objectEvent->singleMovementActive = TRUE;
+    return TRUE;
+}
+
+bool8 MovementType_OverworldWildEncounter_Common_Step12(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (ObjectEventExecSingleMovementAction(objectEvent, sprite))
+    {
+        objectEvent->singleMovementActive = FALSE;
+        sprite->sTypeFuncId = 10;
+        bool32 returnToIdle;
+        switch(OWE_GetReturnToIdleFromSpecies(OW_SPECIES(objectEvent)))
+        {
+        case NEVER_RETURN:
+            returnToIdle = FALSE;
+            break;
+        case PLAYER_CANT_BE_SEEN:
+            returnToIdle = !CanAwareOWESeePlayer(objectEvent);
+            break;
+        case PLAYER_OUTSIDE_ACTIVE_RANGE:
+        default:
+            returnToIdle = !IsPlayerInsideOWEActiveDistance(objectEvent);
+            break;
+        }
+        if (returnToIdle)
+        {
+            ClearSavedOWEMovementState(objectEvent);
+            sprite->sTypeFuncId = 0;
+        }
+    }
+    return FALSE;
+}
+
+movement_type_def(MovementType_OverworldWildEncounter_FleePlayer, gMovementTypeFuncs_FleePlayer_OverworldWildEncounter)
+
+bool8 MovementType_OverworldWildEncounter_FleePlayer_Step8(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    enum Direction direction = GetOppositeDirection(DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent));
+    SetObjectEventDirection(objectEvent, direction);
+    ObjectEventSetSingleMovement(objectEvent, sprite, MOVEMENT_ACTION_EMOTE_EXCLAMATION_MARK);
+    PlaySE(SE_PIN);
+    sprite->sTypeFuncId = 9;
+    return TRUE;
+}
+
+#define sCollisionTimer     sprite->data[6]
+
+bool8 MovementType_OverworldWildEncounter_FleePlayer_Step10(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (WE_OWE_FLEE_DESPAWN && sCollisionTimer >= OWE_FLEE_COLLISION_TIME && CanRemoveObjectForOWEMovement(objectEvent))
+    {
+        RemoveObjectEvent(objectEvent);
+        return FALSE;
+    }
+
+    enum Direction direction = GetOppositeDirection(DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent));
+    SetObjectEventDirection(objectEvent, direction);
+    sprite->sTypeFuncId = 11;
+    return TRUE;
+}
+
+bool8 MovementType_OverworldWildEncounter_FleePlayer_Step11(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    u32 speciesId = OW_SPECIES(objectEvent);
+    u32 movementActionId = GetOWEWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
+    if (CheckRestrictedOWEMovement(objectEvent, objectEvent->movementDirection))
+    {
+        enum Direction newDirection = DirectionOfOWEToPlayerFromCollision(objectEvent);
+        if (newDirection != objectEvent->movementDirection)
+            newDirection = GetOppositeDirection(newDirection);
+        
+        movementActionId = GetOWEWalkMovementActionInDirectionWithSpeed(newDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
+        if (CheckRestrictedOWEMovement(objectEvent, newDirection))
+        {
+            sCollisionTimer++;
+            movementActionId = GetWalkInPlaceNormalMovementAction(objectEvent->facingDirection);
+        }
+        else
+        {
+            sCollisionTimer = 0;
+        }
+    }
+    else
+    {
+        sCollisionTimer = 0;
+    }
+
+    ObjectEventSetSingleMovement(objectEvent, sprite, movementActionId);
+    objectEvent->singleMovementActive = TRUE;
+    sprite->sTypeFuncId = 12;
+    return TRUE;
+}
+
+#undef sCollisionTimer
+
+movement_type_def(MovementType_OverworldWildEncounter_WatchPlayer, gMovementTypeFuncs_WatchPlayer_OverworldWildEncounter)
+
+bool8 MovementType_OverworldWildEncounter_WatchPlayer_Step8(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    enum Direction direction = DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent);
+    SetObjectEventDirection(objectEvent, direction);
+    sprite->sTypeFuncId = 10;
+    if (!IsOWENextToPlayer(objectEvent))
+    {
+        ObjectEventSetSingleMovement(objectEvent, sprite, MOVEMENT_ACTION_EMOTE_QUESTION_MARK);
+        sprite->sTypeFuncId = 9;
+    }
+    return TRUE;
+}
+
+bool8 MovementType_OverworldWildEncounter_WatchPlayer_Step10(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    enum Direction direction = DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent);
+    SetObjectEventDirection(objectEvent, direction);
+    sprite->sTypeFuncId = 11;
+    return TRUE;
+}
+
+bool8 MovementType_OverworldWildEncounter_WatchPlayer_Step11(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    ObjectEventSetSingleMovement(objectEvent, sprite, GetWalkInPlaceNormalMovementAction(objectEvent->facingDirection));
+    objectEvent->singleMovementActive = TRUE;
+    sprite->sTypeFuncId = 12;
+    return TRUE;
+}
+
+movement_type_def(MovementType_OverworldWildEncounter_ApproachPlayer, gMovementTypeFuncs_ApproachPlayer_OverworldWildEncounter)
+
+#define sJumpTimer     sprite->data[7]
+
+bool8 MovementType_OverworldWildEncounter_ApproachPlayer_Step8(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    enum Direction direction = DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent);
+    SetObjectEventDirection(objectEvent, direction);
+    sJumpTimer = RandomUniform(RNG_NONE, OWE_APPROACH_JUMP_TIMER_MIN, OWE_APPROACH_JUMP_TIMER_MAX);
+    sprite->sTypeFuncId = 10;
+    if (!IsOWENextToPlayer(objectEvent))
+    {
+        ObjectEventSetSingleMovement(objectEvent, sprite, MOVEMENT_ACTION_EMOTE_QUESTION_MARK);
+        sprite->sTypeFuncId = 9;
+    }
+    return TRUE;
+}
+
+bool8 MovementType_OverworldWildEncounter_ApproachPlayer_Step10(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    enum Direction direction = DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent);
+    SetObjectEventDirection(objectEvent, direction);
+    sprite->sTypeFuncId = 11;
+    return TRUE;
+}
+
+bool8 MovementType_OverworldWildEncounter_ApproachPlayer_Step11(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    bool32 equalDistances = FALSE;
+    u32 distance = GetApproachingOWEDistanceToPlayer(objectEvent, &equalDistances);
+    u32 speciesId = OW_SPECIES(objectEvent);
+    u32 movementActionId;
+    if (distance <= 1)
+    {
+        SetObjectEventDirection(objectEvent, GetOppositeDirection(objectEvent->movementDirection));
+        movementActionId = GetOWEWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
+        if (CheckRestrictedOWEMovement(objectEvent, objectEvent->movementDirection))
+        {
+            struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+            enum Direction newDirection = DirectionOfOWEToPlayerFromCollision(objectEvent);
+            if (objectEvent->currentCoords.x != player->currentCoords.x && objectEvent->currentCoords.y != player->currentCoords.y)
+                newDirection = GetOppositeDirection(newDirection);
+
+            movementActionId = GetOWEWalkMovementActionInDirectionWithSpeed(newDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
+            if (CheckRestrictedOWEMovement(objectEvent, newDirection))
+                movementActionId = GetWalkInPlaceNormalMovementAction(objectEvent->facingDirection);
+        }
+    }
+    else if (distance == OWE_APPROACH_DISTANCE && !equalDistances)
+    {
+        if (sJumpTimer <= 0)
+        {
+            sJumpTimer = RandomUniform(RNG_NONE, OWE_APPROACH_JUMP_TIMER_MIN, OWE_APPROACH_JUMP_TIMER_MAX);
+            movementActionId = GetJumpInPlaceMovementAction(objectEvent->facingDirection);
+            PlaySE(SE_LEDGE);
+        }
+        else
+        {
+            sJumpTimer--;
+            movementActionId = GetWalkInPlaceNormalMovementAction(objectEvent->facingDirection);
+        }
+    }
+    else
+    {
+        movementActionId = GetOWEWalkMovementActionInDirectionWithSpeed(objectEvent->movementDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
+
+        if (CheckRestrictedOWEMovement(objectEvent, objectEvent->movementDirection))
+        {
+            s16 x = objectEvent->currentCoords.x;
+            s16 y = objectEvent->currentCoords.y;
+            MoveCoords(objectEvent->movementDirection, &x, &y);
+            // If colliding with the player object, don't try to walk around it.
+            if (GetObjectObjectCollidesWith(objectEvent, x, y, FALSE) == gPlayerAvatar.objectEventId)
+            {
+                ObjectEventSetSingleMovement(objectEvent, sprite, GetFaceDirectionMovementAction(objectEvent->facingDirection));
+                objectEvent->singleMovementActive = TRUE;
+                return FALSE;
+            }
+            enum Direction newDirection = DirectionOfOWEToPlayerFromCollision(objectEvent);
+            movementActionId = GetOWEWalkMovementActionInDirectionWithSpeed(newDirection, OWE_GetActiveSpeedFromSpecies(speciesId));
+
+            if (CheckRestrictedOWEMovement(objectEvent, newDirection))
+                movementActionId = GetWalkInPlaceNormalMovementAction(objectEvent->facingDirection);
+        }
+
+        sJumpTimer = RandomUniform(RNG_NONE, OWE_APPROACH_JUMP_TIMER_MIN, OWE_APPROACH_JUMP_TIMER_MAX);
+    }
+
+    ObjectEventSetSingleMovement(objectEvent, sprite, movementActionId);
+    objectEvent->singleMovementActive = TRUE;
+    sprite->sTypeFuncId = 12;
+    return TRUE;
+}
+
+movement_type_def(MovementType_OverworldWildEncounter_Despawn, gMovementTypeFuncs_Despawn_OverworldWildEncounter)
+
+#define sDespawnTimer     sprite->data[6]
+
+bool8 MovementType_OverworldWildEncounter_Despawn_Step8(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    enum Direction direction = DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent);
+    SetObjectEventDirection(objectEvent, direction);
+    ObjectEventSetSingleMovement(objectEvent, sprite, MOVEMENT_ACTION_EMOTE_EXCLAMATION_MARK);
+    PlaySE(SE_PIN);
+    sDespawnTimer = 0;
+    sprite->sTypeFuncId = 9;
+    return TRUE;
+}
+
+bool8 MovementType_OverworldWildEncounter_Despawn_Step10(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    enum Direction direction = DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent);
+    SetObjectEventDirection(objectEvent, direction);
+    sprite->sTypeFuncId = 11;
+    return TRUE;
+}
+
+bool8 MovementType_OverworldWildEncounter_Despawn_Step11(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (sDespawnTimer == OWE_DESPAWN_FRAMES && CanRemoveObjectForOWEMovement(objectEvent))
+    {
+        RemoveObjectEvent(objectEvent);
+        return FALSE;
+    }
+
+    ObjectEventSetSingleMovement(objectEvent, sprite, GetFaceDirectionMovementAction(objectEvent->facingDirection));
+    objectEvent->singleMovementActive = TRUE;
+    sDespawnTimer++;
+    sprite->sTypeFuncId = 12;
+    return TRUE;
+}
+
+#undef sDespawnTimer

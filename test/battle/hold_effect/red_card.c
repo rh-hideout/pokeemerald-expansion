@@ -292,7 +292,7 @@ DOUBLE_BATTLE_TEST("Red Card activates but fails if the attacker is rooted")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
         MESSAGE("Wobbuffet held up its Red Card against the opposing Wobbuffet!");
-        MESSAGE("The opposing Wobbuffet anchored itself with its roots!");
+        MESSAGE("The opposing Wobbuffet is anchored in place with its roots!");
         NOT MESSAGE("The opposing Unown was dragged out!");
 
         // Red Card already consumed so cannot activate.
@@ -321,7 +321,7 @@ DOUBLE_BATTLE_TEST("Red Card activates but fails if the attacker has Suction Cup
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
         MESSAGE("Wobbuffet held up its Red Card against the opposing Octillery!");
-        MESSAGE("The opposing Octillery anchors itself with Suction Cups!");
+        MESSAGE("The opposing Octillery is anchored in place with its suction cups!");
         NOT MESSAGE("The opposing Unown was dragged out!");
 
         // Red Card already consumed so cannot activate.
@@ -500,7 +500,7 @@ SINGLE_BATTLE_TEST("Red Card does not activate if holder is switched in mid-turn
     }
 }
 
-SINGLE_BATTLE_TEST("Red Card prevents Emergency Exit activation when triggered")
+SINGLE_BATTLE_TEST("Red Card doesn't prevent Emergency Exit activation when triggered")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -508,12 +508,12 @@ SINGLE_BATTLE_TEST("Red Card prevents Emergency Exit activation when triggered")
         OPPONENT(SPECIES_GOLISOPOD) { Item(ITEM_RED_CARD); Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(262); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(player, MOVE_SUPER_FANG); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_SUPER_FANG); MOVE(opponent, MOVE_CELEBRATE); SEND_OUT(opponent, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUPER_FANG, player);
         HP_BAR(opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-        NOT ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
+        ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
     }
 }
 
@@ -540,7 +540,7 @@ SINGLE_BATTLE_TEST("Red Card activates and is consumed but fails if the attacker
 SINGLE_BATTLE_TEST("Red Card activates before Eject Pack")
 {
     GIVEN {
-        ASSUME(MoveHasAdditionalEffectSelf(MOVE_OVERHEAT, MOVE_EFFECT_SP_ATK_MINUS_2) == TRUE);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_OVERHEAT, self: TRUE, spAtk: -2);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }

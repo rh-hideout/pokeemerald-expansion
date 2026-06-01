@@ -11,7 +11,7 @@ SINGLE_BATTLE_TEST("Intrepid Sword raises Attack by one stage")
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_INTREPID_SWORD);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Zacian's Intrepid Sword raised its Attack!");
+        MESSAGE("The opposing Zacian's Attack rose!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
     }
@@ -30,10 +30,10 @@ SINGLE_BATTLE_TEST("Intrepid Sword raises Attack by one stage every time it swit
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_INTREPID_SWORD);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Zacian's Intrepid Sword raised its Attack!");
+        MESSAGE("The opposing Zacian's Attack rose!");
         ABILITY_POPUP(opponent, ABILITY_INTREPID_SWORD);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Zacian's Intrepid Sword raised its Attack!");
+        MESSAGE("The opposing Zacian's Attack rose!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
     }
@@ -52,11 +52,11 @@ SINGLE_BATTLE_TEST("Intrepid Sword raises Attack by one stage only once per batt
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_INTREPID_SWORD);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Zacian's Intrepid Sword raised its Attack!");
+        MESSAGE("The opposing Zacian's Attack rose!");
         NONE_OF {
             ABILITY_POPUP(opponent, ABILITY_INTREPID_SWORD);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("The opposing Zacian's Intrepid Sword raised its Attack!");
+            MESSAGE("The opposing Zacian's Attack rose!");
         }
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
@@ -78,7 +78,7 @@ SINGLE_BATTLE_TEST("Intrepid Sword activates when it's no longer effected by Neu
         MESSAGE("The effects of the neutralizing gas wore off!");
         ABILITY_POPUP(opponent, ABILITY_INTREPID_SWORD);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Zacian's Intrepid Sword raised its Attack!");
+        MESSAGE("The opposing Zacian's Attack rose!");
     }
 }
 
@@ -95,21 +95,21 @@ SINGLE_BATTLE_TEST("Intrepid Sword and Dauntless Shield both can be Skill Swappe
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_INTREPID_SWORD);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Zacian's Intrepid Sword raised its Attack!");
+        MESSAGE("The opposing Zacian's Attack rose!");
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, player);
         ABILITY_POPUP(player, ABILITY_INTREPID_SWORD);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Wobbuffet's Intrepid Sword raised its Attack!");
+        MESSAGE("Wobbuffet's Attack rose!");
 
         ABILITY_POPUP(opponent, ABILITY_DAUNTLESS_SHIELD);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Zamazenta's Dauntless Shield raised its Defense!");
+        MESSAGE("The opposing Zamazenta's Defense rose!");
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, player);
         ABILITY_POPUP(player, ABILITY_DAUNTLESS_SHIELD);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Wobbuffet's Dauntless Shield raised its Defense!");
+        MESSAGE("Wobbuffet's Defense rose!");
     }
 }
 
@@ -117,8 +117,8 @@ SINGLE_BATTLE_TEST("Intrepid Sword and Dauntless Shield do not proc at max stage
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
-        ASSUME(GetMoveEffect(MOVE_IRON_DEFENSE) == EFFECT_DEFENSE_UP_2);
-        ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
+        ASSUME_STAT_CHANGE(MOVE_IRON_DEFENSE, defense: +2);
+        ASSUME_STAT_CHANGE(MOVE_SWORDS_DANCE, attack: +2);
         PLAYER(SPECIES_ZACIAN) { Ability(ABILITY_INTREPID_SWORD); }
         OPPONENT(SPECIES_ZAMAZENTA) { Ability(ABILITY_DAUNTLESS_SHIELD); }
     } WHEN {
@@ -138,8 +138,8 @@ SINGLE_BATTLE_TEST("Intrepid Sword and Dauntless Shield do not proc at max stage
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
-        ASSUME(GetMoveEffect(MOVE_IRON_DEFENSE) == EFFECT_DEFENSE_UP_2);
-        ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
+        ASSUME_STAT_CHANGE(MOVE_IRON_DEFENSE, defense: +2);
+        ASSUME_STAT_CHANGE(MOVE_SWORDS_DANCE, attack: +2);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_ZAMAZENTA) { Ability(ABILITY_DAUNTLESS_SHIELD); }
         OPPONENT(SPECIES_WOBBUFFET);

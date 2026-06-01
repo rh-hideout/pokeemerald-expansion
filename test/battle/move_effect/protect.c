@@ -756,9 +756,9 @@ SINGLE_BATTLE_TEST("Protect: Protect does not block Confide or Decorate")
     PARAMETRIZE { move = MOVE_DECORATE; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_CONFIDE) == EFFECT_SPECIAL_ATTACK_DOWN);
+        ASSUME_STAT_CHANGE(MOVE_CONFIDE, spAtk: -1);
         ASSUME(MoveIgnoresProtect(MOVE_CONFIDE));
-        ASSUME(GetMoveEffect(MOVE_DECORATE) == EFFECT_DECORATE);
+        ASSUME_STAT_CHANGE(MOVE_DECORATE, attack: +2, spAtk: +2);
         ASSUME(MoveIgnoresProtect(MOVE_DECORATE));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -778,9 +778,9 @@ DOUBLE_BATTLE_TEST("Crafty Shield protects self and ally from Confide and Decora
     PARAMETRIZE { move = MOVE_DECORATE; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_CONFIDE) == EFFECT_SPECIAL_ATTACK_DOWN);
+        ASSUME_STAT_CHANGE(MOVE_CONFIDE, spAtk: -1);
         ASSUME(MoveIgnoresProtect(MOVE_CONFIDE));
-        ASSUME(GetMoveEffect(MOVE_DECORATE) == EFFECT_DECORATE);
+        ASSUME_STAT_CHANGE(MOVE_DECORATE, attack: +2, spAtk: +2);
         ASSUME(MoveIgnoresProtect(MOVE_DECORATE));
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
@@ -820,10 +820,10 @@ DOUBLE_BATTLE_TEST("Crafty Shield does not protect against moves that target all
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FLOWER_SHIELD, playerLeft);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
             MESSAGE("Tangela's Defense rose!");
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-            MESSAGE("The opposing Sunkern's Defense rose!");
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
             MESSAGE("Tangrowth's Defense rose!");
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+            MESSAGE("The opposing Sunkern's Defense rose!");
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
             MESSAGE("The opposing Sunflora's Defense rose!");
         } else {
@@ -992,3 +992,73 @@ DOUBLE_BATTLE_TEST("Protect is not ignored after a new mon switched in because o
     }
 }
 
+SINGLE_BATTLE_TEST("Protect may fail if used consecutively - 2nd time has 1/2 or 1/3 odds")
+{
+    u32 numRolls = (B_PROTECT_FAILURE_RATE < GEN_5 ? 2 : 3);
+    PASSES_RANDOMLY(1, numRolls, RNG_PROTECT_FAIL);
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_PROTECT); }
+        TURN { MOVE(player, MOVE_PROTECT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Protect may fail if used consecutively - 3rd time has 1/4 or 1/9 odds")
+{
+    u32 numRolls = (B_PROTECT_FAILURE_RATE < GEN_5 ? 4 : 9);
+    PASSES_RANDOMLY(1, numRolls, RNG_PROTECT_FAIL);
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_PROTECT); }
+        TURN { MOVE(player, MOVE_PROTECT, WITH_RNG(RNG_PROTECT_FAIL, 1)); }
+        TURN { MOVE(player, MOVE_PROTECT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Protect may fail if used consecutively - 4th time has 1/8 or 1/27 odds")
+{
+    u32 numRolls = (B_PROTECT_FAILURE_RATE < GEN_5 ? 8 : 27);
+    PASSES_RANDOMLY(1, numRolls, RNG_PROTECT_FAIL);
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_PROTECT); }
+        TURN { MOVE(player, MOVE_PROTECT, WITH_RNG(RNG_PROTECT_FAIL, 1)); }
+        TURN { MOVE(player, MOVE_PROTECT, WITH_RNG(RNG_PROTECT_FAIL, 1)); }
+        TURN { MOVE(player, MOVE_PROTECT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Protect doesn't fail if used consecutively if broken by Feint")
+{
+    PASSES_RANDOMLY(1, 1, RNG_PROTECT_FAIL);
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_FEINT, MOVE_EFFECT_FEINT));
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_PROTECT); MOVE(opponent, MOVE_FEINT); }
+        TURN { MOVE(player, MOVE_PROTECT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FEINT, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+    }
+}
