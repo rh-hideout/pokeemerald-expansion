@@ -1306,8 +1306,12 @@ static const struct BXPYSpriteSheet sBXPYSpriteSheets[BXPY_SPRITEID_COUNT] =
     {
         {
             .data = (const u16[])INCBIN_U16("graphics/bxpy/highlight.4bpp"),
-            .size = TILE_OFFSET_4BPP(32),
+            .size = TILE_OFFSET_4BPP(96),
             .tag = BXPY_SPRITETAG_HIGHLIGHT,
+        },
+        {
+            .data = (const u16[])INCBIN_U16("graphics/bxpy/highlight.gbapal"),
+            .tag = BXPY_PALTAG_HIGHLIGHT,
         },
     }
 };
@@ -2281,30 +2285,49 @@ static void SpriteCB_HighlightSprite(struct Sprite *sprite)
     sprite->y = 12 + (23 * BXPY_GetPosition());
 }
 
+static const union AnimCmd sAnim_HighlightLeft[] =
+{
+    ANIMCMD_FRAME(BXPY_HIGHLIGHT_FRAME_LEFT,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_HighlightCenter[] =
+{
+    ANIMCMD_FRAME(BXPY_HIGHLIGHT_FRAME_CENTER,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_HighlightRight[] =
+{
+    ANIMCMD_FRAME(BXPY_HIGHLIGHT_FRAME_RIGHT,4),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd * const sSpriteAnimTable_Highlight[] =
+{
+    sAnim_HighlightLeft,
+    sAnim_HighlightCenter,
+    sAnim_HighlightRight,
+};
+
 static void BXPY_CreateHighlightSprite(void)
 {
-    for (u32 highlightIndex = 0; highlightIndex < 2; highlightIndex++)
+    for (enum BXPYHighlight highlightIndex = BXPY_HIGHLIGHT_LEFT; highlightIndex < BXPY_HIGHLIGHT_COUNT; highlightIndex++)
     {
         struct SpriteTemplate TempSpriteTemplate = gDummySpriteTemplate;
 
         TempSpriteTemplate.tileTag = BXPY_SPRITETAG_HIGHLIGHT;
         TempSpriteTemplate.callback = SpriteCB_HighlightSprite;
-        TempSpriteTemplate.paletteTag = BXPY_PALTAG_SPRITE;
+        TempSpriteTemplate.paletteTag = BXPY_PALTAG_HIGHLIGHT;
+        TempSpriteTemplate.anims = sSpriteAnimTable_Highlight;
 
-        u32 x = (highlightIndex) ? 76 : 12;
+        u32 x = (64 * highlightIndex) + 12;
         u32 spriteId = CreateSprite(&TempSpriteTemplate, x, 12, 0);
         gSprites[spriteId].oam.shape = SPRITE_SHAPE(64x32);
         gSprites[spriteId].oam.size = SPRITE_SIZE(64x32);
         gSprites[spriteId].oam.priority = 2;
         gSprites[spriteId].subpriority = 0;
 
-        if (highlightIndex)
-        {
-            gSprites[spriteId].oam.matrixNum = ST_OAM_HFLIP;
-            gSprites[spriteId].hFlip = TRUE;
-        }
-
         BXPY_SetSpriteId(BXPY_SPRITEID_HIGHLIGHT_LEFT + highlightIndex,spriteId);
+        StartSpriteAnim(&gSprites[spriteId],highlightIndex);
     }
 }
 
