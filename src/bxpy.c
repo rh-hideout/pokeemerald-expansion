@@ -959,7 +959,7 @@ static void BXPY_ChangePosition(s32 delta)
 {
     u32 current = BXPY_GetPosition();
     s32 new = delta + current;
-    u32 max = BXPY_GetBringSize() - 1 + CalculatePartyCount(B_TRAINER_OPPONENT_A);
+    u32 max = (PARTY_SIZE * 2) - 1;
 
     if (delta == 6)
     {
@@ -2218,7 +2218,7 @@ static bool8 BXPY_IsCursorOnEmpty(void)
 
 static bool8 BXPY_IsCursorOnEnemy(void)
 {
-    return BXPY_GetPosition() >= BXPY_GetBringSize();
+    return BXPY_GetPosition() >= PARTY_SIZE;
 }
 
 static bool8 BXPY_IsCursorOnPartner(void)
