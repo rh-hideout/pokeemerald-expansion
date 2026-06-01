@@ -1663,7 +1663,7 @@ static void BXPY_CreateSelectionSprite(u32 partyMonIndex, enum BattleSide side)
 
     struct SpriteTemplate TempSpriteTemplate = gDummySpriteTemplate;
 
-    TempSpriteTemplate.tileTag = spriteIndex;
+    TempSpriteTemplate.tileTag = BXPY_SPRITETAG_SELECTED_0 + partyMonIndex;
     TempSpriteTemplate.callback = SpriteCB_SelectionSprite;
     TempSpriteTemplate.paletteTag = BXPY_PALTAG_SPRITE;
 
@@ -2177,7 +2177,7 @@ static void BXPY_PrintHelpBarText(enum BXPYWindows windowId)
     {
         u32 pickSize = BXPY_GetPickSize();
         ConvertIntToDecimalStringN(gStringVar1,pickSize,STR_CONV_MODE_LEFT_ALIGN,CountDigits(pickSize));
-        StringAppend(gStringVar4, COMPOUND_STRING(" Select {STR_VAR_1} Pokemon."));
+        StringAppend(gStringVar4, COMPOUND_STRING("Select {STR_VAR_1} Pokemon."));
     }
     else
     {
