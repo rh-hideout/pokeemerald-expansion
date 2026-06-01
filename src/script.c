@@ -156,16 +156,26 @@ static const u8 *ScriptPop(struct ScriptContext *ctx)
 
 void ScriptJump(struct ScriptContext *ctx, const u8 *ptr)
 {
+    assertf(ptr != NULL, "goto to NULL");
     ctx->scriptPtr = ptr;
 }
 
 void ScriptCall(struct ScriptContext *ctx, const u8 *ptr)
 {
+    assertf(ptr != NULL, "call to NULL")
+    {
+        // HINT: Returning without having pushed the current location is
+        // equivalent to branching to a script that just contains
+        // 'return'.
+        return;
+    }
+
     bool32 failed = ScriptPush(ctx, ctx->scriptPtr);
     assertf(!failed, "could not push %p", ptr)
     {
         return;
     }
+
     ctx->scriptPtr = ptr;
 }
 
