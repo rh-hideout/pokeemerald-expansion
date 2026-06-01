@@ -308,7 +308,7 @@ static void FillTrainerParty(u16 trainerId, enum BattleTrainer trainer, u8 monCo
 
 void CreateFacilityMon(const struct TrainerMon *fmon, u16 level, u8 fixedIV, u32 otID, u32 flags, struct Pokemon *dst)
 {
-    u8 ball = (fmon->ball == 0xFF) ? Random() % POKEBALL_COUNT : fmon->ball;
+    enum PokeBall ball = (fmon->ball == 0xFF) ? Random() % POKEBALL_COUNT : fmon->ball;
     enum Move move;
     u32 personality = 0, ability, friendship, j;
 
