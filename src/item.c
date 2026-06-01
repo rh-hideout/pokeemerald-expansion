@@ -34,6 +34,8 @@ static bool32 CheckPyramidBagHasSpace(enum Item itemId, u16 count);
 static const u8 *GetItemPluralName(enum Item);
 static bool32 DoesItemHavePluralName(enum Item);
 static void NONNULL BagPocket_CompactItems(struct BagPocket *pocket);
+static u16 SanitizeItemId(enum Item itemId);
+static u16 SanitizeBagItemId(enum Item itemId);
 
 EWRAM_DATA struct BagPocket gBagPockets[POCKETS_COUNT] = {0};
 
@@ -347,7 +349,8 @@ static bool32 NONNULL BagPocket_AddItem(struct BagPocket *pocket, enum Item item
 
 bool32 AddBagItem(enum Item itemId, u16 count)
 {
-    if (GetItemPocket(itemId) >= POCKETS_COUNT)
+    itemId = SanitizeBagItemId(itemId);
+    if (itemId == ITEM_NONE)
         return FALSE;
 
     // check Battle Pyramid Bag
@@ -403,7 +406,8 @@ static bool32 NONNULL BagPocket_RemoveItem(struct BagPocket *pocket, enum Item i
 
 bool32 RemoveBagItem(enum Item itemId, u16 count)
 {
-    if (GetItemPocket(itemId) >= POCKETS_COUNT || itemId == ITEM_NONE)
+    itemId = SanitizeBagItemId(itemId);
+    if (itemId == ITEM_NONE)
         return FALSE;
 
     // check Battle Pyramid Bag
@@ -782,6 +786,23 @@ bool32 RemovePyramidBagItem(enum Item itemId, u16 count)
 static u16 SanitizeItemId(enum Item itemId)
 {
     assertf(itemId < ITEMS_COUNT, "invalid item: %d", itemId)
+    {
+        return ITEM_NONE;
+    }
+
+    return itemId;
+}
+
+static u16 SanitizeBagItemId(enum Item itemId)
+{
+    itemId = SanitizeItemId(itemId);
+
+    assertf(itemId != ITEM_NONE, "invalid bag item: ITEM_NONE")
+    {
+        return ITEM_NONE;
+    }
+
+    assertf(GetItemPocket(itemId) < POCKETS_COUNT, "invalid bag item pocket: %S", gItemsInfo[itemId].name)
     {
         return ITEM_NONE;
     }
