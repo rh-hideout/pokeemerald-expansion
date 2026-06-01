@@ -1801,11 +1801,9 @@ static void PopulateSpeciesFromTrainerLocation(int matchCallId, u8 *destStr)
         if (gWildMonHeaders[i].mapGroup != MAP_GROUP(MAP_UNDEFINED))
         {
             u16 curSpecies;
-            #if RANDOMIZER_AVAILABLE == TRUE
-                u8 mapGroup, mapNum;
-                mapGroup = gWildMonHeaders[i].mapGroup;
-                mapNum = gWildMonHeaders[i].mapNum;
-            #endif
+            u8 mapGroup, mapNum;
+            mapGroup = gWildMonHeaders[i].mapGroup;
+            mapNum = gWildMonHeaders[i].mapNum;
 
             timeOfDay = GetTimeOfDayForEncounters(i, WILD_AREA_LAND);
             numSpecies = 0;
@@ -1814,10 +1812,7 @@ static void PopulateSpeciesFromTrainerLocation(int matchCallId, u8 *destStr)
                 slot = GetLandEncounterSlot();
                 curSpecies = gWildMonHeaders[i].encounterTypes[timeOfDay].landMonsInfo->wildPokemon[slot].species;
 
-                #if RANDOMIZER_AVAILABLE == TRUE
-                    curSpecies = RandomizeWildEncounter(curSpecies, mapNum, mapGroup,
-                    WILD_AREA_LAND, slot);
-                #endif
+                curSpecies = RandomizeWildEncounter(curSpecies, mapNum, mapGroup, WILD_AREA_LAND, slot);
 
                 species[numSpecies] = curSpecies;
                 numSpecies++;
@@ -1829,10 +1824,7 @@ static void PopulateSpeciesFromTrainerLocation(int matchCallId, u8 *destStr)
                 slot = GetWaterEncounterSlot();
                 curSpecies = gWildMonHeaders[i].encounterTypes[timeOfDay].waterMonsInfo->wildPokemon[slot].species;
 
-                #if RANDOMIZER_AVAILABLE == TRUE
-                    curSpecies = RandomizeWildEncounter(curSpecies, mapNum, mapGroup,
-                    WILD_AREA_WATER, slot);
-                #endif
+                curSpecies = RandomizeWildEncounter(curSpecies, mapNum, mapGroup, WILD_AREA_WATER, slot);
 
                 species[numSpecies] = curSpecies;
                 numSpecies++;

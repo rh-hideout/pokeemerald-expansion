@@ -2110,9 +2110,7 @@ void CB2_ContinueSavedGame(void)
     else
         LoadSaveblockObjEventScripts();
 
-    #if (RANDOMIZER_AVAILABLE == TRUE) && (RANDOMIZER_DYNAMIC_SPECIES == TRUE)
-        PreloadRandomizationTables();
-    #endif
+    PreloadRandomizationTables();
 
     UnfreezeObjectEvents();
     DoTimeBasedEvents();

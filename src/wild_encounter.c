@@ -534,13 +534,11 @@ bool8 TryGenerateWildMon(const struct WildPokemonInfo *wildMonInfo, enum WildPok
         return FALSE;
 
     species = wildMonInfo->wildPokemon[wildMonIndex].species;
-    #if RANDOMIZER_AVAILABLE == TRUE
-        species = RandomizeWildEncounter(
-            species,
-            gSaveBlock1Ptr->location.mapNum,
-            gSaveBlock1Ptr->location.mapGroup,
-            area, wildMonIndex);
-    #endif
+    species = RandomizeWildEncounter(
+        species,
+        gSaveBlock1Ptr->location.mapNum,
+        gSaveBlock1Ptr->location.mapGroup,
+        area, wildMonIndex);
 
     CreateWildMon(species, level);
     return TRUE;
@@ -553,13 +551,11 @@ static u16 GenerateFishingWildMon(const struct WildPokemonInfo *wildMonInfo, u8 
     u8 level = ChooseWildMonLevel(wildMonInfo->wildPokemon, wildMonIndex, WILD_AREA_FISHING);
 
     UpdateChainFishingStreak();
-    #if RANDOMIZER_AVAILABLE == TRUE
-        wildMonSpecies = RandomizeWildEncounter(
-            wildMonSpecies,
-            gSaveBlock1Ptr->location.mapNum,
-            gSaveBlock1Ptr->location.mapGroup,
-            WILD_AREA_FISHING, wildMonIndex);
-    #endif
+    wildMonSpecies = RandomizeWildEncounter(
+        wildMonSpecies,
+        gSaveBlock1Ptr->location.mapNum,
+        gSaveBlock1Ptr->location.mapGroup,
+        WILD_AREA_FISHING, wildMonIndex);
     CreateWildMon(wildMonSpecies, level);
     return wildMonSpecies;
 }
@@ -984,18 +980,17 @@ u16 GetLocalWildMon(bool8 *isWaterMon)
         *isWaterMon = TRUE;
         return waterMonsInfo->wildPokemon[ChooseWildMonIndex_Water()].species;
     }
-    #if RANDOMIZER_AVAILABLE == TRUE
-    {
-        enum WildPokemonArea area;
-        if (*isWaterMon)
-            area = WILD_AREA_WATER;
-        else
-            area = WILD_AREA_LAND;
-        species = RandomizeWildEncounter(
-            species, gWildMonHeaders[headerId].mapNum,
-            gWildMonHeaders[headerId].mapGroup, area, index);
+
+    enum WildPokemonArea area;
+    if (*isWaterMon){
+        area = WILD_AREA_WATER;
     }
-    #endif
+    else{
+        area = WILD_AREA_LAND;
+    }
+    species = RandomizeWildEncounter(
+        species, gWildMonHeaders[headerId].mapNum,
+        gWildMonHeaders[headerId].mapGroup, area, index);
 
     return species;
 }
@@ -1017,12 +1012,10 @@ u16 GetLocalWaterMon(void)
             u16 species;
             index = ChooseWildMonIndex_Water();
             species = waterMonsInfo->wildPokemon[index].species;
-            #if RANDOMIZER_AVAILABLE == TRUE
-                species = RandomizeWildEncounter(
-                    species, gWildMonHeaders[headerId].mapNum,
-                    gWildMonHeaders[headerId].mapGroup, WILD_AREA_WATER,
-                    index);
-            #endif
+            species = RandomizeWildEncounter(
+                species, gWildMonHeaders[headerId].mapNum,
+                gWildMonHeaders[headerId].mapGroup, WILD_AREA_WATER,
+                index);
 
             return species;
         }

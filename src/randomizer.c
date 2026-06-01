@@ -1,6 +1,45 @@
 #include "randomizer.h"
 
-#if RANDOMIZER_AVAILABLE == TRUE
+#if RANDOMIZER_AVAILABLE != TRUE
+
+u16 RandomizeMon(enum RandomizerReason reason, enum RandomizerSpeciesMode mode, u32 seed, u16 species){
+    return species;
+}
+
+u16 RandomizeMove(u16 species, u16 move, u16 level){
+    return move;
+}
+
+u16 RandomizeAbility(u16 species, u16 ability){
+    return ability;
+}
+
+struct TrainerMon RandomizeTrainerMon(const struct Trainer* trainer, u8 monsCount, u8 slot, u16 baseSeed){
+    return trainer->party[slot];
+}
+
+void PreloadRandomizationTables(){};
+
+u16 RandomizeStarter(u16 starterSlot, const u16* originalStarters){
+    return originalStarters[starterSlot];
+}
+
+u16 RandomizeWildEncounter(u16 species, u8 mapNum, u8 mapGroup, enum WildPokemonArea area, u8 slot){
+    return species;
+}
+
+u16 RandomizeFixedEncounterMon(u16 species, u8 mapNum, u8 mapGroup, u8 localId){
+    return species;
+}
+
+u16 RandomizeFoundItem(u16 itemId, u8 mapNum, u8 mapGroup, u8 localId){
+    return itemId;
+}
+void FindItemRandomize_NativeCall(struct ScriptContext *ctx){}
+void FindHiddenItemRandomize_NativeCall(struct ScriptContext *ctx){}
+
+#else // Real definitions
+
 #include "main.h"
 #include "new_game.h"
 #include "item.h"
@@ -16,55 +55,27 @@
 #include "data/randomizer/trainers_exclusions.h"
 #include "data/randomizer/moves_abilities_bans.h"
 
-bool32 RandomizerFeatureEnabled(enum RandomizerFeature feature)
+struct Sfc32State RandomizerRandSeed(enum RandomizerReason reason, u32 data1, u32 data2);
+// Returns the next number from a randomizer seed.
+u32 RandomizerNextRange(struct Sfc32State* state, u32 range);
+
+u16 RandomizerRand(enum RandomizerReason reason, u32 data1, u32 data2);
+u16 RandomizerRandRange(enum RandomizerReason reason, u32 data1, u32 data2, u16 range);
+
+static inline u16 RandomizerNext(struct Sfc32State* state)
 {
-    switch(feature)
-    {
-        case RANDOMIZE_WILD_MON:
-            #ifdef FORCE_RANDOMIZE_WILD_MON
-                return FORCE_RANDOMIZE_WILD_MON;
-            #else
-                return FlagGet(RANDOMIZER_FLAG_WILD_MON);
-            #endif
-        case RANDOMIZE_FIELD_ITEMS:
-            #ifdef FORCE_RANDOMIZE_FIELD_ITEMS
-                return FORCE_RANDOMIZE_FIELD_ITEMS;
-            #else
-                return FlagGet(RANDOMIZER_FLAG_FIELD_ITEMS);
-            #endif
-        case RANDOMIZE_TRAINER_MON:
-            #ifdef FORCE_RANDOMIZE_TRAINER_MON
-                return FORCE_RANDOMIZE_TRAINER_MON;
-            #else
-                return FlagGet(RANDOMIZER_FLAG_TRAINER_MON);
-            #endif
-        case RANDOMIZE_FIXED_MON:
-            #ifdef FORCE_RANDOMIZE_FIXED_MON
-                return FORCE_RANDOMIZE_FIXED_MON;
-            #else
-                return FlagGet(RANDOMIZER_FLAG_FIXED_MON);
-            #endif
-        case RANDOMIZE_STARTERS:
-            #ifdef FORCE_RANDOMIZE_STARTERS
-                return FORCE_RANDOMIZE_STARTERS;
-            #else
-                return FlagGet(RANDOMIZER_FLAG_STARTERS);
-            #endif
-        case RANDOMIZE_LEARNSET:
-            #ifdef FORCE_RANDOMIZE_LEARNSET
-                return FORCE_RANDOMIZE_LEARNSET;
-            #else
-                return FALSE;
-            #endif
-        case RANDOMIZE_ABILITY:
-            #ifdef FORCE_RANDOMIZE_ABILITIES
-                return FORCE_RANDOMIZE_ABILITIES;
-            #else
-                return FALSE;
-            #endif
-        default:
-            return FALSE;
-    }
+    return _SFC32_Next_Stream(state, RANDOMIZER_STREAM) >> 16;
+}
+
+static inline u8 RandomizeMonType(u16 species, u8 typeNum)
+{
+    return (u8)RandomizerRandRange(RANDOMIZER_REASON_SPECIES_TYPE, species, typeNum, NUMBER_OF_MON_TYPES);
+}
+
+static inline bool32 GroupSetsIntersect(struct RandomizerGroupSet* originalCache, struct RandomizerGroupSet* targetCache)
+{
+    return originalCache->maxGroup >= targetCache->minGroup
+        && originalCache->minGroup <= targetCache->maxGroup;
 }
 
 u32 GetRandomizerSeed(void)
@@ -75,19 +86,6 @@ u32 GetRandomizerSeed(void)
         u32 result;
         result = ((u32)VarGet(RANDOMIZER_VAR_SEED_H) << 16) | VarGet(RANDOMIZER_VAR_SEED_L);
         return result;
-    #endif
-}
-
-// Sets the seed that will be used for the randomizer if doing so is possible.
-bool32 SetRandomizerSeed(u32 newSeed)
-{
-    #if RANDOMIZER_SEED_IS_TRAINER_ID == TRUE
-        // It isn't possible to set the randomizer seed in this case.
-        return FALSE;
-    #else
-        VarSet(RANDOMIZER_VAR_SEED_L, (u16)newSeed);
-        VarSet(RANDOMIZER_VAR_SEED_H, (u16)(newSeed >> 16));
-        return TRUE;
     #endif
 }
 
@@ -105,28 +103,6 @@ static bool32 IsSpeciesPermitted(u16 species)
     return TRUE;
 };
 
-u32 GenerateSeedForRandomizer(void)
-{
-    u32 data;
-    const u32 vblankCounter = gMain.vblankCounter1;
-    #if HQ_RANDOM == TRUE
-        data = Random32();
-    #else
-        data = gRngValue;
-        Random();
-    #endif
-    return data ^ vblankCounter;
-}
-
-u16 GetRandomizerOption(enum RandomizerOption option)
-{
-    switch(option) {
-        case RANDOMIZER_OPTION_SPECIES_MODE:
-            return VarGet(RANDOMIZER_VAR_SPECIES_MODE);
-        default: // Unknown option.
-            return 0;
-    }
-}
 
 /* Seeds an SFC32 random number generator state for the randomizer.
 
@@ -227,6 +203,10 @@ static inline bool32 ShouldRandomizeItem(u16 itemId)
 // Given a found item and its location in the game, returns a replacement for that item.
 u16 RandomizeFoundItem(u16 itemId, u8 mapNum, u8 mapGroup, u8 localId)
 {
+    #if RANDOMIZE_FIELD_ITEMS != TRUE
+        return itemId;
+    #endif
+
     struct Sfc32State state;
     u16 result;
     u32 mapSeed;
@@ -259,16 +239,13 @@ u16 RandomizeFoundItem(u16 itemId, u8 mapNum, u8 mapGroup, u8 localId)
 // Takes a SpecialVar as an argument to simplify handling separate scripts.
 static inline void RandomizeFoundItemScript(u16 *scriptVar)
 {
-    if (RandomizerFeatureEnabled(RANDOMIZE_FIELD_ITEMS))
-    {
-        // Pull the object event information from the current object event.
-        u8 objEvent = gSelectedObjectEvent;
-        *scriptVar = RandomizeFoundItem(
-            *scriptVar,
-            gObjectEvents[objEvent].mapGroup,
-            gObjectEvents[objEvent].mapNum,
-            gObjectEvents[objEvent].localId);
-    }
+    // Pull the object event information from the current object event.
+    u8 objEvent = gSelectedObjectEvent;
+    *scriptVar = RandomizeFoundItem(
+        *scriptVar,
+        gObjectEvents[objEvent].mapGroup,
+        gObjectEvents[objEvent].mapNum,
+        gObjectEvents[objEvent].localId);
 }
 
 // These functions are invoked by the scripts that handle found items and
@@ -383,8 +360,6 @@ static void GetIndicesFromGroupRange(const struct SpeciesTable *table, u16 minGr
     }
     *end = rightBound - 1;
 }
-
-#if RANDOMIZER_DYNAMIC_SPECIES == TRUE
 
 struct RamSpeciesTable
 {
@@ -624,10 +599,8 @@ static const struct SpeciesTable* GetSpeciesTable(enum RandomizerSpeciesMode mod
 
 void PreloadRandomizationTables(void)
 {
-    GetSpeciesTable(GetRandomizerOption(RANDOMIZER_OPTION_SPECIES_MODE));
+    GetSpeciesTable(RANDOMIZER_MON_MODE);
 }
-
-#endif
 
 static u16 RandomizeMonTableLookup(struct Sfc32State* state, enum RandomizerSpeciesMode mode, u16 species)
 {
@@ -706,13 +679,6 @@ void GetUniqueMonList(enum RandomizerReason reason, enum RandomizerSpeciesMode m
         }
         resultSpecies[i] = curMon;
     }
-}
-
-u16 RandomizeMonBaseForm(enum RandomizerReason reason, enum RandomizerSpeciesMode mode, u32 seed, u16 species)
-{
-    struct Sfc32State state;
-    state = RandomizerRandSeed(reason, seed, species);
-    return RandomizeMonFromSeed(&state, mode, species);
 }
 
 static u16 ChooseRandomForm(struct Sfc32State *state, const u16 baseSpecies)
@@ -800,20 +766,19 @@ u16 RandomizeMon(enum RandomizerReason reason, enum RandomizerSpeciesMode mode, 
 
 u16 RandomizeWildEncounter(u16 species, u8 mapNum, u8 mapGroup, enum WildPokemonArea area, u8 slot)
 {
-    if (RandomizerFeatureEnabled(RANDOMIZE_WILD_MON) && (species != SPECIES_URSARING) && (species != SPECIES_ROTOM) && (species != SPECIES_BANETTE) && (species != SPECIES_SLAKING) && (species != SPECIES_BLISSEY))
-    {
-        // Randomization is done based on the map number, the WildPokemonArea, and the encounter slot.
-        // This means a distinct species can appear in each encounter slot.
-        u32 seed;
-        seed = ((u32)mapGroup) << 24;
-        seed |= ((u32)mapNum) << 16;
-        seed |= ((u32)area) << 8;
-        seed |= slot;
+    #if RANDOMIZE_WILD_MON != TRUE
+        return species;
+    #endif
 
-        return RandomizeMon(RANDOMIZER_REASON_WILD_ENCOUNTER, GetRandomizerOption(RANDOMIZER_OPTION_SPECIES_MODE), seed, species);
-    }
+    // Randomization is done based on the map number, the WildPokemonArea, and the encounter slot.
+    // This means a distinct species can appear in each encounter slot.
+    u32 seed;
+    seed = ((u32)mapGroup) << 24;
+    seed |= ((u32)mapNum) << 16;
+    seed |= ((u32)area) << 8;
+    seed |= slot;
 
-    return species;
+    return RandomizeMon(RANDOMIZER_REASON_WILD_ENCOUNTER, RANDOMIZER_MON_MODE, seed, species);
 }
 
 bool8 isMoveAllowed(u16 move) {
@@ -826,9 +791,10 @@ bool8 isMoveAllowed(u16 move) {
 }
 
 u16 RandomizeMove(u16 species, u16 move, u16 level) {
-    if (!RandomizerFeatureEnabled(RANDOMIZE_LEARNSET)){
+    #if RANDOMIZE_LEARNSET != TRUE
         return move;
-    }
+    #endif
+
     // We need to create a very stable seed that will always
     // return the same thing for the same pokemon at the same level
     const u8 minIndex = 1;
@@ -852,9 +818,9 @@ bool8 isAbilityAllowed(u16 ability) {
 }
 
 u16 RandomizeAbility(u16 species, u16 ability){
-    if (!RandomizerFeatureEnabled(RANDOMIZE_ABILITY)){
+    #if RANDOMIZE_ABILITIES != TRUE
         return ability;
-    }
+    #endif
     // We need to create a very stable seed that will always
     // return the same thing for the same pokemon
     struct Sfc32State state = RandomizerRandSeed(RANDOMIZER_REASON_ABILITY, species, ability);
@@ -867,39 +833,24 @@ u16 RandomizeAbility(u16 species, u16 ability){
     return randomizedAbility;
 }
 
-// This is used in the Pokédex area map code.
-bool32 IsRandomizationPossible(u16 originalSpecies, u16 targetSpecies)
-{
-    const enum RandomizerSpeciesMode mode = GetRandomizerOption(RANDOMIZER_OPTION_SPECIES_MODE);
-    if (!IsSpeciesPermitted(targetSpecies) || !IsSpeciesPermitted(originalSpecies))
-    {
-        // For a species that is not permitted, randomization is disabled.
-        // Therefore, if the species are the same, they will "randomize".
-        return originalSpecies == targetSpecies;
+bool8 IsTrainerRandomized(const struct Trainer* trainer){
+    for (u32 i = 0; i < ARRAY_COUNT(RandomizerTrainerClassExclusions); i++){
+        if (trainer->trainerClass == RandomizerTrainerClassExclusions[i]){
+            return FALSE;
+        }
     }
-
-    if (mode != MON_RANDOM && mode < MAX_MON_MODE)
-    {
-        u16 minGroupOriginal, maxGroupOriginal, minGroupTarget, maxGroupTarget,
-            originalGroup, targetGroup;
-        const struct SpeciesTable* table;
-        table = GetSpeciesTable(mode);
-        originalGroup = GetSpeciesGroup(table, originalSpecies);
-        targetGroup = GetSpeciesGroup(table, targetSpecies);
-        GetGroupRange(originalGroup, mode, &minGroupOriginal, &maxGroupOriginal);
-        GetGroupRange(targetGroup, mode, &minGroupTarget, &maxGroupTarget);
-
-        // If the group ranges intersect, randomization is possible.
-        return maxGroupOriginal >= minGroupTarget && minGroupOriginal <= maxGroupTarget;
+    for (u32 i = 0; i < ARRAY_COUNT(RandomizerTrainerNamesExclusions); i++){
+        if (StringCompareN(trainer->trainerName, RandomizerTrainerNamesExclusions[i], TRAINER_NAME_LENGTH + 1) == 0){
+            return FALSE;
+        }
     }
-
     return TRUE;
 }
 
 struct TrainerMon RandomizeTrainerMon(const struct Trainer* trainer, u8 monsCount, u8 slot, u16 baseSeed) {
-    if (!RandomizerFeatureEnabled(RANDOMIZE_TRAINER_MON)) { 
+    #if RANDOMIZE_TRAINER_MON != TRUE
         return trainer->party[slot];
-    }
+    #endif
 
     if (!IsTrainerRandomized(trainer)){
         return trainer->party[slot];
@@ -922,7 +873,7 @@ struct TrainerMon RandomizeTrainerMon(const struct Trainer* trainer, u8 monsCoun
     );
 
     // Randomize species
-    mon.species = RandomizeMon(RANDOMIZER_REASON_TRAINER_PARTY, GetRandomizerOption(RANDOMIZER_OPTION_SPECIES_MODE), seed, mon.species);
+    mon.species = RandomizeMon(RANDOMIZER_REASON_TRAINER_PARTY, RANDOMIZER_MON_MODE, seed, mon.species);
 
     // Randomize moveset
     // First, create an initial moveset as if it was a wild pokemon
@@ -944,9 +895,9 @@ struct TrainerMon RandomizeTrainerMon(const struct Trainer* trainer, u8 monsCoun
 }
 
 u16 RandomizeFixedEncounterMon(u16 species, u8 mapNum, u8 mapGroup, u8 localId) {
-    if (!RandomizerFeatureEnabled(RANDOMIZE_FIXED_MON)) {
-        return species;
-    }
+    #if RANDOMIZE_FIXED_MON != TRUE
+        return originalStarters[starterSlot];
+    #endif
 
     // The seed is based on the location of the object event.
     u32 seed;
@@ -954,7 +905,7 @@ u16 RandomizeFixedEncounterMon(u16 species, u8 mapNum, u8 mapGroup, u8 localId) 
     seed |= (u32)mapGroup << 8;
     seed |= localId;
 
-    return RandomizeMon(RANDOMIZER_REASON_FIXED_ENCOUNTER, GetRandomizerOption(RANDOMIZER_OPTION_SPECIES_MODE), seed, species);
+    return RandomizeMon(RANDOMIZER_REASON_FIXED_ENCOUNTER, RANDOMIZER_MON_MODE, seed, species);
 
 }
 
@@ -963,9 +914,9 @@ EWRAM_DATA static u16 sRandomizedStarters[3] = {0};
 
 u16 RandomizeStarter(u16 starterSlot, const u16* originalStarters)
 {
-    if (!RandomizerFeatureEnabled(RANDOMIZE_STARTERS)) {
+    #if RANDOMIZE_STARTERS != TRUE
         return originalStarters[starterSlot];
-    }
+    #endif
 
     if (sLastStarterRandomizerSeed != GetRandomizerSeed() || sRandomizedStarters[0] == SPECIES_NONE)
     {
@@ -981,46 +932,10 @@ u16 RandomizeStarter(u16 starterSlot, const u16* originalStarters)
             starterHash = ((starterHash << 5) + starterHash) ^ (u8)(originalStarter >> 8);
         }
 
-        GetUniqueMonList(RANDOMIZER_REASON_STARTER, GetRandomizerOption(RANDOMIZER_OPTION_SPECIES_MODE),
+        GetUniqueMonList(RANDOMIZER_REASON_STARTER, RANDOMIZER_MON_MODE,
             starterHash, 0, 3, originalStarters, sRandomizedStarters);
     }
     return sRandomizedStarters[starterSlot];
-}
-
-bool8 IsTrainerRandomized(const struct Trainer* trainer){
-    for (u32 i = 0; i < ARRAY_COUNT(RandomizerTrainerClassExclusions); i++){
-        if (trainer->trainerClass == RandomizerTrainerClassExclusions[i]){
-            return FALSE;
-        }
-    }
-    for (u32 i = 0; i < ARRAY_COUNT(RandomizerTrainerNamesExclusions); i++){
-        if (StringCompareN(trainer->trainerName, RandomizerTrainerNamesExclusions[i], TRAINER_NAME_LENGTH + 1) == 0){
-            return FALSE;
-        }
-    }
-    return TRUE;
-}
-
-#else // RANDOMIZER_AVAILABLE
-
-bool8 IsTrainerRandomized(const struct Trainer* trainer){
-    return FALSE;
-}
-
-u16 RandomizeMon(enum RandomizerReason reason, enum RandomizerSpeciesMode mode, u32 seed, u16 species){
-    return species;
-}
-
-u16 RandomizeMove(u16 move){
-    return move;
-}
-
-u16 RandomizeAbility(u16 species, u16 ability){
-    return ability;
-}
-
-struct TrainerMon RandomizeTrainerMon(const struct Trainer* trainer, u8 monsCount, u8 slot, u16 baseSeed){
-    return trainer->party[slot];
 }
 
 #endif // RANDOMIZER_AVAILABLE

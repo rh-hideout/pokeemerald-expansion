@@ -136,12 +136,13 @@ static void ClearFrontierRecord(void)
 
 static void SetUpRandomizer(void)
 {
-    FlagSet(I_EXP_SHARE_FLAG);
-    FlagSet(B_AFFECTION_MECHANICS);
-    VarSet(RANDOMIZER_VAR_SPECIES_MODE, MON_RANDOM_BST);
-    // VarSet(VAR_EXP_CAP_TYPE, 0);
-    // FlagSet(DN_FLAG_DEXNAV_GET);
-    EnableNationalPokedex();
+    #if RANDOMIZER_AVAILABLE == TRUE
+        FlagSet(I_EXP_SHARE_FLAG);
+        FlagSet(B_AFFECTION_MECHANICS);
+        // VarSet(VAR_EXP_CAP_TYPE, 0);
+        // FlagSet(DN_FLAG_DEXNAV_GET);
+        EnableNationalPokedex();
+    #endif
 }
 
 static void WarpToTruck(void)
@@ -243,10 +244,8 @@ void NewGameInitData(void)
     ResetContestLinkResults();
     SetCurrentDifficultyLevel(DIFFICULTY_NORMAL);
 
-    #if (RANDOMIZER_AVAILABLE == TRUE) && (RANDOMIZER_DYNAMIC_SPECIES == TRUE)
-        SetUpRandomizer();
-        PreloadRandomizationTables();
-    #endif
+    SetUpRandomizer();
+    PreloadRandomizationTables();
     ResetItemFlags();
     ResetDexNav();
     ClearFollowerNPCData();
