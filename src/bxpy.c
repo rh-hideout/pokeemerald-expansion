@@ -797,6 +797,7 @@ static void LoadGraphics(void);
 static void LoadBXPYPalettes(void);
 static void PlaySoundStartFadeQuitApp(u8 taskId);
 static bool8 BXPY_HasSelectedEnough(void);
+static u32 BXPY_CalculateCursorMonValue(enum BattleSide side);
 static bool8 BXPY_IsCursorOnEnemy(void);
 static bool8 BXPY_IsCursorOnEmpty(void);
 static bool8 BXPY_IsCursorOnPartner(void);
@@ -873,7 +874,9 @@ static void Task_BXPY_PartySelection(u8 taskId)
 
     if (JOY_NEW(A_BUTTON) || JOY_REPEAT(A_BUTTON))
     {
-        if (BXPY_IsCursorOnEnemy() && BXPY_IsOpenTeamSheetOn() == TRUE)
+        if (BXPY_IsCursorOnEmpty())
+            return;
+        else if (BXPY_IsCursorOnEnemy() && BXPY_IsOpenTeamSheetOn() == TRUE)
             BXPY_GoToPokemonSummary(taskId);
         else if (BXPY_IsCursorOnPartner())
             BXPY_GoToPokemonSummary(taskId);
@@ -2210,10 +2213,23 @@ static bool8 BXPY_HasSelectedEnough(void)
     return (BXPY_CountNumberSelected() == BXPY_GetPickSize());
 }
 
+static u32 BXPY_CalculateCursorMonValue(enum BattleSide side)
+{
+    u32 position = BXPY_GetPosition();
+    return (BXPY_IsCursorOnEnemy()) ? position - PARTY_SIZE : position;
+}
+
 static bool8 BXPY_IsCursorOnEmpty(void)
 {
-    u32 selectedMon = BXPY_GetPosition();
-    return FALSE;
+    enum BattleSide side = BXPY_IsCursorOnEnemy() ? B_SIDE_OPPONENT : B_SIDE_PLAYER;
+    enum BattleTrainer trainer = BXPY_DetermineTrainer(side, BXPY_GetPage());
+    u32 cursorMon = BXPY_CalculateCursorMonValue(side);
+    u32 species = GetMonData(&gParties[trainer][cursorMon],MON_DATA_SPECIES_OR_EGG);
+
+    if (species == SPECIES_NONE)
+        return TRUE;
+
+    return (species == SPECIES_EGG);
 }
 
 static bool8 BXPY_IsCursorOnEnemy(void)
@@ -2307,31 +2323,15 @@ static void Task_LoadPokemonSummary(u8 taskId)
     if (gPaletteFade.active)
         return;
 
-    struct Pokemon *party = BXPY_GetParty();
-    enum BattleSide side = BXPY_IsCursorOnEnemy() ? B_SIDE_OPPONENT : B_SIDE_PLAYER;
-    enum BattleTrainer trainer = BXPY_DetermineTrainer(side, BXPY_GetPage());
-    u32 selectedMon = BXPY_GetPosition();
-    u32 partySize = BXPY_GetBringSize();
-    bool32 isHalf = (B_MULTI_HALF_TEAMS && BXPY_IsMultiBattle());
-
-    if (BXPY_IsCursorOnEnemy())
-    {
-        u32 trainerId = BXPY_IsOnPartnerPage() ? TRAINER_BATTLE_PARAM.opponentB : TRAINER_BATTLE_PARAM.opponentA;
-        const struct Trainer *viewedTrainer = &gTrainers[GetCurrentDifficultyLevel()][trainerId];
-        partySize = (CreateNPCTrainerPartyFromTrainer(party, viewedTrainer, isHalf, BATTLE_TYPE_TRAINER));
-        selectedMon = selectedMon - PARTY_SIZE;
-        DebugPrintf("partySize %d",partySize);
-        DebugPrintf("selectedMon %d",selectedMon);
-        partySize--;
-    }
-
     DestroyTask(taskId);
     FreeAllWindowBuffers();
 
-    if (BXPY_IsCursorOnEnemy())
-        ShowPokemonSummaryScreen(SUMMARY_MODE_BXPY, party, selectedMon, partySize, CB2_ReturnToBXPYInterface);
-    else
-        ShowPokemonSummaryScreen(SUMMARY_MODE_LOCK_MOVES, &gParties[trainer], selectedMon, (partySize - 1), CB2_ReturnToBXPYInterface);
+    enum BattleSide side = BXPY_IsCursorOnEnemy() ? B_SIDE_OPPONENT : B_SIDE_PLAYER;
+    enum BattleTrainer trainer = BXPY_DetermineTrainer(side, BXPY_GetPage());
+    u32 cursorMon = BXPY_CalculateCursorMonValue(side);
+    u32 mode = (side == B_SIDE_PLAYER) ? SUMMARY_MODE_LOCK_MOVES : SUMMARY_MODE_BXPY;
+    u32 partySize = CalculatePartyCount(trainer) - 1;
+    ShowPokemonSummaryScreen(mode, &gParties[trainer], cursorMon, (partySize), CB2_ReturnToBXPYInterface);
 }
 
 static void CB2_ReturnToBXPYInterface(void)
