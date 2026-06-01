@@ -410,7 +410,7 @@ TEST("GetChildNature returns the mom or ditto nature if it's holding an everston
     SetConfig(CONFIG_NATURE_INHERITANCE, GEN_3);
     SET_RNG(RNG_DAYCARE_NATURE_INHERITANCE, TRUE);
 
-    enum Speices species = SPECIES_NONE;
+    enum Species species = SPECIES_NONE;
     u32 gender = 0;
     u32 nature = 0;
     for (u32 j = 0; j < NUM_NATURES; j++)
