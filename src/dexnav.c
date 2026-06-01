@@ -1224,8 +1224,8 @@ static enum Move GetRandomEggMove(enum Species species)
     for (u32 i = 0; eggMoveLearnset[i] != MOVE_UNAVAILABLE; i++)
         numEggMoves++;
 
-    const enum Move *result = RandomElementArray(RNG_DEXNAV_RANDOM_EGG_MOVE, eggMoveLearnset, sizeof(u16), numEggMoves);
-    return *result;
+    enum Move result = *(const u16 *)(RandomElementArray(RNG_DEXNAV_RANDOM_EGG_MOVE, eggMoveLearnset, sizeof(u16), numEggMoves));
+    return result;
 }
 
 static void DexNavGenerateMoveset(enum Species species, u8 searchLevel, u8 encounterLevel, u16 *moveDst)
