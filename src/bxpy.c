@@ -15,6 +15,11 @@
 #include "tv.h"
 #include "constants/battle.h"
 
+static bool8 BXPY_IsSpriteIndexMon(enum BXPYSpriteIds spriteIndex);
+static void BXPY_RemoveAllSprites(void);
+static void BXPY_DrawPage(void);
+static void BXPY_TogglePage(void);
+static bool8 BXPY_IsMultiBattle(void);
 static void BXPY_PreparePartiesAndInit(u32 bringSize, u32 pickSize, u32 battleFlags, u8* playerEnteredMons);
 static void BXPY_InitializeAndSaveCallback(u32 bringSize, u32 pickSize, u32 battleFlags, u8* playerEnteredMons);
 static enum BXPYHealModes BXPY_GetHealMode(void);
@@ -112,7 +117,7 @@ static void BXPY_ErrorCheck_BringSizeTooLarge(void)
     gSpecialVar_Result = FALSE;
 
     u32 bringSize = VarGet(VAR_BXPY_BRING_SIZE);
-    u32 maxSize = (VarGet(VAR_BXPY_PARTNER) == PARTNER_NONE) ? bringSize : (bringSize / 2);
+    u32 maxSize = ((VarGet(VAR_BXPY_PARTNER) != PARTNER_NONE) && (B_MULTI_HALF_TEAMS == TRUE)) ? (bringSize / 2) : bringSize;
     u32 partyCount = CountPartyAliveNonEggMonsExcept(PARTY_SIZE);
 
     if (partyCount <=maxSize)
@@ -337,10 +342,8 @@ static void BXPY_PrepareEnemyParty(u32 bringSize, u32 battleFlags)
     ZeroEnemyPartyMons();
     CreateNPCTrainerPartyFromTrainer(&gParties[B_TRAINER_OPPONENT_A][0], &gTrainers[GetCurrentDifficultyLevel()][TRAINER_BATTLE_PARAM.opponentA], isHalf, battleFlags);
 
-    if (isMulti == FALSE);
-        return;
-
-    CreateNPCTrainerPartyFromTrainer(&gParties[B_TRAINER_OPPONENT_B][0], &gTrainers[GetCurrentDifficultyLevel()][TRAINER_BATTLE_PARAM.opponentB], isHalf, battleFlags);
+    if (isMulti == TRUE)
+        CreateNPCTrainerPartyFromTrainer(&gParties[B_TRAINER_OPPONENT_B][0], &gTrainers[GetCurrentDifficultyLevel()][TRAINER_BATTLE_PARAM.opponentB], isHalf, battleFlags);
 }
 
 static void BXPY_GetEnemyEnterMons(u8* enteredMons, u32 pickSize)
@@ -762,6 +765,7 @@ u32 IsDoingBringXPickYSelection(void);
 static void BXPY_InitializeBackgroundsAndLoadBackgroundGraphics(void);
 static void CB2_ReturnToBXPYInterface(void);
 static void BXPY_CreateMonMenu(void);
+static enum BattleTrainer BXPY_DetermineTrainer(enum BattleSide side, enum BXPYPages page);
 static void Task_LoadPokemonSummary(u8 taskId);
 static void BXPY_GoToPokemonSummary(u8 taskId);
 static void BXPY_VBlankCB(void);
@@ -778,6 +782,7 @@ static bool8 BXPY_ShouldHandleMonsWithFullMenu(void);
 static void Task_HandleMonMenu(u8 taskId);
 static bool8 AreTilesOrTilemapEmpty(enum BXPYBackgrounds backgroundId);
 static bool8 BXPY_IsCursorOnSelectedMon(void);
+static bool8 BXPY_IsMultiBattle(void);
 static void BXPY_SelectMonAndShowMenu(u8 taskId);
 static void BXPY_ClearMenuReturnToMainTask(u8 taskId);
 static void BXPY_HandleMonClearMenu(u8 taskId);
@@ -793,7 +798,8 @@ static void LoadBXPYPalettes(void);
 static void PlaySoundStartFadeQuitApp(u8 taskId);
 static bool8 BXPY_HasSelectedEnough(void);
 static bool8 BXPY_IsCursorOnEnemy(void);
-static bool8 BXPY_IsMultiBattle(void);
+static bool8 BXPY_IsCursorOnEmpty(void);
+static bool8 BXPY_IsCursorOnPartner(void);
 static void BXPY_ResetAllSpriteIds(void);
 static void Task_WaitFadeAndExitGracefully(u8 taskId);
 void BXPY_FadescreenAndExitGracefully(void);
@@ -869,6 +875,8 @@ static void Task_BXPY_PartySelection(u8 taskId)
     {
         if (BXPY_IsCursorOnEnemy() && BXPY_IsOpenTeamSheetOn() == TRUE)
             BXPY_GoToPokemonSummary(taskId);
+        else if (BXPY_IsCursorOnPartner())
+            BXPY_GoToPokemonSummary(taskId);
         else if (BXPY_IsCursorOnEnemy() && BXPY_IsOpenTeamSheetOn() == FALSE)
             return;
         else
@@ -882,6 +890,15 @@ static void Task_BXPY_PartySelection(u8 taskId)
             return;
 
         PlaySoundStartFadeQuitApp(taskId);
+    }
+
+    if (JOY_NEW(SELECT_BUTTON) || JOY_REPEAT(SELECT_BUTTON))
+    {
+        if (BXPY_IsMultiBattle() == FALSE)
+            return;
+
+        BXPY_TogglePage();
+        BXPY_DrawPage();
     }
 }
 
@@ -899,9 +916,6 @@ static void BXPY_AddRemoveSelectedMon(void)
             BXPY_SetSelectedMons(BXPY_CountNumberSelected(),currentIndex);
     }
 
-    DebugPrintf("----------- %d",Random() * 100);
-    for (u32 selectedIndex = 0; selectedIndex < 6; selectedIndex++)
-        DebugPrintf("slot %d is mon %d",selectedIndex,BXPY_GetSelectedMons(selectedIndex));
     BXPY_DisplayHelpBar(WIN_BXPY_HELP_BAR);
 }
 
@@ -1025,6 +1039,13 @@ static bool8 BXPY_IsOnPartnerPage(void)
 static void BXPY_SetInitalPage(void)
 {
     BXPY_SetPage(BXPY_PAGE_OPPONENT_A);
+}
+
+static void BXPY_TogglePage(void)
+{
+    u32 newPage = (BXPY_GetPage() == BXPY_PAGE_OPPONENT_A) ? BXPY_PAGE_OPPONENT_B : BXPY_PAGE_OPPONENT_A;
+
+    BXPY_SetPage(newPage);
 }
 
 static void BXPY_SetSpriteId(u32 spriteIndex, u32 spriteId)
@@ -1529,9 +1550,7 @@ void BXPY_SetupCallback(void)
         case 3:
             BXPY_CreateCursorSprite();
             BXPY_InitWindows();
-            BXPY_DisplayPlayerParty();
-            BXPY_DisplayEnemyParty();
-            BXPY_DisplayHelpBar(WIN_BXPY_HELP_BAR);
+            BXPY_DrawPage();
             BXPY_CreateHighlightSprite();
             gMain.state++;
             break;
@@ -1609,11 +1628,13 @@ static void BXPY_DisplayParty(enum BattleSide side, bool32 cursorMove)
     u32 bringSize = min(BXPY_GetBringSize(),NUM_BXPY_MAX_MONS_SHOWED);
     enum BXPYWindows windowId = (side == B_SIDE_PLAYER) ? WIN_BXPY_PLAYER_INFO : WIN_BXPY_ENEMY_LEVELS;
 
+    enum BattleTrainer trainer = BXPY_DetermineTrainer(side, BXPY_GetPage());
+
     FillWindowPixelBuffer(windowId, PIXEL_FILL(TEXT_COLOR_TRANSPARENT));
 
     for (u32 partyMonIndex = 0; partyMonIndex < bringSize; partyMonIndex++)
     {
-        struct Pokemon *mon = (side == B_SIDE_PLAYER) ? &gParties[B_TRAINER_PLAYER][partyMonIndex] : &gParties[B_TRAINER_OPPONENT_A][partyMonIndex];
+        struct Pokemon *mon = &gParties[trainer][partyMonIndex];
 
         u32 species = GetMonData(mon,MON_DATA_SPECIES_OR_EGG);
 
@@ -1639,9 +1660,14 @@ static void BXPY_CreateSelectionSprite(u32 partyMonIndex, enum BattleSide side)
     if (side == B_SIDE_OPPONENT)
         return;
 
+    u32 spriteIndex = (BXPY_SPRITEID_PLAYER_SELECTED_0 + partyMonIndex);
+
+    if (BXPY_GetSpriteId(spriteIndex) != SPRITE_NONE)
+        return;
+
     struct SpriteTemplate TempSpriteTemplate = gDummySpriteTemplate;
 
-    TempSpriteTemplate.tileTag = BXPY_SPRITETAG_SELECTED_0 + partyMonIndex;
+    TempSpriteTemplate.tileTag = spriteIndex;
     TempSpriteTemplate.callback = SpriteCB_SelectionSprite;
     TempSpriteTemplate.paletteTag = BXPY_PALTAG_SPRITE;
 
@@ -1655,11 +1681,17 @@ static void BXPY_CreateSelectionSprite(u32 partyMonIndex, enum BattleSide side)
     gSprites[spriteId].oam.priority = 0;
     gSprites[spriteId].subpriority = 0;
 
-    BXPY_SetSpriteId(BXPY_SPRITEID_PLAYER_SELECTED_0 + partyMonIndex,spriteId);
+    BXPY_SetSpriteId(spriteIndex,spriteId);
 }
 
 static void SpriteCB_SelectionSprite(struct Sprite *sprite)
 {
+    if (BXPY_IsOnPartnerPage())
+    {
+        sprite->invisible = TRUE;
+        return;
+    }
+
     u32 mon = sprite->data[2];
     bool32 isAlreadySelected = BXPY_IsMonAlreadySelected(mon);
     sprite->invisible = (isAlreadySelected == FALSE);
@@ -1859,7 +1891,8 @@ static void BXPY_PrintSex(enum BXPYWindows windowId, struct Pokemon *mon, enum B
     }
 
     StartSpriteAnimIfDifferent(&gSprites[spriteId],animState);
-    BXPY_SetSpriteId(BXPY_SPRITEID_PLAYER_SEX_0 + partyMonIndex,spriteId);
+    u32 spriteIdStart = (side == B_SIDE_PLAYER) ? BXPY_SPRITEID_PLAYER_SEX_0 : BXPY_SPRITEID_ENEMY_SEX_0;
+    BXPY_SetSpriteId(spriteIdStart + partyMonIndex,spriteId);
 }
 
 static void BXPY_PrintMonIcon(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex, u32 species)
@@ -1869,7 +1902,8 @@ static void BXPY_PrintMonIcon(enum BXPYWindows windowId, struct Pokemon *mon, en
     species = BXPY_TeamPreview_TransformSpeciesId(species, side);
 
     u32 spriteId = CreateMonIcon(species,SpriteCB_MonIcon,x,y,0,0);
-    BXPY_SetSpriteId(BXPY_SPRITEID_PLAYER_MON_0 + partyMonIndex,spriteId);
+    u32 spriteIdStart = (side == B_SIDE_PLAYER) ? BXPY_SPRITEID_PLAYER_MON_0 : BXPY_SPRITEID_ENEMY_MON_0;
+    BXPY_SetSpriteId(spriteIdStart + partyMonIndex,spriteId);
 }
 
 static const union AnimCmd sAnim_MonHP0[] =
@@ -2117,8 +2151,9 @@ static void BXPY_PrintEnemyName(enum BXPYWindows windowId)
     u32 lineSpacing = GetFontAttribute(fontId, FONTATTR_LINE_SPACING);
     u32 letterSpacing = GetFontAttribute(fontId, FONTATTR_LETTER_SPACING);
     u32 windowWidth = TILE_SIZE_1BPP * GetWindowAttribute(windowId, WINDOW_WIDTH);
+    u32 trainerId = BXPY_IsOnPartnerPage() ? TRAINER_BATTLE_PARAM.opponentB : TRAINER_BATTLE_PARAM.opponentA;
 
-    StringCopy(gStringVar4, GetTrainerNameFromId(TRAINER_BATTLE_PARAM.opponentA));
+    StringCopy(gStringVar4, GetTrainerNameFromId(trainerId));
     fontId = GetFontIdToFit(gStringVar4,fontId,letterSpacing,windowWidth);
     u32 x = GetStringRightAlignXOffset(fontId,gStringVar4,windowWidth);
 
@@ -2155,11 +2190,15 @@ static void BXPY_PrintHelpBarText(enum BXPYWindows windowId)
 
     if (BXPY_IsCursorOnEnemy() && BXPY_IsOpenTeamSheetOn() == TRUE)
         StringAppend(gStringVar4,COMPOUND_STRING(" {A_BUTTON} Summary"));
+    else if (BXPY_IsOnPartnerPage())
+        StringAppend(gStringVar4,COMPOUND_STRING(" {A_BUTTON} Summary"));
     else if (!BXPY_IsCursorOnEnemy())
         StringAppend(gStringVar4,COMPOUND_STRING(" {A_BUTTON} Select"));
 
-    if (BXPY_IsMultiBattle())
+    if (BXPY_IsMultiBattle() && BXPY_IsOnPartnerPage() == FALSE)
         StringAppend(gStringVar4,COMPOUND_STRING(" {SELECT_BUTTON} See Partners"));
+    else if (BXPY_IsMultiBattle() && BXPY_IsOnPartnerPage() == TRUE)
+        StringAppend(gStringVar4,COMPOUND_STRING(" {SELECT_BUTTON} See {PLAYER}"));
 
     StringExpandPlaceholders(gStringVar4,gStringVar4);
 
@@ -2171,14 +2210,31 @@ static bool8 BXPY_HasSelectedEnough(void)
     return (BXPY_CountNumberSelected() == BXPY_GetPickSize());
 }
 
+static bool8 BXPY_IsCursorOnEmpty(void)
+{
+    u32 selectedMon = BXPY_GetPosition();
+    return FALSE;
+}
+
 static bool8 BXPY_IsCursorOnEnemy(void)
 {
     return BXPY_GetPosition() >= BXPY_GetBringSize();
 }
 
+static bool8 BXPY_IsCursorOnPartner(void)
+{
+    if (BXPY_IsOnPartnerPage() == FALSE)
+        return FALSE;
+
+    return (BXPY_IsCursorOnEnemy() == FALSE);
+}
+
 static bool8 BXPY_IsMultiBattle(void)
 {
-    return (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE);
+    if (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE)
+        return TRUE;
+
+    return (gPartnerTrainerId != TRAINER_NONE);
 }
 
 static void BXPY_ResetAllSpriteIds(void)
@@ -2252,16 +2308,20 @@ static void Task_LoadPokemonSummary(u8 taskId)
         return;
 
     struct Pokemon *party = BXPY_GetParty();
+    enum BattleSide side = BXPY_IsCursorOnEnemy() ? B_SIDE_OPPONENT : B_SIDE_PLAYER;
+    enum BattleTrainer trainer = BXPY_DetermineTrainer(side, BXPY_GetPage());
     u32 selectedMon = BXPY_GetPosition();
     u32 partySize = BXPY_GetBringSize();
     bool32 isHalf = (B_MULTI_HALF_TEAMS && BXPY_IsMultiBattle());
 
     if (BXPY_IsCursorOnEnemy())
     {
-        u32 trainerId = TRAINER_BATTLE_PARAM.opponentA;
+        u32 trainerId = BXPY_IsOnPartnerPage() ? TRAINER_BATTLE_PARAM.opponentB : TRAINER_BATTLE_PARAM.opponentA;
         const struct Trainer *viewedTrainer = &gTrainers[GetCurrentDifficultyLevel()][trainerId];
         partySize = (CreateNPCTrainerPartyFromTrainer(party, viewedTrainer, isHalf, BATTLE_TYPE_TRAINER));
-        selectedMon = selectedMon - partySize;
+        selectedMon = selectedMon - PARTY_SIZE;
+        DebugPrintf("partySize %d",partySize);
+        DebugPrintf("selectedMon %d",selectedMon);
         partySize--;
     }
 
@@ -2271,7 +2331,7 @@ static void Task_LoadPokemonSummary(u8 taskId)
     if (BXPY_IsCursorOnEnemy())
         ShowPokemonSummaryScreen(SUMMARY_MODE_BXPY, party, selectedMon, partySize, CB2_ReturnToBXPYInterface);
     else
-        ShowPokemonSummaryScreen(SUMMARY_MODE_LOCK_MOVES, &gParties[B_TRAINER_PLAYER], selectedMon, (partySize - 1), CB2_ReturnToBXPYInterface);
+        ShowPokemonSummaryScreen(SUMMARY_MODE_LOCK_MOVES, &gParties[trainer], selectedMon, (partySize - 1), CB2_ReturnToBXPYInterface);
 }
 
 static void CB2_ReturnToBXPYInterface(void)
@@ -2403,4 +2463,103 @@ static void BXPY_CreateMonMenu(void)
 bool8 BXPY_IsOpenTeamSheetOn(void)
 {
     return BXPY_OPEN_TEAM_SHEET;
+}
+
+static enum BattleTrainer BXPY_DetermineTrainer(enum BattleSide side, enum BXPYPages page)
+{
+    if (side == B_SIDE_PLAYER)
+    {
+        if (page == BXPY_PAGE_OPPONENT_A)
+            return B_TRAINER_PLAYER;
+        else
+            return B_TRAINER_PARTNER;
+    }
+    else
+    {
+        if (page == BXPY_PAGE_OPPONENT_A)
+            return B_TRAINER_OPPONENT_A;
+        else
+            return B_TRAINER_OPPONENT_B;
+    }
+}
+
+static void BXPY_DrawPage(void)
+{
+
+    BXPY_RemoveAllSprites();
+    BXPY_DisplayPlayerParty();
+    BXPY_DisplayEnemyParty();
+    BXPY_DisplayHelpBar(WIN_BXPY_HELP_BAR);
+}
+
+static void BXPY_RemoveSprite(enum BXPYSpriteIds first, enum BXPYSpriteIds last)
+{
+    for (u32 spriteIndex = first; spriteIndex < last + 1; spriteIndex++)
+    {
+        u32 spriteId = (BXPY_GetSpriteId(spriteIndex));
+        if (spriteId == SPRITE_NONE)
+            continue;
+
+        if (BXPY_IsSpriteIndexMon(spriteIndex))
+            FreeAndDestroyMonIconSprite(&gSprites[spriteId]);
+        else
+            DestroySpriteAndFreeResources(&gSprites[spriteId]);
+
+        BXPY_SetSpriteId(spriteIndex,SPRITE_NONE);
+    }
+}
+
+static void BXPY_RemovePlayerMonSprites(void)
+{
+    BXPY_RemoveSprite(BXPY_SPRITEID_PLAYER_MON_0,BXPY_SPRITEID_PLAYER_MON_5);
+}
+static void BXPY_RemovePlayerHPSprites(void)
+{
+    BXPY_RemoveSprite(BXPY_SPRITEID_PLAYER_HP_0,BXPY_SPRITEID_PLAYER_HP_5);
+}
+static void BXPY_RemovePlayerSexSprites(void)
+{
+    BXPY_RemoveSprite(BXPY_SPRITEID_PLAYER_SEX_0,BXPY_SPRITEID_PLAYER_SEX_5);
+}
+static void BXPY_RemoveEnemyMonSprites(void)
+{
+    BXPY_RemoveSprite(BXPY_SPRITEID_ENEMY_MON_0,BXPY_SPRITEID_ENEMY_MON_5);
+}
+static void BXPY_RemoveEnemySexSprites(void)
+{
+    BXPY_RemoveSprite(BXPY_SPRITEID_ENEMY_SEX_0,BXPY_SPRITEID_ENEMY_SEX_5);
+}
+
+static void BXPY_RemoveAllSprites(void)
+{
+    BXPY_RemovePlayerMonSprites();
+    BXPY_RemovePlayerHPSprites();
+    BXPY_RemovePlayerSexSprites();
+    BXPY_RemoveEnemyMonSprites();
+    BXPY_RemoveEnemySexSprites();
+}
+
+static bool8 BXPY_IsSpriteIndexMon(enum BXPYSpriteIds spriteIndex)
+{
+    u32 monSpriteIds[] =
+    {
+        BXPY_SPRITEID_PLAYER_MON_0,
+        BXPY_SPRITEID_PLAYER_MON_1,
+        BXPY_SPRITEID_PLAYER_MON_2,
+        BXPY_SPRITEID_PLAYER_MON_3,
+        BXPY_SPRITEID_PLAYER_MON_4,
+        BXPY_SPRITEID_PLAYER_MON_5,
+        BXPY_SPRITEID_ENEMY_MON_0,
+        BXPY_SPRITEID_ENEMY_MON_1,
+        BXPY_SPRITEID_ENEMY_MON_2,
+        BXPY_SPRITEID_ENEMY_MON_3,
+        BXPY_SPRITEID_ENEMY_MON_4,
+        BXPY_SPRITEID_ENEMY_MON_5,
+    };
+
+    for (u32 index = 0; index < ARRAY_COUNT(monSpriteIds); index++)
+        if (spriteIndex == monSpriteIds[index])
+            return TRUE;
+
+    return FALSE;
 }
