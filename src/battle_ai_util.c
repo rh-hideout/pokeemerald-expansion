@@ -2565,6 +2565,28 @@ bool32 ShouldBeatUpForRageFist(enum BattlerId battlerAtkPartner, enum Move move,
          && !wouldPartnerFaint);
 }
 
+bool32 ShouldTriggerSpicySprayForBurn(enum BattlerId battlerAtk, enum Move move, bool32 partnerProtecting, bool32 isFriendlyFireOK, u32 noOfHitsToKOPartner, struct AiLogicData *aiData)
+{
+    enum BattlerId partner = BATTLE_PARTNER(battlerAtk);
+    enum HoldEffect holdEffect = aiData->holdEffects[battlerAtk];
+
+    if (!HasPartner(battlerAtk)
+     || aiData->abilities[partner] != ABILITY_SPICY_SPRAY
+     || partnerProtecting
+     || noOfHitsToKOPartner == 0
+     || !isFriendlyFireOK
+     || DoesSubstituteBlockMove(battlerAtk, partner, move)
+     || gBattleStruct->monToSwitchIntoId[partner] != PARTY_SIZE
+     || holdEffect == HOLD_EFFECT_FLAME_ORB)
+        return FALSE;
+
+    if ((holdEffect == HOLD_EFFECT_CURE_BRN || holdEffect == HOLD_EFFECT_CURE_STATUS)
+     && !IsUnnerveBlocked(battlerAtk, aiData->items[battlerAtk]))
+        return FALSE;
+
+    return ShouldBurn(battlerAtk, battlerAtk, aiData->abilities[battlerAtk]);
+}
+
 bool32 HasPhysicalBestMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum DamageCalcContext calcContext)
 {
     enum Move atkBestMoves[MAX_MON_MOVES] = {MOVE_NONE};

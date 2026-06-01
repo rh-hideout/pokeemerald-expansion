@@ -3297,6 +3297,9 @@ static s32 AI_DoubleBattle(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             default:
                 break;
             }
+
+            if (ShouldTriggerSpicySprayForBurn(battlerAtk, move, partnerProtecting, isFriendlyFireOK, noOfHitsToKOPartner, aiData))
+                ADJUST_SCORE(DECENT_EFFECT);
         }
     }
 
