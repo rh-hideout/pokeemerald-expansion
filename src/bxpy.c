@@ -20,8 +20,8 @@ static void BXPY_RemoveAllSprites(void);
 static void BXPY_DrawPage(void);
 static void BXPY_TogglePage(void);
 static bool8 BXPY_IsMultiBattle(void);
-static void BXPY_PreparePartiesAndInit(u32 bringSize, u32 pickSize, u32 battleFlags, u8* playerEnteredMons);
-static void BXPY_InitializeAndSaveCallback(u32 bringSize, u32 pickSize, u32 battleFlags, u8* playerEnteredMons);
+static void BXPY_PreparePartiesAndInit(u32 bringSize, u32 pickSize, u32 battleFlags, u8* playerEnteredMons, u32 position, enum BXPYPages page);
+static void BXPY_InitializeAndSaveCallback(u32 bringSize, u32 pickSize, u32 battleFlags, u8* playerEnteredMons, u32 position, enum BXPYPages page);
 static enum BXPYHealModes BXPY_GetHealMode(void);
 static bool8 BXPY_ShouldHealBeforeBattle(void);
 static bool8 BXPY_ShouldHealAfterBattle(void);
@@ -305,16 +305,16 @@ void BXPY_Init(enum BXPYBattleTypes battleType, u32 bringSize, u32 pickSize, u32
     for (u32 monsIndex = 0; monsIndex < ARRAY_COUNT(playerEnteredMons); monsIndex++)
         playerEnteredMons[monsIndex] = BXPY_EMPTY_MON;
 
-    BXPY_PreparePartiesAndInit(bringSize,pickSize,battleFlags,playerEnteredMons);
+    BXPY_PreparePartiesAndInit(bringSize,pickSize,battleFlags,playerEnteredMons, 0, BXPY_PAGE_OPPONENT_A);
 
 }
 
-static void BXPY_PreparePartiesAndInit(u32 bringSize, u32 pickSize, u32 battleFlags, u8* playerEnteredMons)
+static void BXPY_PreparePartiesAndInit(u32 bringSize, u32 pickSize, u32 battleFlags, u8* playerEnteredMons, u32 position, enum BXPYPages page)
 {
     BXPY_PrepareEnemyParty(bringSize,battleFlags);
     BXPY_PrepareParty(pickSize);
 
-    BXPY_InitializeAndSaveCallback(bringSize, pickSize, battleFlags,playerEnteredMons);
+    BXPY_InitializeAndSaveCallback(bringSize, pickSize, battleFlags,playerEnteredMons, position, page);
 }
 
 static void BXPY_InitTrainerBattleParams(u32 trainerA, const u8 *loseTextA, u32 trainerB, const u8* loseTextB, u32 partnerId)
@@ -1039,11 +1039,6 @@ static bool8 BXPY_IsOnPartnerPage(void)
     return (BXPY_GetPage() == BXPY_PAGE_OPPONENT_B);
 }
 
-static void BXPY_SetInitalPage(void)
-{
-    BXPY_SetPage(BXPY_PAGE_OPPONENT_A);
-}
-
 static void BXPY_TogglePage(void)
 {
     u32 newPage = (BXPY_GetPage() == BXPY_PAGE_OPPONENT_A) ? BXPY_PAGE_OPPONENT_B : BXPY_PAGE_OPPONENT_A;
@@ -1545,8 +1540,6 @@ void BXPY_SetupCallback(void)
             gMain.state++;
             break;
         case 2:
-            BXPY_SetPosition(0);
-            BXPY_SetInitalPage();
             BXPY_InitializeBackgroundsAndLoadBackgroundGraphics();
             gMain.state++;
             break;
@@ -2331,7 +2324,7 @@ static void Task_LoadPokemonSummary(u8 taskId)
     u32 cursorMon = BXPY_CalculateCursorMonValue(side);
     u32 mode = (side == B_SIDE_PLAYER) ? SUMMARY_MODE_LOCK_MOVES : SUMMARY_MODE_BXPY;
     u32 partySize = CalculatePartyCount(trainer) - 1;
-    ShowPokemonSummaryScreen(mode, &gParties[trainer], cursorMon, (partySize), CB2_ReturnToBXPYInterface);
+    ShowPokemonSummaryScreen(mode, &gParties[trainer], cursorMon, partySize, CB2_ReturnToBXPYInterface);
 }
 
 static void CB2_ReturnToBXPYInterface(void)
@@ -2339,16 +2332,21 @@ static void CB2_ReturnToBXPYInterface(void)
     u32 bringSize = BXPY_GetBringSize();
     u32 pickSize = BXPY_GetPickSize();
     u32 battleFlags = BXPY_GetBattleFlags();
+    enum BXPYPages page = BXPY_GetPage();
+
+    u32 old = BXPY_GetPosition();
+    u32 new = VarGet(VAR_BXPY_MON_INDEX);
+    u32 position = (old >= PARTY_SIZE) ? (new + PARTY_SIZE) : new;
 
     u8 playerEnteredMons[PARTY_SIZE];
     for (u32 partyIndex = 0; partyIndex < ARRAY_COUNT(playerEnteredMons); partyIndex++)
         playerEnteredMons[partyIndex] = BXPY_GetSelectedMons(partyIndex);
 
     BXPY_FreeResources();
-    BXPY_PreparePartiesAndInit(bringSize,pickSize,battleFlags,playerEnteredMons);
+    BXPY_PreparePartiesAndInit(bringSize,pickSize,battleFlags,playerEnteredMons,position,page);
 }
 
-static void BXPY_InitializeAndSaveCallback(u32 bringSize, u32 pickSize, u32 battleFlags, u8* playerEnteredMons)
+static void BXPY_InitializeAndSaveCallback(u32 bringSize, u32 pickSize, u32 battleFlags, u8* playerEnteredMons, u32 position, enum BXPYPages page)
 {
     if (BXPY_AllocateStructs())
     {
@@ -2359,6 +2357,8 @@ static void BXPY_InitializeAndSaveCallback(u32 bringSize, u32 pickSize, u32 batt
     BXPY_SetPickSize(pickSize);
     BXPY_SetBringSize(bringSize);
     BXPY_SetBattleFlags(battleFlags);
+    BXPY_SetPosition(position);
+    BXPY_SetPage(page);
 
     for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
          BXPY_SetSelectedMons(partyIndex,playerEnteredMons[partyIndex]);

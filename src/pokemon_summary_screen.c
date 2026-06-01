@@ -1835,6 +1835,7 @@ static void Task_HandleInput(u8 taskId)
         {
             StopPokemonAnimations();
             PlaySE(SE_SELECT);
+            VarSet(VAR_BXPY_MON_INDEX,sMonSummaryScreen->curMonIndex); // bringXpickY
             BeginCloseSummaryScreen(taskId);
         }
         else if (DEBUG_POKEMON_SPRITE_VISUALIZER && JOY_NEW(SELECT_BUTTON) && !gMain.inBattle)
