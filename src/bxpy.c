@@ -2282,7 +2282,7 @@ static u32 BXPY_CountNumberSelected(void)
 static void SpriteCB_HighlightSprite(struct Sprite *sprite)
 {
     sprite->invisible = BXPY_IsCursorOnEnemy();
-    sprite->y = 12 + (23 * BXPY_GetPosition());
+    sprite->y = 7 + (24 * BXPY_GetPosition());
 }
 
 static const union AnimCmd sAnim_HighlightLeft[] =
