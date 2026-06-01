@@ -2171,34 +2171,38 @@ static void BXPY_PrintHelpBarText(enum BXPYWindows windowId)
     u32 lineSpacing = GetFontAttribute(fontId, FONTATTR_LINE_SPACING);
     u32 letterSpacing = GetFontAttribute(fontId, FONTATTR_LETTER_SPACING);
 
+    bool32 onEnemy = BXPY_IsCursorOnEnemy();
+    bool32 isOTSOn = BXPY_IsOpenTeamSheetOn();
+    bool32 isPartnerPage = BXPY_IsOnPartnerPage();
+    bool32 isMultiBattle = BXPY_IsMultiBattle();
+    bool32 hasSelectedEnough = BXPY_HasSelectedEnough();
+
     StringCopy(gStringVar4, COMPOUND_STRING(""));
 
-    if (BXPY_HasSelectedEnough() == FALSE)
+    if (hasSelectedEnough)
+    {
+        StringAppend(gStringVar4, COMPOUND_STRING("{START_BUTTON} Start Battle"));
+    }
+    else
     {
         u32 pickSize = BXPY_GetPickSize();
         ConvertIntToDecimalStringN(gStringVar1,pickSize,STR_CONV_MODE_LEFT_ALIGN,CountDigits(pickSize));
         StringAppend(gStringVar4, COMPOUND_STRING("Select {STR_VAR_1} Pokemon."));
     }
-    else
-    {
-        StringAppend(gStringVar4, COMPOUND_STRING(" {START_BUTTON} Start Battle"));
-    }
 
-    if (BXPY_IsCursorOnEnemy() && BXPY_IsOpenTeamSheetOn() == TRUE)
-        StringAppend(gStringVar4,COMPOUND_STRING(" {A_BUTTON} Summary"));
-    else if (BXPY_IsOnPartnerPage())
-        StringAppend(gStringVar4,COMPOUND_STRING(" {A_BUTTON} Summary"));
-    else if (!BXPY_IsCursorOnEnemy())
+    if ((onEnemy == FALSE) && (isPartnerPage == FALSE))
         StringAppend(gStringVar4,COMPOUND_STRING(" {A_BUTTON} Select"));
+    else if (isOTSOn == TRUE)
+        StringAppend(gStringVar4,COMPOUND_STRING(" {A_BUTTON} Summary"));
 
-    if (BXPY_IsMultiBattle() && BXPY_IsOnPartnerPage() == FALSE)
+    if ((isMultiBattle == TRUE) && (isPartnerPage == FALSE))
         StringAppend(gStringVar4,COMPOUND_STRING(" {SELECT_BUTTON} See Partners"));
-    else if (BXPY_IsMultiBattle() && BXPY_IsOnPartnerPage() == TRUE)
+    else if ((isMultiBattle == TRUE) && (isPartnerPage == TRUE))
         StringAppend(gStringVar4,COMPOUND_STRING(" {SELECT_BUTTON} See {PLAYER}"));
 
-    StringExpandPlaceholders(gStringVar4,gStringVar4);
+    StringExpandPlaceholders(gStringVar2,gStringVar4);
 
-    AddTextPrinterParameterized4(windowId, fontId, x, y, letterSpacing, lineSpacing, sBXPYWindowFontColors[BXPY_FONT_COLOR_HELP_BAR], TEXT_SKIP_DRAW, gStringVar4);
+    AddTextPrinterParameterized4(windowId, fontId, x, y, letterSpacing, lineSpacing, sBXPYWindowFontColors[BXPY_FONT_COLOR_HELP_BAR], TEXT_SKIP_DRAW, gStringVar2);
 }
 
 static bool8 BXPY_HasSelectedEnough(void)
