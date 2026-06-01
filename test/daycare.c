@@ -236,7 +236,7 @@ TEST("(Daycare) Only Pokémon with the same base species can share egg moves (Ge
     ASSUME(SpeciesHasEggMove(SPECIES_SCATTERBUG, MOVE_RAGE_POWDER));
     SetConfig(CONFIG_EGG_MOVE_TRANSFER, GEN_8);
 
-    u32 teacherSpecies = SPECIES_NONE;
+    enum Species teacherSpecies = SPECIES_NONE;
     PARAMETRIZE { teacherSpecies = SPECIES_VIVILLON_SUN; }
     PARAMETRIZE { teacherSpecies = SPECIES_AMOONGUSS; }
 
@@ -296,7 +296,7 @@ TEST("(Daycare) Pokémon need to hold a mirror herb to learn move in daycare (Ge
     ASSUME(SpeciesHasEggMove(SPECIES_BULBASAUR, MOVE_INGRAIN));
     ASSUME(SpeciesHasEggMove(SPECIES_BULBASAUR, MOVE_NATURE_POWER));
 
-    u32 heldItem  = 0;
+    enum Item heldItem  = ITEM_NONE;
     PARAMETRIZE { heldItem = ITEM_MIRROR_HERB; }
     PARAMETRIZE { heldItem = ITEM_NONE; }
 
@@ -325,10 +325,10 @@ TEST("(Daycare) Pokémon can't learn through egg move transfer a move they alrea
     ASSUME(SpeciesHasEggMove(SPECIES_BULBASAUR, MOVE_INGRAIN));
     ASSUME(SpeciesHasEggMove(SPECIES_BULBASAUR, MOVE_NATURE_POWER));
 
-    u32 knownMove1 = 0;
-    u32 knownMove2 = 0;
-    u32 knownMove3 = 0;
-    u32 expectedMove = 0;
+    enum Move knownMove1 = 0;
+    enum Move knownMove2 = 0;
+    enum Move knownMove3 = 0;
+    enum Move expectedMove = 0;
     PARAMETRIZE { knownMove1 = MOVE_TACKLE; knownMove2 = MOVE_GROWL; knownMove3 = MOVE_VINE_WHIP; expectedMove = MOVE_CURSE; }
     PARAMETRIZE { knownMove1 = MOVE_CURSE; knownMove2 = MOVE_GROWL; knownMove3 = MOVE_VINE_WHIP; expectedMove = MOVE_INGRAIN; }
     PARAMETRIZE { knownMove1 = MOVE_CURSE; knownMove2 = MOVE_INGRAIN; knownMove3 = MOVE_VINE_WHIP; expectedMove = MOVE_NATURE_POWER; }
@@ -410,7 +410,7 @@ TEST("GetChildNature returns the mom or ditto nature if it's holding an everston
     SetConfig(CONFIG_NATURE_INHERITANCE, GEN_3);
     SET_RNG(RNG_DAYCARE_NATURE_INHERITANCE, TRUE);
 
-    u32 species = 0;
+    enum Speices species = SPECIES_NONE;
     u32 gender = 0;
     u32 nature = 0;
     for (u32 j = 0; j < NUM_NATURES; j++)
@@ -517,7 +517,7 @@ TEST("GetChildNature returns a random nature when no parent is holding an everst
     SetConfig(CONFIG_NATURE_INHERITANCE, GEN_3);
     SET_RNG(RNG_DAYCARE_NATURE_INHERITANCE, TRUE);
 
-    u32 species = 0;
+    enum Species species = SPECIES_NONE;
     u32 gender = 0;
     PARAMETRIZE { species = SPECIES_DITTO; gender = MON_GENDERLESS; }
     PARAMETRIZE { species = SPECIES_BULBASAUR; gender = MON_FEMALE; }
@@ -543,7 +543,7 @@ TEST("GetChildNature returns a random nature when the father is the one holding 
     SetConfig(CONFIG_NATURE_INHERITANCE, GEN_3);
     SET_RNG(RNG_DAYCARE_NATURE_INHERITANCE, TRUE);
 
-    u32 species = 0;
+    enum Species species = SPECIES_NONE;
     u32 gender = 0;
     PARAMETRIZE { species = SPECIES_DITTO; gender = MON_GENDERLESS; }
     PARAMETRIZE { species = SPECIES_BULBASAUR; gender = MON_FEMALE; }
@@ -569,7 +569,7 @@ TEST("GetChildNature returns the father's nature if it is holding an Everstone (
     SetConfig(CONFIG_NATURE_INHERITANCE, GEN_4);
     SET_RNG(RNG_DAYCARE_NATURE_INHERITANCE, TRUE);
 
-    u32 species = 0;
+    enum Species species = SPECIES_NONE;
     u32 gender = 0;
     u32 nature = 0;
     for (u32 j = 0; j < NUM_NATURES; j++)
@@ -605,9 +605,9 @@ TEST("GetChildNature returns nature of the first pokemon holding an everstone pa
         {SPECIES_BULBASAUR, MON_FEMALE},
         {SPECIES_BULBASAUR, MON_MALE}
     };
-    u32 species0 = 0;
+    enum Species species0 = SPECIES_NONE;
     u32 gender0 = 0;
-    u32 species1 = 0;
+    enum Species species1 = SPECIES_NONE;
     u32 gender1 = 0;
     u32 randomParent = 0;
     for (u32 j = 0; j < 3; j++)
@@ -650,9 +650,9 @@ TEST("GetChildNature returns nature of any pokemon holding an everstone without 
         {SPECIES_BULBASAUR, MON_FEMALE},
         {SPECIES_BULBASAUR, MON_MALE}
     };
-    u32 species0 = 0;
+    enum Species species0 = SPECIES_NONE;
     u32 gender0 = 0;
-    u32 species1 = 0;
+    enum Species species1 = SPECIES_NONE;
     u32 gender1 = 0;
     u32 nature = 0;
     for (u32 j = 0; j < 3; j++)
@@ -696,9 +696,9 @@ TEST("GetChildNature returns the nature of a random parent if they are both hold
         {SPECIES_BULBASAUR, MON_FEMALE},
         {SPECIES_BULBASAUR, MON_MALE}
     };
-    u32 species0 = 0;
+    enum Species species0 = SPECIES_NONE;
     u32 gender0 = 0;
-    u32 species1 = 0;
+    enum Species species1 = SPECIES_NONE;
     u32 gender1 = 0;
     u32 randomParent = 0;
     for (u32 j = 0; j < 3; j++)
@@ -813,8 +813,8 @@ TEST("InheritIVs does not pass more stats when a power item is equipped")
 
     u32 j;
     u32 rngIv = 0;
-    u32 item0 = 0;
-    u32 item1 = 0;
+    enum Item item0 = ITEM_NONE;
+    enum Item item1 = ITEM_NONE;
     for (j = 0; j < 720; j++)
     {
         for (u32 k = ITEM_POWER_WEIGHT; k <= ITEM_POWER_ANKLET; k++)
@@ -861,8 +861,8 @@ TEST("InheritIVs will always pass the preferred stat from the parent holding the
 
     u32 j;
     u32 rngIv = 0;
-    u32 item0 = 0;
-    u32 powerStat = 0;
+    enum Item item0 = ITEM_NONE;
+    enum Stat powerStat = 0;
     for (j = 0; j < 720; j++)
     {
         for (u32 k = ITEM_POWER_WEIGHT; k <= ITEM_POWER_ANKLET; k++)
@@ -907,8 +907,8 @@ TEST("InheritIVs pick one parent at random to pass its power stat if two power i
     struct Pokemon egg;
     CreateMonWithIVs(&egg, SPECIES_BULBASAUR, 1, Random32(), OTID_STRUCT_PLAYER_ID, 0);
 
-    u32 item0 = 0;
-    u32 item1 = 0;
+    enum Item item0 = ITEM_NONE;
+    enum Item item1 = ITEM_NONE;
     u32 parent = 0;
     for (u32 j = ITEM_POWER_WEIGHT; j <= ITEM_POWER_ANKLET; j++)
     {
@@ -919,8 +919,8 @@ TEST("InheritIVs pick one parent at random to pass its power stat if two power i
         }
     }
     SET_RNG(RNG_DAYCARE_PICK_IVS_PARENT, parent);
-    u32 powerStat0 = GetItemSecondaryId(item0);
-    u32 powerStat1 = GetItemSecondaryId(item1);
+    enum Stat powerStat0 = GetItemSecondaryId(item0);
+    enum Stat powerStat1 = GetItemSecondaryId(item1);
 
     ZeroPlayerPartyMons();
     memset(&gSaveBlock1Ptr->daycare, 0, sizeof(gSaveBlock1Ptr->daycare));
@@ -950,8 +950,8 @@ TEST("InheritPokeball doesn't do anything, all eggs are born in Pokeball (gen5-)
 {
     SetConfig(CONFIG_BALL_INHERITANCE, GEN_5);
 
-    u32 ball = 0;
-    for (u32 j = BALL_STRANGE; j < POKEBALL_COUNT; j++)
+    enum PokeBall ball = 0;
+    for (enum PokeBall j = BALL_STRANGE; j < POKEBALL_COUNT; j++)
     {
         PARAMETRIZE { ball = j; }
     }
@@ -972,14 +972,14 @@ TEST("InheritPokeball make eggs inherit their mother ball unless it's a 'forbidd
 {
     SetConfig(CONFIG_BALL_INHERITANCE, GEN_6);
 
-    u32 ball0 = 0;
-    u32 ball1 = 0;
-    u32 species = 0;
+    enum PokeBall ball0 = 0;
+    enum PokeBall ball1 = 0;
+    enum Species species = SPECIES_NONE;
     u32 gender = 0;
     u32 slot = 0;
-    for (u32 j = BALL_STRANGE; j < POKEBALL_COUNT; j++)
+    for (enum PokeBall j = BALL_STRANGE; j < POKEBALL_COUNT; j++)
     {
-        for (u32 k = BALL_STRANGE; j < POKEBALL_COUNT; j++)
+        for (enum PokeBall k = BALL_STRANGE; j < POKEBALL_COUNT; j++)
         {
             PARAMETRIZE { ball0 = j; ball1 = k; species = SPECIES_BULBASAUR; gender = MON_MALE; slot = 0; }
             PARAMETRIZE { ball0 = j; ball1 = k; species = SPECIES_DITTO; gender = MON_GENDERLESS; slot = 0; }
@@ -1016,9 +1016,9 @@ TEST("InheritPokeball give eggs born from a male and a ditto a pokeball (gen6)")
 {
     SetConfig(CONFIG_BALL_INHERITANCE, GEN_6);
 
-    u32 ball0 = 0;
+    enum PokeBall ball0 = 0;
     u32 slot = 0;
-    for (u32 j = BALL_STRANGE; j < POKEBALL_COUNT; j++)
+    for (enum PokeBall j = BALL_STRANGE; j < POKEBALL_COUNT; j++)
     {
         PARAMETRIZE { ball0 = j; slot = 0; }
         PARAMETRIZE { ball0 = j; slot = 1; }
@@ -1046,9 +1046,9 @@ TEST("InheritPokeball give eggs born from a male and a ditto a pokeball (gen6)")
 {
     SetConfig(CONFIG_BALL_INHERITANCE, GEN_6);
 
-    u32 ball0 = 0;
+    enum PokeBall ball0 = 0;
     u32 slot = 0;
-    for (u32 j = BALL_STRANGE; j < POKEBALL_COUNT; j++)
+    for (enum PokeBall j = BALL_STRANGE; j < POKEBALL_COUNT; j++)
     {
         PARAMETRIZE { ball0 = j; slot = 0; }
         PARAMETRIZE { ball0 = j; slot = 1; }
@@ -1076,14 +1076,14 @@ TEST("InheritPokeball give the non-ditto ball to pokemon born from a ditto and a
 {
     SetConfig(CONFIG_BALL_INHERITANCE, GEN_7);
 
-    u32 ball0 = 0;
-    u32 ball1 = 0;
-    u32 species = 0;
+    enum PokeBall ball0 = 0;
+    enum PokeBall ball1 = 0;
+    enum Species species = SPECIES_NONE;
     u32 gender = 0;
     u32 slot = 0;
-    for (u32 j = BALL_STRANGE; j < POKEBALL_COUNT; j++)
+    for (enum PokeBall j = BALL_STRANGE; j < POKEBALL_COUNT; j++)
     {
-        for (u32 k = BALL_STRANGE; j < POKEBALL_COUNT; j++)
+        for (enum PokeBall k = BALL_STRANGE; k < POKEBALL_COUNT; k++)
         {
             PARAMETRIZE { ball0 = j; ball1 = k; species = SPECIES_BULBASAUR; gender = MON_MALE; slot = 0; }
             PARAMETRIZE { ball0 = j; ball1 = k; species = SPECIES_MAGNEMITE; gender = MON_GENDERLESS; slot = 0; }
@@ -1122,13 +1122,13 @@ TEST("InheritPokeball give the mother ball to pokemon born two different non-dit
 {
     SetConfig(CONFIG_BALL_INHERITANCE, GEN_7);
 
-    u32 ball0 = 0;
-    u32 ball1 = 0;
-    u32 species = 0;
+    enum PokeBall ball0 = 0;
+    enum PokeBall ball1 = 0;
+    enum Species species = SPECIES_NONE;
     u32 slot = 0;
-    for (u32 j = BALL_STRANGE; j < POKEBALL_COUNT; j++)
+    for (enum PokeBall j = BALL_STRANGE; j < POKEBALL_COUNT; j++)
     {
-        for (u32 k = BALL_STRANGE; j < POKEBALL_COUNT; j++)
+        for (enum PokeBall k = BALL_STRANGE; j < POKEBALL_COUNT; j++)
         {
             PARAMETRIZE { ball0 = j; ball1 = k; species = SPECIES_IVYSAUR; slot = 0; }
             PARAMETRIZE { ball0 = j; ball1 = k; species = SPECIES_SLOWBRO; slot = 0; }
@@ -1166,9 +1166,9 @@ TEST("InheritPokeball give a parent ball at random to pokemon born from parents 
 {
     SetConfig(CONFIG_BALL_INHERITANCE, GEN_7);
 
-    u32 ball0 = 0;
-    u32 ball1 = 0;
-    u32 species = 0;
+    enum PokeBall ball0 = 0;
+    enum PokeBall ball1 = 0;
+    enum Species species = SPECIES_NONE;
     u32 randomParent = 0;
     for (u32 j = BALL_STRANGE; j < POKEBALL_COUNT; j++)
     {
@@ -1256,7 +1256,7 @@ TEST("InheritAbility copy the ability of the mother if the dad is not a ditto (g
     SET_RNG(RNG_DAYCARE_ABILITY_INHERITANCE, TRUE);
     u32 abilityNum0 = 0;
     u32 abilityNum1 = 0;
-    u32 species = 0;
+    enum Species species = SPECIES_NONE;
     u32 gender = 0;
     u32 slot = 0;
     for (u32 j = 0; j < 3; j++)
@@ -1309,9 +1309,9 @@ TEST("InheritAbility copy the ability of the mother or non-ditto parent (gen6+)"
         {SPECIES_ABRA, MON_FEMALE},
         {SPECIES_ABRA, MON_MALE}
     };
-    u32 species0 = 0;
+    enum Species species0 = SPECIES_NONE;
     u32 gender0 = 0;
-    u32 species1 = 0;
+    enum Species species1 = SPECIES_NONE;
     u32 gender1 = 0;
     for (u32 j = 0; j < 3; j++)
     {

@@ -5053,9 +5053,7 @@ static u32 CountSpeciesEggMoves(enum Species species)
     u32 numEggMoves = 0;
     const u16 *eggMoveLearnset = GetSpeciesEggMoves(species);
     for (u32 i = 0; eggMoveLearnset[i] != MOVE_UNAVAILABLE; i++)
-    {
         numEggMoves++;
-    }
 
     return numEggMoves;
 }

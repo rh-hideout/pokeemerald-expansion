@@ -309,7 +309,8 @@ static void AddHatchedMonToParty(u8 id)
     enum Species species;
     enum NationalDexOrder nationalDexNum;
     u8 name[POKEMON_NAME_LENGTH + 1];
-    u32 metLevel, friendship, language;
+    u32 metLevel, friendship;
+    enum Language language;
     metloc_u8_t metLocation;
     struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][id];
 
