@@ -97,6 +97,36 @@ SINGLE_BATTLE_TEST("Weather Ball doubles its power and turns to an Ice-type move
     }
 }
 
+SINGLE_BATTLE_TEST("Weather Ball doesn't double its power and stays a Normal-type move in strong winds", s16 damage)
+{
+    enum Ability ability;
+    u16 species;
+    PARAMETRIZE { ability = ABILITY_AIR_LOCK;     species = SPECIES_WOBBUFFET; }
+    PARAMETRIZE { ability = ABILITY_DELTA_STREAM; species = SPECIES_WOBBUFFET; }
+    PARAMETRIZE { ability = ABILITY_DELTA_STREAM; species = SPECIES_GASTLY; }
+
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_WEATHER_BALL) == TYPE_NORMAL);
+        ASSUME(GetSpeciesType(SPECIES_GASTLY, 0) == TYPE_GHOST);
+        PLAYER(SPECIES_RAYQUAZA) { Ability(ability); }
+        OPPONENT(species);
+    } WHEN {
+        TURN { MOVE(player, MOVE_WEATHER_BALL); }
+    } SCENE {
+        if (species == SPECIES_GASTLY) {
+            NONE_OF {
+                ANIMATION(ANIM_TYPE_MOVE, MOVE_WEATHER_BALL, player);
+                HP_BAR(opponent);
+            }
+        } else {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_WEATHER_BALL, player);
+            HP_BAR(opponent, captureDamage: &results[i].damage);
+        }
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
+    }
+}
+
 SINGLE_BATTLE_TEST("Weather Ball doesn't double its power in Sunlight or Rain if Cloud Nine/Air Lock is on the field", s16 damage)
 {
     enum Move setupMove;
