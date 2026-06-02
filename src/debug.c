@@ -286,6 +286,7 @@ static void DebugAction_Util_CheatStart(u8 taskId);
 
 static void DebugAction_TimeMenu_ChangeTimeOfDay(u8 taskId);
 static void DebugAction_TimeMenu_ChangeWeekdays(u8 taskId);
+static void DebugAction_TimeMenu_RedoDailyEvents(u8 taskId);
 
 static void DebugAction_CreateFollowerNPC(u8 taskId);
 static void DebugAction_DestroyFollowerNPC(u8 taskId);
@@ -582,6 +583,7 @@ static const struct DebugMenuOption sDebugMenu_Actions_TimeMenu[] =
     { COMPOUND_STRING("Get time of day…"),  DebugAction_ExecuteScript, Debug_EventScript_PrintTimeOfDay },
     { COMPOUND_STRING("Set time of day…"),  DebugAction_OpenSubMenuFakeRTC, sDebugMenu_Actions_TimeMenu_TimesOfDay },
     { COMPOUND_STRING("Set weekday…"),      DebugAction_OpenSubMenuFakeRTC, sDebugMenu_Actions_TimeMenu_Weekdays },
+    { COMPOUND_STRING("Redo daily events"), DebugAction_TimeMenu_RedoDailyEvents },
     { COMPOUND_STRING("Check wall clock…"), DebugAction_ExecuteScript, PlayersHouse_2F_EventScript_CheckWallClock },
     { COMPOUND_STRING("Set wall clock…"),   DebugAction_ExecuteScript, PlayersHouse_2F_EventScript_SetWallClock },
     { NULL }
@@ -4274,6 +4276,13 @@ static void DebugAction_TimeMenu_ChangeWeekdays(u8 taskId)
     DebugAction_DestroyExtraWindow(taskId);
     daysToAdd = ((input - rtc->dayOfWeek) + WEEKDAY_COUNT) % WEEKDAY_COUNT;
     FakeRtc_AdvanceTimeBy(daysToAdd, 0, 0, 0);
+    Debug_DestroyMenu_Full(taskId);
+    SetMainCallback2(CB2_LoadMap);
+}
+
+void DebugAction_TimeMenu_RedoDailyEvents(u8 taskId)
+{
+    DoDailyEvents(1);
     Debug_DestroyMenu_Full(taskId);
     SetMainCallback2(CB2_LoadMap);
 }
