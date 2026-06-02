@@ -36,7 +36,7 @@ struct PikeWildMon
 {
     enum Species species;
     u8 levelDelta;
-    u16 moves[MAX_MON_MOVES];
+    enum Move moves[MAX_MON_MOVES];
 };
 
 // IWRAM bss

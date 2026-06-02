@@ -257,7 +257,7 @@ struct AiThinkingStruct
 {
     u8 aiState;
     u8 movesetIndex;
-    u16 moveConsidered;
+    enum Move moveConsidered;
     s32 score[MAX_MON_MOVES];
     u64 aiFlags[MAX_BATTLERS_COUNT];
     u8 aiAction;
@@ -487,7 +487,7 @@ struct Wish
 
 struct FutureSight
 {
-    u16 move;
+    enum Move move;
     u16 counter:10;
     u16 battlerIndex:3;
     u16 partyIndex:3;
@@ -612,7 +612,7 @@ struct BattleStruct
     u8 wallyMoveFrames;
     u16 lastTakenMove[MAX_BATTLERS_COUNT]; // Last move that a battler was hit with.
     u32 savedBattleTypeFlags;
-    u16 abilityPreventingSwitchout;
+    enum Ability abilityPreventingSwitchout;
     u8 hpScale;
     u8 anyMonHasTransformed:1; // Only used in battle_tv.c
     u8 sleepClauseNotBlocked:1;
@@ -844,7 +844,7 @@ struct BattleScripting
     u16 unused_0x30;
     u8 illusionNickHack; // To properly display nick in STRINGID_ENEMYABOUTTOSWITCHPKMN.
     bool8 fixedPopup;   // Force ability popup to stick until manually called back
-    u16 abilityPopupOverwrite;
+    enum Ability abilityPopupOverwrite;
     u8 switchCase;  // Special switching conditions, eg. red card
     u8 overrideBerryRequirements;
     u8 stickyWebStatDrop; // To prevent Defiant activating on a Court Change'd Sticky Web

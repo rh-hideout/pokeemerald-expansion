@@ -630,11 +630,11 @@ struct FormChangeContext
     enum Species currentSpecies;
     u16 partyItemUsed;
     u16 multichoiceSelection;
-    u16 heldItem;
-    u16 ability;
+    enum Item heldItem;
+    enum Ability ability;
     u16 learnedMove;
     u32 status;
-    u16 moves[MAX_MON_MOVES];
+    enum Move moves[MAX_MON_MOVES];
     u16 hp;
     u16 maxHP;
     u32 gmaxFactor:1;

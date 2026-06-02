@@ -1655,7 +1655,7 @@ DOUBLE_BATTLE_TEST("Dynamax stat lowering moves don't make stat-changing abiliti
     enum Move move = MOVE_NONE;
     u32 stat = 0;
     enum Ability ability = ABILITY_NONE;
-    u32 abilityList[] = {ABILITY_COMPETITIVE, ABILITY_DEFIANT, ABILITY_CONTRARY, ABILITY_SIMPLE};
+    enum Ability abilityList[] = {ABILITY_COMPETITIVE, ABILITY_DEFIANT, ABILITY_CONTRARY, ABILITY_SIMPLE};
     for (u32 j = 0; j < 4; j++)
     {
         PARAMETRIZE { move = MOVE_SCRATCH; stat = STAT_SPEED; ability = abilityList[j]; }
@@ -1695,7 +1695,7 @@ DOUBLE_BATTLE_TEST("Dynamax stat raising moves don't make stat-changing abilitie
     enum Move move = MOVE_NONE;
     u32 stat = 0;
     enum Ability ability = ABILITY_NONE;
-    u32 abilityList[] = {ABILITY_CONTRARY, ABILITY_SIMPLE};
+    enum Ability abilityList[] = {ABILITY_CONTRARY, ABILITY_SIMPLE};
     for (u32 j = 0; j < 2; j++)
     {
         PARAMETRIZE { move = MOVE_PECK; stat = STAT_SPEED; ability = abilityList[j]; }

@@ -131,7 +131,7 @@ SINGLE_BATTLE_TEST("Protect: King's Shield, Silk Trap and Obstruct protect from 
 
 SINGLE_BATTLE_TEST("Protect: King's Shield, Silk Trap and Obstruct don't lower stats when charging a two turn move")
 {
-    u32 move, protectMove;
+    enum Move move, protectMove;
     PARAMETRIZE { move = MOVE_BOUNCE; protectMove = MOVE_KINGS_SHIELD; }
     PARAMETRIZE { move = MOVE_DIG;    protectMove = MOVE_KINGS_SHIELD; }
     PARAMETRIZE { move = MOVE_BOUNCE; protectMove = MOVE_SILK_TRAP; }
@@ -198,7 +198,7 @@ SINGLE_BATTLE_TEST("Protect: Spiky Shield does 1/8 dmg of max hp of attackers ma
 
 SINGLE_BATTLE_TEST("Protect: Spiky Shield doesn't hurt attacker when charging a two turn move")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_BOUNCE; }
     PARAMETRIZE { move = MOVE_DIG; }
 
@@ -276,7 +276,7 @@ SINGLE_BATTLE_TEST("Protect: Baneful Bunker can't poison Pokémon if they are al
 
 SINGLE_BATTLE_TEST("Protect: Baneful Bunker doesn't poison attacker when charging a two turn move")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_BOUNCE; }
     PARAMETRIZE { move = MOVE_DIG; }
 
@@ -354,7 +354,7 @@ SINGLE_BATTLE_TEST("Protect: Burning Bulwark can't burn Pokémon if they are alr
 
 SINGLE_BATTLE_TEST("Protect: Burning Bulwark doesn't burn attacker when charging a two turn move")
 {
-    u32 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_BOUNCE; }
     PARAMETRIZE { move = MOVE_DIG; }
 
@@ -685,7 +685,7 @@ DOUBLE_BATTLE_TEST("Crafty Shield protects self and ally from opposing status mo
 
 DOUBLE_BATTLE_TEST("Crafty Shield does not protect against status moves used on the user's side")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_AROMATHERAPY; }
     PARAMETRIZE { move = MOVE_ACUPRESSURE; }
@@ -720,7 +720,7 @@ DOUBLE_BATTLE_TEST("Crafty Shield does not protect against status moves used on 
 
 DOUBLE_BATTLE_TEST("Crafty Shield does not protect against entry hazard moves")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_SPIKES; }
     PARAMETRIZE { move = MOVE_STEALTH_ROCK; }
@@ -798,7 +798,7 @@ DOUBLE_BATTLE_TEST("Crafty Shield protects self and ally from Confide and Decora
 
 DOUBLE_BATTLE_TEST("Crafty Shield does not protect against moves that target all battlers")
 {
-    u32 move;
+    enum Move move;
 
     PARAMETRIZE { move = MOVE_FLOWER_SHIELD; }
     PARAMETRIZE { move = MOVE_PERISH_SONG; }

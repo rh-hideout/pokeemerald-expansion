@@ -50,7 +50,7 @@ struct PyramidWildMon
     enum Species species;
     u8 lvl;
     u8 abilityNum;
-    u16 moves[MAX_MON_MOVES];
+    enum Move moves[MAX_MON_MOVES];
 };
 
 struct PyramidFloorTemplate

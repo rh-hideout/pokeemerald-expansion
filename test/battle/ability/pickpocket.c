@@ -313,7 +313,8 @@ SINGLE_BATTLE_TEST("Pickpocket does not prevent King's Rock or Razor Fang flinch
 
 SINGLE_BATTLE_TEST("Pickpocket activates when user has Protective Pads, but not with Punching Glove or Long Reach")
 {
-    u32 item, ability;
+    enum Item item;
+    enum Ability ability;
 
     PARAMETRIZE { item = ITEM_PROTECTIVE_PADS; ability = ABILITY_OVERGROW;   }
     PARAMETRIZE { item = ITEM_PUNCHING_GLOVE;  ability = ABILITY_OVERGROW;   }

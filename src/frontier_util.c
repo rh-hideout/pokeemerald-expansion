@@ -51,7 +51,7 @@ struct FrontierBrainMon
     u8 fixedIV;
     u8 nature;
     u8 evs[NUM_STATS];
-    u16 moves[MAX_MON_MOVES];
+    enum Move moves[MAX_MON_MOVES];
 };
 
 struct FrontierBrain

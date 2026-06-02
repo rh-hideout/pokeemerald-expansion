@@ -2036,7 +2036,7 @@ static void ForewarnChooseMove(enum BattlerId battler)
     struct Forewarn {
         enum BattlerId battler;
         u8 power;
-        u16 moveId;
+        enum Move moveId;
     };
     u32 i, j, bestId, count;
     struct Forewarn *data = Alloc(sizeof(struct Forewarn) * MAX_BATTLERS_COUNT * MAX_MON_MOVES);

@@ -820,7 +820,7 @@ enum HealAmount
     PERCENT_HEAL_AMOUNT,
 };
 
-static u32 ItemHealHp(enum BattlerId battler, enum Item itemId, enum HealAmount percentHeal)
+static enum ItemEffect ItemHealHp(enum BattlerId battler, enum Item itemId, enum HealAmount percentHeal)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Ability ability = GetBattlerAbility(battler);
@@ -849,7 +849,7 @@ static u32 ItemHealHp(enum BattlerId battler, enum Item itemId, enum HealAmount 
     return effect;
 }
 
-static u32 ItemRestorePp(enum BattlerId battler, enum Item itemId)
+static enum ItemEffect ItemRestorePp(enum BattlerId battler, enum Item itemId)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     struct Pokemon *mon = GetBattlerMon(battler);
@@ -886,7 +886,7 @@ static u32 ItemRestorePp(enum BattlerId battler, enum Item itemId)
 
     if (restoreMove != MAX_MON_MOVES)
     {
-        u32 move = GetMonData(mon, MON_DATA_MOVE1 + restoreMove);
+        enum Move move = GetMonData(mon, MON_DATA_MOVE1 + restoreMove);
         u32 currentPP = GetMonData(mon, MON_DATA_PP1 + restoreMove);
         u32 maxPP = CalculatePPWithBonus(move, ppBonuses, restoreMove);
         u32 ppRestored = GetItemHoldEffectParam(itemId);

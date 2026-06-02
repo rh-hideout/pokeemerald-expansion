@@ -112,9 +112,9 @@ u8 (*const gEnemyPartyCountPtr) = &gPartiesCount[B_TRAINER_OPPONENT_A];
 // Unreferenced here and in FRLG.
 struct CombinedMove
 {
-    u16 move1;
-    u16 move2;
-    u16 newMove;
+    enum Move move1;
+    enum Move move2;
+    enum Move newMove;
 };
 
 static const struct CombinedMove sCombinedMoves[2] =

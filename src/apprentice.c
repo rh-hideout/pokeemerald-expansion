@@ -63,7 +63,7 @@
 struct ApprenticePartyMovesData
 {
     u8 moveCounter;
-    u16 moves[MULTI_PARTY_SIZE][NUM_WHICH_MOVE_QUESTIONS];
+    enum Move moves[MULTI_PARTY_SIZE][NUM_WHICH_MOVE_QUESTIONS];
     u8 moveSlots[MULTI_PARTY_SIZE][NUM_WHICH_MOVE_QUESTIONS];
 };
 

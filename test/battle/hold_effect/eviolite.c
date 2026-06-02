@@ -60,7 +60,7 @@ SINGLE_BATTLE_TEST("Eviolite does not boost Defense or Sp. Def for evolved Pokem
 
 SINGLE_BATTLE_TEST("Eviolite uses original species after Transform", s16 damage)
 {
-    u32 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_EVIOLITE; }
     PARAMETRIZE { item = ITEM_NONE; }
