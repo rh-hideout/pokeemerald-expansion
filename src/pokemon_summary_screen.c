@@ -3265,7 +3265,7 @@ static void PrintNotEggInfo(void)
     StringAppend(gStringVar1, gStringVar2);
     PrintTextOnWindow(PSS_LABEL_WINDOW_PORTRAIT_SPECIES, gStringVar1, 24, 17, 0, 1);
     // Start bringXpickY
-    if (!BXPY_SummaryScreen_ShowTrueSpecies(sMonSummaryScreen->mode))
+    if (BXPY_SummaryScreen_HideSpecies(sMonSummaryScreen->mode))
         StringCopy(gStringVar1,COMPOUND_STRING("???"));
     else
     // End bringXpickY
