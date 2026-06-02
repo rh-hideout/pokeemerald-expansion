@@ -15,11 +15,13 @@
 #include "tv.h"
 #include "constants/battle.h"
 
+enum Type BXPY_TransformType(enum BXPYTeamPreviewSpeciesModes mode, enum Type originalTypeId, u32 typeIndex, enum Species species);
 static bool8 BXPY_IsSpriteIndexMon(enum BXPYSpriteIds spriteIndex);
 static void BXPY_RemoveAllSprites(void);
 static void BXPY_DrawPage(void);
 static void BXPY_TogglePage(void);
 static bool8 BXPY_IsMultiBattle(void);
+static void BXPY_PrintTypes(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex);
 static void BXPY_PreparePartiesAndInit(u32 bringSize, u32 pickSize, u32 battleFlags, u8* playerEnteredMons, u32 position, enum BXPYPages page);
 static void BXPY_InitializeAndSaveCallback(u32 bringSize, u32 pickSize, u32 battleFlags, u8* playerEnteredMons, u32 position, enum BXPYPages page);
 static enum BXPYHealModes BXPY_GetHealMode(void);
@@ -494,12 +496,19 @@ enum Type BXPY_TransformPageInfoType(enum PokemonSummaryScreenMode mode, enum Ty
     if (spriteArrayId != SUMMARY_SCREEN_SPRITE_ID_TYPE_1 && spriteArrayId != SUMMARY_SCREEN_SPRITE_ID_TYPE_2)
         return originalTypeId;
 
-    switch (BXPY_SummaryScreen_SpeciesVisibility(mode))
+    enum BXPYTeamPreviewSpeciesModes speciesMode = BXPY_SummaryScreen_SpeciesVisibility(mode);
+    u32 typeIndex = spriteArrayId - SPRITE_ARR_ID_TYPE;
+
+    return BXPY_TransformType(speciesMode, originalTypeId, typeIndex, species);
+}
+
+enum Type BXPY_TransformType(enum BXPYTeamPreviewSpeciesModes mode, enum Type originalTypeId, u32 typeIndex, enum Species species)
+{
+    switch (mode)
     {
         case BXPY_SPECIES_HIDE:
             return TYPE_MYSTERY;
         case BXPY_SPECIES_SHOW_BASE:
-            u32 typeIndex = spriteArrayId - SPRITE_ARR_ID_TYPE;
             return GetSpeciesType(GET_BASE_SPECIES_ID(species), typeIndex);
         default:
         case BXPY_SPECIES_SHOW_TRUE:
@@ -1313,6 +1322,14 @@ static const struct BXPYSpriteSheet sBXPYSpriteSheets[BXPY_SPRITEID_COUNT] =
             .tag = BXPY_PALTAG_HIGHLIGHT,
         },
     },
+    [BXPY_SPRITEID_ENEMY_TYPE_0_MON_0] =
+    {
+        {
+            .data = (const u16[])INCBIN_U16("graphics/bxpy/types.4bpp"),
+            .size = TILE_OFFSET_4BPP(84),
+            .tag = BXPY_SPRITETAG_TYPE,
+        },
+    },
     [BXPY_SPRITEID_PLAYER_SELECTED_TAIL_0] =
     {
         {
@@ -1392,6 +1409,7 @@ static void SetScheduleBgs(enum BXPYBackgrounds backgroundId)
 static const u16 bxpyPalettesText[] = INCBIN_U16("graphics/bxpy/palettes/text.gbapal");
 static const u16 bxpyPartyBackgroundPalette[] = INCBIN_U16("graphics/bxpy/partyBg.gbapal");
 static const u16 bxpyWallpaperPalette[] = INCBIN_U16("graphics/bxpy/wallpaper.gbapal");
+static const u16 bxpyTypesPalette[] = INCBIN_U16("graphics/bxpy/types.gbapal");
 
 static bool8 AreTilesOrTilemapEmpty(enum BXPYBackgrounds backgroundId)
 {
@@ -1434,6 +1452,7 @@ static void LoadBXPYPalettes(void)
     LoadPalette(bxpyPartyBackgroundPalette, BXPY_PALETTE_PARTYBG_SLOT, PLTT_SIZE_4BPP*2);
     LoadPalette(bxpyWallpaperPalette, BXPY_PALETTE_WALLPAPER_SLOT, PLTT_SIZE_4BPP);
     LoadPalette(bxpyPalettesText, BXPY_PALETTE_TEXT_SLOT, PLTT_SIZE_4BPP);
+    LoadPalette(bxpyTypesPalette, BXPY_PALETTE_TYPES_SLOT, PLTT_SIZE_4BPP*3);
 }
 
 static void PlaySoundStartFadeQuitApp(u8 taskId)
@@ -1832,6 +1851,7 @@ static void BXPY_DisplayPartyMonText(enum BXPYWindows windowId, struct Pokemon *
 static void BXPY_DisplayPartyMonIcons(enum BXPYWindows windowId, struct Pokemon *mon, u32 partyMonIndex, enum BattleSide side, u32 species)
 {
     BXPY_PrintSex(windowId, mon, side, partyMonIndex);
+    BXPY_PrintTypes(windowId, mon, side, partyMonIndex);
     BXPY_PrintMonIcon(windowId, mon, side, partyMonIndex,species);
     BXPY_PrintHP(windowId, mon, side, partyMonIndex);
     BXPY_CreateSelectionSprite(partyMonIndex, side);
@@ -2293,12 +2313,17 @@ static u32 BXPY_CalculateCursorMonValue(enum BattleSide side)
     return (BXPY_IsCursorOnEnemy()) ? position - PARTY_SIZE : position;
 }
 
+static enum Species BXPY_GetSpeciesFromPosition(enum BattleTrainer trainer, u32 cursorMon)
+{
+    return (GetMonData(&gParties[trainer][cursorMon],MON_DATA_SPECIES_OR_EGG));
+}
+
 static bool8 BXPY_IsCursorOnEmpty(void)
 {
     enum BattleSide side = BXPY_IsCursorOnEnemy() ? B_SIDE_OPPONENT : B_SIDE_PLAYER;
     enum BattleTrainer trainer = BXPY_DetermineTrainer(side, BXPY_GetPage());
     u32 cursorMon = BXPY_CalculateCursorMonValue(side);
-    u32 species = GetMonData(&gParties[trainer][cursorMon],MON_DATA_SPECIES_OR_EGG);
+    enum Species species = BXPY_GetSpeciesFromPosition(trainer,cursorMon);
 
     if (species == SPECIES_NONE)
         return TRUE;
@@ -2662,4 +2687,188 @@ static bool8 BXPY_IsSpriteIndexMon(enum BXPYSpriteIds spriteIndex)
             return TRUE;
 
     return FALSE;
+}
+
+static const union AnimCmd sAnim_MonTypeNone[] =
+{
+    ANIMCMD_FRAME(BXPY_TYPE_FRAME_NONE,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonTypeNormal[] =
+{
+    ANIMCMD_FRAME(BXPY_TYPE_FRAME_NORMAL,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonTypeFighting[] =
+{
+    ANIMCMD_FRAME(BXPY_TYPE_FRAME_FIGHTING,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonTypeFlying[] =
+{
+    ANIMCMD_FRAME(BXPY_TYPE_FRAME_FLYING,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonTypePoison[] =
+{
+    ANIMCMD_FRAME(BXPY_TYPE_FRAME_POISON,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonTypeGround[] =
+{
+    ANIMCMD_FRAME(BXPY_TYPE_FRAME_GROUND,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonTypeRock[] =
+{
+    ANIMCMD_FRAME(BXPY_TYPE_FRAME_ROCK,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonTypeBug[] =
+{
+    ANIMCMD_FRAME(BXPY_TYPE_FRAME_BUG,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonTypeGhost[] =
+{
+    ANIMCMD_FRAME(BXPY_TYPE_FRAME_GHOST,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonTypeSteel[] =
+{
+    ANIMCMD_FRAME(BXPY_TYPE_FRAME_STEEL,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonTypeMystery[] =
+{
+    ANIMCMD_FRAME(BXPY_TYPE_FRAME_MYSTERY,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonTypeFire[] =
+{
+    ANIMCMD_FRAME(BXPY_TYPE_FRAME_FIRE,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonTypeWater[] =
+{
+    ANIMCMD_FRAME(BXPY_TYPE_FRAME_WATER,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonTypeGrass[] =
+{
+    ANIMCMD_FRAME(BXPY_TYPE_FRAME_GRASS,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonTypeElectric[] =
+{
+    ANIMCMD_FRAME(BXPY_TYPE_FRAME_ELECTRIC,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonTypePsychic[] =
+{
+    ANIMCMD_FRAME(BXPY_TYPE_FRAME_PSYCHIC,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonTypeIce[] =
+{
+    ANIMCMD_FRAME(BXPY_TYPE_FRAME_ICE,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonTypeDragon[] =
+{
+    ANIMCMD_FRAME(BXPY_TYPE_FRAME_DRAGON,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonTypeDark[] =
+{
+    ANIMCMD_FRAME(BXPY_TYPE_FRAME_DARK,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonTypeFairy[] =
+{
+    ANIMCMD_FRAME(BXPY_TYPE_FRAME_FAIRY,4),
+    ANIMCMD_END,
+};
+static const union AnimCmd sAnim_MonTypeStellar[] =
+{
+    ANIMCMD_FRAME(BXPY_TYPE_FRAME_STELLAR,4),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd * const sSpriteAnimTable_MonTypeIcon[] =
+{
+    sAnim_MonTypeNone,
+    sAnim_MonTypeNormal,
+    sAnim_MonTypeFighting,
+    sAnim_MonTypeFlying,
+    sAnim_MonTypePoison,
+    sAnim_MonTypeGround,
+    sAnim_MonTypeRock,
+    sAnim_MonTypeBug,
+    sAnim_MonTypeGhost,
+    sAnim_MonTypeSteel,
+    sAnim_MonTypeMystery,
+    sAnim_MonTypeFire,
+    sAnim_MonTypeWater,
+    sAnim_MonTypeGrass,
+    sAnim_MonTypeElectric,
+    sAnim_MonTypePsychic,
+    sAnim_MonTypeIce,
+    sAnim_MonTypeDragon,
+    sAnim_MonTypeDark,
+    sAnim_MonTypeFairy,
+    sAnim_MonTypeStellar,
+};
+
+static void SpriteCB_BXPYType(struct Sprite *sprite)
+{
+    u32 partyMonIndex = sprite->data[1];
+    u32 typeIndex = sprite->data[0];
+
+    enum BattleSide side = B_SIDE_OPPONENT;
+    enum BattleTrainer trainer = BXPY_DetermineTrainer(side, BXPY_GetPage());
+    enum Species species = BXPY_GetSpeciesFromPosition(trainer,partyMonIndex);
+    species = BXPY_TeamPreview_TransformSpeciesId(species,side);
+
+
+    enum Type type[] = {GetSpeciesType(species,0), GetSpeciesType(species,1)};
+
+    sprite->invisible = ((species == SPECIES_EGG) || (species == SPECIES_NONE));
+        
+    if (typeIndex == 1)
+        sprite->invisible = (type[0] == type[1]);
+
+    sprite->oam.paletteNum = gTypesInfo[type[typeIndex]].palette;
+    StartSpriteAnimIfDifferent(sprite,type[typeIndex]);
+}
+
+static void BXPY_PrintTypes(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex)
+{
+    if (side == B_SIDE_PLAYER)
+        return;
+
+    for (u32 typeIndex = 0; typeIndex < 2; typeIndex++)
+    {
+
+    u32 spriteIndex = BXPY_SPRITEID_ENEMY_TYPE_0_MON_0 + typeIndex + (10 * partyMonIndex);
+    if (BXPY_GetSpriteId(spriteIndex) != SPRITE_NONE)
+        continue;
+
+        struct SpriteTemplate TempSpriteTemplate = gDummySpriteTemplate;
+        TempSpriteTemplate.tileTag = BXPY_SPRITETAG_TYPE;
+        TempSpriteTemplate.callback = SpriteCB_BXPYType;
+        TempSpriteTemplate.paletteTag = BXPY_PALTAG_TYPE;
+        TempSpriteTemplate.anims = sSpriteAnimTable_MonTypeIcon;
+
+        u32 x = 210 + (10 * typeIndex);
+        u32 y = 16 + (partyMonIndex * 22);
+        u32 spriteId = CreateSprite(&TempSpriteTemplate, x, y, 0);
+        gSprites[spriteId].oam.shape = SPRITE_SHAPE(16x16);
+        gSprites[spriteId].oam.size = SPRITE_SIZE(16x16);
+        gSprites[spriteId].oam.priority = 1;
+        gSprites[spriteId].data[1] = partyMonIndex;
+        gSprites[spriteId].data[0] = typeIndex;
+
+        BXPY_SetSpriteId(spriteIndex,spriteId);
+    }
 }
