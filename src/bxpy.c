@@ -1215,7 +1215,12 @@ const u8 sBXPYWindowFontColors[BXPY_FONT_COLOR_COUNT][3] =
         BXPY_TEXT_PALETTE_WHITE,
         BXPY_TEXT_PALETTE_BLACK,
     },
-
+    [BXPY_FONT_COLOR_SELECT_SPRITE] =
+    {
+        BXPY_TEXT_PALETTE_TRANSPERANT,
+        BXPY_TEXT_SELECT_PALETTE_BLACK,
+        BXPY_TEXT_SELECT_PALETTE_GRAY
+    },
 };
 
 static const struct BXPYSpriteSheet sBXPYSpriteSheets[BXPY_SPRITEID_COUNT] =
@@ -1779,10 +1784,10 @@ static void BXPY_DrawOrderOnSelectionSprite(u32 spriteId, u32 index)
     ConvertIntToDecimalStringN(orderString,index,STR_CONV_MODE_LEFT_ALIGN,CountDigits(index));
 
     u32 fontId = FONT_BXPY_LEVEL;
-    u32 x = 7;
+    u32 x = 2;
     u32 y = 0;
 
-    AddSpriteTextPrinterParametrerized(spriteId, fontId, orderString, x, y, TEXT_SKIP_DRAW, NULL);
+    AddSpriteTextPrinterParameterized3(spriteId, fontId, x, y, sBXPYWindowFontColors[BXPY_FONT_COLOR_SELECT_SPRITE],TEXT_SKIP_DRAW,orderString);
 
     Free(orderString);
 }
