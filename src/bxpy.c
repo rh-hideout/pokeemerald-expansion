@@ -1961,8 +1961,8 @@ static void BXPY_PrintSex(enum BXPYWindows windowId, struct Pokemon *mon, enum B
 
 static void BXPY_PrintMonIcon(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex, u32 species)
 {
-    u32 x = (side == B_SIDE_PLAYER) ? 119: 172;
-    u32 y = (side == B_SIDE_PLAYER) ? 15 + (partyMonIndex * 23) : 20 + (partyMonIndex * 22);
+    u32 x = (side == B_SIDE_PLAYER) ? 126: 170;
+    u32 y = (side == B_SIDE_PLAYER) ? 10 + (partyMonIndex * 24) : 20 + (partyMonIndex * 22);
     species = BXPY_TeamPreview_TransformSpeciesId(species, side);
 
     u32 spriteId = CreateMonIcon(species,SpriteCB_MonIcon,x,y,0,0);
@@ -2184,8 +2184,8 @@ static void BXPY_PrintHP(enum BXPYWindows windowId, struct Pokemon *mon, enum Ba
     TempSpriteTemplate.paletteTag = BXPY_PALTAG_SPRITE;
     TempSpriteTemplate.anims = sSpriteAnimTable_MonHP;
 
-    u32 y = 29 + (partyMonIndex * 23);
-    u32 spriteId = CreateSprite(&TempSpriteTemplate, 106, y, 0);
+    u32 y = 23 + (partyMonIndex * 24);
+    u32 spriteId = CreateSprite(&TempSpriteTemplate, 113, y, 0);
     gSprites[spriteId].oam.shape = SPRITE_SHAPE(32x8);
     gSprites[spriteId].oam.size = SPRITE_SIZE(32x8);
     gSprites[spriteId].oam.priority = 1;
