@@ -752,7 +752,6 @@ bool8 BXPY_SummaryScreen_ShouldHideStats(enum PokemonSummaryScreenMode mode, enu
 
 static void Task_BXPY_PartySelection(u8 taskId);
 static void BXPY_ChangePosition(s32 delta);
-static struct Pokemon *BXPY_GetParty(void);
 static u8 BXPY_GetBringSize(void);
 static void BXPY_SetPosition(u32 position);
 static u8 BXPY_GetPosition(void);
@@ -953,11 +952,6 @@ static void BXPY_RemoveIndexFromSelected(u32 currentIndex)
         BXPY_SetSelectedMons(last,BXPY_EMPTY_MON);
 }
 
-static struct Pokemon *BXPY_GetParty(void)
-{
-    return sBXPYState->tempParty;
-}
-
 static void BXPY_ChangePosition(s32 delta)
 {
     u32 current = BXPY_GetPosition();
@@ -1073,32 +1067,32 @@ u32 IsDoingBringXPickYSelection(void)
 
 static const struct BgTemplate sBXPYBgTemplates[] =
 {
-    [BG3_BXPY_WALLPAPER] =
-    {
-        .bg = BG3_BXPY_WALLPAPER,
-        .charBaseIndex = 1,
-        .mapBaseIndex = 29,
-        .priority = 2,
-    },
     [BG0_BXPY_TEXT] =
     {
         .bg = BG0_BXPY_TEXT,
         .charBaseIndex = 2,
-        .mapBaseIndex = 31,
+        .mapBaseIndex = 17,
         .priority = 0,
     },
     [BG1_BXPY_INFO] =
     {
         .bg = BG1_BXPY_INFO,
-        .charBaseIndex = 2,
-        .mapBaseIndex = 30,
+        .charBaseIndex = 3,
+        .mapBaseIndex = 31,
         .priority = 1,
     },
     [BG2_BXPY_PARTY_BG] =
     {
         .bg = BG2_BXPY_PARTY_BG,
         .charBaseIndex = 0,
-        .mapBaseIndex = 27,
+        .mapBaseIndex = 5,
+        .priority = 2,
+    },
+    [BG3_BXPY_WALLPAPER] =
+    {
+        .bg = BG3_BXPY_WALLPAPER,
+        .charBaseIndex = 1,
+        .mapBaseIndex = 9,
         .priority = 2,
     },
 };
