@@ -1935,8 +1935,8 @@ static void BXPY_PrintSex(enum BXPYWindows windowId, struct Pokemon *mon, enum B
     TempSpriteTemplate.paletteTag = BXPY_PALTAG_SPRITE;
     TempSpriteTemplate.anims = sSpriteAnimTable_MonSexIcon;
 
-    u32 x = (side == B_SIDE_PLAYER) ? 96 : 220;
-    u32 y = (side == B_SIDE_PLAYER) ?  24 + (partyMonIndex * 23) : 23 + (partyMonIndex * 22);
+    u32 x = (side == B_SIDE_PLAYER) ? 103 : 220;
+    u32 y = (side == B_SIDE_PLAYER) ?  19 + (partyMonIndex * 24) : 29 + (partyMonIndex * 22);
     u32 spriteId = CreateSprite(&TempSpriteTemplate, x, y, 0);
     gSprites[spriteId].oam.shape = SPRITE_SHAPE(16x16);
     gSprites[spriteId].oam.size = SPRITE_SIZE(16x16);
