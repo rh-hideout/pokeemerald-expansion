@@ -1,6 +1,8 @@
 #ifndef GUARD_CONFIG_BXPY_H
 #define GUARD_CONFIG_BXPY_H
 
+#define BXPY_SCROLLING_BACKGROUND                       TRUE // When TRUE, the background on the BXPY menu will scroll.
+
 #define BXPY_FORCE_MINIMUM_MONS                         TRUE // When TRUE, the PLayer must have at least bringSize unfainted Pokémon in the Party.
 #define BXPY_CLAUSE_ITEMS                               TRUE // When TRUE, the Player cannot have duplicate held items in their Party.
 #define BXPY_CLAUSE_SPECIES                             TRUE // When TRUE, the Player cannot have duplicate in their Party.

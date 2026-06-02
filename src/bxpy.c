@@ -1073,32 +1073,32 @@ u32 IsDoingBringXPickYSelection(void)
 
 static const struct BgTemplate sBXPYBgTemplates[] =
 {
+    [BG3_BXPY_WALLPAPER] =
+    {
+        .bg = BG3_BXPY_WALLPAPER,
+        .charBaseIndex = 1,
+        .mapBaseIndex = 29,
+        .priority = 2,
+    },
     [BG0_BXPY_TEXT] =
     {
         .bg = BG0_BXPY_TEXT,
-        .charBaseIndex = 0,
+        .charBaseIndex = 2,
         .mapBaseIndex = 31,
         .priority = 0,
     },
     [BG1_BXPY_INFO] =
     {
         .bg = BG1_BXPY_INFO,
-        .charBaseIndex = 1,
+        .charBaseIndex = 2,
         .mapBaseIndex = 30,
         .priority = 1,
     },
     [BG2_BXPY_PARTY_BG] =
     {
         .bg = BG2_BXPY_PARTY_BG,
-        .charBaseIndex = 2,
-        .mapBaseIndex = 29,
-        .priority = 2,
-    },
-    [BG3_BXPY_WALLPAPER] =
-    {
-        .bg = BG3_BXPY_WALLPAPER,
-        .charBaseIndex = 3,
-        .mapBaseIndex = 28,
+        .charBaseIndex = 0,
+        .mapBaseIndex = 27,
         .priority = 2,
     },
 };
@@ -1329,6 +1329,12 @@ static void BXPY_VBlankCB(void)
     LoadOam();
     ProcessSpriteCopyRequests();
     TransferPlttBuffer();
+
+    if (BXPY_SCROLLING_BACKGROUND == FALSE)
+        return;
+
+    ChangeBgX(BG3_BXPY_WALLPAPER, 64, BG_COORD_ADD);
+    ChangeBgY(BG3_BXPY_WALLPAPER, 64, BG_COORD_ADD);
 }
 
 static void BXPY_MainCB(void)
