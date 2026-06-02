@@ -151,10 +151,9 @@ SINGLE_BATTLE_TEST("Desolate Land can be replaced by Delta Stream")
 {
     GIVEN {
         PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_RAYQUAZA) { Ability(ABILITY_DELTA_STREAM); }
+        OPPONENT(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
     } WHEN {
-        TURN { SWITCH(opponent, 1); }
+        TURN { MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_DELTA_STREAM);
         MESSAGE("Mysterious strong winds are protecting Flying-type Pokémon!");
