@@ -629,6 +629,29 @@ AI_DOUBLE_BATTLE_TEST("AI will trigger its ally's Spicy Spray if burn benefits i
     }
 }
 
+AI_DOUBLE_BATTLE_TEST("AI will trigger its ally's Spicy Spray if the ally is about to faint")
+{
+    enum Ability atkAbility;
+    bool32 shouldTrigger;
+
+    PARAMETRIZE { atkAbility = ABILITY_GUTS;  shouldTrigger = TRUE;  }
+    PARAMETRIZE { atkAbility = ABILITY_SWARM; shouldTrigger = FALSE; }
+
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_HERACROSS) { Ability(atkAbility); Moves(MOVE_EARTHQUAKE, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_SCOVILLAIN_MEGA) { Ability(ABILITY_SPICY_SPRAY); Moves(MOVE_CELEBRATE); MaxHP(400); HP(1); }
+    } WHEN {
+        if (shouldTrigger)
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_EARTHQUAKE); }
+        else
+            TURN { NOT_EXPECT_MOVE(opponentLeft, MOVE_EARTHQUAKE); }
+    }
+}
+
 AI_DOUBLE_BATTLE_TEST("AI will only explode and kill everything on the field with Risky or Will Suicide (doubles)")
 {
     u32 aiFlags;
