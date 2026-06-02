@@ -139,8 +139,6 @@ static void SetUpRandomizer(void)
     #if RANDOMIZER_AVAILABLE == TRUE
         FlagSet(I_EXP_SHARE_FLAG);
         FlagSet(B_AFFECTION_MECHANICS);
-        // VarSet(VAR_EXP_CAP_TYPE, 0);
-        // FlagSet(DN_FLAG_DEXNAV_GET);
         EnableNationalPokedex();
     #endif
 }

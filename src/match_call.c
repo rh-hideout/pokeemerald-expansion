@@ -1789,14 +1789,14 @@ static void PopulateSpeciesFromTrainerLocation(int matchCallId, u8 *destStr)
 
     if (gWildMonHeaders[i].mapGroup != MAP_GROUP(MAP_UNDEFINED)) // ??? This check is nonsense.
     {
-        // while (gWildMonHeaders[i].mapGroup != MAP_GROUP(MAP_UNDEFINED))
-        // {
-        //     if (gWildMonHeaders[i].mapGroup == gRematchTable[matchCallId].mapGroup
-        //      && gWildMonHeaders[i].mapNum == gRematchTable[matchCallId].mapNum)
-        //         break;
+        while (gWildMonHeaders[i].mapGroup != MAP_GROUP(MAP_UNDEFINED))
+        {
+            if (gWildMonHeaders[i].mapGroup == gRematchTable[matchCallId].mapGroup
+             && gWildMonHeaders[i].mapNum == gRematchTable[matchCallId].mapNum)
+                break;
 
-        //     i++;
-        // }
+            i++;
+        }
 
         if (gWildMonHeaders[i].mapGroup != MAP_GROUP(MAP_UNDEFINED))
         {
@@ -1853,9 +1853,12 @@ static void PopulateSpeciesFromTrainerParty(int matchCallId, u8 *destStr)
     partySize = GetTrainerPartySizeFromId(trainerId);
     if (party != NULL && partySize > 0)
     {
-        u32 monId;
-        monId = Random() % partySize;
-        const struct TrainerMon mon = RandomizeTrainerMon(GetTrainerStructFromId(trainerId), partySize, monId, trainerId);
+        const struct TrainerMon mon = RandomizeTrainerMon(
+            GetTrainerStructFromId(trainerId),
+            partySize,
+            Random() % partySize,
+            trainerId
+        );
 
         speciesName = GetSpeciesName(mon.species);
     }

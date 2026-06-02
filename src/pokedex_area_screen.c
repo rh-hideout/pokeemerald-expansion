@@ -480,10 +480,10 @@ static bool8 MonListHasSpecies(const struct WildEncounterTypes *info, enum Speci
     {
         for (i = 0; i < size; i++)
         {
-            u16 curSpecies = RandomizeWildEncounter(
-                wildMonInfo->wildPokemon[i].species, 0, 0, area, i);
-            if (curSpecies == species)
+            const u16 curSpecies = RandomizeWildEncounter( wildMonInfo->wildPokemon[i].species, 0, 0, area, i);
+            if (curSpecies == species){
                 return TRUE;
+            }
         }
     }
     return FALSE;
