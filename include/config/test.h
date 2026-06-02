@@ -1128,6 +1128,10 @@
 #define P_FAMILY_TERAPAGOS               TRUE
 #undef P_FAMILY_PECHARUNT
 #define P_FAMILY_PECHARUNT               TRUE
+#undef RANDOMIZER_AVAILABLE
+
+// Disable randomizer for tests
+#define RANDOMIZER_AVAILABLE             FALSE
 
 // Vars
 #undef B_VAR_DIFFICULTY

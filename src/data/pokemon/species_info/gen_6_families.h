@@ -7332,7 +7332,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         )
     #endif //OW_BATTLE_ONLY_FORMS
         .isMythical = TRUE,
-        .isGigantamax = TRUE,
+        .isMegaEvolution = TRUE,
         .randomizerMode = MON_RANDOMIZER_INVALID,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,

@@ -4,13 +4,12 @@
 // Global control. If FALSE, no randomizer functionality will be enabled.
 // If this is TRUE, that doesn't necessarily mean that a particular part of the randomizer
 // will be enabled.
-#define RANDOMIZER_AVAILABLE                   TRUE
-#define RANDOMIZER_SEED_IS_TRAINER_ID          TRUE
+#define RANDOMIZER_AVAILABLE                   FALSE
 
 #if RANDOMIZER_AVAILABLE == TRUE
 
 // If TRUE, the trainer ID (including secret ID) will be the randomizer seed.
-#define RZ_TRAINER_ID_IS_SEED       TRUE
+#define RANDOMIZER_SEED_IS_TRAINER_ID          TRUE
 
 // If the longest evolutionary chain (excluding babies) is longer than this,
 // the dynamic evolutionary stage randomization table will be generated
@@ -19,7 +18,7 @@
 
 #define RANDOMIZER_MAX_TM           ITEM_TM50
 
-#define RANDOMIZER_MON_MODE MON_RANDOM
+#define RANDOMIZER_MON_MODE         MON_RANDOM
 
 // Vars and features
 
