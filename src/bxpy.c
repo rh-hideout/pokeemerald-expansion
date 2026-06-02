@@ -1137,7 +1137,7 @@ static const struct WindowTemplate sBXPYWindows[] =
         .bg = BG1_BXPY_INFO,
         .tilemapLeft = 2,
         .tilemapTop = 0,
-        .width = 11,
+        .width = 12,
         .height = 18,
         .paletteNum = BXPY_PALETTE_TEXT_ID,
     },
@@ -1875,8 +1875,8 @@ static void BXPY_PrintItemName(enum BXPYWindows windowId, struct Pokemon *mon, e
 
 static void BXPY_PrintLevel(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex)
 {
-    u32 x = (side == B_SIDE_PLAYER) ? 68 : 8;
-    u32 y = (side == B_SIDE_PLAYER) ? 7 + (partyMonIndex * 23) : 0 + (partyMonIndex * 22);
+    u32 x = (side == B_SIDE_PLAYER) ? 74 : 6;
+    u32 y = (side == B_SIDE_PLAYER) ? 2 + (partyMonIndex * 24) : 6 + (partyMonIndex * 22);
     u32 fontId = FONT_BXPY_LEVEL;
     u32 letterSpacing = GetFontAttribute(fontId, FONTATTR_LETTER_SPACING);
     u32 lineSpacing = GetFontAttribute(fontId, FONTATTR_LINE_SPACING);
