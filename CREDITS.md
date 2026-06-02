@@ -120,7 +120,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/e
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+This project follows the [all-contributors](https://github.com/all-contributors/allcontributors.org) specification. Contributions of any kind welcome!
 
 ## Other Credits
 ### Mega Evolution Overworld Sprite Credits:
