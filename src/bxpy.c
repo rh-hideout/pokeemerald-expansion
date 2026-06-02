@@ -1250,7 +1250,7 @@ static const struct BXPYSpriteSheet sBXPYSpriteSheets[BXPY_SPRITEID_COUNT] =
     {
         {
             .data = (const u16[])INCBIN_U16("graphics/bxpy/selected.4bpp"),
-            .size = TILE_OFFSET_4BPP(4),
+            .size = TILE_OFFSET_4BPP(8),
             .tag = BXPY_SPRITETAG_SELECTED_0,
         },
     },
@@ -1258,7 +1258,7 @@ static const struct BXPYSpriteSheet sBXPYSpriteSheets[BXPY_SPRITEID_COUNT] =
     {
         {
             .data = (const u16[])INCBIN_U16("graphics/bxpy/selected.4bpp"),
-            .size = TILE_OFFSET_4BPP(4),
+            .size = TILE_OFFSET_4BPP(8),
             .tag = BXPY_SPRITETAG_SELECTED_1,
         },
     },
@@ -1266,7 +1266,7 @@ static const struct BXPYSpriteSheet sBXPYSpriteSheets[BXPY_SPRITEID_COUNT] =
     {
         {
             .data = (const u16[])INCBIN_U16("graphics/bxpy/selected.4bpp"),
-            .size = TILE_OFFSET_4BPP(4),
+            .size = TILE_OFFSET_4BPP(8),
             .tag = BXPY_SPRITETAG_SELECTED_2,
         },
     },
@@ -1274,7 +1274,7 @@ static const struct BXPYSpriteSheet sBXPYSpriteSheets[BXPY_SPRITEID_COUNT] =
     {
         {
             .data = (const u16[])INCBIN_U16("graphics/bxpy/selected.4bpp"),
-            .size = TILE_OFFSET_4BPP(4),
+            .size = TILE_OFFSET_4BPP(8),
             .tag = BXPY_SPRITETAG_SELECTED_3,
         },
     },
@@ -1282,7 +1282,7 @@ static const struct BXPYSpriteSheet sBXPYSpriteSheets[BXPY_SPRITEID_COUNT] =
     {
         {
             .data = (const u16[])INCBIN_U16("graphics/bxpy/selected.4bpp"),
-            .size = TILE_OFFSET_4BPP(4),
+            .size = TILE_OFFSET_4BPP(8),
             .tag = BXPY_SPRITETAG_SELECTED_4,
         },
     },
@@ -1290,7 +1290,7 @@ static const struct BXPYSpriteSheet sBXPYSpriteSheets[BXPY_SPRITEID_COUNT] =
     {
         {
             .data = (const u16[])INCBIN_U16("graphics/bxpy/selected.4bpp"),
-            .size = TILE_OFFSET_4BPP(4),
+            .size = TILE_OFFSET_4BPP(8),
             .tag = BXPY_SPRITETAG_SELECTED_5,
         },
     },
@@ -1313,7 +1313,15 @@ static const struct BXPYSpriteSheet sBXPYSpriteSheets[BXPY_SPRITEID_COUNT] =
             .data = (const u16[])INCBIN_U16("graphics/bxpy/highlight.gbapal"),
             .tag = BXPY_PALTAG_HIGHLIGHT,
         },
-    }
+    },
+    [BXPY_SPRITEID_PLAYER_SELECTED_TAIL_0] =
+    {
+        {
+            .data = (const u16[])INCBIN_U16("graphics/bxpy/selected_tail.4bpp"),
+            .size = TILE_OFFSET_4BPP(8),
+            .tag = BXPY_SPRITETAG_SELECTED_TAIL,
+        },
+    },
 };
 
 static void BXPY_VBlankCB(void)
@@ -1655,6 +1663,24 @@ static void BXPY_DisplayParty(enum BattleSide side, bool32 cursorMove)
     CopyWindowToVram(windowId, COPYWIN_GFX);
 }
 
+static const union AnimCmd sAnim_Selected[] =
+{
+    ANIMCMD_FRAME(BXPY_SELECTED_FRAME_0,4),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd sAnim_SelectedHighlight[] =
+{
+    ANIMCMD_FRAME(BXPY_SELECTED_FRAME_1,4),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd * const sSpriteAnimTable_Selected[] =
+{
+    sAnim_Selected,
+    sAnim_SelectedHighlight,
+};
+
 static void BXPY_CreateSelectionSprite(u32 partyMonIndex, enum BattleSide side)
 {
     if (side == B_SIDE_OPPONENT)
@@ -1669,16 +1695,48 @@ static void BXPY_CreateSelectionSprite(u32 partyMonIndex, enum BattleSide side)
 
     TempSpriteTemplate.tileTag = BXPY_SPRITETAG_SELECTED_0 + partyMonIndex;
     TempSpriteTemplate.callback = SpriteCB_SelectionSprite;
-    TempSpriteTemplate.paletteTag = BXPY_PALTAG_SPRITE;
+    TempSpriteTemplate.paletteTag = BXPY_PALTAG_HIGHLIGHT;
+    TempSpriteTemplate.anims = sSpriteAnimTable_Selected;
 
-    u32 y = 12 + (23 * partyMonIndex);
-    u32 spriteId = CreateSprite(&TempSpriteTemplate, 134, y, 0);
+    u32 y = 10 + (24 * partyMonIndex);
+    u32 spriteId = CreateSprite(&TempSpriteTemplate, 15, y, 0);
     gSprites[spriteId].data[1] = spriteId;
     gSprites[spriteId].data[2] = partyMonIndex;
     gSprites[spriteId].oam.shape = SPRITE_SHAPE(16x16);
     gSprites[spriteId].oam.size = SPRITE_SIZE(16x16);
     gSprites[spriteId].invisible = FALSE;
     gSprites[spriteId].oam.priority = 0;
+    gSprites[spriteId].subpriority = 0;
+
+    BXPY_SetSpriteId(spriteIndex,spriteId);
+}
+
+static void BXPY_CreateSelectionSpriteTail(u32 partyMonIndex, enum BattleSide side)
+{
+    if (side == B_SIDE_OPPONENT)
+        return;
+
+    u32 spriteIndex = (BXPY_SPRITEID_PLAYER_SELECTED_TAIL_0 + partyMonIndex);
+
+    if (BXPY_GetSpriteId(spriteIndex) != SPRITE_NONE)
+        return;
+
+    struct SpriteTemplate TempSpriteTemplate = gDummySpriteTemplate;
+
+    TempSpriteTemplate.tileTag = BXPY_SPRITETAG_SELECTED_TAIL;
+    TempSpriteTemplate.callback = SpriteCB_SelectionSprite;
+    TempSpriteTemplate.paletteTag = BXPY_PALTAG_HIGHLIGHT;
+    TempSpriteTemplate.anims = sSpriteAnimTable_Selected;
+
+    u32 y = 11 + (24 * partyMonIndex);
+    u32 spriteId = CreateSprite(&TempSpriteTemplate, 129, y, 0);
+    gSprites[spriteId].data[1] = spriteId;
+    gSprites[spriteId].data[2] = partyMonIndex;
+    gSprites[spriteId].data[3] = TRUE;
+    gSprites[spriteId].oam.shape = SPRITE_SHAPE(16x16);
+    gSprites[spriteId].oam.size = SPRITE_SIZE(16x16);
+    gSprites[spriteId].invisible = FALSE;
+    gSprites[spriteId].oam.priority = 2;
     gSprites[spriteId].subpriority = 0;
 
     BXPY_SetSpriteId(spriteIndex,spriteId);
@@ -1696,8 +1754,13 @@ static void SpriteCB_SelectionSprite(struct Sprite *sprite)
     bool32 isAlreadySelected = BXPY_IsMonAlreadySelected(mon);
     sprite->invisible = (isAlreadySelected == FALSE);
 
-    u32 spriteId = sprite->data[1];
+    u32 anim = (BXPY_GetPosition() != mon) ? BXPY_SELECTED : BXPY_SELECTED_HIGHLIGHT;
+        StartSpriteAnimIfDifferent(sprite,anim);
 
+    if (sprite->data[3])
+        return;
+
+    u32 spriteId = sprite->data[1];
     BXPY_DrawOrderOnSelectionSprite(spriteId,BXPY_GetOrderForMon(mon));
 }
 
@@ -1765,6 +1828,7 @@ static void BXPY_DisplayPartyMonIcons(enum BXPYWindows windowId, struct Pokemon 
     BXPY_PrintMonIcon(windowId, mon, side, partyMonIndex,species);
     BXPY_PrintHP(windowId, mon, side, partyMonIndex);
     BXPY_CreateSelectionSprite(partyMonIndex, side);
+    BXPY_CreateSelectionSpriteTail(partyMonIndex, side);
 }
 
 static void BXPY_PrintNickname(enum BXPYWindows windowId, struct Pokemon *mon, enum BattleSide side, u32 partyMonIndex)
@@ -1772,8 +1836,8 @@ static void BXPY_PrintNickname(enum BXPYWindows windowId, struct Pokemon *mon, e
     if (side == B_SIDE_OPPONENT)
         return;
 
-    u32 x = 2;
-    u32 y = 7 + (partyMonIndex * 23);
+    u32 x = 8;
+    u32 y = 2 + (partyMonIndex * 24);
     u32 fontId = FONT_BXPY_SPECIES_NAME;
     u32 letterSpacing = GetFontAttribute(fontId, FONTATTR_LETTER_SPACING);
     u32 lineSpacing = GetFontAttribute(fontId, FONTATTR_LINE_SPACING);
@@ -1795,8 +1859,8 @@ static void BXPY_PrintItemName(enum BXPYWindows windowId, struct Pokemon *mon, e
     if (heldItem == ITEM_NONE)
         return;
 
-    u32 x = 2;
-    u32 y = 17 + (partyMonIndex * 23);
+    u32 x = 8;
+    u32 y = 12 + (partyMonIndex * 24);
     u32 fontId = FONT_BXPY_SPECIES_NAME;
     u32 letterSpacing = GetFontAttribute(fontId, FONTATTR_LETTER_SPACING);
     u32 lineSpacing = GetFontAttribute(fontId, FONTATTR_LINE_SPACING);
@@ -1903,6 +1967,7 @@ static void BXPY_PrintMonIcon(enum BXPYWindows windowId, struct Pokemon *mon, en
 
     u32 spriteId = CreateMonIcon(species,SpriteCB_MonIcon,x,y,0,0);
     u32 spriteIdStart = (side == B_SIDE_PLAYER) ? BXPY_SPRITEID_PLAYER_MON_0 : BXPY_SPRITEID_ENEMY_MON_0;
+    gSprites[spriteId].subpriority = 1;
     BXPY_SetSpriteId(spriteIdStart + partyMonIndex,spriteId);
 }
 
@@ -2124,6 +2189,7 @@ static void BXPY_PrintHP(enum BXPYWindows windowId, struct Pokemon *mon, enum Ba
     gSprites[spriteId].oam.shape = SPRITE_SHAPE(32x8);
     gSprites[spriteId].oam.size = SPRITE_SIZE(32x8);
     gSprites[spriteId].oam.priority = 1;
+    gSprites[spriteId].subpriority = 0;
 
     StartSpriteAnimIfDifferent(&gSprites[spriteId],percent);
     BXPY_SetSpriteId(BXPY_SPRITEID_PLAYER_HP_0 + partyMonIndex,spriteId);
@@ -2324,7 +2390,7 @@ static void BXPY_CreateHighlightSprite(void)
         gSprites[spriteId].oam.shape = SPRITE_SHAPE(64x32);
         gSprites[spriteId].oam.size = SPRITE_SIZE(64x32);
         gSprites[spriteId].oam.priority = 2;
-        gSprites[spriteId].subpriority = 0;
+        gSprites[spriteId].subpriority = 1;
 
         BXPY_SetSpriteId(BXPY_SPRITEID_HIGHLIGHT_LEFT + highlightIndex,spriteId);
         StartSpriteAnim(&gSprites[spriteId],highlightIndex);
