@@ -1385,7 +1385,8 @@ static void SetScheduleBgs(enum BXPYBackgrounds backgroundId)
 }
 
 static const u16 bxpyPalettesText[] = INCBIN_U16("graphics/bxpy/palettes/text.gbapal");
-static const u16 bxpyBackgroundPalette[] = INCBIN_U16("graphics/bxpy/wallpaper.gbapal");
+static const u16 bxpyPartyBackgroundPalette[] = INCBIN_U16("graphics/bxpy/partyBg.gbapal");
+static const u16 bxpyWallpaperPalette[] = INCBIN_U16("graphics/bxpy/wallpaper.gbapal");
 
 static bool8 AreTilesOrTilemapEmpty(enum BXPYBackgrounds backgroundId)
 {
@@ -1425,7 +1426,8 @@ static void LoadGraphics(void)
 static void LoadBXPYPalettes(void)
 {
     LoadMonIconPalettes();
-    LoadPalette(bxpyBackgroundPalette, BXPY_PALETTE_BG_SLOT, PLTT_SIZE_4BPP);
+    LoadPalette(bxpyPartyBackgroundPalette, BXPY_PALETTE_PARTYBG_SLOT, PLTT_SIZE_4BPP*2);
+    LoadPalette(bxpyWallpaperPalette, BXPY_PALETTE_WALLPAPER_SLOT, PLTT_SIZE_4BPP);
     LoadPalette(bxpyPalettesText, BXPY_PALETTE_TEXT_SLOT, PLTT_SIZE_4BPP);
 }
 
@@ -1598,7 +1600,7 @@ static void BXPY_CreateCursorSprite(void)
     TempSpriteTemplate.callback = SpriteCB_BXPYCursor;
     TempSpriteTemplate.paletteTag = BXPY_PALTAG_SPRITE;
 
-    u32 spriteId = CreateSprite(&TempSpriteTemplate, 6, 15, 0);
+    u32 spriteId = CreateSprite(&TempSpriteTemplate, 6, 16, 0);
     gSprites[spriteId].oam.shape = SPRITE_SHAPE(16x16);
     gSprites[spriteId].oam.size = SPRITE_SIZE(16x16);
     gSprites[spriteId].invisible = FALSE;
