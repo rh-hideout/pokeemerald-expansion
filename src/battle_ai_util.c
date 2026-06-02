@@ -2547,7 +2547,7 @@ bool32 ShouldBeatUpForJustified(enum BattlerId battlerAtk, enum BattlerId battle
      || moveType != TYPE_DARK
      || IsBattleMoveStatus(move)
      || DoesBattlerIgnoreAbilityChecks(battlerAtk, aiData->abilities[battlerAtk], move)
-     || DoesSubstituteBlockMove(battlerAtk, battlerAtkPartner, move))
+     || IsSubstituteProtected(battlerAtk, battlerAtkPartner, aiData->abilities[battlerAtk], move))
         return FALSE;
 
     return (HasMoveWithCategory(battlerAtkPartner, DAMAGE_CATEGORY_PHYSICAL)
@@ -2561,7 +2561,7 @@ bool32 ShouldBeatUpForRageFist(enum BattlerId battlerAtk, enum BattlerId battler
         return FALSE;
 
     if (IsBattleMoveStatus(move)
-     || DoesSubstituteBlockMove(battlerAtk, battlerAtkPartner, move)
+     || IsSubstituteProtected(battlerAtk, battlerAtkPartner, aiData->abilities[battlerAtk], move)
      || GetBattlerPartyState(battlerAtkPartner)->timesGotHit >= 4) // Power is already high beyond this.
         return FALSE;
 
@@ -2595,7 +2595,7 @@ bool32 ShouldTriggerSpicySprayForBurn(enum BattlerId battlerAtk, enum Move move,
     if (noOfHitsToKOPartner == 0
      || IsSelfSacrificeEffect(move)
      || GetMoveEffect(move) == EFFECT_MAX_HP_50_RECOIL
-     || DoesSubstituteBlockMove(battlerAtk, partner, move))
+     || IsSubstituteProtected(battlerAtk, partner, aiData->abilities[battlerAtk], move))
         return FALSE;
 
     enum HoldEffect holdEffect = aiData->holdEffects[battlerAtk];
