@@ -2594,6 +2594,7 @@ bool32 ShouldTriggerSpicySprayForBurn(enum BattlerId battlerAtk, enum Move move,
 
     if (noOfHitsToKOPartner == 0
      || IsSelfSacrificeEffect(move)
+     || GetMoveEffect(move) == EFFECT_MAX_HP_50_RECOIL
      || DoesSubstituteBlockMove(battlerAtk, partner, move))
         return FALSE;
 
