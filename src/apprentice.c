@@ -69,10 +69,10 @@ struct ApprenticePartyMovesData
 
 struct ApprenticeQuestionData
 {
-    u16 speciesId;
-    u16 altSpeciesId;
-    u16 move1;
-    u16 move2;
+    enum Species speciesId;
+    enum Species altSpeciesId;
+    enum Move move1;
+    enum Move move2;
 };
 
 // IWRAM common

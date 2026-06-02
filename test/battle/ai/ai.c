@@ -427,7 +427,7 @@ AI_SINGLE_BATTLE_TEST("First Impression is preferred on the first turn of the sp
 
 AI_SINGLE_BATTLE_TEST("First Impression is not chosen if it's blocked by certain abilities")
 {
-    u16 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_BRUXISH; ability = ABILITY_DAZZLING; }

@@ -199,7 +199,7 @@ SINGLE_BATTLE_TEST("Strong winds block weather-setting moves")
 SINGLE_BATTLE_TEST("Strong winds prevent other weather abilities")
 {
     enum Ability ability;
-    u16 species;
+    enum Species species;
     PARAMETRIZE { ability = ABILITY_DROUGHT;      species = SPECIES_NINETALES; }
     PARAMETRIZE { ability = ABILITY_DRIZZLE;      species = SPECIES_POLITOED; }
     PARAMETRIZE { ability = ABILITY_SAND_STREAM;  species = SPECIES_HIPPOWDON; }

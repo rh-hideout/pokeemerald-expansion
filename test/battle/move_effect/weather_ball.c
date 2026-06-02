@@ -100,7 +100,7 @@ SINGLE_BATTLE_TEST("Weather Ball doubles its power and turns to an Ice-type move
 SINGLE_BATTLE_TEST("Weather Ball doesn't double its power in Sunlight or Rain if Cloud Nine/Air Lock is on the field", s16 damage)
 {
     enum Move setupMove;
-    u16 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_GOLDUCK;  ability = ABILITY_CLOUD_NINE; setupMove = MOVE_CELEBRATE; }
@@ -131,7 +131,7 @@ SINGLE_BATTLE_TEST("Weather Ball doesn't double its power in Sunlight or Rain if
 SINGLE_BATTLE_TEST("Weather Ball doesn't change type in Sunlight or Rain if Cloud Nine/Air Lock is on the field")
 {
     enum Move setupMove;
-    u16 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_GOLDUCK;  ability = ABILITY_CLOUD_NINE; setupMove = MOVE_SUNNY_DAY; }

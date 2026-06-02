@@ -1177,7 +1177,7 @@ static void LoadMultiPartnerCandidatesData(void)
     enum FrontierLevelMode lvlMode;
     u32 battleMode;
     s32 challengeNum;
-    u32 species1, species2;
+    enum Species species1, species2;
     u32 UNUSED level;
     struct ObjectEventTemplate *objEventTemplates;
 

@@ -194,7 +194,7 @@ SINGLE_BATTLE_TEST("Pickpocket activates after Sticky Barb transfers")
 
 SINGLE_BATTLE_TEST("Pickpocket activates after Thief or Covet steals an item")
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_THIEF; }
     PARAMETRIZE { move = MOVE_COVET; }
     GIVEN {
@@ -236,7 +236,7 @@ SINGLE_BATTLE_TEST("Pickpocket activates after Focus Sash is consumed")
 
 SINGLE_BATTLE_TEST("Pickpocket activates after Knock Off, Bug Bite, or Pluck")
 {
-    u16 move;
+    enum Move move;
     PARAMETRIZE { move = MOVE_KNOCK_OFF; }
     PARAMETRIZE { move = MOVE_BUG_BITE; }
     PARAMETRIZE { move = MOVE_PLUCK; }

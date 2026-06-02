@@ -183,8 +183,8 @@ struct AI_SavedBattleMon
 {
     enum Ability ability;
     enum Move moves[MAX_MON_MOVES];
-    u16 heldItem;
-    u16 species:15;
+    enum Item heldItem;
+    enum Species species:15;
     u16 saved:1;
     enum Type types[3];
 };
@@ -513,7 +513,7 @@ struct BattlerState
     u32 canPickupItem:1;
     u32 ateBoost:1;
     u32 wasAboveHalfHp:1; // For Berserk, Emergency Exit, Wimp Out and Anger Shell.
-    u32 commanderSpecies:11;
+    enum Species commanderSpecies:11;
     u32 selectionScriptFinished:1;
     u32 lastMoveTarget:3; // The last target on which each mon used a move, for the sake of Instruct
     // End of Word
@@ -535,7 +535,7 @@ struct PartyState
     u32 transformZeroToHero:1;
     u32 supersweetSyrup:1;
     u32 timesGotHit:5;
-    u32 changedSpecies:11; // For forms when multiple mons can change into the same Pokémon.
+    enum Species changedSpecies:11; // For forms when multiple mons can change into the same Pokémon.
     u32 sentOut:1;
     u32 isKnockedOff:1;
     u32 padding:8;

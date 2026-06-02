@@ -3369,7 +3369,7 @@ static void DebugAction_Give_PokemonSimple(u8 taskId)
     CopyWindowToVram(windowId, COPYWIN_FULL);
 
     // Display initial Pokémon
-    u32 species;
+    enum Species species;
     if (!IsSpeciesEnabled(sDebugMonData->species))
         species = SPECIES_NONE;
     else
@@ -3411,7 +3411,7 @@ static void DebugAction_Give_PokemonComplex(u8 taskId)
     CopyWindowToVram(windowId, COPYWIN_FULL);
 
     // Display initial Pokémon
-    u32 species;
+    enum Species species;
     if (!IsSpeciesEnabled(sDebugMonData->species))
         species = SPECIES_NONE;
     else
@@ -3453,7 +3453,7 @@ static void DebugAction_Give_NewEgg(u8 taskId)
     CopyWindowToVram(windowId, COPYWIN_FULL);
 
     // Display initial Pokémon
-    u32 species;
+    enum Species species;
     if (!IsSpeciesEnabled(gTasks[taskId].tInput))
         species = SPECIES_NONE;
     else
