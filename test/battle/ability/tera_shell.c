@@ -42,9 +42,9 @@ SINGLE_BATTLE_TEST("Tera Shell makes all hits of multi-hit moves against Terapag
     } SCENE {
         MESSAGE("The opposing Wobbuffet used Double Hit!");
         ABILITY_POPUP(player, ABILITY_TERA_SHELL);
-        MESSAGE("Terapagos made its shell gleam! It's distorting type matchups!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DOUBLE_HIT, opponent);
         HP_BAR(player, captureDamage: &firstHit);
+        NOT ABILITY_POPUP(player, ABILITY_TERA_SHELL);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DOUBLE_HIT, opponent);
         HP_BAR(player, captureDamage: &secondHit);
         MESSAGE("It's not very effective…");

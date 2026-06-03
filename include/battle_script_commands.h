@@ -24,6 +24,7 @@ struct PickupItem
 
 bool32 HasBattlerActedThisTurn(enum BattlerId battler);
 u32 GetBattlerTurnOrderNum(enum BattlerId battler);
+u32 GetBattlerRawSpeedOrder(enum BattlerId battler);
 bool32 NoAliveMonsForBattlerSide(enum BattlerId battler);
 bool32 NoAliveMonsForPlayer(void);
 bool32 NoAliveMonsForEitherParty(void);

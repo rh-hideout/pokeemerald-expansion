@@ -2239,7 +2239,7 @@ s32 ProtectChecks(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Mov
     }
 
     if (GetMoveProtectMethod(move) != PROTECT_MAX_GUARD
-     && IsUnseenFistContactMove(battlerDef, battlerAtk, predictedMove))
+     && AI_CanContactBypassProtect(battlerDef, battlerAtk, predictedMove))
     {
         return WORST_EFFECT;
     }
@@ -4982,11 +4982,11 @@ bool32 AI_MoveMakesContact(enum BattlerId battlerAtk, enum BattlerId battlerDef,
     return TRUE;
 }
 
-bool32 IsUnseenFistContactMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
+bool32 AI_CanContactBypassProtect(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
 {
     if (move == MOVE_NONE || move == MOVE_UNAVAILABLE)
         return FALSE;
-    if (gAiLogicData->abilities[battlerAtk] != ABILITY_UNSEEN_FIST || gAiLogicData->abilities[battlerAtk] == ABILITY_PIERCING_DRILL)
+    if (gAiLogicData->abilities[battlerAtk] != ABILITY_UNSEEN_FIST && gAiLogicData->abilities[battlerAtk] != ABILITY_PIERCING_DRILL)
         return FALSE;
     if (GetMoveEffect(move) == EFFECT_SHELL_SIDE_ARM)
     {
@@ -6238,7 +6238,7 @@ bool32 IsPartyMonPlannedToBeSwitchedInByPartner(u32 partyIndex, enum BattlerId b
 static u32 AI_GetAdjustedStatStage(enum BattlerId battler, enum Move move, s32 stage)
 {
     if (GetMoveEffect(move) == EFFECT_GROWTH
-     && IsBattlerWeatherAffected(gAiLogicData->holdEffects[battler], AI_GetWeather(), B_WEATHER_SUN))
+     && GetAttackerWeather(gAiLogicData->holdEffects[battler], gAiLogicData->abilities[battler], AI_GetWeather()) & B_WEATHER_SUN)
         stage = 2;
 
     switch (gAiLogicData->abilities[battler])
@@ -6342,7 +6342,7 @@ s32 GetFoeStatChangeScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, 
 
     for (u32 i = 0; i < numAdditionalEffects; i++)
     {
-        const struct AdditionalEffect *effect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
+        const struct AdditionalEffect *effect = GetMoveAdditionalEffectById(move, gBattleStruct->additionalEffectsCounter);
 
         for (enum Stat stat = STAT_ATK; stat < NUM_STATS; stat++)
         {

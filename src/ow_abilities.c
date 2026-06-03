@@ -83,9 +83,9 @@ static UNUSED bool32 IsTrueIfUndiscoveredEggGroup(enum Species species)
 
 bool32 DoesLeadingMonHaveAbilityEffect(const enum Ability *abilityArray)
 {
-    if (GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_SANITY_IS_EGG))
+    if (GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SANITY_IS_EGG))
         return FALSE;
-    enum Ability leadingMonAbility = GetMonAbility(&gParties[B_TRAINER_0][0]);
+    enum Ability leadingMonAbility = GetMonAbility(&gParties[B_TRAINER_PLAYER][0]);
     for (u32 i = 0; abilityArray[i] != ABILITY_NONE; i++)
     {
         if (leadingMonAbility == abilityArray[i])
@@ -96,11 +96,11 @@ bool32 DoesLeadingMonHaveAbilityEffect(const enum Ability *abilityArray)
 
 UNUSED bool32 DoesPartyMemberHaveAbilityEffect(const enum Ability *abilityArray)
 {
-    for (u32 j = 0; j < gPartiesCount[B_TRAINER_0]; j++)
+    for (u32 j = 0; j < gPartiesCount[B_TRAINER_PLAYER]; j++)
     {
-        if (GetMonData(&gParties[B_TRAINER_0][j], MON_DATA_SANITY_IS_EGG))
+        if (GetMonData(&gParties[B_TRAINER_PLAYER][j], MON_DATA_SANITY_IS_EGG))
             continue;
-        enum Ability monAbility = GetMonAbility(&gParties[B_TRAINER_0][j]);
+        enum Ability monAbility = GetMonAbility(&gParties[B_TRAINER_PLAYER][j]);
         for (u32 i = 0; abilityArray[i] != ABILITY_NONE; i++)
         {
             if (monAbility == abilityArray[i])
@@ -116,7 +116,7 @@ u32 GetSynchronizedNature(enum GeneratedMonOrigin origin, enum Species species)
         return NATURE_RANDOM;
     if (!(sSynchronizeModes[origin](species)))
         return NATURE_RANDOM;
-    return GetMonData(&gParties[B_TRAINER_0][0], MON_DATA_PERSONALITY) % NUM_NATURES;
+    return GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_PERSONALITY) % NUM_NATURES;
 }
 
 u32 GetSynchronizedGender(enum GeneratedMonOrigin origin, enum Species species)
@@ -125,7 +125,7 @@ u32 GetSynchronizedGender(enum GeneratedMonOrigin origin, enum Species species)
         return MON_GENDER_RANDOM;
     if (!(sCuteCharmModes[origin](species)))
         return MON_GENDER_RANDOM;
-    u8 leadingMonGender = GetMonGender(&gParties[B_TRAINER_0][0]);
+    u8 leadingMonGender = GetMonGender(&gParties[B_TRAINER_PLAYER][0]);
     // misses mon is genderless check, although no genderless mon can have cute charm as ability
     if (leadingMonGender == MON_FEMALE)
         return MON_MALE;

@@ -396,6 +396,7 @@ extern const u8 BattleScript_AffectionBasedStatusHeal[];
 extern const u8 BattleScript_AffectionBasedEndurance[];
 extern const u8 BattleScript_SymbiosisActivates[];
 extern const u8 BattleScript_MultiHitPrintStrings[];
+extern const u8 BattleScript_BattlerAvoidedMultiHit[];
 extern const u8 BattleScript_RemoveFireType[];
 extern const u8 BattleScript_AbilityStatChange[];
 extern const u8 BattleScript_DefiantActivates[];
@@ -497,7 +498,9 @@ extern const u8 BattleScript_SkyDropFlyingType[];
 extern const u8 BattleScript_SkyDropNoTarget[];
 extern const u8 BattleScript_IncreaseStatChangeMessage[];
 extern const u8 BattleScript_DecreaseStatChangeMessage[];
+extern const u8 BattleScript_DecreaseStatChangeMessageMinStat[];
 extern const u8 BattleScript_StatDidntChangeMessagePause[];
+extern const u8 BattleScript_WildBattleVictory[];
 
 // zmoves
 extern const u8 BattleScript_ZMoveActivateDamaging[];
