@@ -30,11 +30,11 @@ DOUBLE_BATTLE_TEST("Delta Stream doesn't activate if there's already strong wind
 DOUBLE_BATTLE_TEST("Strong winds continue as long as there's a Pokémon with Delta Stream on the field")
 {
     GIVEN {
-        PLAYER(SPECIES_RAYQUAZA) { HP(1); Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE, MOVE_SCRATCH); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_RAYQUAZA) { HP(1); Speed(5); Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
+        OPPONENT(SPECIES_RAYQUAZA) { Speed(2); Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA);

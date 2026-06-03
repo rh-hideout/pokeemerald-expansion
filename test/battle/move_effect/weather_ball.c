@@ -99,20 +99,27 @@ SINGLE_BATTLE_TEST("Weather Ball doubles its power and turns to an Ice-type move
 
 SINGLE_BATTLE_TEST("Weather Ball doesn't double its power and stays a Normal-type move in strong winds", s16 damage)
 {
-    enum Ability ability;
+    bool32 strongWinds;
     u16 species;
-    PARAMETRIZE { ability = ABILITY_AIR_LOCK;     species = SPECIES_WOBBUFFET; }
-    PARAMETRIZE { ability = ABILITY_DELTA_STREAM; species = SPECIES_WOBBUFFET; }
-    PARAMETRIZE { ability = ABILITY_DELTA_STREAM; species = SPECIES_GASTLY; }
+    PARAMETRIZE { strongWinds = FALSE; species = SPECIES_WOBBUFFET; }
+    PARAMETRIZE { strongWinds = TRUE;  species = SPECIES_WOBBUFFET; }
+    PARAMETRIZE { strongWinds = TRUE;  species = SPECIES_GASTLY; }
 
     GIVEN {
         ASSUME(GetMoveType(MOVE_WEATHER_BALL) == TYPE_NORMAL);
         ASSUME(GetSpeciesType(SPECIES_GASTLY, 0) == TYPE_GHOST);
-        PLAYER(SPECIES_RAYQUAZA) { Ability(ability); }
+        if (strongWinds)
+            PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE, MOVE_WEATHER_BALL); }
+        else
+            PLAYER(SPECIES_RAYQUAZA) { Ability(ABILITY_AIR_LOCK); Moves(MOVE_WEATHER_BALL); }
         OPPONENT(species);
     } WHEN {
+        if (strongWinds)
+            TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
         TURN { MOVE(player, MOVE_WEATHER_BALL); }
     } SCENE {
+        if (strongWinds)
+            ABILITY_POPUP(player, ABILITY_DELTA_STREAM);
         if (species == SPECIES_GASTLY) {
             NONE_OF {
                 ANIMATION(ANIM_TYPE_MOVE, MOVE_WEATHER_BALL, player);

@@ -92,7 +92,7 @@ SINGLE_BATTLE_TEST("Strong winds prevent Weakness Policy from activating on Flyi
     }
 }
 
-SINGLE_BATTLE_TEST("Strong winds Anticipation still triggers with Strong Winds active")
+SINGLE_BATTLE_TEST("Anticipation still triggers with Strong Winds active")
 {
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_RAYQUAZA_MEGA, 0) == TYPE_DRAGON);
@@ -109,7 +109,7 @@ SINGLE_BATTLE_TEST("Strong winds Anticipation still triggers with Strong Winds a
     }
 }
 
-SINGLE_BATTLE_TEST("Strong winds Anticipation still triggers with Strong Winds active - Inverse Battle")
+SINGLE_BATTLE_TEST("Anticipation still triggers with Strong Winds active - Inverse Battle")
 {
     GIVEN {
         FLAG_SET(B_FLAG_INVERSE_BATTLE);
