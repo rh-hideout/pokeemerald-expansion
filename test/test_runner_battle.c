@@ -542,7 +542,7 @@ static void BattleTest_Run(void *data)
     }
 
     for (i = 0; i < STATE->battlersCount; i++)
-        PushBattlerAction(0, i, RECORDED_BYTE, 0xFF);
+        PushBattlerAction(0, i, RECORDED_BYTE, B_ACTION_NONE);
 
     if (DATA.hasExplicitSpeeds)
     {

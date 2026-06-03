@@ -37,26 +37,29 @@
 
 // Battle Actions
 // These determine what each battler will do in a turn
-#define B_ACTION_USE_MOVE               0
-#define B_ACTION_USE_ITEM               1
-#define B_ACTION_SWITCH                 2
-#define B_ACTION_RUN                    3
-#define B_ACTION_SAFARI_WATCH_CAREFULLY 4
-#define B_ACTION_SAFARI_BALL            5
-#define B_ACTION_SAFARI_POKEBLOCK       6
-#define B_ACTION_SAFARI_GO_NEAR         7
-#define B_ACTION_SAFARI_RUN             8
-#define B_ACTION_WALLY_THROW            9
-#define B_ACTION_EXEC_SCRIPT            10
-#define B_ACTION_TRY_FINISH             11
-#define B_ACTION_FINISHED               12
-#define B_ACTION_CANCEL_PARTNER         12 // when choosing an action
-#define B_ACTION_NOTHING_FAINTED        13 // when choosing an action
-#define B_ACTION_UNK_14                 14
-#define B_ACTION_UNK_15                 15
-#define B_ACTION_DEBUG                  20
-#define B_ACTION_THROW_BALL             21 // R to throw last used ball
-#define B_ACTION_NONE                   0xFF
+enum BattleAction
+{
+    B_ACTION_USE_MOVE,
+    B_ACTION_USE_ITEM,
+    B_ACTION_SWITCH,
+    B_ACTION_RUN,
+    B_ACTION_SAFARI_WATCH_CAREFULLY,
+    B_ACTION_SAFARI_BALL,
+    B_ACTION_SAFARI_POKEBLOCK,
+    B_ACTION_SAFARI_GO_NEAR,
+    B_ACTION_SAFARI_RUN,
+    B_ACTION_WALLY_THROW,
+    B_ACTION_EXEC_SCRIPT,
+    B_ACTION_TRY_FINISH,
+    B_ACTION_FINISHED,
+    B_ACTION_CANCEL_PARTNER = B_ACTION_FINISHED, // when choosing an action
+    B_ACTION_NOTHING_FAINTED, // when choosing an action
+    B_ACTION_UNK_14,
+    B_ACTION_UNK_15,
+    B_ACTION_DEBUG = 20,
+    B_ACTION_THROW_BALL, // R to throw last used ball
+    B_ACTION_NONE = 0xFF
+};
 
 #define BATTLE_BUFFER_LINK_SIZE 0x1000
 
