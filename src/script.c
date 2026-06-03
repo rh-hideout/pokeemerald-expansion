@@ -83,9 +83,6 @@ void StopScript(struct ScriptContext *ctx)
 
 bool8 RunScriptCommand(struct ScriptContext *ctx)
 {
-    if (ctx->mode == SCRIPT_MODE_STOPPED)
-        return FALSE;
-
     switch (ctx->mode)
     {
     case SCRIPT_MODE_STOPPED:
