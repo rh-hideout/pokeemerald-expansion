@@ -4512,7 +4512,10 @@ static void SetMonTypeIcons(void)
     else
     {
         SetTypeSpritePosAndPal(GetSpeciesType(summary->species, 0), 120, 48, SPRITE_ARR_ID_TYPE);
-        if (GetSpeciesType(summary->species, 0) != GetSpeciesType(summary->species, 1))
+        // Start bringXpickY
+        //if (GetSpeciesType(summary->species, 0) != GetSpeciesType(summary->species, 1))
+        if (GetSpeciesType(BXPY_SummaryScreen_TransformSpeciesId(sMonSummaryScreen->mode,summary->species), 0) != GetSpeciesType(BXPY_SummaryScreen_TransformSpeciesId(sMonSummaryScreen->mode,summary->species), 1))
+        // End bringXpickY
         {
             SetTypeSpritePosAndPal(GetSpeciesType(summary->species, 1), 160, 48, SPRITE_ARR_ID_TYPE + 1);
             SetSpriteInvisibility(SPRITE_ARR_ID_TYPE + 1, FALSE);
