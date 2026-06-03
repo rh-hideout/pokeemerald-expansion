@@ -97,7 +97,7 @@ SINGLE_BATTLE_TEST("Weather Ball doubles its power and turns to an Ice-type move
     }
 }
 
-SINGLE_BATTLE_TEST("Weather Ball doesn't double its power and stays a Normal-type move in strong winds", s16 damage)
+DOUBLE_BATTLE_TEST("Weather Ball doesn't double its power and stays a Normal-type move in strong winds", s16 damage)
 {
     bool32 strongWinds;
     u16 species;
@@ -109,25 +109,27 @@ SINGLE_BATTLE_TEST("Weather Ball doesn't double its power and stays a Normal-typ
         ASSUME(GetMoveType(MOVE_WEATHER_BALL) == TYPE_NORMAL);
         ASSUME(GetSpeciesType(SPECIES_GASTLY, 0) == TYPE_GHOST);
         if (strongWinds)
-            PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE, MOVE_WEATHER_BALL); }
+            PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
         else
-            PLAYER(SPECIES_RAYQUAZA) { Ability(ABILITY_AIR_LOCK); Moves(MOVE_WEATHER_BALL); }
+            PLAYER(SPECIES_RAYQUAZA) { Ability(ABILITY_AIR_LOCK); }
+        PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(species);
+        OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         if (strongWinds)
-            TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
-        TURN { MOVE(player, MOVE_WEATHER_BALL); }
+            TURN { MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
+        TURN { MOVE(playerRight, MOVE_WEATHER_BALL, target: opponentLeft); }
     } SCENE {
         if (strongWinds)
-            ABILITY_POPUP(player, ABILITY_DELTA_STREAM);
+            ABILITY_POPUP(playerLeft, ABILITY_DELTA_STREAM);
         if (species == SPECIES_GASTLY) {
             NONE_OF {
-                ANIMATION(ANIM_TYPE_MOVE, MOVE_WEATHER_BALL, player);
-                HP_BAR(opponent);
+                ANIMATION(ANIM_TYPE_MOVE, MOVE_WEATHER_BALL, playerRight);
+                HP_BAR(opponentLeft);
             }
         } else {
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_WEATHER_BALL, player);
-            HP_BAR(opponent, captureDamage: &results[i].damage);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_WEATHER_BALL, playerRight);
+            HP_BAR(opponentLeft, captureDamage: &results[i].damage);
         }
     } FINALLY {
         EXPECT_EQ(results[0].damage, results[1].damage);
