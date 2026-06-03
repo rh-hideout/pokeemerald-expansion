@@ -19,7 +19,7 @@ static const u16 sLotteryPrizes[] =
     ITEM_MASTER_BALL,
 };
 
-static u8 GetMatchingDigits(u16, u32);
+static u8 GetMatchingDigits(u16 winNumber, u32 otId);
 
 #define LOTTERY_CORNER_SALT 0x03007173 // Adress of the lottery corner var in vanilla Emerald
 
