@@ -26,7 +26,7 @@ SINGLE_BATTLE_TEST("Pickup grants an item used by another Pokémon")
 WILD_BATTLE_TEST("Pickup grants an item used by itself in wild battles (Gen9+)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_PICKUP_WILD, GEN_9);
+        WITH_CONFIG(B_PICKUP_WILD, GEN_9);
         PLAYER(SPECIES_ZIGZAGOON) { Ability(ABILITY_PICKUP); MaxHP(100); HP(51); Item(ITEM_SITRUS_BERRY); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -88,7 +88,7 @@ SINGLE_BATTLE_TEST("Pickup doesn't grant an item not used that turn")
         TURN { SWITCH(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         NONE_OF {
             ABILITY_POPUP(player, ABILITY_PICKUP);
             MESSAGE("Zigzagoon found one Sitrus Berry!");

@@ -33,7 +33,7 @@ static void SFC32_Seed(struct Sfc32State *state, u32 seed, u8 stream)
     state->a = state->b = 0;
     state->c = seed;
     state->ctr = stream;
-    for(i = 0; i < 16; i++)
+    for (i = 0; i < 16; i++)
     {
         _SFC32_Next_Stream(state, stream);
     }
@@ -263,4 +263,24 @@ u32 RandomBitIndex(enum RandomTag tag, u32 bits)
     return 0; // This is a little awkward, there are no set bits!
   else
     return setIndexes[RandomUniform(tag, 0, n-1)];
+}
+
+u32 Crc32B (const u8 *data, u32 size)
+{
+   s32 i, j;
+   u32 byte, crc, mask;
+
+   i = 0;
+   crc = 0xFFFFFFFF;
+   for (i = 0; i < size; ++i)
+   {
+        byte = data[i];
+        crc = crc ^ byte;
+        for (j = 7; j >= 0; --j)
+        {
+            mask = -(crc & 1);
+            crc = (crc >> 1) ^ (0xEDB88320 & mask);
+        }
+   }
+   return ~crc;
 }

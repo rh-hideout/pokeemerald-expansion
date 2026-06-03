@@ -136,16 +136,16 @@ MULTI_BATTLE_TEST("Switch-in abilities trigger in Speed Order after post-KO swit
     PARAMETRIZE { spdPlayer1 = 4; spdPlayer2 = 3; spdOpponent1 = 5; spdOpponent2 = 2; }
 
     GIVEN {
-        MULTI_PLAYER(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
-        MULTI_PLAYER(SPECIES_TYRANITAR) { Speed(spdPlayer1); Ability(ABILITY_SAND_STREAM); }
-        MULTI_PARTNER(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
-        MULTI_PARTNER(SPECIES_GYARADOS) { Speed(spdPlayer2); Ability(ABILITY_INTIMIDATE); }
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
-        MULTI_OPPONENT_A(SPECIES_WEEZING_GALAR) { Speed(spdOpponent1); Ability(ABILITY_MISTY_SURGE); }
-        MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
-        MULTI_OPPONENT_B(SPECIES_VULPIX_ALOLA) { Speed(spdOpponent2); Ability(ABILITY_SNOW_WARNING); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
+        PLAYER(SPECIES_TYRANITAR) { Speed(spdPlayer1); Ability(ABILITY_SAND_STREAM); }
+        PARTNER(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
+        PARTNER(SPECIES_GYARADOS) { Speed(spdPlayer2); Ability(ABILITY_INTIMIDATE); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
+        OPPONENT_A(SPECIES_WEEZING_GALAR) { Speed(spdOpponent1); Ability(ABILITY_MISTY_SURGE); }
+        OPPONENT_B(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
+        OPPONENT_B(SPECIES_VULPIX_ALOLA) { Speed(spdOpponent2); Ability(ABILITY_SNOW_WARNING); }
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_EXPLOSION); SEND_OUT(playerLeft, 1); SEND_OUT(opponentLeft, 1); SEND_OUT(playerRight, 4); SEND_OUT(opponentRight, 4); }
+        TURN { MOVE(playerLeft, MOVE_EXPLOSION); SEND_OUT(playerLeft, 1); SEND_OUT(opponentLeft, 1); SEND_OUT(playerRight, 1); SEND_OUT(opponentRight, 1); }
         TURN {}
     } SCENE {
         MESSAGE("Wobbuffet used Explosion!");
@@ -177,16 +177,16 @@ TWO_VS_ONE_BATTLE_TEST("Switch-in abilities trigger in Speed Order after post-KO
     PARAMETRIZE { spdPlayer1 = 4; spdPlayer2 = 3; spdOpponent1 = 5; spdOpponent2 = 2; }
 
     GIVEN {
-        MULTI_PLAYER(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
-        MULTI_PLAYER(SPECIES_TYRANITAR) { Speed(spdPlayer1); Ability(ABILITY_SAND_STREAM); }
-        MULTI_PARTNER(SPECIES_WYNAUT) { HP(1); Speed(1); }
-        MULTI_PARTNER(SPECIES_GYARADOS) { Speed(spdPlayer2); Ability(ABILITY_INTIMIDATE); }
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
-        MULTI_OPPONENT_A(SPECIES_WYNAUT) { HP(1); Speed(1); }
-        MULTI_OPPONENT_A(SPECIES_WEEZING_GALAR) { Speed(spdOpponent1); Ability(ABILITY_MISTY_SURGE); }
-        MULTI_OPPONENT_A(SPECIES_VULPIX_ALOLA) { Speed(spdOpponent2); Ability(ABILITY_SNOW_WARNING); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
+        PLAYER(SPECIES_TYRANITAR) { Speed(spdPlayer1); Ability(ABILITY_SAND_STREAM); }
+        PARTNER(SPECIES_WYNAUT) { HP(1); Speed(1); }
+        PARTNER(SPECIES_GYARADOS) { Speed(spdPlayer2); Ability(ABILITY_INTIMIDATE); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
+        OPPONENT_A(SPECIES_WYNAUT) { HP(1); Speed(1); }
+        OPPONENT_A(SPECIES_WEEZING_GALAR) { Speed(spdOpponent1); Ability(ABILITY_MISTY_SURGE); }
+        OPPONENT_A(SPECIES_VULPIX_ALOLA) { Speed(spdOpponent2); Ability(ABILITY_SNOW_WARNING); }
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_EXPLOSION); SEND_OUT(playerLeft, 1); SEND_OUT(opponentLeft, 2); SEND_OUT(playerRight, 4); SEND_OUT(opponentRight, 3); }
+        TURN { MOVE(playerLeft, MOVE_EXPLOSION); SEND_OUT(playerLeft, 1); SEND_OUT(opponentLeft, 2); SEND_OUT(playerRight, 1); SEND_OUT(opponentRight, 3); }
     } SCENE {
         MESSAGE("Wobbuffet used Explosion!");
         if (spdPlayer1 == 5) {
@@ -217,16 +217,16 @@ ONE_VS_TWO_BATTLE_TEST("Switch-in abilities trigger in Speed Order after post-KO
     PARAMETRIZE { spdPlayer1 = 4; spdPlayer2 = 3; spdOpponent1 = 5; spdOpponent2 = 2; }
 
     GIVEN {
-        MULTI_PLAYER(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
-        MULTI_PLAYER(SPECIES_WYNAUT) { HP(1); Speed(1); }
-        MULTI_PLAYER(SPECIES_TYRANITAR) { Speed(spdPlayer1); Ability(ABILITY_SAND_STREAM); }
-        MULTI_PLAYER(SPECIES_GYARADOS) { Speed(spdPlayer2); Ability(ABILITY_INTIMIDATE); }
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
-        MULTI_OPPONENT_A(SPECIES_WEEZING_GALAR) { Speed(spdOpponent1); Ability(ABILITY_MISTY_SURGE); }
-        MULTI_OPPONENT_B(SPECIES_WYNAUT) { HP(1); Speed(1); }
-        MULTI_OPPONENT_B(SPECIES_VULPIX_ALOLA) { Speed(spdOpponent2); Ability(ABILITY_SNOW_WARNING); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
+        PLAYER(SPECIES_WYNAUT) { HP(1); Speed(1); }
+        PLAYER(SPECIES_TYRANITAR) { Speed(spdPlayer1); Ability(ABILITY_SAND_STREAM); }
+        PLAYER(SPECIES_GYARADOS) { Speed(spdPlayer2); Ability(ABILITY_INTIMIDATE); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
+        OPPONENT_A(SPECIES_WEEZING_GALAR) { Speed(spdOpponent1); Ability(ABILITY_MISTY_SURGE); }
+        OPPONENT_B(SPECIES_WYNAUT) { HP(1); Speed(1); }
+        OPPONENT_B(SPECIES_VULPIX_ALOLA) { Speed(spdOpponent2); Ability(ABILITY_SNOW_WARNING); }
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_EXPLOSION); SEND_OUT(playerLeft, 2); SEND_OUT(opponentLeft, 1); SEND_OUT(playerRight, 3); SEND_OUT(opponentRight, 4); }
+        TURN { MOVE(playerLeft, MOVE_EXPLOSION); SEND_OUT(playerLeft, 2); SEND_OUT(opponentLeft, 1); SEND_OUT(playerRight, 3); SEND_OUT(opponentRight, 1); }
     } SCENE {
         MESSAGE("Wobbuffet used Explosion!");
         if (spdPlayer1 == 5) {

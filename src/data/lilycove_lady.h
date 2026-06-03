@@ -1,11 +1,12 @@
 #include "constants/event_objects.h"
 #include "constants/items.h"
 #include "constants/moves.h"
+#include "constants/species.h"
 
 struct LilycoveContestLadyValues
 {
     u16 monGfxId;
-    u16 monSpecies;
+    enum Species monSpecies;
     const u8 *monName;
     const u8 *categoryName;
     const u8 *contestName;

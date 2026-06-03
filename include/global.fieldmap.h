@@ -11,6 +11,15 @@
 #define MAPGRID_COLLISION_SHIFT  10
 #define MAPGRID_ELEVATION_SHIFT  12
 
+enum
+{
+    ELEVATION_TRANSITION = 0,
+    ELEVATION_SURF = 1,
+    ELEVATION_DEFAULT = 3,
+    ELEVATION_MULTI_LEVEL = 15,
+    ELEVATION_INVALID = 0xFFFF
+};
+
 #define PACK_METATILE(metatileId) PACK(metatileId, MAPGRID_METATILE_ID_SHIFT, MAPGRID_METATILE_ID_MASK)
 #define PACK_COLLISION(collision) PACK(collision, MAPGRID_COLLISION_SHIFT, MAPGRID_COLLISION_MASK)
 #define PACK_ELEVATION(elevation) PACK(elevation, MAPGRID_ELEVATION_SHIFT, MAPGRID_ELEVATION_MASK)
@@ -221,19 +230,22 @@ struct MapHeader
     /* 0x08 */ const u8 *mapScripts;
     /* 0x0C */ const struct MapConnections *connections;
     /* 0x10 */ u16 music;
-    /* 0x14 */ u16 mapLayoutId;
-    /* 0x16 */ mapsec_u8_t regionMapSectionId;
-    /* 0x17 */ u8 cave;
-    /* 0x18 */ u8 weather;
-    /* 0x19 */ u8 mapType;
-    /* 0x12 */ u16 nightMusic;
+    /* 0x12 */ u16 mapLayoutId;
+    /* 0x14 */ mapsec_u8_t regionMapSectionId;
+    /* 0x15 */ u8 cave;
+    /* 0x16 */ u8 weather;
+    /* 0x17 */ u8 mapType;
+    /* 0x18 */ s8 floorNumber;
+    /* 0x19 */ u8 filler_19;
+    /* 0x1B */ u16 nightMusic;
                // fields correspond to the arguments in the map_header_flags macro
-    /* 0x1A */ bool8 allowCycling:1;
+    /* 0x1C */ bool8 allowCycling:1;
                bool8 allowEscaping:1; // Escape Rope and Dig
                bool8 allowRunning:1;
-               bool8 showMapName:5; // the last 4 bits are unused
-                                    // but the 5 bit sized bitfield is required to match
-    /* 0x1B */ u8 battleType;
+               bool8 showMapName:1;
+               bool8 writeSpecialVarIsEffect:1;
+               bool8 unused:3;
+    /* 0x1D */ u8 battleType;
 };
 
 

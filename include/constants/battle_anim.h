@@ -2,6 +2,7 @@
 #define GUARD_CONSTANTS_BATTLE_ANIM_H
 
 #include "battle_anim_scripts.h"
+#include "battle.h"
 
 // Sprites start at 10000 and thus must be subtracted of 10000 to account for the true index.
 #define GET_TRUE_SPRITE_INDEX(i) ((i - ANIM_SPRITES_START))
@@ -452,6 +453,7 @@ enum AnimBattler
 //          127
 //
 #define SOUND_PAN_ATTACKER -64
+#define SOUND_PAN_MIDDLE     0
 #define SOUND_PAN_TARGET    63
 
 // move background ids
@@ -605,7 +607,8 @@ enum AnimBattler
 #define B_ANIM_SAFARI_REACTION          60
 #define B_ANIM_FORM_CHANGE_INSTANT      61
 #define B_ANIM_FORM_CHANGE_DISGUISE     62
-#define NUM_B_ANIMS_GENERAL             63
+#define B_ANIM_HELD_ITEM_BERRY          63
+#define NUM_B_ANIMS_GENERAL             64
 
 // special animations table (sBattleAnims_Special)
 #define B_ANIM_LVL_UP                   0
@@ -691,6 +694,10 @@ enum SpeciesGfxChange
     SPECIES_GFX_CHANGE_GHOST_UNVEIL,
 };
 
+// Surf wave palettes
+#define ANIM_SURF_PAL_SURF           0
+#define ANIM_SURF_PAL_MUDDY_WATER    1
+
 // Flags given to various functions to indicate which palettes to consider.
 // Handled by UnpackSelectedBattlePalettes
 #define F_PAL_BG                  (1 << 0)
@@ -709,5 +716,13 @@ enum SpeciesGfxChange
 // The below are only used by AnimTask_BlendBattleAnimPal to get battler sprite palettes by position rather than by role.
 // It's redundant with F_PAL_BATTLERS, because they're only ever used together to refer to all the battlers at once.
 #define F_PAL_BATTLERS_2  (1 << 7 | 1 << 8 | 1 << 9 | 1 << 10)
+
+enum { SHAKE_BG_X, SHAKE_BG_Y, SHAKE_MON_X, SHAKE_MON_Y };
+enum { SHAKE_MON_ATTACKER, SHAKE_MON_TARGET, SHAKE_MON_BOTH };
+
+//  Max number of tile and palette allocations for battle animations
+//  These values must be even
+#define ANIM_SPRITE_GFX_COUNT 8
+#define ANIM_SPRITE_PAL_COUNT 8
 
 #endif // GUARD_CONSTANTS_BATTLE_ANIM_H

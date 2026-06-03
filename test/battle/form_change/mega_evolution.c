@@ -74,7 +74,7 @@ SINGLE_BATTLE_TEST("Rayquaza can Mega Evolve knowing Dragon Ascent")
 SINGLE_BATTLE_TEST("Mega Evolution doesn't affect turn order (Gen6)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_MEGA_EVO_TURN_ORDER, GEN_6);
+        WITH_CONFIG(B_MEGA_EVO_TURN_ORDER, GEN_6);
         PLAYER(SPECIES_GARDEVOIR) { Item(ITEM_GARDEVOIRITE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -90,7 +90,7 @@ SINGLE_BATTLE_TEST("Mega Evolution doesn't affect turn order (Gen6)")
 SINGLE_BATTLE_TEST("Mega Evolution affects turn order (Gen7+)")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_MEGA_EVO_TURN_ORDER, GEN_7);
+        WITH_CONFIG(B_MEGA_EVO_TURN_ORDER, GEN_7);
         PLAYER(SPECIES_GARDEVOIR) { Item(ITEM_GARDEVOIRITE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -106,7 +106,7 @@ SINGLE_BATTLE_TEST("Mega Evolution affects turn order (Gen7+)")
 SINGLE_BATTLE_TEST("Abilities replaced by Mega Evolution do not affect turn order")
 {
     GIVEN {
-        WITH_CONFIG(CONFIG_MEGA_EVO_TURN_ORDER, GEN_7);
+        WITH_CONFIG(B_MEGA_EVO_TURN_ORDER, GEN_7);
         ASSUME(GetSpeciesAbility(SPECIES_SABLEYE_MEGA, 0) != ABILITY_STALL
             && GetSpeciesAbility(SPECIES_SABLEYE_MEGA, 1) != ABILITY_STALL);
         PLAYER(SPECIES_SABLEYE) { Item(ITEM_SABLENITE); Ability(ABILITY_STALL); Speed(105); }
@@ -201,7 +201,7 @@ SINGLE_BATTLE_TEST("Venusaur returns its base Form upon battle end after Mega Ev
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_VENUSAUR);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SPECIES), SPECIES_VENUSAUR);
     }
 }
 
@@ -213,7 +213,7 @@ SINGLE_BATTLE_TEST("Rayquaza returns its base Form upon battle end after Mega Ev
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_RAYQUAZA);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SPECIES), SPECIES_RAYQUAZA);
     }
 }
 

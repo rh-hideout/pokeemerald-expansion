@@ -1,6 +1,5 @@
 #include "global.h"
 #include "battle.h"
-#include "battle_ai_main.h"
 #include "battle_ai_switch.h"
 #include "battle_ai_util.h"
 #include "constants/battle.h"
@@ -43,7 +42,6 @@
 #include "trainer_tower.h"
 #include "test_runner.h"
 #include "test/battle.h"
-#include "test/test_runner_battle.h"
 
 static void OpponentHandleDrawTrainerPic(enum BattlerId battler);
 static void OpponentHandleTrainerSlideBack(enum BattlerId battler);
@@ -378,12 +376,12 @@ static void OpponentHandleDrawTrainerPic(enum BattlerId battler)
     s16 xPos;
     enum TrainerPicID trainerPicId;
 
-    // Sets Multibattle test opponent sprites to not be Hiker
-    if (IsMultibattleTest())
+    // Sets battle test opponent sprites to Leaf and Red
+    if (TESTING)
     {
         if (GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT)
         {
-            trainerPicId = TRAINER_PIC_FRONT_LEAF;
+            trainerPicId = TRAINER_PIC_LEAF;
             if (!(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
                 xPos = 176;
             else
@@ -391,7 +389,7 @@ static void OpponentHandleDrawTrainerPic(enum BattlerId battler)
         }
         else
         {
-            trainerPicId = TRAINER_PIC_FRONT_RED;
+            trainerPicId = TRAINER_PIC_RED;
             xPos = 152;
         }
     }
@@ -462,8 +460,11 @@ static void OpponentHandleChooseMove(enum BattlerId battler)
             u32 chosenMove = moveInfo->moves[chosenMoveIndex];
             enum MoveTarget target = GetBattlerMoveTargetType(battler, chosenMove);
 
-            if (target == TARGET_USER || target == TARGET_USER_OR_ALLY)
+            if (target == TARGET_USER)
                 gBattlerTarget = battler;
+
+            if (target == TARGET_ALLY)
+                gBattlerTarget = BATTLE_PARTNER(battler);
 
             if (target == TARGET_BOTH)
             {
@@ -486,7 +487,7 @@ static void OpponentHandleChooseMove(enum BattlerId battler)
         }
         BtlController_Complete(battler);
     }
-    else // Wild pokemon - use random move
+    else // Wild Pokémon - use random move
     {
         enum Move move;
         do
@@ -500,6 +501,10 @@ static void OpponentHandleChooseMove(enum BattlerId battler)
         {
             BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (battler << 8));
         }
+        else if (moveTarget == TARGET_ALLY)
+        {
+            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (BATTLE_PARTNER(battler) << 8));
+        }
         else if (IsDoubleBattle())
         {
             enum BattlerId targetBattler;
@@ -509,7 +514,7 @@ static void OpponentHandleChooseMove(enum BattlerId battler)
             } while (!CanTargetBattler(battler, targetBattler, move));
 
             // Don't bother to check if they're enemies if the move can't attack ally
-            if (B_WILD_NATURAL_ENEMIES == TRUE && GetBattlerMoveTargetType(battler, move) != TARGET_BOTH)
+            if (WE_WILD_NATURAL_ENEMIES && GetBattlerMoveTargetType(battler, move) != TARGET_BOTH)
             {
                 u32 speciesAttacker, speciesTarget;
                 speciesAttacker = gBattleMons[battler].species;
@@ -568,7 +573,7 @@ static void OpponentHandleChoosePokemon(enum BattlerId battler)
         if (chosenMonId == PARTY_SIZE) // Advanced logic failed so we pick the next available battler
         {
             enum BattlerId battler1, battler2;
-            s32 firstId, lastId;
+            s32 lastId = GetAILastPartyIndex(battler); // + 1
 
             if (!IsDoubleBattle())
             {
@@ -580,12 +585,11 @@ static void OpponentHandleChoosePokemon(enum BattlerId battler)
                 battler2 = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
             }
 
-            GetAIPartyIndexes(battler, &firstId, &lastId);
-            for (chosenMonId = firstId; chosenMonId < lastId; chosenMonId++)
+            for (chosenMonId = 0; chosenMonId < lastId; chosenMonId++)
             {
-                if (IsValidForBattle(&gEnemyParty[chosenMonId])
-                 && chosenMonId != gBattlerPartyIndexes[battler1]
-                 && chosenMonId != gBattlerPartyIndexes[battler2])
+                if (IsValidForBattle(&gParties[GetBattlerTrainer(battler)][chosenMonId])
+                 && !((chosenMonId == gBattlerPartyIndexes[battler1]) && BattlersShareParty(battler, battler1))
+                 && !((chosenMonId == gBattlerPartyIndexes[battler2]) && BattlersShareParty(battler, battler2)))
                     break;
             }
         }

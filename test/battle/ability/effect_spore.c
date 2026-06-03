@@ -19,13 +19,13 @@ SINGLE_BATTLE_TEST("Effect Spore only inflicts status on contact")
         if (MoveMakesContact(move)) {
             ABILITY_POPUP(opponent, ABILITY_EFFECT_SPORE);
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
-            MESSAGE("Wobbuffet was poisoned by the opposing Breloom's Effect Spore!");
+            MESSAGE("Wobbuffet was poisoned!");
             STATUS_ICON(player, poison: TRUE);
         } else {
             NONE_OF {
                 ABILITY_POPUP(opponent, ABILITY_EFFECT_SPORE);
                 ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
-                MESSAGE("Wobbuffet was poisoned by the opposing Breloom's Effect Spore!");
+                MESSAGE("Wobbuffet was poisoned!");
                 STATUS_ICON(player, poison: TRUE);
             }
         }
@@ -40,7 +40,7 @@ SINGLE_BATTLE_TEST("Effect Spore causes poison 3.3% (Gen3), 10% (Gen4) and 9% (G
     PARAMETRIZE { config = GEN_5; passes = 9; trials = 100; } // 9%
     PASSES_RANDOMLY(passes, trials, RNG_EFFECT_SPORE);
     GIVEN {
-        WITH_CONFIG(CONFIG_ABILITY_TRIGGER_CHANCE, config);
+        WITH_CONFIG(B_ABILITY_TRIGGER_CHANCE, config);
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_BRELOOM) { Ability(ABILITY_EFFECT_SPORE); }
@@ -50,7 +50,7 @@ SINGLE_BATTLE_TEST("Effect Spore causes poison 3.3% (Gen3), 10% (Gen4) and 9% (G
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_EFFECT_SPORE);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
-        MESSAGE("Wobbuffet was poisoned by the opposing Breloom's Effect Spore!");
+        MESSAGE("Wobbuffet was poisoned!");
         STATUS_ICON(player, poison: TRUE);
     }
 }
@@ -63,7 +63,7 @@ SINGLE_BATTLE_TEST("Effect Spore causes paralysis 3.3% (Gen3) and 10% (Gen4+) of
     PARAMETRIZE { config = GEN_5; passes = 1; trials = 10; } // 10%
     PASSES_RANDOMLY(passes, trials, RNG_EFFECT_SPORE);
     GIVEN {
-        WITH_CONFIG(CONFIG_ABILITY_TRIGGER_CHANCE, config);
+        WITH_CONFIG(B_ABILITY_TRIGGER_CHANCE, config);
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_BRELOOM) { Ability(ABILITY_EFFECT_SPORE); }
@@ -73,7 +73,7 @@ SINGLE_BATTLE_TEST("Effect Spore causes paralysis 3.3% (Gen3) and 10% (Gen4+) of
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_EFFECT_SPORE);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, player);
-        MESSAGE("The opposing Breloom's Effect Spore paralyzed Wobbuffet, so it may be unable to move!");
+        MESSAGE("Wobbuffet is paralyzed, so it may be unable to move!");
         STATUS_ICON(player, paralysis: TRUE);
     }
 }
@@ -86,7 +86,7 @@ SINGLE_BATTLE_TEST("Effect Spore causes sleep 3.3% (Gen3), 10% (Gen4) and 11% (G
     PARAMETRIZE { config = GEN_5; passes = 11; trials = 100; } // 11%
     PASSES_RANDOMLY(passes, trials, RNG_EFFECT_SPORE);
     GIVEN {
-        WITH_CONFIG(CONFIG_ABILITY_TRIGGER_CHANCE, config);
+        WITH_CONFIG(B_ABILITY_TRIGGER_CHANCE, config);
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_BRELOOM) { Ability(ABILITY_EFFECT_SPORE); }
@@ -96,7 +96,7 @@ SINGLE_BATTLE_TEST("Effect Spore causes sleep 3.3% (Gen3), 10% (Gen4) and 11% (G
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_EFFECT_SPORE);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, player);
-        MESSAGE("The opposing Breloom's Effect Spore made Wobbuffet sleep!");
+        MESSAGE("Wobbuffet fell asleep!");
         STATUS_ICON(player, sleep: TRUE);
     }
 }
@@ -109,7 +109,7 @@ SINGLE_BATTLE_TEST("Effect Spore will check if it can inflict status onto attack
     PARAMETRIZE { config = GEN_5; passes = 11; trials = 100; } // 11%
     PASSES_RANDOMLY(passes, trials, RNG_EFFECT_SPORE);
     GIVEN {
-        WITH_CONFIG(CONFIG_ABILITY_TRIGGER_CHANCE, config);
+        WITH_CONFIG(B_ABILITY_TRIGGER_CHANCE, config);
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_BRELOOM) { Status1(STATUS1_BURN); Ability(ABILITY_EFFECT_SPORE); }
@@ -118,7 +118,7 @@ SINGLE_BATTLE_TEST("Effect Spore will check if it can inflict status onto attack
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_EFFECT_SPORE);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, player);
-        MESSAGE("The opposing Breloom's Effect Spore made Wobbuffet sleep!");
+        MESSAGE("Wobbuffet fell asleep!");
         STATUS_ICON(player, sleep: TRUE);
     }
 }
