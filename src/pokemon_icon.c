@@ -213,7 +213,7 @@ u8 CreateTaggedMonIcon(enum Species species, u32 paletteTag, u32 tileTag)
 
     struct SpriteSheet spriteSheet;
     spriteSheet.data = GetMonIconTilesIsEgg(species, 0, FALSE);
-    spriteSheet.size = sSpriteImageSizes[sMonIconOamData.shape][sMonIconOamData.size];
+    spriteSheet.size = 2 * sSpriteImageSizes[sMonIconOamData.shape][sMonIconOamData.size];
     spriteSheet.tag = tileTag;
     LoadSpriteSheet(&spriteSheet);
 
@@ -417,13 +417,20 @@ u8 UpdateMonIconFrame(struct Sprite *sprite)
             sprite->animCmdIndex = 0;
             break;
         default:
-            RequestSpriteCopy(
-                // pointer arithmetic is needed to get the correct pointer to perform the sprite copy on.
-                // because sprite->images is a struct def, it has to be casted to (u8 *) before any
-                // arithmetic can be performed.
-                (u8 *)sprite->images + (sSpriteImageSizes[sprite->oam.shape][sprite->oam.size] * frame),
-                (u8 *)(OBJ_VRAM0 + sprite->oam.tileNum * TILE_SIZE_4BPP),
-                sSpriteImageSizes[sprite->oam.shape][sprite->oam.size]);
+            if (sprite->usingSheet)
+            {
+                sprite->oam.tileNum = sprite->sheetTileStart + (sSpriteImageSizes[sprite->oam.shape][sprite->oam.size] * frame / TILE_SIZE_4BPP);
+            }
+            else
+            {
+                RequestSpriteCopy(
+                    // pointer arithmetic is needed to get the correct pointer to perform the sprite copy on.
+                    // because sprite->images is a struct def, it has to be casted to (u8 *) before any
+                    // arithmetic can be performed.
+                    (u8 *)sprite->images + (sSpriteImageSizes[sprite->oam.shape][sprite->oam.size] * frame),
+                    (u8 *)(OBJ_VRAM0 + sprite->oam.tileNum * TILE_SIZE_4BPP),
+                    sSpriteImageSizes[sprite->oam.shape][sprite->oam.size]);
+            }
             sprite->animDelayCounter = sprite->anims[sprite->animNum][sprite->animCmdIndex].frame.duration & 0xFF;
             sprite->animCmdIndex++;
             result = sprite->animCmdIndex;
