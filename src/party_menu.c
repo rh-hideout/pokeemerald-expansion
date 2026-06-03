@@ -384,7 +384,7 @@ static void Task_SetSacredAshCB(u8);
 static void CB2_ReturnToBagMenu(void);
 static void Task_DisplayHPRestoredMessage(u8);
 static u16 ItemEffectToMonEv(struct Pokemon *, enum ItemEffectType);
-static void ItemEffectToStatString(num ItemEffectType, u8 *);
+static void ItemEffectToStatString(enum ItemEffectType, u8 *);
 static void ReturnToUseOnWhichMon(u8);
 static void SetSelectedMoveForItem(u8);
 static void TryUseItemOnMove(u8);
