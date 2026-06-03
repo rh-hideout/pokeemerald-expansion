@@ -760,11 +760,23 @@ static void Task_WaitFadeAndExitGracefully(u8 taskId)
 
     for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
         playerEnteredMons[partyIndex] = BXPY_GetSelectedMons(partyIndex);
-
-    u8 enemyEnteredMons[PARTY_SIZE];
-    BXPY_GetEnemyEnterMons(enemyEnteredMons,BXPY_GetPickSize());
     BXPY_SelectPartyMembers(gParties[B_TRAINER_PLAYER],playerEnteredMons);
-    BXPY_SelectPartyMembers(gParties[B_TRAINER_OPPONENT_A],enemyEnteredMons);
+
+    u8 enemyEnteredMons[MAX_BATTLE_TRAINERS][PARTY_SIZE];
+    BXPY_GetEnemyEnterMons(enemyEnteredMons[B_TRAINER_OPPONENT_A],BXPY_GetPickSize());
+    BXPY_SelectPartyMembers(gParties[B_TRAINER_OPPONENT_A],enemyEnteredMons[B_TRAINER_OPPONENT_A]);
+
+    if (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE)
+{
+    BXPY_GetEnemyEnterMons(enemyEnteredMons[B_TRAINER_OPPONENT_B],BXPY_GetPickSize());
+        BXPY_SelectPartyMembers(gParties[B_TRAINER_OPPONENT_B],enemyEnteredMons[B_TRAINER_OPPONENT_B]);
+}
+
+    if (gPartnerTrainerId != TRAINER_NONE)
+{
+    BXPY_GetEnemyEnterMons(enemyEnteredMons[B_TRAINER_PARTNER],BXPY_GetPickSize());
+        BXPY_SelectPartyMembers(gParties[B_TRAINER_PARTNER],enemyEnteredMons[B_TRAINER_PARTNER]);
+}
 
     u32 temp = BXPY_GetBattleFlags();
     BXPY_FreeResources();
