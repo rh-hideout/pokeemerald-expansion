@@ -2332,7 +2332,7 @@ void CreateMonDexNum(u16 entryNum, u8 left, u8 top, u16 unused)
 
     if (P_SKIP_POKEDEX_GAPS == SKIP_GAPS_EXCEPT_ONE && !sPokedexView->pokedexList[entryNum].seen)
     {
-        for (u32 i = 0; i < offset - 1; i++)
+        for (u32 i = 0; text[i] != EOS; i++)
             text[i] = CHAR_HYPHEN;
     }
 
