@@ -1,5 +1,5 @@
 # Introduction
-![Demo of Bring X Pick Y Functionality](https://files.catbox.moe/s9nfyh.png)
+![Demo of Bring X Pick Y Functionality](/docs/tutorials/img/bxpy/demo.png)
 
 This branch allows developers to add a new user interface and battle mode to their `pokeemerald-expansion` decompilation projects. 
 
@@ -20,7 +20,7 @@ The overworld macro takes five required arguments and three optional arguments.
 ## `battleType`
 | `BXPY_BATTLE_SINGLE` | `BXPY_BATTLE_DOUBLE` |
 | --- | --- |
-| ![Demo of BXPY_BATTLE_SINGLE](https://files.catbox.moe/s9nfyh.png) | ![Demo of BXPY_BATTLE_DOUBLE](https://files.catbox.moe/s9nfyh.png) |
+| ![Demo of BXPY_BATTLE_SINGLE](/docs/tutorials/img/bxpy/single.png) | ![Demo of BXPY_BATTLE_DOUBLE](/docs/tutorials/img/bxpy/double.png) |
 
 Required argument.
 
@@ -32,9 +32,7 @@ Dictates if the battle is a Single (`BXPY_BATTLE_SINGLE`) or Double Battle (`BXP
 ## `bringSize`
 | `6` | `4` |
 | --- | --- |
-| <img alt="" src="https://github.com/PokemonSanFran/pokeemerald/assets/77138753/4b718bb8-497c-49e2-a96e-c46fbb10be52" width=480 height=320>| <img alt="" src="https://github.com/PokemonSanFran/pokeemerald/assets/77138753/4b718bb8-497c-49e2-a96e-c46fbb10be52" width=480 height=320>| 
-
-<!-- BXPY TODO show team preview bringing in X mons -->
+| ![](/docs/tutorials/img/bxpy/bring6pick4.png)| ![](/docs/tutorials/img/bxpy/bring4pick3.png)| 
 
 Required argument.
 
@@ -48,9 +46,7 @@ Dictates how many Pokemon each side brings before Team Preview begins.
 ## `pickSize`
 | `4` | `3` |
 | --- | --- |
-| <img alt="" src="https://github.com/PokemonSanFran/pokeemerald/assets/77138753/4b718bb8-497c-49e2-a96e-c46fbb10be52" width=480 height=320>| <img alt="" src="https://github.com/PokemonSanFran/pokeemerald/assets/77138753/4b718bb8-497c-49e2-a96e-c46fbb10be52" width=480 height=320>| 
-
-<!-- BXPY TODO show team preview only asking for X mons -->
+| ![](/docs/tutorials/img/bxpy/bring6pick4.png)| ![](/docs/tutorials/img/bxpy/bring4pick3.png)| 
 
 Required argument.
 
@@ -64,9 +60,7 @@ Dictates how many Pokemon each side pick for battle.
 ## `trainer_a`
 | `TRAINER_GABRIELLE_1` | `TRAINER_WALLACE` |
 | --- | --- |
-| <img alt="" src="https://github.com/PokemonSanFran/pokeemerald/assets/77138753/4b718bb8-497c-49e2-a96e-c46fbb10be52" width=480 height=320>| <img alt="" src="https://github.com/PokemonSanFran/pokeemerald/assets/77138753/4b718bb8-497c-49e2-a96e-c46fbb10be52" width=480 height=320>| 
-
-<!-- BXPY TODO show leaving team preview and starting a battle with this trainer -->
+| ![](/docs/tutorials/img/bxpy/gabirelle.png)| ![](/docs/tutorials/img/bxpy/bring4pick3.png)| 
 
 Required argument.
 
@@ -76,9 +70,8 @@ Dictates what trainer is battled against.
 - Must be a valid trainerId between `TRAINER_NONE` and `TRAINERS_COUNT`.
 
 ## `lose_text_a`
-<img alt="" src="https://github.com/PokemonSanFran/pokeemerald/assets/77138753/4b718bb8-497c-49e2-a96e-c46fbb10be52" width=480 height=320>
-
-<!-- BXPY TODO show defeating a trainer and showing lose text -->
+`bringxpicky BXPY_BATTLE_SINGLE, 4, 3, TRAINER_GABRIELLE_1, Route117_PokemonDayCare_Text_YouHaveJustOneMon`
+![](/docs/tutorials/img/bxpy/losetext.png)
 
 Required argument.
 
@@ -90,9 +83,7 @@ Dictates what `trainer_a` will say when they are defeated.
 ## `trainer_b`
 | `TRAINER_COLTON` | `TRAINER_RONALD` |
 | --- | --- |
-| <img alt="" src="https://github.com/PokemonSanFran/pokeemerald/assets/77138753/4b718bb8-497c-49e2-a96e-c46fbb10be52" width=480 height=320>| <img alt="" src="https://github.com/PokemonSanFran/pokeemerald/assets/77138753/4b718bb8-497c-49e2-a96e-c46fbb10be52" width=480 height=320>| 
-
-<!-- BXPY TODO show leaving team preview and starting a battle with these trainers -->
+| ![](/docs/tutorials/img/bxpy/colton.png)| ![](/docs/tutorials/img/bxpy/ronald.png)| 
 
 Optional argument. Defaults to `TRAINER_NONE` when not defined.
 
@@ -103,9 +94,7 @@ Dictates what second trainer is battled against.
 - Must be defined if `lose_text_b` is defined.
 
 ## `lose_text_b`
-<img alt="" src="https://github.com/PokemonSanFran/pokeemerald/assets/77138753/4b718bb8-497c-49e2-a96e-c46fbb10be52" width=480 height=320>
-
-<!-- BXPY TODO show defeating a trainer and showing lose text for both trainers -->
+![](/docs/tutorials/img/bxpy/losetextb.png)
 
 Optional argument. Defaults to `NULL` when not defined.
 
@@ -116,9 +105,7 @@ Optional argument. Defaults to `NULL` when not defined.
 Dictates what `trainer_b` will say when they are defeated.
 
 ## `partnerId`
-<img alt="" src="https://github.com/PokemonSanFran/pokeemerald/assets/77138753/4b718bb8-497c-49e2-a96e-c46fbb10be52" width=480 height=320>
-
-<!-- BXPY TODO show gif of leaving team preview and starting a battle with that partner -->
+![](/docs/tutorials/img/bxpy/partner.png)
 
 Optional argument. Defaults to `PARTNER_NONE` when not defined.
 
@@ -134,43 +121,33 @@ The player's team will be healed before their party is checked for legality. All
 This can be turned off when `BXPY_HEAL` is not set to `BXPY_HEAL_BEFORE_BATTLE` OR `BXPY_HEAL_ALWAYS`.
 
 ## `BXPY_ERROR_BRING_SIZE_TOO_LARGE`
-<img alt="" src="https://github.com/PokemonSanFran/pokeemerald/assets/77138753/4b718bb8-497c-49e2-a96e-c46fbb10be52" width=480 height=320>
-
-<!-- BXPY TODO show player's party then running the macro and seeing this error message -->
+![](/docs/tutorials/img/bxpy/bringsizetoolarge.png)
 
 If the Player's party has more alive Pokemon than `bringSize`, the Player is given a warning via the overworld. The script stops and does not proceed to Team Preview.
 
 ## `BXPY_ERROR_BRING_SIZE_NOT_ENOUGH`
-<img alt="" src="https://github.com/PokemonSanFran/pokeemerald/assets/77138753/4b718bb8-497c-49e2-a96e-c46fbb10be52" width=480 height=320>
-
-<!-- BXPY TODO show player's party then running the macro and seeing this error message -->
+![](/docs/tutorials/img/bxpy/bringsizenotenough.png)
 
 If the Player's party has less alive Pokemon than `bringSize`, the Player is given a warning via the overworld. The script stops and does not proceed to Team Preview. 
 
 This can be turned off via `BXPY_FORCE_MINIMUM_MONS`, and this config is `TRUE` by default.
 
 ## `BXPY_ERROR_CLAUSE_SPECIES`
-<img alt="" src="https://github.com/PokemonSanFran/pokeemerald/assets/77138753/4b718bb8-497c-49e2-a96e-c46fbb10be52" width=480 height=320>
-
-<!-- BXPY TODO show player's party then running the macro and seeing this error message -->
+![](/docs/tutorials/img/bxpy/species.png)
 
 If the Player's party has multiple Pokemon that are the same species, the Player is given a warning via the overworld. The script stops and does not proceed to Team Preview. 
 
 This can be turned off via `BXPY_CLAUSE_SPECIES`, and this config is `TRUE` by default.
 
 ## `BXPY_ERROR_CLAUSE_ITEM`
-<img alt="" src="https://github.com/PokemonSanFran/pokeemerald/assets/77138753/4b718bb8-497c-49e2-a96e-c46fbb10be52" width=480 height=320>
-
-<!-- BXPY TODO show player's party then running the macro and seeing this error message -->
+![](/docs/tutorials/img/bxpy/item.png)
 
 If the Player's party has multiple Pokemon that are the holding the same item, the Player is given a warning via the overworld. The script stops and does not proceed to Team Preview. 
 
 This can be turned off via `BXPY_CLAUSE_ITEMS`, and this config is `TRUE` by default.
 
 ## `BXPY_ERROR_CLAUSE_SPECIAL_POKEMON`
-<img alt="" src="https://github.com/PokemonSanFran/pokeemerald/assets/77138753/4b718bb8-497c-49e2-a96e-c46fbb10be52" width=480 height=320>
-
-<!-- BXPY TODO show player's party then running the macro and seeing this error message -->
+![](/docs/tutorials/img/bxpy/special.png)
 
 If the Player's party has any Pokemon that are [Restricted](https://bulbapedia.bulbagarden.net/wiki/Special_Pok%C3%A9mon), the Player is given a warning via the overworld. The script stops and does not proceed to Team Preview.
 
@@ -212,7 +189,7 @@ The following occurs regardless of the result of the battle.
 ## Load Party & Retain Changes
 | `TRUE` | `FALSE` |
 | --- | --- |
-| <img alt="" src="https://github.com/PokemonSanFran/pokeemerald/assets/77138753/4b718bb8-497c-49e2-a96e-c46fbb10be52" width=480 height=320>| <img alt="" src="https://github.com/PokemonSanFran/pokeemerald/assets/77138753/4b718bb8-497c-49e2-a96e-c46fbb10be52" width=480 height=320>| 
+| ![](/docs/tutorials/img/bxpy/trueRetain.png)| ![](/docs/tutorials/img/bxpy/falseRetain.png)| 
 
 <!-- BXPY TODO show party, score a KO, evolve after battle, then show the restored party with same damage and evolution -->
 
@@ -223,7 +200,7 @@ Any changes that occured to the participating Pokemon is retained. This includes
 ## Heal Post Battle
 | `TRUE` | `FALSE` |
 | --- | --- |
-| <img alt="" src="https://github.com/PokemonSanFran/pokeemerald/assets/77138753/4b718bb8-497c-49e2-a96e-c46fbb10be52" width=480 height=320>| <img alt="" src="https://github.com/PokemonSanFran/pokeemerald/assets/77138753/4b718bb8-497c-49e2-a96e-c46fbb10be52" width=480 height=320>| 
+| ![](/docs/tutorials/img/bxpy/trueHeal.png)| ![](/docs/tutorials/img/bxpy/falseHeal.png)| 
 
 <!-- BXPY TODO electrode self destructs in battle, show party after battle -->
 
