@@ -146,7 +146,6 @@ EventSnippet_StartTrainerApproach::
 
 EventSnippet_TrainerApproach::
 	special DoTrainerApproach
-	waitstate
 	return
 
 EventSnippet_RevealTrainer::
@@ -183,7 +182,6 @@ EventSnippet_DoTrainerBattle::
 
 EventSnippet_DoRematchTrainerBattle::
 	special BattleSetup_StartRematchBattle
-	waitstate
 	return
 
 EventSnippet_EndTrainerBattle::
