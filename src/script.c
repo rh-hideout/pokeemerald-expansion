@@ -52,6 +52,7 @@ void InitScriptContext(struct ScriptContext *ctx, void *cmdTable, void *cmdTable
 
     ctx->mode = SCRIPT_MODE_STOPPED;
     ctx->scriptPtr = NULL;
+    ctx->stackDepth = 0;
     ctx->nativePtr = NULL;
     ctx->cmdTable = cmdTable;
     ctx->cmdTableEnd = cmdTableEnd;
@@ -59,7 +60,8 @@ void InitScriptContext(struct ScriptContext *ctx, void *cmdTable, void *cmdTable
     for (i = 0; i < (int)ARRAY_COUNT(ctx->data); i++)
         ctx->data[i] = 0;
 
-    InitScriptStack(&ctx->scrStack);
+    for (i = 0; i < (int)ARRAY_COUNT(ctx->stack); i++)
+        ctx->stack[i] = NULL;
 
     ctx->breakOnTrainerBattle = FALSE;
 }
@@ -155,7 +157,16 @@ bool8 ScriptStackPush(struct ScriptStack *stk, const u8 *ptr)
 
 bool8 ScriptPush(struct ScriptContext *ctx, const u8 *ptr)
 {
-    return ScriptStackPush(&ctx->scrStack, ptr);
+    if (ctx->stackDepth + 1 >= (int)ARRAY_COUNT(ctx->stack))
+    {
+        return TRUE;
+    }
+    else
+    {
+        ctx->stack[ctx->stackDepth] = ptr;
+        ctx->stackDepth++;
+        return FALSE;
+    }
 }
 
 const u8 *ScriptStackPop(struct ScriptStack *stk)
@@ -169,7 +180,11 @@ const u8 *ScriptStackPop(struct ScriptStack *stk)
 
 const u8 *ScriptPop(struct ScriptContext *ctx)
 {
-    return ScriptStackPop(&ctx->scrStack);
+    if (ctx->stackDepth == 0)
+        return NULL;
+
+    ctx->stackDepth--;
+    return ctx->stack[ctx->stackDepth];
 }
 
 void ScriptJump(struct ScriptContext *ctx, const u8 *ptr)
@@ -315,45 +330,27 @@ void ScriptContext_Enable(void)
     LockPlayerFieldControls();
 }
 
-bool8 ScriptContext_ScriptPushStackToContext(struct ScriptStack *stk, struct ScriptContext *ctx)
+void ScriptContext_SetupContextFromStack(struct ScriptStack *stk, struct ScriptContext *ctx)
 {
     const u8 *ptr;
+
     while ((ptr = ScriptStackPop(stk)) != NULL)
     {
-        assertf(ScriptPush(ctx, ptr),
-            "Failed to push %p to: %p", ptr, ctx)
-        {
-            return FALSE;
+        if (ScriptPush(ctx, ptr)) {
+            errorf("Failed to push %p to %p.", ptr, ctx);
         }
     }
 
-    return TRUE;    
-}
-
-bool8 ScriptContext_ScriptPushStackToGlobal(struct ScriptStack *stk)
-{
-    return ScriptContext_ScriptPushStackToContext(stk, &sGlobalScriptContext);
-}
-
-// Pops the top script from the stack and enables the context
-void ScriptContext_RunContextFromTop(struct ScriptContext *ctx)
-{
-
     ctx->scriptPtr = ScriptPop(ctx);
     ctx->mode = SCRIPT_MODE_BYTECODE;
-
-    assertf(ctx->scriptPtr, "Failed to load script.");
-    
-    LockPlayerFieldControls();
 
     if (OW_FOLLOWERS_SCRIPT_MOVEMENT)
         FlagSet(FLAG_SAFE_FOLLOWER_MOVEMENT);
 }
 
-void ScriptContext_RunGlobalFromTop(void)
+void ScriptContext_SetupGlobalContextFromStack(struct ScriptStack *stk)
 {
-    ScriptContext_RunContextFromTop(&sGlobalScriptContext);
-    sGlobalScriptContextStatus = CONTEXT_RUNNING;
+    ScriptContext_SetupContextFromStack(stk, &sGlobalScriptContext);
 }
 
 // Sets up and runs a script in its own context immediately. The script will be

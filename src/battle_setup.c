@@ -1241,8 +1241,8 @@ void ConfigureTrainerBattle(struct ScriptContext *ctx)
     TrainerBattleLoadArgs(battleParams->data);
 
     BattleSetup_ConfigureTrainerBattle(&gTrainerBattleParameter, &trainerBattleScriptStack);
-    ScriptContext_ScriptPushStackToContext(&trainerBattleScriptStack, ctx);
-    ScriptContext_RunContextFromTop(ctx);
+    ScriptContext_SetupContextFromStack(&trainerBattleScriptStack, ctx);
+    ScriptContext_Enable();
 }
 
 void ConfigureApproachingTrainerBattle(struct ApproachingTrainer *approachingTrainer)
@@ -1262,42 +1262,31 @@ void ConfigureApproachingTrainerBattle(struct ApproachingTrainer *approachingTra
     }
 
     BattleSetup_ConfigureApproachingTrainerBattle(&gTrainerBattleParameter, &trainerBattleScriptStack);
-    ScriptContext_ScriptPushStackToGlobal(&trainerBattleScriptStack);
-    ScriptContext_RunGlobalFromTop();
+    ScriptContext_SetupGlobalContextFromStack(&trainerBattleScriptStack);
+    ScriptContext_Enable();
 }
 
-static bool8 SetFacilityOpponent(u8 facility, u8 localId, bool8 isTrainerA)
+static void SetFacilityOpponent(u8 facility, u8 localId, bool8 isTrainerA)
 {
+    u16 trainerId;
+
+    switch (facility) {
+        case FACILITY_BATTLE_PYRAMID:
+            trainerId = LocalIdToPyramidTrainerId(localId);
+            break;
+        case FACILITY_BATTLE_TRAINER_HILL:
+            trainerId = LocalIdToHillTrainerId(localId);
+            break;
+        default:
+            errorf("Invalid facility: %d", facility);
+    } 
+
     if (isTrainerA) {
-        switch (facility){
-            case FACILITY_BATTLE_PYRAMID:
-                TRAINER_BATTLE_PARAM.opponentA = LocalIdToPyramidTrainerId(localId);
-                break;
-            case FACILITY_BATTLE_TRAINER_HILL:
-                TRAINER_BATTLE_PARAM.opponentA = LocalIdToHillTrainerId(localId);
-                break;
-            
-            default:
-                return FALSE;   
-        }
-        
+        TRAINER_BATTLE_PARAM.opponentA = trainerId;
         TRAINER_BATTLE_PARAM.objEventLocalIdA = localId;
-        return TRUE;
     } else {
-        switch (facility){
-            case FACILITY_BATTLE_PYRAMID:
-                TRAINER_BATTLE_PARAM.opponentB = LocalIdToPyramidTrainerId(localId);
-                break;
-            case FACILITY_BATTLE_TRAINER_HILL:
-                TRAINER_BATTLE_PARAM.opponentB = LocalIdToHillTrainerId(localId);
-                break;
-            
-            default:
-                return FALSE;   
-        }
-        
+        TRAINER_BATTLE_PARAM.opponentB = trainerId;
         TRAINER_BATTLE_PARAM.objEventLocalIdB = localId;
-        return TRUE;
     }
    
 }
@@ -1314,8 +1303,8 @@ void ConfigureFacilityTrainerBattle(u8 facility, const u8* scriptEndPtr)
     sTrainerBattleEndScript = (u8*)scriptEndPtr;
 
     BattleSetup_ConfigureFacilityTrainerBattle(&gTrainerBattleParameter, &trainerBattleScriptStack);
-    ScriptContext_ScriptPushStackToGlobal(&trainerBattleScriptStack);
-    ScriptContext_RunGlobalFromTop();
+    ScriptContext_SetupGlobalContextFromStack(&trainerBattleScriptStack);
+    ScriptContext_Enable();
 }
 
 void ConfigureApproachingFacilityTrainerBattle(struct ApproachingTrainer *approachingTrainer)
@@ -1348,8 +1337,8 @@ void ConfigureApproachingFacilityTrainerBattle(struct ApproachingTrainer *approa
     gApproachingTrainerId = 0;
 
     BattleSetup_ConfigureApproachingFacilityTrainerBattle(&gTrainerBattleParameter, &trainerBattleScriptStack);
-    ScriptContext_ScriptPushStackToGlobal(&trainerBattleScriptStack);
-    ScriptContext_RunGlobalFromTop();
+    ScriptContext_SetupGlobalContextFromStack(&trainerBattleScriptStack);
+    ScriptContext_Enable();
 }
 
 bool32 GetTrainerFlagFromScriptPointer(const u8 *data)
@@ -1659,7 +1648,7 @@ void ShowTrainerIntroSpeech(void)
     {
         if (gNoOfApproachingTrainers == 0 || gNoOfApproachingTrainers == 1)
             CopyTrainerHillTrainerText(TRAINER_HILL_TEXT_INTRO, LocalIdToHillTrainerId(gSpecialVar_LastTalked));
-        else 
+        else
             CopyTrainerHillTrainerText(TRAINER_HILL_TEXT_INTRO, LocalIdToHillTrainerId(gObjectEvents[gApproachingTrainers[gApproachingTrainerId].objectEventId].localId));
 
         ShowFieldMessageFromBuffer();
