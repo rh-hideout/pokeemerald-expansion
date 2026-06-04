@@ -1268,7 +1268,7 @@ void ConfigureApproachingTrainerBattle(struct ApproachingTrainer *approachingTra
 
 static void SetFacilityOpponent(u8 facility, u8 localId, bool8 isTrainerA)
 {
-    u16 trainerId;
+    u16 trainerId = TRAINER_NONE;
 
     switch (facility) {
         case FACILITY_BATTLE_PYRAMID:
