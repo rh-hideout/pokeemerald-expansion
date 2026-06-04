@@ -35,7 +35,7 @@ static u32 GetNumNegativeStats(struct StatChange *st);
 static void SetAdditionalEffectsOnStatChange(struct BattleCalcValues *cv, struct StatChange *st);
 static void MarkStatsAsDone(struct StatChange *st, enum Stat stat);
 
-u32 const sAccurateStatOrder[NUM_BATTLE_STATS] =
+enum Stat const sAccurateStatOrder[NUM_BATTLE_STATS] =
 {
     STAT_HP,
     STAT_ATK,
@@ -853,7 +853,7 @@ static bool32 AbilityPreventsSpecificStatDrop(enum Ability ability, enum Stat st
     }
 }
 
-u32 GetStatStage(u32 stat, const struct AdditionalEffect *additionalEffect)
+u32 GetStatStage(enum Stat stat, const struct AdditionalEffect *additionalEffect)
 {
     switch (stat)
     {
@@ -864,9 +864,8 @@ u32 GetStatStage(u32 stat, const struct AdditionalEffect *additionalEffect)
     case STAT_SPDEF:   return additionalEffect->spDef;
     case STAT_ACC:     return additionalEffect->accuracy;
     case STAT_EVASION: return additionalEffect->evasion;
+    default:           return 0;
     }
-
-    return 0;
 }
 
 static u32 GetNumPositiveStats(struct StatChange *st)

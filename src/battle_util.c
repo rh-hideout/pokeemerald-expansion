@@ -10142,7 +10142,7 @@ void RemoveAllHazardsFromField(enum BattleSide side)
 
 void RemoveHazardFromField(enum BattleSide side, enum Hazards hazardType)
 {
-    u32 i;
+    enum Hazards i;
     for (i = 0; i < HAZARDS_MAX_COUNT; i++)
     {
         if (gBattleStruct->hazardsQueue[side][i] == hazardType)
@@ -10158,7 +10158,7 @@ void RemoveHazardFromField(enum BattleSide side, enum Hazards hazardType)
     }
     while (i < HAZARDS_MAX_COUNT)
     {
-        if (i+1 == HAZARDS_MAX_COUNT)
+        if (i + 1 == HAZARDS_MAX_COUNT)
         {
             gBattleStruct->hazardsQueue[side][i] = HAZARDS_NONE;
             break;
@@ -10168,7 +10168,7 @@ void RemoveHazardFromField(enum BattleSide side, enum Hazards hazardType)
     }
 }
 
-static bool32 CanMoveSkipAccuracyCheck(enum BattlerId battlerAtk, u32 move)
+static bool32 CanMoveSkipAccuracyCheck(enum BattlerId battlerAtk, enum Move move)
 {
     return MoveAlwaysHitsOnSameType(move) && IS_BATTLER_OF_TYPE(battlerAtk, GetMoveType(move));
 }
@@ -10750,7 +10750,6 @@ void SetWrapTurns(enum BattlerId battler, enum HoldEffect holdEffect)
 // Return True if the order was changed, and false if the order was not changed(for example because the target would move after the attacker anyway).
 bool32 ChangeOrderTargetAfterAttacker(void)
 {
-    u32 i;
     u8 data[MAX_BATTLERS_COUNT];
     u8 actionsData[MAX_BATTLERS_COUNT];
     u32 attackerTurnOrderNum = GetBattlerTurnOrderNum(gBattlerAttacker);
@@ -10761,7 +10760,7 @@ bool32 ChangeOrderTargetAfterAttacker(void)
     if (attackerTurnOrderNum + 1 == targetTurnOrderNum)
         return GetConfig(B_AFTER_YOU_TURN_ORDER) >= GEN_8;
 
-    for (i = 0; i < MAX_BATTLERS_COUNT; i++)
+    for (enum BattlerId i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
         data[i] = gBattlerByTurnOrder[i];
         actionsData[i] = gActionsByTurnOrder[i];
@@ -10889,7 +10888,7 @@ bool32 CanUseMoveConsecutively(enum BattlerId battler)
 // Used for Protect, Endure and Ally switch
 void TryResetConsecutiveUseCounter(enum BattlerId battler)
 {
-    u32 lastMove = gLastResultingMoves[battler];
+    enum Move lastMove = gLastResultingMoves[battler];
     if (lastMove == MOVE_UNAVAILABLE)
     {
         gBattleMons[battler].volatiles.consecutiveMoveUses = 0;

@@ -1583,11 +1583,9 @@ static void IsPartyFullHealed(void)
 
 static void SaveMonHeldItems(void)
 {
-    u8 i;
-
-    for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
+    for (u32 i = 0; i < FRONTIER_PARTY_SIZE; i++)
     {
-        int heldItem = GetMonData(GetSavedPlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1),
+        enum Item heldItem = GetMonData(GetSavedPlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1),
                                   MON_DATA_HELD_ITEM);
         gSaveBlock2Ptr->frontier.pikeHeldItemsBackup[i] = heldItem;
     }
