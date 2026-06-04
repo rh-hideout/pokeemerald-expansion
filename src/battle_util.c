@@ -1180,7 +1180,7 @@ void PrepareStringBattle(enum StringID stringId, enum BattlerId battler)
     {
     case STRINGID_ITDOESNTAFFECT:
     case STRINGID_PKMNUNAFFECTED:
-        TryInitializeTrainerSlideEnemyMonUnaffected(gBattlerTarget); // Depending on the future changes that might lead to bugs
+        TryInitializeTrainerSlideMonUnaffected(gBattlerTarget, gBattlerAttacker);
         break;
     default:
         break;
