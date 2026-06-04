@@ -128,7 +128,8 @@ SINGLE_BATTLE_TEST("Desolate Land blocks weather-setting moves")
 
 SINGLE_BATTLE_TEST("Desolate Land prevents other weather abilities")
 {
-    enum Ability ability; u16 species;
+    enum Ability ability;
+    enum Species species;
     PARAMETRIZE { ability = ABILITY_DROUGHT;      species = SPECIES_NINETALES; }
     PARAMETRIZE { ability = ABILITY_DRIZZLE;      species = SPECIES_POLITOED; }
     PARAMETRIZE { ability = ABILITY_SAND_STREAM;  species = SPECIES_HIPPOWDON; }
