@@ -200,7 +200,7 @@ SINGLE_BATTLE_TEST("Beat Up lists each party member's name")
     }
 }
 
-SINGLE_BATTLE_TEST("Beat Up's damage is typeless (Gen2-4)", s16 damage)
+SINGLE_BATTLE_TEST("Beat Up's damage is typeless (up to Gen4)", s16 damage)
 {
     u16 defender = SPECIES_WOBBUFFET;
     u16 type1, type2;
@@ -225,7 +225,7 @@ SINGLE_BATTLE_TEST("Beat Up's damage is typeless (Gen2-4)", s16 damage)
     PARAMETRIZE { defender = SPECIES_SYLVEON; }     // Fairy
 
     GIVEN {
-        WITH_CONFIG(B_BEAT_UP, GEN_3);
+        WITH_CONFIG(B_BEAT_UP, GEN_4);
         type1 = GetSpeciesType(defender, 0);
         type2 = GetSpeciesType(defender, 1);
         ASSUME(type2 == type1 || type2 == TYPE_MYSTERY); // Ensure monotype targets
