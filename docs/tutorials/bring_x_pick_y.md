@@ -1,22 +1,9 @@
-![Bring X Pick Y Header](https://github.com/PokemonSanFran/pokeemerald/assets/77138753/47e08072-3d73-4efc-9a15-5f401031018f)
-
-<!-- BXPY TODO add new header -->
-
 # Introduction
-<img alt="Demo of Bring X Pick Y functionality" src="https://github.com/PokemonSanFran/pokeemerald/assets/77138753/4b718bb8-497c-49e2-a96e-c46fbb10be52" width=480 height=320>
-
-<!-- BXPY TODO add new gif once all functionality is done -->
+![Demo of Bring X Pick Y Functionality](https://files.catbox.moe/s9nfyh.png)
 
 This branch allows developers to add a new user interface and battle mode to their `pokeemerald-expansion` decompilation projects. 
 
 In this mode, the player must have X healthy, legal, Pokemon in the party. Using information about the opponent's team, they must then pick Y Pokemon to battle with. This mimicks the behavior from several official Pokemon titles.
-
-
-|  |  |  |
-| -------- | -------- | -------- |
-| <img alt="Pokemon Stadium (JP)" src="https://github.com/PokemonSanFran/pokeemerald/assets/77138753/4b718bb8-497c-49e2-a96e-c46fbb10be52" width=480 height=320> | <img alt="Pokemon Stadium" src="https://github.com/PokemonSanFran/pokeemerald/assets/77138753/4b718bb8-497c-49e2-a96e-c46fbb10be52" width=480 height=320> | <img alt="Pokemon Stadium 2" src="https://github.com/PokemonSanFran/pokeemerald/assets/77138753/4b718bb8-497c-49e2-a96e-c46fbb10be52" width=480 height=320> |
-| <img alt="Pokemon Colosseum" src="https://github.com/PokemonSanFran/pokeemerald/assets/77138753/4b718bb8-497c-49e2-a96e-c46fbb10be52" width=480 height=320> | <img alt="Pokemon XD: Gale of Darkness" src="https://github.com/PokemonSanFran/pokeemerald/assets/77138753/4b718bb8-497c-49e2-a96e-c46fbb10be52" width=480 height=320> | <img alt="Pokemon Batle Revolution" src="https://github.com/PokemonSanFran/pokeemerald/assets/77138753/4b718bb8-497c-49e2-a96e-c46fbb10be52" width=480 height=320> |
-| <img alt="X / Y / Sun / Moon / Ultra Sun / Ultra Moon" src="https://github.com/PokemonSanFran/pokeemerald/assets/77138753/4b718bb8-497c-49e2-a96e-c46fbb10be52" width=480 height=320> | | <img alt="Scarlet / Violet / Sword / Shield" src="https://github.com/PokemonSanFran/pokeemerald/assets/77138753/4b718bb8-497c-49e2-a96e-c46fbb10be52" width=480 height=320> |
 
 # Usage
 The functionality is run by using the macro `bringxpicky` in an overworld script. `bringxpicky` can be broken down into four seperate sections:
@@ -33,7 +20,7 @@ The overworld macro takes five required arguments and three optional arguments.
 ## `battleType`
 | `BXPY_BATTLE_SINGLE` | `BXPY_BATTLE_DOUBLE` |
 | --- | --- |
-| <img alt="" src="https://github.com/PokemonSanFran/pokeemerald/assets/77138753/4b718bb8-497c-49e2-a96e-c46fbb10be52" width=480 height=320> | <img alt="" src="https://github.com/PokemonSanFran/pokeemerald/assets/77138753/4b718bb8-497c-49e2-a96e-c46fbb10be52" width=480 height=320>| 
+| ![Demo of BXPY_BATTLE_SINGLE](https://files.catbox.moe/s9nfyh.png) | ![Demo of BXPY_BATTLE_DOUBLE](https://files.catbox.moe/s9nfyh.png) |
 
 Required argument.
 
@@ -287,6 +274,15 @@ If you have read all of the documentation here and still have questions, please 
 # Contributors 
 ## [Pawkkie](https://www.twitch.tv/pawkkie)
 * Wrote the implemention that the AI uses to select the Pokemon to bring into battle.
+
+## [Montblanc](google.com)
+* Designed the user interface used for Bring X Pick Y.
+
+## [Linathan](google.com)
+* Wrote the user interface used for Bring X Pick Y.
+
+## [Zatsu](google.com)
+* Created the type icons used for Bring X Pick Y.
 
 # CHANGELOG
 All changes to this project will be documented in this section. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project tries to adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
