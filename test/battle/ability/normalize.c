@@ -1,5 +1,6 @@
 #include "global.h"
 #include "test/battle.h"
+#include "berry.h"
 
 ASSUMPTIONS
 {
@@ -165,7 +166,7 @@ SINGLE_BATTLE_TEST("Normalize-affected moves become Electric-type under Electrif
     } WHEN {
         TURN { MOVE(opponent, MOVE_ELECTRIFY); MOVE(player, MOVE_WATER_GUN); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
     }
 }
 
@@ -178,7 +179,7 @@ SINGLE_BATTLE_TEST("Normalize-affected moves become Electric-type under Ion Delu
     } WHEN {
         TURN { MOVE(opponent, MOVE_ION_DELUGE); MOVE(player, MOVE_WATER_GUN); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
     }
 }
 
@@ -218,7 +219,7 @@ SINGLE_BATTLE_TEST("Normalize doesn't affect Natural Gift's type")
     PARAMETRIZE { ability = ABILITY_NORMALIZE; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
-        ASSUME(gNaturalGiftTable[ITEM_TO_BERRY(ITEM_ORAN_BERRY)].type == TYPE_POISON);
+        ASSUME(gBerries[ItemIdToBerryType(ITEM_ORAN_BERRY)].naturalGiftType == TYPE_POISON);
         ASSUME(GetSpeciesType(SPECIES_BELDUM, 0) == TYPE_STEEL);
         PLAYER(SPECIES_SKITTY) { Ability(ability); Item(ITEM_ORAN_BERRY); }
         OPPONENT(SPECIES_BELDUM);

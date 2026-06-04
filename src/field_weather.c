@@ -169,7 +169,7 @@ static const u8 ALIGNED(2) sBasePaletteColorMapTypes[32] =
     COLOR_MAP_DARK_CONTRAST,
     COLOR_MAP_DARK_CONTRAST,
     COLOR_MAP_DARK_CONTRAST,
-    COLOR_MAP_DARK_CONTRAST,
+    COLOR_MAP_NONE,
     COLOR_MAP_NONE,
     COLOR_MAP_NONE,
     // sprite palettes
@@ -191,7 +191,7 @@ static const u8 ALIGNED(2) sBasePaletteColorMapTypes[32] =
     COLOR_MAP_DARK_CONTRAST,
 };
 
-const u16 ALIGNED(4) gFogPalette[] = INCBIN_U16("graphics/weather/fog.gbapal");
+const u16 ALIGNED(4) gFogPalette[] = INCGFX_U16("graphics/weather/fog.pal", ".gbapal");
 
 void StartWeather(void)
 {
@@ -246,9 +246,9 @@ static void UpdateWeatherForms(void)
     s32 i;
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        struct Pokemon *mon = &gPlayerParty[i];
-        u16 species = GetMonData(mon, MON_DATA_SPECIES);
-        u16 targetSpecies = GetOverworldWeatherSpecies(species);
+        struct Pokemon *mon = &gParties[B_TRAINER_PLAYER][i];
+        enum Species species = GetMonData(mon, MON_DATA_SPECIES);
+        enum Species targetSpecies = GetOverworldWeatherSpecies(species);
         if (species != targetSpecies)
         {
             SetMonData(mon, MON_DATA_SPECIES, &targetSpecies);

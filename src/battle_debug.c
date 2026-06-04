@@ -669,7 +669,7 @@ void CB2_BattleDebugMenu(void)
         ResetBgsAndClearDma3BusyFlags(0);
         InitBgsFromTemplates(0, sBgTemplates, ARRAY_COUNT(sBgTemplates));
         ResetAllBgsCoordinates();
-        FreeAllWindowBuffers();
+        CloseMainBattleScreen();
         DeactivateAllTextPrinters();
         SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_ON | DISPCNT_OBJ_1D_MAP);
         ShowBg(0);
@@ -1068,7 +1068,7 @@ static void Task_ShowAiParty(u8 taskId)
         aiMons = gAiPartyData->mons[GetBattlerSide(data->aiBattlerId)];
         for (i = 0; i < gAiPartyData->count[GetBattlerSide(data->aiBattlerId)]; i++)
         {
-            u16 species = SPECIES_NONE; // Question mark
+            enum Species species = SPECIES_NONE; // Question mark
             if (aiMons[i].wasSentInBattle && aiMons[i].species)
                 species = aiMons[i].species;
             data->spriteIds.aiPartyIcons[i] = CreateMonIcon(species, SpriteCallbackDummy, (i * 41) + 15, 7, 1, 0);

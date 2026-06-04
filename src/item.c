@@ -15,6 +15,7 @@
 #include "battle_pyramid.h"
 #include "battle_pyramid_bag.h"
 #include "graphics.h"
+#include "shop_criteria.h"
 #include "constants/battle.h"
 #include "constants/items.h"
 #include "constants/moves.h"
@@ -225,12 +226,13 @@ bool32 CheckBagHasItem(enum Item itemId, u16 count)
 
 bool32 HasAtLeastOneBerry(void)
 {
-    gSpecialVar_Result = FALSE;
+    for (enum BerryId berryId = 1; berryId <= NUM_BERRIES; berryId++)
+    {
+        if (CheckBagHasItem(BerryTypeToItemId(berryId), 1) == TRUE)
+            return (gSpecialVar_Result = TRUE);
+    }
 
-    for (u32 i = FIRST_BERRY_INDEX; i <= LAST_BERRY_INDEX && gSpecialVar_Result == FALSE; i++)
-        gSpecialVar_Result = CheckBagHasItem(i, 1);
-
-    return gSpecialVar_Result;
+    return (gSpecialVar_Result = FALSE);
 }
 
 bool32 HasAtLeastOnePokeBall(void)
@@ -949,4 +951,19 @@ bool32 IsHoldEffectChoice(enum HoldEffect holdEffect)
     return holdEffect == HOLD_EFFECT_CHOICE_BAND
         || holdEffect == HOLD_EFFECT_CHOICE_SCARF
         || holdEffect == HOLD_EFFECT_CHOICE_SPECS;
+}
+
+ShopCriteriaFunc GetItemShopCriteriaFunc(u32 itemId)
+{
+    return gItemsInfo[SanitizeItemId(itemId)].shopCriteriaFunc;
+}
+
+bool32 IsItemShopCriteriaFulfilled(u32 itemId)
+{
+    ShopCriteriaFunc func = GetItemShopCriteriaFunc(itemId);
+
+    if (!func)
+        return TRUE;
+
+    return func(SanitizeItemId(itemId));
 }

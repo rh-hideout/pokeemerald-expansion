@@ -29,6 +29,7 @@
 #include "sound.h"
 #include "sprite.h"
 #include "task.h"
+#include "trainer.h"
 #include "trainer_pokemon_sprites.h"
 #include "trig.h"
 #include "util.h"
@@ -192,7 +193,7 @@ static void AnimateIndoorShowMonBg(struct Task *);
 static bool8 SlideIndoorBannerOnscreen(struct Task *);
 static bool8 SlideIndoorBannerOffscreen(struct Task *);
 
-static u8 InitFieldMoveMonSprite(u32, bool8, u32);
+static u8 InitFieldMoveMonSprite(enum Species, bool8, u32);
 static void SpriteCB_FieldMoveMonSlideOnscreen(struct Sprite *);
 static void SpriteCB_FieldMoveMonWaitAfterCry(struct Sprite *);
 static void SpriteCB_FieldMoveMonSlideOffscreen(struct Sprite *);
@@ -268,37 +269,37 @@ static u8 sActiveList[32];
 extern u8 *gFieldEffectScriptPointers[];
 extern const struct SpriteTemplate *const gFieldEffectObjectTemplatePointers[];
 
-static const u32 sNewGameBirch_Gfx[] = INCBIN_U32("graphics/birch_speech/birch.4bpp");
-static const u32 sUnusedBirchBeauty[] = INCBIN_U32("graphics/birch_speech/unused_beauty.4bpp");
-static const u16 sNewGameBirch_Pal[16] = INCBIN_U16("graphics/birch_speech/birch.gbapal");
+static const u32 sNewGameBirch_Gfx[] = INCGFX_U32("graphics/birch_speech/birch.png", ".4bpp");
+static const u32 sUnusedBirchBeauty[] = INCGFX_U32("graphics/birch_speech/unused_beauty.png", ".4bpp", "-num_tiles 822 -Wnum_tiles");
+static const u16 sNewGameBirch_Pal[16] = INCGFX_U16("graphics/birch_speech/birch.png", ".gbapal");
 
-static const u32 sPokeballGlow_Gfx[] = INCBIN_U32("graphics/field_effects/pics/pokeball_glow.4bpp");
-static const u16 sPokeballGlow_Pal[16] = INCBIN_U16("graphics/field_effects/palettes/pokeball_glow.gbapal");
-static const u32 sPokecenterMonitor0_Gfx[] = INCBIN_U32("graphics/field_effects/pics/pokecenter_monitor/0.4bpp");
-static const u32 sPokecenterMonitor1_Gfx[] = INCBIN_U32("graphics/field_effects/pics/pokecenter_monitor/1.4bpp");
-static const u16 sPokecenterMonitor_Gfx_Frlg[] = INCBIN_U16("graphics/field_effects/pics/pokecenter_monitor/frlg.4bpp");
-static const u32 sHofMonitorBig_Gfx[] = INCBIN_U32("graphics/field_effects/pics/hof_monitor_big.4bpp");
-static const u8 sHofMonitorSmall_Gfx[] = INCBIN_U8("graphics/field_effects/pics/hof_monitor_small.4bpp");
-static const u16 sHofMonitor_Pal[16] = INCBIN_U16("graphics/field_effects/palettes/hof_monitor.gbapal");
-static const u16 sHofMonitor_Gfx_Frlg[] = INCBIN_U16("graphics/field_effects/pics/hof_monitor_frlg.4bpp");
-static const u16 sHofMonitor_Pal_Frlg[] = INCBIN_U16("graphics/field_effects/pics/hof_monitor_frlg.gbapal");
+static const u32 sPokeballGlow_Gfx[] = INCGFX_U32("graphics/field_effects/pics/pokeball_glow.png", ".4bpp");
+static const u16 sPokeballGlow_Pal[16] = INCGFX_U16("graphics/field_effects/palettes/pokeball_glow.pal", ".gbapal");
+static const u32 sPokecenterMonitor0_Gfx[] = INCGFX_U32("graphics/field_effects/pics/pokecenter_monitor/0.png", ".4bpp");
+static const u32 sPokecenterMonitor1_Gfx[] = INCGFX_U32("graphics/field_effects/pics/pokecenter_monitor/1.png", ".4bpp");
+static const u16 sPokecenterMonitor_Gfx_Frlg[] = INCGFX_U16("graphics/field_effects/pics/pokecenter_monitor/frlg.png", ".4bpp");
+static const u32 sHofMonitorBig_Gfx[] = INCGFX_U32("graphics/field_effects/pics/hof_monitor_big.png", ".4bpp");
+static const u8 sHofMonitorSmall_Gfx[] = INCGFX_U8("graphics/field_effects/pics/hof_monitor_small.png", ".4bpp");
+static const u16 sHofMonitor_Pal[16] = INCGFX_U16("graphics/field_effects/palettes/hof_monitor.pal", ".gbapal");
+static const u16 sHofMonitor_Gfx_Frlg[] = INCGFX_U16("graphics/field_effects/pics/hof_monitor_frlg.png", ".4bpp");
+static const u16 sHofMonitor_Pal_Frlg[] = INCGFX_U16("graphics/field_effects/pics/hof_monitor_frlg.png", ".gbapal");
 
 // Graphics for the lights streaking past your Pokémon when it uses a field move.
-static const u32 sFieldMoveStreaksOutdoors_Gfx[] = INCBIN_U32("graphics/field_effects/pics/field_move_streaks.4bpp");
-static const u16 sFieldMoveStreaksOutdoors_Pal[16] = INCBIN_U16("graphics/field_effects/pics/field_move_streaks.gbapal");
+static const u32 sFieldMoveStreaksOutdoors_Gfx[] = INCGFX_U32("graphics/field_effects/pics/field_move_streaks.png", ".4bpp");
+static const u16 sFieldMoveStreaksOutdoors_Pal[16] = INCGFX_U16("graphics/field_effects/pics/field_move_streaks.png", ".gbapal");
 static const u16 sFieldMoveStreaksOutdoors_Tilemap[320] = INCBIN_U16("graphics/field_effects/pics/field_move_streaks.bin");
 
 // The following light streaks effect is used when the map is indoors
-static const u32 sFieldMoveStreaksIndoors_Gfx[] = INCBIN_U32("graphics/field_effects/pics/field_move_streaks_indoors.4bpp");
-static const u16 sFieldMoveStreaksIndoors_Pal[16] = INCBIN_U16("graphics/field_effects/pics/field_move_streaks_indoors.gbapal");
+static const u32 sFieldMoveStreaksIndoors_Gfx[] = INCGFX_U32("graphics/field_effects/pics/field_move_streaks_indoors.png", ".4bpp");
+static const u16 sFieldMoveStreaksIndoors_Pal[16] = INCGFX_U16("graphics/field_effects/pics/field_move_streaks_indoors.png", ".gbapal");
 static const u16 sFieldMoveStreaksIndoors_Tilemap[320] = INCBIN_U16("graphics/field_effects/pics/field_move_streaks_indoors.bin");
 
-static const u16 sSpotlight_Pal[16] = INCBIN_U16("graphics/field_effects/pics/spotlight.gbapal");
-static const u8 sSpotlight_Gfx[] = INCBIN_U8("graphics/field_effects/pics/spotlight.4bpp");
-static const u8 sRockFragment_TopLeft[] = INCBIN_U8("graphics/field_effects/pics/deoxys_rock_fragment_top_left.4bpp");
-static const u8 sRockFragment_TopRight[] = INCBIN_U8("graphics/field_effects/pics/deoxys_rock_fragment_top_right.4bpp");
-static const u8 sRockFragment_BottomLeft[] = INCBIN_U8("graphics/field_effects/pics/deoxys_rock_fragment_bottom_left.4bpp");
-static const u8 sRockFragment_BottomRight[] = INCBIN_U8("graphics/field_effects/pics/deoxys_rock_fragment_bottom_right.4bpp");
+static const u16 sSpotlight_Pal[16] = INCGFX_U16("graphics/field_effects/pics/spotlight.png", ".gbapal");
+static const u8 sSpotlight_Gfx[] = INCGFX_U8("graphics/field_effects/pics/spotlight.png", ".4bpp");
+static const u8 sRockFragment_TopLeft[] = INCGFX_U8("graphics/field_effects/pics/deoxys_rock_fragment_top_left.png", ".4bpp");
+static const u8 sRockFragment_TopRight[] = INCGFX_U8("graphics/field_effects/pics/deoxys_rock_fragment_top_right.png", ".4bpp");
+static const u8 sRockFragment_BottomLeft[] = INCGFX_U8("graphics/field_effects/pics/deoxys_rock_fragment_bottom_left.png", ".4bpp");
+static const u8 sRockFragment_BottomRight[] = INCGFX_U8("graphics/field_effects/pics/deoxys_rock_fragment_bottom_right.png", ".4bpp");
 
 bool8 (*const gFieldEffectScriptFuncs[])(u8 **, u32 *) =
 {
@@ -876,6 +877,13 @@ void FieldEffectScript_LoadFadedPalette(u8 **script)
     UpdateSpritePaletteWithWeather(paletteSlot, ShouldFieldEffectBeFogBlended(*script));
 }
 
+void FieldEffect_LoadFadedPalette(struct SpritePalette *palette, enum ColorMapType colorMap)
+{
+    u32 paletteSlot = LoadSpritePalette(palette);
+    SetPaletteColorMapType(paletteSlot + 16, colorMap);
+    UpdateSpritePaletteWithWeather(paletteSlot, TRUE);
+}
+
 void FieldEffectScript_LoadPalette(u8 **script)
 {
     struct SpritePalette *palette = (struct SpritePalette *)FieldEffectScript_ReadWord(script);
@@ -976,8 +984,9 @@ bool8 FieldEffectActiveListContains(u8 id)
     return FALSE;
 }
 
-u8 CreateTrainerSprite(u8 trainerSpriteID, s16 x, s16 y, u8 subpriority, u8 *buffer)
+u8 CreateTrainerSprite(enum TrainerPicID trainerPicId, s16 x, s16 y, u8 subpriority, u8 *buffer)
 {
+    struct CompressedSpriteSheet spriteSheet;
     struct SpriteTemplate spriteTemplate;
     bool32 alloced = FALSE;
 
@@ -988,13 +997,17 @@ u8 CreateTrainerSprite(u8 trainerSpriteID, s16 x, s16 y, u8 subpriority, u8 *buf
         alloced = TRUE;
     }
 
-    LoadSpritePalette(&gTrainerSprites[trainerSpriteID].palette);
-    LoadCompressedSpriteSheetOverrideBuffer(&gTrainerSprites[trainerSpriteID].frontPic, buffer);
+    spriteSheet.data = GetTrainerFrontPicData(trainerPicId);
+    spriteSheet.size = TRAINER_PIC_SIZE;
+    spriteSheet.tag = GetTrainerPicTag(trainerPicId, TRUE);
+
+    LoadSpritePaletteWithTag(GetTrainerFrontPicPalette(trainerPicId), GetTrainerPicTag(trainerPicId, TRUE));
+    LoadCompressedSpriteSheetOverrideBuffer(&spriteSheet, buffer);
     if (alloced)
         Free(buffer);
 
-    spriteTemplate.tileTag = gTrainerSprites[trainerSpriteID].frontPic.tag;
-    spriteTemplate.paletteTag = gTrainerSprites[trainerSpriteID].palette.tag;
+    spriteTemplate.tileTag = GetTrainerPicTag(trainerPicId, TRUE);
+    spriteTemplate.paletteTag = GetTrainerPicTag(trainerPicId, TRUE);
     spriteTemplate.oam = &sOam_64x64;
     spriteTemplate.anims = gDummySpriteAnimTable;
     spriteTemplate.images = NULL;
@@ -1005,8 +1018,8 @@ u8 CreateTrainerSprite(u8 trainerSpriteID, s16 x, s16 y, u8 subpriority, u8 *buf
 
 static void UNUSED LoadTrainerGfx_TrainerCard(u8 gender, u16 palOffset, u8 *dest)
 {
-    DecompressDataWithHeaderVram(gTrainerSprites[gender].frontPic.data, dest);
-    LoadPalette(gTrainerSprites[gender].palette.data, palOffset, PLTT_SIZE_4BPP);
+    DecompressDataWithHeaderVram(GetTrainerFrontPicData(gender), dest);
+    LoadPalette(GetTrainerFrontPicPalette(gender), palOffset, PLTT_SIZE_4BPP);
 }
 
 u8 AddNewGameBirchObject(s16 x, s16 y, u8 subpriority)
@@ -1015,7 +1028,7 @@ u8 AddNewGameBirchObject(s16 x, s16 y, u8 subpriority)
     return CreateSprite(&sSpriteTemplate_NewGameBirch, x, y, subpriority);
 }
 
-u8 CreateMonSprite_PicBox(u16 species, s16 x, s16 y, u8 subpriority)
+u8 CreateMonSprite_PicBox(enum Species species, s16 x, s16 y, u8 subpriority)
 {
     s32 spriteId = CreateMonPicSprite(species, FALSE, 0x8000, TRUE, x, y, 0, species);
     PreservePaletteInWeather(IndexOfSpritePaletteTag(species) + 0x10);
@@ -1025,7 +1038,7 @@ u8 CreateMonSprite_PicBox(u16 species, s16 x, s16 y, u8 subpriority)
         return spriteId;
 }
 
-u8 CreateMonSprite_FieldMove(u16 species, bool8 isShiny, u32 personality, s16 x, s16 y, u8 subpriority)
+u8 CreateMonSprite_FieldMove(enum Species species, bool8 isShiny, u32 personality, s16 x, s16 y, u8 subpriority)
 {
     u16 spriteId = CreateMonPicSprite(species, isShiny, personality, TRUE, x, y, 0, species);
     PreservePaletteInWeather(gSprites[spriteId].oam.paletteNum + 0x10);
@@ -2925,7 +2938,7 @@ bool8 FldEff_FieldMoveShowMonInit(void)
 {
     struct Pokemon *pokemon;
     bool32 noDucking = gFieldEffectArguments[0] & SHOW_MON_CRY_NO_DUCKING;
-    pokemon = &gPlayerParty[(u8)gFieldEffectArguments[0]];
+    pokemon = &gParties[B_TRAINER_PLAYER][(u8)gFieldEffectArguments[0]];
     gFieldEffectArguments[0] = GetMonData(pokemon, MON_DATA_SPECIES);
     gFieldEffectArguments[1] = GetMonData(pokemon, MON_DATA_IS_SHINY);
     gFieldEffectArguments[2] = GetMonData(pokemon, MON_DATA_PERSONALITY);
@@ -3267,7 +3280,7 @@ static bool8 SlideIndoorBannerOffscreen(struct Task *task)
 #undef tBgOffset
 #undef tMonSpriteId
 
-static u8 InitFieldMoveMonSprite(u32 species, bool8 isShiny, u32 personality)
+static u8 InitFieldMoveMonSprite(enum Species species, bool8 isShiny, u32 personality)
 {
     bool16 noDucking;
     u8 monSprite;
@@ -3327,7 +3340,7 @@ u8 FldEff_UseSurf(void)
     u8 taskId = CreateTask(Task_SurfFieldEffect, 0xff);
     gTasks[taskId].tMonId = gFieldEffectArguments[0];
     Overworld_ClearSavedMusic();
-    Overworld_ChangeMusicTo(MUS_SURF);
+    Overworld_ChangeMusicTo(IS_FRLG ? MUS_RG_SURF : MUS_SURF);
     return FALSE;
 }
 

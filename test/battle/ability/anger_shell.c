@@ -51,13 +51,10 @@ SINGLE_BATTLE_TEST("Anger Shell lowers Def/Sp.Def by 1 and raises Atk/Sp.Atk/Spd
         ABILITY_POPUP(player, ABILITY_ANGER_SHELL);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Klawf's Defense fell!");
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Klawf's Sp. Def fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Klawf's Attack rose!");
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Klawf's Sp. Atk rose!");
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Klawf's Speed rose!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE - 1);

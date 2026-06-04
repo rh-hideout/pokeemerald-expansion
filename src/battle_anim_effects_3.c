@@ -3372,7 +3372,7 @@ void AnimTask_RolePlaySilhouette(u8 taskId)
 {
     bool8 isBackPic, isShiny;
     u32 personality;
-    u16 species;
+    enum Species species;
     s16 xOffset;
     u32 priority;
     u8 spriteId;
@@ -5259,7 +5259,7 @@ void AnimTask_SnatchOpposingMonMove(u8 taskId)
 {
     u8 spriteId, spriteId2;
     int personality;
-    u16 species;
+    enum Species species;
     u8 subpriority;
     bool8 isBackPic, isShiny;
     s16 x;
@@ -5670,20 +5670,19 @@ static void AnimRecycle_Step(struct Sprite *sprite)
 
 void AnimTask_GetWeather(u8 taskId)
 {
-    bool32 utilityUmbrellaAffected = GetBattlerHoldEffect(gBattleAnimAttacker) == HOLD_EFFECT_UTILITY_UMBRELLA;
-
+    u32 weather = GetAttackerWeather(GetBattlerHoldEffect(gBattleAnimAttacker), GetBattlerAbility(gBattleAnimAttacker), gWeatherMoveAnim);
     gBattleAnimArgs[ARG_RET_ID] = ANIM_WEATHER_NONE;
-    if (gWeatherMoveAnim & B_WEATHER_SUN && !utilityUmbrellaAffected)
+    if (weather & B_WEATHER_SUN)
         gBattleAnimArgs[ARG_RET_ID] = ANIM_WEATHER_SUN;
-    else if (gWeatherMoveAnim & B_WEATHER_RAIN && !utilityUmbrellaAffected)
+    else if (weather & B_WEATHER_RAIN)
         gBattleAnimArgs[ARG_RET_ID] = ANIM_WEATHER_RAIN;
-    else if (gWeatherMoveAnim & B_WEATHER_SANDSTORM)
+    else if (weather & B_WEATHER_SANDSTORM)
         gBattleAnimArgs[ARG_RET_ID] = ANIM_WEATHER_SANDSTORM;
-    else if (gWeatherMoveAnim & B_WEATHER_HAIL)
+    else if (weather & B_WEATHER_HAIL)
         gBattleAnimArgs[ARG_RET_ID] = ANIM_WEATHER_HAIL;
-    else if (gWeatherMoveAnim & B_WEATHER_SNOW)
+    else if (weather & B_WEATHER_SNOW)
         gBattleAnimArgs[ARG_RET_ID] = ANIM_WEATHER_SNOW;
-    else if (gWeatherMoveAnim & B_WEATHER_FOG)
+    else if (weather & B_WEATHER_FOG)
         gBattleAnimArgs[ARG_RET_ID] = ANIM_WEATHER_FOG;
 
     DestroyAnimVisualTask(taskId);

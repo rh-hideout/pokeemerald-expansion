@@ -46,7 +46,7 @@ u8 GiveMailToMonByItemId(struct Pokemon *mon, enum Item itemId)
 {
     u8 heldItem[2];
     u8 id, i;
-    u16 species;
+    enum Species species;
     u32 personality;
 
     heldItem[0] = itemId;
@@ -80,11 +80,11 @@ u8 GiveMailToMonByItemId(struct Pokemon *mon, enum Item itemId)
     return MAIL_NONE;
 }
 
-u16 SpeciesToMailSpecies(u16 species, u32 personality)
+u16 SpeciesToMailSpecies(enum Species species, u32 personality)
 {
     if (species == SPECIES_UNOWN)
     {
-        u32 species = GetUnownLetterByPersonality(personality) + UNOWN_OFFSET;
+        enum Species species = GetUnownLetterByPersonality(personality) + UNOWN_OFFSET;
         return species;
     }
 
@@ -110,7 +110,6 @@ u16 MailSpeciesToSpecies(u16 mailSpecies, u16 *buffer)
 
 u8 GiveMailToMon(struct Pokemon *mon, struct Mail *mail)
 {
-    u8 heldItem[2];
     enum Item itemId = mail->itemId;
     u8 mailId = GiveMailToMonByItemId(mon, itemId);
 
@@ -118,14 +117,6 @@ u8 GiveMailToMon(struct Pokemon *mon, struct Mail *mail)
         return MAIL_NONE;
 
     gSaveBlock1Ptr->mail[mailId] = *mail;
-
-    SetMonData(mon, MON_DATA_MAIL, &mailId);
-
-    heldItem[0] = itemId;
-    heldItem[1] = itemId >> 8;
-
-    SetMonData(mon, MON_DATA_HELD_ITEM, heldItem);
-
     return mailId;
 }
 

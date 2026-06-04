@@ -447,7 +447,7 @@ static const struct MailLayout sMailLayouts_Tall[] = {
 void ReadMail(struct Mail *mail, MainCallback exitCallback, bool8 hasText)
 {
     u16 buffer[2];
-    u16 species;
+    enum Species species;
 
     sMailRead = AllocZeroed(sizeof(*sMailRead));
     sMailRead->language = GAME_LANGUAGE;

@@ -1,8 +1,10 @@
 #include "global.h"
 #include "script.h"
 #include "event_data.h"
+#include "field_screen_effect.h"
 #include "mystery_gift.h"
 #include "random.h"
+#include "task.h"
 #include "trainer_see.h"
 #include "util.h"
 #include "constants/event_objects.h"
@@ -81,6 +83,7 @@ void SetupNativeScript(struct ScriptContext *ctx, bool8 (*ptr)(void))
 
 void StopScript(struct ScriptContext *ctx)
 {
+    assertf(!FuncIsActiveTask(Task_WarpAndLoadMap), "Leaving script while a warp is in progress: try adding a waitstate");
     ctx->mode = SCRIPT_MODE_STOPPED;
     ctx->scriptPtr = NULL;
 }
@@ -705,7 +708,9 @@ void Script_RequestWriteVar_Internal(u32 varId)
 {
     if (varId == 0)
         return;
-    if (SPECIAL_VARS_START <= varId && varId <= SPECIAL_VARS_END)
+
+    if ((!gMapHeader.writeSpecialVarIsEffect)
+     && (SPECIAL_VARS_START <= varId && varId <= SPECIAL_VARS_END))
         return;
     Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
 }
