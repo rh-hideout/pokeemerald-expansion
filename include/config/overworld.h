@@ -161,7 +161,6 @@
 
 // Daily Seed
 #define OW_USE_DAILY_SEED_FOR_VANILLA_VARIABLES     FALSE // If TRUE, use daily seed to compute mirage island chance and lottery corner tickets.
-                                                          // The following variables can now be deleted: VAR_MIRAGE_RND_H, VAR_MIRAGE_RND_L, VAR_POKELOT_RND1 and VAR_POKELOT_RND2.
                                                           // This has a side effect of removing the deterministic/anti save scumming aspect of the mirage island randomisation
 
 #endif // GUARD_CONFIG_OVERWORLD_H
