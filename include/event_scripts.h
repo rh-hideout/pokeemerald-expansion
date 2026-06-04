@@ -30,8 +30,15 @@ extern const u8 EnterPokeballMovement[];
 
 extern const u8 EventScript_TestSignpostMsg[];
 extern const u8 EventScript_TryGetTrainerScript[];
+extern const u8 EventScript_StartTrainerApproach[];
+extern const u8 EventScript_DoNoIntroTrainerBattle[];
+extern const u8 EventScript_TryDoDoubleTrainerBattle[];
+extern const u8 EventScript_TryDoNormalTrainerBattle[];
+extern const u8 EventScript_TryDoDoubleRematchBattle[];
+extern const u8 EventScript_TryDoRematchBattle[];
 extern const u8 EventScript_ObjectApproachPlayer[];
-extern const u8 EventSnippet_NotEnoughMonsForDoubleBattle[];
+extern const u8 EventScript_ShowTrainerIntroMsg[];
+extern const u8 EventScript_NotEnoughMonsForDoubleBattle[];
 
 extern const u8 EventSnippet_Lock[];
 extern const u8 EventSnippet_FacePlayer[];
@@ -48,6 +55,7 @@ extern const u8 EventSnippet_GotoPostBattleScript[];
 extern const u8 EventSnippet_DoTrainerBattle[];
 extern const u8 EventSnippet_DoRematchTrainerBattle[];
 extern const u8 EventSnippet_EndTrainerBattle[];
+extern const u8 EventSnippet_NotEnoughMonsForDoubleBattle[];
 
 extern const u8 BerryTreeScript[];
 

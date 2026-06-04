@@ -1,3 +1,6 @@
+@ As of 04.06.26 event Script are superseded by Event Snippets (see below).
+@ Kept for backwards compatability.
+
 EventScript_StartTrainerApproach::
 	selectapproachingtrainer
 	lockfortrainer
@@ -110,6 +113,21 @@ Std_MsgboxAutoclose::
 	waitbuttonpress
 	release
 	return
+
+EventScript_ShowTrainerIntroMsg::
+	special ShowTrainerIntroSpeech
+	waitmessage
+	waitbuttonpress
+	special TryPrepareSecondApproachingTrainer
+	goto_if_eq VAR_RESULT, TRUE, EventScript_TrainerApproach
+	goto EventScript_DoTrainerBattle
+
+EventScript_DoTrainerBattle::
+	dotrainerbattle
+EventScript_EndTrainerBattle::
+	gotobeatenscript
+	releaseall
+	end
 
 @ Event Snippets for dynamic trainer battle scripting
 EventSnippet_Lock::
