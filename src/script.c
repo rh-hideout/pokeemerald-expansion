@@ -197,11 +197,6 @@ void ScriptJump(struct ScriptContext *ctx, const u8 *ptr)
 
 void ScriptCall(struct ScriptContext *ctx, const u8 *ptr)
 {
-    DebugPrintfLevel(MGBA_LOG_DEBUG, "%d\n", ctx->stackDepth);
-    for (u8 i = 0; i < ctx->stackDepth; i++) {
-        DebugPrintfLevel(MGBA_LOG_DEBUG, "%p\n", ctx->stack[i]);
-    }
-    
     assertf(!ScriptPush(ctx, ctx->scriptPtr),
         "Failed to push %p to %p", ptr, ctx)
     {
