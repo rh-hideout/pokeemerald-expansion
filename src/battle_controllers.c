@@ -2644,7 +2644,7 @@ void BtlController_HandlePrintString(enum BattlerId battler)
     if (gTestRunnerEnabled)
     {
         TestRunner_Battle_RecordMessage(gDisplayedStringBattle);
-        if (gTestRunnerHeadless)
+        if (gTestRunnerHeadless || *stringId == STRINGID_CELEBRATEMESSAGE)
         {
             BtlController_Complete(battler);
             return;
