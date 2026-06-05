@@ -1,4 +1,4 @@
-CinnabarIsland_PokemonLab_Lounge_MapScripts::
+CinnabarIsland_PokemonLab_Lounge_Frlg_MapScripts::
 	.byte 0
 
 CinnabarIsland_PokemonLab_Lounge_EventScript_Scientist::
@@ -50,7 +50,6 @@ CinnabarIsland_PokemonLab_Lounge_EventScript_Norma::
 	msgbox Trade_Text_DoYouHaveMonWantToTradeForMon, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, CinnabarIsland_PokemonLab_Lounge_EventScript_NormaDeclineTrade
 	special ChoosePartyMon
-	waitstate
 	copyvar VAR_0x800A, VAR_0x8004
 	goto_if_ge VAR_0x8004, PARTY_SIZE, CinnabarIsland_PokemonLab_Lounge_EventScript_NormaDeclineTrade
 	copyvar VAR_0x8005, VAR_0x800A
@@ -61,7 +60,6 @@ CinnabarIsland_PokemonLab_Lounge_EventScript_Norma::
 	copyvar VAR_0x8005, VAR_0x800A
 	special CreateInGameTradePokemon
 	special DoInGameTradeScene
-	waitstate
 	msgbox Trade_Text_ThanksYoureAPal
 	setflag FLAG_DID_TANGENY_TRADE
 	release
@@ -84,8 +82,8 @@ CinnabarIsland_PokemonLab_Lounge_EventScript_NormaAlreadyTraded::
 	end
 
 CinnabarIsland_PokemonLab_Lounge_Text_FoundFossilInMtMoon::
-    .string "I found this most remarkable fossil\n"
-    .string "inside MT. MOON.\p"
-    .string "I think it's of a rare, prehistoric\n"
-    .string "POKéMON.$"
+	.string "I found this most remarkable fossil\n"
+	.string "inside MT. MOON.\p"
+	.string "I think it's of a rare, prehistoric\n"
+	.string "POKéMON.$"
 

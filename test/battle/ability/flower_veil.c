@@ -82,3 +82,62 @@ DOUBLE_BATTLE_TEST("Flower Veil's stat reduction protection considers Contrary")
         EXPECT_EQ(opponentRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
     }
 }
+
+DOUBLE_BATTLE_TEST("Flower Veil does not prevent self-inflicted stat drops - moves")
+{
+    enum Move move;
+
+    PARAMETRIZE { move = MOVE_LEAF_STORM; }
+    PARAMETRIZE { move = MOVE_CURSE; }
+
+    GIVEN {
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_LEAF_STORM, self: TRUE, spAtk: -2);
+        ASSUME_STAT_CHANGE(MOVE_CURSE, attack: +1, defense: +1, speed: -1);
+        PLAYER(SPECIES_CHIKORITA);
+        PLAYER(SPECIES_COMFEY) { Ability(ABILITY_FLOWER_VEIL); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(playerLeft, move, target: opponentLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
+        NOT ABILITY_POPUP(playerRight, ABILITY_FLOWER_VEIL);
+    } THEN {
+        if (move == MOVE_LEAF_STORM)
+        {
+            EXPECT_EQ(playerLeft->statStages[STAT_SPATK], DEFAULT_STAT_STAGE - 2);
+        }
+        else
+        {
+            EXPECT_EQ(playerLeft->statStages[STAT_SPEED], DEFAULT_STAT_STAGE - 1);
+            EXPECT_EQ(playerLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
+            EXPECT_EQ(playerLeft->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 1);
+        }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Flower Veil does not prevent self-inflicted stat drops - abilities")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FORESTS_CURSE) == EFFECT_THIRD_TYPE);
+        ASSUME(GetMoveArgType(MOVE_FORESTS_CURSE) == TYPE_GRASS);
+        ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
+        PLAYER(SPECIES_SLUGMA) { Ability(ABILITY_WEAK_ARMOR); }
+        PLAYER(SPECIES_COMFEY) { Ability(ABILITY_FLOWER_VEIL); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_FORESTS_CURSE, target: playerLeft); }
+        TURN { MOVE(opponentRight, MOVE_SCRATCH, target: playerLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FORESTS_CURSE, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentRight);
+        HP_BAR(playerLeft);
+        ABILITY_POPUP(playerLeft, ABILITY_WEAK_ARMOR);
+        NOT ABILITY_POPUP(playerRight, ABILITY_FLOWER_VEIL);
+    } THEN {
+        EXPECT_EQ(playerLeft->types[2], TYPE_GRASS);
+        EXPECT_EQ(playerLeft->statStages[STAT_DEF], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(playerLeft->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 2);
+    }
+}

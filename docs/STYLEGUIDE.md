@@ -64,7 +64,7 @@ When describing a system/component in-depth, use block comment syntax.
 ```
 
 When briefly describing a function or block of code, use a single-line comments
-placed on its own line. 
+placed on its own line.
 There should be a single space directly to the right of `//`.
 
 ```c
@@ -447,13 +447,15 @@ If a branch has a config that performs either of the following, it should be on 
 *  improves the backend / developer quality of life
 *  emulates present day, modern day Pokémon
 
+The sole excpetion to this is content who's sole source is Pokémon Champions. Champions content should use the `GEN_CHAMPIONS` config, but `GEN_LATEST` will remain `GEN_9` unless explicitly stated otherwise by a maintainer.
+
 If a branch's behavior is one that Game Freak does not have a consistent stance on, the default behavior of the config should be disussed by the maintainers.
 
 All other configs should be off.
 
 ### Save Philosophy
 
-Until [save migration](https://discord.com/channels/419213663107416084/1108733346864963746) is implemented, branches will only merged in if they do not forcefully break existing game saves. 
+Until [save migration](https://discord.com/channels/419213663107416084/1108733346864963746) is implemented, branches will only merged in if they do not forcefully break existing game saves.
 
 When `pokemeerald-expansion` gets to a point where new functionality will require that we break saves, we will merge as many [save-breaking features](https://discord.com/channels/419213663107416084/1202774957776441427) together as possible, and increment the major version number of the project.
 

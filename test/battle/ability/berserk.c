@@ -14,7 +14,7 @@ SINGLE_BATTLE_TEST("Berserk activates only if the target had more than 50% of it
     PARAMETRIZE { hp = 254; activates = TRUE; }
 
     GIVEN {
-        ASSUME(!IsBattleMoveStatus(MOVE_SCRATCH));
+        ASSUME(GetMoveCategory(MOVE_SCRATCH) != DAMAGE_CATEGORY_STATUS);
         PLAYER(SPECIES_DRAMPA) { Ability(ABILITY_BERSERK); MaxHP(maxHp); HP(hp); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -37,7 +37,7 @@ SINGLE_BATTLE_TEST("Berserk raises Sp.Atk by 1")
 {
     u16 maxHp = 500;
     GIVEN {
-        ASSUME(!IsBattleMoveStatus(MOVE_SCRATCH));
+        ASSUME(GetMoveCategory(MOVE_SCRATCH) != DAMAGE_CATEGORY_STATUS);
         PLAYER(SPECIES_DRAMPA) { Ability(ABILITY_BERSERK); MaxHP(maxHp); HP(maxHp / 2 + 1); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -109,7 +109,7 @@ SINGLE_BATTLE_TEST("Berserk will not activate if the last multi hit move activat
             NOT ABILITY_POPUP(player, ABILITY_BERSERK);
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DOUBLE_SLAP, opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         NOT ABILITY_POPUP(player, ABILITY_BERSERK);
 
     } THEN {
@@ -121,7 +121,7 @@ SINGLE_BATTLE_TEST("Berserk activates before the hp can be restored on non multi
 {
     u16 maxHp = 500;
     GIVEN {
-        ASSUME(!IsBattleMoveStatus(MOVE_SCRATCH));
+        ASSUME(GetMoveCategory(MOVE_SCRATCH) != DAMAGE_CATEGORY_STATUS);
         PLAYER(SPECIES_DRAMPA) { Ability(ABILITY_BERSERK); Item(ITEM_SITRUS_BERRY); MaxHP(maxHp); HP(maxHp / 2 + 1); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -129,7 +129,7 @@ SINGLE_BATTLE_TEST("Berserk activates before the hp can be restored on non multi
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         ABILITY_POPUP(player, ABILITY_BERSERK);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
     } THEN {
         EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 1);
     }

@@ -113,7 +113,7 @@ WILD_BATTLE_TEST("Thief and Covet steal target's held item and it's added to Bag
     PARAMETRIZE { move = MOVE_THIEF; }
     PARAMETRIZE { move = MOVE_COVET; }
     GIVEN {
-        WITH_CONFIG(CONFIG_STEAL_WILD_ITEMS, GEN_9);
+        WITH_CONFIG(B_STEAL_WILD_ITEMS, GEN_9);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_HYPER_POTION); }
     } WHEN {
@@ -162,7 +162,7 @@ SINGLE_BATTLE_TEST("Thief and Covet: Berries that activate on HP thresholds are 
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, move, player);
         HP_BAR(opponent);
-        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_STEAL, opponent);
     }
 }
@@ -181,7 +181,7 @@ SINGLE_BATTLE_TEST("Thief and Covet: Berries that activate on a Status activate 
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, move, player);
         ABILITY_POPUP(player, ABILITY_POISON_TOUCH);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_STEAL, opponent);
     }
 }

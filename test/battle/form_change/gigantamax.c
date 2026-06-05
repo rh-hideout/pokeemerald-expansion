@@ -40,6 +40,25 @@ SINGLE_BATTLE_TEST("Dynamax: Venusaur returns its base Form upon battle end afte
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); }
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_VENUSAUR);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SPECIES), SPECIES_VENUSAUR);
+    }
+}
+
+SINGLE_BATTLE_TEST("Dynamax: Venusaur returns its base Form upon fainting end after Gigantamaxing")
+{
+    GIVEN {
+        PLAYER(SPECIES_VENUSAUR) { HP(1); GigantamaxFactor(TRUE); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX);
+            MOVE(opponent, MOVE_SCRATCH);
+            SEND_OUT(player, 1);
+        }
+        TURN { USE_ITEM(player, ITEM_REVIVE, 0); }
+        TURN { SWITCH(player, 0); }
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_VENUSAUR);
     }
 }

@@ -168,7 +168,7 @@ static const struct SpriteTemplate sSpriteTemplate_MenuText =
     .anims = sAnims_MenuText,
 };
 
-static const u16 sMenuText_Pal[] = INCBIN_U16("graphics/trade/text.gbapal");
+static const u16 sMenuText_Pal[] = INCGFX_U16("graphics/trade/text.pal", ".gbapal");
 static const struct SpritePalette sSpritePalette_MenuText =
 {
     .data = sMenuText_Pal,
@@ -615,33 +615,33 @@ static const u8 sSelectedMonLevelGenderCoords[3][2] =
     [TRADE_PARTNER] = {19, 3}
 };
 
-static const u16 sPokeball_Pal[] = INCBIN_U16("graphics/trade/pokeball.gbapal");
-static const u8 sPokeball_Gfx[] = INCBIN_U8("graphics/trade/pokeball.4bpp");
-static const u8 sPokeballSymbol_Gfx[] = INCBIN_U8("graphics/trade/pokeball_symbol.8bpp"); // unused
+static const u16 sPokeball_Pal[] = INCGFX_U16("graphics/trade/pokeball.png", ".gbapal");
+static const u8 sPokeball_Gfx[] = INCGFX_U8("graphics/trade/pokeball.png", ".4bpp");
+static const u8 sPokeballSymbol_Gfx[] = INCGFX_U8("graphics/trade/pokeball_symbol.png", ".8bpp"); // unused
 static const u16 sCableCloseup_Map[] = INCBIN_U16("graphics/trade/crossing_highlight_cable.bin");
 static const u16 sPokeballSymbol_Map[] = INCBIN_U16("graphics/trade/pokeball_symbol_map.bin"); // unused?
-static const u16 sUnusedPal1[] = INCBIN_U16("graphics/trade/unused1.gbapal");
-static const u16 sGba_Pal[] = INCBIN_U16("graphics/trade/gba.gbapal");
-static const u16 sUnusedPal2[] = INCBIN_U16("graphics/trade/unused2.gbapal");
-static const u16 sWirelessSignalNone_Pal_Unused[] = INCBIN_U16("graphics/trade/wireless_signal_none.gbapal");
-static const u16 sLinkMon_Pal[] = INCBIN_U16("graphics/trade/link_mon.gbapal");
-static const u8 sLinkMonGlow_Gfx[] = INCBIN_U8("graphics/trade/link_mon_glow.4bpp");
-static const u8 sLinkMonShadow_Gfx[] = INCBIN_U8("graphics/trade/link_mon_shadow.4bpp");
-static const u8 sCableEnd_Gfx[] = INCBIN_U8("graphics/trade/cable_end.4bpp");
-static const u8 sGbaScreen_Gfx[] = INCBIN_U8("graphics/trade/gba_screen.4bpp");
+static const u16 sUnusedPal1[] = INCGFX_U16("graphics/trade/unused1.pal", ".gbapal");
+static const u16 sGba_Pal[] = INCGFX_U16("graphics/trade/gba.pal", ".gbapal");
+static const u16 sUnusedPal2[] = INCGFX_U16("graphics/trade/unused2.pal", ".gbapal");
+static const u16 sWirelessSignalNone_Pal_Unused[] = INCGFX_U16("graphics/trade/wireless_signal_none.pal", ".gbapal");
+static const u16 sLinkMon_Pal[] = INCGFX_U16("graphics/trade/link_mon.pal", ".gbapal");
+static const u8 sLinkMonGlow_Gfx[] = INCGFX_U8("graphics/trade/link_mon_glow.png", ".4bpp");
+static const u8 sLinkMonShadow_Gfx[] = INCGFX_U8("graphics/trade/link_mon_shadow.png", ".4bpp");
+static const u8 sCableEnd_Gfx[] = INCGFX_U8("graphics/trade/cable_end.png", ".4bpp");
+static const u8 sGbaScreen_Gfx[] = INCGFX_U8("graphics/trade/gba_screen.png", ".4bpp");
 const u16 gTradePlatform_Tilemap[] = INCBIN_U16("graphics/trade/platform.bin");
-static const u8 sGbaAffine_Gfx[] = INCBIN_U8("graphics/trade/gba_affine.8bpp"); // Only the gfx for when the GBA is zooming in/out
+static const u8 sGbaAffine_Gfx[] = INCGFX_U8("graphics/trade/gba_affine.png", ".8bpp"); // Only the gfx for when the GBA is zooming in/out
 static const u8 sEmptyGfx[64] = {};
 static const u8 sGbaAffineMapCable[] = INCBIN_U8("graphics/trade/gba_affine_map_cable.bin");
 static const u8 sGbaAffineMapWireless[] = INCBIN_U8("graphics/trade/gba_affine_map_wireless.bin");
 static const u16 sGbaMapWireless[] = INCBIN_U16("graphics/trade/gba_map_wireless.bin");
 static const u16 sGbaMapCable[] = INCBIN_U16("graphics/trade/gba_map_cable.bin");
-static const u32 sWirelessCloseup_Map[] = INCBIN_U32("graphics/trade/crossing_highlight_wireless.bin.smolTM");
-static const u16 sWirelessSignalSend_Pal[] = INCBIN_U16("graphics/trade/wireless_signal_send.gbapal");
-static const u16 sWirelessSignalRecv_Pal[] = INCBIN_U16("graphics/trade/wireless_signal_receive.gbapal");
-static const u16 sWirelessSignalNone_Pal[] = INCBIN_U16("graphics/trade/wireless_signal_none.gbapal");
-static const u32 sWirelessSignal_Gfx[] = INCBIN_U32("graphics/trade/wireless_signal.4bpp.smol");
-static const u32 sWirelessSignal_Tilemap[] = INCBIN_U32("graphics/trade/wireless_signal.bin.smolTM");
+static const u32 sWirelessCloseup_Map[] = INCGFX_U32("graphics/trade/crossing_highlight_wireless.bin", ".smolTM");
+static const u16 sWirelessSignalSend_Pal[] = INCGFX_U16("graphics/trade/wireless_signal_send.pal", ".gbapal");
+static const u16 sWirelessSignalRecv_Pal[] = INCGFX_U16("graphics/trade/wireless_signal_receive.pal", ".gbapal");
+static const u16 sWirelessSignalNone_Pal[] = INCGFX_U16("graphics/trade/wireless_signal_none.pal", ".gbapal");
+static const u32 sWirelessSignal_Gfx[] = INCGFX_U32("graphics/trade/wireless_signal.png", ".4bpp.smol");
+static const u32 sWirelessSignal_Tilemap[] = INCGFX_U32("graphics/trade/wireless_signal.bin", ".smolTM");
 
 static const struct OamData sOamData_Pokeball =
 {
@@ -953,7 +953,7 @@ static const struct SpriteTemplate sSpriteTemplate_GbaScreenFlash_Short =
     .callback = SpriteCB_GbaScreen
 };
 
-static const u16 sLinkMonShadow_Pal[] = INCBIN_U16("graphics/trade/link_mon_shadow.gbapal");
+static const u16 sLinkMonShadow_Pal[] = INCGFX_U16("graphics/trade/link_mon_shadow.pal", ".gbapal");
 
 static const union AffineAnimCmd sAffineAnim_CrossingMonPic[] =
 {
@@ -1031,6 +1031,186 @@ static const struct InGameTrade sIngameTrades[] =
         .otGender = FEMALE,
         .sheen = 10,
         .requestedSpecies = SPECIES_SKITTY
+    },
+    [INGAME_TRADE_MR_MIME] = 
+    {
+        .nickname = _("MIMIEN"),
+        .species = SPECIES_MR_MIME,
+        .ivs = {20, 15, 17, 24, 23, 22},
+        .abilityNum = 0,
+        .otId = 1985,
+        .conditions = {5, 5, 5, 30, 5},
+        .personality = 0x00009cae,
+        .heldItem = ITEM_NONE,
+        .mailNum = MAIL_NONE,
+        .otName = _("REYLEY"),
+        .otGender = MALE,
+        .sheen = 10,
+        .requestedSpecies = SPECIES_ABRA
+    },
+    [INGAME_TRADE_JYNX] = 
+    {
+        .nickname = _("ZYNX"),
+        .species = SPECIES_JYNX,
+        .ivs = {18, 17, 18, 22, 25, 21},
+        .abilityNum = 0,
+        .otId = 36728,
+        .conditions = {5, 30, 5, 5, 5},
+        .personality = 0x498a2e1d,
+        .heldItem = ITEM_FAB_MAIL,
+        .mailNum = 3,
+        .otName = _("DONTAE"),
+        .otGender = MALE,
+        .sheen = 10,
+        .requestedSpecies = SPECIES_POLIWHIRL
+    },
+    [INGAME_TRADE_NIDORAN] = 
+    {
+#if defined(FIRERED)
+        .nickname = _("MS. NIDO"),
+        .species = SPECIES_NIDORAN_F,
+        .ivs = {22, 18, 25, 19, 15, 22},
+        .abilityNum = 0,
+        .otId = 63184,
+        .conditions = {5, 5, 5, 5, 30},
+        .personality = 0x4c970b89,
+        .heldItem = ITEM_TINY_MUSHROOM,
+        .mailNum = MAIL_NONE,
+        .otName = _("SAIGE"),
+        .otGender = FEMALE,
+        .sheen = 10,
+        .requestedSpecies = SPECIES_NIDORAN_M
+#else
+        .nickname = _("MR. NIDO"),
+        .species = SPECIES_NIDORAN_M,
+        .ivs = {19, 25, 18, 22, 22, 15},
+        .abilityNum = 0,
+        .otId = 63184,
+        .conditions = {30, 5, 5, 5, 5},
+        .personality = 0x4c970b9e,
+        .heldItem = ITEM_TINY_MUSHROOM,
+        .mailNum = MAIL_NONE,
+        .otName = _("SAIGE"),
+        .otGender = FEMALE,
+        .sheen = 10,
+        .requestedSpecies = SPECIES_NIDORAN_F
+#endif
+    },
+    [INGAME_TRADE_FARFETCHD] = 
+    {
+        .nickname = _("CH'DING"),
+        .species = SPECIES_FARFETCHD,
+        .ivs = {20, 25, 21, 24, 15, 20},
+        .abilityNum = 0,
+        .otId = 8810,
+        .conditions = {30, 5, 5, 5, 5},
+        .personality = 0x151943d7,
+        .heldItem = ITEM_STICK,
+        .mailNum = MAIL_NONE,
+        .otName = _("ELYSSA"),
+        .otGender = MALE,
+        .sheen = 10,
+        .requestedSpecies = SPECIES_SPEAROW
+    },
+    [INGAME_TRADE_NIDORINOA] = 
+    {
+#if defined(FIRERED)
+        .nickname = _("NINA"),
+        .species = SPECIES_NIDORINA,
+        .ivs = {22, 25, 18, 19, 22, 15},
+        .abilityNum = 0,
+        .otId = 13637,
+        .conditions = {5, 5, 30, 5, 5},
+        .personality = 0x00eeca15,
+        .heldItem = ITEM_NONE,
+        .mailNum = 255,
+        .otName = _("TURNER"),
+        .otGender = MALE,
+        .sheen = 10,
+        .requestedSpecies = SPECIES_NIDORINO
+#else
+        .nickname = _("NINO"),
+        .species = SPECIES_NIDORINO,
+        .ivs = {19, 18, 25, 22, 15, 22},
+        .abilityNum = 0,
+        .otId = 13637,
+        .conditions = {5, 5, 5, 5, 30},
+        .personality = 0x00eeca19,
+        .heldItem = ITEM_NONE,
+        .mailNum = MAIL_NONE,
+        .otName = _("TURNER"),
+        .otGender = MALE,
+        .sheen = 10,
+        .requestedSpecies = SPECIES_NIDORINA
+#endif
+    },
+    [INGAME_TRADE_LICKITUNG] = 
+    {
+        .nickname = _("MARC"),
+        .species = SPECIES_LICKITUNG,
+        .ivs = {24, 19, 21, 15, 23, 21},
+        .abilityNum = 0,
+        .otId = 1239,
+        .conditions = {5, 5, 5, 5, 30},
+        .personality = 0x451308ab,
+        .heldItem = ITEM_NONE,
+        .mailNum = MAIL_NONE,
+        .otName = _("HADEN"),
+        .otGender = MALE,
+        .sheen = 10,
+#if defined(FIRERED)
+        .requestedSpecies = SPECIES_GOLDUCK
+#else
+        .requestedSpecies = SPECIES_SLOWBRO
+#endif
+    },
+    [INGAME_TRADE_ELECTRODE] = 
+    {
+        .nickname = _("ESPHERE"),
+        .species = SPECIES_ELECTRODE,
+        .ivs = {19, 16, 18, 25, 25, 19},
+        .abilityNum = 1,
+        .otId = 50298,
+        .conditions = {30, 5, 5, 5, 5},
+        .personality = 0x06341016,
+        .heldItem = ITEM_NONE,
+        .mailNum = 255,
+        .otName = _("CLIFTON"),
+        .otGender = MALE,
+        .sheen = 10,
+        .requestedSpecies = SPECIES_RAICHU
+    },
+    [INGAME_TRADE_TANGELA] = 
+    {
+        .nickname = _("TANGENY"),
+        .species = SPECIES_TANGELA,
+        .ivs = {22, 17, 25, 16, 23, 20},
+        .abilityNum = 0,
+        .otId = 60042,
+        .conditions = {5, 5, 30, 5, 5},
+        .personality = 0x5c77ecfa,
+        .heldItem = ITEM_STARDUST,
+        .mailNum = 255,
+        .otName = _("NORMA"),
+        .otGender = FEMALE,
+        .sheen = 10,
+        .requestedSpecies = SPECIES_VENONAT
+    },
+    [INGAME_TRADE_SEEL] = 
+    {
+        .nickname = _("SEELOR"),
+        .species = SPECIES_SEEL,
+        .ivs = {24, 15, 22, 16, 23, 22},
+        .abilityNum = 0,
+        .otId = 9853,
+        .conditions = {5, 5, 5, 5, 30},
+        .personality = 0x482cac89,
+        .heldItem = ITEM_NONE,
+        .mailNum = 255,
+        .otName = _("GARETT"),
+        .otGender = MALE,
+        .sheen = 10,
+        .requestedSpecies = SPECIES_PONYTA
     }
 };
 
@@ -1066,6 +1246,17 @@ static const u16 sIngameTradeMail[][MAIL_WORDS_COUNT + 1] =
         EC_WORD_A,
         EC_WORD_CUTE,
         EC_WORD_WAY
+    },
+    {
+        EC_WORD_THAT_S,
+        EC_WORD_A,
+        EC_WORD_HEALTHY,
+        EC_POKEMON(JYNX),
+        EC_WORD_EXCL,
+        EC_WORD_BE,
+        EC_WORD_KIND,
+        EC_WORD_TO,
+        EC_WORD_IT
     }
 };
 

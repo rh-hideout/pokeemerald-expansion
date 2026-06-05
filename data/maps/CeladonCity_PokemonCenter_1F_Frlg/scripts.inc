@@ -1,4 +1,4 @@
-CeladonCity_PokemonCenter_1F_MapScripts::
+CeladonCity_PokemonCenter_1F_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, CeladonCity_PokemonCenter_1F_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, CableClub_OnResume
 	.byte 0
@@ -10,7 +10,7 @@ CeladonCity_PokemonCenter_1F_OnTransition::
 CeladonCity_PokemonCenter_1F_EventScript_Nurse::
 	lock
 	faceplayer
-	call Common_EventScript_PkmnCenterNurse
+	call EventScript_PkmnCenterNurse_Frlg
 	release
 	end
 
@@ -27,17 +27,17 @@ CeladonCity_PokemonCenter_1F_EventScript_Youngster::
 	end
 
 CeladonCity_PokemonCenter_1F_Text_PokeFluteAwakensSleepingMons::
-    .string "A POKé FLUTE awakens sleeping\n"
-    .string "POKéMON. You know that.\p"
-    .string "It does so with a sound that only\n"
-    .string "they can hear.$"
+	.string "A POKé FLUTE awakens sleeping\n"
+	.string "POKéMON. You know that.\p"
+	.string "It does so with a sound that only\n"
+	.string "they can hear.$"
 
 CeladonCity_PokemonCenter_1F_Text_RodeHereFromFuchsia::
-    .string "I rode here from FUCHSIA.\p"
-    .string "It's an uphill ride on CYCLING\n"
-    .string "ROAD, so I'm exhausted.$"
+	.string "I rode here from FUCHSIA.\p"
+	.string "It's an uphill ride on CYCLING\n"
+	.string "ROAD, so I'm exhausted.$"
 
 CeladonCity_PokemonCenter_1F_Text_GoToCyclingRoadIfIHadBike::
-    .string "If I had a BIKE, I would go to\n"
-    .string "CYCLING ROAD!$"
+	.string "If I had a BIKE, I would go to\n"
+	.string "CYCLING ROAD!$"
 

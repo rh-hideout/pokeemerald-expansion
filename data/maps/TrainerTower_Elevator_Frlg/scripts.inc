@@ -1,4 +1,4 @@
-TrainerTower_Elevator_MapScripts::
+TrainerTower_Elevator_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_RESUME, TrainerTower_OnResume
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, TrainerTower_OnFrame
 	.byte 0

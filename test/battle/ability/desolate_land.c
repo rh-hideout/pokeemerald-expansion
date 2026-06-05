@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(!IsBattleMoveStatus(MOVE_WATER_GUN));
+    ASSUME(GetMoveCategory(MOVE_WATER_GUN) != DAMAGE_CATEGORY_STATUS);
     ASSUME(GetMoveType(MOVE_WATER_GUN) == TYPE_WATER);
 }
 
@@ -32,7 +32,7 @@ SINGLE_BATTLE_TEST("Desolate Land blocks damaging Water-type moves")
 DOUBLE_BATTLE_TEST("Desolate Land blocks damaging Water-type moves and prints the message only once with moves hitting multiple targets")
 {
     GIVEN {
-        ASSUME(!IsBattleMoveStatus(MOVE_SURF));
+        ASSUME(GetMoveCategory(MOVE_SURF) != DAMAGE_CATEGORY_STATUS);
         ASSUME(GetMoveType(MOVE_SURF) == TYPE_WATER);
         ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); Speed(5); }
@@ -128,7 +128,7 @@ SINGLE_BATTLE_TEST("Desolate Land blocks weather-setting moves")
 
 SINGLE_BATTLE_TEST("Desolate Land prevents other weather abilities")
 {
-    u16 ability, species;
+    enum Ability ability; u16 species;
     PARAMETRIZE { ability = ABILITY_DROUGHT;      species = SPECIES_NINETALES; }
     PARAMETRIZE { ability = ABILITY_DRIZZLE;      species = SPECIES_POLITOED; }
     PARAMETRIZE { ability = ABILITY_SAND_STREAM;  species = SPECIES_HIPPOWDON; }

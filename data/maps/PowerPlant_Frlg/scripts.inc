@@ -1,4 +1,4 @@
-PowerPlant_MapScripts::
+PowerPlant_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_RESUME, PowerPlant_OnResume
 	map_script MAP_SCRIPT_ON_TRANSITION, PowerPlant_OnTransition
 	.byte 0
@@ -46,7 +46,6 @@ PowerPlant_EventScript_Zapdos::
 	waitbuttonpress
 	setflag FLAG_SYS_CTRL_OBJ_DELETE
 	special BattleSetup_StartLegendaryBattle
-	waitstate
 	clearflag FLAG_SYS_CTRL_OBJ_DELETE
 	specialvar VAR_RESULT, GetBattleOutcome
 	goto_if_eq VAR_RESULT, B_OUTCOME_WON, PowerPlant_EventScript_DefeatedZapdos

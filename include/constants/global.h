@@ -25,16 +25,18 @@
 #include "config/follower_npc.h"
 #include "config/general.h"
 #include "config/item.h"
+#include "config/map_preview_screen.h"
 #include "config/overworld.h"
 #include "config/pokemon.h"
 #include "config/summary_screen.h"
+#include "config/wild_encounter.h"
 
 // Invalid Versions show as "----------" in Gen 4 and Gen 5's summary screen.
 // In Gens 6 and 7, invalid versions instead show "a distant land" in the summary screen.
 // In Gen 4 only, migrated Pokémon with Diamond, Pearl, or Platinum's ID show as "----------".
 // Gen 5 and up read Diamond, Pearl, or Platinum's ID as "Sinnoh".
 // In Gen 4 and up, migrated Pokémon with HeartGold or SoulSilver's ID show the otherwise unused "Johto" string.
-enum GameVersion
+enum __attribute__((packed)) GameVersion
 {
     VERSION_SAPPHIRE = 1,
     VERSION_RUBY = 2,
@@ -62,7 +64,18 @@ enum Language
     NUM_LANGUAGES = LANGUAGE_SPANISH,
 };
 
-#define GAME_VERSION (VERSION_EMERALD)
+#ifdef FIRERED
+    #define GAME_VERSION (VERSION_FIRE_RED)
+    #define IS_FRLG 1
+#else
+    #ifdef LEAFGREEN
+    #define GAME_VERSION (VERSION_LEAF_GREEN)
+    #define IS_FRLG 1
+    #else
+    #define GAME_VERSION (VERSION_EMERALD)
+    #define IS_FRLG 0
+    #endif
+#endif
 #define GAME_LANGUAGE (LANGUAGE_ENGLISH)
 
 // party sizes
@@ -92,7 +105,6 @@ enum Language
 #define MAX_REMATCH_ENTRIES 100 // only REMATCH_TABLE_ENTRIES (78) are used
 #define NUM_CONTEST_WINNERS 13
 #define UNION_ROOM_KB_ROW_COUNT 10
-#define GIFT_RIBBONS_COUNT 11
 #define SAVED_TRENDS_COUNT 5
 #define PYRAMID_BAG_ITEMS_COUNT 10
 #define ROAMER_COUNT 1 // Number of maximum concurrent active roamers

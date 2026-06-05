@@ -2,13 +2,13 @@
 #include "malloc.h"
 #include "battle.h"
 #include "pokemon.h"
-#include "battle_ai_main.h"
-#include "battle_ai_util.h"
+#include "battle_ai_record.h"
 #include "battle_controllers.h"
 #include "battle_interface.h"
 #include "battle_message.h"
 #include "battle_z_move.h"
 #include "battle_scripts.h"
+#include "battle_stat_change.h"
 #include "graphics.h"
 #include "sprite.h"
 #include "window.h"
@@ -44,9 +44,9 @@
 #define STAT_STAGE(battler, stat) (gBattleMons[battler].statStages[stat - 1])
 
 // Function Declarations
-static void ZMoveSelectionDisplayPpNumber(u32 battler);
+static void ZMoveSelectionDisplayPpNumber(enum BattlerId battler);
 static void ZMoveSelectionDisplayPower(enum Move move, enum Move zMove);
-static void ZMoveSelectionDisplayMoveType(enum Move zMove, u32 battler);
+static void ZMoveSelectionDisplayMoveType(enum Move zMove, enum BattlerId battler);
 
 // Const Data
 static const struct SignatureZMove sSignatureZMoves[] =
@@ -110,18 +110,19 @@ bool32 IsZMove(enum Move move)
     return move >= FIRST_Z_MOVE && move <= LAST_Z_MOVE;
 }
 
-bool32 CanUseZMove(u32 battler)
+bool32 CanUseZMove(enum BattlerId battler)
 {
     enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
+    enum BattlerPosition position = GetBattlerPosition(battler);
 
     // Check if Player has Z-Power Ring.
-    if (!TESTING && (battler == B_POSITION_PLAYER_LEFT
-        || (!(gBattleTypeFlags & BATTLE_TYPE_MULTI) && battler == B_POSITION_PLAYER_RIGHT))
+    if (!TESTING && (position == B_POSITION_PLAYER_LEFT
+        || (!(gBattleTypeFlags & BATTLE_TYPE_MULTI) && position == B_POSITION_PLAYER_RIGHT))
         && !CheckBagHasItem(ITEM_Z_POWER_RING, 1))
         return FALSE;
 
     // Add '| BATTLE_TYPE_FRONTIER' to below if issues occur
-    if (gBattleTypeFlags & (BATTLE_TYPE_SAFARI | BATTLE_TYPE_WALLY_TUTORIAL))
+    if (gBattleTypeFlags & (BATTLE_TYPE_SAFARI | BATTLE_TYPE_CATCH_TUTORIAL))
         return FALSE;
 
     // Check if Trainer has already used a Z-Move.
@@ -140,7 +141,7 @@ bool32 CanUseZMove(u32 battler)
     return TRUE;
 }
 
-enum Move GetUsableZMove(u32 battler, enum Move move)
+enum Move GetUsableZMove(enum BattlerId battler, enum Move move)
 {
     enum Item item = gBattleMons[battler].item;
     enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
@@ -158,12 +159,12 @@ enum Move GetUsableZMove(u32 battler, enum Move move)
     return MOVE_NONE;
 }
 
-void ActivateZMove(u32 battler)
+void ActivateZMove(enum BattlerId battler)
 {
     SetActiveGimmick(battler, GIMMICK_Z_MOVE);
 }
 
-bool32 IsViableZMove(u32 battler, enum Move move)
+bool32 IsViableZMove(enum BattlerId battler, enum Move move)
 {
     enum Item item;
     enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
@@ -180,8 +181,9 @@ bool32 IsViableZMove(u32 battler, enum Move move)
             return FALSE;
     }
 
+    enum BattlerPosition position = GetBattlerPosition(battler);
     // Check if Player has Z-Power Ring.
-    if ((battler == B_POSITION_PLAYER_LEFT || (!(gBattleTypeFlags & BATTLE_TYPE_MULTI) && battler == B_POSITION_PLAYER_RIGHT))
+    if ((position == B_POSITION_PLAYER_LEFT || (!(gBattleTypeFlags & BATTLE_TYPE_MULTI) && position == B_POSITION_PLAYER_RIGHT))
         && !CheckBagHasItem(ITEM_Z_POWER_RING, 1))
     {
         return FALSE;
@@ -201,7 +203,7 @@ bool32 IsViableZMove(u32 battler, enum Move move)
     return FALSE;
 }
 
-void AssignUsableZMoves(u32 battler, enum Move *moves)
+void AssignUsableZMoves(enum BattlerId battler, enum Move *moves)
 {
     u32 i;
     gBattleStruct->zmove.possibleZMoves[battler] = 0;
@@ -212,7 +214,7 @@ void AssignUsableZMoves(u32 battler, enum Move *moves)
     }
 }
 
-bool32 TryChangeZTrigger(u32 battler, u32 moveIndex)
+bool32 TryChangeZTrigger(enum BattlerId battler, u32 moveIndex)
 {
     bool32 viableZMove = (gBattleStruct->zmove.possibleZMoves[battler] & (1u << moveIndex)) != 0;
 
@@ -226,7 +228,7 @@ bool32 TryChangeZTrigger(u32 battler, u32 moveIndex)
     return viableZMove;
 }
 
-enum Move GetSignatureZMove(enum Move move, u32 species, enum Item item)
+enum Move GetSignatureZMove(enum Move move, enum Species species, enum Item item)
 {
     u32 i;
 
@@ -257,7 +259,7 @@ enum Move GetTypeBasedZMove(enum Move move)
     return gTypesInfo[moveType].zMove;
 }
 
-bool32 MoveSelectionDisplayZMove(enum Move zmove, u32 battler)
+bool32 MoveSelectionDisplayZMove(enum Move zmove, enum BattlerId battler)
 {
     u32 i;
     struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
@@ -364,7 +366,6 @@ bool32 MoveSelectionDisplayZMove(enum Move zmove, u32 battler)
         }
         else if (GetMoveEffect(zmove) == EFFECT_EXTREME_EVOBOOST)
         {
-            // Damaging move -> status z move
             StringCopy(gDisplayedStringBattle, sText_StatsPlus2);
             BattlePutTextOnWindow(gDisplayedStringBattle, B_WIN_MOVE_NAME_3);
             StringCopy(gDisplayedStringBattle, GetMoveName(zmove));
@@ -401,7 +402,7 @@ static void ZMoveSelectionDisplayPower(enum Move move, enum Move zMove)
     }
 }
 
-static void ZMoveSelectionDisplayPpNumber(u32 battler)
+static void ZMoveSelectionDisplayPpNumber(enum BattlerId battler)
 {
     u8 *txtPtr;
 
@@ -415,7 +416,7 @@ static void ZMoveSelectionDisplayPpNumber(u32 battler)
     BattlePutTextOnWindow(gDisplayedStringBattle, B_WIN_PP_REMAINING);
 }
 
-static void ZMoveSelectionDisplayMoveType(enum Move zMove, u32 battler)
+static void ZMoveSelectionDisplayMoveType(enum Move zMove, enum BattlerId battler)
 {
     u8 *txtPtr, *end;
     enum Type zMoveType = GetBattleMoveType(zMove);
@@ -433,9 +434,10 @@ static void ZMoveSelectionDisplayMoveType(enum Move zMove, u32 battler)
 #define Z_EFFECT_BS_LENGTH  5
 // This function kinda cheats by setting a return battle script to after the setzeffect various command
 // and then jumping to a z effect script
-void SetZEffect(void)
+void SetZEffect(const u8 *nextInstr)
 {
     u32 i;
+    s32 stage = 0;
     enum ZEffect effect = GetMoveZEffect(gChosenMove);
 
     if (effect == Z_EFFECT_CURSE)
@@ -446,9 +448,6 @@ void SetZEffect(void)
             effect = Z_EFFECT_ATK_UP_1;
     }
 
-    gBattleScripting.savedStatChanger = gBattleScripting.statChanger;   // Save used move's stat changer (e.g. for Z-Growl)
-    gBattleScripting.battler = gBattlerAttacker;
-
     switch (effect)
     {
     case Z_EFFECT_RESET_STATS:
@@ -458,7 +457,7 @@ void SetZEffect(void)
                 gBattleMons[gBattlerAttacker].statStages[i] = DEFAULT_STAT_STAGE;
         }
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_Z_RESET_STATS;
-        BattleScriptPush(gBattlescriptCurrInstr + Z_EFFECT_BS_LENGTH);
+        BattleScriptPush(nextInstr);
         gBattlescriptCurrInstr = BattleScript_ZEffectPrintString;
         break;
     case Z_EFFECT_ALL_STATS_UP_1:
@@ -473,8 +472,14 @@ void SetZEffect(void)
         }
         if (canBoost)
         {
+            SetStatChange(gBattlerAttacker, STAT_ATK, 1);
+            SetStatChange(gBattlerAttacker, STAT_DEF, 1);
+            SetStatChange(gBattlerAttacker, STAT_SPATK, 1);
+            SetStatChange(gBattlerAttacker, STAT_SPDEF, 1);
+            SetStatChange(gBattlerAttacker, STAT_SPEED, 1);
+
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_Z_ALL_STATS_UP;
-            BattleScriptPush(gBattlescriptCurrInstr + Z_EFFECT_BS_LENGTH);
+            BattleScriptPush(nextInstr);
             gBattlescriptCurrInstr = BattleScript_AllStatsUpZMove;
         }
         else
@@ -488,7 +493,7 @@ void SetZEffect(void)
         {
             gBattleMons[gBattlerAttacker].volatiles.focusEnergy = TRUE;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_Z_BOOST_CRITS;
-            BattleScriptPush(gBattlescriptCurrInstr + Z_EFFECT_BS_LENGTH);
+            BattleScriptPush(nextInstr);
             gBattlescriptCurrInstr = BattleScript_ZEffectPrintString;
         }
         else
@@ -500,7 +505,7 @@ void SetZEffect(void)
         gSideTimers[GetBattlerSide(gBattlerAttacker)].followmeTimer = 1;
         gSideTimers[GetBattlerSide(gBattlerAttacker)].followmeTarget = gBattlerAttacker;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_Z_FOLLOW_ME;
-        BattleScriptPush(gBattlescriptCurrInstr + Z_EFFECT_BS_LENGTH);
+        BattleScriptPush(nextInstr);
         gBattlescriptCurrInstr = BattleScript_ZEffectPrintString;
         break;
     case Z_EFFECT_RECOVER_HP:
@@ -508,7 +513,7 @@ void SetZEffect(void)
         {
             SetHealAmount(gBattlerAttacker, gBattleMons[gBattlerAttacker].maxHP);
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_Z_RECOVER_HP;
-            BattleScriptPush(gBattlescriptCurrInstr + Z_EFFECT_BS_LENGTH);
+            BattleScriptPush(nextInstr);
             gBattlescriptCurrInstr = BattleScript_RecoverHPZMove;
         }
         else
@@ -518,27 +523,69 @@ void SetZEffect(void)
         break;
     case Z_EFFECT_RESTORE_REPLACEMENT_HP:
         gBattleStruct->zmove.healReplacement |= 1u << gBattlerAttacker;
-        BattleScriptPush(gBattlescriptCurrInstr + Z_EFFECT_BS_LENGTH);
+        BattleScriptPush(nextInstr);
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_Z_HP_TRAP;
         gBattlescriptCurrInstr = BattleScript_ZEffectPrintString;
         break;
-    case Z_EFFECT_ATK_UP_1 ... Z_EFFECT_EVSN_UP_1:
-        SET_STATCHANGER(effect - Z_EFFECT_ATK_UP_1 + 1, 1, FALSE);
-        BattleScriptPush(gBattlescriptCurrInstr + Z_EFFECT_BS_LENGTH);
-        gBattlescriptCurrInstr = BattleScript_StatUpZMove;
+    case Z_EFFECT_ATK_UP_1:
+    case Z_EFFECT_ATK_UP_2:
+    case Z_EFFECT_ATK_UP_3:
+        stage = effect - Z_EFFECT_ATK_UP_1 + 1;
+        SetStatChange(gBattlerAttacker, STAT_ATK, stage);
+        BattleScriptPush(nextInstr);
+        gBattlescriptCurrInstr = BattleScript_MoveEffectStatChange;
         break;
-    case Z_EFFECT_ATK_UP_2 ... Z_EFFECT_EVSN_UP_2:
-        SET_STATCHANGER(effect - Z_EFFECT_ATK_UP_2 + 1, 2, FALSE);
-        BattleScriptPush(gBattlescriptCurrInstr + Z_EFFECT_BS_LENGTH);
-        gBattlescriptCurrInstr = BattleScript_StatUpZMove;
+    case Z_EFFECT_DEF_UP_1:
+    case Z_EFFECT_DEF_UP_2:
+    case Z_EFFECT_DEF_UP_3:
+        stage = effect - Z_EFFECT_DEF_UP_1 + 1;
+        SetStatChange(gBattlerAttacker, STAT_DEF, stage);
+        BattleScriptPush(nextInstr);
+        gBattlescriptCurrInstr = BattleScript_MoveEffectStatChange;
         break;
-    case Z_EFFECT_ATK_UP_3 ... Z_EFFECT_EVSN_UP_3:
-        SET_STATCHANGER(effect - Z_EFFECT_ATK_UP_3 + 1, 3, FALSE);
-        BattleScriptPush(gBattlescriptCurrInstr + Z_EFFECT_BS_LENGTH);
-        gBattlescriptCurrInstr = BattleScript_StatUpZMove;
+    case Z_EFFECT_SPD_UP_1:
+    case Z_EFFECT_SPD_UP_2:
+    case Z_EFFECT_SPD_UP_3:
+        stage = effect - Z_EFFECT_SPD_UP_1 + 1;
+        SetStatChange(gBattlerAttacker, STAT_SPEED, stage);
+        BattleScriptPush(nextInstr);
+        gBattlescriptCurrInstr = BattleScript_MoveEffectStatChange;
+        break;
+    case Z_EFFECT_SPATK_UP_1:
+    case Z_EFFECT_SPATK_UP_2:
+    case Z_EFFECT_SPATK_UP_3:
+        stage = effect - Z_EFFECT_SPATK_UP_1 + 1;
+        SetStatChange(gBattlerAttacker, STAT_SPATK, stage);
+        BattleScriptPush(nextInstr);
+        gBattlescriptCurrInstr = BattleScript_MoveEffectStatChange;
+        break;
+    case Z_EFFECT_SPDEF_UP_1:
+    case Z_EFFECT_SPDEF_UP_2:
+    case Z_EFFECT_SPDEF_UP_3:
+        stage = effect - Z_EFFECT_SPDEF_UP_1 + 1;
+        SetStatChange(gBattlerAttacker, STAT_SPDEF, stage);
+        BattleScriptPush(nextInstr);
+        gBattlescriptCurrInstr = BattleScript_MoveEffectStatChange;
+        break;
+
+    case Z_EFFECT_ACC_UP_1:
+    case Z_EFFECT_ACC_UP_2:
+    case Z_EFFECT_ACC_UP_3:
+        stage = effect - Z_EFFECT_ACC_UP_1 + 1;
+        SetStatChange(gBattlerAttacker, STAT_ACC, stage);
+        BattleScriptPush(nextInstr);
+        gBattlescriptCurrInstr = BattleScript_MoveEffectStatChange;
+        break;
+    case Z_EFFECT_EVSN_UP_1:
+    case Z_EFFECT_EVSN_UP_2:
+    case Z_EFFECT_EVSN_UP_3:
+        stage = effect - Z_EFFECT_EVSN_UP_1 + 1;
+        SetStatChange(gBattlerAttacker, STAT_EVASION, stage);
+        BattleScriptPush(nextInstr);
+        gBattlescriptCurrInstr = BattleScript_MoveEffectStatChange;
         break;
     default:
-        gBattlescriptCurrInstr += Z_EFFECT_BS_LENGTH;
+        gBattlescriptCurrInstr = nextInstr;
         break;
     }
 }
