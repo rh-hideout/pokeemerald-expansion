@@ -1,14 +1,12 @@
 #ifndef GUARD_CONFIG_BXPY_H
 #define GUARD_CONFIG_BXPY_H
 
-#define BXPY_SCROLLING_BACKGROUND                       TRUE // When TRUE, the background on the BXPY menu will scroll.
-
-#define BXPY_FORCE_MINIMUM_MONS                         TRUE // When TRUE, the PLayer must have at least bringSize unfainted Pokémon in the Party.
+#define BXPY_FORCE_MINIMUM_MONS                         TRUE // When TRUE, the Player must have at least bringSize unfainted Pokémon in the Party.
 #define BXPY_CLAUSE_ITEMS                               TRUE // When TRUE, the Player cannot have duplicate held items in their Party.
 #define BXPY_CLAUSE_SPECIES                             TRUE // When TRUE, the Player cannot have duplicate in their Party.
 #define BXPY_CLAUSE_SPECIAL_POKEMON                     TRUE // When TRUE, the Player cannot have Special Pokemon in their Party.
 
-#define BXPY_HEAL                                       BXPY_HEAL_ALWAYS // Controls when the Player's party is healed, if at all. Valid values are found in BXPYHealModes in include/constants/bxpy.h
+#define BXPY_HEAL                                       BXPY_HEAL_NEVER // Controls when the Player's party is healed, if at all. Valid values are found in BXPYHealModes in include/constants/bxpy.h.
 
 #define BXPY_OPEN_TEAM_SHEET                            TRUE  // When TRUE, the Player can open the Pokemon Summary Screen for enemy Pokemon. If this is FALSE, all of the values for BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_* are ignored.
 
@@ -47,9 +45,16 @@
 #define BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_MOVES          TRUE
 #define BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_STATS          TRUE
 
-#define BXPY_RETAIN_CHANGES                             FALSE // When TRUE, after battle, any changes that occured to the participating Pokemon is retained. This includes changes in HP, PP, Experience, Level, or even Evolution.
+#define BXPY_RETAIN_CHANGES                             TRUE // When TRUE, after battle, any changes that occured to the participating Pokemon is retained. This includes changes in HP, PP, Experience, Level, or even Evolution.
 
-#define B_VAR_BXPY                                       B_VAR_SKY_BATTLE // This var is used to maintain BXPY_RETAIN_CHANGES.
-#define B_FLAG_BXPY                                      FLAG_UNUSED_0x264                // This flag is used to manage BXPY mode's interaction with other features.
+#define B_VAR_BXPY                                      B_VAR_SKY_BATTLE // This var is used to maintain BXPY_RETAIN_CHANGES.
+#define B_FLAG_BXPY                                     FLAG_UNUSED_0x264                // This flag is used to manage BXPY mode's interaction with other features.
+
+#define BXPY_SCROLLING_BACKGROUND                       TRUE // When TRUE, the background on the BXPY menu will scroll.
+#define MUS_BXPY_BACKGROUND                             MUS_B_DOME_LOBBY
+#define SE_BXPY_GENERIC                                 SE_SELECT
+#define SE_BXPY_ERROR                                   SE_BOO
+#define SE_BXPY_SWITCH_PAGE                             SE_ROTATING_GATE
+#define SE_BXPY_REMOVE                                  SE_BALL_OPEN
 
 #endif // GUARD_CONFIG_BXPY_H
