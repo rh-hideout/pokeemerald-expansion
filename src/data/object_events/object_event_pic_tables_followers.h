@@ -3294,9 +3294,9 @@ static const struct SpriteFrameImage sPicTable_Cherubi[] = {
 static const struct SpriteFrameImage sPicTable_CherrimOvercast[] = {
     overworld_ascending_frames(gObjectEventPic_CherrimOvercast, 4, 4),
 };
-/*static const struct SpriteFrameImage sPicTable_CherrimSunshine[] = {
+static const struct SpriteFrameImage sPicTable_CherrimSunshine[] = {
     overworld_ascending_frames(gObjectEventPic_CherrimSunshine, 4, 4),
-};*/
+};
 #endif //P_FAMILY_CHERUBI
 
 #if P_FAMILY_SHELLOS

@@ -3,11 +3,12 @@
 
 SINGLE_BATTLE_TEST("Protean/Libero changes the type of the user to the move used every time (Gen6-8)")
 {
-    u32 ability, species;
+    enum Ability ability;
+    u32 species;
     PARAMETRIZE { ability = ABILITY_PROTEAN; species = SPECIES_KECLEON; }
     PARAMETRIZE { ability = ABILITY_LIBERO;  species = SPECIES_RABOOT; }
     GIVEN {
-        WITH_CONFIG(CONFIG_PROTEAN_LIBERO, GEN_6);
+        WITH_CONFIG(B_PROTEAN_LIBERO, GEN_6);
         PLAYER(SPECIES_REGIROCK);
         OPPONENT(species) { Ability(ability); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -41,11 +42,11 @@ SINGLE_BATTLE_TEST("Protean/Libero changes the type of the user to the move used
 
 SINGLE_BATTLE_TEST("Protean/Libero changes the type of the user only once per switch in (Gen9+)")
 {
-    u32 ability, species;
+    enum Ability ability; u32 species;
     PARAMETRIZE { ability = ABILITY_PROTEAN; species = SPECIES_KECLEON; }
     PARAMETRIZE { ability = ABILITY_LIBERO;  species = SPECIES_RABOOT; }
     GIVEN {
-        WITH_CONFIG(CONFIG_PROTEAN_LIBERO, GEN_9);
+        WITH_CONFIG(B_PROTEAN_LIBERO, GEN_9);
         PLAYER(SPECIES_REGIROCK);
         OPPONENT(species) { Ability(ability); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -79,7 +80,7 @@ SINGLE_BATTLE_TEST("Protean/Libero changes the type of the user only once per sw
 
 SINGLE_BATTLE_TEST("Protean/Libero does not change the user's type when using Struggle")
 {
-    u32 ability, species;
+    enum Ability ability; u32 species;
     PARAMETRIZE { ability = ABILITY_PROTEAN; species = SPECIES_GRENINJA; }
     PARAMETRIZE { ability = ABILITY_LIBERO;  species = SPECIES_RABOOT; }
     GIVEN {

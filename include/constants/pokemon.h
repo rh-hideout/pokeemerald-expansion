@@ -240,7 +240,7 @@ enum __attribute__((packed)) DamageCategory
 };
 
 // Growth rates
-enum GrowthRate
+enum __attribute__((packed)) GrowthRate
 {
     GROWTH_MEDIUM_FAST,
     GROWTH_ERRATIC,
@@ -340,6 +340,18 @@ enum EvolutionMode {
     EVO_MODE_OVERWORLD_SPECIAL,
     EVO_MODE_SCRIPT_TRIGGER,
     EVO_MODE_BATTLE_ONLY,        // This mode is only used in battles to support Tandemaus' unique requirement
+};
+
+enum EvoTriggerVersion {
+    EVO_TRIGGER_TABLET_CURSE,
+    EVO_TRIGGER_DARK_SCROLL,
+    EVO_TRIGGER_WATER_SCROLL,
+};
+
+enum EvolutionEventResult {
+    EVO_EVENT_IMPOSSIBLE,
+    EVO_EVENT_INTERRUPTED,
+    EVO_EVENT_SUCCESSFUL,
 };
 
 // used to determine whether an evolution is happening or not, so we know if items should be removed

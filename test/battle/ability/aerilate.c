@@ -1,5 +1,6 @@
 #include "global.h"
 #include "test/battle.h"
+#include "berry.h"
 
 ASSUMPTIONS
 {
@@ -55,7 +56,7 @@ SINGLE_BATTLE_TEST("Aerilate boosts power of affected moves by 20% (Gen7+) or 30
     PARAMETRIZE { move = MOVE_SKILL_SWAP;  genConfig = GEN_6; }
 
     GIVEN {
-        WITH_CONFIG(CONFIG_ATE_MULTIPLIER, genConfig);
+        WITH_CONFIG(B_ATE_MULTIPLIER, genConfig);
         ASSUME(GetMoveType(MOVE_TACKLE) == TYPE_NORMAL);
         ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
         PLAYER(SPECIES_WOBBUFFET);
@@ -111,7 +112,7 @@ SINGLE_BATTLE_TEST("Aerilate doesn't affect Natural Gift's type")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
         ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
-        ASSUME(gNaturalGiftTable[ITEM_TO_BERRY(ITEM_PERSIM_BERRY)].type == TYPE_GROUND);
+        ASSUME(gBerries[ItemIdToBerryType(ITEM_PERSIM_BERRY)].naturalGiftType == TYPE_GROUND);
         ASSUME(GetSpeciesType(SPECIES_SALAMENCE_MEGA, 0) == TYPE_FLYING || GetSpeciesType(SPECIES_SALAMENCE_MEGA, 1) == TYPE_FLYING);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_PERSIM_BERRY); }
         OPPONENT(SPECIES_SALAMENCE) { Item(ITEM_SALAMENCITE); }

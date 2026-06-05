@@ -17,13 +17,13 @@ SINGLE_BATTLE_TEST("Flame Body inflicts burn on contact")
         if (MoveMakesContact(move)) {
             ABILITY_POPUP(opponent, ABILITY_FLAME_BODY);
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, player);
-            MESSAGE("The opposing Magmar's Flame Body burned Wobbuffet!");
+            MESSAGE("Wobbuffet was burned!");
             STATUS_ICON(player, burn: TRUE);
         } else {
             NONE_OF {
                 ABILITY_POPUP(opponent, ABILITY_FLAME_BODY);
                 ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, player);
-                MESSAGE("The opposing Magmar's Flame Body burned Wobbuffet!");
+                MESSAGE("Wobbuffet was burned!");
                 STATUS_ICON(player, burn: TRUE);
             }
         }
@@ -37,7 +37,7 @@ SINGLE_BATTLE_TEST("Flame Body triggers 1/3 times (Gen3) or 30% (Gen 4+) of the 
     PARAMETRIZE { config = GEN_4; passes = 3; trials = 10; } // 30%
     PASSES_RANDOMLY(passes, trials, RNG_FLAME_BODY);
     GIVEN {
-        WITH_CONFIG(CONFIG_ABILITY_TRIGGER_CHANCE, config);
+        WITH_CONFIG(B_ABILITY_TRIGGER_CHANCE, config);
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_MAGMAR) { Ability(ABILITY_FLAME_BODY); }
@@ -46,7 +46,7 @@ SINGLE_BATTLE_TEST("Flame Body triggers 1/3 times (Gen3) or 30% (Gen 4+) of the 
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_FLAME_BODY);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, player);
-        MESSAGE("The opposing Magmar's Flame Body burned Wobbuffet!");
+        MESSAGE("Wobbuffet was burned!");
         STATUS_ICON(player, burn: TRUE);
     }
 }

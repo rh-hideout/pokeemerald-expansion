@@ -34,7 +34,7 @@ SINGLE_BATTLE_TEST("Foresight always hits unless the target is semi-invulnerable
     PARAMETRIZE { semiInvulnerable = TRUE; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_DOUBLE_TEAM) == EFFECT_EVASION_UP);
+        ASSUME_STAT_CHANGE(MOVE_DOUBLE_TEAM, evasion: +1);
         ASSUME(GetMoveEffect(MOVE_FLY) == EFFECT_SEMI_INVULNERABLE);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_FORESIGHT, MOVE_SPLASH); Speed(10); }
         OPPONENT(SPECIES_SQUAWKABILLY) { Moves(MOVE_DOUBLE_TEAM, MOVE_FLY); Speed(20); }
@@ -61,7 +61,7 @@ SINGLE_BATTLE_TEST("Foresight causes moves against the target to ignore positive
 {
     PASSES_RANDOMLY(100, 100, RNG_ACCURACY);
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_DOUBLE_TEAM) == EFFECT_EVASION_UP);
+        ASSUME_STAT_CHANGE(MOVE_DOUBLE_TEAM, evasion: +1);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_FORESIGHT, MOVE_SCRATCH); Speed(10); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_DOUBLE_TEAM, MOVE_SPLASH); Speed(20); }
     } WHEN {
@@ -82,7 +82,7 @@ SINGLE_BATTLE_TEST("Foresight fails if the target is already under its effect (G
     PARAMETRIZE { genConfig = GEN_2; }
     PARAMETRIZE { genConfig = GEN_5; }
     GIVEN {
-        WITH_CONFIG(CONFIG_FORESIGHT_FAIL, genConfig);
+        WITH_CONFIG(B_FORESIGHT_FAIL, genConfig);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -101,7 +101,7 @@ SINGLE_BATTLE_TEST("Foresight doesn't fail if the target is already under its ef
     PARAMETRIZE { genConfig = GEN_3; }
     PARAMETRIZE { genConfig = GEN_4; }
     GIVEN {
-        WITH_CONFIG(CONFIG_FORESIGHT_FAIL, genConfig);
+        WITH_CONFIG(B_FORESIGHT_FAIL, genConfig);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

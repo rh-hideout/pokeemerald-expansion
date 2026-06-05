@@ -1,5 +1,6 @@
 #include "global.h"
 #include "test/battle.h"
+#include "berry.h"
 
 ASSUMPTIONS
 {
@@ -31,7 +32,7 @@ SINGLE_BATTLE_TEST("Pixilate boosts power of affected moves by 20% (Gen7+) or 30
     PARAMETRIZE { ability = ABILITY_PIXILATE;       genConfig = GEN_6; }
 
     GIVEN {
-        WITH_CONFIG(CONFIG_ATE_MULTIPLIER, genConfig);
+        WITH_CONFIG(B_ATE_MULTIPLIER, genConfig);
         PLAYER(SPECIES_SYLVEON) { Ability(ability); Moves(MOVE_TACKLE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -82,7 +83,7 @@ SINGLE_BATTLE_TEST("Pixilate doesn't affect Natural Gift's type")
     PARAMETRIZE { ability = ABILITY_PIXILATE; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
-        ASSUME(gNaturalGiftTable[ITEM_TO_BERRY(ITEM_ORAN_BERRY)].type == TYPE_POISON);
+        ASSUME(gBerries[ItemIdToBerryType(ITEM_ORAN_BERRY)].naturalGiftType == TYPE_POISON);
         ASSUME(GetSpeciesType(SPECIES_BELDUM, 0) == TYPE_STEEL);
         PLAYER(SPECIES_SYLVEON) { Ability(ability); Item(ITEM_ORAN_BERRY); }
         OPPONENT(SPECIES_BELDUM);

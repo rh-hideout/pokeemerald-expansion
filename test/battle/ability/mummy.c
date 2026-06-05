@@ -39,7 +39,8 @@ SINGLE_BATTLE_TEST("Mummy/Lingering Aroma replace the attacker's ability on cont
 
 SINGLE_BATTLE_TEST("Mummy and Lingering Aroma don't replace each other")
 {
-    enum Ability ability1, species1, ability2, species2;
+    enum Species species1, species2;
+    enum Ability ability1, ability2; 
 
     PARAMETRIZE { ability1 = ability2 = ABILITY_MUMMY; species1 = species2 = SPECIES_YAMASK; }
     PARAMETRIZE { ability1 = ABILITY_MUMMY; species1 = SPECIES_YAMASK; ability2 = ABILITY_LINGERING_AROMA; species2 = SPECIES_OINKOLOGNE; }

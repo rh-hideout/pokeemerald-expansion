@@ -8,6 +8,7 @@
 #include "load_save.h"
 #include "m4a.h"
 #include "main.h"
+#include "intro_frlg.h"
 #include "malloc.h"
 #include "menu.h"
 #include "new_game.h"
@@ -157,17 +158,13 @@ struct IntroSequenceData
 }; // size: 0x28BC
 
 static EWRAM_DATA struct GcmbStruct sGcmb = {0};
-static EWRAM_DATA u16 sUnusedScene3Var0 = 0; // Set but never read
-static EWRAM_DATA u16 sUnusedScene3Var1 = 0; // Set but never read
 static EWRAM_DATA u16 sNidorinoJumpMult = 0;
 static EWRAM_DATA u16 sNidorinoAnimDelayTime = 0;
 static EWRAM_DATA u16 sNidorinoJumpDiv = 0;
 static EWRAM_DATA u16 sNidorinoRecoilReturnTime = 0;
-static EWRAM_DATA u16 sNidorinoUnusedVar = 0; // Set but never read
 static EWRAM_DATA u16 sStarSpeedX = 0;
 static EWRAM_DATA u16 sStarSpeedY = 0;
 static EWRAM_DATA u16 sStarSparklesXmodMask = 0;
-static EWRAM_DATA u16 sStarSparklesUnusedVar = 0; // Set but never read
 static EWRAM_DATA u16 sStarSparklesSpawnRate = 0;
 static EWRAM_DATA u16 sStarSparklesFlickerStartTime = 0;
 static EWRAM_DATA u16 sStarSparklesDestroySpriteTime = 0;
@@ -252,61 +249,61 @@ static void SpriteCB_NidorinoAttack(struct Sprite *sprite);
 extern const u32 gMultiBootProgram_PokemonColosseum_Start[];
 extern const u32 gMultiBootProgram_PokemonColosseum_End[];
 
-static const u16 sCopyright_Pal[] = INCBIN_U16("graphics/intro_frlg/copyright.gbapal");
-static const u32 sCopyright_Gfx[]  = INCBIN_U32( "graphics/intro_frlg/copyright.4bpp.smol");
+static const u16 sCopyright_Pal[] = INCGFX_U16("graphics/intro_frlg/copyright.pal", ".gbapal");
+static const u32 sCopyright_Gfx[]  = INCGFX_U32("graphics/intro_frlg/copyright.png", ".4bpp.smol");
 static const u32 sCopyright_Map[]  = INCBIN_U32( "graphics/intro_frlg/copyright.bin.smolTM");
 
 // Game Freak
-static const u16 sGameFreakBg_Pal[]   = INCBIN_U16("graphics/intro_frlg/game_freak/bg.gbapal");
-static const u8 sGameFreakBg_Gfx[]    = INCBIN_U8( "graphics/intro_frlg/game_freak/bg.4bpp.smol");
+static const u16 sGameFreakBg_Pal[]   = INCGFX_U16("graphics/intro_frlg/game_freak/bg.pal", ".gbapal");
+static const u8 sGameFreakBg_Gfx[]    = INCGFX_U8("graphics/intro_frlg/game_freak/bg.png", ".4bpp.smol");
 static const u8 sGameFreakBg_Map[]    = INCBIN_U8( "graphics/intro_frlg/game_freak/bg.bin.smolTM");
-static const u16 sGameFreakLogo_Pal[] = INCBIN_U16("graphics/intro_frlg/game_freak/logo.gbapal");
-static const u32 sGameFreakText_Gfx[] = INCBIN_U32( "graphics/intro_frlg/game_freak/game_freak.4bpp.smol");
-static const u32 sGameFreakLogo_Gfx[] = INCBIN_U32("graphics/intro_frlg/game_freak/logo.4bpp.smol");
-static const u16 sStar_Pal[]          = INCBIN_U16("graphics/intro_frlg/game_freak/star.gbapal");
-static const u32 sStar_Gfx[]          = INCBIN_U32("graphics/intro_frlg/game_freak/star.4bpp.smol");
-static const u16 sSparkles_Pal[]      = INCBIN_U16("graphics/intro_frlg/game_freak/sparkles.gbapal");
-static const u32 sSparklesSmall_Gfx[] = INCBIN_U32("graphics/intro_frlg/game_freak/sparkles_small.4bpp.smol");
-static const u32 sSparklesBig_Gfx[]   = INCBIN_U32("graphics/intro_frlg/game_freak/sparkles_big.4bpp.smol");
-static const u32 sPresents_Gfx[]      = INCBIN_U32("graphics/intro_frlg/game_freak/presents.4bpp.smol");
+static const u16 sGameFreakLogo_Pal[] = INCGFX_U16("graphics/intro_frlg/game_freak/logo.png", ".gbapal");
+static const u32 sGameFreakText_Gfx[] = INCGFX_U32("graphics/intro_frlg/game_freak/game_freak.png", ".4bpp.smol");
+static const u32 sGameFreakLogo_Gfx[] = INCGFX_U32("graphics/intro_frlg/game_freak/logo.png", ".4bpp.smol");
+static const u16 sStar_Pal[]          = INCGFX_U16("graphics/intro_frlg/game_freak/star.png", ".gbapal");
+static const u32 sStar_Gfx[]          = INCGFX_U32("graphics/intro_frlg/game_freak/star.png", ".4bpp.smol");
+static const u16 sSparkles_Pal[]      = INCGFX_U16("graphics/intro_frlg/game_freak/sparkles.pal", ".gbapal");
+static const u32 sSparklesSmall_Gfx[] = INCGFX_U32("graphics/intro_frlg/game_freak/sparkles_small.png", ".4bpp.smol");
+static const u32 sSparklesBig_Gfx[]   = INCGFX_U32("graphics/intro_frlg/game_freak/sparkles_big.png", ".4bpp.smol");
+static const u32 sPresents_Gfx[]      = INCGFX_U32("graphics/intro_frlg/game_freak/presents.png", ".4bpp.smol");
 
 // Scene 1 (Grass close up)
-static const u16 sScene1_Grass_Pal[] = INCBIN_U16("graphics/intro_frlg/scene_1/grass.gbapal");
-static const u8 sScene1_Grass_Gfx[]  = INCBIN_U8( "graphics/intro_frlg/scene_1/grass.4bpp.smol");
+static const u16 sScene1_Grass_Pal[] = INCGFX_U16("graphics/intro_frlg/scene_1/grass.png", ".gbapal");
+static const u8 sScene1_Grass_Gfx[]  = INCGFX_U8("graphics/intro_frlg/scene_1/grass.png", ".4bpp.smol");
 static const u8 sScene1_Grass_Map[]  = INCBIN_U8( "graphics/intro_frlg/scene_1/grass.bin.smolTM");
-static const u16 sScene1_Bg_Pal[]    = INCBIN_U16("graphics/intro_frlg/scene_1/bg.gbapal");
-static const u8 sScene1_Bg_Gfx[]     = INCBIN_U8( "graphics/intro_frlg/scene_1/bg.4bpp.smol");
+static const u16 sScene1_Bg_Pal[]    = INCGFX_U16("graphics/intro_frlg/scene_1/bg.png", ".gbapal");
+static const u8 sScene1_Bg_Gfx[]     = INCGFX_U8("graphics/intro_frlg/scene_1/bg.png", ".4bpp.smol");
 static const u8 sScene1_Bg_Map[]     = INCBIN_U8( "graphics/intro_frlg/scene_1/bg.bin.smolTM");
 
 // Scenes 2 and 3 (Gengar and Nidorino)
-static const u16 sScene2_Bg_Pal[]            = INCBIN_U16("graphics/intro_frlg/scene_2/bg.gbapal");
-static const u8 sScene2_Bg_Gfx[]             = INCBIN_U8( "graphics/intro_frlg/scene_2/bg.4bpp.smol");
+static const u16 sScene2_Bg_Pal[]            = INCGFX_U16("graphics/intro_frlg/scene_2/bg.pal", ".gbapal");
+static const u8 sScene2_Bg_Gfx[]             = INCGFX_U8("graphics/intro_frlg/scene_2/bg.png", ".4bpp.smol");
 static const u8 sScene2_Bg_Map[]             = INCBIN_U8( "graphics/intro_frlg/scene_2/bg.bin.smolTM");
-static const u16 sScene2_Plants_Pal[]        = INCBIN_U16("graphics/intro_frlg/scene_2/plants.gbapal"); // Unused
-static const u8 sScene2_Plants_Gfx[]         = INCBIN_U8( "graphics/intro_frlg/scene_2/plants.4bpp.smol");
+static const u16 sScene2_Plants_Pal[]        = INCGFX_U16("graphics/intro_frlg/scene_2/plants.png", ".gbapal"); // Unused
+static const u8 sScene2_Plants_Gfx[]         = INCGFX_U8("graphics/intro_frlg/scene_2/plants.png", ".4bpp.smol");
 static const u8 sScene2_Plants_Map[]         = INCBIN_U8( "graphics/intro_frlg/scene_2/plants.bin.smolTM");
-static const u16 sGengar_Pal[]               = INCBIN_U16("graphics/intro_frlg/gengar.gbapal"); // Used by multiple scenes
-static const u8 sScene2_GengarClose_Gfx[]    = INCBIN_U8( "graphics/intro_frlg/scene_2/gengar_close.4bpp.smol");
+static const u16 sGengar_Pal[]               = INCGFX_U16("graphics/intro_frlg/gengar.pal", ".gbapal"); // Used by multiple scenes
+static const u8 sScene2_GengarClose_Gfx[]    = INCGFX_U8("graphics/intro_frlg/scene_2/gengar_close.png", ".4bpp.smol");
 static const u8 sScene2_GengarClose_Map[]    = INCBIN_U8( "graphics/intro_frlg/scene_2/gengar_close.bin.smolTM");
-static const u16 sScene2_NidorinoClose_Pal[] = INCBIN_U16("graphics/intro_frlg/scene_2/nidorino_close.gbapal");
-static const u8 sScene2_NidorinoClose_Gfx[]  = INCBIN_U8( "graphics/intro_frlg/scene_2/nidorino_close.4bpp.smol");
+static const u16 sScene2_NidorinoClose_Pal[] = INCGFX_U16("graphics/intro_frlg/scene_2/nidorino_close.pal", ".gbapal");
+static const u8 sScene2_NidorinoClose_Gfx[]  = INCGFX_U8("graphics/intro_frlg/scene_2/nidorino_close.png", ".4bpp.smol");
 static const u8 sScene2_NidorinoClose_Map[]  = INCBIN_U8( "graphics/intro_frlg/scene_2/nidorino_close.bin.smolTM");
-static const u16 sScene3_Bg_Pal[]            = INCBIN_U16("graphics/intro_frlg/scene_3/bg.gbapal");
-static const u8 sScene3_Bg_Gfx[]             = INCBIN_U8( "graphics/intro_frlg/scene_3/bg.4bpp.smol");
+static const u16 sScene3_Bg_Pal[]            = INCGFX_U16("graphics/intro_frlg/scene_3/bg.pal", ".gbapal");
+static const u8 sScene3_Bg_Gfx[]             = INCGFX_U8("graphics/intro_frlg/scene_3/bg.png", ".4bpp.smol");
 static const u8 sScene3_Bg_Map[]             = INCBIN_U8( "graphics/intro_frlg/scene_3/bg.bin.smolTM");
-static const u8 sScene3_GengarAnim_Gfx[]     = INCBIN_U8( "graphics/intro_frlg/scene_3/gengar_anim.4bpp.smol");
+static const u8 sScene3_GengarAnim_Gfx[]     = INCGFX_U8("graphics/intro_frlg/scene_3/gengar_anim.png", ".4bpp.smol");
 static const u8 sScene3_GengarAnim_Map[]     = INCBIN_U8( "graphics/intro_frlg/scene_3/gengar_anim.bin.smolTM");
-static const u32 sScene2_Gengar_Gfx[]        = INCBIN_U32("graphics/intro_frlg/scene_2/gengar.4bpp.smol");
-static const u16 sNidorino_Pal[]             = INCBIN_U16("graphics/intro_frlg/nidorino.gbapal"); // Used by multiple scenes
-static const u32 sScene2_Nidorino_Gfx[]      = INCBIN_U32("graphics/intro_frlg/scene_2/nidorino.4bpp.smol");
-static const u16 sScene3_Grass_Pal[]         = INCBIN_U16("graphics/intro_frlg/scene_3/grass.gbapal");
-static const u32 sScene3_Grass_Gfx[]         = INCBIN_U32("graphics/intro_frlg/scene_3/grass.4bpp.smol");
-static const u32 sScene3_GengarStatic_Gfx[]  = INCBIN_U32("graphics/intro_frlg/scene_3/gengar_static.4bpp.smol");
-static const u32 sScene3_Nidorino_Gfx[]      = INCBIN_U32("graphics/intro_frlg/scene_3/nidorino.4bpp.smol");
-static const u16 sScene3_Swipe_Pal[]         = INCBIN_U16("graphics/intro_frlg/scene_3/swipe.gbapal");
-static const u16 sScene3_RecoilDust_Pal[]    = INCBIN_U16("graphics/intro_frlg/scene_3/recoil_dust.gbapal");
-static const u32 sScene3_Swipe_Gfx[]         = INCBIN_U32("graphics/intro_frlg/scene_3/swipe.4bpp.smol");
-static const u32 sScene3_RecoilDust_Gfx[]    = INCBIN_U32("graphics/intro_frlg/scene_3/recoil_dust.4bpp.smol");
+static const u32 sScene2_Gengar_Gfx[]        = INCGFX_U32("graphics/intro_frlg/scene_2/gengar.png", ".4bpp.smol");
+static const u16 sNidorino_Pal[]             = INCGFX_U16("graphics/intro_frlg/nidorino.pal", ".gbapal"); // Used by multiple scenes
+static const u32 sScene2_Nidorino_Gfx[]      = INCGFX_U32("graphics/intro_frlg/scene_2/nidorino.png", ".4bpp.smol");
+static const u16 sScene3_Grass_Pal[]         = INCGFX_U16("graphics/intro_frlg/scene_3/grass.png", ".gbapal");
+static const u32 sScene3_Grass_Gfx[]         = INCGFX_U32("graphics/intro_frlg/scene_3/grass.png", ".4bpp.smol");
+static const u32 sScene3_GengarStatic_Gfx[]  = INCGFX_U32("graphics/intro_frlg/scene_3/gengar_static.png", ".4bpp.smol");
+static const u32 sScene3_Nidorino_Gfx[]      = INCGFX_U32("graphics/intro_frlg/scene_3/nidorino.png", ".4bpp.smol");
+static const u16 sScene3_Swipe_Pal[]         = INCGFX_U16("graphics/intro_frlg/scene_3/swipe.png", ".gbapal");
+static const u16 sScene3_RecoilDust_Pal[]    = INCGFX_U16("graphics/intro_frlg/scene_3/recoil_dust.png", ".gbapal");
+static const u32 sScene3_Swipe_Gfx[]         = INCGFX_U32("graphics/intro_frlg/scene_3/swipe.png", ".4bpp.smol");
+static const u32 sScene3_RecoilDust_Gfx[]    = INCGFX_U32("graphics/intro_frlg/scene_3/recoil_dust.png", ".4bpp.smol");
 
 static const struct BgTemplate sBgTemplates_GameFreakScene[] = {
     {
@@ -385,43 +382,43 @@ static const struct BgTemplate sBgTemplates_Scene2[] = {
 };
 
 static const struct BgTemplate sBgTemplates_Scene3[] = {
-	{
-	    .bg = BG_SCENE3_BACKGROUND,
-	    .charBaseIndex = 0,
-	    .mapBaseIndex = 29,
-	    .screenSize = 0,
-	    .paletteMode = 0,
-	    .priority = 1,
-	    .baseTile = 0x000
+    {
+        .bg = BG_SCENE3_BACKGROUND,
+        .charBaseIndex = 0,
+        .mapBaseIndex = 29,
+        .screenSize = 0,
+        .paletteMode = 0,
+        .priority = 1,
+        .baseTile = 0x000
     }, {
-	    .bg = BG_SCENE3_GENGAR,
-	    .charBaseIndex = 1,
-	    .mapBaseIndex = 30,
-	    .screenSize = 2,
-	    .paletteMode = 0,
-	    .priority = 0,
-	    .baseTile = 0x000
-	}
+        .bg = BG_SCENE3_GENGAR,
+        .charBaseIndex = 1,
+        .mapBaseIndex = 30,
+        .screenSize = 2,
+        .paletteMode = 0,
+        .priority = 0,
+        .baseTile = 0x000
+    }
 };
 
 static const struct WindowTemplate sWindowTemplates[WIN_COUNT + 1] = {
-	[WIN_GF_TEXT_LOGO] = {
-	    .bg = BG_GF_TEXT_LOGO,
-	    .tilemapLeft = 6,
-	    .tilemapTop = 4,
-	    .width = 18,
-	    .height = 9,
-	    .paletteNum = 13,
-	    .baseBlock = 0x000
+    [WIN_GF_TEXT_LOGO] = {
+        .bg = BG_GF_TEXT_LOGO,
+        .tilemapLeft = 6,
+        .tilemapTop = 4,
+        .width = 18,
+        .height = 9,
+        .paletteNum = 13,
+        .baseBlock = 0x000
     },
     [WIN_COUNT] = DUMMY_WIN_TEMPLATE
 };
 
 static const u8 sGengarZoomMatrixAnchors[NUM_GENGAR_BACK_SPRITES][2] = {
-	{63, 63},
-	{ 0, 63},
-	{63,  0},
-	{ 0,  0}
+    {63, 63},
+    { 0, 63},
+    {63,  0},
+    { 0,  0}
 };
 
 static const struct CompressedSpriteSheet sSpriteSheets_GameFreakScene[] = {
@@ -433,22 +430,22 @@ static const struct CompressedSpriteSheet sSpriteSheets_GameFreakScene[] = {
 };
 
 static const struct SpritePalette sSpritePalettes_GameFreakScene[] = {
-	{sStar_Pal,          PALTAG_STAR},
-	{sSparkles_Pal,      PALTAG_SPARKLES},
-	{sGameFreakLogo_Pal, PALTAG_GF},
-	{0}
+    {sStar_Pal,          PALTAG_STAR},
+    {sSparkles_Pal,      PALTAG_SPARKLES},
+    {sGameFreakLogo_Pal, PALTAG_GF},
+    {0}
 };
 
 static const struct Coords16 sTextSparkleCoords[] = {
-	{ 72,  80},
-	{136,  74},
-	{168,  80},
-	{120,  80},
-	{104,  86},
-	{ 88,  74},
-	{184,  74},
-	{ 56,  86},
-	{152,  86}
+    { 72,  80},
+    {136,  74},
+    {168,  80},
+    {120,  80},
+    {104,  86},
+    { 88,  74},
+    {184,  74},
+    { 56,  86},
+    {152,  86}
 };
 
 static const struct OamData sOam_Star = {
@@ -478,24 +475,24 @@ static const struct OamData sOam_SparklesSmall = {
 };
 
 static const union AnimCmd sAnim_SparklesSmall_Loop[] = {
-	ANIMCMD_FRAME(0, 4),
-	ANIMCMD_FRAME(1, 4),
-	ANIMCMD_FRAME(2, 4),
-	ANIMCMD_FRAME(3, 4),
-	ANIMCMD_JUMP(0)
+    ANIMCMD_FRAME(0, 4),
+    ANIMCMD_FRAME(1, 4),
+    ANIMCMD_FRAME(2, 4),
+    ANIMCMD_FRAME(3, 4),
+    ANIMCMD_JUMP(0)
 };
 
 static const union AnimCmd sAnim_SparklesSmall_Once[] = {
-	ANIMCMD_FRAME(0, 4),
-	ANIMCMD_FRAME(1, 4),
-	ANIMCMD_FRAME(2, 4),
-	ANIMCMD_FRAME(3, 4),
-	ANIMCMD_END
+    ANIMCMD_FRAME(0, 4),
+    ANIMCMD_FRAME(1, 4),
+    ANIMCMD_FRAME(2, 4),
+    ANIMCMD_FRAME(3, 4),
+    ANIMCMD_END
 };
 
 static const union AnimCmd *const sAnims_SparklesSmall[] = {
-	[ANIM_SPARKLE_LOOP] = sAnim_SparklesSmall_Loop,
-	[ANIM_SPARKLE_ONCE] = sAnim_SparklesSmall_Once
+    [ANIM_SPARKLE_LOOP] = sAnim_SparklesSmall_Loop,
+    [ANIM_SPARKLE_ONCE] = sAnim_SparklesSmall_Once
 };
 
 static const struct SpriteTemplate sSpriteTemplate_Star = {
@@ -532,15 +529,15 @@ static const struct OamData sOam_SparklesBig = {
 };
 
 static const union AnimCmd sAnim_SparklesBig[] = {
-	ANIMCMD_FRAME(0, 8),
-	ANIMCMD_FRAME(16, 8),
-	ANIMCMD_FRAME(32, 8),
-	ANIMCMD_FRAME(48, 8),
-	ANIMCMD_END
+    ANIMCMD_FRAME(0, 8),
+    ANIMCMD_FRAME(16, 8),
+    ANIMCMD_FRAME(32, 8),
+    ANIMCMD_FRAME(48, 8),
+    ANIMCMD_END
 };
 
 static const union AnimCmd *const sAnims_SparklesBig[] = {
-	sAnim_SparklesBig
+    sAnim_SparklesBig
 };
 
 static const struct SpriteTemplate sSpriteTemplate_SparklesBig = {
@@ -613,28 +610,28 @@ static const struct OamData sOam_Scene3_Nidorino = {
 };
 
 static const union AnimCmd sAnim_Scene3_Nidorino_Normal[] = {
-	ANIMCMD_FRAME(0, 1),
-	ANIMCMD_END
+    ANIMCMD_FRAME(0, 1),
+    ANIMCMD_END
 };
 
 static const union AnimCmd sAnim_Scene3_Nidorino_Cry[] = {
-	ANIMCMD_FRAME(64, 1),
-	ANIMCMD_END
+    ANIMCMD_FRAME(64, 1),
+    ANIMCMD_END
 };
 
 static const union AnimCmd sAnim_Scene3_Nidorino_Crouch[] = {
-	ANIMCMD_FRAME(128, 1),
-	ANIMCMD_END
+    ANIMCMD_FRAME(128, 1),
+    ANIMCMD_END
 };
 
 static const union AnimCmd sAnim_Scene3_Nidorino_Hop[] = {
-	ANIMCMD_FRAME(192, 1),
-	ANIMCMD_END
+    ANIMCMD_FRAME(192, 1),
+    ANIMCMD_END
 };
 
 static const union AnimCmd sAnim_Scene3_Nidorino_Attack[] = {
-	ANIMCMD_FRAME(256, 1),
-	ANIMCMD_END
+    ANIMCMD_FRAME(256, 1),
+    ANIMCMD_END
 };
 
 static const union AnimCmd *const sAnims_Scene3_Nidorino[] = {
@@ -646,19 +643,19 @@ static const union AnimCmd *const sAnims_Scene3_Nidorino[] = {
 };
 
 static const union AffineAnimCmd sAffineAnim_Scene3_Mons_Normal[] = {
-	AFFINEANIMCMD_FRAME(256, 256, 0, 0),
-	AFFINEANIMCMD_END
+    AFFINEANIMCMD_FRAME(256, 256, 0, 0),
+    AFFINEANIMCMD_END
 };
 
 static const union AffineAnimCmd sAffineAnim_Scene3_Mons_Zoom[] = {
-	AFFINEANIMCMD_FRAME(256, 256, 0, 0),
-	AFFINEANIMCMD_FRAME(32, 32, 0, 8),
-	AFFINEANIMCMD_END
+    AFFINEANIMCMD_FRAME(256, 256, 0, 0),
+    AFFINEANIMCMD_FRAME(32, 32, 0, 8),
+    AFFINEANIMCMD_END
 };
 
 static const union AffineAnimCmd *const sAffineAnims_Scene3_Mons[] = {
-	[AFFINEANIM_NORMAL] = sAffineAnim_Scene3_Mons_Normal,
-	[AFFINEANIM_ZOOM]   = sAffineAnim_Scene3_Mons_Zoom
+    [AFFINEANIM_NORMAL] = sAffineAnim_Scene3_Mons_Normal,
+    [AFFINEANIM_ZOOM]   = sAffineAnim_Scene3_Mons_Zoom
 };
 
 static const struct SpriteTemplate sSpriteTemplate_Scene3_Nidorino = {
@@ -718,19 +715,19 @@ static const struct OamData sOam_Grass = {
 };
 
 static const union AnimCmd sAnim_Grass_Static[] = {
-	ANIMCMD_FRAME(0, 0),
-	ANIMCMD_END
+    ANIMCMD_FRAME(0, 0),
+    ANIMCMD_END
 };
 
 static const union AnimCmd sAnim_Grass_Rustle[] = {
-	ANIMCMD_FRAME(32, 4),
-	ANIMCMD_FRAME(0, 4),
-	ANIMCMD_END
+    ANIMCMD_FRAME(32, 4),
+    ANIMCMD_FRAME(0, 4),
+    ANIMCMD_END
 };
 
 static const union AnimCmd *const sAnims_Grass[] = {
-	sAnim_Grass_Static,
-	sAnim_Grass_Rustle // Unused
+    sAnim_Grass_Static,
+    sAnim_Grass_Rustle // Unused
 };
 
 static const struct SpriteTemplate sSpriteTemplate_Grass = {
@@ -757,30 +754,30 @@ static const struct OamData sOam_Scene3_Gengar = {
 };
 
 static const union AnimCmd sAnim_Scene3_Gengar_TopLeft[] = {
-	ANIMCMD_FRAME(0, 0),
-	ANIMCMD_END
+    ANIMCMD_FRAME(0, 0),
+    ANIMCMD_END
 };
 
 static const union AnimCmd sAnim_Scene3_Gengar_TopRight[] = {
-	ANIMCMD_FRAME(64, 0),
-	ANIMCMD_END
+    ANIMCMD_FRAME(64, 0),
+    ANIMCMD_END
 };
 
 static const union AnimCmd sAnim_Scene3_Gengar_BottomLeft[] = {
-	ANIMCMD_FRAME(96, 0),
-	ANIMCMD_END
+    ANIMCMD_FRAME(96, 0),
+    ANIMCMD_END
 };
 
 static const union AnimCmd sAnim_Scene3_Gengar_BottomRight[] = {
-	ANIMCMD_FRAME(160, 0),
-	ANIMCMD_END
+    ANIMCMD_FRAME(160, 0),
+    ANIMCMD_END
 };
 
 static const union AnimCmd *const sAnims_Scene3_Gengar[NUM_GENGAR_BACK_SPRITES] = {
-	sAnim_Scene3_Gengar_TopLeft,
-	sAnim_Scene3_Gengar_TopRight,
-	sAnim_Scene3_Gengar_BottomLeft,
-	sAnim_Scene3_Gengar_BottomRight
+    sAnim_Scene3_Gengar_TopLeft,
+    sAnim_Scene3_Gengar_TopRight,
+    sAnim_Scene3_Gengar_BottomLeft,
+    sAnim_Scene3_Gengar_BottomRight
 };
 
 static const struct SpriteTemplate sSpriteTemplate_Scene3_Gengar = {
@@ -807,15 +804,15 @@ static const struct OamData sOam_Swipe = {
 };
 
 static const union AnimCmd sAnim_Swipe_Top[] = {
-	ANIMCMD_FRAME(0, 8),
-	ANIMCMD_FRAME(32, 4),
-	ANIMCMD_END
+    ANIMCMD_FRAME(0, 8),
+    ANIMCMD_FRAME(32, 4),
+    ANIMCMD_END
 };
 
 static const union AnimCmd sAnim_Swipe_Bottom[] = {
-	ANIMCMD_FRAME(64, 8),
-	ANIMCMD_FRAME(72, 4),
-	ANIMCMD_END
+    ANIMCMD_FRAME(64, 8),
+    ANIMCMD_FRAME(72, 4),
+    ANIMCMD_END
 };
 
 static const union AnimCmd *const sAnims_Swipe[] = {
@@ -847,15 +844,15 @@ static const struct OamData sOam_RecoilDust = {
 };
 
 static const union AnimCmd sAnim_RecoilDust[] = {
-	ANIMCMD_FRAME(0, 10),
-	ANIMCMD_FRAME(4, 10),
-	ANIMCMD_FRAME(8, 10),
-	ANIMCMD_FRAME(12, 8),
-	ANIMCMD_END
+    ANIMCMD_FRAME(0, 10),
+    ANIMCMD_FRAME(4, 10),
+    ANIMCMD_FRAME(8, 10),
+    ANIMCMD_FRAME(12, 8),
+    ANIMCMD_END
 };
 
 static const union AnimCmd *const sAnims_RecoilDust[] = {
-	sAnim_RecoilDust
+    sAnim_RecoilDust
 };
 
 static const struct SpriteTemplate sSpriteTemplate_NidorinoRecoilDust = {
@@ -869,13 +866,13 @@ static const struct SpriteTemplate sSpriteTemplate_NidorinoRecoilDust = {
 };
 
 static const struct CompressedSpriteSheet sFightSceneSpriteSheets[] = {
-	{sScene2_Gengar_Gfx,       0x800,  GFXTAG_SCENE2_GENGAR},
-	{sScene2_Nidorino_Gfx,     0x800,  GFXTAG_SCENE2_NIDORINO},
-	{sScene3_Nidorino_Gfx,     0x2800, GFXTAG_SCENE3_NIDORINO},
-	{sScene3_Grass_Gfx,        0x800,  GFXTAG_SCENE3_GRASS},
-	{sScene3_GengarStatic_Gfx, 0x1800, GFXTAG_SCENE3_GENGAR},
-	{sScene3_Swipe_Gfx,        0xA00,  GFXTAG_SCENE3_SWIPE},
-	{sScene3_RecoilDust_Gfx,   0x200,  GFXTAG_SCENE3_RECOIL_DUST}
+    {sScene2_Gengar_Gfx,       0x800,  GFXTAG_SCENE2_GENGAR},
+    {sScene2_Nidorino_Gfx,     0x800,  GFXTAG_SCENE2_NIDORINO},
+    {sScene3_Nidorino_Gfx,     0x2800, GFXTAG_SCENE3_NIDORINO},
+    {sScene3_Grass_Gfx,        0x800,  GFXTAG_SCENE3_GRASS},
+    {sScene3_GengarStatic_Gfx, 0x1800, GFXTAG_SCENE3_GENGAR},
+    {sScene3_Swipe_Gfx,        0xA00,  GFXTAG_SCENE3_SWIPE},
+    {sScene3_RecoilDust_Gfx,   0x200,  GFXTAG_SCENE3_RECOIL_DUST}
 };
 
 // POTENTIAL UB
@@ -884,11 +881,11 @@ static const struct CompressedSpriteSheet sFightSceneSpriteSheets[] = {
 // Because such an entry is absent in this case, the function
 // continues reading into the next .rodata section.
 static const struct SpritePalette sFightSceneSpritePalettes[] = {
-	{sGengar_Pal,            PALTAG_GENGAR},
-	{sNidorino_Pal,          PALTAG_NIDORINO},
-	{sScene3_Grass_Pal,      PALTAG_SCENE3_GRASS},
-	{sScene3_Swipe_Pal,      PALTAG_SCENE3_SWIPE},
-	{sScene3_RecoilDust_Pal, PALTAG_SCENE3_RECOIL_DUST},
+    {sGengar_Pal,            PALTAG_GENGAR},
+    {sNidorino_Pal,          PALTAG_NIDORINO},
+    {sScene3_Grass_Pal,      PALTAG_SCENE3_GRASS},
+    {sScene3_Swipe_Pal,      PALTAG_SCENE3_SWIPE},
+    {sScene3_RecoilDust_Pal, PALTAG_SCENE3_RECOIL_DUST},
 #ifdef BUGFIX
     {0}
 #endif
@@ -1570,8 +1567,6 @@ static void IntroCB_Scene3_Entrance(struct IntroSequenceData * this)
         {
             DecompressAndCopyTileDataToVram(BG_SCENE3_GENGAR, sScene3_GengarAnim_Gfx, 0, 0, 0);
             DecompressAndCopyTileDataToVram(BG_SCENE3_GENGAR, sScene3_GengarAnim_Map, 0, 0, 1);
-            sUnusedScene3Var0 = 4;
-            sUnusedScene3Var1 = 52;
             ChangeBgX(BG_SCENE3_GENGAR, 0x00001800, BG_COORD_SET);
             ChangeBgY(BG_SCENE3_GENGAR, 0x0001F000, BG_COORD_SET);
             this->state++;
@@ -1946,7 +1941,6 @@ static void GFScene_LoadGfxCreateStar(void)
     sStarSpeedX = 96;
     sStarSpeedY = 16;
     sStarSparklesXmodMask = 0x07;
-    sStarSparklesUnusedVar = 5;
     sStarSparklesSpawnRate = 8;
     sStarSparklesFlickerStartTime = 90;
     sStarSparklesDestroySpriteTime = 120;
@@ -2738,7 +2732,6 @@ static void Scene3_StartNidorinoAttack(struct IntroSequenceData * ptr)
     ptr->scene3NidorinoSprite->data[5] = 0; // Unused
     ptr->scene3NidorinoSprite->x += ptr->scene3NidorinoSprite->x2;
     ptr->scene3NidorinoSprite->x2 = 0;
-    sNidorinoUnusedVar = 36;
     sNidorinoAnimDelayTime = 40;
     sNidorinoJumpMult = 3;
     sNidorinoJumpDiv = 4;

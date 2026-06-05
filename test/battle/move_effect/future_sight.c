@@ -123,7 +123,21 @@ SINGLE_BATTLE_TEST("Future Sight is affected by type effectiveness (Gen 5+)")
 }
 
 TO_DO_BATTLE_TEST("Future Sight ignores Wonder Guard (Gen 2-4)")
-TO_DO_BATTLE_TEST("Future Sight doesn't ignore Wonder Guard (Gen 5+)")
+SINGLE_BATTLE_TEST("Future Sight doesn't ignore Wonder Guard (Gen 5+)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_SHEDINJA) { Ability(ABILITY_WONDER_GUARD); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
+        TURN {}
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
+        ABILITY_POPUP(opponent, ABILITY_WONDER_GUARD);
+        NOT HP_BAR(opponent);
+    }
+}
 
 SINGLE_BATTLE_TEST("Future Sight will miss timing if target faints before it is about to get hit")
 {
@@ -184,5 +198,109 @@ SINGLE_BATTLE_TEST("Future Sight breaks Focus Sash and doesn't make the holder e
         MESSAGE("The opposing Pidgey hung on using its Focus Sash!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PSYCHIC, player);
         MESSAGE("The opposing Pidgey fainted!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Future Sight does not trigger Protean")
+{
+    GIVEN {
+        PLAYER(SPECIES_KECLEON) { Ability(ABILITY_PROTEAN); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
+    } SCENE {
+        NOT ABILITY_POPUP(opponent, ABILITY_PROTEAN);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Future Sight set up is not blocked by Protect")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_PROTECT) == EFFECT_PROTECT);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_PROTECT); MOVE(player, MOVE_FUTURE_SIGHT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Future Sight does not trigger Red Card")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
+        TURN {}
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+    } THEN {
+        EXPECT_EQ(opponent->item, ITEM_RED_CARD);
+    }
+}
+
+SINGLE_BATTLE_TEST("Future Sight flying type attacker in party receives no boost from Psychic Terrain", s16 damage)
+{
+    bool32 terrain;
+    u32 species;
+
+    PARAMETRIZE { species = SPECIES_PIDGEY; terrain = FALSE; }
+    PARAMETRIZE { species = SPECIES_PIDGEY; terrain = TRUE; }
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; terrain = FALSE; }
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; terrain = TRUE; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_PSYCHIC_TERRAIN) == EFFECT_PSYCHIC_TERRAIN);
+        ASSUME(gSpeciesInfo[SPECIES_PIDGEY].types[0] == TYPE_FLYING || gSpeciesInfo[SPECIES_PIDGEY].types[1] == TYPE_FLYING);
+        PLAYER(species);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        enum Move move = terrain ? MOVE_PSYCHIC_TERRAIN : MOVE_CELEBRATE;
+        TURN { MOVE(opponent, move); MOVE(player, MOVE_FUTURE_SIGHT); }
+        TURN { SWITCH(player, 1); }
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
+        if (B_TERRAIN_TYPE_BOOST >= GEN_8) {
+            EXPECT_MUL_EQ(results[2].damage, Q_4_12(1.3), results[3].damage);
+        } else {
+            EXPECT_MUL_EQ(results[2].damage, Q_4_12(1.5), results[3].damage);
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Future Sight is affected by Beads of Ruin on the original slot")
+{
+    s16 damage[2];
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_CHI_YU) { Ability(ABILITY_BEADS_OF_RUIN); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
+        TURN {}
+        TURN {}
+        TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
+        TURN { SWITCH(player, 1); }
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
+        HP_BAR(opponent, captureDamage: &damage[0]);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
+        HP_BAR(opponent, captureDamage: &damage[1]);
+    } THEN {
+        EXPECT_MUL_EQ(damage[0], Q_4_12(1.33), damage[1]);
     }
 }
