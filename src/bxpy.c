@@ -93,7 +93,7 @@ static bool8 BXPY_ShouldHealAfterBattle(void)
 
 void BXPY_TryHealAfterBattle(void)
 {
-    if (FlagGet(B_FLAG_BXPY))
+    if (!FlagGet(B_FLAG_BXPY))
         return;
 
     if (!BXPY_ShouldHealAfterBattle())
@@ -126,7 +126,7 @@ static void BXPY_ErrorCheck_BringSizeNotEnough(void)
         return;
 
     u32 bringSize = VarGet(VAR_BXPY_BRING_SIZE);
-    u32 maxSize = (VarGet(VAR_BXPY_PARTNER) == PARTNER_NONE) ? bringSize : (bringSize / 2);
+    u32 maxSize = ((VarGet(VAR_BXPY_PARTNER) != PARTNER_NONE) && (B_MULTI_HALF_TEAMS == TRUE)) ? (bringSize / 2) : bringSize;
 
     u32 partyCount = CountPartyAliveNonEggMonsExcept(PARTY_SIZE);
 
@@ -292,19 +292,19 @@ void BXPY_Init(enum BXPYBattleTypes battleType, u32 bringSize, u32 pickSize, u32
 
     u8 playerEnteredMons[PARTY_SIZE];
 
-    for (u32 monsIndex = 0; monsIndex < ARRAY_COUNT(playerEnteredMons); monsIndex++)
+    for (u32 monsIndex = 0; monsIndex < PARTY_SIZE; monsIndex++)
         playerEnteredMons[monsIndex] = BXPY_EMPTY_MON;
 
-    BXPY_PreparePartiesAndInit(bringSize,pickSize,battleFlags,playerEnteredMons, 0, BXPY_PAGE_OPPONENT_A);
+    BXPY_PreparePartiesAndInit(bringSize,pickSize,battleFlags,playerEnteredMons, 0, BXPY_PAGE_OPPONENT_A,TRUE);
 
 }
 
-void BXPY_PreparePartiesAndInit(u32 bringSize, u32 pickSize, u32 battleFlags, u8* playerEnteredMons, u32 position, enum BXPYPages page)
+void BXPY_PreparePartiesAndInit(u32 bringSize, u32 pickSize, u32 battleFlags, u8* playerEnteredMons, u32 position, enum BXPYPages page, bool32 isFirstTime)
 {
     BXPY_PrepareEnemyParty(bringSize,battleFlags);
     BXPY_PrepareParty(pickSize);
 
-    BXPY_InitializeAndSaveCallback(bringSize, pickSize, battleFlags,playerEnteredMons, position, page);
+    BXPY_InitializeAndSaveCallback(bringSize, pickSize, battleFlags,playerEnteredMons, position, page, isFirstTime);
 }
 
 static void BXPY_InitTrainerBattleParams(u32 trainerA, const u8 *loseTextA, u32 trainerB, const u8* loseTextB, u32 partnerId)
@@ -380,10 +380,10 @@ static void BXPY_DeleteNonAliveMons(void)
     CompactPartySlots();
 }
 
-void BXPY_SelectPartyMembers(struct Pokemon *party, u8* enteredMons)
+void BXPY_SelectPartyMembers(struct Pokemon *party, u8* enteredMons, enum BattleTrainer trainer)
 {
     struct Pokemon tempParty[PARTY_SIZE];
-    u32 participatingPokemonSlot = 0;
+    int participatingPokemonSlot = 0;
     VarSet(B_VAR_SKY_BATTLE,0);
 
     for (u32 i = 0; i < PARTY_SIZE; i++)
@@ -392,11 +392,14 @@ void BXPY_SelectPartyMembers(struct Pokemon *party, u8* enteredMons)
     for (u32 i = 0; i < PARTY_SIZE; i++)
     {
         u32 slot = enteredMons[i];
-        if (slot == PARTY_SIZE)
+        if (slot == BXPY_EMPTY_MON)
             continue;
 
-        participatingPokemonSlot += 1 << slot;
-        VarSet(B_VAR_SKY_BATTLE,participatingPokemonSlot);
+        if (trainer == B_TRAINER_PLAYER)
+        {
+            participatingPokemonSlot += 1 << slot;
+            VarSet(B_VAR_SKY_BATTLE,participatingPokemonSlot);
+        }
 
         CopyMon(&tempParty[i],&party[slot],sizeof(struct Pokemon));
     }

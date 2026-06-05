@@ -31,6 +31,8 @@
 static void Task_BXPY_PartySelection(u8 taskId);
 static void BXPY_AddRemoveSelectedMon(void);
 static void BXPY_RemoveIndexFromSelected(u32 currentIndex);
+static void BXPY_SetMusicFlag(bool32 isFirsTime);
+static u8 BXPY_GetMusicFlag(void);
 static void BXPY_ChangePosition(s32 delta);
 static void BXPY_SetPosition(u32 position);
 static u8 BXPY_GetPosition(void);
@@ -135,6 +137,7 @@ static void Task_BXPY_PartySelection(u8 taskId)
 
     if (JOY_NEW(DPAD_LEFT) || JOY_REPEAT(DPAD_LEFT))
     {
+        PlaySE(SE_BXPY_GENERIC);
         BXPY_ChangePosition(-6);
         BXPY_DisplayHelpBar(WIN_BXPY_HELP_BAR);
         BXPY_DisplayPlayerPartyCursorMove();
@@ -143,6 +146,7 @@ static void Task_BXPY_PartySelection(u8 taskId)
 
     if (JOY_NEW(DPAD_RIGHT) || JOY_REPEAT(DPAD_RIGHT))
     {
+        PlaySE(SE_BXPY_GENERIC);
         BXPY_ChangePosition(6);
         BXPY_DisplayHelpBar(WIN_BXPY_HELP_BAR);
         BXPY_DisplayPlayerPartyCursorMove();
@@ -151,6 +155,7 @@ static void Task_BXPY_PartySelection(u8 taskId)
 
     if (JOY_NEW(DPAD_UP) || JOY_REPEAT(DPAD_UP))
     {
+        PlaySE(SE_BXPY_GENERIC);
         BXPY_ChangePosition(-1);
         BXPY_DisplayHelpBar(WIN_BXPY_HELP_BAR);
         BXPY_DisplayPlayerPartyCursorMove();
@@ -159,6 +164,7 @@ static void Task_BXPY_PartySelection(u8 taskId)
 
     if (JOY_NEW(DPAD_DOWN) || JOY_REPEAT(DPAD_DOWN))
     {
+        PlaySE(SE_BXPY_GENERIC);
         BXPY_ChangePosition(1);
         BXPY_DisplayHelpBar(WIN_BXPY_HELP_BAR);
         BXPY_DisplayPlayerPartyCursorMove();
@@ -168,7 +174,10 @@ static void Task_BXPY_PartySelection(u8 taskId)
     if (JOY_NEW(A_BUTTON) || JOY_REPEAT(A_BUTTON))
     {
         if (BXPY_IsCursorOnEmpty())
+{
+        PlaySE(SE_BXPY_ERROR);
             return;
+}
         else if (BXPY_IsCursorOnEnemy() && BXPY_IsOpenTeamSheetOn() == TRUE)
             BXPY_GoToPokemonSummary(taskId);
         else if (BXPY_IsCursorOnPartner())
@@ -191,8 +200,11 @@ static void Task_BXPY_PartySelection(u8 taskId)
     if (JOY_NEW(SELECT_BUTTON) || JOY_REPEAT(SELECT_BUTTON))
     {
         if (BXPY_IsMultiBattle() == FALSE)
+{
+        PlaySE(SE_BXPY_ERROR);
             return;
-
+}
+        PlaySE(SE_BXPY_SWITCH_PAGE);
         BXPY_TogglePage();
         BXPY_DrawPage();
     }
@@ -209,7 +221,9 @@ static void BXPY_AddRemoveSelectedMon(void)
     else
     {
         if (BXPY_HasSelectedEnough() == FALSE)
+        {
             BXPY_SetSelectedMons(BXPY_CountNumberSelected(),currentIndex);
+        }
     }
 
     BXPY_RefreshSelectedSprites();
@@ -218,6 +232,7 @@ static void BXPY_AddRemoveSelectedMon(void)
 
 static void BXPY_RemoveIndexFromSelected(u32 currentIndex)
 {
+    PlaySE(SE_BXPY_REMOVE);
     u32 bringSize = min(BXPY_GetBringSize(),NUM_BXPY_MAX_MONS_SHOWED);
     u32 selectedIndex = 0;
     s32 retVal = -1;
@@ -281,6 +296,16 @@ static void BXPY_SetPosition(u32 position)
 static u8 BXPY_GetPosition(void)
 {
     return sBXPYState->position;
+}
+
+static void BXPY_SetMusicFlag(bool32 isFirstTime)
+{
+    sBXPYState->musicFlag = isFirstTime;
+}
+
+static u8 BXPY_GetMusicFlag(void)
+{
+    return sBXPYState->musicFlag;
 }
 
 static u8 BXPY_GetBringSize(void)
@@ -743,7 +768,6 @@ static void LoadBXPYPalettes(void)
 
 static void PlaySoundStartFadeQuitApp(u8 taskId)
 {
-    PlaySE(SE_PC_OFF);
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
     gTasks[taskId].func = Task_WaitFadeAndExitGracefully;
 }
@@ -760,23 +784,23 @@ static void Task_WaitFadeAndExitGracefully(u8 taskId)
 
     for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
         playerEnteredMons[partyIndex] = BXPY_GetSelectedMons(partyIndex);
-    BXPY_SelectPartyMembers(gParties[B_TRAINER_PLAYER],playerEnteredMons);
+    BXPY_SelectPartyMembers(gParties[B_TRAINER_PLAYER],playerEnteredMons,B_TRAINER_PLAYER);
 
     u8 enemyEnteredMons[MAX_BATTLE_TRAINERS][PARTY_SIZE];
     BXPY_GetEnemyEnterMons(enemyEnteredMons[B_TRAINER_OPPONENT_A],BXPY_GetPickSize());
-    BXPY_SelectPartyMembers(gParties[B_TRAINER_OPPONENT_A],enemyEnteredMons[B_TRAINER_OPPONENT_A]);
+    BXPY_SelectPartyMembers(gParties[B_TRAINER_OPPONENT_A],enemyEnteredMons[B_TRAINER_OPPONENT_A],B_TRAINER_OPPONENT_A);
 
     if (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE)
-{
-    BXPY_GetEnemyEnterMons(enemyEnteredMons[B_TRAINER_OPPONENT_B],BXPY_GetPickSize());
-        BXPY_SelectPartyMembers(gParties[B_TRAINER_OPPONENT_B],enemyEnteredMons[B_TRAINER_OPPONENT_B]);
-}
+    {
+        BXPY_GetEnemyEnterMons(enemyEnteredMons[B_TRAINER_OPPONENT_B],BXPY_GetPickSize());
+        BXPY_SelectPartyMembers(gParties[B_TRAINER_OPPONENT_B],enemyEnteredMons[B_TRAINER_OPPONENT_B],B_TRAINER_OPPONENT_B);
+    }
 
     if (gPartnerTrainerId != TRAINER_NONE)
-{
-    BXPY_GetEnemyEnterMons(enemyEnteredMons[B_TRAINER_PARTNER],BXPY_GetPickSize());
-        BXPY_SelectPartyMembers(gParties[B_TRAINER_PARTNER],enemyEnteredMons[B_TRAINER_PARTNER]);
-}
+    {
+        BXPY_GetEnemyEnterMons(enemyEnteredMons[B_TRAINER_PARTNER],BXPY_GetPickSize());
+        BXPY_SelectPartyMembers(gParties[B_TRAINER_PARTNER],enemyEnteredMons[B_TRAINER_PARTNER],B_TRAINER_PARTNER);
+    }
 
     u32 temp = BXPY_GetBattleFlags();
     BXPY_FreeResources();
@@ -835,36 +859,11 @@ void BXPY_SetupCallback(void)
     switch (gMain.state)
     {
         case 0:
-            /*
-            SetGpuReg(REG_OFFSET_DISPCNT, 0);
-            SetGpuReg(REG_OFFSET_BG3CNT, 0);
-            SetGpuReg(REG_OFFSET_BG2CNT, 0);
-            SetGpuReg(REG_OFFSET_BG1CNT, 0);
-            SetGpuReg(REG_OFFSET_BG0CNT, 0);
-            ChangeBgX(0, 0, BG_COORD_SET);
-            ChangeBgY(0, 0, BG_COORD_SET);
-            ChangeBgX(1, 0, BG_COORD_SET);
-            ChangeBgY(1, 0, BG_COORD_SET);
-            ChangeBgX(2, 0, BG_COORD_SET);
-            ChangeBgY(2, 0, BG_COORD_SET);
-            ChangeBgX(3, 0, BG_COORD_SET);
-            ChangeBgY(3, 0, BG_COORD_SET);
-            SetGpuReg(REG_OFFSET_BLDCNT, 0);
-            SetGpuReg(REG_OFFSET_BLDY, 0);
-            SetGpuReg(REG_OFFSET_BLDALPHA, 0);
-            SetGpuReg(REG_OFFSET_WIN0H, 0);
-            SetGpuReg(REG_OFFSET_WIN0V, 0);
-            SetGpuReg(REG_OFFSET_WIN1H, 0);
-            SetGpuReg(REG_OFFSET_WIN1V, 0);
-            SetGpuReg(REG_OFFSET_WININ, 0);
-            SetGpuReg(REG_OFFSET_WINOUT, 0);
-            CpuFill16(0, (void *)VRAM, VRAM_SIZE);
-            CpuFill32(0, (void *)OAM, OAM_SIZE);
-            */
-
             DmaClearLarge16(3, (void *)VRAM, VRAM_SIZE, 0x1000);
             SetVBlankHBlankCallbacksToNull();
             ClearScheduledBgCopiesToVram();
+            if (BXPY_GetMusicFlag())
+                PlayBGM(MUS_BXPY_BACKGROUND);
             gMain.state++;
             break;
         case 1:
@@ -1766,10 +1765,10 @@ static void CB2_ReturnToBXPYInterface(void)
         playerEnteredMons[partyIndex] = BXPY_GetSelectedMons(partyIndex);
 
     BXPY_FreeResources();
-    BXPY_PreparePartiesAndInit(bringSize,pickSize,battleFlags,playerEnteredMons,position,page);
+    BXPY_PreparePartiesAndInit(bringSize,pickSize,battleFlags,playerEnteredMons,position,page,FALSE);
 }
 
-void BXPY_InitializeAndSaveCallback(u32 bringSize, u32 pickSize, u32 battleFlags, u8* playerEnteredMons, u32 position, enum BXPYPages page)
+void BXPY_InitializeAndSaveCallback(u32 bringSize, u32 pickSize, u32 battleFlags, u8* playerEnteredMons, u32 position, enum BXPYPages page, bool32 isFirstTime)
 {
     if (BXPY_AllocateStructs())
     {
@@ -1782,6 +1781,7 @@ void BXPY_InitializeAndSaveCallback(u32 bringSize, u32 pickSize, u32 battleFlags
     BXPY_SetBattleFlags(battleFlags);
     BXPY_SetPosition(position);
     BXPY_SetPage(page);
+    BXPY_SetMusicFlag(isFirstTime);
 
     for (u32 partyIndex = 0; partyIndex < PARTY_SIZE; partyIndex++)
          BXPY_SetSelectedMons(partyIndex,playerEnteredMons[partyIndex]);
@@ -1801,6 +1801,7 @@ static bool8 BXPY_IsCursorOnSelectedMon(void)
 
 static void BXPY_SelectMonAndShowMenu(u8 taskId)
 {
+    PlaySE(SE_BXPY_GENERIC);
     BXPY_CreateMonMenu();
     gTasks[taskId].func = Task_HandleMonMenu;
 }

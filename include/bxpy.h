@@ -51,9 +51,9 @@ bool8 BXPY_TeamPreview_ShouldHideEnemyLevel(enum BattleSide side);
 bool8 BXPY_SummaryScreen_ShouldHideEnemyLevel(enum PokemonSummaryScreenMode mode);
 bool8 BXPY_SummaryScreen_ShouldHideStats(enum PokemonSummaryScreenMode mode, enum PokemonSummarySkillsMode stats);
 void BXPY_GetEnemyEnterMons(u8* enteredMons, u32 pickSize);
-void BXPY_SelectPartyMembers(struct Pokemon *party, u8* enteredMons);
-void BXPY_PreparePartiesAndInit(u32 bringSize, u32 pickSize, u32 battleFlags, u8* playerEnteredMons, u32 position, enum BXPYPages page);
-void BXPY_InitializeAndSaveCallback(u32 bringSize, u32 pickSize, u32 battleFlags, u8* playerEnteredMons, u32 position, enum BXPYPages page);
+void BXPY_SelectPartyMembers(struct Pokemon *party, u8* enteredMons, enum BattleTrainer trainer);
+void BXPY_PreparePartiesAndInit(u32 bringSize, u32 pickSize, u32 battleFlags, u8* playerEnteredMons, u32 position, enum BXPYPages page, bool32 isFirstTime);
+void BXPY_InitializeAndSaveCallback(u32 bringSize, u32 pickSize, u32 battleFlags, u8* playerEnteredMons, u32 position, enum BXPYPages page, bool32 isFirstTime);
 bool8 BXPY_IsMultiBattle(void);
 
 struct BXPYState
@@ -67,6 +67,7 @@ struct BXPYState
     u8 pickSize;
     struct Pokemon tempParty[PARTY_SIZE];
     u8 page;
+    bool32 musicFlag;
 };
 
 struct BXPYSpriteSheet
