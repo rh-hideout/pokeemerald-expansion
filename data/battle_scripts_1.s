@@ -6221,6 +6221,7 @@ BattleScript_TargetProtected::
 	return
 
 BattleScript_UnseenFist::
+	copybyte gBattlerAbility, gBattlerAttacker
 	call BattleScript_AbilityPopUp
 BattleScript_CouldntFullyProtect::
 	printstring STRINGID_COULDNTFULLYPROTECT

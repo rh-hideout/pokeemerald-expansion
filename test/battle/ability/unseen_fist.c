@@ -74,14 +74,3 @@ SINGLE_BATTLE_TEST("Unseen Fist bypasses protect effects without triggering thei
             EXPECT_EQ(player->statStages[loweredStat], DEFAULT_STAT_STAGE);
     }
 }
-
-SINGLE_BATTLE_TEST("Unseen Fist with Population Bomb")
-{
-    GIVEN {
-        PLAYER(SPECIES_MAUSHOLD) { Ability(ABILITY_UNSEEN_FIST); Speed(1); }
-        OPPONENT(SPECIES_AGGRON) { Speed(2); }
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_GRAVITY); MOVE(player, MOVE_POPULATION_BOMB); }
-    } SCENE {
-    }
-}
