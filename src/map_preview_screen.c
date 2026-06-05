@@ -582,7 +582,7 @@ void RunMapPreviewScreenFadeIn(mapsec_u8_t mapsec)
     SetBgAttribute(0, BG_ATTR_PRIORITY, 0);
     SetGpuRegBits(REG_OFFSET_WININ, WININ_WIN0_CLR | WININ_WIN1_CLR);
     SetGpuRegBits(REG_OFFSET_WINOUT, WINOUT_WIN01_CLR);
-    if (sMapPreviewScreenData[idx].nameDisabled == FALSE)
+    if (!sMapPreviewScreenData[idx].nameDisabled)
         gTasks[taskId].tWindowId = MapPreview_CreateMapNameWindow(mapsec);
 
     LockPlayerFieldControls();
