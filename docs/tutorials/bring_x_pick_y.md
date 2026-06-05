@@ -189,7 +189,7 @@ The following occurs regardless of the result of the battle.
 ## Load Party & Retain Changes
 | `TRUE` | `FALSE` |
 | --- | --- |
-| ![](/docs/tutorials/img/bxpy/trueRetain.png)| ![](/docs/tutorials/img/bxpy/falseRetain.png)| 
+| ![](/docs/tutorials/img/bxpy/retainTrue.png)| ![](/docs/tutorials/img/bxpy/retainFalse.png)| 
 
 <!-- BXPY TODO show party, score a KO, evolve after battle, then show the restored party with same damage and evolution -->
 
@@ -200,7 +200,7 @@ Any changes that occured to the participating Pokemon is retained. This includes
 ## Heal Post Battle
 | `TRUE` | `FALSE` |
 | --- | --- |
-| ![](/docs/tutorials/img/bxpy/trueHeal.png)| ![](/docs/tutorials/img/bxpy/falseHeal.png)| 
+| ![](/docs/tutorials/img/bxpy/retainTrue.png)| ![](/docs/tutorials/img/bxpy/healFalse.png)| 
 
 <!-- BXPY TODO electrode self destructs in battle, show party after battle -->
 
