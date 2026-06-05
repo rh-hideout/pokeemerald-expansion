@@ -1005,7 +1005,7 @@ static void Debug_CreateInputDisplayWindow(u8 taskId)
 
 static void Debug_ResetInputDisplayMonIcon(u8 taskId, enum Species species)
 {
-    if (gTasks[taskId].tSpriteId != WINDOW_NONE)
+    if (gTasks[taskId].tSpriteId != SPRITE_NONE)
     {
         FreeAndDestroyMonIconSprite(&gSprites[gTasks[taskId].tSpriteId]);
         FreeMonIconPalettes();
