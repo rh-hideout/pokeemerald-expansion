@@ -731,7 +731,7 @@ static const struct DoorGraphics sDoorAnimGraphicsTable[] =
         .sound = DOOR_SOUND_SLIDING,
         .size = DOOR_SIZE_1x2,
         .tiles = sDoorAnimTiles_BattleTentInterior,
-        .palettes = sDoorAnimPalettes_BattleTentInterio
+        .palettes = sDoorAnimPalettes_BattleTentInterior
     },
     {
         .metatileNum = METATILE_TrainerHill_Door_Elevator_Lobby,
