@@ -604,7 +604,7 @@ static enum ItemEffect TryToxicOrb(enum BattlerId battler)
         gBattleMons[battler].status1 = STATUS1_TOXIC_POISON;
         gEffectBattler = battler;
         gBattleCommunication[MULTISTRING_CHOOSER] = 0;
-        BattleScriptCall(BattleScript_MoveEffectToxic);
+        BattleScriptCall(BattleScript_ToxicOrbActivates);
         effect = ITEM_STATUS_CHANGE;
     }
 
@@ -621,7 +621,7 @@ static enum ItemEffect TryFlameOrb(enum BattlerId battler)
         gBattleMons[battler].status1 = STATUS1_BURN;
         gEffectBattler = battler;
         gBattleCommunication[MULTISTRING_CHOOSER] = 0;
-        BattleScriptCall(BattleScript_MoveEffectBurn);
+        BattleScriptCall(BattleScript_FlameOrbActivates);
         effect = ITEM_STATUS_CHANGE;
     }
 

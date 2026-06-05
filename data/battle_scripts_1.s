@@ -4391,6 +4391,8 @@ BattleScript_MoveEffectPoison::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_UpdateEffectStatusIconRet
 
+BattleScript_FlameOrbActivates::
+	call BattleScript_ItemPopUp_Attacker
 BattleScript_MoveEffectBurn::
 	statusanimation BS_EFFECT_BATTLER
 	printfromtable gGotBurnedStringIds
@@ -4424,6 +4426,8 @@ BattleScript_MoveEffectUproar::
 BattleScript_MoveEffectUproarEnd:
 	return
 
+BattleScript_ToxicOrbActivates::
+	call BattleScript_ItemPopUp_Attacker
 BattleScript_MoveEffectToxic::
 	statusanimation BS_EFFECT_BATTLER
 	printstring STRINGID_PKMNBADLYPOISONED

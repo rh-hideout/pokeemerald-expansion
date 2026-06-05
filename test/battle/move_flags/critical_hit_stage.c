@@ -25,8 +25,6 @@ SINGLE_BATTLE_TEST("criticalHitStage set to 1 increases critical hits occur at a
 
 DOUBLE_BATTLE_TEST("Critical hits mention each affected target")
 {
-    u32 j, genConfig = 0, passes = 0, trials = 0;
-
     GIVEN {
         WITH_CONFIG(B_CRIT_CHANCE, GEN_9);
         ASSUME(GetMoveCriticalHitStage(MOVE_SLASH) == 1);
