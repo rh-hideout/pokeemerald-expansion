@@ -2364,19 +2364,19 @@ static void PrintStatsScreen_NameGender(u8 taskId, u32 num, u32 value)
         genderRatio = COMPOUND_STRING("♂");
         break;
     case 31:
-        genderRatio = COMPOUND_STRING("♀ 1/7 ♂"); // ("♀ 12.5 / 87.5 ♂");
+        genderRatio = COMPOUND_STRING("♀ 1:7 ♂"); // ("♀ 12.5 : 87.5 ♂");
         break;
     case 63:
-        genderRatio = COMPOUND_STRING("♀ 1/3 ♂"); // ("♀ 25 / 75 ♂");
+        genderRatio = COMPOUND_STRING("♀ 1:3 ♂"); // ("♀ 25 : 75 ♂");
         break;
     case 127:
-        genderRatio = COMPOUND_STRING("♀ 1/1 ♂"); // ("♀ 50 / 50 ♂");
+        genderRatio = COMPOUND_STRING("♀ 1:1 ♂"); // ("♀ 50 : 50 ♂");
         break;
     case 191:
-        genderRatio = COMPOUND_STRING("♀ 3/1 ♂"); // ("♀ 75 / 25 ♂");
+        genderRatio = COMPOUND_STRING("♀ 3:1 ♂"); // ("♀ 75 : 25 ♂");
         break;
     case 223:
-        genderRatio = COMPOUND_STRING("♀ 7/1 ♂"); // ("♀ 87.5 / 12.5 ♂");
+        genderRatio = COMPOUND_STRING("♀ 7:1 ♂"); // ("♀ 87.5 : 12.5 ♂");
         break;
     case 254:
         genderRatio = COMPOUND_STRING("♀");
