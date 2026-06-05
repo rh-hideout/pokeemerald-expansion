@@ -3892,7 +3892,13 @@ static void PrintHeldItemName(void)
     }
     else if (sMonSummaryScreen->summary.item == ITEM_NONE)
     {
-        text = gText_None;
+        // Start bringXpickY
+        //text = gText_None;
+        if (!BXPY_SummaryScreen_ShouldShowFullItem(sMonSummaryScreen->mode)) // bringXpickY
+            StringCopy(gStringVar1,BXPY_ReturnItemText(ITEM_NONE));
+
+        text = gStringVar1;
+        // End bringXpickY
     }
     else
     {
