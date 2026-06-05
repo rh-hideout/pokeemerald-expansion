@@ -6243,7 +6243,7 @@ Level: 13
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 === TRAINER_WALLACE ===
-Name: Anshul
+Name: WALLACE
 Class: Champion
 Pic: Champion Wallace
 Gender: Male
@@ -6253,48 +6253,48 @@ Double Battle: No
 AI: Basic Trainer
 Mugshot: Yellow
 
-Ogerpon-Wellspring-Tera (F)
-Level: 50
+Wailord
+Level: 57
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Rain Dance
 - Water Spout
 - Double Edge
 - Blizzard
 
-Urshifu (M)
-Level: 50
+Tentacruel
+Level: 55
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Toxic
 - Hydro Pump
 - Sludge Bomb
 - Ice Beam
 
-Gholdengo
-Level: 50
+Ludicolo
+Level: 56
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Giga Drain
 - Surf
 - Leech Seed
 - Double Team
 
-Incineroar (F)
-Level: 50
+Whiscash
+Level: 56
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Earthquake
 - Surf
 - Amnesia
 - Hyper Beam
 
-Tornadus (M)
-Level: 50
+Gyarados
+Level: 56
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Dragon Dance
 - Earthquake
 - Hyper Beam
 - Surf
 
-Raging Bolt
-Level: 50
+Milotic @ Sitrus Berry
+Level: 58
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Recover
 - Surf

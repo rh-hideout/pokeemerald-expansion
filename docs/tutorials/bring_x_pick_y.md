@@ -156,10 +156,56 @@ This can be turned off via `BXPY_CLAUSE_SPECIAL_POKEMON`, and this config is `TR
 If all the checks pass, the Player will not see any messages. The Player's party is saved to the saveblock, and any fainted or unhatched Pokemon are removed from the Party. The game then proceeds to Team Preview.
 
 # Team Preview
-
-Lorem
+## `BXPY_TEAM_PREVIEW_SHOW_ENEMY_SPECIES`
+| `BXPY_SPECIES_HIDE` | `BXPY_SPECIES_SHOW_BASE` | `BXPY_SPECIES_SHOW_TRUE` |
+| --- | --- | --- |
+| ![](/docs/tutorials/img/bxpy/speciesHide.png)| ![](/docs/tutorials/img/bxpy/speciesShowBase.png)| ![](/docs/tutorials/img/bxpy/speciesShowTrue.png)|
+## `BXPY_TEAM_PREVIEW_SHOW_ENEMY_GENDER`
+| `TRUE` | `FALSE` |
+| --- | --- | --- |
+| ![](/docs/tutorials/img/bxpy/speciesShowTrue.png)| ![](/docs/tutorials/img/bxpy/genderFalse.png)|
+## `BXPY_TEAM_PREVIEW_SHOW_ENEMY_ITEM`
+| `BXPY_ITEM_NO_VISIBILITY` | `BXPY_ITEM_SHOW_POSSESSION` | `BXPY_ITEM_SHOW_ITEM` |
+| --- | --- | --- |
+| ![](/docs/tutorials/img/bxpy/itemNoVisibility.png)| ![](/docs/tutorials/img/bxpy/itemShowPossession.png)| ![](/docs/tutorials/img/bxpy/speciesShowTrue.png)|
+## `BXPY_TEAM_PREVIEW_SHOW_ENEMY_LEVEL`
+| `TRUE` | `FALSE` |
+| --- | --- | --- |
+| ![](/docs/tutorials/img/bxpy/speciesShowTrue.png)| ![](/docs/tutorials/img/bxpy/levelFalse.png)|
 
 # Open Team Sheet
+## `BXPY_OPEN_TEAM_SHEET`
+## `BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_ABILITY`
+| `TRUE` | `FALSE` |
+| --- | --- | --- |
+| ![](/docs/tutorials/img/bxpy/speciesShowTrue.png)| ![](/docs/tutorials/img/bxpy/abilityFalse.png)|
+## `BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_NATURE`
+| `TRUE` | `FALSE` |
+| --- | --- | --- |
+| ![](/docs/tutorials/img/bxpy/speciesShowTrue.png)| ![](/docs/tutorials/img/bxpy/natureFalse.png)|
+## `BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_EV`
+| `TRUE` | `FALSE` |
+| --- | --- | --- |
+| ![](/docs/tutorials/img/bxpy/speciesShowTrue.png)| ![](/docs/tutorials/img/bxpy/evFalse.png)|
+## `BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_IV`
+| `TRUE` | `FALSE` |
+| --- | --- | --- |
+| ![](/docs/tutorials/img/bxpy/speciesShowTrue.png)| ![](/docs/tutorials/img/bxpy/ivFalse.png)|
+## `BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_GIMMICK_TERA`
+| `TRUE` | `FALSE` |
+| --- | --- | --- |
+| ![](/docs/tutorials/img/bxpy/speciesShowTrue.png)| ![](/docs/tutorials/img/bxpy/teraFalse.png)|
+## `BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_MOVE`
+| `TRUE` | `FALSE` |
+| --- | --- | --- |
+| ![](/docs/tutorials/img/bxpy/speciesShowTrue.png)| ![](/docs/tutorials/img/bxpy/moveFalse.png)|
+
+# Opposing Trainers
+## `BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_ABILITY`
+## `BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_ITEM`
+## `BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_LEVEL`
+## `BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_MOVES`
+## `BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_STATS`
 
 Lorem
 
