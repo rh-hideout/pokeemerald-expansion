@@ -33,7 +33,7 @@
  * the player's side has a second trainer such as Mossdeep Space Center tag battle with
  * trainer Steven. gParties[B_TRAINER_OPPONENT_B] is only used in battles with two opponent trainers.
  * In a double battle where the battle side only has a single trainer, both battlers on that battle
- * side will reside in the same party (gParties[B_TRAINER_PLAYER] for player side and 
+ * side will reside in the same party (gParties[B_TRAINER_PLAYER] for player side and
  * gParties[B_TRAINER_OPPONENT_A] for opponent side).
  * Note in link multi battles, parties are set locally on each player's device, meaning
  * even if a player is in the right position, on their device they will still occupy
@@ -323,6 +323,7 @@ enum VolatileFlags
     F(VOLATILE_ENDURED,                     endured,                       (u32, 1)) \
     F(VOLATILE_TRY_EJECT_PACK,              tryEjectPack,                  (u32, 1)) \
     F(VOLATILE_OCTOLOCKED_BY,               octolockedBy,                  (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
+    F(VOLATILE_SUPREME_OVERLORD_COUNTER,    supremeOverlordCounter,        (enum BattlerId, MAX_BITS(MAX_BATTLERS_COUNT))) \
     F(VOLATILE_PARADOX_BOOSTED_STAT,        paradoxBoostedStat,            (enum Stat, NUM_STATS - 1)) \
     F(VOLATILE_UNABLE_TO_USE_MOVE,          unableToUseMove,               (u32, 1)) \
     F(VOLATILE_ACTIVATE_DANCER,             activateDancer,                (u32, 1)) \

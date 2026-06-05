@@ -2154,7 +2154,7 @@ static inline u8 GetBattlerSideFaintCounter(enum BattlerId battler)
 // Supreme Overlord adds a x0.1 damage boost for each fainted ally.
 static inline uq4_12_t GetSupremeOverlordModifier(enum BattlerId battler)
 {
-    return UQ_4_12(1.0) + (PercentToUQ4_12(gBattleStruct->supremeOverlordCounter[battler] * 10));
+    return UQ_4_12(1.0) + (PercentToUQ4_12(gBattleMons[battler].volatiles.supremeOverlordCounter * 10));
 }
 
 bool32 HadMoreThanHalfHpNowDoesnt(enum BattlerId battler)
@@ -3455,8 +3455,8 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         case ABILITY_SUPREME_OVERLORD:
             if (shouldAbilityTrigger)
             {
-                gBattleStruct->supremeOverlordCounter[battler] = min(5, GetBattlerSideFaintCounter(battler));
-                if (gBattleStruct->supremeOverlordCounter[battler] > 0)
+                gBattleMons[battler].volatiles.supremeOverlordCounter = min(5, GetBattlerSideFaintCounter(battler));
+                if (gBattleMons[battler].volatiles.supremeOverlordCounter > 0)
                 {
                     BattleScriptCall(BattleScript_SupremeOverlordActivates);
                     effect++;
@@ -6374,6 +6374,20 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
     return basePower;
 }
 
+static u32 DmgCalc_IsAbilityOnField(enum Ability ability, enum Ability abilities[], enum BattlerId *battler)
+{
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
+    {
+        if (abilities[i] == ability)
+        {
+            *battler = i;
+            return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+
 static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
 {
     u32 holdEffectParamAtk;
@@ -6572,34 +6586,42 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
     }
 
     // field abilities
-    if ((IsAbilityOnField(ABILITY_DARK_AURA) && moveType == TYPE_DARK)
-     || (IsAbilityOnField(ABILITY_FAIRY_AURA) && moveType == TYPE_FAIRY))
+    enum BattlerId fieldAbilityBattler = MAX_BATTLERS_COUNT;
+    if ((moveType == TYPE_DARK && DmgCalc_IsAbilityOnField(ABILITY_DARK_AURA, ctx->abilities, &fieldAbilityBattler))
+     || (moveType == TYPE_FAIRY && DmgCalc_IsAbilityOnField(ABILITY_FAIRY_AURA, ctx->abilities, &fieldAbilityBattler)))
     {
-        if (IsAbilityOnField(ABILITY_AURA_BREAK))
+        if (ctx->updateFlags)
+            RecordAbilityBattle(fieldAbilityBattler, ctx->abilities[fieldAbilityBattler]);
+
+        if (DmgCalc_IsAbilityOnField(ABILITY_AURA_BREAK, ctx->abilities, &fieldAbilityBattler))
+        {
+            if (ctx->updateFlags)
+                RecordAbilityBattle(fieldAbilityBattler, ctx->abilities[fieldAbilityBattler]);
             modifier = uq4_12_multiply(modifier, UQ_4_12(0.75));
+        }
         else
+        {
             modifier = uq4_12_multiply(modifier, UQ_4_12(1.33));
+        }
+
     }
 
     // attacker partner's abilities
-    if (IsBattlerAlive(BATTLE_PARTNER(battlerAtk)))
+    switch (ctx->abilities[BATTLE_PARTNER(battlerAtk)])
     {
-        switch (GetBattlerAbility(BATTLE_PARTNER(battlerAtk)))
-        {
-        case ABILITY_BATTERY:
-            if (IsBattleMoveSpecial(move))
-                modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
-            break;
-        case ABILITY_POWER_SPOT:
+    case ABILITY_BATTERY:
+        if (IsBattleMoveSpecial(move))
             modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
-            break;
-        case ABILITY_STEELY_SPIRIT:
-            if (moveType == TYPE_STEEL)
-                modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
-            break;
-        default:
-            break;
-        }
+        break;
+    case ABILITY_POWER_SPOT:
+        modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
+        break;
+    case ABILITY_STEELY_SPIRIT:
+        if (moveType == TYPE_STEEL)
+            modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
+        break;
+    default:
+        break;
     }
 
     // target's abilities
@@ -6836,18 +6858,18 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
         break;
     case ABILITY_PLUS:
-        if (IsBattleMoveSpecial(move) && IsBattlerAlive(BATTLE_PARTNER(battlerAtk)))
+        if (IsBattleMoveSpecial(move))
         {
-            enum Ability partnerAbility = GetBattlerAbility(BATTLE_PARTNER(battlerAtk));
+            enum Ability partnerAbility = ctx->abilities[BATTLE_PARTNER(battlerAtk)];
             if (partnerAbility == ABILITY_MINUS
             || (B_PLUS_MINUS_INTERACTION >= GEN_5 && partnerAbility == ABILITY_PLUS))
                 modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
         }
         break;
     case ABILITY_MINUS:
-        if (IsBattleMoveSpecial(move) && IsBattlerAlive(BATTLE_PARTNER(battlerAtk)))
+        if (IsBattleMoveSpecial(move))
         {
-            enum Ability partnerAbility = GetBattlerAbility(BATTLE_PARTNER(battlerAtk));
+            enum Ability partnerAbility = ctx->abilities[BATTLE_PARTNER(battlerAtk)];
             if (partnerAbility == ABILITY_PLUS
             || (B_PLUS_MINUS_INTERACTION >= GEN_5 && partnerAbility == ABILITY_MINUS))
                 modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
@@ -6952,17 +6974,14 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
     }
 
     // ally's abilities
-    if (IsBattlerAlive(BATTLE_PARTNER(battlerAtk)))
+    switch (ctx->abilities[BATTLE_PARTNER(battlerAtk)])
     {
-        switch (GetBattlerAbility(BATTLE_PARTNER(battlerAtk)))
-        {
-        case ABILITY_FLOWER_GIFT:
-            if (gBattleMons[BATTLE_PARTNER(battlerAtk)].species == SPECIES_CHERRIM_SUNSHINE && IsBattlerWeatherAffected(GetBattlerHoldEffect(BATTLE_PARTNER(battlerAtk)), GetWeather(), B_WEATHER_SUN) && IsBattleMovePhysical(move))
-                modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
-            break;
-        default:
-            break;
-        }
+    case ABILITY_FLOWER_GIFT:
+        if (gBattleMons[BATTLE_PARTNER(battlerAtk)].species == SPECIES_CHERRIM_SUNSHINE && IsBattlerWeatherAffected(GetBattlerHoldEffect(BATTLE_PARTNER(battlerAtk)), GetWeather(), B_WEATHER_SUN) && IsBattleMovePhysical(move))
+            modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
+        break;
+    default:
+        break;
     }
 
     // Ruin field effects
