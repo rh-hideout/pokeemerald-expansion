@@ -718,12 +718,12 @@ bool8 BXPY_SummaryScreen_ShouldHideStats(enum PokemonSummaryScreenMode mode, enu
     if (BXPY_SummaryScreen_ShouldHideEnemyLevel(mode))
         return TRUE;
 
-    if (BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_IV == TRUE)
-        return FALSE;
+    if (BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_IV == FALSE)
+        return TRUE;
 
-    if (BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_EV == TRUE)
-        return FALSE;
+    if (BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_EV == FALSE)
+        return TRUE;
 
-    return (!BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_NATURE);
+    return (BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_NATURE == FALSE);
 }
 
