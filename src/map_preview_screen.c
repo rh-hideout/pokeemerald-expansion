@@ -493,7 +493,7 @@ void Task_MapPreviewScreen_NonFade(u8 taskId)
         {
             u8 idx = GetMapPreviewScreenIdx(tMapSecId);
 
-            if (sMapPreviewScreenData[idx].nameDisabled == FALSE)
+            if (!sMapPreviewScreenData[idx].nameDisabled)
             {
                 tWindowId = MapPreview_CreateMapNameWindow(tMapSecId);
                 CopyWindowToVram(tWindowId, COPYWIN_FULL);
