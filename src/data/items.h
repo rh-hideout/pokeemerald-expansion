@@ -9402,16 +9402,18 @@ const struct ItemInfo gItemsInfo[] =
         .price = 200,
     #endif
         .holdEffect = HOLD_EFFECT_ICY_ROCK,
-        .description = COMPOUND_STRING(
     #if B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_HAIL
+        .description = COMPOUND_STRING(
             "Extends a\n"
             "hailstorm when the\n"
             "holder summons it."),
     #elif B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_SNOW
+        .description = COMPOUND_STRING(
             "Extends a\n"
             "snowstorm when the\n"
             "holder summons it."),
     #else
+        .description = COMPOUND_STRING(
             "Extends hail or\n"
             "snow when the\n"
             "holder summons it."),
@@ -9662,8 +9664,8 @@ const struct ItemInfo gItemsInfo[] =
     {
         .name = ITEM_NAME("Exp. Share"),
         .holdEffect = HOLD_EFFECT_EXP_SHARE,
-        .description = COMPOUND_STRING(
     #if I_EXP_SHARE_ITEM >= GEN_6
+        .description = COMPOUND_STRING(
             "This device allows\n"
             "all party members\n"
             "to share in Exp."),
@@ -9671,6 +9673,7 @@ const struct ItemInfo gItemsInfo[] =
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
     #else
+        .description = COMPOUND_STRING(
             "A held item that\n"
             "gets Exp. Points\n"
             "from battles."),
