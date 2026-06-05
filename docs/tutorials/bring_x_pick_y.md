@@ -191,8 +191,6 @@ The following occurs regardless of the result of the battle.
 | --- | --- |
 | ![](/docs/tutorials/img/bxpy/retainTrue.png)| ![](/docs/tutorials/img/bxpy/retainFalse.png)| 
 
-<!-- BXPY TODO show party, score a KO, evolve after battle, then show the restored party with same damage and evolution -->
-
 The Player's original party prior to starting bringXpickY is restored.
 
 Any changes that occured to the participating Pokemon is retained. This includes changes in HP, PP, Experience, Level, or even Evolution. This is disabled by default, and is enabled if `BXPY_RETAIN_CHANGES` is `TRUE`. This functionality requires `B_VAR_BXPY`(`B_VAR_SKY_BATTLE`) to be set.
@@ -201,8 +199,6 @@ Any changes that occured to the participating Pokemon is retained. This includes
 | `TRUE` | `FALSE` |
 | --- | --- |
 | ![](/docs/tutorials/img/bxpy/retainTrue.png)| ![](/docs/tutorials/img/bxpy/healFalse.png)| 
-
-<!-- BXPY TODO electrode self destructs in battle, show party after battle -->
 
 The Player's party is healed after battle. This can be turned off when `BXPY_HEAL` is not set to `BXPY_HEAL_AFTER_BATTLE` OR `BXPY_HEAL_ALWAYS`.
 
