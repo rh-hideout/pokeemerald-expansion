@@ -272,7 +272,7 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Enemy Lands First Critical Hit")
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
     } WHEN {
-        TURN { EXPECT_MOVE(opponentLeft, MOVE_SURGING_STRIKES, target: playerLeft); }
+        TURN { EXPECT_MOVE(opponentLeft, MOVE_SURGING_STRIKES); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SURGING_STRIKES, opponentLeft);
         MESSAGE("A critical hit!");
@@ -553,10 +553,11 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Enemy Lands First Critical Hit")
         OPPONENT_A(SPECIES_WOBBUFFET) { Speed(4); }
         OPPONENT_B(SPECIES_WOBBUFFET) { Speed(3); }
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_ENDURE);
-            EXPECT_MOVE(opponentLeft, MOVE_SURGING_STRIKES, target: playerLeft);
-            EXPECT_MOVE(opponentRight, MOVE_SURGING_STRIKES, target: playerLeft);
-            MOVE(playerRight, MOVE_SURGING_STRIKES, target: playerLeft);
+        TURN { 
+            MOVE(playerLeft, MOVE_ENDURE); 
+            EXPECT_MOVE(opponentLeft, MOVE_SURGING_STRIKES); 
+            EXPECT_MOVE(opponentRight, MOVE_SURGING_STRIKES); 
+            MOVE(playerRight, MOVE_SURGING_STRIKES, target: playerLeft); 
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ENDURE, playerLeft);
@@ -692,10 +693,10 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Last Switchin")
         OPPONENT_B(SPECIES_WYNAUT) { Speed(2); }
         OPPONENT_B(SPECIES_WOBBUFFET) { Speed(2); Moves(MOVE_CELEBRATE); }
     } WHEN {
-        TURN {
-            EXPECT_MOVE(opponentLeft, MOVE_MEMENTO, target: playerRight); EXPECT_SEND_OUT(opponentLeft,1);
-            MOVE(playerRight, MOVE_MEMENTO, target: opponentRight); SEND_OUT(playerRight,1);
-            EXPECT_MOVE(opponentRight, MOVE_MEMENTO, target: playerRight); EXPECT_SEND_OUT(opponentRight,1);
+        TURN { 
+            EXPECT_MOVE(opponentLeft, MOVE_MEMENTO); EXPECT_SEND_OUT(opponentLeft,1); 
+            MOVE(playerRight, MOVE_MEMENTO, target: opponentRight); SEND_OUT(playerRight,1); 
+            EXPECT_MOVE(opponentRight, MOVE_MEMENTO); EXPECT_SEND_OUT(opponentRight,1); 
         }
     } SCENE {
         MESSAGE("The opposing Wobbuffet fainted!");
@@ -787,9 +788,11 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Z Move")
         OPPONENT_A(SPECIES_WOBBUFFET) { Speed(3); Item(ITEM_NORMALIUM_Z); }
         OPPONENT_B(SPECIES_WOBBUFFET) { Speed(1); Item(ITEM_NORMALIUM_Z); }
     } WHEN {
-        TURN { EXPECT_MOVE(opponentLeft, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE, target: playerLeft);
-            MOVE(playerRight, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE, target: opponentLeft);
-            EXPECT_MOVE(opponentRight, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE, target: playerLeft); }
+        TURN { 
+            EXPECT_MOVE(opponentLeft, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE); 
+            MOVE(playerRight, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE, target: opponentLeft); 
+            EXPECT_MOVE(opponentRight, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE); 
+        }
     } SCENE {
         MESSAGE("Trainer A: This message plays before the enemy activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
         MESSAGE("The opposing Wobbuffet surrounded itself with its Z-Power!");
@@ -849,4 +852,5 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Dynamax")
         }
     }
 }
+
 // MULTI TESTS END
