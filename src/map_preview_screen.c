@@ -769,7 +769,7 @@ static void Task_MapPreviewScreen_Script(u8 taskId)
         {
             u8 idx = GetMapPreviewScreenIdx(gMapHeader.regionMapSectionId);
 
-            if (sMapPreviewScreenData[idx].nameDisabled == FALSE)
+            if (!sMapPreviewScreenData[idx].nameDisabled)
             {
                 tWindowId = MapPreview_CreateMapNameWindow(gMapHeader.regionMapSectionId);
                 CopyWindowToVram(tWindowId, COPYWIN_FULL);
