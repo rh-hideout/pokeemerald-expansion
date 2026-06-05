@@ -2139,3 +2139,7 @@
 	.macro destroyitempopup
 	callnative BS_DestroyItemPopup
 	.endm
+
+	.macro multihitplurality
+	callnative BS_MultiHitPlurality
+	.endm

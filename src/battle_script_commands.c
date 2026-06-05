@@ -14706,3 +14706,19 @@ void BS_DestroyItemPopup(void)
     
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
+
+void BS_MultiHitPlurality(void)
+{
+    NATIVE_ARGS();
+
+    if (gBattleScripting.multihitString[4] == 1)
+    {
+        PREPARE_STRING_BUFFER(gBattleTextBuff2, STRINGID_EMPTYSTRING3);
+    }
+    else
+    {
+        PREPARE_STRING_BUFFER(gBattleTextBuff2, STRINGID_S);
+    }
+    
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}

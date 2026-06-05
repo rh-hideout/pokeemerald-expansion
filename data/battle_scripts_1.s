@@ -1671,15 +1671,15 @@ BattleScript_MultiHitPrintStrings::
 	resultmessage
 	waitmessage B_WAIT_TIME_LONG
 	copyarray gBattleTextBuff1, sMULTIHIT_STRING, 6
+	multihitplurality
 	printstring STRINGID_HITXTIMES
 	waitmessage B_WAIT_TIME_LONG
 	return
 
 BattleScript_BattlerAvoidedMultiHit::
-	pause B_WAIT_TIME_SHORT
-	printstring STRINGID_BATTLERAVOIDEDATTACK
-	waitmessage B_WAIT_TIME_LONG
+	pause B_WAIT_TIME_LONG
 	copyarray gBattleTextBuff1, sMULTIHIT_STRING, 6
+	multihitplurality
 	printstring STRINGID_HITXTIMES
 	waitmessage B_WAIT_TIME_LONG
 	return
@@ -4520,6 +4520,8 @@ BattleScript_ItemPopUp_ScriptingNoFlush::
 	return
 
 BattleScript_ItemPopUp_Target::
+	flushtextbox
+BattleScript_ItemPopUp_TargetNoFlush::
 	showitempopup BS_TARGET
 	pause B_WAIT_TIME_LONG
 	destroyitempopup
@@ -5085,6 +5087,7 @@ BattleScript_RoughSkinActivates::
 	return
 
 BattleScript_RockyHelmetActivates::
+	call BattleScript_ItemPopUp_TargetNoFlush
 	call BattleScript_HurtAttacker
 	return
 
