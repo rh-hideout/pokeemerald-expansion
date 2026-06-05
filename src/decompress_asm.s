@@ -1,26 +1,26 @@
-    .syntax unified
+	.syntax unified
 
-    .arm
-    .section .iwram.code, "ax", %progbits
-    .align 2
+	.arm
+	.section .iwram.code, "ax", %progbits
+	.align 2
 
 .global FastUnsafeCopy32
 .type FastUnsafeCopy32, %function
 
-    @ Word aligned, 32-byte copy
-    @ This function WILL overwrite your buffer, so make sure it is at least 32 bytes larger than the desired size.
+	@ Word aligned, 32-byte copy
+	@ This function WILL overwrite your buffer, so make sure it is at least 32 bytes larger than the desired size.
 FastUnsafeCopy32:
-    push    {r4-r10}
+	push    {r4-r10}
 .Lloop_32:
-    ldmia r1!, {r3-r10}
-    stmia r0!, {r3-r10}
-    subs    r2, r2, #32
-    bgt     .Lloop_32
-    pop     {r4-r10}
-    bx    lr
+	ldmia r1!, {r3-r10}
+	stmia r0!, {r3-r10}
+	subs    r2, r2, #32
+	bgt     .Lloop_32
+	pop     {r4-r10}
+	bx    lr
 
-    .section .text @Copied to stack on run-time
-    .align 2
+	.section .text @Copied to stack on run-time
+	.align 2
 
 .global LZ77UnCompWRAMOptimized
 .type LZ77UnCompWRAMOptimized, %function
@@ -28,9 +28,9 @@ LZ77UnCompWRAMOptimized: @ 0x000010FC
 	push {r4, r5, r6, lr}
 	// read in data header in r5
 	// Data header (32bit)
-    // Bit 0-3   Reserved
-    // Bit 4-7   Compressed type (must be 1 for LZ77)
-    // Bit 8-31  Size of decompressed data
+	// Bit 0-3   Reserved
+	// Bit 4-7   Compressed type (must be 1 for LZ77)
+	// Bit 8-31  Size of decompressed data
 	ldr r5, [r0], #4
 	// store decompressed size in r2
 	lsr r2, r5, #8
@@ -40,7 +40,7 @@ LZ77UnCompWRAMOptimized: @ 0x000010FC
 LZ77_MainLoop:
 	// read in Flag Byte
 	// Flag data (8bit)
-    // Bit 0-7   Type Flags for next 8 Blocks, MSB first
+	// Bit 0-7   Type Flags for next 8 Blocks, MSB first
 	ldrb lr, [r0], #1
 	// shift to the highest byte
 	lsl lr, lr, #24
@@ -50,8 +50,8 @@ LZ77_MainLoop:
 LZ77_HandleCompressedData:
 	// reading in block type 1 Part 1 into r5
 	// Block Type 1 Part 1 - Compressed - Copy N+3 Bytes from Dest-Disp-1 to Dest
-    // Bit 0-3   Disp MSBs
-    // Bit 4-7   Number of bytes to copy (minus 3)
+	// Bit 0-3   Disp MSBs
+	// Bit 4-7   Number of bytes to copy (minus 3)
 	// byte copy range: [3, 18]
 	ldrb r5, [r0], #1
 	

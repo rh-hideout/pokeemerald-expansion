@@ -15,10 +15,10 @@ static void LoadTypeIconsPerBattler(enum BattlerId, u32);
 static bool32 UseDoubleBattleCoords(u32);
 
 static enum Type GetMonPublicType(enum BattlerId, u32);
-static bool32 ShouldHideUncaughtType(u32 species);
-static bool32 ShouldHideUnseenType(u32 species);
-static enum Type GetMonDefensiveTeraType(struct Pokemon *, struct Pokemon *, enum BattlerId, u32, u32, u32);
-static bool32 IsIllusionActiveAndTypeUnchanged(struct Pokemon *, u32, enum BattlerId);
+static bool32 ShouldHideUncaughtType(enum Species species);
+static bool32 ShouldHideUnseenType(enum Species species);
+static enum Type GetMonDefensiveTeraType(struct Pokemon *, struct Pokemon *, enum BattlerId, u32, enum Species, enum Species);
+static bool32 IsIllusionActiveAndTypeUnchanged(struct Pokemon *, enum Species, enum BattlerId);
 
 static void CreateSpriteFromType(u32, bool32, enum Type[], u32, enum BattlerId);
 static bool32 ShouldSkipSecondType(enum Type[], u32);
@@ -237,7 +237,7 @@ void LoadTypeIcons(enum BattlerId battler)
     u32 position;
 
     struct Pokemon* mon = GetBattlerMon(battler);
-    u32 species = GetMonData(mon, MON_DATA_SPECIES);
+    enum Species species = GetMonData(mon, MON_DATA_SPECIES);
 
     if (B_SHOW_TYPES == SHOW_TYPES_NEVER
         || (B_SHOW_TYPES == SHOW_TYPES_SEEN && !GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_GET_SEEN)))
@@ -294,9 +294,9 @@ static bool32 UseDoubleBattleCoords(u32 position)
 static enum Type GetMonPublicType(enum BattlerId battlerId, u32 typeNum)
 {
     struct Pokemon *mon = GetBattlerMon(battlerId);
-    u32 monSpecies = GetMonData(mon,MON_DATA_SPECIES,NULL);
+    enum Species monSpecies = GetMonData(mon,MON_DATA_SPECIES,NULL);
     struct Pokemon *monIllusion;
-    u32 illusionSpecies;
+    enum Species illusionSpecies;
 
     if (ShouldHideUncaughtType(monSpecies) || ShouldHideUnseenType(monSpecies))
         return TYPE_MYSTERY;
@@ -313,7 +313,7 @@ static enum Type GetMonPublicType(enum BattlerId battlerId, u32 typeNum)
     return gBattleMons[battlerId].types[typeNum];
 }
 
-static bool32 ShouldHideUncaughtType(u32 species)
+static bool32 ShouldHideUncaughtType(enum Species species)
 {
     if (B_SHOW_TYPES != SHOW_TYPES_CAUGHT)
         return FALSE;
@@ -324,7 +324,7 @@ static bool32 ShouldHideUncaughtType(u32 species)
     return TRUE;
 }
 
-static bool32 ShouldHideUnseenType(u32 species)
+static bool32 ShouldHideUnseenType(enum Species species)
 {
     if (B_SHOW_TYPES != SHOW_TYPES_SEEN)
         return FALSE;
@@ -335,10 +335,10 @@ static bool32 ShouldHideUnseenType(u32 species)
     return TRUE;
 }
 
-static enum Type GetMonDefensiveTeraType(struct Pokemon *mon, struct Pokemon *monIllusion, enum BattlerId battlerId, u32 typeNum, u32 illusionSpecies, u32 monSpecies)
+static enum Type GetMonDefensiveTeraType(struct Pokemon *mon, struct Pokemon *monIllusion, enum BattlerId battlerId, u32 typeNum, enum Species illusionSpecies, enum Species monSpecies)
 {
     enum Type teraType = GetBattlerTeraType(battlerId);
-    u32 targetSpecies;
+    enum Species targetSpecies;
 
     if (teraType != TYPE_STELLAR)
         return teraType;
@@ -348,7 +348,7 @@ static enum Type GetMonDefensiveTeraType(struct Pokemon *mon, struct Pokemon *mo
     return GetSpeciesType(targetSpecies, typeNum);
 }
 
-static bool32 IsIllusionActiveAndTypeUnchanged(struct Pokemon *monIllusion, u32 monSpecies, enum BattlerId battlerId)
+static bool32 IsIllusionActiveAndTypeUnchanged(struct Pokemon *monIllusion, enum Species monSpecies, enum BattlerId battlerId)
 {
     u32 typeNum;
 
@@ -529,17 +529,17 @@ static s32 GetTypeIconSlideMovement(bool32 useDoubleBattleCoords, u32 position, 
     {
         switch (position)
         {
-            case B_POSITION_PLAYER_LEFT:
-            case B_POSITION_PLAYER_RIGHT:
-                if (xPos > sTypeIconPositions[position][useDoubleBattleCoords].x - 10)
-                    return -1;
-                break;
-            default:
-            case B_POSITION_OPPONENT_LEFT:
-            case B_POSITION_OPPONENT_RIGHT:
-                if (xPos < sTypeIconPositions[position][useDoubleBattleCoords].x + 10)
-                    return 1;
-                break;
+        case B_POSITION_PLAYER_LEFT:
+        case B_POSITION_PLAYER_RIGHT:
+            if (xPos > sTypeIconPositions[position][useDoubleBattleCoords].x - 10)
+                return -1;
+            break;
+        default:
+        case B_POSITION_OPPONENT_LEFT:
+        case B_POSITION_OPPONENT_RIGHT:
+            if (xPos < sTypeIconPositions[position][useDoubleBattleCoords].x + 10)
+                return 1;
+            break;
         }
         return 0;
     }

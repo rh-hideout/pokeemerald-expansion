@@ -57,7 +57,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_SUPER_NERD",
+      "graphics_id": "OBJ_EVENT_GFX_POKE_MANIAC_FRLG",
       "x": 15,
       "y": 70,
       "elevation": 3,
@@ -85,7 +85,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_SUPER_NERD",
+      "graphics_id": "OBJ_EVENT_GFX_POKE_MANIAC_FRLG",
       "x": 13,
       "y": 44,
       "elevation": 3,

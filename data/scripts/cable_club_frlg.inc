@@ -263,7 +263,6 @@ CableClub_EventScript_TryEnterColosseum_Frlg::
 	waitmessage
 	textcolor NPC_TEXT_COLOR_NEUTRAL
 	special TryBattleLinkup
-	waitstate
 	call EventScript_RestorePrevTextColor
 	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, CableClub_EventScript_EnterColosseum_Frlg
 	goto_if_eq VAR_RESULT, LINKUP_SOMEONE_NOT_READY, CableClub_EventScript_AbortLinkSomeoneNotReady_Frlg
@@ -301,7 +300,6 @@ CableClub_EventScript_EnterColosseum_Frlg::
 	special SetCableClubWarp
 	warp MAP_BATTLE_COLOSSEUM_2P, 6, 8
 	special DoCableClubWarp
-	waitstate
 	end
 
 @ Unused
@@ -314,7 +312,6 @@ CableClub_EventScript_WarpTo4PColosseum_Frlg::
 	special SetCableClubWarp
 	warp MAP_BATTLE_COLOSSEUM_4P, 5, 8
 	special DoCableClubWarp
-	waitstate
 	end
 
 CableClub_EventScript_AbortLinkIncorrectNumberOfBattlers_Frlg::
@@ -359,7 +356,6 @@ CableClub_EventScript_TradeCenter_Frlg::
 	waitmessage
 	textcolor NPC_TEXT_COLOR_NEUTRAL
 	special TryTradeLinkup
-	waitstate
 	call EventScript_RestorePrevTextColor
 	goto_if_eq VAR_RESULT, LINKUP_SUCCESS, CableClub_EventScript_EnterTradeCenter_Frlg
 	goto_if_eq VAR_RESULT, LINKUP_SOMEONE_NOT_READY, CableClub_EventScript_AbortLinkSomeoneNotReady_Frlg
@@ -396,7 +392,6 @@ CableClub_EventScript_EnterTradeCenter_Frlg::
 	special SetCableClubWarp
 	setwarp MAP_TRADE_CENTER_FRLG, 5, 8
 	special DoCableClubWarp
-	waitstate
 	end
 
 CableClub_EventScript_CheckPartyTradeRequirements_Frlg::
@@ -467,7 +462,6 @@ CableClub_EventScript_AbortMinigame_Frlg::
 CableClub_EventScript_CableClubWarp_Frlg::
 	special SetCableClubWarp
 	special DoCableClubWarp
-	waitstate
 	end
 
 CableClub_EventScript_AbortLinkIncorrectNumberOfParticipants_Frlg::
@@ -547,7 +541,6 @@ CableClub_EventScript_ShowBattleRecords_Frlg::
 	fadescreen FADE_TO_BLACK
 	setvar VAR_0x8004, 0
 	special ShowTrainerHillRecords
-	waitstate
 	releaseall
 	end
 
@@ -555,58 +548,48 @@ BattleColosseum_2P_EventScript_PlayerSpot0::
 	setvar VAR_0x8005, 0
 	textcolor NPC_TEXT_COLOR_NEUTRAL
 	special ColosseumPlayerSpotTriggered
-	waitstate
 	end
 
 BattleColosseum_2P_EventScript_PlayerSpot1::
 	setvar VAR_0x8005, 1
 	textcolor NPC_TEXT_COLOR_NEUTRAL
 	special ColosseumPlayerSpotTriggered
-	waitstate
 	end
 
 BattleColosseum_4P_EventScript_PlayerSpot0::
 	fadescreen FADE_TO_BLACK
 	special ChooseHalfPartyForBattle
-	waitstate
 	goto_if_eq VAR_RESULT, 0, BattleColosseum_4P_EventScript_CancelSpotTrigger_Frlg
 	setvar VAR_0x8005, 0
 	textcolor NPC_TEXT_COLOR_NEUTRAL
 	special ColosseumPlayerSpotTriggered
-	waitstate
 	end
 
 BattleColosseum_4P_EventScript_PlayerSpot1::
 	fadescreen FADE_TO_BLACK
 	special ChooseHalfPartyForBattle
-	waitstate
 	goto_if_eq VAR_RESULT, 0, BattleColosseum_4P_EventScript_CancelSpotTrigger_Frlg
 	setvar VAR_0x8005, 1
 	textcolor NPC_TEXT_COLOR_NEUTRAL
 	special ColosseumPlayerSpotTriggered
-	waitstate
 	end
 
 BattleColosseum_4P_EventScript_PlayerSpot2::
 	fadescreen FADE_TO_BLACK
 	special ChooseHalfPartyForBattle
-	waitstate
 	goto_if_eq VAR_RESULT, 0, BattleColosseum_4P_EventScript_CancelSpotTrigger_Frlg
 	setvar VAR_0x8005, 2
 	textcolor NPC_TEXT_COLOR_NEUTRAL
 	special ColosseumPlayerSpotTriggered
-	waitstate
 	end
 
 BattleColosseum_4P_EventScript_PlayerSpot3::
 	fadescreen FADE_TO_BLACK
 	special ChooseHalfPartyForBattle
-	waitstate
 	goto_if_eq VAR_RESULT, 0, BattleColosseum_4P_EventScript_CancelSpotTrigger_Frlg
 	setvar VAR_0x8005, 3
 	textcolor NPC_TEXT_COLOR_NEUTRAL
 	special ColosseumPlayerSpotTriggered
-	waitstate
 	end
 
 BattleColosseum_4P_EventScript_CancelSpotTrigger_Frlg::
@@ -616,14 +599,12 @@ TradeCenter_EventScript_Chair0::
 	setvar VAR_0x8005, 0
 	textcolor NPC_TEXT_COLOR_NEUTRAL
 	special PlayerEnteredTradeSeat
-	waitstate
 	end
 
 TradeCenter_EventScript_Chair1::
 	setvar VAR_0x8005, 1
 	textcolor NPC_TEXT_COLOR_NEUTRAL
 	special PlayerEnteredTradeSeat
-	waitstate
 	end
 
 @ Unused
@@ -631,7 +612,6 @@ TradeCenter_EventScript_Chair2_Frlg::
 	setvar VAR_0x8005, 2
 	textcolor NPC_TEXT_COLOR_NEUTRAL
 	special PlayerEnteredTradeSeat
-	waitstate
 	end
 
 @ Unused
@@ -639,7 +619,6 @@ TradeCenter_EventScript_Chair3_Frlg::
 	setvar VAR_0x8005, 3
 	textcolor NPC_TEXT_COLOR_NEUTRAL
 	special PlayerEnteredTradeSeat
-	waitstate
 	end
 
 @ Nop in FRLG
@@ -655,7 +634,6 @@ CableClub_EventScript_ReadTrainerCard_Frlg::
 	msgbox Text_LookedAtPlayersTrainerCard_Frlg
 	fadescreen FADE_TO_BLACK
 	special Script_ShowLinkTrainerCard
-	waitstate
 	end
 
 CableClub_EventScript_ReadTrainerCardColored_Frlg::
@@ -663,7 +641,6 @@ CableClub_EventScript_ReadTrainerCardColored_Frlg::
 	msgbox Text_LookedAtPlayersTrainerCardColored_Frlg
 	fadescreen FADE_TO_BLACK
 	special Script_ShowLinkTrainerCard
-	waitstate
 	end
 
 CableClub_EventScript_TooBusyToNotice_Frlg::
@@ -710,7 +687,6 @@ TradeCenter_TerminateLink_Frlg::
 CableClub_EventScript_DoLinkRoomExit_Frlg::
 	special CleanupLinkRoomState
 	special ReturnFromLinkRoom
-	waitstate
 	end
 
 CableClub_EventScript_UnionRoomAttendant_Frlg::
@@ -1010,12 +986,10 @@ CableClub_EventScript_TryJoinGroupXPlayers_Frlg::
 
 CableClub_EventScript_TryBecomeLinkLeader_Frlg::
 	special TryBecomeLinkLeader
-	waitstate
 	return
 
 CableClub_EventScript_TryJoinLinkGroup_Frlg::
 	special TryJoinLinkGroup
-	waitstate
 	return
 
 CableClub_EventScript_EnterWirelessLinkRoom_Frlg::
@@ -1051,7 +1025,6 @@ CableClub_EventScript_ShowWirelessCommunicationScreen_Frlg::
 	goto_if_eq VAR_RESULT, FALSE, CableClub_EventScript_AdapterNotConnected_Frlg
 	fadescreen FADE_TO_BLACK
 	special ShowWirelessCommunicationScreen
-	waitstate
 	msgbox CableClub_Text_ParticipantsStepUpToCounter_Frlg
 	releaseall
 	end
@@ -1142,7 +1115,6 @@ CableClub_EventScript_PlayPokemonJump_Frlg::
 	msgbox Text_EnterWhichPokemon_Frlg
 	setvar VAR_0x8005, 0
 	special ChooseMonForWirelessMinigame
-	waitstate
 	goto_if_ge VAR_0x8004, PARTY_SIZE, CableClub_EventScript_AbortMinigame_Frlg
 	call Common_EventScript_SaveGame
 	goto_if_eq VAR_RESULT, 0, CableClub_EventScript_AbortMinigame_Frlg
@@ -1157,7 +1129,6 @@ CableClub_EventScript_PlayDodrioBerryPicking_Frlg::
 	msgbox Text_EnterWhichPokemon_Frlg
 	setvar VAR_0x8005, 1
 	special ChooseMonForWirelessMinigame
-	waitstate
 	goto_if_ge VAR_0x8004, PARTY_SIZE, CableClub_EventScript_AbortMinigame_Frlg
 	call Common_EventScript_SaveGame
 	goto_if_eq VAR_RESULT, 0, CableClub_EventScript_AbortMinigame_Frlg
@@ -1238,14 +1209,12 @@ CableClub_EventScript_ExplainDodrioBerryPickingRequirements_Frlg::
 TwoIsland_JoyfulGameCorner_EventScript_ShowPokemonJumpRecords::
 	lockall
 	special ShowPokemonJumpRecords
-	waitstate
 	releaseall
 	end
 
 TwoIsland_JoyfulGameCorner_EventScript_ShowDodrioBerryPickingRecords::
 	lockall
 	special ShowDodrioBerryPickingRecords
-	waitstate
 	releaseall
 	end
 

@@ -18,13 +18,13 @@ SINGLE_BATTLE_TEST("Cute Charm inflicts infatuation on contact")
         if (MoveMakesContact(move)) {
             ABILITY_POPUP(opponent, ABILITY_CUTE_CHARM);
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_INFATUATION, player);
-            MESSAGE("The opposing Clefairy's Cute Charm infatuated Wobbuffet!");
+            MESSAGE("Wobbuffet fell in love!");
             MESSAGE("Wobbuffet is in love with the opposing Clefairy!");
         } else {
             NONE_OF {
                 ABILITY_POPUP(opponent, ABILITY_CUTE_CHARM);
                 ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_INFATUATION, player);
-                MESSAGE("The opposing Clefairy's Cute Charm infatuated Wobbuffet!");
+                MESSAGE("Wobbuffet fell in love!");
                 MESSAGE("Wobbuffet is in love with the opposing Clefairy!");
             }
         }
@@ -55,7 +55,7 @@ SINGLE_BATTLE_TEST("Cute Charm triggers 1/3 times (Gen3) or 30% (Gen 4+) of the 
     PARAMETRIZE { config = GEN_4; passes = 3; trials = 10; } // 30%
     PASSES_RANDOMLY(passes, trials, RNG_CUTE_CHARM);
     GIVEN {
-        WITH_CONFIG(CONFIG_ABILITY_TRIGGER_CHANCE, config);
+        WITH_CONFIG(B_ABILITY_TRIGGER_CHANCE, config);
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
         PLAYER(SPECIES_WOBBUFFET) { Gender(MON_MALE); }
         OPPONENT(SPECIES_CLEFAIRY) { Gender(MON_FEMALE); Ability(ABILITY_CUTE_CHARM); }
@@ -65,7 +65,7 @@ SINGLE_BATTLE_TEST("Cute Charm triggers 1/3 times (Gen3) or 30% (Gen 4+) of the 
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_CUTE_CHARM);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_INFATUATION, player);
-        MESSAGE("The opposing Clefairy's Cute Charm infatuated Wobbuffet!");
+        MESSAGE("Wobbuffet fell in love!");
         MESSAGE("Wobbuffet is in love with the opposing Clefairy!");
     }
 }

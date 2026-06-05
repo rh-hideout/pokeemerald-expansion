@@ -116,6 +116,6 @@ SINGLE_BATTLE_TEST("Misty Terrain does not decrease the power of Dragon-type mov
         MESSAGE("The opposing Wobbuffet used Dragon Claw!");
         HP_BAR(player, captureDamage: &results[i].damage);
     } FINALLY {
-        EXPECT_MUL_EQ(results[1].damage, Q_4_12(0.5), results[0].damage);
+        EXPECT_MUL_EQ(results[1].damage, Q_4_12(1.0), results[0].damage);
     }
 }

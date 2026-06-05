@@ -93,14 +93,12 @@ static u32 LoopedTask_EraseListForCheckPage(s32);
 static u32 LoopedTask_ReshowListFromCheckPage(s32);
 static u32 LoopedTask_PrintCheckPageInfo(s32);
 
-static const u16 sListArrow_Pal[] = INCBIN_U16("graphics/pokenav/list_arrows.gbapal");
-static const u32 sListArrow_Gfx[] = INCBIN_U32("graphics/pokenav/list_arrows.4bpp.smol");
+static const u16 sListArrow_Pal[] = INCGFX_U16("graphics/pokenav/list_arrows.png", ".gbapal");
+static const u32 sListArrow_Gfx[] = INCGFX_U32("graphics/pokenav/list_arrows.png", ".4bpp.smol");
 
 static const u8 gText_PokenavMatchCall_Strategy[] = _("STRATEGY");
 static const u8 gText_PokenavMatchCall_TrainerPokemon[] = _("TRAINER'S POKéMON");
 static const u8 gText_PokenavMatchCall_SelfIntroduction[] = _("SELF-INTRODUCTION");
-
-static EWRAM_DATA u32 sMoveWindowDownIndex = 0; // Read, but pointlessly
 
 bool32 CreatePokenavList(const struct BgTemplate *bgTemplate, struct PokenavListTemplate *listTemplate, s32 tileOffset)
 {
@@ -282,7 +280,7 @@ static void MoveListWindow(s32 delta, bool32 printItems)
     }
     else if (printItems)
     {
-        s32 index = sMoveWindowDownIndex = windowState->windowTopIndex + windowState->entriesOnscreen;
+        s32 index = windowState->windowTopIndex + windowState->entriesOnscreen;
         if (index + delta >= windowState->listLength)
             delta = windowState->listLength - index;
 

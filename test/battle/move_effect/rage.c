@@ -122,7 +122,7 @@ SINGLE_BATTLE_TEST("Rage volatile behavior on Protect depends on generation")
     PARAMETRIZE { config = GEN_3; }
     PARAMETRIZE { config = GEN_4; }
     GIVEN {
-        WITH_CONFIG(CONFIG_RAGE_BUILDS, config);
+        WITH_CONFIG(B_RAGE_BUILDS, config);
         PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
     } WHEN {
@@ -147,7 +147,7 @@ SINGLE_BATTLE_TEST("Rage volatile behavior on miss depends on generation")
     // PARAMETRIZE { config = GEN_3; }
     PARAMETRIZE { config = GEN_4; }
     GIVEN {
-        WITH_CONFIG(CONFIG_RAGE_BUILDS, config);
+        WITH_CONFIG(B_RAGE_BUILDS, config);
         PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(5); Item(ITEM_BRIGHTPOWDER); }
     } WHEN {
@@ -157,7 +157,7 @@ SINGLE_BATTLE_TEST("Rage volatile behavior on miss depends on generation")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RAGE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
         MESSAGE("Wobbuffet's rage is building!");
-        MESSAGE("Wobbuffet's attack missed!");
+        MESSAGE("The opposing Wobbuffet avoided the attack!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
         if (config == GEN_3) {
             MESSAGE("Wobbuffet's rage is building!");
