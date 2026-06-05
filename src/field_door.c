@@ -17,7 +17,8 @@ enum DoorSize
 {
     DOOR_SIZE_1x1,
     DOOR_SIZE_1x2,
-    DOOR_SIZE_2x2,
+    DOOR_SIZE_2x2_LEFT,
+    DOOR_SIZE_2x2_RIGHT,
     DOOR_SIZE_COUNT,
 };
 
@@ -185,7 +186,7 @@ static const u8 sDoorAnimTiles_TrainerTowerRoofElevator[] = INCGFX_U8("graphics/
 
 #endif // IS_FRLG
 
-static const struct DoorAnimFrame sDoorAnimFrames_OpenSmall[] = {
+static const struct DoorAnimFrame sDoorAnimFrames_Open1x1[] = {
     {4, -1},
     {4, 0 * TILE_SIZE_4BPP},
     {4, 4 * TILE_SIZE_4BPP},
@@ -193,7 +194,7 @@ static const struct DoorAnimFrame sDoorAnimFrames_OpenSmall[] = {
     {}
 };
 
-static const struct DoorAnimFrame sDoorAnimFrames_CloseSmall[] = {
+static const struct DoorAnimFrame sDoorAnimFrames_Close1x1[] = {
     {4, 8 * TILE_SIZE_4BPP},
     {4, 4 * TILE_SIZE_4BPP},
     {4, 0 * TILE_SIZE_4BPP},
@@ -201,7 +202,7 @@ static const struct DoorAnimFrame sDoorAnimFrames_CloseSmall[] = {
     {}
 };
 
-static const struct DoorAnimFrame sDoorAnimFrames_OpenLarge[] = {
+static const struct DoorAnimFrame sDoorAnimFrames_Open1x2[] = {
     {4, -1},
     {4, 0 * TILE_SIZE_4BPP},
     {4, 8 * TILE_SIZE_4BPP},
@@ -209,7 +210,7 @@ static const struct DoorAnimFrame sDoorAnimFrames_OpenLarge[] = {
     {}
 };
 
-static const struct DoorAnimFrame sDoorAnimFrames_CloseLarge[] = {
+static const struct DoorAnimFrame sDoorAnimFrames_Close1x2[] = {
     {4, 16 * TILE_SIZE_4BPP},
     {4, 8 * TILE_SIZE_4BPP},
     {4, 0 * TILE_SIZE_4BPP},
@@ -217,7 +218,7 @@ static const struct DoorAnimFrame sDoorAnimFrames_CloseLarge[] = {
     {}
 };
 
-static const struct DoorAnimFrame sDoorAnimFrames_OpenBig[] =
+static const struct DoorAnimFrame sDoorAnimFrames_Open2x2[] =
 {
     {4, -1},
     {4, 0 * TILE_SIZE_4BPP},
@@ -226,7 +227,7 @@ static const struct DoorAnimFrame sDoorAnimFrames_OpenBig[] =
     {0, 0},
 };
 
-static const struct DoorAnimFrame sDoorAnimFrames_CloseBig[] =
+static const struct DoorAnimFrame sDoorAnimFrames_Close2x2[] =
 {
     {4, 32 * TILE_SIZE_4BPP},
     {4, 16 * TILE_SIZE_4BPP},
@@ -237,9 +238,26 @@ static const struct DoorAnimFrame sDoorAnimFrames_CloseBig[] =
 
 static const struct DoorSizeInfo sDoorSizeInfo[DOOR_SIZE_COUNT] = 
 {
-    [DOOR_SIZE_1x1] = { sDoorAnimFrames_OpenSmall, sDoorAnimFrames_CloseSmall },
-    [DOOR_SIZE_1x2] = { sDoorAnimFrames_OpenLarge, sDoorAnimFrames_CloseLarge },
-    [DOOR_SIZE_2x2] = { sDoorAnimFrames_OpenBig, sDoorAnimFrames_CloseBig },
+    [DOOR_SIZE_1x1] =
+    {
+        .openAnimFrames = sDoorAnimFrames_Open1x1,
+        .closeAnimFrames = sDoorAnimFrames_Close1x1,
+    },
+    [DOOR_SIZE_1x2] =
+    {
+        .openAnimFrames = sDoorAnimFrames_Open1x2,
+        .closeAnimFrames = sDoorAnimFrames_Close1x2,
+    },
+    [DOOR_SIZE_2x2_LEFT] =
+    {
+        .openAnimFrames = sDoorAnimFrames_Open2x2,
+        .closeAnimFrames = sDoorAnimFrames_Close2x2,
+    },
+    [DOOR_SIZE_2x2_RIGHT] =
+    {
+        .openAnimFrames = sDoorAnimFrames_Open2x2,
+        .closeAnimFrames = sDoorAnimFrames_Close2x2,
+    },
 };
 
 static const u8 sDoorAnimPalettes_General[] = {1, 1, 1, 1, 1, 1, 1, 1};
@@ -694,10 +712,18 @@ static const struct DoorGraphics sDoorAnimGraphicsTable[] =
         .palettes = sDoorAnimPalettes_BattleDomeCorridor
     },
     {
-        .metatileNum = METATILE_BattleFrontier_Door_MultiCorridor,
+        .metatileNum = METATILE_BattleFrontier_Door_MultiCorridor_Left,
         .tileset = &gTileset_BattleFrontier,
         .sound = DOOR_SOUND_SLIDING,
-        .size = DOOR_SIZE_2x2,
+        .size = DOOR_SIZE_2x2_LEFT,
+        .tiles = sDoorAnimTiles_BattleTowerMultiCorridor,
+        .palettes = sDoorAnimPalettes_BattleTowerMultiCorridor
+    },
+    {
+        .metatileNum = METATILE_BattleFrontier_Door_MultiCorridor_Right,
+        .tileset = &gTileset_BattleFrontier,
+        .sound = DOOR_SOUND_SLIDING,
+        .size = DOOR_SIZE_2x2_RIGHT,
         .tiles = sDoorAnimTiles_BattleTowerMultiCorridor,
         .palettes = sDoorAnimPalettes_BattleTowerMultiCorridor
     },
@@ -1010,7 +1036,7 @@ static const struct DoorGraphics sDoorAnimGraphicsTable[] =
 
 static void CopyDoorTilesToVram(const struct DoorGraphics *gfx, const struct DoorAnimFrame *frame)
 {
-    if (gfx->size == DOOR_SIZE_2x2)
+    if (gfx->size == DOOR_SIZE_2x2_LEFT || gfx->size == DOOR_SIZE_2x2_RIGHT)
         CpuFastCopy(gfx->tiles + frame->offset, (void *)(VRAM + TILE_OFFSET_4BPP(DOOR_TILE_START_SIZE2)), 16 * TILE_SIZE_4BPP);
     else
         CpuFastCopy(gfx->tiles + frame->offset, (void *)(VRAM + TILE_OFFSET_4BPP(DOOR_TILE_START_SIZE1)), 8 * TILE_SIZE_4BPP);
@@ -1042,7 +1068,7 @@ static void DrawCurrentDoorAnimFrame(const struct DoorGraphics *gfx, u32 x, u32 
 
     switch (gfx->size)
     {
-    case DOOR_SIZE_2x2:
+    case DOOR_SIZE_2x2_LEFT:
         // Top left metatile
         BuildDoorTiles(&tiles[8], DOOR_TILE_START_SIZE2 + 0, &paletteNums[0]);
         DrawDoorMetatileAt(x, y - 1, &tiles[8]);
@@ -1058,6 +1084,23 @@ static void DrawCurrentDoorAnimFrame(const struct DoorGraphics *gfx, u32 x, u32 
         // Bottom right metatile
         BuildDoorTiles(&tiles[8], DOOR_TILE_START_SIZE2 + 12, &paletteNums[4]);
         DrawDoorMetatileAt(x + 1, y, &tiles[8]);
+        break;
+    case DOOR_SIZE_2x2_RIGHT:
+        // Top left metatile
+        BuildDoorTiles(&tiles[8], DOOR_TILE_START_SIZE2 + 0, &paletteNums[0]);
+        DrawDoorMetatileAt(x - 1, y - 1, &tiles[8]);
+
+        // Bottom left metatile
+        BuildDoorTiles(&tiles[8], DOOR_TILE_START_SIZE2 + 4, &paletteNums[4]);
+        DrawDoorMetatileAt(x - 1, y, &tiles[8]);
+
+        // Top right metatile
+        BuildDoorTiles(&tiles[8], DOOR_TILE_START_SIZE2 + 8, &paletteNums[0]);
+        DrawDoorMetatileAt(x, y - 1, &tiles[8]);
+
+        // Bottom right metatile
+        BuildDoorTiles(&tiles[8], DOOR_TILE_START_SIZE2 + 12, &paletteNums[4]);
+        DrawDoorMetatileAt(x, y, &tiles[8]);
         break;
     case DOOR_SIZE_1x2:
         // Top metatile
@@ -1080,9 +1123,15 @@ static void DrawClosedDoorTiles(const struct DoorGraphics *gfx, u32 x, u32 y)
 {
     switch (gfx->size)
     {
-    case DOOR_SIZE_2x2:
+    case DOOR_SIZE_2x2_LEFT:
         CurrentMapDrawMetatileAt(x + 1, y - 1);
         CurrentMapDrawMetatileAt(x + 1, y);
+        CurrentMapDrawMetatileAt(x, y - 1);
+        CurrentMapDrawMetatileAt(x, y);
+        break;
+    case DOOR_SIZE_2x2_RIGHT:
+        CurrentMapDrawMetatileAt(x - 1, y - 1);
+        CurrentMapDrawMetatileAt(x - 1, y);
         CurrentMapDrawMetatileAt(x, y - 1);
         CurrentMapDrawMetatileAt(x, y);
         break;
