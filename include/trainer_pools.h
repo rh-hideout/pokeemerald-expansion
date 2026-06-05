@@ -14,6 +14,7 @@
 enum PoolRulesets {
     POOL_RULESET_BASIC,
     POOL_RULESET_DOUBLES,
+    POOL_RULESET_FRONTIER,
     POOL_RULESET_WEATHER_SINGLES,
     POOL_RULESET_WEATHER_DOUBLES,
     POOL_RULESET_SUPPORT_DOUBLES,
@@ -41,8 +42,9 @@ enum PoolTags {
     POOL_TAG_TAG6 = 5,
     POOL_TAG_TAG7 = 6,
     POOL_TAG_TAG8 = 7,
+    POOL_TAG_HIGH_TIER = 8,
     //  Must be the last element
-    POOL_NUM_TAGS = 8
+    POOL_NUM_TAGS = 9
 };
 
 #define MON_POOL_TAG_LEAD           1 << POOL_TAG_LEAD
@@ -53,6 +55,7 @@ enum PoolTags {
 #define MON_POOL_TAG_TAG6           1 << POOL_TAG_TAG6
 #define MON_POOL_TAG_TAG7           1 << POOL_TAG_TAG7
 #define MON_POOL_TAG_TAG8           1 << POOL_TAG_TAG8
+#define MON_POOL_TAG_HIGH_TIER      1 << POOL_TAG_HIGH_TIER
 
 struct PoolRules
 {
@@ -66,6 +69,27 @@ struct PoolRules
     bool8 tagRequired[POOL_NUM_TAGS];
 };
 
+struct TrainerPoolSet
+{
+    const u16 *monIds;
+    u16 poolSize;
+    u8 poolRuleIndex;
+    u8 poolPickIndex;
+    u8 poolPruneIndex;
+};
+
+struct FrontierMonPool
+{
+    const u16 *monIds;
+    u16 firstMonId;
+    u16 size;
+};
+
+#define FRONTIER_MON_LIST_POOL(monIds_, size_) { .monIds = (monIds_), .size = (size_) }
+#define FRONTIER_MON_RANGE_POOL(first_, last_) { .firstMonId = (first_), .size = (last_) - (first_) + 1 }
+
+typedef bool8 (*TrainerMonPoolFilter)(u16 monId, const struct TrainerMon *mon, void *data);
+
 struct PickFunctions
 {
     u32 (*LeadFunction)(const struct Trainer *, u8 *, u32, u32, u32, struct PoolRules *);
@@ -73,6 +97,10 @@ struct PickFunctions
     u32 (*OtherFunction)(const struct Trainer *, u8 *, u32, u32, u32, struct PoolRules *);
 };
 
-void DoTrainerPartyPool(const struct Trainer *trainer, u32 *monIndices, u8 monsCount, u32 battleTypeFlags);
+bool8 DoTrainerPartyPool(const struct Trainer *trainer, u32 *monIndices, u8 monsCount, u32 battleTypeFlags);
+u16 GetTrainerMonPoolAt(const struct FrontierMonPool *pool, u16 index);
+u16 GetRandomTrainerMonFromPool(const struct FrontierMonPool *pool);
+struct FrontierMonPool GetTrainerMonPoolFromSet(const u16 *monSet);
+void SelectTrainerMonsFromPool(const struct FrontierMonPool *pool, const struct TrainerMon *poolMons, u8 poolRuleIndex, u8 poolPickIndex, u8 poolPruneIndex, u8 monCount, u16 *selectedMonIds, u32 battleTypeFlags, TrainerMonPoolFilter filter, void *filterData);
 
 #endif

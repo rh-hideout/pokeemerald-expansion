@@ -367,7 +367,7 @@ static void PrunePool(const struct Trainer *trainer, u8 *poolIndexArray, const s
     }
 }
 
-void DoTrainerPartyPool(const struct Trainer *trainer, u32 *monIndices, u8 monsCount, u32 battleTypeFlags)
+bool8 DoTrainerPartyPool(const struct Trainer *trainer, u32 *monIndices, u8 monsCount, u32 battleTypeFlags)
 {
         bool32 usingPool = FALSE;
         struct PoolRules rules = defaultPoolRules;
@@ -406,4 +406,114 @@ void DoTrainerPartyPool(const struct Trainer *trainer, u32 *monIndices, u8 monsC
         if (!usingPool)
             for (u32 i = 0; i < monsCount; i++)
                 monIndices[i] = i;
+
+        return usingPool;
+}
+
+u16 GetTrainerMonPoolAt(const struct FrontierMonPool *pool, u16 index)
+{
+    if (pool->monIds != NULL)
+        return pool->monIds[index];
+    else
+        return pool->firstMonId + index;
+}
+
+u16 GetRandomTrainerMonFromPool(const struct FrontierMonPool *pool)
+{
+    return GetTrainerMonPoolAt(pool, Random() % pool->size);
+}
+
+struct FrontierMonPool GetTrainerMonPoolFromSet(const u16 *monSet)
+{
+    u16 size;
+
+    for (size = 0; monSet[size] != 0xFFFF; size++)
+        ;
+
+    return (struct FrontierMonPool)FRONTIER_MON_LIST_POOL(monSet, size);
+}
+
+static void SelectTrainerMonsFromPoolRandomly(const u16 *poolMonIds, const struct TrainerMon *poolMons, u16 poolSize, u8 monCount, u16 *selectedMonIds)
+{
+    u32 i = 0;
+
+    while (i != monCount)
+    {
+        u16 monId = poolMonIds[Random() % poolSize];
+        u32 j;
+
+        for (j = 0; j < i; j++)
+        {
+            if (poolMons[selectedMonIds[j]].species == poolMons[monId].species)
+                break;
+        }
+        if (j != i)
+            continue;
+
+        for (j = 0; j < i; j++)
+        {
+            if (poolMons[selectedMonIds[j]].heldItem != ITEM_NONE
+             && poolMons[selectedMonIds[j]].heldItem == poolMons[monId].heldItem)
+                break;
+        }
+        if (j != i)
+            continue;
+
+        for (j = 0; j < i; j++)
+        {
+            if (selectedMonIds[j] == monId)
+                break;
+        }
+        if (j != i)
+            continue;
+
+        selectedMonIds[i] = monId;
+        i++;
+    }
+}
+
+void SelectTrainerMonsFromPool(const struct FrontierMonPool *pool, const struct TrainerMon *poolMons, u8 poolRuleIndex, u8 poolPickIndex, u8 poolPruneIndex, u8 monCount, u16 *selectedMonIds, u32 battleTypeFlags, TrainerMonPoolFilter filter, void *filterData)
+{
+    u32 *selectedIndices;
+    u16 *poolMonIds;
+    u16 poolSize;
+    struct TrainerMon *party;
+    struct Trainer trainer = {
+        .partySize = monCount,
+        .poolRuleIndex = poolRuleIndex,
+        .poolPickIndex = poolPickIndex,
+        .poolPruneIndex = poolPruneIndex,
+    };
+
+    selectedIndices = Alloc(monCount * sizeof(*selectedIndices));
+    poolMonIds = Alloc(pool->size * sizeof(*poolMonIds));
+    party = Alloc(pool->size * sizeof(*party));
+    poolSize = 0;
+    for (u32 i = 0; i < pool->size; i++)
+    {
+        u16 monId = GetTrainerMonPoolAt(pool, i);
+
+        if (filter != NULL && !filter(monId, &poolMons[monId], filterData))
+            continue;
+
+        poolMonIds[poolSize] = monId;
+        party[poolSize] = poolMons[monId];
+        poolSize++;
+    }
+
+    trainer.poolSize = (u8)poolSize;
+    trainer.party = party;
+    if (poolSize < POOL_SLOT_DISABLED && DoTrainerPartyPool(&trainer, selectedIndices, monCount, battleTypeFlags))
+    {
+        for (u32 i = 0; i < monCount; i++)
+            selectedMonIds[i] = poolMonIds[selectedIndices[i]];
+    }
+    else
+    {
+        SelectTrainerMonsFromPoolRandomly(poolMonIds, poolMons, poolSize, monCount, selectedMonIds);
+    }
+
+    Free(selectedIndices);
+    Free(poolMonIds);
+    Free(party);
 }

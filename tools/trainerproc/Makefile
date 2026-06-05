@@ -1,4 +1,4 @@
-.PHONY: all clean
+.PHONY: all check clean
 
 CFLAGS := -Wall -O2
 
@@ -15,6 +15,9 @@ all: trainerproc$(EXE)
 
 trainerproc$(EXE): $(SRCS)
 	$(CC) $(CFLAGS) $(SRCS) -o $@ $(LDFLAGS)
+
+check: trainerproc$(EXE)
+	@:
 
 clean:
 	$(RM) trainerproc$(EXE)

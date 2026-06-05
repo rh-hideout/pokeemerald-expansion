@@ -31,6 +31,7 @@
 #include "save.h"
 #include "load_save.h"
 #include "battle_dome.h"
+#include "trainer_pools.h"
 #include "constants/battle_frontier.h"
 #include "constants/battle_frontier_mons.h"
 #include "constants/battle_move_effects.h"
@@ -3211,28 +3212,67 @@ void GetFrontierTrainerName(u8 *dst, u16 trainerId)
     dst[i] = EOS;
 }
 
+bool8 IsFrontierMonHighTier(u16 monId)
+{
+    return (gFacilityTrainerMons[monId].tags & MON_POOL_TAG_HIGH_TIER) != 0;
+}
+
+static bool8 ShouldExcludeHighTierFrontierMons(u8 level)
+{
+    return level == FRONTIER_MAX_LEVEL_50 || level == 20;
+}
+
+struct FrontierPoolFilterData
+{
+    u8 level;
+};
+
+static bool8 FrontierMonPassesLevelFilter(u16 monId, const struct TrainerMon *mon, void *data)
+{
+    struct FrontierPoolFilterData *filterData = data;
+
+    return !(ShouldExcludeHighTierFrontierMons(filterData->level) && (mon->tags & MON_POOL_TAG_HIGH_TIER));
+}
+
+void SelectFrontierMonsFromPool(const struct FrontierMonPool *pool, u8 level, u8 monCount, u16 *selectedMonIds, u32 battleTypeFlags)
+{
+    struct FrontierPoolFilterData filterData = {level};
+
+    SelectTrainerMonsFromPool(pool, gFacilityTrainerMons, POOL_RULESET_FRONTIER, POOL_PICK_DEFAULT, POOL_PRUNE_NONE, monCount, selectedMonIds, battleTypeFlags, FrontierMonPassesLevelFilter, &filterData);
+}
+
+void SelectFrontierMonsFromPoolSet(const struct TrainerPoolSet *poolSet, u8 level, u8 monCount, u16 *selectedMonIds, u32 battleTypeFlags)
+{
+    struct FrontierMonPool pool = FRONTIER_MON_LIST_POOL(poolSet->monIds, poolSet->poolSize);
+    struct FrontierPoolFilterData filterData = {level};
+
+    SelectTrainerMonsFromPool(&pool, gFacilityTrainerMons, poolSet->poolRuleIndex, poolSet->poolPickIndex, poolSet->poolPruneIndex, monCount, selectedMonIds, battleTypeFlags, FrontierMonPassesLevelFilter, &filterData);
+}
+
+void SelectFrontierMonsFromSet(const u16 *monSet, u8 level, u8 monCount, u16 *selectedMonIds, u32 battleTypeFlags)
+{
+    struct FrontierMonPool pool = GetTrainerMonPoolFromSet(monSet);
+
+    SelectFrontierMonsFromPool(&pool, level, monCount, selectedMonIds, battleTypeFlags);
+}
+
+void SelectFrontierTrainerMons(u16 trainerId, u8 level, u8 monCount, u16 *selectedMonIds, u32 battleTypeFlags)
+{
+    if (gFacilityTrainers[trainerId].poolSet != NULL)
+    {
+        SelectFrontierMonsFromPoolSet(gFacilityTrainers[trainerId].poolSet, level, monCount, selectedMonIds, battleTypeFlags);
+        return;
+    }
+
+    SelectFrontierMonsFromSet(gFacilityTrainers[trainerId].monSet, level, monCount, selectedMonIds, battleTypeFlags);
+}
+
 u16 GetRandomFrontierMonFromSet(u16 trainerId)
 {
     u8 level = SetFacilityPtrsGetLevel();
-    const u16 *monSet = gFacilityTrainers[trainerId].monSet;
-    u8 numMons = 0;
-    u32 monId = monSet[numMons];
+    u16 monId;
 
-    while (monId != 0xFFFF)
-    {
-        numMons++;
-        monId = monSet[numMons];
-        if (monId == 0xFFFF)
-            break;
-    }
-
-    do
-    {
-        // "High tier" Pokémon are only allowed on open level mode
-        // 20 is not a possible value for level here
-        monId = monSet[Random() % numMons];
-    } while ((level == FRONTIER_MAX_LEVEL_50 || level == 20) && monId > FRONTIER_MONS_HIGH_TIER);
-
+    SelectFrontierTrainerMons(trainerId, level, 1, &monId, 0);
     return monId;
 }
 

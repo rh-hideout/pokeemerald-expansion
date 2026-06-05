@@ -3,6 +3,9 @@
 
 #include "constants/species.h"
 
+struct FrontierMonPool;
+struct TrainerPoolSet;
+
 void CallFrontierUtilFunc(void);
 u8 GetFrontierBrainStatus(void);
 void CopyFrontierTrainerText(u8 whichText, u16 trainerId);
@@ -36,6 +39,11 @@ u8 GetFrontierTrainerFrontSpriteId(u16 trainerId);
 enum TrainerClassID GetFrontierOpponentClass(u16 trainerId);
 u8 GetFrontierTrainerFacilityClass(u16 trainerId);
 void GetFrontierTrainerName(u8 *dst, u16 trainerId);
+bool8 IsFrontierMonHighTier(u16 monId);
+void SelectFrontierMonsFromPool(const struct FrontierMonPool *pool, u8 level, u8 monCount, u16 *selectedMonIds, u32 battleTypeFlags);
+void SelectFrontierMonsFromPoolSet(const struct TrainerPoolSet *poolSet, u8 level, u8 monCount, u16 *selectedMonIds, u32 battleTypeFlags);
+void SelectFrontierMonsFromSet(const u16 *monSet, u8 level, u8 monCount, u16 *selectedMonIds, u32 battleTypeFlags);
+void SelectFrontierTrainerMons(u16 trainerId, u8 level, u8 monCount, u16 *selectedMonIds, u32 battleTypeFlags);
 u16 GetRandomFrontierMonFromSet(u16 trainerId);
 void FrontierSpeechToString(const u16 *words);
 u8 SetFacilityPtrsGetLevel(void);
