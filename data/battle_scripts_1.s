@@ -1851,7 +1851,7 @@ BattleScript_AlreadyParalyzed::
 	goto BattleScript_MoveEnd
 
 BattleScript_PowerHerbActivation::
-	call BattleScript_ItemPopUp_Attacker
+	call BattleScript_ItemPopUp_AttackerNoFlush
 	playanimation BS_ATTACKER, B_ANIM_HELD_ITEM_EFFECT
 	printstring STRINGID_POWERHERB
 	waitmessage B_WAIT_TIME_LONG
@@ -4513,13 +4513,13 @@ BattleScript_ItemPopUp_AttackerNoFlush::
 
 BattleScript_ItemPopUp_Scripting::
 	flushtextbox
+BattleScript_ItemPopUp_ScriptingNoFlush::
 	showitempopup BS_SCRIPTING
 	pause B_WAIT_TIME_LONG
 	destroyitempopup
 	return
 
 BattleScript_ItemPopUp_Target::
-	flushtextbox
 	showitempopup BS_TARGET
 	pause B_WAIT_TIME_LONG
 	destroyitempopup
@@ -5241,7 +5241,7 @@ BattleScript_GemActivates::
 	return
 
 BattleScript_BerryReduceDmg::
-	call BattleScript_ItemPopUp_Scripting
+	call BattleScript_ItemPopUp_ScriptingNoFlush
 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_BERRY
 	waitanimation
 	printstring STRINGID_BERRYDMGREDUCES
@@ -5302,7 +5302,7 @@ BattleScript_MentalHerbCuresTaunt:
 	goto BattleScript_MentalHerbCureRetFinish
 
 BattleScript_WhiteHerbRet::
-	call BattleScript_ItemPopUp_Scripting
+	call BattleScript_ItemPopUp_ScriptingNoFlush
 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT
 	printstring STRINGID_PKMNSITEMRESTOREDSTATUS
 	waitmessage B_WAIT_TIME_LONG
@@ -5310,7 +5310,7 @@ BattleScript_WhiteHerbRet::
 	return
 
 BattleScript_WhiteHerbFling::
-	call BattleScript_ItemPopUp_Scripting
+	call BattleScript_ItemPopUp_ScriptingNoFlush
 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT
 	printstring STRINGID_PKMNSITEMRESTOREDSTATUS
 	waitmessage B_WAIT_TIME_LONG

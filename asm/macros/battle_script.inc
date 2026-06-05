@@ -2136,10 +2136,6 @@
 	.byte \battler
 	.endm
 
-	.macro showitempopupscripting
-	callnative BS_ShowItemPopupScripting
-	.endm
-
 	.macro destroyitempopup
 	callnative BS_DestroyItemPopup
 	.endm
