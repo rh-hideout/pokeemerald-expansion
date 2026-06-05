@@ -383,15 +383,17 @@ static void BXPY_DeleteNonAliveMons(void)
 void BXPY_SelectPartyMembers(struct Pokemon *party, u8* enteredMons, enum BattleTrainer trainer)
 {
     struct Pokemon tempParty[PARTY_SIZE];
-    int participatingPokemonSlot = 0;
-    VarSet(B_VAR_SKY_BATTLE,0);
+    u8 participatingPokemonSlot = 0;
+
+    if (trainer == B_TRAINER_PLAYER)
+        VarSet(B_VAR_SKY_BATTLE,0);
 
     for (u32 i = 0; i < PARTY_SIZE; i++)
         ZeroMonData(&tempParty[i]);
 
     for (u32 i = 0; i < PARTY_SIZE; i++)
     {
-        u32 slot = enteredMons[i];
+        u8 slot = enteredMons[i];
         if (slot == BXPY_EMPTY_MON)
             continue;
 
