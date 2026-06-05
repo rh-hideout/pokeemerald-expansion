@@ -40,7 +40,7 @@ SINGLE_BATTLE_TEST("Unseen Fist ignores Protect when user has Protective Pads, b
     }
 }
 
-SINGLE_BATTLE_TEST("Unseen Fist bypasses protect effects without triggering their contact effects")
+SINGLE_BATTLE_TEST("Unseen Fist bypasses protect effects without triggering their contact effects (Gens 8-9)")
 {
     enum Move protectMove = MOVE_NONE;
     u8 loweredStat = 0;

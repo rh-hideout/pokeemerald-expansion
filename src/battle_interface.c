@@ -2747,7 +2747,7 @@ static void Task_FreeAbilityPopUpGfx(u8 taskId)
     }
 }
 
-void CreateItemPopUp(enum BattlerId battler, bool32 isDoubleBattle)
+void CreateItemPopUp(enum BattlerId battler)
 {
     u8 *spriteIds;
     u32 xSlide, tileTag;
@@ -2766,7 +2766,7 @@ void CreateItemPopUp(enum BattlerId battler, bool32 isDoubleBattle)
         LoadSpriteSheet(&sheet);
     }
 
-    coords = isDoubleBattle ? sAbilityPopUpCoordsDoubles : sAbilityPopUpCoordsSingles;
+    coords = IsDoubleBattle() ? sAbilityPopUpCoordsDoubles : sAbilityPopUpCoordsSingles;
     xSlide = IsOnPlayerSide(battler) ? -ABILITY_POP_UP_POS_X_SLIDE : ABILITY_POP_UP_POS_X_SLIDE;
 
     template = sSpriteTemplate_AbilityPopUp;

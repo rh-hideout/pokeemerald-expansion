@@ -14685,14 +14685,14 @@ void BS_ShowItemPopup(void)
 
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
 
-    CreateItemPopUp(battler, (IsDoubleBattle()) != 0);
+    CreateItemPopUp(battler);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 void BS_ShowItemPopupScripting(void)
 {
     NATIVE_ARGS();
-    CreateItemPopUp(gBattleScripting.battler, (IsDoubleBattle()) != 0);
+    CreateItemPopUp(gBattleScripting.battler);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
