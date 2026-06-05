@@ -1,14 +1,6 @@
 #ifndef GUARD_CONFIG_AI_H
 #define GUARD_CONFIG_AI_H
 
-// Frame count references used by testing system
-#define AI_FRAME_CEILING_SINGLES_NO_FLAGS                       3
-#define AI_FRAME_CEILING_SINGLES_SMART_TRAINER                  7
-#define AI_FRAME_CEILING_DOUBLES_NO_FLAGS                       22
-#define AI_FRAME_CEILING_DOUBLES_SMART_TRAINER                  38
-#define AI_FRAME_CEILING_STEVEN_MULTI                           27
-#define AI_FRAME_CEILING_STEVEN_MULTI_SMART_TRAINER             32
-
 // For the details on what specific factors the switching functions are considering, go read the corresponding function inside ShouldSwitch in src/battle_ai_switch_items.c
 // These configuration options control how likely the AI is to switch if it determines that a switch meets all of its criteria
 // Think of them almost like success rates; if the AI has determined that it needs to switch out to hit Wonder Guard, how often do you want it to actually take that course of action? Etc.
@@ -33,6 +25,7 @@
 #define SHOULD_SWITCH_ATTACKING_STAT_MINUS_THREE_PLUS_PERCENTAGE    100
 #define SHOULD_SWITCH_ALL_SCORES_BAD_PERCENTAGE                     100
 #define SHOULD_SWITCH_DYN_FUNC_PERCENTAGE                           50 // Dynamic switching function switch chance
+#define SHOULD_SWITCH_LOSES_1V1_PERCENTAGE                          0 // Keeping this disabled by default makes evaluating and testing switching behaviour when developing much easier
 
 // AI smart switching chances for bad statuses
 #define SHOULD_SWITCH_PERISH_SONG_PERCENTAGE                    100

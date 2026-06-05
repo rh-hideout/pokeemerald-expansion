@@ -74,28 +74,6 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu takes no damage from a confusion hit and c
     }
 }
 
-SINGLE_BATTLE_TEST("Disguised Mimikyu's Air Balloon will pop upon changing to its busted form")
-{
-    u32 species, newSpecies;
-    PARAMETRIZE { species = SPECIES_MIMIKYU_DISGUISED;       newSpecies = SPECIES_MIMIKYU_BUSTED; }
-    PARAMETRIZE { species = SPECIES_MIMIKYU_TOTEM_DISGUISED; newSpecies = SPECIES_MIMIKYU_BUSTED_TOTEM; }
-    GIVEN {
-        ASSUME(gItemsInfo[ITEM_AIR_BALLOON].holdEffect == HOLD_EFFECT_AIR_BALLOON);
-        PLAYER(species) { Ability(ABILITY_DISGUISE); Item(ITEM_AIR_BALLOON); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_AERIAL_ACE); }
-    } SCENE {
-        MESSAGE("Mimikyu floats in the air with its Air Balloon!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_AERIAL_ACE, opponent);
-        NOT HP_BAR(player);
-        ABILITY_POPUP(player, ABILITY_DISGUISE);
-        MESSAGE("Mimikyu's Air Balloon popped!");
-    } THEN {
-        EXPECT_EQ(player->species, newSpecies);
-    }
-}
-
 SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from secondary damage without breaking the disguise - Stealth Rock")
 {
     u32 species;

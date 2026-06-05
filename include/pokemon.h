@@ -3,6 +3,7 @@
 
 #include "contest_effect.h"
 #include "sprite.h"
+#include "wild_encounter_ow.h"
 #include "constants/battle.h"
 #include "constants/cries.h"
 #include "constants/egg_ids.h"
@@ -519,6 +520,7 @@ struct SpeciesInfo /*0xC4*/
 #endif //P_GENDER_DIFFERENCES
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS
+    enum OverworldWildEncounterBehaviors overworldEncounterBehavior;
 };
 
 struct EggData
@@ -696,10 +698,21 @@ struct OriginalTrainerId
 
 extern u8 gPartiesCount[MAX_BATTLE_TRAINERS];
 extern struct Pokemon gParties[MAX_BATTLE_TRAINERS][PARTY_SIZE];
-#define gPlayerParty gParties[B_TRAINER_0]
-#define gEnemyParty gParties[B_TRAINER_1]
-#define gPlayerPartyCount gPartiesCount[B_TRAINER_0]
-#define gEnemyPartyCount gPartiesCount[B_TRAINER_1]
+
+DEPRECATED("Use gParties[B_TRAINER_PLAYER] for player and gParties[B_TRAINER_PARTNER] for partner instead")
+extern struct Pokemon (*const gPlayerPartyPtr)[6];
+#define gPlayerParty (*gPlayerPartyPtr)
+DEPRECATED("gPlayerPartyCount is deprecated. Use gPartiesCount[B_TRAINER_PLAYER] for player and gPartiesCount[B_TRAINER_PARTNER] for partner instead")
+extern u8 (*const gPlayerPartyCountPtr);
+#define gPlayerPartyCount (*gPlayerPartyCountPtr)
+
+DEPRECATED("Will be removed in 1.17.0: use gParties[B_TRAINER_OPPONENT_A] for opponentA and gParties[B_TRAINER_OPPONENT_B] for opponentB instead")
+extern struct Pokemon (*const gEnemyPartyPtr)[6];
+#define gEnemyParty (*gEnemyPartyPtr)
+DEPRECATED("gEnemyPartyCount is deprecated and will be removed in 1.17.0. Use gPartiesCount[B_TRAINER_OPPONENT_A] for opponentA and gPartiesCount[B_TRAINER_OPPONENT_B] for opponentB instead")
+extern u8 (*const gEnemyPartyCountPtr);
+#define gEnemyPartyCount (*gEnemyPartyCountPtr)
+
 extern struct SpriteTemplate gMultiuseSpriteTemplate;
 extern u16 gFollowerSteps;
 extern bool32 consumeItem;
@@ -720,6 +733,7 @@ extern const struct SpriteTemplate gBattlerSpriteTemplates[];
 extern const u32 sExpCandyExperienceTable[];
 extern const struct AbilityInfo gAbilitiesInfo[];
 extern const struct NatureInfo gNaturesInfo[];
+extern const struct BehaviorOWE gOWESpeciesBehavior[OWE_SPECIES_BEHAVIOR_COUNT];
 
 void ZeroBoxMonData(struct BoxPokemon *boxMon);
 void ZeroMonData(struct Pokemon *mon);
@@ -727,6 +741,7 @@ void ZeroPartyMons(struct Pokemon *party);
 void ZeroPlayerPartyMons(void);
 void ZeroEnemyPartyMons(void);
 u32 GetMonPersonality(enum Species species, u8 gender, u8 nature, u8 unownLetter);
+bool32 ComputePlayerShinyOdds(u32 personality, u32 value);
 void CreateMon(struct Pokemon *mon, enum Species species, u8 level, u32 personality, struct OriginalTrainerId);
 void CreateRandomMon(struct Pokemon *mon, enum Species species, u8 level);
 void CreateRandomMonWithIVs(struct Pokemon *mon, enum Species species, u8 level, u8 fixedIv);
@@ -790,6 +805,7 @@ void CopyMon(void *dest, void *src, size_t size);
 u8 GiveCapturedMonToPlayer(struct Pokemon *mon);
 u8 CopyMonToPC(struct Pokemon *mon);
 u8 CalculatePlayerPartyCount(void);
+u8 CalculatePartnerPartyCount(void);
 u8 CalculateEnemyPartyCount(void);
 u8 GetMonsStateToDoubles(void);
 u8 GetMonsStateToDoubles_2(void);
@@ -814,6 +830,7 @@ u32 GetSpeciesBaseSpAttack(enum Species species);
 u32 GetSpeciesBaseSpDefense(enum Species species);
 u32 GetSpeciesBaseSpeed(enum Species species);
 u32 GetSpeciesBaseStat(enum Species species, u32 statIndex);
+u32 GetSpeciesBaseStatTotal(enum Species species);
 const struct LevelUpMove *GetSpeciesLevelUpLearnset(enum Species species);
 const u16 *GetSpeciesTeachableLearnset(enum Species species);
 const u16 *GetSpeciesEggMoves(enum Species species);
@@ -939,5 +956,54 @@ struct BoxPokemon *GetSelectedBoxMonFromPcOrParty(void);
 u32 GiveScriptedMonToPlayer(struct Pokemon *mon, u8 slot);
 void ChangePokemonNicknameWithCallback(void (*callback)(void));
 bool32 HasShedinjaHPHandling(enum Species species);
+
+static inline u32 OWE_GetMovementTypeFromSpecies(enum Species speciesId)
+{
+    speciesId = SanitizeSpeciesId(speciesId);
+    enum OverworldWildEncounterBehaviors behavior = gSpeciesInfo[speciesId].overworldEncounterBehavior;
+    return gOWESpeciesBehavior[behavior].movementType;
+}
+
+static inline u32 OWE_GetViewDistanceFromSpecies(enum Species speciesId)
+{
+    speciesId = SanitizeSpeciesId(speciesId);
+    enum OverworldWildEncounterBehaviors behavior = gSpeciesInfo[speciesId].overworldEncounterBehavior;
+    return gOWESpeciesBehavior[behavior].viewDistance;
+}
+
+static inline u32 OWE_GetViewWidthFromSpecies(enum Species speciesId)
+{
+    speciesId = SanitizeSpeciesId(speciesId);
+    enum OverworldWildEncounterBehaviors behavior = gSpeciesInfo[speciesId].overworldEncounterBehavior;
+    return gOWESpeciesBehavior[behavior].viewWidth;
+}
+
+static inline u32 OWE_GetViewActiveDistanceFromSpecies(enum Species speciesId)
+{
+    speciesId = SanitizeSpeciesId(speciesId);
+    enum OverworldWildEncounterBehaviors behavior = gSpeciesInfo[speciesId].overworldEncounterBehavior;
+    return gOWESpeciesBehavior[behavior].activeDistance;
+}
+
+static inline enum SpeedOWE OWE_GetIdleSpeedFromSpecies(enum Species speciesId)
+{
+    speciesId = SanitizeSpeciesId(speciesId);
+    enum OverworldWildEncounterBehaviors behavior = gSpeciesInfo[speciesId].overworldEncounterBehavior;
+    return gOWESpeciesBehavior[behavior].idleSpeed;
+}
+
+static inline enum SpeedOWE OWE_GetActiveSpeedFromSpecies(enum Species speciesId)
+{
+    speciesId = SanitizeSpeciesId(speciesId);
+    enum OverworldWildEncounterBehaviors behavior = gSpeciesInfo[speciesId].overworldEncounterBehavior;
+    return gOWESpeciesBehavior[behavior].activeSpeed;
+}
+
+static inline enum ReturnToIdleOWE OWE_GetReturnToIdleFromSpecies(enum Species speciesId)
+{
+    speciesId = SanitizeSpeciesId(speciesId);
+    enum OverworldWildEncounterBehaviors behavior = gSpeciesInfo[speciesId].overworldEncounterBehavior;
+    return gOWESpeciesBehavior[behavior].returnToIdle;
+}
 
 #endif // GUARD_POKEMON_H

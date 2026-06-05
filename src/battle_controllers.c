@@ -55,7 +55,6 @@ static u32 ReturnAnimIdForBattler(bool32 isPlayerSide, u32 specificBattler);
 static void LaunchKOAnimation(enum BattlerId battlerId, u16 animId, bool32 isFront);
 static void AnimateMonAfterKnockout(enum BattlerId battler);
 
-
 bool32 IsAiVsAiBattle(void)
 {
     return (B_FLAG_AI_VS_AI_BATTLE && FlagGet(B_FLAG_AI_VS_AI_BATTLE));
@@ -300,9 +299,11 @@ static void InitBtlControllersInternal(void)
             }
             else if (TESTING && isMulti && isRecorded && !isRecordedLink)
             { // Sets to PlayerPartner if EXPECT_XXXX used in test for partner trainer, else sets to RecordedPartner.
+#if TESTING
                 if (gBattleTestRunnerState->data.expectedAiActions[B_BATTLER_2][0].actionSet == TRUE)
                     gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_2)] = SetControllerToPlayerPartner;
                 else
+#endif
                     gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_2)] = SetControllerToRecordedPartner;
             }
             else if ((isInGamePartner && !isRecorded)
@@ -3302,14 +3303,14 @@ enum BattleTrainer GetBattlerTrainer(enum BattlerId battler)
         {
         case BATTLE_CONTROLLER_PLAYER:
         case BATTLE_CONTROLLER_RECORDED_PLAYER:
-            return B_TRAINER_0;
+            return B_TRAINER_PLAYER;
         case BATTLE_CONTROLLER_LINK_PARTNER:
         case BATTLE_CONTROLLER_RECORDED_PARTNER:
-            return B_TRAINER_2;
+            return B_TRAINER_PARTNER;
         case BATTLE_CONTROLLER_LINK_OPPONENT:
         case BATTLE_CONTROLLER_RECORDED_OPPONENT:
         case BATTLE_CONTROLLER_OPPONENT:
-            return (battler & BIT_FLANK) ? B_TRAINER_3 : B_TRAINER_1;
+            return (battler & BIT_FLANK) ? B_TRAINER_OPPONENT_B : B_TRAINER_OPPONENT_A;
         default:
             break;
         }
@@ -3328,7 +3329,7 @@ bool32 BattleSideHasTwoTrainers(enum BattleSide side)
     if (side == B_SIDE_PLAYER)
         return gBattleTypeFlags & BATTLE_TYPE_MULTI;
     else
-        return (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS || (gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_MULTI));
+        return ((gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && TRAINER_BATTLE_PARAM.opponentB != 0xFFFF) || (gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_MULTI));
 }
 
 bool32 BattlersShareParty(enum BattlerId battler1, enum BattlerId battler2)
@@ -3338,5 +3339,5 @@ bool32 BattlersShareParty(enum BattlerId battler1, enum BattlerId battler2)
 
 bool32 TrainerHasParty(enum BattleTrainer trainer)
 {
-    return (trainer < B_TRAINER_2 || BattleSideHasTwoTrainers((enum BattleSide)(trainer & BIT_SIDE)));
+    return (trainer < B_TRAINER_PARTNER || BattleSideHasTwoTrainers((enum BattleSide)(trainer & BIT_SIDE)));
 }

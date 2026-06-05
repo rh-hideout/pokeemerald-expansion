@@ -419,7 +419,7 @@ AI_DOUBLE_BATTLE_TEST("AI will choose Bulldoze if it triggers its ally's ability
 {
     ASSUME(GetMoveTarget(MOVE_BULLDOZE) == TARGET_FOES_AND_ALLY);
     ASSUME(GetMoveType(MOVE_BULLDOZE) == TYPE_GROUND);
-    ASSUME(MoveHasAdditionalEffect(MOVE_BULLDOZE, MOVE_EFFECT_SPD_MINUS_1));
+    ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_BULLDOZE, speed: -1);
 
     u32 species, currentHP;
     enum Ability ability;
@@ -815,7 +815,7 @@ AI_DOUBLE_BATTLE_TEST("AI prioritizes Skill Swapping Contrary to allied mons tha
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
-        ASSUME(GetMoveAdditionalEffectById(MOVE_OVERHEAT, 0)->moveEffect == MOVE_EFFECT_SP_ATK_MINUS_2);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_OVERHEAT, self: TRUE, spAtk: -2);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_DOUBLE_BATTLE);
         PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
@@ -987,7 +987,6 @@ AI_DOUBLE_BATTLE_TEST("AI uses Helping Hand if it's about to die")
 
 AI_DOUBLE_BATTLE_TEST("AI uses Helping Hand if the ally does notably more damage")
 {
-
     KNOWN_FAILING;  // Failure was masked by test runner issues
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_HELPING_HAND) == EFFECT_HELPING_HAND);
@@ -1186,11 +1185,37 @@ AI_DOUBLE_BATTLE_TEST("AI uses Magnetic Flux")
 {
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_SWIFT, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_SWIFT, MOVE_CELEBRATE); }
         OPPONENT(SPECIES_KLINK) { Ability(ABILITY_PLUS); Moves(MOVE_MAGNETIC_FLUX, MOVE_POUND); }
         OPPONENT(SPECIES_KLINK) { Ability(ABILITY_PLUS); Moves(MOVE_MAGNETIC_FLUX, MOVE_POUND); }
     } WHEN {
         TURN { EXPECT_MOVE(opponentLeft, MOVE_MAGNETIC_FLUX); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI can choose a status move that boosts the attack by two (doubles)")
+{
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_STRENGTH) == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMoveCategory(MOVE_HORN_ATTACK) == DAMAGE_CATEGORY_PHYSICAL);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET) { HP(277); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(277); }
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_KANGASKHAN) { Moves(MOVE_STRENGTH, MOVE_HORN_ATTACK, MOVE_SWORDS_DANCE); }
+        OPPONENT(SPECIES_KANGASKHAN) { Moves(MOVE_STRENGTH, MOVE_HORN_ATTACK, MOVE_SWORDS_DANCE); }
+    } WHEN {
+        TURN { 
+            EXPECT_MOVES(opponentLeft, MOVE_STRENGTH, MOVE_SWORDS_DANCE);
+            EXPECT_MOVES(opponentRight, MOVE_STRENGTH, MOVE_SWORDS_DANCE);
+        }
+        TURN {
+            EXPECT_MOVE(opponentLeft, MOVE_STRENGTH);
+            EXPECT_MOVE(opponentRight, MOVE_STRENGTH);
+            SEND_OUT(playerLeft, 2);
+            SEND_OUT(playerRight, 3);
+        }
     }
 }

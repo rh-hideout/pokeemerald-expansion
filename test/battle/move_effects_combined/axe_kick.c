@@ -53,3 +53,25 @@ SINGLE_BATTLE_TEST("Axe Kick deals damage half the hp to user if it fails")
         HP_BAR(player, hp: maxHP / 2);
     }
 }
+
+SINGLE_BATTLE_TEST("Axe Kick still deals crash damage when boosted by Sheer Force")
+{
+    enum Ability ability;
+
+    PARAMETRIZE { ability = ABILITY_SHEER_FORCE; }
+    PARAMETRIZE { ability = ABILITY_INTIMIDATE; }
+
+    GIVEN {
+        ASSUME(MoveIsAffectedBySheerForce(MOVE_AXE_KICK));
+        PLAYER(SPECIES_TAUROS) { Ability(ability); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_AXE_KICK, hit: FALSE); }
+    } SCENE {
+        s32 maxHP = GetMonData(&PLAYER_PARTY[0], MON_DATA_MAX_HP);
+        MESSAGE("Tauros used Axe Kick!");
+        MESSAGE("The opposing Wobbuffet avoided the attack!");
+        MESSAGE("Tauros kept going and crashed!");
+        HP_BAR(player, hp: maxHP / 2);
+    }
+}

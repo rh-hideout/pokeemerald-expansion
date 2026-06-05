@@ -27,7 +27,7 @@ SINGLE_BATTLE_TEST("Emergency Exit does not switch out when going below 50% max-
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUPER_FANG, player);
         HP_BAR(opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         NOT ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
     }
 }
@@ -43,7 +43,7 @@ SINGLE_BATTLE_TEST("Emergency Exit switches out when going below 50% max-HP but 
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUPER_FANG, player);
         HP_BAR(opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
     }
 }

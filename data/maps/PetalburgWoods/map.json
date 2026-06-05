@@ -3,6 +3,7 @@
   "name": "PetalburgWoods",
   "layout": "LAYOUT_PETALBURG_WOODS",
   "music": "MUS_PETALBURG_WOODS",
+  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_PETALBURG_WOODS",
   "requires_flash": false,
   "weather": "WEATHER_SHADE",

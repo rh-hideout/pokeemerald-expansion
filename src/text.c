@@ -66,10 +66,10 @@ EWRAM_DATA bool8 gDisableTextPrinters = 0;
 EWRAM_DATA TextFlags gTextFlags = {0};
 IWRAM_DATA struct TextGlyph gCurGlyph = {0};
 
-static const u8 sDownArrowTiles[] = INCBIN_U8("graphics/fonts/down_arrow.4bpp");
-static const u8 sDarkDownArrowTiles[] = INCBIN_U8("graphics/fonts/down_arrow_alt.4bpp");
-static const u8 sUnusedFRLGBlankedDownArrow[] = INCBIN_U8("graphics/fonts/unused_frlg_blanked_down_arrow.4bpp");
-static const u8 sUnusedFRLGDownArrow[] = INCBIN_U8("graphics/fonts/unused_frlg_down_arrow.4bpp");
+static const u8 sDownArrowTiles[] = INCGFX_U8("graphics/fonts/down_arrow.png", ".4bpp");
+static const u8 sDarkDownArrowTiles[] = INCGFX_U8("graphics/fonts/down_arrow_alt.png", ".4bpp");
+static const u8 sUnusedFRLGBlankedDownArrow[] = INCGFX_U8("graphics/fonts/unused_frlg_blanked_down_arrow.png", ".4bpp");
+static const u8 sUnusedFRLGDownArrow[] = INCGFX_U8("graphics/fonts/unused_frlg_down_arrow.png", ".4bpp");
 static const u8 sDownArrowYCoords[] = { 0, 1, 2, 1 };
 
 static const struct GlyphWidthFunc sGlyphWidthFuncs[] =
@@ -111,7 +111,7 @@ struct
     [CHAR_DPAD_NONE]      = { 0x22,  8, 12 }
 };
 
-static const u8 sKeypadIconTiles[] = INCBIN_U8("graphics/fonts/keypad_icons.4bpp");
+static const u8 sKeypadIconTiles[] = INCGFX_U8("graphics/fonts/keypad_icons.png", ".4bpp");
 
 static const struct FontInfo sFontInfos[] =
 {
@@ -314,7 +314,7 @@ static const u8 sTextScrollSpeeds[] =
     [OPTIONS_TEXT_SPEED_INSTANT] = 6,
 };
 
-static const u16 sFontBoldJapaneseGlyphs[] = INCBIN_U16("graphics/fonts/bold.hwjpnfont");
+static const u16 sFontBoldJapaneseGlyphs[] = INCGFX_U16("graphics/fonts/japanese_bold.png", ".hwjpnfont");
 
 static void SetFontsPointer(const struct FontInfo *fonts)
 {
@@ -2753,8 +2753,8 @@ static void FreeFinishedTextPrinters(void)
 
 extern const struct OamData gOamData_AffineOff_ObjNormal_16x16;
 
-static const u8 sDoubleArrowTiles1[]       = INCBIN_U8("graphics/fonts/down_arrow_3.4bpp");
-static const u8 sDoubleArrowTiles2[]       = INCBIN_U8("graphics/fonts/down_arrow_4.4bpp");
+static const u8 sDoubleArrowTiles1[]       = INCGFX_U8("graphics/fonts/down_arrow_3.png", ".4bpp");
+static const u8 sDoubleArrowTiles2[]       = INCGFX_U8("graphics/fonts/down_arrow_4.png", ".4bpp");
 
 static const struct SpriteSheet sSpriteSheets_TextCursor[] =
 {

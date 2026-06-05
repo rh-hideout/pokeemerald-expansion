@@ -295,7 +295,7 @@ DOUBLE_BATTLE_TEST("Powder damages a target using Shell Trap even if it wasn't h
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_EMBER) == DAMAGE_CATEGORY_SPECIAL);
         ASSUME(GetMoveCategory(MOVE_TICKLE) == DAMAGE_CATEGORY_STATUS);
-        ASSUME(GetMoveEffect(MOVE_TICKLE) == EFFECT_TICKLE);
+        ASSUME_STAT_CHANGE(MOVE_TICKLE, attack: -1, defense: -1);
         PLAYER(SPECIES_TURTONATOR);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
