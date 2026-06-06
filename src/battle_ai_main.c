@@ -2871,7 +2871,7 @@ static s32 AI_CheckBadMove(enum BattlerId battlerAtk, enum BattlerId battlerDef,
             ADJUST_SCORE(-10);
         if (BattlerWillFaintFromWeather(battlerAtk, aiData->abilities[battlerAtk])
         ||  DoesSubstituteBlockMove(battlerAtk, battlerDef, move)
-        ||  GetBattlerWeight(battlerDef) >= 2000) //200.0 kg
+        ||  GetBattlerWeight(battlerDef, aiData->abilities[battlerDef], aiData->holdEffects[battlerDef]) >= 2000) //200.0 kg
             ADJUST_SCORE(-10);
         break;
     case EFFECT_REVIVAL_BLESSING:
