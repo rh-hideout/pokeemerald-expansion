@@ -686,8 +686,6 @@ static const u8 sText_TenDashes[] = _("----------");
 
 ALIGNED(4) static const u8 sExpandedPlaceholder_PokedexDescription[] = _("");
 
-static const u8 sText_DexSearchDontSpecifyDecap[] = _("Don't Specify.");
-
 static const u16 sSizeScreenSilhouette_Pal[] = INCGFX_U16("graphics/pokedex/size_silhouette.pal", ".gbapal");
 
 const struct BgTemplate sInfoScreen_BgTemplate[] =
@@ -1180,7 +1178,7 @@ static const struct SearchOptionText sDexOrderOptions[] =
 
 static const struct SearchOptionText sDexSearchNameOptions[] =
 {
-    {gText_DexEmptyString, gText_DexSearchDontSpecify, sText_DexSearchDontSpecifyDecap},
+    {gText_DexEmptyString, gText_DexSearchDontSpecify, COMPOUND_STRING("Don't Specify.")},
     [NAME_ABC] = {gText_DexEmptyString, gText_DexSearchAlphaABC,    COMPOUND_STRING("abc")},
     [NAME_DEF] = {gText_DexEmptyString, gText_DexSearchAlphaDEF,    COMPOUND_STRING("def")},
     [NAME_GHI] = {gText_DexEmptyString, gText_DexSearchAlphaGHI,    COMPOUND_STRING("ghi")},
@@ -1195,7 +1193,7 @@ static const struct SearchOptionText sDexSearchNameOptions[] =
 
 static const struct SearchOptionText sDexSearchColorOptions[] =
 {
-    {gText_DexEmptyString, gText_DexSearchDontSpecify, sText_DexSearchDontSpecifyDecap},
+    {gText_DexEmptyString, gText_DexSearchDontSpecify, COMPOUND_STRING("Don't Specify.")},
     [BODY_COLOR_RED + 1]    = {gText_DexEmptyString, gText_DexSearchColorRed,       COMPOUND_STRING("Red")},
     [BODY_COLOR_BLUE + 1]   = {gText_DexEmptyString, gText_DexSearchColorBlue,      COMPOUND_STRING("Blue")},
     [BODY_COLOR_YELLOW + 1] = {gText_DexEmptyString, gText_DexSearchColorYellow,    COMPOUND_STRING("Yellow")},
