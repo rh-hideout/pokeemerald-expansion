@@ -8122,7 +8122,7 @@ static inline void TryNoticeIllusionInTypeEffectiveness(enum Move move, enum Typ
 {
     // Check if the type effectiveness would've been different if the Pokémon really had the types as the disguise.
     uq4_12_t presumedModifier = UQ_4_12(1.0);
-*
+
     struct DamageContext ctx = {0};
     ctx.battlerAtk = battlerAtk;
     ctx.battlerDef = battlerDef;
