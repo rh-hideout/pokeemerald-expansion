@@ -185,6 +185,7 @@ When `FALSE`, the enemy Pokemon's Ability appears as `ABILITY_NONE`.
 | `BXPY_ITEM_NO_VISIBILITY` | `BXPY_ITEM_SHOW_POSSESSION` | `BXPY_ITEM_SHOW_ITEM` |
 | --- | --- | --- |
 | ![](/docs/tutorials/img/bxpy/itemNoVisibility.png)| ![](/docs/tutorials/img/bxpy/itemShowPossession.png)| ![](/docs/tutorials/img/bxpy/speciesShowTrue.png)|
+
 When set to `BXPY_ITEM_NO_VISIBILITY`, the enemy Pokemon's held item will appear as "Unknown", regardless of the presence of an item.
 When set to `BXPY_ITEM_SHOW_POSSESSION`, if the enemy Pokemon is holding an item, it will be displayed as "???". If they are not, "NONE" will be displayed.
 When set to `BXPY_ITEM_SHOW_ITEM`, if the enemy Pokemon is holding an item, it will be displayed as the actual item. If they are not, "NONE" will be displayed.
@@ -199,21 +200,25 @@ When `FALSE`, the enemy Pokemon's Nature appears as ???. Stats are not colored.
 | `TRUE` | `FALSE` |
 | --- | --- |
 | ![](/docs/tutorials/img/bxpy/speciesShowTrue.png)| ![](/docs/tutorials/img/bxpy/evFalse.png)|
+
 When `FALSE`, the enemy Pokemon's Effort Values appear as ?. Respects `P_SUMMARY_SCREEN_IV_EV_INFO` and `P_SUMMARY_SCREEN_IV_EV_VALUES`.
 ### `BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_IV`
 | `TRUE` | `FALSE` |
 | --- | --- |
 | ![](/docs/tutorials/img/bxpy/speciesShowTrue.png)| ![](/docs/tutorials/img/bxpy/ivFalse.png)|
+
 When `FALSE`, the enemy Pokemon's Individual Values appear as ?. Respects `P_SUMMARY_SCREEN_IV_EV_INFO` and `P_SUMMARY_SCREEN_IV_EV_VALUES`.
 ### `BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_GIMMICK_TERA`
 | `TRUE` | `FALSE` |
 | --- | --- |
 | ![](/docs/tutorials/img/bxpy/speciesShowTrue.png)| ![](/docs/tutorials/img/bxpy/teraFalse.png)|
+
 When `FALSE`, the enemy Pokemon's Tera Type appears as `TYPE_MYSTERY`. Respects `P_SHOW_TERA_TYPE`.
 ### `BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_MOVE`
 | `TRUE` | `FALSE` |
 | --- | --- |
 | ![](/docs/tutorials/img/bxpy/speciesShowTrue.png)| ![](/docs/tutorials/img/bxpy/moveFalse.png)|
+
 When `FALSE`, the enemy Pokemon's Moves appear as `MOVE_NONE`.
 
 # Battle Prep
