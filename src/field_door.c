@@ -27,7 +27,7 @@ struct DoorGraphics
     u16 metatileNum;
     const struct Tileset *tileset;
     u8 sound;
-    enum DoorSize size;
+    enum DoorSize size:8;
     const void *tiles;
     const void *palettes;
 };
