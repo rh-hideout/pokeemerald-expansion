@@ -2507,7 +2507,8 @@ static enum MoveEndResult MoveEndProtectLikeEffect(struct BattleCalcValues *cv)
 
     if (method != PROTECT_MAX_GUARD
      && (cv->abilities[cv->battlerAtk] == ABILITY_UNSEEN_FIST || cv->abilities[cv->battlerAtk] == ABILITY_PIERCING_DRILL)
-     && IsMoveMakingContact(cv->battlerAtk, cv->battlerDef, cv->abilities[cv->battlerAtk], cv->holdEffects[cv->battlerAtk], cv->move))
+     && IsMoveMakingContact(cv->battlerAtk, cv->battlerDef, cv->abilities[cv->battlerAtk], cv->holdEffects[cv->battlerAtk], cv->move)
+     && GetConfig(B_UNSEEN_FIST_BYPASS_EFFECTS) < GEN_CHAMPIONS)
     {
         gBattleScripting.moveendState++;
         return result;
@@ -2573,6 +2574,15 @@ static enum MoveEndResult MoveEndProtectLikeEffect(struct BattleCalcValues *cv)
         MarkBattlerForControllerExec(cv->battlerAtk);
         BattleScriptCall(BattleScript_BeakBlastBurn);
         result = MOVEEND_RESULT_RUN_SCRIPT;
+    }
+
+    if (method != PROTECT_MAX_GUARD
+     && (cv->abilities[cv->battlerAtk] == ABILITY_UNSEEN_FIST || cv->abilities[cv->battlerAtk] == ABILITY_PIERCING_DRILL)
+     && IsMoveMakingContact(cv->battlerAtk, cv->battlerDef, cv->abilities[cv->battlerAtk], cv->holdEffects[cv->battlerAtk], cv->move)
+     && GetConfig(B_UNSEEN_FIST_BYPASS_EFFECTS) < GEN_CHAMPIONS)
+    {
+        gBattleScripting.moveendState++;
+        return result;
     }
 
     gBattleScripting.moveendState++;

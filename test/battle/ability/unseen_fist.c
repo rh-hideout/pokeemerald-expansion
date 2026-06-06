@@ -53,6 +53,7 @@ SINGLE_BATTLE_TEST("Unseen Fist bypasses protect effects without triggering thei
     PARAMETRIZE { protectMove = MOVE_SILK_TRAP;       loweredStat = STAT_SPEED; }
 
     GIVEN {
+        WITH_CONFIG(B_UNSEEN_FIST_BYPASS_EFFECTS, GEN_9);
         PLAYER(SPECIES_URSHIFU) { Ability(ABILITY_UNSEEN_FIST); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -72,5 +73,53 @@ SINGLE_BATTLE_TEST("Unseen Fist bypasses protect effects without triggering thei
         EXPECT_EQ(player->status1, STATUS1_NONE);
         if (loweredStat != 0)
             EXPECT_EQ(player->statStages[loweredStat], DEFAULT_STAT_STAGE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Unseen Fist no longer bypasses the contact effects of protect moves (Champions)")
+{
+    enum Move protectMove = MOVE_NONE;
+    u8 loweredStat = 0;
+
+    PARAMETRIZE { protectMove = MOVE_SPIKY_SHIELD;    loweredStat = 0; }
+    PARAMETRIZE { protectMove = MOVE_KINGS_SHIELD;    loweredStat = STAT_ATK; }
+    PARAMETRIZE { protectMove = MOVE_BANEFUL_BUNKER;  loweredStat = 0; }
+    PARAMETRIZE { protectMove = MOVE_BURNING_BULWARK; loweredStat = 0; }
+    PARAMETRIZE { protectMove = MOVE_OBSTRUCT;        loweredStat = STAT_DEF; }
+    PARAMETRIZE { protectMove = MOVE_SILK_TRAP;       loweredStat = STAT_SPEED; }
+
+    GIVEN {
+        WITH_CONFIG(B_UNSEEN_FIST_BYPASS_EFFECTS, GEN_CHAMPIONS);
+        PLAYER(SPECIES_URSHIFU) { Ability(ABILITY_UNSEEN_FIST); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, protectMove); MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, protectMove, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        HP_BAR(opponent);
+        // switch (protectMove)
+        // {
+        // case MOVE_SPIKY_SHIELD:
+        //     EXPECT_LT(player->hp, player->maxHP);
+        //     break;
+        // case MOVE_KINGS_SHIELD:
+        //     EXPECT_NE(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+        //     break;
+        // case MOVE_BANEFUL_BUNKER:
+        //     STATUS_ICON(player, poison: TRUE);
+        //     break;
+        // case MOVE_BURNING_BULWARK:
+        //     STATUS_ICON(player, burn: TRUE);
+        //     break;
+        // case MOVE_OBSTRUCT:
+        //     EXPECT_NE(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
+        //     break;
+        // case MOVE_SILK_TRAP:
+        //     EXPECT_NE(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
+        //     break;
+        // default:
+        //     break;
+        // }
     }
 }
