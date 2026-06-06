@@ -156,63 +156,77 @@ This can be turned off via `BXPY_CLAUSE_SPECIAL_POKEMON`, and this config is `TR
 If all the checks pass, the Player will not see any messages. The Player's party is saved to the saveblock, and any fainted or unhatched Pokemon are removed from the Party. The game then proceeds to Team Preview.
 
 # Team Preview
+For all `BXPY_OPEN_TEAM_PREVIEW_SHOW_ENEMY_*` configs, when `TRUE`, the Player will be able to see this specific piece of information on the Team Preview AND Enemy Summary Screen. `FALSE` will disable it in both places.
 ## `BXPY_TEAM_PREVIEW_SHOW_ENEMY_SPECIES`
 | `BXPY_SPECIES_HIDE` | `BXPY_SPECIES_SHOW_BASE` | `BXPY_SPECIES_SHOW_TRUE` |
 | --- | --- | --- |
 | ![](/docs/tutorials/img/bxpy/speciesHide.png)| ![](/docs/tutorials/img/bxpy/speciesShowBase.png)| ![](/docs/tutorials/img/bxpy/speciesShowTrue.png)|
+When set to `BXPY_SPECIES_HIDE`, the enemy Pokemon will appear as ???.
+When set to `BXPY_SPECIES_SHOW_BASE`, the enemy will show Pokemon as their base form. For example, if the opponent has `SPECIES_ROTOM_HEAT`, it will be shown as `SPECIES_ROTOM`.
+When set to `BXPY_SPECIES_SHOW_TRUE`, the enemy will show Pokemon as their true species and form.
 ## `BXPY_TEAM_PREVIEW_SHOW_ENEMY_GENDER`
 | `TRUE` | `FALSE` |
-| --- | --- | --- |
+| --- | --- |
 | ![](/docs/tutorials/img/bxpy/speciesShowTrue.png)| ![](/docs/tutorials/img/bxpy/genderFalse.png)|
-## `BXPY_TEAM_PREVIEW_SHOW_ENEMY_ITEM`
+When `FALSE`, all of the enemy Pokemon will show ? for their gender.
+## `BXPY_TEAM_PREVIEW_SHOW_ENEMY_LEVEL`
+| `TRUE` | `FALSE` |
+| --- | --- |
+| ![](/docs/tutorials/img/bxpy/speciesShowTrue.png)| ![](/docs/tutorials/img/bxpy/levelFalse.png)|
+# Open Team Sheet
+## `BXPY_OPEN_TEAM_SHEET`
+When `TRUE`, the Player can open the Pokemon Summary Screen for enemy Pokemon. If this is `FALSE`, all of the values for `BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_*`` are ignored.
+### `BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_ABILITY`
+| `TRUE` | `FALSE` |
+| --- | --- |
+| ![](/docs/tutorials/img/bxpy/speciesShowTrue.png)| ![](/docs/tutorials/img/bxpy/abilityFalse.png)|
+When `FALSE`, the enemy Pokemon's Ability appears as `ABILITY_NONE`.
+## `BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_ITEM`
 | `BXPY_ITEM_NO_VISIBILITY` | `BXPY_ITEM_SHOW_POSSESSION` | `BXPY_ITEM_SHOW_ITEM` |
 | --- | --- | --- |
 | ![](/docs/tutorials/img/bxpy/itemNoVisibility.png)| ![](/docs/tutorials/img/bxpy/itemShowPossession.png)| ![](/docs/tutorials/img/bxpy/speciesShowTrue.png)|
-## `BXPY_TEAM_PREVIEW_SHOW_ENEMY_LEVEL`
-| `TRUE` | `FALSE` |
-| --- | --- | --- |
-| ![](/docs/tutorials/img/bxpy/speciesShowTrue.png)| ![](/docs/tutorials/img/bxpy/levelFalse.png)|
+When set to `BXPY_ITEM_NO_VISIBILITY`, the enemy Pokemon's held item will appear as "Unknown", regardless of the presence of an item.
+When set to `BXPY_ITEM_SHOW_POSSESSION`, if the enemy Pokemon is holding an item, it will be displayed as "???". If they are not, "NONE" will be displayed.
+When set to `BXPY_ITEM_SHOW_ITEM`, if the enemy Pokemon is holding an item, it will be displayed as the actual item. If they are not, "NONE" will be displayed.
 
-# Open Team Sheet
-## `BXPY_OPEN_TEAM_SHEET`
-## `BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_ABILITY`
+If all three of `BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_*` configs are `TRUE`, the Pokemon stats will be visible. If any of them are `FALSE`, the stats will display as ???.
+### `BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_NATURE`
 | `TRUE` | `FALSE` |
-| --- | --- | --- |
-| ![](/docs/tutorials/img/bxpy/speciesShowTrue.png)| ![](/docs/tutorials/img/bxpy/abilityFalse.png)|
-## `BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_NATURE`
-| `TRUE` | `FALSE` |
-| --- | --- | --- |
+| --- | --- |
 | ![](/docs/tutorials/img/bxpy/speciesShowTrue.png)| ![](/docs/tutorials/img/bxpy/natureFalse.png)|
-## `BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_EV`
+When `FALSE`, the enemy Pokemon's Nature appears as ???. Stats are not colored.
+### `BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_EV`
 | `TRUE` | `FALSE` |
-| --- | --- | --- |
+| --- | --- |
 | ![](/docs/tutorials/img/bxpy/speciesShowTrue.png)| ![](/docs/tutorials/img/bxpy/evFalse.png)|
-## `BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_IV`
+When `FALSE`, the enemy Pokemon's Effort Values appear as ?. Respects `P_SUMMARY_SCREEN_IV_EV_INFO` and `P_SUMMARY_SCREEN_IV_EV_VALUES`.
+### `BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_IV`
 | `TRUE` | `FALSE` |
-| --- | --- | --- |
+| --- | --- |
 | ![](/docs/tutorials/img/bxpy/speciesShowTrue.png)| ![](/docs/tutorials/img/bxpy/ivFalse.png)|
-## `BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_GIMMICK_TERA`
+When `FALSE`, the enemy Pokemon's Individual Values appear as ?. Respects `P_SUMMARY_SCREEN_IV_EV_INFO` and `P_SUMMARY_SCREEN_IV_EV_VALUES`.
+### `BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_GIMMICK_TERA`
 | `TRUE` | `FALSE` |
-| --- | --- | --- |
+| --- | --- |
 | ![](/docs/tutorials/img/bxpy/speciesShowTrue.png)| ![](/docs/tutorials/img/bxpy/teraFalse.png)|
-## `BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_MOVE`
+When `FALSE`, the enemy Pokemon's Tera Type appears as `TYPE_MYSTERY`. Respects `P_SHOW_TERA_TYPE`.
+### `BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_MOVE`
 | `TRUE` | `FALSE` |
-| --- | --- | --- |
+| --- | --- |
 | ![](/docs/tutorials/img/bxpy/speciesShowTrue.png)| ![](/docs/tutorials/img/bxpy/moveFalse.png)|
+When `FALSE`, the enemy Pokemon's Moves appear as `MOVE_NONE`.
 
-# Opposing Trainers
+# Battle Prep
+Once the Player chooses Y Pokemon to battle with, Team Preview closes.
+
+## Bring AI
+// Pawkkie TODO: where / how do these get used?
 ## `BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_ABILITY`
 ## `BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_ITEM`
 ## `BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_LEVEL`
 ## `BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_MOVES`
 ## `BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_STATS`
 
-Lorem
-
-# Battle Prep
-Once the Player chooses Y Pokemon to battle with, Team Preview closes.
-
-## Bring AI
 All of the AI battlers (possibily both Trainers and the Player's partner) will then look at the opposing side's Pokemon and choose Y Pokemon to bring to battle.
 
 The following is run for each of the battler's Pokemon against all of the Pokemon on the opposing side. With the maximum number of battlers and party sizes (3, 6), this will add about 74 frames, or 1.2333333 seconds. In singles, it adds closer to 12 frames. This scales with the number of battlers, Pokemon, and moves.
@@ -224,9 +238,7 @@ The following is run for each of the battler's Pokemon against all of the Pokemo
 
 Once every Pokemon and battler is evaluated, the AI will bring the top Y scoring Pokemon into battle, with the highest ranking Pokemon being sent out first. If multiple Pokemon are tied, a Pokemon is randomly chosen between the tied Pokemon until there are no ties. 
 
-The Pokemon on each side that were not brought to the battle are removed from the party. All scoring occurs before the Pokemon are removed.
-
-The game then returns to the overworld and the battle begins.
+The Pokemon on each side that were not brought to the battle are removed from the party. All scoring occurs before the Pokemon are removed. The battle then begins.
 
 # Post Battle
 
