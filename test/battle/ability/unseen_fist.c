@@ -98,28 +98,34 @@ SINGLE_BATTLE_TEST("Unseen Fist no longer bypasses the contact effects of protec
         ANIMATION(ANIM_TYPE_MOVE, protectMove, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         HP_BAR(opponent);
-        // switch (protectMove)
-        // {
-        // case MOVE_SPIKY_SHIELD:
-        //     EXPECT_LT(player->hp, player->maxHP);
-        //     break;
-        // case MOVE_KINGS_SHIELD:
-        //     EXPECT_NE(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
-        //     break;
-        // case MOVE_BANEFUL_BUNKER:
-        //     STATUS_ICON(player, poison: TRUE);
-        //     break;
-        // case MOVE_BURNING_BULWARK:
-        //     STATUS_ICON(player, burn: TRUE);
-        //     break;
-        // case MOVE_OBSTRUCT:
-        //     EXPECT_NE(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
-        //     break;
-        // case MOVE_SILK_TRAP:
-        //     EXPECT_NE(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
-        //     break;
-        // default:
-        //     break;
-        // }
+        switch (protectMove)
+        {
+        case MOVE_BANEFUL_BUNKER:
+            STATUS_ICON(player, poison: TRUE);
+            break;
+        case MOVE_BURNING_BULWARK:
+            STATUS_ICON(player, burn: TRUE);
+            break;
+        default:
+            break;
+        }
+    } THEN {
+        switch (protectMove)
+        {
+        case MOVE_SPIKY_SHIELD:
+            EXPECT_LT(player->hp, player->maxHP);
+            break;
+        case MOVE_KINGS_SHIELD:
+            EXPECT_NE(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+            break;
+        case MOVE_OBSTRUCT:
+            EXPECT_NE(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
+            break;
+        case MOVE_SILK_TRAP:
+            EXPECT_NE(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
+            break;
+        default:
+            break;
+        }
     }
 }

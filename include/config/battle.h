@@ -196,7 +196,7 @@
 #define B_DANCER_ORDER                  GEN_LATEST // In Gen8+, Dancer activations are based on Speed order including modifiers. In Gen7, Dancer activates from the slowest to fastest battler based on the battler's unmodified Speed stat.
 #define B_UNSEEN_FIST_DAMAGE            GEN_LATEST // In Gen8-9, Unseen Fist deals 100% of the damage dealt to protected targets.
                                                    // In Champions, Unseen Fist nerfs damage dealt against protected targets to 25%.
-#define B_UNSEEN_FIST_BYPASS_EFFECTS    GEN_CHAMPIONS // In Gen8-9, Unseen Fist bypasses the contact effects of protect moves.
+#define B_UNSEEN_FIST_BYPASS_EFFECTS    GEN_LATEST // In Gen8-9, Unseen Fist bypasses the contact effects of protect moves.
                                                    // In Champions, Unseen Fist no longer bypasses the contact effects of protect moves.
 
 // Various volatile timers
