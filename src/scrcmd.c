@@ -44,6 +44,7 @@
 #include "pokedex.h"
 #include "pokemon_storage_system.h"
 #include "random.h"
+#include "randomizer.h"
 #include "overworld.h"
 #include "rotating_tile_puzzle.h"
 #include "rtc.h"
@@ -2525,13 +2526,19 @@ bool8 ScrCmd_setwildbattle(struct ScriptContext *ctx)
 
     Script_RequestEffects(SCREFF_V1);
 
-    if (species2 == SPECIES_NONE)
+    u8 mapNum = gSaveBlock1Ptr->location.mapNum;
+    u8 mapGroup = gSaveBlock1Ptr->location.mapGroup;
+    u8 localId = gObjectEvents[gSelectedObjectEvent].localId;
+    species = RandomizeFixedEncounterMon(species, mapNum, mapGroup, localId);
+
+    if(species2 == SPECIES_NONE)
     {
         CreateScriptedWildMon(species, level, item);
         sIsScriptedWildDouble = FALSE;
     }
     else
     {
+        species2 = RandomizeFixedEncounterMon(species2, mapNum, mapGroup, localId);
         CreateScriptedDoubleWildMon(species, level, item, species2, level2, item2);
         sIsScriptedWildDouble = TRUE;
     }

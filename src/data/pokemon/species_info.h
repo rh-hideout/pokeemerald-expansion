@@ -148,6 +148,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
         .levelUpLearnset = sNoneLevelUpLearnset,
         .teachableLearnset = sNoneTeachableLearnset,
         .eggMoveLearnset = sNoneEggMoveLearnset,
+        .randomizerMode = MON_RANDOMIZER_INVALID,
     },
 
     #include "species_info/gen_1_families.h"
@@ -172,6 +173,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
         .shinyPalette = gMonPalette_Egg,
         .iconSprite = gMonIcon_Egg,
         .iconPalIndex = 1,
+        .randomizerMode = MON_RANDOMIZER_INVALID,
     },
 
     /* You may add any custom species below this point based on the following structure: */

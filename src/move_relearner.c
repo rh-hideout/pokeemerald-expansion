@@ -32,6 +32,7 @@
 #include "constants/rgb.h"
 #include "constants/songs.h"
 #include "data/tutor_moves.h"
+#include "randomizer.h"
 
 // The different versions of hearts are selected using animation
 // commands.
@@ -871,20 +872,21 @@ static u32 GetRelearnerLevelUpMoves(struct BoxPokemon *mon, u16 *moves)
 
         for (u32 i = 0; i < MAX_LEVEL_UP_MOVES && learnset[i].move != LEVEL_UP_MOVE_END; i++)
         {
+            u16 move = RandomizeMove(species, learnset[i].move, learnset[i].level);
             if (learnset[i].level > level)
                 break;
 
-            if (BoxMonKnowsMove(mon, learnset[i].move))
+            if (BoxMonKnowsMove(mon, move))
                 continue;
 
             bool32 alreadyInList = FALSE;
             for (u32 j = 0; j < numMoves; j++)
             {
-                if (learnset[i].move == moves[j])
+                if (move == moves[j])
                     alreadyInList = TRUE;
             }
             if (!alreadyInList)
-                moves[numMoves++] = learnset[i].move;
+                moves[numMoves++] = move;
         }
 
         species = (P_PRE_EVO_MOVES ? GetSpeciesPreEvolution(species) : SPECIES_NONE);

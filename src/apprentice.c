@@ -28,6 +28,7 @@
 #include "constants/songs.h"
 #include "constants/trainers.h"
 #include "constants/moves.h"
+#include "randomizer.h"
 
 /* Summary of Apprentice, because (as of writing at least) it's not very well documented online
  *
@@ -368,7 +369,7 @@ static u16 GetRandomAlternateMove(u8 monId)
                 for (; j < numLearnsetMoves; j++)
                 {
                     // Keep looking for TMs until one not in the level up learnset is found
-                    if ((learnset[j].move) == move)
+                    if ((RandomizeMove(species, learnset[j].move, learnset[j].level)) == move)
                     {
                         shouldUseMove = FALSE;
                         break;
@@ -392,13 +393,13 @@ static u16 GetRandomAlternateMove(u8 monId)
                 {
                     // Get a random move excluding the 4 it would know at max level
                     u8 learnsetId = Random() % (numLearnsetMoves - MAX_MON_MOVES);
-                    move = learnset[learnsetId].move;
+                    move = RandomizeMove(species, learnset[learnsetId].move, learnset[learnsetId].level);
                     shouldUseMove = TRUE;
 
                     for (j = numLearnsetMoves - MAX_MON_MOVES; j < numLearnsetMoves; j++)
                     {
                         // Keep looking for moves until one not in the last 4 is found
-                        if ((learnset[j].move) == move)
+                        if ((RandomizeMove(species, learnset[j].move, learnset[j].level)) == move)
                         {
                             shouldUseMove = FALSE;
                             break;
@@ -457,7 +458,7 @@ static void GetLatestLearnedMoves(enum Species species, u16 *moves)
         numLearnsetMoves = MAX_MON_MOVES;
 
     for (j = 0; j < numLearnsetMoves; j++)
-        moves[j] = learnset[(i - 1) - j].move;
+        moves[j] = RandomizeMove(species, learnset[(i - 1) - j].move, learnset[(i - 1) - j].level);
 }
 
 // Get the level up move or previously suggested move to be the first move choice

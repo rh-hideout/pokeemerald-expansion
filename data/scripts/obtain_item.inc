@@ -106,6 +106,7 @@ EventScript_NoRoomForDecor::
 Std_FindItem::
 	lock
 	faceplayer
+	callnative FindItemRandomize_NativeCall
 	waitse
 	copyvar VAR_0x8006, ITEMID
 	copyvar VAR_0x8004, ITEMID
@@ -176,6 +177,7 @@ EventScript_HiddenItemScript::
 	lockall
 	waitse
 	goto_if_eq VAR_0x8005, 0, EventScript_TryPickUpHiddenCoins
+	callnative FindHiddenItemRandomize_NativeCall
 	copyvar VAR_0x8006, VAR_0x8005
 	additem VAR_0x8005, VAR_0x8009
 	copyvar VAR_0x8007, VAR_RESULT

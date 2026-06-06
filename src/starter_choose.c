@@ -23,6 +23,7 @@
 #include "window.h"
 #include "constants/songs.h"
 #include "constants/rgb.h"
+#include "randomizer.h"
 
 #define STARTER_MON_COUNT   3
 
@@ -349,9 +350,10 @@ static const struct SpriteTemplate sSpriteTemplate_StarterCircle =
 // .text
 u16 GetStarterPokemon(u16 chosenStarterId)
 {
-    if (chosenStarterId > STARTER_MON_COUNT)
+    if (chosenStarterId > STARTER_MON_COUNT){
         chosenStarterId = 0;
-    return sStarterMon[chosenStarterId];
+    }
+    return RandomizeStarter(chosenStarterId, sStarterMon);
 }
 
 static void VblankCB_StarterChoose(void)

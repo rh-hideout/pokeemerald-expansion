@@ -73,6 +73,7 @@
 #include "constants/trainers.h"
 #include "constants/union_room.h"
 #include "constants/weather.h"
+#include "randomizer.h"
 
 extern u16 gSpecialVar_ItemId;
 
@@ -1576,6 +1577,7 @@ void GiveBoxMonInitialMoveset(struct BoxPokemon *boxMon) //Credit: AsparagusEdua
     {
         s32 j;
         bool32 alreadyKnown = FALSE;
+        enum Move move = RandomizeMove(species, learnset[i].move, learnset[i].level);
 
         if (learnset[i].level > level)
             break;
@@ -1584,7 +1586,7 @@ void GiveBoxMonInitialMoveset(struct BoxPokemon *boxMon) //Credit: AsparagusEdua
 
         for (j = 0; j < addedMoves; j++)
         {
-            if (moves[j] == learnset[i].move)
+            if (moves[j] == move)
             {
                 alreadyKnown = TRUE;
                 break;
@@ -1595,14 +1597,14 @@ void GiveBoxMonInitialMoveset(struct BoxPokemon *boxMon) //Credit: AsparagusEdua
         {
             if (addedMoves < MAX_MON_MOVES)
             {
-                moves[addedMoves] = learnset[i].move;
+                moves[addedMoves] = move;
                 addedMoves++;
             }
             else
             {
                 for (j = 0; j < MAX_MON_MOVES - 1; j++)
                     moves[j] = moves[j + 1];
-                moves[MAX_MON_MOVES - 1] = learnset[i].move;
+                moves[MAX_MON_MOVES - 1] = move;
             }
         }
     }
@@ -1629,6 +1631,7 @@ void GiveBoxMonDefaultMove(struct BoxPokemon *boxMon, u32 slot)
     {
         s32 j;
         bool32 alreadyKnown = FALSE;
+        enum Move move = RandomizeMove(species, learnset[i].move, learnset[i].level);
 
         if (learnset[i].level > level)
             break;
@@ -1637,14 +1640,14 @@ void GiveBoxMonDefaultMove(struct BoxPokemon *boxMon, u32 slot)
 
         for (j = 0; j < slot; j++)
         {
-            if (GetBoxMonData(boxMon, MON_DATA_MOVE1 + j) == learnset[i].move)
+            if (GetBoxMonData(boxMon, MON_DATA_MOVE1 + j) == move)
             {
                 alreadyKnown = TRUE;
                 break;
             }
         }
         if (!alreadyKnown)
-            move = learnset[i].move;
+            move = move;
     }
 
     SetBoxMonData(boxMon, MON_DATA_MOVE1 + slot, &move);
@@ -1695,7 +1698,7 @@ enum Move MonTryLearningNewMoveAtLevel(struct Pokemon *mon, bool32 firstMove, u3
 
     if (learnset[sLearningMoveTableID].level == level)
     {
-        gMoveToLearn = learnset[sLearningMoveTableID].move;
+        gMoveToLearn = RandomizeMove(species, learnset[sLearningMoveTableID].move, level);
         sLearningMoveTableID++;
         retVal = GiveMoveToMon(mon, gMoveToLearn);
     }
@@ -3143,7 +3146,7 @@ enum Ability GetAbilityBySpecies(enum Species species, u8 abilityNum)
         gLastUsedAbility = GetSpeciesAbility(species, i);
     }
 
-    return gLastUsedAbility;
+    return RandomizeAbility(species, gLastUsedAbility);
 }
 
 enum Ability GetMonAbility(struct Pokemon *mon)
@@ -5209,7 +5212,7 @@ u8 GetLevelUpMovesBySpecies(enum Species species, u16 *moves)
     const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(species);
 
     for (i = 0; i < MAX_LEVEL_UP_MOVES && learnset[i].move != LEVEL_UP_MOVE_END; i++)
-         moves[numMoves++] = learnset[i].move;
+         moves[numMoves++] = RandomizeMove(species, learnset[i].move, learnset[i].level);
 
      return numMoves;
 }
@@ -6377,7 +6380,7 @@ u16 MonTryLearningNewMoveEvolution(struct Pokemon *mon, bool8 firstMove)
         while ((learnset[sLearningMoveTableID].level == 0 || learnset[sLearningMoveTableID].level == level)
              && !(P_EVOLUTION_LEVEL_1_LEARN >= GEN_8 && learnset[sLearningMoveTableID].level == 1))
         {
-            gMoveToLearn = learnset[sLearningMoveTableID].move;
+            gMoveToLearn = RandomizeMove(species, learnset[sLearningMoveTableID].move, learnset[sLearningMoveTableID].level);
             sLearningMoveTableID++;
             return GiveMoveToMon(mon, gMoveToLearn);
         }

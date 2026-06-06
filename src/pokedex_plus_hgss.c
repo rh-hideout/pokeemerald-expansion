@@ -51,6 +51,7 @@
 #include "constants/rgb.h"
 #include "constants/songs.h"
 #include "config/pokedex_plus_hgss.h"
+#include "randomizer.h"
 
 // static .rodata strings
 
@@ -2203,7 +2204,7 @@ static bool8 CalculateMoves(void)
 
     // Level up moves
     const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(species);
-    for (i = 0; i < MAX_LEVEL_UP_MOVES && learnset[i].move != LEVEL_UP_MOVE_END; i++)
+    for (i = 0; i < MAX_LEVEL_UP_MOVES && RandomizeMove(species, learnset[i].move, learnset[i].level) != LEVEL_UP_MOVE_END; i++)
         numLevelUpMoves++;
 
     // TM and Tutor moves
