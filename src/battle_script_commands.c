@@ -2105,6 +2105,8 @@ void StealTargetItem(enum BattlerId battlerStealer, enum BattlerId itemBattler, 
     if (itemOverride) // don't change flags for unintended battler
         return;
 
+    PREPARE_MON_NICK_WITH_PREFIX_LOWER_BUFFER(gBattleTextBuff2, itemBattler, gBattlerPartyIndexes[itemBattler]);
+
     RecordItemEffectBattle(itemBattler, HOLD_EFFECT_NONE);
     CheckSetUnburden(itemBattler);
 
