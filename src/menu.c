@@ -361,7 +361,7 @@ void Menu_LoadStdPalAt(u16 offset)
     LoadPalette(gStandardMenuPalette, offset, STD_WINDOW_PALETTE_SIZE);
 }
 
-static UNUSED const u16* Menu_GetStdPal(void)
+static UNUSED const u16 *Menu_GetStdPal(void)
 {
     return gStandardMenuPalette;
 }
@@ -409,16 +409,6 @@ void RemoveStartMenuWindow(void)
         RemoveWindow(sStartMenuWindowId);
         sStartMenuWindowId = WINDOW_NONE;
     }
-}
-
-static u16 UNUSED GetDialogFrameBaseTileNum(void)
-{
-    return DLG_WINDOW_BASE_TILE_NUM;
-}
-
-static u16 UNUSED GetStandardFrameBaseTileNum(void)
-{
-    return STD_WINDOW_BASE_TILE_NUM;
 }
 
 u8 AddMapNamePopUpWindow(void)
