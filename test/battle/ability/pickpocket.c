@@ -409,8 +409,8 @@ SINGLE_BATTLE_TEST("Pickpocket steals the attacker's item even after Red Card fo
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         MESSAGE("The opposing Sneasel held up its Red Card against Wobbuffet!");
-        ABILITY_POPUP(opponent, ABILITY_PICKPOCKET);
         MESSAGE("Wynaut was dragged out!");
+        ABILITY_POPUP(opponent, ABILITY_PICKPOCKET);
     } THEN {
         EXPECT(opponent->item == ITEM_POKE_BALL);
         EXPECT(player->item == ITEM_NONE);

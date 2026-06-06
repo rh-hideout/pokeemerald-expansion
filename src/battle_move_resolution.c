@@ -4009,13 +4009,22 @@ static enum MoveEndResult MoveEndPickpocket(struct BattleCalcValues *cv)
                     else
                     {
                         StealTargetItem(battlerDef, cv->battlerAtk, itemToSteal);
-                        if (gBattleTypeFlags & BATTLE_TYPE_TRAINER
+
+                        if (B_TRAINERS_KNOCK_OFF_ITEMS == TRUE
+                         && gBattleTypeFlags & BATTLE_TYPE_TRAINER
                          && !(gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
                          && IsOnPlayerSide(cv->battlerAtk)
                          && itemToSteal == gBattleStruct->itemLost[GetBattlerTrainer(cv->battlerAtk)][originalAttackerPartyId].originalItem)
                             gBattleStruct->itemLost[GetBattlerTrainer(cv->battlerAtk)][originalAttackerPartyId].stolen = TRUE;
                         itemToSteal = ITEM_NONE;
-                        SetMonData(&gParties[GetBattlerTrainer(cv->battlerAtk)][originalAttackerPartyId], MON_DATA_HELD_ITEM, &itemToSteal);
+                        BtlController_EmitSetMonData(
+                            cv->battlerAtk,
+                            B_COMM_TO_CONTROLLER,
+                            REQUEST_HELDITEM_BATTLE,
+                            1u << originalAttackerPartyId,
+                            sizeof(itemToSteal),
+                            &itemToSteal);
+                        MarkBattlerForControllerExec(cv->battlerAtk);
                     }
                     BattleScriptCall(BattleScript_Pickpocket);
                 }
