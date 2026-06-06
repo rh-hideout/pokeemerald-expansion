@@ -4,6 +4,7 @@
 #include "decompress.h"
 #include "decompress_error_handler.h"
 #include "pokemon.h"
+#include "pokemon_spots.h"
 #include "pokemon_sprite_visualizer.h"
 #include "text.h"
 #include "menu.h"
@@ -242,11 +243,6 @@ u32 LoadCompressedSpriteSheetByTemplate(const struct SpriteTemplate *template, s
     }
     return LoadSpriteSheetByTemplate(template, 0, offset);
 
-}
-
-void DecompressPicFromTable(const struct CompressedSpriteSheet *src, void *buffer)
-{
-    DecompressDataWithHeaderWram(src->data, buffer);
 }
 
 void HandleLoadSpecialPokePic(bool32 isFrontPic, void *dest, enum Species species, u32 personality)
@@ -1172,10 +1168,9 @@ void LoadSpecialPokePicIsEgg(void *dest, enum Species species, u32 personality, 
             DecompressDataWithHeaderWram(gSpeciesInfo[SPECIES_NONE].backPic, dest);
     }
 
-    if (species == SPECIES_SPINDA && isFrontPic)
+    if (ShouldDrawSpotsOnSpecies(species) && isFrontPic)
     {
-        DrawSpindaSpots(personality, dest, FALSE);
-        DrawSpindaSpots(personality, dest, TRUE);
+        DrawPokemonSpotsBothFrames(personality, species, dest);
     }
 }
 
@@ -1225,7 +1220,7 @@ static void UNUSED StitchObjectsOn8x8Canvas(s32 object_size, s32 object_count, u
                 }
             }
 
-            // Clear the columns to the left and right that wont be used completely
+            // Clear the columns to the left and right that won't be used completely
             // Unlike the previous loops, this will clear the later used space as well
             for (j = 0; j < 2; j++)
             {

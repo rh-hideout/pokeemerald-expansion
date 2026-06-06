@@ -1647,7 +1647,7 @@ static void PokeBallOpenParticleAnimation(u8 taskId)
         priority = gTasks[taskId].data[3];
         subpriority = gTasks[taskId].data[4];
 
-        spriteId = CreateSprite(&sBallParticles[ballId].spriteTemplate, x, y, subpriority);
+        spriteId = CreateSpriteUnchecked(&sBallParticles[ballId].spriteTemplate, x, y, subpriority);
         if (spriteId != MAX_SPRITES)
         {
             IncrBallParticleCount();
@@ -1706,7 +1706,7 @@ static void TimerBallOpenParticleAnimation(u8 taskId)
 
     for (i = 0; i < 8; i++)
     {
-        spriteId = CreateSprite(&sBallParticles[ballId].spriteTemplate, x, y, subpriority);
+        spriteId = CreateSpriteUnchecked(&sBallParticles[ballId].spriteTemplate, x, y, subpriority);
         if (spriteId != MAX_SPRITES)
         {
             IncrBallParticleCount();
@@ -1740,7 +1740,7 @@ static void DiveBallOpenParticleAnimation(u8 taskId)
 
     for (i = 0; i < 8; i++)
     {
-        spriteId = CreateSprite(&sBallParticles[ballId].spriteTemplate, x, y, subpriority);
+        spriteId = CreateSpriteUnchecked(&sBallParticles[ballId].spriteTemplate, x, y, subpriority);
         if (spriteId != MAX_SPRITES)
         {
             IncrBallParticleCount();
@@ -1775,7 +1775,7 @@ static void SafariBallOpenParticleAnimation(u8 taskId)
 
     for (i = 0; i < 8; i++)
     {
-        spriteId = CreateSprite(&sBallParticles[ballId].spriteTemplate, x, y, subpriority);
+        spriteId = CreateSpriteUnchecked(&sBallParticles[ballId].spriteTemplate, x, y, subpriority);
         if (spriteId != MAX_SPRITES)
         {
             IncrBallParticleCount();
@@ -1810,7 +1810,7 @@ static void UltraBallOpenParticleAnimation(u8 taskId)
 
     for (i = 0; i < 10; i++)
     {
-        spriteId = CreateSprite(&sBallParticles[ballId].spriteTemplate, x, y, subpriority);
+        spriteId = CreateSpriteUnchecked(&sBallParticles[ballId].spriteTemplate, x, y, subpriority);
         if (spriteId != MAX_SPRITES)
         {
             IncrBallParticleCount();
@@ -1851,7 +1851,7 @@ static void GreatBallOpenParticleAnimation(u8 taskId)
 
         for (i = 0; i < 8; i++)
         {
-            spriteId = CreateSprite(&sBallParticles[ballId].spriteTemplate, x, y, subpriority);
+            spriteId = CreateSpriteUnchecked(&sBallParticles[ballId].spriteTemplate, x, y, subpriority);
             if (spriteId != MAX_SPRITES)
             {
                 IncrBallParticleCount();
@@ -1901,7 +1901,7 @@ static void RepeatBallOpenParticleAnimation(u8 taskId)
 
     for (i = 0; i < 12; i++)
     {
-        spriteId = CreateSprite(&sBallParticles[ballId].spriteTemplate, x, y, subpriority);
+        spriteId = CreateSpriteUnchecked(&sBallParticles[ballId].spriteTemplate, x, y, subpriority);
         if (spriteId != MAX_SPRITES)
         {
             IncrBallParticleCount();
@@ -1945,7 +1945,7 @@ static void MasterBallOpenParticleAnimation(u8 taskId)
     {
         for (i = 0; i < 8; i++)
         {
-            spriteId = CreateSprite(&sBallParticles[ballId].spriteTemplate, x, y, subpriority);
+            spriteId = CreateSpriteUnchecked(&sBallParticles[ballId].spriteTemplate, x, y, subpriority);
             if (spriteId != MAX_SPRITES)
             {
                 IncrBallParticleCount();
@@ -1989,7 +1989,7 @@ static void PremierBallOpenParticleAnimation(u8 taskId)
 
     for (i = 0; i < 8; i++)
     {
-        spriteId = CreateSprite(&sBallParticles[ballId].spriteTemplate, x, y, subpriority);
+        spriteId = CreateSpriteUnchecked(&sBallParticles[ballId].spriteTemplate, x, y, subpriority);
         if (spriteId != MAX_SPRITES)
         {
             IncrBallParticleCount();

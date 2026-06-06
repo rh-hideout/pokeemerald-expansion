@@ -3,6 +3,7 @@
 
 #include "contest_effect.h"
 #include "sprite.h"
+#include "wild_encounter_ow.h"
 #include "constants/battle.h"
 #include "constants/cries.h"
 #include "constants/egg_ids.h"
@@ -336,39 +337,40 @@ struct Volatiles
 
 struct BattlePokemon
 {
-    /*0x00*/ enum Species species;
-    /*0x02*/ u16 attack;
-    /*0x04*/ u16 defense;
-    /*0x06*/ u16 speed;
-    /*0x08*/ u16 spAttack;
-    /*0x0A*/ u16 spDefense;
-    /*0x0C*/ enum Move moves[MAX_MON_MOVES];
-    /*0x14*/ u32 hpIV:5;
-    /*0x14*/ u32 attackIV:5;
-    /*0x15*/ u32 defenseIV:5;
-    /*0x15*/ u32 speedIV:5;
-    /*0x16*/ u32 spAttackIV:5;
-    /*0x17*/ u32 spDefenseIV:5;
-    /*0x17*/ u32 abilityNum:2;
-    /*0x18*/ s8 statStages[NUM_BATTLE_STATS];
-    /*0x20*/ enum Ability ability;
-    /*0x22*/ enum Type types[3];
-    /*0x25*/ u8 pp[MAX_MON_MOVES];
-    /*0x29*/ u16 hp;
-    /*0x2B*/ u8 level;
-    /*0x2C*/ u8 friendship;
-    /*0x2D*/ u16 maxHP;
-    /*0x2F*/ enum Item item;
-    /*0x31*/ u8 nickname[POKEMON_NAME_LENGTH + 1];
-    /*0x3C*/ u8 ppBonuses;
-    /*0x3D*/ u8 otName[PLAYER_NAME_LENGTH + 1];
-    /*0x45*/ u32 experience;
-    /*0x49*/ u32 personality;
-    /*0x4D*/ u32 status1;
-    /*0x51*/ struct Volatiles volatiles;
-    /*0x5D*/ u32 otId;
-    /*0x61*/ u8 metLevel;
-    /*0x62*/ bool8 isShiny;
+    enum Species species;
+    u16 attack;
+    u16 defense;
+    u16 speed;
+    u16 spAttack;
+    u16 spDefense;
+    enum Move moves[MAX_MON_MOVES];
+    u32 hpIV:5;
+    u32 attackIV:5;
+    u32 defenseIV:5;
+    u32 speedIV:5;
+    u32 spAttackIV:5;
+    u32 spDefenseIV:5;
+    u32 abilityNum:2;
+    s8 statStages[NUM_BATTLE_STATS];
+    enum Ability ability;
+    enum Type types[3];
+    u8 pp[MAX_MON_MOVES];
+    u16 hp;
+    u8 level;
+    u8 friendship;
+    u16 maxHP;
+    enum Item item;
+    u8 nickname[POKEMON_NAME_LENGTH + 1];
+    u8 ppBonuses;
+    u8 otName[PLAYER_NAME_LENGTH + 1];
+    u32 experience;
+    u32 personality;
+    u32 status1;
+    struct Volatiles volatiles;
+    u32 otId;
+    u8 metLevel:7;
+    u8 isShiny:1;
+    u8 affectionHearts;
 };
 
 struct EvolutionParam
@@ -518,6 +520,7 @@ struct SpeciesInfo /*0xC4*/
 #endif //P_GENDER_DIFFERENCES
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS
+    enum OverworldWildEncounterBehaviors overworldEncounterBehavior;
 };
 
 struct EggData
@@ -603,15 +606,6 @@ struct NatureInfo
     u8 battlePalaceFlavorText;
     u8 battlePalaceSmokescreen;
     const u8 *natureGirlMessage;
-};
-
-#define SPINDA_SPOT_WIDTH 16
-#define SPINDA_SPOT_HEIGHT 16
-
-struct SpindaSpot
-{
-    u8 x, y;
-    u16 image[SPINDA_SPOT_HEIGHT];
 };
 
 struct LevelUpMove
@@ -702,15 +696,29 @@ struct OriginalTrainerId
 #define OTID_STRUCT_PRESET(value)   ((struct OriginalTrainerId) {OT_ID_PRESET, value})
 #define OTID_STRUCT_RANDOM_NO_SHINY ((struct OriginalTrainerId) {OT_ID_RANDOM_NO_SHINY, 0})
 
-extern u8 gPlayerPartyCount;
-extern struct Pokemon gPlayerParty[PARTY_SIZE];
-extern u8 gEnemyPartyCount;
-extern struct Pokemon gEnemyParty[PARTY_SIZE];
+extern u8 gPartiesCount[MAX_BATTLE_TRAINERS];
+extern struct Pokemon gParties[MAX_BATTLE_TRAINERS][PARTY_SIZE];
+
+DEPRECATED("Use gParties[B_TRAINER_PLAYER] for player and gParties[B_TRAINER_PARTNER] for partner instead")
+extern struct Pokemon (*const gPlayerPartyPtr)[6];
+#define gPlayerParty (*gPlayerPartyPtr)
+DEPRECATED("gPlayerPartyCount is deprecated. Use gPartiesCount[B_TRAINER_PLAYER] for player and gPartiesCount[B_TRAINER_PARTNER] for partner instead")
+extern u8 (*const gPlayerPartyCountPtr);
+#define gPlayerPartyCount (*gPlayerPartyCountPtr)
+
+DEPRECATED("Will be removed in 1.17.0: use gParties[B_TRAINER_OPPONENT_A] for opponentA and gParties[B_TRAINER_OPPONENT_B] for opponentB instead")
+extern struct Pokemon (*const gEnemyPartyPtr)[6];
+#define gEnemyParty (*gEnemyPartyPtr)
+DEPRECATED("gEnemyPartyCount is deprecated and will be removed in 1.17.0. Use gPartiesCount[B_TRAINER_OPPONENT_A] for opponentA and gPartiesCount[B_TRAINER_OPPONENT_B] for opponentB instead")
+extern u8 (*const gEnemyPartyCountPtr);
+#define gEnemyPartyCount (*gEnemyPartyCountPtr)
+
 extern struct SpriteTemplate gMultiuseSpriteTemplate;
 extern u16 gFollowerSteps;
 extern bool32 consumeItem;
 extern u32 removeBagItem;
 extern u32 removeBagItemCount;
+extern u8 gTriedEvolving;
 
 extern const u16 gFacilityClassToPicIndex[];
 extern const enum TrainerClassID gFacilityClassToTrainerClass[];
@@ -725,12 +733,15 @@ extern const struct SpriteTemplate gBattlerSpriteTemplates[];
 extern const u32 sExpCandyExperienceTable[];
 extern const struct AbilityInfo gAbilitiesInfo[];
 extern const struct NatureInfo gNaturesInfo[];
+extern const struct BehaviorOWE gOWESpeciesBehavior[OWE_SPECIES_BEHAVIOR_COUNT];
 
 void ZeroBoxMonData(struct BoxPokemon *boxMon);
 void ZeroMonData(struct Pokemon *mon);
+void ZeroPartyMons(struct Pokemon *party);
 void ZeroPlayerPartyMons(void);
 void ZeroEnemyPartyMons(void);
 u32 GetMonPersonality(enum Species species, u8 gender, u8 nature, u8 unownLetter);
+bool32 ComputePlayerShinyOdds(u32 personality, u32 value);
 void CreateMon(struct Pokemon *mon, enum Species species, u8 level, u32 personality, struct OriginalTrainerId);
 void CreateRandomMon(struct Pokemon *mon, enum Species species, u8 level);
 void CreateRandomMonWithIVs(struct Pokemon *mon, enum Species species, u8 level, u8 fixedIv);
@@ -794,8 +805,8 @@ void CopyMon(void *dest, void *src, size_t size);
 u8 GiveCapturedMonToPlayer(struct Pokemon *mon);
 u8 CopyMonToPC(struct Pokemon *mon);
 u8 CalculatePlayerPartyCount(void);
+u8 CalculatePartnerPartyCount(void);
 u8 CalculateEnemyPartyCount(void);
-u8 CalculateEnemyPartyCountInSide(enum BattlerId battler);
 u8 GetMonsStateToDoubles(void);
 u8 GetMonsStateToDoubles_2(void);
 enum Ability GetAbilityBySpecies(enum Species species, u8 abilityNum);
@@ -819,9 +830,11 @@ u32 GetSpeciesBaseSpAttack(enum Species species);
 u32 GetSpeciesBaseSpDefense(enum Species species);
 u32 GetSpeciesBaseSpeed(enum Species species);
 u32 GetSpeciesBaseStat(enum Species species, u32 statIndex);
+u32 GetSpeciesBaseStatTotal(enum Species species);
 const struct LevelUpMove *GetSpeciesLevelUpLearnset(enum Species species);
 const u16 *GetSpeciesTeachableLearnset(enum Species species);
 const u16 *GetSpeciesEggMoves(enum Species species);
+bool32 SpeciesHasEggMove(enum Species species, enum Move move);
 const struct Evolution *GetSpeciesEvolutions(enum Species species);
 const u16 *GetSpeciesFormTable(enum Species species);
 const struct FormChange *GetSpeciesFormChanges(enum Species species);
@@ -853,7 +866,6 @@ enum HoennDexOrder SpeciesToHoennPokedexNum(enum Species species);
 enum NationalDexOrder RegionalToNationalOrder(u32 regionNum);
 enum NationalDexOrder KantoToNationalOrder(enum KantoDexOrder kantoNum);
 enum NationalDexOrder HoennToNationalOrder(enum HoennDexOrder hoennNum);
-void DrawSpindaSpots(u32 personality, u8 *dest, bool32 isSecondFrame);
 void EvolutionRenameMon(struct Pokemon *mon, enum Species oldSpecies, enum Species newSpecies);
 u8 GetPlayerFlankId(void);
 u16 GetLinkTrainerFlankId(u8 linkPlayerId);
@@ -861,12 +873,11 @@ s32 GetBattlerMultiplayerId(u16 id);
 u8 GetTrainerEncounterMusicId(u16 trainerOpponentId);
 u16 ModifyStatByNature(u8 nature, u16 stat, enum Stat statIndex);
 void AdjustFriendship(struct Pokemon *mon, u8 event);
-u8 CalculateFriendshipBonuses(struct Pokemon *mon, u32 modifier, enum HoldEffect itemHoldEffect);
+s32 CalculateFriendshipBonuses(struct Pokemon *mon, s32 modifier, enum HoldEffect itemHoldEffect);
 void MonGainEVs(struct Pokemon *mon, enum Species defeatedSpecies);
 u16 GetMonEVCount(struct Pokemon *mon);
 bool8 TryIncrementMonLevel(struct Pokemon *mon);
 u8 CanLearnTeachableMove(enum Species species, enum Move move);
-u8 GetLevelUpMovesBySpecies(enum Species species, u16 *moves);
 u16 SpeciesToPokedexNum(enum Species species);
 bool32 IsSpeciesInRegionalDex(enum Species species);
 bool32 IsSpeciesInKantoDex(enum Species species);
@@ -915,17 +926,18 @@ u16 MonTryLearningNewMoveEvolution(struct Pokemon *mon, bool8 firstMove);
 void RemoveIVIndexFromList(u8 *ivs, u8 selectedIv);
 void TrySpecialOverworldEvo(void);
 bool32 SpeciesHasGenderDifferences(enum Species species);
-bool32 TryFormChange(struct Pokemon *mon, enum FormChanges method);
+bool32 TryFormChange(struct Pokemon *mon, enum FormChanges method, enum BattleTrainer trainer);
 bool32 TryBoxMonFormChange(struct BoxPokemon *boxMon, enum FormChanges method);
 void TryToSetBattleFormChangeMoves(struct Pokemon *mon, enum FormChanges method);
 u32 GetMonFriendshipScore(struct Pokemon *pokemon);
 u32 GetMonAffectionHearts(struct Pokemon *pokemon);
 void UpdateMonPersonality(struct BoxPokemon *boxMon, u32 personality);
-u8 CalculatePartyCount(struct Pokemon *party);
-u16 SanitizeSpeciesId(enum Species species);
+u8 CalculatePartyCount(enum BattleTrainer trainer);
+u8 CalculatePartyCountOfSide(enum BattlerId battler);
+enum Species SanitizeSpeciesId(enum Species species);
 bool32 IsSpeciesEnabled(enum Species species);
 enum PokemonCry GetCryIdBySpecies(enum Species species);
-u16 GetSpeciesPreEvolution(enum Species species);
+enum Species GetSpeciesPreEvolution(enum Species species);
 void HealPokemon(struct Pokemon *mon);
 void HealBoxPokemon(struct BoxPokemon *boxMon);
 void UpdateDaysPassedSinceFormChange(u16 days);
@@ -944,5 +956,54 @@ struct BoxPokemon *GetSelectedBoxMonFromPcOrParty(void);
 u32 GiveScriptedMonToPlayer(struct Pokemon *mon, u8 slot);
 void ChangePokemonNicknameWithCallback(void (*callback)(void));
 bool32 HasShedinjaHPHandling(enum Species species);
+
+static inline u32 OWE_GetMovementTypeFromSpecies(enum Species speciesId)
+{
+    speciesId = SanitizeSpeciesId(speciesId);
+    enum OverworldWildEncounterBehaviors behavior = gSpeciesInfo[speciesId].overworldEncounterBehavior;
+    return gOWESpeciesBehavior[behavior].movementType;
+}
+
+static inline u32 OWE_GetViewDistanceFromSpecies(enum Species speciesId)
+{
+    speciesId = SanitizeSpeciesId(speciesId);
+    enum OverworldWildEncounterBehaviors behavior = gSpeciesInfo[speciesId].overworldEncounterBehavior;
+    return gOWESpeciesBehavior[behavior].viewDistance;
+}
+
+static inline u32 OWE_GetViewWidthFromSpecies(enum Species speciesId)
+{
+    speciesId = SanitizeSpeciesId(speciesId);
+    enum OverworldWildEncounterBehaviors behavior = gSpeciesInfo[speciesId].overworldEncounterBehavior;
+    return gOWESpeciesBehavior[behavior].viewWidth;
+}
+
+static inline u32 OWE_GetViewActiveDistanceFromSpecies(enum Species speciesId)
+{
+    speciesId = SanitizeSpeciesId(speciesId);
+    enum OverworldWildEncounterBehaviors behavior = gSpeciesInfo[speciesId].overworldEncounterBehavior;
+    return gOWESpeciesBehavior[behavior].activeDistance;
+}
+
+static inline enum SpeedOWE OWE_GetIdleSpeedFromSpecies(enum Species speciesId)
+{
+    speciesId = SanitizeSpeciesId(speciesId);
+    enum OverworldWildEncounterBehaviors behavior = gSpeciesInfo[speciesId].overworldEncounterBehavior;
+    return gOWESpeciesBehavior[behavior].idleSpeed;
+}
+
+static inline enum SpeedOWE OWE_GetActiveSpeedFromSpecies(enum Species speciesId)
+{
+    speciesId = SanitizeSpeciesId(speciesId);
+    enum OverworldWildEncounterBehaviors behavior = gSpeciesInfo[speciesId].overworldEncounterBehavior;
+    return gOWESpeciesBehavior[behavior].activeSpeed;
+}
+
+static inline enum ReturnToIdleOWE OWE_GetReturnToIdleFromSpecies(enum Species speciesId)
+{
+    speciesId = SanitizeSpeciesId(speciesId);
+    enum OverworldWildEncounterBehaviors behavior = gSpeciesInfo[speciesId].overworldEncounterBehavior;
+    return gOWESpeciesBehavior[behavior].returnToIdle;
+}
 
 #endif // GUARD_POKEMON_H

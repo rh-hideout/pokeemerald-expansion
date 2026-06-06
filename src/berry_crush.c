@@ -579,13 +579,13 @@ static const u32 sPressingSpeedConversionTable[] =
       390625  //  0.390625
 };
 
-static const u16 sCrusherBase_Pal[]     = INCBIN_U16("graphics/berry_crush/crusher_base.gbapal");
-static const u16 sEffects_Pal[]         = INCBIN_U16("graphics/berry_crush/effects.gbapal");
-static const u16 sTimerDigits_Pal[]     = INCBIN_U16("graphics/berry_crush/timer_digits.gbapal");
-static const u32 sCrusherBase_Gfx[]     = INCBIN_U32("graphics/berry_crush/crusher_base.4bpp.smol");
-static const u32 sImpact_Gfx[]          = INCBIN_U32("graphics/berry_crush/impact.4bpp.smol");
-static const u32 sSparkle_Gfx[]         = INCBIN_U32("graphics/berry_crush/sparkle.4bpp.smol");
-static const u32 sTimerDigits_Gfx[]     = INCBIN_U32("graphics/berry_crush/timer_digits.4bpp.smol");
+static const u16 sCrusherBase_Pal[]     = INCGFX_U16("graphics/berry_crush/crusher_base.png", ".gbapal");
+static const u16 sEffects_Pal[]         = INCGFX_U16("graphics/berry_crush/effects.pal", ".gbapal");
+static const u16 sTimerDigits_Pal[]     = INCGFX_U16("graphics/berry_crush/timer_digits.png", ".gbapal");
+static const u32 sCrusherBase_Gfx[]     = INCGFX_U32("graphics/berry_crush/crusher_base.png", ".4bpp.smol");
+static const u32 sImpact_Gfx[]          = INCGFX_U32("graphics/berry_crush/impact.png", ".4bpp.smol");
+static const u32 sSparkle_Gfx[]         = INCGFX_U32("graphics/berry_crush/sparkle.png", ".4bpp.smol");
+static const u32 sTimerDigits_Gfx[]     = INCGFX_U32("graphics/berry_crush/timer_digits.png", ".4bpp.smol");
 static const u8 sCrusherTop_Tilemap[]   = INCBIN_U8("graphics/berry_crush/crusher_top.bin.smolTM");
 static const u8 sContainerCap_Tilemap[] = INCBIN_U8("graphics/berry_crush/container_cap.bin.smolTM");
 static const u8 sBg_Tilemap[]           = INCBIN_U8("graphics/berry_crush/bg.bin.smolTM");
@@ -1024,12 +1024,18 @@ void StartBerryCrush(MainCallback exitCallback)
 
 static void GetBerryFromBag(void)
 {
-    if (gSpecialVar_ItemId < FIRST_BERRY_INDEX || gSpecialVar_ItemId > LAST_BERRY_INDEX + 1)
-        gSpecialVar_ItemId = FIRST_BERRY_INDEX;
+    enum BerryId berryId = ItemIdToBerryType(gSpecialVar_ItemId);
+    if (!berryId)
+    {
+        berryId = 1;
+        gSpecialVar_ItemId = BerryTypeToItemId(1);
+    }
     else
+    {
         RemoveBagItem(gSpecialVar_ItemId, 1);
+    }
 
-    sGame->players[sGame->localId].berryId = gSpecialVar_ItemId - FIRST_BERRY_INDEX;
+    sGame->players[sGame->localId].berryId = berryId;
     sGame->nextCmd = CMD_FADE;
     sGame->afterPalFadeCmd = CMD_WAIT_BERRIES;
     SetPaletteFadeArgs(sGame->commandArgs, FALSE, PALETTES_ALL, 0, 16, 0, RGB_BLACK);
@@ -1358,7 +1364,7 @@ static void CreateBerrySprites(struct BerryCrushGame *game, struct BerryCrushGam
             &sSpriteTemplate_PlayerBerry,
             sPlayerBerrySpriteTags[i],
             sPlayerBerrySpriteTags[i],
-            game->players[i].berryId + FIRST_BERRY_INDEX);
+            BerryTypeToItemId(game->players[i].berryId));
         gfx->berrySprites[i] = &gSprites[spriteId];
         gfx->berrySprites[i]->oam.priority = 3;
         gfx->berrySprites[i]->affineAnimPaused = TRUE;
@@ -1617,9 +1623,9 @@ static void PrintResultsText(struct BerryCrushGame *game, u8 page, u8 sp14, u8 b
             playerId = i;
             ranking = i;
             j = game->players[i].berryId;
-            if (j >= LAST_BERRY_INDEX - FIRST_BERRY_INDEX + 2)
-                j = 0;
-            StringCopy(gStringVar1, gBerries[j].name);
+            if (j > NUM_BERRIES)
+                j = 1;
+            StringCopy(gStringVar1, GetBerryInfo(j)->name);
             StringExpandPlaceholders(gStringVar4, sResultsTexts[page]);
             break;
         }
@@ -2363,10 +2369,10 @@ static u32 Cmd_WaitForOthersToPickBerries(struct BerryCrushGame *game, u8 *args)
         for (i = 0; i < game->playerCount; i++)
         {
             game->players[i].berryId = gBlockRecvBuffer[i][0];
-            if (game->players[i].berryId > LAST_BERRY_INDEX + 1)
-                game->players[i].berryId = 0;
-            game->targetAPresses += gBerryCrush_BerryData[game->players[i].berryId].difficulty;
-            game->powder += gBerryCrush_BerryData[game->players[i].berryId].powder;
+            if (game->players[i].berryId > NUM_BERRIES)
+                game->players[i].berryId = 1;
+            game->targetAPresses += gBerries[game->players[i].berryId].berryCrushDifficulty;
+            game->powder += gBerries[game->players[i].berryId].berryCrushPowder;
         }
         game->cmdTimer = 0;
         ResetBlockReceivedFlags();
@@ -3446,7 +3452,7 @@ static void ResetGame(struct BerryCrushGame *game)
     game->sparkleCounter = 0;
     for (i = 0; i < MAX_RFU_PLAYERS; i++)
     {
-        game->players[i].berryId = -1;
+        game->players[i].berryId = 0;
         game->players[i].inputTime = 0;
         game->players[i].neatInputStreak = 0;
         game->players[i].timeSincePrevInput = 1;
