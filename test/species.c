@@ -9,7 +9,7 @@ TEST("Form species ID tables are shared between all forms")
     enum Species species = SPECIES_NONE;
     const u16 *formSpeciesIdTable;
 
-    for (enum Species i = 0; i < NUM_SPECIES; i++)
+    for (enum Species i = SPECIES_NONE; i < NUM_SPECIES; i++)
     {
         if (gSpeciesInfo[i].formSpeciesIdTable)
         {
@@ -31,7 +31,7 @@ TEST("Form species ID tables fit within RANDOM_MON_MAX_FORMS")
     enum Species species = SPECIES_NONE;
     const u16 *formSpeciesIdTable;
 
-    for (enum Species i = 0; i < NUM_SPECIES; i++)
+    for (enum Species i = SPECIES_NONE; i < NUM_SPECIES; i++)
     {
         if (gSpeciesInfo[i].formSpeciesIdTable)
             PARAMETRIZE_LABEL("ID:%d - %S", i, gSpeciesInfo[i].speciesName) { species = i; }
@@ -50,7 +50,7 @@ TEST("Form change tables contain only forms in the form species ID table")
     const struct FormChange *formChangeTable;
     const u16 *formSpeciesIdTable;
 
-    for (enum Species i = 0; i < NUM_SPECIES; i++)
+    for (enum Species i = SPECIES_NONE; i < NUM_SPECIES; i++)
     {
         if (gSpeciesInfo[i].formChangeTable)
         {
@@ -83,7 +83,7 @@ TEST("Forms have the appropriate species form changes")
 {
     enum Species species = SPECIES_NONE;
 
-    for (enum Species i = 0; i < NUM_SPECIES; i++)
+    for (enum Species i = SPECIES_NONE; i < NUM_SPECIES; i++)
     {
         if (gSpeciesInfo[i].isMegaEvolution
             || gSpeciesInfo[i].isGigantamax
@@ -125,7 +125,7 @@ TEST("Form change targets have the appropriate species flags")
     enum Species species = SPECIES_NONE;
     const struct FormChange *formChangeTable;
 
-    for (enum Species i = 0; i < NUM_SPECIES; i++)
+    for (enum Species i = SPECIES_NONE; i < NUM_SPECIES; i++)
     {
         if (gSpeciesInfo[i].formChangeTable)
         {
@@ -163,7 +163,7 @@ TEST("No species has two evolutions that use the evolution tracker")
     bool32 hasRecoilEvo;
     const struct Evolution *evolutions;
 
-    for (enum Species i = 0; i < NUM_SPECIES; i++)
+    for (enum Species i = SPECIES_NONE; i < NUM_SPECIES; i++)
     {
         if (IsSpeciesEnabled(i) && GetSpeciesEvolutions(i) != NULL)
             PARAMETRIZE_LABEL("ID:%d - %S", i, GetSpeciesName(i)) { species = i; }
@@ -204,7 +204,7 @@ extern const u8 gFallbackPokedexText[];
 TEST("Every species has a description")
 {
     enum Species species = SPECIES_NONE;
-    for (enum Species i = 1; i < NUM_SPECIES; i++)
+    for (enum Species i = SPECIES_NONE + 1; i < NUM_SPECIES; i++)
     {
         if (IsSpeciesEnabled(i))
             PARAMETRIZE_LABEL("ID:%d - %S", i, GetSpeciesName(i)) { species = i; }

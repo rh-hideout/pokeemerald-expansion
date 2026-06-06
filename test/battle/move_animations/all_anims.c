@@ -1667,7 +1667,7 @@ SINGLE_BATTLE_TEST("Z-Moves don't leak when used - Singles (player to opponent)"
     FORCE_MOVE_ANIM(TRUE);
     enum Species species;
     enum Move move, zmove;
-    enum Type type;
+    enum Item item;
     Z_MOVE_PARAMETERS;
     GIVEN {
         PLAYER(species) { Item(item); }
@@ -1699,7 +1699,7 @@ SINGLE_BATTLE_TEST("Z-Moves don't leak when used - Singles (opponent to player)"
     FORCE_MOVE_ANIM(TRUE);
     enum Species species;
     enum Move move, zmove;
-    enum Type type;
+    enum Item item;
     Z_MOVE_PARAMETERS;
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
@@ -1731,7 +1731,7 @@ DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (playerLeft to oppone
     FORCE_MOVE_ANIM(TRUE);
     enum Species species;
     enum Move move, zmove;
-    enum Type type;
+    enum Item item;
     Z_MOVE_PARAMETERS;
     GIVEN {
         PLAYER(species) { Item(item); }
@@ -1765,7 +1765,7 @@ DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (playerLeft to oppone
     FORCE_MOVE_ANIM(TRUE);
     enum Species species;
     enum Move move, zmove;
-    enum Type type;
+    enum Item item;
     Z_MOVE_PARAMETERS;
     GIVEN {
         PLAYER(species) { Item(item); }
@@ -1799,7 +1799,7 @@ DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (playerRight to oppon
     FORCE_MOVE_ANIM(TRUE);
     enum Species species;
     enum Move move, zmove;
-    enum Type type;
+    enum Item item;
     Z_MOVE_PARAMETERS;
     GIVEN {
         PLAYER(SPECIES_WYNAUT);
@@ -1833,7 +1833,7 @@ DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (playerRight to oppon
     FORCE_MOVE_ANIM(TRUE);
     enum Species species;
     enum Move move, zmove;
-    enum Type type;
+    enum Item item;
     Z_MOVE_PARAMETERS;
     GIVEN {
         PLAYER(SPECIES_WYNAUT);
@@ -1867,7 +1867,7 @@ DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (opponentLeft to play
     FORCE_MOVE_ANIM(TRUE);
     enum Species species;
     enum Move move, zmove;
-    enum Type type;
+    enum Item item;
     Z_MOVE_PARAMETERS;
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
@@ -1901,7 +1901,7 @@ DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (opponentLeft to play
     FORCE_MOVE_ANIM(TRUE);
     enum Species species;
     enum Move move, zmove;
-    enum Type type;
+    enum Item item;
     Z_MOVE_PARAMETERS;
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
@@ -1935,7 +1935,7 @@ DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (opponentRight to pla
     FORCE_MOVE_ANIM(TRUE);
     enum Species species;
     enum Move move, zmove;
-    enum Type type;
+    enum Item item;
     Z_MOVE_PARAMETERS;
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
@@ -1969,7 +1969,7 @@ DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (opponentRight to pla
     FORCE_MOVE_ANIM(TRUE);
     enum Species species;
     enum Move move, zmove;
-    enum Type type;
+    enum Item item;
     Z_MOVE_PARAMETERS;
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }

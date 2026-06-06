@@ -10142,7 +10142,7 @@ void RemoveAllHazardsFromField(enum BattleSide side)
 
 void RemoveHazardFromField(enum BattleSide side, enum Hazards hazardType)
 {
-    enum Hazards i;
+    u32 i;
     for (i = 0; i < HAZARDS_MAX_COUNT; i++)
     {
         if (gBattleStruct->hazardsQueue[side][i] == hazardType)

@@ -522,7 +522,7 @@ TEST("Pokémon level up learnsets fit within MAX_LEVEL_UP_MOVES and MAX_RELEARNE
     KNOWN_FAILING;
 
     u32 j, count;
-    enum Species species = 0;
+    enum Species species = SPECIES_NONE;
     const struct LevelUpMove *learnset;
 
     for(j = 0; j < SPECIES_EGG; j++)
