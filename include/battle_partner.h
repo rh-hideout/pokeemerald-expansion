@@ -4,8 +4,6 @@
 #include "difficulty.h"
 #include "constants/battle_partner.h"
 
-// Start bringXpickY
-void FillPartnerParty(u16 trainerId);
-// End bringXpickY
+void FillPartnerParty(u16 trainerId); // bringXpickY
 
 #endif // BATTLE_PARTNER_H

@@ -76,5 +76,4 @@ struct BXPYSpriteSheet
     const struct SpritePalette palette;
 };
 
-
 #endif // GUARD_BXPY_H

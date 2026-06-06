@@ -1379,7 +1379,7 @@ enum Direction DetermineFollowerNPCDirection(struct ObjectEvent *player, struct 
     if (player->currentCoords.x == follower->currentCoords.x
      && player->currentCoords.y == follower->currentCoords.y)
         return DIR_NONE;
-
+        
     return DetermineObjectEventDirectionFromObject(player, follower);
 }
 
