@@ -64,7 +64,6 @@ static bool32 IsOpposingSideEmpty(enum BattlerId battler);
 static void ResetParadoxWeatherStat(enum BattlerId battler);
 static void ResetParadoxTerrainStat(enum BattlerId battler);
 static bool32 CanBattlerFormChange(enum BattlerId battler, enum FormChanges method);
-static bool32 IsPowderMoveBlocked(struct DamageContext *ctx);
 const u8 *AbsorbedByDrainHpAbility(enum BattlerId battlerDef);
 const u8 *AbsorbedByStatIncreaseAbility(struct DamageContext *ctx, enum Stat statId, u32 statAmount);
 const u8 *AbsorbedByFlashFire(enum BattlerId battlerDef);
@@ -2189,10 +2188,9 @@ u32 NumFaintedBattlersByAttacker(enum BattlerId battlerAtk)
 
 bool32 CanMoveBeBlockedByTarget(struct DamageContext *ctx, s32 movePriority)
 {
-    return CanPsychicTerrainProtectTarget(ctx, movePriority)
+    return CanAbilityAbsorbMove(ctx)
         || CanTargetBlockPranksterMove(ctx, movePriority)
-        || IsPowderMoveBlocked(ctx)
-        || CanAbilityAbsorbMove(ctx);
+        || IsPowderMoveBlocked(ctx);
 }
 
 bool32 CanPsychicTerrainProtectTarget(struct DamageContext *ctx, s32 movePriority)
@@ -2224,7 +2222,7 @@ bool32 CanTargetBlockPranksterMove(struct DamageContext *ctx, s32 movePriority)
     return TRUE;
 }
 
-static bool32 IsPowderMoveBlocked(struct DamageContext *ctx)
+bool32 IsPowderMoveBlocked(struct DamageContext *ctx)
 {
     if (!IsPowderMove(ctx->move)
      || ctx->battlerAtk == ctx->battlerDef
