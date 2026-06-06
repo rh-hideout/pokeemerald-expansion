@@ -116,16 +116,33 @@ SINGLE_BATTLE_TEST("Unseen Fist no longer bypasses the contact effects of protec
             EXPECT_LT(player->hp, player->maxHP);
             break;
         case MOVE_KINGS_SHIELD:
-            EXPECT_NE(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
-            break;
         case MOVE_OBSTRUCT:
-            EXPECT_NE(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
-            break;
         case MOVE_SILK_TRAP:
-            EXPECT_NE(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
+            EXPECT_NE(player->statStages[loweredStat], DEFAULT_STAT_STAGE);
             break;
         default:
             break;
         }
+    }
+}
+
+SINGLE_BATTLE_TEST("Unseen Fist deals 25% of the damage dealt to protected targets (Champions)", s16 damage)
+{
+    u32 genConfig;
+    PARAMETRIZE { genConfig = GEN_9; }
+    PARAMETRIZE { genConfig = GEN_CHAMPIONS; }
+
+    GIVEN {
+        WITH_CONFIG(B_UNSEEN_FIST_DAMAGE, genConfig);
+        PLAYER(SPECIES_URSHIFU) { Ability(ABILITY_UNSEEN_FIST); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_PROTECT); MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(0.25), results[1].damage);
     }
 }

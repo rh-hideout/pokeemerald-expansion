@@ -198,6 +198,9 @@
                                                    // In Champions, Unseen Fist nerfs damage dealt against protected targets to 25%.
 #define B_UNSEEN_FIST_BYPASS_EFFECTS    GEN_LATEST // In Gen8-9, Unseen Fist bypasses the contact effects of protect moves.
                                                    // In Champions, Unseen Fist no longer bypasses the contact effects of protect moves.
+#define B_FIRST_TURN_MOVE               GEN_LATEST // In Champions, Fake Out and First Impression can no longer be selected past the user's first turn.
+#define B_SALT_CURE_DAMAGE              GEN_LATEST // In Gen9, Salt Cure deals 1/8 max HP (1/4 max HP to Steel and Water)
+                                                   // In Champions, Salt Cure deals 1/16 max HP (1/8 max HP to Steel and Water)
 
 // Various volatile timers
 #define B_CONFUSION_TURNS    5
