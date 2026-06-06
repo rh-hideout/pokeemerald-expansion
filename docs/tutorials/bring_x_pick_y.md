@@ -164,7 +164,9 @@ For all `BXPY_OPEN_TEAM_PREVIEW_SHOW_ENEMY_*` configs, when `TRUE`, the Player w
 
 
 When set to `BXPY_SPECIES_HIDE`, the enemy Pokemon will appear as ???.
+
 When set to `BXPY_SPECIES_SHOW_BASE`, the enemy will show Pokemon as their base form. For example, if the opponent has `SPECIES_ROTOM_HEAT`, it will be shown as `SPECIES_ROTOM`.
+
 When set to `BXPY_SPECIES_SHOW_TRUE`, the enemy will show Pokemon as their true species and form.
 ## `BXPY_TEAM_PREVIEW_SHOW_ENEMY_GENDER`
 | `TRUE` | `FALSE` |
@@ -182,7 +184,9 @@ When `FALSE`, all of the enemy Pokemon will show ? for their gender.
 When FALSE, all of the enemy Pokemon levels will show as ???.
 # Open Team Sheet
 ## `BXPY_OPEN_TEAM_SHEET`
-When `TRUE`, the Player can open the Pokemon Summary Screen for enemy Pokemon. If this is `FALSE`, all of the values for `BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_*`` are ignored.
+When `TRUE`, the Player can open the Pokemon Summary Screen for enemy Pokemon. 
+
+If this is `FALSE`, all of the values for `BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_*`` are ignored.
 ### `BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_ABILITY`
 | `TRUE` | `FALSE` |
 | --- | --- |
@@ -197,7 +201,9 @@ When `FALSE`, the enemy Pokemon's Ability appears as `ABILITY_NONE`.
 
 
 When set to `BXPY_ITEM_NO_VISIBILITY`, the enemy Pokemon's held item will appear as "Unknown", regardless of the presence of an item.
+
 When set to `BXPY_ITEM_SHOW_POSSESSION`, if the enemy Pokemon is holding an item, it will be displayed as "???". If they are not, "NONE" will be displayed.
+
 When set to `BXPY_ITEM_SHOW_ITEM`, if the enemy Pokemon is holding an item, it will be displayed as the actual item. If they are not, "NONE" will be displayed.
 
 If all three of `BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_*` configs are `TRUE`, the Pokemon stats will be visible. If any of them are `FALSE`, the stats will display as ???.
@@ -214,14 +220,14 @@ When `FALSE`, the enemy Pokemon's Nature appears as ???. Stats are not colored.
 | ![](/docs/tutorials/img/bxpy/speciesShowTrue.png)| ![](/docs/tutorials/img/bxpy/evFalse.png)|
 
 
-When `FALSE`, the enemy Pokemon's Effort Values appear as ?. Respects `P_SUMMARY_SCREEN_IV_EV_INFO` and `P_SUMMARY_SCREEN_IV_EV_VALUES`.
+When `FALSE`, the enemy Pokemon's Effort Values appear as "?". Respects `P_SUMMARY_SCREEN_IV_EV_INFO` and `P_SUMMARY_SCREEN_IV_EV_VALUES`.
 ### `BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_IV`
 | `TRUE` | `FALSE` |
 | --- | --- |
 | ![](/docs/tutorials/img/bxpy/speciesShowTrue.png)| ![](/docs/tutorials/img/bxpy/ivFalse.png)|
 
 
-When `FALSE`, the enemy Pokemon's Individual Values appear as ?. Respects `P_SUMMARY_SCREEN_IV_EV_INFO` and `P_SUMMARY_SCREEN_IV_EV_VALUES`.
+When `FALSE`, the enemy Pokemon's Individual Values appear as "?". Respects `P_SUMMARY_SCREEN_IV_EV_INFO` and `P_SUMMARY_SCREEN_IV_EV_VALUES`.
 ### `BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_GIMMICK_TERA`
 | `TRUE` | `FALSE` |
 | --- | --- |
