@@ -391,7 +391,7 @@ SINGLE_BATTLE_TEST("Pickpocket steals from the original U-turn user before it sw
     } THEN {
         EXPECT(opponent->item == ITEM_POTION);
         EXPECT(player->item == ITEM_POKE_BALL);
-        EXPECT(GetMonData(gParties[B_SIDE_PLAYER][0], MON_DATA_ITEM) == ITEM_NONE);
+        EXPECT(GetMonData(&gParties[B_SIDE_PLAYER][0], MON_DATA_HELD_ITEM) == ITEM_NONE);
     }
 }
 
@@ -414,7 +414,7 @@ SINGLE_BATTLE_TEST("Pickpocket steals the attacker's item even after Red Card fo
     } THEN {
         EXPECT(opponent->item == ITEM_POKE_BALL);
         EXPECT(player->item == ITEM_NONE);
-        EXPECT(GetMonData(gParties[B_SIDE_PLAYER][0], MON_DATA_ITEM) == ITEM_NONE);
+        EXPECT(GetMonData(&gParties[B_SIDE_PLAYER][0], MON_DATA_HELD_ITEM) == ITEM_NONE);
     }
 }
 
