@@ -546,7 +546,7 @@ bool8 BXPY_ShouldHideEnemyMoves(enum PokemonSummaryScreenMode mode)
 
 enum BXPYTeamPreviewItemModes BXPY_GetEnemyItemVisibilityLevel(void)
 {
-    return BXPY_TEAM_PREVIEW_SHOW_ENEMY_ITEM;
+    return BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_ITEM;
 }
 
 bool8 BXPY_SummaryScreen_ItemVisibility(enum PokemonSummaryScreenMode mode)

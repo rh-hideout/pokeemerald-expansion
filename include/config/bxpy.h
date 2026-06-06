@@ -13,12 +13,17 @@
 // For all BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_* configs, when TRUE, the Player will be able to see this specific piece of information on the enemy's Pokemon Summary Screen.
 
 #define BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_ABILITY         TRUE             // When FALSE, the enemy Pokemon's Ability appears as `ABILITY_NONE`.
+#define BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_ITEM            BXPY_ITEM_SHOW_ITEM
+// When set to `BXPY_ITEM_NO_VISIBILITY`, the enemy Pokemon will appear with ? icons for Held Items on Team Preview. On the Summary Screen, all will appear as "Unknown". Having no item will appear as "Unknown".
+// When set to `BXPY_ITEM_SHOW_POSSESSION`, the enemy Pokemon will appear on Team Preview with generic item icons if they are holding an item. On the Summary Screen, holding an item will be displayed as "???" and not holding an item will appear as "NONE".
+// When set to `BXPY_ITEM_SHOW_ITEM`, the enemy Pokemon will appear with a sprite of their real item if they are holding an item. On the Summary screen, holding an item will be displayed with the true name, and not holding an item will appear as "NONE".
+
 
 // If all three of BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_* configs are TRUE, the Pokemon stats will be visible. If any of them are FALSE, the stats will display as ???.
 
 #define BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_NATURE     TRUE             // When FALSE, the enemy Pokemon's Nature appears as ???. Stats are not colored.
 #define BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_EV         FALSE            // When FALSE, the enemy Pokemon's Effort Values appear as ?.
-#define BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_IV         FALSE            // When FALSE, the enemy Pokemon's Individual Values appear as ?. Respects P_SUMMARY_SCREEN_IV_EV_INFO and P_SUMMARY_SCREEN_IV_EV_VALUES
+#define BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_STAT_IV         FALSE            // When FALSE, the enemy Pokemon's Individual Values appear as ?. Respects P_SUMMARY_SCREEN_IV_EV_INFO and P_SUMMARY_SCREEN_IV_EV_VALUES.
 #define BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_GIMMICK_TERA    TRUE             // When FALSE, the enemy Pokemon's Tera Type appears as TYPE_MYSTERY. Respects P_SHOW_TERA_TYPE.
 #define BXPY_OPEN_TEAM_SHEET_SHOW_ENEMY_MOVE            TRUE             // When FALSE, the enemy Pokemon's Moves appear as `MOVE_NONE`.
 
@@ -30,11 +35,6 @@
 // When set to `BXPY_SPECIES_SHOW_TRUE`, the enemy will show Pokemon as their true species and form.
 
 #define BXPY_TEAM_PREVIEW_SHOW_ENEMY_GENDER             TRUE             // When FALSE, all of the enemy Pokemon will show ? for their gender.
-#define BXPY_TEAM_PREVIEW_SHOW_ENEMY_ITEM               BXPY_ITEM_SHOW_ITEM
-// When set to `BXPY_ITEM_NO_VISIBILITY`, the enemy Pokemon will appear with ? icons for Held Items on Team Preview. On the Summary Screen, all will appear as "Unknown". Having no item will appear as "Unknown".
-// When set to `BXPY_ITEM_SHOW_POSSESSION`, the enemy Pokemon will appear on Team Preview with generic item icons if they are holding an item. On the Summary Screen, holding an item will be displayed as "???" and not holding an item will appear as "NONE".
-// When set to `BXPY_ITEM_SHOW_ITEM`, the enemy Pokemon will appear with a sprite of their real item if they are holding an item. On the Summary screen, holding an item will be displayed with the true name, and not holding an item will appear as "NONE".
-
 #define BXPY_TEAM_PREVIEW_SHOW_ENEMY_LEVEL              TRUE             // When FALSE, all of the enemy Pokemon levels will show as ???.
 
 // For all BXPY_OPEN_TEAM_SHEET_SHOW_PLAYER_* configs, when TRUE, the AI will be able to see this specific information when calculating which Pokemon to bring. If a trainer on the opposing side has the `AI_FLAG_OMNISCIENT` flag, these configs will be ignored and all AI will have access to full information. If a Trainer on the opposing side does NOT have `AI_FLAG_OMNISCIENT`, then the AI will not have this information for the battle itself.
