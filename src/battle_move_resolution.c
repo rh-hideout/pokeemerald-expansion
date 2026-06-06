@@ -3970,12 +3970,12 @@ static enum MoveEndResult MoveEndPickpocket(struct BattleCalcValues *cv)
         else
         {
             itemToSteal = ITEM_NONE;
-            abilityAtk = ITEM_NONE;
+            abilityAtk = ABILITY_NONE;
         }
     }
     else
     {
-        itemToSteal = GetMonData(gParties[GetBattlerTrainer(cv->battlerAtk)][originalAttackerPartyId], MON_DATA_HELD_ITEM);
+        itemToSteal = GetMonData(&gParties[GetBattlerTrainer(cv->battlerAtk)][originalAttackerPartyId], MON_DATA_HELD_ITEM);
         abilityAtk = ABILITY_NONE;
     }
 
@@ -4009,13 +4009,13 @@ static enum MoveEndResult MoveEndPickpocket(struct BattleCalcValues *cv)
                     else
                     {
                         StealTargetItem(battlerDef, cv->battlerAtk, itemToSteal);
-                        itemToSteal = ITEM_NONE;
-                        SetMonData(gParties[GetBattlerTrainer(cv->battlerAtk)][originalAttackerPartyId], MON_DATA_HELD_ITEM, &itemToSteal);
                         if (gBattleTypeFlags & BATTLE_TYPE_TRAINER
                          && !(gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
                          && IsOnPlayerSide(cv->battlerAtk)
-                         && stolenItem == gBattleStruct->itemLost[GetBattlerTrainer(cv->battlerAtk)][originalAttackerPartyId].originalItem)
+                         && itemToSteal == gBattleStruct->itemLost[GetBattlerTrainer(cv->battlerAtk)][originalAttackerPartyId].originalItem)
                             gBattleStruct->itemLost[GetBattlerTrainer(cv->battlerAtk)][originalAttackerPartyId].stolen = TRUE;
+                        itemToSteal = ITEM_NONE;
+                        SetMonData(&gParties[GetBattlerTrainer(cv->battlerAtk)][originalAttackerPartyId], MON_DATA_HELD_ITEM, &itemToSteal);
                     }
                     BattleScriptCall(BattleScript_Pickpocket);
                 }
