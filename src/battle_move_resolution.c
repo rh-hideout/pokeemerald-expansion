@@ -3526,7 +3526,7 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
         }
         else
         {
-            StealTargetItem(cv->battlerAtk, cv->battlerDef);  // Attacker steals target item
+            StealTargetItem(cv->battlerAtk, cv->battlerDef, ITEM_NONE);  // Attacker steals target item
 
             if (!(GetConfig(B_STEAL_WILD_ITEMS) >= GEN_9
              && !(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_PALACE))))
@@ -3818,7 +3818,7 @@ static enum MoveEndResult MoveEndFormChange(struct BattleCalcValues *cv)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
-    if (!gBattleStruct->battlerState[cv->battlerAtk].redCardSwitched
+    if (gBattleStruct->battlerState[cv->battlerAtk].originalBattlerPartyId == PARTY_SIZE
      && TryBattleFormChange(cv->battlerAtk, FORM_CHANGE_BATTLE_AFTER_MOVE, cv->abilities[cv->battlerAtk]))
     {
         result = MOVEEND_RESULT_RUN_SCRIPT;
@@ -3921,7 +3921,7 @@ static enum MoveEndResult MoveEndHitEscape(struct BattleCalcValues *cv)
     {
     case EFFECT_HIT_ESCAPE:
         if (!HasAnyBattlerQueuedSwitch()
-         && !gBattleStruct->battlerState[cv->battlerAtk].redCardSwitched
+         && gBattleStruct->battlerState[cv->battlerAtk].originalBattlerPartyId == PARTY_SIZE
          && !gBattleStruct->unableToUseMove
          && IsAnyTargetTurnDamaged(cv->battlerAtk, INCLUDING_SUBSTITUTES)
          && IsBattlerAlive(cv->battlerAtk)
@@ -3954,10 +3954,34 @@ static enum MoveEndResult MoveEndHitEscape(struct BattleCalcValues *cv)
 static enum MoveEndResult MoveEndPickpocket(struct BattleCalcValues *cv)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
+    enum Item itemToSteal;
+    enum Ability abilityAtk;
+    enum HoldEffect holdEffectAtk;
+    u32 originalAttackerPartyId = gBattleStruct->battlerState[cv->battlerAtk].originalBattlerPartyId;
+    bool32 originalAttackerOnField = originalAttackerPartyId == PARTY_SIZE;
 
-    if (IsBattlerAlive(cv->battlerAtk)
-     && gBattleMons[cv->battlerAtk].item != ITEM_NONE
-     && !GetBattlerPartyState(cv->battlerAtk)->isKnockedOff) // Gen3 edge case where the knocked of item was not removed
+    if (originalAttackerOnField)
+    {
+        if (IsBattlerAlive(cv->battlerAtk) && !GetBattlerPartyState(cv->battlerAtk)->isKnockedOff) // Gen3 edge case where the knocked of item was not removed
+        {
+            itemToSteal = gBattleMons[cv->battlerAtk].item;
+            abilityAtk = cv->abilities[cv->battlerAtk];
+        }
+        else
+        {
+            itemToSteal = ITEM_NONE;
+            abilityAtk = ITEM_NONE;
+        }
+    }
+    else
+    {
+        itemToSteal = GetMonData(gParties[GetBattlerTrainer(cv->battlerAtk)][originalAttackerPartyId], MON_DATA_HELD_ITEM);
+        abilityAtk = ABILITY_NONE;
+    }
+
+    holdEffectAtk = GetItemHoldEffect(itemToSteal);
+
+    if (itemToSteal != ITEM_NONE) // valid item to steal
     {
         enum BattlerId battlers[MAX_BATTLERS_COUNT] = {0, 1, 2, 3};
         SortBattlersBySpeed(battlers, FALSE); // Pickpocket activates for fastest mon without item
@@ -3968,20 +3992,37 @@ static enum MoveEndResult MoveEndPickpocket(struct BattleCalcValues *cv)
               && !gBattleStruct->battlerState[battlerDef].notOnField
               && !IsBattlerUnaffectedByMove(battlerDef)
               && cv->abilities[battlerDef] == ABILITY_PICKPOCKET
-              && IsMoveMakingContact(cv->battlerAtk, battlerDef, cv->abilities[cv->battlerAtk], cv->holdEffects[cv->battlerAtk], gCurrentMove)
+              && IsMoveMakingContact(cv->battlerAtk, battlerDef, abilityAtk, holdEffectAtk, gCurrentMove)
               && IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)
-              && !DoesSubstituteBlockMove(cv->battlerAtk, battlerDef, gCurrentMove)
-              && IsBattlerAlive(battlerDef)
               && gBattleMons[battlerDef].item == ITEM_NONE
-              && CanStealItem(battlerDef, cv->battlerAtk, gBattleMons[cv->battlerAtk].item))
+              && CanStealItem(battlerDef, cv->battlerAtk, itemToSteal))
             {
                 gBattlerTarget = gBattlerAbility = battlerDef;
-                // Battle scripting is super brittle so we shall do the item exchange now (if possible)
-                if (cv->abilities[cv->battlerAtk] != ABILITY_STICKY_HOLD)
-                    StealTargetItem(battlerDef, cv->battlerAtk);  // Target takes attacker's item
-
                 gEffectBattler = cv->battlerAtk;
-                BattleScriptCall(BattleScript_Pickpocket);   // Includes sticky hold check to print separate string
+                // Battle scripting is super brittle so we shall do the item exchange now (if possible)
+                if (abilityAtk != ABILITY_STICKY_HOLD)
+                {
+                    if (originalAttackerOnField)
+                    {
+                        StealTargetItem(battlerDef, cv->battlerAtk, ITEM_NONE);  // Target takes attacker's item
+                    }
+                    else
+                    {
+                        StealTargetItem(battlerDef, cv->battlerAtk, itemToSteal);
+                        itemToSteal = ITEM_NONE;
+                        SetMonData(gParties[GetBattlerTrainer(cv->battlerAtk)][originalAttackerPartyId], MON_DATA_HELD_ITEM, &itemToSteal);
+                        if (gBattleTypeFlags & BATTLE_TYPE_TRAINER
+                         && !(gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
+                         && IsOnPlayerSide(cv->battlerAtk)
+                         && stolenItem == gBattleStruct->itemLost[GetBattlerTrainer(cv->battlerAtk)][originalAttackerPartyId].originalItem)
+                            gBattleStruct->itemLost[GetBattlerTrainer(cv->battlerAtk)][originalAttackerPartyId].stolen = TRUE;
+                    }
+                    BattleScriptCall(BattleScript_Pickpocket);
+                }
+                else
+                {
+                    BattleScriptCall(BattleScript_PickpocketPrevented);
+                }
                 result = MOVEEND_RESULT_RUN_SCRIPT;
                 break; // Pickpocket activates on fastest mon, so exit loop.
             }
@@ -4224,7 +4265,7 @@ static bool32 ShouldSetStompingTantrumTimer(void)
 {
     u32 numNotAffectedTargets = 0;
 
-    if (gBattleStruct->battlerState[gBattlerAttacker].redCardSwitched) // no longer the same battler
+    if (gBattleStruct->battlerState[gBattlerAttacker].originalBattlerPartyId != PARTY_SIZE) // no longer the same battler
         return FALSE;
 
     if (gBattleStruct->pledgeState == PLEDGE_COMBO_WAITING // Is the battler that uses the first Pledge move in the combo
@@ -4296,7 +4337,7 @@ static enum MoveEndResult MoveEndClearBits(struct BattleCalcValues *cv)
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         gBattleStruct->battlerState[cv->battlerAtk].targetsDone[i] = FALSE;
-        gBattleStruct->battlerState[i].redCardSwitched = FALSE;
+        gBattleStruct->battlerState[i].originalBattlerPartyId = PARTY_SIZE;
         gBattleMons[i].volatiles.tryEjectPack = FALSE;
 
         if (gBattleStruct->battlerState[i].commanderSpecies != SPECIES_NONE && !IsBattlerAlive(i))

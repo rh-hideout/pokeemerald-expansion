@@ -2073,10 +2073,17 @@ u32 GetBattlerRawSpeedOrder(enum BattlerId battler)
 }
 
 // battlerStealer steals the item of itemBattler
-void StealTargetItem(enum BattlerId battlerStealer, enum BattlerId itemBattler)
+void StealTargetItem(enum BattlerId battlerStealer, enum BattlerId itemBattler, enum Item itemOverride)
 {
-    gLastUsedItem = gBattleMons[itemBattler].item;
-    gBattleMons[itemBattler].item = ITEM_NONE;
+    if (itemOverride)
+    {
+        gLastUsedItem = itemOverride;
+    }
+    else
+    {
+        gLastUsedItem = gBattleMons[itemBattler].item;
+        gBattleMons[itemBattler].item = ITEM_NONE;
+    }
 
     if (GetConfig(B_STEAL_WILD_ITEMS) >= GEN_9
      && !(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_PALACE))
@@ -2094,6 +2101,9 @@ void StealTargetItem(enum BattlerId battlerStealer, enum BattlerId itemBattler)
         BtlController_EmitSetMonData(battlerStealer, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gLastUsedItem), &gLastUsedItem); // set attacker item
         MarkBattlerForControllerExec(battlerStealer);
     }
+
+    if (itemOverride) // don't change flags for unintended battler
+        return;
 
     RecordItemEffectBattle(itemBattler, HOLD_EFFECT_NONE);
     CheckSetUnburden(itemBattler);
@@ -7449,8 +7459,8 @@ static void Cmd_forcerandomswitch(void)
         }
         else
         {
-            if (gBattleScripting.switchCase == B_SWITCH_RED_CARD)
-                gBattleStruct->battlerState[gBattlerTarget].redCardSwitched = TRUE; // attacker and target are swapped
+            if (gBattleStruct->battlerState[gBattlerTarget].originalBattlerPartyId == PARTY_SIZE)
+                gBattleStruct->battlerState[gBattlerTarget].originalBattlerPartyId = gBattlerPartyIndexes[gBattlerTarget]; // attacker and target are swapped
             for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
                 gBattleMons[battler].volatiles.tryEjectPack = FALSE; // Disable Eject Pack activations
             gBattleStruct->battlerPartyIndexes[gBattlerTarget] = gBattlerPartyIndexes[gBattlerTarget];
@@ -9396,6 +9406,9 @@ static void Cmd_switchoutabilities(void)
     }
 
     gBattleStruct->battlerState[battler].notOnField = TRUE;
+    
+    if (gBattleStruct->battlerState[battler].originalBattlerPartyId == PARTY_SIZE)
+        gBattleStruct->battlerState[battler].originalBattlerPartyId = gBattlerPartyIndexes[battler];
 
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
