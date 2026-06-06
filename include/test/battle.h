@@ -549,6 +549,7 @@
 #include "constants/battle_ai.h"
 #include "constants/battle_anim.h"
 #include "constants/battle_move_effects.h"
+#include "constants/battle_frontier.h"
 #include "constants/flags.h"
 #include "constants/hold_effects.h"
 #include "constants/items.h"
@@ -572,11 +573,15 @@ enum {
     BATTLE_TEST_MULTI,
     BATTLE_TEST_TWO_VS_ONE,
     BATTLE_TEST_ONE_VS_TWO,
+    BATTLE_TEST_FRONTIER_SINGLES,
+    BATTLE_TEST_FRONTIER_DOUBLES,
     BATTLE_TEST_AI_SINGLES,
     BATTLE_TEST_AI_DOUBLES,
     BATTLE_TEST_AI_MULTI,
     BATTLE_TEST_AI_TWO_VS_ONE,
-    BATTLE_TEST_AI_ONE_VS_TWO
+    BATTLE_TEST_AI_ONE_VS_TWO,
+    BATTLE_TEST_AI_FRONTIER_SINGLES,
+    BATTLE_TEST_AI_FRONTIER_DOUBLES
 };
 
 typedef void (*SingleBattleTestFunction)(void *, const u32, struct BattlePokemon *, struct BattlePokemon *);
@@ -588,6 +593,9 @@ typedef void (*OneVsTwoBattleTestFunction)(void *, const u32, struct BattlePokem
 struct BattleTest
 {
     u8 type;
+    u8 frontierMode:2;
+    u8 frontierFacility:4; // 0-8 inc Trainer Hill
+    enum FrontierLevelMode frontierLevel:2;
     union
     {
         SingleBattleTestFunction singles;
@@ -787,6 +795,8 @@ struct BattleTestData
     enum Ability forcedAbilities[MAX_BATTLE_TRAINERS][PARTY_SIZE];
     u8 chosenGimmick[MAX_BATTLE_TRAINERS][PARTY_SIZE];
     u8 forcedEnvironment;
+    u32 frontierMonHp;
+    u32 frontierMonSpeed;
 
     u8 currentMonIndexes[MAX_BATTLERS_COUNT];
     u8 turnState;
@@ -908,7 +918,7 @@ bool32 IsAITest(void);
     }; \
     static void CAT(Test, __LINE__)(struct CAT(Result, __LINE__) *results, const u32 i, struct BattlePokemon *playerLeft, struct BattlePokemon *opponentLeft, struct BattlePokemon *playerRight, struct BattlePokemon *opponentRight)
 
-    #define BATTLE_TEST_ARGS_MULTI(_name, _type, ...) \
+#define BATTLE_TEST_ARGS_MULTI(_name, _type, ...) \
     struct CAT(Result, __LINE__) { RECURSIVELY(R_FOR_EACH(APPEND_SEMICOLON, __VA_ARGS__)) }; \
     static void CAT(Test, __LINE__)(struct CAT(Result, __LINE__) *, const u32, struct BattlePokemon *, struct BattlePokemon *, struct BattlePokemon *, struct BattlePokemon *); \
     __attribute__((section(".tests"), used)) static const struct Test CAT(sTest, __LINE__) = \
@@ -962,6 +972,48 @@ bool32 IsAITest(void);
     }; \
     static void CAT(Test, __LINE__)(struct CAT(Result, __LINE__) *results, const u32 i, struct BattlePokemon *playerLeft, struct BattlePokemon *opponentLeft, struct BattlePokemon *playerRight, struct BattlePokemon *opponentRight)
 
+#define BATTLE_TEST_ARGS_FRONTIER_SINGLE(_facility, _levelMode, _name, _type, ...) \
+    struct CAT(Result, __LINE__) { RECURSIVELY(R_FOR_EACH(APPEND_SEMICOLON, __VA_ARGS__)) }; \
+    static void CAT(Test, __LINE__)(struct CAT(Result, __LINE__) *, const u32, struct BattlePokemon *, struct BattlePokemon *); \
+    __attribute__((section(".tests"), used)) static const struct Test CAT(sTest, __LINE__) = \
+    { \
+        .name = _name, \
+        .filename = __FILE__, \
+        .runner = &gBattleTestRunner, \
+        .sourceLine = __LINE__, \
+        .data = (void *)&(const struct BattleTest) \
+        { \
+            .type = _type, \
+            .frontierMode = FRONTIER_MODE_SINGLES, \
+            .frontierFacility = CAT(FACILITY_BATTLE_,_facility), \
+            .frontierLevel = CAT(FRONTIER_LVL_,_levelMode), \
+            .function = { .singles = (SingleBattleTestFunction)CAT(Test, __LINE__) }, \
+            .resultsSize = sizeof(struct CAT(Result, __LINE__)), \
+        }, \
+    }; \
+    static void CAT(Test, __LINE__)(struct CAT(Result, __LINE__) *results, const u32 i, struct BattlePokemon *player, struct BattlePokemon *opponent)
+
+#define BATTLE_TEST_ARGS_FRONTIER_DOUBLE(_facility, _levelMode, _facilityMode, _name, _type, ...) \
+    struct CAT(Result, __LINE__) { RECURSIVELY(R_FOR_EACH(APPEND_SEMICOLON, __VA_ARGS__)) }; \
+    static void CAT(Test, __LINE__)(struct CAT(Result, __LINE__) *, const u32, struct BattlePokemon *, struct BattlePokemon *, struct BattlePokemon *, struct BattlePokemon *); \
+    __attribute__((section(".tests"), used)) static const struct Test CAT(sTest, __LINE__) = \
+    { \
+        .name = _name, \
+        .filename = __FILE__, \
+        .runner = &gBattleTestRunner, \
+        .sourceLine = __LINE__, \
+        .data = (void *)&(const struct BattleTest) \
+        { \
+            .type = _type, \
+            .frontierMode = CAT(FRONTIER_MODE_,_facilityMode), \
+            .frontierFacility = CAT(FACILITY_BATTLE_,_facility), \
+            .frontierLevel = CAT(FRONTIER_LVL_,_levelMode), \
+            .function = { .doubles = (DoubleBattleTestFunction)CAT(Test, __LINE__) }, \
+            .resultsSize = sizeof(struct CAT(Result, __LINE__)), \
+        }, \
+    }; \
+    static void CAT(Test, __LINE__)(struct CAT(Result, __LINE__) *results, const u32 i, struct BattlePokemon *playerLeft, struct BattlePokemon *opponentLeft, struct BattlePokemon *playerRight, struct BattlePokemon *opponentRight)
+
 
 #define SINGLE_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_SINGLE(_name, BATTLE_TEST_SINGLES, __VA_ARGS__)
 #define WILD_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_SINGLE(_name, BATTLE_TEST_WILD, __VA_ARGS__)
@@ -979,6 +1031,18 @@ bool32 IsAITest(void);
 
 #define ONE_VS_TWO_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_ONE_VS_TWO(_name, BATTLE_TEST_ONE_VS_TWO, __VA_ARGS__)
 #define AI_ONE_VS_TWO_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_ONE_VS_TWO(_name, BATTLE_TEST_AI_ONE_VS_TWO, __VA_ARGS__)
+
+#define FRONTIER_BATTLE_TEST(_facility, _battleType, _levelMode, _name, ...) CAT(CAT(FRONTIER_, _battleType), _BATTLE_TEST) (_facility, _levelMode, CAT(_battleType, S), _name, __VA_ARGS__)
+#define AI_FRONTIER_BATTLE_TEST(_facility, _battleType, _levelMode, _name, ...) CAT(CAT(AI_FRONTIER_, _battleType), _BATTLE_TEST) (_facility, _levelMode, CAT(_battleType, S), _name, __VA_ARGS__)
+
+#define FRONTIER_SINGLE_BATTLE_TEST(_facility, _levelMode, _facilityMode, _name, ...) BATTLE_TEST_ARGS_FRONTIER_SINGLE(_facility, _levelMode, _name, BATTLE_TEST_FRONTIER_SINGLES, __VA_ARGS__)
+#define AI_FRONTIER_SINGLE_BATTLE_TEST(_facility, _levelMode, _facilityMode, _name, ...) BATTLE_TEST_ARGS_FRONTIER_SINGLE(_facility, _levelMode, _name, BATTLE_TEST_AI_FRONTIER_SINGLES, __VA_ARGS__)
+
+#define FRONTIER_DOUBLE_BATTLE_TEST(_facility, _levelMode, _facilityMode, _name, ...) BATTLE_TEST_ARGS_FRONTIER_DOUBLE(_facility, _levelMode, _facilityMode, _name, BATTLE_TEST_FRONTIER_DOUBLES, __VA_ARGS__)
+#define AI_FRONTIER_DOUBLE_BATTLE_TEST(_facility, _levelMode, _facilityMode, _name, ...) BATTLE_TEST_ARGS_FRONTIER_DOUBLE(_facility, _levelMode, _facilityMode, _name, BATTLE_TEST_AI_FRONTIER_DOUBLES, __VA_ARGS__)
+
+#define FRONTIER_MULTI_BATTLE_TEST FRONTIER_DOUBLE_BATTLE_TEST
+#define AI_FRONTIER_MULTI_BATTLE_TEST AI_FRONTIER_DOUBLE_BATTLE_TEST
 
 /* Parametrize */
 
@@ -1038,6 +1102,7 @@ struct moveWithPP {
 #define SpAttackIV(spAttackIV) SpAttackIV_(__LINE__, spAttackIV)
 #define SpDefenseIV(spDefenseIV) SpDefenseIV_(__LINE__, spDefenseIV)
 #define SpeedIV(speedIV) SpeedIV_(__LINE__, speedIV)
+#define IVs(iv) IVs_(__LINE__, iv)
 #define Item(item) Item_(__LINE__, item)
 #define Moves(move1, ...) do { u16 moves_[MAX_MON_MOVES] = {move1, __VA_ARGS__}; Moves_(__LINE__, moves_); } while (0)
 #define MovesWithPP(movewithpp1, ...) MovesWithPP_(__LINE__, (struct moveWithPP[MAX_MON_MOVES]) {movewithpp1, __VA_ARGS__})
@@ -1060,6 +1125,7 @@ void ClearFlagAfterTest(void);
 void ClearVarAfterTest(void);
 void OpenPokemon(u32 sourceLine, enum BattleTrainer trainer, enum Species species);
 void ClosePokemon(u32 sourceLine);
+const struct BattleTest *GetBattleTest(void);
 
 void RNGSeed_(u32 sourceLine, rng_value_t seed);
 void AIFlags_(u32 sourceLine, u64 flags);
@@ -1082,6 +1148,7 @@ void DefenseIV_(u32 sourceLine, u32 defenseIV);
 void SpAttackIV_(u32 sourceLine, u32 spAttackIV);
 void SpDefenseIV_(u32 sourceLine, u32 spDefenseIV);
 void SpeedIV_(u32 sourceLine, u32 speedIV);
+void IVs_(u32 sourceLine, u32 iv);
 void Item_(u32 sourceLine, u32 item);
 void Moves_(u32 sourceLine, u16 moves[MAX_MON_MOVES]);
 void MovesWithPP_(u32 sourceLine, struct moveWithPP moveWithPP[MAX_MON_MOVES]);
