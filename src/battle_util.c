@@ -2780,7 +2780,6 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
             if (effect)
                 return TRUE;
         }
-        // Weather - Sun
         else if (gStartingStatuses.weatherSun || gStartingStatuses.weatherSunTemporary)
         {
             bool32 isPermanent = gStartingStatuses.weatherSun ? TRUE : FALSE;
@@ -2788,7 +2787,6 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
             if (TryWeatherStartingStatus(BATTLE_WEATHER_SUN, isPermanent))
                 return TRUE;
         }
-        // Weather - Rain
         else if (gStartingStatuses.weatherRain || gStartingStatuses.weatherRainTemporary)
         {
             bool32 isPermanent = gStartingStatuses.weatherRain ? TRUE : FALSE;
