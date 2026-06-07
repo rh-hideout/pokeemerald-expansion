@@ -365,7 +365,6 @@ bool32 IsPursuitTargetSet(void);
 void ClearPursuitValuesIfSet(enum BattlerId battler);
 void ClearPursuitValues(void);
 bool32 HasWeatherEffect(void);
-bool32 IsFutureSightAttackerInParty(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);
 bool32 HadMoreThanHalfHpNowDoesnt(enum BattlerId battler);
 void ChooseStatBoostAnimation(enum BattlerId battler);
 bool32 TrySwitchInEjectPack(enum EjectPackTiming timing);

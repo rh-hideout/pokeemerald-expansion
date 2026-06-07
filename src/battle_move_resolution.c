@@ -3943,6 +3943,7 @@ static enum MoveEndResult MoveEndPickpocket(struct BattleCalcValues *cv)
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
     if (IsBattlerAlive(cv->battlerAtk)
+     && !gSpecialStatuses[cv->battlerAtk].attackerInParty
      && gBattleMons[cv->battlerAtk].item != ITEM_NONE
      && !GetBattlerPartyState(cv->battlerAtk)->isKnockedOff) // Gen3 edge case where the knocked of item was not removed
     {

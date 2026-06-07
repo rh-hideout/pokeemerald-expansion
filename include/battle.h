@@ -109,21 +109,21 @@ struct StatStages
 // Cleared at the start of HandleAction_ActionFinished
 struct SpecialStatus
 {
-    u8 changedStatsBattlerId:3; // Battler that was responsible for the latest stat change. Can be self.
     u8 neutralizingGasRemoved:1;
     u8 berryReduced:1;
     u8 mindBlownRecoil:1;
     u8 updateStallMons:1;
     u8 poisonPuppeteer:1;
-    // End of byte
-    u8 statLowered:1;
+    u8 attackerInParty:1; // Fututre Sight / Doom Desire
     u8 abilityRedirected:1;
     u8 restoredBattlerSprite: 1;
+    // End of byte
     u8 faintedHasReplacement:1;
     u8 afterYou:1;
     u8 damagedByAttack:1;
     u8 dancerUsedMove:1;
     u8 criticalHit:1;
+    u8 padding:3;
     // End of byte
     u8 gemParam:7;
     u8 gemBoost:1;
