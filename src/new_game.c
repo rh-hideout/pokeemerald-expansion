@@ -2,6 +2,7 @@
 #include "clock.h"
 #include "new_game.h"
 #include "random.h"
+#include "clock.h"
 #include "pokemon.h"
 #include "roamer.h"
 #include "pokemon_size_record.h"

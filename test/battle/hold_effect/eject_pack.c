@@ -184,7 +184,8 @@ SINGLE_BATTLE_TEST("Eject Pack will miss timing to switch out user if Eject Butt
 DOUBLE_BATTLE_TEST("Eject Pack: Only the fastest Eject Pack will activate after an ability stat drop")
 {
     u32 speed;
-    u32 species, ability;
+    enum Species species;
+    enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_EKANS; ability = ABILITY_INTIMIDATE; speed = 1; }
     PARAMETRIZE { species = SPECIES_EKANS; ability = ABILITY_INTIMIDATE; speed = 11; }

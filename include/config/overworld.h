@@ -158,4 +158,9 @@
 // Configuration
 #define OW_AMBIENT_CRIES                OW_AMBIENT_CRIES_VANILLA // Selects how ambient cries are played, if at all. As in vanilla, no matter what is chosen, cries will not play if the player is not on a map with Land or Water encounter tables.
 
+
+// Daily Seed
+#define OW_USE_DAILY_SEED_FOR_VANILLA_VARIABLES     FALSE // If TRUE, use daily seed to compute mirage island chance and lottery corner tickets.
+                                                          // This has a side effect of removing the deterministic/anti save scumming aspect of the mirage island randomisation
+
 #endif // GUARD_CONFIG_OVERWORLD_H

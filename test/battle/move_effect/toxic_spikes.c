@@ -91,7 +91,7 @@ SINGLE_BATTLE_TEST("Toxic Spikes inflicts poison on subsequent switch ins")
 
 SINGLE_BATTLE_TEST("Toxic Spikes do not poison airborne Pokemon")
 {
-    u32 species = SPECIES_WOBBUFFET;
+    enum Species species = SPECIES_WOBBUFFET;
     enum Item item = ITEM_NONE;
     enum Move move1 = MOVE_CELEBRATE;
     enum Move move2 = MOVE_CELEBRATE;
@@ -153,7 +153,7 @@ SINGLE_BATTLE_TEST("Toxic Spikes do not affect Steel-types")
 
 SINGLE_BATTLE_TEST("Toxic Spikes are removed by grounded Poison-type Pokémon on switch in")
 {
-    u32 species;
+    enum Species species;
     enum Item item = ITEM_NONE;
     enum Move move = MOVE_CELEBRATE;
     bool32 grounded;
