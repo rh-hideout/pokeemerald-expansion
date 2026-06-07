@@ -76,6 +76,62 @@
 #define _ASSERTF_HANDLE(fmt, ...) AssertfCrashScreen(__builtin_return_address(0), fmt, __VA_ARGS__)
 #endif
 
+/* heapcheck;
+ *
+ * Shows the heap usage screen if any memory blocks are detcted on the heap.
+ * - In a release/test build: does nothing.
+ * - In a development build: shows a resumable heap usage screen. */
+#if RELEASE
+#define heapcheck ((void)0)
+#elif TESTING
+#define heapcheck ((void)0)
+#else
+#define heapcheck TryShowHeapCrashScreen(CheckHeapIsAlloced())
+#endif
+
+/* heapcond(condition);
+ *
+ * Shows the heap usage screen if cond is TRUE and any memory blocks are detcted on the heap.
+ * - In a release/test build: does nothing.
+ * - In a development build: shows a resumable heap usage screen. */
+#if RELEASE
+#define heapcond(conditon) ((void)0)
+#elif TESTING
+#define heapcond(conditon) ((void)0)
+#else
+#define heapcond(conditon) TryShowHeapCrashScreen(conditon && CheckHeapIsAlloced())
+#endif
+
+/* heapsize;
+ *
+ * Shows the heap usage screen if total allocated size is not equal to the value used.
+ * - In a release/test build: does nothing.
+ * - In a development build: shows a resumable heap usage screen. */
+#if RELEASE
+#define heapsize(size) ((void)0)
+#elif TESTING
+#define heapsize(size) ((void)0)
+#else
+#define heapsize(size) TryShowHeapCrashScreen(CheckHeapSize(size))
+#endif
+
+/* heapdump;
+ *
+ * Shows the heap usage screen regardless of heap state.
+ * - In a release/test build: does nothing.
+ * - In a development build: shows a resumable heap usage screen. */
+#if RELEASE
+#define heapdump ((void)0)
+#elif TESTING
+#define heapdump ((void)0)
+#else
+#define heapdump TryShowHeapCrashScreen(TRUE)
+#endif
+
 void AssertfCrashScreen(const void *return0, const char *fmt, ...);
+
+bool32 CheckHeapIsAlloced(void);
+bool32 CheckHeapSize(u32 allocatedBytes);
+void TryShowHeapCrashScreen(bool32 condition);
 
 #endif

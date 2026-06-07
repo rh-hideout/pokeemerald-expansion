@@ -9,6 +9,14 @@ static u32 sHeapSize;
 
 ALIGNED(4) EWRAM_DATA u8 gHeap[HEAP_SIZE] = {0};
 
+#if DEBUG_HEAP_PRINT
+static EWRAM_DATA u32 sTotalAllocations = 0;
+static EWRAM_DATA u32 sTotalFrees = 0;
+#endif
+
+static void TryTrackAllocatedHeap(void);
+static void TryTrackFreedHeap(void);
+
 void PutMemBlockHeader(void *block, struct MemBlock *prev, struct MemBlock *next, u32 size)
 {
     struct MemBlock *header = (struct MemBlock *)block;
@@ -77,6 +85,7 @@ void *AllocInternal(void *heapStart, u32 size, const char *location)
                 pos->locationHi = ((uintptr_t)location) >> 14;
                 pos->locationLo = (uintptr_t)location;
 
+                TryTrackAllocatedHeap();
                 return pos->data;
             }
         }
@@ -118,6 +127,7 @@ void FreeInternal(void *heapStart, void *pointer)
         struct MemBlock *block = (struct MemBlock *)((u8 *)pointer - sizeof(struct MemBlock));
         AGB_ASSERT(block->magic == MALLOC_SYSTEM_ID);
         AGB_ASSERT(block->allocated == TRUE);
+        TryTrackFreedHeap();
         block->allocated = FALSE;
 
         // If the freed block isn't the last one, merge with the next block
@@ -246,4 +256,59 @@ const char *MemBlockLocation(const struct MemBlock *block)
         return NULL;
 
     return (const char *)(ROM_START | (block->locationHi << 14) | block->locationLo);
+}
+
+static void TryTrackAllocatedHeap(void)
+{
+#if DEBUG_HEAP_PRINT
+    sTotalAllocations++;
+#endif
+}
+
+static void TryTrackFreedHeap(void)
+{
+#if DEBUG_HEAP_PRINT
+    sTotalFrees++;
+#endif
+}
+
+u32 GetHeapTotalAllocations(void)
+{
+#if DEBUG_HEAP_PRINT
+    return sTotalAllocations;
+#else
+    return 0;
+#endif
+}
+
+u32 GetHeapTotalFrees(void)
+{
+#if DEBUG_HEAP_PRINT
+    return sTotalFrees;
+#else
+    return 0;
+#endif
+}
+
+u32 GetHeapAllocatedBytes(void)
+{
+    u32 total = 0;
+    const struct MemBlock *head = HeapHead();
+    const struct MemBlock *block = head;
+    do
+    {
+        if (block->allocated)
+            total += block->size;
+        block = block->next;
+    }
+    while (block != head);
+    return total;
+}
+
+void ResetHeapTrackers(void)
+{
+#if DEBUG_HEAP_PRINT
+    sTotalAllocations = 0;
+    sTotalFrees = 0;
+#endif
 }

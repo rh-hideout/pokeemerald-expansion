@@ -14,4 +14,7 @@
 // Pokémon Debug
 #define DEBUG_POKEMON_SPRITE_VISUALIZER DISABLED_ON_RELEASE // Enables a debug menu for Pokémon sprites and icons, accessed by pressing Select in the summary screen.
 
+// Heap Allocation Printing
+#define DEBUG_HEAP_PRINT    DISABLED_ON_RELEASE // Enables tracking of heap allocation and frees.
+
 #endif // GUARD_CONFIG_DEBUG_H
