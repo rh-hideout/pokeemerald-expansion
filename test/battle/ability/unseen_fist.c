@@ -168,3 +168,19 @@ SINGLE_BATTLE_TEST("Unseen Fist still deals 100% of the damage dealt with Phanto
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.0), results[1].damage);
     }
 }
+
+SINGLE_BATTLE_TEST("Unseen Fist KOs protected targets with OHKO moves (Champions)")
+{
+    GIVEN {
+        WITH_CONFIG(B_UNSEEN_FIST_DAMAGE, GEN_CHAMPIONS);
+        PLAYER(SPECIES_EXCADRILL) { Item(ITEM_EXCADRITE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_PROTECT); MOVE(player, MOVE_HORN_DRILL, gimmick: GIMMICK_MEGA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HORN_DRILL, player);
+        HP_BAR(opponent);
+        MESSAGE("The opposing Wobbuffet fainted!");
+    }
+}
