@@ -13,5 +13,6 @@ void Script_GetChosenMonDefensiveEVs(void);
 void Script_GetChosenMonOffensiveIVs(void);
 void Script_GetChosenMonDefensiveIVs(void);
 u32 ScriptGiveMonParameterized(u8 side, u8 slot, struct PokemonTemplate *monTemplate);
+u8 HasEnoughMonsForDoubleBattle2(void);
 
 #endif // GUARD_SCRIPT_POKEMON_UTIL_H

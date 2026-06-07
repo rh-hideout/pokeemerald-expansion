@@ -56,7 +56,9 @@ static enum Item GetRandomItemAtIndex(const struct RandomItemGeneratorOptions *o
 static bool32 UNUSED IsHeldItemFilterFunc(enum Item item, const struct FilterFuncArgs *filterFuncArgs);
 static enum Item SlowPickRandomItem(const struct RandomItemGeneratorOptions *options, u32 poolSize, const struct FilterFuncArgs *filterFuncArgs);
 static enum Item FastPickRandomItem(const struct RandomItemGeneratorOptions *options, u32 poolSize, const struct FilterFuncArgs *filterFuncArgs);
-static bool32 MoveOrder(u16 moveA, u16 moveB);
+static enum PokeBall GetRandomBall(void);
+static enum PokeBall ResolveRandomBall(enum PokeBall ball);
+static bool32 MoveOrder(enum Move moveA, enum Move moveB);
 static void SortMoves(enum Move *moves);
 static bool32 IsMoveInMoveset(enum Move move, enum Move *moves, u32 count);
 
@@ -418,7 +420,7 @@ enum PokeBall GetRandomBall(void)
     return RandomUniform(RNG_RANDOM_BALL, BALL_POKE, POKEBALL_COUNT - 1);
 }
 
-static bool32 MoveOrder(u16 moveA, u16 moveB)
+static bool32 MoveOrder(enum Move moveA, enum Move moveB)
 {
     if (moveA == moveB)
         return FALSE;

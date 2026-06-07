@@ -290,7 +290,6 @@ static void BattleTest_SetUp(void *data)
 {
     const struct BattleTest *test = data;
     memset(STATE, 0, sizeof(*STATE));
-    TestInitConfigData();
     InvokeTestFunction(test);
     STATE->parameters = STATE->parametersCount;
     if (STATE->parametersCount == 0 && test->resultsSize > 0)
@@ -382,6 +381,7 @@ static void BattleTest_Run(void *data)
     const struct BattleTest *test = data;
 
     memset(&DATA, 0, sizeof(DATA));
+    TestInitConfigData();
 
     DATA.recordedBattle.rngSeed = defaultSeed;
     DATA.recordedBattle.textSpeed = OPTIONS_TEXT_SPEED_FAST;
@@ -542,7 +542,7 @@ static void BattleTest_Run(void *data)
     }
 
     for (i = 0; i < STATE->battlersCount; i++)
-        PushBattlerAction(0, i, RECORDED_BYTE, 0xFF);
+        PushBattlerAction(0, i, RECORDED_BYTE, B_ACTION_NONE);
 
     if (DATA.hasExplicitSpeeds)
     {
@@ -2159,7 +2159,7 @@ void Nature_(u32 sourceLine, u32 nature)
 void Ability_(u32 sourceLine, enum Ability ability)
 {
     s32 i;
-    u32 species;
+    enum Species species;
     const struct SpeciesInfo *info;
     INVALID_IF(!DATA.currentMon, "Ability outside of PLAYER/OPPONENT");
     INVALID_IF(ability >= ABILITIES_COUNT, "Illegal ability id: %d", ability);
@@ -2183,7 +2183,7 @@ void Ability_(u32 sourceLine, enum Ability ability)
 void Level_(u32 sourceLine, u32 level)
 {
     // TODO: Preserve any explicitly-set stats.
-    u32 species = GetMonData(DATA.currentMon, MON_DATA_SPECIES);
+    enum Species species = GetMonData(DATA.currentMon, MON_DATA_SPECIES);
     INVALID_IF(!DATA.currentMon, "Level outside of PLAYER/OPPONENT");
     INVALID_IF(level == 0 || level > MAX_LEVEL, "Illegal level: %d", level);
     SetMonData(DATA.currentMon, MON_DATA_LEVEL, &level);
@@ -2697,7 +2697,7 @@ void MoveGetIdAndSlot(enum BattlerId battlerId, struct MoveContext *ctx, u32 *mo
     {
         enum Item item = GetMonData(mon, MON_DATA_HELD_ITEM);
         enum HoldEffect holdEffect = GetItemHoldEffect(item);
-        u32 species = GetMonData(mon, MON_DATA_SPECIES);
+        enum Species species = GetMonData(mon, MON_DATA_SPECIES);
 
         // Check invalid item usage.
         INVALID_IF(ctx->gimmick == GIMMICK_MEGA && holdEffect != HOLD_EFFECT_MEGA_STONE && species != SPECIES_RAYQUAZA, "Cannot Mega Evolve without a Mega Stone");
@@ -2725,7 +2725,7 @@ u32 MoveGetFirstFainted(enum BattlerId battlerId)
     // Loop through to find fainted battler.
     for (i = 0; i < partySize; ++i)
     {
-        u32 species = GetMonData(&party[i], MON_DATA_SPECIES_OR_EGG);
+        enum Species species = GetMonData(&party[i], MON_DATA_SPECIES_OR_EGG);
         if (species != SPECIES_NONE
             && species != SPECIES_EGG
             && GetMonData(&party[i], MON_DATA_HP) == 0)

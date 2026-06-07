@@ -137,7 +137,7 @@ SINGLE_BATTLE_TEST("Chesto Berry cures sleep when Yawn takes effect")
 
 SINGLE_BATTLE_TEST("Chesto and Lum Berries don't trigger if the holder has Comatose")
 {
-    u16 item;
+    enum Item item;
 
     PARAMETRIZE { item = ITEM_CHESTO_BERRY; }
     PARAMETRIZE { item = ITEM_LUM_BERRY; }

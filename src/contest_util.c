@@ -1103,17 +1103,15 @@ static void LoadContestMonIcon(enum Species species, u8 monIndex, u8 srcOffset, 
 
 static void LoadAllContestMonIcons(u8 srcOffset, bool8 useDmaNow)
 {
-    int i;
-
-    for (i = 0; i < CONTESTANT_COUNT; i++)
+    for (u32 i = 0; i < CONTESTANT_COUNT; i++)
         LoadContestMonIcon(gContestMons[i].species, i, srcOffset, useDmaNow, gContestMons[i].personality);
 }
 
 static void LoadAllContestMonIconPalettes(void)
 {
-    int i, species;
+    enum Species species;
 
-    for (i = 0; i < CONTESTANT_COUNT; i++)
+    for (u32 i = 0; i < CONTESTANT_COUNT; i++)
     {
         species = gContestMons[i].species;
         LoadPalette(gMonIconPalettes[gSpeciesInfo[GetIconSpecies(species, 0)].iconPalIndex], BG_PLTT_ID(10 + i), PLTT_SIZE_4BPP);

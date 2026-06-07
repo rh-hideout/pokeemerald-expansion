@@ -132,7 +132,7 @@ AI_SINGLE_BATTLE_TEST("Choiced Pokémon won't use status move if they don't have
 {
     u32 j;
     enum Move move = MOVE_NONE;
-    u32 species = SPECIES_NONE;
+    enum Species species = SPECIES_NONE;
     enum Item heldItem = ITEM_NONE;
     enum Ability ability = ABILITY_NONE;
     static const enum Item choiceItems[] = {
@@ -170,10 +170,10 @@ AI_SINGLE_BATTLE_TEST("Choiced Pokémon won't use status move if they are trappe
 {
     u32 j;
     enum Ability aiAbility = ABILITY_NONE, playerAbility = ABILITY_NONE;
-    u32 species = SPECIES_NONE;
+    enum Species species = SPECIES_NONE;
     enum Item heldItem = ITEM_NONE;
 
-    static const u32 choiceItems[] = {
+    static const enum Item choiceItems[] = {
         ITEM_CHOICE_SPECS,
         ITEM_CHOICE_BAND,
         ITEM_CHOICE_SCARF,

@@ -44,7 +44,7 @@ void HealPlayerParty(void)
         HealPlayerBoxes();
 
     // Recharge Tera Orb, if possible.
-    if (B_FLAG_TERA_ORB_CHARGED != 0 && CheckBagHasItem(ITEM_TERA_ORB, 1))
+    if (!IsTeraOrbCharged() && CheckBagHasItem(ITEM_TERA_ORB, 1))
         FlagSet(B_FLAG_TERA_ORB_CHARGED);
 }
 
@@ -74,6 +74,12 @@ u8 ScriptGiveEgg(enum Species species)
     SetMonData(&mon, MON_DATA_IS_EGG, &isEgg);
 
     return GiveCapturedMonToPlayer(&mon);
+}
+
+// TODO verify that this is really always the same output as the script special variant
+u8 HasEnoughMonsForDoubleBattle2(void)
+{
+    return GetMonsStateToDoubles() == PLAYER_HAS_TWO_USABLE_MONS; 
 }
 
 void HasEnoughMonsForDoubleBattle(void)
@@ -438,13 +444,13 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
     }
 
     monTemplate.gmaxFactor   = PARSE_FLAG(22, FALSE);
-    if (flags & (1 << 21))
+    if (flags & (1 << 23))
     {
         monTemplate.teraType = VarGet(ScriptReadHalfword(ctx));
         monTemplate.doNotUseDefaultTeraType = TRUE;
     }
     monTemplate.dmaxLevel    = PARSE_FLAG(24, 0);
-
+    monTemplate.isEgg         = PARSE_FLAG(25, FALSE);
     if (side == B_SIDE_PLAYER)
     {
         Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);

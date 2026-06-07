@@ -1107,7 +1107,8 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if it can't d
 
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if it has been Toxic'd for at least two turns 50% of the time with more than 1/3 HP remaining with good switchin")
 {
-    u32 species = SPECIES_NONE, odds = 0;
+    enum Species species = SPECIES_NONE;
+    u32 odds = 0;
     PARAMETRIZE { species = SPECIES_ZIGZAGOON, odds = 0; }
     PARAMETRIZE { species = SPECIES_HARIYAMA, odds = SHOULD_SWITCH_BADLY_POISONED_PERCENTAGE; }
     PASSES_RANDOMLY(odds, 100, RNG_AI_SWITCH_BADLY_POISONED);
@@ -1435,7 +1436,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out to cycle Inti
 
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will not cycle Intimidate when target blocks or punishes Attack drops")
 {
-    u32 Species = SPECIES_NONE;
+    enum Species Species = SPECIES_NONE;
     enum Ability ability;
     PARAMETRIZE { Species = SPECIES_TENTACRUEL; ability = ABILITY_CLEAR_BODY; }
     PARAMETRIZE { Species = SPECIES_BRAVIARY; ability = ABILITY_DEFIANT; }
