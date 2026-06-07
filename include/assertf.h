@@ -97,7 +97,7 @@
 #elif TESTING
 #include "test_result.h"
 #define _ASSERTF_HANDLE(fmt, ...) Test_ExitWithResult(TEST_RESULT_INVALID, 0, fmt, __VA_ARGS__)
-#define _FATALASSERTF_HANDLE(fmt, ...) Test_ExitWithResult(TEST_RESULT_ERROR, 0, fmt, __VA_ARGS__)
+#define _FATALASSERTF_HANDLE(fmt, ...) Test_ExitWithResult(TEST_RESULT_CRASH, 0, fmt, __VA_ARGS__)
 #else
 #define _ASSERTF_HANDLE(fmt, ...) AssertfCrashScreen(__builtin_return_address(0), fmt, __VA_ARGS__)
 #define _FATALASSERTF_HANDLE(fmt, ...) FatalfCrashScreen(__builtin_return_address(0), fmt, __VA_ARGS__)

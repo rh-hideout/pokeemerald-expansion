@@ -10,6 +10,12 @@ TEST("Tests resume after CRASH")
     f();
 }
 
+TEST("fatalf counts as CRASH")
+{
+    KNOWN_CRASHING;
+    fatalf("should CRASH");
+}
+
 MULTI_BATTLE_TEST("Forced Abilities are set correctly in multi battle tests")
 {
     GIVEN {
