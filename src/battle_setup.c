@@ -50,7 +50,6 @@
 #include "wild_encounter_ow.h"
 #include "window.h"
 #include "constants/battle_frontier.h"
-#include "constants/battle_setup.h"
 #include "constants/battle_special.h"
 #include "constants/event_objects.h"
 #include "constants/game_stat.h"
