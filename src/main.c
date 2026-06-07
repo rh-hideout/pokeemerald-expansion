@@ -467,3 +467,11 @@ void ClearPokemonCrySongs(void)
 {
     CpuFill16(0, gPokemonCrySongs, MAX_POKEMON_CRIES * sizeof(struct PokemonCrySong));
 }
+
+s32 TestButtonAxis(u32 field, u32 minusButton, u32 plusButton)
+{
+    s32 result = 0;
+    if (field & minusButton) result -= 1;
+    if (field & plusButton) result += 1;
+    return result;
+}

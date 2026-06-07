@@ -239,13 +239,172 @@ void BlendPalette(u16 palOffset, u16 numEntries, u8 coeff, u32 blendColor)
     }
 }
 
-s32 SubtractClamped(s32 lowestVal, s32 highestVal, s32 currentVal, s32 delta)
+s32 ClampS32(s32 value, s32 min, s32 max, bool32 *clamped)
 {
-    s32 newValue = currentVal - delta;
-    if (newValue > highestVal)
-        newValue = highestVal;
-    else if (newValue < lowestVal)
-        newValue = lowestVal;
+    if (min <= value && value <= max)
+    {
+        *clamped = FALSE;
+        return value;
+    }
+    else
+    {
+        *clamped = TRUE;
+        return min > value ? min : max;
+    }
+}
 
-    return newValue;
+u32 ClampU32(u32 value, u32 min, u32 max, bool32 *clamped)
+{
+    if (min <= value && value <= max)
+    {
+        *clamped = FALSE;
+        return value;
+    }
+    else
+    {
+        *clamped = TRUE;
+        return min > value ? min : max;
+    }
+}
+
+s32 SatAddS32(s32 addend1, s32 addend2, s32 min, s32 max, bool32 *saturated)
+{
+    s32 sum;
+    if (!__builtin_add_overflow(addend1, addend2, &sum) && min <= sum && sum <= max)
+    {
+        *saturated = FALSE;
+        return sum;
+    }
+    else
+    {
+        *saturated = TRUE;
+        return addend2 >= 0 ? max : min;
+    }
+}
+
+s32 SatSubS32(s32 minuend, s32 subtrahend, s32 min, s32 max, bool32 *saturated)
+{
+    s32 difference;
+    if (!__builtin_sub_overflow(minuend, subtrahend, &difference) && min <= difference && difference <= max)
+    {
+        *saturated = FALSE;
+        return difference;
+    }
+    else
+    {
+        *saturated = TRUE;
+        return subtrahend >= 0 ? min : max;
+    }
+}
+
+s32 WrapAddS32(s32 addend1, s32 addend2, s32 min, s32 max, bool32 *wrapped)
+{
+    s32 sum;
+    if (!__builtin_add_overflow(addend1, addend2, &sum) && min <= sum && sum <= max)
+    {
+        *wrapped = FALSE;
+        return sum;
+    }
+    else
+    {
+        // TODO: Compute directly rather than via biased unsigned.
+        static const u32 BIAS = 0x80000000;
+        u32 baddend1 = (u32)addend1 + BIAS;
+        u32 bmin = (u32)min + BIAS;
+        u32 bmax = (u32)max + BIAS;
+        u32 bresult;
+        if (addend2 >= 0)
+            bresult = WrapAddU32(baddend1, addend2, bmin, bmax, wrapped);
+        else
+            bresult = WrapSubU32(baddend1, -(u32)addend2, bmin, bmax, wrapped);
+        return (s32)(bresult - BIAS);
+    }
+}
+
+s32 WrapSubS32(s32 minuend, s32 subtrahend, s32 min, s32 max, bool32 *wrapped)
+{
+    s32 difference;
+    if (!__builtin_sub_overflow(minuend, subtrahend, &difference) && min <= difference && difference <= max)
+    {
+        *wrapped = FALSE;
+        return difference;
+    }
+    else
+    {
+        // TODO: Compute directly rather than via biased unsigned.
+        static const u32 BIAS = 0x80000000;
+        u32 bminuend = (u32)minuend + BIAS;
+        u32 bmin = (u32)min + BIAS;
+        u32 bmax = (u32)max + BIAS;
+        u32 bresult;
+        if (subtrahend >= 0)
+            bresult = WrapSubU32(bminuend, subtrahend, bmin, bmax, wrapped);
+        else
+            bresult = WrapAddU32(bminuend, -(u32)subtrahend, bmin, bmax, wrapped);
+        return (s32)(bresult - BIAS);
+    }
+}
+
+u32 SatAddU32(u32 addend1, u32 addend2, u32 min, u32 max, bool32 *saturated)
+{
+    u32 sum;
+    if (!__builtin_add_overflow(addend1, addend2, &sum) && sum <= max)
+    {
+        *saturated = FALSE;
+        return sum;
+    }
+    else
+    {
+        *saturated = TRUE;
+        return max;
+    }
+}
+
+u32 SatSubU32(u32 minuend, u32 subtrahend, u32 min, u32 max, bool32 *saturated)
+{
+    u32 difference;
+    if (!__builtin_sub_overflow(minuend, subtrahend, &difference) && min <= difference)
+    {
+        *saturated = FALSE;
+        return difference;
+    }
+    else
+    {
+        *saturated = TRUE;
+        return min;
+    }
+}
+
+u32 WrapAddU32(u32 addend1, u32 addend2, u32 min, u32 max, bool32 *wrapped)
+{
+    u32 sum;
+    if (!__builtin_add_overflow(addend1, addend2, &sum) && sum <= max)
+    {
+        *wrapped = FALSE;
+        return sum;
+    }
+    else
+    {
+        *wrapped = TRUE;
+        if (max - min != UINT32_MAX)
+            addend2 %= max - min + 1;
+        return min + (addend2 - (max - addend1 + 1));
+    }
+}
+
+u32 WrapSubU32(u32 minuend, u32 subtrahend, u32 min, u32 max, bool32 *wrapped)
+{
+    u32 difference;
+    if (!__builtin_sub_overflow(minuend, subtrahend, &difference) && min <= difference)
+    {
+        *wrapped = FALSE;
+        return difference;
+    }
+    else
+    {
+        *wrapped = TRUE;
+        if (max - min != UINT32_MAX)
+            subtrahend %= max - min + 1;
+        return max - (subtrahend - (minuend - min + 1));
+    }
 }

@@ -12,6 +12,7 @@
 #include "task.h"
 #include "text.h"
 #include "text_window.h"
+#include "util.h"
 #include "window.h"
 #include "gba/m4a_internal.h"
 #include "constants/rgb.h"
@@ -279,6 +280,7 @@ static void Task_OptionMenuFadeIn(u8 taskId)
 
 static void Task_OptionMenuProcessInput(u8 taskId)
 {
+    s32 delta;
     if (JOY_NEW(A_BUTTON))
     {
         if (gTasks[taskId].tMenuSelection == MENUITEM_CANCEL)
@@ -288,20 +290,9 @@ static void Task_OptionMenuProcessInput(u8 taskId)
     {
         gTasks[taskId].func = Task_OptionMenuSave;
     }
-    else if (JOY_NEW(DPAD_UP))
+    else if ((delta = JOY_AXIS_NEW(DPAD_UP, DPAD_DOWN)) != 0)
     {
-        if (gTasks[taskId].tMenuSelection > 0)
-            gTasks[taskId].tMenuSelection--;
-        else
-            gTasks[taskId].tMenuSelection = MENUITEM_CANCEL;
-        HighlightOptionMenuItem(gTasks[taskId].tMenuSelection);
-    }
-    else if (JOY_NEW(DPAD_DOWN))
-    {
-        if (gTasks[taskId].tMenuSelection < MENUITEM_CANCEL)
-            gTasks[taskId].tMenuSelection++;
-        else
-            gTasks[taskId].tMenuSelection = 0;
+        WrapAddPtr(&gTasks[taskId].tMenuSelection, delta, 0, MENUITEM_CANCEL);
         HighlightOptionMenuItem(gTasks[taskId].tMenuSelection);
     }
     else
@@ -413,22 +404,10 @@ static void DrawOptionMenuChoice(const u8 *text, u8 x, u8 y, u8 style)
 
 static u8 TextSpeed_ProcessInput(u8 selection)
 {
-    if (JOY_NEW(DPAD_RIGHT))
+    s32 delta;
+    if ((delta = JOY_AXIS_NEW(DPAD_LEFT, DPAD_RIGHT)) != 0)
     {
-        if (selection <= 1)
-            selection++;
-        else
-            selection = 0;
-
-        sArrowPressed = TRUE;
-    }
-    if (JOY_NEW(DPAD_LEFT))
-    {
-        if (selection != 0)
-            selection--;
-        else
-            selection = 2;
-
+        WrapAddPtr(&selection, delta, OPTIONS_TEXT_SPEED_SLOW, OPTIONS_TEXT_SPEED_FAST);
         sArrowPressed = TRUE;
     }
     return selection;
@@ -529,24 +508,10 @@ static void Sound_DrawChoices(u8 selection)
 
 static u8 FrameType_ProcessInput(u8 selection)
 {
-    if (JOY_NEW(DPAD_RIGHT))
+    s32 delta;
+    if ((delta = JOY_AXIS_NEW(DPAD_LEFT, DPAD_RIGHT)) != 0)
     {
-        if (selection < WINDOW_FRAMES_COUNT - 1)
-            selection++;
-        else
-            selection = 0;
-
-        LoadBgTiles(1, GetWindowFrameTilesPal(selection)->tiles, 0x120, 0x1A2);
-        LoadPalette(GetWindowFrameTilesPal(selection)->pal, BG_PLTT_ID(7), PLTT_SIZE_4BPP);
-        sArrowPressed = TRUE;
-    }
-    if (JOY_NEW(DPAD_LEFT))
-    {
-        if (selection != 0)
-            selection--;
-        else
-            selection = WINDOW_FRAMES_COUNT - 1;
-
+        WrapAddPtr(&selection, delta, 0, WINDOW_FRAMES_COUNT - 1);
         LoadBgTiles(1, GetWindowFrameTilesPal(selection)->tiles, 0x120, 0x1A2);
         LoadPalette(GetWindowFrameTilesPal(selection)->pal, BG_PLTT_ID(7), PLTT_SIZE_4BPP);
         sArrowPressed = TRUE;
@@ -587,22 +552,10 @@ static void FrameType_DrawChoices(u8 selection)
 
 static u8 ButtonMode_ProcessInput(u8 selection)
 {
-    if (JOY_NEW(DPAD_RIGHT))
+    s32 delta;
+    if ((delta = JOY_AXIS_NEW(DPAD_LEFT, DPAD_RIGHT)) != 0)
     {
-        if (selection <= 1)
-            selection++;
-        else
-            selection = 0;
-
-        sArrowPressed = TRUE;
-    }
-    if (JOY_NEW(DPAD_LEFT))
-    {
-        if (selection != 0)
-            selection--;
-        else
-            selection = 2;
-
+        WrapAddPtr(&selection, delta, 0, 2);
         sArrowPressed = TRUE;
     }
     return selection;

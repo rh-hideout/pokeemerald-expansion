@@ -24,6 +24,7 @@
 #include "script.h"
 #include "task.h"
 #include "text_window.h"
+#include "util.h"
 #include "window.h"
 #include "constants/songs.h"
 
@@ -704,15 +705,7 @@ void RedrawMenuCursor(u8 oldPos, u8 newPos)
 u8 Menu_MoveCursor(s8 cursorDelta)
 {
     u8 oldPos = sMenu.cursorPos;
-    int newPos = sMenu.cursorPos + cursorDelta;
-
-    if (newPos < sMenu.minCursorPos)
-        sMenu.cursorPos = sMenu.maxCursorPos;
-    else if (newPos > sMenu.maxCursorPos)
-        sMenu.cursorPos = sMenu.minCursorPos;
-    else
-        sMenu.cursorPos += cursorDelta;
-
+    sMenu.cursorPos = WrapAdd(sMenu.cursorPos, cursorDelta, sMenu.minCursorPos, sMenu.maxCursorPos);
     RedrawMenuCursor(oldPos, sMenu.cursorPos);
     return sMenu.cursorPos;
 }
@@ -720,15 +713,7 @@ u8 Menu_MoveCursor(s8 cursorDelta)
 u8 Menu_MoveCursorNoWrapAround(s8 cursorDelta)
 {
     u8 oldPos = sMenu.cursorPos;
-    int newPos = sMenu.cursorPos + cursorDelta;
-
-    if (newPos < sMenu.minCursorPos)
-        sMenu.cursorPos = sMenu.minCursorPos;
-    else if (newPos > sMenu.maxCursorPos)
-        sMenu.cursorPos = sMenu.maxCursorPos;
-    else
-        sMenu.cursorPos += cursorDelta;
-
+    sMenu.cursorPos = SatAdd(sMenu.cursorPos, cursorDelta, sMenu.minCursorPos, sMenu.maxCursorPos);
     RedrawMenuCursor(oldPos, sMenu.cursorPos);
     return sMenu.cursorPos;
 }
@@ -740,6 +725,7 @@ u8 Menu_GetCursorPos(void)
 
 s8 Menu_ProcessInput(void)
 {
+    s32 delta;
     if (JOY_NEW(A_BUTTON))
     {
         if (!sMenu.APressMuted)
@@ -750,16 +736,10 @@ s8 Menu_ProcessInput(void)
     {
         return MENU_B_PRESSED;
     }
-    else if (JOY_NEW(DPAD_UP))
+    else if ((delta = JOY_AXIS_NEW(DPAD_UP, DPAD_DOWN)) != 0)
     {
         PlaySE(SE_SELECT);
-        Menu_MoveCursor(-1);
-        return MENU_NOTHING_CHOSEN;
-    }
-    else if (JOY_NEW(DPAD_DOWN))
-    {
-        PlaySE(SE_SELECT);
-        Menu_MoveCursor(1);
+        Menu_MoveCursor(delta);
         return MENU_NOTHING_CHOSEN;
     }
 
@@ -768,6 +748,7 @@ s8 Menu_ProcessInput(void)
 
 s8 Menu_ProcessInputNoWrap(void)
 {
+    s32 delta;
     u8 oldPos = sMenu.cursorPos;
 
     if (JOY_NEW(A_BUTTON))
@@ -780,15 +761,9 @@ s8 Menu_ProcessInputNoWrap(void)
     {
         return MENU_B_PRESSED;
     }
-    else if (JOY_NEW(DPAD_UP))
+    else if ((delta = JOY_AXIS_NEW(DPAD_UP, DPAD_DOWN)) != 0)
     {
-        if (oldPos != Menu_MoveCursorNoWrapAround(-1))
-            PlaySE(SE_SELECT);
-        return MENU_NOTHING_CHOSEN;
-    }
-    else if (JOY_NEW(DPAD_DOWN))
-    {
-        if (oldPos != Menu_MoveCursorNoWrapAround(1))
+        if (oldPos != Menu_MoveCursorNoWrapAround(delta))
             PlaySE(SE_SELECT);
         return MENU_NOTHING_CHOSEN;
     }
@@ -1194,6 +1169,7 @@ static s8 UNUSED Menu_ProcessGridInput_NoSoundLimit(void)
 
 s8 Menu_ProcessGridInput(void)
 {
+    s32 delta;
     u8 oldPos = sMenu.cursorPos;
 
     if (JOY_NEW(A_BUTTON))
@@ -1205,15 +1181,9 @@ s8 Menu_ProcessGridInput(void)
     {
         return MENU_B_PRESSED;
     }
-    else if (JOY_NEW(DPAD_UP))
+    else if ((delta = JOY_AXIS_NEW(DPAD_UP, DPAD_DOWN)) != 0)
     {
-        if (oldPos != ChangeGridMenuCursorPosition(0, -1))
-            PlaySE(SE_SELECT);
-        return MENU_NOTHING_CHOSEN;
-    }
-    else if (JOY_NEW(DPAD_DOWN))
-    {
-        if (oldPos != ChangeGridMenuCursorPosition(0, 1))
+        if (oldPos != ChangeGridMenuCursorPosition(0, delta))
             PlaySE(SE_SELECT);
         return MENU_NOTHING_CHOSEN;
     }

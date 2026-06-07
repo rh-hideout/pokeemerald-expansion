@@ -44,8 +44,8 @@ struct BattleDebugModifyArrows
     u16 minValue;
     u16 maxValue;
     int currValue;
-    u8 currentDigit:4;
-    u8 maxDigits:4;
+    u8 currentDigit;
+    u8 maxDigits;
     u8 charDigits[MAX_MODIFY_DIGITS];
     void *modifiedValPtr;
     u8 typeOfVal;
@@ -613,7 +613,7 @@ static void UpdateMonData(struct BattleDebugMenu *data);
 static void ChangeHazardsValue(struct BattleDebugMenu *data);
 static u32 GetHazardsValue(struct BattleDebugMenu *data);
 static u16 *GetSideStatusValue(struct BattleDebugMenu *data, bool32 changeStatus, bool32 statusTrue);
-static bool32 TryMoveDigit(struct BattleDebugModifyArrows *modArrows, bool32 moveUp);
+static bool32 TryMoveDigit(struct BattleDebugModifyArrows *modArrows, s32 delta);
 static void SwitchToDebugView(u8 taskId);
 static void SwitchToDebugViewFromAiParty(u8 taskId);
 
@@ -1246,6 +1246,7 @@ static void Task_DebugMenuProcessInput(u8 taskId)
     // Handle value modifying.
     else if (data->activeWindow == ACTIVE_WIN_MODIFY)
     {
+        s32 delta;
         if (JOY_NEW(B_BUTTON | A_BUTTON))
         {
             ClearStdWindowAndFrameToTransparent(data->modifyWindowId, TRUE);
@@ -1253,36 +1254,15 @@ static void Task_DebugMenuProcessInput(u8 taskId)
             DestroyModifyArrows(data);
             data->activeWindow = ACTIVE_WIN_SECONDARY;
         }
-        else if (JOY_NEW(DPAD_RIGHT))
+        else if ((delta = JOY_AXIS_NEW(DPAD_LEFT, DPAD_RIGHT)) != 0)
         {
-            if (data->modifyArrows.currentDigit != (data->modifyArrows.maxDigits - 1))
-            {
-                data->modifyArrows.currentDigit++;
-                gSprites[data->modifyArrows.arrowSpriteId[0]].x2 += 6;
-                gSprites[data->modifyArrows.arrowSpriteId[1]].x2 += 6;
-            }
+            SatAddPtr(&data->modifyArrows.currentDigit, delta, 0, data->modifyArrows.maxDigits - 1);
+            gSprites[data->modifyArrows.arrowSpriteId[0]].x2 = data->modifyArrows.currentDigit * 6;
+            gSprites[data->modifyArrows.arrowSpriteId[1]].x2 = data->modifyArrows.currentDigit * 6;
         }
-        else if (JOY_NEW(DPAD_LEFT))
+        else if ((delta = JOY_AXIS_NEW(DPAD_UP, DPAD_DOWN)) != 0)
         {
-            if (data->modifyArrows.currentDigit != 0)
-            {
-                data->modifyArrows.currentDigit--;
-                gSprites[data->modifyArrows.arrowSpriteId[0]].x2 -= 6;
-                gSprites[data->modifyArrows.arrowSpriteId[1]].x2 -= 6;
-            }
-        }
-        else if (JOY_NEW(DPAD_UP))
-        {
-            if (TryMoveDigit(&data->modifyArrows, TRUE))
-            {
-                PrintDigitChars(data);
-                UpdateBattlerValue(data);
-                PrintSecondaryEntries(data);
-            }
-        }
-        else if (JOY_NEW(DPAD_DOWN))
-        {
-            if (TryMoveDigit(&data->modifyArrows, FALSE))
+            if (TryMoveDigit(&data->modifyArrows, delta))
             {
                 PrintDigitChars(data);
                 UpdateBattlerValue(data);
@@ -2071,7 +2051,7 @@ static void SetUpModifyArrows(struct BattleDebugMenu *data)
     ValueToCharDigits(data->modifyArrows.charDigits, data->modifyArrows.currValue, data->modifyArrows.maxDigits);
 }
 
-static bool32 TryMoveDigit(struct BattleDebugModifyArrows *modArrows, bool32 moveUp)
+static bool32 TryMoveDigit(struct BattleDebugModifyArrows *modArrows, s32 delta)
 {
     s32 i;
     u8 charDigits[MAX_MODIFY_DIGITS];
@@ -2080,7 +2060,7 @@ static bool32 TryMoveDigit(struct BattleDebugModifyArrows *modArrows, bool32 mov
     for (i = 0; i < MAX_MODIFY_DIGITS; i++)
         charDigits[i] = modArrows->charDigits[i];
 
-    if (moveUp)
+    if (delta < 0)
     {
         if (charDigits[modArrows->currentDigit] == CHAR_9)
         {
