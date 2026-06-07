@@ -1586,11 +1586,7 @@ static u32 GetSwitchinSingleUseItemHealing(enum BattlerId battler, enum BattlerI
                 itemHeal = 1;
         }
         break;
-    case HOLD_EFFECT_CONFUSE_SPICY:
-    case HOLD_EFFECT_CONFUSE_DRY:
-    case HOLD_EFFECT_CONFUSE_SWEET:
-    case HOLD_EFFECT_CONFUSE_BITTER:
-    case HOLD_EFFECT_CONFUSE_SOUR:
+    case HOLD_EFFECT_CONFUSE_FLAVOR:
         if (currentHP < maxHP / CONFUSE_BERRY_HP_FRACTION)
         {
             itemHeal = maxHP / GetItemHoldEffectParam(aiItem);
