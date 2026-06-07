@@ -7340,6 +7340,9 @@ static inline uq4_12_t GetGlaiveRushModifier(enum BattlerId battlerDef)
 
 static inline uq4_12_t GetUnseenFistModifier(struct DamageContext *ctx)
 {
+    if (MoveIgnoresProtect(ctx->move))
+        return UQ_4_12(1.0);
+    
     u32 protected = gProtectStructs[ctx->battlerDef].protected;
     if (GetProtectType(protected) == PROTECT_TYPE_SINGLE && protected != PROTECT_MAX_GUARD
          && (GetBattlerAbility(ctx->battlerAtk) == ABILITY_UNSEEN_FIST || GetBattlerAbility(ctx->battlerAtk) == ABILITY_PIERCING_DRILL)

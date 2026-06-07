@@ -146,3 +146,25 @@ SINGLE_BATTLE_TEST("Unseen Fist deals 25% of the damage dealt to protected targe
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(0.25), results[1].damage);
     }
 }
+
+SINGLE_BATTLE_TEST("Unseen Fist still deals 100% of the damage dealt with Phantom Force (Champions)", s16 damage)
+{
+    u32 genConfig;
+    PARAMETRIZE { genConfig = GEN_9; }
+    PARAMETRIZE { genConfig = GEN_CHAMPIONS; }
+
+    GIVEN {
+        WITH_CONFIG(B_UNSEEN_FIST_DAMAGE, genConfig);
+        PLAYER(SPECIES_URSHIFU) { Ability(ABILITY_UNSEEN_FIST); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_PHANTOM_FORCE); }
+        TURN { SKIP_TURN(player); MOVE(opponent, MOVE_PROTECT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PHANTOM_FORCE, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.0), results[1].damage);
+    }
+}
