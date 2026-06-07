@@ -722,7 +722,10 @@ static enum ItemEffect TryCureFreezeOrFrostbite(enum BattlerId battler)
     }
 
     if (effect == ITEM_STATUS_CHANGE)
+    {
+        gBattleMons[battler].volatiles.freezeTimer = 0;
         BattleScriptCall(BattleScript_BerryCureStatusRet);
+    }
 
     return effect;
 }

@@ -11,6 +11,7 @@
     F(B_MULTI_HIT_CHANCE,          multiHitChance,          (u32, GEN_COUNT - 1)) \
     F(B_WHITEOUT_MONEY,            whiteoutMoney,           (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_LIGHT_BALL_ATTACK_BOOST,   lightBallAttackBoost,    (u32, GEN_COUNT - 1)) \
+    F(B_PARALYSIS_CHANCE,          paralysisChance,         (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     /* Experience settings */ \
     F(B_EXP_CATCH,                 expCatch,                (u32, GEN_COUNT - 1)) \
     F(B_TRAINER_EXP_MULTIPLIER,    trainerExpMultiplier,    (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
@@ -60,6 +61,7 @@
     F(B_RECALC_TURN_AFTER_ACTIONS, recalcTurnAfterActions,  (u32, GEN_COUNT - 1)) \
     F(B_FAINT_SWITCH_IN,           faintSwitchIn,           (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_MEGA_EVO_SPEED_SWAP,       megaEvoSpeedSwap,        (u32, GEN_COUNT - 1)) \
+    F(B_FREEZE_TURNS,              freezeTurns,             (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     /* Move data settings */ \
     F(B_UPDATED_MOVE_DATA,         updatedMoveData,         (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_UPDATED_MOVE_TYPES,        updatedMoveTypes,        (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
