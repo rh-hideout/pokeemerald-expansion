@@ -72,3 +72,30 @@ SINGLE_BATTLE_TEST("Poison Heal activates before Toxic Orb")
         }
     }
 }
+
+SINGLE_BATTLE_TEST("Bad poison counter still increases each turn if the Pokemon has Poison Heal")
+{
+    u32 j;
+    s16 poisonDamage;
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_GASTRO_ACID) == EFFECT_GASTRO_ACID);
+        PLAYER(SPECIES_SHROOMISH) { Ability(ABILITY_POISON_HEAL); Status1(STATUS1_TOXIC_POISON); HP(80); MaxHP(160); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        for (j = 0; j < 4; j++)
+            TURN {}
+        TURN { MOVE(opponent, MOVE_GASTRO_ACID); }
+    } SCENE {
+        for (j = 0; j < 4; j++)
+        {
+            ABILITY_POPUP(player, ABILITY_POISON_HEAL);
+            HP_BAR(player, damage: -(160 / 8));
+        }
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GASTRO_ACID, opponent);
+        NOT ABILITY_POPUP(player, ABILITY_POISON_HEAL);
+        HP_BAR(player, captureDamage: &poisonDamage);
+    } THEN {
+        EXPECT_EQ(poisonDamage, 160 * 4 / 16);
+    }
+}

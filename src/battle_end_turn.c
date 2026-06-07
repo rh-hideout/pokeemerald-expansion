@@ -502,10 +502,12 @@ static bool32 HandleEndTurnPoison(enum BattlerId battler)
     bool32 effect = FALSE;
 
     enum Ability ability = GetBattlerAbility(battler);
+    bool32 isToxicPoison = gBattleMons[battler].status1 & STATUS1_TOXIC_POISON;
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if ((gBattleMons[battler].status1 & STATUS1_POISON || gBattleMons[battler].status1 & STATUS1_TOXIC_POISON)
+
+    if ((gBattleMons[battler].status1 & STATUS1_POISON || isToxicPoison)
      && IsBattlerPresent(battler)
      && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
     {
@@ -518,11 +520,9 @@ static bool32 HandleEndTurnPoison(enum BattlerId battler)
                 effect = TRUE;
             }
         }
-        else if (gBattleMons[battler].status1 & STATUS1_TOXIC_POISON)
+        else if (isToxicPoison)
         {
             SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
-            if ((gBattleMons[battler].status1 & STATUS1_TOXIC_COUNTER) != STATUS1_TOXIC_TURN(15)) // not 16 turns
-                gBattleMons[battler].status1 += STATUS1_TOXIC_TURN(1);
             gBattleStruct->passiveHpUpdate[battler] *= (gBattleMons[battler].status1 & STATUS1_TOXIC_COUNTER) >> 8;
             BattleScriptCall(BattleScript_PoisonTurnDmg);
             effect = TRUE;
@@ -533,6 +533,10 @@ static bool32 HandleEndTurnPoison(enum BattlerId battler)
             BattleScriptCall(BattleScript_PoisonTurnDmg);
             effect = TRUE;
         }
+
+        if (isToxicPoison && (gBattleMons[battler].status1 & STATUS1_TOXIC_COUNTER) != STATUS1_TOXIC_TURN(15)) // not 16 turns
+            gBattleMons[battler].status1 += STATUS1_TOXIC_TURN(1);
+
     }
 
     return effect;
@@ -1580,7 +1584,7 @@ static bool32 HandleEndTurnEmergencyExit(enum BattlerId battler)
     bool32 effect = FALSE;
     enum Ability ability = GetBattlerAbility(battler);
 
-    if (EmergencyExitCanBeTriggered(battler))
+    if (EmergencyExitCanBeTriggered(battler, ability))
     {
         gBattleScripting.battler = gBattlerAbility = battler;
         gLastUsedAbility = ability;
