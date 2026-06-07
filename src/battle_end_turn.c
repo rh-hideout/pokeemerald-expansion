@@ -932,7 +932,12 @@ static bool32 HandleEndTurnYawn(enum BattlerId battler)
             else
             {
                 if (B_SLEEP_TURNS >= GEN_CHAMPIONS)
-                    gBattleMons[battler].status1 |= STATUS1_SLEEP_TURN((Random() % 3 == 0) ? 2 : 3);
+                {
+                    if (Random() % 3 == 0)
+                        gBattleMons[battler].status1 |= STATUS1_SLEEP_TURN(2);
+                    else
+                        gBattleMons[battler].status1 |= STATUS1_SLEEP_TURN(3);
+                }
                 else if (B_SLEEP_TURNS >= GEN_5)
                     gBattleMons[battler].status1 |= (RandomUniform(RNG_SLEEP_TURNS, 2, 4));
                 else if (B_SLEEP_TURNS >= GEN_3)
