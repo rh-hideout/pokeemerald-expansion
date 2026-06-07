@@ -506,12 +506,14 @@ static bool32 HandleEndTurnPoison(enum BattlerId battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-
-    if ((gBattleMons[battler].status1 & STATUS1_POISON || isToxicPoison)
-     && IsBattlerPresent(battler)
-     && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
+    if (IsBattlerPresent(battler) && (gBattleMons[battler].status1 & STATUS1_POISON || isToxicPoison))
     {
-        if (ability == ABILITY_POISON_HEAL)
+        if (IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
+        {
+            if (isToxicPoison && (gBattleMons[battler].status1 & STATUS1_TOXIC_COUNTER) != STATUS1_TOXIC_TURN(15)) // not 16 turns
+                gBattleMons[battler].status1 += STATUS1_TOXIC_TURN(1);
+        }
+        else if (ability == ABILITY_POISON_HEAL)
         {
             if (isToxicPoison && (gBattleMons[battler].status1 & STATUS1_TOXIC_COUNTER) != STATUS1_TOXIC_TURN(15)) // not 16 turns
                 gBattleMons[battler].status1 += STATUS1_TOXIC_TURN(1);
