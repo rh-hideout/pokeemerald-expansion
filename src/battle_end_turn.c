@@ -513,6 +513,9 @@ static bool32 HandleEndTurnPoison(enum BattlerId battler)
     {
         if (ability == ABILITY_POISON_HEAL)
         {
+            if (isToxicPoison && (gBattleMons[battler].status1 & STATUS1_TOXIC_COUNTER) != STATUS1_TOXIC_TURN(15)) // not 16 turns
+                gBattleMons[battler].status1 += STATUS1_TOXIC_TURN(1);
+
             if (!IsBattlerAtMaxHp(battler) && !gBattleMons[battler].volatiles.healBlock)
             {
                 SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
@@ -523,6 +526,8 @@ static bool32 HandleEndTurnPoison(enum BattlerId battler)
         else if (isToxicPoison)
         {
             SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
+            if (isToxicPoison && (gBattleMons[battler].status1 & STATUS1_TOXIC_COUNTER) != STATUS1_TOXIC_TURN(15)) // not 16 turns
+                gBattleMons[battler].status1 += STATUS1_TOXIC_TURN(1);
             gBattleStruct->passiveHpUpdate[battler] *= (gBattleMons[battler].status1 & STATUS1_TOXIC_COUNTER) >> 8;
             BattleScriptCall(BattleScript_PoisonTurnDmg);
             effect = TRUE;
@@ -533,10 +538,6 @@ static bool32 HandleEndTurnPoison(enum BattlerId battler)
             BattleScriptCall(BattleScript_PoisonTurnDmg);
             effect = TRUE;
         }
-
-        if (isToxicPoison && (gBattleMons[battler].status1 & STATUS1_TOXIC_COUNTER) != STATUS1_TOXIC_TURN(15)) // not 16 turns
-            gBattleMons[battler].status1 += STATUS1_TOXIC_TURN(1);
-
     }
 
     return effect;
