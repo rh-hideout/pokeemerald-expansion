@@ -7065,6 +7065,15 @@ static bool8 ResolveGmaxFactor(u32 gmaxFactorTemplate)
     return gmaxFactorTemplate;
 }
 
+static bool8 ResolveIsEgg(u32 isEggTemplate)
+{
+    assertf(isEggTemplate == TRUE || isEggTemplate == FALSE, "using non boolean isEgg value %d when creating pokemon", isEggTemplate)
+    {
+        return FALSE;
+    }
+    return isEggTemplate;
+}
+
 static bool8 ResolveTeraType(u32 teraTypeTemplate)
 {
     assertf(teraTypeTemplate != TYPE_NONE && teraTypeTemplate != TYPE_MYSTERY && teraTypeTemplate < NUMBER_OF_MON_TYPES, "using invalid tera type %d when creating pokemon", teraTypeTemplate)
@@ -7143,6 +7152,9 @@ void CreateMonFromTemplate(struct Pokemon *mon, const struct PokemonTemplate *mo
         enum Type teraType = ResolveTeraType(monTemplate->teraType);
         SetMonData(mon, MON_DATA_TERA_TYPE, &teraType);
     }
+
+    bool8 isEgg = ResolveIsEgg(monTemplate->isEgg);
+    SetMonData(mon, MON_DATA_IS_EGG, &isEgg);
 
     CalculateMonStats(mon);
     TryFormChange(mon, FORM_CHANGE_ITEM_HOLD, B_TRAINER_PLAYER);
