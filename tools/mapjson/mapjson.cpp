@@ -166,7 +166,6 @@ string generate_map_header_text(Json map_data, Json layouts_data) {
 
     text << "\t.2byte " << json_to_string(layout, "id") << "\n"
          << "\t.byte "  << json_to_string(map_data, "region_map_section") << "\n"
-         << "\t.byte "  << json_to_string(map_data, "requires_flash") << "\n"
          << "\t.byte "  << json_to_string(map_data, "weather") << "\n"
          << "\t.byte "  << json_to_string(map_data, "map_type") << "\n";
 
@@ -175,8 +174,6 @@ string generate_map_header_text(Json map_data, Json layouts_data) {
         text << "\t.byte 0\n";
     else
         text << "\t.byte " << floor_number << "\n";
-
-    text << "\t.byte 0\n";
 
     if (!map_data["NightSong"].is_null())
         text << "\t.2byte " << json_to_string(map_data, "NightSong") << "\n";
@@ -193,9 +190,10 @@ string generate_map_header_text(Json map_data, Json layouts_data) {
              << "allow_running=" << json_to_string(map_data, "allow_running") << ", "
              << "show_map_name=" << json_to_string(map_data, "show_map_name") << ", ";
         if (map_data.object_items().find("write_specialvar_iseffect") != map_data.object_items().end())
-            text << "write_specialvar_iseffect=" << json_to_string(map_data, "write_specialvar_iseffect") << "\n";
+            text << "write_specialvar_iseffect=" << json_to_string(map_data, "write_specialvar_iseffect") << ", ";
         else
-            text  << "write_specialvar_iseffect=FALSE" << "\n";
+            text  << "write_specialvar_iseffect=FALSE" << ", ";
+        text << "requires_flash=" << json_to_string(map_data, "requires_flash") << "\n";
     }
 
      text << "\t.byte " << json_to_string(map_data, "battle_scene") << "\n\n";

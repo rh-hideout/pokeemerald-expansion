@@ -5,7 +5,7 @@ static const u8 ALIGNED(4) sBurstTriggerGfx[] = INCGFX_U8("graphics/battle_inter
 static const u8 ALIGNED(4) sDynamaxTriggerGfx[] = INCGFX_U8("graphics/battle_interface/dynamax_trigger.png", ".4bpp");
 static const u8 ALIGNED(4) sTeraTriggerGfx[] = INCGFX_U8("graphics/battle_interface/tera_trigger.png", ".4bpp");
 
-static const u16 sMegaTriggerPal[] = INCGFX_U16("graphics/battle_interface/mega_trigger.pal", ".gbapal");
+static const u16 sMegaTriggerPal[] = INCGFX_U16("graphics/battle_interface/mega_trigger.png", ".gbapal");
 static const u16 sZMoveTriggerPal[] = INCGFX_U16("graphics/battle_interface/z_move_trigger.png", ".gbapal");
 static const u16 sBurstTriggerPal[] = INCGFX_U16("graphics/battle_interface/burst_trigger.png", ".gbapal");
 static const u16 sDynamaxTriggerPal[] = INCGFX_U16("graphics/battle_interface/dynamax_trigger.png", ".gbapal");

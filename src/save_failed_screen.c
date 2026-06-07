@@ -424,7 +424,8 @@ void CB2_FlashNotDetectedScreen(void)
             .height = 16,
             .paletteNum = 15,
             .baseBlock = 1,
-        }
+        },
+        DUMMY_WIN_TEMPLATE
     };
 
     if (gMain.state)

@@ -129,9 +129,9 @@ enum MonData {
 
 struct PokemonSubstruct0
 {
-    u16 species:11; // 2047 species.
+    enum Species species:11; // 2047 species.
     enum Type teraType:5; // 30 types.
-    u16 heldItem:10; // 1023 items.
+    enum Item heldItem:10; // 1023 items.
     u16 unused_02:6;
     u32 experience:21;
     u32 nickname11:8; // 11th character of nickname.
@@ -630,11 +630,11 @@ struct FormChangeContext
     enum Species currentSpecies;
     u16 partyItemUsed;
     u16 multichoiceSelection;
-    u16 heldItem;
-    u16 ability;
+    enum Item heldItem;
+    enum Ability ability;
     u16 learnedMove;
     u32 status;
-    u16 moves[MAX_MON_MOVES];
+    enum Move moves[MAX_MON_MOVES];
     u16 hp;
     u16 maxHP;
     u32 gmaxFactor:1;
@@ -654,10 +654,10 @@ struct Fusion
 {
     u16 fusionStorageIndex;
     enum Item itemId;
-    u16 targetSpecies1;
-    u16 targetSpecies2;
+    enum Species targetSpecies1;
+    enum Species targetSpecies2;
     u16 fusingIntoMon;
-    u16 fusionMove;
+    enum Move fusionMove;
     enum FusionExtraMoveHandling extraMoveHandling;
 };
 
@@ -782,7 +782,7 @@ u8 GetMonGender(struct Pokemon *mon);
 u8 GetBoxMonGender(struct BoxPokemon *boxMon);
 u8 GetGenderFromSpeciesAndPersonality(enum Species species, u32 personality);
 bool32 IsPersonalityFemale(enum Species species, u32 personality);
-u32 GetUnownSpeciesId(u32 personality);
+enum Species GetUnownSpeciesId(u32 personality);
 void SetMultiuseSpriteTemplateToPokemon(enum Species speciesTag, enum BattlerPosition battlerPosition);
 void SetMultiuseSpriteTemplateToTrainerBack(enum TrainerPicID trainerPicId, enum BattlerPosition battlerPosition);
 void SetMultiuseSpriteTemplateToTrainerFront(enum TrainerPicID trainerPicId, enum BattlerPosition battlerPosition);
@@ -944,8 +944,8 @@ void UpdateDaysPassedSinceFormChange(u16 days);
 void TrySetDayLimitToFormChange(struct Pokemon *mon);
 enum Type CheckDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId battler, enum MonState state);
 uq4_12_t GetDynamaxLevelHPMultiplier(u32 dynamaxLevel, bool32 inverseMultiplier);
-u32 GetRegionalFormByRegion(enum Species species, u32 region);
-bool32 IsSpeciesForeignRegionalForm(enum Species species, u32 currentRegion);
+enum Species GetRegionalFormByRegion(enum Species species, enum Region region);
+bool32 IsSpeciesForeignRegionalForm(enum Species species, enum Region currentRegion);
 enum Type GetTeraTypeFromPersonality(struct Pokemon *mon);
 bool8 ShouldSkipFriendshipChange(void);
 struct Pokemon *GetSavedPlayerPartyMon(u32 index);

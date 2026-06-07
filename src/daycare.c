@@ -915,7 +915,7 @@ static enum Species DetermineEggSpeciesAndParentSlots(struct DayCare *daycare, u
     enum Species eggSpecies;
     bool32 hasMotherEverstone, hasFatherEverstone, motherIsForeign, fatherIsForeign;
     bool32 motherEggSpecies, fatherEggSpecies;
-    u32 currentRegion = GetCurrentRegion();
+    enum Region currentRegion = GetCurrentRegion();
 
     for (i = 0; i < DAYCARE_MON_COUNT; i++)
     {

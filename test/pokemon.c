@@ -21,7 +21,7 @@ TEST("Nature independent from Hidden Nature")
             PARAMETRIZE { nature = i; hiddenNature = j; }
         }
     }
-    u32 species = SPECIES_WOBBUFFET;
+    enum Species species = SPECIES_WOBBUFFET;
     u32 personality = GetMonPersonality(species, MON_GENDER_RANDOM, nature, RANDOM_UNOWN_LETTER);
     CreateMon(&mon, species, 100, personality, OTID_STRUCT_PLAYER_ID);
     SetMonData(&mon, MON_DATA_HIDDEN_NATURE, &hiddenNature);
@@ -571,7 +571,8 @@ TEST("Pokémon level up learnsets fit within MAX_LEVEL_UP_MOVES and MAX_RELEARNE
 {
     KNOWN_FAILING;
 
-    u32 j, count, species = 0;
+    u32 j, count;
+    enum Species species = SPECIES_NONE;
     const struct LevelUpMove *learnset;
 
     for(j = 0; j < SPECIES_EGG; j++)

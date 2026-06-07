@@ -20,7 +20,42 @@ static void DummyWindowBgTilemap(void)
 
 }
 
-bool32 InitWindows(const struct WindowTemplate *templates)
+bool32 InitWindowsChecked(const struct WindowTemplate *templates, s32 staticSize)
+{
+    bool32 terminated;
+
+    if (staticSize >= 0)
+    {
+        terminated = templates[(staticSize / sizeof(*templates)) - 1].bg == 0xFF;
+    }
+    else
+    {
+        terminated = FALSE;
+        for (u32 i = 0; i < WINDOWS_MAX; i++)
+        {
+            if (templates[i].bg == 0xFF)
+            {
+                terminated = TRUE;
+                break;
+            }
+            else if (0x04 <= templates[i].bg && templates[i].bg < 0xFF)
+            {
+                break;
+            }
+        }
+    }
+
+    assertf(terminated, "%p is missing DUMMY_WIN_TEMPLATE terminator", templates)
+    {
+        return FALSE;
+    }
+
+    bool32 initialized = InitWindowsUnchecked(templates);
+    assertf(initialized, "Could not initialize windows");
+    return initialized;
+}
+
+bool32 InitWindowsUnchecked(const struct WindowTemplate *templates)
 {
     int i;
     void *bgTilemapBuffer;
@@ -49,7 +84,7 @@ bool32 InitWindows(const struct WindowTemplate *templates)
     {
         if (gWindowTileAutoAllocEnabled == TRUE)
         {
-            allocatedBaseBlock = BgTileAllocOp(bgLayer, 0, templates[i].width * templates[i].height, 0);
+            allocatedBaseBlock = BgTileAllocOpUnchecked(bgLayer, 0, templates[i].width * templates[i].height, 0);
             if (allocatedBaseBlock == -1)
                 return FALSE;
         }
@@ -60,7 +95,7 @@ bool32 InitWindows(const struct WindowTemplate *templates)
 
             if (attrib != 0xFFFF)
             {
-                allocatedTilemapBuffer = AllocZeroed(attrib);
+                allocatedTilemapBuffer = AllocZeroedUnchecked(attrib);
 
                 if (allocatedTilemapBuffer == NULL)
                 {
@@ -76,7 +111,7 @@ bool32 InitWindows(const struct WindowTemplate *templates)
             }
         }
 
-        allocatedTilemapBuffer = AllocZeroed((u16)(32 * (templates[i].width * templates[i].height)));
+        allocatedTilemapBuffer = AllocZeroedUnchecked((u16)(32 * (templates[i].width * templates[i].height)));
 
         if (allocatedTilemapBuffer == NULL)
         {
@@ -125,7 +160,7 @@ u32 AddWindow(const struct WindowTemplate *template)
 
     if (gWindowTileAutoAllocEnabled == TRUE)
     {
-        allocatedBaseBlock = BgTileAllocOp(bgLayer, 0, template->width * template->height, 0);
+        allocatedBaseBlock = BgTileAllocOpUnchecked(bgLayer, 0, template->width * template->height, 0);
 
         if (allocatedBaseBlock == -1)
             return WINDOW_NONE;

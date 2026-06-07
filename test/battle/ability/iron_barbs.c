@@ -31,7 +31,7 @@ SINGLE_BATTLE_TEST("Iron Barbs: Damages attackers that make contact")
 
 SINGLE_BATTLE_TEST("Rough Skin and Iron Barbs cause the attacker to take damage when using a contact move")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_GARCHOMP; ability = ABILITY_ROUGH_SKIN; }

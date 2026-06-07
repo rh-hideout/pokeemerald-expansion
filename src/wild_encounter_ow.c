@@ -150,7 +150,7 @@ static bool32 StartWildBattleWithOWE_CheckDoubleBattle(struct ObjectEvent *owe, 
 static bool32 CheckCurrentWildMonHeaderForOWE(bool32 shouldSpawnWaterMons);
 static u32 GetOldestActiveOWESlot(bool32 forceRemove);
 static u32 GetNextOWESpawnSlot(void);
-static u32 GetSpeciesByOWESpawnSlot(u32 spawnSlot);
+static enum Species GetSpeciesByOWESpawnSlot(u32 spawnSlot);
 static bool32 TrySelectTileForOWE(s32* outX, s32* outY);
 static void SetSpeciesInfoForOWE(struct InfoOWE *info, u32 x, u32 y);
 static u32 GetGraphicsIdForOWE(const struct InfoOWE *info);
@@ -455,7 +455,7 @@ static bool32 CreateEnemyPartyOWE(struct InfoOWE *info, s32 x, s32 y)
             if (TryGenerateWildMon(gBattlePyramidWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo, WILD_AREA_LAND, 0) != TRUE)
                 return FALSE;
 
-            u32 id = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_SPECIES);
+            enum Species id = GetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_SPECIES);
             GenerateBattlePyramidWildMon(SPECIES_NONE);
             SetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_LEVEL, &id);
             return TRUE;
@@ -771,7 +771,7 @@ static u32 GetNextOWESpawnSlot(void)
     return spawnSlot;
 }
 
-static u32 GetSpeciesByOWESpawnSlot(u32 spawnSlot)
+static enum Species GetSpeciesByOWESpawnSlot(u32 spawnSlot)
 {
     u32 objEventId = GetObjectEventIdByLocalId(GetLocalIdByOWESpawnSlot(spawnSlot));
     struct ObjectEvent *owe = &gObjectEvents[objEventId];

@@ -303,7 +303,7 @@ SINGLE_BATTLE_TEST("Ability Shield protects against Skill Swap even if user has 
 
 DOUBLE_BATTLE_TEST("Ability Shield prevents Receiver/Power of Alchemy holder from copying ally's ability")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_PASSIMIAN; ability = ABILITY_RECEIVER; }
@@ -333,7 +333,7 @@ DOUBLE_BATTLE_TEST("Ability Shield prevents Receiver/Power of Alchemy holder fro
 
 DOUBLE_BATTLE_TEST("Ability Shield on fainted ally does not block Receiver/Power of Alchemy")
 {
-    u32 species;
+    enum Species species;
     enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_PASSIMIAN; ability = ABILITY_RECEIVER; }

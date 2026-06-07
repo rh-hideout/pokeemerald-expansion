@@ -50,7 +50,7 @@ TEST("(Daycare) Pokémon offspring species is based off the mother's species")
 TEST("(Daycare) Pokémon can breed with Ditto if they don't belong to the Ditto or No Eggs Discovered group")
 {
     u32 j = 0;
-    u32 parentSpecies = 0;
+    enum Species parentSpecies = 0;
 
     ZeroPlayerPartyMons();
     for (j = 1; j < NUM_SPECIES; j++)
@@ -92,7 +92,9 @@ TEST("(Daycare) Shellos' form is always based on the mother's form")
 
 TEST("(Daycare) Pokémon with regional forms give the correct offspring")
 {
-    u32 region = 0, offspring = 0, species1 = 0, item1 = 0, species2 = 0, item2 = 0;
+    enum Region region;
+    enum Species offspring, species1, species2;
+    enum Item item1, item2;
 
     ZeroPlayerPartyMons();
 
