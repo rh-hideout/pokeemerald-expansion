@@ -4,8 +4,13 @@
 #include "random.h"
 #include "constants/pokemon.h"
 
-const static enum Ability sForceNatureAbilities[] = {ABILITY_SYNCHRONIZE, ABILITY_NONE};
-const static enum Ability sForceOppositeGenderAbilities[] = {ABILITY_CUTE_CHARM, ABILITY_NONE};
+struct WildmonTypeAffectingAbilities
+{
+    enum Ability ability;
+    enum Type type;
+};
+
+#include "data/ow_abilities.h"
 
 static UNUSED bool32 HasHalfChance(enum Species species);
 static UNUSED bool32 HasTwoThirdsChance(enum Species species);
@@ -131,4 +136,19 @@ u32 GetSynchronizedGender(enum GeneratedMonOrigin origin, enum Species species)
         return MON_MALE;
     else
         return MON_FEMALE;
+}
+
+enum Type GetWeightedTypeForWildmonEncounter(void)
+{
+    if (RandomPercentage(RNG_NONE, WILDMON_AFFECTING_ABILITY_PERCENT_CHANCE))
+        return TYPE_NONE;
+    if (GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SANITY_IS_EGG))
+        return TYPE_NONE;
+    enum Ability monAbility = GetMonAbility(&gParties[B_TRAINER_PLAYER][0]);
+    for (u32 i = 0; sWildmonTypeAffectingAbilities[i].ability != ABILITY_NONE; i++)
+    {
+        if (monAbility == sWildmonTypeAffectingAbilities[i].ability)
+            return sWildmonTypeAffectingAbilities[i].type;
+    }
+    return TYPE_NONE;
 }

@@ -244,11 +244,13 @@ bool8 IsRoamerAt(u32 roamerIndex, u8 mapGroup, u8 mapNum)
         return FALSE;
 }
 
-void CreateRoamerMonInstance(u32 roamerIndex)
+void GenerateRoamerMon(u32 roamerIndex, u32 minLevel)
 {
     u32 status = ROAMER(roamerIndex)->statusA + (ROAMER(roamerIndex)->statusB << 8);
     struct Pokemon *mon = &gParties[B_TRAINER_OPPONENT_A][0];
     ZeroEnemyPartyMons();
+    if (ROAMER(roamerIndex)->level < minLevel)
+        return;
     CreateMonWithIVsPersonality(mon, ROAMER(roamerIndex)->species, ROAMER(roamerIndex)->level, ROAMER(roamerIndex)->ivs, ROAMER(roamerIndex)->personality);
     SetMonData(mon, MON_DATA_STATUS, &status);
     SetMonData(mon, MON_DATA_HP, &ROAMER(roamerIndex)->hp);
@@ -260,15 +262,15 @@ void CreateRoamerMonInstance(u32 roamerIndex)
     SetMonData(mon, MON_DATA_IS_SHINY, &ROAMER(roamerIndex)->shiny);
 }
 
-bool8 TryStartRoamerEncounter(void)
+bool32 CheckForRoamerEncounter(void)
 {
     u32 i;
 
+    gEncounteredRoamerIndex = ROAMER_COUNT;
     for (i = 0; i < ROAMER_COUNT; i++)
     {
         if (IsRoamerAt(i, gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum) == TRUE && (Random() % 4) == 0)
         {
-            CreateRoamerMonInstance(i);
             gEncounteredRoamerIndex = i;
             return TRUE;
         }

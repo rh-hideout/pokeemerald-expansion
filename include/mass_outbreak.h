@@ -17,8 +17,8 @@ struct MassOutbreak
 void PrepareTvShowForRandomOutbreak(TVShow *show);
 void UpdateMassOutbreakDaysLeft(u16 days);
 bool32 IsMassOutbreakActive(void);
-bool8 SetUpMassOutbreakEncounter(u8 flags);
-bool8 DoMassOutbreakEncounterTest(void);
+void GenerateMassOutbreakMon(u32 minLevel);
+bool8 CheckForMassOutbreakEncounter(void);
 void StartStaticMassOutbreak(enum MassOutbreakIndex outbreakIdx);
 u32 GetStaticMassOutbreakCount(void);
 enum Species GetStaticOutbreakSpecies(enum MassOutbreakIndex outbreakIdx);
