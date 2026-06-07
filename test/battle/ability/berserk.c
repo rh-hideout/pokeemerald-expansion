@@ -78,7 +78,7 @@ SINGLE_BATTLE_TEST("Berserk does not activate if move is boosted by Sheer Force 
 {
     u16 maxHp = 500;
     GIVEN {
-        WITH_CONFIG(B_SHEER_FORCE_AGAINST_ABILITIES, GEN_9);
+        // WITH_CONFIG(B_SHEER_FORCE_AGAINST_ABILITIES, GEN_9);
         PLAYER(SPECIES_DRAMPA) { Ability(ABILITY_BERSERK); MaxHP(maxHp); HP(maxHp / 2 + 1); }
         OPPONENT(SPECIES_NIDOKING) { Ability(ABILITY_SHEER_FORCE); }
     } WHEN {

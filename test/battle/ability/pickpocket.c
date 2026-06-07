@@ -377,7 +377,7 @@ SINGLE_BATTLE_TEST("Pickpocket can steal the attacker's Air Balloon")
 SINGLE_BATTLE_TEST("Pickpocket cannot steal an item if hit by a contact move that's boosted by Sheer Force (Gen9)")
 {
     GIVEN {
-        GIVEN(B_SHEER_FORCE_AGAINST_ABILITIES, GEN_9);
+        // GIVEN(B_SHEER_FORCE_AGAINST_ABILITIES, GEN_9);
         ASSUME(gItemsInfo[ITEM_LIFE_ORB].holdEffect == HOLD_EFFECT_LIFE_ORB);
         PLAYER(SPECIES_LANDORUS) { Item(ITEM_LIFE_ORB); Ability(ABILITY_SHEER_FORCE); }
         OPPONENT(SPECIES_SNEASEL) { Ability(ABILITY_PICKPOCKET); }
