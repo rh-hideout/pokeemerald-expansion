@@ -1298,7 +1298,7 @@ bool32 IsBelchPreventingMove(enum BattlerId battler, enum Move move)
     if (GetMoveEffect(move) != EFFECT_BELCH)
         return FALSE;
 
-    return !GetBattlerPartyState(battler)->ateBerry;
+    return (!GetBattlerPartyState(battler)->ateBerry && GetConfig(B_BELCH_SELECTABLE) < GEN_CHAMPIONS);
 }
 
 // Dynamax bypasses all selection prevention except Taunt and Assault Vest.
@@ -1458,7 +1458,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
         }
     }
 
-    if (DYNAMAX_BYPASS_CHECK && moveEffect == EFFECT_STUFF_CHEEKS && GetItemPocket(gBattleMons[battler].item) != POCKET_BERRIES)
+    if (DYNAMAX_BYPASS_CHECK && moveEffect == EFFECT_STUFF_CHEEKS && GetItemPocket(gBattleMons[battler].item) != POCKET_BERRIES && GetConfig(B_STUFF_CHEEKS_SELECTABLE) < GEN_CHAMPIONS)
     {
         gCurrentMove = move;
         if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
@@ -1489,8 +1489,13 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
         }
     }
 
-    // Unconfirmed: We're making an assumption that a Max Move variant of Fake Out/First Impression is usable past the first turn
-    if (DYNAMAX_BYPASS_CHECK && moveEffect == EFFECT_FIRST_TURN_ONLY && !IsBattlersFirstTurn(battler) && GetConfig(B_FIRST_TURN_MOVE) >= GEN_CHAMPIONS)
+    // Unconfirmed: We're making an assumption that a Max Move variant of moves that otherwise result in
+    // "This move can't be used!" can be used while Dynamaxed
+    if (DYNAMAX_BYPASS_CHECK &&
+        ((moveEffect == EFFECT_FIRST_TURN_ONLY && !IsBattlersFirstTurn(battler) && GetConfig(B_FIRST_TURN_MOVE) >= GEN_CHAMPIONS)
+         || (moveEffect == EFFECT_SPIT_UP && gBattleMons[battler].volatiles.stockpileCounter == 0 && GetConfig(B_SPIT_UP_SELECTABLE) >= GEN_CHAMPIONS)
+         || (moveEffect == EFFECT_FAIL_IF_NOT_ARG_TYPE && !IS_BATTLER_OF_TYPE(battler, GetMoveArgType(move)) && GetConfig(B_MOVES_THAT_REMOVE_TYPE) >= GEN_CHAMPIONS)
+         || (moveEffect == EFFECT_LAST_RESORT && !CanUseLastResort(battler) && GetConfig(B_LAST_RESORT_SELECTABLE) >= GEN_CHAMPIONS)))
     {
         gCurrentMove = move;
         if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
@@ -1646,13 +1651,24 @@ u32 CheckMoveLimitations(enum BattlerId battler, u8 unusableMoves, u16 check)
         else if (check & MOVE_LIMITATION_THROAT_CHOP && gBattleMons[battler].volatiles.throatChopTimer > 0 && IsSoundMove(move))
             unusableMoves |= 1u << i;
         // Stuff Cheeks
-        else if (check & MOVE_LIMITATION_STUFF_CHEEKS && moveEffect == EFFECT_STUFF_CHEEKS && GetItemPocket(gBattleMons[battler].item) != POCKET_BERRIES)
+        else if (check & MOVE_LIMITATION_STUFF_CHEEKS && moveEffect == EFFECT_STUFF_CHEEKS && GetItemPocket(gBattleMons[battler].item) != POCKET_BERRIES && GetConfig(B_STUFF_CHEEKS_SELECTABLE) < GEN_CHAMPIONS)
             unusableMoves |= 1u << i;
         // Gorilla Tactics
         else if (check & MOVE_LIMITATION_CHOICE_ITEM && GetBattlerAbility(battler) == ABILITY_GORILLA_TACTICS && *choicedMove != MOVE_NONE && *choicedMove != MOVE_UNAVAILABLE && *choicedMove != move)
             unusableMoves |= 1u << i;
         // Can't Use Twice flag
         else if (check & MOVE_LIMITATION_CANT_USE_TWICE && MoveCantBeUsedTwice(move) && move == gLastResultingMoves[battler])
+            unusableMoves |= 1u << i;
+        // Fake Out, First Impression
+        // Spit Up
+        // Burn Up, Double Shock
+        // Last Resort
+        else if (check & MOVE_LIMITATION_UNUSABLE
+             && ((moveEffect == EFFECT_FIRST_TURN_ONLY && !IsBattlersFirstTurn(battler) && GetConfig(B_FIRST_TURN_MOVE) >= GEN_CHAMPIONS)
+             || (moveEffect == EFFECT_SPIT_UP && gBattleMons[battler].volatiles.stockpileCounter == 0 && GetConfig(B_SPIT_UP_SELECTABLE) >= GEN_CHAMPIONS)
+             || (moveEffect == EFFECT_SPIT_UP && gBattleMons[battler].volatiles.stockpileCounter == 0 && GetConfig(B_SPIT_UP_SELECTABLE) >= GEN_CHAMPIONS)
+             || (moveEffect == EFFECT_FAIL_IF_NOT_ARG_TYPE && !IS_BATTLER_OF_TYPE(battler, GetMoveArgType(move)) && GetConfig(B_MOVES_THAT_REMOVE_TYPE) >= GEN_CHAMPIONS)
+             || (moveEffect == EFFECT_LAST_RESORT && !CanUseLastResort(battler) && GetConfig(B_LAST_RESORT_SELECTABLE) >= GEN_CHAMPIONS)))
             unusableMoves |= 1u << i;
     }
     return unusableMoves;
@@ -9393,14 +9409,15 @@ u32 GetNextTarget(u32 moveTarget, bool32 excludeCurrent)
     return battler;
 }
 
-void CopyMonLevelAndBaseStatsToBattleMon(enum BattlerId battler, struct Pokemon *mon)
+void CopyMonLevelAndBaseStatsToBattleMon(enum BattlerId battler, struct Pokemon *mon, bool32 updateSpeedStat)
 {
     gBattleMons[battler].level = GetMonData(mon, MON_DATA_LEVEL);
     gBattleMons[battler].hp = GetMonData(mon, MON_DATA_HP);
     gBattleMons[battler].maxHP = GetMonData(mon, MON_DATA_MAX_HP);
     gBattleMons[battler].attack = GetMonData(mon, MON_DATA_ATK);
     gBattleMons[battler].defense = GetMonData(mon, MON_DATA_DEF);
-    gBattleMons[battler].speed = GetMonData(mon, MON_DATA_SPEED);
+    if (updateSpeedStat)
+        gBattleMons[battler].speed = GetMonData(mon, MON_DATA_SPEED);
     gBattleMons[battler].spAttack = GetMonData(mon, MON_DATA_SPATK);
     gBattleMons[battler].spDefense = GetMonData(mon, MON_DATA_SPDEF);
 }
@@ -9426,7 +9443,11 @@ void RecalcBattlerStats(enum BattlerId battler, struct Pokemon *mon, bool32 isDy
 {
     u32 hp = GetMonData(mon, MON_DATA_HP);
     u32 oldMaxHp = GetMonData(mon, MON_DATA_MAX_HP);
-    CalculateMonStats(mon);
+    if (gBattleMons[battler].volatiles.speedSwapped && GetConfig(B_MEGA_EVO_SPEED_SWAP) >= GEN_CHAMPIONS)
+        CalculateMonStatsCont(mon, FALSE);
+    else
+        CalculateMonStats(mon);
+        
     if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX && gChosenActionByBattler[battler] != B_ACTION_SWITCH)
     {
         ApplyDynamaxHPMultiplier(mon);
@@ -9444,7 +9465,10 @@ void RecalcBattlerStats(enum BattlerId battler, struct Pokemon *mon, bool32 isDy
             }
         }
     }
-    CopyMonLevelAndBaseStatsToBattleMon(battler, mon);
+    if (gBattleMons[battler].volatiles.speedSwapped && GetConfig(B_MEGA_EVO_SPEED_SWAP) >= GEN_CHAMPIONS)
+        CopyMonLevelAndBaseStatsToBattleMon(battler, mon, FALSE);
+    else
+        CopyMonLevelAndBaseStatsToBattleMon(battler, mon, TRUE);
     CopyMonAbilityAndTypesToBattleMon(battler, mon);
 }
 

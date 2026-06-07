@@ -392,9 +392,10 @@ SINGLE_BATTLE_TEST("Knock Off doesn't knock off begin-battle form-change hold it
     }
 }
 
-SINGLE_BATTLE_TEST("Knock Off does not activate if user faints")
+SINGLE_BATTLE_TEST("Knock Off does not activate if user faints (Gen9)")
 {
     GIVEN {
+        WITH_CONFIG(B_KNOCK_OFF_STEAL_ITEM_TIMING, GEN_9);
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ROCKY_HELMET); }
     } WHEN {
@@ -405,6 +406,29 @@ SINGLE_BATTLE_TEST("Knock Off does not activate if user faints")
         MESSAGE("Wobbuffet fainted!");
     } THEN {
         EXPECT(opponent->item == ITEM_ROCKY_HELMET);
+    }
+}
+
+SINGLE_BATTLE_TEST("Knock Off does activate if user faints (Champions)")
+{
+    GIVEN {
+        WITH_CONFIG(B_KNOCK_OFF_STEAL_ITEM_TIMING, GEN_CHAMPIONS);
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ROCKY_HELMET); }
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_KNOCK_OFF);
+            SEND_OUT(player, 1);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, player);
+        MESSAGE("Wobbuffet was hurt by the opposing Wobbuffet's Rocky Helmet!");
+        MESSAGE("Wobbuffet fainted!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF);
+        MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Rocky Helmet!");
+    } THEN {
+        EXPECT(opponent->item == ITEM_NONE);
     }
 }
 

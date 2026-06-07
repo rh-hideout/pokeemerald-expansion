@@ -1459,6 +1459,17 @@ static enum CancelerResult CancelerMoveEffectFailureTarget(struct BattleCalcValu
                 continue;
             }
             break;
+        case EFFECT_BELCH:
+            if (!GetBattlerPartyState(cv->battlerAtk)->ateBerry)
+            {
+                battleScript = BattleScript_BelchFails;
+            }
+            else
+            {
+                numAffectedTargets++;
+                continue;
+            }
+            break;
         default:
             continue;
         }
@@ -3468,13 +3479,15 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
         break;
     case EFFECT_KNOCK_OFF:
         if (gBattleMons[cv->battlerDef].item != ITEM_NONE
-         && IsBattlerAlive(cv->battlerAtk)
          && !(B_KNOCK_OFF_REMOVAL >= GEN_5 && side == B_SIDE_PLAYER && !(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
          && IsAnyTargetTurnDamaged(cv->battlerAtk, EXCLUDING_SUBSTITUTES)
          && !DoesSubstituteBlockMove(cv->battlerAtk, cv->battlerDef, cv->move)
          && CanBattlerGetOrLoseItem(cv->battlerDef, cv->battlerAtk, gBattleMons[cv->battlerDef].item)
          && !NoAliveMonsForEitherParty())
         {
+            if (!IsBattlerAlive(cv->battlerAtk) && GetConfig(B_KNOCK_OFF_STEAL_ITEM_TIMING) < GEN_CHAMPIONS)
+                break;
+
             enum BattleSide side = GetBattlerSide(cv->battlerDef);
 
             if (cv->abilities[cv->battlerDef] == ABILITY_STICKY_HOLD)
@@ -3512,7 +3525,7 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
         if (!IsAnyTargetTurnDamaged(cv->battlerAtk, EXCLUDING_SUBSTITUTES)
          || gBattleMons[cv->battlerAtk].item != ITEM_NONE
          || gBattleMons[cv->battlerDef].item == ITEM_NONE
-         || !IsBattlerAlive(cv->battlerAtk)
+         || (!IsBattlerAlive(cv->battlerAtk) && GetConfig(B_KNOCK_OFF_STEAL_ITEM_TIMING) < GEN_CHAMPIONS)
          || !CanStealItem(cv->battlerAtk, cv->battlerDef, gBattleMons[cv->battlerDef].item))
         {
             result = MOVEEND_RESULT_CONTINUE;
@@ -3535,7 +3548,10 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
                 gBattleMons[cv->battlerAtk].item = gLastUsedItem;
             }
             gEffectBattler = cv->battlerDef;
-            BattleScriptCall(BattleScript_ItemSteal);
+            if (IsBattlerAlive(cv->battlerAtk))
+                BattleScriptCall(BattleScript_ItemSteal);
+            else
+                BattleScriptCall(BattleScript_ItemStealNoAnim);
             result = MOVEEND_RESULT_RUN_SCRIPT;
         }
         break;
@@ -3583,8 +3599,11 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
         }
         break;
     case EFFECT_RAPID_SPIN:
-        if (IsAnyTargetTurnDamaged(cv->battlerAtk, INCLUDING_SUBSTITUTES) && IsBattlerAlive(cv->battlerAtk))
+        if (IsAnyTargetTurnDamaged(cv->battlerAtk, INCLUDING_SUBSTITUTES))
         {
+            if (!IsBattlerAlive(cv->battlerAtk) && GetConfig(B_RAPID_SPIN_TIMING) < GEN_CHAMPIONS)
+                break;
+
             BattleScriptCall(BattleScript_RapidSpinAway);
             result = MOVEEND_RESULT_RUN_SCRIPT;
         }

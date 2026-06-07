@@ -6,23 +6,26 @@
 #include "constants/hold_effects.h"
 #include "constants/battle_stat_change.h"
 
-#define MOVE_LIMITATION_ZEROMOVE                (1 << 0)
-#define MOVE_LIMITATION_PP                      (1 << 1)
-#define MOVE_LIMITATION_DISABLED                (1 << 2)
-#define MOVE_LIMITATION_TORMENTED               (1 << 3)
-#define MOVE_LIMITATION_TAUNT                   (1 << 4)
-#define MOVE_LIMITATION_IMPRISON                (1 << 5)
-#define MOVE_LIMITATION_ENCORE                  (1 << 6)
-#define MOVE_LIMITATION_CHOICE_ITEM             (1 << 7)
-#define MOVE_LIMITATION_ASSAULT_VEST            (1 << 8)
-#define MOVE_LIMITATION_GRAVITY                 (1 << 9)
-#define MOVE_LIMITATION_HEAL_BLOCK              (1 << 10)
-#define MOVE_LIMITATION_BELCH                   (1 << 11)
-#define MOVE_LIMITATION_THROAT_CHOP             (1 << 12)
-#define MOVE_LIMITATION_STUFF_CHEEKS            (1 << 13)
-#define MOVE_LIMITATION_CANT_USE_TWICE          (1 << 14)
+#define MOVE_LIMITATION(x) ((u16)1 << x)
 
-#define MOVE_LIMITATION_PLACEHOLDER             (1 << 15)
+#define MOVE_LIMITATION_ZEROMOVE                MOVE_LIMITATION(0)
+#define MOVE_LIMITATION_PP                      MOVE_LIMITATION(1)
+#define MOVE_LIMITATION_DISABLED                MOVE_LIMITATION(2)
+#define MOVE_LIMITATION_TORMENTED               MOVE_LIMITATION(3)
+#define MOVE_LIMITATION_TAUNT                   MOVE_LIMITATION(4)
+#define MOVE_LIMITATION_IMPRISON                MOVE_LIMITATION(5)
+#define MOVE_LIMITATION_ENCORE                  MOVE_LIMITATION(6)
+#define MOVE_LIMITATION_CHOICE_ITEM             MOVE_LIMITATION(7)
+#define MOVE_LIMITATION_ASSAULT_VEST            MOVE_LIMITATION(8)
+#define MOVE_LIMITATION_GRAVITY                 MOVE_LIMITATION(9)
+#define MOVE_LIMITATION_HEAL_BLOCK              MOVE_LIMITATION(10)
+#define MOVE_LIMITATION_BELCH                   MOVE_LIMITATION(11)
+#define MOVE_LIMITATION_THROAT_CHOP             MOVE_LIMITATION(12)
+#define MOVE_LIMITATION_STUFF_CHEEKS            MOVE_LIMITATION(13)
+#define MOVE_LIMITATION_CANT_USE_TWICE          MOVE_LIMITATION(14)
+#define MOVE_LIMITATION_UNUSABLE                MOVE_LIMITATION(15)
+
+#define MOVE_LIMITATION_PLACEHOLDER             MOVE_LIMITATION(16)
 #define MOVE_LIMITATIONS_ALL                    0xFFFF
 
 // Switches between simulated battle calc and actual battle combat
@@ -303,7 +306,7 @@ bool32 IsBattlerWeatherAffected(enum HoldEffect holdEffect, u32 weather, u32 wea
 enum MoveTarget GetBattlerMoveTargetType(enum BattlerId battler, enum Move move);
 bool32 CanTargetBattler(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move);
 u32 GetNextTarget(u32 moveTarget, bool32 excludeCurrent);
-void CopyMonLevelAndBaseStatsToBattleMon(enum BattlerId battler, struct Pokemon *mon);
+void CopyMonLevelAndBaseStatsToBattleMon(enum BattlerId battler, struct Pokemon *mon, bool32 updateSpeedStat);
 void CopyMonAbilityAndTypesToBattleMon(enum BattlerId battler, struct Pokemon *mon);
 void RecalcBattlerStats(enum BattlerId battler, struct Pokemon *mon, bool32 isDynamaxing);
 bool32 IsGen6ExpShareEnabled(void);

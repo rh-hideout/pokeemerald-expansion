@@ -59,6 +59,7 @@
     F(B_MEGA_EVO_TURN_ORDER,       megaEvoTurnOrder,        (u32, GEN_COUNT - 1)) \
     F(B_RECALC_TURN_AFTER_ACTIONS, recalcTurnAfterActions,  (u32, GEN_COUNT - 1)) \
     F(B_FAINT_SWITCH_IN,           faintSwitchIn,           (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
+    F(B_MEGA_EVO_SPEED_SWAP,       megaEvoSpeedSwap,        (u32, GEN_COUNT - 1)) \
     /* Move data settings */ \
     F(B_UPDATED_MOVE_DATA,         updatedMoveData,         (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_UPDATED_MOVE_TYPES,        updatedMoveTypes,        (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
@@ -144,6 +145,16 @@
     F(B_COUNTER_TRY_HIT_PARTNER,   counterTryHitPartner,    (u32, GEN_COUNT - 1)) \
     F(B_UPROAR,                    uproar,                  (u32, GEN_COUNT - 1)) \
     F(B_UPROAR_IGNORE_SOUNDPROOF,  uproarIgnoreSoundproof,  (u32, GEN_COUNT - 1)) \
+    F(B_FIRST_TURN_MOVE,           firstTurnMove,           (u32, GEN_COUNT - 1)) \
+    F(B_SALT_CURE_DAMAGE,          saltCureDamage,          (u32, GEN_COUNT - 1)) \
+    F(B_BELCH_SELECTABLE,          belchSelectable,         (u32, GEN_COUNT - 1)) \
+    F(B_STUFF_CHEEKS_SELECTABLE,   stuffCheeksSelectable,   (u32, GEN_COUNT - 1)) \
+    F(B_SPIT_UP_SELECTABLE,        spitUpSelectable,        (u32, GEN_COUNT - 1)) \
+    F(B_MOVES_THAT_REMOVE_TYPE,    movesThatRemoveType,     (u32, GEN_COUNT - 1)) \
+    F(B_LAST_RESORT_SELECTABLE,    lastResortSelectable,    (u32, GEN_COUNT - 1)) \
+    F(B_KNOCK_OFF_STEAL_ITEM_TIMING, knockOffStealItemTiming, (u32, GEN_COUNT - 1)) \
+    F(B_RAPID_SPIN_TIMING,         rapidSpinTiming,         (u32, GEN_COUNT - 1)) \
+    F(B_ENCORE_PRIORITY,           encorePriority,          (u32, GEN_COUNT - 1)) \
     /* Ability settings */ \
     F(B_GALE_WINGS,                galeWings,               (u32, GEN_COUNT - 1)) \
     F(B_STANCE_CHANGE_FAIL,        stanceChangeFail,        (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
@@ -177,8 +188,7 @@
     F(B_DANCER_ORDER,              dancerOrder,             (u32, GEN_COUNT - 1)) \
     F(B_UNSEEN_FIST_DAMAGE,        unseenFistDamage,        (u32, GEN_COUNT - 1)) \
     F(B_UNSEEN_FIST_BYPASS_EFFECTS, unseenFistBypassEffects, (u32, GEN_COUNT - 1)) \
-    F(B_FIRST_TURN_MOVE,           firstTurnMove,           (u32, GEN_COUNT - 1)) \
-    F(B_SALT_CURE_DAMAGE,          saltCureDamage,          (u32, GEN_COUNT - 1)) \
+    F(B_SHEER_FORCE_AGAINST_ABILITIES, sheerForceAgainstAbilities, (u32, GEN_COUNT - 1)) \
     /* Item settings */ \
     F(B_CONFUSE_BERRIES_HEAL,      confuseBerriesHeal,      (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(B_X_ITEMS_BUFF,              xItemsBuff,              (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \

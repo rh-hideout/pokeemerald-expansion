@@ -373,3 +373,45 @@ SINGLE_BATTLE_TEST("Pickpocket can steal the attacker's Air Balloon")
         EXPECT_EQ(opponent->item, ITEM_AIR_BALLOON);
     }
 }
+
+SINGLE_BATTLE_TEST("Pickpocket cannot steal an item if hit by a contact move that's boosted by Sheer Force (Gen9)")
+{
+    GIVEN {
+        GIVEN(B_SHEER_FORCE_AGAINST_ABILITIES, GEN_9);
+        ASSUME(gItemsInfo[ITEM_LIFE_ORB].holdEffect == HOLD_EFFECT_LIFE_ORB);
+        PLAYER(SPECIES_LANDORUS) { Item(ITEM_LIFE_ORB); Ability(ABILITY_SHEER_FORCE); }
+        OPPONENT(SPECIES_SNEASEL) { Ability(ABILITY_PICKPOCKET); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CRUNCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CRUNCH, player);
+        HP_BAR(opponent);
+        NONE_OF {
+            ABILITY_POPUP(opponent, ABILITY_PICKPOCKET);
+            MESSAGE("The opposing Sneasel stole Landorus's Life Orb!");
+        }
+    } THEN {
+        EXPECT(opponent->item == ITEM_NONE);
+        EXPECT(player->item == ITEM_LIFE_ORB);
+    }
+}
+
+SINGLE_BATTLE_TEST("Pickpocket can steal an item even if hit by a contact move that's boosted by Sheer Force (Gen9)")
+{
+    GIVEN {
+        GIVEN(B_SHEER_FORCE_AGAINST_ABILITIES, GEN_CHAMPIONS);
+        ASSUME(gItemsInfo[ITEM_LIFE_ORB].holdEffect == HOLD_EFFECT_LIFE_ORB);
+        PLAYER(SPECIES_LANDORUS) { Item(ITEM_LIFE_ORB); Ability(ABILITY_SHEER_FORCE); }
+        OPPONENT(SPECIES_SNEASEL) { Ability(ABILITY_PICKPOCKET); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CRUNCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CRUNCH, player);
+        HP_BAR(opponent);
+        ABILITY_POPUP(opponent, ABILITY_PICKPOCKET);
+        MESSAGE("The opposing Sneasel stole Landorus's Life Orb!");
+    } THEN {
+        EXPECT(opponent->item == ITEM_LIFE_ORB);
+        EXPECT(player->item == ITEM_NONE);
+    }
+}

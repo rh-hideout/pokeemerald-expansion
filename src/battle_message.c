@@ -889,7 +889,7 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_AURORAVEILWOREOFF]                    = COMPOUND_STRING("{B_DEF_TEAM1} team's Aurora Veil wore off!"),
     [STRINGID_STICKYWEBDISAPPEAREDFROMYOU]          = COMPOUND_STRING("The sticky web has disappeared from the ground around you!"),
     [STRINGID_VICTORYCATCH]                         = COMPOUND_STRING("{B_DEF_NAME} is weak!\nThrow a Poké Ball now!"),
-    [STRINGID_CANTUSEMOVE]                          = COMPOUND_STRING("This move can't be used!\p"), // Used for Fake Out and First Impression only
+    [STRINGID_CANTUSEMOVE]                          = COMPOUND_STRING("This move can't be used!\p"),
 };
 
 const u16 gTrainerUsedItemStringIds[] =

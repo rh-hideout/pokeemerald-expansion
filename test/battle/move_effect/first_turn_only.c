@@ -241,4 +241,3 @@ SINGLE_BATTLE_TEST("Fake Out cannot be selected past the user's first turn (Cham
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
     }
 }
-
