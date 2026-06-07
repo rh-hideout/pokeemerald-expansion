@@ -525,14 +525,14 @@ static bool8 WildEncounterCheck(u32 encounterRate, bool8 ignoreAbility)
     {
         if (DoesLeadingMonHaveAbilityEffect(gEncounterReducingAbilities))
         {
-            if (InBattlePyramid_())
+            if (InBattlePyramid())
                 encounterRate = encounterRate * 3 / 4;
             else
                 encounterRate /= 2;
         }
         else if (DoesLeadingMonHaveAbilityEffect(gEncounterIncreasingAbilities))
         {
-            if (InBattlePyramid_())
+            if (InBattlePyramid())
                 encounterRate = encounterRate * 3 / 2;
             else
                 encounterRate *= 2;
@@ -637,7 +637,7 @@ bool8 StandardWildEncounter(u32 metatileBehavior, bool32 isForced)
         minLevel = GetMinLevelAllowedByAbility();
     if (InBattlePike())
         return TrySetupPikeWildBattle(minLevel);
-    else if (InBattlePyramid_())
+    else if (InBattlePyramid())
         return TrySetupPyramidWildBattle(minLevel);
 
     enum WildEncounterType encounterType = GetStandardWildEncounterType(metatileBehavior);

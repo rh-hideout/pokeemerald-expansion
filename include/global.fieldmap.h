@@ -237,14 +237,15 @@ struct MapHeader
     /* 0x17 */ u8 mapType;
     /* 0x18 */ s8 floorNumber;
     /* 0x19 */ u8 filler_19;
+    /* 0x1B */ u16 nightMusic;
                // fields correspond to the arguments in the map_header_flags macro
-    /* 0x1A */ bool8 allowCycling:1;
+    /* 0x1C */ bool8 allowCycling:1;
                bool8 allowEscaping:1; // Escape Rope and Dig
                bool8 allowRunning:1;
                bool8 showMapName:1;
                bool8 writeSpecialVarIsEffect:1;
                bool8 unused:3;
-    /* 0x1B */ u8 battleType;
+    /* 0x1D */ u8 battleType;
 };
 
 

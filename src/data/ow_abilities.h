@@ -68,3 +68,10 @@ const struct WildmonTypeAffectingAbilities sWildmonTypeAffectingAbilities[] =
 #endif
     {ABILITY_NONE, TYPE_NONE}
 };
+
+const enum Ability gIncreaseHatchingSpeedAbilities[] = {
+    ABILITY_MAGMA_ARMOR,
+    ABILITY_FLAME_BODY,
+    ABILITY_STEAM_ENGINE,
+    ABILITY_NONE
+};

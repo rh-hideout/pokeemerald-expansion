@@ -99,7 +99,7 @@ bool32 DoesLeadingMonHaveAbilityEffect(const enum Ability *abilityArray)
     return FALSE;
 }
 
-UNUSED bool32 DoesPartyMemberHaveAbilityEffect(const enum Ability *abilityArray)
+bool32 DoesPartyMemberHaveAbilityEffect(const enum Ability *abilityArray)
 {
     for (u32 j = 0; j < gPartiesCount[B_TRAINER_PLAYER]; j++)
     {

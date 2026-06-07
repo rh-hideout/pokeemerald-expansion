@@ -40,7 +40,12 @@ EWRAM_DATA u8 gMsgBoxIsCancelable = FALSE;
 
 extern ScrCmdFunc gScriptCmdTable[];
 extern ScrCmdFunc gScriptCmdTableEnd[];
-extern void *const gNullScriptPtr;
+
+void InitScriptStack(struct ScriptStack *stk)
+{
+    stk->stackDepth = 0;
+    memset(stk->stack, 0, (int)ARRAY_COUNT(stk->stack) * sizeof(u8*));
+}
 
 void InitScriptContext(struct ScriptContext *ctx, void *cmdTable, void *cmdTableEnd)
 {
@@ -84,9 +89,6 @@ void StopScript(struct ScriptContext *ctx)
 
 bool8 RunScriptCommand(struct ScriptContext *ctx)
 {
-    if (ctx->mode == SCRIPT_MODE_STOPPED)
-        return FALSE;
-
     switch (ctx->mode)
     {
     case SCRIPT_MODE_STOPPED:
@@ -108,16 +110,10 @@ bool8 RunScriptCommand(struct ScriptContext *ctx)
             u8 cmdCode;
             ScrCmdFunc *func;
 
-            if (!ctx->scriptPtr)
+            if (ctx->scriptPtr == NULL)
             {
                 ctx->mode = SCRIPT_MODE_STOPPED;
                 return FALSE;
-            }
-
-            if (ctx->scriptPtr == gNullScriptPtr)
-            {
-                while (1)
-                    asm("svc 2"); // HALT
             }
 
             cmdCode = *(ctx->scriptPtr);
@@ -138,7 +134,21 @@ bool8 RunScriptCommand(struct ScriptContext *ctx)
     return TRUE;
 }
 
-static bool8 ScriptPush(struct ScriptContext *ctx, const u8 *ptr)
+bool8 ScriptStackPush(struct ScriptStack *stk, const u8 *ptr)
+{
+    if (stk->stackDepth + 1 >= (int)ARRAY_COUNT(stk->stack))
+    {
+        return FALSE;
+    }
+    else
+    {
+        stk->stack[stk->stackDepth] = ptr;
+        stk->stackDepth++;
+        return TRUE;
+    }
+}
+
+bool8 ScriptPush(struct ScriptContext *ctx, const u8 *ptr)
 {
     if (ctx->stackDepth + 1 >= (int)ARRAY_COUNT(ctx->stack))
     {
@@ -152,7 +162,16 @@ static bool8 ScriptPush(struct ScriptContext *ctx, const u8 *ptr)
     }
 }
 
-static const u8 *ScriptPop(struct ScriptContext *ctx)
+const u8 *ScriptStackPop(struct ScriptStack *stk)
+{
+    if (stk->stackDepth == 0)
+        return NULL;
+
+    stk->stackDepth--;
+    return stk->stack[stk->stackDepth];
+}
+
+const u8 *ScriptPop(struct ScriptContext *ctx)
 {
     if (ctx->stackDepth == 0)
         return NULL;
@@ -163,16 +182,26 @@ static const u8 *ScriptPop(struct ScriptContext *ctx)
 
 void ScriptJump(struct ScriptContext *ctx, const u8 *ptr)
 {
+    assertf(ptr != NULL, "goto to NULL");
     ctx->scriptPtr = ptr;
 }
 
 void ScriptCall(struct ScriptContext *ctx, const u8 *ptr)
 {
+    assertf(ptr != NULL, "call to NULL")
+    {
+        // HINT: Returning without having pushed the current location is
+        // equivalent to branching to a script that just contains
+        // 'return'.
+        return;
+    }
+
     bool32 failed = ScriptPush(ctx, ctx->scriptPtr);
-    assertf(!failed, "could not push %p", ptr)
+    assertf(!failed, "could not push %p to %p", ptr, ctx)
     {
         return;
     }
+
     ctx->scriptPtr = ptr;
 }
 
@@ -302,6 +331,29 @@ void ScriptContext_Enable(void)
 {
     sGlobalScriptContextStatus = CONTEXT_RUNNING;
     LockPlayerFieldControls();
+}
+
+void ScriptContext_SetupContextFromStack(struct ScriptStack *stk, struct ScriptContext *ctx)
+{
+    const u8 *ptr;
+
+    while ((ptr = ScriptStackPop(stk)) != NULL)
+    {
+        if (ScriptPush(ctx, ptr)) {
+            errorf("Failed to push %p to %p.", ptr, ctx);
+        }
+    }
+
+    ctx->scriptPtr = ScriptPop(ctx);
+    ctx->mode = SCRIPT_MODE_BYTECODE;
+
+    if (OW_FOLLOWERS_SCRIPT_MOVEMENT)
+        FlagSet(FLAG_SAFE_FOLLOWER_MOVEMENT);
+}
+
+void ScriptContext_SetupGlobalContextFromStack(struct ScriptStack *stk)
+{
+    ScriptContext_SetupContextFromStack(stk, &sGlobalScriptContext);
 }
 
 // Sets up and runs a script in its own context immediately. The script will be

@@ -85,7 +85,6 @@ FourIsland_EventScript_DaycareEggWaiting::
 	msgbox DayCare_Text_IWillKeepDoYouWantIt, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, YES, FourIsland_EventScript_DaycareAcceptEgg
 	msgbox DayCare_Text_IllKeepIt
-	clearflag FLAG_PENDING_DAYCARE_EGG
 	special RejectEggFromDayCare
 	release
 	end
@@ -106,7 +105,6 @@ FourIsland_EventScript_DaycareReceivedEgg::
 	waitbuttonpress
 	msgbox DayCare_Text_TakeGoodCareOfIt
 	special GiveEggFromDaycare
-	clearflag FLAG_PENDING_DAYCARE_EGG
 	release
 	end
 

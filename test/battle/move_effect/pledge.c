@@ -226,7 +226,7 @@ DOUBLE_BATTLE_TEST("Pledge moves can not be redirected by absorbing abilities")
 
 DOUBLE_BATTLE_TEST("Pledge status timer does not reset if combined move is used again")
 {
-    u16 pledgeMove1, pledgeMove2;
+    enum Move pledgeMove1, pledgeMove2;
 
     PARAMETRIZE { pledgeMove1 = MOVE_WATER_PLEDGE; pledgeMove2 = MOVE_FIRE_PLEDGE; }
     PARAMETRIZE { pledgeMove1 = MOVE_FIRE_PLEDGE; pledgeMove2 = MOVE_GRASS_PLEDGE; }
@@ -270,7 +270,7 @@ DOUBLE_BATTLE_TEST("Pledge status timer does not reset if combined move is used 
 
 DOUBLE_BATTLE_TEST("Pledge moves get same attack type bonus from partner", s16 damage)
 {
-    u32 species;
+    enum Species species;
 
     PARAMETRIZE { species = SPECIES_WOBBUFFET; }
     PARAMETRIZE { species = SPECIES_CHARMANDER; }

@@ -91,7 +91,7 @@ u16 SpeciesToMailSpecies(enum Species species, u32 personality)
     return species;
 }
 
-u16 MailSpeciesToSpecies(u16 mailSpecies, u16 *buffer)
+enum Species MailSpeciesToSpecies(u16 mailSpecies, u16 *buffer)
 {
     u16 result;
 
