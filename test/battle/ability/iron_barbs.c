@@ -46,7 +46,6 @@ SINGLE_BATTLE_TEST("Rough Skin and Iron Barbs cause the attacker to take damage 
             ABILITY_POPUP(opponent, ABILITY_ROUGH_SKIN);
         else
             ABILITY_POPUP(opponent, ABILITY_IRON_BARBS);
-        MESSAGE("Wobbuffet was hurt!");
     }
 }
 

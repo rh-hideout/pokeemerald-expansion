@@ -2100,14 +2100,20 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
     return CANCELER_RESULT_SUCCESS;
 }
 
-static bool32 CantFullyProtectFromMove(enum BattlerId battlerDef)
+static bool32 GetProtectBypassMethod(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     if (MoveIgnoresProtect(gCurrentMove))
-        return FALSE;
+        return PROTECT_BYPASS_MOVE_IGNORES;
+    if (GetProtectType(gProtectStructs[battlerDef].protected) == PROTECT_TYPE_SINGLE
+        && gProtectStructs[battlerDef].protected != PROTECT_MAX_GUARD
+        && (GetBattlerAbility(battlerAtk) == ABILITY_UNSEEN_FIST || GetBattlerAbility(battlerAtk) == ABILITY_PIERCING_DRILL))
+        return PROTECT_BYPASS_ABILITY_IGNORES;
     if (!IsZMove(gCurrentMove) && !IsMaxMove(gCurrentMove))
-        return FALSE;
-    return GetProtectType(gProtectStructs[battlerDef].protected) == PROTECT_TYPE_SINGLE
-        && gProtectStructs[battlerDef].protected != PROTECT_MAX_GUARD;
+        return PROTECT_BYPASS_NONE;
+    if (GetProtectType(gProtectStructs[battlerDef].protected) == PROTECT_TYPE_SINGLE
+        && gProtectStructs[battlerDef].protected != PROTECT_MAX_GUARD)
+        return PROTECT_BYPASS_OTHER;
+    return PROTECT_BYPASS_MOVE_IGNORES;
 }
 
 static enum CancelerResult CancelerNotFullyProtected(struct BattleCalcValues *cv)
@@ -2119,11 +2125,17 @@ static enum CancelerResult CancelerNotFullyProtected(struct BattleCalcValues *cv
         if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, battlerDef, TRUE))
             continue;
 
-        if (CantFullyProtectFromMove(battlerDef))
+        enum ProtectBypass protectBypassState = gBattleStruct->protectBypassStates[battlerDef] = GetProtectBypassMethod(cv->battlerAtk, battlerDef);
+        switch (protectBypassState)
         {
-            BattleScriptCall(BattleScript_CouldntFullyProtect);
-            gBattleScripting.battler = battlerDef;
-            return CANCELER_RESULT_RUN_SCRIPT;
+            case PROTECT_BYPASS_ABILITY_IGNORES:
+                gBattleScripting.battler = battlerDef;
+                return CANCELER_RESULT_RUN_SCRIPT;
+            case PROTECT_BYPASS_OTHER:
+                gBattleScripting.battler = battlerDef;
+                return CANCELER_RESULT_RUN_SCRIPT;
+            default:
+                break;
         }
     }
 
@@ -2492,6 +2504,26 @@ static enum MoveEndResult MoveEndSetValues(struct BattleCalcValues *cv)
     return MOVEEND_RESULT_CONTINUE;
 }
 
+static enum MoveEndResult MoveEndProtectBypassEffects(struct BattleCalcValues *cv)
+{
+    enum BattlerId battler = gBattleScripting.battler = cv->battlerDef;
+    switch (gBattleStruct->protectBypassStates[battler])
+    {
+        case PROTECT_BYPASS_ABILITY_IGNORES:
+            gBattleStruct->protectBypassStates[battler] = PROTECT_BYPASS_NONE;
+            BattleScriptCall(BattleScript_UnseenFist);
+            return MOVEEND_RESULT_RUN_SCRIPT;
+        case PROTECT_BYPASS_OTHER:
+            gBattleStruct->protectBypassStates[battler] = PROTECT_BYPASS_NONE;
+            BattleScriptCall(BattleScript_CouldntFullyProtect);
+            return MOVEEND_RESULT_RUN_SCRIPT;
+        default:
+            break;
+    }
+    gBattleScripting.moveendState++;
+    return MOVEEND_RESULT_CONTINUE;
+}
+
 static enum MoveEndResult MoveEndProtectLikeEffect(struct BattleCalcValues *cv)
 {
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
@@ -2510,7 +2542,6 @@ static enum MoveEndResult MoveEndProtectLikeEffect(struct BattleCalcValues *cv)
      && (cv->abilities[cv->battlerAtk] == ABILITY_UNSEEN_FIST || cv->abilities[cv->battlerAtk] == ABILITY_PIERCING_DRILL)
      && IsMoveMakingContact(cv->battlerAtk, cv->battlerDef, cv->abilities[cv->battlerAtk], cv->holdEffects[cv->battlerAtk], cv->move))
     {
-        BattleScriptCall(BattleScript_UnseenFist);
         gBattleScripting.moveendState++;
         return result;
     }
@@ -4362,6 +4393,7 @@ static enum MoveEndResult MoveEndPursuitNextAction(struct BattleCalcValues *cv)
 static enum MoveEndResult (*const sMoveEndHandlers[])(struct BattleCalcValues *cv) =
 {
     [MOVEEND_SET_VALUES] = MoveEndSetValues,
+    [MOVEEND_PROTECT_BYPASS_EFFECTS] = MoveEndProtectBypassEffects,
     [MOVEEND_PROTECT_LIKE_EFFECT] = MoveEndProtectLikeEffect,
     [MOVEEND_ABSORB] = MoveEndAbsorb,
     [MOVEEND_RAGE] = MoveEndRage,

@@ -4090,8 +4090,6 @@ BattleScript_AftermathDmg::
 	jumpifability BS_ATTACKER, ABILITY_MAGIC_GUARD, BattleScript_AftermathDmgRet
 	healthbarupdate BS_ATTACKER, PASSIVE_HP_UPDATE
 	datahpupdate BS_ATTACKER, PASSIVE_HP_UPDATE
-	printstring STRINGID_AFTERMATHDMG
-	waitmessage B_WAIT_TIME_LONG
 	tryfaintmon BS_ATTACKER
 BattleScript_AftermathDmgRet:
 	return
@@ -4392,7 +4390,7 @@ BattleScript_MoveEffectPoison::
 	goto BattleScript_UpdateEffectStatusIconRet
 
 BattleScript_FlameOrbActivates::
-	call BattleScript_ItemPopUp_Attacker
+	call BattleScript_ItemPopUp_Scripting
 BattleScript_MoveEffectBurn::
 	statusanimation BS_EFFECT_BATTLER
 	printfromtable gGotBurnedStringIds
@@ -4427,7 +4425,7 @@ BattleScript_MoveEffectUproarEnd:
 	return
 
 BattleScript_ToxicOrbActivates::
-	call BattleScript_ItemPopUp_Attacker
+	call BattleScript_ItemPopUp_Scripting
 BattleScript_MoveEffectToxic::
 	statusanimation BS_EFFECT_BATTLER
 	printstring STRINGID_PKMNBADLYPOISONED
@@ -5085,13 +5083,19 @@ BattleScript_HurtAttacker:
 	tryfaintmon BS_ATTACKER
 	return
 
+BattleScript_HurtAttackerNoMsg:
+	healthbarupdate BS_ATTACKER, PASSIVE_HP_UPDATE
+	datahpupdate BS_ATTACKER, PASSIVE_HP_UPDATE
+	tryfaintmon BS_ATTACKER
+	return
+
 BattleScript_RoughSkinActivates::
 	call BattleScript_AbilityPopUp
-	call BattleScript_HurtAttacker
+	call BattleScript_HurtAttackerNoMsg
 	return
 
 BattleScript_RockyHelmetActivates::
-	call BattleScript_ItemPopUp_TargetNoFlush
+	call BattleScript_ItemPopUp_ScriptingNoFlush
 	call BattleScript_HurtAttacker
 	return
 
@@ -5100,7 +5104,7 @@ BattleScript_SpikyShieldEffect::
 	clearmoveresultflags MOVE_RESULT_NO_EFFECT
 	healthbarupdate BS_ATTACKER, PASSIVE_HP_UPDATE
 	datahpupdate BS_ATTACKER, PASSIVE_HP_UPDATE
-	printstring STRINGID_AFTERMATHDMG
+	printstring STRING_PKMNWASHURT
 	waitmessage B_WAIT_TIME_LONG
 	tryfaintmon BS_ATTACKER
 	setmoveresultflags MOVE_RESULT_MISSED

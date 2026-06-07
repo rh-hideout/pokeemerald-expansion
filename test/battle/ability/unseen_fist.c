@@ -74,3 +74,41 @@ SINGLE_BATTLE_TEST("Unseen Fist bypasses protect effects without triggering thei
             EXPECT_EQ(player->statStages[loweredStat], DEFAULT_STAT_STAGE);
     }
 }
+
+DOUBLE_BATTLE_TEST("Unseen Fist shows its ability pop-up on each affected target (Champions)")
+{
+    enum Move move = MOVE_NONE;
+
+    PARAMETRIZE { move = MOVE_SCRATCH; }
+    PARAMETRIZE { move = MOVE_BRUTAL_SWING; }
+
+    GIVEN {
+        PLAYER(SPECIES_URSHIFU) { Ability(ABILITY_UNSEEN_FIST); }
+        PLAYER(SPECIES_GARCHOMP) {Ability(ABILITY_ROUGH_SKIN); }
+        OPPONENT(SPECIES_GLIMMORA);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(opponentLeft, MOVE_PROTECT);
+            MOVE(opponentRight, MOVE_PROTECT);
+            MOVE(playerLeft, move, target: opponentLeft);
+            MOVE(playerRight, MOVE_PROTECT);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
+        if (move == MOVE_BRUTAL_SWING)
+        {
+            EFFECTIVENESS_SE(opponentLeft, SE_SUPER_EFFECTIVE);
+        } else {
+            EFFECTIVENESS_SE(opponentLeft, SE_NOT_EFFECTIVE);
+        }
+        HP_BAR(opponentLeft);
+        ABILITY_POPUP(playerLeft);
+        if (move == MOVE_BRUTAL_SWING)
+        {
+            ABILITY_POPUP(playerLeft);
+            ABILITY_POPUP(playerLeft);
+        }
+    }
+}

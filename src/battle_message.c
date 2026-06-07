@@ -589,7 +589,7 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_SLOWSTARTENTERS]                      = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} is slow to get going!"),
     [STRINGID_SLOWSTARTEND]                         = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} finally got its act together!"),
     [STRINGID_SOLARPOWERHPDROP]                     = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX}'s {B_ATK_ABILITY} takes its toll!"), // Not in Gen 5+
-    [STRINGID_AFTERMATHDMG]                         = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} was hurt!"),
+    [STRING_PKMNWASHURT]                         = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} was hurt!"),
     [STRINGID_ANTICIPATIONACTIVATES]                = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} shuddered!"),
     [STRINGID_FOREWARNACTIVATES]                    = COMPOUND_STRING("{B_SCR_ABILITY} alerted {B_SCR_NAME_WITH_PREFIX2} to {B_EFF_NAME_WITH_PREFIX2}'s {B_BUFF1}!"),
     [STRINGID_ICEBODYHPGAIN]                        = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX}'s {B_ATK_ABILITY} healed it a little bit!"), // Not in Gen 5+
@@ -766,7 +766,7 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_TOXICSPIKESDISAPPEAREDFROMTEAM]       = COMPOUND_STRING("The toxic spikes disappeared from the ground around {B_ATK_TEAM2} side!"),
     [STRINGID_STICKYWEBDISAPPEAREDFROMTEAM]         = COMPOUND_STRING("The sticky web has disappeared from the ground on {B_ATK_TEAM2} side!"),
     [STRINGID_STEALTHROCKDISAPPEAREDFROMTEAM]       = COMPOUND_STRING("The pointed stones disappeared from {B_ATK_TEAM2} side!"),
-    [STRINGID_COULDNTFULLYPROTECT]                  = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} couldn't fully protect itself and got hurt!"),
+    [STRINGID_COULDNTFULLYPROTECT]                  = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} couldn't fully protect itself and got hurt!"),
     [STRINGID_STOCKPILEDEFFECTWOREOFF]              = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX}'s stockpiled effect wore off!"),
     [STRINGID_PKMNREVIVEDREADYTOFIGHT]              = COMPOUND_STRING("{B_BUFF1} was revived and is ready to fight again!"),
     [STRINGID_ITEMRESTOREDSPECIESHEALTH]            = COMPOUND_STRING("{B_BUFF1} had its HP restored."),
@@ -1447,7 +1447,7 @@ const u16 gPartyCureStatusStringIds[] =
 
 const u16 gHurtByStringIds[] =
 {
-    [B_MSG_HURT] = STRINGID_AFTERMATHDMG,
+    [B_MSG_HURT] = STRING_PKMNWASHURT,
     [B_MSG_HURT_BY_ITEM] = STRINGID_PKMNHURTSWITH,
 };
 

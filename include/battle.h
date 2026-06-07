@@ -730,6 +730,7 @@ struct BattleStruct
     u8 intimidateActivated:1;
     u8 allowPartingShot:1;
     u8 adrenalineOrbActivated:1; // prevents looping after an adrenaline stat changed
+    enum ProtectBypass protectBypassStates[MAX_BATTLERS_COUNT];
 };
 
 struct AiBattleData

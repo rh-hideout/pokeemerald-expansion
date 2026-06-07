@@ -29,13 +29,23 @@ DOUBLE_BATTLE_TEST("Critical hits mention each affected target")
         WITH_CONFIG(B_CRIT_CHANCE, GEN_9);
         ASSUME(GetMoveCriticalHitStage(MOVE_SLASH) == 1);
         ASSUME(GetSpeciesBaseSpeed(SPECIES_WOBBUFFET) == 33);
-        PLAYER(SPECIES_DRAGONITE) { Item(ITEM_SCOPE_LENS); }
+        PLAYER(SPECIES_DRAGONITE) { Item(ITEM_SCOPE_LENS); SpAttack(1); }
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WYNAUT) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_DRAGON_CHEER); MOVE(playerLeft, MOVE_SURF); }
+        TURN { MOVE(playerLeft, MOVE_SURF); }
+        TURN { MOVE(playerLeft, MOVE_DAZZLING_GLEAM); }
     } SCENE {
+        // Surf against all targets
+        MESSAGE("A critical hit on the opposing Wynaut!");
+        MESSAGE("A critical hit on Wobbuffet!");
         MESSAGE("A critical hit on the opposing Wobbuffet!");
+        // Surf against one opponent and one partner
+        MESSAGE("A critical hit on Wobbuffet!");
+        MESSAGE("A critical hit on the opposing Wobbuffet!");
+        // Dazzling Gleam against one target
+        MESSAGE("A critical hit!");
     }
 }
