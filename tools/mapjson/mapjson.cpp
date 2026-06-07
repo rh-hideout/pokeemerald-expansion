@@ -175,8 +175,8 @@ string generate_map_header_text(Json map_data, Json layouts_data) {
     else
         text << "\t.byte " << floor_number << "\n";
 
-    if (!map_data["NightSong"].is_null())
-        text << "\t.2byte " << json_to_string(map_data, "NightSong") << "\n";
+    if (!map_data["night_music"].is_null())
+        text << "\t.2byte " << json_to_string(map_data, "night_music") << "\n";
     else
         text << "\t.2byte MUS_NONE\n";
 
