@@ -569,15 +569,16 @@ TEST("createmon [simple]")
 
 TEST("Pokémon level up learnsets fit within MAX_RELEARNER_MOVES")
 {
-    KNOWN_FAILING;
-
     u32 j, count;
     enum Species species = SPECIES_NONE;
     const struct LevelUpMove *learnset;
 
     for(j = 0; j < SPECIES_EGG; j++)
     {
-        PARAMETRIZE { species = j; }
+        if (IsSpeciesEnabled(j))
+        {
+            PARAMETRIZE { species = j; }
+        }
     }
 
     learnset = GetSpeciesLevelUpLearnset(species);
