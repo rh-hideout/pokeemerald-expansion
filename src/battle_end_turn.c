@@ -229,7 +229,7 @@ static bool32 HandleEndTurnAffection(enum BattlerId battler)
     return effect;
 }
 
-static bool32 IsFutureSightAttackerInParty(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
+static bool32 IsFutureSightAttackerInParty(enum BattlerId battlerAtk, enum BattlerId battlerDef)
 {
     struct Pokemon *party = GetBattlerParty(battlerAtk);
     if (IsDoubleBattle())
@@ -267,7 +267,7 @@ static bool32 HandleEndTurnFutureSight(enum BattlerId battler)
         gCurrentMove = gBattleStruct->futureSight[battler].move;
         gBattleStruct->eventState.atkCanceler = CANCELER_TARGET_FAILURE;
 
-        if (IsFutureSightAttackerInParty(gBattlerAttacker, gBattlerTarget, gCurrentMove))
+        if (IsFutureSightAttackerInParty(gBattlerAttacker, gBattlerTarget))
             gSpecialStatuses[gBattlerAttacker].attackerInParty = TRUE;
         else
             SetTypeBeforeUsingMove(gCurrentMove, gBattlerAttacker);
