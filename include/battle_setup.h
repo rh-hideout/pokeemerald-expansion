@@ -2,6 +2,7 @@
 #define GUARD_BATTLE_SETUP_H
 
 #include "battle_transition.h"
+#include "data.h"
 #include "gym_leader_rematch.h"
 #include "script.h"
 #include "trainer_see.h"
@@ -145,5 +146,7 @@ s32 TrainerIdToRematchTableId(const struct RematchTrainer *table, u16 trainerId)
 s32 FirstBattleTrainerIdToRematchTableId(const struct RematchTrainer *table, u16 trainerId);
 u16 GetRematchTrainerIdFromTable(const struct RematchTrainer *table, u16 firstBattleTrainerId);
 u8 GetRivalBattleFlags(void);
+
+void CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer);
 
 #endif // GUARD_BATTLE_SETUP_H
