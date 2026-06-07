@@ -395,7 +395,7 @@ SINGLE_BATTLE_TEST("Knock Off doesn't knock off begin-battle form-change hold it
 SINGLE_BATTLE_TEST("Knock Off does not activate if user faints (Gen9)")
 {
     GIVEN {
-        WITH_CONFIG(B_KNOCK_OFF_STEAL_ITEM_TIMING, GEN_9);
+        WITH_CONFIG(B_FAINT_MOVE_EFFECT_TIMING, GEN_9);
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ROCKY_HELMET); }
     } WHEN {
@@ -412,7 +412,7 @@ SINGLE_BATTLE_TEST("Knock Off does not activate if user faints (Gen9)")
 SINGLE_BATTLE_TEST("Knock Off does activate if user faints (Champions)")
 {
     GIVEN {
-        WITH_CONFIG(B_KNOCK_OFF_STEAL_ITEM_TIMING, GEN_CHAMPIONS);
+        WITH_CONFIG(B_FAINT_MOVE_EFFECT_TIMING, GEN_CHAMPIONS);
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ROCKY_HELMET); }

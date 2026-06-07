@@ -3486,7 +3486,7 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
          && CanBattlerGetOrLoseItem(cv->battlerDef, cv->battlerAtk, gBattleMons[cv->battlerDef].item)
          && !NoAliveMonsForEitherParty())
         {
-            if (!IsBattlerAlive(cv->battlerAtk) && GetConfig(B_KNOCK_OFF_STEAL_ITEM_TIMING) < GEN_CHAMPIONS)
+            if (!IsBattlerAlive(cv->battlerAtk) && GetConfig(B_FAINT_MOVE_EFFECT_TIMING) < GEN_CHAMPIONS)
                 break;
 
             enum BattleSide side = GetBattlerSide(cv->battlerDef);
@@ -3526,7 +3526,7 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
         if (!IsAnyTargetTurnDamaged(cv->battlerAtk, EXCLUDING_SUBSTITUTES)
          || gBattleMons[cv->battlerAtk].item != ITEM_NONE
          || gBattleMons[cv->battlerDef].item == ITEM_NONE
-         || (!IsBattlerAlive(cv->battlerAtk) && GetConfig(B_KNOCK_OFF_STEAL_ITEM_TIMING) < GEN_CHAMPIONS)
+         || (!IsBattlerAlive(cv->battlerAtk) && GetConfig(B_FAINT_MOVE_EFFECT_TIMING) < GEN_CHAMPIONS)
          || !CanStealItem(cv->battlerAtk, cv->battlerDef, gBattleMons[cv->battlerDef].item))
         {
             result = MOVEEND_RESULT_CONTINUE;
@@ -3602,7 +3602,7 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
     case EFFECT_RAPID_SPIN:
         if (IsAnyTargetTurnDamaged(cv->battlerAtk, INCLUDING_SUBSTITUTES))
         {
-            if (!IsBattlerAlive(cv->battlerAtk) && GetConfig(B_RAPID_SPIN_TIMING) < GEN_CHAMPIONS)
+            if (!IsBattlerAlive(cv->battlerAtk) && GetConfig(B_FAINT_MOVE_EFFECT_TIMING) < GEN_CHAMPIONS)
                 break;
 
             BattleScriptCall(BattleScript_RapidSpinAway);
@@ -4059,10 +4059,12 @@ static enum MoveEndResult MoveEndThirdMoveBlock(struct BattleCalcValues *cv)
         break;
     case EFFECT_ICE_SPINNER:
         if (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY
-         && gLastPrintedMoves[cv->battlerAtk] == cv->move
-         && IsBattlerAlive(cv->battlerAtk)
          && IsAnyTargetTurnDamaged(cv->battlerAtk, INCLUDING_SUBSTITUTES))
         {
+            if ((!IsBattlerAlive(cv->battlerAtk) || gLastPrintedMoves[cv->battlerAtk] != cv->move)
+             && GetConfig(B_FAINT_MOVE_EFFECT_TIMING) < GEN_CHAMPIONS)
+                break;
+
             BattleScriptCall(BattleScript_RemoveTerrain);
             result = MOVEEND_RESULT_RUN_SCRIPT;
         }

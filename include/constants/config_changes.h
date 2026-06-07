@@ -154,8 +154,7 @@
     F(B_SPIT_UP_SELECTABLE,        spitUpSelectable,        (u32, GEN_COUNT - 1)) \
     F(B_MOVES_THAT_REMOVE_TYPE,    movesThatRemoveType,     (u32, GEN_COUNT - 1)) \
     F(B_LAST_RESORT_SELECTABLE,    lastResortSelectable,    (u32, GEN_COUNT - 1)) \
-    F(B_KNOCK_OFF_STEAL_ITEM_TIMING, knockOffStealItemTiming, (u32, GEN_COUNT - 1)) \
-    F(B_RAPID_SPIN_TIMING,         rapidSpinTiming,         (u32, GEN_COUNT - 1)) \
+    F(B_FAINT_MOVE_EFFECT_TIMING,  faintEffectTiming,       (u32, GEN_COUNT - 1)) \
     F(B_ENCORE_PRIORITY,           encorePriority,          (u32, GEN_COUNT - 1)) \
     /* Ability settings */ \
     F(B_GALE_WINGS,                galeWings,               (u32, GEN_COUNT - 1)) \

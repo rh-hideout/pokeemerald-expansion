@@ -134,7 +134,7 @@ SINGLE_BATTLE_TEST("Thief and Covet can't steal target's held item if user faint
     PARAMETRIZE { move = MOVE_THIEF; }
     PARAMETRIZE { move = MOVE_COVET; }
     GIVEN {
-        WITH_CONFIG(B_KNOCK_OFF_STEAL_ITEM_TIMING, GEN_9);
+        WITH_CONFIG(B_FAINT_MOVE_EFFECT_TIMING, GEN_9);
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ROCKY_HELMET); }
     } WHEN {
@@ -155,7 +155,7 @@ SINGLE_BATTLE_TEST("Thief and Covet can steal target's held item if user faints 
     PARAMETRIZE { move = MOVE_THIEF; }
     PARAMETRIZE { move = MOVE_COVET; }
     GIVEN {
-        WITH_CONFIG(B_KNOCK_OFF_STEAL_ITEM_TIMING, GEN_CHAMPIONS);
+        WITH_CONFIG(B_FAINT_MOVE_EFFECT_TIMING, GEN_CHAMPIONS);
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ROCKY_HELMET); }
     } WHEN {
