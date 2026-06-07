@@ -1180,7 +1180,7 @@ enum ItemEffect ItemBattleEffects(enum BattlerId itemBattler, enum BattlerId bat
     case HOLD_EFFECT_RESTORE_PP: // Leppa Berry
         effect = ItemRestorePp(itemBattler, item);
         break;
-    case HOLD_EFFECT_CONFUSE_FLAVOR: // Figy Berry
+    case HOLD_EFFECT_CONFUSE_FLAVOR: // Figy Berry etc.
         effect = HealConfuseBerry(itemBattler, item, GetItemSecondaryId(item));
         break;
     case HOLD_EFFECT_ATTACK_UP: // Liechi Berry
