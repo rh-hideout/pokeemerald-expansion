@@ -56,7 +56,6 @@ static enum Item GetRandomItemAtIndex(const struct RandomItemGeneratorOptions *o
 static bool32 UNUSED IsHeldItemFilterFunc(enum Item item, const struct FilterFuncArgs *filterFuncArgs);
 static enum Item SlowPickRandomItem(const struct RandomItemGeneratorOptions *options, u32 poolSize, const struct FilterFuncArgs *filterFuncArgs);
 static enum Item FastPickRandomItem(const struct RandomItemGeneratorOptions *options, u32 poolSize, const struct FilterFuncArgs *filterFuncArgs);
-static enum PokeBall GetRandomBall(void);
 static enum PokeBall ResolveRandomBall(enum PokeBall ball);
 static bool32 MoveOrder(enum Move moveA, enum Move moveB);
 static void SortMoves(enum Move *moves);

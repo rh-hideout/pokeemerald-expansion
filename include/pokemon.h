@@ -539,6 +539,7 @@ struct PokemonTemplate
     bool8 gmaxFactor;
     u8 teraType;
     u8 dmaxLevel;
+    bool8 isEgg;
     enum GeneratedMonOrigin origin;
     u8 doNotUseDefaultShinyness:1;
     u8 doNotUseDefaultBall:1;
