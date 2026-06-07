@@ -9,6 +9,7 @@
 #define B_MULTI_HIT_CHANCE          GEN_LATEST // In Gen5+, multi-hit moves have different %. See SetRandomMultiHitCounter for values.
 #define B_WHITEOUT_MONEY            GEN_LATEST // In Gen4+, the amount of money lost by losing a battle is determined by the amount of badges earned. Previously, it would cut the current money by half. (While this change was also in FRLG, for the sake of simplicity, setting this to GEN_3 will result in RSE behavior.)
 #define B_LIGHT_BALL_ATTACK_BOOST   GEN_LATEST // In Gen4+, Light Ball doubles the power of physical moves in addition to special moves.
+#define B_PARALYSIS_CHANCE          GEN_LATEST // In Champions, paralysis has a 12.5% chance of not moving, instead of 25%.
 
 // Experience settings
 #define B_EXP_CATCH                 GEN_LATEST // In Gen6+, Pokémon get experience from catching.
@@ -55,6 +56,7 @@
 #define B_DISABLE_TURNS             GEN_LATEST // Disable's turns. See Cmd_disablelastusedattack.
 #define B_TAILWIND_TURNS            GEN_LATEST // In Gen5+, Tailwind lasts 4 turns instead of 3.
 #define B_SLEEP_TURNS               GEN_LATEST // In Gen5+, sleep lasts for 2-4 turns instead of 2-5 turns.
+                                               // In Champions, sleep has a 1/3 chance of lasting for 2 turns; otherwise, it's 3 turns.
 #define B_TAUNT_TURNS               GEN_LATEST // In Gen5+, Taunt lasts 3 turns if the user acts before the target, or 4 turns if the target acted before the user. In Gen3, taunt lasts 2 turns and in Gen 4, 3-5 turns.
 #define B_ENCORE_TURNS              GEN_LATEST // In Gen5+, Encore lasts 3 turns if the target hasn't yet moved this turn, or 4 turns if it has. In Gen4, it lasts 3-7 turns. In Gen2-3, 2-6 turns.
 #define B_SPORT_TURNS               GEN_LATEST // In Gen6+, Water/Mud Sport last 5 turns, even if the user switches out.
@@ -62,6 +64,8 @@
 #define B_RECALC_TURN_AFTER_ACTIONS GEN_LATEST // In Gen8+, switching/using a move affects the current turn's order of actions, better known as dynamic speed.
 #define B_FAINT_SWITCH_IN           GEN_LATEST // In Gen4+, sending out a new Pokémon after the previous one fainted happens at the end of the turn. Before, it would happen after each action.
 #define B_MEGA_EVO_SPEED_SWAP       GEN_LATEST // In Champions, Mega Evolution does not overwrite the speed stat swapped via Speed Swap.
+#define B_FREEZE_TURNS              GEN_LATEST // Prior to Champions, freeze has a 20% chance of being thawed out.
+                                               // As of Champions, freeze has a 25% chance of being thawed out with a hard cap of 3 turns.
 
 // Move data settings
 #define B_UPDATED_MOVE_DATA         GEN_LATEST // Updates move data in gMovesInfo, including Power, Accuracy, PP, stat changes, targets and chances of secondary effects.

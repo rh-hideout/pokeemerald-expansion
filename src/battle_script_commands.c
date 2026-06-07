@@ -2195,7 +2195,9 @@ static void SetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId effec
     switch (effect)
     {
     case MOVE_EFFECT_SLEEP:
-        if (B_SLEEP_TURNS >= GEN_5)
+        if (B_SLEEP_TURNS >= GEN_CHAMPIONS)
+            gBattleMons[effectBattler].status1 |= STATUS1_SLEEP_TURN((Random() % 3 == 0) ? 2 : 3);
+        else if (B_SLEEP_TURNS >= GEN_5)
             gBattleMons[effectBattler].status1 |= STATUS1_SLEEP_TURN(RandomUniform(RNG_SLEEP_TURNS, 2, 4));
         else if (B_SLEEP_TURNS >= GEN_3)
             gBattleMons[effectBattler].status1 |= STATUS1_SLEEP_TURN(RandomUniform(RNG_SLEEP_TURNS, 2, 5));
@@ -2213,6 +2215,7 @@ static void SetNonVolatileStatus(enum BattlerId battlerAtk, enum BattlerId effec
         gBattlescriptCurrInstr = BattleScript_MoveEffectBurn;
         break;
     case MOVE_EFFECT_FREEZE:
+        gBattleMons[effectBattler].volatiles.freezeTimer = 2;
         gBattleMons[effectBattler].status1 |= STATUS1_FREEZE;
         gBattlescriptCurrInstr = BattleScript_MoveEffectFreeze;
         break;
