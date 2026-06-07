@@ -177,6 +177,7 @@
 #define B_KNOCK_OFF_STEAL_ITEM_TIMING   GEN_LATEST // In Champions, Knock Off will still activate even if the user faints due to Rough Skin
 #define B_RAPID_SPIN_TIMING             GEN_LATEST // In Champions, Rapid Spin and Mortal Spin will still remove hazards even if the user faints due to Rough Skin
 #define B_SHEER_FORCE_AGAINST_ABILITIES GEN_LATEST // As of Champions, Sheer Force no longer prevents the activation of Berserk and Pickpocket
+                                                   // Currently does nothing, as there is not enough info to confirm event orders for cases like Eject Pack and Eject Button
 #define B_ENCORE_PRIORITY               GEN_LATEST // In Champions, Encore uses the priority of the Encored move instead of the selected move
 
 // Ability settings

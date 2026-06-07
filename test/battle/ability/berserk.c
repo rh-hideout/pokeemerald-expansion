@@ -97,6 +97,7 @@ SINGLE_BATTLE_TEST("Berserk does not activate if move is boosted by Sheer Force 
 
 SINGLE_BATTLE_TEST("Berserk does activate if move is boosted by Sheer Force (Champions)")
 {
+    KNOWN_FAILING;
     u16 maxHp = 500;
     GIVEN {
         WITH_CONFIG(B_SHEER_FORCE_AGAINST_ABILITIES, GEN_CHAMPIONS);

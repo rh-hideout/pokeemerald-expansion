@@ -396,8 +396,9 @@ SINGLE_BATTLE_TEST("Pickpocket cannot steal an item if hit by a contact move tha
     }
 }
 
-SINGLE_BATTLE_TEST("Pickpocket can steal an item even if hit by a contact move that's boosted by Sheer Force (Gen9)")
+SINGLE_BATTLE_TEST("Pickpocket can steal an item even if hit by a contact move that's boosted by Sheer Force (Champions)")
 {
+    KNOWN_FAILING;
     GIVEN {
         GIVEN(B_SHEER_FORCE_AGAINST_ABILITIES, GEN_CHAMPIONS);
         ASSUME(gItemsInfo[ITEM_LIFE_ORB].holdEffect == HOLD_EFFECT_LIFE_ORB);
