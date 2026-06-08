@@ -974,12 +974,12 @@ bool32 IsHoldEffectChoice(enum HoldEffect holdEffect)
         || holdEffect == HOLD_EFFECT_CHOICE_SPECS;
 }
 
-ShopCriteriaFunc GetItemShopCriteriaFunc(u32 itemId)
+ShopCriteriaFunc GetItemShopCriteriaFunc(enum Item itemId)
 {
     return gItemsInfo[SanitizeItemId(itemId)].shopCriteriaFunc;
 }
 
-bool32 IsItemShopCriteriaFulfilled(u32 itemId)
+bool32 IsItemShopCriteriaFulfilled(enum Item itemId)
 {
     ShopCriteriaFunc func = GetItemShopCriteriaFunc(itemId);
 

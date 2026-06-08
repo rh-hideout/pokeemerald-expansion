@@ -90,7 +90,7 @@ static u32 GetParametrizedHP(enum Move move, u32 variation)
     return 9997;
 }
 
-static u32 GetParametrizedItem(enum Move move, u32 variation)
+static enum Item GetParametrizedItem(enum Move move, u32 variation)
 {
     if ((move == MOVE_TECHNO_BLAST) && variation > 0)
     {

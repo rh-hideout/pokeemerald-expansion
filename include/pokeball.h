@@ -32,6 +32,6 @@ void StartHealthboxSlideIn(enum BattlerId battler);
 void DoHitAnimHealthboxEffect(enum BattlerId battler);
 void LoadBallGfx(enum PokeBall ballId);
 void FreeBallGfx(enum PokeBall ballId);
-enum PokeBall ItemIdToBallId(u32 ballItem);
+enum PokeBall ItemIdToBallId(enum Item ballItem);
 
 #endif // GUARD_POKEBALL_H

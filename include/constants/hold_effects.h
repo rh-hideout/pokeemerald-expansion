@@ -1,7 +1,7 @@
 #ifndef GUARD_HOLD_EFFECTS_H
 #define GUARD_HOLD_EFFECTS_H
 
-enum __attribute__((packed)) HoldEffect
+enum HoldEffect
 {
     HOLD_EFFECT_NONE,
     HOLD_EFFECT_RESTORE_HP,
@@ -138,8 +138,6 @@ enum __attribute__((packed)) HoldEffect
     HOLD_EFFECT_BERSERK_GENE,
     HOLD_EFFECT_COUNT
 };
-
-// HOLD_EFFECT_COUNT should not exceed 127 so that it can fit in an u8
 
 // Terrain seed params
 #define HOLD_EFFECT_PARAM_ELECTRIC_TERRAIN  0

@@ -10,10 +10,11 @@ ASSUMPTIONS
 
 AI_SINGLE_BATTLE_TEST("Choiced Pokémon switch out after using a status move once")
 {
-    u32 j, heldItem = ITEM_NONE;
+    u32 j;
+    enum Item heldItem = ITEM_NONE;
     enum Ability ability = ABILITY_NONE;
 
-    static const u32 choiceItems[] = {
+    static const enum Item choiceItems[] = {
         ITEM_CHOICE_SPECS,
         ITEM_CHOICE_BAND,
         ITEM_CHOICE_SCARF,
@@ -62,10 +63,11 @@ AI_SINGLE_BATTLE_TEST("Choiced Pokémon only consider their own status moves whe
 AI_SINGLE_BATTLE_TEST("Choiced Pokémon won't use stat boosting moves")
 {
     // Moves defined by TARGET_USER (with exceptions?)
-    u32 j, heldItem = ITEM_NONE;
+    u32 j;
+    enum Item heldItem = ITEM_NONE;
     enum Ability ability = ABILITY_NONE;
 
-    static const u32 choiceItems[] = {
+    static const enum Item choiceItems[] = {
         ITEM_CHOICE_SPECS,
         ITEM_CHOICE_BAND,
         ITEM_CHOICE_SCARF,
@@ -95,9 +97,10 @@ AI_SINGLE_BATTLE_TEST("Choiced Pokémon won't use stat boosting moves")
 
 AI_SINGLE_BATTLE_TEST("Choiced Pokémon won't use status move if they are the only party member")
 {
-    u32 j, isAlive = 0, heldItem = ITEM_NONE;
+    u32 j, isAlive = 0;
+    enum Item heldItem = ITEM_NONE;
     enum Ability ability = ABILITY_NONE;
-    static const u32 choiceItems[] = {
+    static const enum Item choiceItems[] = {
         ITEM_CHOICE_SPECS,
         ITEM_CHOICE_BAND,
         ITEM_CHOICE_SCARF,
