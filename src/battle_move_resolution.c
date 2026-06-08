@@ -1337,12 +1337,15 @@ static enum CancelerResult CancelerMoveEffectFailureTarget(struct BattleCalcValu
 {
     const u8 *battleScript = NULL;
     u32 numAffectedTargets = 0;
+    enum MoveTarget moveTarget = GetBattlerMoveTargetType(cv->battlerAtk, cv->move);
+    bool32 doesTargetTypeAffectUser = (moveTarget == TARGET_USER_AND_ALLY || moveTarget == TARGET_ALL_BATTLERS);
 
     while (gBattleStruct->eventState.atkCancelerBattler < gBattlersCount)
     {
         enum BattlerId battlerDef = gBattleStruct->eventState.atkCancelerBattler++;
 
-        if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, battlerDef, TRUE))
+        bool32 checkUserFailure = (battlerDef == cv->battlerAtk && doesTargetTypeAffectUser);
+        if (!checkUserFailure && ShouldSkipFailureCheckOnBattler(cv->battlerAtk, battlerDef, TRUE))
             continue;
 
         switch (cv->moveEffect)
