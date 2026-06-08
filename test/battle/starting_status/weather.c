@@ -109,3 +109,23 @@ SINGLE_BATTLE_TEST("Weather started after the one which started the battle lasts
         ResetStartingStatuses();
     }
 }
+
+// In game: Overworld rain cures status AFTER end of turn 1 (Test result is accurate)
+SINGLE_BATTLE_TEST("StartingStatus weather activates weather-reliant abilities")
+{
+    SetStartingStatus(STARTING_STATUS_WEATHER_RAIN);
+
+    GIVEN {
+        PLAYER(SPECIES_SWANNA) { Ability(ABILITY_HYDRATION); Status1(STATUS1_BURN); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {}
+    } SCENE {
+        MESSAGE("It started to rain!");
+        ABILITY_POPUP(player, ABILITY_HYDRATION);
+        MESSAGE("Swanna's burn was cured!");
+        STATUS_ICON(player, none: TRUE);
+    } THEN {
+        ResetStartingStatuses();
+    }
+}
