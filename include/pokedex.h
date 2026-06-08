@@ -4,7 +4,6 @@
 #include "bg.h"
 #include "window.h"
 
-extern u8 gUnusedPokedexU8;
 extern void (*gPokedexVBlankCB)(void);
 
 void ResetPokedex(void);
