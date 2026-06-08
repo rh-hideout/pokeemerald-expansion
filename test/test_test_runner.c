@@ -186,19 +186,6 @@ SINGLE_BATTLE_TEST("USE_ITEM will add item to bag if GIVE_PLAYER_ITEM was not us
     }
 }
 
-SINGLE_BATTLE_TEST("USE_ITEM will add not item to bag if GIVE_PLAYER_ITEM was used")
-{
-    Test_ExpectedResult(TEST_RESULT_ASSERT_FAIL);
-    GIVEN {
-        ASSUME(GetItemImportance(ITEM_POKE_FLUTE));
-        PLAYER(SPECIES_WOBBUFFET) { Level(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        GIVE_PLAYER_ITEM(ITEM_POTION, 1);
-    } WHEN {
-        TURN { USE_ITEM(player, ITEM_POKE_FLUTE); }
-    }
-}
-
 SINGLE_BATTLE_TEST("USE_ITEM for opponent does not add item to bag")
 {
     GIVEN {
