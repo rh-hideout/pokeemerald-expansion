@@ -40,3 +40,27 @@ SINGLE_BATTLE_TEST("Venom Drench is blocked by Substitute")
         EXPECT_EQ(opponent->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
     }
 }
+
+DOUBLE_BATTLE_TEST("Venom Drench lowers stats of a poisoned target - Doubles")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_TOXIC_ORB].holdEffect == HOLD_EFFECT_TOXIC_ORB);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_VENOM_DRENCH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_POISON); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_TOXIC_ORB); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_VENOM_DRENCH); }
+        TURN { MOVE(playerLeft, MOVE_VENOM_DRENCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_VENOM_DRENCH, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_VENOM_DRENCH, playerLeft);
+    } THEN {
+        EXPECT_EQ(opponentLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 2);
+        EXPECT_EQ(opponentLeft->statStages[STAT_SPATK], DEFAULT_STAT_STAGE - 2);
+        EXPECT_EQ(opponentLeft->statStages[STAT_SPEED], DEFAULT_STAT_STAGE - 2);
+        EXPECT_EQ(opponentRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(opponentRight->statStages[STAT_SPATK], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(opponentRight->statStages[STAT_SPEED], DEFAULT_STAT_STAGE - 1);
+    }
+}
