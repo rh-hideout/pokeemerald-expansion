@@ -248,7 +248,7 @@ static bool32 HandleEndTurnFutureSight(enum BattlerId battler)
         else
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_DOOM_DESIRE;
 
-        PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleStruct->futureSight[battler].move);
+        PrepareMoveBuffer(gBattleTextBuff1, gBattleStruct->futureSight[battler].move);
 
         gBattlerTarget = battler;
         gBattlerAttacker = gBattleStruct->futureSight[battler].battlerIndex;
@@ -277,7 +277,7 @@ static bool32 HandleEndTurnWish(enum BattlerId battler)
     {
         s32 wishHeal = 0;
         gBattlerTarget = battler;
-        PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, battler, gBattleStruct->wish[battler].partyId)
+        PrepareMonNickWithPrefixBuffer(gBattleTextBuff1, battler, gBattleStruct->wish[battler].partyId);
         if (GetConfig(B_WISH_HP_SOURCE) >= GEN_5)
             wishHeal = GetMonData(&GetBattlerParty(battler)[gBattleStruct->wish[battler].partyId], MON_DATA_MAX_HP) / 2;
         else
@@ -643,7 +643,7 @@ static bool32 HandleEndTurnWrap(enum BattlerId battler)
 
             gBattleScripting.animArg1 = gBattleMons[battler].volatiles.wrappedMove;
             gBattleScripting.animArg2 = gBattleMons[battler].volatiles.wrappedMove >> 8;
-            PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[battler].volatiles.wrappedMove);
+            PrepareMoveBuffer(gBattleTextBuff1, gBattleMons[battler].volatiles.wrappedMove);
             BattleScriptCall(BattleScript_WrapTurnDmg);
             s32 bindDamage = 0;
             if (GetBattlerHoldEffect(gBattleMons[battler].volatiles.wrappedBy) == HOLD_EFFECT_BINDING_BAND)
@@ -655,7 +655,7 @@ static bool32 HandleEndTurnWrap(enum BattlerId battler)
         else  // broke free
         {
             gBattleMons[battler].volatiles.wrapped = FALSE;
-            PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[battler].volatiles.wrappedMove);
+            PrepareMoveBuffer(gBattleTextBuff1, gBattleMons[battler].volatiles.wrappedMove);
             BattleScriptCall(BattleScript_WrapEnds);
         }
         effect = TRUE;
@@ -680,7 +680,7 @@ static bool32 HandleEndTurnSaltCure(enum BattlerId battler)
         else
             saltCureDamage = GetNonDynamaxMaxHP(battler) / 8;
         SetPassiveDamageAmount(battler, saltCureDamage);
-        PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_SALT_CURE);
+        PrepareMoveBuffer(gBattleTextBuff1, MOVE_SALT_CURE);
         BattleScriptCall(BattleScript_SaltCureExtraDamage);
         effect = TRUE;
     }
@@ -718,7 +718,7 @@ static bool32 HandleEndTurnSyrupBomb(enum BattlerId battler)
     {
         if (gBattleMons[battler].volatiles.syrupBombTimer > 0 && --gBattleMons[battler].volatiles.syrupBombTimer == 0)
             gBattleMons[battler].volatiles.syrupBomb = FALSE;
-        PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_SYRUP_BOMB);
+        PrepareMoveBuffer(gBattleTextBuff1, MOVE_SYRUP_BOMB);
         gBattlerTarget = battler;
         gBattlerAttacker = gBattleMons[battler].volatiles.stickySyrupedBy;
         SetStatChange(battler, STAT_SPEED, -1);
@@ -739,7 +739,7 @@ static bool32 HandleEndTurnTaunt(enum BattlerId battler)
     {
         gBattleScripting.battler = battler;
         BattleScriptCall(BattleScript_BufferEndTurn);
-        PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_TAUNT);
+        PrepareMoveBuffer(gBattleTextBuff1, MOVE_TAUNT);
         effect = TRUE;
     }
 
@@ -831,7 +831,7 @@ static bool32 HandleEndTurnMagnetRise(enum BattlerId battler)
     {
         gBattleMons[battler].volatiles.magnetRise = FALSE;
         BattleScriptCall(BattleScript_BufferEndTurn);
-        PREPARE_STRING_BUFFER(gBattleTextBuff1, STRINGID_ELECTROMAGNETISM);
+        PrepareStringBuffer(gBattleTextBuff1, STRINGID_ELECTROMAGNETISM);
         effect = TRUE;
     }
 
@@ -960,7 +960,7 @@ static bool32 HandleEndTurnPerishSong(enum BattlerId battler)
     if (gBattleMons[battler].volatiles.perishSong
      && IsBattlerPresent(battler))
     {
-        PREPARE_BYTE_NUMBER_BUFFER(gBattleTextBuff1, 1, gBattleMons[battler].volatiles.perishSongTimer);
+        PrepareByteNumberBuffer(gBattleTextBuff1, 1, gBattleMons[battler].volatiles.perishSongTimer);
         if (gBattleMons[battler].volatiles.perishSongTimer == 0)
         {
             gBattleMons[battler].volatiles.perishSong = FALSE;
@@ -1005,7 +1005,7 @@ static bool32 HandleEndTurnSecondEventBlock(enum BattlerId battler)
             gSideStatuses[side] &= ~SIDE_STATUS_REFLECT;
             BattleScriptCall(BattleScript_SideStatusWoreOff);
             gBattleCommunication[MULTISTRING_CHOOSER] = side;
-            PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_REFLECT);
+            PrepareMoveBuffer(gBattleTextBuff1, MOVE_REFLECT);
             effect = TRUE;
         }
         gBattleStruct->eventState.endTurnBlock++;
@@ -1017,7 +1017,7 @@ static bool32 HandleEndTurnSecondEventBlock(enum BattlerId battler)
             gSideStatuses[side] &= ~SIDE_STATUS_LIGHTSCREEN;
             BattleScriptCall(BattleScript_SideStatusWoreOff);
             gBattleCommunication[MULTISTRING_CHOOSER] = side;
-            PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_LIGHT_SCREEN);
+            PrepareMoveBuffer(gBattleTextBuff1, MOVE_LIGHT_SCREEN);
             effect = TRUE;
         }
         gBattleStruct->eventState.endTurnBlock++;
@@ -1039,7 +1039,7 @@ static bool32 HandleEndTurnSecondEventBlock(enum BattlerId battler)
             gSideStatuses[side] &= ~SIDE_STATUS_MIST;
             BattleScriptCall(BattleScript_SideStatusWoreOff);
             gBattleCommunication[MULTISTRING_CHOOSER] = side;
-            PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_MIST);
+            PrepareMoveBuffer(gBattleTextBuff1, MOVE_MIST);
             effect = TRUE;
         }
         gBattleStruct->eventState.endTurnBlock++;
@@ -1100,7 +1100,7 @@ static bool32 HandleEndTurnSecondEventBlock(enum BattlerId battler)
             gSideStatuses[side] &= ~SIDE_STATUS_AURORA_VEIL;
             BattleScriptCall(BattleScript_SideStatusWoreOff);
             gBattleCommunication[MULTISTRING_CHOOSER] = side;
-            PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_AURORA_VEIL);
+            PrepareMoveBuffer(gBattleTextBuff1, MOVE_AURORA_VEIL);
             effect = TRUE;
         }
         gBattleStruct->eventState.battlerSide++;

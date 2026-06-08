@@ -1010,7 +1010,7 @@ static void Task_EvolutionScene(u8 taskId)
                     else
                     {
                         // Forget move
-                        PREPARE_MOVE_BUFFER(gBattleTextBuff2, move)
+                        PrepareMoveBuffer(gBattleTextBuff2, move);
 
                         RemoveMonPPBonus(mon, var);
                         SetMonMoveSlot(mon, gMoveToLearn, var);
@@ -1413,7 +1413,7 @@ static void Task_TradeEvolutionScene(u8 taskId)
                     else
                     {
                         // Forget move
-                        PREPARE_MOVE_BUFFER(gBattleTextBuff2, move)
+                        PrepareMoveBuffer(gBattleTextBuff2, move);
 
                         RemoveMonPPBonus(mon, var);
                         SetMonMoveSlot(mon, gMoveToLearn, var);

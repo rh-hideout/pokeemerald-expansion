@@ -509,7 +509,7 @@ void HandleAction_Switch(void)
     gActionSelectionCursor[gBattlerAttacker] = 0;
     gMoveSelectionCursor[gBattlerAttacker] = 0;
 
-    PREPARE_MON_NICK_BUFFER(gBattleTextBuff1, gBattlerAttacker, gBattleStruct->battlerPartyIndexes[gBattlerAttacker]);
+    PrepareMonNickBuffer(gBattleTextBuff1, gBattlerAttacker, gBattleStruct->battlerPartyIndexes[gBattlerAttacker]);
 
     gBattleScripting.battler = gBattlerAttacker;
     gBattlescriptCurrInstr = BattleScript_ActionSwitch;
@@ -876,7 +876,7 @@ void HandleAction_WallyBallThrow(void)
     gBattle_BG0_X = 0;
     gBattle_BG0_Y = 0;
 
-    PREPARE_MON_NICK_BUFFER(gBattleTextBuff1, gBattlerAttacker, gBattlerPartyIndexes[gBattlerAttacker])
+    PrepareMonNickBuffer(gBattleTextBuff1, gBattlerAttacker, gBattlerPartyIndexes[gBattlerAttacker]);
 
     gBattlescriptCurrInstr = gBattlescriptsForSafariActions[3];
     gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
@@ -1483,7 +1483,7 @@ u32 TrySetCantSelectMoveBattleScript(enum BattlerId battler)
     if (MoveCantBeUsedTwice(move) && move == gLastResultingMoves[battler])
     {
         gCurrentMove = move;
-        PREPARE_MOVE_BUFFER(gBattleTextBuff1, gCurrentMove);
+        PrepareMoveBuffer(gBattleTextBuff1, gCurrentMove);
         if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
         {
             gPalaceSelectionBattleScripts[battler] = BattleScript_SelectingNotAllowedCurrentMoveInPalace;
@@ -2122,7 +2122,7 @@ static void ForewarnChooseMove(enum BattlerId battler)
     }
 
     gEffectBattler = data[bestId].battler;
-    PREPARE_MOVE_BUFFER(gBattleTextBuff1, data[bestId].moveId)
+    PrepareMoveBuffer(gBattleTextBuff1, data[bestId].moveId);
     RecordKnownMove(data[bestId].battler, data[bestId].moveId);
 
     Free(data);
@@ -2144,7 +2144,7 @@ bool32 ChangeTypeBasedOnTerrain(enum BattlerId battler)
         return FALSE;
 
     SET_BATTLER_TYPE(battler, battlerType);
-    PREPARE_TYPE_BUFFER(gBattleTextBuff1, battlerType);
+    PrepareTypeBuffer(gBattleTextBuff1, battlerType);
     return TRUE;
 }
 
@@ -3004,8 +3004,8 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                     BattleScriptCall(BattleScript_TraceActivates);
                     gBattleStruct->tracedAbility[battler] = gLastUsedAbility = gBattleMons[chosenTarget].ability;
                     RecordAbilityBattle(chosenTarget, gLastUsedAbility); // Record the opposing battler has this ability
-                    PREPARE_MON_NICK_WITH_PREFIX_LOWER_BUFFER(gBattleTextBuff1, chosenTarget, gBattlerPartyIndexes[chosenTarget])
-                    PREPARE_ABILITY_BUFFER(gBattleTextBuff2, gLastUsedAbility)
+                    PrepareMonNickWithPrefixLowerBuffer(gBattleTextBuff1, chosenTarget, gBattlerPartyIndexes[chosenTarget]);
+                    PrepareAbilityBuffer(gBattleTextBuff2, gLastUsedAbility);
                 }
             }
             break;
@@ -3428,7 +3428,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             if (shouldAbilityTrigger)
             {
                 gBattleMons[battler].volatiles.vesselOfRuin = TRUE;
-                PREPARE_STAT_BUFFER(gBattleTextBuff1, STAT_SPATK);
+                PrepareStatBuffer(gBattleTextBuff1, STAT_SPATK);
                 BattleScriptCall(BattleScript_RuinAbilityActivates);
                 effect++;
             }
@@ -3437,7 +3437,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             if (shouldAbilityTrigger)
             {
                 gBattleMons[battler].volatiles.swordOfRuin = TRUE;
-                PREPARE_STAT_BUFFER(gBattleTextBuff1, STAT_DEF);
+                PrepareStatBuffer(gBattleTextBuff1, STAT_DEF);
                 BattleScriptCall(BattleScript_RuinAbilityActivates);
                 effect++;
             }
@@ -3446,7 +3446,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             if (shouldAbilityTrigger)
             {
                 gBattleMons[battler].volatiles.tabletsOfRuin = TRUE;
-                PREPARE_STAT_BUFFER(gBattleTextBuff1, STAT_ATK);
+                PrepareStatBuffer(gBattleTextBuff1, STAT_ATK);
                 BattleScriptCall(BattleScript_RuinAbilityActivates);
                 effect++;
             }
@@ -3455,7 +3455,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             if (shouldAbilityTrigger)
             {
                 gBattleMons[battler].volatiles.beadsOfRuin = TRUE;
-                PREPARE_STAT_BUFFER(gBattleTextBuff1, STAT_SPDEF);
+                PrepareStatBuffer(gBattleTextBuff1, STAT_SPDEF);
                 BattleScriptCall(BattleScript_RuinAbilityActivates);
                 effect++;
             }
@@ -3733,7 +3733,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             {
                 gEffectBattler = gBattlerAbility = battler;
                 SET_BATTLER_TYPE(battler, moveType);
-                PREPARE_TYPE_BUFFER(gBattleTextBuff1, moveType);
+                PrepareTypeBuffer(gBattleTextBuff1, moveType);
                 BattleScriptCall(BattleScript_ColorChangeActivates);
                 effect++;
             }
@@ -3859,7 +3859,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             {
                 gBattleMons[gBattlerAttacker].volatiles.disabledMove = gChosenMove;
                 gBattleMons[gBattlerAttacker].volatiles.disableTimer = B_DISABLE_TIMER;
-                PREPARE_MOVE_BUFFER(gBattleTextBuff1, gChosenMove);
+                PrepareMoveBuffer(gBattleTextBuff1, gChosenMove);
                 BattleScriptCall(BattleScript_CursedBodyActivates);
                 effect++;
             }
@@ -3977,7 +3977,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             {
                 if (!IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_MAGIC_GUARD))
                 {
-                    PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
+                    PrepareAbilityBuffer(gBattleTextBuff1, gLastUsedAbility);
                     SetPassiveDamageAmount(gBattlerAttacker, GetNonDynamaxMaxHP(gBattlerAttacker) / (B_ROUGH_SKIN_DMG >= GEN_4 ? 8 : 16));
                     gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_HURT;
                     BattleScriptCall(BattleScript_RoughSkinActivates);
@@ -4066,7 +4066,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                     gEffectBattler = gBattlerAttacker;
                     gBattleScripting.battler = gBattlerTarget;
                     gBattleScripting.moveEffect = MOVE_EFFECT_SLEEP;
-                    PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
+                    PrepareAbilityBuffer(gBattleTextBuff1, gLastUsedAbility);
                     BattleScriptCall(BattleScript_AbilityStatusEffect);
                     effect++;
                 }
@@ -4088,7 +4088,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                     gEffectBattler = gBattlerAttacker;
                     gBattleScripting.battler = gBattlerTarget;
                     gBattleScripting.moveEffect = MOVE_EFFECT_POISON;
-                    PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
+                    PrepareAbilityBuffer(gBattleTextBuff1, gLastUsedAbility);
                     BattleScriptCall(BattleScript_AbilityStatusEffect);
                     effect++;
                 }
@@ -4110,7 +4110,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                     gEffectBattler = gBattlerAttacker;
                     gBattleScripting.battler = gBattlerTarget;
                     gBattleScripting.moveEffect = MOVE_EFFECT_PARALYSIS;
-                    PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
+                    PrepareAbilityBuffer(gBattleTextBuff1, gLastUsedAbility);
                     BattleScriptCall(BattleScript_AbilityStatusEffect);
                     effect++;
                 }
@@ -4128,7 +4128,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 gEffectBattler = gBattlerAttacker;
                 gBattleScripting.battler = gBattlerTarget;
                 gBattleScripting.moveEffect = MOVE_EFFECT_BURN;
-                PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
+                PrepareAbilityBuffer(gBattleTextBuff1, gLastUsedAbility);
                 BattleScriptCall(BattleScript_AbilityStatusEffect);
                 effect++;
             }
@@ -4281,7 +4281,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 gEffectBattler = gBattlerAttacker;
                 gBattleScripting.battler = gBattlerTarget;
                 gBattleScripting.moveEffect = MOVE_EFFECT_BURN;
-                PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
+                PrepareAbilityBuffer(gBattleTextBuff1, gLastUsedAbility);
                 BattleScriptCall(BattleScript_AbilityStatusEffect);
                 effect++;
             }
@@ -4305,7 +4305,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 gEffectBattler = gBattlerTarget;
                 gBattleScripting.battler = gBattlerAttacker;
                 gBattleScripting.moveEffect = MOVE_EFFECT_POISON;
-                PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
+                PrepareAbilityBuffer(gBattleTextBuff1, gLastUsedAbility);
                 BattleScriptCall(BattleScript_AbilityStatusEffect);
                 effect++;
             }
@@ -4319,7 +4319,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                     gEffectBattler = gBattlerTarget;
                     gBattleScripting.battler = gBattlerAttacker;
                     gBattleScripting.moveEffect = MOVE_EFFECT_TOXIC;
-                    PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
+                    PrepareAbilityBuffer(gBattleTextBuff1, gLastUsedAbility);
                     BattleScriptCall(BattleScript_AbilityStatusEffect);
                     effect++;
                 }
@@ -4346,7 +4346,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                     gBattleScripting.battler = gBattlerAttacker;
                     gEffectBattler = gBattlerTarget;
                     gBattleScripting.moveEffect = MOVE_EFFECT_CONFUSION;
-                    PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
+                    PrepareAbilityBuffer(gBattleTextBuff1, gLastUsedAbility);
                     BattleScriptCall(BattleScript_AbilityStatusEffect);
                     effect++;
                 }
@@ -4526,7 +4526,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                     // Can't use TryBattleFormChange as we can't test form change const data changes.
                     gLastUsedAbility = ability;
                     GetBattlerPartyState(battler)->battleBondBoost = TRUE;
-                    PREPARE_SPECIES_BUFFER(gBattleTextBuff1, gBattleMons[battler].species);
+                    PrepareSpeciesBuffer(gBattleTextBuff1, gBattleMons[battler].species);
                     GetBattlerPartyState(battler)->changedSpecies = gBattleMons[battler].species;
                     gBattleMons[battler].species = SPECIES_GRENINJA_ASH;
                     BattleScriptCall(BattleScript_BattleBondActivatesOnMoveEndAttacker);
@@ -4654,7 +4654,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
              && GET_BASE_SPECIES_ID(GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES)) == SPECIES_TATSUGIRI)
             {
                 gEffectBattler = partner;
-                PREPARE_MON_NICK_BUFFER(gBattleTextBuff1, partner, gBattlerPartyIndexes[partner]);
+                PrepareMonNickBuffer(gBattleTextBuff1, partner, gBattlerPartyIndexes[partner]);
                 gBattleStruct->battlerState[battler].commandingDondozo = TRUE;
                 gBattleStruct->battlerState[partner].commanderSpecies = gBattleMons[battler].species;
                 gBattleMons[battler].volatiles.semiInvulnerable = STATE_COMMANDER;
@@ -4739,7 +4739,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             {
                 gBattleMons[battler].volatiles.weatherAbilityDone = TRUE;
                 gBattleMons[battler].volatiles.paradoxBoostedStat = GetParadoxHighestStatId(battler);
-                PREPARE_STAT_BUFFER(gBattleTextBuff1, gBattleMons[battler].volatiles.paradoxBoostedStat);
+                PrepareStatBuffer(gBattleTextBuff1, gBattleMons[battler].volatiles.paradoxBoostedStat);
                 gBattleScripting.battler = battler;
                 BattleScriptCall(BattleScript_ProtosynthesisActivates);
                 effect++;
@@ -4771,7 +4771,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             {
                 gBattleMons[battler].volatiles.terrainAbilityDone = TRUE;
                 gBattleMons[battler].volatiles.paradoxBoostedStat = GetParadoxHighestStatId(battler);
-                PREPARE_STAT_BUFFER(gBattleTextBuff1, gBattleMons[battler].volatiles.paradoxBoostedStat);
+                PrepareStatBuffer(gBattleTextBuff1, gBattleMons[battler].volatiles.paradoxBoostedStat);
                 gBattlerAbility = gBattleScripting.battler = battler;
                 BattleScriptCall(BattleScript_QuarkDriveActivates);
                 effect++;

@@ -621,9 +621,9 @@ TEST("Battle strings fit on the battle message window")
     }
 
     // Clear buffers
-    PREPARE_STRING_BUFFER(gBattleTextBuff1, STRINGID_EMPTYSTRING3);
-    PREPARE_STRING_BUFFER(gBattleTextBuff2, STRINGID_EMPTYSTRING3);
-    PREPARE_STRING_BUFFER(gBattleTextBuff3, STRINGID_EMPTYSTRING3);
+    PrepareStringBuffer(gBattleTextBuff1, STRINGID_EMPTYSTRING3);
+    PrepareStringBuffer(gBattleTextBuff2, STRINGID_EMPTYSTRING3);
+    PrepareStringBuffer(gBattleTextBuff3, STRINGID_EMPTYSTRING3);
     *gStringVar1 = EOS;
     *gStringVar2 = EOS;
     *gStringVar3 = EOS;
@@ -669,14 +669,14 @@ TEST("Battle strings fit on the battle message window")
         break;
     // Buffer Nickname with prefix to B_BUFF1, " a boosted" to B_BUFF2, "999999" to B_BUFF3
     case STRINGID_PKMNGAINEDEXP:
-        PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, 0, 0);
-        PREPARE_STRING_BUFFER(gBattleTextBuff2, STRINGID_ABOOSTED); // 'gained a boosted'
-        PREPARE_WORD_NUMBER_BUFFER(gBattleTextBuff3, 6, sixDigitNines);
+        PrepareMonNickWithPrefixBuffer(gBattleTextBuff1, 0, 0);
+        PrepareStringBuffer(gBattleTextBuff2, STRINGID_ABOOSTED); // 'gained a boosted';
+        PrepareWordNumberBuffer(gBattleTextBuff3, 6, sixDigitNines);
         break;
     // Buffer Nickname with prefix to B_BUFF1, "100" to B_BUFF2
     case STRINGID_PKMNGREWTOLV:
-        PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, 0, 0);
-        PREPARE_BYTE_NUMBER_BUFFER(gBattleTextBuff2, 3, 100);
+        PrepareMonNickWithPrefixBuffer(gBattleTextBuff1, 0, 0);
+        PrepareByteNumberBuffer(gBattleTextBuff2, 3, 100);
         break;
     // Buffer Nickname with prefix to B_BUFF1, move name to B_BUFF2
     case STRINGID_PKMNLEARNEDMOVE:
@@ -686,8 +686,8 @@ TEST("Battle strings fit on the battle message window")
     case STRINGID_PKMNFORGOTMOVE:
     case STRINGID_STOPLEARNINGMOVE:
     case STRINGID_DIDNOTLEARNMOVE:
-        PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, 0, 0);
-        PREPARE_MOVE_BUFFER(gBattleTextBuff2, longMoveID);
+        PrepareMonNickWithPrefixBuffer(gBattleTextBuff1, 0, 0);
+        PrepareMoveBuffer(gBattleTextBuff2, longMoveID);
         break;
     // Buffer Move name to B_BUFF1
     case STRINGID_PKMNLEARNEDMOVE2:
@@ -704,24 +704,24 @@ TEST("Battle strings fit on the battle message window")
     case STRINGID_CURSEDBODYDISABLED:
     case STRINGID_CURRENTMOVECANTSELECT:
     case STRINGID_TARGETISHURTBYSALTCURE:
-        PREPARE_MOVE_BUFFER(gBattleTextBuff1, longMoveID);
+        PrepareMoveBuffer(gBattleTextBuff1, longMoveID);
         break;
     // Buffer "999999" to B_BUFF1
     case STRINGID_PLAYERGOTMONEY:
     case STRINGID_PLAYERWHITEOUT2_TRAINER:
     case STRINGID_PLAYERPICKEDUPMONEY:
     case STRINGID_PLAYERWHITEOUT2_WILD:
-        PREPARE_WORD_NUMBER_BUFFER(gBattleTextBuff1, 6, sixDigitNines);
+        PrepareWordNumberBuffer(gBattleTextBuff1, 6, sixDigitNines);
         break;
     // Buffer "99" to B_BUFF1
     case STRINGID_HITXTIMES:
     case STRINGID_MAGNITUDESTRENGTH:
-        PREPARE_WORD_NUMBER_BUFFER(gBattleTextBuff1, 2, 99);
+        PrepareWordNumberBuffer(gBattleTextBuff1, 2, 99);
         break;
     // Buffer "9" to B_BUFF1
     case STRINGID_PKMNSTOCKPILED:
     case STRINGID_PKMNPERISHCOUNTFELL:
-        PREPARE_WORD_NUMBER_BUFFER(gBattleTextBuff1, 1, 9);
+        PrepareWordNumberBuffer(gBattleTextBuff1, 1, 9);
         break;
     // Buffer Ability name to B_BUFF1
     case STRINGID_PKMNMADESLEEP:
@@ -730,7 +730,7 @@ TEST("Battle strings fit on the battle message window")
     case STRINGID_PKMNFROZENBY:
     case STRINGID_PKMNWASPARALYZEDBY:
     case STRINGID_CANACTFASTERTHANKSTO:
-        PREPARE_ABILITY_BUFFER(gBattleTextBuff1, longAbilityID);
+        PrepareAbilityBuffer(gBattleTextBuff1, longAbilityID);
         break;
     // Buffer Stat name to B_BUFF1
     case STRINGID_STATSWONTINCREASE:
@@ -750,7 +750,7 @@ TEST("Battle strings fit on the battle message window")
     case STRINGID_THIRDTYPEADDED:
     case STRINGID_ATTACKERLOSTITSTYPE:
     case STRINGID_PKMNTERASTALLIZEDINTO:
-        PREPARE_TYPE_BUFFER(gBattleTextBuff1, longTypeName);
+        PrepareTypeBuffer(gBattleTextBuff1, longTypeName);
         break;
     // Buffer Species name to B_BUFF1
     case STRINGID_PKMNTRANSFORMEDINTO:
@@ -760,20 +760,20 @@ TEST("Battle strings fit on the battle message window")
     case STRINGID_ITEMRESTOREDSPECIESHEALTH: // Should probably use nickname instead?
     case STRINGID_ITEMCUREDSPECIESSTATUS: // Should probably use nickname instead?
     case STRINGID_ITEMRESTOREDSPECIESPP: // Should probably use nickname instead?
-        PREPARE_SPECIES_BUFFER(gBattleTextBuff1, longSpeciesName)
+        PrepareSpeciesBuffer(gBattleTextBuff1, longSpeciesName);
         break;
     // Buffer nickname with prefix to B_BUFF1
     case STRINGID_PKMNATTACK:
     case STRINGID_PKMNWISHCAMETRUE:
-        PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, 1, 0);
+        PrepareMonNickWithPrefixBuffer(gBattleTextBuff1, 1, 0);
         break;
     // Buffer nickname with prefix in lower case to B_BUFF1
     case STRINGID_USEDINSTRUCTEDMOVE:
-        PREPARE_MON_NICK_WITH_PREFIX_LOWER_BUFFER(gBattleTextBuff1, 1, 0);
+        PrepareMonNickWithPrefixLowerBuffer(gBattleTextBuff1, 1, 0);
         break;
     // Buffer nickname to B_BUFF2
     case STRINGID_ENEMYABOUTTOSWITCHPKMN:
-        PREPARE_MON_NICK_BUFFER(gBattleTextBuff2, 1, 0);
+        PrepareMonNickBuffer(gBattleTextBuff2, 1, 0);
         break;
     // Buffer Item name to B_BUFF1
     case STRINGID_PKMNHURTSWITH:
@@ -782,21 +782,21 @@ TEST("Battle strings fit on the battle message window")
     case STRINGID_PKMNIGNOREDX:
     case STRINGID_PKMNOBTAINEDX:
     case STRINGID_ABOUTTOUSEPOLTERGEIST:
-        PREPARE_ITEM_BUFFER(gBattleTextBuff1, longItemName);
+        PrepareItemBuffer(gBattleTextBuff1, longItemName);
         break;
     // Buffer Item name to B_BUFF2
     case STRINGID_PKMNOBTAINEDX2:
-        PREPARE_ITEM_BUFFER(gBattleTextBuff2, longItemName);
+        PrepareItemBuffer(gBattleTextBuff2, longItemName);
         break;
     // Buffer Item name to B_BUFF1 and B_BUFF2
     case STRINGID_PKMNOBTAINEDXYOBTAINEDZ:
-        PREPARE_ITEM_BUFFER(gBattleTextBuff1, longItemName);
-        PREPARE_ITEM_BUFFER(gBattleTextBuff2, longItemName);
+        PrepareItemBuffer(gBattleTextBuff1, longItemName);
+        PrepareItemBuffer(gBattleTextBuff2, longItemName);
         break;
     // Buffer nickname with prefix to B_BUFF1, Ability name to B_BUFF2
     case STRINGID_PKMNTRACED:
-        PREPARE_MON_NICK_WITH_PREFIX_LOWER_BUFFER(gBattleTextBuff1, 1, 0);
-        PREPARE_ABILITY_BUFFER(gBattleTextBuff2, longAbilityID);
+        PrepareMonNickWithPrefixLowerBuffer(gBattleTextBuff1, 1, 0);
+        PrepareAbilityBuffer(gBattleTextBuff2, longAbilityID);
         break;
     // Buffer Stat name to B_BUFF1, "drastically rose" to B_BUFF2
     case STRINGID_STATROSE:
