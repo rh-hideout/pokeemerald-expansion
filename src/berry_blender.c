@@ -2475,11 +2475,6 @@ static void CalculatePokeblock(struct BlenderBerry *berries, struct Pokeblock *p
         flavors[i] = sPokeblockFlavors[i];
 }
 
-static void UNUSED Debug_CalculatePokeblock(struct BlenderBerry *berries, struct Pokeblock *pokeblock, u8 numPlayers, u8 *flavors, u16 maxRPM)
-{
-    CalculatePokeblock(berries, pokeblock, numPlayers, flavors, maxRPM);
-}
-
 static void Debug_SetStageVars(void)
 {
     u32 frames = (u16)(sBerryBlender->gameFrameTime);
@@ -3444,7 +3439,6 @@ static bool8 PrintBlendingResults(void)
     struct Pokeblock pokeblock;
     enum Flavor flavors[FLAVOR_COUNT + 1];
     u8 text[40];
-    u16 UNUSED berryIds[4];
 
     switch (sBerryBlender->mainState)
     {
@@ -3538,8 +3532,6 @@ static bool8 PrintBlendingResults(void)
 
         for (i = 0; i < BLENDER_MAX_PLAYERS; i++)
         {
-            if (sBerryBlender->chosenItemId[i] != 0)
-                berryIds[i] = ItemIdToBerryType(sBerryBlender->chosenItemId[i]);
             if (sBerryBlender->arrowIdToPlayerId[i] != NO_PLAYER)
             {
                 PutWindowTilemap(i);

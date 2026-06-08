@@ -8,7 +8,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Ivy Cudgel changes the move type depending on the form of Ogerpon")
 {
-    u16 species;
+    enum Species species;
     u16 ogerpon;
     enum Item item;
 

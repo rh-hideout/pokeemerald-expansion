@@ -91,7 +91,7 @@ u16 SpeciesToMailSpecies(enum Species species, u32 personality)
     return species;
 }
 
-u16 MailSpeciesToSpecies(u16 mailSpecies, u16 *buffer)
+enum Species MailSpeciesToSpecies(u16 mailSpecies, u16 *buffer)
 {
     u16 result;
 
@@ -118,11 +118,6 @@ u8 GiveMailToMon(struct Pokemon *mon, struct Mail *mail)
 
     gSaveBlock1Ptr->mail[mailId] = *mail;
     return mailId;
-}
-
-static bool32 UNUSED DummyMailFunc(void)
-{
-    return FALSE;
 }
 
 void TakeMailFromMon(struct Pokemon *mon)

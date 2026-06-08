@@ -170,10 +170,10 @@ string generate_map_header_text(Json map_data, Json layouts_data) {
     else
         text << "\t.4byte NULL\n";
 
-    text << "\t.2byte " << json_to_string(map_data, "music") << "\n"
-         << "\t.2byte " << json_to_string(layout, "id") << "\n"
+    text << "\t.2byte " << json_to_string(map_data, "music") << "\n";
+
+    text << "\t.2byte " << json_to_string(layout, "id") << "\n"
          << "\t.byte "  << json_to_string(map_data, "region_map_section") << "\n"
-         << "\t.byte "  << json_to_string(map_data, "requires_flash") << "\n"
          << "\t.byte "  << json_to_string(map_data, "weather") << "\n"
          << "\t.byte "  << json_to_string(map_data, "map_type") << "\n";
 
@@ -183,12 +183,19 @@ string generate_map_header_text(Json map_data, Json layouts_data) {
     else
         text << "\t.byte " << floor_number << "\n";
 
-    text << "\t.byte 0\n";
+    text << "\t.2byte MUS_NONE\n";
+
+    string write_specialvar_iseffect = json_to_string(map_data, "write_specialvar_iseffect", true);
+    if (write_specialvar_iseffect.empty())
+        write_specialvar_iseffect = "FALSE";
+
     text << "\tmap_header_flags "
          << "allow_cycling=" << json_to_string(map_data, "allow_cycling") << ", "
          << "allow_escaping=" << json_to_string(map_data, "allow_escaping") << ", "
          << "allow_running=" << json_to_string(map_data, "allow_running") << ", "
-         << "show_map_name=" << json_to_string(map_data, "show_map_name") << "\n";
+         << "show_map_name=" << json_to_string(map_data, "show_map_name") << ", "
+         << "write_specialvar_iseffect=" << write_specialvar_iseffect << ", "
+         << "requires_flash=" << json_to_string(map_data, "requires_flash") << "\n";
 
      text << "\t.byte " << json_to_string(map_data, "battle_scene") << "\n\n";
 

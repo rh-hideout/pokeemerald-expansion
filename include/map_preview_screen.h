@@ -44,8 +44,10 @@ enum MapPreviewScreenId
 struct MapPreviewScreen
 {
     mapsec_u8_t mapsec;
-    u8 type;
-    u8 usesAllPalettes;
+    u8 type:2;
+    u8 usesAllPalettes:1;
+    u8 nameDisabled:1;
+    u8 padding:4;
     u16 flagId;
     const void *tilesptr;
     const void *tilemapptr;

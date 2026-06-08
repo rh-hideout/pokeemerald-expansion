@@ -145,7 +145,7 @@ static void PrintCurrentSpeciesInfo(void);
 // SEARCH
 static bool8 TryStartHiddenMonFieldEffect(enum EncounterType environment, u8 xSize, u8 ySize, bool8 smallScan);
 static void DexNavGenerateMoveset(enum Species species, u8 searchLevel, u8 encounterLevel, u16 *moveDst);
-static u16 DexNavGenerateHeldItem(enum Species species, u8 searchLevel);
+static enum Item DexNavGenerateHeldItem(enum Species species, u8 searchLevel);
 static u8 DexNavGetAbilityNum(enum Species species, u8 searchLevel);
 static u8 DexNavGeneratePotential(u8 searchLevel);
 static u8 DexNavTryGenerateMonLevel(enum Species species, enum EncounterType environment);
@@ -1217,12 +1217,22 @@ static u8 DexNavTryGenerateMonLevel(enum Species species, enum EncounterType env
         return levelBase + levelBonus;
 }
 
+static enum Move GetRandomEggMove(enum Species species)
+{
+    u32 numEggMoves = 0;
+    const u16 *eggMoveLearnset = GetSpeciesEggMoves(species);
+    for (u32 i = 0; eggMoveLearnset[i] != MOVE_UNAVAILABLE; i++)
+        numEggMoves++;
+
+    enum Move result = *(const u16 *)(RandomElementArray(RNG_DEXNAV_RANDOM_EGG_MOVE, eggMoveLearnset, sizeof(u16), numEggMoves));
+    return result;
+}
+
 static void DexNavGenerateMoveset(enum Species species, u8 searchLevel, u8 encounterLevel, u16 *moveDst)
 {
     bool8 genMove = FALSE;
     u16 randVal = Random() % 100;
     u16 i;
-    u16 eggMoveBuffer[EGG_MOVES_ARRAY_COUNT];
 
     // see if first move slot should be an egg move
     if (searchLevel < 5)
@@ -1265,14 +1275,10 @@ static void DexNavGenerateMoveset(enum Species species, u8 searchLevel, u8 encou
 
     // set first move slot to a random egg move if search level is good enough
     if (genMove)
-    {
-        u8 numEggMoves = GetEggMoves(&gParties[B_TRAINER_OPPONENT_A][0], eggMoveBuffer);
-        if (numEggMoves != 0)
-            moveDst[0] = eggMoveBuffer[Random() % numEggMoves];
-    }
+        moveDst[0] = GetRandomEggMove(GetEggSpecies(species));
 }
 
-static u16 DexNavGenerateHeldItem(enum Species species, u8 searchLevel)
+static enum Item DexNavGenerateHeldItem(enum Species species, u8 searchLevel)
 {
     u16 randVal = Random() % 100;
     u8 searchLevelInfluence = searchLevel >> 1;
