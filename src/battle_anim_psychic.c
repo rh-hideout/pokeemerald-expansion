@@ -502,6 +502,14 @@ static void AnimateZenHeadbutt(struct Sprite *sprite)
 // For the rectangular wall sprite used by Reflect, Mirror Coat, etc
 static void AnimDefensiveWall(struct Sprite *sprite)
 {
+
+    //  It's possible for this anim tag to be different from the already loaded tag
+    if (!TryLoadPal(gBattleAnimArgs[2]))
+    {
+        sprite->callback = DestroyAnimSprite;
+        return;
+    }
+
     u8 isContest = IsContest();
 
     if (IsOnPlayerSide(gBattleAnimAttacker) || isContest)
@@ -827,7 +835,11 @@ static void AnimTask_Teleport_Step(u8 taskId)
 
 void AnimTask_ImprisonOrbs(u8 taskId)
 {
-    u16 var0, var1;
+    if (!TryLoadSpriteAssets(&gImprisonOrbSpriteTemplate))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
 
     struct Task *task = &gTasks[taskId];
 
@@ -836,8 +848,8 @@ void AnimTask_ImprisonOrbs(u8 taskId)
     task->data[13] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
     task->data[14] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
 
-    var0 = GetBattlerSpriteCoordAttr(gBattleAnimAttacker, BATTLER_COORD_ATTR_WIDTH) / 3;
-    var1 = GetBattlerSpriteCoordAttr(gBattleAnimAttacker, BATTLER_COORD_ATTR_HEIGHT) / 3;
+    u32 var0 = GetBattlerSpriteCoordAttr(gBattleAnimAttacker, BATTLER_COORD_ATTR_WIDTH) / 3;
+    u32 var1 = GetBattlerSpriteCoordAttr(gBattleAnimAttacker, BATTLER_COORD_ATTR_HEIGHT) / 3;
     task->data[12] = var0 > var1 ? var0 : var1;
 
     SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT2_ALL | BLDCNT_EFFECT_BLEND);
@@ -941,6 +953,12 @@ static void AnimRedX(struct Sprite *sprite)
 
 void AnimTask_SkillSwap(u8 taskId)
 {
+    if (!TryLoadSpriteAssets(&gSkillSwapOrbSpriteTemplate))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+
     struct Task *task = &gTasks[taskId];
 
     if (IsContest())
@@ -990,6 +1008,12 @@ void AnimTask_SkillSwap(u8 taskId)
 // arg 0: move target
 void AnimTask_HeartSwap(u8 taskId)
 {
+    if (!TryLoadSpriteAssets(&gHeartSwapOrbSpriteTemplate))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+
     struct Task *task = &gTasks[taskId];
 
     if (IsContest())

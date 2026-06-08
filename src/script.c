@@ -1,8 +1,10 @@
 #include "global.h"
 #include "script.h"
 #include "event_data.h"
+#include "field_screen_effect.h"
 #include "mystery_gift.h"
 #include "random.h"
+#include "task.h"
 #include "trainer_see.h"
 #include "util.h"
 #include "constants/event_objects.h"
@@ -38,7 +40,6 @@ EWRAM_DATA u8 gMsgBoxIsCancelable = FALSE;
 
 extern ScrCmdFunc gScriptCmdTable[];
 extern ScrCmdFunc gScriptCmdTableEnd[];
-extern void *const gNullScriptPtr;
 
 void InitScriptContext(struct ScriptContext *ctx, void *cmdTable, void *cmdTableEnd)
 {
@@ -75,15 +76,13 @@ void SetupNativeScript(struct ScriptContext *ctx, bool8 (*ptr)(void))
 
 void StopScript(struct ScriptContext *ctx)
 {
+    assertf(!FuncIsActiveTask(Task_WarpAndLoadMap), "Leaving script while a warp is in progress: try adding a waitstate");
     ctx->mode = SCRIPT_MODE_STOPPED;
     ctx->scriptPtr = NULL;
 }
 
 bool8 RunScriptCommand(struct ScriptContext *ctx)
 {
-    if (ctx->mode == SCRIPT_MODE_STOPPED)
-        return FALSE;
-
     switch (ctx->mode)
     {
     case SCRIPT_MODE_STOPPED:
@@ -105,16 +104,10 @@ bool8 RunScriptCommand(struct ScriptContext *ctx)
             u8 cmdCode;
             ScrCmdFunc *func;
 
-            if (!ctx->scriptPtr)
+            if (ctx->scriptPtr == NULL)
             {
                 ctx->mode = SCRIPT_MODE_STOPPED;
                 return FALSE;
-            }
-
-            if (ctx->scriptPtr == gNullScriptPtr)
-            {
-                while (1)
-                    asm("svc 2"); // HALT
             }
 
             cmdCode = *(ctx->scriptPtr);
@@ -160,16 +153,26 @@ static const u8 *ScriptPop(struct ScriptContext *ctx)
 
 void ScriptJump(struct ScriptContext *ctx, const u8 *ptr)
 {
+    assertf(ptr != NULL, "goto to NULL");
     ctx->scriptPtr = ptr;
 }
 
 void ScriptCall(struct ScriptContext *ctx, const u8 *ptr)
 {
+    assertf(ptr != NULL, "call to NULL")
+    {
+        // HINT: Returning without having pushed the current location is
+        // equivalent to branching to a script that just contains
+        // 'return'.
+        return;
+    }
+
     bool32 failed = ScriptPush(ctx, ctx->scriptPtr);
     assertf(!failed, "could not push %p", ptr)
     {
         return;
     }
+
     ctx->scriptPtr = ptr;
 }
 

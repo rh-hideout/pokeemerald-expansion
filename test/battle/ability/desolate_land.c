@@ -128,7 +128,8 @@ SINGLE_BATTLE_TEST("Desolate Land blocks weather-setting moves")
 
 SINGLE_BATTLE_TEST("Desolate Land prevents other weather abilities")
 {
-    u16 ability, species;
+    enum Ability ability;
+    enum Species species;
     PARAMETRIZE { ability = ABILITY_DROUGHT;      species = SPECIES_NINETALES; }
     PARAMETRIZE { ability = ABILITY_DRIZZLE;      species = SPECIES_POLITOED; }
     PARAMETRIZE { ability = ABILITY_SAND_STREAM;  species = SPECIES_HIPPOWDON; }
@@ -151,10 +152,9 @@ SINGLE_BATTLE_TEST("Desolate Land can be replaced by Delta Stream")
 {
     GIVEN {
         PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_RAYQUAZA) { Ability(ABILITY_DELTA_STREAM); }
+        OPPONENT(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
     } WHEN {
-        TURN { SWITCH(opponent, 1); }
+        TURN { MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_DELTA_STREAM);
         MESSAGE("Mysterious strong winds are protecting Flying-type Pokémon!");

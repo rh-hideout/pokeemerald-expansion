@@ -10,7 +10,6 @@ SixIsland_WaterPath_House1_EventScript_Beauty::
 	special GetHeracrossSizeRecordInfo
 	msgbox SixIsland_WaterPath_House1_Text_MayIMeasureHeracross
 	special ChoosePartyMon
-	waitstate
 	copyvar VAR_RESULT, VAR_0x8004
 	goto_if_ge VAR_RESULT, PARTY_SIZE, SixIsland_WaterPath_House1_EventScript_DontShowMon
 	special CompareHeracrossSize

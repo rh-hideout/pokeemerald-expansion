@@ -323,4 +323,22 @@ SINGLE_BATTLE_TEST("Corrosion does not affect Poison Spikes")
     }
 }
 
+SINGLE_BATTLE_TEST("Corrosion does not make Toxic Spikes poison a Corrosion user Terastallized into Steel")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TOXIC_SPIKES) == EFFECT_TOXIC_SPIKES);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_SALANDIT) { Ability(ABILITY_CORROSION); TeraType(TYPE_STEEL); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_TOXIC_SPIKES); MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
+        TURN { SWITCH(opponent, 1); }
+        TURN { SWITCH(opponent, 0); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC_SPIKES, player);
+    } THEN {
+        EXPECT_EQ(opponent->status1, STATUS1_NONE);
+    }
+}
+
 TO_DO_BATTLE_TEST("Dynamax: Corrosion can poison Poison/Steel types if the Pokémon uses G-Max Malodor")

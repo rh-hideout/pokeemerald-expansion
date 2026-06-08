@@ -70,7 +70,13 @@ SECTIONS {
     script_data :
     ALIGN(4)
     {
-		data/*.o(script_data);
+        data/*.o(script_data);
+    } > ROM =0
+
+    .rodata.compound_string :
+    SUBALIGN(0)
+    {
+        *.o(.rodata.compound_string.*);
     } > ROM =0
 
     .rodata :

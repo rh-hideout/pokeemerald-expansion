@@ -289,8 +289,15 @@ bool32 IsInvalidBg(u32 bg)
         return FALSE;
 }
 
-// From FRLG. Dummied out.
 int BgTileAllocOp(int bg, int offset, int count, int mode)
+{
+    int result = BgTileAllocOpUnchecked(bg, offset, count, mode);
+    fatal_assertf(result > 0);
+    return result;
+}
+
+// From FRLG. Dummied out.
+int BgTileAllocOpUnchecked(int bg, int offset, int count, int mode)
 {
 #if IS_FRLG
     int start, end;
@@ -1248,7 +1255,7 @@ void CopyTileMapEntry(const u16 *src, u16 *dest, s32 palette1, s32 tileOffset, s
         var |= (*src + tileOffset) & 0x3FF;
         break;
     default:
-    case 17 ... INT_MAX:
+    case 17:
         var = *src + tileOffset + (palette2 << 12);
         break;
     }

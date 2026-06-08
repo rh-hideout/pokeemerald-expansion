@@ -818,6 +818,12 @@ void AnimElectricity(struct Sprite *sprite)
 // The vertical falling thunder bolt used in Thunder Wave/Shock/Bolt
 void AnimTask_ElectricBolt(u8 taskId)
 {
+    if (!TryLoadSpriteAssets(&gElectricBoltSegmentSpriteTemplate))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+
     gTasks[taskId].data[0] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X) + gBattleAnimArgs[0];
     gTasks[taskId].data[1] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y) + gBattleAnimArgs[1];
     gTasks[taskId].data[2] = gBattleAnimArgs[2];
@@ -942,6 +948,19 @@ static void AnimThunderWave_Step(struct Sprite *sprite)
 // Animates small electric orbs moving from around the battler inward. For Charge/Shock Wave
 void AnimTask_ElectricChargingParticles(u8 taskId)
 {
+    const struct SpriteTemplate *template;
+    if (gAnimMoveIndex == MOVE_FLASH_CANNON || gAnimMoveIndex == MOVE_STEEL_BEAM)
+        template = &gLightOfRuinGrayChargeTemplate;
+    else
+        template = &gElectricChargingParticlesSpriteTemplate;
+
+    if (!TryLoadSpriteAssets(template))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+
+
     struct Task *task = &gTasks[taskId];
 
     if (gBattleAnimArgs[0] == ANIM_ATTACKER)
@@ -977,9 +996,9 @@ static void AnimTask_ElectricChargingParticles_Step(u8 taskId)
             u8 spriteId;
             task->data[12] = 0;
             if (gAnimMoveIndex == MOVE_FLASH_CANNON || gAnimMoveIndex == MOVE_STEEL_BEAM)
-                spriteId = CreateSprite(&gLightOfRuinGrayChargeTemplate, task->data[14], task->data[15], 2);
+                spriteId = CreateSpriteUnchecked(&gLightOfRuinGrayChargeTemplate, task->data[14], task->data[15], 2);
             else
-                spriteId = CreateSprite(&gElectricChargingParticlesSpriteTemplate, task->data[14], task->data[15], 2);
+                spriteId = CreateSpriteUnchecked(&gElectricChargingParticlesSpriteTemplate, task->data[14], task->data[15], 2);
 
             if (spriteId != MAX_SPRITES)
             {
@@ -1167,6 +1186,26 @@ void AnimTask_VoltTackleBolt(u8 taskId)
     switch (task->data[0])
     {
     case 0:
+    {
+        const struct SpriteTemplate *template;
+        switch(gAnimMoveIndex)
+        {
+        case MOVE_FAIRY_LOCK:
+            template = &gFairyLockChainsSpriteTemplate;
+            break;
+        case MOVE_COLLISION_COURSE:
+            template = &gCollisionCourseSpriteTemplate;
+            break;
+        default:
+            template = &gVoltTackleBoltSpriteTemplate;
+        }
+
+        if (!TryLoadSpriteAssets(template))
+        {
+            DestroyAnimVisualTask(taskId);
+            return;
+        }
+
         task->data[1] = IsOnPlayerSide(gBattleAnimAttacker) ? 1 : -1;
 
         switch (gBattleAnimArgs[0])
@@ -1220,6 +1259,7 @@ void AnimTask_VoltTackleBolt(u8 taskId)
 
         task->data[0]++;
         break;
+    }
     case 1:
         if (++task->data[2] > 0)
         {
@@ -1240,13 +1280,13 @@ static bool8 CreateVoltTackleBolt(struct Task *task, u8 taskId)
     switch (gAnimMoveIndex)
     {
     case MOVE_FAIRY_LOCK:
-        spriteId = CreateSprite(&gFairyLockChainsSpriteTemplate, task->data[3], task->data[5] + 10, 35);
+        spriteId = CreateSpriteUnchecked(&gFairyLockChainsSpriteTemplate, task->data[3], task->data[5] + 10, 35);
         break;
     case MOVE_COLLISION_COURSE:
-        spriteId = CreateSprite(&gCollisionCourseSpriteTemplate, task->data[3], task->data[5], 35);
+        spriteId = CreateSpriteUnchecked(&gCollisionCourseSpriteTemplate, task->data[3], task->data[5], 35);
         break;
     default:
-        spriteId = CreateSprite(&gVoltTackleBoltSpriteTemplate, task->data[3], task->data[5], 35);
+        spriteId = CreateSpriteUnchecked(&gVoltTackleBoltSpriteTemplate, task->data[3], task->data[5], 35);
         break;
     }
     bool32 doDestroyOamMatrix = (gAnimMoveIndex == MOVE_FAIRY_LOCK) || (gAnimMoveIndex == MOVE_COLLISION_COURSE);
@@ -1318,6 +1358,12 @@ void AnimTask_ShockWaveProgressingBolt(u8 taskId)
     switch (task->data[0])
     {
     case 0:
+        if (!TryLoadSpriteAssets(&gVoltTackleBoltSpriteTemplate))
+        {
+            DestroyAnimVisualTask(taskId);
+            return;
+        }
+
         task->data[6] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
         task->data[7] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
         task->data[8] = 4;
@@ -1391,7 +1437,7 @@ void AnimTask_ShockWaveProgressingBolt(u8 taskId)
 
 static bool8 CreateShockWaveBoltSprite(struct Task *task, u8 taskId)
 {
-    u8 spriteId = CreateSprite(&gShockWaveProgressingBoltSpriteTemplate, task->data[6], task->data[7], 35);
+    u8 spriteId = CreateSpriteUnchecked(&gShockWaveProgressingBoltSpriteTemplate, task->data[6], task->data[7], 35);
     if (spriteId != MAX_SPRITES)
     {
         gSprites[spriteId].oam.tileNum += task->data[4];
@@ -1445,6 +1491,12 @@ void AnimTask_ShockWaveLightning(u8 taskId)
     switch (task->data[0])
     {
     case 0:
+        if (!TryLoadSpriteAssets(&gLightningSpriteTemplate))
+        {
+            DestroyAnimVisualTask(taskId);
+            return;
+        }
+
         task->data[15] = GetBattlerSpriteCoord(target, BATTLER_COORD_Y) + 32;
         task->data[14] = task->data[15];
         while (task->data[14] > 16)
@@ -1503,7 +1555,11 @@ static void AnimShockWaveLightning(struct Sprite *sprite)
 // arg 2: duration
 void AnimTask_CreateIons(u8 taskId)
 {
-    u8 x, y;
+    if (!TryLoadSpriteAssets(&gIonSpriteTemplate))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
 
     if (gTasks[taskId].data[0] == 0)
     {
@@ -1514,8 +1570,8 @@ void AnimTask_CreateIons(u8 taskId)
     gTasks[taskId].data[0]++;
     if (gTasks[taskId].data[0] % gTasks[taskId].data[2] == 1)
     {
-        x = Random2() % DISPLAY_WIDTH;
-        y = Random2() % (DISPLAY_HEIGHT / 2);
+        u32 x = Random2() % DISPLAY_WIDTH;
+        u32 y = Random2() % (DISPLAY_HEIGHT / 2);
         CreateSprite(&gIonSpriteTemplate, x, y, 4);
     }
     if (gTasks[taskId].data[0] == gTasks[taskId].data[3])
