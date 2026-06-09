@@ -156,7 +156,7 @@ struct InGameTrade {
     u32 otId;
     u8 conditions[CONTEST_CATEGORIES_COUNT];
     u32 personality;
-    u16 heldItem;
+    enum Item heldItem;
     u8 mailNum;
     u8 otName[TRAINER_NAME_LENGTH + 1];
     u8 otGender;

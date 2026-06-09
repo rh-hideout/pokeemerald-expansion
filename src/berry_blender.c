@@ -159,7 +159,7 @@ struct BerryBlender
     u16 canceledPlayerId;
     u16 playAgainState;
     u8 slowdownTimer;
-    u16 chosenItemId[BLENDER_MAX_PLAYERS];
+    enum Item chosenItemId[BLENDER_MAX_PLAYERS];
     u8 numPlayers;
     u8 unused2[16];
     u16 arrowIdToPlayerId[BLENDER_MAX_PLAYERS];
@@ -864,7 +864,7 @@ static const u8 sOpponentBerrySets[][3] =
 
 // Berry master's berries follow the same rules as above, but instead of explicitly listing
 // the alternate sets if the player chooses one of these berries, it implicitly uses these berries - 5, i.e. Tamato - Nomel
-static const u8 sBerryMasterBerries[] = {
+static const enum BerryId sBerryMasterBerries[] = {
     BERRY_ID_SPELON,
     BERRY_ID_PAMTRE,
     BERRY_ID_WATMEL,
@@ -1528,10 +1528,10 @@ static u8 GetArrowProximity(u16 arrowPos, u8 playerId)
     return PROXIMITY_MISS;
 }
 
-static void SetOpponentsBerryData(u16 playerBerryItemId, u8 playersNum, struct BlenderBerry *playerBerry)
+static void SetOpponentsBerryData(enum Item playerBerryItemId, u8 playersNum, struct BlenderBerry *playerBerry)
 {
     u16 opponentSetId = 0;
-    u16 opponentBerryId;
+    enum BerryId opponentBerryId;
     u16 berryMasterDiff;
     u16 i;
 

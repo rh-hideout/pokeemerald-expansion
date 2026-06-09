@@ -103,7 +103,9 @@ SINGLE_BATTLE_TEST("Parting Shot: Hyper Cutter blocks Attack drop but still swit
 
 SINGLE_BATTLE_TEST("Parting Shot: Mirror Armor switches the user even if reflected drops fail")
 {
-    u16 species, ability, item;
+    enum Species species;
+    enum Ability ability;
+    enum Item item;
 
     PARAMETRIZE { species = SPECIES_METAGROSS; ability = ABILITY_CLEAR_BODY;      item = ITEM_NONE; }
     PARAMETRIZE { species = SPECIES_TORKOAL;   ability = ABILITY_WHITE_SMOKE;     item = ITEM_NONE; }
@@ -207,7 +209,9 @@ SINGLE_BATTLE_TEST("Parting Shot: Does not switch if Contrary is at maximum stat
 
 SINGLE_BATTLE_TEST("Parting Shot: Stat drop prevention by abilities/items does not switch (Gen7+)")
 {
-    u16 species, ability, item;
+    enum Species species;
+    enum Ability ability;
+    enum Item item;
 
     PARAMETRIZE { species = SPECIES_METAGROSS; ability = ABILITY_CLEAR_BODY;      item = ITEM_NONE; }
     PARAMETRIZE { species = SPECIES_TORKOAL;   ability = ABILITY_WHITE_SMOKE;     item = ITEM_NONE; }
@@ -322,7 +326,9 @@ SINGLE_BATTLE_TEST("Parting Shot: Switches if Contrary is at maximum stats (Gen6
 
 SINGLE_BATTLE_TEST("Parting Shot: Stat drop prevention by abilities/items switches (Gen6)")
 {
-    u16 species, ability, item;
+    enum Species species;
+    enum Ability ability;
+    enum Item item;
 
     PARAMETRIZE { species = SPECIES_METAGROSS; ability = ABILITY_CLEAR_BODY;      item = ITEM_NONE; }
     PARAMETRIZE { species = SPECIES_TORKOAL;   ability = ABILITY_WHITE_SMOKE;     item = ITEM_NONE; }

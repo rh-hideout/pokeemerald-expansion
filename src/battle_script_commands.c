@@ -8951,7 +8951,7 @@ static void Cmd_tryswapitems(void)
         // took a while, but all checks passed and items can be safely swapped
         else
         {
-            u16 oldItemAtk, oldItemDef;
+            enum Item oldItemAtk, oldItemDef;
 
             oldItemAtk = gBattleMons[gBattlerAttacker].item;
             oldItemDef = gBattleMons[gBattlerTarget].item;
@@ -9608,7 +9608,7 @@ static void Cmd_tryrecycleitem(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
-    u16 *usedHeldItem;
+    enum Item *usedHeldItem;
 
     if (gCurrentMove == MOVE_NONE && GetBattlerAbility(gBattlerAttacker) == ABILITY_PICKUP)
         usedHeldItem = &GetBattlerPartyState(gBattlerTarget)->usedHeldItem;
@@ -10252,7 +10252,7 @@ static void Cmd_givecaughtmon(void)
         struct Pokemon *caughtMon = GetBattlerMon(GetCatchingBattler());
         if (B_RESTORE_HELD_BATTLE_ITEMS >= GEN_9)
         {
-            u16 lostItem = gBattleStruct->itemLost[B_SIDE_OPPONENT][gBattlerPartyIndexes[GetCatchingBattler()]].originalItem;
+            enum Item lostItem = gBattleStruct->itemLost[B_SIDE_OPPONENT][gBattlerPartyIndexes[GetCatchingBattler()]].originalItem;
             if (lostItem != ITEM_NONE && GetItemPocket(lostItem) != POCKET_BERRIES)
                 SetMonData(caughtMon, MON_DATA_HELD_ITEM, &lostItem);  // Restore non-berry items
         }
@@ -12662,7 +12662,7 @@ void BS_HealOneSixth(void)
 void BS_TryRecycleBerry(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
-    u16 *usedHeldItem = &GetBattlerPartyState(gBattlerTarget)->usedHeldItem;
+    enum Item *usedHeldItem = &GetBattlerPartyState(gBattlerTarget)->usedHeldItem;
     if (gBattleMons[gBattlerTarget].item == ITEM_NONE
         && GetItemPocket(*usedHeldItem) == POCKET_BERRIES)
     {

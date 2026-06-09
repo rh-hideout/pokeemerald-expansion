@@ -16,7 +16,7 @@ struct PokeBallSprite
     struct CompressedSpriteSheet pic;
     struct SpritePalette palette;
     struct SpriteTemplate spriteTemplate;
-    u16 itemId;
+    enum Item itemId;
 };
 
 extern const struct PokeBallSprite gPokeBalls[];

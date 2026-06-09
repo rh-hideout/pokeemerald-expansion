@@ -3263,7 +3263,7 @@ void UpdateFriendshipFromXItem(enum BattlerId battler)
     gBattleResources->bufferA[battler][1] = REQUEST_FRIENDSHIP_BATTLE;
     GetBattlerMonData(battler, party, gBattlerPartyIndexes[battler], &friendship);
 
-    u16 heldItem;
+    enum Item heldItem;
     gBattleResources->bufferA[battler][1] = REQUEST_HELDITEM_BATTLE;
     GetBattlerMonData(battler, party, gBattlerPartyIndexes[battler], (u8*)&heldItem);
 

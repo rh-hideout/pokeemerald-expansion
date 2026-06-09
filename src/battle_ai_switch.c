@@ -1881,7 +1881,9 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, enum BattlerId battler, const st
     u32 recurringHealing = GetSwitchinRecurringHealing(battler);
     u32 statusDamage = GetSwitchinStatusDamage(battler);
     u32 hitsToKO = 0;
-    u16 maxHP = gBattleMons[battler].maxHP, item = gAiLogicData->items[battler], heldItemEffect = GetItemHoldEffect(item);
+    u16 maxHP = gBattleMons[battler].maxHP;
+    enum Item item = gAiLogicData->items[battler];
+    enum HoldEffect heldItemEffect = GetItemHoldEffect(item);
     u8 weatherDuration = gBattleStruct->weatherDuration;
     enum BattlerId opposingBattler = GetOppositeBattler(battler);
     enum Ability opposingAbility = gAiLogicData->abilities[opposingBattler], ability = gAiLogicData->abilities[battler];

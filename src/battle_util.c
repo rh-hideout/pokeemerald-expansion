@@ -8398,7 +8398,7 @@ bool32 IsPartnerMonFromSameTrainer(enum BattlerId battler)
         return !(gBattleTypeFlags & BATTLE_TYPE_MULTI);
 }
 
-bool32 DoesSpeciesUseHoldItemToChangeForm(enum Species species, u16 heldItemId)
+bool32 DoesSpeciesUseHoldItemToChangeForm(enum Species species, enum Item heldItemId)
 {
     u32 i;
     const struct FormChange *formChanges = GetSpeciesFormChanges(species);
@@ -9164,7 +9164,7 @@ void TryRestoreHeldItems(void)
         // Check if held items should be restored after battle based on generation
         if (B_RESTORE_HELD_BATTLE_ITEMS >= GEN_9 || gBattleStruct->itemLost[B_SIDE_PLAYER][i].stolen || returnNPCItems)
         {
-            u16 lostItem = gBattleStruct->itemLost[B_SIDE_PLAYER][i].originalItem;
+            enum Item lostItem = gBattleStruct->itemLost[B_SIDE_PLAYER][i].originalItem;
 
             // Check if the lost item is a berry and the mon is not holding it
             if (GetItemPocket(lostItem) == POCKET_BERRIES && GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HELD_ITEM) != lostItem)
