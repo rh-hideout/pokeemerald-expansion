@@ -224,7 +224,6 @@ bool32 IsStatRaisingMove(enum Move move);
 bool32 IsStatLoweringMove(enum Move move);
 bool32 IsSwitchOutEffect(enum BattleMoveEffects effect);
 bool32 IsChaseEffect(enum BattleMoveEffects effect);
-bool32 IsAttackBoostMoveEffect(enum BattleMoveEffects effect);
 bool32 HasMoveWithFlag(enum BattlerId battler, MoveFlag getFlag);
 bool32 IsHazardClearingMove(enum Move move);
 bool32 IsSelfSacrificeEffect(enum Move move);
