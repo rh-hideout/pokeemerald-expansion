@@ -79,8 +79,6 @@ void ScriptContext_Stop(void);
 void ScriptContext_Enable(void);
 void ScriptContext_SetupContextFromStack(struct ScriptStack *stk, struct ScriptContext *ctx);
 void ScriptContext_SetupGlobalContextFromStack(struct ScriptStack *stk);
-void ScriptContext_RunContextFromTop(struct ScriptContext *ctx);
-void ScriptContext_RunGlobalFromTop(void);
 void RunScriptImmediately(const u8 *ptr);
 const u8 *MapHeaderGetScriptTable(u8 tag);
 void MapHeaderRunScriptType(u8 tag);
