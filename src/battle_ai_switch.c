@@ -62,8 +62,8 @@ static enum Ability GetPartyMonAbilityForSwitchCalc(enum BattlerId battler, u32 
     if (gTestRunnerEnabled)
     {
         enum BattleTrainer trainer = !IsPartnerMonFromSameTrainer(battler) ? battler : GetBattlerSide(battler);
-        u32 forcedAbility = TestRunner_Battle_GetForcedAbility(trainer, monIndex);
-        if (forcedAbility != 0)
+        enum Ability forcedAbility = TestRunner_Battle_GetForcedAbility(trainer, monIndex);
+        if (forcedAbility != ABILITY_NONE)
             ability = forcedAbility;
     }
 #endif
@@ -2718,7 +2718,7 @@ static void SetBattlerStatusForSwitchin(enum BattlerId battler)
 
 static void SetBattlerStatStagesForSwitchin(enum BattlerId battler, enum BattlerId opposingBattler, u32 fieldStatus)
 {
-    u32 aiAbility = gAiLogicData->abilities[battler];
+    enum Ability aiAbility = gAiLogicData->abilities[battler];
     enum Item aiItem = gAiLogicData->items[battler];
     bool32 isStickyWebsAffected = (IsHazardOnSide(GetBattlerSide(battler), HAZARDS_STICKY_WEB) && IsBattlerAffectedByHazards(battler, GetItemHoldEffect(aiItem), FALSE) && IsBattlerGrounded(battler, gAiLogicData->abilities[battler], GetItemHoldEffect(aiItem)));
     bool32 opponentStatDrop = FALSE;

@@ -268,7 +268,9 @@ AI_SINGLE_BATTLE_TEST("AI chooses moves with secondary effect that have a 100% c
 
 AI_DOUBLE_BATTLE_TEST("AI chooses moves that cure self or partner")
 {
-    u32 status1_0, status1_1, partnerAbility, move;
+    u32 status1_0, status1_1;
+    enum Ability partnerAbility;
+    enum Move move;
 
     PARAMETRIZE { status1_0 = STATUS1_NONE;         status1_1 = STATUS1_NONE;
                   move = MOVE_HEAL_BELL;            partnerAbility = ABILITY_SCRAPPY; }

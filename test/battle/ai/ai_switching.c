@@ -151,7 +151,7 @@ AI_SINGLE_BATTLE_TEST("AI switches if Perish Song is about to kill")
 
 AI_SINGLE_BATTLE_TEST("AI sees on-field player ability correctly and does not see previous Pokémon's ability after player uses a pivot move when choosing a post-KO switch")
 {
-    u32 testAbility;
+    enum Ability testAbility;
     PARAMETRIZE { testAbility = ABILITY_WATER_ABSORB; }
     PARAMETRIZE { testAbility = ABILITY_VOLT_ABSORB; }
     GIVEN {
