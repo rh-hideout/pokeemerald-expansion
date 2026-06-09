@@ -560,7 +560,7 @@ struct PlayersApprentice
              u8 saveId:2;
              //u8 padding1:3;
     /*0xB3*/ u8 unused;
-    /*0xB4*/ u8 speciesIds[MULTI_PARTY_SIZE];
+    /*0xB4*/ enum Species speciesIds[MULTI_PARTY_SIZE];
     /*0xB7*/ //u8 padding2;
     /*0xB8*/ struct ApprenticeQuestion questions[APPRENTICE_MAX_QUESTIONS];
 };
