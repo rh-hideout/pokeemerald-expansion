@@ -414,7 +414,7 @@ struct SpeciesInfo /*0xC4*/
     u8 eggCycles;
     u8 friendship;
     u8 growthRate;
-    u8 eggGroups[2];
+    enum EggGroup eggGroups[EGG_GROUPS_PER_MON];
     enum Ability abilities[NUM_ABILITY_SLOTS]; // 3 abilities, no longer u8 because we have over 255 abilities now.
     u8 safariZoneFleeRate;
 
@@ -512,11 +512,11 @@ struct SpeciesInfo /*0xC4*/
     struct ObjectEventGraphicsInfo overworldDataFemale;
 #endif //P_GENDER_DIFFERENCES
 #if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
-    const void* overworldPalette;
-    const void* overworldShinyPalette;
+    const void *overworldPalette;
+    const void *overworldShinyPalette;
 #if P_GENDER_DIFFERENCES
-    const void* overworldPaletteFemale;
-    const void* overworldShinyPaletteFemale;
+    const void *overworldPaletteFemale;
+    const void *overworldShinyPaletteFemale;
 #endif //P_GENDER_DIFFERENCES
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS
@@ -616,7 +616,7 @@ struct LevelUpMove
 
 struct FormChange
 {
-    u16 method;
+    enum FormChanges method:16;
     enum Species targetSpecies;
     u16 param1;
     u16 param2;
@@ -628,7 +628,7 @@ struct FormChangeContext
 {
     enum FormChanges method:16;
     enum Species currentSpecies;
-    u16 partyItemUsed;
+    enum Item partyItemUsed;
     u16 multichoiceSelection;
     enum Item heldItem;
     enum Ability ability;
@@ -656,7 +656,7 @@ struct Fusion
     enum Item itemId;
     enum Species targetSpecies1;
     enum Species targetSpecies2;
-    u16 fusingIntoMon;
+    enum Species fusingIntoMon;
     enum Move fusionMove;
     enum FusionExtraMoveHandling extraMoveHandling;
 };
@@ -877,7 +877,7 @@ s32 CalculateFriendshipBonuses(struct Pokemon *mon, s32 modifier, enum HoldEffec
 void MonGainEVs(struct Pokemon *mon, enum Species defeatedSpecies);
 u16 GetMonEVCount(struct Pokemon *mon);
 bool8 TryIncrementMonLevel(struct Pokemon *mon);
-u8 CanLearnTeachableMove(enum Species species, enum Move move);
+bool32 CanLearnTeachableMove(enum Species species, enum Move move);
 u16 SpeciesToPokedexNum(enum Species species);
 bool32 IsSpeciesInRegionalDex(enum Species species);
 bool32 IsSpeciesInKantoDex(enum Species species);
@@ -918,8 +918,8 @@ bool8 HasTwoFramesAnimation(enum Species species);
 struct MonSpritesGfxManager *CreateMonSpritesGfxManager(u8 managerId, u8 mode);
 void DestroyMonSpritesGfxManager(u8 managerId);
 u8 *MonSpritesGfxManager_GetSpritePtr(u8 managerId, u8 spriteNum);
-u16 GetFormSpeciesId(enum Species speciesId, u8 formId);
-u8 GetFormIdFromFormSpeciesId(u16 formSpeciesId);
+enum Species GetFormSpeciesId(enum Species speciesId, u8 formId);
+u8 GetFormIdFromFormSpeciesId(enum Species formSpeciesId);
 enum Species GetFormChangeTargetSpecies_Internal(struct FormChangeContext ctx);
 bool32 DoesSpeciesHaveFormChangeMethod(enum Species species, enum FormChanges method);
 u16 MonTryLearningNewMoveEvolution(struct Pokemon *mon, bool8 firstMove);
