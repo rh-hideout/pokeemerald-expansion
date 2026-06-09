@@ -2100,13 +2100,13 @@ static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
     return CANCELER_RESULT_SUCCESS;
 }
 
-static bool32 GetProtectBypassMethod(enum BattlerId battlerAtk, enum BattlerId battlerDef)
+static bool32 GetProtectBypassMethod(enum BattlerId battlerDef, enum Ability abilityAtk)
 {
     if (MoveIgnoresProtect(gCurrentMove))
         return PROTECT_BYPASS_MOVE_IGNORES;
     if (GetProtectType(gProtectStructs[battlerDef].protected) == PROTECT_TYPE_SINGLE
         && gProtectStructs[battlerDef].protected != PROTECT_MAX_GUARD
-        && (GetBattlerAbility(battlerAtk) == ABILITY_UNSEEN_FIST || GetBattlerAbility(battlerAtk) == ABILITY_PIERCING_DRILL))
+        && (abilityAtk == ABILITY_UNSEEN_FIST || abilityAtk == ABILITY_PIERCING_DRILL))
         return PROTECT_BYPASS_ABILITY_IGNORES;
     if (!IsZMove(gCurrentMove) && !IsMaxMove(gCurrentMove))
         return PROTECT_BYPASS_NONE;
@@ -2114,33 +2114,6 @@ static bool32 GetProtectBypassMethod(enum BattlerId battlerAtk, enum BattlerId b
         && gProtectStructs[battlerDef].protected != PROTECT_MAX_GUARD)
         return PROTECT_BYPASS_OTHER;
     return PROTECT_BYPASS_MOVE_IGNORES;
-}
-
-static enum CancelerResult CancelerNotFullyProtected(struct BattleCalcValues *cv)
-{
-    while (gBattleStruct->eventState.atkCancelerBattler < gBattlersCount)
-    {
-        enum BattlerId battlerDef = gBattleStruct->eventState.atkCancelerBattler++;
-
-        if (ShouldSkipFailureCheckOnBattler(cv->battlerAtk, battlerDef, TRUE))
-            continue;
-
-        enum ProtectBypass protectBypassState = gBattleStruct->protectBypassStates[battlerDef] = GetProtectBypassMethod(cv->battlerAtk, battlerDef);
-        switch (protectBypassState)
-        {
-            case PROTECT_BYPASS_ABILITY_IGNORES:
-                gBattleScripting.battler = battlerDef;
-                return CANCELER_RESULT_RUN_SCRIPT;
-            case PROTECT_BYPASS_OTHER:
-                gBattleScripting.battler = battlerDef;
-                return CANCELER_RESULT_RUN_SCRIPT;
-            default:
-                break;
-        }
-    }
-
-    gBattleStruct->eventState.atkCancelerBattler = 0;
-    return CANCELER_RESULT_SUCCESS;
 }
 
 static bool32 ShouldSkipAccuracyCalcPastFirstHit(enum BattlerId battlerAtk, enum Ability abilityAtk, enum HoldEffect holdEffectAtk, u32 moveEffect)
@@ -2452,7 +2425,6 @@ static enum CancelerResult (*const sMoveSuccessOrderCancelers[])(struct BattleCa
     [CANCELER_NO_TARGET] = CancelerNoTarget,
     [CANCELER_TOOK_ATTACK] = CancelerTookAttack,
     [CANCELER_TARGET_FAILURE] = CancelerTargetFailure,
-    [CANCELER_NOT_FULLY_PROTECTED] = CancelerNotFullyProtected,
     [CANCELER_MULTIHIT_MOVES] = CancelerMultihitMoves,
     [CANCELER_ACCURACY_CHECK] = CancelerAccuracyCheck,
 };
@@ -2506,22 +2478,26 @@ static enum MoveEndResult MoveEndSetValues(struct BattleCalcValues *cv)
 
 static enum MoveEndResult MoveEndProtectBypassEffects(struct BattleCalcValues *cv)
 {
-    enum BattlerId battler = gBattleScripting.battler = cv->battlerDef;
-    switch (gBattleStruct->protectBypassStates[battler])
+    enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
+    enum Ability abilityAtk = GetBattlerAbility(cv->battlerAtk);
+    enum ProtectBypass protectBypassMethod = GetProtectBypassMethod(cv->battlerDef, abilityAtk);
+
+    switch (protectBypassMethod)
     {
         case PROTECT_BYPASS_ABILITY_IGNORES:
-            gBattleStruct->protectBypassStates[battler] = PROTECT_BYPASS_NONE;
             BattleScriptCall(BattleScript_UnseenFist);
-            return MOVEEND_RESULT_RUN_SCRIPT;
+            result = MOVEEND_RESULT_RUN_SCRIPT;
+            break;
         case PROTECT_BYPASS_OTHER:
-            gBattleStruct->protectBypassStates[battler] = PROTECT_BYPASS_NONE;
             BattleScriptCall(BattleScript_CouldntFullyProtect);
-            return MOVEEND_RESULT_RUN_SCRIPT;
+            result = MOVEEND_RESULT_RUN_SCRIPT;
+            break;
         default:
             break;
     }
+
     gBattleScripting.moveendState++;
-    return MOVEEND_RESULT_CONTINUE;
+    return result;
 }
 
 static enum MoveEndResult MoveEndProtectLikeEffect(struct BattleCalcValues *cv)
