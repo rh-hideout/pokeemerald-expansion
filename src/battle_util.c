@@ -9920,8 +9920,9 @@ bool32 TrySwitchInEjectPack(enum EjectPackTiming timing)
     for (enum BattlerId i = 0; i < gBattlersCount; i++)
     {
         if (gBattleMons[i].volatiles.tryEjectPack
-         && GetBattlerHoldEffect(i) == HOLD_EFFECT_EJECT_PACK
          && IsBattlerAlive(i)
+         && !IsBattlerInvolvedInSkyDrop(i)
+         && GetBattlerHoldEffect(i) == HOLD_EFFECT_EJECT_PACK
          && CanBattlerSwitch(i))
         {
             ejectPackBattlers |= 1u << i;
@@ -10180,20 +10181,13 @@ static bool32 CanMoveSkipAccuracyCheck(enum BattlerId battlerAtk, enum Move move
     return MoveAlwaysHitsOnSameType(move) && IS_BATTLER_OF_TYPE(battlerAtk, GetMoveType(move));
 }
 
-static bool32 IsSkyDropInvolved(enum BattlerId battlerDef, enum BattleMoveEffects moveEffect)
-{
-    if (moveEffect != EFFECT_SKY_DROP)
-        return FALSE;
-    return gBattleMons[battlerDef].volatiles.semiInvulnerable == STATE_SKY_DROP_ATTACKER
-        || gBattleMons[battlerDef].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET;
-}
-
 bool32 CanMoveSkipAccuracyCalc(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum Move move, enum ResultOption option)
 {
     bool32 effect = FALSE;
     enum Ability ability = ABILITY_NONE;
     enum BattlerId abilityBattler = battlerAtk;
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
+    bool32 shouldAvoidSkyDropBattlers = (moveEffect != EFFECT_SKY_DROP && IsBattlerInvolvedInSkyDrop(battlerDef));
 
     if (gBattleMons[battlerAtk].volatiles.battlerWithSureHit == battlerDef + 1
      || CanMoveSkipAccuracyCheck(battlerAtk, move)
@@ -10203,13 +10197,13 @@ bool32 CanMoveSkipAccuracyCalc(enum BattlerId battlerAtk, enum BattlerId battler
     }
     else if (abilityAtk == ABILITY_NO_GUARD
           && gBattleMons[battlerDef].volatiles.semiInvulnerable != STATE_COMMANDER
-          && !IsSkyDropInvolved(battlerDef, moveEffect))
+          && !shouldAvoidSkyDropBattlers)
     {
         effect = TRUE;
         ability = ABILITY_NO_GUARD;
         abilityBattler = battlerAtk;
     }
-    else if (abilityDef == ABILITY_NO_GUARD && !IsSkyDropInvolved(battlerDef, moveEffect))
+    else if (abilityDef == ABILITY_NO_GUARD && !shouldAvoidSkyDropBattlers)
     {
         effect = TRUE;
         ability = ABILITY_NO_GUARD;
@@ -11020,4 +11014,10 @@ bool32 IsVictoryCatchGuaranteed(void)
 {
     return gBattleTypeFlags & BATTLE_TYPE_RAID
         || FlagGet(B_FLAG_VICTORY_CATCH_GUARANTEED);
+}
+
+bool32 IsBattlerInvolvedInSkyDrop(enum BattlerId battler)
+{
+    return gBattleMons[battler].volatiles.semiInvulnerable == STATE_SKY_DROP_ATTACKER
+        || gBattleMons[battler].volatiles.semiInvulnerable == STATE_SKY_DROP_TARGET;
 }
