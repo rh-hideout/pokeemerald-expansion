@@ -249,7 +249,7 @@ SINGLE_BATTLE_TEST("Future Sight does not trigger Red Card")
 SINGLE_BATTLE_TEST("Future Sight flying type attacker in party receives no boost from Psychic Terrain", s16 damage)
 {
     bool32 terrain;
-    u32 species;
+    enum Species species;
 
     PARAMETRIZE { species = SPECIES_PIDGEY; terrain = FALSE; }
     PARAMETRIZE { species = SPECIES_PIDGEY; terrain = TRUE; }

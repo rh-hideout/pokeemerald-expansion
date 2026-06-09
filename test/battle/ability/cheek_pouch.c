@@ -52,7 +52,7 @@ SINGLE_BATTLE_TEST("Cheek Pouch restores HP after the berry's effect")
 
 SINGLE_BATTLE_TEST("Cheek Pouch activates via Bug Bite/Pluck if it would trigger an effect")
 {
-    u16 move;
+    enum Move move;
     s16 berryHeal, cheekPouchHeal;
 
     PARAMETRIZE { move = MOVE_BUG_BITE; }
