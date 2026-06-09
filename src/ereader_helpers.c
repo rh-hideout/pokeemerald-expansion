@@ -38,8 +38,6 @@ static void SetUpTransferManager(size_t, const void *, void *);
 static void StartTm3(void);
 
 static struct SendRecvMgr sSendRecvMgr;
-static u16 sJoyNewOrRepeated;
-static u16 sJoyNew;
 static u16 sCounter1;
 static u32 sCounter2;
 static u16 sSavedIme;
