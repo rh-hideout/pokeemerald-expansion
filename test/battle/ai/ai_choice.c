@@ -264,7 +264,7 @@ AI_SINGLE_BATTLE_TEST("Choiced Pokémon will only see choiced moves when conside
 
 AI_DOUBLE_BATTLE_TEST("Choiced Pokémon won't switch out if they can still affect one opposing Pokémon in doubles")
 {
-    u32 defendingSpecies = SPECIES_NONE;
+    enum Species defendingSpecies = SPECIES_NONE;
     enum Ability defendingAbility = ABILITY_NONE;
     PARAMETRIZE { defendingSpecies = SPECIES_VAPOREON; defendingAbility = ABILITY_WATER_ABSORB; }
     PARAMETRIZE { defendingSpecies = SPECIES_ZIGZAGOON; defendingAbility = ABILITY_GLUTTONY; }
