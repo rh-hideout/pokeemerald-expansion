@@ -31,7 +31,6 @@ struct SendRecvMgr
     int checksum;
 };
 
-static void GetKeyInput(void);
 static u16 DetermineSendRecvState(u8);
 static void EnableSio(void);
 static void DisableTm3(void);
@@ -41,7 +40,6 @@ static void StartTm3(void);
 static struct SendRecvMgr sSendRecvMgr;
 static u16 sJoyNewOrRepeated;
 static u16 sJoyNew;
-static u16 sSendRecvStatus;
 static u16 sCounter1;
 static u32 sCounter2;
 static u16 sSavedIme;
@@ -756,13 +754,6 @@ static void DisableTm3(void)
 {
     REG_TM3CNT_H &= ~TIMER_ENABLE;
     REG_TM3CNT_L = 0xFDA7;
-}
-
-static void GetKeyInput(void)
-{
-    int rawKeys = REG_KEYINPUT ^ KEYS_MASK;
-    sJoyNew = rawKeys & ~sJoyNewOrRepeated;
-    sJoyNewOrRepeated = rawKeys;
 }
 
 void EReaderHelper_SaveRegsState(void)
