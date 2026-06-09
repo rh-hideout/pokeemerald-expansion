@@ -469,7 +469,7 @@ AI_SINGLE_BATTLE_TEST("AI uses Trick Room (singles)")
 AI_SINGLE_BATTLE_TEST("AI uses Tailwind to trigger Wind Rider (Single)")
 {
     bool32 expectTailwind;
-    u16 tailwindSpecies;
+    enum Species tailwindSpecies;
     enum Ability tailwindAbility;
 
     PARAMETRIZE { tailwindSpecies = SPECIES_BRAMBLEGHAST; tailwindAbility = ABILITY_WIND_RIDER;  expectTailwind = TRUE; }
@@ -491,7 +491,7 @@ AI_SINGLE_BATTLE_TEST("AI uses Tailwind to trigger Wind Rider (Single)")
 AI_SINGLE_BATTLE_TEST("AI uses Tailwind to trigger Wind Power (Single)")
 {
     bool32 expectTailwind;
-    u16 tailwindSpecies;
+    enum Species tailwindSpecies;
     enum Ability tailwindAbility;
 
     PARAMETRIZE { tailwindSpecies = SPECIES_KILOWATTREL; tailwindAbility = ABILITY_WIND_POWER;  expectTailwind = TRUE; }

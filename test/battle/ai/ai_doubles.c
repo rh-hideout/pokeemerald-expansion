@@ -140,7 +140,8 @@ AI_DOUBLE_BATTLE_TEST("AI considers status orbs and abilities for Trick/Bestow")
 {
     enum Move move = MOVE_NONE;
     enum Item item = ITEM_NONE;
-    u16 status = STATUS1_NONE, species = SPECIES_NONE;
+    u16 status = STATUS1_NONE;
+    enum Species species = SPECIES_NONE;
     enum Ability ability = ABILITY_NONE;
     u8 turnToTrick = 0;
 
@@ -178,7 +179,7 @@ AI_DOUBLE_BATTLE_TEST("AI considers status orbs and abilities for Trick/Bestow")
 
 AI_DOUBLE_BATTLE_TEST("AI gifts Utility Umbrella only when it removes the foe's weather benefit")
 {
-    u16 weatherSpecies = SPECIES_NONE, targetSpecies = SPECIES_NONE, attackerSpecies = SPECIES_NONE;
+    enum Species weatherSpecies = SPECIES_NONE, targetSpecies = SPECIES_NONE, attackerSpecies = SPECIES_NONE;
     enum Ability weatherAbility = ABILITY_NONE, targetAbility = ABILITY_NONE, attackerAbility = ABILITY_NONE;
     bool32 expectTrick = FALSE;
 
@@ -209,7 +210,7 @@ AI_DOUBLE_BATTLE_TEST("AI gifts Utility Umbrella only when it removes the foe's 
 
 AI_DOUBLE_BATTLE_TEST("AI steals Utility Umbrella to handle sun and Dry Skin but keeps its own weather perks")
 {
-    u16 weatherSpecies = SPECIES_NONE, targetSpecies = SPECIES_NONE, attackerSpecies = SPECIES_NONE;
+    enum Species weatherSpecies = SPECIES_NONE, targetSpecies = SPECIES_NONE, attackerSpecies = SPECIES_NONE;
     enum Ability weatherAbility = ABILITY_NONE, targetAbility = ABILITY_NONE, attackerAbility = ABILITY_NONE;
     bool32 expectTrick = FALSE;
 
@@ -1052,7 +1053,7 @@ AI_DOUBLE_BATTLE_TEST("AI uses Tailwind based on speed matchups")
 AI_DOUBLE_BATTLE_TEST("AI uses Tailwind to trigger Wind Rider (Doubles)")
 {
     bool32 expectTailwind;
-    u16 tailwindSpecies, partnerSpecies;
+    enum Species tailwindSpecies, partnerSpecies;
     enum Ability tailwindAbility, partnerAbility;
 
     PARAMETRIZE { tailwindSpecies = SPECIES_BRAMBLEGHAST; tailwindAbility = ABILITY_WIND_RIDER;  partnerSpecies = SPECIES_BRAMBLEGHAST; partnerAbility = ABILITY_WIND_RIDER;  expectTailwind = TRUE; }
@@ -1078,7 +1079,7 @@ AI_DOUBLE_BATTLE_TEST("AI uses Tailwind to trigger Wind Rider (Doubles)")
 AI_DOUBLE_BATTLE_TEST("AI uses Tailwind to trigger Wind Power (Doubles)")
 {
     bool32 expectTailwind;
-    u16 tailwindSpecies, partnerSpecies;
+    enum Species tailwindSpecies, partnerSpecies;
     enum Ability tailwindAbility, partnerAbility;
 
     PARAMETRIZE { tailwindSpecies = SPECIES_KILOWATTREL; tailwindAbility = ABILITY_WIND_POWER;  partnerSpecies = SPECIES_KILOWATTREL; partnerAbility = ABILITY_WIND_POWER;  expectTailwind = TRUE; }

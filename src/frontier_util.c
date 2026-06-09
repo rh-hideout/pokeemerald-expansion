@@ -2077,7 +2077,7 @@ static void AppendIfValid(enum Species species, enum Item heldItem, u16 hp, enum
 // The names of ineligible Pokémon that have been caught are also buffered to print
 static void CheckPartyIneligibility(void)
 {
-    u16 speciesArray[PARTY_SIZE];
+    enum Species speciesArray[PARTY_SIZE];
     enum Item itemArray[PARTY_SIZE];
     s32 monId = 0;
     s32 toChoose = 0;

@@ -152,7 +152,7 @@ enum {
 struct PokemonJump_MonInfo
 {
     u16 isShiny:1;
-    u16 species:15;
+    enum Species species:15;
     u32 otId;
     u32 personality;
 };

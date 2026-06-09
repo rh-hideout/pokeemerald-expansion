@@ -1690,7 +1690,8 @@ static void CreateNoDataIcon(s16 x, s16 y)
 
 static bool8 CapturedAllLandMons(u32 headerId)
 {
-    u16 i, species;
+    u16 i;
+    enum Species species;
     int count = 0;
     enum TimeOfDay timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
 
@@ -1712,13 +1713,11 @@ static bool8 CapturedAllLandMons(u32 headerId)
 
         if (i >= LAND_WILD_COUNT && count > 0) //All land mons caught
             return TRUE;
-    }
-    else
-    {
-        return TRUE;    //technically, no mon data means you caught them all
+        else
+            return FALSE;
     }
 
-    return FALSE;
+    return TRUE;    //technically, no mon data means you caught them all
 }
 
 //Checks if all Pokemon that can be encountered while surfing have been capture
@@ -1746,13 +1745,11 @@ static bool8 CapturedAllWaterMons(u32 headerId)
 
         if (i >= WATER_WILD_COUNT && count > 0)
             return TRUE;
-    }
-    else
-    {
-        return TRUE;    //technically, no mon data means you caught them all
+        else
+            return FALSE;
     }
 
-    return FALSE;
+    return TRUE;    //technically, no mon data means you caught them all
 }
 
 static bool8 CapturedAllHiddenMons(u32 headerId)
@@ -1779,13 +1776,11 @@ static bool8 CapturedAllHiddenMons(u32 headerId)
 
         if (i >= HIDDEN_WILD_COUNT && count > 0)
             return TRUE;
-    }
-    else
-    {
-        return TRUE;    //technically, no mon data means you caught them all
+        else
+            return FALSE;
     }
 
-    return FALSE;
+    return TRUE;    //technically, no mon data means you caught them all
 }
 
 static void DexNavLoadCapturedAllSymbols(void)
