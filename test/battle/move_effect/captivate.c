@@ -140,9 +140,10 @@ DOUBLE_BATTLE_TEST("Captivate decreases the target's Sp. Attack if they're oppos
         MESSAGE("The opposing Nidoking's Sp. Atk harshly fell!");
     } THEN {
         if (species == SPECIES_NIDOKING) {
-        EXPECT(opponentLeft->statStages[STAT_SPATK] == DEFAULT_STAT_STAGE - 2);
+            EXPECT(opponentLeft->statStages[STAT_SPATK] == DEFAULT_STAT_STAGE - 2);
         } else {
-        EXPECT(opponentLeft->statStages[STAT_SPATK] == DEFAULT_STAT_STAGE);}
+            EXPECT(opponentLeft->statStages[STAT_SPATK] == DEFAULT_STAT_STAGE);
+        }
         EXPECT(opponentRight->statStages[STAT_SPATK] == DEFAULT_STAT_STAGE - 2);
     }
 }
