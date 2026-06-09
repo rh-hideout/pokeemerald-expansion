@@ -711,7 +711,7 @@ static void ReceiveLilycoveLadyData(LilycoveLady *records, size_t recordSize, u8
     }
 }
 
-static u8 GetDaycareMailItemId(struct DaycareMail *mail)
+static enum Item GetDaycareMailItemId(struct DaycareMail *mail)
 {
     return mail->message.itemId;
 }
