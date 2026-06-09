@@ -3,6 +3,17 @@
 #include "text.h"
 #include "malloc.h"
 
+void StripLineBreaks(u8 *src)
+{
+    u32 currIndex = 0;
+    while (src[currIndex] != EOS)
+    {
+        if (src[currIndex] == CHAR_PROMPT_SCROLL || src[currIndex] == CHAR_NEWLINE)
+            src[currIndex] = CHAR_SPACE;
+        currIndex++;
+    }
+}
+
 u32 CountLineBreaks(u8 *src)
 {
     u32 currIndex = 0;
@@ -34,6 +45,25 @@ void BreakStringAutomatic(u8 *src, u32 maxWidth, u32 screenLines, u8 fontId, enu
         currIndex++;
     }
     BreakSubStringAutomatic(currSrc, maxWidth, screenLines, fontId, toggleScrollPrompt);
+}
+
+void BreakStringNaive(u8 *src, u32 maxWidth, u32 screenLines, u8 fontId, enum ToggleScrollPrompt toggleScrollPrompt)
+{
+    u32 currIndex = 0;
+    u8 *currSrc = src;
+    while (src[currIndex] != EOS)
+    {
+        if (src[currIndex] == CHAR_PROMPT_CLEAR)
+        {
+            u8 replacedChar = src[currIndex + 1];
+            src[currIndex + 1] = EOS;
+            BreakSubStringNaive(currSrc, maxWidth, screenLines, fontId, toggleScrollPrompt);
+            src[currIndex + 1] = replacedChar;
+            currSrc = &src[currIndex + 1];
+        }
+        currIndex++;
+    }
+    BreakSubStringNaive(currSrc, maxWidth, screenLines, fontId, toggleScrollPrompt);
 }
 
 #define SCROLL_PROMPT_WIDTH 8
@@ -308,7 +338,6 @@ void BreakSubStringAutomatic(u8 *src, u32 maxWidth, u32 screenLines, u8 fontId, 
             }
         } while (shouldTryAgain);
         //u32 currBadness = GetStringBadness(stringLines, totalLines, maxWidth);
-        // WHEN REMOVING THIS COMMENT, RETIRE GetStringBadness
         BuildNewString(stringLines, totalLines, screenLines, src, toggleScrollPrompt);
         Free(stringLines);
     }
