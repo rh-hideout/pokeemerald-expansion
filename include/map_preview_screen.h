@@ -34,17 +34,20 @@ enum MapPreviewScreenId
     MPS_COUNT
 };
 
-#define MPS_TYPE_CAVE       0
-#define MPS_TYPE_FADE_IN    1
-#define MPS_TYPE_BASIC      2
-#define MPS_TYPE_ANY        3
+enum MapPreviewScreenType
+{
+    MPS_TYPE_CAVE,
+    MPS_TYPE_FADE_IN,
+    MPS_TYPE_BASIC,
+    MPS_TYPE_ANY
+};
 
 #define MPS_FLAG_NULL   0
 
 struct MapPreviewScreen
 {
     mapsec_u8_t mapsec;
-    u8 type:2;
+    enum MapPreviewScreenType type:2;
     u8 usesAllPalettes:1;
     u8 nameDisabled:1;
     u8 padding:4;
@@ -55,9 +58,9 @@ struct MapPreviewScreen
 };
 
 bool32 ShouldRunMapPreview(void);
-u16 MapPreview_CreateMapNameWindow(u8 id);
-u16 MapPreview_GetDuration(u8 id);
-bool32 CurrentMapHasPreviewScreen(u8 type);
+u16 MapPreview_CreateMapNameWindow(mapsec_u8_t mapsec);
+u16 MapPreview_GetDuration(mapsec_u8_t mapsec);
+bool32 CurrentMapHasPreviewScreen(enum MapPreviewScreenType type);
 bool32 FadeInMapPreviewScreenIsRunning(void);
 void MapPreview_InitBgs(void);
 void MapPreview_LoadGfx(mapsec_u8_t mapsec);

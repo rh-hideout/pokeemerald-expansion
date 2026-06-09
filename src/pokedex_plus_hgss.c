@@ -2202,7 +2202,7 @@ static bool8 CalculateMoves(void)
 
     // Level up moves
     const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(species);
-    for (i = 0; i < MAX_LEVEL_UP_MOVES && learnset[i].move != LEVEL_UP_MOVE_END; i++)
+    for (i = 0; learnset[i].move != LEVEL_UP_MOVE_END; i++)
         numLevelUpMoves++;
 
     // TM and Tutor moves

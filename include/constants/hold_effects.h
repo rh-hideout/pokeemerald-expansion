@@ -139,6 +139,8 @@ enum HoldEffect
     HOLD_EFFECT_COUNT
 };
 
+// HOLD_EFFECT_COUNT should not exceed 127 so that it can fit in an u8
+
 // Terrain seed params
 #define HOLD_EFFECT_PARAM_ELECTRIC_TERRAIN  0
 #define HOLD_EFFECT_PARAM_GRASSY_TERRAIN    1

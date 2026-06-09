@@ -120,11 +120,6 @@ u8 GiveMailToMon(struct Pokemon *mon, struct Mail *mail)
     return mailId;
 }
 
-static bool32 UNUSED DummyMailFunc(void)
-{
-    return FALSE;
-}
-
 void TakeMailFromMon(struct Pokemon *mon)
 {
     u8 heldItem[2];

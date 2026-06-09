@@ -9539,9 +9539,9 @@ bool32 MoveHasAdditionalEffectSelf(enum Move move, enum MoveEffect moveEffect)
     return FALSE;
 }
 
-bool32 IsMoveEffectRemoveSpeciesType(enum Move move, enum MoveEffect moveEffect, u32 argument)
+bool32 IsMoveEffectRemoveSpeciesType(enum Move move, enum MoveEffect moveEffect, enum Type type)
 {
-    return (MoveHasAdditionalEffectSelf(move, moveEffect) && GetMoveArgType(move) == argument);
+    return (MoveHasAdditionalEffectSelf(move, moveEffect) && GetMoveArgType(move) == type);
 }
 
 bool32 MoveHasChargeTurnAdditionalEffect(enum Move move)

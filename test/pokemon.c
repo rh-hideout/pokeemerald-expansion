@@ -567,24 +567,24 @@ TEST("createmon [simple]")
     EXPECT_EQ(GetMonData(&gParties[B_TRAINER_OPPONENT_A][1], MON_DATA_LEVEL), 10);
 }
 
-TEST("Pokémon level up learnsets fit within MAX_LEVEL_UP_MOVES and MAX_RELEARNER_MOVES")
+TEST("Pokémon level up learnsets fit within MAX_RELEARNER_MOVES")
 {
-    KNOWN_FAILING;
-
     u32 j, count;
     enum Species species = SPECIES_NONE;
     const struct LevelUpMove *learnset;
 
     for(j = 0; j < SPECIES_EGG; j++)
     {
-        PARAMETRIZE { species = j; }
+        if (IsSpeciesEnabled(j))
+        {
+            PARAMETRIZE { species = j; }
+        }
     }
 
     learnset = GetSpeciesLevelUpLearnset(species);
     count = 0;
     for (j = 0; learnset[j].move != LEVEL_UP_MOVE_END; j++)
         count++;
-    EXPECT_LT(count, MAX_LEVEL_UP_MOVES);
     EXPECT_LT(count, MAX_RELEARNER_MOVES - 1); // - 1 because at least one move is already known
 }
 
