@@ -1,6 +1,7 @@
 #ifndef GUARD_ITEM_MENU_H
 #define GUARD_ITEM_MENU_H
 
+#include "config/swsh_item_menu.h"
 #include "item.h"
 #include "main.h"
 #include "menu_helpers.h"
@@ -71,7 +72,12 @@ extern struct BagPosition gBagPosition;
 struct BagMenu
 {
     MainCallback newScreenCallback;
+#if SWSH_ITEM_MENU
+    u8 mainTilemapBuffer[BG_SCREEN_SIZE];
+    u8 scrollingBgTilemapBuffer[BG_SCREEN_SIZE];
+#else
     u8 tilemapBuffer[BG_SCREEN_SIZE];
+#endif
     u8 spriteIds[ITEMMENUSPRITE_COUNT];
     u8 windowIds[ITEMWIN_COUNT];
     u8 toSwapPos;
