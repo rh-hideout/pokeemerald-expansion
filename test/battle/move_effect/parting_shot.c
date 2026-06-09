@@ -27,7 +27,8 @@ SINGLE_BATTLE_TEST("Parting Shot: Passes Substitute and switches the user out")
 
 SINGLE_BATTLE_TEST("Parting Shot: Soundproof and Good as Gold block Parting Shot")
 {
-    u16 species, ability;
+    enum Species species;
+    enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_EXPLOUD;   ability = ABILITY_SOUNDPROOF; }
     PARAMETRIZE { species = SPECIES_GHOLDENGO; ability = ABILITY_GOOD_AS_GOLD; }
