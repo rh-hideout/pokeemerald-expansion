@@ -312,7 +312,6 @@ const void *RandomElementArrayDefault(enum RandomTag, const void *array, size_t 
 
 u8 RandomWeightedIndex(u8 *weights, u8 length);
 
-u32 RandomBit(enum RandomTag tag, u32 bits);
 u32 RandomBitIndex(enum RandomTag tag, u32 bits);
 
 #if TESTING

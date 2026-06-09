@@ -383,12 +383,6 @@ void CalcTimeDifference(struct Time *result, struct Time *t1, struct Time *t2)
     }
 }
 
-u32 RtcGetMinuteCount(void)
-{
-    RtcGetInfo(&sRtc);
-    return (HOURS_PER_DAY * MINUTES_PER_HOUR) * RtcGetDayCount(&sRtc) + MINUTES_PER_HOUR * sRtc.hour + sRtc.minute;
-}
-
 u32 RtcGetLocalDayCount(void)
 {
     return RtcGetDayCount(&sRtc);
@@ -422,42 +416,6 @@ void FormatDecimalTimeWithoutSeconds(u8 *txtPtr, s8 hour, s8 minute, bool32 is24
 
     *txtPtr++ = EOS;
     *txtPtr = EOS;
-}
-
-u16 GetFullYear(void)
-{
-    struct DateTime dateTime;
-    RtcCalcLocalTime();
-    ConvertTimeToDateTime(&dateTime, &gLocalTime);
-
-    return dateTime.year;
-}
-
-enum Month GetMonth(void)
-{
-    struct DateTime dateTime;
-    RtcCalcLocalTime();
-    ConvertTimeToDateTime(&dateTime, &gLocalTime);
-
-    return dateTime.month;
-}
-
-u8 GetDay(void)
-{
-    struct DateTime dateTime;
-    RtcCalcLocalTime();
-    ConvertTimeToDateTime(&dateTime, &gLocalTime);
-
-    return dateTime.day;
-}
-
-enum Weekday GetDayOfWeek(void)
-{
-    struct DateTime dateTime;
-    RtcCalcLocalTime();
-    ConvertTimeToDateTime(&dateTime, &gLocalTime);
-
-    return dateTime.dayOfWeek;
 }
 
 enum TimeOfDay GenConfigTimeOfDay(enum TimeOfDay timeOfDay)

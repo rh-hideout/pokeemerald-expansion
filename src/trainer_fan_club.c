@@ -37,12 +37,6 @@ static void UpdateTrainerFansAfterLinkBattle(struct TrainerFanClub *);
 static bool8 DidPlayerGetFirstFans(struct TrainerFanClub * );
 static void SetPlayerGotFirstFans(struct TrainerFanClub *);
 
-void ResetTrainerFanClub(void)
-{
-    VarSet(VAR_FANCLUB_FAN_COUNTER, 0);
-    VarSet(VAR_FANCLUB_LOSE_FAN_TIMER, 0);
-}
-
 void Script_TryLoseFansFromPlayTimeAfterLinkBattle(void)
 {
     TryLoseFansFromPlayTimeAfterLinkBattle(TRAINER_FAN_CLUB);
@@ -356,11 +350,6 @@ static void BufferFanClubTrainerName(u8 whichLinkTrainer, u8 whichNPCTrainer)
     }
 }
 #endif //FREE_LINK_BATTLE_RECORDS
-
-void Special_UpdateTrainerFansAfterLinkBattle(void)
-{
-    UpdateTrainerFansAfterLinkBattle(TRAINER_FAN_CLUB);
-}
 
 static void UpdateTrainerFansAfterLinkBattle(struct TrainerFanClub *fanClub)
 {

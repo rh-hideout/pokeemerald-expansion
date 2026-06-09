@@ -4951,15 +4951,6 @@ static void Cmd_trainerslidein(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static inline bool32 IsProtectivePadsProtected(enum BattlerId battler, enum HoldEffect holdEffect)
-{
-    if (holdEffect != HOLD_EFFECT_PROTECTIVE_PADS)
-        return FALSE;
-
-    RecordItemEffectBattle(battler, holdEffect);
-    return TRUE;
-}
-
 static void Cmd_moveend(void)
 {
     CMD_ARGS(u8 endMode, u8 endState);
@@ -8185,20 +8176,6 @@ static void Cmd_copymovepermanently(void)
     {
         gBattlescriptCurrInstr = cmd->failInstr;
     }
-}
-
-static inline bool32 IsDanamaxMonPresent(void)
-{
-    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
-    {
-        if (battler == gBattlerAttacker)
-            continue;
-
-        if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX)
-            return TRUE;
-    }
-
-    return FALSE;
 }
 
 static void Cmd_settailwind(void)

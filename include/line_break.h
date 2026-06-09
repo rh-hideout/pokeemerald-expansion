@@ -27,12 +27,10 @@ enum ToggleScrollPrompt
     HIDE_SCROLL_PROMPT,
 };
 
-void StripLineBreaks(u8 *src);
 u32 CountLineBreaks(u8 *src);
 void BreakStringAutomatic(u8 *src, u32 maxWidth, u32 screenLines, u8 fontId, enum ToggleScrollPrompt toggleScrollPrompt);
 void BreakSubStringAutomatic(u8 *src, u32 maxWidth, u32 screenLines, u8 fontId, enum ToggleScrollPrompt toggleScrollPrompt);
 
-void BreakStringNaive(u8 *src, u32 maxWidth, u32 screenLines, u8 fontId, enum ToggleScrollPrompt toggleScrollPrompt);
 void BreakSubStringNaive(u8 *src, u32 maxWidth, u32 screenLines, u8 fontId, enum ToggleScrollPrompt toggleScrollPrompt);
 
 bool32 IsWordSplittingChar(const u8 *src, u32 index);
