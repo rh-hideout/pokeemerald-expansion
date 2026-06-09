@@ -1377,7 +1377,7 @@ bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon)
         }
         break;
     case EFFECT_ITEM_USE_POKE_FLUTE:
-        // THIS IS MISSING A CHECK, OPEN ISSUE ON GITHUB
+        // ISSUE #10182
         break;
     }
 
