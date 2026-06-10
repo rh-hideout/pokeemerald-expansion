@@ -2966,14 +2966,20 @@ static enum MoveEndResult MoveEndFaintBlock(struct BattleCalcValues *cv)
             {
                 gHitMarker |= HITMARKER_PLAYER_FAINTED;
                 if (gBattleResults.playerFaintCounter < 255)
+                {
                     gBattleResults.playerFaintCounter++;
+                    gBattleStruct->faintCounter[GetBattlerTrainer(cv->battlerDef)]++;
+                }
                 AdjustFriendshipOnBattleFaint(cv->battlerDef);
                 gSideTimers[B_SIDE_PLAYER].retaliateTimer = 2;
             }
             else
             {
                 if (gBattleResults.opponentFaintCounter < 255)
+                {
                     gBattleResults.opponentFaintCounter++;
+                    gBattleStruct->faintCounter[GetBattlerTrainer(cv->battlerDef)]++;
+                }
                 gBattleResults.lastOpponentSpecies = GetMonData(GetBattlerMon(cv->battlerDef), MON_DATA_SPECIES);
                 gSideTimers[B_SIDE_OPPONENT].retaliateTimer = 2;
             }

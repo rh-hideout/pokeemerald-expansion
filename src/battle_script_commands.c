@@ -3623,14 +3623,20 @@ static void Cmd_tryfaintmon(void)
             {
                 gHitMarker |= HITMARKER_PLAYER_FAINTED;
                 if (gBattleResults.playerFaintCounter < 255)
+                {
                     gBattleResults.playerFaintCounter++;
+                    gBattleStruct->faintCounter[GetBattlerTrainer(battler)]++;
+                }
                 AdjustFriendshipOnBattleFaint(battler);
                 gSideTimers[B_SIDE_PLAYER].retaliateTimer = 2;
             }
             else
             {
                 if (gBattleResults.opponentFaintCounter < 255)
+                {
                     gBattleResults.opponentFaintCounter++;
+                    gBattleStruct->faintCounter[GetBattlerTrainer(battler)]++;
+                }
                 gBattleResults.lastOpponentSpecies = GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES);
                 gSideTimers[B_SIDE_OPPONENT].retaliateTimer = 2;
             }
