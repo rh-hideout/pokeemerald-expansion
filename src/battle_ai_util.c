@@ -3439,6 +3439,38 @@ bool32 ShouldBurn(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Abi
         return TRUE;
 }
 
+bool32 ShouldFreezeOrFrostbite(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityDef)
+{
+    if (!B_USE_FROSTBITE)
+    {
+        if (CanBeFrozen(battlerAtk, battlerDef, abilityDef))
+        {
+            if (battlerAtk == battlerDef) // Targeting self
+                return FALSE;
+            else
+                return TRUE;
+        }
+        return FALSE;
+    }
+    else
+    {
+        // Battler can be frostbitten and has move/ability that synergizes with being frostbitten
+        if (CanBeFrozen(battlerAtk, battlerDef, abilityDef)
+            && DoesBattlerBenefitFromAllVolatileStatus(battlerDef, abilityDef))
+        {
+            if (battlerAtk == battlerDef) // Targeting self
+                return TRUE;
+            else
+                return FALSE;
+        }
+
+        if (battlerAtk == battlerDef)
+            return FALSE;
+        else
+            return TRUE;
+    }
+}
+
 bool32 ShouldParalyze(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityDef)
 {
     // Battler can be paralyzed and has move/ability that synergizes with being paralyzed
@@ -3697,6 +3729,20 @@ bool32 AnyPartyMemberStatused(enum BattlerId battlerId, bool32 checkSoundproof)
     }
 
     return hasStatusToCure;
+}
+
+bool32 ShouldUseRecoilMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, u32 recoilDmg, u32 moveIndex)
+{
+    if (recoilDmg >= gBattleMons[battlerAtk].hp //Recoil kills attacker
+      && CountUsablePartyMons(battlerDef) != 0) //Foe has more than 1 target left
+    {
+        if (recoilDmg >= gBattleMons[battlerDef].hp && !CanAIFaintTarget(battlerAtk, battlerDef, 0))
+            return TRUE; //If it's the only KO move then just use it
+        else
+            return FALSE; //Not as good to use move if you'll faint and not win
+    }
+
+    return TRUE;
 }
 
 static inline bool32 RecoveryEnablesWinning1v1(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, bool32 aiIsFaster, u32 healAmount)
