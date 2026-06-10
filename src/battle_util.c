@@ -2141,14 +2141,9 @@ bool32 ChangeTypeBasedOnTerrain(enum BattlerId battler)
     return TRUE;
 }
 
-static inline u8 GetSideFaintCounter(enum BattleSide side)
+u32 GetBattlerSideFaintCounter(enum BattlerId battler)
 {
-    return (side == B_SIDE_PLAYER) ? gBattleResults.playerFaintCounter : gBattleResults.opponentFaintCounter;
-}
-
-static inline u8 GetBattlerSideFaintCounter(enum BattlerId battler)
-{
-    return GetSideFaintCounter(GetBattlerSide(battler));
+    return IsOnPlayerSide(battler) ? gBattleResults.playerFaintCounter : gBattleResults.opponentFaintCounter;
 }
 
 // Supreme Overlord adds a x0.1 damage boost for each fainted ally.
