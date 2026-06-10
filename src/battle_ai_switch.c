@@ -2736,8 +2736,6 @@ static void SetBattlerStatStagesForSwitchin(enum BattlerId battler, enum Battler
     case ABILITY_DAUNTLESS_SHIELD:
         gBattleMons[battler].statStages[STAT_DEF] += 1;
         break;
-    case ABILITY_SUPREME_OVERLORD:
-        break;
     case ABILITY_DOWNLOAD:
         gBattleMons[battler].statStages[GetDownloadStat(battler)] += 1;
         break;
@@ -2891,6 +2889,9 @@ static void SetBattlerVolatilesForSwitchin(enum BattlerId battler, u32 weather, 
     case ABILITY_WIND_POWER:
         if (gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_TAILWIND)
             gBattleMons[battler].volatiles.chargeTimer = 2;
+        break;
+    case ABILITY_SUPREME_OVERLORD:
+        gBattleMons[battler].volatiles.supremeOverlordCounter = min(5, GetBattlerSideFaintCounter(battler));
         break;
     default:
         break;
